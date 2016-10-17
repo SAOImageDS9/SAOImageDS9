@@ -1,0 +1,96 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAServer: The XPA Server-side Programming Interface>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+A description of the XPA server-side programming interface.
+
+
+
+=head1 DESCRIPTION
+
+
+
+B<Introduction to XPA Server Programming>
+
+Creating an XPA server is easy: you generally only need to call the
+XPANew() subroutine to define a named XPA access point and set up the
+send and receive callback routines.  You then enter an event loop such
+as XPAMainLoop() to field XPA requests.
+
+  #include <xpa.h>
+
+  XPA XPANew(char *class, char *name, char *help,
+      int (*send_callback)(), void *send_data, char *send_mode,
+      int (*rec_callback)(),  void *rec_data,  char *rec_mode);
+
+  XPA XPACmdNew(char *class, char *name);
+
+  XPACmd XPACmdAdd(XPA xpa,
+         char *name, char *help,
+         int (*send_callback)(), void *send_data, char *send_mode,
+         int (*rec_callback)(),  void *rec_data,  char *rec_mode);
+
+  void XPACmdDel(XPA xpa, XPACmd cmd);
+
+  XPA XPAInfoNew(char *class, char *name,
+      int (*info_callback)(), void *info_data, char *info_mode);
+
+  int XPAFree(XPA xpa);
+
+  void XPAMainLoop(void);
+
+  int XPAPoll(int msec, int maxreq);
+
+  void XPAAtExit(void);
+
+  void XPACleanup(void);
+
+
+
+B<Introduction>
+
+To use the XPA application programming interface, a software developer
+generally will include the xpa.h definitions file:
+
+  #include <xpa.h>
+
+in the software module that defines or accesses an XPA access point, and
+then will link against the libxpa.a library:
+
+  gcc -o foo foo.c libxpa.a
+
+XPA has been compiled using both C and C++ compilers.
+
+
+A server program generally defines an XPA access point by calling the
+XPANew() routine and specifies "send" and/or "receive" callback
+procedures to be executed by the program when an external process
+either sends data or commands to this access point or requests data or
+information from this access point. A program also can define several
+sub-commands for a single access point by calling XPACmdNew() and
+XPACmdAdd() instead.  Having defined one or more public access points
+in this way, an XPA server program enters its usual event loop (or
+uses the standard XPA event loop).
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

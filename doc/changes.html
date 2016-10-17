@@ -1,0 +1,69 @@
+<!-- =defdoc xpachanges xpachanges 1 -->
+<HTML>
+<HEAD>
+<TITLE>Changes For Users from XPA 1.0 and 2.0</TITLE>
+</HEAD>
+<BODY>
+
+<!-- =section xpachanges NAME -->
+<H2><A NAME="xpachanges">XPA Changes: Changes For Users from XPA 1.0 and 2.0</A></H2>
+
+<!-- =section xpachanges SYNOPSIS -->
+<H2>Summary</H2>
+<P>
+This document describes changes that will affect users who migrate
+from XPA 1.0 to XPA 2.0.
+
+<!-- =section xpachanges DESCRIPTION -->
+<H2>Description</H2>
+<P>
+There have been a few changes that affect users who upgrade XPA
+from version 1.0 to version 2.0.  These changes are detailed below.
+<UL>
+<P>
+<LI>XPA commands no longer have a resolver routine (this is open to
+negotiations, but we decided the idea was dumb).  For the SAOtng
+program, this means that you must explicitly specify the access
+point, i.e.,:
+<PRE>
+  cat foo.fits | xpaset SAOtng fits
+</PRE>
+
+<P>
+instead of:
+<PRE>
+  cat foo.fits | xpaset SAOtng
+</PRE>
+<P>
+<LI>By default, xpaset, xpaget, etc. now wait for the server callback to
+complete; i.e., the old -W is implied (and the switch is ignored).
+This allows support for better error handling.  If you want xpaset, etc.
+to return before the callback is complete, use -n switch:
+<PRE>
+  echo "file foo.fits" | xpaset -n SAOtng
+</PRE>
+<P>
+<LI>The old -w switch in xpaset and xpaget is no longer necessary (and is
+ignored), since you can have more than one process communicating with
+an xpa access point at one time.
+
+<P>
+<LI>The new -p switch on xpaset means you need not read from stdout:
+<PRE>              
+  xpaset -p SAOtng colormap I8
+</PRE>
+<P>
+will send the paramlist to the SAOtng callback without reading from stdin.
+
+</UL>
+
+<!-- =section xpachanges SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =stop -->
+
+<P>
+<A HREF="./help.html">Go to XPA Help Index</A>
+
+<H5>Last updated: September 10, 2003</H5>
+</BODY>
+</HTML>

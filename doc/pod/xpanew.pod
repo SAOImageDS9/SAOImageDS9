@@ -1,0 +1,243 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPANew: create a new XPA access point>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  XPA XPANew(char *class, char *name, char *help,
+	     int (*send_callback)(),
+	     void *send_data, char *send_mode,
+	     int (*rec_callback)(),
+	     void *rec_data,  char *rec_mode);
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+Create a new XPA public access point with the class:name
+identifier template
+and enter this access point into the XPA name server, so that it
+can be accessed by external processes. XPANew() returns an XPA struct.
+Note that the length of the class and name designations must be less
+than or equal to 1024 characters each.
+
+
+The XPA name server daemon, xpans, will be started automatically if it
+is not running already (assuming it can be found in the path).  The
+program's ip address and listening port are specified by the
+environment variable XPA_NSINET, which takes the form :.  If
+no such environment variable exists, then xpans is started on the
+current machine listening on port 14285.  It also uses 14286 as a
+known port for its public access point (so that routines do not have
+to go to the name server to find the name server ip and port!)
+As of XPA 2.1.1, version information is exchanged between the xpans
+process and the new access point. If the access point uses an XPA
+major/minor version newer than xpans, a warning is issued by both processes,
+since mixing of new servers and old xpa programs (xpaset, xpaget,
+xpans, etc.) is not likely to work. You can turn off the warning
+message by setting the XPA_VERSIONCHECK environment variable to "false".
+
+
+The help string is meant to be returned by a request from xpaget:
+
+  xpaget class:name -help
+
+
+A send_callback and/or a receive_callback can be specified; at
+least one of them must be specified.
+
+
+A send_callback can be specified that will be executed in response to
+an external request from the xpaget program, the XPAGet() routine, or
+XPAGetFd() routine. This callback is used to send data to the
+requesting client.
+
+
+The calling sequence for send_callback() is:
+
+  int send_callback(void *send_data, void *call_data,
+    char *paramlist, char **buf, size_t *len)
+  {
+    XPA xpa = (XPA)call_data;
+    ...
+    return(stat);
+  }
+
+
+The send_mode string is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  acl		true/false	true		enable access control
+  freebuf	true/false	true		free buf after callback completes
+
+
+The call_data should be recast to the XPA struct as shown.  In
+addition, client-specific data can be passed to the callback in
+send_data.
+
+
+The paramlist will be supplied by the client as qualifying parameters
+for the callback.  There are two ways in which the send_callback()
+routine can send data back to the client:
+
+
+1. The send_callback() routine can fill in a buffer and pass back a
+pointer to this buffer. An integer len also is returned to specify the
+number of bytes of data in buf.  XPA will send this buffer to the
+client after the callback is complete.
+
+
+2. The send_callback can send data directly to the client by writing
+to the fd pointed by the macro:
+
+  xpa_datafd(xpa)
+
+
+Note that this fd is of the kind returned by socket() or open().
+
+
+If a buf has been allocated by a standard malloc routine, filled, and
+returned to XPA, then freebuf generally is set so that the buffer will
+be freed automatically when the callback is completed and data has
+been sent to the client.  If a static buf is returned, freebuf should
+be set to false to avoid a system error when freeing static storage.
+Note that default value for freebuf implies that the callback will
+allocate a buffer rather than use static storage.
+
+
+On the other hand, if buf is dynamically allocated using a method
+other than a standard malloc/calloc/realloc routine (e.g. using Perl's
+memory allocation and garbage collection scheme), then it is necessary
+to tell XPA how to free the allocated buffer. To do this, use the
+XPASetFree() routine within your callback:
+
+  void XPASetFree(XPA xpa, void (*myfree)(void *), void *myfree_ptr);
+
+The first argument is the usual XPA handle. The second argument is the
+special routine to call to free your allocated memory. The third
+argument is an optional pointer.  If not NULL, the specified free
+routine is called with that pointer as its sole argument. If NULL, the
+free routine is called with the standard buf pointer as its sole
+argument. This is useful in cases where there is a mapping between the
+buffer pointer and the actual allocated memory location, and the
+special routine is expecting to be passed the former.
+
+
+If, while the callback performs its processing, an error occurs that
+should be communicated to the client, then the routine XPAError should be
+called:
+
+  XPAError(XPA xpa, char *s);
+
+
+where s is an arbitrary error message.  The returned error message
+string will be of the form:
+
+  XPA$ERROR   [error] (class:name ip:port)
+
+
+If the callback wants to send a specific acknowledgment message back
+to the client, the routine XPAMessage can be called:
+
+  XPAMessage(XPA xpa, char *s);
+
+
+where s is an arbitrary error message.  The returned error message
+string will be of the form:
+
+  XPA$MESSAGE [message] (class:name ip:port)
+
+
+Otherwise, a standard acknowledgment is sent back to the client
+after the callback is completed.
+
+
+The callback routine should return 0 if no error occurs, or -1 to
+signal an error.
+
+
+A receive_callback can be specified that will be executed in response
+to an external request from the xpaset program, or the XPASet (or
+XPASetFd()) routine. This callback is used to process data received
+from an external process.
+
+
+The calling sequence for receive_callback is:
+
+  int receive_callback(void *receive_data, void *call_data,
+    char *paramlist, char *buf, size_t len)
+  {
+    XPA xpa = (XPA)call_data;
+    ...
+    return(stat);
+  }
+
+
+The mode string is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  acl		true/false	true		enable access control
+  buf		true/false	true		server expects data bytes from client
+  fillbuf	true/false	true		read data into buf before executing callback
+  freebuf	true/false	true		free buf after callback completes
+
+
+The call_data should be recast to the XPA struct as shown.  In
+addition, client-specific data can be passed to the callback in
+receive_data.
+
+
+The paramlist will be supplied by the client. In addition, if the
+receive_mode keywords buf and fillbuf are true, then on entry into the
+receive_callback() routine, buf will contain the data sent by the
+client. If buf is true but fillbuf is false, it becomes the callback's
+responsibility to retrieve the data from the client, using the data fd
+pointed to by the macro xpa_datafd(xpa).  If freebuf is true, then buf
+will be freed when the callback is complete.
+
+
+If, while the callback is performing its processing, an error occurs
+that should be communicated to the client, then the routine XPAError
+can be called:
+
+  XPAError(XPA xpa, char *s);
+
+
+where s is an arbitrary error message.
+
+
+The callback routine should return 0 if no error occurs, or -1 to
+signal an error.
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

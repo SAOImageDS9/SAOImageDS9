@@ -1,0 +1,102 @@
+=pod
+
+=head1 NAME
+
+
+
+B<xpaaccess: see if template matches registered XPA access points>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+xpaaccess [-c] [-h] [-i nsinet] [-m method] [-n] [-t sval,lval] [-u users] -v <template> [type]
+
+
+
+
+
+=head1 OPTIONS
+
+
+
+
+
+  -c		contact each access point individually
+  -h		print help message
+  -i		access XPA point on different machine (override XPA_NSINET)
+  -m		override XPA_METHOD environment variable
+  -n		return number of matches instead of "yes" or "no"
+  -t [s,l]	set short and long timeouts (override XPA_[SHORT,LONG]_TIMEOUT)
+  -u [users]	XPA points can be from specified users (override XPA_NSUSERS)
+  -v		print info about each successful access point
+  -V		print info or error about each access point
+  --version     display version and exit
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+xpaaccess returns "yes" to stdout (with a return error code if 1) if there are
+existing XPA access points that match the 
+template
+(and optional access type: g,i,s). Otherwise, it returns "no" (with a
+return error code of 0).  If -n is specified, the number of matches is
+returned instead (both to stdout and in the returned error code). If
+-v is specified, each access point is displayed to stdout instead of
+the number of matches.
+
+
+By default, xpaaccess simply contacts the xpans name server to find
+the list of registered access points that match the specified
+template. It also checks to make sure the specified types are
+supported by that access point. This is the fastest way to determine
+available access points. However, an access point might registered but
+not yet available, if, for example, the server program has not entered
+its event loop to process XPA requests. To find access points that are
+guaranteed to be available for processing, use the -c (contact)
+switch.  With this switch, xpaaccess contacts each matching XPA server
+(rather than the name server) to make sure the registered access point
+really is ready for processing. In this mode, if an access point is
+registered but not available, xpaaccess will pause for a period of
+time equal to the XPA_LONG_TIMEOUT, in order to give the server a
+chance to ready itself. By default, this timeout is 30 seconds. You
+can shorten the time of delay using the -t "short,long" switch. For
+example, to shorten the delay time to 2 seconds, use:
+
+  xpaaccess -c -t "2,2" ds9
+
+The first argument is the short delay value, and is ignored in this
+operation. The second is the long delay timeout.
+
+
+Note also that the default xpaaccess method (no -c switch) does not
+check access control (acls) but rather only checks whether the access
+point is both registered with the xpans name server and provides the
+specified type of access. In other words, the default xpaaccess could
+return 'yes' when you might not actually have access. This mode also
+always returns 'yes' for the xpans name server itself, regardless of
+whether the name server is active. The -c (contact) switch, which
+contacts the access point directly, can and does check the access
+control (only for servers using version 2.1 and above) and also
+returns the real status of xpans.
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

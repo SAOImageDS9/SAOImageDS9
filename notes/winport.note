@@ -1,0 +1,81 @@
+Documentation:
+
+The URL:
+
+    http://msdn.microsoft.com/library 
+
+has a good Unix Application Migration Guide as well as Win32 API. 
+
+				MINGW32
+Problems:
+
+client.c:
+
+The select() function does not work on stdio files, so xpaset cannot add
+stdio to select(). This means that "cat foo.fits | xpaset ds9" is not
+implemented. This is a client side problem and would not affect ds9 running
+as an xpa server.
+
+xpaio.c and others:
+
+Win32 does not support most Unix signal handling, and in particular, the
+SIGALRM signal. This means that XPA will hang indefinitely on a system
+call, i.e., there is no timeout support corresponding to XPA_LONG_TIMEOUT
+and XPA_SHORT_TIMEOUT. This affects both clients and servers.
+
+timedconn.c:
+
+Again, lack of support for SIGALRM means alrmconnect() is not implemented.
+For some reason, noblkconect() also did not work properly, so I had to
+use theregular connect() in client.c and hang until further notice. This
+is a client side problem and would not affect ds9 as an xpa server.
+
+launch.c:
+
+Without fork(), its not obvious how to make the code wait for the
+child to start. In the end, I used simply called win32 spawnvp(), put
+a short sleep into the parent, and hoped for the best.
+
+find.c:
+
+Couldn't find the access mode bits (S_IRUSR, S_IWUSR, S_IXUSR) in win32,
+so access checking in find() is not supported.
+
+Code Changes:
+
+xpa.c, client.c (sockets)
+
+Ironically, wsock64 has an FD_SETSIZE of 64 and I had to redefine this to
+8192 to make XPA sockets work.
+
+For wsock32 sockets, we must initialize wsock32 using:
+
+     WSADATA wsaData;
+     ...
+     if( WSAStartup(MAKEWORD(2,0), &wsaData) ) != 0 ) {handle error};
+
+and clean up at the time of exit:
+
+    WSACleanup();
+
+The close(sock) call is replaced by closesocket(sock).
+
+The call:
+
+    fcntl(sock, F_SETFD, FD_CLOEXEC);
+
+is not needed or implemented (since sockets do not survive across exec) and
+must be commented out.
+
+Calls to:
+
+    flags = fcntl(client->datafd, F_GETFL);
+    fcntl(client->datafd, F_SETFL, flags|NONBIO);
+
+get changed to:
+
+    int flags=1;
+    ioctlsocket(socket, FIONBIO, (u_long FAR *)&flags);
+
+
+

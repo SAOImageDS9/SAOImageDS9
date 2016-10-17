@@ -1,0 +1,115 @@
+=pod
+
+=head1 NAME
+
+
+
+B<xpaset: send data to one or more XPA servers>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+<data> | xpaset  [-h] [-i nsinet] [-m method] [-n] [-p] [-s] [-t sval,lval] [-u users] [-v] <template|host:port> [paramlist]
+
+
+
+
+
+=head1 OPTIONS
+
+
+
+
+
+  -h		print help message
+  -i		access XPA point on different machine (override XPA_NSINET)
+  -m		override XPA_METHOD environment variable
+  -n		don't wait for the status message after server completes
+  -p		don't read (or send) buf data from stdin
+  -s		enter server mode
+  -t [s,l]	set short and long timeouts (override XPA_[SHORT,LONG]_TIMEOUT)
+  -u [users]	XPA points can be from specified users (override XPA_NSUSERS)
+  -v		verify message to stdout
+  --version     display version and exit
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+Data read from stdin will be sent to access points matching the 
+template
+or host:port.
+A set of qualifying parameters can be appended.
+
+Normally, xpaset reads data input from stdin until EOF and sends those
+data to the XPA target, along with parameters entered on the command
+line. For example to send a FITS file to the ds9 image display:
+
+  cat foo.fits | xpaset ds9 fits
+
+
+Sometimes, however, it is desirable to send only parameters to an XPA
+access point, without sending data. For such cases, use the -p switch to
+indicate that there is no data being send to stdin. For example, to
+change the colormap used by the ds9 image display program, use:
+
+  csh> xpaset -p ds9 cmap Heat
+
+Of course, this also can be accomplished by sending EOF to stdin in
+any of the usual ways:
+
+  csh> echo "" | xpaset ds9 cmap Heat
+  csh> xpaget ds9 cmap Heat < /dev/null
+  csh> xpaset ds9 cmap Heat
+  ^D			# Ctl-D signals EOF
+
+
+The -s switch puts xpaset into server mode, in which commands and data
+can be sent to access points without having to run xpaset multiple times.
+(Its not clear if this buys you much!) The syntax for sending commands
+in server mode is:
+
+
+  csh> xpaset -s
+  xpaset ds9 colormap I8
+  ^D
+  xpaset ds9 regions
+  circle 200 300 40
+  circle 300 400 50
+  ^D
+etc.
+
+After the  required "xpaset" command is specified, optional ASCII data
+can be appended (as in the region example).  A single data/command set is
+delimited by ^D. Note that typing ^D when a command is expected terminates
+the program.
+
+NB: server mode only works from the terminal and only ASCII data can be
+sent in this way.
+
+B<Examples:>
+
+  csh> xpaset ds9 file < foo.fits
+  csh> echo "stop" | xpaset myhost:12345
+
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

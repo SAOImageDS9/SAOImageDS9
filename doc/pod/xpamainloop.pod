@@ -1,0 +1,108 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAMainLoop: optional main loop for XPA>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  void XPAMainLoop();
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+Once XPA access points have been defined, a program must enter an
+event loop to watch for requests from external programs. This can be
+done in a variety of ways, depending on whether the event loop is
+processing events other than XPA events.  In cases where there are no
+non-XPA events to be processed, the program can simply call the
+XPAMainLoop() event loop.  This loop is implemented essentially as
+follows (error checking is simplified in this example):
+
+  FD_ZERO(&readfds);
+  while( XPAAddSelect(NULL, &readfds) ){
+    if( sgot = select(swidth, &readfds, NULL, NULL, NULL) >0 )
+      XPAProcessSelect(&readfds, 0);
+    else
+      break;
+    FD_ZERO(&readfds);
+  }
+
+
+The XPAAddSelect() routine sets up the select() readfds variable so
+that select() will wait for I/O on all the active XPA channels.  It
+returns the number of XPAs that are active; the loop will end when
+there are no active XPAs. The standard select() routine is called to
+wait for an external I/O request.  Since no timeout struct is passed
+in argument 5, the select() call hangs until there is an external
+request.  When an external I/O request is made, the XPAProcessSelect()
+routine is executed to process the pending requests.  In this routine,
+the maxreq value determines how many requests will be processed: if
+maxreq <=0, then all currently pending requests will be processed.
+Otherwise, up to maxreq requests will be processed.  (The most usual
+values for maxreq is 0 to process all requests.)
+
+
+If a program has its own Unix select() loop, then XPA access points can
+be added to it by using a variation of the standard XPAMainLoop:
+
+  XPAAddSelect(xpa, &readfds);
+  [app-specific ...]
+  if( select(width, &readfds, ...) ){
+    XPAProcessSelect(&readfds, maxreq);
+    [app-specific ...]
+    FD_ZERO(&readfds);
+  }
+
+
+XPAAddSelect() is called before select() to add the access points.
+If the first argument is NULL, then all active XPA access points
+are added. Otherwise only the specified access point is added.
+After select() is called, the XPAProcessSelect() routine can be called
+to process XPA requests.  Once again, the maxreq value determines how
+many requests will be processed: if maxreq <=0, then all currently
+pending requests will be processed.  Otherwise, up to maxreq requests
+will be processed.
+
+
+XPA access points can be added to
+Xt event loops (using XtAppMainLoop())
+and
+Tcl/Tk event loops (using vwait and the Tk loop).
+When using XPA with these event loops, you only need to call:
+
+int XPAXtAddInput(XtAppContext app, XPA xpa)
+
+or
+
+  int XPATclAddInput(XPA xpa)
+
+respectively before entering the loop.
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

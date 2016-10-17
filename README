@@ -1,0 +1,43 @@
+This is the directory for XPA 2.0.
+
+The XPA messaging system provides seamless communication between many
+kinds of Unix programs, including X programs and Tcl/Tk programs.  It
+also provides an easy way for users to communicate with XPA-enabled
+programs by executing XPA client commands in the shell or by utilizing
+such commands in scripts.  Because XPA works both at the programming
+level and the shell level, it is a powerful tool for unifying any
+analysis environment: users and programmers have great flexibility in
+choosing the best level or levels at which to access XPA services, and
+client access can be extended or modified easily at any time.
+
+A program becomes an XPA-enabled server by defining named points of
+public access through which data and commands can be exchanged with
+other client programs (and users).  Using standard TCP sockets as a
+transport mechanism, XPA supports both single-point and broadcast
+messaging to and from these servers.  It supports direct communication
+between clients and servers, or indirect communication via an
+intermediate message bus emulation program. Host-based access control
+is implemented, as is as the ability to communicate with XPA servers
+across a network.
+
+XPA implements a layered interface that is designed to be useful both
+to software developers and to users.  The interface consists of a
+library of XPA client and server routines for use in C/C++ programs and
+a suite of high-level user programs built on top of these libraries.
+Using the XPA library, access points can be added to Tcl/Tk programs,
+Xt programs, or to Unix programs that use the XPA event loop or any
+event loop based on select().  Client access subroutines can be added
+to any Tcl/Tk, Xt, or Unix program. Client access also is supported at
+the command line via a suite of high-level programs.
+
+To build XPA, see the INSTALL instructions (which are based on
+standard instructions for building software using GNU configure).
+
+Documentation for XPA is contained in the doc subdirectory (where the
+help.html file is the top-level index).
+
+If you have questions, please contact us at: saord@cfa.harvard.edu.
+
+							Eric Mandel
+
+XPA is distributed under the terms of The MIT License.

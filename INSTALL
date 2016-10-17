@@ -1,0 +1,323 @@
+Quick Summary
+=============
+
+To build and install the XPA package, simply execute:
+
+	./configure		# site-specific configuration
+	make			# build the software
+	make install		# install it
+	make clean		# clean up unneeded temp files
+
+We strongly recommend that you install in a directory other than the
+default of /usr/local, so as not to require root access. To do this,
+configure for a different install directory:
+
+	./configure --prefix=<top_level_install_dir>
+e.g.,
+	./configure --prefix=/soft/saord
+
+Programs will be installed in /soft/saord/bin, libraries in /soft/saord/lib,
+include files in /soft/saord/include, and man pages in /soft/saord/man.
+Indeed, we do this at SAO and recommend it as a general rule, in order
+to keep SAORD software in one place that does not conflict with other
+installations. Note that you will need to add the bin directory to
+your path and the man directory to MANPATH.
+
+The build ("make") takes only a minute or so on modern machines.  To
+monitor its progress and/or check for errors, redirect output to a file
+and use the 'tail' command:
+
+	make >& foo.log &; tail -f foo.log		# csh
+or
+	make 1>foo.log 2>&1 &; tail -f foo.log		# sh, bash
+
+
+Details of Installation
+=======================
+
+   NB: These are generic installation instructions, modified for XPA.
+
+   The `configure' shell script attempts to guess correct values for
+various system-dependent variables used during compilation.  It uses
+those values to create a `Makefile' in each directory of the package.
+It may also create one or more `.h' files containing system-dependent
+definitions.  Finally, it creates a shell script `config.status' that
+you can run in the future to recreate the current configuration, a file
+`config.cache' that saves the results of its tests to speed up
+reconfiguring, and a file `config.log' containing compiler output
+(useful mainly for debugging `configure').
+
+   If you need to do unusual things to compile the package, please try
+to figure out how `configure' could check whether to do them, and mail
+diffs or instructions to the address given in the `README' so they can
+be considered for the next release.  If at some point `config.cache'
+contains results you don't want to keep, you may remove or edit it.
+
+   The file `configure.in' is used to create `configure' by a program
+called `autoconf'.  You only need `configure.in' if you want to change
+it or regenerate `configure' using a newer version of `autoconf'.
+
+The simplest way to compile this package is:
+
+     `./configure' to configure the package for your system.  If you're
+     using `csh' on an old version of System V, you might need to type
+     `sh ./configure' instead to prevent `csh' from trying to execute
+     `configure' itself.
+
+     Running `configure' takes awhile.  While running, it prints some
+     messages telling which features it is checking for.
+
+  1. `cd' to the directory containing the package's source code and type
+    "./configure".  This runs a configuration script created by GNU
+    autoconf, which configures XPA for your system and creates a
+    Makefile.  The configure script allows you to customize the XPA
+    configuration for your site; for details on how you can do this,
+    type "./configure -help" or refer to the autoconf documentation (not
+    included here). The XPA "configure" script supports the following special
+    switch(es) in addition to the standard ones:
+
+        --enable-shared=yes|link
+
+				Build shared libraries in addition to the
+				default static library. There are two options:
+
+				If the value is "yes", shared libraries are
+				built but not used to link xpa programs.
+
+				If the value is "link", shared libraries are
+				used to link xpa programs. If therefore becomes
+				your responsibility to put the shared library
+				where it can be found (or use LD_LIBRARY_PATH).
+
+        --enable-threaded-xpans
+				Build xpans to support separate threads for
+				handling name server requests and xpa proxy
+				callbacks. This is recommended if you are going
+				to enable proxy handling in xpans (-P), since
+				XPA long callbacks via proxy can interfere
+				with the name server functions. (You still have
+				to start xpans with -P 2 to use 2 threads.)
+
+	--with-tcl=<dir>	
+				Force build Tcl support using parameters found
+				in <dir>/tclConfig.sh. Configure will look for
+				the Tcl config script in standard places and
+				will enable Tcl support if found. It will abort
+				if tclConfig.sh points to a non-existent tcl.h
+				file (some versions of Linux have shown this
+				behavior). Use this switch to override the
+				standard locations or to force a build even
+				if tcl.h is not found (e.g. if you are going to
+				install tcl as part of a larger build). With
+				Tcl support enabled you can execute:
+
+					make tclxpa
+
+				to generate the XPA package as a shared Tcl
+				object, loadable using Tcl "package require".
+				Contact us with problems -- its been a bear to
+				get this even half-way right.
+
+	--with-threads
+				If you are going to link XPA into a threaded
+				program, you need to specify --with-threads.
+				This add -D_REENTRANT to the compiler flags,
+				which tells gcc to use thread-safe versions of
+				global system variables such as errno. No code
+				changes are made to XPA. Please note that all 
+				XPA calls must be in a single thread: XPA is
+				not thread-safe in and of itself but does work
+				in threaded programs.
+
+	--with-gtk=<include_dir>	
+				Build with support for adding xpa to a gtk
+				loop. The specified include directory must 
+				contain the gtk directory which itself contains
+				gtk.h, e.g.:
+
+				    --with-gtk=/usr/local/include/gtk-1.2
+
+				which contains gtk/gtk.h
+
+    Standard options are listed below. the most important of which
+    are --exec-prefix and --prefix (to specify where to install), and
+    --x-includes=DIR and --x-libraries=DIR (for non-standard X installations).
+    We recommend --prefix be set to a directory that will hold saord software
+    (e.g., --prefix=/soft/saord) in order to make management of our software
+    easier.
+
+    NB: be sure to use only absolute path names (those starting with "/")
+    in the --prefix and --exec_prefix options. (The configure options we
+    use at SAO for various machines are given as examples in the script
+    file called "saoconfig" in this directory.)
+
+  2. Type `make' to compile the package.
+     This will create a library archive called libxpa.a. It also will create
+     the programs xpaget, xpaset, xpainfo, xpaaccess, xpans, and xpamb. It
+     also will create the libxpa.so shared object if requested using the
+     --enable-shared switch
+
+  3. You can build the libxpa.so shared library manually by executing:
+
+	make shlib
+
+     at this point. This will not contain Xt or Tcl routines. If Tcl support
+     has been enabled (see --with-tcl above), you can build a shared library
+     called libtclxpa.so that supports the tclxpa package (i.e. Tcl routines
+     are contained in it) by executing:
+
+	make tclxpa
+
+     This shared library will be loaded automatically with the Tcl command:
+
+        package require tclxpa 2.1
+
+     assuming, of course, that your shared library can be found by Tcl.
+
+  4. Type "make install" to install XPA's libraries and binaries in
+     standard places.  You'll need write permission on the installation
+     directories to do this.  The installation directories are
+     determined by the "configure" script and may be specified with
+     the --prefix and --exec_prefix options to "configure".  See the
+     Makefile for information on what directories were chosen; you
+     can override these choices by modifying the "prefix" and
+     "exec_prefix" variables in the Makefile.
+
+  5. There are .html help files in the doc directory. You can copy
+     these files to a more convenient location, if you like. We
+     did not automate this step because we did not know where to
+     copy these files by default. (NB: The help.html file is the
+     top level index file.)
+
+  6. You can remove the program binaries and object files from the
+     source code directory by typing `make clean'.  To also remove the
+     files that `configure' created (so you can compile the package for
+     a different kind of computer), type `make distclean'.  There is
+     also a `make maintainer-clean' target, but that is intended mainly
+     for the package's developers.  If you use it, you may have to get
+     all sorts of other programs in order to regenerate files that came
+     with the distribution.
+
+Compilers and Options
+=====================
+
+   Some systems require unusual options for compilation or linking that
+the `configure' script does not know about.  You can give `configure'
+initial values for variables by setting them in the environment:
+
+     ./configure CC=c89 CFLAGS=-O2 LIBS=-lposix 
+
+You also can use this facility to specify a compiler other than the default
+gcc (if it exists).
+
+Installation Names
+==================
+
+   By default, `make install' will install the package's files in
+`/usr/local/bin', `/usr/local/lib', etc.  You can specify an
+installation prefix other than `/usr/local' by giving `configure' the
+option `--prefix=PATH':
+
+e.g.,
+	./configure --prefix=/soft/saord
+
+Programs will be installed in /soft/saord/bin, libraries in /soft/saord/lib,
+and include files in /soft/saord/include. We recommend this as a general rule,
+in order to keep SAORD software in one place that does not conflict with other
+installations. Note that you will need to add the bin directory to your path.
+
+   You can specify separate installation prefixes for architecture-specific
+files and architecture-independent files.  If you give `configure' the option
+`--exec-prefix=PATH', the package will use PATH as the prefix for installing
+programs and libraries. Documentation and other data files will still use the
+regular prefix.
+
+   In addition, if you use an unusual directory layout you can give
+options like `--bindir=PATH' to specify different values for particular
+kinds of files.  Run `configure --help' for a list of the directories
+you can set and what kinds of files go in them.
+
+   If the package supports it, you can cause programs to be installed
+with an extra prefix or suffix on their names by giving `configure' the
+option `--program-prefix=PREFIX' or `--program-suffix=SUFFIX'.
+
+Optional Features
+=================
+
+   Some packages pay attention to `--enable-FEATURE' options to
+`configure', where FEATURE indicates an optional part of the package.
+They may also pay attention to `--with-PACKAGE' options, where PACKAGE
+is something like `gnu-as' or `x' (for the X Window System).  The
+`README' should mention any `--enable-' and `--with-' options that the
+package recognizes.
+
+   For packages that use the X Window System, `configure' can usually
+find the X include and library files automatically, but if it doesn't,
+you can use the `configure' options `--x-includes=DIR' and
+`--x-libraries=DIR' to specify their locations.
+
+Specifying the System Type
+==========================
+
+   There may be some features `configure' can not figure out
+automatically, but needs to determine by the type of host the package
+will run on.  Usually `configure' can figure that out, but if it prints
+a message saying it can not guess the host type, give it the
+`--host=TYPE' option.  TYPE can either be a short name for the system
+type, such as `sun4', or a canonical name with three fields:
+     CPU-COMPANY-SYSTEM
+
+See the file `config.sub' for the possible values of each field.  If
+`config.sub' isn't included in this package, then this package doesn't
+need to know the host type.
+
+   If you are building compiler tools for cross-compiling, you can also
+use the `--target=TYPE' option to select the type of system they will
+produce code for and the `--build=TYPE' option to select the type of
+system on which you are compiling the package.
+
+Sharing Defaults
+================
+
+   If you want to set default values for `configure' scripts to share,
+you can create a site shell script called `config.site' that gives
+default values for variables like `CC', `cache_file', and `prefix'.
+`configure' looks for `PREFIX/share/config.site' if it exists, then
+`PREFIX/etc/config.site' if it exists.  Or, you can set the
+`CONFIG_SITE' environment variable to the location of the site script.
+A warning: not all `configure' scripts look for a site script.
+
+Operation Controls
+==================
+
+   `configure' recognizes the following options to control how it
+operates.
+
+`--cache-file=FILE'
+     Use and save the results of the tests in FILE instead of
+     `./config.cache'.  Set FILE to `/dev/null' to disable caching, for
+     debugging `configure'.
+
+`--help'
+     Print a summary of the options to `configure', and exit.
+
+`--quiet'
+`--silent'
+`-q'
+     Do not print messages saying which checks are being made.  To
+     suppress all normal output, redirect it to `/dev/null' (any error
+     messages will still be shown).
+
+`--srcdir=DIR'
+     Look for the package's source code in directory DIR.  Usually
+     `configure' can determine that directory automatically.
+
+`--version'
+     Print the version of Autoconf used to generate the `configure'
+     script, and exit.
+
+`configure' also accepts some other, not widely useful, options.
+
+If you have questions, please contact us at: saord@cfa.harvard.edu.
+
+							Eric Mandel

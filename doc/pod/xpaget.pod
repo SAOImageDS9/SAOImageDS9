@@ -1,0 +1,67 @@
+=pod
+
+=head1 NAME
+
+
+
+B<xpaget: retrieve data from one or more XPA servers>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+xpaget [-h] [-i nsinet] [-m method] [-s] [-t sval,lval] [-u users] <template|host:port> [paramlist]
+
+
+
+
+
+=head1 OPTIONS
+
+
+
+
+
+  -h		print help message
+  -i		access XPA point on different machine (override XPA_NSINET)
+  -m		override XPA_METHOD environment variable
+  -n		don't wait for the status message after server completes
+  -s		enter server mode
+  -t [s,l]	set short and long timeouts (override XPA_[SHORT,LONG]_TIMEOUT)
+  -u [users]	XPA points can be from specified users (override XPA_NSUSERS)
+  --version     display version and exit
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+Data will be retrieved from access points matching the 
+template
+or host:port.
+A set of qualifying parameters can be appended.
+
+B<Examples:>
+
+  csh> xpaget ds9 images
+  csh> xpaget myhost.harvard.edu:12345
+
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

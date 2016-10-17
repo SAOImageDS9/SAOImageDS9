@@ -1,0 +1,89 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPA Race Conditions>
+
+
+
+=head1 SYNOPSIS
+
+
+
+Potential XPA race conditions and how to avoid them.
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+Currently, there is only one known circumstance in which XPA can get
+(temporarily) deadlocked in a race condition: if two or more XPA
+servers send messages to one another using an XPA client routine such
+as XPASet(), they can deadlock while each waits for the other server
+to respond.  (This can happen if the servers call XPAPoll() with a
+time limit, and send messages in between the polling call.)  The
+reason this happens is that both client routines send a string to the
+other server to establish the handshake and then wait for the server
+response. Since each client is waiting for a response, neither is able
+to enter its event-handling loop and respond to the other's
+request. This deadlock will continue until one of the timeout periods
+expire, at which point an error condition will be triggered and the
+timed-out server will return to its event loop.
+
+
+Starting with version 2.1.6, this rare race condition can be
+avoided by setting the XPA_IOCALLSXPA environment variable for servers
+that will make client calls. Setting this variable causes all XPA
+socket IO calls to process outstanding XPA requests whenever the
+primary socket is not ready for IO. This means that a server making a
+client call will (recursively) process incoming server requests while
+waiting for client completion. It also means that a server callback
+routine can handle incoming XPA messages if it makes its own XPA call.
+The semi-public routine oldvalue=XPAIOCallsXPA(newvalue) can be used
+to turn this behavior off and on temporarily. Passing a 0 will turn
+off IO processing, 1 will turn it back on. The old value is returned
+by the call.
+
+
+By default, the XPA_IOCALLSXPA option is turned off, because we judge
+that the added code complication and overhead involved will not be
+justified by the amount of its use.  Moreover, processing XPA requests
+within socket IO can lead to non-intuitive results, since incoming
+server requests will not necessarily be processed to completion in the
+order in which they are received.
+
+
+Aside from setting XPA_IOCALLSXPA, the simplest way to avoid this race
+condition is to multi-process: when you want to send a client message,
+simply start a separate process to call the client routine, so that
+the server is not stopped. It probably is fastest and easiest to use
+fork() and then have the child call the client routine and exit. But
+you also can use either the system() or popen() routine to start one
+of the command line programs and do the same thing. Alternatively, you
+can use XPA's internal launch() routine instead of system(). Based on
+fork() and exec(), this routine is more secure than system() because
+it does not call /bin/sh.
+
+
+Starting with version 2.1.5, you also can send an XPAInfo() message with
+the mode string "ack=false". This will cause the client to send a message
+to the server and then exit without waiting for any return message from
+the server. This UDP-like behavior will avoid the server deadlock when
+sending short XPAInfo messages.
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

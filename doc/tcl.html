@@ -1,0 +1,249 @@
+<!-- =defdoc xpatcl xpatcl n -->
+<HTML>
+<HEAD>
+<TITLE>XPA/Tcl Interface</TITLE>
+</HEAD>
+<BODY>
+
+<!-- =section xpatcl NAME -->
+<H2><A NAME="xpatcl">XPATcl: the XPA Interface to the Tcl/Tk Environment</A></H2>
+
+<!-- =section xpatcl SYNOPSIS -->
+<H2>Summary</H2>
+
+<P>
+Tcl/Tk programs can act as XPA clients and/or servers using the Tcl
+interface to XPA that is contained in the libtclxpa.so shared object.
+
+<H2>Server Routines</H2>
+
+<PRE>
+  set xpa [xpanew class name help sproc sdata smode rproc rdata rmode]
+  xpafree xpa
+  set xpa [xpanew class name help iproc idata imode]
+  set xpa [xpacmdnew class name]
+  xpacmdadd xpa name help sproc sdata smode rproc rdata rmode
+  xpacmddel xpa cmd
+  set val [xparec xpa option]
+    options: name, class, method, cmdfd, datafd, cmdchan, datachan
+  xpasetbuf xpa buf len
+  xpaerror xpa message
+  xpamessage xpa message
+</PRE>
+
+<H2>Client Routines</H2>
+	
+<PRE>
+  set xpa [xpaopen mode]
+  xpaclose xpa
+  set got [xpaget xpa template paramlist mode bufs lens names errs n]
+  set got [xpaget xpa template paramlist mode chans names errs n]
+  set got [xpaset xpa template paramlist mode buf len names errs n]
+  set got [xpasetfd xpa template paramlist mode chan names errs n]
+  set got [xpainfo xpa template paramlist mode names errs n]
+  # NB: 2.1 calling sequence change
+  # set got [xpaaccess template type] (2.0.5)
+  set got [xpaaccess xpa template paramlist mode names errs n]
+  set got [xpanslookup template type classes names methods]
+</PRE>
+
+<!-- =section xpatcl DESCRIPTION -->
+<H2>Description</H2>
+<P>
+You can call XPANew(), XPACmdNew(), or XPAInfoNew() within a C
+routine to add C-based XPA server callbacks to a TCL/Tk program that
+uses a Tcl/Tk event loop (either vwait() or the Tk event loop);
+Such a program does not need or want to use the XPA event loop.
+Therefore, in order to add XPA access points to the Tcl/Tk loop, the
+following routine should be called beforehand:
+<PRE>
+  int XPATclAddInput(XPA xpa);
+</PRE>
+<P>
+Normally, the xpa argument is NULL, meaning that all current XPA
+access points are registered with the event loop.  However, if a
+single XPA access point is to be added (i.e., after the event loop is
+started) then the handle of that XPA access point can be passed to
+this routine.
+
+<P>
+The significance of the XPA/TCL interface goes beyond the support for
+using XPA inside C code. The interface allows you to write XPA
+servers and to make calls to the XPA client interface within the Tcl
+environment using the Tcl language directly. The XPA/Tcl
+interface can be loaded using the following package command:
+<PRE>
+  package require tclxpa 2.0
+</PRE>
+Alternatively, you can load the shared object (called libtclxpa.so ) directly:
+<PRE>
+  load .../libtclxpa.so tclxpa
+</PRE>
+<P>
+Once the tclxpa package is loaded, you can use Tcl versions of XPA
+routines to define XPA servers or make client XPA calls.  The
+interface for these routines is designed to match the Unix XPA
+interface as nearly as possible.  Please refer to
+<A HREF="./server.html">XPA Servers</A>
+and
+<A HREF="./client.html">XPA Clients</A>
+for general information about these routines.  
+
+<P>
+The file test.tcl in the XPA source directory gives examples for using the 
+XPA/Tcl interface.
+
+<P>
+The following notes describe the minor differences between the interfaces.
+
+<H2><A NAME="xpanew">XPANew</A></H2>
+<PRE>
+<B>
+  set xpa [xpanew class name help sproc sdata smode rproc rdata rmode]
+</B>
+</PRE>
+<P>
+rproc and sproc routines are routines.  The calling sequence of the
+rproc routine is identical to its C counterpart:
+<PRE>
+  proc rec_cb { xpa client_data paramlist buf len } { ... }
+</PRE>
+<P>
+The sproc routine, however is slightly different from its C counterpart
+because of the difficulty of passing data back from the callback to C:
+<PRE>
+  proc sendcb { xpa client_data paramlist } { ... }
+</PRE>
+<P>
+Note that the C-based server's char **buf and int *len arguments are
+missing from the Tcl callback. This is because we did not know how to
+fill buf with data and pass it back to the C routines for communication
+with the client.  Instead, the Tcl server callback uses the following
+routine to set buf and len:
+<PRE>
+  xpasetbuf xpa buf len
+</PRE>
+where:
+<PRE>
+  arg   	explanation
+  ------	-----------
+  xpa		the first argument of the server callback
+  buf		the data to be returned to the client
+  len		data length in bytes, (if absent, use length of the buf object)
+</PRE>
+<P>
+When this routine is called, a copy of buf is saved for transmission to
+the client.
+
+<P>
+The fact that buf is duplicated means that TCL server writers might wish to
+perform the I/O directly within the callback, rather than have XPA do it
+automatically at the end of the routine.  To do this, set:
+<PRE>
+  fillbuf=false
+</PRE>
+<P>
+in the xpanew smode and then perform I/O through the Tcl channel
+obtained from:
+<PRE>
+  set dchan [xparec $xpa datachan]
+</PRE>
+<P>
+where:
+<PRE>
+  arg   	explanation
+  ------	-----------
+  xpa		the first argument of the server callback
+  datachan	literal string "datachan" that returns the data channel
+  len		data length in bytes, (if absent, use length of the buf object)
+</PRE>
+<P>
+<B>
+NB: datachan and cmdchan are not available under Windows. It is
+necessary to use the "raw" equivalents: datafd and cmdfd.
+</B>
+
+<P>
+The same considerations apply to the rproc for receive servers: a copy
+of the incoming data is generated to pass to the receive callback. This
+copy again can be avoided by using "fillbuf=false" in the rmode and then
+reading the incoming data from datachan.
+
+<P>
+The send and receive callback routines can use the xpaerror and xpamessage
+routines to send errors and messages back to the client.  If you also
+want tcl itself to field an error condition, use the standard return call:
+<PRE>
+  return ?-code c? ?-errorinfo i? ?-errorcode ec? string
+</PRE>
+<P>
+See the Tcl man page for more info.
+
+<H2><A NAME="xpanew">XPARec</A></H2>
+<P>
+The Tcl xparec procedure supplies server routines with access to information 
+that is available via macros in the C interface:
+<PRE>
+  set val [xparec xpa &lt;option&gt;]
+</PRE>
+<P>
+where option is: name, class, method, cmdfd, datafd, cmdchan,
+datachan.  Note that two additional identifiers, cmdchan and datachan,
+have been added to to provide Tcl channels corresponding to datafd and
+cmdfd.  (These latter might still be retrieved in Tcl and passed back
+to a C routines.)  An additional option called "version" can be used to
+determine the XPA version used to build the Tcl interface. Note that
+the standard options require a valid XPA handle, but "version" does
+not (since it simply reports the value of the XPA_VERSION definition
+in the XPA source include file).
+
+<P>
+<B>
+NB: datachan and cmdchan are not available under Windows. It is
+necessary to use the "raw" equivalents: datafd and cmdfd.
+</B>
+<PRE>
+  macro 	explanation
+  ------	-----------
+  class		class of this xpa
+  name		name of this xpa
+  method	method string (inet or local connect info)
+  cmdchan	Tcl channel of command socket
+  datachan	Tcl channel of data socket
+  cmdfd		fd of command socket
+  datafd	fd of data socket
+  sendian	endian-ness of server ("little" or "big")
+  cendian	endian-ness of client ("little" or "big"
+  version	XPA version used to build this code
+</PRE>
+
+<p>
+Under Windows, the Tcl event handler cannot automatically sense when an
+XPA socket is ready for IO (i.e. Tcl_CreateFileHandler() is not available
+under Windows). The Windows Tcl event handler therefore must be awakened
+occasionally for check for XPA events. This is done using the standard
+Tcl_SetMaxBlockTime() call. The time parameter is defined in tclloop.c
+and is currently set to 1000 microseconds (1/1000 of a second). 
+
+<P>
+The version option can be used to differentiate between source code versions.
+It was created to support legacy Tcl code that needs to maintain the 2.0.5
+calling sequence for xpaaccess. You can use a version test such as:
+<PRE>
+  if [catch { xparec "" version } version] {
+    puts "pre-2.1.0e"
+  } else {
+    puts [split $version .]
+  }
+<PRE>
+
+<!-- =section xpatcl SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =stop -->
+
+<P>
+<A HREF="./help.html">Go to XPA Help Index</A>
+
+<H5>Last updated: September 10, 2003</H5>
+</BODY>
+</HTML>

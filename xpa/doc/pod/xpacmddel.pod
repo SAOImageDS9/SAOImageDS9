@@ -1,0 +1,43 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPACmdDel: remove a command from an XPA command public access point>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  void XPACmdDel(XPA xpa, XPACmd cmd);
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+This routine removes a command from the list of available commands in
+a given XPA.  That command will no longer be available for processing.
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

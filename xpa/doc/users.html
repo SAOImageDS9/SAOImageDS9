@@ -1,0 +1,67 @@
+<!-- =defdoc xpausers xpausers n -->
+<HTML>
+<HEAD>
+<TITLE>Distinguishing Users</TITLE>
+</HEAD>
+<BODY>
+
+<!-- =section xpausers NAME -->
+<H2><A NAME="xpausers">XPAUsers: Distinguishing Users</A></H2>
+
+<!-- =section xpausers SYNOPSIS -->
+<H2>Summary</H2>
+<P>
+XPA normally distinguishes between users on a given host, but it is possible
+to send data to access points belonging to other users.
+
+<!-- =section xpausers DESCRIPTION -->
+<H2>Description</H2>
+<P>
+A single XPA name service typically serves all users on a given
+machine.  Two users can register the same XPA access points on the
+same machine without conflict, because the user's username is
+registered with each access point and, by default, programs such as
+xpaget and xpaset only process access points of the appropriate user.
+For example:
+<PRE>
+  XPA xpa1 gs 838e2f67:1262 eric
+  XPA xpa2 gs 838e2f67:1266 eric
+  XPA xpa1 gs 838e2f67:2523 john
+  XPA xpa2 gs 838e2f67:2527 john
+</PRE>
+Here the users "eric" and "john" both have registered the access
+points xpa1 and xpa2. When either "john" or "eric" retrieves
+information from xpa1, they will process only the access point
+registered in their user name.
+
+<P>
+If you want to access another user's XPA access points on a single
+machine, use the -u [user] option on xpaset, xpaget, etc. For example,
+if eric executes:
+<PRE>
+  xpaget -u john xpa1
+</PRE>
+he will access John's xpa1 access point.Use "*" to access all users
+on a given machine:
+<PRE>
+  xpaget -u "*" xpa1
+</PRE>
+Note that the <A HREF="./env.html">XPA Environment Variable</A>
+XPA_NSUSERS can be used to specify the default list of users to
+process:
+<PRE>
+  setenv XPA_NSUSERS "eric,john"
+</PRE>
+will cause access points from both "eric" and "john" to be processed
+by default.
+
+<!-- =section xpausers SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =stop -->
+
+<P>
+<A HREF="./help.html">Go to XPA Help Index</A>
+
+<H5>Last updated: September 10, 2003</H5>
+</BODY>
+</HTML>

@@ -1,0 +1,202 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAConvert: Converting the XPA API to 2.0>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+This document describes tips for converting from xpa 1.0 (Xt-based
+xpa) to xpa 2.0 (socket-based xpa).
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+
+The following are tips for converting from xpa 1.0 (Xt-based xpa) to
+xpa 2.0 (socket-based xpa). The changes are straight-forward and
+almost can be done automatically (we used editor macros for most of
+the conversion).
+
+
+=over 4
+
+
+
+
+
+=item *
+
+The existence of the cpp XPA_VERSION directive to distinguish between 1.0
+(where it is not defined) and 2.0 (where it is defined).
+
+
+
+
+=item *
+
+Remove the first widget argument from all send and receive server
+callbacks.  Also change first 2 arguments from XtPointer to void
+*. For example:
+
+#ifdef XPA_VERSION
+static void XPAReceiveFile(client_data, call_data, paramlist, buf, len)
+     void *client_data;
+     void *call_data;
+     char *paramlist;
+     char *buf;
+     int len;
+#else
+static void XPAReceiveFile(w, client_data, call_data, paramlist, buf, len)
+     Widget w;
+     XtPointer client_data;
+     XtPointer call_data;
+     char *paramlist;
+     char *buf;
+     int len;
+#endif
+
+
+
+
+=item *
+
+Server callbacks should be declared as returning int instead
+of void. They now should return 0 for no errors, -1 for error.
+
+
+
+
+=item *
+
+The mode flags have changed when defining XPA server callbacks.
+The old I<S> flag (save buffer) is replaced by I<freebuf=false>.
+The old I<E> flag (empty buffer is OK) is no longer used (it
+was an artifact of the X implementation).
+
+
+
+
+=item *
+
+Change NewXPACommand() to XPAcmdNew(), with the new calling sequence:
+
+  xpa = NewXPACommand(toplevel, NULL, prefix, NULL);
+
+is changed to:
+
+  xpa = XPACmdNew(xclass, name);
+
+
+
+
+=item *
+
+Change the AddXPACommand() subroutine name to XPACmdAdd (with the same
+calling sequence):
+
+  AddXPACommand(xpa, "file",
+    "\tdisplay a new file\n\t\t  requires: filename",
+    NULL, NULL, NULL, XPAReceiveFile, text, NULL);
+
+is changed to:
+
+  XPACmdAdd(xpa, "file",
+    "\tdisplay a new file\n\t\t  requires: filename",
+    NULL, NULL, NULL, XPAReceiveFile, text, NULL);
+
+
+
+
+=item *
+
+The XPAXtAppInput() routine should be called just before XtAppMainLoop()
+to add xpa fds to the Xt event loop:
+
+  /* add the xpas to the Xt loop */
+  XPAXtAddInput(app, NULL);
+
+  /* process events */
+  XtAppMainLoop(app);
+
+
+
+
+=item *
+
+Change NewXPA() to XPANew() and call XPAXtAddInput() if the XtAppMainLoop
+routine already has been entered:
+
+  xpa = NewXPA(saotng->xim->toplevel, prefix, xparoot,
+               "FITS data or image filename\n\t\t  options: file type",
+               XPASendData, new, NULL,
+               XPAReceiveData, new, "SE");
+
+is changed to:
+
+  sprintf(tbuf, "%s.%s", prefix, xparoot);
+  xpa = XPANew("SAOTNG", tbuf,
+               "FITS data or image filename\n\t\t  options: file type",
+               XPASendData, new, NULL,
+               XPAReceiveData, new, "SE");
+  XPAXtAddInput(XtWidgetToApplicationContext(saotng->xim->toplevel), xpa);
+
+
+
+
+=item *
+
+Change XPAInternalReceiveCommand() to XPACmdInternalReceive()
+remove first argument in the calling sequence):
+
+  XPAInternalReceiveCommand(im->saotng->xim->toplevel,
+			    im->saotng, im->saotng->commands,
+			    "zoom reset", NULL, 0);
+
+is changed to:
+
+  XPACmdInternalReceive(im->saotng, im->saotng->commands,
+			"zoom reset", NULL, 0);
+
+
+
+
+=item *
+
+Change DestroyXPA to XPAFree:
+
+  DestroyXPA(im->dataxpa);
+
+is changed to:
+
+  XPAFree(im->dataxpa);
+
+
+
+=back
+
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

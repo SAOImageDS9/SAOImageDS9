@@ -1,0 +1,92 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAInfoNew: define an XPA info public access point>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  XPA XPAInfoNew(char *class, char *name,
+	         int (*info_callback)(),
+		 void *info_data, char *info_mode);
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+[NB: this is an experimental interface, new to XPA 2.0, whose value
+and best use is evolving.]
+
+
+A program can register interest in receiving a short message about a
+particular topic from any other process that cares to send such a
+message.  Neither has to be an XPA server.  For example, if a user
+starts to work with a new image file called new.fits, she might
+wish to alert interested programs about this new file by sending a
+short message using xpainfo:
+
+  xpainfo IMAGEFILE /data/new.fits
+
+
+
+In this example, each process that has used the XPAInfoNew() call to
+register interest in messages associated with the identifier IMAGEFILE
+will have its info_callback() executed with the following calling
+sequence:
+
+  int info_cb(void *info_data, void *call_data, char *paramlist)
+  {
+    XPA xpa = (XPA)call_data;
+  }
+
+
+The arguments passed to this routine are equivalent to those sent in
+the send_callback() routine.  The main difference is that there is no
+buf sent to the info callback: this mechanism is meant for short
+announcement of messages of interest to many clients.
+
+
+The mode string is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  acl		true/false	true		enable access control
+
+
+Because no buf is passed to this callback, the usual buf-related keywords
+are not applicable here.
+
+
+The information sent in the parameter list is arbitrary.  However, we
+envision sending information such as file names or XPA access points
+from which to collect more data.  Note that the xpainfo program and
+the XPAInfo() routine that cause the info_callback to execute do not
+wait for the callback to complete before returning.
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

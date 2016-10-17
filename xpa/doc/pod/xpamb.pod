@@ -1,0 +1,249 @@
+=pod
+
+=head1 NAME
+
+
+
+B<xpamb: the XPA Message Bus>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+The xpamb program can act as a "classical" message bus interface
+between clients and servers. A client can send a data request to
+the message bus, which then interfaces with multiple servers and
+returns the data back to the client.
+
+
+
+=head1 OPTIONS
+
+
+
+
+
+For xpaset, several optional switches are used to save data and
+manipulate the stored data:
+
+
+=over 4
+
+
+
+
+
+
+=item *
+
+B<-data [name]>
+
+
+Add the supplied data buffer to a pool of stored data buffers,
+using the specified name as a unique identifier for later retrieval.
+An error occurs if the name already exists (use either B<replace>
+or B<del> to rectify this). The B<-add> switch is supported
+for backwards compatibility with xpa 2.0.
+
+
+
+
+=item *
+
+B<-replace [name]>
+
+
+Replace previously existing stored data having the same unique name
+with new data. This essentially is a combination of the B<del>
+and B<data> commands.
+
+
+
+
+=item *
+
+B<-info ["'info string'"]>
+
+
+When adding a data buffer, you can specify an informational
+string to be stored with that data.  This string will be returned
+by xpaget:
+
+  xpaget xpamb foo -info
+
+(along with other information such as the date/time of storage and the size of
+the data buffer) if the -info switch is specified. If the info string contains
+spaces, you must enclose it in B<two> sets of quotes:
+
+  cat foo | xpaset xpamb -store foo -info "'this is info on foo'"
+
+The first set of quotes is removed by the shell while the second is used to
+delineate the info string.
+
+
+
+
+=item *
+
+B<-send [name]>
+
+
+Broadcast the stored data buffer to the named template.
+
+
+
+
+=item *
+
+B<-del [name]>
+
+
+Delete the named data buffer and free all allocated space.
+
+
+=back
+
+
+
+
+Switches can be used in any combination that makes sense. For example:
+
+  cat foo.fits | xpaset xpamb -store foo -info "FITS" "DS9:*" fits foo.fits
+
+will broadcast the foo.fits image to all access points of class
+B<DS9>.  In addition, the foo.fits file will be stored under the
+name of B<foo> for later manipulation such as:
+
+  xpaset -p xpamb -send foo "DS9:*" fits foo.fits
+
+will re-broadcast the foo.fits image to all access points of class "DS9".
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+
+A "classical" message bus (such as ToolTalk) consists of servers and
+clients, along with a mediating program that transfers data between
+different processes. XPA takes a slightly different approach in that
+communication between clients and servers is direct.  This generally
+is the correct technique when there is only one connection (or even a
+small number of connections), but can become inefficient for the
+serving program if a large amount of data is being transferred to many
+clients. For example, if a real-time data acquisition program is
+broadcasting a FITS image to several clients, it would need to
+transmit that image to each client individually.  This might interfere
+with its own processing cycles.  The preferable mechanism would be to
+pass the image off to an intermediate program that can then broadcast
+the data to the several clients.
+
+The B<xpamb> program can alleviate such problems by functioning
+as a message bus in cases where such an intermediary process is
+wanted.  It pre-defines a single access point named
+B<XPAMB:xpamb> to which data can be sent for re-broadcast. You
+also can tell B<xpamb> to save the data, and associate with that
+data a new access point, so that it can be retrieved later on.
+
+
+All interaction with B<xpamb> is performed through
+B<xpaset> and B<xpaget> (or the corresponding API
+routines, B<XPASet()> and B<XPAGet()>) to the
+B<XPAMB:xpamb> access point. That is, B<xpamb> is just
+another XPA-enabled program that responds to requests from
+clients. The paramlist is used to specify the targets to which
+the data will be for re-broadcast, as well as the re-broadcast paramlist:
+
+  data | xpaset xpamb [switches] broadcast-target broadcast-paramlist
+
+Optional switches are used to store data, and manipulate stored data,
+and are described below.
+
+
+In its simplest form, you can, for example, send a FITS image to xpamb for
+broadcasting to all ds9 image simply by executing:
+
+  cat foo.fits | xpaset xpamb "DS9:*" fits foo.fits
+
+Since B<DS9> is the class name for the ds9 image display
+program, this will result in the FITS image being re-sent to all fits
+access points for all active image display programs.
+
+
+You can send stored data and new data to the same set of access points at
+the same time.  The stored data always is send first, followed by the new
+data:
+
+  cat foo2.fits | xpaset xpamb -send foo "DS9:*" fits foo.fits
+
+will first send the foo.fits file, and then the foo2.fits file to all
+access points of class B<DS9>.  Notice that in this example,
+the foo2.fits file is not stored, but it could be stored by using the
+B<-store [name]> switch on the command line.
+
+
+The B<xpaget> command can be used to retrieve a data from XPA
+access points or from a stored data buffer, or retrieve information
+about a stored data buffer.  If no arguments are given:
+
+  xpaget xpamb
+
+then information about all currently stored data buffers is returned. This
+information includes the data and time at which the data was stored, the
+size in bytes of the data, and the supplied info string.
+
+
+If arguments are specified, they will be in the form:
+
+  xpaget xpamb [-info] [-data] [name [paramlist]]
+
+If the optional B<-info> and/or B<-data> switches are specified, then
+information and/or data will be returned for the named data buffer
+following the switches. You can use either or both of these switches
+in a single command. For example, if the -info switch is used:
+
+  xpaget xpamb -info foo
+
+then the info about that stored data buffer will be returned.
+If the -data is used with a specific name:
+
+  xpaget xpamb -data foo
+
+then the stored data itself will be returned. If both are used:
+
+  xpaget xpamb -info -data foo
+
+then the info will be returned, followed by the data. Note that it is an
+error to specify one of these switches without a data buffer name and that
+the paramlist will be ignored.
+
+
+If neither the B<-info> or B<-data> switch is specified, then
+the name refers to an XPA access point (with an optional paramlist
+following).
+For example:
+
+  xpaget xpamb ds9 file
+
+is equivalent to:
+
+  xpaget ds9 file
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

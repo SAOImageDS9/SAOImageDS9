@@ -1,0 +1,49 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAFree: remove an XPA public access point>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  int XPAFree(XPA xpa);
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+Remove the specified XPA public access point from the name server and
+free all associated storage.  Note that removal from the name server
+happens automatically when the process terminates, so this call is not
+generally needed.  It is used when public access points are being
+defined temporarily and then destroyed when no longer needed.  For
+example, ds9 temporarily creates a public access point when it
+loads a new image for display and destroys it when the image is
+unloaded.
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

@@ -1,0 +1,95 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAClient: The XPA Client-side Programming Interface>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+A description of the XPA client-side programming interface.
+
+
+
+=head1 DESCRIPTION
+
+
+
+B<Introduction to XPA Client Programming>
+
+Sending/receiving data to/from an XPA access point is easy: you
+generally only need to call the XPAGet() or XPASet() subroutines.
+
+  #include <xpa.h>
+
+  int XPAGet(XPA xpa,
+      char *template, char *paramlist, char *mode,
+      char **bufs, size_t *lens, char **names, char **messages, int n);
+
+  int XPASet(XPA xpa,
+      char *template, char *paramlist, char *mode,
+      char *buf, size_t len, char **names, char **messages, int n);
+
+  int XPAInfo(XPA xpa,
+      char *template, char *paramlist, char *mode,
+      char **names, char **messages, int n);
+
+  int XPAAccess(XPA xpa,
+      char *template, char *paramlist, char *mode,
+      char **names, char **messages, int n);
+
+  int XPAGetFd(XPA xpa,
+      char *template, char *paramlist, char *mode,
+      int *fds, char **names, char **messages, int n);
+
+  int XPASetFd(XPA xpa,
+      char *template, char *paramlist, char *mode,
+      int fd, char **names, char **messages, int n);
+
+  XPA XPAOpen(char *mode);
+
+  void XPAClose(XPA xpa);
+
+  int XPANSLookup(XPA xpa,
+      char *template, char *type,
+      char ***classes, char ***names, char ***methods, char ***infos);
+
+
+B<Introduction>
+
+To use the XPA application programming interface, a software developer
+generally will include the xpa.h definitions file:
+
+  #include <xpa.h>
+
+in the software module that defines or accesses an XPA access point and
+then will link against the libxpa.a library:
+
+  gcc -o foo foo.c libxpa.a
+
+XPA has been compiled using both C and C++ compilers.
+
+Client communication with XPA public access points generally is
+accomplished using XPAGet() or XPASet() within a program (or xpaget
+and xpaset at the command line).  Both routines require specification
+of the name of the access point.  If a template
+is used to specify the access point name (e.g., "ds9*"), then
+communication will take place with all servers matching that template.
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

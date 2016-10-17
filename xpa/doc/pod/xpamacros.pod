@@ -1,0 +1,76 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPA Server Callback Macros>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  xpa_class, xpa_name, xpa_method, xpa_cmdfd, xpa_datafd,
+  xpa_sendian, xpa_cendian
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+Server routines have  access to information about the XPA being called via
+the following macros (each of which takes the xpa handle as an argument):
+
+  macro		 	explanation
+  ------		-----------
+  xpa_class		class of this xpa
+  xpa_name		name of this xpa
+  xpa_method		method string (inet or local connect info)
+  xpa_cmdfd		fd of command socket
+  xpa_datafd		fd of data socket
+  xpa_sendian		endian-ness of server ("little" or "big")
+  xpa_cendian		endian-ness of client ("little" or "big"
+
+
+The argument to these macros is the call_data pointer that is passed
+to the server procedure.  This pointer should be type case to XPA
+in the server routine:
+
+  XPA xpa = (XPA)call_data;
+
+
+
+The most important of these macros is xpa_datafd().  A server routine
+that sets "fillbuf=false" in receive_mode or send_mode can use this
+macro to perform I/O directly to/from the client, rather than using
+buf.
+
+
+The xpa_cendian and xpa_sendian macros can be used together to determine
+if the data transferred from the client is byte swapped with respect
+to the server. Values for these macros are: "little", "big", or "?".
+In order to do a proper conversion, you still need to know the format
+of the data (i.e., byte swapping is dependent on the size of the data
+element being converted).
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

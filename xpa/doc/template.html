@@ -1,0 +1,112 @@
+<!-- =defdoc xpatemplate xpatemplate n -->
+<HTML>
+<HEAD>
+<TITLE>Access Point Names and Templates</TITLE>
+</HEAD>
+<BODY>
+
+<!-- =section xpatemplate NAME -->
+<H2><A NAME="xpatemplate">XPATemplate: Access Point Names and Templates</A></H2>
+<!-- =section xpatemplate SYNOPSIS -->
+<H2>Summary</H2>
+<P>
+XPA access points are composed of two parts: a general class and a
+specific name.  Both parts accept template characters so that you
+can send/retrieve data to/from multiple servers at one time.
+
+<!-- =section xpatemplate DESCRIPTION -->
+<H2>Description</H2>
+<P>
+When XPA servers call
+<A HREF="./server.html#xpanew">XPANew(),</A>
+or
+<A HREF="./server.html#xpacmdnew">XPACmdNew()</A>
+to define XPA access points, they specify a string identifier composed of a
+class and a name. When clients communicate with XPA access points,
+they specify which access points to communicate with using
+an identifier of the form:
+<PRE>
+  class:name
+</PRE>
+All registered XPA access points that match the specified identifier
+will be available for communication (subject to access control rules,
+etc.)
+
+<P>
+As of XPA 2.1.5, the length of both the class and name designations are
+limited to 1024 characters.
+
+<P>
+The XPA class:name identifier actually is a template: it accepts wild
+cards in its syntax, so a single specifier can match more than one XPA
+access point.  (Note that the class is optional and defaults to "*".)
+The allowed syntax for clients to specify the class:name template is
+of the form shown below. (Note that "*" is used to denote a generic
+wild card, but other wild cards characters are supported, as described
+below).
+<PRE>
+  template   	explanation
+  --------	-----------
+  class:name	exact match of class and name
+  name		match any class with this name
+  *:name	match any class with this name
+  class:*	match any name of this class
+  *:*		match any access point
+</PRE>
+<P>
+In general, the following wild-cards can be applied to class and name:
+<PRE>
+  wildcard	explanation
+  --------	-----------
+  ?		match any character, but there must be one
+  *		match anything, or nothing
+  [...]		match an inclusive set
+</PRE>
+<P>
+Although the class:name template normally is used to refer to XPA
+access points, these also can be specified using their individual
+socket identifiers.  For inet sockets, the socket identifier is
+<B>ip:port</B>, where ip can be the DNS-registered name,
+the ASCII IP number (e.g. 123.45.67.890) or the hex IP number
+(e.g. 838f3a60). For unix sockets, the identifier is the <B>socket file
+name</B>.  These socket identifiers are displayed as the fourth argument
+in the xpans display of registered access points.  For example,
+consider the ds9 program started using inet sockets. The xpans name
+server will register something like this:
+<PRE>
+  csh> xpaget xpans
+  DS9 ds9 gs saord.harvard.edu:3236 eric
+</PRE>
+You can access ds9 using ip:3236 in any of the three forms:
+<PRE>
+  csh> xpaget saord:3236 file
+  /home/eric/data/snr.ev
+
+  csh> xpaget 123.45.67.890:3236 file
+  /home/eric/data/snr.ev
+
+  csh> xpaget 838f3a60:3236 file
+  /home/eric/data/snr.ev
+</PRE>
+In the case of unix  sockets, the socket identifier is a file:
+<PRE>
+  csh> xpaget xpans
+  DS9 ds9 gs /tmp/.xpa/DS9_ds9.2631 eric
+
+  csh> xpaget /tmp/.xpa/DS9_ds9.2631 file
+  /home/eric/data/snr.ev 
+</PRE>
+This feature can be useful in distinguishing between multiple
+instances of a program that all have the same class:name designation.
+
+<!-- =section xpatemplate SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =stop -->
+
+<P>
+<A HREF="./help.html">Go to XPA Help Index</A>
+
+<H5>Last updated: September 10, 2003</H5>
+</BODY>
+</HTML>
+

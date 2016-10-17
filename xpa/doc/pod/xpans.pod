@@ -1,0 +1,226 @@
+=pod
+
+=head1 NAME
+
+
+
+B<xpans: the XPA Name Server>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  xpans [-h] [-e] [-k sec] [-p port] [-l log] [-s security log] [-P n]
+
+
+
+
+=head1 OPTIONS
+
+
+
+
+
+  -h		print help message
+  -e		exit when there are no more XPA connections
+  -k		send keepalive messages every n sec
+  -l		log data base entries to specified file
+  -p		listen for connections on specified port
+  -s		log security info for each connection to specified file      
+  -P 		accept proxy requests (P=1) using separate thread (P=2)
+  --version     display version and exit
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+The xpans name server is an XPA-enabled program that is used to
+manage the names and ports of XPA access points. It is started
+automatically when an XPA access point is registered. You can access
+the name server using xpaget to get a list of registered access points.
+
+The I<xpans> name server provides a crucial link between XPA
+clients and servers.  When an XPA server defines an access point using
+XPANew(), XPACmdNew(), or XPAInfoNew(), the name of the access point
+is registered in the name service, along with connection information.
+The name server then matches class:name templates passed to it by XPA
+clients with these registered entries, so that the clients can
+communicate with the appropriate servers.
+
+
+The socket connection between an XPA-enabled program and
+I<xpans> is kept open until the former exits (or explicitly
+closes the connection). Apparently, some Internet equipment (e.g. DSL
+modems) can cause such a connection to time-out after a period of
+inactivity. To prevent this from happening, you can use the -k
+[sec] switch to send a short keep-alive message to each open
+connection after the specified time delay. (Note that this
+application level use of keep-alive is necessary only if you are
+serving XPA-enabled clients over the Internet and have to deal with
+long-term connections involving DSL or similar equipment.  XPA uses
+the ordinary socket-level keep-alive, which works for all other cases.)
+NB (12/2/2009): Out-of-band (URG) TCP data, used by xpans
+keep-alive, is changed by some Cisco routers into in-band data.
+Encountering such a router will break the keep-alive function and may
+break your XPA server as well. Proceed with caution!
+
+
+The I<xpans> program will be started automatically (assuming it
+can be found in the user's path) when the first XPA access point is
+registered.  It therefore need not be started explicitly.  However,
+when started automatically, the I<-e> switch is used, so that
+the name server will exit when there are no more XPA access points
+registered. If you wish to keep the name server running continually,
+simply start it manually without the I<-e> switch.
+
+
+The name server will keep a log of registered access points if the
+I<-l [log]> switch is used on the command line (this is the
+case for automatic start-up).  The log contains enough name and connection
+information to allow you to re-register all XPA access points in case
+the name server process is terminated prematurely. For example, after
+the ds9 access point is registered,the log will contain the entry:
+
+  add 838e2f67:1863 ds9 ds9 gs eric
+
+If I<xpans> is terminated but ds9 still is running, you
+can re-register both access points for the ds9 process by running:
+
+  xpaset -p 838e2f67:1863 -nsconnect
+
+Notice that the ip:port specifier is used with I<xpaset> to bypass
+the need for contacting the name server (which does not have the name
+registered yet!)
+
+
+The name server will keep a log of security information if the -s
+[security log] switch is used on the command line. For each
+accepted connection, (including connections via the I<xpaget>
+command), information will be logged about the host issuing the
+command and the parameters passed into the program. This is most
+useful when I<xpans> is accepting connections from untrusted
+machines.
+
+
+When an XPA access point is removed by a server using I<XPAFree()>,
+the access information is removed from the name server.  If an
+XPA-enabled process is terminated, all names registered by that process
+will be removed automatically.  The log file is always updated to
+reflect the currently registered access points.
+
+
+The name server itself has an XPA access point names I<xpans>
+registered through which you can find out information about currently
+registered access points (assuming you have access to the name server;
+see XPA Access Control for more information).
+For each registered access point, the following information is returned:
+
+  class		# class of the access point
+  name		# name of the access point
+  access	# allowed access (g=xpaget,s=xpaset,i=xpainfo)
+  id		# socket access method (host:port for inet, file for local/unix)
+  user		# user name of access point owner
+
+
+
+For example, to display all currently registered access points, simply execute:
+
+  xpaget xpans
+
+Continuing the example of ds9 above, this will return:
+
+  DS9 ds9 gs 838e2f67:1863 eric
+
+If the same program has been started with different XPA access names,
+you can look up only names matching a specified template. For example,
+assume that ds9 has been started up using:
+
+  ds9 &
+  ds9 -title ds9-1-eric &
+  ds9 -title ds9-2-eric &
+
+To lookup all ds9 access points which end in ".eric" and which can
+be accessed using I<xpaset>, use:
+
+  xpaget xpans "DS9:*.eric" "s" "*"
+
+This will return:
+
+  DS9 ds9-2-eric gs 838e29d3:42102 eric
+  DS9 ds9-1-eric gs 838e29d3:42105 eric
+
+The third argument "*" requests all access points from all users.
+You also can specify a specific user name and only access points
+registered by that user will be returned.
+
+
+The name server uses the I<XPA_METHOD> environment variable
+to determine whether it should listen for requests on INET or LOCAL
+sockets.  Since XPA access points also use this environment variable,
+the choice of socket method will be consistent.  Note that, when INET
+sockets are used, a local server can be accessed from remote machines
+if the I<XPA_NSINET> environment variable is set to point to
+the local machine.  See
+XPA Environment Variables
+for more information.
+
+
+An experimental feature of xpans is its ability to act as a proxy to
+XPA servers behind firewalls that want to communicate with external
+processes.  The basic idea is the following: an XPA server (call it
+"foo") on host1, possibly behind a firewall, makes a remote connection
+to a proxy-enabled xpans program on host2 (specifying host2's XPA method).
+For example:
+
+  xpaset -p foo -remote 'host2:28571' + -proxy   # on host1
+ 
+When this is done, host2 can use xpaset, xpaget, and xpainfo calls to
+communicate with the XPA server foo. All command communication is
+performed via the xpans socket connection between foo on host1 and
+xpans on host2 (which was initiated by foo from inside the firewall).
+Data communication is similarly performed using a socket connection
+initiated on host1 (usually with a port value two greater than the
+port value of the main xpans socket connection). An xpaset or xpaget
+call on host2 contacts xpans, which performs an XPASet() or XPAGet()
+call to foo, passing commands and data back and forth between the two
+programs.
+
+
+By default, proxy connections are not allowed by xpans. If the -P switch is
+specified with a value of 1, proxy connection are allowed, but all proxy
+communication is performed in the same thread as xpans processing. If
+a value of 2 is specified, the proxy processing is performed in a
+separate thread (assuming pthreads are supported on your system).
+Because xpa callback processing of any type can take a long time and
+therefore can interfere with normal xpans processing, threaded proxy
+connections (-P 2) are recommended.  When using proxy connections, it
+might also be useful to set the XPA_IOCALLSXPA environment variable, so
+that multiple proxy requests can be handled at the same time, instead of
+serially.
+
+
+Note that this proxy interface to xpans is experimental. It is used
+to provide remote data analysis capabilities on the Chandra-Ed system
+using ds9.  (See http://chandra-ed.cfa.harvard.edu and
+http://hea-www.harvard.edu/saord/ds9 for more details). As always, please
+contact us if you have problems or questions.
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

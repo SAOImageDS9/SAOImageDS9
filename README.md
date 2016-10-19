@@ -1,3 +1,5 @@
+# SAOImage DS9 ![alt-text](http://ds9.si.edu/doc/sun.gif "SAOImage DS9") 
+
 SAOImage DS9 is an astronomical imaging and data visualization application. DS9 supports FITS images and binary tables,  multiple frame buffers, region manipulation, and many scale algorithms and colormaps. It provides for easy communication with external analysis tasks and is highly configurable and extensible via XPA and SAMP.
 
 DS9 is a stand-alone application. It requires no installation or support files. All versions and platforms support a consistent set of GUI and functional capabilities.

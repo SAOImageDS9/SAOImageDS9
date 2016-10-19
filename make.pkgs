@@ -1,0 +1,41 @@
+#--------------------------basic
+
+DS9VERSION=7.5rc2
+XPAVERSION=2.1.17
+
+#--------------------------version
+# tcl 8.6.5
+# tk 8.6.5
+# tclcheckdns 1.1
+# tcliis 1.0
+# tclsignal 1.4
+# tclzvfs 1.0
+# tclxml 3.2
+# tcllib 1.15
+# xpa 2.1.17
+# tkblt 3.2.3
+# tktable 2.10
+# tkimg 1.4.2
+# tkmpeg 1.0.1
+# tkhtml1 1.0.3
+# tkcon 2.7
+# ast 8.0.2
+# wcssubs 3.9.0
+# funtools 1.4.6
+# zlib 1.2.8
+
+TCLVER=8.6
+TCLCHECKDNSVER=1.1
+TCLIISVER=1.0
+TCLSIGNALVER=1.4
+TCLXMLVER=3.2
+TCLZVFSVER=1.0
+TKBLTVER=3.2
+TKCONVER=2.7
+TKHTMLVER=1.0
+TKIMGVER=1.4.2
+TKMACOSXVER=1.0
+TKMPEGVER=1.0
+TKSAOVER=1.0
+TKTABLEVER=2.10
+TKWINVER=1.0

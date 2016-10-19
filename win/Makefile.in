@@ -1,0 +1,158 @@
+OS	= @OS@
+ARCH	= @ARCH@
+ROOT	= @ROOT@
+EXEEXT	= @EXEEXT@
+JOBS	= @CORES@
+
+CONFIGFLAGS =CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar
+ASTFLAGS =CFLAGS=-DCMINPACK_NO_DLL
+XPAFLAGS =CFLAGS=-DSTATIC_BUILD
+TCLXMLFLAGS =--with-xml-static=yes
+TARGET =--build=x86_64-unknown-mingw32
+WITHTCL =--with-tcl=$(ROOT)/tcl$(TCLVER)/win
+WITHTK  =--with-tk=$(ROOT)/tk$(TCLVER)/win $(WITHTCL)
+CACHE	=--config-cache --cache-file=../config.cache
+
+include ./make.include
+
+#--------------------------build
+
+.PHONY	: saods9 tcl tk tkwin libxml2 libxslt zlib
+
+saods9	: dirs tcl tk \
+	libxml2 libxslt zlib \
+	tclxml xpa \
+	tkblt tktable tkimg \
+	tkmpeg tkhtml1 tkcon \
+	tkwin \
+	tksao ds9
+# posix- tclcheckdns tcliis tclsignal
+
+# no symbols
+tcl	: tcl$(TCLVER)/win/Makefile
+	@echo ""
+	@echo "*** Install tcl$(TCLVER) ***"
+	$(MAKE) -C tcl$(TCLVER)/win -j $(JOBS)
+	$(MAKE) -C tcl$(TCLVER)/win install
+
+tcl$(TCLVER)/win/Makefile :
+	@echo ""
+	@echo "*** Configure tcl$(TCLVER) ***"
+	cd tcl$(TCLVER)/win; \
+	./configure \
+	--prefix $(ROOT) -exec-prefix $(ROOT) \
+	--disable-shared \
+	--config-cache --cache-file=../../config.cache
+
+tk	: tk$(TCLVER)/win/Makefile
+	@echo ""
+	@echo "*** Install tk$(TCLVER) ***"
+	$(MAKE) -C tk$(TCLVER)/win -j $(JOBS) install
+
+tk$(TCLVER)/win/Makefile :
+	@echo ""
+	@echo "*** Configure tk$(TCLVER) ***"
+	cd tk$(TCLVER)/win; \
+	./configure \
+	$(WITHTCL) \
+	$(TKFLAGS) \
+	--prefix $(ROOT) -exec-prefix $(ROOT) \
+	--disable-shared --enable-symbols
+
+tkwin: tkwin/Makefile
+	@echo ""
+	@echo "*** Installing tkwin ***"
+	$(MAKE) -C tkwin install
+
+tkwin/Makefile :
+	@echo ""
+	@echo "*** Configure tkwin ***"
+	cd tkwin; \
+	./configure \
+	$(WITHTK) \
+	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--disable-shared --enable-symbols \
+	--config-cache --cache-file=../../config.cache
+
+libxml2 : libxml2/win32/config.mingw
+	@echo ""
+	@echo "*** Installing libxml2 ***"
+	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw dep
+	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw libxmla
+	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw install-libsa
+	cp libxml2/win32/xml2-config $(ROOT)/bin
+
+libxml2/win32/config.mingw :
+	@echo ""
+	@echo "*** Configure libxml2 ***"
+	cd libxml2/win32; \
+	cscript configure.js trio=no threads=no ftp=yes http=yes html=yes c14n=yes catalog=yes docb=yes xpath=yes xptr=yes xinclude=yes iconv=no icu=no iso8859x=no zlib=no lzma=no xml_debug=yes mem_debug=yes run_debug=no regexps=yes modules=no tree=yes reader=yes writer=yes walker=yes pattern=yes push=yes valid=yes sax1=yes legacy=yes output=yes schemas=yes schematron=yes python=no compiler=mingw static=yes prefix="..\.." bindir="..\..\bin" incdir="..\..\include" libdir="..\..\lib"
+
+libxslt : libxslt/win32/config.mingw
+	@echo ""
+	@echo "*** Installing libxslt ***"
+	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw dep
+	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw libxslta
+	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw libexslta
+	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw install-libsa
+	cp libxslt/win32/xslt-config $(ROOT)/bin
+
+libxslt/win32/config.mingw :
+	@echo ""
+	@echo "*** Configure libxslt ***"
+	cd libxslt/win32; \
+	cscript configure.js trio=no xslt_debug=yes mem_debug=no debugger=yes iconv=no zlib=no crypto=yes modules=no locale=yes compiler=mingw static=yes prefix="..\.." bindir="..\..\bin" incdir="..\..\include" libdir="..\..\lib"
+
+zlib	: zlib/Makefile
+	@echo ""
+	@echo "*** Installing zlib ***"
+	$(MAKE) -C zlib -j $(JOBS) install
+
+zlib/Makefile :
+	@echo ""
+	@echo "*** Configure zlib ***"
+	cd zlib; \
+	$(CONFIGFLAGS) CFLAGS=-DSTATIC_BUILD=1 ./configure \
+	--prefix $(ROOT) --eprefix $(ROOT) \
+	--static
+
+#--------------------------clean
+
+.PHONY	: tkwinclean libxml2clean libxsltclean zlibclean
+
+tkwinclean : libxml2clean libxsltclean zlibclean
+	$(MAKE) -C tkwin clean
+
+libxml2clean :
+	$(MAKE) -C libxml2/win32 -f Makefile.mingw clean
+
+libxsltclean :
+	$(MAKE) -C libxslt/win32 -f Makefile.mingw clean
+
+zlibclean :
+	$(MAKE) -C zlib clean
+
+#--------------------------distclean
+
+.PHONY	: tkwindistclean libxml2distclean libxsltdistclean zlibdistclean
+
+tkwindistclean : libxml2distclean libxsltdistclean zlibdistclean
+	$(MAKE) -C tkwin distclean
+
+libxml2distclean :
+	$(MAKE) -C libxml2/win32 -f Makefile.mingw distclean
+
+libxsltdistclean :
+	$(MAKE) -C libxslt/win32 -f Makefile.mingw distclean
+
+zlibdistclean :
+	$(MAKE) -C zlib distclean
+	rm -f zlib/Makefile
+
+#--------------------------distribution
+
+.PHONY	: dist
+
+dist	: all
+	cd bin; tar cvf - ds9$(EXEEXT) $(ZIPFILE) | gzip > dist/ds9.$(ARCH).$(DS9VERSION).tar.gz
+

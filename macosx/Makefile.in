@@ -1,0 +1,130 @@
+OS	= @OS@
+ARCH	= @ARCH@
+ROOT	= @ROOT@
+JOBS	= @CORES@
+
+WITHTCL =--with-tcl=$(ROOT)/build/tcl/Development
+WITHTK  =--with-tk=$(ROOT)/build/tk/Development $(WITHTCL)
+CACHE	=--config-cache --cache-file=../config.cache
+
+include ./make.include
+
+#--------------------------defines
+
+DS9APP	=SAOImage\ DS9\ $(DS9VERSION)
+
+TCLFILES= \
+	tcl$(TCLVER)/generic/tcl.h \
+	tcl$(TCLVER)/generic/tclDecls.h \
+	tcl$(TCLVER)/generic/tclPlatDecls.h
+
+TKFILES = \
+	tk$(TCLVER)/generic/tk.h \
+	tk$(TCLVER)/generic/tkDecls.h \
+	tk$(TCLVER)/generic/tkPlatDecls.h \
+	tk$(TCLVER)/generic/tkIntXlibDecls.h \
+	tk$(TCLVER)/macosx/tkMacOSX.h
+
+#--------------------------build
+
+.PHONY	: saods9 tcl tk tkmacosx
+
+saods9	: dirs tcl tk \
+	tclcheckdns tcliis tclsignal \
+	tclzvfs tclxml xpa \
+	tkblt tktable tkimg \
+	tkmpeg tkhtml1 tkcon \
+	tkmacosx \
+	tksao ds9
+
+tcl	: tcl$(TCLVER)/macosx/Makefile
+	@echo ""
+	@echo "*** Install tcl$(TCLVER) ***"
+	$(MAKE) -C tcl$(TCLVER)/macosx -j $(JOBS)
+
+# install include, lib
+	cp -p $(TCLFILES) include/.
+	cp -p build/tcl/Tcl.framework/libtclstub8.6.a lib/.
+	cp -rp build/tcl/Tcl.framework/Versions/8.6/Resources/Scripts lib/tcl8.6
+	cp -rp build/tcl/Tcl.framework/Versions/8.6/Resources/tcl8 lib/.
+
+# we need a working tclsh later
+	cp -p build/tcl/tclsh8.6 bin/.
+	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/8.6/Tcl @executable_path/../build/tcl/Tcl.framework/Tcl bin/tclsh8.6
+
+tcl$(TCLVER)/macosx/Makefile :
+	@echo ""
+	@echo "*** Configure tcl$(TCLVER) ***"
+	cd tcl$(TCLVER)/macosx; \
+	./configure \
+	--enable-64bit \
+	--enable-symbols \
+	--config-cache --cache-file=../../config.cache
+
+tk	: tk$(TCLVER)/macosx/Makefile
+	@echo ""
+	@echo "*** Installing tk$(TCLVER) ***"
+	$(MAKE) -C tk$(TCLVER)/macosx -j $(JOBS)
+
+# install include, lib
+	cp -p $(TKFILES) include/.
+	cp -p build/tk/Tk.framework/libtkstub8.6.a lib/.
+	cp -rp build/tk/Tk.framework/Versions/8.6/Resources/Scripts lib/tk8.6
+
+# fix wish8.6
+	cp -p build/tk/wish8.6 bin/.
+	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/8.6/Tcl @executable_path/../build/tcl/Tcl.framework/Tcl bin/wish8.6
+	install_name_tool -change /Library/Frameworks/Tk.framework/Versions/8.6/Tk @executable_path/../build/tk/Tk.framework/Tk bin/wish8.6
+
+tk$(TCLVER)/macosx/Makefile :
+	@echo ""
+	@echo "*** Configure tk$(TCLVER) ***"
+	cd tk$(TCLVER)/macosx; \
+	./configure \
+	$(WITHTCL) \
+	--enable-64bit \
+	--enable-symbols \
+	--config-cache --cache-file=../config.cache
+
+tkmacosx: tkmacosx/Makefile
+	@echo ""
+	@echo "*** Installing tkmacosx ***"
+	$(MAKE) -C tkmacosx -j $(JOBS) install
+
+tkmacosx/Makefile :
+	@echo ""
+	@echo "*** Configure tkmacosx ***"
+	cd tkmacosx; \
+	./configure \
+	$(WITHTK) \
+	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--disable-shared --enable-symbols \
+	--config-cache --cache-file=../config.cache
+
+#--------------------------clean
+
+.PHONY	: tkmacosxclean
+
+tkmacosxclean :
+	$(MAKE) -C tkmacosx clean
+
+#--------------------------distclean
+
+.PHONY	: tkmacosxdistclean
+
+tkmacosxdistclean :
+	$(MAKE) -C tkmacosx distclean
+
+#--------------------------distribution
+
+.PHONY	: dist
+
+dist	:
+	rm -rf dist/$(DS9APP)
+	rm -rf dist/$(DS9APP).dmg
+	mkdir dist/$(DS9APP)
+	ln -s /Applications dist/$(DS9APP)/.
+	cp -r ds9/macosx/README dist/$(DS9APP)/.
+	cp -rp bin/SAOImage\ DS9.app dist/$(DS9APP)/.
+	hdiutil create -srcfolder dist/$(DS9APP) dist/$(DS9APP) 
+	rm -rf dist/$(DS9APP)

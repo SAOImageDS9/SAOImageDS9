@@ -1,0 +1,73 @@
+OS	= @OS@
+ARCH	= @ARCH@
+ROOT	= @ROOT@
+TKFLAGS	= @TKFLAGS@
+TKIMGFLAGS = @TKIMGFLAGS@
+JOBS	= @CORES@
+
+WITHTCL =--with-tcl=$(ROOT)/tcl$(TCLVER)/unix
+WITHTK  =--with-tk=$(ROOT)/tk$(TCLVER)/unix $(WITHTCL)
+CACHE	=--config-cache --cache-file=../config.cache
+
+include ./make.include
+
+#--------------------------build
+
+.PHONY	: saods9 tcl tk
+
+saods9	: dirs tcl tk \
+	tclcheckdns tcliis tclsignal \
+	tclzvfs tclxml xpa \
+	tkblt tktable tkimg \
+	tkmpeg tkhtml1 tkcon \
+	tksao ds9
+
+tcl	: tcl$(TCLVER)/unix/Makefile
+	@echo ""
+	@echo "*** Install tcl$(TCLVER) ***"
+	$(MAKE) -C tcl$(TCLVER)/unix -j $(JOBS) install
+
+tcl$(TCLVER)/unix/Makefile :
+	@echo ""
+	@echo "*** Configure tcl$(TCLVER) ***"
+	cd tcl$(TCLVER)/unix; \
+	./configure \
+	--prefix $(ROOT) -exec-prefix $(ROOT) \
+	--disable-shared --enable-symbols \
+	--config-cache --cache-file=../../config.cache
+
+tk	: tk$(TCLVER)/unix/Makefile
+	@echo ""
+	@echo "*** Install tk$(TCLVER) ***"
+	$(MAKE) -C tk$(TCLVER)/unix -j $(JOBS) install
+
+tk$(TCLVER)/unix/Makefile :
+	@echo ""
+	@echo "*** Configure tk$(TCLVER) ***"
+	cd tk$(TCLVER)/unix; \
+	./configure \
+	$(TKFLAGS) \
+	--prefix $(ROOT) -exec-prefix $(ROOT) \
+	--disable-shared --enable-symbols \
+	--config-cache --cache-file=../../config.cache
+
+#--------------------------clean
+
+.PHONY	: tkunixclean
+
+tkunixclean :
+
+#--------------------------distclean
+
+.PHONY	: tkunixdistclean
+
+tkunixdistclean :
+
+#--------------------------distribution
+
+.PHONY	: dist
+
+dist	:
+	cd bin; tar cvf - ds9* | gzip > ../dist/ds9.$(ARCH).$(DS9VERSION).tar.gz
+	cd bin; tar cvf - xpa* | gzip > ../dist/xpa.$(ARCH).$(XPAVERSION).tar.gz
+

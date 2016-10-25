@@ -1,0 +1,6 @@
+#!/bin/sh
+
+for file in foo.[in][cdpt]*
+do
+  funcheck $file
+done

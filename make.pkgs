@@ -21,7 +21,7 @@ XPAVERSION=2.1.17
 # tkcon 2.7
 # ast 8.0.2
 # wcssubs 3.9.0
-# funtools 1.4.6
+# funtools 1.4.7
 # zlib 1.2.8
 
 TCLVER=8.6

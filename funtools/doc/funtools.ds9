@@ -1,0 +1,83 @@
+#
+# Analysis command descriptions:
+#   menu label/description
+#   file templates for this command (* for all files)
+#   "menu" (add to menu) |"bind" (bind to key)
+#   analysis command line
+#
+
+hmenu Funtools
+
+# 1D histogram params for a table
+param thist
+column entry    "Enter column name to histogram" pi "(histo)"
+bins   entry    "Enter [min:max:]bins" 0 "('0' for default number of bins)"
+norm   checkbox "Normalize by binsize?"                          0
+end
+
+# 1D histogram params for an image
+param ihist
+bins entry "Enter [min:max:]bins" 0 "('0' for default number of bins)"
+end
+
+# Light Curve params
+param ltc
+bins   entry    "Enter [min:max:]bins" 0 "('0' for default number of bins)"
+norm   checkbox "Normalize by time?"                          0
+end
+
+Funtools Overview
+*
+menu
+echo "Funtools Tasks in DS9\r\rThe tasks in this section of the Analysis menu utilize the Funtools programs\r'funcnts' and 'funhist'. With the exceptions noted below, they all work off the \roriginal disk-based FITS file. The funcnts-based tasks (radial profile, counts\rin regions) present their results using WCS units, if the appropriate info is\rpresent in the FITS header. \r\rFor situations where a disk file is not available (e.g., image data generated\rby a program and sent to DS9's 'fits' XPA access point), alternate versions of\rthe radial profile and counts in regions tasks are offered that work from DS9's\rinternal image data. In these two cases, results are presented in pixels. Aside\rfrom the units, the results should be identical to the file-based results.\r\rFor more sophisticated analysis, please consider using the underlying Funtools\rtasks directly. These are documented at:\r\r        http://hea-www.harvard.edu/RD/funtools/programs.html\r\r" | $text
+
+Radial Profile Plot (annulus regions; options: none)
+*
+menu
+funds9 funcnts_plot "$xpa" "$filename" "$regions(source,,)" "$regions(background,,)" | $plot(stdin)
+
+Histogram Plot (any column; options: column name, number of bins)
+*
+menu
+$param(thist); funds9 funhist_plot "$xpa" "$filename[$regions]" "$norm" "$column" "$bins" | $plot(stdin)
+
+Light Curve Plot ("time" column; options: number of bins)
+*
+menu
+$param(ltc); funds9 funhist_plot "$xpa" "$filename[$regions]" "$norm" time "$bins" | $plot(stdin)
+
+Energy Spectrum Plot ("pi" column; options: none)
+*
+menu
+funds9 funhist_plot "$xpa" "$filename[$regions]" "0" "pi" "$bins" | $plot(stdin)
+
+Counts in Regions (any regions; options: none)
+*
+menu
+funds9 funcnts "$xpa" "$filename" "$regions(source,,)" "$regions(background,,)" | $text
+
+Column Histogram (any column; options: colname, <min:max:>bins)
+*
+menu
+$param(thist); funds9 funhist "$xpa"  "$filename[$regions]" "$norm" "$column" "$bins" | $text
+
+Image Histogram (options: <min:max:>bins)
+*
+menu
+$param(ihist); $data | funhist "stdin[$regions]" xy "$bins" | $text
+
+---
+
+Radial Profile Plot in Pixels using DS9's Internal Image Data (annulus regions)
+*
+menu
+$data | funcnts -rpG stdin $regions(source,,) $regions(background,,) |  funcnts.plot -file "$filename" ds9 | $plot(stdin)
+
+Counts in Regions in Pixels using DS9's Internal Image Data (any regions)
+*
+menu
+$data | funcnts -rp stdin $regions(source,,) $regions(background,,) | $text
+
+---
+
+end

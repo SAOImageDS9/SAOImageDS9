@@ -1,0 +1,158 @@
+include ../../make.pkgs
+
+TCL_LIB_SPEC	= @TCL_LIB_SPEC@
+TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
+TK_LIBS		= @TK_LIBS@
+TK_LIB_SPEC	= @TK_LIB_SPEC@
+TK_STUB_LIB_SPEC= @TK_STUB_LIB_SPEC@
+
+CC		= @CC@
+CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
+CFLAGS_WARNING	= @CFLAGS_WARNING@
+EXEEXT		= @EXEEXT@
+OBJEXT		= @OBJEXT@
+
+INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ @TK_INCLUDES@ @TK_XINCLUDES@
+
+PKG_CFLAGS	= @PKG_CFLAGS@
+DEFS		= @DEFS@ $(PKG_CFLAGS)
+
+CPPFLAGS	= @CPPFLAGS@
+LIBS		= @PKG_LIBS@ @LIBS@
+CFLAGS		= @CFLAGS@
+COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+
+STRIP		= i686-w64-mingw32-strip.exe
+
+.SUFFIXES: .c .C .$(OBJEXT)
+
+.c.@OBJEXT@:
+	$(COMPILE) -DSTATIC_BUILD -c $< -o $@
+
+.C.@OBJEXT@:
+	$(COMPILE) -DSTATIC_BUILD -c $< -o $@
+
+#--------------------------defines
+
+OBJS	= ds9.o winMain.o ds9.res.o
+
+LLIBS	= \
+	../../lib/tksao$(TKSAOVER)/tksao10.a \
+	../../lib/libfuntools.a \
+	../../lib/libast.a \
+	../../lib/libast_err.a \
+	../../lib/libast_pal.a \
+	../../lib/tksao$(TKSAOVER)/tksao10.a \
+	../../lib/tkhtml1$(TKHTMLVER)/tkhtml110.a \
+	../../lib/tkmpeg$(TKMPEGVER)/tkmpeg10.a \
+	../../lib/Tclxml$(TCLXMLVER)/Tclxml32.a \
+	../../lib/Tktable$(TKTABLEVER)/Tktable210.a \
+	../../lib/Img$(TKIMGVER)/libtkimgpng142.a \
+	../../lib/Img$(TKIMGVER)/libpngtcl1412.a \
+	../../lib/Img$(TKIMGVER)/libtkimgtiff142.a \
+	../../lib/Img$(TKIMGVER)/libtifftcl394.a \
+	../../lib/Img$(TKIMGVER)/libtkimgjpeg142.a \
+	../../lib/Img$(TKIMGVER)/libjpegtcl84.a \
+	../../lib/Img$(TKIMGVER)/libtkimggif142.a \
+	../../lib/Img$(TKIMGVER)/libtkimgwindow142.a \
+	../../lib/Img$(TKIMGVER)/zlibtcl128.a \
+	../../lib/Img$(TKIMGVER)/libtkimg142.a \
+	../../lib/libxpa.a \
+	../../lib/tkblt$(TKBLTVER)/libtkbltstub32.a \
+	../../lib/tkblt$(TKBLTVER)/tkblt32.a \
+	../../lib/tkwin$(TKWINVER)/tkwin10.a \
+	../../lib/libxml2.a \
+	../../lib/libz.a
+
+APPDIR	= ../../bin/ds9app
+
+#--------------------------main
+
+.NOTPARALLEL :
+.PHONY	: ds9 debug appdir framework tcltk tcllib tkcon tkblt xpa cleanup
+
+ds9	: ds9Base$(EXEEXT) appdir framework tcltk tcllib tkcon tkblt xpa cleanup
+	cp -p ds9base$(EXEEXT) ds9$(EXEEXT)
+	$(STRIP) ds9$(EXEEXT)
+	cp -p ds9$(EXEEXT) $(APPDIR)/.
+
+debug	: ds9Base$(EXEEXT) appdir framework tcltk tcllib tkcon tkblt cleanup
+	mv ds9base$(EXEEXT) ds9$(EXEEXT)
+	cp -p ds9$(EXEEXT) $(APPDIR)/.
+
+ds9Base$(EXEEXT): $(OBJS) $(LLIBS)
+	$(RM) $@
+	$(CC) $(CFLAGS)	-o $@ \
+	$(OBJS) \
+	$(LLIBS) \
+	$(LIBS) \
+	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
+	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
+	$(TK_LIBS) \
+	-mwindows -static
+
+winMain.o : winMain.c
+	$(COMPILE) \
+	-DSTATIC_BUILD \
+	-DTK_LOCAL_APPINIT=SAOAppInit -DTK_LOCAL_MAIN_HOOK=SAOLocalMainHook \
+	-c winMain.c -o $@
+
+winMain.c : ../../tk$(TCLVER)/win/winMain.c
+	cp ../../tk$(TCLVER)/win/winMain.c .
+
+ds9.res.o: ds9.rc ds9.ico
+	i686-w64-mingw32-windres -o $@ \
+	--define STATIC_BUILD --include ../../tk$(TCLVER)/generic \
+	--include ../../$(TCLDIR)/generic --include ../../tk$(TCLVER)/win/rc \
+	ds9.rc
+
+appdir	:
+	rm -rf $(APPDIR)
+	mkdir $(APPDIR)
+
+framework:
+	cp install.vbs $(APPDIR)/.
+	cp -pr ../library $(APPDIR)/.
+	cp -pr ../msgs $(APPDIR)/.
+	cp -pr ../doc $(APPDIR)/.
+	cp -pr ../cmaps $(APPDIR)/.
+	cp -pr ../template $(APPDIR)/.
+	echo "pkg_mkIndex $(APPDIR)/library *.tcl; exit" | ../../bin/tclsh86s
+
+tcltk	:
+	cp -pr ../../lib/tcl8 $(APPDIR)/.
+	cp -pr ../../lib/tcl8.6 $(APPDIR)/.
+	cp -pr ../../lib/tk8.6 $(APPDIR)/.
+
+tkblt	:
+	mkdir $(APPDIR)/tkblt
+	cp -p ../../tkblt/library/graph.tcl $(APPDIR)/tkblt/.
+	echo "pkg_mkIndex $(APPDIR)/tkblt *.tcl; exit" | ../../bin/tclsh86s
+
+tcllib	:
+	cp -pr ../../tcllib/modules/base64 $(APPDIR)/.
+	cp -pr ../../tcllib/modules/ftp $(APPDIR)/.
+	cp -pr ../../tcllib/modules/log $(APPDIR)/.
+	cp -pr ../../tcllib/modules/textutil $(APPDIR)/.
+	cp -pr ../../tcllib/modules/math $(APPDIR)/.
+
+tkcon	:
+	mkdir $(APPDIR)/tkcon
+	cp -p ../../tkcon/*.tcl $(APPDIR)/tkcon/.
+
+xpa	:
+	cp -p ../../bin/xpans.exe $(APPDIR)/.
+
+cleanup:
+	cd $(APPDIR); find . -depth -name CVS -exec rm -rf {} \;
+
+#--------------------------cleanup
+
+.PHONY	: clean distclean
+
+clean	:
+	cd ../library; $(MAKE) clean
+	$(RM) core *~ *# ds9Base ds9 *.o
+
+distclean: clean
+	-rm -f Makefile config.cache config.log config.status

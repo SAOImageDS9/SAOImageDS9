@@ -1,0 +1,60 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=ISO-8859-1">
+    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
+      2.4.7-10 i686) [Netscape]">
+    <title>Backup</title>
+  </head>
+  <body alink="#ff0000" bgcolor="#ffffff" link="#0000ee" text="#000000"
+    vlink="#551a8b">
+    <h3><img alt="" src="../sun.gif" align="middle" width="100"
+        height="98"> Backup and Restore</h3>
+    <blockquote>
+      <p>DS9 now supports Backup and Restore. When a backup is invoked,
+        DS9 will save in a backup save set all files needed to restore
+        DS9 to that state, including geometry, data files, colormaps,
+        catalogs, contours, and regions.<br>
+      </p>
+      <p><b>Backup Save Set</b></p>
+      <p>A backup save set consists of a text file, called a backup
+        script, and an optional directory, which will contain auxiliary
+        data files needed to restore DS9 to a previous state. The backup
+        file and the auxiliary directory maybe moved across file
+        systems, or even platforms, but must remain together in the same
+        directory. <br>
+      </p>
+      <p><b>Image data files</b></p>
+      <p>By default, all data image files are save within the backup
+        save set. However, the user has the option, via the Preferences,
+        to only save only an absolute pathname to the data file, and not
+        the data file itself. This option will dramatically reduce the
+        size of a backup save set, but will restrict the usage to a
+        particular file system and platform.<br>
+      </p>
+      <p>Image files that have been loaded into DS9 via XPA, SAMP, or
+        from URL will always be saved into the save set.<br>
+      </p>
+      <p><b>Caveats</b></p>
+      <p>There are several caveats in the usage of Backup and Restore.
+        In particular:<br>
+      </p>
+      <blockquote>
+        <p> <tt>Currently, there is no support for masks.<br>
+            External Analysis menus will not be saved.<br>
+            Plot Tool windows will not be saved.<br>
+            IIS frames (IRAF) will not be saved.<br>
+            SAMP and XPA sessions will not be saved.</tt></p>
+      </blockquote>
+      <p>And finally, if the image data had been loaded into DS9 via
+        XPA, SAMP, or from a URL, the following complex load operations
+        are not supported:</p>
+      <blockquote> <tt>Open Mosaic IRAF Image<br>
+          Open Mosaic IRAF Segment Open Mosaic WCS Image<br>
+          Open Mosaic WCS Segment Open Mosaic WFPC2 Open RGB Fits Image
+          Open RGB Fits Cube Open RGB Array Open Multi Ext Data Cube
+          Open Multi Ext Multiple Frames </tt></blockquote>
+    </blockquote>
+  </body>
+</html>

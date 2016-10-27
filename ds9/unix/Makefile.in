@@ -1,0 +1,214 @@
+include ../../make.pkgs
+
+TCL_LIB_SPEC	= @TCL_LIB_SPEC@
+TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
+TK_LIBS		= @TK_LIBS@
+TK_LIB_SPEC	= @TK_LIB_SPEC@
+TK_STUB_LIB_SPEC= @TK_STUB_LIB_SPEC@
+
+CC		= @CC@
+CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
+CFLAGS_WARNING	= @CFLAGS_WARNING@
+EXEEXT		= @EXEEXT@
+OBJEXT		= @OBJEXT@
+
+INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ @TK_INCLUDES@ @TK_XINCLUDES@
+
+PKG_CFLAGS	= @PKG_CFLAGS@
+DEFS		= @DEFS@ $(PKG_CFLAGS)
+
+CPPFLAGS	= @CPPFLAGS@
+LIBS		= @PKG_LIBS@ @LIBS@
+CFLAGS		= @CFLAGS@
+COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+
+system		= @system@
+
+.SUFFIXES: .c .C .$(OBJEXT)
+
+.c.@OBJEXT@:
+	$(COMPILE) -c `@CYGPATH@ $<` -o $@
+
+.C.@OBJEXT@:
+	$(COMPILE) -c `@CYGPATH@ $<` -o $@
+
+#--------------------------defines
+
+ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)
+
+ZDIR	= zvfsmntpt
+OBJS	= ds9.o tkAppInit.o
+
+FILES	= \
+	$(ZDIR)/tcl$(TCLVER) \
+	$(ZDIR)/tcl8 \
+	$(ZDIR)/tk$(TCLVER) \
+	$(ZDIR)/tkblt \
+	$(ZDIR)/tcllib \
+	$(ZDIR)/tkcon \
+	$(ZDIR)/library \
+	$(ZDIR)/msgs \
+	$(ZDIR)/doc \
+	$(ZDIR)/cmaps \
+	$(ZDIR)/template
+
+LLIBS	= \
+	../../lib/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
+	../../lib/libfuntools.a \
+	../../lib/libast.a \
+	../../lib/libast_err.a \
+	../../lib/libast_pal.a \
+	../../lib/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
+	../../lib/tkhtml1$(TKHTMLVER)/libtkhtml1$(TKHTMLVER).a \
+	../../lib/tkmpeg$(TKMPEGVER)/libtkmpeg$(TKMPEGVER).a \
+	../../lib/Tclxml$(TCLXMLVER)/libTclxml$(TCLXMLVER).a \
+	../../lib/Tktable$(TKTABLEVER)/libTktable$(TKTABLEVER).a \
+	../../lib/Img$(TKIMGVER)/libtkimgpng1.4.2.a \
+	../../lib/Img$(TKIMGVER)/libpngtcl1.4.12.a \
+	../../lib/Img$(TKIMGVER)/libtkimgtiff1.4.2.a \
+	../../lib/Img$(TKIMGVER)/libtifftcl3.9.4.a \
+	../../lib/Img$(TKIMGVER)/libtkimgjpeg1.4.2.a \
+	../../lib/Img$(TKIMGVER)/libjpegtcl8.4.a \
+	../../lib/Img$(TKIMGVER)/libtkimggif1.4.2.a \
+	../../lib/Img$(TKIMGVER)/libtkimgwindow1.4.2.a \
+	../../lib/Img$(TKIMGVER)/libzlibtcl1.2.8.a \
+	../../lib/Img$(TKIMGVER)/libtkimg1.4.2.a \
+	../../lib/tclzvfs$(TCLZVFSVER)/libtclzvfs$(TCLZVFSVER).a \
+	../../lib/libxpa.a \
+	../../lib/tcliis$(TCLIISVER)/libtcliis$(TCLIISVER).a \
+	../../lib/tclcheckdns$(TCLCHECKDNSVER)/libtclcheckdns$(TCLCHECKDNSVER).a \
+	../../lib/tclsignal$(TCLSIGNALVER)/libtclsignal$(TCLSIGNALVER).a \
+	../../lib/tkblt$(TKBLTVER)/libtkbltstub$(TKBLTVER).a \
+	../../lib/tkblt$(TKBLTVER)/libtkblt$(TKBLTVER).a
+
+#--------------------------main
+
+.NOTPARALLEL :
+.PHONY	: debug
+
+ifeq (,$(findstring Darwin,$(system)))
+
+ds9	: ds9base ds9.zip
+	$(RM) ds9
+	strip ds9base
+	cat ds9base ds9.zip > ds9
+	zip -A ds9
+	chmod 755 ds9
+	cp ds9 ../../bin/.
+
+debug	: ds9base ds9.zip
+	$(RM) ds9
+	cat ds9base ds9.zip > ds9
+	zip -A ds9
+	chmod 755 ds9
+	cp ds9 ../../bin/.
+
+else
+
+ds9	: ds9base ds9.zip
+	$(RM) ds9
+	strip ds9base
+	cp ds9base ds9
+	cp ds9 ../../bin/.
+	cp ds9.zip ../../bin/.
+	cd ../../bin; codesign -s "$(ID)" ds9
+
+debug: ds9base ds9.zip
+	$(RM) ds9
+	cp ds9base ds9
+	cp ds9 ../../bin/.
+	cp ds9.zip ../../bin/.
+	cd ../../bin; codesign -s "$(ID)" ds9
+
+endif
+
+ds9base	: $(OBJS) $(LLIBS)
+	$(RM) $@
+	$(CC) $(CFLAGS) -o $@ \
+	$(OBJS) \
+	$(LLIBS) \
+	$(LIBS) \
+	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
+	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
+	$(TK_LIBS)
+
+ds9.zip	: $(ZDIR) $(FILES)
+	$(RM) $@
+	find $(ZDIR) -depth -name "CVS" -exec rm -r {} \;
+	zip -r ds9.zip $(ZDIR)
+
+tkAppInit.o : tkAppInit.c
+	$(COMPILE) -DTK_LOCAL_APPINIT=SAOAppInit \
+	-DTK_LOCAL_MAIN_HOOK=SAOLocalMainHook -c tkAppInit.c -o $@
+
+tkAppInit.c : ../../tk$(TCLVER)/unix/tkAppInit.c
+	cp ../../tk$(TCLVER)/unix/tkAppInit.c .
+
+$(ZDIR)	: 
+	mkdir $@
+
+$(ZDIR)/tcl$(TCLVER) : ../../lib/tcl$(TCLVER)
+	$(RM) -r $@
+	cp -r ../../lib/tcl$(TCLVER) $(ZDIR)/.
+
+$(ZDIR)/tcl8 : ../../lib/tcl8
+	$(RM) -r $@
+	cp -r ../../lib/tcl8 $(ZDIR)/.
+
+$(ZDIR)/tk$(TCLVER) : ../../lib/tk$(TCLVER)
+	$(RM) -r $@
+	cp -r ../../lib/tk$(TCLVER) $(ZDIR)/.
+	rm -rf $(ZDIR)/tk$(TCLVER)/images
+	rm -rf $(ZDIR)/tk$(TCLVER)/demos
+
+$(ZDIR)/tkblt :
+	$(RM) -r $@
+	mkdir $(ZDIR)/tkblt
+	cp ../../tkblt/library/graph.tcl $(ZDIR)/tkblt/.
+
+$(ZDIR)/tcllib :
+	$(RM) -r $@
+	mkdir $(ZDIR)/tcllib
+	cp -r ../../tcllib/modules/base64 $(ZDIR)/tcllib/.
+	cp -r ../../tcllib/modules/ftp $(ZDIR)/tcllib/.
+	cp -r ../../tcllib/modules/log $(ZDIR)/tcllib/.
+	cp -r ../../tcllib/modules/textutil $(ZDIR)/tcllib/.
+	cp -r ../../tcllib/modules/math $(ZDIR)/tcllib/.
+
+$(ZDIR)/tkcon : ../../lib/tkcon$(TKCONVER)
+	$(RM) -r $@
+	cp -r ../../lib/tkcon$(TKCONVER) $@
+
+$(ZDIR)/library : ../library/*.tcl
+	$(RM) -r $@
+	cp -r ../library $(ZDIR)/.
+
+$(ZDIR)/msgs : ../msgs/*
+	$(RM) -r $@
+	cp -r ../msgs $(ZDIR)/.
+
+$(ZDIR)/doc : ../doc/* ../doc/ref/* ../doc/user/* ../doc/release/*
+	$(RM) -r $@
+	cd ..; find doc -name "*.html" | cpio -pdmuv unix/$(ZDIR)
+	cd ..; find doc -name "*.gif" | cpio -pdmuv unix/$(ZDIR)
+	cd ..; find doc -name "*.png" | cpio -pdmuv unix/$(ZDIR)
+
+$(ZDIR)/cmaps : ../cmaps/*
+	$(RM) -r $@
+	cp -r ../cmaps $(ZDIR)/.
+
+$(ZDIR)/template : ../template/*
+	$(RM) -r $@
+	cd ..; find template -name "*.tpl" | cpio -pdmuv unix/$(ZDIR)
+
+#--------------------------cleanup
+
+.PHONY	: clean distclean
+
+clean	:
+	cd ../library; $(MAKE) clean
+	$(RM) core *~ *# ds9base ds9 *.zip *.o
+	$(RM) -r $(ZDIR)
+
+distclean: clean
+	-rm -f Makefile config.cache config.log config.status

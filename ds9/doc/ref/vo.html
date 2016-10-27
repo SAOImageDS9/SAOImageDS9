@@ -1,0 +1,69 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type"
+	  content="text/html; charset=ISO-8859-1">
+    <meta name="GENERATOR"
+	  content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+    <title>Virtual Observatory</title>
+  </head>
+  <body alink="#ff0000" bgcolor="#ffffff" vlink="#551a8b" text="#000000"
+	link="#0000ff">
+    <h3><img alt="" src="../sun.gif" align="middle" width="100" height="98">
+      Virtual Observatory Reference</h3>
+    <blockquote>
+      <p><b>Summary</b></p>
+      <p>Use the Web proxy connection if your firewall does not allow your
+	computer to connect directly to external computers. In this case, you
+	also must use DS9's internal browser.</p>
+      <p><b>Details</b></p>
+      <p>When you click on one of the Virtual Observatory servers in the VO
+	list, DS9 will attempt to connect to that server and (if the internal
+	Web display is enabled) display its Web page. The square box to the left
+	of the server name turns yellow while the connection is being
+	established and then green to signal success. </p>
+      <p>A direct connection is fast and flexible. Among other things, it
+	allows
+	you to perform analysis on your own local data (the VO server will
+	retrieve the image from DS9) and also allows you to use an
+	external browser to load images. </p>
+      <p>Some system managers configure their firewall explicitly to
+	prevent
+	computers in their care from making a direct connection to an external
+	host. Instead, they only allow external access through a Web proxy<br>
+	server (such as SOCKS). If you are using a computer behind a restricted
+	firewall of this sort, then DS9 will not be able to connect directly to
+	a VO server. The yellow box will not turn green and
+	eventually DS9 will display an error message. </p>
+      <p>In this case, you can choose to have DS9 communicate with the VO
+	servers through your Web proxy server. DS9 will use your proxy to send
+	its commands and retrieve its data and analysis results, rather than
+	doing this directly. Note that the following restrictions apply:<br>
+      </p>
+      <blockquote> <i>The transfer of data is slower.<br>
+	  You must use the internal Web browser for loading images, etc.<br>
+	  You cannot perform analysis on local data.<br>
+	  There is a (large but finite) restriction on the number of
+	  annuli, and number of polygon points you can specify in a region, as
+	  well as the total number of regions allowed.</i><br>
+      </blockquote>
+      <p>If your computer and firewall have been configured to require use
+	of a
+	Web proxy server, you will have to tell DS9 about this server.
+	Click the <b>Configure Web Proxy</b> button and type the relevant
+	information into the boxes. (Your systems administrator will be able to
+	tell you the details.) At this point,
+	you should be able to connect to a VO server successfully. Please let
+	us know if you have problems! </p>
+      <blockquote>
+	<p> <i>A final note: you may, of course, choose to use the Web
+	    proxy
+	    even
+	    if your computer and firewall are configured to allow direct
+	    connections. In this case, there is no need to configure the proxy
+	    server.<br>
+	</i></p>
+      </blockquote>
+    </blockquote>
+  </body>
+</html>

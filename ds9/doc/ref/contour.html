@@ -1,0 +1,189 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
+      2.4.7-10 i686) [Netscape]">
+    <title>Contours</title>
+  </head>
+  <body link="#0000ee" alink="#ff0000" bgcolor="#ffffff" text="#000000"
+    vlink="#551a8b">
+    <h3><img alt="" src="../sun.gif" height="98" align="middle"
+        width="100"> Contours</h3>
+    <blockquote>
+      <p>DS9 can create and display contours as an overlay on an image.
+        The Analysis Contours menu is used to display contours. To
+        create, copy, paste,&nbsp; and configure contours, use the
+        Analysis Contour Parameters menu.</p>
+      <p><b>Contour Parameters </b></p>
+      <p>When creating a new contour, a dialog box appears, in which the
+        user selects the number of contour levels, smoothness, and the
+        distribution of the contours. </p>
+      <p><b> Contour Levels</b></p>
+      <p>Specifies the number of contour levels to be generated. A
+        typical number is between 1 and 10. Note: large numbers of
+        contours can take a long time to generate. </p>
+      <p><b> Contour Smoothness</b></p>
+      <p>Specifies how smooth the contours are. A smoothness level of 1
+        will evaluate the contour at each image pixel. A level of 2 will
+        evaluate the contour at every other pixel. The larger the
+        number, the quicker the contour will be generated, and the less
+        detail will be available. </p>
+      <p><b> Contour Scale</b></p>
+      <p>Specifies the distribution of the contour levels. <br>
+      </p>
+      <p><b> Contour Method</b></p>
+      <p>There are two methods that are available to calculate the
+        contour lines. The first, BLOCK, blocks down the image, by the
+        smoothness factor, before contours are calculated. As a result,
+        the larger the smoothness, the faster the result. The second
+        method, SMOOTH, smooths the image before calculating contours.
+        As a result, the larger the smoothness, the slower the result.<br>
+      </p>
+      <p><b> <a name="ContourFiles"></a>Contour Files</b></p>
+      <p>A contour file is an ASCII file containing a header, global
+        properties, coordinate system, contour levels, and contour
+        points. <br>
+      </p>
+      <blockquote>
+        <p><b> Header</b></p>
+        <p>A DS9 contour file may start with the following optional
+          header: </p>
+        <blockquote> <tt># Contour file format: DS9 version 7.5<br>
+          </tt></blockquote>
+        <p><b> Global Properties</b></p>
+        <p>Global properties affect all contour levels unless a line
+          level attribute is specified. The <tt>global</tt> keyword is
+          first, followed by a list of keyword = value pairs. Multiple
+          global property lines may be used within a region file. </p>
+        <blockquote> <tt>global color=green width=1 dash=1 dashlist=8 3<br>
+          </tt></blockquote>
+        <p><b> Coordinate Systems</b></p>
+        <p>For each contour file, it is important to specify the
+          coordinate system used to interpret the contour points, i.e.,
+          to set the context in which the positions are interpreted. For
+          this purpose, the following keywords are recognized: </p>
+        <blockquote> <tt>PHYSICAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+#
+
+
+
+
+
+
+
+
+            pixel coords of original file using LTM/LTV</tt> <br>
+          <tt>IMAGE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+#
+
+
+
+
+
+
+
+
+            pixel coords of current file</tt> <br>
+          <tt><tt><tt>FK4,B1950&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;
+                # sky coordinate systems</tt> <br>
+              FK5,J2000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+#
+
+
+
+
+
+
+
+
+              sky coordinate systems</tt> <br>
+          </tt><tt><tt><tt>ICRS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+#
+                sky coordinate systems</tt> <br>
+            </tt>GALACTIC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+#
+
+
+
+
+
+
+
+
+            sky coordinate systems</tt> <br>
+          <tt>ECLIPTIC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+#
+
+
+
+
+
+
+
+
+            sky coordinate systems</tt> <br>
+          <tt>WCS&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp; # primary WCS<br>
+          </tt><tt>WCSA &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; #
+            secondary WCS<br>
+          </tt><tt>LINEAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+#
+
+
+
+
+
+
+
+
+            linear primary WCS</tt> <tt><br>
+          </tt></blockquote>
+      </blockquote>
+      <blockquote>
+        <p><b> Contour Level</b></p>
+        <p>Each contour level is composed of a line value, line
+          attributes and one or more contours. Line attributes are
+          specified at the start of a new level and only affect contours
+          within that level . </p>
+        <blockquote> <tt>level=15.78775 color=pink width=2 dash=yes dashlist=2
+            2<br>
+          </tt></blockquote>
+        <p><b> Contour</b></p>
+        <p>Each contour is composed of one or more X,Y coordinates, with
+          a deliminator of space or comma,&nbsp; starting with "(" and
+          ending with ")". Contours are not closed.<br>
+        </p>
+      </blockquote>
+      <blockquote>
+        <blockquote><tt>(</tt><tt>202.4836468 47.22380226</tt><tt><br>
+          </tt><tt>&nbsp;202.4833538 47.2239185</tt><tt><br>
+          </tt><tt>&nbsp;202.4831634 47.22409874</tt><tt><br>
+          </tt><tt>&nbsp;202.4829883 47.22428858</tt><tt>)</tt><br>
+        </blockquote>
+      </blockquote>
+      <blockquote>
+        <p><br>
+        </p>
+        <blockquote> </blockquote>
+      </blockquote>
+      <p><br>
+      </p>
+      <blockquote>
+        <blockquote> </blockquote>
+        <blockquote> </blockquote>
+        <blockquote> </blockquote>
+      </blockquote>
+    </blockquote>
+  </body>
+</html>

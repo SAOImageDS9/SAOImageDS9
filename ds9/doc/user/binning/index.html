@@ -1,0 +1,367 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Binning and Filtering FITS Event Files - DS9 </title>
+</head> 
+<!--THIS FILE IS CREATED AUTOMATICALLY - DO NOT EDIT MANUALLY--> 
+<body><div class="mainbar">
+<a name="maintext"></a><div align="center"><h1>Binning and Filtering FITS Event Files</h1></div>
+<p>
+      Return to the <a href="../index.html">DS9 Users Manual</a></p>
+<hr size="5" noshade>
+<div>
+<h2>Synopsis</h2>
+        <p>
+	  When an x-ray event file is loaded, ds9 makes a virtual
+	  image for display by binning on one or more axes.
+	  This threads describes how to adjust the binning and buffer
+	  sizes.  Interactive data filtering is described, as well
+	  as binning in three dimensions.
+	</p>
+
+	<p>
+	  Note that the terms "binning" and "blocking" are used
+	  interchangeably in this thread.  They both refer to
+	  combining pixels in an image.  
+	</p>
+      <p>
+	    If you encounter any problems, please email saord @ cfa.harvard.edu.
+	  </p>
+</div>
+<hr size="5" noshade>
+<h2><a name="toc">Contents</a></h2>
+<ul>
+<li><strong><a href="index.html#start">Getting Started</a></strong></li>
+<li><strong><a href="index.html#buffer">Buffer Size</a></strong></li>
+<li>
+<strong><a href="index.html#basics">Binning Basics</a></strong><ul>
+<li><a href="index.html#basics.block">Changing the binning factor</a></li>
+<li><a href="index.html#basics.cols">Binning different columns</a></li>
+</ul>
+</li>
+<li><strong><a href="index.html#cube">Data Cubes: Binning in three dimensions</a></strong></li>
+<li><strong><a href="index.html#filtering">Filtering Data</a></strong></li>
+<li><strong><a href="index.html#history">History</a></strong></li>
+<li>
+<strong>Images</strong><ul>
+<li><a href="#defaults">Figure 1: Data loaded with default buffer and bin size</a></li>
+<li><a href="#binmenu">Figure 2: The Bin menu</a></li>
+<li><a href="#smallbuffer">Figure 3: Buffer size set to 128x128</a></li>
+<li><a href="#largebuffer">Figure 4: Buffer size set to 4096x4096</a></li>
+<li><a href="#block4">Figure 5: Data binned by a factor of 4</a></li>
+<li><a href="#binpar">Figure 6: The Binning Parameter dialog</a></li>
+<li><a href="#detimage">Figure 7: Image binned in detector coordinates</a></li>
+<li><a href="#binpar2">Figure 8: Binning Parameter dialog for a data cube</a></li>
+<li><a href="#cubebox">Figure 9: Data Cube dialog box</a></li>
+<li><a href="#cubeimg">Figure 10: Viewing a data cube</a></li>
+<li><a href="#filterimg">Figure 11: Filtering data</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<div class="sectionlist">
+<div class="section">
+<h2><a name="start">Getting Started</a></h2>
+        
+
+	<p>
+	  This thread begins with Chandra data from an observation of
+	  the Antennae Galaxies (NGC 4038/NGC 4039, ObsID 315).  Open
+	  the file in ds9: 
+	</p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">
+unix% ds9 acisf00315N002_evt2.fits &amp;
+</pre></div>
+
+        <p>
+	  A small section of the data is visible when the file is
+	  loaded, as shown in <a href="#defaults">Figure 1</a>.  The target of
+	  the observation is partially visible in the display frame.
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="defaults">Figure 1: Data loaded with default buffer and bin size</a></h3></div>
+<div><img alt="[The target sources of the observation are partially visible at the bottom of the frame.]" src="defaults.png"></div>
+</div>
+
+        <p>
+	  By default, the buffer size is set to 1024x1024 and the
+	  binning factor is set to 1.  These values will be adjusted
+	  in the following sections to illustrate how to make more of
+	  the data visible.
+	</p>
+
+	<p>
+	  The "Bin" menu, shown in <a href="#binmenu">Figure 2</a>, will be used to
+	  change the setting in the following examples.  From top to
+	  bottom, this menu contains the bin function setting,
+	  blocking factor, buffer size options, and access to the
+	  binning parameters dialog box.  
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="binmenu">Figure 2: The Bin menu</a></h3></div>
+<div><img alt="[The blocking factor is set to 1, the buffer size is 1024x1024, and the function is sum.]" src="binmenu.png"></div>
+</div>
+
+      <hr>
+</div>
+<div class="section">
+<h2><a name="buffer">Buffer Size</a></h2>
+        
+
+	<p>
+	  The buffer size determines the size of the image generated
+	  by ds9.  By default, a full-resolution 1024x1024 image of
+	  the data is created.  If your input data file has larger
+	  dimensions, it is clipped to 1024x1024 in ds9.  The buffer
+	  settings range from 128x128 to 8192x1892.
+	</p>
+
+	<p>
+	  Setting the buffer to the smallest size, 128x128,
+	  illustrates how it works.  The data was centered on the
+	  sources in ds9 before the buffer size was changed, creating
+	  <a href="#smallbuffer">Figure 3</a>.
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="smallbuffer">Figure 3: Buffer size set to 128x128</a></h3></div>
+<div><img alt="[A small central portion of the data is visible.]" src="smallbuffer.png"></div>
+</div>
+
+	<p>
+	  Setting the buffer to a large size, e.g. 4096x4096, produces
+	  <a href="#largebuffer">Figure 4</a>.  The display frame is filled by
+	  the data, and the panner in the upper right indicates
+	  that more of the image is available.  Clicking and dragging
+	  the viewing bounding box in the panner will display a
+	  different portion of the image.
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="largebuffer">Figure 4: Buffer size set to 4096x4096</a></h3></div>
+<div><img alt="[The frame is filled by the data, and the panner indicates more of the image is outside the field of view.]" src="largebuffer.png"></div>
+</div>
+
+      <hr>
+</div>
+<div class="section">
+<h2><a name="basics">Binning Basics</a></h2>
+        
+
+	<div class="subsectionlist">
+<div class="subsection">
+<h3><a name="basics.block">Changing the binning factor</a></h3>
+	    
+
+	    <p>
+	      While increasing the buffer size loads more of the file
+	      into ds9, binning the data makes more of it visible in
+	      the frame. Binning combines the specified number of
+	      pixels into one new pixel; the new pixel has a value
+	      equal to the sum of the original pixels.  (Note that if
+	      the bin method is changed to "average", the pixel values
+	      are averaged instead of summed.)
+	    </p>
+
+	    <p>
+	      The binning can changed from the "Bin" menu or from the
+	      "Bin" item in the button bar.  It's also possible to
+	      step through different binning values with the -/+
+	      buttons or the "Block In"/"Block Out" menu items.
+	    </p>
+
+	    <p>
+	      In <a href="#block4">Figure 5</a>, the buffer size is set to
+	      1024x1024, but the block factor has been set to 4.  A
+	      larger section of the data is visible in the frame.
+	    </p>
+
+	    <div class="figure">
+<div class="caption"><h3><a name="block4">Figure 5: Data binned by a factor of 4</a></h3></div>
+<div><img alt="[Five of the CCDs are visible in the binned data.]" src="block4.png"></div>
+</div>
+	  <hr width="80%" align="center">
+</div>
+<div class="subsection">
+<h3><a name="basics.cols">Binning different columns</a></h3>
+	    
+
+	    <p>
+	      ds9 has the ability to display any of the other columns 
+	      stored in the event file, although it is generally only
+	      meaningful to use the spatial vector columns.   Begin by
+	      opening the "Bin → Binning Parameters" dialog box,
+	      shown in <a href="#binpar">Figure 6</a>.
+	    </p>
+
+	    <p>
+	      The "Bin Columns" menus are used to select the columns
+	      to be binned.  To create an image in detector
+	      coordinates, set the first to "detx" and the second to
+	      "dety"; the block is set to "2" for both.
+	      The "or center of data" box is checked so that the
+	      center of the data is recalculated for the new columns.
+	    </p>
+
+	    <div class="figure">
+<div class="caption"><h3><a name="binpar">Figure 6: The Binning Parameter dialog</a></h3></div>
+<div><img alt="[The parameters are set to bin in detector coordinates about the center of the data.]" src="binpar.png"></div>
+</div>
+
+	    <p>
+	      Click "Apply" and the ds9 frame is updated, as shown in
+	      <a href="#detimage">Figure 7</a>.
+	    </p>
+
+	    <div class="figure">
+<div class="caption"><h3><a name="detimage">Figure 7: Image binned in detector coordinates</a></h3></div>
+<div><img alt="[Some bad columns are visible in black in the detector image.]" src="detimage.png"></div>
+</div>
+
+	    <p>
+	      Alternatively, one can display an event file in specific 
+	      coordinates when starting ds9 from the command line:
+	    </p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">
+unix% ds9 "acisf00315N002_evt2.fits[bin=detx,dety]" &amp;
+</pre></div>
+
+	  </div>
+</div>
+      <hr>
+</div>
+<div class="section">
+<h2><a name="cube">Data Cubes: Binning in three dimensions</a></h2>
+        
+
+	<p>
+	  It is possible to add a third column to the binning,
+	  creating a 3-dimensional image also known as a "data cube". 
+	  In this example, an (x,y,time) data cube is created of a
+	  Chandra observation of Jupiter (ObsID 1463).  A cube may be
+	  created from any three columns that make sense in the
+	  analysis.  For instance, you may want to create a PHA or
+	  energy axis to see how the spectral characteristics of a
+	  source change over time.  
+	</p>
+
+	<p>
+	  The data file is loaded into a new frame in ds9 and the "Bin →
+	  Binning Parameters" dialog box is opened again.  The "time"
+	  column of the file is selected from the "Bin 3rd Column"
+	  menu.  The limits of the data in that column are filled in
+	  automatically.  The "depth" field determines how many
+	  intervals the column is divided into; a depth of 25 is used.
+	  The completed parameter box is shown in
+	  <a href="#binpar2">Figure 8</a>.  
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="binpar2">Figure 8: Binning Parameter dialog for a data cube</a></h3></div>
+<div><img alt='[The third binning column is set to "time" with a depth of "25".]' src="binpar2.png"></div>
+</div>
+
+	<p>
+	  After clicking "Apply", two things
+	  happen: <a href="#cubebox">the "Data Cube" dialog
+	  box (Figure 9)</a> is launched and <a href="#cubeimg">the
+	  frame is updated to show only the (x,y) image of the first
+	  time slice (Figure 10)</a>.  (If the data cube dialog box doesn't
+	  launch, open it from the "Frame" menu.) 
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="cubebox">Figure 9: Data Cube dialog box</a></h3></div>
+<div><img alt="[The dialog box has controls to step through each slice of the data cube.]" src="cubebox.png"></div>
+</div>
+
+	<p>
+	  When "Play" is chosen, ds9 cycles through the bins of the
+	  time axis, essentially creating a movie of the (x,y)
+	  position of the object over time.  The speed of the frame
+	  changes is controlled from the "Interval" menu of the dialog
+	  box.   Any of the 25 intervals may be selected with the
+	  slider bar.
+	</p>
+	
+	<div class="figure">
+<div class="caption"><h3><a name="cubeimg">Figure 10: Viewing a data cube</a></h3></div>
+<div><img alt="[One interval of the data cube is visible at a time when displayed in ds9.]" src="cubeimg.png"></div>
+</div>
+
+	<p>
+	  The data cube can be saved as an MPEG movie from the "File →
+	  Save Image..." menu.  Select "MPEG-1 (Movie)" and click
+	  "OK"; after setting the filename, choose an MPEG Quality
+	  Factor.  The Jupiter data was saved at a quality factor of
+	  15: <a href="jupiter.mpg">jupiter.mpg</a>. 
+	</p>
+      <hr>
+</div>
+<div class="section">
+<h2><a name="filtering">Filtering Data</a></h2>
+        
+
+	<p>
+	  The "Bin Filter" field in the "Binning Parameters" dialog
+	  box is used to apply filters to the data.  A filter can be
+	  applied to any of the columns present in the input file. A
+	  colon is used to indicate a range of values.  Filters can
+	  also use &lt; (less than) or &gt; (greater than). 
+	</p>
+
+	<p>
+	  For instance, to include only the hard-band photons
+	  (2500-8000 eV): 
+	</p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">energy=2500:8000</pre></div>
+
+	<p>
+	  Clicking "Apply" updates the ds9 display and keeps the
+	  dialog open for adjusting the filters.	 
+	</p>
+
+	<p>
+	  Multiple filters may be specified, separated by commas:
+	</p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">energy=2500:8000, ccd_id=7</pre></div>
+
+        <p>
+	  The resulting image is shown in <a href="#filterimg">Figure 11</a>.
+	</p>
+	
+	<div class="figure">
+<div class="caption"><h3><a name="filterimg">Figure 11: Filtering data</a></h3></div>
+<div><img alt="[Only the hard-band photos on CCD 7 are displayed.]" src="filterimg.png"></div>
+</div>
+
+	<p>
+	  The filtered dataset can be saved as a FITS file for use in
+	  data analysis from the "File → Save Frame as Fits..."
+	  menu.   
+	</p>
+
+      </div>
+</div>
+<hr size="5" noshade>
+<h2><a name="history">History</a></h2>
+<table class="history">
+      <tr>
+<td class="historydate">26 Jun 2009</td>
+<td>
+	Original version
+     </td>
+</tr>
+     </table>
+<hr size="5" noshade>
+<p>
+      Return to the <a href="../index.html">DS9 Users Manual</a></p>
+</div></body>
+</html>

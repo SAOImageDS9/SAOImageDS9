@@ -1,0 +1,11 @@
+# SAOimage color table
+# yarg
+# created by cptutils 1.46
+# Wed Aug 15 23:29:38 2012
+PSEUDOCOLOR
+RED:
+(0,0)(1,1)
+GREEN:
+(0,0)(1,1)
+BLUE:
+(0,0)(1,1)

@@ -1,0 +1,878 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
+      2.4.7-10 i686) [Netscape]">
+    <title>Analysis</title>
+  </head>
+  <body link="#0000ee" alink="#ff0000" bgcolor="#ffffff" text="#000000"
+    vlink="#551a8b">
+    <h3><img alt="" src="../sun.gif" height="98" align="middle"
+        width="100"> Analysis</h3>
+    <blockquote>
+      <p>Each file type known to DS9 can have user-defined analysis
+        commands associated with it. These analysis commands are defined
+        at start-up time , or loaded by the user, by means of an ASCII
+        analysis description file. The analysis commands are available
+        for execution, either via the <i>Analysis Menu </i>or the XPA
+        point <i>Analysis</i>. In addition, commands may be <i>bound</i>
+        to events, such as keystrokes or mouse clicks. This type of
+        command is called a bind command.<br>
+      </p>
+      <p>DS9 searches for an analysis file named <tt>ds9.ans</tt> or <tt>ds9.analysis</tt>
+        in the current directory and <tt>$HOME</tt> to be loaded at
+        startup. In addition, DS9 will search the following directories
+        for any analysis files to be loaded at startup in the form of <tt>*.ds9</tt>:
+        the current directory, <tt>$HOME/bin</tt>, <tt>/usr/local/bin</tt>,
+        <tt>/opt/local/bin</tt>, and <tt>/soft/saord/bin</tt>. Finally,
+        the user may specify analysis files to be loaded at startup in
+        the preferences analysis panel. The user may also load or clear
+        current analysis commands via command line options or the <i>Analysis
+
+
+
+          m</i>enu<i>.</i></p>
+      <p>When activated, either from the menu, XPA, or bound event, an
+        analysis command first is macro-expanded to fill in user-defined
+        arguments and then is executed externally. Results may be
+        displayed in a separate text window, plot window, or in a image
+        frame. </p>
+      <a href="#Syntax">Syntax</a> <br>
+      <a href="#CommandType">Command Type</a> <br>
+      <a href="#Macros">Macros</a> <br>
+      <a href="#Help">Help</a> <br>
+      <a href="#Web"> </a><a href="#Parameters">Parameters</a> <br>
+      <a href="#HierarchicalMenus">Hierarchical Menus</a> <br>
+      <a href="#Sample">Sample</a>
+      <p><b><a name="Syntax"></a>Syntax</b></p>
+      The analysis file that defines the known analysis commands
+      consists of one or more file descriptors, each of which has the
+      following format:
+      <blockquote> <tt>Menu label to be used</tt> <br>
+        <tt>A space separated list of file templates</tt> <br>
+        <tt>Command type [menu | bind &lt;event&gt;]</tt> <br>
+        <tt>The command line for the analysis program</tt> </blockquote>
+      <p>Task names may contain space characters. All lines may be
+        indented. Also, the '#' character is a comment character. A
+        separator can be inserted in the menu by specifying the
+        following sequence '---'.</p>
+      <tt>Example:</tt>
+      <blockquote> <tt># this will insert a menu separator</tt> <br>
+        <tt>---</tt> </blockquote>
+      <p><b><a name="CommandType"></a>Command Type</b></p>
+      <p>The third line indicates the type of command. </p>
+      <blockquote>
+        <p><b>menu</b></p>
+        <p>A <tt>menu</tt> command creates an menu option under the <i>Analysis
+
+
+
+
+
+
+          </i>menu option, and can be invoked by the user via the GUI or
+          XPA.</p>
+        <tt>Example:</tt>
+        <blockquote> <tt># Menu command example</tt><br>
+          <tt>My Analysis Task</tt><br>
+          <tt> </tt><tt>*.fits</tt> <br>
+          <tt>menu</tt> <br>
+          <tt>$data | doit | $text</tt> </blockquote>
+        <p><b>bind</b></p>
+        <p>A <tt>bind</tt> command is a command that is bound to an
+          event. When the event occurs, the command is executed. Types
+          of events available include all TK events, including all <i>keystrokes</i>
+          and <i>mouse clicks.</i> If a command is bound to an event
+          other that a <i>keystroke</i>, care must be taken to not to
+          interfere with other internal DS9 events. </p>
+        <p>To bind to a key stroke, use the following command type:</p>
+        <blockquote> <tt>bind &lt;keystroke&gt; </tt><br>
+        </blockquote>
+        <tt>Example:</tt>
+        <blockquote> <tt># Bind command example</tt><br>
+          <tt>Print coordinates</tt><br>
+          <tt>*.fits</tt><br>
+          <tt>bind x</tt><br>
+          <tt>echo "$x $y" | $text</tt><br>
+        </blockquote>
+        <p><b>web</b></p>
+        <p>A <tt>web</tt> command allows the user to invoke the
+          internal web browser from the analysis menu.</p>
+        <tt>Example:</tt>
+        <blockquote> <tt> # web command example<br>
+            HTTP based<br>
+            *<br>
+            web<br>
+            http://hea-www.harvard.edu/RD/ds9/ref/index.html<br>
+            <br>
+            File based<br>
+            *<br>
+            web<br>
+            file:/home/joye/index.html<br>
+          </tt> </blockquote>
+      </blockquote>
+      <p><b><a name="Macros"></a>Macros</b></p>
+      <p>The following macros are macro-expanded to fill in user-defined
+        arguments before the command is executed. Strings that contain
+        $&lt;macroname&gt; that user does not want to be expanded may be
+        escaped by using $$&lt;macroname&gt;. All strings that contain
+        $&lt;string&gt; &nbsp;that are not a macro name will not be
+        affected.</p>
+      <p>For example:</p>
+      <blockquote> <tt>echo "$$data $foo" | $text</tt><br>
+      </blockquote>
+      <p>will display a text dialog that contains "$data $foo"</p>
+      <p><b>$width<br>
+          $height<br>
+          $depth</b></p>
+      <p>Substitute the width, height, or depth of the data file in the
+        command line. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $width</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; $height</tt><br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; echo "$width $height $depth" | $text</tt>
+      <br>
+      <p><b>$bitpix</b></p>
+      <p>Substitute the bitpix of the data file in the command line. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $bitpix</tt> <br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; echo "$bitpix" | $text</tt>
+      <p><b>$data</b></p>
+      <p>Data from the current frame becomes the input data to the
+        command string. This data is in the form of a FITS image. This
+        macro can only used at the beginning of the command string. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $data</tt> <br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $data | dosomething | $text</tt>
+      <p><b>$entry</b></p>
+      <p>Display an entry modal dialog. The returned string is
+        substituted. If <tt>cancel</tt> is selected, the command line
+        is not executed. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $entry(&lt;message&gt;)</tt><br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; echo "$entry(Enter something here)"
+        | $text</tt>
+      <p><b>$env</b></p>
+      <p>Substitute the value of a shell environment variable. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $env(&lt;shell variable&gt;)</tt><br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; echo "$env(PATH)" | $text</tt>
+      <p><b>$filedialog</b></p>
+      <p>Display the standard file dialog. Substitutes the returned
+        pathname. Argument specifies if an open file or save file dialog
+        is invoked.</p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $filedialog([open|save])</tt><br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; echo "$filedialog(open)" | $text</tt><br>
+      <p><b>$filename</b></p>
+      <p>Substitute the filename of the data file in the command line. A
+        full filename includes any absolute or relative path. A root
+        filename contains no path. A (2D) subsection defines a subimage
+        from <tt>xmin,ymin</tt> to <tt>xmax,ymax</tt>. For Frame3D, a
+        2D subsection will also include the current slice (PLANE=)
+        parameter if not 1. A 3D subsection defines a subimage from <tt>xmin,ymin,zmin</tt>
+        to <tt>xmax,ymax,zmax</tt> and no PLANE parameter.<br>
+      </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $filename # filename with extname,
+        (2d) subsections, filters</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; $filename(root|root,base) # root filename
+        with </tt><tt>with extname, </tt><tt>no subsections, no
+        filters)</tt> <br>
+      <tt>&nbsp; &nbsp; $filename(full|full,base) # full filename </tt><tt>with
+
+        extname, </tt><tt>no subsections, no filters)</tt> <br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; dosomething $filename | $text</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; dosomething $filename(root) | $text<br>
+      </tt><br>
+      <b>$filename[$regions]</b>
+      <p>Combination of <tt>$filename </tt>and <tt>$regions </tt>macros.
+
+Generates
+a
+
+
+
+
+        series of filenames, each with a region. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $filename[$regions]</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $filename[$regions(&lt;options&gt;)]</tt> <br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; dosomething $filename[$regions] |
+        $text</tt>
+      <p><b>$geturl</b></p>
+      <p>This macro differs from all other macros, including $<tt>url</tt>,
+        in that no subprocess pipe is created. Only HTTP is supported.
+        The contents of the url are retrieved and sent to $<tt>text</tt>,
+        $<tt>plot</tt>, or $<tt>image.</tt> No other processing is
+        allowed. The primary purpose of this macro is to support
+        external analysis for the Windows platform, which has no
+        subprocess support. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp;
+        $geturl(http://&lt;hostname&gt;:&lt;port&gt;/&lt;query&gt;)</tt>
+      <br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $geturl(http://foo.bar.edu/foo.html)
+        | $text</tt><br>
+      <p><b>$image</b></p>
+      <p>The resulting image data is display in a DS9 frame. This macro
+        should be the last macro of a command line. Optional parameter
+        indicates if a new frame and what type of frame is created for
+        the new data. The macro is removed from the command line before
+        execution. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $image</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $image([new|rgb|3d|current])</tt> <br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; doit | $image(new)</tt>
+      <p><b>$message</b></p>
+      <p>Display a message dialog box, with option buttons.&nbsp; After
+        displaying the message, the macro is removed from the command
+        line before execution. If <tt>cancel</tt> or <tt>no</tt> is
+        selected, the command line is not executed. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $message(&lt;message&gt;)</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp;
+        $message([ok|okcancel|yesno],&lt;message&gt;)</tt><br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $message(okcancel,This is a
+        Message)| doit | $text</tt>
+      <p><b>$null</b></p>
+      <p>Expect no output or results from analysis task. Note: no error
+        message will be returned if the analysis task fails to execute
+        correctly. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $null</tt><br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; echo "Hello, world" &gt; foo | $null</tt>
+      <p><b>$pan</b></p>
+      <p>Substitute current pan location of the particular data file are
+        returned. The default coordinate system is <tt>physical</tt>. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $pan<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $pan(&lt;coordinate
+        system&gt;,&lt;format&gt;)</tt> <br>
+      <p>where:</p>
+      <tt>&nbsp;&nbsp;&nbsp; coordinate system =
+        [image|physical|detector|amplifier|wcs|wcsa...wcsz]</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; sky
+        frame&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+        [fk4|fk5|icrs|galactic|ecliptic]</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; sky
+        format&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+        [hms|sexagesimal|degrees]</tt><br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; echo $pan(fk5,sexagesimal) | $text</tt><br>
+      <p><b>$plot</b></p>
+      <p>Display data in plot window. This macro should be the last
+        macro of a command line. The data is read via <tt>STDIN</tt>
+        and consist of a pair of coordinates, with option error values.
+        (<tt>xy, xyex, xyey, xyexe</tt>y) Default dimension is <tt>xy.</tt>
+        The macro is removed from the command line before execution. </p>
+      <p>For <tt>$plot(stdin)</tt> only: </p>
+      <p>The title, x axis label, and y axis label are assumed to be on
+        the first line of input, delimited with a new-line. However, if
+        the data starts with $<tt>BEGINTEXT</tt>, all text between $<tt>BEGINTEXT</tt>
+        and $<tt>ENDTEXT</tt> will be removed from the data and
+        displayed in a separate text dialog window, with the remaining
+        data, including the title, x axis label, and y axis label, will
+        be displayed in a plot window. Furthermore, if the data contains
+        the string $<tt>ERROR,</tt> an error is assumed to have occurred
+        and a text dialog window is displayed only. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $plot</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $plot(,,,)</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $plot(&lt;title&gt;,&lt;x axis
+        label&gt;,&lt;y axis label&gt;,[xy|xyex|xyey|xyexey])</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $plot(stdin)</tt> <br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; doit | $plot(This is aTitle,X Axis,Y
+        Axis)<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; doit | $plot(stdin)</tt>
+      <p><b>$regions</b></p>
+      <p>Substitute region definition in specified region format,
+        coordinate system, and coordinate format. The default coordinate
+        system is <tt>physical</tt>, default coordinate format <tt>degrees</tt>,
+        and default region format <tt>DS9</tt>. Arguments may appear in
+        any order, as long as they are separated by ',' and no spaces.
+        If one or&nbsp; more properties are specified, only regions with
+        all of the specified properties will be substituted. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $regions</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $regions(&lt;options&gt;)</tt>
+      <p>where options are one of the following: </p>
+      <tt>&nbsp;&nbsp;&nbsp; regions format&nbsp;&nbsp;&nbsp; =
+        [ds9|ciao|saotng|saoimage|pros|xy]</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp;
+        property&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+        [include|exclude|source|background]</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; coordinate system =
+        [image|physical|detector|amplifier|wcs]</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; sky
+        frame&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+        [fk4|fk5|icrs|galactic|ecliptic]</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; sky
+        format&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+        [sexagesimal|degrees]</tt>
+      <p>also, the old <i>SAOTNG</i> formats are also supported: </p>
+      <tt>&nbsp;&nbsp;&nbsp; $regions_pixels</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $regions_degrees</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $regions_hms</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $include_regions</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $include_regions_pixels</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $include_regions_degrees</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $include_regions_hms</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $exclude_regions</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $exclude_regions_pixels</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $exclude_regions_degrees</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $exclude_regions_hms<br>
+      </tt> <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; dosomething $regions | $text</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; dosomething $regions(pros) | $text</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; dosomething $regions(source,wcs,fk5) |
+        $text</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; dosomething
+        $regions(saotng,background,exclude,ecliptic,sexagesimal) | $text</tt>
+      <p><b>$text</b></p>
+      <p>Display text in a text dialog window. This macro should be the
+        last macro of a command line. To display text from only STDOUT
+        use '|' as the pipe command. To display text from both STDOUT
+        and STDERR, use '|&amp;' as the pipe command. No parameters are
+        required. The macro is removed from the command line before
+        execution. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $text</tt> <br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; doit | $text # stdout<br>
+        &nbsp;&nbsp;&nbsp; doit |&amp; $text # stdout and stderr<br>
+      </tt>
+      <p><b>$url</b></p>
+      <p>URLs are processed and stored in a temporary file. Only HTTP
+        and anonymous FTP are supported. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp;
+        $url(http://&lt;hostname&gt;:&lt;port&gt;/&lt;query&gt;)</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp;
+        $url(ftp://&lt;hostname&gt;/&lt;filename&gt;)</tt><br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp;
+        $url(http://legacy.gsfc.nasa.gov/rosat/data/p000s26b.img.Z) |
+        uncompress | $image</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp;
+        $url(ftp://legacy.gsfc.nasa.gov/rosat/data/hri/images/rh100193_img.fits)
+        | $image<br>
+      </tt>
+      <p><b>$vo_method</b></p>
+      <p>Returns the vo method. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $vo_method</tt> <br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; echo '$vo_method' | $text</tt><br>
+      <p><b>$value<br>
+        </b></p>
+      <p>Substitute the value at the location of the cursor of an bind
+        event.<br>
+      </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $value<br>
+        <br>
+        Example:<br>
+        &nbsp;&nbsp;&nbsp; echo "$value" | $text</tt><br>
+      <p><b>$x<br>
+          $y<br>
+          $z<br>
+        </b></p>
+      <p>Substitute coordinates of an bind event. When a bind event is
+        triggered, the <i>x,y </i>coordinates of the mouse of the
+        particular data file are returned. The default coordinate system
+        is <tt>physical</tt>. This macro is only available for bind
+        commands. For datacubes, the z coordinate is returned based on
+        the current slice selected.<br>
+      </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $x</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $x(&lt;coordinate
+        system&gt;,&lt;format&gt;)</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $y</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; $y(&lt;coordinate
+        system&gt;,&lt;format&gt;)<br>
+        &nbsp;&nbsp;&nbsp; $z<br>
+        &nbsp;&nbsp;&nbsp; $z(&lt;coordinate system&gt;)<br>
+      </tt>
+      <p>where:</p>
+      <tt>&nbsp;&nbsp;&nbsp; coordinate system =
+        [image|physical|detector|amplifier|wcs|wcsa...wcsz]</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; sky
+        frame&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+        [fk4|fk5|icrs|galactic|ecliptic]</tt> <br>
+      <tt>&nbsp;&nbsp;&nbsp; sky
+        format&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+        [hms|sexagesimal|degrees]</tt> <br>
+      <br>
+      <tt>Example:<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; echo "$x $y" | $text<br>
+        &nbsp;&nbsp;&nbsp; echo "$x $y $z" | $text<br>
+        &nbsp;&nbsp;&nbsp; echo "$x(fk5,sexagesimal)
+        $y(fk5,sexagesimal)" | $text<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; echo "$x(wcs) $y(wcs) $z(wcs)" | $text</tt><br>
+      <p><b>$xpa</b></p>
+      <p>Returns the xpa access point name. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $xpa</tt> <br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; echo '$xpa' | $text</tt>
+      <p><b>$xpa_method</b></p>
+      <p>Returns the xpa method. </p>
+      <tt>Syntax:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; $xpa_method</tt> <br>
+      <br>
+      <tt>Example:<br>
+      </tt> <tt>&nbsp;&nbsp;&nbsp; echo '$xpa_method' | $text</tt>
+      <p><b><a name="Help"></a>Help</b></p>
+      <p>The user may define his own <tt>HELP</tt> message. This
+        message will be available to the user as a menu item. An
+        optional label maybe specified. The default label is <tt>Help</tt>.
+        When invoked, an text dialog window will appear, containing the
+        message. Multiple <tt>HELP</tt> items maybe defined within a
+        menu or across hierarchical menus. </p>
+      <tt>Example:</tt>
+      <blockquote><tt>help Main Help</tt> <br>
+        <tt>A help message may contain</tt> <br>
+        <tt>multiple lines of description of the tasks</tt> <br>
+        <tt>in the menu or menus</tt> <br>
+        <tt>endhelp</tt> </blockquote>
+      <p><b><a name="Parameters"></a>Parameters</b></p>
+      <p>The user may define his own macros or parameters to be
+        evaluated before the command line is executed. To do this, the
+        user defines a param segment that is referenced in the command
+        line. The param definition has the follow format: </p>
+      <blockquote> <tt>param &lt;name&gt;</tt> <br>
+        <tt>&lt;variable&gt; &lt;entry | checkbox | menu&gt;
+          &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;</tt> <br>
+        <tt>...</tt> <br>
+        <tt>endparam</tt> </blockquote>
+      <p>or </p>
+      <blockquote> <tt>param &lt;name&gt;</tt> <br>
+        <tt>@&lt;iraf param filename&gt;</tt> <br>
+        <tt>end</tt> </blockquote>
+      <p>The definition either consisted of a number of variables, one
+        per row, or the name of a IRAF style parameter file. DS9 will
+        look for the IRAF parameter file in: </p>
+      <blockquote> <tt>./&lt;filename&gt;</tt> <br>
+        <tt>$UPARM/&lt;filename&gt;</tt> <br>
+        <tt>$HOME/iraf/&lt;filename&gt;</tt> </blockquote>
+      <tt>Example:<br>
+      </tt>
+      <blockquote> <tt>param foobar</tt> <br>
+        <tt>var1 entry {Variable 1} default {this is a entry}</tt> <br>
+        <tt>var2 checkbox {Variable 2} 1 {this is a checkbox}</tt> <br>
+        <tt>var3 menu {Variable 3} AAA|BBB|CCC {this is a menu}</tt> <br>
+        <tt>endparam</tt> </blockquote>
+      <p>To use parameters, specify the param name at the beginning of
+        your command line: </p>
+      <blockquote> <tt>Parameter Test</tt> <br>
+        <tt>*</tt> <br>
+        <tt>menu</tt> <br>
+        <tt>$param(foobar); echo "$var1 $var2 $var3" | $text</tt> </blockquote>
+      <p>When the menu item is selected, the user will be presented with
+        a dialog box that contains <i>entry, checkbox, or menu </i>choices
+
+
+
+
+        for each variable specified. If the user clicks ok, the values
+        are substituted in the command line before execution. </p>
+      <p><b><a name="HierarchicalMenus"></a>Hierarchical Menus</b></p>
+      <p>The user may define hierarchical menus. Use this to organized
+        crowded menus. To do this, frame menu entries with <tt>hmenu
+          &lt;label&gt; </tt>and <tt>endhmenu</tt>. Hierarchical menu
+        labels may contain spaces. Multiple levels maybe implemented. </p>
+      <tt>Example:<br>
+      </tt>
+      <blockquote> <tt>hmenu Stuff</tt> <br>
+        <tt>&nbsp;&nbsp;&nbsp; hello</tt> <br>
+        <tt>&nbsp;&nbsp;&nbsp; *</tt> <br>
+        <tt>&nbsp;&nbsp;&nbsp; menu</tt> <br>
+        <tt>&nbsp;&nbsp;&nbsp; echo "Hello" | $text</tt>
+        <p><tt>&nbsp;&nbsp;&nbsp; world</tt> <br>
+          <tt>&nbsp;&nbsp;&nbsp; *</tt> <br>
+          <tt>&nbsp;&nbsp;&nbsp; menu</tt> <br>
+          <tt>&nbsp;&nbsp;&nbsp; echo "World" | $text</tt> </p>
+        <p><tt>&nbsp;&nbsp;&nbsp; hmenu More Stuff</tt> <br>
+          <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hello world</tt>
+          <br>
+          <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *</tt> <br>
+          <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; menu</tt> <br>
+          <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; echo "Hello
+            World" | $text</tt> <br>
+          <tt>&nbsp;&nbsp;&nbsp; endhmenu</tt> <br>
+          <tt>endhmenu</tt></p>
+      </blockquote>
+      <p>Will create an hierarchical menu with two members, <tt>hello</tt>
+        and <tt>world</tt>. </p>
+      <p><b><a name="Sample"></a>Sample</b></p>
+      <tt>#<br>
+        # Analysis command descriptions:<br>
+        #&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; menu label<br>
+        #&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file templates<br>
+        #&nbsp;&nbsp;&nbsp; menu/bind<br>
+        #&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; analysis command line<br>
+        <br>
+        param foo<br>
+        &nbsp;&nbsp;&nbsp; var1 entry entry 40 {this is a entry}<br>
+        &nbsp;&nbsp;&nbsp; var2 checkbox checkbox 1 {this is a checkbox}<br>
+        &nbsp;&nbsp;&nbsp; var3 menu menu AAA|BBB|CCC {this is a menu}<br>
+        endparam<br>
+        <br>
+        param bar<br>
+        &nbsp;&nbsp;&nbsp; @analysis.par<br>
+        endparam<br>
+        <br>
+        param foobar<br>
+        &nbsp;&nbsp;&nbsp; @tvdisply.par<br>
+        endparam<br>
+        <br>
+        param ltc<br>
+        &nbsp;&nbsp;&nbsp; bins entry "Enter number of [t1:t2:]bins" 0
+        "('0' for default number of bins)"<br>
+        endparam<br>
+        <br>
+        # Help Main Help<br>
+        <br>
+        help Main Help<br>
+        These menus contain a test for each possible feature<br>
+        <br>
+        supported by the ds9 (blank line above)<br>
+        endhelp<br>
+        ---<br>
+        <br>
+        hmenu Test Web<br>
+        &nbsp;&nbsp;&nbsp; help Web Help<br>
+        &nbsp;&nbsp;&nbsp; Help for web features<br>
+        &nbsp;&nbsp;&nbsp; endhelp<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Web Test url<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; web<br>
+        &nbsp;&nbsp;&nbsp; http://hea-www.harvard.edu/RD/ds9/<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Web Test file<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; web<br>
+        &nbsp;&nbsp;&nbsp; file:/home/joye/saods9/ds9/tests/hv.html<br>
+        endhmenu<br>
+        <br>
+        hmenu Test Basics<br>
+        &nbsp;&nbsp;&nbsp; help Basic Help<br>
+        &nbsp;&nbsp;&nbsp; Help for basic features<br>
+        &nbsp;&nbsp;&nbsp; endhelp<br>
+        &nbsp;&nbsp;&nbsp; ---<br>
+        &nbsp;&nbsp;&nbsp; Test escape char # this is a comment<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo "this is not a macro $$xpa" | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test pass thru # this is a comment<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo "this is not a macro $foo" | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $xpa # this is a comment<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo $xpa | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $xpa_method<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo $xpa_method | $text<br>
+      </tt><tt><br>
+        &nbsp;&nbsp;&nbsp; Test $vo_method<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo $vo_method | $text<br>
+        <br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; Test $filename<br>
+        &nbsp;&nbsp;&nbsp; *.fits<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo $filename | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $filename(root)<br>
+        &nbsp;&nbsp;&nbsp; *.fits<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo $filename(root) | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $xdim $ydim $bitpix<br>
+        &nbsp;&nbsp;&nbsp; *.fits<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo "$xdim $ydim $bitpix" | $text<br>
+        <br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; Test $xcen $ycen<br>
+        &nbsp;&nbsp;&nbsp; *.fits<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo "$xcen $ycen" | $text<br>
+        <br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; Test $env<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo $env(PATH) | $text<br>
+        endhmenu<br>
+        <br>
+        hmenu Test Regions<br>
+        &nbsp;&nbsp;&nbsp; help Regions Help<br>
+        &nbsp;&nbsp;&nbsp; Help for regions features<br>
+        &nbsp;&nbsp;&nbsp; endhelp<br>
+        &nbsp;&nbsp;&nbsp; ---<br>
+        &nbsp;&nbsp;&nbsp; Test $regions<br>
+        &nbsp;&nbsp;&nbsp; *.fits<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo "$regions
+        ds9_s:$regions(ds9,source,image)
+        ciao_b:$regions(ciao,background)
+        saotng_i:$regions(saotng,include,wcs,fk5)
+        pros_e:$regions(pros,exclude,wcs,fk5,sexagesimal)
+        xy_be:$regions(xy,background,exclude,wcs,fk4,hms)" | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $regions wcs<br>
+        &nbsp;&nbsp;&nbsp; *.fits<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo "$regions(ds9,wcs)
+        $regions(ds9,wcs,fk5,sexagesimal) $regions(ds9,wcsa) " | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $include_regions_pixels<br>
+        &nbsp;&nbsp;&nbsp; *.fits<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo "ds9_s: $source_regions ds9_b:
+        $background_regions_pixels ds9_i: $include_regions_degrees
+        ds9_e: $exclude_regions_hms" | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $filename $regions<br>
+        &nbsp;&nbsp;&nbsp; *.fits<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo "$filename[$regions]" | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $filename $regions()<br>
+        &nbsp;&nbsp;&nbsp; *.fits<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo "$filename[$regions()]" | $text<br>
+        endhmenu<br>
+        <br>
+        hmenu Test Output<br>
+        &nbsp;&nbsp;&nbsp; help Output Help<br>
+        &nbsp;&nbsp;&nbsp; Help for output features<br>
+        &nbsp;&nbsp;&nbsp; endhelp<br>
+        &nbsp;&nbsp;&nbsp; ---<br>
+        &nbsp;&nbsp;&nbsp; Test $null<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo "This is Text" &gt; /dev/null | $null<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $text<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo "This is Text" | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $text stderr<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; ls foofoofoo | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $plot<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; cat xy.dat | $plot<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $plot(title,x,y,xyey)<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; cat xye.dat | $plot(Title,X Axis,Y Axis,xyey)<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $plot(title,x,y,xyexey)<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; cat xyee.dat | $plot(Title,X Axis,Y
+        Axis,xyexey)<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $plot(title,x,y,4)<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; cat xyey.dat | $plot(Title,X Axis,Y Axis,4)<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $plot(title,x,y,5)<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; cat xyeye.dat | $plot(Title,X Axis,Y Axis,5)<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $plot(stdin)<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; cat xye.stdin.dat | $plot(stdin)<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $plot(stdin) text<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; cat xye.stdin.text.dat | $plot(stdin)<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $plot(stdin) error<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; cat xy.stdin.error.dat | $plot(stdin)<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $data<br>
+        &nbsp;&nbsp;&nbsp; *.fits<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; $data | $image(new)<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $image<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; cat img16.fits | $image<br>
+        endhmenu<br>
+        <br>
+        hmenu Test Dialogs<br>
+        &nbsp;&nbsp;&nbsp; help Dialogs Help<br>
+        &nbsp;&nbsp;&nbsp; Help for dialog features<br>
+        &nbsp;&nbsp;&nbsp; endhelp<br>
+        &nbsp;&nbsp;&nbsp; ---<br>
+        &nbsp;&nbsp;&nbsp; Test $message(message)<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; $message(ok,This is a Message) | echo "hello"
+        | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $message(ok,message)<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; $message(ok,This is a Message) | echo "World"
+        | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $entry(message)<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; echo "$entry(Enter Something)" | $text<br>
+        endhmenu<br>
+        <br>
+        hmenu Test Params<br>
+        &nbsp;&nbsp;&nbsp; help Param Help<br>
+        &nbsp;&nbsp;&nbsp; Help for param features<br>
+        &nbsp;&nbsp;&nbsp; endhelp<br>
+        &nbsp;&nbsp;&nbsp; ---<br>
+        &nbsp;&nbsp;&nbsp; Test $param<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; $param(foo); echo "$var1 $var2 $var3" | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $param @file<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; $param(bar); echo "$var1 $var2 $var3" | $text<br>
+        endhmenu<br>
+        <br>
+        hmenu Test Network<br>
+        &nbsp;&nbsp;&nbsp; help Network Help<br>
+        &nbsp;&nbsp;&nbsp; Help for network features<br>
+        &nbsp;&nbsp;&nbsp; endhelp<br>
+        &nbsp;&nbsp;&nbsp; ---<br>
+        &nbsp;&nbsp;&nbsp; Test $url(http://)<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp;
+        $url(http://legacy.gsfc.nasa.gov/FTP/rosat/data/cdrom/vol1/IMAGES/00h/p000s26b.img.Z)
+
+|
+gunzip
+
+
+
+
+        | $image<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $url(ftp://)<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp;
+        $url(ftp://legacy.gsfc.nasa.gov/rosat/data/hri/images/fits/rh100193_img.fits)
+
+
+
+
+        | $image<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $geturl $text<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp;
+$geturl(http://hea-www.harvard.edu/RD/saord-cgi/funtools?funcnts+$filename+$regions(source,,)+$regions(background,,))|$text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; Test $geturl $plotstd<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; $param(ltc);
+$geturl(http://hea-www.harvard.edu/RD/saord-cgi/funtools?funhist_plot+$filename[$regions]+time+$bins)|$plot(stdin)<br>
+        endhmenu<br>
+        <br>
+        hmenu Test Other<br>
+        &nbsp;&nbsp;&nbsp; help Other Help<br>
+        &nbsp;&nbsp;&nbsp; Help for other features<br>
+        &nbsp;&nbsp;&nbsp; endhelp<br>
+        &nbsp;&nbsp;&nbsp; ---<br>
+        &nbsp;&nbsp;&nbsp; Test $param @tvdisply<br>
+        &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; $param(foobar); echo "$frame $erase" | $text<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; hmenu Test MultiLevel<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; test<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; *<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; menu<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; echo "Hello World" | $text<br>
+        &nbsp;&nbsp;&nbsp; endhmenu<br>
+        endhmenu<br>
+        <br>
+        $x $y<br>
+        *.fits<br>
+        bind x<br>
+        echo "$x $y" | $text<br>
+        <br>
+        $x(fk5,hms) $y(fk5,hms)<br>
+        *.fits<br>
+        bind y<br>
+        echo "$x(fk5,hms) $y(fk5,hms)" | $text<br>
+        <br>
+        $x(wcs,fk5,hms) $y(wcs,fk5,hms)<br>
+        *.fits<br>
+        bind z<br>
+        echo "$x(wcs,fk5,hms) $y(wcs,fk5,hms)" | $text<br>
+      </tt> </blockquote>
+  </body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Create a True Color Image in an RGB frame - DS9 </title>
+</head> 
+<!--THIS FILE IS CREATED AUTOMATICALLY - DO NOT EDIT MANUALLY--> 
+<body><div class="mainbar">
+<a name="maintext"></a><div align="center"><h1>Create a True Color Image in an RGB frame</h1></div>
+<p>
+      Return to the <a href="../index.html">DS9 Users Manual</a></p>
+<hr size="5" noshade>
+<div>
+<h2>Synopsis</h2>
+        <p>
+	  Most astronomical images map color to intensity level,
+	  e.g. lighter tones may correspond to a brighter intensity
+	  level in a greyscale image.  An alternative way of
+	  presenting data is via an image that correllates color and
+	  energy. 
+	</p>
+	
+	<p>
+	  ds9 has the capability to create an RGB image and
+          interactively adjust many of its parameters to achieve
+          optimal display results. 
+	</p>
+      <p>
+	    If you encounter any problems, please email saord @ cfa.harvard.edu.
+	  </p>
+</div>
+<hr size="5" noshade>
+<h2><a name="toc">Contents</a></h2>
+<ul>
+<li>
+<strong><a href="index.html#frame">Creating an RGB Frame</a></strong><ol type="A">
+<li><a href="index.html#frame.cmdline">From the command line</a></li>
+<li><a href="index.html#frame.gui">From the ds9 GUI</a></li>
+</ol>
+</li>
+<li><strong><a href="index.html#energy">Apply Energy Filters</a></strong></li>
+<li><strong><a href="index.html#smooth">Smoothing the Data (optional)</a></strong></li>
+<li><strong><a href="index.html#scale">Adjusting the Scale Parameters</a></strong></li>
+<li><strong><a href="index.html#coordgrid">Adding a Coordinate Grid</a></strong></li>
+<li><strong><a href="index.html#output">Saving the Output</a></strong></li>
+<li><strong><a href="index.html#history">History</a></strong></li>
+<li>
+<strong>Images</strong><ul>
+<li><a href="#rgb">Figure 1: RGB window</a></li>
+<li><a href="#lock">Figure 2: Lock menu in the RGB window</a></li>
+<li><a href="#ds9">Figure 3: RGB frame with three files loaded</a></li>
+<li><a href="#efilt">Figure 4: Energy-filtered RGB data</a></li>
+<li><a href="#smooth">Figure 5: Data smoothed with a Gaussian of radius three</a></li>
+<li><a href="#scale">Figure 6: The adjusted pixel distribution for scaling</a></li>
+<li><a href="#grid">Figure 7: Coordinate Grid parameters dialog box</a></li>
+<li><a href="#color">Figure 8: Final three-color image with coordinate grid overlaid</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<div class="sectionlist">
+<div class="section">
+<h2><a name="frame">Creating an RGB Frame</a></h2>
+        
+
+	<p>
+	  To use the three-color capabilities of ds9, the data must be
+	  loaded into a special RGB frame.  This frame will contain
+	  all three files, stacked together in separate layers. 
+	</p>
+
+	<p>
+	  This thread uses Chandra data from an observation of Cas A
+	  (ObsID 198); the level=2 event file is named 
+	  "casa.fits".  The same file is loaded into each layer of the
+	  RGB frame; different energy filters will be applied to the
+	  layers in a later step.   
+	</p>
+
+	<p>
+	  There are two options for creating the RGB frame:
+	</p>
+
+        <div class="subsectionlist">
+<div class="subsection">
+<h3><a name="frame.cmdline">A. From the command line</a></h3>
+            
+
+	    <p>
+	      The command-line syntax can be used to create the
+	      RGB frame and load the three files into the red, green,
+	      and blue layers:
+	    </p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">
+unix% ds9 -rgb -red casa.fits \
+               -green casa.fits \
+	       -blue casa.fits &amp;
+</pre></div>
+
+	    <p>
+	      ds9 will open with the three files in one frame.
+	      The <a href="#rgb">RGB window (Figure 1)</a> should open
+	      as well.  If it doesn't, open it from the "Frame →
+	      RGB..." menu.  
+	    </p>
+
+	  <hr width="80%" align="center">
+</div>
+<div class="subsection">
+<h3><a name="frame.gui">B. From the ds9 GUI</a></h3>
+            
+
+	    <p>
+	      To load the files from the ds9 GUI:
+	    </p>
+
+	    <ol type="1">
+	      <li>
+	        <p>
+		  Launch ds9
+		</p>
+	      </li>
+
+	      <li>
+	        <p>
+		  Choose "New Frame RGB" from the "Frame" menu.
+		</p>
+
+		<p>
+		  When the new frame is created, the 
+		  <a href="#rgb">RGB window (Figure 1)</a> should open as well.
+		  If it doesn't, open it from the "Frame → RGB..."
+		  menu. 
+		</p>
+	      </li>
+
+	      <li>
+	        <p>
+		  Make sure the "Red" band is selected in the
+		  "Current" column of the RGB window, then choose
+		  "File → Open..." in the main ds9 window and
+		  select the red file.   
+		</p>
+	      </li>
+
+	      <li>
+	        <p>
+		  Change the current band to "Green" in the RGB
+		  window and open the green file.
+		</p>
+	      </li>
+
+	      <li>
+	        <p>
+		  Change the current band to "Blue" in the RGB
+		  window and open the blue file.
+		</p>
+	      </li>
+	      </ol>
+
+	  </div>
+</div>
+
+            <div class="figure">
+<div class="caption"><h3><a name="rgb">Figure 1: RGB window</a></h3></div>
+<div><img alt="[The RGB window indicates that all three layers are visible and Blue is selected as the current one.]" src="rgb.png"></div>
+</div>
+
+	    <p>
+	      Each frame of the RGB image may have different binning,
+	      scaling, smoothing, and colorbars applied to it.  You
+	      can "lock" the frames together, so that the setting
+	      is applied to all three frames at once.  This is done
+	      with the <a href="#lock">Lock menu in the RGB
+	      window (Figure 2)</a>; all four options are checked in this
+	      thread. 
+	    </p>
+
+    	    <div class="figure">
+<div class="caption"><h3><a name="lock">Figure 2: Lock menu in the RGB window</a></h3></div>
+<div><img alt="[The lock menu is expanded and all four options are checked.]" src="lock.png"></div>
+</div>
+
+	    <p>
+	      Use the binning and zoom options in ds9 to adjust the
+	      image so that the full region of interest is visible.
+	      <a href="#ds9">Figure 3</a> uses binning=2 and zoom=1.
+	      The "Scale" is set to "log: minmax"
+	    </p>
+            
+            <div class="figure">
+<div class="caption"><h3><a name="ds9">Figure 3: RGB frame with three files loaded</a></h3></div>
+<div><img alt="[The data is loaded into one ds9 frame; the RGB window indicates the current layer is Blue.]" src="ds9.png"></div>
+</div>
+     <hr>
+</div>
+<div class="section">
+<h2><a name="energy">Apply Energy Filters</a></h2>
+        
+
+	<p>	 
+	  The following energy bands are used for the RGB layers:
+	</p>
+
+	<ul>
+	  <li>red (soft band): 200-1500 eV</li>
+	  <li>green (medium band): 1500-2500 eV</li>
+	  <li>blue (hard band): 2500-8000 eV</li>
+	</ul>
+
+	<p>
+          The values are just guidelines and may need to be adjusted for your analysis.
+	</p>
+
+	<p>
+	  To filter the data, first select the Red frame from the RGB
+	  window.  Open the <tt>Bin  → Binning Parameters</tt>
+	  dialog box and type "<tt>energy=200:1500</tt>" in the Bin
+	  Filter field.  Choose "Apply" and the ds9 display will be
+	  updated to reflect the energy filter.
+	</p>
+
+	<p>
+	  Without closing the Binning Parameters box, select the Green
+	  frame.  Type "<tt>energy=1500:2500</tt>" in the Bin
+	  Filter field and choose "Apply" again.  Repeat these two
+	  steps for the Blue layer, using the filter 
+	  "<tt>energy=2500:8000</tt>".
+	</p>
+            
+	<p>
+	  The colors in the image, as seen in <a href="#efilt">Figure 4</a>,
+	  are correlated to the energy of the data.
+	</p>
+
+            <div class="figure">
+<div class="caption"><h3><a name="efilt">Figure 4: Energy-filtered RGB data</a></h3></div>
+<div><img alt="[Each layer of data has a different energy filtered applied, correlating color and energy in the image.]" src="filtered.png"></div>
+</div>
+
+      <hr>
+</div>
+<div class="section">
+<h2><a name="smooth">Smoothing the Data (optional)</a></h2>
+        
+	
+	<p>	 
+	  Smoothing can help bring out finer features in the data by
+	  removing statistical noise.  It is an optional step;
+	  experiment with smoothing to see if it improves the
+	  appearance of your data. 
+	</p>
+
+	<p>
+	  The smoothing capability in ds9 lets you interactively
+	  smooth the data.  Note that for quantitative data analysis,
+	  smoothing should be done with the appropriate data analysis
+	  software; ds9 does a nice job for publication purposes.	   
+	</p>
+
+	<p>
+	  Choose "Smooth" from the "Analysis" menu and the ds9 display
+	  is updated with the results of smoothing. The "Smooth"
+	  option can be toggled on and off during your ds9 session.  
+	</p>
+
+	<p>
+	  Open the "Smoothing Parameters..." dialog box from the same
+	  menu to adjust the function and kernel radius of the
+	  smoothing.  This data were smoothed with a Gaussian function
+	  with radius of two.  The results are shown in
+	  <a href="#smooth">Figure 5</a>. 
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="smooth">Figure 5: Data smoothed with a Gaussian of radius three</a></h3></div>
+<div><img alt="[The smoothed data are displayed in ds9.]" src="smooth.png"></div>
+</div>
+
+      <hr>
+</div>
+<div class="section">
+<h2><a name="scale">Adjusting the Scale Parameters</a></h2>
+        
+
+	<p>
+	  This data is being displayed with a "log: minmax" scale.
+	  That means that ds9 stretches the scale to encompass
+	  the range of pixel values in the file.  Adjusting the
+	  minimum and maximum scale values sets a threshold for the
+	  background data and brings out features. 
+	</p>
+
+	<p>
+	  To change the minimum and maximum values, open the "Scale
+	  → Scale Parameters" dialog box.  The pixel distribution
+	  shown is for the band selected as "Current" in the RGB
+	  window; when the a different band is selected, the histogram
+	  of pixel values is updated to match. 
+	</p>
+
+	<p>
+	  To adjust the values, use the cursor to grab the red
+	  (minimum) or green (maximum) vertical lines on the plot and
+	  drag them to the desired location.  You can type a value in
+	  to the "Low" or "High" field and hit "Apply" to set the
+	  limits. 
+	</p>
+
+	<p>
+	  A basic guideline for setting the low value is to minimize
+	  the contribution of the background.  That is, adjust the
+	  minimum of each band until the background of the image is
+	  flat (i.e. solid black).  For the maximum value, bringing it
+	  in to the last data point in the pixel distribution is
+	  usually sufficient.  
+	</p>
+
+	<p>
+	  For ObsID 198 with the smoothing applied, the following
+	  limits were chosen (listed as "low:high" pairs): 
+	</p>
+
+	<ul>
+	  <li>Red - 0.4 : 20</li>
+	  <li>Green - 0.3 : 35</li>
+	  <li>Blue - 0.1 : 10</li>
+	</ul>
+
+	<p>
+	  <a href="#scale">Figure 6</a> shows the image with
+	  the new pixel value limits set. 
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="scale">Figure 6: The adjusted pixel distribution for scaling</a></h3></div>
+<div><img alt="[The background of the image is almost completely flat (black) after changing the scaling values.]" src="scale.png"></div>
+</div>
+
+      <hr>
+</div>
+<div class="section">
+<h2><a name="coordgrid">Adding a Coordinate Grid</a></h2>
+        
+
+	<p>
+	  To add a coordinate grid to the image, choose the
+	  "Coordinate Grid" option from the "Analysis"
+	  menu.  Then choose "Coordinate Grid Parameters" from the
+	  same menu to open <a href="#grid">the preferences
+	  dialog (Figure 7)</a>.  
+	</p>
+
+    	<div class="figure">
+<div class="caption"><h3><a name="grid">Figure 7: Coordinate Grid parameters dialog box</a></h3></div>
+<div><img alt="[The parameter box contains fields to set the plot title and axis labels and to change the axis spacing and numbering.]" src="grid.png"></div>
+</div>
+
+	<p>
+	  From the preferences box, you can change the color,
+	  font, line style (solid or dash), and line thickness for
+	  all elements of the grid.  The font style, size, and
+	  color can be edited, and you can add titles.  It is also
+	  possible to turn off the display of individual items via
+	  the "View" menu.  
+	</p>
+
+	<p>
+	  In <a href="#color">Figure 8</a>, we have turned
+	  off the grid lines and border.  The axes have been
+	  changed to "Exterior Axes" (from the "Type" menu).
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="color">Figure 8: Final three-color image with coordinate grid overlaid</a></h3></div>
+<div><img alt="[The three-color image is displayed in ds9.]" src="color.png"></div>
+</div>
+      <hr>
+</div>
+<div class="section">
+<h2><a name="output">Saving the Output</a></h2>
+        
+
+	<p>
+	  Once you are happy with your true color image, there are a
+	  number of output options in ds9. 
+	</p>
+
+	<ul>
+	  <li>
+	    <p>
+	      <strong>Image formats:</strong> from the "File →
+	      Save Image As..." menu, you can choose JPG, PNG, or TIFF
+	      file formats. 
+	    </p>
+	  </li>
+
+	  <li>
+	    <p>
+	      <strong>Postscript:</strong>  to create a postscript
+	      file, go to "File → Print..." and select "Print To:
+	      File". 
+	    </p>
+	  </li>
+	</ul>
+
+	<p>
+	  Currently it is not possible to save the state of the ds9
+	  imager, meaning that you cannot save the composite RGB
+	  frame and reopen later for further analysis.  
+	</p>
+
+      </div>
+</div>
+<hr size="5" noshade>
+<h2><a name="history">History</a></h2>
+<table class="history">
+      <tr>
+<td class="historydate">04 Jun 2009</td>
+<td>
+	Original version
+	
+     </td>
+</tr>
+     </table>
+<hr size="5" noshade>
+<p>
+      Return to the <a href="../index.html">DS9 Users Manual</a></p>
+</div></body>
+</html>

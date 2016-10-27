@@ -1,0 +1,230 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
+      2.4.7-10 i686) [Netscape]">
+    <title>Mouse and Keyboard</title>
+  </head>
+  <body alink="#ff0000" bgcolor="#ffffff" link="#0000ee" text="#000000"
+    vlink="#551a8b">
+    <h3><img alt="" src="../sun.gif" align="middle" height="98"
+        width="100"> Mouse and Keyboard</h3>
+    <blockquote>
+      <p><b> Mouse Buttons</b></p>
+      <p>The following table contains the event bindings for the mouse
+        buttons. </p>
+      <center>
+        <table nosave="" border="1" width="75%">
+          <tbody>
+            <tr>
+              <td>
+                <center>Mouse Button</center>
+              </td>
+              <td>
+                <center>Description</center>
+              </td>
+            </tr>
+            <tr>
+              <td><font face="Courier New,Courier">Button 1</font></td>
+              <td>Depends on current MODE, which may be selected by the
+                EDIT menu option.<br>
+                In Region mode, create/edit/delete regions.<br>
+                In Crosshair mode, will move current crosshair.<br>
+                In Colorbar mode, will change contrast and bias of
+                colormap.<br>
+                In Pan mode, will move or pan to clicked location.<br>
+                In Zoom mode, will zoom about clicked location.<br>
+                In Rotate mode, will rotate image about center.<br>
+                In Crop mode, will select 2-D crop region. For 3-D <i>Shift-click</i>
+                will edit front clip plane, <i>Control-click</i> will
+                edit back clip plane.<br>
+                In Catalog mode, will select catalog regions.<br>
+                In examine mode, will follow IRAF examine protocol.<br>
+              </td>
+            </tr>
+            <tr>
+              <td><font face="Courier New,Courier">Button 2</font></td>
+              <td>Pan mode: will move or pan to clicked location.
+                Behavior depends on the PAN preference settings.</td>
+            </tr>
+            <tr>
+              <td><font face="Courier New,Courier">Button 3</font></td>
+              <td>Colorbar mode: will change the contrast and bias of
+                the colormap.</td>
+            </tr>
+          </tbody>
+        </table>
+      </center>
+      <p><b>Greek and other special characters.</b> </p>
+      <p>The concept of a separate <tt>SYMBOL</tt> font is no longer
+        implemented with the latest OS font and scripting support,
+        especially with scalable anti-alias fonts such as Xft for Linux.
+        Most newer fonts (if not all) now have greek characters as part
+        of the font. The greek characters start at unicode \u0391 for
+        'A' and \u03b1 for 'a'. Each OS has a tool used to build and
+        copy a string of characters. Then use the Edit:Paste menu of DS9
+        to insert the character string.</p>
+      <blockquote>
+        <p>Linux- Gnome: <b>gucharmap<br>
+          </b>Linux- KDE: <b>kcharselect<br>
+          </b>MacOSX: <b>Character Viewer</b> (Select <tt>Edit:Special
+            Characters</tt>) Now click and drag the characters to a
+          terminal window. Then select the string and select <tt>Edit:Copy</tt>.<br>
+          Windows: <b>Character Map</b> (from <tt>Start</tt> button,
+          select <tt>All Programs</tt>, <tt>Accessories</tt>, <tt>System
+
+
+            Tools</tt> and then <tt>Character Map</tt>)</p>
+      </blockquote>
+      <p><b>Keyboard Shortcuts</b></p>
+      <p>The following table contains the list of keyboard shortcuts and
+        the resulting action taken.&nbsp; </p>
+      <center>
+        <table nosave="" border="1" width="75%">
+          <tbody>
+            <tr>
+              <td align="center"> Key Stroke </td>
+              <td>
+                <center>Description</center>
+              </td>
+            </tr>
+            <tr>
+              <td align="center"><tt>TAB</tt></td>
+              <td><font face="Courier New,Courier">G</font>oto next
+                frame</td>
+            </tr>
+            <tr>
+              <td align="center" valign="top"><tt>Shift-TAB</tt><br>
+              </td>
+              <td valign="top">Goto previous frame<br>
+              </td>
+            </tr>
+            <tr>
+              <td align="center"><tt>DELETE</tt></td>
+              <td>Deletes selected regions</td>
+            </tr>
+            <tr>
+              <td align="center">c<br>
+              </td>
+              <td>Print Mouse Coordinates and Pixel value.</td>
+            </tr>
+            <tr>
+              <td align="center">f<br>
+              </td>
+              <td>Toggles Infobox freeze</td>
+            </tr>
+            <tr>
+              <td align="center">i<br>
+              </td>
+              <td>Set include property for region</td>
+            </tr>
+            <tr>
+              <td align="center">e<br>
+              </td>
+              <td>Set exclude property for region</td>
+            </tr>
+            <tr>
+              <td align="center">s<br>
+              </td>
+              <td>Set source property for region</td>
+            </tr>
+            <tr>
+              <td align="center">b<br>
+              </td>
+              <td>Set background property for region</td>
+            </tr>
+            <tr>
+              <td align="center">g<br>
+              </td>
+              <td>Create a new group</td>
+            </tr>
+            <tr>
+              <td align="center"><tt>Shift-g</tt></td>
+              <td>Create a new group with default name</td>
+            </tr>
+            <tr>
+              <td align="center"><tt>+</tt></td>
+              <td>Goto next 3D Fits Slice</td>
+            </tr>
+            <tr>
+              <td align="center"><tt>-</tt></td>
+              <td>Goto previous 3D Fits Slice</td>
+            </tr>
+            <tr>
+              <td align="center"><tt>Up Arrow<br>
+                  k<br>
+                </tt></td>
+              <td>Will move selected regions up one pixel. <br>
+                In Pointer mode, will move the cursor up one pixel. <br>
+                In Crosshair mode, will move the crosshair up one pixel.
+                <br>
+                In Pan mode, will pan the image up one pixel.</td>
+            </tr>
+            <tr nosave="">
+              <td align="center"><tt>Right</tt><font face="Courier
+                  New,Courier"> </font><tt>Arrow<br>
+                  l<br>
+                </tt></td>
+              <td nosave="">Will move selected regions to the right one
+                pixel. <br>
+                In Pointer mode, will move the cursor to the right one
+                pixel. <br>
+                In Crosshair mode, will move the crosshair to the right
+                one pixel. <br>
+                In Pan mode, will pan the image to the right one pixel.</td>
+            </tr>
+            <tr>
+              <td align="center"><tt>Left</tt><font face="Courier
+                  New,Courier"> </font><tt>Arrow<br>
+                  h<br>
+                </tt></td>
+              <td>Will move selected regions to the left one pixel. <br>
+                In Pointer mode, will move the cursor to the left one
+                pixel. <br>
+                In Crosshair mode, will move the crosshair to the left
+                one pixel. <br>
+                In Pan mode, will pan the image to the left one pixel.</td>
+            </tr>
+            <tr>
+              <td align="center"><tt>Down</tt><font face="Courier
+                  New,Courier"> </font><tt>Arrow<br>
+                  j<br>
+                </tt></td>
+              <td>Will move selected regions down one pixel. <br>
+                In Pointer mode, will move the cursor up down one pixel.
+                <br>
+                In Crosshair mode, will also move the crosshair down one
+                pixel. <br>
+                In Pan mode, will pan the image down one pixel.</td>
+            </tr>
+            <tr>
+              <td align="center"><tt>Shift</tt><font face="Courier
+                  New,Courier">-</font><tt>Drag</tt></td>
+              <td>In Pointer mode, will select all regions within the
+                indicated region.<br>
+                In Crop mode, for 3D frame, will move front crop plane
+                forward.<br>
+              </td>
+            </tr>
+            <tr>
+              <td align="center"><tt>Control-Drag</tt></td>
+              <td>In Poiner mode, on selected <tt>ANNULUS</tt> Regions,
+                will create new radii.<br>
+                In Crop mode, for 3D frame, will move back crop plane
+                backward.<br>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" valign="top"><tt>Command-`</tt><br>
+              </td>
+              <td valign="top">Rotate thur all open windows<br>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </center>
+    </blockquote>
+  </body>
+</html>

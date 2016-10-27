@@ -1,0 +1,53 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=ISO-8859-1">
+    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
+      2.4.7-10 i686) [Netscape]">
+    <title>Bin</title>
+  </head>
+  <body alink="#ff0000" bgcolor="#ffffff" link="#0000ee" text="#000000"
+    vlink="#551a8b">
+    <h3><img alt="" src="../sun.gif" align="middle" height="98"
+        width="100"> Binning</h3>
+    <blockquote>
+      <p>To create an image from a FITS Bin Table, the user needs to
+        specify a binning factor, binning buffer size, and the binning
+        function.<br>
+      </p>
+      <p>The Binning (or Block) Factor is defined as the following: A
+        value greater or equal to zero. This value indicates the number
+        of pixel values that will fall into a particular bin.<br>
+      </p>
+      <p>The Bin Buffer Size is overall size of the image generated.
+        This has no relation to min and max values of the columns used
+        to create the image. <br>
+      </p>
+      <p>The Bin Function is defined as the following: Average - all
+        pixel values that fall into one pixel bin are averaged. Sum -
+        all pixel values that fall into one pixel bin are summed.<br>
+      </p>
+      <p>Bin to Fit Frame will calculate a bin block factor as a power
+        of 2 that will allow the entire data space to be displayed in
+        the current frame. </p>
+      <p>By default, DS9 will bin about the center of the image. To
+        determine the center of the image, DS9 will look for the
+        following keywords in order:</p>
+      <blockquote> <tt>TDMIN/TDMAX<br>
+          TLMIN/TLMAX<br>
+          TALEN<br>
+          AXLEN</tt> </blockquote>
+      <p>If no valid keywords are found, DS9 will define the center as
+        the middle of the possible data space based on the coordinate
+        data type.</p>
+      <br>
+      <p><br>
+      </p>
+      <blockquote> </blockquote>
+      <p><br>
+      </p>
+      <br>
+    </blockquote>
+  </body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=ISO-8859-1">
+    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
+      2.4.7-10 i686) [Netscape]">
+    <title>Coordinate Grids</title>
+  </head>
+  <body alink="#ff0000" bgcolor="#ffffff" link="#0000ee" text="#000000"
+    vlink="#551a8b">
+    <h3><img alt="" src="../sun.gif" align="middle" height="98"
+        width="100"> Coordinate Grids</h3>
+    <blockquote>
+      <p>DS9 can create and display coordinate grids as an overlay on an
+        image. The Display Coordinate Grid Menu is used to display
+        grids. A coordinate grid is composed of Grid Lines, Axes,
+        Border, and Title. Axes include tick marks, title, and numbers.
+        The appearance of the coordinate grid is specified by
+        parameters. These parameters may be configured via the
+        Coordinate Grid Parameters dialog box. In addition to the axes
+        titles and the grid title, the following menus are available. </p>
+      <p><b><a name="Format"></a>Numeric Formats</b></p>
+      <p>The user may specify custom numeric formats for either axes.
+        The format specification can be empty (default) or a print
+        function, based on the selected coordinate system:<br>
+      </p>
+      <blockquote> <tt>image</tt><br>
+        <tt>physical</tt><br>
+        <tt>detector</tt><br>
+        <tt>amplifier</tt><br>
+        <tt>wcs linear</tt><br>
+        <tt>wcs equatorial</tt><br>
+      </blockquote>
+      <p>The format specification string to be passed to the C "printf"
+        function (e.g. "%%1.7G") in order to format a single coordinate
+        value.</p>
+      <p>The Format string supplied should contain one or more of the
+        following characters. These may occur in any order, but the
+        following is recommended for clarity:</p>
+      <blockquote> "": Indicates that a plus sign should be prefixed to
+        positive values. By default, no plus sign is used.<br>
+        "z": Indicates that leading zeros should be prefixed to the
+        value so that the first field is of constant width, as would be
+        required in a fixed-width table (leading zeros are always
+        prefixed to any fields that follow). By default, no leading
+        zeros are added.<br>
+        "i": Use the standard ISO field separator (a colon) between
+        fields. This is the default behaviour.<br>
+        "b": Use a blank to separate fields.<br>
+        "l": Use a letter ("h"/"d", "m" or "s" as appropriate) to
+        separate fields.<br>
+        "g": Use a letter and symbols to separate fields ("h"/"d", "m"
+        or "s", etc, as appropriate), but include escape sequences in
+        the formatted value so that the Plot class will draw the
+        separators as small super-scripts.<br>
+        "d": Include a degrees field. Expressing the angle purely in
+        degrees is also the default if none of "h", "m", "s" or "t" are
+        given.<br>
+        "h": Express the angle as a time and include an hours field
+        (where 24 hours correspond to 360 degrees). Expressing the angle
+        purely in hours is also the default if "t" is given without
+        either "m" or "s".<br>
+        "m": Include a minutes field. By default this is not included.<br>
+        "s": Include a seconds field. By default this is not included.
+        This request is ignored if "d" or "h" is given, unless a minutes
+        field is also included.<br>
+        "t": Express the angle as a time (where 24 hours correspond to
+        360 degrees). This option is ignored if either "d" or "h" is
+        given and is intended for use where the value is to be expressed
+        purely in minutes and/or seconds of time (with no hours field).
+        If "t" is given without "d", "h", "m" or "s" being present, then
+        it is equivalent to "h".<br>
+        ".": Indicates that decimal places are to be given for the final
+        field in the formatted string (whichever field this is). The "."
+        should be followed immediately by an unsigned integer which
+        gives the number of decimal places required, or by an asterisk.
+        If an asterisk is supplied, a default number of decimal places
+        is used which is based on the value of the Digits attribute.<br>
+      </blockquote>
+      <p>All of the above format specifiers are case-insensitive. If
+        several characters make conflicting requests (e.g. if both "i"
+        and "b" appear), then the character occurring last takes
+        precedence, except that "d" and "h" always override "t".</p>
+      <p>The default formats are <tt>d.3</tt> for degrees and <tt>hms.1</tt>
+        / <tt>dms.1</tt> / <tt>ldms.1</tt> for sexagesimal.<br>
+      </p>
+    </blockquote>
+  </body>
+</html>

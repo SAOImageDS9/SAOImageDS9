@@ -1,0 +1,488 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="GENERATOR"
+ content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+  <title>DS9 Version 2.2 Release Notes</title>
+</head>
+<body alink="#ff0000" bgcolor="#ffffff" link="#0000ee" text="#000000"
+ vlink="#551a8b">
+<h3>
+<img alt="" src="../sun.gif" align="middle" height="98" width="100">Version
+2.2 Release
+Notes</h3>
+<ol>
+  <h4> <b>Version 2.2.1</b></h4>
+  <ol>
+    <li> <tt>11.04.2002 fixed bin smooth buttons.</tt></li>
+    <li> <tt>11.07.2002 remove debug statements in dss.tcl</tt></li>
+    <li> <tt>11.07.2002 fixed a problem with pure virtual method
+called
+when frame
+was deleted and histequ was the active scale.</tt></li>
+    <li> <tt>11.07.2002 fixed a problem with pasting filters that
+contains
+'\n'
+on the end of the string.</tt></li>
+    <li> <tt>11.14.2002 add W3Browse to archive menu</tt></li>
+    <li> <tt>11.14.2002 Web Display: for redirection, first use
+'location'
+meta
+data parameter, then look for first 'href' in html to find the
+redirection
+url.</tt></li>
+    <li> <tt>11.14.2002 move 'IISInit' after 'ProcessCommandLine' so
+that
+iis command
+line options take affect.</tt></li>
+    <li> <tt>11.14.2002 remove menu short cut options. Too many
+conflicts
+and unable
+to support multiple languages.</tt></li>
+    <li> <tt>11.18.2002 change prefs(scalemode) to prefs(scale,mode),
+prefs(scalescope)
+to prefs(scale,scope) and added prefs(scale,scope) to prefs written.</tt></li>
+    <li> <tt>11.18.2002 change prefs(minmaxmode) to
+prefs(minmax,mode),
+prefs(minmaxsample)
+to prefs(minmax,sample)</tt></li>
+    <li> <tt>11.18.2002 changes to Archive Servers preferences take
+effect
+immediately.</tt></li>
+    <li> <tt>11.19.2002 Web Display: improved support for fits
+mime-types.</tt></li>
+    <li> <tt>11.20.2002 Web Display: improved HVVerifyURL repairing
+urls.</tt></li>
+    <li> <tt>11.20.2002 Archive: add IRAS MSX support.</tt></li>
+    <li> <tt>11.22.2002 add 'update now' when a new display is
+received.
+This will
+allow 'movies' from iraf to display properly.</tt></li>
+    <li> <tt>11.22.2002 ds9 version 2.2.1 released to the public.</tt></li>
+  </ol>
+  <h4> <b>Version 2.2</b></h4>
+  <ol>
+    <li> <tt>09.03.2002 add Archive Server user prefs.</tt></li>
+    <li> <tt>09.03.2002 when HV window is unable to parse input, place
+a
+html header
+around it and display it as text.</tt></li>
+    <li> <tt>09.04.2002 update FITS Bin Table WCS keywords to conform
+to
+25 June
+2002 WCS FITS Documentation.</tt></li>
+    <li> <tt>09.04.2002 add support for FITS Bin Table Alt WCS
+keywords.</tt></li>
+    <li> <tt>09.04.2002 corrected minor errors in xpa documentation.</tt></li>
+    <li> <tt>09.04.2002 fixed a minor memory leak when frame is
+deleted
+and an image
+is still loaded.</tt></li>
+    <li> <tt>09.05.2002 added IPAC NED to archive menu.</tt></li>
+    <li> <tt>09.05.2002 add 'marker # move to canvas x y' command for
+CXC.</tt></li>
+    <li> <tt>09.05.2002 add 'marker # angle' command for CXC.</tt></li>
+    <li> <tt>09.09.2002 change ds9 regions syntax for ellipse annulus
+and
+box annulus
+from old saoimage to funtools syntax.</tt></li>
+    <li> <tt>09.10.2002 undid grid WIDGETBB fix. The results where not
+acceptable.</tt></li>
+    <li> <tt>09.12.2002 fixed a nasty bug with binning FITS bin tables
+and
+high
+bin factor values.</tt></li>
+    <li> <tt>09.13.2002 add Match Scales to Frame menu. This matches
+all
+scale parameters
+across all frames.</tt></li>
+    <li> <tt>09.16.2002 add Grid debug option.</tt></li>
+    <li> <tt>09.17.2002 upgrade to ast 1.8.9. This corrected two
+problems.
+First,
+incorrect grids were generated for dss images in the southern
+hemisphere.
+Second, a problem with galactic grids that crossed 0 degrees.</tt></li>
+    <li> <tt>09.17.2002 modify grid code to not to set attributes
+unless
+really
+needed. ast 1.8.9 tends to set attributes much more often than previous
+versions.</tt></li>
+    <li> <tt>09.17.2002 fixed a problem with reconizing non-standard
+wcs
+in the
+header.</tt></li>
+    <li> <tt>09.17.2002 add more xpa grid support for coordinate
+systems,
+grid type,
+and view options.</tt></li>
+    <li> <tt>09.18.2002 fixed grid axes label and title spacing
+problems
+in publication
+mode.</tt></li>
+    <li> <tt>09.18.2002 add optional grid axes label and title spacing
+parameters
+that override internal calculated values.</tt></li>
+    <li> <tt>09.18.2002 the grid x-axis is now plotted on the bottom
+of
+publication
+grid.</tt></li>
+    <li> <tt>09.18.2002 zoom to fit now makes room for labels for
+publication grid.</tt></li>
+    <li> <tt>09.19.2002 fixed a problem with Clear Analysis File that
+deleted too
+much of the Analysis Menu.</tt></li>
+    <li> <tt>09.19.2002 support new vo list syntax of a tab delimited
+newline terminated
+list of three parameters, xpa, title, and url.</tt></li>
+    <li> <tt>09.20.2002 PHYSICAL Coordinate System: first look for
+WCSNAMEx='PHYSICAL',
+then look for LTM/LTV keywords.</tt></li>
+    <li> <tt>09.24.2002 fixed yet another bug with binning, and
+TLMIN/TLMAX keywords
+whose values were not powers of 2.</tt></li>
+    <li> <tt>09.24.2002 fixed a problem with cores and bad wcs grids.
+ds9
+now checks
+to make sure ast generated a vaild grid.</tt></li>
+    <li> <tt>09.24.2002 WebDisplay: plain text is now displayed using
+&lt;pre&gt;.</tt></li>
+    <li> <tt>09.24.2002 WebDisplay: default method for forms is now
+GET.</tt></li>
+    <li> <tt>09.24.2002 WebDisplay: default width for TEXT form
+elements
+is 20</tt></li>
+    <li> <tt>09.24.2002 XPA nameserver: http has a error, so just
+clear
+errorInfo.</tt></li>
+    <li> <tt>09.25.2002 fixed a bug in wcsinit.c, line 328 and line
+409.</tt></li>
+    <li> <tt>09.25.2002 add Debug Bin option.</tt></li>
+    <li> <tt>09.26.2002 upgrade to xpa 2.1.3</tt></li>
+    <li> <tt>09.26.2002 upgrade to wcssubs 3.1.3</tt></li>
+    <li> <tt>09.26.2002 upgrade to filter 1.2b1</tt></li>
+    <li> <tt>09.26.2002 upgrade to fitsy 1.2b1</tt></li>
+    <li> <tt>10.01.2002 Web Display: more robust URL parseing</tt></li>
+    <li> <tt>10.01.2002 Web Display: add 'Save to Fits File' option</tt></li>
+    <li> <tt>10.01.2002 fixed 'xpaget ds9 bin cols' to return only 2
+cols
+if bin
+depth is 1.</tt></li>
+    <li> <tt>10.07.2002 Web Display: add support for new window with
+button click.</tt></li>
+    <li> <tt>10.08.2002 Change in saotk Makefiles to correct a problem
+with Bison
+and Flex.</tt></li>
+    <li> <tt>10.08.2002 Analysis Text now updates as text arrives.</tt></li>
+    <li> <tt>10.08.2002 add xpa/command line support for MatchFrames.</tt></li>
+    <li> <tt>10.08.2002 don't write WCS for Save Fits Resample and DSS
+fits.</tt></li>
+    <li> <tt>10.10.2002 Web Display: hidden fields are not totally
+encoded
+if url
+is present.</tt></li>
+    <li> <tt>10.17.2002 Fixed a problem with default fonts. Add the
+option
+of 'Default',
+which will not set any font options, if selected. This allows the
+native
+system to choose the best font/size combo.</tt></li>
+    <li> <tt>10.18.2002 Add ProcessFrameCmd.</tt></li>
+    <li> <tt>10.18.2002 Add system wide preference file support.</tt></li>
+    <li> <tt>10.18.2002 Add Default mode. It just updates the infobox
+and
+graphs,
+with no regions.</tt></li>
+    <li> <tt>10.21.2002 Fixed a problem with old prefs files and
+marker(system).</tt></li>
+    <li> <tt>10.22.2002 Fixed a problem with MINMAX Sample. Sample
+intervals are
+now equal in row and columns.</tt></li>
+    <li> <tt>10.25.2002 Fixed a problem with vo and errors that occur
+when
+connecting
+to the vo server.</tt></li>
+    <li> <tt>10.25.2002 Add Match Colorbars and Match Scales
+xpa/command
+line options.</tt></li>
+    <li> <tt>10.25.2002 Changed Analysis plot error reporting to
+include
+first line
+of received data.</tt></li>
+    <li> <tt>10.25.2002 Fixed a problem with DSS and editing the
+dialog
+with another
+image loaded.</tt></li>
+    <li> <tt>10.27.2002 Add filename to ds9/funtools regions file
+header.</tt></li>
+    <li> <tt>10.29.2002 Add Lock Crosshairs xpa/command line options.</tt></li>
+    <li> <tt>10.31.2002 ds9 version 2.2 released to public.</tt></li>
+    <h4> <b>Version 2.2b2</b></h4>
+  </ol>
+  <ol>
+    <li> <tt>07.31.2002 fixed a problem with hv and urls of the form
+foo.com/foo/bar.html#foo.
+Now, the html is not reloaded before the goto is executed.</tt></li>
+    <li> <tt>08.01.2002 add adjust text size support to web browser</tt></li>
+    <li> <tt>08.01.2002 add boxcar and tophat smooth support for
+binning.</tt></li>
+    <li> <tt>08.05.2002 add -vo commandline and xpa support</tt></li>
+    <li> <tt>08.05.2002 fixed a problem for the windows port where
+windows
+has been
+configured to open a fits file with ds9. In this case, the file path
+name
+passed to ds9 is actually in 'dos' format. So we used a cygwin function
+to convert to a posix format. This only occurs in a command line file
+name
+option.</tt></li>
+    <li> <tt>08.06.2002 fixed a problem with smooth and depth&gt;1.</tt></li>
+    <li> <tt>08.06.2002 fixed a problem with save fits resample.</tt></li>
+    <li> <tt>08.07.2002 the user can now display the horz and vert
+graphs,
+even
+in tile or blink mode</tt></li>
+    <li> <tt>08.07.2002 ds9 will operate in single mode, even if in
+tile
+or blink
+mode, if there is just one frame.</tt></li>
+    <li> <tt>08.08.2002 add Gaussian smooth support for binning.</tt></li>
+    <li> <tt>08.08.2002 fixed a problem with the plot tool and
+displaying
+discrete
+x y e1 y2 data. The correct colors are now used.</tt></li>
+    <li> <tt>08.08.2002 the plot tool will now always update the plot
+title, x axis
+label, and y axis label when receiving new data.</tt></li>
+    <li> <tt>08.08.2002 add xpaset -p ds9 analysis plot close support.</tt></li>
+    <li> <tt>08.08.2002 add Know Issues Documentation</tt></li>
+    <li> <tt>08.12.2002 add http proxy support.</tt></li>
+    <li> <tt>08.12.2002 fixed a problem with the close box for the bin
+dialog box.</tt></li>
+    <li> <tt>08.20.2002 add support for default fonts to preferences.</tt></li>
+    <li> <tt>08.23.2002 remove timeouts for all http requests with
+optional cancel
+support.</tt></li>
+    <li> <tt>08.23.2002 fixed a number of items with web display.</tt></li>
+    <li> <tt>08.26.2002 reformat all documentation to remove
+references to
+Helvetica</tt></li>
+    <li> <tt>08.26.2002 bring grid WIDGETBB in by one so that the
+border
+can be
+seen and printed.</tt></li>
+    <li> <tt>08.26.2002 fixed a problem with web gifs under windows.
+The
+output
+channel needed an -translation binary flag.</tt></li>
+    <li> <tt>08.26.2002 adjust font sizes for web display to more
+closely
+follow
+those of Netscape and IE.</tt></li>
+    <li> <tt>08.27.2002 add 'Save as Fits', 'Save as Image', and 'Page
+Setup' buttons.</tt></li>
+    <li> <tt>08.27.2002 add 'First' and 'NVSS' archive server menu
+items.</tt></li>
+    <li> <tt>08.28.2002 add auto coordinate feed to HV for archive
+servers.</tt></li>
+    <li> <tt>08.30.2002 ds9 version 2.2b2 released to public.</tt></li>
+  </ol>
+  <h4> <b>Version 2.2b1</b></h4>
+  <ol>
+    <li> <tt>04.05.2002 fixed a problem with xpa contour load.</tt></li>
+    <li> <tt>04.05.2002 improved parsing of analysis menu file. In
+particular, keywords
+like 'help', 'param', and 'end' can be used more freely.</tt></li>
+    <li> <tt>04.10.2002 add tag suppport for regions.</tt></li>
+    <li> <tt>04.11.2002 add background marker stack. The default stack
+is
+in the
+foreground.</tt></li>
+    <li> <tt>04.11.2002 fixed checks for can Edit, can Move, can
+Rotate,
+and can
+Delete properties thru out marker code.</tt></li>
+    <li> <tt>04.11.2002 add HIGHLITE marker property.</tt></li>
+    <li> <tt>04.12.2002 add $null macro to analysis support.</tt></li>
+    <li> <tt>04.17.2002 fitsy++ now builds an keyword index to search
+for
+keywords.
+Previously, it would search sequentially.</tt></li>
+    <li> <tt>04.18.2002 add a fix to ps level 2 driver to prevent a
+'\n%'
+in the
+image data. Seems the perl script 'assemble' does a global
+search/replace
+that results in corrupted image data. This fix includes a redesign of a
+previous fix that worked around an issue with old versions of dvips
+that
+will incorrectly process'\n%%'.</tt></li>
+    <li> <tt>04.18.2002 upgrade to WCS 3.1.0</tt></li>
+    <li> <tt>04.24.2002 start to add support for multiple wcs's.</tt></li>
+    <li> <tt>04.25.2002 add support for multiple wcs's in infobox.</tt></li>
+    <li> <tt>04.26.2002 improve tag support for regions. All
+functionality
+of selected
+regions are now available for tagged regions.</tt></li>
+    <li> <tt>04.30.2002 add marker command var command to support
+regions
+files
+in tcl vars.</tt></li>
+    <li> <tt>05.08.2002 recalc polygon center when adding or deleteing
+vertex.</tt></li>
+    <li> <tt>05.13.2002 complete implementation of multiple wcs
+support.
+ds9 now
+supports a total of 31 coordinate systems. Furthermore, of the 27 WCS
+coordinate
+systems, both sky coordinates and linear coordinates are fully
+supported.</tt></li>
+    <li> <tt>05.13.2002 complete re-implemenation of map() functions.
+Now
+all map
+functions are in the fits case, and only map between REF and
+IMAGE/PHYSICAL/AMPLIFIER/DETECTOR/WCS/WCSA...
+coordinate systems. This cleans up alot of code and confusion.</tt></li>
+    <li> <tt>05.14.2002 add support for TCROT and CDn_1 WCS keywords
+in
+FITS bin
+tables.</tt></li>
+    <li> <tt>05.16.2002 dramatically speed up parsing wcs keywords by
+substituting
+the fitsy++ index based keyword search routine for Doug Mink's
+'ksearch'
+routine. With multiple wcs's in a large mosaic this can save up to a
+minute
+at load time.</tt></li>
+    <li> <tt>05.16.2002 fixed a minor problem with xpa dss. http has a
+error, that
+carries over and is caught by xpa.</tt></li>
+    <li> <tt>05.16.2002 analysis $text windows will not appear if
+there is
+no output,
+or just an &lt;cr&gt;.</tt></li>
+    <li> <tt>05.16.2002 fixed display header to correctly display 80
+chars, not
+79.</tt></li>
+    <li> <tt>05.16.2002 fixed a problem with iis and very long file
+names.
+names
+up to 256 chars are now allowed.</tt></li>
+    <li> <tt>005.20.2002 AMPLIFER and DETECTOR coordinate menu entries
+are
+now an
+option, to be enabled via the Preferences:Misc menu option. Changes
+will
+take affect at startup.</tt></li>
+    <li> <tt>05.23.2002 add support for 3D binning of fits bin tables.</tt></li>
+    <li> <tt>05.24.2002 made changes to grid.C to handle the special
+LONG/NPOL skyframe
+coordinate system used by Chandra.</tt></li>
+    <li> <tt>05.24.2002 add -xpa and xpa prefs to allow a user to
+enable
+or disable
+initialization of XPA at startup</tt></li>
+    <li> <tt>05.28.2002 add -xpa [inet|local|unix|localhost] xpa point.</tt></li>
+    <li> <tt>05.29.2002 correct 3D binning to properly reflect filter
+params in
+the filename.</tt></li>
+    <li> <tt>06.03.2002 fixed a problem with Fits Bin Tables, odd
+length
+rows and
+referencing shorts.</tt></li>
+    <li> <tt>06.04.2002 add support for multiple wcs with skyframe
+panner
+compass,
+along with prefs.</tt></li>
+    <li> <tt>06.04.2002 add -xpa noxpans support.</tt></li>
+    <li> <tt>06.04.2002 match frames wcs now uses the wcs system and
+wcs
+skyframe
+specified in align to wcs.</tt></li>
+    <li> <tt>06.05.2002 upgrade to xpa 2.1.1</tt></li>
+    <li> <tt>06.06.2002 add wcs master menu and buttons</tt></li>
+    <li> <tt>06.06.2002 sync xpa wcs and command line wcs command.</tt></li>
+    <li> <tt>06.10.2002 xpa wcs and commanline -wcs now uses same code
+to
+process</tt></li>
+    <li> <tt>06.10.2002 xpa nameserver format now skyformat</tt></li>
+    <li> <tt>06.10.2002 added support for variable args for xpa
+contour
+and -contour.</tt></li>
+    <li> <tt>06.11.2002 add match frames physical, amplifier,
+detector.
+this does
+not handle rotation, nor orientation.</tt></li>
+    <li> <tt>06.11.2002 the master wcs menu now modifies the
+Region:File
+Coordinate
+System menu also</tt></li>
+    <li> <tt>06.11.2002 fixed a problem with list projection and
+linear
+wcs. the
+thickness parameter was not written correctly.</tt></li>
+    <li> <tt>06.12.2002 fixed a problem with -tile and -region
+commandline
+options.
+The ds9 window must be realized before processing region files.</tt></li>
+    <li> <tt>06.13.2002 fixed a problem with -pagesetup commandline
+option.</tt></li>
+    <li> <tt>06.13.2002 fixed a problem with ds9parser.Y,
+prosparser.Y,
+and tngparser.Y
+when processing coordinates when no coordinate system has been
+specified.</tt></li>
+    <li> <tt>06.13.2002 fixed a problem with -pan to command line
+option.
+The ds9
+window needs to be realized (and the matrices defined) before
+processing.</tt></li>
+    <li> <tt>06.13.2002 binning on a third column now invokes the data
+cube dialog
+box.</tt></li>
+    <li> <tt>06.14.2002 add smaller buffer sizes to binning menus. We
+want
+to do
+this for those building large 3D binning movies.</tt></li>
+    <li> <tt>06.19.2002 implemented new grid support. Grids now handle
+rotated images
+much better. Numerics are better positioned.</tt></li>
+    <li> <tt>06.27.2002 updated to WCSSUBS 3.1.1. This corrects a
+number
+of TNX
+problems.</tt></li>
+    <li> <tt>06.27.2002 add File:XPA info menu item.</tt></li>
+    <li> <tt>06.27.2002 add XPA regions selected feature.</tt></li>
+    <li> <tt>06.28.2002 Analysis $geturl macro calls are now logged.</tt></li>
+    <li> <tt>07.01.2002 add support for limited web browser</tt></li>
+    <li> <tt>07.01.2002 help reference manual now uses built-in
+brower,
+and is static.</tt></li>
+    <li> <tt>07.02.2002 fixed a problem with cross-platform displays
+and
+16 bit
+truecolor.</tt></li>
+    <li> <tt>07.08.2002 fixed a problem with regions and changes in
+the
+bin factor
+of fits bin tables.</tt></li>
+    <li> <tt>07.08.2002 add $xpa_method analysis macro.</tt></li>
+    <li> <tt>07.08.2002 add @@xpa_method@@ support in hv.html</tt></li>
+    <li> <tt>07.22.2002 fix numerous problems with internal web
+browser.</tt></li>
+    <li> <tt>07.23.2002 add async support for internal web browser.</tt></li>
+    <li> <tt>07.24.2002 changed Makefiles so that parser.C,
+parser.C.h,
+and lex.C
+are now archived. Therefor, builds no longer need bison and flex,
+unless
+changes have been made to the parser.Y. This gets around problems with
+different versions of bison.</tt></li>
+    <li> <tt>07.25.2002 add support for the Compass region.</tt></li>
+    <li> <tt>07.25.2002 add vo proxy and internal hv support.</tt></li>
+  </ol>
+</ol>
+</body>
+</html>

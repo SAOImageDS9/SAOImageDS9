@@ -1,0 +1,71 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=ISO-8859-1">
+    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
+      2.4.7-10 i686) [Netscape]">
+    <title>Color</title>
+  </head>
+  <body alink="#ff0000" bgcolor="#ffffff" link="#0000ee" text="#000000"
+    vlink="#551a8b">
+    <h3><img alt="" src="../sun.gif" align="middle" width="100"
+        height="98"> Colorbar<br>
+    </h3>
+    <blockquote>
+      <p><b>Color Tags</b></p>
+      <p>The purpose of color tags are to highlight (or hide) certain
+        values of data, regardless of the color map selected. The user
+        creates, edits, and deletes color tags via the GUI. To create a
+        color tag, enter the Colorbar Mode, and click once on the
+        colorbar. This creates a default color tag. Click and drag to
+        change the values. Click and drag on one side to increase or
+        decrease the value. Double click to manually edit the values and
+        color. Place the cursor over the color tag and press the delete
+        key to delete it. From the color parameters dialog, the user can
+        load, save, and delete all color tags for that frame.<br>
+      </p>
+      <p><b>Visuals</b></p>
+      <p>DS9 supports a number of color environments. Not all color
+        environments, or visuals, are available on most machines. In
+        fact, you may be restricted to one or two, base on the color
+        graphics hardware your computer has. A color visual is composed
+        of two parts, the color model and the bit depth. Pseudo color
+        uses a color lookup table to derive the correct color, True
+        color uses the value directly as a RGB triplet, to derive the
+        correct color. The follow is a list of the color visuals DS9
+        currently supports:</p>
+      <blockquote> <tt>pseudo color, 8 bit<br>
+          true color, 8 bit <br>
+          true color, 15 bit <br>
+          true color, 16 bit <br>
+          true color, 24 bit</tt> </blockquote>
+      <p> You can use the <tt>xdpyinfo</tt> command to see if one of
+        these visual are available. NOTE: Linux Users-- if your desired
+        visual is not available, use the Xconfigarator command (Red Hat)
+        or similar command under other versions of linux, to configure
+        your X window visuals.</p>
+      <p>When DS9 is invoked, by default, it will use the default
+        visual. You can find out what the default visual is by using the
+        <tt>xdpyinfo</tt> command. You can also force DS9 to use another
+        visual by command line option. If you specify a visual, and it
+        is not available, DS9 will exit with an error message. </p>
+      <blockquote><tt>$ds9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+          # default visual, default depth<br>
+          $ds9 -visual pseudo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #
+          pseudo color, default depth <br>
+          $ds9 -visual pseudocolor&nbsp; # pseudo color, default depth <br>
+          $ds9 -visual pseudocolor8 # pseudo color 8 <br>
+          $ds9 -visual
+          true&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # true
+          color, default depth <br>
+          $ds9 -visual truecolor&nbsp;&nbsp;&nbsp; # true color, default
+          depth <br>
+          $ds9 -visual truecolor8&nbsp;&nbsp; # true color 8 <br>
+          $ds9 -visual truecolor16&nbsp; # true color 16 <br>
+          $ds9 -visual truecolor24&nbsp; # true color 24</tt> </blockquote>
+    </blockquote>
+  </body>
+</html>

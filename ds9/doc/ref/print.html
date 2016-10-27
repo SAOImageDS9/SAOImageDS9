@@ -1,0 +1,57 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
+      2.4.7-10 i686) [Netscape]">
+    <title>Printing</title>
+  </head>
+  <body link="#0000ee" alink="#ff0000" bgcolor="#ffffff" text="#000000"
+    vlink="#551a8b">
+    <h3><img alt="" src="../sun.gif" height="98" align="middle"
+        width="100"> Printing</h3>
+    <blockquote>
+      <p>DS9 provides strong Postscript printing support. This is not a
+        screen capture method, but a full level 1/2/3 postscript driver.
+        The postscript images generated are detailed and accurate as
+        possible, given the resolution of the data, and the printing
+        resolution. </p>
+      <p><b> Postscript Level</b></p>
+      <blockquote>
+        <p> Level 1-- The postscript generated consist of a color lookup
+          table and image data, encoded in <tt>ASCIIHEX</tt>. All line
+          graphics and text are postscript elements.</p>
+        <p> Level 2-- The postscript generated consist of a color lookup
+          table and image data, compressed with RLE, and encoded in <tt>ASCIIHEX85.
+
+
+
+
+          </tt>All line graphics and text are postscript elements.</p>
+      </blockquote>
+      <blockquote>
+        <p> Level 3-- The postscript generated consist of a color lookup
+          table and image data, compressed with GZIP<tt>. </tt>All line
+          graphics and text are postscript elements.</p>
+      </blockquote>
+      <p><b>Postscript Color Model</b></p>
+      <p>DS9 supports three color models for level 2/3 postscript. All
+        three color models generate approximately the same size files. </p>
+      <blockquote><tt> RGB<br>
+          CMYK<br>
+          Grayscale<br>
+        </tt></blockquote>
+      <p><b> Resolution</b></p>
+      <p>Unlike graphic elements, image data must be sampled when
+        encoded into postscript. The specified resolution parameter is
+        in "pixels per inch" and is independent of the current screen
+        resolution. A value of 96 maps to the current screen resolution.
+        Any value over 96 will over sample the image, while any value
+        under 96 will under sample. For high resolution printers and
+        posters, the higher resolution sampling, the better. However,
+        keep in mind the size of the postscript file grows with the
+        square of the increase in resolution.</p>
+    </blockquote>
+  </body>
+</html>

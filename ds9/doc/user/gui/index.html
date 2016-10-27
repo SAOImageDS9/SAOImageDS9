@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Introduction to the ds9 Interface - DS9 </title>
+</head> 
+<!--THIS FILE IS CREATED AUTOMATICALLY - DO NOT EDIT MANUALLY--> 
+<body><div class="mainbar">
+<a name="maintext"></a><div align="center"><h1>Introduction to the ds9 Interface</h1></div>
+<p>
+      Return to the <a href="../index.html">DS9 Users Manual</a></p>
+<hr size="5" noshade>
+<div>
+<h2>Synopsis</h2>
+        <p>
+	  This thread provides an overview of the key components of
+	  the ds9 graphical user interface (GUI).
+	</p>
+      <p>
+	    If you encounter any problems, please email saord @ cfa.harvard.edu.
+	  </p>
+</div>
+<hr size="5" noshade>
+<h2><a name="toc">Contents</a></h2>
+<ul>
+<li>
+<strong><a href="index.html#gui">The ds9 Interface</a></strong><ol type="1">
+<li><a href="index.html#gui.menu">Menu bar</a></li>
+<li><a href="index.html#gui.info">Information panel</a></li>
+<li><a href="index.html#gui.pan">Panner</a></li>
+<li><a href="index.html#gui.mag">Magnifier</a></li>
+<li><a href="index.html#gui.buttons">Buttons</a></li>
+<li><a href="index.html#gui.frame">Display frame</a></li>
+<li><a href="index.html#gui.color">Colorbar</a></li>
+</ol>
+</li>
+<li><strong><a href="index.html#preferences">Setting and Saving View Preferences</a></strong></li>
+<li><strong><a href="index.html#history">History</a></strong></li>
+<li>
+<strong>Images</strong><ul>
+<li><a href="#components">Figure 1: The ds9 GUI</a></li>
+<li><a href="#vertical">Figure 2: The ds9 GUI, vertical layout</a></li>
+<li><a href="#menu">Figure 3: Menu bar</a></li>
+<li><a href="#menutear">Figure 4: Tearing off a Menu</a></li>
+<li><a href="#info">Figure 5: Information panel</a></li>
+<li><a href="#panner">Figure 6: Panner</a></li>
+<li><a href="#mag">Figure 7: Magnifier</a></li>
+<li><a href="#button">Figure 8: Buttons</a></li>
+<li><a href="#frame">Figure 9: Tiled frame display</a></li>
+<li><a href="#color">Figure 10: Colorbar</a></li>
+<li><a href="#prefs">Figure 11: Preferences dialog box</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<div class="sectionlist">
+<div class="section">
+<h2><a name="gui">The ds9 Interface</a></h2>
+        
+
+	<p>
+	  This thread uses Chandra data from an observation of the
+	  Trapezium Cluster (ObsID 1522).  The default ds9 GUI is
+	  shown in <a href="#components">Figure 1</a>.  The main components
+	  are numbered:
+	</p>
+
+	<ol type="1">
+	  <li>Menu bar</li>
+	  <li>Information panel</li>
+	  <li>Panner</li>
+	  <li>Magnifier</li>
+	  <li>Buttons</li>
+	  <li>Display frame</li>
+	  <li>Colorbar</li>
+	</ol>
+	 
+	<div class="figure">
+<div class="caption"><h3><a name="components">Figure 1: The ds9 GUI</a></h3></div>
+<div><img alt="[The default ds9 display includes the information panel, panner, magnifier, and colorbar.]" src="components.png"></div>
+</div>
+
+	<p>
+	  The default setup is a "horizontal layout", with the
+	  information panel, panner, magnifier, and buttons displayed
+	  horizontally across the window.  This may be changed to
+	  "vertical layout" in the View menu (<a href="#vertical">Figure 2</a>).
+	</p>
+	 
+	<div class="figure">
+<div class="caption"><h3><a name="vertical">Figure 2: The ds9 GUI, vertical layout</a></h3></div>
+<div><img alt="[In the vertical layout, the information panel, panner, magnifier, and buttons are displayed vertically at the left of the data frame.]" src="vertical.png"></div>
+</div>
+
+	<p>
+	  Note that the colorbar remained horizontal at the bottom of
+	  the display frame.  This may be changed with the "vertical
+	  colorbar" option in the "View" menu.
+	</p>
+
+	<div class="subsectionlist">
+<div class="subsection">
+<h3><a name="gui.menu">1. Menu bar</a></h3>
+	    
+
+	    <p>
+	      The menu bar provides access to all of ds9's 
+	      capabilities.  For a complete description of each menu,
+	      refer to the <a href="../../ref/gui.html">Menu bar
+	      section of the Reference Manual</a>. 
+	    </p>
+
+	    <div class="figure">
+<div class="caption"><h3><a name="menu">Figure 3: Menu bar</a></h3></div>
+<div><img alt="[The menu bar of the ds9 GUI.]" src="menu.png"></div>
+</div>
+
+	    <p>
+	      All ds9 menus can be "torn off" to be a separate window
+	      from the main GUI.  To tear off a menu, select the
+	      dashed line, which is the first item of each menu (shown
+	      in <a href="#menutear">Figure 4</a>).  The menu will become its 
+	      own window.  
+	    </p>
+
+	    <div class="figure">
+<div class="caption"><h3><a name="menutear">Figure 4: Tearing off a Menu</a></h3></div>
+<div><img alt='[The dashed line at the top of the "View" menu is highlighted.]' src="menutear.png"></div>
+</div>
+	  <hr width="80%" align="center">
+</div>
+<div class="subsection">
+<h3><a name="gui.info">2. Information panel</a></h3>
+	    
+
+	    <p>
+	      The information panel displays information about the
+	      data file and the values at the cursor position.  In
+	      <a href="#info">Figure 5</a>, the object name has been
+	      loaded from the header of the data file.    The image
+	      value and position (in WCS, physical, and image
+	      coordinates) are updated in real time as the cursor is
+	      moved.  
+	    </p>
+
+	    <p>
+	      The fields of the information panel can be customized
+	      from the "View" menu.  Any of the default entries can be
+	      removed, and additional fields can be added
+	      (e.g. detector coordinates, min/max data values).
+	    </p>
+
+	    <div class="figure">
+<div class="caption"><h3><a name="info">Figure 5: Information panel</a></h3></div>
+<div><img alt="[The information panel of the ds9 GUI.]" src="info.png"></div>
+</div>
+	  <hr width="80%" align="center">
+</div>
+<div class="subsection">
+<h3><a name="gui.pan">3. Panner</a></h3>
+	    
+
+	    <p>
+	      The panner allows the user to view areas of the frame
+	      which are outside of the current field of view.
+	      Although the display frame is filled by the data, the
+	      panner indicates that more of the image is
+	      available. Clicking and dragging the viewing bounding
+	      box in the panner - shown in blue in
+	      <a href="#panner">Figure 6</a> - will display a different
+	      portion of the image.   
+	    </p>
+
+	    <p>
+	      The panner also contains axes to indicate the directions
+	      of North and East and the directions of the physical
+	      (x,y) data axes. 
+	    </p>
+
+	    <div class="figure">
+<div class="caption"><h3><a name="panner">Figure 6: Panner</a></h3></div>
+<div><img alt="[The panner of the ds9 GUI.]" src="panner.png"></div>
+</div>
+ 	  <hr width="80%" align="center">
+</div>
+<div class="subsection">
+<h3><a name="gui.mag">4. Magnifier</a></h3>
+	    
+ 
+	    <p>
+	      The magnifier displays a magnified view of the current
+	      cursor location. The magnifier cursor - the small square
+	      in the center of <a href="#mag">Figure 7</a> - outlines 
+	      the size and orientation of one pixel, taking into
+	      account the current frame zoom and orientation. 
+	    </p>
+  
+	    <div class="figure">
+<div class="caption"><h3><a name="mag">Figure 7: Magnifier</a></h3></div>
+<div><img alt="[The magnifier of the ds9 GUI.]" src="mag.png"></div>
+</div>
+	  <hr width="80%" align="center">
+</div>
+<div class="subsection">
+<h3><a name="gui.buttons">5. Buttons</a></h3>
+	    
+
+	    <p>
+	      The button bar duplicates many of the options available
+	      from the menu bar.  The buttons provide quick access to
+	      change the most frequently-used ds9 actions
+	      (e.g. changing the scale and color bar, blinking and
+	      tiling frames).  
+	    </p>
+
+	    <p>
+	      When a category is chosen from the top row, the options
+	      within that category are displayed in the bottom row of
+	      buttons.  In <a href="#button">Figure 8</a>, the color category is
+	      chosen and the bottom row shows the ten most-used
+	      colormap options (additional colormaps are available
+	      from the "Color" menu).   
+	    </p>
+
+	    <div class="figure">
+<div class="caption"><h3><a name="button">Figure 8: Buttons</a></h3></div>
+<div><img alt="[The buttons of the ds9 GUI.]" src="button.png"></div>
+</div>
+	  <hr width="80%" align="center">
+</div>
+<div class="subsection">
+<h3><a name="gui.frame">6. Display frame</a></h3>
+	    
+
+	    <p>
+	      The display frame is the area of ds9 where the FITS
+	      image is shown.  In <a href="#components">Figure 1</a>, a single
+	      frame is shown.
+	    </p>
+
+	    <p>
+	      Multiple frames can be opened in ds9 at the same time.
+	      In <a href="#frame">Figure 9</a>, nine frames have been
+	      opened and set to "tile" display from the "frame"
+	      button.  The current frame is indicated by a blue
+	      outline around it (second row, center frame).  How the
+	      frames are tiled is set in the "Frame → Frame
+	      Parameters → Tile" menu; the default is to tile
+	      the frames in a grid. 
+	    </p>
+
+	    <div class="figure">
+<div class="caption"><h3><a name="frame">Figure 9: Tiled frame display</a></h3></div>
+<div><img alt="[Nine frames in the ds9 GUI.]" src="frame.png"></div>
+</div>
+
+	    <p>
+	      If the display is set back to "single", then the current
+	      frame fills the display area.  The other frames can be
+	      accessed via the "previous" and "next" options in the
+	      buttons bar (or from the "Frame" menu).  
+	    </p>
+
+	    <p>
+	      The "blink" option may also be used with multiple
+	      frames.  When blink is turned on, ds9 cycles through all
+	      the available frames.  The blink interval is set in the
+	      "Frame → Frame Parameters → Blink Interval" menu.
+	    </p>
+	    
+	  <hr width="80%" align="center">
+</div>
+<div class="subsection">
+<h3><a name="gui.color">7. Colorbar</a></h3>
+	    
+
+	    <p>
+	      The colorbar displays the colormap, bias, and contrast
+	      settings. The colormap correlates the colors used in the
+	      image with the pixel values in the data.
+	    </p>
+
+	    <p>
+	      To change the colormap, use the "Color" menu or button.
+	      The contrast and bias can be adjusted by right-clicking
+	      and dragging on the ds9 display.  The "Color →
+	      Colormap Parameters" dialog box can also be used to
+	      change contrast and bias.
+	    </p>
+
+	    <div class="figure">
+<div class="caption"><h3><a name="color">Figure 10: Colorbar</a></h3></div>
+<div><img alt="[The colorbar of the ds9 GUI.]" src="color.png"></div>
+</div>
+	  </div>
+</div>
+
+      <hr>
+</div>
+<div class="section">
+<h2><a name="preferences">Setting and Saving View Preferences</a></h2>
+        
+	
+	<p>
+	  All of the view options described in this thread can be set
+	  and saved as a preference.  Open the "Preferences" dialog box 
+	  from the "Edit" menu and select the "View" tab, shown in 
+	  <a href="#prefs">Figure 11</a>. 
+	</p>
+
+
+	<div class="figure">
+<div class="caption"><h3><a name="prefs">Figure 11: Preferences dialog box</a></h3></div>
+<div><img alt="[The view tab is selected in the preferences dialog.]" src="prefs.png"></div>
+</div>
+
+
+	<p>
+	  The "Default" menus are used to set the defaults of the
+	  "View" menu and buttons.  For instance, uncheck the "Panner"
+	  item under "Menu" and the panner won't be displayed when ds9
+	  is launched.  (Note that some options require ds9 to be
+	  restarted before they take effect.)
+	</p>
+
+	<p>
+	  After setting the desired preferences, select "Save".  User
+	  preferences are stored in <tt>.ds9.prf</tt>.  At startup,
+	  ds9 looks for the preferences file in the following
+	  directory order: 
+	  <tt>./</tt>, <tt>$HOME</tt>, <tt>/usr/local/lib</tt>, 
+	  <tt>/opt/local/lib</tt>.   
+	</p>
+
+      </div>
+</div>
+<hr size="5" noshade>
+<h2><a name="history">History</a></h2>
+<table class="history">
+      <tr>
+<td class="historydate">06 Jul 2009</td>
+<td>
+	Original version
+     </td>
+</tr>
+     </table>
+<hr size="5" noshade>
+<p>
+      Return to the <a href="../index.html">DS9 Users Manual</a></p>
+</div></body>
+</html>

@@ -1,0 +1,825 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
+      2.4.7-10 i686) [Netscape]">
+    <title>File Formats</title>
+  </head>
+  <body link="#0000ee" alink="#ff0000" bgcolor="#ffffff" text="#000000"
+    vlink="#551a8b">
+    <h3><img alt="" src="../sun.gif" height="98" align="middle"
+        width="100"> File Formats</h3>
+    <blockquote> <a href="#FITS">FITS</a><br>
+      <a href="#FITSImage">FITS Image</a><br>
+      <a href="#FITSBinaryEventsTable">FITS Binary Events Table</a><br>
+      <a href="#FITSHEALPIXTable">FITS HEALPIX Table</a><br>
+      <a href="#FITSDataCube">FITS Data Cube</a><br>
+      <a href="#FITSMultipleExtensionDataCube">FITS Multiple Extension
+        Data Cube</a><br>
+      <a href="#FITSMultipleExtensionMultipleFrames">FITS Multiple
+        Extension Multiple Frames</a><br>
+      <a href="#FITSMosaic">FITS Mosaic</a><br>
+      <a href="#FITSMosaicDataCube">FITS Mosaic Data Cube</a><br>
+      <a href="#FITSRGB">FITS RGB </a><br>
+      <a href="#SplitFITS">Split FITS</a><br>
+      <a href="#array">Array</a> <br>
+      <a href="file:///Users/joye/saods9/doc/ref/file.html#nrrd">NRRD</a><br>
+      <a href="#envi">ENVI</a><br>
+      <a href="#gif">GIF</a><br>
+      <a href="#tiff">TIFF</a><br>
+      <a href="#jpeg">JPEG</a><br>
+      <a href="#png">PNG</a><br>
+      <a href="#ExternalFileSupport">External Format Support</a> <br>
+      <a href="#ExternalAnalysisSupport">External Analysis Support</a> <br>
+      <a href="#RegionFiles">Region Files</a><br>
+      <a href="#ContourFiles">Contour Files</a> <br>
+      <a href="#ColorLookupTable">Color Lookup Table</a> <br>
+      <a href="#WCS">WCS</a> <br>
+      <a href="#PreferenceFile">Preference File</a> <br>
+      <a href="#StartupFile">Startup File</a> <br>
+      <a href="#TCL">TCL</a><br>
+      <p><b><a name="FITS"></a>FITS</b></p>
+      DS9 supports FITS images and FITS binary tables. The following
+      algorithm is used to locate and to load the FITS image or table if
+      no additional information is provide:
+      <blockquote>
+        <ul>
+          <li> <tt> Examine primary HDU, if IMAGE, load.<br>
+            </tt></li>
+          <li><tt>Examine each extension HDU</tt></li>
+          <ul>
+            <li><tt>If IMAGE, load.<br>
+              </tt></li>
+            <li><tt>If BINARY TABLE, create IMAGE if the following is
+                true:</tt></li>
+            <ul>
+              <li><tt>FITS COMPRESSED: keyword ZIMAGE is T.</tt></li>
+              <li><tt>FITS EVENTS: keyword EXTNAME is EVENTS,STDEVT, or
+                  RAYEVENT, column names X and Y are present.</tt></li>
+              <li><tt>FITS HEALPIX: keyword PIXTYPE is HEALPIX.</tt><br>
+              </li>
+            </ul>
+          </ul>
+          <li><tt> If DS9 traverses the entire FITS file without
+              satisfying one of the above, an error is generated.</tt> </li>
+        </ul>
+      </blockquote>
+      FITS keyword inheritance is supported. All valid FITS <tt>BITPIX</tt>
+      values are supported, along with <tt>-16,</tt> for <tt>UNSIGNED
+        SHORT</tt>. The following FITS keywords are supported:
+      <blockquote> <tt> OBJECT<br>
+          UNITS<br>
+          BSCALE / BZERO<br>
+          BLANK<br>
+          DATASEC<br>
+          LTV / LTM&nbsp; for physical coords<br>
+          DTV / DTM&nbsp; for detector coords<br>
+          ATV / ATM&nbsp; for amplifier coords<br>
+          WCS keywords<br>
+          WCS# keywords </tt> </blockquote>
+      <p><b> <a name="FITSImage"></a>FITS Image</b></p>
+      At load time, the user may provide just a file name or a file name
+      along with FITS extension name/number and image section
+      specification. FITS extension names are case insensitive. When
+      specifying an extension, be sure to quote strings correctly to
+      pass both the shell and DS9 parser. A image section specification
+      is used to specify the x,y limits of an image subsection. By
+      default, x and y coordinates are in <tt>IMAGE</tt>, use a <tt>'p'</tt>
+      as the last character to indicate <tt>PHYSICAL</tt> coordinates.
+      A <tt>'*'</tt> indicates use the default for that axis only.
+      Block is optional and defaults to 1.<br>
+      <blockquote> <tt> Syntax:<br>
+          filename<br>
+          filename[ext]<br>
+          filename[ext][sect]<br>
+          filename[sect]<br>
+          filename[ext,sect]<br>
+          <br>
+          where</tt><tt><br>
+          <br>
+          ext:<br>
+          [extension name | extension #]<br>
+          <br>
+          sect:<br>
+          [x0:x1</tt><tt>,y0:y1[p]]<br>
+        </tt><tt><tt><tt>[x0:x1</tt></tt></tt><tt><tt><tt>,y0:y1</tt></tt></tt><tt><tt><tt><tt>,block</tt></tt></tt></tt><tt><tt><tt><tt>[p]</tt>]<br>
+            </tt>[x0:x1</tt></tt><tt><tt>,y0:y1</tt></tt><tt><tt>,z0:z1</tt></tt><tt><tt><tt>[p]</tt>]<br>
+          </tt></tt><tt><tt><tt>[x0:x1</tt></tt></tt><tt><tt><tt>,y0:y1</tt></tt></tt><tt><tt><tt>,block,z0:z1</tt></tt></tt><tt><tt><tt><tt>[p]</tt>]</tt></tt></tt><br>
+        <tt><tt><tt>[*,y0:y1</tt></tt></tt><tt><tt><tt><tt>[p]</tt>]<br>
+            </tt><tt><tt><tt>[*,y0:y1</tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>,block</tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>[p]</tt>]<br>
+                </tt>[*,y0:y1</tt></tt></tt></tt><tt><tt><tt><tt>,z0:z1</tt></tt></tt></tt><tt><tt><tt><tt><tt>[p]</tt>]<br>
+              </tt></tt><tt><tt><tt>[*,y0:y1</tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>,block,z0:z1</tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>[p]</tt>]</tt></tt></tt></tt></tt><br>
+        <tt><tt><tt><tt><tt>[x0:x1</tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>,*</tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>[p]</tt>]<br>
+                </tt><tt><tt><tt>[x0:x1</tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>,*</tt></tt></tt><tt><tt><tt><tt>,block</tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt>]<br>
+                    </tt>[x0:x1</tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>,*,z0:z1</tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt>]<br>
+                  </tt></tt><tt><tt><tt>[x0:x1</tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>,*,block,z0:z1</tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt>]</tt></tt></tt></tt></tt></tt></tt><br>
+        <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[*,*</tt></tt></tt><tt><tt><tt><tt>,block</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>]<br>
+                            </tt>[*,*,z0:z1</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>]<br>
+                          </tt></tt><tt><tt><tt>[*,*,block,z0:z1</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>]</tt></tt></tt><br>
+                        <br>
+                      </tt></tt></tt></tt></tt></tt>[dim1@xcen,dim2@ycen</tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>]<br>
+          </tt></tt><tt><tt><tt><tt><tt><tt>[dim1@xcen,dim2@ycen,block</tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>]<br>
+                  </tt></tt>[dim1@xcen,dim2@ycen,dim3@zcen</tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>]<br>
+              </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>[dim1@xcen,dim2@ycen,block,dim3@zcen</tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>]</tt></tt></tt></tt></tt></tt><br>
+        <tt><tt><tt><tt>[*,dim2@ycen</tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>]<br>
+              </tt></tt><tt><tt><tt><tt><tt><tt>[*,dim2@ycen,block</tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>]<br>
+                      </tt></tt>[*,dim2@ycen,dim3@zcen</tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>]<br>
+                  </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>[*,dim2@ycen,block,dim3@zcen</tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>]</tt></tt></tt></tt></tt></tt></tt></tt><br>
+        <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[dim1@xcen,*</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>]<br>
+                          </tt></tt><tt><tt><tt><tt><tt><tt>[dim1@xcen,*,block</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>]<br>
+                                  </tt></tt>[dim1@xcen,*,dim3@zcen</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>]<br>
+                              </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>[dim1@xcen,*,block,dim3@zcen</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[p]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+        <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>[*,*,block]<br>
+                                  </tt></tt>[*,*,dim3@zcen]<br>
+                              </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>[*,*,block,dim3@zcen]</tt></tt></tt></tt></tt></tt><br>
+                        <br>
+                      </tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt>[dim@xcen@ycen]</tt></tt><tt><tt><br>
+              </tt></tt>[dim@xcen@ycen,block]</tt></tt><br>
+        <tt><tt><tt><tt>[dim@xcen@ycen,zdim@zcen]</tt></tt></tt></tt><br>
+        <tt><tt><tt><tt><tt><tt><tt><tt>[dim@xcen@ycen,block,zdim@zcen]</tt></tt></tt></tt></tt></tt></tt></tt><tt><br>
+          <br>
+          Example:<br>
+          $ds9 foo.fits # default load <br>
+          $ds9 foo.fits[1] # load first extension<br>
+          $ds9 foo.fits[BCKGRD] # load extension named 'BCKGRD'<br>
+          $ds9 foo.fits[10:200,40:100] # image section<br>
+        </tt><tt><tt>$ds9 foo.fits[10:200,40:100,2] # image section,
+            blocked by 2<br>
+          </tt>$ds9 foo.fits[*,40:100] # only section y axis<br>
+          $ds9 foo.fits[256@512@512] # section box at 512,512<br>
+          $ds9 foo.fits[2][100:200,100:200] # second extension, image
+          section<br>
+        </tt><tt><tt>$ds9 foo.fits[2][100:200,100:200,2] # second
+            extension, image section, blocked by 2<br>
+          </tt>$ds9 foo.fits[10:200,40:100,5:20] # cube section<br>
+          $ds9 foo.fits[*,40:100,5:20] # only section y and z axes<br>
+          $ds9 foo.fits[256@512@512] # section cube at 512,512<br>
+          $ds9 foo.fits[2][100:200,100:200,5:20] # second extension,
+          cube section</tt><br>
+        <tt>$ds9 foo.fits[2][100:200,100:200,2,5:20] # second extension,
+          cube section, blocked by 2</tt> </blockquote>
+      <b><a name="FITSBinaryEventsTable"></a>FITS Binary Events Table<br>
+        <br>
+      </b> At load time, the user may provide just a file name or a file
+      name along with FITS extension name/number, image section
+      specification, and binnng parameters. DS9 will automatically
+      convert an FITS binary events table into a 2D image for display.
+      FITS extension names and parameters are case insensitive. The
+      users may specify a number of parameters on how to construct the
+      image and how to filter data. When specifying a filter, be sure to
+      quote strings correctly to pass both the shell and DS9 parser. </blockquote>
+    <blockquote>
+      <blockquote> <tt><tt><tt><tt>Syntax: <br>
+              </tt></tt></tt></tt><tt><tt>filename<br>
+            filename[ext]<br>
+            filename[ext][sect]<br>
+            filename[sect]<br>
+            filename[ext,sect]<br>
+          </tt><br>
+          filename[ext][bin]<br>
+        </tt><tt><tt><tt><tt><tt>filename[ext][bin][sect]<br>
+                </tt></tt></tt></tt>filename[ext][sect][bin]<br>
+        </tt><tt><tt><tt><tt>filename[bin]<br>
+              </tt></tt></tt>filename[bin][sect]<br>
+        </tt><tt><tt>filename[sect][bin]<br>
+          </tt></tt><tt>filename[ext,bin]<br>
+          <br>
+        </tt><tt>where:<br>
+          ext: see <a href="FITSImage">FITS Image</a><br>
+          sect: see <a href="FITSImage">FITS Image</a><br>
+          <br>
+          bin:<br>
+          [bin=colx,coly] # bin counts <br>
+        </tt><tt><tt>[bin=colx,coly,filter] # bin counts with filter<br>
+          </tt>[bin=colx,coly,colz] # bin on colz <br>
+        </tt><tt><tt>[bin=colx,coly,colz,filter] # bin on colz with
+            filter<br>
+          </tt></tt><tt><tt>[bin=colz] # bin cols 'x', 'y', and colz <br>
+          </tt></tt><tt><tt>[bin=colz,filter] # bin cols 'x', 'y', and
+            colz with filter<br>
+          </tt>[key=colx,coly] <br>
+          [binkey=colx,coly]<br>
+        </tt><br>
+        (see <a
+          href="http://hea-www.harvard.edu/saord/funtools/filters.html">Introduction
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          to Filtering</a>)<br>
+        <br>
+        <tt>Example: </tt><br>
+        <tt> $ds9 foo.fits # default load </tt><br>
+        <tt> $ds9 foo.fits[1] # load first extension </tt><br>
+        <tt> $ds9 foo.fits[BCKGRD] # load extension named 'BCKGRD' </tt><br>
+        <tt> $ds9 foo.fits[bin=detx,dety] # bin on detx,dety </tt><br>
+        <tt> $ds9 foo.fits[2][bin=rawx,rawy] # load ext 2, cols
+          rawx,rawy </tt><br>
+        <tt> $ds9 foo.fits[bg_events,bin=rawx,rawy] # load ext
+          bg_events, cols rawx,rawy </tt><br>
+        <tt> $ds9 foo.fits[bin=x,y,pha] # bin on x,y,pi </tt><br>
+        <tt> $ds9 foo.fits[bin=pi] # bin on x,y,pi</tt><br>
+        <tt> $ds9 'foo.fits[ccd_id==3&amp;&amp;energy&gt;4000]' # quoted
+          filter</tt><br>
+        <tt> $ds9 '"foo.fits[ccd_id==3 &amp;&amp; energy&gt;4000]"' #
+          double quoted filter</tt><br>
+        <tt> $ds9 'foo.fits[events][pha&gt;5,pi&lt;2]' # load extension
+          'events' and filter</tt></blockquote>
+    </blockquote>
+    <blockquote>
+      <blockquote> </blockquote>
+      <p>The shell environment variable <tt>DS9_BINKEY </tt>may be
+        used to specify default bin cols for FITS bin tables. Example:</p>
+      <blockquote> <tt>$ export DS9_BINKEY='[bin=rawx,rawy]'</tt> <br>
+        <tt>$ ds9 foo.fits # load FITS bin table, bin on rawx, rawy<br>
+        </tt></blockquote>
+      <p><b> <a name="FITSHEALPIXTable"></a>FITS HEALPIX Table<br>
+        </b></p>
+      At load time, the user may provide just a file name or a file name
+      along with FITS extension name/number, image section
+      specification, and Healpix parameters. DS9 will automatically
+      convert a FITS HEALPIX binary or ascii table into a 2D image for
+      display. FITS extension names and parameters are case insensitive.
+      The users may specify a number of parameters on how to construct
+      the image. Any table with keyword PIXTYPE=HEALPIX or NSIDE=x will
+      be processed as an HEALPIX image. The following FITS keywords will
+      be used if present and not overwritten by a command line option:
+      NSIDE, COORDSYS, ORDER.<br>
+      <blockquote>
+        <blockquote> </blockquote>
+        <tt><tt><tt><tt>Syntax: <br>
+              </tt></tt></tt></tt><tt><tt>filename<br>
+            filename[ext]<br>
+            filename[ext][sect]<br>
+            filename[sect]<br>
+            filename[ext,sect]<br>
+            <br>
+          </tt></tt><tt><tt><tt>filename[ext][hpx]<br>
+            </tt><tt><tt><tt><tt><tt>filename[ext][hpx][sect]<br>
+                    </tt></tt></tt></tt>filename[ext][sect][hpx]<br>
+            </tt><tt><tt><tt><tt>filename[hpx]<br>
+                  </tt></tt></tt>filename[hpx][sect]<br>
+            </tt><tt><tt>filename[sect][hpx]<br>
+              </tt></tt><tt>filename[ext,hpx]<br>
+              <br>
+            </tt>where:<br>
+          </tt></tt><tt><tt><tt><tt><tt><tt><tt>ext: see <a
+                        href="file:///Users/joye/saods9/ds9/doc/ref/FITSImage">FITS
+
+
+
+
+
+                        Image</a><br>
+                    </tt></tt></tt></tt></tt>sect: see <a
+              href="file:///Users/joye/saods9/ds9/doc/ref/FITSImage">FITS
+
+
+
+
+
+              Image</a><br>
+            <br>
+            hpx:<br>
+          </tt></tt><tt>[order=ring|nested] # default ring<br>
+          [layout=equatorial|north|south] # default equatorial<br>
+          [col=&lt;column number&gt;] # defaut 1<br>
+          [quad=&lt;quadurant number&gt;] # (1-4) default 1<br>
+          [system=equatorial|galactic|ecliptic|unknown] # default
+          unknown</tt><br>
+        <br>
+        <tt>Example: </tt><tt><br>
+          $ds9 foo.fits # default load </tt><tt><br>
+          $ds9 foo.fits[1] # load first extension </tt><tt><br>
+          $ds9
+          foo.fits[order=ring,layout=equatorial,col=1,quad=1,system=unknown]<br>
+        </tt><tt>$ds9 foo.fits[1,order=nested] # first extension, nested
+          order</tt><br>
+      </blockquote>
+      <blockquote> </blockquote>
+      <p><b><a name="FITSDataCube"></a>FITS Cube</b></p>
+      A FITS Cube is a FITS image which contains more than 2 axes
+      (NAXES&gt;2). DS9 will automatically detect if a cube is present
+      and will load all additional images. In addition, individual
+      images can be loaded one at a time into a cube. DS9 will display
+      the Cube dialog box which allows the user to select which 2 image
+      to be displayed.
+      <p><b><a name="FITSMultipleExtensionDataCube"></a>FITS Multiple
+          Extension Cube</b></p>
+      A FITS Multiple Extension Data Cube file is a FITS file with one
+      or more extensions, that is to be displayed as a data cube. Each
+      image does not have to be the same size, however, only the
+      coordinate systems from the first extension will be used for
+      contours and grids. <br>
+      <blockquote><tt> Example:</tt><br>
+        <tt> $ds9 -mecube foo.fits # load multiple extension fits file
+          as data cube</tt></blockquote>
+      <p><b><a name="FITSMultipleExtensionMultipleFrames"></a>FITS
+          Multiple Extension Multiple Frames</b></p>
+      Load a multiple extension FITS file into multiple frames. Please
+      note that files loaded via standard-in or the xpa fits command can
+      not be displayed using this method. <br>
+      <blockquote><tt> Example:</tt><br>
+        <tt> $ds9 -multiframe foo.fits # load multiple extension fits
+          file as multiple frames</tt></blockquote>
+      <p><b><a name="FITSMosaic"></a>FITS Mosaic</b></p>
+      A FITS mosaic image may exist as a series of FITS files, or as one
+      FITS file with many extensions. A FITS mosaic may be loaded all a
+      one time, or by the segment. Once loaded, the multiple FITS images
+      are treated as one FITS image. <br>
+      <br>
+      DS9 supports three forms of mosaics:&nbsp;
+      <center>
+        <table align="center" border="1" cellpadding="2" cellspacing="2"
+          width="50%">
+          <tbody>
+            <tr>
+              <td valign="top"><tt>IRAF</tt><br>
+              </td>
+              <td valign="top"> <tt>contains the DETSEC and DETSIZE
+                  keywords.<br>
+                  See <a
+                    href="http://iraf.noao.edu/projects/ccdmosaic/imagedef/imagedef.html">NOAO
+
+IRAF
+Mosaic
+Data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    Structures</a></tt> <br>
+              </td>
+            </tr>
+            <tr>
+              <td align="left" valign="top"> <tt>WCS</tt><br>
+              </td>
+              <td align="left" valign="top"><tt>each FITS image contains
+                  a valid WCS.</tt><br>
+              </td>
+            </tr>
+            <tr>
+              <td align="left" valign="top"> <tt>HST WFPC2</tt><br>
+              </td>
+              <td align="left" valign="top"> <tt>valid HST WFPC2 data
+                  cube, consisting of 4 planes, along with a fits ascii
+                  table containing wcs information. </tt></td>
+            </tr>
+          </tbody>
+        </table>
+      </center>
+      <tt></tt>
+      <blockquote><tt>Example:</tt><br>
+        <tt> $ds9 -mosaicimage iraf foo.fits # load mosaic iraf from one
+          fits file with multiple exts</tt><br>
+        <tt> $ds9 -mosaic iraf foo.fits bar.fits wow.fits # load mosaic
+          iraf from 3 files</tt><br>
+        <tt> $ds9 -mosaicimage wcs foo.fits # load mosaic wcs from one
+          fits file with multiple exts</tt><br>
+        <tt> $ds9 -mosaic wcs foo.fits bar.fits wow.fits # load mosaic
+          wcs from 3 files</tt><br>
+        <tt> $ds9 -mosaicimage wfpc2 bar.fits # load wfpc2 mosaic</tt><br>
+        <tt> $ds9 -mosaic foo.fits bar.fits wow.fits # load mosaic (wcs)
+          from 3 files</tt><br>
+        <tt> </tt></blockquote>
+      <p><b><a name="FITSMosaicDataCube"></a>FITS Mosaic Data Cube</b></p>
+      A FITS Mosaic Data Cube is a FITS mosaic image which contains more
+      than 2 axes (NAXES&gt;2). DS9 will automatically detect if a
+      mosaic data cube is present and will load all additional images.
+      At the same time, DS9 will display the data cube dialog box which
+      allows the user to select which 2 image to be displayed.
+      <p><b><a name="FITSRGB"></a>FITS RGB</b></p>
+      A FITS RGB image may exist as three of FITS images, one FITS file
+      with three extensions, or as a FITS 3D Data cube, with three
+      slices, each representing the red, green, and blue channel. A FITS
+      RGB image may be loaded all a one time, or by the channel. Once
+      loaded, the multiple FITS images are treated as one FITS image.<br>
+      <blockquote><tt>Example:</tt><br>
+        <tt> $ds9 -rgbimage rgb.fits # load rgb image consisting of one
+          fits file with 3 image exts</tt><br>
+        <tt> $ds9 -rgbcube cube.fits # load rgb image consisting of one
+          fits data cube</tt><br>
+        <tt> $ds9 -rgb -red foo.fits -green bar.fits -blue wow.fits #
+          rgb image from 3 fits images</tt><br>
+        <tt> </tt></blockquote>
+      <p><b><a name="SplitFITS"></a>Split FITS</b></p>
+      A split fits is a valid fits file in which two files contain the
+      header and data segments.
+      <p><b><a name="array"></a>Array</b></p>
+      Raw data arrays are supported. To load an array, the user must
+      provide the dimensions, pixel depth, and optional header size and
+      architecture type.
+      <blockquote> <tt> Syntax:<br>
+        </tt><tt><tt><tt><tt><tt><tt><tt>filename[arr]<br>
+                    </tt></tt></tt>filename[arr][sect]<br>
+              </tt><tt><tt>filename[sect][arr]<br>
+                  &nbsp; </tt></tt></tt></tt><br>
+          where</tt><br>
+        <tt><tt><tt>sect: see <a
+                href="file:///Users/joye/saods9/ds9/doc/ref/FITSImage">FITS
+
+
+
+
+
+                Image</a><br>
+            </tt></tt>arr:<br>
+        </tt>
+        <blockquote><tt> xdim=value </tt><br>
+          <tt> ydim=value </tt><br>
+          <tt> zdim=value # default is a depth of 1</tt><br>
+          <tt> dim=value </tt><br>
+          <tt> dims=value </tt><br>
+          <tt> bitpix=[8|16|-16|32|64|-32|-64] </tt><br>
+          <tt> skip=value # must be even, most must be factor of 4 </tt><br>
+          <tt> arch|endian=[big|bigendian|little|littleendian]</tt><br>
+        </blockquote>
+        <tt> Example:<br>
+          $ds9 -array bar.arr[xdim=512,ydim=512,zdim=1,bitpix=16] # load
+          512x512 short<br>
+          $ds9 -array bar.arr[dim=256,bitpix=-32,skip=4] # load 256x256
+          float with 4 byte head<br>
+          $ds9 -array bar.arr[dim=512,bitpix=32,arch=little] # load
+          512x512 long, intel<br>
+        </tt>
+        <p>or alternate format:</p>
+        <tt>filename[array(&lt;type&gt;&lt;dim&gt;&lt;:skip&gt;&lt;endian&gt;)]<br>
+          <br>
+          where:<br>
+          type:
+          <blockquote> 'b' 8 -bit unsigned char<br>
+            's' 16-bit short int<br>
+            'u' 16-bit unsigned short int<br>
+            'i' 32-bit int<br>
+            'l' 64-bit int<br>
+            'r' 32-bit float<br>
+            'f' 32-bit float<br>
+            'd' 64-bit float </blockquote>
+          dim:
+          <blockquote> int&nbsp;&nbsp;&nbsp;&nbsp; # x,y dim<br>
+            int.int # x,y dim<br>
+            int.int.int # x,y,z dim<br>
+          </blockquote>
+          skip:
+          <blockquote> int&nbsp;&nbsp;&nbsp;&nbsp; # number of bytes to
+            skip </blockquote>
+          endian:
+          <blockquote> 'l' little endian<br>
+            'b' big endian<br>
+          </blockquote>
+          Example:<br>
+          $ds9 -array bar.arr[array(s512)]&nbsp;&nbsp; # load 512x512
+          short<br>
+          $ds9 -array bar.arr[array(r256:4)] # load 256x256 float with 4
+          byte head<br>
+          $ds9 -array bar.arr[array(i512l)]&nbsp; # load 512x512 long,
+          intel </tt>
+        <p>The shell environment variable <tt>DS9_ARRAY </tt>may be
+          used to specify default array parameters. </p>
+        <tt> Example:<br>
+          $export DS9_ARRAY='[dim=256,bitpix=-32]'<br>
+          $ds9 -array foo.arr # load 256x256 float<br>
+        </tt></blockquote>
+      <p><b><a name="nrrd"></a>NRRD (Nearly Raw Raster Data)</b><br>
+      </p>
+      Images in NRRD are supported directly. Encodings supported: <tt>raw,
+
+
+
+
+
+
+
+
+        gzip<br>
+      </tt><br>
+      <tt>Syntax:<br>
+      </tt><tt><tt><tt><tt><tt><tt><tt>filename<br>
+                  </tt></tt></tt>filename[sect]<br>
+            </tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt>where:<br>
+                  sect: see <a
+                    href="file:///Users/joye/saods9/ds9/doc/ref/FITSImage">FITS
+
+
+
+
+
+                    Image</a><br>
+                </tt></tt> </tt><tt><tt><br>
+              </tt></tt></tt></tt></tt><tt>Example:</tt><br>
+      <tt>$ds9 -nrrd foo.nrrd<br>
+        $ds9 -nrrd foo.nrrd[100:200,100:200] # cropped</tt><br>
+      <p><b><a name="envi"></a>ENVI</b><br>
+      </p>
+      Images in ENVI are supported directly. Encodings supported: <tt>BIL,
+
+
+
+
+
+
+        BIP, BSQ.<br>
+      </tt><br>
+      <tt>Syntax:<br>
+      </tt><tt><tt><tt><tt><tt><tt><tt>filename<br>
+                  </tt></tt></tt>filename[sect]<br>
+              <br>
+              where:</tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt>sect: see <a
+                    href="file:///Users/joye/saods9/ds9/doc/ref/FITSImage">FITS
+
+
+
+
+
+                    Image</a><br>
+                </tt></tt> </tt><tt><tt><br>
+              </tt></tt></tt></tt></tt> <tt>Example:</tt><br>
+      <tt>$ds9 -envi foo.hdr foo.bsq<br>
+        $ds9 -envi foo.hdr foo.bsq[100:200,100:200] # cropped<br>
+      </tt>
+      <p><b><a name="gif"></a>GIF</b><br>
+      </p>
+      Images in GIF are supported directly. For a <tt>Frame</tt>, the
+      average of the luminosity is used. For <tt>Frame RGB</tt>, each
+      channel is loaded directly.<br>
+      <tt><br>
+        Syntax:<br>
+      </tt><tt><tt><tt><tt><tt><tt><tt>filename<br>
+                  </tt></tt></tt></tt></tt></tt></tt><br>
+      <tt>Example:<br>
+      </tt> <tt>$ ds9 -gif foo.gif</tt><br>
+      <p><b><a name="tiff"></a>TIFF</b><br>
+      </p>
+      Images in TIFF are supported directly. For a <tt>Frame</tt>, the
+      average of the luminosity is used. For <tt>Frame RGB</tt>, each
+      channel is loaded directly.<br>
+      <br>
+      <tt>Syntax:<br>
+      </tt><tt><tt><tt><tt><tt><tt><tt>filename<br>
+                  </tt></tt></tt></tt></tt></tt></tt><br>
+      <tt>Example:</tt><br>
+      <tt>$ ds9 -tiff foo.tiff</tt><br>
+      <p><b><a name="jpeg"></a>JPEG</b><br>
+      </p>
+      Images in JPEG are supported directly. For a <tt>Frame</tt>, the
+      average of the luminosity is used. For <tt>Frame RGB</tt>, each
+      channel is loaded directly.<br>
+      <tt><br>
+        Syntax:<br>
+      </tt><tt><tt><tt><tt><tt><tt><tt>filename<br>
+                  </tt></tt></tt></tt></tt></tt></tt><br>
+      <tt>Example:</tt><br>
+      <tt>$ ds9 -jpeg foo.jpeg</tt><br>
+      <p><b><a name="png"></a>PNG</b><br>
+      </p>
+      Images in PNG are supported directly. For a <tt>Frame</tt>, the
+      average of the luminosity is used. For <tt>Frame RGB</tt>, each
+      channel is loaded directly.<br>
+      <br>
+      <tt>Syntax:<br>
+      </tt><tt><tt><tt><tt><tt><tt><tt>filename<br>
+                  </tt></tt></tt></tt></tt></tt></tt><br>
+      <tt>Example:</tt><br>
+      <tt>$ ds9 -png foo.png</tt><br>
+      <p><b> <a name="ExternalFileSupport"></a>External File Support</b></p>
+      DS9 supports external file formats via an ASCII description file.
+      When loading a file into DS9, these descriptions are referenced
+      for instructions for loading the file, based on the file
+      extension. If found, the command is executed and the result, a
+      FITS image or FITS Binary Table, is read into DS9 via stdin. <br>
+      At start-up, DS9 first searches for the ASCII file, named <tt>.ds9.fil</tt>in
+
+
+the
+local
+directory,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      then in the users home directory. <br>
+      The file command first is macro-expanded to fill in user-defined
+      arguments and then is executed externally. <br>
+      The ASCII file that defines the known image files consists of one
+      or more file descriptors, each of which has the following format:
+      <blockquote> <tt> Help description<br>
+          A space-separated list of templates<br>
+          A space-separated list of file types (not currently used)<br>
+          The command line for the loading this file type<br>
+        </tt> </blockquote>
+      Note that blank lines separate the file descriptions and should
+      not be used as part of a description. Also, the '#' character is a
+      comment character. <br>
+      <br>
+      The following macros are supported: <tt>$filename</tt><br>
+      <blockquote><tt> For Example: </tt><br>
+        <tt> # File access descriptions:</tt><br>
+        <tt> #&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; help explanation</tt><br>
+        <tt> #&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file template</tt><br>
+        <tt> #&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file type</tt><br>
+        <tt> #&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; access command</tt><br>
+        <tt> IRAF IMH files</tt><br>
+        <tt> *.imh</tt><br>
+        <tt> IMH</tt><br>
+        <tt> i2f -s $filename </tt></blockquote>
+      <p><b> <a name="ExternalAnalysisSupport"></a>External Analysis
+          Support</b></p>
+      For more information about external analysis support files, see <a
+        href="analysis.html">Analysis</a>.
+      <p><b> <a name="RegionFiles"></a>Region Files</b></p>
+      DS9 can read and write a number of region file formats. See <a
+        href="region.html">Regions</a> documentation for more
+      information.
+      <blockquote> <tt> <a href="region.html#RegionDescriptions">DS9</a><br>
+          <a href="region.html#FUNTools">FUNTools</a><br>
+          <a href="region.html#Ciao">Ciao</a><br>
+          <a href="region.html#SAOimage">SAOimage</a><br>
+          <a href="region.html#IRAFPROS">IRAF PROS</a><br>
+          <a href="region.html#FITSREGIONBinaryTable">FITS REGION Binary
+            Table</a><br>
+          <a href="region.html#XY">X Y</a><br>
+        </tt></blockquote>
+      <p> <b><a name="ContourFiles"></a>Contour Files</b></p>
+      <b> </b>See <a
+        href="file:///Users/joye/saods9/ds9/doc/ref/contour.html#ContourFiles">Contours</a>
+      documentation for more information. <br>
+      <b></b>
+      <blockquote><tt> </tt> </blockquote>
+      <p><b> <a name="ColorLookupTable"></a>Color Lookup Table</b></p>
+      DS9 has a number of default colormaps available to the user. DS9
+      also supports reading and writing color lookup table formats from
+      the following programs:
+      <blockquote> <tt> <a
+href="http://tdc-www.harvard.edu/software/saoimage/saoimage.color.html#cmap">SAOimage</a><br>
+          <a
+            href="http://hea-www.harvard.edu/RD/saotng/adding_cmaps.html">SAOtng</a><br>
+          XImtool<br>
+        </tt> </blockquote>
+      DS9 uses the file extension to determine the color table format:
+      <center>
+        <table nosave="" border="1" cellpadding="2" cellspacing="2"
+          width="50%">
+          <tbody>
+            <tr nosave="">
+              <td nosave="">
+                <center><tt>Ext</tt></center>
+              </td>
+              <td>
+                <center><tt>Format</tt></center>
+              </td>
+            </tr>
+            <tr>
+              <td><tt>.lut</tt></td>
+              <td><tt>XImtool, SAOtng</tt></td>
+            </tr>
+            <tr>
+              <td><tt>.sao</tt></td>
+              <td><tt>DS9, SAOimage</tt></td>
+            </tr>
+            <tr>
+              <td><tt>any other</tt></td>
+              <td><tt>DS9</tt></td>
+            </tr>
+          </tbody>
+        </table>
+      </center>
+      <p><b> <a name="WCS"></a>WCS</b></p>
+      A new WCS specification can be loaded and used by the current
+      image regardless of the WCS that was contained in the image file.
+      WCS specification can be sent to DS9 as an ASCII file via XPA. The
+      format of the specification is a set of valid FITS keywords that
+      describe a WCS.
+      <blockquote> <tt> Example: <br>
+          &nbsp;&nbsp;&nbsp; CRPIX1&nbsp;
+          =&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          257.75<br>
+          &nbsp;&nbsp;&nbsp; CRPIX2&nbsp;
+          =&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          258.93<br>
+          &nbsp;&nbsp;&nbsp; CRVAL1&nbsp;
+          =&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -201.94541667302 <br>
+          &nbsp;&nbsp;&nbsp; CRVAL2&nbsp;
+          =&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          -47.45444<br>
+          &nbsp;&nbsp;&nbsp; CDELT1&nbsp;
+          =&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -2.1277777E-4 <br>
+          &nbsp;&nbsp;&nbsp; CDELT2&nbsp;
+          =&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.1277777E-4
+          <br>
+          &nbsp;&nbsp;&nbsp; CTYPE1&nbsp; = 'RA---TAN' <br>
+          &nbsp;&nbsp;&nbsp; CTYPE2&nbsp; = 'DEC--TAN' <br>
+        </tt> </blockquote>
+      Note that the WCS definitions can contain standard FITS 80
+      character WCS card images, as shown above, or free-form name/value
+      pairs without the intervening "=" sign:
+      <blockquote> <tt> &nbsp;&nbsp;&nbsp; CRPIX1&nbsp;&nbsp;&nbsp;
+          257.75 <br>
+          &nbsp;&nbsp;&nbsp; CRPIX2&nbsp;&nbsp;&nbsp; 258.93 <br>
+          &nbsp;&nbsp;&nbsp; CRVAL1&nbsp;&nbsp;&nbsp; -201.94541667302 <br>
+          &nbsp;&nbsp;&nbsp; CRVAL2&nbsp;&nbsp;&nbsp; -47.45444 <br>
+          &nbsp;&nbsp;&nbsp; CDELT1&nbsp;&nbsp;&nbsp; -2.1277777E-4 <br>
+          &nbsp;&nbsp;&nbsp; CDELT2&nbsp;&nbsp;&nbsp; 2.1277777E-4 <br>
+          &nbsp;&nbsp;&nbsp; CTYPE1&nbsp;&nbsp; 'RA---TAN' <br>
+          &nbsp;&nbsp;&nbsp; CTYPE2&nbsp;&nbsp; 'DEC--TAN' </tt> </blockquote>
+      <p><b> <a name="PreferenceFile"></a>Preference File</b></p>
+      A preference file is a valid tcl script generated by DS9 to save
+      the current preference items. See <a href="prefs.html">Preferences</a>
+      for more information.
+      <p><b> <a name="StartupFile"></a>Startup File</b></p>
+      If a startup file <tt>$HOME/ds9.ini</tt> is available, it is
+      sourced as the last step in initialization. The file permissions
+      must be group/world readonly.<br>
+      Users may have several different startup files. DS9 looks for a
+      startup file with its own name. By default, if the application is
+      named <tt>ds9</tt>, it will look for <tt>.ds9.ini.</tt> However,
+      if the DS9 application is named <tt>foo</tt>, then DS9 will look
+      for <tt>.foo.ini.</tt> In this manner, the user can have several
+      predefined startup files that are activated by invoking DS9 with a
+      different application names. <br>
+      <p><b> <a name="TCL"></a>TCL</b></p>
+      TCL/TK script file. Users may customize the appearance and enhance
+      the capabilities of DS9 by sourcing their own TCL scripts. </blockquote>
+  </body>
+</html>

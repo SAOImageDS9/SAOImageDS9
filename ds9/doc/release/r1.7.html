@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="GENERATOR"
+ content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+  <title>DS9 Version 1.7 Release Notes</title>
+</head>
+<body alink="#ff0000" bgcolor="#ffffff" link="#0000ee" text="#000000"
+ vlink="#551a8b">
+<h3>
+<img alt="" src="../sun.gif" align="middle" height="98" width="100">Version
+1.7 Release
+Notes</h3>
+<ul>
+  <h4> <b>Version 1.7.2</b></h4>
+  <ol>
+    <li> <tt>Fixes a rather nasty bug with coordinates.</tt></li>
+    <li> <tt>XPA version 2.b32</tt></li>
+    <br>
+    <tt>example:</tt> <br>
+    <tt>$ ds9&amp;</tt> <br>
+    <tt>$ xpaget DS9 # will list all public access points</tt> <br>
+    <tt>$ xpaset -p DS9 colormap BB # change colormap</tt> <br>
+    <tt>$ xpaset -p DS9 file snr.fits # load a fits file</tt> <br>
+    <tt>$ cat snr.fits | xpaset DS9 fits # load via XPA</tt> <br>
+    <tt>$ cat snr.fits | xpaset DS9 fits foo[key=RAWX,RAWY] # load via
+XPA</tt> <br>
+    <tt>Note: xpa class and name for ds9</tt> <br>
+    <tt>-- xpa class : 'DS9'</tt> <br>
+    <tt>-- xpa name&nbsp; : 'DS9'</tt> <br>
+    <tt>both class and name are case sensitive</tt> <br>
+    <tt>To specify a different xpa name for this application use the</tt>
+    <br>
+    <tt>-title command line option:</tt> <br>
+    <tt>$
+ds9&amp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+# default name of 'DS9'</tt> <br>
+    <tt>$ ds9 -title foo&amp; # name of 'foo'</tt> <br>
+    <tt>$ xpaset -p foo colormap BB # change colormap for 'foo'</tt> <br>
+    <tt>$ xpaset -p :foo colormap A # change colormap for 'foo'</tt> <br>
+    <tt>$ xpaset -p DS9:foo colormap BB # change colormap for 'foo'</tt>
+    <br>
+    <tt>$ xpaset -p DS9: colormap I8 # change colormap for 'DS9 &amp;
+foo'</tt> <li><tt>fixed bug with zscale and minmax preferences</tt></li>
+    <li> <tt>geometry command line option: $ ds9 -geometry 600x500</tt></li>
+    <br>
+    <tt>Note: this does not include space needed for menus.</tt> <li><tt>default
+wcs is 'fk5'</tt></li>
+  </ol>
+  <h4> <b>Version 1.7</b></h4>
+  <ol>
+    <li> <tt>new version of Fits I/O library</tt></li>
+    <li> <tt>.Z, .z, and .gz files are supported</tt></li>
+    <br>
+    <tt>example:</tt> <br>
+    <tt>$ ds9 snr.fits.Z</tt> <br>
+    <tt>$ ds9 snr.fits.z</tt> <li><tt>url's are now supported</tt></li>
+    <br>
+    <tt>example:</tt> <br>
+    <tt>$ ds9
+ftp://legacy.gsfc.nasa.gov/rosat/data/hri/images/fits/rh100193_img.fits</tt>
+    <br>
+    <tt>$ ds9
+http://legacy.gsfc.nasa.gov/FTP/rosat/data/cdrom/vol1/IMAGES/00h/p000s26b.img.Z</tt>
+    <li><tt>fixed some minor problems with Mosaic Images</tt></li>
+    <li> <tt>Support for FITS bin tables</tt></li>
+    <br>
+    <tt>example:</tt> <br>
+    <tt>$ ds9 snr.fits[2] # assume 'X' or 'x' and 'Y' or 'y' column</tt>
+    <br>
+    <tt>$ ds9 snr.fits[EVENTS]</tt> <br>
+    <tt>$ ds9 snr.fits # assumes EVENTS or STDEVT extension</tt> <br>
+    <tt>$ ds9 snr.fits[key=RAWX,RAWY] # bin on RAWX/RAWY column</tt> <li><tt>Backward
+compatible with Einstein .xpa data for bining</tt></li>
+    <li> <tt>Contours are now supported</tt></li>
+    <br>
+    <tt>You can generate contours for each frame and cut/paste them
+into
+other frames. When you paste a contour, you choose which coordinate
+system
+to translate the contour into. Obvisously, to paste via WCS, each image
+must have a valid WCS. Printing of image/contours also is supported.</tt>
+    <br>
+    <tt>The contour algorithm currently implemented is a general
+purpose
+algorithm, good for most images. However, there are some issues that
+make
+it less than optimal for sparse high energy data. Therefor, next on the
+list is implemention of the 'Pros Imcontour' algorithm.</tt> <li><tt>Now
+supports ICRS WCS</tt></li>
+    <li> <tt>Now Uses Tcl/Tk 8.0.4 and BLT 2.4g</tt></li>
+    <li> <tt>Now uses Doug Minks's wcssubs 2.6.</tt></li>
+  </ol>
+</ul>
+</body>
+</html>

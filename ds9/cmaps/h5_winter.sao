@@ -1,0 +1,11 @@
+# SAOimage color table
+# winter
+# created by cptutils 1.46
+# Wed Aug 15 23:29:39 2012
+PSEUDOCOLOR
+RED:
+(0,0)(1,0)
+GREEN:
+(0,0)(1,1)
+BLUE:
+(0,1)(1,0.49804)

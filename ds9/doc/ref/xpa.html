@@ -1,0 +1,6216 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
+      2.4.7-10 i686) [Netscape]">
+    <title>XPA Access Points</title>
+  </head>
+  <body alink="#ff0000" link="#0000ff" vlink="#551a8b">
+    <h3><img alt="" src="../sun.gif" align="middle" height="98"
+        width="100"> XPA Access Points</h3>
+    <blockquote>
+      <p>The <a href="http://hea-www.harvard.edu/RD/xpa/index.html">XPA
+        </a> messaging system provides seamless communication between
+        DS9 and other Unix programs, including X programs, Perl, <a
+          href="http://space.mit.edu/cxc/software/slang/modules/xpa/">
+          S-Lang,</a> and Tcl/Tk. It also provides an easy way for users
+        to communicate with DS9 by executing XPA client commands in the
+        shell or by utilizing such commands in scripts. Because XPA
+        works both at the programming level and the shell level, it is a
+        powerful tool for unifying any analysis environment.</p>
+      <tt> <a href="#2mass">2mass</a><br>
+        <a href="#3d">3d</a><br>
+        <a href="#about">about</a><br>
+        <a href="#align">align</a><br>
+        <a href="#analysis">analysis</a><br>
+        <a href="#array">array</a><br>
+        <a href="#background">background</a><br>
+        <a href="#backup">backup</a><br>
+        <a href="#bin">bin</a><br>
+        <a href="#blink">blink</a><br>
+        <a href="#block">block</a><br>
+        <a href="#catalog">catalog</a><br>
+        <a href="#cd">cd</a><br>
+        <a href="#cmap">cmap</a><br>
+        <a href="#colorbar">colorbar</a><br>
+        <a href="#console">console</a><br>
+        <a href="#contour">contour</a><br>
+        <a href="#crop">crop</a><br>
+        <a href="#crosshair">crosshair</a><br>
+        <a href="#cube">cube</a><br>
+        <a href="#cursor">cursor</a><br>
+        <a href="#data">data</a><br>
+        <a href="#dsssao">dsssao</a><br>
+        <a href="#dsseso">dsseso</a><br>
+        <a href="#dssstsci">dssstsci</a><br>
+        <a href="#envi">envi</a><br>
+        <a href="#exit">exit</a><br>
+        <a href="#export">export</a><br>
+        <a href="#file">file</a><br>
+        <a href="#fits">fits</a><br>
+        <a href="#frame">frame</a><br>
+        <a href="#gif">gif</a><br>
+        <a href="#grid">grid</a><br>
+        <a href="#header">header</a><br>
+        <a href="#height">height</a><br>
+        <a href="#iconify">iconify</a><br>
+      </tt><tt><tt><a href="#iexam">iexam</a><br>
+        </tt><a href="#iis">iis</a><br>
+        <a href="#jpeg">jpeg</a><br>
+        <a href="#lock">lock</a><br>
+        <a href="#lower">lower</a><br>
+        <a href="#magnifier">magnifier</a><br>
+        <a href="#mask">mask</a><br>
+        <a href="#match">match</a><br>
+        <a href="#mecube">mecube</a><br>
+        <a href="#minmax">minmax</a><br>
+        <a href="#mode">mode</a><br>
+        <a href="#mosaic">mosaic</a><br>
+        <a href="#mosaicimage">mosaicimage</a><br>
+        <a href="#movie">movie</a><br>
+        <a href="#multiframe">multiframe</a><br>
+        <a href="#nameserver">nameserver</a><br>
+        <a href="#nrrd">nrrd</a><br>
+        <a href="#nvss">nvss</a><br>
+        <a href="#orient">orient</a><br>
+        <a href="#pagesetup">pagesetup</a><br>
+        <a href="#pan">pan</a><br>
+        <a href="#pixeltable">pixeltable</a><br>
+        <a href="#plot">plot</a><br>
+        <a href="#png">png</a><br>
+        <a href="#prefs">prefs</a><br>
+        <a href="#preserve">preserve</a><br>
+        <a href="#print">psprint</a><br>
+        <a href="#print">print</a><br>
+        <a href="#exit">quit</a><br>
+        <a href="#raise">raise</a><br>
+        <a href="#regions">regions</a><br>
+        <a href="#restore">restore</a><br>
+        <a href="#rgb">rgb</a><br>
+        <a href="#rgbarray">rgbarray</a><br>
+        <a href="#rgbcube">rgbcube</a><br>
+        <a href="#rgbimage">rgbimage</a><br>
+        <a href="#rotate">rotate</a><br>
+        <a href="#save">save</a><br>
+        <a href="#saveimage">saveimage</a><br>
+        <a href="#scale">scale</a><br>
+        <a href="#shm">shm</a></tt><br>
+      <tt><tt><a href="#sia">sia</a><br>
+        </tt> <a href="#single">single</a><br>
+        <a href="#skyview">skyview</a><br>
+        <a href="#sleep">sleep</a><br>
+        <a href="#smooth">smooth</a><br>
+        <a href="#source">source</a><br>
+        <a href="#tcl">tcl</a><br>
+        <a href="#threads">threads</a><br>
+        <a href="#tile">tile</a><br>
+        <a href="#update">update</a><br>
+        <a href="#url">url</a><br>
+        <a href="#version">version</a><br>
+        <a href="#view">view</a><br>
+        <a href="#vla">vla</a></tt><br>
+      <tt><tt><a href="#vlss">vlss</a><br>
+        </tt> <a href="#vo">vo</a><br>
+        <a href="#wcs">wcs</a><br>
+        <a href="#web">web</a><br>
+        <a href="#width">width</a><br>
+        <a href="#xpa">xpa</a><br>
+        <a href="#zscale">zscale</a><br>
+        <a href="#zoom">zoom</a><br>
+      </tt>
+      <p><b> <a name="2mass"></a>2mass</b></p>
+      <p> Support for 2MASS Digital Sky Survey.</p>
+      <tt> Syntax: <br>
+        2mass []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt; &lt;dec&gt;
+        degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
+        &lt;height&gt; degrees|arcmin|arcsec]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [frame new|current]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [update frame|crosshair]<br>
+        &nbsp; &nbsp;&nbsp;&nbsp; [survey j|h|k]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+      </tt><tt>&nbsp; <br>
+        Example:<br>
+        $xpaget ds9 2mass name <br>
+        $xpaget ds9 2mass coord <br>
+        $xpaget ds9 2mass size<br>
+        $xpaget ds9 2mass save<br>
+        $xpaget ds9 2mass frame<br>
+        $xpaget ds9 2mass survey <br>
+        $xpaset -p ds9 2mass<br>
+      </tt><tt>$xpaset -p ds9 2mass m31<br>
+        $xpaset -p ds9 2mass name m31 <br>
+        $xpaset -p ds9 2mass coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+        $xpaset -p ds9 2mass size 60 60 arcmin<br>
+        $xpaset -p ds9 2mass save yes<br>
+        $xpaset -p ds9 2mass frame current<br>
+        $xpaset -p ds9 2mass update frame<br>
+        $xpaset -p ds9 2mass survey j<br>
+      </tt><tt>$xpaset -p ds9 2mass open<br>
+        $xpaset -p ds9 2mass close</tt><br>
+      <p><b> <a name="3d"></a>3d</b></p>
+      <p> Support for 3D frame.</p>
+      <tt> Syntax: <br>
+        3d []<br>
+        &nbsp;&nbsp; [view &lt;az&gt; &lt;el&gt;]<br>
+        &nbsp;&nbsp; [az &lt;az&gt;]<br>
+        &nbsp;&nbsp; [el &lt;el&gt;]<br>
+        &nbsp;&nbsp; [scale &lt;scale&gt;]<br>
+        &nbsp;&nbsp; [method mip|aip]</tt><br>
+      <tt><tt>&nbsp;&nbsp; [background none|azimuth|elevation]<br>
+        </tt>&nbsp;</tt><tt>&nbsp; [border yes|no]<br>
+        &nbsp;&nbsp; [border color &lt;color&gt;]</tt><br>
+      <tt> </tt><tt>&nbsp;&nbsp; [highlite yes|no]<br>
+        &nbsp;&nbsp; [highlite color &lt;color&gt;]<br>
+      </tt><tt>&nbsp;&nbsp; [open|close]<br>
+      </tt><tt>&nbsp; <br>
+        Example:<br>
+        $xpaget ds9 3d view<br>
+        $xpaget ds9 3d az<br>
+        $xpaget ds9 3d el<br>
+        $xpaget ds9 3d scale<br>
+        $xpaget ds9 3d method<br>
+      </tt><tt>$xpaget ds9 3d background<br>
+      </tt><tt>$xpaget ds9 3d border<br>
+        $xpaget ds9 3d border color</tt><br>
+      <tt>$xpaget ds9 3d highlite<br>
+        $xpaget ds9 3d highlite color<br>
+        $xpaset -p ds9 3d # create new 3D frame<br>
+        $xpaset -p ds9 3d view 45 30<br>
+        $xpaset -p ds9 3d az 45<br>
+        $xpaset -p ds9 3d el 30<br>
+        $xpaset -p ds9 3d scale 10<br>
+        $xpaset -p ds9 3d method mip</tt><br>
+      <tt>$xpaset -p ds9 3d background azimuth<br>
+      </tt><tt>$xpaset -p ds9 3d border yes<br>
+        $xpaset -p ds9 3d border color red</tt><br>
+      <tt>$xpaset -p ds9 3d highlite yes<br>
+        $xpaset -p ds9 3d highlite color red<br>
+        $xpaset -p ds9 3d open<br>
+        $xpaset -p ds9 3d close<br>
+      </tt>
+      <p><b><a name="about"></a>about</b></p>
+      <p>Get DS9 credits. </p>
+      <tt> Syntax: <br>
+        about <br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 about<br>
+      </tt>
+      <p><b> <a name="align"></a>align</b></p>
+      <p>Controls the World Coordinate System alignment for the current
+        frame.</p>
+      <tt> Syntax: <br>
+        align []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [yes|no]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 align<br>
+        $xpaset -p ds9 align yes<br>
+      </tt>
+      <p><b> <a name="analysis"></a>analysis</b></p>
+      <p>Control external analysis tasks. Tasks are numbered as they are
+        loaded, starting with 0. Can also be used to display a message
+        and display text in the text dialog window. </p>
+      <tt> Syntax: <br>
+        analysis [&lt;task number&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [&lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [task &lt;task
+        number&gt;|&lt;task name&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load
+        &lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [clear][load
+        &lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [message
+        ok|okcancel|yesno &lt;message&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [entry
+        &lt;message&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [text]</tt><tt><tt><br>
+          <br>
+        </tt> Example: <br>
+        $xpaget ds9 analysis<br>
+        $xpaget ds9 analysis task<br>
+        $xpaget ds9 analysis entry 'Please enter something'<br>
+        $xpaget ds9 analysis entry okcancel 'Please enter something'<br>
+        $xpaset -p ds9 analysis 0 # invoke first analysis task<br>
+        $xpaset -p ds9 analysis task 0<br>
+        $xpaset -p ds9 analysis task foobar<br>
+        $xpaset -p ds9 analysis "{foo bar}"<br>
+        $xpaset -p ds9 analysis my.ans<br>
+        $xpaset -p ds9 analysis load my.ans <br>
+        $xpaset -p ds9 analysis clear <br>
+        $xpaset -p ds9 analysis clear load my.ans<br>
+        $xpaset -p ds9 analysis message ok {This is a message}<br>
+        $xpaset -p ds9 analysis text {this is text}<br>
+        $cat my.ans | xpaset ds9 analysis load <br>
+        $cat foo.txt | xpaset ds9 analysis text <br>
+      </tt>
+      <p><b> <a name="array"></a>array</b></p>
+      <p>Load raw data array into current frame.<br>
+      </p>
+      <tt> Syntax:<br>
+        array [native|big|little]<br>
+        array [new|mask]
+[[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],zdim=&lt;z&gt;,bitpix=&lt;b&gt;,skip=&lt;s&gt;,endian=[little|big]]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 array &gt; foo.arr<br>
+        $xpaget ds9 array little &gt; foo.arr<br>
+        $xpaset -p ds9 array foo.arr[dim=512,bitpix=-32,endian=little]<br>
+        $xpaset -p ds9 array new foo.arr[dim=512,bitpix=</tt><tt>-32,endian=little]</tt><br>
+      <tt><tt>$xpaset -p ds9 array mask foo.arr[dim=512,bitpix=</tt></tt><tt>-32,endian=little]</tt><br>
+      <tt>$cat foo.arr | xpaset ds9 array
+        [dim=512,bitpix=-32,endian=little]</tt><br>
+      <tt>$cat foo.arr | xpaset ds9 array new
+        [dim=512,bitpix=-32,endian=little]</tt><br>
+      <tt>$cat foo.arr | xpaset ds9 array mask
+        [dim=512,bitpix=-32,endian=little]</tt> <tt> </tt>
+      <p><b> <a name="background"></a>bg<br>
+          background</b></p>
+      <p>Set image background color. </p>
+      <tt> Syntax: <br>
+        bg &lt;color&gt;<br>
+        &nbsp;<br>
+        Example:<br>
+        $xpaget ds9 bg</tt><tt><br>
+        <tt>$xpaset -p ds9 bg red</tt><br>
+      </tt>
+      <p><b> <a name="backup"></a>backup</b></p>
+      <p>Create a backup save set. </p>
+      <tt> Syntax: <br>
+        backup &lt;filename&gt;<br>
+        &nbsp;<br>
+        Example:<br>
+        $xpaset -p ds9 backup ds9.bck</tt><br>
+      <p><b> <a name="bin"></a>bin</b></p>
+      <p>Controls binning factor, binning buffer size, and&nbsp; binning
+        function for binning FITS bin tables. The access point blocking
+        is provided for backward compatibility. </p>
+      <tt> Syntax: <br>
+        bin [about &lt;x&gt; &lt;y&gt;]<br>
+        &nbsp;&nbsp;&nbsp; [about center]<br>
+        &nbsp;&nbsp;&nbsp; [buffersize &lt;value&gt;] <br>
+        &nbsp;&nbsp;&nbsp; [cols &lt;x&gt; &lt;y&gt;]<br>
+        &nbsp;&nbsp;&nbsp; [colsz &lt;x&gt; &lt;y&gt; &lt;z&gt;]<br>
+        &nbsp;&nbsp;&nbsp; [factor &lt;value&gt; [&lt;vector&gt;]]<br>
+        &nbsp;&nbsp;&nbsp; [depth &lt;value&gt;] <br>
+        &nbsp;&nbsp;&nbsp; [filter &lt;string&gt;] <br>
+        &nbsp;&nbsp;&nbsp; [function average|sum]<br>
+        &nbsp;&nbsp;&nbsp; [in]<br>
+        &nbsp;&nbsp;&nbsp; [out]<br>
+        &nbsp;&nbsp;&nbsp; [to fit] <br>
+        &nbsp;&nbsp;&nbsp; [match]<br>
+        &nbsp;&nbsp;&nbsp; [lock [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example: <br>
+        $xpaget ds9 bin about<br>
+        $xpaget ds9 bin buffersize<br>
+        $xpaget ds9 bin cols<br>
+        $xpaget ds9 bin factor<br>
+        $xpaget ds9 bin depth<br>
+        $xpaget ds9 bin filter<br>
+        $xpaget ds9 bin function<br>
+        $xpaget ds9 bin smooth<br>
+        $xpaget ds9 bin smooth function<br>
+        $xpaget ds9 bin smooth radius<br>
+        $xpaget ds9 bin lock<br>
+        $xpaset -p ds9 bin about 4096 4096<br>
+        $xpaset -p ds9 bin about center<br>
+        $xpaset -p ds9 bin buffersize 512<br>
+        $xpaset -p ds9 bin cols detx dety<br>
+        $xpaset -p ds9 bin colsz detx dety time<br>
+        $xpaset -p ds9 bin factor 4<br>
+        $xpaset -p ds9 bin factor 4 2<br>
+        $xpaset -p ds9 bin depth 10<br>
+        $xpaset -p ds9 bin filter 'pha &gt; 5'<br>
+        $xpaset -p ds9 bin filter ''<br>
+        $xpaset -p ds9 bin function sum<br>
+        $xpaset -p ds9 bin in<br>
+        $xpaset -p ds9 bin out<br>
+        $xpaset -p ds9 bin to fit<br>
+        $xpaset -p ds9 bin match<br>
+        $xpaset -p ds9 bin lock yes<br>
+        $xpaset -p ds9 bin open<br>
+        $xpaset -p ds9 bin close</tt><tt><br>
+      </tt>
+      <p><b> <a name="blink"></a>blink</b></p>
+      <p>Blink mode parameters. Interval is in seconds. <br>
+      </p>
+      <tt> Syntax: <br>
+        blink []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [interval &lt;value&gt;]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 blink<br>
+        $xpaget ds9 blink interval<br>
+        $xpaset -p ds9 blink<br>
+        $xpaset -p ds9 blink yes<br>
+        $xpaset -p ds9 blink interval 1</tt><br>
+      <p><b> <a name="block"></a>block</b></p>
+      <p>Controls blocking parameters. </p>
+      <tt> Syntax: <br>
+        block</tt><tt><tt> [&lt;value&gt;] <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;value&gt; &lt;value&gt;]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [to &lt;value&gt;] <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [to &lt;value&gt;
+          &lt;value&gt;]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [in]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [out]<br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [to fit] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [match]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example: <br>
+        $xpaget ds9 block<br>
+        $xpaget ds9 block lock<br>
+      </tt><tt>$xpaset -p ds9 </tt><tt><tt><tt>block</tt></tt> 4<br>
+        $xpaset -p ds9 </tt><tt><tt><tt>block</tt></tt> 4 2<br>
+      </tt><tt><tt><tt>$xpaset -p ds9 </tt><tt><tt><tt>block</tt></tt>
+            to 4<br>
+            $xpaset -p ds9 </tt><tt><tt><tt>block</tt></tt> to 4 2<br>
+          </tt>$xpaset -p ds9 </tt><tt><tt><tt>block</tt></tt> in<br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 </tt><tt><tt><tt>block</tt></tt>
+            out<br>
+          </tt></tt>$xpaset -p ds9 </tt><tt><tt><tt>block</tt></tt> to
+        fit<br>
+        $xpaset -p ds9 </tt><tt><tt><tt>block</tt></tt> match<br>
+        $xpaset -p ds9 </tt><tt><tt><tt>block</tt></tt> lock yes<br>
+        $xpaset -p ds9 </tt><tt><tt><tt>block</tt></tt> open<br>
+        $xpaset -p ds9 </tt><tt><tt><tt>block</tt></tt> close</tt><tt><br>
+      </tt>
+      <p><b> <a name="catalog"></a>catalog<br>
+          cat<br>
+        </b></p>
+      <p>Support for catalogs. The first three commands will create a
+        new catalog search. All other commands operated on the last
+        search created, unless indicated otherwise.</p>
+      <tt> Syntax: <br>
+        catalog []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [ned|simbad|denis|skybot]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [ascss|cmc|gsc1|gsc2|gsc3|ac|nomad|ppmx|sao|sdss5|sdss6|</tt><tt>sdss7|sdss8|</tt><tt>tycho|ua2|ub1|ucac2]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2mass|iras]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [csc|xmm|rosat]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [first|nvss]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+        [chandralog|cfhtlog|esolog|stlog|xmmlog]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [cds &lt;catalogname&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [cds
+        &lt;catalogid&gt;]<br>
+        <br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [import sb|tsv
+        &lt;filename&gt;]<br>
+        <br>
+      </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;] [allcols]<br>
+      </tt><tt>&nbsp;</tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+        [&lt;ref&gt;] [allrows]<br>
+        &nbsp;</tt><tt>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [cancel]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [clear]<br>
+      </tt><tt>&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; [&lt;ref&gt;] [close]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]</tt><tt><br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [crosshair]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
+        &lt;col&gt;]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [edit
+        yes|no]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [export sb|tsv &lt;filename&gt;]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [filter &lt;string&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [filter load
+        &lt;filename&gt;]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [header]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [hide]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [location
+        &lt;code&gt;]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [match &lt;ref&gt; &lt;ref&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [match error &lt;value&gt; degrees|arcmin|arcsec]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [match function 1and2|1not2|2not1]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [match return 1and2|1only|2only]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [match unique yes|no]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [maxrows
+        &lt;number&gt;]</tt><br>
+      <tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;] [name
+        &lt;object&gt;]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [panto yes|no]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [plot
+        &lt;xcol&gt; &lt;ycol&gt; &lt;xerrcol&gt; &lt;yerrcol&gt;]</tt><br>
+      <tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;] [print]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [psky
+        &lt;skyframe&gt;]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [psystem
+        &lt;coordsys&gt;]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [ra
+        &lt;col&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [regions]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [retrieve]</tt><br>
+      <tt> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [samp]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [samp
+        broadcast]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [samp
+        send &lt;application&gt;]</tt><tt><br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [save &lt;filename&gt;]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [server cds|sao|cadc|adac|iucaa|bejing|cambridge|ukirt]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [show]</tt><br>
+      <tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;] [size
+        &lt;width&gt; &lt;height&gt; degrees|arcmin|arcsec]</tt><br>
+      <tt> </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [sky &lt;skyframe&gt;]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [skyformat &lt;skyformat&gt;]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [sort
+        &lt;col&gt; incr|decr]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol
+        [#]
+        condition|shape|color|text|font|fontsize|fontweight|fontslant
+        &lt;value&gt;] <br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [symbol [#] text|size|size2|units|angle &lt;value&gt;] <br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+        [symbol shape {circle point}|{box point}|{diamond point}|<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp; {cross point}|{x point}|{arrow
+        point}|{boxcircle point}|<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+        &nbsp;&nbsp; circle|ellipse|box|text]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol
+        add| [#] remove]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol
+        save|load &lt;filename&gt;]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
+        &lt;coordsys&gt;]</tt><tt><br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        [update]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [x
+        &lt;col&gt;]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [y
+        &lt;col&gt;]</tt><br>
+      <tt> &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 catalog<br>
+      </tt><tt>$xpaget ds9 catalog header</tt><br>
+      <tt><br>
+        $xpaset -p ds9 catalog<br>
+        $xpaset -p ds9 catalog 2mass<br>
+        $xpaset -p ds9 catalog cds 2mass<br>
+        $xpaset -p ds9 catalog cds "I/252"<br>
+        <br>
+      </tt><tt>$xpaset -p ds9 catalog load foo.xml<br>
+        $xpaset -p ds9 catalog import tsv foo.tsv<br>
+        <br>
+      </tt><tt>$xpaset -p ds9 catalog allrows<br>
+        $xpaset -p ds9 catalog allcols<br>
+      </tt><tt>$xpaset -p ds9 catalog cancel<br>
+      </tt><tt>$xpaset -p ds9 catalog clear<br>
+      </tt><tt>$xpaset -p ds9 catalog close<br>
+      </tt><tt>$xpaset -p ds9 catalog coordinate 202.48 47.21 fk5<br>
+      </tt><tt>$xpaset -p ds9 catalog crosshair<br>
+      </tt><tt>$xpaset -p ds9 catalog dec DEC<br>
+      </tt><tt>$xpaset -p ds9 catalog edit yes<br>
+      </tt><tt>$xpaset -p ds9 catalog export tsv bar.tsv<br>
+      </tt><tt>$xpaset -p ds9 catalog filter '$Jmag&gt;10'<br>
+        $xpaset -p ds9 catalog filter load foo.flt<br>
+        $xpaset -p ds9 catalog header<br>
+      </tt><tt>$xpaset -p ds9 catalog hide<br>
+      </tt><tt>$xpaset -p ds9 catalog location 500</tt><br>
+      <tt>$xpaset -p ds9 catalog match error 2 arcsec<br>
+        $xpaset -p ds9 catalog match function 1and2<br>
+        $xpaset -p ds9 catalog match unique no<br>
+        $xpaset -p ds9 catalog match return 1only<br>
+        $xpaset -p ds9 catalog match 2mass csc<br>
+      </tt><tt>$xpaset -p ds9 catalog maxrows 2000<br>
+      </tt><tt>$xpaset -p ds9 catalog name m51<br>
+        $xpaset -p ds9 catalog panto no<br>
+      </tt><tt>$xpaset -p ds9 catalog plot '$Jmag' '$Hmag' '$e_Jmag'
+        '$e_Hmag'<br>
+      </tt><tt>$xpaset -p ds9 catalog print</tt><br>
+      <tt>$xpaset -p ds9 catalog psky fk5</tt><br>
+      <tt>$xpaset -p ds9 catalog psystem wcs</tt><br>
+      <tt>$xpaset -p ds9 catalog ra RA<br>
+        $xpaset -p ds9 catalog regions</tt><br>
+      <tt>$xpaset -p ds9 catalog retrieve<br>
+      </tt><tt> $xpaset -p ds9 catalog samp broadcast<br>
+        $xpaset -p ds9 catalog samp send aladin<br>
+        $xpaset -p ds9 catalog save foo.xml<br>
+      </tt><tt>$xpaset -p ds9 catalog server sao<br>
+      </tt><tt>$xpaset -p ds9 catalog show</tt><br>
+      <tt>$xpaset -p ds9 catalog size 1 1 degrees</tt><br>
+      <tt>$xpaset -p ds9 catalog symbol condition '$Jmag&gt;15'<br>
+        $xpaset -p ds9 catalog symbol 2 shape "boxcircle point"<br>
+        $xpaset -p ds9 catalog symbol color red<br>
+        $xpaset -p ds9 catalog symbol font times<br>
+      </tt><tt>$xpaset -p ds9 catalog symbol fontsize 14<br>
+      </tt><tt>$xpaset -p ds9 catalog symbol fontweight bold<br>
+      </tt><tt>$xpaset -p ds9 catalog symbol fontslant italic<br>
+      </tt><tt>$xpaset -p ds9 catalog symbol add<br>
+        $xpaset -p ds9 catalog symbol 2 remove<br>
+        $xpaset -p ds9 catalog symbol load foo.sym<br>
+        $xpaset -p ds9 catalog symbol save bar.sym</tt><tt><br>
+        $xpaset -p ds9 catalog sky fk5<br>
+        $xpaset -p ds9 catalog skyformat degrees<br>
+      </tt><tt>$xpaset -p ds9 catalog sort "Jmag" incr<br>
+      </tt><tt>$xpaset -p ds9 catalog system wcs</tt><tt><br>
+      </tt><tt>$xpaset -p ds9 catalog update<br>
+      </tt><tt>$xpaset -p ds9 catalog x RA<br>
+        $xpaset -p ds9 catalog y DEC</tt><br>
+      <p><b> <a name="cd"></a>cd</b></p>
+      <p>Sets/Returns the current working directory. </p>
+      <tt> Syntax: <br>
+        cd [&lt;directory&gt;] <br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 cd<br>
+        $xpaset -p ds9 cd /home/mrbill<br>
+      </tt>
+      <p><b> <a name="cmap"></a>cmap</b></p>
+      <p>Controls the colormap for the current frame. The colormap name
+        is not case sensitive. A valid contrast value is&nbsp; from 0 to
+        10 and bias value from 0 to 1. </p>
+      <tt> Syntax: <br>
+        cmap [&lt;colormap&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [file]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;] <br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;] <br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [invert yes|no] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [value &lt;constrast&gt; &lt;bias&gt;]
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [tag [load|save] &lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [tag delete]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [match]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [lock [yes|no]]</tt><br>
+      <tt> &nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example: <br>
+        $xpaget ds9 cmap <br>
+        $xpaget ds9 cmap file <br>
+        $xpaget ds9 cmap invert <br>
+        $xpaget ds9 cmap value <br>
+      </tt><tt>$xpaget ds9 cmap lock</tt><br>
+      <tt> $xpaset -p ds9 cmap Heat <br>
+        $xpaset -p ds9 cmap load foo.sao <br>
+      </tt><tt>$xpaset -p ds9 cmap save bar.sao <br>
+      </tt><tt>$xpaset -p ds9 cmap invert yes <br>
+        $xpaset -p ds9 cmap value 5 .5<br>
+        $xpaset -p ds9 cmap tag load foo.tag<br>
+        $xpaset -p ds9 cmap tag save foo.tag<br>
+        $xpaset -p ds9 cmap tag delete<br>
+      </tt><tt>$xpaset -p ds9 cmap match<br>
+        $xpaset -p ds9 cmap lock yes</tt><br>
+      <tt> $xpaset -p ds9 cmap open<br>
+        $xpaset -p ds9 cmap close<br>
+      </tt>
+      <p><b> <a name="colorbar"></a>colorbar<br>
+        </b></p>
+      <p>Controls colorbar parameters.</p>
+      <tt> Syntax: <br>
+        colorbar []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+        [horizontal|vertical]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [orientation
+        horizontal|vertical]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics
+        yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [space
+        value|distance] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [font
+        times|helvetica|courier]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [fontsize
+        &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [fontweight
+        normal|bold]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [fontslant
+        roman|italic]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [size]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ticks]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 colorbar<br>
+        $xpaget ds9 colorbar orientation<br>
+        $xpaget ds9 colorbar numerics<br>
+        $xpaget ds9 colorbar space<br>
+        $xpaget ds9 colorbar font<br>
+        $xpaget ds9 colorbar fontsize<br>
+        $xpaget ds9 colorbar fontweight<br>
+        $xpaget ds9 colorbar fontslant<br>
+        $xpaget ds9 colorbar size<br>
+        $xpaget ds9 colorbar ticks<br>
+        $xpaset -p ds9 colorbar yes<br>
+        $xpaset -p ds9 colorbar vertical<br>
+        $xpaset -p ds9 colorbar orientation vertical<br>
+        $xpaset -p ds9 colorbar numerics yes<br>
+        $xpaset -p ds9 colorbar space value<br>
+        $xpaset -p ds9 colorbar font times<br>
+        $xpaset -p ds9 colorbar fontsize 14<br>
+        $xpaset -p ds9 colorbar fontweight bold<br>
+        $xpaset -p ds9 colorbar fontslant italic<br>
+        $xpaset -p ds9 colorbar size 20<br>
+        $xpaset -p ds9 colorbar ticks 11<br>
+      </tt>
+      <p><b> <a name="console"></a>console</b></p>
+      <p>Display tcl console window.</p>
+      <tt> Syntax: <br>
+        -console<br>
+        &nbsp;<br>
+        Example:<br>
+        $xpaset -p ds9 console<br>
+      </tt>
+      <p><b> <a name="contour"></a>contour<br>
+        </b></p>
+      <p>Controls contours in the current frame. </p>
+      <tt> Syntax: <br>
+        contour []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;coordsys&gt;
+        [&lt;skyframe&gt;]]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [generate]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load
+        &lt;filename&gt; [&lt;color&gt; &lt;width&gt; yes|no]]<br>
+        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;
+        &lt;coordsys&gt; &lt;skyframe&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [convert]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [loadlevels
+        &lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [savelevels
+        &lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [copy]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [paste
+        &lt;coordsys&gt; [&lt;color&gt; &lt;width&gt; yes|no]]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [color &lt;color&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [width &lt;width&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [dash yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [smooth &lt;smooth&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [method block|smooth]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [nlevels &lt;number of
+        levels&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [scale
+        linear|log|pow|squared|sqrt|asinh|sinh|histequ]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [log exp &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [mode
+        minmax|&lt;value&gt;|zscale|zmax]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [limits &lt;min&gt;
+        &lt;max&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [levels &lt;value
+        value value...&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example: <br>
+        $xpaget ds9 contour<br>
+        $xpaget ds9 contour wcs fk5<br>
+        $xpaget ds9 contour color<br>
+        $xpaget ds9 contour width<br>
+        $xpaget ds9 contour dash<br>
+        $xpaget ds9 contour smooth<br>
+        $xpaget ds9 contour method<br>
+        $xpaget ds9 contour nlevels<br>
+        $xpaget ds9 contour scale<br>
+        $xpaget ds9 contour log exp<br>
+        $xpaget ds9 contour mode<br>
+        $xpaget ds9 contour limits<br>
+        $xpaget ds9 contour levels<br>
+        $xpaset -p ds9 contour<br>
+        $xpaset -p ds9 contour yes<br>
+        $xpaset -p ds9 contour clear<br>
+        $xpaset -p ds9 contour generate<br>
+      </tt><tt><tt>$xpaset -p ds9 contour load ds9.ctr<br>
+        </tt></tt><tt>$xpaset -p ds9 contour load ds9.ctr red 2 yes<br>
+        $xpaset -p ds9 contour save ds9.ctr wcs fk5<br>
+        $xpaset -p ds9 contour convert<br>
+        $xpaset -p ds9 contour loadlevels ds9.ctr</tt><br>
+      <tt><tt>$xpaset -p ds9 contour savelevels ds9.lev<br>
+        </tt> $xpaset -p ds9 contour copy<br>
+        $xpaset -p ds9 contour paste wcs red 2 no<br>
+        $xpaset -p ds9 contour color yellow<br>
+        $xpaset -p ds9 contour width 2<br>
+        $xpaset -p ds9 contour dash yes<br>
+        $xpaset -p ds9 contour smooth 5<br>
+        $xpaset -p ds9 contour method smooth<br>
+        $xpaset -p ds9 contour nlevels 10<br>
+        $xpaset -p ds9 contour scale sqrt<br>
+        $xpaset -p ds9 contour log exp 1000<br>
+        $xpaset -p ds9 contour mode zscale<br>
+        $xpaset -p ds9 contour limits 1 100<br>
+        $xpaset -p ds9 contour levels "{1 10 100 1000}"<br>
+        $xpaset -p ds9 contour open<br>
+        $xpaset -p ds9 contour close<br>
+      </tt>
+      <p><b><a name="crop"></a>crop</b> </p>
+      <p>Set current image display area. </p>
+      <tt> Syntax: <br>
+        crop [&lt;x&gt; &lt;y&gt; &lt;width&gt; &lt;height&gt;
+        [&lt;coordsys&gt;][&lt;skyframe&gt;][&lt;skyformat&gt;][degrees|arcmin|arcsec]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [match &lt;coordsys&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [lock &lt;coordsys&gt;|none]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 crop # get crop in physical coords <br>
+        $xpaget ds9 crop wcs galactic sexagesimal arcsec<br>
+        $xpaget ds9 crop lock<br>
+        $xpaset -p ds9 crop 40 30 10 20 # set crop in physical coords<br>
+        $xpaset -p ds9 crop +104:51:06.915 +68:33:40.761&nbsp; 28.144405
+        22.000204 wcs galactic arcsec<br>
+        $xpaset -p ds9 crop match wcs<br>
+        $xpaset -p ds9 crop lock wcs</tt><br>
+      <p><b> <a name="crosshair"></a>crosshair</b></p>
+      <p>Controls the current position of the crosshair in the current
+        frame. DS9 is placed in crosshair mode when the crosshair is
+        set. </p>
+      <tt> Syntax: <br>
+        crosshair [&lt;x&gt; &lt;y&gt; &lt;coordsys&gt;
+        [&lt;skyframe&gt;][&lt;skyformat&gt;]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [match
+        &lt;coordsys&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [lock
+        &lt;coordsys&gt;|none]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 crosshair # get crosshair in physical coords <br>
+        $xpaget ds9 crosshair wcs fk4 sexagesimal # get crosshair in wcs
+        coords <br>
+        $xpaget ds9 crosshair lock<br>
+        $xpaset -p ds9 crosshair 100 100 physical # set crosshair in
+        physical <br>
+        $xpaset -p ds9 crosshair 345 58.8 wcs fk5 # set crosshair in wcs
+        coords <br>
+        $xpaset -p ds9 crosshair 23:01:00 +58:52:51 wcs fk5<br>
+        $xpaset -p ds9 crosshair match wcs<br>
+        $xpaset -p ds9 crosshair lock wcs<br>
+      </tt>
+      <p><b> <a name="cube"></a>cube<br>
+        </b></p>
+      <p>Controls FITS cube dialog. </p>
+      <tt> Syntax: <br>
+        cube [play|stop|next|prev|first|last]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [&lt;slice&gt;
+        [&lt;coordsys&gt;][&lt;axis&gt;]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [interval &lt;numeric&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [axis &lt;axis&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [match &lt;coordsys&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [lock &lt;coordsys&gt;|none]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [order 123|132|213|231|312|321]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [axes lock [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 cube<br>
+        $xpaget ds9 cube interval<br>
+        $xpaget ds9 cube axis<br>
+        $xpaget ds9 cube lock<br>
+        $xpaget ds9 cube order<br>
+        $xpaget ds9 cube axes lock<br>
+        $xpaset -p ds9 cube play<br>
+        $xpaset -p ds9 cube last<br>
+        $xpaset -p ds9 cube 3<br>
+        $xpaset -p ds9 cube 4.4 wcs 3<br>
+        $xpaset -p ds9 cube interval 2<br>
+        $xpaset -p ds9 cube axis 3<br>
+        $xpaset -p ds9 cube match wcs<br>
+        $xpaset -p ds9 cube lock wcs<br>
+        $xpaset -p ds9 cube order 123<br>
+        $xpaset -p ds9 cube axes lock yes<br>
+        $xpaset -p ds9 cube open<br>
+        $xpaset -p ds9 cube close</tt><br>
+      <p><b> <a name="cursor"></a>cursor</b></p>
+      <p>Move mouse pointer or crosshair in image pixels in the current
+        frame. Note, this will move selected Regions also. </p>
+      <tt> Syntax: <br>
+        cursor [&lt;x&gt; &lt;y&gt;] <br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaset -p ds9 cursor 10 10<br>
+      </tt>
+      <p><b> <a name="data"></a>data</b></p>
+      <p>Return an array of data values given a lower left corner and a
+        width and height in specified coordinate system. The last
+        argument of yes indicates to strip the coordinates from the
+        output and just list the data values. The default is yes.</p>
+      <tt> Syntax: <br>
+        data [&lt;coordsys&gt; [&lt;skyframe&gt;] &lt;x&gt; &lt;y&gt;
+        &lt;width&gt; &lt;height&gt; [yes|no]]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 data image 450 520 3 3 yes<br>
+        $xpaget ds9 data physical 899 1039 6 6 no<br>
+        $xpaget ds9 data fk5 202.47091 47.196811 0.00016516669
+        0.00016516669 no<br>
+        $xpaget ds9 data wcs fk5 13:29:53.018 +47:11:48.52 0.00016516669
+        0.00016516669 no</tt><tt><br>
+      </tt>
+      <p><b> <a name="dsssao"></a>dsssao<br>
+          dss<br>
+        </b></p>
+      <p>Support for Digital Sky Survey at SAO. </p>
+      <tt> Syntax:<br>
+        dsssao []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt;
+        &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
+        &lt;height&gt; degrees|arcmin|arcsec]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [frame new|current]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [update frame|crosshair]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 dsssao name <br>
+        $xpaget ds9 dsssao coord <br>
+        $xpaget ds9 dsssao size<br>
+        $xpaget ds9 dsssao save<br>
+        $xpaget ds9 dsssao frame<br>
+        $xpaset -p ds9 dsssao<br>
+        $xpaset -p ds9 dsssao m31 <br>
+        $xpaset -p ds9 dsssao name m31 <br>
+        $xpaset -p ds9 dsssao coord 00:42:44.404 +41:16:08.78
+        sexagesimal<br>
+        $xpaset -p ds9 dsssao size 60 60 arcmin<br>
+        $xpaset -p ds9 dsssao save yes<br>
+        $xpaset -p ds9 dsssao frame current<br>
+        $xpaset -p ds9 dsssao update frame<br>
+        $xpaset -p ds9 dsssao open<br>
+      </tt><tt>$xpaset -p ds9 dsssao close</tt><br>
+      <p><b> <a name="dsseso"></a>dsseso</b></p>
+      <p>Support for Digital Sky Survey at ESO. </p>
+      <tt> Syntax:<br>
+        dsseso []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt;
+        &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
+        &lt;height&gt; degrees|arcmin|arcsec]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [frame new|current]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [update frame|crosshair]<br>
+        &nbsp;&nbsp; &nbsp; &nbsp; [survey
+        DSS1|DSS2-red|DSS2-blue|DSS2-infrared]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example: <br>
+        $xpaget ds9 dsseso name <br>
+        $xpaget ds9 dsseso coord <br>
+        $xpaget ds9 dsseso size<br>
+        $xpaget ds9 dsseso save<br>
+        $xpaget ds9 dsseso frame<br>
+        $xpaget ds9 dsseso survey<br>
+        $xpaset -p ds9 dsseso<br>
+        $xpaset -p ds9 dsseso m31 <br>
+        $xpaset -p ds9 dsseso name m31 <br>
+        $xpaset -p ds9 dsseso coord 00:42:44.404 +41:16:08.78
+        sexagesimal<br>
+        $xpaset -p ds9 dsseso size 60 60 arcmin<br>
+        $xpaset -p ds9 dsseso save yes<br>
+        $xpaset -p ds9 dsseso frame current<br>
+        $xpaset -p ds9 dsseso update frame<br>
+        $xpaset -p ds9 dsseso survey DSS2-red <br>
+        $xpaset -p ds9 dsseso open<br>
+      </tt><tt>$xpaset -p ds9 dsseso close</tt><br>
+      <p><b> <a name="dssstsci"></a>dssstsci</b></p>
+      <p>Support for Digital Sky Survey at STSCI.</p>
+      <tt> Syntax:<br>
+        dssstsci []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [&lt;object&gt;]<br>
+        &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; [name &lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord
+        &lt;ra&gt; &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size
+        &lt;width&gt; &lt;height&gt; degrees|arcmin|arcsec]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [frame
+        new|current]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [update
+        frame|crosshair]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [survey
+        poss2ukstu_red|poss2ukstu_ir|poss2ukstu_blue] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [survey
+        poss1_blue|poss1_red]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [survey
+        all|quickv|phase2_gsc2|phase2_gsc1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example:<br>
+        $xpaget ds9 dssstsci name <br>
+        $xpaget ds9 dssstsci coord <br>
+        $xpaget ds9 dssstsci size<br>
+        $xpaget ds9 dssstsci save<br>
+        $xpaget ds9 dssstsci frame<br>
+        $xpaget ds9 dssstsci survey<br>
+        $xpaset -p ds9 dssstsci<br>
+        $xpaset -p ds9 dssstsci m31 <br>
+        $xpaset -p ds9 dssstsci name m31 <br>
+        $xpaset -p ds9 dssstsci coord 00:42:44.404 +41:16:08.78
+        sexagesimal<br>
+        $xpaset -p ds9 dssstsci size 60 60 arcmin<br>
+        $xpaset -p ds9 dssstsci save yes<br>
+        $xpaset -p ds9 dssstsci frame current<br>
+        $xpaset -p ds9 dssstsci update frame<br>
+        $xpaset -p ds9 dssstsci survey all<br>
+        $xpaset -p ds9 dssstsci open<br>
+        $xpaset -p ds9 dssstsci close</tt><br>
+      <p><b> <a name="envi"></a>envi</b></p>
+      <p>Load an ENVI header and file. Optional parameter: array endian.<br>
+      </p>
+      <tt> Syntax: <br>
+        envi &lt;header&gt; [&lt;filename&gt;]<br>
+        &nbsp;<br>
+        Example:<br>
+      </tt><tt><tt>$xpaset -p ds9 envi foo.hdr</tt></tt><br>
+      <tt><tt><tt><tt><tt><tt>$xpaset -p ds9 envi foo.hdr foo.bsq</tt></tt><br>
+              $xpaset -p ds9 envi new foo.hdr foo.bsq</tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><br>
+                </tt></tt></tt></tt></tt></tt>
+      <p><b> <a name="exit"></a>exit<br>
+          quit<br>
+        </b></p>
+      <p>Quits DS9. </p>
+      <tt> Syntax: <br>
+        exit<br>
+        quit<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaset -p ds9 exit<br>
+      </tt>
+      <p><b> <a name="export"></a>export<br>
+        </b></p>
+      <p>Export loaded image data of current frame in specified image
+        format. Optional parameters: array endian, nrrd endian, jpeg
+        quality (1-100) and tiff compression method.</p>
+      <tt> Syntax: </tt><tt><br>
+      </tt><tt> export </tt><tt>[array|nrrd|envi|gif|tiff|jpeg|png] </tt><tt>&lt;filename&gt;</tt><tt><br>
+      </tt><tt>export array &lt;filename&gt;</tt><tt> </tt><tt>[big|little</tt><tt>|native]<br>
+      </tt><tt>export nrrd &lt;filename&gt; </tt><tt>[big|little</tt><tt>|native]</tt><tt><br>
+        export envi &lt;header&gt; [&lt;filename&gt;] </tt><tt>[big|little</tt><tt>|native]</tt><tt>
+      </tt><tt><br>
+        export jpeg &lt;filename&gt;</tt><tt> [1-100]</tt><tt><br>
+      </tt><tt> </tt><tt>export tiff &lt;filename</tt><tt>&gt;</tt><tt>
+        [none|jpeg|packbits|deflate]</tt><br>
+      <tt> &nbsp;<br>
+        Example: <br>
+      </tt><tt><tt>$xpaset -p ds9 export array foo.arr little</tt></tt><br>
+      <tt><tt>$xpaset -p ds9 export nrrd foo.nrrd little</tt></tt><br>
+      <tt><tt><tt><tt><tt><tt>$xpaset -p ds9 export envi foo.hdr little</tt></tt><br>
+            </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                          -p ds9 export envi foo.hdr foo.bsq little</tt></tt><br>
+                    </tt></tt></tt></tt>$xpaset -p ds9 export tiff
+              foo.tiff jpeg</tt></tt></tt><br>
+        $xpaset -p ds9 export jpeg foo.jpeg 75<br>
+        $xpaset -p ds9 export png foo.png</tt><br>
+      <p><b> <a name="file"></a>file</b></p>
+      <p>Query currently loaded file information. </p>
+      <tt> Syntax:<br>
+        file <br>
+        &nbsp; <br>
+        Example: <br>
+        $xpaget ds9 file </tt><br>
+      <p><b> <a name="fits"></a>fits</b></p>
+      <p>Load a FITS image into the current frame or query the currently
+        loaded image.<br>
+      </p>
+      <tt> Syntax: <br>
+        fits </tt><tt><tt>[new|mask|slice] [&lt;filename&gt;]</tt><tt><br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp; [width|height|depth|bitpix|type]<br>
+        &nbsp; &nbsp;&nbsp; [size [wcs|wcsa...wcsz]
+        [fk4|fk5|icrs|galactic|ecliptic] [degrees|arcmin|arcsecs]]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;[header [&lt;ext&gt;] [keyword
+        &lt;string&gt;]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [image|table|slice]</tt><tt><br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 fits &gt; foo.fits<br>
+        $xpaget ds9 fits width<br>
+        $xpaget ds9 fits height<br>
+        $xpaget ds9 fits depth<br>
+        $xpaget ds9 fits bitpix</tt><br>
+      <tt>$xpaget ds9 fits type </tt><br>
+      <tt><tt>$xpaget ds9 fits size<br>
+        </tt> $xpaget ds9 fits size wcs fk5 arcmin<br>
+        $xpaget ds9 fits header # primary<br>
+        $xpaget ds9 fits header 2 # hdu 2<br>
+        $xpaget ds9 fits header -2 # hdu 2 with inherit<br>
+        $xpaget ds9 fits header keyword BITPIX<br>
+        $xpaget ds9 fits header 1 keyword BITPIX</tt><br>
+      <tt><tt>$xpaget ds9 fits image &gt; foo.fits<br>
+          $xpaget ds9 fits table &gt; bar.fits<br>
+          $xpaget ds9 fits slice &gt; foo.fits<br>
+        </tt> $xpaset -p ds9 fits foo.fits<br>
+        $xpaset -p ds9 fits new foo.fits<br>
+        $xpaset -p ds9 fits bar.fits[bin=detx,dety]<br>
+        $xpaset -p ds9 fits slice foo.fits<br>
+        $xpaset -p ds9 fits mask foo.fits<br>
+        $cat foo.fits | xpaset ds9 fits <br>
+        $cat foo.fits | xpaset ds9 fits new<br>
+        $cat bar.fits | xpaset ds9 fits -[bin=detx,dety]<br>
+        $cat foo.fits | xpaset ds9 fits slice<br>
+        $cat foo.fits | xpaset ds9 fits mask<br>
+      </tt>
+      <p><b> <a name="frame"></a>frame</b></p>
+      <p>Controls frame functions. Frames may be created, deleted,
+        reset, and centered. While return the current frame number. If
+        you goto a frame that does not exists, it will be created. If
+        the frame is hidden, it will be shown. The 'frameno' option is
+        available for backward compatibility. </p>
+      <tt> Syntax: <br>
+        frame [center [#|all]]<br>
+        &nbsp; &nbsp; &nbsp; [clear [#|all]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [new [rgb|3d]]<br>
+        &nbsp; &nbsp; &nbsp; [delete [#|all]] <br>
+        &nbsp; &nbsp; &nbsp; [reset [#|all]]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [refresh [#|all]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [hide [#|all]]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [show [#|all]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [move first]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [move back]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [move forward]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [move last]<br>
+        &nbsp; &nbsp; &nbsp; [first]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [prev]<br>
+        &nbsp; &nbsp; &nbsp; [next]<br>
+        &nbsp; &nbsp; &nbsp; [last]<br>
+        &nbsp; &nbsp; &nbsp; [frameno #]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [#]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [match &lt;coordsys&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock &lt;coordsys&gt;|none]</tt><br>
+      <tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [has
+[amplifier|datamin|datasec|detector|grid|iis|irafmin|physical|smooth]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [has contour [aux]]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [has fits [bin|cube|mosaic]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [has marker
+        [highlite|paste|select|undo]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [has system &lt;coordsys&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [has wcs
+        [&lt;wcssys&gt;|equatorial &lt;wcssys&gt;|linear
+        &lt;wcssys&gt;]]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 frame # returns the id of the current frame <br>
+        $xpaget ds9 frame frameno # returns the id of the current frame
+        <br>
+        $xpaget ds9 frame all # returns the id of all frames <br>
+        $xpaget ds9 frame active # returns the id of all active frames<br>
+      </tt><tt>$xpaget ds9 frame lock</tt><br>
+      <tt> $xpaget ds9 frame has amplifier<br>
+        $xpaget ds9 frame has datamin<br>
+        $xpaget ds9 frame has datasec<br>
+        $xpaget ds9 frame has detector<br>
+        $xpaget ds9 frame has grid<br>
+        $xpaget ds9 frame has iis<br>
+        $xpaget ds9 frame has irafmin<br>
+        $xpaget ds9 frame has physical<br>
+        $xpaget ds9 frame has smooth<br>
+        $xpaget ds9 frame has contour<br>
+        $xpaget ds9 frame has contour aux<br>
+        $xpaget ds9 frame has fits<br>
+        $xpaget ds9 frame has fits bin<br>
+        $xpaget ds9 frame has fits cube<br>
+        $xpaget ds9 frame has fits mosaic<br>
+        $xpaget ds9 frame has marker highlite<br>
+        $xpaget ds9 frame has marker paste<br>
+        $xpaget ds9 frame has marker select<br>
+        $xpaget ds9 frame has marker undo<br>
+        $xpaget ds9 frame has system physical<br>
+        $xpaget ds9 frame has wcs wcsa<br>
+        $xpaget ds9 frame has wcs equatorial wcsa<br>
+        $xpaget ds9 frame has wcs linear wcsa<br>
+        $xpaset -p ds9 frame center # center current frame<br>
+        $xpaset -p ds9 frame center 1 # center 'Frame1' <br>
+        $xpaset -p ds9 frame center all # center all frames <br>
+        $xpaset -p ds9 frame clear # clear current frame<br>
+        $xpaset -p ds9 frame new # create new frame <br>
+        $xpaset -p ds9 frame new rgb # create new rgb frame<br>
+        $xpaset -p ds9 frame delete # delete current frame <br>
+        $xpaset -p ds9 frame reset # reset current frame <br>
+        $xpaset -p ds9 frame refresh # refresh current frame <br>
+        $xpaset -p ds9 frame hide # hide current frame <br>
+        $xpaset -p ds9 frame show 1 # show frame 'Frame1'<br>
+        $xpaset -p ds9 frame move first # move frame to first in order<br>
+        $xpaset -p ds9 frame move back # move frame back in order<br>
+        $xpaset -p ds9 frame move forward # move frame forward in order<br>
+        $xpaset -p ds9 frame move last # move frame to last in order<br>
+        $xpaset -p ds9 frame first # goto first frame <br>
+        $xpaset -p ds9 frame prev # goto prev frame <br>
+        $xpaset -p ds9 frame next # goto next frame<br>
+        $xpaset -p ds9 frame last # goto last frame<br>
+        $xpaset -p ds9 frame frameno 4 # goto frame 'Frame4', create if
+        needed<br>
+        $xpaset -p ds9 frame 3 # goto frame 'Frame3', create if needed <br>
+        $xpaset -p ds9 frame match wcs<br>
+        $xpaset -p ds9 frame lock wcs</tt><br>
+      <p><b> <a name="gif"></a>gif</b></p>
+      <p>Load GIF image into current frame.<br>
+      </p>
+      <tt> Syntax:<br>
+        gif [new|slice] [&lt;filename&gt;]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 gif &gt; foo.gif</tt><br>
+      <tt>$xpaset -p ds9 gif foo.gif</tt><br>
+      <tt><tt>$xpaset -p ds9 gif new foo.gif<br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 gif slice foo.gif<br>
+          </tt></tt>$cat foo.gif | xpaset ds9 gif # not available
+        windows</tt> <br>
+      <tt><tt>$cat foo.gif | xpaset ds9 gif</tt><tt> new # not available
+          windows<br>
+        </tt>$cat foo.gif | xpaset ds9 gif</tt><tt> slice</tt><tt><tt><tt>
+            # not available windows</tt></tt></tt>
+      <p><b> <a name="grid"></a>grid</b></p>
+      <p> Controls coordinate grid. For grid numeric format
+        syntax,&nbsp; click <a href="grid.html#Format">here</a>.</p>
+      <tt> Syntax: <br>
+        grid&nbsp; []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [yes|no] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [type analysis|publication] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [sky &lt;skyframe&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [skyformat &lt;skyformat&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid color &lt;color&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid width &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap1 &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap2 &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes color &lt;color&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes width &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes type interior|exterior]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes origin
+        lll|llu|lul|luu|ull|ulu|uul|uuu]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [format1 &lt;format&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [format2 &lt;format&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks color &lt;color&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks width &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border color &lt;color&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border width &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics font
+        times|helvetica|courier]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics fontsize &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics fontweight normal|bold]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics fontslant roman|italic]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics color &lt;color&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap1 &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap2 &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics type interior|exterior]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics vertical yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title text &lt;text&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title def yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title gap &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title font
+        times|helvetica|courier]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title fontsize &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title fontweight normal|bold]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title fontslant roman|italic]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title color &lt;color&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text1 &lt;text&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def1 yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap1 &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text2 &lt;text&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def2 yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap2 &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels font
+        times|helvetica|courier]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels fontsize &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels fontweight normal|bold]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels fontslant roman|italic]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels color &lt;color&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [reset]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example: <br>
+        $xpaget ds9 grid <br>
+        $xpaget ds9 grid type <br>
+        $xpaget ds9 grid system <br>
+        $xpaget ds9 grid sky <br>
+        $xpaget ds9 grid skyformat <br>
+        $xpaget ds9 grid grid <br>
+        $xpaget ds9 grid grid color <br>
+        $xpaget ds9 grid grid width <br>
+        $xpaget ds9 grid grid style <br>
+        $xpaget ds9 grid grid gap1 <br>
+        $xpaget ds9 grid grid gap2 <br>
+        $xpaget ds9 grid axes <br>
+        $xpaget ds9 grid axes color <br>
+        $xpaget ds9 grid axes width <br>
+        $xpaget ds9 grid axes style <br>
+        $xpaget ds9 grid axes type <br>
+        $xpaget ds9 grid axes origin<br>
+        $xpaget ds9 grid format1<br>
+        $xpaget ds9 grid format2<br>
+        $xpaget ds9 grid tickmarks <br>
+        $xpaget ds9 grid tickmarks color <br>
+        $xpaget ds9 grid tickmarks width <br>
+        $xpaget ds9 grid tickmarks style <br>
+        $xpaget ds9 grid border <br>
+        $xpaget ds9 grid border color <br>
+        $xpaget ds9 grid border width <br>
+        $xpaget ds9 grid border style <br>
+        $xpaget ds9 grid numerics <br>
+        $xpaget ds9 grid numerics font <br>
+        $xpaget ds9 grid numerics fontsize <br>
+        $xpaget ds9 grid numerics fontweight<br>
+        $xpaget ds9 grid numerics fontslant<br>
+        $xpaget ds9 grid numerics color <br>
+        $xpaget ds9 grid numerics gap1 <br>
+        $xpaget ds9 grid numerics gap2 <br>
+        $xpaget ds9 grid numerics type <br>
+        $xpaget ds9 grid numerics vertical <br>
+        $xpaget ds9 grid title <br>
+        $xpaget ds9 grid title text<br>
+        $xpaget ds9 grid title def <br>
+        $xpaget ds9 grid title gap <br>
+        $xpaget ds9 grid title font <br>
+        $xpaget ds9 grid title fontsize <br>
+        $xpaget ds9 grid title fontweight<br>
+        $xpaget ds9 grid title fontslant<br>
+        $xpaget ds9 grid title color <br>
+        $xpaget ds9 grid labels <br>
+        $xpaget ds9 grid labels text1 <br>
+        $xpaget ds9 grid labels def1 <br>
+        $xpaget ds9 grid labels gap1 <br>
+        $xpaget ds9 grid labels text2 <br>
+        $xpaget ds9 grid labels def2 <br>
+        $xpaget ds9 grid labels gap2 <br>
+        $xpaget ds9 grid labels font <br>
+        $xpaget ds9 grid labels fontsize <br>
+        $xpaget ds9 grid labels fontweight<br>
+        $xpaget ds9 grid labels fontslant<br>
+        $xpaget ds9 grid labels color <br>
+        $xpaset -p ds9 grid <br>
+        $xpaset -p ds9 grid yes<br>
+        $xpaset -p ds9 grid type analysis <br>
+        $xpaset -p ds9 grid system wcs <br>
+        $xpaset -p ds9 grid sky fk5 <br>
+        $xpaset -p ds9 grid skyformat degrees<br>
+        $xpaset -p ds9 grid grid yes<br>
+        $xpaset -p ds9 grid grid color red<br>
+        $xpaset -p ds9 grid grid width 2<br>
+        $xpaset -p ds9 grid grid style 1<br>
+        $xpaset -p ds9 grid grid gap1 10<br>
+        $xpaset -p ds9 grid grid gap2 10<br>
+        $xpaset -p ds9 grid axes yes<br>
+        $xpaset -p ds9 grid axes color red<br>
+        $xpaset -p ds9 grid axes width 2<br>
+        $xpaset -p ds9 grid axes style 1<br>
+        $xpaset -p ds9 grid axes type exterior<br>
+        $xpaset -p ds9 grid axes origin lll<br>
+        $xpaset -p ds9 grid format1 d.2<br>
+        $xpaset -p ds9 grid format2 d.2<br>
+        $xpaset -p ds9 grid tickmarks yes<br>
+        $xpaset -p ds9 grid tickmarks color red<br>
+        $xpaset -p ds9 grid tickmarks width 2<br>
+        $xpaset -p ds9 grid tickmarks style 1<br>
+        $xpaset -p ds9 grid border yes<br>
+        $xpaset -p ds9 grid border color red<br>
+        $xpaset -p ds9 grid border width 2<br>
+        $xpaset -p ds9 grid border style 1<br>
+        $xpaset -p ds9 grid numerics yes<br>
+        $xpaset -p ds9 grid numerics font courier<br>
+        $xpaset -p ds9 grid numerics fontsize 12<br>
+        $xpaset -p ds9 grid numerics fontweight bold<br>
+        $xpaset -p ds9 grid numerics fontslant italic<br>
+        $xpaset -p ds9 grid numerics color red<br>
+        $xpaset -p ds9 grid numerics gap1 10<br>
+        $xpaset -p ds9 grid numerics gap2 10<br>
+        $xpaset -p ds9 grid numerics type exterior<br>
+        $xpaset -p ds9 grid numerics vertical yes<br>
+        $xpaset -p ds9 grid title yes<br>
+        $xpaset -p ds9 grid title text {Hello World}<br>
+        $xpaset -p ds9 grid title def yes<br>
+        $xpaset -p ds9 grid title gap 10<br>
+        $xpaset -p ds9 grid title font courier<br>
+        $xpaset -p ds9 grid title fontsize 12<br>
+        $xpaset -p ds9 grid title fontweight bold<br>
+        $xpaset -p ds9 grid title fontslant italic<br>
+        $xpaset -p ds9 grid title color red<br>
+        $xpaset -p ds9 grid labels yes<br>
+        $xpaset -p ds9 grid labels text1 {Hello World}<br>
+        $xpaset -p ds9 grid labels def1 yes<br>
+        $xpaset -p ds9 grid labels gap1 10<br>
+        $xpaset -p ds9 grid labels text2 {Hello World}<br>
+        $xpaset -p ds9 grid labels def2 yes<br>
+        $xpaset -p ds9 grid labels gap2 10<br>
+        $xpaset -p ds9 grid labels font courier<br>
+        $xpaset -p ds9 grid labels fontsize 12<br>
+        $xpaset -p ds9 grid labels fontweight boldj<br>
+        $xpaset -p ds9 grid labels fontslant italic<br>
+        $xpaset -p ds9 grid labels color red<br>
+        $xpaset -p ds9 grid reset<br>
+        $xpaset -p ds9 grid load foo.grd <br>
+        $xpaset -p ds9 grid save foo.grd<br>
+        $xpaset -p ds9 grid open<br>
+        $xpaset -p ds9 grid close<br>
+      </tt>
+      <p><b> <a name="header"></a>header</b></p>
+      <p>Display current fits header dialog. Optional extension number
+        maybe specified. Please note, this differs from xpa fits header.</p>
+      <tt> Syntax: <br>
+        header [&lt;ext&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [close [&lt;ext&gt;]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save [&lt;ext&gt;]
+        &lt;filename&gt;]<br>
+        &nbsp;<br>
+        Example:<br>
+        $xpaset -p ds9 header<br>
+        $xpaset -p ds9 header 2<br>
+        $xpaset -p ds9 header close<br>
+        $xpaset -p ds9 header save 1 foo.txt<br>
+      </tt>
+      <p><b> <a name="height"></a>height</b></p>
+      <p>Set the height of the image display window. </p>
+      <tt> Syntax: <br>
+        height [&lt;value&gt;]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 height<br>
+        $xpaset -p ds9 height 512<br>
+      </tt>
+      <p><b> <a name="iconify"></a>iconify</b></p>
+      <p>Toggles iconification. </p>
+      <tt> Syntax: <br>
+        iconify []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [yes|no] <br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 iconify <br>
+        $xpaset -p ds9 iconify</tt><br>
+      <tt> $xpaset -p ds9 iconify yes</tt><br>
+      <p><b><a name="iexam"></a>iexam</b> </p>
+      <p>Interactive examine function. A blinking cursor will indicate
+        to the user to click on a point on an image. The specified
+        information will be returned at that time. The default event is
+        <tt>button</tt>. In the last form, the following macros will be
+        expanded if present: <tt>$width, $height, $depth, $bitpix,
+          $filename, $regions, $filename[$regions], $env, $pan, $value,
+          $x, $y, $z.</tt> See <a href="analysis.html#macros">Analysis
+          Macros</a> for more information.<br>
+      </p>
+      <tt> Syntax: <br>
+        iexam []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [[]|button|key|any] coordinate
+        &lt;coordsys&gt; [&lt;skyframe&gt;] [&lt;skyformat&gt;]<br>
+        &nbsp;&nbsp; &nbsp;&nbsp; [[]|button|key|any] data
+        [width][height]<br>
+      </tt><tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; [[]|button|key|any]
+          &lt;macro string&gt;]<br>
+          &nbsp; </tt><br>
+        Example: <br>
+        $xpaget ds9 iexam # image coordinates<br>
+      </tt><tt><tt>$xpaget ds9 iexam coordinate image<br>
+        </tt>$xpaget ds9 iexam key coordinate image # return coordinate
+        and key event<br>
+        $xpaget ds9 iexam coordinate wcs fk5 degrees<br>
+        $xpaget ds9 iexam coordinate wcs galactic sexagesimal<br>
+        $xpaget ds9 iexam coordinate fk5<br>
+        $xpaget ds9 iexam data # return data value<br>
+        $xpaget ds9 iexam key data # return data value and key event<br>
+        $xpaget ds9 iexam data 3 3 # return all data in 3x3 box about
+        selected point<br>
+        $xpaget ds9 iexam 'Click at $x,$y in file $filename'</tt><br>
+      <p><b> <a name="iis"></a>iis</b></p>
+      <p>Set/Get IIS Filename. Optional mosaic number maybe supplied.</p>
+      <tt> Syntax: <br>
+        iis [filename &lt;filename&gt; [#]]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 iis filename<br>
+        $xpaget ds9 iis filename 4<br>
+        $xpaset -p ds9 iis filename foo.fits<br>
+        $xpaset -p ds9 iis filename bar.fits 4</tt><br>
+      <p><b> <a name="jpeg"></a>jpeg</b></p>
+      <p>Load JPEG image into current frame. Optional parameters: <tt>jpeg
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </tt>quality (1-100) </p>
+      <tt> Syntax:<br>
+        jpeg [new|slice] [&lt;filename&gt;] [1-100]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 jpeg &gt; foo.jpeg</tt><br>
+      <tt><tt>$xpaget ds9 jpeg 100 &gt; foo.jpeg</tt><br>
+        $xpaset -p ds9 jpeg foo.jpeg</tt><br>
+      <tt><tt>$xpaset -p ds9 jpeg new foo.jpeg<br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 jpeg slice foo.jpeg<br>
+          </tt></tt>$cat foo.jpeg | xpaset ds9 jpeg </tt><tt><tt><tt> #
+            not available windows</tt></tt></tt><br>
+      <tt><tt>$cat foo.jpeg | xpaset ds9 jpeg</tt><tt> new</tt></tt><tt><tt><tt><tt>
+              # not available windows</tt></tt><br>
+        </tt>$cat foo.jpeg | xpaset ds9 jpeg</tt><tt> slice </tt><tt><tt><tt>
+            # not available windows</tt></tt></tt>
+      <p><b> <a name="lock"></a>lock</b></p>
+      <p>Lock all other frames to the current frame. </p>
+      <tt> Syntax: <br>
+        lock</tt><tt> </tt><tt>[frame &lt;coordsys&gt;|none]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[crosshair
+        &lt;coordsys&gt;|none] </tt><tt><br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [crop &lt;coordsys&gt;|none]</tt><br>
+      <tt> &nbsp;&nbsp;&nbsp;&nbsp; [slice &lt;coordsys&gt;|none]]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [bin [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [axes [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [scale [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [scalelimites [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [colorbar [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [block [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [smooth [yes|no]]</tt><br>
+      <tt><tt>&nbsp; </tt><br>
+        Example:<br>
+        $xpaget -p ds9 lock frame<br>
+        $xpaget -p ds9 lock crosshair<br>
+      </tt><tt>$xpaget -p ds9 lock crop</tt><br>
+      <tt> $xpaget -p ds9 lock slice</tt><br>
+      <tt>$xpaget -p ds9 lock bin<br>
+        $xpaget -p ds9 lock axes<br>
+        $xpaget -p ds9 lock scale<br>
+        $xpaget -p ds9 lock scalelimits<br>
+        $xpaget -p ds9 lock colorbar<br>
+        $xpaget -p ds9 lock block <br>
+        $xpaget -p ds9 lock smooth<br>
+        $xpaset -p ds9 lock frame wcs</tt><tt><br>
+      </tt><tt>$xpaset -p ds9 lock crosshair wcs<br>
+      </tt><tt>$xpaset -p ds9 lock crop wcs</tt><br>
+      <tt>$xpaset -p ds9 lock slice wcs</tt><br>
+      <tt>$xpaset -p ds9 lock bin yes<br>
+        $xpaset -p ds9 lock axes yes<br>
+      </tt><tt>$xpaset -p ds9 lock scale yes<br>
+        $xpaset -p ds9 lock scalelimits yes<br>
+      </tt><tt>$xpaset -p ds9 lock colorbar yes<br>
+        $xpaset -p ds9 lock block yes<br>
+        $xpaset -p ds9 lock smooth yes<br>
+        <br>
+      </tt><b><a name="lower"></a>lower</b>
+      <p>Lower in the window stacking order. </p>
+      <tt> Syntax: <br>
+        lower <br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaset -p ds9 lower</tt><tt><br>
+      </tt>
+      <p><b> <a name="magnifier"></a>magnifier</b></p>
+      <p>Controls the magnifier settings. </p>
+      <tt> Syntax: <br>
+        magnifier [color &lt;color&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [zoom
+        &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [cursor
+        yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [region
+        yes|no]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 magnifier color<br>
+        $xpaget ds9 magnifier zoom<br>
+        $xpaget ds9 magnifier cursor<br>
+        $xpaget ds9 magnifier region<br>
+        $xpaset -p ds9 magnifier color yellow<br>
+        $xpaset -p ds9 magnifier zoom 2<br>
+        $xpaset -p ds9 magnifier cursor no<br>
+        $xpaset -p ds9 magnifier region no</tt><br>
+      <p><b> <a name="mask"></a>mask<br>
+        </b></p>
+      <p>Controls mask parameters. </p>
+      <tt> Syntax: <br>
+        mask [color &lt;color&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [mark 1|0]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [transparency &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example:<br>
+        $xpaget ds9 mask color<br>
+        $xpaget ds9 mask mark<br>
+        $xpaget ds9 mask transparency<br>
+        $xpaset -p ds9 mask color red<br>
+        $xpaset -p ds9 mask mark 0<br>
+        $xpaset -p ds9 mask transparency 50<br>
+        $xpaset -p ds9 mask clear<br>
+        $xpaset -p ds9 mask open<br>
+        $xpaset -p ds9 mask close<br>
+      </tt>
+      <p><b> <a name="match"></a>match</b></p>
+      <p>Match all other frames to the current frame. </p>
+      <tt> Syntax: <br>
+      </tt><tt>match </tt><tt>[frame &lt;coordsys&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[crosshair
+        &lt;coordsys&gt;] </tt><tt><br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [crop &lt;coordsys&gt;]</tt><br>
+      <tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [slice &lt;coordsys&gt;]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [bin]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [scale]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [scalelimits]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [colorbar]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [block]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [smooth]</tt><br>
+      <tt><tt><br>
+        </tt> <tt> </tt> Example: <br>
+        $xpaset -p ds9 match frame wcs <br>
+      </tt><tt>$xpaset -p ds9 match crosshair wcs<br>
+      </tt><tt>$xpaset -p ds9 match crop wcs</tt><br>
+      <tt>$xpaset -p ds9 match slice</tt><tt> wcs<br>
+      </tt><tt>$xpaset -p ds9 match bin<br>
+        $xpaset -p ds9 match axes<br>
+        $xpaset -p ds9 match scale<br>
+        $xpaset -p ds9 match scalelimits<br>
+        $xpaset -p ds9 match colorbar<br>
+        $xpaset -p ds9 match block<br>
+        $xpaset -p ds9 match smooth<br>
+        <br>
+      </tt><b><a name="mecube"></a>mecube</b>
+      <p>Load FITS multiple extension file as data cube.<br>
+      </p>
+      <tt> Syntax:<br>
+        mecube [new] [&lt;filename&gt;]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 mecube &gt; foo.fits<br>
+        $xpaset -p ds9 mecube foo.fits</tt><br>
+      <tt><tt>$xpaset -p ds9 mecube new foo.fits<br>
+        </tt>$cat foo.fits | xpaset ds9 mecube</tt><br>
+      <tt>$cat foo.fits | xpaset ds9 mecube</tt><tt> new</tt>
+      <p><b> <a name="minmax"></a>minmax</b></p>
+      <p>This is how DS9 determines&nbsp; the min and max data values
+        from the data. <tt>SCAN</tt> will scan all data.&nbsp;<tt>DATAMIN</tt>
+        and <tt>IRAFMIN</tt> will use the values of the keywords if
+        present.<br>
+      </p>
+      <tt> Syntax: <br>
+        minmax [scan|sample|datamin|irafmin]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [mode
+        scan|sample|datamin|irafmin]<br>
+        &nbsp; &nbsp; &nbsp;&nbsp; [interval #] <br>
+        &nbsp; <br>
+        Example: <br>
+        $xpaget ds9 minmax mode<br>
+        $xpaget ds9 minmax interval <br>
+        $xpaset -p ds9 minmax scan <br>
+        $xpaset -p ds9 minmax mode scan<br>
+        $xpaset -p ds9 minmax interval 100<br>
+      </tt>
+      <p><b> <a name="mode"></a>mode</b></p>
+      <p>Controls the first mouse button mode. </p>
+      <tt> Syntax: <br>
+        mode
+        [none|region|crosshair|colorbar|pan|zoom|rotate|catalog|examine]
+        <br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 mode <br>
+        $xpaset -p ds9 mode crosshair</tt><br>
+      <p><b> <a name="mosaic"></a>mosaic</b></p>
+      <p>Load FITS mosaic segment into current frame.</p>
+      <tt> Syntax:<br>
+        mosaic [wcs|wcsa...wcsz|iraf] [new|mask] [&lt;filename&gt;]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 mosaic &gt; foo.fits</tt><tt><br>
+        $xpaset -p ds9 mosaic foo.fits</tt><br>
+      <tt><tt>$xpaset -p ds9 mosaic wcs foo.fits</tt></tt><br>
+      <tt><tt>$xpaset -p ds9 mosaic wcs new foo.fits</tt></tt><br>
+      <tt><tt>$xpaset -p ds9 mosaic wcs mask foo.fits</tt></tt><tt><tt><tt><br>
+          </tt></tt>$cat foo.fits | xpaset ds9 mosaic</tt><br>
+      <tt><tt>$cat foo.fits | xpaset ds9 mosaic wcs<br>
+          $cat foo.fits | xpaset ds9 mosaic wcs</tt><tt> new<br>
+        </tt>$cat foo.fits | xpaset ds9 mosaic wcs</tt><tt> mask<br>
+      </tt>
+      <p><b> <a name="mosaicimage"></a>mosaicimage</b></p>
+      <p>Load FITS mosaic image into current frame.</p>
+      <tt> Syntax:<br>
+        mosaicimage [wcs|wcsa...wcsz|iraf|wfpc2] [new|mask]
+        [&lt;filename&gt;]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 mosaicimage &gt; foo.fits</tt><tt><br>
+        $xpaset -p ds9 mosaicimage foo.fits</tt><br>
+      <tt><tt>$xpaset -p ds9 mosaicimage wcs foo.fits</tt></tt><br>
+      <tt><tt>$xpaset -p ds9 mosaicimage wcs new foo.fits</tt></tt><br>
+      <tt><tt>$xpaset -p ds9 mosaicimage wcs mask foo.fits</tt></tt><tt><tt><tt><br>
+          </tt></tt>$cat foo.fits | xpaset ds9 mosaicimage</tt><br>
+      <tt><tt>$cat foo.fits | xpaset ds9 mosaicimage wcs<br>
+          $cat foo.fits | xpaset ds9 mosaicimage wcs new</tt><tt><br>
+        </tt>$cat foo.fits | xpaset ds9 mosaicimage wcs mask</tt><br>
+      <p><b> <a name="movie"></a>movie<br>
+          savempeg<br>
+        </b></p>
+      <p>Create mpeg1 movie from snap shots of the DS9 window. A <tt>slice</tt>
+        movie cycles though all slices of a cube. A <tt>frame</tt>
+        movie cycles through all active frames. A <tt>3d</tt> movie
+        cycles through specified viewing angles. The default is <tt>frame</tt>.
+        Optional parameters for <tt>3d</tt>: number of frames, azimuth
+        from/to, elevation from/to, slice from/to, oscillate/repeat
+        times.</p>
+      <tt> Syntax:<br>
+        movie </tt><tt>[slice|frame|3d] </tt><tt>&lt;filename&gt;<br>
+      </tt><tt>movie 3d &lt;filename&gt;
+        [number|azfrom|azto|elfrom|elto|slfrom|slto|oscillate|repeat
+        &lt;#&gt;]</tt><br>
+      <tt> &nbsp;<br>
+        Example:<br>
+        $xpaset -p ds9 movie slice ds9.mpg<br>
+      </tt><tt>$xpaset -p ds9 movie 3d ds9.mpg number 10 azfrom -60 azto
+        60 oscillate 1</tt><br>
+      <p><b> <a name="multiframe"></a>multiframe</b></p>
+      <p>Load FITS multiple extension file as multiple images.<br>
+      </p>
+      <tt> Syntax:<br>
+        multiframe [&lt;filename&gt;]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaset -p ds9 multiframe foo.fits</tt><tt><tt><br>
+        </tt>$cat foo.fits | xpaset ds9 multiframe</tt><tt><tt><tt> #
+            not available windows</tt></tt></tt><br>
+      <p><b> <a name="nameserver"></a>nameserver</b></p>
+      <p>Support Name Server functions. Coordinates are in fk5. </p>
+      <tt> Syntax: <br>
+        nameserver [&lt;object&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [name &lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [server ned-sao|ned-eso|simbad-sao|simbad-eso]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [skyformat degrees|sexagesimal]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [pan]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [crosshair] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [open|close]<br>
+        <br>
+        Example: <br>
+        $xpaget ds9 nameserver<br>
+        $xpaget ds9 nameserver server<br>
+        $xpaget ds9 nameserver skyformat<br>
+        $xpaget ds9 nameserver m31<br>
+        $xpaset -p ds9 nameserver m31 <br>
+        $xpaset -p ds9 nameserver name m31 <br>
+        $xpaset -p ds9 nameserver server ned-sao <br>
+        $xpaset -p ds9 nameserver skyformat sexagesimal<br>
+        $xpaset -p ds9 nameserver pan<br>
+        $xpaset -p ds9 nameserver crosshair<br>
+        $xpaset -p ds9 nameserver open<br>
+        $xpaset -p ds9 nameserver close<br>
+      </tt>
+      <p><b> <a name="nan"></a>nan</b></p>
+      <p>Set image not-a-number color. </p>
+      <tt> Syntax: <br>
+        nan &lt;color&gt;<br>
+        &nbsp;<br>
+        Example:<br>
+        $xpaget ds9 nan<br>
+        $xpaset -p ds9 nan red</tt><tt><br>
+      </tt>
+      <p><b> <a name="nrrd"></a>nrrd</b></p>
+      <p>Load an NRRD (Nearly Raw Raster Data) file. Optional parameter:
+        array endian.<br>
+      </p>
+      <tt> Syntax: <br>
+        nrrd [&lt;filename&gt;] [little|big]<br>
+        &nbsp;<br>
+        Example:<br>
+        $xpaget ds9 nrrd</tt><br>
+      <tt><tt>$xpaget ds9 nrrd big<br>
+          $xpaset -p ds9 nrrd foo.nrrd</tt></tt><br>
+      <tt><tt><tt><tt>$xpaset -p ds9 nrrd new foo.nrrd</tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt>$xpaset -p ds9 nrrd mask foo.nrrd<br>
+                </tt></tt></tt></tt></tt>$cat foo.nrrd | xpaset ds9 nrrd</tt><br>
+      <tt>$cat foo.nrrd | xpaset ds9 nrrd</tt><tt> new<br>
+        $cat foo.nrrd | xpaset ds9 nrrd mask</tt>
+      <p><b> <a name="nvss"></a>nvss</b></p>
+      <p>Support for NRAO VLA Sky Survey.</p>
+      <tt> Syntax: <br>
+        nvss []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt; &lt;dec&gt;
+        degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt; &lt;height&gt;
+        degrees|arcmin|arcsec]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [frame new|current]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [update frame|crosshair]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example: <br>
+        $xpaget ds9 nvss name <br>
+        $xpaget ds9 nvss coord <br>
+        $xpaget ds9 nvss size<br>
+        $xpaget ds9 nvss save<br>
+        $xpaget ds9 nvss frame<br>
+        $xpaset -p ds9 nvss<br>
+        $xpaset -p ds9 nvss m31 <br>
+        $xpaset -p ds9 nvss name m31 <br>
+        $xpaset -p ds9 nvss coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+        $xpaset -p ds9 nvss size 60 60 arcmin<br>
+        $xpaset -p ds9 nvss save yes<br>
+        $xpaset -p ds9 nvss frame current<br>
+        $xpaset -p ds9 nvss update frame<br>
+        $xpaset -p ds9 nvss open<br>
+      </tt><tt>$xpaset -p ds9 nvss close</tt><br>
+      <p><b> <a name="orient"></a>orient</b></p>
+      <p>Controls the orientation of the current frame. </p>
+      <tt> Syntax: <br>
+        orient [none|x|y|xy] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example: <br>
+        $xpaget ds9 orient <br>
+        $xpaset -p ds9 orient xy<br>
+        $xpaset -p ds9 orient open<br>
+        $xpaset -p ds9 orient close<br>
+      </tt>
+      <p><b> <a name="pagesetup"></a>pagesetup</b></p>
+      <p>Controls Page Setup options.<br>
+      </p>
+      <tt> Syntax: <br>
+        pagesetup [orient portrait|landscape] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [scale
+        &lt;numberic&gt;]</tt><br>
+      <tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size
+        letter|legal|tabloid|poster|a4]</tt><br>
+      <tt> &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 pagesetup orient<br>
+        $xpaget ds9 pagesetup scale <br>
+        $xpaget ds9 pagesetup size <br>
+        $xpaset -p ds9 pagesetup orient portrait <br>
+        $xpaset -p ds9 pagesetup scale 50<br>
+        $xpaset -p ds9 pagesetup size poster<br>
+      </tt>
+      <p><b> <a name="pan"></a>pan</b></p>
+      <p>Controls the current image cursor location for the current
+        frame. </p>
+      <tt> Syntax: <br>
+        pan [&lt;x&gt; &lt;y&gt; &lt;coordsys&gt;
+        [&lt;skyframe&gt;][&lt;skyformat&gt;]] # relative<br>
+        &nbsp;&nbsp;&nbsp; [to &lt;x&gt; &lt;y&gt; &lt;coordsys&gt;
+        [&lt;skyframe&gt;][&lt;skyformat&gt;] # absolute<br>
+        &nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example: <br>
+        $xpaget ds9 pan # get current image coords <br>
+        $xpaget ds9 pan wcs fk4 sexagesimal # get current wcs coords <br>
+        $xpaset -p ds9 pan 200 200 image # pan relative <br>
+        $xpaset -p ds9 pan to 400 400 physical # pan to physical coords
+        <br>
+        $xpaset -p ds9 pan to 13:29:55 47:11:50 wcs fk5 # pan to wcs
+        coords<br>
+        $xpaset -p ds9 pan open<br>
+        $xpaset -p ds9 pan close<br>
+      </tt>
+      <p><b> <a name="pixeltable"></a>pixeltable</b></p>
+      <p>Display/Hide the pixel table. </p>
+      <tt> Syntax: <br>
+        pixeltable []<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; [yes|open]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [no|close]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 pixeltable <br>
+        $xpaset -p ds9 pixeltable<br>
+        $xpaset -p ds9 pixeltable yes<br>
+        $xpaset -p ds9 pixeltable open<br>
+        $xpaset -p ds9 pixeltable close</tt><br>
+      <p><b> <a name="plot"></a>plot</b></p>
+      <p>Display and configure data plots. All plot commands take an
+        optional second command, the plot name. If no plot name is
+        specified, the last plot created is assumed. Plot data is
+        assumed to be a pair of coordinates, with optional error values.
+        The follow are valid data descriptions:</p>
+      <blockquote>xy &nbsp;&nbsp; &nbsp; &nbsp; x and y coordinates<br>
+        xyex&nbsp;&nbsp;&nbsp; &nbsp; x,y coordinates with x errors<br>
+        xyey&nbsp;&nbsp;&nbsp; &nbsp; x,y coordinates with y errors<br>
+        xyexey&nbsp;&nbsp;&nbsp; x,y coordinates with&nbsp; x and y
+        errors<br>
+      </blockquote>
+      <p>To create a new plot, use the plot new command.</p>
+      <tt> Syntax: <br>
+        # create new empty plot window<br>
+        plot<br>
+        plot [bar|scatter]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [new [name &lt;plotname&gt;]
+        [line|bar|scatter]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [new [name &lt;plotname&gt;]
+        [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
+        label&gt; </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]<br>
+        <br>
+        # create new plot with data<br>
+        plot [new [name &lt;plotname&gt;] </tt><tt>[line|bar|scatter] </tt><tt>stdin]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # title, title xaxis, title yaxis, dimension on line 1<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;[new [name &lt;plotname&gt;]
+        [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
+        label&gt; xy|xyex|xyey|xyexey]<br>
+        <br>
+        # load dataset into an existing plot<br>
+        plot [&lt;plotname&gt;] [data xy|xyex|xyey|xyexey]<br>
+      </tt><tt><tt><br>
+          plot [&lt;plotname&gt;] load &lt;filename&gt;
+          [xy|xyex|xyey|xyexey]<br>
+          &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] save
+          &lt;filename&gt;<br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
+      </tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                duplicate<br>
+              </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                          </tt>[&lt;plotname&gt;] stats<br>
+                        </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    list<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                loadconfig &lt;filename&gt;<br>
+                &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] saveconfig
+                &lt;filename&gt;<br>
+              </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                [&lt;plotname&gt;] pagesetup orient [portrait|landscape]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] pagesetup
+                size [letter|legal|tabloid|poster|a4]</tt><br>
+              <tt> </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                [&lt;plotname&gt;] print<br>
+                &nbsp; &nbsp; &nbsp;[&lt;plotname&gt;] print destination
+                [printer|file] <br>
+                &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] print
+                command &lt;command&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] print
+                filename &lt;filename&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] print color
+                [rgb|gray]<br>
+              </tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
+            close<br>
+          </tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><br>
+                    plot </tt>[&lt;plotname&gt;] mode [pointer|zoom]<br>
+                </tt></tt></tt></tt></tt></tt><tt><br>
+        # configure graph<br>
+        plot [&lt;plotname&gt;] axis [x|y] grid [yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] axis [x|y] log
+        [yes|no]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] axis [x|y]
+        flip [yes|no]</tt><br>
+      <tt><tt>&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] axis [x|y] auto
+          [yes|no]<br>
+          &nbsp; &nbsp; &nbsp;[&lt;plotname&gt;] axis [x|y] min
+          &lt;value&gt;<br>
+          &nbsp; &nbsp; &nbsp;[&lt;plotname&gt;] axis [x|y] max
+          &lt;value&gt;</tt><tt><br>
+        </tt><tt><tt>&nbsp; &nbsp; &nbsp;[&lt;plotname&gt;] axis [x|y]
+            format &lt;string&gt;</tt><tt><br>
+          </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          legend [yes|no]<br>
+          &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] legend position
+          [right|left|top|bottom]</tt><br>
+      </tt><tt><tt>&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] font
+          [title|labels|numbers] font [times|helvetica|courier]<br>
+          &nbsp; &nbsp; &nbsp;[&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>[title|labels|numbers]</tt></tt>
+          size &lt;value&gt;<br>
+          &nbsp; &nbsp; &nbsp;[&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>[title|labels|numbers]</tt></tt>
+          weight [normal|bold]<br>
+          &nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>[title|labels|numbers]</tt></tt>
+          slant [roman|italic]<br>
+        </tt></tt><tt>&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] title
+        &lt;string&gt;</tt><br>
+      <tt><tt>&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] title [x|y]
+          &lt;string&gt;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              barmode [normal|stacked|aligned|overlap]<br>
+              <br>
+            </tt> # configure current dataset<br>
+          </tt>plot [&lt;plotname&gt;] show [yes|no]<br>
+        </tt>&nbsp; &nbsp;&nbsp; <tt></tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              shape
+              [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      shape fill [yes|no]</tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; <tt>
+                        </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+                              shape color &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                      smooth
+                                                      [step|linear|cubic|quadratic|catrom]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          color
+                                                          &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          width
+                                                          &lt;value&gt;<br>
+                                                          </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          dash [yes|no]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          error [yes|no]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          error color
+                                                          &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          [&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          color
+                                                          &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          error width
+                                                          &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          name
+                                                          &lt;string&gt;<br>
+                                                          </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><br>
+              # select current dataset<br>
+            </tt></tt></tt>plot [&lt;plotname&gt;] select &lt;value&gt;<br>
+        &nbsp; <br>
+        Example: <br>
+      </tt><tt><tt> </tt><tt><tt># return all plotnames<br>
+          </tt></tt>$xpaget ds9 plot</tt><tt><tt><br>
+        </tt><br>
+        # create new empty plot window<br>
+        $xpaset -p ds9 plot<br>
+        $xpaset -p ds9 plot scatter<br>
+        $xpaset -p ds9 plot new<br>
+        $xpaset -p ds9 plot new bar<br>
+        $xpaset -p ds9 plot new name foo<br>
+        $xpaset -p ds9 plot new name foo scatter<br>
+        <br>
+        # create new plot with data<br>
+        $cat foo.dat | xpaset ds9 plot new stdin <br>
+        $cat foo.dat | xpaset ds9 plot new name foo stdin<br>
+        $cat bar.dat | xpaset ds9 plot new "{The Title}" "{X}" "{Y}" xy<br>
+        $cat bar.dat | xpaset ds9 plot new name foo "{The Title}" "{X}"
+        "{Y}" xy<br>
+        <br>
+        # load additional dataset into an existing plot<br>
+        $cat bar.dat | xpaset ds9 plot data xy # plot additional data<br>
+        $cat bar.dat | xpaset ds9 plot foo data xy # plot additional
+        data<br>
+      </tt><tt><tt><br>
+        </tt></tt><tt><tt><tt><tt><tt><tt>$xpaget ds9 plot stats<br>
+                </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt>$xpaget
+              ds9 plot list<br>
+            </tt></tt>$xpaset -p ds9 plot load foo.dat xy # load new
+          dataset with dimension xy<br>
+          $xpaset -p ds9 plot save bar.dat # save current dataset<br>
+        </tt></tt><tt><tt>$xpaset -p ds9 plot clear # clear all datasets<br>
+          $xpaset -p ds9 plot duplicate # duplicate current dataset<br>
+        </tt></tt><tt><tt><tt><tt><tt><tt>$xpaset -p ds9 plot stats<br>
+                </tt></tt></tt></tt></tt></tt><tt><tt>$xpaset -p ds9
+          plot list<br>
+        </tt></tt><tt><tt>$xpaset -p ds9 plot loadconfig foo.plt # load
+          plot configuration <br>
+          $xpaset -p ds9 plot saveconfig bar.plt # save current plot
+          configuration<br>
+        </tt></tt><tt><tt>$xpaset -p ds9 plot pagesetup orient portrait<br>
+          $xpaset -p ds9 plot pagesetup size letter<br>
+        </tt></tt><tt><tt>$xpaset -p ds9 plot print<br>
+          $xpaset -p ds9 plot print destination file<br>
+          $xpaset -p ds9 plot print command "lp"<br>
+          $xpaset -p ds9 plot print filename "foo.ps"<br>
+          $xpaset -p ds9 plot print color rgb<br>
+        </tt>$xpaset -p ds9 plot close # close current plot<br>
+      </tt><tt><tt><br>
+          $xpaget ds9 plot mode<br>
+          $xpaset -p ds9 plot mode pointer</tt><br>
+      </tt><tt><br>
+        # configure plot<br>
+        $xpaget ds9 plot axis x grid<br>
+      </tt><tt><tt>$xpaget ds9 plot axis x log<br>
+        </tt></tt><tt><tt><tt>$xpaget ds9 plot axis x flip</tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+                                  ds9 plot axis x auto<br>
+                                </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    ds9 plot axis x min<br>
+                                  </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                      ds9 plot axis x max<br>
+                                      $xpaget ds9 plot axis x format<br>
+                                    </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              ds9 plot legend<br>
+            </tt></tt></tt></tt><tt><tt><tt><tt><tt>$xpaget ds9 plot
+                legend position<br>
+              </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>$xpaget
+                  ds9 plot font numbers font<br>
+                </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    ds9 plot font numbers size<br>
+                  </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      ds9 plot font numbers weight<br>
+                    </tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        ds9 plot font numbers slant<br>
+                      </tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                ds9 plot title<br>
+                              </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                  ds9 plot title x</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><br>
+                                    $xpaget ds9 plot barmode<br>
+                                  </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>
+          </tt></tt>$xpaset -p ds9 plot axis x grid yes<br>
+        $xpaset -p ds9 plot axis x log yes</tt><br>
+      <tt>$xpaset -p ds9 plot axis x flip yes</tt><tt><br>
+      </tt><tt><tt>$xpaset -p ds9 plot axis x auto no<br>
+          $xpaset -p ds9 plot axis x min 0<br>
+          $xpaset -p ds9 plot axis x max 100<br>
+          $xpaset -p ds9 plot axis x format {%f}<br>
+        </tt>$xpaset -p ds9 plot legend yes # show legend<br>
+      </tt><tt>$xpaset -p ds9 plot legend position left</tt><tt><tt><tt><tt><br>
+            </tt></tt>$xpaset -p ds9 plot font numbers font times<br>
+          $xpaset -p ds9 plot font numbers size 12<br>
+          $xpaset -p ds9 plot font numbers weight bold<br>
+          $xpaset -p ds9 plot font numbers slant italic<br>
+        </tt></tt><tt>$xpaset -p ds9 plot title {The Title}<br>
+        $xpaset -p ds9 plot title x {X Axis}<br>
+        $xpaset -p ds9 plot barmode aligned<br>
+        <br>
+        # configure current dataset<br>
+        $xpaget ds9 plot show<br>
+        $xpaget ds9 plot shape</tt> <br>
+      <tt><tt>$xpaget ds9 plot shape fill<br>
+        </tt></tt><tt><tt><tt>$xpaget ds9 plot shape color<br>
+          </tt></tt></tt><tt><tt><tt><tt>$xpaget ds9 plot smooth<br>
+            </tt></tt></tt></tt><tt><tt><tt><tt><tt>$xpaget ds9 plot
+                color<br>
+              </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>$xpaget
+                  ds9 plot width<br>
+                </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    ds9 plot dash<br>
+                  </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                      ds9 plot error<br>
+                                    </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                      ds9 plot error
+                                                      color<br>
+                                                    </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          ds9 plot error
+                                                          width<br>
+                                                          </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          ds9 plot name<br>
+                                                          </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>$xpaset
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        -p ds9 plot show yes<br>
+        $xpaset -p ds9 plot shape circle<br>
+      </tt><tt><tt>$xpaset -p ds9 plot shape fill no<br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 plot shape color cyan<br>
+          </tt></tt></tt><tt><tt>$xpaset -p ds9 plot smooth step<br>
+        </tt>$xpaset -p ds9 plot color red<br>
+        $xpaset -p ds9 plot width 2<br>
+        $xpaset -p ds9 plot dash yes<br>
+        $xpaset -p ds9 plot error yes<br>
+        $xpaset -p ds9 plot error color red</tt><br>
+      <tt>$xpaset -p ds9 plot error width 2</tt><br>
+      <tt>$xpaset -p ds9 plot name {My Data}</tt><br>
+      <tt><br>
+        # select current dataset<br>
+        $xpaget ds9 plot select<br>
+        $xpaset -p ds9 plot select 2</tt><br>
+      <p><b><b><a name="png"></a></b>png</b></p>
+      <p>Load PNG image into current frame.<br>
+      </p>
+      <tt> Syntax:<br>
+        png [new|slice] [&lt;filename&gt;]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 png &gt; foo.png</tt><br>
+      <tt>$xpaset -p ds9 png foo.png</tt><br>
+      <tt><tt>$xpaset -p ds9 png new foo.png<br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 png slice foo.png<br>
+          </tt></tt>$cat foo.png | xpaset ds9 png</tt><tt><tt><tt> # not
+            available windows</tt></tt></tt><br>
+      <tt><tt>$cat foo.png | xpaset ds9 png</tt><tt> new </tt></tt><tt><tt><tt><tt>
+              # not available windows</tt></tt><br>
+        </tt>$cat foo.png | xpaset ds9 png</tt><tt> slice</tt><tt><tt><tt>
+            # not available windows</tt></tt></tt>
+      <p><b> <a name="prefs"></a>prefs</b></p>
+      <p>Controls various preference settings. </p>
+      <tt> Syntax: <br>
+        prefs [clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [irafalign yes|no]<br>
+        &nbsp; <br>
+        Example:<br>
+        $xpaget ds9 prefs irafalign <br>
+        $xpaset -p ds9 prefs clear<br>
+        $xpaset -p ds9 prefs iraf yes<br>
+      </tt>
+      <p><b><a name="preserve"></a>preserve</b> </p>
+      <p>Preserve the follow attributes while loading a new image. </p>
+      <tt> Syntax: <br>
+        preserve [pan yes|no]<br>
+        &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; [regions yes|no]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 preserve pan<br>
+        $xpaget ds9 preserve regions<br>
+        $xpaset -p ds9 preserve pan yes<br>
+        $xpaset -p ds9 preserve regions yes<br>
+      </tt>
+      <p><b> <a name="psprint"></a>psprint</b></p>
+      <p>Invokes postscript printing. Please see <a
+          href="command.html#print">print</a> for further details.</p>
+      <p><b> <a name="print"></a>print</b></p>
+      <p>Controls printing. Use print option to set printing options.
+        Only available for <tt>XPA_METHOD local.</tt> </p>
+      <tt> Syntax: <br>
+        print [destination printer|file] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [command &lt;command&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [filename &lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [color rgb|cmyk|gray] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [level 1|2] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [resolution 53|72|75|150|300|600]
+        <br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 print destination <br>
+        $xpaget ds9 print command <br>
+        $xpaget ds9 print filename <br>
+        $xpaget ds9 print color<br>
+        $xpaget ds9 print level <br>
+        $xpaget ds9 print resolution <br>
+        $xpaset -p ds9 print <br>
+        $xpaset -p ds9 print destination file <br>
+        $xpaset -p ds9 print command '{gv -}' <br>
+        $xpaset -p ds9 print filename foo.ps <br>
+        $xpaset -p ds9 print color cmyk <br>
+        $xpaset -p ds9 print level 2 <br>
+        $xpaset -p ds9 print resolution 75 </tt>
+      <p><b> <a name="raise"></a>raise</b></p>
+      <p>Raise in the window stacking order. </p>
+      <tt> Syntax: <br>
+        raise <br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaset -p ds9 raise </tt>
+      <p><b> <a name="regions"></a>regions</b></p>
+      <p>Controls regions in the current frame. </p>
+      <tt> Syntax: <br>
+        regions&nbsp;[&lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [load [all]
+        &lt;filename&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save
+        &lt;filename&gt;] <br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [list [close]]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [epsilon &lt;integer&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [show yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [showtext yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [centroid]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [centroid auto
+        yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [centroid radius
+        &lt;value&gt;|iteration &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [getinfo]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [move front] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [move back]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [select all]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [select none] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [select invert]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [delete all] <br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [delete select] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [format
+        ds9|xml|ciao|saotng|saoimage|pros|xy] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [system
+        image|physical|wcs|wcsa...wcsz]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [sky
+        fk4|fk5|icrs|galactic|ecliptic] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [skyformat
+        degrees|sexagesimal]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [strip yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [shape &lt;shape&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [color
+        &amp;ltcolor&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [width &lt;width&gt;]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+        [fixed|edit|rotate|delete yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+        [include|exclude|source|background]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [delim
+        [nl|&lt;char&gt;]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [command &lt;marker
+        command&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [composite]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [dissolve]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [template
+        &lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [template &lt;filename&gt;
+        at &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt; &lt;skyframe&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [savetemplate
+        &lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [groups] <br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [group new]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [group &lt;tag&gt;
+        new]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [group &lt;tag&gt; update]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [group &lt;tag&gt;
+        select]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [group &lt;tag&gt; color
+        &amp;ltcolor&gt;] <br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [group &lt;tag&gt; copy] <br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [group &lt;tag&gt; delete]
+        <br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [group &lt;tag&gt; cut]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [group &lt;tag&gt; font
+        &lt;font&gt;] <br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [group &lt;tag&gt; move
+        &lt;int&gt; &lt;int&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [group &lt;tag&gt;
+        movefront] <br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [group &lt;tag&gt;
+        moveback] <br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [group &lt;tag&gt;
+        property &lt;property&gt; yes|no] <br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [copy]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [cut]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [paste
+        image|physical|wcs|wcsa...wcsz]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [undo]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [-format
+        ds9|ciao|saotng|saoimage|pros|xy]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [-system
+        image|physical|wcs|wcsa...wcsz]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [-sky
+        fk4|fk5|icrs|galactic|ecliptic] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [-skyformat
+        degrees|sexagesimal]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [-delim [nl|&lt;char&gt;]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [-prop
+        select|edit|move|rotate|delete|fixed|include|source 1|0] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [-group &lt;tag&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [-strip yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [-wcs yes|no]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 regions<br>
+        $xpaget ds9 regions -format ds9 -system wcs -sky fk5 -skyformat
+        sexagesimal -prop edit 1 -group foo <br>
+        $xpaget ds9 regions epsilon<br>
+        $xpaget ds9 regions show<br>
+        $xpaget ds9 regions showtext<br>
+        $xpaget ds9 regions centroid auto<br>
+        $xpaget ds9 regions centroid radius<br>
+        $xpaget ds9 regions centroid iteration<br>
+        $xpaget ds9 regions selected<br>
+        $xpaget ds9 regions format <br>
+        $xpaget ds9 regions system <br>
+        $xpaget ds9 regions sky <br>
+        $xpaget ds9 regions skyformat <br>
+        $xpaget ds9 regions strip<br>
+        $xpaget ds9 regions shape <br>
+        $xpaget ds9 regions color <br>
+        $xpaget ds9 regions width<br>
+        $xpaget ds9 regions delim<br>
+        $xpaget ds9 regions source <br>
+        $xpaget ds9 regions background <br>
+        $xpaget ds9 regions include <br>
+        $xpaget ds9 regions exclude <br>
+        $xpaget ds9 regions selected<br>
+        $xpaget ds9 regions groups<br>
+        $cat foo.reg | xpaset ds9 regions -format xy -system wcs -sky
+        fk5<br>
+        $cat bar.reg | xpaset ds9 regions -format ds9<br>
+        $echo "image; circle 100 100 20" | xpaset ds9 regions <br>
+        $echo "image; circle 100 100 20" | xpaset ds9 regions<br>
+        $echo "fk5; circle 13:29:55 47:11:50 .5'" | xpaset ds9 regions <br>
+        $echo "physical; ellipse 100 100 20 40" | xpaset ds9 regions <br>
+        $echo "box 100 100 20 40 25" | xpaset ds9 regions <br>
+        $echo "image; line 100 100 200 400" | xpaset ds9 regions <br>
+        $echo "physical; ruler 200 300 200 400" | xpaset ds9 regions <br>
+        $echo "image; text 100 100 # text={Hello, World}" | xpaset ds9
+        regions <br>
+        $echo "fk4; boxcircle point 13:29:55 47:11:50" | xpaset ds9
+        regions <br>
+        $xpaset -p ds9 regions foo.reg <br>
+        $xpaset -p ds9 regions -format ciao bar.reg # load as ciao
+        format<br>
+        $xpaset -p ds9 regions foo.fits # FITS regions files do not need
+        a format specification<br>
+        $xpaset -p ds9 regions load foo.reg # load foo.reg into current
+        frame<br>
+        $xpaset -p ds9 regions load all foo.reg # load foo.reg into all
+        frames<br>
+        $xpaset -p ds9 regions load '*.reg'# expand *.reg and load into
+        current frame<br>
+        $xpaset -p ds9 regions load all '*.reg' # expand *.reg and load
+        into all frames<br>
+        $xpaset -p ds9 regions save foo.reg<br>
+        $xpaset -p ds9 regions list <br>
+        $xpaset -p ds9 regions list close<br>
+        $xpaset -p ds9 regions epsilon 5<br>
+        $xpaset -p ds9 regions show yes<br>
+        $xpaset -p ds9 regions showtext no<br>
+        $xpaset -p ds9 regions centroid<br>
+        $xpaset -p ds9 regions centroid auto yes<br>
+        $xpaset -p ds9 regions centroid radius 10<br>
+        $xpaset -p ds9 regions centroid iteration 20<br>
+        $xpaset -p ds9 regions getinfo<br>
+        $xpaset -p ds9 regions move back <br>
+        $xpaset -p ds9 regions move front <br>
+        $xpaset -p ds9 regions select all <br>
+        $xpaset -p ds9 regions select none <br>
+        $xpaset -p ds9 regions select invert<br>
+        $xpaset -p ds9 regions delete all <br>
+        $xpaset -p ds9 regions delete select <br>
+        $xpaset -p ds9 regions format ds9 <br>
+        $xpaset -p ds9 regions system wcs<br>
+        $xpaset -p ds9 regions sky fk5 <br>
+        $xpaset -p ds9 regions skyformat degrees <br>
+        $xpaset -p ds9 regions delim nl <br>
+        $xpaset -p ds9 regions strip yes<br>
+        $xpaset -p ds9 regions shape ellipse <br>
+        $xpaset -p ds9 regions color red <br>
+        $xpaset -p ds9 regions width 3<br>
+        $xpaset -p ds9 regions edit yes<br>
+        $xpaset -p ds9 regions include<br>
+        $xpaset -p ds9 regions command '{circle 100 100 20 # color=red}'<br>
+        $xpaset -p ds9 regions composite<br>
+        $xpaset -p ds9 regions dissolve<br>
+        $xpaset -p ds9 regions template foo.tpl<br>
+        $xpaset -p ds9 regions template foo.tpl at 13:29:55.92
+        +47:12:48.02 fk5<br>
+        $xpaset -p ds9 regions savetemplate foo.tpl<br>
+        $xpaset -p ds9 regions group new<br>
+        $xpaset -p ds9 regions group foo new<br>
+      </tt><tt>$xpaset -p ds9 regions group foo update</tt><br>
+      <tt>$xpaset -p ds9 regions group foo select</tt><br>
+      <tt>$xpaset -p ds9 regions group foo color red<br>
+        $xpaset -p ds9 regions group foo copy<br>
+        $xpaset -p ds9 regions group foo delete<br>
+        $xpaset -p ds9 regions group foo cut<br>
+        $xpaset -p ds9 regions group foo font {times 14 bold}<br>
+        $xpaset -p ds9 regions group foo move 100 100 <br>
+        $xpaset -p ds9 regions group foo movefront <br>
+        $xpaset -p ds9 regions group foo moveback <br>
+        $xpaset -p ds9 regions group foo property delete no <br>
+        <br>
+        $xpaset -p ds9 regions copy<br>
+        $xpaset -p ds9 regions cut<br>
+        $xpaset -p ds9 regions paste wcs<br>
+        $xpaset -p ds9 regions undo<br>
+      </tt>
+      <p><b> <a name="restore"></a>restore</b></p>
+      <p>Restore DS9 to a previous state from a backup save set. </p>
+      <tt> Syntax: <br>
+        restore &lt;filename&gt;<br>
+        &nbsp;<br>
+        Example:<br>
+        $xpaset -p ds9 restore ds9.bck</tt><br>
+      <p><b> <a name="rgb"></a>rgb</b></p>
+      <p>Create RGB frame and control RGB frame parameters.</p>
+      <tt> Syntax: <br>
+        rgb&nbsp; []<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;[red|green|blue]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;[channel [red|green|blue]]<br>
+        &nbsp;&nbsp; &nbsp; [view [red|green|blue] [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;[system &lt;coordsys&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;[lock
+        wcs|crop|slice|bin|scale|scalelimits|colorbar|block|smooth
+        [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 rgb channel<br>
+      </tt><tt>$xpaget ds9 rgb lock wcs</tt><br>
+      <tt>$xpaget ds9 rgb lock crop</tt><br>
+      <tt>$xpaget ds9 rgb lock slice</tt><br>
+      <tt> $xpaget ds9 rgb lock bin<br>
+        $xpaget ds9 rgb lock scale<br>
+        $xpaset ds9 rgb lock scalelimits<br>
+        $xpaget ds9 rgb lock colorbar<br>
+        $xpaget ds9 rgb lock block<br>
+        $xpaget ds9 rgb lock smooth<br>
+        $xpaget ds9 rgb system<br>
+        $xpaget ds9 rgb view red<br>
+        $xpaget ds9 rgb view green<br>
+        $xpaget ds9 rgb view blue<br>
+        $xpaset -p ds9 rgb # create new rgb frame<br>
+        $xpaset -p ds9 rgb red # set current channel to red<br>
+        $xpaset -p ds9 rgb channel red # set current channel to red<br>
+        $xpaset -p ds9 rgb view blue no # turn off blue channel<br>
+        $xpaset -p ds9 rgb system wcs # set rgb coordinate system<br>
+      </tt><tt>$xpaset -p ds9 rgb lock wcs yes</tt><br>
+      <tt>$xpaset -p ds9 rgb lock crop yes</tt><br>
+      <tt>$xpaset -p ds9 rgb lock slice yes</tt><br>
+      <tt>$xpaset -p ds9 rgb lock bin yes</tt><br>
+      <tt> $xpaset -p ds9 rgb lock scale yes<br>
+        $xpaset -p ds9 rgb lock scalelimits yes<br>
+        $xpaset -p ds9 rgb lock colorbar yes<br>
+        $xpaset -p ds9 rgb lock block yes<br>
+        $xpaset -p ds9 rgb lock smooth yes<br>
+        $xpaset -p ds9 rgb open<br>
+        $xpaset -p ds9 rgb close</tt><br>
+      <p><b> <a name="rgbarray"></a>rgbarray</b></p>
+      <p>Load raw data array cube into rgb frame.<br>
+      </p>
+      <tt> Syntax:<br>
+        rgbarray [native|big|little]<br>
+        rgbarray [new|mask]
+[[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],[zdim=3],bitpix=&lt;b&gt;,skip=&lt;s&gt;,endian=[little|big]]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 rgbarray &gt; foo.arr<br>
+        $xpaget ds9 rgbarray little &gt; foo.arr<br>
+        $xpaset -p ds9 rgbarray
+        foo.arr[dim=512,zdim=3,bitpix=-32,endian=little]<br>
+        $xpaset -p ds9 rgbarray new foo.arr[dim=512,zdim=3,bitpix=</tt><tt>-32,endian=little]</tt><br>
+      <tt>$cat foo.arr | xpaset ds9 rgbarray
+        [dim=512,zdim=3,bitpix=-32,endian=little]</tt><br>
+      <tt>$cat foo.arr | xpaset ds9 rgbarray new
+        [dim=512,zdim=3,bitpix=-32,endian=little]</tt><br>
+      <p><b> <a name="rgbcube"></a>rgbcube</b></p>
+      <p>Load FITS rgbcube into rgb frame.<br>
+      </p>
+      <tt> Syntax:<br>
+        rgbcube [new] [&lt;filename&gt;]<br>
+        <br>
+        Example: <br>
+        $xpaget ds9 rgbcube &gt; foo.fits<br>
+        $xpaset -p ds9 rgbcube foo.fits</tt><br>
+      <tt><tt>$xpaset -p ds9 rgbcube new foo.fits<br>
+        </tt>$cat foo.fits | xpaset ds9 rgbcube</tt><br>
+      <tt>$cat foo.fits | xpaset ds9 rgbcube</tt><tt> new</tt><br>
+      <p><b> <a name="rgbimage"></a>rgbimage</b></p>
+      <p>Load FITS rgbimage into rgb frame.<br>
+      </p>
+      <tt> Syntax:<br>
+        rgbimage [new] [&lt;filename&gt;]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 rgbimage &gt; foo.fits<br>
+        $xpaset -p ds9 rgbimage foo.fits</tt><br>
+      <tt><tt>$xpaset -p ds9 rgbimage new foo.fits<br>
+        </tt>$cat foo.fits | xpaset ds9 rgbimage</tt><br>
+      <tt>$cat foo.fits | xpaset ds9 rgbimage</tt><tt> new<br>
+      </tt>
+      <p><b> <a name="rotate"></a>rotate</b></p>
+      <p>Controls the rotation angle (in degrees) of the current frame.
+      </p>
+      <tt> Syntax: <br>
+        rotate [&lt;value&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [to &lt;value&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        <br>
+        Example: <br>
+        $xpaget ds9 rotate <br>
+        $xpaset -p ds9 rotate 45 <br>
+        $xpaset -p ds9 rotate to 30<br>
+        $xpaset -p ds9 rotate open<br>
+        $xpaset -p ds9 rotate close<br>
+      </tt>
+      <p><b> <a name="save"></a>save<br>
+        </b></p>
+      <p>Save loaded image data of current frame as FITS.</p>
+      <tt> Syntax: <br>
+        save </tt><tt>[fits|rgbimage|rgbcube|mecube|mosaic|mosaicimage]
+        &lt;filename&gt; [image|table|slice]</tt> <br>
+      <tt> &nbsp;<br>
+        Example: <br>
+        $xpaset -p ds9 save foo.fits</tt><br>
+      <tt>$xpaset -p ds9 save fits foo.fits image</tt><br>
+      <tt>$xpaset -p ds9 save fits foo.fits table<br>
+        $xpaset -p ds9 save fits foo.fits slice</tt><br>
+      <tt>$xpaset -p ds9 save rgbimage foo.fits<br>
+      </tt><tt>$xpaset -p ds9 save rgbcube foo.fits</tt><br>
+      <tt>$xpaset -p ds9 save mecube foo.fits</tt><br>
+      <tt>$xpaset -p ds9 save mosaic foo.fits</tt><br>
+      <tt>$xpaset -p ds9 save mosaicimage foo.fits</tt><br>
+      <p><b> <a name="saveimage"></a>saveimage<br>
+        </b></p>
+      <p>Create a snap shot of the current DS9 window and save in
+        specified image format. If no format specified, the file name
+        extension is used to determine the output format. Optional
+        parameters: <tt>jpeg </tt>quality (1-100) and <tt>tiff </tt>compression
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        method. </p>
+      <tt> Syntax: <br>
+        saveimage </tt><tt>[fits|eps|gif|tiff|jpeg|png] </tt><tt>&lt;filename&gt;<br>
+        saveimage &lt;filename&gt;.jpeg [1-100]<br>
+        saveimage &lt;filename&gt;.tiff [none|jpeg|packbits|deflate]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaset -p ds9 saveimage ds9.tiff<br>
+        $xpaset -p ds9 saveimage jpeg ds9.jpeg 75</tt><br>
+      <p><b> <a name="scale"></a>scale</b></p>
+      <p>Controls the limits and color scale distribution. </p>
+      <tt> Syntax: <br>
+        scale [linear|log|pow|sqrt|squared|asinh|sinh|histequ]<br>
+        &nbsp; &nbsp; &nbsp; [log exp &lt;value&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [datasec yes|no] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [limits &lt;minvalue&gt;
+        &lt;maxvalue&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [mode
+        minmax|&lt;value&gt;|zscale|zmax] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [scope local|global] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [match]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [match limits]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [lock [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock limits [yes|no]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        <br>
+        Example: <br>
+        $xpaget ds9 scale<br>
+        $xpaget ds9 scale log exp <br>
+        $xpaget ds9 scale datasec <br>
+        $xpaget ds9 scale limits <br>
+        $xpaget ds9 scale mode <br>
+        $xpaget ds9 scale scope <br>
+        $xpaget ds9 scale lock<br>
+        $xpaget ds9 scale lock limits<br>
+        $xpaset -p ds9 scale linear<br>
+        $xpaset -p ds9 scale log 100<br>
+        $xpaset -p ds9 scale datasec yes <br>
+        $xpaset -p ds9 scale histequ <br>
+        $xpaset -p ds9 scale limits 1 100 <br>
+        $xpaset -p ds9 scale mode zscale <br>
+        $xpaset -p ds9 scale mode 99.5 <br>
+        $xpaset -p ds9 scale scope local<br>
+        $xpaset -p ds9 scale match<br>
+        $xpaset -p ds9 scale match limits<br>
+        $xpaset -p ds9 scale lock yes<br>
+        $xpaset -p ds9 scale lock limits yes<br>
+        $xpaset -p ds9 scale open<br>
+        $xpaset -p ds9 scale close<br>
+      </tt>
+      <p><b> <a name="shm"></a>shm</b></p>
+      <p>Load a shared memory segment into the current frame. </p>
+      <tt> Syntax: <br>
+        shm [&lt;key&gt; [&lt;filename&gt;]] <br>
+        &nbsp;&nbsp;&nbsp; [key &lt;key&gt; [&lt;filename&gt;]] <br>
+        &nbsp;&nbsp;&nbsp; [shmid &lt;id&gt; [&lt;filename&gt;]]<br>
+        &nbsp;&nbsp;&nbsp; [fits [key|shmid] &lt;id&gt;
+        [&lt;filename&gt;]]<br>
+        &nbsp;&nbsp;&nbsp; [mosaicimage [iraf|wcs|wcsa...wcsz|wfpc2]
+        [key|shmid] &lt;id&gt; [&lt;filename&gt;]]<br>
+        &nbsp;&nbsp;&nbsp; [mosaicimagenext [wcs|wcsa...wcsz]
+        [key|shmid] &lt;id&gt; [&lt;filename&gt;]]<br>
+        &nbsp;&nbsp;&nbsp; [mosaic [iraf|wcs|wcsa...wcsz] [key|shmid]
+        &lt;id&gt; [&lt;filename&gt;]] <br>
+        &nbsp;&nbsp;&nbsp; [rgbcube [key|shmid] &lt;id&gt;
+        [&lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp; [rgbimage [key|shmid] &lt;id&gt;
+        [&lt;filename&gt;]]<br>
+        &nbsp;&nbsp;&nbsp; [rgbarray [key|shmid] &lt;id&gt;
+[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;,zdim=3],bitpix=&lt;b&gt;,[skip=&lt;s&gt;]]<br>
+        &nbsp;&nbsp;&nbsp; [array [key|shmid] &lt;id&gt;
+[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],bitpix=&lt;b&gt;,[skip=&lt;s&gt;]]<br>
+        &nbsp;&nbsp;&nbsp; [startload|finishload]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 shm <br>
+        $xpaset -p ds9 shm 102 <br>
+        $xpaset -p ds9 shm key 102<br>
+        $xpaset -p ds9 shm shmid 102 foo<br>
+        $xpaset -p ds9 shm fits key 100 foo <br>
+        $xpaset -p ds9 shm mosaicimage iraf key 100 foo <br>
+        $xpaset -p ds9 shm mosaicimage wcs key 100 foo <br>
+        $xpaset -p ds9 shm mosaicimage wcsa key 100 foo <br>
+        $xpaset -p ds9 shm mosaicimage wfpc2 key 100 foo <br>
+        $xpaset -p ds9 shm mosaicimagenext wcs key 100 foo<br>
+        $xpaset -p ds9 shm mosaic iraf key 100 foo <br>
+        $xpaset -p ds9 shm mosaic wcs key 100 foo <br>
+        $xpaset -p ds9 shm rgbcube key 100 foo <br>
+        $xpaset -p ds9 shm rgbimage key 100 foo<br>
+        $xpaset -p ds9 shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
+        $xpaset -p ds9 shm array shmid 102 [dim=32,bitpix=-32]<br>
+        $xpaset -p ds9 shm startload # start a multiple load sequence
+        without updating the display<br>
+        $xpaset -p ds9 shm finishload # finish multiple load sequence</tt><br>
+      <p><b> <a name="sia"></a>sia<br>
+        </b></p>
+      <p>Support for VO Simple Image Access protocol. The first command
+        will create a new search. All other commands operated on the
+        last search created, unless indicated otherwise.</p>
+      <tt> Syntax: <br>
+        sia [2mass|akari|astrowise|cadc|cxc|mast|sdss|skyview|tgssadr</tt><tt>]<br>
+        <br>
+      </tt><tt>&nbsp;</tt><tt>&nbsp;&nbsp; [&lt;ref&gt;] [cancel]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [clear]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [close]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [coordinate &lt;ra&gt;
+        &lt;dec&gt; &lt;coordsys&gt;]</tt><tt><br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;] [crosshair]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [export sb|tsv
+        &lt;filename&gt;]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [name &lt;object&gt;]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [print]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [retrieve]</tt><br>
+      <tt> </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [save
+        &lt;filename&gt;]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [size &lt;width&gt;
+        &lt;height&gt; degrees|arcmin|arcsec]</tt><br>
+      <tt> </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [sky
+        &lt;skyframe&gt;]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [skyformat
+        &lt;skyformat&gt;]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
+        &lt;coordsys&gt;]</tt><tt><br>
+      </tt><tt>&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;] [update]</tt><br>
+      &nbsp; <tt><br>
+        Example: <br>
+        $xpaget ds9 sia<br>
+      </tt><tt><br>
+        $xpaset -p ds9 sia 2mass<br>
+      </tt><tt>$xpaset -p ds9 sia cancel<br>
+      </tt><tt>$xpaset -p ds9 sia clear<br>
+      </tt><tt>$xpaset -p ds9 sia close<br>
+      </tt><tt>$xpaset -p ds9 sia coordinate 202.48 47.21 fk5<br>
+      </tt><tt>$xpaset -p ds9 sia crosshair<br>
+      </tt><tt>$xpaset -p ds9 sia export tsv bar.tsv<br>
+      </tt><tt>$xpaset -p ds9 sia name m51<br>
+      </tt><tt>$xpaset -p ds9 sia print</tt><br>
+      <tt>$xpaset -p ds9 sia retrieve<br>
+        $xpaset -p ds9 sia save foo.xml<br>
+      </tt><tt> </tt><tt>$xpaset -p ds9 sia size 1 1 degrees</tt><br>
+      <tt>$xpaset -p ds9 sia sky fk5<br>
+        $xpaset -p ds9 sia skyformat degrees<br>
+      </tt><tt>$xpaset -p ds9 sia system wcs</tt><tt><br>
+      </tt><tt>$xpaset -p ds9 sia update<br>
+        <br>
+      </tt><b><a name="single"></a>single</b>
+      <p>Select Single Display mode </p>
+      <tt> Syntax: <br>
+        single <br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 single <br>
+        $xpaset -p ds9 single<br>
+      </tt>
+      <p><b> <a name="skyview"></a>skyview </b></p>
+      <p>Support for SkyView image server at HEASARC. </p>
+      <tt> Syntax: <br>
+        skyview []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt;
+        &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
+        &lt;height&gt; degrees|arcmin|arcsec]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pixels &lt;width&gt;
+        &lt;height&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [frame new|current]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [update
+        frame|crosshair]<br>
+        &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; [survey &lt;survey&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        <br>
+        Example: <br>
+        $xpaget ds9 skyview name <br>
+        $xpaget ds9 skyview coord <br>
+        $xpaget ds9 skyview size<br>
+        $xpaget ds9 skyview pixels<br>
+        $xpaget ds9 skyview save<br>
+        $xpaget ds9 skyview frame<br>
+        $xpaget ds9 skyview survey<br>
+        $xpaset -p ds9 skyview<br>
+        $xpaset -p ds9 skyview m31 <br>
+        $xpaset -p ds9 skyview name m31 <br>
+        $xpaset -p ds9 skyview coord 00:42:44.404 +41:16:08.78
+        sexagesimal<br>
+        $xpaset -p ds9 skyview size 60 60 arcmin<br>
+        $xpaset -p ds9 skyview pixels 600 600<br>
+        $xpaset -p ds9 skyview save yes<br>
+        $xpaset -p ds9 skyview frame current<br>
+        $xpaset -p ds9 skyview update frame<br>
+        $xpaset -p ds9 skyview survey sdssi<br>
+        $xpaset -p ds9 skyview open<br>
+      </tt><tt>$xpaset -p ds9 skyview close</tt><br>
+      <p><b> <a name="sleep"></a>sleep </b></p>
+      <p>Delays execution for specified number of seconds. Default is 1
+        second. <br>
+      </p>
+      <tt> Syntax: <br>
+        sleep [#]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaset -p ds9 sleep<br>
+        $xpaset -p ds9 sleep 2<br>
+      </tt>
+      <p><b> <a name="smooth"></a>smooth</b></p>
+      <p>Smooth current image or set smooth parameters.</p>
+      <tt> Syntax:<br>
+        smooth []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; [function
+        boxcar|tophat|gaussian]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [radius &lt;int&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; [match]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; [lock [yes|no]]<br>
+        <br>
+        Example:<br>
+        $xpaget ds9 smooth<br>
+        $xpaget ds9 smooth function<br>
+        $xpaget ds9 smooth radius<br>
+        $xpaget ds9 smooth lock<br>
+        $xpaset -p ds9 smooth<br>
+        $xpaset -p ds9 smooth yes<br>
+        $xpaset -p ds9 smooth function tophat<br>
+        $xpaset -p ds9 smooth radius 4<br>
+        $xpaset -p ds9 smooth open<br>
+        $xpaset -p ds9 smooth close<br>
+        $xpaset -p ds9 smooth match<br>
+        $xpaset -p ds9 smooth lock yes<br>
+      </tt>
+      <p><b> <a name="source"></a>source</b></p>
+      <p>Source TCL code from a file. Only available for <tt>XPA_METHOD
+          local.</tt></p>
+      <tt> Syntax: <br>
+        source [&lt;filename&gt;] <br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaset -p ds9 source foo.tcl </tt>
+      <p><b> <a name="tcl"></a>tcl</b></p>
+      <p>Execute one tcl command. Only available for <tt>XPA_METHOD
+          local.</tt><tt></tt> </p>
+      <tt> Syntax: <br>
+        tcl [&lt;tcl command&gt;] <br>
+        &nbsp;<br>
+        Example: <br>
+        $echo 'puts "Hello, World"' | xpaset ds9 tcl<br>
+        $xpaset -p ds9 tcl 'puts "Hello, World"'</tt><tt><br>
+      </tt>
+      <p><b> <a name="threads"></a>threads</b></p>
+      <p>Set number of process threads for functions which are
+        multi-threaded.<br>
+      </p>
+      <tt> Syntax:<br>
+        threads #<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 threads<br>
+        $xpaset -p ds9 threads 8</tt><br>
+      <p><b> <a name="tiff"></a>tiff</b></p>
+      <p>Load TIFF image into current frame. Optional parameters: <tt>tiff
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </tt>compression method. </p>
+      <tt> Syntax:<br>
+        tiff [new|slice] [&lt;filename&gt;] [none|jpeg|packbits|deflate]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 tiff &gt; foo.tiff</tt><br>
+      <tt><tt>$xpaget ds9 tiff jpeg &gt; foo.tiff</tt><br>
+        $xpaset -p ds9 tiff foo.tiff</tt><br>
+      <tt><tt>$xpaset -p ds9 tiff new foo.tiff<br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 tiff slice foo.tiff<br>
+          </tt></tt>$cat foo.tiff | xpaset ds9 tiff</tt><tt><tt><tt> #
+            not available windows</tt></tt></tt><br>
+      <tt><tt>$cat foo.tiff | xpaset ds9 tiff</tt><tt> new</tt></tt><tt><tt><tt><tt>
+              # not available windows</tt></tt><br>
+        </tt>$cat foo.tiff | xpaset ds9 tiff</tt><tt> slice</tt><tt><tt><tt>
+            # not available windows</tt></tt></tt>
+      <p><b> <a name="tile"></a>tile</b></p>
+      <p>Controls the tile display mode. </p>
+      <tt> Syntax: <br>
+        tile []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [yes|no] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [mode grid|column|row] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [grid] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [grid mode automatic|manual]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [grid direction x|y]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [grid layout &lt;col&gt; &lt;row&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [grid gap &lt;pixels&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [row] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [column] <br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 tile <br>
+        $xpaget ds9 tile mode <br>
+        $xpaget ds9 tile grid mode<br>
+        $xpaget ds9 tile grid direction <br>
+        $xpaget ds9 tile grid layout <br>
+        $xpaget ds9 tile grid gap <br>
+        $xpaset -p ds9 tile<br>
+        $xpaset -p ds9 tile yes <br>
+        $xpaset -p ds9 tile mode row <br>
+        $xpaset -p ds9 tile grid <br>
+        $xpaset -p ds9 tile grid mode manual<br>
+        $xpaset -p ds9 tile grid direction x <br>
+        $xpaset -p ds9 tile grid layout 5 5 <br>
+        $xpaset -p ds9 tile grid gap 10 <br>
+        $xpaset -p ds9 tile row <br>
+        $xpaset -p ds9 tile column </tt>
+      <p><b> <a name="update"></a>update</b></p>
+      <p>Updates the current frame or region of frame. In the second
+        form, the first argument is the number of the fits HDU (starting
+        with 1) and the remaining args are a bounding box in IMAGE
+        coordinates. By default, the screen is updated the next
+        available idle cycle. However, you may force an immediate update
+        by specifying the NOW option. </p>
+      <tt> Syntax: <br>
+        update [] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [# x1 y1 x2 y2] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [now] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [now # x1 y1 x2 y2]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaset -p ds9 update <br>
+        $xpaset -p ds9 update 1 100 100 300 400 <br>
+        $xpaset -p ds9 update now <br>
+        $xpaset -p ds9 update now 1 100 100 300 400</tt><br>
+      <p><b> <a name="url"></a>url</b></p>
+      <p>Load FITS from URL into the current frame</p>
+      <tt> Syntax: <br>
+        url &lt;url&gt;<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaset -p ds9 url http://foo.bar.edu/foo.fits <br>
+      </tt>
+      <p><b> <a name="version"></a>version</b></p>
+      <p>Returns the current version of DS9. </p>
+      <tt> Syntax: <br>
+        version <br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 version </tt>
+      <p><b> <a name="view"></a>view</b></p>
+      <p>Controls the GUI. </p>
+      <tt> Syntax: <br>
+        view&nbsp; [layout horizontal|vertical]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [keyvalue &lt;string&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [info yes|no] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [panner yes|no] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [magnifier yes|no] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [buttons yes|no] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [colorbar yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [colorbar horizontal|vertical]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [colorbar numerics yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [graph horizontal|vertical
+        yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [filename yes|no[<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [object yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [keyword yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [minmax yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [lowhigh yes|no]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [units yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [image|physical|wcs|wcsa...wcsz
+        yes|no]<br>
+      </tt><tt><tt><tt>&nbsp;&nbsp;&nbsp; &nbsp; [frame yes|no] <br>
+          </tt></tt>&nbsp;&nbsp;&nbsp; &nbsp; [red yes|no]<br>
+        &nbsp; &nbsp; &nbsp; [green yes|no]<br>
+        &nbsp; &nbsp; &nbsp; [blue yes|no]</tt><br>
+      <tt><tt>&nbsp; </tt> <br>
+        Example: <br>
+        $xpaget ds9 view layout<br>
+        $xpaget ds9 view keyvalue<br>
+        $xpaget ds9 view info <br>
+        $xpaget ds9 view panner<br>
+        $xpaget ds9 view magnifier<br>
+        $xpaget ds9 view buttons<br>
+        $xpaget ds9 view colorbar<br>
+        $xpaget ds9 view graph horizontal<br>
+        $xpaget ds9 view filename<br>
+        $xpaget ds9 view object<br>
+        $xpaget ds9 view keyword<br>
+        $xpaget ds9 view minmax<br>
+        $xpaget ds9 view lowhigh<br>
+        $xpaget ds9 view units<br>
+        $xpaget ds9 view image<br>
+        $xpaget ds9 view wcsa</tt><br>
+      <tt>$xpaget ds9 view red<br>
+      </tt><tt><tt><tt>$xpaget ds9 view frame<br>
+          </tt> </tt>$xpaset -p ds9 view layout vertical<br>
+        $xpaset -p ds9 view keyvalue BITPIX<br>
+        $xpaset -p ds9 view info yes<br>
+        $xpaset -p ds9 view panner yes<br>
+        $xpaset -p ds9 view magnifier yes<br>
+        $xpaset -p ds9 view buttons yes<br>
+        $xpaset -p ds9 view colorbar yes<br>
+        $xpaset -p ds9 view graph horizontal yes<br>
+        $xpaset -p ds9 view filename yes<br>
+        $xpaset -p ds9 view object yes<br>
+        $xpaset -p ds9 view keyword yes<br>
+        $xpaset -p ds9 view minmax yes<br>
+        $xpaset -p ds9 view lowhigh yes<br>
+        $xpaset -p ds9 view units yes<br>
+        $xpaset -p ds9 view wcsa yes<br>
+      </tt><tt><tt>$xpaset -p ds9 view frame yes </tt></tt><br>
+      <b> </b><tt>$xpaset -p ds9 view red yes<br>
+        $xpaset -p ds9 view green yes<br>
+        $xpaset -p ds9 view blue yes</tt><br>
+      <br>
+      <b><a name="vla"></a>vla</b>
+      <p>Support for VLA Sky Survey. </p>
+      <tt> Syntax:<br>
+        vla []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt; &lt;dec&gt;
+        degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
+        &lt;height&gt; degrees|arcmin|arcsec]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [frame new|current]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [update frame|crosshair]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp; [survey first|stripe82]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example:<br>
+        $xpaget ds9 vla name <br>
+        $xpaget ds9 vla coord <br>
+        $xpaget ds9 vla size<br>
+        $xpaget ds9 vla save<br>
+        $xpaget ds9 vla frame<br>
+        $xpaget ds9 vla survey<br>
+        $xpaset -p ds9 vla<br>
+        $xpaset -p ds9 vla m31 <br>
+        $xpaset -p ds9 vla name m31 <br>
+        $xpaset -p ds9 vla coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+        $xpaset -p ds9 vla size 60 60 arcmin<br>
+        $xpaset -p ds9 vla save yes<br>
+        $xpaset -p ds9 vla frame current<br>
+        $xpaset -p ds9 vla update frame<br>
+        $xpaset -p ds9 vla survey stripe82<br>
+        $xpaset -p ds9 vla open<br>
+      </tt><tt>$xpaset -p ds9 vla close<br>
+      </tt>
+      <p><b> <a name="vlss"></a>vlss</b></p>
+      <p>Support for NRAO VLSS Sky Survey.</p>
+      <tt> Syntax: <br>
+        vlss []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt; &lt;dec&gt;
+        degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt; &lt;height&gt;
+        degrees|arcmin|arcsec]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [frame new|current]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [update frame|crosshair]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp; <br>
+        Example: <br>
+        $xpaget ds9 vlss name <br>
+        $xpaget ds9 vlss coord <br>
+        $xpaget ds9 vlss size<br>
+        $xpaget ds9 vlss save<br>
+        $xpaget ds9 vlss frame<br>
+        $xpaset -p ds9 vlss<br>
+        $xpaset -p ds9 vlss m31 <br>
+        $xpaset -p ds9 vlss name m31 <br>
+        $xpaset -p ds9 vlss coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+        $xpaset -p ds9 vlss size 60 60 arcmin<br>
+        $xpaset -p ds9 vlss save yes<br>
+        $xpaset -p ds9 vlss frame current<br>
+        $xpaset -p ds9 vlss update frame<br>
+        $xpaset -p ds9 vlss open<br>
+      </tt><tt>$xpaset -p ds9 vlss close</tt><br>
+      <b> </b><br>
+      <p><b> <a name="vo"></a>vo</b></p>
+      <p>Invoke an connection to a Virtual Observatory site. </p>
+      <tt> Syntax: <br>
+        vo [method xpa|mime]<br>
+        &nbsp;&nbsp; [server &lt;url&gt;]<br>
+        &nbsp;&nbsp; [internal yes|no]<br>
+        &nbsp;&nbsp; [delay #]<br>
+        &nbsp;&nbsp; [&lt;url&gt;]<br>
+        &nbsp;&nbsp; [connect &lt;url&gt;]<br>
+        &nbsp;&nbsp; [disconnect &lt;url&gt;]<br>
+        &nbsp;&nbsp; [open|close]<br>
+        <br>
+        Example:<br>
+        $xpaget ds9 vo <br>
+        $xpaget ds9 vo method<br>
+        $xpaget ds9 vo server<br>
+        $xpaget ds9 vo internal<br>
+        $xpaget ds9 vo delay<br>
+        $xpaget ds9 vo connect<br>
+        $xpaset -p ds9 vo method xpa<br>
+        $xpaset -p ds9 vo server "http://foo.bar.edu/list.txt"<br>
+        $xpaset -p ds9 vo internal yes<br>
+        $xpaset -p ds9 vo delay 15 # keep-alive delay<br>
+        $xpaset -p ds9 vo chandra-ed<br>
+        $xpaset -p ds9 vo connect chandra-ed<br>
+        $xpaset -p ds9 vo disconnect chandra-ed<br>
+        $xpaset -p ds9 vo open<br>
+        $xpaset -p ds9 vo close<br>
+      </tt>
+      <p><b> <a name="wcs"></a>wcs</b></p>
+      <p>Controls the World Coordinate System for the current frame. If
+        the wcs system, skyframe, or skyformat is modified, the info
+        panel, compass, grid, and alignment will be modified
+        accordingly. Also, using this access point, a new WCS
+        specification can be loaded and used by the current image
+        regardless of the WCS that was contained in the image file. WCS
+        specification can be sent to DS9 as an ASCII file . Please see <a
+          href="file.html#WCS">WCS</a> for more information. </p>
+      <tt> Syntax: <br>
+        wcs [[system] wcs|wcsa...wcsz] <br>
+        &nbsp;&nbsp;&nbsp; [[sky] fk4|fk5|icrs|galactic|ecliptic] <br>
+        &nbsp;&nbsp;&nbsp; [[skyformat] degrees|sexagesimal] <br>
+        &nbsp;&nbsp;&nbsp; [align yes|no] <br>
+        &nbsp;&nbsp;&nbsp; [reset [#]] <br>
+        &nbsp;&nbsp;&nbsp; [replace [#] &lt;filename&gt;] <br>
+        &nbsp;&nbsp;&nbsp; [append [#] &lt;filename&gt;] <br>
+        &nbsp;&nbsp;&nbsp; [open|close]<br>
+        <br>
+        Example: <br>
+        $xpaget ds9 wcs <br>
+        $xpaget ds9 wcs system <br>
+        $xpaget ds9 wcs sky <br>
+        $xpaget ds9 wcs skyformat <br>
+        $xpaget ds9 wcs align <br>
+        $xpaset -p ds9 wcs wcs <br>
+        $xpaset -p ds9 wcs system wcs<br>
+        $xpaset -p ds9 wcs fk5 <br>
+      </tt><tt>$xpaset -p ds9 wcs sky fk5 <br>
+      </tt><tt>$xpaset -p ds9 wcs sexagesimal <br>
+      </tt><tt>$xpaset -p ds9 wcs skyformat sexagesimal <br>
+        $xpaset -p ds9 wcs align yes<br>
+        $xpaset -p ds9 wcs reset<br>
+        $xpaset -p ds9 wcs reset 3<br>
+        $xpaset -p ds9 wcs replace foo.wcs<br>
+        $xpaset -p ds9 wcs replace 3 foo.wcs <br>
+        $xpaset -p ds9 wcs append foo.wcs<br>
+        $xpaset -p ds9 wcs append 3 foo.wcs <br>
+        $cat foo.wcs | xpaset ds9 wcs replace <br>
+        $cat foo.wcs | xpaset ds9 wcs append <br>
+        $echo "OBJECT = 'foobar'" | xpaset ds9 wcs append<br>
+        $xpaset -p ds9 open<br>
+        $xpaset -p ds9 close<br>
+      </tt>
+      <p><b> <a name="web"></a>web</b></p>
+      <p>Display specified URL in the web display. </p>
+      <tt> Syntax:<br>
+        web [new|&lt;webname&gt;] [&lt;url&gt;]<br>
+        &nbsp;&nbsp;&nbsp; [&lt;webname&gt;] [click
+        back|forward|stop|reload|#]<br>
+        &nbsp;&nbsp;&nbsp; [&lt;webname&gt;] [clear]<br>
+        &nbsp;&nbsp;&nbsp; [&lt;webname&gt;] [close]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 web <br>
+        $xpaset -p ds9 web www.cnn.com<br>
+        $xpaset -p ds9 web new www.cnn.com<br>
+        $xpaset -p ds9 web hvweb www.apple.com<br>
+        $xpaset -p ds9 web click back<br>
+        $xpaset -p ds9 web click 2<br>
+        $xpaset -p ds9 web clear<br>
+        $xpaset -p ds9 web close<br>
+      </tt>
+      <p><b> <a name="width"></a>width</b></p>
+      <p>Set the width of the image display window.</p>
+      <tt> Syntax: <br>
+        width [&lt;value&gt;]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 width<br>
+        $xpaset -p ds9 width 512</tt><br>
+      <p><b> <a name="xpa"></a>xpa</b></p>
+      <p>Configure XPA.</p>
+      <tt> Syntax:<br>
+        -xpa [disconnect] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [info] <br>
+        &nbsp;<br>
+        Example:<br>
+        $xpaget ds9 info <br>
+        $xpaset -p ds9 disconnect <br>
+        $xpaset -p ds9 info <br>
+      </tt>
+      <p><b> <a name="zscale"></a>zscale</b></p>
+      <p>Set Scale Limits based&nbsp; on the <i>IRAF</i> algorithm. </p>
+      <tt> Syntax: <br>
+        zscale []<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; [contrast]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [sample]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [line]<br>
+        &nbsp;<br>
+        Example:<br>
+        $xpaget ds9 zscale contrast<br>
+        $xpaget ds9 zscale sample<br>
+        $xpaget ds9 zscale line<br>
+        $xpaset -p ds9 zscale<br>
+        $xpaset -p ds9 zscale contrast .25<br>
+        $xpaset -p ds9 zscale sample 600<br>
+        $xpaset -p ds9 zscale line 120<br>
+      </tt>
+      <p><b> <a name="zoom"></a>zoom</b></p>
+      <p>Controls the current zoom value for the current frame. </p>
+      <tt> Syntax: <br>
+        zoom [&lt;value&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [&lt;value&gt; &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [to &lt;value&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [to &lt;value&gt; &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [in]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [out]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [to fit] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+        &nbsp;<br>
+        Example: <br>
+        $xpaget ds9 zoom <br>
+        $xpaset -p ds9 zoom 2 <br>
+        $xpaset -p ds9 zoom 2 4<br>
+        $xpaset -p ds9 zoom to 4 <br>
+        $xpaset -p ds9 zoom to 2 4<br>
+        $xpaset -p ds9 zoom in<br>
+        $xpaset -p ds9 zoom out<br>
+        &lt;$xpaset -p ds9 zoom to fit<br>
+        $xpaset -p ds9 zoom open<br>
+        $xpaset -p ds9 zoom close<br>
+      </tt> </blockquote>
+  </body>
+</html>

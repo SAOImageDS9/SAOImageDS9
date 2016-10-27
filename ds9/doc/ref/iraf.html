@@ -1,0 +1,179 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type"
+	  content="text/html; charset=ISO-8859-1">
+    <meta name="GENERATOR"
+	  content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+    <title>IRAF Support</title>
+  </head>
+  <body link="#0000ee" text="#000000" vlink="#551a8b" alink="#ff0000"
+	bgcolor="#ffffff">
+    <h3><img alt="" src="../sun.gif" height="98" width="100" align="middle">
+      IRAF Support</h3>
+    <blockquote>
+      <p>DS9 is a fully functional IRAF image display server. IRAF
+	uses the IIS protocol to communicate with a valid image display server,
+	such as DS9, ximtool, saoimage, and saotng. With DS9, no special
+	scripts are
+	needed. If you have one of the above currently working, DS9 works <i>right</i>
+	<i>out of the box.</i> And DS9 now supports IRAF's new IIS image
+	display
+	protocol that supports up to 16 display frames. </p>
+      <p>All native DS9 functions may be used with images load with IRAF
+	display
+	except for the <tt>Scale</tt> menu items. Values displayed may the the
+	true values, if a linear scale is specified with the <tt>display</tt>
+	command.
+	Otherwise, the value is a scaled value. DS9 supports IRAF in all
+	display
+	visuals including <tt>Truecolor</tt>. Support full postscript printing
+	of images loaded from IRAF is provided. </p>
+      <p><b> Command Line Arguments</b></p>
+      <p>As with <i>ximtool</i>, the follow command line arguments may be
+	used
+	to specify the communication parameters: </p>
+      <blockquote>
+	<tt>
+	  <a href="command.html#fifo">fifo</a><br>
+	  <a href="command.html#fifo_only">fifo_only</a><br>
+	  <a href="command.html#port_only">inet_only</a><br>
+	  <a href="command.html#port">port</a><br>
+	  <a href="command.html#port_only">port_only</a><br>
+	  <a href="command.html#unix">unix</a><br>
+	  <a href="command.html#unix_only">unix_only</a>
+	</tt>
+      </blockquote>
+      <p>The default parameters are: </p>
+      <blockquote>
+	<tt>
+	  fifo /dev/imt1<br>
+	  port 5137<br>
+	  unix /tmp/.IMT%d</tt>
+      </blockquote>
+      <p><b> Configuration</b></p>
+      <p>An <i>IRAF</i> image server uses a configuration
+	file to specify the number of available buffers and their sizes.
+	What actually
+	passes from IRAF is not the buffer size, but an index number into
+	this file. </p>
+      <p>So when an image server starts (DS9), it will attempt to locate
+	this file as <tt>$HOME/.imtoolrc</tt> and /<tt>usr/local/lib/imtoolrc</tt>.
+	If
+	not found, it will look for shell environment variables <tt>IMTOOLRC</tt>
+	and <tt>imtoolrc</tt>, that contains the name of the configuration
+	file. </p>
+      <p>If no configuration file is found, DS9 will assume the following
+	default configuration: </p>
+      <blockquote>
+	<tt>
+	  1 2 512 512 # imt1|imt512 <br>
+	  2 2 800 800 # imt2|imt800 <br>
+	  3 2 1024 1024 # imt3|imt1024 <br>
+	  4 1 1600 1600 # imt4|imt1600 <br>
+	  5 1 2048 2048 # imt5|imt2048 <br>
+	  6 1 4096 4096 # imt6|imt4096 <br>
+	  7 1 8192 8192 # imt7|imt8192 <br>
+	  8 1 1024 4096 # imt8|imt1x4 <br>
+	  9 2 1144 880 # imt9|imtfs full screen
+	  (1152x900 minus frame) <br>
+	  10 2 1144 764 # imt10|imtfs35 full screen at
+	  35mm film aspect ratio <br>
+	  11 2 128 128 # imt11|imt128 <br>
+	  12 2 256 256 # imt12|imt256 <br>
+	  13 2 128 1056 # imt13|imttall128 tall &amp;
+	  narrow for spectro. <br>
+	  14 2 256 1056 # imt14|imttall256 tall &amp;
+	  wider for spectro. <br>
+	  15 2 1056 128 # imt15|imtwide128 wide &amp;
+	  thin for spectro. <br>
+	  16 2 1056 256 # imt16|imtwide256 wide &amp;
+	  fatter for spectro. <br>
+	  17 2 1008 648 # imt17|imtssy Solitaire fmt w/
+	  imtool border <br>
+	  18 2 1024 680 # imt18|imtssn Solitaire fmt
+	  w/out imtool border <br>
+	  19 1 4096 1024 # imt19|imt4x1</tt>
+      </blockquote>
+      <p>If on the other hand, IRAF assumes a different buffer size, the
+	image
+	will appear corrupted and DS9 may issue a number of error messages. </p>
+      <p>Another problem is that this file must be in sync with <tt>dev$graphcap</tt>.
+	If
+	your system administrator has made changes to <tt>graphcap</tt>,
+	they must also be implemented in <tt>imtoolrc</tt>. </p>
+      <p>Here is a note from NOAO: </p>
+      <blockquote>
+	<p><tt>The messages means that there is no /usr/local/lib/imtoolrc
+	    file on the machine. This is created as a symlink to dev$imtoolrc by
+	    the iraf install script but only if the /usr/local/lib dir already
+	    exists on the machine. The fix is the create the dir and rerun the
+	    install
+	    script or else make the link by hand. Users can also just copy
+	    dev$imtoolrc to $HOME/.imtoolrc and restart the server to also
+	    workaround
+	    it. Note that an existing .imtoolrc might define old frame buffer
+	    configs which might confuse things, so if the system file exists check
+	    for a
+	    private copy screwing things up.</tt></p>
+      </blockquote>
+      <p><b> Windows DS9 and IRAF</b></p>
+      <p>To direct image output from IRAF to DS9 running under windows, use
+	the <tt>IMTDEV</tt>
+	environment variable. For example, if the windows machine is named
+	'foo.bar.edu', define <tt>IMTDEV</tt> to the follow value before
+	entering IRAF. </p>
+      <blockquote>
+	<tt>$ setenv IMTDEV inet:5137:foo.bar.edu<br>
+	  $ cl <br>
+	  cl&gt; display dev$pix</tt>
+      </blockquote>
+      <p><b> Scale Menu Disabled</b></p>
+      <p>When you display an image from <i>IRAF</i> into DS9, <i>IRAF</i>
+	actually does the color scale distribution. In <tt>Display</tt>,
+	use the <tt>ztrans</tt> and <tt>z1</tt>,<tt>z2</tt><tt>zscale</tt>
+	parameter to auto determine <tt>z1,z2. Here</tt> are the <tt>DISPLAY</tt>
+	parameters in question: parameters to set
+	the upper/lower bounds and distribution. You can also use the </p>
+      <blockquote>
+	<tt>
+	  ztrans=[linear|log|none|user]<br>
+	  z1=min<br>
+	  z2=max<br>
+	  zscale=[yes|no]</tt>
+      </blockquote>
+      <p>What actually is sent from <i>IRAF</i> to DS9 is one byte per
+	pixel,
+	values 0-200, which already has applied both the upper and lower
+	clipping bounds and the distribution. So this is why, the <tt>SCALE </tt>menu
+	is
+	disabled in DS9 when it receives a image from <i>IRAF</i>.</p>
+      <p><b>MSCRED/MSCZERO<br>
+      </b></p>
+      <p>DS9 now supports IRAF's new IIS image display protocol. However,
+	there
+	is one minor problem with the <b>mscred</b> task <b>msczero.</b>
+	Before using <b>msczero</b>, issue the following command in the cl:</p>
+      <blockquote>
+	<tt>cl&gt; set disable_wcs_maps=""<br>
+	  cl&gt; flpr</tt><br>
+      </blockquote>
+      <p><b>IMEXAMINE</b></p>
+      <p>Due to the unique relationship between DS9 and IRAF, if you use
+	the <b>imexamine</b>
+	task, you can take advantage of a special feature of DS9. Instead of
+	loading the image from IRAF with the <b>display</b> task, load the
+	image directly into DS9. Then, from the <b>cl</b> prompt, invoke <b>imexamine</b>
+	without a filename. IRAF will ask DS9 for the current filename and use
+	it for analysis. This approach provides several advantages over
+	previous methods. First, it
+	will work with compound fits images such as mosaics, data cubes, and
+	rgb images.
+	Second, the image displays includes true image data and WCS
+	information,
+	not
+	the approximated data from IRAF.
+      </p>
+    </blockquote>
+  </body>
+</html>

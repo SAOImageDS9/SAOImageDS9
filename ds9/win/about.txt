@@ -1,0 +1,4 @@
+SAOImage DS9 installation program.
+For futher information, please visit
+us at http://ds9.si.edu
+or contact us at saord @ cfa.harvard.edu.

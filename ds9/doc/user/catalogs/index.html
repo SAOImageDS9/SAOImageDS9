@@ -1,0 +1,414 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Catalogs - DS9 </title>
+</head> 
+<!--THIS FILE IS CREATED AUTOMATICALLY - DO NOT EDIT MANUALLY--> 
+<body><div class="mainbar">
+<a name="maintext"></a><div align="center"><h1>Catalogs</h1></div>
+<p>
+      Return to the <a href="../index.html">DS9 Users Manual</a></p>
+<hr size="5" noshade>
+<div>
+<h2>Synopsis</h2>
+        <p>
+	  DS9 provides full support for loading, displaying,
+	  filtering, and saving catalogs. DS9 allows you to overlay
+	  symbols from multiple catalogs on the current image and to
+	  create expressions to style the source symbols based on
+	  catalog properties.  
+	</p>
+      <p>
+	    If you encounter any problems, please email saord @ cfa.harvard.edu.
+	  </p>
+</div>
+<hr size="5" noshade>
+<h2><a name="toc">Contents</a></h2>
+<ul>
+<li><strong><a href="index.html#display">Displaying a Catalog</a></strong></li>
+<li><strong><a href="index.html#select">Selecting Sources with the Cursor</a></strong></li>
+<li><strong><a href="index.html#display2">Displaying Multiple Catalogs</a></strong></li>
+<li><strong><a href="index.html#clear">Clearing Catalog Sources</a></strong></li>
+<li><strong><a href="index.html#filter">Sorting and Filtering</a></strong></li>
+<li><strong><a href="index.html#symbol">Specifying Symbols with Conditional Expressions</a></strong></li>
+<li><strong><a href="index.html#save">Saving the Sources: Catalog Files and Region Files</a></strong></li>
+<li><strong><a href="index.html#cite">Citing a Catalog in Publication</a></strong></li>
+<li><strong><a href="index.html#history">History</a></strong></li>
+<li>
+<strong>Images</strong><ul>
+<li><a href="#2masssrc">Figure 1: 2MASS Sources for the Antennae Galaxies</a></li>
+<li><a href="#2masscat">Figure 2: Catalog Tool of 2MASS Sources</a></li>
+<li><a href="#cscsrc">Figure 3: CSC and 2MASS Sources for the Antennae Galaxies</a></li>
+<li><a href="#2masssort">Figure 4: 2MASS Sources Sorted by Decreasing Jmag</a></li>
+<li><a href="#jmag14">Figure 5: Filtering 2MASS Sources: Jmag&lt;14</a></li>
+<li><a href="#jmagrange">Figure 6: Filtering 2MASS Sources: Jmag&lt;14 or Jmag&gt;16.5</a></li>
+<li><a href="#editjmag14">Figure 7: Symbol Editing: Jmag&lt;14 Rule</a></li>
+<li><a href="#editjmag14ds9">Figure 8: Symbol Editing: Jmag&lt;14 Sources Displayed</a></li>
+<li><a href="#editjmagrange">Figure 9: Symbol Editing: Jmag&gt;16.5 Sources Added</a></li>
+<li><a href="#addlabels">Figure 10: Symbol Editing: Rule to Add a Label</a></li>
+<li><a href="#addlabelsds9">Figure 11: Symbol Editing: Jmag Labels Displayed</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<div class="sectionlist">
+<div class="section">
+<h2><a name="display">Displaying a Catalog</a></h2>
+        
+
+	<p>
+	  This thread uses an optical image of the Antennae Galaxies
+	  (NGC 4038/NGC 4039) from the Digital Sky Survey (DSS).   It
+	  was retrieved via the "Analysis → Image Servers" menu
+	  in ds9. 
+	</p>
+
+	<p>
+	  A number of the most popular catalogs are listed by
+	  wavelength in the "Analysis → Catalogs" menu.  More
+	  options can be accessed via the "Search for Catalogs" option
+	  in that menu.   
+	</p>
+
+	<p>
+	  First we overlay sources from 2MASS by choosing
+	  "Analysis → Catalogs → Infrared → 2MASS
+	  point sources".   The source matches are displayed on the
+	  ds9 display (<a href="#2masssrc">Figure 1</a>) and listed in a
+	  "Catalog Tool" window (<a href="#2masscat">Figure 2</a>). 
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="2masssrc">Figure 1: 2MASS Sources for the Antennae Galaxies</a></h3></div>
+<div><img alt="[The sources are displayed in green on the optical image.]" src="2masssrc.png"></div>
+</div> 
+
+	<p>
+	  A set area centered on the field of view is used for the
+	  first catalog search.  The center and size of the search
+	  area may be adjusted in the Catalog Tool by setting the
+	  RA, Dec, height, and width fields.  The "Coordinate" and
+	  "Size" menus may be used to set the units for those values
+	  (degrees/sexagesimal and degrees/arcmin/arcsec,
+	  respectively).  After changing the values, click the
+	  "Retrieve" button to update the Catalog Tool.
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="2masscat">Figure 2: Catalog Tool of 2MASS Sources</a></h3></div>
+<div><img alt="[199 sources were returned for this field.]" src="2masscat.png"></div>
+</div> 
+
+	<p>
+	  Note that ds9 attempts to select the correct (RA,Dec)
+	  columns from the catalog data file in order to display the
+	  sources.  In some cases, the user will have to explicitly
+	  set the column names by using the drop-down menus in the
+	  Catalog Tool.  In this example, ds9 correctly chose "_RAJ2000" and
+	  "_DEJ2000".
+	</p>
+
+      <hr>
+</div>
+<div class="section">
+<h2><a name="select">Selecting Sources with the Cursor</a></h2>
+        
+	
+	<p>
+	  From the "Edit" menu in ds9, choose the "Catalog" cursor
+	  type.  Clicking on a source in the ds9 display highlights
+	  the corresponding row in the Catalog Tool.   Multiple sources may be
+	  selected by holding down the SHIFT key while clicking them.
+	</p>
+
+	<p> 
+	  Similarly, highlighting a row in the Catalog Tool will blink the
+	  source region in ds9.  If the "Pan to" option in the Catalog Tool
+	  "Preferences" menu is checked, the ds9 display also centers
+	  on the chosen source.  Mutiple rows may be selected by
+	  holding down the SHIFT or CTRL key while selecting them.
+	</p>
+
+      <hr>
+</div>
+<div class="section">
+<h2><a name="display2">Displaying Multiple Catalogs</a></h2>
+        
+
+	<p>
+	  More than one catalog can be displayed in the same frame.	 
+	  By default, the sources are displayed as green circle
+	  points.  The color and shape can be changed in the "Symbol"
+	  menu of the Catalog Tool to distinguish between the different catalogs.    
+	</p>
+
+	<p>
+	  In <a href="#cscsrc">Figure 3</a>, the Chandra Source Catalog has been
+	  added to the display (Analysis → Catalogs → High
+	  Energy → Chandra Source).  The symbols for the CSC
+	  sources are set to red diamonds.
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="cscsrc">Figure 3: CSC and 2MASS Sources for the Antennae Galaxies</a></h3></div>
+<div><img alt="[The 2MASS sources are displayed as green circles and the CSC sources are displayed as red diamonds on the optical image.]" src="cscsrc.png"></div>
+</div> 
+
+	<p>
+	  To toggle the display of each catalog, use the "Show
+	  Regions" option in the Catalog Tool "Preferences" menu.
+	</p>
+      <hr>
+</div>
+<div class="section">
+<h2><a name="clear">Clearing Catalog Sources</a></h2>
+        
+
+	<p>
+	  Simply closing the Catalog Tool will not remove the sources from the
+	  display.  It is necessary to choose "Clear" from the
+	  corresponding Catalog Tool.
+	</p>
+
+	<p>
+	  To remove <em>all</em> the sources from the display, use
+	  "Analysis → Catalogs → Clear All". 
+	</p>
+
+	<p>
+	  For the rest of this thread, only the 2MASS sources will be
+	  used.   
+	</p>
+      <hr>
+</div>
+<div class="section">
+<h2><a name="filter">Sorting and Filtering</a></h2>
+        
+
+	<p>
+	  The source listing is sorted on position by default.  A
+	  different column for sorting may be selected from the "Sort"
+	  menu in the Catalog Tool.  Related checkboxes determine whether the
+	  results are listed in increasing or decreasing order.
+	  The Catalog Tool in <a href="#2masssort">Figure 4</a> is sorted on the
+	  "Jmag" column in decreasing order.
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="2masssort">Figure 4: 2MASS Sources Sorted by Decreasing Jmag</a></h3></div>
+<div><img alt="[The sources are sorted on the Jmag column in decreasing order.]" src="2masssort.png"></div>
+</div> 
+
+	<p>
+	  The "Filter" field in the Catalog Tool is used to filter out
+	  specific rows from the source matches.  A filter is
+	  conditional expression that is evaluated for each row of the
+	  catalog.  The column name must be referenced with a dollar
+	  sign in the expression, e.g. "$_RAJ2000".
+	</p>
+
+	<p>
+	  To select the sources with low Jmag values, the filter
+	  "$Jmag&lt;14" is used.  Click the "Filter" button to update
+	  the Catalog Tool and the ds9 display.  The results are shown in
+	  <a href="#jmag14">Figure 5</a>.
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="jmag14">Figure 5: Filtering 2MASS Sources: Jmag&lt;14</a></h3></div>
+<div><img alt="[33 sources are included in the filter.]" src="jmag14.png"></div>
+</div>
+
+	<p>
+	  TCL expression syntax can be used to construct more complex
+	  filters.  The filter "$Jmag&lt;14 || $Jmag&gt;16.5" uses the
+	  logical "OR" syntax ("||") to select any source with Jmag
+	  less than 14 or greater than 16.5, as shown in
+	  <a href="#jmagrange">Figure 6</a>. 
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="jmagrange">Figure 6: Filtering 2MASS Sources: Jmag&lt;14 or Jmag&gt;16.5</a></h3></div>
+<div><img alt="[70 sources are included in the filter.]" src="jmagrange.png"></div>
+</div> 
+
+	<p>
+	  The uniformity of the symbols doesn't distinguish between
+	  the low-Jmag sources and the high-Jmag sources.  The
+	  advanced symbol editing in the next section improves on this
+	  display.
+	</p>
+
+	<p>
+	  Before continuing the thread, clear the filter in the
+	  Catalog Tool so that all the sources are displayed.
+	</p>
+      <hr>
+</div>
+<div class="section">
+<h2><a name="symbol">Specifying Symbols with Conditional Expressions</a></h2>
+        
+
+	<p>
+	  The advanced symbol editing in the Catalog Tool allows you to
+	  specify the shape, size, color, and text of each symbol
+	  based on catalog column values. 
+	</p>
+
+	<p>
+	  Open the "Symbol Editor" from the "Symbol →
+	  Advanced..." menu in the Catalog Tool.   A conditional statement,
+	  written in the TCL expression syntax, is entered in the "If"
+	  field.  The styles that should be applied are set by the
+	  other fields (shape, color, text, etc.).  
+	</p>
+
+	<p>
+	  First, define a rule that sets the sources with
+	  Jmag&lt;14 to be red boxcircle points.  The completed form
+	  is shown in <a href="#editjmag14">Figure 7</a>.  After clicking the
+	  "Apply" button, the ds9 display is updated (<a href="#editjmag14ds9">Figure 8</a>).
+	</p>
+
+
+	<div class="figure">
+<div class="caption"><h3><a name="editjmag14">Figure 7: Symbol Editing: Jmag&lt;14 Rule</a></h3></div>
+<div><img alt="[The fields are set to display sources with Jmag&lt;14 as red boxpoints.]" src="editjmag14.png"></div>
+</div> 
+
+	<div class="figure">
+<div class="caption"><h3><a name="editjmag14ds9">Figure 8: Symbol Editing: Jmag&lt;14 Sources Displayed</a></h3></div>
+<div><img alt="[The sources with Jmag&lt;14 are displayed as red boxpoints.]" src="editjmag14ds9.png"></div>
+</div>
+
+	<p>
+	  The "Add" button in the Symbol Editor is used to create a
+	  new, empty form.  The second rule is defined such that
+	  sources with Jmag&gt;16.5 will be cyan diamonds.  
+	  After clicking the "Apply" button again, the ds9 display is
+	  as shown in <a href="#editjmagrange">Figure 9</a>. 
+	</p>
+
+	<div class="figure">
+<div class="caption"><h3><a name="editjmagrange">Figure 9: Symbol Editing: Jmag&gt;16.5 Sources Added</a></h3></div>
+<div><img alt="[The sources with Jmag&gt;16.5 are displayed as cyan diamonds.]" src="editjmagrange.png"></div>
+</div>
+
+	<p>
+	  To edit an existing rule, highlight the rule in the Symbol
+	  Editor and adjust the parameters.  In
+	  <a href="#addlabels">Figure 10</a>, both rules have been updated
+	  so that the Text field is set to "$Jmag".  This
+	  <a href="#addlabelsds9">displays the Jmag column value
+	  next to the symbol (Figure 11)</a>. 
+	</p>
+
+
+	<div class="figure">
+<div class="caption"><h3><a name="addlabels">Figure 10: Symbol Editing: Rule to Add a Label</a></h3></div>
+<div><img alt="[The fields are set to label each source with its Jmag column value.]" src="addlabels.png"></div>
+</div> 
+
+	<div class="figure">
+<div class="caption"><h3><a name="addlabelsds9">Figure 11: Symbol Editing: Jmag Labels Displayed</a></h3></div>
+<div><img alt="[Each source is labeled with its Jmag column value.]" src="addlabelsds9.png"></div>
+</div>
+
+	<p>
+	  The ds9 Reference Manual
+	  has <a href="../../ref/catalog.html">further examples of
+	  symbol expressions</a>.
+	</p>
+
+	<p>
+	  The set of rules may be saved from the "File" menu in the
+	  Symbol Editor.  The output for these rules looks like:
+	</p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">
+condition       shape   color   text    size    size2   units   angle
+---------       -----   -----   ----    ----    -----   -----   -----
+$Jmag&lt;14        boxcircle point red     $Jmag                   physical
+$Jmag&gt;16.5      diamond point   cyan    $Jmag                   physical
+</pre></div>
+
+	<p>
+	  The file can be loaded into a later ds9 session by opening
+	  the Symbol Editor and using the "File → Load" menu
+	  item.  Note that the column names in the symbol rules may
+	  have to be updated in order to use them with a different
+	  catalog.
+	</p>
+      <hr>
+</div>
+<div class="section">
+<h2><a name="save">Saving the Sources: Catalog Files and Region Files</a></h2>
+        
+
+
+	<p><strong>Saving a Catalog File</strong></p>
+	<p>
+	  The contents of the Catalog Tool may be saved from the "File →
+	  Save" menu.  If any filters are applied, the filtered output
+	  is saved in the catalog file.
+	</p>
+	
+	<p>
+	  ds9 supports three catalog formats: VOTable, Starbase, and
+	  tab-separated file.   If the catalog file will be loaded
+	  back into ds9 in the future, any of the three formats may be
+	  chosen.  
+	</p>	
+
+	<p><strong>Saving the Sources in a Region File</strong></p>
+	<p>
+	  The sources may also be converted to a ds9 region file for
+	  use in data analysis, e.g. spectra extraction or calculating
+	  sources counts.
+	</p>
+
+	<p>
+	  Select "Copy to Regions" from the Catalog Tool "File" menu.   Once
+	  the sources are converted to regions, individual ones may be
+	  selected and edited or deleted, if desired.  Save the
+	  regions from the "Region → Save Regions..." menu. 
+	</p>
+
+      <hr>
+</div>
+<div class="section">
+<h2><a name="cite">Citing a Catalog in Publication</a></h2>
+        
+
+	<p>
+	  If you wish to use the source information in a publication,
+	  refer to the "Acknowledgment" item under the "File" menu in
+	  the Catalog Tool.  For instance, the 2MASS acknowledgment reads:
+	</p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">
+Acknowledgments for CDS
+
+This research has made use of the VizieR catalogue access tool, CDS,
+Strasbourg, France. VizieR is a joint effort of CDS (Centre de Données 
+astronomiques de Strasbourg) and ESA-ESRIN (Information Systems Division).
+</pre></div>
+
+      </div>
+</div>
+<hr size="5" noshade>
+<h2><a name="history">History</a></h2>
+<table class="history">
+      <tr>
+<td class="historydate">08 Jan 2010</td>
+<td>
+	Original version
+     </td>
+</tr>
+     </table>
+<hr size="5" noshade>
+<p>
+      Return to the <a href="../index.html">DS9 Users Manual</a></p>
+</div></body>
+</html>

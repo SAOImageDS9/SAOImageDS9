@@ -1,0 +1,363 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Scripting ds9 - DS9 </title>
+</head> 
+<!--THIS FILE IS CREATED AUTOMATICALLY - DO NOT EDIT MANUALLY--> 
+<body><div class="mainbar">
+<a name="maintext"></a><div align="center"><h1>Scripting ds9</h1></div>
+<p>
+      Return to the <a href="../index.html">DS9 Users Manual</a></p>
+<hr size="5" noshade>
+<div>
+<h2>Synopsis</h2>
+        <p>
+	  Scripting with ds9 can be done in several ways:  by invoking
+	  the GUI with a number of command-line options or via
+	  the <a href="http://hea-www.harvard.edu/RD/xpa/index.html">XPA
+	  messaging system</a>.   A third option, Simple Application
+	  Messaging Protocol (SAMP), is introduced but not included in
+	  the examples.
+	</p>
+
+	<p>
+	  To illustrate how to script ds9, we
+	  repeat the <a href="../contour/index.html">contours example</a>
+	  with both methods,.  The examples use Chandra data from an
+	  observation of the galaxy cluster Abell 2142 (ObsID 5005).  
+	</p>
+      <p>
+	    If you encounter any problems, please email saord @ cfa.harvard.edu.
+	  </p>
+</div>
+<hr size="5" noshade>
+<h2><a name="toc">Contents</a></h2>
+<ul>
+<li><strong><a href="index.html#commandline">Command-line Scripting</a></strong></li>
+<li><strong><a href="index.html#xpa">XPA Scripting</a></strong></li>
+<li><strong><a href="index.html#samp">SAMP: Simple Application Messaging Protocol</a></strong></li>
+<li><strong><a href="index.html#history">History</a></strong></li>
+<li>
+<strong>Images</strong><ul>
+<li><a href="#clcontour">Figure 1: Command line: x-ray data with contours</a></li>
+<li><a href="#clcontourdss">Figure 2: Command line: x-ray and optical data with contours</a></li>
+<li><a href="#xpacontour">Figure 3: XPA: x-ray data with contours</a></li>
+<li><a href="#xpacontourdss">Figure 4: XPA: x-ray and optical data with contours</a></li>
+</ul>
+</li>
+</ul>
+<hr>
+<div class="sectionlist">
+<div class="section">
+<h2><a name="commandline">Command-line Scripting</a></h2>
+        
+
+	<p>
+	  The ds9 Reference Manual
+	  has <a href="../../ref/command.html">an extensive list of
+	  the available command line options</a>.  The most important 
+	  thing to note is that the commands are executed one at a
+	  time in the order they are listed.   
+	</p>
+
+	<p>
+	  To create contours on a data image:
+	</p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">
+unix% ds9 acisf05005N002_evt2.fits -bin about 3800 3800 -bin factor 2 \
+    -scale log -cmap b \ 
+    -contour yes -contour limits 1 100 \
+    -contour smooth 5 -contour nlevels 6 -contour save ds9.con &amp;
+</pre></div>
+
+        <p>
+	  This command line produces <a href="#clcontour">Figure 1</a>.
+	</p>
+
+	 <div class="figure">
+<div class="caption"><h3><a name="clcontour">Figure 1: Command line: x-ray data with contours</a></h3></div>
+<div><img alt="[Diffuse emission with contours overlaid; a point source is visible in the upper left corner of the image.]" src="contour.png"></div>
+</div> 
+
+        <p>
+	  The options direct ds9 to:
+	</p>
+
+	<ol type="1">
+	  <li>
+<tt>-bin about 3800 3800</tt> : center the image display at (x,y)=(3800,3800)</li>
+	  <li>
+<tt>-bin factor 2</tt> : bin the data by a factor of 2</li> 
+	  <li>
+<tt>-scale log</tt> : set the display to log scale</li> 
+	  <li>
+<tt>-cmap b</tt> : use the "b" colormap</li>
+	  <li>
+<tt>-contour yes</tt> : display contours</li> 
+	  <li>
+<tt>-contour limits 1 100</tt> : set the minimum and maximum contour limits</li>
+	  <li>
+<tt>-contour smooth 5</tt> : set contour smoothness to "5"</li>	  
+	  <li>
+<tt>-contour nlevels 6</tt> : create six contour levels</li> 
+	  <li>
+<tt>-contour save ds9.com</tt> : save the contours to the file "ds9.con"</li> 
+	</ol>
+
+	<p>
+	  If you wish to add options to the command line after it has
+	  been processed, the whole command must be run again from the
+	  beginning.  It is, however, possible to interact with
+	  the ds9 GUI that has been created.  For instance, instead of
+	  including the "<tt>-bin about 3800 3800</tt>" modifier, the
+	  image could be recentered in ds9 interactively.
+	</p>
+
+	<p>
+	  The following command line builds on the previous example by
+	  retrieving a DSS image and copying the contours to the new
+	  frame:
+	</p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">
+unix% ds9 acisf05005N002_evt2.fits -bin about 3800 3800 -bin factor 2 \
+    -scale log -cmap b \ 
+    -contour yes -contour limits 1 100 \
+    -contour smooth 5 -contour nlevels 6 -contour copy \
+    -dsssao A2142 -cmap grey -contour paste \
+    -frame first -match frames wcs &amp;
+</pre></div>
+
+	<p>
+	  The resulting image is shown in <a href="#clcontourdss">Figure 2</a>.
+	</p>
+
+        <div class="figure">
+<div class="caption"><h3><a name="clcontourdss">Figure 2: Command line: x-ray and optical data with contours</a></h3></div>
+<div><img alt="[The x-ray data is in the left frame and the optical data is in the right frame; both have the x-ray contours displayed on the data.]" src="contourdss.png"></div>
+</div> 
+
+	<p>
+	  The options which have been added from the previous command
+	  line are:
+	</p>
+
+	<ol type="1">
+	  <li>
+<tt>-contour copy</tt> : copy the x-ray contours</li>
+	  <li>
+<tt>-dsssao A2142</tt> : retrieve a DSS image of A2142
+	  from the DSS-SAO server (there are also a "dsseso" and
+	  "dssstsci" options)</li>
+	  <li>
+<tt>-cmap grey</tt> : use the "grey" colormap in the DSS frame</li>
+	  <li>
+<tt>-contour paste</tt> : paste the x-ray contours onto
+	  the optical data</li>
+	  <li>
+<tt>-frame first</tt> : select the first ds9 frame</li>
+	  <li>
+<tt>-match frames wcs</tt> : match the WCS of the DSS
+	  frame to the current (x-ray) frame</li>
+	</ol>
+
+	<p>
+	  At this point, we can end the ds9 session or modify the
+	  display interactively via the ds9 GUI.
+	</p>
+
+
+      <hr>
+</div>
+<div class="section">
+<h2><a name="xpa">XPA Scripting</a></h2>
+        
+
+	<p>
+	  X Public Access (XPA) is a messaging system which provides 
+	  communication between Unix programs through a set of access
+	  points. The two most common actions are retrieving
+	  information (<tt>xpaget</tt>) and issuing commands
+	  (<tt>xpaset</tt>). For more information, see the <a href="http://hea-www.harvard.edu/RD/xpa/">XPA Messaging
+	  System</a> page and the <a href="../../ref/xpa.html">XPA Access Points</a>
+	  section of the ds9 manual.  
+	</p>
+
+	<p>
+	  XPA commands may be issued one at a time from the terminal
+	  or collected in a script to run in batch mode.
+	  Unlike the command line syntax, there is no predetermined
+	  stopping point - commands may be sent to ds9 as long as the
+	  GUI is open.
+	</p>
+
+	<p>
+	  First, open ds9 with the data file:
+	</p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">
+unix% ds9 acisf05005N002_evt2.fits &amp;
+</pre></div>
+
+        <p>
+	  The <a href="http://hea-www.harvard.edu/RD/xpa/xpans.html">xpans
+	  name server</a> is used to manage the names and ports
+	  of XPA access points.  Use "<tt>xpaget xpans</tt>" to see
+	  the list of available access points:  
+	</p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">
+unix% xpaget xpans
+DS9 ds9 gs /tmp/.xpa/DS9_ds9.22972 username
+</pre></div>
+
+	<p>
+	  Now that ds9 is running and linked to an XPA server, we can
+	  use xpaset to modify the display and add contours.  (Refer
+	  to the <a href="http://hea-www.harvard.edu/RD/xpa/programs.html#xpaset">XPA
+	  documentation</a> for details on <tt>xpaset</tt> syntax.) 
+	</p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">
+unix% xpaset -p ds9 bin about 3800 3800 
+unix% xpaset -p ds9 bin factor 2 
+unix% xpaset -p ds9 scale log 
+unix% xpaset -p ds9 cmap b  
+unix% xpaset -p ds9 contour yes 
+unix% xpaset -p ds9 contour limits 1 100 
+unix% xpaset -p ds9 contour smooth 5 
+unix% xpaset -p ds9 contour nlevels 6 
+unix% xpaset -p ds9 contour save xpa.con
+</pre></div>
+
+        <p>
+	  This command line produces <a href="#xpacontour">Figure 3</a>.
+	</p>
+
+	 <div class="figure">
+<div class="caption"><h3><a name="xpacontour">Figure 3: XPA: x-ray data with contours</a></h3></div>
+<div><img alt="[Diffuse emission with contours overlaid; a point source is visible in the upper left corner of the image.]" src="contour.png"></div>
+</div> 
+
+        <p>
+	  The options direct ds9 to:
+	</p>
+
+	<ol type="1">
+	  <li>
+<tt>xpaset -p bin about 3800 3800</tt> : center the image display at (x,y)=(3800,3800)</li>
+	  <li>
+<tt>xpaset -p bin factor 2</tt> : bin the data by a factor of 2</li> 
+	  <li>
+<tt>xpaset -p scale log</tt> : set the display to log scale</li> 
+	  <li>
+<tt>xpaset -p cmap b</tt> : use the "b" colormap</li>
+	  <li>
+<tt>xpaset -p contour yes</tt> : display contours</li> 
+	  <li>
+<tt>xpaset -p contour limits 1 100</tt> : set the minimum and maximum contour limits</li>
+	  <li>
+<tt>xpaset -p contour smooth 5</tt> : set contour smoothness to "5"</li>	  
+	  <li>
+<tt>xpaset -p contour nlevels 6</tt> : create six contour levels</li> 
+	  <li>
+<tt>xpaset -p contour save xpa.com</tt> : save the contours to the file "xpa.con"</li> 
+	</ol>
+
+	<p>
+	  As long as the ds9 GUI remains open, we can continue to
+	  modify the display.  Here we build on the previous example
+	  by retrieving a DSS image and copying the contours to the
+	  new frame:
+	</p>
+
+<div class="screen"><pre style="background: #cccccc; white-space: pre; border: none; padding:  0.5em; overflow: auto; border: thin solid black;">
+unix% xpaset -p ds9 contour copy 
+unix% xpaset -p ds9 dsssao A2142 
+unix% xpaset -p ds9 cmap grey
+unix% xpaset -p ds9 contour paste 
+unix% xpaset -p ds9 frame first
+unix% xpaset -p ds9 match frames wcs
+</pre></div>
+
+	<p>
+	  The resulting image is shown in <a href="#clcontourdss">Figure 2</a>.
+	</p>
+
+        <div class="figure">
+<div class="caption"><h3><a name="xpacontourdss">Figure 4: XPA: x-ray and optical data with contours</a></h3></div>
+<div><img alt="[The x-ray data is in the left frame and the optical data is in the right frame; both have the x-ray contours displayed on the data.]" src="contourdss.png"></div>
+</div> 
+
+	<p>
+	  The options which have been added from the previous command
+	  line are:
+	</p>
+
+	<ol type="1">
+	  <li>
+<tt>xpaset -p contour copy</tt> : copy the x-ray contours</li>
+	  <li>
+<tt>xpaset -p dsssao A2142</tt> : retrieve a DSS image of A2142
+	  from the DSS-SAO server (there are also a "dsseso" and
+	  "dssstsci" options)</li>
+	  <li>
+<tt>xpaset -p cmap grey</tt> : use the "grey" colormap in the DSS frame</li>
+	  <li>
+<tt>xpaset -p contour paste</tt> : paste the x-ray contours onto
+	  the optical data</li>
+	  <li>
+<tt>xpaset -p frame first</tt> : select the first ds9 frame</li>
+	  <li>
+<tt>xpaset -p match frames wcs</tt> : match the WCS of the DSS
+	  frame to the current (x-ray) frame</li>
+	</ol>
+
+	<p>
+	  At this point, we can end the ds9 session, issue further XPA
+	  commands, or modify the display interactively via the ds9
+	  GUI.
+	</p>
+
+      <hr>
+</div>
+<div class="section">
+<h2><a name="samp">SAMP: Simple Application Messaging Protocol</a></h2>
+        
+
+	<p>
+	  A third method of scripting ds9 is via
+	  <a href="http://www.ivoa.net/Documents/latest/SAMP.html">SAMP</a>,
+	  a messaging protocol that enables astronomy software
+	  tools to interoperate and communicate.  SAMP is also used by
+	  such applications
+	  as <a href="http://www.star.bris.ac.uk/~mbt/topcat/">TOPCAT</a>,
+	  an interactive graphical viewer and editor for tabular data
+	  and <a href="http://aladin.u-strasbg.fr/">Aladin</a>, an
+	  interactive software sky atlas.      
+	</p>
+
+	<p>
+	  Information on the ds9 SAMP implementation is available in
+	  the  <a href="../../ref/samp.html">ds9 Reference Manual</a>.
+	</p>    
+      </div>
+</div>
+<hr size="5" noshade>
+<h2><a name="history">History</a></h2>
+<table class="history">
+      <tr>
+<td class="historydate">21 Sep 2009</td>
+<td>
+	Original version
+	
+     </td>
+</tr>
+     </table>
+<hr size="5" noshade>
+<p>
+      Return to the <a href="../index.html">DS9 Users Manual</a></p>
+</div></body>
+</html>

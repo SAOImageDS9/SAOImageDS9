@@ -1,0 +1,147 @@
+<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
+      2.4.7-10 i686) [Netscape]">
+    <title>Catalogs</title>
+  </head>
+  <body link="#0000ee" alink="#ff0000" bgcolor="#ffffff" text="#000000"
+    vlink="#551a8b">
+    <h3><img alt="" src="../sun.gif" height="98" align="middle"
+        width="100"> Catalogs</h3>
+    <blockquote>
+      <p>DS9 provides full support for loading, displaying, filtering,
+        and saving catalogs. DS9 allows you to overlay symbols from
+        multiple catalogs on the current image.</p>
+      <p>Local and on-line catalog access is supported. Most major
+        catalogs can be retrieved from online servers. Both the CDS and
+        SDSS catalog servers are now supported. Local catalog files in
+        starbase (rdb) or CSV (with or without header) are supported.</p>
+      <p>On-line catalogs are available via services provided by the
+        VizieR catalog access tool, CDS, Strasbourg, France (VizieR is a
+        joint effort of the Centre de Donnees Astronomiques de
+        Strasbourg and ESA-ESRIN Information Systems Division) and by
+        the Sloan Digital Sky Survey.</p>
+      <p>A selection of popular catalogs is provided in the Analysis
+        menu. In addition, you can search for other catalogs based on
+        title, keywords, mission, wavelength, and object type.</p>
+      <p>When a catalog is overlayed on an image, each displayed catalog
+        symbol consists of a shape, color, and text. An advanced symbol
+        editor is available that allows you to specify the shape, size,
+        color, and text of each symbol, based on catalog column values.
+        These symbol expressions can be saved for future use.</p>
+      <p>Along with the overlay display, a catalog list is provided in a
+        separate window. It displays the column values for each catalog
+        object. The catalog list can be sorted and filtered, and the
+        catalog display will be automatically updated. Advanced
+        filtering options are available. Catalogs can be loaded and
+        saved as local files in ASCII Starbase format. Each catalog
+        contains header information which can be displayed. The list can
+        be printed separately from the image.</p>
+      <p>An interactive connection between the displayed catalog symbols
+        and the catalog list is provided. When you select one or more
+        rows within the catalog list, the corresponding symbols are
+        highlighted on the image display. Conversely, selecting multiple
+        symbols on the image display will highlight the corresponding
+        rows within the catalog list. Catalog symbols can be converted
+        to regions for use with analysis tasks.</p>
+      <p><b>Filter Option</b></p>
+      <p>The catalog list can be sorted and filtered, and the catalog
+        display will be automatically updated. A filter is conditional
+        expression, when evaluated for each row of the catalog, if true,
+        the row is displayed, and if false, the row is not displayed.
+        The conditional expression can be any valid TCL expression. The
+        value of a column may be indicated with <tt>$&lt;column
+          name&gt;</tt>.</p>
+      <blockquote> <tt>$_RAJ2000&gt;180. &amp;&amp; $_RAJ2000&lt;270.</tt><br>
+        <tt>$Jmag&gt;11</tt><br>
+        <tt>log($Kmag*10)&lt;.3<br>
+        </tt><tt>[string equal $OTYPE_S SNR]</tt><br>
+      </blockquote>
+      <p><b>Advanced Symbol Editor</b></p>
+      <p>An advanced symbol editor is available that allows you to
+        specify the shape, size, color, and text of each symbol, based
+        on catalog column values. For each row of the catalog, one or
+        more conditional expressions are evaluated. For the first
+        expression to evaluate true, a given symbol is displayed, with
+        the specified shape, color, size and text properties. As with
+        the filter, the value of a particular column can be indicated as
+        <tt>$&lt;column name&gt;.</tt></p>
+      <p>For the condition entry, the expression you type in is
+        automatically evaluated via TCL <tt>expr</tt> after macro
+        expansion.</p>
+      <blockquote> <tt>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+
+
+          always</tt><br>
+        <tt>0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+
+
+          never</tt><br>
+        <tt>true&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+
+
+          always</tt><br>
+        <tt>false&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+
+
+          never</tt><br>
+        <tt>$Jmag&gt;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+
+
+          conditional</tt><br>
+        <tt>sin($Jmag)&gt;.5
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+          # conditional</tt><br>
+        <tt>[string equal $Class
+          SNR]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# conditional</tt><br>
+        <tt>[regexp {*SNR*}
+          $Class]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+          conditional</tt><br>
+      </blockquote>
+      <p>For the size, size2, and angle entries, the expression you type
+        in is also automatically evaluated via TCL <tt>expr</tt> after
+        macro expansion.</p>
+      <blockquote> <tt>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+
+
+          value of '2' is used</tt><br>
+        <tt>$Jmag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+
+
+          value of column Jmag is used</tt><br>
+        <tt>$Jmag/2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+          value of column Jmag div 2 is used</tt><br>
+        <tt>(4+2)/3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+
+
+          value of '2' is used</tt><br>
+      </blockquote>
+      <p>For the text portion, this is not true. It is assumed to be
+        text, unless you explicitly use an <tt>expr </tt>operator.</p>
+      <blockquote> <tt>foo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+
+
+          will put 'foo' above the symbol</tt><br>
+        <tt>$Jmag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+
+
+          will put the value of column Jmag above the symbol</tt><br>
+        <tt>(4+2)/3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#
+
+
+          will put the text '(4+2)/3' above the symbol</tt><br>
+        <tt>[expr (4+2)/3]&nbsp;&nbsp;# will put the text '2' above the
+          symbol</tt><br>
+        <tt>[expr $Jmag/2.]&nbsp;# will take the value of Jmag and div
+          by 2</tt><br>
+      </blockquote>
+      <p>And finally, one special case for shape = text and text =
+        empty. In this case, the row number is displayed. </p>
+      &nbsp; </blockquote>
+  </body>
+</html>

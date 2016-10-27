@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="us-ascii" ?>
+<!DOCTYPE thread>
+
+<thread>
+
+  <info>
+    
+    <version>June 2009</version>
+    <title>
+      <long>Contours</long>
+    </title>
+    <history>
+      <entry day="24" month="June" year="9" who="liz">
+	Original version
+	<!-- copied in part from CIAO ds9 thread //-->
+     </entry>
+     </history>
+  </info>
+
+  <text>
+    <overview>
+
+      <synopsis>
+        <p>
+	  Contours are shapes which are drawn on the data at a
+	  specified pixel value.  ds9 can create and display contours
+	  as an overlay on an image.  
+	</p>
+      </synopsis>
+    </overview>
+
+    <sectionlist>
+
+      <section id="create">
+        <title>Creating Contours on a Dataset</title>
+
+	<p>
+	  This thread uses Chandra data from an observation of the
+	  galaxy cluster Abell 2142 (ObsID 5005).
+	</p>
+
+        <p>
+	  After loading the data into ds9 and setting the desired
+	  scale, click on the "Contours" item in the "Analysis" menu
+	  to turn on contour display.  Open the "Contour Parameters"
+	  window from "Analysis &#8594; Contours Parameters".  There
+	  are two sliding scales which are used to set the number and
+	  smoothness of the contours and fields for setting the range
+	  of values to use. 
+	</p>
+
+	<figure id="dialog">
+	  <title>Contour Parameters dialog box</title>
+	  <description>The "Contour Parameters" dialog box has sliding
+	  scales to set the number and smoothness of the contours and
+	  fields for setting the range of values.</description>  
+	  <bitmap format="png">dialog.png</bitmap>
+	</figure> 
+
+	<p>
+	  Typically, you will want to generate between 1 and 10
+	  contours; larger numbers will take longer to generate and
+	  display.  A smoothness level of 1 will evaluate the contour
+	  at each image pixel, while a level of 2 will evaluate the
+	  contour at every other pixel, and so on.  A larger smoothing
+	  will generate contours more quickly, but less detail will be
+	  available. 
+	</p>
+	 
+	<p>
+	  By default, the range of the data scale is filled in as the
+	  limits.  Under the "Method" menu, there are two choices:
+	</p>
+
+	<list type="1">
+	  <li>
+	    block (the default) - blocks down the image by the
+	    smoothness factor before contours are calculated.  The
+	    larger the smoothness, the faster the result.  
+	  </li>
+
+	  <li>
+	    smooth - smooths the image before calculating contours.
+	    The larger the smoothness, the slower the result. 
+	  </li>
+	</list>	
+
+	<p>
+	  In this example, the number of levels is set to 6 and the
+	  smoothing is set to 5.  The contours will be generated over
+	  the limit 1 to 100.  The default method (block) is used.
+	</p>
+
+	<p>
+	  After clicking the "Generate" button, the list of contours
+	  is calculated and displayed in the "Levels" portion of the window.
+	   Click "Apply" and the ds9 display is updated with the new
+	   contour levels, as shown in <figlink id="xraycontour"/>.
+	 </p>
+
+	 <figure id="xraycontour">
+	   <title>X-ray data with contours</title>
+	   <description>Diffuse emission with
+	   contours overlaid; a point source is visible in the upper
+	   left corner of the image.</description>  
+	   <bitmap format="png">xraycontour.png</bitmap>
+	 </figure> 
+
+	 <p>
+	   The contour parameters can be adjusted until the desired
+	   result is achieved.  Be sure to click "Generate" whenever
+	   an adjustment is made so that the levels are recalculated.
+	 </p>
+
+      </section>
+
+      <section id="copy">
+        <title>Copying the Contours to Another Frame</title>
+
+	<p>
+	  In this section, we take the X-ray contours just generated
+	  and display them on an optional image from the Digital Sky Survey (DSS).
+	</p>
+	 
+	<p>
+	  From the "Analysis &#8594; Image Servers" menu, select one
+	  of the DSS server options (e.g. "SAO-DSS").  The server
+	  dialog box allows you to retrieve an optical image of the
+	  field of your observation and load it into a new frame.  The
+	  default retrieval image size and (RA,Dec) is equal to the
+	  size and center of the field currently displayed.  Here the
+	  width and height have been set to 40, but the (RA,Dec)
+	  determined by ds9 are used.
+	</p>
+
+	<figure id="dssdialog">
+	  <title>SAO-DSS Server dialog box</title>
+	  <description>The fields for Ra, Dec, width, and height are
+	  populated with values determined from the x-ray data image.</description>  
+	  <bitmap format="png">dssdialog.png</bitmap>
+	</figure> 
+
+	<p>
+	  Click on "Retrieve" and the data is loaded into a new ds9
+	  frame.  
+	</p>
+
+	<p>
+	  To copy the x-ray contours:
+	</p>
+
+	<list type="1">
+	  <li><p>
+	    Select the frame with the X-ray data in it.
+	  </p></li>
+	  <li><p>
+	    Use "Frame &#8594; Match Frames &#8594; WCS" to align the
+	    two images.
+	  </p></li>	
+	  <li><p>
+	    To copy the contours, open the "Contour Parameters"
+	    dialog again and select "Copy Contours" from the
+	    "File" menu. Leave the window open, as it is needed in
+	    a future step. 
+          </p></li>
+	  <li><p>
+	    Select the frame with the optical data in it.
+	  </p></li>
+	  <li><p>
+	    Using the "File" menu of the "Contour Parameters"
+	    dialog, select "Paste Contours".
+	  </p></li>
+	  <li><p>
+	    Adjust the parameters (if desired) in the small dialog box
+	    that is displayed, then click "OK".
+	  </p></li>
+	</list>
+
+	<p>
+	  The optical image now has the x-ray contours overlaid.
+	  Since the WCS is the same, correlation between x-ray
+	  and optical features may be seen.
+	</p>
+
+        <figure id="dsscontour">
+	  <title>X-ray and optical data with contours</title>
+	  <description>The x-ray data is in the left frame and the
+	    optical data is in the right frame; both have the x-ray
+	    contours displayed on the data.</description>
+	  <bitmap format="png">dsscontour.png</bitmap>
+	</figure> 
+
+	<p>
+	  To delete contours which have been pasted into a
+	  frame, select "Clear" from the "File" menu of the "Contour
+	  Parameters" dialog.
+	</p>
+	
+      </section>
+
+      <section id="save">
+        <title>Saving the Contours</title>
+
+	<p>
+	  To save the contours to a text file, choose "Save Contours"
+	  from the "File" menu of the "Contour Parameters" dialog.
+	  The contours are saved in a text file which can be loaded
+	  back into ds9 with the "Load Contours" menu item. 
+	</p>
+
+	<p>
+	  The contours generated in this thread have been saved as <a href="ds9.con">ds9.con</a>.
+	</p>
+
+      </section>
+
+      <section id="convert">
+        <title>Converting to Polygons and Saving</title>
+
+	<p>
+	  The contours can be converted to ds9 polygon regions for use
+	  in filtering data.  Converting to polygons also allows you
+	  to select and/or delete specific contours.
+	</p>
+
+	<p>
+	  <strong>Note that the contours cannot be <threadlink id="save">saved
+	  in ds9 format</threadlink> after converting.</strong>  If you wish to
+	  save the contours, do so before continuing.
+	</p>
+
+	<p>
+	  To convert the contours, select "Convert to Polygons" from
+	  the "File" menu of the "Contour Parameters" dialog.  The
+	  contours are now defined as ds9 polygons, e.g.  
+	</p>
+
+<screen>
+polygon(3535.2112,4184.5,3540.5,4179.1154,3548.5,4176.8219,3555.9012,4184.5,3548.5,4191.9558,3540.5,4190.3926)
+</screen>
+
+
+	<p>
+	  The polygon-shaped contours can be saved as a ds9 region
+	  file from the "Region Save &#8594; Regions" menu. The region
+	  file for these contours has been saved as <a href="a2142.reg">a2142.reg</a>. 
+	</p>
+	
+      </section>
+
+
+    </sectionlist>
+  </text>
+
+</thread>
+
+
+

@@ -1,0 +1,11 @@
+# SAOimage color table
+# autumn
+# created by cptutils 1.46
+# Wed Aug 15 23:29:40 2012
+PSEUDOCOLOR
+RED:
+(0,1)(1,1)
+GREEN:
+(0,0)(1,1)
+BLUE:
+(0,0)(1,0)

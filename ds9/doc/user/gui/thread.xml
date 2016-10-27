@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="us-ascii" ?>
+<!DOCTYPE thread>
+
+<thread>
+
+  <info>
+    
+    <name>gui</name>
+    <version>June 2009</version>
+    <title>
+      <long>Introduction to the ds9 Interface</long>
+    </title>
+    <history>
+      <entry day="6" month="July" year="9" who="liz">
+	Original version
+     </entry>
+     </history>
+  </info>
+
+  <text>
+    <overview>
+
+      <synopsis>
+        <p>
+	  This thread provides an overview of the key components of
+	  the ds9 graphical user interface (GUI).
+	</p>
+      </synopsis>
+    </overview>
+
+    <sectionlist>
+
+      <section id="gui">
+        <title>The ds9 Interface</title>
+
+	<p>
+	  This thread uses Chandra data from an observation of the
+	  Trapezium Cluster (ObsID 1522).  The default ds9 GUI is
+	  shown in <figlink id="components"/>.  The main components
+	  are numbered:
+	</p>
+
+	<list type="1">
+	  <li>Menu bar</li>
+	  <li>Information panel</li>
+	  <li>Panner</li>
+	  <li>Magnifier</li>
+	  <li>Buttons</li>
+	  <li>Display frame</li>
+	  <li>Colorbar</li>
+	</list>
+	 
+	<figure id="components">
+	  <title>The ds9 GUI</title>
+	  <description>The default ds9 display includes the
+	  information panel, panner, magnifier, and colorbar.</description>
+	  <bitmap format="png">components.png</bitmap>
+	</figure>
+
+	<p>
+	  The default setup is a "horizontal layout", with the
+	  information panel, panner, magnifier, and buttons displayed
+	  horizontally across the window.  This may be changed to
+	  "vertical layout" in the View menu (<figlink id="vertical"/>).
+	</p>
+	 
+	<figure id="vertical">
+	  <title>The ds9 GUI, vertical layout</title>
+	  <description>In the vertical layout, the information panel,
+	  panner, magnifier, and buttons are displayed vertically at
+	  the left of the data frame.</description>
+	  <bitmap format="png">vertical.png</bitmap>
+	</figure>
+
+	<p>
+	  Note that the colorbar remained horizontal at the bottom of
+	  the display frame.  This may be changed with the "vertical
+	  colorbar" option in the "View" menu.
+	</p>
+
+	<subsectionlist type="1">
+	  <subsection id="gui.menu">
+	    <title>Menu bar</title>
+
+	    <p>
+	      The menu bar provides access to all of ds9's 
+	      capabilities.  For a complete description of each menu,
+	      refer to the <a href="../../ref/gui.html">Menu bar
+	      section of the Reference Manual</a>. 
+	    </p>
+
+	    <figure id="menu">
+	      <title>Menu bar</title>
+	      <description>The menu bar of the ds9 GUI.</description>
+	      <bitmap format="png">menu.png</bitmap>
+	    </figure>
+
+	    <p>
+	      All ds9 menus can be "torn off" to be a separate window
+	      from the main GUI.  To tear off a menu, select the
+	      dashed line, which is the first item of each menu (shown
+	      in <figlink id="menutear"/>).  The menu will become its 
+	      own window.  
+	    </p>
+
+	    <figure id="menutear">
+	      <title>Tearing off a Menu</title>
+	      <description>The dashed line at the top of the "View"
+	      menu is highlighted.</description>
+	      <bitmap format="png">menutear.png</bitmap>
+	    </figure>
+	  </subsection>
+
+	  <subsection id="gui.info">
+	    <title>Information panel</title>
+
+	    <p>
+	      The information panel displays information about the
+	      data file and the values at the cursor position.  In
+	      <figlink id="info"/>, the object name has been
+	      loaded from the header of the data file.    The image
+	      value and position (in WCS, physical, and image
+	      coordinates) are updated in real time as the cursor is
+	      moved.  
+	    </p>
+
+	    <p>
+	      The fields of the information panel can be customized
+	      from the "View" menu.  Any of the default entries can be
+	      removed, and additional fields can be added
+	      (e.g. detector coordinates, min/max data values).
+	    </p>
+
+	    <figure id="info">
+	      <title>Information panel</title>
+	      <description>The information panel of the ds9 GUI.</description>
+	      <bitmap format="png">info.png</bitmap>
+	    </figure>
+	  </subsection>
+
+	  <subsection id="gui.pan">
+	    <title>Panner</title>
+
+	    <p>
+	      The panner allows the user to view areas of the frame
+	      which are outside of the current field of view.
+	      Although the display frame is filled by the data, the
+	      panner indicates that more of the image is
+	      available. Clicking and dragging the viewing bounding
+	      box in the panner - shown in blue in
+	      <figlink id="panner"/> - will display a different
+	      portion of the image.   
+	    </p>
+
+	    <p>
+	      The panner also contains axes to indicate the directions
+	      of North and East and the directions of the physical
+	      (x,y) data axes. 
+	    </p>
+
+	    <figure id="panner">
+	      <title>Panner</title>
+	      <description>The panner of the ds9 GUI.</description>
+	      <bitmap format="png">panner.png</bitmap>
+	    </figure>
+ 	  </subsection>
+
+	  <subsection id="gui.mag">
+	    <title>Magnifier</title>
+ 
+	    <p>
+	      The magnifier displays a magnified view of the current
+	      cursor location. The magnifier cursor - the small square
+	      in the center of <figlink id="mag"/> - outlines 
+	      the size and orientation of one pixel, taking into
+	      account the current frame zoom and orientation. 
+	    </p>
+  
+	    <figure id="mag">
+	      <title>Magnifier</title>
+	      <description>The magnifier of the ds9 GUI.</description>
+              <bitmap format="png">mag.png</bitmap>
+    	    </figure>
+	  </subsection>
+
+	  <subsection id="gui.buttons">
+	    <title>Buttons</title>
+
+	    <p>
+	      The button bar duplicates many of the options available
+	      from the menu bar.  The buttons provide quick access to
+	      change the most frequently-used ds9 actions
+	      (e.g. changing the scale and color bar, blinking and
+	      tiling frames).  
+	    </p>
+
+	    <p>
+	      When a category is chosen from the top row, the options
+	      within that category are displayed in the bottom row of
+	      buttons.  In <figlink id="button"/>, the color category is
+	      chosen and the bottom row shows the ten most-used
+	      colormap options (additional colormaps are available
+	      from the "Color" menu).   
+	    </p>
+
+	    <figure id="button">
+	      <title>Buttons</title>
+	      <description>The buttons of the ds9 GUI.</description>
+	      <bitmap format="png">button.png</bitmap>
+	    </figure>
+	  </subsection>
+
+	  <subsection id="gui.frame">
+	    <title>Display frame</title>
+
+	    <p>
+	      The display frame is the area of ds9 where the FITS
+	      image is shown.  In <figlink id="components"/>, a single
+	      frame is shown.
+	    </p>
+
+	    <p>
+	      Multiple frames can be opened in ds9 at the same time.
+	      In <figlink id="frame"/>, nine frames have been
+	      opened and set to "tile" display from the "frame"
+	      button.  The current frame is indicated by a blue
+	      outline around it (second row, center frame).  How the
+	      frames are tiled is set in the "Frame &#8594; Frame
+	      Parameters &#8594; Tile" menu; the default is to tile
+	      the frames in a grid. 
+	    </p>
+
+	    <figure id="frame">
+	      <title>Tiled frame display</title>
+	      <description>Nine frames in the ds9 GUI.</description>
+	      <bitmap format="png">frame.png</bitmap>
+	    </figure>
+
+	    <p>
+	      If the display is set back to "single", then the current
+	      frame fills the display area.  The other frames can be
+	      accessed via the "previous" and "next" options in the
+	      buttons bar (or from the "Frame" menu).  
+	    </p>
+
+	    <p>
+	      The "blink" option may also be used with multiple
+	      frames.  When blink is turned on, ds9 cycles through all
+	      the available frames.  The blink interval is set in the
+	      "Frame &#8594; Frame Parameters &#8594; Blink Interval" menu.
+	    </p>
+	    
+	  </subsection>
+
+	  <subsection id="gui.color">
+	    <title>Colorbar</title>
+
+	    <p>
+	      The colorbar displays the colormap, bias, and contrast
+	      settings. The colormap correlates the colors used in the
+	      image with the pixel values in the data.
+	    </p>
+
+	    <p>
+	      To change the colormap, use the "Color" menu or button.
+	      The contrast and bias can be adjusted by right-clicking
+	      and dragging on the ds9 display.  The "Color &#8594;
+	      Colormap Parameters" dialog box can also be used to
+	      change contrast and bias.
+	    </p>
+
+	    <figure id="color">
+    	      <title>Colorbar</title>
+	      <description>The colorbar of the ds9 GUI.</description>
+	      <bitmap format="png">color.png</bitmap>
+	    </figure>
+	  </subsection>
+	</subsectionlist>
+
+      </section>
+
+
+      <section id="preferences">
+        <title>Setting and Saving View Preferences</title>
+	
+	<p>
+	  All of the view options described in this thread can be set
+	  and saved as a preference.  Open the "Preferences" dialog box 
+	  from the "Edit" menu and select the "View" tab, shown in 
+	  <figlink id="prefs"/>. 
+	</p>
+
+
+	<figure id="prefs">
+    	  <title>Preferences dialog box</title>
+	  <description>The view tab is selected in the preferences dialog.</description>
+	  <bitmap format="png">prefs.png</bitmap>
+	</figure>
+
+
+	<p>
+	  The "Default" menus are used to set the defaults of the
+	  "View" menu and buttons.  For instance, uncheck the "Panner"
+	  item under "Menu" and the panner won't be displayed when ds9
+	  is launched.  (Note that some options require ds9 to be
+	  restarted before they take effect.)
+	</p>
+
+	<p>
+	  After setting the desired preferences, select "Save".  User
+	  preferences are stored in <tt>.ds9.prf</tt>.  At startup,
+	  ds9 looks for the preferences file in the following
+	  directory order: 
+	  <tt>./</tt>, <tt>$HOME</tt>, <tt>/usr/local/lib</tt>, 
+	  <tt>/opt/local/lib</tt>.   
+	</p>
+
+      </section>
+    </sectionlist>
+  </text>
+
+</thread>
+
+
+

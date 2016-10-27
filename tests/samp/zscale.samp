@@ -1,0 +1,10 @@
+get zscale contrast
+get zscale sample
+get zscale line
+set {} zscale contrast .25
+set {} zscale sample 600
+set {} zscale line 120
+
+set {} scale
+set {} raise
+

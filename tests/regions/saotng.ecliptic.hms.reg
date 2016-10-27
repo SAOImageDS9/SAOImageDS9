@@ -1,0 +1,26 @@
+# format: hms (ecliptic)
+#Circle
++circle(+175:06:44.609,+50:57:09.897,20) # This is a Comment
+#Ellipse
+-ellipse(+175:06:44.610,+50:56:53.299,40,20,45) # background
+#Box
+-box(+175:06:39.479,+50:56:35.752,80,40,45) # yellow
+#Polygon
++polygon(+175:06:31.671,+50:56:22.755,+175:06:17.634,+50:56:16.946,+175:06:26.852,+50:56:08.101,+175:06:40.888,+50:56:13.910) # green
+#Line
+-line(+175:06:32.876,+50:56:02.002,+175:06:13.343,+50:55:52.408) # cyan
++text(+175:06:20.905,+50:55:33.406, "Region") # magenta
+#Circle Point
++point(+175:07:48.208,+50:57:03.004) # green
+#Box Point
++point(+175:07:43.135,+50:56:45.651) # red
+#Diamond Point
++point(+175:07:37.342,+50:56:30.013) # green
+#Cross Point
++point(+175:08:02.343,+50:56:58.119) # blue
+#X Point
++point(+175:07:57.176,+50:56:43.411) # green
+#Arrow Point
++point(+175:07:53.177,+50:56:28.347) # magenta
+#BoxCircle Point
++point(+175:08:13.064,+50:56:40.927) # green

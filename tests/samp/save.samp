@@ -1,0 +1,56 @@
+# fits...
+set {} save foo.fits
+set {} save fits foo.fits
+set {} save foo.fits image
+set {} save fits foo.fits image
+set {} save foo.fits slice
+set {} save fits foo.fits slice
+
+set {} frame new
+set {} fits fits/table.fits
+set {} save foo.fits
+set {} save fits foo.fits
+set {} save foo.fits image
+set {} save fits foo.fits image
+set {} save foo.fits table
+set {} save fits foo.fits table
+set {} frame delete
+
+# rgbimage...
+set {} frame new rgb
+set {} rgbimage mecube/float.fits
+set {} save rgbimage foo.fits
+set {} frame delete
+
+# rgbcube...
+set {} frame new rgb
+set {} rgbcube rgbcube/float.fits
+set {} save rgbcube foo.fits
+set {} frame delete
+
+# mecube...
+set {} frame new
+set {} mecube mecube/float.fits
+set {} save mecube foo.fits
+set {} frame delete
+
+# mosaicimage...
+set {} frame new
+set {} mosaicimage mosaic/mosaicimage.fits
+set {} save mosaicimage foo.fits
+set {} frame delete
+
+# mosaic...
+set {} frame new
+set {} mosaicimage mosaic/mosaicimage.fits
+set {} save mosaic foo.fits
+set {} frame delete
+
+# backward compatibility
+# savefits...
+set {} savefits foo.fits
+
+set {} rgb close
+set {} cube close
+set {} single
+set {} raise

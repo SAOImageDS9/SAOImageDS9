@@ -1,0 +1,30 @@
+echo "Select coordinate point:"
+get iexam coordinate wcs fk5 degrees
+echo "  ok"
+sleep .5
+echo "Press key:"
+get iexam key coordinate wcs fk5 degrees
+echo "  ok"
+sleep .5
+echo "Press either:"
+get iexam any coordinate wcs fk5 degrees
+echo "  ok"
+sleep .5
+echo "Select value point:"
+get iexam data
+echo "  ok"
+sleep .5
+echo "Press key:"
+get iexam key data
+echo "  ok"
+sleep .5
+echo "Press any:"
+get iexam any data
+echo "  ok"
+sleep .5
+echo "Macro string:"
+get iexam any {Click at $x,$y in file $filename}
+echo "  ok"
+
+set {} single
+set {} raise

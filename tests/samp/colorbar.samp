@@ -1,0 +1,34 @@
+get colorbar
+get colorbar orientation
+get colorbar numerics
+get colorbar space
+get colorbar font
+get colorbar fontsize
+get colorbar fontweight
+get colorbar fontslant
+get colorbar size
+get colorbar ticks
+
+set {} colorbar no
+set {} colorbar yes
+set {} colorbar vertical
+set {} colorbar horizontal
+set {} colorbar numerics no
+set {} colorbar numerics yes
+set {} colorbar space value
+set {} colorbar space distance
+set {} colorbar font times
+set {} colorbar fontsize 30
+set {} colorbar fontweight bold
+set {} colorbar fontslant roman
+set {} colorbar font helvetica
+set {} colorbar fontsize 10
+set {} colorbar fontweight normal
+set {} colorbar fontslant roman
+set {} colorbar size 30
+set {} colorbar ticks 9
+set {} colorbar size 20
+set {} colorbar ticks 11
+
+set {} single
+set {} raise

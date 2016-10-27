@@ -1,0 +1,13 @@
+get blink
+get blink interval
+set {} frame new
+set {} blink
+set {} blink yes
+set {} blink interval .5
+set {} single
+set {} frame first
+set {} frame next
+set {} frame delete
+
+set {} single
+set {} raise

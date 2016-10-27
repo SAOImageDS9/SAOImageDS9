@@ -1,0 +1,8 @@
+set {} header
+set {} header save foo.txt
+set {} header close
+set {} header 1
+set {} header close 1
+
+set {} single
+set {} raise

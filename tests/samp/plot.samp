@@ -1,0 +1,408 @@
+# empty plot...
+set {} plot
+get plot
+set {} sleep .5
+set {} plot close
+
+set {} plot new
+set {} plot bar
+set {} plot new bar
+set {} plot scatter
+set {} plot new scatter
+set {} sleep .5
+set {} plot close
+set {} plot close
+set {} plot close
+set {} plot close
+set {} plot close
+
+set {} plot new name foo
+set {} plot new name foo line
+set {} plot new name foo bar
+set {} plot new name foo scatter
+set {} sleep .5
+set {} plot close
+set {} plot close
+set {} plot close
+set {} plot close
+
+set {} plot new name foo "The Title" "X Axis" "Y Axis" xy
+set {} plot new name foo line "The Title" "X Axis" "Y Axis" xy
+set {} plot new name foo bar "The Title" "X Axis" "Y Axis" xy
+set {} plot new name foo scatter "The Title" "X Axis" "Y Axis" xy
+set {} sleep .5
+set {} plot close
+set {} plot close
+set {} plot close
+set {} plot close
+
+# data...
+set {} plot new
+set file://localhost/Users/joye/saods9/tests/plot/xy.dat plot data xy
+set {} plot new name foo
+set file://localhost/Users/joye/saods9/tests/plot/xy.dat plot foo data xy
+set {} sleep .5
+set {} plot close
+set {} plot close
+
+# save/load...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} plot save foo.dat
+set {} sleep .5
+set {} plot close
+
+# clear...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} sleep .5
+set {} plot clear
+set {} plot close
+
+# duplicate...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} plot dup
+set {} plot duplicate 1
+set {} sleep .5
+set {} plot close
+
+# stats...
+set {} plot new
+set {} plot load plot/xy.dat xy
+get plot stats
+set {} plot stats
+set {} sleep .5
+set {} plot close
+
+# list...
+set {} plot new
+set {} plot load plot/xy.dat xy
+get plot list
+set {} plot list
+set {} sleep .5
+set {} plot close
+
+# saveconfig/loadconfig...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} plot saveconfig foo.plt
+set {} plot loadconfig foo.plt
+set {} sleep .5
+set {} plot close
+
+# pagesetup...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} plot pagesetup orient portrait
+set {} plot pagesetup size letter
+set {} sleep .5
+set {} plot close
+
+# print...
+set {} plot new
+set {} plot load plot/xy.dat xy
+#set {} plot print
+set {} plot print destination printer
+set {} plot print command "lp"
+set {} plot print filename "foo.ps"
+set {} plot print color rgb
+set {} sleep .5
+set {} plot close
+
+# mode...
+set {} plot new
+set {} plot load plot/xy.dat xy
+get plot mode
+set {} plot mode pointer
+set {} sleep .5
+set {} plot close
+
+# axis...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} plot axis x grid no
+set {} plot axis x grid yes
+set {} plot axis x log yes
+set {} plot axis x log no
+set {} plot axis x flip yes
+set {} plot axis x flip no
+set {} plot axis x auto no
+set {} plot axis x min 1
+set {} plot axis x max 100
+set {} plot axis x format "%f"
+set {} plot axis y grid no
+set {} plot axis y grid yes
+set {} plot axis y log yes
+set {} plot axis y log no
+set {} plot axis y flip yes
+set {} plot axis y flip no
+set {} plot axis y auto no
+set {} plot axis y min 1
+set {} plot axis y max 100
+set {} plot axis y format "%f"
+get plot axis x grid
+get plot axis x log
+get plot axis x flip
+get plot axis x auto
+get plot axis x min
+get plot axis x max
+get plot axis x format
+get plot axis y grid
+get plot axis y log
+get plot axis y flip
+get plot axis y auto
+get plot axis y min
+get plot axis y max
+get plot axis y format
+set {} sleep .5
+set {} plot close
+
+# legend...
+set {} plot new
+set {} plot load plot/xy.dat xy
+get plot legend
+get plot legend position
+set {} plot legend yes
+set {} plot legend position left
+set {} plot legend position right
+set {} plot legend position bottom
+set {} plot legend position top
+set {} sleep .5
+set {} plot close
+
+# font...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} plot title "This is a Title"
+set {} plot title xaxis "X Axis"
+set {} plot title yaxis "Y Axis"
+set {} plot title legend "This is the Legend"
+set {} plot legend yes
+get plot font title font
+get plot font title size
+get plot font title weight
+get plot font title slant
+get plot font labels font
+get plot font labels size
+get plot font labels weight
+get plot font labels slant
+get plot font numbers font
+get plot font numbers size
+get plot font numbers weight
+get plot font numbers slant
+get plot font legendtitle font
+get plot font legendtitle size
+get plot font legendtitle weight
+get plot font legendtitle slant
+get plot font legend font
+get plot font legend size
+get plot font legend weight
+get plot font legend slant
+set {} plot font title font times
+set {} plot font title size 12
+set {} plot font title weight bold
+set {} plot font title slant roman
+set {} plot font labels font times
+set {} plot font labels size 12
+set {} plot font labels weight bold
+set {} plot font labels slant roman
+set {} plot font numbers font times
+set {} plot font numbers size 12
+set {} plot font numbers weight bold
+set {} plot font numbers slant roman
+set {} plot font legendtitle font times
+set {} plot font legendtitle size 12
+set {} plot font legendtitle weight bold
+set {} plot font legendtitle slant roman
+set {} plot font legend font times
+set {} plot font legend size 12
+set {} plot font legend weight bold
+set {} plot font legend slant roman
+set {} sleep .5
+set {} plot close
+
+# title...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} plot title "This is a Title"
+set {} plot title x "X Axis"
+set {} plot title y "Y Axis"
+set {} plot title legend "This is the Legend"
+get plot title
+get plot title x
+get plot title y
+get plot title legend
+set {} sleep .5
+set {} plot close
+
+# barmode...
+set {} plot new bar
+set {} plot load plot/xy.dat xy
+set {} plot load plot/xyey.dat xyey
+get plot barmode
+set {} plot barmode normal
+set {} plot barmode stacked
+set {} plot barmode aligned
+set {} plot barmode overlap
+set {} sleep .5
+set {} plot close
+
+# show...
+set {} plot new
+set {} plot load plot/xy.dat xy
+get plot show
+set {} plot show no
+set {} plot show yes
+set {} sleep .5
+set {} plot close
+
+# shape...
+set {} plot new
+set {} plot load plot/xy.dat xy
+get plot shape
+get plot shape fill
+get plot shape color
+set {} plot shape circle
+set {} plot shape square
+set {} plot shape diamond
+set {} plot shape plus
+set {} plot shape splus
+set {} plot shape scross
+set {} plot shape triangle
+set {} plot shape arrow
+set {} plot shape circle
+set {} plot shape fill no
+set {} plot shape fill yes
+set {} plot shape color cyan
+set {} sleep .5
+set {} plot close
+
+# smooth...
+set {} plot new
+set {} plot load plot/xy.dat xy
+get plot smooth
+set {} plot smooth step
+set {} plot smooth linear
+set {} plot smooth cubic
+set {} plot smooth quadratic
+set {} plot smooth catrom
+set {} sleep .5
+set {} plot close
+
+# color...
+set {} plot new
+set {} plot load plot/xy.dat xy
+get plot color
+set {} plot color magenta
+set {} plot color "#2C8"
+set {} sleep .5
+set {} plot close
+
+# width...
+set {} plot new
+set {} plot load plot/xy.dat xy
+get plot width
+get plot dash
+set {} plot width 2
+set {} plot dash yes
+set {} sleep .5
+set {} plot close
+
+# error...
+set {} plot new
+set {} plot load plot/xy.dat xy
+get plot error
+get plot error cap
+get plot error color
+get plot error width
+set {} plot error no
+set {} plot error yes
+set {} plot error cap yes
+set {} plot error cap no
+set {} plot error color blue
+set {} plot error width 2
+set {} sleep .5
+set {} plot close
+
+# name...
+set {} plot new
+set {} plot load plot/xy.dat xy
+get plot name
+set {} plot legend yes
+set {} plot name "This is a test"
+set {} sleep .5
+set {} plot close
+
+# select...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} plot load plot/xyey.dat xyey
+get plot select
+set {} plot select 2
+set {} plot dataset 1
+set {} sleep .5
+set {} plot close
+
+# backward compatibility graph...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} plot graph grid x no
+set {} plot graph grid y yes
+set {} plot graph log x no
+set {} plot graph log y no
+set {} plot graph flip x no
+set {} plot graph flip y no
+set {} plot graph range x min 1
+set {} plot graph range x max 100
+set {} plot graph range y min 1
+set {} plot graph range y max 100
+set {} plot graph range x auto yes
+set {} plot graph range y auto yes
+set {} plot graph format x {}
+set {} plot graph format y {}
+set {} plot graph labels title "The Title"
+set {} plot graph labels xaxis "X Axis"
+set {} plot graph labels yaxis "Y Axis"
+set {} sleep .5
+set {} plot close
+
+# backward compatibility view...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} plot view discrete yes
+set {} plot view line yes
+set {} plot view step yes
+set {} plot view quadratic yes
+set {} plot view errorbar yes
+set {} sleep .5
+set {} plot close
+
+# backward compatibility view...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} plot line discrete cross
+set {} plot line linear width 2
+set {} plot line linear dash yes
+set {} plot line step width 2
+set {} plot line step dash yes
+set {} plot line quadratic width 2
+set {} plot line quadratic dash yes
+set {} plot line errorbar width 2
+set {} plot line errorbar style 1
+set {} sleep .5
+set {} plot close
+
+# backward compatibility view...
+set {} plot new
+set {} plot load plot/xy.dat xy
+set {} plot color discrete red
+set {} plot color line green
+set {} plot color step blue
+set {} plot color quadratic cyan
+set {} plot color errorbar magenta
+set {} sleep .5
+set {} plot close
+
+set {} single
+set {} raise

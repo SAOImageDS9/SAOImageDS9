@@ -1,0 +1,32 @@
+set {} vla open
+set {} vla close
+set {} vla size 30 30 arcsec
+get vla size
+set {} vla save no
+get vla save
+set {} vla frame new
+get vla frame
+set {} vla survey first
+get vla survey
+set {} vla update frame
+set {} vla m51
+set {} vla name m51
+get vla name
+set {} vla name {}
+set {} vla coord 13:29:52.37 +47:11:40.8 sexagesimal
+get vla coord
+set {} vla update frame
+set {} mode crosshair
+set {} vla update crosshair
+set {} vla close
+set {} mode none
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+
+set {} single
+set {} raise
+

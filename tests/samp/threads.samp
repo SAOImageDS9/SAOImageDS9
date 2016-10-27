@@ -1,0 +1,5 @@
+get threads
+set {} threads 4
+
+set {} single
+set {} raise

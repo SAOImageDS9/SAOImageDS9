@@ -1,0 +1,18 @@
+set {} block open
+set {} block 4
+set {} block 8 8
+set {} block to 4
+set {} block to 8 8
+set {} block in
+set {} block out
+set {} block to fit
+set {} block to 1
+set {} block match
+set {} block lock yes
+set {} block lock no
+set {} block close
+get block
+get block lock
+
+set {} single
+set {} raise

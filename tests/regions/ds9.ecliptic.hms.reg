@@ -1,0 +1,39 @@
+# Region file format: DS9 version 4.1
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+ecliptic
+circle(+175:06:44.660,+50:57:09.921,3.964") # color=pink width=3 font="times 10 normal roman" text={Circle} tag={foo} tag={foo bar} This is a Comment
+-ellipse(+175:06:44.660,+50:56:53.323,7.928",3.964",326.717) # color=#0ff font="helvetica 10 normal italic" text={Ellipse} background
+-box(+175:06:39.530,+50:56:35.776,15.856",7.928",326.717) # color=yellow font="helvetica 10 bold roman" text={Box}
+polygon(+175:06:31.722,+50:56:22.779,+175:06:17.685,+50:56:16.970,+175:06:26.903,+50:56:08.125,+175:06:40.939,+50:56:13.934) # font="courier 10 normal roman" text={Polygon} edit=0 rotate=0
+-line(+175:06:32.927,+50:56:02.026,+175:06:13.393,+50:55:52.432) # line=1 1 color=cyan text={Line}
+# vector(+175:06:20.154,+50:55:44.667,7.928",326.717) vector=1 color=red text={Vector}
+# text(+175:06:20.956,+50:55:33.430) color=magenta font="helvetica 14 bold roman" text={Region}
+# ruler(+175:07:14.900,+50:56:21.236,+175:06:52.643,+50:56:11.190) ruler=physical physical color=white font="helvetica 12 normal roman" text={Ruler}
+annulus(+175:07:19.163,+50:57:05.414,1.982",3.964",5.946") # color=magenta font="helvetica 10 bold roman" text={Annulus}
+ellipse(+175:07:14.964,+50:56:48.757,2.973",1.486",5.946",2.973",326.717) # color=red width=3 font="helvetica 10 bold roman" text={Ellipse Annulus}
+box(+175:07:09.715,+50:56:31.833,7.928",3.964",11.892",5.946",326.717) # font="helvetica 10 bold roman" text={Box Annulus}
+point(+175:07:48.259,+50:57:03.028) # point=circle text={Circle Point}
+point(+175:07:43.186,+50:56:45.675) # point=box color=red width=3 text={Box Point}
+point(+175:07:37.393,+50:56:30.037) # point=diamond text={Diamond Point}
+point(+175:08:02.394,+50:56:58.143) # point=cross color=blue text={Cross Point}
+point(+175:07:57.227,+50:56:43.435) # point=x text={X Point}
+point(+175:07:53.228,+50:56:28.371) # point=arrow color=magenta text={Arrow Point}
+point(+175:08:13.115,+50:56:40.951) # point=boxcircle text={BoxCircle Point}
+# projection(+175:07:11.338,+50:56:00.651,+175:06:45.077,+50:55:45.258,3.964") text={Projection}
+panda(+175:07:31.067,+50:56:10.824,281.717,551.717,3,0.000",5.946",2) # text={Panda}
+panda(+175:07:58.962,+50:56:06.771,333.299,371.7173,1,0.000",2.973",1) # panda=(333.299 11.7173 101.717 191.717)(0.000" 2.973" 5.946") text={Panda 2}
+panda(+175:07:58.962,+50:56:06.771,333.299,371.7173,1,2.973",5.946",1) # panda=ignore
+panda(+175:07:58.962,+50:56:06.771,11.7173,101.717,1,0.000",2.973",1) # panda=ignore
+panda(+175:07:58.962,+50:56:06.771,11.7173,101.717,1,2.973",5.946",1) # panda=ignore
+panda(+175:07:58.962,+50:56:06.771,101.717,191.717,1,0.000",2.973",1) # panda=ignore
+panda(+175:07:58.962,+50:56:06.771,101.717,191.717,1,2.973",5.946",1) # panda=ignore
+# compass(+175:06:57.081,+50:55:37.819,7.928") compass=physical {N} {E} 1 1 text={Compass}
+epanda(+175:07:28.292,+50:55:54.588,281.717,551.717,3,2.973",1.486",5.946",2.973",1,326.717) # text={Epanda}
+epanda(+175:07:55.505,+50:55:50.422,326.717,371.7173,1,2.973",1.486",5.946",2.973",1,326.717) # epanda=(326.717 11.7173 101.717 191.717)(2.973" 1.486" 5.946" 2.973")(326.717) text={Epanda 2}
+epanda(+175:07:55.505,+50:55:50.422,11.7173,101.717,1,2.973",1.486",5.946",2.973",1,326.717) # epanda=ignore
+epanda(+175:07:55.505,+50:55:50.422,101.717,191.717,1,2.973",1.486",5.946",2.973",1,326.717) # epanda=ignore
+bpanda(+175:07:22.735,+50:55:37.704,281.717,551.717,3,7.928",3.964",11.892",5.946",1,326.717) # text={Bpanda}
+bpanda(+175:07:50.085,+50:55:34.937,326.717,371.7173,1,7.928",3.964",11.892",5.946",1,326.717) # bpanda=(326.717 11.7173 101.717 191.717)(7.928" 3.964" 11.892" 5.946")(326.717) text={Bpanda 2}
+bpanda(+175:07:50.085,+50:55:34.937,11.7173,101.717,1,7.928",3.964",11.892",5.946",1,326.717) # bpanda=ignore
+bpanda(+175:07:50.085,+50:55:34.937,101.717,191.717,1,7.928",3.964",11.892",5.946",1,326.717) # bpanda=ignore
+# segment(+175:06:02.705,+50:55:33.587,+175:06:14.128,+50:55:29.262,+175:06:12.470,+50:55:24.216) text={Segment}

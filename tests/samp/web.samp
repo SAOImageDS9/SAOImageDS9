@@ -1,0 +1,13 @@
+set {} web ds9.si.edu/doc/acknowledgment.html
+sleep .5
+get web
+set {} web ds9.si.edu/doc/helpdesk.html
+sleep .5
+set {} web hvweb click back
+sleep .5
+set {} web click forward
+set {} web clear
+set {} web close
+
+set {} single
+set {} raise

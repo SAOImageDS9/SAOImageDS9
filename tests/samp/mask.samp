@@ -1,0 +1,10 @@
+get mask color
+get mask mark
+get mask transparency
+set {} mask open
+set {} mask color cyan
+set {} mask clear
+set {} mask close
+
+set {} single
+set {} raise

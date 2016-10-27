@@ -1,0 +1,16 @@
+$BEGINTEXT
+this is text that is inserted at the beginning of the $plot(stdin) call
+this text can be of any length and maybe contain
+multiple lines
+$ENDTEXT
+Title XAxis YAxis 3
+0.00 0.153 0.003
+80.00 0.021 0.001
+160.00 0.008 0.000
+240.00 0.007 0.000
+320.00 0.007 0.000
+400.00 0.006 0.000
+480.00 0.006 0.000
+560.00 0.006 0.000
+640.00 0.005 0.000
+720.00 0.005 0.000

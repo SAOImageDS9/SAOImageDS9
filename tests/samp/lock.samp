@@ -1,0 +1,43 @@
+get lock frame
+get lock crosshair
+get lock crop
+get lock slice
+get lock bin
+get lock axes
+get lock scale
+get lock scalelimits
+get lock colorbar
+get lock smooth
+set {} file new data/img.fits
+set {} tile
+set {} mode crosshair
+set {} lock frame wcs
+set {} lock frame none
+set {} lock crosshair wcs
+set {} crosshair 13:29:56 +47:11:38 wcs fk5
+set {} lock crosshair none
+set {} lock crop wcs
+set {} lock crop none
+set {} lock slice wcs
+set {} lock slice none
+set {} lock bin yes
+set {} lock bin no
+set {} lock axes yes
+set {} lock axes no
+set {} lock scale yes
+set {} lock scale no
+set {} lock scalelimits yes
+set {} lock scalelimits no
+set {} lock colorbar yes
+set {} lock colorbar no
+set {} lock block yes
+set {} lock block no
+set {} lock smooth yes
+set {} lock smooth no
+set {} mode none
+set {} frame delete
+set {} wcs align no
+set {} scale zscale
+
+set {} single
+set {} raise

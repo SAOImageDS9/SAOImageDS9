@@ -1,0 +1,73 @@
+# Region file format: DS9 version 4.1
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+galactic
+circle(58.472592,20.884671,6.660") # color=pink width=3 font="times 10 normal roman" text={Circle} tag={foo} tag={foo bar} This is a Comment
+-ellipse(58.468256,20.891274,13.320",6.660",115.14338) # color=#0ff font="helvetica 10 normal italic" text={Ellipse} background
+-box(58.465049,20.899043,26.640",13.320",115.14338) # color=yellow font="helvetica 10 bold roman" text={Box}
+polygon(58.463749,20.905414,58.465999,20.909884,58.461214,20.911985,58.458965,20.907516) # font="courier 10 normal roman" text={Polygon} edit=0 rotate=0
+-line(58.458004,20.913485,58.460741,20.920306) # line=1 1 color=cyan text={Line}
+# vector(58.456897,20.922355,13.320",115.14338) vector=1 color=red text={Vector}
+# text(58.453746,20.926702) color=magenta font="helvetica 14 bold roman" text={Region}
+# ruler(58.45176,20.899387,58.455107,20.906807) ruler=physical physical color=white font="helvetica 12 normal roman" text={Ruler}
+annulus(58.46216,20.881159,3.330",6.660",9.990") # color=magenta font="helvetica 10 bold roman" text={Annulus}
+ellipse(58.458934,20.88843,4.995",2.498",9.990",4.995",115.14338) # color=red width=3 font="helvetica 10 bold roman" text={Ellipse Annulus}
+box(58.455921,20.89597,13.320",6.660",19.980",9.990",115.14338) # font="helvetica 10 bold roman" text={Box Annulus}
+point(58.453734,20.877633) # point=circle text={Circle Point}
+point(58.450559,20.885315) # point=box color=red width=3 text={Box Point}
+point(58.448026,20.892426) # point=diamond text={Diamond Point}
+point(58.448666,20.877401) # point=cross color=blue text={Cross Point}
+point(58.446208,20.884046) # point=x text={X Point}
+point(58.443343,20.890652) # point=arrow color=magenta text={Arrow Point}
+point(58.441298,20.882589) # point=boxcircle text={BoxCircle Point}
+# projection(58.447337,20.908123,58.450362,20.918286,6.660") text={Projection}
+panda(58.444702,20.901041,70.143383,340.14338,3,0.000",9.990",2) # text={Panda}
+panda(58.436158,20.89836,121.72528,160.14338,1,0.000",4.995",1) # panda=(121.72528 160.14338 250.14338 340.14338)(0.000" 4.995" 9.990") text={Panda 2}
+panda(58.436158,20.89836,121.72528,160.14338,1,4.995",9.990",1) # panda=ignore
+panda(58.436158,20.89836,160.14338,250.14338,1,0.000",4.995",1) # panda=ignore
+panda(58.436158,20.89836,160.14338,250.14338,1,4.995",9.990",1) # panda=ignore
+panda(58.436158,20.89836,250.14338,340.14338,1,0.000",4.995",1) # panda=ignore
+panda(58.436158,20.89836,250.14338,340.14338,1,4.995",9.990",1) # panda=ignore
+# compass(58.445196,20.919398,13.320") compass=physical {N} {E} 1 1 text={Compass}
+epanda(58.441203,20.907926,70.143383,340.14338,3,4.995",2.498",9.990",4.995",1,115.14338) # text={Epanda}
+epanda(58.432812,20.905394,115.14338,160.14338,1,4.995",2.498",9.990",4.995",1,115.14338) # epanda=(115.14338 160.14338 250.14338 340.14338)(4.995" 2.498" 9.990" 4.995")(115.14338) text={Epanda 2}
+epanda(58.432812,20.905394,160.14338,250.14338,1,4.995",2.498",9.990",4.995",1,115.14338) # epanda=ignore
+epanda(58.432812,20.905394,250.14338,340.14338,1,4.995",2.498",9.990",4.995",1,115.14338) # epanda=ignore
+bpanda(58.438281,20.915496,70.143383,340.14338,3,13.32",6.66",19.98",9.99",1,115.14338) # text={Bpanda}
+bpanda(58.430218,20.912387,115.14338,160.14338,1,13.320",6.660",19.980",9.990",1,115.14338) # bpanda=(115.14338 160.14338 250.14338 340.14338)(13.320" 6.660" 19.980" 9.990")(115.14338) text={Bpanda 2}
+bpanda(58.430218,20.912387,160.14338,250.14338,1,13.320",6.660",19.980",9.990",1,115.14338) # bpanda=ignore
+bpanda(58.430218,20.912387,250.14338,340.14338,1,13.320",6.660",19.980",9.990",1,115.14338) # bpanda=ignore
+circle(58.544035,20.833598,6.660") # color=pink width=3 font="times 10 normal roman" text={Circle} tag={foo} tag={foo bar} This is a Comment
+-ellipse(58.539704,20.840203,13.320",6.660",115.14338) # color=#0ff font="helvetica 10 normal italic" text={Ellipse} background
+-box(58.536501,20.847973,26.640",13.320",115.14338) # color=yellow font="helvetica 10 bold roman" text={Box}
+polygon(58.535205,20.854345,58.537456,20.858813,58.532674,20.860917,58.530423,20.856448) # font="courier 10 normal roman" text={Polygon} edit=0 rotate=0
+-line(58.529465,20.862418,58.532204,20.869237) # line=1 1 color=cyan text={Line}
+# vector(58.528363,20.871288,13.320",115.14338) vector=1 color=red text={Vector}
+# text(58.525215,20.875636) color=magenta font="helvetica 14 bold roman" text={Region}
+# ruler(58.523217,20.848322,58.526567,20.855741) ruler=physical physical color=white font="helvetica 12 normal roman" text={Ruler}
+annulus(58.533605,20.83009,3.330",6.660",9.990") # color=magenta font="helvetica 10 bold roman" text={Annulus}
+ellipse(58.530384,20.837363,4.995",2.498",9.990",4.995",115.14338) # color=red width=3 font="helvetica 10 bold roman" text={Ellipse Annulus}
+box(58.527374,20.844904,13.320",6.660",19.980",9.990",115.14338) # font="helvetica 10 bold roman" text={Box Annulus}
+point(58.525179,20.826568) # point=circle text={Circle Point}
+point(58.52201,20.834251) # point=box color=red width=3 text={Box Point}
+point(58.519481,20.841363) # point=diamond text={Diamond Point}
+point(58.520114,20.826338) # point=cross color=blue text={Cross Point}
+point(58.517659,20.832984) # point=x text={X Point}
+point(58.514798,20.839591) # point=arrow color=magenta text={Arrow Point}
+point(58.51275,20.831529) # point=boxcircle text={BoxCircle Point}
+# projection(58.518799,20.85706,58.521828,20.867222,6.660") text={Projection}
+panda(58.516162,20.84998,70.143383,340.14338,3,0.000",9.990",2) # text={Panda}
+panda(58.50762,20.847302,121.72528,160.14338,1,0.000",4.995",1) # panda=(121.72528 160.14338 250.14338 340.14338)(0.000" 4.995" 9.990") text={Panda 2}
+panda(58.50762,20.847302,121.72528,160.14338,1,4.995",9.990",1) # panda=ignore
+panda(58.50762,20.847302,160.14338,250.14338,1,0.000",4.995",1) # panda=ignore
+panda(58.50762,20.847302,160.14338,250.14338,1,4.995",9.990",1) # panda=ignore
+panda(58.50762,20.847302,250.14338,340.14338,1,0.000",4.995",1) # panda=ignore
+panda(58.50762,20.847302,250.14338,340.14338,1,4.995",9.990",1) # panda=ignore
+# compass(58.516664,20.868336,13.320") compass=physical {N} {E} 1 1 text={Compass}
+epanda(58.512667,20.856865,70.143383,340.14338,3,4.995",2.498",9.990",4.995",1,115.14338) # text={Epanda}
+epanda(58.504278,20.854338,115.14338,160.14338,1,4.995",2.498",9.990",4.995",1,115.14338) # epanda=(115.14338 160.14338 250.14338 340.14338)(4.995" 2.498" 9.990" 4.995")(115.14338) text={Epanda 2}
+epanda(58.504278,20.854338,160.14338,250.14338,1,4.995",2.498",9.990",4.995",1,115.14338) # epanda=ignore
+epanda(58.504278,20.854338,250.14338,340.14338,1,4.995",2.498",9.990",4.995",1,115.14338) # epanda=ignore
+bpanda(58.50975,20.864437,70.143383,340.14338,3,13.32",6.66",19.98",9.99",1,115.14338) # text={Bpanda}
+bpanda(58.501688,20.861331,115.14338,160.14338,1,13.320",6.660",19.980",9.990",1,115.14338) # bpanda=(115.14338 160.14338 250.14338 340.14338)(13.320" 6.660" 19.980" 9.990")(115.14338) text={Bpanda 2}
+bpanda(58.501688,20.861331,160.14338,250.14338,1,13.320",6.660",19.980",9.990",1,115.14338) # bpanda=ignore
+bpanda(58.501688,20.861331,250.14338,340.14338,1,13.320",6.660",19.980",9.990",1,115.14338) # bpanda=ignore

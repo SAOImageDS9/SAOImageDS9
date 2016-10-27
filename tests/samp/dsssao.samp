@@ -1,0 +1,29 @@
+set {} dsssao open
+set {} dsssao close
+set {} dsssao size 30 30 arcsec
+get dsssao size
+set {} dsssao save no
+get dsssao save
+set {} dsssao frame new
+get dsssao frame
+set {} dsssao update frame
+set {} dsssao m51
+set {} dsssao name m51
+get dsssao name
+set {} dsssao name {}
+set {} dsssao coord 00:42:44.404 +41:16:08.78 sexagesimal
+get dsssao coord
+set {} dsssao update frame
+set {} mode crosshair
+set {} dsssao update crosshair
+set {} dsssao close
+set {} mode none
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+
+set {} single
+set {} raise

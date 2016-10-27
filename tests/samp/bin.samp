@@ -1,0 +1,34 @@
+set {} file new fits/table.fits
+set {} bin open
+set {} bin factor 4
+set {} bin factor 8 8
+set {} scale log
+set {} scale minmax
+set {} bin buffersize 1024
+set {} bin filter 'circle(4096,4096,200)'
+set {} bin filter ''
+set {} bin cols rawx rawy
+set {} bin about center
+set {} bin colsz x y pha
+set {} bin depth 10
+set {} bin about 4096 4096
+set {} bin depth 1
+set {} bin function sum
+set {} bin in
+set {} bin out
+set {} bin to fit
+set {} bin match
+set {} bin lock yes
+set {} bin lock no
+set {} bin close
+get bin about
+get bin buffersize
+get bin cols
+get bin factor
+get bin filter
+get bin function
+get bin lock
+set {} frame delete
+
+set {} single
+set {} raise

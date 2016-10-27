@@ -1,0 +1,7 @@
+get iis filename
+get iis filename 1
+set {} iis filename foo.fits
+set {} iis filename foo.fits 1
+
+set {} single
+set {} raise

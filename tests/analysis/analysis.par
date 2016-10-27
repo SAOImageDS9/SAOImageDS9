@@ -1,0 +1,4 @@
+var1,f,a,"something",,,"this is an entry"
+var2,b,h,yes,,,"this is a checkbox"
+var3,s,a,"default",default|other|another,,"this is a menu"
+mode,s,h,"ql",,,

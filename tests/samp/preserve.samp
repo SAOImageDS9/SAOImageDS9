@@ -1,0 +1,8 @@
+get preserve pan
+get preserve regions
+
+set {} preserve pan no
+set {} preserve regions no
+
+set {} single
+set {} raise

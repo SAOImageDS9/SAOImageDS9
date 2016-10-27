@@ -1,0 +1,21 @@
+set {} file new data/img.fits
+set {} tile
+set {} mode crosshair
+set {} match frames wcs
+set {} match frames image
+set {} match crosshairs wcs
+set {} match crop wcs
+set {} match slice wcs
+set {} match bin
+set {} match axes
+set {} match scale
+set {} match scalelimits
+set {} match colorbar
+set {} match block
+set {} match smooth
+set {} frame delete
+set {} mode none
+set {} scale zscale
+
+set {} single
+set {} raise

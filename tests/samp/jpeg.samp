@@ -1,0 +1,12 @@
+set {} frame new
+set {} jpeg photo/rose.jpeg
+set file://localhost/Users/joye/saods9/tests/photo/rose.jpeg jpeg
+get jpeg
+set {} frame delete
+
+set {} jpeg new photo/rose.jpeg
+set {} jpeg slice photo/rose.jpeg
+set {} frame delete
+
+set {} single
+set {} raise

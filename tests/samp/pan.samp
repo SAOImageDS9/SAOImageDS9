@@ -1,0 +1,10 @@
+get pan physical
+get pan wcs fk5 sexagesimal
+set {} pan open
+set {} pan 100 100 image
+set {} pan to 13:29:55.666 +47:12:16.29 wcs fk5
+set {} pan close
+set {} frame reset
+
+set {} single
+set {} raise

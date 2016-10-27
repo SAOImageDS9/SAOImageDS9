@@ -1,0 +1,209 @@
+get file
+
+# default...
+set {} frame new
+set {} file fits/float.fits
+set {} frame delete
+
+set {} file new fits/float.fits
+set {} file slice fits/float.fits
+set {} file mask fits/float.fits
+set {} frame delete
+
+# fits...
+set {} frame new
+set {} file fits fits/float.fits
+set {} frame delete
+
+set {} file new fits fits/float.fits
+set {} file fits slice fits/float.fits
+set {} file mask fits fits/float.fits
+set {} frame delete
+
+# sfits...
+set {} frame new
+set {} file sfits sfits/float.hdr sfits/float.arr
+set {} frame delete
+
+set {} file new sfits sfits/float.hdr sfits/float.arr
+set {} file mask sfits sfits/float.hdr sfits/float.arr
+set {} frame delete
+
+# url...
+set {} frame new
+set {} file url http://ds9.si.edu/download/data/img.fits
+set {} frame delete
+
+# rgbimage...
+set {} frame new rgb
+set {} file rgbimage mecube/float.fits
+set {} frame delete
+
+set {} file new rgbimage mecube/float.fits
+set {} frame delete
+
+# rgbcube...
+set {} frame new rgb
+set {} file rgbcube rgbcube/float.fits
+set {} frame delete
+
+set {} file new rgbcube rgbcube/float.fits
+set {} frame delete
+
+# srgbcube...
+set {} frame new rgb
+set {} file srgbcube srgbcube/float.hdr srgbcube/float.arr
+set {} frame delete
+
+set {} file new srgbcube srgbcube/float.hdr srgbcube/float.arr
+set {} frame delete
+
+# mecube...
+set {} frame new
+set {} file mecube mecube/float.fits
+set {} frame delete
+
+set {} file new mecube mecube/float.fits
+set {} frame delete
+
+# multiframe...
+set {} frame new
+set {} file multiframe mecube/float.fits
+set {} frame delete
+set {} frame delete
+set {} frame delete
+
+set {} file new multiframe mecube/float.fits
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} single
+
+# mosaic...
+set {} frame new
+set {} file mosaic mosaic/mosaicimage.fits
+set {} frame clear
+set {} file mosaic wcs mosaic/mosaicimage.fits
+set {} frame clear
+set {} file mosaic iraf mosaic/mosaicimage.fits
+set {} frame delete
+
+set {} file new mosaic mosaic/mosaicimage.fits
+set {} file mask mosaic mosaic/mosaicimage.fits
+set {} frame delete
+
+set {} file new mosaic wcs mosaic/mosaicimage.fits
+set {} file mask mosaic wcs mosaic/mosaicimage.fits
+set {} frame delete
+
+# mosaicimage...
+set {} frame new
+set {} file mosaicimage mosaic/mosaicimage.fits
+set {} frame clear
+set {} file mosaicimage wcs mosaic/mosaicimage.fits
+set {} frame clear
+set {} file mosaicimage iraf mosaic/mosaicimage.fits
+set {} frame clear
+set {} file mosaicimage wfpc2 mosaic/hst.fits
+set {} frame delete
+
+set {} file new mosaicimage mosaic/mosaicimage.fits
+set {} file mask mosaicimage mosaic/mosaicimage.fits
+set {} frame delete
+
+set {} file new mosaicimage wcs mosaic/mosaicimage.fits
+set {} file mask mosaicimage wcs mosaic/mosaicimage.fits
+set {} frame delete
+
+# mosaicwcs...
+set {} frame new
+set {} file mosaicwcs mosaic/mosaicimage.fits
+set {} frame delete
+
+set {} file new mosaicwcs mosaic/mosaicimage.fits
+set {} file mask mosaicwcs mosaic/mosaicimage.fits
+set {} frame delete
+
+# mosaiciraf...
+set {} frame new
+set {} file mosaiciraf mosaic/mosaicimage.fits
+set {} frame delete
+
+set {} file new mosaiciraf mosaic/mosaicimage.fits
+set {} file mask mosaiciraf mosaic/mosaicimage.fits
+set {} frame delete
+
+# mosaicimagewcs...
+set {} frame new
+set {} file mosaicimagewcs mosaic/mosaicimage.fits
+set {} frame delete
+
+set {} file new mosaicimagewcs mosaic/mosaicimage.fits
+set {} file mask mosaicimagewcs mosaic/mosaicimage.fits
+set {} frame delete
+
+# mosaicimageiraf...
+set {} frame new
+set {} file mosaicimageiraf mosaic/mosaicimage.fits
+set {} frame delete
+
+set {} file new mosaicimageiraf mosaic/mosaicimage.fits
+set {} file mask mosaicimageiraf mosaic/mosaicimage.fits
+set {} frame delete
+
+# mosaicimagewfpc2...
+set {} frame new
+set {} file mosaicimagewfpc2 mosaic/hst.fits
+set {} frame delete
+
+set {} file new mosaicimagewfpc2 mosaic/hst.fits
+set {} frame delete
+
+# smosaic...no test...
+
+# smosaiciraf...no test...
+
+# smosaicwcs...no test...
+
+# array...
+set {} frame new
+set {} file array array/float_big.arr[dim=256,bitpix=-32,endian=big]
+set {} frame delete
+
+set {} file new array array/float_big.arr[dim=256,bitpix=-32,endian=big]
+set {} file mask array array/float_big.arr[dim=256,bitpix=-32,endian=big]
+set {} frame delete
+
+# rgbarray...
+set {} frame new rgb
+set {} file rgbarray rgbarray/float_big.rgb[dim=256,bitpix=-32,endian=big]
+set {} frame delete
+
+set {} file new rgbarray rgbarray/float_big.rgb[dim=256,bitpix=-32,endian=big]
+set {} frame delete
+
+# photo...
+set {} frame new
+set {} file photo photo/rose.png
+set {} frame delete
+
+set {} file new photo photo/rose.png
+set {} file photo slice photo/rose.png
+set {} frame delete
+
+# file save...
+set {} file save foo.fits
+
+# file save gz...
+set {} file save gz foo.fits.gz
+
+# file save resample...
+set {} file save resample foo.fits
+
+# file save resample gz...
+set {} file save resample gz foo.fits.gz
+
+set {} rgb close
+set {} cube close
+set {} single
+set {} raise

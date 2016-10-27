@@ -1,0 +1,13 @@
+set {} frame new
+set {} tiff photo/rose.tiff
+set file://localhost/Users/joye/saods9/tests/photo/rose.tiff tiff
+get tiff
+get tiff jpeg
+set {} frame delete
+
+set {} tiff new photo/rose.tiff
+set {} tiff slice photo/rose.tiff
+set {} frame delete
+
+set {} single
+set {} raise

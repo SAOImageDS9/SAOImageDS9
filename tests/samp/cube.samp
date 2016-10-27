@@ -1,0 +1,27 @@
+set {} cube open
+set {} cube close
+set {} file new data/3d.fits
+get cube
+get cube interval
+get cube axis
+get cube lock
+get cube order
+get cube axes lock
+set {} cube 2
+set {} cube interval .5
+set {} cube axis 3
+set {} cube play
+set {} cube stop
+set {} cube match wcs
+set {} cube lock wcs
+set {} cube lock none
+set {} cube order 321
+set {} cube order 123
+set {} cube axes lock yes
+set {} cube axes lock no
+set {} frame delete
+
+set {} 3d close
+set {} cube close
+set {} single
+set {} raise

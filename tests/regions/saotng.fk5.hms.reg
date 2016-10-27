@@ -1,0 +1,26 @@
+# format: hms (fk5)
+#Circle
++circle(13:29:56.743,+47:12:30.420,20) # This is a Comment
+#Ellipse
+-ellipse(13:29:55.792,+47:12:16.940,40,20,45) # background
+#Box
+-box(13:29:54.530,+47:12:04.570,80,40,45) # yellow
+#Polygon
++polygon(13:29:53.394,+47:11:56.880,13:29:52.357,+47:11:57.320,13:29:52.314,+47:11:46.750,13:29:53.351,+47:11:46.310) # green
+#Line
+-line(13:29:52.267,+47:11:39.580,13:29:50.737,+47:11:38.970) # cyan
++text(13:29:50.030,+47:11:20.750, "Region") # magenta
+#Circle Point
++point(13:29:59.541,+47:12:01.440) # green
+#Box Point
++point(13:29:58.293,+47:11:49.210) # red
+#Diamond Point
++point(13:29:57.107,+47:11:38.640) # green
+#Cross Point
++point(13:29:59.971,+47:11:52.280) # blue
+#X Point
++point(13:29:58.870,+47:11:42.230) # green
+#Arrow Point
++point(13:29:57.807,+47:11:31.470) # magenta
+#BoxCircle Point
++point(13:29:59.526,+47:11:34.380) # green

@@ -1,0 +1,26 @@
+# format: degrees (fk4)
+#Circle
++circle(201.95993,47.466046,20) # This is a Comment
+#Ellipse
+-ellipse(201.95594,47.462308,40,20,45) # background
+#Box
+-box(201.95064,47.458883,80,40,45) # yellow
+#Polygon
++polygon(201.94588,47.456757,201.94153,47.456887,201.94134,47.453951,201.94568,47.45382) # green
+#Line
+-line(201.94114,47.45196,201.93473,47.451801) # cyan
++text(201.93175,47.446747, "Region") # magenta
+#Circle Point
++point(201.97162,47.457976) # green
+#Box Point
++point(201.96638,47.454589) # red
+#Diamond Point
++point(201.9614,47.451661) # green
+#Cross Point
++point(201.97341,47.455428) # blue
+#X Point
++point(201.96879,47.452645) # green
+#Arrow Point
++point(201.96433,47.449663) # magenta
+#BoxCircle Point
++point(201.97152,47.450458) # green

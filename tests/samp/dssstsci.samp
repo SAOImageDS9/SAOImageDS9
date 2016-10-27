@@ -1,0 +1,31 @@
+set {} dssstsci open
+set {} dssstsci close
+set {} dssstsci survey all
+get dssstsci survey
+set {} dssstsci size 30 30 arcsec
+get dssstsci size
+set {} dssstsci save no
+get dssstsci save
+set {} dssstsci frame new
+get dssstsci frame
+set {} dssstsci update frame
+set {} dssstsci m1
+set {} dssstsci name m51
+get dssstsci name
+set {} dssstsci name {}
+set {} dssstsci coord 00:42:44.404 +41:16:08.78 sexagesimal
+get dssstsci coord
+set {} dssstsci update frame
+set {} mode crosshair
+set {} dssstsci update crosshair
+set {} dssstsci close
+set {} mode none
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+
+set {} single
+set {} raise

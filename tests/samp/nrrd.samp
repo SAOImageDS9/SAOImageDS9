@@ -1,0 +1,13 @@
+set {} frame new
+set {} nrrd nrrd/float_big_raw.nrrd
+set file://localhost/Users/joye/saods9/tests/nrrd/float_big_raw.nrrd nrrd
+get nrrd
+get nrrd big
+set {} frame delete
+
+set {} nrrd new nrrd/float_big_raw.nrrd
+set {} nrrd mask nrrd/float_big_raw.nrrd
+set {} frame delete
+
+set {} single
+set {} raise

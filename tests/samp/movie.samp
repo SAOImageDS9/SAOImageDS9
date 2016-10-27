@@ -1,0 +1,16 @@
+set {} width 715
+set {} height 450
+set {} movie foo.mpg
+set {} movie frame foo.mpg
+set {} movie slice foo.mpg
+set {} frame new 3d
+set {} movie 3d foo.mpg number 1 azfrom 0 azto 0 elfrom 0 elto 0 slfrom 1 slto 1 repeat 1
+set {} frame delete
+
+# backward compatibility
+set {} savempeg foo.mpg
+
+set {} 3d close
+set {} cube close
+set {} single
+set {} raise

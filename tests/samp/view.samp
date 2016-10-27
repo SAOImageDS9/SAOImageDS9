@@ -1,0 +1,87 @@
+set {} frame delete
+get view layout
+get view keyvalue
+get view info
+get view panner
+get view magnifier
+get view buttons
+get view colorbar
+get view graph horizontal
+get view graph vertical
+get view filename
+get view object
+get view keyword
+get view minmax
+get view lowhigh
+get view units
+get view wcs
+get view detector
+get view amplifier
+get view physical
+get view image
+get view frame
+
+set {} view layout vertical
+set {} sleep .5
+set {} view layout horizontal
+set {} sleep .5
+
+set {} view keyvalue BITPIX
+set {} view info no
+set {} view info yes
+set {} view panner no
+set {} view panner yes
+set {} view magnifier no
+set {} view magnifier yes
+set {} view buttons no
+set {} view buttons yes
+set {} view colorbar no
+set {} view colorbar yes
+set {} view graph horizontal yes
+set {} view graph horizontal no
+set {} view graph vertical yes
+set {} view graph vertical no
+set {} view filename no
+set {} view filename yes
+set {} view object no
+set {} view object yes
+set {} view keyword yes
+set {} view keyword no
+set {} view minmax yes
+set {} view minmax no
+set {} view lowhigh yes
+set {} view lowhigh no
+set {} view units yes
+set {} view units no
+set {} view wcs no
+set {} view wcs yes
+set {} view wcsa yes
+set {} view wcsa no
+set {} view detector yes
+set {} view detector no
+set {} view amplifier yes
+set {} view amplifier no
+set {} view physical no
+set {} view physical yes
+set {} view image no
+set {} view image yes
+set {} view frame no
+set {} view frame yes
+set {} sleep .5
+
+set {} frame new rgb
+set {} view red no
+set {} view red yes
+set {} view green no
+set {} view green yes
+set {} view blue no
+set {} view blue yes
+set {} frame delete
+set {} sleep .5
+
+set {} file new data/img.fits
+set {} rgb close
+
+set {} rgb close
+set {} single
+set {} raise

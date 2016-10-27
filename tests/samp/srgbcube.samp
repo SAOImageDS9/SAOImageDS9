@@ -1,0 +1,10 @@
+set {} frame new rgb
+set {} srgbcube srgbcube/float.hdr srgbcube/float.arr
+set {} frame delete
+
+set {} srgbcube new srgbcube/float.hdr srgbcube/float.arr
+set {} frame delete
+
+set {} rgb close
+set {} single
+set {} raise

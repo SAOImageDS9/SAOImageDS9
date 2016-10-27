@@ -1,0 +1,78 @@
+set {} contour yes
+set {} contour open
+
+get contour
+get contour color
+get contour width
+get contour smooth
+get contour method
+get contour nlevels
+get contour scale
+get contour log exp
+get contour mode
+get contour limits
+get contour levels
+
+get contour wcs fk5
+
+# load/save
+# backward compatibility
+set {} contour clear
+set {} contour yes
+set {} contour load aux/ds9.con wcs fk5 red 2 no
+#
+set {} contour clear
+set {} contour load aux/ds9.ctr
+set {} contour clear
+set {} contour load aux/ds9.ctr blue 2 yes
+set {} contour save foo.ctr wcs fk5
+
+# paste
+set {} contour clear
+set {} frame new
+set {} fits data/img.fits
+set {} tile
+set {} contour yes
+set {} contour copy
+set {} frame first
+# backward compatibility
+set {} contour clear
+set {} contour paste wcs red 2 yes
+#
+set {} contour clear
+set {} contour paste
+set {} frame next
+set {} frame delete
+
+set {} contour clear
+set {} contour loadlevels aux/ds9.ctr
+# backward compatibility
+set {} contour clear
+set {} contour loadlevels aux/ds9.lev
+#
+set {} contour savelevels foo.lev
+
+set {} contour clear
+set {} contour yes
+set {} contour convert
+set {} regions delete all
+
+set {} contour clear
+set {} contour yes
+set {} contour color blue
+set {} contour width 2
+set {} contour smooth 5
+set {} contour method block
+set {} contour nlevels 10
+set {} contour width 2
+set {} contour scale sqrt
+set {} contour log exp 1000
+set {} contour mode zscale
+set {} contour limits 1 100
+set {} contour levels "{1 10 100 1000}"
+
+set {} contour clear
+set {} contour close
+
+set {} single
+set {} raise

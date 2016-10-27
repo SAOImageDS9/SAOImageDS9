@@ -1,0 +1,26 @@
+# format: pixels (physical)
+#Circle
++circle(166,546,20) # This is a Comment
+#Ellipse
+-ellipse(248,529,40,20,45) # background
+#Box
+-box(338,527,80,40,45) # yellow
+#Polygon
++polygon(407.24723,538,445,575.75275,482.75277,538,445,500.24723) # green
+#Line
+-line(509,513,569,564) # cyan
++text(658,521, "Region") # magenta
+#Circle Point
++point(159,341) # green
+#Box Point
++point(248,339) # red
+#Diamond Point
++point(329,341) # green
+#Cross Point
++point(174,292) # blue
+#X Point
++point(250,293) # green
+#Arrow Point
++point(327,290) # magenta
+#BoxCircle Point
++point(252,241) # green

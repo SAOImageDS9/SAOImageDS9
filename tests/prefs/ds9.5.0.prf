@@ -1,0 +1,348 @@
+global ds9
+global prefs
+set prefs(version) 5.0
+# this is a check for to ensure a match between the
+# current ds9 version matches the prefs version
+if {[string compare $prefs(version) $ds9(version)] == 1} {
+    tk_messageBox -type ok -icon warning -message "[msgcat::mc {DS9 has detected a newer version of a preferences file and therefore will not process this file.}]"
+    return
+}
+
+# Bin prefs
+global bin
+global pbin
+array set pbin { depth 1 buffersize 1024 function sum top .bl mb .blmb factor { 1 1 } }
+array set bin [array get pbin]
+
+# Contour prefs
+global contour
+global pcontour
+array set pcontour { scale linear method block view 0 copy {} mb .ctmb width 1 smooth 4 top .ct levels 5 min {} mode minmax max {} color green }
+array set contour [array get pcontour]
+
+# Mask prefs
+global mask
+global pmask
+array set pmask { view 1 color red }
+array set mask [array get pmask]
+
+# MinMax prefs
+global minmax
+global pminmax
+array set pminmax { mode auto sample 25 }
+array set minmax [array get pminmax]
+
+# Postscript prefs
+global ps
+global pps
+array set pps { scale scaled orient portrait height 11 size letter resolution 150 dest printer level 2 width 8.5 filename ds9.ps color2 color cmd lp color rgb }
+array set ps [array get pps]
+
+# Scale prefs
+global scale
+global pscale
+array set pscale { min 1 preserve 0 xaxis full mode minmax datasec 1 max 100 yaxis log type linear scope local top .scale mb .scalemb }
+array set scale [array get pscale]
+
+# Smooth prefs
+global smooth
+global psmooth
+array set psmooth { radius 3 function gaussian top .sm mb .smmb view 0 }
+array set smooth [array get psmooth]
+
+# View prefs
+global view
+global pview
+array set pview { info,wcss 0 info,wcsc 0 info,wcst 0 info,wcsd 0 graph,horz 0 info,wcsu 0 info,wcse 0 info,lowhigh 0 magnifier 1 info,wcsf 0 info,frame 1 info,image 1 info,wcsv 0 colorbar 1 info 1 info,wcsg 0 info,wcsw 0 info,wcs 1 info,wcsh 0 info,wcsx 0 info,physical 1 colorbar,numerics 1 info,wcsi 0 info,wcsy 0 info,object 1 buttons 1 info,wcsj 0 info,wcsz 0 info,wcsk 0 info,filename 1 info,wcsl 0 info,amplifier 0 info,minmax 0 info,wcsm 0 info,detector 0 info,wcsn 0 panner 1 info,wcso 0 info,wcsp 0 layout horizontal info,wcsa 0 info,wcsq 0 graph,vert 0 info,wcsb 0 info,wcsr 0 }
+array set view [array get pview]
+
+# WCS prefs
+global wcs
+global pwcs
+array set pwcs { skyformat sexagesimal align,system wcs system wcs align,sky fk5 sky fk5 align 0 }
+array set wcs [array get pwcs]
+
+# ZScale prefs
+global zscale
+global pzscale
+array set pzscale { line 120 contrast .25 sample 600 }
+array set zscale [array get pzscale]
+
+# Edit prefs
+set prefs(ds9,mode) pointer
+set ds9(mode) pointer
+
+# Frame prefs
+global tile
+set prefs(tile,mode) grid
+set tile(mode) grid
+global blink
+set prefs(blink,interval) 500
+set blink(interval) 500
+
+# Zoom prefs
+global current
+global wcs
+set prefs(zoom) { 1 1 }
+set current(zoom) { 1 1 }
+set prefs(orient) none
+set current(orient) none
+set prefs(rotate) 0
+set current(rotate) 0
+
+# Color prefs
+global colorbar
+set prefs(colorbar,map) Grey
+set colorbar(map) Grey
+set prefs(colorbar,invert) 0
+set colorbar(invert) 0
+
+# Region prefs
+global marker
+set prefs(marker,shape) {circle}
+set marker(shape) {circle}
+set prefs(marker,color) green
+set marker(color) green
+set prefs(marker,width) 1
+set marker(width) 1
+set prefs(marker,edit) 1
+set marker(edit) 1
+set prefs(marker,move) 1
+set marker(move) 1
+set prefs(marker,rotate) 1
+set marker(rotate) 1
+set prefs(marker,delete) 1
+set marker(delete) 1
+set prefs(marker,fixed) 0
+set marker(fixed) 0
+set prefs(marker,include) 1
+set marker(include) 1
+set prefs(marker,source) 1
+set marker(source) 1
+set prefs(marker,font) helvetica
+set marker(font) helvetica
+set prefs(marker,font,size) 10
+set marker(font,size) 10
+set prefs(marker,font,style) normal
+set marker(font,style) normal
+set prefs(marker,format) ds9
+set marker(format) ds9
+set prefs(marker,strip) 0
+set marker(strip) 0
+set prefs(marker,wcs) 0
+set marker(wcs) 0
+set prefs(marker,system) physical
+set marker(system) physical
+set prefs(marker,sky) fk5
+set marker(sky) fk5
+set prefs(marker,skyformat) degrees
+set marker(skyformat) degrees
+set marker(dialog,system) physical
+set marker(dialog,sky) fk5
+set marker(dialog,skyformat) degrees
+set marker(dialog,dist,system) physical
+set marker(dialog,dist,format) degrees
+set marker(circle,radius) 20
+set marker(ellipse,radius1) 40
+set marker(ellipse,radius2) 20
+set marker(box,radius1) 80
+set marker(box,radius2) 40
+set marker(polygon,width) 20
+set marker(polygon,height) 20
+set marker(projection,thick) 0
+set marker(annulus,inner) 15
+set marker(annulus,outer) 30
+set marker(annulus,annuli) 1
+set marker(ellipseannulus,radius1) 40
+set marker(ellipseannulus,radius2) 20
+set marker(ellipseannulus,radius3) 60
+set marker(ellipseannulus,annuli) 1
+set marker(boxannulus,radius1) 80
+set marker(boxannulus,radius2) 40
+set marker(boxannulus,radius3) 120
+set marker(boxannulus,annuli) 1
+set marker(panda,inner) 15
+set marker(panda,outer) 30
+set marker(panda,annuli) 1
+set marker(panda,ang1) 0
+set marker(panda,ang2) 360
+set marker(panda,angnum) 4
+set marker(epanda,radius1) 40
+set marker(epanda,radius2) 20
+set marker(epanda,radius3) 60
+set marker(epanda,annuli) 1
+set marker(epanda,ang1) 0
+set marker(epanda,ang2) 360
+set marker(epanda,angnum) 4
+set marker(bpanda,radius1) 80
+set marker(bpanda,radius2) 40
+set marker(bpanda,radius3) 120
+set marker(bpanda,annuli) 1
+set marker(bpanda,ang1) 0
+set marker(bpanda,ang2) 360
+set marker(bpanda,angnum) 4
+set marker(point,size) 11
+global graph
+set graph(horz,grid) 1
+set graph(horz,log) false
+set graph(vert,grid) 1
+set graph(vert,log) false
+global nres
+set nres(server) {simbad-sao}
+global cat
+set cat(server) {sao}
+set cat(sym,shape) {circle point}
+set cat(sym,color) green
+global hv
+set hv(archive,menu,1) {}
+set hv(archive,url,1) {}
+set hv(archive,menu,2) {}
+set hv(archive,url,2) {}
+set hv(archive,menu,3) {}
+set hv(archive,url,3) {}
+set hv(archive,menu,4) {}
+set hv(archive,url,4) {}
+global vo
+set vo(server) {http://cxc.harvard.edu/chandraed/list.txt}
+set vo(hv) 1
+set vo(method) xpa
+set ds9(analysis,user)  {}
+set ds9(analysis,user2) {}
+set ds9(analysis,user3) {}
+set ds9(analysis,user4) {}
+global analysis
+set prefs(analysis,log) 0
+set analysis(log) 0
+
+# Analysis Plot prefs
+set prefs(ap,grid) 1
+set prefs(ap,grid,log) linearlinear
+set prefs(ap,discrete) 0
+set prefs(ap,discrete,symbol) circle
+set prefs(ap,discrete,color) red
+set prefs(ap,linear) 1
+set prefs(ap,linear,width) 1
+set prefs(ap,linear,color) black
+set prefs(ap,linear,dash) no
+set prefs(ap,step) 0
+set prefs(ap,step,width) 1
+set prefs(ap,step,color) black
+set prefs(ap,step,dash) no
+set prefs(ap,quadratic) 0
+set prefs(ap,quadratic,width) 1
+set prefs(ap,quadratic,color) black
+set prefs(ap,quadratic,dash) no
+set prefs(ap,error,width) 1
+set prefs(ap,error,color) red
+set prefs(ap,error,style) 1
+set prefs(ap,titleFont) helvetica
+set prefs(ap,titleSize) 12
+set prefs(ap,titleStyle) normal
+set prefs(ap,textlabFont) helvetica
+set prefs(ap,textlabSize) 10
+set prefs(ap,textlabStyle) normal
+set prefs(ap,numlabFont) helvetica
+set prefs(ap,numlabSize) 10
+set prefs(ap,numlabStyle) normal
+
+# Language
+set ds9(language) locale
+set ds9(language,name) Locale
+
+# Background Color prefs
+set ds9(bg,color) white
+
+# Blank/Inf/NaN Color prefs
+set ds9(nan,color) white
+
+# Font prefs
+set ds9(font) default
+set ds9(font,size) 10
+set ds9(font,style) normal
+if {$ds9(font) != "default"} {
+option add *font {default 10 normal}
+}
+
+# Panner prefs
+global panner
+set panner(compass,image) 1
+set panner(compass,wcs) 1
+set panner(compass,wcs,system) wcs
+set panner(compass,wcs,sky) fk5
+
+# Magnifier prefs
+global magnifier
+set magnifier(region) 1
+set magnifier(cursor) 1
+set magnifier(zoom) 4
+
+# Truecolor Colorbar prefs
+global colorbar
+set colorbar(area) 0
+set colorbar(mode) center
+
+# Dialog prefs
+global ds9
+set ds9(dialog) motif
+
+# PanZoom prefs
+global panzoom
+set panzoom(mode) click
+
+# Print Coordinates prefs
+global coord
+set coord(value) 1
+set coord(image) 1
+set coord(physical) 0
+set coord(amplifier) 0
+set coord(detector) 0
+set coord(wcs) 1
+set coord(wcsa) 0
+set coord(wcsb) 0
+set coord(wcsc) 0
+set coord(wcsd) 0
+set coord(wcse) 0
+set coord(wcsf) 0
+set coord(wcsg) 0
+set coord(wcsh) 0
+set coord(wcsi) 0
+set coord(wcsj) 0
+set coord(wcsk) 0
+set coord(wcsl) 0
+set coord(wcsm) 0
+set coord(wcsn) 0
+set coord(wcso) 0
+set coord(wcsp) 0
+set coord(wcsq) 0
+set coord(wcsr) 0
+set coord(wcss) 0
+set coord(wcst) 0
+set coord(wcsu) 0
+set coord(wcsv) 0
+set coord(wcsw) 0
+set coord(wcsx) 0
+set coord(wcsy) 0
+set coord(wcsz) 0
+set coord(sky) fk5
+set coord(skyformat) sexagesimal
+
+# Examine prefs
+global examine
+set examine(mode) new
+set examine(zoom) 4
+
+# Misc prefs
+global ds9
+set ds9(tmpdir) {/tmp}
+set ds9(automarker) 1
+set ds9(xpa) 1
+set ds9(confirm) 1
+
+# HTTP prefs
+global http
+set http(proxy) 0
+set http(proxy,host) {}
+set http(proxy,port) {}
+set http(auth) 0
+set http(auth,user) {}
+set http(auth,passwd) {}

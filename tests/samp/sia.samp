@@ -1,0 +1,21 @@
+set {} sia 2mass
+
+get sia
+set {} sia clear
+set {} sia close
+
+set {} sia 2mass
+set {} sia name m51
+set {} sia coordinate 202.48 47.21 fk5
+set {} sia system wcs
+set {} sia sky fk5
+set {} sia skyformat degrees
+set {} sia size 22 22 arcmin
+set {} sia retrieve
+set {} sia save foo.xml
+set {} sia cancel
+#set {} sia print
+set {} sia close
+
+set {} single
+set {} raise

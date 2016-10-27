@@ -1,0 +1,24 @@
+get wcs
+get wcs system
+get wcs sky
+get wcs skyformat
+get wcs align
+set {} wcs open
+set {} wcs wcs
+set {} wcs align yes
+set {} wcs system wcs
+set {} wcs sky galactic
+set {} wcs skyformat sexagesimal
+set {} wcs align no
+set {} wcs sky fk5
+set {} wcs skyformat degrees
+set file://localhost/Users/joye/saods9/tests/aux/image.wcs wcs append
+set file://localhost/Users/joye/saods9/tests/aux/image.wcs wcs replace
+set {} wcs append aux/image.wcs
+set {} wcs replace aux/image.wcs
+set {} wcs reset
+set {} wcs skyformat sexagesimal
+set {} wcs close
+
+set {} single
+set {} raise

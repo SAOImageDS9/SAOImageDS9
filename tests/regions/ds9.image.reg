@@ -1,0 +1,39 @@
+# Region file format: DS9 version 4.1
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+image
+circle(166,546,20) # color=pink width=3 font="times 10 normal roman" text={Circle} tag={foo} tag={foo bar} This is a Comment
+-ellipse(248,529,40,20,45) # color=#0ff font="helvetica 10 normal italic" text={Ellipse} background
+-box(338,527,80,40,45) # color=yellow font="helvetica 10 bold roman" text={Box}
+polygon(407.24723,538,445,575.75275,482.75277,538,445,500.24723) # font="courier 10 normal roman" text={Polygon} edit=0 rotate=0
+-line(509,513,569,564) # line=1 1 color=cyan text={Line}
+# vector(603,535,40,45) vector=1 color=red text={Vector}
+# text(658,521) color=magenta font="helvetica 14 bold roman" text={Region}
+# ruler(387,402,451,461) ruler=physical physical color=white font="helvetica 12 normal roman" text={Ruler}
+annulus(166,434,10,20,30) # color=magenta font="helvetica 10 bold roman" text={Annulus}
+ellipse(251,430,15,7.5,30,15,45) # color=red width=3 font="helvetica 10 bold roman" text={Ellipse Annulus}
+box(338,429,40,20,60,30,45) # font="helvetica 10 bold roman" text={Box Annulus}
+point(159,341) # point=circle text={Circle Point}
+point(248,339) # point=box color=red width=3 text={Box Point}
+point(329,341) # point=diamond text={Diamond Point}
+point(174,292) # point=cross color=blue text={Cross Point}
+point(250,293) # point=x text={X Point}
+point(327,290) # point=arrow color=magenta text={Arrow Point}
+point(252,241) # point=boxcircle text={BoxCircle Point}
+# projection(491,392,584,458,20) text={Projection}
+panda(428,341,0,270,3,0,30,2) # text={Panda}
+panda(430,250,51.5819,90,1,0,15,1) # panda=(51.5819 90 180 270)(0 15 30) text={Panda 2}
+panda(430,250,51.5819,90,1,15,30,1) # panda=ignore
+panda(430,250,90,180,1,0,15,1) # panda=ignore
+panda(430,250,90,180,1,15,30,1) # panda=ignore
+panda(430,250,180,270,1,0,15,1) # panda=ignore
+panda(430,250,180,270,1,15,30,1) # panda=ignore
+# compass(613,413,40) compass=physical {N} {E} 1 1 text={Compass}
+epanda(510,333,0,270,3,15,7.5,30,15,1,45) # text={Epanda}
+epanda(513,244,45,90,1,15,7.5,30,15,1,45) # epanda=(45 90 180 270)(15 7.5 30 15)(45) text={Epanda 2}
+epanda(513,244,90,180,1,15,7.5,30,15,1,45) # epanda=ignore
+epanda(513,244,180,270,1,15,7.5,30,15,1,45) # epanda=ignore
+bpanda(597,333,0,270,3,40,20,60,30,1,45) # text={Bpanda}
+bpanda(593,245,45,90,1,40,20,60,30,1,45) # bpanda=(45 90 180 270)(40 20 60 30)(45) text={Bpanda 2}
+bpanda(593,245,90,180,1,40,20,60,30,1,45) # bpanda=ignore
+bpanda(593,245,180,270,1,40,20,60,30,1,45) # bpanda=ignore
+# segment(668.9973,577.99654,682.99709,537.99647,708.99709,537.99633) text={Segment}

@@ -1,0 +1,8 @@
+set {} frame new
+set {} mosaicimage wfpc2 mosaic/hst.fits
+set {} frame clear
+set file://localhost/Users/joye/saods9/tests/mosaic/hst.fits mosaicimagewfpc2
+set {} frame delete
+
+set {} single
+set {} raise

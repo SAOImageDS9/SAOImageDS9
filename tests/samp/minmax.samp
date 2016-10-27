@@ -1,0 +1,9 @@
+get minmax
+get minmax mode
+get minmax interval
+set {} minmax scan
+set {} minmax mode scan
+set {} minmax interval 100
+
+set {} single
+set {} raise

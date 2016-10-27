@@ -1,0 +1,7 @@
+get iconify
+set {} iconify
+set {} iconify yes
+set {} iconify no
+
+set {} single
+set {} raise

@@ -1,0 +1,19 @@
+set {} nameserver open
+set {} nameserver close
+set {} nameserver m51
+get nameserver
+get nameserver server
+get nameserver skyformat
+get nameserver m51
+set {} nameserver name m51
+set {} nameserver server simbad-cds
+set {} nameserver skyformat degrees
+set {} mode crosshair
+set {} nameserver crosshair
+set {} nameserver pan
+set {} nameserver close
+set {} mode none
+set {} frame reset
+
+set {} single
+set {} raise

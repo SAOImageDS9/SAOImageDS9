@@ -1,0 +1,14 @@
+set {} zoom open
+set {} zoom 2
+set {} zoom 2 4
+set {} zoom to 4
+set {} zoom to 2 4
+set {} zoom in
+set {} zoom out
+set {} zoom to fit
+set {} zoom close
+get zoom
+set {} frame reset
+
+set {} single
+set {} raise

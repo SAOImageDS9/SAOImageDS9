@@ -1,0 +1,192 @@
+global ds9
+global prefs
+set prefs(version) 5.5.1
+# this is a check for to ensure a match between the
+# current ds9 version matches the prefs version
+if {[string compare $prefs(version) [lindex $ds9(version) 0]] == 1} {
+    tk_messageBox -type ok -icon warning -message "[msgcat::mc {DS9 has detected a newer version of a preferences file and therefore will not process this file.}]"
+    return
+}
+
+# Analysis prefs
+global analysis
+global panalysis
+array set panalysis { log 0 }
+array set analysis [array get panalysis]
+
+# AP prefs
+global pap
+array set pap { step,dash no step,width 1 titleFont helvetica quadratic,color black numlabSize 10 error 1 linear 1 textlabStyle normal numlabFont helvetica error,width 1 quadratic 0 grid 1 discrete,color red textlabSize 10 linear,width 1 step,color black numlabStyle normal quadratic,dash no quadratic,width 1 textlabFont helvetica titleStyle normal discrete 0 grid,log linearlinear step 0 titleSize 12 error,color red discrete,symbol circle linear,color black error,style 1 linear,dash no }
+
+# Bin prefs
+global bin
+global pbin
+array set pbin { depth 1 buffersize 1024 function sum factor { 1 1 } }
+array set bin [array get pbin]
+
+# Blink prefs
+global blink
+global pblink
+array set pblink { interval 500 }
+array set blink [array get pblink]
+
+# Buttons prefs
+global pbuttons
+array set pbuttons { color,he 1 view,lowhigh 0 frame,single 1 major,color 1 view,wcs 0 bin,in 1 view,buttons 1 help,release 1 file,open 1 edit,crosshair 1 view,panner 1 help,new 0 view,amplifier 0 scale,params 0 region,dissolve 0 major,zoom 1 frame,newrgb 1 major,file 1 bin,512x 0 file,console 0 bin,8192x 0 edit,prefs 0 bin,2048x 0 zoom,i2 1 edit,colorbar 1 zoom,i4 1 scale,minmax 1 view,horizontal 0 major,wcs 1 zoom,i8 1 view,colorbar 1 color,sls 0 frame,clear 1 bin,1 1 bin,2 1 zoom,16 0 edit,rotate 1 file,page 1 bin,4 1 zoom,none 0 file,pspage 0 region,list 1 bin,8 1 scale,zscale 1 region,centroid 0 region,autocentroid 0 frame,size 0 zoom,270 0 scale,pow 1 scale,90 0 help,issue 0 wcs,fk4 1 zoom,32 0 wcs,fk5 1 frame,blink 1 bin,average 0 bin,128x 0 color,cool 1 view,image 0 frame,reset 0 scale,95 0 color,staircase 0 scale,96 0 scale,97 0 major,scale 1 scale,98 0 region,showtext 0 file,exit 1 scale,99 0 frame,first 1 help,ref 1 color,grey 1 view,filename 0 view,magnifier 1 region,vector 0 color,green 0 file,header 1 edit,cut 0 file,savefits 0 region,all 1 scale,user 0 file,saveimage 1 color,params 0 zoom,in 1 frame,movelast 0 edit,pointer 1 color,standard 0 region,deleteall 0 help,faq 0 region,load 1 region,savetemplate 0 scale,925 0 region,loadtemplate 0 zoom,params 0 color,rainbow 1 frame,refresh 0 zoom,i16 0 zoom,90 0 region,delete 1 edit,copy 0 file,xpa 0 region,annulus 0 bin,fit 1 region,circle 0 region,ruler 0 view,physical 0 color,a 1 color,b 1 scale,sqrt 1 frame,matchframe 0 zoom,i32 0 major,view 1 view,vertical 0 region,point 0 frame,movenext 0 region,group 0 bin,128 0 file,print 1 frame,delete 1 frame,movefirst 0 color,red 0 region,polygon 0 region,none 1 bin,params 0 frame,last 1 scale,zmax 0 edit,catalog 1 frame,tile 1 major,help 1 region,compass 0 edit,paste 0 scale,squared 1 scale,datasec 0 region,back 1 help,desk 1 frame,cube 0 region,ellipse 0 view,graphvert 1 edit,none 1 major,edit 1 color,blue 0 file,psprint 0 wcs,ecliptic 1 region,save 1 region,newgroup 0 color,aips0 1 wcs,galactic 1 zoom,0 0 region,front 1 zoom,1 1 frame,matchcolor 0 frame,moveprev 0 zoom,2 1 scale,995 0 scale,hist 1 zoom,4 1 color,reset 0 file,about 1 region,show 0 frame,new 1 view,detector 0 view,minmax 0 zoom,8 1 zoom,center 0 zoom,fit 1 region,ellipseannulus 0 major,bin 1 frame,next 1 edit,pan 1 view,info 1 bin,1024x 0 bin,out 1 view,object 0 color,invert 0 region,info 1 region,create 0 file,tcl 0 color,bb 1 wcs,sexagesimal 1 region,panda 0 region,boxannulus 0 wcs,degrees 1 region,box 0 wcs,icrs 1 view,frame 0 bin,16 1 major,frame 1 color,color 0 help,ack 1 frame,prev 1 color,i8 1 color,heat 1 edit,zoom 1 region,invert 0 edit,examine 1 bin,32 1 frame,deleteall 0 region,text 0 region,projection 0 help,keyboard 1 scale,log 1 bin,4096x 0 file,savempeg 0 frame,matchscale 0 zoom,align 0 help,home 1 scale,linear 1 edit,undo 0 major,region 1 zoom,x 0 frame,rgb 0 bin,256 0 zoom,y 0 zoom,xy 0 zoom,180 0 view,graphhorz 1 color,hsv 0 region,line 0 zoom,out 1 region,epanda 0 bin,sum 0 bin,256x 0 region,bpanda 0 bin,64 1 }
+
+# CAT prefs
+global cat
+set cat(server) {sao}
+set cat(sym,shape) {circle point}
+set cat(sym,color) green
+
+# Colorbar prefs
+global colorbar
+global pcolorbar
+array set pcolorbar { font,style normal orientation horizontal invert 0 font,size 10 numerics 1 map Grey font helvetica }
+array set colorbar [array get pcolorbar]
+
+# Contour prefs
+global contour
+global pcontour
+array set pcontour { scale linear method block view 0 width 1 dash 0 smooth 4 levels 5 min {} mode minmax max {} color green }
+array set contour [array get pcontour]
+
+# Coord prefs
+global coord
+array set coord { skyformat sexagesimal wcss 0 wcsc 0 wcst 0 wcsd 0 wcsu 0 wcse 0 wcsv 0 image 1 wcsf 0 wcsw 0 wcsg 0 wcsx 0 wcsh 0 physical 0 wcs 1 wcsy 0 wcsi 0 wcsz 0 wcsj 0 wcsk 0 wcsl 0 amplifier 0 wcsm 0 detector 0 wcsn 0 wcso 0 wcsp 0 value 1 wcsq 0 wcsa 0 sky fk5 wcsr 0 wcsb 0 }
+
+# Current prefs
+global current
+global pcurrent
+array set pcurrent { orient none zoom { 1 1 } rotate 0 }
+array set current [array get pcurrent]
+
+# DS9 prefs
+global ds9
+global pds9
+array set pds9 { mode pointer }
+array set ds9 [array get pds9]
+set ds9(analysis,user)  {}
+set ds9(analysis,user2) {}
+set ds9(analysis,user3) {}
+set ds9(analysis,user4) {}
+set ds9(automarker) 1
+set ds9(bg,color) white
+set ds9(confirm) 1
+set ds9(dialog) native
+set ds9(font) default
+set ds9(font,size) 10
+set ds9(font,style) normal
+if {$ds9(font) != "default"} {
+option add *font {default 10 normal}
+}
+set ds9(language) locale
+set ds9(language,name) English
+set ds9(nan,color) white
+set ds9(tmpdir) {/tmp}
+set ds9(xpa) 1
+
+# Examine prefs
+global examine
+array set examine { zoom 4 mode new }
+
+# Graph prefs
+global graph
+set graph(horz,grid) 1
+set graph(horz,log) false
+set graph(vert,grid) 1
+set graph(vert,log) false
+
+# HTTP prefs
+global http
+array set http { auth,passwd {} proxy,host {} auth,user {} auth 0 proxy 0 timeout 240000 proxy,port {} }
+
+# HV prefs
+global hv
+array set hv { archive,url,3 {} archive,menu,1 {} archive,url,4 {} archive,menu,2 {} archive,menu,3 {} archive,url,1 {} archive,menu,4 {} archive,url,2 {} }
+
+# Magnifier prefs
+global magnifier
+array set magnifier { region 1 zoom 4 cursor 1 size 128 }
+
+# Marker prefs
+global marker
+global pmarker
+array set pmarker { panda,ang2 360 bpanda,ang1 0 shape circle show 1 dialog,dist,system physical bpanda,ang2 360 boxannulus,annuli 1 delete 1 annulus,inner 15 panda,angnum 4 autocentroid 0 show,text 1 epanda,angnum 4 font,size 10 rotate 1 move 1 fixed 0 skyformat degrees ellipseannulus,radius1 40 ellipseannulus,radius2 20 ellipseannulus,radius3 60 wcs 0 epanda,radius1 40 epanda,radius2 20 panda,outer 30 panda,annuli 1 epanda,radius3 60 source 1 dialog,system physical strip 0 bpanda,radius1 80 bpanda,radius2 40 epanda,annuli 1 dialog,skyformat degrees bpanda,radius3 120 sky fk5 color green format ds9 annulus,outer 30 polygon,width 20 font,style normal edit 1 font helvetica bpanda,angnum 4 dash 0 dialog,sky fk5 projection,thick 0 boxannulus,radius1 80 dashlist {8 3} polygon,height 20 boxannulus,radius2 40 system physical boxannulus,radius3 120 box,radius1 80 box,radius2 40 point,size 11 annulus,annuli 1 compass,radius 40 epanda,ang1 0 include 1 epanda,ang2 360 dialog,dist,format degrees circle,radius 20 width 1 bpanda,annuli 1 ellipse,radius1 40 preserve 0 panda,inner 15 ellipse,radius2 20 maxdialog 48 panda,ang1 0 ellipseannulus,annuli 1 }
+array set marker [array get pmarker]
+
+# Mask prefs
+global mask
+global pmask
+array set pmask { transparency 0 color red mark 1 }
+array set mask [array get pmask]
+
+# MinMax prefs
+global minmax
+global pminmax
+array set pminmax { mode auto sample 25 }
+array set minmax [array get pminmax]
+
+# NRES prefs
+global nres
+set nres(server) {simbad-sao}
+
+# Panner prefs
+global panner
+array set panner { compass,wcs,system wcs compass,image 1 compass,wcs,sky fk5 compass,wcs 1 size 128 }
+
+# PanZoom prefs
+global panzoom
+global ppanzoom
+set panzoom(mode) click
+array set ppanzoom { preserve 0 }
+array set panzoom [array get ppanzoom]
+
+# Postscript prefs
+global ps
+global pps
+array set pps { scale scaled orient portrait height 11 size letter resolution 150 dest printer level 2 width 8.5 filename ds9.ps color2 color cmd lp color rgb }
+array set ps [array get pps]
+
+# Scale prefs
+global scale
+global pscale
+array set pscale { min 1 preserve 0 xaxis full mode minmax datasec 1 max 100 yaxis log type linear scope local }
+array set scale [array get pscale]
+
+# Smooth prefs
+global smooth
+global psmooth
+array set psmooth { radius 3 function gaussian view 0 }
+array set smooth [array get psmooth]
+
+# Tile prefs
+global tile
+global ptile
+array set ptile { mode grid }
+array set tile [array get ptile]
+
+# View prefs
+global view
+global pview
+array set pview { info,wcss 0 info,wcsc 0 info,wcst 0 info,wcsd 0 graph,horz 0 info,wcsu 0 info,wcse 0 magnifier 1 info,lowhigh 0 info,wcsf 0 info,frame 1 info,image 1 info,wcsv 0 colorbar 1 info 1 info,wcsg 0 info,wcsw 0 info,wcs 1 info,wcsh 0 info,wcsx 0 info,physical 1 info,wcsi 0 info,wcsy 0 info,object 1 buttons 1 info,wcsj 0 info,wcsz 0 info,wcsk 0 info,filename 1 info,wcsl 0 info,amplifier 0 info,minmax 0 info,wcsm 0 info,detector 0 info,wcsn 0 panner 1 info,wcso 0 info,wcsp 0 layout horizontal info,wcsa 0 info,wcsq 0 graph,vert 0 info,wcsb 0 info,wcsr 0 }
+array set view [array get pview]
+
+# WCS prefs
+global wcs
+global pwcs
+array set pwcs { skyformat sexagesimal align,system wcs system wcs align,sky fk5 sky fk5 align 0 }
+array set wcs [array get pwcs]
+
+# VO prefs
+global vo
+set vo(server) http://cxc.harvard.edu/chandraed/list.txt
+set vo(hv) 1
+set vo(method) xpa
+
+# ZScale prefs
+global zscale
+global pzscale
+array set pzscale { line 120 contrast .25 sample 600 }
+array set zscale [array get pzscale]

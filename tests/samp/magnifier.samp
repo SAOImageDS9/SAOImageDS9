@@ -1,0 +1,11 @@
+get magnifier color
+get magnifier zoom
+get magnifier cursor
+get magnifier region
+set {} magnifier color white
+set {} magnifier zoom 4
+set {} magnifier cursor yes
+set {} magnifier region yes
+
+set {} single
+set {} raise

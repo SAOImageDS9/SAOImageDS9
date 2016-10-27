@@ -1,0 +1,83 @@
+set {} catalog cds 2mass
+
+get catalog
+get catalog header
+get catalog cat2mass header
+set {} catalog clear
+set {} catalog close
+
+set {} catalog
+set {} catalog close
+
+set {} catalog cds {I/284}
+set {} catalog clear
+set {} catalog close
+
+set {} catalog import sb aux/ds9.cat
+set {} catalog clear
+set {} catalog close
+
+set {} catalog cds 2mass
+set {} raise
+set {} catalog plot {$Jmag} {$Hmag} {$e_Jmag} {$e_Hmag}
+set {} catalog symbol condition {$Jmag>15}
+set {} catalog symbol shape {boxcircle point}
+set {} catalog symbol color red
+set {} catalog symbol condition {}
+set {} catalog symbol color red
+set {} catalog symbol shape text
+set {} catalog symbol font times
+set {} catalog symbol fontsize 14
+set {} catalog symbol fontweight bold
+set {} catalog symbol fontslant italic
+set {} catalog symbol add
+set {} catalog symbol remove
+set {} catalog symbol load aux/ds9.sym
+set {} catalog symbol save foo.sym
+set {} catalog name m51
+set {} catalog coordinate 202.48 47.21 fk5
+set {} catalog system wcs
+set {} catalog sky fk5
+set {} catalog skyformat degrees
+set {} catalog size 22 22 arcmin
+set {} catalog save foo.cat
+set {} catalog filter {$Jmag>15}
+set {} catalog filter load aux/ds9.flt
+set {} catalog regions
+set {} regions delete all
+set {} catalog retrieve
+set {} catalog cancel
+#set {} catalog print
+set {} catalog server sao
+set {} catalog sort {Jmag} incr
+set {} catalog maxrows 3000
+set {} catalog allcols
+set {} catalog allrows
+set {} catalog ra {RAJ2000}
+set {} catalog dec {DEJ2000}
+set {} catalog psystem wcs
+set {} catalog psky fk5
+set {} catalog hide
+set {} catalog show
+set {} catalog panto no
+#set {} catalog edit yes
+set {} catalog location 400
+set {} catalog header
+set {} catalog clear
+set {} catalog close
+set {} catalog 2mass
+set {} catalog xmm
+set {} catalog match function 1and2
+set {} catalog match error 2 arcsec
+set {} catalog match return 1only
+set {} catalog match unique no
+set {} catalog match 2mass xmm
+set {} catalog clear
+set {} catalog close
+set {} catalog clear
+set {} catalog close
+set {} catalog clear
+set {} catalog close
+
+set {} single
+set {} raise

@@ -1,0 +1,12 @@
+set {} frame new
+set {} gif photo/rose.gif
+set file://localhost/Users/joye/saods9/tests/photo/rose.gif gif
+get gif
+set {} frame delete
+
+set {} gif new photo/rose.gif
+set {} gif slice photo/rose.gif
+set {} frame delete
+
+set {} single
+set {} raise

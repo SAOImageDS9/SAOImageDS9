@@ -1,0 +1,19 @@
+get vo method
+get vo server
+get vo internal
+get vo delay
+get vo connect
+get vo
+set {} vo open
+set {} vo method mime
+set {} vo server "http://cxc.harvard.edu/chandraed/list.txt"
+set {} vo internal yes
+set {} vo delay 10
+set {} vo connect foo
+set {} vo chandra-ed
+set {} vo disconnect chandra-ed
+set {} vo close
+set {} web close
+
+set {} single
+set {} raise

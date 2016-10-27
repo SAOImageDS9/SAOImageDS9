@@ -1,0 +1,39 @@
+# Region file format: DS9 version 4.1
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+icrs
+circle(13:29:56.743,+47:12:30.420,3.964") # color=pink width=3 font="times 10 normal roman" text={Circle} tag={foo} tag={foo bar} This is a Comment
+-ellipse(13:29:55.792,+47:12:16.940,7.928",3.964",2.39832) # color=#0ff font="helvetica 10 normal italic" text={Ellipse} background
+-box(13:29:54.530,+47:12:04.570,15.856",7.928",2.39832) # color=yellow font="helvetica 10 bold roman" text={Box}
+polygon(13:29:53.394,+47:11:56.880,13:29:52.357,+47:11:57.330,13:29:52.314,+47:11:46.750,13:29:53.351,+47:11:46.310) # font="courier 10 normal roman" text={Polygon} edit=0 rotate=0
+-line(13:29:52.267,+47:11:39.580,13:29:50.737,+47:11:38.970) # line=1 1 color=cyan text={Line}
+# vector(13:29:50.632,+47:11:30.180,7.928",2.39832) vector=1 color=red text={Vector}
+# text(13:29:50.030,+47:11:20.760) color=magenta font="helvetica 14 bold roman" text={Region}
+# ruler(13:29:55.474,+47:11:39.760,13:29:53.782,+47:11:39.780) ruler=physical physical color=white font="helvetica 12 normal roman" text={Ruler}
+annulus(13:29:58.217,+47:12:14.080,1.982",3.964",5.946") # color=magenta font="helvetica 10 bold roman" text={Annulus}
+ellipse(13:29:57.053,+47:12:02.090,2.973",1.486",5.946",2.973",2.39832) # color=red width=3 font="helvetica 10 bold roman" text={Ellipse Annulus}
+box(13:29:55.820,+47:11:50.270,7.928",3.964",11.892",5.946",2.39832) # font="helvetica 10 bold roman" text={Box Annulus}
+point(13:29:59.541,+47:12:01.450) # point=circle text={Circle Point}
+point(13:29:58.293,+47:11:49.220) # point=box color=red width=3 text={Box Point}
+point(13:29:57.108,+47:11:38.640) # point=diamond text={Diamond Point}
+point(13:29:59.971,+47:11:52.280) # point=cross color=blue text={Cross Point}
+point(13:29:58.870,+47:11:42.240) # point=x text={X Point}
+point(13:29:57.807,+47:11:31.470) # point=arrow color=magenta text={Arrow Point}
+point(13:29:59.526,+47:11:34.380) # point=boxcircle text={BoxCircle Point}
+# projection(13:29:54.118,+47:11:24.350,13:29:51.918,+47:11:21.500,3.964") text={Projection}
+panda(13:29:55.691,+47:11:25.360,317.398,587.398,3,0.000",5.946",2) # text={Panda}
+panda(13:29:56.859,+47:11:11.820,8.98022,47.3983,1,0.000",2.973",1) # panda=(8.98022 47.3983 137.398 227.398)(0.000" 2.973" 5.946") text={Panda 2}
+panda(13:29:56.859,+47:11:11.820,8.98022,47.3983,1,2.973",5.946",1) # panda=ignore
+panda(13:29:56.859,+47:11:11.820,47.3983,137.398,1,0.000",2.973",1) # panda=ignore
+panda(13:29:56.859,+47:11:11.820,47.3983,137.398,1,2.973",5.946",1) # panda=ignore
+panda(13:29:56.859,+47:11:11.820,137.398,227.398,1,0.000",2.973",1) # panda=ignore
+panda(13:29:56.859,+47:11:11.820,137.398,227.398,1,2.973",5.946",1) # panda=ignore
+# compass(13:29:52.095,+47:11:11.040,7.928") compass=physical {N} {E} 1 1 text={Compass}
+epanda(13:29:54.622,+47:11:13.190,317.398,587.398,3,2.973",1.486",5.946",2.973",1,2.39832) # text={Epanda}
+epanda(13:29:55.751,+47:10:59.810,2.39832,47.3983,1,2.973",1.486",5.946",2.973",1,2.39832) # epanda=(2.39832 47.3983 137.398 227.398)(2.973" 1.486" 5.946" 2.973")(2.39832) text={Epanda 2}
+epanda(13:29:55.751,+47:10:59.810,47.3983,137.398,1,2.973",1.486",5.946",2.973",1,2.39832) # epanda=ignore
+epanda(13:29:55.751,+47:10:59.810,137.398,227.398,1,2.973",1.486",5.946",2.973",1,2.39832) # epanda=ignore
+bpanda(13:29:53.377,+47:11:01.520,317.398,587.398,3,7.928",3.964",11.892",5.946",1,2.39832) # text={Bpanda}
+bpanda(13:29:54.593,+47:10:49.220,2.39832,47.3983,1,7.928",3.964",11.892",5.946",1,2.39832) # bpanda=(2.39832 47.3983 137.398 227.398)(7.928" 3.964" 11.892" 5.946")(2.39832) text={Bpanda 2}
+bpanda(13:29:54.593,+47:10:49.220,47.3983,137.398,1,7.928",3.964",11.892",5.946",1,2.39832) # bpanda=ignore
+bpanda(13:29:54.593,+47:10:49.220,137.398,227.398,1,7.928",3.964",11.892",5.946",1,2.39832) # bpanda=ignore
+# segment(13:29:49.122,+47:11:27.590,13:29:49.448,+47:11:19.880,13:29:49.076,+47:11:16.390) text={Segment}

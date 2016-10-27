@@ -1,0 +1,47 @@
+get scale
+get scale log exp
+get scale limits
+get scale mode
+get scale scope
+get scale datasec
+get scale lock
+get scale lock limits
+set {} scale open
+set {} scale linear
+set {} scale log
+set {} scale pow
+set {} scale sqrt
+set {} scale squared
+set {} scale asinh
+set {} scale sinh
+set {} scale histequ
+set {} scale log exp 1000
+set {} scale log exp 10000
+set {} scale linear
+set {} scale minmax
+set {} scale zscale
+set {} scale zmax
+set {} scale user
+set {} scale mode zscale
+set {} scale mode zmax
+set {} scale mode 95
+set {} scale mode minmax
+set {} scale limits 0 100
+set {} scale global
+set {} scale local
+set {} scale scope global
+set {} scale scope local
+set {} scale mode minmax
+set {} scale linear
+set {} scale zscale
+set {} scale datasec yes
+set {} scale match
+set {} scale match limits
+set {} scale lock yes
+set {} scale lock no
+set {} scale lock limits yes
+set {} scale lock limits no
+set {} scale close
+
+set {} single
+set {} raise

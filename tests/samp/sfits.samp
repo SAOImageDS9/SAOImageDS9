@@ -1,0 +1,11 @@
+set {} frame new
+set {} sfits sfits/float.hdr sfits/float.arr
+set {} frame delete
+
+set {} sfits new sfits/float.hdr sfits/float.arr
+set {} sfits slice sfits/float.hdr sfits/float.arr
+set {} sfits mask sfits/float.hdr sfits/float.arr
+set {} frame delete
+
+set {} single
+set {} raise

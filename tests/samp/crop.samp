@@ -1,0 +1,23 @@
+set {} mode crop
+set {} crop  978 970  356 308 
+get crop
+get crop wcs fk5 sexagesimal arcsec
+get crop lock
+set {} crop  978 970  356 308 
+set {} crop 13:29:52.908 +47:11:38.19  35.279606 30.522805 wcs fk5 arcsec
+set {} crop reset
+set {} 3d
+set {} file data/3d.fits
+set {} 3d vp 45 30
+set {} crop 3d 25 75
+set {} crop reset
+set {} crop match wcs
+set {} crop lock wcs
+set {} crop lock none
+set {} frame delete
+set {} mode none
+
+set {} 3d close
+set {} cube close
+set {} single
+set {} raise

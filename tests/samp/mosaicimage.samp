@@ -1,0 +1,23 @@
+set {} frame new
+set {} mosaicimage mosaic/mosaicimage.fits
+get mosaicimage
+set {} frame clear
+set {} mosaicimage wcs mosaic/mosaicimage.fits
+set {} frame clear
+set file://localhost/Users/joye/saods9/tests/mosaic/mosaicimage.fits mosaicimage wcs
+set {} frame clear
+set {} mosaicimage iraf mosaic/mosaicimage.fits
+set {} frame clear
+set file://localhost/Users/joye/saods9/tests/mosaic/mosaicimage.fits mosaicimage iraf
+set {} frame clear
+set {} mosaicimage wfpc2 mosaic/hst.fits
+set {} frame clear
+set file://localhost/Users/joye/saods9/tests/mosaic/hst.fits mosaicimage wfpc2
+set {} frame delete
+
+set {} mosaicimage new mosaic/mosaicimage.fits
+set {} mosaicimage mask mosaic/mosaicimage.fits
+set {} frame delete
+
+set {} single
+set {} raise

@@ -1,0 +1,10 @@
+# Region file format: DS9 version 4.0
+#
+# foobar
+# foobar+
+# foo+bar
+## foobar
+### foobar
+#. foobar
+##. foobar
+

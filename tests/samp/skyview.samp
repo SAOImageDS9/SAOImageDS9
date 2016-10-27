@@ -1,0 +1,33 @@
+set {} skyview open
+set {} skyview close
+#set {} skyview survey sdssi
+get skyview survey
+set {} skyview size 30 30 arcsec
+get skyview size
+set {} skyview pixels 600 600
+get skyview pixels
+set {} skyview save no
+get skyview save
+set {} skyview frame new
+get skyview frame
+set {} skyview update frame
+set {} skyview m51
+set {} skyview name m51
+get skyview name
+set {} skyview name {}
+set {} skyview coord 13:29:55.301 +47:11:37.73 sexagesimal
+get skyview coord
+set {} skyview update frame
+set {} mode crosshair
+set {} skyview update crosshair
+set {} skyview close
+set {} mode none
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+
+set {} single
+set {} raise

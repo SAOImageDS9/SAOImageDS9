@@ -1,0 +1,15 @@
+get mode
+set {} mode none
+set {} mode region
+set {} mode pointer
+set {} mode crosshair
+set {} mode colorbar
+set {} mode pan
+set {} mode zoom
+set {} mode rotate
+set {} mode catalog
+set {} mode examine
+set {} mode none
+
+set {} single
+set {} raise

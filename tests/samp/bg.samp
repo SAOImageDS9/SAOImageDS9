@@ -1,0 +1,7 @@
+get background
+get bg
+set {} background red
+set {} background white
+
+set {} single
+set {} raise

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE version="1.1">
+<DEFINITIONS>
+<COOSYS ID="fk5" system="eq_FK5" equinox="J2000"/>
+<COOSYS ID="fk4" system="eq_FK4" equinox="B1950"/>
+</DEFINITIONS>
+<RESOURCE>
+<TABLE>
+<DESCRIPTION>DS9 version 4.1</DESCRIPTION>
+<FIELD ID="shape" name="shape" datatype="char" arraysize="*"/>
+<FIELD ID="x" name="x" datatype="char" arraysize="*" unit="&quot;h:m:s&quot;" ref="ecliptic" ucd="pos.ecliptic.lon;meta.main"/>
+<FIELD ID="y" name="y" datatype="char" arraysize="*" unit="&quot;d:m:s&quot;" ref="ecliptic" ucd="pos.ecliptic.lat;meta.main"/>
+<FIELD ID="xv" name="xv" datatype="char" arraysize="*" unit="&quot;h:m:s&quot;" ref="ecliptic"/>
+<FIELD ID="yv" name="yv" datatype="char" arraysize="*" unit="&quot;d:m:s&quot;" ref="ecliptic"/>
+<FIELD ID="r" name="r" datatype="float" precision="8" unit="arcsec" ref="ecliptic"/>
+<FIELD ID="r2" name="r2" datatype="float" precision="8" unit="arcsec" ref="ecliptic"/>
+<FIELD ID="rv" name="rv" datatype="float" precision="8" arraysize="*" unit="arcsec" ref="ecliptic"/>
+<FIELD ID="rv2" name="rv2" datatype="float" precision="8" arraysize="*" unit="arcsec" ref="ecliptic"/>
+<FIELD ID="ang" name="ang" datatype="float" precision="8" unit="deg" ref="ecliptic" axis="-x" dir="ccw"/>
+<FIELD ID="angv" name="angv" datatype="float" precision="8" arraysize="*" unit="deg" ref="ecliptic" axis="-x" dir="ccw"/>
+<FIELD ID="tile" name="tile" datatype="int"/>
+<FIELD ID="color" name="color" datatype="char" arraysize="*"/>
+<FIELD ID="width" name="width" datatype="int"/>
+<FIELD ID="text" name="text" datatype="char" arraysize="*"/>
+<FIELD ID="font" name="font" datatype="char" arraysize="*"/>
+<FIELD ID="select" name="select" datatype="boolean"/>
+<FIELD ID="highlite" name="highlite" datatype="boolean"/>
+<FIELD ID="edit" name="edit" datatype="boolean"/>
+<FIELD ID="move" name="move" datatype="boolean"/>
+<FIELD ID="rotate" name="rotate" datatype="boolean"/>
+<FIELD ID="delete" name="delete" datatype="boolean"/>
+<FIELD ID="fixed" name="fixed" datatype="boolean"/>
+<FIELD ID="include" name="include" datatype="boolean"/>
+<FIELD ID="source" name="source" datatype="boolean"/>
+<FIELD ID="dash" name="dash" datatype="boolean"/>
+<FIELD ID="dashlist" name="dashlist" datatype="char" arraysize="*"/>
+<FIELD ID="tag" name="tag" datatype="char" arraysize="*"/>
+<FIELD ID="param" name="param" datatype="char" arraysize="*"/>
+<FIELD ID="param2" name="param2" datatype="char" arraysize="*"/>
+<FIELD ID="param3" name="param3" datatype="char" arraysize="*"/>
+<FIELD ID="param4" name="param4" datatype="char" arraysize="*"/>
+<FIELD ID="param5" name="param5" datatype="char" arraysize="*"/>
+<FIELD ID="comment" name="comment" datatype="char" arraysize="*"/>
+<DATA>
+<TABLEDATA>
+<TR><TD>circle</TD><TD>+175:06:44.660</TD><TD>+50:57:09.921</TD><TD></TD><TD></TD><TD>3.964</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>pink</TD><TD>3</TD><TD>Circle</TD><TD>times 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD>foo foo&#160;bar</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>This is a Comment</TD></TR>
+<TR><TD>ellipse</TD><TD>+175:06:44.660</TD><TD>+50:56:53.323</TD><TD></TD><TD></TD><TD>7.928</TD><TD>3.964</TD><TD></TD><TD></TD><TD>326.71725</TD><TD></TD><TD></TD><TD>#0ff</TD><TD>1</TD><TD>Ellipse</TD><TD>helvetica 10 normal italic</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>box</TD><TD>+175:06:39.530</TD><TD>+50:56:35.776</TD><TD></TD><TD></TD><TD>15.856</TD><TD>7.928</TD><TD></TD><TD></TD><TD>326.71725</TD><TD></TD><TD></TD><TD>yellow</TD><TD>1</TD><TD>Box</TD><TD>helvetica 10 bold roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>0</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>polygon</TD><TD></TD><TD></TD><TD>+175:06:31.722 +175:06:17.685 +175:06:26.903 +175:06:40.939</TD><TD>+50:56:22.779 +50:56:16.970 +50:56:08.125 +50:56:13.934</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Polygon</TD><TD>courier 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>line</TD><TD></TD><TD></TD><TD>+175:06:32.927 +175:06:13.393</TD><TD>+50:56:02.026 +50:55:52.432</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>cyan</TD><TD>1</TD><TD>Line</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>0</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>1</TD><TD>1</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>vector</TD><TD>+175:06:20.154</TD><TD>+50:55:44.667</TD><TD></TD><TD></TD><TD>7.928</TD><TD></TD><TD></TD><TD></TD><TD>326.71725</TD><TD></TD><TD></TD><TD>red</TD><TD>1</TD><TD>Vector</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>1</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>text</TD><TD>+175:06:20.956</TD><TD>+50:55:33.430</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>281.71725</TD><TD></TD><TD></TD><TD>magenta</TD><TD>1</TD><TD>Region</TD><TD>helvetica 14 bold roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>1</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>ruler</TD><TD></TD><TD></TD><TD>+175:07:14.900 +175:06:52.643</TD><TD>+50:56:21.236 +50:56:11.190</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>white</TD><TD>1</TD><TD>Ruler</TD><TD>helvetica 12 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>physical</TD><TD>physical</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>annulus</TD><TD>+175:07:19.163</TD><TD>+50:57:05.414</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1.982 3.964 5.946</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>magenta</TD><TD>1</TD><TD>Annulus</TD><TD>helvetica 10 bold roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>ellipseannulus</TD><TD>+175:07:14.964</TD><TD>+50:56:48.757</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2.973 5.946</TD><TD>1.487 2.973</TD><TD>326.71725</TD><TD></TD><TD></TD><TD>red</TD><TD>3</TD><TD>Ellipse Annulus</TD><TD>helvetica 10 bold roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>boxannulus</TD><TD>+175:07:09.715</TD><TD>+50:56:31.833</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>7.928 11.892</TD><TD>3.964 5.946</TD><TD>326.71725</TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Box Annulus</TD><TD>helvetica 10 bold roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>+175:07:48.259</TD><TD>+50:57:03.028</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Circle Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>circle</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>+175:07:43.186</TD><TD>+50:56:45.675</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>red</TD><TD>3</TD><TD>Box Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>box</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>+175:07:37.393</TD><TD>+50:56:30.037</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Diamond Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>diamond</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>+175:08:02.394</TD><TD>+50:56:58.143</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>blue</TD><TD>1</TD><TD>Cross Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>cross</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>+175:07:57.227</TD><TD>+50:56:43.435</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>X Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>x</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>+175:07:53.228</TD><TD>+50:56:28.371</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>magenta</TD><TD>1</TD><TD>Arrow Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>arrow</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>+175:08:13.115</TD><TD>+50:56:40.951</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>BoxCircle Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>boxcircle</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>projection</TD><TD></TD><TD></TD><TD>+175:07:11.338 +175:06:45.077</TD><TD>+50:56:00.651 +50:55:45.258</TD><TD>3.964</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Projection</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>panda</TD><TD>+175:07:31.067</TD><TD>+50:56:10.824</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>0.000 2.973 5.946</TD><TD></TD><TD></TD><TD>281.71725 11.717254 101.71725 191.71725</TD><TD></TD><TD>green</TD><TD>1</TD><TD>Panda</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>panda</TD><TD>+175:07:58.962</TD><TD>+50:56:06.771</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>0.000 2.973 5.946</TD><TD></TD><TD></TD><TD>333.29915 11.717254 101.71725 191.71725</TD><TD></TD><TD>green</TD><TD>1</TD><TD>Panda 2</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>compass</TD><TD>+175:06:57.081</TD><TD>+50:55:37.819</TD><TD></TD><TD></TD><TD>7.928</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Compass</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>physical</TD><TD>N</TD><TD>E</TD><TD>1</TD><TD>1</TD><TD></TD></TR>
+<TR><TD>epanda</TD><TD>+175:07:28.292</TD><TD>+50:55:54.588</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2.973 5.946</TD><TD>1.487 2.973</TD><TD>326.71725</TD><TD>281.71725 11.717254 101.71725 191.71725</TD><TD></TD><TD>green</TD><TD>1</TD><TD>Epanda</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>epanda</TD><TD>+175:07:55.505</TD><TD>+50:55:50.422</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2.973 5.946</TD><TD>1.487 2.973</TD><TD>326.71725</TD><TD>326.71725 11.717254 101.71725 191.71725</TD><TD></TD><TD>green</TD><TD>1</TD><TD>Epanda 2</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>bpanda</TD><TD>+175:07:22.735</TD><TD>+50:55:37.704</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>7.928 11.892</TD><TD>3.964 5.946</TD><TD>326.71725</TD><TD>281.71725 11.717254 101.71725 191.71725</TD><TD></TD><TD>green</TD><TD>1</TD><TD>Bpanda</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>bpanda</TD><TD>+175:07:50.085</TD><TD>+50:55:34.937</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>7.928 11.892</TD><TD>3.964 5.946</TD><TD>326.71725</TD><TD>326.71725 11.717254 101.71725 191.71725</TD><TD></TD><TD>green</TD><TD>1</TD><TD>Bpanda 2</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>segment</TD><TD></TD><TD></TD><TD>+175:06:02.705 +175:06:14.128 +175:06:12.470</TD><TD>+50:55:33.587 +50:55:29.262 +50:55:24.216</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Segment</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+</TABLEDATA>
+</DATA>
+</TABLE>
+</RESOURCE>
+</VOTABLE>

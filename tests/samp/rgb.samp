@@ -1,0 +1,44 @@
+set {} rgb open
+set {} rgb close
+set {} rgb
+get rgb channel
+get rgb view red
+get rgb view green
+get rgb view blue
+get rgb system
+get rgb lock wcs
+get rgb lock crop
+get rgb lock slice
+get rgb lock bin
+get rgb lock scale
+get rgb lock scalelimits
+get rgb lock colorbar
+get rgb lock block
+get rgb lock smooth
+set {} rgb green
+set {} rgb channel blue
+set {} rgb view blue off
+set {} rgb system wcs
+set {} rgb lock wcs yes
+set {} rgb lock wcs no
+set {} rgb lock crop yes
+set {} rgb lock crop no
+set {} rgb lock slice yes
+set {} rgb lock slice no
+set {} rgb lock bin yes
+set {} rgb lock bin no
+set {} rgb lock scale yes
+set {} rgb lock scale no
+set {} rgb lock scalelimits yes
+set {} rgb lock scalelimits no
+set {} rgb lock colorbar yes
+set {} rgb lock colorbar no
+set {} rgb lock block yes
+set {} rgb lock block no
+set {} rgb lock smooth yes
+set {} rgb lock smooth no
+set {} rgb close
+set {} frame delete
+
+set {} single
+set {} raise

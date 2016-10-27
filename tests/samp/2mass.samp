@@ -1,0 +1,31 @@
+set {} 2mass open
+set {} 2mass close
+set {} 2mass survey h
+get 2mass survey
+set {} 2mass size 30 30 arcsec
+get 2mass size
+set {} 2mass save no
+get 2mass save
+set {} 2mass frame new
+get 2mass frame
+set {} 2mass update frame
+set {} 2mass m51
+set {} 2mass name m51
+get 2mass name
+set {} 2mass name {}
+set {} 2mass coord 00:42:44.404 +41:16:08.78 sexagesimal
+get 2mass coord
+set {} 2mass update frame
+set {} mode crosshair
+set {} 2mass update crosshair
+set {} 2mass close
+set {} mode none
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+
+set {} single
+set {} raise

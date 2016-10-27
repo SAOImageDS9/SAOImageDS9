@@ -1,0 +1,29 @@
+set {} vlss open
+set {} vlss close
+set {} vlss size 30 30 arcsec
+get vlss size
+set {} vlss save no
+get vlss save
+set {} vlss frame new
+get vlss frame
+set {} vlss update frame
+set {} vlss m51
+set {} vlss name m51
+get vlss name
+set {} vlss name {}
+set {} vlss coord 13:29:52.37 +47:11:40.8 sexagesimal
+get vlss coord
+set {} vlss update frame
+set {} mode crosshair
+set {} vlss update crosshair
+set {} vlss close
+set {} mode none
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+
+set {} single
+set {} raise

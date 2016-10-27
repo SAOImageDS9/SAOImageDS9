@@ -1,0 +1,11 @@
+set {} frame new rgb
+set {} rgbarray rgbarray/float_big.rgb[dim=256,bitpix=-32,endian=big]
+get rgbarray big
+set {} frame delete
+
+set {} rgbarray new rgbarray/float_big.rgb[dim=256,bitpix=-32,endian=big]
+set {} frame delete
+
+set {} rgb close
+set {} single
+set {} raise

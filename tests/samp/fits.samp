@@ -1,0 +1,70 @@
+get fits
+get fits image
+get fits slice
+
+set {} frame new
+set file://localhost/Users/joye/saods9/tests/fits/table.fits fits 
+get fits table
+set {} frame delete
+
+set {} frame new
+set {} fits fits/float.fits
+set {} frame delete
+
+set {} fits new fits/float.fits
+set {} fits slice fits/float.fits
+set {} fits mask fits/float.fits
+set {} frame delete
+
+get fits size
+get fits width
+get fits height
+get fits depth
+get fits bitpix
+get fits type
+get fits size wcs fk5 arcsec
+get fits header
+get fits header 1
+get fits header keyword BITPIX
+get fits header 1 keyword BITPIX
+set {} single
+
+# backward compatibility
+get fits image
+get fits image gz
+get fits resample
+get fits resample gz
+set {} frame new
+set {} fits fits/table.fits
+get fits table
+get fits table gz
+set {} frame delete
+
+set {} frame new
+set file://localhost/Users/joye/saods9/tests/mecube/float.fits fits mecube 
+set {} frame delete
+set file://localhost/Users/joye/saods9/tests/mecube/float.fits fits new mecube
+set {} frame delete
+
+set {} frame new
+set file://localhost/Users/joye/saods9/tests/mosaic/mosaicimage.fits fits mosaicimage 
+set file://localhost/Users/joye/saods9/tests/mosaic/mosaicimage.fits fits mosaicimage wcs 
+set {} frame delete
+set file://localhost/Users/joye/saods9/tests/mosaic/mosaicimage.fits fits new mosaicimage 
+set file://localhost/Users/joye/saods9/tests/mosaic/mosaicimage.fits fits mask mosaicimage 
+set {} frame delete
+
+set {} frame new
+set file://localhost/Users/joye/saods9/tests/mosaic/mosaicimage.fits fits mosaicimagewcs 
+set {} frame delete
+set file://localhost/Users/joye/saods9/tests/mosaic/mosaicimage.fits fits new mosaicimagewcs 
+set file://localhost/Users/joye/saods9/tests/mosaic/mosaicimage.fits fits mask mosaicimagewcs 
+set {} frame delete
+
+set {} rgb close
+set {} cube close
+set {} single
+set {} raise
+
+
+

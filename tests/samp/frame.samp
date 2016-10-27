@@ -1,0 +1,74 @@
+get frame lock
+get frame has amplifier
+get frame has datamin
+get frame has datasec
+get frame has detector
+get frame has grid
+get frame has iis
+get frame has irafmin
+get frame has physical
+get frame has smooth
+get frame has contour
+get frame has contour aux
+get frame has fits
+get frame has fits bin
+get frame has fits cube
+get frame has fits mosaic
+get frame has marker highlite
+get frame has marker paste
+get frame has marker select
+get frame has marker undo
+get frame has system physical
+get frame has wcs wcsa
+get frame has wcs equatorial wcsa
+set {} frame new rgb
+set {} frame delete
+set {} frame new 3d
+set {} frame delete
+set {} frame new
+set {} file data/img.fits
+get frame
+get frame frameno
+get frame all
+get frame active
+set {} frame center
+set {} frame center 1
+set {} frame center all
+set {} frame reset
+set {} frame reset 1
+set {} frame reset all
+set {} frame refresh
+set {} frame refresh 1
+set {} frame refresh all
+set {} frame hide
+set {} frame hide 1
+set {} frame hide all
+set {} frame show
+set {} frame show 1
+set {} frame show all
+set {} frame move first
+set {} frame move back
+set {} frame move forward
+set {} frame move last
+set {} frame first
+set {} frame prev
+set {} frame next
+set {} frame last
+set {} frame frameno 1
+set {} frame 2
+set {} frame match wcs
+set {} frame lock wcs
+set {} frame lock none
+set {} frame clear
+set {} frame clear 1
+set {} frame clear all
+set {} frame delete
+set {} frame delete 1
+set {} frame delete all
+set {} file new data/img.fits
+
+set {} rgb close
+set {} 3d close
+set {} cube close
+set {} single
+set {} raise

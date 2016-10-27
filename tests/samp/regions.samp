@@ -1,0 +1,112 @@
+set {} regions delete all
+set {} regions system physical
+set {} regions sky fk5
+set {} regions skyformat degrees
+set file://localhost/Users/joye/saods9/tests/regions/samp.reg regions
+
+get regions
+get regions epsilon
+get regions show
+get regions showtext
+get regions centroid auto
+get regions centroid radius
+get regions centroid iteration
+get regions -format pros -system wcs -sky fk5 -skyformat sexagesimal -delim nl -prop edit 1 -group foo -strip yes
+get regions include
+get regions exclude
+get regions source
+get regions background
+get regions selected
+
+get regions format
+get regions system
+get regions sky
+get regions skyformat
+get regions strip
+get regions shape
+get regions color
+get regions width
+get regions delim
+get regions groups
+
+set {} regions delete all
+
+set {} regions regions/ds9.physical.reg
+set {} regions delete all
+set {} regions load regions/ds9.physical.reg
+set {} regions delete all
+set {} regions load regions/ds9.fk5*.reg
+set {} regions delete all
+set {} regions load all regions/ds9.physical.reg
+set {} regions save foo.reg
+set {} regions list
+set {} regions list close
+set {} regions delete all
+
+set {} regions epsilon 5
+set {} regions show yes
+set {} regions showtext yes
+set {} regions centroid
+set {} regions centroid auto no
+set {} regions centroid radius 10
+set {} regions centroid iteration 30
+#set {} regions getinfo
+set {} regions move front
+set {} regions move back
+set {} regions select all
+set {} regions select none
+set {} regions delete all
+set {} regions delete select
+set {} regions format ds9
+set {} regions system physical
+set {} regions sky fk5
+set {} regions skyformat degrees
+set {} regions delim nl
+set {} regions strip no
+set {} regions shape circle
+set {} regions color green
+set {} regions edit yes
+set {} regions include
+set {} regions width 1
+set {} regions command "circle 100 100 20"
+
+set {} regions group new
+set {} regions group foo new
+set {} regions group foo update
+set {} regions group foo select
+set {} regions group foo color red
+set {} regions group foo copy
+set {} regions group foo delete
+set {} regions group foo cut
+set {} regions group foo font 'time 14 bold'
+set {} regions group foo move 100 100
+set {} regions group foo movefront
+set {} regions group foo moveback
+set {} regions group foo property delete no
+
+set {} regions delete all
+
+set {} regions command "circle 100 100 20"
+set {} regions select all
+set {} regions copy
+set {} regions cut
+set {} regions paste
+set {} regions undo
+set {} regions delete all
+
+set {} regions load regions/ds9.physical.reg
+set {} regions select all
+set {} regions composite
+set {} regions desolve
+set {} regions delete all
+
+set {} regions command "circle 100 100 20"
+set {} regions savetemplate foo.tpl
+set {} regions delete all
+set {} regions template foo.tpl
+set {} regions delete all
+set {} regions template foo.tpl at 202.46963 47.19556 fk5
+set {} regions delete all
+
+set {} single
+set {} raise

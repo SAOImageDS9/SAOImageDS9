@@ -1,0 +1,14 @@
+set {} prefs clear
+
+# backward compatibility
+get prefs bgcolor
+get prefs nancolor
+get prefs threads
+get prefs irafalign
+set {} prefs bgcolor white
+set {} prefs nancolor white
+set {} prefs threads 4
+set {} prefs irafalign yes
+
+set {} single
+set {} raise

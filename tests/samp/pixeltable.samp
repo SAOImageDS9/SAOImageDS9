@@ -1,0 +1,9 @@
+get pixeltable
+set {} pixeltable
+set {} pixeltable yes
+set {} pixeltable no
+set {} pixeltable open
+set {} pixeltable close
+
+set {} single
+set {} raise

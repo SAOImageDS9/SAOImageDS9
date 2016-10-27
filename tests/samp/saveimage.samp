@@ -1,0 +1,19 @@
+set {} saveimage fits foo.fits
+set {} saveimage foo.fits
+set {} saveimage eps foo.eps
+set {} saveimage foo.eps
+#set {} saveimage foo.gif
+set {} saveimage tiff foo.tiff none
+set {} saveimage foo.tiff
+set {} saveimage jpeg foo.jpeg 100
+set {} saveimage foo.jpeg
+set {} saveimage png foo.png
+set {} saveimage foo.png
+
+# backward compatibility (6.2)
+set {} saveimage tiff none foo.tiff
+set {} saveimage jpeg 100 foo.jpeg
+#set {} saveimage mpeg foo.mpeg
+
+set {} single
+set {} raise

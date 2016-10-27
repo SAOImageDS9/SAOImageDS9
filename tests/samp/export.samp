@@ -1,0 +1,22 @@
+set {} export array foo.arr little 
+set {} export foo.arr little 
+set {} export nrrd foo.nrrd big
+set {} export foo.nrrd
+set {} export gif foo.gif
+set {} export foo.gif
+set {} export tiff foo.tiff none
+set {} export foo.tiff
+set {} export jpeg foo.jpeg 10
+set {} export foo.jpeg
+set {} export png foo.png
+set {} export foo.png
+
+set {} frame new rgb
+set {} rgbcube rgbcube/float.fits
+set {} export rgbarray foo.rgb little
+set {} export foo.rgb little
+set {} frame delete
+
+set {} rgb close
+set {} single
+set {} raise

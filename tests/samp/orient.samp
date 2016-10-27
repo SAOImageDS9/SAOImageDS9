@@ -1,0 +1,11 @@
+set {} orient open
+set {} orient none
+set {} orient x
+set {} orient y
+set {} orient xy
+set {} orient close
+get orient
+set {} frame reset
+
+set {} single
+set {} raise

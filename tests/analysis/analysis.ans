@@ -1,0 +1,282 @@
+#
+# Analysis command descriptions:
+#       menu label
+#       file templates
+#	menu/bind
+#       analysis command line
+
+param foo
+	var1 entry entry 40 {this is a entry}
+	var2 checkbox checkbox 1 {this is a checkbox}
+	var3 menu menu AAA|BBB|CCC {this is a menu}
+endparam
+
+param bar
+	@analysis/analysis.par
+endparam
+
+param ltc
+	bins entry "Enter number of [t1:t2:]bins" 0 "('0' for default number of bins)"
+endparam
+
+# Help Main Help
+
+help Main Help
+These menus contain a test for each possible feature
+
+supported by the ds9 (blank line above)
+endhelp
+---
+
+hmenu Test Web
+	help Web Help
+	Help for web features
+	endhelp
+	---
+	Web Test url
+	*
+	web
+	http://ds9.si.edu/doc/helpdesk.html
+
+	Web Test file
+	*
+	web
+	file:/Users/joye/saods9/tests/analysis/hv.html
+endhmenu
+
+hmenu Test Basics
+	help Basic Help
+	Help for basic features
+	endhelp
+	---
+	Test escape char # this is a comment
+	*
+	menu
+	echo "this is not a macro $$xpa" | $text
+
+	Test pass thru # this is a comment
+	*
+	menu
+	echo "this is not a macro $foo" | $text
+
+	Test $xpa # this is a comment
+	*
+	menu
+	echo $xpa | $text
+
+	Test $xpa_method # this is also a comment
+	*
+	menu
+	echo $xpa_method | $text
+
+	Test $vo_method
+	*
+	menu
+	echo $vo_method | $text
+
+	Test $filename
+	*.fits
+	menu
+	echo $filename | $text
+
+	Test $filename(root)
+	*.fits
+	menu
+	echo $filename(root) | $text
+
+	Test $filename(full)
+	*.fits
+	menu
+	echo $filename(full) | $text
+
+	Test $filedialog(open)
+	*
+	menu
+	echo "$filedialog(open)" | $text
+
+	Test $filedialog(save)
+	*
+	menu
+	echo "$filedialog(save)" | $text
+
+	Test $width $height $depth $bitpix
+	*.fits
+	menu
+	echo "$width $height $depth $bitpix" | $text
+
+	Test $pan
+	*.fits
+	menu
+	echo "$pan(fk5,degrees)" | $text
+
+	Test $env
+	*
+	menu
+	echo $env(PATH) | $text
+endhmenu
+
+hmenu Test Regions
+	help Regions Help
+	Help for regions features
+	endhelp
+	---
+	Test $regions
+	*.fits
+	menu
+	echo "$regions ds9_s:$regions(ds9,source,image) ciao_b:$regions(ciao,background) saotng_i:$regions(saotng,include,wcs,fk5) pros_e:$regions(pros,exclude,wcs,fk5,sexagesimal) xy_be:$regions(xy,background,exclude,wcs,fk4,hms)" | $text
+
+	Test $regions wcs
+	*.fits
+	menu
+	echo "$regions(ds9,wcs) $regions(ds9,wcs,fk5,sexagesimal) $regions(ds9,wcsa) " | $text
+
+	Test $include_regions_pixels
+	*.fits
+	menu
+	echo "ds9_s: $source_regions ds9_b: $background_regions_pixels ds9_i: $include_regions_degrees ds9_e: $exclude_regions_hms" | $text
+
+	Test $filename $regions
+	*.fits
+	menu
+	echo "$filename[$regions]" | $text
+
+	Test $filename $regions()
+	*.fits
+	menu
+	echo "$filename[$regions()]" | $text
+endhmenu
+
+hmenu Test Output
+	help Output Help
+	Help for output features
+	endhelp
+	---
+	Test $null
+	*
+	menu
+	echo "This is Text" > /dev/null | $null
+
+	Test $text
+	*
+	menu
+	echo "This is Text" | $text
+
+	Test $plot
+	*
+	menu
+	cat xy.dat | $plot
+
+	Test $plot(title,x,y,xyey)
+	*
+	menu
+	cat xyey.dat | $plot(Title,X Axis,Y Axis,xyey)
+
+	Test $plot(title,x,y,xyexey)
+	*
+	menu
+	cat xyexey.dat | $plot(Title,X Axis,Y Axis,xyexey)
+
+	Test $plot(title,x,y,4)
+	*
+	menu
+	cat 4.dat | $plot(Title,X Axis,Y Axis,4)
+
+	Test $plot(title,x,y,5)
+	*
+	menu
+	cat 5.dat | $plot(Title,X Axis,Y Axis,5)
+
+	Test $plot(stdin)
+	*
+	menu
+	cat stdin.xy.dat | $plot(stdin)
+
+	Test $plot(stdin) text
+	*
+	menu
+	cat stdin.text.dat | $plot(stdin)
+
+	Test $plot(stdin) error
+	*
+	menu
+	cat stdin.error.dat | $plot(stdin)
+
+	Test $data
+	*.fits
+	menu
+	$data | $image(new)
+
+	Test $image
+	*
+	menu
+	cat data/img.fits | $image
+
+	Test $image(3d)
+	*
+	menu
+	cat data/3d.fits | $image(3d)
+endhmenu
+
+hmenu Test Dialogs
+	help Dialogs Help
+	Help for dialog features
+	endhelp
+	---
+	Test $message(message)
+	*
+	menu
+	$message(ok,This is a Message) | echo "hello" | $text
+
+	Test $message(ok,message)
+	*
+	menu
+	$message(ok,This is a Message) | echo "World" | $text
+
+	Test $entry(message)
+	*
+	menu
+	echo "$entry(Enter Something)" | $text
+endhmenu
+
+hmenu Test Params
+	help Param Help
+	Help for param features
+	endhelp
+	---
+	Test $param
+	*
+	menu
+	$param(foo); echo "$var1 $var2 $var3" | $text
+
+	Test $param @file
+	*
+	menu
+	$param(bar); echo "$var1 $var2 $var3" | $text
+endhmenu
+
+hmenu Test Network
+	help Network Help
+	Help for network features
+	endhelp
+	---
+	Test $url(http://)
+	*
+	menu
+	$url(http://ds9.si.edu/download/data/img.fits) | $image(new)
+endhmenu
+
+$x $y $z $value
+*.fits
+bind x
+echo "$x $y $z $value" | $text
+
+$x(fk5) $y(fk5) $z(wcs) $value
+*.fits
+bind y
+echo "$x(fk5) $y(fk5) $z(wcs) $value" | $text
+
+$x(wcs,fk5,hms) $y(wcs,fk5,hms) $z(wcs) $value
+*.fits
+bind z
+echo "$x(wcs,fk5,hms) $y(wcs,fk5,hms) $z(wcs) $value" | $text
+

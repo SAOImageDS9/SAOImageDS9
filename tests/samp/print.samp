@@ -1,0 +1,15 @@
+get psprint destination
+get psprint command
+get psprint color
+get psprint level
+get psprint resolution
+#set {} psprint
+set {} psprint destination printer
+set {} psprint command lp
+set {} psprint filename ds9.ps
+set {} psprint color rgb
+set {} psprint level 2
+set {} psprint resolution 150
+
+set {} single
+set {} raise

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE version="1.1">
+<DEFINITIONS>
+<COOSYS ID="fk5" system="eq_FK5" equinox="J2000"/>
+<COOSYS ID="fk4" system="eq_FK4" equinox="B1950"/>
+</DEFINITIONS>
+<RESOURCE>
+<TABLE>
+<DESCRIPTION>DS9 version 4.1</DESCRIPTION>
+<FIELD ID="shape" name="shape" datatype="char" arraysize="*"/>
+<FIELD ID="x" name="x" datatype="float" precision="8" unit="deg" ref="fk5" ucd="pos.eq.ra;meta.main"/>
+<FIELD ID="y" name="y" datatype="float" precision="8" unit="deg" ref="fk5" ucd="pos.eq.dec;meta.main"/>
+<FIELD ID="xv" name="xv" datatype="float" precision="8" arraysize="*" unit="deg" ref="fk5"/>
+<FIELD ID="yv" name="yv" datatype="float" precision="8" arraysize="*" unit="deg" ref="fk5"/>
+<FIELD ID="r" name="r" datatype="float" precision="8" unit="arcsec" ref="fk5"/>
+<FIELD ID="r2" name="r2" datatype="float" precision="8" unit="arcsec" ref="fk5"/>
+<FIELD ID="rv" name="rv" datatype="float" precision="8" arraysize="*" unit="arcsec" ref="fk5"/>
+<FIELD ID="rv2" name="rv2" datatype="float" precision="8" arraysize="*" unit="arcsec" ref="fk5"/>
+<FIELD ID="ang" name="ang" datatype="float" precision="8" unit="deg" ref="fk5" axis="-x" dir="ccw"/>
+<FIELD ID="angv" name="angv" datatype="float" precision="8" arraysize="*" unit="deg" ref="fk5" axis="-x" dir="ccw"/>
+<FIELD ID="tile" name="tile" datatype="int"/>
+<FIELD ID="color" name="color" datatype="char" arraysize="*"/>
+<FIELD ID="width" name="width" datatype="int"/>
+<FIELD ID="text" name="text" datatype="char" arraysize="*"/>
+<FIELD ID="font" name="font" datatype="char" arraysize="*"/>
+<FIELD ID="select" name="select" datatype="boolean"/>
+<FIELD ID="highlite" name="highlite" datatype="boolean"/>
+<FIELD ID="edit" name="edit" datatype="boolean"/>
+<FIELD ID="move" name="move" datatype="boolean"/>
+<FIELD ID="rotate" name="rotate" datatype="boolean"/>
+<FIELD ID="delete" name="delete" datatype="boolean"/>
+<FIELD ID="fixed" name="fixed" datatype="boolean"/>
+<FIELD ID="include" name="include" datatype="boolean"/>
+<FIELD ID="source" name="source" datatype="boolean"/>
+<FIELD ID="dash" name="dash" datatype="boolean"/>
+<FIELD ID="dashlist" name="dashlist" datatype="char" arraysize="*"/>
+<FIELD ID="tag" name="tag" datatype="char" arraysize="*"/>
+<FIELD ID="param" name="param" datatype="char" arraysize="*"/>
+<FIELD ID="param2" name="param2" datatype="char" arraysize="*"/>
+<FIELD ID="param3" name="param3" datatype="char" arraysize="*"/>
+<FIELD ID="param4" name="param4" datatype="char" arraysize="*"/>
+<FIELD ID="param5" name="param5" datatype="char" arraysize="*"/>
+<FIELD ID="comment" name="comment" datatype="char" arraysize="*"/>
+<DATA>
+<TABLEDATA>
+<TR><TD>circle</TD><TD>202.48643</TD><TD>47.208449</TD><TD></TD><TD></TD><TD>3.964</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>pink</TD><TD>3</TD><TD>Circle</TD><TD>times 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD>foo foo&#160;bar</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>This is a Comment</TD></TR>
+<TR><TD>ellipse</TD><TD>202.48247</TD><TD>47.204704</TD><TD></TD><TD></TD><TD>7.928</TD><TD>3.964</TD><TD></TD><TD></TD><TD>2.3983109</TD><TD></TD><TD></TD><TD>#0ff</TD><TD>1</TD><TD>Ellipse</TD><TD>helvetica 10 normal italic</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>box</TD><TD>202.47721</TD><TD>47.201269</TD><TD></TD><TD></TD><TD>15.856</TD><TD>7.928</TD><TD></TD><TD></TD><TD>2.3983109</TD><TD></TD><TD></TD><TD>yellow</TD><TD>1</TD><TD>Box</TD><TD>helvetica 10 bold roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>0</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>polygon</TD><TD></TD><TD></TD><TD>202.47248 202.46815 202.46797 202.4723</TD><TD>47.199134 47.199257 47.19632 47.196197</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Polygon</TD><TD>courier 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>line</TD><TD></TD><TD></TD><TD>202.46778 202.4614</TD><TD>47.194329 47.194158</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>cyan</TD><TD>1</TD><TD>Line</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>0</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>1</TD><TD>1</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>vector</TD><TD>202.46097</TD><TD>47.191716</TD><TD></TD><TD></TD><TD>7.928</TD><TD></TD><TD></TD><TD></TD><TD>2.3983109</TD><TD></TD><TD></TD><TD>red</TD><TD>1</TD><TD>Vector</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>1</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>text</TD><TD>202.45846</TD><TD>47.189099</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>317.39831</TD><TD></TD><TD></TD><TD>magenta</TD><TD>1</TD><TD>Region</TD><TD>helvetica 14 bold roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>1</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>ruler</TD><TD></TD><TD></TD><TD>202.48114 202.47409</TD><TD>47.194378 47.194383</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>white</TD><TD>1</TD><TD>Ruler</TD><TD>helvetica 12 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>physical</TD><TD>physical</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>annulus</TD><TD>202.49257</TD><TD>47.20391</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>1.982 3.964 5.946</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>magenta</TD><TD>1</TD><TD>Annulus</TD><TD>helvetica 10 bold roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>ellipseannulus</TD><TD>202.48772</TD><TD>47.20058</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2.973 5.946</TD><TD>1.487 2.973</TD><TD>2.3983109</TD><TD></TD><TD></TD><TD>red</TD><TD>3</TD><TD>Ellipse Annulus</TD><TD>helvetica 10 bold roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>boxannulus</TD><TD>202.48258</TD><TD>47.197298</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>7.928 11.892</TD><TD>3.964 5.946</TD><TD>2.3983109</TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Box Annulus</TD><TD>helvetica 10 bold roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>202.49809</TD><TD>47.200401</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Circle Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>circle</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>202.49289</TD><TD>47.197004</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>red</TD><TD>3</TD><TD>Box Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>box</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>202.48795</TD><TD>47.194067</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Diamond Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>diamond</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>202.49988</TD><TD>47.197856</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>blue</TD><TD>1</TD><TD>Cross Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>cross</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>202.49529</TD><TD>47.195065</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>X Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>x</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>202.49086</TD><TD>47.192074</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>magenta</TD><TD>1</TD><TD>Arrow Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>arrow</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>point</TD><TD>202.49802</TD><TD>47.192883</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>BoxCircle Point</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>boxcircle</TD><TD>11</TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>projection</TD><TD></TD><TD></TD><TD>202.47549 202.46632</TD><TD>47.190096 47.189304</TD><TD>3.964</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Projection</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>panda</TD><TD>202.48204</TD><TD>47.190378</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>0.000 2.973 5.946</TD><TD></TD><TD></TD><TD>317.39831 47.398311 137.39831 227.39831</TD><TD></TD><TD>green</TD><TD>1</TD><TD>Panda</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>panda</TD><TD>202.48691</TD><TD>47.186615</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>0.000 2.973 5.946</TD><TD></TD><TD></TD><TD>8.9802109 47.398311 137.39831 227.39831</TD><TD></TD><TD>green</TD><TD>1</TD><TD>Panda 2</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>compass</TD><TD>202.46706</TD><TD>47.1864</TD><TD></TD><TD></TD><TD>7.928</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Compass</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD>physical</TD><TD>N</TD><TD>E</TD><TD>1</TD><TD>1</TD><TD></TD></TR>
+<TR><TD>epanda</TD><TD>202.47759</TD><TD>47.186997</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2.973 5.946</TD><TD>1.487 2.973</TD><TD>2.3983109</TD><TD>317.39831 47.398311 137.39831 227.39831</TD><TD></TD><TD>green</TD><TD>1</TD><TD>Epanda</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>epanda</TD><TD>202.48229</TD><TD>47.183279</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>2.973 5.946</TD><TD>1.487 2.973</TD><TD>2.3983109</TD><TD>2.3983109 47.398311 137.39831 227.39831</TD><TD></TD><TD>green</TD><TD>1</TD><TD>Epanda 2</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>bpanda</TD><TD>202.47241</TD><TD>47.183755</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>7.928 11.892</TD><TD>3.964 5.946</TD><TD>2.3983109</TD><TD>317.39831 47.398311 137.39831 227.39831</TD><TD></TD><TD>green</TD><TD>1</TD><TD>Bpanda</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>bpanda</TD><TD>202.47747</TD><TD>47.180338</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>7.928 11.892</TD><TD>3.964 5.946</TD><TD>2.3983109</TD><TD>2.3983109 47.398311 137.39831 227.39831</TD><TD></TD><TD>green</TD><TD>1</TD><TD>Bpanda 2</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+<TR><TD>segment</TD><TD></TD><TD></TD><TD>202.45467 202.45603 202.45448</TD><TD>47.190998 47.188855 47.187886</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD>green</TD><TD>1</TD><TD>Segment</TD><TD>helvetica 10 normal roman</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>1</TD><TD>1</TD><TD>0</TD><TD>8,3</TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD><TD></TD></TR>
+</TABLEDATA>
+</DATA>
+</TABLE>
+</RESOURCE>
+</VOTABLE>

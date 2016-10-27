@@ -1,0 +1,12 @@
+set {} frame new rgb
+set {} rgbcube rgbcube/float.fits
+set file://localhost/Users/joye/saods9/tests/rgbcube/float.fits rgbcube
+get rgbcube
+set {} frame delete
+
+set {} rgbcube new rgbcube/float.fits
+set {} frame delete
+
+set {} rgb close
+set {} single
+set {} raise

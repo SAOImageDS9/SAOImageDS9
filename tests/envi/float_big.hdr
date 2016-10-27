@@ -1,0 +1,9 @@
+ENVI
+description = {}
+samples = 256
+lines = 256
+header offset = 0
+file type = ENVI Standard
+data type = 4
+interleave = bsq
+byte order = 1

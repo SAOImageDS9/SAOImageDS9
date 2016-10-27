@@ -1,0 +1,29 @@
+set {} nvss open
+set {} nvss close
+set {} nvss size 30 30 arcsec
+get nvss size
+set {} nvss save no
+get nvss save
+set {} nvss frame new
+get nvss frame
+set {} nvss update frame
+set {} nvss m51
+set {} nvss name m51
+get nvss name
+set {} nvss name {}
+set {} nvss coord 13:29:52.37 +47:11:40.8 sexagesimal
+get nvss coord
+set {} nvss update frame
+set {} mode crosshair
+set {} nvss update crosshair
+set {} nvss close
+set {} mode none
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+
+set {} single
+set {} raise

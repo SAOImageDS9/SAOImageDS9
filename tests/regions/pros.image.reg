@@ -1,0 +1,16 @@
+logical; circle 166 546 20
+logical; ellipse 248 529 40 20 45
+logical; box 338 527 80 40 45
+logical; polygon 407.24723 538 445 575.75275 482.75277 538 445 500.24723
+logical; annulus 166 434 10 20 30
+logical; ellipse 251 430 15 7.5 45
+logical; ellipse 251 430 30 15 45 & !ellipse 251 430 15 7.5 45
+logical; box 338 429 40 20 45
+logical; box 338 429 60 30 45 & !box 338 429 40 20 45
+logical; point 159 341
+logical; point 248 339
+logical; point 329 341
+logical; point 174 292
+logical; point 250 293
+logical; point 327 290
+logical; point 252 241

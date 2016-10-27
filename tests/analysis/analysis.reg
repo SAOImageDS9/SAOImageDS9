@@ -1,0 +1,4 @@
+# Region file format: DS9 version 3.1
+global color=green font="helvetica 10 normal roman" select=1 edit=1 move=1 delete=1 include=1 fixed=0 source
+physical;circle(759,913,40)
+physical;-circle(1029,917,40) # background

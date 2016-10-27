@@ -1,0 +1,9 @@
+get rotate
+set {} rotate open
+set {} rotate to 30
+set {} rotate 15
+set {} rotate close
+set {} frame reset
+
+set {} single
+set {} raise

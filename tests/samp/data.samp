@@ -1,0 +1,7 @@
+get data image 450 520 3 3 yes
+get data physical 899 1039 6 6 no
+get data fk5 202.4709 47.19681 0.00016517 0.00016517 yes
+get data wcs fk5 202.4709 47.19681 0.00016517 0.00016517 no
+
+set {} single
+set {} raise

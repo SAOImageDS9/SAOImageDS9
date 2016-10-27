@@ -1,0 +1,6 @@
+set {} mode crosshair
+set {} cursor 10 10
+set {} mode none
+
+set {} single
+set {} raise

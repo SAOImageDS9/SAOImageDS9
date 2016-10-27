@@ -1,0 +1,9 @@
+get pspagesetup orient
+get pspagesetup scale
+get pspagesetup size
+set {} pspagesetup orient portrait
+set {} pspagesetup scale 100
+set {} pspagesetup size letter
+
+set {} single
+set {} raise

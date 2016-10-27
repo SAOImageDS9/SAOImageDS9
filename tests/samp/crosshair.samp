@@ -1,0 +1,12 @@
+set {} mode crosshair
+get crosshair
+get crosshair wcs fk5 sexagesimal
+get crosshair lock
+set {} crosshair 13:29:55.287 +47:11:37.73 wcs fk5
+set {} crosshair match wcs
+set {} crosshair lock wcs
+set {} crosshair lock none
+set {} mode none
+
+set {} single
+set {} raise

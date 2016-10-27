@@ -1,0 +1,18 @@
+get tile
+get tile mode
+get tile grid mode
+get tile grid direction
+set {} fits new data/img.fits
+set {} fits new data/img.fits
+set {} tile
+set {} tile yes
+set {} tile row
+set {} tile column
+set {} tile grid
+set {} tile grid mode automatic
+set {} tile grid direction x
+set {} frame delete
+set {} frame delete
+
+set {} single
+set {} raise

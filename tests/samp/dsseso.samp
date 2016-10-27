@@ -1,0 +1,31 @@
+set {} dsseso open
+set {} dsseso close
+set {} dsseso survey DSS2-red
+get dsseso survey
+set {} dsseso size 30 30 arcsec
+get dsseso size
+set {} dsseso save no
+get dsseso save
+set {} dsseso frame new
+get dsseso frame
+set {} dsseso update frame
+set {} dsseso m51
+set {} dsseso name m51
+get dsseso name
+set {} dsseso name {}
+set {} dsseso coord 00:42:44.404 +41:16:08.78 sexagesimal
+get dsseso coord
+set {} dsseso update frame
+set {} mode crosshair
+set {} dsseso update crosshair
+set {} dsseso close
+set {} mode none
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+set {} frame delete
+
+set {} single
+set {} raise

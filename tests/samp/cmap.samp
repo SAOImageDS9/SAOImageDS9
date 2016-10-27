@@ -1,0 +1,22 @@
+get cmap
+get cmap file
+get cmap invert
+get cmap value
+get cmap lock
+set {} cmap open
+set {} cmap Heat
+set {} cmap load aux/ds9.sao
+set {} cmap save foo.sao
+set {} cmap invert yes
+set {} cmap value 5 .2
+set {} cmap tag load aux/ds9.tag
+set {} cmap tag save foo.tag
+set {} cmap tag delete
+set {} cmap match
+set {} cmap lock yes
+set {} cmap lock no
+set {} cmap Grey
+set {} cmap close
+
+set {} single
+set {} raise

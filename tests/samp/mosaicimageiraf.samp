@@ -1,0 +1,12 @@
+set {} frame new
+set {} mosaicimageiraf mosaic/mosaicimage.fits
+set {} frame clear
+set file://localhost/Users/joye/saods9/tests/mosaic/mosaicimage.fits mosaicimageiraf
+set {} frame delete
+
+set {} mosaicimageiraf new mosaic/mosaicimage.fits
+set {} mosaicimageiraf mask mosaic/mosaicimage.fits
+set {} frame delete
+
+set {} single
+set {} raise

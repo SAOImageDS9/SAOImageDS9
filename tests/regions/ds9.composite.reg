@@ -1,0 +1,39 @@
+# Region file format: DS9 version 4.1
+global color=green dashlist=8 3 width=1 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
+fk5
+# composite(202.48165,47.1931,317.39831) || composite=1
+circle(202.48705,47.208237,3.964") || # color=pink width=3 font="times 10 normal roman" text={Circle} tag={foo} tag={foo bar} This is a Comment
+-ellipse(202.48309,47.204492,7.928",3.964",2.3983109) || # color=#0ff font="helvetica 10 normal italic" text={Ellipse} background
+-box(202.47783,47.201057,15.856",7.928",2.3983109) || # color=yellow font="helvetica 10 bold roman" text={Box}
+polygon(202.47309,47.198922,202.46877,47.199044,202.46859,47.196108,202.47291,47.195985) || # font="courier 10 normal roman" text={Polygon} edit=0 rotate=0
+-line(202.4684,47.194116,202.46202,47.193946) || # line=1 1 color=cyan text={Line}
+# vector(202.46159,47.191504,7.928",2.3983109) || vector=1 color=red text={Vector}
+# text(202.45907,47.188886) || color=magenta font="helvetica 14 bold roman" text={Region}
+# ruler(202.48176,47.194165,202.47471,47.194171) || ruler=physical physical color=white font="helvetica 12 normal roman" text={Ruler}
+annulus(202.49319,47.203697,1.982",3.964",5.946") || # color=magenta font="helvetica 10 bold roman" text={Annulus}
+ellipse(202.48834,47.200368,2.973",1.487",5.946",2.973",2.3983109) || # color=red width=3 font="helvetica 10 bold roman" text={Ellipse Annulus}
+box(202.4832,47.197085,7.928",3.964",11.892",5.946",2.3983109) || # font="helvetica 10 bold roman" text={Box Annulus}
+point(202.49871,47.200189) || # point=circle text={Circle Point}
+point(202.49351,47.196791) || # point=box color=red width=3 text={Box Point}
+point(202.48857,47.193854) || # point=diamond text={Diamond Point}
+point(202.5005,47.197643) || # point=cross color=blue text={Cross Point}
+point(202.49591,47.194852) || # point=x text={X Point}
+point(202.49148,47.191862) || # point=arrow color=magenta text={Arrow Point}
+point(202.49864,47.19267) || # point=boxcircle text={BoxCircle Point}
+# projection(202.47611,47.189884,202.46694,47.189092,3.964") || text={Projection}
+panda(202.48266,47.190165,317.39831,587.39831,3,0.000",5.946",2) || # text={Panda}
+panda(202.48753,47.186403,8.9802109,47.398311,1,0.000",2.973",1) || # panda=(8.9802109 47.398311 137.39831 227.39831)(0.000" 2.973" 5.946") text={Panda 2}
+panda(202.48753,47.186403,8.9802109,47.398311,1,2.973",5.946",1) || # panda=ignore
+panda(202.48753,47.186403,47.398311,137.39831,1,0.000",2.973",1) || # panda=ignore
+panda(202.48753,47.186403,47.398311,137.39831,1,2.973",5.946",1) || # panda=ignore
+panda(202.48753,47.186403,137.39831,227.39831,1,0.000",2.973",1) || # panda=ignore
+panda(202.48753,47.186403,137.39831,227.39831,1,2.973",5.946",1) || # panda=ignore
+# compass(202.46768,47.186188,7.928") || compass=physical {N} {E} 1 1 text={Compass}
+epanda(202.47821,47.186785,317.39831,587.39831,3,2.973",1.487",5.946",2.973",1,2.3983109) || # text={Epanda}
+epanda(202.48291,47.183066,2.3983109,47.398311,1,2.973",1.487",5.946",2.973",1,2.3983109) || # epanda=(2.3983109 47.398311 137.39831 227.39831)(2.973" 1.487" 5.946" 2.973")(2.3983109) text={Epanda 2}
+epanda(202.48291,47.183066,47.398311,137.39831,1,2.973",1.487",5.946",2.973",1,2.3983109) || # epanda=ignore
+epanda(202.48291,47.183066,137.39831,227.39831,1,2.973",1.487",5.946",2.973",1,2.3983109) || # epanda=ignore
+bpanda(202.47302,47.183543,317.39831,587.39831,3,7.9280014",3.9640007",11.892002",5.946001",1,2.3983109) || # text={Bpanda}
+bpanda(202.47809,47.180126,2.3983109,47.398311,1,7.928",3.964",11.892",5.946",1,2.3983109) # bpanda=(2.3983109 47.398311 137.39831 227.39831)(7.928" 3.964" 11.892" 5.946")(2.3983109) text={Bpanda 2}
+bpanda(202.47809,47.180126,47.398311,137.39831,1,7.928",3.964",11.892",5.946",1,2.3983109) # bpanda=ignore
+bpanda(202.47809,47.180126,137.39831,227.39831,1,7.928",3.964",11.892",5.946",1,2.3983109) # bpanda=ignore

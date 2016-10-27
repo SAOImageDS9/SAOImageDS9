@@ -1,0 +1,298 @@
+// Copyright (C) 1999-2016
+// Smithsonian Astrophysical Observatory, Cambridge, MA, USA
+// For conditions of distribution and use, see copyright notice in "copyright"
+
+#include "contour.h"
+#include "base.h"
+#include "context.h"
+
+// ContourLevel
+ContourLevel::ContourLevel(Base* pp, double lev, const char* cc, int ww, 
+			   int dd, int* dl) 
+{
+  parent_ = pp;
+  gc_ = parent_->contourGC;
+
+  level_ = lev;
+  colorName_ = dupstr(cc);
+  color_ = parent_->getColor(colorName_);
+  lineWidth_ = ww;
+  dash_ = dd;
+  dlist_[0] = dl[0];
+  dlist_[1] = dl[1];
+
+  previous_ = NULL;
+  next_ = NULL;
+}
+
+ContourLevel::~ContourLevel()
+{
+  if (colorName_)
+    delete [] colorName_;
+}
+
+void ContourLevel::list(ostream& str, FitsImage* fits, 
+		   Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  if (lcontour_.head()) {
+    str << "level=" << level_ << ' ';
+    if (strncmp("green", colorName_, 5) || dash_ != 0 ||
+	dlist_[0] != 8 || dlist_[1] != 3 || lineWidth_ != 1) {
+      if (strncmp("green", colorName_, 5))
+	str << "color=" << colorName_ << ' ';
+
+      if (lineWidth_ != 1)
+	str << "width=" << lineWidth_ << ' ';
+
+      if (dash_ != 0)
+	str << "dash=" << dash_ << ' ';
+
+      if (dlist_[0] != 8 || dlist_[1] != 3)
+	str << "dashlist=" << dlist_[0] << ' ' << dlist_[1] << ' ';
+    }
+    str << endl;
+
+    do
+      lcontour_.current()->list(str, fits, sys, sky);
+    while (lcontour_.next());
+  }
+}
+
+void ContourLevel::render(Pixmap pmap, Coord::InternalSystem sys, 
+			  int width, int height)
+{
+  if (lcontour_.head()) {
+    do
+      lcontour_.current()->render(pmap, sys, width, height);
+    while (lcontour_.next());
+  }
+}
+
+void ContourLevel::ps(int mode)
+{
+  if (lcontour_.head()) {
+    do
+      lcontour_.current()->ps(mode);
+    while (lcontour_.next());
+  }
+}
+
+void ContourLevel::updateCoords(const Matrix& mx)
+{
+  if (lcontour_.head()) {
+    do
+      lcontour_.current()->updateCoords(mx);
+    while (lcontour_.next());
+  }
+}
+
+void ContourLevel::setColor(const char* clr)
+{
+  if (colorName_)
+    delete [] colorName_;
+
+  colorName_ = dupstr(clr);
+  color_ = parent_->getColor(colorName_);
+}
+
+#ifdef MAC_OSX_TK
+void ContourLevel::macosx()
+{
+  if (lcontour_.head()) {
+    do
+      lcontour_.current()->macosx();
+    while (lcontour_.next());
+  }
+}
+#endif
+
+#ifdef __WIN32
+void ContourLevel::win32()
+{
+  if (lcontour_.head()) {
+    do
+      lcontour_.current()->win32();
+    while (lcontour_.next());
+  }
+}
+#endif
+
+// Contour
+
+Contour::Contour(ContourLevel* cc)
+{
+  parent_ = cc;
+  base_ = cc->parent_;
+
+  previous_ = NULL;
+  next_ = NULL;
+}
+
+Contour::~Contour()
+{
+}
+
+void Contour::list(ostream& str, FitsImage* fits, 
+		   Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  if (lvertex_.head())
+    str << '(' << endl;
+    do {
+      str << ' ';
+      fits->listFromRef(str, lvertex_.current()->vector, sys, sky, Coord::DEGREES);
+      str << endl;
+    }
+    while (lvertex_.next());
+    str << ')' << endl;
+}
+
+void Contour::render(Pixmap pmap, Coord::InternalSystem sys, 
+		     int width, int height)
+{
+  if (lvertex_.head()) {
+    XSetForeground(base_->display, parent_->gc_, parent_->color_);
+    int ww = parent_->lineWidth_>=1 ? parent_->lineWidth_ : 1;
+
+    if (!parent_->dash_)
+      XSetLineAttributes(base_->display, parent_->gc_, 
+			 ww, LineSolid, CapButt, JoinMiter);
+    else {
+      char dl[2];
+      dl[0] = parent_->dlist_[0];
+      dl[1] = parent_->dlist_[1];
+
+      XSetDashes(base_->display, parent_->gc_, 0, dl, 2);
+      XSetLineAttributes(base_->display, parent_->gc_, 
+			 ww, LineOnOffDash, CapButt, JoinMiter);
+    }
+
+    BBox bb = BBox(0, 0, width, height);
+
+    Vector u1 = lvertex_.current()->vector;
+    while (lvertex_.next()) {
+      Vector u2 = lvertex_.current()->vector;
+
+      Vector v1 = base_->mapFromRef(u1,sys);
+      Vector v2 = base_->mapFromRef(u2,sys);
+      if (bb.isIn(v1) || bb.isIn(v2))
+	XDrawLine(base_->display, pmap, parent_->gc_, 
+		  (int)v1[0], (int)v1[1], (int)v2[0], (int)v2[1]);
+
+      u1 = u2;
+    }
+  }
+}
+
+void Contour::ps(int mode)
+{
+  if (!lvertex_.head())
+    return;
+
+  ostringstream str;
+
+  switch ((Widget::PSColorSpace)mode) {
+  case Widget::BW:
+  case Widget::GRAY:
+    psColorGray(base_->getXColor(parent_->colorName_), str);
+    str << " setgray";
+    break;
+  case Widget::RGB:
+    psColorRGB(base_->getXColor(parent_->colorName_), str);
+    str << " setrgbcolor";
+    break;
+  case Widget::CMYK:
+    psColorCMYK(base_->getXColor(parent_->colorName_), str);
+    str << " setcmykcolor";
+    break;
+  }
+  str << endl;
+  
+  if (!parent_->dash_)
+    str << parent_->lineWidth_ << " setlinewidth" << endl << "[] 0 setdash";
+  else {
+    str << parent_->lineWidth_ << " setlinewidth" << endl
+	<< '[' << parent_->dlist_[0] << ' ' << parent_->dlist_[1] 
+	<< "] 0 setdash";
+  }
+  str << endl;
+
+  Vector v1 = base_->mapFromRef(lvertex_.current()->vector,Coord::CANVAS);
+  str << "newpath " << endl
+      << v1.TkCanvasPs(base_->canvas) << " moveto" << endl;
+  while (lvertex_.next()) {
+    Vector vv = base_->mapFromRef(lvertex_.current()->vector,Coord::CANVAS);
+    str << vv.TkCanvasPs(base_->canvas) << " lineto" << endl;
+  }
+  str << "stroke" << endl << ends;
+  Tcl_AppendResult(base_->interp, str.str().c_str(), NULL);
+}
+
+void Contour::updateCoords(const Matrix& mx)
+{
+  if (lvertex_.head()) {
+    do {
+      Vector& vv = lvertex_.current()->vector;
+      vv *= mx;
+    }
+    while (lvertex_.next());
+  }
+}
+
+#ifdef MAC_OSX_TK
+void Contour::macosx()
+{
+  if (lvertex_.head()) {
+    macosxColor(base_->getXColor(parent_->colorName_));
+    macosxWidth(parent_->lineWidth_);
+    if (parent_->dash_) {
+      float dl[2];
+      dl[0] = parent_->dlist_[0];
+      dl[1] = parent_->dlist_[1];
+      macosxDash(dl,2);
+    }
+    else
+      macosxDash(NULL,0);
+
+    Vector u1 = lvertex_.current()->vector;
+    while (lvertex_.next()) {
+      Vector u2 = lvertex_.current()->vector;
+
+      Vector v1 = base_->mapFromRef(u1,Coord::CANVAS);
+      Vector v2 = base_->mapFromRef(u2,Coord::CANVAS);
+      macosxDrawLine(v1,v2);
+
+      u1 = u2;
+    }
+  }
+}
+#endif
+
+#ifdef __WIN32
+void Contour::win32()
+{
+  if (lvertex_.head()) {
+    win32Color(base_->getXColor(parent_->colorName_));
+    win32Width(parent_->lineWidth_);
+    if (parent_->dash_) {
+      float dl[2];
+      dl[0] = parent_->dlist_[0];
+      dl[1] = parent_->dlist_[1];
+      win32Dash(dl,2);
+    }
+    else
+      win32Dash(NULL,0);
+
+    Vector u1 = lvertex_.current()->vector;
+    while (lvertex_.next()) {
+      Vector u2 = lvertex_.current()->vector;
+
+      Vector v1 = base_->mapFromRef(u1,Coord::CANVAS);
+      Vector v2 = base_->mapFromRef(u2,Coord::CANVAS);
+      win32DrawLine(v1,v2);
+
+      u1 = u2;
+    }
+  }
+}
+#endif
+

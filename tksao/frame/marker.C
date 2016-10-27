@@ -1,0 +1,2157 @@
+// Copyright (C) 1999-2016
+// Smithsonian Astrophysical Observatory, Cambridge, MA, USA
+// For conditions of distribution and use, see copyright notice in "copyright"
+
+#include <tk.h>
+
+#include "marker.h"
+#include "fitsimage.h"
+
+extern "C" {
+#include "tkbltVector.h"
+}
+
+static int markerSeqID = 1;
+
+// hard coded
+const char* Marker::analysisHistogramCB_[] = {
+  "MarkerAnalysisHistogramCB",
+  "MarkerAnalysisHistogramDeleteCB"
+};
+
+const char* Marker::analysisPlot2dCB_[] = {
+  "MarkerAnalysisPlot2dCB",
+  "MarkerAnalysisPlot2dDeleteCB"
+};
+
+const char* Marker::analysisPlot3dCB_[] = {
+  "MarkerAnalysisPlot3dCB",
+  "MarkerAnalysisPlot3dDeleteCB"
+};
+
+const char* Marker::analysisPandaCB_[] = {
+  "MarkerAnalysisPandaCB",
+  "MarkerAnalysisPandaDeleteCB"
+};
+
+const char* Marker::analysisRadialCB_[] = {
+  "MarkerAnalysisRadialCB",
+  "MarkerAnalysisRadialDeleteCB"
+};
+
+const char* Marker::analysisStatsCB_[] = {
+  "MarkerAnalysisStatsCB",
+  "MarkerAnalysisStatsDeleteCB"
+};
+
+// Marker Members Public
+
+Marker::Marker(Base* p, const Vector& ctr, double ang)
+{
+  id = markerSeqID++;
+  type_[0] = '\0';
+  parent = p;
+
+  center = ctr;
+
+  angle = ang;
+
+  handle = NULL;
+  numHandle = 0;
+
+  colorName = dupstr("green");
+  color = parent->getColor(colorName);
+  lineWidth = 1;
+  properties = INCLUDE|SOURCE;
+  selected = 0;
+  highlited = 0;
+
+  dlist[0] = 8;
+  dlist[1] = 3;
+
+  text = dupstr("");
+  tkfont_ =NULL;
+  psfont_ =NULL;
+  initFonts("helvetica 10 normal roman");
+
+  comment = dupstr("");
+
+  display = parent->display;
+  gc = parent->markerGC;
+  gcxor = parent->markerGCXOR;
+
+  for (int ii=0; ii<XMLNUMCOL; ii++)
+    XMLCol[ii] = NULL;
+
+  doCB = 1;
+
+  previous_ = NULL;
+  next_ = NULL;
+
+  analysisHistogram_ =0;
+  analysisPlot2d_ =0;
+  analysisPlot3d_ =0;
+  analysisPanda_ =0;
+  analysisRadial_ =0;
+  analysisStats_ =0;
+}
+
+Marker::Marker(Base* p, const Vector& ctr, 
+	       double ang,
+	       const char* clr, int* dsh, 
+	       int w, const char* f, const char* t, 
+	       unsigned short prop, const char* c, 
+	       const List<Tag>& tg, const List<CallBack>& cb)
+{
+  id = markerSeqID++;
+  type_[0] = '\0';
+  parent = p;
+
+  center = ctr;
+
+  angle = ang;
+
+  handle = NULL;
+  numHandle = 0;
+
+  colorName = dupstr(clr);
+  color = parent->getColor(colorName);
+  lineWidth = w;
+  properties = prop;
+  selected = 0;
+  highlited = 0;
+
+  dlist[0] = dsh[0];
+  dlist[1] = dsh[1];
+
+  text = dupstr(t);
+  tkfont_ =NULL;
+  psfont_ =NULL;
+  initFonts(f);
+
+  comment = dupstr(c);
+
+  display = parent->display;
+  gc = parent->markerGC;
+  gcxor = parent->markerGCXOR;
+
+  for (int ii=0; ii<XMLNUMCOL; ii++)
+    XMLCol[ii] = NULL;
+
+  doCB = 1;
+
+  tags = tg;
+  callbacks = cb;
+
+  previous_ = NULL;
+  next_ = NULL;
+
+  analysisPlot2d_ =0;
+  analysisPlot3d_ =0;
+  analysisPanda_ =0;
+  analysisRadial_ =0;
+  analysisStats_ =0;
+}
+
+Marker::Marker(const Marker& a)
+{
+  id = a.id;
+  strcpy(type_, a.type_);
+  parent = a.parent;
+
+  center = a.center;
+  bbox = a.bbox;
+  allBBox = a.allBBox;
+
+  angle = a.angle;
+
+  numHandle = a.numHandle;
+  if (numHandle) {
+    handle = new Vector[numHandle];
+    for (int i=0; i<numHandle; i++)
+      handle[i] = a.handle[i];
+  }
+  else
+    handle = NULL;
+
+  colorName = dupstr(a.colorName);
+  color = a.color;
+  lineWidth = a.lineWidth;
+  properties = a.properties;
+  selected = a.selected;
+  highlited = a.highlited;
+
+  dlist[0] = a.dlist[0];
+  dlist[1] = a.dlist[1];
+
+  text = dupstr(a.text);
+  tkfont_ = a.tkfont_ ? Tk_GetFont(parent->interp, parent->tkwin, Tk_NameOfFont(a.tkfont_)) : NULL;
+  psfont_ = a.psfont_ ? Tk_GetFont(parent->interp, parent->tkwin, Tk_NameOfFont(a.psfont_)) : NULL;
+  comment = dupstr(a.comment);
+
+  display = a.display;
+  gc = a.gc;
+  gcxor = a.gcxor;
+  
+  for (int ii=0; ii<XMLNUMCOL; ii++)
+    XMLCol[ii] = NULL;
+
+  // disable Callbacks by default
+  doCB = 0;
+
+  tags = a.tags;
+  callbacks = a.callbacks;
+
+  previous_ = NULL;
+  next_ = NULL;
+
+  analysisPlot2d_ = a.analysisPlot2d_;
+  analysisPlot3d_ = a.analysisPlot3d_;
+  analysisPanda_ = a.analysisPanda_;
+  analysisRadial_ = a.analysisRadial_;
+  analysisStats_ = a.analysisStats_;
+}
+
+Marker::~Marker()
+{
+  if (colorName)
+    delete [] colorName;
+
+  if (text)
+    delete [] text;
+
+  if (comment)
+    delete [] comment;
+
+  if (tkfont_)
+    Tk_FreeFont(tkfont_);
+
+  if (psfont_)
+    Tk_FreeFont(psfont_);
+
+  if (handle)
+    delete [] handle;
+
+  for (int ii=0; ii<XMLNUMCOL; ii++)
+    if (XMLCol[ii])
+      delete [] XMLCol[ii];
+
+  doCallBack(CallBack::DELETECB);
+}
+
+void Marker::x11(Drawable drawable, Coord::InternalSystem sys, 
+		 int tt, RenderMode mode, HandleMode hh)
+{
+  if (properties & HIDDEN)
+    return;
+
+  if (hh==HANDLES)
+    renderXHandles(drawable);
+  if (tt)
+    renderXText(drawable, sys, mode);
+
+  renderX(drawable, sys, mode);
+  renderXInclude(drawable, sys, mode);
+}
+
+void Marker::renderXInclude(Drawable drawable, Coord::InternalSystem sys, 
+			    RenderMode mode)
+{
+  if (!(properties & INCLUDE)) {
+    GC lgc = renderXGC(mode);
+
+    Vector ll = (handle[0]*parent->canvasToWidget).round();
+    Vector ur = (handle[2]*parent->canvasToWidget).round();
+
+    if (mode==SRC)
+      XSetForeground(display, gc, parent->getColor("red"));
+
+    XDrawLine(display, drawable, lgc, ll[0], ll[1], ur[0], ur[1]);    
+  }
+}
+
+void Marker::renderXText(Drawable drawable, Coord::InternalSystem sys, RenderMode mode)
+{
+  if (text && *text && tkfont_) {
+    GC lgc;
+    switch (mode) {
+    case SRC:
+      lgc = gc;
+      XSetForeground(display, gc, color);
+      break;
+    case XOR:
+      lgc = gcxor;
+      break;
+    }
+
+    XSetFont(display, lgc, Tk_FontId(tkfont_));
+
+    Tk_FontMetrics metrics;
+    Tk_GetFontMetrics(tkfont_, &metrics);
+    int width = Tk_TextWidth(tkfont_, text, strlen(text));
+
+    Matrix mm;
+    Matrix nn;
+    setMatrices(sys,&mm,&nn);
+
+    Vector ll0 = bbox.ll*parent->canvasToRef;
+    Vector ll = ll0*mm;
+    Vector ur0 = bbox.ur*parent->canvasToRef;
+    Vector ur = ur0*mm;
+    BBox bb(ll,ur);
+
+    Vector bbc = bb.center();
+    Vector tt =  Vector(bbc[0], bb.ll[1]) * 
+      Translate(-width/2., -metrics.descent);
+
+    Tk_DrawChars(display, drawable, lgc, tkfont_, text, strlen(text), 
+		 tt[0], tt[1]);
+  }
+}
+
+void Marker::renderXArrow(Drawable drawable, const Vector& p1, 
+			  const Vector& p2, Coord::InternalSystem sys, GC lgc)
+{
+  Vector* vv = arrow(p1,p2,sys);
+  XPoint dd[6];
+  for (int ii=0; ii<6; ii++) {
+    dd[ii].x = (short)vv[ii][0];
+    dd[ii].y = (short)vv[ii][1];
+  }
+
+  XFillPolygon(display, drawable, lgc, dd, 6, Nonconvex, CoordModeOrigin);
+  delete [] vv;
+}
+
+void Marker::renderXHandles(Drawable drawable)
+{
+  // handles are of length 5
+  if (selected && canSelect()) {
+    XSetForeground(display, gc, color);
+
+    for (int ii=0; ii<numHandle; ii++) {
+      Vector vv = (handle[ii]*parent->canvasToWidget - Vector(2,2)).round();
+      XFillRectangle(display, drawable, gc, vv[0], vv[1], 5, 5);
+    }
+  }
+}
+
+GC Marker::renderXGC(RenderMode mode)
+{
+  // set width, color, dash
+  switch (mode) {
+  case SRC:
+    XSetForeground(display, gc, color); 
+    if ((properties & SOURCE) && !(properties & DASH))
+      renderXLineNoDash(gc);
+    else
+      renderXLineDash(gc);
+    return gc;
+
+  case XOR:
+    renderXLineDash(gcxor);
+    return gcxor;
+  }
+}
+
+void Marker::renderXLineDash(GC lgc)
+{
+  char dl[2];
+  dl[0] = dlist[0];
+  dl[1] = dlist[1];
+
+  int ww = (highlited && canHighlite()) ? lineWidth*2 : lineWidth;
+  XSetDashes(display, lgc, 0, dl, 2);
+  XSetLineAttributes(display, lgc, ww, LineOnOffDash, CapButt, JoinMiter);
+}
+
+void Marker::renderXLineNoDash(GC lgc)
+{
+  int ww = (highlited && canHighlite()) ? lineWidth*2 : lineWidth;
+  XSetLineAttributes(display, lgc, ww, LineSolid, CapButt, JoinMiter);
+}
+
+void Marker::ps(int mode, int tt)
+{
+  if (properties & HIDDEN)
+    return;
+
+  if (tt)
+    renderPSText(mode);
+
+  renderPS(mode);
+  renderPSInclude(mode);
+}
+
+void Marker::renderPSInclude(int mode)
+{
+  if (!(properties & INCLUDE)) {
+    renderPSColor(mode, parent->getXColor("red"));
+
+    Vector ll = handle[0];
+    Vector ur = handle[2];
+
+    ostringstream str;
+    str << "newpath " 
+	<< ll.TkCanvasPs(parent->canvas) << ' '
+	<< "moveto "
+	<< ur.TkCanvasPs(parent->canvas) << ' '
+	<< "lineto stroke" << endl << ends;
+    Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+  }
+}
+
+void Marker::renderPSText(int mode)
+{
+  if (text && *text && psfont_) {
+    renderPSColor(mode, parent->getXColor(colorName));
+
+    ostringstream str;
+
+    const char* ff = Tk_NameOfFont(psfont_);
+    str << '/' << psFontName(ff)
+    	<< " findfont " << int(psFontSize(ff)*parent->getDisplayRatio())
+	<< " scalefont setfont" << endl;
+
+    Vector bbc = bbox.center();
+    Vector tt =  Vector(bbc[0], bbox.ll[1]).TkCanvasPs(parent->canvas);
+    str << "gsave" << endl
+	<< "newpath " << endl
+	<< tt << " moveto" << endl
+	<< '(' << psQuote(text) << ')' << endl
+	<< "dup true charpath pathbbox " << endl
+	<< "closepath " << endl
+      	<< "3 -1 roll sub 2.5 div " << endl
+	<< "3 1 roll sub 2 div exch " << endl
+	<< tt << " moveto rmoveto show " << endl
+	<< "grestore" << endl;
+
+    str << ends;
+    Tcl_AppendResult(parent->interp, (char*)str.str().c_str(), NULL);
+  }
+}
+
+void Marker::renderPSArrow(const Vector& p1, const Vector& p2, 
+			   Coord::InternalSystem sys)
+{
+  Vector* vv = arrow(p1,p2,sys);
+  ostringstream str;
+  str << "newpath " << endl
+      << vv[0].TkCanvasPs(parent->canvas) << " moveto" << endl;
+  for (int ii=1; ii<6; ii++)
+      str << vv[ii].TkCanvasPs(parent->canvas) << " lineto" << endl;
+  str << "closepath fill" << endl << ends;
+  Tcl_AppendResult(parent->interp, (char*)str.str().c_str(), NULL);
+  delete [] vv;
+}
+
+void Marker::renderPSGC(int mode)
+{
+  // set width, color, dash
+  renderPSColor(mode, parent->getXColor(colorName));
+  if ((properties & SOURCE) && !(properties & DASH))
+    renderPSLineNoDash();
+  else
+    renderPSLineDash();
+}
+
+void Marker::renderPSLineDash()
+{
+  ostringstream str;
+  str << lineWidth << " setlinewidth" << endl
+      << '[' << dlist[0] << ' ' << dlist[1] << "] 0 setdash" << endl 
+      << ends;
+  Tcl_AppendResult(parent->interp, (char*)str.str().c_str(), NULL);
+}
+
+void Marker::renderPSLineNoDash()
+{
+  ostringstream str;
+  str << lineWidth << " setlinewidth" << endl
+      << "[] 0 setdash" << endl 
+      << ends;
+  Tcl_AppendResult(parent->interp, (char*)str.str().c_str(), NULL);
+}
+
+void Marker::renderPSColor(int mode, XColor* clr)
+{
+  ostringstream str;
+
+  switch ((Widget::PSColorSpace)mode) {
+  case Widget::BW:
+  case Widget::GRAY:
+    psColorGray(clr, str);
+    str << " setgray";
+    break;
+  case Widget::RGB:
+    psColorRGB(clr, str);
+    str << " setrgbcolor";
+    break;
+  case Widget::CMYK:
+    psColorCMYK(clr, str);
+    str << " setcmykcolor";
+    break;
+  }
+  str << endl << ends;
+
+  Tcl_AppendResult(parent->interp, (char*)str.str().c_str(), NULL);
+}
+
+#ifdef MAC_OSX_TK
+void Marker::macosx(int tt)
+{
+  if (properties & HIDDEN)
+    return;
+
+  if (tt)
+    renderMACOSXText();
+
+  renderMACOSX();
+  renderMACOSXInclude();
+}
+void Marker::renderMACOSXInclude()
+{
+  if (!(properties & INCLUDE)) {
+    macosxColor(parent->getXColor("red"));
+
+    Vector ll = handle[0];
+    Vector ur = handle[2];
+    macosxDrawLine(ll,ur);
+  }
+}
+
+void Marker::renderMACOSXText()
+{
+  if (text && *text && psfont_) {
+    macosxColor(parent->getXColor(colorName));
+
+    Tcl_DString psdstr;
+    Tcl_DStringInit(&psdstr);
+    int psSize = Tk_PostscriptFontName(psfont_, &psdstr);
+    macosxFont(Tcl_DStringValue(&psdstr), psSize);
+    Tcl_DStringFree(&psdstr);
+
+    Tk_FontMetrics metrics;
+    Tk_GetFontMetrics(psfont_, &metrics);
+    int width = Tk_TextWidth(psfont_, text, strlen(text));
+
+    Vector bbc = bbox.center();
+    Vector tt =  Vector(bbc[0], bbox.ll[1]) * 
+      Translate(-width/2., -metrics.descent);
+
+    macosxDrawText(tt, 0, text);
+  }
+}
+
+void Marker::renderMACOSXArrow(const Vector& p1, const Vector& p2, 
+			       Coord::InternalSystem sys)
+{
+  Vector* vv = arrow(p1,p2,sys);
+  Vector dd[6];
+  for (int ii=0; ii<6; ii++)
+    dd[ii] = vv[ii];
+
+  macosxFillPolygon(dd,6);
+  delete [] vv;
+}
+
+void Marker::renderMACOSXGC()
+{
+  // set width, color, dash
+  macosxColor(parent->getXColor(colorName));
+
+  if ((properties & SOURCE) && !(properties & DASH))
+    renderMACOSXLineNoDash();
+  else
+    renderMACOSXLineDash();
+}
+
+void Marker::renderMACOSXLineDash()
+{
+  macosxWidth(lineWidth);
+  macosxDash(dlist,2);
+}
+
+void Marker::renderMACOSXLineNoDash()
+{
+  macosxWidth(lineWidth);
+  macosxDash(NULL,0);
+}
+#endif
+
+#ifdef __WIN32
+void Marker::win32(int tt)
+{
+  if (properties & HIDDEN)
+    return;
+
+  if (tt)
+    renderWIN32Text();
+
+  renderWIN32();
+  renderWIN32Include();
+}
+void Marker::renderWIN32Include()
+{
+  if (!(properties & INCLUDE)) {
+    win32Color(parent->getXColor("red"));
+
+    Vector ll = handle[0];
+    Vector ur = handle[2];
+    win32DrawLine(ll,ur);
+  }
+}
+
+void Marker::renderWIN32Text()
+{
+  if (text && *text && tkfont_) {
+    win32Color(parent->getXColor(colorName));
+
+    win32Font(tkfont_);
+
+    Tk_FontMetrics metrics;
+    Tk_GetFontMetrics(tkfont_, &metrics);
+    int width = Tk_TextWidth(tkfont_, text, strlen(text));
+
+    BBox bb = bbox;
+    Vector bbc = bb.center();
+    Vector tt =  Vector(bbc[0], bbox.ll[1]) * 
+      Translate(-width/2., -metrics.descent);
+
+    win32DrawText(tt, 0, text);
+  }
+}
+
+void Marker::renderWIN32Arrow(const Vector& p1, const Vector& p2, 
+			      Coord::InternalSystem sys)
+{
+  Vector* vv = arrow(p1,p2,sys);
+  Vector dd[6];
+  for (int ii=0; ii<6; ii++)
+    dd[ii] = vv[ii];
+
+  win32FillPolygon(dd,6);
+  delete [] vv;
+}
+
+void Marker::renderWIN32GC()
+{
+  // set width, color, dash
+  win32Color(parent->getXColor(colorName));
+
+  if ((properties & SOURCE) && !(properties & DASH))
+    renderWIN32LineNoDash();
+  else
+    renderWIN32LineDash();
+}
+
+void Marker::renderWIN32LineDash()
+{
+  win32Width(lineWidth);
+  win32Dash(dlist,2);
+}
+
+void Marker::renderWIN32LineNoDash()
+{
+  win32Width(lineWidth);
+  win32Dash(NULL,0);
+}
+#endif
+
+// Support
+
+void Marker::updateBBox()
+{
+  // generate handles
+  updateHandles();
+
+  // bound handles
+  bbox = BBox(handle[0]);
+  for (int ii=1; ii<numHandle; ii++)
+    bbox.bound(handle[ii]);
+
+  // make room for handles
+  bbox.expand(3);
+
+  // calculate overall bbox
+  calcAllBBox();
+}
+
+void Marker::calcAllBBox()
+{
+  allBBox = bbox;
+
+  if (text && *text && tkfont_) {
+    Tk_FontMetrics metrics;
+    Tk_GetFontMetrics(tkfont_, &metrics);
+    int width = Tk_TextWidth(tkfont_, text, strlen(text));
+
+    Vector bbc = bbox.center();
+    Vector ll =  Vector(bbc[0], bbox.ll[1]) * Translate(-width/2., 0);
+    Vector ur = ll * Translate(width, -(metrics.linespace));
+
+    allBBox.bound(ll);
+    allBBox.bound(ur);
+  }
+}
+
+void Marker::deleteCBs()
+{
+  callbacks.deleteAll();
+}
+
+void Marker::newIdentity()
+{
+  id = markerSeqID++;
+
+  doCB = 1;
+  //  deleteCBs();
+  updateBBox();
+}
+
+void Marker::updateCoords(const Matrix& mx)
+{
+  center*=mx;
+  updateBBox();
+}
+
+void Marker::centroid()
+{
+  center = parent->centroid(center);
+  updateBBox();
+  doCallBack(CallBack::MOVECB);
+}
+
+void Marker::moveTo(const Vector& v)
+{
+  center=v;
+  updateBBox();
+  doCallBack(CallBack::MOVECB);
+}
+
+void Marker::moveBegin()
+{
+  doCallBack(CallBack::MOVEBEGINCB);
+}
+
+void Marker::move(const Vector& v)
+{
+  center+=v;
+  updateBBox();
+  doCallBack(CallBack::MOVECB);
+}
+
+void Marker::moveEnd()
+{
+  doCallBack(CallBack::MOVEENDCB);
+}
+
+void Marker::editBegin(int)
+{
+  doCallBack(CallBack::EDITBEGINCB);
+}
+
+void Marker::edit(const Vector& v, int h)
+{
+  doCallBack(CallBack::EDITCB);
+}
+
+void Marker::editEnd()
+{
+  doCallBack(CallBack::EDITENDCB);
+}
+
+void Marker::rotateBegin()
+{
+  doCallBack(CallBack::ROTATEBEGINCB);
+}
+
+void Marker::rotate(const Vector& v, int h)
+{
+  // v is in ref coords
+  // handles are in canvas coords
+
+  double a = (v * Translate(-center) * FlipY()).angle();
+  double b = ((parent->mapToRef(handle[h-1],Coord::CANVAS) * Translate(-center) * FlipY())).angle();
+  angle -= a-b;
+
+  updateBBox();
+  doCallBack(CallBack::ROTATECB);
+}
+
+void Marker::rotateEnd()
+{
+  doCallBack(CallBack::ROTATEENDCB);
+}
+
+void Marker::select() {
+  // only call the CB if not already selected
+  if (!selected)
+    doCallBack(CallBack::SELECTCB);
+  selected = 1;
+}
+
+void Marker::unselect() {
+  // only call the CB if already selected
+  if (selected)
+    doCallBack(CallBack::UNSELECTCB);
+  selected = 0;
+}
+
+void Marker::toggleSelect() {
+  selected = !selected;
+  if (selected)
+    doCallBack(CallBack::SELECTCB);
+  else
+    doCallBack(CallBack::UNSELECTCB);
+}
+
+void Marker::highlite() {
+  // only call the CB if not already highlited
+  if (!highlited)
+    doCallBack(CallBack::HIGHLITECB);
+  highlited = 1;
+}
+
+void Marker::unhighlite() {
+  // only call the CB if already highlited
+  if (highlited)
+    doCallBack(CallBack::UNHIGHLITECB);
+  highlited = 0;
+}
+
+void Marker::toggleHighlite() {
+  highlited = !highlited;
+  if (highlited)
+    doCallBack(CallBack::HIGHLITECB);
+  else
+    doCallBack(CallBack::UNHIGHLITECB);
+}
+
+void Marker::key() {
+  doCallBack(CallBack::KEYCB);
+}
+
+Vector Marker::getHandle(int h)
+{
+  if (h<numHandle)
+    return handle[h];
+  else
+    return Vector();
+}
+
+void Marker::setAngle(double a)
+{
+  angle = a;
+  updateBBox();
+
+  doCallBack(CallBack::ROTATECB);
+}
+
+void Marker::setColor(const char* clr)
+{
+  if (colorName)
+    delete [] colorName;
+
+  colorName = dupstr(clr);
+  color = parent->getColor(colorName);
+
+  doCallBack(CallBack::COLORCB);
+}
+
+void Marker::setLineWidth(int w)
+{
+  lineWidth = w;
+
+  doCallBack(CallBack::LINEWIDTHCB);
+}
+
+void Marker::setFont(const char* f)
+{
+  initFonts(f);
+  updateBBox();
+  doCallBack(CallBack::FONTCB);
+}
+
+void Marker::initFonts(const char* ff)
+{
+  if (tkfont_)
+    Tk_FreeFont(tkfont_);
+  tkfont_ = NULL;
+  if (psfont_)
+    Tk_FreeFont(psfont_);
+  psfont_ = NULL;
+
+  const char* dd = "helvetica 9 roman normal";
+  if (!ff)
+    ff = dd;
+
+  psfont_ = Tk_GetFont(parent->interp, parent->tkwin, ff);
+
+  // determine tkfont from psfont
+  string x(ff);
+  istringstream str(x);
+  char family[16] = "";
+  int size = 0;
+  char weight[16] = "";
+  char slant[16] = "";
+
+  str >> family >> size >> weight >> slant;
+
+  // old regions files will not have a slant
+  if (strncmp(slant,"roma",4) && strncmp(slant,"ital",4))
+    strcpy(slant,"roman");
+
+#ifdef MAC_OSX_TK
+  size *= parent->getDisplayRatio();
+#endif
+
+  char* ptr =NULL;
+  if (!strncmp(family,"helvetica",4))
+    ptr = parent->options->helvetica;
+  else if (!strncmp(family,"times",4))
+    ptr = parent->options->times;
+  else if (!strncmp(family,"courier",4))
+    ptr = parent->options->courier;
+  else
+    ptr = parent->options->helvetica;
+
+  ostringstream fstr;
+  fstr << '{' << ptr << '}' << ' ' 
+       << size << ' ' << weight << ' ' << slant << ends;
+
+  tkfont_ = Tk_GetFont(parent->getInterp(), parent->getTkwin(), 
+		       fstr.str().c_str());
+}
+
+const char* Marker::getFont()
+{
+  if (psfont_)
+    return Tk_NameOfFont(psfont_);
+  else
+    return NULL;
+}
+
+void Marker::addTag(const char* tg)
+{
+  Tag* t = new Tag(tg);
+  tags.append(t);
+}
+
+void Marker::editTag(const char* from, const char* to)
+{
+  // change any tags
+  {
+    Tag* t = tags.head();
+    while (t) {
+      if (!strcmp(t->tag(),from)) {
+	t->set(to);
+      }
+      t=t->next();
+    }
+  }
+
+  // now, remove duplicates
+  {
+    Tag* t = tags.head();
+    while (t) {
+      Tag* tt=t->next();
+      while (tt) {
+	if (!strcmp(t->tag(),tt->tag())) {
+	  Tag* ntt = tags.extractNext(tt);
+	  delete tt;
+	  tt = ntt;
+	}
+	else
+	  tt=tt->next();
+      }
+      t=t->next();
+    }
+  }
+}
+
+void Marker::deleteTags()
+{
+  tags.deleteAll();
+}
+
+void Marker::deleteTag(const char* tg)
+{
+  Tag* t = tags.head();
+  while (t) {
+    if (!strcmp(t->tag(),tg)) {
+      tags.extractNext(t);
+      delete t;
+      return;
+    }
+    t = t->next();
+  }
+}
+
+void Marker::deleteTag(int w)
+{
+  Tag* t = tags.head();
+  for (int i=0; i<w; i++)
+    if (t)
+      t = t->next();
+    else
+      break;
+
+  if (t) {
+    tags.extractNext(t);
+    delete t;
+  }
+}
+
+const char* Marker::getTag()
+{
+  Tag* t = tags.head();
+  if (t)
+    return t->tag();
+  else
+    return NULL;
+}
+
+const char* Marker::getNextTag()
+{
+  Tag* t = tags.next();
+  if (t)
+    return t->tag();
+  else
+    return NULL;
+}
+
+const char* Marker::getTag(int w)
+{
+  Tag* t = tags.head();
+  for (int i=0; i<w; i++)
+    if (t)
+      t = t->next();
+    else
+      break;
+
+  if (t)
+    return t->tag();
+  else
+    return NULL;
+}
+
+int Marker::hasTag(const char* tg)
+{
+  Tag* t = tags.head();
+  while (t) {
+    if (!strcmp(t->tag(),tg))
+      return 1;
+    t = t->next();
+  }
+  return 0;
+}
+
+int Marker::onHandle(const Vector& v)
+{
+  // return handle number
+  // work last to first for annuli
+  for (int ii=numHandle-1; ii>=0; ii--) {
+    BBox bb(handle[ii]);
+    bb.expand(parent->markerEpsilon);
+    if (bb.isIn(v))
+      return ii+1;
+  }
+  return 0;
+}
+
+int Marker::getProperty(unsigned short which)
+{
+  return (properties & which) ? 1 : 0;
+}
+
+void Marker::setText(const char* str)
+{
+  if (text)
+    delete [] text;
+  text = dupstr(str);
+
+  updateBBox();
+  doCallBack(CallBack::TEXTCB);
+}
+
+void Marker::setProperty(unsigned short prop, int value)
+{
+  if (value)
+    properties |= prop;
+  else
+    properties &= ~prop;
+
+  if (prop == FIXED) // bbox will change
+    updateBBox();
+
+  doCallBack(CallBack::PROPERTYCB);
+}
+
+int Marker::addCallBack(CallBack::Type t, const char* proc, const char* arg)
+{
+  CallBack* cb = new CallBack(parent->interp, t, proc, arg);
+  if (cb) {
+    callbacks.append(cb);
+    return TCL_OK;
+  }
+
+  return TCL_ERROR;
+}
+
+void Marker::deleteCallBack(CallBack::Type t)
+{
+  CallBack* cb = callbacks.head();
+  while (cb) {
+    if (cb->type() == t) {
+      CallBack* next = callbacks.extractNext(cb);
+      delete cb;
+      cb = next;
+    }
+    else
+      cb = cb->next();
+  }
+}
+
+int Marker::deleteCallBack(CallBack::Type t, const char* proc)
+{
+  CallBack* cb = callbacks.head();
+  while (cb) {
+    if (cb->type() == t && (!strcmp(cb->proc(), proc))) {
+      callbacks.extractNext(cb);
+      delete cb;
+      return TCL_OK;
+    }
+    else
+      cb = cb->next();
+  }
+
+  return TCL_ERROR;
+}
+
+int Marker::isIn(const Vector& vv, Coord::InternalSystem sys)
+{
+  Vector rr = parent->mapToRef(vv,sys);
+  Vector ss = parent->mapFromRef(rr,Coord::CANVAS);
+  return bbox.isIn(ss);
+}
+
+// assume Coord::REF
+int Marker::isIn(const Vector& vv, const Matrix& bck)
+{
+  Vector ss = parent->mapFromRef(vv,Coord::CANVAS);
+  return bbox.isIn(ss);
+}
+
+int Marker::isVisible(const BBox& b)
+{
+  // assume visible, prove otherwise
+  // all coords are in canvas coords
+
+  BBox bb(b);
+  return 
+    !((allBBox.ur[0] < bb.ll[0]) ||
+    (allBBox.ll[0] > bb.ur[0]) ||
+    (allBBox.ur[1] < bb.ll[1]) ||
+    (allBBox.ll[1] > bb.ur[1]));
+}
+
+void Marker::doCallBack(CallBack::Type t)
+{
+  if (!doCB)
+    return;
+
+  ostringstream str;
+
+  str << id << ends;
+
+  CallBack* cb=callbacks.head();
+  while (cb) {
+    if (cb->type() == t)
+      if (cb->eval(str.str().c_str())) {
+	ostringstream estr;
+	estr << "Unable to eval Marker CallBack "
+	     << cb->proc() << " : " << Tcl_GetStringResult(parent->interp) << ends;
+	internalError(estr.str().c_str());
+      }
+    cb=cb->next();
+  }
+}
+
+double Marker::calcAngle()
+{
+  switch (parent->getOrientation()) {
+  case Coord::NORMAL:
+  case Coord::XY:
+    return angle + parent->getRotation();
+  case Coord::XX:
+  case Coord::YY:
+    return -angle + parent->getRotation();
+  }
+}
+
+Vector Marker::modifyArrow(const Vector& p1, const Vector& p2, 
+			   Coord::InternalSystem sys)
+{
+  const int tip = 6;  // length from end of line to tip of arrow
+  
+  Vector aa = parent->mapFromRef(p1,sys);
+  Vector bb = parent->mapFromRef(p2,sys);
+
+  Vector nn = (bb-aa).normalize();
+  double ll = (bb-aa).length();
+  return nn * Scale(ll-tip) * Translate(aa);
+}
+
+Vector* Marker::arrow(const Vector& p1, const Vector& p2, Coord::InternalSystem sys)
+{
+  Vector p3;
+  if (((p2-p1)[0]) == 0)
+    p3 = p1+Vector(1,0);
+  else
+    p3 = p1+Vector(0,1);
+
+  Vector3d aa = parent->mapFromRef3d(p1,sys);
+  Vector3d bb = parent->mapFromRef3d(p2,sys);
+  Vector3d cc = parent->mapFromRef3d(p3,sys);
+
+  const int tip = 6;  // length from end of line to tip of arrow
+  const int tail = 2; // length from end of line to tails of arrow
+  const int wc = 2;   // width of arrow at end of line
+  const int wt = 3;   // width of arrow at tails
+
+  // build in Y-Z plane, align on z axis
+  Vector3d vv[6];
+  vv[0] = Vector3d(0,0,tip);
+  vv[1] = Vector3d(0,-wc,0);
+  vv[2] = Vector3d(0,-wt,-tail);
+  vv[3] = Vector3d(0,0,0);
+  vv[4] = Vector3d(0,wt,-tail);
+  vv[5] = Vector3d(0,wc,0);
+
+  Vector3d l1 = (aa-bb).normalize();
+  Vector3d l2 = (aa-cc).normalize();
+  Vector3d rz = -l1;
+  Vector3d rx = (cross(l1,l2)).normalize();
+  Vector3d ry = cross(rz,rx);
+  Matrix3d rr(rx,ry,rz);
+  Matrix3d mm = 
+    Translate3d(0,0,-tip) *
+    Scale3d(1.5) *
+    rr.invert() *
+    Translate3d(bb);
+
+  Vector* ww = new Vector[6];
+  for (int ii=0; ii<6; ii++)
+    ww[ii] = vv[ii]*mm;
+
+  return ww;
+}
+
+void Marker::analysisXYEEResult(char* xname, char* yname, 
+				  char* xcname, char* ycname,
+				  double* x, double* y, 
+				  double* xc, double* yc, int num)
+{
+  Blt_Vector* xx;
+  Blt_GetVector(parent->getInterp(), xname, &xx);
+  Blt_ResetVector(xx, x, num, num*sizeof(double), TCL_DYNAMIC);
+
+  Blt_Vector* yy;
+  Blt_GetVector(parent->getInterp(), yname, &yy);
+  Blt_ResetVector(yy, y, num, num*sizeof(double), TCL_DYNAMIC);
+
+  Blt_Vector* xxc;
+  Blt_GetVector(parent->getInterp(), xcname, &xxc);
+  Blt_ResetVector(xxc, xc, num, num*sizeof(double), TCL_DYNAMIC);
+
+  Blt_Vector* yyc;
+  Blt_GetVector(parent->getInterp(), ycname, &yyc);
+  Blt_ResetVector(yyc, yc, num, num*sizeof(double), TCL_DYNAMIC);
+}
+
+void Marker::analysisXYResult(char* xname, char* yname, double* x, double* y, 
+			      int num)
+{
+  Blt_Vector* xx;
+  Blt_GetVector(parent->getInterp(), xname, &xx);
+  Blt_ResetVector(xx, x, num, num*sizeof(double), TCL_DYNAMIC);
+
+  Blt_Vector* yy;
+  Blt_GetVector(parent->getInterp(), yname, &yy);
+  Blt_ResetVector(yy, y, num, num*sizeof(double), TCL_DYNAMIC);
+}
+
+void Marker::analysisXYEResult(char* xname, char* yname, char* ename,
+			       double* x, double* y, double* e, int num)
+{
+  Blt_Vector* xx;
+  Blt_GetVector(parent->getInterp(), xname, &xx);
+  Blt_ResetVector(xx, x, num, num*sizeof(double), TCL_DYNAMIC);
+
+  Blt_Vector* yy;
+  Blt_GetVector(parent->getInterp(), yname, &yy);
+  Blt_ResetVector(yy, y, num, num*sizeof(double), TCL_DYNAMIC);
+
+  Blt_Vector* ee;
+  Blt_GetVector(parent->getInterp(), ename, &ee);
+  Blt_ResetVector(ee, e, num, num*sizeof(double), TCL_DYNAMIC);
+}
+
+void Marker::analysisXYEResult(double* x, double* y, double* e, int num)
+{
+  for (int ii=0; ii<num; ii++) {
+    ostringstream str;
+    str << x[ii] << ' ' << y[ii] << ' ' << e[ii] << endl << ends;
+    Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+  }
+}
+
+Matrix Marker::fwdMatrix()
+{
+  return Rotate(angle) * FlipY() * Translate(center);
+}
+
+Matrix Marker::bckMatrix()
+{
+  return Translate(-center) * FlipY() * Rotate(-angle);
+}
+
+Vector Marker::fwdMap(const Vector& vv, Coord::InternalSystem sys)
+{
+  return 
+    parent->mapFromRef(vv * Rotate(angle) * FlipY() * Translate(center),sys);
+}
+
+Vector Marker::bckMap(const Vector& vv, Coord::InternalSystem sys)
+{
+  return 
+    parent->mapToRef(vv,sys) * Translate(-center) * FlipY() * Rotate(-angle);
+}
+
+void Marker::setMatrices(Coord::InternalSystem sys, Matrix* fwd, Matrix* bck)
+{
+  switch (sys) {
+  case Coord::WIDGET:
+    *fwd = parent->refToWidget;
+    *bck = parent->widgetToRef;
+    break;
+  case Coord::CANVAS:
+    *fwd = parent->refToCanvas;
+    *bck = parent->canvasToRef;
+    break;
+  case Coord::WINDOW:
+    *fwd = parent->refToWindow;
+    *bck = parent->windowToRef;
+    break;
+  case Coord::MAGNIFIER:
+    *fwd = parent->refToMagnifier;
+    *bck = parent->magnifierToRef;
+    break;
+  default:
+    // na
+    break;
+  }
+}
+
+// list
+
+void Marker::listRADEC(FitsImage* ptr, 
+		       const Vector& vv, Coord::CoordSystem sys, 
+		       Coord::SkyFrame sky, Coord::SkyFormat format)
+{
+  char buf[64];
+  ptr->mapFromRef(vv,sys,sky,format,buf);
+  string x(buf);
+  istringstream wcs(x);
+  wcs >> ra >> dec;
+}
+
+void Marker::listRADECPros(FitsImage* ptr, 
+			   const Vector& vv, Coord::CoordSystem sys, 
+			   Coord::SkyFrame sky, Coord::SkyFormat format)
+{
+  char buf[64];
+  char decc[32];
+  ptr->mapFromRef(vv,sys,sky,format,buf);
+  string x(buf);
+  istringstream wcs(x);
+  wcs >> ra >> decc;
+  if (decc[0]=='+')
+    strncpy(dec,decc+1,32);
+  else
+    strncpy(dec,decc,32);
+}
+
+void Marker::listPre(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky, 
+		     FitsImage* ptr, int strip, int hash)
+{
+  // no props for semicolons
+  if (!strip) {
+    FitsImage* fits = parent->findFits();
+    if (fits && fits->nextMosaic()) {
+      switch (sys) {
+      case Coord::IMAGE:
+      case Coord::PHYSICAL:
+      case Coord::DETECTOR:
+      case Coord::AMPLIFIER:
+	str << "# tile " << parent->findFits(ptr) << endl;
+
+	break;
+      default:
+	if (!parent->findFits()->hasWCSCel(sys))
+	  str << "# tile " << parent->findFits(ptr) << endl;
+      }
+    }
+
+    if (hash)
+      str << "# ";
+  }
+	
+  if (!(properties&INCLUDE))
+    str << '-';
+}
+
+void Marker::listPost(ostream& str, int conj, int strip)
+{
+  // no props for semicolons
+  if (!strip) {
+    if (conj)
+      str << " ||";
+
+    listProperties(str,1);
+  }
+  else {
+    if (conj)
+      str << "||";
+    else
+      str << ';';
+  }
+}
+
+void Marker::listProperties(ostream& str, int hash)
+{
+  if (strncmp("green",colorName,5) ||
+      dlist[0] != 8 ||
+      dlist[1] != 3 ||
+      (lineWidth != 1) ||
+      strncmp("helvetica 10 normal roman",getFont(),25) ||
+      (text && *text) ||
+      !(properties&SELECT) ||
+      !(properties&HIGHLITE) ||
+      (properties&DASH) ||
+      (properties&FIXED) ||
+      !(properties&EDIT) ||
+      !(properties&MOVE) ||
+      !(properties&ROTATE) ||
+      !(properties&DELETE) ||
+      !(properties&SOURCE) ||
+      (tags.count() > 0) ||
+      (comment && *comment)) {
+
+    if (hash)
+      str << " #";
+    listProps(str);
+  }
+
+  str << endl;
+}
+
+void Marker::listProps(ostream& str)
+{
+  if (strncmp("green",colorName,5))
+    str << " color=" << colorName;
+
+  if (dlist[0] != 8 || dlist[1] != 3)
+    str << " dashlist=" << dlist[0] << ' ' << dlist[1];
+
+  if (lineWidth != 1)
+    str << " width=" << lineWidth;
+
+  if (strncmp("helvetica 10 normal roman", getFont(), 25))
+    str << " font=\"" << getFont() << '"';
+
+  if (text && *text) // only list text if there is something to list
+    str << " text={" << text << '}';
+
+  if (!(properties&SELECT))
+    str << " select=0";
+
+  if (!(properties&HIGHLITE))
+    str << " highlite=0";
+
+  if (properties&DASH)
+    str << " dash=1";
+
+  if (properties&FIXED)
+    str << " fixed=1";
+
+  if (!(properties&EDIT))
+    str << " edit=0";
+
+  if (!(properties&MOVE))
+    str << " move=0";
+
+  if (!(properties&ROTATE))
+    str << " rotate=0";
+
+  if (!(properties&DELETE))
+    str << " delete=0";
+
+  if (!(properties&SOURCE))
+    str << " background";
+
+  // tags
+  Tag* t = tags.head();
+  while (t) {
+    str << " tag={" << t->tag() << '}';
+    t = t->next();
+  }
+
+  if (comment && *comment) 
+    str << ' ' << comment;
+}
+
+void Marker::listCiaoPre(ostream& str)
+{
+  if (!(properties&INCLUDE))
+    str << '-';
+}
+
+void Marker::listCiaoPost(ostream& str, int strip)
+			  
+{
+  str << (strip ? ';' : '\n');
+}
+
+void Marker::listProsPost(ostream& str, int strip)
+{
+  str << (strip ? ';' : '\n');
+}
+
+void Marker::listSAOtngPre(ostream& str, int strip)
+{
+  if (!strip && text && *text)
+    str << '#' << text << endl;
+
+  if (properties&INCLUDE)
+    str << '+';
+  else
+    str << '-';
+}
+
+void Marker::listSAOtngPost(ostream& str, int strip)
+{
+  if (!strip) {
+    str << " # ";
+    if (comment && *comment)
+      str << comment;
+    else if (!(properties&SOURCE))
+      str << "background";
+    else
+      str << colorName;
+  }
+
+  str << (strip ? ';' : '\n');
+}
+
+void Marker::listSAOimagePre(ostream& str)
+{
+  if (!(properties&INCLUDE))
+    str << '-';
+}
+
+void Marker::listSAOimagePost(ostream& str, int strip)
+{
+  str << (strip ? ';' : '\n');
+}
+
+void Marker::listXY(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
+		    Coord::SkyFormat format, int strip)
+{
+  FitsImage* ptr = parent->findFits();
+
+  switch (sys) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::DETECTOR:
+  case Coord::AMPLIFIER:
+    str << setprecision(8) << ptr->mapFromRef(center,sys);
+    break;
+  default:
+    if (ptr->hasWCS(sys)) {
+      if (ptr->hasWCSCel(sys)) {
+	switch (format) {
+	case Coord::DEGREES:
+	  str << setprecision(10) << ptr->mapFromRef(center,sys,sky);
+	  break;
+	case Coord::SEXAGESIMAL:
+	  listRADEC(ptr,center,sys,sky,format);
+	  str << ra << ' ' << dec;
+	  break;
+	}
+      }
+      else {
+	str << setprecision(8) << ptr->mapFromRef(center,sys);
+      }
+    }
+    break;
+  }
+
+  str << (strip ? ';' : '\n');
+}
+
+void Marker::XMLRowInit()
+{
+  for (int ii=0; ii<XMLNUMCOL; ii++) {
+    if (XMLCol[ii])
+      delete [] XMLCol[ii];
+    XMLCol[ii] = NULL;
+  }
+}
+
+void Marker::XMLRow(XMLColName col, int val)
+{
+  ostringstream str;
+  str << val << ends;
+
+  if (XMLCol[col])
+    delete [] XMLCol[col];
+  XMLCol[col] = dupstr(str.str().c_str());
+}
+
+void Marker::XMLRow(XMLColName col, int* val, int cnt)
+{
+  ostringstream str;
+  for (int ii=0; ii<cnt; ii++) {
+    str << val[ii];
+    if (ii!=cnt-1)
+      str << ' ';
+    else
+      str << ends;
+  }
+
+  if (XMLCol[col])
+    delete [] XMLCol[col];
+  XMLCol[col] = dupstr(str.str().c_str());
+}
+
+void Marker::XMLRow(XMLColName col, double val, int prec)
+{
+  ostringstream str;
+  str << setprecision(prec) << val << ends;
+
+  if (XMLCol[col])
+    delete [] XMLCol[col];
+  XMLCol[col] = dupstr(str.str().c_str());
+}
+
+void Marker::XMLRowARCSEC(XMLColName col, double val)
+{
+  ostringstream str;
+  str << setprecision(3) << fixed << val << ends;
+
+  if (XMLCol[col])
+    delete [] XMLCol[col];
+  XMLCol[col] = dupstr(str.str().c_str());
+}
+
+void Marker::XMLRow(XMLColName col, double* val, int cnt, int prec)
+{
+  ostringstream str;
+  str << setprecision(prec);
+  for (int ii=0; ii<cnt; ii++) {
+    str << val[ii];
+    if (ii!=cnt-1)
+      str << ' ';
+    else
+      str << ends;
+  }
+
+  if (XMLCol[col])
+    delete [] XMLCol[col];
+  XMLCol[col] = dupstr(str.str().c_str());
+}
+
+void Marker::XMLRowARCSEC(XMLColName col, double* val, int cnt)
+{
+  ostringstream str;
+  str << setprecision(3) << fixed;
+  for (int ii=0; ii<cnt; ii++) {
+    str << val[ii];
+    if (ii!=cnt-1)
+      str << ' ';
+    else
+      str << ends;
+  }
+
+  if (XMLCol[col])
+    delete [] XMLCol[col];
+  XMLCol[col] = dupstr(str.str().c_str());
+}
+
+void Marker::XMLRow(XMLColName col, char* val)
+{
+  if (XMLCol[col])
+    delete [] XMLCol[col];
+  XMLCol[col] = dupstr(val);
+}
+
+void Marker::XMLRow(XMLColName col, char** val, int cnt)
+{
+  ostringstream str;
+  for (int ii=0; ii<cnt; ii++) {
+    str << val[ii];
+    if (ii!=cnt-1)
+      str << ' ';
+    else
+      str << ends;
+  }
+
+  if (XMLCol[col])
+    delete [] XMLCol[col];
+  XMLCol[col] = dupstr(str.str().c_str());
+}
+
+void Marker::XMLRowProps(FitsImage* ptr, Coord::CoordSystem sys)
+{
+  // tile
+  {
+    ostringstream str;
+    XMLColName col = XMLTILE;
+
+    FitsImage* fits = parent->findFits();
+    if (fits && fits->nextMosaic()) {
+      switch (sys) {
+      case Coord::IMAGE:
+      case Coord::PHYSICAL:
+      case Coord::DETECTOR:
+      case Coord::AMPLIFIER:
+	str << parent->findFits(ptr) << ends;
+	break;
+      default:
+	if (!parent->findFits()->hasWCSCel(sys))
+	  str << parent->findFits(ptr) << ends;
+	break;
+      }
+    }
+    if (XMLCol[col])
+      delete [] XMLCol[col];
+    XMLCol[col] = dupstr(str.str().c_str());
+  }
+
+  // color
+  {
+    XMLColName col = XMLCOLOR;
+    if (XMLCol[col])
+      delete [] XMLCol[col];
+    XMLCol[col] = dupstr(colorName);
+  }
+
+  // width
+  {
+    ostringstream str;
+    str << lineWidth << ends;
+    XMLColName col = XMLWIDTH;
+    if (XMLCol[col])
+      delete [] XMLCol[col];
+    XMLCol[col] = dupstr(str.str().c_str());
+  }
+
+  // text
+  if (text && *text) {
+    XMLColName col = XMLTEXT;
+    if (XMLCol[col])
+      delete [] XMLCol[col];
+    XMLCol[col] = dupstr(text);
+  }
+
+  // font
+  {
+    XMLColName col = XMLFONT;
+    if (XMLCol[col])
+      delete [] XMLCol[col];
+    XMLCol[col] = dupstr(getFont());
+  }
+
+  XMLRowProp(XMLSELECT,SELECT);
+  XMLRowProp(XMLHIGHLITE,HIGHLITE);
+  XMLRowProp(XMLEDIT,EDIT);
+  XMLRowProp(XMLMOVE,MOVE);
+  XMLRowProp(XMLROTATE,ROTATE);
+  XMLRowProp(XMLDELETE,DELETE);
+  XMLRowProp(XMLFIXED,FIXED);
+  XMLRowProp(XMLINCLUDE,INCLUDE);
+  XMLRowProp(XMLSOURCE,SOURCE);
+  XMLRowProp(XMLDASH,DASH);
+
+  // dashlist
+  {
+    ostringstream str;
+    str << dlist[0] << ',' << dlist[1] << ends;
+    XMLColName col = XMLDASHLIST;
+    if (XMLCol[col])
+      delete [] XMLCol[col];
+    XMLCol[col] = dupstr(str.str().c_str());
+  }
+
+  // tags
+  {
+    ostringstream str;
+    Tag* start = tags.head();
+    Tag* ptr = start;
+    while (ptr) {
+      if (ptr != start)
+	str << ' ';
+      char* tag = (char*)ptr->tag();
+      while (*tag) {
+	if (*tag == ' ')
+	  str << "&#160;";
+	else
+	  str << *tag;
+	tag++;
+      }
+      ptr = ptr->next();
+    }
+    str << ends;
+
+    XMLColName col = XMLTAG;
+    if (XMLCol[col])
+      delete [] XMLCol[col];
+    XMLCol[col] = dupstr(str.str().c_str());
+  }
+
+  // comment
+  if (comment && *comment) {
+    XMLColName col = XMLCOMMENT;
+    if (XMLCol[col])
+      delete [] XMLCol[col];
+    XMLCol[col] = dupstr(comment);
+  }
+}
+
+void Marker::XMLRowEnd(ostream& str)
+{
+  str << "<TR>";
+  for (int ii=0; ii<XMLNUMCOL; ii++) {
+    str << "<TD>";
+    if (XMLCol[ii]) {
+      char* ss = XMLQuote(XMLCol[ii]);
+      str << ss;
+      delete [] XMLCol[ii];
+      delete [] ss;
+      XMLCol[ii] = NULL;
+    }
+    str << "</TD>";
+  }
+  str << "</TR>" << endl;
+}
+
+void Marker::XMLRowProp(XMLColName col, Property prop)
+{
+  if (properties & prop)
+    XMLCol[col] = dupstr("1");
+  else
+    XMLCol[col] = dupstr("0");
+}
+
+void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys,
+			 Coord::SkyFrame sky, Coord::SkyFormat format,
+			 Vector vv)
+{
+  switch (sys) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::DETECTOR:
+  case Coord::AMPLIFIER:
+    {
+      Vector v = ptr->mapFromRef(vv,sys);
+      XMLRow(XMLX,v[0],8);
+      XMLRow(XMLY,v[1],8);
+    }
+    break;
+  default:
+    if (ptr->hasWCS(sys)) {
+      if (ptr->hasWCSCel(sys)) {
+	switch (format) {
+	case Coord::DEGREES:
+	  {
+	    Vector v = ptr->mapFromRef(vv,sys,sky);
+	    XMLRow(XMLX,v[0],10);
+	    XMLRow(XMLY,v[1],10);
+	  }
+	  break;
+	case Coord::SEXAGESIMAL:
+	  listRADEC(ptr,vv,sys,sky,format);
+	  XMLRow(XMLX,ra);
+	  XMLRow(XMLY,dec);
+	  break;
+	}
+      }
+      else {
+	Vector v = ptr->mapFromRef(vv,sys);
+	XMLRow(XMLX,v[0],8);
+	XMLRow(XMLY,v[1],8);
+      }
+    }
+  }
+}
+
+void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys, 
+			 Coord::SkyFrame sky, Coord::SkyFormat format, 
+			 Vector* vv, int cnt)
+{
+  switch (sys) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::DETECTOR:
+  case Coord::AMPLIFIER:
+    {
+      double xx[cnt];
+      double yy[cnt];
+      for (int ii=0; ii<cnt; ii++) {
+	Vector v = ptr->mapFromRef(vv[ii],sys);
+	xx[ii] = v[0];
+	yy[ii] = v[1];
+      }
+      XMLRow(XMLXV,xx,cnt,8);
+      XMLRow(XMLYV,yy,cnt,8);
+    }
+    break;
+  default:
+    if (ptr->hasWCS(sys)) {
+      if (ptr->hasWCSCel(sys)) {
+	switch (format) {
+	case Coord::DEGREES:
+	  {
+	    double xx[cnt];
+	    double yy[cnt];
+	    for (int ii=0; ii<cnt; ii++) {
+	      Vector v = ptr->mapFromRef(vv[ii],sys,sky);
+	      xx[ii] = v[0];
+	      yy[ii] = v[1];
+	    }
+	    XMLRow(XMLXV,xx,cnt,10);
+	    XMLRow(XMLYV,yy,cnt,10);
+	  }
+	  break;
+	case Coord::SEXAGESIMAL:
+	  {
+	    char* xx[cnt];
+	    char* yy[cnt];
+	    for (int ii=0; ii<cnt; ii++) {
+	      listRADEC(ptr,vv[ii],sys,sky,format);
+	      xx[ii] = dupstr(ra);
+	      yy[ii] = dupstr(dec);
+	    }
+	    XMLRow(XMLXV,xx,cnt);
+	    XMLRow(XMLYV,yy,cnt);
+
+	    for (int ii=0; ii<cnt; ii++) {
+	      delete [] xx[ii];
+	      delete [] yy[ii];
+	    }
+	  }
+	  break;
+	}
+      }
+      else {
+	double xx[cnt];
+	double yy[cnt];
+	for (int ii=0; ii<cnt; ii++) {
+	  Vector v = ptr->mapFromRef(vv[ii],sys);
+	  xx[ii] = v[0];
+	  yy[ii] = v[1];
+	}
+	XMLRow(XMLXV,xx,cnt,8);
+	XMLRow(XMLYV,yy,cnt,8);
+      }
+    }
+  }
+}
+
+void Marker::XMLRowRadiusX(FitsImage* ptr, Coord::CoordSystem sys, Vector vv)
+{
+  double rr = ptr->mapLenFromRef(vv[0],sys,Coord::ARCSEC);
+
+  switch (sys) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::DETECTOR:
+  case Coord::AMPLIFIER:
+    XMLRow(XMLR,rr,8);
+    break;
+  default:
+    if (ptr->hasWCS(sys)) {
+      if (ptr->hasWCSCel(sys))
+	XMLRowARCSEC(XMLR,rr);
+      else
+	XMLRow(XMLR,rr,8);
+    }
+    break;
+  }
+}
+
+void Marker::XMLRowRadiusX(FitsImage* ptr, Coord::CoordSystem sys, 
+			   Vector* vv, int cnt)
+{
+  double rr[cnt];
+  for (int ii=0; ii<cnt; ii++)
+    rr[ii] = ptr->mapLenFromRef(vv[ii][0],sys,Coord::ARCSEC);
+
+  switch (sys) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::DETECTOR:
+  case Coord::AMPLIFIER:
+    XMLRow(XMLRV,rr,cnt,8);
+    break;
+  default:
+    if (ptr->hasWCS(sys)) {
+      if (ptr->hasWCSCel(sys))
+	XMLRowARCSEC(XMLRV,rr,cnt);
+      else
+	XMLRow(XMLRV,rr,cnt,8);
+    }
+    break;
+  }
+}
+
+void Marker::XMLRowRadius(FitsImage* ptr, Coord::CoordSystem sys, Vector vv)
+{
+  Vector v = ptr->mapLenFromRef(vv,sys,Coord::ARCSEC);
+
+  switch (sys) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::DETECTOR:
+  case Coord::AMPLIFIER:
+    XMLRow(XMLR,v[0],8);
+    XMLRow(XMLR2,v[1],8);
+    break;
+  default:
+    if (ptr->hasWCS(sys)) {
+      if (ptr->hasWCSCel(sys)) {
+	XMLRowARCSEC(XMLR,v[0]);
+	XMLRowARCSEC(XMLR2,v[1]);
+      }
+      else {
+	XMLRow(XMLR,v[0],8);
+	XMLRow(XMLR2,v[1],8);
+      }
+    }
+    break;
+  }
+}
+
+void Marker::XMLRowRadius(FitsImage* ptr, Coord::CoordSystem sys, 
+			  Vector* vv, int cnt)
+{
+  double rr[cnt];
+  double rr2[cnt];
+  for (int ii=0; ii<cnt; ii++) {
+    Vector v = ptr->mapLenFromRef(vv[ii],sys,Coord::ARCSEC);
+    rr[ii] = v[0];
+    rr2[ii] = v[1];
+  }
+
+  switch (sys) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::DETECTOR:
+  case Coord::AMPLIFIER:
+    XMLRow(XMLRV,rr,cnt,8);
+    XMLRow(XMLRV2,rr2,cnt,8);
+    break;
+  default:
+    if (ptr->hasWCS(sys)) {
+      if (ptr->hasWCSCel(sys)) {
+	XMLRowARCSEC(XMLRV,rr,cnt);
+	XMLRowARCSEC(XMLRV2,rr2,cnt);
+      }
+      else {
+	XMLRow(XMLRV,rr,cnt,8);
+	XMLRow(XMLRV2,rr2,cnt,8);
+      }
+    }
+    break;
+  }
+}
+
+void Marker::XMLRowAng(Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  XMLRow(XMLANG, radToDeg(parent->mapAngleFromRef(angle,sys,sky)),8);
+}
+
+void Marker::XMLRowAng(Coord::CoordSystem sys, Coord::SkyFrame sky, 
+		       double* ang, int cnt)
+{
+  double aa[cnt];
+  for (int ii=0; ii<cnt; ii++)
+    aa[ii] = radToDeg(parent->mapAngleFromRef(ang[ii],sys,sky));
+
+  XMLRow(XMLANGV,aa,cnt,8);
+}
+
+char* Marker::XMLQuote(char* src)
+{
+  char* dest = new char[strlen(src)*7+1];
+  char* sptr = src;
+  char* dptr = dest;
+  while (sptr && *sptr) {
+    if (*sptr == '&') {
+      // special case, char entities
+      if (*(sptr+1) == '#') {
+	*dptr++ = *sptr;
+      }
+      else {
+	memcpy(dptr,"&amp;",5);
+	dptr += 5;
+      }
+    }
+    else if (*sptr == '<') {
+      memcpy(dptr,"&lt;",4);
+      dptr += 4;
+    }
+    else if (*sptr == '>') {
+      memcpy(dptr,"&gt;",4);
+      dptr += 4;
+    }
+    else if (*sptr == '\'') {
+      memcpy(dptr,"&apos;",6);
+      dptr += 6;
+    }
+    else if (*sptr == '"') {
+      memcpy(dptr,"&quot;",6);
+      dptr += 6;
+    }
+    else
+     *dptr++ = *sptr;
+
+    sptr++;
+  }
+  *dptr = '\0';
+
+  return dest;
+}
+
+// special composite funtionallity
+
+void Marker::setComposite(const Matrix& mx, double aa)
+{
+  center *= mx;
+  angle += aa;
+  updateBBox();
+}
+
+void Marker::setComposite(const char* clr, int w, int h)
+{
+  lineWidth = w;
+  if (colorName)
+    delete [] colorName;
+
+  colorName = dupstr(clr);
+  color = parent->getColor(colorName);
+  highlited = h;
+}
+

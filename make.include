@@ -327,7 +327,7 @@ funtools/libfuntools.a : funtools/Makefile
 	cp funtools/fitsy/*.h $(ROOT)/include/.
 	cp funtools/libfuntools.a $(ROOT)/lib/.
 
-funtools/Makefile :
+funtools/Makefile : funtools/configure
 	@echo ""
 	@echo "*** Configure funtools ***"
 	cd funtools; \
@@ -336,6 +336,10 @@ funtools/Makefile :
 	$(CONFIGFLAGS) $(TARGET) \
 	--prefix $(ROOT) --exec-prefix $(ROOT) \
 	--disable-shared
+
+funtools/configure :
+	cd funtools; \
+	./mkconfigure
 
 #-------------------------- tktable
 

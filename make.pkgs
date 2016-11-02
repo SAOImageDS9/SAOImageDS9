@@ -1,6 +1,6 @@
 #--------------------------basic
 
-DS9VERSION=7.5rc2
+DS9VERSION=7.6b1
 XPAVERSION=2.1.17
 
 #--------------------------version
@@ -11,7 +11,7 @@ XPAVERSION=2.1.17
 # tclsignal 1.4
 # tclzvfs 1.0
 # tclxml 3.2
-# tcllib 1.15
+# tcllib 1.18
 # xpa 2.1.18
 # tkblt 3.2.3
 # tktable 2.10

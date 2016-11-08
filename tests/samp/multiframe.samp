@@ -1,9 +1,0 @@
-set {} frame new
-set {} multiframe mecube/float.fits
-set {} frame delete
-set {} frame delete
-set {} frame delete
-
-set {} single
-set {} raise
-

@@ -1,3 +1,0 @@
-set {} frame new
-set {} url http://ds9.si.edu/download/data/img.fits
-set {} frame delete

@@ -1685,6 +1685,10 @@ void Base::updateMagnifier(const Vector& vv)
   if (!(magnifierXImage && magnifierPixmap))
     return;
 
+  // just in case
+  if (!widgetGC)
+    widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+
   if (useMagnifier) {
     updateMagnifierMatrices();
 

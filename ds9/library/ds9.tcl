@@ -8,7 +8,7 @@ proc DS9Def {} {
 
     set ds9(title) "$ds9(app)"
     # for beta version, MUST have space
-    set ds9(version) {7.6b1}
+    set ds9(version) {7.6 b1}
 
     set ds9(top) .
     set ds9(mb) .mb

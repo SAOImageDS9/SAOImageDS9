@@ -370,7 +370,12 @@ proc LayoutViewAdjust {varname} {
 	# can't trust 'tk scaling'
 	switch $ds9(wm) {
 	    x11 -
-	    win32 {set scaling [tk scaling]}
+	    win32 {
+		set scaling [tk scaling]
+		if {$scaling == Inf} {
+		    set scaling 1.334
+		}
+	    }
 	    aqua {set scaling 1.4}
 	}
 

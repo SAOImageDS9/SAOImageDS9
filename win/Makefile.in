@@ -40,7 +40,7 @@ tcl$(TCLVER)/win/Makefile :
 	@echo "*** Configure tcl$(TCLVER) ***"
 	cd tcl$(TCLVER)/win; \
 	./configure \
-	--prefix $(ROOT) -exec-prefix $(ROOT) \
+	--prefix $(ROOT) --exec-prefix $(ROOT) \
 	--disable-shared \
 	--config-cache --cache-file=../../config.cache
 
@@ -56,7 +56,7 @@ tk$(TCLVER)/win/Makefile :
 	./configure \
 	$(WITHTCL) \
 	$(TKFLAGS) \
-	--prefix $(ROOT) -exec-prefix $(ROOT) \
+	--prefix $(ROOT) --exec-prefix $(ROOT) \
 	--disable-shared --enable-symbols
 
 tkwin: tkwin/Makefile

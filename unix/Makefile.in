@@ -32,7 +32,7 @@ tcl$(TCLVER)/unix/Makefile :
 	@echo "*** Configure tcl$(TCLVER) ***"
 	cd tcl$(TCLVER)/unix; \
 	./configure \
-	--prefix $(ROOT) -exec-prefix $(ROOT) \
+	--prefix $(ROOT) --exec-prefix $(ROOT) \
 	--disable-shared --enable-symbols \
 	--config-cache --cache-file=../../config.cache
 
@@ -47,7 +47,7 @@ tk$(TCLVER)/unix/Makefile :
 	cd tk$(TCLVER)/unix; \
 	./configure \
 	$(TKFLAGS) \
-	--prefix $(ROOT) -exec-prefix $(ROOT) \
+	--prefix $(ROOT) --exec-prefix $(ROOT) \
 	--disable-shared --enable-symbols \
 	--config-cache --cache-file=../../config.cache
 

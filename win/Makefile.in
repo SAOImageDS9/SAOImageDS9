@@ -103,12 +103,13 @@ libxslt/win32/config.mingw :
 	cd libxslt/win32; \
 	cscript configure.js trio=no xslt_debug=yes mem_debug=no debugger=yes iconv=no zlib=no crypto=yes modules=no locale=yes compiler=mingw static=yes prefix="..\.." bindir="..\..\bin" incdir="..\..\include" libdir="..\..\lib"
 
-zlib	: zlib/Makefile
+# must force Makefile
+zlib	: zlib_Makefile
 	@echo ""
 	@echo "*** Installing zlib ***"
 	$(MAKE) -C zlib -j $(JOBS) install
 
-zlib/Makefile :
+zlib_Makefile :
 	@echo ""
 	@echo "*** Configure zlib ***"
 	cd zlib; \

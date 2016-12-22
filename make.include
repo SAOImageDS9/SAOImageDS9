@@ -277,7 +277,7 @@ ast/Makefile :
 	$(CONFIGFLAGS) \
 	--prefix $(ROOT) --exec-prefix $(ROOT) \
 	--disable-shared
-	touch configure.ac aclocal.m4 configure Makefile.am Makefile.in
+	cd ast; touch configure.ac aclocal.m4 configure Makefile.am Makefile.in
 
 ast/ast.h :
 	@echo ""

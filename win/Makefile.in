@@ -34,6 +34,7 @@ tcl	: tcl$(TCLVER)/win/Makefile
 	@echo "*** Install tcl$(TCLVER) ***"
 	$(MAKE) -C tcl$(TCLVER)/win -j $(JOBS)
 	$(MAKE) -C tcl$(TCLVER)/win install
+	cd bin; ln -s tclsh86s.exe tclsh86.exe
 
 tcl$(TCLVER)/win/Makefile :
 	@echo ""

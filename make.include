@@ -264,7 +264,7 @@ tksao/Makefile :
 
 #-------------------------- ast
 
-ast	: ast/Makefile ast_includes ast_libs
+ast	: ast/Makefile ast/ast.h ast/.libs/libast.a ast/.libs/libast_err.a ast/.libs/libast_pal.a
 
 ast/Makefile :
 	@echo ""
@@ -278,19 +278,38 @@ ast/Makefile :
 	--prefix $(ROOT) --exec-prefix $(ROOT) \
 	--disable-shared
 
-ast_includes :
+ast/ast.h :
 	@echo ""
-	@echo "*** Install ast includes ***"
+	@echo "*** Install ast/ast.h ***"
+	$(MAKE) -C ast -j ast.h
+	$(MAKE) -C ast -j $(JOBS) libast.la
+	$(MAKE) -C ast -j $(JOBS) libast_err.la
+	$(MAKE) -C ast -j $(JOBS) libast_pal.la
+	cp ast/ast.h $(ROOT)/include/.
+	cp ast/grf.h $(ROOT)/include/.
+	cp ast/grf3d.h $(ROOT)/include/.
+	cp ast/.libs/libast.a $(ROOT)/lib/.
+	cp ast/.libs/libast_err.a $(ROOT)/lib/.
+	cp ast/.libs/libast_pal.a $(ROOT)/lib/.
+
+ast/.libs/libast.a :
+	@echo ""
+	@echo "*** Install ast/ast.h ***"
+	$(MAKE) -C ast -j ast.h
 	cp ast/ast.h $(ROOT)/include/.
 	cp ast/grf.h $(ROOT)/include/.
 	cp ast/grf3d.h $(ROOT)/include/.
 
-ast_libs :
-	$(MAKE) -C ast -j $(JOBS) libast.la
+ast/.libs/libast_err.a :
+	@echo ""
+	@echo "*** Install ast/libast_err.a ***"
 	$(MAKE) -C ast -j $(JOBS) libast_err.la
+	cp ast/.libs/libast_err.a $(ROOT)/lib/.
+
+ast/.libs/libast_pal.a :
+	@echo ""
+	@echo "*** Install ast/libast_pal.a ***"
 	$(MAKE) -C ast -j $(JOBS) libast_pal.la
-	cp ast/.libs/libast_err.a $(ROOT)/lib/.
-	cp ast/.libs/libast_err.a $(ROOT)/lib/.
 	cp ast/.libs/libast_pal.a $(ROOT)/lib/.
 
 #-------------------------- funtools

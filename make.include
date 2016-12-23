@@ -195,9 +195,11 @@ tkcon	:
 #-------------------------- tkhtml1
 
 # no parallel
+# make sure htmltokens.c does not get regenerated (windows)
 tkhtml1	: tkhtml1/Makefile
 	@echo ""
 	@echo "*** Install tkhtml1 ***"
+	touch tkhtml1/src/htmltokens.c
 	$(MAKE) -C tkhtml1 install
 
 tkhtml1/Makefile :

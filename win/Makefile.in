@@ -19,7 +19,7 @@ include ./make.include
 
 .PHONY	: saods9 tcl tk tkwin libxml2 libxslt zlib
 
-saods9	: dirs tcl tk \
+saods9	: tcl tk \
 	libxml2 libxslt zlib \
 	tclxml xpa \
 	tkblt tktable tkimg \

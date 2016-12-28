@@ -15,7 +15,7 @@ include ./make.include
 
 .PHONY	: saods9 tcl tk
 
-saods9	: dirs tcl tk \
+saods9	: tcl tk \
 	tclcheckdns tcliis tclsignal \
 	tclzvfs tclxml xpa \
 	tkblt tktable tkimg \

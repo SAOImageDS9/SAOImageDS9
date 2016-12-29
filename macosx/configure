@@ -584,7 +584,6 @@ PACKAGE_URL=''
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 CORES
-ROOT
 ARCH
 OS
 PKG_CFLAGS
@@ -1859,8 +1858,8 @@ OS="macosx"
 ARCH=$with_arch
 
 
-ROOT=$ac_pwd
-
+prefix=$ac_pwd
+exec_prefix=$ac_pwd
 
 CORES=`sysctl -n "hw.ncpu"`
 

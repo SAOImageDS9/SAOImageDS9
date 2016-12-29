@@ -41,8 +41,8 @@ AC_SUBST(OS)
 ARCH=$with_arch
 AC_SUBST(ARCH)
 
-ROOT=$ac_pwd
-AC_SUBST(ROOT)
+prefix=$ac_pwd
+exec_prefix=$ac_pwd
 
 CORES=`sysctl -n "hw.ncpu"`
 AC_SUBST(CORES)

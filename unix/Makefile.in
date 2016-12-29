@@ -42,7 +42,7 @@ tcl$(TCLVER)/unix/Makefile :
 	@echo "*** Configure tcl$(TCLVER) ***"
 	cd tcl$(TCLVER)/unix; \
 	./configure \
-	--prefix $(prefix) --exec-prefix $(prefix) --libdir $(libdir) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	--config-cache --cache-file=../../config.cache
 
@@ -57,7 +57,7 @@ tk$(TCLVER)/unix/Makefile :
 	cd tk$(TCLVER)/unix; \
 	./configure \
 	$(TKFLAGS) \
-	--prefix $(prefix) --exec-prefix $(prefix) --libdir $(libdir) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	--config-cache --cache-file=../../config.cache
 

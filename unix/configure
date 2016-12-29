@@ -586,7 +586,6 @@ LIBOBJS
 CORES
 TKIMGFLAGS
 TKFLAGS
-ROOT
 ARCH
 OS
 PKG_CFLAGS
@@ -1861,7 +1860,9 @@ OS="unix"
 ARCH=$with_arch
 
 
-ROOT=$ac_pwd
+prefix=$ac_pwd
+
+exec_prefix=$ac_pwd
 
 
 

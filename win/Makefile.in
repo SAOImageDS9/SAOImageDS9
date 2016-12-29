@@ -21,7 +21,7 @@ TCLXMLFLAGS =--with-xml-static=yes
 TARGET =--build=x86_64-unknown-mingw32
 WITHTCL =--with-tcl=$(prefix)/tcl$(TCLVER)/win
 WITHTK  =--with-tk=$(prefix)/tk$(TCLVER)/win $(WITHTCL)
-CACHE	=--config-cache --cache-file=../config.cache
+CACHE	=--config-cache --cache-file=$(prefix)/config.cache
 
 include ./make.include
 
@@ -52,7 +52,7 @@ tcl$(TCLVER)/win/Makefile :
 	./configure \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared \
-	--config-cache --cache-file=../../config.cache
+	--config-cache --cache-file=$(prefix)/config.cache
 
 tk	: tk$(TCLVER)/win/Makefile
 	@echo ""
@@ -82,7 +82,7 @@ tkwin/Makefile :
 	$(WITHTK) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) \
 	--disable-shared --enable-symbols \
-	--config-cache --cache-file=../../config.cache
+	--config-cache --cache-file=$(prefix)/config.cache
 
 libxml2 : libxml2/win32/config.mingw
 	@echo ""
@@ -90,7 +90,7 @@ libxml2 : libxml2/win32/config.mingw
 	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw dep
 	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw libxmla
 	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw install-libsa
-	cp libxml2/win32/xml2-config $(exec_prefix)/bin
+	cp libxml2/win32/xml2-config $(bindir)
 
 libxml2/win32/config.mingw :
 	@echo ""
@@ -105,7 +105,7 @@ libxslt : libxslt/win32/config.mingw
 	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw libxslta
 	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw libexslta
 	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw install-libsa
-	cp libxslt/win32/xslt-config $(exec_prefix)/bin
+	cp libxslt/win32/xslt-config $(bindir)
 
 libxslt/win32/config.mingw :
 	@echo ""

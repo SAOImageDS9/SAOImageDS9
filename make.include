@@ -2,7 +2,7 @@ include ./make.pkgs
 
 #-------------------------- dirs
 
-DIRS = bin lib include man share dist
+DIRS = $(bindir) $(libdir) $(includedir) $(mandir) $(datadir) dist
 
 #-------------------------- cvs stuff
 
@@ -57,7 +57,7 @@ ds9/$(OS)/Makefile :
 	cd ds9/$(OS); \
 	./configure \
 	$(WITHTK) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--enable-symbols
 
 #-------------------------- tclcheckdns
@@ -73,7 +73,7 @@ tclcheckdns/Makefile :
 	cd tclcheckdns; \
 	./configure \
 	$(WITHTCL) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -90,7 +90,7 @@ tcliis/Makefile :
 	cd tcliis; \
 	./configure \
 	$(WITHTCL) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -107,7 +107,7 @@ tclsignal/Makefile :
 	cd tclsignal; \
 	./configure \
 	$(WITHTCL) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -126,7 +126,7 @@ tclxml/Makefile :
 	./configure \
 	$(WITHTCL) \
 	$(TCLXMLFLAGS) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -143,7 +143,7 @@ tclzvfs/Makefile :
 	cd tclzvfs; \
 	./configure \
 	$(WITHTCL) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -162,7 +162,7 @@ xpa/Makefile :
 	./configure \
 	$(CONFIGFLAGS) $(TARGET) $(XPAFLAGS) \
 	$(WITHTCL) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	--with-x=disabled
 
@@ -179,7 +179,7 @@ tkblt/Makefile :
 	cd tkblt; \
 	./configure \
 	$(WITHTK) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -188,9 +188,9 @@ tkblt/Makefile :
 tkcon	:
 	@echo ""
 	@echo "*** Install $@ ***"
-	$(RM) -r lib/tkcon$(TKCONVER)
-	mkdir lib/tkcon$(TKCONVER)
-	cp tkcon/*.tcl lib/tkcon$(TKCONVER)
+	$(RM) -r $(libdir)/tkcon$(TKCONVER)
+	mkdir $(libdir)/tkcon$(TKCONVER)
+	cp tkcon/*.tcl $(libdir)/tkcon$(TKCONVER)
 
 #-------------------------- tkhtml1
 
@@ -208,7 +208,7 @@ tkhtml1/Makefile :
 	cd tkhtml1; \
 	./configure \
 	$(WITHTK) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -227,7 +227,7 @@ tkimg/Makefile :
 	./configure \
 	CFLAGS='-DPNG_NO_WRITE_gAMA' \
 	$(WITHTK) $(TKIMGFLAGS) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols
 
 #-------------------------- tkmpeg
@@ -243,7 +243,7 @@ tkmpeg/Makefile :
 	cd tkmpeg; \
 	./configure \
 	$(WITHTK) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -260,7 +260,7 @@ tksao/Makefile :
 	cd tksao; \
 	./configure \
 	$(WITHTK) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -277,7 +277,7 @@ ast/Makefile :
 	--without-pthreads --enable-shared=no \
 	star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no \
 	$(CONFIGFLAGS) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared
 	cd ast; touch configure.ac aclocal.m4 configure Makefile.am Makefile.in
 
@@ -288,32 +288,32 @@ ast/ast.h :
 	$(MAKE) -C ast -j $(JOBS) libast.la
 	$(MAKE) -C ast -j $(JOBS) libast_err.la
 	$(MAKE) -C ast -j $(JOBS) libast_pal.la
-	cp ast/ast.h $(ROOT)/include/.
-	cp ast/grf.h $(ROOT)/include/.
-	cp ast/grf3d.h $(ROOT)/include/.
-	cp ast/.libs/libast.a $(ROOT)/lib/.
-	cp ast/.libs/libast_err.a $(ROOT)/lib/.
-	cp ast/.libs/libast_pal.a $(ROOT)/lib/.
+	cp ast/ast.h $(includedir)/.
+	cp ast/grf.h $(includedir)/.
+	cp ast/grf3d.h $(includedir)/.
+	cp ast/.libs/libast.a $(libdir)/.
+	cp ast/.libs/libast_err.a $(libdir)/.
+	cp ast/.libs/libast_pal.a $(libdir)/.
 
 ast/.libs/libast.a :
 	@echo ""
 	@echo "*** Install ast/ast.h ***"
 	$(MAKE) -C ast -j ast.h
-	cp ast/ast.h $(ROOT)/include/.
-	cp ast/grf.h $(ROOT)/include/.
-	cp ast/grf3d.h $(ROOT)/include/.
+	cp ast/ast.h $(includedir)/.
+	cp ast/grf.h $(includedir)/.
+	cp ast/grf3d.h $(includedir)/.
 
 ast/.libs/libast_err.a :
 	@echo ""
 	@echo "*** Install ast/libast_err.a ***"
 	$(MAKE) -C ast -j $(JOBS) libast_err.la
-	cp ast/.libs/libast_err.a $(ROOT)/lib/.
+	cp ast/.libs/libast_err.a $(libdir)/.
 
 ast/.libs/libast_pal.a :
 	@echo ""
 	@echo "*** Install ast/libast_pal.a ***"
 	$(MAKE) -C ast -j $(JOBS) libast_pal.la
-	cp ast/.libs/libast_pal.a $(ROOT)/lib/.
+	cp ast/.libs/libast_pal.a $(libdir)/.
 
 #-------------------------- funtools
 
@@ -324,20 +324,20 @@ funtools/libfuntools.a : funtools/Makefile
 	@echo ""
 	@echo "*** Install funtools ***"
 	$(MAKE) -C funtools lib
-	cp funtools/funtools.h $(ROOT)/include/.
-	cp funtools/filter/*.h $(ROOT)/include/.
-	cp funtools/util/*.h $(ROOT)/include/.
-	cp funtools/fitsy/*.h $(ROOT)/include/.
-	cp funtools/libfuntools.a $(ROOT)/lib/.
+	cp funtools/funtools.h $(includedir)/.
+	cp funtools/filter/*.h $(includedir)/.
+	cp funtools/util/*.h $(includedir)/.
+	cp funtools/fitsy/*.h $(includedir)/.
+	cp funtools/libfuntools.a $(libdir)/.
 
 funtools/Makefile : funtools/configure
 	@echo ""
 	@echo "*** Configure funtools ***"
 	cd funtools; \
 	./configure \
-	--with-zlib=../lib --with-wcslib=../lib \
+	--with-zlib=$(libdir) --with-wcslib=$(libdir) \
 	$(CONFIGFLAGS) $(TARGET) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared
 
 funtools/configure :
@@ -358,7 +358,7 @@ tktable/Makefile :
 	cd tktable; \
 	./configure \
 	$(WITHTK) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -441,7 +441,7 @@ tkhtml1clean:
 
 tkimgclean:
 	rm -fr tkimg/Img/*
-	rm -fr lib/Img1.*
+	rm -fr $(libdir)/Img1.*
 	$(MAKE) -C tkimg clean
 
 tkmpegclean:
@@ -519,7 +519,7 @@ tkhtml1distclean:
 
 tkimgdistclean: 
 	rm -fr tkimg/Img/*
-	rm -fr lib/Img1.*
+	rm -fr $(libdir)/Img1.*
 	$(MAKE) -C tkimg distclean
 
 tkmpegdistclean:

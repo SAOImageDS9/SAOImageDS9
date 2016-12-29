@@ -15,7 +15,7 @@ JOBS	= @CORES@
 
 WITHTCL =--with-tcl=$(prefix)/build/tcl/Development
 WITHTK  =--with-tk=$(prefix)/build/tk/Development $(WITHTCL)
-CACHE	=--config-cache --cache-file=../config.cache
+CACHE	=--config-cache --cache-file=$(prefix)/config.cache
 
 include ./make.include
 
@@ -69,7 +69,7 @@ tcl$(TCLVER)/macosx/Makefile :
 	./configure \
 	--enable-64bit \
 	--enable-symbols \
-	--config-cache --cache-file=../../config.cache
+	--config-cache --cache-file=$(prefix)/config.cache
 
 tk	: tk$(TCLVER)/macosx/Makefile
 	@echo ""
@@ -94,7 +94,7 @@ tk$(TCLVER)/macosx/Makefile :
 	$(WITHTCL) \
 	--enable-64bit \
 	--enable-symbols \
-	--config-cache --cache-file=../config.cache
+	--config-cache --cache-file=$(prefix)/config.cache
 
 tkmacosx: tkmacosx/Makefile
 	@echo ""
@@ -109,7 +109,7 @@ tkmacosx/Makefile :
 	$(WITHTK) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
-	--config-cache --cache-file=../config.cache
+	--config-cache --cache-file=$(prefix)/config.cache
 
 #--------------------------clean
 

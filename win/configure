@@ -1859,9 +1859,7 @@ ARCH=$with_arch
 
 
 prefix=$ac_pwd
-
 exec_prefix=$ac_pwd
-
 
 CORES=`grep -c ^processor /proc/cpuinfo`
 

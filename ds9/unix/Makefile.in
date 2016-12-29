@@ -1,4 +1,14 @@
-include ../../make.pkgs
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+
+bindir		= @bindir@
+libdir		= @libdir@
+includedir	= @includedir@
+datarootdir	= @datarootdir@
+datadir		= @datadir@
+mandir		= @mandir@
+
+include $(prefix)/make.pkgs
 
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
@@ -53,33 +63,33 @@ FILES	= \
 	$(ZDIR)/template
 
 LLIBS	= \
-	../../lib/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
-	../../lib/libfuntools.a \
-	../../lib/libast.a \
-	../../lib/libast_err.a \
-	../../lib/libast_pal.a \
-	../../lib/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
-	../../lib/tkhtml1$(TKHTMLVER)/libtkhtml1$(TKHTMLVER).a \
-	../../lib/tkmpeg$(TKMPEGVER)/libtkmpeg$(TKMPEGVER).a \
-	../../lib/Tclxml$(TCLXMLVER)/libTclxml$(TCLXMLVER).a \
-	../../lib/Tktable$(TKTABLEVER)/libTktable$(TKTABLEVER).a \
-	../../lib/Img$(TKIMGVER)/libtkimgpng1.4.2.a \
-	../../lib/Img$(TKIMGVER)/libpngtcl1.4.12.a \
-	../../lib/Img$(TKIMGVER)/libtkimgtiff1.4.2.a \
-	../../lib/Img$(TKIMGVER)/libtifftcl3.9.4.a \
-	../../lib/Img$(TKIMGVER)/libtkimgjpeg1.4.2.a \
-	../../lib/Img$(TKIMGVER)/libjpegtcl8.4.a \
-	../../lib/Img$(TKIMGVER)/libtkimggif1.4.2.a \
-	../../lib/Img$(TKIMGVER)/libtkimgwindow1.4.2.a \
-	../../lib/Img$(TKIMGVER)/libzlibtcl1.2.8.a \
-	../../lib/Img$(TKIMGVER)/libtkimg1.4.2.a \
-	../../lib/tclzvfs$(TCLZVFSVER)/libtclzvfs$(TCLZVFSVER).a \
-	../../lib/libxpa.a \
-	../../lib/tcliis$(TCLIISVER)/libtcliis$(TCLIISVER).a \
-	../../lib/tclcheckdns$(TCLCHECKDNSVER)/libtclcheckdns$(TCLCHECKDNSVER).a \
-	../../lib/tclsignal$(TCLSIGNALVER)/libtclsignal$(TCLSIGNALVER).a \
-	../../lib/tkblt$(TKBLTVER)/libtkbltstub$(TKBLTVER).a \
-	../../lib/tkblt$(TKBLTVER)/libtkblt$(TKBLTVER).a
+	$(libdir)/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
+	$(libdir)/libfuntools.a \
+	$(libdir)/libast.a \
+	$(libdir)/libast_err.a \
+	$(libdir)/libast_pal.a \
+	$(libdir)/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
+	$(libdir)/tkhtml1$(TKHTMLVER)/libtkhtml1$(TKHTMLVER).a \
+	$(libdir)/tkmpeg$(TKMPEGVER)/libtkmpeg$(TKMPEGVER).a \
+	$(libdir)/Tclxml$(TCLXMLVER)/libTclxml$(TCLXMLVER).a \
+	$(libdir)/Tktable$(TKTABLEVER)/libTktable$(TKTABLEVER).a \
+	$(libdir)/Img$(TKIMGVER)/libtkimgpng1.4.2.a \
+	$(libdir)/Img$(TKIMGVER)/libpngtcl1.4.12.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimgtiff1.4.2.a \
+	$(libdir)/Img$(TKIMGVER)/libtifftcl3.9.4.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimgjpeg1.4.2.a \
+	$(libdir)/Img$(TKIMGVER)/libjpegtcl8.4.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimggif1.4.2.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimgwindow1.4.2.a \
+	$(libdir)/Img$(TKIMGVER)/libzlibtcl1.2.8.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimg1.4.2.a \
+	$(libdir)/tclzvfs$(TCLZVFSVER)/libtclzvfs$(TCLZVFSVER).a \
+	$(libdir)/libxpa.a \
+	$(libdir)/tcliis$(TCLIISVER)/libtcliis$(TCLIISVER).a \
+	$(libdir)/tclcheckdns$(TCLCHECKDNSVER)/libtclcheckdns$(TCLCHECKDNSVER).a \
+	$(libdir)/tclsignal$(TCLSIGNALVER)/libtclsignal$(TCLSIGNALVER).a \
+	$(libdir)/tkblt$(TKBLTVER)/libtkbltstub$(TKBLTVER).a \
+	$(libdir)/tkblt$(TKBLTVER)/libtkblt$(TKBLTVER).a
 
 #--------------------------main
 
@@ -147,17 +157,17 @@ tkAppInit.c : ../../tk$(TCLVER)/unix/tkAppInit.c
 $(ZDIR)	: 
 	mkdir $@
 
-$(ZDIR)/tcl$(TCLVER) : ../../lib/tcl$(TCLVER)
+$(ZDIR)/tcl$(TCLVER) : $(prefix)/lib/tcl$(TCLVER)
 	$(RM) -r $@
-	cp -r ../../lib/tcl$(TCLVER) $(ZDIR)/.
+	cp -r $(prefix)/lib/tcl$(TCLVER) $(ZDIR)/.
 
-$(ZDIR)/tcl8 : ../../lib/tcl8
+$(ZDIR)/tcl8 : $(prefix)/lib/tcl8
 	$(RM) -r $@
-	cp -r ../../lib/tcl8 $(ZDIR)/.
+	cp -r $(prefix)/lib/tcl8 $(ZDIR)/.
 
-$(ZDIR)/tk$(TCLVER) : ../../lib/tk$(TCLVER)
+$(ZDIR)/tk$(TCLVER) : $(prefix)/lib/tk$(TCLVER)
 	$(RM) -r $@
-	cp -r ../../lib/tk$(TCLVER) $(ZDIR)/.
+	cp -r $(prefix)/lib/tk$(TCLVER) $(ZDIR)/.
 	rm -rf $(ZDIR)/tk$(TCLVER)/images
 	rm -rf $(ZDIR)/tk$(TCLVER)/demos
 
@@ -175,9 +185,9 @@ $(ZDIR)/tcllib :
 	cp -r ../../tcllib/modules/textutil $(ZDIR)/tcllib/.
 	cp -r ../../tcllib/modules/math $(ZDIR)/tcllib/.
 
-$(ZDIR)/tkcon : ../../lib/tkcon$(TKCONVER)
+$(ZDIR)/tkcon : $(prefix)/lib/tkcon$(TKCONVER)
 	$(RM) -r $@
-	cp -r ../../lib/tkcon$(TKCONVER) $@
+	cp -r $(prefix)/lib/tkcon$(TKCONVER) $@
 
 $(ZDIR)/library : ../library/*.tcl
 	$(RM) -r $@

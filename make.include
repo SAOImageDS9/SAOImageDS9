@@ -2,7 +2,7 @@ include ./make.pkgs
 
 #-------------------------- dirs
 
-DIRS = $(bindir) $(libdir) $(includedir) $(datadir) $(mandir) dist
+DIRS = $(bindir) $(libdir) $(includedir) man dist
 
 #-------------------------- cvs stuff
 

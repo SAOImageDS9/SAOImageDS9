@@ -17,7 +17,7 @@ JOBS	= @CORES@
 
 WITHTCL =--with-tcl=$(prefix)/tcl$(TCLVER)/unix
 WITHTK  =--with-tk=$(prefix)/tk$(TCLVER)/unix $(WITHTCL)
-CACHE	=--config-cache --cache-file=../config.cache
+CACHE	=--config-cache --cache-file=$(prefix)/config.cache
 
 include ./make.include
 
@@ -44,7 +44,7 @@ tcl$(TCLVER)/unix/Makefile :
 	./configure \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
-	--config-cache --cache-file=../../config.cache
+	--config-cache --cache-file=$(prefix)/config.cache
 
 tk	: tk$(TCLVER)/unix/Makefile
 	@echo ""
@@ -59,7 +59,7 @@ tk$(TCLVER)/unix/Makefile :
 	$(TKFLAGS) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
-	--config-cache --cache-file=../../config.cache
+	--config-cache --cache-file=$(prefix)/config.cache
 
 #--------------------------clean
 
@@ -78,5 +78,5 @@ tkunixdistclean :
 .PHONY	: dist
 
 dist	:
-	cd bin; tar cvf - ds9* | gzip > ../dist/ds9.$(ARCH).$(DS9VERSION).tar.gz
-	cd bin; tar cvf - xpa* | gzip > ../dist/xpa.$(ARCH).$(XPAVERSION).tar.gz
+	cd bin; tar cvf - ds9* | gzip > $(prefix)/dist/ds9.$(ARCH).$(DS9VERSION).tar.gz
+	cd bin; tar cvf - xpa* | gzip > $(prefix)/dist/xpa.$(ARCH).$(XPAVERSION).tar.gz

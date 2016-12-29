@@ -1861,9 +1861,7 @@ ARCH=$with_arch
 
 
 prefix=$ac_pwd
-
 exec_prefix=$ac_pwd
-
 
 
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking system version" >&5

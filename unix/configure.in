@@ -42,9 +42,7 @@ ARCH=$with_arch
 AC_SUBST(ARCH)
 
 prefix=$ac_pwd
-AC_SUBST(prefix)
 exec_prefix=$ac_pwd
-AC_SUBST(exec_prefix)
 
 TEA_CONFIG_SYSTEM
 

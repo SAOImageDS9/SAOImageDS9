@@ -1,6 +1,16 @@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+
+bindir		= @bindir@
+libdir		= $(exec_prefix)/lib
+#libdir		= @libdir@
+includedir	= @includedir@
+datarootdir	= @datarootdir@
+datadir		= @datadir@
+mandir		= @mandir@
+
 OS	= @OS@
 ARCH	= @ARCH@
-ROOT	= @ROOT@
 EXEEXT	= @EXEEXT@
 JOBS	= @CORES@
 
@@ -9,8 +19,8 @@ ASTFLAGS =CFLAGS=-DCMINPACK_NO_DLL
 XPAFLAGS =CFLAGS=-DSTATIC_BUILD
 TCLXMLFLAGS =--with-xml-static=yes
 TARGET =--build=x86_64-unknown-mingw32
-WITHTCL =--with-tcl=$(ROOT)/tcl$(TCLVER)/win
-WITHTK  =--with-tk=$(ROOT)/tk$(TCLVER)/win $(WITHTCL)
+WITHTCL =--with-tcl=$(prefix)/tcl$(TCLVER)/win
+WITHTK  =--with-tk=$(prefix)/tk$(TCLVER)/win $(WITHTCL)
 CACHE	=--config-cache --cache-file=../config.cache
 
 include ./make.include
@@ -40,7 +50,7 @@ tcl$(TCLVER)/win/Makefile :
 	@echo "*** Configure tcl$(TCLVER) ***"
 	cd tcl$(TCLVER)/win; \
 	./configure \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared \
 	--config-cache --cache-file=../../config.cache
 
@@ -56,7 +66,7 @@ tk$(TCLVER)/win/Makefile :
 	./configure \
 	$(WITHTCL) \
 	$(TKFLAGS) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols
 
 tkwin: tkwin/Makefile
@@ -70,7 +80,7 @@ tkwin/Makefile :
 	cd tkwin; \
 	./configure \
 	$(WITHTK) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) \
 	--disable-shared --enable-symbols \
 	--config-cache --cache-file=../../config.cache
 
@@ -80,7 +90,7 @@ libxml2 : libxml2/win32/config.mingw
 	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw dep
 	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw libxmla
 	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw install-libsa
-	cp libxml2/win32/xml2-config $(ROOT)/bin
+	cp libxml2/win32/xml2-config $(exec_prefix)/bin
 
 libxml2/win32/config.mingw :
 	@echo ""
@@ -95,7 +105,7 @@ libxslt : libxslt/win32/config.mingw
 	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw libxslta
 	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw libexslta
 	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw install-libsa
-	cp libxslt/win32/xslt-config $(ROOT)/bin
+	cp libxslt/win32/xslt-config $(exec_prefix)/bin
 
 libxslt/win32/config.mingw :
 	@echo ""
@@ -114,7 +124,7 @@ zlib_Makefile :
 	@echo "*** Configure zlib ***"
 	cd zlib; \
 	$(CONFIGFLAGS) CFLAGS=-DSTATIC_BUILD=1 ./configure \
-	--prefix $(ROOT) --eprefix $(ROOT) \
+	--prefix $(prefix) -eprefix $(exec_prefix) --libdir $(libdir) \
 	--static
 
 #--------------------------clean

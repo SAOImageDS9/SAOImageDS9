@@ -1,4 +1,14 @@
-include ../../make.pkgs
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+
+bindir		= @bindir@
+libdir		= @libdir@
+includedir	= @includedir@
+datarootdir	= @datarootdir@
+datadir		= @datadir@
+mandir		= @mandir@
+
+include $(prefix)/make.pkgs
 
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
@@ -37,34 +47,34 @@ STRIP		= i686-w64-mingw32-strip.exe
 OBJS	= ds9.o winMain.o ds9.res.o
 
 LLIBS	= \
-	../../lib/tksao$(TKSAOVER)/tksao10.a \
-	../../lib/libfuntools.a \
-	../../lib/libast.a \
-	../../lib/libast_err.a \
-	../../lib/libast_pal.a \
-	../../lib/tksao$(TKSAOVER)/tksao10.a \
-	../../lib/tkhtml1$(TKHTMLVER)/tkhtml110.a \
-	../../lib/tkmpeg$(TKMPEGVER)/tkmpeg10.a \
-	../../lib/Tclxml$(TCLXMLVER)/Tclxml32.a \
-	../../lib/Tktable$(TKTABLEVER)/Tktable210.a \
-	../../lib/Img$(TKIMGVER)/libtkimgpng142.a \
-	../../lib/Img$(TKIMGVER)/libpngtcl1412.a \
-	../../lib/Img$(TKIMGVER)/libtkimgtiff142.a \
-	../../lib/Img$(TKIMGVER)/libtifftcl394.a \
-	../../lib/Img$(TKIMGVER)/libtkimgjpeg142.a \
-	../../lib/Img$(TKIMGVER)/libjpegtcl84.a \
-	../../lib/Img$(TKIMGVER)/libtkimggif142.a \
-	../../lib/Img$(TKIMGVER)/libtkimgwindow142.a \
-	../../lib/Img$(TKIMGVER)/zlibtcl128.a \
-	../../lib/Img$(TKIMGVER)/libtkimg142.a \
-	../../lib/libxpa.a \
-	../../lib/tkblt$(TKBLTVER)/libtkbltstub32.a \
-	../../lib/tkblt$(TKBLTVER)/tkblt32.a \
-	../../lib/tkwin$(TKWINVER)/tkwin10.a \
-	../../lib/libxml2.a \
-	../../lib/libz.a
+	$(libdir)/tksao$(TKSAOVER)/tksao10.a \
+	$(libdir)/libfuntools.a \
+	$(libdir)/libast.a \
+	$(libdir)/libast_err.a \
+	$(libdir)/libast_pal.a \
+	$(libdir)/tksao$(TKSAOVER)/tksao10.a \
+	$(libdir)/tkhtml1$(TKHTMLVER)/tkhtml110.a \
+	$(libdir)/tkmpeg$(TKMPEGVER)/tkmpeg10.a \
+	$(libdir)/Tclxml$(TCLXMLVER)/Tclxml32.a \
+	$(libdir)/Tktable$(TKTABLEVER)/Tktable210.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimgpng142.a \
+	$(libdir)/Img$(TKIMGVER)/libpngtcl1412.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimgtiff142.a \
+	$(libdir)/Img$(TKIMGVER)/libtifftcl394.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimgjpeg142.a \
+	$(libdir)/Img$(TKIMGVER)/libjpegtcl84.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimggif142.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimgwindow142.a \
+	$(libdir)/Img$(TKIMGVER)/zlibtcl128.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimg142.a \
+	$(libdir)/libxpa.a \
+	$(libdir)/tkblt$(TKBLTVER)/libtkbltstub32.a \
+	$(libdir)/tkblt$(TKBLTVER)/tkblt32.a \
+	$(libdir)/tkwin$(TKWINVER)/tkwin10.a \
+	$(libdir)/libxml2.a \
+	$(libdir)/libz.a
 
-APPDIR	= ../../bin/ds9app
+APPDIR	= $(bindir)/ds9app
 
 #--------------------------main
 
@@ -97,13 +107,13 @@ winMain.o : winMain.c
 	-DTK_LOCAL_APPINIT=SAOAppInit -DTK_LOCAL_MAIN_HOOK=SAOLocalMainHook \
 	-c winMain.c -o $@
 
-winMain.c : ../../tk$(TCLVER)/win/winMain.c
-	cp ../../tk$(TCLVER)/win/winMain.c .
+winMain.c : $(prefix)/tk$(TCLVER)/win/winMain.c
+	cp $(prefix)/tk$(TCLVER)/win/winMain.c .
 
 ds9.res.o: ds9.rc ds9.ico
 	i686-w64-mingw32-windres -o $@ \
-	--define STATIC_BUILD --include ../../tk$(TCLVER)/generic \
-	--include ../../$(TCLDIR)/generic --include ../../tk$(TCLVER)/win/rc \
+	--define STATIC_BUILD --include $(prefix)/tk$(TCLVER)/generic \
+	--include $(prefix)/$(TCLDIR)/generic --include $(prefix)/tk$(TCLVER)/win/rc \
 	ds9.rc
 
 appdir	:
@@ -117,31 +127,31 @@ framework:
 	cp -pr ../doc $(APPDIR)/.
 	cp -pr ../cmaps $(APPDIR)/.
 	cp -pr ../template $(APPDIR)/.
-	echo "pkg_mkIndex $(APPDIR)/library *.tcl; exit" | ../../bin/tclsh86s
+	echo "pkg_mkIndex $(APPDIR)/library *.tcl; exit" | $(bindir)/tclsh86s
 
 tcltk	:
-	cp -pr ../../lib/tcl8 $(APPDIR)/.
-	cp -pr ../../lib/tcl8.6 $(APPDIR)/.
-	cp -pr ../../lib/tk8.6 $(APPDIR)/.
+	cp -pr $(prefix)/lib/tcl8 $(APPDIR)/.
+	cp -pr $(prefix)/lib/tcl8.6 $(APPDIR)/.
+	cp -pr $(prefix)/lib/tk8.6 $(APPDIR)/.
 
 tkblt	:
 	mkdir $(APPDIR)/tkblt
-	cp -p ../../tkblt/library/graph.tcl $(APPDIR)/tkblt/.
-	echo "pkg_mkIndex $(APPDIR)/tkblt *.tcl; exit" | ../../bin/tclsh86s
+	cp -p $(prefix)/tkblt/library/graph.tcl $(APPDIR)/tkblt/.
+	echo "pkg_mkIndex $(APPDIR)/tkblt *.tcl; exit" | $(bindir)/tclsh86s
 
 tcllib	:
-	cp -pr ../../tcllib/modules/base64 $(APPDIR)/.
-	cp -pr ../../tcllib/modules/ftp $(APPDIR)/.
-	cp -pr ../../tcllib/modules/log $(APPDIR)/.
-	cp -pr ../../tcllib/modules/textutil $(APPDIR)/.
-	cp -pr ../../tcllib/modules/math $(APPDIR)/.
+	cp -pr $(prefix)/tcllib/modules/base64 $(APPDIR)/.
+	cp -pr $(prefix)/tcllib/modules/ftp $(APPDIR)/.
+	cp -pr $(prefix)/tcllib/modules/log $(APPDIR)/.
+	cp -pr $(prefix)/tcllib/modules/textutil $(APPDIR)/.
+	cp -pr $(prefix)/tcllib/modules/math $(APPDIR)/.
 
 tkcon	:
 	mkdir $(APPDIR)/tkcon
-	cp -p ../../tkcon/*.tcl $(APPDIR)/tkcon/.
+	cp -p $(prefix)/tkcon/*.tcl $(APPDIR)/tkcon/.
 
 xpa	:
-	cp -p ../../bin/xpans.exe $(APPDIR)/.
+	cp -p $(bindir)/xpans.exe $(APPDIR)/.
 
 cleanup:
 	cd $(APPDIR); find . -depth -name CVS -exec rm -rf {} \;

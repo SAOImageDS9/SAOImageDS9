@@ -1,4 +1,14 @@
-include ../../make.pkgs
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+
+bindir		= @bindir@
+libdir		= @libdir@
+includedir	= @includedir@
+datarootdir	= @datarootdir@
+datadir		= @datadir@
+mandir		= @mandir@
+
+include $(prefix)/make.pkgs
 
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
@@ -37,41 +47,41 @@ ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d
 OBJS	= ds9.o tkAppInit.o
 
 LLIBS	= \
-	../../lib/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
-	../../lib/libfuntools.a \
-	../../lib/libast.a \
-	../../lib/libast_err.a \
-	../../lib/libast_pal.a \
-	../../lib/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
-	../../lib/tkhtml1$(TKHTMLVER)/libtkhtml1$(TKHTMLVER).a \
-	../../lib/tkmpeg$(TKMPEGVER)/libtkmpeg$(TKMPEGVER).a \
-	../../lib/Tclxml$(TCLXMLVER)/libTclxml$(TCLXMLVER).a \
-	../../lib/Tktable$(TKTABLEVER)/libTktable$(TKTABLEVER).a \
-	../../lib/Img$(TKIMGVER)/libtkimgpng1.4.2.a \
-	../../lib/Img$(TKIMGVER)/libpngtcl1.4.12.a \
-	../../lib/Img$(TKIMGVER)/libtkimgtiff1.4.2.a \
-	../../lib/Img$(TKIMGVER)/libtifftcl3.9.4.a \
-	../../lib/Img$(TKIMGVER)/libtkimgjpeg1.4.2.a \
-	../../lib/Img$(TKIMGVER)/libjpegtcl8.4.a \
-	../../lib/Img$(TKIMGVER)/libtkimggif1.4.2.a \
-	../../lib/Img$(TKIMGVER)/libtkimgwindow1.4.2.a \
-	../../lib/Img$(TKIMGVER)/libzlibtcl1.2.8.a \
-	../../lib/Img$(TKIMGVER)/libtkimg1.4.2.a \
-	../../lib/libxpa.a \
-	../../lib/tcliis$(TCLIISVER)/libtcliis$(TCLIISVER).a \
-	../../lib/tclcheckdns$(TCLCHECKDNSVER)/libtclcheckdns$(TCLCHECKDNSVER).a \
-	../../lib/tclsignal$(TCLSIGNALVER)/libtclsignal$(TCLSIGNALVER).a \
-	../../lib/tkblt$(TKBLTVER)/libtkbltstub$(TKBLTVER).a \
-	../../lib/tkblt$(TKBLTVER)/libtkblt$(TKBLTVER).a \
-	../../lib/tkmacosx$(TKMACOSXVER)/libtkmacosx$(TKMACOSXVER).a
+	$(libdir)/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
+	$(libdir)/libfuntools.a \
+	$(libdir)/libast.a \
+	$(libdir)/libast_err.a \
+	$(libdir)/libast_pal.a \
+	$(libdir)/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
+	$(libdir)/tkhtml1$(TKHTMLVER)/libtkhtml1$(TKHTMLVER).a \
+	$(libdir)/tkmpeg$(TKMPEGVER)/libtkmpeg$(TKMPEGVER).a \
+	$(libdir)/Tclxml$(TCLXMLVER)/libTclxml$(TCLXMLVER).a \
+	$(libdir)/Tktable$(TKTABLEVER)/libTktable$(TKTABLEVER).a \
+	$(libdir)/Img$(TKIMGVER)/libtkimgpng1.4.2.a \
+	$(libdir)/Img$(TKIMGVER)/libpngtcl1.4.12.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimgtiff1.4.2.a \
+	$(libdir)/Img$(TKIMGVER)/libtifftcl3.9.4.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimgjpeg1.4.2.a \
+	$(libdir)/Img$(TKIMGVER)/libjpegtcl8.4.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimggif1.4.2.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimgwindow1.4.2.a \
+	$(libdir)/Img$(TKIMGVER)/libzlibtcl1.2.8.a \
+	$(libdir)/Img$(TKIMGVER)/libtkimg1.4.2.a \
+	$(libdir)/libxpa.a \
+	$(libdir)/tcliis$(TCLIISVER)/libtcliis$(TCLIISVER).a \
+	$(libdir)/tclcheckdns$(TCLCHECKDNSVER)/libtclcheckdns$(TCLCHECKDNSVER).a \
+	$(libdir)/tclsignal$(TCLSIGNALVER)/libtclsignal$(TCLSIGNALVER).a \
+	$(libdir)/tkblt$(TKBLTVER)/libtkbltstub$(TKBLTVER).a \
+	$(libdir)/tkblt$(TKBLTVER)/libtkblt$(TKBLTVER).a \
+	$(libdir)/tkmacosx$(TKMACOSXVER)/libtkmacosx$(TKMACOSXVER).a
 
-APPDIR	= ../../bin/SAOImage\ DS9.app
-TKSAOFW	= ../../bin/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework
-TKSAORES= ../../bin/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework/Resources
-TCLFW	= ../../bin/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework
-TCLRES	= ../../bin/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework/Resources
-TKFW	= ../../bin/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework
-TKRES	= ../../bin/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework/Resources
+APPDIR	= $(bindir)/SAOImage\ DS9.app
+TKSAOFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework
+TKSAORES= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework/Resources
+TCLFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework
+TCLRES	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework/Resources
+TKFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework
+TKRES	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework/Resources
 
 #--------------------------main
 
@@ -90,7 +100,7 @@ ds9	: ds9base appdir framework tcl tk tcllib tkcon tkblt xpa compiler cleanup
 	/Library/Frameworks/Tk.framework/Versions/8.6/Tk \
 	@executable_path/../Frameworks/Tk.framework/Tk \
 	$(APPDIR)/Contents/MacOS/ds9
-	cd ../../bin; codesign --deep -f -s "$(ID)" SAOImage\ DS9.app
+	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImage\ DS9.app
 
 debug	: ds9base appdir framework tcl tk tcllib tkcon tkblt xpa compiler cleanup
 	cp -p ds9base $(APPDIR)/Contents/MacOS/ds9
@@ -102,14 +112,14 @@ debug	: ds9base appdir framework tcl tk tcllib tkcon tkblt xpa compiler cleanup
 	/Library/Frameworks/Tk.framework/Versions/8.6/Tk \
 	@executable_path/../Frameworks/Tk.framework/Tk \
 	$(APPDIR)/Contents/MacOS/ds9
-	cd ../../bin; codesign --deep -f -s "$(ID)" SAOImage\ DS9.app
+	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImage\ DS9.app
 
 tkAppInit.o : tkAppInit.c
 	$(COMPILE) -DTK_LOCAL_APPINIT=SAOAppInit \
 	-DTK_LOCAL_MAIN_HOOK=SAOLocalMainHook -c tkAppInit.c -o $@
 
-tkAppInit.c : ../../tk$(TCLVER)/unix/tkAppInit.c
-	cp ../../tk$(TCLVER)/unix/tkAppInit.c .
+tkAppInit.c : $(prefix)/tk$(TCLVER)/unix/tkAppInit.c
+	cp $(prefix)/tk$(TCLVER)/unix/tkAppInit.c .
 
 ds9base	: $(OBJS) $(LLIBS)
 	$(RM) $@
@@ -123,7 +133,7 @@ ds9base	: $(OBJS) $(LLIBS)
 
 appdir	:
 	rm -rf $(APPDIR)
-	cp -rp SAOImage\ DS9.app ../../bin/.
+	cp -rp SAOImage\ DS9.app $(bindir)/.
 
 framework:
 	cp -pr ../library $(TKSAORES)/.
@@ -133,55 +143,55 @@ framework:
 	cp -pr ../template $(TKSAORES)/.
 
 	rm $(TKSAORES)/library/source.tcl
-	echo "pkg_mkIndex $(TKSAORES)/library *.tcl; exit" | ../../bin/tclsh8.6
+	echo "pkg_mkIndex $(TKSAORES)/library *.tcl; exit" | $(bindir)/tclsh8.6
 
 tcl	:
-	cp -p ../../build/tcl/Tcl.framework/Versions/8.6/Tcl $(TCLFW)/.
-	cp -pr ../../build/tcl/Tcl.framework/Versions/8.6/Resources/* $(TCLRES)/.
+	cp -p $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl $(TCLFW)/.
+	cp -pr $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Resources/* $(TCLRES)/.
 
 tcl_debug:
-	cp -p ../../build/tcl/Tcl.framework/Versions/8.6/Tcl_debug $(TCLFW)/Tcl
-	cp -pr ../../build/tcl/Tcl.framework/Versions/8.6/Resources/* $(TCLRES)/.
+	cp -p $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl_debug $(TCLFW)/Tcl
+	cp -pr $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Resources/* $(TCLRES)/.
 
 tk	:
-	cp -p ../../build/tk/Tk.framework/Versions/8.6/Tk $(TKFW)/.
-	cp -p ../../build/tk/Tk.framework/Versions/8.6/Resources/Info.plist \
+	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Tk $(TKFW)/.
+	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Info.plist \
 	$(TKRES)/.
-	cp -p ../../build/tk/Tk.framework/Versions/8.6/Resources/license.terms \
+	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms \
 	$(TKRES)/.
-	cp -rp ../../build/tk/Tk.framework/Versions/8.6/Resources/Scripts \
+	cp -rp $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts \
 	$(TKRES)/.
 
 tk_debug:
-	cp -p ../../build/tk/Tk.framework/Versions/8.6/Tk_debug $(TKFW)/Tk
-	cp -p ../../build/tk/Tk.framework/Versions/8.6/Resources/Info.plist \
+	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Tk_debug $(TKFW)/Tk
+	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Info.plist \
 	$(TKRES)/.
-	cp -p ../../build/tk/Tk.framework/Versions/8.6/Resources/license.terms \
+	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms \
 	$(TKRES)/.
-	cp -rp ../../build/tk/Tk.framework/Versions/8.6/Resources/Scripts \
+	cp -rp $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts \
 	$(TKRES)/.
 
 tcllib	:
-	cp -pr ../../tcllib/modules/base64 $(TKSAORES)/.
-	cp -pr ../../tcllib/modules/ftp $(TKSAORES)/.
-	cp -pr ../../tcllib/modules/log $(TKSAORES)/.
-	cp -pr ../../tcllib/modules/textutil $(TKSAORES)/.
-	cp -pr ../../tcllib/modules/math $(TKSAORES)/.
+	cp -pr $(prefix)/tcllib/modules/base64 $(TKSAORES)/.
+	cp -pr $(prefix)/tcllib/modules/ftp $(TKSAORES)/.
+	cp -pr $(prefix)/tcllib/modules/log $(TKSAORES)/.
+	cp -pr $(prefix)/tcllib/modules/textutil $(TKSAORES)/.
+	cp -pr $(prefix)/tcllib/modules/math $(TKSAORES)/.
 
 tkcon	:
 	mkdir $(TKSAORES)/tkcon
-	cp -p ../../tkcon/*.tcl $(TKSAORES)/tkcon/.
+	cp -p $(prefix)/tkcon/*.tcl $(TKSAORES)/tkcon/.
 
 tkblt	:
 	mkdir $(TKSAORES)/tkblt
-	cp -p ../../tkblt/library/graph.tcl $(TKSAORES)/tkblt/.
-	echo "pkg_mkIndex $(TKSAORES)/tkblt *.tcl; exit" | ../../bin/tclsh8.6
+	cp -p $(prefix)/tkblt/library/graph.tcl $(TKSAORES)/tkblt/.
+	echo "pkg_mkIndex $(TKSAORES)/tkblt *.tcl; exit" | $(bindir)/tclsh8.6
 
 xpa	:
-	cp -pr ../../bin/xpans $(TKSAORES)/.
+	cp -pr $(bindir)/xpans $(TKSAORES)/.
 
 compiler:
-	cp -p ../../compilers/pcc-i386-snowleopard.tar.gz $(TKSAORES)/.
+	cp -p $(prefix)/compilers/pcc-i386-snowleopard.tar.gz $(TKSAORES)/.
 
 cleanup:
 	cd $(APPDIR); find . -depth -name CVS -exec rm -rf {} \;

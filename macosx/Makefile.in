@@ -1,10 +1,20 @@
+prefix		= @prefix@
+exec_prefix	= @exec_prefix@
+
+bindir		= @bindir@
+libdir		= $(exec_prefix)/lib
+#libdir		= @libdir@
+includedir	= @includedir@
+datarootdir	= @datarootdir@
+datadir		= @datadir@
+mandir		= @mandir@
+
 OS	= @OS@
 ARCH	= @ARCH@
-ROOT	= @ROOT@
 JOBS	= @CORES@
 
-WITHTCL =--with-tcl=$(ROOT)/build/tcl/Development
-WITHTK  =--with-tk=$(ROOT)/build/tk/Development $(WITHTCL)
+WITHTCL =--with-tcl=$(prefix)/build/tcl/Development
+WITHTK  =--with-tk=$(prefix)/build/tk/Development $(WITHTCL)
 CACHE	=--config-cache --cache-file=../config.cache
 
 include ./make.include
@@ -97,7 +107,7 @@ tkmacosx/Makefile :
 	cd tkmacosx; \
 	./configure \
 	$(WITHTK) \
-	--prefix $(ROOT) --exec-prefix $(ROOT) \
+	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	--config-cache --cache-file=../config.cache
 

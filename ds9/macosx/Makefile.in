@@ -10,6 +10,7 @@ mandir		= @mandir@
 
 include $(prefix)/make.pkgs
 
+TCL_VERSION	= @TCL_VERSION@
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
 TK_LIBS		= @TK_LIBS@
@@ -118,8 +119,8 @@ tkAppInit.o : tkAppInit.c
 	$(COMPILE) -DTK_LOCAL_APPINIT=SAOAppInit \
 	-DTK_LOCAL_MAIN_HOOK=SAOLocalMainHook -c tkAppInit.c -o $@
 
-tkAppInit.c : $(prefix)/tk$(TCLVER)/unix/tkAppInit.c
-	cp $(prefix)/tk$(TCLVER)/unix/tkAppInit.c .
+tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
+	cp $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c .
 
 ds9base	: $(OBJS) $(LLIBS)
 	$(RM) $@

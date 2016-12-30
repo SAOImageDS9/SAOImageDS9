@@ -10,6 +10,7 @@ mandir		= @mandir@
 
 include $(prefix)/make.pkgs
 
+TCL_VERSION	= @TCL_VERSION@
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
 TK_LIBS		= @TK_LIBS@
@@ -50,9 +51,9 @@ ZDIR	= zvfsmntpt
 OBJS	= ds9.o tkAppInit.o
 
 FILES	= \
-	$(ZDIR)/tcl$(TCLVER) \
+	$(ZDIR)/tcl$(TCL_VERSION) \
 	$(ZDIR)/tcl8 \
-	$(ZDIR)/tk$(TCLVER) \
+	$(ZDIR)/tk$(TCL_VERSION) \
 	$(ZDIR)/tkblt \
 	$(ZDIR)/tcllib \
 	$(ZDIR)/tkcon \
@@ -151,25 +152,25 @@ tkAppInit.o : tkAppInit.c
 	$(COMPILE) -DTK_LOCAL_APPINIT=SAOAppInit \
 	-DTK_LOCAL_MAIN_HOOK=SAOLocalMainHook -c tkAppInit.c -o $@
 
-tkAppInit.c : ../../tk$(TCLVER)/unix/tkAppInit.c
-	cp ../../tk$(TCLVER)/unix/tkAppInit.c .
+tkAppInit.c : ../../tk$(TCL_VERSION)/unix/tkAppInit.c
+	cp ../../tk$(TCL_VERSION)/unix/tkAppInit.c .
 
 $(ZDIR)	: 
 	mkdir $@
 
-$(ZDIR)/tcl$(TCLVER) : $(prefix)/lib/tcl$(TCLVER)
+$(ZDIR)/tcl$(TCL_VERSION) : $(prefix)/lib/tcl$(TCL_VERSION)
 	$(RM) -r $@
-	cp -r $(prefix)/lib/tcl$(TCLVER) $(ZDIR)/.
+	cp -r $(prefix)/lib/tcl$(TCL_VERSION) $(ZDIR)/.
 
 $(ZDIR)/tcl8 : $(prefix)/lib/tcl8
 	$(RM) -r $@
 	cp -r $(prefix)/lib/tcl8 $(ZDIR)/.
 
-$(ZDIR)/tk$(TCLVER) : $(prefix)/lib/tk$(TCLVER)
+$(ZDIR)/tk$(TCL_VERSION) : $(prefix)/lib/tk$(TCL_VERSION)
 	$(RM) -r $@
-	cp -r $(prefix)/lib/tk$(TCLVER) $(ZDIR)/.
-	rm -rf $(ZDIR)/tk$(TCLVER)/images
-	rm -rf $(ZDIR)/tk$(TCLVER)/demos
+	cp -r $(prefix)/lib/tk$(TCL_VERSION) $(ZDIR)/.
+	rm -rf $(ZDIR)/tk$(TCL_VERSION)/images
+	rm -rf $(ZDIR)/tk$(TCL_VERSION)/demos
 
 $(ZDIR)/tkblt :
 	$(RM) -r $@

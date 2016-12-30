@@ -127,7 +127,7 @@ framework:
 	cp -pr ../doc $(APPDIR)/.
 	cp -pr ../cmaps $(APPDIR)/.
 	cp -pr ../template $(APPDIR)/.
-	echo "pkg_mkIndex $(APPDIR)/library *.tcl; exit" | $(bindir)/tclsh86s
+	echo "pkg_mkIndex ../../bin/ds9app/library *.tcl; exit" | $(bindir)/tclsh86s
 
 tcltk	:
 	cp -pr $(prefix)/lib/tcl8 $(APPDIR)/.
@@ -137,7 +137,7 @@ tcltk	:
 tkblt	:
 	mkdir $(APPDIR)/tkblt
 	cp -p $(prefix)/tkblt/library/graph.tcl $(APPDIR)/tkblt/.
-	echo "pkg_mkIndex $(APPDIR)/tkblt *.tcl; exit" | $(bindir)/tclsh86s
+	echo "pkg_mkIndex ../../bin/ds9app/tkblt *.tcl; exit" | $(bindir)/tclsh86s
 
 tcllib	:
 	cp -pr $(prefix)/tcllib/modules/base64 $(APPDIR)/.

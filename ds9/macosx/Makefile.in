@@ -10,11 +10,18 @@ mandir		= @mandir@
 
 include $(prefix)/make.pkgs
 
+TCL_VERSION	= @TCL_VERSION@
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
 TK_LIBS		= @TK_LIBS@
 TK_LIB_SPEC	= @TK_LIB_SPEC@
 TK_STUB_LIB_SPEC= @TK_STUB_LIB_SPEC@
+
+tifftcl_LIB_SPEC= @tifftcl_LIB_SPEC@
+pngtcl_LIB_SPEC	= @pngtcl_LIB_SPEC@
+jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
+zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
+tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
 
 CC		= @CC@
 CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
@@ -58,14 +65,10 @@ LLIBS	= \
 	$(libdir)/Tclxml$(TCLXMLVER)/libTclxml$(TCLXMLVER).a \
 	$(libdir)/Tktable$(TKTABLEVER)/libTktable$(TKTABLEVER).a \
 	$(libdir)/Img$(TKIMGVER)/libtkimgpng1.4.2.a \
-	$(libdir)/Img$(TKIMGVER)/libpngtcl1.4.12.a \
 	$(libdir)/Img$(TKIMGVER)/libtkimgtiff1.4.2.a \
-	$(libdir)/Img$(TKIMGVER)/libtifftcl3.9.4.a \
 	$(libdir)/Img$(TKIMGVER)/libtkimgjpeg1.4.2.a \
-	$(libdir)/Img$(TKIMGVER)/libjpegtcl8.4.a \
 	$(libdir)/Img$(TKIMGVER)/libtkimggif1.4.2.a \
 	$(libdir)/Img$(TKIMGVER)/libtkimgwindow1.4.2.a \
-	$(libdir)/Img$(TKIMGVER)/libzlibtcl1.2.8.a \
 	$(libdir)/Img$(TKIMGVER)/libtkimg1.4.2.a \
 	$(libdir)/libxpa.a \
 	$(libdir)/tcliis$(TCLIISVER)/libtcliis$(TCLIISVER).a \
@@ -118,8 +121,8 @@ tkAppInit.o : tkAppInit.c
 	$(COMPILE) -DTK_LOCAL_APPINIT=SAOAppInit \
 	-DTK_LOCAL_MAIN_HOOK=SAOLocalMainHook -c tkAppInit.c -o $@
 
-tkAppInit.c : $(prefix)/tk$(TCLVER)/unix/tkAppInit.c
-	cp $(prefix)/tk$(TCLVER)/unix/tkAppInit.c .
+tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
+	cp $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c .
 
 ds9base	: $(OBJS) $(LLIBS)
 	$(RM) $@
@@ -127,6 +130,11 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(OBJS) \
 	$(LLIBS) \
 	$(LIBS) \
+	$(tifftcl_LIB_SPEC) \
+	$(pngtcl_LIB_SPEC) \
+	$(jpegtcl_LIB_SPEC) \
+	$(zlibtcl_LIB_SPEC) \
+	$(tkimg_LIB_SPEC) \
 	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
 	$(TK_LIBS)

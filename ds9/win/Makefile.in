@@ -10,6 +10,7 @@ mandir		= @mandir@
 
 include $(prefix)/make.pkgs
 
+TCL_VERSION	= @TCL_VERSION@
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
 TK_LIBS		= @TK_LIBS@
@@ -107,13 +108,13 @@ winMain.o : winMain.c
 	-DTK_LOCAL_APPINIT=SAOAppInit -DTK_LOCAL_MAIN_HOOK=SAOLocalMainHook \
 	-c winMain.c -o $@
 
-winMain.c : $(prefix)/tk$(TCLVER)/win/winMain.c
-	cp $(prefix)/tk$(TCLVER)/win/winMain.c .
+winMain.c : $(prefix)/tk$(TCL_VERSION)/win/winMain.c
+	cp $(prefix)/tk$(TCL_VERSION)/win/winMain.c .
 
 ds9.res.o: ds9.rc ds9.ico
 	i686-w64-mingw32-windres -o $@ \
-	--define STATIC_BUILD --include $(prefix)/tk$(TCLVER)/generic \
-	--include $(prefix)/$(TCLDIR)/generic --include $(prefix)/tk$(TCLVER)/win/rc \
+	--define STATIC_BUILD --include $(prefix)/tk$(TCL_VERSION)/generic \
+	--include $(prefix)/$(TCLDIR)/generic --include $(prefix)/tk$(TCL_VERSION)/win/rc \
 	ds9.rc
 
 appdir	:

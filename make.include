@@ -2,26 +2,7 @@ include ./make.pkgs
 
 #-------------------------- dirs
 
-DIRS = $(bindir) $(libdir) $(includedir) $(datadir) man dist
-
-#-------------------------- cvs stuff
-
-CVSFILES = admin \
-	compilers \
-	BUILD.txt \
-	copyright \
-	ds9 \
-	macosx \
-	make.include \
-	make.pkgs \
-	mods \
-	LICENSE.txt \
-	tests \
-	tkmacosx \
-	tksao \
-	tkwin \
-	unix \
-	win
+DIRS = $(bindir) $(libdir) $(includedir) $(datadir) man build dist
 
 #-------------------------- main
 
@@ -399,7 +380,6 @@ clean	: dirsclean tclclean tkclean \
 	tclzvfsclean tclxmlclean xpaclean \
 	tkbltclean tktableclean tkimgclean \
 	tkmpegclean tkhtml1clean \
-	tk$(OS)clean \
 	tksaoclean astclean funtoolsclean ds9clean \
 	localclean
 
@@ -477,7 +457,6 @@ distclean : tcldistclean tkdistclean \
 	tclzvfsdistclean tclxmldistclean xpadistclean \
 	tkbltdistclean tktabledistclean tkimgdistclean \
 	tkmpegdistclean tkhtml1distclean \
-	tk$(OS)distclean \
 	tksaodistclean astdistclean funtoolsdistclean ds9distclean \
 	dirsdistclean localdistclean
 
@@ -540,12 +519,3 @@ tktabledistclean:
 xpadistclean :
 	$(MAKE) -C xpa distclean
 
-#-------------------------- cvs
-
-.PHONY	: commit update
-
-commit : scrub
-	cvs commit -m "" $(CVSFILES)
-
-update : scrub
-	cvs update $(CVSFILES)

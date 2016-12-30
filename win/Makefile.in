@@ -9,19 +9,19 @@ datarootdir	= @datarootdir@
 datadir		= @datadir@
 mandir		= @mandir@
 
-OS	= @OS@
-ARCH	= @ARCH@
-EXEEXT	= @EXEEXT@
-JOBS	= @CORES@
+OS		= @OS@
+ARCH		= @ARCH@
+EXEEXT		= @EXEEXT@
+JOBS		= @CORES@
 
-CONFIGFLAGS =CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar
-ASTFLAGS =CFLAGS=-DCMINPACK_NO_DLL
-XPAFLAGS =CFLAGS=-DSTATIC_BUILD
-TCLXMLFLAGS =--with-xml-static=yes
-TARGET =--build=x86_64-unknown-mingw32
-WITHTCL =--with-tcl=$(prefix)/tcl$(TCLVER)/win
-WITHTK  =--with-tk=$(prefix)/tk$(TCLVER)/win $(WITHTCL)
-CACHE	=--config-cache --cache-file=$(prefix)/config.cache
+CONFIGFLAGS 	= CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar
+ASTFLAGS	= CFLAGS=-DCMINPACK_NO_DLL
+XPAFLAGS	= CFLAGS=-DSTATIC_BUILD
+TCLXMLFLAGS 	= --with-xml-static=yes
+TARGET		= --build=x86_64-unknown-mingw32
+WITHTCL		= --with-tcl=$(prefix)/tcl$(TCLVER)/win
+WITHTK		= --with-tk=$(prefix)/tk$(TCLVER)/win $(WITHTCL)
+CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 include ./make.include
 

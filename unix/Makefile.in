@@ -9,15 +9,15 @@ datarootdir	= @datarootdir@
 datadir		= @datadir@
 mandir		= @mandir@
 
-OS	= @OS@
-ARCH	= @ARCH@
-TKFLAGS	= @TKFLAGS@
-TKIMGFLAGS = @TKIMGFLAGS@
-JOBS	= @CORES@
+OS		= @OS@
+ARCH		= @ARCH@
+TKFLAGS		= @TKFLAGS@
+TKIMGFLAGS	= @TKIMGFLAGS@
+JOBS		= @CORES@
 
-WITHTCL =--with-tcl=$(prefix)/tcl$(TCLVER)/unix
-WITHTK  =--with-tk=$(prefix)/tk$(TCLVER)/unix $(WITHTCL)
-CACHE	=--config-cache --cache-file=$(prefix)/config.cache
+WITHTCL 	= --with-tcl=$(prefix)/tcl$(TCLVER)/unix
+WITHTK  	= --with-tk=$(prefix)/tk$(TCLVER)/unix $(WITHTCL)
+CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 include ./make.include
 

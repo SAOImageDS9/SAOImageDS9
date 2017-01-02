@@ -198,7 +198,17 @@ tkhtml1/Makefile :
 tkimg	: tkimg/Makefile
 	@echo ""
 	@echo "*** Install tkimg ***"
-	$(MAKE) -C tkimg -j $(JOBS) install
+	$(MAKE) -C tkimg -j $(JOBS) all
+	$(MAKE) -C tkimg/base -j $(JOBS) install
+	$(MAKE) -C tkimg/tiff -j $(JOBS) install
+	$(MAKE) -C tkimg/libtiff -j $(JOBS) install
+	$(MAKE) -C tkimg/jpeg -j $(JOBS) install
+	$(MAKE) -C tkimg/libjpeg -j $(JOBS) install
+	$(MAKE) -C tkimg/png -j $(JOBS) install
+	$(MAKE) -C tkimg/libpng -j $(JOBS) install
+	$(MAKE) -C tkimg/gif -j $(JOBS) install
+	$(MAKE) -C tkimg/window -j $(JOBS) install
+	$(MAKE) -C tkimg/zlib -j $(JOBS) install
 
 # no config.cache
 tkimg/Makefile :

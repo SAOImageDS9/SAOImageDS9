@@ -652,6 +652,46 @@ RANLIB
 SET_MAKE
 INSTALL
 CPP
+tkimg_STUB_LIB_PATH
+tkimg_STUB_LIB_SPEC
+tkimg_STUB_LIB_FILE
+tkimg_LIB_SPEC
+tkimg_LIB_FILE
+tkimg_SRC_DIR
+tkimg_BIN_DIR
+tkimg_VERSION
+zlibtcl_STUB_LIB_PATH
+zlibtcl_STUB_LIB_SPEC
+zlibtcl_STUB_LIB_FILE
+zlibtcl_LIB_SPEC
+zlibtcl_LIB_FILE
+zlibtcl_SRC_DIR
+zlibtcl_BIN_DIR
+zlibtcl_VERSION
+jpegtcl_STUB_LIB_PATH
+jpegtcl_STUB_LIB_SPEC
+jpegtcl_STUB_LIB_FILE
+jpegtcl_LIB_SPEC
+jpegtcl_LIB_FILE
+jpegtcl_SRC_DIR
+jpegtcl_BIN_DIR
+jpegtcl_VERSION
+pngtcl_STUB_LIB_PATH
+pngtcl_STUB_LIB_SPEC
+pngtcl_STUB_LIB_FILE
+pngtcl_LIB_SPEC
+pngtcl_LIB_FILE
+pngtcl_SRC_DIR
+pngtcl_BIN_DIR
+pngtcl_VERSION
+tifftcl_STUB_LIB_PATH
+tifftcl_STUB_LIB_SPEC
+tifftcl_STUB_LIB_FILE
+tifftcl_LIB_SPEC
+tifftcl_LIB_FILE
+tifftcl_SRC_DIR
+tifftcl_BIN_DIR
+tifftcl_VERSION
 TK_XINCLUDES
 TK_LIBS
 TK_STUB_LIB_SPEC
@@ -739,6 +779,11 @@ ac_user_opts='
 enable_option_checking
 with_tcl
 with_tk
+with_tifftcl
+with_pngtcl
+with_jpegtcl
+with_zlibtcl
+with_tkimg
 with_tclinclude
 with_tkinclude
 with_x
@@ -1386,6 +1431,11 @@ Optional Packages:
   --with-tcl              directory containing tcl configuration
                           (tclConfig.sh)
   --with-tk               directory containing tk configuration (tkConfig.sh)
+  --with-tifftcl              directory containing tifftcl configuration (tifftclConfig.sh)
+  --with-pngtcl              directory containing pngtcl configuration (pngtclConfig.sh)
+  --with-jpegtcl              directory containing jpegtcl configuration (jpegtclConfig.sh)
+  --with-zlibtcl              directory containing zlibtcl configuration (zlibtclConfig.sh)
+  --with-tkimg              directory containing tkimg configuration (tkimgConfig.sh)
   --with-tclinclude       directory containing the public Tcl header files
   --with-tkinclude        directory containing the public Tk header files
   --with-x                use the X Window System
@@ -3636,6 +3686,1250 @@ $as_echo "#define MAC_OSX_TK 1" >>confdefs.h
     # TEA specific:
 
 
+
+
+#--------------------------------------------------------------------
+# Load the *.sh file if necessary (Img extension)
+#--------------------------------------------------------------------
+
+
+    #
+    # Ok, lets find the tifftcl configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tifftcl
+    #
+
+    if test x"${no_tifftcl}" = x ; then
+	# we reset no_tifftcl in case something fails here
+	no_tifftcl=true
+
+# Check whether --with-tifftcl was given.
+if test "${with_tifftcl+set}" = set; then :
+  withval=$with_tifftcl; with_tifftclconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tifftcl configuration" >&5
+$as_echo_n "checking for tifftcl configuration... " >&6; }
+	if ${ac_cv_c_tifftclconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tifftcl was specified.
+	    if test x"${with_tifftclconfig}" != x ; then
+		case ${with_tifftclconfig} in
+		    */tifftclConfig.sh )
+			if test -f ${with_tifftclconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tifftcl argument should refer to directory containing tifftclConfig.sh, not to tifftclConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tifftcl argument should refer to directory containing tifftclConfig.sh, not to tifftclConfig.sh itself" >&2;}
+			    with_tifftclconfig=`echo ${with_tifftclconfig} | sed 's!/tifftclConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tifftclconfig}/tifftclConfig.sh" ; then
+		    ac_cv_c_tifftclconfig=`(cd ${with_tifftclconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tifftclconfig} directory doesn't contain tifftclConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tifftcl installation
+	    if test x"${ac_cv_c_tifftclconfig}" = x ; then
+		for i in \
+			../tifftcl \
+			`ls -dr ../tifftcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tifftcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tifftcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tifftcl*[0-9].[0-9]* 2>/dev/null` \
+			../../tifftcl \
+			`ls -dr ../../tifftcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tifftcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tifftcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tifftcl*[0-9].[0-9]* 2>/dev/null` \
+			../../../tifftcl \
+			`ls -dr ../../../tifftcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tifftcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tifftcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tifftcl*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tifftcl \
+			`ls -dr ${srcdir}/../tifftcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tifftcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tifftcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tifftcl*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tifftclConfig.sh" ; then
+			ac_cv_c_tifftclconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tifftclConfig.sh" ; then
+			ac_cv_c_tifftclconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tifftclconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tifftclConfig.sh" ; then
+			ac_cv_c_tifftclconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tifftclconfig}" = x ; then
+	    tifftcl_BIN_DIR="# no tifftcl configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tifftcl configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tifftcl configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tifftcl=
+	    tifftcl_BIN_DIR=${ac_cv_c_tifftclconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tifftcl_BIN_DIR/tifftclConfig.sh" >&5
+$as_echo "found $tifftcl_BIN_DIR/tifftclConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tifftcl_BIN_DIR}/tifftclConfig.sh" >&5
+$as_echo_n "checking for existence of ${tifftcl_BIN_DIR}/tifftclConfig.sh... " >&6; }
+
+    if test -f "${tifftcl_BIN_DIR}/tifftclConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tifftcl_BIN_DIR}/tifftclConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tifftcl_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tifftcl_LIB_SPEC will be set to the value
+    # of tifftcl_BUILD_LIB_SPEC. An extension should make use of tifftcl_LIB_SPEC
+    # instead of tifftcl_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tifftcl_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tifftcl" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tifftcl" >&2;}
+        tifftcl_LIB_SPEC=${tifftcl_BUILD_LIB_SPEC}
+        tifftcl_STUB_LIB_SPEC=${tifftcl_BUILD_STUB_LIB_SPEC}
+        tifftcl_STUB_LIB_PATH=${tifftcl_BUILD_STUB_LIB_PATH}
+        tifftcl_INCLUDE_SPEC=${tifftcl_BUILD_INCLUDE_SPEC}
+        tifftcl_LIBRARY_PATH=${tifftcl_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tifftcl_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TIFFTCL_STUB library for LIBS" >&5
+$as_echo_n "checking For TIFFTCL_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TIFFTCL_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TIFFTCL_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TIFFTCL_STUB_LIB_PATH ${TIFFTCL_STUB_LIB_PATH}" >&5
+$as_echo "using TIFFTCL_STUB_LIB_PATH ${TIFFTCL_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TIFFTCL_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TIFFTCL_STUB_LIB_SPEC ${TIFFTCL_STUB_LIB_SPEC}" >&5
+$as_echo "using TIFFTCL_STUB_LIB_SPEC ${TIFFTCL_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tifftcl_STUB library for LIBS" >&5
+$as_echo_n "checking For tifftcl_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tifftcl_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tifftcl_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tifftcl_STUB_LIB_PATH ${tifftcl_STUB_LIB_PATH}" >&5
+$as_echo "using tifftcl_STUB_LIB_PATH ${tifftcl_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tifftcl_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tifftcl_STUB_LIB_SPEC ${tifftcl_STUB_LIB_SPEC}" >&5
+$as_echo "using tifftcl_STUB_LIB_SPEC ${tifftcl_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the pngtcl configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-pngtcl
+    #
+
+    if test x"${no_pngtcl}" = x ; then
+	# we reset no_pngtcl in case something fails here
+	no_pngtcl=true
+
+# Check whether --with-pngtcl was given.
+if test "${with_pngtcl+set}" = set; then :
+  withval=$with_pngtcl; with_pngtclconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for pngtcl configuration" >&5
+$as_echo_n "checking for pngtcl configuration... " >&6; }
+	if ${ac_cv_c_pngtclconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-pngtcl was specified.
+	    if test x"${with_pngtclconfig}" != x ; then
+		case ${with_pngtclconfig} in
+		    */pngtclConfig.sh )
+			if test -f ${with_pngtclconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-pngtcl argument should refer to directory containing pngtclConfig.sh, not to pngtclConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-pngtcl argument should refer to directory containing pngtclConfig.sh, not to pngtclConfig.sh itself" >&2;}
+			    with_pngtclconfig=`echo ${with_pngtclconfig} | sed 's!/pngtclConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_pngtclconfig}/pngtclConfig.sh" ; then
+		    ac_cv_c_pngtclconfig=`(cd ${with_pngtclconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_pngtclconfig} directory doesn't contain pngtclConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private pngtcl installation
+	    if test x"${ac_cv_c_pngtclconfig}" = x ; then
+		for i in \
+			../pngtcl \
+			`ls -dr ../pngtcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../pngtcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../pngtcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../pngtcl*[0-9].[0-9]* 2>/dev/null` \
+			../../pngtcl \
+			`ls -dr ../../pngtcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../pngtcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../pngtcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../pngtcl*[0-9].[0-9]* 2>/dev/null` \
+			../../../pngtcl \
+			`ls -dr ../../../pngtcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../pngtcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../pngtcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../pngtcl*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../pngtcl \
+			`ls -dr ${srcdir}/../pngtcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../pngtcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../pngtcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../pngtcl*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/pngtclConfig.sh" ; then
+			ac_cv_c_pngtclconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/pngtclConfig.sh" ; then
+			ac_cv_c_pngtclconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_pngtclconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/pngtclConfig.sh" ; then
+			ac_cv_c_pngtclconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_pngtclconfig}" = x ; then
+	    pngtcl_BIN_DIR="# no pngtcl configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find pngtcl configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find pngtcl configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_pngtcl=
+	    pngtcl_BIN_DIR=${ac_cv_c_pngtclconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $pngtcl_BIN_DIR/pngtclConfig.sh" >&5
+$as_echo "found $pngtcl_BIN_DIR/pngtclConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${pngtcl_BIN_DIR}/pngtclConfig.sh" >&5
+$as_echo_n "checking for existence of ${pngtcl_BIN_DIR}/pngtclConfig.sh... " >&6; }
+
+    if test -f "${pngtcl_BIN_DIR}/pngtclConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${pngtcl_BIN_DIR}/pngtclConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the pngtcl_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable pngtcl_LIB_SPEC will be set to the value
+    # of pngtcl_BUILD_LIB_SPEC. An extension should make use of pngtcl_LIB_SPEC
+    # instead of pngtcl_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${pngtcl_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for pngtcl" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for pngtcl" >&2;}
+        pngtcl_LIB_SPEC=${pngtcl_BUILD_LIB_SPEC}
+        pngtcl_STUB_LIB_SPEC=${pngtcl_BUILD_STUB_LIB_SPEC}
+        pngtcl_STUB_LIB_PATH=${pngtcl_BUILD_STUB_LIB_PATH}
+        pngtcl_INCLUDE_SPEC=${pngtcl_BUILD_INCLUDE_SPEC}
+        pngtcl_LIBRARY_PATH=${pngtcl_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${pngtcl_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For PNGTCL_STUB library for LIBS" >&5
+$as_echo_n "checking For PNGTCL_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${PNGTCL_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${PNGTCL_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using PNGTCL_STUB_LIB_PATH ${PNGTCL_STUB_LIB_PATH}" >&5
+$as_echo "using PNGTCL_STUB_LIB_PATH ${PNGTCL_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${PNGTCL_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using PNGTCL_STUB_LIB_SPEC ${PNGTCL_STUB_LIB_SPEC}" >&5
+$as_echo "using PNGTCL_STUB_LIB_SPEC ${PNGTCL_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For pngtcl_STUB library for LIBS" >&5
+$as_echo_n "checking For pngtcl_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${pngtcl_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${pngtcl_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using pngtcl_STUB_LIB_PATH ${pngtcl_STUB_LIB_PATH}" >&5
+$as_echo "using pngtcl_STUB_LIB_PATH ${pngtcl_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${pngtcl_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using pngtcl_STUB_LIB_SPEC ${pngtcl_STUB_LIB_SPEC}" >&5
+$as_echo "using pngtcl_STUB_LIB_SPEC ${pngtcl_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the jpegtcl configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-jpegtcl
+    #
+
+    if test x"${no_jpegtcl}" = x ; then
+	# we reset no_jpegtcl in case something fails here
+	no_jpegtcl=true
+
+# Check whether --with-jpegtcl was given.
+if test "${with_jpegtcl+set}" = set; then :
+  withval=$with_jpegtcl; with_jpegtclconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for jpegtcl configuration" >&5
+$as_echo_n "checking for jpegtcl configuration... " >&6; }
+	if ${ac_cv_c_jpegtclconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-jpegtcl was specified.
+	    if test x"${with_jpegtclconfig}" != x ; then
+		case ${with_jpegtclconfig} in
+		    */jpegtclConfig.sh )
+			if test -f ${with_jpegtclconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-jpegtcl argument should refer to directory containing jpegtclConfig.sh, not to jpegtclConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-jpegtcl argument should refer to directory containing jpegtclConfig.sh, not to jpegtclConfig.sh itself" >&2;}
+			    with_jpegtclconfig=`echo ${with_jpegtclconfig} | sed 's!/jpegtclConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_jpegtclconfig}/jpegtclConfig.sh" ; then
+		    ac_cv_c_jpegtclconfig=`(cd ${with_jpegtclconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_jpegtclconfig} directory doesn't contain jpegtclConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private jpegtcl installation
+	    if test x"${ac_cv_c_jpegtclconfig}" = x ; then
+		for i in \
+			../jpegtcl \
+			`ls -dr ../jpegtcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../jpegtcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../jpegtcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../jpegtcl*[0-9].[0-9]* 2>/dev/null` \
+			../../jpegtcl \
+			`ls -dr ../../jpegtcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../jpegtcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../jpegtcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../jpegtcl*[0-9].[0-9]* 2>/dev/null` \
+			../../../jpegtcl \
+			`ls -dr ../../../jpegtcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../jpegtcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../jpegtcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../jpegtcl*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../jpegtcl \
+			`ls -dr ${srcdir}/../jpegtcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../jpegtcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../jpegtcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../jpegtcl*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/jpegtclConfig.sh" ; then
+			ac_cv_c_jpegtclconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/jpegtclConfig.sh" ; then
+			ac_cv_c_jpegtclconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_jpegtclconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/jpegtclConfig.sh" ; then
+			ac_cv_c_jpegtclconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_jpegtclconfig}" = x ; then
+	    jpegtcl_BIN_DIR="# no jpegtcl configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find jpegtcl configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find jpegtcl configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_jpegtcl=
+	    jpegtcl_BIN_DIR=${ac_cv_c_jpegtclconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $jpegtcl_BIN_DIR/jpegtclConfig.sh" >&5
+$as_echo "found $jpegtcl_BIN_DIR/jpegtclConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${jpegtcl_BIN_DIR}/jpegtclConfig.sh" >&5
+$as_echo_n "checking for existence of ${jpegtcl_BIN_DIR}/jpegtclConfig.sh... " >&6; }
+
+    if test -f "${jpegtcl_BIN_DIR}/jpegtclConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${jpegtcl_BIN_DIR}/jpegtclConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the jpegtcl_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable jpegtcl_LIB_SPEC will be set to the value
+    # of jpegtcl_BUILD_LIB_SPEC. An extension should make use of jpegtcl_LIB_SPEC
+    # instead of jpegtcl_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${jpegtcl_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for jpegtcl" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for jpegtcl" >&2;}
+        jpegtcl_LIB_SPEC=${jpegtcl_BUILD_LIB_SPEC}
+        jpegtcl_STUB_LIB_SPEC=${jpegtcl_BUILD_STUB_LIB_SPEC}
+        jpegtcl_STUB_LIB_PATH=${jpegtcl_BUILD_STUB_LIB_PATH}
+        jpegtcl_INCLUDE_SPEC=${jpegtcl_BUILD_INCLUDE_SPEC}
+        jpegtcl_LIBRARY_PATH=${jpegtcl_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${jpegtcl_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For JPEGTCL_STUB library for LIBS" >&5
+$as_echo_n "checking For JPEGTCL_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${JPEGTCL_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${JPEGTCL_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using JPEGTCL_STUB_LIB_PATH ${JPEGTCL_STUB_LIB_PATH}" >&5
+$as_echo "using JPEGTCL_STUB_LIB_PATH ${JPEGTCL_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${JPEGTCL_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using JPEGTCL_STUB_LIB_SPEC ${JPEGTCL_STUB_LIB_SPEC}" >&5
+$as_echo "using JPEGTCL_STUB_LIB_SPEC ${JPEGTCL_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For jpegtcl_STUB library for LIBS" >&5
+$as_echo_n "checking For jpegtcl_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${jpegtcl_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${jpegtcl_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using jpegtcl_STUB_LIB_PATH ${jpegtcl_STUB_LIB_PATH}" >&5
+$as_echo "using jpegtcl_STUB_LIB_PATH ${jpegtcl_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${jpegtcl_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using jpegtcl_STUB_LIB_SPEC ${jpegtcl_STUB_LIB_SPEC}" >&5
+$as_echo "using jpegtcl_STUB_LIB_SPEC ${jpegtcl_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the zlibtcl configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-zlibtcl
+    #
+
+    if test x"${no_zlibtcl}" = x ; then
+	# we reset no_zlibtcl in case something fails here
+	no_zlibtcl=true
+
+# Check whether --with-zlibtcl was given.
+if test "${with_zlibtcl+set}" = set; then :
+  withval=$with_zlibtcl; with_zlibtclconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for zlibtcl configuration" >&5
+$as_echo_n "checking for zlibtcl configuration... " >&6; }
+	if ${ac_cv_c_zlibtclconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-zlibtcl was specified.
+	    if test x"${with_zlibtclconfig}" != x ; then
+		case ${with_zlibtclconfig} in
+		    */zlibtclConfig.sh )
+			if test -f ${with_zlibtclconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-zlibtcl argument should refer to directory containing zlibtclConfig.sh, not to zlibtclConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-zlibtcl argument should refer to directory containing zlibtclConfig.sh, not to zlibtclConfig.sh itself" >&2;}
+			    with_zlibtclconfig=`echo ${with_zlibtclconfig} | sed 's!/zlibtclConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_zlibtclconfig}/zlibtclConfig.sh" ; then
+		    ac_cv_c_zlibtclconfig=`(cd ${with_zlibtclconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_zlibtclconfig} directory doesn't contain zlibtclConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private zlibtcl installation
+	    if test x"${ac_cv_c_zlibtclconfig}" = x ; then
+		for i in \
+			../zlibtcl \
+			`ls -dr ../zlibtcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../zlibtcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../zlibtcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../zlibtcl*[0-9].[0-9]* 2>/dev/null` \
+			../../zlibtcl \
+			`ls -dr ../../zlibtcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../zlibtcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../zlibtcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../zlibtcl*[0-9].[0-9]* 2>/dev/null` \
+			../../../zlibtcl \
+			`ls -dr ../../../zlibtcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../zlibtcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../zlibtcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../zlibtcl*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../zlibtcl \
+			`ls -dr ${srcdir}/../zlibtcl*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../zlibtcl*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../zlibtcl*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../zlibtcl*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/zlibtclConfig.sh" ; then
+			ac_cv_c_zlibtclconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/zlibtclConfig.sh" ; then
+			ac_cv_c_zlibtclconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_zlibtclconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/zlibtclConfig.sh" ; then
+			ac_cv_c_zlibtclconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_zlibtclconfig}" = x ; then
+	    zlibtcl_BIN_DIR="# no zlibtcl configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find zlibtcl configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find zlibtcl configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_zlibtcl=
+	    zlibtcl_BIN_DIR=${ac_cv_c_zlibtclconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $zlibtcl_BIN_DIR/zlibtclConfig.sh" >&5
+$as_echo "found $zlibtcl_BIN_DIR/zlibtclConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${zlibtcl_BIN_DIR}/zlibtclConfig.sh" >&5
+$as_echo_n "checking for existence of ${zlibtcl_BIN_DIR}/zlibtclConfig.sh... " >&6; }
+
+    if test -f "${zlibtcl_BIN_DIR}/zlibtclConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${zlibtcl_BIN_DIR}/zlibtclConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the zlibtcl_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable zlibtcl_LIB_SPEC will be set to the value
+    # of zlibtcl_BUILD_LIB_SPEC. An extension should make use of zlibtcl_LIB_SPEC
+    # instead of zlibtcl_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${zlibtcl_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for zlibtcl" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for zlibtcl" >&2;}
+        zlibtcl_LIB_SPEC=${zlibtcl_BUILD_LIB_SPEC}
+        zlibtcl_STUB_LIB_SPEC=${zlibtcl_BUILD_STUB_LIB_SPEC}
+        zlibtcl_STUB_LIB_PATH=${zlibtcl_BUILD_STUB_LIB_PATH}
+        zlibtcl_INCLUDE_SPEC=${zlibtcl_BUILD_INCLUDE_SPEC}
+        zlibtcl_LIBRARY_PATH=${zlibtcl_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${zlibtcl_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For ZLIBTCL_STUB library for LIBS" >&5
+$as_echo_n "checking For ZLIBTCL_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${ZLIBTCL_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${ZLIBTCL_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using ZLIBTCL_STUB_LIB_PATH ${ZLIBTCL_STUB_LIB_PATH}" >&5
+$as_echo "using ZLIBTCL_STUB_LIB_PATH ${ZLIBTCL_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${ZLIBTCL_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using ZLIBTCL_STUB_LIB_SPEC ${ZLIBTCL_STUB_LIB_SPEC}" >&5
+$as_echo "using ZLIBTCL_STUB_LIB_SPEC ${ZLIBTCL_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For zlibtcl_STUB library for LIBS" >&5
+$as_echo_n "checking For zlibtcl_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${zlibtcl_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${zlibtcl_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using zlibtcl_STUB_LIB_PATH ${zlibtcl_STUB_LIB_PATH}" >&5
+$as_echo "using zlibtcl_STUB_LIB_PATH ${zlibtcl_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${zlibtcl_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using zlibtcl_STUB_LIB_SPEC ${zlibtcl_STUB_LIB_SPEC}" >&5
+$as_echo "using zlibtcl_STUB_LIB_SPEC ${zlibtcl_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tkimg configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tkimg
+    #
+
+    if test x"${no_tkimg}" = x ; then
+	# we reset no_tkimg in case something fails here
+	no_tkimg=true
+
+# Check whether --with-tkimg was given.
+if test "${with_tkimg+set}" = set; then :
+  withval=$with_tkimg; with_tkimgconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkimg configuration" >&5
+$as_echo_n "checking for tkimg configuration... " >&6; }
+	if ${ac_cv_c_tkimgconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tkimg was specified.
+	    if test x"${with_tkimgconfig}" != x ; then
+		case ${with_tkimgconfig} in
+		    */tkimgConfig.sh )
+			if test -f ${with_tkimgconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkimg argument should refer to directory containing tkimgConfig.sh, not to tkimgConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkimg argument should refer to directory containing tkimgConfig.sh, not to tkimgConfig.sh itself" >&2;}
+			    with_tkimgconfig=`echo ${with_tkimgconfig} | sed 's!/tkimgConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tkimgconfig}/tkimgConfig.sh" ; then
+		    ac_cv_c_tkimgconfig=`(cd ${with_tkimgconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tkimgconfig} directory doesn't contain tkimgConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tkimg installation
+	    if test x"${ac_cv_c_tkimgconfig}" = x ; then
+		for i in \
+			../tkimg \
+			`ls -dr ../tkimg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkimg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkimg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkimg*[0-9].[0-9]* 2>/dev/null` \
+			../../tkimg \
+			`ls -dr ../../tkimg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkimg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkimg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkimg*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkimg \
+			`ls -dr ../../../tkimg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkimg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimg*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkimg \
+			`ls -dr ${srcdir}/../tkimg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimg*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tkimgConfig.sh" ; then
+			ac_cv_c_tkimgconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tkimgConfig.sh" ; then
+			ac_cv_c_tkimgconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tkimgconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tkimgConfig.sh" ; then
+			ac_cv_c_tkimgconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tkimgconfig}" = x ; then
+	    tkimg_BIN_DIR="# no tkimg configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkimg configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkimg configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tkimg=
+	    tkimg_BIN_DIR=${ac_cv_c_tkimgconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkimg_BIN_DIR/tkimgConfig.sh" >&5
+$as_echo "found $tkimg_BIN_DIR/tkimgConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkimg_BIN_DIR}/tkimgConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkimg_BIN_DIR}/tkimgConfig.sh... " >&6; }
+
+    if test -f "${tkimg_BIN_DIR}/tkimgConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tkimg_BIN_DIR}/tkimgConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tkimg_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tkimg_LIB_SPEC will be set to the value
+    # of tkimg_BUILD_LIB_SPEC. An extension should make use of tkimg_LIB_SPEC
+    # instead of tkimg_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tkimg_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkimg" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkimg" >&2;}
+        tkimg_LIB_SPEC=${tkimg_BUILD_LIB_SPEC}
+        tkimg_STUB_LIB_SPEC=${tkimg_BUILD_STUB_LIB_SPEC}
+        tkimg_STUB_LIB_PATH=${tkimg_BUILD_STUB_LIB_PATH}
+        tkimg_INCLUDE_SPEC=${tkimg_BUILD_INCLUDE_SPEC}
+        tkimg_LIBRARY_PATH=${tkimg_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tkimg_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKIMG_STUB library for LIBS" >&5
+$as_echo_n "checking For TKIMG_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKIMG_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKIMG_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMG_STUB_LIB_PATH ${TKIMG_STUB_LIB_PATH}" >&5
+$as_echo "using TKIMG_STUB_LIB_PATH ${TKIMG_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKIMG_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMG_STUB_LIB_SPEC ${TKIMG_STUB_LIB_SPEC}" >&5
+$as_echo "using TKIMG_STUB_LIB_SPEC ${TKIMG_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkimg_STUB library for LIBS" >&5
+$as_echo_n "checking For tkimg_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tkimg_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tkimg_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimg_STUB_LIB_PATH ${tkimg_STUB_LIB_PATH}" >&5
+$as_echo "using tkimg_STUB_LIB_PATH ${tkimg_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tkimg_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimg_STUB_LIB_SPEC ${tkimg_STUB_LIB_SPEC}" >&5
+$as_echo "using tkimg_STUB_LIB_SPEC ${tkimg_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
 
 
 #-----------------------------------------------------------------------

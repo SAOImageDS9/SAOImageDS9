@@ -9,13 +9,13 @@ datarootdir	= @datarootdir@
 datadir		= @datadir@
 mandir		= @mandir@
 
-OS	= @OS@
-ARCH	= @ARCH@
-JOBS	= @CORES@
+OS		= @OS@
+ARCH		= @ARCH@
+JOBS		= @CORES@
 
-WITHTCL =--with-tcl=$(prefix)/build/tcl/Development
-WITHTK  =--with-tk=$(prefix)/build/tk/Development $(WITHTCL)
-CACHE	=--config-cache --cache-file=$(prefix)/config.cache
+WITHTCL		= --with-tcl=$(prefix)/build/tcl/Development
+WITHTK		= --with-tk=$(prefix)/build/tk/Development $(WITHTCL)
+CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 include ./make.include
 

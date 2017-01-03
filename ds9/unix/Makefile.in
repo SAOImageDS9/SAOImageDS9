@@ -80,11 +80,11 @@ LLIBS	= \
 	$(libdir)/tkmpeg$(TKMPEGVER)/libtkmpeg$(TKMPEGVER).a \
 	$(libdir)/Tclxml$(TCLXMLVER)/libTclxml$(TCLXMLVER).a \
 	$(libdir)/Tktable$(TKTABLEVER)/libTktable$(TKTABLEVER).a \
-	$(libdir)/tkimgtiff1.4.6/libtkimgtiff1.4.6.a \
-	$(libdir)/tkimgpng1.4.6/libtkimgpng1.4.6.a \
-	$(libdir)/tkimgjpeg1.4.6/libtkimgjpeg1.4.6.a \
-	$(libdir)/tkimggif1.4.6/libtkimggif1.4.6.a \
-	$(libdir)/tkimgwindow1.4.6/libtkimgwindow1.4.6.a \
+	$(libdir)/tkimgtiff$(TKIMGVER)/libtkimgtiff$(TKIMGVER).a \
+	$(libdir)/tkimgpng$(TKIMGVER)/libtkimgpng$(TKIMGVER).a \
+	$(libdir)/tkimgjpeg$(TKIMGVER)/libtkimgjpeg$(TKIMGVER).a \
+	$(libdir)/tkimggif$(TKIMGVER)/libtkimggif$(TKIMGVER).a \
+	$(libdir)/tkimgwindow$(TKIMGVER)/libtkimgwindow$(TKIMGVER).a \
 	$(libdir)/tclzvfs$(TCLZVFSVER)/libtclzvfs$(TCLZVFSVER).a \
 	$(libdir)/libxpa.a \
 	$(libdir)/tcliis$(TCLIISVER)/libtcliis$(TCLIISVER).a \

@@ -57,9 +57,6 @@ case $system in
 	CORES=`grep -c ^processor /proc/cpuinfo`
 	;;
     Linux* )
-	TKIMGFLAGS="tcl_cv_cc_visibility_hidden=no"
-	AC_SUBST(TKIMGFLAGS)
-
 	CORES=`grep -c ^processor /proc/cpuinfo`
 	;;
     *)

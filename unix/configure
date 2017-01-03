@@ -584,7 +584,6 @@ PACKAGE_URL=''
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 CORES
-TKIMGFLAGS
 TKFLAGS
 ARCH
 OS
@@ -1903,9 +1902,6 @@ case $system in
 	CORES=`grep -c ^processor /proc/cpuinfo`
 	;;
     Linux* )
-	TKIMGFLAGS="tcl_cv_cc_visibility_hidden=no"
-
-
 	CORES=`grep -c ^processor /proc/cpuinfo`
 	;;
     *)

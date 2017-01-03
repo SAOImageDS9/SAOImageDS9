@@ -2713,13 +2713,11 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
   if (hasWCS(sys)) {
     int ii = sys-Coord::WCS;
 
-    // The scaling factor could be encoded in pc or cdelt or both
-    double pc0 = wcs_[ii]->pc[0] ? wcs_[ii]->pc[0] : 1;
-    double pc3 = wcs_[ii]->pc[3] ? wcs_[ii]->pc[3] : 1;
+    // The scaling factor mag is in cdelt
     if (!wcs_[ii]->coorflip)
-      return Vector(wcs_[ii]->cdelt[0]*pc0, wcs_[ii]->cdelt[1]*pc3);
+      return Vector(wcs_[ii]->cdelt[0], wcs_[ii]->cdelt[1]);
     else
-      return Vector(wcs_[ii]->cdelt[1]*pc3, wcs_[ii]->cdelt[0]*pc0);
+      return Vector(wcs_[ii]->cdelt[1], wcs_[ii]->cdelt[0]);
   }
   else
     return Vector();

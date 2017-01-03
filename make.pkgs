@@ -15,7 +15,7 @@ XPAVERSION=2.1.17
 # xpa 2.1.18
 # tkblt 3.2.3
 # tktable 2.10
-# tkimg 1.4.2
+# tkimg 1.4.6
 # tkmpeg 1.0.1
 # tkhtml1 1.0.3
 # tkcon 2.7
@@ -35,7 +35,7 @@ TCLZVFSVER=1.0
 TKBLTVER=3.2
 TKCONVER=2.7
 TKHTMLVER=1.0
-TKIMGVER=1.4.2
+TKIMGVER=1.4.6
 TKMACOSXVER=1.0
 TKMPEGVER=1.0
 TKSAOVER=1.0

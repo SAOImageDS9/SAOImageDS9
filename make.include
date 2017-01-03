@@ -217,7 +217,7 @@ tkimg/Makefile :
 	cd tkimg; \
 	./configure \
 	CFLAGS='-DPNG_NO_WRITE_gAMA' \
-	$(WITHTK) $(TKIMGFLAGS) \
+	$(WITHTK) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols
 

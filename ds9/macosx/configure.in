@@ -29,7 +29,7 @@ AC_INIT([ds9], [7.6])
 
 TEA_INIT([3.9])
 
-AC_CONFIG_AUX_DIR(tclconfig)
+AC_CONFIG_AUX_DIR(../tclconfig)
 
 #--------------------------------------------------------------------
 # Load the tclConfig.sh file

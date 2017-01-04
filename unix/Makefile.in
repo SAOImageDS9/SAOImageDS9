@@ -12,7 +12,6 @@ mandir		= @mandir@
 OS		= @OS@
 ARCH		= @ARCH@
 TKFLAGS		= @TKFLAGS@
-TKIMGFLAGS	= @TKIMGFLAGS@
 JOBS		= @CORES@
 
 WITHTCL 	= --with-tcl=$(prefix)/tcl$(TCLVER)/unix

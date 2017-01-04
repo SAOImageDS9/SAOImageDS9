@@ -2,7 +2,8 @@ prefix		= @prefix@
 exec_prefix	= @exec_prefix@
 
 bindir		= @bindir@
-libdir		= @libdir@
+libdir		= $(exec_prefix)/lib
+#libdir		= @libdir@
 includedir	= @includedir@
 datarootdir	= @datarootdir@
 datadir		= @datadir@

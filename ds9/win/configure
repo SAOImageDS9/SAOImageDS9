@@ -651,6 +651,14 @@ RANLIB
 SET_MAKE
 INSTALL
 CPP
+tkblt_STUB_LIB_PATH
+tkblt_STUB_LIB_SPEC
+tkblt_STUB_LIB_FILE
+tkblt_LIB_SPEC
+tkblt_LIB_FILE
+tkblt_SRC_DIR
+tkblt_BIN_DIR
+tkblt_VERSION
 tkimg_STUB_LIB_PATH
 tkimg_STUB_LIB_SPEC
 tkimg_STUB_LIB_FILE
@@ -783,6 +791,7 @@ with_pngtcl
 with_jpegtcl
 with_zlibtcl
 with_tkimg
+with_tkblt
 with_tclinclude
 with_tkinclude
 enable_shared
@@ -1429,6 +1438,7 @@ Optional Packages:
   --with-jpegtcl              directory containing jpegtcl configuration (jpegtclConfig.sh)
   --with-zlibtcl              directory containing zlibtcl configuration (zlibtclConfig.sh)
   --with-tkimg              directory containing tkimg configuration (tkimgConfig.sh)
+  --with-tkblt              directory containing tkblt configuration (tkbltConfig.sh)
   --with-tclinclude       directory containing the public Tcl header files
   --with-tkinclude        directory containing the public Tk header files
   --with-celib=DIR        use Windows/CE support library from DIR
@@ -4912,6 +4922,254 @@ $as_echo "using tkimg_STUB_LIB_PATH ${tkimg_STUB_LIB_PATH}" >&6; }
 
 	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimg_STUB_LIB_SPEC ${tkimg_STUB_LIB_SPEC}" >&5
 $as_echo "using tkimg_STUB_LIB_SPEC ${tkimg_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tkblt configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tkblt
+    #
+
+    if test x"${no_tkblt}" = x ; then
+	# we reset no_tkblt in case something fails here
+	no_tkblt=true
+
+# Check whether --with-tkblt was given.
+if test "${with_tkblt+set}" = set; then :
+  withval=$with_tkblt; with_tkbltconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkblt configuration" >&5
+$as_echo_n "checking for tkblt configuration... " >&6; }
+	if ${ac_cv_c_tkbltconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tkblt was specified.
+	    if test x"${with_tkbltconfig}" != x ; then
+		case ${with_tkbltconfig} in
+		    */tkbltConfig.sh )
+			if test -f ${with_tkbltconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkblt argument should refer to directory containing tkbltConfig.sh, not to tkbltConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkblt argument should refer to directory containing tkbltConfig.sh, not to tkbltConfig.sh itself" >&2;}
+			    with_tkbltconfig=`echo ${with_tkbltconfig} | sed 's!/tkbltConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tkbltconfig}/tkbltConfig.sh" ; then
+		    ac_cv_c_tkbltconfig=`(cd ${with_tkbltconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tkbltconfig} directory doesn't contain tkbltConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tkblt installation
+	    if test x"${ac_cv_c_tkbltconfig}" = x ; then
+		for i in \
+			../tkblt \
+			`ls -dr ../tkblt*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkblt*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkblt*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkblt*[0-9].[0-9]* 2>/dev/null` \
+			../../tkblt \
+			`ls -dr ../../tkblt*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkblt*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkblt*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkblt*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkblt \
+			`ls -dr ../../../tkblt*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkblt*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkblt*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkblt*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkblt \
+			`ls -dr ${srcdir}/../tkblt*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkblt*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkblt*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkblt*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tkbltConfig.sh" ; then
+			ac_cv_c_tkbltconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tkbltConfig.sh" ; then
+			ac_cv_c_tkbltconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tkbltconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tkbltConfig.sh" ; then
+			ac_cv_c_tkbltconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tkbltconfig}" = x ; then
+	    tkblt_BIN_DIR="# no tkblt configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkblt configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkblt configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tkblt=
+	    tkblt_BIN_DIR=${ac_cv_c_tkbltconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkblt_BIN_DIR/tkbltConfig.sh" >&5
+$as_echo "found $tkblt_BIN_DIR/tkbltConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkblt_BIN_DIR}/tkbltConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkblt_BIN_DIR}/tkbltConfig.sh... " >&6; }
+
+    if test -f "${tkblt_BIN_DIR}/tkbltConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tkblt_BIN_DIR}/tkbltConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tkblt_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tkblt_LIB_SPEC will be set to the value
+    # of tkblt_BUILD_LIB_SPEC. An extension should make use of tkblt_LIB_SPEC
+    # instead of tkblt_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tkblt_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkblt" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkblt" >&2;}
+        tkblt_LIB_SPEC=${tkblt_BUILD_LIB_SPEC}
+        tkblt_STUB_LIB_SPEC=${tkblt_BUILD_STUB_LIB_SPEC}
+        tkblt_STUB_LIB_PATH=${tkblt_BUILD_STUB_LIB_PATH}
+        tkblt_INCLUDE_SPEC=${tkblt_BUILD_INCLUDE_SPEC}
+        tkblt_LIBRARY_PATH=${tkblt_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tkblt_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKBLT_STUB library for LIBS" >&5
+$as_echo_n "checking For TKBLT_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKBLT_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKBLT_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKBLT_STUB_LIB_PATH ${TKBLT_STUB_LIB_PATH}" >&5
+$as_echo "using TKBLT_STUB_LIB_PATH ${TKBLT_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKBLT_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKBLT_STUB_LIB_SPEC ${TKBLT_STUB_LIB_SPEC}" >&5
+$as_echo "using TKBLT_STUB_LIB_SPEC ${TKBLT_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkblt_STUB library for LIBS" >&5
+$as_echo_n "checking For tkblt_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tkblt_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tkblt_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkblt_STUB_LIB_PATH ${tkblt_STUB_LIB_PATH}" >&5
+$as_echo "using tkblt_STUB_LIB_PATH ${tkblt_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tkblt_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkblt_STUB_LIB_SPEC ${tkblt_STUB_LIB_SPEC}" >&5
+$as_echo "using tkblt_STUB_LIB_SPEC ${tkblt_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5

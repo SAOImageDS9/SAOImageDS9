@@ -23,6 +23,8 @@ jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
 zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
 tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
 
+tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
+
 CC		= @CC@
 CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
 CFLAGS_WARNING	= @CFLAGS_WARNING@
@@ -70,8 +72,6 @@ LLIBS	= \
 	$(libdir)/tkimggif$(TKIMGVER)/libtkimggif146.a \
 	$(libdir)/tkimgwindow$(TKIMGVER)/libtkimgwindow146.a \
 	$(libdir)/libxpa.a \
-	$(libdir)/tkblt$(TKBLTVER)/libtkbltstub32.a \
-	$(libdir)/tkblt$(TKBLTVER)/tkblt32.a \
 	$(libdir)/tkwin$(TKWINVER)/tkwin10.a \
 	$(libdir)/libxml2.a \
 	$(libdir)/libz.a
@@ -103,6 +103,7 @@ ds9Base$(EXEEXT): $(OBJS) $(LLIBS)
 	$(jpegtcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \
 	$(tkimg_LIB_SPEC) \
+	$(tkble_LIB_SPEC) \
 	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
 	$(TK_LIBS) \

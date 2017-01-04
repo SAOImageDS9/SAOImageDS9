@@ -46,7 +46,7 @@ TEA_PATH_TKCONFIG
 TEA_LOAD_TKCONFIG
 
 #--------------------------------------------------------------------
-# Load the *.sh file if necessary (Img extension)
+# Load the *.sh file if necessary
 #--------------------------------------------------------------------
 
 TEA_PATH_CONFIG(tifftcl)
@@ -63,6 +63,9 @@ TEA_LOAD_CONFIG(zlibtcl)
 
 TEA_PATH_CONFIG(tkimg)
 TEA_LOAD_CONFIG(tkimg)
+
+TEA_PATH_CONFIG(tkblt)
+TEA_LOAD_CONFIG(tkblt)
 
 #-----------------------------------------------------------------------
 # Handle the --prefix=... option by defaulting to what Tcl gave.

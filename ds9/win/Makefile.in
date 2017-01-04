@@ -104,7 +104,7 @@ ds9Base$(EXEEXT): $(OBJS) $(LLIBS)
 	$(jpegtcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \
 	$(tkimg_LIB_SPEC) \
-	$(tkble_LIB_SPEC) \
+	$(tkblt_LIB_SPEC) \
 	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
 	$(TK_LIBS) \

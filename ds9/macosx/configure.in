@@ -46,7 +46,7 @@ TEA_PATH_TKCONFIG
 TEA_LOAD_TKCONFIG
 
 #--------------------------------------------------------------------
-# Load the *.sh file if necessary (Img extension)
+# Load the *.sh file if necessary
 #--------------------------------------------------------------------
 
 TEA_PATH_CONFIG(tifftcl)

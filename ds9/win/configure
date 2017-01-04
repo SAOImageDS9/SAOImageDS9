@@ -3690,7 +3690,7 @@ $as_echo "#define MAC_OSX_TK 1" >>confdefs.h
 
 
 #--------------------------------------------------------------------
-# Load the *.sh file if necessary (Img extension)
+# Load the *.sh file if necessary
 #--------------------------------------------------------------------
 
 

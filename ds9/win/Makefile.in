@@ -17,6 +17,12 @@ TK_LIBS		= @TK_LIBS@
 TK_LIB_SPEC	= @TK_LIB_SPEC@
 TK_STUB_LIB_SPEC= @TK_STUB_LIB_SPEC@
 
+tifftcl_LIB_SPEC= @tifftcl_LIB_SPEC@
+pngtcl_LIB_SPEC	= @pngtcl_LIB_SPEC@
+jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
+zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
+tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
+
 CC		= @CC@
 CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
 CFLAGS_WARNING	= @CFLAGS_WARNING@
@@ -58,16 +64,11 @@ LLIBS	= \
 	$(libdir)/tkmpeg$(TKMPEGVER)/tkmpeg10.a \
 	$(libdir)/Tclxml$(TCLXMLVER)/Tclxml32.a \
 	$(libdir)/Tktable$(TKTABLEVER)/Tktable210.a \
-	$(libdir)/Img$(TKIMGVER)/libtkimgpng142.a \
-	$(libdir)/Img$(TKIMGVER)/libpngtcl1412.a \
-	$(libdir)/Img$(TKIMGVER)/libtkimgtiff142.a \
-	$(libdir)/Img$(TKIMGVER)/libtifftcl394.a \
-	$(libdir)/Img$(TKIMGVER)/libtkimgjpeg142.a \
-	$(libdir)/Img$(TKIMGVER)/libjpegtcl84.a \
-	$(libdir)/Img$(TKIMGVER)/libtkimggif142.a \
-	$(libdir)/Img$(TKIMGVER)/libtkimgwindow142.a \
-	$(libdir)/Img$(TKIMGVER)/zlibtcl128.a \
-	$(libdir)/Img$(TKIMGVER)/libtkimg142.a \
+	$(libdir)/tkimgtiff$(TKIMGVER)/libtkimgtiff146.a \
+	$(libdir)/tkimgpng$(TKIMGVER)/libtkimgpng146.a \
+	$(libdir)/tkimgjpeg$(TKIMGVER)/libtkimgjpeg146.a \
+	$(libdir)/tkimggif$(TKIMGVER)/libtkimggif146.a \
+	$(libdir)/tkimgwindow$(TKIMGVER)/libtkimgwindow146.a \
 	$(libdir)/libxpa.a \
 	$(libdir)/tkblt$(TKBLTVER)/libtkbltstub32.a \
 	$(libdir)/tkblt$(TKBLTVER)/tkblt32.a \
@@ -97,6 +98,11 @@ ds9Base$(EXEEXT): $(OBJS) $(LLIBS)
 	$(OBJS) \
 	$(LLIBS) \
 	$(LIBS) \
+	$(tifftcl_LIB_SPEC) \
+	$(pngtcl_LIB_SPEC) \
+	$(jpegtcl_LIB_SPEC) \
+	$(zlibtcl_LIB_SPEC) \
+	$(tkimg_LIB_SPEC) \
 	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
 	$(TK_LIBS) \

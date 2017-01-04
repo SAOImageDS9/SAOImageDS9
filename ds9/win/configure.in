@@ -45,6 +45,25 @@ TEA_LOAD_TCLCONFIG
 TEA_PATH_TKCONFIG
 TEA_LOAD_TKCONFIG
 
+#--------------------------------------------------------------------
+# Load the *.sh file if necessary (Img extension)
+#--------------------------------------------------------------------
+
+TEA_PATH_CONFIG(tifftcl)
+TEA_LOAD_CONFIG(tifftcl)
+
+TEA_PATH_CONFIG(pngtcl)
+TEA_LOAD_CONFIG(pngtcl)
+
+TEA_PATH_CONFIG(jpegtcl)
+TEA_LOAD_CONFIG(jpegtcl)
+
+TEA_PATH_CONFIG(zlibtcl)
+TEA_LOAD_CONFIG(zlibtcl)
+
+TEA_PATH_CONFIG(tkimg)
+TEA_LOAD_CONFIG(tkimg)
+
 #-----------------------------------------------------------------------
 # Handle the --prefix=... option by defaulting to what Tcl gave.
 # Must be called after TEA_LOAD_TCLCONFIG and before TEA_SETUP_COMPILER.

@@ -49,6 +49,9 @@ TEA_LOAD_TKCONFIG
 # Load the *.sh file if necessary
 #--------------------------------------------------------------------
 
+TEA_PATH_CONFIG(tclcheckdns)
+TEA_LOAD_CONFIG(tclcheckdns)
+
 TEA_PATH_CONFIG(tclzvfs)
 TEA_LOAD_CONFIG(tclzvfs)
 

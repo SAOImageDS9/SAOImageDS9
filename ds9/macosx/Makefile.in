@@ -24,6 +24,7 @@ jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
 zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
 tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
 
+tclcheckdns_LIB_SPEC= @tclcheckdns_LIB_SPEC@
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
 
 CC		= @CC@
@@ -74,7 +75,6 @@ LLIBS	= \
 	$(libdir)/tkimgwindow$(TKIMGVER)/libtkimgwindow$(TKIMGVER).a \
 	$(libdir)/libxpa.a \
 	$(libdir)/tcliis$(TCLIISVER)/libtcliis$(TCLIISVER).a \
-	$(libdir)/tclcheckdns$(TCLCHECKDNSVER)/libtclcheckdns$(TCLCHECKDNSVER).a \
 	$(libdir)/tclsignal$(TCLSIGNALVER)/libtclsignal$(TCLSIGNALVER).a \
 	$(libdir)/tkmacosx$(TKMACOSXVER)/libtkmacosx$(TKMACOSXVER).a
 
@@ -130,6 +130,7 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(OBJS) \
 	$(LLIBS) \
 	$(LIBS) \
+	$(tclcheckdns_LIB_SPEC) \
 	$(tifftcl_LIB_SPEC) \
 	$(pngtcl_LIB_SPEC) \
 	$(jpegtcl_LIB_SPEC) \

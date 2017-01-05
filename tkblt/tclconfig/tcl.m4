@@ -3085,7 +3085,7 @@ AC_DEFUN([TEA_ADD_SOURCES], [
 		fi
 		PKG_SOURCES="$PKG_SOURCES $i"
 		# this assumes it is in a VPATH dir
-		i=`basename $i`
+#		i=`basename $i`
 		# handle user calling this before or after TEA_SETUP_COMPILER
 		if test x"${OBJEXT}" != x ; then
 		    j="`echo $i | sed -e 's/\.[[^.]]*$//'`.${OBJEXT}"
@@ -3129,7 +3129,7 @@ AC_DEFUN([TEA_ADD_STUB_SOURCES], [
 	fi
 	PKG_STUB_SOURCES="$PKG_STUB_SOURCES $i"
 	# this assumes it is in a VPATH dir
-	i=`basename $i`
+#	i=`basename $i`
 	# handle user calling this before or after TEA_SETUP_COMPILER
 	if test x"${OBJEXT}" != x ; then
 	    j="`echo $i | sed -e 's/\.[[^.]]*$//'`.${OBJEXT}"

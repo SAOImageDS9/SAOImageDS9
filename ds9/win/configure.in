@@ -49,9 +49,6 @@ TEA_LOAD_TKCONFIG
 # Load the *.sh file if necessary
 #--------------------------------------------------------------------
 
-TEA_PATH_CONFIG(tcliis)
-TEA_LOAD_CONFIG(tcliis)
-
 TEA_PATH_CONFIG(tifftcl)
 TEA_LOAD_CONFIG(tifftcl)
 

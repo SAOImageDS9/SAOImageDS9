@@ -29,6 +29,7 @@ tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
 tclsignal_LIB_SPEC= @tclsignal_LIB_SPEC@
 
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
+tkmacosx_LIB_SPEC= @tkmacosx_LIB_SPEC@
 tkmpeg_LIB_SPEC	= @tkmpeg_LIB_SPEC@
 
 CC		= @CC@
@@ -76,8 +77,7 @@ LLIBS	= \
 	$(libdir)/tkimgjpeg$(TKIMGVER)/libtkimgjpeg$(TKIMGVER).a \
 	$(libdir)/tkimggif$(TKIMGVER)/libtkimggif$(TKIMGVER).a \
 	$(libdir)/tkimgwindow$(TKIMGVER)/libtkimgwindow$(TKIMGVER).a \
-	$(libdir)/libxpa.a \
-	$(libdir)/tkmacosx$(TKMACOSXVER)/libtkmacosx$(TKMACOSXVER).a
+	$(libdir)/libxpa.a
 
 APPDIR	= $(bindir)/SAOImage\ DS9.app
 TKSAOFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework
@@ -140,6 +140,7 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(zlibtcl_LIB_SPEC) \
 	$(tkimg_LIB_SPEC) \
 	$(tkblt_LIB_SPEC) \
+	$(tkmacosx_LIB_SPEC) \
 	$(tkmpeg_LIB_SPEC) \
 	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \

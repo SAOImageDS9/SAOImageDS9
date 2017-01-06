@@ -174,7 +174,7 @@ TEA_PROG_TCLSH
 TEA_PROG_WISH
 
 #--------------------------------------------------------------------
-# These are for tkmpegConfig.sh
+# These are for tkmacosxConfig.sh
 #--------------------------------------------------------------------
 
 TEA_EXPORT_CONFIG([tkmacosx])

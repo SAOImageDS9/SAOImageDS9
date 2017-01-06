@@ -1,32 +1,55 @@
+2016-03-11 Sean Woods <yoda@etoyoc.com>
+  *tcl.m4 Fixed the search for Tcl and Wish shells under MinGW. Static builds and threaded builds
+  get an "s" or "t" added to the name.
+
+2015-08-28  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* tcl.m4:  Rfe [00189c4afc]: Allow semi-static UCRT build on
+	Windows with VC 14.0
+
+2013-10-08  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* tcl.m4:  Bug [172223e008]: Wrong filename in
+	--disable-shared compile on MinGW
+
+2013-10-04  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* tcl.m4:  stub library is no longer linked with msvcrt??.dll.
+
+2013-10-01  Jan Nijtmans  <nijtmans@users.sf.net>
+
+	* tcl.m4:  Workaround for MinGW bug #2065:  "gcc --shared" links
+	with libgcc_s_dw2-1.dll when using 64-bit division in C
+
 2013-07-04  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* unix/tcl.m4:  Bug [3324676]: AC_PROG_INSTALL incompat,
+	* tcl.m4:  Bug [3324676]: AC_PROG_INSTALL incompat,
 	Bug [3606445]: Unneeded -DHAVE_NO_SEH=1 when not building on Windows
 
 2013-07-02  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* unix/tcl.m4:  Bug [32afa6e256]: dirent64 check is incorrect in tcl.m4
+	* tcl.m4:  Bug [32afa6e256]: dirent64 check is incorrect in tcl.m4
 	(thanks to Brian Griffin)
 
 2013-06-20  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* unix/tcl.m4:  Use X11/Xlib.h for checking where X11 can be found
+	* tcl.m4:  Use X11/Xlib.h for checking where X11 can be found
 	in stead of X11/XIntrinsic.h. Suggested by Pietro Cerutti.
 
 2013-06-04  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* unix/tcl.m4: Eliminate NO_VIZ macro as current
+	* tcl.m4: Eliminate NO_VIZ macro as current
 	zlib uses HAVE_HIDDEN in stead. One more last-moment
 	fix for FreeBSD by Pietro Cerutti
 
 2013-05-19  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* unix/tcl.m4: Fix for FreeBSD, and remove support for old
-	FreeBSD versions. Patch by Pietro Cerutti 
+	* tcl.m4: Fix for FreeBSD, and remove support for old
+	FreeBSD versions. Patch by Pietro Cerutti
 
 2013-03-12  Jan Nijtmans  <nijtmans@users.sf.net>
 
-	* unix/tcl.m4: Patch by Andrew Shadura, providing better support for
+	* tcl.m4: Patch by Andrew Shadura, providing better support for
 	* three architectures they have in Debian.
 
 2012-08-07  Stuart Cassoff  <stwo@users.sourceforge.net>

@@ -651,14 +651,14 @@ RANLIB
 SET_MAKE
 INSTALL
 CPP
-tkwinu_STUB_LIB_PATH
-tkwinu_STUB_LIB_SPEC
-tkwinu_STUB_LIB_FILE
-tkwinu_LIB_SPEC
-tkwinu_LIB_FILE
-tkwinu_SRC_DIR
-tkwinu_BIN_DIR
-tkwinu_VERSION
+tkwin_STUB_LIB_PATH
+tkwin_STUB_LIB_SPEC
+tkwin_STUB_LIB_FILE
+tkwin_LIB_SPEC
+tkwin_LIB_FILE
+tkwin_SRC_DIR
+tkwin_BIN_DIR
+tkwin_VERSION
 tkmpeg_STUB_LIB_PATH
 tkmpeg_STUB_LIB_SPEC
 tkmpeg_STUB_LIB_FILE
@@ -5558,35 +5558,35 @@ $as_echo "found $tkwin_BIN_DIR/tkwinConfig.sh" >&6; }
     fi
 
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkwinu_BIN_DIR}/tkwinuConfig.sh" >&5
-$as_echo_n "checking for existence of ${tkwinu_BIN_DIR}/tkwinuConfig.sh... " >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkwin_BIN_DIR}/tkwinConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkwin_BIN_DIR}/tkwinConfig.sh... " >&6; }
 
-    if test -f "${tkwinu_BIN_DIR}/tkwinuConfig.sh" ; then
+    if test -f "${tkwin_BIN_DIR}/tkwinConfig.sh" ; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
 $as_echo "loading" >&6; }
-	. "${tkwinu_BIN_DIR}/tkwinuConfig.sh"
+	. "${tkwin_BIN_DIR}/tkwinConfig.sh"
     else
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
 $as_echo "file not found" >&6; }
     fi
 
     #
-    # If the tkwinu_BIN_DIR is the build directory (not the install directory),
+    # If the tkwin_BIN_DIR is the build directory (not the install directory),
     # then set the common variable name to the value of the build variables.
-    # For example, the variable tkwinu_LIB_SPEC will be set to the value
-    # of tkwinu_BUILD_LIB_SPEC. An extension should make use of tkwinu_LIB_SPEC
-    # instead of tkwinu_BUILD_LIB_SPEC since it will work with both an
+    # For example, the variable tkwin_LIB_SPEC will be set to the value
+    # of tkwin_BUILD_LIB_SPEC. An extension should make use of tkwin_LIB_SPEC
+    # instead of tkwin_BUILD_LIB_SPEC since it will work with both an
     # installed and uninstalled version of Tcl.
     #
 
-    if test -f "${tkwinu_BIN_DIR}/Makefile" ; then
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkwinu" >&5
-$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkwinu" >&2;}
-        tkwinu_LIB_SPEC=${tkwinu_BUILD_LIB_SPEC}
-        tkwinu_STUB_LIB_SPEC=${tkwinu_BUILD_STUB_LIB_SPEC}
-        tkwinu_STUB_LIB_PATH=${tkwinu_BUILD_STUB_LIB_PATH}
-        tkwinu_INCLUDE_SPEC=${tkwinu_BUILD_INCLUDE_SPEC}
-        tkwinu_LIBRARY_PATH=${tkwinu_LIBRARY_PATH}
+    if test -f "${tkwin_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkwin" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkwin" >&2;}
+        tkwin_LIB_SPEC=${tkwin_BUILD_LIB_SPEC}
+        tkwin_STUB_LIB_SPEC=${tkwin_BUILD_STUB_LIB_SPEC}
+        tkwin_STUB_LIB_PATH=${tkwin_BUILD_STUB_LIB_PATH}
+        tkwin_INCLUDE_SPEC=${tkwin_BUILD_INCLUDE_SPEC}
+        tkwin_LIBRARY_PATH=${tkwin_LIBRARY_PATH}
     fi
 
 
@@ -5606,18 +5606,18 @@ $as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkwinu
 	# Check both upper and lower-case variants
 	# If a dev wanted non-stubs libs, this function could take an option
 	# to not use _STUB in the paths below
-	if test "x${tkwinu_STUB_LIB_SPEC}" = x; then :
+	if test "x${tkwin_STUB_LIB_SPEC}" = x; then :
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKWINU_STUB library for LIBS" >&5
-$as_echo_n "checking For TKWINU_STUB library for LIBS... " >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKWIN_STUB library for LIBS" >&5
+$as_echo_n "checking For TKWIN_STUB library for LIBS... " >&6; }
     # This simplifies the use of stub libraries by automatically adding
     # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
     # but this is called before CONFIG_CFLAGS.  More importantly, this adds
     # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
-    if test "x${TKWINU_STUB_LIB_SPEC}" != "x" ; then
+    if test "x${TKWIN_STUB_LIB_SPEC}" != "x" ; then
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
 
-    vars="\"`${CYGPATH} ${TKWINU_STUB_LIB_PATH}`\""
+    vars="\"`${CYGPATH} ${TKWIN_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
 	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
@@ -5627,11 +5627,11 @@ $as_echo_n "checking For TKWINU_STUB library for LIBS... " >&6; }
     done
 
 
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKWINU_STUB_LIB_PATH ${TKWINU_STUB_LIB_PATH}" >&5
-$as_echo "using TKWINU_STUB_LIB_PATH ${TKWINU_STUB_LIB_PATH}" >&6; }
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKWIN_STUB_LIB_PATH ${TKWIN_STUB_LIB_PATH}" >&5
+$as_echo "using TKWIN_STUB_LIB_PATH ${TKWIN_STUB_LIB_PATH}" >&6; }
 	else
 
-    vars="${TKWINU_STUB_LIB_SPEC}"
+    vars="${TKWIN_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
 	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
@@ -5641,8 +5641,8 @@ $as_echo "using TKWINU_STUB_LIB_PATH ${TKWINU_STUB_LIB_PATH}" >&6; }
     done
 
 
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKWINU_STUB_LIB_SPEC ${TKWINU_STUB_LIB_SPEC}" >&5
-$as_echo "using TKWINU_STUB_LIB_SPEC ${TKWINU_STUB_LIB_SPEC}" >&6; }
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKWIN_STUB_LIB_SPEC ${TKWIN_STUB_LIB_SPEC}" >&5
+$as_echo "using TKWIN_STUB_LIB_SPEC ${TKWIN_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
@@ -5651,16 +5651,16 @@ $as_echo "file not found" >&6; }
 
 else
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkwinu_STUB library for LIBS" >&5
-$as_echo_n "checking For tkwinu_STUB library for LIBS... " >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkwin_STUB library for LIBS" >&5
+$as_echo_n "checking For tkwin_STUB library for LIBS... " >&6; }
     # This simplifies the use of stub libraries by automatically adding
     # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
     # but this is called before CONFIG_CFLAGS.  More importantly, this adds
     # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
-    if test "x${tkwinu_STUB_LIB_SPEC}" != "x" ; then
+    if test "x${tkwin_STUB_LIB_SPEC}" != "x" ; then
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
 
-    vars="\"`${CYGPATH} ${tkwinu_STUB_LIB_PATH}`\""
+    vars="\"`${CYGPATH} ${tkwin_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
 	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
@@ -5670,11 +5670,11 @@ $as_echo_n "checking For tkwinu_STUB library for LIBS... " >&6; }
     done
 
 
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkwinu_STUB_LIB_PATH ${tkwinu_STUB_LIB_PATH}" >&5
-$as_echo "using tkwinu_STUB_LIB_PATH ${tkwinu_STUB_LIB_PATH}" >&6; }
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkwin_STUB_LIB_PATH ${tkwin_STUB_LIB_PATH}" >&5
+$as_echo "using tkwin_STUB_LIB_PATH ${tkwin_STUB_LIB_PATH}" >&6; }
 	else
 
-    vars="${tkwinu_STUB_LIB_SPEC}"
+    vars="${tkwin_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
 	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
@@ -5684,8 +5684,8 @@ $as_echo "using tkwinu_STUB_LIB_PATH ${tkwinu_STUB_LIB_PATH}" >&6; }
     done
 
 
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkwinu_STUB_LIB_SPEC ${tkwinu_STUB_LIB_SPEC}" >&5
-$as_echo "using tkwinu_STUB_LIB_SPEC ${tkwinu_STUB_LIB_SPEC}" >&6; }
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkwin_STUB_LIB_SPEC ${tkwin_STUB_LIB_SPEC}" >&5
+$as_echo "using tkwin_STUB_LIB_SPEC ${tkwin_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5

@@ -26,6 +26,7 @@ tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
 
 tclcheckdns_LIB_SPEC= @tclcheckdns_LIB_SPEC@
 tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
+tclsignal_LIB_SPEC= @tclsignal_LIB_SPEC@
 tclzvfs_LIB_SPEC= @tclzvfs_LIB_SPEC@
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
 
@@ -91,8 +92,7 @@ LLIBS	= \
 	$(libdir)/tkimgjpeg$(TKIMGVER)/libtkimgjpeg$(TKIMGVER).a \
 	$(libdir)/tkimggif$(TKIMGVER)/libtkimggif$(TKIMGVER).a \
 	$(libdir)/tkimgwindow$(TKIMGVER)/libtkimgwindow$(TKIMGVER).a \
-	$(libdir)/libxpa.a \
-	$(libdir)/tclsignal$(TCLSIGNALVER)/libtclsignal$(TCLSIGNALVER).a
+	$(libdir)/libxpa.a
 
 
 #--------------------------main
@@ -144,6 +144,7 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(LIBS) \
 	$(tclcheckdns_LIB_SPEC) \
 	$(tcliis_LIB_SPEC) \
+	$(tclsignal_LIB_SPEC) \
 	$(tclzvfs_LIB_SPEC) \
 	$(tifftcl_LIB_SPEC) \
 	$(pngtcl_LIB_SPEC) \

@@ -1,0 +1,45 @@
+# tkmacosxConfig.sh --
+#
+# This shell script (for sh) is generated automatically by tkmacosx's
+# configure script.  It will create shell variables for most of
+# the configuration options discovered by the configure script.
+# This script is intended to be included by the configure scripts
+# for tkmacosx extensions so that they don't have to figure this all
+# out for themselves.  This file does not duplicate information
+# already provided by tclConfig.sh, so you may need to use that
+# file in addition to this one.
+#
+# The information in this file is specific to a single platform.
+
+# tkmacosx's version number.
+tkmacosx_VERSION='@PACKAGE_VERSION@'
+
+# The name of the tkmacosx library (may be either a .a file or a shared library):
+tkmacosx_LIB_FILE=@PKG_LIB_FILE@
+
+# String to pass to linker to pick up the tkmacosx library from its
+# build directory.
+tkmacosx_BUILD_LIB_SPEC='@tkmacosx_BUILD_LIB_SPEC@'
+
+# String to pass to linker to pick up the tkmacosx library from its
+# installed directory.
+tkmacosx_LIB_SPEC='@tkmacosx_LIB_SPEC@'
+
+# The name of the tkmacosx stub library (a .a file):
+#tkmacosx_STUB_LIB_FILE=@PKG_STUB_LIB_FILE@
+
+# String to pass to linker to pick up the tkmacosx stub library from its
+# build directory.
+#tkmacosx_BUILD_STUB_LIB_SPEC='@tkmacosx_BUILD_STUB_LIB_SPEC@'
+
+# String to pass to linker to pick up the tkmacosx stub library from its
+# installed directory.
+#tkmacosx_STUB_LIB_SPEC='@tkmacosx_STUB_LIB_SPEC@'
+
+# String to pass to linker to pick up the tkmacosx stub library from its
+# build directory.
+#tkmacosx_BUILD_STUB_LIB_PATH='@tkmacosx_BUILD_STUB_LIB_PATH@'
+
+# String to pass to linker to pick up the tkmacosx stub library from its
+# installed directory.
+#tkmacosx_STUB_LIB_PATH='@tkmacosx_STUB_LIB_PATH@'

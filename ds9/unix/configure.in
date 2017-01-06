@@ -79,6 +79,9 @@ TEA_LOAD_CONFIG(tkimg)
 TEA_PATH_CONFIG(tkblt)
 TEA_LOAD_CONFIG(tkblt)
 
+TEA_PATH_CONFIG(tkmpeg)
+TEA_LOAD_CONFIG(tkmpeg)
+
 #-----------------------------------------------------------------------
 # Handle the --prefix=... option by defaulting to what Tcl gave.
 # Must be called after TEA_LOAD_TCLCONFIG and before TEA_SETUP_COMPILER.

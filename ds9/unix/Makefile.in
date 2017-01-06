@@ -28,7 +28,9 @@ tclcheckdns_LIB_SPEC= @tclcheckdns_LIB_SPEC@
 tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
 tclsignal_LIB_SPEC= @tclsignal_LIB_SPEC@
 tclzvfs_LIB_SPEC= @tclzvfs_LIB_SPEC@
+
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
+tkmpeg_LIB_SPEC	= @tkmpeg_LIB_SPEC@
 
 CC		= @CC@
 CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
@@ -84,7 +86,6 @@ LLIBS	= \
 	$(libdir)/libast_pal.a \
 	$(libdir)/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
 	$(libdir)/tkhtml1$(TKHTMLVER)/libtkhtml1$(TKHTMLVER).a \
-	$(libdir)/tkmpeg$(TKMPEGVER)/libtkmpeg$(TKMPEGVER).a \
 	$(libdir)/Tclxml$(TCLXMLVER)/libTclxml$(TCLXMLVER).a \
 	$(libdir)/Tktable$(TKTABLEVER)/libTktable$(TKTABLEVER).a \
 	$(libdir)/tkimgtiff$(TKIMGVER)/libtkimgtiff$(TKIMGVER).a \
@@ -152,6 +153,7 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(zlibtcl_LIB_SPEC) \
 	$(tkimg_LIB_SPEC) \
 	$(tkblt_LIB_SPEC) \
+	$(tkmpeg_LIB_SPEC) \
 	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
 	$(TK_LIBS)

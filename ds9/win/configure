@@ -651,6 +651,14 @@ RANLIB
 SET_MAKE
 INSTALL
 CPP
+tkmpeg_STUB_LIB_PATH
+tkmpeg_STUB_LIB_SPEC
+tkmpeg_STUB_LIB_FILE
+tkmpeg_LIB_SPEC
+tkmpeg_LIB_FILE
+tkmpeg_SRC_DIR
+tkmpeg_BIN_DIR
+tkmpeg_VERSION
 tkblt_STUB_LIB_PATH
 tkblt_STUB_LIB_SPEC
 tkblt_STUB_LIB_FILE
@@ -801,6 +809,7 @@ with_jpegtcl
 with_zlibtcl
 with_tkimg
 with_tkblt
+with_tkmpeg
 with_tclinclude
 with_tkinclude
 enable_shared
@@ -1449,6 +1458,7 @@ Optional Packages:
   --with-zlibtcl              directory containing zlibtcl configuration (zlibtclConfig.sh)
   --with-tkimg              directory containing tkimg configuration (tkimgConfig.sh)
   --with-tkblt              directory containing tkblt configuration (tkbltConfig.sh)
+  --with-tkmpeg              directory containing tkmpeg configuration (tkmpegConfig.sh)
   --with-tclinclude       directory containing the public Tcl header files
   --with-tkinclude        directory containing the public Tk header files
   --with-celib=DIR        use Windows/CE support library from DIR
@@ -5428,6 +5438,254 @@ $as_echo "using tkblt_STUB_LIB_PATH ${tkblt_STUB_LIB_PATH}" >&6; }
 
 	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkblt_STUB_LIB_SPEC ${tkblt_STUB_LIB_SPEC}" >&5
 $as_echo "using tkblt_STUB_LIB_SPEC ${tkblt_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tkmpeg configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tkmpeg
+    #
+
+    if test x"${no_tkmpeg}" = x ; then
+	# we reset no_tkmpeg in case something fails here
+	no_tkmpeg=true
+
+# Check whether --with-tkmpeg was given.
+if test "${with_tkmpeg+set}" = set; then :
+  withval=$with_tkmpeg; with_tkmpegconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkmpeg configuration" >&5
+$as_echo_n "checking for tkmpeg configuration... " >&6; }
+	if ${ac_cv_c_tkmpegconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tkmpeg was specified.
+	    if test x"${with_tkmpegconfig}" != x ; then
+		case ${with_tkmpegconfig} in
+		    */tkmpegConfig.sh )
+			if test -f ${with_tkmpegconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkmpeg argument should refer to directory containing tkmpegConfig.sh, not to tkmpegConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkmpeg argument should refer to directory containing tkmpegConfig.sh, not to tkmpegConfig.sh itself" >&2;}
+			    with_tkmpegconfig=`echo ${with_tkmpegconfig} | sed 's!/tkmpegConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tkmpegconfig}/tkmpegConfig.sh" ; then
+		    ac_cv_c_tkmpegconfig=`(cd ${with_tkmpegconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tkmpegconfig} directory doesn't contain tkmpegConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tkmpeg installation
+	    if test x"${ac_cv_c_tkmpegconfig}" = x ; then
+		for i in \
+			../tkmpeg \
+			`ls -dr ../tkmpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkmpeg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkmpeg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkmpeg*[0-9].[0-9]* 2>/dev/null` \
+			../../tkmpeg \
+			`ls -dr ../../tkmpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkmpeg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkmpeg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkmpeg*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkmpeg \
+			`ls -dr ../../../tkmpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkmpeg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkmpeg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkmpeg*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkmpeg \
+			`ls -dr ${srcdir}/../tkmpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkmpeg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkmpeg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkmpeg*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tkmpegConfig.sh" ; then
+			ac_cv_c_tkmpegconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tkmpegConfig.sh" ; then
+			ac_cv_c_tkmpegconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tkmpegconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tkmpegConfig.sh" ; then
+			ac_cv_c_tkmpegconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tkmpegconfig}" = x ; then
+	    tkmpeg_BIN_DIR="# no tkmpeg configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkmpeg configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkmpeg configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tkmpeg=
+	    tkmpeg_BIN_DIR=${ac_cv_c_tkmpegconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkmpeg_BIN_DIR/tkmpegConfig.sh" >&5
+$as_echo "found $tkmpeg_BIN_DIR/tkmpegConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkmpeg_BIN_DIR}/tkmpegConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkmpeg_BIN_DIR}/tkmpegConfig.sh... " >&6; }
+
+    if test -f "${tkmpeg_BIN_DIR}/tkmpegConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tkmpeg_BIN_DIR}/tkmpegConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tkmpeg_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tkmpeg_LIB_SPEC will be set to the value
+    # of tkmpeg_BUILD_LIB_SPEC. An extension should make use of tkmpeg_LIB_SPEC
+    # instead of tkmpeg_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tkmpeg_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkmpeg" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkmpeg" >&2;}
+        tkmpeg_LIB_SPEC=${tkmpeg_BUILD_LIB_SPEC}
+        tkmpeg_STUB_LIB_SPEC=${tkmpeg_BUILD_STUB_LIB_SPEC}
+        tkmpeg_STUB_LIB_PATH=${tkmpeg_BUILD_STUB_LIB_PATH}
+        tkmpeg_INCLUDE_SPEC=${tkmpeg_BUILD_INCLUDE_SPEC}
+        tkmpeg_LIBRARY_PATH=${tkmpeg_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tkmpeg_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKMPEG_STUB library for LIBS" >&5
+$as_echo_n "checking For TKMPEG_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKMPEG_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKMPEG_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKMPEG_STUB_LIB_PATH ${TKMPEG_STUB_LIB_PATH}" >&5
+$as_echo "using TKMPEG_STUB_LIB_PATH ${TKMPEG_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKMPEG_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKMPEG_STUB_LIB_SPEC ${TKMPEG_STUB_LIB_SPEC}" >&5
+$as_echo "using TKMPEG_STUB_LIB_SPEC ${TKMPEG_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkmpeg_STUB library for LIBS" >&5
+$as_echo_n "checking For tkmpeg_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tkmpeg_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tkmpeg_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkmpeg_STUB_LIB_PATH ${tkmpeg_STUB_LIB_PATH}" >&5
+$as_echo "using tkmpeg_STUB_LIB_PATH ${tkmpeg_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tkmpeg_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkmpeg_STUB_LIB_SPEC ${tkmpeg_STUB_LIB_SPEC}" >&5
+$as_echo "using tkmpeg_STUB_LIB_SPEC ${tkmpeg_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5

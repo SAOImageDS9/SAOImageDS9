@@ -24,6 +24,7 @@ jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
 zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
 tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
 
+tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
 
 CC		= @CC@

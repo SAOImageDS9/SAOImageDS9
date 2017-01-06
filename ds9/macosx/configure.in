@@ -52,6 +52,9 @@ TEA_LOAD_TKCONFIG
 TEA_PATH_CONFIG(tclcheckdns)
 TEA_LOAD_CONFIG(tclcheckdns)
 
+TEA_PATH_CONFIG(tcliis)
+TEA_LOAD_CONFIG(tcliis)
+
 TEA_PATH_CONFIG(tifftcl)
 TEA_LOAD_CONFIG(tifftcl)
 

@@ -651,6 +651,14 @@ RANLIB
 SET_MAKE
 INSTALL
 CPP
+tkwinu_STUB_LIB_PATH
+tkwinu_STUB_LIB_SPEC
+tkwinu_STUB_LIB_FILE
+tkwinu_LIB_SPEC
+tkwinu_LIB_FILE
+tkwinu_SRC_DIR
+tkwinu_BIN_DIR
+tkwinu_VERSION
 tkmpeg_STUB_LIB_PATH
 tkmpeg_STUB_LIB_SPEC
 tkmpeg_STUB_LIB_FILE
@@ -801,6 +809,7 @@ with_zlibtcl
 with_tkimg
 with_tkblt
 with_tkmpeg
+with_tkwin
 with_tclinclude
 with_tkinclude
 enable_shared
@@ -1449,6 +1458,7 @@ Optional Packages:
   --with-tkimg              directory containing tkimg configuration (tkimgConfig.sh)
   --with-tkblt              directory containing tkblt configuration (tkbltConfig.sh)
   --with-tkmpeg              directory containing tkmpeg configuration (tkmpegConfig.sh)
+  --with-tkwin              directory containing tkwin configuration (tkwinConfig.sh)
   --with-tclinclude       directory containing the public Tcl header files
   --with-tkinclude        directory containing the public Tk header files
   --with-celib=DIR        use Windows/CE support library from DIR
@@ -5428,6 +5438,254 @@ $as_echo "using tkmpeg_STUB_LIB_PATH ${tkmpeg_STUB_LIB_PATH}" >&6; }
 
 	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkmpeg_STUB_LIB_SPEC ${tkmpeg_STUB_LIB_SPEC}" >&5
 $as_echo "using tkmpeg_STUB_LIB_SPEC ${tkmpeg_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tkwin configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tkwin
+    #
+
+    if test x"${no_tkwin}" = x ; then
+	# we reset no_tkwin in case something fails here
+	no_tkwin=true
+
+# Check whether --with-tkwin was given.
+if test "${with_tkwin+set}" = set; then :
+  withval=$with_tkwin; with_tkwinconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkwin configuration" >&5
+$as_echo_n "checking for tkwin configuration... " >&6; }
+	if ${ac_cv_c_tkwinconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tkwin was specified.
+	    if test x"${with_tkwinconfig}" != x ; then
+		case ${with_tkwinconfig} in
+		    */tkwinConfig.sh )
+			if test -f ${with_tkwinconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkwin argument should refer to directory containing tkwinConfig.sh, not to tkwinConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkwin argument should refer to directory containing tkwinConfig.sh, not to tkwinConfig.sh itself" >&2;}
+			    with_tkwinconfig=`echo ${with_tkwinconfig} | sed 's!/tkwinConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tkwinconfig}/tkwinConfig.sh" ; then
+		    ac_cv_c_tkwinconfig=`(cd ${with_tkwinconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tkwinconfig} directory doesn't contain tkwinConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tkwin installation
+	    if test x"${ac_cv_c_tkwinconfig}" = x ; then
+		for i in \
+			../tkwin \
+			`ls -dr ../tkwin*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkwin*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkwin*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkwin*[0-9].[0-9]* 2>/dev/null` \
+			../../tkwin \
+			`ls -dr ../../tkwin*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkwin*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkwin*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkwin*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkwin \
+			`ls -dr ../../../tkwin*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkwin*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkwin*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkwin*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkwin \
+			`ls -dr ${srcdir}/../tkwin*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkwin*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkwin*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkwin*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tkwinConfig.sh" ; then
+			ac_cv_c_tkwinconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tkwinConfig.sh" ; then
+			ac_cv_c_tkwinconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tkwinconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tkwinConfig.sh" ; then
+			ac_cv_c_tkwinconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tkwinconfig}" = x ; then
+	    tkwin_BIN_DIR="# no tkwin configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkwin configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkwin configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tkwin=
+	    tkwin_BIN_DIR=${ac_cv_c_tkwinconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkwin_BIN_DIR/tkwinConfig.sh" >&5
+$as_echo "found $tkwin_BIN_DIR/tkwinConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkwinu_BIN_DIR}/tkwinuConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkwinu_BIN_DIR}/tkwinuConfig.sh... " >&6; }
+
+    if test -f "${tkwinu_BIN_DIR}/tkwinuConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tkwinu_BIN_DIR}/tkwinuConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tkwinu_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tkwinu_LIB_SPEC will be set to the value
+    # of tkwinu_BUILD_LIB_SPEC. An extension should make use of tkwinu_LIB_SPEC
+    # instead of tkwinu_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tkwinu_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkwinu" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkwinu" >&2;}
+        tkwinu_LIB_SPEC=${tkwinu_BUILD_LIB_SPEC}
+        tkwinu_STUB_LIB_SPEC=${tkwinu_BUILD_STUB_LIB_SPEC}
+        tkwinu_STUB_LIB_PATH=${tkwinu_BUILD_STUB_LIB_PATH}
+        tkwinu_INCLUDE_SPEC=${tkwinu_BUILD_INCLUDE_SPEC}
+        tkwinu_LIBRARY_PATH=${tkwinu_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tkwinu_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKWINU_STUB library for LIBS" >&5
+$as_echo_n "checking For TKWINU_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKWINU_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKWINU_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKWINU_STUB_LIB_PATH ${TKWINU_STUB_LIB_PATH}" >&5
+$as_echo "using TKWINU_STUB_LIB_PATH ${TKWINU_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKWINU_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKWINU_STUB_LIB_SPEC ${TKWINU_STUB_LIB_SPEC}" >&5
+$as_echo "using TKWINU_STUB_LIB_SPEC ${TKWINU_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkwinu_STUB library for LIBS" >&5
+$as_echo_n "checking For tkwinu_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tkwinu_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tkwinu_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkwinu_STUB_LIB_PATH ${tkwinu_STUB_LIB_PATH}" >&5
+$as_echo "using tkwinu_STUB_LIB_PATH ${tkwinu_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tkwinu_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkwinu_STUB_LIB_SPEC ${tkwinu_STUB_LIB_SPEC}" >&5
+$as_echo "using tkwinu_STUB_LIB_SPEC ${tkwinu_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5

@@ -26,6 +26,7 @@ tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
 
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
 tkmpeg_LIB_SPEC	= @tkmpeg_LIB_SPEC@
+tkwin_LIB_SPEC	= @tkwin_LIB_SPEC@
 
 CC		= @CC@
 CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
@@ -73,7 +74,6 @@ LLIBS	= \
 	$(libdir)/tkimggif$(TKIMGVER)/libtkimggif146.a \
 	$(libdir)/tkimgwindow$(TKIMGVER)/libtkimgwindow146.a \
 	$(libdir)/libxpa.a \
-	$(libdir)/tkwin$(TKWINVER)/tkwin10.a \
 	$(libdir)/libxml2.a \
 	$(libdir)/libz.a
 
@@ -106,6 +106,7 @@ ds9Base$(EXEEXT): $(OBJS) $(LLIBS)
 	$(tkimg_LIB_SPEC) \
 	$(tkblt_LIB_SPEC) \
 	$(tkmpeg_LIB_SPEC) \
+	$(tkwin_LIB_SPEC) \
 	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
 	$(TK_LIBS) \

@@ -29,6 +29,7 @@ tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
 tclsignal_LIB_SPEC= @tclsignal_LIB_SPEC@
 
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
+tkhtml1_LIB_SPEC= @tkhtml1_LIB_SPEC@
 tkmacosx_LIB_SPEC= @tkmacosx_LIB_SPEC@
 tkmpeg_LIB_SPEC	= @tkmpeg_LIB_SPEC@
 
@@ -69,7 +70,6 @@ LLIBS	= \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
 	$(libdir)/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
-	$(libdir)/tkhtml1$(TKHTMLVER)/libtkhtml1$(TKHTMLVER).a \
 	$(libdir)/Tclxml$(TCLXMLVER)/libTclxml$(TCLXMLVER).a \
 	$(libdir)/Tktable$(TKTABLEVER)/libTktable$(TKTABLEVER).a \
 	$(libdir)/tkimgtiff$(TKIMGVER)/libtkimgtiff$(TKIMGVER).a \
@@ -140,6 +140,7 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(zlibtcl_LIB_SPEC) \
 	$(tkimg_LIB_SPEC) \
 	$(tkblt_LIB_SPEC) \
+	$(tkhtml1_LIB_SPEC) \
 	$(tkmacosx_LIB_SPEC) \
 	$(tkmpeg_LIB_SPEC) \
 	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \

@@ -76,6 +76,9 @@ TEA_LOAD_CONFIG(tkimg)
 TEA_PATH_CONFIG(tkblt)
 TEA_LOAD_CONFIG(tkblt)
 
+TEA_PATH_CONFIG(tkhtml1)
+TEA_LOAD_CONFIG(tkhtml1)
+
 TEA_PATH_CONFIG(tkmacosx)
 TEA_LOAD_CONFIG(tkmacosx)
 

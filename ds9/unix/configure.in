@@ -85,6 +85,9 @@ TEA_LOAD_CONFIG(tkhtml1)
 TEA_PATH_CONFIG(tkmpeg)
 TEA_LOAD_CONFIG(tkmpeg)
 
+TEA_PATH_CONFIG(tksao)
+TEA_LOAD_CONFIG(tksao)
+
 #-----------------------------------------------------------------------
 # Handle the --prefix=... option by defaulting to what Tcl gave.
 # Must be called after TEA_LOAD_TCLCONFIG and before TEA_SETUP_COMPILER.

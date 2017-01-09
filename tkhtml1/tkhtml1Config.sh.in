@@ -26,20 +26,20 @@ tkhtml1_BUILD_LIB_SPEC='@tkhtml1_BUILD_LIB_SPEC@'
 tkhtml1_LIB_SPEC='@tkhtml1_LIB_SPEC@'
 
 # The name of the tkhtml1 stub library (a .a file):
-tkhtml1_STUB_LIB_FILE=@PKG_STUB_LIB_FILE@
+#tkhtml1_STUB_LIB_FILE=@PKG_STUB_LIB_FILE@
 
 # String to pass to linker to pick up the tkhtml1 stub library from its
 # build directory.
-tkhtml1_BUILD_STUB_LIB_SPEC='@tkhtml1_BUILD_STUB_LIB_SPEC@'
+#tkhtml1_BUILD_STUB_LIB_SPEC='@tkhtml1_BUILD_STUB_LIB_SPEC@'
 
 # String to pass to linker to pick up the tkhtml1 stub library from its
 # installed directory.
-tkhtml1_STUB_LIB_SPEC='@tkhtml1_STUB_LIB_SPEC@'
+#tkhtml1_STUB_LIB_SPEC='@tkhtml1_STUB_LIB_SPEC@'
 
 # String to pass to linker to pick up the tkhtml1 stub library from its
 # build directory.
-tkhtml1_BUILD_STUB_LIB_PATH='@tkhtml1_BUILD_STUB_LIB_PATH@'
+#tkhtml1_BUILD_STUB_LIB_PATH='@tkhtml1_BUILD_STUB_LIB_PATH@'
 
 # String to pass to linker to pick up the tkhtml1 stub library from its
 # installed directory.
-tkhtml1_STUB_LIB_PATH='@tkhtml1_STUB_LIB_PATH@'
+#tkhtml1_STUB_LIB_PATH='@tkhtml1_STUB_LIB_PATH@'

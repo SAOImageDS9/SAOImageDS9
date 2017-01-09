@@ -81,7 +81,6 @@ FILES	= \
 	$(ZDIR)/template
 
 LLIBS	= \
-	$(libdir)/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
 	$(libdir)/libfuntools.a \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \

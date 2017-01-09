@@ -61,7 +61,6 @@ STRIP		= i686-w64-mingw32-strip.exe
 OBJS	= ds9.o winMain.o ds9.res.o
 
 LLIBS	= \
-	$(libdir)/tksao$(TKSAOVER)/tksao10.a \
 	$(libdir)/libfuntools.a \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \

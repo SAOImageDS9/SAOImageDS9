@@ -65,7 +65,6 @@ ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d
 OBJS	= ds9.o tkAppInit.o
 
 LLIBS	= \
-	$(libdir)/tksao$(TKSAOVER)/libtksao$(TKSAOVER).a \
 	$(libdir)/libfuntools.a \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \

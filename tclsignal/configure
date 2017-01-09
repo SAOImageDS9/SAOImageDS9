@@ -8777,7 +8777,7 @@ $as_echo "${TCLSH_PROG}" >&6; }
 #TEA_PROG_WISH
 
 #--------------------------------------------------------------------
-# These are for tcliisConfig.sh
+# These are for tclsignalConfig.sh
 #--------------------------------------------------------------------
 
 

@@ -168,7 +168,7 @@ TEA_PROG_TCLSH
 #TEA_PROG_WISH
 
 #--------------------------------------------------------------------
-# These are for tcliisConfig.sh
+# These are for tclsignalConfig.sh
 #--------------------------------------------------------------------
 
 TEA_EXPORT_CONFIG([tclsignal])

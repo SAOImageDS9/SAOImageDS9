@@ -183,7 +183,7 @@ TEA_PROG_TCLSH
 TEA_PROG_WISH
 
 #--------------------------------------------------------------------
-# These are for tkbltConfig.sh
+# These are for tkhtml1Config.sh
 #--------------------------------------------------------------------
 
 TEA_EXPORT_CONFIG([tkhtml1])

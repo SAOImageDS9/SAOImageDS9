@@ -94,7 +94,6 @@ LLIBS	= \
 	$(libdir)/tkimgwindow$(TKIMGVER)/libtkimgwindow$(TKIMGVER).a \
 	$(libdir)/libxpa.a
 
-
 #--------------------------main
 
 .NOTPARALLEL :

@@ -13,7 +13,7 @@ int ColorbarRGBTrueColor24CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int,
 // ColorbarRGB Specs
 
 static Tk_CustomOption tagsOption = {
-  Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, NULL
+  NULL, NULL, NULL
 };
 
 static Tk_ConfigSpec colorbarRGBTrueColor24Specs[] = {
@@ -101,6 +101,9 @@ static Tk_ItemType colorbarRGBTrueColor24Type = {
 
 int ColorbarRGBTrueColor24_Init(Tcl_Interp* interp)
 {
+  tagsOption.parseProc = Tk_CanvasTagsParseProc;
+  tagsOption.printProc = Tk_CanvasTagsPrintProc;
+
   Tk_CreateItemType(&colorbarRGBTrueColor24Type);
   return TCL_OK;
 }

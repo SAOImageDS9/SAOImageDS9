@@ -13,7 +13,7 @@ int ColorbarRGBTrueColor8CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int,
 // Colorbar Specs
 
 static Tk_CustomOption tagsOption = {
-  Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, NULL
+  NULL, NULL, NULL
 };
 
 static Tk_ConfigSpec colorbarRGBTrueColor8Specs[] = {
@@ -101,6 +101,9 @@ static Tk_ItemType colorbarRGBTrueColor8Type = {
 
 int ColorbarRGBTrueColor8_Init(Tcl_Interp* interp)
 {
+  tagsOption.parseProc = Tk_CanvasTagsParseProc;
+  tagsOption.printProc = Tk_CanvasTagsPrintProc;
+
   Tk_CreateItemType(&colorbarRGBTrueColor8Type);
   return TCL_OK;
 }

@@ -404,7 +404,7 @@
 /*  variables.								    */
 
 #define CHARACTER(X)             F77_CHARACTER_TYPE *CNF_CONST X
-#define TRAIL(X)                 ,int X ## _length
+#define TRAIL(X)                 ,long X ## _length
 #define CHARACTER_ARRAY(X)       F77_CHARACTER_TYPE *CNF_CONST X
 
 
@@ -736,7 +736,7 @@
 /*  Macros to handle character dummy arguments.				    */
 
 #undef  TRAIL
-#define TRAIL(X) ,int X/**/_length
+#define TRAIL(X) ,long X/**/_length
 
 
 /*  ---  Declare variables  ---						    */

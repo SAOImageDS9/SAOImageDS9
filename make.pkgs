@@ -6,38 +6,29 @@ XPAVERSION=2.1.17
 #--------------------------version
 # tcl 8.6.6
 # tk 8.6.6
-# tclcheckdns 1.1
-# tcliis 1.0
-# tclsignal 1.4
-# tclzvfs 1.0
-# tclxml 3.2
+# tclcheckdns 1.1.1
+# tcliis 1.0.1
 # tcllib 1.18
-# xpa 2.1.18
-# tkblt 3.2.3
-# tktable 2.10
-# tkimg 1.4.6
-# tkmpeg 1.0.1
-# tkhtml1 1.0.3
+# tclsignal 1.4.1
+# tclxml 3.2
+# tclzvfs 1.0.1
+# tkblt 3.2.4
 # tkcon 2.7
+# tkhtml1 1.0.4
+# tkimg 1.4.6
+# tkmpeg 1.0.2
+# tktable 2.10
+
 # ast 8.3.0
 # wcssubs 3.9.0
 # funtools 1.4.7
 # zlib 1.2.8
+# xpa 2.1.18
 # libxml2 2.9.4
 # libxslt 1.1.29
 
 TCLVER=8.6
-TCLCHECKDNSVER=1.1
-TCLIISVER=1.0
-TCLSIGNALVER=1.4
 TCLXMLVER=3.2
-TCLZVFSVER=1.0
-TKBLTVER=3.2
 TKCONVER=2.7
-TKHTMLVER=1.0
 TKIMGVER=1.4.6
-TKMACOSXVER=1.0
-TKMPEGVER=1.0
-TKSAOVER=1.0
 TKTABLEVER=2.10
-TKWINVER=1.0

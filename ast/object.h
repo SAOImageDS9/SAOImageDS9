@@ -367,7 +367,7 @@
 
 /* Set to "1" (yes) or "0" (no) to indicate if AST was build with threads
    support. */
-#define AST__THREADSAFE 1
+#define AST__THREADSAFE 0
 
 #if defined(astCLASS )
 #define AST__GETATTRIB_BUFF_LEN 50 /* Length of string returned by GetAttrib. */

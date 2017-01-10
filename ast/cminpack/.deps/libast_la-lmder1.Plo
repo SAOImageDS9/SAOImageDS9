@@ -1,1 +1,6 @@
-# dummy
+cminpack/libast_la-lmder1.lo: cminpack/lmder1.c cminpack/cminpack.h \
+  cminpack/cminpackP.h
+
+cminpack/cminpack.h:
+
+cminpack/cminpackP.h:

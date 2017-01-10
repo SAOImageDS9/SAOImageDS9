@@ -15,7 +15,7 @@ int PannerTrueColorCreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int,
 // PannerTrueColor Specs
 
 static Tk_CustomOption tagsOption = {
-  Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, NULL
+  NULL, NULL, NULL
 };
 
 static Tk_ConfigSpec pannerTrueColorSpecs[] = {
@@ -74,6 +74,9 @@ static Tk_ItemType pannerTrueColorType = {
 
 int PannerTrueColor_Init(Tcl_Interp* interp)
 {
+  tagsOption.parseProc = Tk_CanvasTagsParseProc;
+  tagsOption.printProc = Tk_CanvasTagsPrintProc;
+
   Tk_CreateItemType(&pannerTrueColorType);
   return TCL_OK;
 }

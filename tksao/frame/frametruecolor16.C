@@ -12,7 +12,7 @@ int FrameTrueColor16CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int, Tcl_Obj *c
 // FrameTrueColor16 Specs
 
 static Tk_CustomOption tagsOption = {
-  Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, NULL
+  NULL, NULL, NULL
 };
 
 static Tk_ConfigSpec frameTrueColor16Specs[] = {
@@ -71,6 +71,9 @@ static Tk_ItemType frameTrueColor16Type = {
 
 int FrameTrueColor16_Init(Tcl_Interp* interp)
 {
+  tagsOption.parseProc = Tk_CanvasTagsParseProc;
+  tagsOption.printProc = Tk_CanvasTagsPrintProc;
+
   Tk_CreateItemType(&frameTrueColor16Type);
   return TCL_OK;
 }

@@ -13,7 +13,7 @@ int Frame3dTrueColor24CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int, Tcl_Obj 
 // Frame3dTrueColor24 Specs
 
 static Tk_CustomOption tagsOption = {
-  Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, NULL
+  NULL, NULL, NULL
 };
 
 static Tk_ConfigSpec frame3dTrueColor24Specs[] = {
@@ -72,6 +72,9 @@ static Tk_ItemType frame3dTrueColor24Type = {
 
 int Frame3dTrueColor24_Init(Tcl_Interp* interp)
 {
+  tagsOption.parseProc = Tk_CanvasTagsParseProc;
+  tagsOption.printProc = Tk_CanvasTagsPrintProc;
+
   Tk_CreateItemType(&frame3dTrueColor24Type);
   return TCL_OK;
 }

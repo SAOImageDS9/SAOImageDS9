@@ -13,7 +13,7 @@ int FrameRGBTrueColor24CreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int,
 // FrameRGBTrueColor24 Specs
 
 static Tk_CustomOption tagsOption = {
-  Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, NULL
+  NULL, NULL, NULL
 };
 
 static Tk_ConfigSpec frameRGBTrueColor24Specs[] = {
@@ -72,6 +72,9 @@ static Tk_ItemType frameRGBTrueColor24Type = {
 
 int FrameRGBTrueColor24_Init(Tcl_Interp* interp)
 {
+  tagsOption.parseProc = Tk_CanvasTagsParseProc;
+  tagsOption.printProc = Tk_CanvasTagsPrintProc;
+
   Tk_CreateItemType(&frameRGBTrueColor24Type);
   return TCL_OK;
 }

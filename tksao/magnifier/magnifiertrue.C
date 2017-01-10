@@ -15,7 +15,7 @@ int MagnifierTrueColorCreateProc(Tcl_Interp*, Tk_Canvas, Tk_Item*, int,
 // MagnifierTrueColor Specs
 
 static Tk_CustomOption tagsOption = {
-  Tk_CanvasTagsParseProc, Tk_CanvasTagsPrintProc, NULL
+  NULL, NULL, NULL
 };
 
 static Tk_ConfigSpec magnifierTrueColorSpecs[] = {
@@ -74,6 +74,9 @@ static Tk_ItemType magnifierTrueColorType = {
 
 int MagnifierTrueColor_Init(Tcl_Interp* interp)
 {
+  tagsOption.parseProc = Tk_CanvasTagsParseProc;
+  tagsOption.printProc = Tk_CanvasTagsPrintProc;
+
   Tk_CreateItemType(&magnifierTrueColorType);
   return TCL_OK;
 }

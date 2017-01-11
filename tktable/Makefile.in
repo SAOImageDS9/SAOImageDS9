@@ -161,7 +161,7 @@ DEFS		= @DEFS@ $(PKG_CFLAGS) \
 		  -DTBL_RUNTIME_DIR=\"$(pkglibdir)\"
 
 # Move pkgIndex.tcl to 'BINARIES' var if it is generated in the Makefile
-CONFIG_CLEAN_FILES = Makefile pkgIndex.tcl
+CONFIG_CLEAN_FILES = Makefile pkgIndex.tcl tktableConfig.sh
 CLEANFILES	= @CLEANFILES@
 
 CPPFLAGS	= @CPPFLAGS@

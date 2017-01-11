@@ -33,6 +33,7 @@ tkhtml1_LIB_SPEC= @tkhtml1_LIB_SPEC@
 tkmacosx_LIB_SPEC= @tkmacosx_LIB_SPEC@
 tkmpeg_LIB_SPEC	= @tkmpeg_LIB_SPEC@
 tksao_LIB_SPEC	= @tksao_LIB_SPEC@
+tktable_LIB_SPEC= @tktable_LIB_SPEC@
 
 CC		= @CC@
 CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
@@ -70,7 +71,6 @@ LLIBS	= \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
 	$(libdir)/Tclxml$(TCLXMLVER)/libTclxml$(TCLXMLVER).a \
-	$(libdir)/Tktable$(TKTABLEVER)/libTktable$(TKTABLEVER).a \
 	$(libdir)/tkimgtiff$(TKIMGVER)/libtkimgtiff$(TKIMGVER).a \
 	$(libdir)/tkimgpng$(TKIMGVER)/libtkimgpng$(TKIMGVER).a \
 	$(libdir)/tkimgjpeg$(TKIMGVER)/libtkimgjpeg$(TKIMGVER).a \
@@ -130,19 +130,20 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(OBJS) \
 	$(LLIBS) \
 	$(LIBS) \
-	$(tclcheckdns_LIB_SPEC) \
-	$(tcliis_LIB_SPEC) \
-	$(tclsignal_LIB_SPEC) \
 	$(tifftcl_LIB_SPEC) \
 	$(pngtcl_LIB_SPEC) \
 	$(jpegtcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \
-	$(tkimg_LIB_SPEC) \
+	$(tclcheckdns_LIB_SPEC) \
+	$(tcliis_LIB_SPEC) \
+	$(tclsignal_LIB_SPEC) \
 	$(tkblt_LIB_SPEC) \
 	$(tkhtml1_LIB_SPEC) \
+	$(tkimg_LIB_SPEC) \
 	$(tkmacosx_LIB_SPEC) \
 	$(tkmpeg_LIB_SPEC) \
 	$(tksao_LIB_SPEC) \
+	$(tktable_LIB_SPEC) \
 	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
 	$(TK_LIBS)

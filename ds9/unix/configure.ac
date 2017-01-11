@@ -49,18 +49,6 @@ TEA_LOAD_TKCONFIG
 # Load the *.sh file if necessary
 #--------------------------------------------------------------------
 
-TEA_PATH_CONFIG(tclcheckdns)
-TEA_LOAD_CONFIG(tclcheckdns)
-
-TEA_PATH_CONFIG(tcliis)
-TEA_LOAD_CONFIG(tcliis)
-
-TEA_PATH_CONFIG(tclsignal)
-TEA_LOAD_CONFIG(tclsignal)
-
-TEA_PATH_CONFIG(tclzvfs)
-TEA_LOAD_CONFIG(tclzvfs)
-
 TEA_PATH_CONFIG(tifftcl)
 TEA_LOAD_CONFIG(tifftcl)
 
@@ -73,8 +61,17 @@ TEA_LOAD_CONFIG(jpegtcl)
 TEA_PATH_CONFIG(zlibtcl)
 TEA_LOAD_CONFIG(zlibtcl)
 
-TEA_PATH_CONFIG(tkimg)
-TEA_LOAD_CONFIG(tkimg)
+TEA_PATH_CONFIG(tclcheckdns)
+TEA_LOAD_CONFIG(tclcheckdns)
+
+TEA_PATH_CONFIG(tcliis)
+TEA_LOAD_CONFIG(tcliis)
+
+TEA_PATH_CONFIG(tclsignal)
+TEA_LOAD_CONFIG(tclsignal)
+
+TEA_PATH_CONFIG(tclzvfs)
+TEA_LOAD_CONFIG(tclzvfs)
 
 TEA_PATH_CONFIG(tkblt)
 TEA_LOAD_CONFIG(tkblt)
@@ -82,11 +79,17 @@ TEA_LOAD_CONFIG(tkblt)
 TEA_PATH_CONFIG(tkhtml1)
 TEA_LOAD_CONFIG(tkhtml1)
 
+TEA_PATH_CONFIG(tkimg)
+TEA_LOAD_CONFIG(tkimg)
+
 TEA_PATH_CONFIG(tkmpeg)
 TEA_LOAD_CONFIG(tkmpeg)
 
 TEA_PATH_CONFIG(tksao)
 TEA_LOAD_CONFIG(tksao)
+
+TEA_PATH_CONFIG(tktable)
+TEA_LOAD_CONFIG(tktable)
 
 #-----------------------------------------------------------------------
 # Handle the --prefix=... option by defaulting to what Tcl gave.

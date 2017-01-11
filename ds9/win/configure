@@ -666,14 +666,6 @@ INSTALL_DATA
 INSTALL_DATA_DIR
 INSTALL
 CPP
-tksao_STUB_LIB_PATH
-tksao_STUB_LIB_SPEC
-tksao_STUB_LIB_FILE
-tksao_LIB_SPEC
-tksao_LIB_FILE
-tksao_SRC_DIR
-tksao_BIN_DIR
-tksao_VERSION
 tkwin_STUB_LIB_PATH
 tkwin_STUB_LIB_SPEC
 tkwin_STUB_LIB_FILE
@@ -682,14 +674,22 @@ tkwin_LIB_FILE
 tkwin_SRC_DIR
 tkwin_BIN_DIR
 tkwin_VERSION
-tkhtml1_STUB_LIB_PATH
-tkhtml1_STUB_LIB_SPEC
-tkhtml1_STUB_LIB_FILE
-tkhtml1_LIB_SPEC
-tkhtml1_LIB_FILE
-tkhtml1_SRC_DIR
-tkhtml1_BIN_DIR
-tkhtml1_VERSION
+tktable_STUB_LIB_PATH
+tktable_STUB_LIB_SPEC
+tktable_STUB_LIB_FILE
+tktable_LIB_SPEC
+tktable_LIB_FILE
+tktable_SRC_DIR
+tktable_BIN_DIR
+tktable_VERSION
+tksao_STUB_LIB_PATH
+tksao_STUB_LIB_SPEC
+tksao_STUB_LIB_FILE
+tksao_LIB_SPEC
+tksao_LIB_FILE
+tksao_SRC_DIR
+tksao_BIN_DIR
+tksao_VERSION
 tkmpeg_STUB_LIB_PATH
 tkmpeg_STUB_LIB_SPEC
 tkmpeg_STUB_LIB_FILE
@@ -698,14 +698,6 @@ tkmpeg_LIB_FILE
 tkmpeg_SRC_DIR
 tkmpeg_BIN_DIR
 tkmpeg_VERSION
-tkblt_STUB_LIB_PATH
-tkblt_STUB_LIB_SPEC
-tkblt_STUB_LIB_FILE
-tkblt_LIB_SPEC
-tkblt_LIB_FILE
-tkblt_SRC_DIR
-tkblt_BIN_DIR
-tkblt_VERSION
 tkimg_STUB_LIB_PATH
 tkimg_STUB_LIB_SPEC
 tkimg_STUB_LIB_FILE
@@ -714,6 +706,22 @@ tkimg_LIB_FILE
 tkimg_SRC_DIR
 tkimg_BIN_DIR
 tkimg_VERSION
+tkhtml1_STUB_LIB_PATH
+tkhtml1_STUB_LIB_SPEC
+tkhtml1_STUB_LIB_FILE
+tkhtml1_LIB_SPEC
+tkhtml1_LIB_FILE
+tkhtml1_SRC_DIR
+tkhtml1_BIN_DIR
+tkhtml1_VERSION
+tkblt_STUB_LIB_PATH
+tkblt_STUB_LIB_SPEC
+tkblt_STUB_LIB_FILE
+tkblt_LIB_SPEC
+tkblt_LIB_FILE
+tkblt_SRC_DIR
+tkblt_BIN_DIR
+tkblt_VERSION
 zlibtcl_STUB_LIB_PATH
 zlibtcl_STUB_LIB_SPEC
 zlibtcl_STUB_LIB_FILE
@@ -839,12 +847,13 @@ with_tifftcl
 with_pngtcl
 with_jpegtcl
 with_zlibtcl
-with_tkimg
 with_tkblt
-with_tkmpeg
 with_tkhtml1
-with_tkwin
+with_tkimg
+with_tkmpeg
 with_tksao
+with_tktable
+with_tkwin
 with_tclinclude
 with_tkinclude
 enable_shared
@@ -1493,12 +1502,13 @@ Optional Packages:
   --with-pngtcl              directory containing pngtcl configuration (pngtclConfig.sh)
   --with-jpegtcl              directory containing jpegtcl configuration (jpegtclConfig.sh)
   --with-zlibtcl              directory containing zlibtcl configuration (zlibtclConfig.sh)
-  --with-tkimg              directory containing tkimg configuration (tkimgConfig.sh)
   --with-tkblt              directory containing tkblt configuration (tkbltConfig.sh)
-  --with-tkmpeg              directory containing tkmpeg configuration (tkmpegConfig.sh)
   --with-tkhtml1              directory containing tkhtml1 configuration (tkhtml1Config.sh)
-  --with-tkwin              directory containing tkwin configuration (tkwinConfig.sh)
+  --with-tkimg              directory containing tkimg configuration (tkimgConfig.sh)
+  --with-tkmpeg              directory containing tkmpeg configuration (tkmpegConfig.sh)
   --with-tksao              directory containing tksao configuration (tksaoConfig.sh)
+  --with-tktable              directory containing tktable configuration (tktableConfig.sh)
+  --with-tkwin              directory containing tkwin configuration (tkwinConfig.sh)
   --with-tclinclude       directory containing the public Tcl header files
   --with-tkinclude        directory containing the public Tk header files
   --with-celib=DIR        use Windows/CE support library from DIR
@@ -4883,270 +4893,6 @@ fi
 
 
     #
-    # Ok, lets find the tkimg configuration
-    # First, look for one uninstalled.
-    # the alternative search directory is invoked by --with-tkimg
-    #
-
-    if test x"${no_tkimg}" = x ; then
-	# we reset no_tkimg in case something fails here
-	no_tkimg=true
-
-# Check whether --with-tkimg was given.
-if test "${with_tkimg+set}" = set; then :
-  withval=$with_tkimg; with_tkimgconfig=${withval}
-fi
-
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkimg configuration" >&5
-$as_echo_n "checking for tkimg configuration... " >&6; }
-	if ${ac_cv_c_tkimgconfig+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-
-	    # First check to see if --with-tkimg was specified.
-	    if test x"${with_tkimgconfig}" != x ; then
-		case ${with_tkimgconfig} in
-		    */tkimgConfig.sh )
-			if test -f ${with_tkimgconfig}; then
-			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkimg argument should refer to directory containing tkimgConfig.sh, not to tkimgConfig.sh itself" >&5
-$as_echo "$as_me: WARNING: --with-tkimg argument should refer to directory containing tkimgConfig.sh, not to tkimgConfig.sh itself" >&2;}
-			    with_tkimgconfig=`echo ${with_tkimgconfig} | sed 's!/tkimgConfig\.sh$!!'`
-			fi;;
-		esac
-		if test -f "${with_tkimgconfig}/tkimgConfig.sh" ; then
-		    ac_cv_c_tkimgconfig=`(cd ${with_tkimgconfig}; pwd)`
-		else
-		    as_fn_error $? "${with_tkimgconfig} directory doesn't contain tkimgConfig.sh" "$LINENO" 5
-		fi
-	    fi
-
-	    # then check for a private tkimg installation
-	    if test x"${ac_cv_c_tkimgconfig}" = x ; then
-		for i in \
-			../tkimg \
-			`ls -dr ../tkimg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
-			`ls -dr ../tkimg*[0-9].[0-9][0-9] 2>/dev/null` \
-			`ls -dr ../tkimg*[0-9].[0-9] 2>/dev/null` \
-			`ls -dr ../tkimg*[0-9].[0-9]* 2>/dev/null` \
-			../../tkimg \
-			`ls -dr ../../tkimg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
-			`ls -dr ../../tkimg*[0-9].[0-9][0-9] 2>/dev/null` \
-			`ls -dr ../../tkimg*[0-9].[0-9] 2>/dev/null` \
-			`ls -dr ../../tkimg*[0-9].[0-9]* 2>/dev/null` \
-			../../../tkimg \
-			`ls -dr ../../../tkimg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
-			`ls -dr ../../../tkimg*[0-9].[0-9][0-9] 2>/dev/null` \
-			`ls -dr ../../../tkimg*[0-9].[0-9] 2>/dev/null` \
-			`ls -dr ../../../tkimg*[0-9].[0-9]* 2>/dev/null` \
-			${srcdir}/../tkimg \
-			`ls -dr ${srcdir}/../tkimg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
-			`ls -dr ${srcdir}/../tkimg*[0-9].[0-9][0-9] 2>/dev/null` \
-			`ls -dr ${srcdir}/../tkimg*[0-9].[0-9] 2>/dev/null` \
-			`ls -dr ${srcdir}/../tkimg*[0-9].[0-9]* 2>/dev/null` \
-			; do
-		    if test -f "$i/tkimgConfig.sh" ; then
-			ac_cv_c_tkimgconfig=`(cd $i; pwd)`
-			break
-		    fi
-		    if test -f "$i/unix/tkimgConfig.sh" ; then
-			ac_cv_c_tkimgconfig=`(cd $i/unix; pwd)`
-			break
-		    fi
-		done
-	    fi
-
-	    # check in a few common install locations
-	    if test x"${ac_cv_c_tkimgconfig}" = x ; then
-		for i in `ls -d ${libdir} 2>/dev/null` \
-			`ls -d ${exec_prefix}/lib 2>/dev/null` \
-			`ls -d ${prefix}/lib 2>/dev/null` \
-			`ls -d /usr/local/lib 2>/dev/null` \
-			`ls -d /usr/contrib/lib 2>/dev/null` \
-			`ls -d /usr/lib 2>/dev/null` \
-			`ls -d /usr/lib64 2>/dev/null` \
-			; do
-		    if test -f "$i/tkimgConfig.sh" ; then
-			ac_cv_c_tkimgconfig=`(cd $i; pwd)`
-			break
-		    fi
-		done
-	    fi
-
-fi
-
-
-	if test x"${ac_cv_c_tkimgconfig}" = x ; then
-	    tkimg_BIN_DIR="# no tkimg configs found"
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkimg configuration definitions" >&5
-$as_echo "$as_me: WARNING: Cannot find tkimg configuration definitions" >&2;}
-	    exit 0
-	else
-	    no_tkimg=
-	    tkimg_BIN_DIR=${ac_cv_c_tkimgconfig}
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkimg_BIN_DIR/tkimgConfig.sh" >&5
-$as_echo "found $tkimg_BIN_DIR/tkimgConfig.sh" >&6; }
-	fi
-    fi
-
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkimg_BIN_DIR}/tkimgConfig.sh" >&5
-$as_echo_n "checking for existence of ${tkimg_BIN_DIR}/tkimgConfig.sh... " >&6; }
-
-    if test -f "${tkimg_BIN_DIR}/tkimgConfig.sh" ; then
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
-$as_echo "loading" >&6; }
-	. "${tkimg_BIN_DIR}/tkimgConfig.sh"
-    else
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
-$as_echo "file not found" >&6; }
-    fi
-
-    #
-    # If the tkimg_BIN_DIR is the build directory (not the install directory),
-    # then set the common variable name to the value of the build variables.
-    # For example, the variable tkimg_LIB_SPEC will be set to the value
-    # of tkimg_BUILD_LIB_SPEC. An extension should make use of tkimg_LIB_SPEC
-    # instead of tkimg_BUILD_LIB_SPEC since it will work with both an
-    # installed and uninstalled version of Tcl.
-    #
-
-    if test -f "${tkimg_BIN_DIR}/Makefile" ; then
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkimg" >&5
-$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkimg" >&2;}
-        tkimg_LIB_SPEC=${tkimg_BUILD_LIB_SPEC}
-        tkimg_STUB_LIB_SPEC=${tkimg_BUILD_STUB_LIB_SPEC}
-        tkimg_STUB_LIB_PATH=${tkimg_BUILD_STUB_LIB_PATH}
-        tkimg_INCLUDE_SPEC=${tkimg_BUILD_INCLUDE_SPEC}
-        tkimg_LIBRARY_PATH=${tkimg_LIBRARY_PATH}
-    fi
-
-
-
-
-
-
-
-
-
-
-
-
-    # Allow the caller to prevent this auto-check by specifying any 2nd arg
-    if test "x" = x; then :
-
-	# Check both upper and lower-case variants
-	# If a dev wanted non-stubs libs, this function could take an option
-	# to not use _STUB in the paths below
-	if test "x${tkimg_STUB_LIB_SPEC}" = x; then :
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKIMG_STUB library for LIBS" >&5
-$as_echo_n "checking For TKIMG_STUB library for LIBS... " >&6; }
-    # This simplifies the use of stub libraries by automatically adding
-    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
-    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
-    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
-    if test "x${TKIMG_STUB_LIB_SPEC}" != "x" ; then
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
-
-    vars="\"`${CYGPATH} ${TKIMG_STUB_LIB_PATH}`\""
-    for i in $vars; do
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-          case $i in
-            *.lib)
-              # Convert foo.lib to -lfoo for GCC
-                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
-            ;;
-          esac
-	fi
-	PKG_LIBS="$PKG_LIBS $i"
-    done
-
-
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMG_STUB_LIB_PATH ${TKIMG_STUB_LIB_PATH}" >&5
-$as_echo "using TKIMG_STUB_LIB_PATH ${TKIMG_STUB_LIB_PATH}" >&6; }
-	else
-
-    vars="${TKIMG_STUB_LIB_SPEC}"
-    for i in $vars; do
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-          case $i in
-            *.lib)
-              # Convert foo.lib to -lfoo for GCC
-                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
-            ;;
-          esac
-	fi
-	PKG_LIBS="$PKG_LIBS $i"
-    done
-
-
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMG_STUB_LIB_SPEC ${TKIMG_STUB_LIB_SPEC}" >&5
-$as_echo "using TKIMG_STUB_LIB_SPEC ${TKIMG_STUB_LIB_SPEC}" >&6; }
-	fi
-    else
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
-$as_echo "file not found" >&6; }
-    fi
-
-else
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkimg_STUB library for LIBS" >&5
-$as_echo_n "checking For tkimg_STUB library for LIBS... " >&6; }
-    # This simplifies the use of stub libraries by automatically adding
-    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
-    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
-    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
-    if test "x${tkimg_STUB_LIB_SPEC}" != "x" ; then
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
-
-    vars="\"`${CYGPATH} ${tkimg_STUB_LIB_PATH}`\""
-    for i in $vars; do
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-          case $i in
-            *.lib)
-              # Convert foo.lib to -lfoo for GCC
-                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
-            ;;
-          esac
-	fi
-	PKG_LIBS="$PKG_LIBS $i"
-    done
-
-
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimg_STUB_LIB_PATH ${tkimg_STUB_LIB_PATH}" >&5
-$as_echo "using tkimg_STUB_LIB_PATH ${tkimg_STUB_LIB_PATH}" >&6; }
-	else
-
-    vars="${tkimg_STUB_LIB_SPEC}"
-    for i in $vars; do
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-          case $i in
-            *.lib)
-              # Convert foo.lib to -lfoo for GCC
-                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
-            ;;
-          esac
-	fi
-	PKG_LIBS="$PKG_LIBS $i"
-    done
-
-
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimg_STUB_LIB_SPEC ${tkimg_STUB_LIB_SPEC}" >&5
-$as_echo "using tkimg_STUB_LIB_SPEC ${tkimg_STUB_LIB_SPEC}" >&6; }
-	fi
-    else
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
-$as_echo "file not found" >&6; }
-    fi
-
-fi
-
-fi
-
-
-
-    #
     # Ok, lets find the tkblt configuration
     # First, look for one uninstalled.
     # the alternative search directory is invoked by --with-tkblt
@@ -5398,270 +5144,6 @@ $as_echo "using tkblt_STUB_LIB_PATH ${tkblt_STUB_LIB_PATH}" >&6; }
 
 	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkblt_STUB_LIB_SPEC ${tkblt_STUB_LIB_SPEC}" >&5
 $as_echo "using tkblt_STUB_LIB_SPEC ${tkblt_STUB_LIB_SPEC}" >&6; }
-	fi
-    else
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
-$as_echo "file not found" >&6; }
-    fi
-
-fi
-
-fi
-
-
-
-    #
-    # Ok, lets find the tkmpeg configuration
-    # First, look for one uninstalled.
-    # the alternative search directory is invoked by --with-tkmpeg
-    #
-
-    if test x"${no_tkmpeg}" = x ; then
-	# we reset no_tkmpeg in case something fails here
-	no_tkmpeg=true
-
-# Check whether --with-tkmpeg was given.
-if test "${with_tkmpeg+set}" = set; then :
-  withval=$with_tkmpeg; with_tkmpegconfig=${withval}
-fi
-
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkmpeg configuration" >&5
-$as_echo_n "checking for tkmpeg configuration... " >&6; }
-	if ${ac_cv_c_tkmpegconfig+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-
-	    # First check to see if --with-tkmpeg was specified.
-	    if test x"${with_tkmpegconfig}" != x ; then
-		case ${with_tkmpegconfig} in
-		    */tkmpegConfig.sh )
-			if test -f ${with_tkmpegconfig}; then
-			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkmpeg argument should refer to directory containing tkmpegConfig.sh, not to tkmpegConfig.sh itself" >&5
-$as_echo "$as_me: WARNING: --with-tkmpeg argument should refer to directory containing tkmpegConfig.sh, not to tkmpegConfig.sh itself" >&2;}
-			    with_tkmpegconfig=`echo ${with_tkmpegconfig} | sed 's!/tkmpegConfig\.sh$!!'`
-			fi;;
-		esac
-		if test -f "${with_tkmpegconfig}/tkmpegConfig.sh" ; then
-		    ac_cv_c_tkmpegconfig=`(cd ${with_tkmpegconfig}; pwd)`
-		else
-		    as_fn_error $? "${with_tkmpegconfig} directory doesn't contain tkmpegConfig.sh" "$LINENO" 5
-		fi
-	    fi
-
-	    # then check for a private tkmpeg installation
-	    if test x"${ac_cv_c_tkmpegconfig}" = x ; then
-		for i in \
-			../tkmpeg \
-			`ls -dr ../tkmpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
-			`ls -dr ../tkmpeg*[0-9].[0-9][0-9] 2>/dev/null` \
-			`ls -dr ../tkmpeg*[0-9].[0-9] 2>/dev/null` \
-			`ls -dr ../tkmpeg*[0-9].[0-9]* 2>/dev/null` \
-			../../tkmpeg \
-			`ls -dr ../../tkmpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
-			`ls -dr ../../tkmpeg*[0-9].[0-9][0-9] 2>/dev/null` \
-			`ls -dr ../../tkmpeg*[0-9].[0-9] 2>/dev/null` \
-			`ls -dr ../../tkmpeg*[0-9].[0-9]* 2>/dev/null` \
-			../../../tkmpeg \
-			`ls -dr ../../../tkmpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
-			`ls -dr ../../../tkmpeg*[0-9].[0-9][0-9] 2>/dev/null` \
-			`ls -dr ../../../tkmpeg*[0-9].[0-9] 2>/dev/null` \
-			`ls -dr ../../../tkmpeg*[0-9].[0-9]* 2>/dev/null` \
-			${srcdir}/../tkmpeg \
-			`ls -dr ${srcdir}/../tkmpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
-			`ls -dr ${srcdir}/../tkmpeg*[0-9].[0-9][0-9] 2>/dev/null` \
-			`ls -dr ${srcdir}/../tkmpeg*[0-9].[0-9] 2>/dev/null` \
-			`ls -dr ${srcdir}/../tkmpeg*[0-9].[0-9]* 2>/dev/null` \
-			; do
-		    if test -f "$i/tkmpegConfig.sh" ; then
-			ac_cv_c_tkmpegconfig=`(cd $i; pwd)`
-			break
-		    fi
-		    if test -f "$i/unix/tkmpegConfig.sh" ; then
-			ac_cv_c_tkmpegconfig=`(cd $i/unix; pwd)`
-			break
-		    fi
-		done
-	    fi
-
-	    # check in a few common install locations
-	    if test x"${ac_cv_c_tkmpegconfig}" = x ; then
-		for i in `ls -d ${libdir} 2>/dev/null` \
-			`ls -d ${exec_prefix}/lib 2>/dev/null` \
-			`ls -d ${prefix}/lib 2>/dev/null` \
-			`ls -d /usr/local/lib 2>/dev/null` \
-			`ls -d /usr/contrib/lib 2>/dev/null` \
-			`ls -d /usr/lib 2>/dev/null` \
-			`ls -d /usr/lib64 2>/dev/null` \
-			; do
-		    if test -f "$i/tkmpegConfig.sh" ; then
-			ac_cv_c_tkmpegconfig=`(cd $i; pwd)`
-			break
-		    fi
-		done
-	    fi
-
-fi
-
-
-	if test x"${ac_cv_c_tkmpegconfig}" = x ; then
-	    tkmpeg_BIN_DIR="# no tkmpeg configs found"
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkmpeg configuration definitions" >&5
-$as_echo "$as_me: WARNING: Cannot find tkmpeg configuration definitions" >&2;}
-	    exit 0
-	else
-	    no_tkmpeg=
-	    tkmpeg_BIN_DIR=${ac_cv_c_tkmpegconfig}
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkmpeg_BIN_DIR/tkmpegConfig.sh" >&5
-$as_echo "found $tkmpeg_BIN_DIR/tkmpegConfig.sh" >&6; }
-	fi
-    fi
-
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkmpeg_BIN_DIR}/tkmpegConfig.sh" >&5
-$as_echo_n "checking for existence of ${tkmpeg_BIN_DIR}/tkmpegConfig.sh... " >&6; }
-
-    if test -f "${tkmpeg_BIN_DIR}/tkmpegConfig.sh" ; then
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
-$as_echo "loading" >&6; }
-	. "${tkmpeg_BIN_DIR}/tkmpegConfig.sh"
-    else
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
-$as_echo "file not found" >&6; }
-    fi
-
-    #
-    # If the tkmpeg_BIN_DIR is the build directory (not the install directory),
-    # then set the common variable name to the value of the build variables.
-    # For example, the variable tkmpeg_LIB_SPEC will be set to the value
-    # of tkmpeg_BUILD_LIB_SPEC. An extension should make use of tkmpeg_LIB_SPEC
-    # instead of tkmpeg_BUILD_LIB_SPEC since it will work with both an
-    # installed and uninstalled version of Tcl.
-    #
-
-    if test -f "${tkmpeg_BIN_DIR}/Makefile" ; then
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkmpeg" >&5
-$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkmpeg" >&2;}
-        tkmpeg_LIB_SPEC=${tkmpeg_BUILD_LIB_SPEC}
-        tkmpeg_STUB_LIB_SPEC=${tkmpeg_BUILD_STUB_LIB_SPEC}
-        tkmpeg_STUB_LIB_PATH=${tkmpeg_BUILD_STUB_LIB_PATH}
-        tkmpeg_INCLUDE_SPEC=${tkmpeg_BUILD_INCLUDE_SPEC}
-        tkmpeg_LIBRARY_PATH=${tkmpeg_LIBRARY_PATH}
-    fi
-
-
-
-
-
-
-
-
-
-
-
-
-    # Allow the caller to prevent this auto-check by specifying any 2nd arg
-    if test "x" = x; then :
-
-	# Check both upper and lower-case variants
-	# If a dev wanted non-stubs libs, this function could take an option
-	# to not use _STUB in the paths below
-	if test "x${tkmpeg_STUB_LIB_SPEC}" = x; then :
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKMPEG_STUB library for LIBS" >&5
-$as_echo_n "checking For TKMPEG_STUB library for LIBS... " >&6; }
-    # This simplifies the use of stub libraries by automatically adding
-    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
-    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
-    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
-    if test "x${TKMPEG_STUB_LIB_SPEC}" != "x" ; then
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
-
-    vars="\"`${CYGPATH} ${TKMPEG_STUB_LIB_PATH}`\""
-    for i in $vars; do
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-          case $i in
-            *.lib)
-              # Convert foo.lib to -lfoo for GCC
-                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
-            ;;
-          esac
-	fi
-	PKG_LIBS="$PKG_LIBS $i"
-    done
-
-
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKMPEG_STUB_LIB_PATH ${TKMPEG_STUB_LIB_PATH}" >&5
-$as_echo "using TKMPEG_STUB_LIB_PATH ${TKMPEG_STUB_LIB_PATH}" >&6; }
-	else
-
-    vars="${TKMPEG_STUB_LIB_SPEC}"
-    for i in $vars; do
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-          case $i in
-            *.lib)
-              # Convert foo.lib to -lfoo for GCC
-                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
-            ;;
-          esac
-	fi
-	PKG_LIBS="$PKG_LIBS $i"
-    done
-
-
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKMPEG_STUB_LIB_SPEC ${TKMPEG_STUB_LIB_SPEC}" >&5
-$as_echo "using TKMPEG_STUB_LIB_SPEC ${TKMPEG_STUB_LIB_SPEC}" >&6; }
-	fi
-    else
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
-$as_echo "file not found" >&6; }
-    fi
-
-else
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkmpeg_STUB library for LIBS" >&5
-$as_echo_n "checking For tkmpeg_STUB library for LIBS... " >&6; }
-    # This simplifies the use of stub libraries by automatically adding
-    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
-    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
-    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
-    if test "x${tkmpeg_STUB_LIB_SPEC}" != "x" ; then
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
-
-    vars="\"`${CYGPATH} ${tkmpeg_STUB_LIB_PATH}`\""
-    for i in $vars; do
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-          case $i in
-            *.lib)
-              # Convert foo.lib to -lfoo for GCC
-                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
-            ;;
-          esac
-	fi
-	PKG_LIBS="$PKG_LIBS $i"
-    done
-
-
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkmpeg_STUB_LIB_PATH ${tkmpeg_STUB_LIB_PATH}" >&5
-$as_echo "using tkmpeg_STUB_LIB_PATH ${tkmpeg_STUB_LIB_PATH}" >&6; }
-	else
-
-    vars="${tkmpeg_STUB_LIB_SPEC}"
-    for i in $vars; do
-	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-          case $i in
-            *.lib)
-              # Convert foo.lib to -lfoo for GCC
-                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
-            ;;
-          esac
-	fi
-	PKG_LIBS="$PKG_LIBS $i"
-    done
-
-
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkmpeg_STUB_LIB_SPEC ${tkmpeg_STUB_LIB_SPEC}" >&5
-$as_echo "using tkmpeg_STUB_LIB_SPEC ${tkmpeg_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
@@ -5939,81 +5421,81 @@ fi
 
 
     #
-    # Ok, lets find the tkwin configuration
+    # Ok, lets find the tkimg configuration
     # First, look for one uninstalled.
-    # the alternative search directory is invoked by --with-tkwin
+    # the alternative search directory is invoked by --with-tkimg
     #
 
-    if test x"${no_tkwin}" = x ; then
-	# we reset no_tkwin in case something fails here
-	no_tkwin=true
+    if test x"${no_tkimg}" = x ; then
+	# we reset no_tkimg in case something fails here
+	no_tkimg=true
 
-# Check whether --with-tkwin was given.
-if test "${with_tkwin+set}" = set; then :
-  withval=$with_tkwin; with_tkwinconfig=${withval}
+# Check whether --with-tkimg was given.
+if test "${with_tkimg+set}" = set; then :
+  withval=$with_tkimg; with_tkimgconfig=${withval}
 fi
 
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkwin configuration" >&5
-$as_echo_n "checking for tkwin configuration... " >&6; }
-	if ${ac_cv_c_tkwinconfig+:} false; then :
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkimg configuration" >&5
+$as_echo_n "checking for tkimg configuration... " >&6; }
+	if ${ac_cv_c_tkimgconfig+:} false; then :
   $as_echo_n "(cached) " >&6
 else
 
 
-	    # First check to see if --with-tkwin was specified.
-	    if test x"${with_tkwinconfig}" != x ; then
-		case ${with_tkwinconfig} in
-		    */tkwinConfig.sh )
-			if test -f ${with_tkwinconfig}; then
-			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkwin argument should refer to directory containing tkwinConfig.sh, not to tkwinConfig.sh itself" >&5
-$as_echo "$as_me: WARNING: --with-tkwin argument should refer to directory containing tkwinConfig.sh, not to tkwinConfig.sh itself" >&2;}
-			    with_tkwinconfig=`echo ${with_tkwinconfig} | sed 's!/tkwinConfig\.sh$!!'`
+	    # First check to see if --with-tkimg was specified.
+	    if test x"${with_tkimgconfig}" != x ; then
+		case ${with_tkimgconfig} in
+		    */tkimgConfig.sh )
+			if test -f ${with_tkimgconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkimg argument should refer to directory containing tkimgConfig.sh, not to tkimgConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkimg argument should refer to directory containing tkimgConfig.sh, not to tkimgConfig.sh itself" >&2;}
+			    with_tkimgconfig=`echo ${with_tkimgconfig} | sed 's!/tkimgConfig\.sh$!!'`
 			fi;;
 		esac
-		if test -f "${with_tkwinconfig}/tkwinConfig.sh" ; then
-		    ac_cv_c_tkwinconfig=`(cd ${with_tkwinconfig}; pwd)`
+		if test -f "${with_tkimgconfig}/tkimgConfig.sh" ; then
+		    ac_cv_c_tkimgconfig=`(cd ${with_tkimgconfig}; pwd)`
 		else
-		    as_fn_error $? "${with_tkwinconfig} directory doesn't contain tkwinConfig.sh" "$LINENO" 5
+		    as_fn_error $? "${with_tkimgconfig} directory doesn't contain tkimgConfig.sh" "$LINENO" 5
 		fi
 	    fi
 
-	    # then check for a private tkwin installation
-	    if test x"${ac_cv_c_tkwinconfig}" = x ; then
+	    # then check for a private tkimg installation
+	    if test x"${ac_cv_c_tkimgconfig}" = x ; then
 		for i in \
-			../tkwin \
-			`ls -dr ../tkwin*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
-			`ls -dr ../tkwin*[0-9].[0-9][0-9] 2>/dev/null` \
-			`ls -dr ../tkwin*[0-9].[0-9] 2>/dev/null` \
-			`ls -dr ../tkwin*[0-9].[0-9]* 2>/dev/null` \
-			../../tkwin \
-			`ls -dr ../../tkwin*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
-			`ls -dr ../../tkwin*[0-9].[0-9][0-9] 2>/dev/null` \
-			`ls -dr ../../tkwin*[0-9].[0-9] 2>/dev/null` \
-			`ls -dr ../../tkwin*[0-9].[0-9]* 2>/dev/null` \
-			../../../tkwin \
-			`ls -dr ../../../tkwin*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
-			`ls -dr ../../../tkwin*[0-9].[0-9][0-9] 2>/dev/null` \
-			`ls -dr ../../../tkwin*[0-9].[0-9] 2>/dev/null` \
-			`ls -dr ../../../tkwin*[0-9].[0-9]* 2>/dev/null` \
-			${srcdir}/../tkwin \
-			`ls -dr ${srcdir}/../tkwin*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
-			`ls -dr ${srcdir}/../tkwin*[0-9].[0-9][0-9] 2>/dev/null` \
-			`ls -dr ${srcdir}/../tkwin*[0-9].[0-9] 2>/dev/null` \
-			`ls -dr ${srcdir}/../tkwin*[0-9].[0-9]* 2>/dev/null` \
+			../tkimg \
+			`ls -dr ../tkimg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkimg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkimg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkimg*[0-9].[0-9]* 2>/dev/null` \
+			../../tkimg \
+			`ls -dr ../../tkimg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkimg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkimg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkimg*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkimg \
+			`ls -dr ../../../tkimg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkimg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimg*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkimg \
+			`ls -dr ${srcdir}/../tkimg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimg*[0-9].[0-9]* 2>/dev/null` \
 			; do
-		    if test -f "$i/tkwinConfig.sh" ; then
-			ac_cv_c_tkwinconfig=`(cd $i; pwd)`
+		    if test -f "$i/tkimgConfig.sh" ; then
+			ac_cv_c_tkimgconfig=`(cd $i; pwd)`
 			break
 		    fi
-		    if test -f "$i/unix/tkwinConfig.sh" ; then
-			ac_cv_c_tkwinconfig=`(cd $i/unix; pwd)`
+		    if test -f "$i/unix/tkimgConfig.sh" ; then
+			ac_cv_c_tkimgconfig=`(cd $i/unix; pwd)`
 			break
 		    fi
 		done
 	    fi
 
 	    # check in a few common install locations
-	    if test x"${ac_cv_c_tkwinconfig}" = x ; then
+	    if test x"${ac_cv_c_tkimgconfig}" = x ; then
 		for i in `ls -d ${libdir} 2>/dev/null` \
 			`ls -d ${exec_prefix}/lib 2>/dev/null` \
 			`ls -d ${prefix}/lib 2>/dev/null` \
@@ -6022,8 +5504,8 @@ $as_echo "$as_me: WARNING: --with-tkwin argument should refer to directory conta
 			`ls -d /usr/lib 2>/dev/null` \
 			`ls -d /usr/lib64 2>/dev/null` \
 			; do
-		    if test -f "$i/tkwinConfig.sh" ; then
-			ac_cv_c_tkwinconfig=`(cd $i; pwd)`
+		    if test -f "$i/tkimgConfig.sh" ; then
+			ac_cv_c_tkimgconfig=`(cd $i; pwd)`
 			break
 		    fi
 		done
@@ -6032,49 +5514,49 @@ $as_echo "$as_me: WARNING: --with-tkwin argument should refer to directory conta
 fi
 
 
-	if test x"${ac_cv_c_tkwinconfig}" = x ; then
-	    tkwin_BIN_DIR="# no tkwin configs found"
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkwin configuration definitions" >&5
-$as_echo "$as_me: WARNING: Cannot find tkwin configuration definitions" >&2;}
+	if test x"${ac_cv_c_tkimgconfig}" = x ; then
+	    tkimg_BIN_DIR="# no tkimg configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkimg configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkimg configuration definitions" >&2;}
 	    exit 0
 	else
-	    no_tkwin=
-	    tkwin_BIN_DIR=${ac_cv_c_tkwinconfig}
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkwin_BIN_DIR/tkwinConfig.sh" >&5
-$as_echo "found $tkwin_BIN_DIR/tkwinConfig.sh" >&6; }
+	    no_tkimg=
+	    tkimg_BIN_DIR=${ac_cv_c_tkimgconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkimg_BIN_DIR/tkimgConfig.sh" >&5
+$as_echo "found $tkimg_BIN_DIR/tkimgConfig.sh" >&6; }
 	fi
     fi
 
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkwin_BIN_DIR}/tkwinConfig.sh" >&5
-$as_echo_n "checking for existence of ${tkwin_BIN_DIR}/tkwinConfig.sh... " >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkimg_BIN_DIR}/tkimgConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkimg_BIN_DIR}/tkimgConfig.sh... " >&6; }
 
-    if test -f "${tkwin_BIN_DIR}/tkwinConfig.sh" ; then
+    if test -f "${tkimg_BIN_DIR}/tkimgConfig.sh" ; then
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
 $as_echo "loading" >&6; }
-	. "${tkwin_BIN_DIR}/tkwinConfig.sh"
+	. "${tkimg_BIN_DIR}/tkimgConfig.sh"
     else
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
 $as_echo "file not found" >&6; }
     fi
 
     #
-    # If the tkwin_BIN_DIR is the build directory (not the install directory),
+    # If the tkimg_BIN_DIR is the build directory (not the install directory),
     # then set the common variable name to the value of the build variables.
-    # For example, the variable tkwin_LIB_SPEC will be set to the value
-    # of tkwin_BUILD_LIB_SPEC. An extension should make use of tkwin_LIB_SPEC
-    # instead of tkwin_BUILD_LIB_SPEC since it will work with both an
+    # For example, the variable tkimg_LIB_SPEC will be set to the value
+    # of tkimg_BUILD_LIB_SPEC. An extension should make use of tkimg_LIB_SPEC
+    # instead of tkimg_BUILD_LIB_SPEC since it will work with both an
     # installed and uninstalled version of Tcl.
     #
 
-    if test -f "${tkwin_BIN_DIR}/Makefile" ; then
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkwin" >&5
-$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkwin" >&2;}
-        tkwin_LIB_SPEC=${tkwin_BUILD_LIB_SPEC}
-        tkwin_STUB_LIB_SPEC=${tkwin_BUILD_STUB_LIB_SPEC}
-        tkwin_STUB_LIB_PATH=${tkwin_BUILD_STUB_LIB_PATH}
-        tkwin_INCLUDE_SPEC=${tkwin_BUILD_INCLUDE_SPEC}
-        tkwin_LIBRARY_PATH=${tkwin_LIBRARY_PATH}
+    if test -f "${tkimg_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkimg" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkimg" >&2;}
+        tkimg_LIB_SPEC=${tkimg_BUILD_LIB_SPEC}
+        tkimg_STUB_LIB_SPEC=${tkimg_BUILD_STUB_LIB_SPEC}
+        tkimg_STUB_LIB_PATH=${tkimg_BUILD_STUB_LIB_PATH}
+        tkimg_INCLUDE_SPEC=${tkimg_BUILD_INCLUDE_SPEC}
+        tkimg_LIBRARY_PATH=${tkimg_LIBRARY_PATH}
     fi
 
 
@@ -6094,18 +5576,18 @@ $as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkwin"
 	# Check both upper and lower-case variants
 	# If a dev wanted non-stubs libs, this function could take an option
 	# to not use _STUB in the paths below
-	if test "x${tkwin_STUB_LIB_SPEC}" = x; then :
+	if test "x${tkimg_STUB_LIB_SPEC}" = x; then :
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKWIN_STUB library for LIBS" >&5
-$as_echo_n "checking For TKWIN_STUB library for LIBS... " >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKIMG_STUB library for LIBS" >&5
+$as_echo_n "checking For TKIMG_STUB library for LIBS... " >&6; }
     # This simplifies the use of stub libraries by automatically adding
     # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
     # but this is called before CONFIG_CFLAGS.  More importantly, this adds
     # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
-    if test "x${TKWIN_STUB_LIB_SPEC}" != "x" ; then
+    if test "x${TKIMG_STUB_LIB_SPEC}" != "x" ; then
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
 
-    vars="\"`${CYGPATH} ${TKWIN_STUB_LIB_PATH}`\""
+    vars="\"`${CYGPATH} ${TKIMG_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
           case $i in
@@ -6119,11 +5601,11 @@ $as_echo_n "checking For TKWIN_STUB library for LIBS... " >&6; }
     done
 
 
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKWIN_STUB_LIB_PATH ${TKWIN_STUB_LIB_PATH}" >&5
-$as_echo "using TKWIN_STUB_LIB_PATH ${TKWIN_STUB_LIB_PATH}" >&6; }
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMG_STUB_LIB_PATH ${TKIMG_STUB_LIB_PATH}" >&5
+$as_echo "using TKIMG_STUB_LIB_PATH ${TKIMG_STUB_LIB_PATH}" >&6; }
 	else
 
-    vars="${TKWIN_STUB_LIB_SPEC}"
+    vars="${TKIMG_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
           case $i in
@@ -6137,8 +5619,8 @@ $as_echo "using TKWIN_STUB_LIB_PATH ${TKWIN_STUB_LIB_PATH}" >&6; }
     done
 
 
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKWIN_STUB_LIB_SPEC ${TKWIN_STUB_LIB_SPEC}" >&5
-$as_echo "using TKWIN_STUB_LIB_SPEC ${TKWIN_STUB_LIB_SPEC}" >&6; }
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMG_STUB_LIB_SPEC ${TKIMG_STUB_LIB_SPEC}" >&5
+$as_echo "using TKIMG_STUB_LIB_SPEC ${TKIMG_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
@@ -6147,16 +5629,16 @@ $as_echo "file not found" >&6; }
 
 else
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkwin_STUB library for LIBS" >&5
-$as_echo_n "checking For tkwin_STUB library for LIBS... " >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkimg_STUB library for LIBS" >&5
+$as_echo_n "checking For tkimg_STUB library for LIBS... " >&6; }
     # This simplifies the use of stub libraries by automatically adding
     # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
     # but this is called before CONFIG_CFLAGS.  More importantly, this adds
     # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
-    if test "x${tkwin_STUB_LIB_SPEC}" != "x" ; then
+    if test "x${tkimg_STUB_LIB_SPEC}" != "x" ; then
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
 
-    vars="\"`${CYGPATH} ${tkwin_STUB_LIB_PATH}`\""
+    vars="\"`${CYGPATH} ${tkimg_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
           case $i in
@@ -6170,11 +5652,11 @@ $as_echo_n "checking For tkwin_STUB library for LIBS... " >&6; }
     done
 
 
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkwin_STUB_LIB_PATH ${tkwin_STUB_LIB_PATH}" >&5
-$as_echo "using tkwin_STUB_LIB_PATH ${tkwin_STUB_LIB_PATH}" >&6; }
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimg_STUB_LIB_PATH ${tkimg_STUB_LIB_PATH}" >&5
+$as_echo "using tkimg_STUB_LIB_PATH ${tkimg_STUB_LIB_PATH}" >&6; }
 	else
 
-    vars="${tkwin_STUB_LIB_SPEC}"
+    vars="${tkimg_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
           case $i in
@@ -6188,8 +5670,272 @@ $as_echo "using tkwin_STUB_LIB_PATH ${tkwin_STUB_LIB_PATH}" >&6; }
     done
 
 
-	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkwin_STUB_LIB_SPEC ${tkwin_STUB_LIB_SPEC}" >&5
-$as_echo "using tkwin_STUB_LIB_SPEC ${tkwin_STUB_LIB_SPEC}" >&6; }
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimg_STUB_LIB_SPEC ${tkimg_STUB_LIB_SPEC}" >&5
+$as_echo "using tkimg_STUB_LIB_SPEC ${tkimg_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tkmpeg configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tkmpeg
+    #
+
+    if test x"${no_tkmpeg}" = x ; then
+	# we reset no_tkmpeg in case something fails here
+	no_tkmpeg=true
+
+# Check whether --with-tkmpeg was given.
+if test "${with_tkmpeg+set}" = set; then :
+  withval=$with_tkmpeg; with_tkmpegconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkmpeg configuration" >&5
+$as_echo_n "checking for tkmpeg configuration... " >&6; }
+	if ${ac_cv_c_tkmpegconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tkmpeg was specified.
+	    if test x"${with_tkmpegconfig}" != x ; then
+		case ${with_tkmpegconfig} in
+		    */tkmpegConfig.sh )
+			if test -f ${with_tkmpegconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkmpeg argument should refer to directory containing tkmpegConfig.sh, not to tkmpegConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkmpeg argument should refer to directory containing tkmpegConfig.sh, not to tkmpegConfig.sh itself" >&2;}
+			    with_tkmpegconfig=`echo ${with_tkmpegconfig} | sed 's!/tkmpegConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tkmpegconfig}/tkmpegConfig.sh" ; then
+		    ac_cv_c_tkmpegconfig=`(cd ${with_tkmpegconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tkmpegconfig} directory doesn't contain tkmpegConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tkmpeg installation
+	    if test x"${ac_cv_c_tkmpegconfig}" = x ; then
+		for i in \
+			../tkmpeg \
+			`ls -dr ../tkmpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkmpeg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkmpeg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkmpeg*[0-9].[0-9]* 2>/dev/null` \
+			../../tkmpeg \
+			`ls -dr ../../tkmpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkmpeg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkmpeg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkmpeg*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkmpeg \
+			`ls -dr ../../../tkmpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkmpeg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkmpeg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkmpeg*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkmpeg \
+			`ls -dr ${srcdir}/../tkmpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkmpeg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkmpeg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkmpeg*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tkmpegConfig.sh" ; then
+			ac_cv_c_tkmpegconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tkmpegConfig.sh" ; then
+			ac_cv_c_tkmpegconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tkmpegconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tkmpegConfig.sh" ; then
+			ac_cv_c_tkmpegconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tkmpegconfig}" = x ; then
+	    tkmpeg_BIN_DIR="# no tkmpeg configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkmpeg configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkmpeg configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tkmpeg=
+	    tkmpeg_BIN_DIR=${ac_cv_c_tkmpegconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkmpeg_BIN_DIR/tkmpegConfig.sh" >&5
+$as_echo "found $tkmpeg_BIN_DIR/tkmpegConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkmpeg_BIN_DIR}/tkmpegConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkmpeg_BIN_DIR}/tkmpegConfig.sh... " >&6; }
+
+    if test -f "${tkmpeg_BIN_DIR}/tkmpegConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tkmpeg_BIN_DIR}/tkmpegConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tkmpeg_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tkmpeg_LIB_SPEC will be set to the value
+    # of tkmpeg_BUILD_LIB_SPEC. An extension should make use of tkmpeg_LIB_SPEC
+    # instead of tkmpeg_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tkmpeg_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkmpeg" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkmpeg" >&2;}
+        tkmpeg_LIB_SPEC=${tkmpeg_BUILD_LIB_SPEC}
+        tkmpeg_STUB_LIB_SPEC=${tkmpeg_BUILD_STUB_LIB_SPEC}
+        tkmpeg_STUB_LIB_PATH=${tkmpeg_BUILD_STUB_LIB_PATH}
+        tkmpeg_INCLUDE_SPEC=${tkmpeg_BUILD_INCLUDE_SPEC}
+        tkmpeg_LIBRARY_PATH=${tkmpeg_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tkmpeg_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKMPEG_STUB library for LIBS" >&5
+$as_echo_n "checking For TKMPEG_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKMPEG_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKMPEG_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKMPEG_STUB_LIB_PATH ${TKMPEG_STUB_LIB_PATH}" >&5
+$as_echo "using TKMPEG_STUB_LIB_PATH ${TKMPEG_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKMPEG_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKMPEG_STUB_LIB_SPEC ${TKMPEG_STUB_LIB_SPEC}" >&5
+$as_echo "using TKMPEG_STUB_LIB_SPEC ${TKMPEG_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkmpeg_STUB library for LIBS" >&5
+$as_echo_n "checking For tkmpeg_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tkmpeg_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tkmpeg_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkmpeg_STUB_LIB_PATH ${tkmpeg_STUB_LIB_PATH}" >&5
+$as_echo "using tkmpeg_STUB_LIB_PATH ${tkmpeg_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tkmpeg_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkmpeg_STUB_LIB_SPEC ${tkmpeg_STUB_LIB_SPEC}" >&5
+$as_echo "using tkmpeg_STUB_LIB_SPEC ${tkmpeg_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
@@ -6454,6 +6200,534 @@ $as_echo "using tksao_STUB_LIB_PATH ${tksao_STUB_LIB_PATH}" >&6; }
 
 	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tksao_STUB_LIB_SPEC ${tksao_STUB_LIB_SPEC}" >&5
 $as_echo "using tksao_STUB_LIB_SPEC ${tksao_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tktable configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tktable
+    #
+
+    if test x"${no_tktable}" = x ; then
+	# we reset no_tktable in case something fails here
+	no_tktable=true
+
+# Check whether --with-tktable was given.
+if test "${with_tktable+set}" = set; then :
+  withval=$with_tktable; with_tktableconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tktable configuration" >&5
+$as_echo_n "checking for tktable configuration... " >&6; }
+	if ${ac_cv_c_tktableconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tktable was specified.
+	    if test x"${with_tktableconfig}" != x ; then
+		case ${with_tktableconfig} in
+		    */tktableConfig.sh )
+			if test -f ${with_tktableconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tktable argument should refer to directory containing tktableConfig.sh, not to tktableConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tktable argument should refer to directory containing tktableConfig.sh, not to tktableConfig.sh itself" >&2;}
+			    with_tktableconfig=`echo ${with_tktableconfig} | sed 's!/tktableConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tktableconfig}/tktableConfig.sh" ; then
+		    ac_cv_c_tktableconfig=`(cd ${with_tktableconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tktableconfig} directory doesn't contain tktableConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tktable installation
+	    if test x"${ac_cv_c_tktableconfig}" = x ; then
+		for i in \
+			../tktable \
+			`ls -dr ../tktable*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tktable*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tktable*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tktable*[0-9].[0-9]* 2>/dev/null` \
+			../../tktable \
+			`ls -dr ../../tktable*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tktable*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tktable*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tktable*[0-9].[0-9]* 2>/dev/null` \
+			../../../tktable \
+			`ls -dr ../../../tktable*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tktable*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tktable*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tktable*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tktable \
+			`ls -dr ${srcdir}/../tktable*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tktable*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tktable*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tktable*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tktableConfig.sh" ; then
+			ac_cv_c_tktableconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tktableConfig.sh" ; then
+			ac_cv_c_tktableconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tktableconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tktableConfig.sh" ; then
+			ac_cv_c_tktableconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tktableconfig}" = x ; then
+	    tktable_BIN_DIR="# no tktable configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tktable configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tktable configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tktable=
+	    tktable_BIN_DIR=${ac_cv_c_tktableconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tktable_BIN_DIR/tktableConfig.sh" >&5
+$as_echo "found $tktable_BIN_DIR/tktableConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tktable_BIN_DIR}/tktableConfig.sh" >&5
+$as_echo_n "checking for existence of ${tktable_BIN_DIR}/tktableConfig.sh... " >&6; }
+
+    if test -f "${tktable_BIN_DIR}/tktableConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tktable_BIN_DIR}/tktableConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tktable_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tktable_LIB_SPEC will be set to the value
+    # of tktable_BUILD_LIB_SPEC. An extension should make use of tktable_LIB_SPEC
+    # instead of tktable_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tktable_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tktable" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tktable" >&2;}
+        tktable_LIB_SPEC=${tktable_BUILD_LIB_SPEC}
+        tktable_STUB_LIB_SPEC=${tktable_BUILD_STUB_LIB_SPEC}
+        tktable_STUB_LIB_PATH=${tktable_BUILD_STUB_LIB_PATH}
+        tktable_INCLUDE_SPEC=${tktable_BUILD_INCLUDE_SPEC}
+        tktable_LIBRARY_PATH=${tktable_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tktable_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKTABLE_STUB library for LIBS" >&5
+$as_echo_n "checking For TKTABLE_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKTABLE_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKTABLE_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKTABLE_STUB_LIB_PATH ${TKTABLE_STUB_LIB_PATH}" >&5
+$as_echo "using TKTABLE_STUB_LIB_PATH ${TKTABLE_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKTABLE_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKTABLE_STUB_LIB_SPEC ${TKTABLE_STUB_LIB_SPEC}" >&5
+$as_echo "using TKTABLE_STUB_LIB_SPEC ${TKTABLE_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tktable_STUB library for LIBS" >&5
+$as_echo_n "checking For tktable_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tktable_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tktable_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tktable_STUB_LIB_PATH ${tktable_STUB_LIB_PATH}" >&5
+$as_echo "using tktable_STUB_LIB_PATH ${tktable_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tktable_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tktable_STUB_LIB_SPEC ${tktable_STUB_LIB_SPEC}" >&5
+$as_echo "using tktable_STUB_LIB_SPEC ${tktable_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tkwin configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tkwin
+    #
+
+    if test x"${no_tkwin}" = x ; then
+	# we reset no_tkwin in case something fails here
+	no_tkwin=true
+
+# Check whether --with-tkwin was given.
+if test "${with_tkwin+set}" = set; then :
+  withval=$with_tkwin; with_tkwinconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkwin configuration" >&5
+$as_echo_n "checking for tkwin configuration... " >&6; }
+	if ${ac_cv_c_tkwinconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tkwin was specified.
+	    if test x"${with_tkwinconfig}" != x ; then
+		case ${with_tkwinconfig} in
+		    */tkwinConfig.sh )
+			if test -f ${with_tkwinconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkwin argument should refer to directory containing tkwinConfig.sh, not to tkwinConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkwin argument should refer to directory containing tkwinConfig.sh, not to tkwinConfig.sh itself" >&2;}
+			    with_tkwinconfig=`echo ${with_tkwinconfig} | sed 's!/tkwinConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tkwinconfig}/tkwinConfig.sh" ; then
+		    ac_cv_c_tkwinconfig=`(cd ${with_tkwinconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tkwinconfig} directory doesn't contain tkwinConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tkwin installation
+	    if test x"${ac_cv_c_tkwinconfig}" = x ; then
+		for i in \
+			../tkwin \
+			`ls -dr ../tkwin*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkwin*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkwin*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkwin*[0-9].[0-9]* 2>/dev/null` \
+			../../tkwin \
+			`ls -dr ../../tkwin*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkwin*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkwin*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkwin*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkwin \
+			`ls -dr ../../../tkwin*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkwin*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkwin*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkwin*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkwin \
+			`ls -dr ${srcdir}/../tkwin*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkwin*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkwin*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkwin*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tkwinConfig.sh" ; then
+			ac_cv_c_tkwinconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tkwinConfig.sh" ; then
+			ac_cv_c_tkwinconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tkwinconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tkwinConfig.sh" ; then
+			ac_cv_c_tkwinconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tkwinconfig}" = x ; then
+	    tkwin_BIN_DIR="# no tkwin configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkwin configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkwin configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tkwin=
+	    tkwin_BIN_DIR=${ac_cv_c_tkwinconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkwin_BIN_DIR/tkwinConfig.sh" >&5
+$as_echo "found $tkwin_BIN_DIR/tkwinConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkwin_BIN_DIR}/tkwinConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkwin_BIN_DIR}/tkwinConfig.sh... " >&6; }
+
+    if test -f "${tkwin_BIN_DIR}/tkwinConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tkwin_BIN_DIR}/tkwinConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tkwin_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tkwin_LIB_SPEC will be set to the value
+    # of tkwin_BUILD_LIB_SPEC. An extension should make use of tkwin_LIB_SPEC
+    # instead of tkwin_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tkwin_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkwin" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkwin" >&2;}
+        tkwin_LIB_SPEC=${tkwin_BUILD_LIB_SPEC}
+        tkwin_STUB_LIB_SPEC=${tkwin_BUILD_STUB_LIB_SPEC}
+        tkwin_STUB_LIB_PATH=${tkwin_BUILD_STUB_LIB_PATH}
+        tkwin_INCLUDE_SPEC=${tkwin_BUILD_INCLUDE_SPEC}
+        tkwin_LIBRARY_PATH=${tkwin_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tkwin_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKWIN_STUB library for LIBS" >&5
+$as_echo_n "checking For TKWIN_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKWIN_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKWIN_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKWIN_STUB_LIB_PATH ${TKWIN_STUB_LIB_PATH}" >&5
+$as_echo "using TKWIN_STUB_LIB_PATH ${TKWIN_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKWIN_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKWIN_STUB_LIB_SPEC ${TKWIN_STUB_LIB_SPEC}" >&5
+$as_echo "using TKWIN_STUB_LIB_SPEC ${TKWIN_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkwin_STUB library for LIBS" >&5
+$as_echo_n "checking For tkwin_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tkwin_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tkwin_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkwin_STUB_LIB_PATH ${tkwin_STUB_LIB_PATH}" >&5
+$as_echo "using tkwin_STUB_LIB_PATH ${tkwin_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tkwin_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkwin_STUB_LIB_SPEC ${tkwin_STUB_LIB_SPEC}" >&5
+$as_echo "using tkwin_STUB_LIB_SPEC ${tkwin_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5

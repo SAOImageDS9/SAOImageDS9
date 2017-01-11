@@ -61,23 +61,26 @@ TEA_LOAD_CONFIG(jpegtcl)
 TEA_PATH_CONFIG(zlibtcl)
 TEA_LOAD_CONFIG(zlibtcl)
 
-TEA_PATH_CONFIG(tkimg)
-TEA_LOAD_CONFIG(tkimg)
-
 TEA_PATH_CONFIG(tkblt)
 TEA_LOAD_CONFIG(tkblt)
-
-TEA_PATH_CONFIG(tkmpeg)
-TEA_LOAD_CONFIG(tkmpeg)
 
 TEA_PATH_CONFIG(tkhtml1)
 TEA_LOAD_CONFIG(tkhtml1)
 
-TEA_PATH_CONFIG(tkwin)
-TEA_LOAD_CONFIG(tkwin)
+TEA_PATH_CONFIG(tkimg)
+TEA_LOAD_CONFIG(tkimg)
+
+TEA_PATH_CONFIG(tkmpeg)
+TEA_LOAD_CONFIG(tkmpeg)
 
 TEA_PATH_CONFIG(tksao)
 TEA_LOAD_CONFIG(tksao)
+
+TEA_PATH_CONFIG(tktable)
+TEA_LOAD_CONFIG(tktable)
+
+TEA_PATH_CONFIG(tkwin)
+TEA_LOAD_CONFIG(tkwin)
 
 #-----------------------------------------------------------------------
 # Handle the --prefix=... option by defaulting to what Tcl gave.

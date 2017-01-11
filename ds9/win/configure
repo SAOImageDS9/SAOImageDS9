@@ -620,6 +620,14 @@ ac_includes_default="\
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+PRACTCL_NAME_LIBRARY
+PRACTCL_VC_MANIFEST_EMBED_EXE
+PRACTCL_VC_MANIFEST_EMBED_DLL
+PRACTCL_STUB_LIB
+PRACTCL_STATIC_LIB
+PRACTCL_SHARED_LIB
+PRACTCL_TOOLSET
+PRACTCL_CFLAGS
 VC_MANIFEST_EMBED_EXE
 VC_MANIFEST_EMBED_DLL
 RANLIB_STUB
@@ -633,6 +641,7 @@ CFLAGS_DEFAULT
 LD_LIBRARY_PATH_VAR
 SHLIB_CFLAGS
 SHLIB_LD_LIBS
+SHLIB_SUFFIX
 SHLIB_LD
 STLIB_LD
 CFLAGS_WARNING
@@ -641,6 +650,7 @@ CFLAGS_DEBUG
 RC
 CELIB_DIR
 AR
+STUBS_BUILD
 SHARED_BUILD
 TK_INCLUDES
 TCL_INCLUDES
@@ -649,6 +659,11 @@ EGREP
 GREP
 RANLIB
 SET_MAKE
+INSTALL_LIBRARY
+INSTALL_SCRIPT
+INSTALL_PROGRAM
+INSTALL_DATA
+INSTALL_DATA_DIR
 INSTALL
 CPP
 tksao_STUB_LIB_PATH
@@ -731,6 +746,7 @@ tifftcl_LIB_FILE
 tifftcl_SRC_DIR
 tifftcl_BIN_DIR
 tifftcl_VERSION
+PRACTCL_WINDOWINGSYSTEM
 TK_XINCLUDES
 TK_LIBS
 TK_STUB_LIB_SPEC
@@ -775,6 +791,7 @@ PKG_STUB_LIB_FILE
 PKG_LIB_FILE
 EXEEXT
 CYGPATH
+TEA_TK_EXTENSION
 target_alias
 host_alias
 build_alias
@@ -831,6 +848,7 @@ with_tksao
 with_tclinclude
 with_tkinclude
 enable_shared
+enable_stubs
 enable_64bit
 enable_64bit_vis
 enable_rpath
@@ -1457,6 +1475,8 @@ Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-shared         build and link with shared libraries (default: on)
+  --enable-stubs          build and link with stub libraries. Always true for
+                          shared builds (default: on)
   --enable-64bit          enable 64bit support (default: off)
   --enable-64bit-vis      enable 64bit Sparc VIS support (default: off)
   --disable-rpath         disable rpath support (default: on)
@@ -2282,20 +2302,19 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
     # TEA extensions pass this us the version of TEA they think they
     # are compatible with.
-    TEA_VERSION="3.9"
-
+    TEA_VERSION="3.10"
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking for correct TEA configuration" >&5
 $as_echo_n "checking for correct TEA configuration... " >&6; }
     if test x"${PACKAGE_NAME}" = x ; then
 	as_fn_error $? "
-The PACKAGE_NAME variable must be defined by your TEA configure.in" "$LINENO" 5
+The PACKAGE_NAME variable must be defined by your TEA configure.ac" "$LINENO" 5
     fi
-    if test x"3.9" = x ; then
+    if test x"3.10" = x ; then
 	as_fn_error $? "
 TEA version not specified." "$LINENO" 5
-    elif test "3.9" != "${TEA_VERSION}" ; then
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: warning: requested TEA version \"3.9\", have \"${TEA_VERSION}\"" >&5
-$as_echo "warning: requested TEA version \"3.9\", have \"${TEA_VERSION}\"" >&6; }
+    elif test "3.10" != "${TEA_VERSION}" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: warning: requested TEA version \"3.10\", have \"${TEA_VERSION}\"" >&5
+$as_echo "warning: requested TEA version \"3.10\", have \"${TEA_VERSION}\"" >&6; }
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: ok (TEA ${TEA_VERSION})" >&5
 $as_echo "ok (TEA ${TEA_VERSION})" >&6; }
@@ -2306,6 +2325,7 @@ $as_echo "ok (TEA ${TEA_VERSION})" >&6; }
     if test "${CFLAGS+set}" != "set" ; then
 	CFLAGS=""
     fi
+		TEA_TK_EXTENSION=0
 
     case "`uname -s`" in
 	*win32*|*WIN32*|*MINGW32_*)
@@ -2326,7 +2346,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CYGPATH="cygpath -w"
+    ac_cv_prog_CYGPATH="cygpath -m"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -2351,9 +2371,8 @@ fi
 	    TEA_PLATFORM="windows"
 	    ;;
 	*CYGWIN_*)
-	    CYGPATH=echo
 	    EXEEXT=".exe"
-	    # TEA_PLATFORM is determined later in LOAD_TCLCONFIG
+	    # CYGPATH and TEA_PLATFORM are determined later in LOAD_TCLCONFIG
 	    ;;
 	*)
 	    CYGPATH=echo
@@ -2536,10 +2555,13 @@ $as_echo "$as_me: WARNING: --with-tcl argument should refer to directory contain
 		for i in `ls -d ${libdir} 2>/dev/null` \
 			`ls -d ${exec_prefix}/lib 2>/dev/null` \
 			`ls -d ${prefix}/lib 2>/dev/null` \
-			`ls -d /usr/local/lib 2>/dev/null` \
 			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/pkg/lib 2>/dev/null` \
 			`ls -d /usr/lib 2>/dev/null` \
 			`ls -d /usr/lib64 2>/dev/null` \
+			`ls -d /usr/lib/tcl8.6 2>/dev/null` \
+			`ls -d /usr/lib/tcl8.5 2>/dev/null` \
 			; do
 		    if test -f "$i/tclConfig.sh" ; then
 			ac_cv_c_tclconfig="`(cd $i; pwd)`"
@@ -3459,9 +3481,51 @@ main ()
 }
 _ACEOF
 if ac_fn_c_try_compile "$LINENO"; then :
-  TEA_PLATFORM="unix"
+
+	    TEA_PLATFORM="unix"
+	    CYGPATH=echo
+
 else
-  TEA_PLATFORM="windows"
+
+	    TEA_PLATFORM="windows"
+	    # Extract the first word of "cygpath", so it can be a program name with args.
+set dummy cygpath; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_CYGPATH+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$CYGPATH"; then
+  ac_cv_prog_CYGPATH="$CYGPATH" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_CYGPATH="cygpath -m"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_prog_CYGPATH" && ac_cv_prog_CYGPATH="echo"
+fi
+fi
+CYGPATH=$ac_cv_prog_CYGPATH
+if test -n "$CYGPATH"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CYGPATH" >&5
+$as_echo "$CYGPATH" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
@@ -3505,6 +3569,7 @@ _ACEOF
     if test x"${no_tk}" = x ; then
 	# we reset no_tk in case something fails here
 	no_tk=true
+  TEA_TK_EXTENSION=0
 
 # Check whether --with-tk was given.
 if test "${with_tk+set}" = set; then :
@@ -3633,6 +3698,7 @@ fi
 	    as_fn_error $? "Can't find Tk configuration definitions. Use --with-tk to specify a directory containing tkConfig.sh" "$LINENO" 5
 	else
 	    no_tk=
+		  TEA_TK_EXTENSION=1
 	    TK_BIN_DIR="${ac_cv_c_tkconfig}"
 	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found ${TK_BIN_DIR}/tkConfig.sh" >&5
 $as_echo "found ${TK_BIN_DIR}/tkConfig.sh" >&6; }
@@ -3696,20 +3762,44 @@ $as_echo "could not find ${TK_BIN_DIR}/tkConfig.sh" >&6; }
     eval "TK_STUB_LIB_SPEC=\"${TK_STUB_LIB_SPEC}\""
 
     # TEA specific: Ensure windowingsystem is defined
-    if test "${TEA_PLATFORM}" = "unix" ; then
+    case ${TK_DEFS} in
+	*PLATFORM_SDL*)
+	    TEA_WINDOWINGSYSTEM="x11"
+            PRACTCL_WINDOWINGSYSTEM="sdl"
+	    TEA_USE_SDL=yes
+	    ;;
+    esac
+    if test "${TEA_USE_SDL}" = "yes" ; then
+	true
+    elif test "${TEA_PLATFORM}" = "unix" ; then
 	case ${TK_DEFS} in
 	    *MAC_OSX_TK*)
 
 $as_echo "#define MAC_OSX_TK 1" >>confdefs.h
 
 		TEA_WINDOWINGSYSTEM="aqua"
+                PRACTCL_WINDOWINGSYSTEM="cocoa"
+                TEA_USE_HITHEME=no;
+                if test "${TK_VERSION}" = "8.5" ; then
+                  if test "${TK_PATCH_LEVEL}" > ".17" ; then
+                    TEA_USE_HITHEME=yes;
+                  fi
+                elif test "${TK_VERSION}" = "8.6" ; then
+                  if test "${TK_PATCH_LEVEL}" > ".3" ; then
+                    TEA_USE_HITHEME=yes;
+                  fi
+                elif test "${TK_VERSION}" > "8.6" ; then
+                    TEA_USE_HITHEME=yes;
+                fi
 		;;
 	    *)
 		TEA_WINDOWINGSYSTEM="x11"
+                PRACTCL_WINDOWINGSYSTEM="x11"
 		;;
 	esac
     elif test "${TEA_PLATFORM}" = "windows" ; then
 	TEA_WINDOWINGSYSTEM="win32"
+        PRACTCL_WINDOWINGSYSTEM="windows"
     fi
 
 
@@ -3726,6 +3816,8 @@ $as_echo "#define MAC_OSX_TK 1" >>confdefs.h
 
     # TEA specific:
 
+
+    # Practcl
 
 
 
@@ -3904,8 +3996,12 @@ $as_echo_n "checking For TIFFTCL_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${TIFFTCL_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -3918,8 +4014,12 @@ $as_echo "using TIFFTCL_STUB_LIB_PATH ${TIFFTCL_STUB_LIB_PATH}" >&6; }
     vars="${TIFFTCL_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -3947,8 +4047,12 @@ $as_echo_n "checking For tifftcl_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${tifftcl_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -3961,8 +4065,12 @@ $as_echo "using tifftcl_STUB_LIB_PATH ${tifftcl_STUB_LIB_PATH}" >&6; }
     vars="${tifftcl_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4152,8 +4260,12 @@ $as_echo_n "checking For PNGTCL_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${PNGTCL_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4166,8 +4278,12 @@ $as_echo "using PNGTCL_STUB_LIB_PATH ${PNGTCL_STUB_LIB_PATH}" >&6; }
     vars="${PNGTCL_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4195,8 +4311,12 @@ $as_echo_n "checking For pngtcl_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${pngtcl_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4209,8 +4329,12 @@ $as_echo "using pngtcl_STUB_LIB_PATH ${pngtcl_STUB_LIB_PATH}" >&6; }
     vars="${pngtcl_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4400,8 +4524,12 @@ $as_echo_n "checking For JPEGTCL_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${JPEGTCL_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4414,8 +4542,12 @@ $as_echo "using JPEGTCL_STUB_LIB_PATH ${JPEGTCL_STUB_LIB_PATH}" >&6; }
     vars="${JPEGTCL_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4443,8 +4575,12 @@ $as_echo_n "checking For jpegtcl_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${jpegtcl_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4457,8 +4593,12 @@ $as_echo "using jpegtcl_STUB_LIB_PATH ${jpegtcl_STUB_LIB_PATH}" >&6; }
     vars="${jpegtcl_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4648,8 +4788,12 @@ $as_echo_n "checking For ZLIBTCL_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${ZLIBTCL_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4662,8 +4806,12 @@ $as_echo "using ZLIBTCL_STUB_LIB_PATH ${ZLIBTCL_STUB_LIB_PATH}" >&6; }
     vars="${ZLIBTCL_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4691,8 +4839,12 @@ $as_echo_n "checking For zlibtcl_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${zlibtcl_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4705,8 +4857,12 @@ $as_echo "using zlibtcl_STUB_LIB_PATH ${zlibtcl_STUB_LIB_PATH}" >&6; }
     vars="${zlibtcl_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4896,8 +5052,12 @@ $as_echo_n "checking For TKIMG_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${TKIMG_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4910,8 +5070,12 @@ $as_echo "using TKIMG_STUB_LIB_PATH ${TKIMG_STUB_LIB_PATH}" >&6; }
     vars="${TKIMG_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4939,8 +5103,12 @@ $as_echo_n "checking For tkimg_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${tkimg_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -4953,8 +5121,12 @@ $as_echo "using tkimg_STUB_LIB_PATH ${tkimg_STUB_LIB_PATH}" >&6; }
     vars="${tkimg_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5144,8 +5316,12 @@ $as_echo_n "checking For TKBLT_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${TKBLT_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5158,8 +5334,12 @@ $as_echo "using TKBLT_STUB_LIB_PATH ${TKBLT_STUB_LIB_PATH}" >&6; }
     vars="${TKBLT_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5187,8 +5367,12 @@ $as_echo_n "checking For tkblt_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${tkblt_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5201,8 +5385,12 @@ $as_echo "using tkblt_STUB_LIB_PATH ${tkblt_STUB_LIB_PATH}" >&6; }
     vars="${tkblt_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5392,8 +5580,12 @@ $as_echo_n "checking For TKMPEG_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${TKMPEG_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5406,8 +5598,12 @@ $as_echo "using TKMPEG_STUB_LIB_PATH ${TKMPEG_STUB_LIB_PATH}" >&6; }
     vars="${TKMPEG_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5435,8 +5631,12 @@ $as_echo_n "checking For tkmpeg_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${tkmpeg_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5449,8 +5649,12 @@ $as_echo "using tkmpeg_STUB_LIB_PATH ${tkmpeg_STUB_LIB_PATH}" >&6; }
     vars="${tkmpeg_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5640,8 +5844,12 @@ $as_echo_n "checking For TKHTML1_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${TKHTML1_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5654,8 +5862,12 @@ $as_echo "using TKHTML1_STUB_LIB_PATH ${TKHTML1_STUB_LIB_PATH}" >&6; }
     vars="${TKHTML1_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5683,8 +5895,12 @@ $as_echo_n "checking For tkhtml1_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${tkhtml1_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5697,8 +5913,12 @@ $as_echo "using tkhtml1_STUB_LIB_PATH ${tkhtml1_STUB_LIB_PATH}" >&6; }
     vars="${tkhtml1_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5888,8 +6108,12 @@ $as_echo_n "checking For TKWIN_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${TKWIN_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5902,8 +6126,12 @@ $as_echo "using TKWIN_STUB_LIB_PATH ${TKWIN_STUB_LIB_PATH}" >&6; }
     vars="${TKWIN_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5931,8 +6159,12 @@ $as_echo_n "checking For tkwin_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${tkwin_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -5945,8 +6177,12 @@ $as_echo "using tkwin_STUB_LIB_PATH ${tkwin_STUB_LIB_PATH}" >&6; }
     vars="${tkwin_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -6136,8 +6372,12 @@ $as_echo_n "checking For TKSAO_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${TKSAO_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -6150,8 +6390,12 @@ $as_echo "using TKSAO_STUB_LIB_PATH ${TKSAO_STUB_LIB_PATH}" >&6; }
     vars="${TKSAO_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -6179,8 +6423,12 @@ $as_echo_n "checking For tksao_STUB library for LIBS... " >&6; }
     vars="\"`${CYGPATH} ${tksao_STUB_LIB_PATH}`\""
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -6193,8 +6441,12 @@ $as_echo "using tksao_STUB_LIB_PATH ${tksao_STUB_LIB_PATH}" >&6; }
     vars="${tksao_STUB_LIB_SPEC}"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -6933,7 +7185,18 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-    INSTALL="\$(SHELL) \$(srcdir)/tclconfig/install-sh -c"
+    INSTALL='$(SHELL) $(srcdir)/tclconfig/install-sh -c'
+    INSTALL_DATA_DIR='${INSTALL} -d -m 755'
+    INSTALL_DATA='${INSTALL} -m 644'
+    INSTALL_PROGRAM='${INSTALL}'
+    INSTALL_SCRIPT='${INSTALL}'
+    INSTALL_LIBRARY='${INSTALL_DATA}'
+
+
+
+
+
+
 
 
     #--------------------------------------------------------------------
@@ -8100,8 +8363,12 @@ done
     vars="-lstdc++"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -8318,7 +8585,7 @@ $as_echo "${ac_cv_c_tkh}" >&6; }
 
 
 
-    if test "${TEA_WINDOWINGSYSTEM}" != "x11"; then
+    if test "${PRACTCL_WINDOWINGSYSTEM}" != "x11"; then
 	# On Windows and Aqua, we need the X compat headers
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for X11 header files" >&5
 $as_echo_n "checking for X11 header files... " >&6; }
@@ -8351,23 +8618,40 @@ $as_echo "${INCLUDE_DIR_NATIVE}" >&6; }
 $as_echo_n "checking how to build libraries... " >&6; }
     # Check whether --enable-shared was given.
 if test "${enable_shared+set}" = set; then :
-  enableval=$enable_shared; tcl_ok=$enableval
+  enableval=$enable_shared; shared_ok=$enableval
 else
-  tcl_ok=yes
+  shared_ok=yes
 fi
 
 
     if test "${enable_shared+set}" = set; then
 	enableval="$enable_shared"
-	tcl_ok=$enableval
+	shared_ok=$enableval
     else
-	tcl_ok=yes
+	shared_ok=yes
     fi
 
-    if test "$tcl_ok" = "yes" ; then
+    # Check whether --enable-stubs was given.
+if test "${enable_stubs+set}" = set; then :
+  enableval=$enable_stubs; stubs_ok=$enableval
+else
+  stubs_ok=yes
+fi
+
+
+    if test "${enable_stubs+set}" = set; then
+	enableval="$enable_stubs"
+	stubs_ok=$enableval
+    else
+	stubs_ok=yes
+    fi
+
+    # Stubs are always enabled for shared builds
+    if test "$shared_ok" = "yes" ; then
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: shared" >&5
 $as_echo "shared" >&6; }
 	SHARED_BUILD=1
+        STUBS_BUILD=1
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: static" >&5
 $as_echo "static" >&6; }
@@ -8375,7 +8659,27 @@ $as_echo "static" >&6; }
 
 $as_echo "#define STATIC_BUILD 1" >>confdefs.h
 
+        if test "$stubs_ok" = "yes" ; then
+          STUBS_BUILD=1
+        else
+          STUBS_BUILD=0
+        fi
     fi
+    if test "${STUBS_BUILD}" = "1" ; then
+
+$as_echo "#define USE_TCL_STUBS 1" >>confdefs.h
+
+
+$as_echo "#define USE_TCLOO_STUBS 1" >>confdefs.h
+
+      if test "${TEA_WINDOWINGSYSTEM}" != ""; then
+
+$as_echo "#define USE_TK_STUBS 1" >>confdefs.h
+
+      fi
+    fi
+
+
 
 
 
@@ -8748,7 +9052,9 @@ fi
     STLIB_LD='${AR} cr'
     LD_LIBRARY_PATH_VAR="LD_LIBRARY_PATH"
     if test "x$SHLIB_VERSION" = x; then :
-  SHLIB_VERSION="1.0"
+  SHLIB_VERSION=""
+else
+  SHLIB_VERSION=".$SHLIB_VERSION"
 fi
     case $system in
 	# TEA specific:
@@ -8912,13 +9218,35 @@ $as_echo "found $CELIB_DIR" >&6; }
 	        else
 		    runtime=-MD
 	        fi
+	        case "x`echo \${VisualStudioVersion}`" in
+	            x1[4-9]*)
+		        lflags="${lflags} -nodefaultlib:libucrt.lib"
+
+    vars="ucrt.lib"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	            ;;
+	            *)
+	            ;;
+	        esac
 
                 if test "$do64bit" != "no" ; then
 		    # All this magic is necessary for the Win64 SDK RC1 - hobbs
 		    CC="\"${PATH64}/cl.exe\""
 		    CFLAGS="${CFLAGS} -I\"${MSSDK}/Include\" -I\"${MSSDK}/Include/crt\" -I\"${MSSDK}/Include/crt/sys\""
 		    RC="\"${MSSDK}/bin/rc.exe\""
-		    lflags="-nologo -MACHINE:${MACHINE} -LIBPATH:\"${MSSDK}/Lib/${MACHINE}\""
+		    lflags="${lflags} -nologo -MACHINE:${MACHINE} -LIBPATH:\"${MSSDK}/Lib/${MACHINE}\""
 		    LINKBIN="\"${PATH64}/link.exe\""
 		    CFLAGS_DEBUG="-nologo -Zi -Od -W3 ${runtime}d"
 		    CFLAGS_OPTIMIZE="-nologo -O2 -W2 ${runtime}"
@@ -8928,8 +9256,12 @@ $as_echo "found $CELIB_DIR" >&6; }
     vars="bufferoverflowU.lib"
     for i in $vars; do
 	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
-	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
-	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
 	fi
 	PKG_LIBS="$PKG_LIBS $i"
     done
@@ -8970,13 +9302,13 @@ _ACEOF
 		    CFLAGS_DEBUG="-nologo -Zi -Od"
 		    CFLAGS_OPTIMIZE="-nologo -Ox"
 		    lversion=`echo ${CEVERSION} | sed -e 's/\(.\)\(..\)/\1\.\2/'`
-		    lflags="-MACHINE:${ARCH} -LIBPATH:\"${CELIBPATH}\" -subsystem:windowsce,${lversion} -nologo"
+		    lflags="${lflags} -MACHINE:${ARCH} -LIBPATH:\"${CELIBPATH}\" -subsystem:windowsce,${lversion} -nologo"
 		    LINKBIN="\"${CEBINROOT}/link.exe\""
 
 		else
 		    RC="rc"
-		    lflags="-nologo"
-    		    LINKBIN="link"
+		    lflags="${lflags} -nologo"
+		    LINKBIN="link"
 		    CFLAGS_DEBUG="-nologo -Z7 -Od -W3 -WX ${runtime}d"
 		    CFLAGS_OPTIMIZE="-nologo -O2 -W2 ${runtime}"
 		fi
@@ -9080,6 +9412,8 @@ fi
 		CFLAGS_OPTIMIZE="-O2 -fomit-frame-pointer"
 		SHLIB_LD='${CC} -shared'
 		UNSHARED_LIB_SUFFIX='${TCL_TRIM_DOTS}.a'
+		PRACTCL_UNSHARED_LIB_SUFFIX='.a'
+
 		LDFLAGS_CONSOLE="-wl,--subsystem,console ${lflags}"
 		LDFLAGS_WINDOW="-wl,--subsystem,windows ${lflags}"
 
@@ -9091,7 +9425,7 @@ else
   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
-			    #ifdef __WIN32__
+			    #ifdef _WIN32
 				#error cross-compiler
 			    #endif
 
@@ -9298,8 +9632,10 @@ fi
 	CYGWIN_*)
 	    SHLIB_CFLAGS=""
 	    SHLIB_LD='${CC} -shared'
+	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} -Wl,--out-implib,\$@.a"
 	    SHLIB_SUFFIX=".dll"
 	    EXEEXT=".exe"
+	    do64bit_ok=yes
 	    CC_SEARCH_FLAGS=""
 	    LD_SEARCH_FLAGS=""
 	    ;;
@@ -9616,7 +9952,14 @@ fi
 		LDFLAGS=""
 		;;
 	    *)
-		SHLIB_CFLAGS="-fPIC"
+		case "$arch" in
+		alpha|sparc64)
+		    SHLIB_CFLAGS="-fPIC"
+		    ;;
+		*)
+		    SHLIB_CFLAGS="-fpic"
+		    ;;
+		esac
 		SHLIB_LD='${CC} -shared ${SHLIB_CFLAGS}'
 		SHLIB_SUFFIX=".so"
 		if test $doRpath = yes; then :
@@ -9624,7 +9967,7 @@ fi
 		    CC_SEARCH_FLAGS='-Wl,-rpath,${LIB_RUNTIME_DIR}'
 fi
 		LD_SEARCH_FLAGS=${CC_SEARCH_FLAGS}
-		SHARED_LIB_SUFFIX='${TCL_TRIM_DOTS}.so.${SHLIB_VERSION}'
+		SHARED_LIB_SUFFIX='${TCL_TRIM_DOTS}.so${SHLIB_VERSION}'
 		LDFLAGS="-Wl,-export-dynamic"
 		;;
 	    esac
@@ -9672,7 +10015,7 @@ fi
 	    # This configuration from FreeBSD Ports.
 	    SHLIB_CFLAGS="-fPIC"
 	    SHLIB_LD="${CC} -shared"
-	    TCL_SHLIB_LD_EXTRAS="-Wl,-soname=\$@"
+	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} -Wl,-soname,\$@"
 	    SHLIB_SUFFIX=".so"
 	    LDFLAGS=""
 	    if test $doRpath = yes; then :
@@ -9687,11 +10030,15 @@ fi
 		CFLAGS="$CFLAGS $PTHREAD_CFLAGS"
 		LDFLAGS="$LDFLAGS $PTHREAD_LIBS"
 fi
-	    # Version numbers are dot-stripped by system policy.
-	    TCL_TRIM_DOTS=`echo ${PACKAGE_VERSION} | tr -d .`
-	    UNSHARED_LIB_SUFFIX='${TCL_TRIM_DOTS}.a'
-	    SHARED_LIB_SUFFIX='${TCL_TRIM_DOTS}\$\{DBGX\}.so.1'
-	    TCL_LIB_VERSIONS_OK=nodots
+	    case $system in
+	    FreeBSD-3.*)
+		# Version numbers are dot-stripped by system policy.
+		TCL_TRIM_DOTS=`echo ${PACKAGE_VERSION} | tr -d .`
+		UNSHARED_LIB_SUFFIX='${TCL_TRIM_DOTS}.a'
+		SHARED_LIB_SUFFIX='${TCL_TRIM_DOTS}\$\{DBGX\}.so.1'
+		TCL_LIB_VERSIONS_OK=nodots
+		;;
+	    esac
 	    ;;
 	Darwin-*)
 	    CFLAGS_OPTIMIZE="-Os"
@@ -10053,8 +10400,8 @@ fi
 
 else
 
-	       SHLIB_CFLAGS="-Kpic -belf"
-	       LDFLAGS="$LDFLAGS -belf -Wl,-Bexport"
+		SHLIB_CFLAGS="-Kpic -belf"
+		LDFLAGS="$LDFLAGS -belf -Wl,-Bexport"
 
 fi
 	    SHLIB_LD="ld -G"
@@ -10320,11 +10667,13 @@ fi
 
     # TEA specific: use PACKAGE_VERSION instead of VERSION
     SHARED_LIB_SUFFIX='${PACKAGE_VERSION}${SHLIB_SUFFIX}'
+
 fi
     if test "$UNSHARED_LIB_SUFFIX" = ""; then :
 
     # TEA specific: use PACKAGE_VERSION instead of VERSION
     UNSHARED_LIB_SUFFIX='${PACKAGE_VERSION}.a'
+
 fi
 
     if test "${GCC}" = "yes" -a ${SHLIB_SUFFIX} = ".dll"; then
@@ -10502,6 +10851,7 @@ $as_echo "$tcl_cv_cast_to_union" >&6; }
 $as_echo "#define HAVE_CAST_TO_UNION 1" >>confdefs.h
 
 	fi
+
 
 
 
@@ -10915,26 +11265,22 @@ $as_echo "enabled $tcl_ok debugging" >&6; }
 
 
 #--------------------------------------------------------------------
-# Everyone should be linking against the Tcl stub library.  If you
-# can't for some reason, remove this definition.  If you aren't using
-# stubs, you also need to modify the SHLIB_LD_LIBS setting below to
-# link against the non-stubbed Tcl library.  Add Tk too if necessary.
-#--------------------------------------------------------------------
-
-#AC_DEFINE(USE_TCL_STUBS, 1, [Use Tcl stubs])
-#AC_DEFINE(USE_TK_STUBS, 1, [Use Tk stubs])
-
-#--------------------------------------------------------------------
 # This macro generates a line to use when building a library.  It
 # depends on values set by the TEA_ENABLE_SHARED, TEA_ENABLE_SYMBOLS,
 # and TEA_LOAD_TCLCONFIG macros above.
 #--------------------------------------------------------------------
 
 
-    if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes"; then
-	MAKE_STATIC_LIB="\${STLIB_LD} -out:\$@ \$(PKG_OBJECTS)"
-	MAKE_SHARED_LIB="\${SHLIB_LD} \${SHLIB_LD_LIBS} \${LDFLAGS_DEFAULT} -out:\$@ \$(PKG_OBJECTS)"
-	cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+  PRACTCL_TOOLSET="gcc"
+	PRACTCL_VC_MANIFEST_EMBED_DLL=:
+	PRACTCL_VC_MANIFEST_EMBED_EXE=:
+  if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes"; then
+	  PRACTCL_TOOLSET="msvc"
+	  PRACTCL_STATIC_LIB="%STLIB_LD% -out:%OUTFILE% %LIBRARY_OBJECTS%"
+	  PRACTCL_SHARED_LIB="%SHLIB_LD% %SHLIB_LD_LIBS% %LDFLAGS_DEFAULT% -out:%OUTFILE% %LIBRARY_OBJECTS%"
+	  MAKE_STATIC_LIB="\${STLIB_LD} -out:\$@ \$(PKG_OBJECTS)"
+	  MAKE_SHARED_LIB="\${SHLIB_LD} \${SHLIB_LD_LIBS} \${LDFLAGS_DEFAULT} -out:\$@ \$(PKG_OBJECTS)"
+	  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
@@ -10945,10 +11291,12 @@ _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
   $EGREP "manifest needed" >/dev/null 2>&1; then :
 
-	# Could do a CHECK_PROG for mt, but should always be with MSVC8+
-	VC_MANIFEST_EMBED_DLL="if test -f \$@.manifest ; then mt.exe -nologo -manifest \$@.manifest -outputresource:\$@\;2 ; fi"
-	VC_MANIFEST_EMBED_EXE="if test -f \$@.manifest ; then mt.exe -nologo -manifest \$@.manifest -outputresource:\$@\;1 ; fi"
-	MAKE_SHARED_LIB="${MAKE_SHARED_LIB} ; ${VC_MANIFEST_EMBED_DLL}"
+	    # Could do a CHECK_PROG for mt, but should always be with MSVC8+
+	    PRACTCL_VC_MANIFEST_EMBED_DLL="mt.exe -nologo -manifest %OUTFILE%.manifest -outputresource:%OUTFILE%\;2"
+	    PRACTCL_VC_MANIFEST_EMBED_EXE="mt.exe -nologo -manifest %OUTFILE%.manifest -outputresource:%OUTFILE%\;1"
+	    VC_MANIFEST_EMBED_DLL="if test -f \$@.manifest ; then mt.exe -nologo -manifest \$@.manifest -outputresource:\$@\;2 ; fi"
+	    VC_MANIFEST_EMBED_EXE="if test -f \$@.manifest ; then mt.exe -nologo -manifest \$@.manifest -outputresource:\$@\;1 ; fi"
+	    MAKE_SHARED_LIB="${MAKE_SHARED_LIB} ; ${VC_MANIFEST_EMBED_DLL}"
 
     CLEANFILES="$CLEANFILES *.manifest"
 
@@ -10956,67 +11304,89 @@ if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
 fi
 rm -f conftest*
 
-	MAKE_STUB_LIB="\${STLIB_LD} -out:\$@ \$(PKG_STUB_OBJECTS)"
-    else
-	MAKE_STATIC_LIB="\${STLIB_LD} \$@ \$(PKG_OBJECTS)"
-	MAKE_SHARED_LIB="\${SHLIB_LD} -o \$@ \$(PKG_OBJECTS) \${SHLIB_LD_LIBS}"
-	MAKE_STUB_LIB="\${STLIB_LD} \$@ \$(PKG_STUB_OBJECTS)"
-    fi
+		PRACTCL_STUB_LIB="%STLIB_LD% -nodefaultlib -out:%OUTFILE% %LIBRARY_OBJECTS%"
+	  MAKE_STUB_LIB="\${STLIB_LD} -nodefaultlib -out:\$@ \$(PKG_STUB_OBJECTS)"
+  else
+	  MAKE_STATIC_LIB="\${STLIB_LD} \$@ \$(PKG_OBJECTS)"
+	  MAKE_SHARED_LIB="\${SHLIB_LD} -o \$@ \$(PKG_OBJECTS) \${SHLIB_LD_LIBS}"
+	  MAKE_STUB_LIB="\${STLIB_LD} \$@ \$(PKG_STUB_OBJECTS)"
 
-    if test "${SHARED_BUILD}" = "1" ; then
-	MAKE_LIB="${MAKE_SHARED_LIB} "
-    else
-	MAKE_LIB="${MAKE_STATIC_LIB} "
-    fi
+	  PRACTCL_STATIC_LIB="%STLIB_LD% %OUTFILE% %LIBRARY_OBJECTS%"
+	  PRACTCL_SHARED_LIB="%SHLIB_LD% -o %OUTFILE% %LIBRARY_OBJECTS% %SHLIB_LD_LIBS%"
+    PRACTCL_STUB_LIB="%STLIB_LD% %OUTFILE% %LIBRARY_OBJECTS%"
+  fi
 
-    #--------------------------------------------------------------------
-    # Shared libraries and static libraries have different names.
-    # Use the double eval to make sure any variables in the suffix is
-    # substituted. (@@@ Might not be necessary anymore)
-    #--------------------------------------------------------------------
+  if test "${SHARED_BUILD}" = "1" ; then
+	  MAKE_LIB="${MAKE_SHARED_LIB} "
+  else
+	  MAKE_LIB="${MAKE_STATIC_LIB} "
+  fi
 
-    if test "${TEA_PLATFORM}" = "windows" ; then
-	if test "${SHARED_BUILD}" = "1" ; then
+  #--------------------------------------------------------------------
+  # Shared libraries and static libraries have different names.
+  # Use the double eval to make sure any variables in the suffix is
+  # substituted. (@@@ Might not be necessary anymore)
+  #--------------------------------------------------------------------
+  if test "${TEA_PLATFORM}" = "windows" ; then
+	  PRACTCL_NAME_LIBRARY="%LIBRARY_PREFIX%%LIBRARY_NAME%%LIBRARY_VERSION_NODOTS%"
+	  if test "${SHARED_BUILD}" = "1" ; then
 	    # We force the unresolved linking of symbols that are really in
 	    # the private libraries of Tcl and Tk.
+	    if test x"${TK_BIN_DIR}" != x ; then
+			  SHLIB_LD_LIBS="${SHLIB_LD_LIBS} \"`${CYGPATH} ${TK_BIN_DIR}/${TK_STUB_LIB_FILE}`\""
+	    fi
 	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} \"`${CYGPATH} ${TCL_BIN_DIR}/${TCL_STUB_LIB_FILE}`\""
-	    if test x"${TK_BIN_DIR}" != x ; then
-		SHLIB_LD_LIBS="${SHLIB_LD_LIBS} \"`${CYGPATH} ${TK_BIN_DIR}/${TK_STUB_LIB_FILE}`\""
+	    if test "$GCC" = "yes"; then
+        SHLIB_LD_LIBS="${SHLIB_LD_LIBS} -static-libgcc"
 	    fi
-	    eval eval "PKG_LIB_FILE=${PACKAGE_NAME}${SHARED_LIB_SUFFIX}"
-	else
-	    eval eval "PKG_LIB_FILE=${PACKAGE_NAME}${UNSHARED_LIB_SUFFIX}"
-	fi
-	# Some packages build their own stubs libraries
-	eval eval "PKG_STUB_LIB_FILE=${PACKAGE_NAME}stub${UNSHARED_LIB_SUFFIX}"
-	if test "$GCC" = "yes"; then
-	    PKG_STUB_LIB_FILE=lib${PKG_STUB_LIB_FILE}
-	fi
-	# These aren't needed on Windows (either MSVC or gcc)
-	RANLIB=:
-	RANLIB_STUB=:
+	    eval eval "PKG_LIB_FILE=${PACKAGE_LIB_PREFIX}${PACKAGE_NAME}${SHARED_LIB_SUFFIX}"
+	  else
+	    eval eval "PKG_LIB_FILE=${PACKAGE_LIB_PREFIX}${PACKAGE_NAME}${UNSHARED_LIB_SUFFIX}"
+	    if test "$GCC" = "yes"; then
+        PKG_LIB_FILE=lib${PKG_LIB_FILE}
+	    fi
+	  fi
+	  # Some packages build their own stubs libraries
+	  eval eval "PKG_STUB_LIB_FILE=${PACKAGE_LIB_PREFIX}${PACKAGE_NAME}stub${UNSHARED_LIB_SUFFIX}"
+    if test "$GCC" = "yes"; then
+      PKG_STUB_LIB_FILE=lib${PKG_STUB_LIB_FILE}
+    fi
+	  # These aren't needed on Windows (either MSVC or gcc)
+	  RANLIB=:
+	  RANLIB_STUB=:
+  else
+	  PRACTCL_NAME_LIBRARY="lib%LIBRARY_PREFIX%%LIBRARY_NAME%%LIBRARY_VERSION%"
+	  RANLIB_STUB="${RANLIB}"
+	  if test "${SHARED_BUILD}" = "1" ; then
+      SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TCL_STUB_LIB_SPEC}"
+      if test x"${TK_BIN_DIR}" != x ; then
+        SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TK_STUB_LIB_SPEC}"
+      fi
+      eval eval "PKG_LIB_FILE=lib${PACKAGE_LIB_PREFIX}${PACKAGE_NAME}${SHARED_LIB_SUFFIX}"
+      RANLIB=:
     else
-	RANLIB_STUB="${RANLIB}"
-	if test "${SHARED_BUILD}" = "1" ; then
-	    SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TCL_STUB_LIB_SPEC}"
-	    if test x"${TK_BIN_DIR}" != x ; then
-		SHLIB_LD_LIBS="${SHLIB_LD_LIBS} ${TK_STUB_LIB_SPEC}"
-	    fi
-	    eval eval "PKG_LIB_FILE=lib${PACKAGE_NAME}${SHARED_LIB_SUFFIX}"
-	    RANLIB=:
-	else
-	    eval eval "PKG_LIB_FILE=lib${PACKAGE_NAME}${UNSHARED_LIB_SUFFIX}"
-	fi
-	# Some packages build their own stubs libraries
-	eval eval "PKG_STUB_LIB_FILE=lib${PACKAGE_NAME}stub${UNSHARED_LIB_SUFFIX}"
+      eval eval "PKG_LIB_FILE=lib${PACKAGE_LIB_PREFIX}${PACKAGE_NAME}${UNSHARED_LIB_SUFFIX}"
     fi
+    # Some packages build their own stubs libraries
+    eval eval "PKG_STUB_LIB_FILE=lib${PACKAGE_LIB_PREFIX}${PACKAGE_NAME}stub${UNSHARED_LIB_SUFFIX}"
+  fi
 
-    # These are escaped so that only CFLAGS is picked up at configure time.
-    # The other values will be substituted at make time.
-    CFLAGS="${CFLAGS} \${CFLAGS_DEFAULT} \${CFLAGS_WARNING}"
-    if test "${SHARED_BUILD}" = "1" ; then
-	CFLAGS="${CFLAGS} \${SHLIB_CFLAGS}"
-    fi
+  # Store the raw CFLAGS before we add the trimmings
+  PRACTCL_CFLAGS=${CFLAGS}
+  # These are escaped so that only CFLAGS is picked up at configure time.
+  # The other values will be substituted at make time.
+  CFLAGS="${CFLAGS} \${CFLAGS_DEFAULT} \${CFLAGS_WARNING}"
+  if test "${SHARED_BUILD}" = "1" ; then
+    CFLAGS="${CFLAGS} \${SHLIB_CFLAGS}"
+  fi
+
+
+
+
+
+
+
+
 
 
 

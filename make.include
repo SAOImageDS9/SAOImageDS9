@@ -519,6 +519,7 @@ tksaodistclean :
 
 astdistclean :
 	$(MAKE) -C ast distclean
+	rm -rf ast/autom4te.cache
 
 funtoolsdistclean :
 	$(MAKE) -C funtools distclean

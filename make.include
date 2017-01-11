@@ -4,6 +4,23 @@ include ./make.pkgs
 
 DIRS = $(bindir) $(libdir) $(includedir) $(datadir) man build dist
 
+#-------------------------- tkimg tmp files
+
+TKIMGTMPFILES = \
+	      tkimg/libjpeg/libjpeg \
+	      tkimg/libtiff/build \
+	      tkimg/libtiff/contrib \
+	      tkimg/libtiff/html \
+	      tkimg/libtiff/libtiff \
+	      tkimg/libtiff/libtool \
+	      tkimg/libtiff/man \
+	      tkimg/libtiff/mkg3states \
+	      tkimg/libtiff/mkg3states.dSYM \
+	      tkimg/libtiff/port \
+	      tkimg/libtiff/test \
+	      tkimg/libtiff/tif_fax3sm.c \
+	      tkimg/libtiff/tools
+
 #-------------------------- main
 
 .NOTPARALLEL :
@@ -430,8 +447,6 @@ tkhtml1clean:
 	$(MAKE) -C tkhtml1 clean
 
 tkimgclean:
-	rm -fr tkimg/Img/*
-	rm -fr $(libdir)/Img1.*
 	$(MAKE) -C tkimg clean
 
 tkmpegclean:
@@ -507,9 +522,10 @@ tkhtml1distclean:
 	$(MAKE) -C tkhtml1 distclean
 
 tkimgdistclean: 
-	rm -fr tkimg/Img/*
-	rm -fr $(libdir)/Img1.*
 	$(MAKE) -C tkimg distclean
+	find tkimg -name "pkgIndex.tcl" -exec rm {} \;		
+	find tkimg -name "*Config.sh" -exec rm {} \;		
+	rm -rf $(TKIMGTMPFILES)
 
 tkmpegdistclean:
 	$(MAKE) -C tkmpeg distclean

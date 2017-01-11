@@ -96,8 +96,8 @@ ds9Base$(EXEEXT): $(OBJS) $(LLIBS)
 	$(RM) $@
 	$(CC) $(CFLAGS)	-o $@ \
 	$(OBJS) \
+	$(tksao_LIB_SPEC) \
 	$(LLIBS) \
-	$(LIBS) \
 	$(tifftcl_LIB_SPEC) \
 	$(pngtcl_LIB_SPEC) \
 	$(jpegtcl_LIB_SPEC) \
@@ -111,6 +111,7 @@ ds9Base$(EXEEXT): $(OBJS) $(LLIBS)
 	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
 	$(TK_LIBS) \
+	$(LIBS) \
 	-mwindows -static
 
 winMain.o : winMain.c

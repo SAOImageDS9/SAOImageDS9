@@ -144,8 +144,8 @@ TCLSH		= $(PKG_ENV) $(TCLSH_ENV) $(TCLSH_PROG)
 
 SHARED_BUILD	= @SHARED_BUILD@
 
-INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@
-#INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ @TK_INCLUDES@ @TK_XINCLUDES@
+#INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@
+INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ @TK_INCLUDES@ @TK_XINCLUDES@
 
 PKG_CFLAGS	= @PKG_CFLAGS@
 
@@ -155,7 +155,10 @@ PKG_CFLAGS	= @PKG_CFLAGS@
 # you do not compile with a similar machine setup as the Tcl core was
 # compiled with.
 #DEFS		= $(TCL_DEFS) @DEFS@ $(PKG_CFLAGS)
-DEFS		= @DEFS@ $(PKG_CFLAGS)
+DEFS		= @DEFS@ $(PKG_CFLAGS) \
+		  -DTBL_COMMAND=\"table\" \
+		  -DTBL_RUNTIME=\"tkTable.tcl\" \
+		  -DTBL_RUNTIME_DIR=\"$(pkglibdir)\"
 
 # Move pkgIndex.tcl to 'BINARIES' var if it is generated in the Makefile
 CONFIG_CLEAN_FILES = Makefile pkgIndex.tcl
@@ -201,10 +204,6 @@ libraries:
 #========================================================================
 
 doc:
-	@echo "If you have documentation to create, place the commands to"
-	@echo "build the docs in the 'doc:' target.  For example:"
-	@echo "        xml2nroff sample.xml > sample.n"
-	@echo "        xml2html sample.xml > sample.html"
 
 install: all install-binaries install-libraries install-doc
 
@@ -296,6 +295,11 @@ $(PKG_STUB_LIB_FILE): $(PKG_STUB_OBJECTS)
 
 VPATH = $(srcdir):$(srcdir)/generic:$(srcdir)/unix:$(srcdir)/win:$(srcdir)/macosx
 
+# I would prefer to use $< over $?, but FreeBSD's can't handle it, and
+# with only one prereq, $? is sufficient
+tkTable.tcl.h: $(srcdir)/library/tkTable.tcl
+	sed -e '/^\#/d' -e '/^$$/d' -e 's/\\/\\\\/g' -e 's/\"/\\"/g' -e 's/^/"/' -e 's/$$/\\n"/' < `@CYGPATH@ $?` > '$@' || { rm -f $@; exit 1; }
+
 .c.@OBJEXT@:
 	$(COMPILE) -c `@CYGPATH@ $<` -o $@
 
@@ -353,7 +357,7 @@ dist: dist-clean
 
 clean:
 	-test -z "$(BINARIES)" || rm -f $(BINARIES)
-	-rm -f *.$(OBJEXT) core *.core
+	-rm -f $(PKG_OBJECTS) *.$(OBJEXT) core *.core
 	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean: clean

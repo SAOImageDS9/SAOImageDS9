@@ -261,13 +261,19 @@ proc UpdateGraph {which x y sys} {
 
     if {[$which has fits]} {
 	if {$view(graph,horz)} {
-	    $which get horizontal cut graphHorzX graphHorzY $x $y $sys
-	    $ds9(graph,horz) element configure line1 -hide no
+	    if {![catch {$which get horizontal cut graphHorzX graphHorzY $x $y $sys}]} {
+		$ds9(graph,horz) element configure line1 -hide no
+	    } else {
+		$ds9(graph,horz) element configure line1 -hide yes
+	    }
 	}
 
 	if {$view(graph,vert)} {
-	    $which get vertical cut graphVertX graphVertY $x $y $sys
-	    $ds9(graph,vert) element configure line1 -hide no
+	    if {![catch {$which get vertical cut graphVertX graphVertY $x $y $sys}]} {
+		$ds9(graph,vert) element configure line1 -hide no
+	    } else {
+		$ds9(graph,vert) element configure line1 -hide yes
+	    }
 	}
     }
 }

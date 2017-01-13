@@ -27,6 +27,7 @@ tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
 tclcheckdns_LIB_SPEC= @tclcheckdns_LIB_SPEC@
 tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
 tclsignal_LIB_SPEC= @tclsignal_LIB_SPEC@
+tclxml_LIB_SPEC	= @tclxml_LIB_SPEC@
 tclzvfs_LIB_SPEC= @tclzvfs_LIB_SPEC@
 
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
@@ -86,7 +87,6 @@ LLIBS	= \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
-	$(libdir)/Tclxml$(TCLXMLVER)/libTclxml$(TCLXMLVER).a \
 	$(libdir)/tkimgtiff$(TKIMGVER)/libtkimgtiff$(TKIMGVER).a \
 	$(libdir)/tkimgpng$(TKIMGVER)/libtkimgpng$(TKIMGVER).a \
 	$(libdir)/tkimgjpeg$(TKIMGVER)/libtkimgjpeg$(TKIMGVER).a \
@@ -148,6 +148,7 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(tclcheckdns_LIB_SPEC) \
 	$(tcliis_LIB_SPEC) \
 	$(tclsignal_LIB_SPEC) \
+	$(tclxml_LIB_SPEC) \
 	$(tclzvfs_LIB_SPEC) \
 	$(tkblt_LIB_SPEC) \
 	$(tkhtml1_LIB_SPEC) \

@@ -70,6 +70,9 @@ TEA_LOAD_CONFIG(tcliis)
 TEA_PATH_CONFIG(tclsignal)
 TEA_LOAD_CONFIG(tclsignal)
 
+TEA_PATH_CONFIG(tclxml)
+TEA_LOAD_CONFIG(tclxml)
+
 TEA_PATH_CONFIG(tclzvfs)
 TEA_LOAD_CONFIG(tclzvfs)
 

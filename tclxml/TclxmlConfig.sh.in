@@ -26,20 +26,20 @@ tclxml_BUILD_LIB_SPEC='@tclxml_BUILD_LIB_SPEC@'
 tclxml_LIB_SPEC='@tclxml_LIB_SPEC@'
 
 # The name of the tclxml stub library (a .a file):
-tclxml_STUB_LIB_FILE=@PKG_STUB_LIB_FILE@
+#tclxml_STUB_LIB_FILE=@PKG_STUB_LIB_FILE@
 
 # String to pass to linker to pick up the tclxml stub library from its
 # build directory.
-tclxml_BUILD_STUB_LIB_SPEC='@tclxml_BUILD_STUB_LIB_SPEC@'
+#tclxml_BUILD_STUB_LIB_SPEC='@tclxml_BUILD_STUB_LIB_SPEC@'
 
 # String to pass to linker to pick up the tclxml stub library from its
 # installed directory.
-tclxml_STUB_LIB_SPEC='@tclxml_STUB_LIB_SPEC@'
+#tclxml_STUB_LIB_SPEC='@tclxml_STUB_LIB_SPEC@'
 
 # String to pass to linker to pick up the tclxml stub library from its
 # build directory.
-tclxml_BUILD_STUB_LIB_PATH='@tclxml_BUILD_STUB_LIB_PATH@'
+#tclxml_BUILD_STUB_LIB_PATH='@tclxml_BUILD_STUB_LIB_PATH@'
 
 # String to pass to linker to pick up the tclxml stub library from its
 # installed directory.
-tclxml_STUB_LIB_PATH='@tclxml_STUB_LIB_PATH@'
+#tclxml_STUB_LIB_PATH='@tclxml_STUB_LIB_PATH@'

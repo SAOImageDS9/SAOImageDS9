@@ -24,6 +24,8 @@ jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
 zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
 tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
 
+tclxml_LIB_SPEC	= @tclxml_LIB_SPEC@
+
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
 tkhtml1_LIB_SPEC= @tkhtml1_LIB_SPEC@
 tkmpeg_LIB_SPEC	= @tkmpeg_LIB_SPEC@
@@ -66,7 +68,6 @@ LLIBS	= \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
-	$(libdir)/Tclxml$(TCLXMLVER)/Tclxml32.a \
 	$(libdir)/tkimgtiff$(TKIMGVER)/libtkimgtiff146.a \
 	$(libdir)/tkimgpng$(TKIMGVER)/libtkimgpng146.a \
 	$(libdir)/tkimgjpeg$(TKIMGVER)/libtkimgjpeg146.a \
@@ -102,6 +103,7 @@ ds9Base$(EXEEXT): $(OBJS) $(LLIBS)
 	$(pngtcl_LIB_SPEC) \
 	$(jpegtcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \
+	$(tclxml_LIB_SPEC) \
 	$(tkblt_LIB_SPEC) \
 	$(tkhtml1_LIB_SPEC) \
 	$(tkimg_LIB_SPEC) \

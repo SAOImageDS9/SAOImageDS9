@@ -722,6 +722,14 @@ tkblt_LIB_FILE
 tkblt_SRC_DIR
 tkblt_BIN_DIR
 tkblt_VERSION
+tclxml_STUB_LIB_PATH
+tclxml_STUB_LIB_SPEC
+tclxml_STUB_LIB_FILE
+tclxml_LIB_SPEC
+tclxml_LIB_FILE
+tclxml_SRC_DIR
+tclxml_BIN_DIR
+tclxml_VERSION
 zlibtcl_STUB_LIB_PATH
 zlibtcl_STUB_LIB_SPEC
 zlibtcl_STUB_LIB_FILE
@@ -847,6 +855,7 @@ with_tifftcl
 with_pngtcl
 with_jpegtcl
 with_zlibtcl
+with_tclxml
 with_tkblt
 with_tkhtml1
 with_tkimg
@@ -1502,6 +1511,7 @@ Optional Packages:
   --with-pngtcl              directory containing pngtcl configuration (pngtclConfig.sh)
   --with-jpegtcl              directory containing jpegtcl configuration (jpegtclConfig.sh)
   --with-zlibtcl              directory containing zlibtcl configuration (zlibtclConfig.sh)
+  --with-tclxml              directory containing tclxml configuration (tclxmlConfig.sh)
   --with-tkblt              directory containing tkblt configuration (tkbltConfig.sh)
   --with-tkhtml1              directory containing tkhtml1 configuration (tkhtml1Config.sh)
   --with-tkimg              directory containing tkimg configuration (tkimgConfig.sh)
@@ -4880,6 +4890,270 @@ $as_echo "using zlibtcl_STUB_LIB_PATH ${zlibtcl_STUB_LIB_PATH}" >&6; }
 
 	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using zlibtcl_STUB_LIB_SPEC ${zlibtcl_STUB_LIB_SPEC}" >&5
 $as_echo "using zlibtcl_STUB_LIB_SPEC ${zlibtcl_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tclxml configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tclxml
+    #
+
+    if test x"${no_tclxml}" = x ; then
+	# we reset no_tclxml in case something fails here
+	no_tclxml=true
+
+# Check whether --with-tclxml was given.
+if test "${with_tclxml+set}" = set; then :
+  withval=$with_tclxml; with_tclxmlconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tclxml configuration" >&5
+$as_echo_n "checking for tclxml configuration... " >&6; }
+	if ${ac_cv_c_tclxmlconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tclxml was specified.
+	    if test x"${with_tclxmlconfig}" != x ; then
+		case ${with_tclxmlconfig} in
+		    */tclxmlConfig.sh )
+			if test -f ${with_tclxmlconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tclxml argument should refer to directory containing tclxmlConfig.sh, not to tclxmlConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tclxml argument should refer to directory containing tclxmlConfig.sh, not to tclxmlConfig.sh itself" >&2;}
+			    with_tclxmlconfig=`echo ${with_tclxmlconfig} | sed 's!/tclxmlConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tclxmlconfig}/tclxmlConfig.sh" ; then
+		    ac_cv_c_tclxmlconfig=`(cd ${with_tclxmlconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tclxmlconfig} directory doesn't contain tclxmlConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tclxml installation
+	    if test x"${ac_cv_c_tclxmlconfig}" = x ; then
+		for i in \
+			../tclxml \
+			`ls -dr ../tclxml*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tclxml*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tclxml*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tclxml*[0-9].[0-9]* 2>/dev/null` \
+			../../tclxml \
+			`ls -dr ../../tclxml*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tclxml*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tclxml*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tclxml*[0-9].[0-9]* 2>/dev/null` \
+			../../../tclxml \
+			`ls -dr ../../../tclxml*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tclxml*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tclxml*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tclxml*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tclxml \
+			`ls -dr ${srcdir}/../tclxml*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tclxml*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tclxml*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tclxml*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tclxmlConfig.sh" ; then
+			ac_cv_c_tclxmlconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tclxmlConfig.sh" ; then
+			ac_cv_c_tclxmlconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tclxmlconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tclxmlConfig.sh" ; then
+			ac_cv_c_tclxmlconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tclxmlconfig}" = x ; then
+	    tclxml_BIN_DIR="# no tclxml configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tclxml configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tclxml configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tclxml=
+	    tclxml_BIN_DIR=${ac_cv_c_tclxmlconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tclxml_BIN_DIR/tclxmlConfig.sh" >&5
+$as_echo "found $tclxml_BIN_DIR/tclxmlConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tclxml_BIN_DIR}/tclxmlConfig.sh" >&5
+$as_echo_n "checking for existence of ${tclxml_BIN_DIR}/tclxmlConfig.sh... " >&6; }
+
+    if test -f "${tclxml_BIN_DIR}/tclxmlConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tclxml_BIN_DIR}/tclxmlConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tclxml_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tclxml_LIB_SPEC will be set to the value
+    # of tclxml_BUILD_LIB_SPEC. An extension should make use of tclxml_LIB_SPEC
+    # instead of tclxml_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tclxml_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tclxml" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tclxml" >&2;}
+        tclxml_LIB_SPEC=${tclxml_BUILD_LIB_SPEC}
+        tclxml_STUB_LIB_SPEC=${tclxml_BUILD_STUB_LIB_SPEC}
+        tclxml_STUB_LIB_PATH=${tclxml_BUILD_STUB_LIB_PATH}
+        tclxml_INCLUDE_SPEC=${tclxml_BUILD_INCLUDE_SPEC}
+        tclxml_LIBRARY_PATH=${tclxml_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tclxml_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TCLXML_STUB library for LIBS" >&5
+$as_echo_n "checking For TCLXML_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TCLXML_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TCLXML_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TCLXML_STUB_LIB_PATH ${TCLXML_STUB_LIB_PATH}" >&5
+$as_echo "using TCLXML_STUB_LIB_PATH ${TCLXML_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TCLXML_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TCLXML_STUB_LIB_SPEC ${TCLXML_STUB_LIB_SPEC}" >&5
+$as_echo "using TCLXML_STUB_LIB_SPEC ${TCLXML_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tclxml_STUB library for LIBS" >&5
+$as_echo_n "checking For tclxml_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tclxml_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tclxml_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tclxml_STUB_LIB_PATH ${tclxml_STUB_LIB_PATH}" >&5
+$as_echo "using tclxml_STUB_LIB_PATH ${tclxml_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tclxml_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tclxml_STUB_LIB_SPEC ${tclxml_STUB_LIB_SPEC}" >&5
+$as_echo "using tclxml_STUB_LIB_SPEC ${tclxml_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5

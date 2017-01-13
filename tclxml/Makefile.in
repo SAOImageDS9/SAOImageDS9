@@ -243,9 +243,8 @@ test: binaries libraries
 		-load "package ifneeded ${PACKAGE_NAME} ${PACKAGE_VERSION} \
 			[list load `@CYGPATH@ $(PKG_LIB_FILE)` $(PACKAGE_NAME)]"
 
-genstubs: $(srcdir)/tools/genStubs.tcl $(srcdir)/src/tclxml.decls
-	@echo $(TCLSH) $(srcdir)/tools/genStubs.tcl $(srcdir)/src $(srcdir)/src/tclxml.decls
-	@$(TCLSH) $(srcdir)/tools/genStubs.tcl $(srcdir)/src $(srcdir)/src/tclxml.decls
+genstubs: $(srcdir)/tools/genStubs.tcl $(srcdir)/tclxml.decls
+	@$(TCLSH) $(srcdir)/tools/genStubs.tcl $(srcdir) $(srcdir)/tclxml.decls
 
 shell: binaries libraries
 	@$(TCLSH) $(SCRIPT)

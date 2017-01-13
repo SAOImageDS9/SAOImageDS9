@@ -86,12 +86,12 @@ pkgincludedir	= $(includedir)/$(PKG_DIR)
 top_builddir	= .
 
 INSTALL_OPTIONS	=
-INSTALL		= $(SHELL) $(srcdir)/tclconfig/install-sh -c ${INSTALL_OPTIONS}
-INSTALL_DATA_DIR = ${INSTALL} -d -m 755
-INSTALL_PROGRAM	= ${INSTALL} -m 555
-INSTALL_DATA	= ${INSTALL} -m 444
-INSTALL_SCRIPT	= ${INSTALL_PROGRAM}
-INSTALL_LIBRARY	= ${INSTALL} -m 644
+INSTALL		= @INSTALL@ ${INSTALL_OPTIONS}
+INSTALL_DATA_DIR = @INSTALL_DATA_DIR@
+INSTALL_DATA	= @INSTALL_DATA@
+INSTALL_PROGRAM	= @INSTALL_PROGRAM@
+INSTALL_SCRIPT	= @INSTALL_SCRIPT@
+INSTALL_LIBRARY	= @INSTALL_LIBRARY@
 
 PACKAGE_NAME	= @PACKAGE_NAME@
 PACKAGE_VERSION	= @PACKAGE_VERSION@
@@ -151,7 +151,7 @@ INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@
 PKG_CFLAGS	= @PKG_CFLAGS@ @XML2_CFLAGS@ @XSLT_CFLAGS@
 
 # TCL_DEFS is not strictly need here, but if you remove it, then you
-# must make sure that configure.in checks for the necessary components
+# must make sure that configure.ac checks for the necessary components
 # that your library may use.  TCL_DEFS can actually be a problem if
 # you do not compile with a similar machine setup as the Tcl core was
 # compiled with.
@@ -159,7 +159,7 @@ PKG_CFLAGS	= @PKG_CFLAGS@ @XML2_CFLAGS@ @XSLT_CFLAGS@
 DEFS		= @DEFS@ $(PKG_CFLAGS)
 
 # Move pkgIndex.tcl to 'BINARIES' var if it is generated in the Makefile
-CONFIG_CLEAN_FILES = Makefile pkgIndex.tcl include/tclxml/tclxml.h
+CONFIG_CLEAN_FILES = Makefile pkgIndex.tcl include/tclxml/tclxml.h tclxmlConfig.sh
 CLEANFILES	= @CLEANFILES@
 
 CPPFLAGS	= @CPPFLAGS@
@@ -203,6 +203,10 @@ libraries:
 #========================================================================
 
 doc:
+	@echo "If you have documentation to create, place the commands to"
+	@echo "build the docs in the 'doc:' target.  For example:"
+	@echo "        xml2nroff sample.xml > sample.n"
+	@echo "        xml2html sample.xml > sample.html"
 
 install: all install-binaries install-libraries #install-doc
 
@@ -238,6 +242,10 @@ test: binaries libraries
 	$(TCLSH) `@CYGPATH@ $(srcdir)/tests/all.tcl` $(TESTFLAGS) \
 		-load "package ifneeded ${PACKAGE_NAME} ${PACKAGE_VERSION} \
 			[list load `@CYGPATH@ $(PKG_LIB_FILE)` $(PACKAGE_NAME)]"
+
+genstubs: $(srcdir)/tools/genStubs.tcl $(srcdir)/src/tclxml.decls
+	@echo $(TCLSH) $(srcdir)/tools/genStubs.tcl $(srcdir)/src $(srcdir)/src/tclxml.decls
+	@$(TCLSH) $(srcdir)/tools/genStubs.tcl $(srcdir)/src $(srcdir)/src/tclxml.decls
 
 shell: binaries libraries
 	@$(TCLSH) $(SCRIPT)
@@ -314,9 +322,9 @@ dist: dist-clean
 	$(INSTALL_DATA_DIR) $(DIST_DIR)
 	cp -p $(srcdir)/ChangeLog $(srcdir)/README* $(srcdir)/license* \
 		$(srcdir)/aclocal.m4 $(srcdir)/configure $(srcdir)/*.in \
-		$(DIST_DIR)/
+		$(srcdir)/configure.ac $(DIST_DIR)/
 	chmod 664 $(DIST_DIR)/Makefile.in $(DIST_DIR)/aclocal.m4
-	chmod 775 $(DIST_DIR)/configure $(DIST_DIR)/configure.in
+	chmod 775 $(DIST_DIR)/configure $(DIST_DIR)/configure.ac
 
 	for i in $(srcdir)/*.[ch]; do \
 	    if [ -f $$i ]; then \
@@ -346,18 +354,19 @@ dist: dist-clean
 
 #========================================================================
 # Don't modify the file to clean here.  Instead, set the "CLEANFILES"
-# variable in configure.in
+# variable in configure.ac
 #========================================================================
 
 clean:
 	-test -z "$(BINARIES)" || rm -f $(BINARIES)
-	-rm -f $(PKG_OBJECTS) *.$(OBJEXT) core *.core
+	-rm -f *.$(OBJEXT) core *.core
 	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean: clean
 	-rm -f *.tab.c
 	-rm -f $(CONFIG_CLEAN_FILES)
 	-rm -f config.cache config.log config.status
+	-rm -rf autom4te.cache
 
 #========================================================================
 # Install binary object libraries.  On Windows this includes both .dll and
@@ -405,6 +414,7 @@ install-lib-binaries: binaries
 	    echo " Install pkgIndex.tcl $(DESTDIR)$(pkglibdir)"; \
 	    $(INSTALL_DATA) pkgIndex.tcl $(DESTDIR)$(pkglibdir); \
 	fi
+	$(INSTALL_DATA) tclxmlConfig.sh $(DESTDIR)$(libdir)
 
 #========================================================================
 # Install binary executables (e.g. .exe files and dependent .dll files)

@@ -23,6 +23,7 @@ pngtcl_LIB_SPEC	= @pngtcl_LIB_SPEC@
 jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
 zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
 tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
+tkimg_VERSION	= @tkimg_VERSION@
 
 tclcheckdns_LIB_SPEC= @tclcheckdns_LIB_SPEC@
 tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
@@ -65,18 +66,6 @@ COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)
 
 OBJS	= ds9.o tkAppInit.o
-
-LLIBS	= \
-	$(libdir)/libfuntools.a \
-	$(libdir)/libast.a \
-	$(libdir)/libast_err.a \
-	$(libdir)/libast_pal.a \
-	$(libdir)/tkimgtiff$(TKIMGVER)/libtkimgtiff$(TKIMGVER).a \
-	$(libdir)/tkimgpng$(TKIMGVER)/libtkimgpng$(TKIMGVER).a \
-	$(libdir)/tkimgjpeg$(TKIMGVER)/libtkimgjpeg$(TKIMGVER).a \
-	$(libdir)/tkimggif$(TKIMGVER)/libtkimggif$(TKIMGVER).a \
-	$(libdir)/tkimgwindow$(TKIMGVER)/libtkimgwindow$(TKIMGVER).a \
-	$(libdir)/libxpa.a
 
 APPDIR	= $(bindir)/SAOImage\ DS9.app
 TKSAOFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework
@@ -128,8 +117,16 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(RM) $@
 	$(CC) $(CFLAGS) -o $@ \
 	$(OBJS) \
-	$(LLIBS) \
-	$(LIBS) \
+	$(libdir)/libfuntools.a \
+	$(libdir)/libast.a \
+	$(libdir)/libast_err.a \
+	$(libdir)/libast_pal.a \
+	$(libdir)/libxpa.a \
+	$(libdir)/tkimgtiff$(tkimg_VERSION)/libtkimgtiff$(tkimg_VERSION).a \
+	$(libdir)/tkimgpng$(tkimg_VERSION)/libtkimgpng$(tkimg_VERSION).a \
+	$(libdir)/tkimgjpeg$(tkimg_VERSION)/libtkimgjpeg$(tkimg_VERSION).a \
+	$(libdir)/tkimggif$(tkimg_VERSION)/libtkimggif$(tkimg_VERSION).a \
+	$(libdir)/tkimgwindow$(tkimg_VERSION)/libtkimgwindow$(tkimg_VERSION).a \
 	$(tifftcl_LIB_SPEC) \
 	$(pngtcl_LIB_SPEC) \
 	$(jpegtcl_LIB_SPEC) \
@@ -147,7 +144,8 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(tktable_LIB_SPEC) \
 	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
-	$(TK_LIBS)
+	$(TK_LIBS) \
+	$(LIBS)
 
 appdir	:
 	rm -rf $(APPDIR)

@@ -4,7 +4,7 @@ include ./make.pkgs
 
 DIRS   = $(bindir) $(libdir) $(includedir) $(datadir) man build dist
 PREFIX = --prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir)
-STD    = --disable-shared --enable-symbols
+STD    = --disable-shared --disable-stubs --enable-symbols
 
 #-------------------------- tkimg tmp files
 

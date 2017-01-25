@@ -113,7 +113,7 @@ tkAppInit.o : tkAppInit.c
 tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
 	cp $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c .
 
-ds9base	: $(OBJS) $(LLIBS)
+ds9base	: $(OBJS)
 	$(RM) $@
 	$(CC) $(CFLAGS) -o $@ \
 	$(OBJS) \

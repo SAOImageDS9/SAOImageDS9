@@ -23,6 +23,7 @@ pngtcl_LIB_SPEC	= @pngtcl_LIB_SPEC@
 jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
 zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
 tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
+tkimg_VERSION	= @tkimg_VERSION@
 
 tclxml_LIB_SPEC	= @tclxml_LIB_SPEC@
 
@@ -64,18 +65,6 @@ STRIP		= i686-w64-mingw32-strip.exe
 OBJS	= ds9.o winMain.o ds9.res.o
 
 LLIBS	= \
-	$(libdir)/libfuntools.a \
-	$(libdir)/libast.a \
-	$(libdir)/libast_err.a \
-	$(libdir)/libast_pal.a \
-	$(libdir)/tkimgtiff$(TKIMGVER)/libtkimgtiff146.a \
-	$(libdir)/tkimgpng$(TKIMGVER)/libtkimgpng146.a \
-	$(libdir)/tkimgjpeg$(TKIMGVER)/libtkimgjpeg146.a \
-	$(libdir)/tkimggif$(TKIMGVER)/libtkimggif146.a \
-	$(libdir)/tkimgwindow$(TKIMGVER)/libtkimgwindow146.a \
-	$(libdir)/libxpa.a \
-	$(libdir)/libxml2.a \
-	$(libdir)/libz.a
 
 APPDIR	= $(bindir)/ds9app
 
@@ -93,12 +82,23 @@ debug	: ds9Base$(EXEEXT) appdir framework tcltk tcllib tkcon tkblt cleanup
 	mv ds9base$(EXEEXT) ds9$(EXEEXT)
 	cp -p ds9$(EXEEXT) $(APPDIR)/.
 
-ds9Base$(EXEEXT): $(OBJS) $(LLIBS)
+ds9Base$(EXEEXT): $(OBJS)
 	$(RM) $@
 	$(CC) $(CFLAGS)	-o $@ \
 	$(OBJS) \
 	$(tksao_LIB_SPEC) \
-	$(LLIBS) \
+	$(libdir)/libfuntools.a \
+	$(libdir)/libast.a \
+	$(libdir)/libast_err.a \
+	$(libdir)/libast_pal.a \
+	$(libdir)/tkimgtiff$(tkimg_VERSION)/libtkimgtiff$(tkimg_VERSION).a \
+	$(libdir)/tkimgpng$(tkimg_VERSION)/libtkimgpng$(tkimg_VERSION).a \
+	$(libdir)/tkimgjpeg$(tkimg_VERSION)/libtkimgjpeg$(tkimg_VERSION).a \
+	$(libdir)/tkimggif$(tkimg_VERSION)/libtkimggif$(tkimg_VERSION).a \
+	$(libdir)/tkimgwindow$(tkimg_VERSION)/libtkimgwindow$(tkimg_VERSION).a \
+	$(libdir)/libxpa.a \
+	$(libdir)/libxml2.a \
+	$(libdir)/libz.a \
 	$(tifftcl_LIB_SPEC) \
 	$(pngtcl_LIB_SPEC) \
 	$(jpegtcl_LIB_SPEC) \

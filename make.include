@@ -1,8 +1,10 @@
 include ./make.pkgs
 
-#-------------------------- dirs
+#-------------------------- Defs
 
-DIRS = $(bindir) $(libdir) $(includedir) $(datadir) man build dist
+DIRS   = $(bindir) $(libdir) $(includedir) $(datadir) man build dist
+PREFIX = --prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir)
+STD    = --disable-shared --enable-symbols
 
 #-------------------------- tkimg tmp files
 
@@ -55,8 +57,8 @@ ds9/$(OS)/Makefile :
 	cd ds9/$(OS); \
 	./configure \
 	$(WITHTK) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--enable-symbols
+	$(PREFIX) \
+	$(STD)
 
 #-------------------------- tclcheckdns
 
@@ -71,8 +73,8 @@ tclcheckdns/Makefile :
 	cd tclcheckdns; \
 	./configure \
 	$(WITHTCL) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols \
+	$(PREFIX) \
+	$(STD) \
 	$(CACHE)
 
 #-------------------------- tcliis
@@ -88,8 +90,8 @@ tcliis/Makefile :
 	cd tcliis; \
 	./configure \
 	$(WITHTCL) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols \
+	$(PREFIX) \
+	$(STD) \
 	$(CACHE)
 
 #-------------------------- tclsignal
@@ -105,8 +107,8 @@ tclsignal/Makefile :
 	cd tclsignal; \
 	./configure \
 	$(WITHTCL) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols \
+	$(PREFIX) \
+	$(STD) \
 	$(CACHE)
 
 #-------------------------- tclxml
@@ -124,8 +126,8 @@ tclxml/Makefile :
 	./configure \
 	$(WITHTCL) \
 	$(TCLXMLFLAGS) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols \
+	$(PREFIX) \
+	$(STD) \
 	$(CACHE)
 
 #-------------------------- tclzvfs
@@ -141,8 +143,8 @@ tclzvfs/Makefile :
 	cd tclzvfs; \
 	./configure \
 	$(WITHTCL) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols \
+	$(PREFIX) \
+	$(STD) \
 	$(CACHE)
 
 #-------------------------- xpa
@@ -160,8 +162,8 @@ xpa/Makefile :
 	./configure \
 	$(CONFIGFLAGS) $(TARGET) $(XPAFLAGS) \
 	$(WITHTCL) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols \
+	$(PREFIX) \
+	$(STD) \
 	--with-x=disabled
 
 #-------------------------- tkblt
@@ -177,8 +179,8 @@ tkblt/Makefile :
 	cd tkblt; \
 	./configure \
 	$(WITHTK) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols \
+	$(PREFIX) \
+	$(STD) \
 	$(CACHE)
 
 #-------------------------- tkcon
@@ -206,8 +208,8 @@ tkhtml1/Makefile :
 	cd tkhtml1; \
 	./configure \
 	$(WITHTK) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols \
+	$(PREFIX) \
+	$(STD) \
 	$(CACHE)
 
 #-------------------------- tkimg
@@ -235,8 +237,8 @@ tkimg/Makefile :
 	./configure \
 	CFLAGS='-DPNG_NO_WRITE_gAMA' \
 	$(WITHTK) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols
+	$(PREFIX) \
+	$(STD)
 
 #-------------------------- tkmpeg
 
@@ -251,8 +253,8 @@ tkmpeg/Makefile :
 	cd tkmpeg; \
 	./configure \
 	$(WITHTK) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols \
+	$(PREFIX) \
+	$(STD) \
 	$(CACHE)
 
 #-------------------------- tksao
@@ -268,8 +270,8 @@ tksao/Makefile :
 	cd tksao; \
 	./configure \
 	$(WITHTK) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols \
+	$(PREFIX) \
+	$(STD) \
 	$(CACHE)
 
 #-------------------------- ast
@@ -285,7 +287,7 @@ ast/Makefile :
 	--without-pthreads --enable-shared=no \
 	star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no \
 	$(CONFIGFLAGS) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
+	$(PREFIX) \
 	--disable-shared
 	cd ast; touch configure.ac aclocal.m4 configure Makefile.am Makefile.in
 
@@ -345,7 +347,7 @@ funtools/Makefile : funtools/configure
 	./configure \
 	--with-zlib=$(libdir) --with-wcslib=$(libdir) \
 	$(CONFIGFLAGS) $(TARGET) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
+	$(PREFIX) \
 	--disable-shared
 
 funtools/configure :
@@ -366,8 +368,8 @@ tktable/Makefile :
 	cd tktable; \
 	./configure \
 	$(WITHTK) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols \
+	$(PREFIX) \
+	$(STD) \
 	$(CACHE)
 
 #-------------------------- language

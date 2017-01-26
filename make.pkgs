@@ -27,6 +27,7 @@ XPAVERSION=2.1.17
 # libxml2 2.9.4
 # libxslt 1.1.29
 
+# unix/Makefile.in macosx/Makefile.in win/Makefile.in make.include
 TCLVER=8.6
-TCLXMLVER=3.2
+# make.include
 TKCONVER=2.7

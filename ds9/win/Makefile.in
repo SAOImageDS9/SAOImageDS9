@@ -155,11 +155,6 @@ tcltk	:
 	cp -pr $(prefix)/lib/tcl8.6 $(APPDIR)/.
 	cp -pr $(prefix)/lib/tk8.6 $(APPDIR)/.
 
-tkblt	:
-	mkdir $(APPDIR)/tkblt
-	cp -p $(prefix)/tkblt/library/graph.tcl $(APPDIR)/tkblt/.
-	echo "pkg_mkIndex ../../bin/ds9app/tkblt *.tcl; exit" | $(bindir)/tclsh86s
-
 tcllib	:
 	cp -pr $(prefix)/tcllib/modules/base64 $(APPDIR)/.
 	cp -pr $(prefix)/tcllib/modules/ftp $(APPDIR)/.
@@ -167,9 +162,15 @@ tcllib	:
 	cp -pr $(prefix)/tcllib/modules/textutil $(APPDIR)/.
 	cp -pr $(prefix)/tcllib/modules/math $(APPDIR)/.
 
+tkblt	:
+	mkdir $(APPDIR)/tkblt
+	cp -p $(prefix)/tkblt/library/graph.tcl $(APPDIR)/tkblt/.
+	echo "pkg_mkIndex ../../bin/ds9app/tkblt *.tcl; exit" | $(bindir)/tclsh86s
+
 tkcon	:
 	mkdir $(APPDIR)/tkcon
 	cp -p $(prefix)/tkcon/*.tcl $(APPDIR)/tkcon/.
+	echo "pkg_mkIndex ../../bin/ds9app/tkblt *.tcl; exit" | $(bindir)/tclsh86s
 
 xpa	:
 	cp -p $(bindir)/xpans.exe $(APPDIR)/.

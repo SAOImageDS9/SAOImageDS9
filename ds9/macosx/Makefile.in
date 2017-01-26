@@ -199,14 +199,15 @@ tcllib	:
 	cp -pr $(prefix)/tcllib/modules/textutil $(TKSAORES)/.
 	cp -pr $(prefix)/tcllib/modules/math $(TKSAORES)/.
 
-tkcon	:
-	mkdir $(TKSAORES)/tkcon
-	cp -p $(prefix)/tkcon/*.tcl $(TKSAORES)/tkcon/.
-
 tkblt	:
 	mkdir $(TKSAORES)/tkblt
 	cp -p $(prefix)/tkblt/library/graph.tcl $(TKSAORES)/tkblt/.
 	echo "pkg_mkIndex $(TKSAORES)/tkblt *.tcl; exit" | $(bindir)/tclsh8.6
+
+tkcon	:
+	mkdir $(TKSAORES)/tkcon
+	cp -p $(prefix)/tkcon/*.tcl $(TKSAORES)/tkcon/.
+	echo "pkg_mkIndex $(TKSAORES)/tkcon *.tcl; exit" | $(bindir)/tclsh8.6
 
 xpa	:
 	cp -pr $(bindir)/xpans $(TKSAORES)/.

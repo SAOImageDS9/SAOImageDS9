@@ -1,3 +1,7 @@
+DS9_VERSION	= 7.6b1
+XPA_VERSION	= 2.1.17
+TCL_VERSION	= 8.6
+
 include ./make.pkgs
 
 #-------------------------- Defs
@@ -422,7 +426,7 @@ localclean :
 	-rm -f core *~ *#
 
 tclclean :
-	$(MAKE) -C tcl$(TCLVER)/$(OS) clean
+	$(MAKE) -C tcl$(TCL_VERSION)/$(OS) clean
 
 tclcheckdnsclean :
 	$(MAKE) -C tclcheckdns clean
@@ -440,7 +444,7 @@ tclzvfsclean:
 	$(MAKE) -C tclzvfs clean
 
 tkclean :
-	$(MAKE) -C tk$(TCLVER)/$(OS) clean
+	$(MAKE) -C tk$(TCL_VERSION)/$(OS) clean
 
 tkbltclean:
 	$(MAKE) -C tkblt clean
@@ -497,7 +501,7 @@ localdistclean : localclean
 	-rm -f config.log config.status config.cache Makefile 
 
 tcldistclean :
-	$(MAKE) -C tcl$(TCLVER)/$(OS) distclean
+	$(MAKE) -C tcl$(TCL_VERSION)/$(OS) distclean
 
 tclcheckdnsdistclean :
 	$(MAKE) -C tclcheckdns distclean
@@ -515,7 +519,7 @@ tclzvfsdistclean:
 	$(MAKE) -C tclzvfs distclean
 
 tkdistclean :
-	$(MAKE) -C tk$(TCLVER)/$(OS) distclean
+	$(MAKE) -C tk$(TCL_VERSION)/$(OS) distclean
 
 tkbltdistclean:
 	$(MAKE) -C tkblt distclean

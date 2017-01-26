@@ -13,27 +13,27 @@ OS		= @OS@
 ARCH		= @ARCH@
 JOBS		= @CORES@
 
+include ./make.include
+
 WITHTCL		= --with-tcl=$(prefix)/build/tcl/Development
 WITHTK		= --with-tk=$(prefix)/build/tk/Development $(WITHTCL)
 CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
-include ./make.include
-
 #--------------------------defines
 
-DS9APP	=SAOImage\ DS9\ $(DS9VERSION)
+DS9APP	=SAOImage\ DS9\ $(DS9_VERSION)
 
 TCLFILES= \
-	tcl$(TCLVER)/generic/tcl.h \
-	tcl$(TCLVER)/generic/tclDecls.h \
-	tcl$(TCLVER)/generic/tclPlatDecls.h
+	tcl$(TCL_VERSION)/generic/tcl.h \
+	tcl$(TCL_VERSION)/generic/tclDecls.h \
+	tcl$(TCL_VERSION)/generic/tclPlatDecls.h
 
 TKFILES = \
-	tk$(TCLVER)/generic/tk.h \
-	tk$(TCLVER)/generic/tkDecls.h \
-	tk$(TCLVER)/generic/tkPlatDecls.h \
-	tk$(TCLVER)/generic/tkIntXlibDecls.h \
-	tk$(TCLVER)/macosx/tkMacOSX.h
+	tk$(TCL_VERSION)/generic/tk.h \
+	tk$(TCL_VERSION)/generic/tkDecls.h \
+	tk$(TCL_VERSION)/generic/tkPlatDecls.h \
+	tk$(TCL_VERSION)/generic/tkIntXlibDecls.h \
+	tk$(TCL_VERSION)/macosx/tkMacOSX.h
 
 #--------------------------build
 
@@ -47,10 +47,10 @@ saods9	: dirs tcl tk \
 	tkmacosx \
 	tksao ds9
 
-tcl	: tcl$(TCLVER)/macosx/Makefile
+tcl	: tcl$(TCL_VERSION)/macosx/Makefile
 	@echo ""
-	@echo "*** Install tcl$(TCLVER) ***"
-	$(MAKE) -C tcl$(TCLVER)/macosx -j $(JOBS)
+	@echo "*** Install tcl$(TCL_VERSION) ***"
+	$(MAKE) -C tcl$(TCL_VERSION)/macosx -j $(JOBS)
 
 # install include, lib
 	cp -p $(TCLFILES) include/.
@@ -62,19 +62,19 @@ tcl	: tcl$(TCLVER)/macosx/Makefile
 	cp -p build/tcl/tclsh8.6 bin/.
 	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/8.6/Tcl @executable_path/../build/tcl/Tcl.framework/Tcl bin/tclsh8.6
 
-tcl$(TCLVER)/macosx/Makefile :
+tcl$(TCL_VERSION)/macosx/Makefile :
 	@echo ""
-	@echo "*** Configure tcl$(TCLVER) ***"
-	cd tcl$(TCLVER)/macosx; \
+	@echo "*** Configure tcl$(TCL_VERSION) ***"
+	cd tcl$(TCL_VERSION)/macosx; \
 	./configure \
 	--enable-64bit \
 	--enable-symbols \
 	--config-cache --cache-file=$(prefix)/config.cache
 
-tk	: tk$(TCLVER)/macosx/Makefile
+tk	: tk$(TCL_VERSION)/macosx/Makefile
 	@echo ""
-	@echo "*** Installing tk$(TCLVER) ***"
-	$(MAKE) -C tk$(TCLVER)/macosx -j $(JOBS)
+	@echo "*** Installing tk$(TCL_VERSION) ***"
+	$(MAKE) -C tk$(TCL_VERSION)/macosx -j $(JOBS)
 
 # install include, lib
 	cp -p $(TKFILES) include/.
@@ -86,10 +86,10 @@ tk	: tk$(TCLVER)/macosx/Makefile
 	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/8.6/Tcl @executable_path/../build/tcl/Tcl.framework/Tcl bin/wish8.6
 	install_name_tool -change /Library/Frameworks/Tk.framework/Versions/8.6/Tk @executable_path/../build/tk/Tk.framework/Tk bin/wish8.6
 
-tk$(TCLVER)/macosx/Makefile :
+tk$(TCL_VERSION)/macosx/Makefile :
 	@echo ""
-	@echo "*** Configure tk$(TCLVER) ***"
-	cd tk$(TCLVER)/macosx; \
+	@echo "*** Configure tk$(TCL_VERSION) ***"
+	cd tk$(TCL_VERSION)/macosx; \
 	./configure \
 	$(WITHTCL) \
 	--enable-64bit \

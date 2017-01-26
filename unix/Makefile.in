@@ -14,11 +14,11 @@ ARCH		= @ARCH@
 TKFLAGS		= @TKFLAGS@
 JOBS		= @CORES@
 
-WITHTCL 	= --with-tcl=$(prefix)/tcl$(TCLVER)/unix
-WITHTK  	= --with-tk=$(prefix)/tk$(TCLVER)/unix $(WITHTCL)
-CACHE		= --config-cache --cache-file=$(prefix)/config.cache
-
 include ./make.include
+
+WITHTCL 	= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/unix
+WITHTK  	= --with-tk=$(prefix)/tk$(TCL_VERSION)/unix $(WITHTCL)
+CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 #--------------------------build
 
@@ -31,29 +31,29 @@ saods9	: tcl tk \
 	tkmpeg tkhtml1 tkcon \
 	tksao ds9
 
-tcl	: tcl$(TCLVER)/unix/Makefile
+tcl	: tcl$(TCL_VERSION)/unix/Makefile
 	@echo ""
-	@echo "*** Install tcl$(TCLVER) ***"
-	$(MAKE) -C tcl$(TCLVER)/unix -j $(JOBS) install
+	@echo "*** Install tcl$(TCL_VERSION) ***"
+	$(MAKE) -C tcl$(TCL_VERSION)/unix -j $(JOBS) install
 
-tcl$(TCLVER)/unix/Makefile :
+tcl$(TCL_VERSION)/unix/Makefile :
 	@echo ""
-	@echo "*** Configure tcl$(TCLVER) ***"
-	cd tcl$(TCLVER)/unix; \
+	@echo "*** Configure tcl$(TCL_VERSION) ***"
+	cd tcl$(TCL_VERSION)/unix; \
 	./configure \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	--config-cache --cache-file=$(prefix)/config.cache
 
-tk	: tk$(TCLVER)/unix/Makefile
+tk	: tk$(TCL_VERSION)/unix/Makefile
 	@echo ""
-	@echo "*** Install tk$(TCLVER) ***"
-	$(MAKE) -C tk$(TCLVER)/unix -j $(JOBS) install
+	@echo "*** Install tk$(TCL_VERSION) ***"
+	$(MAKE) -C tk$(TCL_VERSION)/unix -j $(JOBS) install
 
-tk$(TCLVER)/unix/Makefile :
+tk$(TCL_VERSION)/unix/Makefile :
 	@echo ""
-	@echo "*** Configure tk$(TCLVER) ***"
-	cd tk$(TCLVER)/unix; \
+	@echo "*** Configure tk$(TCL_VERSION) ***"
+	cd tk$(TCL_VERSION)/unix; \
 	./configure \
 	$(TKFLAGS) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
@@ -77,5 +77,5 @@ tkunixdistclean :
 .PHONY	: dist
 
 dist	:
-	cd bin; tar cvf - ds9* | gzip > $(prefix)/dist/ds9.$(ARCH).$(DS9VERSION).tar.gz
-	cd bin; tar cvf - xpa* | gzip > $(prefix)/dist/xpa.$(ARCH).$(XPAVERSION).tar.gz
+	cd bin; tar cvf - ds9* | gzip > $(prefix)/dist/ds9.$(ARCH).$(DS9_VERSION).tar.gz
+	cd bin; tar cvf - xpa* | gzip > $(prefix)/dist/xpa.$(ARCH).$(XPA_VERSION).tar.gz

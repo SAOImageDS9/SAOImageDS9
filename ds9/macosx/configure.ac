@@ -82,6 +82,21 @@ TEA_LOAD_CONFIG(tkhtml1)
 TEA_PATH_CONFIG(tkimg)
 TEA_LOAD_CONFIG(tkimg)
 
+TEA_PATH_CONFIG(tkimggif)
+TEA_LOAD_CONFIG(tkimggif)
+
+TEA_PATH_CONFIG(tkimgjpeg)
+TEA_LOAD_CONFIG(tkimgjpeg)
+
+TEA_PATH_CONFIG(tkimgpng)
+TEA_LOAD_CONFIG(tkimgpng)
+
+TEA_PATH_CONFIG(tkimgtiff)
+TEA_LOAD_CONFIG(tkimgtiff)
+
+TEA_PATH_CONFIG(tkimgwindow)
+TEA_LOAD_CONFIG(tkimgwindow)
+
 TEA_PATH_CONFIG(tkmacosx)
 TEA_LOAD_CONFIG(tkmacosx)
 

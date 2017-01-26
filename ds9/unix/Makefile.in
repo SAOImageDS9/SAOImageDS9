@@ -22,8 +22,13 @@ tifftcl_LIB_SPEC= @tifftcl_LIB_SPEC@
 pngtcl_LIB_SPEC	= @pngtcl_LIB_SPEC@
 jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
 zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
+
 tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
-tkimg_VERSION	= @tkimg_VERSION@
+tkimggif_LIB_SPEC= @tkimggif_LIB_SPEC@
+tkimgjpeg_LIB_SPEC= @tkimgjpeg_LIB_SPEC@
+tkimgpng_LIB_SPEC= @tkimgpng_LIB_SPEC@
+tkimgtiff_LIB_SPEC= @tkimgtiff_LIB_SPEC@
+tkimgwindow_LIB_SPEC= @tkimgwindow_LIB_SPEC@
 
 tclcheckdns_LIB_SPEC= @tclcheckdns_LIB_SPEC@
 tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
@@ -133,14 +138,9 @@ ds9base	: $(OBJS)
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
 	$(libdir)/libxpa.a \
-	$(libdir)/tkimgtiff$(tkimg_VERSION)/libtkimgtiff$(tkimg_VERSION).a \
-	$(libdir)/tkimgpng$(tkimg_VERSION)/libtkimgpng$(tkimg_VERSION).a \
-	$(libdir)/tkimgjpeg$(tkimg_VERSION)/libtkimgjpeg$(tkimg_VERSION).a \
-	$(libdir)/tkimggif$(tkimg_VERSION)/libtkimggif$(tkimg_VERSION).a \
-	$(libdir)/tkimgwindow$(tkimg_VERSION)/libtkimgwindow$(tkimg_VERSION).a \
-	$(tifftcl_LIB_SPEC) \
-	$(pngtcl_LIB_SPEC) \
 	$(jpegtcl_LIB_SPEC) \
+	$(pngtcl_LIB_SPEC) \
+	$(tifftcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \
 	$(tclcheckdns_LIB_SPEC) \
 	$(tcliis_LIB_SPEC) \
@@ -150,6 +150,11 @@ ds9base	: $(OBJS)
 	$(tkblt_LIB_SPEC) \
 	$(tkhtml1_LIB_SPEC) \
 	$(tkimg_LIB_SPEC) \
+	$(tkimggif_LIB_SPEC) \
+	$(tkimgjpeg_LIB_SPEC) \
+	$(tkimgpng_LIB_SPEC) \
+	$(tkimgtiff_LIB_SPEC) \
+	$(tkimgwindow_LIB_SPEC) \
 	$(tkmpeg_LIB_SPEC) \
 	$(tksao_LIB_SPEC) \
 	$(tktable_LIB_SPEC) \

@@ -698,6 +698,46 @@ tkmacosx_LIB_FILE
 tkmacosx_SRC_DIR
 tkmacosx_BIN_DIR
 tkmacosx_VERSION
+tkimgwindow_STUB_LIB_PATH
+tkimgwindow_STUB_LIB_SPEC
+tkimgwindow_STUB_LIB_FILE
+tkimgwindow_LIB_SPEC
+tkimgwindow_LIB_FILE
+tkimgwindow_SRC_DIR
+tkimgwindow_BIN_DIR
+tkimgwindow_VERSION
+tkimgtiff_STUB_LIB_PATH
+tkimgtiff_STUB_LIB_SPEC
+tkimgtiff_STUB_LIB_FILE
+tkimgtiff_LIB_SPEC
+tkimgtiff_LIB_FILE
+tkimgtiff_SRC_DIR
+tkimgtiff_BIN_DIR
+tkimgtiff_VERSION
+tkimgpng_STUB_LIB_PATH
+tkimgpng_STUB_LIB_SPEC
+tkimgpng_STUB_LIB_FILE
+tkimgpng_LIB_SPEC
+tkimgpng_LIB_FILE
+tkimgpng_SRC_DIR
+tkimgpng_BIN_DIR
+tkimgpng_VERSION
+tkimgjpeg_STUB_LIB_PATH
+tkimgjpeg_STUB_LIB_SPEC
+tkimgjpeg_STUB_LIB_FILE
+tkimgjpeg_LIB_SPEC
+tkimgjpeg_LIB_FILE
+tkimgjpeg_SRC_DIR
+tkimgjpeg_BIN_DIR
+tkimgjpeg_VERSION
+tkimggif_STUB_LIB_PATH
+tkimggif_STUB_LIB_SPEC
+tkimggif_STUB_LIB_FILE
+tkimggif_LIB_SPEC
+tkimggif_LIB_FILE
+tkimggif_SRC_DIR
+tkimggif_BIN_DIR
+tkimggif_VERSION
 tkimg_STUB_LIB_PATH
 tkimg_STUB_LIB_SPEC
 tkimg_STUB_LIB_FILE
@@ -886,6 +926,11 @@ with_tclxml
 with_tkblt
 with_tkhtml1
 with_tkimg
+with_tkimggif
+with_tkimgjpeg
+with_tkimgpng
+with_tkimgtiff
+with_tkimgwindow
 with_tkmacosx
 with_tkmpeg
 with_tksao
@@ -1548,6 +1593,11 @@ Optional Packages:
   --with-tkblt              directory containing tkblt configuration (tkbltConfig.sh)
   --with-tkhtml1              directory containing tkhtml1 configuration (tkhtml1Config.sh)
   --with-tkimg              directory containing tkimg configuration (tkimgConfig.sh)
+  --with-tkimggif              directory containing tkimggif configuration (tkimggifConfig.sh)
+  --with-tkimgjpeg              directory containing tkimgjpeg configuration (tkimgjpegConfig.sh)
+  --with-tkimgpng              directory containing tkimgpng configuration (tkimgpngConfig.sh)
+  --with-tkimgtiff              directory containing tkimgtiff configuration (tkimgtiffConfig.sh)
+  --with-tkimgwindow              directory containing tkimgwindow configuration (tkimgwindowConfig.sh)
   --with-tkmacosx              directory containing tkmacosx configuration (tkmacosxConfig.sh)
   --with-tkmpeg              directory containing tkmpeg configuration (tkmpegConfig.sh)
   --with-tksao              directory containing tksao configuration (tksaoConfig.sh)
@@ -6773,6 +6823,1326 @@ $as_echo "using tkimg_STUB_LIB_PATH ${tkimg_STUB_LIB_PATH}" >&6; }
 
 	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimg_STUB_LIB_SPEC ${tkimg_STUB_LIB_SPEC}" >&5
 $as_echo "using tkimg_STUB_LIB_SPEC ${tkimg_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tkimggif configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tkimggif
+    #
+
+    if test x"${no_tkimggif}" = x ; then
+	# we reset no_tkimggif in case something fails here
+	no_tkimggif=true
+
+# Check whether --with-tkimggif was given.
+if test "${with_tkimggif+set}" = set; then :
+  withval=$with_tkimggif; with_tkimggifconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkimggif configuration" >&5
+$as_echo_n "checking for tkimggif configuration... " >&6; }
+	if ${ac_cv_c_tkimggifconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tkimggif was specified.
+	    if test x"${with_tkimggifconfig}" != x ; then
+		case ${with_tkimggifconfig} in
+		    */tkimggifConfig.sh )
+			if test -f ${with_tkimggifconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkimggif argument should refer to directory containing tkimggifConfig.sh, not to tkimggifConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkimggif argument should refer to directory containing tkimggifConfig.sh, not to tkimggifConfig.sh itself" >&2;}
+			    with_tkimggifconfig=`echo ${with_tkimggifconfig} | sed 's!/tkimggifConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tkimggifconfig}/tkimggifConfig.sh" ; then
+		    ac_cv_c_tkimggifconfig=`(cd ${with_tkimggifconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tkimggifconfig} directory doesn't contain tkimggifConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tkimggif installation
+	    if test x"${ac_cv_c_tkimggifconfig}" = x ; then
+		for i in \
+			../tkimggif \
+			`ls -dr ../tkimggif*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkimggif*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkimggif*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkimggif*[0-9].[0-9]* 2>/dev/null` \
+			../../tkimggif \
+			`ls -dr ../../tkimggif*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkimggif*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkimggif*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkimggif*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkimggif \
+			`ls -dr ../../../tkimggif*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkimggif*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimggif*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimggif*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkimggif \
+			`ls -dr ${srcdir}/../tkimggif*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimggif*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimggif*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimggif*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tkimggifConfig.sh" ; then
+			ac_cv_c_tkimggifconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tkimggifConfig.sh" ; then
+			ac_cv_c_tkimggifconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tkimggifconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tkimggifConfig.sh" ; then
+			ac_cv_c_tkimggifconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tkimggifconfig}" = x ; then
+	    tkimggif_BIN_DIR="# no tkimggif configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkimggif configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkimggif configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tkimggif=
+	    tkimggif_BIN_DIR=${ac_cv_c_tkimggifconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkimggif_BIN_DIR/tkimggifConfig.sh" >&5
+$as_echo "found $tkimggif_BIN_DIR/tkimggifConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkimggif_BIN_DIR}/tkimggifConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkimggif_BIN_DIR}/tkimggifConfig.sh... " >&6; }
+
+    if test -f "${tkimggif_BIN_DIR}/tkimggifConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tkimggif_BIN_DIR}/tkimggifConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tkimggif_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tkimggif_LIB_SPEC will be set to the value
+    # of tkimggif_BUILD_LIB_SPEC. An extension should make use of tkimggif_LIB_SPEC
+    # instead of tkimggif_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tkimggif_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkimggif" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkimggif" >&2;}
+        tkimggif_LIB_SPEC=${tkimggif_BUILD_LIB_SPEC}
+        tkimggif_STUB_LIB_SPEC=${tkimggif_BUILD_STUB_LIB_SPEC}
+        tkimggif_STUB_LIB_PATH=${tkimggif_BUILD_STUB_LIB_PATH}
+        tkimggif_INCLUDE_SPEC=${tkimggif_BUILD_INCLUDE_SPEC}
+        tkimggif_LIBRARY_PATH=${tkimggif_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tkimggif_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKIMGGIF_STUB library for LIBS" >&5
+$as_echo_n "checking For TKIMGGIF_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKIMGGIF_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKIMGGIF_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMGGIF_STUB_LIB_PATH ${TKIMGGIF_STUB_LIB_PATH}" >&5
+$as_echo "using TKIMGGIF_STUB_LIB_PATH ${TKIMGGIF_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKIMGGIF_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMGGIF_STUB_LIB_SPEC ${TKIMGGIF_STUB_LIB_SPEC}" >&5
+$as_echo "using TKIMGGIF_STUB_LIB_SPEC ${TKIMGGIF_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkimggif_STUB library for LIBS" >&5
+$as_echo_n "checking For tkimggif_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tkimggif_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tkimggif_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimggif_STUB_LIB_PATH ${tkimggif_STUB_LIB_PATH}" >&5
+$as_echo "using tkimggif_STUB_LIB_PATH ${tkimggif_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tkimggif_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimggif_STUB_LIB_SPEC ${tkimggif_STUB_LIB_SPEC}" >&5
+$as_echo "using tkimggif_STUB_LIB_SPEC ${tkimggif_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tkimgjpeg configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tkimgjpeg
+    #
+
+    if test x"${no_tkimgjpeg}" = x ; then
+	# we reset no_tkimgjpeg in case something fails here
+	no_tkimgjpeg=true
+
+# Check whether --with-tkimgjpeg was given.
+if test "${with_tkimgjpeg+set}" = set; then :
+  withval=$with_tkimgjpeg; with_tkimgjpegconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkimgjpeg configuration" >&5
+$as_echo_n "checking for tkimgjpeg configuration... " >&6; }
+	if ${ac_cv_c_tkimgjpegconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tkimgjpeg was specified.
+	    if test x"${with_tkimgjpegconfig}" != x ; then
+		case ${with_tkimgjpegconfig} in
+		    */tkimgjpegConfig.sh )
+			if test -f ${with_tkimgjpegconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkimgjpeg argument should refer to directory containing tkimgjpegConfig.sh, not to tkimgjpegConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkimgjpeg argument should refer to directory containing tkimgjpegConfig.sh, not to tkimgjpegConfig.sh itself" >&2;}
+			    with_tkimgjpegconfig=`echo ${with_tkimgjpegconfig} | sed 's!/tkimgjpegConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tkimgjpegconfig}/tkimgjpegConfig.sh" ; then
+		    ac_cv_c_tkimgjpegconfig=`(cd ${with_tkimgjpegconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tkimgjpegconfig} directory doesn't contain tkimgjpegConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tkimgjpeg installation
+	    if test x"${ac_cv_c_tkimgjpegconfig}" = x ; then
+		for i in \
+			../tkimgjpeg \
+			`ls -dr ../tkimgjpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkimgjpeg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkimgjpeg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkimgjpeg*[0-9].[0-9]* 2>/dev/null` \
+			../../tkimgjpeg \
+			`ls -dr ../../tkimgjpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkimgjpeg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkimgjpeg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkimgjpeg*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkimgjpeg \
+			`ls -dr ../../../tkimgjpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkimgjpeg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimgjpeg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimgjpeg*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkimgjpeg \
+			`ls -dr ${srcdir}/../tkimgjpeg*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimgjpeg*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimgjpeg*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimgjpeg*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tkimgjpegConfig.sh" ; then
+			ac_cv_c_tkimgjpegconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tkimgjpegConfig.sh" ; then
+			ac_cv_c_tkimgjpegconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tkimgjpegconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tkimgjpegConfig.sh" ; then
+			ac_cv_c_tkimgjpegconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tkimgjpegconfig}" = x ; then
+	    tkimgjpeg_BIN_DIR="# no tkimgjpeg configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkimgjpeg configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkimgjpeg configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tkimgjpeg=
+	    tkimgjpeg_BIN_DIR=${ac_cv_c_tkimgjpegconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkimgjpeg_BIN_DIR/tkimgjpegConfig.sh" >&5
+$as_echo "found $tkimgjpeg_BIN_DIR/tkimgjpegConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkimgjpeg_BIN_DIR}/tkimgjpegConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkimgjpeg_BIN_DIR}/tkimgjpegConfig.sh... " >&6; }
+
+    if test -f "${tkimgjpeg_BIN_DIR}/tkimgjpegConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tkimgjpeg_BIN_DIR}/tkimgjpegConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tkimgjpeg_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tkimgjpeg_LIB_SPEC will be set to the value
+    # of tkimgjpeg_BUILD_LIB_SPEC. An extension should make use of tkimgjpeg_LIB_SPEC
+    # instead of tkimgjpeg_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tkimgjpeg_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkimgjpeg" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkimgjpeg" >&2;}
+        tkimgjpeg_LIB_SPEC=${tkimgjpeg_BUILD_LIB_SPEC}
+        tkimgjpeg_STUB_LIB_SPEC=${tkimgjpeg_BUILD_STUB_LIB_SPEC}
+        tkimgjpeg_STUB_LIB_PATH=${tkimgjpeg_BUILD_STUB_LIB_PATH}
+        tkimgjpeg_INCLUDE_SPEC=${tkimgjpeg_BUILD_INCLUDE_SPEC}
+        tkimgjpeg_LIBRARY_PATH=${tkimgjpeg_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tkimgjpeg_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKIMGJPEG_STUB library for LIBS" >&5
+$as_echo_n "checking For TKIMGJPEG_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKIMGJPEG_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKIMGJPEG_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMGJPEG_STUB_LIB_PATH ${TKIMGJPEG_STUB_LIB_PATH}" >&5
+$as_echo "using TKIMGJPEG_STUB_LIB_PATH ${TKIMGJPEG_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKIMGJPEG_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMGJPEG_STUB_LIB_SPEC ${TKIMGJPEG_STUB_LIB_SPEC}" >&5
+$as_echo "using TKIMGJPEG_STUB_LIB_SPEC ${TKIMGJPEG_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkimgjpeg_STUB library for LIBS" >&5
+$as_echo_n "checking For tkimgjpeg_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tkimgjpeg_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tkimgjpeg_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimgjpeg_STUB_LIB_PATH ${tkimgjpeg_STUB_LIB_PATH}" >&5
+$as_echo "using tkimgjpeg_STUB_LIB_PATH ${tkimgjpeg_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tkimgjpeg_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimgjpeg_STUB_LIB_SPEC ${tkimgjpeg_STUB_LIB_SPEC}" >&5
+$as_echo "using tkimgjpeg_STUB_LIB_SPEC ${tkimgjpeg_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tkimgpng configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tkimgpng
+    #
+
+    if test x"${no_tkimgpng}" = x ; then
+	# we reset no_tkimgpng in case something fails here
+	no_tkimgpng=true
+
+# Check whether --with-tkimgpng was given.
+if test "${with_tkimgpng+set}" = set; then :
+  withval=$with_tkimgpng; with_tkimgpngconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkimgpng configuration" >&5
+$as_echo_n "checking for tkimgpng configuration... " >&6; }
+	if ${ac_cv_c_tkimgpngconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tkimgpng was specified.
+	    if test x"${with_tkimgpngconfig}" != x ; then
+		case ${with_tkimgpngconfig} in
+		    */tkimgpngConfig.sh )
+			if test -f ${with_tkimgpngconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkimgpng argument should refer to directory containing tkimgpngConfig.sh, not to tkimgpngConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkimgpng argument should refer to directory containing tkimgpngConfig.sh, not to tkimgpngConfig.sh itself" >&2;}
+			    with_tkimgpngconfig=`echo ${with_tkimgpngconfig} | sed 's!/tkimgpngConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tkimgpngconfig}/tkimgpngConfig.sh" ; then
+		    ac_cv_c_tkimgpngconfig=`(cd ${with_tkimgpngconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tkimgpngconfig} directory doesn't contain tkimgpngConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tkimgpng installation
+	    if test x"${ac_cv_c_tkimgpngconfig}" = x ; then
+		for i in \
+			../tkimgpng \
+			`ls -dr ../tkimgpng*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkimgpng*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkimgpng*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkimgpng*[0-9].[0-9]* 2>/dev/null` \
+			../../tkimgpng \
+			`ls -dr ../../tkimgpng*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkimgpng*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkimgpng*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkimgpng*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkimgpng \
+			`ls -dr ../../../tkimgpng*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkimgpng*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimgpng*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimgpng*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkimgpng \
+			`ls -dr ${srcdir}/../tkimgpng*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimgpng*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimgpng*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimgpng*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tkimgpngConfig.sh" ; then
+			ac_cv_c_tkimgpngconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tkimgpngConfig.sh" ; then
+			ac_cv_c_tkimgpngconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tkimgpngconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tkimgpngConfig.sh" ; then
+			ac_cv_c_tkimgpngconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tkimgpngconfig}" = x ; then
+	    tkimgpng_BIN_DIR="# no tkimgpng configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkimgpng configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkimgpng configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tkimgpng=
+	    tkimgpng_BIN_DIR=${ac_cv_c_tkimgpngconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkimgpng_BIN_DIR/tkimgpngConfig.sh" >&5
+$as_echo "found $tkimgpng_BIN_DIR/tkimgpngConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkimgpng_BIN_DIR}/tkimgpngConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkimgpng_BIN_DIR}/tkimgpngConfig.sh... " >&6; }
+
+    if test -f "${tkimgpng_BIN_DIR}/tkimgpngConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tkimgpng_BIN_DIR}/tkimgpngConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tkimgpng_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tkimgpng_LIB_SPEC will be set to the value
+    # of tkimgpng_BUILD_LIB_SPEC. An extension should make use of tkimgpng_LIB_SPEC
+    # instead of tkimgpng_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tkimgpng_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkimgpng" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkimgpng" >&2;}
+        tkimgpng_LIB_SPEC=${tkimgpng_BUILD_LIB_SPEC}
+        tkimgpng_STUB_LIB_SPEC=${tkimgpng_BUILD_STUB_LIB_SPEC}
+        tkimgpng_STUB_LIB_PATH=${tkimgpng_BUILD_STUB_LIB_PATH}
+        tkimgpng_INCLUDE_SPEC=${tkimgpng_BUILD_INCLUDE_SPEC}
+        tkimgpng_LIBRARY_PATH=${tkimgpng_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tkimgpng_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKIMGPNG_STUB library for LIBS" >&5
+$as_echo_n "checking For TKIMGPNG_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKIMGPNG_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKIMGPNG_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMGPNG_STUB_LIB_PATH ${TKIMGPNG_STUB_LIB_PATH}" >&5
+$as_echo "using TKIMGPNG_STUB_LIB_PATH ${TKIMGPNG_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKIMGPNG_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMGPNG_STUB_LIB_SPEC ${TKIMGPNG_STUB_LIB_SPEC}" >&5
+$as_echo "using TKIMGPNG_STUB_LIB_SPEC ${TKIMGPNG_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkimgpng_STUB library for LIBS" >&5
+$as_echo_n "checking For tkimgpng_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tkimgpng_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tkimgpng_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimgpng_STUB_LIB_PATH ${tkimgpng_STUB_LIB_PATH}" >&5
+$as_echo "using tkimgpng_STUB_LIB_PATH ${tkimgpng_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tkimgpng_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimgpng_STUB_LIB_SPEC ${tkimgpng_STUB_LIB_SPEC}" >&5
+$as_echo "using tkimgpng_STUB_LIB_SPEC ${tkimgpng_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tkimgtiff configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tkimgtiff
+    #
+
+    if test x"${no_tkimgtiff}" = x ; then
+	# we reset no_tkimgtiff in case something fails here
+	no_tkimgtiff=true
+
+# Check whether --with-tkimgtiff was given.
+if test "${with_tkimgtiff+set}" = set; then :
+  withval=$with_tkimgtiff; with_tkimgtiffconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkimgtiff configuration" >&5
+$as_echo_n "checking for tkimgtiff configuration... " >&6; }
+	if ${ac_cv_c_tkimgtiffconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tkimgtiff was specified.
+	    if test x"${with_tkimgtiffconfig}" != x ; then
+		case ${with_tkimgtiffconfig} in
+		    */tkimgtiffConfig.sh )
+			if test -f ${with_tkimgtiffconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkimgtiff argument should refer to directory containing tkimgtiffConfig.sh, not to tkimgtiffConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkimgtiff argument should refer to directory containing tkimgtiffConfig.sh, not to tkimgtiffConfig.sh itself" >&2;}
+			    with_tkimgtiffconfig=`echo ${with_tkimgtiffconfig} | sed 's!/tkimgtiffConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tkimgtiffconfig}/tkimgtiffConfig.sh" ; then
+		    ac_cv_c_tkimgtiffconfig=`(cd ${with_tkimgtiffconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tkimgtiffconfig} directory doesn't contain tkimgtiffConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tkimgtiff installation
+	    if test x"${ac_cv_c_tkimgtiffconfig}" = x ; then
+		for i in \
+			../tkimgtiff \
+			`ls -dr ../tkimgtiff*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkimgtiff*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkimgtiff*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkimgtiff*[0-9].[0-9]* 2>/dev/null` \
+			../../tkimgtiff \
+			`ls -dr ../../tkimgtiff*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkimgtiff*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkimgtiff*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkimgtiff*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkimgtiff \
+			`ls -dr ../../../tkimgtiff*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkimgtiff*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimgtiff*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimgtiff*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkimgtiff \
+			`ls -dr ${srcdir}/../tkimgtiff*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimgtiff*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimgtiff*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimgtiff*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tkimgtiffConfig.sh" ; then
+			ac_cv_c_tkimgtiffconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tkimgtiffConfig.sh" ; then
+			ac_cv_c_tkimgtiffconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tkimgtiffconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tkimgtiffConfig.sh" ; then
+			ac_cv_c_tkimgtiffconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tkimgtiffconfig}" = x ; then
+	    tkimgtiff_BIN_DIR="# no tkimgtiff configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkimgtiff configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkimgtiff configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tkimgtiff=
+	    tkimgtiff_BIN_DIR=${ac_cv_c_tkimgtiffconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkimgtiff_BIN_DIR/tkimgtiffConfig.sh" >&5
+$as_echo "found $tkimgtiff_BIN_DIR/tkimgtiffConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkimgtiff_BIN_DIR}/tkimgtiffConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkimgtiff_BIN_DIR}/tkimgtiffConfig.sh... " >&6; }
+
+    if test -f "${tkimgtiff_BIN_DIR}/tkimgtiffConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tkimgtiff_BIN_DIR}/tkimgtiffConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tkimgtiff_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tkimgtiff_LIB_SPEC will be set to the value
+    # of tkimgtiff_BUILD_LIB_SPEC. An extension should make use of tkimgtiff_LIB_SPEC
+    # instead of tkimgtiff_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tkimgtiff_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkimgtiff" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkimgtiff" >&2;}
+        tkimgtiff_LIB_SPEC=${tkimgtiff_BUILD_LIB_SPEC}
+        tkimgtiff_STUB_LIB_SPEC=${tkimgtiff_BUILD_STUB_LIB_SPEC}
+        tkimgtiff_STUB_LIB_PATH=${tkimgtiff_BUILD_STUB_LIB_PATH}
+        tkimgtiff_INCLUDE_SPEC=${tkimgtiff_BUILD_INCLUDE_SPEC}
+        tkimgtiff_LIBRARY_PATH=${tkimgtiff_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tkimgtiff_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKIMGTIFF_STUB library for LIBS" >&5
+$as_echo_n "checking For TKIMGTIFF_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKIMGTIFF_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKIMGTIFF_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMGTIFF_STUB_LIB_PATH ${TKIMGTIFF_STUB_LIB_PATH}" >&5
+$as_echo "using TKIMGTIFF_STUB_LIB_PATH ${TKIMGTIFF_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKIMGTIFF_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMGTIFF_STUB_LIB_SPEC ${TKIMGTIFF_STUB_LIB_SPEC}" >&5
+$as_echo "using TKIMGTIFF_STUB_LIB_SPEC ${TKIMGTIFF_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkimgtiff_STUB library for LIBS" >&5
+$as_echo_n "checking For tkimgtiff_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tkimgtiff_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tkimgtiff_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimgtiff_STUB_LIB_PATH ${tkimgtiff_STUB_LIB_PATH}" >&5
+$as_echo "using tkimgtiff_STUB_LIB_PATH ${tkimgtiff_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tkimgtiff_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimgtiff_STUB_LIB_SPEC ${tkimgtiff_STUB_LIB_SPEC}" >&5
+$as_echo "using tkimgtiff_STUB_LIB_SPEC ${tkimgtiff_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tkimgwindow configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tkimgwindow
+    #
+
+    if test x"${no_tkimgwindow}" = x ; then
+	# we reset no_tkimgwindow in case something fails here
+	no_tkimgwindow=true
+
+# Check whether --with-tkimgwindow was given.
+if test "${with_tkimgwindow+set}" = set; then :
+  withval=$with_tkimgwindow; with_tkimgwindowconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkimgwindow configuration" >&5
+$as_echo_n "checking for tkimgwindow configuration... " >&6; }
+	if ${ac_cv_c_tkimgwindowconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tkimgwindow was specified.
+	    if test x"${with_tkimgwindowconfig}" != x ; then
+		case ${with_tkimgwindowconfig} in
+		    */tkimgwindowConfig.sh )
+			if test -f ${with_tkimgwindowconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkimgwindow argument should refer to directory containing tkimgwindowConfig.sh, not to tkimgwindowConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkimgwindow argument should refer to directory containing tkimgwindowConfig.sh, not to tkimgwindowConfig.sh itself" >&2;}
+			    with_tkimgwindowconfig=`echo ${with_tkimgwindowconfig} | sed 's!/tkimgwindowConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tkimgwindowconfig}/tkimgwindowConfig.sh" ; then
+		    ac_cv_c_tkimgwindowconfig=`(cd ${with_tkimgwindowconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tkimgwindowconfig} directory doesn't contain tkimgwindowConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tkimgwindow installation
+	    if test x"${ac_cv_c_tkimgwindowconfig}" = x ; then
+		for i in \
+			../tkimgwindow \
+			`ls -dr ../tkimgwindow*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkimgwindow*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkimgwindow*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkimgwindow*[0-9].[0-9]* 2>/dev/null` \
+			../../tkimgwindow \
+			`ls -dr ../../tkimgwindow*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkimgwindow*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkimgwindow*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkimgwindow*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkimgwindow \
+			`ls -dr ../../../tkimgwindow*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkimgwindow*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimgwindow*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkimgwindow*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkimgwindow \
+			`ls -dr ${srcdir}/../tkimgwindow*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimgwindow*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimgwindow*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkimgwindow*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tkimgwindowConfig.sh" ; then
+			ac_cv_c_tkimgwindowconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tkimgwindowConfig.sh" ; then
+			ac_cv_c_tkimgwindowconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tkimgwindowconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tkimgwindowConfig.sh" ; then
+			ac_cv_c_tkimgwindowconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tkimgwindowconfig}" = x ; then
+	    tkimgwindow_BIN_DIR="# no tkimgwindow configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkimgwindow configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkimgwindow configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tkimgwindow=
+	    tkimgwindow_BIN_DIR=${ac_cv_c_tkimgwindowconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkimgwindow_BIN_DIR/tkimgwindowConfig.sh" >&5
+$as_echo "found $tkimgwindow_BIN_DIR/tkimgwindowConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkimgwindow_BIN_DIR}/tkimgwindowConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkimgwindow_BIN_DIR}/tkimgwindowConfig.sh... " >&6; }
+
+    if test -f "${tkimgwindow_BIN_DIR}/tkimgwindowConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tkimgwindow_BIN_DIR}/tkimgwindowConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tkimgwindow_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tkimgwindow_LIB_SPEC will be set to the value
+    # of tkimgwindow_BUILD_LIB_SPEC. An extension should make use of tkimgwindow_LIB_SPEC
+    # instead of tkimgwindow_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tkimgwindow_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkimgwindow" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkimgwindow" >&2;}
+        tkimgwindow_LIB_SPEC=${tkimgwindow_BUILD_LIB_SPEC}
+        tkimgwindow_STUB_LIB_SPEC=${tkimgwindow_BUILD_STUB_LIB_SPEC}
+        tkimgwindow_STUB_LIB_PATH=${tkimgwindow_BUILD_STUB_LIB_PATH}
+        tkimgwindow_INCLUDE_SPEC=${tkimgwindow_BUILD_INCLUDE_SPEC}
+        tkimgwindow_LIBRARY_PATH=${tkimgwindow_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tkimgwindow_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKIMGWINDOW_STUB library for LIBS" >&5
+$as_echo_n "checking For TKIMGWINDOW_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKIMGWINDOW_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKIMGWINDOW_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMGWINDOW_STUB_LIB_PATH ${TKIMGWINDOW_STUB_LIB_PATH}" >&5
+$as_echo "using TKIMGWINDOW_STUB_LIB_PATH ${TKIMGWINDOW_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKIMGWINDOW_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKIMGWINDOW_STUB_LIB_SPEC ${TKIMGWINDOW_STUB_LIB_SPEC}" >&5
+$as_echo "using TKIMGWINDOW_STUB_LIB_SPEC ${TKIMGWINDOW_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkimgwindow_STUB library for LIBS" >&5
+$as_echo_n "checking For tkimgwindow_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tkimgwindow_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tkimgwindow_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimgwindow_STUB_LIB_PATH ${tkimgwindow_STUB_LIB_PATH}" >&5
+$as_echo "using tkimgwindow_STUB_LIB_PATH ${tkimgwindow_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tkimgwindow_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+          case $i in
+            *.lib)
+              # Convert foo.lib to -lfoo for GCC
+                i=-l`echo "$i" | sed -e 's/\.[^.]*$//' -e 's/\.lib.*//'`
+            ;;
+          esac
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkimgwindow_STUB_LIB_SPEC ${tkimgwindow_STUB_LIB_SPEC}" >&5
+$as_echo "using tkimgwindow_STUB_LIB_SPEC ${tkimgwindow_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5

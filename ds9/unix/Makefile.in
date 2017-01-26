@@ -66,25 +66,28 @@ system		= @system@
 .C.@OBJEXT@:
 	$(COMPILE) -c `@CYGPATH@ $<` -o $@
 
+include ../make.include
+
 #--------------------------defines
+
+APPDIR	= zvfsmntpt
 
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)
 
-ZDIR	= zvfsmntpt
 OBJS	= ds9.o tkAppInit.o
 
 FILES	= \
-	$(ZDIR)/tcl$(TCL_VERSION) \
-	$(ZDIR)/tcl8 \
-	$(ZDIR)/tk$(TCL_VERSION) \
-	$(ZDIR)/tkblt \
-	$(ZDIR)/tcllib \
-	$(ZDIR)/tkcon \
-	$(ZDIR)/library \
-	$(ZDIR)/msgs \
-	$(ZDIR)/doc \
-	$(ZDIR)/cmaps \
-	$(ZDIR)/template
+	$(APPDIR)/tcl$(TCL_VERSION) \
+	$(APPDIR)/tcl8 \
+	$(APPDIR)/tk$(TCL_VERSION) \
+	$(APPDIR)/tkblt \
+	$(APPDIR)/tcllib \
+	$(APPDIR)/tkcon \
+	$(APPDIR)/library \
+	$(APPDIR)/msgs \
+	$(APPDIR)/doc \
+	$(APPDIR)/cmaps \
+	$(APPDIR)/template
 
 #--------------------------main
 
@@ -161,10 +164,10 @@ ds9base	: $(OBJS)
 	$(TK_LIBS) \
 	$(LIBS)
 
-ds9.zip	: $(ZDIR) framework $(FILES)
+ds9.zip	: $(APPDIR) framework $(FILES)
 	$(RM) $@
-	find $(ZDIR) -depth -name "CVS" -exec rm -r {} \;
-	zip -r ds9.zip $(ZDIR)
+	find $(APPDIR) -depth -name "CVS" -exec rm -r {} \;
+	zip -r ds9.zip $(APPDIR)
 
 tkAppInit.o : tkAppInit.c
 	$(COMPILE) -DTK_LOCAL_APPINIT=SAOAppInit \
@@ -173,42 +176,42 @@ tkAppInit.o : tkAppInit.c
 tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
 	cp $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c .
 
-$(ZDIR)	: 
-	rm -rf $(ZDIR)
+$(APPDIR)	: 
+	rm -rf $(APPDIR)
 	mkdir $@
 
 framework :
-	cp -r ../library $(ZDIR)/.
-	cp -r ../msgs $(ZDIR)/.
-	cp -r ../doc $(ZDIR)/.
-	cp -r ../cmaps $(ZDIR)/.
-	cp -r ../template $(ZDIR)/.
+	cp -r ../library $(APPDIR)/.
+	cp -r ../msgs $(APPDIR)/.
+	cp -r ../doc $(APPDIR)/.
+	cp -r ../cmaps $(APPDIR)/.
+	cp -r ../template $(APPDIR)/.
 
-$(ZDIR)/tcl$(TCL_VERSION) : $(prefix)/lib/tcl$(TCL_VERSION)
-	cp -r $(prefix)/lib/tcl$(TCL_VERSION) $(ZDIR)/.
+$(APPDIR)/tcl$(TCL_VERSION) : $(prefix)/lib/tcl$(TCL_VERSION)
+	cp -r $(prefix)/lib/tcl$(TCL_VERSION) $(APPDIR)/.
 
-$(ZDIR)/tcl8 : $(prefix)/lib/tcl8
-	cp -r $(prefix)/lib/tcl8 $(ZDIR)/.
+$(APPDIR)/tcl8 : $(prefix)/lib/tcl8
+	cp -r $(prefix)/lib/tcl8 $(APPDIR)/.
 
-$(ZDIR)/tk$(TCL_VERSION) : $(prefix)/lib/tk$(TCL_VERSION)
-	cp -r $(prefix)/lib/tk$(TCL_VERSION) $(ZDIR)/.
-	rm -rf $(ZDIR)/tk$(TCL_VERSION)/images
-	rm -rf $(ZDIR)/tk$(TCL_VERSION)/demos
+$(APPDIR)/tk$(TCL_VERSION) : $(prefix)/lib/tk$(TCL_VERSION)
+	cp -r $(prefix)/lib/tk$(TCL_VERSION) $(APPDIR)/.
+	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
+	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
 
-$(ZDIR)/tcllib :
-	mkdir $(ZDIR)/tcllib
-	cp -r $(prefix)/tcllib/modules/base64 $(ZDIR)/tcllib/.
-	cp -r $(prefix)/tcllib/modules/ftp $(ZDIR)/tcllib/.
-	cp -r $(prefix)/tcllib/modules/log $(ZDIR)/tcllib/.
-	cp -r $(prefix)/tcllib/modules/textutil $(ZDIR)/tcllib/.
-	cp -r $(prefix)/tcllib/modules/math $(ZDIR)/tcllib/.
+$(APPDIR)/tcllib :
+	mkdir $(APPDIR)/tcllib
+	cp -r $(prefix)/tcllib/modules/base64 $(APPDIR)/tcllib/.
+	cp -r $(prefix)/tcllib/modules/ftp $(APPDIR)/tcllib/.
+	cp -r $(prefix)/tcllib/modules/log $(APPDIR)/tcllib/.
+	cp -r $(prefix)/tcllib/modules/textutil $(APPDIR)/tcllib/.
+	cp -r $(prefix)/tcllib/modules/math $(APPDIR)/tcllib/.
 
-$(ZDIR)/tkblt :
-	mkdir $(ZDIR)/tkblt
-	cp $(prefix)/tkblt/library/graph.tcl $(ZDIR)/tkblt/.
+$(APPDIR)/tkblt :
+	mkdir $(APPDIR)/tkblt
+	cp $(prefix)/tkblt/library/graph.tcl $(APPDIR)/tkblt/.
 
-$(ZDIR)/tkcon :
-	mkdir $(ZDIR)/tkcon
+$(APPDIR)/tkcon :
+	mkdir $(APPDIR)/tkcon
 	cp $(prefix)/tkcon/*.tcl $@
 
 #--------------------------cleanup
@@ -218,7 +221,7 @@ $(ZDIR)/tkcon :
 clean	:
 	cd ../library; $(MAKE) clean
 	$(RM) core *~ *# ds9base ds9 *.zip *.o
-	$(RM) -r $(ZDIR)
+	$(RM) -r $(APPDIR)
 
 distclean: clean
 	-rm -f Makefile config.cache config.log config.status

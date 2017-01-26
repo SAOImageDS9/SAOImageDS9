@@ -9,8 +9,6 @@ datarootdir	= @datarootdir@
 datadir		= @datadir@
 mandir		= @mandir@
 
-include $(prefix)/make.pkgs
-
 TCL_VERSION	= @TCL_VERSION@
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
@@ -65,13 +63,13 @@ STRIP		= i686-w64-mingw32-strip.exe
 .C.@OBJEXT@:
 	$(COMPILE) -DSTATIC_BUILD -c $< -o $@
 
+include ../make.include
+
 #--------------------------defines
 
-OBJS	= ds9.o winMain.o ds9.res.o
-
-LLIBS	= \
-
 APPDIR	= $(bindir)/ds9app
+
+OBJS	= ds9.o winMain.o ds9.res.o
 
 #--------------------------main
 

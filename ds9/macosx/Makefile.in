@@ -9,8 +9,6 @@ datarootdir	= @datarootdir@
 datadir		= @datadir@
 mandir		= @mandir@
 
-include $(prefix)/make.pkgs
-
 TCL_VERSION	= @TCL_VERSION@
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
@@ -66,13 +64,16 @@ COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 .C.@OBJEXT@:
 	$(COMPILE) -c $< -o $@
 
+include ../make.include
+
 #--------------------------defines
+
+APPDIR	= $(bindir)/SAOImage\ DS9.app
 
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)
 
 OBJS	= ds9.o tkAppInit.o
 
-APPDIR	= $(bindir)/SAOImage\ DS9.app
 TKSAOFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework
 TKSAORES= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework/Resources
 TCLFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework

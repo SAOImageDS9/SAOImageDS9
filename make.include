@@ -1,8 +1,29 @@
+# tcl 8.6.6
+# tk 8.6.6
+# tclcheckdns 1.1.1
+# tcliis 1.0.1
+# tcllib 1.18
+# tclsignal 1.4.1
+# tclxml 3.2
+# tclzvfs 1.0.1
+# tkblt 3.2.4
+# tkcon 2.7
+# tkhtml1 1.0.4
+# tkimg 1.4.6
+# tkmpeg 1.0.2
+# tktable 2.10.1
+
+# ast 8.3.0
+# wcssubs 3.9.0
+# funtools 1.4.7
+# zlib 1.2.8
+# xpa 2.1.18
+# libxml2 2.9.4
+# libxslt 1.1.29
+
 DS9_VERSION	= 7.6b1
 XPA_VERSION	= 2.1.17
 TCL_VERSION	= 8.6
-
-include ./make.pkgs
 
 #-------------------------- Defs
 
@@ -189,12 +210,19 @@ tkblt/Makefile :
 
 #-------------------------- tkcon
 
-tkcon	:
+tkcon	: tkcon/Makefile
 	@echo ""
-	@echo "*** Install $@ ***"
-	$(RM) -r $(libdir)/tkcon$(TKCONVER)
-	mkdir $(libdir)/tkcon$(TKCONVER)
-	cp tkcon/*.tcl $(libdir)/tkcon$(TKCONVER)
+	@echo "*** Install tkcon ***"
+	$(MAKE) -C tkcon -j $(JOBS) install
+
+tkcon/Makefile :
+	@echo ""
+	@echo "*** Configure tkcon ***"
+	cd tkcon; \
+	./configure \
+	$(WITHTK) \
+	$(PREFIX) \
+	$(CACHE)
 
 #-------------------------- tkhtml1
 
@@ -405,13 +433,13 @@ scrub :
 .PHONY	: dirsclean ds9clean localclean
 .PHONY	: tclclean tclcheckdnsclean tcliisclean tclsignalclean 
 .PHONY	: tclxmlclean tclzvfsclean
-.PHONY	: tkclean tkbltclean tkhtml1clean tkimgclean
+.PHONY	: tkclean tkbltclean tkcon tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksaoclean astclean funtoolsclean tktableclean xpaclean
 
 clean	: dirsclean tclclean tkclean \
 	tclcheckdnsclean tcliisclean tclsignalclean \
 	tclzvfsclean tclxmlclean xpaclean \
-	tkbltclean tktableclean tkimgclean \
+	tkbltclean tkconclean tktableclean tkimgclean \
 	tkmpegclean tkhtml1clean \
 	tksaoclean astclean funtoolsclean ds9clean \
 	localclean
@@ -449,6 +477,9 @@ tkclean :
 tkbltclean:
 	$(MAKE) -C tkblt clean
 
+tkconclean:
+	$(MAKE) -C tkcon clean
+
 tkhtml1clean:
 	$(MAKE) -C tkhtml1 clean
 
@@ -478,8 +509,8 @@ xpaclean :
 .PHONY	: dirsdistclean ds9distclean localdistclean 
 .PHONY	: tcldistclean tclcheckdnsdistclean tcliisdistclean tclsignaldistclean 
 .PHONY	: tclxmldistclean tclzvfsdistclean
-.PHONY	: tkdistclean tkbltdistclean tkhtml1distclean tkimgdistclean
-.PHONY	: tkmpegdistclean 
+.PHONY	: tkdistclean tkbltdistclean tkcondistclean tkhtml1distclean 
+.PHONY	: tkimgdistclean tkmpegdistclean 
 .PHONY	: tksaodistclean astdistclean funtoolsdistclean
 .PHONY	: tktabledistclean xpadistclean
 
@@ -520,6 +551,9 @@ tclzvfsdistclean:
 
 tkdistclean :
 	$(MAKE) -C tk$(TCL_VERSION)/$(OS) distclean
+
+tkcondistclean:
+	$(MAKE) -C tkcon distclean
 
 tkbltdistclean:
 	$(MAKE) -C tkblt distclean

@@ -165,7 +165,7 @@ ds9base	: $(OBJS)
 	$(TK_LIBS) \
 	$(LIBS)
 
-ds9.zip	: $(APPDIR) framework $(FILES)
+ds9.zip	: $(APPDIR) framework tkblt tkcon $(FILES)
 	$(RM) $@
 	find $(APPDIR) -depth -name "CVS" -exec rm -r {} \;
 	zip -r ds9.zip $(APPDIR)
@@ -201,14 +201,6 @@ $(APPDIR)/tcllib :
 	cp -r $(prefix)/tcllib/modules/log $(APPDIR)/tcllib/.
 	cp -r $(prefix)/tcllib/modules/textutil $(APPDIR)/tcllib/.
 	cp -r $(prefix)/tcllib/modules/math $(APPDIR)/tcllib/.
-
-$(APPDIR)/tkblt :
-	mkdir $(APPDIR)/tkblt
-	cp $(prefix)/tkblt/library/graph.tcl $(APPDIR)/tkblt/.
-
-$(APPDIR)/tkcon :
-	mkdir $(APPDIR)/tkcon
-	cp $(prefix)/tkcon/*.tcl $@
 
 #--------------------------cleanup
 

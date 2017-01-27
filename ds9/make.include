@@ -4,5 +4,21 @@ framework:
 	cp -pr $(prefix)/ds9/doc $(TKSAORES)/.
 	cp -pr $(prefix)/ds9/cmaps $(TKSAORES)/.
 	cp -pr $(prefix)/ds9/template $(TKSAORES)/.
-	echo "pkg_mkIndex $(TKSAORES)/library *.tcl; exit" | $(TCLSH_PROG)
+# must do it this way for win
+	cd $(TKSAORES)/library; \
+	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
 
+tkblt	:
+	mkdir $(APPDIR)/tkblt
+	cp -p $(prefix)/tkblt/library/*.tcl $(APPDIR)/tkblt/.
+# must do it this way for win
+	cd $(APPDIR)/tkblt; \
+	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
+
+
+tkcon	:
+	mkdir $(APPDIR)/tkcon
+	cp -p $(prefix)/tkcon/*.tcl $(APPDIR)/tkcon/.
+# must do it this way for win
+	cd $(APPDIR)/tkcon; \
+	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)

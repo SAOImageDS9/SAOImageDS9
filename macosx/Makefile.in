@@ -58,6 +58,9 @@ tcl	: tcl$(TCL_VERSION)/macosx/Makefile
 	cp -rp build/tcl/Tcl.framework/Versions/8.6/Resources/Scripts lib/tcl8.6
 	cp -rp build/tcl/Tcl.framework/Versions/8.6/Resources/tcl8 lib/.
 
+# we need this also
+	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/8.6/Tcl @executable_path/../Tcl.framework/Tcl build/tcl/Development/tclsh
+
 # we need a working tclsh later
 	cp -p build/tcl/tclsh8.6 bin/.
 	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/8.6/Tcl @executable_path/../build/tcl/Tcl.framework/Tcl bin/tclsh8.6
@@ -80,6 +83,10 @@ tk	: tk$(TCL_VERSION)/macosx/Makefile
 	cp -p $(TKFILES) include/.
 	cp -p build/tk/Tk.framework/libtkstub8.6.a lib/.
 	cp -rp build/tk/Tk.framework/Versions/8.6/Resources/Scripts lib/tk8.6
+
+# we need this also
+	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/8.6/Tcl @executable_path/../Tcl.framework/Tcl build/tk/Development/wish
+	install_name_tool -change /Library/Frameworks/Tk.framework/Versions/8.6/Tk @executable_path/../Tk.framework/Tk build/tk/Development/wish
 
 # fix wish8.6
 	cp -p build/tk/wish8.6 bin/.

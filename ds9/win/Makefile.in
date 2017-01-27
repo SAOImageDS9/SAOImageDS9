@@ -9,6 +9,8 @@ datarootdir	= @datarootdir@
 datadir		= @datadir@
 mandir		= @mandir@
 
+TCLSH_PROG	= @TCLSH_PROG@
+
 TCL_VERSION	= @TCL_VERSION@
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
@@ -63,25 +65,24 @@ STRIP		= i686-w64-mingw32-strip.exe
 .C.@OBJEXT@:
 	$(COMPILE) -DSTATIC_BUILD -c $< -o $@
 
-include ../make.include
-
 #--------------------------defines
 
 APPDIR	= $(bindir)/ds9app
+TKSAORES= $(APPDIR)
 
 OBJS	= ds9.o winMain.o ds9.res.o
 
 #--------------------------main
 
 .NOTPARALLEL :
-.PHONY	: ds9 debug appdir framework tcltk tcllib tkcon tkblt xpa cleanup
+.PHONY	: ds9 debug appdir framework frame2 tcltk tcllib tkcon tkblt xpa cleanup
 
-ds9	: ds9Base$(EXEEXT) appdir framework tcltk tcllib tkcon tkblt xpa cleanup
+ds9	: ds9Base$(EXEEXT) appdir framework frame2 tcltk tcllib tkcon tkblt xpa cleanup
 	cp -p ds9base$(EXEEXT) ds9$(EXEEXT)
 	$(STRIP) ds9$(EXEEXT)
 	cp -p ds9$(EXEEXT) $(APPDIR)/.
 
-debug	: ds9Base$(EXEEXT) appdir framework tcltk tcllib tkcon tkblt cleanup
+debug	: ds9Base$(EXEEXT) appdir framework frame2 tcltk tcllib tkcon tkblt cleanup
 	mv ds9base$(EXEEXT) ds9$(EXEEXT)
 	cp -p ds9$(EXEEXT) $(APPDIR)/.
 
@@ -135,18 +136,14 @@ ds9.res.o: ds9.rc ds9.ico
 	--include $(prefix)/$(TCLDIR)/generic --include $(prefix)/tk$(TCL_VERSION)/win/rc \
 	ds9.rc
 
+include ../make.include
+
 appdir	:
 	rm -rf $(APPDIR)
 	mkdir $(APPDIR)
 
-framework:
+frame2:
 	cp install.vbs $(APPDIR)/.
-	cp -pr ../library $(APPDIR)/.
-	cp -pr ../msgs $(APPDIR)/.
-	cp -pr ../doc $(APPDIR)/.
-	cp -pr ../cmaps $(APPDIR)/.
-	cp -pr ../template $(APPDIR)/.
-	echo "pkg_mkIndex ../../bin/ds9app/library *.tcl; exit" | $(bindir)/tclsh86s
 
 tcltk	:
 	cp -pr $(prefix)/lib/tcl8 $(APPDIR)/.

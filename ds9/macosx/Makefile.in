@@ -9,6 +9,8 @@ datarootdir	= @datarootdir@
 datadir		= @datadir@
 mandir		= @mandir@
 
+TCLSH_PROG	= @TCLSH_PROG@
+
 TCL_VERSION	= @TCL_VERSION@
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
@@ -64,18 +66,16 @@ COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 .C.@OBJEXT@:
 	$(COMPILE) -c $< -o $@
 
-include ../make.include
-
 #--------------------------defines
 
 APPDIR	= $(bindir)/SAOImage\ DS9.app
+TKSAORES= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework/Resources
 
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)
 
 OBJS	= ds9.o tkAppInit.o
 
 TKSAOFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework
-TKSAORES= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework/Resources
 TCLFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework
 TCLRES	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework/Resources
 TKFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework
@@ -153,19 +153,11 @@ ds9base	: $(OBJS)
 	$(TK_LIBS) \
 	$(LIBS)
 
+include ../make.include
+
 appdir	:
 	rm -rf $(APPDIR)
 	cp -rp SAOImage\ DS9.app $(bindir)/.
-
-framework:
-	cp -pr ../library $(TKSAORES)/.
-	cp -pr ../msgs $(TKSAORES)/.
-	cp -pr ../doc $(TKSAORES)/.
-	cp -pr ../cmaps $(TKSAORES)/.
-	cp -pr ../template $(TKSAORES)/.
-
-	rm $(TKSAORES)/library/source.tcl
-	echo "pkg_mkIndex $(TKSAORES)/library *.tcl; exit" | $(bindir)/tclsh8.6
 
 tcl	:
 	cp -p $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl $(TCLFW)/.

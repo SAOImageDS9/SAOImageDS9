@@ -9,6 +9,8 @@ datarootdir	= @datarootdir@
 datadir		= @datadir@
 mandir		= @mandir@
 
+TCLSH_PROG	= @TCLSH_PROG@
+
 TCL_VERSION	= @TCL_VERSION@
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
@@ -66,11 +68,10 @@ system		= @system@
 .C.@OBJEXT@:
 	$(COMPILE) -c `@CYGPATH@ $<` -o $@
 
-include ../make.include
-
 #--------------------------defines
 
 APPDIR	= zvfsmntpt
+TKSAORES= $(APPDIR)
 
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)
 
@@ -176,16 +177,11 @@ tkAppInit.o : tkAppInit.c
 tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
 	cp $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c .
 
-$(APPDIR)	: 
+include ../make.include
+
+$(APPDIR) : 
 	rm -rf $(APPDIR)
 	mkdir $@
-
-framework :
-	cp -r ../library $(APPDIR)/.
-	cp -r ../msgs $(APPDIR)/.
-	cp -r ../doc $(APPDIR)/.
-	cp -r ../cmaps $(APPDIR)/.
-	cp -r ../template $(APPDIR)/.
 
 $(APPDIR)/tcl$(TCL_VERSION) : $(prefix)/lib/tcl$(TCL_VERSION)
 	cp -r $(prefix)/lib/tcl$(TCL_VERSION) $(APPDIR)/.

@@ -1,0 +1,8 @@
+framework:
+	cp -pr $(prefix)/ds9/library $(TKSAORES)/.
+	cp -pr $(prefix)/ds9/msgs $(TKSAORES)/.
+	cp -pr $(prefix)/ds9/doc $(TKSAORES)/.
+	cp -pr $(prefix)/ds9/cmaps $(TKSAORES)/.
+	cp -pr $(prefix)/ds9/template $(TKSAORES)/.
+	echo "pkg_mkIndex $(TKSAORES)/library *.tcl; exit" | $(TCLSH_PROG)
+

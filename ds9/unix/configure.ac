@@ -240,7 +240,7 @@ TEA_MAKE_LIB
 # a pkgIndex.tcl file or anything else at extension build time.
 #--------------------------------------------------------------------
 
-#TEA_PROG_TCLSH
+TEA_PROG_TCLSH
 #TEA_PROG_WISH
 
 #--------------------------------------------------------------------

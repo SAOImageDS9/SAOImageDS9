@@ -5756,7 +5756,7 @@ fi
 # which require substituting th AC variables in.  Include these here.
 #--------------------------------------------------------------------
 
-ac_config_files="$ac_config_files Makefile pkgIndex.tcl"
+ac_config_files="$ac_config_files Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -6465,7 +6465,6 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "pkgIndex.tcl") CONFIG_FILES="$CONFIG_FILES pkgIndex.tcl" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

@@ -620,6 +620,7 @@ ac_includes_default="\
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+TCLSH_PROG
 PRACTCL_NAME_LIBRARY
 PRACTCL_VC_MANIFEST_EMBED_EXE
 PRACTCL_VC_MANIFEST_EMBED_DLL
@@ -918,6 +919,7 @@ enable_rpath
 enable_wince
 with_celib
 enable_symbols
+with_tclsh
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1572,6 +1574,7 @@ Optional Packages:
   --with-tclinclude       directory containing the public Tcl header files
   --with-tkinclude        directory containing the public Tk header files
   --with-celib=DIR        use Windows/CE support library from DIR
+  --with-tclsh      Specify a local tcl shell to use for dynamic code
 
 Some influential environment variables:
   CC          C compiler command
@@ -13323,7 +13326,71 @@ rm -f conftest*
 # a pkgIndex.tcl file or anything else at extension build time.
 #--------------------------------------------------------------------
 
-#TEA_PROG_TCLSH
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for tclsh" >&5
+$as_echo_n "checking for tclsh... " >&6; }
+
+
+# Check whether --with-tclsh was given.
+if test "${with_tclsh+set}" = set; then :
+  withval=$with_tclsh; with_tclsh=${withval}
+fi
+
+ 	  # Use the value from --with-tclsh, if it was given
+		TCLSH_PROG=0
+		if test x"${with_tclsh}" != x ; then
+	    if test -f "${with_tclsh}" ; then
+		TCLSH_PROG=${with_tclsh}
+	    else
+	      if test -f "${with_tclsh}/tcl8.6" ; then
+		TCLSH_PROG="${with_tclsh}/tcl8.6"
+			  else
+	        if test -f "${with_tclsh}/tclsh86.exe" ; then
+		TCLSH_PROG="${with_tclsh}/tclsh86.exe"
+				  else
+		as_fn_error $? "${with_tclsh} does not point to a valid Tcl executable" "$LINENO" 5
+		      fi
+				fi
+	    fi
+		else
+      if test -f "${TCL_BIN_DIR}/Makefile" ; then
+        # tclConfig.sh is in Tcl build directory
+        if test "${TEA_PLATFORM}" = "windows"; then
+          if test -f "${TCL_BIN_DIR}/tclsh${TCL_MAJOR_VERSION}${TCL_MINOR_VERSION}${TCL_DBGX}${EXEEXT}" ; then
+            TCLSH_PROG="${TCL_BIN_DIR}/tclsh${TCL_MAJOR_VERSION}${TCL_MINOR_VERSION}${TCL_DBGX}${EXEEXT}"
+          elif test -f "${TCL_BIN_DIR}/tclsh${TCL_MAJOR_VERSION}${TCL_MINOR_VERSION}${TCL_DBGX}s${EXEEXT}" ; then
+            TCLSH_PROG="${TCL_BIN_DIR}/tclsh${TCL_MAJOR_VERSION}${TCL_MINOR_VERSION}${TCL_DBGX}s${EXEEXT}"
+          elif test -f "${TCL_BIN_DIR}/tclsh${TCL_MAJOR_VERSION}${TCL_MINOR_VERSION}${TCL_DBGX}t${EXEEXT}" ; then
+            TCLSH_PROG="${TCL_BIN_DIR}/tclsh${TCL_MAJOR_VERSION}${TCL_MINOR_VERSION}${TCL_DBGX}t${EXEEXT}"
+          elif test -f "${TCL_BIN_DIR}/tclsh${TCL_MAJOR_VERSION}${TCL_MINOR_VERSION}${TCL_DBGX}st${EXEEXT}" ; then
+            TCLSH_PROG="${TCL_BIN_DIR}/tclsh${TCL_MAJOR_VERSION}${TCL_MINOR_VERSION}${TCL_DBGX}st${EXEEXT}"
+          fi
+        else
+            TCLSH_PROG="${TCL_BIN_DIR}/tclsh"
+        fi
+      else
+        # tclConfig.sh is in install location
+        if test "${TEA_PLATFORM}" = "windows"; then
+            TCLSH_PROG="tclsh${TCL_MAJOR_VERSION}${TCL_MINOR_VERSION}${TCL_DBGX}${EXEEXT}"
+        else
+            TCLSH_PROG="tclsh${TCL_MAJOR_VERSION}.${TCL_MINOR_VERSION}${TCL_DBGX}"
+        fi
+        list="`ls -d ${TCL_BIN_DIR}/../bin 2>/dev/null` \
+              `ls -d ${TCL_BIN_DIR}/..     2>/dev/null` \
+              `ls -d ${TCL_PREFIX}/bin     2>/dev/null`"
+        for i in $list ; do
+            if test -f "$i/${TCLSH_PROG}" ; then
+                REAL_TCL_BIN_DIR="`cd "$i"; pwd`/"
+                break
+            fi
+        done
+        TCLSH_PROG="${REAL_TCL_BIN_DIR}${TCLSH_PROG}"
+      fi
+		fi
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: ${TCLSH_PROG}" >&5
+$as_echo "${TCLSH_PROG}" >&6; }
+
+
 #TEA_PROG_WISH
 
 #--------------------------------------------------------------------

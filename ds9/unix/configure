@@ -651,6 +651,8 @@ CFLAGS_DEBUG
 RC
 CELIB_DIR
 AR
+STUBS_BUILD
+SHARED_BUILD
 TCL_THREADS
 XMKMF
 TK_INCLUDES
@@ -941,6 +943,8 @@ with_tclinclude
 with_tkinclude
 with_x
 enable_threads
+enable_shared
+enable_stubs
 enable_64bit
 enable_64bit_vis
 enable_rpath
@@ -1573,6 +1577,9 @@ Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --enable-threads        build with threads
+  --enable-shared         build and link with shared libraries (default: on)
+  --enable-stubs          build and link with stub libraries. Always true for
+                          shared builds (default: on)
   --enable-64bit          enable 64bit support (default: off)
   --enable-64bit-vis      enable 64bit Sparc VIS support (default: off)
   --disable-rpath         disable rpath support (default: on)
@@ -12092,7 +12099,75 @@ $as_echo "$as_me: WARNING:
 # building as a shared library instead of a static library.
 #--------------------------------------------------------------------
 
-#TEA_ENABLE_SHARED
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking how to build libraries" >&5
+$as_echo_n "checking how to build libraries... " >&6; }
+    # Check whether --enable-shared was given.
+if test "${enable_shared+set}" = set; then :
+  enableval=$enable_shared; shared_ok=$enableval
+else
+  shared_ok=yes
+fi
+
+
+    if test "${enable_shared+set}" = set; then
+	enableval="$enable_shared"
+	shared_ok=$enableval
+    else
+	shared_ok=yes
+    fi
+
+    # Check whether --enable-stubs was given.
+if test "${enable_stubs+set}" = set; then :
+  enableval=$enable_stubs; stubs_ok=$enableval
+else
+  stubs_ok=yes
+fi
+
+
+    if test "${enable_stubs+set}" = set; then
+	enableval="$enable_stubs"
+	stubs_ok=$enableval
+    else
+	stubs_ok=yes
+    fi
+
+    # Stubs are always enabled for shared builds
+    if test "$shared_ok" = "yes" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: shared" >&5
+$as_echo "shared" >&6; }
+	SHARED_BUILD=1
+        STUBS_BUILD=1
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: static" >&5
+$as_echo "static" >&6; }
+	SHARED_BUILD=0
+
+$as_echo "#define STATIC_BUILD 1" >>confdefs.h
+
+        if test "$stubs_ok" = "yes" ; then
+          STUBS_BUILD=1
+        else
+          STUBS_BUILD=0
+        fi
+    fi
+    if test "${STUBS_BUILD}" = "1" ; then
+
+$as_echo "#define USE_TCL_STUBS 1" >>confdefs.h
+
+
+$as_echo "#define USE_TCLOO_STUBS 1" >>confdefs.h
+
+      if test "${TEA_WINDOWINGSYSTEM}" != ""; then
+
+$as_echo "#define USE_TK_STUBS 1" >>confdefs.h
+
+      fi
+    fi
+
+
+
+
 
 #--------------------------------------------------------------------
 # This macro figures out what flags to use with the compiler/linker

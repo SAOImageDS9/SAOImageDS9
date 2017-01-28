@@ -208,7 +208,7 @@ TEA_ENABLE_THREADS
 # building as a shared library instead of a static library.
 #--------------------------------------------------------------------
 
-#TEA_ENABLE_SHARED
+TEA_ENABLE_SHARED
 
 #--------------------------------------------------------------------
 # This macro figures out what flags to use with the compiler/linker

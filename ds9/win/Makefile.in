@@ -150,13 +150,6 @@ tcltk	:
 	cp -pr $(prefix)/lib/tcl8.6 $(APPDIR)/.
 	cp -pr $(prefix)/lib/tk8.6 $(APPDIR)/.
 
-tcllib	:
-	cp -pr $(prefix)/tcllib/modules/base64 $(APPDIR)/.
-	cp -pr $(prefix)/tcllib/modules/ftp $(APPDIR)/.
-	cp -pr $(prefix)/tcllib/modules/log $(APPDIR)/.
-	cp -pr $(prefix)/tcllib/modules/textutil $(APPDIR)/.
-	cp -pr $(prefix)/tcllib/modules/math $(APPDIR)/.
-
 xpa	:
 	cp -p $(bindir)/xpans.exe $(APPDIR)/.
 

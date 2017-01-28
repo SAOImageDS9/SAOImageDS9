@@ -194,14 +194,6 @@ $(APPDIR)/tk$(TCL_VERSION) : $(prefix)/lib/tk$(TCL_VERSION)
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
 
-$(APPDIR)/tcllib :
-	mkdir $(APPDIR)/tcllib
-	cp -r $(prefix)/tcllib/modules/base64 $(APPDIR)/tcllib/.
-	cp -r $(prefix)/tcllib/modules/ftp $(APPDIR)/tcllib/.
-	cp -r $(prefix)/tcllib/modules/log $(APPDIR)/tcllib/.
-	cp -r $(prefix)/tcllib/modules/textutil $(APPDIR)/tcllib/.
-	cp -r $(prefix)/tcllib/modules/math $(APPDIR)/tcllib/.
-
 #--------------------------cleanup
 
 .PHONY	: clean distclean

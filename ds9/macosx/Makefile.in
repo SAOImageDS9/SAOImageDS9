@@ -83,8 +83,8 @@ OBJS	= ds9.o tkAppInit.o
 #--------------------------main
 
 .NOTPARALLEL :
-.PHONY	: ds9 debug appdir framework tcl tcl_debug tk tk_debug tcllib tkcon
-.PHONY	: tkblt xpa compiler cleanup
+.PHONY	: ds9 debug appdir framework tcl tcl_debug tk tk_debug 
+.PHONY	: tcllib tkcon tkblt xpa compiler cleanup
 
 ds9	: ds9base appdir framework tcl tk tcllib tkcon tkblt xpa compiler cleanup
 	cp -p ds9base $(APPDIR)/Contents/MacOS/ds9
@@ -152,8 +152,6 @@ ds9base	: $(OBJS)
 	$(TK_LIBS) \
 	$(LIBS)
 
-include ../make.include
-
 appdir	:
 	rm -rf $(APPDIR)
 	cp -rp SAOImage\ DS9.app $(bindir)/.
@@ -168,21 +166,15 @@ tcl_debug:
 
 tk	:
 	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Tk $(TKFW)/.
-	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Info.plist \
-	$(TKDIR)/.
-	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms \
-	$(TKDIR)/.
-	cp -rp $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts \
-	$(TKDIR)/.
+	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Info.plist $(TKDIR)/.
+	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms $(TKDIR)/.
+	cp -rp $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts $(TKDIR)/.
 
 tk_debug:
 	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Tk_debug $(TKFW)/Tk
-	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Info.plist \
-	$(TKDIR)/.
-	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms \
-	$(TKDIR)/.
-	cp -rp $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts \
-	$(TKDIR)/.
+	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Info.plist $(TKDIR)/.
+	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms $(TKDIR)/.
+	cp -rp $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts $(TKDIR)/.
 
 xpa	:
 	cp -pr $(bindir)/xpans $(LIBDIR)/.
@@ -191,19 +183,7 @@ compiler:
 	cp -p $(prefix)/compilers/pcc-i386-snowleopard.tar.gz $(LIBDIR)/.
 
 cleanup:
-	cd $(APPDIR); find . -depth -name CVS -exec rm -rf {} \;
 	cd $(APPDIR); find . -name keepme -exec rm -rf {} \;
 
-#--------------------------cleanup
-
-.PHONY	: clean distclean
-
-clean	:
-	cd ../library; $(MAKE) clean
-	$(RM) core *~ *# ds9Base ds9 *.o
-
-distclean: clean
-	-rm -f Makefile config.cache config.log config.status
-	-rm -rf autom4te.cache
-
+include ../make.include
 

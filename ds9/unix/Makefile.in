@@ -82,8 +82,12 @@ FILES	= \
 	$(APPDIR)/tcl8 \
 	$(APPDIR)/tk$(TCL_VERSION) \
 	$(APPDIR)/tkblt \
-	$(APPDIR)/tcllib \
 	$(APPDIR)/tkcon \
+	$(APPDIR)/base64 \
+	$(APPDIR)/ftp \
+	$(APPDIR)/log \
+	$(APPDIR)/textutil \
+	$(APPDIR)/math \
 	$(APPDIR)/library \
 	$(APPDIR)/msgs \
 	$(APPDIR)/doc \

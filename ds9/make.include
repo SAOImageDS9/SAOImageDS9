@@ -21,3 +21,26 @@ tkcon	:
 # must do it this way for win
 	cd $(LIBDIR)/tkcon; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
+
+tcllib	: base64 ftp log textutil math
+
+base64	:
+	mkdir $(LIBDIR)/base64
+	cp -r $(prefix)/tcllib/modules/base64/*.tcl $(LIBDIR)/base64/.
+
+ftp	:
+	mkdir $(LIBDIR)/ftp
+	cp -r $(prefix)/tcllib/modules/ftp/*.tcl $(LIBDIR)/ftp/.
+
+log	:
+	mkdir $(LIBDIR)/log
+	cp -r $(prefix)/tcllib/modules/log/*.tcl $(LIBDIR)/log/.
+
+textutil:
+	mkdir $(LIBDIR)/textutil
+	cp -r $(prefix)/tcllib/modules/textutil/*.tcl $(LIBDIR)/textutil/.
+
+math	:
+	mkdir $(LIBDIR)/math
+	cp -r $(prefix)/tcllib/modules/math/*.tcl $(LIBDIR)/math/.
+

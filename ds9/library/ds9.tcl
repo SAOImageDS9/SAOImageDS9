@@ -197,12 +197,12 @@ switch $ds9(wm) {
 	source $ds9(root)/tk8.6/optMenu.tcl
 	source $ds9(root)/tk8.6/unsupported.tcl
 
-	source $ds9(root)/tcllib/base64/base64.tcl
-	source $ds9(root)/tcllib/log/log.tcl
-	source $ds9(root)/tcllib/ftp/ftp.tcl
-	source $ds9(root)/tcllib/textutil/repeat.tcl
-	source $ds9(root)/tcllib/textutil/tabify.tcl
-	source $ds9(root)/tcllib/math/fuzzy.tcl
+	source $ds9(root)/base64/base64.tcl
+	source $ds9(root)/log/log.tcl
+	source $ds9(root)/ftp/ftp.tcl
+	source $ds9(root)/textutil/repeat.tcl
+	source $ds9(root)/textutil/tabify.tcl
+	source $ds9(root)/math/fuzzy.tcl
 
 	source $ds9(root)/tkcon/tkcon.tcl
 	source $ds9(root)/tkblt/graph.tcl

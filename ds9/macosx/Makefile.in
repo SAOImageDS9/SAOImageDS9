@@ -184,13 +184,6 @@ tk_debug:
 	cp -rp $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts \
 	$(TKDIR)/.
 
-tcllib	:
-	cp -pr $(prefix)/tcllib/modules/base64 $(LIBDIR)/.
-	cp -pr $(prefix)/tcllib/modules/ftp $(LIBDIR)/.
-	cp -pr $(prefix)/tcllib/modules/log $(LIBDIR)/.
-	cp -pr $(prefix)/tcllib/modules/textutil $(LIBDIR)/.
-	cp -pr $(prefix)/tcllib/modules/math $(LIBDIR)/.
-
 xpa	:
 	cp -pr $(bindir)/xpans $(LIBDIR)/.
 

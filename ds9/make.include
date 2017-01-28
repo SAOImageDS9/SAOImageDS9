@@ -1,24 +1,23 @@
 framework:
-	cp -pr $(prefix)/ds9/library $(TKSAORES)/.
-	cp -pr $(prefix)/ds9/msgs $(TKSAORES)/.
-	cp -pr $(prefix)/ds9/doc $(TKSAORES)/.
-	cp -pr $(prefix)/ds9/cmaps $(TKSAORES)/.
-	cp -pr $(prefix)/ds9/template $(TKSAORES)/.
+	cp -pr $(prefix)/ds9/library $(LIBDIR)/.
+	cp -pr $(prefix)/ds9/msgs $(LIBDIR)/.
+	cp -pr $(prefix)/ds9/doc $(LIBDIR)/.
+	cp -pr $(prefix)/ds9/cmaps $(LIBDIR)/.
+	cp -pr $(prefix)/ds9/template $(LIBDIR)/.
 # must do it this way for win
-	cd $(TKSAORES)/library; \
+	cd $(LIBDIR)/library; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
 
 tkblt	:
-	mkdir $(APPDIR)/tkblt
-	cp -p $(prefix)/tkblt/library/*.tcl $(APPDIR)/tkblt/.
+	mkdir $(LIBDIR)/tkblt
+	cp -p $(prefix)/tkblt/library/*.tcl $(LIBDIR)/tkblt/.
 # must do it this way for win
-	cd $(APPDIR)/tkblt; \
+	cd $(LIBDIR)/tkblt; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
 
-
 tkcon	:
-	mkdir $(APPDIR)/tkcon
-	cp -p $(prefix)/tkcon/*.tcl $(APPDIR)/tkcon/.
+	mkdir $(LIBDIR)/tkcon
+	cp -p $(prefix)/tkcon/*.tcl $(LIBDIR)/tkcon/.
 # must do it this way for win
-	cd $(APPDIR)/tkcon; \
+	cd $(LIBDIR)/tkcon; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)

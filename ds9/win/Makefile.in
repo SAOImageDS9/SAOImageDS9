@@ -68,7 +68,7 @@ STRIP		= i686-w64-mingw32-strip.exe
 #--------------------------defines
 
 APPDIR	= $(bindir)/ds9app
-TKSAORES= $(APPDIR)
+LIBDIR	= $(APPDIR)
 
 OBJS	= ds9.o winMain.o ds9.res.o
 

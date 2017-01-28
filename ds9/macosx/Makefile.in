@@ -69,7 +69,7 @@ COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 #--------------------------defines
 
 APPDIR	= $(bindir)/SAOImage\ DS9.app
-TKSAORES= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework/Resources
+LIBDIR= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework/Resources
 
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)
 
@@ -186,17 +186,17 @@ tk_debug:
 	$(TKRES)/.
 
 tcllib	:
-	cp -pr $(prefix)/tcllib/modules/base64 $(TKSAORES)/.
-	cp -pr $(prefix)/tcllib/modules/ftp $(TKSAORES)/.
-	cp -pr $(prefix)/tcllib/modules/log $(TKSAORES)/.
-	cp -pr $(prefix)/tcllib/modules/textutil $(TKSAORES)/.
-	cp -pr $(prefix)/tcllib/modules/math $(TKSAORES)/.
+	cp -pr $(prefix)/tcllib/modules/base64 $(LIBDIR)/.
+	cp -pr $(prefix)/tcllib/modules/ftp $(LIBDIR)/.
+	cp -pr $(prefix)/tcllib/modules/log $(LIBDIR)/.
+	cp -pr $(prefix)/tcllib/modules/textutil $(LIBDIR)/.
+	cp -pr $(prefix)/tcllib/modules/math $(LIBDIR)/.
 
 xpa	:
-	cp -pr $(bindir)/xpans $(TKSAORES)/.
+	cp -pr $(bindir)/xpans $(LIBDIR)/.
 
 compiler:
-	cp -p $(prefix)/compilers/pcc-i386-snowleopard.tar.gz $(TKSAORES)/.
+	cp -p $(prefix)/compilers/pcc-i386-snowleopard.tar.gz $(LIBDIR)/.
 
 cleanup:
 	cd $(APPDIR); find . -depth -name CVS -exec rm -rf {} \;

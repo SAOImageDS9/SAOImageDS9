@@ -71,7 +71,7 @@ system		= @system@
 #--------------------------defines
 
 APPDIR	= zvfsmntpt
-TKSAORES= $(APPDIR)
+LIBDIR= $(APPDIR)
 
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)
 

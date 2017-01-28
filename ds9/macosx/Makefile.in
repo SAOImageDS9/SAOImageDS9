@@ -71,15 +71,14 @@ COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 APPDIR	= $(bindir)/SAOImage\ DS9.app
 LIBDIR= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework/Resources
 
+TCLFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework
+TCLDIR	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework/Resources
+TKFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework
+TKDIR	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework/Resources
+
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)
 
 OBJS	= ds9.o tkAppInit.o
-
-TKSAOFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework
-TCLFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework
-TCLRES	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework/Resources
-TKFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework
-TKRES	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework/Resources
 
 #--------------------------main
 
@@ -161,29 +160,29 @@ appdir	:
 
 tcl	:
 	cp -p $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl $(TCLFW)/.
-	cp -pr $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Resources/* $(TCLRES)/.
+	cp -pr $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Resources/* $(TCLDIR)/.
 
 tcl_debug:
 	cp -p $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl_debug $(TCLFW)/Tcl
-	cp -pr $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Resources/* $(TCLRES)/.
+	cp -pr $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Resources/* $(TCLDIR)/.
 
 tk	:
 	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Tk $(TKFW)/.
 	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Info.plist \
-	$(TKRES)/.
+	$(TKDIR)/.
 	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms \
-	$(TKRES)/.
+	$(TKDIR)/.
 	cp -rp $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts \
-	$(TKRES)/.
+	$(TKDIR)/.
 
 tk_debug:
 	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Tk_debug $(TKFW)/Tk
 	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Info.plist \
-	$(TKRES)/.
+	$(TKDIR)/.
 	cp -p $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms \
-	$(TKRES)/.
+	$(TKDIR)/.
 	cp -rp $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts \
-	$(TKRES)/.
+	$(TKDIR)/.
 
 tcllib	:
 	cp -pr $(prefix)/tcllib/modules/base64 $(LIBDIR)/.

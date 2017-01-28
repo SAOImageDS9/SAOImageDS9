@@ -152,7 +152,7 @@ ds9base	: $(OBJS)
 	$(TK_LIBS) \
 	$(LIBS)
 
-ds9.zip	: appdir framework tkblt tkcon tcllib $(FILES)
+ds9.zip	: appdir framework tcl tk tcllib tkblt tkcon
 	$(RM) $@
 	find $(APPDIR) -depth -name "CVS" -exec rm -r {} \;
 	zip -r ds9.zip $(APPDIR)
@@ -166,7 +166,7 @@ tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
 
 appdir : 
 	rm -rf $(APPDIR)
-	mkdir $@
+	mkdir $(APPDIR)
 
 tcl	: $(prefix)/lib/tcl$(TCL_VERSION)
 	cp -r $(prefix)/lib/tcl$(TCL_VERSION) $(APPDIR)/.

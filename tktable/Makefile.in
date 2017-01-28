@@ -364,7 +364,6 @@ distclean: clean
 	-rm -f *.tab.c
 	-rm -f $(CONFIG_CLEAN_FILES)
 	-rm -f config.cache config.log config.status
-	-rm -rf autom4te.cache
 
 #========================================================================
 # Install binary object libraries.  On Windows this includes both .dll and

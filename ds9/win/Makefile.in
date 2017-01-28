@@ -75,14 +75,14 @@ OBJS	= ds9.o winMain.o ds9.res.o
 #--------------------------main
 
 .NOTPARALLEL :
-.PHONY	: ds9 debug appdir framework frame2 tcltk tcllib tkcon tkblt xpa cleanup
+.PHONY	: ds9 debug appdir framework tcl tk tcllib tkcon tkblt xpa vbs
 
-ds9	: ds9Base$(EXEEXT) appdir framework frame2 tcltk tcllib tkcon tkblt xpa cleanup
+ds9	: ds9Base$(EXEEXT) appdir framework tcl tk tcllib tkcon tkblt xpa vbs
 	cp -p ds9base$(EXEEXT) ds9$(EXEEXT)
 	$(STRIP) ds9$(EXEEXT)
 	cp -p ds9$(EXEEXT) $(APPDIR)/.
 
-debug	: ds9Base$(EXEEXT) appdir framework frame2 tcltk tcllib tkcon tkblt cleanup
+debug	: ds9Base$(EXEEXT) appdir framework tcl tk tcllib tkcon tkblt xpa vbs
 	mv ds9base$(EXEEXT) ds9$(EXEEXT)
 	cp -p ds9$(EXEEXT) $(APPDIR)/.
 
@@ -133,37 +133,26 @@ winMain.c : $(prefix)/tk$(TCL_VERSION)/win/winMain.c
 ds9.res.o: ds9.rc ds9.ico
 	i686-w64-mingw32-windres -o $@ \
 	--define STATIC_BUILD --include $(prefix)/tk$(TCL_VERSION)/generic \
-	--include $(prefix)/$(TCLDIR)/generic --include $(prefix)/tk$(TCL_VERSION)/win/rc \
+	--include $(prefix)/$(TCLDIR)/generic \
+	--include $(prefix)/tk$(TCL_VERSION)/win/rc \
 	ds9.rc
-
-include ../make.include
 
 appdir	:
 	rm -rf $(APPDIR)
 	mkdir $(APPDIR)
 
-frame2:
-	cp install.vbs $(APPDIR)/.
-
-tcltk	:
+tcl	:
 	cp -pr $(prefix)/lib/tcl8 $(APPDIR)/.
 	cp -pr $(prefix)/lib/tcl8.6 $(APPDIR)/.
+
+tk	:
 	cp -pr $(prefix)/lib/tk8.6 $(APPDIR)/.
 
 xpa	:
 	cp -p $(bindir)/xpans.exe $(APPDIR)/.
 
-cleanup:
-	cd $(APPDIR); find . -depth -name CVS -exec rm -rf {} \;
+vbs	:
+	cp install.vbs $(APPDIR)/.
 
-#--------------------------cleanup
+include ../make.include
 
-.PHONY	: clean distclean
-
-clean	:
-	cd ../library; $(MAKE) clean
-	$(RM) core *~ *# ds9Base ds9 *.o
-
-distclean: clean
-	-rm -f Makefile config.cache config.log config.status
-	-rm -rf autom4te.cache

@@ -77,27 +77,10 @@ ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d
 
 OBJS	= ds9.o tkAppInit.o
 
-FILES	= \
-	$(APPDIR)/tcl$(TCL_VERSION) \
-	$(APPDIR)/tcl8 \
-	$(APPDIR)/tk$(TCL_VERSION) \
-	$(APPDIR)/tkblt \
-	$(APPDIR)/tkcon \
-	$(APPDIR)/base64 \
-	$(APPDIR)/ftp \
-	$(APPDIR)/log \
-	$(APPDIR)/textutil \
-	$(APPDIR)/math \
-	$(APPDIR)/library \
-	$(APPDIR)/msgs \
-	$(APPDIR)/doc \
-	$(APPDIR)/cmaps \
-	$(APPDIR)/template
-
 #--------------------------main
 
 .NOTPARALLEL :
-.PHONY	: debug
+.PHONY	: ds9 debug appdir framework tcl tk tcllib tkcon tkblt
 
 ifeq (,$(findstring Darwin,$(system)))
 
@@ -169,7 +152,7 @@ ds9base	: $(OBJS)
 	$(TK_LIBS) \
 	$(LIBS)
 
-ds9.zip	: $(APPDIR) framework tkblt tkcon $(FILES)
+ds9.zip	: appdir framework tkblt tkcon tcllib $(FILES)
 	$(RM) $@
 	find $(APPDIR) -depth -name "CVS" -exec rm -r {} \;
 	zip -r ds9.zip $(APPDIR)
@@ -181,32 +164,19 @@ tkAppInit.o : tkAppInit.c
 tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
 	cp $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c .
 
-include ../make.include
-
-$(APPDIR) : 
+appdir : 
 	rm -rf $(APPDIR)
 	mkdir $@
 
-$(APPDIR)/tcl$(TCL_VERSION) : $(prefix)/lib/tcl$(TCL_VERSION)
+tcl	: $(prefix)/lib/tcl$(TCL_VERSION)
 	cp -r $(prefix)/lib/tcl$(TCL_VERSION) $(APPDIR)/.
-
-$(APPDIR)/tcl8 : $(prefix)/lib/tcl8
 	cp -r $(prefix)/lib/tcl8 $(APPDIR)/.
 
-$(APPDIR)/tk$(TCL_VERSION) : $(prefix)/lib/tk$(TCL_VERSION)
+tk	: $(prefix)/lib/tk$(TCL_VERSION)
 	cp -r $(prefix)/lib/tk$(TCL_VERSION) $(APPDIR)/.
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
 
-#--------------------------cleanup
+include ../make.include
 
-.PHONY	: clean distclean
 
-clean	:
-	cd ../library; $(MAKE) clean
-	$(RM) core *~ *# ds9base ds9 *.zip *.o
-	$(RM) -r $(APPDIR)
-
-distclean: clean
-	-rm -f Makefile config.cache config.log config.status
-	-rm -rf autom4te.cache

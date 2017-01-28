@@ -1,3 +1,5 @@
+#--------------------------framework
+
 framework:
 	cp -pr $(prefix)/ds9/library $(LIBDIR)/.
 	cp -pr $(prefix)/ds9/msgs $(LIBDIR)/.
@@ -8,6 +10,8 @@ framework:
 	cd $(LIBDIR)/library; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
 
+#--------------------------tkblt
+
 tkblt	:
 	mkdir $(LIBDIR)/tkblt
 	cp -p $(prefix)/tkblt/library/*.tcl $(LIBDIR)/tkblt/.
@@ -15,12 +19,16 @@ tkblt	:
 	cd $(LIBDIR)/tkblt; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
 
+#--------------------------tkcon
+
 tkcon	:
 	mkdir $(LIBDIR)/tkcon
 	cp -p $(prefix)/tkcon/*.tcl $(LIBDIR)/tkcon/.
 # must do it this way for win
 	cd $(LIBDIR)/tkcon; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
+
+#--------------------------tcllib
 
 tcllib	: base64 ftp log textutil math
 
@@ -44,3 +52,15 @@ math	:
 	mkdir $(LIBDIR)/math
 	cp -r $(prefix)/tcllib/modules/math/*.tcl $(LIBDIR)/math/.
 
+#--------------------------cleanup
+
+.PHONY	: clean distclean
+
+clean	:
+	cd ../library; $(MAKE) clean
+	$(RM) core *~ *# ds9base ds9 *.zip *.o
+
+distclean: clean
+	-rm -f Makefile config.cache config.log config.status
+	-rm -rf autom4te.cache
+	$(RM) -rf $(APPDIR)

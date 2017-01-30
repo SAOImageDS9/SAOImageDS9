@@ -1,11 +1,11 @@
 #--------------------------framework
 
 framework:
-	cp -pr $(prefix)/ds9/library $(LIBDIR)/.
-	cp -pr $(prefix)/ds9/msgs $(LIBDIR)/.
-	cp -pr $(prefix)/ds9/doc $(LIBDIR)/.
-	cp -pr $(prefix)/ds9/cmaps $(LIBDIR)/.
-	cp -pr $(prefix)/ds9/template $(LIBDIR)/.
+	cp -prf $(prefix)/ds9/library $(LIBDIR)/.
+	cp -prf $(prefix)/ds9/msgs $(LIBDIR)/.
+	cp -prf $(prefix)/ds9/doc $(LIBDIR)/.
+	cp -prf $(prefix)/ds9/cmaps $(LIBDIR)/.
+	cp -prf $(prefix)/ds9/template $(LIBDIR)/.
 # must do it this way for win
 	cd $(LIBDIR)/library; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
@@ -13,8 +13,8 @@ framework:
 #--------------------------tkblt
 
 tkblt	:
-	mkdir $(LIBDIR)/tkblt
-	cp -p $(prefix)/tkblt/library/*.tcl $(LIBDIR)/tkblt/.
+	mkdir -p $(LIBDIR)/tkblt
+	cp -pf $(prefix)/tkblt/library/*.tcl $(LIBDIR)/tkblt/.
 # must do it this way for win
 	cd $(LIBDIR)/tkblt; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
@@ -22,8 +22,8 @@ tkblt	:
 #--------------------------tkcon
 
 tkcon	:
-	mkdir $(LIBDIR)/tkcon
-	cp -p $(prefix)/tkcon/*.tcl $(LIBDIR)/tkcon/.
+	mkdir -p $(LIBDIR)/tkcon
+	cp -pf $(prefix)/tkcon/*.tcl $(LIBDIR)/tkcon/.
 # must do it this way for win
 	cd $(LIBDIR)/tkcon; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
@@ -33,24 +33,24 @@ tkcon	:
 tcllib	: base64 ftp log textutil math
 
 base64	:
-	mkdir $(LIBDIR)/base64
-	cp -r $(prefix)/tcllib/modules/base64/*.tcl $(LIBDIR)/base64/.
+	mkdir -p $(LIBDIR)/base64
+	cp -prf $(prefix)/tcllib/modules/base64/*.tcl $(LIBDIR)/base64/.
 
 ftp	:
-	mkdir $(LIBDIR)/ftp
-	cp -r $(prefix)/tcllib/modules/ftp/*.tcl $(LIBDIR)/ftp/.
+	mkdir -p $(LIBDIR)/ftp
+	cp -prf $(prefix)/tcllib/modules/ftp/*.tcl $(LIBDIR)/ftp/.
 
 log	:
-	mkdir $(LIBDIR)/log
-	cp -r $(prefix)/tcllib/modules/log/*.tcl $(LIBDIR)/log/.
+	mkdir -p $(LIBDIR)/log
+	cp -prf $(prefix)/tcllib/modules/log/*.tcl $(LIBDIR)/log/.
 
 textutil:
-	mkdir $(LIBDIR)/textutil
-	cp -r $(prefix)/tcllib/modules/textutil/*.tcl $(LIBDIR)/textutil/.
+	mkdir -p $(LIBDIR)/textutil
+	cp -prf $(prefix)/tcllib/modules/textutil/*.tcl $(LIBDIR)/textutil/.
 
 math	:
-	mkdir $(LIBDIR)/math
-	cp -r $(prefix)/tcllib/modules/math/*.tcl $(LIBDIR)/math/.
+	mkdir -p $(LIBDIR)/math
+	cp -prf $(prefix)/tcllib/modules/math/*.tcl $(LIBDIR)/math/.
 
 #--------------------------distclean
 

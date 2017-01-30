@@ -83,10 +83,10 @@ OBJS	= ds9.o tkAppInit.o
 #--------------------------main
 
 .NOTPARALLEL :
-.PHONY	: ds9 debug appdir framework tcl tcl_debug tk tk_debug 
+.PHONY	: ds9 debug framework tcl tcl_debug tk tk_debug 
 .PHONY	: tcllib tkcon tkblt xpa compiler cleanup
 
-ds9	: ds9base appdir framework tcl tk tcllib tkcon tkblt xpa compiler cleanup
+ds9	: ds9base $(APPDIR) framework tcl tk tcllib tkcon tkblt xpa compiler cleanup
 	cp -p ds9base $(APPDIR)/Contents/MacOS/ds9
 	strip $(APPDIR)/Contents/MacOS/ds9
 	install_name_tool -change \
@@ -99,7 +99,7 @@ ds9	: ds9base appdir framework tcl tk tcllib tkcon tkblt xpa compiler cleanup
 	$(APPDIR)/Contents/MacOS/ds9
 	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImage\ DS9.app
 
-debug	: ds9base appdir framework tcl tk tcllib tkcon tkblt xpa compiler cleanup
+debug	: ds9base $(APPDIR) framework tcl tk tcllib tkcon tkblt xpa compiler cleanup
 	cp -p ds9base $(APPDIR)/Contents/MacOS/ds9
 	install_name_tool -change \
 	/Library/Frameworks/Tcl.framework/Versions/8.6/Tcl \
@@ -153,7 +153,7 @@ ds9base	: $(OBJS)
 	$(LIBS)
 
 $(APPDIR):
-	cp -rp SAOImage\ DS9.app $@
+	cp -rp SAOImage\ DS9.app $(bindir)/.
 
 tcl	:
 	cp -p $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl $(TCLFW)/.

@@ -77,10 +77,27 @@ ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d
 
 OBJS	= ds9.o tkAppInit.o
 
+PREQS	= \
+	$(APPDIR) \
+	$(LIBDIR)/tcl$(TCL_VERSION) \
+	$(LIBDIR)/tcl8 \
+	$(LIBDIR)/tk$(TCL_VERSION) \
+	$(LIBDIR)/library \
+	$(LIBDIR)/doc \
+	$(LIBDIR)/cmaps \
+	$(LIBDIR)/template \
+	$(LIBDIR)/base64 \
+	$(LIBDIR)/ftp \
+	$(LIBDIR)/log \
+	$(LIBDIR)/textutil \
+	$(LIBDIR)/math \
+	$(LIBDIR)/tkblt \
+	$(LIBDIR)/tkcon
+
 #--------------------------main
 
 .NOTPARALLEL :
-.PHONY	: ds9 debug framework tcl tk tcllib tkcon tkblt
+.PHONY	: ds9 debug tcl framework tcllib
 
 ifeq (,$(findstring Darwin,$(system)))
 
@@ -152,26 +169,28 @@ ds9base	: $(OBJS)
 	$(TK_LIBS) \
 	$(LIBS)
 
-ds9.zip	: $(APPDIR) framework tcl tk tcllib tkblt tkcon
+ds9.zip	: $(PREQS)
 	$(RM) $@
 	zip -r ds9.zip $(APPDIR)
 
 tkAppInit.o : tkAppInit.c
 	$(COMPILE) -DTK_LOCAL_APPINIT=SAOAppInit \
-	-DTK_LOCAL_MAIN_HOOK=SAOLocalMainHook -c tkAppInit.c -o $@
+	-DTK_LOCAL_MAIN_HOOK=SAOLocalMainHook -c $? -o $@
 
 tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
-	cp $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c .
+	cp $? .
 
 $(APPDIR) : 
 	mkdir -p $@
 
-tcl	: $(prefix)/lib/tcl$(TCL_VERSION)
-	cp -r $(prefix)/lib/tcl$(TCL_VERSION) $(APPDIR)/.
-	cp -r $(prefix)/lib/tcl8 $(APPDIR)/.
+$(LIBDIR)/tcl$(TCL_VERSION) :
+	cp -prf $(prefix)/lib/tcl$(TCL_VERSION) $(LIBDIR)/.
 
-tk	: $(prefix)/lib/tk$(TCL_VERSION)
-	cp -r $(prefix)/lib/tk$(TCL_VERSION) $(APPDIR)/.
+$(LIBDIR)/tcl8 :
+	cp -prf $(prefix)/lib/tcl8 $(LIBDIR)/.
+
+$(LIBDIR)/tk$(TCL_VERSION) :
+	cp -prf $(prefix)/lib/tk$(TCL_VERSION) $(LIBDIR)/.
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
 

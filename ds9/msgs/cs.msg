@@ -159,6 +159,8 @@
 ::msgcat::mcset cs {Console} 
 ::msgcat::mcset cs {Contacting Image Server} 
 ::msgcat::mcset cs {Contour Parameters} [encoding convertfrom iso8859-2 {Parametry obrysu}]
+::msgcat::mcset cs {Contour Paste} 
+::msgcat::mcset cs {Contour Save} 
 ::msgcat::mcset cs {Contours} [encoding convertfrom iso8859-2 {Obrysy}]
 ::msgcat::mcset cs {Contour} [encoding convertfrom iso8859-2 {Obrys}]
 ::msgcat::mcset cs {Contrast} [encoding convertfrom iso8859-2 {Kontrast}]
@@ -356,6 +358,7 @@
 ::msgcat::mcset cs {Internal Parse Error} 
 ::msgcat::mcset cs {Interval} 
 ::msgcat::mcset cs {Invalid Column Name} 
+::msgcat::mcset cs {Invalid WCS} 
 ::msgcat::mcset cs {Invalid formated multipart/mixed mime type message} 
 ::msgcat::mcset cs {Invert Colormap} 
 ::msgcat::mcset cs {Invert Selection} [encoding convertfrom iso8859-2 {Vybrat doplnìk}]
@@ -803,6 +806,7 @@
 ::msgcat::mcset cs {Use Authentication} 
 ::msgcat::mcset cs {Use Current Frame on Download} 
 ::msgcat::mcset cs {Use Internal Web Browser} 
+::msgcat::mcset cs {Use Original Color/Width} 
 ::msgcat::mcset cs {Use Proxy} 
 ::msgcat::mcset cs {User Manual} [encoding convertfrom iso8859-2 {U¾ivatelský manuál}]
 ::msgcat::mcset cs {Username} 

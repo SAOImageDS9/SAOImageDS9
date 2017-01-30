@@ -159,6 +159,8 @@
 ::msgcat::mcset da {Console} {konsol}
 ::msgcat::mcset da {Contacting Image Server} 
 ::msgcat::mcset da {Contour Parameters} {Kontur parametre}
+::msgcat::mcset da {Contour Paste} 
+::msgcat::mcset da {Contour Save} 
 ::msgcat::mcset da {Contours} {Konturer}
 ::msgcat::mcset da {Contour} {Konturer}
 ::msgcat::mcset da {Contrast} {Kontrast}
@@ -356,6 +358,7 @@
 ::msgcat::mcset da {Internal Parse Error} 
 ::msgcat::mcset da {Interval} {Interval} 
 ::msgcat::mcset da {Invalid Column Name} 
+::msgcat::mcset da {Invalid WCS} 
 ::msgcat::mcset da {Invalid formated multipart/mixed mime type message} {Forkert formatteret opdelt eller blandet mime type meddelelse}
 ::msgcat::mcset da {Invert Colormap} {Vend farvetabel}
 ::msgcat::mcset da {Invert Selection} {Inverter valg}
@@ -803,6 +806,7 @@
 ::msgcat::mcset da {Use Authentication} [encoding convertfrom iso8859-1 {Anvend bekræftelse}]
 ::msgcat::mcset da {Use Current Frame on Download} {Brug nuværende ramme til download}
 ::msgcat::mcset da {Use Internal Web Browser} {Brug intern web browser}
+::msgcat::mcset da {Use Original Color/Width} 
 ::msgcat::mcset da {Use Proxy} {Anvend proxy}
 ::msgcat::mcset da {User Manual} 
 ::msgcat::mcset da {Username} {Brugernavn}

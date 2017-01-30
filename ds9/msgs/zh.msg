@@ -159,6 +159,8 @@
 ::msgcat::mcset zh {Console} 
 ::msgcat::mcset zh {Contacting Image Server} 
 ::msgcat::mcset zh {Contour Parameters} [encoding convertfrom big5 "\xB5\xA5 \xAD\xC8 \xBD\x75 \xB0\xD1 \xBC\xC6"]
+::msgcat::mcset zh {Contour Paste} 
+::msgcat::mcset zh {Contour Save} 
 ::msgcat::mcset zh {Contours} [encoding convertfrom big5 "\xB5\xA5 \xAD\xC8 \xBD\x75"]
 ::msgcat::mcset zh {Contour} 
 ::msgcat::mcset zh {Contrast} 
@@ -356,6 +358,7 @@
 ::msgcat::mcset zh {Internal Parse Error} 
 ::msgcat::mcset zh {Interval} 
 ::msgcat::mcset zh {Invalid Column Name} 
+::msgcat::mcset zh {Invalid WCS} 
 ::msgcat::mcset zh {Invalid formated multipart/mixed mime type message} 
 ::msgcat::mcset zh {Invert Colormap} [encoding convertfrom big5 "\xA6\xE2 \xB1\x6D \xA4\xCF \xA6\x56"]
 ::msgcat::mcset zh {Invert Selection} [encoding convertfrom big5 "\xA4\xCF \xA6\x56 \xBF\xEF \xA8\xFA"]
@@ -803,6 +806,7 @@
 ::msgcat::mcset zh {Use Authentication} 
 ::msgcat::mcset zh {Use Current Frame on Download} 
 ::msgcat::mcset zh {Use Internal Web Browser} 
+::msgcat::mcset zh {Use Original Color/Width} 
 ::msgcat::mcset zh {Use Proxy} 
 ::msgcat::mcset zh {User Manual} 
 ::msgcat::mcset zh {Username} 

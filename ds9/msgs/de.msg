@@ -159,6 +159,8 @@
 ::msgcat::mcset de {Console} 
 ::msgcat::mcset de {Contacting Image Server} 
 ::msgcat::mcset de {Contour Parameters} {Konturenparameter}
+::msgcat::mcset de {Contour Paste} 
+::msgcat::mcset de {Contour Save} 
 ::msgcat::mcset de {Contours} {Konturen}
 ::msgcat::mcset de {Contour} 
 ::msgcat::mcset de {Contrast} {Kontrast}
@@ -356,6 +358,7 @@
 ::msgcat::mcset de {Internal Parse Error} 
 ::msgcat::mcset de {Interval} {Intervall}
 ::msgcat::mcset de {Invalid Column Name} 
+::msgcat::mcset de {Invalid WCS} 
 ::msgcat::mcset de {Invalid formated multipart/mixed mime type message} [encoding convertfrom iso8859-1 {Ungültig formatierter multipart/mixed MIME-Type}]
 ::msgcat::mcset de {Invert Colormap} {Farbpalette invertieren}
 ::msgcat::mcset de {Invert Selection} {Auswahl umkehren}
@@ -803,6 +806,7 @@
 ::msgcat::mcset de {Use Authentication} {Authentifizierung verwenden}
 ::msgcat::mcset de {Use Current Frame on Download} {Aktuellen rahmen bei Download verwenden}
 ::msgcat::mcset de {Use Internal Web Browser} {Internen Webbrowser verwenden}
+::msgcat::mcset de {Use Original Color/Width} 
 ::msgcat::mcset de {Use Proxy} {Proxy verwenden}
 ::msgcat::mcset de {User Manual} 
 ::msgcat::mcset de {Username} {Login}

@@ -159,6 +159,8 @@
 ::msgcat::mcset ja {Console} 
 ::msgcat::mcset ja {Contacting Image Server} 
 ::msgcat::mcset ja {Contour Parameters} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2\xa4\xce\xc0\xdf\xc4\xea"]
+::msgcat::mcset ja {Contour Paste} 
+::msgcat::mcset ja {Contour Save} 
 ::msgcat::mcset ja {Contours} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2"]
 ::msgcat::mcset ja {Contour} 
 ::msgcat::mcset ja {Contrast} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xe9\xa5\xb9\xa5\xc8"]
@@ -356,6 +358,7 @@
 ::msgcat::mcset ja {Internal Parse Error} [encoding convertfrom euc-jp "\xc6\xe2\xc9\xf4\xb2\xf2\xbc\xe1\xa5\xa8\xa5\xe9\xa1\xbc"]
 ::msgcat::mcset ja {Interval} [encoding convertfrom euc-jp "\xb4\xd6\xb3\xd6"]
 ::msgcat::mcset ja {Invalid Column Name} 
+::msgcat::mcset ja {Invalid WCS} 
 ::msgcat::mcset ja {Invalid formated multipart/mixed mime type message} 
 ::msgcat::mcset ja {Invert Colormap} [encoding convertfrom euc-jp "\xbf\xa7\xc4\xb4\xa4\xf2\xc8\xbf\xc5\xbe"]
 ::msgcat::mcset ja {Invert Selection} [encoding convertfrom euc-jp "\xc1\xaa\xc2\xf2\xa4\xf2\xc8\xbf\xc5\xbe"]
@@ -803,6 +806,7 @@
 ::msgcat::mcset ja {Use Authentication} [encoding convertfrom euc-jp "\xc7\xa7\xbe\xda\xa4\xf2\xbb\xc8\xcd\xd1"]
 ::msgcat::mcset ja {Use Current Frame on Download} [encoding convertfrom euc-jp "\xa5\xc0\xa5\xa6\xa5\xf3\xa5\xed\xa1\xbc\xa5\xc9\xbb\xfe\xa4\xcb\xc1\xaa\xc2\xf2\xc3\xe6\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xbb\xc8\xcd\xd1"]
 ::msgcat::mcset ja {Use Internal Web Browser} [encoding convertfrom euc-jp "\xc6\xe2\xc9\xf4\xa5\xd6\xa5\xe9\xa5\xa6\xa5\xb6\xa4\xf2\xbb\xc8\xcd\xd1"]
+::msgcat::mcset ja {Use Original Color/Width} 
 ::msgcat::mcset ja {Use Proxy} [encoding convertfrom euc-jp "\xa5\xd7\xa5\xed\xa5\xad\xa5\xb7\xa4\xf2\xbb\xc8\xcd\xd1"]
 ::msgcat::mcset ja {User Manual} [encoding convertfrom euc-jp "\xa5\xe6\xa1\xbc\xa5\xb6\xa1\xbc\xa5\xde\xa5\xcb\xa5\xe5\xa5\xa2\xa5\xeb"]
 ::msgcat::mcset ja {Username} [encoding convertfrom euc-jp "\xa5\xe6\xa1\xbc\xa5\xb6\xa1\xbc\xcc\xbe"]

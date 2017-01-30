@@ -159,6 +159,8 @@
 ::msgcat::mcset pt {Console} 
 ::msgcat::mcset pt {Contacting Image Server} 
 ::msgcat::mcset pt {Contour Parameters} [encoding convertfrom iso8859-1 {Parâmetros de contorno}]
+::msgcat::mcset pt {Contour Paste} 
+::msgcat::mcset pt {Contour Save} 
 ::msgcat::mcset pt {Contours} {Contornos}
 ::msgcat::mcset pt {Contour} 
 ::msgcat::mcset pt {Contrast} {Contraste}
@@ -356,6 +358,7 @@
 ::msgcat::mcset pt {Internal Parse Error} 
 ::msgcat::mcset pt {Interval} {Intervalo}
 ::msgcat::mcset pt {Invalid Column Name} 
+::msgcat::mcset pt {Invalid WCS} 
 ::msgcat::mcset pt {Invalid formated multipart/mixed mime type message} [encoding convertfrom iso8859-1 {Mensagem tipo MIME multiparte/mista em formato inválido}]
 ::msgcat::mcset pt {Invert Colormap} {Inverter mapa de cores}
 ::msgcat::mcset pt {Invert Selection} [encoding convertfrom iso8859-1 {Inverter Seleção}]
@@ -803,6 +806,7 @@
 ::msgcat::mcset pt {Use Authentication} [encoding convertfrom iso8859-1 {Utilizar Autenticação}]
 ::msgcat::mcset pt {Use Current Frame on Download} {Utilizar Frame Atual ao Descarregar}
 ::msgcat::mcset pt {Use Internal Web Browser} {Utilizar Navegador Web Interno}
+::msgcat::mcset pt {Use Original Color/Width} 
 ::msgcat::mcset pt {Use Proxy} {Utilizar Proxy}
 ::msgcat::mcset pt {User Manual} 
 ::msgcat::mcset pt {Username} [encoding convertfrom iso8859-1 {Nome de usuário}]

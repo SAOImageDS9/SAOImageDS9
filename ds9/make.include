@@ -52,12 +52,9 @@ math	:
 	mkdir $(LIBDIR)/math
 	cp -r $(prefix)/tcllib/modules/math/*.tcl $(LIBDIR)/math/.
 
-#--------------------------cleanup
+#--------------------------distclean
 
-.PHONY	: clean distclean
-
-clean	:
-	$(RM) core *~ *# ds9base ds9 *.zip *.o
+.PHONY	: distclean
 
 distclean: clean
 	-rm -f Makefile config.cache config.log config.status

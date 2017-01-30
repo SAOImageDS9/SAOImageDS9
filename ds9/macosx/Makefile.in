@@ -152,9 +152,8 @@ ds9base	: $(OBJS)
 	$(TK_LIBS) \
 	$(LIBS)
 
-appdir	:
-	rm -rf $(APPDIR)
-	cp -rp SAOImage\ DS9.app $(bindir)/.
+$(APPDIR):
+	cp -rp SAOImage\ DS9.app $@
 
 tcl	:
 	cp -p $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl $(TCLFW)/.
@@ -184,6 +183,13 @@ compiler:
 
 cleanup:
 	cd $(APPDIR); find . -name keepme -exec rm -rf {} \;
+
+#--------------------------clean
+
+.PHONY	: clean
+
+clean	:
+	$(RM) core *~ *# *.o
 
 include ../make.include
 

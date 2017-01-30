@@ -426,6 +426,7 @@ language:
 
 scrub :
 	find . -name "*[~#]" -exec rm {} \;
+	find . -name "autom4te.cache" -exec rm -rf {} \;
 
 #-------------------------- clean
 
@@ -575,7 +576,6 @@ tksaodistclean :
 
 astdistclean :
 	$(MAKE) -C ast distclean
-	rm -rf ast/autom4te.cache
 
 funtoolsdistclean :
 	$(MAKE) -C funtools distclean

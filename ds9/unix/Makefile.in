@@ -163,9 +163,8 @@ tkAppInit.o : tkAppInit.c
 tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
 	cp $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c .
 
-appdir : 
-	rm -rf $(APPDIR)
-	mkdir $(APPDIR)
+$(APPDIR) : 
+	mkdir -p $@
 
 tcl	: $(prefix)/lib/tcl$(TCL_VERSION)
 	cp -r $(prefix)/lib/tcl$(TCL_VERSION) $(APPDIR)/.
@@ -175,6 +174,13 @@ tk	: $(prefix)/lib/tk$(TCL_VERSION)
 	cp -r $(prefix)/lib/tk$(TCL_VERSION) $(APPDIR)/.
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
+
+#--------------------------clean
+
+.PHONY	: clean
+
+clean	:
+	$(RM) core *~ *# ds9base ds9 *.zip *.o
 
 include ../make.include
 

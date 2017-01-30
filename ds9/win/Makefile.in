@@ -137,9 +137,8 @@ ds9.res.o: ds9.rc ds9.ico
 	--include $(prefix)/tk$(TCL_VERSION)/win/rc \
 	ds9.rc
 
-appdir	:
-	rm -rf $(APPDIR)
-	mkdir $(APPDIR)
+$(APPDIR):
+	mkdir -p $@
 
 tcl	:
 	cp -pr $(prefix)/lib/tcl8 $(APPDIR)/.
@@ -153,6 +152,13 @@ xpa	:
 
 vbs	:
 	cp install.vbs $(APPDIR)/.
+
+#--------------------------clean
+
+.PHONY	: clean
+
+clean	:
+	$(RM) core *~ *# *.zip *.o
 
 include ../make.include
 

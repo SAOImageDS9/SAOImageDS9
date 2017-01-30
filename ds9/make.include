@@ -57,7 +57,6 @@ math	:
 .PHONY	: clean distclean
 
 clean	:
-	cd ../library; $(MAKE) clean
 	$(RM) core *~ *# ds9base ds9 *.zip *.o
 
 distclean: clean

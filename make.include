@@ -434,7 +434,7 @@ scrub :
 .PHONY	: dirsclean ds9clean localclean
 .PHONY	: tclclean tclcheckdnsclean tcliisclean tclsignalclean 
 .PHONY	: tclxmlclean tclzvfsclean
-.PHONY	: tkclean tkbltclean tkcon tkhtml1clean tkimgclean
+.PHONY	: tkclean tkbltclean tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksaoclean astclean funtoolsclean tktableclean xpaclean
 
 clean	: dirsclean tclclean tkclean \

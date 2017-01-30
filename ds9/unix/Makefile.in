@@ -80,7 +80,7 @@ OBJS	= ds9.o tkAppInit.o
 #--------------------------main
 
 .NOTPARALLEL :
-.PHONY	: ds9 debug appdir framework tcl tk tcllib tkcon tkblt
+.PHONY	: ds9 debug framework tcl tk tcllib tkcon tkblt
 
 ifeq (,$(findstring Darwin,$(system)))
 
@@ -152,7 +152,7 @@ ds9base	: $(OBJS)
 	$(TK_LIBS) \
 	$(LIBS)
 
-ds9.zip	: appdir framework tcl tk tcllib tkblt tkcon
+ds9.zip	: $(APPDIR) framework tcl tk tcllib tkblt tkcon
 	$(RM) $@
 	zip -r ds9.zip $(APPDIR)
 

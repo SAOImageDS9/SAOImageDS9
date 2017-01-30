@@ -66,12 +66,12 @@ dirs	:
 
 #-------------------------- ds9
 
-ds9	: scrub ds9/$(OS)/Makefile
+ds9	: ds9/$(OS)/Makefile
 	@echo ""
 	@echo "*** Installing ds9 ***"
 	$(MAKE) -C ds9/$(OS) -j $(JOBS)
 
-debug	: scrub ds9/$(OS)/Makefile
+debug	: ds9/$(OS)/Makefile
 	@echo ""
 	@echo "*** Installing ds9 ***"
 	$(MAKE) -C ds9/$(OS)  -j $(JOBS) debug
@@ -426,7 +426,7 @@ language:
 
 scrub :
 	find . -name "*[~#]" -exec rm {} \;
-	find . -name "autom4te.cache" -exec rm -rf {} \;
+	find . -d -name "autom4te.cache" -exec rm -rf {} \;
 
 #-------------------------- clean
 
@@ -437,7 +437,8 @@ scrub :
 .PHONY	: tkclean tkbltclean tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksaoclean astclean funtoolsclean tktableclean xpaclean
 
-clean	: dirsclean tclclean tkclean \
+clean	: scrub dirsclean \
+	tclclean tkclean \
 	tclcheckdnsclean tcliisclean tclsignalclean \
 	tclzvfsclean tclxmlclean xpaclean \
 	tkbltclean tkconclean tktableclean tkimgclean \
@@ -521,7 +522,7 @@ distclean : tcldistclean tkdistclean \
 	tkbltdistclean tktabledistclean tkimgdistclean \
 	tkmpegdistclean tkhtml1distclean \
 	tksaodistclean astdistclean funtoolsdistclean ds9distclean \
-	dirsdistclean localdistclean
+	dirsdistclean localdistclean scrub
 
 dirsdistclean:
 	@for d in $(DIRS); do rm -rf $$d; done

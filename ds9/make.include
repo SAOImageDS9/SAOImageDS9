@@ -1,66 +1,76 @@
 #--------------------------framework
 
-framework: $(LIBDIR)/library $(LIBDIR)/doc $(LIBDIR)/cmaps $(LIBDIR)/template
-
-$(LIBDIR)/library :
-	cp -prf $(prefix)/ds9/library $(LIBDIR)/.
+$(LIBDIR)/library : $(prefix)/ds9/library/*.tcl
+	mkdir -p $@
+	cp -p $? $@
 # must do it this way for win
 	cd $@; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
+	touch $@
 
-$(LIBDIR)/msgs :
-	cp -prf $(prefix)/ds9/msgs $(LIBDIR)/.
+$(LIBDIR)/msgs : $(prefix)/ds9/msgs/*.msg
+	mkdir -p $@
+	cp -p $? $@
+	touch $@
 
 $(LIBDIR)/doc :
 	cp -prf $(prefix)/ds9/doc $(LIBDIR)/.
+	touch $@
 
 $(LIBDIR)/cmaps :
 	cp -prf $(prefix)/ds9/cmaps $(LIBDIR)/.
+	touch $@
 
 $(LIBDIR)/template :
 	cp -prf $(prefix)/ds9/template $(LIBDIR)/.
+	touch $@
 
 #--------------------------tkblt
 
-$(LIBDIR)/tkblt	:
+$(LIBDIR)/tkblt	: $(prefix)/tkblt/library/*.tcl
 	mkdir -p $@
-	cp -pf $(prefix)/tkblt/library/*.tcl $@/.
+	cp -p $? $@
 # must do it this way for win
 	cd $@; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
+	touch $@
 
 #--------------------------tkcon
 
-$(LIBDIR)/tkcon	:
+$(LIBDIR)/tkcon	: $(prefix)/tkcon/*.tcl
 	mkdir -p $@
-	cp -pf $(prefix)/tkcon/*.tcl $@/.
+	cp -p $? $@
 # must do it this way for win
 	cd $@; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
+	touch $@
 
 #--------------------------tcllib
 
-tcllib	: $(LIBDIR)/base64 $(LIBDIR)/ftp $(LIBDIR)/log $(LIBDIR)/textutil $(LIBDIR)/math
-
-$(LIBDIR)/base64:
+$(LIBDIR)/base64: $(prefix)/tcllib/modules/base64/*.tcl
 	mkdir -p $@
-	cp -prf $(prefix)/tcllib/modules/base64/*.tcl $@
+	cp -p $? $@
+	touch $@
 
-$(LIBDIR)/ftp	:
+$(LIBDIR)/ftp	: $(prefix)/tcllib/modules/ftp/*.tcl
 	mkdir -p $@
-	cp -prf $(prefix)/tcllib/modules/ftp/*.tcl $@
+	cp -p $? $@
+	touch $@
 
-$(LIBDIR)/log	:
+$(LIBDIR)/log	: $(prefix)/tcllib/modules/log/*.tcl
 	mkdir -p $@
-	cp -prf $(prefix)/tcllib/modules/log/*.tcl $@
+	cp -p $? $@
+	touch $@
 
-$(LIBDIR)/textutil:
+$(LIBDIR)/textutil: $(prefix)/tcllib/modules/textutil/*.tcl
 	mkdir -p $@
-	cp -prf $(prefix)/tcllib/modules/textutil/*.tcl $@
+	cp -p $? $@
+	touch $@
 
-$(LIBDIR)/math	:
+$(LIBDIR)/math	: $(prefix)/tcllib/modules/math/*.tcl
 	mkdir -p $@
-	cp -prf $(prefix)/tcllib/modules/math/*.tcl $@/.
+	cp -p $? $@
+	touch $@
 
 #--------------------------distclean
 

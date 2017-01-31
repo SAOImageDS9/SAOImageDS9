@@ -77,22 +77,60 @@ ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d
 
 OBJS	= ds9.o tkAppInit.o
 
+empty:=
+space:=$(empty) $(empty)
+
+SPECS	= \
+	$(jpegtcl_LIB_SPEC) \
+	$(pngtcl_LIB_SPEC) \
+	$(tifftcl_LIB_SPEC) \
+	$(zlibtcl_LIB_SPEC) \
+	$(tclcheckdns_LIB_SPEC) \
+	$(tcliis_LIB_SPEC) \
+	$(tclsignal_LIB_SPEC) \
+	$(tclxml_LIB_SPEC) \
+	$(tclzvfs_LIB_SPEC) \
+	$(tkblt_LIB_SPEC) \
+	$(tkhtml1_LIB_SPEC) \
+	$(tkimg_LIB_SPEC) \
+	$(tkimggif_LIB_SPEC) \
+	$(tkimgjpeg_LIB_SPEC) \
+	$(tkimgpng_LIB_SPEC) \
+	$(tkimgtiff_LIB_SPEC) \
+	$(tkimgwindow_LIB_SPEC) \
+	$(tkmpeg_LIB_SPEC) \
+	$(tksao_LIB_SPEC) \
+	$(tktable_LIB_SPEC) \
+	$(TK_STUB_LIB_SPEC) \
+	$(TK_LIB_SPEC) \
+	$(TCL_STUB_LIB_SPEC) \
+	$(TCL_LIB_SPEC)
+
+LLIBS	= \
+	$(libdir)/libfuntools.a \
+	$(libdir)/libast.a \
+	$(libdir)/libast_err.a \
+	$(libdir)/libast_pal.a \
+	$(libdir)/libxpa.a \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS))))
+
 PREQS	= \
 	$(APPDIR) \
 	$(LIBDIR)/tcl$(TCL_VERSION) \
 	$(LIBDIR)/tcl8 \
 	$(LIBDIR)/tk$(TCL_VERSION) \
 	$(LIBDIR)/library \
+	$(LIBDIR)/msgs \
 	$(LIBDIR)/doc \
 	$(LIBDIR)/cmaps \
 	$(LIBDIR)/template \
+	$(LIBDIR)/tkblt \
+	$(LIBDIR)/tkcon \
 	$(LIBDIR)/base64 \
 	$(LIBDIR)/ftp \
 	$(LIBDIR)/log \
 	$(LIBDIR)/textutil \
-	$(LIBDIR)/math \
-	$(LIBDIR)/tkblt \
-	$(LIBDIR)/tkcon
+	$(LIBDIR)/math
 
 #--------------------------main
 
@@ -135,43 +173,16 @@ debug: ds9base ds9.zip
 
 endif
 
-ds9base	: $(OBJS)
+ds9base	: $(OBJS) $(LLIBS)
 	$(RM) $@
 	$(CC) $(CFLAGS) -o $@ \
 	$(OBJS) \
-	$(libdir)/libfuntools.a \
-	$(libdir)/libast.a \
-	$(libdir)/libast_err.a \
-	$(libdir)/libast_pal.a \
-	$(libdir)/libxpa.a \
-	$(jpegtcl_LIB_SPEC) \
-	$(pngtcl_LIB_SPEC) \
-	$(tifftcl_LIB_SPEC) \
-	$(zlibtcl_LIB_SPEC) \
-	$(tclcheckdns_LIB_SPEC) \
-	$(tcliis_LIB_SPEC) \
-	$(tclsignal_LIB_SPEC) \
-	$(tclxml_LIB_SPEC) \
-	$(tclzvfs_LIB_SPEC) \
-	$(tkblt_LIB_SPEC) \
-	$(tkhtml1_LIB_SPEC) \
-	$(tkimg_LIB_SPEC) \
-	$(tkimggif_LIB_SPEC) \
-	$(tkimgjpeg_LIB_SPEC) \
-	$(tkimgpng_LIB_SPEC) \
-	$(tkimgtiff_LIB_SPEC) \
-	$(tkimgwindow_LIB_SPEC) \
-	$(tkmpeg_LIB_SPEC) \
-	$(tksao_LIB_SPEC) \
-	$(tktable_LIB_SPEC) \
-	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
-	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
+	$(LLIBS) \
 	$(TK_LIBS) \
 	$(LIBS)
 
 ds9.zip	: $(PREQS)
-	$(RM) $@
-	zip -r ds9.zip $(APPDIR)
+	zip -ru ds9.zip $(APPDIR)
 
 tkAppInit.o : tkAppInit.c
 	$(COMPILE) -DTK_LOCAL_APPINIT=SAOAppInit \

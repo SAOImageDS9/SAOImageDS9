@@ -97,7 +97,7 @@ PREQS	= \
 #--------------------------main
 
 .NOTPARALLEL :
-.PHONY	: ds9 debug tcl framework tcllib
+.PHONY	: debug
 
 ifeq (,$(findstring Darwin,$(system)))
 

@@ -80,11 +80,26 @@ ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d
 
 OBJS	= ds9.o tkAppInit.o
 
+PREQS	= \
+	$(APPDIR) \
+	$(LIBDIR)/library \
+	$(LIBDIR)/msgs \
+	$(LIBDIR)/doc \
+	$(LIBDIR)/cmaps \
+	$(LIBDIR)/template \
+	$(LIBDIR)/tkblt \
+	$(LIBDIR)/tkcon \
+	$(LIBDIR)/base64 \
+	$(LIBDIR)/ftp \
+	$(LIBDIR)/log \
+	$(LIBDIR)/textutil \
+	$(LIBDIR)/math \
+	$(LIBDIR)/xpans
+
 #--------------------------main
 
 .NOTPARALLEL :
-.PHONY	: ds9 debug framework tcl tcl_debug tk tk_debug 
-.PHONY	: tcllib tkcon tkblt compiler cleanup
+.PHONY	: ds9 debug tcl tcl_debug tk tk_debug compiler cleanup
 
 ds9	: ds9base ds9ext
 	cp -p ds9base $(APPDIR)/Contents/MacOS/ds9
@@ -152,7 +167,7 @@ ds9base	: $(OBJS)
 	$(TK_LIBS) \
 	$(LIBS)
 
-ds9ext	: $(APPDIR) framework tcl tk tcllib tkcon tkblt $(LIBDIR)/xpa compiler cleanup
+ds9ext	: $(APPDIR) $(PREQS) tcl tk compiler cleanup
 
 $(APPDIR):
 	cp -prf SAOImage\ DS9.app $(bindir)/.
@@ -177,9 +192,8 @@ tk_debug:
 	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms $(TKDIR)/.
 	cp -prf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts $(TKDIR)/.
 
-$(LIBDIR)/xpa	:
-	cp -prf $(bindir)/xpans $(LIBDIR)/.
-	echo "***"
+$(LIBDIR)/xpans	: $(bindir)/xpans
+	cp -p $? "$@"
 
 compiler:
 	cp -pf $(prefix)/compilers/pcc-i386-snowleopard.tar.gz $(LIBDIR)/.

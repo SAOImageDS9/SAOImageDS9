@@ -1,76 +1,76 @@
 #--------------------------framework
 
 $(LIBDIR)/library : $(prefix)/ds9/library/*.tcl
-	mkdir -p $@
-	cp -p $? $@
+	mkdir -p "$@"
+	cp -p $? "$@"
 # must do it this way for win
-	cd $@; \
+	cd "$@"; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
-	touch $@
+	touch "$@"
 
 $(LIBDIR)/msgs : $(prefix)/ds9/msgs/*.msg
-	mkdir -p $@
-	cp -p $? $@
-	touch $@
+	mkdir -p "$@"
+	cp -p $? "$@"
+	touch "$@"
 
 $(LIBDIR)/doc :
 	cp -prf $(prefix)/ds9/doc $(LIBDIR)/.
-	touch $@
+	touch "$@"
 
 $(LIBDIR)/cmaps :
 	cp -prf $(prefix)/ds9/cmaps $(LIBDIR)/.
-	touch $@
+	touch "$@"
 
 $(LIBDIR)/template :
 	cp -prf $(prefix)/ds9/template $(LIBDIR)/.
-	touch $@
+	touch "$@"
 
 #--------------------------tkblt
 
 $(LIBDIR)/tkblt	: $(prefix)/tkblt/library/*.tcl
-	mkdir -p $@
-	cp -p $? $@
+	mkdir -p "$@"
+	cp -p $? "$@"
 # must do it this way for win
-	cd $@; \
+	cd "$@"; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
-	touch $@
+	touch "$@"
 
 #--------------------------tkcon
 
 $(LIBDIR)/tkcon	: $(prefix)/tkcon/*.tcl
-	mkdir -p $@
-	cp -p $? $@
+	mkdir -p "$@"
+	cp -p $? "$@"
 # must do it this way for win
-	cd $@; \
+	cd "$@"; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
-	touch $@
+	touch "$@"
 
 #--------------------------tcllib
 
 $(LIBDIR)/base64: $(prefix)/tcllib/modules/base64/*.tcl
-	mkdir -p $@
-	cp -p $? $@
-	touch $@
+	mkdir -p "$@"
+	cp -p $? "$@"
+	touch "$@"
 
 $(LIBDIR)/ftp	: $(prefix)/tcllib/modules/ftp/*.tcl
-	mkdir -p $@
-	cp -p $? $@
-	touch $@
+	mkdir -p "$@"
+	cp -p $? "$@"
+	touch "$@"
 
 $(LIBDIR)/log	: $(prefix)/tcllib/modules/log/*.tcl
-	mkdir -p $@
-	cp -p $? $@
-	touch $@
+	mkdir -p "$@"
+	cp -p $? "$@"
+	touch "$@"
 
 $(LIBDIR)/textutil: $(prefix)/tcllib/modules/textutil/*.tcl
-	mkdir -p $@
-	cp -p $? $@
-	touch $@
+	mkdir -p "$@"
+	cp -p $? "$@"
+	touch "$@"
 
 $(LIBDIR)/math	: $(prefix)/tcllib/modules/math/*.tcl
-	mkdir -p $@
-	cp -p $? $@
-	touch $@
+	mkdir -p "$@"
+	cp -p $? "$@"
+	touch "$@"
 
 #--------------------------distclean
 

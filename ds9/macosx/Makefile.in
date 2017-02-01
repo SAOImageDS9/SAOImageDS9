@@ -69,12 +69,12 @@ COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 #--------------------------defines
 
 APPDIR	= $(bindir)/SAOImage\ DS9.app
-LIBDIR= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework/Resources
-TCLDIR	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework/Resources
-TKDIR	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework/Resources
-
-TCLFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework
-TKFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework
+MACDIR	= $(APPDIR)/Contents/MacOS
+LIBDIR	= $(APPDIR)/Contents/Frameworks/Tksao.framework/Resources
+TCLDIR	= $(APPDIR)/Contents/Frameworks/Tcl.framework/Resources
+TKDIR	= $(APPDIR)/Contents/Frameworks/Tk.framework/Resources
+TCLFW	= $(APPDIR)/Contents/Frameworks/Tcl.framework
+TKFW	= $(APPDIR)/Contents/Frameworks/Tk.framework
 
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)
 
@@ -135,19 +135,19 @@ PREQS	= \
 #--------------------------main
 
 .NOTPARALLEL :
-.PHONY	: ds9 debug tcl tk cleanup
+.PHONY	: debug
 
-ds9	: ds9base ds9ext
-	cp -p ds9base $(APPDIR)/Contents/MacOS/ds9
-	strip $(APPDIR)/Contents/MacOS/ds9
+$(MACDIR)/ds9 : ds9base ds9ext
+	cp -p ds9base "$@"
+	strip "$@"
 	install_name_tool -change \
 	/Library/Frameworks/Tcl.framework/Versions/8.6/Tcl \
 	@executable_path/../Frameworks/Tcl.framework/Tcl \
-	$(APPDIR)/Contents/MacOS/ds9
+	"$@"
 	install_name_tool -change \
 	/Library/Frameworks/Tk.framework/Versions/8.6/Tk \
 	@executable_path/../Frameworks/Tk.framework/Tk \
-	$(APPDIR)/Contents/MacOS/ds9
+	"$@"
 	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImage\ DS9.app
 
 debug	: ds9base ds9ext
@@ -179,16 +179,16 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(TK_LIBS) \
 	$(LIBS)
 
-ds9ext	: $(APPDIR) $(PREQS) tcl tk $(LIBDIR)/pcc-i386-snowleopard.tar.gz cleanup
+ds9ext	: $(APPDIR) $(PREQS) $(TCLFW)/Tcl $(TKFW)/Tk $(LIBDIR)/pcc-i386-snowleopard.tar.gz
 
 $(APPDIR):
 	cp -prf SAOImage\ DS9.app $(bindir)/.
 
-tcl	:
+$(TCLFW)/Tcl : $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl
 	cp -pf $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl $(TCLFW)/.
 	cp -prf $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Resources/* $(TCLDIR)/.
 
-tk	:
+$(TKFW)/Tk : $(prefix)/build/tk/Tk.framework/Versions/8.6/Tk
 	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Tk $(TKFW)/.
 	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Info.plist $(TKDIR)/.
 	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms $(TKDIR)/.
@@ -199,9 +199,6 @@ $(LIBDIR)/xpans	: $(bindir)/xpans
 
 $(LIBDIR)/pcc-i386-snowleopard.tar.gz: $(prefix)/compilers/pcc-i386-snowleopard.tar.gz
 	cp -p $? "$@"
-
-cleanup:
-	cd $(APPDIR); find . -name keepme -exec rm -rf {} \;
 
 #--------------------------clean
 

@@ -137,7 +137,7 @@ PREQS	= \
 .NOTPARALLEL :
 .PHONY	: debug
 
-$(MACDIR)/ds9 : ds9base ds9ext
+$(MACDIR)/ds9 : ds9base $(APPDIR) $(PREQS) $(TCLFW)/Tcl $(TKFW)/Tk $(LIBDIR)/pcc-i386-snowleopard.tar.gz
 	cp -p ds9base "$@"
 	strip "$@"
 	install_name_tool -change \
@@ -150,7 +150,7 @@ $(MACDIR)/ds9 : ds9base ds9ext
 	"$@"
 	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImage\ DS9.app
 
-debug	: ds9base ds9ext
+debug	: ds9base $(APPDIR) $(PREQS) $(TCLFW)/Tcl $(TKFW)/Tk $(LIBDIR)/pcc-i386-snowleopard.tar.gz
 	cp -p ds9base $(APPDIR)/Contents/MacOS/ds9
 	install_name_tool -change \
 	/Library/Frameworks/Tcl.framework/Versions/8.6/Tcl \
@@ -178,8 +178,6 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(TCL_LIB_SPEC) \
 	$(TK_LIBS) \
 	$(LIBS)
-
-ds9ext	: $(APPDIR) $(PREQS) $(TCLFW)/Tcl $(TKFW)/Tk $(LIBDIR)/pcc-i386-snowleopard.tar.gz
 
 $(APPDIR):
 	cp -prf SAOImage\ DS9.app $(bindir)/.

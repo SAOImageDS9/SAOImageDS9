@@ -70,15 +70,51 @@ COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
 APPDIR	= $(bindir)/SAOImage\ DS9.app
 LIBDIR= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tksao.framework/Resources
+TCLDIR	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework/Resources
+TKDIR	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework/Resources
 
 TCLFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework
-TCLDIR	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tcl.framework/Resources
 TKFW	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework
-TKDIR	= $(bindir)/SAOImage\ DS9.app/Contents/Frameworks/Tk.framework/Resources
 
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)
 
 OBJS	= ds9.o tkAppInit.o
+
+empty:=
+space:=$(empty) $(empty)
+
+SPECS	= \
+	$(jpegtcl_LIB_SPEC) \
+	$(pngtcl_LIB_SPEC) \
+	$(tifftcl_LIB_SPEC) \
+	$(zlibtcl_LIB_SPEC) \
+	$(tclcheckdns_LIB_SPEC) \
+	$(tcliis_LIB_SPEC) \
+	$(tclsignal_LIB_SPEC) \
+	$(tclxml_LIB_SPEC) \
+	$(tclzvfs_LIB_SPEC) \
+	$(tkblt_LIB_SPEC) \
+	$(tkhtml1_LIB_SPEC) \
+	$(tkimg_LIB_SPEC) \
+	$(tkimggif_LIB_SPEC) \
+	$(tkimgjpeg_LIB_SPEC) \
+	$(tkimgpng_LIB_SPEC) \
+	$(tkimgtiff_LIB_SPEC) \
+	$(tkimgwindow_LIB_SPEC) \
+	$(tkmpeg_LIB_SPEC) \
+	$(tksao_LIB_SPEC) \
+	$(tktable_LIB_SPEC) \
+	$(tkmacosx_LIB_SPEC) \
+	$(TK_STUB_LIB_SPEC) \
+	$(TCL_STUB_LIB_SPEC)
+
+LLIBS	= \
+	$(libdir)/libfuntools.a \
+	$(libdir)/libast.a \
+	$(libdir)/libast_err.a \
+	$(libdir)/libast_pal.a \
+	$(libdir)/libxpa.a \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS))))
 
 PREQS	= \
 	$(APPDIR) \
@@ -99,7 +135,7 @@ PREQS	= \
 #--------------------------main
 
 .NOTPARALLEL :
-.PHONY	: ds9 debug tcl tcl_debug tk tk_debug compiler cleanup
+.PHONY	: ds9 debug tcl tk cleanup
 
 ds9	: ds9base ds9ext
 	cp -p ds9base $(APPDIR)/Contents/MacOS/ds9
@@ -133,41 +169,17 @@ tkAppInit.o : tkAppInit.c
 tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
 	cp $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c .
 
-ds9base	: $(OBJS)
+ds9base	: $(OBJS) $(LLIBS)
 	$(RM) $@
 	$(CC) $(CFLAGS) -o $@ \
 	$(OBJS) \
-	$(libdir)/libfuntools.a \
-	$(libdir)/libast.a \
-	$(libdir)/libast_err.a \
-	$(libdir)/libast_pal.a \
-	$(libdir)/libxpa.a \
-	$(jpegtcl_LIB_SPEC) \
-	$(pngtcl_LIB_SPEC) \
-	$(tifftcl_LIB_SPEC) \
-	$(zlibtcl_LIB_SPEC) \
-	$(tclcheckdns_LIB_SPEC) \
-	$(tcliis_LIB_SPEC) \
-	$(tclsignal_LIB_SPEC) \
-	$(tclxml_LIB_SPEC) \
-	$(tkblt_LIB_SPEC) \
-	$(tkhtml1_LIB_SPEC) \
-	$(tkimg_LIB_SPEC) \
-	$(tkimggif_LIB_SPEC) \
-	$(tkimgjpeg_LIB_SPEC) \
-	$(tkimgpng_LIB_SPEC) \
-	$(tkimgtiff_LIB_SPEC) \
-	$(tkimgwindow_LIB_SPEC) \
-	$(tkmacosx_LIB_SPEC) \
-	$(tkmpeg_LIB_SPEC) \
-	$(tksao_LIB_SPEC) \
-	$(tktable_LIB_SPEC) \
-	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
-	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
+	$(LLIBS) \
+	$(TK_LIB_SPEC) \
+	$(TCL_LIB_SPEC) \
 	$(TK_LIBS) \
 	$(LIBS)
 
-ds9ext	: $(APPDIR) $(PREQS) tcl tk compiler cleanup
+ds9ext	: $(APPDIR) $(PREQS) tcl tk $(LIBDIR)/pcc-i386-snowleopard.tar.gz cleanup
 
 $(APPDIR):
 	cp -prf SAOImage\ DS9.app $(bindir)/.
@@ -176,18 +188,8 @@ tcl	:
 	cp -pf $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl $(TCLFW)/.
 	cp -prf $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Resources/* $(TCLDIR)/.
 
-tcl_debug:
-	cp -pf $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl_debug $(TCLFW)/Tcl
-	cp -prf $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Resources/* $(TCLDIR)/.
-
 tk	:
 	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Tk $(TKFW)/.
-	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Info.plist $(TKDIR)/.
-	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms $(TKDIR)/.
-	cp -prf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts $(TKDIR)/.
-
-tk_debug:
-	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Tk_debug $(TKFW)/Tk
 	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Info.plist $(TKDIR)/.
 	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms $(TKDIR)/.
 	cp -prf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts $(TKDIR)/.
@@ -195,8 +197,8 @@ tk_debug:
 $(LIBDIR)/xpans	: $(bindir)/xpans
 	cp -p $? "$@"
 
-compiler:
-	cp -pf $(prefix)/compilers/pcc-i386-snowleopard.tar.gz $(LIBDIR)/.
+$(LIBDIR)/pcc-i386-snowleopard.tar.gz: $(prefix)/compilers/pcc-i386-snowleopard.tar.gz
+	cp -p $? "$@"
 
 cleanup:
 	cd $(APPDIR); find . -name keepme -exec rm -rf {} \;

@@ -114,6 +114,9 @@ LLIBS	= \
 
 PREQS	= \
 	$(APPDIR) \
+	$(APPDIR)/tcl$(TCL_VERSION) \
+	$(APPDIR)/tcl8 \
+	$(APPDIR)/tk$(TCL_VERSION) \
 	$(LIBDIR)/library \
 	$(LIBDIR)/msgs \
 	$(LIBDIR)/doc \
@@ -125,25 +128,21 @@ PREQS	= \
 	$(LIBDIR)/ftp \
 	$(LIBDIR)/log \
 	$(LIBDIR)/textutil \
-	$(LIBDIR)/math
+	$(LIBDIR)/math \
+	$(APPDIR)/xpans.exe \
+	$(APPDIR)/install.vbs
 
 #--------------------------main
 
 .NOTPARALLEL :
 .PHONY	: debug
 
-$(APPDIR)/ds9.exe : ds9Base.exe $(PREQS) \
-	$(APPDIR)/tcl$(TCL_VERSION) $(APPDIR)/tcl8 \
-	$(APPDIR)/tk$(TCL_VERSION) \
-	$(APPDIR)/xpans.exe $(APPDIR)/install.vbs
+$(APPDIR)/ds9.exe : ds9Base.exe $(PREQS)
 	cp -p ds9base.exe ds9.exe
 	$(STRIP) ds9.exe
 	cp -p ds9.exe $(APPDIR)/.
 
-debug	: ds9Base.exe $(PREQS) \
-	$(APPDIR)/tcl$(TCL_VERSION) $(APPDIR)/tcl8 \
-	$(APPDIR)/tk$(TCL_VERSION) \
-	$(APPDIR)/xpans.exe $(APPDIR)/install.vbs
+debug	: ds9Base.exe $(PREQS)
 	mv ds9base.exe ds9.exe
 	cp -p ds9.exe $(APPDIR)/.
 

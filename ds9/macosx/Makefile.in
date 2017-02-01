@@ -141,11 +141,11 @@ $(MACDIR)/ds9 : ds9base $(PREQS) $(TCLFW)/Tcl $(TKFW)/Tk $(LIBDIR)/pcc-i386-snow
 	cp -p ds9base "$@"
 	strip "$@"
 	install_name_tool -change \
-	/Library/Frameworks/Tcl.framework/Versions/8.6/Tcl \
+	/Library/Frameworks/Tcl.framework/Versions/$(TCL_VERSION)/Tcl \
 	@executable_path/../Frameworks/Tcl.framework/Tcl \
 	"$@"
 	install_name_tool -change \
-	/Library/Frameworks/Tk.framework/Versions/8.6/Tk \
+	/Library/Frameworks/Tk.framework/Versions/$(TCL_VERSION)/Tk \
 	@executable_path/../Frameworks/Tk.framework/Tk \
 	"$@"
 	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImage\ DS9.app
@@ -153,11 +153,11 @@ $(MACDIR)/ds9 : ds9base $(PREQS) $(TCLFW)/Tcl $(TKFW)/Tk $(LIBDIR)/pcc-i386-snow
 debug	: ds9base $(PREQS) $(TCLFW)/Tcl $(TKFW)/Tk $(LIBDIR)/pcc-i386-snowleopard.tar.gz
 	cp -p ds9base $(APPDIR)/Contents/MacOS/ds9
 	install_name_tool -change \
-	/Library/Frameworks/Tcl.framework/Versions/8.6/Tcl \
+	/Library/Frameworks/Tcl.framework/Versions/$(TCL_VERSION)/Tcl \
 	@executable_path/../Frameworks/Tcl.framework/Tcl \
 	$(APPDIR)/Contents/MacOS/ds9
 	install_name_tool -change \
-	/Library/Frameworks/Tk.framework/Versions/8.6/Tk \
+	/Library/Frameworks/Tk.framework/Versions/$(TCL_VERSION)/Tk \
 	@executable_path/../Frameworks/Tk.framework/Tk \
 	$(APPDIR)/Contents/MacOS/ds9
 	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImage\ DS9.app
@@ -182,15 +182,15 @@ ds9base	: $(OBJS) $(LLIBS)
 $(APPDIR):
 	cp -prf SAOImage\ DS9.app $(bindir)/.
 
-$(TCLFW)/Tcl : $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl
-	cp -pf $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Tcl $(TCLFW)/.
-	cp -prf $(prefix)/build/tcl/Tcl.framework/Versions/8.6/Resources/* $(TCLDIR)/.
+$(TCLFW)/Tcl : $(prefix)/build/tcl/Tcl.framework/Versions/$(TCL_VERSION)/Tcl
+	cp -pf $(prefix)/build/tcl/Tcl.framework/Versions/$(TCL_VERSION)/Tcl $(TCLFW)/.
+	cp -prf $(prefix)/build/tcl/Tcl.framework/Versions/$(TCL_VERSION)/Resources/* $(TCLDIR)/.
 
-$(TKFW)/Tk : $(prefix)/build/tk/Tk.framework/Versions/8.6/Tk
-	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Tk $(TKFW)/.
-	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Info.plist $(TKDIR)/.
-	cp -pf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/license.terms $(TKDIR)/.
-	cp -prf $(prefix)/build/tk/Tk.framework/Versions/8.6/Resources/Scripts $(TKDIR)/.
+$(TKFW)/Tk : $(prefix)/build/tk/Tk.framework/Versions/$(TCL_VERSION)/Tk
+	cp -pf $(prefix)/build/tk/Tk.framework/Versions/$(TCL_VERSION)/Tk $(TKFW)/.
+	cp -pf $(prefix)/build/tk/Tk.framework/Versions/$(TCL_VERSION)/Resources/Info.plist $(TKDIR)/.
+	cp -pf $(prefix)/build/tk/Tk.framework/Versions/$(TCL_VERSION)/Resources/license.terms $(TKDIR)/.
+	cp -prf $(prefix)/build/tk/Tk.framework/Versions/$(TCL_VERSION)/Resources/Scripts $(TKDIR)/.
 
 $(LIBDIR)/xpans	: $(bindir)/xpans
 	cp -p $? "$@"

@@ -42,7 +42,6 @@ tkwin_LIB_SPEC	= @tkwin_LIB_SPEC@
 CC		= @CC@
 CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
 CFLAGS_WARNING	= @CFLAGS_WARNING@
-EXEEXT		= @EXEEXT@
 OBJEXT		= @OBJEXT@
 
 INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ @TK_INCLUDES@ @TK_XINCLUDES@
@@ -72,37 +71,19 @@ LIBDIR	= $(APPDIR)
 
 OBJS	= ds9.o winMain.o ds9.res.o
 
-#--------------------------main
+empty:=
+space:=$(empty) $(empty)
 
-.NOTPARALLEL :
-.PHONY	: ds9 debug appdir framework tcl tk tcllib tkcon tkblt xpa vbs
-
-ds9	: ds9Base$(EXEEXT) appdir framework tcl tk tcllib tkcon tkblt xpa vbs
-	cp -p ds9base$(EXEEXT) ds9$(EXEEXT)
-	$(STRIP) ds9$(EXEEXT)
-	cp -p ds9$(EXEEXT) $(APPDIR)/.
-
-debug	: ds9Base$(EXEEXT) appdir framework tcl tk tcllib tkcon tkblt xpa vbs
-	mv ds9base$(EXEEXT) ds9$(EXEEXT)
-	cp -p ds9$(EXEEXT) $(APPDIR)/.
-
-ds9Base$(EXEEXT): $(OBJS)
-	$(RM) $@
-	$(CC) $(CFLAGS)	-o $@ \
-	$(OBJS) \
-	$(tksao_LIB_SPEC) \
-	$(libdir)/libfuntools.a \
-	$(libdir)/libast.a \
-	$(libdir)/libast_err.a \
-	$(libdir)/libast_pal.a \
-	$(libdir)/libxpa.a \
-	$(libdir)/libxml2.a \
-	$(libdir)/libz.a \
+SPECS	= \
 	$(jpegtcl_LIB_SPEC) \
 	$(pngtcl_LIB_SPEC) \
 	$(tifftcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \
+	$(tclcheckdns_LIB_SPEC) \
+	$(tcliis_LIB_SPEC) \
+	$(tclsignal_LIB_SPEC) \
 	$(tclxml_LIB_SPEC) \
+	$(tclzvfs_LIB_SPEC) \
 	$(tkblt_LIB_SPEC) \
 	$(tkhtml1_LIB_SPEC) \
 	$(tkimg_LIB_SPEC) \
@@ -115,8 +96,62 @@ ds9Base$(EXEEXT): $(OBJS)
 	$(tksao_LIB_SPEC) \
 	$(tktable_LIB_SPEC) \
 	$(tkwin_LIB_SPEC) \
-	$(TK_STUB_LIB_SPEC) $(TK_LIB_SPEC) \
-	$(TCL_STUB_LIB_SPEC) $(TCL_LIB_SPEC) \
+	$(TK_STUB_LIB_SPEC) \
+	$(TK_LIB_SPEC) \
+	$(TCL_STUB_LIB_SPEC) \
+	$(TCL_LIB_SPEC)
+
+LLIBS	= \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(tksao_LIB_SPEC)))) \
+	$(libdir)/libfuntools.a \
+	$(libdir)/libast.a \
+	$(libdir)/libast_err.a \
+	$(libdir)/libast_pal.a \
+	$(libdir)/libxpa.a \
+	$(libdir)/libxml2.a \
+	$(libdir)/libz.a \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS))))
+
+PREQS	= \
+	$(APPDIR) \
+	$(LIBDIR)/library \
+	$(LIBDIR)/msgs \
+	$(LIBDIR)/doc \
+	$(LIBDIR)/cmaps \
+	$(LIBDIR)/template \
+	$(LIBDIR)/tkblt \
+	$(LIBDIR)/tkcon \
+	$(LIBDIR)/base64 \
+	$(LIBDIR)/ftp \
+	$(LIBDIR)/log \
+	$(LIBDIR)/textutil \
+	$(LIBDIR)/math
+
+#--------------------------main
+
+.NOTPARALLEL :
+.PHONY	: debug
+
+$(APPDIR)/ds9.exe : ds9Base.exe $(PREQS) \
+	$(APPDIR)/tcl$(TCL_VERSION) $(APPDIR)/tcl8 \
+	$(APPDIR)/tk$(TCL_VERSION) \
+	$(APPDIR)/xpans.exe $(APPDIR)/install.vbs
+	cp -p ds9base.exe ds9.exe
+	$(STRIP) ds9.exe
+	cp -p ds9.exe $(APPDIR)/.
+
+debug	: ds9Base.exe $(PREQS) \
+	$(APPDIR)/tcl$(TCL_VERSION) $(APPDIR)/tcl8 \
+	$(APPDIR)/tk$(TCL_VERSION) \
+	$(APPDIR)/xpans.exe $(APPDIR)/install.vbs
+	mv ds9base.exe ds9.exe
+	cp -p ds9.exe $(APPDIR)/.
+
+ds9Base.exe: $(OBJS) $(LLIBS)
+	$(RM) $@
+	$(CC) $(CFLAGS)	-o $@ \
+	$(OBJS) \
+	$(LLIBS) \
 	$(TK_LIBS) \
 	$(LIBS) \
 	-mwindows -static
@@ -140,18 +175,20 @@ ds9.res.o: ds9.rc ds9.ico
 $(APPDIR):
 	mkdir -p $@
 
-tcl	:
-	cp -pr $(prefix)/lib/tcl8 $(APPDIR)/.
-	cp -pr $(prefix)/lib/tcl8.6 $(APPDIR)/.
+$(APPDIR)/tcl$(TCL_VERSION) : $(prefix)/lib/tcl$(TCL_VERSION)
+	cp -pr $? $@
 
-tk	:
-	cp -pr $(prefix)/lib/tk8.6 $(APPDIR)/.
+$(APPDIR)/tcl8 : $(prefix)/lib/tcl8
+	cp -pr $? $@
 
-xpa	:
-	cp -p $(bindir)/xpans.exe $(APPDIR)/.
+$(APPDIR)/tk$(TCL_VERSION) : $(prefix)/lib/tk$(TCL_VERSION)
+	cp -pr $? $@
 
-vbs	:
-	cp install.vbs $(APPDIR)/.
+$(APPDIR)/xpans.exe: $(bindir)/xpans.exe
+	cp -p $? $@
+
+$(APPDIR)/install.vbs	: install.vbs
+	cp -p $? $@
 
 #--------------------------clean
 

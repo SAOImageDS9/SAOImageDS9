@@ -197,9 +197,11 @@ $(TKDIR)/Tk : $(TKSRC)/Tk
 	cp -p $? "$@"
 
 $(TKDIR)/Resources : $(TKSRC)/Resources
-	cp -p $(TKSRC)/Resources/Info.plist "$@"
-	cp -p $(TKSRC)/Resources/license.terms "$@"
-	cp -prf $(TKSRC)/Resources/Scripts "$@"
+	cp -prf $? "$@"
+
+#	cp -p $(TKSRC)/Resources/Info.plist "$@"
+#	cp -p $(TKSRC)/Resources/license.terms "$@"
+#	cp -prf $(TKSRC)/Resources/Scripts "$@"
 
 $(LIBDIR)/xpans	: $(bindir)/xpans
 	cp -p $? "$@"

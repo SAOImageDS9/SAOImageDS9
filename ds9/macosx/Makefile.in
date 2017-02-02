@@ -191,7 +191,7 @@ $(TCLDIR)/Tcl : $(TCLSRC)/Tcl
 	cp -p $? "$@"
 
 $(TCLDIR)/Resources : $(TCLSRC)/Resources
-	cp -prf $?/* "$@"
+	cp -prf $? "$@"
 
 $(TKDIR)/Tk : $(TKSRC)/Tk
 	cp -p $? "$@"

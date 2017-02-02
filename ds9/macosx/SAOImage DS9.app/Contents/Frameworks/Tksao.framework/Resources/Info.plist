@@ -5,35 +5,6 @@
   Smithsonian Astrophysical Observatory, Cambridge, MA, USA
   For conditions of distribution and use, see copyright notice in "copyright"
 	this file, and for a DISCLAIMER OF ALL WARRANTIES.
-
-<plist version="1.0">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Tk</string>
-	<key>CFBundleGetInfoString</key>
-	<string>Tk AQUA 8.6.1,
-Copyright © 1989-2013 Tcl Core Team,
-Copyright © 2002-2013 Daniel A. Steffen,
-Copyright © 2001-2009 Apple Inc.,
-Copyright © 2001-2002 Jim Ingham &amp; Ian Reid</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.tcltk.tklibrary</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>Tk AQUA 8.6</string>
-	<key>CFBundlePackageType</key>
-	<string>FMWK</string>
-	<key>CFBundleShortVersionString</key>
-	<string>8.6.1</string>
-	<key>CFBundleSignature</key>
-	<string>Tk  </string>
-	<key>CFBundleVersion</key>
-	<string>8.6.1</string>
-</dict>
-</plist>
 -->
 
 <plist version="1.0">

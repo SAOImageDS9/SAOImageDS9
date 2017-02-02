@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
-  Copyright (C) 1999-2015
+  Copyright (C) 1999-2017
   Smithsonian Astrophysical Observatory, Cambridge, MA, USA
   For conditions of distribution and use, see copyright notice in "copyright"
 	this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -43,8 +43,8 @@ Copyright © 2001-2002 Jim Ingham &amp; Ian Reid</string>
 	<key>CFBundleExecutable</key>
 	<string>Tk</string>
 	<key>CFBundleGetInfoString</key>
-	<string>Tksao 7.4,
-Copyright 1999-2015
+	<string>Tksao 7.6,
+Copyright 1999-2017
 Smithsonian Astrophysical Observatory"</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.sao.tksao</string>
@@ -55,10 +55,10 @@ Smithsonian Astrophysical Observatory"</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>7.4</string>
+	<string>7.6</string>
 	<key>CFBundleSignature</key>
 	<string>Tksao  </string>
 	<key>CFBundleVersion</key>
-	<string>7.4</string>
+	<string>7.6</string>
 </dict>
 </plist>

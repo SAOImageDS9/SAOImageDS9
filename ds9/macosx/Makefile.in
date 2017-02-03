@@ -184,8 +184,9 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(TK_LIBS) \
 	$(LIBS)
 
+# update date/time so we know when the build was done
 $(APPDIR):
-	cp -prf SAOImage\ DS9.app $(bindir)
+	cp -rf SAOImage\ DS9.app $(bindir)
 
 $(TCLDIR)/Tcl : $(TCLSRC)/Tcl
 	cp -p $? "$@"

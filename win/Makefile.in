@@ -26,6 +26,10 @@ WITHTCL		= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/win
 WITHTK		= --with-tk=$(prefix)/tk$(TCL_VERSION)/win $(WITHTCL)
 CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
+#--------------------------defines
+
+DS9APP	=SAOImage\ DS9\ $(DS9_VERSION)
+
 #--------------------------build
 
 .PHONY	: saods9 tcl tk tkwin libxml2 libxslt zlib
@@ -165,6 +169,8 @@ zlibdistclean :
 
 .PHONY	: dist
 
-dist	: all
-	cd bin; tar cvf - ds9$(EXEEXT) $(ZIPFILE) | gzip > dist/ds9.$(ARCH).$(DS9_VERSION).tar.gz
+dist	:
+	$(RM) -f dist/$(DS9APP)\ Install.*
+	/cygdrive/c/Program\ Files\ \(x86\)/WinZip/wzzip -p -r dist/$(DS9APP)\ Install.zip bin/ds9app
+	/cygdrive/c/Program\ Files\ \(x86\)/WinZip\ Self-Extractor/WINZIPSE.EXE  dist/$(DS9APP)\ Install.zip -d "C:\SAOImage DS9" -i ds9/win/ds9.ico -le -overwrite -runasuser -c cscript install.vbs
 

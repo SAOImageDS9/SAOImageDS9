@@ -30,7 +30,7 @@ CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 .PHONY	: saods9 tcl tk tkwin libxml2 libxslt zlib
 
-saods9	: tcl tk \
+saods9	: dirs tcl tk \
 	libxml2 libxslt zlib \
 	tclxml xpa \
 	tkblt tktable tkimg \

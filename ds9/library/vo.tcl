@@ -239,7 +239,7 @@ proc VOApply {varname} {
     set ivo(server,button) {}
 
     VOFindServer $varname
-    if {$var(url) != {}} {
+    if {$var(url) != {} && 0} {
 	VOLoad $varname 
     } else {
 	VOLoadDefault $varname
@@ -256,8 +256,7 @@ proc VOLoadDefault {varname} {
     # hardcode
     VOError $varname "Unable to access VO server list, please verify internet connection. Using default list."
 
-    set rr {chandra-ed.cfa.harvard.edu:28571	CFA Chandra-Ed Archive Server	http://chandra-ed.cfa.harvard.edu/archive.html
-xray1.physics.rutgers.edu:28571	Rutgers Primary MOOC X-ray Analysis Server	http://xray1.physics.rutgers.edu/archive.html
+    set rr {xray1.physics.rutgers.edu:28571	Rutgers Primary MOOC X-ray Analysis Server	http://xray1.physics.rutgers.edu/archive.html
 rinzai.rutgers.edu:28571	Rutgers X-ray Analysis Server #2	http://rinzai.rutgers.edu/archive.html}
 
     VOParse $varname $rr

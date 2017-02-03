@@ -239,7 +239,7 @@ proc VOApply {varname} {
     set ivo(server,button) {}
 
     VOFindServer $varname
-    if {$var(url) != {} && 0} {
+    if {$var(url) != {}} {
 	VOLoad $varname 
     } else {
 	VOLoadDefault $varname

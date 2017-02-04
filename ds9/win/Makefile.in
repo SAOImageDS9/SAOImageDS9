@@ -192,7 +192,7 @@ $(APPDIR)/install.vbs: install.vbs
 
 $(APPDIR)/tcc: $(prefix)/compilers/tcc-0.9.25-win32-bin.zip
 	$(RM) -rf $@
-	cd $(bindir); unzip %?
+	cd $(APPDIR); unzip $?
 	chmod +x $@/tcc.exe
 	touch $@
 

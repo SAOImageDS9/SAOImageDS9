@@ -443,8 +443,9 @@ proc InitFilterCompiler {} {
 		}
 	    }
 	    win32 {
-		set tcc [file join [file dirname $argv0] tcc/tcc.exe]
+		set tcc [file join [file dirname $argv0] ../tcc/tcc.exe]
  		if {[file exists $tcc]} {
+		    set env(FILTER_KEEP) 1
 		    set env(FILTER_CC) [file nativename [file attributes [file normalize $tcc] -shortname]]
 		    set env(FILTER_TMPDIR) [file nativename [file attributes [file normalize $ds9(tmpdir)] -shortname]]
 		}

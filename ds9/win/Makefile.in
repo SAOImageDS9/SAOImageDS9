@@ -130,7 +130,8 @@ PREQS	= \
 	$(LIBDIR)/textutil \
 	$(LIBDIR)/math \
 	$(APPDIR)/xpans.exe \
-	$(APPDIR)/install.vbs
+	$(APPDIR)/install.vbs \
+	$(APPDIR)/tcc
 
 #--------------------------main
 
@@ -186,8 +187,14 @@ $(APPDIR)/tk$(TCL_VERSION) : $(prefix)/lib/tk$(TCL_VERSION)
 $(APPDIR)/xpans.exe: $(bindir)/xpans.exe
 	cp -p $? $@
 
-$(APPDIR)/install.vbs	: install.vbs
+$(APPDIR)/install.vbs: install.vbs
 	cp -p $? $@
+
+$(APPDIR)/tcc: $(prefix)/compilers/tcc-0.9.25-win32-bin.zip
+	$(RM) -rf $@
+	cd $(bindir); unzip %?
+	chmod +x $@/tcc.exe
+	touch $@
 
 #--------------------------clean
 
@@ -197,4 +204,3 @@ clean	:
 	$(RM) core *~ *# *.zip *.o
 
 include ../make.include
-

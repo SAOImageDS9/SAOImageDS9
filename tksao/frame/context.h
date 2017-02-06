@@ -5,9 +5,7 @@
 #ifndef __context_h__
 #define __context_h__
 
-#ifndef __WIN32
 #include <pthread.h>
-#endif
 
 #include "base.h"
 #include "colorscale.h"
@@ -88,13 +86,9 @@ class Context {
 		   List<ContourLevel>&);
 
   void reorderAxis(char*, char**, int, int, int, size_t);
-#ifndef __WIN32
   void reorderThread(void*, char*, void* (void*), int*);
-#endif
 
-#ifndef __WIN32
   pthread_t* thread_;
-#endif
 
  public:
   FitsImage* bfits_;

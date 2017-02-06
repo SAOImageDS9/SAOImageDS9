@@ -135,11 +135,7 @@ class FitsImage {
   char* root(const char*);
   char* strip(const char*);
 
-#ifdef __WIN32
-  void smooth();
-#else
   void smooth(pthread_t*, t_smooth_arg*);
-#endif
 
   void wcsShow(WorldCoor*);
   void astinit(int, FitsHead*, FitsHead*);
@@ -244,15 +240,9 @@ class FitsImage {
   void setContext(Context* cx) {context_ = cx;}
 
   void load();
-#ifdef __WIN32
-  void analysis(int);
-#else
   void analysis(int, pthread_t*, t_smooth_arg*);
-#endif
   void block();
-#ifndef __WIN32
   void block(pthread_t*);
-#endif
 
   Matrix bin(const Vector&);
   Matrix binCenter();
@@ -471,9 +461,7 @@ class FitsImage {
   double high() {return data_ ? data_->high() : 0;}
 
   void updateClip(FrScale*);
-#ifndef __WIN32
   void updateClip(FrScale* fr, pthread_t* thread, t_clip_arg* targ);
-#endif
 
   int hasDATAMIN() {return data_ ? data_->hasDATAMIN() : 0;}
   int hasDATASEC() {return keyDATASEC;}

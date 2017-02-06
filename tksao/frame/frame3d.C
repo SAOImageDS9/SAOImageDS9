@@ -7,11 +7,8 @@
 #include "ps.h"
 #include "sigbus.h"
 
-#ifndef __WIN32
 #include <pthread.h>
-#endif
 
-#ifndef __WIN32
 void render3dTimer(void* ptr) {
   int rr = ((Frame3d*)ptr)->processDetach();
   if (rr) {
@@ -21,7 +18,6 @@ void render3dTimer(void* ptr) {
   else
     ((Frame3d*)ptr)->setTimer(0);
 }
-#endif
 
 Frame3d::Frame3d(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 
   : Frame3dBase(i,c,item)
@@ -43,9 +39,7 @@ Frame3d::Frame3d(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   colorScale = NULL;
   colorCells = NULL;
 
-#ifndef __WIN32
   thread_ =NULL;
-#endif
 
   targ_ =NULL;
   status_ = 0;
@@ -76,10 +70,8 @@ Frame3d::~Frame3d()
   if (colorCells)
     delete [] colorCells;
 
-#ifndef __WIN32
   if (thread_)
     delete [] thread_;
-#endif
 
   if (targ_)
     delete [] targ_;
@@ -94,62 +86,6 @@ Frame3d::~Frame3d()
   if (rtb_)
     delete rtb_;
 }
-
-#ifdef __WIN32
-
-unsigned char* Frame3d::fillImage(int width, int height, 
-				  Coord::InternalSystem sys)
-{
-  unsigned char* img =NULL;
-  Matrix3d mm = context->fits->matrixToData3d(sys);
-
-  switch (sys) {
-  case Coord::WIDGET:
-    {
-      RayTrace* rt = findInCache(cache_, az_, el_);
-      if (!rt) {
-	BBox3d bb = imageBounds(width, height, mm);
-	rt = new RayTrace(az_, el_, width, height, mm, bb);
-	if (!fillImageJoin(rt))
-	  return NULL;
-	cacheIt(cache_, rt);
-      }
-      img = fillImageColor(rt);
-    }
-    break;
-  case Coord::PANNER:
-    {
-      RayTrace* rt = findInCache(pannerCache_, az_, el_);
-      if (!rt) {
-	BBox3d bb = imageBounds(width, height, mm);
-	rt = new RayTrace(az_, el_, width, height, mm, bb);
-	if (!fillImageJoin(rt))
-	  return NULL;
-	cacheIt(pannerCache_, rt);
-      }
-      img = fillImageColor(rt);
-    }
-    break;
-  case Coord::PS:
-    {
-      BBox3d bb = imageBounds(width, height, mm);
-      RayTrace* rt = new RayTrace(az_, el_, width, height, mm, bb);
-      if (!fillImageJoin(rt))
-	return NULL;
-      img = fillImageColor(rt);
-      if (rt)
-	delete rt;
-    }
-    break;
-  default:
-    // na
-    break;
-  }
-
-  return img;
-}
-
-#else
 
 unsigned char* Frame3d::fillImage(int width, int height, 
 				  Coord::InternalSystem sys)
@@ -270,8 +206,6 @@ unsigned char* Frame3d::fillImage(int width, int height,
   return img;
 }
 
-#endif
-
 void* raytrace(void* arg)
 {
   t_arg* targ = (t_arg*)arg;
@@ -386,70 +320,6 @@ void* raytrace(void* arg)
   targ->done=1;
   return NULL;
 }
-
-#ifdef __WIN32
-
-int Frame3d::fillImageJoin(RayTrace* rt)
-{
-  BBox3d& bb = rt->bb_;
-
-  Vector3d dd=bb.size();
-  int ww = dd[0];
-  int hh = dd[1];
-  int zz = dd[2];
-
-  // sanity check
-  if (!ww || !hh || !zz)
-    return 1;
-
-  // local var overide
-  int nrays = ww*hh;
-  int* xid = new int[nrays];
-  int* yid = new int[nrays];
-  int x=bb.ll[0]+.5; // don't know why;
-  int y=bb.ll[1]+.5; // don't know why
-
-  // init array
-  for (int jj=0; jj<hh; jj++) {
-    for (int ii=0; ii<ww; ii++) {
-      xid[jj*ww+ii] = ii+x;
-      yid[jj*ww+ii] = jj+y;
-    }
-  }
-
-  // local var overide
-  t_arg targ;
-
-  targ.renderMethod = renderMethod_;
-  targ.width = rt->width_;
-  targ.zbuf = rt->zbuf_;
-  targ.mkzbuf = rt->mkzbuf_;
-  targ.context = context;
-
-  targ.matrix = rt->mm_;
-
-  targ.xid = xid;
-  targ.yid = yid;
-  targ.start = 0;
-  targ.stop = nrays-1;
-  targ.zstart = bb.ll[2];
-  targ.zstop = bb.ur[2];
-
-  targ.rays =0;
-  targ.abort =0;
-  targ.done =0;
-
-  raytrace(&targ);
-
-  if (xid)
-    delete [] xid;
-  if (yid)
-    delete [] yid;
-
-  return 1;
-}
-
-#else
 
 int Frame3d::fillImageJoin(RayTrace* rt)
 {
@@ -920,8 +790,6 @@ int Frame3d::bkgDetach(double az, double el) {
   rtbcnt_++;
   return 0;
 }
-
-#endif
 
 void Frame3d::cacheIt(List<RayTrace>& cache, RayTrace* rt)
 {

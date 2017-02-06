@@ -42,9 +42,7 @@ class Frame3d : public Frame3dBase {
   ColorScale* colorScale;    // current color scale
   unsigned char* colorCells; // current color values
 
-#ifndef __WIN32
   pthread_t* thread_;
-#endif
 
   int status_;
   t_arg* targ_;
@@ -57,13 +55,9 @@ class Frame3d : public Frame3dBase {
   int rtbcnt_;
 
  private:
-#ifndef __WIN32
   void cancelDetach();
   void fillImageDetach(RayTrace*);
   int bkgDetach(double az, double el);
-#else
-  void cancelDetach() {}
-#endif
 
   BBox3d imageBounds(int, int, Matrix3d);
   void ibv3d(Vector3d, Matrix3d&, int, int, double*, double*);
@@ -97,9 +91,7 @@ class Frame3d : public Frame3dBase {
   virtual ~Frame3d();
 
   void setTimer(Tcl_TimerToken tt) {timer_ = tt;}
-#ifndef __WIN32
   int processDetach();
-#endif
 
   void getColorbarCmd();
   void getRGBChannelCmd();

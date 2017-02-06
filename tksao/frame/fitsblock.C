@@ -73,8 +73,6 @@ void FitsImage::block()
   processKeywordsParams();
 }
 
-#ifndef __WIN32
-
 void FitsImage::block(pthread_t* thread)
 {
   if (DebugPerf)
@@ -141,8 +139,6 @@ void FitsImage::block(pthread_t* thread)
   processKeywordsPhysical();
   processKeywordsParams();
 }
-
-#endif
 
 void* blockproc(void* tt)
 {

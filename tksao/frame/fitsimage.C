@@ -2,9 +2,7 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#ifndef __WIN32
 #include <pthread.h>
-#endif
 
 #include "fitsimage.h"
 #include "framebase.h"
@@ -2336,8 +2334,6 @@ void FitsImage::updateClip(FrScale* fr)
   data_->updateClip(fr,getDataParams(fr->secMode()));
 }
 
-#ifndef __WIN32
-
 void* clipproc(void* tt)
 {
   t_clip_arg* targ = (t_clip_arg*)tt;
@@ -2358,8 +2354,6 @@ void FitsImage::updateClip(FrScale* fr, pthread_t* thread, t_clip_arg* targ)
   if (result)
     internalError("Unable to Create Thread");
 }
-
-#endif
 
 const char* FitsImage::getFileName(Base::FileNameType type)
 {

@@ -92,37 +92,12 @@ Context::Context()
   smoothFunction_ =GAUSSIAN;
   smoothRadius_ =3;
 
-#ifndef __WIN32
   thread_ =NULL;
-#endif
 }
 
 Context::~Context()
 {
 }
-
-#ifdef __WIN32
-
-void Context::analysis()
-{
-  if (DebugPerf)
-    cerr << "Context::analysis()" << endl;
-
-  FitsImage* ptr = fits;
-  while (ptr) {
-    FitsImage* sptr = ptr;
-    while (sptr) {
-      sptr->analysis(doSmooth_);
-      sptr = sptr->nextSlice();
-    }
-    ptr = ptr->nextMosaic();
-  }
-
-  clearHist();
-  updateClip();
-}
-
-#else
 
 void Context::analysis()
 {
@@ -182,8 +157,6 @@ void Context::analysis()
   clearHist();
   updateClip();
 }
-
-#endif
 
 Matrix Context::bin(const Vector& vv)
 {
@@ -265,94 +238,6 @@ void Context::binFinish()
   resetSecMode();
   loadFinish();
 }
-
-#ifdef __WIN32
-
-int Context::block()
-{
-  if (DebugPerf)
-    cerr << "Context::block()" << endl;
-
-  // primary
-  FitsImage* ptr = fits;
-  while (ptr) {
-    FitsImage* sptr = ptr;
-    while (sptr) {
-      sptr->block();
-      sptr = sptr->nextSlice();
-    }
-    ptr = ptr->nextMosaic();
-  }
-
-  resetSecMode();
-
-  int rr =1;
-  switch (mosaicType) {
-  case Base::IRAF:
-  case Base::WCSMOSAIC:
-    rr = processMosaicKeywords(fits);
-    break;
-  default:
-    break;
-  }
-
-  FitsMask* msk = mask.head();
-  if (msk) {
-    FitsImage* ptr = msk->mask();
-    while (ptr) {
-      FitsImage* sptr = ptr;
-      while (sptr) {
-	sptr->block();
-      
-	switch (mosaicType) {
-	case Base::IRAF:
-	case Base::WCSMOSAIC:
-	  rr &= processMosaicKeywords(ptr);
-	  break;
-	default:
-	  break;
-	}
-	sptr = sptr->nextSlice();
-      }
-      ptr = ptr->nextMosaic();
-    }
-    msk = msk->next();
-  }
-
-  return rr & blockMask();
-}
-
-int Context::blockMask()
-{
-  int rr =1;
-
-  FitsMask* msk = mask.head();
-  if (msk) {
-    FitsImage* ptr = msk->mask();
-    while (ptr) {
-      FitsImage* sptr = ptr;
-      while (sptr) {
-	sptr->block();
-      
-	switch (mosaicType) {
-	case Base::IRAF:
-	case Base::WCSMOSAIC:
-	  rr &= processMosaicKeywords(ptr);
-	  break;
-	default:
-	  break;
-	}
-	sptr = sptr->nextSlice();
-      }
-      ptr = ptr->nextMosaic();
-    }
-    msk = msk->next();
-  }
-
-  return rr;
-}
-
-#else 
 
 int Context::block()
 {
@@ -494,8 +379,6 @@ int Context::blockMask()
 
   return rr;
 }
-
-#endif
 
 void Context::bltHist(char* xname, char* yname, int num)
 {
@@ -1922,62 +1805,6 @@ void* reorder321(void* tt)
   return NULL;
 }
 
-#ifdef __WIN32
-
-void Context::reorderAxis(char* data, char** sjv, int ww, int hh, int dd, 
-			  size_t bz)
-{
-  t_reorder_arg targ;
-
-  targ.sjv = sjv;
-  targ.ww = ww;
-  targ.hh = hh;
-  targ.dd = dd;
-  targ.bz = bz;
-
-  for (int mm=0; mm<naxis_[2]; mm++) {
-    targ.dest = data + (size_t)naxis_[0]*naxis_[1]*mm*targ.bz;
-    targ.mm = mm;
-
-    switch (axesOrder_) {
-    case 123:
-      return;
-    case 132:
-      naxis_[0] =ww;
-      naxis_[1] =dd;
-      naxis_[2] =hh;
-      reorder132(&targ);
-      break;
-    case 213:
-      naxis_[0] =hh;
-      naxis_[1] =ww;
-      naxis_[2] =dd;
-      reorder213(&targ);
-      break;
-    case 231:
-      naxis_[0] =hh;
-      naxis_[1] =dd;
-      naxis_[2] =ww;
-      reorder231(&targ);
-      break;
-    case 312:
-      naxis_[0] =dd;
-      naxis_[1] =ww;
-      naxis_[2] =hh;
-      reorder312(&targ);
-      break;
-    case 321:
-      naxis_[0] =dd;
-      naxis_[1] =hh;
-      naxis_[2] =ww;
-      reorder321(&targ);
-      break;
-    }
-  }
-}
-
-#else
-
 void Context::reorderThread(void* tt, char* data, void* proc(void*), int* cnt)
 {
   t_reorder_arg* targ = (t_reorder_arg*)tt;
@@ -2059,8 +1886,6 @@ void Context::reorderAxis(char* data, char** sjv, int ww, int hh, int dd,
   delete [] thread_;
   thread_ =NULL;
 }
-
-#endif
 
 void Context::reorderAxes()
 {
@@ -2753,99 +2578,6 @@ void Context::updateClip(FrScale* fr)
     cerr << *fr << endl;
 }
 
-#ifdef __WIN32
-
-void Context::updateClipGlobal(FrScale* fr)
-{
-  FitsImage* ptr = fits;
-  while (ptr) {
-    FitsImage* sptr = ptr;
-    while (sptr) {
-      sptr->updateClip(fr);
-      sptr = sptr->nextSlice();
-    }
-    ptr = ptr->nextMosaic();
-  }
-
-  // set min/max low/high
-  ptr = fits;
-  while (ptr) {
-    FitsImage* sptr = ptr;
-    while (sptr) {
-      if (fr->min() > sptr->min())
-	fr->setMin(sptr->min(), sptr->minXY());
-      if (fr->max() < sptr->max())
-	fr->setMax(sptr->max(), sptr->maxXY());
-
-      if (fr->low() > sptr->low())
-	fr->setLow(sptr->low());
-      if (fr->high() < sptr->high())
-	fr->setHigh(sptr->high());
-
-      sptr = sptr->nextSlice();
-    }
-
-    ptr = ptr->nextMosaic();
-  }
-
-  // sanity check
-  if (fr->min() == DBL_MAX && fr->max() == -DBL_MAX) {
-    fr->setMin(NAN, Vector());
-    fr->setMax(NAN, Vector());
-  }
-  if (fr->low() == DBL_MAX && fr->high() == -DBL_MAX) {
-    fr->setLow(NAN);
-    fr->setHigh(NAN);
-  }
-
-  ptr = fits;
-  while (ptr) {
-    FitsImage* sptr = ptr;
-    while (sptr) {
-      sptr->setClip(fr->low(), fr->high());
-      sptr = sptr->nextSlice();
-    }
-    ptr = ptr->nextMosaic();
-  }
-}
-
-void Context::updateClipLocal(FrScale* fr)
-{
-  FitsImage* ptr = cfits;
-  while (ptr) {
-    ptr->updateClip(fr);
-    ptr = ptr->nextMosaic();
-  }
-
-  // set min/max low/high
-  ptr = cfits;
-  while (ptr) {
-    if (fr->min() > ptr->min())
-      fr->setMin(ptr->min(), ptr->minXY());
-    if (fr->max() < ptr->max())
-      fr->setMax(ptr->max(), ptr->maxXY());
-
-    if (fr->low() > ptr->low())
-      fr->setLow(ptr->low());
-    if (fr->high() < ptr->high())
-      fr->setHigh(ptr->high());
-
-    ptr = ptr->nextMosaic();
-  }
-
-  // sanity check
-  if (fr->min() == DBL_MAX && fr->max() == -DBL_MAX) {
-    fr->setMin(NAN, Vector());
-    fr->setMax(NAN, Vector());
-  }
-  if (fr->low() == DBL_MAX && fr->high() == -DBL_MAX) {
-    fr->setLow(NAN);
-    fr->setHigh(NAN);
-  }
-}
-
-#else
-
 void Context::updateClipGlobal(FrScale* fr)
 {
   if (thread_)
@@ -2985,8 +2717,6 @@ void Context::updateClipLocal(FrScale* fr)
     fr->setHigh(NAN);
   }
 }
-
-#endif
 
 void Context::updateContours()
 {

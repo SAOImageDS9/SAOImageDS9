@@ -9,9 +9,11 @@
 #include <sstream>
 using namespace std;
 
+#include <math.h>
+
 #include <tcl.h>
 
-#ifdef __WIN32__
+#ifdef __WIN32
 #include <Winsock2.h>
 #endif
 
@@ -28,8 +30,15 @@ void iisIO(ClientData data, int mask)
   if (IISDebug)
     cerr << "iisIO() " << fd << ' ' << mask << endl;
 
-  if ((fd < MAXCHANNEL) && iis->func[fd]) {
-    (*iis->func[fd])(iis->chan[fd], &fd, NULL);
+  int idx;
+#ifdef __WIN32
+  idx = fmod(fd,MAXCHANNEL);
+#else
+  idx = fd;
+#endif
+
+  if ((idx < MAXCHANNEL) && iis->func[idx]) {
+    (*iis->func[idx])(iis->chan[idx], &fd, NULL);
   }
   else
     cerr << "Error: IIS iisIO problems" << endl;
@@ -41,21 +50,28 @@ int xim_addInput(XimDataPtr xim, int fd,
 		 void (*func)(IoChan*, int*, void*), IoChanPtr chan)
 {
   if (IISDebug)
-    cerr << "xim_addInput() " << fd << ' ' << func << ' ' << chan << endl;
+    cerr << "xim_addInput() " << fd << ' ' << chan << endl;
 
-  iis->func[fd] = func;
-  iis->chan[fd] = chan;
-#ifndef __WIN32__
+  int idx;
+#ifdef __WIN32
+  idx = fmod(fd,MAXCHANNEL);
+#else
+  idx = fd;
+#endif
+
+  iis->func[idx] = func;
+  iis->chan[idx] = chan;
+#ifndef __WIN32
   Tcl_CreateFileHandler(fd, TCL_READABLE, (void (*)(ClientData,int))iisIO,
 			(ClientData)long(fd));
 #else
   Tcl_CreateEventSource(setupProc, checkProc, (ClientData)long(fd));
 #endif
 
-  return fd;
+  return idx;
 }
 
-#ifdef __WIN32__
+#ifdef __WIN32
 void setupProc(void* fd, int flags)
 {
   Tcl_Time blockTime = {0,1000};
@@ -88,7 +104,7 @@ void xim_removeInput(XimDataPtr xim, int fd)
   if (fd < MAXCHANNEL) {
     iis->func[fd] = NULL;
     iis->chan[fd] = NULL;
-#ifndef __WIN32__
+#ifndef __WIN32
     Tcl_DeleteFileHandler(fd);
 #endif
   }

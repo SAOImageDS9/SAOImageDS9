@@ -11,7 +11,11 @@ extern "C" {
 
 extern int IISDebug;
 
+#ifdef __WIN32
+#define MAXCHANNEL 255
+#else
 #define MAXCHANNEL 40
+#endif
 
 class IIS {
  private:

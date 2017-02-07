@@ -36,12 +36,12 @@ DS9APP	=SAOImage\ DS9\ $(DS9_VERSION)
 
 saods9	: dirs tcl tk \
 	libxml2 libxslt zlib \
-	tclxml xpa \
+	tcliis tclxml xpa \
 	tkblt tktable tkimg \
 	tkmpeg tkhtml1 tkcon \
 	tkwin \
 	tksao ds9
-# posix- tclcheckdns tcliis tclsignal
+# posix- tclcheckdns tclsignal
 
 # no symbols
 tcl	: tcl$(TCL_VERSION)/win/Makefile

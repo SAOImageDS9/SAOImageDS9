@@ -519,7 +519,7 @@ xpaclean :
 distclean : tcldistclean tkdistclean \
 	tclcheckdnsdistclean tcliisdistclean tclsignaldistclean \
 	tclzvfsdistclean tclxmldistclean xpadistclean \
-	tkbltdistclean tktabledistclean tkimgdistclean \
+	tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
 	tkmpegdistclean tkhtml1distclean \
 	tksaodistclean astdistclean funtoolsdistclean ds9distclean \
 	dirsdistclean localdistclean scrub

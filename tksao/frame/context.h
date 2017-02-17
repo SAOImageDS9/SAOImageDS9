@@ -69,6 +69,8 @@ class Context {
 
   FVContour fvcontour_;
   List<ContourLevel> auxcontours_;
+  int hasContour_;
+  int hasAuxContour_;
 
  protected:
   void binFinish();
@@ -149,8 +151,8 @@ class Context {
   FitsZBound* getDataParams(FrScale::SecMode);   // return bbox in IMAGE
   Vector getMinMax();
 
-  int hasContour() {return !fvcontour_.isEmpty();}
-  int hasContourAux() {return !auxcontours_.isEmpty();}
+  int hasContour() {return hasContour_;}
+  int hasContourAux() {return hasAuxContour_;}
   double* histequ() {return frScale.histequ(fits);}
 
   Coord::Orientation IRAFOrientation(Coord::Orientation oo) 

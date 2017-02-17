@@ -454,22 +454,29 @@ void Context::contourCreateFV(const char* color, int width, int dash,
       }
     }
   }
+
+  hasContour_ =1;
 }
 
 void Context::contourDeleteFV()
 {
   fvcontour_.lcontourlevel().deleteAll();
+  hasContour_ =0;
 }
 
 void Context::contourDeleteAux()
 {
   auxcontours_.deleteAll();
+  hasAuxContour_ =0;
 }
 
 void Context::contourListFV(ostream& str, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {
   if (!cfits)
+    return;
+
+  if (!hasContour_)
     return;
 
   contourList(str, sys, sky, fvcontour_.lcontourlevel());
@@ -479,6 +486,9 @@ void Context::contourListAux(ostream& str, Coord::CoordSystem sys,
 			     Coord::SkyFrame sky)
 {
   if (!cfits)
+    return;
+
+  if (!hasAuxContour_)
     return;
 
   contourList(str, sys, sky, auxcontours_);
@@ -586,16 +596,20 @@ void Context::contourPS(Widget::PSColorSpace cs)
   
   // render back to front
   // aux contours
-  if (auxcontours_.tail())
-    do
-      auxcontours_.current()->ps(cs);
-    while (auxcontours_.previous());
+  if (hasAuxContour_) {
+    if (auxcontours_.tail())
+      do
+	auxcontours_.current()->ps(cs);
+      while (auxcontours_.previous());
+  }
 
-  List<ContourLevel>& cc = fvcontour_.lcontourlevel();
-  if (cc.head())
-    do
-      cc.current()->ps(cs);
-    while (cc.next());
+  if (hasContour_) {
+    List<ContourLevel>& cc = fvcontour_.lcontourlevel();
+    if (cc.head())
+      do
+	cc.current()->ps(cs);
+      while (cc.next());
+  }
 }
 
 void Context::contourX11(Pixmap pm, Coord::InternalSystem sys, 
@@ -606,16 +620,20 @@ void Context::contourX11(Pixmap pm, Coord::InternalSystem sys,
   
   // render back to front
   // aux contours
-  if (auxcontours_.tail())
-    do
-      auxcontours_.current()->render(pm, sys, width, height);
-    while (auxcontours_.previous());
+  if (hasAuxContour_) {
+    if (auxcontours_.tail())
+      do
+	auxcontours_.current()->render(pm, sys, width, height);
+      while (auxcontours_.previous());
+  }
 
-  List<ContourLevel>& cc = fvcontour_.lcontourlevel();
-  if (cc.head())
-    do
-      cc.current()->render(pm, sys, width, height);
-    while (cc.next());
+  if (hasContour_) {
+    List<ContourLevel>& cc = fvcontour_.lcontourlevel();
+    if (cc.head())
+      do
+	cc.current()->render(pm, sys, width, height);
+      while (cc.next());
+  }
 }
 
 #ifdef MAC_OSX_TK
@@ -626,16 +644,20 @@ void Context::contourMacOSX()
   
   // render back to front
   // aux contours
-  if (auxcontours_.tail())
-    do
-      auxcontours_.current()->macosx();
-    while (auxcontours_.previous());
+  if (hasAuxContour_) {
+    if (auxcontours_.tail())
+      do
+	auxcontours_.current()->macosx();
+      while (auxcontours_.previous());
+  }
 
-  List<ContourLevel>& cc = fvcontour_.lcontourlevel();
-  if (cc.head())
-    do
-      cc.current()->macosx();
-    while (cc.next());
+  if (hasContour_) {
+    List<ContourLevel>& cc = fvcontour_.lcontourlevel();
+    if (cc.head())
+      do
+	cc.current()->macosx();
+      while (cc.next());
+  }
 }
 #endif
 
@@ -647,16 +669,20 @@ void Context::contourWin32()
   
   // render back to front
   // aux contours
-  if (auxcontours_.tail())
-    do
-      auxcontours_.current()->win32();
-    while (auxcontours_.previous());
+  if (hasAuxContour_) {
+    if (auxcontours_.tail())
+      do
+	auxcontours_.current()->win32();
+      while (auxcontours_.previous());
+  }
 
-  List<ContourLevel>& cc = fvcontour_.lcontourlevel();
-  if (cc.head())
-    do
-      cc.current()->win32();
-    while (cc.next());
+  if (hasContour_) {
+    List<ContourLevel>& cc = fvcontour_.lcontourlevel();
+    if (cc.head())
+      do
+	cc.current()->win32();
+      while (cc.next());
+  }
 }
 #endif
 
@@ -2527,6 +2553,8 @@ void Context::unload()
 
   fvcontour_.lcontourlevel().deleteAll();
   auxcontours_.deleteAll();
+  hasContour_ =0;
+  hasAuxContour_ =0;
 
   resetSecMode();
   updateClip();
@@ -2734,16 +2762,20 @@ void Context::updateContours(const Matrix& mx)
     return;
   
   // aux contours
-  if (auxcontours_.head())
-    do
-      auxcontours_.current()->updateCoords(mx);
-    while (auxcontours_.next());
+  if (hasAuxContour_) {
+    if (auxcontours_.head())
+      do
+	auxcontours_.current()->updateCoords(mx);
+      while (auxcontours_.next());
+  }
 
-  List<ContourLevel>& cc = fvcontour_.lcontourlevel();
-  if (cc.head())
-    do
-      cc.current()->updateCoords(mx);
-    while (cc.next());
+  if (hasContour_) {
+    List<ContourLevel>& cc = fvcontour_.lcontourlevel();
+    if (cc.head())
+      do
+	cc.current()->updateCoords(mx);
+      while (cc.next());
+  }
 }
 
 void Context::updateSlice(int id, int ss)

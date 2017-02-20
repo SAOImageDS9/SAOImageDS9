@@ -130,7 +130,7 @@ proc ProcessCommand {argv argc} {
 	    -console {ProcessConsoleCmd argv i}
 	    -contours -
 	    -contour {incr i; ProcessContourCmd argv i}
-	    -nocontour {set contour(view) 0; ContourUpdate}
+	    -nocontour {set contour(view) 0; UpdateContour}
 	    -crop {incr i; ProcessCropCmd argv i}
 	    -crosshair {incr i; ProcessCrosshairCmd argv i}
 	    -cursor {incr i; ProcessCursorCmd argv i}

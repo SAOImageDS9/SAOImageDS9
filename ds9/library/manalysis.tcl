@@ -20,7 +20,7 @@ proc AnalysisMainMenu {} {
 	-command MaskDialog
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add checkbutton -label [msgcat::mc {Contours}] \
-	-variable contour(view) -command ContourUpdate
+	-variable contour(view) -command UpdateContour
     $ds9(mb).analysis add command -label "[msgcat::mc {Contour Parameters}]..."\
 	-command ContourDialog
     $ds9(mb).analysis add separator
@@ -301,7 +301,7 @@ proc CreateButtonsAnalysis {} {
 
     CheckButton $ds9(buttons).analysis.contours \
 	[string tolower [msgcat::mc {Contours}]] \
-	contour(view) ContourUpdate
+	contour(view) UpdateContour
     CheckButton $ds9(buttons).analysis.grid \
 	[string tolower [msgcat::mc {Grid}]] \
 	grid(view) GridUpdateCurrent

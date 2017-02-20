@@ -45,11 +45,16 @@ proc ContourDef {} {
     set pcontour(numlevel) $contour(numlevel)
 }
 
-proc ContourUpdate {} {
+proc UpdateContour {} {
     global contour
     global icontour
     global dcontour
     global current
+
+    global debug
+    if {$debug(tcl,update)} {
+	puts stderr "UpdateContour"
+    }
 
     if {$current(frame) == {}} {
 	return
@@ -80,6 +85,7 @@ proc ContourUpdate {} {
 	}
 
 	if {$levels != {} && [ContourCheckMinMax]} {
+	    puts stderr "a: $contour(min) $contour(max)"
 	    $current(frame) contour create \
 		$contour(color) $contour(width) $contour(dash) \
 		$contour(method) $contour(numlevel) $contour(smooth) \
@@ -96,6 +102,7 @@ proc ContourUpdate {} {
 	set contour(max) [lindex $limits 1]
 
 	if {[ContourCheckMinMax]} {
+	    puts stderr "b: $contour(min) $contour(max)"
 	    $current(frame) contour create \
 		$contour(color) $contour(width) $contour(dash) \
 		$contour(method) $contour(numlevel) $contour(smooth) \
@@ -310,7 +317,7 @@ proc ContourApplyDialog {} {
     global contour
 
     set contour(view) 1
-    ContourUpdate
+    UpdateContour
 }
 
 proc ContourDestroyDialog {} {
@@ -336,6 +343,7 @@ proc ContourGenerateDialog {} {
     $dcontour(txt) delete 1.0 end
     if {$current(frame) != {}} {
 	if {([$current(frame) has fits]) && [ContourCheckMinMax]} {
+	    puts stderr "c: $contour(min) $contour(max)"
 	    set ll [$current(frame) get colorscale level $contour(numlevel) \
 			$contour(min) $contour(max) \
 			$contour(scale) $contour(log)]
@@ -508,6 +516,7 @@ proc ContourModeDialog {} {
 	set limits [$current(frame) get clip $contour(mode)]
 	set contour(min) [lindex $limits 0]
 	set contour(max) [lindex $limits 1]
+	puts stderr "d: $contour(min) $contour(max)"
     }
 }
 
@@ -880,9 +889,10 @@ proc UpdateContourScale {} {
 	set contour(scale) [$current(frame) get contour colorscale]
 	set contour(mode) [$current(frame) get contour clip mode]
 	set contour(log) [$current(frame) get contour colorscale log]
-	set limits [$current(frame) get contour clip]
+	set limits [$current(frame) get clip $contour(mode)]
 	set contour(min) [lindex $limits 0]
 	set contour(max) [lindex $limits 1]
+	puts stderr "e: $contour(min) $contour(max)"
     } else {
 	if {!($ds9(init) && $contour(init,scale))} {
 	    set contour(scale) [$current(frame) get colorscale]
@@ -895,6 +905,7 @@ proc UpdateContourScale {} {
 	    set limits [$current(frame) get clip $contour(mode)]
 	    set contour(min) [lindex $limits 0]
 	    set contour(max) [lindex $limits 1]
+	    puts stderr "f: $contour(min) $contour(max)"
 	}
     }
 }
@@ -1096,7 +1107,7 @@ proc ProcessContourCmd {varname iname} {
 	    ContourDialog
 	    incr i
 	    ContourLoadLevelsNow [lindex $var $i]
-	    ContourUpdate
+	    UpdateContour
 	}
 	savelevels {
 	    ContourDialog
@@ -1130,21 +1141,21 @@ proc ProcessContourCmd {varname iname} {
 
 	    incr i
 	    set contour(color) [lindex $var $i]
-	    ContourUpdate
+	    UpdateContour
 	}
 	width {
 	    ContourDialog
 
  	    incr i
 	    set contour(width) [lindex $var $i]
-	    ContourUpdate
+	    UpdateContour
 	}
 	dash {
 	    ContourDialog
 
 	    incr i
 	    set contour(dash) [FromYesNo [lindex $var $i]]
-	    ContourUpdate
+	    UpdateContour
 	}
 
 	smooth {
@@ -1153,7 +1164,7 @@ proc ProcessContourCmd {varname iname} {
 	    incr i
 	    set contour(smooth) [lindex $var $i]
 	    ContourGenerateDialog
-	    ContourUpdate
+	    UpdateContour
 	}
 	method {
 	    ContourDialog
@@ -1161,7 +1172,7 @@ proc ProcessContourCmd {varname iname} {
 	    incr i
 	    set contour(method) [lindex $var $i]
 	    ContourGenerateDialog
-	    ContourUpdate
+	    UpdateContour
 	}
 
 	nlevels {
@@ -1170,7 +1181,7 @@ proc ProcessContourCmd {varname iname} {
 	    incr i
 	    set contour(numlevel) [lindex $var $i]
 	    ContourGenerateDialog
-	    ContourUpdate
+	    UpdateContour
 	}
 	scale {
 	    set contour(init,scale) 1
@@ -1179,7 +1190,7 @@ proc ProcessContourCmd {varname iname} {
 	    incr i
 	    set contour(scale) [string tolower [lindex $var $i]]
 	    ContourGenerateDialog
-	    ContourUpdate
+	    UpdateContour
 	}
 	log {
 	    set contour(init,scale) 1
@@ -1197,7 +1208,7 @@ proc ProcessContourCmd {varname iname} {
 		}
 	    }
 	    ContourGenerateDialog
-	    ContourUpdate
+	    UpdateContour
 	}
 	mode {
 	    set contour(init,mode) 1
@@ -1207,7 +1218,7 @@ proc ProcessContourCmd {varname iname} {
 	    set contour(mode) [lindex $var $i]
 	    ContourModeDialog
 	    ContourGenerateDialog
-	    ContourUpdate
+	    UpdateContour
 	}
 	limits {
 	    set contour(init,limits) 1
@@ -1218,7 +1229,7 @@ proc ProcessContourCmd {varname iname} {
 	    incr i
 	    set contour(max) [lindex $var $i]
 	    ContourGenerateDialog
-	    ContourUpdate
+	    UpdateContour
 	}
 
 	levels {
@@ -1228,14 +1239,14 @@ proc ProcessContourCmd {varname iname} {
 	    $dcontour(txt) delete 1.0 end
 	    incr i
 	    $dcontour(txt) insert end [lindex $var $i]
-	    ContourUpdate
+	    UpdateContour
 	}
 
 	generate {
 	    ContourDialog
 
 	    ContourGenerateDialog
-	    ContourUpdate
+	    UpdateContour
 	}
 
 	yes -
@@ -1247,12 +1258,12 @@ proc ProcessContourCmd {varname iname} {
 	off -
 	0 {
 	    set contour(view) [FromYesNo [lindex $var $i]]
-	    ContourUpdate
+	    UpdateContour
 	}
 
 	default {
 	    set contour(view) 1
-	    ContourUpdate
+	    UpdateContour
 	    incr i -1
 	}
     }

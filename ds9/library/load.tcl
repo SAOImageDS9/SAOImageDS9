@@ -267,7 +267,7 @@ proc FinishLoadPre {} {
 
     # generate contour so updatemenu is correct
     UpdateContourScale
-    ContourUpdate
+    UpdateContour
 
     # just in case, frame may have been deleted before FinishLoad during startup
     if {$current(frame) == {}} {

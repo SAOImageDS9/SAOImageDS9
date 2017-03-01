@@ -905,7 +905,6 @@ proc UpdateContourScale {} {
 	    set limits [$current(frame) get clip $contour(mode)]
 	    set contour(min) [lindex $limits 0]
 	    set contour(max) [lindex $limits 1]
-	    puts stderr "f: $contour(min) $contour(max)"
 	}
     }
 }

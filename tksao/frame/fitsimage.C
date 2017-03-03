@@ -1277,6 +1277,17 @@ void FitsImage::initWCSPhysical()
 
 void FitsImage::initWCS0(const Vector& pix)
 {
+  FitsHead* hd =NULL;
+  FitsHead* prim =NULL;
+  if (wcsHeader_)
+    hd = wcsHeader_;
+  else if (altHeader_)
+    hd = altHeader_;
+  else {
+    hd = image_->head();
+    prim = image_->primary() && image_->inherit() ? image_->primary() : NULL;
+  }
+
   int ii = Coord::WCS0-Coord::WCS;
   if (wcs_[ii])
     wcsfree(wcs_[ii]);
@@ -1294,7 +1305,7 @@ void FitsImage::initWCS0(const Vector& pix)
     if (ast_[ii])
       astAnnul(ast_[ii]);
     ast_[ii] = NULL;
-    astinit0(ii);
+    astinit0(ii, hd, prim);
 
     if (DebugWCS) {
       if (wcs_[ii])
@@ -3167,14 +3178,14 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
     astShow(ast_[ii]);
 }
 
-void FitsImage::astinit0(int ii)
+void FitsImage::astinit0(int ii, FitsHead* hd, FitsHead* prim)
 {
   if (!wcs_[ii]) {
     ast_[ii] = NULL;
     return;
   }
 
-  ast_[ii] = buildast0(ii);
+  ast_[ii] = buildast0(ii, hd, prim);
 
   if (!ast_[ii])
     return;
@@ -3379,7 +3390,7 @@ AstFrameSet* FitsImage::buildast(int ii, FitsHead* hd, FitsHead* prim)
   return frameSet;
 }
 
-AstFrameSet* FitsImage::buildast0(int ii) 
+AstFrameSet* FitsImage::buildast0(int ii, FitsHead* hd, FitsHead* prim)
 {
   if (DebugAST)
     cerr << endl << "buildast0()" << endl;
@@ -3400,7 +3411,7 @@ AstFrameSet* FitsImage::buildast0(int ii)
   putFitsCard(chan, "NAXIS1", (int)naxis(0));
   putFitsCard(chan, "NAXIS2", (int)naxis(1));
 
-  wcs2ast0(ii,chan);
+  wcs2ast0(ii,hd,prim,chan);
 
   // rewind chan
   astClear(chan, "Card");
@@ -3699,7 +3710,7 @@ void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan)
 	    (hd->find("CROTA1") || (prim && prim->find("CROTA1"))))
 	  putFitsCard(chan, "CROTA1", wcs_[ww]->rot);
 	if (!ww && 
-	    (hd->find("CROTA2") || (prim && hd->find("CROTA2"))))
+	    (hd->find("CROTA2") || (prim && prim->find("CROTA2"))))
 	  putFitsCard(chan, "CROTA2", wcs_[ww]->rot);
       }
     }
@@ -3732,7 +3743,8 @@ void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan)
     // from wcssub/wcsinit.c line 800
     // wcs[ww]->epoch = 1900.0 + (mjd - 15019.81352) / 365.242198781;
     // only set if MJD-OBS or DATE-OBS is present
-    if (hd->find("MJD-OBS") || hd->find("DATE-OBS"))
+    if (hd->find("MJD-OBS") || hd->find("DATE-OBS") || 
+	(prim && prim->find("MJD-OBS")) || (prim && prim->find("DATE-OBS")))
       putFitsCard(chan, "MJD-OBS", 
 		  (wcs_[ww]->epoch-1900)*365.242198781+15019.81352);
 
@@ -3957,7 +3969,7 @@ void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan)
   }
 }
 
-void FitsImage::wcs2ast0(int ww, void* chan) 
+void FitsImage::wcs2ast0(int ww, FitsHead* hd, FitsHead* prim, void* chan) 
 {
   if (DebugAST)
     cerr << endl << "wcs2ast0()" << endl;
@@ -3980,8 +3992,11 @@ void FitsImage::wcs2ast0(int ww, void* chan)
 
   // from wcssub/wcsinit.c line 800
   // wcs[ww]->epoch = 1900.0 + (mjd - 15019.81352) / 365.242198781;
-  putFitsCard(chan, "MJD-OBS", 
-	      (wcs_[ww]->epoch-1900)*365.242198781+15019.81352);
+  // only set if MJD-OBS or DATE-OBS is present
+    if (hd->find("MJD-OBS") || hd->find("DATE-OBS") || 
+	(prim && prim->find("MJD-OBS")) || (prim && prim->find("DATE-OBS")))
+      putFitsCard(chan, "MJD-OBS", 
+		  (wcs_[ww]->epoch-1900)*365.242198781+15019.81352);
 
   putFitsCard(chan, "RADESYS", wcs_[ww]->radecsys);
 }

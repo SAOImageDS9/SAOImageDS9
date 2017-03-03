@@ -139,13 +139,13 @@ class FitsImage {
 
   void wcsShow(WorldCoor*);
   void astinit(int, FitsHead*, FitsHead*);
-  void astinit0(int);
+  void astinit0(int, FitsHead*, FitsHead*);
   int checkAst(double, double);
   AstFrameSet* fits2ast(FitsHead*);  
   AstFrameSet* buildast(int, FitsHead*, FitsHead*);
-  AstFrameSet* buildast0(int);
+  AstFrameSet* buildast0(int, FitsHead*, FitsHead*);
   void wcs2ast(int, FitsHead*, FitsHead*, void*);
-  void wcs2ast0(int, void*);
+  void wcs2ast0(int, FitsHead*, FitsHead*, void*);
   void header2ast(FitsHead*, void*);
   void putFitsCard(void* chan, const char* key, const char* value);
   void putFitsCard(void* chan, const char* key, int value);

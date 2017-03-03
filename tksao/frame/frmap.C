@@ -6,7 +6,8 @@
 #include "framebase.h"
 #include "fitsimage.h"
 
-double Base::mapAngleFromRef(double angle, Coord::CoordSystem sys, Coord::SkyFrame sky)
+double Base::mapAngleFromRef(double angle, Coord::CoordSystem sys, 
+			     Coord::SkyFrame sky)
 {
   double rr = angle;
   FitsImage* ptr = currentContext->cfits;
@@ -20,23 +21,15 @@ double Base::mapAngleFromRef(double angle, Coord::CoordSystem sys, Coord::SkyFra
   case Coord::AMPLIFIER:
     break;
   default:
-    switch (ptr->getWCSOrientation(sys,sky)) {
-    case Coord::NORMAL:
-      rr += ptr->getWCSRotation(sys,sky);
-      break;
-    case Coord::XX:
-      rr = -(angle + ptr->getWCSRotation(sys,sky) + M_PI);
-      break;
-    case Coord::YY:
-    case Coord::XY:
-      break;
-    }
+    rr += ptr->getWCSRotation(sys,sky);
+    break;
   }
 
   return zeroTWOPI(rr);
 }
 
-double Base::mapAngleToRef(double angle, Coord::CoordSystem sys, Coord::SkyFrame sky)
+double Base::mapAngleToRef(double angle, Coord::CoordSystem sys, 
+			   Coord::SkyFrame sky)
 {
   double rr = angle;
   FitsImage* ptr = currentContext->cfits;
@@ -50,17 +43,8 @@ double Base::mapAngleToRef(double angle, Coord::CoordSystem sys, Coord::SkyFrame
   case Coord::AMPLIFIER:
     break;
   default:
-    switch (ptr->getWCSOrientation(sys,sky)) {
-    case Coord::NORMAL:
-      rr -= ptr->getWCSRotation(sys,sky);
-      break;
-    case Coord::XX:
-      rr = -(angle + ptr->getWCSRotation(sys,sky) + M_PI);
-      break;
-    case Coord::YY:
-    case Coord::XY:
-      break;
-    }
+    rr -= ptr->getWCSRotation(sys,sky);
+    break;
   }
 
   return zeroTWOPI(rr);

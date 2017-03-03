@@ -3731,8 +3731,10 @@ void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan)
 
     // from wcssub/wcsinit.c line 800
     // wcs[ww]->epoch = 1900.0 + (mjd - 15019.81352) / 365.242198781;
-    putFitsCard(chan, "MJD-OBS", 
-		(wcs_[ww]->epoch-1900)*365.242198781+15019.81352);
+    // only set if MJD-OBS or DATE-OBS is present
+    if (hd->find("MJD-OBS") || hd->find("DATE-OBS"))
+      putFitsCard(chan, "MJD-OBS", 
+		  (wcs_[ww]->epoch-1900)*365.242198781+15019.81352);
 
     ostringstream radesys;
     radesys << "RADESYS" << alt << ends;

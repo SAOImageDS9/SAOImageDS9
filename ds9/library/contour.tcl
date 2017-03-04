@@ -85,8 +85,7 @@ proc UpdateContour {} {
 	}
 
 	if {$levels != {} && [ContourCheckMinMax]} {
-	    puts stderr "a: $contour(min) $contour(max)"
-	    $current(frame) contour create \
+    $current(frame) contour create \
 		$contour(color) $contour(width) $contour(dash) \
 		$contour(method) $contour(numlevel) $contour(smooth) \
 		$contour(scale) $contour(log) $contour(mode) \
@@ -102,7 +101,6 @@ proc UpdateContour {} {
 	set contour(max) [lindex $limits 1]
 
 	if {[ContourCheckMinMax]} {
-	    puts stderr "b: $contour(min) $contour(max)"
 	    $current(frame) contour create \
 		$contour(color) $contour(width) $contour(dash) \
 		$contour(method) $contour(numlevel) $contour(smooth) \
@@ -343,7 +341,6 @@ proc ContourGenerateDialog {} {
     $dcontour(txt) delete 1.0 end
     if {$current(frame) != {}} {
 	if {([$current(frame) has fits]) && [ContourCheckMinMax]} {
-	    puts stderr "c: $contour(min) $contour(max)"
 	    set ll [$current(frame) get colorscale level $contour(numlevel) \
 			$contour(min) $contour(max) \
 			$contour(scale) $contour(log)]
@@ -516,7 +513,6 @@ proc ContourModeDialog {} {
 	set limits [$current(frame) get clip $contour(mode)]
 	set contour(min) [lindex $limits 0]
 	set contour(max) [lindex $limits 1]
-	puts stderr "d: $contour(min) $contour(max)"
     }
 }
 
@@ -892,7 +888,6 @@ proc UpdateContourScale {} {
 	set limits [$current(frame) get clip $contour(mode)]
 	set contour(min) [lindex $limits 0]
 	set contour(max) [lindex $limits 1]
-	puts stderr "e: $contour(min) $contour(max)"
     } else {
 	if {!($ds9(init) && $contour(init,scale))} {
 	    set contour(scale) [$current(frame) get colorscale]

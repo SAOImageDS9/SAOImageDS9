@@ -30,7 +30,7 @@ proc SAMPConnect {{verbose 1}} {
     # connected?
     if {[info exists samp]} {
 	if {$verbose} {
-	    Error [msgcat::mc {SAMP: already connected}]
+	    Error "SAMP: [msgcat::mc {already connected}]"
 	}
 	return
     }
@@ -52,7 +52,7 @@ proc SAMPConnect {{verbose 1}} {
     # can we find a hub?
     if {![SAMPParseHub]} {
  	if {$verbose} {
-	    Error [msgcat::mc {SAMP: unable to locate HUB}]
+	    Error "SAMP: [msgcat::mc {unable to locate HUB}]"
 	}
 	catch {unset samp}
 	return
@@ -60,9 +60,10 @@ proc SAMPConnect {{verbose 1}} {
 
     # register
     set params [list "string $samp(secret)"]
+    set rr {}
     if {![SAMPSend {samp.hub.register} $params rr]} {
   	if {$verbose} {
-	    Error [msgcat::mc {SAMP: internal error}]
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
 	catch {unset samp}
 	return
@@ -94,9 +95,10 @@ proc SAMPConnect {{verbose 1}} {
     set param1 [list "string $samp(private)"]
     set param2 [list "struct sampmap"]
     set params "$param1 $param2"
+    set rr {}
     if {![SAMPSend {samp.hub.declareMetadata} $params rr]} {
   	if {$verbose} {
-	    Error [msgcat::mc {SAMP: internal error}]
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
 	catch {unset samp}
 	return
@@ -110,9 +112,10 @@ proc SAMPConnect {{verbose 1}} {
     set param1 [list "string $samp(private)"]
     set param2 [list "string http://$samp(home)"]
     set params "$param1 $param2"
+    set rr {}
     if {![SAMPSend {samp.hub.setXmlrpcCallback} $params rr]} {
   	if {$verbose} {
-	    Error [msgcat::mc {SAMP: internal error}]
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
 	catch {unset samp}
 	return
@@ -154,9 +157,10 @@ proc SAMPConnect {{verbose 1}} {
     set param1 [list "string $samp(private)"]
     set param2 [list "struct sampmap"]
     set params "$param1 $param2" 
+    set rr {}
     if {![SAMPSend {samp.hub.declareSubscriptions} $params rr]} {
   	if {$verbose} {
-	    Error [msgcat::mc {SAMP: internal error}]
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
 	catch {unset samp}
 	return
@@ -171,7 +175,7 @@ proc SAMPDisconnect {} {
 
     # connected?
     if {![info exists samp]} {
-	Error [msgcat::mc {SAMP: not connected}]
+	Error "SAMP: [msgcat::mc {not connected}]"
 	return
     }
 
@@ -179,7 +183,9 @@ proc SAMPDisconnect {} {
     if {[info exists samp(private)]} {
 	set params [list "string $samp(private)"]
 	set rr {}
-	SAMPSend {samp.hub.unregister} $params rr
+	if {![SAMPSend {samp.hub.unregister} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
 	SAMPShutdown
     }
 
@@ -202,7 +208,7 @@ proc SAMPSendImageLoadFits {id} {
 
     # connected?
     if {![info exists samp]} {
-	Error [msgcat::mc {SAMP: not connected}]
+	Error "SAMP: [msgcat::mc {not connected}]"
 	return
     }
 
@@ -247,10 +253,15 @@ proc SAMPSendImageLoadFits {id} {
     set param3 [list "struct sampmap"]
     set params "$param1 $param2 $param3" 
 
+    set rr {}
     if {$id != {}} {
-	SAMPSend {samp.hub.notify} $params rr
+	if {![SAMPSend {samp.hub.notify} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
     } else {
-	SAMPSend {samp.hub.notifyAll} $params rr
+	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
     }
 
     # set lock
@@ -273,7 +284,7 @@ proc SAMPSendTableLoadFits {id} {
 
     # connected?
     if {![info exists samp]} {
-	Error [msgcat::mc {SAMP: not connected}]
+	Error "SAMP: [msgcat::mc {not connected}]"
 	return
     }
 
@@ -318,10 +329,15 @@ proc SAMPSendTableLoadFits {id} {
     set param3 [list "struct sampmap"]
     set params "$param1 $param2 $param3" 
 
+    set rr {}
     if {$id != {}} {
-	SAMPSend {samp.hub.notify} $params rr
+	if {![SAMPSend {samp.hub.notify} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
     } else {
-	SAMPSend {samp.hub.notifyAll} $params rr
+	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
     }
 
     # set lock
@@ -346,7 +362,7 @@ proc SAMPSendTableLoadVotable {id varname} {
 
     # connected?
     if {![info exists samp]} {
-	Error [msgcat::mc {SAMP: not connected}]
+	Error "SAMP: [msgcat::mc {not connected}]"
 	return
     }
 
@@ -385,10 +401,15 @@ proc SAMPSendTableLoadVotable {id varname} {
     set param3 [list "struct sampmap"]
     set params "$param1 $param2 $param3" 
 
+    set rr {}
     if {$id != {}} {
-	SAMPSend {samp.hub.notify} $params rr
+	if {![SAMPSend {samp.hub.notify} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
     } else {
-	SAMPSend {samp.hub.notifyAll} $params rr
+	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
     }
 
     # set lock
@@ -428,10 +449,15 @@ proc SAMPSendTableHighlightRow {id varname row} {
     set param3 [list "struct sampmap"]
     set params "$param1 $param2 $param3" 
 
+    set rr {}
     if {$id != {}} {
-	SAMPSend {samp.hub.notify} $params rr
+	if {![SAMPSend {samp.hub.notify} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
     } else {
-	SAMPSend {samp.hub.notifyAll} $params rr
+	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
     }
 
     # set lock
@@ -475,10 +501,15 @@ proc SAMPSendTableSelectRowList {id varname rows} {
     set param3 [list "struct sampmap"]
     set params "$param1 $param2 $param3" 
 
+    set rr {}
     if {$id != {}} {
-	SAMPSend {samp.hub.notify} $params rr
+	if {![SAMPSend {samp.hub.notify} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
     } else {
-	SAMPSend {samp.hub.notifyAll} $params rr
+	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
     }
 
     # set lock
@@ -548,10 +579,15 @@ proc SAMPSendCoordPointAtSky {id coord} {
     set param3 [list "struct sampmap"]
     set params "$param1 $param2 $param3" 
 
+    set rr {}
     if {$id != {}} {
-	SAMPSend {samp.hub.notify} $params rr
+	if {![SAMPSend {samp.hub.notify} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
     } else {
-	SAMPSend {samp.hub.notifyAll} $params rr
+	if {![SAMPSend {samp.hub.notifyAll} $params rr]} {
+	    Error "SAMP: [msgcat::mc {internal error}] $rr"
+	}
     }
 
     # set lock
@@ -631,7 +667,9 @@ proc SAMPUpdate {} {
     set param1 [list "string $samp(private)"]
     set param2 [list "string image.load.fits"]
     set params "$param1 $param2" 
+    set rr {}
     if {![SAMPSend {samp.hub.getSubscribedClients} $params rr]} {
+	Error "SAMP: [msgcat::mc {internal error}] $rr"
 	return
     }
     
@@ -648,7 +686,9 @@ proc SAMPUpdate {} {
     set param1 [list "string $samp(private)"]
     set param2 [list "string table.load.fits"]
     set params "$param1 $param2" 
+    set rr {}
     if {![SAMPSend {samp.hub.getSubscribedClients} $params rr]} {
+	Error "SAMP: [msgcat::mc {internal error}] $rr"
 	return
     }
     
@@ -665,7 +705,9 @@ proc SAMPUpdate {} {
     set param1 [list "string $samp(private)"]
     set param2 [list "string table.load.votable"]
     set params "$param1 $param2" 
+    set rr {}
     if {![SAMPSend {samp.hub.getSubscribedClients} $params rr]} {
+	Error "SAMP: [msgcat::mc {internal error}] $rr"
 	return
     }
     
@@ -762,7 +804,9 @@ proc SAMPReply {msgid status {result {}} {url {}} {error {}}} {
     set param2 [list "string $msgid"]
     set param3 [list "struct sampmap"]
     set params "$param1 $param2 $param3"
+    set rr {}
     if {![SAMPSend {samp.hub.reply} $params rr]} {
+	Error "SAMP: [msgcat::mc {internal error}] $rr"
 	return
     }
 }
@@ -1075,7 +1119,9 @@ proc SAMPGetAppName {id} {
     set param1 [list "string $samp(private)"]
     set param2 [list "string $id"]
     set params "$param1 $param2" 
+    set rr {}
     if {![SAMPSend {samp.hub.getMetadata} $params rr]} {
+	Error "SAMP: [msgcat::mc {internal error}] $rr"
 	return
     }
 
@@ -1670,7 +1716,7 @@ proc ProcessSAMPCmd {varname iname} {
 			    }
 			}
 		    } else {
-			Error [msgcat::mc {SAMP: not connected}]
+			Error "SAMP: [msgcat::mc {not connected}]"
 		    }
 		}
 		table {
@@ -1686,7 +1732,7 @@ proc ProcessSAMPCmd {varname iname} {
 			    }
 			}
 		    } else {
-			Error [msgcat::mc {SAMP: not connected}]
+			Error "SAMP: [msgcat::mc {not connected}]"
 		    }
 		}
 		default {
@@ -1701,7 +1747,7 @@ proc ProcessSAMPCmd {varname iname} {
 			    }
 			}
 		    } else {
-			Error [msgcat::mc {SAMP: not connected}]
+			Error "SAMP: [msgcat::mc {not connected}]"
 		    }
 		}
 	    }

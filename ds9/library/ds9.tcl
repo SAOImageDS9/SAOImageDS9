@@ -240,6 +240,8 @@ switch $ds9(wm) {
 	package require tkcon
 	package require Tkblt
 
+	package require xmlrpc
+
 	package require DS9
 
 	proc ::tk::mac::ShowPreferences {} {
@@ -297,6 +299,8 @@ switch $ds9(wm) {
 
 	package require tkcon
 	package require Tkblt
+
+	package require xmlrpc
 
 	package require DS9
 

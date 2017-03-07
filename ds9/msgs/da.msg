@@ -658,10 +658,7 @@
 ::msgcat::mcset da {Ruler} {Lineal}
 ::msgcat::mcset da {SAMP Image} 
 ::msgcat::mcset da {SAMP Table} 
-::msgcat::mcset da {SAMP: already connected} 
-::msgcat::mcset da {SAMP: internal error} 
 ::msgcat::mcset da {SAMP: not connected} 
-::msgcat::mcset da {SAMP: unable to locate HUB} 
 ::msgcat::mcset da {SAMP} 
 ::msgcat::mcset da {Sample Increment} 
 ::msgcat::mcset da {Sample Parameters} 
@@ -848,6 +845,7 @@
 ::msgcat::mcset da {Zoom In} {Zoom ind}
 ::msgcat::mcset da {Zoom Out} {Zoom ud}
 ::msgcat::mcset da {Zoom} 
+::msgcat::mcset da {already connected} 
 ::msgcat::mcset da {and} 
 ::msgcat::mcset da {blue} 
 ::msgcat::mcset da {b} 
@@ -858,6 +856,8 @@
 ::msgcat::mcset da {g} 
 ::msgcat::mcset da {h5utils} 
 ::msgcat::mcset da {heat} 
+::msgcat::mcset da {internal error} 
+::msgcat::mcset da {not connected} 
 ::msgcat::mcset da {not} 
 ::msgcat::mcset da {only} 
 ::msgcat::mcset da {or center of data} {eller center for data}
@@ -867,5 +867,6 @@
 ::msgcat::mcset da {r} 
 ::msgcat::mcset da {staircase} {trappe}
 ::msgcat::mcset da {standard} 
+::msgcat::mcset da {unable to locate HUB} 
 ::msgcat::mcset da {x} 
 ::msgcat::mcset da {} 

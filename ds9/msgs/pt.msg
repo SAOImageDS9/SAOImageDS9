@@ -658,10 +658,7 @@
 ::msgcat::mcset pt {Ruler} [encoding convertfrom iso8859-1 {Régua}]
 ::msgcat::mcset pt {SAMP Image} 
 ::msgcat::mcset pt {SAMP Table} 
-::msgcat::mcset pt {SAMP: already connected} 
-::msgcat::mcset pt {SAMP: internal error} 
 ::msgcat::mcset pt {SAMP: not connected} 
-::msgcat::mcset pt {SAMP: unable to locate HUB} 
 ::msgcat::mcset pt {SAMP} 
 ::msgcat::mcset pt {Sample Increment} 
 ::msgcat::mcset pt {Sample Parameters} 
@@ -848,6 +845,7 @@
 ::msgcat::mcset pt {Zoom In} {Aumentar}
 ::msgcat::mcset pt {Zoom Out} {Diminuir}
 ::msgcat::mcset pt {Zoom} {Fator}
+::msgcat::mcset pt {already connected} 
 ::msgcat::mcset pt {and} 
 ::msgcat::mcset pt {blue} 
 ::msgcat::mcset pt {b} 
@@ -858,6 +856,8 @@
 ::msgcat::mcset pt {g} 
 ::msgcat::mcset pt {h5utils} 
 ::msgcat::mcset pt {heat} 
+::msgcat::mcset pt {internal error} 
+::msgcat::mcset pt {not connected} 
 ::msgcat::mcset pt {not} 
 ::msgcat::mcset pt {only} 
 ::msgcat::mcset pt {or center of data} {ou centro dos dados}
@@ -867,5 +867,6 @@
 ::msgcat::mcset pt {r} 
 ::msgcat::mcset pt {staircase} 
 ::msgcat::mcset pt {standard} 
+::msgcat::mcset pt {unable to locate HUB} 
 ::msgcat::mcset pt {x} 
 ::msgcat::mcset pt {} 

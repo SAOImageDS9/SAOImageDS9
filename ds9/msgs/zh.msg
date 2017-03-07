@@ -1,3 +1,4 @@
+
 ::msgcat::mcset zh {2D} 
 ::msgcat::mcset zh {3D} 
 ::msgcat::mcset zh {A postscript generation error has occurred} 
@@ -658,10 +659,7 @@
 ::msgcat::mcset zh {Ruler} [encoding convertfrom big5 "\xA4\xD8 \xB3\x57"]
 ::msgcat::mcset zh {SAMP Image} 
 ::msgcat::mcset zh {SAMP Table} 
-::msgcat::mcset zh {SAMP: already connected} 
-::msgcat::mcset zh {SAMP: internal error} 
 ::msgcat::mcset zh {SAMP: not connected} 
-::msgcat::mcset zh {SAMP: unable to locate HUB} 
 ::msgcat::mcset zh {SAMP} 
 ::msgcat::mcset zh {Sample Increment} 
 ::msgcat::mcset zh {Sample Parameters} 
@@ -848,6 +846,7 @@
 ::msgcat::mcset zh {Zoom In} [encoding convertfrom big5 "\xA9\xF1 \xA4\x6A"]
 ::msgcat::mcset zh {Zoom Out} [encoding convertfrom big5 "\xC1\x59 \xA4\x70"]
 ::msgcat::mcset zh {Zoom} [encoding convertfrom big5 "\xC1\x59 \xA9\xF1"]
+::msgcat::mcset zh {already connected} 
 ::msgcat::mcset zh {and} 
 ::msgcat::mcset zh {blue} [encoding convertfrom big5 "\xC2\xC5"]
 ::msgcat::mcset zh {b} 
@@ -858,6 +857,8 @@
 ::msgcat::mcset zh {g} 
 ::msgcat::mcset zh {h5utils} 
 ::msgcat::mcset zh {heat} 
+::msgcat::mcset zh {internal error} 
+::msgcat::mcset zh {not connected} 
 ::msgcat::mcset zh {not} 
 ::msgcat::mcset zh {only} 
 ::msgcat::mcset zh {or center of data} 
@@ -867,5 +868,6 @@
 ::msgcat::mcset zh {r} 
 ::msgcat::mcset zh {staircase} 
 ::msgcat::mcset zh {standard} 
+::msgcat::mcset zh {unable to locate HUB} 
 ::msgcat::mcset zh {x} 
 ::msgcat::mcset zh {}  

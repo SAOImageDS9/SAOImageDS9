@@ -658,10 +658,7 @@
 ::msgcat::mcset cs {Ruler} 
 ::msgcat::mcset cs {SAMP Image} 
 ::msgcat::mcset cs {SAMP Table} 
-::msgcat::mcset cs {SAMP: already connected} 
-::msgcat::mcset cs {SAMP: internal error} 
 ::msgcat::mcset cs {SAMP: not connected} 
-::msgcat::mcset cs {SAMP: unable to locate HUB} 
 ::msgcat::mcset cs {SAMP} 
 ::msgcat::mcset cs {Sample Increment} 
 ::msgcat::mcset cs {Sample Parameters} 
@@ -848,6 +845,7 @@
 ::msgcat::mcset cs {Zoom In} [encoding convertfrom iso8859-2 {Zvìt¹it}]
 ::msgcat::mcset cs {Zoom Out} [encoding convertfrom iso8859-2 {Zmen¹it}]
 ::msgcat::mcset cs {Zoom} [encoding convertfrom iso8859-2 {Zvìt¹ení}]
+::msgcat::mcset cs {already connected} 
 ::msgcat::mcset cs {and} 
 ::msgcat::mcset cs {blue} [encoding convertfrom iso8859-2 {modrá}]
 ::msgcat::mcset cs {b} 
@@ -858,6 +856,8 @@
 ::msgcat::mcset cs {g} 
 ::msgcat::mcset cs {h5utils} 
 ::msgcat::mcset cs {heat} [encoding convertfrom iso8859-2 {horko}]
+::msgcat::mcset cs {internal error} 
+::msgcat::mcset cs {not connected} 
 ::msgcat::mcset cs {not} 
 ::msgcat::mcset cs {only} 
 ::msgcat::mcset cs {or center of data} 
@@ -867,5 +867,6 @@
 ::msgcat::mcset cs {r} 
 ::msgcat::mcset cs {staircase} [encoding convertfrom iso8859-2 {schodi¹tì}]
 ::msgcat::mcset cs {standard} 
+::msgcat::mcset cs {unable to locate HUB} 
 ::msgcat::mcset cs {x} 
 ::msgcat::mcset cs {} 

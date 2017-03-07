@@ -658,10 +658,7 @@
 ::msgcat::mcset ja {Ruler} [encoding convertfrom euc-jp "\xa4\xe2\xa4\xce\xa4\xb5\xa4\xb7"]
 ::msgcat::mcset ja {SAMP Image} 
 ::msgcat::mcset ja {SAMP Table} 
-::msgcat::mcset ja {SAMP: already connected} [encoding convertfrom euc-jp "\x53\x41\x4d\x50\x3a\x20\xc0\xdc\xc2\xb3\xa4\xba\xa4\xdf"]
-::msgcat::mcset ja {SAMP: internal error} [encoding convertfrom euc-jp "\x53\x41\x4d\x50\x3a\x20\xc6\xe2\xc9\xf4\xa5\xa8\xa5\xe9\xa1\xbc"]
 ::msgcat::mcset ja {SAMP: not connected} [encoding convertfrom euc-jp "\x53\x41\x4d\x50\x3a\x20\xcc\xa4\xc0\xdc\xc2\xb3"]
-::msgcat::mcset ja {SAMP: unable to locate HUB} [encoding convertfrom euc-jp "\x53\x41\x4d\x50\x3a\x20\x48\x55\x42\x20\xa4\xf2\xb8\xab\xa4\xc4\xa4\xb1\xa4\xe9\xa4\xec\xa4\xde\xa4\xbb\xa4\xf3"]
 ::msgcat::mcset ja {SAMP} [encoding convertfrom euc-jp "\x53\x41\x4d\x50"]
 ::msgcat::mcset ja {Sample Increment} 
 ::msgcat::mcset ja {Sample Parameters} 
@@ -848,6 +845,7 @@
 ::msgcat::mcset ja {Zoom In} [encoding convertfrom euc-jp "\xb3\xc8\xc2\xe7"]
 ::msgcat::mcset ja {Zoom Out} [encoding convertfrom euc-jp "\xbd\xcc\xbe\xae"]
 ::msgcat::mcset ja {Zoom} [encoding convertfrom euc-jp "\xa5\xba\xa1\xbc\xa5\xe0"]
+::msgcat::mcset ja {already connected} 
 ::msgcat::mcset ja {and} 
 ::msgcat::mcset ja {blue} 
 ::msgcat::mcset ja {b} 
@@ -858,6 +856,8 @@
 ::msgcat::mcset ja {g} 
 ::msgcat::mcset ja {h5utils} 
 ::msgcat::mcset ja {heat} 
+::msgcat::mcset ja {internal error} 
+::msgcat::mcset ja {not connected} 
 ::msgcat::mcset ja {not} 
 ::msgcat::mcset ja {only} 
 ::msgcat::mcset ja {or center of data} [encoding convertfrom euc-jp "\xa4\xe2\xa4\xb7\xa4\xaf\xa4\xcf\xa5\xc7\xa1\xbc\xa5\xbf\xa4\xce\xc3\xe6\xbf\xb4"]
@@ -867,5 +867,6 @@
 ::msgcat::mcset ja {r} 
 ::msgcat::mcset ja {staircase} 
 ::msgcat::mcset ja {standard} 
+::msgcat::mcset ja {unable to locate HUB} 
 ::msgcat::mcset ja {x} 
 ::msgcat::mcset ja {} 

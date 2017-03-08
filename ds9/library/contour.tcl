@@ -26,6 +26,7 @@ proc ContourDef {} {
     set contour(scale) linear
     set contour(mode) minmax
     set contour(log) 1000
+    set contour(scope) local
     set contour(min) {}
     set contour(max) {}
 
@@ -34,6 +35,7 @@ proc ContourDef {} {
     # .. contour scale is log, not zscale
     set contour(init,scale) 0
     set contour(init,mode) 0
+    set contour(init,scope) 0
     set contour(init,limits) 0
 
     set pcontour(view) $contour(view)
@@ -88,7 +90,7 @@ proc UpdateContour {} {
     $current(frame) contour create \
 		$contour(color) $contour(width) $contour(dash) \
 		$contour(method) $contour(numlevel) $contour(smooth) \
-		$contour(scale) $contour(log) $contour(mode) \
+		$contour(scale) $contour(log) $contour(mode) $contour(scope) \
 		$contour(min) $contour(max) \
 		"\"$levels\""
 	}
@@ -96,7 +98,8 @@ proc UpdateContour {} {
 	set contour(scale) [$current(frame) get colorscale]
 	set contour(log) [$current(frame) get colorscale log]
 	set contour(mode) [$current(frame) get clip mode]
-	set limits [$current(frame) get clip $contour(mode)]
+	set contour(scope) [$current(frame) get clip scope]
+	set limits [$current(frame) get clip $contour(mode) $contour(scope)]
 	set contour(min) [lindex $limits 0]
 	set contour(max) [lindex $limits 1]
 
@@ -104,7 +107,7 @@ proc UpdateContour {} {
 	    $current(frame) contour create \
 		$contour(color) $contour(width) $contour(dash) \
 		$contour(method) $contour(numlevel) $contour(smooth) \
-		$contour(scale) $contour(log) $contour(mode) \
+		$contour(scale) $contour(log) $contour(mode) $contour(scope) \
 		$contour(min) $contour(max) \
 		"{}"
 	}
@@ -164,6 +167,7 @@ proc ContourDialog {} {
     $mb add cascade -label [msgcat::mc {Width}] -menu $mb.width
     $mb add cascade -label [msgcat::mc {Scale}] -menu $mb.scale
     $mb add cascade -label [msgcat::mc {Limits}] -menu $mb.limit
+    $mb add cascade -label [msgcat::mc {Scope}] -menu $mb.scope
     $mb add cascade -label [msgcat::mc {Method}] -menu $mb.method
 
     menu $mb.file
@@ -249,6 +253,12 @@ proc ContourDialog {} {
 	-variable contour(mode) -value zmax -command ContourModeDialog
     $mb.limit add radiobutton -label [msgcat::mc {User}] \
 	-variable contour(mode) -value user -command ContourModeDialog
+
+    menu $mb.scope 
+    $mb.scope add radiobutton -label [msgcat::mc {Global}] \
+	-variable contour(scope) -value global -command ContourModeDialog
+    $mb.scope add radiobutton -label [msgcat::mc {Local}] \
+	-variable contour(scope) -value local -command ContourModeDialog
 
     menu $mb.method
     $mb.method add radiobutton -label [msgcat::mc {Block}] \
@@ -510,7 +520,7 @@ proc ContourModeDialog {} {
     global contour
 
     if {$current(frame) != {}} {
-	set limits [$current(frame) get clip $contour(mode)]
+	set limits [$current(frame) get clip $contour(mode) $contour(scope)]
 	set contour(min) [lindex $limits 0]
 	set contour(max) [lindex $limits 1]
     }
@@ -884,8 +894,9 @@ proc UpdateContourScale {} {
     if {[$current(frame) has contour]} {
 	set contour(scale) [$current(frame) get contour colorscale]
 	set contour(mode) [$current(frame) get contour clip mode]
+	set contour(scope) [$current(frame) get contour clip scope]
 	set contour(log) [$current(frame) get contour colorscale log]
-	set limits [$current(frame) get clip $contour(mode)]
+	set limits [$current(frame) get clip $contour(mode) $contour(scope)]
 	set contour(min) [lindex $limits 0]
 	set contour(max) [lindex $limits 1]
     } else {
@@ -896,8 +907,11 @@ proc UpdateContourScale {} {
 	if {!($ds9(init) && $contour(init,mode))} {
 	    set contour(mode) [$current(frame) get clip mode]
 	}
+	if {!($ds9(init) && $contour(init,scope))} {
+	    set contour(scope) [$current(frame) get clip scope]
+	}
 	if {!($ds9(init) && $contour(init,limits))} {
-	    set limits [$current(frame) get clip $contour(mode)]
+	    set limits [$current(frame) get clip $contour(mode) $contour(scope)]
 	    set contour(min) [lindex $limits 0]
 	    set contour(max) [lindex $limits 1]
 	}
@@ -967,10 +981,11 @@ proc ContourBackupBase {ch which fdir rdir} {
 	set scale [$which get contour colorscale]
 	set log [$which get contour colorscale log]
 	set mode [$which get contour clip mode]
+	set scope [$which get contour clip scope]
 	set limits [$which get contour clip]
 	set levels [$which get contour level]
 
-	puts $ch "$which contour create $color $width $dash $method $numlevel $smooth $scale $log $mode $limits \{\"$levels\"\}"
+	puts $ch "$which contour create $color $width $dash $method $numlevel $smooth $scale $log $mode $scope $limits \{\"$levels\"\}"
     }
 
     # delete old contours
@@ -1214,6 +1229,16 @@ proc ProcessContourCmd {varname iname} {
 	    ContourGenerateDialog
 	    UpdateContour
 	}
+	scope {
+	    set contour(init,scope) 1
+	    ContourDialog
+
+	    incr i
+	    set contour(scope) [lindex $var $i]
+	    ContourModeDialog
+	    ContourGenerateDialog
+	    UpdateContour
+	}
 	limits {
 	    set contour(init,limits) 1
 	    ContourDialog
@@ -1406,6 +1431,7 @@ proc ProcessSendContourCmd {proc id param sock fn} {
 	log -
 	{log exp} {$proc $id "$contour(log)\n"}
 	mode {$proc $id "$contour(mode)\n"}
+	scope {$proc $id "$contour(scope)\n"}
 	limits {$proc $id "$contour(min) $contour(max)\n"}
 	levels {
 	    global dcontour

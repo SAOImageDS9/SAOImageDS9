@@ -1705,8 +1705,8 @@ void FrameRGB::setRGBSystemCmd(Coord::CoordSystem sys)
 
   // fix any contours
   for (int ii=0; ii<3; ii++) {
-    Matrix mm = old[ii].invert() * rgb[ii];
-    context[ii].updateContours(mm);
+    Matrix mx = old[ii].invert() * rgb[ii];
+    context[ii].updateContours(mx);
   }
 
   update(MATRIX);

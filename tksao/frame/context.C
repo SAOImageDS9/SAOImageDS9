@@ -436,16 +436,26 @@ void Context::contourCreateFV(const char* color, int width, int dash,
 			      int smooth, 
 			      FrScale::ColorScaleType colorScaleType,
 			      float expo,
-			      float clipMode, Vector limits, 
-			      const char* level)
+			      FrScale::ClipMode clipMode, float autoCutPer,
+			      FrScale::ClipScope clipScope,
+			      double low, double high, const char* level)
 {
+  FrScale fr = frScale;
+  fr.setColorScaleType(colorScaleType);
+  fr.setExpo(expo);
+  fr.setClipMode(clipMode);
+  fr.setAutoCutPer(autoCutPer);
+  fr.setClipScope(clipScope);
+  fr.setLow(low);
+  fr.setHigh(high);
+
   if (!isMosaic()) {
     if (cfits)
-      fvcontour_.create(parent_, cfits, &frScale, color, width, dash, method, numlevel, smooth, level, colorScaleType, expo, clipMode, limits);
+      fvcontour_.create(parent_, cfits, &fr, color, width, dash, method, numlevel, smooth, level);
   }
   else {
     if (fits) {
-      fvcontour_.create(parent_, fits, &frScale, color, width, dash, method, numlevel, smooth, level, colorScaleType, expo, clipMode, limits);
+      fvcontour_.create(parent_, fits, &fr, color, width, dash, method, numlevel, smooth, level);
 
       FitsImage* ptr = fits->nextMosaic();
       while (ptr) {
@@ -717,17 +727,20 @@ Vector Context::getClip()
   return Vector(frScale.low(), frScale.high());
 }
 
-Vector Context::getClip(FrScale::ClipMode cm, float ac)
+Vector Context::getClip(FrScale::ClipMode cm, FrScale::ClipScope sc, float ac)
 {
   if (DebugPerf)
     cerr << "Context::getClip()" << endl;
 
   // we already have the scale?
-  if (frScale.clipMode() == cm && frScale.autoCutPer() == ac)
+  if (frScale.clipMode() == cm && 
+      frScale.clipScope() == sc && 
+      frScale.autoCutPer() == ac)
     return Vector(frScale.low(),frScale.high());
 
   FrScale cl = frScale;
   cl.setClipMode(cm);
+  cl.setClipScope(sc);
   cl.setAutoCutPer(ac);
   updateClip(&cl);
 
@@ -2748,12 +2761,21 @@ void Context::updateClipLocal(FrScale* fr)
 
 void Context::updateContours()
 {
-  fvcontour_.update(cfits);
-}
+  if (!cfits)
+    return;
 
-void Context::updateContoursScale()
-{
-  fvcontour_.update(cfits,&frScale);
+  if (!hasContour_)
+    return;
+
+  switch (fvcontour_.frScale()->clipScope()) {
+  case FrScale::GLOBAL:
+    break;
+  case FrScale::LOCAL:
+    updateClip(fvcontour_.frScale());
+    break;
+  }
+
+  fvcontour_.update(cfits);
 }
 
 void Context::updateContours(const Matrix& mx)

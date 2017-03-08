@@ -123,8 +123,9 @@ class Context {
 		       int smooth, 
 		       FrScale::ColorScaleType colorScaleType,
 		       float expo,
-		       float clipMode, Vector limits, 
-		       const char* level);
+		       FrScale::ClipMode clipMode, float,
+		       FrScale::ClipScope clipScope, 
+		       double low, double high, const char* level);
   void contourDeleteFV();
   void contourDeleteAux();
   void contourListFV(ostream&, Coord::CoordSystem, Coord::SkyFrame);
@@ -146,7 +147,7 @@ class Context {
 
   int fitsCount();
 
-  Vector getClip(FrScale::ClipMode, float);
+  Vector getClip(FrScale::ClipMode, FrScale::ClipScope, float);
   Vector getClip();
   FitsZBound* getDataParams(FrScale::SecMode);   // return bbox in IMAGE
   Vector getMinMax();
@@ -221,7 +222,6 @@ class Context {
   void updateClip();
   void updateContours();
   void updateContours(const Matrix&);
-  void updateContoursScale();
   void updateSlice(int, int);
 
   int updateClipScope(FrScale::ClipScope);
@@ -257,7 +257,8 @@ class Context {
   float zContrast() {return frScale.zContrast();}
   int zSample() {return frScale.zSample();}
   int zLine() {return frScale.zLine();}
-  Vector clipUser() {return Vector(frScale.ulow(), frScale.uhigh());}
+  double ulow() {return frScale.ulow();}
+  double uhigh() {return frScale.uhigh();}
 
   void setClipScope(FrScale::ClipScope ss) {frScale.setClipScope(ss);}
   void setColorScaleType(FrScale::ColorScaleType tt)

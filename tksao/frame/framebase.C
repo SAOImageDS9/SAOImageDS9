@@ -110,15 +110,14 @@ void FrameBase::setSlice(int id, int ss)
 
   switch (currentContext->clipScope()) {
   case FrScale::GLOBAL:
-    currentContext->updateContours();
     break;
   case FrScale::LOCAL:
     currentContext->clearHist();
     currentContext->updateClip();
-    currentContext->updateContoursScale();
     break;
   }
 
+  currentContext->updateContours();
   updateColorScale();
   update(MATRIX);
 

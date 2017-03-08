@@ -83,7 +83,8 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %type <integer> pscolorspace
 %type <integer> scaleType
 %type <integer> minmaxMode
-%type <real> contourClipMode
+%type <integer> contourClipMode
+%type <integer> contourClipScope
 %type <integer> shmType
 %type <integer> contourMethod
 %type <integer> layerType
@@ -669,13 +670,6 @@ skyDist : /* empty */ {$$=Coord::DEGREE;}
 	| ARCSEC_ {$$=Coord::ARCSEC;}
 	;
 
-contourClipMode: numeric {$$ = $1;}
-	| MINMAX_ {$$ = FrScale::MINMAX;}
-	| ZSCALE_ {$$ = FrScale::ZSCALE;}
-	| ZMAX_ {$$ = FrScale::ZMAX;}
-	| USER_ {$$ = FrScale::USERCLIP;}
-	;
-
 shmType	: /* empty */ {$$ = Base::SHMID;}
 	| SHMID_ {$$ = Base::SHMID;}
 	| KEY_ {$$ = Base::KEY;}
@@ -908,8 +902,10 @@ contour	: CREATE_ contourCreate
 	| SAVE_ contourSave
 	;
 
-contourCreate : STRING INT INT contourMethod INT INT scaleType numeric contourClipMode numeric numeric STRING
-	{fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,$9,Vector($10,$11),$12);}
+contourCreate : STRING INT INT contourMethod INT INT scaleType numeric contourClipMode contourClipScope numeric numeric STRING
+{fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,(FrScale::ClipMode)$9,100,(FrScale::ClipScope)$10,$11,$12,$13);}
+        | STRING INT INT contourMethod INT INT scaleType numeric numeric contourClipScope numeric numeric STRING
+	{fr->contourCreateCmd($1,$2,$3,(FVContour::Method)$4,$5,$6,(FrScale::ColorScaleType)$7,$8,FrScale::AUTOCUT,$9,(FrScale::ClipScope)$10,$11,$12,$13);}
 	| POLYGON_ {fr->contourCreatePolygonCmd();}
 	;
 
@@ -925,6 +921,16 @@ contourLoad : STRING {fr->contourLoadCmd($1);}
 	  fr->contourLoadCmd($4,(Coord::CoordSystem)$5,(Coord::SkyFrame)$6,$1,$2,$3);
 	}
         ;
+
+contourClipMode: MINMAX_ {$$ = FrScale::MINMAX;}
+	| ZSCALE_ {$$ = FrScale::ZSCALE;}
+	| ZMAX_ {$$ = FrScale::ZMAX;}
+	| USER_ {$$ = FrScale::USERCLIP;}
+	;
+
+contourClipScope: GLOBAL_ {$$ = FrScale::GLOBAL;}
+	| LOCAL_ {$$ = FrScale::LOCAL;}
+	;
 
 contourMethod : SMOOTH_ {$$ = FVContour::SMOOTH;}
 	| BLOCK_ {$$ = FVContour::BLOCK;}
@@ -1045,7 +1051,11 @@ getBinCols : /* empty */ {fr->getBinColsCmd();}
 getBlock : FACTOR_  {fr->getBlockCmd();}
 	;
 
-getClip	: getClipLimits
+getClip	: {fr->getClipCmd();}
+        | contourClipMode contourClipScope 
+	{fr->getClipCmd((FrScale::ClipMode)$1, (FrScale::ClipScope)$2);}
+        | numeric contourClipScope 
+	{fr->getClipCmd($1, (FrScale::ClipScope)$2);}
 	| SCOPE_ {fr->getClipScopeCmd();}
 	| MODE_ {fr->getClipModeCmd();}
 	| MINMAX_ getClipMinMax
@@ -1056,14 +1066,6 @@ getClip	: getClipLimits
 	  // backward compatibility with backup
 	  fr->getClipPreserveCmd();
 	}
-	;
-
-getClipLimits: /* empty */ {fr->getClipCmd();}
-	| numeric {fr->getClipCmd($1);}
-	| MINMAX_ {fr->getClipCmd(FrScale::MINMAX);}
-	| ZSCALE_ {fr->getClipCmd(FrScale::ZSCALE);}
-	| ZMAX_ {fr->getClipCmd(FrScale::ZMAX);}
-	| USER_ {fr->getClipCmd(FrScale::USERCLIP);}
 	;
 
 getClipMinMax : MODE_ {fr->getClipMinMaxModeCmd();}
@@ -1113,6 +1115,7 @@ getContour: coordSystem skyFrame
 
 getContourClip : /* empty */ {fr->getContourClipCmd();}
 	| MODE_ {fr->getContourClipModeCmd();}
+	| SCOPE_ {fr->getContourClipScopeCmd();}
 	;
 
 getContourColorScale : /* empty */ {fr->getContourScaleCmd();}

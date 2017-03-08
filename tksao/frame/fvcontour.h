@@ -29,15 +29,12 @@ class FVContour {
   int smooth_;
   int numLevel_;
 
-  FrScale::ColorScaleType colorScaleType_;
-  float expo_;
-  float clipMode_;
-  Vector limits_;
+  FrScale frScale_;
 
   char* level_;
   InverseScale* scale_;
 
-  void buildScale(FitsImage* fits, FrScale* fr);
+  void buildScale(FitsImage* fits);
   void unity(FitsImage*);
   void bin(FitsImage*);
   void nobin(FitsImage*);
@@ -56,11 +53,13 @@ public:
   List<ContourLevel>& lcontourlevel() {return lcontourlevel_;}
 
   void create(Base*, FitsImage*, FrScale*, 
-	      const char*, int, int, Method, int, int, const char*,
-	      FrScale::ColorScaleType, float, float, Vector);
-  void append(FitsImage*);
+	      const char*, int, int, 
+	      Method, int, int, 
+	      const char*);
   void update(FitsImage*);
   void update(FitsImage*, FrScale*);
+
+  void append(FitsImage*);
 
   int isEmpty() {return lcontourlevel_.isEmpty();}
 
@@ -69,10 +68,7 @@ public:
   int numLevel() {return numLevel_;}
   int smooth() {return smooth_;}
 
-  int colorScaleType() {return colorScaleType_;}
-  float expo() {return expo_;}
-  float clipMode() {return clipMode_;}
-  Vector limits() {return limits_;}
+  FrScale* frScale() {return &frScale_;}
 
   const char* getColorName() {return colorName_;}
   int getDash() {return dash_;}

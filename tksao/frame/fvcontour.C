@@ -40,11 +40,6 @@ FVContour::FVContour()
   smooth_ =4;
   numLevel_ =5;
 
-  colorScaleType_ = FrScale::LINEARSCALE;
-  clipMode_ = (float)FrScale::MINMAX;
-  expo_ =1000;
-  limits_ = Vector(0,100);
-
   level_ =NULL;
   scale_ =NULL;
 }
@@ -64,9 +59,7 @@ FVContour::~FVContour()
 void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
 		       const char* cc, int ww, int dd, 
 		       Method mm, int nn, int rr, 
-		       const char* ll,
-		       FrScale::ColorScaleType sc, float exp, 
-		       float cm, Vector lim)
+		       const char* ll)
 {
   lcontourlevel_.deleteAll();
 
@@ -80,10 +73,7 @@ void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
   smooth_ = rr;
   numLevel_ = nn;
 
-  colorScaleType_ = sc;
-  clipMode_ = cm;
-  expo_ = exp;
-  limits_ = lim;
+  frScale_ = *fr;
 
   level_ = dupstr(ll);
 
@@ -99,74 +89,66 @@ void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
     scale_ = new InverseScale(cnt, levels);
   }
   else
-    buildScale(fits, fr);
+    buildScale(fits);
 
   append(fits);
 }
 
-void FVContour::buildScale(FitsImage* fits, FrScale* fr)
+void FVContour::buildScale(FitsImage* fits)
 {
-  switch (colorScaleType_) {
+  switch (frScale_.colorScaleType()) {
   case FrScale::LINEARSCALE:
-    scale_ = new LinearInverseScale(numLevel_, limits_[0], limits_[1]);
+    scale_ = new LinearInverseScale(numLevel_, frScale_.low(), frScale_.high());
     break;
   case FrScale::LOGSCALE:
-    scale_ =  new LogInverseScale(numLevel_, limits_[0], limits_[1], expo_);
+    scale_ = new LogInverseScale(numLevel_, frScale_.low(), frScale_.high(), frScale_.expo());
     break;
   case FrScale::POWSCALE:
-    scale_ =  new PowInverseScale(numLevel_, limits_[0], limits_[1], expo_);
+    scale_ =  new PowInverseScale(numLevel_, frScale_.low(), frScale_.high(), frScale_.expo());
     break;
   case FrScale::SQRTSCALE:
-    scale_ =  new SqrtInverseScale(numLevel_, limits_[0], limits_[1]);
+    scale_ =  new SqrtInverseScale(numLevel_, frScale_.low(), frScale_.high());
     break;
   case FrScale::SQUAREDSCALE:
-    scale_ =  new SquaredInverseScale(numLevel_, limits_[0], limits_[1]);
+    scale_ =  new SquaredInverseScale(numLevel_, frScale_.low(), frScale_.high());
     break;
   case FrScale::ASINHSCALE:
-    scale_ =  new AsinhInverseScale(numLevel_, limits_[0], limits_[1]);
+    scale_ =  new AsinhInverseScale(numLevel_, frScale_.low(), frScale_.high());
     break;
   case FrScale::SINHSCALE:
-    scale_ =  new SinhInverseScale(numLevel_, limits_[0], limits_[1]);
+    scale_ =  new SinhInverseScale(numLevel_, frScale_.low(), frScale_.high());
     break;
   case FrScale::HISTEQUSCALE:
-    scale_ =  new HistEquInverseScale(numLevel_, limits_[0], limits_[1], 
-				      fr->histequ(fits), HISTEQUSIZE);
+    scale_ =  new HistEquInverseScale(numLevel_, frScale_.low(), frScale_.high(), frScale_.histequ(fits), HISTEQUSIZE);
     break;
   case FrScale::IISSCALE:
-    scale_ = new IISInverseScale(numLevel_, limits_[0], limits_[1],
-				 fits->iisz());
+    scale_ = new IISInverseScale(numLevel_, frScale_.low(), frScale_.high(), fits->iisz());
     break;
   }
 }
 
 void FVContour::update(FitsImage* fits)
 {
-  if (lcontourlevel_.isEmpty()) 
-    return;
-
-  lcontourlevel_.deleteAll();
-  append(fits);
-}
-
-void FVContour::update(FitsImage* fits, FrScale* fr)
-{
-  if (lcontourlevel_.isEmpty())
-    return;
-
   lcontourlevel_.deleteAll();
 
-  if (scale_)
-    delete scale_;
-  limits_ = Vector(fr->low(),fr->high());
-  expo_ = fr->expo();
+  switch (frScale_.clipScope()) {
+  case FrScale::GLOBAL:
+    break;
+  case FrScale::LOCAL:
+    if (scale_)
+      delete scale_;
 
-  buildScale(fits, fr);
+    buildScale(fits);
 
-  if (level_)
-    delete [] level_;
-  ostringstream str;
-  str << *scale_ << ends;
-  level_ = dupstr(str.str().c_str());
+    if (level_)
+      delete [] level_;
+    {
+      ostringstream str;
+      str << *scale_ << ends;
+      level_ = dupstr(str.str().c_str());
+    }
+    break;
+  }
 
   append(fits);
 }

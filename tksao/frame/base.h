@@ -644,8 +644,8 @@ public:
   void clipZScaleLineCmd(int);
 
   void getClipCmd();
-  void getClipCmd(float);
-  void getClipCmd(FrScale::ClipMode);
+  void getClipCmd(float, FrScale::ClipScope);
+  void getClipCmd(FrScale::ClipMode, FrScale::ClipScope);
   void getClipMinMaxModeCmd();
   void getClipMinMaxSampleCmd();
   void getClipModeCmd();
@@ -675,7 +675,7 @@ public:
 
   // Contour Commands
   void contourAppendCmd(ContourLevel*);
-  void contourCreateCmd(const char*, int, int, FVContour::Method, int, int, FrScale::ColorScaleType, float, float, Vector, const char*);
+  void contourCreateCmd(const char*, int, int, FVContour::Method, int, int, FrScale::ColorScaleType, float, FrScale::ClipMode, float, FrScale::ClipScope, double, double, const char*);
   void contourCreatePolygonCmd();
   void contourDeleteCmd();
   void contourDeleteAuxCmd();
@@ -690,6 +690,7 @@ public:
   void getContourCmd(Coord::CoordSystem sys, Coord::SkyFrame sky);
   void getContourClipCmd();
   void getContourClipModeCmd();
+  void getContourClipScopeCmd();
   void getContourColorNameCmd();
   void getContourDashCmd();
   void getContourLevelCmd();

@@ -354,7 +354,6 @@ void Base::cropCmd()
   }
 
   currentContext->updateClip();
-  currentContext->updateContours();
   updateColorScale();
   update(MATRIX);
 
@@ -383,7 +382,6 @@ void Base::cropCmd(const Vector& aa, const Vector& bb,
   }
 
   currentContext->updateClip();
-  currentContext->updateContours();
   updateColorScale();
   update(MATRIX);
 
@@ -415,7 +413,6 @@ void Base::cropCenterCmd(const Vector& vv,
   }
 
   currentContext->updateClip();
-  currentContext->updateContours();
   updateColorScale();
   update(MATRIX);
 
@@ -541,7 +538,6 @@ void Base::cropEndCmd(const Vector& vv)
   }
 
   currentContext->updateClip();
-  currentContext->updateContours();
   updateColorScale();
   update(MATRIX);
 
@@ -556,7 +552,6 @@ void Base::crop3dCmd()
   currentContext->setCrop3dParams();
 
   currentContext->updateClip();
-  currentContext->updateContours();
   updateColorScale();
   update(MATRIX);
 
@@ -661,8 +656,9 @@ void Base::contourCreateCmd(const char* color, int width, int dash,
 			    int smooth, 
 			    FrScale::ColorScaleType colorScaleType,
 			    float expo,
-			    float clipMode, Vector limits, 
-			    const char* level)
+			    FrScale::ClipMode clipMode, float autocut,
+			    FrScale::ClipScope clipScope,
+			    double low, double high, const char* level)
 {
   if (DebugPerf)
     cerr << "Base::contourCreate()" << endl;
@@ -670,9 +666,11 @@ void Base::contourCreateCmd(const char* color, int width, int dash,
   currentContext->contourCreateFV(color, width, dash, 
 				  method, numlevel,
 				  smooth, 
-				  colorScaleType, expo,
-				  clipMode, limits,
-				  level);
+				  colorScaleType, 
+				  expo,
+				  clipMode, autocut, 
+				  clipScope,
+				  low, high, level);
   update(PIXMAP);
 }
 
@@ -791,7 +789,6 @@ void Base::DATASECCmd(int which)
   if (currentContext->updateDataSec(which)) {
     currentContext->resetSecMode();
     currentContext->updateClip();
-    currentContext->updateContours();
     updateColorScale();
     update(MATRIX);
   }
@@ -944,26 +941,26 @@ void Base::getClipCmd()
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void Base::getClipCmd(float per)
+void Base::getClipCmd(float per, FrScale::ClipScope sc)
 {
   if (DebugPerf)
-    cerr << "getClipCmd(float)" << endl;
+    cerr << "getClipCmd(float, FrScale::ClipScope)" << endl;
 
   FrScale::ClipMode cm = (per == 100) ? FrScale::MINMAX : FrScale::AUTOCUT;
   float ac = per;
 
   ostringstream str;
-  str << currentContext->getClip(cm, ac) << ends;
+  str << currentContext->getClip(cm, sc, ac) << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void Base::getClipCmd(FrScale::ClipMode cm)
+void Base::getClipCmd(FrScale::ClipMode cm, FrScale::ClipScope sc)
 {
   if (DebugPerf)
-    cerr << "getClipCmd(FrScale::ClipMode)" << endl;
+    cerr << "getClipCmd(FrScale::ClipMode, FrScale::ClipScope)" << endl;
 
   ostringstream str;
-  str << currentContext->getClip(cm, currentContext->autoCutPer()) << ends;
+  str << currentContext->getClip(cm, sc, currentContext->autoCutPer()) << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
@@ -1033,7 +1030,7 @@ void Base::getClipScopeCmd()
 void Base::getClipUserCmd()
 {
   ostringstream str;
-  str << currentContext->clipUser() << ends;
+  str << currentContext->ulow() << ' ' << currentContext->uhigh() << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
@@ -1247,25 +1244,45 @@ void Base::getContourMethodCmd()
 
 void Base::getContourClipCmd()
 {
+  FrScale* fr = currentContext->fvcontour().frScale();
   ostringstream str;
-  str << currentContext->fvcontour().limits() << ends;
+  str << fr->low() << ' ' 
+      << fr->high() << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
 void Base::getContourClipModeCmd()
 {
-  if (currentContext->fvcontour().clipMode() == FrScale::MINMAX)
+  FrScale* fr = currentContext->fvcontour().frScale();
+  switch (fr->clipMode()) {
+  case FrScale::MINMAX:
     Tcl_AppendResult(interp, "minmax", NULL);
-  else if (currentContext->fvcontour().clipMode() == FrScale::ZSCALE)
+    break;
+  case FrScale::ZSCALE:
     Tcl_AppendResult(interp, "zscale", NULL);
-  else if (currentContext->fvcontour().clipMode() == FrScale::ZMAX)
+    break;
+  case FrScale::ZMAX:
     Tcl_AppendResult(interp, "zmax", NULL);
-  else if (currentContext->fvcontour().clipMode() == FrScale::USERCLIP)
+    break;
+  case FrScale::AUTOCUT:
+    printDouble(fr->autoCutPer());
+    break;
+  case FrScale::USERCLIP:
     Tcl_AppendResult(interp, "user", NULL);
-  else {
-    ostringstream str;
-    str << currentContext->fvcontour().clipMode() << ends;
-    Tcl_AppendResult(interp, str.str().c_str(), NULL);
+    break;
+  }
+}
+
+void Base::getContourClipScopeCmd()
+{
+  FrScale* fr = currentContext->fvcontour().frScale();
+  switch (fr->clipScope()) {
+  case FrScale::GLOBAL:
+    Tcl_AppendResult(interp, "global", NULL);
+    break;
+  case FrScale::LOCAL:
+    Tcl_AppendResult(interp, "local", NULL);
+    break;
   }
 }
 
@@ -1310,7 +1327,8 @@ void Base::getContourSmoothCmd()
 
 void Base::getContourScaleCmd()
 {
-  switch (currentContext->fvcontour().colorScaleType()) {
+  FrScale* fr = currentContext->fvcontour().frScale();
+  switch (fr->colorScaleType()) {
   case FrScale::LINEARSCALE:
     Tcl_AppendResult(interp, "linear", NULL);
     break;
@@ -1343,8 +1361,9 @@ void Base::getContourScaleCmd()
 
 void Base::getContourScaleLogCmd()
 {
+  FrScale* fr = currentContext->fvcontour().frScale();
   ostringstream str;
-  str << currentContext->fvcontour().expo() << ends;
+  str << fr->expo() << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
@@ -2467,7 +2486,6 @@ void Base::loadIncrEndCmd()
   currentContext->resetSecMode();
 
   currentContext->updateClip();
-  currentContext->updateContours();
   updateColorScale();
   update(MATRIX);
 }

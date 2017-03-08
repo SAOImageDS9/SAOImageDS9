@@ -221,7 +221,6 @@ void Frame3dBase::crop3dEndCmd(const Vector& vv, int which)
   }
 
   keyContext->updateClip();
-  keyContext->updateContours();
   updateColorScale();
 
   update(MATRIX);

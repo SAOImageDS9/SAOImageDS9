@@ -569,8 +569,10 @@ void Frame3dBase::setSlice(int id, int ss)
   }
   else {
     // load the next cube
+    currentContext->clearHist();
     currentContext->updateClip();
-    currentContext->updateContoursScale();
+
+    currentContext->updateContours();
     updateColorScale();
     update(MATRIX);
   }

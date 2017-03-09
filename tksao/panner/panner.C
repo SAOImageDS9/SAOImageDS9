@@ -230,6 +230,10 @@ void Panner::updateCmd(void* p)
 void Panner::updateBBoxCmd(const Vector& ll, const Vector& lr, 
 			   const Vector& ur, const Vector& ul)
 {
+  Vector ss = ur - ll;
+  if (ss[0] < 3 || ss[1] < 3)
+    return;
+
   bbox[0] = ll;
   bbox[1] = lr;
   bbox[2] = ur;

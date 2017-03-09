@@ -475,10 +475,8 @@ proc UpdateScaleDialog {} {
 	    set dscale(minmin) [lindex $limits 0]
 	    set dscale(minmax) [lindex $limits 1]
 
-	    SetWatchCursor
 	    $current(frame) get histogram \
 		$dscale(xdata) $dscale(ydata) $scale(bins)
-	    ResetWatchCursor
 
 	    # we seem to need to do this so that the min/max values are known
 	    blt::vector expr min($dscale(ydata))

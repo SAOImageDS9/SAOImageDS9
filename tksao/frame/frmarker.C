@@ -4649,7 +4649,7 @@ void Base::markerListCmd(MarkerFormat type,
 
   {
     Marker* mm = markers->head();
-    Marker* first = mm;
+    int first = 1;
     while (mm) {
       Tag* t;
 
@@ -4678,7 +4678,8 @@ void Base::markerListCmd(MarkerFormat type,
       switch (type) {
       case DS9:
 	// only do this once
-	if (mm == first) {
+	if (first) {
+	  first =0;
 	  coord.listCoordSystem(str, sys, sky, keyContext->fits);
 	  str << (strip ? ';' : '\n');
 	}

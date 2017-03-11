@@ -7,8 +7,10 @@
 #include "circle.h"
 #include "fitsimage.h"
 
-Circle::Circle(Base* p, const Vector& ctr, double r)
-  : BaseEllipse(p, ctr, 0)
+Circle::Circle(const Circle& a) : BaseEllipse(a), BaseFill(a) {}
+
+Circle::Circle(Base* p, const Vector& ctr, double r, int fill)
+  : BaseEllipse(p, ctr, 0), BaseFill(fill)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
@@ -21,12 +23,13 @@ Circle::Circle(Base* p, const Vector& ctr, double r)
 }
 
 Circle::Circle(Base* p, const Vector& ctr,
-	       double r, 
+	       double r, int fill,
 	       const char* clr, int* dsh, 
 	       int wth, const char* fnt, const char* txt, 
 	       unsigned short prop, const char* cmt,
 	       const List<Tag>& tg, const List<CallBack>& cb)
-  : BaseEllipse(p, ctr, 0, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
+  : BaseEllipse(p, ctr, 0, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb), 
+    BaseFill(fill)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[numAnnuli_];
@@ -37,8 +40,6 @@ Circle::Circle(Base* p, const Vector& ctr,
 
   updateBBox();
 }
-
-Circle::Circle(const Circle& a) : BaseEllipse(a) {}
 
 void Circle::edit(const Vector& v, int h)
 {
@@ -51,6 +52,35 @@ void Circle::edit(const Vector& v, int h)
   
   updateBBox();
   doCallBack(CallBack::EDITCB);
+}
+
+void Circle::renderXCircleDraw(Drawable drawable, GC lgc, 
+			       Vector& st, Vector& size,
+			       int a1, int aa)
+{
+  if (fill_)
+    XFillArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
+  else
+    XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
+}
+
+void Circle::renderPSCircleDraw(Vector& cc, double l, float a1, float a2)
+{
+  ostringstream str;
+  if (fill_)
+    str << "newpath " 
+	<< cc.TkCanvasPs(parent->canvas) << ' '
+	<< l << ' '
+	<< a1 << ' ' << a2 << ' '
+	<< "arc fill" << endl << ends;
+  else
+    str << "newpath " 
+	<< cc.TkCanvasPs(parent->canvas) << ' '
+	<< l << ' '
+	<< a1 << ' ' << a2 << ' '
+	<< "arc stroke" << endl << ends;
+
+  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
 void Circle::analysis(AnalysisTask mm, int which)
@@ -195,6 +225,26 @@ void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   listPost(str, conj, strip);
 }
 
+void Circle::listPost(ostream& str, int conj, int strip)
+{
+  // no props for semicolons
+  if (!strip) {
+    if (conj)
+      str << " ||";
+
+    if (fill_)
+      str << " # fill=" << fill_;
+
+    listProperties(str, !fill_);
+  }
+  else {
+    if (conj)
+      str << "||";
+    else
+      str << ';';
+  }
+}
+
 void Circle::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
 {
   Vector vv = ptr->mapFromRef(center,sys);
@@ -212,6 +262,8 @@ void Circle::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 
   XMLRowCenter(ptr,sys,sky,format);
   XMLRowRadiusX(ptr,sys,annuli_[0]);
+  if (fill_)
+    XMLRow(XMLPARAM,fill_);
 
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);

@@ -171,3 +171,26 @@ void Segment::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     listProperties(str, 0);
   }
 }
+
+void Segment::listXML(ostream& str, Coord::CoordSystem sys, 
+		      Coord::SkyFrame sky, Coord::SkyFormat format)
+{
+  FitsImage* ptr = parent->findFits(sys,center);
+  Matrix mm = fwdMatrix();
+  Vector* vv = new Vector[vertex.count()];
+
+  XMLRowInit();
+  XMLRow(XMLSHAPE,type_);
+
+  vertex.head();
+  int cnt =0;
+  do
+    vv[cnt++] =vertex.current()->vector*mm;
+  while (vertex.next());
+  XMLRowPoint(ptr,sys,sky,format,vv,vertex.count());
+  delete [] vv;
+
+  XMLRowProps(ptr,sys);
+  XMLRowEnd(str);
+}
+

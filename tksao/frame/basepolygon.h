@@ -52,8 +52,6 @@ public:
   virtual void reset(const Vector&) =0;
   void rotate(const Vector&, int);
   void updateCoords(const Matrix&);
-
-  void listXML(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
 };
 
 #endif

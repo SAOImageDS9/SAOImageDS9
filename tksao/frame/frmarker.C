@@ -268,22 +268,21 @@ void Base::analysisMarkersSelectCmd(const char* which, const Vector& cc)
 
 // Basic Regions
 void Base::createCircleCmd(const Vector& center, 
-			   double radius,
+			   double radius, int fill,
 			   const char* color, int* dash, 
 			   int width, const char* font,
 			   const char* text, unsigned short prop, 
 			   const char* comment, 
 			   const List<Tag>& tag, const List<CallBack>& cb)
 {
-  createMarker(new Circle(this, center, 
-			  radius, 
+  createMarker(new Circle(this, center, radius, fill,
 			  color, dash, width, font, text, 
 			  prop, comment, tag, cb));
 }
 
 void Base::createEllipseCmd(const Vector& center, 
 			    const Vector& radius,
-			    double angle,
+			    double angle, int fill,
 			    const char* color, int* dash, 
 			    int width, const char* font,
 			    const char* text, unsigned short prop,
@@ -291,51 +290,46 @@ void Base::createEllipseCmd(const Vector& center,
 			    const List<Tag>& tag,const List<CallBack>& cb)
 
 {
-  createMarker(new Ellipse(this,center, 
-			   radius, 
-			   angle, 
+  createMarker(new Ellipse(this,center, radius, angle, fill,
 			   color, dash, width, font, text, 
 			   prop, comment, tag, cb));
 }
 
 void Base::createBoxCmd(const Vector& center, 
 			const Vector& size, 
-			double angle,
+			double angle, int fill,
 			const char* color, int* dash, 
 			int width, const char* font,
 			const char* text, unsigned short prop,
 			const char* comment, 
 			const List<Tag>& tag, const List<CallBack>& cb)
 {
-  createMarker(new Box(this, center, 
-		       size, 
-		       angle, 
+  createMarker(new Box(this, center, size, angle, fill,
 		       color, dash, width, font, text, 
 		       prop, comment, tag, cb));
 }
 
 void Base::createPolygonCmd(const Vector& center, 
-			    const Vector& bb,
+			    const Vector& bb, int fill,
 			    const char* color, int* dash, 
 			    int width, const char* font,
 			    const char* text, unsigned short prop,
 			    const char* comment, 
 			    const List<Tag>& tag, const List<CallBack>& cb)
 {
-  createMarker(new Polygon(this, center, 
-			   bb, 
+  createMarker(new Polygon(this, center, bb, fill,
 			   color, dash, width, font, text, 
 			   prop, comment, tag, cb));
 }
 
-void Base::createPolygonCmd(const List<Vertex>& list,
+void Base::createPolygonCmd(const List<Vertex>& list, int fill,
 			    const char* color, int* dash, 
 			    int width, const char* font,
 			    const char* text, unsigned short prop,
 			    const char* comment, 
 			    const List<Tag>& tag, const List<CallBack>& cb)
 {
-  createMarker(new Polygon(this, list, 
+  createMarker(new Polygon(this, list, fill,
 			   color, dash, width, font, text, 
 			   prop, comment, tag, cb));
 }
@@ -358,6 +352,7 @@ void Base::contourCreatePolygon(List<ContourLevel>& cl)
   dl[0] = 8;
   dl[1] = 3;
   char font[] = "helvetica 10 normal roman";
+  int fill =0;
   char text[] = "";
   unsigned short defaultProps = Marker::SELECT | Marker::HIGHLITE |
     Marker::EDIT | Marker::MOVE | Marker::ROTATE | 
@@ -379,7 +374,7 @@ void Base::contourCreatePolygon(List<ContourLevel>& cl)
       while (cc.current()) {
 	List<Vertex>& vv = cc.current()->lvertex();
 	if (!vv.isEmpty())
-	  createMarker(new Polygon(this, vv, color, dl, width, font, 
+	  createMarker(new Polygon(this, vv, fill, color, dl, width, font,
 				   text, prop, NULL, tag, cb));
 	cc.next();
       }
@@ -1194,6 +1189,23 @@ void Base::getMarkerAnnulusRadiusCmd(int id, Coord::CoordSystem sys,
   Tcl_AppendResult(interp, "", NULL);
 }
 
+void Base::getMarkerBoxFillCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (((Box*)mm)->getFill())
+	Tcl_AppendResult(interp, "1", NULL);
+      else
+	Tcl_AppendResult(interp, "0", NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+
+  Tcl_AppendResult(interp, "", NULL);
+}
+
 void Base::getMarkerBoxAnnulusRadiusCmd(int id, Coord::CoordSystem sys, 
 					Coord::SkyDist dist)
 {
@@ -1317,6 +1329,23 @@ void Base::getMarkerCenterCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
+}
+
+void Base::getMarkerCircleFillCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (((Circle*)mm)->getFill())
+	Tcl_AppendResult(interp, "1", NULL);
+      else
+	Tcl_AppendResult(interp, "0", NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+
+  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerCircleRadiusCmd(int id, Coord::CoordSystem sys,
@@ -1543,6 +1572,23 @@ void Base::getMarkerCompositeCmd(int id)
     }
     mm=mm->next();
   }
+}
+
+void Base::getMarkerEllipseFillCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (((Ellipse*)mm)->getFill())
+	Tcl_AppendResult(interp, "1", NULL);
+      else
+	Tcl_AppendResult(interp, "0", NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+
+  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerEllipseRadiusCmd(int id, Coord::CoordSystem sys, 
@@ -1890,6 +1936,23 @@ void Base::getMarkerPointSizeCmd(int id)
   while (mm) {
     if (mm->getId() == id) {
       printInteger(((Point*)mm)->size());
+      return;
+    }
+    mm=mm->next();
+  }
+
+  Tcl_AppendResult(interp, "", NULL);
+}
+
+void Base::getMarkerPolygonFillCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (((Polygon*)mm)->getFill())
+	Tcl_AppendResult(interp, "1", NULL);
+      else
+	Tcl_AppendResult(interp, "0", NULL);
       return;
     }
     mm=mm->next();
@@ -2813,6 +2876,23 @@ void Base::markerBackCmd(int id)
   }
 }
 
+void Base::markerBoxFillCmd(int id, int ff)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (mm->canEdit()) {
+	((Box*)(mm))->fill(ff);
+	update(PIXMAP, mm->getAllBBox());
+      }
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
+}
+
 void Base::markerBoxAnnulusRadiusCmd(int id, const Vector& inner,
 				     const Vector& outer, int num,
 				     Coord::InternalSystem sys)
@@ -3228,6 +3308,23 @@ void Base::markerCentroidRadiusCmd(float rad)
 void Base::markerCentroidIterationCmd(int iter)
 {
   centroidIteration = iter;
+}
+
+void Base::markerCircleFillCmd(int id, int ff)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (mm->canEdit()) {
+	((Circle*)(mm))->fill(ff);
+	update(PIXMAP, mm->getAllBBox());
+      }
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
 }
 
 void Base::markerCircleRadiusCmd(int id, double radius,
@@ -3927,6 +4024,23 @@ void Base::markerEditEndCmd()
   editMarker = NULL;
 
   update(PIXMAP);
+}
+
+void Base::markerEllipseFillCmd(int id, int ff)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (mm->canEdit()) {
+	((Ellipse*)(mm))->fill(ff);
+	update(PIXMAP, mm->getAllBBox());
+      }
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
 }
 
 void Base::markerEllipseRadiusCmd(int id, const Vector& radius, 
@@ -4876,7 +4990,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
     if (!strncmp(s2, "CIRCLE", 6) && r) {
       Vector rr(r->value(ptr),0);
       createCircleCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
-		      keyContext->fits->mapLenToRef(rr[0], Coord::PHYSICAL), 
+		      keyContext->fits->mapLenToRef(rr[0], Coord::PHYSICAL), 0,
 		      color, dash, width, font, text, props, NULL, taglist,cblist);
 
     }
@@ -4895,7 +5009,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
       Vector rr(r->value(ptr,0),r->value(ptr,1));
       createBoxCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
 		   keyContext->fits->mapLenToRef(rr, Coord::PHYSICAL), 
-		   degToRad(ang->value(ptr)),
+		   degToRad(ang->value(ptr)), 0,
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
 
     }
@@ -4904,7 +5018,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
       Vector rr(r->value(ptr,0),r->value(ptr,1));
       createBoxCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
 		   keyContext->fits->mapLenToRef(rr, Coord::PHYSICAL), 
-		   0,
+		   0, 0,
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
 
     }
@@ -4912,9 +5026,8 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
       Vector rr(r->value(ptr,0),r->value(ptr,1));
       createBoxCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
 		   keyContext->fits->mapLenToRef(rr, Coord::PHYSICAL), 
-		   degToRad(ang->value(ptr)),
+		   degToRad(ang->value(ptr)), 0,
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
-
     }
     else if (!strncmp(s2, "RECTAN", 6)) {
       Vector v1(center);
@@ -4925,7 +5038,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
 
       createBoxCmd(keyContext->fits->mapToRef(c,Coord::PHYSICAL), 
 		   keyContext->fits->mapLenToRef(d,Coord::PHYSICAL), 
-		   0,
+		   0, 0,
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
     }
 
@@ -4938,7 +5051,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
 
       createBoxCmd(keyContext->fits->mapToRef(c,Coord::PHYSICAL), 
 		   keyContext->fits->mapLenToRef(d,Coord::PHYSICAL), 
-		   degToRad(ang->value(ptr)),
+		   degToRad(ang->value(ptr)), 0,
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
     }
 
@@ -4946,7 +5059,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
       Vector rr(r->value(ptr,0),r->value(ptr,1));
       createEllipseCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
 		       keyContext->fits->mapLenToRef(rr, Coord::PHYSICAL),
-		       degToRad(ang->value(ptr)),
+		       degToRad(ang->value(ptr)), 0,
 		       color, dash, width, font, text, props, NULL, taglist,cblist);
 
     }
@@ -5005,7 +5118,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
       }
 
       if (!list.isEmpty())
-	createPolygonCmd(list, color, dash, width, font, text, props, NULL, 
+	createPolygonCmd(list, 0, color, dash, width, font, text, props, NULL, 
 			 taglist,cblist);
     }
 
@@ -5386,6 +5499,23 @@ void Base::markerPointSizeCmd(int id, int size)
 	// it may shrink
 	update(PIXMAP, mm->getAllBBox());
 	((Point*)mm)->setSize(size);
+	update(PIXMAP, mm->getAllBBox());
+      }
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
+}
+
+void Base::markerPolygonFillCmd(int id, int ff)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (mm->canEdit()) {
+	((Polygon*)(mm))->fill(ff);
 	update(PIXMAP, mm->getAllBBox());
       }
       return;

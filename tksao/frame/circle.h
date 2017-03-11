@@ -6,15 +6,19 @@
 #define __circle_h__
 
 #include "baseellipse.h"
+#include "basefill.h"
 
-class Circle : public BaseEllipse {
+class Circle : public BaseEllipse, public BaseFill {
  protected:
+  void renderXCircleDraw(Drawable, GC, Vector&, Vector&, int, int);
+  void renderPSCircleDraw(Vector& cc, double l, float a1, float a2);
+
   void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
 
 public:
-  Circle(Base* p, const Vector& ctr, double r);
+  Circle(Base* p, const Vector& ctr, double r, int fill);
   Circle(Base* p, const Vector& ctr,
-	 double r,
+	 double r, int fill,
 	 const char* clr, int *dsh,
 	 int wth, const char* fnt, const char* txt, 
 	 unsigned short prop, const char* cmt,
@@ -34,6 +38,7 @@ public:
   void analysisStats(Coord::CoordSystem, Coord::SkyFrame sky);
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int, int);
+  virtual void listPost(ostream&, int, int);
   void listXML(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   virtual void listCiao(ostream&, Coord::CoordSystem, int);
   virtual void listSAOtng(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int);

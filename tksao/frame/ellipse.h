@@ -6,15 +6,16 @@
 #define __ellipse_h__
 
 #include "baseellipse.h"
+#include "basefill.h"
 
-class Ellipse : public BaseEllipse {
+class Ellipse : public BaseEllipse, public BaseFill {
  protected:
   void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
 
 public:
-  Ellipse(Base* p, const Vector& ctr, const Vector& r, double ang);
+  Ellipse(Base* p, const Vector& ctr, const Vector& r, double ang, int fill);
   Ellipse(Base* p, const Vector& ctr,
-	  const Vector& r, double ang, 
+	  const Vector& r, double ang, int fill,
 	  const char* clr, int* dsh,
 	  int wth, const char* fnt, const char* txt, 
 	  unsigned short prop, const char* cmt, 
@@ -30,6 +31,7 @@ public:
   void analysisStats(Coord::CoordSystem, Coord::SkyFrame sky);
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int, int);
+  virtual void listPost(ostream&, int, int);
   void listXML(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   virtual void listCiao(ostream&, Coord::CoordSystem, int);
   virtual void listSAOtng(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int);

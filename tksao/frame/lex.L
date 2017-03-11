@@ -135,6 +135,7 @@ ext		{return EXT_;}
 factor		{return FACTOR_;}
 false		{return FALSE_;}
 file		{return FILE_;}
+fill            {return FILL_;}
 filter		{return FILTER_;}
 fit		{return FIT_;}
 fits		{return FITS_;}

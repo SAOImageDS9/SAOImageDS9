@@ -136,7 +136,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 61 "frame/tngparser.Y"
+#line 62 "frame/tngparser.Y"
 {
 #define TNGBUFSIZE 2048
   double real;

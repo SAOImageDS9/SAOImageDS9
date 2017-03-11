@@ -78,6 +78,7 @@ epanda		{return EPANDA_;}
 end		{return END_;}
 false		{return FALSE_;}
 fie[l][d]	{return FIELD_;}
+fill            {return FILL_;}
 fixed		{return FIXED_;}
 fk4		{return FK4_;}
 fk4-no-e	{return FK4_NO_E_;}

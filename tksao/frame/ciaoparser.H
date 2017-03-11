@@ -98,7 +98,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 43 "frame/ciaoparser.Y"
+#line 44 "frame/ciaoparser.Y"
 {
 #define CIAOBUFSIZE 2048
   double real;

@@ -7,8 +7,10 @@
 #include "ellipse.h"
 #include "fitsimage.h"
 
-Ellipse::Ellipse(Base* p, const Vector& ctr, const Vector& r, double ang)
-  : BaseEllipse(p, ctr, ang)
+Ellipse::Ellipse(const Ellipse& a) : BaseEllipse(a), BaseFill(a) {}
+
+Ellipse::Ellipse(Base* p, const Vector& ctr, const Vector& r, double ang, int fill)
+  : BaseEllipse(p, ctr, ang), BaseFill(fill)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
@@ -21,12 +23,13 @@ Ellipse::Ellipse(Base* p, const Vector& ctr, const Vector& r, double ang)
 }
 
 Ellipse::Ellipse(Base* p, const Vector& ctr,
-		 const Vector& r, double ang, 
+		 const Vector& r, double ang, int fill,
 		 const char* clr, int* dsh, 
 		 int wth, const char* fnt, const char* txt, 
 		 unsigned short prop, const char* cmt, 
 		 const List<Tag>& tg, const List<CallBack>& cb)
-  : BaseEllipse(p, ctr, ang, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
+  : BaseEllipse(p, ctr, ang, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb),
+    BaseFill(fill)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
@@ -37,8 +40,6 @@ Ellipse::Ellipse(Base* p, const Vector& ctr,
 
   updateBBox();
 }
-
-Ellipse::Ellipse(const Ellipse& a) : BaseEllipse(a) {}
 
 void Ellipse::edit(const Vector& v, int h)
 {
@@ -218,6 +219,26 @@ void Ellipse::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   listPost(str, conj, strip);
 }
 
+void Ellipse::listPost(ostream& str, int conj, int strip)
+{
+  // no props for semicolons
+  if (!strip) {
+    if (conj)
+      str << " ||";
+
+    if (fill_)
+      str << " # fill=" << fill_;
+
+    listProperties(str, !fill_);
+  }
+  else {
+    if (conj)
+      str << "||";
+    else
+      str << ';';
+  }
+}
+
 void Ellipse::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
 {
   Vector vv = ptr->mapFromRef(center,sys);
@@ -238,6 +259,8 @@ void Ellipse::listXML(ostream& str, Coord::CoordSystem sys,
   XMLRowCenter(ptr,sys,sky,format);
   XMLRowRadius(ptr,sys,annuli_[0]);
   XMLRowAng(sys,sky);
+  if (fill_)
+    XMLRow(XMLPARAM,fill_);
 
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);

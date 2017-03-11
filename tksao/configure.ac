@@ -147,6 +147,7 @@ frame/annulus.C
 frame/base.C
 frame/basebox.C
 frame/basecommand.C
+frame/basefill.C
 frame/baseellipse.C
 frame/baseline.C
 frame/basemarker.C

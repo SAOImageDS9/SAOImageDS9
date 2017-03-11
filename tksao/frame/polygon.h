@@ -6,10 +6,11 @@
 #define __polygon_h__
 
 #include "basepolygon.h"
+#include "basefill.h"
 #include "marker.h"
 #include "list.h"
 
-class Polygon : public BasePolygon {
+class Polygon : public BasePolygon, public BaseFill {
  protected:
   int isInRef(const Vector& v);
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
@@ -23,19 +24,19 @@ class Polygon : public BasePolygon {
 
 public:
   Polygon(Base* p, const Vector& ctr,
-	  const Vector& b);
+	  const Vector& b, int fill);
   Polygon(Base* p, const Vector& ctr,
-	  const Vector& b,
+	  const Vector& b, int fill,
 	  const char* clr, int* dsh,
 	  int wth, const char* fnt, const char* txt,
 	  unsigned short prop, const char* cmt,
 	  const List<Tag>& tg, const List<CallBack>& cb);
-  Polygon(Base* p, const List<Vertex>& v, 
+  Polygon(Base* p, const List<Vertex>& v, int fill,
 	  const char* clr, int* dsh,
 	  int wth, const char* fnt, const char* txt,
 	  unsigned short prop, const char* cmt,
 	  const List<Tag>& tg, const List<CallBack>& cb);
-  Polygon(const Polygon& a) : BasePolygon(a) {}
+  Polygon(const Polygon& a);
 
   Marker* dup() {return new Polygon(*this);}
 
@@ -55,6 +56,8 @@ public:
   void reset(const Vector&);
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int, int);
+  virtual void listPost(ostream&, int, int);
+  void listXML(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void listCiao(ostream&, Coord::CoordSystem, int);
   void listSAOtng(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int);
   void listSAOimage(ostream&, int);

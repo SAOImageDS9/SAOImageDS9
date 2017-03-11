@@ -7,32 +7,35 @@
 #include "polygon.h"
 #include "fitsimage.h"
 
-Polygon::Polygon(Base* p, const Vector& ctr,
-		 const Vector& b)
-  : BasePolygon(p,ctr,b)
+Polygon::Polygon(const Polygon& a) : BasePolygon(a), BaseFill(a) {}
+
+Polygon::Polygon(Base* p, const Vector& ctr, const Vector& b, int fill)
+  : BasePolygon(p,ctr,b), BaseFill(fill)
 {
   strcpy(type_, "polygon");
   reset(b);
 }
 
 Polygon::Polygon(Base* p, const Vector& ctr,
-		 const Vector& b,
+		 const Vector& b, int fill,
 		 const char* clr, int* dsh,
 		 int wth, const char* fnt, const char* txt,
 		 unsigned short prop, const char* cmt,
 		 const List<Tag>& tg, const List<CallBack>& cb)
-  : BasePolygon(p, ctr, b, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
+  : BasePolygon(p, ctr, b, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb),
+    BaseFill(fill)
 {
   strcpy(type_, "polygon");
   reset(b);
 }
 
-Polygon::Polygon(Base* p, const List<Vertex>& v, 
+Polygon::Polygon(Base* p, const List<Vertex>& v, int fill,
 		 const char* clr, int* dsh,
 		 int wth, const char* fnt, const char* txt,
 		 unsigned short prop, const char* cmt,
 		 const List<Tag>& tg, const List<CallBack>& cb)
-  : BasePolygon(p, v, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
+  : BasePolygon(p, v, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb),
+    BaseFill(fill)
 {
   strcpy(type_, "polygon");
 
@@ -366,6 +369,51 @@ void Polygon::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   listPre(str, sys, sky, ptr, strip, 0);
   listBase(ptr, str, sys, sky, format);
   listPost(str, conj, strip);
+}
+
+void Polygon::listPost(ostream& str, int conj, int strip)
+{
+  // no props for semicolons
+  if (!strip) {
+    if (conj)
+      str << " ||";
+
+    if (fill_)
+      str << " # fill=" << fill_;
+
+    listProperties(str, !fill_);
+  }
+  else {
+    if (conj)
+      str << "||";
+    else
+      str << ';';
+  }
+}
+
+void Polygon::listXML(ostream& str, Coord::CoordSystem sys, 
+		      Coord::SkyFrame sky, Coord::SkyFormat format)
+{
+  FitsImage* ptr = parent->findFits(sys,center);
+  Matrix mm = fwdMatrix();
+  Vector* vv = new Vector[vertex.count()];
+
+  XMLRowInit();
+  XMLRow(XMLSHAPE,type_);
+
+  vertex.head();
+  int cnt =0;
+  do
+    vv[cnt++] =vertex.current()->vector*mm;
+  while (vertex.next());
+  XMLRowPoint(ptr,sys,sky,format,vv,vertex.count());
+  delete [] vv;
+
+  if (fill_)
+    XMLRow(XMLPARAM,fill_);
+
+  XMLRowProps(ptr,sys);
+  XMLRowEnd(str);
 }
 
 void Polygon::listCiao(ostream& str, Coord::CoordSystem sys, int strip)

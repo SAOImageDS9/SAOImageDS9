@@ -7,8 +7,10 @@
 #include "box.h"
 #include "fitsimage.h"
 
-Box::Box(Base* p, const Vector& ctr, const Vector& seg, double ang)
-  : BaseBox(p, ctr, ang)
+Box::Box(const Box& a) : BaseBox(a), BaseFill(a) {}
+
+Box::Box(Base* p, const Vector& ctr, const Vector& seg, double ang, int fill)
+  : BaseBox(p, ctr, ang), BaseFill(fill)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
@@ -22,12 +24,13 @@ Box::Box(Base* p, const Vector& ctr, const Vector& seg, double ang)
 
 Box::Box(Base* p, const Vector& ctr, 
 	 const Vector& seg, 
-	 double ang,
+	 double ang, int fill,
 	 const char* clr, int* dsh, 
 	 int wth, const char* fnt, const char* txt,
 	 unsigned short prop, const char* cmt, 
 	 const List<Tag>& tg, const List<CallBack>& cb)
-  : BaseBox(p, ctr, ang, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
+  : BaseBox(p, ctr, ang, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb), 
+    BaseFill(fill)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
@@ -38,8 +41,6 @@ Box::Box(Base* p, const Vector& ctr,
 
   updateBBox();
 }
-
-Box::Box(const Box& a) : BaseBox(a) {}
 
 void Box::editBegin(int h)
 {
@@ -256,6 +257,26 @@ void Box::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   listPost(str, conj, strip);
 }
 
+void Box::listPost(ostream& str, int conj, int strip)
+{
+  // no props for semicolons
+  if (!strip) {
+    if (conj)
+      str << " ||";
+
+    if (fill_)
+      str << " # fill=" << fill_;
+
+    listProperties(str, !fill_);
+  }
+  else {
+    if (conj)
+      str << "||";
+    else
+      str << ';';
+  }
+}
+
 void Box::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
 {
   Vector vv = ptr->mapFromRef(center,sys);
@@ -276,6 +297,8 @@ void Box::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   XMLRowCenter(ptr,sys,sky,format);
   XMLRowRadius(ptr,sys,annuli_[0]);
   XMLRowAng(sys,sky);
+  if (fill_)
+    XMLRow(XMLPARAM,fill_);
 
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);

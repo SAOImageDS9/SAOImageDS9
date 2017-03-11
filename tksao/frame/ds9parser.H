@@ -42,50 +42,50 @@
      INT = 258,
      REAL = 259,
      STRING = 260,
-     COLOR = 261,
-     ANGDEGREE = 262,
-     ANGRADIAN = 263,
-     ARCMINUTE = 264,
-     ARCSECOND = 265,
-     PHYCOORD = 266,
-     IMGCOORD = 267,
-     SEXSTR = 268,
-     HMSSTR = 269,
-     DMSSTR = 270,
-     EOF_ = 271,
-     AMPLIFIER_ = 272,
-     ANNULUS_ = 273,
-     ARCMIN_ = 274,
-     ARCSEC_ = 275,
-     ARROW_ = 276,
-     B1950_ = 277,
-     BACKGROUND_ = 278,
-     BEGIN_ = 279,
-     BOX_ = 280,
-     BOXCIRCLE_ = 281,
-     BPANDA_ = 282,
-     CALLBACK_ = 283,
-     CIRCLE_ = 284,
-     CIRCLE3D_ = 285,
-     COLOR_ = 286,
-     COMPASS_ = 287,
-     COMPOSITE_ = 288,
-     CPANDA_ = 289,
-     CROSS_ = 290,
-     DASH_ = 291,
-     DASHLIST_ = 292,
-     DEBUG_ = 293,
-     DEGREES_ = 294,
-     DELETE_ = 295,
-     DETECTOR_ = 296,
-     DIAMOND_ = 297,
-     ECLIPTIC_ = 298,
-     EDIT_ = 299,
-     ELLIPSE_ = 300,
-     END_ = 301,
-     EPANDA_ = 302,
-     FALSE_ = 303,
-     FIELD_ = 304,
+     ANGDEGREE = 261,
+     ANGRADIAN = 262,
+     ARCMINUTE = 263,
+     ARCSECOND = 264,
+     PHYCOORD = 265,
+     IMGCOORD = 266,
+     SEXSTR = 267,
+     HMSSTR = 268,
+     DMSSTR = 269,
+     EOF_ = 270,
+     AMPLIFIER_ = 271,
+     ANNULUS_ = 272,
+     ARCMIN_ = 273,
+     ARCSEC_ = 274,
+     ARROW_ = 275,
+     B1950_ = 276,
+     BACKGROUND_ = 277,
+     BEGIN_ = 278,
+     BOX_ = 279,
+     BOXCIRCLE_ = 280,
+     BPANDA_ = 281,
+     CALLBACK_ = 282,
+     CIRCLE_ = 283,
+     CIRCLE3D_ = 284,
+     COLOR_ = 285,
+     COMPASS_ = 286,
+     COMPOSITE_ = 287,
+     CPANDA_ = 288,
+     CROSS_ = 289,
+     DASH_ = 290,
+     DASHLIST_ = 291,
+     DEBUG_ = 292,
+     DEGREES_ = 293,
+     DELETE_ = 294,
+     DETECTOR_ = 295,
+     DIAMOND_ = 296,
+     ECLIPTIC_ = 297,
+     EDIT_ = 298,
+     ELLIPSE_ = 299,
+     END_ = 300,
+     EPANDA_ = 301,
+     FALSE_ = 302,
+     FIELD_ = 303,
+     FILL_ = 304,
      FIXED_ = 305,
      FK4_ = 306,
      FK4_NO_E_ = 307,
@@ -171,50 +171,50 @@
 #define INT 258
 #define REAL 259
 #define STRING 260
-#define COLOR 261
-#define ANGDEGREE 262
-#define ANGRADIAN 263
-#define ARCMINUTE 264
-#define ARCSECOND 265
-#define PHYCOORD 266
-#define IMGCOORD 267
-#define SEXSTR 268
-#define HMSSTR 269
-#define DMSSTR 270
-#define EOF_ 271
-#define AMPLIFIER_ 272
-#define ANNULUS_ 273
-#define ARCMIN_ 274
-#define ARCSEC_ 275
-#define ARROW_ 276
-#define B1950_ 277
-#define BACKGROUND_ 278
-#define BEGIN_ 279
-#define BOX_ 280
-#define BOXCIRCLE_ 281
-#define BPANDA_ 282
-#define CALLBACK_ 283
-#define CIRCLE_ 284
-#define CIRCLE3D_ 285
-#define COLOR_ 286
-#define COMPASS_ 287
-#define COMPOSITE_ 288
-#define CPANDA_ 289
-#define CROSS_ 290
-#define DASH_ 291
-#define DASHLIST_ 292
-#define DEBUG_ 293
-#define DEGREES_ 294
-#define DELETE_ 295
-#define DETECTOR_ 296
-#define DIAMOND_ 297
-#define ECLIPTIC_ 298
-#define EDIT_ 299
-#define ELLIPSE_ 300
-#define END_ 301
-#define EPANDA_ 302
-#define FALSE_ 303
-#define FIELD_ 304
+#define ANGDEGREE 261
+#define ANGRADIAN 262
+#define ARCMINUTE 263
+#define ARCSECOND 264
+#define PHYCOORD 265
+#define IMGCOORD 266
+#define SEXSTR 267
+#define HMSSTR 268
+#define DMSSTR 269
+#define EOF_ 270
+#define AMPLIFIER_ 271
+#define ANNULUS_ 272
+#define ARCMIN_ 273
+#define ARCSEC_ 274
+#define ARROW_ 275
+#define B1950_ 276
+#define BACKGROUND_ 277
+#define BEGIN_ 278
+#define BOX_ 279
+#define BOXCIRCLE_ 280
+#define BPANDA_ 281
+#define CALLBACK_ 282
+#define CIRCLE_ 283
+#define CIRCLE3D_ 284
+#define COLOR_ 285
+#define COMPASS_ 286
+#define COMPOSITE_ 287
+#define CPANDA_ 288
+#define CROSS_ 289
+#define DASH_ 290
+#define DASHLIST_ 291
+#define DEBUG_ 292
+#define DEGREES_ 293
+#define DELETE_ 294
+#define DETECTOR_ 295
+#define DIAMOND_ 296
+#define ECLIPTIC_ 297
+#define EDIT_ 298
+#define ELLIPSE_ 299
+#define END_ 300
+#define EPANDA_ 301
+#define FALSE_ 302
+#define FIELD_ 303
+#define FILL_ 304
 #define FIXED_ 305
 #define FK4_ 306
 #define FK4_NO_E_ 307
@@ -300,7 +300,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 136 "frame/ds9parser.Y"
+#line 139 "frame/ds9parser.Y"
 {
 #define MKBUFSIZE 2048
   double real;

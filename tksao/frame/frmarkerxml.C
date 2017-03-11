@@ -555,52 +555,65 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   // Basic Regions
   if (STRCMP(shape, "circle", 6)) {
     // will also capture circle3d
+    int fill =0;
+    if (param) 
+      fill = atoi(param);
     createCircleCmd(xmlPoint(ptr, x, y, sys, sky, format),
-		    ptr->mapLenToRef(atof(r), rsys, rdist), 
+		    ptr->mapLenToRef(atof(r), rsys, rdist), fill,
 		    color, dash, width, font, text, props, comment, 
 		    taglist, cblist);
   }
   else if (STRCMP(shape, "ellipse", 7)) {
+    int fill =0;
+    if (param) 
+      fill = atoi(param);
     createEllipseCmd(xmlPoint(ptr, x, y, sys, sky, format),
-		     ptr->mapLenToRef(Vector(atof(r),atof(r2)), 
-				      rsys, rdist),
-		     xmlAngle(ang, angsign, angoffset, angformat,
-			      sys, sky),
+		     ptr->mapLenToRef(Vector(atof(r),atof(r2)), rsys, rdist),
+		     xmlAngle(ang, angsign, angoffset, angformat, sys, sky),
+		     fill,
 		     color, dash, width, font, text, props, comment, 
 		     taglist, cblist);
   }
   else if (STRCMP(shape, "box", 3) || STRCMP(shape, "rotbox", 6)) {
+    int fill =0;
+    if (param) 
+      fill = atoi(param);
     createBoxCmd(xmlPoint(ptr, x, y, sys, sky, format),
-		 ptr->mapLenToRef(Vector(atof(r),atof(r2)), 
-				  rsys, rdist),
-		 xmlAngle(ang, angsign, angoffset, angformat,
-			  sys, sky),
+		 ptr->mapLenToRef(Vector(atof(r),atof(r2)), rsys, rdist),
+		 xmlAngle(ang, angsign, angoffset, angformat, sys, sky),
+		 fill,
 		 color, dash, width, font, text, props, comment, 
 		 taglist, cblist);
   }
   else if (STRCMP(shape, "rectang", 6) || STRCMP(shape, "rotrec", 6)) {
+    int fill =0;
+    if (param) 
+      fill = atoi(param);
     Vector v1 = xmlPoint(ptr, xv, yv, vsys, vsky, vformat, 0);
     Vector v2 = xmlPoint(ptr, xv, yv, vsys, vsky, vformat, 1);
     Vector d = v2-v1;
     Vector c = d/2 + v1;
     createBoxCmd(c,d,
-		  xmlAngle(ang, angsign, angoffset, angformat, 
-			   sys, sky),
+		 xmlAngle(ang, angsign, angoffset, angformat, sys, sky),
+		 fill,
 		 color, dash, width, font, text, props, comment, 
 		 taglist, cblist);
   }
   else if (STRCMP(shape, "polygon", 7)) {
+    int fill =0;
+    if (param) 
+      fill = atoi(param);
     List<Vertex>* list = xmlVertex(ptr, xv, yv, vsys, vsky, vformat);
-    createPolygonCmd(*list,
+    createPolygonCmd(*list, fill,
 		     color, dash, width, font, text, props, comment, 
 		     taglist, cblist);
   }
   else if (STRCMP(shape, "line", 4)) {
     int arrow1 =1;
     int arrow2 =1;
-    if (!param) 
+    if (param) 
       arrow1 = atoi(param);
-    if (!param2)
+    if (param2)
       arrow2 = atoi(param2);
     createLineCmd(xmlPoint(ptr, xv, yv, vsys, vsky, vformat, 0),
 		  xmlPoint(ptr, xv, yv, vsys, vsky, vformat, 1),
@@ -610,7 +623,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   }
   else if (STRCMP(shape, "vector", 6)) {
     int arrow =1;
-    if (!param) 
+    if (param) 
       arrow = atoi(param);
     createVectCmd(xmlPoint(ptr, x, y, sys, sky, format),
 		  ptr->mapLenToRef(atof(r), rsys, rdist), 
@@ -635,7 +648,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   }
   else if (STRCMP(shape, "text", 4)) {
     int rotate = 1;
-    if (!param)
+    if (param)
       rotate = atoi(param);
     createTextCmd(xmlPoint(ptr, x, y, sys, sky, format),
 		  xmlAngle(ang, angsign, angoffset, angformat, 
@@ -699,10 +712,10 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
     if (!param3)
       param3 = (char*)param3def;
     int arrow1 =1;
-    if (!param4) 
+    if (param4) 
       arrow1 = atoi(param4);
     int arrow2 =1;
-    if (!param5)
+    if (param5)
       arrow2 = atoi(param5);
       
     createCompassCmd(xmlPoint(ptr, x, y, sys, sky, format),
@@ -804,8 +817,8 @@ int Base::xmlCount(const char* col)
 }
 
 Vector Base::xmlPoint(FitsImage* ptr, const char* xstr, const char* ystr,
-		      Coord::CoordSystem sys, Coord::SkyFrame sky, Coord::SkyFormat format,
-		      int which)
+		      Coord::CoordSystem sys, Coord::SkyFrame sky, 
+		      Coord::SkyFormat format, int which)
 {
   if (!xstr || !ystr)
     return Vector();

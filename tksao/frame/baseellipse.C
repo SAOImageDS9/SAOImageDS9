@@ -78,12 +78,18 @@ void BaseEllipse::renderXCircle(Drawable drawable, Coord::InternalSystem sys,
     if (a2<=a1)
       a2 += 360*64;
 
-    XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], 
-	     a1, (a2-a1));
+    renderXCircleDraw(drawable, lgc, st, size, a1, (a2-a1));
   }
 }
 
-void BaseEllipse::renderXEllipseCurve(Drawable drawable, Coord::InternalSystem sys,
+void BaseEllipse::renderXCircleDraw(Drawable drawable, GC lgc, Vector& st, 
+				    Vector& size, int a1, int aa)
+{
+  XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
+}
+
+void BaseEllipse::renderXEllipseCurve(Drawable drawable, 
+				      Coord::InternalSystem sys,
 				      RenderMode mode)
 {
   double a1 = startAng_;
@@ -226,6 +232,12 @@ void BaseEllipse::renderPSCircle(int mode)
     if (a2<=a1)
       a2 += 360;
 
+    renderPSCircleDraw(cc, l, a1, a2);
+  }
+}
+
+void BaseEllipse::renderPSCircleDraw(Vector& cc, double l, float a1, float a2)
+{
     ostringstream str;
     str << "newpath " 
 	<< cc.TkCanvasPs(parent->canvas) << ' '
@@ -234,7 +246,6 @@ void BaseEllipse::renderPSCircle(int mode)
 	<< "arc stroke" << endl << ends;
 
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
-  }
 }
 
 void BaseEllipse::renderPSEllipseCurve(int mode)

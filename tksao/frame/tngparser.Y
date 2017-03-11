@@ -41,6 +41,7 @@ static char globalColor[16];
 static char localColor[16];
 
 static int dash[] = {8,3};
+static int fill_ =0;
 
 static char globalFont[32];
 
@@ -268,47 +269,42 @@ include	: /* empty */ {setProps(&localProps, Marker::INCLUDE, 1);}
 	;
 
 shape	: CIRCLE_ bp coord sp value ep shapeComment
-	  {fr->createCircleCmd(Vector($3),
-	    $5,
+        {fr->createCircleCmd(Vector($3), $5, fill_,
 	    localColor,dash,1,globalFont,localText,
 	    localProps,localComment,taglist,cblist);}
 
 	| ELLIPSE_ bp coord sp vvalue sp optangle ep shapeComment
-	  {fr->createEllipseCmd(Vector($3),
-	    Vector($5),
-	    $7,
+	{fr->createEllipseCmd(Vector($3), Vector($5), $7, fill_,
 	    localColor,dash,1,globalFont,localText,
 	    localProps,localComment,taglist,cblist);}
 
 	| BOX_ bp coord sp vvalue sp optangle ep shapeComment
-	  {fr->createBoxCmd(Vector($3),
-	    Vector($5),
-	    $7,
+	{fr->createBoxCmd(Vector($3), Vector($5), $7, fill_,
 	    localColor,dash,1,globalFont,localText,
 	    localProps,localComment,taglist,cblist);}
 
 	| LINE_ bp coord sp coord ep shapeComment
-	  {fr->createLineCmd(Vector($3),
+	{fr->createLineCmd(Vector($3),
 	    Vector($5),
 	    0,0,
 	    localColor,dash,1,globalFont,localText,
 	    localProps,localComment,taglist,cblist);}
 
 	| POINT_ bp coord ep shapeComment
-	  {fr->createPointCmd(Vector($3), Point::BOXCIRCLE, POINTSIZE, 
+	{fr->createPointCmd(Vector($3), Point::BOXCIRCLE, POINTSIZE, 
 	    localColor,dash,1,globalFont,localText,
 	    localProps,localComment,taglist,cblist);}
 
 	| TEXT_ bp coord sp STRING ep {strncpy(localText,$5,80);} shapeComment
-	  {fr->createTextCmd(Vector($3),
+	{fr->createTextCmd(Vector($3),
 	    0, 1,
 	    localColor,dash,1,globalFont,localText,
 	    localProps,localComment,taglist,cblist);}
 
 	| POLYGON_ {polylist.deleteAll();} bp polyNodes ep shapeComment
-	  {fr->createPolygonCmd(polylist,
-	      localColor,dash,1,globalFont,localText,
-	      localProps,localComment,taglist,cblist);} 
+	{fr->createPolygonCmd(polylist, fill_,
+	    localColor,dash,1,globalFont,localText,
+	    localProps,localComment,taglist,cblist);} 
 	;
 
 polyNodes : polyNodes sp polyNode

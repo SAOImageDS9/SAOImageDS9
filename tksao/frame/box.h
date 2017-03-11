@@ -6,16 +6,17 @@
 #define __box_h__
 
 #include "basebox.h"
+#include "basefill.h"
 
-class Box : public BaseBox {
+class Box : public BaseBox, public BaseFill {
  protected:
   void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
 
 public:
-  Box(Base* p, const Vector& ctr, const Vector& seg, double ang);
+  Box(Base* p, const Vector& ctr, const Vector& seg, double ang, int fill);
   Box(Base* p, const Vector& ctr, 
       const Vector& seg,
-      double ang,
+      double ang, int fill,
       const char* clr, int* dsh,
       int wth, const char* fnt, const char* txt,
       unsigned short prop, const char* cmt, 
@@ -33,6 +34,7 @@ public:
   void analysisStats(Coord::CoordSystem, Coord::SkyFrame sky);
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int, int);
+  virtual void listPost(ostream&, int, int);
   void listXML(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   virtual void listCiao(ostream&, Coord::CoordSystem, int);
   virtual void listSAOtng(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int);

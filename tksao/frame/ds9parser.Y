@@ -59,6 +59,9 @@ static char localText[80];
 
 static char localComment[80];
 
+static int globalFill;
+static int localFill;
+
 static int globalLine1;
 static int localLine1;
 static int globalLine2;
@@ -211,6 +214,7 @@ static Coord::SkyFrame checkWCSSky();
 %token EPANDA_
 %token FALSE_
 %token FIELD_
+%token FILL_
 %token FIXED_
 %token FK4_
 %token FK4_NO_E_
@@ -653,6 +657,10 @@ globalProperty : property '=' yesno
 	  globalPoint = localPoint = $3;
 	  globalPointSize = localPointSize = $4;
 	}
+        | FILL_ '=' INT
+	{
+	  globalFill = localFill = $3;
+	}
 	| LINE_ '=' INT INT 
 	{
 	  globalLine1 = localLine1 = $3;
@@ -783,6 +791,7 @@ initGlobal:{
 	  strcpy(globalText,"");
 
 	  // unique properties
+	  globalFill = 0;
 	  globalLine1 = 0;
 	  globalLine2 = 0;
 	  globalVector = 1;
@@ -830,6 +839,7 @@ localProperty : property '=' yesno {setProps(&localProps,$1,$3);}
 
 	| POINT_ '=' pointShape {localPoint = $3;}
 	| POINT_ '=' pointShape INT {localPoint = $3; localPointSize = $4;}
+        | FILL_ '=' INT {localFill=$3;}
 	| LINE_ '=' INT INT {localLine1=$3; localLine2=$4;}
 	| VECTOR_ '=' INT {localVector=$3;}
 	| COMPOSITE_ '=' INT {localComposite=$3;}
@@ -974,6 +984,7 @@ initLocal : {
 	  cblist.deleteAll();
 
 	  // unique properties
+	  localFill = globalFill;
 	  localLine1 = globalLine1;
 	  localLine2 = globalLine2;
 	  localVector = globalVector;
@@ -1064,7 +1075,7 @@ nonshape : VECTOR_ bp coord sp value sp angle ep conjunction nonshapeComment
 	{
 	  // backward compatibility
 	  fr->createCircleCmd(Vector($3),
-	  $5,
+	  $5, localFill,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
@@ -1080,7 +1091,7 @@ nonshape : VECTOR_ bp coord sp value sp angle ep conjunction nonshapeComment
 shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 	{
 	  fr->createCircleCmd(Vector($3),
-	  $5,
+	  $5, localFill,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
@@ -1088,7 +1099,7 @@ shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 	{
 	  // backwards compatibility
 	  fr->createCircleCmd(Vector($3),
-	  $5,
+          $5, localFill,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
@@ -1111,7 +1122,7 @@ shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 
 	  fr->createEllipseCmd(Vector($3),
 	  Vector($5),
-	  $7,
+	  $7, localFill,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
@@ -1134,7 +1145,7 @@ shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 
 	  fr->createBoxCmd(Vector($3),
 	  Vector($5),
-	  $7,
+	  $7, localFill,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
@@ -1143,14 +1154,14 @@ shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 	  // backwards compatibility
 	  fr->createBoxCmd(Vector($3),
 	  Vector($5),
-	  $7,
+	  $7, localFill,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
 	| POLYGON_ {polylist.deleteAll();} bp polyNodes ep conjunction 
 	    shapeComment
 	{
-	  fr->createPolygonCmd(polylist, 
+	  fr->createPolygonCmd(polylist, localFill,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}

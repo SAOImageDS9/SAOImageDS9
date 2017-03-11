@@ -21,6 +21,7 @@ proc CircleDialog {varname} {
     set var(dcoord) [lindex $rr 0]
     set var(dformat) $pmarker(dformat)
     AdjustCoordSystem $varname dcoord
+    set var(fill) [$var(frame) get marker $var(id) circle fill]
 
     # procs
     set var(proc,apply) CircleApply
@@ -29,6 +30,11 @@ proc CircleDialog {varname} {
 
     # base
     MarkerBaseCenterDialog $varname
+
+    # menu
+    $var(mb).color add separator
+    $var(mb).color add checkbutton -label [msgcat::mc {Fill}] \
+	-variable ${varname}(fill) -command [list CircleFill $varname]
 
     # analysis
     $var(mb) add cascade -label [msgcat::mc {Analysis}] -menu $var(mb).analysis
@@ -75,6 +81,15 @@ proc CircleApply {varname} {
 	$var(dcoord) $var(dformat)
 
     MarkerBaseCenterApply $varname
+}
+
+# support
+
+proc CircleFill {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    $var(frame) marker $var(id) circle fill $var(fill)
 }
 
 # callbacks

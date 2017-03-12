@@ -37,7 +37,8 @@ BaseBox::~BaseBox()
   deleteVertices();
 }
 
-void BaseBox::renderX(Drawable drawable, Coord::InternalSystem sys, RenderMode mode)
+void BaseBox::renderX(Drawable drawable, Coord::InternalSystem sys, 
+		      RenderMode mode)
 {
   GC lgc = renderXGC(mode);
 
@@ -49,10 +50,15 @@ void BaseBox::renderX(Drawable drawable, Coord::InternalSystem sys, RenderMode m
       pp[jj].x = (short)v[0];
       pp[jj].y = (short)v[1];
     }
-    XDrawLines(display, drawable, lgc, pp, numPoints_, CoordModeOrigin);
+    renderXDraw(drawable, lgc, pp);
     delete [] pp;
   }
   deleteVertices();
+}
+
+void BaseBox::renderXDraw(Drawable drawable, GC lgc, XPoint* pp)
+{
+  XDrawLines(display, drawable, lgc, pp, numPoints_, CoordModeOrigin);
 }
 
 void BaseBox::renderPS(int mode)
@@ -60,20 +66,24 @@ void BaseBox::renderPS(int mode)
   renderPSGC(mode);
 
   newVertices();
-  for (int ii=0; ii<numAnnuli_; ii++) {
-    ostringstream str;
-    for (int jj=0; jj<numPoints_; jj++) {
-      Vector v =  parent->mapFromRef(vertices_[ii][jj],Coord::CANVAS);
-      if (jj==0)
-	str << "newpath " 
-	    << v.TkCanvasPs(parent->canvas) << " moveto" << endl;
-      else
-	str << v.TkCanvasPs(parent->canvas) << " lineto" << endl;
-    }
-    str << "stroke" << endl << ends;
-    Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
-  }
+  for (int ii=0; ii<numAnnuli_; ii++)
+    renderPSDraw(ii);
   deleteVertices();
+}
+
+void BaseBox::renderPSDraw(int ii)
+{
+  ostringstream str;
+  for (int jj=0; jj<numPoints_; jj++) {
+    Vector v =  parent->mapFromRef(vertices_[ii][jj],Coord::CANVAS);
+    if (jj==0)
+      str << "newpath " 
+	  << v.TkCanvasPs(parent->canvas) << " moveto" << endl;
+    else
+      str << v.TkCanvasPs(parent->canvas) << " lineto" << endl;
+  }
+  str << "stroke" << endl << ends;
+  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
 #ifdef MAC_OSX_TK

@@ -42,6 +42,33 @@ Box::Box(Base* p, const Vector& ctr,
   updateBBox();
 }
 
+void Box::renderXDraw(Drawable drawable, GC lgc, XPoint* pp)
+{
+  if (fill_)
+    XFillPolygon(display, drawable, lgc, pp, numPoints_, Convex, CoordModeOrigin);
+  else
+    XDrawLines(display, drawable, lgc, pp, numPoints_, CoordModeOrigin);
+}
+
+void Box::renderPSDraw(int ii)
+{
+  ostringstream str;
+  for (int jj=0; jj<numPoints_; jj++) {
+    Vector v =  parent->mapFromRef(vertices_[ii][jj],Coord::CANVAS);
+    if (jj==0)
+      str << "newpath " 
+	  << v.TkCanvasPs(parent->canvas) << " moveto" << endl;
+    else
+      str << v.TkCanvasPs(parent->canvas) << " lineto" << endl;
+  }
+  if (fill_)
+    str << "fill" << endl << ends;
+  else
+    str << "stroke" << endl << ends;
+
+  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+}
+
 void Box::editBegin(int h)
 {
   switch (h) {

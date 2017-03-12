@@ -119,7 +119,8 @@ void BaseEllipse::renderXEllipseCurve(Drawable drawable,
   }
 }
 
-void BaseEllipse::renderXEllipsePrep(Drawable drawable, Coord::InternalSystem sys, 
+void BaseEllipse::renderXEllipsePrep(Drawable drawable, 
+				     Coord::InternalSystem sys, 
 				     RenderMode mode, 
 				     double a1, double a2, 
 				     double b1, double b2, 
@@ -138,9 +139,11 @@ void BaseEllipse::renderXEllipsePrep(Drawable drawable, Coord::InternalSystem sy
     renderXEllipseArc(drawable, sys, mode, a1,a2,r);
 }				
 
-void BaseEllipse::renderXEllipseArc(Drawable drawable, Coord::InternalSystem sys,
+void BaseEllipse::renderXEllipseArc(Drawable drawable, 
+				    Coord::InternalSystem sys,
 				    RenderMode mode,
-				    double a1, double a2, Vector& rr)
+				    double a1, double a2, 
+				    Vector& rr)
 {
   // don't render if zero angle
   if (a1==a2)
@@ -170,7 +173,8 @@ void BaseEllipse::renderXEllipseArc(Drawable drawable, Coord::InternalSystem sys
   XDrawCurve(drawable, mode, tt0, xx1, xx2, tt1);
 }
 
-void BaseEllipse::renderXInclude(Drawable drawable, Coord::InternalSystem sys, 
+void BaseEllipse::renderXInclude(Drawable drawable, 
+				 Coord::InternalSystem sys, 
 				 RenderMode mode)
 {
   if (!(properties & INCLUDE)) {
@@ -297,7 +301,6 @@ void BaseEllipse::renderPSEllipsePrep(double a1, double a2,
 }				
 
 void BaseEllipse::renderPSEllipseArc(double a1, double a2, Vector& rr)
-
 {
   // don't render zero length arcs
   if (a1 == a2)
@@ -323,6 +326,12 @@ void BaseEllipse::renderPSEllipseArc(double a1, double a2, Vector& rr)
   Vector xx2 = fwdMap(x2*FlipY(),Coord::CANVAS);
   Vector tt1 = fwdMap(t1*FlipY(),Coord::CANVAS);
 
+  renderPSEllipseArcDraw(tt0, xx1, xx2, tt1);
+}
+
+void BaseEllipse::renderPSEllipseArcDraw(Vector& tt0, Vector& xx1, 
+					 Vector& xx2, Vector& tt1)
+{
   ostringstream str;
   str << "newpath "
       << tt0.TkCanvasPs(parent->canvas) << ' '

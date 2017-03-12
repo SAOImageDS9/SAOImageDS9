@@ -30,7 +30,10 @@ protected:
   Vector intersect(Vector, double);
 
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
+  virtual void renderXDraw(Drawable drawable, GC lgc, XPoint* pp);
   void renderPS(int);
+  virtual void renderPSDraw(int);
+
 #ifdef MAC_OSX_TK
   void renderMACOSX();
 #endif

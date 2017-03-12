@@ -11,6 +11,8 @@
 class Box : public BaseBox, public BaseFill {
  protected:
   void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
+  void renderXDraw(Drawable drawable, GC lgc, XPoint* pp);
+  void renderPSDraw(int);
 
 public:
   Box(Base* p, const Vector& ctr, const Vector& seg, double ang, int fill);

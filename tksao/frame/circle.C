@@ -83,6 +83,42 @@ void Circle::renderPSCircleDraw(Vector& cc, double l, float a1, float a2)
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
+void Circle::renderPSEllipseArcDraw(Vector& tt0, Vector& xx1, 
+				    Vector& xx2, Vector& tt1)
+{
+  ostringstream str;
+  if (fill_) {
+    Vector cc =  parent->mapFromRef(center,Coord::CANVAS);
+
+    str << "newpath "
+	<< tt0.TkCanvasPs(parent->canvas) << ' '
+	<< "moveto "
+	<< xx1.TkCanvasPs(parent->canvas) << ' '
+	<< xx2.TkCanvasPs(parent->canvas) << ' ' 
+	<< tt1.TkCanvasPs(parent->canvas) << ' ' 
+	<< "curveto fill" << endl
+	<< "newpath "
+	<< cc.TkCanvasPs(parent->canvas) << ' '
+	<< "moveto "
+	<< tt0.TkCanvasPs(parent->canvas) << ' '
+	<< "lineto "
+	<< tt1.TkCanvasPs(parent->canvas) << ' '
+	<< "lineto closepath gsave" << endl
+	<< "1 setlinejoin .5 setlinewidth stroke" << endl
+	<< "grestore fill" << endl << ends;
+  }  
+  else
+    str << "newpath "
+	<< tt0.TkCanvasPs(parent->canvas) << ' '
+	<< "moveto "
+	<< xx1.TkCanvasPs(parent->canvas) << ' '
+	<< xx2.TkCanvasPs(parent->canvas) << ' ' 
+	<< tt1.TkCanvasPs(parent->canvas) << ' ' 
+	<< "curveto stroke" << endl << ends;
+
+  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+}
+
 void Circle::analysis(AnalysisTask mm, int which)
 {
   switch (mm) {

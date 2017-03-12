@@ -51,43 +51,43 @@ void Polygon::renderX(Drawable drawable, Coord::InternalSystem sys,
   GC lgc = renderXGC(mode);
 
   vertex.head();
-  Vector v1;
-  Vector v2 = fwdMap(vertex.current()->vector,sys);
-  int done = 0;
-
-  do {
-    if (!vertex.next()) {
-      done = 1;
+  int cnt = vertex.count()+1;
+  XPoint* pp = new XPoint[cnt];
+  for (int ii=0; ii<cnt; ii++) {
+    Vector vv = fwdMap(vertex.current()->vector,sys);
+    pp[ii].x = (short)vv[0];
+    pp[ii].y = (short)vv[1];
+    if (!vertex.next())
       vertex.head();
-    }
-    v1 = v2;
-    v2 = fwdMap(vertex.current()->vector,sys);
-    XDrawLine(display, drawable, lgc, v1[0], v1[1], v2[0], v2[1]);
-  } while (!done);
+  }
+
+  if (fill_)
+    XFillPolygon(display, drawable, lgc, pp, cnt, Complex, CoordModeOrigin);
+  else
+    XDrawLines(display, drawable, lgc, pp, cnt, CoordModeOrigin);
 }
 
 void Polygon::renderPS(int mode)
 {
   renderPSGC(mode);
 
-  vertex.head();
-  int first = 1;
-  do {
-    ostringstream str;
-    Vector v =  fwdMap(vertex.current()->vector,Coord::CANVAS);
-    if (first) {
-      str << "newpath " << endl
-	  << v.TkCanvasPs(parent->canvas) << " moveto" << endl << ends;
-      first = 0;
-    }
-    else
-      str << v.TkCanvasPs(parent->canvas) << " lineto" << endl << ends;
-
-    Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
-  } while (vertex.next());
-
   ostringstream str;
-  str << "closepath stroke" << endl << ends;
+
+  vertex.head();
+  Vector v =  fwdMap(vertex.current()->vector,Coord::CANVAS);
+  str << "newpath " << endl
+      << v.TkCanvasPs(parent->canvas) << " moveto" << endl;
+  while (vertex.next()) {
+    Vector v =  fwdMap(vertex.current()->vector,Coord::CANVAS);
+    str << v.TkCanvasPs(parent->canvas) << " lineto" << endl;
+  }
+
+  str << "closepath ";
+  if (fill_)
+    str << "fill" << endl << ends;
+  else
+    str << "stroke" << endl << ends;
+
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 

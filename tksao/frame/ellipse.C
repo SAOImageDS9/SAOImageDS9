@@ -54,18 +54,16 @@ void Ellipse::renderXCircleDraw(Drawable drawable, GC lgc,
 void Ellipse::renderPSCircleDraw(Vector& cc, double l, float a1, float a2)
 {
   ostringstream str;
+  str << "newpath " 
+      << cc.TkCanvasPs(parent->canvas) << ' '
+      << l << ' '
+      << a1 << ' ' << a2 << ' '
+      << "arc ";
   if (fill_)
-    str << "newpath " 
-	<< cc.TkCanvasPs(parent->canvas) << ' '
-	<< l << ' '
-	<< a1 << ' ' << a2 << ' '
-	<< "arc fill" << endl << ends;
+    str << "fill";
   else
-    str << "newpath " 
-	<< cc.TkCanvasPs(parent->canvas) << ' '
-	<< l << ' '
-	<< a1 << ' ' << a2 << ' '
-	<< "arc stroke" << endl << ends;
+    str << "stroke";
+  str << endl << ends;
 
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
@@ -91,7 +89,7 @@ void Ellipse::renderPSEllipseArcDraw(Vector& tt0, Vector& xx1,
 	<< "lineto "
 	<< tt1.TkCanvasPs(parent->canvas) << ' '
 	<< "lineto closepath gsave" << endl
-	<< "1 setlinejoin .5 setlinewidth stroke" << endl
+	<< "1 setlinejoin .75 setlinewidth stroke" << endl
 	<< "grestore fill" << endl << ends;
   }  
   else

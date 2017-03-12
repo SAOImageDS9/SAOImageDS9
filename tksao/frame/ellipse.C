@@ -9,7 +9,8 @@
 
 Ellipse::Ellipse(const Ellipse& a) : BaseEllipse(a), BaseFill(a) {}
 
-Ellipse::Ellipse(Base* p, const Vector& ctr, const Vector& r, double ang, int fill)
+Ellipse::Ellipse(Base* p, const Vector& ctr, const Vector& r, 
+		 double ang, int fill)
   : BaseEllipse(p, ctr, ang), BaseFill(fill)
 {
   numAnnuli_ = 1;

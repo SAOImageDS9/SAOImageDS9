@@ -49,6 +49,23 @@ void Ellipse::renderXCircleDraw(Drawable drawable, GC lgc,
   BaseFillEllipse::renderXCircleDraw(display, drawable, lgc, st, size, a1, aa);
 }
 
+void Ellipse::renderXEllipseDraw(Drawable drawable, GC lgc, 
+				 XPoint* pts, int cnt)
+{
+  if (fill_ || ((properties & SOURCE) && !(properties & DASH)))
+    BaseFillEllipse::renderXEllipseDraw(display, drawable, lgc, pts, cnt);
+  else {
+    // crude attempt to clip unwanted drawlines
+    // only works for SRC
+    for (int ii=0; ii<xpointNum_; ii+=2) {
+      XPoint* ptr1 = xpoint_+ii;
+      XPoint* ptr2 = xpoint_+ii+1;
+      XDrawLine(display, drawable, lgc, 
+		(*ptr1).x, (*ptr1).y, (*ptr2).x, (*ptr2).y);    
+    }    
+  }
+}
+
 void Ellipse::renderPSCircleDraw(Vector& cc, double l, float a1, float a2)
 {
   BaseFillEllipse::renderPSCircleDraw(parent, cc, l, a1, a2);

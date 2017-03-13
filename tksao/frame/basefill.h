@@ -27,6 +27,7 @@ class BaseFill {
 class BaseFillEllipse : public BaseFill {
  protected:
   void renderXCircleDraw(Display*, Drawable, GC, Vector&, Vector&, int, int);
+  void renderXEllipseDraw(Display*, Drawable, GC, XPoint*, int);
   void renderPSCircleDraw(Base*, Vector&, double, float, float);
   void renderPSEllipseArcDraw(Base*, Vector&, Vector&, Vector&, 
 			      Vector&, Vector&);

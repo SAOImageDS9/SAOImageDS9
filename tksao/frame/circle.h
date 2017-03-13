@@ -11,6 +11,7 @@
 class Circle : public BaseEllipse, public BaseFillEllipse {
  protected:
   void renderXCircleDraw(Drawable, GC, Vector&, Vector&, int, int);
+  void renderXEllipseDraw(Drawable, GC, XPoint*, int);
   void renderPSCircleDraw(Vector& cc, double l, float a1, float a2);
   void renderPSEllipseArcDraw(Vector&, Vector&, Vector&, Vector&);
 

@@ -2,14 +2,17 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tk.h>
-
 #include "baseellipse.h"
 #include "fitsimage.h"
+
+#define XPOINT_BLOCK 1024
 
 BaseEllipse::BaseEllipse(Base* p, const Vector& ctr, double ang)
   : BaseMarker(p, ctr, ang)
 {
+  xpoint_ =NULL;
+  xpointSize_ =0;
+  xpointNum_ =0;
 }
 
 BaseEllipse::BaseEllipse(Base* p, const Vector& ctr, 
@@ -20,13 +23,25 @@ BaseEllipse::BaseEllipse(Base* p, const Vector& ctr,
 			 const List<Tag>& tag, const List<CallBack>& cb)
   : BaseMarker(p, ctr, ang, clr, dsh, w, f, t, prop, c, tag, cb)
 {
+  xpoint_ =NULL;
+  xpointSize_ =0;
+  xpointNum_ =0;
 }
 
-BaseEllipse::BaseEllipse(const BaseEllipse& a) : BaseMarker(a) {}
+BaseEllipse::BaseEllipse(const BaseEllipse& a) : BaseMarker(a)
+{
+  xpoint_ =NULL;
+  xpointSize_ =0;
+  xpointNum_ =0;
+}
 
 BaseEllipse::~BaseEllipse()
 {
+  if (xpoint_)
+    free(xpoint_);
 }
+
+// renderX
 
 void BaseEllipse::renderX(Drawable drawable, Coord::InternalSystem sys, 
 			  RenderMode mode)
@@ -99,6 +114,10 @@ void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
   for (int i=0; i<numAnnuli_; i++) {
     Vector r = annuli_[i];
 
+    xpointSize_ = XPOINT_BLOCK*sizeof(XPoint);
+    xpoint_ = (XPoint*)malloc(xpointSize_);
+    xpointNum_ =0;
+
     int s1 =0;
     int s2 =0;
     for (int i=0; i<8; i++) {
@@ -115,6 +134,60 @@ void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
       if (s1&&s2)
 	s1=s2=0;
     }
+
+    // close the loop
+    xpointNum_++;
+    if (xpointNum_*sizeof(XPoint) >= xpointSize_) {
+      xpointSize_ += XPOINT_BLOCK*sizeof(XPoint);
+      xpoint_ = (XPoint*)realloc(xpoint_, xpointSize_);
+    }
+    XPoint* ptr = xpoint_+xpointNum_;
+    (*ptr).x = (*xpoint_).x;
+    (*ptr).y = (*xpoint_).y;
+
+    // if dashed, fake it
+    GC lgc;
+    if ((properties & SOURCE) && !(properties & DASH))
+      lgc = renderXGC(mode);
+    else {
+      // set width, color, dash
+      switch (mode) {
+      case SRC:
+	XSetForeground(display, gc, color); 
+	renderXLineNoDash(gc);
+	lgc = gc;
+	break;
+      case XOR:
+	renderXLineNoDash(gcxor);
+	lgc = gcxor;
+	break;
+      }
+    }
+
+    renderXEllipseDraw(drawable, lgc, xpoint_, xpointNum_);
+
+    if (xpoint_)
+      free(xpoint_);
+    xpoint_ =NULL;
+    xpointSize_ =0;
+    xpointNum_ =0;
+  }
+}
+
+void BaseEllipse::renderXEllipseDraw(Drawable drawable, GC lgc, 
+				     XPoint* pts, int cnt)
+{
+  if ((properties & SOURCE) && !(properties & DASH))
+    XDrawLines(display, drawable, lgc, pts, cnt, CoordModeOrigin);
+  else {
+    // crude attempt to clip unwanted drawlines
+    // only works for SRC
+    for (int ii=0; ii<xpointNum_; ii+=2) {
+      XPoint* ptr1 = xpoint_+ii;
+      XPoint* ptr2 = xpoint_+ii+1;
+      XDrawLine(display, drawable, lgc, 
+		(*ptr1).x, (*ptr1).y, (*ptr2).x, (*ptr2).y);    
+    }    
   }
 }
 
@@ -169,7 +242,80 @@ void BaseEllipse::renderXEllipseArc(Drawable drawable,
   Vector xx2 = fwdMap(x2*FlipY(),sys);
   Vector tt1 = fwdMap(t1*FlipY(),sys);
 
+  if (xpointNum_ == 0) {
+    (*xpoint_).x = tt0[0];
+    (*xpoint_).y = tt0[1];
+  }
+
   XDrawCurve(drawable, mode, tt0, xx1, xx2, tt1);
+}
+
+void BaseEllipse::XDrawCurve(Drawable drawable, RenderMode mode,
+			     Vector& t1, Vector& x1,
+			     Vector& x2, Vector& t2)
+{
+  float t1x = t1[0];
+  float t1y = t1[1];
+  float t2x = t2[0];
+  float t2y = t2[1];
+
+  float x1x = x1[0];
+  float x1y = x1[1];
+  float x2x = x2[0];
+  float x2y = x2[1];
+
+  Vector dd = (t2-t1).abs();
+  float max = dd[0]>dd[1] ? dd[0] : dd[1];
+
+  // calculate incr
+  // this is a crude attempt to limit the number of iterations
+  // we want a min for very small segments, but not that large for
+  // high zoom or elongated curves
+  float aa = int(log(max))*5;
+  float incr = 1./(aa > 2 ? aa : 2);
+
+  float tt = incr;
+  while (tt<=1+FLT_EPSILON) {
+    float xx = pow(tt,3)*(t2x+3*(x1x-x2x)-t1x)
+      +3*pow(tt,2)*(t1x-2*x1x+x2x)
+      +3*tt*(x1x-t1x)+t1x;
+    float yy = pow(tt,3)*(t2y+3*(x1y-x2y)-t1y)
+      +3*pow(tt,2)*(t1y-2*x1y+x2y)
+      +3*tt*(x1y-t1y)+t1y;
+
+    xpointNum_++;
+    if (xpointNum_*sizeof(XPoint) >= xpointSize_) {
+      xpointSize_ += XPOINT_BLOCK*sizeof(XPoint);
+      xpoint_ = (XPoint*)realloc(xpoint_, xpointSize_);
+    }
+    XPoint* ptr = xpoint_+xpointNum_;
+    (*ptr).x = xx;
+    (*ptr).y = yy;
+
+    tt += incr;
+  }
+}
+
+// this routine maps the desired angle to an angle to be used with XDrawArc
+double BaseEllipse::xyz(Vector rr, double aa)
+{
+  // just in case
+  if (!rr[0] || !rr[1]) 
+    return aa;
+
+  int flip=0;
+  while (aa>M_PI) {
+    aa -= M_PI;
+    flip++;
+  }
+
+  double tt = rr[1]*rr[1]*cos(aa)*cos(aa)+rr[0]*rr[0]*sin(aa)*sin(aa);
+  double ss =0;
+  if (tt>0) 
+    ss = 1./sqrt(tt);
+
+  double bb = rr[1]*ss*cos(aa);
+  return acos(bb)+M_PI*flip;
 }
 
 void BaseEllipse::renderXInclude(Drawable drawable, 
@@ -180,12 +326,8 @@ void BaseEllipse::renderXInclude(Drawable drawable,
     //    Matrix mm = fwdMatrix();
     double theta = degToRad(45);
 
-    Vector r1 = fwdMap(Vector(annuli_[numAnnuli_-1][0]*cos(theta), 
-					annuli_[numAnnuli_-1][1]*sin(theta)),
-				 sys);
-    Vector r2 = fwdMap(Vector(-annuli_[numAnnuli_-1][0]*cos(theta), 
-					-annuli_[numAnnuli_-1][1]*sin(theta)),
-				 sys);
+    Vector r1 = fwdMap(Vector(annuli_[numAnnuli_-1][0]*cos(theta), annuli_[numAnnuli_-1][1]*sin(theta)), sys);
+    Vector r2 = fwdMap(Vector(-annuli_[numAnnuli_-1][0]*cos(theta), -annuli_[numAnnuli_-1][1]*sin(theta)), sys);
 
     GC lgc = renderXGC(mode);
     if (mode == SRC)
@@ -194,6 +336,8 @@ void BaseEllipse::renderXInclude(Drawable drawable,
     XDrawLine(display, drawable, lgc, r1[0], r1[1], r2[0], r2[1]);    
   }
 }
+
+// renderPS
 
 void BaseEllipse::renderPS(int mode) {
   Vector r = annuli_[numAnnuli_-1];
@@ -207,7 +351,7 @@ void BaseEllipse::renderPS(int mode) {
   if (isRound && isScale && isOrient && parent->isAzElZero())
     renderPSCircle(mode);
   else
-    renderPSEllipseCurve(mode);
+    renderPSEllipse(mode);
 }
 
 void BaseEllipse::renderPSCircle(int mode)
@@ -251,7 +395,7 @@ void BaseEllipse::renderPSCircleDraw(Vector& cc, double l, float a1, float a2)
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
-void BaseEllipse::renderPSEllipseCurve(int mode)
+void BaseEllipse::renderPSEllipse(int mode)
 {
   renderPSGC(mode);
 
@@ -691,97 +835,3 @@ Vector BaseEllipse::intersect(Vector rr, double aa)
   return Vector(ss*cos(aa),ss*sin(aa));
 }
 
-void BaseEllipse::XDrawCurve(Drawable drawable, RenderMode mode,
-			     Vector& t1, Vector& x1,
-			     Vector& x2, Vector& t2)
-{
-  // if dashed, fake it
-  GC lgc;
-  if ((properties & SOURCE) && !(properties & DASH))
-    lgc = renderXGC(mode);
-  else {
-    // set width, color, dash
-    switch (mode) {
-    case SRC:
-      XSetForeground(display, gc, color); 
-      renderXLineNoDash(gc);
-      lgc = gc;
-      break;
-    case XOR:
-      renderXLineNoDash(gcxor);
-      lgc = gcxor;
-      break;
-    }
-  }
-
-  float t1x = t1[0];
-  float t1y = t1[1];
-  float t2x = t2[0];
-  float t2y = t2[1];
-
-  float x1x = x1[0];
-  float x1y = x1[1];
-  float x2x = x2[0];
-  float x2y = x2[1];
-
-  float rx = t1x;
-  float ry = t1y;
-
-  Vector dd = (t2-t1).abs();
-  float max = dd[0]>dd[1] ? dd[0] : dd[1];
-
-  // calculate incr
-  // this is a crude attempt to limit the number of iterations
-  // we want a min for very small segments, but not that large for
-  // high zoom or elongated curves
-  float aa = int(log(max))*5;
-  float incr = 1./(aa > 2 ? aa : 2);
-
-  int dash=0;
-  float tt = incr;
-  while (tt<=1+FLT_EPSILON) {
-    float xx = pow(tt,3)*(t2x+3*(x1x-x2x)-t1x)
-      +3*pow(tt,2)*(t1x-2*x1x+x2x)
-      +3*tt*(x1x-t1x)+t1x;
-    float yy = pow(tt,3)*(t2y+3*(x1y-x2y)-t1y)
-      +3*pow(tt,2)*(t1y-2*x1y+x2y)
-      +3*tt*(x1y-t1y)+t1y;
-
-    // crude attempt to clip unwanted drawlines
-    // only works for SRC
-    if ((properties & SOURCE) && !(properties & DASH))
-      XDrawLine(display, drawable, lgc, rx, ry, xx, yy);
-    else {
-      if (dash)
-	XDrawLine(display, drawable, lgc, rx, ry, xx, yy);    
-      dash = !dash;
-    }
-
-    rx = xx;
-    ry = yy;
-
-    tt += incr;
-  }
-}
-
-// this routine maps the desired angle to an angle to be used with XDrawArc
-double BaseEllipse::xyz(Vector rr, double aa)
-{
-  // just in case
-  if (!rr[0] || !rr[1]) 
-    return aa;
-
-  int flip=0;
-  while (aa>M_PI) {
-    aa -= M_PI;
-    flip++;
-  }
-
-  double tt = rr[1]*rr[1]*cos(aa)*cos(aa)+rr[0]*rr[0]*sin(aa)*sin(aa);
-  double ss =0;
-  if (tt>0) 
-    ss = 1./sqrt(tt);
-
-  double bb = rr[1]*ss*cos(aa);
-  return acos(bb)+M_PI*flip;
-}

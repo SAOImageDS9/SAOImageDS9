@@ -42,6 +42,16 @@ void BaseFillEllipse::renderXCircleDraw(Display* display, Drawable drawable,
     XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
 }
 
+void BaseFillEllipse::renderXEllipseDraw(Display* display, Drawable drawable,
+					 GC lgc, 
+					 XPoint* pts, int cnt)
+{
+  if (fill_)
+    XFillPolygon(display, drawable, lgc, pts, cnt, Convex, CoordModeOrigin);
+  else
+    XDrawLines(display, drawable, lgc, pts, cnt, CoordModeOrigin);
+}
+
 void BaseFillEllipse::renderPSCircleDraw(Base* parent, 
 					 Vector& cc, double l, 
 					 float a1, float a2)

@@ -5,9 +5,16 @@
 #ifndef __baseellipse_h__
 #define __baseellipse_h__
 
+#include <tk.h>
+
 #include "basemarker.h"
 
 class BaseEllipse : public BaseMarker {
+ protected:
+  XPoint* xpoint_;
+  int xpointSize_;
+  int xpointNum_;
+
  private:
   double xyz(Vector rr, double ang);
   void XDrawCurve(Drawable, RenderMode, Vector&, Vector&, Vector&, Vector&);
@@ -21,7 +28,7 @@ class BaseEllipse : public BaseMarker {
   void renderXInclude(Drawable, Coord::InternalSystem, RenderMode);
 
   void renderPSCircle(int);
-  void renderPSEllipseCurve(int);
+  void renderPSEllipse(int);
   void renderPSEllipsePrep(double, double, double, double, Vector&);
   void renderPSEllipseArc(double, double, Vector&);
   void renderPSInclude(int);
@@ -45,6 +52,7 @@ class BaseEllipse : public BaseMarker {
  protected:
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
   virtual void renderXCircleDraw(Drawable, GC, Vector&, Vector&, int, int);
+  virtual void renderXEllipseDraw(Drawable, GC, XPoint*, int);
   void renderPS(int);
   virtual void renderPSCircleDraw(Vector& cc, double l, float a1, float a2);
   virtual void renderPSEllipseArcDraw(Vector&, Vector&, Vector&, Vector&);

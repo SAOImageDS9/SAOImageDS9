@@ -8,7 +8,7 @@
 #include "baseellipse.h"
 #include "basefill.h"
 
-class Ellipse : public BaseEllipse, public BaseFill {
+class Ellipse : public BaseEllipse, public BaseFillEllipse {
  protected:
   void renderXCircleDraw(Drawable, GC, Vector&, Vector&, int, int);
   void renderPSCircleDraw(Vector& cc, double l, float a1, float a2);

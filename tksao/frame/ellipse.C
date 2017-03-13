@@ -7,11 +7,11 @@
 #include "ellipse.h"
 #include "fitsimage.h"
 
-Ellipse::Ellipse(const Ellipse& a) : BaseEllipse(a), BaseFill(a) {}
+Ellipse::Ellipse(const Ellipse& a) : BaseEllipse(a), BaseFillEllipse(a) {}
 
 Ellipse::Ellipse(Base* p, const Vector& ctr, const Vector& r, 
 		 double ang, int fill)
-  : BaseEllipse(p, ctr, ang), BaseFill(fill)
+  : BaseEllipse(p, ctr, ang), BaseFillEllipse(fill)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
@@ -30,7 +30,7 @@ Ellipse::Ellipse(Base* p, const Vector& ctr,
 		 unsigned short prop, const char* cmt, 
 		 const List<Tag>& tg, const List<CallBack>& cb)
   : BaseEllipse(p, ctr, ang, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb),
-    BaseFill(fill)
+    BaseFillEllipse(fill)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
@@ -46,63 +46,18 @@ void Ellipse::renderXCircleDraw(Drawable drawable, GC lgc,
 				Vector& st, Vector& size,
 				int a1, int aa)
 {
-  if (fill_)
-    XFillArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
-  else
-    XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
+  BaseFillEllipse::renderXCircleDraw(display, drawable, lgc, st, size, a1, aa);
 }
 
 void Ellipse::renderPSCircleDraw(Vector& cc, double l, float a1, float a2)
 {
-  ostringstream str;
-  str << "newpath " 
-      << cc.TkCanvasPs(parent->canvas) << ' '
-      << l << ' '
-      << a1 << ' ' << a2 << ' '
-      << "arc ";
-  if (fill_)
-    str << "fill";
-  else
-    str << "stroke";
-  str << endl << ends;
-
-  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+  BaseFillEllipse::renderPSCircleDraw(parent, cc, l, a1, a2);
 }
 
 void Ellipse::renderPSEllipseArcDraw(Vector& tt0, Vector& xx1, 
-				    Vector& xx2, Vector& tt1)
+				     Vector& xx2, Vector& tt1)
 {
-  ostringstream str;
-  if (fill_) {
-    Vector cc =  parent->mapFromRef(center,Coord::CANVAS);
-
-    str << "newpath "
-	<< tt0.TkCanvasPs(parent->canvas) << ' '
-	<< "moveto "
-	<< xx1.TkCanvasPs(parent->canvas) << ' '
-	<< xx2.TkCanvasPs(parent->canvas) << ' ' 
-	<< tt1.TkCanvasPs(parent->canvas) << ' ' 
-	<< "curveto fill" << endl
-	<< "newpath "
-	<< cc.TkCanvasPs(parent->canvas) << ' '
-	<< "moveto "
-	<< tt0.TkCanvasPs(parent->canvas) << ' '
-	<< "lineto "
-	<< tt1.TkCanvasPs(parent->canvas) << ' '
-	<< "lineto closepath gsave" << endl
-	<< "1 setlinejoin .75 setlinewidth stroke" << endl
-	<< "grestore fill" << endl << ends;
-  }  
-  else
-    str << "newpath "
-	<< tt0.TkCanvasPs(parent->canvas) << ' '
-	<< "moveto "
-	<< xx1.TkCanvasPs(parent->canvas) << ' '
-	<< xx2.TkCanvasPs(parent->canvas) << ' ' 
-	<< tt1.TkCanvasPs(parent->canvas) << ' ' 
-	<< "curveto stroke" << endl << ends;
-
-  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+  BaseFillEllipse::renderPSEllipseArcDraw(parent, center, tt0, xx1, xx2, tt1);
 }
 
 void Ellipse::edit(const Vector& v, int h)

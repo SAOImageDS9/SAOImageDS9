@@ -13,7 +13,7 @@ class BaseEllipse : public BaseMarker {
   void XDrawCurve(Drawable, RenderMode, Vector&, Vector&, Vector&, Vector&);
 
   void renderXCircle(Drawable, Coord::InternalSystem, double, RenderMode);
-  void renderXEllipseCurve(Drawable, Coord::InternalSystem, RenderMode);
+  void renderXEllipse(Drawable, Coord::InternalSystem, RenderMode);
   void renderXEllipsePrep(Drawable, Coord::InternalSystem, RenderMode,
 			  double, double, double, double, Vector&);
   void renderXEllipseArc(Drawable, Coord::InternalSystem, RenderMode, 

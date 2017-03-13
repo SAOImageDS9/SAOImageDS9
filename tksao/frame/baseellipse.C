@@ -44,7 +44,7 @@ void BaseEllipse::renderX(Drawable drawable, Coord::InternalSystem sys,
   if (isRound && isScale && isOrient && parent->isAzElZero())
     renderXCircle(drawable, sys, ang, mode);
   else
-    renderXEllipseCurve(drawable, sys, mode);
+    renderXEllipse(drawable, sys, mode);
 }
 
 void BaseEllipse::renderXCircle(Drawable drawable, Coord::InternalSystem sys, 
@@ -88,9 +88,8 @@ void BaseEllipse::renderXCircleDraw(Drawable drawable, GC lgc, Vector& st,
   XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
 }
 
-void BaseEllipse::renderXEllipseCurve(Drawable drawable, 
-				      Coord::InternalSystem sys,
-				      RenderMode mode)
+void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
+				 RenderMode mode)
 {
   double a1 = startAng_;
   double a2 = stopAng_;

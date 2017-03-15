@@ -1029,7 +1029,11 @@ const char* FitsImage::getValue(const Vector& v)
     else if (val > IISMAX)
       str << ends;
     else
-      str << ((val-1) * (iisz_[1]-iisz_[0]))/(IISMAX-1) + iisz_[0] << ends;
+      // W_LINEAR =1
+      if (iiszt_ == 1)
+	str << ((val-1) * (iisz_[1]-iisz_[0]))/(IISMAX-1) + iisz_[0] << ends;
+      else
+	str << val << ends;
 
     memcpy(buf,str.str().c_str(), str.str().length());
     return buf;

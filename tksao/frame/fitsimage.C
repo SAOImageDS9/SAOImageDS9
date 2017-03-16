@@ -1022,7 +1022,7 @@ const char* FitsImage::getValue(const Vector& v)
     ostringstream str;
     if (val == 0)
       str << ends;
-    else if (val == 1)
+    else if (val == IISMIN)
       str << '<' << iisz_[0] << ends;
     else if (val == IISMAX)
       str << '>' << iisz_[1] << ends;
@@ -1031,7 +1031,8 @@ const char* FitsImage::getValue(const Vector& v)
     else
       // W_LINEAR =1
       if (iiszt_ == 1)
-	str << ((val-1) * (iisz_[1]-iisz_[0]))/(IISMAX-1) + iisz_[0] << ends;
+	str << ((val-IISMIN) * (iisz_[1]-iisz_[0]))/(IISMAX-IISMIN) + iisz_[0] 
+	    << ends;
       else
 	str << val << ends;
 

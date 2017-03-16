@@ -2532,8 +2532,8 @@ void Context::setIIS()
 {
   frScale.setClipMode(FrScale::USERCLIP);
   frScale.setMinMaxMode(FrScale::SCAN);
-  frScale.setULow(0);
-  frScale.setUHigh(IISSIZE);
+  frScale.setULow(IISMIN);
+  frScale.setUHigh(IISMAX);
   frScale.setColorScaleType(FrScale::IISSCALE);
 }
 

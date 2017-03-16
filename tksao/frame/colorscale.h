@@ -11,6 +11,7 @@
 // 1-200 data, 1 lowerlimit 200 upperlimit
 // 201 cursor color (white)
 // 202-217 colors 
+#define IISMIN 1
 #define IISMAX 200
 #define IISCOLORS 201
 #define IISSIZE 218

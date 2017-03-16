@@ -191,14 +191,14 @@ IISInverseScale::IISInverseScale(int ss, double low, double high, Vector& iisz)
 
     if (vv == 0)
       level_[ii] = iisz[0];
-    else if (vv == 1)
+    else if (vv == IISMIN)
       level_[ii] = iisz[0];
     else if (vv == IISMAX)
       level_[ii] = iisz[1];
     else if (vv > IISMAX)
       level_[ii] = iisz[1];
     else
-      level_[ii] = ((vv-1) * (iisz[1]-iisz[0]))/(IISMAX-1) + iisz[0];
+      level_[ii] = ((vv-IISMIN) * (iisz[1]-iisz[0]))/(IISMAX-IISMIN) + iisz[0];
   }
 }
 

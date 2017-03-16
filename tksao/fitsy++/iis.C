@@ -50,7 +50,8 @@ char* FitsIIS::get(int xx, int yy, int dx, int dy)
 
   char* dptr = dest;
   char* sptr = (char*)data_ + ((hh-1)-yy)*ww + xx;
-  while (ll) {
+
+  while (ll>0) {
     memcpy(dptr, sptr, ww);
     sptr -= ww;
     dptr += ww;
@@ -69,7 +70,8 @@ void FitsIIS::set(const char* src, int xx, int yy, int dx, int dy)
 
   char* sptr = (char*)src;
   char* dptr = (char*)data_ + ((hh-1)-yy)*ww + xx;
-  while (ll) {
+
+  while (ll>0) {
     memcpy(dptr, sptr, ww);
     sptr += ww;
     dptr -= ww;

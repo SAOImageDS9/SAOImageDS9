@@ -275,15 +275,16 @@ proc BackupFrame {ch which dir} {
     RGBBackup $ch $which
     BinBackup $ch $which
     ScaleBackup $ch $which
-    PanZoomBackup $ch $which
-    # Block need to be before Crop
+    # Block need to be before WCS and Crop
     BlockBackup $ch $which
+    # WCS nees to be before Pan/Zoom
+    WCSBackup $ch $which $fdir $rdir
+    PanZoomBackup $ch $which
     CropBackup $ch $which
     # must be after Pan and Block
     3DBackup $ch $which
     MarkerBackup $ch $which $fdir $rdir
     CentroidBackup $ch $which
-    WCSBackup $ch $which $fdir $rdir
     MaskBackup $ch $which
     SmoothBackup $ch $which
     ContourBackup $ch $which $fdir $rdir

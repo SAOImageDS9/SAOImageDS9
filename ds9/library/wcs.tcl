@@ -121,6 +121,7 @@ proc WCSBackup {ch which fdir rdir} {
 	WCSSaveFile $fn
 	puts $ch "WCSLoadFile $rfn"
 	puts $ch "$which wcs replace text 1 \\\{\[WCSFromVar\]\\\}"
+	puts $ch "RealizeDS9"
     }
 }
 

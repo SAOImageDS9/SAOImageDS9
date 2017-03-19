@@ -16,7 +16,7 @@ class Circle : public BaseEllipse {
   void renderXEllipseDraw(Drawable, GC);
 
   void renderPSCircleDraw(Vector& cc, double l, float a1, float a2);
-  void renderPSEllipseArcDraw(Vector&, Vector&, Vector&, Vector&);
+  void renderPSEllipseDraw();
 
 #ifdef MAC_OSX_TK
   void renderMACOSXCircleDraw(Vector&, double, float, float);

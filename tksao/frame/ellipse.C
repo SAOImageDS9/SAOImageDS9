@@ -74,13 +74,12 @@ void Ellipse::renderPSCircleDraw(Vector& cc, double l, float a1, float a2)
     BaseEllipse::renderPSCircleDraw(cc, l, a1, a2);
 }
 
-void Ellipse::renderPSEllipseArcDraw(Vector& tt0, Vector& xx1, 
-				     Vector& xx2, Vector& tt1)
+void Ellipse::renderPSEllipseDraw()
 {
   if (fill_)
-    BaseEllipse::renderPSEllipseArcFillDraw(tt0, xx1, xx2, tt1);
+    BaseEllipse::renderPSEllipseFillDraw();
   else
-    BaseEllipse::renderPSEllipseArcDraw(tt0, xx1, xx2, tt1);
+    BaseEllipse::renderPSEllipseDraw();
 }
 
 #ifdef MAC_OSX_TK

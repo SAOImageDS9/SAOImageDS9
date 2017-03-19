@@ -419,6 +419,10 @@ void BaseEllipse::renderPSEllipse(int mode)
     a2 += M_TWOPI;
 
   for (int ii=0; ii<numAnnuli_; ii++) {
+    ostringstream str;
+    str << "newpath" << endl << ends;
+    Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+
     Vector r = annuli_[ii];
 
     int s1 =0;
@@ -437,7 +441,23 @@ void BaseEllipse::renderPSEllipse(int mode)
       if (s1&&s2)
 	s1=s2=0;
     }
+
+    renderPSEllipseDraw();
   }
+}
+
+void BaseEllipse::renderPSEllipseDraw()
+{
+  ostringstream str;
+  str << "stroke" << endl << ends;
+  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+}
+
+void BaseEllipse::renderPSEllipseFillDraw()
+{
+  ostringstream str;
+  str << "fill" << endl << ends;
+  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
 void BaseEllipse::renderPSEllipsePrep(double a1, double a2, 
@@ -483,44 +503,13 @@ void BaseEllipse::renderPSEllipseArc(double a1, double a2, Vector& rr)
   Vector xx2 = fwdMap(x2*FlipY(),Coord::CANVAS);
   Vector tt1 = fwdMap(t1*FlipY(),Coord::CANVAS);
 
-  renderPSEllipseArcDraw(tt0, xx1, xx2, tt1);
-}
-
-void BaseEllipse::renderPSEllipseArcDraw(Vector& tt0, Vector& xx1, 
-					 Vector& xx2, Vector& tt1)
-{
   ostringstream str;
-  str << "newpath "
-      << tt0.TkCanvasPs(parent->canvas) << ' '
+  str << tt0.TkCanvasPs(parent->canvas) << ' '
       << "moveto "
       << xx1.TkCanvasPs(parent->canvas) << ' '
       << xx2.TkCanvasPs(parent->canvas) << ' ' 
       << tt1.TkCanvasPs(parent->canvas) << ' '
-      << "curveto stroke" << endl << ends;
-  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
-}
-
-void BaseEllipse::renderPSEllipseArcFillDraw(Vector& tt0, Vector& xx1, 
-					     Vector& xx2, Vector& tt1)
-{
-  Vector cc =  parent->mapFromRef(center,Coord::CANVAS);
-  ostringstream str;
-  str << "newpath "
-      << tt0.TkCanvasPs(parent->getCanvas()) << ' '
-      << "moveto "
-      << xx1.TkCanvasPs(parent->getCanvas()) << ' '
-      << xx2.TkCanvasPs(parent->getCanvas()) << ' ' 
-      << tt1.TkCanvasPs(parent->getCanvas()) << ' ' 
-      << "curveto fill" << endl
-      << "newpath "
-      << cc.TkCanvasPs(parent->getCanvas()) << ' '
-      << "moveto "
-      << tt0.TkCanvasPs(parent->getCanvas()) << ' '
-      << "lineto "
-      << tt1.TkCanvasPs(parent->getCanvas()) << ' '
-      << "lineto closepath gsave" << endl
-      << "1 setlinejoin 1 setlinewidth stroke" << endl
-      << "grestore fill" << endl << ends;
+      << "curveto" << endl << ends;
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 

@@ -58,8 +58,8 @@ class BaseEllipse : public BaseMarker {
   void renderPS(int);
   virtual void renderPSCircleDraw(Vector& cc, double l, float a1, float a2);
   void renderPSCircleFillDraw(Vector& cc, double l, float a1, float a2);
-  virtual void renderPSEllipseArcDraw(Vector&, Vector&, Vector&, Vector&);
-  void renderPSEllipseArcFillDraw(Vector&, Vector&, Vector&, Vector&);
+  virtual void renderPSEllipseDraw();
+  void renderPSEllipseFillDraw();
 
 #ifdef MAC_OSX_TK
   void renderMACOSX();

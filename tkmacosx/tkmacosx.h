@@ -48,12 +48,16 @@ class TkMacosx {
   void font(const char*, float);
   void clip(float, float, float, float);
 
+  void newpath();
+  void stroke();
+  void fill();
+  void arc(float, float, float, float, float);
+  void curve(float, float, float, float, float, float, float, float);
+
   void drawText(float, float, float, const char*);
   void drawLines(float*, float*, int);
-  void drawRect(float, float, float, float);
-  void drawArc(float, float, float, float, float);
-  void drawCurve(float, float, float, float, float, float, float, float);
   void fillPolygon(float*, float*, int);
+  void drawArc(float, float, float, float, float);
   
   void bitmapCreate(void*, int, int, float, float, float, float);
   */

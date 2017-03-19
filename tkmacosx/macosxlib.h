@@ -19,15 +19,17 @@ void macosxDash(float*,int);
 void macosxFont(const char*, float);
 void macosxClip(Vector, Vector);
 
+void macosxNewPath();
+void macosxStroke();
+void macosxFill();
+void macosxArc(Vector, float, float, float);
+void macosxCurve(Vector, Vector, Vector, Vector);
+
 void macosxDrawText(Vector, float, const char*);
 void macosxDrawLine(Vector, Vector);
 void macosxDrawLines(Vector*, int);
 void macosxFillPolygon(Vector*, int);
 void macosxDrawArc(Vector, float, float, float);
-void macosxFillArc(Vector, float, float, float);
-void macosxDrawCurve(Vector, Vector, Vector, Vector);
-void macosxFillCurve(Vector, Vector, Vector, Vector);
-
 
 void macosxBitmapCreate(void*, int, int, const Vector&, const Vector&);
 

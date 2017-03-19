@@ -735,6 +735,33 @@ void TkMacosx::clip(float x, float y, float w, float h)
   CGContextClip(context);
 }
 
+void TkMacosx::newpath()
+{
+  CGContextBeginPath(context);
+}
+
+void TkMacosx::stroke()
+{
+  CGContextStrokePath(context);
+}
+
+void TkMacosx::fill()
+{
+  CGContextEOFillPath(context);
+}
+
+void TkMacosx::arc(float x, float y, float rad, float ang1, float ang2)
+{
+  CGContextAddArc(context, x, y, rad, ang1, ang2, 0);
+}
+
+void TkMacosx::curve(float x0, float y0, float u0, float v0, 
+		     float u1, float v1, float x1, float y1)
+{
+  CGContextMoveToPoint(context, x0, y0);
+  CGContextAddCurveToPoint(context, u0, v0, u1, v1, x1, y1);
+}
+
 void TkMacosx::drawText(float x, float y, float angle, const char* text)
 {
   CGAffineTransform mm = CGAffineTransformMakeRotation(angle);
@@ -768,35 +795,6 @@ void TkMacosx::drawArc(float x, float y, float rad, float ang1, float ang2)
   CGContextBeginPath(context);
   CGContextAddArc(context, x, y, rad, ang1, ang2, 0);
   CGContextStrokePath(context);
-}
-
-void TkMacosx::fillArc(float x, float y, float rad, float ang1, float ang2)
-{
-  CGContextBeginPath(context);
-  CGContextAddArc(context, x, y, rad, ang1, ang2, 0);
-  CGContextEOFillPath(context);
-}
-
-void TkMacosx::drawCurve(float x0, float y0, 
-			 float u0, float v0, 
-			 float u1, float v1,
-			 float x1, float y1)
-{
-  CGContextBeginPath(context);
-  CGContextMoveToPoint(context, x0, y0);
-  CGContextAddCurveToPoint(context, u0, v0, u1, v1, x1, y1);
-  CGContextStrokePath(context);
-}
-
-void TkMacosx::fillCurve(float x0, float y0, 
-			 float u0, float v0, 
-			 float u1, float v1,
-			 float x1, float y1)
-{
-  CGContextBeginPath(context);
-  CGContextMoveToPoint(context, x0, y0);
-  CGContextAddCurveToPoint(context, u0, v0, u1, v1, x1, y1);
-  CGContextEOPath(context);
 }
 
 void TkMacosx::bitmapCreate(void* data, int width, int height, 

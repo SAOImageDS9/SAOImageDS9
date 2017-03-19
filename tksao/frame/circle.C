@@ -78,32 +78,16 @@ void Circle::renderXEllipseDraw(Drawable drawable, GC lgc)
     renderXEllipseDashDraw(drawable, lgc);
 }
 
-void Circle::renderPSCircleDraw(Vector& cc, double l, float a1, float a2)
+void Circle::renderPSDraw()
 {
   if (fill_)
-    BaseEllipse::renderPSCircleFillDraw(cc, l, a1, a2);
+    BaseEllipse::renderPSFill();
   else
-    BaseEllipse::renderPSCircleDraw(cc, l, a1, a2);
-}
-
-void Circle::renderPSEllipseDraw()
-{
-  if (fill_)
-    BaseEllipse::renderPSEllipseFillDraw();
-  else
-    BaseEllipse::renderPSEllipseDraw();
+    BaseEllipse::renderPSDraw();
 }
 
 #ifdef MAC_OSX_TK
-void Circle::renderMACOSXCircleDraw(Vector& cc, double l, float a1, float a2)
-{
-  if (fill_)
-    macosxFillArc(cc, l, a1, a2);
-  else
-    macosxDrawArc(cc, l, a1, a2);
-}
-
-void Circle::renderMACOSXEllipseDraw()
+void Circle::renderMACOSXDraw()
 {
   if (fill_)
     macosxFill();

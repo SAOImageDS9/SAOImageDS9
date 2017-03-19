@@ -15,12 +15,10 @@ class Circle : public BaseEllipse {
   void renderXCircleDraw(Drawable, GC, Vector&, Vector&, int, int);
   void renderXEllipseDraw(Drawable, GC);
 
-  void renderPSCircleDraw(Vector& cc, double l, float a1, float a2);
-  void renderPSEllipseDraw();
+  void renderPSDraw();
 
 #ifdef MAC_OSX_TK
-  void renderMACOSXCircleDraw(Vector&, double, float, float);
-  void renderMACOSXEllipseDraw();
+  void renderMACOSXDraw();
 #endif
 
 #ifdef __WIN32

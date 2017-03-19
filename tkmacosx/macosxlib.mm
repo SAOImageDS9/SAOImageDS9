@@ -71,6 +71,58 @@ void macosxClip(Vector v, Vector s)
 */
 }
 
+void macosxNewPath()
+{
+/*
+  if (tkmacosx) {
+    tkmacosx->newpath();
+  }
+*/
+}
+
+void macosxStroke()
+{
+/*
+  if (tkmacosx) {
+    tkmacosx->stroke();
+  }
+*/
+}
+
+void macosxFill()
+{
+/*
+  if (tkmacosx) {
+    tkmacosx->fill();
+  }
+*/
+}
+
+void macosxArc(Vector v, float rad, float ang1, float ang2)
+{
+/*
+  if (tkmacosx) {
+    Vector vv = v*tkmacosx->getCanvasToPage();
+    tkmacosx->arc(vv[0], vv[1], rad, ang1, ang2);
+  }
+*/
+}
+
+void macosxCurve(Vector v0, Vector t0, Vector t1, Vector v1)
+{
+/*
+  if (tkmacosx) {
+    Vector vv0 = v0*tkmacosx->getCanvasToPage();
+    Vector tt0 = t0*tkmacosx->getCanvasToPage();
+    Vector tt1 = t1*tkmacosx->getCanvasToPage();
+    Vector vv1 = v1*tkmacosx->getCanvasToPage();
+
+    tkmacosx->curve(vv0[0], vv0[1], tt0[0], tt0[1], 
+	 	    tt1[0], tt1[1], vv1[0], vv1[1]);
+  }
+*/
+} 
+
 void macosxDrawText(Vector v, float ang, const char* text)
 {
 /*
@@ -149,46 +201,6 @@ void macosxDrawArc(Vector v, float rad, float ang1, float ang2)
   }
 */
 }
-
-void macosxFillArc(Vector v, float rad, float ang1, float ang2)
-{
-/*
-  if (tkmacosx) {
-    Vector vv = v*tkmacosx->getCanvasToPage();
-    tkmacosx->fillArc(vv[0], vv[1], rad, ang1, ang2);
-  }
-*/
-}
-
-void macosxDrawCurve(Vector v0, Vector t0, Vector t1, Vector v1)
-{
-/*
-  if (tkmacosx) {
-    Vector vv0 = v0*tkmacosx->getCanvasToPage();
-    Vector tt0 = t0*tkmacosx->getCanvasToPage();
-    Vector tt1 = t1*tkmacosx->getCanvasToPage();
-    Vector vv1 = v1*tkmacosx->getCanvasToPage();
-
-    tkmacosx->drawCurve(vv0[0], vv0[1], tt0[0], tt0[1], 
-			tt1[0], tt1[1], vv1[0], vv1[1]);
-  }
-*/
-} 
-
-void macosxFillCurve(Vector v0, Vector t0, Vector t1, Vector v1)
-{
-/*
-  if (tkmacosx) {
-    Vector vv0 = v0*tkmacosx->getCanvasToPage();
-    Vector tt0 = t0*tkmacosx->getCanvasToPage();
-    Vector tt1 = t1*tkmacosx->getCanvasToPage();
-    Vector vv1 = v1*tkmacosx->getCanvasToPage();
-
-    tkmacosx->fillCurve(vv0[0], vv0[1], tt0[0], tt0[1], 
-			tt1[0], tt1[1], vv1[0], vv1[1]);
-  }
-*/
-} 
 
 void macosxBitmapCreate(void* img, int width, int height, 
 			const Vector& v, const Vector& s)

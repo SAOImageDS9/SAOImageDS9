@@ -357,6 +357,20 @@ void BaseEllipse::renderPS(int mode) {
     renderPSEllipse(mode);
 }
 
+void BaseEllipse::renderPSDraw()
+{
+  ostringstream str;
+  str << "stroke" << endl << ends;
+  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+}
+
+void BaseEllipse::renderPSFill()
+{
+  ostringstream str;
+  str << "fill" << endl << ends;
+  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+}
+
 void BaseEllipse::renderPSCircle(int mode)
 {
   renderPSGC(mode);
@@ -365,6 +379,12 @@ void BaseEllipse::renderPSCircle(int mode)
   double ang = calcAngle();
 
   for (int ii=0; ii<numAnnuli_; ii++) {
+    {
+      ostringstream str;
+      str << "newpath" << endl << ends;
+      Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+    }
+
     Vector r = annuli_[ii];
 
     Vector ur = fwdMap(r,Coord::CANVAS);
@@ -382,31 +402,17 @@ void BaseEllipse::renderPSCircle(int mode)
     if (a2<=a1)
       a2 += 360;
 
-    renderPSCircleDraw(cc, l, a1, a2);
+    {
+      ostringstream str;
+      str << cc.TkCanvasPs(parent->canvas) << ' '
+	  << l << ' '
+	  << a1 << ' ' << a2 << ' '
+	  << "arc" << endl << ends;
+      Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+    }
+
+    renderPSDraw();
   }
-}
-
-void BaseEllipse::renderPSCircleDraw(Vector& cc, double l, float a1, float a2)
-{
-    ostringstream str;
-    str << "newpath " 
-	<< cc.TkCanvasPs(parent->canvas) << ' '
-	<< l << ' '
-	<< a1 << ' ' << a2 << ' '
-	<< "arc stroke" << endl << ends;
-    Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
-}
-
-void BaseEllipse::renderPSCircleFillDraw(Vector& cc, double l, 
-					 float a1, float a2)
-{
-    ostringstream str;
-    str << "newpath " 
-	<< cc.TkCanvasPs(parent->getCanvas()) << ' '
-	<< l << ' '
-	<< a1 << ' ' << a2 << ' '
-	<< "arc fill" << endl << ends;
-    Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
 void BaseEllipse::renderPSEllipse(int mode)
@@ -442,22 +448,8 @@ void BaseEllipse::renderPSEllipse(int mode)
 	s1=s2=0;
     }
 
-    renderPSEllipseDraw();
+    renderPSDraw();
   }
-}
-
-void BaseEllipse::renderPSEllipseDraw()
-{
-  ostringstream str;
-  str << "stroke" << endl << ends;
-  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
-}
-
-void BaseEllipse::renderPSEllipseFillDraw()
-{
-  ostringstream str;
-  str << "fill" << endl << ends;
-  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
 void BaseEllipse::renderPSEllipsePrep(double a1, double a2, 
@@ -560,6 +552,8 @@ void BaseEllipse::renderMACOSXCircle()
   double ang = calcAngle();
 
   for (int ii=0; ii<numAnnuli_; ii++) {
+    macosxNewPath();
+
     Vector r = annuli_[ii];
 
     Vector ur = fwdMap(r,Coord::CANVAS);
@@ -574,14 +568,15 @@ void BaseEllipse::renderMACOSXCircle()
     if (a2<=a1)
       a2 += M_TWOPI;
 
-    renderMACOSXCircleDraw(cc, l, a1, a2);
+    macosxArc(cc, l, a1, a2);
+
+    renderMACOSXDraw();
   }
 }
 
-void BaseEllipse::renderMACOSXCircleDraw(Vector& cc, double l, 
-					 float a1, float a2)
+void BaseEllipse::renderMACOSXDraw()
 {
-  macosxDrawArc(cc, l, a1, a2);
+  macosxStroke();
 }
 
 void BaseEllipse::renderMACOSXEllipse()
@@ -614,14 +609,9 @@ void BaseEllipse::renderMACOSXEllipse()
       if (s1&&s2)
 	s1=s2=0;
 
-      renderMACOSXEllipseDraw();
+      renderMACOSXDraw();
     }
   }
-}
-
-void BaseEllipse::renderMACOSXEllipseDraw()
-{
-  macosxStroke();
 }
 
 void BaseEllipse::renderMACOSXEllipsePrep(double a1, double a2, 

@@ -24,11 +24,11 @@ void win32Clip(Vector, Vector);
 void win32DrawText(Vector, float, const char*);
 void win32DrawLine(Vector, Vector);
 void win32DrawLines(Vector*, int);
-void win32DrawRect(Vector, Vector);
-void win32DrawArc(Vector, float, float, float);
-void win32DrawCurve(Vector, Vector, Vector, Vector);
-
 void win32FillPolygon(Vector*, int);
+void win32DrawArc(Vector, float, float, float);
+void win32FillArc(Vector, float, float, float);
+void win32DrawCurve(Vector, Vector, Vector, Vector);
+void win32FillCurve(Vector, Vector, Vector, Vector);
 
 void win32BitmapCreate(void*, int, int, const Vector&, const Vector&);
 

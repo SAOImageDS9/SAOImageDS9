@@ -122,10 +122,11 @@ class TkWin32 {
 
   void drawText(float, float, float, const char*);
   void drawLines(float*, float*, int);
-  void drawRect(float, float, float, float);
-  void drawArc(float, float, float, float, float);
-  void drawCurve(float, float, float, float, float, float, float, float);
   void fillPolygon(float*, float*, int);
+  void drawArc(float, float, float, float, float);
+  void fillArc(float, float, float, float, float);
+  void drawCurve(float, float, float, float, float, float, float, float);
+  void fillCurve(float, float, float, float, float, float, float, float);
   
   void bitmapCreate(void*, int, int, float, float, float, float);
   */

@@ -753,23 +753,21 @@ void TkWin32::drawLines(float* x, float* y, int n)
   SetPen(0);
 }
 
-void TkWin32::drawRect(float x, float y, float w, float h)
+void TkWin32::fillPolygon(float* x, float* y, int n)
 {
-  float xx[5];
-  float yy[5];
-  xx[0] = x;
-  yy[0] = y;
-  xx[1] = x+w;
-  yy[1] = y;
-  xx[2] = x+w;
-  yy[2] = y-h;
-  xx[3] = x;
-  yy[3] = y-h;
-  xx[4] = xx[0];
-  yy[4] = yy[0];
+  int ii;
+  POINT *apt;
+  if( !(apt=(POINT *)calloc(n+1, sizeof(POINT))) ){
+    return;
+  }
+  for(ii=0; ii<n; ii++){
+    apt[ii].x = (int)x[ii];
+    apt[ii].y = (int)y[ii];
+  }
   SetPen(1);
-  TkWin32::drawLines(xx, yy, 5);
+  Polygon(pd.hDC, apt, n);
   SetPen(0);
+  free(apt);
 }
 
 void TkWin32::drawArc(float x, float y, float rad, float ang1, float ang2)
@@ -788,10 +786,14 @@ void TkWin32::drawArc(float x, float y, float rad, float ang1, float ang2)
   SetPen(0);
 }
 
+void TkWin32::fillArc(float x, float y, float rad, float ang1, float ang2)
+{
+}
+
 void TkWin32::drawCurve(float x0, float y0, 
-			 float u0, float v0, 
-			 float u1, float v1,
-			 float x1, float y1)
+			float u0, float v0, 
+			float u1, float v1,
+			float x1, float y1)
 {
   POINT apt[4];
   apt[0].x = (int)x0;
@@ -807,21 +809,11 @@ void TkWin32::drawCurve(float x0, float y0,
   SetPen(0);
 }
 
-void TkWin32::fillPolygon(float* x, float* y, int n)
+void TkWin32::fillCurve(float x0, float y0, 
+                        float u0, float v0, 
+			float u1, float v1,
+			float x1, float y1)
 {
-  int ii;
-  POINT *apt;
-  if( !(apt=(POINT *)calloc(n+1, sizeof(POINT))) ){
-    return;
-  }
-  for(ii=0; ii<n; ii++){
-    apt[ii].x = (int)x[ii];
-    apt[ii].y = (int)y[ii];
-  }
-  SetPen(1);
-  Polygon(pd.hDC, apt, n);
-  SetPen(0);
-  free(apt);
 }
 
 void TkWin32::bitmapCreate(void* data, int width, int height, 

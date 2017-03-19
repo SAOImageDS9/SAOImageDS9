@@ -132,13 +132,19 @@ void win32DrawLines(Vector* v, int n)
   */
 }
 
-void win32DrawRect(Vector v, Vector s)
+void win32FillPolygon(Vector* v, int n)
 {
   /*
   if (tkwin32) {
-    Vector vv1 = v*tkwin32->getCanvasToPage();
-    Vector ss = s*tkwin32->getPageScale();
-    tkwin32->drawRect(vv1[0], vv1[1], ss[0], ss[1]);
+    float xx[n];
+    float yy[n];
+
+    for(int ii=0; ii<n; ii++) {
+      Vector vv = v[ii]*tkwin32->getCanvasToPage();
+      xx[ii] = vv[0];
+      yy[ii] = vv[1];
+    }
+    tkwin32->fillPolygon(xx,yy,n);
   }
   */
 }
@@ -150,6 +156,17 @@ void win32DrawArc(Vector v, float rad, float ang1, float ang2)
     Vector vv = v*tkwin32->getCanvasToPage();
     float rr = rad*tkwin32->getPageScale();
     tkwin32->drawArc(vv[0], vv[1], rr, ang1, ang2);
+  }
+  */
+}
+
+void win32FillArc(Vector v, float rad, float ang1, float ang2)
+{
+  /*
+  if (tkwin32) {
+    Vector vv = v*tkwin32->getCanvasToPage();
+    float rr = rad*tkwin32->getPageScale();
+    tkwin32->fillArc(vv[0], vv[1], rr, ang1, ang2);
   }
   */
 }
@@ -168,22 +185,19 @@ void win32DrawCurve(Vector v0, Vector t0, Vector t1, Vector v1)
   */
 } 
 
-void win32FillPolygon(Vector* v, int n)
+void win32FillCurve(Vector v0, Vector t0, Vector t1, Vector v1)
 {
   /*
   if (tkwin32) {
-    float xx[n];
-    float yy[n];
-
-    for(int ii=0; ii<n; ii++) {
-      Vector vv = v[ii]*tkwin32->getCanvasToPage();
-      xx[ii] = vv[0];
-      yy[ii] = vv[1];
-    }
-    tkwin32->fillPolygon(xx,yy,n);
+    Vector vv0 = v0*tkwin32->getCanvasToPage();
+    Vector tt0 = t0*tkwin32->getCanvasToPage();
+    Vector tt1 = t1*tkwin32->getCanvasToPage();
+    Vector vv1 = v1*tkwin32->getCanvasToPage();
+    tkwin32->fillCurve(vv0[0], vv0[1], tt0[0], tt0[1], 
+			tt1[0], tt1[1], vv1[0], vv1[1]);
   }
   */
-}
+} 
 
 void win32BitmapCreate(void* img, int width, int height, 
 			const Vector& v, const Vector& s)

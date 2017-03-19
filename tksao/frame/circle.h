@@ -20,7 +20,7 @@ class Circle : public BaseEllipse {
 
 #ifdef MAC_OSX_TK
   void renderMACOSXCircleDraw(Vector&, double, float, float);
-  void renderMACOSXEllipseArcDraw(Vector&, Vector&, Vector&, Vector&);
+  void renderMACOSXEllipseDraw();
 #endif
 
 #ifdef __WIN32

@@ -64,7 +64,7 @@ class BaseEllipse : public BaseMarker {
 #ifdef MAC_OSX_TK
   void renderMACOSX();
   virtual void renderMACOSXCircleDraw(Vector&, double, float, float);
-  virtual void renderMACOSXEllipseArcDraw(Vector&, Vector&, Vector&, Vector&);
+  virtual void renderMACOSXEllipseDraw();
 #endif
 #ifdef __WIN32
   void renderWIN32();

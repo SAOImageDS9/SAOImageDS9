@@ -594,6 +594,8 @@ void BaseEllipse::renderMACOSXEllipse()
     a2 += M_TWOPI;
 
   for (int ii=0; ii<numAnnuli_; ii++) {
+    macosxNewPath();
+
     Vector r = annuli_[ii];
 
     int s1 =0;
@@ -611,8 +613,15 @@ void BaseEllipse::renderMACOSXEllipse()
 
       if (s1&&s2)
 	s1=s2=0;
+
+      renderMACOSXEllipseDraw();
     }
   }
+}
+
+void BaseEllipse::renderMACOSXEllipseDraw()
+{
+  macosxStroke();
 }
 
 void BaseEllipse::renderMACOSXEllipsePrep(double a1, double a2, 
@@ -659,12 +668,7 @@ void BaseEllipse::renderMACOSXEllipseArc(double a1, double a2, Vector& rr)
   Vector xx2 = fwdMap(x2*FlipY(),Coord::CANVAS);
   Vector tt1 = fwdMap(t1*FlipY(),Coord::CANVAS);
 
-  renderMACOSXEllipseArcDraw(tt0, xx1, xx2, tt1);
-}
-
-void BaseEllipse::renderMACOSXEllipseArcDraw(Vector& tt0, Vector& xx1, Vector& xx2, Vector& tt1)
-{
-  macosxDrawCurve(tt0, xx1, xx2, tt1);
+  macosxCurve(tt0, xx1, xx2, tt1);
 }
 
 void BaseEllipse::renderMACOSXInclude()

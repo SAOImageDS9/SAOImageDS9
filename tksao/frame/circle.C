@@ -103,13 +103,12 @@ void Circle::renderMACOSXCircleDraw(Vector& cc, double l, float a1, float a2)
     macosxDrawArc(cc, l, a1, a2);
 }
 
-void Circle::renderMACOSXEllipseArcDraw(Vector& tt0, Vector& xx1, 
-					Vector& xx2, Vector& tt1)
+void Circle::renderMACOSXEllipseDraw()
 {
   if (fill_)
-    macosxFillCurve(tt0, xx1, xx2, tt1);
+    macosxFill();
   else
-    macosxDrawCurve(tt0, xx1, xx2, tt1);
+    macosxStroke();
 }
 #endif
 

@@ -22,11 +22,12 @@ void macosxClip(Vector, Vector);
 void macosxDrawText(Vector, float, const char*);
 void macosxDrawLine(Vector, Vector);
 void macosxDrawLines(Vector*, int);
-void macosxDrawRect(Vector, Vector);
-void macosxDrawArc(Vector, float, float, float);
-void macosxDrawCurve(Vector, Vector, Vector, Vector);
-
 void macosxFillPolygon(Vector*, int);
+void macosxDrawArc(Vector, float, float, float);
+void macosxFillArc(Vector, float, float, float);
+void macosxDrawCurve(Vector, Vector, Vector, Vector);
+void macosxFillCurve(Vector, Vector, Vector, Vector);
+
 
 void macosxBitmapCreate(void*, int, int, const Vector&, const Vector&);
 

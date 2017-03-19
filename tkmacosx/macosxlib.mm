@@ -121,12 +121,21 @@ void macosxDrawLines(Vector* v, int n)
 */
 }
 
-void macosxDrawRect(Vector v, Vector s)
+void macosxFillPolygon(Vector* v, int n)
 {
 /*
   if (tkmacosx) {
-    Vector vv1 = v*tkmacosx->getCanvasToPage();
-    tkmacosx->drawRect(vv1[0], vv1[1], s[0], s[1]);
+    float xx[n];
+    float yy[n];
+
+    for(int ii=0; ii<n; ii++) {
+      Vector vv = v[ii]*tkmacosx->getCanvasToPage();
+
+      xx[ii] = vv[0];
+      yy[ii] = vv[1];
+    }
+
+    tkmacosx->fillPolygon(xx,yy,n);
   }
 */
 }
@@ -137,6 +146,16 @@ void macosxDrawArc(Vector v, float rad, float ang1, float ang2)
   if (tkmacosx) {
     Vector vv = v*tkmacosx->getCanvasToPage();
     tkmacosx->drawArc(vv[0], vv[1], rad, ang1, ang2);
+  }
+*/
+}
+
+void macosxFillArc(Vector v, float rad, float ang1, float ang2)
+{
+/*
+  if (tkmacosx) {
+    Vector vv = v*tkmacosx->getCanvasToPage();
+    tkmacosx->fillArc(vv[0], vv[1], rad, ang1, ang2);
   }
 */
 }
@@ -156,24 +175,20 @@ void macosxDrawCurve(Vector v0, Vector t0, Vector t1, Vector v1)
 */
 } 
 
-void macosxFillPolygon(Vector* v, int n)
+void macosxFillCurve(Vector v0, Vector t0, Vector t1, Vector v1)
 {
 /*
   if (tkmacosx) {
-    float xx[n];
-    float yy[n];
+    Vector vv0 = v0*tkmacosx->getCanvasToPage();
+    Vector tt0 = t0*tkmacosx->getCanvasToPage();
+    Vector tt1 = t1*tkmacosx->getCanvasToPage();
+    Vector vv1 = v1*tkmacosx->getCanvasToPage();
 
-    for(int ii=0; ii<n; ii++) {
-      Vector vv = v[ii]*tkmacosx->getCanvasToPage();
-
-      xx[ii] = vv[0];
-      yy[ii] = vv[1];
-    }
-
-    tkmacosx->fillPolygon(xx,yy,n);
+    tkmacosx->fillCurve(vv0[0], vv0[1], tt0[0], tt0[1], 
+			tt1[0], tt1[1], vv1[0], vv1[1]);
   }
 */
-}
+} 
 
 void macosxBitmapCreate(void* img, int width, int height, 
 			const Vector& v, const Vector& s)

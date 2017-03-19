@@ -753,11 +753,14 @@ void TkMacosx::drawLines(float* x, float* y, int n)
   CGContextStrokePath(context);
 }
 
-void TkMacosx::drawRect(float x, float y, float w, float h)
+void TkMacosx::fillPolygon(float* x, float* y, int n)
 {
   CGContextBeginPath(context);
-  CGContextAddRect(context, CGRectMake(x,y,w,h));
-  CGContextStrokePath(context);
+  CGContextMoveToPoint(context, x[0], y[0]);
+  for (int ii=1; ii<n; ii++) 
+    CGContextAddLineToPoint(context, x[ii], y[ii]);
+  CGContextAddLineToPoint(context, x[0], y[0]);
+  CGContextEOFillPath(context);
 }
 
 void TkMacosx::drawArc(float x, float y, float rad, float ang1, float ang2)
@@ -765,6 +768,13 @@ void TkMacosx::drawArc(float x, float y, float rad, float ang1, float ang2)
   CGContextBeginPath(context);
   CGContextAddArc(context, x, y, rad, ang1, ang2, 0);
   CGContextStrokePath(context);
+}
+
+void TkMacosx::fillArc(float x, float y, float rad, float ang1, float ang2)
+{
+  CGContextBeginPath(context);
+  CGContextAddArc(context, x, y, rad, ang1, ang2, 0);
+  CGContextEOFillPath(context);
 }
 
 void TkMacosx::drawCurve(float x0, float y0, 
@@ -778,14 +788,15 @@ void TkMacosx::drawCurve(float x0, float y0,
   CGContextStrokePath(context);
 }
 
-void TkMacosx::fillPolygon(float* x, float* y, int n)
+void TkMacosx::fillCurve(float x0, float y0, 
+			 float u0, float v0, 
+			 float u1, float v1,
+			 float x1, float y1)
 {
   CGContextBeginPath(context);
-  CGContextMoveToPoint(context, x[0], y[0]);
-  for (int ii=1; ii<n; ii++) 
-    CGContextAddLineToPoint(context, x[ii], y[ii]);
-  CGContextAddLineToPoint(context, x[0], y[0]);
-  CGContextEOFillPath(context);
+  CGContextMoveToPoint(context, x0, y0);
+  CGContextAddCurveToPoint(context, u0, v0, u1, v1, x1, y1);
+  CGContextEOPath(context);
 }
 
 void TkMacosx::bitmapCreate(void* data, int width, int height, 

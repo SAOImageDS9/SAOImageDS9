@@ -7,15 +7,19 @@
 #include "circle.h"
 #include "fitsimage.h"
 
-Circle::Circle(const Circle& a) : BaseEllipse(a), BaseFillEllipse(a) {}
+Circle::Circle(const Circle& a) : BaseEllipse(a)
+{
+  fill_ =0;
+}
 
 Circle::Circle(Base* p, const Vector& ctr, double r, int fill)
-  : BaseEllipse(p, ctr, 0), BaseFillEllipse(fill)
+  : BaseEllipse(p, ctr, 0)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
   annuli_[0] = Vector(r,r);
 
+  fill_ = fill;
   strcpy(type_, "circle");
   numHandle = 4;
 
@@ -28,13 +32,13 @@ Circle::Circle(Base* p, const Vector& ctr,
 	       int wth, const char* fnt, const char* txt, 
 	       unsigned short prop, const char* cmt,
 	       const List<Tag>& tg, const List<CallBack>& cb)
-  : BaseEllipse(p, ctr, 0, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb), 
-    BaseFillEllipse(fill)
+  : BaseEllipse(p, ctr, 0, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[numAnnuli_];
   annuli_[0] = Vector(r,r);
 
+  fill_ = fill;
   strcpy(type_, "circle");
   numHandle = 4;
 
@@ -58,36 +62,76 @@ void Circle::renderXCircleDraw(Drawable drawable, GC lgc,
 			       Vector& st, Vector& size,
 			       int a1, int aa)
 {
-  BaseFillEllipse::renderXCircleDraw(display, drawable, lgc, st, size, a1, aa);
+  if (fill_)
+    XFillArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
+  else
+    XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
 }
 
-void Circle::renderXEllipseDraw(Drawable drawable, GC lgc, 
-				XPoint* pts, int cnt)
+void Circle::renderXEllipseDraw(Drawable drawable, GC lgc)
 {
-  if (fill_ || ((properties & SOURCE) && !(properties & DASH)))
-    BaseFillEllipse::renderXEllipseDraw(display, drawable, lgc, pts, cnt);
-  else {
-    // crude attempt to clip unwanted drawlines
-    // only works for SRC
-    for (int ii=0; ii<xpointNum_; ii+=2) {
-      XPoint* ptr1 = xpoint_+ii;
-      XPoint* ptr2 = xpoint_+ii+1;
-      XDrawLine(display, drawable, lgc, 
-		(*ptr1).x, (*ptr1).y, (*ptr2).x, (*ptr2).y);    
-    }    
-  }
+  if (fill_)
+    XFillPolygon(display, drawable, lgc, xpoint_, xpointNum_, Convex, CoordModeOrigin);
+  else if ((properties & SOURCE) && !(properties & DASH))
+    XDrawLines(display, drawable, lgc, xpoint_, xpointNum_, CoordModeOrigin);
+  else
+    renderXEllipseDashDraw(drawable, lgc);
 }
 
 void Circle::renderPSCircleDraw(Vector& cc, double l, float a1, float a2)
 {
-  BaseFillEllipse::renderPSCircleDraw(parent, cc, l, a1, a2);
+  if (fill_)
+    BaseEllipse::renderPSCircleFillDraw(cc, l, a1, a2);
+  else
+    BaseEllipse::renderPSCircleDraw(cc, l, a1, a2);
 }
 
 void Circle::renderPSEllipseArcDraw(Vector& tt0, Vector& xx1, 
 				    Vector& xx2, Vector& tt1)
 {
-  BaseFillEllipse::renderPSEllipseArcDraw(parent, center, tt0, xx1, xx2, tt1);
+  if (fill_)
+    BaseEllipse::renderPSEllipseArcFillDraw(tt0, xx1, xx2, tt1);
+  else
+    BaseEllipse::renderPSEllipseArcDraw(tt0, xx1, xx2, tt1);
 }
+
+#ifdef MAC_OSX_TK
+void Circle::renderMACOSXCircleDraw(Vector& cc, double l, float a1, float a2)
+{
+  if (fill_)
+    macosxFillArc(cc, l, a1, a2);
+  else
+    macosxDrawArc(cc, l, a1, a2);
+}
+
+void Circle::renderMACOSXEllipseArcDraw(Vector& tt0, Vector& xx1, 
+					Vector& xx2, Vector& tt1)
+{
+  if (fill_)
+    macosxFillCurve(tt0, xx1, xx2, tt1);
+  else
+    macosxDrawCurve(tt0, xx1, xx2, tt1);
+}
+#endif
+
+#ifdef __WIN32
+void Circle::renderWIN32CircleDraw(Vector& cc, double l, float a1, float a2)
+{
+  if (fill_)
+    win32FillArc(cc, l, a1, a2);
+  else
+    win32DrawArc(cc, l, a1, a2);
+}
+
+void Circle::renderWIN32EllipseArcDraw(Vector& tt0, Vector& xx1, 
+				       Vector& xx2, Vector& tt1)
+{
+  if (fill_)
+    win32FillCurve(tt0, xx1, xx2, tt1);
+  else
+    win32DrawCurve(tt0, xx1, xx2, tt1);
+}
+#endif
 
 void Circle::analysis(AnalysisTask mm, int which)
 {

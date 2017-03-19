@@ -7,15 +7,19 @@
 #include "box.h"
 #include "fitsimage.h"
 
-Box::Box(const Box& a) : BaseBox(a), BaseFill(a) {}
+Box::Box(const Box& a) : BaseBox(a)
+{
+  fill_ =0;
+}
 
 Box::Box(Base* p, const Vector& ctr, const Vector& seg, double ang, int fill)
-  : BaseBox(p, ctr, ang), BaseFill(fill)
+  : BaseBox(p, ctr, ang)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
   annuli_[0] = seg;
 
+  fill_ = fill;
   strcpy(type_,"box");
   numHandle = 4;
 
@@ -29,13 +33,13 @@ Box::Box(Base* p, const Vector& ctr,
 	 int wth, const char* fnt, const char* txt,
 	 unsigned short prop, const char* cmt, 
 	 const List<Tag>& tg, const List<CallBack>& cb)
-  : BaseBox(p, ctr, ang, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb), 
-    BaseFill(fill)
+  : BaseBox(p, ctr, ang, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
 {
   numAnnuli_ = 1;
   annuli_ = new Vector[1];
   annuli_[0] = seg;
 
+  fill_ = fill;
   strcpy(type_,"box");
   numHandle = 4;
 
@@ -52,22 +56,30 @@ void Box::renderXDraw(Drawable drawable, GC lgc, XPoint* pp)
 
 void Box::renderPSDraw(int ii)
 {
-  ostringstream str;
-  for (int jj=0; jj<numPoints_; jj++) {
-    Vector v =  parent->mapFromRef(vertices_[ii][jj],Coord::CANVAS);
-    if (jj==0)
-      str << "newpath " 
-	  << v.TkCanvasPs(parent->canvas) << " moveto" << endl;
-    else
-      str << v.TkCanvasPs(parent->canvas) << " lineto" << endl;
-  }
   if (fill_)
-    str << "fill" << endl << ends;
+    BaseBox::renderPSFillDraw(ii);
   else
-    str << "stroke" << endl << ends;
-
-  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+    BaseBox::renderPSDraw(ii);
 }
+
+#ifdef MAC_OSX_TK
+void Box::renderMACOSXDraw(Vector* vv)
+{
+  if (fill_)
+    macosxFillPolygon(vv, numPoints_);
+  else
+    macosxDrawLines(vv, numPoints_);
+}
+#endif
+
+#ifdef __WIN32
+void Box::renderWIN32Draw(Vector* vv)
+  if (fill_)
+    win32FillPolygon(vv, numPoints_);
+  else
+    win32DrawLines(vv, numPoints_);
+}
+#endif
 
 void Box::editBegin(int h)
 {

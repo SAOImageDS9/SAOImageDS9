@@ -35,7 +35,7 @@ class BaseEllipse : public BaseMarker {
 
 #ifdef MAC_OSX_TK
   void renderMACOSXCircle();
-  void renderMACOSXEllipseCurve();
+  void renderMACOSXEllipse();
   void renderMACOSXEllipsePrep(double, double, double, double, Vector&);
   void renderMACOSXEllipseArc(double, double, Vector&);
   void renderMACOSXInclude();
@@ -52,16 +52,23 @@ class BaseEllipse : public BaseMarker {
  protected:
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
   virtual void renderXCircleDraw(Drawable, GC, Vector&, Vector&, int, int);
-  virtual void renderXEllipseDraw(Drawable, GC, XPoint*, int);
+  virtual void renderXEllipseDraw(Drawable, GC);
+  void renderXEllipseDashDraw(Drawable, GC);
+
   void renderPS(int);
   virtual void renderPSCircleDraw(Vector& cc, double l, float a1, float a2);
+  void renderPSCircleFillDraw(Vector& cc, double l, float a1, float a2);
   virtual void renderPSEllipseArcDraw(Vector&, Vector&, Vector&, Vector&);
+  void renderPSEllipseArcFillDraw(Vector&, Vector&, Vector&, Vector&);
 
 #ifdef MAC_OSX_TK
   void renderMACOSX();
+  virtual void renderMACOSXCircleDraw(Vector&, double, float, float);
+  virtual void renderMACOSXEllipseArcDraw(Vector&, Vector&, Vector&, Vector&);
 #endif
 #ifdef __WIN32
   void renderWIN32();
+  virtual void renderWIN32CircleDraw(Vector&, double, float, float);
 #endif
 
   virtual void updateHandles();

@@ -6,13 +6,24 @@
 #define __box_h__
 
 #include "basebox.h"
-#include "basefill.h"
 
-class Box : public BaseBox, public BaseFill {
+class Box : public BaseBox {
  protected:
-  void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
+  int fill_;
+
+ protected:
   void renderXDraw(Drawable drawable, GC lgc, XPoint* pp);
   void renderPSDraw(int);
+
+#ifdef MAC_OSX_TK
+  void renderMACOSXDraw(Vector*);
+#endif
+
+#ifdef __WIN32
+  void renderWIN32Draw(Vector*);
+#endif
+
+  void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
 
 public:
   Box(Base* p, const Vector& ctr, const Vector& seg, double ang, int fill);
@@ -29,6 +40,9 @@ public:
   void editBegin(int);
   void edit(const Vector&, int);
   void editEnd();
+
+  void fill(int ff) {fill_ = ff;}
+  int getFill() {return fill_;}
 
   void analysis(AnalysisTask, int);
   void analysisHistogram(char*, char*, int);

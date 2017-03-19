@@ -6,11 +6,13 @@
 #define __polygon_h__
 
 #include "basepolygon.h"
-#include "basefill.h"
 #include "marker.h"
 #include "list.h"
 
-class Polygon : public BasePolygon, public BaseFill {
+class Polygon : public BasePolygon {
+ protected:
+  int fill_;
+
  protected:
   int isInRef(const Vector& v);
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
@@ -39,6 +41,9 @@ public:
   Polygon(const Polygon& a);
 
   Marker* dup() {return new Polygon(*this);}
+
+  void fill(int ff) {fill_ = ff;}
+  int getFill() {return fill_;}
 
   void analysis(AnalysisTask, int);
   void analysisHistogram(char*, char*, int);

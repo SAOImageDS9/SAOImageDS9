@@ -7,11 +7,15 @@
 #include "polygon.h"
 #include "fitsimage.h"
 
-Polygon::Polygon(const Polygon& a) : BasePolygon(a), BaseFill(a) {}
+Polygon::Polygon(const Polygon& a) : BasePolygon(a)
+{
+  fill_ =0;
+}
 
 Polygon::Polygon(Base* p, const Vector& ctr, const Vector& b, int fill)
-  : BasePolygon(p,ctr,b), BaseFill(fill)
+  : BasePolygon(p,ctr,b)
 {
+  fill_ = fill;
   strcpy(type_, "polygon");
   reset(b);
 }
@@ -22,9 +26,9 @@ Polygon::Polygon(Base* p, const Vector& ctr,
 		 int wth, const char* fnt, const char* txt,
 		 unsigned short prop, const char* cmt,
 		 const List<Tag>& tg, const List<CallBack>& cb)
-  : BasePolygon(p, ctr, b, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb),
-    BaseFill(fill)
+  : BasePolygon(p, ctr, b, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
 {
+  fill_ = fill;
   strcpy(type_, "polygon");
   reset(b);
 }
@@ -34,9 +38,9 @@ Polygon::Polygon(Base* p, const List<Vertex>& v, int fill,
 		 int wth, const char* fnt, const char* txt,
 		 unsigned short prop, const char* cmt,
 		 const List<Tag>& tg, const List<CallBack>& cb)
-  : BasePolygon(p, v, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb),
-    BaseFill(fill)
+  : BasePolygon(p, v, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
 {
+  fill_ = fill;
   strcpy(type_, "polygon");
 
   // check to see if the first and last node are the same
@@ -96,20 +100,20 @@ void Polygon::renderMACOSX()
 {
   renderMACOSXGC();
 
+  int cnt = vertex.count();
+  Vector* vv = new Vector[cnt];
   vertex.head();
-  Vector v1;
-  Vector v2 = fwdMap(vertex.current()->vector,Coord::CANVAS);
-  int done = 0;
+  for (int ii=0; ii<cnt; ii++) {
+    vv[ii] = fwdMap(vertex.current()->vector,Coord::CANVAS);
+    vertex.next();
+  }
 
-  do {
-    if (!vertex.next()) {
-      done = 1;
-      vertex.head();
-    }
-    v1 = v2;
-    v2 = fwdMap(vertex.current()->vector,Coord::CANVAS);
-    macosxDrawLine(v1,v2);
-  } while (!done);
+  if (fill_)
+    macosxFillPolygon(vv,cnt);
+  else
+    macosxDrawLines(vv,cnt);
+
+  delete [] vv;
 }
 #endif
 
@@ -118,20 +122,18 @@ void Polygon::renderWIN32()
 {
   renderWIN32GC();
 
+  int cnt = vertex.count();
+  Vector* vv = new Vector[cnt];
   vertex.head();
-  Vector v1;
-  Vector v2 =  fwdMap(vertex.current()->vector,Coord::CANVAS);
-  int done = 0;
+  for (int ii=0; ii<cnt; ii++) {
+    vv[ii] = fwdMap(vertex.current()->vector,Coord::CANVAS);
+    vertex.next();
+  }
 
-  do {
-    if (!vertex.next()) {
-      done = 1;
-      vertex.head();
-    }
-    v1 = v2;
-    v2 = fwdMap(vertex.current()->vector,Coord::CANVAS);
-    win32DrawLine(v1,v2);
-  } while (!done);
+  if (fill_)
+    win32FillPolygon(vv,cnt);
+  else
+    win32DrawLines(vv,cnt);
 }
 #endif
 

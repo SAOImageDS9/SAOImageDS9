@@ -86,6 +86,21 @@ void BaseBox::renderPSDraw(int ii)
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
+void BaseBox::renderPSFillDraw(int ii)
+{
+  ostringstream str;
+  for (int jj=0; jj<numPoints_; jj++) {
+    Vector v =  parent->mapFromRef(vertices_[ii][jj],Coord::CANVAS);
+    if (jj==0)
+      str << "newpath " 
+	  << v.TkCanvasPs(parent->canvas) << " moveto" << endl;
+    else
+      str << v.TkCanvasPs(parent->canvas) << " lineto" << endl;
+  }
+  str << "fill" << endl << ends;
+  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+}
+
 #ifdef MAC_OSX_TK
 void BaseBox::renderMACOSX()
 {
@@ -100,6 +115,11 @@ void BaseBox::renderMACOSX()
     delete [] vv;
   }
   deleteVertices();
+}
+
+void BaseBox::renderMACOSXDraw(Vector* vv)
+{
+  macosxDrawLines(vv, numPoints_);
 }
 #endif
 
@@ -117,6 +137,11 @@ void BaseBox::renderWIN32()
     delete [] vv;
   }
   deleteVertices();
+}
+
+void BaseBox::renderWIN32Draw(Vector* vv)
+{
+  win32DrawLines(vv, numPoints_);
 }
 #endif
 

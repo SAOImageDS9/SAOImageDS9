@@ -13,8 +13,6 @@ class BasePolygon : public Marker {
   List<Vertex> vertex;
 
  protected:
-  void moveVertex(const Vector&, int);
-  void recalcCenter();
   virtual void renderX(Drawable, Coord::InternalSystem, RenderMode) =0;
   virtual void renderPS(int) =0;
 #ifdef MAC_OSX_TK
@@ -23,6 +21,9 @@ class BasePolygon : public Marker {
 #ifdef __WIN32
   virtual void renderWIN32() =0;
 #endif
+
+  void moveVertex(const Vector&, int);
+  void recalcCenter();
   void updateHandles();
 
   void listBase(FitsImage*, ostream&, Coord::CoordSystem, 

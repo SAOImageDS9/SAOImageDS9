@@ -164,7 +164,7 @@ void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
       }
     }
 
-    renderXEllipseDraw(drawable, lgc, xpoint_, xpointNum_);
+    renderXEllipseDraw(drawable, lgc);
 
     if (xpoint_)
       free(xpoint_);
@@ -174,21 +174,24 @@ void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
   }
 }
 
-void BaseEllipse::renderXEllipseDraw(Drawable drawable, GC lgc, 
-				     XPoint* pts, int cnt)
+void BaseEllipse::renderXEllipseDraw(Drawable drawable, GC lgc)
 {
   if ((properties & SOURCE) && !(properties & DASH))
-    XDrawLines(display, drawable, lgc, pts, cnt, CoordModeOrigin);
-  else {
-    // crude attempt to clip unwanted drawlines
-    // only works for SRC
-    for (int ii=0; ii<xpointNum_; ii+=2) {
-      XPoint* ptr1 = xpoint_+ii;
-      XPoint* ptr2 = xpoint_+ii+1;
-      XDrawLine(display, drawable, lgc, 
-		(*ptr1).x, (*ptr1).y, (*ptr2).x, (*ptr2).y);    
-    }    
-  }
+    XDrawLines(display, drawable, lgc, xpoint_, xpointNum_, CoordModeOrigin);
+  else
+    renderXEllipseDashDraw(drawable, lgc);
+}
+
+void BaseEllipse::renderXEllipseDashDraw(Drawable drawable, GC lgc)
+{
+  // crude attempt to clip unwanted drawlines
+  // only works for SRC
+  for (int ii=0; ii<xpointNum_; ii+=2) {
+    XPoint* ptr1 = xpoint_+ii;
+    XPoint* ptr2 = xpoint_+ii+1;
+    XDrawLine(display, drawable, lgc, 
+	      (*ptr1).x, (*ptr1).y, (*ptr2).x, (*ptr2).y);    
+  }    
 }
 
 void BaseEllipse::renderXEllipsePrep(Drawable drawable, 
@@ -391,7 +394,18 @@ void BaseEllipse::renderPSCircleDraw(Vector& cc, double l, float a1, float a2)
 	<< l << ' '
 	<< a1 << ' ' << a2 << ' '
 	<< "arc stroke" << endl << ends;
+    Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+}
 
+void BaseEllipse::renderPSCircleFillDraw(Vector& cc, double l, 
+					 float a1, float a2)
+{
+    ostringstream str;
+    str << "newpath " 
+	<< cc.TkCanvasPs(parent->getCanvas()) << ' '
+	<< l << ' '
+	<< a1 << ' ' << a2 << ' '
+	<< "arc fill" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
@@ -481,8 +495,32 @@ void BaseEllipse::renderPSEllipseArcDraw(Vector& tt0, Vector& xx1,
       << "moveto "
       << xx1.TkCanvasPs(parent->canvas) << ' '
       << xx2.TkCanvasPs(parent->canvas) << ' ' 
-      << tt1.TkCanvasPs(parent->canvas) << ' ' 
+      << tt1.TkCanvasPs(parent->canvas) << ' '
       << "curveto stroke" << endl << ends;
+  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+}
+
+void BaseEllipse::renderPSEllipseArcFillDraw(Vector& tt0, Vector& xx1, 
+					     Vector& xx2, Vector& tt1)
+{
+  Vector cc =  parent->mapFromRef(center,Coord::CANVAS);
+  ostringstream str;
+  str << "newpath "
+      << tt0.TkCanvasPs(parent->getCanvas()) << ' '
+      << "moveto "
+      << xx1.TkCanvasPs(parent->getCanvas()) << ' '
+      << xx2.TkCanvasPs(parent->getCanvas()) << ' ' 
+      << tt1.TkCanvasPs(parent->getCanvas()) << ' ' 
+      << "curveto fill" << endl
+      << "newpath "
+      << cc.TkCanvasPs(parent->getCanvas()) << ' '
+      << "moveto "
+      << tt0.TkCanvasPs(parent->getCanvas()) << ' '
+      << "lineto "
+      << tt1.TkCanvasPs(parent->getCanvas()) << ' '
+      << "lineto closepath gsave" << endl
+      << "1 setlinejoin 1 setlinewidth stroke" << endl
+      << "grestore fill" << endl << ends;
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
@@ -522,7 +560,7 @@ void BaseEllipse::renderMACOSX() {
   if (isRound && isScale && isOrient & parent->isAzElZero())
     renderMACOSXCircle();
   else
-    renderMACOSXEllipseCurve();
+    renderMACOSXEllipse();
 }
 
 void BaseEllipse::renderMACOSXCircle()
@@ -547,11 +585,17 @@ void BaseEllipse::renderMACOSXCircle()
     if (a2<=a1)
       a2 += M_TWOPI;
 
-    macosxDrawArc(cc, l, a1, a2);
+    renderMACOSXCircleDraw(cc, l, a1, a2);
   }
 }
 
-void BaseEllipse::renderMACOSXEllipseCurve()
+void BaseEllipse::renderMACOSXCircleDraw(Vector& cc, double l, 
+					 float a1, float a2)
+{
+  macosxDrawArc(cc, l, a1, a2);
+}
+
+void BaseEllipse::renderMACOSXEllipse()
 {
   renderMACOSXGC();
 
@@ -626,6 +670,11 @@ void BaseEllipse::renderMACOSXEllipseArc(double a1, double a2, Vector& rr)
   Vector xx2 = fwdMap(x2*FlipY(),Coord::CANVAS);
   Vector tt1 = fwdMap(t1*FlipY(),Coord::CANVAS);
 
+  renderMACOSXEllipseArcDraw(tt0, xx1, xx2, tt1);
+}
+
+void BaseEllipse::renderMACOSXEllipseArcDraw(Vector& tt0, Vector& xx1, Vector& xx2, Vector& tt1)
+{
   macosxDrawCurve(tt0, xx1, xx2, tt1);
 }
 
@@ -684,8 +733,14 @@ void BaseEllipse::renderWIN32Circle()
     if (a2<=a1)
       a2 += M_TWOPI;
 
-    win32DrawArc(cc, l, a1, a2);
+    renderWIN32CircleDraw(cc, l, a1, a2);
   }
+}
+
+void BaseEllipse::renderWIN32CircleDraw(Vector& cc, double l, 
+					float a1, float a2)
+{
+  win32DrawArc(cc, l, a1, a2);
 }
 
 void BaseEllipse::renderWIN32EllipseCurve()

@@ -6,14 +6,27 @@
 #define __circle_h__
 
 #include "baseellipse.h"
-#include "basefill.h"
 
-class Circle : public BaseEllipse, public BaseFillEllipse {
+class Circle : public BaseEllipse {
+ protected:
+  int fill_;
+
  protected:
   void renderXCircleDraw(Drawable, GC, Vector&, Vector&, int, int);
-  void renderXEllipseDraw(Drawable, GC, XPoint*, int);
+  void renderXEllipseDraw(Drawable, GC);
+
   void renderPSCircleDraw(Vector& cc, double l, float a1, float a2);
   void renderPSEllipseArcDraw(Vector&, Vector&, Vector&, Vector&);
+
+#ifdef MAC_OSX_TK
+  void renderMACOSXCircleDraw(Vector&, double, float, float);
+  void renderMACOSXEllipseArcDraw(Vector&, Vector&, Vector&, Vector&);
+#endif
+
+#ifdef __WIN32
+  void renderWIN32CircleDraw(Vector&, double, float, float);
+  void renderWIN32EllipseArcDraw(Vector&, Vector&, Vector&, Vector&);
+#endif
 
   void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
 
@@ -33,6 +46,9 @@ public:
   void rotateBegin() {}
   void rotate(const Vector& v, int h) {}
   void rotateEnd() {}
+
+  void fill(int ff) {fill_ = ff;}
+  int getFill() {return fill_;}
 
   void analysis(AnalysisTask, int);
   void analysisHistogram(char*, char*, int);

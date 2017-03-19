@@ -26,20 +26,24 @@ class BaseBox : public BaseMarker {
   int isInRef(const Vector& vv, int);
 
 protected:
-  virtual void updateHandles();
-  Vector intersect(Vector, double);
-
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
   virtual void renderXDraw(Drawable drawable, GC lgc, XPoint* pp);
+
   void renderPS(int);
   virtual void renderPSDraw(int);
+  void renderPSFillDraw(int);
 
 #ifdef MAC_OSX_TK
   void renderMACOSX();
+  virtual void renderMACOSXDraw(Vector*);
 #endif
 #ifdef __WIN32
   void renderWIN32();
+  virtual void renderWIN32Draw(Vector*);
 #endif
+
+  virtual void updateHandles();
+  Vector intersect(Vector, double);
 
 public:
   BaseBox(Base* p, const Vector& ctr, double a);

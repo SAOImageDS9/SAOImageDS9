@@ -213,6 +213,7 @@ $(LIBDIR)/pcc-i386-snowleopard.tar.gz: $(prefix)/compilers/pcc-i386-snowleopard.
 
 clean	:
 	$(RM) core *~ *# *.o
+	$(RM) -rf $(APPDIR)
 
 include ../make.include
 

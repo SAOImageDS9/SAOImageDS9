@@ -200,6 +200,7 @@ $(APPDIR)/tcc: $(prefix)/compilers/tcc-0.9.25-win32-bin.zip
 .PHONY	: clean
 
 clean	:
-	$(RM) core *~ *# *.zip *.o
+	$(RM) core *~ *# ds9base.exe ds9.exe *.zip *.o
+	$(RM) -rf $(APPDIR)
 
 include ../make.include

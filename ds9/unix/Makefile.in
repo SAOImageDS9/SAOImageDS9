@@ -211,6 +211,7 @@ $(LIBDIR)/tk$(TCL_VERSION) :
 
 clean	:
 	$(RM) core *~ *# ds9base ds9 *.zip *.o
+	$(RM) -rf $(APPDIR)
 
 include ../make.include
 

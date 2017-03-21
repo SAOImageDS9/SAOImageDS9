@@ -9,7 +9,7 @@
 
 Polygon::Polygon(const Polygon& a) : BasePolygon(a)
 {
-  fill_ =0;
+  fill_ = a.fill_;
 }
 
 Polygon::Polygon(Base* p, const Vector& ctr, const Vector& b, int fill)

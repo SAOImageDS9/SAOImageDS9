@@ -9,7 +9,7 @@
 
 Ellipse::Ellipse(const Ellipse& a) : BaseEllipse(a)
 {
-  fill_ =0;
+  fill_ = a.fill_;
 }
 
 Ellipse::Ellipse(Base* p, const Vector& ctr, const Vector& r, 

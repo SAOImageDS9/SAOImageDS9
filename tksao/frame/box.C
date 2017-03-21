@@ -9,7 +9,7 @@
 
 Box::Box(const Box& a) : BaseBox(a)
 {
-  fill_ =0;
+  fill_ = a.fill_;
 }
 
 Box::Box(Base* p, const Vector& ctr, const Vector& seg, double ang, int fill)

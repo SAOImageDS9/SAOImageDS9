@@ -9,7 +9,7 @@
 
 Circle::Circle(const Circle& a) : BaseEllipse(a)
 {
-  fill_ =0;
+  fill_ = a.fill_;
 }
 
 Circle::Circle(Base* p, const Vector& ctr, double r, int fill)

@@ -74,7 +74,8 @@ void Vect::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	case Coord::DEGREES:
 	  {
 	    Vector v1 = ptr->mapFromRef(p1,sys,sky);
-	    str << type_ << '(' << setprecision(10) << v1 << ','
+	    str << type_ << '(' 
+		<< setprecision(10) << v1 << ','
 		<< setprecision(3) << fixed << rr << '"' << ',';
 	    str.unsetf(ios_base::floatfield);
 	    str << setprecision(8) << radToDeg(aa) << ')';

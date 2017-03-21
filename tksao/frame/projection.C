@@ -357,7 +357,8 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	  {
 	    Vector v1 = ptr->mapFromRef(p1,sys,sky);
 	    Vector v2 = ptr->mapFromRef(p2,sys,sky);
-	    str << type_ << '(' << setprecision(10) << v1 << ',' << v2 << ','
+	    str << type_ << '(' 
+		<< setprecision(10) << v1 << ',' << v2 << ','
 		<< setprecision(3) << fixed << ww << '"' << ')';
 	    str.unsetf(ios_base::floatfield);
 	  }
@@ -368,7 +369,6 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	  str << ra << ',' << dec << ',';
 	  listRADEC(ptr,p2,sys,sky,format);
 	  str << ra << ',' << dec << ',';
-
 	  str << setprecision(3) << fixed << ww << '"' << ')';
 	  str.unsetf(ios_base::floatfield);
 	  break;

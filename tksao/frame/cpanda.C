@@ -517,8 +517,7 @@ void Cpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	  str << type_ << '(' 
 	      << setprecision(10) << vv << ','
 	      << setprecision(8) << a1 << ',' << a2 <<',' << numAngles_-1 << ','
-	      << setprecision(3) << fixed << r1 << '"' << ','	
-	      << r2 << '"' << ',';
+	      << setprecision(3) << fixed << r1 << '"' << ',' << r2 << '"' << ',';
 	  str.unsetf(ios_base::floatfield);
 	  str << setprecision(8) << numAnnuli_-1 << ')';
 	}
@@ -528,8 +527,7 @@ void Cpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	str << type_ << '(' 
 	    << ra << ',' << dec << ','
 	    << setprecision(8) << a1 << ',' << a2 <<',' << numAngles_-1 << ','
-	    << setprecision(3) << fixed << r1 << '"' << ','	
-	    << r2 << '"' << ',';
+	    << setprecision(3) << fixed << r1 << '"' << ',' << r2 << '"' << ',';
 	str.unsetf(ios_base::floatfield);
 	str << setprecision(8) << numAnnuli_-1 << ')';
 	break;
@@ -618,8 +616,7 @@ void Cpanda::listBNonCel(FitsImage* ptr, ostream& str,
 
       double r1 = ptr->mapLenFromRef(annuli_[ii-1][0],sys);
       double r2 = ptr->mapLenFromRef(annuli_[ii][0],sys);
-      str << type_ << '(' 
-	  << setprecision(8) << vv << ','
+      str << type_ << '(' << setprecision(8) << vv << ','
 	  << a1 << ',' << a2 << ",1,"
 	  << r1 << ',' << r2 << ",1)";
 
@@ -668,7 +665,7 @@ void Cpanda::listBCel(FitsImage* ptr, int ii, int jj, ostream& str,
   double r1 = ptr->mapLenFromRef(annuli_[ii-1][0],sys,Coord::ARCSEC);
   double r2 = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
 
-  str << setprecision(10) << a1 << ',' << a2 << ",1,"
+  str << setprecision(8) << a1 << ',' << a2 << ",1,"
       << setprecision(3) << fixed << r1 << '"' << ',' << r2 << '"' << ",1)";
   str.unsetf(ios_base::floatfield);
 		

@@ -675,9 +675,8 @@ void Epanda::listBCel(FitsImage* ptr, int ii, int jj, ostream& str,
   Vector r2 =  ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);	
   double aa = parent->mapAngleFromRef(angle,sys,sky);
       
-  str << setprecision(10) << a1 << ',' << a2 << ",1,"
-      << setprecision(3) << fixed << setunit('"') << r1 << ',' 
-      << setunit('"') << r2 << ",1,";
+  str << setprecision(8) << a1 << ',' << a2 << ",1,"
+      << setprecision(3) << fixed << setunit('"') << r1 << ',' << setunit('"') << r2 << ",1,";
   str.unsetf(ios_base::floatfield);
   str << setprecision(8) << radToDeg(aa) << ')';
 		

@@ -545,21 +545,25 @@ void Bpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       case Coord::DEGREES:
 	{
 	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << type_ << '(' << setprecision(8) << vv << ','
-	      << ang1 << ',' << ang2 <<',' << numAngles_-1 << ','
-	      << setunit('"') << r1 << ',' << setunit('"') << r2 << ','
-	      << numAnnuli_-1 << ','
-	      << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
+	  str << type_ << '(' 
+	      << setprecision(10) << vv << ','
+	      << setprecision(8) << ang1 << ',' << ang2 << ',' 
+	      << setprecision(8) << numAngles_-1 << ','
+	      << setprecision(3) << fixed << setunit('"') << r1 << ',' << setunit('"') << r2 << ',';
+	  str.unsetf(ios_base::floatfield);
+	  str << setprecision(8) << numAnnuli_-1 << ','
+	      << setprecision(8) << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
 	}
 	break;
       case Coord::SEXAGESIMAL:
 	listRADEC(ptr,center,sys,sky,format);
 	str << type_ << '(' << ra << ',' << dec << ','
-	    << setprecision(8) 
-	    << ang1 << ',' << ang2 <<',' << numAngles_-1 << ','
-	    << setunit('"') << r1 << ',' << setunit('"') << r2 << ','
-	    << numAnnuli_-1 << ','
-	    << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
+	      << setprecision(8) << ang1 << ',' << ang2 << ',' 
+	      << setprecision(8) << numAngles_-1 << ','
+	      << setprecision(3) << fixed << setunit('"') << r1 << ',' << setunit('"') << r2 << ',';
+	  str.unsetf(ios_base::floatfield);
+	  str << setprecision(8) << numAnnuli_-1 << ','
+	      << setprecision(8) << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
 	break;
       }
     }
@@ -705,9 +709,8 @@ void Bpanda::listBCel(FitsImage* ptr, int ii, int jj, ostream& str,
   Vector r2 =  ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);	
   double aa = parent->mapAngleFromRef(angle,sys,sky);
       
-  str << setprecision(10) << a1 << ',' << a2 << ",1,"
-      << setprecision(3) << fixed << setunit('"') << r1 << ',' 
-      << setunit('"') << r2 << ",1,";
+  str << setprecision(8) << a1 << ',' << a2 << ",1,"
+      << setprecision(3) << fixed << setunit('"') << r1 << ',' << setunit('"') << r2 << ",1,";
   str.unsetf(ios_base::floatfield);
   str << setprecision(8) << radToDeg(aa) << ')';
 		

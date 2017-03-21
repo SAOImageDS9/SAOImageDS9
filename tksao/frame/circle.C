@@ -243,8 +243,7 @@ void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	break;
       case Coord::SEXAGESIMAL:
 	listRADEC(ptr,center,sys,sky,format);
-	str << type_ << '(' 
-	    << ra << ',' << dec << ',' 
+	str << type_ << '(' << ra << ',' << dec << ',' 
 	    << setprecision(3) << fixed << rr << '"' << ')';
 	str.unsetf(ios_base::floatfield);
 	break;
@@ -321,8 +320,7 @@ void Circle::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
     if (ptr->hasWCSCel(sys)) {
       listRADEC(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
       double rr = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCMIN);
-      str << type_ << '(' 
-	  << ra << ',' << dec << ',' 
+      str << type_ << '(' << ra << ',' << dec << ',' 
 	  << setprecision(5) << fixed << rr << '\'' << ')';
       str.unsetf(ios_base::floatfield);
     }

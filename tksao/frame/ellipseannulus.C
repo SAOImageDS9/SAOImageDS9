@@ -259,7 +259,7 @@ void EllipseAnnulus::list(ostream& str, Coord::CoordSystem sys,
       case Coord::DEGREES:
 	{
 	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << "ellipse(" << setprecision(8) << vv
+	  str << "ellipse(" << setprecision(10) << vv
 	      << setprecision(3) << fixed;
 	  for (int ii=0; ii<numAnnuli_; ii++) {
 	    Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
@@ -337,13 +337,11 @@ void EllipseAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
 	str << "; ";
 
 	Vector rr = ptr->mapLenFromRef(annuli_[ii],Coord::IMAGE);
-	str << "ellipse " << setprecision(8) << vv << ' ' << rr << ' ' 
-	    << radToDeg(angle);
+	str << "ellipse " << vv << ' ' << rr << ' ' << radToDeg(angle);
 
 	if (ii!=0) {
 	  Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],Coord::IMAGE);
-	  str << " & !ellipse " << setprecision(8) << vv << ' ' << r1 << ' ' 
-	      << radToDeg(angle);
+	  str << " & !ellipse " << vv << ' ' << r1 << ' ' << radToDeg(angle);
 	}
 
 	listProsPost(str, strip);
@@ -361,19 +359,13 @@ void EllipseAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
 	    str << "; ";
 
 	    Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
-	    str << "ellipse " 
-		<< setprecision(10) << setunit('d') << vv << ' ' 
-		<< setprecision(3) << setunit('"') << fixed << rr << ' ';
-	  str.unsetf(ios_base::floatfield);
-	  str << setprecision(8) << radToDeg(angle);
+	    str << "ellipse " << setunit('d') << vv << ' ' 
+		<< setunit('"') << rr << ' ' << radToDeg(angle);
 
 	    if (ii!=0) {
 	      Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys,Coord::ARCSEC);
-	      str << " & !ellipse " 
-		  << setprecision(8) << setunit('d') << vv << ' ' 
-		  << setprecision(3) << setunit('"') << fixed << r1 << ' ';
-	      str.unsetf(ios_base::floatfield);
-	      str << setprecision(8) << radToDeg(angle);
+	      str << " & !ellipse " << setunit('d') << vv << ' ' 
+		  << setunit('"') << r1 << ' ' << radToDeg(angle);
 	    }
 
 	    listProsPost(str, strip);
@@ -388,16 +380,12 @@ void EllipseAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
 
 	  Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
 	  str << "ellipse " << ra << ' ' << dec << ' ' 
-	      << setprecision(3) << setunit('"') << fixed << rr << ' ';
-	  str.unsetf(ios_base::floatfield);
-	  str << setprecision(8) << radToDeg(angle);
+	      << setunit('"') << rr << ' ' << radToDeg(angle);
 
 	  if (ii!=0) {
 	    Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys,Coord::ARCSEC);
 	    str << " & !ellipse " << ra << ' ' << dec << ' ' 
-		<< setprecision(3) << setunit('"') << fixed << r1 << ' ';
-	    str.unsetf(ios_base::floatfield);
-	    str << setprecision(8) << radToDeg(angle);
+		<< setunit('"') << r1 << ' ' << radToDeg(angle);
 	  }
 
 	  listProsPost(str, strip);
@@ -415,12 +403,12 @@ void EllipseAnnulus::listSAOimage(ostream& str, int strip)
 
   for (int ii=0; ii<numAnnuli_; ii++) {
     Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-    str << "ellipse(" << setprecision(8) << vv << ','
-	<< annuli_[ii] << ',' << radToDeg(angle) << ')';
+    str << "ellipse(" << vv << ',' << annuli_[ii] << ',' 
+	<< radToDeg(angle) << ')';
 
     if (ii!=0)
-      str << " & !ellipse(" << setprecision(8) << vv << ','
-	  << annuli_[ii-1] << ',' << radToDeg(angle) << ')';
+      str << " & !ellipse(" << vv << ',' << annuli_[ii-1] << ',' 
+	  << radToDeg(angle) << ')';
 
     listSAOimagePost(str, strip);
   }

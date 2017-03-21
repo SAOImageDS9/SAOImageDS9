@@ -266,8 +266,7 @@ void Ellipse::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	break;
       case Coord::SEXAGESIMAL:
 	listRADEC(ptr,center,sys,sky,format);
-	str << type_ << '(' << setprecision(8)
-	    << ra << ',' << dec << ',' 
+	str << type_ << '(' << ra << ',' << dec << ',' 
 	    << setprecision(3) << fixed << setunit('"') << rr << ',';
 	str.unsetf(ios_base::floatfield);
 	str << setprecision(8) << radToDeg(aa) << ')';
@@ -349,8 +348,7 @@ void Ellipse::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
     if (ptr->hasWCSCel(sys)) {
       listRADEC(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
       Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCMIN);
-      str << type_ << '('
-	  << ra << ',' << dec << ',' 
+      str << type_ << '(' << ra << ',' << dec << ',' 
 	  << setprecision(5) << fixed << setunit('\'') << rr << ',';
       str.unsetf(ios_base::floatfield);
       str << setprecision(8) << radToDeg(angle) << ')';

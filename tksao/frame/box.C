@@ -391,8 +391,7 @@ void Box::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     {
       Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
       Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::IMAGE);
-      str << type_ << '(' << setprecision(8) << vv << ',' << rr << ',' 
-	  << radToDeg(angle) << ')';
+      str << type_ << '(' << vv << ',' << rr << ',' << radToDeg(angle) << ')';
     }
     break;
   default:
@@ -402,18 +401,14 @@ void Box::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       case Coord::DEGREES:
 	{
 	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << type_ << '(' 
-	      << setprecision(10) << vv << ',' 
-	      << setprecision(8) << rr << ',' 
-	      << setprecision(8) << radToDeg(angle) << ')';
+	  str << type_ << '(' << vv << ',' << rr << ',' 
+	      << radToDeg(angle) << ')';
 	}
 	break;
       case Coord::SEXAGESIMAL:
 	listRADEC(ptr,center,sys,sky,format);
-	str << type_ << '('
-	    << ra << ',' << dec << ',' 
-	    << setprecision(8) << rr << ',' 
-	    << setprecision(8) << radToDeg(angle) << ')';
+	str << type_ << '(' << ra << ',' << dec << ',' << rr << ',' 
+	    << radToDeg(angle) << ')';
 	break;
       }
     }
@@ -437,8 +432,7 @@ void Box::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       Vector vv = ptr->mapFromRef(center,sys);
       Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::IMAGE);
       coord.listProsCoordSystem(str,sys,sky);
-      str << "; "<< type_ << ' ' << setprecision(8) << vv << ' ' << rr << ' ' 
-	  << radToDeg(angle);
+      str << "; "<< type_ << ' ' << vv << ' ' << rr << ' ' << radToDeg(angle);
     }
     break;
   default:
@@ -449,21 +443,15 @@ void Box::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	{
 	  Vector vv = ptr->mapFromRef(center,sys,sky);
 	  coord.listProsCoordSystem(str,sys,sky);
-	  str << "; " << type_ << ' ' 
-	      << setprecision(10) << setunit('d') << vv << ' ' 
-	      << setprecision(3) << fixed << setunit('"') << rr << ' ';
-	  str.unsetf(ios_base::floatfield);
-	  str << setprecision(8) << radToDeg(angle);
+	  str << "; " << type_ << ' ' << setunit('d') << vv << ' ' 
+	      << setunit('"') << rr << ' ' << radToDeg(angle);
 	}
 	break;
       case Coord::SEXAGESIMAL:
 	listRADECPros(ptr,center,sys,sky,format);
 	coord.listProsCoordSystem(str,sys,sky);
-	str << "; " << type_ << ' '
-	    << ra << ' ' << dec << ' '
-	    << setprecision(3) << fixed << setunit('"') << rr << ' ';
-	str.unsetf(ios_base::floatfield);
-	str << setprecision(8) << radToDeg(angle);
+	str << "; " << type_ << ' ' << ra << ' ' << dec << ' '
+	    << setunit('"') << rr << ' ' << radToDeg(angle);
 	break;
       }
     }
@@ -478,7 +466,7 @@ void Box::listSAOimage(ostream& str, int strip)
   listSAOimagePre(str);
 
   Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-  str << type_ << '(' << setprecision(8) << vv << ',' << annuli_[0] << ',' 
+  str << type_ << '(' << vv << ',' << annuli_[0] << ',' 
       << radToDeg(angle) << ')';
 
   listSAOimagePost(str, strip);

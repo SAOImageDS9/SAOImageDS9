@@ -281,7 +281,7 @@ void Circle::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
 {
   Vector vv = ptr->mapFromRef(center,sys);
   double rr = ptr->mapLenFromRef(annuli_[0][0],sys);
-  str << type_ << '(' << setprecision(8) << vv << ',' << rr <<  ')';
+  str << type_ << '(' << setprecision(8) << vv << ',' << rr << ')';
 }
 
 void Circle::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky, 
@@ -346,7 +346,7 @@ void Circle::listSAOtng(ostream& str,
     {
       Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
       double rr = ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
-      str << type_ << '(' << setprecision(8) << vv << ',' << rr << ')';
+      str << type_ << '(' << vv << ',' << rr << ')';
     }
     break;
   default:
@@ -356,16 +356,12 @@ void Circle::listSAOtng(ostream& str,
       case Coord::DEGREES:
 	{
 	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << type_ << '(' 
-	      << setprecision(10) << vv << ',' 
-	      << setprecision(8) << rr << ')';
+	  str << type_ << '(' << vv << ',' << rr << ')';
 	}
 	break;
       case Coord::SEXAGESIMAL:
 	listRADEC(ptr,center,sys,sky,format);
-	str << type_ << '(' 
-	    << ra << ',' << dec << ',' 
-	    << setprecision(8) << rr << ')';
+	str << type_ << '(' << ra << ',' << dec << ',' << rr << ')';
 	break;
       }
     }
@@ -389,7 +385,7 @@ void Circle::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       Vector vv = ptr->mapFromRef(center,sys);
       double rr = ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
       coord.listProsCoordSystem(str,sys,sky);
-      str << "; " << type_ << ' ' << setprecision(8) << vv << ' ' << rr;
+      str << "; " << type_ << ' ' << vv << ' ' << rr;
     }
     break;
   default:
@@ -400,19 +396,13 @@ void Circle::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	{
 	  Vector vv = ptr->mapFromRef(center,sys,sky);
 	  coord.listProsCoordSystem(str,sys,sky);
-	  str << "; " << type_ << ' ' 
-	      << setprecision(10) << setunit('d') << vv << ' ' 
-	      << setprecision(3) << fixed << rr << '"';
-	  str.unsetf(ios_base::floatfield);
+	  str << "; " << type_ << ' ' << setunit('d') << vv << ' ' << rr << '"';
 	}
 	break;
       case Coord::SEXAGESIMAL:
 	listRADECPros(ptr,center,sys,sky,format);
 	coord.listProsCoordSystem(str,sys,sky);
-	str << "; " << type_ << ' ' 
-	    << ra << ' ' << dec << ' ' 
-	    << setprecision(3) << fixed << rr << '"';
-	str.unsetf(ios_base::floatfield);
+	str << "; " << type_ << ' ' << ra << ' ' << dec << ' ' << rr << '"';
 	break;
       }
     }
@@ -427,7 +417,7 @@ void Circle::listSAOimage(ostream& str, int strip)
   listSAOimagePre(str);
 
   Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-  str << type_ << '(' << setprecision(8) << vv << ',' << annuli_[0][0] << ')';
+  str << type_ << '(' << vv << ',' << annuli_[0][0] << ')';
 
   listSAOimagePost(str, strip);
 }

@@ -764,8 +764,7 @@ void Point::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       case Coord::DEGREES:
 	{
 	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << type_ << '(' 
-	      << setprecision(10) << vv << ')';
+	  str << type_ << '(' << setprecision(10) << vv << ')';
 	}
 	break;
       case Coord::SEXAGESIMAL:
@@ -866,7 +865,7 @@ void Point::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       coord.listProsCoordSystem(str,sys,sky);
       str << "; ";
       Vector vv = ptr->mapFromRef(center,sys);
-      str << type_ << ' ' << vv;
+      str << type_ << ' ' << setprecision(8) << vv;
     }
     break;
   default:
@@ -878,7 +877,7 @@ void Point::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       case Coord::DEGREES:
 	{
 	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << type_ << ' ' << setunit('d') << vv;
+          str << type_ << ' ' << setprecision(10) << setunit('d') << vv;
 	}
 	break;
       case Coord::SEXAGESIMAL:
@@ -906,7 +905,7 @@ void Point::listSAOtng(ostream& str, Coord::CoordSystem sys,
   case Coord::AMPLIFIER:
     {
       Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-      str << type_ << '(' << vv << ')';
+      str << type_ << '(' << setprecision(8) << vv << ')';
     }
     break;
   default:
@@ -915,7 +914,7 @@ void Point::listSAOtng(ostream& str, Coord::CoordSystem sys,
       case Coord::DEGREES:
 	{
 	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << type_ << '(' << vv << ')';
+          str << type_ << '(' << setprecision(10) << vv << ')';
 	}
 	break;
       case Coord::SEXAGESIMAL:
@@ -937,7 +936,7 @@ void Point::listSAOimage(ostream& str, int strip)
   // all coords are in image coords
 
   Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-  str << type_ << '(' << vv << ')';
+  str << type_ << '(' << setprecision(8) << vv << ')';
 
   listSAOimagePost(str, strip);
 }

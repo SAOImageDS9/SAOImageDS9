@@ -295,7 +295,7 @@ void Text::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::AMPLIFIER:
     {
       Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-      str << type_ << '(' << vv << ", \"" << text << "\")";
+      str << type_ << '(' << setprecision(8) << vv << ", \"" << text << "\")";
     }
     break;
   default:
@@ -304,7 +304,8 @@ void Text::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       case Coord::DEGREES:
 	{
 	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << type_ << '(' << vv  << ", \"" << text << "\")";
+          str << type_ << '(' << setprecision(10) << vv
+              << ", \"" << text << "\")";
 	}
 	break;
       case Coord::SEXAGESIMAL:

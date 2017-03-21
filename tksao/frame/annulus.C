@@ -326,7 +326,7 @@ void Annulus::listPros(ostream& str, Coord::CoordSystem sys,
     {
       Vector vv = ptr->mapFromRef(center,sys);
       coord.listProsCoordSystem(str,sys,sky);
-      str << "; " << type_ << ' ' << vv;
+      str << "; " << type_ << ' ' << setprecision(8) << vv;
       for (int ii=0; ii<numAnnuli_; ii++) {
 	double rr = ptr->mapLenFromRef(annuli_[ii][0],Coord::IMAGE);
 	str << ' ' << rr;
@@ -340,20 +340,24 @@ void Annulus::listPros(ostream& str, Coord::CoordSystem sys,
 	{
 	  Vector vv = ptr->mapFromRef(center,sys,sky);
 	  coord.listProsCoordSystem(str,sys,sky);
-	  str << "; " << type_ << ' ' << setunit('d') << vv;
+          str << "; " << type_ << ' ' << setprecision(10) << setunit('d') << vv
+              << setprecision(3) << fixed;
 	  for (int ii=0; ii<numAnnuli_; ii++) {
 	    double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
 	    str << ' ' << rr << '"';
+          str.unsetf(ios_base::floatfield);
 	  }
 	}
 	break;
       case Coord::SEXAGESIMAL:
 	listRADECPros(ptr,center,sys,sky,format);
 	coord.listProsCoordSystem(str,sys,sky);
-	str << "; " << type_ << ' ' << ra << ' ' << dec;
+        str << "; " << type_ << ' ' << ra << ' ' << dec
+            << setprecision(3) << fixed;
 	for (int ii=0; ii<numAnnuli_; ii++) {
 	  double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
 	  str << ' ' << rr << '"';
+	  str.unsetf(ios_base::floatfield);
 	}
 	break;
       }
@@ -369,7 +373,7 @@ void Annulus::listSAOimage(ostream& str, int strip)
   listSAOimagePre(str);
 
   Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-  str << type_ << '(' << vv;
+  str << type_ << '(' << setprecision(8) << vv;
   for (int ii=0; ii<numAnnuli_; ii++) {
     double rr = ptr->mapLenFromRef(annuli_[ii][0],Coord::IMAGE);
     str << ',' << rr;

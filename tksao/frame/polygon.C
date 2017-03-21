@@ -487,7 +487,7 @@ void Polygon::listPros(ostream& str, Coord::CoordSystem sys,
       vertex.head();
       do {
 	Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,sys);
-	str << ' ' << vv;
+        str << ' ' << setprecision(8) << vv;
       }
       while (vertex.next());
     }
@@ -503,7 +503,7 @@ void Polygon::listPros(ostream& str, Coord::CoordSystem sys,
 	  vertex.head();
 	  do {
 	    Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,sys,sky);
-	    str << ' ' << setunit('d') << vv;
+            str << ' ' << setprecision(10) << setunit('d') << vv;
 	  }
 	  while (vertex.next());
 	}
@@ -546,7 +546,7 @@ void Polygon::listSAOtng(ostream& str, Coord::CoordSystem sys,
 	first=0;
 
 	Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,sys);
-	str << vv;
+        str << setprecision(8) << vv;
       }
       while (vertex.next());
       str << ')';
@@ -566,7 +566,7 @@ void Polygon::listSAOtng(ostream& str, Coord::CoordSystem sys,
 	    first=0;
 
 	    Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,sys,sky);
-	    str << vv;
+            str << setprecision(10) << vv;
 	  }
 	  while (vertex.next());
 	  str << ')';
@@ -611,7 +611,7 @@ void Polygon::listSAOimage(ostream& str, int strip)
     first=0;
 
     Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,Coord::IMAGE);
-    str << vv;
+    str << setprecision(8) << vv;
   }
   while (vertex.next());
 

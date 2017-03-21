@@ -369,7 +369,8 @@ void BoxAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
 	str << "; ";
 
 	Vector rr = ptr->mapLenFromRef(annuli_[ii],Coord::IMAGE);
-	str << "box " << vv << ' ' << rr << ' ' << radToDeg(angle);
+        str << "box " << setprecision(8) << vv << ' ' << rr << ' '
+            << radToDeg(angle);
 
 	if (ii!=0) {
 	  Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],Coord::IMAGE);
@@ -391,13 +392,19 @@ void BoxAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
 	    str << "; ";
 
 	    Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
-	    str << "box " << setunit('d') << vv << ' ' 
-		<< setunit('"') << rr << ' ' << radToDeg(angle);
+            str << "box "
+                << setprecision(10) << setunit('d') << vv << ' '
+                << setprecision(3) << setunit('"') << fixed << rr << ' ';
+            str.unsetf(ios_base::floatfield);
+	    str << setprecision(8) << radToDeg(angle);
 
 	    if (ii!=0) {
 	      Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys,Coord::ARCSEC);
-	      str << " & !box " << setunit('d') << vv << ' ' 
-		  << setunit('"') << r1 << ' ' << radToDeg(angle);
+              str << " & !box "
+                  << setprecision(8) << setunit('d') << vv << ' '
+                  << setprecision(3) << setunit('"') << fixed << r1 << ' ';
+              str.unsetf(ios_base::floatfield);
+              str << setprecision(8) << radToDeg(angle);
 	    }
 
 	    listProsPost(str, strip);
@@ -411,13 +418,17 @@ void BoxAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
 	  str << "; ";
 
 	  Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
-	  str << "box " << ra << ' ' << dec << ' ' << setunit('"') << rr << ' '
-	      << radToDeg(angle);
+          str << "box " << ra << ' ' << dec << ' '
+              << setprecision(3) << setunit('"') << fixed << rr << ' ';
+          str.unsetf(ios_base::floatfield);
+          str << setprecision(8) << radToDeg(angle);
 
 	  if (ii!=0) {
 	    Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys,Coord::ARCSEC);
-	    str << " & !box " << ra << ' ' << dec << ' ' 
-		<< setunit('"') << r1 << ' ' << radToDeg(angle);
+            str << " & !box " << ra << ' ' << dec << ' '
+                << setprecision(3) << setunit('"') << fixed << r1 << ' ';
+            str.unsetf(ios_base::floatfield);
+            str << setprecision(8) << radToDeg(angle);
 	  }
 
 	  listProsPost(str, strip);
@@ -435,11 +446,12 @@ void BoxAnnulus::listSAOimage(ostream& str, int strip)
 
   for (int ii=0; ii<numAnnuli_; ii++) {
     Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-    str << "box(" << vv << ',' << annuli_[ii] << ',' << radToDeg(angle) << ')';
+    str << "box(" << setprecision(8) << vv << ','
+        << annuli_[ii] << ',' << radToDeg(angle) << ')';
 
     if (ii!=0)
-      str << " & !box(" << vv << ',' << annuli_[ii-1] << ',' 
-	  << radToDeg(angle) << ')';
+      str << " & !box(" << setprecision(8) << vv << ','
+          << annuli_[ii-1] << ',' << radToDeg(angle) << ')';
 
     listSAOimagePost(str, strip);
   }

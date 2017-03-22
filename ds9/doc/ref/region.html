@@ -11,10 +11,10 @@
     <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
       2.4.7-10 i686) [Netscape]">
   </head>
-  <body link="#0000ff" alink="#ff0000" bgcolor="#ffffff" text="#000000"
-    vlink="#551a8b">
-    <h3><img alt="" src="../sun.gif" height="98" align="middle"
-        width="100"> Regions</h3>
+  <body vlink="#551a8b" text="#000000" link="#0000ff" bgcolor="#ffffff"
+    alink="#ff0000">
+    <h3><img alt="" src="../sun.gif" width="100" height="98"
+        align="middle"> Regions</h3>
     <blockquote>
       <p>Regions provide a means for marking particular areas of an
         image for further analysis. Regions may also be used for
@@ -29,17 +29,14 @@
       <a href="#ExternalRegionFiles">External Region Files</a><br>
       <p><b> <a name="RegionDescriptions"></a>Region Descriptions</b></p>
       <p><tt>Circle<br>
-          Usage: circle x y radius<br>
+          Usage: circle x y radius # fill=[0|1]<br>
         </tt></p>
       <p><tt>Ellipse<br>
-          Usage: ellipse x y radius radius angle<br>
-        </tt></p>
+          Usage: ellipse x y radius radius angle</tt><tt> # fill=[0|1]</tt></p>
       <p><tt>Box <br>
-          Usage: box x y width height angle<br>
-        </tt></p>
+          Usage: box x y width height angle</tt><tt> # fill=[0|1]</tt></p>
       <p><tt>Polygon <br>
-          Usage: polygon x1 y1 x2 y2 x3 y3 ...<br>
-        </tt></p>
+          Usage: polygon x1 y1 x2 y2 x3 y3 ...</tt><tt> # fill=[0|1]</tt></p>
       <p><tt>Point <br>
           Usage: point x y #
           point=[circle|box|diamond|cross|x|arrow|boxcircle] [size]<br>
@@ -175,7 +172,14 @@
           which may be used for grouping and searching. </p>
         <tt>Example:&nbsp; circle(100,100,20) # tag={Group 1} tag={Group
           2}</tt>
-        <p><b> Line</b></p>
+        <p><b>Circle | Ellipse | Box | Polygon<br>
+          </b></p>
+        <p>Circle, ellipse, box, and polygon regions may be rendered
+          with outline or solid color fill. To indicate fill, use the
+          fill property. A '1' indicates fill, '0' indicates no outline.
+        </p>
+        <tt>Example: circle(100,100,20) # fill=1</tt>
+        <p><b>Line</b></p>
         <p>The line region may be rendered with arrows, one at each end.
           To indicate arrows, use the line property. A '1' indicates an
           arrow, '0' indicates no arrow. </p>
@@ -254,6 +258,7 @@
 
 
 
+
               pixel coords of original file using LTM/LTV</tt> <br>
             <tt>IMAGE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -266,12 +271,14 @@
 
 
 
+
               pixel coords of current file</tt> <br>
             <tt><tt><tt>FK4,B1950&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  &nbsp;
-                  # sky coordinate systems</tt> <br>
+
+                  &nbsp; # sky coordinate systems</tt> <br>
                 FK5,J2000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 #
+
 
 
 
@@ -284,6 +291,7 @@
             </tt><tt><tt><tt>ICRS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
                   sky coordinate systems</tt> <br>
               </tt>GALACTIC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -296,10 +304,12 @@
 
 
 
+
               sky coordinate systems</tt> <br>
             <tt>ECLIPTIC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -326,6 +336,7 @@
 
 
 
+
               linear primary WCS</tt> <tt><br>
             </tt></blockquote>
           <tt></tt> </blockquote>
@@ -335,6 +346,7 @@
           <tt>physical</tt> , are valid on a per segment basis. In this
           case, use <tt>tile</tt> to specify which header to use in all
           coordinate conversions. The default is the first header, or <tt>tile
+
 
 
 
@@ -366,10 +378,12 @@
 
 
 
+
             context-dependent (see below)</tt> <br>
           <tt>[num]d&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -390,6 +404,7 @@
 
 
 
+
             radians</tt> <br>
           <tt>[num]p&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -402,10 +417,12 @@
 
 
 
+
             physical pixels</tt> <br>
           <tt>[num]i&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -435,10 +452,12 @@
 
 
 
+
             context-dependent (see below)</tt> <br>
           <tt>[num]"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -459,10 +478,12 @@
 
 
 
+
             arc min</tt> <br>
           <tt>[num]d&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -483,6 +504,7 @@
 
 
 
+
             radians</tt> <br>
           <tt>[num]p&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -495,10 +517,12 @@
 
 
 
+
             physical pixels</tt> <br>
           <tt>[num]i&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -536,6 +560,7 @@
 
 
 
+
             pixel coords of current file</tt> <br>
           <br>
           <tt>LINEAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -549,11 +574,13 @@
 
 
 
+
             linear wcs as defined in file</tt>
           <p><tt>FK4,
               B1950&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -578,6 +605,7 @@
 
 
 
+
               pixel coords of original file using LTM/LTV</tt> <br>
             <tt>AMPLIFIER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -590,10 +618,12 @@
 
 
 
+
               mosaic coords of original file using ATM/ATV</tt> <br>
             <tt>DETECTOR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -778,6 +808,7 @@
                       ELLIPTANNULUS is translated into EPANDA<br>
                       SECTOR is ignored<br>
                     </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>FIELD
+
 
                         is ignored</tt><br>
                     </tt><tt>DIAMOND</tt><tt><tt> is ignored<br>

@@ -8,8 +8,6 @@ using namespace std;
 
 #include <string.h>
 
-#include <tkMacOSXPrivate.h>
-
 #include "tkmacosx.h"
 
 extern "C" {
@@ -42,10 +40,9 @@ int Tkmacosx_Init(Tcl_Interp* interp) {
 int TkmacosxCmd(ClientData data,Tcl_Interp *interp,int argc,const char* argv[])
 {
   if (argc>=2) {
-/*
     if (!strncmp(argv[1], "pm", 2))
       return tkmacosx->pm(argc, argv);
-*/
+
     if (!strncmp(argv[1], "locale", 2))
       return tkmacosx->locale(argc, argv);
     else {
@@ -65,7 +62,6 @@ TkMacosx::TkMacosx(Tcl_Interp* intp)
 {
   interp = intp;
 
-/*
   showDialog = 0;
 
   status = noErr;
@@ -73,17 +69,14 @@ TkMacosx::TkMacosx(Tcl_Interp* intp)
   printSettings = kPMNoPrintSettings;
   printSession = NULL;
   context = NULL;
-*/
 }
 
 TkMacosx::~TkMacosx()
 {
-/*
   if (pageFormat != kPMNoPageFormat)
     PMRelease(pageFormat);
   if (printSettings != kPMNoPrintSettings)
     PMRelease(printSettings);
-*/
 }
 
 // Locale
@@ -113,7 +106,6 @@ int TkMacosx::locale(int argc, const char* argv[])
   return TCL_OK;
 }
 
-/*
 // Image Print Mangager
 int TkMacosx::pm(int argc, const char* argv[])
 {
@@ -243,8 +235,8 @@ int TkMacosx::pmPrintBegin(int argc, const char* argv[])
 
   // dialog
   if (showDialog) {
-    Boolean rr;
-    status = PMSessionPrintDialog(printSession, printSettings, pageFormat, &rr);
+    Boolean rr =0;
+//    status = PMSessionPrintDialog(printSession, printSettings, pageFormat, &rr);
     if (status != noErr)
       goto error;
 
@@ -284,11 +276,11 @@ int TkMacosx::pmPrintBegin(int argc, const char* argv[])
       goto error;
   }
 
-  status = PMSessionBeginCGDocument(printSession, printSettings, pageFormat);
+//  status = PMSessionBeginCGDocument(printSession, printSettings, pageFormat);
   if (status != noErr)
     goto error;
 
-  status = PMSessionBeginPage(printSession, pageFormat, NULL);
+//  status = PMSessionBeginPage(printSession, pageFormat, NULL);
   if (status != noErr)
     goto error;
 
@@ -361,10 +353,10 @@ int TkMacosx::pmPrintBegin(int argc, const char* argv[])
 
 int TkMacosx::pmPrintEnd()
 {
-  status = PMSessionEndPage(printSession);
+//  status = PMSessionEndPage(printSession);
   if (status != noErr)
     goto error;
-  status = PMSessionEndDocument(printSession);
+//  status = PMSessionEndDocument(printSession);
   if (status != noErr)
     goto error;
 
@@ -372,7 +364,6 @@ int TkMacosx::pmPrintEnd()
   if (status != noErr)
     goto error;
 
- done:
   PMRelease(printSession);
   printSession = NULL;
   return TCL_OK;
@@ -406,8 +397,8 @@ int TkMacosx::pmPrintText(int argc, const char* argv[])
   char* ss;
   char* st;
 
-  char* sstr;
-  char* estr;
+  char* sstr =NULL;
+  char* estr =NULL;
 
   // text
   if (argc >= 5)
@@ -519,8 +510,8 @@ int TkMacosx::pmPrintText(int argc, const char* argv[])
 
   // dialog
   {
-    Boolean rr;
-    status = PMSessionPrintDialog(printSession, printSettings, pageFormat, &rr);
+    Boolean rr =0;
+//    status = PMSessionPrintDialog(printSession, printSettings, pageFormat, &rr);
     if (status != noErr)
       goto error;
 
@@ -533,8 +524,8 @@ int TkMacosx::pmPrintText(int argc, const char* argv[])
 
   // job name
   {
-    CFStringRef jobName = CFSTR("SAOImage DS9");
-    status = PMSetJobNameCFString(printSettings, jobName);
+//    CFStringRef jobName = CFSTR("SAOImage DS9");
+//    status = PMSetJobNameCFString(printSettings, jobName);
     if (status != noErr)
       goto error;
   }
@@ -567,7 +558,7 @@ int TkMacosx::pmPrintText(int argc, const char* argv[])
     goto error;
 
   // start
-  status = PMSessionBeginCGDocument(printSession, printSettings, pageFormat);
+  //status = PMSessionBeginCGDocument(printSession, printSettings, pageFormat);
   if (status != noErr)
     goto error;
 
@@ -578,7 +569,7 @@ int TkMacosx::pmPrintText(int argc, const char* argv[])
   st = sstr;
 
   while (currentPage <= lastPage) {
-    status = PMSessionBeginPage(printSession, pageFormat, NULL);
+//    status = PMSessionBeginPage(printSession, pageFormat, NULL);
     if (status != noErr)
       goto error;
 
@@ -587,7 +578,7 @@ int TkMacosx::pmPrintText(int argc, const char* argv[])
       goto error;
 
     // set context
-    CGContextSelectFont(context, "Courier", fontSize, kCGEncodingMacRoman);
+//    CGContextSelectFont(context, "Courier", fontSize, kCGEncodingMacRoman);
     CGContextSetRGBFillColor(context,0,0,0,1);
     CGContextSetTextDrawingMode (context, kCGTextFill);
 
@@ -601,8 +592,9 @@ int TkMacosx::pmPrintText(int argc, const char* argv[])
     
     // line by line
     while (ss < estr) {
-      Vector vv = Vector(xx,yy) * mm;
-      CGContextShowTextAtPoint (context, vv[0], vv[1], ss, strlen(ss));
+	Vector vv = Vector(xx,yy) * mm;
+	vv = Vector(); // remove waj
+  //    CGContextShowTextAtPoint (context, vv[0], vv[1], ss, strlen(ss));
 
       while (*st++);
       ss = st;
@@ -614,14 +606,14 @@ int TkMacosx::pmPrintText(int argc, const char* argv[])
       }
     }
 
-    status = PMSessionEndPage(printSession);
+  //  status = PMSessionEndPage(printSession);
     if (status != noErr)
       goto error;
 
     currentPage++;
   }
 
-  status = PMSessionEndDocument(printSession);
+//  status = PMSessionEndDocument(printSession);
   if (status != noErr)
     goto error;
 
@@ -677,12 +669,11 @@ int TkMacosx::pmPageSetup()
       goto error;
   }
   
-  Boolean rr;
-  status = PMSessionPageSetupDialog(printSession, pageFormat, &rr);
+  //Boolean rr =0;
+  //status = PMSessionPageSetupDialog(printSession, pageFormat, &rr);
   if (status != noErr)
     goto error;
 
- done:
   PMRelease(printSession);
   printSession = NULL;
   return TCL_OK;
@@ -698,108 +689,121 @@ int TkMacosx::pmPageSetup()
 
 void TkMacosx::begin()
 {
-  CGContextSaveGState(context);
+//  CGContextSaveGState(context);
 }
 
 void TkMacosx::end()
 {
-  CGContextRestoreGState(context);
+//  CGContextRestoreGState(context);
 }
 
 void TkMacosx::color(float red, float green, float blue)
 {
-  CGContextSetRGBStrokeColor(context,red,green,blue,1);
-  CGContextSetRGBFillColor(context,red,green,blue,1);
+//  CGContextSetRGBStrokeColor(context,red,green,blue,1);
+//  CGContextSetRGBFillColor(context,red,green,blue,1);
 }
 
 void TkMacosx::width(float ww)
 {
-  CGContextSetLineWidth(context,ww);
+//  CGContextSetLineWidth(context,ww);
 }
 
 void TkMacosx::dash(float* dd, int nn)
 {
-  CGContextSetLineDash(context,0,(CGFloat*)dd,nn);
+//  CGContextSetLineDash(context,0,(CGFloat*)dd,nn);
 }
 
 void TkMacosx::font(const char* font, float size)
 {
-  CGContextSelectFont(context, font, size, kCGEncodingMacRoman);
+//  CGContextSelectFont(context, font, size, kCGEncodingMacRoman);
 }
 
 void TkMacosx::clip(float x, float y, float w, float h)
 {
+/*
   CGContextBeginPath(context);
   CGContextAddRect(context, CGRectMake(x,y,w,h));
   CGContextClosePath(context);
   CGContextClip(context);
+*/
 }
 
 void TkMacosx::newpath()
 {
-  CGContextBeginPath(context);
+//  CGContextBeginPath(context);
 }
 
 void TkMacosx::stroke()
 {
-  CGContextStrokePath(context);
+//  CGContextStrokePath(context);
 }
 
 void TkMacosx::fill()
 {
-  CGContextEOFillPath(context);
+//  CGContextEOFillPath(context);
 }
 
 void TkMacosx::arc(float x, float y, float rad, float ang1, float ang2)
 {
-  CGContextAddArc(context, x, y, rad, ang1, ang2, 0);
+//  CGContextAddArc(context, x, y, rad, ang1, ang2, 0);
 }
 
 void TkMacosx::curve(float x0, float y0, float u0, float v0, 
 		     float u1, float v1, float x1, float y1)
 {
+/*
   CGContextMoveToPoint(context, x0, y0);
   CGContextAddCurveToPoint(context, u0, v0, u1, v1, x1, y1);
+*/
 }
 
 void TkMacosx::drawText(float x, float y, float angle, const char* text)
 {
+/*
   CGAffineTransform mm = CGAffineTransformMakeRotation(angle);
   CGContextSetTextMatrix(context, mm);
 
   CGContextSetTextDrawingMode (context, kCGTextFill);
   CGContextShowTextAtPoint (context, x, y, text, strlen(text));
+*/
 }
 
 void TkMacosx::drawLines(float* x, float* y, int n)
 {
+/*
   CGContextBeginPath(context);
   CGContextMoveToPoint(context, x[0], y[0]);
   for (int ii=1; ii<n; ii++) 
     CGContextAddLineToPoint(context, x[ii], y[ii]);
   CGContextStrokePath(context);
+*/
 }
 
 void TkMacosx::fillPolygon(float* x, float* y, int n)
 {
+/*
   CGContextBeginPath(context);
   CGContextMoveToPoint(context, x[0], y[0]);
   for (int ii=1; ii<n; ii++) 
     CGContextAddLineToPoint(context, x[ii], y[ii]);
   CGContextAddLineToPoint(context, x[0], y[0]);
   CGContextEOFillPath(context);
+*/
 }
 
 void TkMacosx::drawArc(float x, float y, float rad, float ang1, float ang2)
 {
+/*
   CGContextBeginPath(context);
   CGContextAddArc(context, x, y, rad, ang1, ang2, 0);
   CGContextStrokePath(context);
+*/
 }
 
 void TkMacosx::bitmapCreate(void* data, int width, int height, 
 			    float x, float y, float w, float h)
 {
+/*
   CGColorSpaceRef cs = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
   CGContextRef bm = CGBitmapContextCreate(data, width, height, 8,
 					  width*4, cs, 
@@ -815,5 +819,5 @@ void TkMacosx::bitmapCreate(void* data, int width, int height,
     CGContextRelease(bm);
   if (cs)
     CGColorSpaceRelease(cs);
-}
 */
+}

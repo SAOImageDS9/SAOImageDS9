@@ -5,7 +5,7 @@
 #ifndef __tkmacosx_h__
 #define __tkmacosx_h__
 
-#include <tcl.h>
+#include <tkMacOSXPrivate.h>
 
 #include <vector.h>
 
@@ -13,13 +13,12 @@ class TkMacosx {
  private:
   Tcl_Interp* interp;
 
-  /*
   int showDialog;
-
-  CGContextRef context;
   Matrix canvasToPage;
 
+  CGContextRef context;
   OSStatus status;
+
   PMPageFormat pageFormat;
   PMPrintSettings printSettings;
   PMPrintSession printSession;
@@ -29,19 +28,19 @@ class TkMacosx {
   int pmPrintEnd();
   int pmPrintText(int, const char**);
   int pmPageSetup();
-  */
+
  public:
   TkMacosx(Tcl_Interp*);
   ~TkMacosx();
 
-  //  int pm(int, const char**);
+  int pm(int, const char**);
   int locale(int, const char**);
-  /*
+
   const Matrix& getCanvasToPage() {return canvasToPage;}
 
   void begin();
   void end();
-
+  
   void color(float,float,float);
   void width(float);
   void dash(float*,int);
@@ -60,7 +59,6 @@ class TkMacosx {
   void drawArc(float, float, float, float, float);
   
   void bitmapCreate(void*, int, int, float, float, float, float);
-  */
 };
 
 extern TkMacosx* tkmacosx;

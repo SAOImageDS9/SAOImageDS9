@@ -72,9 +72,9 @@ TEA_SETUP_COMPILER
 #-----------------------------------------------------------------------
 
 TEA_ADD_SOURCES([
-	tkmacosx.mm
-	macosxlib.mm
-	xxlib.mm
+	tkmacosx.M
+	macosxlib.M
+	xxlib.M
 	])
 TEA_ADD_HEADERS([
 	macosxlib.h

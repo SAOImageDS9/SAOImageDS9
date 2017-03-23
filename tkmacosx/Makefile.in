@@ -167,7 +167,7 @@ AR		= @AR@
 CFLAGS		= @CFLAGS@
 COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 
-.SUFFIXES: .c .mm .$(OBJEXT)
+.SUFFIXES: .c .C .m .M .$(OBJEXT)
 
 #========================================================================
 # Start of user-definable TARGETS section
@@ -299,7 +299,13 @@ VPATH = $(srcdir):$(srcdir)/generic:$(srcdir)/unix:$(srcdir)/win:$(srcdir)/macos
 .c.@OBJEXT@:
 	$(COMPILE) -c `@CYGPATH@ $<` -o $@
 
-.mm.@OBJEXT@:
+.C.@OBJEXT@:
+	$(COMPILE) -c `@CYGPATH@ $<` -o $@
+
+.m.@OBJEXT@:
+	$(COMPILE) -c `@CYGPATH@ $<` -o $@
+
+.M.@OBJEXT@:
 	$(COMPILE) -c `@CYGPATH@ $<` -o $@
 
 #========================================================================

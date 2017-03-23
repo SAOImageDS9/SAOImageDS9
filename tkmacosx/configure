@@ -5634,9 +5634,9 @@ done
 
 
     vars="
-	tkmacosx.mm
-	macosxlib.mm
-	xxlib.mm
+	tkmacosx.M
+	macosxlib.M
+	xxlib.M
 	"
     for i in $vars; do
 	case $i in

@@ -1069,9 +1069,7 @@ int Base::postscriptProc(int prepass)
     switch (psColorSpace) {
     case BW:
     case GRAY:
-      if (grid)
-	grid->ps(GRAY);
-
+      // needs to before markers if marker is filled
       currentContext->contourPS(GRAY);
 
       if (showMarkers) {
@@ -1080,15 +1078,17 @@ int Base::postscriptProc(int prepass)
       }
       //      psMarkers(&analysisMarkers, GRAY);
 
+      // needs to be after markers if marker is filled
+      if (grid)
+	grid->ps(GRAY);
+
       psCrosshair(GRAY);
       psGraphics(GRAY);
 
       break;
     case RGB:
     case CMYK:
-      if (grid)
-	grid->ps(RGB);
-
+      // needs to before markers if marker is filled
       currentContext->contourPS(RGB);
 
       if (showMarkers) {
@@ -1096,6 +1096,10 @@ int Base::postscriptProc(int prepass)
 	psMarkers(&userMarkers, RGB);
       }
       //      psMarkers(&analysisMarkers, RGB);
+
+      // needs to be after markers if marker is filled
+      if (grid)
+	grid->ps(RGB);
 
       psCrosshair(RGB);
       psGraphics(RGB);
@@ -1105,9 +1109,7 @@ int Base::postscriptProc(int prepass)
     break;
   case 2:
   case 3:
-    if (grid)
-      grid->ps(psColorSpace);
-
+    // needs to before markers if marker is filled
     currentContext->contourPS(psColorSpace);
 
     if (showMarkers) {
@@ -1115,6 +1117,10 @@ int Base::postscriptProc(int prepass)
       psMarkers(&userMarkers, psColorSpace);
     }
     //    psMarkers(&analysisMarkers, psColorSpace);
+
+    // needs to be after markers if marker is filled
+    if (grid)
+      grid->ps(psColorSpace);
 
     psCrosshair(psColorSpace);
     psGraphics(psColorSpace);
@@ -1707,6 +1713,11 @@ void Base::updateMagnifier(const Vector& vv)
 	bb.bound(ll);
 	bb.bound(ur);
 
+	// render contours
+	// needs to before markers if marker is filled
+	currentContext->contourX11(magnifierPixmap, Coord::MAGNIFIER, 
+				   magnifierWidth, magnifierHeight);
+
 	if (showMarkers) {
 	  x11MagnifierMarkers(&userMarkers, bb);
 	  x11MagnifierMarkers(&catalogMarkers, bb);
@@ -1717,10 +1728,6 @@ void Base::updateMagnifier(const Vector& vv)
 	if (useCrosshair)
 	  x11Crosshair(magnifierPixmap, Coord::MAGNIFIER, 
 			  magnifierWidth, magnifierHeight);
-
-	// render contours
-	currentContext->contourX11(magnifierPixmap, Coord::MAGNIFIER, 
-				   magnifierWidth, magnifierHeight);
       }
 
       // render cursor
@@ -1947,11 +1954,8 @@ void Base::updatePM(const BBox& bbox)
     XCopyArea(display, basePixmap, pixmap, widgetGC, x0, y0, sx, sy, x0, y0);
   }
 
-  // grid
-  if (grid)
-    grid->x11();
-
   // contours
+  // needs to before markers if marker is filled
   currentContext->contourX11(pixmap, Coord::WIDGET, 
 			     options->width, options->height);
 
@@ -1961,6 +1965,11 @@ void Base::updatePM(const BBox& bbox)
     x11Markers(&userMarkers, bbox);
   }
   //  x11Markers(&analysisMarkers, bbox);
+
+  // grid
+  // needs to be after markers if marker is filled
+  if (grid)
+    grid->x11();
 
   // crosshair
   x11Crosshair(pixmap, Coord::WIDGET, options->width, options->height);
@@ -2129,11 +2138,8 @@ void Base::macosxPrintCmd()
   // image
   macosx();
 
-  // grid
-  if (grid)
-    grid->macosx();
-
   // contours
+  // needs to before markers if marker is filled
   currentContext->contourMacOSX();
 
   // markers
@@ -2142,6 +2148,11 @@ void Base::macosxPrintCmd()
     macosxMarkers(&userMarkers);
   }
   //  macosxMarkers(&analysisMarkers);
+
+  // grid
+  // needs to be after markers if marker is filled
+  if (grid)
+    grid->macosx();
 
   macosxCrosshair();
   macosxGraphics();
@@ -2249,11 +2260,8 @@ void Base::win32PrintCmd()
   // image
   win32();
 
-  // grid
-  if (grid)
-    grid->win32();
-
   // contours
+  // needs to before markers if marker is filled
   currentContext->contourWin32();
 
   // markers
@@ -2262,6 +2270,11 @@ void Base::win32PrintCmd()
     win32Markers(&catalogMarkers);
   }
   //  win32Markers(&analysisMarkers);
+
+  // grid
+  // needs to be after markers if marker is filled
+  if (grid)
+    grid->win32();
 
   win32Crosshair();
   win32Graphics();

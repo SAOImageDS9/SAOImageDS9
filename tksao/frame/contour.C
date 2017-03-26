@@ -59,11 +59,11 @@ void ContourLevel::list(ostream& str, FitsImage* fits,
 }
 
 void ContourLevel::render(Pixmap pmap, Coord::InternalSystem sys, 
-			  int width, int height)
+			  const BBox& bbox)
 {
   if (lcontour_.head()) {
     do
-      lcontour_.current()->render(pmap, sys, width, height);
+      lcontour_.current()->render(pmap, sys, bbox);
     while (lcontour_.next());
   }
 }
@@ -146,8 +146,7 @@ void Contour::list(ostream& str, FitsImage* fits,
     str << ')' << endl;
 }
 
-void Contour::render(Pixmap pmap, Coord::InternalSystem sys, 
-		     int width, int height)
+void Contour::render(Pixmap pmap, Coord::InternalSystem sys, const BBox& bbox)
 {
   if (lvertex_.head()) {
     XSetForeground(base_->display, parent_->gc_, parent_->color_);
@@ -166,15 +165,13 @@ void Contour::render(Pixmap pmap, Coord::InternalSystem sys,
 			 ww, LineOnOffDash, CapButt, JoinMiter);
     }
 
-    BBox bb = BBox(0, 0, width, height);
-
     Vector u1 = lvertex_.current()->vector;
     while (lvertex_.next()) {
       Vector u2 = lvertex_.current()->vector;
 
       Vector v1 = base_->mapFromRef(u1,sys);
       Vector v2 = base_->mapFromRef(u2,sys);
-      if (bb.isIn(v1) || bb.isIn(v2))
+      if (bbox.isIn(v1) || bbox.isIn(v2))
 	XDrawLine(base_->display, pmap, parent_->gc_, 
 		  (int)v1[0], (int)v1[1], (int)v2[0], (int)v2[1]);
 

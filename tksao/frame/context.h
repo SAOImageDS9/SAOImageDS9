@@ -135,7 +135,7 @@ class Context {
   void contourLoadAux(istream&, Coord::CoordSystem, Coord::SkyFrame, 
 		      const char*, int, int);
   void contourPS(Widget::PSColorSpace cs);
-  void contourX11(Pixmap, Coord::InternalSystem, int, int);
+  void contourX11(Pixmap, Coord::InternalSystem, const BBox&);
 #ifdef MAC_OSX_TK
   void contourMacOSX();
 #endif

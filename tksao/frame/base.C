@@ -1715,8 +1715,8 @@ void Base::updateMagnifier(const Vector& vv)
 
 	// render contours
 	// needs to before markers if marker is filled
-	currentContext->contourX11(magnifierPixmap, Coord::MAGNIFIER, 
-				   magnifierWidth, magnifierHeight);
+	currentContext->contourX11(magnifierPixmap, Coord::MAGNIFIER,
+				   bbox(0,0,magnifierWidth,magnifierHeight));
 
 	if (showMarkers) {
 	  x11MagnifierMarkers(&userMarkers, bb);
@@ -1956,8 +1956,7 @@ void Base::updatePM(const BBox& bbox)
 
   // contours
   // needs to before markers if marker is filled
-  currentContext->contourX11(pixmap, Coord::WIDGET, 
-			     options->width, options->height);
+  currentContext->contourX11(pixmap, Coord::WIDGET, bbox);
 
   // markers
   if (showMarkers) {
@@ -1975,7 +1974,7 @@ void Base::updatePM(const BBox& bbox)
   if (useCrosshair)
     x11Crosshair(pixmap, Coord::WIDGET, options->width, options->height);
 
-  // highlite bbox
+  // highlite bbox/compass
   x11Graphics();
 
   if (DebugPerf)

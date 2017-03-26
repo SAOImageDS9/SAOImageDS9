@@ -622,8 +622,7 @@ void Context::contourPS(Widget::PSColorSpace cs)
   }
 }
 
-void Context::contourX11(Pixmap pm, Coord::InternalSystem sys, 
-			 int width, int height)
+void Context::contourX11(Pixmap pm, Coord::InternalSystem sys, const BBox& bbox)
 {
   if (!cfits)
     return;
@@ -633,7 +632,7 @@ void Context::contourX11(Pixmap pm, Coord::InternalSystem sys,
   if (hasAuxContour_) {
     if (auxcontours_.tail())
       do
-	auxcontours_.current()->render(pm, sys, width, height);
+	auxcontours_.current()->render(pm, sys, bbox);
       while (auxcontours_.previous());
   }
 
@@ -641,7 +640,7 @@ void Context::contourX11(Pixmap pm, Coord::InternalSystem sys,
     List<ContourLevel>& cc = fvcontour_.lcontourlevel();
     if (cc.head())
       do
-	cc.current()->render(pm, sys, width, height);
+	cc.current()->render(pm, sys, bbox);
       while (cc.next());
   }
 }

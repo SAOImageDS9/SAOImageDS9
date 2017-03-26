@@ -43,7 +43,7 @@ class ContourLevel {
   List<Contour>& lcontour() {return lcontour_;}
 
   void list(ostream& str, FitsImage*, Coord::CoordSystem, Coord::SkyFrame);
-  void render(Pixmap, Coord::InternalSystem, int, int);
+  void render(Pixmap, Coord::InternalSystem, const BBox&);
   void ps(int);
   void updateCoords(const Matrix&);
 #ifdef MAC_OSX_TK
@@ -84,7 +84,7 @@ class Contour {
   List<Vertex>& lvertex() {return lvertex_;}
 
   void list(ostream& str, FitsImage*, Coord::CoordSystem, Coord::SkyFrame);
-  void render(Pixmap, Coord::InternalSystem, int, int);
+  void render(Pixmap, Coord::InternalSystem, const BBox&);
   void ps(int);
   void updateCoords(const Matrix&);
 #ifdef MAC_OSX_TK

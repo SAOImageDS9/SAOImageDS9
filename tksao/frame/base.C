@@ -1972,7 +1972,8 @@ void Base::updatePM(const BBox& bbox)
     grid->x11();
 
   // crosshair
-  x11Crosshair(pixmap, Coord::WIDGET, options->width, options->height);
+  if (useCrosshair)
+    x11Crosshair(pixmap, Coord::WIDGET, options->width, options->height);
 
   // highlite bbox
   x11Graphics();
@@ -1994,16 +1995,14 @@ char* Base::varcat(char* buf, char* base, char id, char* mod)
 void Base::x11Crosshair(Pixmap pm, Coord::InternalSystem sys, 
 			int width, int height)
 {
-  if (useCrosshair) {
-    Vector rr = mapFromRef(crosshair,sys);
+  Vector rr = mapFromRef(crosshair,sys);
 
-    XSetForeground(display, widgetGC, getColor("green"));
-    if (rr[0]>=0 && rr[0]<width)
-      XDrawLine(display, pm, widgetGC, rr[0], 1, rr[0], height);
+  XSetForeground(display, widgetGC, getColor("green"));
+  if (rr[0]>=0 && rr[0]<width)
+    XDrawLine(display, pm, widgetGC, rr[0], 1, rr[0], height);
 
-    if (rr[1]>=0 && rr[1]<height)
-      XDrawLine(display, pm, widgetGC, 1, rr[1], width, rr[1]);
-  }
+  if (rr[1]>=0 && rr[1]<height)
+    XDrawLine(display, pm, widgetGC, 1, rr[1], width, rr[1]);
 }
 
 void Base::x11Dash(GC lgc, int which)

@@ -260,7 +260,7 @@ public:
   GC selectGCXOR; // select gc
 
   Grid* grid;
-  GC gridGC;
+  GC gridGC_;
 
   GC contourGC;
 

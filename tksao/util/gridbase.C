@@ -24,8 +24,7 @@ GridBase::GridBase(Widget* pp) : parent_(pp)
   line_ = new Attribute(parent_);
   text_ = new Attribute(parent_);
 
-  gridGC_ = XCreateGC(parent_->getDisplay(), Tk_WindowId(parent_->getTkwin()),
-		      0, NULL);
+  gridGC_ = NULL;
   pixmap_ = 0;
 
   mode_ = Widget::RGB;
@@ -39,8 +38,7 @@ GridBase::GridBase(Widget* pp, const char* op) : parent_(pp)
   line_ = new Attribute(parent_);
   text_ = new Attribute(parent_);
 
-  gridGC_ = XCreateGC(parent_->getDisplay(), Tk_WindowId(parent_->getTkwin()),
-		      0, NULL);
+  gridGC_ = NULL;
   pixmap_ = 0;
 
   mode_ = Widget::RGB;
@@ -50,9 +48,6 @@ GridBase::~GridBase()
 {
   if (option_)
     delete [] option_;
-
-  if (gridGC_)
-    XFreeGC(parent_->getDisplay(), gridGC_);
 
   if (line_)
     delete line_;

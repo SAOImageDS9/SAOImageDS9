@@ -74,6 +74,7 @@ CBGrid::CBGrid(Widget* p, int cc, double* ll)
 int CBGrid::render()
 {
   pixmap_ = ((ColorbarBase*)parent_)->pixmap;
+  gridGC_ = ((ColorbarBase*)parent_)->gridGC_;
   return doit(X11);
 }
 

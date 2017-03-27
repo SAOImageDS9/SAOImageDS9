@@ -28,6 +28,7 @@ int Grid2d::doit(RenderMode rm)
 
   matrix_ = pp->widgetToCanvas;
   pixmap_ = pp->pixmap;
+  gridGC_ = pp->gridGC_;
   renderMode_ = rm;
 
   Context* context = pp->keyContext;

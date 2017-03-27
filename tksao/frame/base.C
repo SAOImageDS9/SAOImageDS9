@@ -150,7 +150,7 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   XSetForeground(display, selectGCXOR, getColor("white"));
 
   grid = NULL;
-  gridGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+  gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   contourGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   XSetLineAttributes(display, contourGC, 1, LineSolid, CapButt, JoinMiter);
@@ -234,8 +234,8 @@ Base::~Base()
   if (grid)
     delete grid;
 
-  if (gridGC)
-    XFreeGC(display, gridGC);
+  if (gridGC_)
+    XFreeGC(display, gridGC_);
 
   if (contourGC)
     XFreeGC(display, contourGC);
@@ -1665,7 +1665,7 @@ void Base::updateGCs()
   XSetClipRectangles(display, selectGCXOR, 0, 0, rectWindow, 1, Unsorted);
 
   // gridGC
-  XSetClipRectangles(display, gridGC, 0, 0, rectWidget, 1, Unsorted);
+  XSetClipRectangles(display, gridGC_, 0, 0, rectWidget, 1, Unsorted);
 
   // contourGC
   XSetClipRectangles(display, contourGC, 0, 0, rectWidget, 1, Unsorted);

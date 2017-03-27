@@ -70,6 +70,18 @@ class ColorbarBase : public Widget {
   int colorCount;
 
   CBGrid* grid;
+  GC gridGC_;
+
+  XRectangle rectWidget[1];
+  XRectangle rectWindow[1];
+
+  Matrix widgetToCanvas;
+  Matrix canvasToWidget;
+  Matrix widgetToWindow;
+  Matrix windowToWidget;
+
+  Matrix canvasToWindow;
+  Matrix windowToCanvas;
 
   int cnt;
   double* lut;
@@ -109,6 +121,8 @@ class ColorbarBase : public Widget {
 #endif
 
  protected:
+  void updateGCs();
+  void updateMatrices();
   void invalidPixmap();
 
   int postscriptProc(int);   // generate postscript

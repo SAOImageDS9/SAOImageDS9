@@ -51,6 +51,7 @@ ColorbarBase::ColorbarBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   colorCount = 0;
 
   grid = NULL;
+  gridGC_ = NULL;
 
   cnt = 0;
   lut = NULL;
@@ -72,6 +73,9 @@ ColorbarBase::~ColorbarBase()
 
   if (grid)
     delete grid;
+
+  if (gridGC_)
+    XFreeGC(display, gridGC_);
 
   if (lut)
     delete [] lut;
@@ -281,8 +285,13 @@ void ColorbarBase::updateColors()
 
 int ColorbarBase::updatePixmap(const BBox& bb)
 {
+  updateMatrices();
+
   if (!widgetGC)
     widgetGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+
+  if (!gridGC_)
+    gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
@@ -297,10 +306,14 @@ int ColorbarBase::updatePixmap(const BBox& bb)
 			      options->height, depth))) {
     internalError("Colorbar: Unable to Create Pixmap"); 
     return TCL_OK;
+
+    // Geometry has changed, redefine our marker GCs including clip regions
+    updateGCs();
   }
       
   XSetForeground(display, widgetGC, getColor("white"));
-  XFillRectangle(display, pixmap, widgetGC, 0, 0, options->width,options->height);
+  XFillRectangle(display, pixmap, widgetGC, 0, 0, 
+		 options->width,options->height);
 
   if (!opts->orientation) {
     if (!(xmap = XGetImage(display, pixmap, 1, 1, 
@@ -331,6 +344,39 @@ int ColorbarBase::updatePixmap(const BBox& bb)
   // we want a border, even with no numerics
   renderGrid();
   return TCL_OK;
+}
+
+void ColorbarBase::updateMatrices()
+{
+  widgetToCanvas = Translate(originX, originY);
+  short xx, yy;
+  Tk_CanvasWindowCoords(canvas, 0, 0, &xx, &yy);
+  canvasToWindow = Translate(xx, yy);
+  widgetToWindow = widgetToCanvas * canvasToWindow;
+}
+
+void ColorbarBase::updateGCs()
+{
+  // widget clip region
+  BBox bbWidget = BBox(0, 0, options->width, options->height);
+  Vector sizeWidget = bbWidget.size();
+
+  rectWidget[0].x = (int)bbWidget.ll[0];
+  rectWidget[0].y = (int)bbWidget.ll[1];
+  rectWidget[0].width = (int)sizeWidget[0];
+  rectWidget[0].height = (int)sizeWidget[1];
+
+  // window clip region
+  BBox bbWindow = bbWidget * widgetToWindow;
+  Vector sizeWindow = bbWindow.size();
+
+  rectWindow[0].x = (int)bbWindow.ll[0];
+  rectWindow[0].y = (int)bbWindow.ll[1];
+  rectWindow[0].width = (int)sizeWindow[0];
+  rectWindow[0].height = (int)sizeWindow[1];
+
+  // gridGC
+  XSetClipRectangles(display, gridGC_, 0, 0, rectWidget, 1, Unsorted);
 }
 
 void ColorbarBase::renderGrid()

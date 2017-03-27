@@ -1970,8 +1970,6 @@ void Base::updatePM(const BBox& bbox)
   // grid
   // needs to be after markers if marker is filled
   if (grid) {
-    if (0) {
-    cerr << bbox << endl;
     BBox bb = bbox;
     XRectangle rr[1];
     Vector ss = bb.size();
@@ -1982,7 +1980,6 @@ void Base::updatePM(const BBox& bbox)
     rr[0].height = (int)ss[1];
 
     XSetClipRectangles(display, gridGC_, 0, 0, rr, 1, Unsorted);
-    }
     grid->x11();
   }
 

@@ -86,12 +86,11 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 	}
 	aqua {
 	    $var(mb).file add command \
-		-label "[msgcat::mc {Page Setup}]..." \
+		-label "[msgcat::mc {Postscript Page Setup}]..." \
 		-command PSPageSetup
-	    $var(mb).file add command -label "[msgcat::mc {Print}]..." \
+	    $var(mb).file add command \
+		-label "[msgcat::mc {Postscript Print}]..." \
 		-command [list PlotPSPrint $varname]
-# $var(mb).file add command -label "[msgcat::mc {Postscript Page Setup}]..." -command PSPageSetup
-# $var(mb).file add command -label "[msgcat::mc {Postscript Print}]..." -command [list PlotPSPrint $varname]
 	}
     }
     $var(mb).file add separator

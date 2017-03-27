@@ -13,7 +13,7 @@ using namespace std;
 extern "C" {
   int Tkmacosx_Init(Tcl_Interp* interp);
   int TkmacosxCmd(ClientData data, Tcl_Interp *interp, int argc, 
-	       const char* argv[]);
+		  const char* argv[]);
 }
 
 TkMacosx* tkmacosx=NULL;
@@ -42,8 +42,7 @@ int TkmacosxCmd(ClientData data,Tcl_Interp *interp,int argc,const char* argv[])
   if (argc>=2) {
     if (!strncmp(argv[1], "pm", 2))
       return tkmacosx->pm(argc, argv);
-
-    if (!strncmp(argv[1], "locale", 2))
+    else if (!strncmp(argv[1], "locale", 2))
       return tkmacosx->locale(argc, argv);
     else {
       Tcl_AppendResult(interp, "macosx: unknown command: ", argv[1], NULL);
@@ -61,22 +60,26 @@ int TkmacosxCmd(ClientData data,Tcl_Interp *interp,int argc,const char* argv[])
 TkMacosx::TkMacosx(Tcl_Interp* intp)
 {
   interp = intp;
+  pmView = NULL;
 
+  /*
   showDialog = 0;
-
   status = noErr;
   pageFormat = kPMNoPageFormat;
   printSettings = kPMNoPrintSettings;
   printSession = NULL;
   context = NULL;
+  */
 }
 
 TkMacosx::~TkMacosx()
 {
+  /*
   if (pageFormat != kPMNoPageFormat)
     PMRelease(pageFormat);
   if (printSettings != kPMNoPrintSettings)
     PMRelease(printSettings);
+  */
 }
 
 // Locale
@@ -149,8 +152,40 @@ int TkMacosx::pmPrint(int argc, const char* argv[])
   return TCL_OK;
 }
 
+@implementation PMView
+- (PMView*)init
+{
+  self = [super init];
+  return self;
+}
+
+- (void)alloc
+{
+}
+
+- (void)dealloc
+{
+  [super dealloc];
+}
+
+- (void)drawRect: (NSRect)rect
+{
+}
+@end
+
 int TkMacosx::pmPrintBegin(int argc, const char* argv[])
 {
+  pmView = [[PMView alloc] init];
+  NSPrintInfo* printInfo = [NSPrintInfo sharedPrintInfo];
+  NSPrintOperation* printOp = \
+    [NSPrintOperation printOperationWithView:pmView printInfo:printInfo];
+  //  [printOp setCanSpawnSeparateThread:YES];
+  NSGraphicsContext* context = [printOp createContext];
+
+  [printOp runOperation];
+  return TCL_OK;
+
+  /*
   // canvas width and height
   double width =0;
   double height =0;
@@ -349,10 +384,13 @@ int TkMacosx::pmPrintBegin(int argc, const char* argv[])
  error:
   cerr << "PM Error Code: " << status << endl;
   return TCL_ERROR;
+  */
+  return TCL_OK;
 }
 
 int TkMacosx::pmPrintEnd()
 {
+  /*
 //  status = PMSessionEndPage(printSession);
   if (status != noErr)
     goto error;
@@ -373,10 +411,14 @@ int TkMacosx::pmPrintEnd()
   PMRelease(printSession);
   printSession = NULL;
   return TCL_ERROR;
+  */
+
+  return TCL_OK;
 }
 
 int TkMacosx::pmPrintText(int argc, const char* argv[])
 {
+  /*
   const int fontSize =12;
   const float margin =36;
 
@@ -641,10 +683,14 @@ int TkMacosx::pmPrintText(int argc, const char* argv[])
     delete sstr;
 
   return TCL_ERROR;
+  */
+
+  return TCL_OK;
 }
 
 int TkMacosx::pmPageSetup()
 {
+  /*
   // print session
   status = PMCreateSession(&printSession);
   if (status != noErr)
@@ -683,6 +729,9 @@ int TkMacosx::pmPageSetup()
   PMRelease(printSession);
   printSession = NULL;
   return TCL_ERROR;
+  */
+
+  return TCL_OK;
 }
 
 // drawing routines

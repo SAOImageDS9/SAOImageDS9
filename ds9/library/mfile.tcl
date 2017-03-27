@@ -60,15 +60,19 @@ proc FileMainMenu {} {
 	}
 	aqua {
 	    # accelerators don't work with dialog box
-	    $ds9(mb).file add command -label "[msgcat::mc {Page Setup}]..." \
+	    $ds9(mb).file add command \
+		-label "[msgcat::mc {Postscript Page Setup}]..." \
 		-command PSPageSetup
-	    $ds9(mb).file add command -label "[msgcat::mc {Print}]..." \
+	    $ds9(mb).file add command \
+		-label "[msgcat::mc {Postscript Print}]..." \
 		-command PSPrint
-#	    $ds9(mb).file add command -label "[msgcat::mc {Postscript Page Setup}]..." -command PSPageSetup
-#	    $ds9(mb).file add command -label "[msgcat::mc {Postscript Print}]..." -command PSPrint
-#	    $ds9(mb).file add separator
-#	    $ds9(mb).file add command -label "[msgcat::mc {Page Setup}]..." -command MacOSXPageSetup
-#	    $ds9(mb).file add command -label "[msgcat::mc {Print}]..." -command MacOSXPrint
+	    $ds9(mb).file add separator
+	    $ds9(mb).file add command \
+		-label "[msgcat::mc {Page Setup}]..." \
+		-command MacOSXPageSetup
+	    $ds9(mb).file add command \
+		-label "[msgcat::mc {Print}]..." \
+		-command MacOSXPrint
 	}
     }
     switch $ds9(wm) {
@@ -367,11 +371,9 @@ proc CreateButtonsFile {} {
 	}
  	aqua {
 	    ButtonButton $ds9(buttons).file.page \
-		[string tolower [msgcat::mc {Page Setup}]] PSPageSetup
+		[string tolower [msgcat::mc {Page Setup}]] MacOSXPageSetup
 	    ButtonButton $ds9(buttons).file.print \
-		[string tolower [msgcat::mc {Print}]] PSPrint
-# ButtonButton $ds9(buttons).file.page [string tolower [msgcat::mc {Page Setup}]] MacOSXPageSetup
-# ButtonButton $ds9(buttons).file.print [string tolower [msgcat::mc {Print}]] MacOSXPrint
+		[string tolower [msgcat::mc {Print}]] MacOSXPrint
 	}
     }
 
@@ -446,6 +448,15 @@ proc PrefsDialogButtonbarFile {f} {
 	}
 	aqua {
 	    $m add checkbutton \
+		-label "[msgcat::mc {Postscript Page Setup}]..." \
+		-variable pbuttons(file,pspage) \
+		-command {UpdateButtons buttons(file)}
+	    $m add checkbutton \
+		-label "[msgcat::mc {Postscript Print}]..." \
+		-variable pbuttons(file,psprint) \
+		-command {UpdateButtons buttons(file)}
+	    $m add separator
+	    $m add checkbutton \
 		-label "[msgcat::mc {Page Setup}]..." \
 		-variable pbuttons(file,page) \
 		-command {UpdateButtons buttons(file)}
@@ -453,11 +464,6 @@ proc PrefsDialogButtonbarFile {f} {
 		-label "[msgcat::mc {Print}]..." \
 		-variable pbuttons(file,print) \
 		-command {UpdateButtons buttons(file)}
-# $m add checkbutton -label "[msgcat::mc {Postscript Page Setup}]..." -variable pbuttons(file,pspage) -command {UpdateButtons buttons(file)}
-# $m add checkbutton -label "[msgcat::mc {Postscript Print}]..." -variable pbuttons(file,psprint) -command {UpdateButtons buttons(file)}
-# $m add separator
-# $m add checkbutton -label "[msgcat::mc {Page Setup}]..." -variable pbuttons(file,page) -command {UpdateButtons buttons(file)}
-# $m add checkbutton -label "[msgcat::mc {Print}]..." -variable pbuttons(file,print) -command {UpdateButtons buttons(file)}
 	}
     }
 

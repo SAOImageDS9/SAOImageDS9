@@ -9,19 +9,31 @@
 
 #include <vector.h>
 
+@interface PMView : NSView
+{
+}
+- (PMView*)init;
+- (void)alloc;
+- (void)dealloc;
+- (void)drawRect: (NSRect)rect;
+@end
+
 class TkMacosx {
  private:
   Tcl_Interp* interp;
 
-  int showDialog;
   Matrix canvasToPage;
+  PMView* pmView;
 
+  /*
+  int showDialog;
   CGContextRef context;
   OSStatus status;
 
   PMPageFormat pageFormat;
   PMPrintSettings printSettings;
   PMPrintSession printSession;
+  */
 
   int pmPrint(int, const char**);
   int pmPrintBegin(int, const char**);

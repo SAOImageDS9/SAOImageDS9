@@ -148,6 +148,8 @@ void Contour::list(ostream& str, FitsImage* fits,
 
 void Contour::render(Pixmap pmap, Coord::InternalSystem sys, const BBox& bbox)
 {
+  // bbox is in sys coords
+
   if (lvertex_.head()) {
     XSetForeground(base_->display, parent_->gc_, parent_->color_);
     int ww = parent_->lineWidth_>=1 ? parent_->lineWidth_ : 1;

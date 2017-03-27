@@ -1716,7 +1716,7 @@ void Base::updateMagnifier(const Vector& vv)
 	// render contours
 	// needs to before markers if marker is filled
 	currentContext->contourX11(magnifierPixmap, Coord::MAGNIFIER,
-				   bbox(0,0,magnifierWidth,magnifierHeight));
+				   BBox(0,0,magnifierWidth,magnifierHeight));
 
 	if (showMarkers) {
 	  x11MagnifierMarkers(&userMarkers, bb);
@@ -1924,6 +1924,7 @@ int Base::updatePixmap(const BBox& bb)
 void Base::updatePM(const BBox& bbox)
 {
   // bbox is in Canvas Coords
+  cerr << bbox << endl;
 
   if (DebugPerf)
     cerr << "Base::updatePM()...";
@@ -1939,24 +1940,25 @@ void Base::updatePM(const BBox& bbox)
     }
   }
 
-  if (!bbox.isEmpty()) {
-    BBox bb = bbox * canvasToWidget;
-    int x0 = (int)bb.ll[0] > 0 ? (int)bb.ll[0] : 0;
-    int y0 = (int)bb.ll[1] > 0 ? (int)bb.ll[1] : 0;
-    int x1 = (int)bb.ur[0] < width ? (int)bb.ur[0] : width;
-    int y1 = (int)bb.ur[1] < height ? (int)bb.ur[1] : height;
-    int sx = x1-x0;
-    int sy = y1-y0;
+  if (bbox.isEmpty())
+    return;
 
-    if (DebugPerf)
-      cerr << ' ' << x0 << ' ' << y0 << ' ' << x1 << ' ' << y1 << ' ';
+  BBox bb = bbox * canvasToWidget;
+  int x0 = (int)bb.ll[0] > 0 ? (int)bb.ll[0] : 0;
+  int y0 = (int)bb.ll[1] > 0 ? (int)bb.ll[1] : 0;
+  int x1 = (int)bb.ur[0] < width ? (int)bb.ur[0] : width;
+  int y1 = (int)bb.ur[1] < height ? (int)bb.ur[1] : height;
+  int sx = x1-x0;
+  int sy = y1-y0;
 
-    XCopyArea(display, basePixmap, pixmap, widgetGC, x0, y0, sx, sy, x0, y0);
-  }
+  if (DebugPerf)
+    cerr << ' ' << x0 << ' ' << y0 << ' ' << x1 << ' ' << y1 << ' ';
+
+  XCopyArea(display, basePixmap, pixmap, widgetGC, x0, y0, sx, sy, x0, y0);
 
   // contours
   // needs to before markers if marker is filled
-  currentContext->contourX11(pixmap, Coord::WIDGET, bbox);
+  currentContext->contourX11(pixmap, Coord::WIDGET, bb);
 
   // markers
   if (showMarkers) {
@@ -1967,8 +1969,22 @@ void Base::updatePM(const BBox& bbox)
 
   // grid
   // needs to be after markers if marker is filled
-  if (grid)
+  if (grid) {
+    if (0) {
+    cerr << bbox << endl;
+    BBox bb = bbox;
+    XRectangle rr[1];
+    Vector ss = bb.size();
+    
+    rr[0].x = (int)bb.ll[0];
+    rr[0].y = (int)bb.ll[1];
+    rr[0].width = (int)ss[0];
+    rr[0].height = (int)ss[1];
+
+    XSetClipRectangles(display, gridGC_, 0, 0, rr, 1, Unsorted);
+    }
     grid->x11();
+  }
 
   // crosshair
   if (useCrosshair)

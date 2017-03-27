@@ -77,8 +77,8 @@ Marker::Marker(Base* p, const Vector& ctr, double ang)
   comment = dupstr("");
 
   display = parent->display;
-  gc = parent->markerGC;
-  gcxor = parent->markerGCXOR;
+  gc = parent->markerGC_;
+  gcxor = parent->markerGCXOR_;
 
   for (int ii=0; ii<XMLNUMCOL; ii++)
     XMLCol[ii] = NULL;
@@ -132,8 +132,8 @@ Marker::Marker(Base* p, const Vector& ctr,
   comment = dupstr(c);
 
   display = parent->display;
-  gc = parent->markerGC;
-  gcxor = parent->markerGCXOR;
+  gc = parent->markerGC_;
+  gcxor = parent->markerGCXOR_;
 
   for (int ii=0; ii<XMLNUMCOL; ii++)
     XMLCol[ii] = NULL;

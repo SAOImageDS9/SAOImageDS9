@@ -141,10 +141,10 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   centroidRadius = 10;
   preserveMarkers = 0;
 
-  markerGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+  markerGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
-  markerGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-  XSetForeground(display, markerGCXOR, getColor("white"));
+  markerGCXOR_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+  XSetForeground(display, markerGCXOR_, getColor("white"));
 
   selectGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   XSetForeground(display, selectGCXOR, getColor("white"));
@@ -152,8 +152,8 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   grid = NULL;
   gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
-  contourGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-  XSetLineAttributes(display, contourGC, 1, LineSolid, CapButt, JoinMiter);
+  contourGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
+  XSetLineAttributes(display, contourGC_, 1, LineSolid, CapButt, JoinMiter);
 
   bgColorName = dupstr("white");
   bgColor = getXColor("white");
@@ -222,11 +222,11 @@ Base::~Base()
   if (maskColorName)
     delete [] maskColorName;
 
-  if (markerGC)
-    XFreeGC(display, markerGC);
+  if (markerGC_)
+    XFreeGC(display, markerGC_);
 
-  if (markerGCXOR)
-    XFreeGC(display, markerGCXOR);
+  if (markerGCXOR_)
+    XFreeGC(display, markerGCXOR_);
 
   if (selectGCXOR)
     XFreeGC(display, selectGCXOR);
@@ -237,8 +237,8 @@ Base::~Base()
   if (gridGC_)
     XFreeGC(display, gridGC_);
 
-  if (contourGC)
-    XFreeGC(display, contourGC);
+  if (contourGC_)
+    XFreeGC(display, contourGC_);
 
   if (bgColorName)
     delete [] bgColorName;
@@ -1663,8 +1663,8 @@ void Base::updateGCs()
   XSetClipRectangles(display, rotateGCXOR, 0, 0, rectWindow, 1, Unsorted);
 
   // markerGC
-  XSetClipRectangles(display, markerGC, 0, 0, rectWidget, 1, Unsorted);
-  XSetClipRectangles(display, markerGCXOR, 0, 0, rectWindow, 1, Unsorted);
+  XSetClipRectangles(display, markerGC_, 0, 0, rectWidget, 1, Unsorted);
+  XSetClipRectangles(display, markerGCXOR_, 0, 0, rectWindow, 1, Unsorted);
 
   // selectGC
   x11Dash(selectGCXOR,1);
@@ -1674,7 +1674,7 @@ void Base::updateGCs()
   XSetClipRectangles(display, gridGC_, 0, 0, rectWidget, 1, Unsorted);
 
   // contourGC
-  XSetClipRectangles(display, contourGC, 0, 0, rectWidget, 1, Unsorted);
+  XSetClipRectangles(display, contourGC_, 0, 0, rectWidget, 1, Unsorted);
 }
 
 void Base::updateMagnifier()
@@ -1921,10 +1921,14 @@ int Base::updatePixmap(const BBox& bb)
   return TCL_OK;
 }
 
+extern "C" {
+void TkUnixSetXftClipRegion(TkRegion clipRegion);
+};
+
 void Base::updatePM(const BBox& bbox)
 {
   // bbox is in Canvas Coords
-  cerr << bbox << endl;
+  // Gave up on only redrawing bbox, contours, and grid causes problems
 
   if (DebugPerf)
     cerr << "Base::updatePM()...";
@@ -1940,48 +1944,24 @@ void Base::updatePM(const BBox& bbox)
     }
   }
 
-  if (bbox.isEmpty())
-    return;
-
-  BBox bb = bbox * canvasToWidget;
-  int x0 = (int)bb.ll[0] > 0 ? (int)bb.ll[0] : 0;
-  int y0 = (int)bb.ll[1] > 0 ? (int)bb.ll[1] : 0;
-  int x1 = (int)bb.ur[0] < width ? (int)bb.ur[0] : width;
-  int y1 = (int)bb.ur[1] < height ? (int)bb.ur[1] : height;
-  int sx = x1-x0;
-  int sy = y1-y0;
-
-  if (DebugPerf)
-    cerr << ' ' << x0 << ' ' << y0 << ' ' << x1 << ' ' << y1 << ' ';
-
-  XCopyArea(display, basePixmap, pixmap, widgetGC, x0, y0, sx, sy, x0, y0);
+  XCopyArea(display, basePixmap, pixmap, widgetGC, 0, 0, width, height, 0, 0);
 
   // contours
   // needs to before markers if marker is filled
-  currentContext->contourX11(pixmap, Coord::WIDGET, bb);
+  currentContext->contourX11(pixmap, Coord::WIDGET, BBox(0,0,width,height));
 
   // markers
+  BBox bb = BBox(0,0,width,height) * widgetToCanvas;
   if (showMarkers) {
-    x11Markers(&catalogMarkers, bbox);
-    x11Markers(&userMarkers, bbox);
+    x11Markers(&catalogMarkers, bb);
+    x11Markers(&userMarkers, bb);
   }
-  //  x11Markers(&analysisMarkers, bbox);
+  //  x11Markers(&analysisMarkers, bb);
 
   // grid
   // needs to be after markers if marker is filled
-  if (grid) {
-    BBox bb = bbox;
-    XRectangle rr[1];
-    Vector ss = bb.size();
-    
-    rr[0].x = (int)bb.ll[0];
-    rr[0].y = (int)bb.ll[1];
-    rr[0].width = (int)ss[0];
-    rr[0].height = (int)ss[1];
-
-    XSetClipRectangles(display, gridGC_, 0, 0, rr, 1, Unsorted);
+  if (grid)
     grid->x11();
-  }
 
   // crosshair
   if (useCrosshair)

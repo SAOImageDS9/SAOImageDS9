@@ -255,14 +255,14 @@ public:
   float centroidRadius;
   int preserveMarkers;       // flag to indicate preserve between loads
 
-  GC markerGC; // marker gc
-  GC markerGCXOR; // marker xor gc
+  GC markerGC_; // marker gc
+  GC markerGCXOR_; // marker xor gc
   GC selectGCXOR; // select gc
 
   Grid* grid;
   GC gridGC_;
 
-  GC contourGC;
+  GC contourGC_;
 
   char* bgColorName;
   XColor* bgColor;

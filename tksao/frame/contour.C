@@ -11,7 +11,7 @@ ContourLevel::ContourLevel(Base* pp, double lev, const char* cc, int ww,
 			   int dd, int* dl) 
 {
   parent_ = pp;
-  gc_ = parent_->contourGC;
+  gc_ = parent_->contourGC_;
 
   level_ = lev;
   colorName_ = dupstr(cc);

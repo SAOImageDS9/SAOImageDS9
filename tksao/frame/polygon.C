@@ -65,7 +65,7 @@ void Polygon::renderX(Drawable drawable, Coord::InternalSystem sys,
       vertex.head();
   }
 
-  if (fill_)
+  if (fill_ && mode == SRC)
     XFillPolygon(display, drawable, lgc, pp, cnt, Complex, CoordModeOrigin);
   else
     XDrawLines(display, drawable, lgc, pp, cnt, CoordModeOrigin);

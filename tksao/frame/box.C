@@ -46,10 +46,11 @@ Box::Box(Base* p, const Vector& ctr,
   updateBBox();
 }
 
-void Box::renderXDraw(Drawable drawable, GC lgc, XPoint* pp)
+void Box::renderXDraw(Drawable drawable, GC lgc, XPoint* pp, RenderMode mode)
 {
-  if (fill_)
-    XFillPolygon(display, drawable, lgc, pp, numPoints_, Convex, CoordModeOrigin);
+  if (fill_ && mode == SRC)
+    XFillPolygon(display, drawable, lgc, pp, numPoints_, Convex, 
+		 CoordModeOrigin);
   else
     XDrawLines(display, drawable, lgc, pp, numPoints_, CoordModeOrigin);
 }

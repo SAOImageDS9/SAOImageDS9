@@ -93,12 +93,13 @@ void BaseEllipse::renderXCircle(Drawable drawable, Coord::InternalSystem sys,
     if (a2<=a1)
       a2 += 360*64;
 
-    renderXCircleDraw(drawable, lgc, st, size, a1, (a2-a1));
+    renderXCircleDraw(drawable, lgc, st, size, a1, (a2-a1), mode);
   }
 }
 
 void BaseEllipse::renderXCircleDraw(Drawable drawable, GC lgc, Vector& st, 
-				    Vector& size, int a1, int aa)
+				    Vector& size, int a1, int aa, 
+				    RenderMode mode)
 {
   XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
 }
@@ -164,7 +165,7 @@ void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
       }
     }
 
-    renderXEllipseDraw(drawable, lgc);
+    renderXEllipseDraw(drawable, lgc, mode);
 
     if (xpoint_)
       free(xpoint_);
@@ -174,7 +175,7 @@ void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
   }
 }
 
-void BaseEllipse::renderXEllipseDraw(Drawable drawable, GC lgc)
+void BaseEllipse::renderXEllipseDraw(Drawable drawable, GC lgc, RenderMode mode)
 {
   if ((properties & SOURCE) && !(properties & DASH))
     XDrawLines(display, drawable, lgc, xpoint_, xpointNum_, CoordModeOrigin);

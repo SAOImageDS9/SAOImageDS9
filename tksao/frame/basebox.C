@@ -50,13 +50,14 @@ void BaseBox::renderX(Drawable drawable, Coord::InternalSystem sys,
       pp[jj].x = (short)v[0];
       pp[jj].y = (short)v[1];
     }
-    renderXDraw(drawable, lgc, pp);
+    renderXDraw(drawable, lgc, pp, mode);
     delete [] pp;
   }
   deleteVertices();
 }
 
-void BaseBox::renderXDraw(Drawable drawable, GC lgc, XPoint* pp)
+void BaseBox::renderXDraw(Drawable drawable, GC lgc, XPoint* pp, 
+			  RenderMode mode)
 {
   XDrawLines(display, drawable, lgc, pp, numPoints_, CoordModeOrigin);
 }

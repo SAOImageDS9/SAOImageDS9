@@ -27,7 +27,7 @@ class BaseBox : public BaseMarker {
 
 protected:
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
-  virtual void renderXDraw(Drawable drawable, GC lgc, XPoint* pp);
+  virtual void renderXDraw(Drawable, GC, XPoint*, RenderMode);
 
   void renderPS(int);
   virtual void renderPSDraw(int);

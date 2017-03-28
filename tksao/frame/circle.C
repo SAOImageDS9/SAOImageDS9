@@ -60,17 +60,17 @@ void Circle::edit(const Vector& v, int h)
 
 void Circle::renderXCircleDraw(Drawable drawable, GC lgc, 
 			       Vector& st, Vector& size,
-			       int a1, int aa)
+			       int a1, int aa, RenderMode mode)
 {
-  if (fill_)
+  if (fill_ && mode == SRC)
     XFillArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
   else
     XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
 }
 
-void Circle::renderXEllipseDraw(Drawable drawable, GC lgc)
+void Circle::renderXEllipseDraw(Drawable drawable, GC lgc, RenderMode mode)
 {
-  if (fill_)
+  if (fill_ && mode == SRC)
     XFillPolygon(display, drawable, lgc, xpoint_, xpointNum_, Convex, CoordModeOrigin);
   else if ((properties & SOURCE) && !(properties & DASH))
     XDrawLines(display, drawable, lgc, xpoint_, xpointNum_, CoordModeOrigin);

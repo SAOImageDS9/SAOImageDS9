@@ -51,8 +51,9 @@ class BaseEllipse : public BaseMarker {
 
  protected:
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
-  virtual void renderXCircleDraw(Drawable, GC, Vector&, Vector&, int, int);
-  virtual void renderXEllipseDraw(Drawable, GC);
+  virtual void renderXCircleDraw(Drawable, GC, Vector&, Vector&, 
+				 int, int, RenderMode);
+  virtual void renderXEllipseDraw(Drawable, GC, RenderMode);
   void renderXEllipseDashDraw(Drawable, GC);
 
   void renderPS(int);

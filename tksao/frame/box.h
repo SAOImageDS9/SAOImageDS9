@@ -12,7 +12,7 @@ class Box : public BaseBox {
   int fill_;
 
  protected:
-  void renderXDraw(Drawable drawable, GC lgc, XPoint* pp);
+  void renderXDraw(Drawable, GC, XPoint*, RenderMode);
   void renderPSDraw(int);
 
 #ifdef MAC_OSX_TK

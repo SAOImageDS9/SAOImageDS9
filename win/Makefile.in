@@ -46,13 +46,13 @@ saods9	: dirs tcl tk \
 # no symbols
 tcl	: tcl$(TCL_VERSION)/win/Makefile
 	@echo ""
-	@echo "*** Install tcl$(TCL_VERSION) ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tcl$(TCL_VERSION)/win -j $(JOBS)
 	$(MAKE) -C tcl$(TCL_VERSION)/win install
 
 tcl$(TCL_VERSION)/win/Makefile :
 	@echo ""
-	@echo "*** Configure tcl$(TCL_VERSION) ***"
+	@echo "*** $@ ***"
 	cd tcl$(TCL_VERSION)/win; \
 	./configure \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
@@ -61,12 +61,12 @@ tcl$(TCL_VERSION)/win/Makefile :
 
 tk	: tk$(TCL_VERSION)/win/Makefile
 	@echo ""
-	@echo "*** Install tk$(TCL_VERSION) ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/win -j $(JOBS) install
 
 tk$(TCL_VERSION)/win/Makefile :
 	@echo ""
-	@echo "*** Configure tk$(TCL_VERSION) ***"
+	@echo "*** $@ ***"
 	cd tk$(TCL_VERSION)/win; \
 	./configure \
 	$(WITHTCL) \
@@ -76,12 +76,12 @@ tk$(TCL_VERSION)/win/Makefile :
 
 tkwin: tkwin/Makefile
 	@echo ""
-	@echo "*** Installing tkwin ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tkwin install
 
 tkwin/Makefile :
 	@echo ""
-	@echo "*** Configure tkwin ***"
+	@echo "*** $@ ***"
 	cd tkwin; \
 	./configure \
 	$(WITHTK) \
@@ -91,7 +91,7 @@ tkwin/Makefile :
 
 libxml2 : libxml2/win32/config.mingw
 	@echo ""
-	@echo "*** Installing libxml2 ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw dep
 	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw libxmla
 	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw install-libsa
@@ -99,13 +99,13 @@ libxml2 : libxml2/win32/config.mingw
 
 libxml2/win32/config.mingw :
 	@echo ""
-	@echo "*** Configure libxml2 ***"
+	@echo "*** $@ ***"
 	cd libxml2/win32; \
 	cscript configure.js trio=no threads=no ftp=yes http=yes html=yes c14n=yes catalog=yes docb=yes xpath=yes xptr=yes xinclude=yes iconv=no icu=no iso8859x=no zlib=no lzma=no xml_debug=yes mem_debug=yes run_debug=no regexps=yes modules=no tree=yes reader=yes writer=yes walker=yes pattern=yes push=yes valid=yes sax1=yes legacy=yes output=yes schemas=yes schematron=yes python=no compiler=mingw static=yes prefix="..\.." bindir="..\..\bin" incdir="..\..\include" libdir="..\..\lib"
 
 libxslt : libxslt/win32/config.mingw
 	@echo ""
-	@echo "*** Installing libxslt ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw dep
 	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw libxslta
 	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw libexslta
@@ -114,19 +114,19 @@ libxslt : libxslt/win32/config.mingw
 
 libxslt/win32/config.mingw :
 	@echo ""
-	@echo "*** Configure libxslt ***"
+	@echo "*** $@ ***"
 	cd libxslt/win32; \
 	cscript configure.js trio=no xslt_debug=yes mem_debug=no debugger=yes iconv=no zlib=no crypto=yes modules=no locale=yes compiler=mingw static=yes prefix="..\.." bindir="..\..\bin" incdir="..\..\include" libdir="..\..\lib"
 
 # must force Makefile
 zlib	: zlib_Makefile
 	@echo ""
-	@echo "*** Installing zlib ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C zlib -j $(JOBS) install
 
 zlib_Makefile :
 	@echo ""
-	@echo "*** Configure zlib ***"
+	@echo "*** $@ ***"
 	cd zlib; \
 	$(CONFIGFLAGS) CFLAGS=-DSTATIC_BUILD=1 ./configure \
 	--prefix $(prefix) -eprefix $(exec_prefix) --libdir $(libdir) \
@@ -137,15 +137,23 @@ zlib_Makefile :
 .PHONY	: tkwinclean libxml2clean libxsltclean zlibclean
 
 tkwinclean : libxml2clean libxsltclean zlibclean
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkwin clean
 
 libxml2clean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C libxml2/win32 -f Makefile.mingw clean
 
 libxsltclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C libxslt/win32 -f Makefile.mingw clean
 
 zlibclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C zlib clean
 
 #--------------------------distclean
@@ -153,15 +161,23 @@ zlibclean :
 .PHONY	: tkwindistclean libxml2distclean libxsltdistclean zlibdistclean
 
 tkwindistclean : libxml2distclean libxsltdistclean zlibdistclean
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkwin distclean
 
 libxml2distclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C libxml2/win32 -f Makefile.mingw distclean
 
 libxsltdistclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C libxslt/win32 -f Makefile.mingw distclean
 
 zlibdistclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C zlib distclean
 	rm -f zlib/Makefile
 

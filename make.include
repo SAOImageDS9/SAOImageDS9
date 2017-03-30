@@ -68,17 +68,17 @@ dirs	:
 
 ds9	: ds9/$(OS)/Makefile
 	@echo ""
-	@echo "*** Installing ds9 ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C ds9/$(OS) -j $(JOBS)
 
 debug	: ds9/$(OS)/Makefile
 	@echo ""
-	@echo "*** Installing ds9 ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C ds9/$(OS)  -j $(JOBS) debug
 
 ds9/$(OS)/Makefile :
 	@echo ""
-	@echo "*** Configure ds9 ***"
+	@echo "*** $@ ***"
 	cd ds9/$(OS); \
 	./configure \
 	$(WITHTK) \
@@ -89,12 +89,12 @@ ds9/$(OS)/Makefile :
 
 tclcheckdns : tclcheckdns/Makefile
 	@echo ""
-	@echo "*** Install tclcheckdns ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tclcheckdns -j $(JOBS) install
 
 tclcheckdns/Makefile :
 	@echo ""
-	@echo "*** Configure tclcheckdns ***"
+	@echo "*** $@ ***"
 	cd tclcheckdns; \
 	./configure \
 	$(WITHTCL) \
@@ -106,12 +106,12 @@ tclcheckdns/Makefile :
 
 tcliis	: tcliis/Makefile
 	@echo ""
-	@echo "*** Install tcliis ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tcliis -j $(JOBS) install
 
 tcliis/Makefile :
 	@echo ""
-	@echo "*** Configure tcliis ***"
+	@echo "*** $@ ***"
 	cd tcliis; \
 	./configure \
 	$(WITHTCL) \
@@ -123,12 +123,12 @@ tcliis/Makefile :
 
 tclsignal: tclsignal/Makefile
 	@echo ""
-	@echo "*** Install tclsignal ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tclsignal install
 
 tclsignal/Makefile :
 	@echo ""
-	@echo "*** Configure tclsignal ***"
+	@echo "*** $@ ***"
 	cd tclsignal; \
 	./configure \
 	$(WITHTCL) \
@@ -141,12 +141,12 @@ tclsignal/Makefile :
 # no parallel
 tclxml	: tclxml/Makefile
 	@echo ""
-	@echo "*** Install tclxml ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tclxml install
 
 tclxml/Makefile :
 	@echo ""
-	@echo "*** Configure tclxml ***"
+	@echo "*** $@ ***"
 	cd tclxml; \
 	./configure \
 	$(WITHTCL) \
@@ -159,12 +159,12 @@ tclxml/Makefile :
 
 tclzvfs	: tclzvfs/Makefile
 	@echo ""
-	@echo "*** Install tclzvfs ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tclzvfs install
 
 tclzvfs/Makefile :
 	@echo ""
-	@echo "*** Configure tclzvfs ***"
+	@echo "*** $@ ***"
 	cd tclzvfs; \
 	./configure \
 	$(WITHTCL) \
@@ -177,12 +177,12 @@ tclzvfs/Makefile :
 # no config.cache
 xpa	: xpa/Makefile
 	@echo ""
-	@echo "*** Install xpa ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C xpa -j $(JOBS) install
 
 xpa/Makefile :
 	@echo ""
-	@echo "*** Configure xpa ***"
+	@echo "*** $@ ***"
 	cd xpa; \
 	./configure \
 	$(CONFIGFLAGS) $(TARGET) $(XPAFLAGS) \
@@ -195,12 +195,12 @@ xpa/Makefile :
 
 tkblt	: tkblt/Makefile
 	@echo ""
-	@echo "*** Install tkblt ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tkblt -j $(JOBS) install
 
 tkblt/Makefile :
 	@echo ""
-	@echo "*** Configure tkblt ***"
+	@echo "*** $@ ***"
 	cd tkblt; \
 	./configure \
 	$(WITHTK) \
@@ -212,12 +212,12 @@ tkblt/Makefile :
 
 tkcon	: tkcon/Makefile
 	@echo ""
-	@echo "*** Install tkcon ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tkcon -j $(JOBS) install
 
 tkcon/Makefile :
 	@echo ""
-	@echo "*** Configure tkcon ***"
+	@echo "*** $@ ***"
 	cd tkcon; \
 	./configure \
 	$(WITHTK) \
@@ -230,13 +230,13 @@ tkcon/Makefile :
 # make sure htmltokens.c does not get regenerated (windows)
 tkhtml1	: tkhtml1/Makefile
 	@echo ""
-	@echo "*** Install tkhtml1 ***"
+	@echo "*** $@ ***"
 	touch tkhtml1/src/htmltokens.c
 	$(MAKE) -C tkhtml1 install
 
 tkhtml1/Makefile :
 	@echo ""
-	@echo "*** Configure tkhtml1 ***"
+	@echo "*** $@ ***"
 	cd tkhtml1; \
 	./configure \
 	$(WITHTK) \
@@ -248,7 +248,7 @@ tkhtml1/Makefile :
 
 tkimg	: tkimg/Makefile
 	@echo ""
-	@echo "*** Install tkimg ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tkimg -j $(JOBS) all
 	$(MAKE) -C tkimg/base -j $(JOBS) install
 	$(MAKE) -C tkimg/tiff -j $(JOBS) install
@@ -264,7 +264,7 @@ tkimg	: tkimg/Makefile
 # no config.cache
 tkimg/Makefile :
 	@echo ""
-	@echo "*** Configure tkimg ***"
+	@echo "*** $@ ***"
 	cd tkimg; \
 	./configure \
 	CFLAGS='-DPNG_NO_WRITE_gAMA' \
@@ -276,12 +276,12 @@ tkimg/Makefile :
 
 tkmpeg	: tkmpeg/Makefile
 	@echo ""
-	@echo "*** Install tkmpeg ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tkmpeg -j $(JOBS) install
 
 tkmpeg/Makefile :
 	@echo ""
-	@echo "*** Configure tkmpeg ***"
+	@echo "*** $@ ***"
 	cd tkmpeg; \
 	./configure \
 	$(WITHTK) \
@@ -293,12 +293,12 @@ tkmpeg/Makefile :
 
 tksao	: ast funtools tksao/Makefile
 	@echo ""
-	@echo "*** Install tksao ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tksao -j $(JOBS) install
 
 tksao/Makefile :
 	@echo ""
-	@echo "*** Configure tksao ***"
+	@echo "*** $@ ***"
 	cd tksao; \
 	./configure \
 	$(WITHTK) \
@@ -312,7 +312,7 @@ ast	: ast/Makefile ast/ast.h ast/.libs/libast.a ast/.libs/libast_err.a ast/.libs
 
 ast/Makefile :
 	@echo ""
-	@echo "*** Configure ast ***"
+	@echo "*** $@ ***"
 	cd ast; \
 	./configure \
 	$(ASTFLAGS) \
@@ -325,7 +325,7 @@ ast/Makefile :
 
 ast/ast.h :
 	@echo ""
-	@echo "*** Install ast/ast.h ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C ast -j ast.h
 	$(MAKE) -C ast -j $(JOBS) libast.la
 	$(MAKE) -C ast -j $(JOBS) libast_err.la
@@ -339,7 +339,7 @@ ast/ast.h :
 
 ast/.libs/libast.a :
 	@echo ""
-	@echo "*** Install ast/ast.h ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C ast -j ast.h
 	cp ast/ast.h $(includedir)/.
 	cp ast/grf.h $(includedir)/.
@@ -347,13 +347,13 @@ ast/.libs/libast.a :
 
 ast/.libs/libast_err.a :
 	@echo ""
-	@echo "*** Install ast/libast_err.a ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C ast -j $(JOBS) libast_err.la
 	cp ast/.libs/libast_err.a $(libdir)/.
 
 ast/.libs/libast_pal.a :
 	@echo ""
-	@echo "*** Install ast/libast_pal.a ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C ast -j $(JOBS) libast_pal.la
 	cp ast/.libs/libast_pal.a $(libdir)/.
 
@@ -364,7 +364,7 @@ funtools : funtools/libfuntools.a
 # no parallel
 funtools/libfuntools.a : funtools/Makefile
 	@echo ""
-	@echo "*** Install funtools ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C funtools lib
 	cp funtools/funtools.h $(includedir)/.
 	cp funtools/filter/*.h $(includedir)/.
@@ -374,7 +374,7 @@ funtools/libfuntools.a : funtools/Makefile
 
 funtools/Makefile : funtools/configure
 	@echo ""
-	@echo "*** Configure funtools ***"
+	@echo "*** $@ ***"
 	cd funtools; \
 	./configure \
 	--with-zlib=$(libdir) --with-wcslib=$(libdir) \
@@ -391,12 +391,12 @@ funtools/configure :
 # no parallel
 tktable	: tktable/Makefile
 	@echo ""
-	@echo "*** Install tktable ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tktable install
 
 tktable/Makefile :
 	@echo ""
-	@echo "*** Configure tktable ***"
+	@echo "*** $@ ***"
 	cd tktable; \
 	./configure \
 	$(WITHTK) \
@@ -437,78 +437,117 @@ scrub :
 .PHONY	: tkclean tkbltclean tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksaoclean astclean funtoolsclean tktableclean xpaclean
 
-clean	: scrub dirsclean \
-	tclclean tkclean \
+clean	: tclclean tkclean \
 	tclcheckdnsclean tcliisclean tclsignalclean \
 	tclzvfsclean tclxmlclean xpaclean \
 	tkbltclean tkconclean tktableclean tkimgclean \
 	tkmpegclean tkhtml1clean \
 	tksaoclean astclean funtoolsclean ds9clean \
-	localclean
+	tk$(OS)clean dirsclean localclean scrub
 
 dirsclean :
-	@for d in $(DIRS); do rm -rf $$d; done
+	@echo ""
+	@echo "*** $@ ***"
+	for d in $(DIRS); do rm -rf $$d; done
 
 ds9clean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C ds9/$(OS) clean
 
 localclean :
+	@echo ""
+	@echo "*** $@ ***"
 	-rm -f core *~ *#
 
 tclclean :
+	@echo ""
+	@echo "*** tclclean ***"
 	$(MAKE) -C tcl$(TCL_VERSION)/$(OS) clean
 
 tclcheckdnsclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tclcheckdns clean
 
 tcliisclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tcliis clean
 
 tclsignalclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tclsignal clean
 
 tclxmlclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tclxml clean
 
 tclzvfsclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tclzvfs clean
 
 tkclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/$(OS) clean
 
 tkbltclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkblt clean
 
 tkconclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkcon clean
 
 tkhtml1clean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkhtml1 clean
 
 tkimgclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkimg clean
 
 tkmpegclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkmpeg clean
 
 tksaoclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tksao clean
 
 astclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C ast clean
 
 funtoolsclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C funtools clean
 
 tktableclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tktable clean
 
 xpaclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C xpa clean
 
 #-------------------------- distclean
 
-.PHONY	: dirsdistclean ds9distclean localdistclean 
+.PHONY	: dirsdistclean ds9distclean localdistclean
 .PHONY	: tcldistclean tclcheckdnsdistclean tcliisdistclean tclsignaldistclean 
 .PHONY	: tclxmldistclean tclzvfsdistclean
 .PHONY	: tkdistclean tkbltdistclean tkcondistclean tkhtml1distclean 
@@ -522,68 +561,109 @@ distclean : tcldistclean tkdistclean \
 	tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
 	tkmpegdistclean tkhtml1distclean \
 	tksaodistclean astdistclean funtoolsdistclean ds9distclean \
-	dirsdistclean localdistclean scrub
+	tk$(OS)distclean dirsdistclean localdistclean scrub
 
 dirsdistclean:
-	@for d in $(DIRS); do rm -rf $$d; done
+	@echo ""
+	@echo "*** $@ ***"
+	for d in $(DIRS); do rm -rf $$d; done
 
 ds9distclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C ds9/$(OS) distclean
 
-localdistclean : localclean
+localdistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	-rm -f core *~ *#
 	-rm -f config.log config.status config.cache Makefile 
 
 tcldistclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tcl$(TCL_VERSION)/$(OS) distclean
 
 tclcheckdnsdistclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tclcheckdns distclean
 
 tcliisdistclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tcliis distclean
 
 tclsignaldistclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tclsignal distclean
 
 tclxmldistclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tclxml distclean
 
 tclzvfsdistclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tclzvfs distclean
 
 tkdistclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/$(OS) distclean
 
 tkcondistclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkcon distclean
 
 tkbltdistclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkblt distclean
 
 tkhtml1distclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkhtml1 distclean
 
 tkimgdistclean: 
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkimg distclean
 	find tkimg -name "pkgIndex.tcl" -exec rm {} \;		
 	find tkimg -name "*Config.sh" -exec rm {} \;		
 	rm -rf $(TKIMGTMPFILES)
 
 tkmpegdistclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkmpeg distclean
 
 tksaodistclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tksao distclean
 
 astdistclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C ast distclean
 
 funtoolsdistclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C funtools distclean
 
 tktabledistclean:
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tktable distclean
 
 xpadistclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C xpa distclean
 

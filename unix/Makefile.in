@@ -33,12 +33,12 @@ saods9	: dirs tcl tk \
 
 tcl	: tcl$(TCL_VERSION)/unix/Makefile
 	@echo ""
-	@echo "*** Install tcl$(TCL_VERSION) ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tcl$(TCL_VERSION)/unix -j $(JOBS) install
 
 tcl$(TCL_VERSION)/unix/Makefile :
 	@echo ""
-	@echo "*** Configure tcl$(TCL_VERSION) ***"
+	@echo "*** $@ ***"
 	cd tcl$(TCL_VERSION)/unix; \
 	./configure \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
@@ -47,12 +47,12 @@ tcl$(TCL_VERSION)/unix/Makefile :
 
 tk	: tk$(TCL_VERSION)/unix/Makefile
 	@echo ""
-	@echo "*** Install tk$(TCL_VERSION) ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/unix -j $(JOBS) install
 
 tk$(TCL_VERSION)/unix/Makefile :
 	@echo ""
-	@echo "*** Configure tk$(TCL_VERSION) ***"
+	@echo "*** $@ ***"
 	cd tk$(TCL_VERSION)/unix; \
 	./configure \
 	$(TKFLAGS) \
@@ -65,12 +65,16 @@ tk$(TCL_VERSION)/unix/Makefile :
 .PHONY	: tkunixclean
 
 tkunixclean :
+	@echo ""
+	@echo "*** $@ ***"
 
 #--------------------------distclean
 
 .PHONY	: tkunixdistclean
 
 tkunixdistclean :
+	@echo ""
+	@echo "*** $@ ***"
 
 #--------------------------distribution
 

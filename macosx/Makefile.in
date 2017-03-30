@@ -49,7 +49,7 @@ saods9	: dirs tcl tk \
 
 tcl	: tcl$(TCL_VERSION)/macosx/Makefile
 	@echo ""
-	@echo "*** Install tcl$(TCL_VERSION) ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tcl$(TCL_VERSION)/macosx -j $(JOBS)
 
 # install include, lib
@@ -67,7 +67,7 @@ tcl	: tcl$(TCL_VERSION)/macosx/Makefile
 
 tcl$(TCL_VERSION)/macosx/Makefile :
 	@echo ""
-	@echo "*** Configure tcl$(TCL_VERSION) ***"
+	@echo "*** $@ ***"
 	cd tcl$(TCL_VERSION)/macosx; \
 	./configure \
 	--enable-64bit \
@@ -76,7 +76,7 @@ tcl$(TCL_VERSION)/macosx/Makefile :
 
 tk	: tk$(TCL_VERSION)/macosx/Makefile
 	@echo ""
-	@echo "*** Installing tk$(TCL_VERSION) ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx -j $(JOBS)
 
 # install include, lib
@@ -95,7 +95,7 @@ tk	: tk$(TCL_VERSION)/macosx/Makefile
 
 tk$(TCL_VERSION)/macosx/Makefile :
 	@echo ""
-	@echo "*** Configure tk$(TCL_VERSION) ***"
+	@echo "*** $@ ***"
 	cd tk$(TCL_VERSION)/macosx; \
 	./configure \
 	$(WITHTCL) \
@@ -105,12 +105,12 @@ tk$(TCL_VERSION)/macosx/Makefile :
 
 tkmacosx: tkmacosx/Makefile
 	@echo ""
-	@echo "*** Installing tkmacosx ***"
+	@echo "*** $@ ***"
 	$(MAKE) -C tkmacosx -j $(JOBS) install
 
 tkmacosx/Makefile :
 	@echo ""
-	@echo "*** Configure tkmacosx ***"
+	@echo "*** $@ ***"
 	cd tkmacosx; \
 	./configure \
 	$(WITHTK) \
@@ -123,6 +123,8 @@ tkmacosx/Makefile :
 .PHONY	: tkmacosxclean
 
 tkmacosxclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkmacosx clean
 
 #--------------------------distclean
@@ -130,6 +132,8 @@ tkmacosxclean :
 .PHONY	: tkmacosxdistclean
 
 tkmacosxdistclean :
+	@echo ""
+	@echo "*** $@ ***"
 	$(MAKE) -C tkmacosx distclean
 
 #--------------------------distribution

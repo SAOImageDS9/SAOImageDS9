@@ -85,6 +85,58 @@ void win32Clip(Vector v, Vector s)
   */
 }
 
+void win32NewPath()
+{
+  /*
+  if (tkwin32) {
+    tkwin32->newpath();
+  }
+  */
+}
+
+void win32Stroke()
+{
+  /*
+  if (tkwin32) {
+    tkwin32->stroke();
+  }
+  */
+}
+
+void win32Fill()
+{
+  /*
+  if (tkwin32) {
+    tkwin32->fill();
+  }
+  */
+}
+
+void win32Arc(Vector v, float rad, float ang1, float ang2)
+{
+  /*
+  if (tkwin32) {
+    Vector vv = v*tkwin32->getCanvasToPage();
+    tkwin32->arc(vv[0], vv[1], rad, ang1, ang2);
+  }
+  */
+}
+
+void win32Curve(Vector v0, Vector t0, Vector t1, Vector v1)
+{
+  /*
+  if (tkwin32) {
+    Vector vv0 = v0*tkwin32->getCanvasToPage();
+    Vector tt0 = t0*tkwin32->getCanvasToPage();
+    Vector tt1 = t1*tkwin32->getCanvasToPage();
+    Vector vv1 = v1*tkwin32->getCanvasToPage();
+
+    tkwin32->curve(vv0[0], vv0[1], tt0[0], tt0[1], 
+	 	    tt1[0], tt1[1], vv1[0], vv1[1]);
+  }
+  */
+} 
+
 void win32DrawText(Vector v, float ang, const char* text)
 {
   /*
@@ -160,17 +212,6 @@ void win32DrawArc(Vector v, float rad, float ang1, float ang2)
   */
 }
 
-void win32FillArc(Vector v, float rad, float ang1, float ang2)
-{
-  /*
-  if (tkwin32) {
-    Vector vv = v*tkwin32->getCanvasToPage();
-    float rr = rad*tkwin32->getPageScale();
-    tkwin32->fillArc(vv[0], vv[1], rr, ang1, ang2);
-  }
-  */
-}
-
 void win32DrawCurve(Vector v0, Vector t0, Vector t1, Vector v1)
 {
   /*
@@ -180,20 +221,6 @@ void win32DrawCurve(Vector v0, Vector t0, Vector t1, Vector v1)
     Vector tt1 = t1*tkwin32->getCanvasToPage();
     Vector vv1 = v1*tkwin32->getCanvasToPage();
     tkwin32->drawCurve(vv0[0], vv0[1], tt0[0], tt0[1], 
-			tt1[0], tt1[1], vv1[0], vv1[1]);
-  }
-  */
-} 
-
-void win32FillCurve(Vector v0, Vector t0, Vector t1, Vector v1)
-{
-  /*
-  if (tkwin32) {
-    Vector vv0 = v0*tkwin32->getCanvasToPage();
-    Vector tt0 = t0*tkwin32->getCanvasToPage();
-    Vector tt1 = t1*tkwin32->getCanvasToPage();
-    Vector vv1 = v1*tkwin32->getCanvasToPage();
-    tkwin32->fillCurve(vv0[0], vv0[1], tt0[0], tt0[1], 
 			tt1[0], tt1[1], vv1[0], vv1[1]);
   }
   */

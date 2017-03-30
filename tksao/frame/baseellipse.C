@@ -692,7 +692,7 @@ void BaseEllipse::renderWIN32() {
   if (isRound && isScale && isOrient && parent->isAzElZero())
     renderWIN32Circle();
   else
-    renderWIN32EllipseCurve();
+    renderWIN32Ellipse();
 }
 
 void BaseEllipse::renderWIN32Circle()
@@ -717,17 +717,18 @@ void BaseEllipse::renderWIN32Circle()
     if (a2<=a1)
       a2 += M_TWOPI;
 
-    renderWIN32CircleDraw(cc, l, a1, a2);
+    win32Arc(cc, l, a1, a2);
+
+    renderWIN32Draw();
   }
 }
 
-void BaseEllipse::renderWIN32CircleDraw(Vector& cc, double l, 
-					float a1, float a2)
+void BaseEllipse::renderWIN32Draw()
 {
-  win32DrawArc(cc, l, a1, a2);
+  win32Stroke();
 }
 
-void BaseEllipse::renderWIN32EllipseCurve()
+void BaseEllipse::renderWIN32Ellipse()
 {
   renderWIN32GC();
 
@@ -754,6 +755,8 @@ void BaseEllipse::renderWIN32EllipseCurve()
 
       if (s1&&s2)
 	s1=s2=0;
+
+      renderWIN32Draw();
     }
   }
 }
@@ -802,7 +805,7 @@ void BaseEllipse::renderWIN32EllipseArc(double a1, double a2, Vector& rr)
   Vector xx2 = fwdMap(x2*FlipY(),Coord::CANVAS);
   Vector tt1 = fwdMap(t1*FlipY(),Coord::CANVAS);
 
-  win32DrawCurve(tt0, xx1, xx2, tt1);
+  win32Curve(tt0, xx1, xx2, tt1);
 }
 
 void BaseEllipse::renderWIN32Include()

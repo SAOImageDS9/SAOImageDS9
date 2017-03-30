@@ -43,7 +43,7 @@ class BaseEllipse : public BaseMarker {
 
 #ifdef __WIN32
   void renderWIN32Circle();
-  void renderWIN32EllipseCurve();
+  void renderWIN32Ellipse();
   void renderWIN32EllipsePrep(double, double, double, double, Vector&);
   void renderWIN32EllipseArc(double, double, Vector&);
   void renderWIN32Include();
@@ -66,7 +66,7 @@ class BaseEllipse : public BaseMarker {
 #endif
 #ifdef __WIN32
   void renderWIN32();
-  virtual void renderWIN32CircleDraw(Vector&, double, float, float);
+  virtual void renderWIN32Draw();
 #endif
 
   virtual void updateHandles();

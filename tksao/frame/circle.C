@@ -97,21 +97,12 @@ void Circle::renderMACOSXDraw()
 #endif
 
 #ifdef __WIN32
-void Circle::renderWIN32CircleDraw(Vector& cc, double l, float a1, float a2)
+void Circle::renderWIN32Draw()
 {
   if (fill_)
-    win32FillArc(cc, l, a1, a2);
+    win32Fill();
   else
-    win32DrawArc(cc, l, a1, a2);
-}
-
-void Circle::renderWIN32EllipseArcDraw(Vector& tt0, Vector& xx1, 
-				       Vector& xx2, Vector& tt1)
-{
-  if (fill_)
-    win32FillCurve(tt0, xx1, xx2, tt1);
-  else
-    win32DrawCurve(tt0, xx1, xx2, tt1);
+    win32Stroke();
 }
 #endif
 

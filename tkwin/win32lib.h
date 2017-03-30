@@ -21,14 +21,17 @@ void win32Dash(float*,int);
 void win32Font(Tk_Font);
 void win32Clip(Vector, Vector);
 
+void win32NewPath();
+void win32Stroke();
+void win32Fill();
+void win32Arc(Vector, float, float, float);
+void win32Curve(Vector, Vector, Vector, Vector);
+
 void win32DrawText(Vector, float, const char*);
 void win32DrawLine(Vector, Vector);
 void win32DrawLines(Vector*, int);
 void win32FillPolygon(Vector*, int);
 void win32DrawArc(Vector, float, float, float);
-void win32FillArc(Vector, float, float, float);
-void win32DrawCurve(Vector, Vector, Vector, Vector);
-void win32FillCurve(Vector, Vector, Vector, Vector);
 
 void win32BitmapCreate(void*, int, int, const Vector&, const Vector&);
 

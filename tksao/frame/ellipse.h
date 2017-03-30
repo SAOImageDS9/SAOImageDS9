@@ -22,8 +22,7 @@ class Ellipse : public BaseEllipse {
 #endif
 
 #ifdef __WIN32
-  void renderWIN32CircleDraw(Vector&, double, float, float);
-  void renderWIN32EllipseArcDraw(Vector&, Vector&, Vector&, Vector&);
+  void renderWIN32Draw();
 #endif
 
   void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);

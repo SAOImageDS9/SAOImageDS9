@@ -110,26 +110,28 @@ class TkWin32 {
 
   double getPageScale() {return pageScale;}
   const Matrix& getCanvasToPage() {return canvasToPage;}
-
+  */
   void begin();
   void end();
 
-  void color(int red, int green, int blue);
+  void color(int, int, int);
   void width(float);
   void dash(float*,int);
   void font(Tk_Font);
   void clip(float, float, float, float);
 
+  void newpath();
+  void stroke();
+  void fill();
+  void arc(float, float, float, float, float);
+  void curve(float, float, float, float, float, float, float, float);
+
   void drawText(float, float, float, const char*);
   void drawLines(float*, float*, int);
   void fillPolygon(float*, float*, int);
   void drawArc(float, float, float, float, float);
-  void fillArc(float, float, float, float, float);
-  void drawCurve(float, float, float, float, float, float, float, float);
-  void fillCurve(float, float, float, float, float, float, float, float);
   
   void bitmapCreate(void*, int, int, float, float, float, float);
-  */
 };
 
 extern TkWin32* tkwin32;

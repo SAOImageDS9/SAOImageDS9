@@ -75,6 +75,7 @@ void Box::renderMACOSXDraw(Vector* vv)
 
 #ifdef __WIN32
 void Box::renderWIN32Draw(Vector* vv)
+{
   if (fill_)
     win32FillPolygon(vv, numPoints_);
   else

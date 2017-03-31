@@ -107,6 +107,7 @@ SPECS	= \
 	$(TCL_LIB_SPEC)
 
 LLIBS	= \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(tksao_LIB_SPEC)))) \
 	$(libdir)/libfuntools.a \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \

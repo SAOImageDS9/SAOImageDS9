@@ -2906,7 +2906,7 @@ WmProtocolCmd(
 	protPtr->nextPtr = wmPtr->protPtr;
 	wmPtr->protPtr = protPtr;
 	protPtr->interp = interp;
-	protPtr->command = malloc(cmdLength+1);
+	protPtr->command = ckalloc(cmdLength+1);
 	strcpy(protPtr->command, cmd);
     }
     return TCL_OK;

@@ -57,7 +57,12 @@ proc CATDialog {varname format catalog title action} {
     set var(frame) $current(frame)
 
     set var(server) $pcat(server)
+
+    # Skybot
     set var(loc) $pcat(loc)
+    set var(asteroids) 1
+    set var(planets) 1
+    set var(comets) 1
 
     set var(system) $wcs(system)
     set var(sky) $wcs(sky)
@@ -285,13 +290,17 @@ proc CATDialog {varname format catalog title action} {
     ttk::label $f.ref -text [string range $varname 3 end] \
 	-relief groove -width 13 -anchor w
 
-    ttk::label $f.loctitle -text [msgcat::mc {IAU Location Code}]
-    ttk::entry $f.loc -textvariable ${varname}(loc) -width 7
-
     grid $f.ttitle $f.title -padx 2 -pady 2 -sticky w
     grid $f.tcat $f.cat -padx 2 -pady 2 -sticky w
     grid $f.tref $f.ref -padx 2 -pady 2 -sticky w
-    grid $f.loctitle $f.loc -padx 2 -pady 2 -sticky w
+    switch $var(format) {
+	skybot {
+	    ttk::label $f.loctitle -text [msgcat::mc {IAU Location Code}]
+	    ttk::entry $f.loc -textvariable ${varname}(loc) -width 7
+	    grid $f.loctitle $f.loc -padx 2 -pady 2 -sticky w
+	}
+	default {}
+    }
 
     # Object
     set f [ttk::labelframe $w.obj -text [msgcat::mc {Object}] -padding 2]
@@ -322,6 +331,19 @@ proc CATDialog {varname format catalog title action} {
     grid $f.xtitle $f.x $f.ytitle $f.y $f.coord $f.update \
 	-padx 2 -pady 2 -sticky w
     grid $f.wtitle $f.w $f.htitle $f.h $f.rformat -padx 2 -pady 2 -sticky w
+
+    switch $var(format) {
+	skybot {
+	    ttk::checkbutton $f.asteroids -text [msgcat::mc {Asteroids}] \
+		-variable ${varname}(asteroids)
+	    ttk::checkbutton $f.planets -text [msgcat::mc {Planets}] \
+		-variable ${varname}(planets)
+	    ttk::checkbutton $f.comets -text [msgcat::mc {Comets}] \
+		-variable ${varname}(comets)
+	    grid x $f.asteroids $f.planets $f.comets -padx 2 -pady 2 -sticky w
+	}
+	default {}
+    }
 
     # Param
     set f [ttk::labelframe $w.param -text [msgcat::mc {Table}] -padding 2]

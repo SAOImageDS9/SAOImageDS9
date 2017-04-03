@@ -134,7 +134,7 @@ proc CATSkyBotVOT {varname} {
     }
 
     # query
-    set var(query) [http::formatQuery EPOCH $epoch RA $xx DEC $yy SR $rr VERB $type -mime votable -loc $var(loc) -filter=0]
+    set var(query) [http::formatQuery EPOCH $epoch RA $xx DEC $yy SR $rr VERB $type -mime votable -loc $var(loc) -filter=0 -objFilter=111]
     set var(url) "http://vo.imcce.fr/webservices/skybot/skybotconesearch_query.php"
 
     CATLoad $varname

@@ -44,6 +44,7 @@
 ::msgcat::mcset cs {Archives} 
 ::msgcat::mcset cs {Array} 
 ::msgcat::mcset cs {Arrow} [encoding convertfrom iso8859-2 {©ipka}]
+::msgcat::mcset cs {Asteroids} 
 ::msgcat::mcset cs {Astronomy} [encoding convertfrom iso8859-2 {Astronomie}]
 ::msgcat::mcset cs {At Startup} [encoding convertfrom iso8859-2 {Pøi spu¹tìní}]
 ::msgcat::mcset cs {At least 2 different catalogs are required} 
@@ -145,6 +146,7 @@
 ::msgcat::mcset cs {Color} [encoding convertfrom iso8859-2 {Barva}]
 ::msgcat::mcset cs {Columns} [encoding convertfrom iso8859-2 {Sloupce}]
 ::msgcat::mcset cs {Column} [encoding convertfrom iso8859-2 {Sploupec}]
+::msgcat::mcset cs {Comets} 
 ::msgcat::mcset cs {Command not allowed} 
 ::msgcat::mcset cs {Command} [encoding convertfrom iso8859-2 {Pøíkaz}]
 ::msgcat::mcset cs {Compass} [encoding convertfrom iso8859-2 {Kompas}]
@@ -585,6 +587,7 @@
 ::msgcat::mcset cs {Pixel Size} 
 ::msgcat::mcset cs {Pixel Table} [encoding convertfrom iso8859-2 {Pixel tabulka}]
 ::msgcat::mcset cs {Pixels} 
+::msgcat::mcset cs {Planets} 
 ::msgcat::mcset cs {Play} 
 ::msgcat::mcset cs {Please Select a Region} 
 ::msgcat::mcset cs {Please change the file's permission to disable other users write access. Use anyway?} 
@@ -771,7 +774,6 @@
 ::msgcat::mcset cs {URL} 
 ::msgcat::mcset cs {Unable to connect directly: using Web Proxy} 
 ::msgcat::mcset cs {Unable to determine date of observation} 
-::msgcat::mcset cs {Unable to determine time of observation} 
 ::msgcat::mcset cs {Unable to evaluate filter} 
 ::msgcat::mcset cs {Unable to find SIAP window} 
 ::msgcat::mcset cs {Unable to find URL column} 

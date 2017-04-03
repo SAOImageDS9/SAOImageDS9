@@ -44,6 +44,7 @@
 ::msgcat::mcset da {Archives} 
 ::msgcat::mcset da {Array} 
 ::msgcat::mcset da {Arrow} {Pil}
+::msgcat::mcset da {Asteroids} 
 ::msgcat::mcset da {Astronomy} 
 ::msgcat::mcset da {At Startup} 
 ::msgcat::mcset da {At least 2 different catalogs are required} 
@@ -145,6 +146,7 @@
 ::msgcat::mcset da {Color} {Farve}
 ::msgcat::mcset da {Columns} [encoding convertfrom iso8859-1 {Søjler}]
 ::msgcat::mcset da {Column} [encoding convertfrom iso8859-1 {Søjle}]
+::msgcat::mcset da {Comets} 
 ::msgcat::mcset da {Command not allowed} 
 ::msgcat::mcset da {Command} 
 ::msgcat::mcset da {Compass} {Kompas}
@@ -585,6 +587,7 @@
 ::msgcat::mcset da {Pixel Size} [encoding convertfrom iso8859-1 {Pixelstørrelse}]
 ::msgcat::mcset da {Pixel Table} {Pixel tabel}
 ::msgcat::mcset da {Pixels} {Pixler}
+::msgcat::mcset da {Planets} 
 ::msgcat::mcset da {Play} {Afspil}
 ::msgcat::mcset da {Please Select a Region} 
 ::msgcat::mcset da {Please change the file's permission to disable other users write access. Use anyway?} 
@@ -771,7 +774,6 @@
 ::msgcat::mcset da {URL} 
 ::msgcat::mcset da {Unable to connect directly: using Web Proxy} 
 ::msgcat::mcset da {Unable to determine date of observation} 
-::msgcat::mcset da {Unable to determine time of observation} 
 ::msgcat::mcset da {Unable to evaluate filter} {kan ikke bestemme filter}
 ::msgcat::mcset da {Unable to find SIAP window} 
 ::msgcat::mcset da {Unable to find URL column} 

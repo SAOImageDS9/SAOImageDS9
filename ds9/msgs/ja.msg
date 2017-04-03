@@ -44,6 +44,7 @@
 ::msgcat::mcset ja {Archives} 
 ::msgcat::mcset ja {Array} 
 ::msgcat::mcset ja {Arrow} [encoding convertfrom euc-jp "\xcc\xf0\xb0\xf5"]
+::msgcat::mcset ja {Asteroids} 
 ::msgcat::mcset ja {Astronomy} [encoding convertfrom euc-jp "\xc5\xb7\xca\xb8\xb3\xd8"]
 ::msgcat::mcset ja {At Startup} 
 ::msgcat::mcset ja {At least 2 different catalogs are required} 
@@ -145,6 +146,7 @@
 ::msgcat::mcset ja {Color} [encoding convertfrom euc-jp "\xbf\xa7"]
 ::msgcat::mcset ja {Columns} [encoding convertfrom euc-jp "\xce\xf3"]
 ::msgcat::mcset ja {Column} [encoding convertfrom euc-jp "\xce\xf3"]
+::msgcat::mcset ja {Comets} 
 ::msgcat::mcset ja {Command not allowed} 
 ::msgcat::mcset ja {Command} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xde\xa5\xf3\xa5\xc9"]
 ::msgcat::mcset ja {Compass} [encoding convertfrom euc-jp "\xca\xfd\xb0\xcc\xbc\xa7\xc0\xd0"]
@@ -585,6 +587,7 @@
 ::msgcat::mcset ja {Pixel Size} [encoding convertfrom euc-jp "\xa5\xd4\xa5\xaf\xa5\xbb\xa5\xeb\xa5\xb5\xa5\xa4\xa5\xba"]
 ::msgcat::mcset ja {Pixel Table} [encoding convertfrom euc-jp "\xa5\xd4\xa5\xaf\xa5\xbb\xa5\xeb\xc9\xbd"]
 ::msgcat::mcset ja {Pixels} [encoding convertfrom euc-jp "\xa5\xd4\xa5\xaf\xa5\xbb\xa5\xeb"]
+::msgcat::mcset ja {Planets} 
 ::msgcat::mcset ja {Play} [encoding convertfrom euc-jp "\xba\xc6\xc0\xb8"]
 ::msgcat::mcset ja {Please Select a Region} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xf2\xbb\xd8\xc4\xea\xa4\xb7\xa4\xc6\xa4\xaf\xa4\xc0\xa4\xb5\xa4\xa4\xa1\xa3"]
 ::msgcat::mcset ja {Please change the file's permission to disable other users write access. Use anyway?} 
@@ -771,7 +774,6 @@
 ::msgcat::mcset ja {URL} 
 ::msgcat::mcset ja {Unable to connect directly: using Web Proxy} 
 ::msgcat::mcset ja {Unable to determine date of observation} 
-::msgcat::mcset ja {Unable to determine time of observation} 
 ::msgcat::mcset ja {Unable to evaluate filter} [encoding convertfrom euc-jp "\xb9\xca\xa4\xea\xb9\xfe\xa4\xdf\xbe\xf2\xb7\xef\xa4\xac\xc9\xbe\xb2\xc1\xa4\xc7\xa4\xad\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {Unable to find SIAP window} 
 ::msgcat::mcset ja {Unable to find URL column} 

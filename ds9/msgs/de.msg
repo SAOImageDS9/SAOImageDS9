@@ -44,6 +44,7 @@
 ::msgcat::mcset de {Archives} 
 ::msgcat::mcset de {Array} 
 ::msgcat::mcset de {Arrow} {Pfeil}
+::msgcat::mcset de {Asteroids} 
 ::msgcat::mcset de {Astronomy} 
 ::msgcat::mcset de {At Startup} 
 ::msgcat::mcset de {At least 2 different catalogs are required} 
@@ -145,6 +146,7 @@
 ::msgcat::mcset de {Color} {Farbe}
 ::msgcat::mcset de {Columns} {Spalten}
 ::msgcat::mcset de {Column} {Spalte} 
+::msgcat::mcset de {Comets} 
 ::msgcat::mcset de {Command not allowed} 
 ::msgcat::mcset de {Command} 
 ::msgcat::mcset de {Compass} {Kompass}
@@ -585,6 +587,7 @@
 ::msgcat::mcset de {Pixel Size} [encoding convertfrom iso8859-1 {Pixelgröße}]
 ::msgcat::mcset de {Pixel Table} {Pixeltabelle}
 ::msgcat::mcset de {Pixels} {Pixel}
+::msgcat::mcset de {Planets} 
 ::msgcat::mcset de {Play} {Abspielen}
 ::msgcat::mcset de {Please Select a Region} 
 ::msgcat::mcset de {Please change the file's permission to disable other users write access. Use anyway?} 
@@ -771,7 +774,6 @@
 ::msgcat::mcset de {URL} 
 ::msgcat::mcset de {Unable to connect directly: using Web Proxy} 
 ::msgcat::mcset de {Unable to determine date of observation} 
-::msgcat::mcset de {Unable to determine time of observation} 
 ::msgcat::mcset de {Unable to evaluate filter} [encoding convertfrom iso8859-1 {Nicht möglich Filter zu evaluieren}]
 ::msgcat::mcset de {Unable to find SIAP window} 
 ::msgcat::mcset de {Unable to find URL column} 

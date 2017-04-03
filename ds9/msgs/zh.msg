@@ -1,4 +1,3 @@
-
 ::msgcat::mcset zh {2D} 
 ::msgcat::mcset zh {3D} 
 ::msgcat::mcset zh {A postscript generation error has occurred} 
@@ -45,6 +44,7 @@
 ::msgcat::mcset zh {Archives} 
 ::msgcat::mcset zh {Array} 
 ::msgcat::mcset zh {Arrow} 
+::msgcat::mcset zh {Asteroids} 
 ::msgcat::mcset zh {Astronomy} 
 ::msgcat::mcset zh {At Startup} 
 ::msgcat::mcset zh {At least 2 different catalogs are required} 
@@ -146,6 +146,7 @@
 ::msgcat::mcset zh {Color} [encoding convertfrom big5 "\xC3\x43 \xA6\xE2"]
 ::msgcat::mcset zh {Columns} [encoding convertfrom big5 "\xA4\xE8 \xA6\xEC"]
 ::msgcat::mcset zh {Column} 
+::msgcat::mcset zh {Comets} 
 ::msgcat::mcset zh {Command not allowed} 
 ::msgcat::mcset zh {Command} 
 ::msgcat::mcset zh {Compass} 
@@ -586,6 +587,7 @@
 ::msgcat::mcset zh {Pixel Size} 
 ::msgcat::mcset zh {Pixel Table} 
 ::msgcat::mcset zh {Pixels} 
+::msgcat::mcset zh {Planets} 
 ::msgcat::mcset zh {Play} 
 ::msgcat::mcset zh {Please Select a Region} 
 ::msgcat::mcset zh {Please change the file's permission to disable other users write access. Use anyway?} 
@@ -772,7 +774,6 @@
 ::msgcat::mcset zh {URL} 
 ::msgcat::mcset zh {Unable to connect directly: using Web Proxy} 
 ::msgcat::mcset zh {Unable to determine date of observation} 
-::msgcat::mcset zh {Unable to determine time of observation} 
 ::msgcat::mcset zh {Unable to evaluate filter} 
 ::msgcat::mcset zh {Unable to find SIAP window} 
 ::msgcat::mcset zh {Unable to find URL column} 

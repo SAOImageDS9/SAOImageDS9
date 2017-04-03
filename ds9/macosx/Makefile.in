@@ -72,8 +72,10 @@ APPDIR	= $(bindir)/SAOImage\ DS9.app
 MACDIR	= $(APPDIR)/Contents/MacOS
 LIBDIR	= $(APPDIR)/Contents/Frameworks/Tksao.framework/Resources
 TCLSRC	= $(prefix)/build/tcl/Tcl.framework/Versions/$(TCL_VERSION)
+#TCLSRCD	= $(prefix)/build/tcl/Development
 TCLDIR	= $(APPDIR)/Contents/Frameworks/Tcl.framework
 TKSRC	= $(prefix)/build/tk/Tk.framework/Versions/$(TCL_VERSION)
+#TKSRCD	= $(prefix)/build/tk/Development
 TKDIR	= $(APPDIR)/Contents/Frameworks/Tk.framework
 
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)

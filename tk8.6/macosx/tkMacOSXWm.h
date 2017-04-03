@@ -36,9 +36,6 @@ typedef struct ProtocolHandler {
 				 * THE LAST FIELD OF THE STRUCTURE. */
 } ProtocolHandler;
 
-#define HANDLER_SIZE(cmdLength) \
-    ((unsigned) (sizeof(ProtocolHandler) -3 + cmdLength))
-
 /*
  * A data structure of the following type holds window-manager-related
  * information for each top-level window in an application.

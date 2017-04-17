@@ -174,7 +174,6 @@ image		{return IMAGE_;}
 include		{return INCLUDE_;}
 incr		{return INCR_;}
 info		{return INFO_;}
-integer		{return INTEGER_;}
 iteration	{return ITERATION_;}
 iraf		{return IRAF_;}
 irafmin		{return IRAFMIN_;}

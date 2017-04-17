@@ -31,6 +31,7 @@ proc GraphDef {} {
     # prefs only
     set pgraph(horz,grid) 1
     set pgraph(horz,log) false
+    set pgraph(thick) 1
     set pgraph(vert,grid) 1
     set pgraph(vert,log) false
 }
@@ -144,19 +145,17 @@ proc UpdateGraphXAxis {which} {
     }
 
     if {$view(graph,horz)} {
-	UpdateGraphXAxisHV $which $ds9(graph,horz) graphHorzX graphHorzY 1
+	UpdateGraphXAxisHV $which $ds9(graph,horz) graphHorzX
     }
     
     if {$view(graph,vert)} {
-	UpdateGraphXAxisHV $which $ds9(graph,vert) graphVertX graphVertY 0
+	UpdateGraphXAxisHV $which $ds9(graph,vert) graphVertX
     }
 }
 
-proc UpdateGraphXAxisHV {which what vectorX vectorY cut} {
+proc UpdateGraphXAxisHV {which what vectorX} {
     global igraph
-
-    global graphHorzX graphHorzY
-    global graphVertX graphVertY
+    global graphHorzX graphVertX
 
     if {$which != {}} {
 	set xMin [expr "$$vectorX\(min\)"]
@@ -182,16 +181,17 @@ proc UpdateGraphYAxis {which} {
     }
 
     if {$view(graph,horz)} {
-	UpdateGraphYAxisHV $which $ds9(graph,horz) $pgraph(horz,log)
+	UpdateGraphYAxisHV $which $ds9(graph,horz) graphHorzY $pgraph(horz,log)
     }
 
     if {$view(graph,vert)} {
-	UpdateGraphYAxisHV $which $ds9(graph,vert) $pgraph(vert,log)
+	UpdateGraphYAxisHV $which $ds9(graph,vert) graphVertY $pgraph(vert,log)
     }
 }
 
-proc UpdateGraphYAxisHV {which what log} {
+proc UpdateGraphYAxisHV {which what vectorY log} {
     global igraph
+    global graphHorzY graphVertY
 
     if {$which != {}} {
 	set minmax [$which get clip]
@@ -258,10 +258,11 @@ proc ClearGraphData {} {
 proc UpdateGraph {which x y sys} {
     global ds9
     global view
+    global pgraph
 
     if {[$which has fits]} {
 	if {$view(graph,horz)} {
-	    if {![catch {$which get horizontal cut graphHorzX graphHorzY $x $y $sys}]} {
+	    if {![catch {$which get horizontal cut graphHorzX graphHorzY $x $y $sys $pgraph(thick)}]} {
 		$ds9(graph,horz) element configure line1 -hide no
 	    } else {
 		$ds9(graph,horz) element configure line1 -hide yes
@@ -269,7 +270,7 @@ proc UpdateGraph {which x y sys} {
 	}
 
 	if {$view(graph,vert)} {
-	    if {![catch {$which get vertical cut graphVertX graphVertY $x $y $sys}]} {
+	    if {![catch {$which get vertical cut graphVertX graphVertY $x $y $sys $pgraph(thick)}]} {
 		$ds9(graph,vert) element configure line1 -hide no
 	    } else {
 		$ds9(graph,vert) element configure line1 -hide yes

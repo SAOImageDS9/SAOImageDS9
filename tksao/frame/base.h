@@ -335,8 +335,8 @@ public:
 
   //  void analysisMarkersInit();
 
-  void bltCut(char*, char*, Coord::Orientation, const Vector&);
-  void bltCutFits(double*, double*, int, Coord::Orientation, const Vector&);
+  void bltCut(char*, char*, Coord::Orientation, const Vector&, int);
+  void bltCutFits(double*, double*, int, Coord::Orientation, const Vector&,int);
 
   double calcZoom(Vector,Vector);
   virtual double calcZoomPanner() =0;
@@ -988,8 +988,8 @@ public:
   void warpToCmd(const Vector&);
 
   // Graph Commands
-  void getHorzCutCmd(char*, char*, const Vector&, Coord::InternalSystem);
-  void getVertCutCmd(char*, char*, const Vector&, Coord::InternalSystem);
+  void getHorzCutCmd(char*, char*, const Vector&, Coord::InternalSystem, int);
+  void getVertCutCmd(char*, char*, const Vector&, Coord::InternalSystem, int);
 
   // Grid Commands
   virtual void gridCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, 

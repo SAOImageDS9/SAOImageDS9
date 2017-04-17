@@ -919,7 +919,7 @@ void Base::markerAnalysisStats4(ostream& str, int kk,
 }
 
 void Base::bltCut(char* xname, char* yname, Coord::Orientation axis, 
-		  const Vector& rr)
+		  const Vector& rr, int thick)
 {
   int size;
   if (axis == Coord::XX)
@@ -941,7 +941,7 @@ void Base::bltCut(char* xname, char* yname, Coord::Orientation axis,
     }
   }
   else
-    bltCutFits(xx, yy, size, axis, rr);
+    bltCutFits(xx, yy, size, axis, rr, thick);
 
   Blt_Vector* xv;
   if (Blt_GetVector(interp, xname, &xv) != TCL_OK)
@@ -967,62 +967,48 @@ void Base::bltCut(char* xname, char* yname, Coord::Orientation axis,
 }
 
 void Base::bltCutFits(double* xx, double* yy, int size, Coord::Orientation axis,
-		      const Vector& r)
+		      const Vector& r, int thick)
 {
-  // Widget
   Vector rr = r * refToWidget;
-
-  // basics
-  FitsImage* sptr = currentContext->cfits;
-  int mosaic = isMosaic();
-
-  // variable
-  FitsBound* params = sptr->getDataParams(currentContext->secMode());
+  FitsImage* ptr = currentContext->cfits;
+  FitsBound* params = ptr->getDataParams(currentContext->secMode());
   double prev = currentContext->low();
 
   // main loop
 
   SETSIGBUS
   for (int ii=0; ii<=size; ii++) {
-    double vv = currentContext->low();
+    double vv =0;
+    int cnt =0;
 
-    if (mosaic) {
-      sptr = currentContext->cfits;
-      params = sptr->getDataParams(currentContext->secMode());
-    }
-
-    do {
-      Vector img;
+    Vector img;
+    for (int jj=0; jj<thick; jj++) {
+      int ww = jj/2;
       if (axis == Coord::XX)
-	img = Vector(1+ii,rr[1]) * sptr->widgetToData;
+	img = Vector(1+ii,rr[1]-ww+jj) * ptr->widgetToData;
       else
-	img = Vector(rr[0],1+ii) * sptr->widgetToData;
+	img = Vector(rr[0]-ww+jj,1+ii) * ptr->widgetToData;
 
       if (img[0]>=params->xmin && img[0]<params->xmax && 
 	  img[1]>=params->ymin && img[1]<params->ymax) {
-	double value = sptr->getValueDouble(img);
+	double value = ptr->getValueDouble(img);
 
-	if (isfinite(value))
-	  vv = value;
-
-	break;
-      }
-      else {
-	if (mosaic) {
-	  sptr = sptr->nextMosaic();
-	  if (sptr)
-	    params = sptr->getDataParams(currentContext->secMode());
+	if (isfinite(value)) {
+	  vv += value;
+	  cnt +=1;
 	}
       }
     }
-    while (mosaic && sptr);
 
     xx[2*ii] = ii;
     xx[2*ii +1] = ii;
     
     yy[2*ii] = prev;
-    yy[2*ii +1] = vv;
-    prev = vv;
+    if (cnt)
+      yy[2*ii +1] = prev = vv/cnt;
+    else
+      yy[2*ii +1] = prev = currentContext->low();
+      
   }
   CLEARSIGBUS
 }

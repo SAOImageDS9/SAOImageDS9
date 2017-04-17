@@ -258,7 +258,6 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token INCLUDE_
 %token INCR_
 %token INFO_
-%token INTEGER_
 %token ITERATION_
 %token IRAF_
 %token IRAFMIN_
@@ -1007,8 +1006,8 @@ get	: BG_ COLOR_ {fr->getBgColorCmd();}
 	| FITS_ getFits
 	| GRID_ getGrid
 	| HISTOGRAM_ STRING STRING INT {fr->getHistogramCmd($2,$3,$4);}
-	| HORIZONTAL_ CUT_ STRING STRING numeric numeric internalSystem
-	{fr->getHorzCutCmd($3,$4,Vector($5,$6),(Coord::InternalSystem)$7);}
+	| HORIZONTAL_ CUT_ STRING STRING numeric numeric internalSystem INT
+	{fr->getHorzCutCmd($3,$4,Vector($5,$6),(Coord::InternalSystem)$7,$8);}
 	| IIS_ getiis
 	| INFO_ getInfo
 	| IRAF_ ALIGN_ {fr->getIRAFAlignCmd();}
@@ -1028,8 +1027,8 @@ get	: BG_ COLOR_ {fr->getBgColorCmd();}
 	| TYPE_ {fr->getTypeCmd();}
 	| VALUE_ internalSystem numeric numeric
 	{fr->getValueCmd(Vector($3,$4),(Coord::InternalSystem)$2);}
-	| VERTICAL_ CUT_ STRING STRING numeric numeric internalSystem
-	{fr->getVertCutCmd($3,$4,Vector($5,$6),(Coord::InternalSystem)$7);}
+	| VERTICAL_ CUT_ STRING STRING numeric numeric internalSystem INT
+	{fr->getVertCutCmd($3,$4,Vector($5,$6),(Coord::InternalSystem)$7,$8);}
 	| WCS_ getWCS
 	| ZOOM_ {fr->getZoomCmd();}
 	;

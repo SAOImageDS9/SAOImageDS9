@@ -144,6 +144,7 @@ proc PrefsDialogGraph {} {
     $dprefs(list) insert end [msgcat::mc {Graphs}]
     lappend dprefs(tabs) [ttk::frame $w.graph]
 
+    # Horz
     set f [ttk::labelframe $w.graph.horz -text [msgcat::mc {Horizontal}]]
 
     ttk::label $f.htitle -text [msgcat::mc {Default}]
@@ -158,6 +159,7 @@ proc PrefsDialogGraph {} {
 
     grid $f.htitle $f.hgrid $f.hlinear $f.hlog -padx 2 -pady 2 -sticky w
 
+    # Vert
     set f [ttk::labelframe $w.graph.vert -text [msgcat::mc {Vertical}]]
 
     ttk::label $f.vtitle -text [msgcat::mc {Default}]
@@ -172,7 +174,15 @@ proc PrefsDialogGraph {} {
 
     grid $f.vtitle $f.vgrid $f.vlinear $f.vlog -padx 2 -pady 2 -sticky w
 
-    pack $w.graph.horz $w.graph.vert -side top -fill both -expand true
+    # Thickness
+    set f [ttk::labelframe $w.graph.thick -text [msgcat::mc {Thickness}]]
+
+    ttk::entry $f.thick -textvariable pgraph(thick) -width 13
+
+    grid $f.thick -padx 2 -pady 2 -sticky w
+
+    pack $w.graph.horz $w.graph.vert $w.graph.thick \
+	-side top -fill both -expand true
 }
 
 # Buttons

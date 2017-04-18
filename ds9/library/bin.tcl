@@ -198,7 +198,6 @@ proc BinDialog {} {
     global ds9
 
     # see if we already have a window visible
-
     if {[winfo exists $ibin(top)]} {
 	raise $ibin(top)
 	return

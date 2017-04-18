@@ -665,6 +665,9 @@ proc BackupGUI {ch} {
     puts $ch "global pime"
     puts $ch "array set pime \{ [array get pime] \}"
 
+    global graph
+    puts $ch "global graph"
+    puts $ch "array set graph \{ [array get graph] \}"
     global pgraph
     puts $ch "global pgraph"
     puts $ch "array set pgraph \{ [array get pgraph] \}"

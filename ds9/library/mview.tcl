@@ -138,6 +138,7 @@ proc PrefsDialogGraph {} {
     global pds9
     global pmagnifier
     global current
+    global pgraph
 
     set w $dprefs(tab)
 
@@ -147,42 +148,50 @@ proc PrefsDialogGraph {} {
     # Horz
     set f [ttk::labelframe $w.graph.horz -text [msgcat::mc {Horizontal}]]
 
-    ttk::label $f.htitle -text [msgcat::mc {Default}]
-    ttk::checkbutton $f.hgrid -text [msgcat::mc {Grid}] \
+    ttk::checkbutton $f.hgrid -text [msgcat::mc {Show Grid}] \
 	-variable pgraph(horz,grid) -command UpdateGraphGrid
-    ttk::radiobutton $f.hlinear -text [msgcat::mc {Linear}] \
-	-variable pgraph(horz,log) -value false \
-	-command "UpdateGraphYAxis $current(frame)"
-    ttk::radiobutton $f.hlog -text [msgcat::mc {Log}] \
-	-variable pgraph(horz,log) -value true \
-	-command "UpdateGraphYAxis $current(frame)"
+    ttk::label $f.htaxis -text [msgcat::mc {Axis}]
+    ttk::radiobutton $f.hlaxis -text [msgcat::mc {Linear}] \
+	-variable pgraph(horz,log) -value false
+    ttk::radiobutton $f.hgaxis -text [msgcat::mc {Log}] \
+	-variable pgraph(horz,log) -value true
+    ttk::label $f.htthick -text [msgcat::mc {Thickness}]
+    ttk::entry $f.hthick -textvariable pgraph(horz,thick) -width 7
+    ttk::label $f.htmethod -text [msgcat::mc {Method}]
+    ttk::radiobutton $f.hamethod -text [msgcat::mc {Average}] \
+	-variable pgraph(horz,method) -value average
+    ttk::radiobutton $f.hsmethod -text [msgcat::mc {Sum}] \
+	-variable pgraph(horz,method) -value sum
 
-    grid $f.htitle $f.hgrid $f.hlinear $f.hlog -padx 2 -pady 2 -sticky w
+    grid $f.hgrid -padx 2 -pady 2 -sticky w
+    grid $f.htaxis $f.hlaxis $f.hgaxis -padx 2 -pady 2 -sticky w
+    grid $f.htthick $f.hthick -padx 2 -pady 2 -sticky w
+    grid $f.htmethod $f.hamethod $f.hsmethod -padx 2 -pady 2 -sticky w
 
     # Vert
     set f [ttk::labelframe $w.graph.vert -text [msgcat::mc {Vertical}]]
 
-    ttk::label $f.vtitle -text [msgcat::mc {Default}]
-    ttk::checkbutton $f.vgrid -text [msgcat::mc {Grid}] \
+    ttk::checkbutton $f.vgrid -text [msgcat::mc {Show Grid}] \
 	-variable pgraph(vert,grid) -command UpdateGraphGrid
-    ttk::radiobutton $f.vlinear -text [msgcat::mc {Linear}] \
-	-variable pgraph(vert,log) -value false \
-	-command "UpdateGraphYAxis $current(frame)"
-    ttk::radiobutton $f.vlog -text [msgcat::mc {Log}] \
-	-variable pgraph(vert,log) -value true \
-	-command "UpdateGraphYAxis $current(frame)"
+    ttk::label $f.vtaxis -text [msgcat::mc {Axis}]
+    ttk::radiobutton $f.vlaxis -text [msgcat::mc {Linear}] \
+	-variable pgraph(vert,log) -value false
+    ttk::radiobutton $f.vgaxis -text [msgcat::mc {Log}] \
+	-variable pgraph(vert,log) -value true
+    ttk::label $f.vtthick -text [msgcat::mc {Thickness}]
+    ttk::entry $f.vthick -textvariable pgraph(vert,thick) -width 7
+    ttk::label $f.vtmethod -text [msgcat::mc {Method}]
+    ttk::radiobutton $f.vamethod -text [msgcat::mc {Average}] \
+	-variable pgraph(vert,method) -value average
+    ttk::radiobutton $f.vsmethod -text [msgcat::mc {Sum}] \
+	-variable pgraph(vert,method) -value sum
 
-    grid $f.vtitle $f.vgrid $f.vlinear $f.vlog -padx 2 -pady 2 -sticky w
+    grid $f.vgrid -padx 2 -pady 2 -sticky w
+    grid $f.vtaxis $f.vlaxis $f.vgaxis -padx 2 -pady 2 -sticky w
+    grid $f.vtthick $f.vthick -padx 2 -pady 2 -sticky w
+    grid $f.vtmethod $f.vamethod $f.vsmethod -padx 2 -pady 2 -sticky w
 
-    # Thickness
-    set f [ttk::labelframe $w.graph.thick -text [msgcat::mc {Thickness}]]
-
-    ttk::entry $f.thick -textvariable pgraph(thick) -width 13
-
-    grid $f.thick -padx 2 -pady 2 -sticky w
-
-    pack $w.graph.horz $w.graph.vert $w.graph.thick \
-	-side top -fill both -expand true
+    pack $w.graph.horz $w.graph.vert -side top -fill both -expand true
 }
 
 # Buttons

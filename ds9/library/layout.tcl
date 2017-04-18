@@ -861,12 +861,14 @@ proc ProcessViewCmd {varname iname} {
 	    incr i
 	    set item [string tolower [lindex $var $i]]
 	    switch  -- $item {
+		horz -
 		horizontal {
-		    set view(layout) $item
+		    set view(layout) horizontal
 		    ViewHorzCmd
 		}
+		vert -
 		vertical {
-		    set view(layout) $item
+		    set view(layout) verical
 		    ViewVertCmd
 		}
 	    }
@@ -875,14 +877,16 @@ proc ProcessViewCmd {varname iname} {
 	    incr i
 	    set view(info,keyvalue) [lindex $var $i]
 	}
+	horz -
 	horizontal {
 	    # backward compatibility
-	    set view(layout) $item
+	    set view(layout) horizontal
 	    ViewHorzCmd
 	}
+	vert -
 	vertical {
 	    # backward compatibility
-	    set view(layout) $item
+	    set view(layout) vertical
 	    ViewVertCmd
 	}
 
@@ -917,6 +921,7 @@ proc ProcessViewCmd {varname iname} {
 		    incr i
 		    set item [string tolower [lindex $var $i]]
 		    switch -- $item {
+			horz -
 			horizontal {
 			    set yesno [lindex $var [expr $i+1]]
 			    switch -- $yesno {
@@ -934,6 +939,7 @@ proc ProcessViewCmd {varname iname} {
 			    }
 			    set view(graph,horz) [FromYesNo $yesno]
 			}
+			vert -
 			vertical {
 			    set yesno [lindex $var [expr $i+1]]
 			    switch -- $yesno {

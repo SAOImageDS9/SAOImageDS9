@@ -7,12 +7,17 @@ package provide DS9 1.0
 proc GraphDef {} {
     global igraph
     global pgraph
+    global graph
+
+    set igraph(top) .grph
+    set igraph(mb) .grphmb
 
     set igraph(horz,id) 0
     set igraph(vert,id) 0
 
     set igraph(size) 150
-    set igraph(gap,x) 50
+#    set igraph(gap,x) 50
+    set igraph(gap,x) 0
     set igraph(gap,y) 25
 
     set igraph(x,min) 0
@@ -28,12 +33,16 @@ proc GraphDef {} {
     blt::vector create graphVertX graphVertY
     blt::vector create histX histY
 
-    # prefs only
-    set pgraph(horz,grid) 1
-    set pgraph(horz,log) false
-    set pgraph(thick) 1
-    set pgraph(vert,grid) 1
-    set pgraph(vert,log) false
+    set graph(horz,grid) 1
+    set graph(horz,log) false
+    set graph(horz,thick) 1
+    set graph(horz,method) average
+    set graph(vert,grid) 1
+    set graph(vert,log) false
+    set graph(vert,thick) 1
+    set graph(vert,method) average
+
+    array set pgraph [array get graph]
 }
 
 proc CreateGraphs {} {
@@ -48,8 +57,9 @@ proc CreateGraphs {} {
 			     -takefocus 0 \
      			     -background $ds9(bg) \
 			     -highlightthickness 0 \
-			     -plotborderwidth 2 \
-			     -plotrelief groove \
+			     -borderwidth 0 \
+			     -plotborderwidth 1 \
+			     -plotrelief solid \
 			     -plotbackground $ds9(bg) \
 			     -font [font actual TkDefaultFont] \
 			    ]
@@ -63,6 +73,7 @@ proc CreateGraphs {} {
     $ds9(graph,horz) x2axis configure -hide yes
     $ds9(graph,horz) yaxis configure -hide yes
     $ds9(graph,horz) y2axis configure -hide no -bg $ds9(bg) \
+	-exterior no \
 	-tickfont [font actual TkDefaultFont]
 
     $ds9(graph,horz) element create line1 -xdata graphHorzX -ydata graphHorzY \
@@ -86,8 +97,9 @@ proc CreateGraphs {} {
 			     -takefocus 0 \
      			     -background $ds9(bg) \
 			     -highlightthickness 0 \
-			     -plotrelief groove \
-			     -plotborderwidth 2 \
+			     -borderwidth 0 \
+			     -plotborderwidth 1 \
+			     -plotrelief flat \
 			     -plotbackground $ds9(bg)
 			    ]
     $ds9(graph,vert) legend configure -hide yes
@@ -125,14 +137,14 @@ proc UpdateGraphFont {} {
 }
 
 proc UpdateGraphGrid {} {
-    global pgraph
+    global graph
     global ds9
 
-    $ds9(graph,horz) xaxis configure -grid $pgraph(horz,grid) -tickdefault 4
-    $ds9(graph,horz) y2axis configure -grid $pgraph(horz,grid)
+    $ds9(graph,horz) xaxis configure -grid $graph(horz,grid) -tickdefault 4
+    $ds9(graph,horz) y2axis configure -grid $graph(horz,grid)
 
-    $ds9(graph,vert) x2axis configure -grid $pgraph(vert,grid)
-    $ds9(graph,vert) yaxis configure -grid $pgraph(vert,grid) -tickdefault 4
+    $ds9(graph,vert) x2axis configure -grid $graph(vert,grid)
+    $ds9(graph,vert) yaxis configure -grid $graph(vert,grid) -tickdefault 4
 }
 
 proc UpdateGraphXAxis {which} {
@@ -170,7 +182,7 @@ proc UpdateGraphXAxisHV {which what vectorX} {
 }
 
 proc UpdateGraphYAxis {which} {
-    global pgraph
+    global graph
 
     global ds9
     global view
@@ -181,15 +193,17 @@ proc UpdateGraphYAxis {which} {
     }
 
     if {$view(graph,horz)} {
-	UpdateGraphYAxisHV $which $ds9(graph,horz) graphHorzY $pgraph(horz,log)
+	UpdateGraphYAxisHV $which $ds9(graph,horz) graphHorzY \
+	    $graph(horz,log) $graph(horz,thick) $graph(horz,method)
     }
 
     if {$view(graph,vert)} {
-	UpdateGraphYAxisHV $which $ds9(graph,vert) graphVertY $pgraph(vert,log)
+	UpdateGraphYAxisHV $which $ds9(graph,vert) graphVertY \
+	    $graph(vert,log) $graph(vert,thick) $graph(thick,method)
     }
 }
 
-proc UpdateGraphYAxisHV {which what vectorY log} {
+proc UpdateGraphYAxisHV {which what vectorY log thick method} {
     global igraph
     global graphHorzY graphVertY
 
@@ -206,6 +220,13 @@ proc UpdateGraphYAxisHV {which what vectorY log} {
 
 	if {$yMin >= $yMax} {
 	    set yMax [expr $yMin + 1]
+	}
+
+	switch $method {
+	    sum {
+		set yMax [expr $yMax*$thick]
+	    }
+	    average {}
 	}
 
 	$what yaxis configure -min $yMin -max $yMax -logscale $log -tickdefault 4
@@ -258,23 +279,31 @@ proc ClearGraphData {} {
 proc UpdateGraph {which x y sys} {
     global ds9
     global view
-    global pgraph
+    global graph
+    global dgraph
 
-    if {[$which has fits]} {
-	if {$view(graph,horz)} {
-	    if {![catch {$which get horizontal cut graphHorzX graphHorzY $x $y $sys $pgraph(thick)}]} {
-		$ds9(graph,horz) element configure line1 -hide no
-	    } else {
-		$ds9(graph,horz) element configure line1 -hide yes
-	    }
+    # save for later
+    set dgraph(frame) $which
+    set dgraph(x) $x
+    set dgraph(y) $y
+
+    if {![$which has fits]} {
+	return
+    }
+
+    if {$view(graph,horz)} {
+	if {![catch {$which get horizontal cut graphHorzX graphHorzY $x $y $sys $graph(horz,thick) $graph(horz,method)}]} {
+	    $ds9(graph,horz) element configure line1 -hide no
+	} else {
+	    $ds9(graph,horz) element configure line1 -hide yes
 	}
+    }
 
-	if {$view(graph,vert)} {
-	    if {![catch {$which get vertical cut graphVertX graphVertY $x $y $sys $pgraph(thick)}]} {
-		$ds9(graph,vert) element configure line1 -hide no
-	    } else {
-		$ds9(graph,vert) element configure line1 -hide yes
-	    }
+    if {$view(graph,vert)} {
+	if {![catch {$which get vertical cut graphVertX graphVertY $x $y $sys $graph(vert,thick) $graph(vert,method)}]} {
+	    $ds9(graph,vert) element configure line1 -hide no
+	} else {
+	    $ds9(graph,vert) element configure line1 -hide yes
 	}
     }
 }
@@ -389,7 +418,6 @@ proc LayoutGraphs {} {
 
 	set ww [expr $canvas(width)+$igraph(gap,x)]
 	$ds9(graph,horz) configure -width $ww
-
     } else {
 	if {$igraph(horz,id)>0} {
 	    $ds9(canvas) delete $igraph(horz,id)
@@ -424,3 +452,132 @@ proc LayoutGraphs {} {
 	}
     }
 }
+
+proc GraphDialog {} {
+    global igraph
+    global graph
+    global current
+
+    # see if we already have a window visible
+    if {[winfo exists $igraph(top)]} {
+	raise $igraph(top)
+	return
+    }
+
+    # create the window
+    set w $igraph(top)
+    set mb $igraph(mb)
+
+    Toplevel $w $mb 6 [msgcat::mc {Graph Parameters}] GraphDestroyDialog
+    $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
+    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+
+    menu $mb.file
+    $mb.file add command -label [msgcat::mc {Apply}] \
+	-command GraphApplyDialog
+    $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Close}] \
+	-command GraphDestroyDialog
+
+    EditMenu $mb igraph
+
+    # Horizontal
+    set f [ttk::labelframe $w.horz -text [msgcat::mc {Horizontal}] -padding 2]
+
+    ttk::checkbutton $f.hgrid -text [msgcat::mc {Show Grid}] \
+	-variable graph(horz,grid) \
+	-command UpdateGraphGrid
+    ttk::label $f.htaxis -text [msgcat::mc {Axis}]
+    ttk::radiobutton $f.hlaxis -text [msgcat::mc {Linear}] \
+	-variable graph(horz,log) -value false \
+	-command [list UpdateGraphYAxis $current(frame)]
+    ttk::radiobutton $f.hgaxis -text [msgcat::mc {Log}] \
+	-variable graph(horz,log) -value true \
+	-command [list UpdateGraphYAxis $current(frame)]
+    ttk::label $f.htthick -text [msgcat::mc {Thickness}]
+    ttk::entry $f.hthick -textvariable graph(horz,thick) -width 7
+    ttk::label $f.htmethod -text [msgcat::mc {Method}]
+    ttk::radiobutton $f.hamethod -text [msgcat::mc {Average}] \
+	-variable graph(horz,method) -value average \
+	-command [list UpdateGraphYAxis $current(frame)]
+    ttk::radiobutton $f.hsmethod -text [msgcat::mc {Sum}] \
+	-variable graph(horz,method) -value sum \
+	-command [list UpdateGraphYAxis $current(frame)]
+
+    grid $f.hgrid -padx 2 -pady 2 -sticky w
+    grid $f.htaxis $f.hlaxis $f.hgaxis -padx 2 -pady 2 -sticky w
+    grid $f.htthick $f.hthick -padx 2 -pady 2 -sticky w
+    grid $f.htmethod $f.hamethod $f.hsmethod -padx 2 -pady 2 -sticky w
+
+    # Vertical
+    set f [ttk::labelframe $w.vert -text [msgcat::mc {Vertical}] -padding 2]
+
+    ttk::checkbutton $f.vgrid -text [msgcat::mc {Show Grid}] \
+	-variable graph(vert,grid) \
+	-command UpdateGraphGrid
+    ttk::label $f.vtaxis -text [msgcat::mc {Axis}]
+    ttk::radiobutton $f.vlaxis -text [msgcat::mc {Linear}] \
+	-variable graph(vert,log) -value false \
+	-command [list UpdateGraphYAxis $current(frame)]
+    ttk::radiobutton $f.vgaxis -text [msgcat::mc {Log}] \
+	-variable graph(vert,log) -value true \
+	-command [list UpdateGraphYAxis $current(frame)]
+    ttk::label $f.vtthick -text [msgcat::mc {Thickness}]
+    ttk::entry $f.vthick -textvariable graph(vert,thick) -width 7
+    ttk::label $f.vtmethod -text [msgcat::mc {Method}]
+    ttk::radiobutton $f.vamethod -text [msgcat::mc {Average}] \
+	-variable graph(vert,method) -value average \
+	-command [list UpdateGraphYAxis $current(frame)]
+    ttk::radiobutton $f.vsmethod -text [msgcat::mc {Sum}] \
+	-variable graph(vert,method) -value sum \
+	-command [list UpdateGraphYAxis $current(frame)]
+
+    grid $f.vgrid -padx 2 -pady 2 -sticky w
+    grid $f.vtaxis $f.vlaxis $f.vgaxis -padx 2 -pady 2 -sticky w
+    grid $f.vtthick $f.vthick -padx 2 -pady 2 -sticky w
+    grid $f.vtmethod $f.vamethod $f.vsmethod -padx 2 -pady 2 -sticky w
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.apply -text [msgcat::mc {Apply}] -command GraphApplyDialog
+    ttk::button $f.close -text [msgcat::mc {Close}] -command GraphDestroyDialog
+    pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
+
+    # Fini
+    grid $w.horz -sticky news
+    grid $w.vert -sticky news
+    grid $w.buttons - -sticky ew
+    grid rowconfigure $w 0 -weight 1
+    grid columnconfigure $w 1 -weight 1
+}
+
+proc GraphApplyDialog {} {
+    global ds9
+    global igraph
+    global graph
+    global dgraph
+    
+    if {[info exists dgraph]} {
+	if {$dgraph(frame) != {}} {
+	    set ii [lsearch $ds9(active) $dgraph(frame)]
+	    if {$ii>=0} {
+		UpdateGraph $dgraph(frame) $dgraph(x) $dgraph(y) canvas
+	    } else {
+		set dgraph(frame) {}
+	    }
+	}
+    }
+}
+
+proc GraphDestroyDialog {} {
+    global igraph
+    global dgraph
+
+    if {[winfo exists $igraph(top)]} {
+	destroy $igraph(top)
+	destroy $igraph(mb)
+    }
+
+    unset dgraph
+}
+

@@ -288,9 +288,12 @@ proc SavePrefs {} {
     puts $ch "array set pime \{ [array get pime] \}"
     puts $ch {array set ime [array get pime]}
 
+    global graph
     global pgraph
+    puts $ch "global graph"
     puts $ch "global pgraph"
     puts $ch "array set pgraph \{ [array get pgraph] \}"
+    puts $ch {array set graph [array get pgraph]}
 
     global pcoord
     puts $ch "global pcoord"

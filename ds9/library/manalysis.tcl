@@ -44,6 +44,10 @@ proc AnalysisMainMenu {} {
 	-label "[msgcat::mc {Crosshair Parameters}]..." \
 	-command CrosshairDialog
     $ds9(mb).analysis add separator
+    $ds9(mb).analysis add command \
+	-label "[msgcat::mc {Graph Parameters}]..." \
+	-command GraphDialog
+    $ds9(mb).analysis add separator
     $ds9(mb).analysis add command -label "[msgcat::mc {Name Resolution}]..." \
 	-command NRESDialog
     $ds9(mb).analysis add separator

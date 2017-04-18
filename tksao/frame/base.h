@@ -126,6 +126,7 @@ public:
 		SHARE, SSHARE, SOCKET, SOCKETGZ, VAR, HIST, POST, PHOTO};
   enum MosaicType {NOMOSAIC, IRAF, WCSMOSAIC, WFPC2};
   enum LayerType {IMG, MASK};
+  enum CutMethod {SUM,AVERAGE};
 
  private:
   InverseScale* inverseScale;
@@ -335,8 +336,10 @@ public:
 
   //  void analysisMarkersInit();
 
-  void bltCut(char*, char*, Coord::Orientation, const Vector&, int);
-  void bltCutFits(double*, double*, int, Coord::Orientation, const Vector&,int);
+  void bltCut(char*, char*, Coord::Orientation, const Vector&, 
+	      int, Base::CutMethod);
+  void bltCutFits(double*, double*, int, Coord::Orientation, const Vector&,
+		  int, Base::CutMethod);
 
   double calcZoom(Vector,Vector);
   virtual double calcZoomPanner() =0;
@@ -988,8 +991,10 @@ public:
   void warpToCmd(const Vector&);
 
   // Graph Commands
-  void getHorzCutCmd(char*, char*, const Vector&, Coord::InternalSystem, int);
-  void getVertCutCmd(char*, char*, const Vector&, Coord::InternalSystem, int);
+  void getHorzCutCmd(char*, char*, const Vector&, Coord::InternalSystem, 
+		     int, Base::CutMethod);
+  void getVertCutCmd(char*, char*, const Vector&, Coord::InternalSystem, 
+		     int, Base::CutMethod);
 
   // Grid Commands
   virtual void gridCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, 

@@ -1852,11 +1852,12 @@ void Base::getHistogramCmd(char* xName, char* yName, int num)
 }
 
 void Base::getHorzCutCmd(char* xx, char* yy, const Vector& vv, 
-			 Coord::InternalSystem ref, int thick)
+			 Coord::InternalSystem ref, 
+			 int thick, Base::CutMethod method)
 {
   Vector rr;
   if (isInCFits(vv, ref, &rr))
-    bltCut(xx, yy, Coord::XX, rr, thick);
+    bltCut(xx, yy, Coord::XX, rr, thick, method);
   else
     result = TCL_ERROR;
 }
@@ -2201,11 +2202,12 @@ void Base::getValueCmd(const Vector& vv, Coord::InternalSystem sys)
 }
 
 void Base::getVertCutCmd(char* xx, char* yy, const Vector& vv,
-			 Coord::InternalSystem ref, int thick)
+			 Coord::InternalSystem ref, 
+			 int thick, Base::CutMethod method)
 {
   Vector rr;
   if (isInCFits(vv, ref, &rr))
-    bltCut(xx, yy, Coord::YY, rr, thick);
+    bltCut(xx, yy, Coord::YY, rr, thick, method);
   else
     result = TCL_ERROR;
 }

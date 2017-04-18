@@ -919,7 +919,7 @@ void Base::markerAnalysisStats4(ostream& str, int kk,
 }
 
 void Base::bltCut(char* xname, char* yname, Coord::Orientation axis, 
-		  const Vector& rr, int thick)
+		  const Vector& rr, int thick, Base::CutMethod method)
 {
   int size;
   if (axis == Coord::XX)
@@ -941,7 +941,7 @@ void Base::bltCut(char* xname, char* yname, Coord::Orientation axis,
     }
   }
   else
-    bltCutFits(xx, yy, size, axis, rr, thick);
+    bltCutFits(xx, yy, size, axis, rr, thick, method);
 
   Blt_Vector* xv;
   if (Blt_GetVector(interp, xname, &xv) != TCL_OK)
@@ -967,7 +967,7 @@ void Base::bltCut(char* xname, char* yname, Coord::Orientation axis,
 }
 
 void Base::bltCutFits(double* xx, double* yy, int size, Coord::Orientation axis,
-		      const Vector& r, int thick)
+		      const Vector& r, int thick, Base::CutMethod method)
 {
   Vector rr = r * refToWidget;
   FitsImage* ptr = currentContext->cfits;
@@ -1002,12 +1002,19 @@ void Base::bltCutFits(double* xx, double* yy, int size, Coord::Orientation axis,
 
     xx[2*ii] = ii;
     xx[2*ii +1] = ii;
-    
     yy[2*ii] = prev;
-    if (cnt)
-      yy[2*ii +1] = prev = vv/cnt;
-    else
-      yy[2*ii +1] = prev = currentContext->low();
+
+    switch (method) {
+    case Base::AVERAGE:
+      if (cnt)
+	yy[2*ii +1] = prev = vv/cnt;
+      else
+	yy[2*ii +1] = prev = currentContext->low();
+      break;
+    case Base::SUM:
+      yy[2*ii +1] = prev = vv;
+      break;
+    }
       
   }
   CLEARSIGBUS

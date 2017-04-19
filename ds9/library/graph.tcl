@@ -16,8 +16,7 @@ proc GraphDef {} {
     set igraph(vert,id) 0
 
     set igraph(size) 150
-#    set igraph(gap,x) 50
-    set igraph(gap,x) 0
+    set igraph(gap,x) 50
     set igraph(gap,y) 25
 
     set igraph(x,min) 0
@@ -62,6 +61,8 @@ proc CreateGraphs {} {
 			     -plotrelief solid \
 			     -plotbackground $ds9(bg) \
 			     -font [font actual TkDefaultFont] \
+			     -rm $igraph(gap,x) \
+			     -plotpadx -2 \
 			    ]
     # we need to manually set the element foreground color, i.e. use graph fg
     set fgcolor [$ds9(graph,horz) cget -foreground]
@@ -69,11 +70,11 @@ proc CreateGraphs {} {
     $ds9(graph,horz) legend configure -hide yes
     $ds9(graph,horz) crosshairs configure -color green
 
-    $ds9(graph,horz) xaxis configure -hide no -showticks no -bg $ds9(bg)
+    $ds9(graph,horz) xaxis configure -hide no -showticks no -linewidth 0 \
+	-bg $ds9(bg)
     $ds9(graph,horz) x2axis configure -hide yes
     $ds9(graph,horz) yaxis configure -hide yes
     $ds9(graph,horz) y2axis configure -hide no -bg $ds9(bg) \
-	-exterior no \
 	-tickfont [font actual TkDefaultFont]
 
     $ds9(graph,horz) element create line1 -xdata graphHorzX -ydata graphHorzY \
@@ -92,22 +93,25 @@ proc CreateGraphs {} {
 
     # Vertical Graph
     set ds9(graph,vert) [blt::graph $ds9(main).vert \
-			     -width $igraph(size) -height $canvas(height) \
 			     -invertxy yes \
+			     -width $igraph(size) -height $canvas(height) \
 			     -takefocus 0 \
      			     -background $ds9(bg) \
 			     -highlightthickness 0 \
 			     -borderwidth 0 \
 			     -plotborderwidth 1 \
-			     -plotrelief flat \
-			     -plotbackground $ds9(bg)
+			     -plotrelief solid \
+			     -plotbackground $ds9(bg) \
+			     -font [font actual TkDefaultFont] \
+			     -bm $igraph(gap,y) \
+			     -plotpady -2 \
 			    ]
     $ds9(graph,vert) legend configure -hide yes
     $ds9(graph,vert) crosshairs configure -color green
 
     $ds9(graph,vert) xaxis configure -hide yes -descending yes
     $ds9(graph,vert) x2axis configure -hide no -descending yes \
-	-showticks no -bg $ds9(bg)
+	-showticks no -linewidth 0 -bg $ds9(bg)
     $ds9(graph,vert) yaxis configure -hide no -descending yes \
 	 -bg $ds9(bg) -tickfont [font actual TkDefaultFont]
     $ds9(graph,vert) y2axis configure -hide yes -descending yes
@@ -199,7 +203,7 @@ proc UpdateGraphYAxis {which} {
 
     if {$view(graph,vert)} {
 	UpdateGraphYAxisHV $which $ds9(graph,vert) graphVertY \
-	    $graph(vert,log) $graph(vert,thick) $graph(thick,method)
+	    $graph(vert,log) $graph(vert,thick) $graph(vert,method)
     }
 }
 
@@ -360,11 +364,12 @@ proc MotionGraph {which x y horz} {
 		set coord [$current(frame) get crosshair canvas]
 		set X [lindex $coord 0]
 		set Y [lindex $coord 1]
-
 		if {$horz} {
+		    puts stderr "$x $X"
 		    UpdateInfoBox $current(frame) $x $Y canvas
 		    UpdatePixelTableDialog $current(frame) $x $Y canvas
 		} else {
+		    puts stderr "$y $Y"
 		    UpdateInfoBox $current(frame) $X $y canvas
 		    UpdatePixelTableDialog $current(frame) $X $y canvas
 		}

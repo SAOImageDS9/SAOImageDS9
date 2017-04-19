@@ -16,8 +16,14 @@ proc AnalysisMainMenu {} {
 #    $ds9(mb).analysis add separator
     $ds9(mb).analysis add command -label "[msgcat::mc {Pixel Table}]..." \
 	-command PixelTableDialog 
+    $ds9(mb).analysis add command -label "[msgcat::mc {Name Resolution}]..." \
+	-command NRESDialog
+    $ds9(mb).analysis add separator
     $ds9(mb).analysis add command -label "[msgcat::mc {Mask Parameters}]..." \
 	-command MaskDialog
+    $ds9(mb).analysis add command -label "[msgcat::mc {Graph Parameters}]..." \
+	-command GraphDialog
+    $ds9(mb).analysis add command -label "[msgcat::mc {Crosshair Parameters}]..." -command CrosshairDialog
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add checkbutton -label [msgcat::mc {Contours}] \
 	-variable contour(view) -command UpdateContour
@@ -39,17 +45,6 @@ proc AnalysisMainMenu {} {
 	-variable smooth(view) -command SmoothUpdate
     $ds9(mb).analysis add command -label "[msgcat::mc {Smooth Parameters}]..." \
 	-command SmoothDialog
-    $ds9(mb).analysis add separator
-    $ds9(mb).analysis add command \
-	-label "[msgcat::mc {Crosshair Parameters}]..." \
-	-command CrosshairDialog
-    $ds9(mb).analysis add separator
-    $ds9(mb).analysis add command \
-	-label "[msgcat::mc {Graph Parameters}]..." \
-	-command GraphDialog
-    $ds9(mb).analysis add separator
-    $ds9(mb).analysis add command -label "[msgcat::mc {Name Resolution}]..." \
-	-command NRESDialog
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add cascade -label [msgcat::mc {Image Servers}] \
 	-menu $ds9(mb).analysis.image

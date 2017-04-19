@@ -233,37 +233,15 @@ proc UpdateGraphYAxisHV {which what vectorY log thick method} {
 	    average {}
 	}
 
-	$what yaxis configure -min $yMin -max $yMax -logscale $log -tickdefault 4
-	$what y2axis configure -min $yMin -max $yMax -logscale $log -tickdefault 4
+	$what yaxis configure -min $yMin -max $yMax \
+	    -logscale $log -tickdefault 4
+	$what y2axis configure -min $yMin -max $yMax \
+	    -logscale $log -tickdefault 4
     } else {
 	$what yaxis configure -min $igraph(y,min) -max $igraph(y,max) \
 	    -logscale $log -tickdefault 4
 	$what y2axis configure -min $igraph(y,min) -max $igraph(y,max) \
 	    -logscale $log -tickdefault 4
-    }
-}
-
-proc ShowGraphData {which} {
-    global ds9
-    global view
-
-    if {$view(graph,horz)} {
-	ShowGraphDataHV $which $ds9(graph,horz)
-    }
-    if {$view(graph,vert)} {
-	ShowGraphDataHV $which $ds9(graph,vert)
-    }
-}
-
-proc ShowGraphDataHV {which what} {
-    if {$which != {}} {
-	if {[$which has fits]} {
-	    $what element configure line1 -hide no
-	} else {
-	    $what element configure line1 -hide yes
-	}
-    } else {
-	$what element configure line1 -hide yes
     }
 }
 
@@ -296,19 +274,15 @@ proc UpdateGraph {which x y sys} {
     }
 
     if {$view(graph,horz)} {
-	if {![catch {$which get horizontal cut graphHorzX graphHorzY $x $y $sys $graph(horz,thick) $graph(horz,method)}]} {
-	    $ds9(graph,horz) element configure line1 -hide no
-	} else {
-	    $ds9(graph,horz) element configure line1 -hide yes
-	}
+	$which get horizontal cut graphHorzX graphHorzY $x $y $sys \
+	    $graph(horz,thick) $graph(horz,method)
+	$ds9(graph,horz) element configure line1 -hide no
     }
 
     if {$view(graph,vert)} {
-	if {![catch {$which get vertical cut graphVertX graphVertY $x $y $sys $graph(vert,thick) $graph(vert,method)}]} {
-	    $ds9(graph,vert) element configure line1 -hide no
-	} else {
-	    $ds9(graph,vert) element configure line1 -hide yes
-	}
+	$which get vertical cut graphVertX graphVertY $x $y $sys \
+	    $graph(vert,thick) $graph(vert,method)
+	$ds9(graph,vert) element configure line1 -hide no
     }
 }
 
@@ -365,11 +339,9 @@ proc MotionGraph {which x y horz} {
 		set X [lindex $coord 0]
 		set Y [lindex $coord 1]
 		if {$horz} {
-		    puts stderr "$x $X"
 		    UpdateInfoBox $current(frame) $x $Y canvas
 		    UpdatePixelTableDialog $current(frame) $x $Y canvas
 		} else {
-		    puts stderr "$y $Y"
 		    UpdateInfoBox $current(frame) $X $y canvas
 		    UpdatePixelTableDialog $current(frame) $X $y canvas
 		}

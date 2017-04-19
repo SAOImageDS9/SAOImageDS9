@@ -970,8 +970,11 @@ void Base::bltCutFits(double* xx, double* yy, int size, Coord::Orientation axis,
 		      const Vector& r, int thick, Base::CutMethod method)
 {
   Vector rr = r * refToWidget;
-  FitsImage* ptr = currentContext->cfits;
-  FitsBound* params = ptr->getDataParams(currentContext->secMode());
+
+  FitsImage* sptr = currentContext->cfits;
+  FitsBound* params = sptr->getDataParams(currentContext->secMode());
+
+  int mosaic = isMosaic();
   double prev = currentContext->low();
 
   // main loop
@@ -982,22 +985,39 @@ void Base::bltCutFits(double* xx, double* yy, int size, Coord::Orientation axis,
     int cnt =0;
 
     Vector img;
+    int ww = thick/2;
     for (int jj=0; jj<thick; jj++) {
-      int ww = jj/2;
-      if (axis == Coord::XX)
-	img = Vector(1+ii,rr[1]-ww+jj) * ptr->widgetToData;
-      else
-	img = Vector(rr[0]-ww+jj,1+ii) * ptr->widgetToData;
 
-      if (img[0]>=params->xmin && img[0]<params->xmax && 
-	  img[1]>=params->ymin && img[1]<params->ymax) {
-	double value = ptr->getValueDouble(img);
+      if (mosaic) {
+	sptr = currentContext->cfits;
+	params = sptr->getDataParams(currentContext->secMode());
+      }
 
-	if (isfinite(value)) {
-	  vv += value;
-	  cnt +=1;
+      do {
+	if (axis == Coord::XX)
+	  img = Vector(1+ii,rr[1]-ww+jj) * sptr->widgetToData;
+	else
+	  img = Vector(rr[0]-ww+jj,1+ii) * sptr->widgetToData;
+
+	if (img[0]>=params->xmin && img[0]<params->xmax && 
+	    img[1]>=params->ymin && img[1]<params->ymax) {
+	  double value = sptr->getValueDouble(img);
+
+	  if (isfinite(value)) {
+	    vv += value;
+	    cnt +=1;
+	  }
+	  break;
+	}
+	else {
+	  if (mosaic) {
+	    sptr = sptr->nextMosaic();
+	    if (sptr)
+	      params = sptr->getDataParams(currentContext->secMode());
+	  }
 	}
       }
+      while (mosaic && sptr);
     }
 
     xx[2*ii] = ii;

@@ -1855,11 +1855,7 @@ void Base::getHorzCutCmd(char* xx, char* yy, const Vector& vv,
 			 Coord::InternalSystem ref, 
 			 int thick, Base::CutMethod method)
 {
-  Vector rr;
-  if (isInCFits(vv, ref, &rr))
-    bltCut(xx, yy, Coord::XX, rr, thick, method);
-  else
-    result = TCL_ERROR;
+  bltCut(xx, yy, Coord::XX, mapToRef(vv,ref), thick, method);
 }
 
 void Base::getInfoCmd(char* var)
@@ -2205,11 +2201,7 @@ void Base::getVertCutCmd(char* xx, char* yy, const Vector& vv,
 			 Coord::InternalSystem ref, 
 			 int thick, Base::CutMethod method)
 {
-  Vector rr;
-  if (isInCFits(vv, ref, &rr))
-    bltCut(xx, yy, Coord::YY, rr, thick, method);
-  else
-    result = TCL_ERROR;
+  bltCut(xx, yy, Coord::YY, mapToRef(vv,ref), thick, method);
 }
 
 void Base::getWCSCmd()

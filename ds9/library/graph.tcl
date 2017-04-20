@@ -241,11 +241,16 @@ proc ClearGraphData {} {
     }
 }
 
-proc UpdateGraph {which x y sys} {
+proc UpdateGraphData {which x y sys} {
     global ds9
     global view
     global graph
     global dgraph
+
+    global debug
+    if {$debug(tcl,update)} {
+	puts stderr "UpdateGraphData"
+    }
 
     # save for later
     set dgraph(frame) $which
@@ -521,7 +526,7 @@ proc GraphApplyDialog {} {
 	if {$dgraph(frame) != {}} {
 	    set ii [lsearch $ds9(active) $dgraph(frame)]
 	    if {$ii>=0} {
-		UpdateGraph $dgraph(frame) $dgraph(x) $dgraph(y) canvas
+		UpdateGraphData $dgraph(frame) $dgraph(x) $dgraph(y) canvas
 	    } else {
 		set dgraph(frame) {}
 	    }

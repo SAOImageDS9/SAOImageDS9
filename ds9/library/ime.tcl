@@ -217,7 +217,7 @@ proc IMEKeyTask {which xx yy} {
     UpdateColormapLevelMosaic $which $xx $yy canvas
     UpdateInfoBox $which $xx $yy canvas
     UpdatePixelTableDialog $which $xx $yy canvas
-    UpdateGraph $which $xx $yy canvas
+    UpdateGraphData $which $xx $yy canvas
 }
 
 proc IMEButton {which xx yy} {
@@ -399,7 +399,7 @@ proc IMEArrowKey {which xx yy} {
     UpdateColormapLevelMosaic $which $XX $YY canvas
     UpdateInfoBox $which $XX $YY canvas
     UpdatePixelTableDialog $which $XX $YY canvas
-    UpdateGraph $which $XX $YY canvas
+    UpdateGraphData $which $XX $YY canvas
 }
 
 proc IMEHelp {} {

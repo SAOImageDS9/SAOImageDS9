@@ -168,7 +168,7 @@ proc UpdateMain {} {
 		# just in case we hae a mosaic
 		UpdateColormapLevelMosaic $current(frame) $x $y canvas
 		UpdatePixelTableDialog $current(frame) $x $y canvas
-		UpdateGraph $current(frame) $x $y canvas
+		UpdateGraphData $current(frame) $x $y canvas
 	    }
 	}
 	none -

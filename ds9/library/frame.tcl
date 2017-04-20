@@ -578,7 +578,7 @@ proc EnterFrame {which x y} {
     EnterInfoBox $which
     UpdateInfoBox $which $x $y canvas
     UpdatePixelTableDialog $which $x $y canvas
-    UpdateGraph $which $x $y canvas
+    UpdateGraphData $which $x $y canvas
     UpdateGraphAxis $which
     UpdateMagnifier $which $x $y
 
@@ -683,7 +683,7 @@ proc DoMotion {which x y cursor1 cursor2} {
 	    UpdateColormapLevelMosaic $which $x $y canvas
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraph $which $x $y canvas
+	    UpdateGraphData $which $x $y canvas
 	}
 	none -
 	colorbar -
@@ -696,7 +696,7 @@ proc DoMotion {which x y cursor1 cursor2} {
 	    UpdateColormapLevelMosaic $which $x $y canvas
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraph $which $x $y canvas
+	    UpdateGraphData $which $x $y canvas
 	}
 	crosshair {}
     }
@@ -752,7 +752,7 @@ proc Button1Frame {which x y} {
 	    UpdateColormapLevelMosaic $which $x $y canvas
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraph $which $x $y canvas
+	    UpdateGraphData $which $x $y canvas
 	    UpdateMagnifier $which $x $y
 	}
 	colorbar {
@@ -791,7 +791,7 @@ proc Button1Frame {which x y} {
 	    UpdateColormapLevelMosaic $which $x $y canvas
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraph $which $x $y canvas
+	    UpdateGraphData $which $x $y canvas
 	    UpdateMagnifier $which $x $y
 	}
 	examine {ExamineButton $which $x $y}
@@ -954,7 +954,7 @@ proc Motion1Frame {which x y} {
 
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraph $which $x $y canvas
+	    UpdateGraphData $which $x $y canvas
 	    UpdateMagnifier $which $x $y
 	}
 	crosshair {
@@ -964,7 +964,7 @@ proc Motion1Frame {which x y} {
 		UpdateColormapLevelMosaic $which $x $y canvas
 		UpdateInfoBox $which $x $y canvas
 		UpdatePixelTableDialog $which $x $y canvas
-		UpdateGraph $which $x $y canvas
+		UpdateGraphData $which $x $y canvas
 		UpdateMagnifier $which $x $y
 	    }
 	}
@@ -1005,7 +1005,7 @@ proc Motion1Frame {which x y} {
 
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraph $which $x $y canvas
+	    UpdateGraphData $which $x $y canvas
 	    UpdateMagnifier $which $x $y
 	}
 	analysis {
@@ -1014,7 +1014,7 @@ proc Motion1Frame {which x y} {
 	    UpdateColormapLevelMosaic $which $x $y canvas
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraph $which $x $y canvas
+	    UpdateGraphData $which $x $y canvas
 	    UpdateMagnifier $which $x $y
 	}
 	examine -
@@ -1051,7 +1051,7 @@ proc Release1Frame {which x y} {
 		UpdateColormapLevelMosaic $which $x $y canvas
 		UpdateInfoBox $which $x $y canvas
 		UpdatePixelTableDialog $which $x $y canvas
-		UpdateGraph $which $x $y canvas
+		UpdateGraphData $which $x $y canvas
 	    }
 	}
 	colorbar {

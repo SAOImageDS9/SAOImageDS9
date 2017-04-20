@@ -43,7 +43,7 @@ proc CrosshairArrowKey {which x y} {
     UpdateColormapLevelMosaic $which $X $Y canvas
     UpdateInfoBox $which $X $Y canvas
     UpdatePixelTableDialog $which $X $Y canvas
-    UpdateGraph $which $X $Y canvas
+    UpdateGraphData $which $X $Y canvas
 }
 
 proc CrosshairTo {x y sys sky} {

@@ -151,21 +151,26 @@ proc UpdateGraphGrid {} {
     $ds9(graph,vert) yaxis configure -grid $graph(vert,grid) -tickdefault 4
 }
 
-proc UpdateGraphXAxis {which} {
+proc UpdateGraphAxis {which} {
     global ds9
     global view
+    global graph
 
     global debug
     if {$debug(tcl,update)} {
-	puts stderr "UpdateGraphXAxis"
+	puts stderr "UpdateGraphAxis"
     }
 
     if {$view(graph,horz)} {
 	UpdateGraphXAxisHV $which $ds9(graph,horz) graphHorzX
+	UpdateGraphYAxisHV $which $ds9(graph,horz) graphHorzY \
+	    $graph(horz,log) $graph(horz,thick) $graph(horz,method)
     }
     
     if {$view(graph,vert)} {
 	UpdateGraphXAxisHV $which $ds9(graph,vert) graphVertX
+	UpdateGraphYAxisHV $which $ds9(graph,vert) graphVertY \
+	    $graph(vert,log) $graph(vert,thick) $graph(vert,method)
     }
 }
 
@@ -182,28 +187,6 @@ proc UpdateGraphXAxisHV {which what vectorX} {
     } else {
 	$what xaxis configure -min $igraph(x,min) -max $igraph(x,max)
 	$what x2axis configure -min $igraph(x,min) -max $igraph(x,max)
-    }
-}
-
-proc UpdateGraphYAxis {which} {
-    global graph
-
-    global ds9
-    global view
-
-    global debug
-    if {$debug(tcl,update)} {
-	puts stderr "UpdateGraphYAxis"
-    }
-
-    if {$view(graph,horz)} {
-	UpdateGraphYAxisHV $which $ds9(graph,horz) graphHorzY \
-	    $graph(horz,log) $graph(horz,thick) $graph(horz,method)
-    }
-
-    if {$view(graph,vert)} {
-	UpdateGraphYAxisHV $which $ds9(graph,vert) graphVertY \
-	    $graph(vert,log) $graph(vert,thick) $graph(vert,method)
     }
 }
 
@@ -467,19 +450,19 @@ proc GraphDialog {} {
     ttk::label $f.htaxis -text [msgcat::mc {Axis}]
     ttk::radiobutton $f.hlaxis -text [msgcat::mc {Linear}] \
 	-variable graph(horz,log) -value false \
-	-command [list UpdateGraphYAxis $current(frame)]
+	-command [list UpdateGraphAxis $current(frame)]
     ttk::radiobutton $f.hgaxis -text [msgcat::mc {Log}] \
 	-variable graph(horz,log) -value true \
-	-command [list UpdateGraphYAxis $current(frame)]
+	-command [list UpdateGraphAxis $current(frame)]
     ttk::label $f.htthick -text [msgcat::mc {Thickness}]
     ttk::entry $f.hthick -textvariable graph(horz,thick) -width 7
     ttk::label $f.htmethod -text [msgcat::mc {Method}]
     ttk::radiobutton $f.hamethod -text [msgcat::mc {Average}] \
 	-variable graph(horz,method) -value average \
-	-command [list UpdateGraphYAxis $current(frame)]
+	-command [list UpdateGraphAxis $current(frame)]
     ttk::radiobutton $f.hsmethod -text [msgcat::mc {Sum}] \
 	-variable graph(horz,method) -value sum \
-	-command [list UpdateGraphYAxis $current(frame)]
+	-command [list UpdateGraphAxis $current(frame)]
 
     grid $f.hgrid -padx 2 -pady 2 -sticky w
     grid $f.htaxis $f.hlaxis $f.hgaxis -padx 2 -pady 2 -sticky w
@@ -495,19 +478,19 @@ proc GraphDialog {} {
     ttk::label $f.vtaxis -text [msgcat::mc {Axis}]
     ttk::radiobutton $f.vlaxis -text [msgcat::mc {Linear}] \
 	-variable graph(vert,log) -value false \
-	-command [list UpdateGraphYAxis $current(frame)]
+	-command [list UpdateGraphAxis $current(frame)]
     ttk::radiobutton $f.vgaxis -text [msgcat::mc {Log}] \
 	-variable graph(vert,log) -value true \
-	-command [list UpdateGraphYAxis $current(frame)]
+	-command [list UpdateGraphAxis $current(frame)]
     ttk::label $f.vtthick -text [msgcat::mc {Thickness}]
     ttk::entry $f.vthick -textvariable graph(vert,thick) -width 7
     ttk::label $f.vtmethod -text [msgcat::mc {Method}]
     ttk::radiobutton $f.vamethod -text [msgcat::mc {Average}] \
 	-variable graph(vert,method) -value average \
-	-command [list UpdateGraphYAxis $current(frame)]
+	-command [list UpdateGraphAxis $current(frame)]
     ttk::radiobutton $f.vsmethod -text [msgcat::mc {Sum}] \
 	-variable graph(vert,method) -value sum \
-	-command [list UpdateGraphYAxis $current(frame)]
+	-command [list UpdateGraphAxis $current(frame)]
 
     grid $f.vgrid -padx 2 -pady 2 -sticky w
     grid $f.vtaxis $f.vlaxis $f.vgaxis -padx 2 -pady 2 -sticky w

@@ -303,7 +303,7 @@ proc UpdateCube {} {
     UpdateScaleDialog
     UpdateContourScale
     UpdateContourDialog
-    UpdateGraphYAxis $current(frame)
+    UpdateGraphAxis $current(frame)
     UpdateInfoBoxBase
     UpdateMain
 }

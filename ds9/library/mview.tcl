@@ -149,7 +149,7 @@ proc PrefsDialogGraph {} {
     set f [ttk::labelframe $w.graph.horz -text [msgcat::mc {Horizontal}]]
 
     ttk::checkbutton $f.hgrid -text [msgcat::mc {Show Grid}] \
-	-variable pgraph(horz,grid) -command UpdateGraphGrid
+	-variable pgraph(horz,grid)
     ttk::label $f.htaxis -text [msgcat::mc {Axis}]
     ttk::radiobutton $f.hlaxis -text [msgcat::mc {Linear}] \
 	-variable pgraph(horz,log) -value false
@@ -172,7 +172,7 @@ proc PrefsDialogGraph {} {
     set f [ttk::labelframe $w.graph.vert -text [msgcat::mc {Vertical}]]
 
     ttk::checkbutton $f.vgrid -text [msgcat::mc {Show Grid}] \
-	-variable pgraph(vert,grid) -command UpdateGraphGrid
+	-variable pgraph(vert,grid)
     ttk::label $f.vtaxis -text [msgcat::mc {Axis}]
     ttk::radiobutton $f.vlaxis -text [msgcat::mc {Linear}] \
 	-variable pgraph(vert,log) -value false

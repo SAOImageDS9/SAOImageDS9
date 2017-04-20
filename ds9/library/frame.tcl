@@ -579,8 +579,7 @@ proc EnterFrame {which x y} {
     UpdateInfoBox $which $x $y canvas
     UpdatePixelTableDialog $which $x $y canvas
     UpdateGraph $which $x $y canvas
-    UpdateGraphXAxis $which
-    UpdateGraphYAxis $which
+    UpdateGraphAxis $which
     UpdateMagnifier $which $x $y
 
     if {$view(magnifier)} {
@@ -1810,8 +1809,7 @@ proc ResetFrame {which} {
 	UpdateZoomMenu
 	UpdateScaleMenu
 	UpdateScaleDialog
-	UpdateGraphXAxis $which
-	UpdateGraphYAxis $which
+	UpdateGraphAxis $which
 
 	SAMPSendCoordPointAtSkyCmd $which
     }

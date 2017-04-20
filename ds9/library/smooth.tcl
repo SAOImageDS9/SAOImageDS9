@@ -40,7 +40,7 @@ proc SmoothUpdate {} {
     UpdateContourScale
     UpdateContourDialog
     UpdateScaleDialog
-    UpdateGraphXAxis $current(frame)
+    UpdateGraphAxis $current(frame)
     UpdateMain
 }
 

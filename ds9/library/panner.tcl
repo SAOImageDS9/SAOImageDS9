@@ -229,7 +229,7 @@ proc Release1Panner {x y} {
 	UpdateGraph $current(frame) $x $y panner
 
 	LockFrameCurrent
-	UpdateGraphXAxis $current(frame)
+	UpdateGraphAxis $current(frame)
 	UpdatePanZoomDialog
 	SAMPSendCoordPointAtSkyCmd $current(frame)
     }
@@ -249,7 +249,7 @@ proc Release2Panner {x y} {
 	UpdateGraph $current(frame) $x $y panner
 
 	LockFrameCurrent
-	UpdateGraphXAxis $current(frame)
+	UpdateGraphAxis $current(frame)
 	UpdatePanZoomDialog
 	SAMPSendCoordPointAtSkyCmd $current(frame)
     }

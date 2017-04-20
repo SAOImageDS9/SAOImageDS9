@@ -333,7 +333,8 @@ proc LayoutView {} {
     LayoutButtons
     LayoutFrames
     LayoutColorbar
-    LayoutGraphs
+
+    UpdateGraphLayout {}
 }
 
 proc LayoutViewAdjust {varname} {

@@ -165,7 +165,7 @@ proc UpdateMain {} {
 		set x [lindex $coord 0]
 		set y [lindex $coord 1]
 
-		# just in case we hae a mosaic
+		# just in case we have a mosaic
 		UpdateColormapLevelMosaic $current(frame) $x $y canvas
 		UpdatePixelTableDialog $current(frame) $x $y canvas
 		UpdateGraphData $current(frame) $x $y canvas

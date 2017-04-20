@@ -217,6 +217,8 @@ proc IMEKeyTask {which xx yy} {
     UpdateColormapLevelMosaic $which $xx $yy canvas
     UpdateInfoBox $which $xx $yy canvas
     UpdatePixelTableDialog $which $xx $yy canvas
+    UpdateGraphLayout $which
+    UpdateGraphAxis $which
     UpdateGraphData $which $xx $yy canvas
 }
 

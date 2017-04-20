@@ -348,7 +348,7 @@ proc ArrowKeyGraph {which x y horz} {
     MotionGraph $which $cx $cy $horz
 }
 
-proc LayoutGraphs {} {
+proc UpdateGraphLayout {which} {
     global igraph
 
     global ds9
@@ -356,6 +356,18 @@ proc LayoutGraphs {} {
     global view
     global colorbar
     global icolorbar
+
+    if {$which != {}} {
+	set frww [$ds9(canvas) itemcget $which -width]
+	set frhh [$ds9(canvas) itemcget $which -height]
+	set frxx [$ds9(canvas) itemcget $which -x]
+	set fryy [$ds9(canvas) itemcget $which -y]
+    } else {
+	set frww $canvas(width)
+	set frhh $canvas(height)
+	set frxx 0
+	set fryy 0
+    }
 
     set cbh [expr $view(colorbar) && \
 	     [string equal $colorbar(orientation) {horizontal}]]
@@ -365,8 +377,9 @@ proc LayoutGraphs {} {
     set grv [expr $view(graph,vert)]
 
     if {$grh} {
-	set xx 0
+	set xx $frxx
 	set yy [expr $canvas(height) + $canvas(gap)]
+
 	if {$cbh} {
 	    incr yy $icolorbar(horizontal,height)
 	}
@@ -381,7 +394,7 @@ proc LayoutGraphs {} {
 	    $ds9(canvas) coords $igraph(horz,id) $xx $yy
 	}
 
-	set ww [expr $canvas(width)+$igraph(gap,x)]
+	set ww [expr $frww+$igraph(gap,x)]
 	$ds9(graph,horz) configure -width $ww
     } else {
 	if {$igraph(horz,id)>0} {
@@ -391,8 +404,9 @@ proc LayoutGraphs {} {
     }
 
     if {$grv} {
-	set yy 0
+	set yy $fryy
 	set xx [expr $canvas(width) + $canvas(gap)]
+
 	if {$cbv} {
 	    incr xx $icolorbar(vertical,width)
 	}
@@ -407,7 +421,7 @@ proc LayoutGraphs {} {
 	    $ds9(canvas) coords $igraph(vert,id) $xx $yy
 	}
 
-	set hh [expr $canvas(height)+$igraph(gap,y)]
+	set hh [expr $frhh+$igraph(gap,y)]
 	$ds9(graph,vert) configure -height $hh
 
     } else {

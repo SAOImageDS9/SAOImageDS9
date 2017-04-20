@@ -137,7 +137,6 @@ proc EnterPanner {x y} {
 	EnterInfoBox $current(frame)
 	UpdateInfoBox $current(frame) $x $y panner
 	UpdatePixelTableDialog $current(frame) $x $y panner
-	UpdateGraphData $current(frame) $x $y panner
     }
 }
 
@@ -177,7 +176,6 @@ proc MotionPanner {x y} {
 	UpdateColormapLevelMosaic $current(frame) $x $y panner
 	UpdateInfoBox $current(frame) $x $y panner
 	UpdatePixelTableDialog $current(frame) $x $y panner
-	UpdateGraphData $current(frame) $x $y panner
     }
 }
 
@@ -206,7 +204,6 @@ proc Motion1Panner {x y} {
 	UpdateColormapLevelMosaic $current(frame) $x $y panner
 	UpdateInfoBox $current(frame) $x $y panner
 	UpdatePixelTableDialog $current(frame) $x $y panner
-	UpdateGraphData $current(frame) $x $y panner
     }
 }
 
@@ -226,10 +223,8 @@ proc Release1Panner {x y} {
 	UpdateColormapLevelMosaic $current(frame) $x $y panner
 	UpdateInfoBox $current(frame) $x $y panner
 	UpdatePixelTableDialog $current(frame) $x $y panner
-	UpdateGraphData $current(frame) $x $y panner
 
 	LockFrameCurrent
-	UpdateGraphAxis $current(frame)
 	UpdatePanZoomDialog
 	SAMPSendCoordPointAtSkyCmd $current(frame)
     }
@@ -246,10 +241,8 @@ proc Release2Panner {x y} {
 	UpdateColormapLevelMosaic $current(frame) $x $y panner
 	UpdateInfoBox $current(frame) $x $y panner
 	UpdatePixelTableDialog $current(frame) $x $y panner
-	UpdateGraphData $current(frame) $x $y panner
 
 	LockFrameCurrent
-	UpdateGraphAxis $current(frame)
 	UpdatePanZoomDialog
 	SAMPSendCoordPointAtSkyCmd $current(frame)
     }

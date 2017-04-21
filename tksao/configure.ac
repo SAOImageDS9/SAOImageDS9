@@ -315,6 +315,7 @@ esac
 #--------------------------------------------------------------------
 
 #CLEANFILES="$CLEANFILES pkgIndex.tcl"
+#CLEANFILES="$CLEANFILES tksaoConfig.sh"
 if test "${TEA_PLATFORM}" = "windows" ; then
     # Ensure no empty if clauses
     :

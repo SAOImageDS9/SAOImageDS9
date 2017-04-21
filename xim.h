@@ -19,7 +19,7 @@ void xim_eraseFrame(XimDataPtr, int);
 int xim_addInput(XimDataPtr, int, void (*func)(IoChan*, int*, void*), IoChan*);
 void xim_wcs(int, float, float, float, float, float, float, float, float, int);
 
-#ifdef __WIN32__
+#ifdef __WIN32
 void setupProc(void*, int);
 void checkProc(void*, int);
 #endif

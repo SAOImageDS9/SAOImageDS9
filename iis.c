@@ -1,17 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/errno.h>
-#include <sys/types.h>
+#ifdef __WIN32
+#include <winsock2.h>
+#else
+#include <fcntl.h>
+#include <errno.h>
 #include <sys/socket.h>
-#include <unistd.h>
 #include <netinet/in.h>
+#include <sys/types.h>
+#endif
+#include <unistd.h>
 #include <time.h>
 #include <ctype.h>
 #ifdef HAVE_SYS_UN_H
 #include <sys/un.h>
 #endif
-#include <fcntl.h>
 
 #include "iis.h"
 #include "xim.h"
@@ -98,14 +102,17 @@ static void xim_connectClient(), xim_disconnectClient();
 static int chan_read(), chan_write(), decode_frameno();
 
 static CtranPtr wcs_update();
-static IoChanPtr open_fifo(), open_inet();
+static IoChanPtr open_fifo();
+static IoChanPtr open_inet();
 #ifdef HAVE_SYS_UN_H
 static IoChanPtr open_unix();
 #endif
 static IoChanPtr get_iochan();
 static MappingPtr xim_getMapping(XimDataPtr, float, float, int);
 static void print_mappings(FrameBufPtr fr);
+#ifndef __WIN32
 extern int errno;
+#endif
 
 
 /* XIM_IISOPEN -- Initialize the IIS protocol module and ready the module to
@@ -156,7 +163,11 @@ void xim_iisClose(XimDataPtr xim)
       break;
 
     case IO_INET:
+#ifdef __WIN32
+      closesocket(chan->datain);
+#else
       close (chan->datain);
+#endif
       chan->type = 0;
       break;
 
@@ -178,15 +189,23 @@ void xim_iisClose(XimDataPtr xim)
  */
 static IoChanPtr open_fifo(XimDataPtr xim)
 {
-  IoChanPtr chan;
-  int datain, dataout;
-  int keepalive;
-
 #ifdef __DARWIN__
   /* On OS X we don't use fifos. */
   xim->input_fifo = "none";
   return (NULL);
 #endif
+
+#ifdef __WIN32
+
+  /* On Windows we don't use fifos. */
+  xim->input_fifo = "none";
+  return (NULL);
+
+#else
+  
+  IoChanPtr chan;
+  int datain, dataout;
+  int keepalive;
 
   /* Setting the input fifo to "none" or the null string disables
    * fifo support.
@@ -253,8 +272,9 @@ static IoChanPtr open_fifo(XimDataPtr xim)
   }
 
   return (chan);
-}
 
+#endif
+}
 
 /* OPEN_INET -- Set up a port to be used for incoming client connections
  * using internet domain sockets.
@@ -288,8 +308,9 @@ static IoChanPtr open_inet(XimDataPtr xim)
     goto err;
 
   /* make sure we close on exec */
+#ifndef __WIN32
   fcntl(s, F_SETFD, FD_CLOEXEC);
-
+#endif
   /* Allocate and fill in i/o channel descriptor. */
   if ((chan = get_iochan(xim))) {
     chan->xim = (XtPointer) xim;
@@ -316,7 +337,11 @@ static IoChanPtr open_inet(XimDataPtr xim)
   */
   xim->port = 0;
   if (s)
+#ifdef __WIN32
+    closesocket(s);
+#else
     close (s);
+#endif
   return (NULL);
 }
 
@@ -403,7 +428,8 @@ static void xim_connectClient(IoChanPtr chan_port, int *source, XtPointer id)
   int s;
 
   /* Accept connection. */
-  if ((s = accept ((int)*source, (struct sockaddr *)0, (socklen_t *)0)) < 0)
+  //  if ((s = accept ((int)*source, (struct sockaddr *)0, (socklen_t *)0)) < 0)
+  if ((s = accept ((int)*source, (struct sockaddr *)0, NULL)) < 0)
     return;
   /* 	if (fcntl (s, F_SETFL, O_RDWR|O_NDELAY) < 0) {
 	close (s);
@@ -433,7 +459,11 @@ static void xim_disconnectClient(IoChanPtr chan)
   switch (chan->type) {
   case IO_INET:
   case IO_UNIX:
+#ifdef __WIN32
+    closesocket(chan->datain);
+#else
     close (chan->datain);
+#endif
     if (chan->id) {
       xim_removeInput(chan->xim, chan->id);
       chan->id = 0;
@@ -1455,8 +1485,13 @@ static int chan_read(int fd, void* vptr, int nbytes)
   int 	nread = 0, nleft = nbytes, nb = 0;
 
   while (nleft > 0) {
+#ifdef __WIN32
+    if ( (nb = recv(fd, ptr, nleft, 0)) < 0) {
+      if (WSAGetLastError() == WSAEINTR)
+#else
     if ( (nb = read(fd, ptr, nleft)) < 0) {
       if (errno == EINTR)
+#endif
 	nb = 0;          	/* and call read() again */
       else
 	return(-1);
@@ -1479,8 +1514,13 @@ static int chan_write (int fd, void* vptr, int nbytes)
   int     nwritten = 0,  nleft = nbytes, nb = 0;
 
   while (nleft > 0) {
+#ifdef __WIN32
+    if ( (nb = send(fd, ptr, nleft, 0)) <= 0) {
+      if (WSAGetLastError() == WSAEINTR)
+#else
     if ( (nb = write(fd, ptr, nleft)) <= 0) {
       if (errno == EINTR)
+#endif
 	nb = 0;           	/* and call write() again */
       else
 	return(-1);         /* error */

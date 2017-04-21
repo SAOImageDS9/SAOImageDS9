@@ -97,6 +97,7 @@ TEA_ADD_TCL_SOURCES([])
 #--------------------------------------------------------------------
 
 #CLEANFILES="$CLEANFILES pkgIndex.tcl"
+CLEANFILES="$CLEANFILES tcliisConfig.sh"
 if test "${TEA_PLATFORM}" = "windows" ; then
     # Ensure no empty if clauses
     :

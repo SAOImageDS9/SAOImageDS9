@@ -92,6 +92,7 @@ TEA_ADD_TCL_SOURCES([tclxml-tcl/xml__tcl.tcl tclxml-tcl/sgml-8.0.tcl tclxml-tcl/
 #--------------------------------------------------------------------
 
 #CLEANFILES="$CLEANFILES pkgIndex.tcl"
+CLEANFILES="$CLEANFILES include/tclxml/tclxml.h tclxmlConfig.sh"
 if test "${TEA_PLATFORM}" = "windows" ; then
     # Ensure no empty if clauses
     :

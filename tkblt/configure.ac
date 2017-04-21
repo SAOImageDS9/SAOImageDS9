@@ -145,6 +145,7 @@ TEA_ADD_TCL_SOURCES([library/graph.tcl])
 #--------------------------------------------------------------------
 
 #CLEANFILES="$CLEANFILES pkgIndex.tcl"
+CLEANFILES="$CLEANFILES tkbltConfig.sh"
 if test "${TEA_PLATFORM}" = "windows" ; then
     # Ensure no empty if clauses
     :

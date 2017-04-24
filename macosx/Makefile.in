@@ -13,6 +13,8 @@ OS		= @OS@
 ARCH		= @ARCH@
 JOBS		= @CORES@
 
+TLSFLAGS	= "--with-ssl-dir=/opt/local"
+
 include ./make.include
 
 WITHTCL		= --with-tcl=$(prefix)/build/tcl/Development
@@ -41,7 +43,7 @@ TKFILES = \
 
 saods9	: dirs tcl tk \
 	tclcheckdns tcliis tclsignal \
-	tclzvfs tclxml xpa \
+	tclzvfs tls tclxml xpa \
 	tkblt tktable tkimg \
 	tkmpeg tkhtml1 tkcon \
 	tkmacosx \

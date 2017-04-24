@@ -584,6 +584,7 @@ PACKAGE_URL=''
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 CORES
+TLSFLAGS
 TKFLAGS
 ARCH
 OS
@@ -1894,6 +1895,8 @@ $as_echo "$tcl_cv_sys_version" >&6; }
 case $system in
     Darwin* )
 	TKFLAGS="--disable-corefoundation"
+
+	TLSFLAGS="--with-ssl-dir=/opt/local"
 
 
 	CORES=`sysctl -n "hw.ncpu"`

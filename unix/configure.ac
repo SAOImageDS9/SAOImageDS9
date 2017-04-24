@@ -50,6 +50,8 @@ case $system in
     Darwin* )
 	TKFLAGS="--disable-corefoundation"
 	AC_SUBST(TKFLAGS)
+	TLSFLAGS="--with-ssl-dir=/opt/local"
+	AC_SUBST(TLSFLAGS)
 
 	CORES=`sysctl -n "hw.ncpu"`
 	;;

@@ -12,6 +12,7 @@ mandir		= @mandir@
 OS		= @OS@
 ARCH		= @ARCH@
 TKFLAGS		= @TKFLAGS@
+TLSFLAGS	= @TLSFLAGS@
 JOBS		= @CORES@
 
 include ./make.include
@@ -26,7 +27,7 @@ CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 saods9	: dirs tcl tk \
 	tclcheckdns tcliis tclsignal \
-	tclzvfs tclxml xpa \
+	tclzvfs tls tclxml xpa \
 	tkblt tktable tkimg \
 	tkmpeg tkhtml1 tkcon \
 	tksao ds9

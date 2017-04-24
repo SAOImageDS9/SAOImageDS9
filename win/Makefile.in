@@ -36,7 +36,7 @@ DS9APP	=SAOImage\ DS9\ $(DS9_VERSION)
 
 saods9	: dirs tcl tk \
 	libxml2 libxslt zlib \
-	tcliis tclxml xpa \
+	tcliis tclxml tls xpa \
 	tkblt tktable tkimg \
 	tkmpeg tkhtml1 tkcon \
 	tkwin \

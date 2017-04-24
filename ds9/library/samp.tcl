@@ -1043,6 +1043,7 @@ proc SAMPParseHub {} {
 		    }
 		    file {set fn $rr(path)}
 		    http -
+		    https -
 		    default {
 			set fn [tmpnam {.samp}]
 			GetFileHTTP $url $fn

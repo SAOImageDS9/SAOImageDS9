@@ -14,7 +14,8 @@ proc GetFileURL {url fname} {
     switch -- $rr(scheme) {
 	ftp {GetFileFTP $rr(authority) $rr(path) $fn}
 	file {set fn $rr(path)}
-	http -
+	http
+	https -
 	default {GetFileHTTP $url $fn}
     }
 }
@@ -87,6 +88,7 @@ proc LoadURLFits {url layer mode} {
 	ftp {LoadURLFitsFTP $r(authority) $r(path) $layer $mode}
 	file {LoadURLFitsFile $r(path) $layer $mode}
 	http -
+	https -
 	default {LoadURLFitsHTTP $url $layer $mode}
     }
 }

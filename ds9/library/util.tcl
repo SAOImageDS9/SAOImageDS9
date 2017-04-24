@@ -929,6 +929,7 @@ proc ParseURL {url varname} {
 		{} -
 		ftp -
 		http -
+		https -
 		file {
 		    if {[regexp {/([A-Z]:)(/.*)} $r(path) a b c]} {
 			set r(path) "$b$c"
@@ -1013,6 +1014,9 @@ proc ConfigHTTP {} {
 
     # set the User-Agent
     http::config -useragent ds9
+
+    # set up tls
+    http::register https 443 [list ::tls::socket -tls1 1]
 
     # set the proxy if requested
     if {$phttp(proxy)} {

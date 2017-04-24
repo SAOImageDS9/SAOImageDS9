@@ -206,6 +206,7 @@ switch $ds9(wm) {
 
 	source $ds9(root)/tkcon/tkcon.tcl
 	source $ds9(root)/tkblt/graph.tcl
+	source $ds9(root)/tls/tls.tcl
 
 	source $ds9(root)/library/source.tcl
 
@@ -239,6 +240,7 @@ switch $ds9(wm) {
 
 	package require tkcon
 	package require Tkblt
+	package require tls
 
 	package require xmlrpc
 
@@ -299,6 +301,7 @@ switch $ds9(wm) {
 
 	package require tkcon
 	package require Tkblt
+	package require tls
 
 	package require xmlrpc
 

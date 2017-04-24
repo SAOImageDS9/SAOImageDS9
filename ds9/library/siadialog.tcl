@@ -396,7 +396,8 @@ proc SIAImageCmd {varname} {
 	SIAApplyLoad $varname
 	ParseURL $url r
 	switch -- $r(scheme) {
-	    http {
+	    http -
+	    https {
 		if {$var(save)} {
 		    set var(fn) [SaveFileDialog savefitsfbox]
 		    if {$var(fn) == {}} {

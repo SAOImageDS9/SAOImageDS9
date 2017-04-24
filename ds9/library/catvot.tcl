@@ -16,6 +16,7 @@ proc CATVOTURL {url catalog title} {
 	ftp {CATVOTFTP $r(authority) $r(path)}
 	file {CATVOTFile $r(path)}
 	http -
+	https -
 	default {CATVOTHTTP $url $catalog $title}
     }
 }

@@ -213,7 +213,8 @@ proc HVLoadURL {varname url query {sync 0}} {
 	file -
 	{} {HVProcessURLFile $varname $url $query r}
 	ftp {HVProcessURLFTP $varname $url $query r}
-	http {HVProcessURLHTTP $varname $url $query r $sync}
+	http -
+	https {HVProcessURLHTTP $varname $url $query r $sync}
 	default {HVError $varname "[msgcat::mc {Sorry, DS9 does not support}] $r(scheme)"}
     }
 }
@@ -1125,7 +1126,8 @@ proc HVParseHTML {varname} {
     set base {}
     # scheme
     switch $r(scheme) {
-	http {append base "$r(scheme)://"}
+	http -
+	https {append base "$r(scheme)://"}
 	ftp {}
 	file {}
     }
@@ -1829,7 +1831,8 @@ proc HVImageURL {varname url width height} {
 		}
 	    }
 	}
-	http {
+	http -
+	https {
 	    set ch {}
 
 	    set fn [tmpnam [file extension $r(path)]]

@@ -20,6 +20,12 @@ $(LIBDIR)/cmaps : $(prefix)/ds9/cmaps
 $(LIBDIR)/template : $(prefix)/ds9/template
 	cp -prf $? "$@"
 
+#--------------------------tls
+
+$(LIBDIR)/tls	: $(prefix)/tls/*.tcl
+	mkdir -p "$@"
+	cp -prf $? "$@"
+
 #--------------------------tkblt
 
 $(LIBDIR)/tkblt	: $(prefix)/tkblt/library/*.tcl

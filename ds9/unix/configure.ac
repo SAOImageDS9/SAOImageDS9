@@ -76,6 +76,9 @@ TEA_LOAD_CONFIG(tclxml)
 TEA_PATH_CONFIG(tclzvfs)
 TEA_LOAD_CONFIG(tclzvfs)
 
+TEA_PATH_CONFIG(tls)
+TEA_LOAD_CONFIG(tls)
+
 TEA_PATH_CONFIG(tkblt)
 TEA_LOAD_CONFIG(tkblt)
 
@@ -147,10 +150,13 @@ TEA_CONFIG_SYSTEM
 case $system in
     Darwin*)
 	AC_DEFINE([ZIPFILE])
+	SSLLIBS="/opt/local/lib/libssl.a /opt/local/lib/libcrypto.a"
 	;;
     *)
+	SSLLIBS="-lssl -lcrypto"
 	;;
 esac
+AC_SUBST(SSLLIBS)
 
 AC_SUBST(system)
 AC_CHECK_LIB([xml2],[xmlInitParser])

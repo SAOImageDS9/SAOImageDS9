@@ -11441,8 +11441,9 @@ case $system in
     Darwin*)
 	$as_echo "#define ZIPFILE 1" >>confdefs.h
 
+
 #	save_LDFLAGS="$LDFLAGS"
-#	LDFLAGS="-static -L/opt/local/lib $LDFLAGS"
+#	LDFLAGS="-L/opt/local/lib $LDFLAGS"
 #	AC_CHECK_LIB([crypto],[CRYPTO_new_ex_data])
 #	AC_CHECK_LIB([ssl],[TLSv1_1_method])
 #	LDFLAGS="$save_LDFLAGS"

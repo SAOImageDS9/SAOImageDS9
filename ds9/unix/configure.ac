@@ -150,8 +150,9 @@ TEA_CONFIG_SYSTEM
 case $system in
     Darwin*)
 	AC_DEFINE([ZIPFILE])
+
 #	save_LDFLAGS="$LDFLAGS"
-#	LDFLAGS="-static -L/opt/local/lib $LDFLAGS"
+#	LDFLAGS="-L/opt/local/lib $LDFLAGS"
 #	AC_CHECK_LIB([crypto],[CRYPTO_new_ex_data])
 #	AC_CHECK_LIB([ssl],[TLSv1_1_method])
 #	LDFLAGS="$save_LDFLAGS"

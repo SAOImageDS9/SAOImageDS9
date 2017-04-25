@@ -239,8 +239,9 @@ switch $ds9(wm) {
 	package require math
 
 	package require tkcon
+	# these are scripts only
 	package require Tkblt
-	package require tls
+	package require Tls
 
 	package require xmlrpc
 
@@ -300,8 +301,9 @@ switch $ds9(wm) {
 	package require math
 
 	package require tkcon
+	# these are scripts only
 	package require Tkblt
-	package require tls
+	package require Tls
 
 	package require xmlrpc
 

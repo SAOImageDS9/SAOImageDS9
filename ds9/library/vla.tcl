@@ -113,7 +113,7 @@ proc VLAExec {varname} {
     }
 
     set var(query) [http::formatQuery .submit "Extract the Cutout" RA "$xx $yy" Equinox J2000 ImageSize $rr MaxInt 10 .cgifields ImageType ImageType "FITS Image"]
-    set url "http://third.ucllnl.org/cgi-bin/$var(survey)cutout"
+    set url "https://third.ucllnl.org/cgi-bin/$var(survey)cutout"
     IMGSVRGetURL $varname $url
 }
 

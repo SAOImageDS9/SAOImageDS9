@@ -3,6 +3,8 @@
 #
 # $Header: /cvsroot/tls/tls/tls.tcl,v 1.14 2015/07/07 17:16:03 andreas_kupries Exp $
 #
+package provide tls 1.6
+
 namespace eval tls {
     variable logcmd tclLog
     variable debug 0

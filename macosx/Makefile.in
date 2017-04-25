@@ -11,9 +11,8 @@ mandir		= @mandir@
 
 OS		= @OS@
 ARCH		= @ARCH@
+TLSFLAGS	= @TLSFLAGS@
 JOBS		= @CORES@
-
-TLSFLAGS	= "--with-ssl-dir=/opt/local"
 
 include ./make.include
 

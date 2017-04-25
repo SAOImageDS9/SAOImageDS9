@@ -22,9 +22,12 @@ $(LIBDIR)/template : $(prefix)/ds9/template
 
 #--------------------------tls
 
-$(LIBDIR)/tls	: $(prefix)/tls/*.tcl
+$(LIBDIR)/tls	: $(prefix)/tls/tls.tcl
 	mkdir -p "$@"
 	cp -prf $? "$@"
+# must do it this way for win
+	cd "$@"; \
+	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
 
 #--------------------------tkblt
 

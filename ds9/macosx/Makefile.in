@@ -34,6 +34,7 @@ tclcheckdns_LIB_SPEC= @tclcheckdns_LIB_SPEC@
 tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
 tclsignal_LIB_SPEC= @tclsignal_LIB_SPEC@
 tclxml_LIB_SPEC = @tclxml_LIB_SPEC@
+tls_LIB_SPEC=@tls_LIB_SPEC@
 
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
 tkhtml1_LIB_SPEC= @tkhtml1_LIB_SPEC@
@@ -54,7 +55,7 @@ PKG_CFLAGS	= @PKG_CFLAGS@
 DEFS		= @DEFS@ $(PKG_CFLAGS)
 
 CPPFLAGS	= @CPPFLAGS@
-LIBS		= @PKG_LIBS@ @LIBS@
+LIBS		= @PKG_LIBS@ @LIBS@ @SSLLIBS@
 CFLAGS		= @CFLAGS@
 COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
@@ -95,6 +96,7 @@ SPECS	= \
 	$(tclsignal_LIB_SPEC) \
 	$(tclxml_LIB_SPEC) \
 	$(tclzvfs_LIB_SPEC) \
+	$(tls_LIB_SPEC) \
 	$(tkblt_LIB_SPEC) \
 	$(tkhtml1_LIB_SPEC) \
 	$(tkimg_LIB_SPEC) \
@@ -129,6 +131,7 @@ PREQS	= \
 	$(LIBDIR)/doc \
 	$(LIBDIR)/cmaps \
 	$(LIBDIR)/template \
+	$(LIBDIR)/tls \
 	$(LIBDIR)/tkblt \
 	$(LIBDIR)/tkcon \
 	$(LIBDIR)/base64 \

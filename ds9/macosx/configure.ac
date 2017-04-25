@@ -73,6 +73,9 @@ TEA_LOAD_CONFIG(tclsignal)
 TEA_PATH_CONFIG(tclxml)
 TEA_LOAD_CONFIG(tclxml)
 
+TEA_PATH_CONFIG(tls)
+TEA_LOAD_CONFIG(tls)
+
 TEA_PATH_CONFIG(tkblt)
 TEA_LOAD_CONFIG(tkblt)
 
@@ -143,6 +146,8 @@ TEA_ADD_LIBS([-lstdc++])
 #TEA_ADD_STUB_SOURCES([])
 #TEA_ADD_TCL_SOURCES([])
 
+SSLLIBS="/opt/local/lib/libssl.a /opt/local/lib/libcrypto.a"
+AC_SUBST(SSLLIBS)
 AC_CHECK_LIB([xml2],[xmlInitParser])
 
 #--------------------------------------------------------------------

@@ -41,6 +41,7 @@ extern "C" {
   int Tclxpa_Init(Tcl_Interp*);
   int Tcliis_Init(Tcl_Interp*);
 
+  int Tls_Init(Tcl_Interp*);
   int Tclxml_Init(Tcl_Interp*);
   int Tclxml_libxml2_Init(Tcl_Interp*);
 
@@ -137,6 +138,12 @@ int SAOAppInit(Tcl_Interp *interp)
   //    return TCL_ERROR;
   //  Tcl_StaticPackage (interp, "tclcheckdns", Tclcheckdns_Init, 
   //		     (Tcl_PackageInitProc*)NULL);
+
+  // Tls
+  if (Tls_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  Tcl_StaticPackage (interp, "tls", Tls_Init, 
+		     (Tcl_PackageInitProc*)NULL);
 
   // Tksao
   if (Tksao_Init(interp) == TCL_ERROR)

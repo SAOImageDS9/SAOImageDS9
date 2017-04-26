@@ -67,6 +67,9 @@ TEA_LOAD_CONFIG(tcliis)
 TEA_PATH_CONFIG(tclxml)
 TEA_LOAD_CONFIG(tclxml)
 
+TEA_PATH_CONFIG(tls)
+TEA_LOAD_CONFIG(tls)
+
 TEA_PATH_CONFIG(tkblt)
 TEA_LOAD_CONFIG(tkblt)
 
@@ -136,6 +139,9 @@ TEA_ADD_LIBS([-lstdc++])
 #TEA_ADD_CFLAGS([])
 #TEA_ADD_STUB_SOURCES([])
 #TEA_ADD_TCL_SOURCES([])
+
+AC_CHECK_LIB([crypto],[CRYPTO_new_ex_data])
+AC_CHECK_LIB([ssl],[TLSv1_1_method])
 
 #--------------------------------------------------------------------
 # __CHANGE__

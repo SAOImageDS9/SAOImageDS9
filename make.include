@@ -175,6 +175,7 @@ tclzvfs/Makefile :
 
 #-------------------------- tls
 
+# no cache (win)
 tls	: tls/Makefile
 	@echo ""
 	@echo "*** $@ ***"
@@ -185,11 +186,10 @@ tls/Makefile :
 	@echo "*** $@ ***"
 	cd tls; \
 	./configure \
-	$(WITHTCL) \
 	$(TLSFLAGS) \
+	$(WITHTCL) \
 	$(PREFIX) \
-	$(STD) \
-	$(CACHE)
+	$(STD)
 
 #-------------------------- xpa
 

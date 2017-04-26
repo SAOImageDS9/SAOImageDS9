@@ -21,6 +21,7 @@ TK_STUB_LIB_SPEC= @TK_STUB_LIB_SPEC@
 tifftcl_LIB_SPEC= @tifftcl_LIB_SPEC@
 pngtcl_LIB_SPEC	= @pngtcl_LIB_SPEC@
 jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
+zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
 
 tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
 tkimggif_LIB_SPEC= @tkimggif_LIB_SPEC@
@@ -51,7 +52,7 @@ PKG_CFLAGS	= @PKG_CFLAGS@
 DEFS		= @DEFS@ $(PKG_CFLAGS)
 
 CPPFLAGS	= @CPPFLAGS@
-LIBS		= @PKG_LIBS@ @LIBS@
+LIBS		= @PKG_LIBS@ @LIBS@ @SSLLIBS@
 CFLAGS		= @CFLAGS@
 COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
@@ -130,6 +131,8 @@ PREQS	= \
 	$(LIBDIR)/math \
 	$(APPDIR)/xpans.exe \
 	$(APPDIR)/install.vbs \
+	$(APPDIR)/libeay32.dll \
+	$(APPDIR)/ssleay32.dll \
 	$(APPDIR)/tcc
 
 #--------------------------main
@@ -194,6 +197,12 @@ $(APPDIR)/tcc: $(prefix)/compilers/tcc-0.9.25-win32-bin.zip
 	cd $(APPDIR); unzip $?
 	chmod +x $@/tcc.exe
 	touch $@
+
+$(APPDIR)/libeay32.dll: c:/opt/bin/libeay32.dll
+	cp -p $? $@
+
+$(APPDIR)/ssleay32.dll: c:/opt/bin/ssleay32.dll
+	cp -p $? $@
 
 #--------------------------clean
 

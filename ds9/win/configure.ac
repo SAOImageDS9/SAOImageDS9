@@ -140,8 +140,8 @@ TEA_ADD_LIBS([-lstdc++])
 #TEA_ADD_STUB_SOURCES([])
 #TEA_ADD_TCL_SOURCES([])
 
-AC_CHECK_LIB([crypto],[CRYPTO_new_ex_data])
-AC_CHECK_LIB([ssl],[TLSv1_1_method])
+SSLLIBS="-LC:/opt/openssl/lib -lssleay32 -llibeay32"
+AC_SUBST(SSLLIBS)
 
 #--------------------------------------------------------------------
 # __CHANGE__

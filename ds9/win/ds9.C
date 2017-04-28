@@ -143,7 +143,7 @@ int SAOAppInit(Tcl_Interp *interp)
   if (Tls_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
   Tcl_StaticPackage (interp, "tls", Tls_Init, 
-		     (Tcl_PackageInitProc*)NULL);
+  		     (Tcl_PackageInitProc*)NULL);
 
   // Tksao
   if (Tksao_Init(interp) == TCL_ERROR)

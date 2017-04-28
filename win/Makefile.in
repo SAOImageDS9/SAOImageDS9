@@ -18,7 +18,7 @@ CONFIGFLAGS 	= CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar
 ASTFLAGS	= CFLAGS=-DCMINPACK_NO_DLL
 XPAFLAGS	= CFLAGS=-DSTATIC_BUILD
 TCLXMLFLAGS 	= --with-xml-static=yes
-TLSFLAGS	="CFLAGS=-DNO_IDEA=1 -DNO_RC5=1" --with-ssl-dir=/cygdrive/c/opt
+TLSFLAGS	="CFLAGS=-DNO_IDEA=1 -DNO_RC5=1" --with-ssl-dir=/home/joye/openssl-1.0.2k
 TARGET		= --build=x86_64-unknown-mingw32
 
 include ./make.include

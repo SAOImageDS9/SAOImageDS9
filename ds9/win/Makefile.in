@@ -32,7 +32,8 @@ tkimgwindow_LIB_SPEC= @tkimgwindow_LIB_SPEC@
 
 tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
 tclxml_LIB_SPEC	= @tclxml_LIB_SPEC@
-tls_LIB_SPEC	=@tls_LIB_SPEC@
+
+tls_LIB_SPEC	= @tls_LIB_SPEC@
 
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
 tkhtml1_LIB_SPEC= @tkhtml1_LIB_SPEC@
@@ -52,7 +53,7 @@ PKG_CFLAGS	= @PKG_CFLAGS@
 DEFS		= @DEFS@ $(PKG_CFLAGS)
 
 CPPFLAGS	= @CPPFLAGS@
-LIBS		= @PKG_LIBS@ @LIBS@ @SSLLIBS@
+LIBS		= @PKG_LIBS@ @LIBS@
 CFLAGS		= @CFLAGS@
 COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
@@ -122,6 +123,7 @@ PREQS	= \
 	$(LIBDIR)/doc \
 	$(LIBDIR)/cmaps \
 	$(LIBDIR)/template \
+	$(LIBDIR)/tls \
 	$(LIBDIR)/tkblt \
 	$(LIBDIR)/tkcon \
 	$(LIBDIR)/base64 \
@@ -131,9 +133,8 @@ PREQS	= \
 	$(LIBDIR)/math \
 	$(APPDIR)/xpans.exe \
 	$(APPDIR)/install.vbs \
-	$(APPDIR)/libeay32.dll \
-	$(APPDIR)/ssleay32.dll \
-	$(APPDIR)/tcc
+	$(APPDIR)/tcc \
+	stuff
 
 #--------------------------main
 
@@ -156,7 +157,10 @@ ds9Base.exe: $(OBJS) $(LLIBS)
 	$(LLIBS) \
 	$(TK_LIBS) \
 	$(LIBS) \
-	-mwindows -static
+	-L /home/joye/openssl-1.0.2k -lssl -lcrypto \
+	-lgdi32 \
+	-mwindows
+#-static
 
 winMain.o : winMain.c
 	$(COMPILE) \
@@ -198,11 +202,12 @@ $(APPDIR)/tcc: $(prefix)/compilers/tcc-0.9.25-win32-bin.zip
 	chmod +x $@/tcc.exe
 	touch $@
 
-$(APPDIR)/libeay32.dll: c:/opt/bin/libeay32.dll
-	cp -p $? $@
-
-$(APPDIR)/ssleay32.dll: c:/opt/bin/ssleay32.dll
-	cp -p $? $@
+stuff:
+	cp /home/joye/openssl-1.0.2k/ssleay32.dll $(APPDIR)
+	cp /home/joye/openssl-1.0.2k/libeay32.dll $(APPDIR)
+	cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcc_s_sjlj-1.dll $(APPDIR)
+	cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libstdc++-6.dll $(APPDIR)
+	cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll $(APPDIR)
 
 #--------------------------clean
 

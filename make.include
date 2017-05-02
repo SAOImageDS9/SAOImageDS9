@@ -21,6 +21,7 @@
 # xpa 2.1.18
 # libxml2 2.9.4
 # libxslt 1.1.29
+# openssl 1.0.2k
 
 DS9_VERSION	= 7.6b1
 XPA_VERSION	= 2.1.17

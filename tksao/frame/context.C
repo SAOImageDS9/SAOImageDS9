@@ -1942,7 +1942,7 @@ void Context::reorderAxes()
   char* data = new char[sz];
   if (!data)
     return;
-  memset(data,sz,0);
+  memset(data,0,sz);
 
   naxis_ = new int[FTY_MAXAXES];
   for (int ii=0; ii<FTY_MAXAXES; ii++)

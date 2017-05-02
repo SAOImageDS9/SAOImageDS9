@@ -22,6 +22,8 @@ TCLXMLFLAGS 	= --with-xml-static=yes
 TLSFLAGS	="CFLAGS=-DNO_IDEA=1 -DNO_RC5=1" --with-ssl-dir=$(prefix)/openssl
 TARGET		= --build=x86_64-unknown-mingw32
 
+FFLAGS		= CPP='x86_64-w64-mingw32-gcc -E' CC=x86_64-w64-mingw32-gcc LD=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar 
+
 include ./make.include
 
 WITHTCL		= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/win --enable-64bit
@@ -95,9 +97,9 @@ tkwin/Makefile :
 libxml2 : libxml2/win32/config.mingw
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw dep
-	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw libxmla
-	$(MAKE) -C libxml2/win32 -j $(JOBS) -f Makefile.mingw install-libsa
+	$(CONFIGFLAGS) $(MAKE) -e -C libxml2/win32 -j $(JOBS) -f Makefile.mingw dep
+	$(CONFIGFLAGS) $(MAKE) -e -C libxml2/win32 -j $(JOBS) -f Makefile.mingw libxmla
+	$(CONFIGFLAGS) $(MAKE) -e -C libxml2/win32 -j $(JOBS) -f Makefile.mingw install-libsa
 	cp libxml2/win32/xml2-config $(bindir)
 
 libxml2/win32/config.mingw :
@@ -109,10 +111,10 @@ libxml2/win32/config.mingw :
 libxslt : libxslt/win32/config.mingw
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw dep
-	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw libxslta
-	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw libexslta
-	$(MAKE) -C libxslt/win32 -j $(JOBS) -f Makefile.mingw install-libsa
+	$(CONFIGFLAGS) $(MAKE) -e -C libxslt/win32 -j $(JOBS) -f Makefile.mingw dep
+	$(CONFIGFLAGS) $(MAKE) -e -C libxslt/win32 -j $(JOBS) -f Makefile.mingw libxslta
+	$(CONFIGFLAGS) $(MAKE) -e -C libxslt/win32 -j $(JOBS) -f Makefile.mingw libexslta
+	$(CONFIGFLAGS) $(MAKE) -e -C libxslt/win32 -j $(JOBS) -f Makefile.mingw install-libsa
 	cp libxslt/win32/xslt-config $(bindir)
 
 libxslt/win32/config.mingw :

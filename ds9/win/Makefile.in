@@ -57,7 +57,7 @@ LIBS		= @PKG_LIBS@ @LIBS@
 CFLAGS		= @CFLAGS@
 COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
-STRIP		= i686-w64-mingw32-strip.exe
+STRIP		= x86_64-w64-mingw32-strip.exe
 
 .SUFFIXES: .c .C .$(OBJEXT)
 
@@ -157,7 +157,7 @@ ds9Base.exe: $(OBJS) $(LLIBS)
 	$(LLIBS) \
 	$(TK_LIBS) \
 	$(LIBS) \
-	-L /home/joye/openssl-1.0.2k -lssl -lcrypto \
+	-L $(prefix)/openssl -lssl -lcrypto \
 	-lgdi32 \
 	-mwindows
 #-static
@@ -172,7 +172,7 @@ winMain.c : $(prefix)/tk$(TCL_VERSION)/win/winMain.c
 	cp $(prefix)/tk$(TCL_VERSION)/win/winMain.c .
 
 ds9.res.o: ds9.rc ds9.ico
-	i686-w64-mingw32-windres -o $@ \
+	x86_64-w64-mingw32-windres -o $@ \
 	--define STATIC_BUILD --include $(prefix)/tk$(TCL_VERSION)/generic \
 	--include $(prefix)/$(TCLDIR)/generic \
 	--include $(prefix)/tk$(TCL_VERSION)/win/rc \
@@ -203,11 +203,12 @@ $(APPDIR)/tcc: $(prefix)/compilers/tcc-0.9.25-win32-bin.zip
 	touch $@
 
 stuff:
-	cp /home/joye/openssl-1.0.2k/ssleay32.dll $(APPDIR)
-	cp /home/joye/openssl-1.0.2k/libeay32.dll $(APPDIR)
-	cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcc_s_sjlj-1.dll $(APPDIR)
-	cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libstdc++-6.dll $(APPDIR)
-	cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll $(APPDIR)
+	cp $(prefix)/openssl/ssleay32.dll $(APPDIR)
+	cp $(prefix)/openssl/libeay32.dll $(APPDIR)
+#	cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcc_s_sjlj-1.dll $(APPDIR)
+	cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgcc_s_seh-1.dll $(APPDIR)
+	cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/libstdc++-6.dll $(APPDIR)
+	cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll $(APPDIR)
 
 #--------------------------clean
 

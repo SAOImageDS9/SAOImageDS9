@@ -5,7 +5,7 @@
 #ifndef __fitsmask_h__
 #define __fitsmask_h__
 
-#include <X11/Xlib.h>
+#include "util.h"
 
 class Base;
 class FitsImage;

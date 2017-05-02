@@ -6,9 +6,7 @@
 #define __colorbarbase_h__
 
 #include "widget.h"
-
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
+#include "util.h"
 
 // Widget ConfigSpecs Defines
 

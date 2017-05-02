@@ -5,18 +5,7 @@
 #ifndef __colortag_h__
 #define __colortag_h__
 
-#include <string.h>
-#include <stdlib.h>
-#include <limits.h>
-
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <iomanip>
-using namespace std;
-
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
+#include "util.h"
 
 class Colorbar;
 

@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include <tcl.h>
-#include <X11/Xlib.h>
 
 #include "panner.h"
 #include "util.h"

@@ -5,10 +5,7 @@
 #ifndef __contour_h__
 #define __contour_h__
 
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-
-#include "vector.h"
+#include "util.h"
 #include "vector3d.h"
 #include "list.h"
 #include "coord.h"

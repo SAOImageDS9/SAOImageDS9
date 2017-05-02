@@ -14,16 +14,17 @@ ARCH		= @ARCH@
 EXEEXT		= @EXEEXT@
 JOBS		= @CORES@
 
-CONFIGFLAGS 	= CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar
+#CONFIGFLAGS 	= CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar
+CONFIGFLAGS 	= CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar
 ASTFLAGS	= CFLAGS=-DCMINPACK_NO_DLL
 XPAFLAGS	= CFLAGS=-DSTATIC_BUILD
 TCLXMLFLAGS 	= --with-xml-static=yes
-TLSFLAGS	="CFLAGS=-DNO_IDEA=1 -DNO_RC5=1" --with-ssl-dir=/home/joye/openssl-1.0.2k
+TLSFLAGS	="CFLAGS=-DNO_IDEA=1 -DNO_RC5=1" --with-ssl-dir=$(prefix)/openssl
 TARGET		= --build=x86_64-unknown-mingw32
 
 include ./make.include
 
-WITHTCL		= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/win
+WITHTCL		= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/win --enable-64bit
 WITHTK		= --with-tk=$(prefix)/tk$(TCL_VERSION)/win $(WITHTCL)
 CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
@@ -33,11 +34,11 @@ DS9APP	=SAOImage\ DS9\ $(DS9_VERSION)
 
 #--------------------------build
 
-.PHONY	: saods9 tcl tk tkwin libxml2 libxslt zlib
+.PHONY	: saods9 tcl tk tkwin libxml2 libxslt zlib openssl
 
 saods9	: dirs tcl tk \
-	libxml2 libxslt zlib \
-	tcliis tls tclxml tls xpa \
+	libxml2 libxslt zlib openssl \
+	tcliis tls tclxml xpa \
 	tkblt tktable tkimg \
 	tkmpeg tkhtml1 tkcon \
 	tkwin \
@@ -56,6 +57,7 @@ tcl$(TCL_VERSION)/win/Makefile :
 	@echo "*** $@ ***"
 	cd tcl$(TCL_VERSION)/win; \
 	./configure \
+	--enable-64bit \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared \
 	--config-cache --cache-file=$(prefix)/config.cache
@@ -133,11 +135,23 @@ zlib_Makefile :
 	--prefix $(prefix) -eprefix $(exec_prefix) --libdir $(libdir) \
 	--static
 
+openssl	: openssl/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C openssl -j $(JOBS)
+
+openssl/Makefile:
+	@echo ""
+	@echo "*** $@ ***"
+	cd openssl; \
+	export CROSS_COMPILE=x86_64-w64-mingw32-; \
+	./Configure mingw64 --prefix=$(prefix) shared no-asm
+
 #--------------------------clean
 
-.PHONY	: tkwinclean libxml2clean libxsltclean zlibclean
+.PHONY	: tkwinclean libxml2clean libxsltclean zlibclean opensslclean
 
-tkwinclean : libxml2clean libxsltclean zlibclean
+tkwinclean : libxml2clean libxsltclean zlibclean opensslclean
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkwin clean
@@ -157,11 +171,16 @@ zlibclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C zlib clean
 
+opensslclean:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C openssl clean
+
 #--------------------------distclean
 
-.PHONY	: tkwindistclean libxml2distclean libxsltdistclean zlibdistclean
+.PHONY	: tkwindistclean libxml2distclean libxsltdistclean zlibdistclean openssldistclean
 
-tkwindistclean : libxml2distclean libxsltdistclean zlibdistclean
+tkwindistclean : libxml2distclean libxsltdistclean zlibdistclean openssldistclean
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkwin distclean
@@ -181,6 +200,12 @@ zlibdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C zlib distclean
 	rm -f zlib/Makefile
+
+openssldistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C openssl clean
+	rm -f openssl/Makefile
 
 #--------------------------distribution
 

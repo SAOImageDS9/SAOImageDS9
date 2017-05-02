@@ -63,7 +63,11 @@ static int AxisSetProc(ClientData clientData, Tcl_Interp* interp,
     return TCL_OK;
 
   Graph* graphPtr = getGraphFromWindowData(tkwin);
-  ClassId classId = (ClassId)(long(clientData));
+#ifdef _WIN64
+  ClassId classId = (ClassId)((long long)clientData);
+#else
+  ClassId classId = (ClassId)((long)clientData);
+#endif
 
   Axis *axisPtr;
   if (graphPtr->getAxis(*objPtr, &axisPtr) != TCL_OK)

@@ -43,9 +43,13 @@ tktable_LIB_SPEC= @tktable_LIB_SPEC@
 tkwin_LIB_SPEC	= @tkwin_LIB_SPEC@
 
 CC		= @CC@
+AR		= @AR@
+RC		= @RC@
 CFLAGS_DEFAULT	= @CFLAGS_DEFAULT@
 CFLAGS_WARNING	= @CFLAGS_WARNING@
 OBJEXT		= @OBJEXT@
+
+DLLDIR		= /usr/$(CC:-gcc=)/sys-root/mingw/bin
 
 INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ @TK_INCLUDES@ @TK_XINCLUDES@
 
@@ -56,8 +60,6 @@ CPPFLAGS	= @CPPFLAGS@
 LIBS		= @PKG_LIBS@ @LIBS@
 CFLAGS		= @CFLAGS@
 COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-
-STRIP		= x86_64-w64-mingw32-strip.exe
 
 .SUFFIXES: .c .C .$(OBJEXT)
 
@@ -134,7 +136,7 @@ PREQS	= \
 	$(APPDIR)/xpans.exe \
 	$(APPDIR)/install.vbs \
 	$(APPDIR)/tcc \
-	stuff
+	DLLs
 
 #--------------------------main
 
@@ -143,7 +145,7 @@ PREQS	= \
 
 $(APPDIR)/ds9.exe : ds9Base.exe $(PREQS)
 	cp -p ds9base.exe ds9.exe
-	$(STRIP) ds9.exe
+	strip ds9.exe
 	cp -p ds9.exe $(APPDIR)/.
 
 debug	: ds9Base.exe $(PREQS)
@@ -172,7 +174,7 @@ winMain.c : $(prefix)/tk$(TCL_VERSION)/win/winMain.c
 	cp $(prefix)/tk$(TCL_VERSION)/win/winMain.c .
 
 ds9.res.o: ds9.rc ds9.ico
-	x86_64-w64-mingw32-windres -o $@ \
+	$(RC) -o $@ \
 	--define STATIC_BUILD --include $(prefix)/tk$(TCL_VERSION)/generic \
 	--include $(prefix)/$(TCLDIR)/generic \
 	--include $(prefix)/tk$(TCL_VERSION)/win/rc \
@@ -202,13 +204,12 @@ $(APPDIR)/tcc: $(prefix)/compilers/tcc-0.9.25-win32-bin.zip
 	chmod +x $@/tcc.exe
 	touch $@
 
-stuff:
+DLLs:
 	cp $(prefix)/openssl/ssleay32.dll $(APPDIR)
 	cp $(prefix)/openssl/libeay32.dll $(APPDIR)
-#	cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcc_s_sjlj-1.dll $(APPDIR)
-	cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/libgcc_s_seh-1.dll $(APPDIR)
-	cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/libstdc++-6.dll $(APPDIR)
-	cp /usr/x86_64-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll $(APPDIR)
+	cp $(DLLDIR)/libgcc_s_s*-1.dll $(APPDIR)
+	cp $(DLLDIR)/libstdc++-6.dll $(APPDIR)
+	cp $(DLLDIR)/libwinpthread-1.dll $(APPDIR)
 
 #--------------------------clean
 

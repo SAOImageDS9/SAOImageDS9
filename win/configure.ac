@@ -46,16 +46,19 @@ case $with_arch in
 	CONFIGFLAGS='CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar'
 	CROSSCOMPILE=i686-w64-mingw32-
 	ENABLE64BIT=
+	TARGET=i686-unknown-mingw32
 	;;
     win64 | WIN64 | *)
 	CONFIGFLAGS='CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar'
 	CROSSCOMPILE=x86_64-w64-mingw32-
 	ENABLE64BIT=--enable-64bit
+	TARGET=x86_64-unknown-mingw32
 	;;
 esac
 AC_SUBST(CONFIGFLAGS)
 AC_SUBST(CROSSCOMPILE)
 AC_SUBST(ENABLE64BIT)
+AC_SUBST(TARGET)
 
 prefix=$ac_pwd
 exec_prefix=$ac_pwd

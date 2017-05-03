@@ -23,7 +23,7 @@ AC_INIT([saods9], [7.6])
 
 #--------------------------------------------------------------------
 # Call TEA_INIT as the first TEA_ macro to set up initial vars.
-# This will define a ${TEA_PLATFORM} variable == "unix" or "windows"
+n# This will define a ${TEA_PLATFORM} variable == "unix" or "windows"
 # as well as PKG_LIB_FILE and PKG_STUB_LIB_FILE.
 #--------------------------------------------------------------------
 
@@ -40,6 +40,22 @@ AC_SUBST(OS)
 
 ARCH=$with_arch
 AC_SUBST(ARCH)
+
+case $with_arch in
+    win32 )
+    WIN32 )
+	CONFIGFLAGS= CC=i686-w64-mingw32-gcc AR=i686-w64-mingw32-ar
+	CROSSCOMPILE=i686-w64-mingw32-
+	;;
+    win64 )
+    WIN64 )
+    *)
+	CONFIGFLAGS= CC=x86_64-w64-mingw32-gcc AR=x86_64-w64-mingw32-ar
+	CROSSCOMPILE=x86_64-w64-mingw32-
+	;;
+esac
+AC_SUBST(CONFIGFLAGS)
+AC_SUBST(CROSSCOMPILE)
 
 prefix=$ac_pwd
 exec_prefix=$ac_pwd

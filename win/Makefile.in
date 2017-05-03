@@ -14,10 +14,10 @@ ARCH		= @ARCH@
 EXEEXT		= @EXEEXT@
 JOBS		= @CORES@
 
-CONFIGFLAGS 	= @CONFIGFLAGS@
-CROSSCOMPILE	= @CROSSCOMPILE@
 ENABLE64BIT	= @ENABLE64BIT@
 TARGET		= @TARGET@
+
+CONFIGFLAGS	=CC=$(TARGET)-gcc AR=$(TARGET)-ar
 
 ASTFLAGS	= CFLAGS=-DCMINPACK_NO_DLL
 XPAFLAGS	= CFLAGS=-DSTATIC_BUILD
@@ -130,7 +130,7 @@ openssl/Makefile:
 	@echo ""
 	@echo "*** $@ ***"
 	cd openssl; \
-	export CROSS_COMPILE=$(CROSSCOMPILE); \
+	export CROSS_COMPILE=$(TARGET)-; \
 	./Configure mingw64 --prefix=$(prefix) shared no-asm
 
 #--------------------------clean

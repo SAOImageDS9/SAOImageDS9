@@ -1157,8 +1157,15 @@ void FitsImage::initWCS()
 
   // AST
   for (int ii=0; ii<MULTWCSA; ii++) {
-    if (wcs_[ii])
+    if (wcs_[ii]) {
+      if (DebugWCS)
+	wcsShow(wcs_[ii]);
+
       astinit(ii, hd, prim);
+
+      if (DebugAST)
+	astShow(ast_[ii]);
+    }
   }
 
   // WCSDEP
@@ -1232,9 +1239,6 @@ void FitsImage::initWCS()
 
   if (DebugWCS) {
     for (int ii=0; ii<MULTWCS; ii++) {
-      if (wcs_[ii])
-	wcsShow(wcs_[ii]);
-
       if (wcsx_[ii]) {
 	for (int jj=0; jj<FTY_MAXAXES; jj++) {
 	  if (wcsx_[ii]->cd[jj]) {
@@ -1311,11 +1315,6 @@ void FitsImage::initWCS0(const Vector& pix)
       astAnnul(ast_[ii]);
     ast_[ii] = NULL;
     astinit0(ii, hd, prim);
-
-    if (DebugWCS) {
-      if (wcs_[ii])
-	wcsShow(wcs_[ii]);
-    }
   }
 }
 
@@ -3178,9 +3177,6 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
   // set default skyframe
   if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT)))
     setAstSkyFrame(ast_[ii],Coord::FK5);
-
-  if (DebugAST)
-    astShow(ast_[ii]);
 }
 
 void FitsImage::astinit0(int ii, FitsHead* hd, FitsHead* prim)
@@ -3198,9 +3194,6 @@ void FitsImage::astinit0(int ii, FitsHead* hd, FitsHead* prim)
   // set default skyframe
   if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT)))
     setAstSkyFrame(ast_[ii],Coord::FK5);
-
-  if (DebugAST)
-    astShow(ast_[ii]);
 }
 
 int FitsImage::checkAst(double x, double y)
@@ -3343,7 +3336,7 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
 AstFrameSet* FitsImage::buildast(int ii, FitsHead* hd, FitsHead* prim) 
 {
   if (DebugAST)
-    cerr << endl << "buildast()" << endl;
+    cerr << endl << "buildast("<< ii << ")" << endl;
 
   // read wcs struct into astChannel
   // we may have an error, just reset
@@ -3364,14 +3357,31 @@ AstFrameSet* FitsImage::buildast(int ii, FitsHead* hd, FitsHead* prim)
   // simple test to see if we have complete WCS
   // if not (as in 3d cube reorder), wcs[] can be very unreliable
   int fromwcs =0;
-  if (hd->find("CTYPE1") && hd->find("CTYPE2") &&
-      hd->find("CRVAL1") && hd->find("CRVAL2") &&
-      hd->find("CRPIX1") && hd->find("CRPIX2")) {
+
+  char alt = (ii==0) ? ' ' : (char)('@'+ii);
+  char ctype1[8], ctype2[8];
+  strcpy(ctype1, "CTYPE1 ");
+  strcpy(ctype2, "CTYPE2 ");
+  ctype1[6] = ctype2[6] = alt;
+
+  char crval1[8], crval2[8];
+  strcpy(crval1, "CRVAL1 ");
+  strcpy(crval2, "CRVAL2 ");
+  crval1[6] = crval2[6] = alt;
+
+  char crpix1[8], crpix2[8];
+  strcpy(crpix1, "CRPIX1 ");
+  strcpy(crpix2, "CRPIX2 ");
+  crpix1[6] = crpix2[6] = alt;
+
+  if (hd->find(ctype1) && hd->find(ctype2) &&
+      hd->find(crval1) && hd->find(crval2) &&
+      hd->find(crpix1) && hd->find(crpix2)) {
     wcs2ast(ii,hd,prim,chan);
     fromwcs =1;
   }
   else
-    header2ast(hd,chan);
+    header2ast(ii,hd,chan);
 
   // rewind chan
   astClear(chan, "Card");
@@ -3397,9 +3407,6 @@ AstFrameSet* FitsImage::buildast(int ii, FitsHead* hd, FitsHead* prim)
 
 AstFrameSet* FitsImage::buildast0(int ii, FitsHead* hd, FitsHead* prim)
 {
-  if (DebugAST)
-    cerr << endl << "buildast0()" << endl;
-
   // read wcs struct into astChannel
   // we may have an error, just reset
   astClearStatus;
@@ -3440,151 +3447,149 @@ AstFrameSet* FitsImage::buildast0(int ii, FitsHead* hd, FitsHead* prim)
   return frameSet;
 }
 
-void FitsImage::header2ast(FitsHead* hd, void* chan) 
+void FitsImage::header2ast(int ii, FitsHead* hd, void* chan) 
 {
   if (DebugAST)
-    cerr << endl << "header2ast()" << endl;
+    cerr << endl << "header2ast(" << ii << ")" << endl;
 
-  for (int ii=0; ii<MULTWCS; ii++) {
-    char alt = (ii==0) ? ' ' : (char)('@'+ii);
+  char alt = (ii==0) ? ' ' : (char)('@'+ii);
 
-    char key1[8];
-    char key2[8];
+  char key1[8];
+  char key2[8];
 
-    // CTYPE
-    // We can't have RA/DEC without DEC/RA or GLON/GLAT without GLAT/GLON
-    const char* linear = "LINEAR";
-    strcpy(key1, "CTYPE1 ");
-    strcpy(key2, "CTYPE2 ");
-    key1[6] = key2[6] = alt;
+  // CTYPE
+  // We can't have RA/DEC without DEC/RA or GLON/GLAT without GLAT/GLON
+  const char* linear = "LINEAR";
+  strcpy(key1, "CTYPE1 ");
+  strcpy(key2, "CTYPE2 ");
+  key1[6] = key2[6] = alt;
 
-    // do we have WCSa?
-    if (!hd->find(key1) && !hd->find(key2))
-      continue;
+  // do we have WCSa?
+  if (!hd->find(key1) && !hd->find(key2))
+    return;
 
-    char* ctype1 = hd->getString(key1);
-    char* ctype2 = hd->getString(key2);
+  char* ctype1 = hd->getString(key1);
+  char* ctype2 = hd->getString(key2);
 
-    if (ctype1 && !strncmp(ctype1,"GLON",4)) {
-      if (!ctype2 || strncmp(ctype2,"GLAT",4)) {
-	ctype1 = (char*)linear;
-	ctype2 = (char*)linear;
-      }
+  if (ctype1 && !strncmp(ctype1,"GLON",4)) {
+    if (!ctype2 || strncmp(ctype2,"GLAT",4)) {
+      ctype1 = (char*)linear;
+      ctype2 = (char*)linear;
     }
-    else if (ctype2 && !strncmp(ctype2,"GLON",4)) {
-      if (!ctype1 || strncmp(ctype1,"GLAT",4)) {
-	ctype1 = (char*)linear;
-	ctype2 = (char*)linear;
-      }
+  }
+  else if (ctype2 && !strncmp(ctype2,"GLON",4)) {
+    if (!ctype1 || strncmp(ctype1,"GLAT",4)) {
+      ctype1 = (char*)linear;
+      ctype2 = (char*)linear;
     }
-    else if (ctype1 && !strncmp(ctype1,"GLAT",4)) {
-      if (!ctype2 || strncmp(ctype2,"GLON",4)) {
-	ctype1 = (char*)linear;
-	ctype2 = (char*)linear;
-      }
+  }
+  else if (ctype1 && !strncmp(ctype1,"GLAT",4)) {
+    if (!ctype2 || strncmp(ctype2,"GLON",4)) {
+      ctype1 = (char*)linear;
+      ctype2 = (char*)linear;
     }
-    else if (ctype2 && !strncmp(ctype2,"GLAT",4)) {
-      if (!ctype1 || strncmp(ctype1,"GLON",4)) {
-	ctype1 = (char*)linear;
-	ctype2 = (char*)linear;
-      }
+  }
+  else if (ctype2 && !strncmp(ctype2,"GLAT",4)) {
+    if (!ctype1 || strncmp(ctype1,"GLON",4)) {
+      ctype1 = (char*)linear;
+      ctype2 = (char*)linear;
     }
-    else if (ctype1 && !strncmp(ctype1,"RA",2)) {
-      if (!ctype2 || strncmp(ctype2,"DEC",3)) {
-	ctype1 = (char*)linear;
-	ctype2 = (char*)linear;
-      }
+  }
+  else if (ctype1 && !strncmp(ctype1,"RA",2)) {
+    if (!ctype2 || strncmp(ctype2,"DEC",3)) {
+      ctype1 = (char*)linear;
+      ctype2 = (char*)linear;
     }
-    else if (ctype2 && !strncmp(ctype2,"RA",2)) {
-      if (!ctype1 || strncmp(ctype1,"DEC",3)) {
-	ctype1 = (char*)linear;
-	ctype2 = (char*)linear;
-      }
+  }
+  else if (ctype2 && !strncmp(ctype2,"RA",2)) {
+    if (!ctype1 || strncmp(ctype1,"DEC",3)) {
+      ctype1 = (char*)linear;
+      ctype2 = (char*)linear;
     }
-    else if (ctype1 && !strncmp(ctype1,"DEC",3)) {
-      if (!ctype2 || strncmp(ctype2,"RA",2)) {
-	ctype1 = (char*)linear;
-	ctype2 = (char*)linear;
-      }
+  }
+  else if (ctype1 && !strncmp(ctype1,"DEC",3)) {
+    if (!ctype2 || strncmp(ctype2,"RA",2)) {
+      ctype1 = (char*)linear;
+      ctype2 = (char*)linear;
     }
-    else if (ctype2 && !strncmp(ctype2,"DEC",3)) {
-      if (!ctype1 || strncmp(ctype1,"RA",2)) {
-	ctype1 = (char*)linear;
-	ctype2 = (char*)linear;
-      }
+  }
+  else if (ctype2 && !strncmp(ctype2,"DEC",3)) {
+    if (!ctype1 || strncmp(ctype1,"RA",2)) {
+      ctype1 = (char*)linear;
+      ctype2 = (char*)linear;
     }
-    else {
-      if (!ctype1)
-	ctype1 =(char*)linear;
-      if (!ctype2)
-	ctype2 =(char*)linear;
-    }
+  }
+  else {
+    if (!ctype1)
+      ctype1 =(char*)linear;
+    if (!ctype2)
+      ctype2 =(char*)linear;
+  }
 
-    putFitsCard(chan, key1, ctype1);
-    putFitsCard(chan, key2, ctype2);
+  putFitsCard(chan, key1, ctype1);
+  putFitsCard(chan, key2, ctype2);
 
-    // CRPIX
-    strcpy(key1, "CRPIX1 ");
-    strcpy(key2, "CRPIX2 ");
-    key1[6] = key2[6] = alt;
-    putFitsCard(chan, key1, hd->getReal(key1,0));
-    putFitsCard(chan, key2, hd->getReal(key2,0));
+  // CRPIX
+  strcpy(key1, "CRPIX1 ");
+  strcpy(key2, "CRPIX2 ");
+  key1[6] = key2[6] = alt;
+  putFitsCard(chan, key1, hd->getReal(key1,0));
+  putFitsCard(chan, key2, hd->getReal(key2,0));
 
-    // CRVAL
-    strcpy(key1, "CRVAL1 ");
-    strcpy(key2, "CRVAL2 ");
-    key1[6] = key2[6] = alt;
-    putFitsCard(chan, key1, hd->getReal(key1,0));
-    putFitsCard(chan, key2, hd->getReal(key2,0));
+  // CRVAL
+  strcpy(key1, "CRVAL1 ");
+  strcpy(key2, "CRVAL2 ");
+  key1[6] = key2[6] = alt;
+  putFitsCard(chan, key1, hd->getReal(key1,0));
+  putFitsCard(chan, key2, hd->getReal(key2,0));
 
-    // CDELT/CD/PC
-    strcpy(key1, "CDELT1 ");
-    strcpy(key2, "CDELT2 ");
-    key1[6] = key2[6] = alt;
+  // CDELT/CD/PC
+  strcpy(key1, "CDELT1 ");
+  strcpy(key2, "CDELT2 ");
+  key1[6] = key2[6] = alt;
 
-    char pkey1[8];
-    char pkey2[8];
-    char pkey3[8];
-    char pkey4[8];
-    strcpy(pkey1, "PC1_1 ");
-    strcpy(pkey2, "PC1_2 ");
-    strcpy(pkey3, "PC2_1 ");
-    strcpy(pkey4, "PC2_2 ");
-    pkey1[5] = pkey2[5] = pkey3[5] = pkey4[5] = alt;
+  char pkey1[8];
+  char pkey2[8];
+  char pkey3[8];
+  char pkey4[8];
+  strcpy(pkey1, "PC1_1 ");
+  strcpy(pkey2, "PC1_2 ");
+  strcpy(pkey3, "PC2_1 ");
+  strcpy(pkey4, "PC2_2 ");
+  pkey1[5] = pkey2[5] = pkey3[5] = pkey4[5] = alt;
 
-    char ckey1[8];
-    char ckey2[8];
-    char ckey3[8];
-    char ckey4[8];
-    strcpy(ckey1, "CD1_1 ");
-    strcpy(ckey2, "CD1_2 ");
-    strcpy(ckey3, "CD2_1 ");
-    strcpy(ckey4, "CD2_2 ");
-    ckey1[5] = ckey2[5] = ckey3[5] = ckey4[5] = alt;
+  char ckey1[8];
+  char ckey2[8];
+  char ckey3[8];
+  char ckey4[8];
+  strcpy(ckey1, "CD1_1 ");
+  strcpy(ckey2, "CD1_2 ");
+  strcpy(ckey3, "CD2_1 ");
+  strcpy(ckey4, "CD2_2 ");
+  ckey1[5] = ckey2[5] = ckey3[5] = ckey4[5] = alt;
 
-    // Give CD priority over CDELT
-    if (hd->find(ckey1) || 
-	hd->find(ckey2) ||
-	hd->find(ckey3) || 
-	hd->find(ckey4)) {
-      putFitsCard(chan, ckey1, hd->getReal(ckey1,1));
-      putFitsCard(chan, ckey2, hd->getReal(ckey2,0));
-      putFitsCard(chan, ckey3, hd->getReal(ckey3,0));
-      putFitsCard(chan, ckey4, hd->getReal(ckey4,1));
-    }
-    else if (hd->find(key1) || hd->find(key2)) {
-      putFitsCard(chan, key1, hd->getReal(key1,1));
-      putFitsCard(chan, key2, hd->getReal(key2,1));
+  // Give CD priority over CDELT
+  if (hd->find(ckey1) || 
+      hd->find(ckey2) ||
+      hd->find(ckey3) || 
+      hd->find(ckey4)) {
+    putFitsCard(chan, ckey1, hd->getReal(ckey1,1));
+    putFitsCard(chan, ckey2, hd->getReal(ckey2,0));
+    putFitsCard(chan, ckey3, hd->getReal(ckey3,0));
+    putFitsCard(chan, ckey4, hd->getReal(ckey4,1));
+  }
+  else if (hd->find(key1) || hd->find(key2)) {
+    putFitsCard(chan, key1, hd->getReal(key1,1));
+    putFitsCard(chan, key2, hd->getReal(key2,1));
 
-      if (hd->find(pkey1) || 
-	  hd->find(pkey2) ||
-	  hd->find(pkey3) || 
-	  hd->find(pkey4)) {
-	putFitsCard(chan, pkey1, hd->getReal(pkey1,1));
-	putFitsCard(chan, pkey2, hd->getReal(pkey2,1));
-	putFitsCard(chan, pkey3, hd->getReal(pkey3,1));
-	putFitsCard(chan, pkey4, hd->getReal(pkey4,1));
-      }
+    if (hd->find(pkey1) || 
+	hd->find(pkey2) ||
+	hd->find(pkey3) || 
+	hd->find(pkey4)) {
+      putFitsCard(chan, pkey1, hd->getReal(pkey1,1));
+      putFitsCard(chan, pkey2, hd->getReal(pkey2,1));
+      putFitsCard(chan, pkey3, hd->getReal(pkey3,1));
+      putFitsCard(chan, pkey4, hd->getReal(pkey4,1));
     }
   }
 }
@@ -3592,7 +3597,7 @@ void FitsImage::header2ast(FitsHead* hd, void* chan)
 void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan) 
 {
   if (DebugAST)
-    cerr << endl << "wcs2ast()" << endl;
+    cerr << endl << "wcs2ast(" << ww << ")" << endl;
 
   // Alt WCS
   char alt = (ww==0) ? ' ' : (char)('@'+ww);
@@ -3637,12 +3642,14 @@ void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan)
 	   (strncmp(wcs_[ww]->ctype[0]+2,"LN",2)) &&
 	   (strncmp(wcs_[ww]->ctype[0]+2,"LT",2)) &&
 	   (strncmp(wcs_[ww]->ctype[0]+1,"LON",3)) &&
-	   (strncmp(wcs_[ww]->ctype[0]+1,"LAT",3))) {
+	   (strncmp(wcs_[ww]->ctype[0]+1,"LAT",3)) &&
+	   (*wcs_[ww]->c1type && *wcs_[ww]->c2type)) {
     // this is not a mistake
     putFitsCard(chan, "CTYPE1", wcs_[ww]->c1type);
     putFitsCard(chan, "CTYPE2", wcs_[ww]->c2type);
   }
-  else if (wcs_[ww]->prjcode == WCS_PIX) {
+  else if ((wcs_[ww]->prjcode == WCS_PIX) &&
+	   (*wcs_[ww]->c1type && *wcs_[ww]->c2type)) {
     // this is not a mistake
     putFitsCard(chan, "CTYPE1", wcs_[ww]->c1type);
     putFitsCard(chan, "CTYPE2", wcs_[ww]->c2type);
@@ -3976,9 +3983,6 @@ void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan)
 
 void FitsImage::wcs2ast0(int ww, FitsHead* hd, FitsHead* prim, void* chan) 
 {
-  if (DebugAST)
-    cerr << endl << "wcs2ast0()" << endl;
-
   putFitsCard(chan, "CTYPE1", wcs_[ww]->ctype[0]);
   putFitsCard(chan, "CTYPE2", wcs_[ww]->ctype[1]);
 

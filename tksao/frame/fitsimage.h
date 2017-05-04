@@ -146,7 +146,7 @@ class FitsImage {
   AstFrameSet* buildast0(int, FitsHead*, FitsHead*);
   void wcs2ast(int, FitsHead*, FitsHead*, void*);
   void wcs2ast0(int, FitsHead*, FitsHead*, void*);
-  void header2ast(FitsHead*, void*);
+  void header2ast(int,FitsHead*, void*);
   void putFitsCard(void* chan, const char* key, const char* value);
   void putFitsCard(void* chan, const char* key, int value);
   void putFitsCard(void* chan, const char* key, double value);

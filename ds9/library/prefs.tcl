@@ -394,6 +394,18 @@ proc FixVar {varname ovarname} {
     }
 }
 
+proc FixVarSet {varname ovarname} {
+    global aa bb
+    set aa $varname
+    set bb $ovarname
+
+    uplevel #0 {
+	if {[info exists $bb]} {
+	    set $aa [expr $$bb]
+	}
+    }
+}
+
 proc FixVarRm {ovarname} {
     global aa
     set aa $ovarname
@@ -758,12 +770,12 @@ proc FixPrefs6.0to6.1 {} {
     FixVar pnres(server) nres(server)
 
     # graph
-    FixVar pgraph(horz,grid) graph(horz,grid) 
-    FixVar pgraph(horz,log) graph(horz,log) 
-    FixVar pgraph(vert,grid) graph(vert,grid) 
-    FixVar pgraph(vert,log) graph(vert,log) 
-    global graph
-    catch {unset graph}
+    FixVarSet pgraph(horz,grid) graph(horz,grid) 
+    FixVarSet pgraph(horz,log) graph(horz,log) 
+    FixVarSet pgraph(vert,grid) graph(vert,grid) 
+    FixVarSet pgraph(vert,log) graph(vert,log) 
+#    global graph
+#    catch {unset graph}
 
     # cat
     FixVar pcat(server) cat(server)

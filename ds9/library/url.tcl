@@ -14,7 +14,7 @@ proc GetFileURL {url fname} {
     switch -- $rr(scheme) {
 	ftp {GetFileFTP $rr(authority) $rr(path) $fn}
 	file {set fn $rr(path)}
-	http
+	http -
 	https -
 	default {GetFileHTTP $url $fn}
     }

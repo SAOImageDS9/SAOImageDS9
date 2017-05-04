@@ -58,8 +58,10 @@ void BaseEllipse::renderX(Drawable drawable, Coord::InternalSystem sys,
 
   if (isRound && isScale && isOrient && parent->isAzElZero())
     renderXCircle(drawable, sys, ang, mode);
+  else if (!ang && parent->isAzElZero())
+    renderXEllipse(drawable, sys, ang, mode);
   else
-    renderXEllipse(drawable, sys, mode);
+    renderXBezier(drawable, sys, mode);
 }
 
 void BaseEllipse::renderXCircle(Drawable drawable, Coord::InternalSystem sys, 
@@ -93,18 +95,49 @@ void BaseEllipse::renderXCircle(Drawable drawable, Coord::InternalSystem sys,
     if (a2<=a1)
       a2 += 360*64;
 
-    renderXCircleDraw(drawable, lgc, st, size, a1, (a2-a1), mode);
+    renderXArcDraw(drawable, lgc, st, size, a1, (a2-a1), mode);
   }
 }
 
-void BaseEllipse::renderXCircleDraw(Drawable drawable, GC lgc, Vector& st, 
+void BaseEllipse::renderXArcDraw(Drawable drawable, GC lgc, Vector& st, 
 				    Vector& size, int a1, int aa, 
 				    RenderMode mode)
 {
   XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
 }
 
-void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
+void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys, 
+				 double ang, RenderMode mode)
+{
+  GC lgc = renderXGC(mode);
+
+  // this routine is only valid for circles with equal zoom in x & y
+  Vector cc = parent->mapFromRef(center,sys);
+
+  for (int i=0; i<numAnnuli_; i++) {
+    Vector r = annuli_[i];
+
+    Vector st = cc-r;
+    Vector size = r*2;
+
+    // Verify size is positive
+    // XDrawArc is sensative to bad data, and may hang the XServer
+    if (!size[0] || !size[1])
+      continue;
+
+    // Must be very sure that a1<a2
+    double aa1 = startAng_ + ang;
+    double aa2 = stopAng_  + ang;
+    int a1 = radToDeg(aa1)*64;
+    int a2 = radToDeg(aa2)*64;
+    if (a2<=a1)
+      a2 += 360*64;
+
+    renderXArcDraw(drawable, lgc, st, size, a1, (a2-a1), mode);
+  }
+}
+
+void BaseEllipse::renderXBezier(Drawable drawable, Coord::InternalSystem sys,
 				 RenderMode mode)
 {
   double a1 = startAng_;
@@ -130,7 +163,7 @@ void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
 	s2 =1;
 
       if ((s1 && !s2) || (s1 && s2))
-	renderXEllipsePrep(drawable, sys, mode, a1,a2,b1,b2,r);
+	renderXBezierPrep(drawable, sys, mode, a1,a2,b1,b2,r);
 
       if (s1&&s2)
 	s1=s2=0;
@@ -165,7 +198,7 @@ void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
       }
     }
 
-    renderXEllipseDraw(drawable, lgc, mode);
+    renderXBezierDraw(drawable, lgc, mode);
 
     if (xpoint_)
       free(xpoint_);
@@ -175,15 +208,15 @@ void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
   }
 }
 
-void BaseEllipse::renderXEllipseDraw(Drawable drawable, GC lgc, RenderMode mode)
+void BaseEllipse::renderXBezierDraw(Drawable drawable, GC lgc, RenderMode mode)
 {
   if ((properties & SOURCE) && !(properties & DASH))
     XDrawLines(display, drawable, lgc, xpoint_, xpointNum_, CoordModeOrigin);
   else
-    renderXEllipseDashDraw(drawable, lgc);
+    renderXBezierDashDraw(drawable, lgc);
 }
 
-void BaseEllipse::renderXEllipseDashDraw(Drawable drawable, GC lgc)
+void BaseEllipse::renderXBezierDashDraw(Drawable drawable, GC lgc)
 {
   // crude attempt to clip unwanted drawlines
   // only works for SRC
@@ -195,7 +228,7 @@ void BaseEllipse::renderXEllipseDashDraw(Drawable drawable, GC lgc)
   }    
 }
 
-void BaseEllipse::renderXEllipsePrep(Drawable drawable, 
+void BaseEllipse::renderXBezierPrep(Drawable drawable, 
 				     Coord::InternalSystem sys, 
 				     RenderMode mode, 
 				     double a1, double a2, 
@@ -208,14 +241,14 @@ void BaseEllipse::renderXEllipsePrep(Drawable drawable,
     a2 = b2;
 
   if (a1>a2) {
-    renderXEllipseArc(drawable, sys, mode, b1,a2,r);
-    renderXEllipseArc(drawable, sys, mode, a1,b2,r);
+    renderXBezierArc(drawable, sys, mode, b1,a2,r);
+    renderXBezierArc(drawable, sys, mode, a1,b2,r);
   }
   else
-    renderXEllipseArc(drawable, sys, mode, a1,a2,r);
+    renderXBezierArc(drawable, sys, mode, a1,a2,r);
 }				
 
-void BaseEllipse::renderXEllipseArc(Drawable drawable, 
+void BaseEllipse::renderXBezierArc(Drawable drawable, 
 				    Coord::InternalSystem sys,
 				    RenderMode mode,
 				    double a1, double a2, 

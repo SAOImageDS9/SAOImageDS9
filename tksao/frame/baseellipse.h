@@ -20,10 +20,11 @@ class BaseEllipse : public BaseMarker {
   void XDrawCurve(Drawable, RenderMode, Vector&, Vector&, Vector&, Vector&);
 
   void renderXCircle(Drawable, Coord::InternalSystem, double, RenderMode);
-  void renderXEllipse(Drawable, Coord::InternalSystem, RenderMode);
-  void renderXEllipsePrep(Drawable, Coord::InternalSystem, RenderMode,
+  void renderXEllipse(Drawable, Coord::InternalSystem, double, RenderMode);
+  void renderXBezier(Drawable, Coord::InternalSystem, RenderMode);
+  void renderXBezierPrep(Drawable, Coord::InternalSystem, RenderMode,
 			  double, double, double, double, Vector&);
-  void renderXEllipseArc(Drawable, Coord::InternalSystem, RenderMode, 
+  void renderXBezierArc(Drawable, Coord::InternalSystem, RenderMode, 
 			 double, double, Vector&);
   void renderXInclude(Drawable, Coord::InternalSystem, RenderMode);
 
@@ -51,10 +52,10 @@ class BaseEllipse : public BaseMarker {
 
  protected:
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
-  virtual void renderXCircleDraw(Drawable, GC, Vector&, Vector&, 
+  virtual void renderXArcDraw(Drawable, GC, Vector&, Vector&, 
 				 int, int, RenderMode);
-  virtual void renderXEllipseDraw(Drawable, GC, RenderMode);
-  void renderXEllipseDashDraw(Drawable, GC);
+  virtual void renderXBezierDraw(Drawable, GC, RenderMode);
+  void renderXBezierDashDraw(Drawable, GC);
 
   void renderPS(int);
   virtual void renderPSDraw();

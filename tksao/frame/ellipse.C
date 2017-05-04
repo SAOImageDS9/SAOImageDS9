@@ -46,7 +46,7 @@ Ellipse::Ellipse(Base* p, const Vector& ctr,
   updateBBox();
 }
 
-void Ellipse::renderXCircleDraw(Drawable drawable, GC lgc, 
+void Ellipse::renderXArcDraw(Drawable drawable, GC lgc, 
 				Vector& st, Vector& size,
 				int a1, int aa, RenderMode mode)
 {
@@ -56,14 +56,14 @@ void Ellipse::renderXCircleDraw(Drawable drawable, GC lgc,
     XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
 }
 
-void Ellipse::renderXEllipseDraw(Drawable drawable, GC lgc, RenderMode mode)
+void Ellipse::renderXBezierDraw(Drawable drawable, GC lgc, RenderMode mode)
 {
   if (fill_ && mode == SRC)
     XFillPolygon(display, drawable, lgc, xpoint_, xpointNum_, Convex, CoordModeOrigin);
   else if ((properties & SOURCE) && !(properties & DASH))
     XDrawLines(display, drawable, lgc, xpoint_, xpointNum_, CoordModeOrigin);
   else
-    renderXEllipseDashDraw(drawable, lgc);
+    renderXBezierDashDraw(drawable, lgc);
 }
 
 void Ellipse::renderPSDraw()

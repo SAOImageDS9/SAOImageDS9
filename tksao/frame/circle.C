@@ -58,7 +58,7 @@ void Circle::edit(const Vector& v, int h)
   doCallBack(CallBack::EDITCB);
 }
 
-void Circle::renderXCircleDraw(Drawable drawable, GC lgc, 
+void Circle::renderXArcDraw(Drawable drawable, GC lgc, 
 			       Vector& st, Vector& size,
 			       int a1, int aa, RenderMode mode)
 {
@@ -68,14 +68,14 @@ void Circle::renderXCircleDraw(Drawable drawable, GC lgc,
     XDrawArc(display, drawable, lgc, st[0], st[1], size[0], size[1], a1, aa);
 }
 
-void Circle::renderXEllipseDraw(Drawable drawable, GC lgc, RenderMode mode)
+void Circle::renderXBezierDraw(Drawable drawable, GC lgc, RenderMode mode)
 {
   if (fill_ && mode == SRC)
     XFillPolygon(display, drawable, lgc, xpoint_, xpointNum_, Convex, CoordModeOrigin);
   else if ((properties & SOURCE) && !(properties & DASH))
     XDrawLines(display, drawable, lgc, xpoint_, xpointNum_, CoordModeOrigin);
   else
-    renderXEllipseDashDraw(drawable, lgc);
+    renderXBezierDashDraw(drawable, lgc);
 }
 
 void Circle::renderPSDraw()

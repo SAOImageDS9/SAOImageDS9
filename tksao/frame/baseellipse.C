@@ -222,10 +222,12 @@ void BaseEllipse::renderXBezierDashDraw(Drawable drawable, GC lgc)
   // crude attempt to clip unwanted drawlines
   // only works for SRC
   for (int ii=0; ii<xpointNum_; ii+=2) {
-    XPoint* ptr1 = xpoint_+ii;
-    XPoint* ptr2 = xpoint_+ii+1;
-    XDrawLine(display, drawable, lgc, 
-	      (*ptr1).x, (*ptr1).y, (*ptr2).x, (*ptr2).y);    
+    if (ii+1 < xpointNum_) {
+      XPoint* ptr1 = xpoint_+ii;
+      XPoint* ptr2 = xpoint_+ii+1;
+      XDrawLine(display, drawable, lgc, 
+		(*ptr1).x, (*ptr1).y, (*ptr2).x, (*ptr2).y);    
+    }
   }    
 }
 

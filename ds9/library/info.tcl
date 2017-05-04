@@ -585,17 +585,21 @@ proc UpdateInfoBox {which x y sys} {
 		    }
 		}
 	    } elseif {[$which has wcs celestrial wcs$ll]} {
-		set infobox(wcs$ll,sys) "WCS $ll"
+		if {$infobox(wcs$ll,sys) == {}} {
+		    set infobox(wcs$ll,sys) "WCS $ll"
+		}
 		$infobox(wcs$ll,x,nm) configure -text {l} \
 		    -font "{$ds9(times)} $pds9(font,size) normal italic"
 		$infobox(wcs$ll,y,nm) configure -text {b} \
 		    -font "{$ds9(times)} $pds9(font,size) normal italic"
 	    } else {
-		set infobox(wcs$ll,sys) "WCS $ll"
+		if {$infobox(wcs$ll,sys) == {}} {
+		    set infobox(wcs$ll,sys) "WCS $ll"
+		}
 		$infobox(wcs$ll,x,nm) configure -text {x} \
 		    -font "{$ds9(times)} $pds9(font,size) normal italic"
 		$infobox(wcs$ll,y,nm) configure -text {y} \
-		-font "{$ds9(times)} $pds9(font,size) normal italic"
+		    -font "{$ds9(times)} $pds9(font,size) normal italic"
 	    }
 	}
     }

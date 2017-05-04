@@ -43,13 +43,14 @@ proc CATDef {} {
 		       {{DENIS} catdenis cds {B/denis}} \
 		       {{SkyBot} catskybot skybot skybot} \
 		       {- {Optical} opt} \
-		       {{ASCC-2.5} catascss cds {I/280A/ascc01}} \
 		       {{AAVSO} cataavso cds {B/vsx}} \
+		       {{AC 2000.2} catac cds {I/275/ac2002}} \
+		       {{ASCC-2.5} catascss cds {I/280A/ascc01}} \
 		       {{Carlsberg Meridian 14} catcmc cds {I/304}}\
+		       {{GAIA DR1} catgaia cds {I/337}} \
 		       {{GSC 1.2} catgsc1 cds {I/254/out}} \
 		       {{GSC 2.2} catgsc2 cds {I/271/out}} \
 		       {{GSC 2.3} catgsc3 cds {I/305/out}} \
-		       {{AC 2000.2} catac cds {I/275/ac2002}} \
 		       {{NOMAD} catnomad cds {I/297/out}} \
 		       {{PPMX} catppmx cds {I/312}} \
 		       {{SAO J2000} catsao cds {I/131A/sao}} \

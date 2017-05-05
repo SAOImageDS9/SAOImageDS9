@@ -3605,22 +3605,22 @@ void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan)
   // CTYPE
   if (
       // special case (reorder 3D cube)
-      (!strncmp(wcs_[ww]->c1type,"GLON",4) && 
-       strncmp(wcs_[ww]->c2type,"GLAT",4)) || 
-      (strncmp(wcs_[ww]->c1type,"GLON",4) && 
-       !strncmp(wcs_[ww]->c2type,"GLAT",4)) || 
-      (!strncmp(wcs_[ww]->c1type,"GLAT",4) && 
-       strncmp(wcs_[ww]->c2type,"GLON",4)) || 
-      (strncmp(wcs_[ww]->c1type,"GLAT",4) && 
-       !strncmp(wcs_[ww]->c2type,"GLON",4)) || 
-      (!strncmp(wcs_[ww]->c1type,"RA",2) && 
-       strncmp(wcs_[ww]->c2type,"DEC",3)) ||
-      (strncmp(wcs_[ww]->c1type,"RA",2) && 
-       !strncmp(wcs_[ww]->c2type,"DEC",3)) ||
-      (!strncmp(wcs_[ww]->c1type,"DEC",3) && 
-       strncmp(wcs_[ww]->c2type,"RA",2)) ||
-      (strncmp(wcs_[ww]->c1type,"DEC",3) && 
-       !strncmp(wcs_[ww]->c2type,"RA",2)))
+      (!strncmp(wcs_[ww]->ctype[0],"GLON",4) && 
+       strncmp(wcs_[ww]->ctype[1],"GLAT",4)) || 
+      (strncmp(wcs_[ww]->ctype[0],"GLON",4) && 
+       !strncmp(wcs_[ww]->ctype[1],"GLAT",4)) || 
+      (!strncmp(wcs_[ww]->ctype[0],"GLAT",4) && 
+       strncmp(wcs_[ww]->ctype[1],"GLON",4)) || 
+      (strncmp(wcs_[ww]->ctype[0],"GLAT",4) && 
+       !strncmp(wcs_[ww]->ctype[1],"GLON",4)) || 
+      (!strncmp(wcs_[ww]->ctype[0],"RA",2) && 
+       strncmp(wcs_[ww]->ctype[1],"DEC",3)) ||
+      (strncmp(wcs_[ww]->ctype[0],"RA",2) && 
+       !strncmp(wcs_[ww]->ctype[1],"DEC",3)) ||
+      (!strncmp(wcs_[ww]->ctype[0],"DEC",3) && 
+       strncmp(wcs_[ww]->ctype[1],"RA",2)) ||
+      (strncmp(wcs_[ww]->ctype[0],"DEC",3) && 
+       !strncmp(wcs_[ww]->ctype[1],"RA",2)))
     {
       putFitsCard(chan, "CTYPE1", "LINEAR");
       putFitsCard(chan, "CTYPE2", "LINEAR");
@@ -3637,22 +3637,6 @@ void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan)
       str << wcs_[ww]->ctype[1] << "-SIP" << ends;
       putFitsCard(chan, "CTYPE2", str.str().c_str());
     }
-  }
-  else if ((wcs_[ww]->prjcode == WCS_LIN) && 
-	   (strncmp(wcs_[ww]->ctype[0]+2,"LN",2)) &&
-	   (strncmp(wcs_[ww]->ctype[0]+2,"LT",2)) &&
-	   (strncmp(wcs_[ww]->ctype[0]+1,"LON",3)) &&
-	   (strncmp(wcs_[ww]->ctype[0]+1,"LAT",3)) &&
-	   (*wcs_[ww]->c1type && *wcs_[ww]->c2type)) {
-    // this is not a mistake
-    putFitsCard(chan, "CTYPE1", wcs_[ww]->c1type);
-    putFitsCard(chan, "CTYPE2", wcs_[ww]->c2type);
-  }
-  else if ((wcs_[ww]->prjcode == WCS_PIX) &&
-	   (*wcs_[ww]->c1type && *wcs_[ww]->c2type)) {
-    // this is not a mistake
-    putFitsCard(chan, "CTYPE1", wcs_[ww]->c1type);
-    putFitsCard(chan, "CTYPE2", wcs_[ww]->c2type);
   }
   else {
     putFitsCard(chan, "CTYPE1", wcs_[ww]->ctype[0]);

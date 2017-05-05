@@ -54,12 +54,14 @@ void BaseEllipse::renderX(Drawable drawable, Coord::InternalSystem sys,
     parent->getWCSOrientation() == Coord::NORMAL;
   int isRound = r[0] == r[1];
   int isScale = z[0] == z[1];
-  int isAng0 = teq(ang,0,FLT_EPSILON)||teq(ang,M_PI,FLT_EPSILON);
-  int is360 =  teq(startAng_,0,FLT_EPSILON)&&teq(stopAng_,M_TWOPI,FLT_EPSILON);
+  int isAngle = teq(ang,0,FLT_EPSILON) ||
+    teq(ang,M_PI,FLT_EPSILON);
+  int is360 =  teq(startAng_,0,FLT_EPSILON) && 
+    teq(stopAng_,M_TWOPI,FLT_EPSILON);
 
   if (isRound && isScale && isOrient && parent->isAzElZero())
     renderXCircle(drawable, sys, ang, mode);
-  else if (isAng0 && is360 && parent->isAzElZero())
+  else if (isAngle && is360 && parent->isAzElZero())
     renderXEllipse(drawable, sys, ang, mode);
   else
     renderXBezier(drawable, sys, mode);

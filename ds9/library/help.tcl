@@ -14,7 +14,7 @@ proc HelpDef {} {
     set help(keyboard) "$ds9(root)/doc/ref/keyboard.html"
     set help(faq) "$ds9(root)/doc/faq.html"
     set help(new) "$ds9(root)/doc/new.html"
-    set help(release) "$ds9(root)/doc/release/r7.0.html"
+    set help(release) "$ds9(root)/doc/release/r7.6.html"
     set help(helpdesk) "$ds9(root)/doc/helpdesk.html"
     set help(story) "$ds9(root)/doc/story.html"
     set help(ack) "$ds9(root)/doc/acknowledgment.html"

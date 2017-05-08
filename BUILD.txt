@@ -5,14 +5,14 @@ Welcome to SAOImage DS9
 Please Note: The build instructions have changed!
 
 Quick Instructions for those who hate to read instructions.
-After installation, ds9 can be located in saods9/bin/ds9.
+After installation, ds9 can be located in SAOImageDS9/bin/ds9.
 To build DS9, just cut and paste the following commands:
 
 ***************************
 For Linux/X11 MacOSX/Cygwin
 ***************************
 
-cd saods9
+cd SAOImageDS9
 unix/configure
 make
 
@@ -22,7 +22,7 @@ For Aqua MacOSX
 
 requires XCode
 
-cd saods9
+cd SAOImageDS9
 macosx/configure
 make
 
@@ -32,6 +32,6 @@ For Windows
 
 requires cygwin with mingw compilers
 
-cd saods9
+cd SAOImageDS9
 win/configure
 make

@@ -135,9 +135,9 @@ openssl/Makefile:
 
 #--------------------------clean
 
-.PHONY	: tkwinclean libxml2clean zlibclean opensslclean
+.PHONY	: tkosclean libxml2clean zlibclean opensslclean
 
-tkwinclean : libxml2clean zlibclean opensslclean
+tkosclean : libxml2clean zlibclean opensslclean
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkwin clean
@@ -159,9 +159,9 @@ opensslclean:
 
 #--------------------------distclean
 
-.PHONY	: tkwindistclean libxml2distclean zlibdistclean openssldistclean
+.PHONY	: tkosdistclean libxml2distclean zlibdistclean openssldistclean
 
-tkwindistclean : libxml2distclean zlibdistclean openssldistclean
+tkosdistclean : libxml2distclean zlibdistclean openssldistclean
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkwin distclean

@@ -121,18 +121,18 @@ tkmacosx/Makefile :
 
 #--------------------------clean
 
-.PHONY	: tkmacosxclean
+.PHONY	: tkosclean
 
-tkmacosxclean :
+tkosclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmacosx clean
 
 #--------------------------distclean
 
-.PHONY	: tkmacosxdistclean
+.PHONY	: tkosdistclean
 
-tkmacosxdistclean :
+tkosdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmacosx distclean

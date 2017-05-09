@@ -1853,7 +1853,7 @@ else
 fi
 
 
-OS="macosx"
+OS="macos"
 
 
 ARCH=$with_arch

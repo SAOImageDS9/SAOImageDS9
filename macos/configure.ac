@@ -35,7 +35,7 @@ AC_CONFIG_AUX_DIR(../tclconfig)
 
 AC_ARG_WITH([arch],AC_HELP_STRING([--with-arch],[build name]),[],[with_arch=unknown])
 
-OS="macosx"
+OS="macos"
 AC_SUBST(OS)
 
 ARCH=$with_arch

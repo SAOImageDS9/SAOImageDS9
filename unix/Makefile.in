@@ -63,17 +63,17 @@ tk$(TCL_VERSION)/unix/Makefile :
 
 #--------------------------clean
 
-.PHONY	: tkunixclean
+.PHONY	: tkosclean
 
-tkunixclean :
+tkosclean :
 	@echo ""
 	@echo "*** $@ ***"
 
 #--------------------------distclean
 
-.PHONY	: tkunixdistclean
+.PHONY	: tkosdistclean
 
-tkunixdistclean :
+tkosdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 

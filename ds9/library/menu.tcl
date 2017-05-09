@@ -49,7 +49,7 @@ proc AppleMenu {mb} {
 	    menu $mb.apple
 	    $mb add cascade -menu $mb.apple
 	    $mb.apple add command \
-		-label [msgcat::mc {About SAOImage DS9}] \
+		-label [msgcat::mc {About SAOImageDS9}] \
 		-command AboutBox
 #		-command ::tk::mac::standardAboutPanel
 	}

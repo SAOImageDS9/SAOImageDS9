@@ -22,7 +22,7 @@ CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 #--------------------------defines
 
-DS9APP	=SAOImage\ DS9\ $(DS9_VERSION)
+DS9APP	=SAOImageDS9\ $(DS9_VERSION)
 
 TCLFILES= \
 	tcl$(TCL_VERSION)/generic/tcl.h \
@@ -147,6 +147,6 @@ dist	:
 	mkdir dist/$(DS9APP)
 	ln -s /Applications dist/$(DS9APP)/.
 	cp -r ds9/macosx/README dist/$(DS9APP)/.
-	cp -rp bin/SAOImage\ DS9.app dist/$(DS9APP)/.
+	cp -rp bin/SAOImageDS9.app dist/$(DS9APP)/.
 	hdiutil create -srcfolder dist/$(DS9APP) dist/$(DS9APP) 
 	rm -rf dist/$(DS9APP)

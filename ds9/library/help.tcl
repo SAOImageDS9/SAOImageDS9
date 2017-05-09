@@ -11,9 +11,7 @@ proc HelpDef {} {
     set help(refman) "$ds9(root)/doc/ref/index.html"
     set help(command) "$ds9(root)/doc/ref/command.html"
     set help(userman) "$ds9(root)/doc/user/index.html"
-    set help(keyboard) "$ds9(root)/doc/ref/keyboard.html"
     set help(faq) "$ds9(root)/doc/faq.html"
-    set help(new) "$ds9(root)/doc/new.html"
     set help(release) "$ds9(root)/doc/release/r7.6.html"
     set help(helpdesk) "$ds9(root)/doc/helpdesk.html"
     set help(story) "$ds9(root)/doc/story.html"
@@ -21,7 +19,7 @@ proc HelpDef {} {
     set help(vo) "$ds9(root)/doc/ref/vo.html"
 
     set help(authors) "William Joye (Smithsonian Astrophysical Observatory)\nEric Mandel (Smithsonian Astrophysical Observatory)\nSteve Murray (Smithsonian Astrophysical Observatory)\n"
-    set help(about) "SAOImage DS9\nVersion $ds9(version)\n\nAuthors\n$help(authors)\nSAOImage DS9 development has been made possible by funding from NASA's Applied Information Systems Research Program, Chandra X-ray Science Center (CXC), and the High Energy Astrophysics Science Archive Center (HEASARC). Additional funding was provided by the JWST Mission office at Space Telescope Science Institute to improve capabilities for 3D data visualization.\n\nColormaps\nh5utils: Steven Johnson (MIT)\nViridis: Eric Firing (UW)\nCubehelix: Dave Green (Cavendish)\nGist: David Munro (LLNL)\nTopographic: Tom Patterson (US National Park Service) "
+    set help(about) "SAOImageDS9\nVersion $ds9(version)\n\nAuthors\n$help(authors)\nSAOImage DS9 development has been made possible by funding from NASA's Applied Information Systems Research Program, Chandra X-ray Science Center (CXC), and the High Energy Astrophysics Science Archive Center (HEASARC). Additional funding was provided by the JWST Mission office at Space Telescope Science Institute to improve capabilities for 3D data visualization.\n\nColormaps\nh5utils: Steven Johnson (MIT)\nViridis: Eric Firing (UW)\nCubehelix: Dave Green (Cavendish)\nGist: David Munro (LLNL)\nTopographic: Tom Patterson (US National Park Service) "
 }
 
 proc HelpRef {} {
@@ -39,19 +37,9 @@ proc HelpUser {} {
     HV hlpuser [msgcat::mc {User Manual}] $help(userman)
 }
 
-proc HelpKeyboard {} {
-    global help
-    HV hlpkeyboard [msgcat::mc {Keyboard Shortcuts}] $help(keyboard)
-}
-
 proc HelpFAQ {} {
     global help
     HV hlpfaq [msgcat::mc {FAQ}] $help(faq)
-}
-
-proc HelpNew {} {
-    global help
-    HV hlpnew [msgcat::mc {New Features}] $help(new)
 }
 
 proc HelpRelease {} {
@@ -66,7 +54,7 @@ proc HelpDesk {} {
 
 proc HelpStory {} {
     global help
-    HV hlpstory [msgcat::mc {Story of SAOImage DS9}] $help(story)
+    HV hlpstory [msgcat::mc {Story of SAOImageDS9}] $help(story)
 }
 
 proc HelpAck {} {

@@ -1,5 +1,5 @@
 ***************************
-Welcome to SAOImage DS9
+Welcome to SAOImageDS9
 ***************************
 
 Please Note: The build instructions have changed!

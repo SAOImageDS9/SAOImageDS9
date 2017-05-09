@@ -32,19 +32,15 @@ proc HelpMainMenu {} {
     }
     $ds9(mb).help add command -label [msgcat::mc {User Manual}]\
 	-command HelpUser
-    $ds9(mb).help add command -label [msgcat::mc {Mouse and Keyboard}] \
-	-command HelpKeyboard
     $ds9(mb).help add separator
     $ds9(mb).help add command -label [msgcat::mc {FAQ}] \
 	-command HelpFAQ
-    $ds9(mb).help add command -label [msgcat::mc {New Features}] \
-	-command HelpNew
     $ds9(mb).help add command -label [msgcat::mc {Release Notes}] \
 	-command HelpRelease
     $ds9(mb).help add command -label [msgcat::mc {Help Desk}] \
 	-command HelpDesk
     $ds9(mb).help add separator
-    $ds9(mb).help add command -label [msgcat::mc {Story of SAOImage DS9}] \
+    $ds9(mb).help add command -label [msgcat::mc {Story of SAOImageDS9}] \
 	-command HelpStory
     $ds9(mb).help add command -label [msgcat::mc {Acknowledgment}] \
 	-command HelpAck
@@ -54,7 +50,7 @@ proc HelpMainMenu {} {
 	win32 {
 	    $ds9(mb).help add separator
 	    $ds9(mb).help add command \
-		-label "[msgcat::mc {About SAOImage DS9}]..." \
+		-label "[msgcat::mc {About SAOImageDS9}]..." \
 		-command AboutBox
 	}
 	aqua {}
@@ -143,23 +139,19 @@ proc PrefsDialogButtonbarHelp {f} {
 	-variable pbuttons(help,ref) -command {UpdateButtons buttons(help)}
     $m add checkbutton -label [msgcat::mc {User Manual}]\
 	-variable pbuttons(help,user) -command {UpdateButtons buttons(help)}
-    $m add checkbutton -label [msgcat::mc {Mouse and Keyboard}] \
-	-variable pbuttons(help,keyboard) -command {UpdateButtons buttons(help)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {FAQ}] \
 	-variable pbuttons(help,faq) -command {UpdateButtons buttons(help)}
-    $m add checkbutton -label [msgcat::mc {New Features}] \
-	-variable pbuttons(help,new) -command {UpdateButtons buttons(help)}
     $m add checkbutton -label [msgcat::mc {Release Notes}] \
 	-variable pbuttons(help,release) -command {UpdateButtons buttons(help)}
     $m add checkbutton -label [msgcat::mc {Help Desk}] \
 	-variable pbuttons(help,desk) -command {UpdateButtons buttons(help)}
     $m add separator
-    $m add checkbutton -label [msgcat::mc {Story of SAOImage DS9}] \
+    $m add checkbutton -label [msgcat::mc {Story of SAOImageDS9}] \
 	-variable pbuttons(help,story) -command {UpdateButtons buttons(help)}
     $m add checkbutton -label [msgcat::mc {Acknowledgment}] \
 	-variable pbuttons(help,ack) -command {UpdateButtons buttons(help)}
     $m add separator
-    $m add checkbutton -label "[msgcat::mc {About SAOImage DS9}]..." \
+    $m add checkbutton -label "[msgcat::mc {About SAOImageDS9}]..." \
 	-variable pbuttons(help,about) -command {UpdateButtons buttons(help)}
 }

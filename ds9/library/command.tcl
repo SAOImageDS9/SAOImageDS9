@@ -34,7 +34,7 @@ proc ProcessCommandLineFirst {} {
 	    -title {
 		incr i
 		set ds9(title) [lindex $argv $i]
-		set t "SAOImage $ds9(title)"
+		set t "SAOImage[string toupper $ds9(title)]"
 		wm title $ds9(top) "$t"
 		wm iconname $ds9(top) "$t"
 	    }

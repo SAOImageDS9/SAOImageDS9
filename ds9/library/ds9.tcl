@@ -438,8 +438,8 @@ switch $ds9(wm) {
 # We want to withdraw the window til everything is ready to go
 wm withdraw $ds9(top)
 
-wm title $ds9(top) "SAOImage $ds9(title)"
-wm iconname $ds9(top) "SAOImage $ds9(title)"
+wm title $ds9(top) "SAOImage[string toupper $ds9(title)]"
+wm iconname $ds9(top) "SAOImage[string toupper $ds9(title)]"
 wm protocol $ds9(top) WM_DELETE_WINDOW QuitDS9
 
 # we need to set certain variables before anything else

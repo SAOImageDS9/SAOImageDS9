@@ -71,7 +71,7 @@ COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
 #--------------------------defines
 
-APPDIR	= $(bindir)/ds9app
+APPDIR	= $(bindir)/SAOImageDS9
 LIBDIR	= $(APPDIR)
 
 OBJS	= ds9.o winMain.o ds9.res.o

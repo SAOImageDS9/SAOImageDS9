@@ -69,7 +69,7 @@ COMPILE		= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
 #--------------------------defines
 
-APPDIR	= $(bindir)/SAOImage\ DS9.app
+APPDIR	= $(bindir)/SAOImageDS9.app
 MACDIR	= $(APPDIR)/Contents/MacOS
 LIBDIR	= $(APPDIR)/Contents/Frameworks/Tksao.framework/Resources
 TCLSRC	= $(prefix)/build/tcl/Tcl.framework/Versions/$(TCL_VERSION)
@@ -158,7 +158,7 @@ $(MACDIR)/ds9 : ds9base $(PREQS)
 	/Library/Frameworks/Tk.framework/Versions/$(TCL_VERSION)/Tk \
 	@executable_path/../Frameworks/Tk.framework/Tk \
 	"$@"
-	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImage\ DS9.app
+	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImageDS9.app
 
 debug	: ds9base $(PREQS)
 	cp -p ds9base $(APPDIR)/Contents/MacOS/ds9
@@ -170,7 +170,7 @@ debug	: ds9base $(PREQS)
 	/Library/Frameworks/Tk.framework/Versions/$(TCL_VERSION)/Tk \
 	@executable_path/../Frameworks/Tk.framework/Tk \
 	$(APPDIR)/Contents/MacOS/ds9
-	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImage\ DS9.app
+	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImageDS9.app
 
 tkAppInit.o : tkAppInit.c
 	$(COMPILE) -DTK_LOCAL_APPINIT=SAOAppInit \
@@ -191,7 +191,7 @@ ds9base	: $(OBJS) $(LLIBS)
 
 # update date/time so we know when the build was done
 $(APPDIR):
-	cp -rf SAOImage\ DS9.app $(bindir)
+	cp -rf SAOImageDS9.app $(bindir)
 
 $(TCLDIR)/Tcl : $(TCLSRC)/Tcl
 	cp -p $? "$@"

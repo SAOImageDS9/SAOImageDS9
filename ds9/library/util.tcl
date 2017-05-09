@@ -621,7 +621,7 @@ proc AboutBox {} {
 
     set ed(ok) 0
 
-    DialogCreate $w [msgcat::mc {About SAOImage DS9}] ed(ok)
+    DialogCreate $w [msgcat::mc {About SAOImageDS9}] ed(ok)
 
     # Param
     set f [frame $w.param -background white]

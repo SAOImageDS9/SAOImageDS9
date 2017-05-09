@@ -1,1 +1,1 @@
-To install SAOImage DS9 in C:\ds9, please select the Setup button.
+To install SAOImageDS9 in C:, please select the Setup button.

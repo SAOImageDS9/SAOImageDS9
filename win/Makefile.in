@@ -31,7 +31,7 @@ CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 #--------------------------defines
 
-DS9APP	=SAOImage\ DS9\ $(DS9_VERSION)
+DS9APP	=SAOImageDS9\ $(DS9_VERSION)
 
 #--------------------------build
 
@@ -189,6 +189,6 @@ openssldistclean :
 
 dist	:
 	$(RM) -f dist/$(DS9APP)\ Install.*
-	/cygdrive/c/Program\ Files\ \(x86\)/WinZip/wzzip -p -r dist/$(DS9APP)\ Install.zip bin/ds9app
-	/cygdrive/c/Program\ Files\ \(x86\)/WinZip\ Self-Extractor/WINZIPSE.EXE  dist/$(DS9APP)\ Install.zip -d "C:\SAOImage DS9" -i ds9/win/ds9.ico -le -overwrite -runasuser -c cscript install.vbs
+	/cygdrive/c/Program\ Files\ \(x86\)/WinZip/wzzip -p -r dist/$(DS9APP)\ Install.zip bin/SAOImageDS9
+	/cygdrive/c/Program\ Files\ \(x86\)/WinZip\ Self-Extractor/WINZIPSE.EXE  dist/$(DS9APP)\ Install.zip -d "C:\SAOImageDS9" -i ds9/win/ds9.ico -le -overwrite -runasuser -c cscript install.vbs
 

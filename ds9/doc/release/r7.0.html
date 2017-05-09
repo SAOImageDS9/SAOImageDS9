@@ -2,15 +2,15 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html;
-      charset=ISO-8859-1">
+      charset=windows-1252">
     <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
       2.4.7-10 i686) [Netscape]">
     <title>DS9 Version 7 Release Notes</title>
   </head>
-  <body alink="#ff0000" bgcolor="#ffffff" link="#0000ee" text="#000000"
-    vlink="#551a8b">
-    <h3> <img alt="" src="../sun.gif" align="middle" height="98"
-        width="100"> SAOImage DS9 Version 7 Release Notes</h3>
+  <body vlink="#551a8b" text="#000000" link="#0000ee" bgcolor="#ffffff"
+    alink="#ff0000">
+    <h3> <img alt="" src="../sun.gif" width="100" height="98"
+        align="middle"> SAOImageDS9 Version 7 Release Notes</h3>
     <ol>
       <ol>
         <li><tt>10.18.2010 SCALE: fixed a problem preserve Scale at
@@ -94,8 +94,8 @@
             added support for in/out sys/sky formats.</tt></li>
         <li><tt>05.19.2011 CATALOG: SIMBAD added support for in/out
             sys/sky formats.</tt></li>
-        <li><tt>05.19.2011 CATALOG: CDS added support for in/out
-            sys/sky formats.</tt></li>
+        <li><tt>05.19.2011 CATALOG: CDS added support for in/out sys/sky
+            formats.</tt></li>
         <li><tt>05.20.2011 COMPOSITE: speed up create/delete composite
             region with +1000 regions.</tt></li>
         <li><tt>05.20.2011 WCS: implemented preferred WCS for each
@@ -447,19 +447,29 @@
             variable array TFORM descriptions, used in fits compression.
             If no length is specified, set default to 8.<br>
           </tt></li>
-        <li><tt>01.29.2013 SAVE: save fits will now save an entire cube if loaded.</tt></li>
+        <li><tt>01.29.2013 SAVE: save fits will now save an entire cube
+            if loaded.</tt></li>
         <li><tt>01.30.2013 SAVE: add support for save mecube.</tt></li>
-        <li><tt>01.31.2013 CONTOUR: fixed a problem with loading a set of contours with a specified color.</tt></li>
-        <li><tt>02.13.2013 FITSY++: support new fits compression float/double gzip method.</tt></li>
-        <li><tt>02.13.2013 FITSY++: ds9 now distinguishes between BLANK/NAN/INF values.</tt></li>
+        <li><tt>01.31.2013 CONTOUR: fixed a problem with loading a set
+            of contours with a specified color.</tt></li>
+        <li><tt>02.13.2013 FITSY++: support new fits compression
+            float/double gzip method.</tt></li>
+        <li><tt>02.13.2013 FITSY++: ds9 now distinguishes between
+            BLANK/NAN/INF values.</tt></li>
         <li><tt>02.15.2013 REGIONS: no longer output filename in header.</tt></li>
-        <li><tt>02.26.2013 FITSY++: use magic bytes to check for gz compressed files before load.</tt></li>
-        <li><tt>02.28.2013 RGB: loading rgbimage, rgbcube, rgbarray into non-rgb frame will create new rgb frame for all command line, xpa, and samp commands.</tt></li>
-        <li><tt>03.01.2013 FRAME: trap SIGBUS and SIGSEGV while scanning data.</tt></li>
-        <li><tt>03.01.2013 FRAME: will only return error messages at levels info, warning, and error.</tt></li>
+        <li><tt>02.26.2013 FITSY++: use magic bytes to check for gz
+            compressed files before load.</tt></li>
+        <li><tt>02.28.2013 RGB: loading rgbimage, rgbcube, rgbarray into
+            non-rgb frame will create new rgb frame for all command
+            line, xpa, and samp commands.</tt></li>
+        <li><tt>03.01.2013 FRAME: trap SIGBUS and SIGSEGV while scanning
+            data.</tt></li>
+        <li><tt>03.01.2013 FRAME: will only return error messages at
+            levels info, warning, and error.</tt></li>
         <li><tt>03.10.2013 PREFS: fixed a problem with prefs zoom align.</tt></li>
         <li><tt>03.12.2013 BACKUP: check for sym links.</tt></li>
-        <li><tt>03.14.2013 GUI: non-modal dialogs are now created at the center of the main ds9 window.</tt></li>
+        <li><tt>03.14.2013 GUI: non-modal dialogs are now created at the
+            center of the main ds9 window.</tt></li>
         <li><tt>03.25.2013 VO: default vo method is mime.</tt></li>
         <li><tt>03.25.2013 VO: if xpa method fails, default to mime.</tt></li>
         <li><tt>03.26.2013 XPA: add samp cmd to xpa.</tt></li>
@@ -468,7 +478,8 @@
         <li><tt>04.11.2013 CATALOG: fixed cut and paste.</tt></li>
         <li><tt>04.11.2013 WCS: SAO_PLT is now handled directly by AST.</tt></li>
         <li><tt>04.12.2013 PREFS: add dialog center option.</tt></li>
-        <li><tt>04.12.2013 PLOT: all plots (user, analysis and catalogs) are now available to the plot command.</tt></li>
+        <li><tt>04.12.2013 PLOT: all plots (user, analysis and catalogs)
+            are now available to the plot command.</tt></li>
         <li><tt><b>04.15.2013 RELEASE version 7.2</b></tt></li>
         <li><tt>04.16.2013 AST: updated to version 7.2</tt></li>
         <li><tt>04.16.2013 TCLLIB: updated to version 1.15</tt></li>
@@ -478,13 +489,18 @@
         <li><tt>05.15.2013 CATALOGS: add AAVSO to cat list.</tt></li>
         <li><tt>05.17.2013 HV: add DASCHE to Archives list.</tt></li>
         <li><tt>06.03.2013 IRAF: fixed a problem with imexamine coords.</tt></li>
-        <li><tt>06.04.2013 IRAF: save/export will save wcs values, not just the color number.</tt></li>
+        <li><tt>06.04.2013 IRAF: save/export will save wcs values, not
+            just the color number.</tt></li>
         <li><tt>06.05.2013 IRAF: colorbar displays wcs values.</tt></li>
-        <li><tt>06.05.2013 IRAF: fixed a number of issues with tvmark colors.</tt></li>
-        <li><tt>06.11.2013 FITSY++: implemented compressed FITS SUBTRACTIVE_DITHER_1 method.</tt></li>
-        <li><tt>06.14.2013 ENVI: add support for import/export envi format.</tt></li>
+        <li><tt>06.05.2013 IRAF: fixed a number of issues with tvmark
+            colors.</tt></li>
+        <li><tt>06.11.2013 FITSY++: implemented compressed FITS
+            SUBTRACTIVE_DITHER_1 method.</tt></li>
+        <li><tt>06.14.2013 ENVI: add support for import/export envi
+            format.</tt></li>
         <li><tt>06.14.2013 AST: updated to version 7.3.1</tt></li>
-        <li><tt>06.18.2013 GUI: fixed a problem with blank headers being displayed.</tt></li>
+        <li><tt>06.18.2013 GUI: fixed a problem with blank headers being
+            displayed.</tt></li>
         <li><tt>06.18.2013 ARRAY: now accepts cropping info in filename.</tt></li>
         <li><tt>06.18.2013 NRRD: now accepts cropping info in filename.</tt></li>
         <li><tt>06.18.2013 ENVI: now accepts cropping info in filename.</tt></li>
@@ -493,60 +509,98 @@
         <li><tt>06.26.2013 SEGMENT: add new segment region.</tt></li>
         <li><tt>07.02.2013 ENVI: fixed a problem with calculating wcs.</tt></li>
         <li><tt>07.02.2013 FITSY++: changes to allow 1D image.</tt></li>
-        <li><tt>07.03.2013 GROUPS: fixed a problem allowing multiple selection of region groups.</tt></li>
-        <li><tt>08.14.2013 WCS: Linear WCS now goes straight to AST.</tt></li>          <li><tt>09.10.2013 PSEUDOCOLOR: rm support for pseudocolor visuals.</tt></li>
-        <li><tt>09.17.2013 REGIONS: PLOT3D dramatic improvements in speed of deep images and large regions.</tt></li>
-        <li><tt>09.17.2013 GUI: set last file directory based on file type last loaded.</tt></li>
+        <li><tt>07.03.2013 GROUPS: fixed a problem allowing multiple
+            selection of region groups.</tt></li>
+        <li><tt>08.14.2013 WCS: Linear WCS now goes straight to AST.</tt></li>
+        <li><tt>09.10.2013 PSEUDOCOLOR: rm support for pseudocolor
+            visuals.</tt></li>
+        <li><tt>09.17.2013 REGIONS: PLOT3D dramatic improvements in
+            speed of deep images and large regions.</tt></li>
+        <li><tt>09.17.2013 GUI: set last file directory based on file
+            type last loaded.</tt></li>
         <li><tt>09.18.2013 ENVI: minor change to hdr parser.</tt></li>
         <li><tt>09.18.2013 ENVI: fixed a major problem with swapbytes.</tt></li>
-        <li><tt>09.18.2013 CATALOG: fixed a problem with selecting the correct region when arrow keys are used.</tt></li>
-        <li><tt>09.19.2013 FITSY++: cleaned up code for dumping array,nrrd,envi in native endian.</tt></li>
-        <li><tt>09.25.2013 AST: updated to version 7.3.2 to fix problem with SCAMP.</tt></li>
-        <li><tt>09.25.2013 FITSY++: fixed a problem parsing filters in the command line.</tt></li>
+        <li><tt>09.18.2013 CATALOG: fixed a problem with selecting the
+            correct region when arrow keys are used.</tt></li>
+        <li><tt>09.19.2013 FITSY++: cleaned up code for dumping
+            array,nrrd,envi in native endian.</tt></li>
+        <li><tt>09.25.2013 AST: updated to version 7.3.2 to fix problem
+            with SCAMP.</tt></li>
+        <li><tt>09.25.2013 FITSY++: fixed a problem parsing filters in
+            the command line.</tt></li>
         <li><tt>10.05.2013 3D: implement image cache.</tt></li>
         <li><tt>10.08.2013 3D: implement az and el background render.</tt></li>
-        <li><tt>10.10.2013 COLORBAR: fixed a minor problem with specifing 'other color'.</tt></li>
+        <li><tt>10.10.2013 COLORBAR: fixed a minor problem with
+            specifing 'other color'.</tt></li>
         <li><tt>10.11.2013 REGIONS: add mouse click epsilon parameter.</tt></li>
         <li><tt>10.16.2013 CUBE: add lock slice wcs.</tt></li>
-        <li><tt>10.17.2013 REGIONS: fixed a problem with ds9 regions parser and parsing hex color specification.</tt></li>
-        <li><tt>10.18.2013 XPA: fixed a problem with "file" and backward compatability.</tt></li>
-        <li><tt>10.18.2013 ANALYSIS: add several checks to verify analysis file before try to parse.</tt></li>
-        <li><tt>10.22.2013 GUI: fixed a problem with preserve PAN while loading.</tt></li>
-        <li><tt>10.22.2013 SCALE: removed PRESERVE SCALE. This has been redundant since 7.0. Setting the scale limits does the same thing.</tt></li>
-        <li><tt>10.22.2013 CONTOUR: fixed a problem if no system is specified and, the default is normally WCS, unless no WCS is defined, then default to PHYSICAL.</tt></li>
+        <li><tt>10.17.2013 REGIONS: fixed a problem with ds9 regions
+            parser and parsing hex color specification.</tt></li>
+        <li><tt>10.18.2013 XPA: fixed a problem with "file" and backward
+            compatability.</tt></li>
+        <li><tt>10.18.2013 ANALYSIS: add several checks to verify
+            analysis file before try to parse.</tt></li>
+        <li><tt>10.22.2013 GUI: fixed a problem with preserve PAN while
+            loading.</tt></li>
+        <li><tt>10.22.2013 SCALE: removed PRESERVE SCALE. This has been
+            redundant since 7.0. Setting the scale limits does the same
+            thing.</tt></li>
+        <li><tt>10.22.2013 CONTOUR: fixed a problem if no system is
+            specified and, the default is normally WCS, unless no WCS is
+            defined, then default to PHYSICAL.</tt></li>
         <li><tt>10.28.2013 TCL/TK: update to version 8.6.1.</tt></li>
-        <li><tt>10.31.2013 HTML: fixed issue causeing corrupt stack with new CLANG compilers.</tt></li>
-        <li><tt>11.10.2013 FITS: improved error handling for malformed FITS tables.</tt></li>
+        <li><tt>10.31.2013 HTML: fixed issue causeing corrupt stack with
+            new CLANG compilers.</tt></li>
+        <li><tt>11.10.2013 FITS: improved error handling for malformed
+            FITS tables.</tt></li>
         <li><tt>11.15.2013 CUBE: fixed a problem with lock slice wcs.</tt></li>
         <li><tt>11.18.2013 CATALOG: add SDSS9 to optical menu.</tt></li>
         <li><tt>12.12.2013 WCS: add support for AST WCS def.</tt></li>
         <li><tt>01.28.2014 REGIONS: add auto statistics option.</tt></li>
         <li><tt>03.06.2014 AST: updated to version 7.3.4.</tt></li>
-        <li><tt>03.21.2014 CATALOG: add 'Copy to Regions' from XPA/SAMP/commandline.</tt></li>
-        <li><tt>03.26.2014 WCS: fixed a problem with wcs append/replace where the line length was 81 with newline.</tt></li>
-        <li><tt>04.07.2014 FITSY++: expanded valid EXTNAME keywords to include '.', '-', and '_' chars.</tt></li>
-        <li><tt>04.07.2014 FITSY++: save fits will convert BITPIX=-16 to BITPIX=32</tt></li>
-        <li><tt>06.09.2014 CATALOG: if sort col is of type real, but contains blank values, substitue a value of 0.</tt></li>
+        <li><tt>03.21.2014 CATALOG: add 'Copy to Regions' from
+            XPA/SAMP/commandline.</tt></li>
+        <li><tt>03.26.2014 WCS: fixed a problem with wcs append/replace
+            where the line length was 81 with newline.</tt></li>
+        <li><tt>04.07.2014 FITSY++: expanded valid EXTNAME keywords to
+            include '.', '-', and '_' chars.</tt></li>
+        <li><tt>04.07.2014 FITSY++: save fits will convert BITPIX=-16 to
+            BITPIX=32</tt></li>
+        <li><tt>06.09.2014 CATALOG: if sort col is of type real, but
+            contains blank values, substitue a value of 0.</tt></li>
         <li><tt>07.01.2014 BLT: completed upgrade to TkBLT 3.0.</tt></li>
         <li><tt>07.28.2014 CATALOG: add UCAC4 to optical menu.</tt></li>
         <li><tt>08.01.2014 MACOSX: completed new 64bit Aqua port.</tt></li>
-        <li><tt>08.06.2014 3D: don't wipeout the cache when generating a movie.</tt></li>
-        <li><tt>09.15.2014 ENVI: try to determine data file name from header file name.</tt></li>
-        <li><tt>09.30.2014 GUI: default mouse mode is NONE (not POINTER).</tt></li>
+        <li><tt>08.06.2014 3D: don't wipeout the cache when generating a
+            movie.</tt></li>
+        <li><tt>09.15.2014 ENVI: try to determine data file name from
+            header file name.</tt></li>
+        <li><tt>09.30.2014 GUI: default mouse mode is NONE (not
+            POINTER).</tt></li>
         <li><tt>09.30.2014 GUI: change mode POINTER to REGION.</tt></li>
         <li><tt><b>10.01.2014 RELEASE version 7.3</b></tt></li>
-        <li><tt>10.03.2014 GUI: Fixed problems with Control-S and Control-Z accelerators.</tt></li>
-        <li><tt>10.03.2014 MACOSX: Removed accelerators for Print, PageSetup, and Find, as then invoke a known bug with Tk and dialogs.</tt></li>
-        <li><tt>10.03.2014 MACOSX: Fixed a problem with coordinate display dialog.</tt></li>
-        <li><tt>10.03.2014 MACOSX: Fixed a problem with deleting colorbar tags.</tt></li>
-        <li><tt>10.03.2014 PREFS: Beta versions are now deemed to be of the same verison as the final release.</tt></li>
-        <li><tt>10.03.2014 PREFS: Fixed a problem processing a newer prefs file. Now wait to notify the user after the init phase has been completed.</tt></li>
-        <li><tt>10.03.2014 PREFS: some combinations of old prefs files were not being updated correctly.</tt></li>
+        <li><tt>10.03.2014 GUI: Fixed problems with Control-S and
+            Control-Z accelerators.</tt></li>
+        <li><tt>10.03.2014 MACOSX: Removed accelerators for Print,
+            PageSetup, and Find, as then invoke a known bug with Tk and
+            dialogs.</tt></li>
+        <li><tt>10.03.2014 MACOSX: Fixed a problem with coordinate
+            display dialog.</tt></li>
+        <li><tt>10.03.2014 MACOSX: Fixed a problem with deleting
+            colorbar tags.</tt></li>
+        <li><tt>10.03.2014 PREFS: Beta versions are now deemed to be of
+            the same verison as the final release.</tt></li>
+        <li><tt>10.03.2014 PREFS: Fixed a problem processing a newer
+            prefs file. Now wait to notify the user after the init phase
+            has been completed.</tt></li>
+        <li><tt>10.03.2014 PREFS: some combinations of old prefs files
+            were not being updated correctly.</tt></li>
         <li><tt>10.06.2014 FIRST: rename FIRST to VLA</tt></li>
         <li><tt>10.06.2014 VLA: add STRIPE82 survey.</tt></li>
         <li><tt>10.06.2014 HV: fixed a problem with scrolling.</tt></li>
         <li><tt><b>10.07.2014 RELEASE version 7.3.1</b></tt></li>
-        <li><tt>10.08.2014 REGIONS: fixed a problem with parsing old regions file fonts.</tt></li>
+        <li><tt>10.08.2014 REGIONS: fixed a problem with parsing old
+            regions file fonts.</tt></li>
         <li><tt><b>10.08.2014 RELEASE version 7.3.2</b></tt></li>
         <li><tt>10.10.2014 IEXAM: imexam has been renamed iexam.</tt></li>
         <li><tt>10.15.2014 WCS: fixed a problem with imflip=1.</tt></li>
@@ -554,188 +608,304 @@
         <li><tt>10.20.2014 AST: updated to version 8.0.2.</tt></li>
         <li><tt>10.20.2014 HPX: updated compatiable wcslib-4.24.</tt></li>
         <li><tt>10.21.2014 CATALOG: add width property for symbols.</tt></li>
-        <li><tt>10.22.2014 MACOSX: fixed a problem with mouse wheel zoom.</tt></li>
-        <li><tt>10.22.2014 FITSY++: add support for SUBTRACTIVE_DITHER_2 keyword.</tt></li>
-        <li><tt>10.22.2014 FITSY++: fixed a problem with native endian arrays. Unless specified, the array is assumed to be of the same endian-ness as the processor.</tt></li>
-        <li><tt>11.14.2014 CUBE: fixed a problem with lock slice with no fits loaded.</tt></li>
+        <li><tt>10.22.2014 MACOSX: fixed a problem with mouse wheel
+            zoom.</tt></li>
+        <li><tt>10.22.2014 FITSY++: add support for SUBTRACTIVE_DITHER_2
+            keyword.</tt></li>
+        <li><tt>10.22.2014 FITSY++: fixed a problem with native endian
+            arrays. Unless specified, the array is assumed to be of the
+            same endian-ness as the processor.</tt></li>
+        <li><tt>11.14.2014 CUBE: fixed a problem with lock slice with no
+            fits loaded.</tt></li>
         <li><tt>11.17.2014 TCL/TK: update to version 8.6.3.</tt></li>
-        <li><tt>11.18.2014 MACOSX: preferences, fixed jumpy window size problem.</tt></li>
-        <li><tt>11.19.2014 GUI: view horizontal/vertical now sets display size to default settings.</tt></li>
+        <li><tt>11.18.2014 MACOSX: preferences, fixed jumpy window size
+            problem.</tt></li>
+        <li><tt>11.19.2014 GUI: view horizontal/vertical now sets
+            display size to default settings.</tt></li>
         <li><tt>12.03.2014 IIS: fixed a problem with open_unix().</tt></li>
         <li><tt>12.29.2014 BLOCK: add support for blocking.</tt></li>
-        <li><tt>02.04.2015 HPX: fixed a problem with cropping HPX images.</tt></li>
-        <li><tt>02.05.2015 FITS++: Fits Compression- fixed a problem with uncompressed blocks.</tt></li>
+        <li><tt>02.04.2015 HPX: fixed a problem with cropping HPX
+            images.</tt></li>
+        <li><tt>02.05.2015 FITS++: Fits Compression- fixed a problem
+            with uncompressed blocks.</tt></li>
         <li><tt>02.05.2015 FITS++: added support for 'Q' column arrays.</tt></li>
-        <li><tt>02.17.2015 HV: Fixed a problem when url scheme is FTP and authority included username and passwd.</tt></li>
-        <li><tt>02.18.2015 WCS: Fixed a problem when CDELTs and PCs keywords are used, but not in the orthodox way.</tt></li>
-        <li><tt>03.11.2015 NRRD: Fixed a problem exporting built data cube.</tt></li>
-        <li><tt>03.11.2015 ENVI: Fixed a problem exporting built data cube.</tt></li>
-        <li><tt>03.24.2015 MOSAIC: mecube will now skip over tables and find all images.</tt></li>
-        <li><tt>04.08.2015 FITS++: fixed a problem with compressed fits files and static memory size. now using alloc.</tt></li>
-        <li><tt>04.13.2015 CATALOGS: fixed a problem with deleting the frame first, before closing a catalog dialog.</tt></li>
-        <li><tt>04.15.2015 CUBE: added support for reorder data cube axes.</tt></li>
-        <li><tt>04.16.2015 SMOOTH: blank/NaN values are no longer replaced by 0, instead, NaN is used.</tt></li>
+        <li><tt>02.17.2015 HV: Fixed a problem when url scheme is FTP
+            and authority included username and passwd.</tt></li>
+        <li><tt>02.18.2015 WCS: Fixed a problem when CDELTs and PCs
+            keywords are used, but not in the orthodox way.</tt></li>
+        <li><tt>03.11.2015 NRRD: Fixed a problem exporting built data
+            cube.</tt></li>
+        <li><tt>03.11.2015 ENVI: Fixed a problem exporting built data
+            cube.</tt></li>
+        <li><tt>03.24.2015 MOSAIC: mecube will now skip over tables and
+            find all images.</tt></li>
+        <li><tt>04.08.2015 FITS++: fixed a problem with compressed fits
+            files and static memory size. now using alloc.</tt></li>
+        <li><tt>04.13.2015 CATALOGS: fixed a problem with deleting the
+            frame first, before closing a catalog dialog.</tt></li>
+        <li><tt>04.15.2015 CUBE: added support for reorder data cube
+            axes.</tt></li>
+        <li><tt>04.16.2015 SMOOTH: blank/NaN values are no longer
+            replaced by 0, instead, NaN is used.</tt></li>
         <li><tt>04.17.2015 SMOOTH: is now threaded.</tt></li>
         <li><tt>04.21.2015 GUI: add UNITS keyword to infobox.</tt></li>
         <li><tt>04.23.2015 CUBE: reorder is now threaded.</tt></li>
         <li><tt>04.24.2015 IEXAM: add macro expansion string.</tt></li>
-        <li><tt>04.27.2015 CHECKDNS: fixed a problem so that delay will activate on time (and will return promptly).</tt></li>
+        <li><tt>04.27.2015 CHECKDNS: fixed a problem so that delay will
+            activate on time (and will return promptly).</tt></li>
         <li><tt>04.29.2015 TCL/TK: update to version 8.6.4.</tt></li>
         <li><tt>04.30.2015 LAYOUT: add tile grid direction.</tt></li>
         <li><tt>04.30.2015 GUI: add user selected keyword to infobox.</tt></li>
         <li><tt>05.21.2015 SCALE: add lock/match scalelimits.</tt></li>
         <li><tt><b>05.29.2015 RELEASE version 7.4b1</b></tt></li>
-        <li><tt>06.09.2015 CATALOG: fixed a problem finding correct cols to parse. Original bug introduced after 7.3.2.</tt></li>
+        <li><tt>06.09.2015 CATALOG: fixed a problem finding correct cols
+            to parse. Original bug introduced after 7.3.2.</tt></li>
         <li><tt><b>06.09.2015 RELEASE version 7.4b2</b></tt></li>
-        <li><tt>06.15.2015 SCALE: scaling for data cubes now use clip scope (LOCAL/GLOBAL).</tt></li>
+        <li><tt>06.15.2015 SCALE: scaling for data cubes now use clip
+            scope (LOCAL/GLOBAL).</tt></li>
         <li><tt>06.18.2015 SCALE: Default scope is now GLOBAL.</tt></li>
-        <li><tt>06.18.2015 SCALE: MinMax mode AUTOSCAN has been deprecated.</tt></li>
-        <li><tt>06.22.2015 GUI: fixed a font problem displaying greek symbols.</tt></li>
+        <li><tt>06.18.2015 SCALE: MinMax mode AUTOSCAN has been
+            deprecated.</tt></li>
+        <li><tt>06.22.2015 GUI: fixed a font problem displaying greek
+            symbols.</tt></li>
         <li><tt><b>06.22.2015 RELEASE version 7.4b3</b></tt></li>
         <li><tt>06.29.2015 SKYVIEW: add survey and size options.</tt></li>
         <li><tt><b>07.04.2015 RELEASE version 7.4b4</b></tt></li>
-        <li><tt>07.07.2015 VO: add additional code to use default url list if unable to download list.txt for any reason.</tt></li>
-        <li><tt>07.14.2015 FITSY++: fixed a problem with RICE compression and 4 byte INT to FLOAT conversions.</tt></li>
-        <li><tt>07.15.2015 FITSY++: fixed a problem with GZIP lossless compression.</tt></li>
-        <li><tt>07.15.2015 FITSY++: Add support for GZIP_2 FITS compression.</tt></li>
+        <li><tt>07.07.2015 VO: add additional code to use default url
+            list if unable to download list.txt for any reason.</tt></li>
+        <li><tt>07.14.2015 FITSY++: fixed a problem with RICE
+            compression and 4 byte INT to FLOAT conversions.</tt></li>
+        <li><tt>07.15.2015 FITSY++: fixed a problem with GZIP lossless
+            compression.</tt></li>
+        <li><tt>07.15.2015 FITSY++: Add support for GZIP_2 FITS
+            compression.</tt></li>
         <li><tt><b>07.20.2015 RELEASE version 7.4b5</b></tt></li>
-        <li><tt>07.23.2015 FITSY++: fixed a problem with SAVE FITS and writing NAXIS3=1 into the header.</tt></li>
-        <li><tt>07.23.2015 FITSY++: added check for fits table in SAVE FITS TABLE.</tt></li>
+        <li><tt>07.23.2015 FITSY++: fixed a problem with SAVE FITS and
+            writing NAXIS3=1 into the header.</tt></li>
+        <li><tt>07.23.2015 FITSY++: added check for fits table in SAVE
+            FITS TABLE.</tt></li>
         <li><tt><b>07.24.2015 RELEASE version 7.4b6</b></tt></li>
-        <li><tt>08.13.2015 REGIONS: fixed a problem with FITS CIAO PIE region.</tt></li>
-        <li><tt>08.13.2015 REGIONS: fixed a problem with FITS CIAO ANNULUS region.</tt></li>
-        <li><tt>08.13.2015 REGIONS: added support for FITS CIAO SECTOR and ELLIPTANNULS regions.</tt></li>
+        <li><tt>08.13.2015 REGIONS: fixed a problem with FITS CIAO PIE
+            region.</tt></li>
+        <li><tt>08.13.2015 REGIONS: fixed a problem with FITS CIAO
+            ANNULUS region.</tt></li>
+        <li><tt>08.13.2015 REGIONS: added support for FITS CIAO SECTOR
+            and ELLIPTANNULS regions.</tt></li>
         <li><tt>08.16.2015 WCS: fixed a problem with reorder 3D cubes.</tt></li>
         <li><tt>08.25.2015 COLORBAR: added MathLab colormaps.</tt></li>
         <li><tt>08.25.2015 COLORBAR: added MatPlotLib colormaps.</tt></li>
         <li><tt>08.26.2015 COLORBAR: added H5utils colormaps.</tt></li>
         <li><tt>08.26.2015 COLORBAR: added GIST colormaps.</tt></li>
         <li><tt>08.26.2015 COLORBAR: added Topographic colormaps.</tt></li>
-        <li><tt>08.28.2015 MOSAIC: fixed a problem introduced in 7.4b1 which failed to ignore generic tables in extensions when loading multiple extension fits.</tt></li>
+        <li><tt>08.28.2015 MOSAIC: fixed a problem introduced in 7.4b1
+            which failed to ignore generic tables in extensions when
+            loading multiple extension fits.</tt></li>
         <li><tt>09.03.2015 PAN: fixed a problem with pan then zoom mode.</tt></li>
-        <li><tt>09.17.2015 IIS: fixed a problem with imexam introduced in an earlier beta version.</tt></li>
-        <li><tt>09.17.2015 IIS: fixed a problem with imexam when a former imexam frame has been delete.</tt></li>
+        <li><tt>09.17.2015 IIS: fixed a problem with imexam introduced
+            in an earlier beta version.</tt></li>
+        <li><tt>09.17.2015 IIS: fixed a problem with imexam when a
+            former imexam frame has been delete.</tt></li>
         <li><tt>09.17.2015 MOSAIC: add IRAF DETSEC Align option.</tt></li>
         <li><tt><b>09.18.2015 RELEASE version 7.4b7</b></tt></li>
-        <li><tt>09.21.2015 WCS: Look for old RADECSYS keyword if present.</tt></li>
+        <li><tt>09.21.2015 WCS: Look for old RADECSYS keyword if
+            present.</tt></li>
         <li><tt>09.22.2015 CROSSHAIR: add crosshair parameters dialog.</tt></li>
-        <li><tt>09.30.2015 TEMPLATES: fixed a problem with WCS introduced in an earlier beta version.</tt></li>
+        <li><tt>09.30.2015 TEMPLATES: fixed a problem with WCS
+            introduced in an earlier beta version.</tt></li>
         <li><tt>10.02.2015 SMOOTH: smooth on load now threaded.</tt></li>
         <li><tt>10.02.2015 REGIONS: PLOT3D is disabled by default.</tt></li>
-        <li><tt>10.13.2015 SAMP: fixed a issue with case of meta-data in xmlrpc.</tt></li>
-        <li><tt>10.14.2015 GUI : fixed an issue where not all header options were offered in the case of compressed fits images.</tt></li>
-        <li><tt>10.14.2015 BACKUP : fixed a problem when creating a backup with a file that has been compressed.</tt></li>
-        <li><tt>10.15.2015 SAMP: fixed a issue with results with empty elements.</tt></li>
-        <li><tt>10.16.2015 LINUX: For all key press events, calculate the current cursor position, as Ubuntu and MacOSX Aqua returns bad x,y values. </tt></li>
-        <li><tt>10.21.2015 CATALOG: fixed a problem where a catalog had a column of the same name as a variable. </tt></li>
-        <li><tt>10.26.2015 GUI: fixed a problem remembering the previous filename loaded for standard dialogs. </tt></li>
-        <li><tt>10.30.2015 SAMP: fixed a issue with incorrect body length in  xmlrpc messages.</tt></li>
-        <li><tt>11.03.2015 3D: fixed a major issue introduced in the beta 7.4 series which caused a redraw everytime the current slice was changed.</tt></li>
+        <li><tt>10.13.2015 SAMP: fixed a issue with case of meta-data in
+            xmlrpc.</tt></li>
+        <li><tt>10.14.2015 GUI : fixed an issue where not all header
+            options were offered in the case of compressed fits images.</tt></li>
+        <li><tt>10.14.2015 BACKUP : fixed a problem when creating a
+            backup with a file that has been compressed.</tt></li>
+        <li><tt>10.15.2015 SAMP: fixed a issue with results with empty
+            elements.</tt></li>
+        <li><tt>10.16.2015 LINUX: For all key press events, calculate
+            the current cursor position, as Ubuntu and MacOSX Aqua
+            returns bad x,y values. </tt></li>
+        <li><tt>10.21.2015 CATALOG: fixed a problem where a catalog had
+            a column of the same name as a variable. </tt></li>
+        <li><tt>10.26.2015 GUI: fixed a problem remembering the previous
+            filename loaded for standard dialogs. </tt></li>
+        <li><tt>10.30.2015 SAMP: fixed a issue with incorrect body
+            length in xmlrpc messages.</tt></li>
+        <li><tt>11.03.2015 3D: fixed a major issue introduced in the
+            beta 7.4 series which caused a redraw everytime the current
+            slice was changed.</tt></li>
         <li><tt>11.03.2015 SCALE: Default scope is back to LOCAL.</tt></li>
-        <li><tt>11.04.2015 CONTOUR: Fixed lots of issues with interaction with contours and bin/block/smooth.</tt></li>
+        <li><tt>11.04.2015 CONTOUR: Fixed lots of issues with
+            interaction with contours and bin/block/smooth.</tt></li>
         <li><tt>11.04.2015 SCALE: remove old AUTOSCAN and SAMPLE code.</tt></li>
-	<li><tt>11.09.2015 FITS: fixed issues with data all NAN or INF.</tt></li>
-	<li><tt>11.09.2015 CUBE: fixed issues with selecting current slice and updating other dialog boxes while in local mode.</tt></li>
+        <li><tt>11.09.2015 FITS: fixed issues with data all NAN or INF.</tt></li>
+        <li><tt>11.09.2015 CUBE: fixed issues with selecting current
+            slice and updating other dialog boxes while in local mode.</tt></li>
         <li><tt><b>11.11.2015 RELEASE version 7.4b8</b></tt></li>
-	<li><tt>11.11.2015 FITS: fixed another issue when calculating MIN and MAX and one pixel images.</tt></li>
-	<li><tt>11.17.2015 WCS: fixed problem with infobox/grid with xLN/xLT WCS.</tt></li>
+        <li><tt>11.11.2015 FITS: fixed another issue when calculating
+            MIN and MAX and one pixel images.</tt></li>
+        <li><tt>11.17.2015 WCS: fixed problem with infobox/grid with
+            xLN/xLT WCS.</tt></li>
         <li><tt><b>11.18.2015 RELEASE version 7.4b9</b></tt></li>
-	<li><tt>11.30.2015 CATALOG: update CDS catalog search parameters.</tt></li>
-	<li><tt>12.02.2015 BACKUP: fixed a problem with backup save sets generated with beta versions.</tt></li>
-	<li><tt>12.03.2015 PREFS: fixed a problem with prefs generated with beta versions.</tt></li>
-	<li><tt>12.07.2015 WCS: fixed a problem with replacement WCS.</tt></li>
-	<li><tt>12.08.2015 WCS: cubes now share WCS structures (very fast).</tt></li>
-	<li><tt>12.08.2015 ANALYSIS: fixed a problem with $z macro.</tt></li>
+        <li><tt>11.30.2015 CATALOG: update CDS catalog search
+            parameters.</tt></li>
+        <li><tt>12.02.2015 BACKUP: fixed a problem with backup save sets
+            generated with beta versions.</tt></li>
+        <li><tt>12.03.2015 PREFS: fixed a problem with prefs generated
+            with beta versions.</tt></li>
+        <li><tt>12.07.2015 WCS: fixed a problem with replacement WCS.</tt></li>
+        <li><tt>12.08.2015 WCS: cubes now share WCS structures (very
+            fast).</tt></li>
+        <li><tt>12.08.2015 ANALYSIS: fixed a problem with $z macro.</tt></li>
         <li><tt><b>12.10.2015 RELEASE version 7.4b10</b></tt></li>
-	<li><tt>12.11.2015 SAVEIMAGE: fixed a problem with the colorbar not updating when used with -exit.</tt></li>
-	<li><tt>12.17.2015 FITS: 3D displayed z coord off by .5.</tt></li>
+        <li><tt>12.11.2015 SAVEIMAGE: fixed a problem with the colorbar
+            not updating when used with -exit.</tt></li>
+        <li><tt>12.17.2015 FITS: 3D displayed z coord off by .5.</tt></li>
         <li><tt><b>12.21.2015 RELEASE version 7.4</b></tt></li>
         <li><tt>01.05.2016 XPA: update to version 2.1.17.</tt></li>
         <li><tt>01.05.2016 FUNTOOLS: update to version 2.1.6.</tt></li>
-        <li><tt>01.21.2016 WCS: fixed a problem with PC3_3 being ignored.</tt></li>
+        <li><tt>01.21.2016 WCS: fixed a problem with PC3_3 being
+            ignored.</tt></li>
         <li><tt>01.21.2016 WCS: add 3d axis params to WCS dialog.</tt></li>
         <li><tt>01.25.2016 MACOSX: fixed a problem init Tkblt.</tt></li>
-        <li><tt>02.10.2016 MACOSX: fixed again the problem with font sizes and screen dpi.</tt></li>
-        <li><tt>02.11.2016 WCS: fixed a problem with WCS replace and files without linefeed termination.</tt></li>
-        <li><tt>03.07.2016 XPA: "tcl","source","print" commands only enabled for local.</tt></li>
+        <li><tt>02.10.2016 MACOSX: fixed again the problem with font
+            sizes and screen dpi.</tt></li>
+        <li><tt>02.11.2016 WCS: fixed a problem with WCS replace and
+            files without linefeed termination.</tt></li>
+        <li><tt>03.07.2016 XPA: "tcl","source","print" commands only
+            enabled for local.</tt></li>
         <li><tt>03.07.2016 XPA: new xpa command.</tt></li>
         <li><tt>03.07.2016 GUI: "tcl" command enabled from commandline.</tt></li>
-        <li><tt>03.07.2016 PREFS: for security reasons, will only look for the prefs file in the $HOME directory, and must be group/world readonly.</tt></li>
-        <li><tt>03.07.2016 INIT FILE: will only look for any init file(s) in the $HOME, /usr/local/lib, /opt/local/lib directories.</tt></li>
-        <li><tt>03.07.2016 INIT FILE: only read-only files will be sourced.</tt></li>
+        <li><tt>03.07.2016 PREFS: for security reasons, will only look
+            for the prefs file in the $HOME directory, and must be
+            group/world readonly.</tt></li>
+        <li><tt>03.07.2016 INIT FILE: will only look for any init
+            file(s) in the $HOME, /usr/local/lib, /opt/local/lib
+            directories.</tt></li>
+        <li><tt>03.07.2016 INIT FILE: only read-only files will be
+            sourced.</tt></li>
         <li><tt>03.08.2016 SAMP: new samp command.</tt></li>
         <li><tt>03.08.2016 SAMP: new ds9.restricted-get command.</tt></li>
         <li><tt>03.08.2016 SAMP: new ds9.restricted-set command.</tt></li>
         <li><tt>03.08.2016 HV: xpa-set is now in safe mode.</tt></li>
-        <li><tt>03.18.2016 GUI: Hard code font size. Give up on trying to correct for screen resolution.</tt></li>
+        <li><tt>03.18.2016 GUI: Hard code font size. Give up on trying
+            to correct for screen resolution.</tt></li>
         <li><tt>03.18.2016 REGION: fixed title issue with radial plot.</tt></li>
         <li><tt>03.18.2016 REGION: fixed title issue with 2d plot.</tt></li>
         <li><tt>03.28.2016 FITSY++: cube update clip is now threaded.</tt></li>
-        <li><tt>03.30.2016 GUI: cleaned up initialization and event loop code.</tt></li>
+        <li><tt>03.30.2016 GUI: cleaned up initialization and event loop
+            code.</tt></li>
         <li><tt>03.30.2016 WCSSUBS: updated to version 3.9.0.</tt></li>
-        <li><tt>04.01.2016 GUI: default number of threads is now detected based on OS.</tt></li>
-        <li><tt>04.01.2016 WCS: fixed a problem with region templates, lengths were incorrect.</tt></li>
+        <li><tt>04.01.2016 GUI: default number of threads is now
+            detected based on OS.</tt></li>
+        <li><tt>04.01.2016 WCS: fixed a problem with region templates,
+            lengths were incorrect.</tt></li>
         <li><tt>04.05.2016 GUI: added coordinates of min/max to infobox.</tt></li>
-        <li><tt>04.05.2016 GUI: limit dialog status lines to 80 chars, so the window will not expand off the screen.</tt></li>
-        <li><tt>04.06.2016 WCS: use getWCSOrientation() instead of wcs->imflip for calcAlign and mapAngleTo/FromRef.</tt></li>
+        <li><tt>04.05.2016 GUI: limit dialog status lines to 80 chars,
+            so the window will not expand off the screen.</tt></li>
+        <li><tt>04.06.2016 WCS: use getWCSOrientation() instead of
+            wcs-&gt;imflip for calcAlign and mapAngleTo/FromRef.</tt></li>
         <li><tt>04.14.2016 SCALE: fixed minmax mode SAMPLE.</tt></li>
-        <li><tt>04.14.2016 CUBE: update histogram and histequ when changing current slice.</tt></li>
-        <li><tt>04.20.2016 MINMAX: reimplemented "-minmax sample" commandline option for loading very large images..</tt></li>
-        <li><tt>04.21.2016 3D: fixed a problem with rendering the bbox when endpoints are way off screen. Now clip against frame.</tt></li>
+        <li><tt>04.14.2016 CUBE: update histogram and histequ when
+            changing current slice.</tt></li>
+        <li><tt>04.20.2016 MINMAX: reimplemented "-minmax sample"
+            commandline option for loading very large images..</tt></li>
+        <li><tt>04.21.2016 3D: fixed a problem with rendering the bbox
+            when endpoints are way off screen. Now clip against frame.</tt></li>
         <li><tt>04.22.2016 3D: rendering speed improvements.</tt></li>
         <li><tt>04.26.2016 3D: panner images are now cached.</tt></li>
-        <li><tt>04.27.2016 GUI: fixed a minor problem with header choice box and no filename given for xpaset stdin commands.</tt></li>
-        <li><tt>04.27.2016 3D: dramatic improvements in render speed for certain data sets.</tt></li>
+        <li><tt>04.27.2016 GUI: fixed a minor problem with header choice
+            box and no filename given for xpaset stdin commands.</tt></li>
+        <li><tt>04.27.2016 3D: dramatic improvements in render speed for
+            certain data sets.</tt></li>
         <li><tt>04.27.2016 3D: fixed a problem with backup and 3D pan.</tt></li>
-        <li><tt>05.04.2016 BIN: added keywords EQUINOX, MJD-OBS, and RADESYS if present.</tt></li>
+        <li><tt>05.04.2016 BIN: added keywords EQUINOX, MJD-OBS, and
+            RADESYS if present.</tt></li>
         <li><tt><b>05.06.2016 RELEASE version 7.5b1</b></tt></li>
-        <li><tt>05.11.2016 SCALE: fixed a problem where histequ colorbar numerics displayed were incorrect.</tt></li>
-        <li><tt>05.18.2016 GUI: fixed a very minor problem where catalog tools is invoked back to back via command line.</tt></li>
-        <li><tt>05.19.2016 REGIONS: many important changes to Ciao Region parser to support current syntax. In particular, changes to BOX, ROTBOX, RECTANGLE. SECTOR, FIELD, and REGION are now no-ops.</tt></li>
+        <li><tt>05.11.2016 SCALE: fixed a problem where histequ colorbar
+            numerics displayed were incorrect.</tt></li>
+        <li><tt>05.18.2016 GUI: fixed a very minor problem where catalog
+            tools is invoked back to back via command line.</tt></li>
+        <li><tt>05.19.2016 REGIONS: many important changes to Ciao
+            Region parser to support current syntax. In particular,
+            changes to BOX, ROTBOX, RECTANGLE. SECTOR, FIELD, and REGION
+            are now no-ops.</tt></li>
         <li><tt>05.23.2016 TKCON: updated to version 2.7 proper.</tt></li>
-        <li><tt>05.24.2016 PREFS: check file permissions and set accordingly.</tt></li>
+        <li><tt>05.24.2016 PREFS: check file permissions and set
+            accordingly.</tt></li>
         <li><tt>05.24.2016 PREFS: new prefs file directory implemented.</tt></li>
-        <li><tt>05.07.2016 STARTUP: for security reasons, will only look for the startup file in the $HOME directory, and must be group/world readonly.</tt></li>
+        <li><tt>05.07.2016 STARTUP: for security reasons, will only look
+            for the startup file in the $HOME directory, and must be
+            group/world readonly.</tt></li>
         <li><tt>05.31.2016 TKBLT: updated to version 3.1.</tt></li>
         <li><tt>06.01.2016 TKBLT: updated to version 3.1.1.</tt></li>
         <li><tt>06.20.2016 TKBLT: updated to version 3.1.2.</tt></li>
-        <li><tt>06.20.2016 FITSY++: fixed a problem where BZERO/BSCALE was not applied to MIN/MAX for BITPIX=-32,-64.</tt></li>
-        <li><tt>06.27.2016 REGIONS: default regions coordinate system is set to PHYSICAL if no WCS present.</tt></li>
-        <li><tt>06.28.2016 3D: fixed yet another problem with rendering speed.</tt></li>
-        <li><tt>07.01.2016 FITSY++: look for MJD_OBS if MJD-OBS is not present.</tt></li>
+        <li><tt>06.20.2016 FITSY++: fixed a problem where BZERO/BSCALE
+            was not applied to MIN/MAX for BITPIX=-32,-64.</tt></li>
+        <li><tt>06.27.2016 REGIONS: default regions coordinate system is
+            set to PHYSICAL if no WCS present.</tt></li>
+        <li><tt>06.28.2016 3D: fixed yet another problem with rendering
+            speed.</tt></li>
+        <li><tt>07.01.2016 FITSY++: look for MJD_OBS if MJD-OBS is not
+            present.</tt></li>
         <li><tt>07.05.2016 IMGSRV: simplify code.</tt></li>
         <li><tt>07.11.2016 IMGSRV: add support for VLSS.</tt></li>
-        <li><tt>07.12.2016 SIA: simple image access protocal implemented.</tt></li>
+        <li><tt>07.12.2016 SIA: simple image access protocal
+            implemented.</tt></li>
         <li><tt><b>07.13.2016 RELEASE version 7.5b2</b></tt></li>
         <li><tt>07.13.2016 SKYVIEW: updated survey options.</tt></li>
         <li><tt>07.14.2016 IIS: fixed segv issue.</tt></li>
         <li><tt><b>07.15.2016 RELEASE version 7.5b3</b></tt></li>
         <li><tt>07.15.2016 TKBLT: upgrade to version 3.2.2.</tt></li>
-        <li><tt>07.15.2016 GUI: fixed an issue with sourcing init files and 'global ds9'.</tt></li>
+        <li><tt>07.15.2016 GUI: fixed an issue with sourcing init files
+            and 'global ds9'.</tt></li>
         <li><tt><b>07.15.2016 RELEASE version 7.5b4</b></tt></li>
-        <li><tt>07.21.2016 PRINT: scaling now implement without mods to Tk source code.</tt></li>
-        <li><tt>07.21.2016 PRINT: give up on postscript scaling to screen resolution. Print resolution of 72 equals screen resolution.</tt></li>
-        <li><tt>07.25.2016 TKHTML: updated to version 1.0.3, fixed an issues with corrupted screens under MacOSX.</tt></li>
+        <li><tt>07.21.2016 PRINT: scaling now implement without mods to
+            Tk source code.</tt></li>
+        <li><tt>07.21.2016 PRINT: give up on postscript scaling to
+            screen resolution. Print resolution of 72 equals screen
+            resolution.</tt></li>
+        <li><tt>07.25.2016 TKHTML: updated to version 1.0.3, fixed an
+            issues with corrupted screens under MacOSX.</tt></li>
         <li><tt>07.26.2016 TCL/TK: update to version 8.6.5.</tt></li>
-        <li><tt>07.26.2016 BACKUP: fixed an issue with missing RGB channels.</tt></li>
+        <li><tt>07.26.2016 BACKUP: fixed an issue with missing RGB
+            channels.</tt></li>
         <li><tt>07.27.2016 TCLLIB: update to version 1.15.</tt></li>
         <li><tt>07.29.2016 PREFS: fixed a problem with name server.</tt></li>
-        <li><tt>08.12.2016 REGIONS: Sky Coordinates are now formated for precision of 1/1000 of arcsec.</tt></li>
-        <li><tt>08.16.2016 PLOT: fixed an issue with incorrect color for bar chart.</tt></li>
-        <li><tt>08.18.2016 BIN: pass all keywords except manitory and reserved.</tt></li>
-        <li><tt>09.02.2016 CONTOUR: new contour file format. DS9 can read/write the new contour file format while continue support for read the old contour file format.</tt></li>
-        <li><tt>09.06.2016 CONTOUR: can read contour levels from new format while continue support for read and write old contour levels format.</tt></li>
-        <li><tt>09.09.2016 REGION: fixed a problem where RULER was not using the default length format.</tt></li>
-        <li><tt>09.14.2016 POSTSCRIPT: fixed a problem with PS level 3 images.</tt></li>
+        <li><tt>08.12.2016 REGIONS: Sky Coordinates are now formated for
+            precision of 1/1000 of arcsec.</tt></li>
+        <li><tt>08.16.2016 PLOT: fixed an issue with incorrect color for
+            bar chart.</tt></li>
+        <li><tt>08.18.2016 BIN: pass all keywords except manitory and
+            reserved.</tt></li>
+        <li><tt>09.02.2016 CONTOUR: new contour file format. DS9 can
+            read/write the new contour file format while continue
+            support for read the old contour file format.</tt></li>
+        <li><tt>09.06.2016 CONTOUR: can read contour levels from new
+            format while continue support for read and write old contour
+            levels format.</tt></li>
+        <li><tt>09.09.2016 REGION: fixed a problem where RULER was not
+            using the default length format.</tt></li>
+        <li><tt>09.14.2016 POSTSCRIPT: fixed a problem with PS level 3
+            images.</tt></li>
         <li><tt><b>09.16.2016 RELEASE version 7.5rc</b></tt></li>
-        <li><tt>09.16.2016 MACOSX: add NSHighResolutionCapable attribute to info.plist to support Retina displays.</tt></li>
-        <li><tt>10.05.2016 REGION: fixed a problem when contour "Convert to Polygons" created polygon regions. Saving or listing the regions caused a Segv.</tt></li>
-        <li><tt>10.05.2016 REGION: fixed a problem saving or listing regions in WCS when no WCS is defined for the FITS image. The regions file was corrupted.</tt></li>
-        <li><tt>10.05.2016 REGION: fixed a problem with Composite Regions not properly updating when created. The region was not displayed properly.</tt></li>
-        <li><tt>11.10.2016 MAGNIFIER: added check to prevent a SEGV in rare cases.</tt></li>
-        <li><tt>11.15.2016 GUI: added check for bad "tk scaling" command results, which can occur with high resolution monitors.</tt></li>
+        <li><tt>09.16.2016 MACOSX: add NSHighResolutionCapable attribute
+            to info.plist to support Retina displays.</tt></li>
+        <li><tt>10.05.2016 REGION: fixed a problem when contour "Convert
+            to Polygons" created polygon regions. Saving or listing the
+            regions caused a Segv.</tt></li>
+        <li><tt>10.05.2016 REGION: fixed a problem saving or listing
+            regions in WCS when no WCS is defined for the FITS image.
+            The regions file was corrupted.</tt></li>
+        <li><tt>10.05.2016 REGION: fixed a problem with Composite
+            Regions not properly updating when created. The region was
+            not displayed properly.</tt></li>
+        <li><tt>11.10.2016 MAGNIFIER: added check to prevent a SEGV in
+            rare cases.</tt></li>
+        <li><tt>11.15.2016 GUI: added check for bad "tk scaling" command
+            results, which can occur with high resolution monitors.</tt></li>
         <li><tt><b>12.15.2016 RELEASE version 7.5</b></tt></li>
-     </ol>
+      </ol>
     </ol>
   </body>
 </html>

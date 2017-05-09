@@ -88,7 +88,7 @@ proc SAMPConnect {{verbose 1}} {
 
     set sampmap(home.page) {string "http://ds9.si.edu/"}
     set sampmap(author.name) {string "William Joye"}
-    set sampmap(author.email) {string "saord@cfa.harvard.edu"}
+    set sampmap(author.email) {string "ds9help@cfa.harvard.edu"}
     set sampmap(author.affiliation) {string "Smithsonian Astrophysical Observatory"}
     set sampmap(ds9.version) "string [lindex $ds9(version) 0]"
 

@@ -121,7 +121,7 @@ proc InitAnalysisFile {} {
 
     # autoload
     if {$panalysis(autoload)} {
-	foreach dir [list {.} "[GetEnvHome]/bin" {/usr/local/bin} {/opt/local/bin} {/soft/saord/bin}] {
+	foreach dir [list {.} "[GetEnvHome]/bin" {/usr/local/bin} {/opt/local/bin}] {
 	    foreach fn [glob -directory $dir -nocomplain "*.ds9"] {
 		if {[file exists $fn]} {
 		    ProcessAnalysisFile $fn

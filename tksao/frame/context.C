@@ -429,6 +429,7 @@ void Context::clearHist()
 void Context::contourAppendAux(ContourLevel* ct)
 {
   auxcontours_.append(ct);
+  hasAuxContour_ =1;
 }
 
 void Context::contourCreateFV(const char* color, int width, int dash,
@@ -597,6 +598,7 @@ void Context::contourLoadAux(istream& str,
   }
 
   auxcontours_.append(cl);
+  hasAuxContour_ =1;
 }
 
 void Context::contourPS(Widget::PSColorSpace cs)

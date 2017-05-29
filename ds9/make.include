@@ -8,7 +8,7 @@ $(prefix)/ds9/library/parser.tcl : $(prefix)/ds9/library/parser.tac
 
 #--------------------------framework
 
-$(LIBDIR)/library : $(prefix)/ds9/library/*.tcl
+$(LIBDIR)/library : $(prefix)/ds9/library/parser.tcl $(prefix)/ds9/library/lex.tcl $(prefix)/ds9/library/*.tcl
 	mkdir -p "$@"
 	cp -p $? "$@"
 # must do it this way for win
@@ -77,4 +77,5 @@ $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 
 distclean: clean
 	-rm -f Makefile config.cache config.log config.status
+	-rm -f library/parser.output library/parser.tcl library/parser.tab.tcl 
 	-rm -rf autom4te.cache

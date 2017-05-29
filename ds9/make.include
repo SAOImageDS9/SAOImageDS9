@@ -1,3 +1,11 @@
+#--------------------------parser
+
+$(prefix)/ds9/library/lex.tcl : $(prefix)/ds9/library/lex.fcl
+      $(TCLSH_PROG) $(prefix)/fickle/fickle.tcl -v -i -o $@ $?
+
+$(prefix)/ds9/library/parser.tcl : $(prefix)/ds9/library/parser.tac
+      $(TCLSH_PROG) $(prefix)/taccle/taccle.tcl -d -v -w -o $@ $?
+
 #--------------------------framework
 
 $(LIBDIR)/library : $(prefix)/ds9/library/*.tcl

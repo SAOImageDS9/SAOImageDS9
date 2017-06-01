@@ -7,8 +7,9 @@ $(prefix)/ds9/library/parser.tcl : $(prefix)/ds9/library/parser.tac
 	$(TCLSH_PROG) $(prefix)/taccle/taccle.tcl -d -v -w -o $@ $?
 
 #--------------------------framework
+# $(prefix)/ds9/library/parser.tcl $(prefix)/ds9/library/lex.tcl 
 
-$(LIBDIR)/library : $(prefix)/ds9/library/parser.tcl $(prefix)/ds9/library/lex.tcl $(prefix)/ds9/library/*.tcl
+$(LIBDIR)/library : $(prefix)/ds9/library/*.tcl
 	mkdir -p "$@"
 	cp -p $? "$@"
 # must do it this way for win

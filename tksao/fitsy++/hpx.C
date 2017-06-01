@@ -148,6 +148,8 @@ void FitsHPX::build(FitsFile* fits)
   FitsHead* head = fits->head();
   FitsTableHDU* hdu = (FitsTableHDU*)(head->hdu());
   int rowlen = hdu->width();
+  int nrow = hdu->rows();
+  int repeat = col_->repeat();
   char* data = (char*)fits->data();
 
   int nside = nside_;
@@ -213,9 +215,19 @@ void FitsHPX::build(FitsFile* fits)
 	  }
 
           // Gather data into the output vector.
+	  /*
 	  long* healp = healidx;
 	  for (float* rowp = row; rowp < row+nside; rowp++)
-	    *rowp = col_->value(data+*(healp++)*rowlen,0);
+	    *rowp = col_->value(data+*(healp++),0);
+	  */
+	  for (int ii=0; ii<nside_; ii++) {
+	    int aa = healidx[ii]/repeat;
+	    int bb = healidx[ii] - (aa*repeat);
+	    if (aa<nrow)
+	      row[ii] = col_->value(data+aa*rowlen,bb);
+	    else 
+	      row[ii] = 0;
+	  }
 
           // Apply blanking to halved facets.
           if (halve) {

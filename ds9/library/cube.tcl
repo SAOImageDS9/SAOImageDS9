@@ -464,7 +464,11 @@ proc UpdateCubeDialog {} {
 	puts stderr "UpdateCubeDialog"
     }
 
-    CubeStop
+    # don't stop during init process
+    # user may have started via command line
+    if {!$ds9(init)} {
+	CubeStop
+    }
 
     if {![winfo exists $icube(top)]} {
 	return

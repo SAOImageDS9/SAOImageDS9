@@ -687,7 +687,8 @@ void Base::doubleToTclArray(double d, const char* var,
   str << base << "," << mod << ends;
 
   ostringstream vstr;
-  vstr << fixed << setw(9) << setprecision(3) << d << ends;
+  vstr << setprecision(8) << d << ends;
+  //  vstr << fixed << setw(9) << setprecision(3) << d << ends;
   Tcl_SetVar2(interp, (char*)var, str.str().c_str(), vstr.str().c_str(), 0);
 }
 

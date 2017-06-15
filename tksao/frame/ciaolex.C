@@ -531,7 +531,7 @@ static yyconst flex_int16_t yy_chk[362] =
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 #line 1 "frame/ciaolex.L"
-/* Copyright (C) 1999-2016
+/* Copyright (C) 1999-2017
  * Smithsonian Astrophysical Observatory, Cambridge, MA, USA
  * For conditions of distribution and use, see copyright notice in "copyright"
  */

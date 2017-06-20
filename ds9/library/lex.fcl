@@ -1,0 +1,10 @@
+%{
+source $ds9(root)/library/parser.tab.tcl
+%}
+
+%%
+about	{return ABOUT_}
+.	{set ::yylval $yytext; return $yytext}
+%%
+
+#yylex

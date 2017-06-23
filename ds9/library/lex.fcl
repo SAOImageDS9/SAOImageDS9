@@ -7,11 +7,21 @@ source $ds9(root)/library/parser.tab.tcl
 %option nodefault
 %option nointeractive
 
+D   [0-9]
+E   [Ee][+-]?{D}+
+
 %%
 
-\n        #
+[+-]?{D}+ {set ::yylval $yytext; return $::INT_}
+
+[+-]?{D}+"."?({E})? |
+[+-]?{D}*"."{D}+({E})? {set ::yylval $yytext; return $::REAL_}
+
+#[!-~][!-~]+ {set ::yylval $yytext; return $::STRING_}
+
+\n        # ignore return
 \s        # ignore whitespace
-.         { set ::yylval $yytext; return $yytext }
+.         {set ::yylval $yytext; return $yytext}
 
 2mass	    {return $::2MASS_}
 3d	    {return $::3D_}
@@ -19,12 +29,18 @@ about	    {return $::ABOUT_}
 align	    {return $::ALIGN_}
 analysis    {return $::ANALYSIS_}
 array	    {return $::ARRAY_}
+arcmin	    {return $::ARCMIN_}
+arcsec	    {return $::ARCSEC_}
 asinh	    {return $::ASINH_}
 close	    {return $::CLOSE_}
 coord	    {return $::COORD_}
+crosshair   {return $::CROSSHAIR_}
+current	    {return $::CURRENT_}
+degrees	    {return $::DEGREES_}
 false	    {return $::FALSE_}
 frame	    {return $::FRAME_}
 name	    {return $::NAME_}
+new	    {return $::NEW_}
 no	    {return $::NO_}
 off	    {return $::OFF_}
 on	    {return $::ON_}

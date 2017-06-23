@@ -12,12 +12,27 @@ E   [Ee][+-]?{D}+
 
 %%
 
+# INT
 [+-]?{D}+ {set ::yylval $yytext; return $::INT_}
 
+# REAL
 [+-]?{D}+"."?({E})? |
 [+-]?{D}*"."{D}+({E})? {set ::yylval $yytext; return $::REAL_}
 
+# STRING
 #[!-~][!-~]+ {set ::yylval $yytext; return $::STRING_}
+
+# SEXAGESIMAL
+[+-]?{D}+:{D}+:{D}+"."? |
+[+-]?{D}+:{D}+:{D}*"."{D}+ {set ::yylval $yytext; return $::SEXSTR_}
+
+# HMS
+[+-]?{D}+h{D}+m{D}+"."?s |
+[+-]?{D}+h{D}+m{D}*"."{D}+s {set ::yylval $yytext; return $::HMSSTR_}
+
+# DMS
+[+-]?{D}+d{D}+m{D}+"."?s |
+[+-]?{D}+d{D}+m{D}*"."{D}+s {set ::yylval $yytext; return $::SMSSTR_}
 
 \n        # ignore return
 \s        # ignore whitespace
@@ -47,6 +62,7 @@ on	    {return $::ON_}
 open	    {return $::OPEN_}
 pixels	    {return $::PIXELS_}
 save	    {return $::SAVE_}
+sexagesimal {return $::SEXAGESIMAL_}
 size	    {return $::SIZE_}
 survey	    {return $::SURVEY_}
 true	    {return $::TRUE_}

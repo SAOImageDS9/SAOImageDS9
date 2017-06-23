@@ -4,6 +4,9 @@
 %token INT_
 %token REAL_
 %token STRING_
+%token SEXSTR_
+%token HMSSTR_
+%token DMSSTR_
 
 %token 2MASS_
 %token 3D_
@@ -29,6 +32,7 @@
 %token OPEN_
 %token PIXELS_
 %token SAVE_
+%token SEXAGESIMAL_
 %token SIZE_
 %token SURVEY_
 %token TRUE_
@@ -73,7 +77,16 @@ degArcminArcsec : DEGREES_ {set _ degrees}
  | ARCSEC_ {set _ arcsec}
  ;
 
-2mass : OPEN_ {}
+optSex : {set _ sexagesimal}
+ | SEXAGESIMAL_ {set _ sexagesimal}
+ ;
+
+optDeg : {set _ degrees}
+ | DEGREES_ {set _ degrees}
+ ;
+
+2mass : {IMGSVRApply dtwomass 1}
+ | OPEN_ {}
  | CLOSE_ {ARDestroy dtwomass}
  | SAVE_ yesno {global dtwomass; set dtwomass(save) $2}
  | FRAME_ newCurrent {global dtwomass; set dtwomass(mode) $2}
@@ -81,11 +94,26 @@ degArcminArcsec : DEGREES_ {set _ degrees}
  | SURVEY_ 2massSurvey {global dtwomass; set dtwomass(survey) $2}
  | UPDATE_ FRAME_ {IMGSVRUpdate dtwomass; IMGSVRApply dtwomass 1}
  | UPDATE_ CROSSHAIR_ {IMGSVRCrosshair dtwomass; IMGSVRApply dtwomass 1}
- | COORD_
- | NAME_ STRING_
+ | COORD_ 2massCoord
+ | NAME_
  ;
-# {}
 # default
+
+2massCoord : SEXSTR_ SEXSTR_ optSex {
+  global dtwomass
+  set dtwomass(x) $1
+  set dtwomass(y) $2
+  set dtwomass(skyformat) $3
+  set dtwomass(skyformat,msg) $3
+ }
+ | numeric numeric optDeg {
+  global dtwomass
+  set dtwomass(x) $1
+  set dtwomass(y) $2
+  set dtwomass(skyformat) $3
+  set dtwomass(skyformat,msg) $3
+ }
+ ;
 
 2massSize : numeric numeric {
    global dtwomass

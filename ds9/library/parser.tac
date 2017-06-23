@@ -77,19 +77,8 @@ degArcminArcsec : DEGREES_ {set _ degrees}
  | CLOSE_ {ARDestroy dtwomass}
  | SAVE_ yesno {global dtwomass; set dtwomass(save) $2}
  | FRAME_ newCurrent {global dtwomass; set dtwomass(mode) $2}
- | SURVEY_ STRING_ {global dtwomass; set dtwomass(survey) $2}
- | SIZE_ numeric numeric {
-   global dtwomass
-   set dtwomass(width) $2
-   set dtwomass(height) $3
- }
- | SIZE_ numeric numeric degArcminArcsec {
-   global dtwomass
-   set dtwomass(width) $2
-   set dtwomass(height) $3
-   set dtwomass(rformat) $4
-   set dtwomass(rformat,msg) $4
- }
+ | SIZE_ 2massSize
+ | SURVEY_ 2massSurvey {global dtwomass; set dtwomass(survey) $2}
  | UPDATE_ FRAME_ {IMGSVRUpdate dtwomass; IMGSVRApply dtwomass 1}
  | UPDATE_ CROSSHAIR_ {IMGSVRCrosshair dtwomass; IMGSVRApply dtwomass 1}
  | COORD_
@@ -98,7 +87,26 @@ degArcminArcsec : DEGREES_ {set _ degrees}
 # {}
 # default
 
-3d :  {puts "*** 2MASS ***"}
+2massSize : numeric numeric {
+   global dtwomass
+   set dtwomass(width) $1
+   set dtwomass(height) $2
+ }
+ | numeric numeric degArcminArcsec {
+   global dtwomass
+   set dtwomass(width) $1
+   set dtwomass(height) $2
+   set dtwomass(rformat) $3
+   set dtwomass(rformat,msg) $3
+ }
+ ;
+
+2massSurvey : 'j' {set _ $1}
+ | 'h' {set _ $1}
+ | 'k' {set _ $1}
+ ;
+
+3d :  {puts "*** 3D ***"}
  ;
 
 about : {puts "*** ABOUT ***"}

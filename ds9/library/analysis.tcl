@@ -55,6 +55,7 @@ proc ClearAnalysis {} {
     if {$ianalysis(menu,count) == 0} {
 	return
     }
+    puts stderr $ianalysis(menu,count)
 
     # delete cascade menus
     for {set ii 0} {$ii<$ianalysis(menu,hmenu,count)} {incr ii} {
@@ -77,7 +78,6 @@ proc ClearAnalysis {} {
     set ianalysis(menu,count) 0
 
     # clear all bindings, first
-
     foreach ff $ds9(frames) {
 	for {set ii 0} {$ii<$ianalysis(bind,count)} {incr ii} {
 	    $ds9(canvas) bind $ff "$ianalysis(bind,$ii,item)" {}
@@ -85,7 +85,6 @@ proc ClearAnalysis {} {
     }
 
     # clear bindings
-
     for {set ii 0} {$ii<$ianalysis(bind,count)} {incr ii} {
 	unset ianalysis(bind,$ii,item)
 	unset ianalysis(bind,$ii,template)
@@ -95,7 +94,6 @@ proc ClearAnalysis {} {
     set ianalysis(bind,count) 0
 
     # clear params
-
     for {set ii 0} {$ii<$ianalysis(param,count)} {incr ii} {
 	for {set jj 0} {$jj<$ianalysis(param,$ii,count)} {incr jj} {
 	    unset ianalysis(param,$ii,$jj,var)

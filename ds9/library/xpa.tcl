@@ -2180,7 +2180,7 @@ proc XPAMethod {} {
     if {[info exists xpa]} {
 	return [xparec $xpa method]
     } else {
-	return {}
+	return {none}
     }
 }
 

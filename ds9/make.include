@@ -1,10 +1,11 @@
 #--------------------------parser
 
+# must do it this way for win
 $(prefix)/ds9/library/lex.tcl : $(prefix)/ds9/library/lex.fcl
-	$(TCLSH_PROG) $(prefix)/fickle/fickle.tcl -o $@ $?
+	cat $(prefix)/fickle/fickle.tcl | $(TCLSH_PROG) -o $@ $?
 
 $(prefix)/ds9/library/parser.tcl : $(prefix)/ds9/library/parser.tac
-	$(TCLSH_PROG) $(prefix)/taccle/taccle.tcl -d -o $@ $?
+	cat $(prefix)/taccle/taccle.tcl | $(TCLSH_PROG) -d -o $@ $?
 
 #--------------------------framework
 
@@ -77,5 +78,5 @@ $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 
 distclean: clean
 	-rm -f Makefile config.cache config.log config.status
-	-rm -f library/parser.output library/parser.tcl library/parser.tab.tcl 
 	-rm -rf autom4te.cache
+	-rm -f ../library/parser.output ../library/parser.tcl ../library/parser.tab.tcl ../library/lex.tcl

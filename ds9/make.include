@@ -2,11 +2,11 @@
 
 # will not work for win
 $(prefix)/ds9/library/lex.tcl : $(prefix)/ds9/library/lex.fcl
-	$(TCLSH_PROG) $(prefix)/fickle/fickle.tcl -o $@ $?
+	tclsh $(prefix)/fickle/fickle.tcl -o $@ $?
 
 # will not work for win
 $(prefix)/ds9/library/parser.tcl : $(prefix)/ds9/library/parser.tac
-	$(TCLSH_PROG) $(prefix)/taccle/taccle.tcl -d -o $@ $?
+	tclsh $(prefix)/taccle/taccle.tcl -d -o $@ $?
 
 #--------------------------framework
 #$(prefix)/ds9/library/parser.tcl $(prefix)/ds9/library/lex.tcl
@@ -16,7 +16,7 @@ $(LIBDIR)/library : $(prefix)/ds9/library/*.tcl
 	cp -p $? "$@"
 # must do it this way for win
 	cd "$@"; \
-	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
+	echo "pkg_mkIndex . *.tcl; exit" | tclsh
 	touch "$@"
 
 $(LIBDIR)/msgs : $(prefix)/ds9/msgs
@@ -38,7 +38,7 @@ $(LIBDIR)/tls	: $(prefix)/tls/tls.tcl
 	cp -prf $? "$@"
 # must do it this way for win
 	cd "$@"; \
-	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
+	echo "pkg_mkIndex . *.tcl; exit" | tclsh
 
 #--------------------------tkblt
 
@@ -47,7 +47,7 @@ $(LIBDIR)/tkblt	: $(prefix)/tkblt/library/*.tcl
 	cp -p $? "$@"
 # must do it this way for win
 	cd "$@"; \
-	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
+	echo "pkg_mkIndex . *.tcl; exit" | tclsh
 
 #--------------------------tkcon
 
@@ -55,7 +55,7 @@ $(LIBDIR)/tkcon	: $(prefix)/tkcon
 	cp -prf $? "$@"
 # must do it this way for win
 	cd "$@"; \
-	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
+	echo "pkg_mkIndex . *.tcl; exit" | tclsh
 
 #--------------------------tcllib
 

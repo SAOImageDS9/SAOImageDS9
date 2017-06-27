@@ -1344,7 +1344,6 @@ proc HVParseXPASet {varname} {
     global $varname
     global ds9
 
-    puts stderr "HVParseXPASet: [HVParseMimeParam $varname paramlist]"
     global debug
     if {$debug(tcl,hv)} {
 	puts stderr "HVParseXPASet: [HVParseMimeParam $varname paramlist]"
@@ -1352,12 +1351,9 @@ proc HVParseXPASet {varname} {
 
     if {[info exists var(xpa,target)]} {
 	set target $var(xpa,target)
-	puts stderr a
     } else {
 	set target [HVParseMimeParam $varname target]
-	puts stderr b
     }
-    puts stderr "[HVParseMimeParam $varname target]"
 
     if {$target == "$ds9(title)" ||
 	$target == "DS9:*" ||

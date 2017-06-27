@@ -32,7 +32,6 @@ proc HV {varname title url {init {}} {sync 0}} {
     set mb $var(mb)
 
     # see if we already have a window visible
-    
     if {[winfo exists $w]} {
 	raise $w
     } else {
@@ -241,12 +240,6 @@ proc HV {varname title url {init {}} {sync 0}} {
 	# a blank page, all seems ok
 	$var(widget) clear
 	$var(widget) parse "<html>\n<body>\n<form method=\"get\" action=\"foo\">\n</form>\n</body>\n</html>"
-
-	global debug
-	if {$debug(tcl,idletasks)} {
-	    puts stderr "HV"
-	}
-	update idletasks
     }
 
     selection handle $w [list HVExportSelection $varname]

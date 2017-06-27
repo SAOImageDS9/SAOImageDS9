@@ -9,8 +9,6 @@ datarootdir	= @datarootdir@
 datadir		= @datadir@
 mandir		= @mandir@
 
-TCLSH_PROG	= @TCLSH_PROG@
-
 TCL_VERSION	= @TCL_VERSION@
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@

@@ -55,7 +55,6 @@ proc ClearAnalysis {} {
     if {$ianalysis(menu,count) == 0} {
 	return
     }
-    puts stderr $ianalysis(menu,count)
 
     # delete cascade menus
     for {set ii 0} {$ii<$ianalysis(menu,hmenu,count)} {incr ii} {

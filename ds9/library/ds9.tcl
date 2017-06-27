@@ -31,7 +31,6 @@ proc DS9Def {} {
 	aqua {set ds9(times) times}
 	win32 {set ds9(times) times}
     }
-
     set ds9(main) {}
     set ds9(image) {}
     set ds9(canvas) {}
@@ -610,3 +609,9 @@ after $ds9(msg,timeout) [list ErrorTimer]
 # ok, we're done
 set ds9(init) 0
 
+# major kludge- jump start keyevents for windows
+switch $ds9(wm) {
+    x11 -
+    aqua {}
+    win32 {event generate $ds9(canvas) <Tab> -x 0 -y 0}
+}

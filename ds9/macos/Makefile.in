@@ -79,7 +79,7 @@ TKSRC	= $(prefix)/build/tk/Tk.framework/Versions/$(TCL_VERSION)
 #TKSRCD	= $(prefix)/build/tk/Development
 TKDIR	= $(APPDIR)/Contents/Frameworks/Tk.framework
 
-ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | xargs echo)
+ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | head -n 1 | xargs echo)
 
 OBJS	= ds9.o tkAppInit.o
 

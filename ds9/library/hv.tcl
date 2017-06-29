@@ -234,12 +234,6 @@ proc HV {varname title url {init {}} {sync 0}} {
 	pack $w.status $w.sep -side bottom -fill x
 	pack $w.buttons -side top -fill x
 	pack $w.param -side top -fill both -expand true
-
-	# we have a problem with the html widget. first time thur, some
-	# structures are not allocated/initialized. if we first display
-	# a blank page, all seems ok
-	$var(widget) clear
-	$var(widget) parse "<html>\n<body>\n<form method=\"get\" action=\"foo\">\n</form>\n</body>\n</html>"
     }
 
     selection handle $w [list HVExportSelection $varname]

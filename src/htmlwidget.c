@@ -434,7 +434,7 @@ static void HtmlRedrawCallback(ClientData clientData){
       if( htmlPtr->xScrollCmd && htmlPtr->xScrollCmd[0] ){
         HtmlComputeHorizontalPosition(htmlPtr,buf);
         HtmlLock(htmlPtr);
-        result = Tcl_VarEval(interp, htmlPtr->xScrollCmd, " ", buf, 0);
+        result = Tcl_VarEval(interp, htmlPtr->xScrollCmd, " ", buf, NULL);
         if( HtmlUnlock(htmlPtr) ) goto redrawExit;
         if (result != TCL_OK) {
           Tcl_AddErrorInfo(interp,
@@ -452,7 +452,7 @@ static void HtmlRedrawCallback(ClientData clientData){
         char buf[200];
         HtmlComputeVerticalPosition(htmlPtr,buf);
         HtmlLock(htmlPtr);
-        result = Tcl_VarEval(interp, htmlPtr->yScrollCmd, " ", buf, 0);
+        result = Tcl_VarEval(interp, htmlPtr->yScrollCmd, " ", buf, NULL);
         if( HtmlUnlock(htmlPtr) ) goto redrawExit;
         if (result != TCL_OK) {
           Tcl_AddErrorInfo(interp,

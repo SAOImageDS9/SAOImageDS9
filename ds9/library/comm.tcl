@@ -338,6 +338,7 @@ proc CommGet {proc id paramlist fn} {
 	sfits {	
 	    # backward compatibility
 	}
+	sia {ProcessSendSIACmd $proc $id $param {} $fn}
 	single {ProcessSendSingleCmd $proc $id $param}
 	shm {ProcessSendShmCmd $proc $id $param}
 	skyview {ProcessSendSkyViewCmd $proc $id $param}

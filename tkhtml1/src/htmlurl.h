@@ -242,7 +242,8 @@ extern int HtmlTPArray[2000];
 #if !(defined(COVERAGE_TEST))
 # define TestPoint(X)
 #endif
-#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))
+/*#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))*/
+void* HtmlAlloc(size_t);
 typedef struct HtmlUri HtmlUri;
 struct HtmlUri {
   char *zScheme;             /* Ex: "http" */

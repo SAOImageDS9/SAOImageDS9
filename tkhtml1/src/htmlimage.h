@@ -1,5 +1,6 @@
 /* This file was automatically generated.  Do not edit! */
-#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))
+/*#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))*/
+void* HtmlAlloc(size_t);
 #define HtmlFree(A)       Tcl_Free((char*)(A))
 typedef struct HtmlWidget HtmlWidget;
 int HtmlUnlock(HtmlWidget *htmlPtr);

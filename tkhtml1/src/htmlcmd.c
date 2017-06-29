@@ -685,6 +685,14 @@ int HtmlTokenListCmd(
   return TCL_OK;
 }
 
+void* HtmlAlloc(size_t A)
+{
+  void* ptr = Tcl_Alloc(A);
+  if (ptr)
+    memset(ptr,0,A);
+  return ptr;
+}
+
 #ifdef DEBUG
 /*
 ** WIDGET debug dump START END

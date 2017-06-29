@@ -81,7 +81,8 @@ struct HtmlSpaceElement {
   Html_u8 ascent;             /* height above the baseline */
   Html_u8 descent;            /* depth below the baseline */
 };
-#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))
+/*#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))*/
+void* HtmlAlloc(size_t);
 #if !defined(HAVE_STRICMP)
 # define strnicmp strncasecmp
 #endif

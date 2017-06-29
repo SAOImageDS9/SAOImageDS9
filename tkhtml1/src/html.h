@@ -90,7 +90,8 @@
 /*
 ** Macros to allocate and free memory.
 */
-#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))
+/*#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))*/
+void* HtmlAlloc(size_t);
 #define HtmlFree(A)       Tcl_Free((char*)(A))
 #define HtmlRealloc(A,B)  ((void*)Tcl_Realloc((A),(B)))
 

@@ -457,7 +457,8 @@ struct HtmlWidget {
 };
 #define HtmlFree(A)       Tcl_Free((char*)(A))
 #define Html_Block   4
-#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))
+/*#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))*/
+void* HtmlAlloc(size_t);
 struct HtmlImage {
   HtmlWidget *htmlPtr;     /* The owner of this image */
   Tk_Image image;          /* The Tk image token */

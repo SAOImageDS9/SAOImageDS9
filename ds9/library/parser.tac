@@ -11,32 +11,44 @@
 %token 2MASS_
 %token 3D_
 %token ABOUT_
+%token AIP_
 %token ALIGN_
 %token ANALYSIS_
 %token ARCMIN_
 %token ARCSEC_
 %token ARRAY_
 %token ASINH_
+%token AZIMUTH_
+%token BACKGROUND_
+%token BORDER_
 %token CLOSE_
+%token COLOR_
+%token COMPASS_
 %token COORD_
 %token CROSSHAIR_
 %token CURRENT_
 %token DEGREES_
+%token ELEVATION_
 %token FALSE_
 %token FRAME_
+%token HIGHLITE_
+%token METHOD_
+%token MIP_
 %token NAME_
 %token NEW_
 %token NO_
+%token NONE_
 %token OFF_
 %token ON_
 %token OPEN_
-%token PIXELS_
 %token SAVE_
+%token SCALE_
 %token SEXAGESIMAL_
 %token SIZE_
 %token SURVEY_
 %token TRUE_
 %token UPDATE_
+%token VIEW_
 %token YES_
 
 %%
@@ -46,13 +58,13 @@ commands : commands command
  ;
 
 command : 2MASS_ {2MASSDialog} 2mass
- | 3D_ 3d
+ | 3D_ {3DDialog} 3d
  | ABOUT_ about
  | ALIGN_ align
  | ANALYSIS_ analysis
  | ARRAY_ array
  | ASINH_ asinh
- | STRING_ {puts "STRING: $1"}
+ | numeric {puts "numeric: $1"}
  ;
 
 numeric	: REAL_ {set _ $1}
@@ -135,7 +147,39 @@ optDeg : {set _ degrees}
  | 'k' {set _ $1}
  ;
 
-3d :  {puts "*** 3D ***"}
+3d : {Create3DFrame}
+ | OPEN_ {}
+ | CLOSE_ {3DDestroyDialog}
+ | AZIMUTH_ numeric {global threed; set threed(az) $2; 3DViewPoint}
+ | ELEVATION_ numeric {global threed; set threed(el) $2; 3DViewPoint}
+ | VIEW_ numeric numeric {global threed; set threed(az) $2; set threed(el) $3; 3DViewPoint}
+ | SCALE_ numeric {global threed; set threed(scale) $2; 3DScale}
+ | METHOD_ 3dMethod {global threed; set threed(method) $2; 3DRenderMethod}
+ | BACKGROUND_ 3dBackground {global threed; set threed(background) $2; 3DBackground}
+ | HIGHLITE_ 3dHighlite
+ | BORDER_ 3dBorder
+ | COMPASS_ 3dCompass
+ ;
+
+3dMethod : MIP_ {set _ mip}
+ | AIP_ {set _ aip}
+ ;
+
+3dBackground : NONE_ {set _ none}
+ | AZIMUTH_ {set _ azimuth}
+ | ELEVATION_ {set _ elevation}
+ ;
+
+3dHighlite : yesno {global threed; set threed(highlite) $1; 3DHighlite}
+ | COLOR_ STRING_ {global threed; set threed(highlite,color) $2; 3DHighliteColor}
+ ;
+
+3dBorder : yesno {global threed; set threed(border) $1; 3DBorder}
+ | COLOR_ STRING_ {global threed; set threed(border,color) $2; 3DBorderColor}
+ ;
+
+3dCompass : yesno {global threed; set threed(compass) $1; 3DCompass}
+ | COLOR_ STRING_ {global threed; set threed(compass,color) $2; 3DCompassColor}
  ;
 
 about : {puts "*** ABOUT ***"}

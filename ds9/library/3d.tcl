@@ -53,7 +53,7 @@ proc 3DDialog {} {
     $mb add cascade -label [msgcat::mc {Render}] -menu $mb.render
     $mb add cascade -label [msgcat::mc {Highlite}] -menu $mb.highlite
     $mb add cascade -label [msgcat::mc {Border}] -menu $mb.border
-#    $mb add cascade -label [msgcat::mc {Compass}] -menu $mb.compass
+    $mb add cascade -label [msgcat::mc {Compass}] -menu $mb.compass
 
     menu $mb.file
     $mb.file add command -label [msgcat::mc {Apply}] -command 3DApplyDialog

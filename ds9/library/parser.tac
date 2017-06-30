@@ -89,10 +89,10 @@ command : 2MASS_ {2MASSDialog} 2mass
  | LINEAR_ {global scale; set scale(type) linear; ChangeScale}
  | LOG_ {global scale; set scale(type) log; ChangeScale}
  | POW_ {global scale; set scale(type) pow; ChangeScale}
- | SCALE_ scale
  | SINH_ {global scale; set scale(type) sinh; ChangeScale}
  | SQUARED_ {global scale; set scale(type) squared; ChangeScale}
  | SQRT_ {global scale; set scale(type) sqrt; ChangeScale}
+ | SCALE_ scale
  ;
 
 numeric	: REAL_ {set _ $1}

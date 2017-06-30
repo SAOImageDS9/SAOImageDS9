@@ -7,9 +7,9 @@
       2.4.7-10 i686) [Netscape]">
     <title>SAMP</title>
   </head>
-  <body alink="#ff0000" link="#0000ff" vlink="#551a8b">
-    <h3><img alt="" src="../sun.gif" align="middle" height="98"
-        width="100"> SAMP</h3>
+  <body vlink="#551a8b" link="#0000ff" alink="#ff0000">
+    <h3><img alt="" src="../sun.gif" width="100" height="98"
+        align="middle"> SAMP</h3>
     <blockquote>
       <p>SAMP is a messaging protocol that enables astronomy software
         tools to interoperate and communicate. Broadly speaking, SAMP is
@@ -202,7 +202,9 @@
         &nbsp;&nbsp; [border color &lt;color&gt;]<br>
       </tt><tt>&nbsp;&nbsp; [highlite yes|no]<br>
         &nbsp;&nbsp; [hightlite color &lt;color&gt;]<br>
-      </tt><tt>&nbsp;&nbsp; [open|close]</tt><tt><br>
+      </tt><tt><tt>&nbsp;</tt><tt>&nbsp; [compass yes|no]<br>
+          &nbsp;&nbsp; [compass color &lt;color&gt;]<br>
+        </tt>&nbsp;&nbsp; [open|close]</tt><tt><br>
         &nbsp;<br>
         Example:<br>
         string value = ds9.get(string cmd)<br>
@@ -216,7 +218,9 @@
         3d border color<br>
       </tt> <tt> </tt><tt>3d highlite<br>
         3d highlite color<br>
-      </tt> <tt> ds9.set(string cmd)<br>
+      </tt> <tt><tt>3d compass<br>
+          3d compass color<br>
+        </tt> <tt> </tt>ds9.set(string cmd)<br>
       </tt><tt>3d # create new 3D frame<br>
         3d view 45 30<br>
         3d az 45<br>
@@ -228,7 +232,9 @@
         3d border color red<br>
       </tt><tt>3d highlite yes<br>
         3d highlite color red<br>
-        3d open<br>
+      </tt><tt><tt>3d compass yes<br>
+          3d compass color red<br>
+        </tt>3d open<br>
         3d close</tt><br>
       <p><b><a name="about"></a>about</b></p>
       <p>Get DS9 credits.</p>
@@ -544,6 +550,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -563,6 +570,7 @@
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [match &lt;ref&gt; &lt;ref&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -717,8 +725,10 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -873,6 +883,7 @@
 
 
 
+
         [match unique yes|no]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [maxrows
         &lt;number&gt;]</tt><br>
@@ -931,6 +942,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -2029,6 +2041,7 @@
 
 
 
+
           Macros</a> for more information.</p>
       <tt> Syntax: <br>
         iexam []<br>
@@ -2066,6 +2079,7 @@
         iis filename bar.fits 4</tt><br>
       <p><b> <a name="jpeg"></a>jpeg</b></p>
       <p>Load JPEG image into current frame. Optional parameters: <tt>jpeg
+
 
 
 
@@ -2622,6 +2636,7 @@
 
 
 
+
         # title, title xaxis, title yaxis, dimension on line 1<br>
         &nbsp;&nbsp;&nbsp; &nbsp;[new [name &lt;plotname&gt;]
         [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
@@ -2636,6 +2651,7 @@
           &lt;filename&gt;<br>
         </tt>&nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
       </tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -2741,6 +2757,7 @@
 
 
 
+
                           </tt>[&lt;plotname&gt;] stats<br>
                         </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
 
@@ -2794,8 +2811,10 @@
 
 
 
+
                     list<br>
                     &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -2902,10 +2921,12 @@
 
 
 
+
                 [&lt;plotname&gt;] pagesetup orient [portrait|landscape]<br>
                 &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] pagesetup
                 size [letter|legal|tabloid|poster|a4]</tt><br>
               <tt> </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3034,6 +3055,7 @@
 
 
 
+
           legend [yes|no]<br>
           &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] legend position
           [right|left|top|bottom]</tt><br>
@@ -3106,9 +3128,11 @@
 
 
 
+
               shape
               [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3217,7 +3241,9 @@
 
 
 
+
                                                 <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3324,7 +3350,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3431,7 +3459,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3538,7 +3568,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3644,7 +3676,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3750,7 +3784,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3857,7 +3893,9 @@
 
 
 
+
                                                           [&lt;plotname&gt;]
+
 
 
 
@@ -3964,7 +4002,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4071,7 +4111,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4202,6 +4244,7 @@
 
 
 
+
                                       value = ds9.get(string cmd)<br>
                                     </tt></tt></tt></tt></tt></tt>plot
                           stats<br>
@@ -4238,6 +4281,7 @@
         </tt><tt><tt>plot axis x log<br>
           </tt></tt><tt><tt><tt>plot axis x flip</tt></tt></tt><br>
       </tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -4334,8 +4378,10 @@
 
 
 
+
                                         axis x min<br>
                                       </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -4432,8 +4478,10 @@
 
 
 
+
                                                           axis x format<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>plot
+
 
 
 
@@ -4538,8 +4586,10 @@
 
 
 
+
                       font numbers size<br>
                     </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -4644,6 +4694,7 @@
 
 
 
+
                           font numbers slant<br>
                         </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
 
@@ -4697,8 +4748,10 @@
 
 
 
+
                                   title<br>
                                 </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -4835,8 +4888,10 @@
 
 
 
+
                       dash<br>
                     </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -4941,8 +4996,10 @@
 
 
 
+
                                                         error color<br>
                                                       </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -5047,8 +5104,10 @@
 
 
 
+
                                                           name<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt>ds9.set(string
+
 
 
 
@@ -5738,6 +5797,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [export sb|tsv &lt;filename&gt;]<br>
@@ -5757,6 +5817,7 @@
       </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [system &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -5982,6 +6043,7 @@
       </tt><tt>threads 8</tt><br>
       <p><b> <a name="tiff"></a>tiff</b></p>
       <p>Load TIFF image into current frame. Optional parameters: <tt>tiff
+
 
 
 

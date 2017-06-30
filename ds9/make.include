@@ -4,7 +4,7 @@
 	tclsh $(prefix)/fickle/fickle.tcl $<
 
 %.tcl: %.tac
-	tclsh $(prefix)/taccle/taccle.tcl -d -w $<
+	tclsh $(prefix)/taccle/taccle.tcl -d -v -w $<
 
 #--------------------------framework
 

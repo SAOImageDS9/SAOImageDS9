@@ -8,16 +8,14 @@
 %token HMSSTR_
 %token DMSSTR_
 
-%token 2MASS_
-%token 3D_
-%token ABOUT_
+%token 2MASSCMD_
+%token 3DCMD_
 %token AIP_
-%token ALIGN_
-%token ANALYSIS_
+%token ALIGNCMD_
 %token ARCMIN_
 %token ARCSEC_
-%token ARRAY_
 %token ASINH_
+%token ASINHCMD_
 %token AZIMUTH_
 %token BACKGROUND_
 %token BORDER_
@@ -36,11 +34,14 @@
 %token GLOBAL_
 %token HIGHLITE_
 %token HISTEQU_
+%token HISTEQUCMD_
 %token LIMITS_
 %token LINEAR_
+%token LINEARCMD_
 %token LOCAL_
 %token LOCK_
 %token LOG_
+%token LOGCMD_
 %token MATCH_
 %token METHOD_
 %token MINMAX_
@@ -54,15 +55,20 @@
 %token ON_
 %token OPEN_
 %token POW_
+%token POWCMD_
 %token SAVE_
 %token SCALE_
+%token SCALECMD_
 %token SCALELIMITS_
 %token SCOPE_
 %token SEXAGESIMAL_
 %token SINH_
+%token SINHCMD_
 %token SIZE_
 %token SQUARED_
+%token SQUAREDCMD_
 %token SQRT_
+%token SQRTCMD_
 %token SURVEY_
 %token TRUE_
 %token UPDATE_
@@ -78,21 +84,18 @@ commands : commands command
  | command
  ;
 
-command : 2MASS_ {2MASSDialog} 2mass
- | 3D_ {3DDialog} 3d
- | ABOUT_ about
- | ALIGN_ align
- | ANALYSIS_ analysis
- | ARRAY_ array
- | ASINH_ {global scale; set scale(type) asinh; ChangeScale}
- | HISTEQU_ {global scale; set scale(type) histequ; ChangeScale}
- | LINEAR_ {global scale; set scale(type) linear; ChangeScale}
- | LOG_ {global scale; set scale(type) log; ChangeScale}
- | POW_ {global scale; set scale(type) pow; ChangeScale}
- | SINH_ {global scale; set scale(type) sinh; ChangeScale}
- | SQUARED_ {global scale; set scale(type) squared; ChangeScale}
- | SQRT_ {global scale; set scale(type) sqrt; ChangeScale}
- | SCALE_ scale
+command : 2MASSCMD_ {2MASSDialog} 2mass
+ | 3DCMD_ {3DDialog} 3d
+ | ALIGNCMD_ align
+ | ASINHCMD_ {global scale; set scale(type) asinh; ChangeScale}
+ | HISTEQUCMD_ {global scale; set scale(type) histequ; ChangeScale}
+ | LINEARCMD_ {global scale; set scale(type) linear; ChangeScale}
+ | LOGCMD_ {global scale; set scale(type) log; ChangeScale}
+ | POWCMD_ {global scale; set scale(type) pow; ChangeScale}
+ | SINHCMD_ {global scale; set scale(type) sinh; ChangeScale}
+ | SQUAREDCMD_ {global scale; set scale(type) squared; ChangeScale}
+ | SQRTCMD_ {global scale; set scale(type) sqrt; ChangeScale}
+ | SCALECMD_ scale
  ;
 
 numeric	: REAL_ {set _ $1}
@@ -107,10 +110,6 @@ yesno : YES_ {set _ 1}
  | OFF_ {set _ 0}
  | '1' {set _ 1}
 # | '0' {set _ 0}
- ;
-
-newCurrent : NEW_ {set _ new}
- | CURRENT_ {set _ current}
  ;
 
 degArcminArcsec : DEGREES_ {set _ degrees}
@@ -132,7 +131,7 @@ optDeg : {set _ degrees}
  | COORD_ 2massCoord {IMGSVRApply dtwomass 1}
  | SIZE_ 2massSize
  | SAVE_ yesno {global dtwomass; set dtwomass(save) $2}
- | FRAME_ newCurrent {global dtwomass; set dtwomass(mode) $2}
+ | FRAME_ 2massFrame {global dtwomass; set dtwomass(mode) $2}
  | UPDATE_ FRAME_ {IMGSVRUpdate dtwomass; IMGSVRApply dtwomass 1}
  | UPDATE_ CROSSHAIR_ {IMGSVRCrosshair dtwomass; IMGSVRApply dtwomass 1}
  | SURVEY_ 2massSurvey {global dtwomass; set dtwomass(survey) $2}
@@ -154,6 +153,10 @@ optDeg : {set _ degrees}
   set dtwomass(skyformat) $3
   set dtwomass(skyformat,msg) $3
  }
+ ;
+
+2massFrame : NEW_ {set _ new}
+ | CURRENT_ {set _ current}
  ;
 
 2massSize : numeric numeric {
@@ -210,17 +213,8 @@ optDeg : {set _ degrees}
  | COLOR_ STRING_ {global threed; set threed(compass,color) $2; 3DCompassColor}
  ;
 
-about : {puts "*** ABOUT ***"}
- ;
-
 align : {global current; set current(align) 1; AlignWCSFrame}
  | yesno {global current; set current(align) $1; AlignWCSFrame}
- ;
-
-analysis : {puts "*** ANALYSIS ***"}
- ;
-
-array : {puts "*** ARRAY ***"}
  ;
 
 scale : scaleScales {global scale; set scale(type) $1; ChangeScale}

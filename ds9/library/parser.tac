@@ -52,6 +52,7 @@ command : 2MASS_ {2MASSDialog} 2mass
  | ANALYSIS_ analysis
  | ARRAY_ array
  | ASINH_ asinh
+ | STRING_ {puts "STRING: $1"}
  ;
 
 numeric	: REAL_ {set _ $1}
@@ -95,9 +96,9 @@ optDeg : {set _ degrees}
  | UPDATE_ FRAME_ {IMGSVRUpdate dtwomass; IMGSVRApply dtwomass 1}
  | UPDATE_ CROSSHAIR_ {IMGSVRCrosshair dtwomass; IMGSVRApply dtwomass 1}
  | COORD_ 2massCoord {IMGSVRApply dtwomass 1}
- | NAME_
+ | NAME_ STRING_ {global dtwomass; set dtwomass(name) $2; IMGSVRApply dtwomass 1}
+ | STRING_ {global dtwomass; set dtwomass(name) $1; IMGSVRApply dtwomass 1}
  ;
-# default
 
 2massCoord : SEXSTR_ SEXSTR_ optSex {
   global dtwomass

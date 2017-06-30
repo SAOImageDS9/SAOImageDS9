@@ -33,17 +33,26 @@ compass	    {return $::COMPASS_}
 coord	    {return $::COORD_}
 crosshair   {return $::CROSSHAIR_}
 current	    {return $::CURRENT_}
+datasec	    {return $::DATASEC_}
 degrees	    {return $::DEGREES_}
 elevation   {return $::ELEVATION_}
 el	    {return $::ELEVATION_}
+exp	    {return $::EXP_}
 false	    {return $::FALSE_}
 frame	    {return $::FRAME_}
+global	    {return $::GLOBAL_}
 highlite    {return $::HIGHLITE_}
 histequ	    {return $::HISTEQU_}
 linear	    {return $::LINEAR_}
+limits	    {return $::LIMITS_}
+local	    {return $::LOCAL_}
+lock	    {return $::LOCK_}
 log	    {return $::LOG_}
+match	    {return $::MATCH_}
 method	    {return $::METHOD_}
+minmax	    {return $::MINMAX_}
 mip	    {return $::MIP_}
+mode	    {return $::MODE_}
 name	    {return $::NAME_}
 new	    {return $::NEW_}
 no	    {return $::NO_}
@@ -54,6 +63,8 @@ open	    {return $::OPEN_}
 pow	    {return $::POW_}
 save	    {return $::SAVE_}
 scale	    {return $::SCALE_}
+scalelimits {return $::SCALELIMITS_}
+scope	    {return $::SCOPE_}
 sexagesimal {return $::SEXAGESIMAL_}
 sinh	    {return $::SINH_}
 size	    {return $::SIZE_}
@@ -62,9 +73,12 @@ sqrt	    {return $::SQRT_}
 survey	    {return $::SURVEY_}
 true	    {return $::TRUE_}
 update	    {return $::UPDATE_}
+user	    {return $::USER_}
 view	    {return $::VIEW_}
 vp	    {return $::VIEW_}
 yes	    {return $::YES_}
+zscale	    {return $::ZSCALE_}
+zmax	    {return $::ZMAX_}
 
 # INT
 [+-]?{D}+ {set ::yylval $yytext; return $::INT_}

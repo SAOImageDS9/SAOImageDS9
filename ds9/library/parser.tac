@@ -27,16 +27,25 @@
 %token COORD_
 %token CROSSHAIR_
 %token CURRENT_
+%token DATASEC_
 %token DEGREES_
 %token ELEVATION_
+%token EXP_
 %token FALSE_
 %token FRAME_
+%token GLOBAL_
 %token HIGHLITE_
 %token HISTEQU_
+%token LIMITS_
 %token LINEAR_
+%token LOCAL_
+%token LOCK_
 %token LOG_
+%token MATCH_
 %token METHOD_
+%token MINMAX_
 %token MIP_
+%token MODE_
 %token NAME_
 %token NEW_
 %token NO_
@@ -47,6 +56,8 @@
 %token POW_
 %token SAVE_
 %token SCALE_
+%token SCALELIMITS_
+%token SCOPE_
 %token SEXAGESIMAL_
 %token SINH_
 %token SIZE_
@@ -55,8 +66,11 @@
 %token SURVEY_
 %token TRUE_
 %token UPDATE_
+%token USER_
 %token VIEW_
 %token YES_
+%token ZSCALE_
+%token ZMAX_
 
 %%
 
@@ -75,6 +89,7 @@ command : 2MASS_ {2MASSDialog} 2mass
  | LINEAR_ {global scale; set scale(type) linear; ChangeScale}
  | LOG_ {global scale; set scale(type) log; ChangeScale}
  | POW_ {global scale; set scale(type) pow; ChangeScale}
+ | SCALE_ scale
  | SINH_ {global scale; set scale(type) sinh; ChangeScale}
  | SQUARED_ {global scale; set scale(type) squared; ChangeScale}
  | SQRT_ {global scale; set scale(type) sqrt; ChangeScale}
@@ -112,17 +127,17 @@ optDeg : {set _ degrees}
  ;
 
 2mass : {IMGSVRApply dtwomass 1}
- | OPEN_ {}
- | CLOSE_ {ARDestroy dtwomass}
+ | STRING_ {global dtwomass; set dtwomass(name) $1; IMGSVRApply dtwomass 1}
+ | NAME_ STRING_ {global dtwomass; set dtwomass(name) $2; IMGSVRApply dtwomass 1}
+ | COORD_ 2massCoord {IMGSVRApply dtwomass 1}
+ | SIZE_ 2massSize
  | SAVE_ yesno {global dtwomass; set dtwomass(save) $2}
  | FRAME_ newCurrent {global dtwomass; set dtwomass(mode) $2}
- | SIZE_ 2massSize
- | SURVEY_ 2massSurvey {global dtwomass; set dtwomass(survey) $2}
  | UPDATE_ FRAME_ {IMGSVRUpdate dtwomass; IMGSVRApply dtwomass 1}
  | UPDATE_ CROSSHAIR_ {IMGSVRCrosshair dtwomass; IMGSVRApply dtwomass 1}
- | COORD_ 2massCoord {IMGSVRApply dtwomass 1}
- | NAME_ STRING_ {global dtwomass; set dtwomass(name) $2; IMGSVRApply dtwomass 1}
- | STRING_ {global dtwomass; set dtwomass(name) $1; IMGSVRApply dtwomass 1}
+ | SURVEY_ 2massSurvey {global dtwomass; set dtwomass(survey) $2}
+ | OPEN_ {}
+ | CLOSE_ {ARDestroy dtwomass}
  ;
 
 2massCoord : SEXSTR_ SEXSTR_ optSex {
@@ -161,17 +176,17 @@ optDeg : {set _ degrees}
  ;
 
 3d : {Create3DFrame}
- | OPEN_ {}
- | CLOSE_ {3DDestroyDialog}
+ | VIEW_ numeric numeric {global threed; set threed(az) $2; set threed(el) $3; 3DViewPoint}
  | AZIMUTH_ numeric {global threed; set threed(az) $2; 3DViewPoint}
  | ELEVATION_ numeric {global threed; set threed(el) $2; 3DViewPoint}
- | VIEW_ numeric numeric {global threed; set threed(az) $2; set threed(el) $3; 3DViewPoint}
  | SCALE_ numeric {global threed; set threed(scale) $2; 3DScale}
  | METHOD_ 3dMethod {global threed; set threed(method) $2; 3DRenderMethod}
  | BACKGROUND_ 3dBackground {global threed; set threed(background) $2; 3DBackground}
- | HIGHLITE_ 3dHighlite
  | BORDER_ 3dBorder
+ | HIGHLITE_ 3dHighlite
  | COMPASS_ 3dCompass
+ | OPEN_ {}
+ | CLOSE_ {3DDestroyDialog}
  ;
 
 3dMethod : MIP_ {set _ mip}
@@ -206,6 +221,61 @@ analysis : {puts "*** ANALYSIS ***"}
  ;
 
 array : {puts "*** ARRAY ***"}
+ ;
+
+scale : scaleScales {global scale; set scale(type) $1; ChangeScale}
+ | LOG_ scaleLog
+ | DATASEC_ yesno
+ | LIMITS_ scaleLimits
+ | SCALELIMITS_ scaleLimits
+ | MINMAX_ {global scale; set scale(mode) minmax; ChangeScaleMode}
+ | ZSCALE_ {global scale; set scale(mode) zscale; ChangeScaleMode}
+ | ZMAX_ {global scale; set scale(mode) zmax; ChangeScaleMode}
+ | USER_ {global scale; set scale(mode) user; ChangeScaleMode}
+ | MODE_ scaleMode {global scale; set scale(mode) $2; ChangeScaleMode}
+ | MODE_ numeric {global scale; set scale(mode) $2; ChangeScaleMode}
+ | LOCAL_ {global scale; set scale(scope) local; ChangeScaleScope}
+ | GLOBAL_ {global scale; set scale(scope) global; ChangeScaleScope}
+ | SCOPE_ scaleScope {global scale; set scale(scope) $2; ChangeScaleScope}
+ | MATCH_ {MatchScaleCurrent} 
+ | MATCH_ LIMITS_ {MatchScaleLimitsCurrent}
+ | MATCH_ SCALELIMITS_ {MatchScaleLimitsCurrent}
+ | LOCK_ {global scale; set scale(lock) 1; LockScaleCurrent} 
+ | LOCK_ yesno {global scale; set scale(lock) $2; LockScaleCurrent}
+ | LOCK_ LIMITS_ {global scale; set scale(lock,limits) 1; LockScaleLimitsCurrent} 
+ | LOCK_ LIMITS_ scaleLockLimits
+ | LOCK_ SCALELIMITS_ {global scale; set scale(lock,limits) 1; LockScaleLimitsCurrent} 
+ | LOCK_ SCALELIMITS_ scaleLockLimits
+ | OPEN_ {ScaleDialog}
+ | CLOSE_ {ScaleDestroyDialog}
+ ;
+
+scaleScales : LINEAR_ {set _ linear}
+ | POW_ {set _ pow}
+ | SQRT_ {set _ sqrt}
+ | SQUARED_ {set _ squared}
+ | ASINH_ {set _ asinh}
+ | SINH_ {set _ sinh}
+ | HISTEQU_ {set _ histequ}
+ ;
+
+scaleLog : {global scale; set scale(type) log; ChangeScale}
+ | EXP_ numeric {global scale; set scale(log) $2; ChangeScale}
+ ;
+
+scaleLimits: numeric numeric {global scale; set scale(min) $1; set scale(max) $2; ChangeScaleLimit}
+ ;
+	     
+scaleLockLimits : yesno {global scale; set scale(lock,limits) $1; LockScaleLimitsCurrent}
+ ;
+
+scaleMode : MINMAX_ {set _ minmax}
+ | ZSCALE_ {set _ zscale}
+ | ZMAX_ {set _ zmax}
+ ;
+
+scaleScope : LOCAL_ {set _ local}
+ | GLOBAL_ {set _ global}
  ;
 
 %%

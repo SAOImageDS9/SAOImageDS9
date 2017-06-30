@@ -185,7 +185,8 @@ optDeg : {set _ degrees}
 about : {puts "*** ABOUT ***"}
  ;
 
-align : {puts "*** ALIGN ***"}
+align : {global current; set current(align) 1; AlignWCSFrame}
+ | yesno {global current; set current(align) $1; AlignWCSFrame}
  ;
 
 analysis : {puts "*** ANALYSIS ***"}

@@ -45,7 +45,7 @@ commands : commands command
  | command
  ;
 
-command : 2MASS_ 2mass
+command : 2MASS_ {2MASSDialog} 2mass
  | 3D_ 3d
  | ABOUT_ about
  | ALIGN_ align
@@ -94,7 +94,7 @@ optDeg : {set _ degrees}
  | SURVEY_ 2massSurvey {global dtwomass; set dtwomass(survey) $2}
  | UPDATE_ FRAME_ {IMGSVRUpdate dtwomass; IMGSVRApply dtwomass 1}
  | UPDATE_ CROSSHAIR_ {IMGSVRCrosshair dtwomass; IMGSVRApply dtwomass 1}
- | COORD_ 2massCoord
+ | COORD_ 2massCoord {IMGSVRApply dtwomass 1}
  | NAME_
  ;
 # default

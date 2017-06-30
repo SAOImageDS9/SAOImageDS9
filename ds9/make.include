@@ -1,17 +1,14 @@
 #--------------------------parser
 
-# will not work for win
-$(prefix)/ds9/library/lex.tcl : $(prefix)/ds9/library/lex.fcl
-	tclsh $(prefix)/fickle/fickle.tcl -o $@ $?
+%.tcl: %.fcl
+	tclsh $(prefix)/fickle/fickle.tcl $<
 
-# will not work for win
-$(prefix)/ds9/library/parser.tcl : $(prefix)/ds9/library/parser.tac
-	tclsh $(prefix)/taccle/taccle.tcl -d -o $@ $?
+%.tcl: %.tac
+	tclsh $(prefix)/taccle/taccle.tcl -d -w $<
 
 #--------------------------framework
-#$(prefix)/ds9/library/parser.tcl $(prefix)/ds9/library/lex.tcl
 
-$(LIBDIR)/library : $(prefix)/ds9/library/*.tcl
+$(LIBDIR)/library : $(prefix)/ds9/library/parser.tcl $(prefix)/ds9/library/lex.tcl $(prefix)/ds9/library/*.tcl
 	mkdir -p "$@"
 	cp -p $? "$@"
 # must do it this way for win

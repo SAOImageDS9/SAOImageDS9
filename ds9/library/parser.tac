@@ -32,6 +32,9 @@
 %token FALSE_
 %token FRAME_
 %token HIGHLITE_
+%token HISTEQU_
+%token LINEAR_
+%token LOG_
 %token METHOD_
 %token MIP_
 %token NAME_
@@ -41,10 +44,14 @@
 %token OFF_
 %token ON_
 %token OPEN_
+%token POW_
 %token SAVE_
 %token SCALE_
 %token SEXAGESIMAL_
+%token SINH_
 %token SIZE_
+%token SQUARED_
+%token SQRT_
 %token SURVEY_
 %token TRUE_
 %token UPDATE_
@@ -63,8 +70,14 @@ command : 2MASS_ {2MASSDialog} 2mass
  | ALIGN_ align
  | ANALYSIS_ analysis
  | ARRAY_ array
- | ASINH_ asinh
- | numeric {puts "numeric: $1"}
+ | ASINH_ {global scale; set scale(type) asinh; ChangeScale}
+ | HISTEQU_ {global scale; set scale(type) histequ; ChangeScale}
+ | LINEAR_ {global scale; set scale(type) linear; ChangeScale}
+ | LOG_ {global scale; set scale(type) log; ChangeScale}
+ | POW_ {global scale; set scale(type) pow; ChangeScale}
+ | SINH_ {global scale; set scale(type) sinh; ChangeScale}
+ | SQUARED_ {global scale; set scale(type) squared; ChangeScale}
+ | SQRT_ {global scale; set scale(type) sqrt; ChangeScale}
  ;
 
 numeric	: REAL_ {set _ $1}
@@ -193,9 +206,6 @@ analysis : {puts "*** ANALYSIS ***"}
  ;
 
 array : {puts "*** ARRAY ***"}
- ;
-
-asinh : {puts "*** ASINH ***"}
  ;
 
 %%

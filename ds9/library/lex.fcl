@@ -39,6 +39,9 @@ el	    {return $::ELEVATION_}
 false	    {return $::FALSE_}
 frame	    {return $::FRAME_}
 highlite    {return $::HIGHLITE_}
+histequ	    {return $::HISTEQU_}
+linear	    {return $::LINEAR_}
+log	    {return $::LOG_}
 method	    {return $::METHOD_}
 mip	    {return $::MIP_}
 name	    {return $::NAME_}
@@ -48,10 +51,14 @@ none	    {return $::NONE_}
 off	    {return $::OFF_}
 on	    {return $::ON_}
 open	    {return $::OPEN_}
+pow	    {return $::POW_}
 save	    {return $::SAVE_}
 scale	    {return $::SCALE_}
 sexagesimal {return $::SEXAGESIMAL_}
+sinh	    {return $::SINH_}
 size	    {return $::SIZE_}
+squared	    {return $::SQUARED_}
+sqrt	    {return $::SQRT_}
 survey	    {return $::SURVEY_}
 true	    {return $::TRUE_}
 update	    {return $::UPDATE_}

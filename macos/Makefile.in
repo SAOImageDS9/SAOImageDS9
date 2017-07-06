@@ -121,7 +121,17 @@ tkmacosx/Makefile :
 
 #--------------------------clean
 
-.PHONY	: tkosclean
+.PHONY	: tclclean tkclean tkosclean
+
+tclclean :
+	@echo ""
+	@echo "*** tclclean ***"
+	$(MAKE) -C tcl$(TCL_VERSION)/macosx clean
+
+tkclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tk$(TCL_VERSION)/macosx clean
 
 tkosclean :
 	@echo ""
@@ -130,7 +140,17 @@ tkosclean :
 
 #--------------------------distclean
 
-.PHONY	: tkosdistclean
+.PHONY	: tcldistclean tkdistclean tkosdistclean
+
+tcldistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tcl$(TCL_VERSION)/macosx distclean
+
+tkdistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tk$(TCL_VERSION)/macosx distclean
 
 tkosdistclean :
 	@echo ""

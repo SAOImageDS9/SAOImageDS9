@@ -127,7 +127,12 @@ proc DS9Def {} {
 
     set pds9(backup) 1
     set pds9(automarker) 1
-    set pds9(xpa) 1
+    switch $ds9(wm) {
+	x11 -
+	aqua {set pds9(xpa) 1}
+	win32 {set pds9(xpa) 0}
+    }
+    
     set pds9(samp) 1
     set pds9(confirm) 1
     set pds9(bg) white
@@ -569,12 +574,7 @@ ConfigHTTP
 InitSAMP
 
 # XPA
-# don't start xpa for windows
-switch $ds9(wm) {
-    x11 -
-    aqua {InitXPA}
-    win32 {}
-}
+InitXPA
 
 # and process any command line items
 # we want to see something before any fits files are loaded

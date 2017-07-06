@@ -574,7 +574,9 @@ ConfigHTTP
 InitSAMP
 
 # XPA
-InitXPA
+if {$pds9(xpa)} {
+    InitXPA
+}
 
 # and process any command line items
 # we want to see something before any fits files are loaded

@@ -9,10 +9,6 @@ proc InitXPA {} {
     global pds9
     global env
 
-    if {!$pds9(xpa)} {
-	return
-    }
-
     # this is needed
     # if there is a problem (usually with VPN), XPA will hang
     # so preempt and set to local before XPAINIT

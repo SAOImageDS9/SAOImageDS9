@@ -6,7 +6,12 @@ proc DS9Def {} {
     global ds9
     global pds9
 
-    set ds9(title) "$ds9(app)"
+    switch $ds9(wm) {
+	x11 -
+	aqua {set ds9(title) $ds9(app)}
+	win32 {set ds9(title) [file rootname $ds9(app)]}
+    }
+
     # for beta version, MUST have space
     set ds9(version) {7.6 b4}
 
@@ -397,6 +402,8 @@ switch $tcl_platform(platform) {
 if { [info exists env(XPA_VERBOSITY)] == 0 } {
   set env(XPA_VERBOSITY) 0
 }
+# lower XPA connection timeout
+set env(XPA_CONNECT_TIMEOUT) 3
 # set filter ptype to contained (default is process)
 set env(FILTER_PTYPE) c
 # set filter error proc so it will not kill ds9

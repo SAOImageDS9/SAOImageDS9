@@ -6,6 +6,8 @@ source $ds9(root)/library/parser.tab.tcl
 %option caseless
 %option nodefault
 %option nointeractive
+%option stack
+%option debug
 
 D   [0-9]
 E   [Ee][+-]?{D}+
@@ -115,12 +117,10 @@ zmax	    {return $::ZMAX_}
 \{[^\}]*\} {set ::yylval [string range $yytext 1 end-1]; return $::STRING_}
 
 # STRING
-#   at least 2 printable chars
-[!-~][!-~]+ {set ::yylval $yytext; return $::STRING_}
+\S+ {set ::yylval $yytext; return $::STRING_}
 
-\n        # ignore return
 \s        # ignore whitespace
-.         {set ::yylval $yytext; return $yytext}
 
+%%
 
-
+set ::yy_flex_debug 1

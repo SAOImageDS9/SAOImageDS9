@@ -96,7 +96,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | SQUAREDCMD_ {global scale; set scale(type) squared; ChangeScale}
  | SQRTCMD_ {global scale; set scale(type) sqrt; ChangeScale}
  | SCALECMD_ scale
- | STRING_ {puts "   STRING: $::yylval"}
+ | STRING_ {puts "STRING: $::yylval"}
  ;
 
 numeric	: REAL_ {set _ $1}

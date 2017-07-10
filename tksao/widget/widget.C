@@ -644,14 +644,17 @@ void Widget::warp(Vector& vv)
   unsigned int msk;
   XQueryPointer(display,Tk_WindowId(tkwin),&root,&child,
 		&rootx,&rooty,&winx,&winy,&msk);
+  int xx,yy;
+  Tk_GetRootCoords(tkwin,&xx,&yy);
+
   XWarpPointer(display, None, Tk_WindowId(tkwin), 0, 0, 0, 0, 
-    winx+vv[0], winy+vv[1]);
+	       rootx-xx+vv[0], rooty-yy+vv[1]);
 #endif
 }
 
 void Widget::warpTo(Vector& vv)
 {
-#if !(MAC_OSX_TK)
+#if !MAC_OSX_TK
   XWarpPointer(display, None, Tk_WindowId(tkwin), 0, 0, 0, 0, vv[0], vv[1]);
 #endif
 

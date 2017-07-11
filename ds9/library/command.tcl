@@ -25,7 +25,6 @@ proc ProcessCommandLineFirst {} {
 	switch -- $item {
 	    -debug {incr i; ProcessDebugTclCmd argv i}
 	    -title {
-		incr i
 		set ds9(title) [lindex $argv $i]
 		set t "SAOImage[string toupper $ds9(title)]"
 		wm title $ds9(top) "$t"

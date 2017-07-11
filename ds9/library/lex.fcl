@@ -16,21 +16,25 @@ E   [Ee][+-]?{D}+
 
 %%
 
+-?	    {return $::HELPCMD_}
 -2mass	    {return $::2MASSCMD_}
 -3d	    {return $::3DCMD_}
 -align	    {return $::ALIGNCMD_}
 -asinh	    {return $::ASINHCMD_}
--?	    {return $::HELPCMD_}
+-exit	    {return $::QUITCMD_}
 -help	    {return $::HELPCMD_}
 -histequ    {return $::HISTEQUCMD_}
 -linear	    {return $::LINEARCMD_}
 -log	    {return $::LOGCMD_}
 -private    {return $::PRIVATECMD_}
 -pow	    {return $::POWCMD_}
+-quit	    {return $::QUITCMD_}
 -scale	    {return $::SCALECMD_}
 -sinh	    {return $::SINHCMD_}
+-sleep	    {return $::SLEEPCMD_}
 -squared    {return $::SQUAREDCMD_}
 -sqrt	    {return $::SQRTCMD_}
+-zscale	    {return $::ZSCALECMD_}
 
 aip    	    {return $::AIP_}
 arcmin	    {return $::ARCMIN_}
@@ -44,6 +48,7 @@ border	    {return $::BORDER_}
 close	    {return $::CLOSE_}
 color	    {return $::COLOR_}
 compass	    {return $::COMPASS_}
+contrast    {return $::CONTRAST_}
 coord	    {return $::COORD_}
 crosshair   {return $::CROSSHAIR_}
 current	    {return $::CURRENT_}
@@ -59,6 +64,7 @@ highlite    {return $::HIGHLITE_}
 histequ	    {return $::HISTEQU_}
 linear	    {return $::LINEAR_}
 limits	    {return $::LIMITS_}
+line	    {return $::LINE_}
 local	    {return $::LOCAL_}
 lock	    {return $::LOCK_}
 log	    {return $::LOG_}
@@ -75,6 +81,7 @@ off	    {return $::OFF_}
 on	    {return $::ON_}
 open	    {return $::OPEN_}
 pow	    {return $::POW_}
+sample	    {return $::SAMPLE_}
 save	    {return $::SAVE_}
 scale	    {return $::SCALE_}
 scalelimits {return $::SCALELIMITS_}

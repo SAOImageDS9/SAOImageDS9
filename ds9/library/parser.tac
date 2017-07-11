@@ -24,10 +24,13 @@ set file(load) 0
 %token LOGCMD_
 %token PRIVATECMD_
 %token POWCMD_
+%token QUITCMD_
 %token SCALECMD_
 %token SINHCMD_
+%token SLEEPCMD_
 %token SQUAREDCMD_
 %token SQRTCMD_
+%token ZSCALECMD_
 
 %token AIP_
 %token ARCMIN_
@@ -39,6 +42,7 @@ set file(load) 0
 %token CLOSE_
 %token COLOR_
 %token COMPASS_
+%token CONTRAST_
 %token COORD_
 %token CROSSHAIR_
 %token CURRENT_
@@ -52,6 +56,7 @@ set file(load) 0
 %token HIGHLITE_
 %token HISTEQU_
 %token LIMITS_
+%token LINE_
 %token LINEAR_
 %token LOCAL_
 %token LOCK_
@@ -69,6 +74,7 @@ set file(load) 0
 %token ON_
 %token OPEN_
 %token POW_
+%token SAMPLE_
 %token SAVE_
 %token SCALE_
 %token SCALELIMITS_
@@ -105,11 +111,14 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  # backword compatibility
  }
  | POWCMD_ {global scale; set scale(type) pow; ChangeScale}
+ | QUITCMD_ {QuitDS9}
  | SINHCMD_ {global scale; set scale(type) sinh; ChangeScale}
+ | SLEEPCMD_ {UpdateDS9; RealizeDS9} sleep
  | SQUAREDCMD_ {global scale; set scale(type) squared; ChangeScale}
  | SQRTCMD_ {global scale; set scale(type) sqrt; ChangeScale}
  | SCALECMD_ scale
  | STRING_ {CommandLineFileName $1}
+ | ZSCALECMD_ zscale
  ;
 
 numeric	: REAL_ {set _ $1}
@@ -284,6 +293,16 @@ scaleMode : MINMAX_ {set _ minmax}
 
 scaleScope : LOCAL_ {set _ local}
  | GLOBAL_ {set _ global}
+ ;
+
+sleep : {after 1000}
+ | numeric {after [expr int($1*1000)]}
+ ;
+
+zscale : {global zscale; set scale(mode) zscale; ChangeScaleMode}
+ | CONTRAST_ numeric {global zscale; set zscale(contrast) $2; ChangeZScale}
+ | SAMPLE_ INT_ {global zscale; set zscale(sample) $2; ChangeZScale}
+ | LINE_ INT_ {global zscale; set zscale(line) $2; ChangeZScale}
  ;
 
 %%

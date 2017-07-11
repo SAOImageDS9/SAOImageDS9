@@ -10,12 +10,21 @@
 
 %token 2MASSCMD_
 %token 3DCMD_
-%token AIP_
 %token ALIGNCMD_
+%token ASINHCMD_
+%token HISTEQUCMD_
+%token LINEARCMD_
+%token LOGCMD_
+%token POWCMD_
+%token SCALECMD_
+%token SINHCMD_
+%token SQUAREDCMD_
+%token SQRTCMD_
+
+%token AIP_
 %token ARCMIN_
 %token ARCSEC_
 %token ASINH_
-%token ASINHCMD_
 %token AZIMUTH_
 %token BACKGROUND_
 %token BORDER_
@@ -34,14 +43,11 @@
 %token GLOBAL_
 %token HIGHLITE_
 %token HISTEQU_
-%token HISTEQUCMD_
 %token LIMITS_
 %token LINEAR_
-%token LINEARCMD_
 %token LOCAL_
 %token LOCK_
 %token LOG_
-%token LOGCMD_
 %token MATCH_
 %token METHOD_
 %token MINMAX_
@@ -55,20 +61,15 @@
 %token ON_
 %token OPEN_
 %token POW_
-%token POWCMD_
 %token SAVE_
 %token SCALE_
-%token SCALECMD_
 %token SCALELIMITS_
 %token SCOPE_
 %token SEXAGESIMAL_
 %token SINH_
-%token SINHCMD_
 %token SIZE_
 %token SQUARED_
-%token SQUAREDCMD_
 %token SQRT_
-%token SQRTCMD_
 %token SURVEY_
 %token TRUE_
 %token UPDATE_
@@ -96,7 +97,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | SQUAREDCMD_ {global scale; set scale(type) squared; ChangeScale}
  | SQRTCMD_ {global scale; set scale(type) sqrt; ChangeScale}
  | SCALECMD_ scale
- | STRING_ {puts "STRING: $::yylval"}
+ | STRING_ {puts "STRING: $1"}
  ;
 
 numeric	: REAL_ {set _ $1}

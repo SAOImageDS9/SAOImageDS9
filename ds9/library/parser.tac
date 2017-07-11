@@ -1,4 +1,10 @@
 %{
+global file
+set file(type) fits
+set file(mode) {}
+set file(layer) {}
+set file(mosaic) wcs
+set file(load) 0
 %}
 
 %token INT_
@@ -12,9 +18,11 @@
 %token 3DCMD_
 %token ALIGNCMD_
 %token ASINHCMD_
+%token HELPCMD_
 %token HISTEQUCMD_
 %token LINEARCMD_
 %token LOGCMD_
+%token PRIVATECMD_
 %token POWCMD_
 %token SCALECMD_
 %token SINHCMD_
@@ -89,15 +97,19 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | 3DCMD_ {3DDialog} 3d
  | ALIGNCMD_ align
  | ASINHCMD_ {global scale; set scale(type) asinh; ChangeScale}
+ | HELPCMD_ {HelpCommand}
  | HISTEQUCMD_ {global scale; set scale(type) histequ; ChangeScale}
  | LINEARCMD_ {global scale; set scale(type) linear; ChangeScale}
  | LOGCMD_ {global scale; set scale(type) log; ChangeScale}
+ | PRIVATECMD_ {
+ # backword compatibility
+ }
  | POWCMD_ {global scale; set scale(type) pow; ChangeScale}
  | SINHCMD_ {global scale; set scale(type) sinh; ChangeScale}
  | SQUAREDCMD_ {global scale; set scale(type) squared; ChangeScale}
  | SQRTCMD_ {global scale; set scale(type) sqrt; ChangeScale}
  | SCALECMD_ scale
- | STRING_ {puts "STRING: $1"}
+ | STRING_ {CommandLineFileName $1}
  ;
 
 numeric	: REAL_ {set _ $1}
@@ -276,3 +288,15 @@ scaleScope : LOCAL_ {set _ local}
 
 %%
 
+proc yyerror {s} {
+     puts stderr "parse error:"
+     puts stderr "$::yy_buffer"
+     puts stderr [format "%*s" $::yy_index ^]
+}
+
+proc yydone {} {
+     global file
+     if {$file(load) != 0} {
+	FinishLoadPost
+     }
+}

@@ -19,9 +19,11 @@ set file(load) 0
 %token ALIGNCMD_
 %token ASINHCMD_
 %token BGCMD_
+%token BLUECMD_
 %token CDCMD_
 %token CONSOLECMD_
 %token CURSORCMD_
+%token GREENCMD_
 %token HELPCMD_
 %token HISTEQUCMD_
 %token ICONIFYCMD_
@@ -38,6 +40,7 @@ set file(load) 0
 %token POWCMD_
 %token QUITCMD_
 %token RAISECMD_
+%token REDCMD_
 %token SCALECMD_
 %token SINHCMD_
 %token SLEEPCMD_
@@ -133,9 +136,11 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | ALIGNCMD_ align
  | ASINHCMD_ {global scale; set scale(type) asinh; ChangeScale}
  | BGCMD_ STRING_ {global pds9; set pds9(bg) $2; PrefsBgColor}
+ | BLUECMD_ {global current; set current(rgb) blue; RGBChannel}
  | CDCMD_ cd
  | CONSOLECMD_ {global ds9; OpenConsole; InitError $ds9(msg,src)}
  | CURSORCMD_ INT_ INT_ {CursorCmd $2 $3}
+ | GREENCMD_ {global current; set current(rgb) green; RGBChannel}
  | HELPCMD_ {HelpCommand}
  | HISTEQUCMD_ {global scale; set scale(type) histequ; ChangeScale}
  # backward compatibility
@@ -154,6 +159,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | POWCMD_ {global scale; set scale(type) pow; ChangeScale}
  | QUITCMD_ {QuitDS9}
  | RAISECMD_ {global ds9; raise $ds9(top)}
+ | REDCMD_ {global current; set current(rgb) red; RGBChannel}
  | SINHCMD_ {global scale; set scale(type) sinh; ChangeScale}
  | SLEEPCMD_ {UpdateDS9; RealizeDS9} sleep
  | SOURCECMD_ STRING_ {SourceFileCmd $2}

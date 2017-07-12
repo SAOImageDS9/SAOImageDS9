@@ -24,6 +24,7 @@ E   [Ee][+-]?{D}+
 -bg	    {return $::BGCMD_}
 -background {return $::BGCMD_}
 -blink	    {return $::BLINKCMD_}
+-block	    {return $::BLOCKCMD_}
 -blue	    {return $::BLUECMD_}
 -cd	    {return $::CDCMD_}
 -console    {return $::CONSOLECMD_}

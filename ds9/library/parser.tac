@@ -19,6 +19,7 @@ set file(load) 0
 %token ALIGNCMD_
 %token ASINHCMD_
 %token BGCMD_
+%token BLOCKCMD_
 %token BLUECMD_
 %token BLINKCMD_
 %token CDCMD_
@@ -198,6 +199,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | ASINHCMD_ {global scale; set scale(type) asinh; ChangeScale}
  | BGCMD_ STRING_ {global pds9; set pds9(bg) $2; PrefsBgColor}
  | BLINKCMD_ blink
+ | BLOCKCMD_ {ProcessRealizeDS9} block
  | BLUECMD_ {global current; set current(rgb) blue; RGBChannel}
  | CDCMD_ cd
  | CONSOLECMD_ {global ds9; OpenConsole; InitError $ds9(msg,src)}
@@ -411,6 +413,26 @@ blink : {global current; set current(display) blink; DisplayMode}
  | no {global current; set current(display) single; DisplayMode}
  | INTERVAL_ numeric {global blink; set blink(interval) [expr int($2*1000)]; DisplayMode}
  ;
+
+block : INT_ {Block $1 $1}
+ | INT_ INT_ {Block $1 $2}
+ | OPEN_ {BlockDialog}
+ | CLOSE_ {BlockDestroyDialog}
+ | MATCH_ {MatchBlockCurrent}
+ | LOCK_ blockLock
+ | IN_ {Block .5 .5}
+ | OUT_ {Block 2 2}
+ | TO_ blockTo
+ ;
+
+blockLock : {global block; set block(lock) 1; LockBlockCurrent}
+ | yesno {global block; set block(lock) $1; LockBlockCurrent}
+ ;
+
+blockTo : INT_ {global block; set block(factor) " $1 $1 "; ChangeBlock}
+ | INT_ INT_ {global block; set block(factor) " $1 $2 "; ChangeBlock}
+ | FIT_ {BlockToFit}
+ ; 
 
 cd : STRING_ {cd $2}
  | '.' {cd .}

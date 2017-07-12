@@ -18,6 +18,7 @@ set file(load) 0
 %token 3DCMD_
 %token ALIGNCMD_
 %token ASINHCMD_
+%token BINCMD_
 %token BGCMD_
 %token BLOCKCMD_
 %token BLUECMD_
@@ -26,6 +27,7 @@ set file(load) 0
 %token CONSOLECMD_
 %token CURSORCMD_
 %token GREENCMD_
+%token FITSCMD_
 %token FRAMECMD_
 %token HELPCMD_
 %token HISTEQUCMD_
@@ -34,6 +36,7 @@ set file(load) 0
 %token LINEARCMD_
 %token LOGCMD_
 %token LOWERCMD_
+%token MINMAXCMD_
 %token NANCMD_
 %token ORIENTCMD_
 %token PANCMD_
@@ -54,45 +57,57 @@ set file(load) 0
 %token THEMECMD_
 %token THREADSCMD_
 %token TILECMD_
+%token ZMAXCMD_
 %token ZOOMCMD_
 %token ZSCALECMD_
 
 %token 3D_
+%token ABOUT_
 %token AIP_
 %token ALL_
 %token AMPLIFIER_
 %token ARCMIN_
 %token ARCSEC_
 %token ASINH_
-%token AZIMUTH_
+%token AUTO_
 %token AUTOMATIC_
+%token AVERAGE_
+%token AZIMUTH_
 %token BACK_
 %token BACKGROUND_
 %token BGCOLOR_
 %token BORDER_
+%token BUFFERSIZE_
 %token CENTER_
 %token CLEAR_
 %token CLOSE_
 %token COLOR_
+%token COLS_
 %token COLUMN_
+%token COLSZ_
 %token COMPASS_
 %token CONTRAST_
 %token COORD_
 %token CROSSHAIR_
 %token CURRENT_
+%token DATAMIN_
 %token DATASEC_
 %token DEGREES_
+%token DEPTH_
 %token DETECTOR_
 %token DELETE_
 %token DIRECTION_
 %token ELEVATION_
 %token EXP_
+%token FACTOR_
 %token FALSE_
+%token FILTER_
 %token FIRST_
 %token FIT_
 %token FORWARD_
 %token FRAME_
 %token FRAMENO_
+%token FUNCTION_
 %token GAP_
 %token GLOBAL_
 %token GRID_
@@ -102,7 +117,9 @@ set file(load) 0
 %token IMAGE_
 %token IN_
 %token INTERVAL_
+%token IRAF_
 %token IRAFALIGN_
+%token IRAFMIN_
 %token LAST_
 %token LAYOUT_
 %token LIMITS_
@@ -113,11 +130,15 @@ set file(load) 0
 %token LOG_
 %token MANUAL_
 %token MATCH_
+%token MECUBE_
 %token METHOD_
 %token MINMAX_
 %token MIP_
 %token MODE_
+%token MOSAIC_
+%token MOSAICIMAGE_
 %token MOVE_
+%token MULTIFRAME_
 %token NAME_
 %token NANCOLOR_
 %token NEW_
@@ -134,11 +155,14 @@ set file(load) 0
 %token REFRESH_
 %token RESET_
 %token RGB_
+%token RGBCUBE_
+%token RGBIMAGE_
 %token ROW_
 %token SAMPLE_
 %token SAVE_
 %token SCALE_
 %token SCALELIMITS_
+%token SCAN_
 %token SCOPE_
 %token SEXAGESIMAL_
 %token SHOW_
@@ -146,6 +170,7 @@ set file(load) 0
 %token SIZE_
 %token SQUARED_
 %token SQRT_
+%token SUM_
 %token SURVEY_
 %token THREADS_
 %token TO_
@@ -180,6 +205,7 @@ set file(load) 0
 %token WCSX_
 %token WCSY_
 %token WCSZ_
+%token WFPC2_
 %token X_
 %token XY_
 %token Y_
@@ -197,6 +223,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | 3DCMD_ {3DDialog} 3d
  | ALIGNCMD_ align
  | ASINHCMD_ {global scale; set scale(type) asinh; ChangeScale}
+ | BINCMD_ bin
  | BGCMD_ STRING_ {global pds9; set pds9(bg) $2; PrefsBgColor}
  | BLINKCMD_ blink
  | BLOCKCMD_ {ProcessRealizeDS9} block
@@ -204,6 +231,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | CDCMD_ cd
  | CONSOLECMD_ {global ds9; OpenConsole; InitError $ds9(msg,src)}
  | CURSORCMD_ INT_ INT_ {CursorCmd $2 $3}
+ | FITSCMD_ fits
  | FRAMECMD_ frame
  | GREENCMD_ {global current; set current(rgb) green; RGBChannel}
  | HELPCMD_ {HelpCommand}
@@ -214,6 +242,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | LINEARCMD_ {global scale; set scale(type) linear; ChangeScale}
  | LOGCMD_ {global scale; set scale(type) log; ChangeScale}
  | LOWERCMD_ {global ds9; lower $ds9(top)}
+ | MINMAXCMD_ minmax
  | NANCMD_ STRING_ {global pds9; set pds9(nan) $2; PrefsNanColor}
  | ORIENTCMD_ orient
  | PANCMD_ pan
@@ -236,6 +265,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | THEMECMD_
  | THREADSCMD_ INT_ {global ds9; set ds9(threads) $2; ChangeThreads}
  | TILECMD_ tile
+ | ZMAXCMD_ {global scale; set scale(mode) zmax; ChangeScaleMode}
  | ZOOMCMD_ {ProcessRealizeDS9} zoom
  | ZSCALECMD_ zscale
  | STRING_ {CommandLineFileName $1}
@@ -288,6 +318,40 @@ coordsys : IMAGE_ {set _ image}
  ;
 
 wcssys : WCS_ {set _ wcs}
+ | WCSA_ {set _ wcsa}
+ | WCSB_ {set _ wcsb}
+ | WCSC_ {set _ wcsc}
+ | WCSD_ {set _ wcsd}
+ | WCSE_ {set _ wcse}
+ | WCSF_ {set _ wcsf}
+ | WCSG_ {set _ wcsg}
+ | WCSH_ {set _ wcsh}
+ | WCSI_ {set _ wcsi}
+ | WCSJ_ {set _ wcsj}
+ | WCSK_ {set _ wcsk}
+ | WCSL_ {set _ wcsl}
+ | WCSM_ {set _ wcsm}
+ | WCSN_ {set _ wcsn}
+ | WCSO_ {set _ wcso}
+ | WCSP_ {set _ wcsp}
+ | WCSQ_ {set _ wcsq}
+ | WCSR_ {set _ wcsr}
+ | WCSS_ {set _ wcss}
+ | WCST_ {set _ wcst}
+ | WCSU_ {set _ wcsu}
+ | WCSV_ {set _ wcsv}
+ | WCSW_ {set _ wcsw}
+ | WCSX_ {set _ wcsx}
+ | WCSY_ {set _ wcsy}
+ | WCSZ_ {set _ wcsz}
+ ;
+
+mosaicImageType : mosaicType {set _ $1}
+ | WFPC2_ {set _ wfpc2}
+ ;
+
+mosaicType : IRAF_ {set _ iraf}
+ | WCS_ {set _ wcs}
  | WCSA_ {set _ wcsa}
  | WCSB_ {set _ wcsb}
  | WCSC_ {set _ wcsc}
@@ -414,6 +478,43 @@ blink : {global current; set current(display) blink; DisplayMode}
  | INTERVAL_ numeric {global blink; set blink(interval) [expr int($2*1000)]; DisplayMode}
  ;
 
+bin : CLOSE_ {BinDestroyDialog}
+ | OPEN_ {BinDialog}
+ | MATCH_ {MatchBinCurrent}
+ | LOCK_ binLock
+ | ABOUT_ binAbout
+ | BUFFERSIZE_ INT_ {global bin; set bin(buffersize) $1; ChangeBinBufferSize}
+ | COLS_ STRING_ STRING_ {BinCols $2 $3}
+ | COLSZ_ STRING_ STRING_ STRING_ {BinCols $2 $3 $4}
+ | FACTOR_ binFactor
+ | DEPTH_ INT_ {global bin; set bin(depth) $1; ChangeBinDepth}
+ | FILTER_ STRING_ {BinFilter $2}
+ | FUNCTION_ binFunction {global bin; set bin(function) $1; ChangeBinFunction}
+ | IN_ {Bin .5 .5}
+ | OUT_ {Bin 2 2}
+ | TO_ binTo
+ ;
+
+binLock : {global bin; set bin(lock) 1; LockBinCurrent}
+ | yesno {global bin; set bin(lock) $1; LockBinCurrent}
+ ;
+
+binAbout : numeric numeric {BinAbout $1 $2}
+ | CENTER_ {BinAboutCenter}
+ ;
+
+binFactor : numeric {global bin; set bin(factor) " $1 $1 "; ChangeBinFactor}
+ | numeric numeric {global bin; set bin(factor) " $1 $2 "; ChangeBinFactor}
+ ;
+
+binFunction: AVERAGE_ {set _ average}
+ | SUM_ {set _ sum}
+ ;
+
+binTo: binFactor
+ | FIT_ {BinToFit}
+ ;
+
 block : INT_ {Block $1 $1}
  | INT_ INT_ {Block $1 $2}
  | OPEN_ {BlockDialog}
@@ -437,6 +538,15 @@ blockTo : INT_ {global block; set block(factor) " $1 $1 "; ChangeBlock}
 cd : STRING_ {cd $2}
  | '.' {cd .}
  | '/' {cd /}
+ ;
+
+fits : {global file; set file(type) fits}
+ | MOSAIC_ mosaicType {global file; set file(type) mosaic; set file(mosaic) $2}
+ | MOSAICIMAGE_ mosaicImageType {global file; set file(type) mosaicimage; set file(mosaic) $2}
+ | MECUBE_ {global file; set file(type) mecube}
+ | MULTIFRAME_ {global file; set file(type) multiframe}
+ | RGBCUBE_ {global file; set file(type) rgbcube}
+ | RGBIMAGE_ {global file; set file(type) rgbimage}
  ;
 
 frame :
@@ -510,6 +620,20 @@ frameMove : FIRST_ {MoveFirstFrame}
 iconify : {global ds9; wm iconify $ds9(top)}
  | yes {global ds9; wm iconify $ds9(top)}
  | no {global ds9; wm deiconify $ds9(top)}
+ ;
+
+minmax : {global scale; set scale(mode) minmax; ChangeScaleMode}
+ # backward compatibility
+ | AUTO_ {global minmax; set minmax(mode) scan; ChangeMinMax}
+ | SCAN_ {global minmax; set minmax(mode) scan; ChangeMinMax}
+ | SAMPLE_ {global minmax; set minmax(mode) sample; ChangeMinMax}
+ | DATAMIN_ {global minmax; set minmax(mode) datamin; ChangeMinMax}
+ | IRAFMIN_ {global minmax; set minmax(mode) irafmin; ChangeMinMax}
+ | MODE_ minmaxMode {global minmax; set minmax(mode) $2; ChangeMinMax}
+ | INTERVAL_ INT_ {global minmax; set minmax(sample) $2; ChangeMinMax}
+ ;
+
+minmaxMode :
  ;
 
 orient : orientation {global current; set current(orient) $1; ChangeOrient}
@@ -651,7 +775,7 @@ zoomTo: FIT_ {ZoomToFit}
  | numeric numeric {global zoom; set current(zoom) " $1 $2 "; ChangeZoom}
  ;
 
-zscale : {global zscale; set scale(mode) zscale; ChangeScaleMode}
+zscale : {global scale; set scale(mode) zscale; ChangeScaleMode}
  | CONTRAST_ numeric {global zscale; set zscale(contrast) $2; ChangeZScale}
  | SAMPLE_ INT_ {global zscale; set zscale(sample) $2; ChangeZScale}
  | LINE_ INT_ {global zscale; set zscale(line) $2; ChangeZScale}

@@ -21,6 +21,7 @@ set file(load) 0
 %token BGCMD_
 %token HELPCMD_
 %token HISTEQUCMD_
+%token IRAFALIGNCMD_
 %token LINEARCMD_
 %token LOGCMD_
 %token NANCMD_
@@ -36,6 +37,7 @@ set file(load) 0
 %token SLEEPCMD_
 %token SQUAREDCMD_
 %token SQRTCMD_
+%token THREADSCMD_
 %token ZOOMCMD_
 %token ZSCALECMD_
 
@@ -125,6 +127,8 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | BGCMD_ STRING_ {global pds9; set pds9(bg) $2; PrefsBgColor}
  | HELPCMD_ {HelpCommand}
  | HISTEQUCMD_ {global scale; set scale(type) histequ; ChangeScale}
+ # backward compatibility
+ | IRAFALIGNCMD_ yesno {global pds9; set pds9(iraf) $2; PrefsIRAFAlign}
  | LINEARCMD_ {global scale; set scale(type) linear; ChangeScale}
  | LOGCMD_ {global scale; set scale(type) log; ChangeScale}
  | NANCMD_ STRING_ {global pds9; set pds9(nan) $2; PrefsNanColor}
@@ -132,9 +136,8 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | PANCMD_ pan
  | PIXELTABLECMD_ pixelTable
  | PREFSCMD_ prefs
- | PRIVATECMD_ {
- # backword compatibility
- }
+ # backward compatibility
+ | PRIVATECMD_ 
  | POWCMD_ {global scale; set scale(type) pow; ChangeScale}
  | QUITCMD_ {QuitDS9}
  | SINHCMD_ {global scale; set scale(type) sinh; ChangeScale}
@@ -142,9 +145,10 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | SQUAREDCMD_ {global scale; set scale(type) squared; ChangeScale}
  | SQRTCMD_ {global scale; set scale(type) sqrt; ChangeScale}
  | SCALECMD_ scale
- | STRING_ {CommandLineFileName $1}
+ | THREADSCMD_ INT_ {global ds9; set ds9(threads) $2; ChangeThreads}
  | ZOOMCMD_ {ProcessRealizeDS9} zoom
  | ZSCALECMD_ zscale
+ | STRING_ {CommandLineFileName $1}
  ;
 
 numeric	: REAL_ {set _ $1}
@@ -306,8 +310,11 @@ pixelTable : {PixelTableDialog}
  ;
 
 prefs : CLEAR_ {ClearPrefs}
+ # backward compatibility
  | BGCOLOR_ STRING_ {global pds9; set pds9(bg) $2; PrefsBgColor}
+ # backward compatibility
  | NANCOLOR_ STRING_ {global pds9; set pds9(nan) $2; PrefsNanColor}
+ # backward compatibility
  | THREADS_ INT_ {global pds9; set ds9(threads) $2; ChangeThreads}
  | IRAFALIGN_ yesno {global pds9; set pds9(iraf) $2; PrefsIRAFAlign}
  ;

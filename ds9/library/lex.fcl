@@ -41,6 +41,7 @@ E   [Ee][+-]?{D}+
 -sleep	    {return $::SLEEPCMD_}
 -squared    {return $::SQUAREDCMD_}
 -sqrt	    {return $::SQRTCMD_}
+-threads    {return $::THREADSCMD_}
 -zoom	    {return $::ZOOMCMD_}
 -zscale	    {return $::ZSCALECMD_}
 

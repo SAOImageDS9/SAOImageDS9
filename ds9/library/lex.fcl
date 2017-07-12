@@ -23,6 +23,8 @@ E   [Ee][+-]?{D}+
 -asinh	    {return $::ASINHCMD_}
 -bg	    {return $::BGCMD_}
 -background {return $::BGCMD_}
+-cd	    {return $::CDCMD_}
+-console    {return $::CONSOLECMD_}
 -cursor	    {return $::CURSORCMD_}
 -exit	    {return $::QUITCMD_}
 -help	    {return $::HELPCMD_}

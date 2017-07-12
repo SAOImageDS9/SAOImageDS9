@@ -559,7 +559,7 @@ fits : {global file; set file(type) fits}
  | RGBIMAGE_ {global file; set file(type) rgbimage}
  ;
 
-frame :
+frame : INT_ {CreateGotoFrame $1 base}
  | MATCH_ coordsys {MatchFrameCurrent $2}
  | LOCK_ frameLock
  | CENTER_ frameCenter
@@ -584,17 +584,17 @@ frameLock : coordsys {global panzoom; set panzoom(lock) $1; LockFrameCurrent}
 
 frameCenter: {CenterCurrentFrame}
  | ALL_ {CenterAllFrame}
- | INT_ {CenterFrame "Frame$1"}
+ | INT_ {CenterFrame Frame$1}
  ;
 
 frameClear: {ClearCurrentFrame}
  | ALL_ {ClearAllFrame}
- | INT_ {ClearFrame "Frame$1"}
+ | INT_ {ClearFrame Frame$1}
  ;
 
 frameDelete: {DeleteCurrentFrame}
  | ALL_ {DeleteAllFrames}
- | INT_ {DeleteFrame "Frame$1"}
+ | INT_ {DeleteSingleFrame Frame$1}
  ;
 
 frameNew: {CreateFrame}
@@ -604,21 +604,22 @@ frameNew: {CreateFrame}
 
 frameReset: {ResetCurrentFrame}
  | ALL_ {ResetAllFrame}
- | INT_ {ResetFrame "Frame$1"}
+ | INT_ {ResetFrame Frame$1}
  ;
 
 frameRefresh: {UpdateCurrentFrame}
  | ALL_ {UpdateAllFrame}
- | INT_ {UpdateFrame "Frame$1"}
+ | INT_ {UpdateFrame Frame$1}
  ;
 
 frameHide: {global active; global current; set active($current(frame)) 0; UpdateActiveFrames}
  | ALL_ {ActiveFrameNone}
- | INT_ {global active; set active("Frame$1") 0; UpdateActiveFrames}
+ | INT_ {global active; set active(Frame$1) 0; UpdateActiveFrames}
  ;
 
-frameShow: ALL_ {ActiveFrameAll}
- | INT_ {global active; set active("Frame$1") 1; UpdateActiveFrames}
+frameShow: {}
+ | ALL_ {ActiveFrameAll}
+ | INT_ {global active; set active(Frame$1) 1; UpdateActiveFrames}
  ;
 
 frameMove : FIRST_ {MoveFirstFrame}

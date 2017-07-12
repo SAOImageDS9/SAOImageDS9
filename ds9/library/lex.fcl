@@ -117,7 +117,7 @@ filter	    {return $::FILTER_}
 first	    {return $::FIRST_}
 fit	    {return $::FIT_}
 function    {return $::FUNCTION_}
-foward	    {return $::FOWARD_}
+forward	    {return $::FORWARD_}
 frame	    {return $::FRAME_}
 frameno	    {return $::FRAMENO_}
 gap	    {return $::GAP_}

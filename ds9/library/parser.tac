@@ -20,6 +20,7 @@ set file(load) 0
 %token ASINHCMD_
 %token BGCMD_
 %token BLUECMD_
+%token BLINKCMD_
 %token CDCMD_
 %token CONSOLECMD_
 %token CURSORCMD_
@@ -99,6 +100,7 @@ set file(load) 0
 %token HISTEQU_
 %token IMAGE_
 %token IN_
+%token INTERVAL_
 %token IRAFALIGN_
 %token LAST_
 %token LAYOUT_
@@ -195,6 +197,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | ALIGNCMD_ align
  | ASINHCMD_ {global scale; set scale(type) asinh; ChangeScale}
  | BGCMD_ STRING_ {global pds9; set pds9(bg) $2; PrefsBgColor}
+ | BLINKCMD_ blink
  | BLUECMD_ {global current; set current(rgb) blue; RGBChannel}
  | CDCMD_ cd
  | CONSOLECMD_ {global ds9; OpenConsole; InitError $ds9(msg,src)}
@@ -401,6 +404,12 @@ wcssys : WCS_ {set _ wcs}
 
 align : {global current; set current(align) 1; AlignWCSFrame}
  | yesno {global current; set current(align) $1; AlignWCSFrame}
+ ;
+
+blink : {global current; set current(display) blink; DisplayMode}
+ | yes {global current; set current(display) blink; DisplayMode}
+ | no {global current; set current(display) single; DisplayMode}
+ | INTERVAL_ numeric {global blink; set blink(interval) [expr int($2*1000)]; DisplayMode}
  ;
 
 cd : STRING_ {cd $2}

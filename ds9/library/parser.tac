@@ -19,11 +19,14 @@ set file(load) 0
 %token ALIGNCMD_
 %token ASINHCMD_
 %token BGCMD_
+%token CURSORCMD_
 %token HELPCMD_
 %token HISTEQUCMD_
+%token ICONIFYCMD_
 %token IRAFALIGNCMD_
 %token LINEARCMD_
 %token LOGCMD_
+%token LOWERCMD_
 %token NANCMD_
 %token ORIENTCMD_
 %token PANCMD_
@@ -32,11 +35,14 @@ set file(load) 0
 %token PRIVATECMD_
 %token POWCMD_
 %token QUITCMD_
+%token RAISECMD_
 %token SCALECMD_
 %token SINHCMD_
 %token SLEEPCMD_
+%token SOURCECMD_
 %token SQUAREDCMD_
 %token SQRTCMD_
+%token THEMECMD_
 %token THREADSCMD_
 %token ZOOMCMD_
 %token ZSCALECMD_
@@ -125,12 +131,15 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | ALIGNCMD_ align
  | ASINHCMD_ {global scale; set scale(type) asinh; ChangeScale}
  | BGCMD_ STRING_ {global pds9; set pds9(bg) $2; PrefsBgColor}
+ | CURSORCMD_ INT_ INT_ {CursorCmd $2 $3}
  | HELPCMD_ {HelpCommand}
  | HISTEQUCMD_ {global scale; set scale(type) histequ; ChangeScale}
  # backward compatibility
+ | ICONIFYCMD_ iconify
  | IRAFALIGNCMD_ yesno {global pds9; set pds9(iraf) $2; PrefsIRAFAlign}
  | LINEARCMD_ {global scale; set scale(type) linear; ChangeScale}
  | LOGCMD_ {global scale; set scale(type) log; ChangeScale}
+ | LOWERCMD_ {global ds9; lower $ds9(top)}
  | NANCMD_ STRING_ {global pds9; set pds9(nan) $2; PrefsNanColor}
  | ORIENTCMD_ orient
  | PANCMD_ pan
@@ -140,11 +149,15 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | PRIVATECMD_ 
  | POWCMD_ {global scale; set scale(type) pow; ChangeScale}
  | QUITCMD_ {QuitDS9}
+ | RAISECMD_ {global ds9; raise $ds9(top)}
  | SINHCMD_ {global scale; set scale(type) sinh; ChangeScale}
  | SLEEPCMD_ {UpdateDS9; RealizeDS9} sleep
+ | SOURCECMD_ STRING_ {SourceFileCmd $2}
  | SQUAREDCMD_ {global scale; set scale(type) squared; ChangeScale}
  | SQRTCMD_ {global scale; set scale(type) sqrt; ChangeScale}
  | SCALECMD_ scale
+ # backward compatibility
+ | THEMECMD_
  | THREADSCMD_ INT_ {global ds9; set ds9(threads) $2; ChangeThreads}
  | ZOOMCMD_ {ProcessRealizeDS9} zoom
  | ZSCALECMD_ zscale
@@ -280,6 +293,11 @@ optDeg : {set _ degrees}
 
 align : {global current; set current(align) 1; AlignWCSFrame}
  | yesno {global current; set current(align) $1; AlignWCSFrame}
+ ;
+
+iconify : {global ds9; wm iconify $ds9(top)}
+ | yes {global ds9; wm iconify $ds9(top)}
+ | no {global ds9; wm deiconify $ds9(top)}
  ;
 
 orient : orientation {global current; set current(orient) $1; ChangeOrient}

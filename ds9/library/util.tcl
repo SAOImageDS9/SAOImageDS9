@@ -1336,6 +1336,28 @@ proc ProcessCursorCmd {varname iname} {
     }
 }
 
+proc CursorCmd {x y} {
+    global current
+
+    if {$current(frame) != {}} {
+	switch -- $current(mode) {
+	    none {$current(frame) warp $x $y}
+	    pointer -
+	    region {MarkerArrowKey $current(frame) $x $y}
+	    catalog {MarkerArrowKey $current(frame) $x $y}
+	    crosshair {CrosshairArrowKey $current(frame) $x $y}
+	    colorbar {}
+	    pan {Pan $x $y canvas}
+	    zoom -
+	    rotate -
+	    crop {}
+	    analysis {IMEArrowKey $current(frame) $x $y}
+	    examine -
+	    iexam {}
+	}
+    }
+}
+
 proc ProcessSendDataCmd {proc id param sock fn} {
     global cube
     global blink
@@ -1489,12 +1511,13 @@ proc ProcessSleepCmd {varname iname} {
 proc ProcessSourceCmd {varname iname} {
     upvar $varname var
     upvar $iname i
+    SourceFileCmd [lindex $var $i]
+}
 
+proc SourceFileCmd {fn} {
     # we need to be realized
     # you never know what someone will try to do
     ProcessRealizeDS9
-
-    set fn [lindex $var $i]
     uplevel #0 "source $fn"
 }
 

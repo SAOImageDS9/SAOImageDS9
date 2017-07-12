@@ -30,6 +30,8 @@ E   [Ee][+-]?{D}+
 -log	    {return $::LOGCMD_}
 -nan	    {return $::NANCMD_}
 -orient	    {return $::ORIENTCMD_}
+-pan	    {return $::PANCMD_}
+-pixeltable {return $::PIXELTABLECMD_}
 -private    {return $::PRIVATECMD_}
 -pow	    {return $::POWCMD_}
 -quit	    {return $::QUITCMD_}
@@ -38,6 +40,7 @@ E   [Ee][+-]?{D}+
 -sleep	    {return $::SLEEPCMD_}
 -squared    {return $::SQUAREDCMD_}
 -sqrt	    {return $::SQRTCMD_}
+-zoom	    {return $::ZOOMCMD_}
 -zscale	    {return $::ZSCALECMD_}
 
 aip    	    {return $::AIP_}
@@ -62,10 +65,12 @@ elevation   {return $::ELEVATION_}
 el	    {return $::ELEVATION_}
 exp	    {return $::EXP_}
 false	    {return $::FALSE_}
+fit	    {return $::FIT_}
 frame	    {return $::FRAME_}
 global	    {return $::GLOBAL_}
 highlite    {return $::HIGHLITE_}
 histequ	    {return $::HISTEQU_}
+in	    {return $::IN_}
 linear	    {return $::LINEAR_}
 limits	    {return $::LIMITS_}
 line	    {return $::LINE_}
@@ -84,6 +89,7 @@ none	    {return $::NONE_}
 off	    {return $::OFF_}
 on	    {return $::ON_}
 open	    {return $::OPEN_}
+out	    {return $::OUT_}
 pow	    {return $::POW_}
 sample	    {return $::SAMPLE_}
 save	    {return $::SAVE_}
@@ -96,6 +102,7 @@ size	    {return $::SIZE_}
 squared	    {return $::SQUARED_}
 sqrt	    {return $::SQRT_}
 survey	    {return $::SURVEY_}
+to	    {return $::TO_}
 true	    {return $::TRUE_}
 update	    {return $::UPDATE_}
 user	    {return $::USER_}

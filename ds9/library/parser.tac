@@ -25,6 +25,8 @@ set file(load) 0
 %token LOGCMD_
 %token NANCMD_
 %token ORIENTCMD_
+%token PANCMD_
+%token PIXELTABLECMD_
 %token PRIVATECMD_
 %token POWCMD_
 %token QUITCMD_
@@ -33,6 +35,7 @@ set file(load) 0
 %token SLEEPCMD_
 %token SQUAREDCMD_
 %token SQRTCMD_
+%token ZOOMCMD_
 %token ZSCALECMD_
 
 %token AIP_
@@ -54,10 +57,12 @@ set file(load) 0
 %token ELEVATION_
 %token EXP_
 %token FALSE_
+%token FIT_
 %token FRAME_
 %token GLOBAL_
 %token HIGHLITE_
 %token HISTEQU_
+%token IN_
 %token LIMITS_
 %token LINE_
 %token LINEAR_
@@ -76,6 +81,7 @@ set file(load) 0
 %token OFF_
 %token ON_
 %token OPEN_
+%token OUT_
 %token POW_
 %token SAMPLE_
 %token SAVE_
@@ -88,6 +94,7 @@ set file(load) 0
 %token SQUARED_
 %token SQRT_
 %token SURVEY_
+%token TO_
 %token TRUE_
 %token UPDATE_
 %token USER_
@@ -116,6 +123,8 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | LOGCMD_ {global scale; set scale(type) log; ChangeScale}
  | NANCMD_ STRING_ {global pds9; set pds9(nan) $2; PrefsNanColor}
  | ORIENTCMD_ orient
+ | PANCMD_ pan
+ | PIXELTABLECMD_ pixelTable
  | PRIVATECMD_ {
  # backword compatibility
  }
@@ -127,11 +136,24 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | SQRTCMD_ {global scale; set scale(type) sqrt; ChangeScale}
  | SCALECMD_ scale
  | STRING_ {CommandLineFileName $1}
+ | ZOOMCMD_ {ProcessRealizeDS9} zoom
  | ZSCALECMD_ zscale
  ;
 
 numeric	: REAL_ {set _ $1}
  | INT_ {set _ $1}
+ ;
+
+yes : YES_ {set _ 1}
+ | TRUE_ {set _ 1}
+ | ON_ {set _ 1}
+ | '1' {set _ 1}
+ ;
+
+no : NO_ {set _ 0}
+ | FALSE_ {set _ 0}
+ | OFF_ {set _ 0}
+# | '0' {set _ 0}
  ;
 
 yesno : YES_ {set _ 1}
@@ -260,6 +282,22 @@ orientation : NONE_ {set _ none}
  | XY_ {set _ xy}
  ;
 
+pan : {}
+ | OPEN_ {PanZoomDialog}
+ | CLOSE_ {PanZoomDestroyDialog}
+ | TO_ panTo
+ ;
+
+panTo : {}
+ ;
+
+pixelTable : {PixelTableDialog}
+ | yes {PixelTableDialog}
+ | OPEN_ {PixelTableDialog}
+ | no {PixelTableDestroyDialog}
+ | CLOSE_ {PixelTableDestroyDialog}
+ ;
+
 scale : scaleScales {global scale; set scale(type) $1; ChangeScale}
  | LOG_ scaleLog
  | DATASEC_ yesno
@@ -317,6 +355,20 @@ scaleScope : LOCAL_ {set _ local}
 
 sleep : {after 1000}
  | numeric {after [expr int($1*1000)]}
+ ;
+
+zoom : numeric {Zoom $1 $1}
+ | numeric numeric {Zoom $1 $2}
+ | OPEN_ {PanZoomDialog}
+ | CLOSE_ {PanZoomDestroyDialog}
+ | IN_ {Zoom 2 2}
+ | OUT_ {Zoom .5 .5}
+ | TO_ zoomTo
+ ;
+
+zoomTo: FIT_ {ZoomToFit}
+ | numeric {global zoom; set current(zoom) " $1 $1 "; ChangeZoom}
+ | numeric numeric {global zoom; set current(zoom) " $1 $2 "; ChangeZoom}
  ;
 
 zscale : {global zscale; set scale(mode) zscale; ChangeScaleMode}

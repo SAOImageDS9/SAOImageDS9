@@ -37,6 +37,7 @@ set file(load) 0
 %token LOGCMD_
 %token LOWERCMD_
 %token MINMAXCMD_
+%token MODECMD_
 %token NANCMD_
 %token ORIENTCMD_
 %token PANCMD_
@@ -78,10 +79,12 @@ set file(load) 0
 %token BGCOLOR_
 %token BORDER_
 %token BUFFERSIZE_
+%token CATALOG_
 %token CENTER_
 %token CLEAR_
 %token CLOSE_
 %token COLOR_
+%token COLORBAR_
 %token COLS_
 %token COLUMN_
 %token COLSZ_
@@ -98,6 +101,7 @@ set file(load) 0
 %token DELETE_
 %token DIRECTION_
 %token ELEVATION_
+%token EXAMINE_
 %token EXP_
 %token FACTOR_
 %token FALSE_
@@ -149,14 +153,18 @@ set file(load) 0
 %token ON_
 %token OPEN_
 %token OUT_
+%token PAN_
+%token POINTER_
 %token POW_
 %token PREV_
 %token PHYSICAL_
 %token REFRESH_
+%token REGION_
 %token RESET_
 %token RGB_
 %token RGBCUBE_
 %token RGBIMAGE_
+%token ROTATE_
 %token ROW_
 %token SAMPLE_
 %token SAVE_
@@ -210,8 +218,9 @@ set file(load) 0
 %token XY_
 %token Y_
 %token YES_
-%token ZSCALE_
 %token ZMAX_
+%token ZOOM_
+%token ZSCALE_
 
 %%
 
@@ -243,6 +252,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | LOGCMD_ {global scale; set scale(type) log; ChangeScale}
  | LOWERCMD_ {global ds9; lower $ds9(top)}
  | MINMAXCMD_ minmax
+ | MODECMD_ mode
  | NANCMD_ STRING_ {global pds9; set pds9(nan) $2; PrefsNanColor}
  | ORIENTCMD_ orient
  | PANCMD_ pan
@@ -633,7 +643,23 @@ minmax : {global scale; set scale(mode) minmax; ChangeScaleMode}
  | INTERVAL_ INT_ {global minmax; set minmax(sample) $2; ChangeMinMax}
  ;
 
-minmaxMode :
+minmaxMode : SCAN_ {set _ scan}
+ | SAMPLE_ {set _ sample}
+ | DATAMIN_ {set _ datamin}
+ | IRAFMIN_ {set _ irafmin}
+ ;
+
+mode : NONE_ {global current; set current(mode) none; ChangeMode}
+ # backward compatibility
+ | POINTER_ {global current; set current(mode) none; ChangeMode}
+ | REGION_ {global current; set current(mode) region; ChangeMode}
+ | CROSSHAIR_ {global current; set current(mode) crosshair; ChangeMode}
+ | COLORBAR_ {global current; set current(mode) colorbar; ChangeMode}
+ | PAN_ {global current; set current(mode) pan; ChangeMode}
+ | ZOOM_ {global current; set current(mode) zoom; ChangeMode}
+ | ROTATE_ {global current; set current(mode) rotate; ChangeMode}
+ | CATALOG_ {global current; set current(mode) catalog; ChangeMode}
+ | EXAMINE_ {global current; set current(mode) examine; ChangeMode}
  ;
 
 orient : orientation {global current; set current(orient) $1; ChangeOrient}

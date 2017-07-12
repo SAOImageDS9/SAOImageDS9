@@ -42,6 +42,7 @@ E   [Ee][+-]?{D}+
 -log	    {return $::LOGCMD_}
 -lower	    {return $::LOWERCMD_}
 -minmax	    {return $::MINMAXCMD_}
+-mode	    {return $::MODECMD_}
 -nan	    {return $::NANCMD_}
 -orient	    {return $::ORIENTCMD_}
 -pan	    {return $::PANCMD_}
@@ -85,10 +86,12 @@ bg	    {return $::BACKGROUND_}
 bgcolor	    {return $::BGCOLOR_}
 border	    {return $::BORDER_}
 buffersize  {return $::BUFFERSIZE_}
+catalog	    {return $::CATALOG_}
 center	    {return $::CENTER_}
 clear	    {return $::CLEAR_}
 close	    {return $::CLOSE_}
 color	    {return $::COLOR_}
+colorbar    {return $::COLORBAR_}
 cols	    {return $::COLS_}
 column	    {return $::COLUMN_}
 colsz	    {return $::COLSZ_}
@@ -106,6 +109,7 @@ degrees	    {return $::DEGREES_}
 direction   {return $::DIRECTION_}
 elevation   {return $::ELEVATION_}
 el	    {return $::ELEVATION_}
+examine	    {return $::EXAMINE_}
 exp	    {return $::EXP_}
 factor	    {return $::FACTOR_}
 false	    {return $::FALSE_}
@@ -157,14 +161,18 @@ off	    {return $::OFF_}
 on	    {return $::ON_}
 open	    {return $::OPEN_}
 out	    {return $::OUT_}
+pan	    {return $::PAN_}
+pointer	    {return $::POINTER_}
 pow	    {return $::POW_}
 prev	    {return $::PREV_}
 physical    {return $::PHYSICAL_}
+region	    {return $::REGION_}
 refresh	    {return $::REFRESH_}
 reset	    {return $::RESET_}
 rgb	    {return $::RGB_}
 rgbcube	    {return $::RGBCUBE_}
 rgbimage    {return $::RGBIMAGE_}
+rotate	    {return $::ROTATE_}
 row	    {return $::ROW_}
 sample	    {return $::SAMPLE_}
 save	    {return $::SAVE_}
@@ -219,8 +227,9 @@ x	    {return $::X_}
 xy	    {return $::XY_}
 y	    {return $::Y_}
 yes	    {return $::YES_}
-zscale	    {return $::ZSCALE_}
 zmax	    {return $::ZMAX_}
+zoom	    {return $::ZOOM_}
+zscale	    {return $::ZSCALE_}
 
 # INT
 [+-]?{D}+ {set ::yylval $yytext; return $::INT_}

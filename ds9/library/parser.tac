@@ -493,9 +493,9 @@ bin : CLOSE_ {BinDestroyDialog}
  | MATCH_ {MatchBinCurrent}
  | LOCK_ binLock
  | ABOUT_ binAbout
- | BUFFERSIZE_ INT_ {global bin; set bin(buffersize) $1; ChangeBinBufferSize}
- | COLS_ STRING_ STRING_ {BinCols $2 $3}
- | COLSZ_ STRING_ STRING_ STRING_ {BinCols $2 $3 $4}
+ | BUFFERSIZE_ INT_ {global bin; set bin(buffersize) $2; ChangeBinBufferSize}
+ | COLS_ STRING_ STRING_ {BinCols \"$2\" \"$3\" \"\"}
+ | COLSZ_ STRING_ STRING_ STRING_ {BinCols \"$2\" \"$3\" \"$4\"}
  | FACTOR_ binFactor
  | DEPTH_ INT_ {global bin; set bin(depth) $1; ChangeBinDepth}
  | FILTER_ STRING_ {BinFilter $2}

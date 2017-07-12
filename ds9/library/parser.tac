@@ -18,10 +18,13 @@ set file(load) 0
 %token 3DCMD_
 %token ALIGNCMD_
 %token ASINHCMD_
+%token BGCMD_
 %token HELPCMD_
 %token HISTEQUCMD_
 %token LINEARCMD_
 %token LOGCMD_
+%token NANCMD_
+%token ORIENTCMD_
 %token PRIVATECMD_
 %token POWCMD_
 %token QUITCMD_
@@ -89,6 +92,9 @@ set file(load) 0
 %token UPDATE_
 %token USER_
 %token VIEW_
+%token X_
+%token XY_
+%token Y_
 %token YES_
 %token ZSCALE_
 %token ZMAX_
@@ -103,10 +109,13 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | 3DCMD_ {3DDialog} 3d
  | ALIGNCMD_ align
  | ASINHCMD_ {global scale; set scale(type) asinh; ChangeScale}
+ | BGCMD_ STRING_ {global pds9; set pds9(bg) $2; PrefsBgColor}
  | HELPCMD_ {HelpCommand}
  | HISTEQUCMD_ {global scale; set scale(type) histequ; ChangeScale}
  | LINEARCMD_ {global scale; set scale(type) linear; ChangeScale}
  | LOGCMD_ {global scale; set scale(type) log; ChangeScale}
+ | NANCMD_ STRING_ {global pds9; set pds9(nan) $2; PrefsNanColor}
+ | ORIENTCMD_ orient
  | PRIVATECMD_ {
  # backword compatibility
  }
@@ -238,6 +247,17 @@ optDeg : {set _ degrees}
 
 align : {global current; set current(align) 1; AlignWCSFrame}
  | yesno {global current; set current(align) $1; AlignWCSFrame}
+ ;
+
+orient : orientation {global current; set current(orient) $1; ChangeOrient}
+ | OPEN_ {PanZoomDialog}
+ | CLOSE_ {PanZoomDestroyDialog}
+ ;
+
+orientation : NONE_ {set _ none}
+ | X_ {set _ x}
+ | Y_ {set _ y}
+ | XY_ {set _ xy}
  ;
 
 scale : scaleScales {global scale; set scale(type) $1; ChangeScale}

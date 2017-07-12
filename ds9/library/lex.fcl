@@ -21,11 +21,15 @@ E   [Ee][+-]?{D}+
 -3d	    {return $::3DCMD_}
 -align	    {return $::ALIGNCMD_}
 -asinh	    {return $::ASINHCMD_}
+-bg	    {return $::BGCMD_}
+-background {return $::BGCMD_}
 -exit	    {return $::QUITCMD_}
 -help	    {return $::HELPCMD_}
 -histequ    {return $::HISTEQUCMD_}
 -linear	    {return $::LINEARCMD_}
 -log	    {return $::LOGCMD_}
+-nan	    {return $::NANCMD_}
+-orient	    {return $::ORIENTCMD_}
 -private    {return $::PRIVATECMD_}
 -pow	    {return $::POWCMD_}
 -quit	    {return $::QUITCMD_}
@@ -97,6 +101,9 @@ update	    {return $::UPDATE_}
 user	    {return $::USER_}
 view	    {return $::VIEW_}
 vp    	    {return $::VIEW_}
+x	    {return $::X_}
+xy	    {return $::XY_}
+y	    {return $::Y_}
 yes	    {return $::YES_}
 zscale	    {return $::ZSCALE_}
 zmax	    {return $::ZMAX_}

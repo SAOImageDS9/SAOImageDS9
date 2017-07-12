@@ -26,6 +26,7 @@ set file(load) 0
 %token NANCMD_
 %token ORIENTCMD_
 %token PANCMD_
+%token PREFSCMD_
 %token PIXELTABLECMD_
 %token PRIVATECMD_
 %token POWCMD_
@@ -44,7 +45,9 @@ set file(load) 0
 %token ASINH_
 %token AZIMUTH_
 %token BACKGROUND_
+%token BGCOLOR_
 %token BORDER_
+%token CLEAR_
 %token CLOSE_
 %token COLOR_
 %token COMPASS_
@@ -63,6 +66,7 @@ set file(load) 0
 %token HIGHLITE_
 %token HISTEQU_
 %token IN_
+%token IRAFALIGN_
 %token LIMITS_
 %token LINE_
 %token LINEAR_
@@ -75,6 +79,7 @@ set file(load) 0
 %token MIP_
 %token MODE_
 %token NAME_
+%token NANCOLOR_
 %token NEW_
 %token NO_
 %token NONE_
@@ -94,6 +99,7 @@ set file(load) 0
 %token SQUARED_
 %token SQRT_
 %token SURVEY_
+%token THREADS_
 %token TO_
 %token TRUE_
 %token UPDATE_
@@ -125,6 +131,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | ORIENTCMD_ orient
  | PANCMD_ pan
  | PIXELTABLECMD_ pixelTable
+ | PREFSCMD_ prefs
  | PRIVATECMD_ {
  # backword compatibility
  }
@@ -296,6 +303,13 @@ pixelTable : {PixelTableDialog}
  | OPEN_ {PixelTableDialog}
  | no {PixelTableDestroyDialog}
  | CLOSE_ {PixelTableDestroyDialog}
+ ;
+
+prefs : CLEAR_ {ClearPrefs}
+ | BGCOLOR_ STRING_ {global pds9; set pds9(bg) $2; PrefsBgColor}
+ | NANCOLOR_ STRING_ {global pds9; set pds9(nan) $2; PrefsNanColor}
+ | THREADS_ INT_ {global pds9; set ds9(threads) $2; ChangeThreads}
+ | IRAFALIGN_ yesno {global pds9; set pds9(iraf) $2; PrefsIRAFAlign}
  ;
 
 scale : scaleScales {global scale; set scale(type) $1; ChangeScale}

@@ -32,6 +32,7 @@ E   [Ee][+-]?{D}+
 -orient	    {return $::ORIENTCMD_}
 -pan	    {return $::PANCMD_}
 -pixeltable {return $::PIXELTABLECMD_}
+-prefs	    {return $::PREFSCMD_}
 -private    {return $::PRIVATECMD_}
 -pow	    {return $::POWCMD_}
 -quit	    {return $::QUITCMD_}
@@ -51,7 +52,9 @@ azimuth	    {return $::AZIMUTH_}
 az	    {return $::AZIMUTH_}
 background  {return $::BACKGROUND_}
 bg	    {return $::BACKGROUND_}
+bgcolor	    {return $::BGCOLOR_}
 border	    {return $::BORDER_}
+clear	    {return $::CLEAR_}
 close	    {return $::CLOSE_}
 color	    {return $::COLOR_}
 compass	    {return $::COMPASS_}
@@ -71,6 +74,7 @@ global	    {return $::GLOBAL_}
 highlite    {return $::HIGHLITE_}
 histequ	    {return $::HISTEQU_}
 in	    {return $::IN_}
+irafalign   {return $::IRAFALIGN_}
 linear	    {return $::LINEAR_}
 limits	    {return $::LIMITS_}
 line	    {return $::LINE_}
@@ -83,6 +87,7 @@ minmax	    {return $::MINMAX_}
 mip	    {return $::MIP_}
 mode	    {return $::MODE_}
 name	    {return $::NAME_}
+nancolor    {return $::NANCOLOR_}
 new	    {return $::NEW_}
 no	    {return $::NO_}
 none	    {return $::NONE_}
@@ -102,6 +107,7 @@ size	    {return $::SIZE_}
 squared	    {return $::SQUARED_}
 sqrt	    {return $::SQRT_}
 survey	    {return $::SURVEY_}
+threads	    {return $::THREADS_}
 to	    {return $::TO_}
 true	    {return $::TRUE_}
 update	    {return $::UPDATE_}

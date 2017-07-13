@@ -25,6 +25,7 @@ set file(load) 0
 %token BLINKCMD_
 %token CDCMD_
 %token CONSOLECMD_
+%token CROPCMD_
 %token CUBECMD_
 %token CURSORCMD_
 %token GREENCMD_
@@ -85,6 +86,7 @@ set file(load) 0
 %token AXES_
 %token AXIS_
 %token AZIMUTH_
+%token B1950_
 %token BACK_
 %token BACKGROUND_
 %token BGCOLOR_
@@ -117,6 +119,7 @@ set file(load) 0
 %token DETECTOR_
 %token DELETE_
 %token DIRECTION_
+%token ECLIPTIC_
 %token ELEVATION_
 %token EXAMINE_
 %token EXP_
@@ -125,10 +128,13 @@ set file(load) 0
 %token FILTER_
 %token FIRST_
 %token FIT_
+%token FK4_
+%token FK5_
 %token FORWARD_
 %token FRAME_
 %token FRAMENO_
 %token FUNCTION_
+%token GALATIC_
 %token GAP_
 %token GLOBAL_
 %token GREEN_
@@ -136,12 +142,14 @@ set file(load) 0
 %token HIDE_
 %token HIGHLITE_
 %token HISTEQU_
+%token ICRS_
 %token IMAGE_
 %token IN_
 %token INTERVAL_
 %token IRAF_
 %token IRAFALIGN_
 %token IRAFMIN_
+%token J2000_
 %token LAST_
 %token LAYOUT_
 %token LIMITS_
@@ -264,6 +272,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | BLUECMD_ {global current; set current(rgb) blue; RGBChannel}
  | CDCMD_ cd
  | CONSOLECMD_ {global ds9; OpenConsole; InitError $ds9(msg,src)}
+ | CROPCMD_ {ProcessRealizeDS9} crop
  | CUBECMD_ {CubeDialog} cube
  | CURSORCMD_ INT_ INT_ {CursorCmd $2 $3}
  | FITSCMD_ fits
@@ -334,7 +343,16 @@ yesno : YES_ {set _ 1}
 # | '0' {set _ 0}
  ;
 
-degArcminArcsec : DEGREES_ {set _ degrees}
+skyframe : FK4_ {set _ fk4}
+ | B1950_ {set _ fk4}
+ | FK5_ {set _ fk5}
+ | J2000_ {set _ fk5}
+ | ICRS_ {set _ icrs}
+ | GALATIC_ {set _ galactic}
+ | ECLIPTIC_ {set _ ecliptic}
+ ;
+
+sysdist : DEGREES_ {set _ degrees}
  | ARCMIN_ {set _ arcmin}
  | ARCSEC_ {set _ arcsec}
  ;
@@ -456,7 +474,7 @@ mosaicType : IRAF_ {set _ iraf}
    set dtwomass(width) $1
    set dtwomass(height) $2
  }
- | numeric numeric degArcminArcsec {
+ | numeric numeric sysdist {
    global dtwomass
    set dtwomass(width) $1
    set dtwomass(height) $2
@@ -575,6 +593,29 @@ blockTo : INT_ {global block; set block(factor) " $1 $1 "; ChangeBlock}
 cd : STRING_ {cd $2}
  | '.' {cd .}
  | '/' {cd /}
+ ;
+
+crop : numeric numeric numeric numeric {global current; $current(frame) crop center $1 $2 image fk5 $3 $4 image degrees}
+ | numeric numeric numeric numeric coordsys {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 degrees}
+ | numeric numeric numeric numeric coordsys skyframe {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 degrees}
+ | numeric numeric numeric numeric coordsys skyframe sysdist {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
+ | numeric numeric numeric numeric skyframe {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs degrees}
+ | numeric numeric numeric numeric skyframe sysdist {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
+
+ | SEXSTR_ SEXSTR_ numeric numeric coordsys {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 degrees}
+ | SEXSTR_ SEXSTR_ numeric numeric coordsys skyframe {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 degrees}
+ | SEXSTR_ SEXSTR_ numeric numeric coordsys skyframe sysdist {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
+ | SEXSTR_ SEXSTR_ numeric numeric skyframe {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs degrees}
+ | SEXSTR_ SEXSTR_ numeric numeric skyframe sysdist {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
+
+ | OPEN_ {CropDialog}
+ | CLOSE_ {CropDestroyDialog}
+ | MATCH_ coordsys {MatchCropCurrent $2}
+ | LOCK_ coordsys {global crop; set crop(lock) $2; LockCropCurrent}
+ | LOCK_ NONE_ {global crop; set crop(lock) none; LockCropCurrent}
+ | RESET_ {CropReset}
+ | 3D_ numeric numeric {global current; $current(frame) crop 3d $2 $3 image}
+ | 3D_ numeric numeric coordsys {global current; $current(frame) crop 3d $2 $3 $4}
  ;
 
 cube : cubeSlice
@@ -735,6 +776,7 @@ mode : NONE_ {global current; set current(mode) none; ChangeMode}
  | PAN_ {global current; set current(mode) pan; ChangeMode}
  | ZOOM_ {global current; set current(mode) zoom; ChangeMode}
  | ROTATE_ {global current; set current(mode) rotate; ChangeMode}
+ | CROP_ {global current; set current(mode) rotate; ChangeMode}
  | CATALOG_ {global current; set current(mode) catalog; ChangeMode}
  | EXAMINE_ {global current; set current(mode) examine; ChangeMode}
  ;

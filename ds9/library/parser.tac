@@ -48,6 +48,7 @@ set file(load) 0
 %token QUITCMD_
 %token RAISECMD_
 %token REDCMD_
+%token RGBCMD_
 %token SCALECMD_
 %token SINGLECMD_
 %token SINHCMD_
@@ -73,24 +74,31 @@ set file(load) 0
 %token AUTO_
 %token AUTOMATIC_
 %token AVERAGE_
+%token AXES_
 %token AZIMUTH_
 %token BACK_
 %token BACKGROUND_
 %token BGCOLOR_
+%token BIN_
+%token BLOCK_
+%token BLUE_
 %token BORDER_
 %token BUFFERSIZE_
 %token CATALOG_
 %token CENTER_
+%token CHANNEL_
 %token CLEAR_
 %token CLOSE_
 %token COLOR_
 %token COLORBAR_
+%token COLORMAP_
 %token COLS_
 %token COLUMN_
 %token COLSZ_
 %token COMPASS_
 %token CONTRAST_
 %token COORD_
+%token CROP_
 %token CROSSHAIR_
 %token CURRENT_
 %token DATAMIN_
@@ -114,6 +122,7 @@ set file(load) 0
 %token FUNCTION_
 %token GAP_
 %token GLOBAL_
+%token GREEN_
 %token GRID_
 %token HIDE_
 %token HIGHLITE_
@@ -152,12 +161,14 @@ set file(load) 0
 %token OFF_
 %token ON_
 %token OPEN_
+%token ORDER_
 %token OUT_
 %token PAN_
 %token POINTER_
 %token POW_
 %token PREV_
 %token PHYSICAL_
+%token RED_
 %token REFRESH_
 %token REGION_
 %token RESET_
@@ -176,10 +187,13 @@ set file(load) 0
 %token SHOW_
 %token SINH_
 %token SIZE_
+%token SLICE_
+%token SMOOTH_
 %token SQUARED_
 %token SQRT_
 %token SUM_
 %token SURVEY_
+%token SYSTEM_
 %token THREADS_
 %token TO_
 %token TRUE_
@@ -264,6 +278,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | QUITCMD_ {QuitDS9}
  | RAISECMD_ {global ds9; raise $ds9(top)}
  | REDCMD_ {global current; set current(rgb) red; RGBChannel}
+ | RGBCMD_ rgb
  | SINGLECMD_ {global current; ProcessRealizeDS9; set current(display) single; DisplayMode}
  | SINHCMD_ {global scale; set scale(type) sinh; ChangeScale}
  | SLEEPCMD_ {UpdateDS9; RealizeDS9} sleep
@@ -300,10 +315,10 @@ no : NO_ {set _ 0}
 yesno : YES_ {set _ 1}
  | TRUE_ {set _ 1}
  | ON_ {set _ 1}
+# | '1' {set _ 1}
  | NO_ {set _ 0}
  | FALSE_ {set _ 0}
  | OFF_ {set _ 0}
- | '1' {set _ 1}
 # | '0' {set _ 0}
  ;
 
@@ -700,6 +715,84 @@ prefs : CLEAR_ {ClearPrefs}
  | IRAFALIGN_ yesno {global pds9; set pds9(iraf) $2; PrefsIRAFAlign}
  ;
 
+rgb : {CreateRGBFrame}
+ | OPEN_ {RGBDialog}
+ | CLOSE_ {RGBDestroyDialog}
+ | RED_ {global current; set current(rgb) red; RGBChannel}
+ | GREEN_ {global current; set current(rgb) green; RGBChannel}
+ | BLUE_ {global current; set current(rgb) blue; RGBChannel}
+ | CHANNEL_ rgbChannel {global current; set current(rgb) $2; RGBChannel}
+ | LOCK_ rgbLock
+ | SYSTEM_ coordsys {global rgb; set rgb(system) $2; RGBSystem}
+ | VIEW_ rgbView
+ ;
+
+rgbChannel : RED_ {set _ red}
+ | GREEN_ {set _ green}
+ | BLUE_ {set _ blue}
+ ;
+
+rgbLock : WCS_ rgbLockWCS
+ | CROP_ rgbLockCrop
+ | SLICE_ rgbLockSlice
+ | BIN_ rgbLockBin
+ | AXES_ rgbLockAxes
+ | ORDER_ rgbLockAxes
+ | SCALE_ rgbLockScale
+ | LIMITS_ rgbLockScalelimits
+ | SCALELIMITS_ rgbLockScalelimits
+ | COLOR_ rgbLockColorbar
+ | COLORMAP_ rgbLockColorbar
+ | COLORBAR_ rgbLockColorbar
+ | BLOCK_ rgbLockBlock
+ | SMOOTH_ rgbLockSmooth
+ ;
+
+rgbLockWCS: {global rgb; set rgb(lock,wcs) 1;}
+ | yesno {global rgb; set rgb(lock,wcs) $1;}
+ ;
+
+rgbLockCrop: {global rgb; set rgb(lock,crop) 1;}
+ | yesno {global rgb; set rgb(lock,crop) $1;}
+ ;
+
+rgbLockSlice: {global rgb; set rgb(lock,slice) 1;}
+ | yesno {global rgb; set rgb(lock,slice) $1;}
+ ;
+
+rgbLockBin: {global rgb; set rgb(lock,bin) 1;}
+ | yesno {global rgb; set rgb(lock,bin) $1;}
+ ;
+
+rgbLockAxes: {global rgb; set rgb(lock,axes) 1;}
+ | yesno {global rgb; set rgb(lock,axes) $1;}
+ ;
+
+rgbLockScale: {global rgb; set rgb(lock,scale) 1;}
+ | yesno {global rgb; set rgb(lock,scale) $1;}
+ ;
+
+rgbLockScalelimits: {global rgb; set rgb(lock,scalelimits) 1;}
+ | yesno {global rgb; set rgb(lock,scalelimits) $1;}
+ ;
+
+rgbLockColorbar: {global rgb; set rgb(lock,colorbar) 1;}
+ | yesno {global rgb; set rgb(lock,colorbar) $1;}
+ ;
+
+rgbLockBlock: {global rgb; set rgb(lock,block) 1;}
+ | yesno {global rgb; set rgb(lock,block) $1;}
+ ;
+
+rgbLockSmooth: {global rgb; set rgb(lock,smooth) 1;}
+ | yesno {global rgb; set rgb(lock,smooth) $1;}
+ ;
+
+rgbView : RED_ yesno {global rgb; set rgb(red) $2; RGBView}
+ | GREEN_ yesno {global rgb; set rgb(green) $2; RGBView}
+ | BLUE_ yesno {global rgb; set rgb(blue) $2; RGBView}
+ ;
+
 scale : scaleScales {global scale; set scale(type) $1; ChangeScale}
  | LOG_ scaleLog
  | DATASEC_ yesno
@@ -817,6 +910,7 @@ proc yyerror {s} {
 }
 
 proc yydone {} {
+     puts stderr "z: $file(load)"
      global file
      if {$file(load) != 0} {
 	FinishLoadPost

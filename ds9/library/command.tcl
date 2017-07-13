@@ -60,6 +60,11 @@ proc ProcessCommand {argv argc} {
     YY_FLUSH_BUFFER
     yy_scan_string $argv
     yyparse
+
+    global file
+    if {$file(load) != 0} {
+	FinishLoadPost
+    }
     return
     
     if {0} {

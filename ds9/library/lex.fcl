@@ -29,6 +29,7 @@ E   [Ee][+-]?{D}+
 -blue	    {return $::BLUECMD_}
 -cd	    {return $::CDCMD_}
 -console    {return $::CONSOLECMD_}
+-cube	    {return $::CUBECMD_}
 -cursor	    {return $::CURSORCMD_}
 -exit	    {return $::QUITCMD_}
 -fits	    {return $::FITSCMD_}
@@ -68,6 +69,13 @@ E   [Ee][+-]?{D}+
 -zoom	    {return $::ZOOMCMD_}
 -zscale	    {return $::ZSCALECMD_}
 
+123	    {return $::123_}
+132	    {return $::132_}
+213	    {return $::213_}
+231	    {return $::231_}
+312	    {return $::312_}
+321	    {return $::321_}
+
 3d    	    {return $::3D_}
 about	    {return $::ABOUT_}
 aip    	    {return $::AIP_}
@@ -80,6 +88,7 @@ auto	    {return $::AUTO_}
 automatic   {return $::AUTOMATIC_}
 average	    {return $::AVERAGE_}
 axes	    {return $::AXES_}
+axis	    {return $::AXIS_}
 azimuth	    {return $::AZIMUTH_}
 az	    {return $::AZIMUTH_}
 back	    {return $::BACK_}
@@ -172,6 +181,7 @@ open	    {return $::OPEN_}
 order	    {return $::ORDER_}
 out	    {return $::OUT_}
 pan	    {return $::PAN_}
+play	    {return $::PLAY_}
 pointer	    {return $::POINTER_}
 pow	    {return $::POW_}
 prev	    {return $::PREV_}
@@ -199,6 +209,7 @@ slice	    {return $::SLICE_}
 smooth	    {return $::SMOOTH_}
 squared	    {return $::SQUARED_}
 sqrt	    {return $::SQRT_}
+stop	    {return $::STOP_}
 sum	    {return $::SUM_}
 survey	    {return $::SURVEY_}
 system	    {return $::SYSTEM_}

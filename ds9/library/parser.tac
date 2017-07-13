@@ -25,6 +25,7 @@ set file(load) 0
 %token BLINKCMD_
 %token CDCMD_
 %token CONSOLECMD_
+%token CUBECMD_
 %token CURSORCMD_
 %token GREENCMD_
 %token FITSCMD_
@@ -63,6 +64,13 @@ set file(load) 0
 %token ZOOMCMD_
 %token ZSCALECMD_
 
+%token 123_
+%token 132_
+%token 213_
+%token 231_
+%token 312_
+%token 321_
+
 %token 3D_
 %token ABOUT_
 %token AIP_
@@ -75,6 +83,7 @@ set file(load) 0
 %token AUTOMATIC_
 %token AVERAGE_
 %token AXES_
+%token AXIS_
 %token AZIMUTH_
 %token BACK_
 %token BACKGROUND_
@@ -164,6 +173,7 @@ set file(load) 0
 %token ORDER_
 %token OUT_
 %token PAN_
+%token PLAY_
 %token POINTER_
 %token POW_
 %token PREV_
@@ -191,6 +201,7 @@ set file(load) 0
 %token SMOOTH_
 %token SQUARED_
 %token SQRT_
+%token STOP_
 %token SUM_
 %token SURVEY_
 %token SYSTEM_
@@ -253,6 +264,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | BLUECMD_ {global current; set current(rgb) blue; RGBChannel}
  | CDCMD_ cd
  | CONSOLECMD_ {global ds9; OpenConsole; InitError $ds9(msg,src)}
+ | CUBECMD_ {CubeDialog} cube
  | CURSORCMD_ INT_ INT_ {CursorCmd $2 $3}
  | FITSCMD_ fits
  | FRAMECMD_ frame
@@ -278,7 +290,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | QUITCMD_ {QuitDS9}
  | RAISECMD_ {global ds9; raise $ds9(top)}
  | REDCMD_ {global current; set current(rgb) red; RGBChannel}
- | RGBCMD_ rgb
+ | RGBCMD_ {RGBDialog} rgb
  | SINGLECMD_ {global current; ProcessRealizeDS9; set current(display) single; DisplayMode}
  | SINHCMD_ {global scale; set scale(type) sinh; ChangeScale}
  | SLEEPCMD_ {UpdateDS9; RealizeDS9} sleep
@@ -565,6 +577,55 @@ cd : STRING_ {cd $2}
  | '/' {cd /}
  ;
 
+cube : cubeSlice
+ | OPEN_ {}
+ | CLOSE_ {CubeDestroyDialog}
+ | MATCH_ cubeMatch
+ | LOCK_ cubeLock
+ | PLAY_ {CubePlay}
+ | STOP_ {CubeStop}
+ | NEXT_ {CubeNext}
+ | PREV_ {CubePrev}
+ | FIRST_ {CubeFirst}
+ | LAST_ {CubeLast}
+ | INTERVAL_ numeric {global blink; set blink(interval) [expr int($2*1000)]}
+ | AXIS_ INT_ {global cube; set cube(axis) [expr $2-1]}
+ | AXES_ cubeAxes
+ | ORDER_ cubeAxes
+ ;
+
+cubeSlice : INT_ {global dcube; global cube; set dcube(wcs,2) $1; set cube(system) image; set cube(axis) 2; CubeApply 2}
+ | numeric coordsys {global dcube; global cube; set dcube(wcs,2) $1; set cube(system) $2; set cube(axis) 2; CubeApply 2}
+ | numeric coordsys INT_ {global dcube; global cube; set aa [expr $3-1]; set dcube(wcs,$aa) $1; set cube(system) $2; set cube(axis) $aa; CubeApply $aa}
+ ;
+
+cubeMatch : {MatchCubeCurrent image}
+ | coordsys {MatchCubeCurrent $1}
+ ;
+
+cubeLock : {global cube; set cube(lock) image; LockCubeCurrent}
+ | yes {global cube; set cube(lock) image; LockCubeCurrent}
+ | no {global cube; set cube(lock) none; LockCubeCurrent}
+ | coordsys {global cube; set cube(lock) $1; LockCubeCurrent}
+ | NONE_ {global cube; set cube(lock) none; LockCubeCurrent}
+ ;
+
+cubeAxes : cubeAxesOrder {global cube; set cube(axes) $1; CubeAxes}
+ | LOCK_ cubeAxesLock
+ ;
+
+cubeAxesOrder : 123_ {set _ 123}
+ | 132_ {set _ 132}
+ | 213_ {set _ 213}
+ | 231_ {set _ 231}
+ | 312_ {set _ 312}
+ | 321_ {set _ 321}
+ ;
+
+cubeAxesLock : {global cube; set cube(lock,axes) 1; LockAxesCurrent}
+ | yesno {global cube; set cube(lock,axes) $1; LockAxesCurrent}
+ ;
+
 fits : {global file; set file(type) fits}
  | MOSAIC_ mosaicType {global file; set file(type) mosaic; set file(mosaic) $2}
  | MOSAICIMAGE_ mosaicImageType {global file; set file(type) mosaicimage; set file(mosaic) $2}
@@ -716,7 +777,7 @@ prefs : CLEAR_ {ClearPrefs}
  ;
 
 rgb : {CreateRGBFrame}
- | OPEN_ {RGBDialog}
+ | OPEN_ {}
  | CLOSE_ {RGBDestroyDialog}
  | RED_ {global current; set current(rgb) red; RGBChannel}
  | GREEN_ {global current; set current(rgb) green; RGBChannel}

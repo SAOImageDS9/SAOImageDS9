@@ -30,6 +30,7 @@ E   [Ee][+-]?{D}+
 -cd	    {return $::CDCMD_}
 -console    {return $::CONSOLECMD_}
 -crop	    {return $::CROPCMD_}
+-crosshair  {return $::CROSSHAIRCMD_}
 -cube	    {return $::CUBECMD_}
 -cursor	    {return $::CURSORCMD_}
 -exit	    {return $::QUITCMD_}

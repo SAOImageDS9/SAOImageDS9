@@ -26,6 +26,7 @@ set file(load) 0
 %token CDCMD_
 %token CONSOLECMD_
 %token CROPCMD_
+%token CROSSHAIRCMD_
 %token CUBECMD_
 %token CURSORCMD_
 %token GREENCMD_
@@ -273,6 +274,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | CDCMD_ cd
  | CONSOLECMD_ {global ds9; OpenConsole; InitError $ds9(msg,src)}
  | CROPCMD_ {ProcessRealizeDS9} crop
+ | CROSSHAIRCMD_ crosshair
  | CUBECMD_ {CubeDialog} cube
  | CURSORCMD_ INT_ INT_ {CursorCmd $2 $3}
  | FITSCMD_ fits
@@ -601,7 +603,6 @@ crop : numeric numeric numeric numeric {global current; $current(frame) crop cen
  | numeric numeric numeric numeric coordsys skyframe sysdist {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
  | numeric numeric numeric numeric skyframe {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs degrees}
  | numeric numeric numeric numeric skyframe sysdist {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
-
  | SEXSTR_ SEXSTR_ numeric numeric coordsys {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 degrees}
  | SEXSTR_ SEXSTR_ numeric numeric coordsys skyframe {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 degrees}
  | SEXSTR_ SEXSTR_ numeric numeric coordsys skyframe sysdist {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
@@ -616,6 +617,18 @@ crop : numeric numeric numeric numeric {global current; $current(frame) crop cen
  | RESET_ {CropReset}
  | 3D_ numeric numeric {global current; $current(frame) crop 3d $2 $3 image}
  | 3D_ numeric numeric coordsys {global current; $current(frame) crop 3d $2 $3 $4}
+ ;
+
+crosshair : numeric numeric {CrosshairTo $1 $2 image fk5}
+ | numeric numeric coordsys {CrosshairTo $1 $2 $3 fk5}
+ | numeric numeric coordsys skyframe {CrosshairTo $1 $2 $3 $4}
+ | numeric numeric skyframe {CrosshairTo $1 $2 wcs $3}
+ | SEXSTR_ SEXSTR_ coordsys {CrosshairTo $1 $2 $3 fk5}
+ | SEXSTR_ SEXSTR_ coordsys skyframe {CrosshairTo $1 $2 $3 $4}
+ | SEXSTR_ SEXSTR_ skyframe {CrosshairTo $1 $2 $3 fk5}
+ | MATCH_ coordsys {global crosshair; MatchCrosshairCurrent $2}
+ | LOCK_ coordsys {global crosshair; set crosshair(lock) $2; LockCrosshairCurrent}
+ | LOCK_ NONE_ {global crosshair; set crosshair(lock) none; LockCrosshairCurrent}
  ;
 
 cube : cubeSlice

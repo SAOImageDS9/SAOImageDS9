@@ -73,6 +73,7 @@ set file(load) 0
 %token THEMECMD_
 %token THREADSCMD_
 %token TILECMD_
+%token WCSCMD_
 %token WIDTHCMD_
 %token ZMAXCMD_
 %token ZOOMCMD_
@@ -88,8 +89,10 @@ set file(load) 0
 %token 3D_
 %token ABOUT_
 %token AIP_
+%token ALIGN_
 %token ALL_
 %token AMPLIFIER_
+%token APPEND_
 %token ARCMIN_
 %token ARCSEC_
 %token ASINH_
@@ -144,11 +147,12 @@ set file(load) 0
 %token FIT_
 %token FK4_
 %token FK5_
+%token FORMAT_
 %token FORWARD_
 %token FRAME_
 %token FRAMENO_
 %token FUNCTION_
-%token GALATIC_
+%token GALACTIC_
 %token GAP_
 %token GLOBAL_
 %token GREEN_
@@ -205,6 +209,7 @@ set file(load) 0
 %token RED_
 %token REFRESH_
 %token REGION_
+%token REPLACE_
 %token RESET_
 %token RGB_
 %token RGBCUBE_
@@ -221,6 +226,8 @@ set file(load) 0
 %token SHOW_
 %token SINH_
 %token SIZE_
+%token SKY_
+%token SKYFORMAT_
 %token SLICE_
 %token SMOOTH_
 %token SQUARED_
@@ -293,7 +300,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | CMAPCMD_ {ProcessRealizeDS9} cmap
  | CONSOLECMD_ {global ds9; OpenConsole; InitError $ds9(msg,src)}
  | CROPCMD_ {ProcessRealizeDS9} crop
- | CROSSHAIRCMD_ crosshair
+ | CROSSHAIRCMD_ {ProcessRealizeDS9} crosshair
  | CUBECMD_ {CubeDialog} cube
  | CURSORCMD_ int int {CursorCmd $2 $3}
  | FITSCMD_ fits
@@ -312,8 +319,8 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | MINMAXCMD_ minmax
  | MODECMD_ mode
  | NANCMD_ STRING_ {global pds9; set pds9(nan) $2; PrefsNanColor}
- | ORIENTCMD_ orient
- | PANCMD_ pan
+ | ORIENTCMD_ {ProcessRealizeDS9} orient
+ | PANCMD_ {ProcessRealizeDS9} pan
  | PIXELTABLECMD_ pixelTable
  | PREFSCMD_ prefs
  # backward compatibility
@@ -326,7 +333,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | SINGLECMD_ {global current; ProcessRealizeDS9; set current(display) single; DisplayMode}
  | SINHCMD_ {global scale; set scale(type) sinh; ChangeScale}
  | SLEEPCMD_ {UpdateDS9; RealizeDS9} sleep
- | SOURCECMD_ STRING_ {SourceFileCmd $2}
+ | SOURCECMD_ STRING_ {SourceCmd $2}
  | SQUAREDCMD_ {global scale; set scale(type) squared; ChangeScale}
  | SQRTCMD_ {global scale; set scale(type) sqrt; ChangeScale}
  | SCALECMD_ scale
@@ -334,6 +341,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | THEMECMD_
  | THREADSCMD_ int {global ds9; set ds9(threads) $2; ChangeThreads}
  | TILECMD_ tile
+ | WCSCMD_ wcs
  | WIDTHCMD_ int {global canvas; RealizeDS9; set canvas(width) $2; UpdateView}
  | ZMAXCMD_ {global scale; set scale(mode) zmax; ChangeScaleMode}
  | ZOOMCMD_ {ProcessRealizeDS9} zoom
@@ -390,18 +398,22 @@ skysize : numeric numeric {global yy; set yy(w) $1; set yy(h) $2; set yy(rformat
  | numeric numeric skydist {global yy; set yy(w) $1; set yy(h) $2; set yy(rformat) $3}
  ;
 
-skydist : DEGREES_ {set _ degrees}
- | ARCMIN_ {set _ arcmin}
- | ARCSEC_ {set _ arcsec}
- ;
-
 skyframe : FK4_ {set _ fk4}
  | B1950_ {set _ fk4}
  | FK5_ {set _ fk5}
  | J2000_ {set _ fk5}
  | ICRS_ {set _ icrs}
- | GALATIC_ {set _ galactic}
+ | GALACTIC_ {set _ galactic}
  | ECLIPTIC_ {set _ ecliptic}
+ ;
+
+skyformat : DEGREES_ {set _ degrees}
+ | SEXAGESIMAL_ {set _ sexagesimal}
+ ;
+
+skydist : DEGREES_ {set _ degrees}
+ | ARCMIN_ {set _ arcmin}
+ | ARCSEC_ {set _ arcsec}
  ;
 
 coordsys : IMAGE_ {set _ image}
@@ -1025,6 +1037,24 @@ tileGridMode : AUTOMATIC_ {set _ automatic}
 
 tileGridDir : X_ {set _ x}
  | Y_ {set _ y}
+ ;
+
+wcs : OPEN_ {WCSDialog}
+ | CLOSE_ {WCSDestroyDialog}
+ | SYSTEM_ wcssys {global wcs; set wcs(system) $2; UpdateWCS}
+ | SKY_ skyframe {global wcs; set wcs(sky) $2; UpdateWCS}
+ | FORMAT_ skyformat {global wcs; set wcs(skyformat) $2; UpdateWCS}
+ | SKYFORMAT_ skyformat {global wcs; set wcs(skyformat) $2; UpdateWCS}
+ | ALIGN_ yesno {global current; set current(align) $2; AlignWCSFrame}
+ | RESET_ {WCSResetCmd 1}
+ | RESET_ int {WCSResetCmd $2} 
+ | REPLACE_ STRING_
+ | REPLACE_ int STRING_
+ | APPEND_ STRING_
+ | APPEND_ int STRING_
+ | wcssys {global wcs; set wcs(system) $1; UpdateWCS}
+ | skyframe {global wcs; set wcs(sky) $1; UpdateWCS}
+ | skyformat {global wcs; set wcs(skyformat) $1; UpdateWCS}
  ;
 
 zoom : numeric {Zoom $1 $1}

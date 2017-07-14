@@ -70,6 +70,7 @@ E   [Ee][+-]?{D}+
 -theme	    {return $::THREMECMD_}
 -threads    {return $::THREADSCMD_}
 -tile	    {return $::TILECMD_}
+-wcs	    {return $::WCSCMD_}
 -width	    {return $::WIDTHCMD_}
 -zmax	    {return $::ZMAXCMD_}
 -zoom	    {return $::ZOOMCMD_}
@@ -86,8 +87,10 @@ E   [Ee][+-]?{D}+
 3d    	    {return $::3D_}
 about	    {return $::ABOUT_}
 aip    	    {return $::AIP_}
+align  	    {return $::ALIGN_}
 all    	    {return $::ALL_}
 amplifier   {return $::AMPLIFIER_}
+append	    {return $::APPEND_}
 arcmin	    {return $::ARCMIN_}
 arcsec	    {return $::ARCSEC_}
 asinh	    {return $::ASINH_}	
@@ -145,12 +148,13 @@ file	    {return $::FILE_}
 filter	    {return $::FILTER_}
 first	    {return $::FIRST_}
 fit	    {return $::FIT_}
-function    {return $::FUNCTION_}
+format	    {return $::FORMAT_}
 forward	    {return $::FORWARD_}
 frame	    {return $::FRAME_}
 frameno	    {return $::FRAMENO_}
+function    {return $::FUNCTION_}
 gap	    {return $::GAP_}
-galatic	    {return $::GALATIC_}
+galactic    {return $::GALACTIC_}
 global	    {return $::GLOBAL_}
 green	    {return $::GREEN_}
 grid	    {return $::GRID_}
@@ -206,6 +210,7 @@ physical    {return $::PHYSICAL_}
 region	    {return $::REGION_}
 refresh	    {return $::REFRESH_}
 red	    {return $::RED_}
+replace	    {return $::REPLACE_}
 reset	    {return $::RESET_}
 rgb	    {return $::RGB_}
 rgbcube	    {return $::RGBCUBE_}
@@ -222,6 +227,8 @@ sexagesimal {return $::SEXAGESIMAL_}
 show	    {return $::SHOW_}
 sinh	    {return $::SINH_}
 size	    {return $::SIZE_}
+sky	    {return $::SKY_}
+skyformat   {return $::SKYFORMAT_}
 slice	    {return $::SLICE_}
 smooth	    {return $::SMOOTH_}
 squared	    {return $::SQUARED_}

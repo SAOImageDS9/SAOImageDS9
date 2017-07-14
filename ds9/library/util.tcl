@@ -1511,10 +1511,10 @@ proc ProcessSleepCmd {varname iname} {
 proc ProcessSourceCmd {varname iname} {
     upvar $varname var
     upvar $iname i
-    SourceFileCmd [lindex $var $i]
+    SourceCmd [lindex $var $i]
 }
 
-proc SourceFileCmd {fn} {
+proc SourceCmd {fn} {
     # we need to be realized
     # you never know what someone will try to do
     ProcessRealizeDS9

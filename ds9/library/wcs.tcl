@@ -1249,6 +1249,15 @@ proc ProcessWCSCmd {varname iname sock fn} {
     }
 }
 
+proc WCSResetCmd {ext} {
+    global current
+    global rgb
+
+    RGBEvalLock rgb(lock,wcs) $current(frame) \
+	[list $current(frame) wcs reset $ext]
+    UpdateWCS
+}
+
 proc ProcessSendWCSCmd {proc id param} {
     global current
     global wcs

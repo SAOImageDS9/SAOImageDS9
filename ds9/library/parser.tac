@@ -31,6 +31,7 @@ set file(load) 0
 %token BLOCKCMD_
 %token BLUECMD_
 %token BLINKCMD_
+%token CATALOGCMD_
 %token CDCMD_
 %token CMAPCMD_
 %token CONSOLECMD_
@@ -87,11 +88,16 @@ set file(load) 0
 %token 312_
 %token 321_
 
+%token SB_
+%token STARBASE_
+
 %token 3D_
 %token ABOUT_
 %token AIP_
 %token ALIGN_
 %token ALL_
+%token ALLCOLS_
+%token ALLROWS_
 %token AMPLIFIER_
 %token APPEND_
 %token ARCMIN_
@@ -112,6 +118,7 @@ set file(load) 0
 %token BLUE_
 %token BORDER_
 %token BUFFERSIZE_
+%token CANCEL_
 %token CATALOG_
 %token CENTER_
 %token CHANNEL_
@@ -126,20 +133,26 @@ set file(load) 0
 %token COMPASS_
 %token CONTRAST_
 %token COORD_
+%token COORDINATE_
 %token CROP_
 %token CROSSHAIR_
+%token CSV_
 %token CURRENT_
 %token DATAMIN_
 %token DATASEC_
+%token DEC_
+%token DECR_
 %token DEGREES_
 %token DEPTH_
 %token DETECTOR_
 %token DELETE_
 %token DIRECTION_
 %token ECLIPTIC_
+%token EDIT_
 %token ELEVATION_
 %token EXAMINE_
 %token EXP_
+%token EXPORT_
 %token FACTOR_
 %token FALSE_
 %token FILE_
@@ -158,12 +171,15 @@ set file(load) 0
 %token GLOBAL_
 %token GREEN_
 %token GRID_
+%token HEADER_
 %token HIDE_
 %token HIGHLITE_
 %token HISTEQU_
 %token ICRS_
 %token IMAGE_
+%token IMPORT_
 %token IN_
+%token INCR_
 %token INTERVAL_
 %token INVERT_
 %token IRAF_
@@ -177,10 +193,12 @@ set file(load) 0
 %token LINEAR_
 %token LOAD_
 %token LOCAL_
+%token LOCATION_
 %token LOCK_
 %token LOG_
 %token MANUAL_
 %token MATCH_
+%token MAXROWS_
 %token MECUBE_
 %token METHOD_
 %token MINMAX_
@@ -202,27 +220,37 @@ set file(load) 0
 %token ORDER_
 %token OUT_
 %token PAN_
+%token PANTO_
+%token PHYSICAL_
 %token PLAY_
+%token PLOT_
 %token POINTER_
 %token POW_
 %token PREV_
-%token PHYSICAL_
+%token PRINT_
+%token PSKY_
+%token PSYSTEM_
+%token RA_
 %token RED_
 %token REFRESH_
 %token REGION_
+%token REGIONS_
 %token REPLACE_
 %token RESET_
+%token RETRIEVE_
 %token RGB_
 %token RGBCUBE_
 %token RGBIMAGE_
 %token ROTATE_
 %token ROW_
+%token SAMP_
 %token SAMPLE_
 %token SAVE_
 %token SCALE_
 %token SCALELIMITS_
 %token SCAN_
 %token SCOPE_
+%token SERVER_
 %token SEXAGESIMAL_
 %token SHOW_
 %token SINH_
@@ -233,18 +261,22 @@ set file(load) 0
 %token SMOOTH_
 %token SQUARED_
 %token SQRT_
+%token SORT_
 %token STOP_
 %token SUM_
 %token SURVEY_
+%token SYMBOL_
 %token SYSTEM_
 %token THREADS_
 %token TAG_
 %token TO_
 %token TRUE_
+%token TSV_
 %token UPDATE_
 %token USER_
 %token VALUE_
 %token VIEW_
+%token VOT_
 %token VP_
 %token WCS_
 %token WCSA_
@@ -275,6 +307,7 @@ set file(load) 0
 %token WCSZ_
 %token WFPC2_
 %token X_
+%token XML_
 %token XY_
 %token Y_
 %token YES_
@@ -297,6 +330,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | BLINKCMD_ blink
  | BLOCKCMD_ {ProcessRealizeDS9} block
  | BLUECMD_ {global current; set current(rgb) blue; RGBChannel}
+ | CATALOGCMD_ catalog
  | CDCMD_ cd
  | CMAPCMD_ {ProcessRealizeDS9} cmap
  | CONSOLECMD_ {global ds9; OpenConsole; InitError $ds9(msg,src)}
@@ -616,6 +650,74 @@ blockTo : int {global block; set block(factor) " $1 $1 "; ChangeBlock}
  | int int {global block; set block(factor) " $1 $2 "; ChangeBlock}
  | FIT_ {BlockToFit}
  ; 
+
+catalog : {CATTool}
+ | LOAD_ catLoad
+ | FILE_ catLoad
+ | IMPORT_ catLoad
+ | STRING_ cat
+ | cat
+ ;
+
+catLoad: catLoadReader STRING_ {global icats; CATDialog cattool {} {} {} none; CATLoadFn [lindex $icat(cats) end] $2 $1; FileLast catfbox $2}
+ ;
+
+catLoadReader : XML_ {set _ VOTRead}
+ | VOT_ {set _ VOTRead}
+ | SB_ {set _ starbase_read}
+ | STARBASE_ {set _ starbase_read}
+ | CSV_ {set _ TSVRead}
+ | TSV_ {set _ TSVRead}
+ ;
+
+cat :
+ | ALLCOLS_ {set cvar(allrows) 1}
+ | ALLROWS_ {set cvar(allcols) 1}
+ | CANCEL_ {global cvarname; ARCancel $cvarname}
+ | CLEAR_ {global cvarname; CATOff $cvarname}
+ | CLOSE_ {global cvarname; CATDestroy $cvarname}
+ | COORDINATE_ skycoord skyframe {set cvar(x) $yy(x); set cvar(y) $yy(y); set cvar(sky) $yy(skyframe)}
+ | CROSSHAIR_ {global cvarname; CATCrosshair $cvarname}
+ | EDIT_ yesno {global cvarname; set cvar(edit) $2; CATEdit $cvarname}
+ | EXPORT_
+ | FILTER_
+ | HEADER_ {global cvarname; CATHeader $cvarname}
+ | HIDE_ {global cvarname; set cvar(show) 0; CATGenerate $cvarname}
+ | LOCATION_ {global cvarname; set cvar(loc) [lindex $var $i]; CATGenerate $cvarname}
+ | MATCH_
+ | MAXROWS_ int {set cvar(max) $2}
+ | NAME_ STRING_ {set cvar(name) $2}
+ | PANTO_ yesno {set cvar(panto) $2}
+ | PLOT_
+ | PRINT_ {global cvarname; CATPrint $cvarname}
+ | PSKY_ skyframe {global cvarname; set cvar(psky) $2; CATGenerate $cvarname}
+ | PSYSTEM_ wcssys {global cvarname; set cvar(psystem) $2; CATGenerate $cvarname}
+ | REGIONS_ {global cvarname; CATGenerateRegions $cvarname}
+ | RETRIEVE_ {global cvarname; CATApply $cvarname 1}
+ | SAMP_
+ | SAVE_
+ | SERVER_ STRING_ {global cvarname; set cvar(server) $2}
+ | SHOW_ {global cvarname; set cvar(show) 1; CATGenerate $cvarname}
+ | SIZE_
+ | SKY_
+ | SKYFORMAT_ skyformat {set cvar(skyformat) $2}
+ | SORT_ catSort
+ | SYMBOL_
+ | SYSTEM_
+ | UPDATE_ {global cvarname; CATUpdate $cvarname}
+ | X_ STRING_ {global cvarname; set cvar(colx) $2; CATGenerate $cvarname}
+ | RA_ STRING_ {global cvarname; set cvar(colx) $2; CATGenerate $cvarname}
+ | Y_ STRING_ {global cvarname; set cvar(coly) $2; CATGenerate $cvarname}
+ | DEC_ STRING_ {global cvarname; set cvar(coly) $2; CATGenerate $cvarname}
+ ;
+
+catSort : STRING_ {set cvar(sort) $1; CATTable $cvarname}
+ | STRING_ catSortDir {set cvar(sort) $1; set cvar(sort,dir) $2; CATTable $cvarname}
+ ;
+
+catSortDir : INCR_ {set _ "-increasing"}
+ | DECR_ {set _ "-decreasing"}
+ ;
 
 cd : STRING_ {cd $2}
  | '.' {cd .}

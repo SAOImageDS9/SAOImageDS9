@@ -37,8 +37,8 @@ E   [Ee][+-]?{D}+
 -fits	    {return $::FITSCMD_}
 -frame	    {return $::FRAMECMD_}
 -green	    {return $::GREENCMD_}
--help	    {return $::HELPCMD_}
 -height	    {return $::HEIGHTCMD_}
+-help	    {return $::HELPCMD_}
 -histequ    {return $::HISTEQUCMD_}
 -iconify    {return $::ICONIFYCMD_}
 -irafalign  {return $::IRAFALIGNCMD_}
@@ -230,7 +230,7 @@ true	    {return $::TRUE_}
 update	    {return $::UPDATE_}
 user	    {return $::USER_}
 view	    {return $::VIEW_}
-vp    	    {return $::VIEW_}
+vp    	    {return $::VP_}
 wcs	    {return $::WCS_}
 wcsa	    {return $::WCSA_}
 wcsb	    {return $::WCSB_}

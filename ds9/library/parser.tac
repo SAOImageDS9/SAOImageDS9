@@ -222,6 +222,7 @@ set file(load) 0
 %token UPDATE_
 %token USER_
 %token VIEW_
+%token VP_
 %token WCS_
 %token WCSA_
 %token WCSB_
@@ -495,7 +496,8 @@ mosaicType : IRAF_ {set _ iraf}
  ;
 
 3d : {Create3DFrame}
- | VIEW_ numeric numeric {global threed; set threed(az) $2; set threed(el) $3; 3DViewPoint}
+ | VIEW_ 3dView
+ | VP_ 3dView
  | AZIMUTH_ numeric {global threed; set threed(az) $2; 3DViewPoint}
  | ELEVATION_ numeric {global threed; set threed(el) $2; 3DViewPoint}
  | SCALE_ numeric {global threed; set threed(scale) $2; 3DScale}
@@ -506,6 +508,9 @@ mosaicType : IRAF_ {set _ iraf}
  | COMPASS_ 3dCompass
  | OPEN_ {}
  | CLOSE_ {3DDestroyDialog}
+ ;
+
+3dView : numeric numeric {global threed; set threed(az) $1; set threed(el) $2; 3DViewPoint}
  ;
 
 3dMethod : MIP_ {set _ mip}

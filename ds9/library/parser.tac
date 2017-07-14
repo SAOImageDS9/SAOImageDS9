@@ -63,6 +63,7 @@ set file(load) 0
 %token RAISECMD_
 %token REDCMD_
 %token RGBCMD_
+%token ROTATECMD_
 %token SCALECMD_
 %token SINGLECMD_
 %token SINHCMD_
@@ -330,6 +331,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | RAISECMD_ {global ds9; raise $ds9(top)}
  | REDCMD_ {global current; set current(rgb) red; RGBChannel}
  | RGBCMD_ {RGBDialog} rgb
+ | ROTATECMD_ {ProcessRealizeDS9} rotate
  | SINGLECMD_ {global current; ProcessRealizeDS9; set current(display) single; DisplayMode}
  | SINHCMD_ {global scale; set scale(type) sinh; ChangeScale}
  | SLEEPCMD_ {UpdateDS9; RealizeDS9} sleep
@@ -949,6 +951,12 @@ rgbLockSmooth: {global rgb; set rgb(lock,smooth) 1;}
 rgbView : RED_ yesno {global rgb; set rgb(red) $2; RGBView}
  | GREEN_ yesno {global rgb; set rgb(green) $2; RGBView}
  | BLUE_ yesno {global rgb; set rgb(blue) $2; RGBView}
+ ;
+
+rotate : numeric {Rotate $1}
+ | OPEN_ {PanZoomDialog}
+ | CLOSE_ {PanZoomDestroyDialog}
+ | TO_ numeric {global current; set current(rotate) $2; ChangeRotate}
  ;
 
 scale : scaleScales {global scale; set scale(type) $1; ChangeScale}

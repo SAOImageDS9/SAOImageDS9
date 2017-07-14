@@ -60,6 +60,7 @@ E   [Ee][+-]?{D}+
 -raise	    {return $::RAISECMD_}
 -red	    {return $::REDCMD_}
 -rgb	    {return $::RGBCMD_}
+-rotate	    {return $::ROTATECMD_}
 -scale	    {return $::SCALECMD_}
 -single	    {return $::SINGLECMD_}
 -sinh	    {return $::SINHCMD_}

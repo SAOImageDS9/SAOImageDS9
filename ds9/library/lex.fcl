@@ -28,6 +28,7 @@ E   [Ee][+-]?{D}+
 -block	    {return $::BLOCKCMD_}
 -blue	    {return $::BLUECMD_}
 -cd	    {return $::CDCMD_}
+-cmap	    {return $::CMAPCMD_}
 -console    {return $::CONSOLECMD_}
 -crop	    {return $::CROPCMD_}
 -crosshair  {return $::CROSSHAIRCMD_}
@@ -41,6 +42,7 @@ E   [Ee][+-]?{D}+
 -help	    {return $::HELPCMD_}
 -histequ    {return $::HISTEQUCMD_}
 -iconify    {return $::ICONIFYCMD_}
+-invert	    {return $::INVERTCMD_}
 -irafalign  {return $::IRAFALIGNCMD_}
 -linear	    {return $::LINEARCMD_}
 -log	    {return $::LOGCMD_}
@@ -73,6 +75,7 @@ E   [Ee][+-]?{D}+
 -zoom	    {return $::ZOOMCMD_}
 -zscale	    {return $::ZSCALECMD_}
 
+# integers which are also tokens
 123	    {return $::123_}
 132	    {return $::132_}
 213	    {return $::213_}
@@ -87,7 +90,7 @@ all    	    {return $::ALL_}
 amplifier   {return $::AMPLIFIER_}
 arcmin	    {return $::ARCMIN_}
 arcsec	    {return $::ARCSEC_}
-asinh	    {return $::ASINH_}
+asinh	    {return $::ASINH_}	
 auto	    {return $::AUTO_}
 automatic   {return $::AUTOMATIC_}
 average	    {return $::AVERAGE_}
@@ -138,6 +141,7 @@ fk4	    {return $::FK4_}
 fk5	    {return $::FK5_}
 factor	    {return $::FACTOR_}
 false	    {return $::FALSE_}
+file	    {return $::FILE_}
 filter	    {return $::FILTER_}
 first	    {return $::FIRST_}
 fit	    {return $::FIT_}
@@ -157,6 +161,7 @@ icrs	    {return $::ICRS_}
 image	    {return $::IMAGE_}
 in	    {return $::IN_}
 interval    {return $::INTERVAL_}
+invert	    {return $::INVERT_}
 iraf	    {return $::IRAF_}
 irafalign   {return $::IRAFALIGN_}
 irafmin	    {return $::IRAFMIN_}
@@ -166,6 +171,7 @@ layout	    {return $::LAYOUT_}
 limits	    {return $::LIMITS_}
 linear	    {return $::LINEAR_}
 line	    {return $::LINE_}
+load	    {return $::LOAD_}
 local	    {return $::LOCAL_}
 lock	    {return $::LOCK_}
 log	    {return $::LOG_}
@@ -225,10 +231,12 @@ sum	    {return $::SUM_}
 survey	    {return $::SURVEY_}
 system	    {return $::SYSTEM_}
 threads	    {return $::THREADS_}
+tag	    {return $::TAG_}
 to	    {return $::TO_}
 true	    {return $::TRUE_}
 update	    {return $::UPDATE_}
 user	    {return $::USER_}
+value	    {return $::VALUE_}
 view	    {return $::VIEW_}
 vp    	    {return $::VP_}
 wcs	    {return $::WCS_}

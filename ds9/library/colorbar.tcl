@@ -1291,6 +1291,56 @@ proc ProcessCmapCmd {varname iname} {
     }
 }
 
+proc CmapCmd {item} {
+    global current
+    global colorbar
+
+    switch -- [$current(frame) get type] {
+	base -
+	3d {
+	    set cmap $item
+	    # common variants on spellings
+	    switch -- [string tolower $cmap] {
+		gray {set cmap grey}
+	    }
+
+	    set id [colorbar list id]
+	    set found 0
+	    foreach ii $id {
+		set title [colorbar get name $ii]
+		if {[string equal -nocase $title $cmap]} {
+		    set colorbar(map) $title
+		    colorbar map "{$colorbar(map)}"
+		    $current(frame) colormap [colorbar get colormap]
+		    set colorbar(invert) [colorbar get invert]
+
+		    set found 1
+		    break
+		}
+	    }
+	    if {!$found} {
+		Error "[msgcat::mc {Unknown Colormap}] $cmap"
+	    }
+	}
+	rgb {}
+    }
+    LockColorCurrent
+    UpdateColorDialog
+}
+
+proc CmapValueCmd {c b} {
+    global current 
+
+    if {$current(frame) != {}} {
+	RGBEvalLockColorbar [list $current(colorbar) adjust $c $b]
+	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap begin]
+	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap motion [$current(colorbar) get colormap]]
+	RGBEvalLockCurrent rgb(lock,colorbar) [list $current(frame) colormap end]
+    }
+    LockColorCurrent
+    UpdateColorDialog
+}
+
 proc ProcessSendCmapCmd {proc id param} {
     global colorbar
     global current

@@ -32,6 +32,7 @@ set file(load) 0
 %token BLUECMD_
 %token BLINKCMD_
 %token CDCMD_
+%token CMAPCMD_
 %token CONSOLECMD_
 %token CROPCMD_
 %token CROSSHAIRCMD_
@@ -44,6 +45,7 @@ set file(load) 0
 %token HELPCMD_
 %token HISTEQUCMD_
 %token ICONIFYCMD_
+%token INVERTCMD_
 %token IRAFALIGNCMD_
 %token LINEARCMD_
 %token LOGCMD_
@@ -136,6 +138,7 @@ set file(load) 0
 %token EXP_
 %token FACTOR_
 %token FALSE_
+%token FILE_
 %token FILTER_
 %token FIRST_
 %token FIT_
@@ -157,6 +160,7 @@ set file(load) 0
 %token IMAGE_
 %token IN_
 %token INTERVAL_
+%token INVERT_
 %token IRAF_
 %token IRAFALIGN_
 %token IRAFMIN_
@@ -166,6 +170,7 @@ set file(load) 0
 %token LIMITS_
 %token LINE_
 %token LINEAR_
+%token LOAD_
 %token LOCAL_
 %token LOCK_
 %token LOG_
@@ -225,10 +230,12 @@ set file(load) 0
 %token SURVEY_
 %token SYSTEM_
 %token THREADS_
+%token TAG_
 %token TO_
 %token TRUE_
 %token UPDATE_
 %token USER_
+%token VALUE_
 %token VIEW_
 %token VP_
 %token WCS_
@@ -283,19 +290,21 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | BLOCKCMD_ {ProcessRealizeDS9} block
  | BLUECMD_ {global current; set current(rgb) blue; RGBChannel}
  | CDCMD_ cd
+ | CMAPCMD_ {ProcessRealizeDS9} cmap
  | CONSOLECMD_ {global ds9; OpenConsole; InitError $ds9(msg,src)}
  | CROPCMD_ {ProcessRealizeDS9} crop
  | CROSSHAIRCMD_ crosshair
  | CUBECMD_ {CubeDialog} cube
- | CURSORCMD_ INT_ INT_ {CursorCmd $2 $3}
+ | CURSORCMD_ int int {CursorCmd $2 $3}
  | FITSCMD_ fits
  | FRAMECMD_ frame
  | GREENCMD_ {global current; set current(rgb) green; RGBChannel}
- | HEIGHTCMD_ INT_ {global canvas; RealizeDS9; set canvas(height) $2; UpdateView}
+ | HEIGHTCMD_ int {global canvas; RealizeDS9; set canvas(height) $2; UpdateView}
  | HELPCMD_ {HelpCommand}
  | HISTEQUCMD_ {global scale; set scale(type) histequ; ChangeScale}
- # backward compatibility
  | ICONIFYCMD_ iconify
+ | INVERTCMD_ {global colorbar; set colorbar(invert) 1; InvertColorbar}
+ # backward compatibility
  | IRAFALIGNCMD_ yesno {global pds9; set pds9(iraf) $2; PrefsIRAFAlign}
  | LINEARCMD_ {global scale; set scale(type) linear; ChangeScale}
  | LOGCMD_ {global scale; set scale(type) log; ChangeScale}
@@ -323,17 +332,26 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | SCALECMD_ scale
  # backward compatibility
  | THEMECMD_
- | THREADSCMD_ INT_ {global ds9; set ds9(threads) $2; ChangeThreads}
+ | THREADSCMD_ int {global ds9; set ds9(threads) $2; ChangeThreads}
  | TILECMD_ tile
- | WIDTHCMD_ INT_ {global canvas; RealizeDS9; set canvas(width) $2; UpdateView}
+ | WIDTHCMD_ int {global canvas; RealizeDS9; set canvas(width) $2; UpdateView}
  | ZMAXCMD_ {global scale; set scale(mode) zmax; ChangeScaleMode}
  | ZOOMCMD_ {ProcessRealizeDS9} zoom
  | ZSCALECMD_ zscale
  | STRING_ {CommandLineFileName $1}
  ;
 
-numeric	: REAL_ {set _ $1}
- | INT_ {set _ $1}
+int : INT_ {set _ $1}
+ | 123_ {set _ $1}
+ | 132_ {set _ $1}
+ | 213_ {set _ $1}
+ | 231_ {set _ $1}
+ | 312_ {set _ $1}
+ | 321_ {set _ $1}
+ ;
+
+numeric	: int {set _ $1}
+ | REAL_ {set _ $1}
  ;
 
 yes : YES_ {set _ 1}
@@ -345,7 +363,7 @@ yes : YES_ {set _ 1}
 no : NO_ {set _ 0}
  | FALSE_ {set _ 0}
  | OFF_ {set _ 0}
-# | '0' {set _ 0}
+# | 0_ {set _ 0}
  ;
 
 yesno : YES_ {set _ 1}
@@ -533,11 +551,11 @@ bin : CLOSE_ {BinDestroyDialog}
  | MATCH_ {MatchBinCurrent}
  | LOCK_ binLock
  | ABOUT_ binAbout
- | BUFFERSIZE_ INT_ {global bin; set bin(buffersize) $2; ChangeBinBufferSize}
+ | BUFFERSIZE_ int {global bin; set bin(buffersize) $2; ChangeBinBufferSize}
  | COLS_ STRING_ STRING_ {BinCols \"$2\" \"$3\" \"\"}
  | COLSZ_ STRING_ STRING_ STRING_ {BinCols \"$2\" \"$3\" \"$4\"}
  | FACTOR_ binFactor
- | DEPTH_ INT_ {global bin; set bin(depth) $1; ChangeBinDepth}
+ | DEPTH_ int {global bin; set bin(depth) $1; ChangeBinDepth}
  | FILTER_ STRING_ {BinFilter $2}
  | FUNCTION_ binFunction {global bin; set bin(function) $1; ChangeBinFunction}
  | IN_ {Bin .5 .5}
@@ -565,8 +583,8 @@ binTo: binFactor
  | FIT_ {BinToFit}
  ;
 
-block : INT_ {Block $1 $1}
- | INT_ INT_ {Block $1 $2}
+block : int {Block $1 $1}
+ | int int {Block $1 $2}
  | OPEN_ {BlockDialog}
  | CLOSE_ {BlockDestroyDialog}
  | MATCH_ {MatchBlockCurrent}
@@ -580,14 +598,41 @@ blockLock : {global block; set block(lock) 1; LockBlockCurrent}
  | yesno {global block; set block(lock) $1; LockBlockCurrent}
  ;
 
-blockTo : INT_ {global block; set block(factor) " $1 $1 "; ChangeBlock}
- | INT_ INT_ {global block; set block(factor) " $1 $2 "; ChangeBlock}
+blockTo : int {global block; set block(factor) " $1 $1 "; ChangeBlock}
+ | int int {global block; set block(factor) " $1 $2 "; ChangeBlock}
  | FIT_ {BlockToFit}
  ; 
 
 cd : STRING_ {cd $2}
  | '.' {cd .}
  | '/' {cd /}
+ ;
+
+cmap : STRING_ {CmapCmd $1}
+ | OPEN_ {ColormapDialog}
+ | CLOSE_ {ColormapDestroyDialog}
+# backward compatibility
+ | MATCH_ {MatchColorCurrent}
+# backward compatibility
+ | LOCK_ cmapLock
+ | LOAD_ cmapLoad
+ | FILE_ cmapLoad
+ | SAVE_ STRING_ {SaveColormapFile $1; FileLast colormapfbox $1}
+ | INVERT_ yesno {global colorbar; set colorbar(invert) $2; InvertColorbar}
+ | TAG_ cmapTag
+ | VALUE_ numeric numeric {CmapValueCmd $2 $3}
+ ;
+
+cmapLock : {global colorbar; set colorbar(lock) 1; LockColorCurrent}
+ | yesno {global colorbar; set colorbar(lock) $1; LockColorCurrent}
+ ;
+
+cmapLoad : STRING_ {LoadColormapFile $1; FileLast colormapfbox $1}
+ ;
+
+cmapTag : LOAD_ STRING_ {LoadColorTag $2}
+ | SAVE_ STRING_ {global current; $current(colorbar) tag save $2}
+ | DELETE_ {DeleteColorTag}
  ;
 
 crop : skycoord numeric numeric {global yy; global current; $current(frame) crop center $yy(x) $yy(y) image fk5 $2 $3 image degrees}
@@ -628,14 +673,14 @@ cube : cubeSlice
  | FIRST_ {CubeFirst}
  | LAST_ {CubeLast}
  | INTERVAL_ numeric {global blink; set blink(interval) [expr int($2*1000)]}
- | AXIS_ INT_ {global cube; set cube(axis) [expr $2-1]}
+ | AXIS_ int {global cube; set cube(axis) [expr $2-1]}
  | AXES_ cubeAxes
  | ORDER_ cubeAxes
  ;
 
-cubeSlice : INT_ {global dcube; global cube; set dcube(wcs,2) $1; set cube(system) image; set cube(axis) 2; CubeApply 2}
+cubeSlice : int {global dcube; global cube; set dcube(wcs,2) $1; set cube(system) image; set cube(axis) 2; CubeApply 2}
  | numeric coordsys {global dcube; global cube; set dcube(wcs,2) $1; set cube(system) $2; set cube(axis) 2; CubeApply 2}
- | numeric coordsys INT_ {global dcube; global cube; set aa [expr $3-1]; set dcube(wcs,$aa) $1; set cube(system) $2; set cube(axis) $aa; CubeApply $aa}
+ | numeric coordsys int {global dcube; global cube; set aa [expr $3-1]; set dcube(wcs,$aa) $1; set cube(system) $2; set cube(axis) $aa; CubeApply $aa}
  ;
 
 cubeMatch : {MatchCubeCurrent image}
@@ -674,7 +719,7 @@ fits : {global file; set file(type) fits}
  | RGBIMAGE_ {global file; set file(type) rgbimage}
  ;
 
-frame : INT_ {CreateGotoFrame $1 base}
+frame : int {CreateGotoFrame $1 base}
  | MATCH_ coordsys {MatchFrameCurrent $2}
  | LOCK_ frameLock
  | CENTER_ frameCenter
@@ -690,7 +735,7 @@ frame : INT_ {CreateGotoFrame $1 base}
  | PREV_ {PrevFrame}
  | NEXT_ {NextFrame}
  | LAST_ {LastFrame}
- | FRAMENO_ INT_ {CreateGotoFrame $2 base}
+ | FRAMENO_ int {CreateGotoFrame $2 base}
  ;
 
 frameLock : coordsys {global panzoom; set panzoom(lock) $1; LockFrameCurrent}
@@ -699,17 +744,17 @@ frameLock : coordsys {global panzoom; set panzoom(lock) $1; LockFrameCurrent}
 
 frameCenter: {CenterCurrentFrame}
  | ALL_ {CenterAllFrame}
- | INT_ {CenterFrame Frame$1}
+ | int {CenterFrame Frame$1}
  ;
 
 frameClear: {ClearCurrentFrame}
  | ALL_ {ClearAllFrame}
- | INT_ {ClearFrame Frame$1}
+ | int {ClearFrame Frame$1}
  ;
 
 frameDelete: {DeleteCurrentFrame}
  | ALL_ {DeleteAllFrames}
- | INT_ {DeleteSingleFrame Frame$1}
+ | int {DeleteSingleFrame Frame$1}
  ;
 
 frameNew: {CreateFrame}
@@ -719,22 +764,22 @@ frameNew: {CreateFrame}
 
 frameReset: {ResetCurrentFrame}
  | ALL_ {ResetAllFrame}
- | INT_ {ResetFrame Frame$1}
+ | int {ResetFrame Frame$1}
  ;
 
 frameRefresh: {UpdateCurrentFrame}
  | ALL_ {UpdateAllFrame}
- | INT_ {UpdateFrame Frame$1}
+ | int {UpdateFrame Frame$1}
  ;
 
 frameHide: {global active; global current; set active($current(frame)) 0; UpdateActiveFrames}
  | ALL_ {ActiveFrameNone}
- | INT_ {global active; set active(Frame$1) 0; UpdateActiveFrames}
+ | int {global active; set active(Frame$1) 0; UpdateActiveFrames}
  ;
 
 frameShow: {}
  | ALL_ {ActiveFrameAll}
- | INT_ {global active; set active(Frame$1) 1; UpdateActiveFrames}
+ | int {global active; set active(Frame$1) 1; UpdateActiveFrames}
  ;
 
 frameMove : FIRST_ {MoveFirstFrame}
@@ -756,7 +801,7 @@ minmax : {global scale; set scale(mode) minmax; ChangeScaleMode}
  | DATAMIN_ {global minmax; set minmax(mode) datamin; ChangeMinMax}
  | IRAFMIN_ {global minmax; set minmax(mode) irafmin; ChangeMinMax}
  | MODE_ minmaxMode {global minmax; set minmax(mode) $2; ChangeMinMax}
- | INTERVAL_ INT_ {global minmax; set minmax(sample) $2; ChangeMinMax}
+ | INTERVAL_ int {global minmax; set minmax(sample) $2; ChangeMinMax}
  ;
 
 minmaxMode : SCAN_ {set _ scan}
@@ -812,7 +857,7 @@ prefs : CLEAR_ {ClearPrefs}
  # backward compatibility
  | NANCOLOR_ STRING_ {global pds9; set pds9(nan) $2; PrefsNanColor}
  # backward compatibility
- | THREADS_ INT_ {global pds9; set ds9(threads) $2; ChangeThreads}
+ | THREADS_ int {global pds9; set ds9(threads) $2; ChangeThreads}
  | IRAFALIGN_ yesno {global pds9; set pds9(iraf) $2; PrefsIRAFAlign}
  ;
 
@@ -970,8 +1015,8 @@ tileMode : GRID_ {set _ grid}
 tileGrid : {global tile; set tile(mode) grid; DisplayMode}
  | MODE_ tileGridMode {global tile; set tile(grid,mode) $2; DisplayMode}
  | DIRECTION_ tileGridDir {global tile; set tile(grid,dir) $2; DisplayMode}
- | LAYOUT_ INT_ INT_ {global tile; set tile(grid,col) $2; set tile(grid,row) $3; set tile(grid,mode) manual; DisplayMode}
- | GAP_ INT_ {global tile; set tile(grid,gap) $2; DisplayMode}
+ | LAYOUT_ int int {global tile; set tile(grid,col) $2; set tile(grid,row) $3; set tile(grid,mode) manual; DisplayMode}
+ | GAP_ int {global tile; set tile(grid,gap) $2; DisplayMode}
  ;
 
 tileGridMode : AUTOMATIC_ {set _ automatic}
@@ -998,8 +1043,8 @@ zoomTo: FIT_ {ZoomToFit}
 
 zscale : {global scale; set scale(mode) zscale; ChangeScaleMode}
  | CONTRAST_ numeric {global zscale; set zscale(contrast) $2; ChangeZScale}
- | SAMPLE_ INT_ {global zscale; set zscale(sample) $2; ChangeZScale}
- | LINE_ INT_ {global zscale; set zscale(line) $2; ChangeZScale}
+ | SAMPLE_ int {global zscale; set zscale(sample) $2; ChangeZScale}
+ | LINE_ int {global zscale; set zscale(line) $2; ChangeZScale}
  ;
 
 %%
@@ -1008,12 +1053,4 @@ proc yyerror {s} {
      puts stderr "parse error:"
      puts stderr "$::yy_buffer"
      puts stderr [format "%*s" $::yy_index ^]
-}
-
-proc yydone {} {
-     puts stderr "z: $file(load)"
-     global file
-     if {$file(load) != 0} {
-	FinishLoadPost
-     }
 }

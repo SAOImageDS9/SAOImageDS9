@@ -1,4 +1,12 @@
 %{
+global yy
+set yy(x) 0
+set yy(y) 0
+set yy(format) degrees
+set yy(w) 0
+set yy(h) 0
+set yy(rformat) degrees
+
 global file
 set file(type) fits
 set file(mode) {}
@@ -331,7 +339,7 @@ numeric	: REAL_ {set _ $1}
 yes : YES_ {set _ 1}
  | TRUE_ {set _ 1}
  | ON_ {set _ 1}
- | '1' {set _ 1}
+# | '1' {set _ 1}
  ;
 
 no : NO_ {set _ 0}
@@ -350,6 +358,25 @@ yesno : YES_ {set _ 1}
 # | '0' {set _ 0}
  ;
 
+skycoord : numeric numeric {global yy; set yy(x) $1; set yy(y) $2}
+ | SEXSTR_ SEXSTR_ {global yy; set yy(x) $1; set yy(y) $2}
+ ;
+
+skycoordformat : numeric numeric {global yy; set yy(x) $1; set yy(y) $2; set yy(format) degrees}
+ | numeric numeric DEGREES_ {global yy; set yy(x) $1; set yy(y) $2; set yy(format) degrees}
+ | SEXSTR_ SEXSTR_ {global yy; set yy(x) $1; set yy(y) $2; set yy(format) sexagesimal}
+ | SEXSTR_ SEXSTR_ SEXAGESIMAL_ {global yy; set yy(x) $1; set yy(y) $2; set yy(format) sexagesimal}
+ ;
+
+skysize : numeric numeric {global yy; set yy(w) $1; set yy(h) $2; set yy(rformat) degrees}
+ | numeric numeric skydist {global yy; set yy(w) $1; set yy(h) $2; set yy(rformat) $3}
+ ;
+
+skydist : DEGREES_ {set _ degrees}
+ | ARCMIN_ {set _ arcmin}
+ | ARCSEC_ {set _ arcsec}
+ ;
+
 skyframe : FK4_ {set _ fk4}
  | B1950_ {set _ fk4}
  | FK5_ {set _ fk5}
@@ -357,19 +384,6 @@ skyframe : FK4_ {set _ fk4}
  | ICRS_ {set _ icrs}
  | GALATIC_ {set _ galactic}
  | ECLIPTIC_ {set _ ecliptic}
- ;
-
-sysdist : DEGREES_ {set _ degrees}
- | ARCMIN_ {set _ arcmin}
- | ARCSEC_ {set _ arcsec}
- ;
-
-optSex : {set _ sexagesimal}
- | SEXAGESIMAL_ {set _ sexagesimal}
- ;
-
-optDeg : {set _ degrees}
- | DEGREES_ {set _ degrees}
  ;
 
 coordsys : IMAGE_ {set _ image}
@@ -445,8 +459,8 @@ mosaicType : IRAF_ {set _ iraf}
 2mass : {IMGSVRApply dtwomass 1}
  | STRING_ {global dtwomass; set dtwomass(name) $1; IMGSVRApply dtwomass 1}
  | NAME_ STRING_ {global dtwomass; set dtwomass(name) $2; IMGSVRApply dtwomass 1}
- | COORD_ 2massCoord {IMGSVRApply dtwomass 1}
- | SIZE_ 2massSize
+ | COORD_ skycoordformat {global yy; global dtwomass; set dtwomass(x) $yy(x); set dtwomass(y) $yy(y); set dtwomass(skyformat) $yy(format); set dtwomass(skyformat,msg) $yy(format); IMGSVRApply dtwomass 1}
+ | SIZE_ skysize {global yy; global dtwomass; set dtwomass(width) $yy(w); set dtwomass(height) $yy(h); set dtwomass(rformat) $yy(rformat); set dtwomass(rformat,msg) $yy(rformat)}
  | SAVE_ yesno {global dtwomass; set dtwomass(save) $2}
  | FRAME_ 2massFrame {global dtwomass; set dtwomass(mode) $2}
  | UPDATE_ FRAME_ {IMGSVRUpdate dtwomass; IMGSVRApply dtwomass 1}
@@ -456,38 +470,8 @@ mosaicType : IRAF_ {set _ iraf}
  | CLOSE_ {ARDestroy dtwomass}
  ;
 
-2massCoord : SEXSTR_ SEXSTR_ optSex {
-  global dtwomass
-  set dtwomass(x) $1
-  set dtwomass(y) $2
-  set dtwomass(skyformat) $3
-  set dtwomass(skyformat,msg) $3
- }
- | numeric numeric optDeg {
-  global dtwomass
-  set dtwomass(x) $1
-  set dtwomass(y) $2
-  set dtwomass(skyformat) $3
-  set dtwomass(skyformat,msg) $3
- }
- ;
-
 2massFrame : NEW_ {set _ new}
  | CURRENT_ {set _ current}
- ;
-
-2massSize : numeric numeric {
-   global dtwomass
-   set dtwomass(width) $1
-   set dtwomass(height) $2
- }
- | numeric numeric sysdist {
-   global dtwomass
-   set dtwomass(width) $1
-   set dtwomass(height) $2
-   set dtwomass(rformat) $3
-   set dtwomass(rformat,msg) $3
- }
  ;
 
 2massSurvey : 'j' {set _ $1}
@@ -606,17 +590,12 @@ cd : STRING_ {cd $2}
  | '/' {cd /}
  ;
 
-crop : numeric numeric numeric numeric {global current; $current(frame) crop center $1 $2 image fk5 $3 $4 image degrees}
- | numeric numeric numeric numeric coordsys {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 degrees}
- | numeric numeric numeric numeric coordsys skyframe {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 degrees}
- | numeric numeric numeric numeric coordsys skyframe sysdist {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
- | numeric numeric numeric numeric skyframe {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs degrees}
- | numeric numeric numeric numeric skyframe sysdist {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
- | SEXSTR_ SEXSTR_ numeric numeric coordsys {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 degrees}
- | SEXSTR_ SEXSTR_ numeric numeric coordsys skyframe {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 degrees}
- | SEXSTR_ SEXSTR_ numeric numeric coordsys skyframe sysdist {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
- | SEXSTR_ SEXSTR_ numeric numeric skyframe {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs degrees}
- | SEXSTR_ SEXSTR_ numeric numeric skyframe sysdist {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
+crop : skycoord numeric numeric {global yy; global current; $current(frame) crop center $yy(x) $yy(y) image fk5 $2 $3 image degrees}
+ | skycoord numeric numeric coordsys {global yy; global current; $current(frame) crop center $yy(x) $yy(y) $4 fk5 $2 $3 $4 degrees}
+ | skycoord numeric numeric coordsys skyframe {global yy; global current; $current(frame) crop center $yy(x) $yy(y) $4 $5 $2 $3 $4 degrees}
+ | skycoord numeric numeric coordsys skyframe skydist {global yy; global current; $current(frame) crop center $yy(x) $yy(y) $4 $5 $2 $3 $4 $6}
+ | skycoord numeric numeric skyframe {global yy; global current; $current(frame) crop center $yy(x) $yy(y) wcs $4 $2 $3 wcs degrees}
+ | skycoord numeric numeric skyframe skydist {global yy; global current; $current(frame) crop center $yy(x) $yy(y) wcs $4 $2 $3 wcs $5}
 
  | OPEN_ {CropDialog}
  | CLOSE_ {CropDestroyDialog}
@@ -628,13 +607,10 @@ crop : numeric numeric numeric numeric {global current; $current(frame) crop cen
  | 3D_ numeric numeric coordsys {global current; $current(frame) crop 3d $2 $3 $4}
  ;
 
-crosshair : numeric numeric {CrosshairTo $1 $2 image fk5}
- | numeric numeric coordsys {CrosshairTo $1 $2 $3 fk5}
- | numeric numeric coordsys skyframe {CrosshairTo $1 $2 $3 $4}
- | numeric numeric skyframe {CrosshairTo $1 $2 wcs $3}
- | SEXSTR_ SEXSTR_ coordsys {CrosshairTo $1 $2 $3 fk5}
- | SEXSTR_ SEXSTR_ coordsys skyframe {CrosshairTo $1 $2 $3 $4}
- | SEXSTR_ SEXSTR_ skyframe {CrosshairTo $1 $2 $3 fk5}
+crosshair : skycoord {global yy; CrosshairTo $yy(x) $yy(y) image fk5}
+ | skycoord coordsys {global yy; CrosshairTo $yy(x) $yy(y) $2 fk5}
+ | skycoord coordsys skyframe {global yy; CrosshairTo $yy(x) $yy(y) $2 $3}
+ | skycoord skyframe {global yy; CrosshairTo $yy(x) $yy(y) wcs $2}
  | MATCH_ coordsys {global crosshair; MatchCrosshairCurrent $2}
  | LOCK_ coordsys {global crosshair; set crosshair(lock) $2; LockCrosshairCurrent}
  | LOCK_ NONE_ {global crosshair; set crosshair(lock) none; LockCrosshairCurrent}

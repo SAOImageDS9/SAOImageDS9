@@ -32,6 +32,7 @@ set file(load) 0
 %token GREENCMD_
 %token FITSCMD_
 %token FRAMECMD_
+%token HEIGHTCMD_
 %token HELPCMD_
 %token HISTEQUCMD_
 %token ICONIFYCMD_
@@ -62,6 +63,7 @@ set file(load) 0
 %token THEMECMD_
 %token THREADSCMD_
 %token TILECMD_
+%token WIDTHCMD_
 %token ZMAXCMD_
 %token ZOOMCMD_
 %token ZSCALECMD_
@@ -280,6 +282,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | FITSCMD_ fits
  | FRAMECMD_ frame
  | GREENCMD_ {global current; set current(rgb) green; RGBChannel}
+ | HEIGHTCMD_ INT_ {global canvas; RealizeDS9; set canvas(height) $2; UpdateView}
  | HELPCMD_ {HelpCommand}
  | HISTEQUCMD_ {global scale; set scale(type) histequ; ChangeScale}
  # backward compatibility
@@ -313,6 +316,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | THEMECMD_
  | THREADSCMD_ INT_ {global ds9; set ds9(threads) $2; ChangeThreads}
  | TILECMD_ tile
+ | WIDTHCMD_ INT_ {global canvas; RealizeDS9; set canvas(width) $2; UpdateView}
  | ZMAXCMD_ {global scale; set scale(mode) zmax; ChangeScaleMode}
  | ZOOMCMD_ {ProcessRealizeDS9} zoom
  | ZSCALECMD_ zscale

@@ -38,6 +38,7 @@ E   [Ee][+-]?{D}+
 -frame	    {return $::FRAMECMD_}
 -green	    {return $::GREENCMD_}
 -help	    {return $::HELPCMD_}
+-height	    {return $::HEIGHTCMD_}
 -histequ    {return $::HISTEQUCMD_}
 -iconify    {return $::ICONIFYCMD_}
 -irafalign  {return $::IRAFALIGNCMD_}
@@ -67,6 +68,7 @@ E   [Ee][+-]?{D}+
 -theme	    {return $::THREMECMD_}
 -threads    {return $::THREADSCMD_}
 -tile	    {return $::TILECMD_}
+-width	    {return $::WIDTHCMD_}
 -zmax	    {return $::ZMAXCMD_}
 -zoom	    {return $::ZOOMCMD_}
 -zscale	    {return $::ZSCALECMD_}

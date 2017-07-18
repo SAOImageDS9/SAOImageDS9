@@ -1241,6 +1241,59 @@ proc PrefsDialogCatalog {} {
 
 # Process Cmds
 
+proc CatalogInitCmd {} {
+    global icat
+
+    set ref [lindex $icat(cats) end]
+    global cvarname
+    set cvarname $ref
+}
+
+proc CatalogRefCmd {ref} {
+    global icat
+    global cvarname
+
+    # look for reference in current list
+    if {[lsearch $icat(cats) cat${ref}] < 0} {
+	# see if its from our list of cats
+	foreach mm $icat(def) {
+	    set ll [lindex $mm 0]
+	    set ww [lindex $mm 1]
+	    set ss [lindex $mm 2]
+	    set cc [lindex $mm 3]
+
+	    if {$ll != {-} && "cat${ref}" == $ww} {
+		CATDialog $ww $ss $cc $ll sync
+		set cvarname cat${ref}
+		return
+	    }
+	}
+
+	# not a default, assume other name
+	CATDialog catcds cds $ref $ref sync
+    }
+    set cvarname cat${ref}
+}
+
+proc CatalogSAMPCmd {name} {
+    global cvarname
+    global $cvarname
+    global samp
+
+    if {[info exists samp]} {
+	foreach arg $samp(apps,votable) {
+	    foreach {key val} $arg {
+		if {[string tolower $val] == $name} {
+		    SAMPSendTableLoadVotable $key $cvarname
+		    break
+		}
+	    }
+	}
+    } else {
+	Error [msgcat::mc {SAMP: not connected}]
+    }
+}
+
 proc ProcessCatalogCmd {varname iname} {
     upvar $varname var
     upvar $iname i

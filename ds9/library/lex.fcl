@@ -87,6 +87,9 @@ E   [Ee][+-]?{D}+
 312	    {return $::312_}
 321	    {return $::321_}
 
+1and2	    {return $::1AND2_}
+1not2	    {return $::1NOT2_}
+2not1	    {return $::2NOT1_}
 3d    	    {return $::3D_}
 about	    {return $::ABOUT_}
 aip    	    {return $::AIP_}
@@ -115,6 +118,7 @@ bin	    {return $::BIN_}
 block	    {return $::BLOCK_}
 blue	    {return $::BLUE_}
 border	    {return $::BORDER_}
+broadcast   {return $::BROADCAST_}
 buffersize  {return $::BUFFERSIZE_}
 cancel	    {return $::CANCEL_}
 catalog	    {return $::CATALOG_}
@@ -149,6 +153,7 @@ ecliptic    {return $::ECLIPTIC_}
 edit	    {return $::EDIT_}
 elevation   {return $::ELEVATION_}
 el	    {return $::ELEVATION_}
+error	    {return $::ERROR_}
 examine	    {return $::EXAMINE_}
 exp	    {return $::EXP_}
 export	    {return $::EXPORT_}
@@ -230,13 +235,14 @@ print	    {return $::PRINT_}
 psky	    {return $::PSKY_}
 psystem	    {return $::PSYSTEM_}
 ra	    {return $::RA_}
+red	    {return $::RED_}
 region	    {return $::REGION_}
 regions	    {return $::REGIONS_}
 refresh	    {return $::REFRESH_}
-red	    {return $::RED_}
 replace	    {return $::REPLACE_}
 reset	    {return $::RESET_}
 retrieve    {return $::RETRIEVE_}
+return	    {return $::RETURN_}
 rgb	    {return $::RGB_}
 rgbcube	    {return $::RGBCUBE_}
 rgbimage    {return $::RGBIMAGE_}
@@ -250,6 +256,7 @@ scale	    {return $::SCALE_}
 scalelimits {return $::SCALELIMITS_}
 scan	    {return $::SCAN_}
 scope	    {return $::SCOPE_}
+send	    {return $::SEND_}
 server	    {return $::SERVER_}
 sexagesimal {return $::SEXAGESIMAL_}
 show	    {return $::SHOW_}
@@ -273,6 +280,7 @@ tag	    {return $::TAG_}
 to	    {return $::TO_}
 true	    {return $::TRUE_}
 tsv	    {return $::TSV_}
+unique	    {return $::UNIQUE_}
 update	    {return $::UPDATE_}
 user	    {return $::USER_}
 value	    {return $::VALUE_}

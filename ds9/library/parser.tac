@@ -1,4 +1,5 @@
 %{
+
 global yy
 set yy(x) 0
 set yy(y) 0
@@ -13,6 +14,10 @@ set file(mode) {}
 set file(layer) {}
 set file(mosaic) wcs
 set file(load) 0
+
+global cvarname
+set cvarname {}
+
 %}
 
 %token INT_
@@ -88,9 +93,9 @@ set file(load) 0
 %token 312_
 %token 321_
 
-%token SB_
-%token STARBASE_
-
+%token 1AND2_
+%token 1NOT2_
+%token 2NOT1_
 %token 3D_
 %token ABOUT_
 %token AIP_
@@ -117,6 +122,7 @@ set file(load) 0
 %token BLOCK_
 %token BLUE_
 %token BORDER_
+%token BROADCAST_
 %token BUFFERSIZE_
 %token CANCEL_
 %token CATALOG_
@@ -150,6 +156,7 @@ set file(load) 0
 %token ECLIPTIC_
 %token EDIT_
 %token ELEVATION_
+%token ERROR_
 %token EXAMINE_
 %token EXP_
 %token EXPORT_
@@ -238,6 +245,7 @@ set file(load) 0
 %token REPLACE_
 %token RESET_
 %token RETRIEVE_
+%token RETURN_
 %token RGB_
 %token RGBCUBE_
 %token RGBIMAGE_
@@ -246,10 +254,12 @@ set file(load) 0
 %token SAMP_
 %token SAMPLE_
 %token SAVE_
+%token SB_
 %token SCALE_
 %token SCALELIMITS_
 %token SCAN_
 %token SCOPE_
+%token SEND_
 %token SERVER_
 %token SEXAGESIMAL_
 %token SHOW_
@@ -262,6 +272,7 @@ set file(load) 0
 %token SQUARED_
 %token SQRT_
 %token SORT_
+%token STARBASE_
 %token STOP_
 %token SUM_
 %token SURVEY_
@@ -272,6 +283,7 @@ set file(load) 0
 %token TO_
 %token TRUE_
 %token TSV_
+%token UNIQUE_
 %token UPDATE_
 %token USER_
 %token VALUE_
@@ -330,7 +342,7 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | BLINKCMD_ blink
  | BLOCKCMD_ {ProcessRealizeDS9} block
  | BLUECMD_ {global current; set current(rgb) blue; RGBChannel}
- | CATALOGCMD_ catalog
+ | CATALOGCMD_ {CatalogInitCmd} catalog
  | CDCMD_ cd
  | CMAPCMD_ {ProcessRealizeDS9} cmap
  | CONSOLECMD_ {global ds9; OpenConsole; InitError $ds9(msg,src)}
@@ -655,11 +667,12 @@ catalog : {CATTool}
  | LOAD_ catLoad
  | FILE_ catLoad
  | IMPORT_ catLoad
- | STRING_ cat
+ | STRING_ {CatalogRefCmd $1} cat
  | cat
  ;
 
 catLoad: catLoadReader STRING_ {global icats; CATDialog cattool {} {} {} none; CATLoadFn [lindex $icat(cats) end] $2 $1; FileLast catfbox $2}
+ | STRING_ {global icats; CATDialog cattool {} {} {} none; CATLoadFn [lindex $icat(cats) end] $1 VOTRead; FileLast catfbox $1}
  ;
 
 catLoadReader : XML_ {set _ VOTRead}
@@ -671,48 +684,92 @@ catLoadReader : XML_ {set _ VOTRead}
  ;
 
 cat :
- | ALLCOLS_ {set cvar(allrows) 1}
- | ALLROWS_ {set cvar(allcols) 1}
+ | ALLCOLS_ {global cvarname; global $cvarname; set ${cvarname}(allcols) 1}
+ | ALLROWS_ {global cvarname; global $cvarname; set ${cvarname}(allrows) 1}
  | CANCEL_ {global cvarname; ARCancel $cvarname}
  | CLEAR_ {global cvarname; CATOff $cvarname}
  | CLOSE_ {global cvarname; CATDestroy $cvarname}
- | COORDINATE_ skycoord skyframe {set cvar(x) $yy(x); set cvar(y) $yy(y); set cvar(sky) $yy(skyframe)}
+ | COORDINATE_ skycoord skyframe {global cvarname; global $cvarname; set ${cvarname}(x) $yy(x); set ${cvarname}(y) $yy(y); set ${cvarname}(sky) $yy(skyframe)}
  | CROSSHAIR_ {global cvarname; CATCrosshair $cvarname}
- | EDIT_ yesno {global cvarname; set cvar(edit) $2; CATEdit $cvarname}
- | EXPORT_
- | FILTER_
+ | EDIT_ yesno {global cvarname; global $cvarname; set ${cvarname}(edit) $2; CATEdit $cvarname}
+ | EXPORT_ catSave
+ | FILTER_ catFilter
  | HEADER_ {global cvarname; CATHeader $cvarname}
- | HIDE_ {global cvarname; set cvar(show) 0; CATGenerate $cvarname}
- | LOCATION_ {global cvarname; set cvar(loc) [lindex $var $i]; CATGenerate $cvarname}
- | MATCH_
- | MAXROWS_ int {set cvar(max) $2}
- | NAME_ STRING_ {set cvar(name) $2}
- | PANTO_ yesno {set cvar(panto) $2}
- | PLOT_
+ | HIDE_ {global cvarname; global $cvarname; set ${cvarname}(show) 0; CATGenerate $cvarname}
+ | LOCATION_ int {global cvarname; global $cvarname; set ${cvarname}(loc) $2; CATGenerate $cvarname}
+ | MATCH_ catMatch
+ | MAXROWS_ int {global cvarname; global $cvarname; set ${cvarname}(max) $2}
+ | NAME_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(name) $2}
+ | PANTO_ yesno {global cvarname; global $cvarname; set ${cvarname}(panto) $2}
+ | PLOT_ STRING_ STRING_ STRING_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(plot,x) $2; set ${cvarname}(plot,y) $3; set ${cvarname}(plot,xerr) $4; set ${cvarname}(plot,yerr) $5; CATPlotGenerate $cvarname}
  | PRINT_ {global cvarname; CATPrint $cvarname}
- | PSKY_ skyframe {global cvarname; set cvar(psky) $2; CATGenerate $cvarname}
- | PSYSTEM_ wcssys {global cvarname; set cvar(psystem) $2; CATGenerate $cvarname}
+ | PSKY_ skyframe {global cvarname; global $cvarname; set ${cvarname}(psky) $2; CATGenerate $cvarname}
+ | PSYSTEM_ wcssys {global cvarname; global $cvarname; set ${cvarname}(psystem) $2; CATGenerate $cvarname}
  | REGIONS_ {global cvarname; CATGenerateRegions $cvarname}
  | RETRIEVE_ {global cvarname; CATApply $cvarname 1}
- | SAMP_
- | SAVE_
- | SERVER_ STRING_ {global cvarname; set cvar(server) $2}
- | SHOW_ {global cvarname; set cvar(show) 1; CATGenerate $cvarname}
- | SIZE_
- | SKY_
- | SKYFORMAT_ skyformat {set cvar(skyformat) $2}
+ | SAMP_ catSAMP
+ | SAVE_ catSave
+ | SERVER_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(server) $2}
+ | SHOW_ {global cvarname; global $cvarname; set ${cvarname}(show) 1; CATGenerate $cvarname}
+ | SIZE_ numeric numeric skydist {global cvarname; global $cvarname; set ${cvarname}(width) $1; set ${cvarname}(height) $2; set ${cvarname}(rformat) $3; set ${cvarname}(rformat,msg) $3}
+ | SKY_ skyframe {global cvarname; global $cvarname; set ${cvarname}(sky) $1; CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]}
+ | SKYFORMAT_ skyformat {global cvarname; global $cvarname; set ${cvarname}(skyformat) $2}
  | SORT_ catSort
  | SYMBOL_
- | SYSTEM_
+ | SYSTEM_ wcssys {global cvarname; global $cvarname; set ${cvarname}(system) $1; CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]}
  | UPDATE_ {global cvarname; CATUpdate $cvarname}
- | X_ STRING_ {global cvarname; set cvar(colx) $2; CATGenerate $cvarname}
- | RA_ STRING_ {global cvarname; set cvar(colx) $2; CATGenerate $cvarname}
- | Y_ STRING_ {global cvarname; set cvar(coly) $2; CATGenerate $cvarname}
- | DEC_ STRING_ {global cvarname; set cvar(coly) $2; CATGenerate $cvarname}
+ | X_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(colx) $2; CATGenerate $cvarname}
+ | RA_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(colx) $2; CATGenerate $cvarname}
+ | Y_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(coly) $2; CATGenerate $cvarname}
+ | DEC_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(coly) $2; CATGenerate $cvarname}
  ;
 
-catSort : STRING_ {set cvar(sort) $1; CATTable $cvarname}
- | STRING_ catSortDir {set cvar(sort) $1; set cvar(sort,dir) $2; CATTable $cvarname}
+catFilter : LOAD_ STRING_ {
+  global cvarname
+  global $cvarname
+  if {[catch {open $2 r} fp]} {
+    Error "[msgcat::mc {Unable to open file}] $2: $fp"
+    yyerror
+  }
+  set flt [read -nonewline $fp]
+  catch {regsub {\n} $flt " " $flt}
+  set ${cvarname}(filter) [string trim $flt]
+  catch {close $fp}
+ }
+ | STRING_ {global cvarname; global $cvarname; set ${cvarname}(filter) $1; CATable $cvarname}
+ ;
+
+catMatch : ERROR_ numeric skydist {global icat; set icat(error) $2; set icat(eformat) $3}
+ | FUNCTION_ catMatchFunction {global icat;  set icat(function) $2}
+ | UNIQUE_ yesno {global icat; set icat(unique) $2}
+ | RETURN_ catMatchFunction {global icat;  set icat(return) $2}
+ | STRING_ STRING_ {global current; global icat; set icat(match1) cat$1; set icat(match2) cat$2;CATMatch $current(frame) $icat(match1) $icat(match2)}
+ ;
+
+catSave : catSaveWriter STRING_ {global cvarname; CATSaveFn $cvarname $2 $1; FileLast catfbox $2}
+ | STRING_ {global cvarname; CATSaveFn $cvarname $1 VOTWrite; FileLast catfbox $1}
+ ;
+
+catMatchFunction : 1AND2_ {set _ 1and2}
+ | 1NOT2_ {set _ 1not2}
+ | 2NOT1_ {set _ 2not1}
+ ;
+
+catSAMP : {global cvarname; SAMPSendTableLoadVotable {} $cvarname}
+ | BROADCAST_ {global cvarname; SAMPSendTableLoadVotable {} $cvarname}
+ | SEND_ STRING_ {global cvarname; CatalogSAMPCmd $2}
+ ;
+
+catSaveWriter : XML_ {set _ VOTWrite}
+ | VOT_ {set _ VOTWrite}
+ | SB_ {set _ starbase_write}
+ | STARBASE_ {set _ starbase_write}
+ | CSV_ {set _ TSVWrite}
+ | TSV_ {set _ TSVWrite}
+ ;
+
+catSort : STRING_ {global cvarname; global $cvarname; set ${cvarname}(sort) $1; CATTable $cvarname}
+ | STRING_ catSortDir {global cvarname; global $cvarname; set ${cvarname}(sort) $1; set ${cvarname}(sort,dir) $2; CATTable $cvarname}
  ;
 
 catSortDir : INCR_ {set _ "-increasing"}

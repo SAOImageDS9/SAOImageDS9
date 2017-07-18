@@ -57,7 +57,8 @@ proc ds9Cmd {argv} {
 }
 
 proc ProcessCommand {argv argc} {
-    if {0} {
+    if {1} {
+
     YY_FLUSH_BUFFER
     yy_scan_string $argv
     yyparse
@@ -67,7 +68,8 @@ proc ProcessCommand {argv argc} {
 	FinishLoadPost
     }
     return
-    }    
+
+    } else {
 
     global ds9
     global pds9
@@ -496,6 +498,7 @@ proc ProcessCommand {argv argc} {
     if {$file(load) != 0} {
 	FinishLoadPost
     }
+}
 }
 
 proc CommandLineFileName {item} {

@@ -98,21 +98,25 @@ set cvarname {}
 %token 2NOT1_
 %token 3D_
 %token ABOUT_
+%token ADD_
 %token AIP_
 %token ALIGN_
 %token ALL_
 %token ALLCOLS_
 %token ALLROWS_
 %token AMPLIFIER_
+%token ANGLE_
 %token APPEND_
 %token ARCMIN_
 %token ARCSEC_
+%token ARROW_
 %token ASINH_
 %token AUTO_
 %token AUTOMATIC_
 %token AVERAGE_
 %token AXES_
 %token AXIS_
+%token AZ_
 %token AZIMUTH_
 %token B1950_
 %token BACK_
@@ -121,13 +125,17 @@ set cvarname {}
 %token BIN_
 %token BLOCK_
 %token BLUE_
+%token BOLD_
 %token BORDER_
+%token BOX_
+%token BOXCIRCLE_
 %token BROADCAST_
 %token BUFFERSIZE_
 %token CANCEL_
 %token CATALOG_
 %token CENTER_
 %token CHANNEL_
+%token CIRCLE_
 %token CLEAR_
 %token CLOSE_
 %token COLOR_
@@ -137,10 +145,13 @@ set cvarname {}
 %token COLUMN_
 %token COLSZ_
 %token COMPASS_
+%token CONDITION_
 %token CONTRAST_
 %token COORD_
 %token COORDINATE_
+%token COURIER_
 %token CROP_
+%token CROSS_
 %token CROSSHAIR_
 %token CSV_
 %token CURRENT_
@@ -152,10 +163,13 @@ set cvarname {}
 %token DEPTH_
 %token DETECTOR_
 %token DELETE_
+%token DIAMOND_
 %token DIRECTION_
 %token ECLIPTIC_
 %token EDIT_
+%token EL_
 %token ELEVATION_
+%token ELLIPSE_
 %token ERROR_
 %token EXAMINE_
 %token EXP_
@@ -168,6 +182,10 @@ set cvarname {}
 %token FIT_
 %token FK4_
 %token FK5_
+%token FONT_
+%token FONTSIZE_
+%token FONTSLANT_
+%token FONTWEIGHT_
 %token FORMAT_
 %token FORWARD_
 %token FRAME_
@@ -179,6 +197,7 @@ set cvarname {}
 %token GREEN_
 %token GRID_
 %token HEADER_
+%token HELVETICA_
 %token HIDE_
 %token HIGHLITE_
 %token HISTEQU_
@@ -192,6 +211,7 @@ set cvarname {}
 %token IRAF_
 %token IRAFALIGN_
 %token IRAFMIN_
+%token ITALIC_
 %token J2000_
 %token LAST_
 %token LAYOUT_
@@ -221,6 +241,7 @@ set cvarname {}
 %token NEXT_
 %token NO_
 %token NONE_
+%token NORMAL_
 %token OFF_
 %token ON_
 %token OPEN_
@@ -231,6 +252,7 @@ set cvarname {}
 %token PHYSICAL_
 %token PLAY_
 %token PLOT_
+%token POINT_
 %token POINTER_
 %token POW_
 %token PREV_
@@ -242,6 +264,7 @@ set cvarname {}
 %token REFRESH_
 %token REGION_
 %token REGIONS_
+%token REMOVE_
 %token REPLACE_
 %token RESET_
 %token RETRIEVE_
@@ -249,6 +272,7 @@ set cvarname {}
 %token RGB_
 %token RGBCUBE_
 %token RGBIMAGE_
+%token ROMAN_
 %token ROTATE_
 %token ROW_
 %token SAMP_
@@ -262,9 +286,11 @@ set cvarname {}
 %token SEND_
 %token SERVER_
 %token SEXAGESIMAL_
+%token SHAPE_
 %token SHOW_
 %token SINH_
 %token SIZE_
+%token SIZE2_
 %token SKY_
 %token SKYFORMAT_
 %token SLICE_
@@ -278,12 +304,15 @@ set cvarname {}
 %token SURVEY_
 %token SYMBOL_
 %token SYSTEM_
-%token THREADS_
 %token TAG_
+%token THREADS_
+%token TIMES_
+%token TEXT_
 %token TO_
 %token TRUE_
 %token TSV_
 %token UNIQUE_
+%token UNITS_
 %token UPDATE_
 %token USER_
 %token VALUE_
@@ -432,6 +461,19 @@ yesno : YES_ {set _ 1}
 # | '0' {set _ 0}
  ;
 
+font : TIMES_ {set _ times}
+ | HELVETICA_ {set _ helvetica}
+ | COURIER_ {set _ courier}
+ ;
+
+fontweight : NORMAL_ {set _ normal}
+ | BOLD_ {set _ bold}
+ ;
+
+fontslant : ROMAN_ {set _ roman}
+ | ITALIC_ {set _ italic}
+ ;
+
 skycoord : numeric numeric {global yy; set yy(x) $1; set yy(y) $2}
  | SEXSTR_ SEXSTR_ {global yy; set yy(x) $1; set yy(y) $2}
  ;
@@ -560,7 +602,9 @@ mosaicType : IRAF_ {set _ iraf}
 3d : {Create3DFrame}
  | VIEW_ 3dView
  | VP_ 3dView
+ | AZ_ numeric {global threed; set threed(az) $2; 3DViewPoint}
  | AZIMUTH_ numeric {global threed; set threed(az) $2; 3DViewPoint}
+ | EL_ numeric {global threed; set threed(el) $2; 3DViewPoint}
  | ELEVATION_ numeric {global threed; set threed(el) $2; 3DViewPoint}
  | SCALE_ numeric {global threed; set threed(scale) $2; 3DScale}
  | METHOD_ 3dMethod {global threed; set threed(method) $2; 3DRenderMethod}
@@ -715,7 +759,8 @@ cat :
  | SKY_ skyframe {global cvarname; global $cvarname; set ${cvarname}(sky) $1; CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]}
  | SKYFORMAT_ skyformat {global cvarname; global $cvarname; set ${cvarname}(skyformat) $2}
  | SORT_ catSort
- | SYMBOL_
+ | SYMBOL_ {global cvarname; global $cvarname; set $cvarname(row) 1} catSymbol
+ | SYMBOL_ int {global cvarname; global $cvarname; set $cvarname(row) $2} catSymbol
  | SYSTEM_ wcssys {global cvarname; global $cvarname; set ${cvarname}(system) $1; CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]}
  | UPDATE_ {global cvarname; CATUpdate $cvarname}
  | X_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(colx) $2; CATGenerate $cvarname}
@@ -746,10 +791,6 @@ catMatch : ERROR_ numeric skydist {global icat; set icat(error) $2; set icat(efo
  | STRING_ STRING_ {global current; global icat; set icat(match1) cat$1; set icat(match2) cat$2;CATMatch $current(frame) $icat(match1) $icat(match2)}
  ;
 
-catSave : catSaveWriter STRING_ {global cvarname; CATSaveFn $cvarname $2 $1; FileLast catfbox $2}
- | STRING_ {global cvarname; CATSaveFn $cvarname $1 VOTWrite; FileLast catfbox $1}
- ;
-
 catMatchFunction : 1AND2_ {set _ 1and2}
  | 1NOT2_ {set _ 1not2}
  | 2NOT1_ {set _ 2not1}
@@ -758,6 +799,10 @@ catMatchFunction : 1AND2_ {set _ 1and2}
 catSAMP : {global cvarname; SAMPSendTableLoadVotable {} $cvarname}
  | BROADCAST_ {global cvarname; SAMPSendTableLoadVotable {} $cvarname}
  | SEND_ STRING_ {global cvarname; CatalogSAMPCmd $2}
+ ;
+
+catSave : catSaveWriter STRING_ {global cvarname; CATSaveFn $cvarname $2 $1; FileLast catfbox $2}
+ | STRING_ {global cvarname; CATSaveFn $cvarname $1 VOTWrite; FileLast catfbox $1}
  ;
 
 catSaveWriter : XML_ {set _ VOTWrite}
@@ -774,6 +819,37 @@ catSort : STRING_ {global cvarname; global $cvarname; set ${cvarname}(sort) $1; 
 
 catSortDir : INCR_ {set _ "-increasing"}
  | DECR_ {set _ "-decreasing"}
+ ;
+
+catSymbol : ADD_ {CatalogSymbolAddCmd}
+ | ANGLE_ numeric {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) angle] $2; CATGenerate $cvarname}
+ | COLOR_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) color] $2; CATGenerate $cvarname}
+ | CONDITION_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) condition] $2; CATGenerate $cvarname}
+ | FONT_ font {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) font] $2; CATGenerate $cvarname}
+ | FONTSIZE_ int {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) fontsize] $2; CATGenerate $cvarname}
+ | FONTWEIGHT_ fontweight {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) fontweight] $2; CATGenerate $cvarname}
+ | FONTSLANT_ fontslant {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) fontslant] $2; CATGenerate $cvarname}
+ | LOAD_ STRING_ {global cvarname; global $cvarname; CatalogSymbolLoadCmd $2}
+ | REMOVE_ {global cvarname; global $cvarname; starbase_rowdel ${cvarname}(symdb) ${cvarname}(row); CATGenerate $cvarname}
+ | SAVE_ STRING_ {global cvarname; global $cvarname; starbase_write ${cvarname}(symdb) $2}
+ | SIZE_ numeric {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) size] $2; CATGenerate $cvarname}
+ | SIZE2_ numeric {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) size2] $2; CATGenerate $cvarname}
+ | SHAPE_ catSymbolShape {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) shape] $2; CATGenerate $cvarname}
+ | TEXT_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) text] $2; CATGenerate $cvarname}
+ | UNITS_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) units] $2; CATGenerate $cvarname}
+ ;
+
+catSymbolShape : CIRCLE_ POINT_ {set _ "circle point"}
+ | BOX_ POINT_ {set _ "box point"}
+ | DIAMOND_ POINT_ {set _ "diamond point"}
+ | CROSS_ POINT_ {set _ "cross point"}
+ | X_ POINT_ {set _ "x point"}
+ | ARROW_ POINT_ {set _ "arrow point"}
+ | BOXCIRCLE_ POINT_ {set _ "boxcircle point"}
+ | CIRCLE_ {set _ circle}
+ | ELLIPSE_ {set _ ellipse}
+ | BOX_ {set _ box}
+ | TEXT_ {set _ text}
  ;
 
 cd : STRING_ {cd $2}

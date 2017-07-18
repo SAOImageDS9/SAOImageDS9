@@ -1253,6 +1253,11 @@ proc CatalogRefCmd {ref} {
     global icat
     global cvarname
 
+    # backward compatibility
+    if {$ref == "cxc"} {
+	set ref csc
+    }
+
     # look for reference in current list
     if {[lsearch $icat(cats) cat${ref}] < 0} {
 	# see if its from our list of cats

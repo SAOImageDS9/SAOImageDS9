@@ -134,6 +134,7 @@ set cvarname {}
 %token CANCEL_
 %token CATALOG_
 %token CENTER_
+%token CDS_
 %token CHANNEL_
 %token CIRCLE_
 %token CLEAR_
@@ -712,11 +713,13 @@ catalog : {CATTool}
  | FILE_ catLoad
  | IMPORT_ catLoad
  | STRING_ {CatalogRefCmd $1} cat
+ # backward compatibility
+ | CDS_ STRING_ {CatalogRefCmd $2} cat
  | cat
  ;
 
-catLoad: catLoadReader STRING_ {global icats; CATDialog cattool {} {} {} none; CATLoadFn [lindex $icat(cats) end] $2 $1; FileLast catfbox $2}
- | STRING_ {global icats; CATDialog cattool {} {} {} none; CATLoadFn [lindex $icat(cats) end] $1 VOTRead; FileLast catfbox $1}
+catLoad: catLoadReader STRING_ {global icat; CATDialog cattool {} {} {} none; CATLoadFn [lindex $icat(cats) end] $2 $1; FileLast catfbox $2}
+ | STRING_ {global icat; CATDialog cattool {} {} {} none; CATLoadFn [lindex $icat(cats) end] $1 VOTRead; FileLast catfbox $1}
  ;
 
 catLoadReader : XML_ {set _ VOTRead}
@@ -759,8 +762,8 @@ cat :
  | SKY_ skyframe {global cvarname; global $cvarname; set ${cvarname}(sky) $1; CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]}
  | SKYFORMAT_ skyformat {global cvarname; global $cvarname; set ${cvarname}(skyformat) $2}
  | SORT_ catSort
- | SYMBOL_ {global cvarname; global $cvarname; set $cvarname(row) 1} catSymbol
- | SYMBOL_ int {global cvarname; global $cvarname; set $cvarname(row) $2} catSymbol
+ | SYMBOL_ {global cvarname; global $cvarname; set ${cvarname}(row) 1} catSymbol
+ | SYMBOL_ int {global cvarname; global $cvarname; set ${cvarname}(row) $2} catSymbol
  | SYSTEM_ wcssys {global cvarname; global $cvarname; set ${cvarname}(system) $1; CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]}
  | UPDATE_ {global cvarname; CATUpdate $cvarname}
  | X_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(colx) $2; CATGenerate $cvarname}
@@ -839,7 +842,8 @@ catSymbol : ADD_ {CatalogSymbolAddCmd}
  | UNITS_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) units] $2; CATGenerate $cvarname}
  ;
 
-catSymbolShape : CIRCLE_ POINT_ {set _ "circle point"}
+catSymbolShape : POINT_ {set _ "circle point"}
+ | CIRCLE_ POINT_ {set _ "circle point"}
  | BOX_ POINT_ {set _ "box point"}
  | DIAMOND_ POINT_ {set _ "diamond point"}
  | CROSS_ POINT_ {set _ "cross point"}

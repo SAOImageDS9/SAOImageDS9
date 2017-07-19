@@ -117,10 +117,9 @@ set cvarname {}
 %token AXES_
 %token AXIS_
 %token AZ_
-%token AZIMUTH_
 %token B1950_
 %token BACK_
-%token BACKGROUND_
+%token BG_
 %token BGCOLOR_
 %token BIN_
 %token BLOCK_
@@ -169,7 +168,6 @@ set cvarname {}
 %token ECLIPTIC_
 %token EDIT_
 %token EL_
-%token ELEVATION_
 %token ELLIPSE_
 %token ERROR_
 %token EXAMINE_
@@ -348,10 +346,8 @@ set cvarname {}
 %token WCSY_
 %token WCSZ_
 %token WFPC2_
-%token X_
 %token XML_
 %token XY_
-%token Y_
 %token YES_
 %token ZMAX_
 %token ZOOM_
@@ -604,12 +600,10 @@ mosaicType : IRAF_ {set _ iraf}
  | VIEW_ 3dView
  | VP_ 3dView
  | AZ_ numeric {global threed; set threed(az) $2; 3DViewPoint}
- | AZIMUTH_ numeric {global threed; set threed(az) $2; 3DViewPoint}
  | EL_ numeric {global threed; set threed(el) $2; 3DViewPoint}
- | ELEVATION_ numeric {global threed; set threed(el) $2; 3DViewPoint}
  | SCALE_ numeric {global threed; set threed(scale) $2; 3DScale}
  | METHOD_ 3dMethod {global threed; set threed(method) $2; 3DRenderMethod}
- | BACKGROUND_ 3dBackground {global threed; set threed(background) $2; 3DBackground}
+ | BG_ 3dBackground {global threed; set threed(background) $2; 3DBackground}
  | BORDER_ 3dBorder
  | HIGHLITE_ 3dHighlite
  | COMPASS_ 3dCompass
@@ -625,8 +619,8 @@ mosaicType : IRAF_ {set _ iraf}
  ;
 
 3dBackground : NONE_ {set _ none}
- | AZIMUTH_ {set _ azimuth}
- | ELEVATION_ {set _ elevation}
+ | AZ_ {set _ azimuth}
+ | EL_ {set _ elevation}
  ;
 
 3dHighlite : yesno {global threed; set threed(highlite) $1; 3DHighlite}
@@ -730,8 +724,7 @@ catLoadReader : XML_ {set _ VOTRead}
  | TSV_ {set _ TSVRead}
  ;
 
-cat :
- | ALLCOLS_ {global cvarname; global $cvarname; set ${cvarname}(allcols) 1}
+cat : ALLCOLS_ {global cvarname; global $cvarname; set ${cvarname}(allcols) 1}
  | ALLROWS_ {global cvarname; global $cvarname; set ${cvarname}(allrows) 1}
  | CANCEL_ {global cvarname; ARCancel $cvarname}
  | CLEAR_ {global cvarname; CATOff $cvarname}
@@ -766,9 +759,9 @@ cat :
  | SYMBOL_ int {global cvarname; global $cvarname; set ${cvarname}(row) $2} catSymbol
  | SYSTEM_ wcssys {global cvarname; global $cvarname; set ${cvarname}(system) $1; CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]}
  | UPDATE_ {global cvarname; CATUpdate $cvarname}
- | X_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(colx) $2; CATGenerate $cvarname}
+ | 'x' STRING_ {global cvarname; global $cvarname; set ${cvarname}(colx) $2; CATGenerate $cvarname}
  | RA_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(colx) $2; CATGenerate $cvarname}
- | Y_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(coly) $2; CATGenerate $cvarname}
+ | 'y' STRING_ {global cvarname; global $cvarname; set ${cvarname}(coly) $2; CATGenerate $cvarname}
  | DEC_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(coly) $2; CATGenerate $cvarname}
  ;
 
@@ -847,7 +840,7 @@ catSymbolShape : POINT_ {set _ "circle point"}
  | BOX_ POINT_ {set _ "box point"}
  | DIAMOND_ POINT_ {set _ "diamond point"}
  | CROSS_ POINT_ {set _ "cross point"}
- | X_ POINT_ {set _ "x point"}
+ | 'x' POINT_ {set _ "x point"}
  | ARROW_ POINT_ {set _ "arrow point"}
  | BOXCIRCLE_ POINT_ {set _ "boxcircle point"}
  | CIRCLE_ {set _ circle}
@@ -1083,8 +1076,8 @@ orient : orientation {global current; set current(orient) $1; ChangeOrient}
  ;
 
 orientation : NONE_ {set _ none}
- | X_ {set _ x}
- | Y_ {set _ y}
+ | 'x' {set _ x}
+ | 'y' {set _ y}
  | XY_ {set _ xy}
  ;
 
@@ -1282,8 +1275,8 @@ tileGridMode : AUTOMATIC_ {set _ automatic}
  | MANUAL_ {set _ manual}
  ;
 
-tileGridDir : X_ {set _ x}
- | Y_ {set _ y}
+tileGridDir : 'x' {set _ x}
+ | 'y' {set _ y}
  ;
 
 wcs : OPEN_ {WCSDialog}

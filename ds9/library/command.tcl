@@ -57,7 +57,7 @@ proc ds9Cmd {argv} {
 }
 
 proc ProcessCommand {argv argc} {
-    if {1} {
+    if {0} {
 
     YY_FLUSH_BUFFER
     yy_scan_string $argv
@@ -473,17 +473,17 @@ proc ProcessCommand {argv argc} {
 
 		switch $ds9(wm) {
 		    x11 -
-		    aqua {CommandLineLoad $item argv i}
+		    aqua {CommandLineLoad $item}
 		    win32 {
 			# if win32 and envoked via DOS shell
 			# we must expand wildcards ourselves
 			if {[catch {glob $item} fns]} {
 			    # cygwin/double click/DOS Shell no wildcards
-			    CommandLineLoad $item argv i
+			    CommandLineLoad $item
 			} else {
 			    # DOS Shell with wildcards
 			    foreach fn $fns {
-				CommandLineLoad $fn argv i
+				CommandLineLoad $fn
 			    }
 			}
 		    }

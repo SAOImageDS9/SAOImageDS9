@@ -359,6 +359,15 @@ commands : commands command
  | command
  ;
 
+int : INT_ {set _ $1}
+ | 123_ {set _ 123}
+ | 132_ {set _ 132}
+ | 213_ {set _ 213}
+ | 231_ {set _ 231}
+ | 312_ {set _ 312}
+ | 321_ {set _ 321}
+ ;
+
 command : 2MASSCMD_ {2MASSDialog} 2mass
  | 3DCMD_ {3DDialog} 3d
  | ALIGNCMD_ align
@@ -421,15 +430,6 @@ command : 2MASSCMD_ {2MASSDialog} 2mass
  | ZOOMCMD_ {ProcessRealizeDS9} zoom
  | ZSCALECMD_ zscale
  | STRING_ {CommandLineFileName $1}
- ;
-
-int : INT_ {set _ $1}
- | 123_ {set _ $1}
- | 132_ {set _ $1}
- | 213_ {set _ $1}
- | 231_ {set _ $1}
- | 312_ {set _ $1}
- | 321_ {set _ $1}
  ;
 
 numeric	: int {set _ $1}

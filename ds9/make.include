@@ -1,14 +1,6 @@
-#--------------------------parser
-
-%.tcl: %.fcl
-	tclsh $(prefix)/fickle/fickle.tcl $<
-
-%.tcl: %.tac
-	tclsh $(prefix)/taccle/taccle.tcl -d -v -w $<
-
 #--------------------------framework
 
-$(LIBDIR)/library : $(prefix)/ds9/library/parser.tcl $(prefix)/ds9/library/lex.tcl $(prefix)/ds9/library/*.tcl
+$(LIBDIR)/library : $(prefix)/ds9/library/*.tcl
 	mkdir -p "$@"
 	cp -p $? "$@"
 # must do it this way for win

@@ -23,8 +23,16 @@ proc ProcessCommandLineFirst {} {
 	set item [lindex $argv $i]
 
 	switch -- $item {
+	    -help {
+		puts "For more information, use --help"
+		QuitDS9
+	    }
 	    -debug {incr i; ProcessDebugTclCmd argv i}
+	    -private {
+		# backward compatibility
+	    }
 	    -title {
+		incr i
 		set ds9(title) [lindex $argv $i]
 		set t "SAOImage[string toupper $ds9(title)]"
 		wm title $ds9(top) "$t"
@@ -57,20 +65,6 @@ proc ds9Cmd {argv} {
 }
 
 proc ProcessCommand {argv argc} {
-    if {0} {
-
-    YY_FLUSH_BUFFER
-    yy_scan_string $argv
-    yyparse
-
-    global file
-    if {$file(load) != 0} {
-	FinishLoadPost
-    }
-    return
-
-    } else {
-
     global ds9
     global pds9
     global help
@@ -92,8 +86,8 @@ proc ProcessCommand {argv argc} {
     set file(mode) {}
     set file(layer) {}
     set file(mosaic) wcs
-    set file(load) 0
 
+    set load 0
     set noopts 0
     set i 0
 
@@ -466,24 +460,24 @@ proc ProcessCommand {argv argc} {
 		    return
 		}
 
-		if {$file(load) == 0} {
+		if {$load == 0} {
 		    StartLoad
-		    incr file(load)
+		    incr load
 		}
 
 		switch $ds9(wm) {
 		    x11 -
-		    aqua {CommandLineLoad $item}
+		    aqua {CommandLineLoad $item argv i}
 		    win32 {
 			# if win32 and envoked via DOS shell
 			# we must expand wildcards ourselves
 			if {[catch {glob $item} fns]} {
 			    # cygwin/double click/DOS Shell no wildcards
-			    CommandLineLoad $item
+			    CommandLineLoad $item argv i
 			} else {
 			    # DOS Shell with wildcards
 			    foreach fn $fns {
-				CommandLineLoad $fn
+				CommandLineLoad $fn argv i
 			    }
 			}
 		    }
@@ -495,60 +489,35 @@ proc ProcessCommand {argv argc} {
 	incr i
     }
 
-    if {$file(load) != 0} {
+    if {$load != 0} {
 	FinishLoadPost
     }
 }
-}
 
-proc CommandLineFileName {item} {
-    global ds9
-    global file
+proc CommandLineLoad {item argvname iname} {
+    upvar $argvname argv
+    upvar $iname i
 
-    if {$file(load) == 0} {
-	StartLoad
-	incr file(load)
-    }
-
-    switch $ds9(wm) {
-	x11 -
-	aqua {CommandLineLoad $item}
-	win32 {
-	    # if win32 and envoked via DOS shell
-	    # we must expand wildcards ourselves
-	    if {[catch {glob $item} fns]} {
-		# cygwin/double click/DOS Shell no wildcards
-		CommandLineLoad $item
-	    } else {
-		# DOS Shell with wildcards
-		foreach fn $fns {
-		    CommandLineLoad $fn
-		}
-	    }
-	}
-    }
-
-    FinishLoadPre
-}
-
-proc CommandLineLoad {item} {
     global file
     global current
 
     if {$current(frame) != {}} {
 	switch -- [$current(frame) get type] {
-	    base {CommandLineLoadBase $item}
-	    rgb {CommandLineLoadRGB $item}
-	    3d {CommandLineLoad3D $item}
+	    base {CommandLineLoadBase $item $argvname $iname}
+	    rgb {CommandLineLoadRGB $item $argvname $iname}
+	    3d {CommandLineLoad3D $item $argvname $iname}
 	}
     } else {
-	CommandLineLoadBase $item
+	CommandLineLoadBase $item $argvname $iname
     }
 
     SetFileLast $file(type) $item
 }
 
-proc CommandLineLoadBase {item} {
+proc CommandLineLoadBase {item argvname iname} {
+    upvar 2 $argvname argv
+    upvar 2 $iname i
+
     global file
     global ds9
 
@@ -600,25 +569,22 @@ proc CommandLineLoadBase {item} {
 
 	sfits {
 	    #backward compatibility
-	    #handle directly
-	    #incr i
-	    #MultiLoad $file(layer) $file(mode)
-	    #LoadSFitsFile $item [lindex $argv $i] $file(layer) $file(mode)
+	    incr i
+	    MultiLoad $file(layer) $file(mode)
+	    LoadSFitsFile $item [lindex $argv $i] $file(layer) $file(mode)
 	}
 	srgbcube {
 	    #backward compatibility
-	    #handle directly
-	    #CreateRGBFrame
-	    #incr i
-	    #LoadSRGBCubeFile $item [lindex $argv $i]
+	    CreateRGBFrame
+	    incr i
+	    LoadSRGBCubeFile $item [lindex $argv $i]
 	}
 	smosaic {
 	    #backward compatibility
-	    #handle directly
-	    #incr i
-	    #switch -- $file(mosaic) {
-	    #iraf {LoadSMosaicIRAFFile $item [lindex $argv $i] $file(layer)}
-	    #default {LoadSMosaicWCSFile $item [lindex $argv $i] $file(layer) $file(mosaic)}
+	    incr i
+	    switch -- $file(mosaic) {
+		iraf {LoadSMosaicIRAFFile $item [lindex $argv $i] $file(layer)}
+		default {LoadSMosaicWCSFile $item [lindex $argv $i] $file(layer) $file(mosaic)}
 	    }
 	}
 
@@ -636,16 +602,14 @@ proc CommandLineLoadBase {item} {
 	}
 	envi {
 	    MultiLoad
-	    ImportENVIFile $item [FindENVIDataFile $item]
-	    #handle directly
-	    #set fn $item
-	    #set fn2 [lindex $argv [expr $i+1]]
-	    #if {$fn2 == {} || [string range $fn2 0 0] == {-}} {
-	    #set fn2 [FindENVIDataFile $fn]
-	    #} else {
-	    #incr i
-	    #}
-	    #ImportENVIFile $fn $fn2
+	    set fn $item
+	    set fn2 [lindex $argv [expr $i+1]]
+	    if {$fn2 == {} || [string range $fn2 0 0] == {-}} {
+		set fn2 [FindENVIDataFile $fn]
+	    } else {
+		incr i
+	    }
+	    ImportENVIFile $fn $fn2
 	}
 	gif -
 	tiff -
@@ -657,7 +621,10 @@ proc CommandLineLoadBase {item} {
     }
 }
 
-proc CommandLineLoadRGB {item} {
+proc CommandLineLoadRGB {item argvname iname} {
+    upvar 2 $argvname argv
+    upvar 2 $iname i
+
     global file
 
     switch -- $file(type) {
@@ -694,25 +661,22 @@ proc CommandLineLoadRGB {item} {
 
 	sfits {
 	    #backward compatibility
-	    #handle directly
-	    #incr i
-	    #LoadSFitsFile $item [lindex $argv $i] {} $file(mode)
+	    incr i
+	    LoadSFitsFile $item [lindex $argv $i] {} $file(mode)
 	}
 	srgbcube {
 	    #backward compatibility
-	    #handle directly
-	    #MultiLoadRGB
-	    #incr i
-	    #LoadSRGBCubeFile $item [lindex $argv $i]
+	    MultiLoadRGB
+	    incr i
+	    LoadSRGBCubeFile $item [lindex $argv $i]
 	}
 	smosaic {
 	    #backward compatibility
-	    #handle directly
-	    #incr i
-	    #switch -- $file(mosaic) {
-	    #iraf {LoadMosaicIRAFSFitsFile $item [lindex $argv $i] {}}
-	    #default {LoadMosaicWCSSFitsFile $item [lindex $argv $i] {} $file(mosaic)}
-	    #}
+	    incr i
+	    switch -- $file(mosaic) {
+		iraf {LoadMosaicIRAFSFitsFile $item [lindex $argv $i] {}}
+		default {LoadMosaicWCSSFitsFile $item [lindex $argv $i] {} $file(mosaic)}
+	    }
 	}
 
 	array {ImportArrayFile $item {}}
@@ -729,10 +693,14 @@ proc CommandLineLoadRGB {item} {
 	    MultiLoadRGB
 	    ImportPhotoFile $item $file(mode)
 	}
+
     }
 }
 
-proc CommandLineLoad3D {item} {
+proc CommandLineLoad3D {item argvname iname} {
+    upvar 2 $argvname argv
+    upvar 2 $iname i
+
     global file
 
     switch -- $file(type) {
@@ -780,26 +748,23 @@ proc CommandLineLoad3D {item} {
 
 	sfits {
 	    #backward compatibility
-	    #handle directly
-	    #incr i
-	    #MultiLoad {} $file(mode)
-	    #LoadSFitsFile $item [lindex $argv $i] {} $file(mode)
+	    incr i
+	    MultiLoad {} $file(mode)
+	    LoadSFitsFile $item [lindex $argv $i] {} $file(mode)
 	}
 	srgbcube {
 	    #backward compatibility
-	    #handle directly
-	    #CreateRGBFrame
-	    #incr i
-	    #LoadSRGBCubeFile $item [lindex $argv $i]
+	    CreateRGBFrame
+	    incr i
+	    LoadSRGBCubeFile $item [lindex $argv $i]
 	}
 	smosaic {
 	    #backward compatibility
-	    #handle directly
-	    #incr i
-	    #switch -- $file(mosaic) {
-	    #iraf {LoadMosaicIRAFSFitsFile $item [lindex $argv $i] {}}
-	    #default {LoadMosaicWCSSFitsFile $item [lindex $argv $i] {} $file(mosaic)}
-	    #}
+	    incr i
+	    switch -- $file(mosaic) {
+		iraf {LoadMosaicIRAFSFitsFile $item [lindex $argv $i] {}}
+		default {LoadMosaicWCSSFitsFile $item [lindex $argv $i] {} $file(mosaic)}
+	    }
 	}
 
 	array {
@@ -815,16 +780,14 @@ proc CommandLineLoad3D {item} {
 	    ImportNRRDFile $item {}
 	}
 	envi {
-	    ImportENVIFile $fn [FindENVIDataFile $fn]
-	    #handle directly
-	    #set fn $item
-	    #set fn2 [lindex $argv [expr $i+1]]
-	    #if {$fn2 == {} || [string range $fn2 0 0] == {-}} {
-	    #set fn2 [FindENVIDataFile $fn]
-	    #} else {
-	    #incr i
-	    #}
-	    #ImportENVIFile $fn $fn2
+	    set fn $item
+	    set fn2 [lindex $argv [expr $i+1]]
+	    if {$fn2 == {} || [string range $fn2 0 0] == {-}} {
+		set fn2 [FindENVIDataFile $fn]
+	    } else {
+		incr i
+	    }
+	    ImportENVIFile $fn $fn2
 	}
 	gif -
 	tiff -

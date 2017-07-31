@@ -551,6 +551,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -570,6 +571,7 @@
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [match &lt;ref&gt; &lt;ref&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -726,8 +728,10 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -884,6 +888,7 @@
 
 
 
+
         [match unique yes|no]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [maxrows
         &lt;number&gt;]</tt><br>
@@ -942,6 +947,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1336,7 +1342,8 @@
         </b></p>
       <p>Controls FITS cube. </p>
       <tt> Syntax: <br>
-        cube [play|stop|next|prev|first|last]<br>
+        cube []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [play|stop|next|prev|first|last]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [&lt;slice&gt;
         [&lt;coordsys&gt;][&lt;axis&gt;]]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [interval &lt;numeric&gt;]<br>
@@ -1355,6 +1362,7 @@
         cube order<br>
         cube axes lock<br>
         ds9.set(string cmd)<br>
+        cube<br>
         cube play<br>
         cube last<br>
         cube 3<br>
@@ -2042,6 +2050,7 @@
 
 
 
+
           Macros</a> for more information.</p>
       <tt> Syntax: <br>
         iexam []<br>
@@ -2079,6 +2088,7 @@
         iis filename bar.fits 4</tt><br>
       <p><b> <a name="jpeg"></a>jpeg</b></p>
       <p>Load JPEG image into current frame. Optional parameters: <tt>jpeg
+
 
 
 
@@ -2637,6 +2647,7 @@
 
 
 
+
         # title, title xaxis, title yaxis, dimension on line 1<br>
         &nbsp;&nbsp;&nbsp; &nbsp;[new [name &lt;plotname&gt;]
         [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
@@ -2651,6 +2662,7 @@
           &lt;filename&gt;<br>
         </tt>&nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
       </tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -2758,6 +2770,7 @@
 
 
 
+
                           </tt>[&lt;plotname&gt;] stats<br>
                         </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
 
@@ -2812,8 +2825,10 @@
 
 
 
+
                     list<br>
                     &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -2922,10 +2937,12 @@
 
 
 
+
                 [&lt;plotname&gt;] pagesetup orient [portrait|landscape]<br>
                 &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] pagesetup
                 size [letter|legal|tabloid|poster|a4]</tt><br>
               <tt> </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3056,6 +3073,7 @@
 
 
 
+
           legend [yes|no]<br>
           &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] legend position
           [right|left|top|bottom]</tt><br>
@@ -3129,9 +3147,11 @@
 
 
 
+
               shape
               [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3242,7 +3262,9 @@
 
 
 
+
                                                 <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3351,7 +3373,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3460,7 +3484,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3569,7 +3595,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3677,7 +3705,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3785,7 +3815,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3894,7 +3926,9 @@
 
 
 
+
                                                           [&lt;plotname&gt;]
+
 
 
 
@@ -4003,7 +4037,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4112,7 +4148,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4245,6 +4283,7 @@
 
 
 
+
                                       value = ds9.get(string cmd)<br>
                                     </tt></tt></tt></tt></tt></tt>plot
                           stats<br>
@@ -4281,6 +4320,7 @@
         </tt><tt><tt>plot axis x log<br>
           </tt></tt><tt><tt><tt>plot axis x flip</tt></tt></tt><br>
       </tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -4379,8 +4419,10 @@
 
 
 
+
                                         axis x min<br>
                                       </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -4479,8 +4521,10 @@
 
 
 
+
                                                           axis x format<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>plot
+
 
 
 
@@ -4587,8 +4631,10 @@
 
 
 
+
                       font numbers size<br>
                     </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -4695,6 +4741,7 @@
 
 
 
+
                           font numbers slant<br>
                         </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
 
@@ -4749,8 +4796,10 @@
 
 
 
+
                                   title<br>
                                 </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -4889,8 +4938,10 @@
 
 
 
+
                       dash<br>
                     </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -4997,8 +5048,10 @@
 
 
 
+
                                                         error color<br>
                                                       </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -5105,8 +5158,10 @@
 
 
 
+
                                                           name<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt>ds9.set(string
+
 
 
 
@@ -5798,6 +5853,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [export sb|tsv &lt;filename&gt;]<br>
@@ -5817,6 +5873,7 @@
       </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [system &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -6043,6 +6100,7 @@
       </tt><tt>threads 8</tt><br>
       <p><b> <a name="tiff"></a>tiff</b></p>
       <p>Load TIFF image into current frame. Optional parameters: <tt>tiff
+
 
 
 

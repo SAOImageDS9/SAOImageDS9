@@ -474,13 +474,16 @@ proc UpdateCubeDialog {} {
 	return
     }
 
+    set w $icube(top)
+    set mb $icube(mb)
+
     if {$current(frame) != {}} {
 	if {[$current(frame) has fits]} {
 	    # now make sure we have the coord systems
 	    AdjustCoordSystem3d cube system
-	    CoordMenuEnable $icube(mb).coord cube system 2 {} {}
+	    CoordMenuEnable $mb.coord cube system 2 {} {}
 	} else {
-	    CoordMenuReset $icube(mb).coord cube system 2 {} {}
+	    CoordMenuReset $mb.coord cube system 2 {} {}
 	}
     }
 
@@ -491,6 +494,13 @@ proc UpdateCubeDialog {} {
 	set naxes 2
     }
     
+    # enable/disable Axes Reorder
+    if {$naxes > 2} {
+	$mb entryconfig [msgcat::mc {Axes Order}] -state normal
+    } else {
+	$mb entryconfig [msgcat::mc {Axes Order}] -state disabled
+    }
+
     # set from/to
     set depth 1
     if {$naxes == 2} {
@@ -523,13 +533,13 @@ proc UpdateCubeDialog {} {
     # show it
     if {$naxes <= 3} {
 	# special chase, no checkbox
-	grid columnconfigure $icube(top).param 1 -weight 1
-	grid columnconfigure $icube(top).param 2 -weight 0
+	grid columnconfigure $w.param 1 -weight 1
+	grid columnconfigure $w.param 2 -weight 0
 	grid $dcube(tslice) $dcube(twcs) -padx 2 -pady 2 -sticky ew
 	grid $dcube(lslice,2) $dcube(sslice,2) -padx 2 -pady 2 -sticky ew
     } else {
-	grid columnconfigure $icube(top).param 1 -weight 0
-	grid columnconfigure $icube(top).param 2 -weight 1
+	grid columnconfigure $w.param 1 -weight 0
+	grid columnconfigure $w.param 2 -weight 1
 	grid $dcube(taxis) $dcube(tslice) $dcube(twcs) \
 	    -padx 2 -pady 2 -sticky ew
 	for {set ii 2} {$ii<$naxes} {incr ii} {
@@ -779,43 +789,55 @@ proc ProcessCubeCmd {varname iname} {
 	}
     	default {
 	    # defaults
-	    set ss [lindex $var $i]
+	    set ss 1
 	    set sys image
 	    set axis 2
 
-	    # sys
-	    set item [lindex $var [expr $i+1]]
+	    # slice
+	    set item [lindex $var $i]
 	    if {$item != {}} {
 		if {!([string range $item 0 0] == "-")} {
-		    incr i
-		    if {[string is integer $item]} {
-			set axis [expr $item-1]
+		    if {[string is double $item]} {
+			set ss $item
 		    } else {
 			set sys $item
 		    }
 
-		    # axis
+		    # sys
 		    set item [lindex $var [expr $i+1]]
 		    if {$item != {}} {
 			if {!([string range $item 0 0] == "-")} {
 			    incr i
 			    if {[string is integer $item]} {
 				set axis [expr $item-1]
+			    } else {
+				set sys $item
+			    }
+
+			    # axis
+			    set item [lindex $var [expr $i+1]]
+			    if {$item != {}} {
+				if {!([string range $item 0 0] == "-")} {
+				    incr i
+				    if {[string is integer $item]} {
+					set axis [expr $item-1]
+				    }
+				}
 			    }
 			}
 		    }
+		} else {
+		    incr i -1
 		}
 	    }
 
-	    if {[string is double $ss]} {
-		set dcube(wcs,$axis) $ss
-		set cube(system) $sys
-		set cube(axis) $axis
-		if {$cube(axis) < 2} {
-		    set cube(axis) 2
-		}
-		CubeApply $cube(axis)
+	    set dcube(wcs,$axis) $ss
+	    set cube(system) $sys
+	    set cube(axis) $axis
+	    if {$cube(axis) < 2} {
+		set cube(axis) 2
 	    }
+	    CubeApply $cube(axis)
 	}
     }
 }

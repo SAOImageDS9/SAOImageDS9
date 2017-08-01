@@ -500,6 +500,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -519,6 +520,7 @@
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [match &lt;ref&gt; &lt;ref&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -679,8 +681,10 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -841,6 +845,7 @@
 
 
 
+
         [match unique yes|no]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [maxrows
         &lt;number&gt;]</tt><br>
@@ -900,6 +905,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1214,14 +1220,21 @@
 [&lt;coordsys&gt;][&lt;skyframe&gt;][&lt;skyformat&gt;][degrees|arcmin|arcsec]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [match &lt;coordsys&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock &lt;coordsys&gt;|none]</tt><tt>
-        <br>
-        &nbsp;<br>
-        Example: <br>
+      </tt><br>
+      <tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [reset]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3d zmin zmax &lt;coordsys&gt;]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+          <br>
+        </tt> Example: <br>
         $ds9 foo.fits -crop 40 30 10 20 # set crop in physical coords<br>
         $ds9 foo.fits -crop +104:51:06.915 +68:33:40.761&nbsp; 28.144405
         22.000204 wcs galactic arcsec<br>
         $ds9 foo.fits -crop match wcs<br>
         $ds9 foo.fits -crop lock wcs<br>
+        $ds9 foo.fits -crop reset</tt><br>
+      <tt>$ds9 foo.fits -crop 3d .25 .5 wcs<br>
+        $ds9 foo.fits -crop open<br>
+        $ds9 foo.fits -crop close<br>
       </tt>
       <p><b> <a name="crosshair"></a>crosshair</b></p>
       <p>Controls the current position of the crosshair in the current
@@ -1231,6 +1244,7 @@
         -crosshair [&lt;x&gt; &lt;h&gt; &lt;coordsys&gt;
         [&lt;skyframe&gt;][&lt;skyformat&gt;]]<br>
         &nbsp;</tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2222,6 +2236,7 @@
 
 
 
+
         [pan]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -2346,8 +2361,10 @@
 
 
 
+
         [crosshair]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2697,6 +2714,7 @@
 
 
 
+
         [yes|open]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
         [no|close]<br>
@@ -2737,6 +2755,7 @@
           &lt;filename&gt;<br>
         </tt>&nbsp;&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
       </tt><tt><tt><tt><tt><tt><tt>&nbsp; &nbsp; &nbsp; </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -2847,6 +2866,7 @@
 
 
 
+
                             &nbsp;&nbsp; </tt>[&lt;plotname&gt;] stats<br>
                         </tt></tt>&nbsp;&nbsp;&nbsp; &nbsp; </tt>[&lt;plotname&gt;]
 
@@ -2903,8 +2923,10 @@
 
 
 
+
                     list<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3022,6 +3044,7 @@
 
 
 
+
                 &nbsp;&nbsp; [&lt;plotname&gt;] print<br>
                 &nbsp; &nbsp; &nbsp; [&lt;plotname&gt;] print
                 destination [printer|file] <br>
@@ -3034,6 +3057,7 @@
               </tt>&nbsp; &nbsp; &nbsp; </tt>[&lt;plotname&gt;] close<br>
             <br>
           </tt></tt></tt><tt><tt><tt><tt><tt><tt><tt> -plot </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3179,9 +3203,11 @@
 
 
 
+
               shape
               [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt>&nbsp; &nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3295,7 +3321,9 @@
 
 
 
+
                                                 &nbsp; &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3407,8 +3435,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3520,7 +3550,9 @@
 
 
 
+
                                                           &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3632,6 +3664,7 @@
 
 
 
+
                                                           &nbsp;&nbsp;&nbsp;
 
 
@@ -3688,7 +3721,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3799,8 +3834,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3911,8 +3948,10 @@
 
 
 
+
                                                           &nbsp; &nbsp;
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4024,8 +4063,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4137,7 +4178,9 @@
 
 
 
+
                                                           &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4612,6 +4655,7 @@
       <p>Save loaded image data of current frame as FITS.</p>
       <tt> Syntax: <br>
         -save </tt><tt>[fits|rgbimage|rgbcube|mecube|mosaic|mosaicimage]
+
 
 
 

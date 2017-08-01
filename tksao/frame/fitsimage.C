@@ -3364,19 +3364,7 @@ AstFrameSet* FitsImage::buildast(int ii, FitsHead* hd, FitsHead* prim)
   strcpy(ctype2, "CTYPE2 ");
   ctype1[6] = ctype2[6] = alt;
 
-  char crval1[8], crval2[8];
-  strcpy(crval1, "CRVAL1 ");
-  strcpy(crval2, "CRVAL2 ");
-  crval1[6] = crval2[6] = alt;
-
-  char crpix1[8], crpix2[8];
-  strcpy(crpix1, "CRPIX1 ");
-  strcpy(crpix2, "CRPIX2 ");
-  crpix1[6] = crpix2[6] = alt;
-
-  if (hd->find(ctype1) && hd->find(ctype2) &&
-      hd->find(crval1) && hd->find(crval2) &&
-      hd->find(crpix1) && hd->find(crpix2)) {
+  if (hd->find(ctype1) && hd->find(ctype2)) {
     wcs2ast(ii,hd,prim,chan);
     fromwcs =1;
   }

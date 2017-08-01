@@ -54,7 +54,7 @@ void Base::saveFitsSlice(OutFitsStream& str)
   if (!ptr) 
     return;
 
-  ptr->saveFitsHeader(str,0);
+  ptr->saveFitsHeader(str,1);
   size_t cnt = ptr->saveFits(str);
   ptr->saveFitsPad(str,cnt,'\0');
 }
@@ -67,7 +67,7 @@ void Base::saveFitsExtCube(OutFitsStream& str)
 
   ptr->saveFitsPrimHeader(str);
   while (ptr) {
-    ptr->saveFitsXtHeader(str, 0);
+    ptr->saveFitsXtHeader(str, 1);
     size_t cnt = ptr->saveFits(str);
     ptr->saveFitsPad(str,cnt,'\0');
     ptr = ptr->nextSlice();
@@ -130,7 +130,7 @@ void FrameRGB::saveFitsRGBImage(OutFitsStream& str)
   ptr->saveFitsPrimHeader(str);
   for (int ii=0; ii<3; ii++) {
     if (context[ii].fits) {
-      context[ii].fits->saveFitsXtHeader(str,0);
+      context[ii].fits->saveFitsXtHeader(str,1);
       size_t cnt = context[ii].fits->saveFits(str);
       context[ii].fits->saveFitsPad(str,cnt,'\0');
     }

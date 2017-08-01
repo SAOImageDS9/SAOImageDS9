@@ -41,19 +41,14 @@ int FitsFile::saveFitsPrimHeader(OutFitsStream& str)
   return FTY_BLOCK;
 }
 
-int FitsFile::saveFitsHeader(OutFitsStream& str, int depth)
+int FitsFile::saveFitsHeaderCards(OutFitsStream& str, int depth, int cc)
 {
-  int cnt =0;
   char buf[FTY_CARDLEN];
+  int cnt = 0;
 
-  memset(buf,' ',FTY_CARDLEN);
-  memcpy(buf,"SIMPLE  = ",10);
-  memcpy(buf+32-3,"T /",3);
-  str.write(buf, FTY_CARDLEN);
-  cnt += FTY_CARDLEN;
-
-  char* ptr = head()->cards()+FTY_CARDLEN;
+  char* ptr = head()->cards() + cc;
   char* end = head()->cards() + head()->headbytes();
+
   while (ptr<end) {
     if (!strncmp(ptr,"BITPIX",6) && head()->bitpix() == -16) {
       memset(buf,' ',FTY_CARDLEN);
@@ -91,15 +86,15 @@ int FitsFile::saveFitsHeader(OutFitsStream& str, int depth)
       }
     } 
     else if (!strncmp(ptr,"NAXIS3",6)) {
-      // skip
+      // skip, we already take care of it above
       cnt -= FTY_CARDLEN;
     } 
     else if (!strncmp(ptr,"NAXIS4",6)) {
-      // skip
+      // skip, better not be here
       cnt -= FTY_CARDLEN;
     } 
     else if (!strncmp(ptr,"NAXIS5",6)) {
-      // skip
+      // skip, better not be here
       cnt -= FTY_CARDLEN;
     } 
     else if (!strncmp(ptr,"PCOUNT",6)) {
@@ -111,13 +106,34 @@ int FitsFile::saveFitsHeader(OutFitsStream& str, int depth)
       cnt -= FTY_CARDLEN;
     } 
     else if (!strncmp(ptr,"END   ",6)) {
-      // skip
+      // skip, will insert at the end
       cnt -= FTY_CARDLEN;
     }
+    else if (!strncmp(ptr,"CRVAL3",6) && depth==1)
+      // skip
+      cnt -= FTY_CARDLEN;
+    else if (!strncmp(ptr,"CRPIX3",6) && depth==1)
+      // skip
+      cnt -= FTY_CARDLEN;
+    else if (!strncmp(ptr,"CDELT3",6) && depth==1)
+      // skip
+      cnt -= FTY_CARDLEN;
+    else if (!strncmp(ptr,"CTYPE3",6) && depth==1)
+      // skip
+      cnt -= FTY_CARDLEN;
+    else if (!strncmp(ptr,"CUNIT3",6) && depth==1)
+      // skip
+      cnt -= FTY_CARDLEN;
+    else if (!strncmp(ptr,"CD3_",4) && depth==1)
+      // skip
+      cnt -= FTY_CARDLEN;
+    else if (!strncmp(ptr,"PC3_",4) && depth==1)
+      // skip
+      cnt -= FTY_CARDLEN;
     else
       str.write(ptr, FTY_CARDLEN);
 
-    ptr+=FTY_CARDLEN;
+    ptr += FTY_CARDLEN;
     cnt += FTY_CARDLEN;
   }
 
@@ -127,6 +143,21 @@ int FitsFile::saveFitsHeader(OutFitsStream& str, int depth)
   str.write(buf, FTY_CARDLEN);
   cnt += FTY_CARDLEN;
 
+  return cnt;
+}
+
+int FitsFile::saveFitsHeader(OutFitsStream& str, int depth)
+{
+  int cnt =0;
+  char buf[FTY_CARDLEN];
+
+  memset(buf,' ',FTY_CARDLEN);
+  memcpy(buf,"SIMPLE  = ",10);
+  memcpy(buf+32-3,"T /",3);
+  str.write(buf, FTY_CARDLEN);
+  cnt += FTY_CARDLEN;
+
+  cnt += saveFitsHeaderCards(str,depth,cnt);
   cnt += saveFitsPad(str,cnt,' ');
 
   return cnt;
@@ -145,92 +176,7 @@ int FitsFile::saveFitsXtHeader(OutFitsStream& str, int depth)
   str.write(buf, FTY_CARDLEN);
   cnt += FTY_CARDLEN;
 
-  char* ptr = head()->cards()+FTY_CARDLEN;
-  char* end = head()->cards() + head()->headbytes();
-  while (ptr<end) {
-    if (!strncmp(ptr,"BITPIX",6) && head()->bitpix() == -16) {
-      memset(buf,' ',FTY_CARDLEN);
-      memcpy(buf,"BITPIX  = ",10);
-      memcpy(buf+32-4,"32 /",4);
-      str.write(buf, FTY_CARDLEN);
-    } 
-    else if (!strncmp(ptr,"NAXIS ",6)) {
-      memset(buf,' ',FTY_CARDLEN);
-      memcpy(buf,"NAXIS   = ",10);
-      if (depth>1)
-	memcpy(buf+32-3,"3 /",3);
-      else
-	if (head()->naxis(1)>1)
-	  memcpy(buf+32-3,"2 /",3);
-	else
-	  memcpy(buf+32-3,"1 /",3);
-      str.write(buf, FTY_CARDLEN);
-    } 
-    else if (!strncmp(ptr,"NAXIS2",6)) {
-      str.write(ptr, FTY_CARDLEN);
-
-      if (depth>1) {
-	ostringstream ddstr;
-	ddstr << depth << " /" << ends;
-	const char* ddptr = ddstr.str().c_str();
-	int ll = strlen(ddptr);
-
-	memset(buf,' ',FTY_CARDLEN);
-	memcpy(buf,"NAXIS3  = ",10);
-	memcpy(buf+32-ll, ddptr, ll);
-	str.write(buf, FTY_CARDLEN);
-	cnt += FTY_CARDLEN;
-      }
-
-      memset(buf,' ',FTY_CARDLEN);
-      memcpy(buf,"PCOUNT  = ",10);
-      memcpy(buf+32-3,"0 /",3);
-      str.write(buf, FTY_CARDLEN);
-      cnt += FTY_CARDLEN;
-
-      memset(buf,' ',FTY_CARDLEN);
-      memcpy(buf,"GCOUNT  = ",10);
-      memcpy(buf+32-3,"1 /",3);
-      str.write(buf, FTY_CARDLEN);
-      cnt += FTY_CARDLEN;
-    } 
-    else if (!strncmp(ptr,"NAXIS3",6)) {
-      // skip
-      cnt -= FTY_CARDLEN;
-    } 
-    else if (!strncmp(ptr,"NAXIS4",6)) {
-      // skip
-      cnt -= FTY_CARDLEN;
-    } 
-    else if (!strncmp(ptr,"NAXIS5",6)) {
-      // skip
-      cnt -= FTY_CARDLEN;
-    } 
-    else if (!strncmp(ptr,"PCOUNT",6)) {
-      // skip
-      cnt -= FTY_CARDLEN;
-    } 
-    else if (!strncmp(ptr,"GCOUNT",6)) {
-      // skip
-      cnt -= FTY_CARDLEN;
-    } 
-    else if (!strncmp(ptr,"END   ",6)) {
-      // skip
-      cnt -= FTY_CARDLEN;
-    }
-    else
-      str.write(ptr, FTY_CARDLEN);
-
-    ptr+=FTY_CARDLEN;
-    cnt += FTY_CARDLEN;
-  }
-
-  // final END
-  memset(buf,' ',FTY_CARDLEN);
-  memcpy(buf,"END",3);
-  str.write(buf, FTY_CARDLEN);
-  cnt += FTY_CARDLEN;
-
+  cnt += saveFitsHeaderCards(str,depth,cnt);
   cnt += saveFitsPad(str,cnt,' ');
 
   return cnt;

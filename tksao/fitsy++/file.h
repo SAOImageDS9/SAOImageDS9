@@ -87,6 +87,7 @@ protected:
   int validParams();
   int findEnd(const char*);
   void setByteSwap();
+  int saveFitsHeaderCards(OutFitsStream&, int, int);
 
 public:
   FitsFile();

@@ -83,6 +83,7 @@ proc CATSelectBrowseCmd {varname ss rc} {
     # init timer vars
     set var(blink,count) 0
     set var(blink,marker) {}
+    set var(blink,marker,color) {}
 
     # now see the current selection
     set last [lindex [split $ss ,] 0]
@@ -108,7 +109,10 @@ proc CATSelectBrowseCmd {varname ss rc} {
     }
 
     foreach rr $rowlist {
-	lappend ${varname}(blink,marker) "\{${varname}.${rr}\}"
+	set tag "\{${varname}.${rr}\}"
+	lappend ${varname}(blink,marker) $tag
+	lappend ${varname}(blink,marker,color) \
+	    [$var(frame) get marker catalog $tag color]
     }
 
     # status
@@ -176,9 +180,13 @@ proc CATSelectRows {varname src rowlist} {
     # init timer vars
     set var(blink,count) 0
     set var(blink,marker) {}
+    set var(blink,marker,color) {}
 
     foreach rr $rowlist {
-	lappend ${varname}(blink,marker) "\{${varname}.${rr}\}"
+	set tag "\{${varname}.${rr}\}"
+	lappend ${varname}(blink,marker) $tag
+	lappend ${varname}(blink,marker,color) \
+	    [$var(frame) get marker catalog $tag color]
     }
 
     # status
@@ -239,16 +247,26 @@ proc CATSelectTimer {varname} {
 	    set var(blink) 0
 	    set var(blink,count) 0
 	    set var(blink,marker) {}
+	    set var(blink,marker,color) {}
 	}
 	1 {
-	    foreach mm $var(blink,marker) {
+	    for {set ii 0} {$ii<[llength $var(blink,marker)]} {incr ii} {
+		set mm [lindex $var(blink,marker) $ii]
+		set clr [lindex $var(blink,marker,color) $ii]
+
 		if {[info commands $var(frame)] != {}} {
 		    if {[$var(frame) has fits]} {
+			if {$var(blink,count) < 4} {
+			    switch $clr {
+				red {$var(frame) marker catalog $mm color green}
+				default {$var(frame) marker catalog $mm color red}
+			    }
+			}
 			$var(frame) marker catalog $mm highlite
 		    }
 		}
 	    }
-
+	    
 	    incr ${varname}(blink,count)
 	    if {$var(blink,count) < 5} {
 		set var(blink) 2
@@ -259,9 +277,13 @@ proc CATSelectTimer {varname} {
 	    after 250 [list CATSelectTimer $varname]
 	}
 	2 {
-	    foreach mm $var(blink,marker) {
+	    for {set ii 0} {$ii<[llength $var(blink,marker)]} {incr ii} {
+		set mm [lindex $var(blink,marker) $ii]
+		set clr [lindex $var(blink,marker,color) $ii]
+
 		if {[info commands $var(frame)] != {}} {
 		    if {[$var(frame) has fits]} {
+			$var(frame) marker catalog $mm color $clr
 			$var(frame) marker catalog $mm unhighlite
 		    }
 		}

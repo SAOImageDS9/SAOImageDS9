@@ -82,20 +82,18 @@ proc SmoothDialog {} {
 	-variable smooth(function) -value tophat 
     ttk::radiobutton $f.gaussian -text [msgcat::mc {Gaussian}] \
 	-variable smooth(function) -value gaussian 
-    ttk::label $f.rbtitle -text {Boxcar width = 2*radius+1}
-    ttk::label $f.rttitle -text {Tophat diameter = 2*radius+1}
-    ttk::label $f.rgtitle -text {Gaussian sigma = radius/2}
+    ttk::label $f.rbtitle -text {width= *radius+1}
+    ttk::label $f.rttitle -text {diameter=2*radius+1}
+    ttk::label $f.rgtitle -text {sigma=radius/2}
     slider $f.rslider 1 20 {Radius} smooth(radius) {SmoothCheckRadius}
 
     grid $f.boxcar $f.tophat $f.gaussian -padx 2 -pady 2 -sticky w
-    grid $f.rbtitle - - -padx 2 -pady 2 -sticky ew
-    grid $f.rttitle - - -padx 2 -pady 2 -sticky ew
-    grid $f.rgtitle - - -padx 2 -pady 2 -sticky ew
+    grid $f.rbtitle $f.rttitle $f.rgtitle -padx 2 -pady 2 -sticky ew
     grid $f.rslider - - -padx 2 -pady 2 -sticky ew
     
     # Kernal
     set f [ttk::labelframe $w.rad -text [msgcat::mc {Kernel}] -padding 2]
-    ttk::label $f.ktitle -text {Width/Height = 2*size+1; radius <= size}
+    ttk::label $f.ktitle -text {width,height=2*size+1; radius<=size}
     slider $f.kslider 1 20 {Size} smooth(kernel) {SmoothCheckKernel}
 
     grid $f.ktitle -padx 2 -pady 2 -sticky ew

@@ -5,8 +5,8 @@
 #ifndef __smooth_h__
 #define __smooth_h__
 
-void boxcar(double* kernel, int r);
-void tophat(double* kernel, int r);
-void gaussian(double* kernel, int r);
+void boxcar(double* kernel, int k, int r);
+void tophat(double* kernel, int k, int r);
+void gaussian(double* kernel, int k, int r);
 
 #endif

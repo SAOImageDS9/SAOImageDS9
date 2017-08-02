@@ -90,6 +90,7 @@ Context::Context()
 
   doSmooth_ =0;
   smoothFunction_ =GAUSSIAN;
+  smoothKernel_ =3;
   smoothRadius_ =3;
 
   thread_ =NULL;

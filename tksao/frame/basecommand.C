@@ -2176,6 +2176,11 @@ void Base::getSmoothFunctionCmd()
   }
 }
 
+void Base::getSmoothKernelCmd()
+{
+  printInteger(currentContext->smoothKernel());
+}
+
 void Base::getSmoothRadiusCmd()
 {
   printInteger(currentContext->smoothRadius());
@@ -2904,9 +2909,9 @@ void Base::sliceCmd(int id, double vv, Coord::CoordSystem sys)
   updateMagnifier();
 }
 
-void Base::smoothCmd(int function, int radius)
+void Base::smoothCmd(int function, int kernel, int radius)
 {
-  currentContext->setSmooth(1, (Context::SmoothFunction)function, radius);
+  currentContext->setSmooth(1,(Context::SmoothFunction)function,kernel,radius);
   currentContext->analysis();
   updateColorScale();
   // for 3d, rebuffer

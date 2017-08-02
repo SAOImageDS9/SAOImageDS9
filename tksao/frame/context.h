@@ -62,6 +62,7 @@ class Context {
 
   int doSmooth_;
   SmoothFunction smoothFunction_;
+  int smoothKernel_;
   int smoothRadius_;
 
   FitsZBound iparams; // image bbox
@@ -208,10 +209,11 @@ class Context {
   void resetIIS();
 
   void setSmooth(int ss) {doSmooth_ =ss;}
-  void setSmooth(int ss, SmoothFunction ff, int rr)
-  {doSmooth_=ss; smoothFunction_=ff; smoothRadius_=rr;}
+  void setSmooth(int ss, SmoothFunction ff, int kk, int rr)
+  {doSmooth_=ss; smoothFunction_=ff; smoothKernel_=kk; smoothRadius_=rr;}
   int hasSmooth() {return doSmooth_;}
   SmoothFunction smoothFunction() {return smoothFunction_;}
+  int smoothKernel() {return smoothKernel_;}
   int smoothRadius() {return smoothRadius_;}
 
   int shareWCS() {return shareWCS_;}

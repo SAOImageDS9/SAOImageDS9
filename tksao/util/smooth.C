@@ -11,57 +11,84 @@ using namespace std;
 
 #include "smooth.h"
 
-void boxcar(double* kernel, int r)
+void boxcar(double* kernel, int k, int r)
 {
-  int rr = 2*r+1;
-  int ksz = rr*rr;
-  
-  double* ptr = kernel;
-  for (int jj=0; jj<rr; jj++)
-    for (int ii=0; ii<rr; ii++, ptr++)
-      *ptr = 1./ksz;
-}
+  if (r>k)
+    r=k;
 
-void tophat(double* kernel, int r)
-{
-  int rr = 2*r+1;
-  int ksz = rr*rr;
-  
-  double kt = 0;
-  for (int y=-r; y<=r; y++) {
-    for (int x=-r; x<=r; x++) { 
-      if ((x*x + y*y) <= r*r) {
-	kernel[(y+r)*rr+(x+r)] = 1;
-	kt++;
+  int kk = 2*k+1;
+  int ksz = kk*kk;
+
+  int cnt =0;
+  for (int yy=-k; yy<=k; yy++)
+    for (int xx=-k; xx<=k; xx++)
+      if (abs(yy) <= r && abs(xx) <= r) {
+	kernel[(yy+k)*kk+(xx+k)] = 1;
+	cnt++;
       }
-    }
-  }
 
   // normalize kernel
-  for (int aa=0; aa<ksz; aa++)
-    kernel[aa] /= kt;
+  if (cnt) 
+    for (int ii=0; ii<ksz; ii++)
+      kernel[ii] /= cnt;
+
+  for (int yy=-k; yy<=k; yy++)
+    for (int xx=-k; xx<=k; xx++)
+      cerr << '(' << xx << ',' << yy << ")=" 
+	   << kernel[(yy+k)*kk+(xx+k)] << endl;
 }
 
-void gaussian(double* kernel, int r)
+void tophat(double* kernel, int k, int r)
 {
-  int rr = 2*r+1;
-  int ksz = rr*rr;
+  if (r>k)
+    r=k;
+
+  int kk = 2*k+1;
+  int ksz = kk*kk;
+  int rr = r*r;
+
+  int cnt =0;
+  for (int yy=-k; yy<=k; yy++)
+    for (int xx=-k; xx<=k; xx++)
+      if ((xx*xx + yy*yy) <= rr) {
+	kernel[(yy+k)*kk+(xx+k)] = 1;
+	cnt++;
+      }
+
+  // normalize kernel
+  if (cnt) 
+    for (int ii=0; ii<ksz; ii++)
+      kernel[ii] /= cnt;
+
+  for (int yy=-k; yy<=k; yy++)
+    for (int xx=-k; xx<=k; xx++)
+      cerr << '(' << xx << ',' << yy << ")=" 
+	   << kernel[(yy+k)*kk+(xx+k)] << endl;
+}
+
+void gaussian(double* kernel, int k, int r)
+{
+  if (r>k)
+    r=k;
+
+  int k2 = k*k;
+  int kk = 2*k+1;
+  int ksz = kk*kk;
   double sigma = r/2.;
   double s2 = sigma*sigma;
-  
-  double kt = 0;
-  for (int y=-r; y<=r; y++) {
-    for (int x=-r; x<=r; x++) { 
-      if ((x*x + y*y) <= r*r) {
-	double vv = exp(-.5*((x*x + y*y)/s2));
-	kernel[(y+r)*rr+(x+r)] = vv;
-	kt += vv;
+
+  double total =0;
+  for (int yy=-k; yy<=k; yy++)
+    for (int xx=-k; xx<=k; xx++)
+      if ((xx*xx + yy*yy) <= k2) {
+	double vv = exp(-.5*((xx*xx + yy*yy)/s2));
+	kernel[(yy+k)*kk+(xx+k)] = vv;
+	total += vv;
       }
-    }
-  }
 
   // normalize kernel
-  for (int aa=0; aa<ksz; aa++)
-    kernel[aa] /= kt;
+  if (total) 
+    for (int ii=0; ii<ksz; ii++)
+      kernel[ii] /= total;
 }
 

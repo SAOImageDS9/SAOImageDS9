@@ -97,17 +97,18 @@
         colors based on the frequency of each data value.</p>
       <p><b><a name="Smoothing"></a>Smoothing</b></p>
       <p>The user may select one of three types of smoothing kernels.
-        The parameter, <i>r</i> or <tt>kernel radius</tt>, is defined
-        as the following:</p>
-      <blockquote> Boxcar function, where the width = 2<i>r</i>+1<br>
-        Tophat function, where the radius = <i>r</i> and the diameter
-        of kernel is 2<i>r</i>+1<br>
+        Two parameters, <i>r</i><i>&nbsp; (radius)</i> and <i><tt>k </tt></i><i>(kernel
+          size</i><i>)</i>, are defined as the following:</p>
+      <blockquote> Kernel width/height = <i>2k+1</i> with <i>r</i><i>
+          &lt;= </i><i><tt>k</tt></i><br>
+        Boxcar function, width = <i>2</i><i>r</i><i>+1</i><br>
+        Tophat function, where the diameter = <i>2r</i><i>+1</i><br>
         Gaussian function, defined as:
         <blockquote><img src="img/gauss.png" alt="Gaussian Equation"
             width="173" height="38"><br>
         </blockquote>
-        where the mean = 0 and sigma =<i> r</i>/2, and the diameter of
-        kernel is 2<i>r</i>+1 </blockquote>
+        where the mean = 0 and sigma =<i> r/2</i><br>
+      </blockquote>
       <p><b><a name="Contours"></a>Contours</b></p>
       <p>The contour algorithm is from an unknown author and originally
         came from FV. The difference between the two modes are:<tt><br>

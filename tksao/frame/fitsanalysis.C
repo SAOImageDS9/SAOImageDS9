@@ -53,7 +53,7 @@ void FitsImage::analysis(int which, pthread_t* thread, t_smooth_arg* targ)
 
 void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
 {
-  // radius
+  int k = context_->smoothKernel();
   int r = context_->smoothRadius();
 
   int ww = analysis_->head()->naxis(0);
@@ -71,19 +71,19 @@ void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
 
   // kernel
   // create kernel
-  int rr = 2*r+1;
-  double* kernel = new double[rr*rr];
-  memset(kernel, 0, rr*rr*sizeof(double));
+  int kk = 2*k+1;
+  double* kernel = new double[kk*kk];
+  memset(kernel, 0, kk*kk*sizeof(double));
 
   switch (context_->smoothFunction()) {
   case Context::BOXCAR:
-    boxcar(kernel,r);
+    boxcar(kernel,k,r);
     break;
   case Context::TOPHAT:
-    tophat(kernel,r);
+    tophat(kernel,k,r);
     break;
   case Context::GAUSSIAN:
-    gaussian(kernel,r);
+    gaussian(kernel,k,r);
     break;
   }
 
@@ -93,7 +93,7 @@ void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
   targ->dest = dest;
   targ->width = ww;
   targ->height = hh;
-  targ->radius = r;
+  targ->radius = k;
 
   int result = pthread_create(thread, NULL, convolve, targ);
   if (result)
@@ -108,19 +108,19 @@ void* convolve(void* tt)
   double* dest = targ->dest;
   int width = targ->width;
   int height = targ->height;
-  int r = targ->radius;
+  int k = targ->radius;
 
-  int rr = 2*r+1;
+  int kk = 2*k+1;
 
   double* dptr = dest;
   for (int jj=0; jj<height; jj++) {
     for (int ii=0; ii<width; ii++, dptr++) {
 
-      for (int nn=jj-r, qq=0; nn<=jj+r; nn++, qq++) {
+      for (int nn=jj-k, qq=0; nn<=jj+k; nn++, qq++) {
 	if (nn>=0 && nn<height) {
 	  register int nd = nn*width;
-	  register int qd = qq*rr;
-	  for (int mm=ii-r, pp=0; mm<=ii+r; mm++, pp++) {
+	  register int qd = qq*kk;
+	  for (int mm=ii-k, pp=0; mm<=ii+k; mm++, pp++) {
 	    if (mm>=0 && mm<width)
 	      *dptr += src[nd+mm]*kernel[qd+pp];
 	  }

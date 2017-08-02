@@ -263,6 +263,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token IRAF_
 %token IRAFMIN_
 %token J2000_
+%token KERNEL_
 %token KEY_
 %token KEYWORD_
 %token LABEL_
@@ -1263,6 +1264,7 @@ getRGB	: CHANNEL_ {fr->getRGBChannelCmd();}
 	;
 
 getSmooth : FUNCTION_  {fr->getSmoothFunctionCmd();}
+	| KERNEL_ {fr->getSmoothKernelCmd();}
 	| RADIUS_ {fr->getSmoothRadiusCmd();}
 	;
 
@@ -2800,7 +2802,8 @@ saveENVI : FILE_ STRING STRING endian
         {fr->saveENVIFileCmd($2, $3, (FitsFile::ArchType)$4);}
         ;
 
-smooth	: smoothFunction INT {fr->smoothCmd((Context::SmoothFunction)$1,$2);}
+smooth	: smoothFunction INT INT 
+        {fr->smoothCmd((Context::SmoothFunction)$1,$2,$3);}
 	| DELETE_ {fr->smoothDeleteCmd();}
 	;
 

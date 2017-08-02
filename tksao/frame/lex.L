@@ -178,6 +178,7 @@ iteration	{return ITERATION_;}
 iraf		{return IRAF_;}
 irafmin		{return IRAFMIN_;}
 j2000		{return J2000_;}
+kernel		{return KERNEL_;}
 key		{return KEY_;}
 keyword		{return KEYWORD_;}
 label		{return LABEL_;}

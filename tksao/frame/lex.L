@@ -122,6 +122,7 @@ dim		{return DIM_;}
 ds9		{return DS9_;}
 ecliptic	{return ECLIPTIC_;}
 elevation       {return ELEVATION_;}
+elliptic	{return ELLIPTIC_;}
 ellipse		{return ELLIPSE_;}
 ellipseannulus	{return ELLIPSEANNULUS_;}
 edit		{return EDIT_;}
@@ -178,7 +179,6 @@ iteration	{return ITERATION_;}
 iraf		{return IRAF_;}
 irafmin		{return IRAFMIN_;}
 j2000		{return J2000_;}
-kernel		{return KERNEL_;}
 key		{return KEY_;}
 keyword		{return KEYWORD_;}
 label		{return LABEL_;}
@@ -202,6 +202,7 @@ mask		{return MASK_;}
 message		{return MESSAGE_;}
 method		{return METHOD_;}
 minmax		{return MINMAX_;}
+minor		{return MINOR_;}
 mip		{return MIP_;}
 mmap		{return MMAP_;}
 mmapincr	{return MMAPINCR_;}
@@ -277,6 +278,7 @@ shared		{return SHARED_;}
 shift		{return SHIFT_;}
 shmid		{return SHMID_;}
 show		{return SHOW_;}
+sigma           {return SIGMA_;}
 sinh		{return SINH_;}
 size		{return SIZE_;}
 slice		{return SLICE_;}

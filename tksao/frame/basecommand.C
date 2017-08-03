@@ -2173,17 +2173,35 @@ void Base::getSmoothFunctionCmd()
   case Context::GAUSSIAN:
     Tcl_AppendResult(interp, "gaussian", NULL);
     return;
+  case Context::ELLIPTIC:
+    Tcl_AppendResult(interp, "elliptic", NULL);
+    return;
   }
-}
-
-void Base::getSmoothKernelCmd()
-{
-  printInteger(currentContext->smoothKernel());
 }
 
 void Base::getSmoothRadiusCmd()
 {
   printInteger(currentContext->smoothRadius());
+}
+
+void Base::getSmoothRadiusMinorCmd()
+{
+  printInteger(currentContext->smoothRadiusMinor());
+}
+
+void Base::getSmoothSigmaCmd()
+{
+  printDouble(currentContext->smoothSigma());
+}
+
+void Base::getSmoothSigmaMinorCmd()
+{
+  printDouble(currentContext->smoothSigmaMinor());
+}
+
+void Base::getSmoothAngleCmd()
+{
+  printDouble(radToDeg(currentContext->smoothAngle()));
 }
 
 void Base::getThreadsCmd()
@@ -2909,9 +2927,9 @@ void Base::sliceCmd(int id, double vv, Coord::CoordSystem sys)
   updateMagnifier();
 }
 
-void Base::smoothCmd(int function, int kernel, int radius)
+void Base::smoothCmd(int ff, int rr, int rm, double ss, double sm, double aa)
 {
-  currentContext->setSmooth(1,(Context::SmoothFunction)function,kernel,radius);
+  currentContext->setSmooth(1, (Context::SmoothFunction)ff, rr, rm, ss, sm, aa);
   currentContext->analysis();
   updateColorScale();
   // for 3d, rebuffer

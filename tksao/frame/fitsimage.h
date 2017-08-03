@@ -25,7 +25,7 @@ typedef struct {
   double* dest;
   int width;
   int height;
-  int radius;
+  int k;
 } t_smooth_arg;
 
 typedef struct {

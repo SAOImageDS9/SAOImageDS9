@@ -33,7 +33,7 @@ ostream& operator<<(ostream&, const FitsZBound&);
 
 class Context {
  public:
-  enum SmoothFunction {BOXCAR, TOPHAT, GAUSSIAN};
+  enum SmoothFunction {BOXCAR, TOPHAT, GAUSSIAN, ELLIPTIC};
 
  protected:
   Base* parent_;
@@ -62,8 +62,11 @@ class Context {
 
   int doSmooth_;
   SmoothFunction smoothFunction_;
-  int smoothKernel_;
   int smoothRadius_;
+  int smoothRadiusMinor_;
+  double smoothSigma_;
+  double smoothSigmaMinor_;
+  double smoothAngle_;
 
   FitsZBound iparams; // image bbox
   FitsZBound cparams; // crop bbox
@@ -209,12 +212,14 @@ class Context {
   void resetIIS();
 
   void setSmooth(int ss) {doSmooth_ =ss;}
-  void setSmooth(int ss, SmoothFunction ff, int kk, int rr)
-  {doSmooth_=ss; smoothFunction_=ff; smoothKernel_=kk; smoothRadius_=rr;}
+  void setSmooth(int, SmoothFunction, int, int, double, double, double);
   int hasSmooth() {return doSmooth_;}
   SmoothFunction smoothFunction() {return smoothFunction_;}
-  int smoothKernel() {return smoothKernel_;}
   int smoothRadius() {return smoothRadius_;}
+  int smoothRadiusMinor() {return smoothRadiusMinor_;}
+  double smoothSigma() {return smoothSigma_;}
+  double smoothSigmaMinor() {return smoothSigmaMinor_;}
+  double smoothAngle() {return smoothAngle_;}
 
   int shareWCS() {return shareWCS_;}
 

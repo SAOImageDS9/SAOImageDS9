@@ -1663,10 +1663,13 @@ public:
 
   // Smooth Commands
   void getSmoothFunctionCmd();
-  void getSmoothKernelCmd();
   void getSmoothRadiusCmd();
+  void getSmoothRadiusMinorCmd();
+  void getSmoothSigmaCmd();
+  void getSmoothSigmaMinorCmd();
+  void getSmoothAngleCmd();
   void hasSmoothCmd();
-  void smoothCmd(int, int, int);
+  void smoothCmd(int, int, int, double, double, double);
   void smoothDeleteCmd();
 
   // Threads Commands

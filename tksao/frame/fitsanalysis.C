@@ -21,7 +21,7 @@ void FitsImage::analysis(int which, pthread_t* thread, t_smooth_arg* targ)
   targ->dest =NULL;
   targ->width =0;
   targ->height =0;
-  targ->radius =0;
+  targ->k =0;
 
   if (manageAnalysis_) {
     if (analysis_)
@@ -53,8 +53,11 @@ void FitsImage::analysis(int which, pthread_t* thread, t_smooth_arg* targ)
 
 void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
 {
-  int k = context_->smoothKernel();
-  int r = context_->smoothRadius();
+  int rr = context_->smoothRadius();
+  int mm = context_->smoothRadiusMinor();
+  double ss = context_->smoothSigma();
+  double sm = context_->smoothSigmaMinor();
+  double aa = context_->smoothAngle();
 
   int ww = analysis_->head()->naxis(0);
   int hh = analysis_->head()->naxis(1);
@@ -71,19 +74,22 @@ void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
 
   // kernel
   // create kernel
-  int kk = 2*k+1;
+  int kk = 2*rr+1;
   double* kernel = new double[kk*kk];
   memset(kernel, 0, kk*kk*sizeof(double));
 
   switch (context_->smoothFunction()) {
   case Context::BOXCAR:
-    boxcar(kernel,k,r);
+    boxcar(kernel,rr);
     break;
   case Context::TOPHAT:
-    tophat(kernel,k,r);
+    tophat(kernel,rr);
     break;
   case Context::GAUSSIAN:
-    gaussian(kernel,k,r);
+    gaussian(kernel,rr,ss);
+    break;
+  case Context::ELLIPTIC:
+    elliptic(kernel,rr,mm,ss,sm,aa);
     break;
   }
 
@@ -93,7 +99,7 @@ void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
   targ->dest = dest;
   targ->width = ww;
   targ->height = hh;
-  targ->radius = k;
+  targ->k = rr;
 
   int result = pthread_create(thread, NULL, convolve, targ);
   if (result)
@@ -108,7 +114,7 @@ void* convolve(void* tt)
   double* dest = targ->dest;
   int width = targ->width;
   int height = targ->height;
-  int k = targ->radius;
+  int k = targ->k;
 
   int kk = 2*k+1;
 

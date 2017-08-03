@@ -208,6 +208,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token EDIT_
 %token ECLIPTIC_
 %token ELEVATION_
+%token ELLIPTIC_
 %token ELLIPSE_
 %token ELLIPSEANNULUS_
 %token END_
@@ -263,7 +264,6 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token IRAF_
 %token IRAFMIN_
 %token J2000_
-%token KERNEL_
 %token KEY_
 %token KEYWORD_
 %token LABEL_
@@ -287,6 +287,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token MESSAGE_
 %token METHOD_
 %token MINMAX_
+%token MINOR_
 %token MIP_
 %token MMAP_
 %token MMAPINCR_
@@ -361,6 +362,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token SHIFT_
 %token SHMID_
 %token SHOW_
+%token SIGMA_
 %token SINH_
 %token SIZE_
 %token SLICE_
@@ -1264,8 +1266,11 @@ getRGB	: CHANNEL_ {fr->getRGBChannelCmd();}
 	;
 
 getSmooth : FUNCTION_  {fr->getSmoothFunctionCmd();}
-	| KERNEL_ {fr->getSmoothKernelCmd();}
 	| RADIUS_ {fr->getSmoothRadiusCmd();}
+	| RADIUS_ MINOR_ {fr->getSmoothRadiusMinorCmd();}
+	| SIGMA_ {fr->getSmoothSigmaCmd();}
+	| SIGMA_ MINOR_ {fr->getSmoothSigmaMinorCmd();}
+	| ANGLE_ {fr->getSmoothAngleCmd();}
 	;
 
 getThreed : VIEW_ getThreedView
@@ -2802,14 +2807,15 @@ saveENVI : FILE_ STRING STRING endian
         {fr->saveENVIFileCmd($2, $3, (FitsFile::ArchType)$4);}
         ;
 
-smooth	: smoothFunction INT INT 
-        {fr->smoothCmd((Context::SmoothFunction)$1,$2,$3);}
+smooth	: smoothFunction INT INT numeric numeric angle
+        {fr->smoothCmd((Context::SmoothFunction)$1,$2,$3,$4,$5,$6);}
 	| DELETE_ {fr->smoothDeleteCmd();}
 	;
 
 smoothFunction : BOXCAR_ {$$ = Context::BOXCAR;}
-	| GAUSSIAN_ {$$ = Context::GAUSSIAN;}
 	| TOPHAT_ {$$ = Context::TOPHAT;}
+	| GAUSSIAN_ {$$ = Context::GAUSSIAN;}
+	| ELLIPTIC_ {$$ = Context::ELLIPTIC;}
 	;
 
 update	: /* empty */ {fr->updateFitsCmd(0);}

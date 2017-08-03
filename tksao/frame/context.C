@@ -90,8 +90,11 @@ Context::Context()
 
   doSmooth_ =0;
   smoothFunction_ =GAUSSIAN;
-  smoothKernel_ =3;
   smoothRadius_ =3;
+  smoothRadiusMinor_ =3;
+  smoothSigma_ =1;
+  smoothSigmaMinor_ =1;
+  smoothAngle_ =0;
 
   thread_ =NULL;
 }
@@ -2543,6 +2546,18 @@ void Context::setSecMode(FrScale::SecMode mode)
 {
   frScale.setSecMode(mode);
   clearHist();
+}
+
+void Context::setSmooth(int dd, SmoothFunction ff, int rr, int rm, 
+			double ss, double sm, double aa)
+{
+  doSmooth_=dd;
+  smoothFunction_=ff;
+  smoothRadius_=rr;
+  smoothRadiusMinor_=rm;
+  smoothSigma_=ss;
+  smoothSigmaMinor_=sm;
+  smoothAngle_=aa;
 }
 
 void Context::unload()

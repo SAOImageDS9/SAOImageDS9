@@ -113,33 +113,33 @@ proc SmoothDialog {} {
     
     # gaussian
     set f [ttk::labelframe $w.gaussian -text [msgcat::mc {Gaussian}] -padding 2]
-    ttk::label $f.tsigma -text {Sigma}
-    ttk::entry $f.sigma -textvariable smooth(sigma) -width 7
     ttk::label $f.tdescr -text [msgcat::mc {Diameter}]
     ttk::label $f.descr -text {2*radius+1}
-    slider $f.slider 1 20 {Radius} smooth(radius) {}
+    slider $f.rslider 1 20 {Radius} smooth(radius) {}
+    slider $f.sslider 1 20 {Sigma} smooth(sigma) {}
 
-    grid $f.tsigma $f.sigma -padx 2 -pady 2 -sticky w
     grid $f.tdescr $f.descr -padx 2 -pady 2 -sticky w
-    grid $f.slider -columnspan 20 -padx 2 -pady 2 -sticky ew
+    grid $f.rslider -columnspan 20 -padx 2 -pady 2 -sticky ew
+    grid $f.sslider -columnspan 20 -padx 2 -pady 2 -sticky ew
 
     # elliptical gaussian
-    set f [ttk::labelframe $w.elliptic -text [msgcat::mc {Elliptical Gaussian}] -padding 2]
+    set f [ttk::labelframe $w.elliptic \
+	       -text [msgcat::mc {Elliptical Gaussian}] -padding 2]
     ttk::label $f.tdescr -text [msgcat::mc {Diameter}]
-    ttk::label $f.tsigma -text {Sigma}
-    ttk::entry $f.sigma -textvariable smooth(sigma) -width 7
-    ttk::entry $f.sigmaminor -textvariable smooth(sigma,minor) -width 7
     ttk::label $f.tangle -text {Angle}
     ttk::entry $f.angle -textvariable smooth(angle) -width 7
     ttk::label $f.descr -text {2*radius+1}
-    slider $f.slider 1 20 [msgcat::mc {Major Radius}] smooth(radius) {}
-    slider $f.slider2 1 20 [msgcat::mc {Minor Radius}] smooth(radius,minor) {}
+    slider $f.rslider 1 20 [msgcat::mc {Major Radius}] smooth(radius) {}
+    slider $f.rmslider 1 20 [msgcat::mc {Minor Radius}] smooth(radius,minor) {}
+    slider $f.sslider 1 20 [msgcat::mc {Major Sigma}] smooth(sigma) {}
+    slider $f.smlider 1 20 [msgcat::mc {Minor Sigma}] smooth(sigma,minor) {}
 
-    grid $f.tsigma $f.sigma $f.sigmaminor -padx 2 -pady 2 -sticky w
     grid $f.tangle $f.angle -padx 2 -pady 2 -sticky w
     grid $f.tdescr $f.descr -padx 2 -pady 2 -sticky w
-    grid $f.slider -columnspan 20 -padx 2 -pady 2 -sticky ew
-    grid $f.slider2 -columnspan 20 -padx 2 -pady 2 -sticky ew
+    grid $f.rslider -columnspan 20 -padx 2 -pady 2 -sticky ew
+    grid $f.rmslider -columnspan 20 -padx 2 -pady 2 -sticky ew
+    grid $f.sslider -columnspan 20 -padx 2 -pady 2 -sticky ew
+    grid $f.smlider -columnspan 20 -padx 2 -pady 2 -sticky ew
 
     # Buttons
     set f [ttk::frame $w.buttons]

@@ -15,8 +15,11 @@ proc SmoothDef {} {
     set smooth(lock) 0
     set smooth(view) 0
     set smooth(function) gaussian
-    set smooth(kernel) 3
     set smooth(radius) 3
+    set smooth(radius,minor) 3
+    set smooth(sigma) 1
+    set smooth(sigma,minor) 1
+    set smooth(angle) 0
 
     array set psmooth [array get smooth]
 }
@@ -29,7 +32,7 @@ proc SmoothUpdate {} {
     if {$current(frame) != {}} {
 	SetWatchCursor
 	if {$smooth(view)} {
-	    RGBEvalLockCurrent rgb(lock,smooth) [list $current(frame) smooth $smooth(function) $smooth(kernel) $smooth(radius)]
+	    RGBEvalLockCurrent rgb(lock,smooth) [list $current(frame) smooth $smooth(function) $smooth(radius) $smooth(radius,minor) $smooth(sigma) $smooth(sigma,minor) $smooth(angle)]
 	} else {
 	    RGBEvalLockCurrent rgb(lock,smooth) [list $current(frame) smooth delete]
 	}
@@ -77,28 +80,67 @@ proc SmoothDialog {} {
     # Function
     set f [ttk::labelframe $w.func -text [msgcat::mc {Function}] -padding 2]
     ttk::radiobutton $f.boxcar -text [msgcat::mc {Boxcar}] \
-	-variable smooth(function) -value boxcar 
+	-variable smooth(function) -value boxcar \
+	-command SmoothUpdateDialog
     ttk::radiobutton $f.tophat -text [msgcat::mc {Tophat}] \
-	-variable smooth(function) -value tophat 
+	-variable smooth(function) -value tophat \
+	-command SmoothUpdateDialog
     ttk::radiobutton $f.gaussian -text [msgcat::mc {Gaussian}] \
-	-variable smooth(function) -value gaussian 
-    ttk::label $f.rbtitle -text {width= *radius+1}
-    ttk::label $f.rttitle -text {diameter=2*radius+1}
-    ttk::label $f.rgtitle -text {sigma=radius/2}
-    slider $f.rslider 1 20 {Radius} smooth(radius) {SmoothCheckRadius}
+	-variable smooth(function) -value gaussian \
+	-command SmoothUpdateDialog
+    ttk::radiobutton $f.elliptic -text [msgcat::mc {Elliptical Gaussian}] \
+	-variable smooth(function) -value elliptic \
+	-command SmoothUpdateDialog
+    grid $f.boxcar $f.tophat $f.gaussian $f.elliptic -padx 2 -pady 2 -sticky w
 
-    grid $f.boxcar $f.tophat $f.gaussian -padx 2 -pady 2 -sticky w
-    grid $f.rbtitle $f.rttitle $f.rgtitle -padx 2 -pady 2 -sticky ew
-    grid $f.rslider - - -padx 2 -pady 2 -sticky ew
-    
-    # Kernal
-    set f [ttk::labelframe $w.rad -text [msgcat::mc {Kernel}] -padding 2]
-    ttk::label $f.ktitle -text {width,height=2*size+1; radius<=size}
-    slider $f.kslider 1 20 {Size} smooth(kernel) {SmoothCheckKernel}
+    # boxcar
+    set f [ttk::labelframe $w.boxcar -text [msgcat::mc {Boxcar}] -padding 2]
+    ttk::label $f.tdescr -text [msgcat::mc {Width}]
+    ttk::label $f.descr -text {2*radius+1}
+    slider $f.slider 1 20 {Radius} smooth(radius) {}
 
-    grid $f.ktitle -padx 2 -pady 2 -sticky ew
-    grid $f.kslider -padx 2 -pady 2 -sticky ew
+    grid $f.tdescr $f.descr -padx 2 -pady 2 -sticky w
+    grid $f.slider -columnspan 20 -padx 2 -pady 2 -sticky ew
+
+    # tophat
+    set f [ttk::labelframe $w.tophat -text [msgcat::mc {Tophat}] -padding 2]
+    ttk::label $f.tdescr -text [msgcat::mc {Diameter}]
+    ttk::label $f.descr -text {2*radius+1}
+    slider $f.slider 1 20 {Radius} smooth(radius) {}
+
+    grid $f.tdescr $f.descr -padx 2 -pady 2 -sticky w
+    grid $f.slider -columnspan 20 -padx 2 -pady 2 -sticky ew
     
+    # gaussian
+    set f [ttk::labelframe $w.gaussian -text [msgcat::mc {Gaussian}] -padding 2]
+    ttk::label $f.tsigma -text {Sigma}
+    ttk::entry $f.sigma -textvariable smooth(sigma) -width 7
+    ttk::label $f.tdescr -text [msgcat::mc {Diameter}]
+    ttk::label $f.descr -text {2*radius+1}
+    slider $f.slider 1 20 {Radius} smooth(radius) {}
+
+    grid $f.tsigma $f.sigma -padx 2 -pady 2 -sticky w
+    grid $f.tdescr $f.descr -padx 2 -pady 2 -sticky w
+    grid $f.slider -columnspan 20 -padx 2 -pady 2 -sticky ew
+
+    # elliptical gaussian
+    set f [ttk::labelframe $w.elliptic -text [msgcat::mc {Elliptical Gaussian}] -padding 2]
+    ttk::label $f.tdescr -text [msgcat::mc {Diameter}]
+    ttk::label $f.tsigma -text {Sigma}
+    ttk::entry $f.sigma -textvariable smooth(sigma) -width 7
+    ttk::entry $f.sigmaminor -textvariable smooth(sigma,minor) -width 7
+    ttk::label $f.tangle -text {Angle}
+    ttk::entry $f.angle -textvariable smooth(angle) -width 7
+    ttk::label $f.descr -text {2*radius+1}
+    slider $f.slider 1 20 [msgcat::mc {Major Radius}] smooth(radius) {}
+    slider $f.slider2 1 20 [msgcat::mc {Minor Radius}] smooth(radius,minor) {}
+
+    grid $f.tsigma $f.sigma $f.sigmaminor -padx 2 -pady 2 -sticky w
+    grid $f.tangle $f.angle -padx 2 -pady 2 -sticky w
+    grid $f.tdescr $f.descr -padx 2 -pady 2 -sticky w
+    grid $f.slider -columnspan 20 -padx 2 -pady 2 -sticky ew
+    grid $f.slider2 -columnspan 20 -padx 2 -pady 2 -sticky ew
+
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.apply -text [msgcat::mc {Apply}] -command SmoothApplyDialog
@@ -108,27 +150,38 @@ proc SmoothDialog {} {
 
     # Fini
     grid $w.func -sticky news
-    grid $w.rad -sticky news
-    grid $w.buttons -sticky ew
     grid rowconfigure $w 0 -weight 1
     grid rowconfigure $w 1 -weight 1
     grid columnconfigure $w 0 -weight 1
+
+    SmoothUpdateDialog
 }
 
-proc SmoothCheckRadius {} {
+proc SmoothUpdateDialog {} {
+    global ismooth
     global smooth
+    global ds9
 
-    if {$smooth(radius) > $smooth(kernel)} {
-	set smooth(kernel) $smooth(radius)
+    if {![winfo exists $ismooth(top)]} {
+	return
     }
-}
 
-proc SmoothCheckKernel {} {
-    global smooth
+    set w $ismooth(top)
+    set mb $ismooth(mb)
 
-    if {$smooth(kernel) < $smooth(radius)} {
-	set smooth(radius) $smooth(kernel)
+    grid forget $w.boxcar
+    grid forget $w.tophat
+    grid forget $w.gaussian
+    grid forget $w.elliptic
+    grid forget $w.buttons
+
+    switch $smooth(function) {
+	boxcar {grid $w.boxcar -sticky news}
+	tophat {grid $w.tophat -sticky news}
+	gaussian {grid $w.gaussian -sticky news}
+	elliptic {grid $w.elliptic -sticky news}
     }
+    grid $w.buttons -sticky ew
 }
 
 proc SmoothApplyDialog {} {
@@ -167,7 +220,10 @@ proc UpdateSmoothMenu {} {
 	set smooth(view) [$current(frame) has smooth]
 	set smooth(function) [$current(frame) get smooth function]
 	set smooth(radius) [$current(frame) get smooth radius]
-	set smooth(kernel) [$current(frame) get smooth kernel]
+	set smooth(radius,minor) [$current(frame) get smooth radius minor]
+	set smooth(sigma) [$current(frame) get smooth sigma]
+	set smooth(sigma,minor) [$current(frame) get smooth sigma minor]
+	set smooth(angle) [$current(frame) get smooth angle]
     }
 }
 
@@ -182,15 +238,18 @@ proc MatchSmoothCurrent {} {
 proc MatchSmooth {which} {
     global ds9
     global rgb
- 
+    
     set view [$which has smooth]
     set function [$which get smooth function]
     set radius [$which get smooth radius]
+    set minor [$current(frame) get smooth minor]
+    set sigma [$current(frame) get smooth sigma]
+    set angle [$current(frame) get smooth angle]
 
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
 	    if {$view} {
-		RGBEvalLock rgb(lock,smooth) $ff [list $ff smooth $function $radius]
+		RGBEvalLock rgb(lock,smooth) $ff [list $ff smooth $function $radius $minor $sigma $angle]
 	    } else {
 		RGBEvalLock rgb(lock,smooth) $ff [list $ff smooth delete]
 	    }
@@ -226,7 +285,10 @@ proc SmoothBackupBase {ch which} {
     if {[$which has smooth]} {
 	set function [$which get smooth function]
 	set radius [$which get smooth radius]
-	puts $ch "$which smooth $function $radius"
+	set minor [$which get smooth minor]
+	set sigma [$which get smooth sigma]
+	set angle [$which get smooth angle]
+	puts $ch "$which smooth $function $radius $minor $sigma $angle"
     }
 }
 
@@ -288,19 +350,34 @@ proc ProcessSmoothCmd {varname iname} {
 	    }
 	    LockSmoothCurrent
 	}
+	function {
+	    incr i
+	    set smooth(function) [lindex $var $i]
+	    SmoothUpdate
+	}
 	radius {
 	    incr i
 	    set smooth(radius) [lindex $var $i]
 	    SmoothUpdate
 	}
-	kernel {
+	radiusminor {
 	    incr i
-	    set smooth(kernel) [lindex $var $i]
+	    set smooth(radius,minor) [lindex $var $i]
 	    SmoothUpdate
 	}
-	function {
+	sigma {
 	    incr i
-	    set smooth(function) [lindex $var $i]
+	    set smooth(sigma) [lindex $var $i]
+	    SmoothUpdate
+	}
+	sigmaminor {
+	    incr i
+	    set smooth(sigma,minor) [lindex $var $i]
+	    SmoothUpdate
+	}
+	angle {
+	    incr i
+	    set smooth(angle) [lindex $var $i]
 	    SmoothUpdate
 	}
 	yes -
@@ -330,8 +407,10 @@ proc ProcessSendSmoothCmd {proc id param} {
 	lock {$proc $id [ToYesNo $smooth(lock)]} 
 	function {$proc $id "$smooth(function)\n"}
 	radius {$proc $id "$smooth(radius)\n"}
-	kernel {$proc $id "$smooth(kernel)\n"}
+	radiusminor {$proc $id "$smooth(radius,minor)\n"}
+	sigma {$proc $id "$smooth(sigma)\n"}
+	sigmaminor {$proc $id "$smooth(sigma,minor)\n"}
+	angle {$proc $id "$smooth(angle)\n"}
 	default {$proc $id [ToYesNo $smooth(view)]}
     }
 }
-

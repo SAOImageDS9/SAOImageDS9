@@ -242,14 +242,15 @@ proc MatchSmooth {which} {
     set view [$which has smooth]
     set function [$which get smooth function]
     set radius [$which get smooth radius]
-    set minor [$current(frame) get smooth minor]
-    set sigma [$current(frame) get smooth sigma]
-    set angle [$current(frame) get smooth angle]
+    set minor [$which get smooth radius minor]
+    set sigma [$which get smooth sigma]
+    set sigmaminor [$which get smooth sigma minor]
+    set angle [$which get smooth angle]
 
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
 	    if {$view} {
-		RGBEvalLock rgb(lock,smooth) $ff [list $ff smooth $function $radius $minor $sigma $angle]
+		RGBEvalLock rgb(lock,smooth) $ff [list $ff smooth $function $radius $radiusminor $sigma $sigmaminor $angle]
 	    } else {
 		RGBEvalLock rgb(lock,smooth) $ff [list $ff smooth delete]
 	    }
@@ -285,10 +286,11 @@ proc SmoothBackupBase {ch which} {
     if {[$which has smooth]} {
 	set function [$which get smooth function]
 	set radius [$which get smooth radius]
-	set minor [$which get smooth minor]
+	set radiusminor [$which get smooth radius minor]
 	set sigma [$which get smooth sigma]
+	set sigmaminor [$which get smooth sigma minor]
 	set angle [$which get smooth angle]
-	puts $ch "$which smooth $function $radius $minor $sigma $angle"
+	puts $ch "$which smooth $function $radius $radiusminor $sigma $sigmaminor $angle"
     }
 }
 

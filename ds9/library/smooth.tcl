@@ -115,7 +115,8 @@ proc SmoothDialog {} {
     set f [ttk::labelframe $w.gaussian -text [msgcat::mc {Gaussian}] -padding 2]
     ttk::label $f.tdescr -text [msgcat::mc {Diameter}]
     ttk::label $f.descr -text {2*radius+1}
-    slider $f.rslider 1 20 {Radius} smooth(radius) {}
+    slider $f.rslider 1 20 {Radius} smooth(radius) \
+	{SmoothCheckSigma radius sigma}
     slider $f.sslider 1 20 {Sigma} smooth(sigma) {}
 
     grid $f.tdescr $f.descr -padx 2 -pady 2 -sticky w
@@ -129,8 +130,10 @@ proc SmoothDialog {} {
     ttk::label $f.tangle -text {Angle}
     ttk::entry $f.angle -textvariable smooth(angle) -width 7
     ttk::label $f.descr -text {2*radius+1}
-    slider $f.rslider 1 20 [msgcat::mc {Major Radius}] smooth(radius) {}
-    slider $f.rmslider 1 20 [msgcat::mc {Minor Radius}] smooth(radius,minor) {}
+    slider $f.rslider 1 20 [msgcat::mc {Major Radius}] smooth(radius) \
+	{SmoothCheckSigma radius sigma}
+    slider $f.rmslider 1 20 [msgcat::mc {Minor Radius}] smooth(radius,minor) \
+	{SmoothCheckSigma radius,minor sigma,minor}
     slider $f.sslider 1 20 [msgcat::mc {Major Sigma}] smooth(sigma) {}
     slider $f.smlider 1 20 [msgcat::mc {Minor Sigma}] smooth(sigma,minor) {}
 
@@ -155,6 +158,12 @@ proc SmoothDialog {} {
     grid columnconfigure $w 0 -weight 1
 
     SmoothUpdateDialog
+}
+
+proc SmoothCheckSigma {rr ss} {
+    global smooth
+
+    set smooth($ss) [expr $smooth($rr)/2.]
 }
 
 proc SmoothUpdateDialog {} {

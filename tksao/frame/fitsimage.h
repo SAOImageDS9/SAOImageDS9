@@ -13,8 +13,6 @@
 #include "wcs.h"
 #include "head.h"
 
-#include "smooth.h"
-
 // WCS ' ','A' to 'Z', WCS0
 #define MULTWCS 27
 #define MULTWCSA 28

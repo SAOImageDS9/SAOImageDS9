@@ -92,8 +92,8 @@ Context::Context()
   smoothFunction_ =GAUSSIAN;
   smoothRadius_ =3;
   smoothRadiusMinor_ =3;
-  smoothSigma_ =1;
-  smoothSigmaMinor_ =1;
+  smoothSigma_ =1.5;
+  smoothSigmaMinor_ =1.5;
   smoothAngle_ =0;
 
   thread_ =NULL;

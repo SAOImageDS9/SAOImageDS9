@@ -17,8 +17,8 @@ proc SmoothDef {} {
     set smooth(function) gaussian
     set smooth(radius) 3
     set smooth(radius,minor) 3
-    set smooth(sigma) 1
-    set smooth(sigma,minor) 1
+    set smooth(sigma) 1.5
+    set smooth(sigma,minor) 1.5
     set smooth(angle) 0
 
     array set psmooth [array get smooth]
@@ -117,7 +117,7 @@ proc SmoothDialog {} {
     ttk::label $f.descr -text {2*radius+1}
     slider $f.rslider 1 20 {Radius} smooth(radius) \
 	{SmoothCheckSigma radius sigma}
-    slider $f.sslider 1 20 {Sigma} smooth(sigma) {}
+    slider $f.sslider 1. 20. {Sigma} smooth(sigma) {}
 
     grid $f.tdescr $f.descr -padx 2 -pady 2 -sticky w
     grid $f.rslider -columnspan 20 -padx 2 -pady 2 -sticky ew
@@ -134,8 +134,8 @@ proc SmoothDialog {} {
 	{SmoothCheckSigma radius sigma}
     slider $f.rmslider 1 20 [msgcat::mc {Minor Radius}] smooth(radius,minor) \
 	{SmoothCheckSigma radius,minor sigma,minor}
-    slider $f.sslider 1 20 [msgcat::mc {Major Sigma}] smooth(sigma) {}
-    slider $f.smlider 1 20 [msgcat::mc {Minor Sigma}] smooth(sigma,minor) {}
+    slider $f.sslider 1. 20. [msgcat::mc {Major Sigma}] smooth(sigma) {}
+    slider $f.smlider 1. 20. [msgcat::mc {Minor Sigma}] smooth(sigma,minor) {}
 
     grid $f.tangle $f.angle -padx 2 -pady 2 -sticky w
     grid $f.tdescr $f.descr -padx 2 -pady 2 -sticky w

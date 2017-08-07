@@ -556,6 +556,7 @@ void Ruler::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   XMLRowPoint(ptr,sys,sky,format,vv,2);
   XMLRow(XMLPARAM,(char*)(sysstr.str().c_str()));
   XMLRow(XMLPARAM2,(char*)(diststr.str().c_str()));
+  XMLRow(XMLPARAM3,(char*)distSpec);
 
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);

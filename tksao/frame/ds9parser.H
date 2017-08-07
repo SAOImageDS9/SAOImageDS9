@@ -90,81 +90,82 @@
      FK4_ = 306,
      FK4_NO_E_ = 307,
      FK5_ = 308,
-     FONT_ = 309,
-     GALACTIC_ = 310,
-     GLOBAL_ = 311,
-     HELIOECLIPTIC_ = 312,
-     HIGHLITE_ = 313,
-     ICRS_ = 314,
-     IGNORE_ = 315,
-     IMAGE_ = 316,
-     INCLUDE_ = 317,
-     J2000_ = 318,
-     KEY_ = 319,
-     LINE_ = 320,
-     LINEAR_ = 321,
-     MOVE_ = 322,
-     N_ = 323,
-     NO_ = 324,
-     OFF_ = 325,
-     ON_ = 326,
-     PHYSICAL_ = 327,
-     PIE_ = 328,
-     PIXELS_ = 329,
-     POINT_ = 330,
-     POLYGON_ = 331,
-     PROJECTION_ = 332,
-     PROPERTY_ = 333,
-     ROTATE_ = 334,
-     ROTBOX_ = 335,
-     RULER_ = 336,
-     SEGMENT_ = 337,
-     SELECT_ = 338,
-     SOURCE_ = 339,
-     SUPERGALACTIC_ = 340,
-     TAG_ = 341,
-     TEXT_ = 342,
-     TEXTANGLE_ = 343,
-     TEXTROTATE_ = 344,
-     TILE_ = 345,
-     TRUE_ = 346,
-     VECTOR_ = 347,
-     VERSION_ = 348,
-     UNHIGHLITE_ = 349,
-     UNSELECT_ = 350,
-     UPDATE_ = 351,
-     WCS_ = 352,
-     WCSA_ = 353,
-     WCSB_ = 354,
-     WCSC_ = 355,
-     WCSD_ = 356,
-     WCSE_ = 357,
-     WCSF_ = 358,
-     WCSG_ = 359,
-     WCSH_ = 360,
-     WCSI_ = 361,
-     WCSJ_ = 362,
-     WCSK_ = 363,
-     WCSL_ = 364,
-     WCSM_ = 365,
-     WCSN_ = 366,
-     WCSO_ = 367,
-     WCSP_ = 368,
-     WCSQ_ = 369,
-     WCSR_ = 370,
-     WCSS_ = 371,
-     WCST_ = 372,
-     WCSU_ = 373,
-     WCSV_ = 374,
-     WCSW_ = 375,
-     WCSX_ = 376,
-     WCSY_ = 377,
-     WCSZ_ = 378,
-     WCS0_ = 379,
-     WIDTH_ = 380,
-     X_ = 381,
-     Y_ = 382,
-     YES_ = 383
+     FORMAT_ = 309,
+     FONT_ = 310,
+     GALACTIC_ = 311,
+     GLOBAL_ = 312,
+     HELIOECLIPTIC_ = 313,
+     HIGHLITE_ = 314,
+     ICRS_ = 315,
+     IGNORE_ = 316,
+     IMAGE_ = 317,
+     INCLUDE_ = 318,
+     J2000_ = 319,
+     KEY_ = 320,
+     LINE_ = 321,
+     LINEAR_ = 322,
+     MOVE_ = 323,
+     N_ = 324,
+     NO_ = 325,
+     OFF_ = 326,
+     ON_ = 327,
+     PHYSICAL_ = 328,
+     PIE_ = 329,
+     PIXELS_ = 330,
+     POINT_ = 331,
+     POLYGON_ = 332,
+     PROJECTION_ = 333,
+     PROPERTY_ = 334,
+     ROTATE_ = 335,
+     ROTBOX_ = 336,
+     RULER_ = 337,
+     SEGMENT_ = 338,
+     SELECT_ = 339,
+     SOURCE_ = 340,
+     SUPERGALACTIC_ = 341,
+     TAG_ = 342,
+     TEXT_ = 343,
+     TEXTANGLE_ = 344,
+     TEXTROTATE_ = 345,
+     TILE_ = 346,
+     TRUE_ = 347,
+     VECTOR_ = 348,
+     VERSION_ = 349,
+     UNHIGHLITE_ = 350,
+     UNSELECT_ = 351,
+     UPDATE_ = 352,
+     WCS_ = 353,
+     WCSA_ = 354,
+     WCSB_ = 355,
+     WCSC_ = 356,
+     WCSD_ = 357,
+     WCSE_ = 358,
+     WCSF_ = 359,
+     WCSG_ = 360,
+     WCSH_ = 361,
+     WCSI_ = 362,
+     WCSJ_ = 363,
+     WCSK_ = 364,
+     WCSL_ = 365,
+     WCSM_ = 366,
+     WCSN_ = 367,
+     WCSO_ = 368,
+     WCSP_ = 369,
+     WCSQ_ = 370,
+     WCSR_ = 371,
+     WCSS_ = 372,
+     WCST_ = 373,
+     WCSU_ = 374,
+     WCSV_ = 375,
+     WCSW_ = 376,
+     WCSX_ = 377,
+     WCSY_ = 378,
+     WCSZ_ = 379,
+     WCS0_ = 380,
+     WIDTH_ = 381,
+     X_ = 382,
+     Y_ = 383,
+     YES_ = 384
    };
 #endif
 /* Tokens.  */
@@ -219,81 +220,82 @@
 #define FK4_ 306
 #define FK4_NO_E_ 307
 #define FK5_ 308
-#define FONT_ 309
-#define GALACTIC_ 310
-#define GLOBAL_ 311
-#define HELIOECLIPTIC_ 312
-#define HIGHLITE_ 313
-#define ICRS_ 314
-#define IGNORE_ 315
-#define IMAGE_ 316
-#define INCLUDE_ 317
-#define J2000_ 318
-#define KEY_ 319
-#define LINE_ 320
-#define LINEAR_ 321
-#define MOVE_ 322
-#define N_ 323
-#define NO_ 324
-#define OFF_ 325
-#define ON_ 326
-#define PHYSICAL_ 327
-#define PIE_ 328
-#define PIXELS_ 329
-#define POINT_ 330
-#define POLYGON_ 331
-#define PROJECTION_ 332
-#define PROPERTY_ 333
-#define ROTATE_ 334
-#define ROTBOX_ 335
-#define RULER_ 336
-#define SEGMENT_ 337
-#define SELECT_ 338
-#define SOURCE_ 339
-#define SUPERGALACTIC_ 340
-#define TAG_ 341
-#define TEXT_ 342
-#define TEXTANGLE_ 343
-#define TEXTROTATE_ 344
-#define TILE_ 345
-#define TRUE_ 346
-#define VECTOR_ 347
-#define VERSION_ 348
-#define UNHIGHLITE_ 349
-#define UNSELECT_ 350
-#define UPDATE_ 351
-#define WCS_ 352
-#define WCSA_ 353
-#define WCSB_ 354
-#define WCSC_ 355
-#define WCSD_ 356
-#define WCSE_ 357
-#define WCSF_ 358
-#define WCSG_ 359
-#define WCSH_ 360
-#define WCSI_ 361
-#define WCSJ_ 362
-#define WCSK_ 363
-#define WCSL_ 364
-#define WCSM_ 365
-#define WCSN_ 366
-#define WCSO_ 367
-#define WCSP_ 368
-#define WCSQ_ 369
-#define WCSR_ 370
-#define WCSS_ 371
-#define WCST_ 372
-#define WCSU_ 373
-#define WCSV_ 374
-#define WCSW_ 375
-#define WCSX_ 376
-#define WCSY_ 377
-#define WCSZ_ 378
-#define WCS0_ 379
-#define WIDTH_ 380
-#define X_ 381
-#define Y_ 382
-#define YES_ 383
+#define FORMAT_ 309
+#define FONT_ 310
+#define GALACTIC_ 311
+#define GLOBAL_ 312
+#define HELIOECLIPTIC_ 313
+#define HIGHLITE_ 314
+#define ICRS_ 315
+#define IGNORE_ 316
+#define IMAGE_ 317
+#define INCLUDE_ 318
+#define J2000_ 319
+#define KEY_ 320
+#define LINE_ 321
+#define LINEAR_ 322
+#define MOVE_ 323
+#define N_ 324
+#define NO_ 325
+#define OFF_ 326
+#define ON_ 327
+#define PHYSICAL_ 328
+#define PIE_ 329
+#define PIXELS_ 330
+#define POINT_ 331
+#define POLYGON_ 332
+#define PROJECTION_ 333
+#define PROPERTY_ 334
+#define ROTATE_ 335
+#define ROTBOX_ 336
+#define RULER_ 337
+#define SEGMENT_ 338
+#define SELECT_ 339
+#define SOURCE_ 340
+#define SUPERGALACTIC_ 341
+#define TAG_ 342
+#define TEXT_ 343
+#define TEXTANGLE_ 344
+#define TEXTROTATE_ 345
+#define TILE_ 346
+#define TRUE_ 347
+#define VECTOR_ 348
+#define VERSION_ 349
+#define UNHIGHLITE_ 350
+#define UNSELECT_ 351
+#define UPDATE_ 352
+#define WCS_ 353
+#define WCSA_ 354
+#define WCSB_ 355
+#define WCSC_ 356
+#define WCSD_ 357
+#define WCSE_ 358
+#define WCSF_ 359
+#define WCSG_ 360
+#define WCSH_ 361
+#define WCSI_ 362
+#define WCSJ_ 363
+#define WCSK_ 364
+#define WCSL_ 365
+#define WCSM_ 366
+#define WCSN_ 367
+#define WCSO_ 368
+#define WCSP_ 369
+#define WCSQ_ 370
+#define WCSR_ 371
+#define WCSS_ 372
+#define WCST_ 373
+#define WCSU_ 374
+#define WCSV_ 375
+#define WCSW_ 376
+#define WCSX_ 377
+#define WCSY_ 378
+#define WCSZ_ 379
+#define WCS0_ 380
+#define WIDTH_ 381
+#define X_ 382
+#define Y_ 383
+#define YES_ 384
 
 
 
@@ -309,7 +311,7 @@ typedef union YYSTYPE
   double vector[3];
 }
 /* Line 1529 of yacc.c.  */
-#line 313 "frame/ds9parser.H"
+#line 315 "frame/ds9parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

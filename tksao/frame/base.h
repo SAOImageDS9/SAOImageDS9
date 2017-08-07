@@ -1113,7 +1113,8 @@ public:
 
   // Measurement Regions
   void createRulerCmd(const Vector&, const Vector&, 
-		      Coord::CoordSystem, Coord::SkyFrame, Coord::CoordSystem, Coord::DistFormat,
+		      Coord::CoordSystem, Coord::SkyFrame, 
+		      Coord::CoordSystem, Coord::DistFormat, const char*,
 		      const char*, int*, int, const char*,
 		      const char*, unsigned short, const char*,
 		      const List<Tag>&, const List<CallBack>& cb);
@@ -1309,6 +1310,7 @@ public:
   void getMarkerPropertyCmd(unsigned short);
   void getMarkerPropertyCmd(const char*, unsigned short);
   void getMarkerPropertyCmd(int, unsigned short);
+  void getMarkerRulerDistSpecCmd(int);
   void getMarkerRulerLengthCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerRulerPointCmd(int, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void getMarkerRulerSystemCmd(int);
@@ -1524,6 +1526,7 @@ public:
   void markerRotateBeginCmd(const Vector&);
   void markerRotateMotionCmd(const Vector&, int h);
   void markerRotateEndCmd();
+  void markerRulerDistSpecCmd(int, const char*);
   void markerRulerPointCmd(int, const Vector&, const Vector&, 
 			   Coord::CoordSystem, Coord::SkyFrame);
   void markerRulerPointCmd(int, const Vector&, const Vector&, Coord::InternalSystem);

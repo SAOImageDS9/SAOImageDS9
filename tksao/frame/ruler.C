@@ -21,6 +21,7 @@ Ruler::Ruler(const Ruler& a) : BaseLine(a)
 Ruler::Ruler(Base* p, const Vector& ptr1, const Vector& ptr2,
 	     Coord::CoordSystem sys, Coord::SkyFrame sky, 
 	     Coord::CoordSystem distsys, Coord::DistFormat distformat,
+	     const char* distspec,
 	     const char* clr, int* dsh,
 	     int wth, const char* fnt, const char* txt, 
 	     unsigned short prop, const char* cmt,
@@ -32,8 +33,7 @@ Ruler::Ruler(Base* p, const Vector& ptr1, const Vector& ptr2,
   dist = 0;
   distSystem = distsys;
   distFormat = distformat;
-  //  strncpy(distSpec, spec, 32);
-  distSpec[0] = '\0';
+  strncpy(distSpec, distspec, 32);
 
   strcpy(type_,"ruler");
   handle = new Vector[2];
@@ -423,6 +423,11 @@ int Ruler::isIn(const Vector& vv)
   }
 
   return fmod(float(crossings),float(2)) ? 1 : 0; // if odd, point is inside
+}
+
+void Ruler::setDistSpec(const char* distspec)
+{
+  strncpy(distSpec, distspec, 32);
 }
 
 void Ruler::setCoordSystem(Coord::CoordSystem sys, Coord::SkyFrame sky, 

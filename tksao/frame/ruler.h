@@ -44,7 +44,8 @@ public:
   Ruler(const Ruler&);
   Ruler(Base* p, const Vector& ptr1, const Vector& ptr2,
 	Coord::CoordSystem sys, Coord::SkyFrame sky, 
-	Coord::CoordSystem distsys, Coord::DistFormat distfor,
+	Coord::CoordSystem distsys, Coord::DistFormat distformat, 
+	const char* distspec,
 	const char* clr, int* dsh,
 	int wth, const char* fnt, const char* txt, 
 	unsigned short prop, const char* cmt,
@@ -59,13 +60,15 @@ public:
   const Vector& getP1() {return p1;}
   const Vector& getP2() {return p2;}
   const Vector& getP3() {return p3;}
-  void setCoordSystem(Coord::CoordSystem, Coord::SkyFrame, Coord::CoordSystem, Coord::DistFormat);
 
   Coord::CoordSystem getSystem() {return coordSystem;}
   Coord::SkyFrame getSkyFrame() {return skyFrame;}
-
   Coord::CoordSystem getDistSystem() {return distSystem;}
   Coord::DistFormat getDistFormat() {return distFormat;}
+  const char* getDistSpec() {return distSpec;}
+
+  void setDistSpec(const char* distspec);
+  void setCoordSystem(Coord::CoordSystem, Coord::SkyFrame, Coord::CoordSystem, Coord::DistFormat);
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int, int);
   void listXML(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);

@@ -697,7 +697,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
     coord.strToDistSystem(param2, wcsSystem_, &dsys, &ddist);
     createRulerCmd(xmlPoint(ptr, xv, yv, vsys, vsky, vformat, 0),
 		   xmlPoint(ptr, xv, yv, vsys, vsky, vformat, 1),
-		   rsys, rsky, dsys, ddist,
+		   rsys, rsky, dsys, ddist, "",
 		   color, dash, width, font,
 		   text, props, comment, taglist, cblist);
   }

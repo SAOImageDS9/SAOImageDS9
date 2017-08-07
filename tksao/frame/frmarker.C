@@ -477,7 +477,8 @@ void Base::createPointCmd(const Vector& center,
 // Measurement Regions
 void Base::createRulerCmd(const Vector& center, const Vector& p2,
 			  Coord::CoordSystem sys, Coord::SkyFrame sky,
-			  Coord::CoordSystem distsys, Coord::DistFormat distdist,
+			  Coord::CoordSystem distsys, 
+			  Coord::DistFormat distdist, const char* distspec,
 			  const char* color, int* dash, 
 			  int width, const char* font,
 			  const char* text, unsigned short prop,
@@ -485,7 +486,7 @@ void Base::createRulerCmd(const Vector& center, const Vector& p2,
 			  const List<Tag>& tag, const List<CallBack>& cb)
 {
   createMarker(new Ruler(this, center, p2, 
-			 sys, sky, distsys, distdist, 
+			 sys, sky, distsys, distdist, distspec,
 			 color, dash, width, font, text, 
 			 prop, comment, tag, cb));
 }
@@ -2143,6 +2144,20 @@ void Base::getMarkerRulerPointCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
+}
+
+void Base::getMarkerRulerDistSpecCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      Tcl_AppendResult(interp, ((Ruler*)mm)->getDistSpec(), NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+
+  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerRulerSystemCmd(int id)
@@ -5842,6 +5857,23 @@ void Base::markerRulerPointCmd(int id, const Vector& p1, const Vector& p2,
 				 ptr->mapToRef(p2,sys,sky));
 	update(PIXMAP, mm->getAllBBox());
       }
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
+}
+
+void Base::markerRulerDistSpecCmd(int id, const char* distspec)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      // it may shrink
+      update(PIXMAP, mm->getAllBBox());
+      ((Ruler*)(mm))->setDistSpec(distspec);
+      update(PIXMAP, mm->getAllBBox());
       return;
     }
     mm=mm->next();

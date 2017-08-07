@@ -231,6 +231,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token FK4_NO_E_
 %token FK5_
 %token FONT_
+%token FORMAT_
 %token FRONT_
 %token FULL_
 %token FUNCTION_
@@ -1943,6 +1944,7 @@ marker	: CENTROID_ markerCentroid
 	{fr->markerPropertyCmd($1,$3,$4);}
 
 	| INT ROTATE_ BEGIN_ {fr->markerRotateBeginCmd($1);}
+        | INT RULER_ FORMAT_ STRING {fr->markerRulerDistSpecCmd($1, $4);}
 	| INT RULER_ POINT_ internalSystem coord coord
 	{fr->markerRulerPointCmd($1, Vector($5), Vector($6),
 	    (Coord::InternalSystem)$4);}
@@ -2166,11 +2168,12 @@ markerCreate :
 
 	| RULER_ numeric numeric 
 	    numeric numeric 
-	    coordSystem skyFrame coordSystem skyDist
+	    coordSystem skyFrame coordSystem skyDist STRING
 	    markerProperties
 	{fr->createRulerCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    fr->mapToRef(Vector($4,$5),Coord::CANVAS),
-	    (Coord::CoordSystem)$6, (Coord::SkyFrame)$7, (Coord::CoordSystem)$8, (Coord::DistFormat)$9,
+            (Coord::CoordSystem)$6, (Coord::SkyFrame)$7, 
+            (Coord::CoordSystem)$8, (Coord::DistFormat)$9, $10,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 	| COMPASS_ numeric numeric 
@@ -2403,6 +2406,7 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerProjectionWidthCmd($1,(Coord::CoordSystem)$4,(Coord::DistFormat)$5);}
 	| INT PROPERTY_ {fr->getMarkerPropertyCmd($1);}
 	| INT PROPERTY_ markerProperty {fr->getMarkerPropertyCmd($1,$3);}
+        | INT RULER_ FORMAT_ {fr->getMarkerRulerDistSpecCmd($1);}
 	| INT RULER_ LENGTH_ coordSystem skyDist
 	{fr->getMarkerRulerLengthCmd($1,(Coord::CoordSystem)$4,(Coord::DistFormat)$5);}
 	| INT RULER_ POINT_ coordSystem skyFrame skyFormat

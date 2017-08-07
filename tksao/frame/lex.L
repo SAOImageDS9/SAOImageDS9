@@ -146,6 +146,7 @@ fk4		{return FK4_;}
 fk4-no-e	{return FK4_NO_E_;}
 fk5		{return FK5_;}
 font		{return FONT_;}
+format          {return FORMAT_;}
 front		{return FRONT_;}
 full		{return FULL_;}
 function	{return FUNCTION_;}

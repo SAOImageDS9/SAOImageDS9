@@ -12,14 +12,15 @@ Ruler::Ruler(const Ruler& a) : BaseLine(a)
   p3 = a.p3;
   coordSystem = a.coordSystem;
   skyFrame = a.skyFrame;
+  dist = a.dist;
   distSystem = a.distSystem;
   distDist = a.distDist;
-  dist = a.dist;
+  strncpy(distSpec, a.distSpec, 32);
 }
 
 Ruler::Ruler(Base* p, const Vector& ptr1, const Vector& ptr2,
 	     Coord::CoordSystem sys, Coord::SkyFrame sky, 
-	     Coord::CoordSystem distsys, Coord::DistFormat distfor,
+	     Coord::CoordSystem distsys, Coord::DistFormat distformat,
 	     const char* clr, int* dsh,
 	     int wth, const char* fnt, const char* txt, 
 	     unsigned short prop, const char* cmt,
@@ -28,9 +29,11 @@ Ruler::Ruler(Base* p, const Vector& ptr1, const Vector& ptr2,
 {
   coordSystem = sys;
   skyFrame = sky;
-  distSystem = distsys;
-  distDist = distfor;
   dist = 0;
+  distSystem = distsys;
+  distDist = distformat;
+  //  strncpy(distSpec, spec, 32);
+  distSpec[0] = '\0';
 
   strcpy(type_,"ruler");
   handle = new Vector[2];
@@ -434,34 +437,42 @@ void Ruler::setCoordSystem(Coord::CoordSystem sys, Coord::SkyFrame sky,
 
 void Ruler::distToStr(ostringstream& str)
 {
+  if (*distSpec) {
+    char buf[64];
+    sprintf(buf, distSpec, dist);
+    str << buf;
+  }
+  else
+    str << dist;
+  
   switch (distSystem) {
   case Coord::IMAGE:
-    str << dist << " img";
+    str << " img";
     break;
   case Coord::PHYSICAL:
-    str << dist << " phy";
+    str << " phy";
     break;
   case Coord::AMPLIFIER:
-    str << dist << " amp";
+    str << " amp";
     break;
   case Coord::DETECTOR:
-    str << dist << " det";
+    str << " det";
     break;
   default:
     if (parent->findFits()->hasWCSCel(distSystem))
       switch (distDist) {
       case Coord::DEGREE:
-	str << dist << " deg";
+	str << " deg";
 	break;
       case Coord::ARCMIN:
-	str << dist << '\'';
+	str << '\'';
 	break;
       case Coord::ARCSEC:
-	str << dist << '"';
+	str << '"';
 	break;
       }
     else
-      str << dist << " lin";
+      str << " lin";
   }
 }
 

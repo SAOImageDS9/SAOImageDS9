@@ -12,9 +12,10 @@ private:
   Vector p3;
   Coord::CoordSystem coordSystem;
   Coord::SkyFrame skyFrame;
+  double dist;
   Coord::CoordSystem distSystem;
   Coord::DistFormat distDist;
-  double dist;
+  char distSpec[32];
 
 private:
   void renderX(Drawable, Coord::InternalSystem, RenderMode);

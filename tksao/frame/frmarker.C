@@ -2156,7 +2156,7 @@ void Base::getMarkerRulerSystemCmd(int id)
       Tcl_AppendResult(interp, " ", NULL);
       printCoordSystem(((Ruler*)mm)->getDistSystem());
       Tcl_AppendResult(interp, " ", NULL);
-      printDistFormat(((Ruler*)mm)->getDistDist());
+      printDistFormat(((Ruler*)mm)->getDistFormat());
       return;
     }
     mm=mm->next();

@@ -14,7 +14,7 @@ Ruler::Ruler(const Ruler& a) : BaseLine(a)
   skyFrame = a.skyFrame;
   dist = a.dist;
   distSystem = a.distSystem;
-  distDist = a.distDist;
+  distFormat = a.distFormat;
   strncpy(distSpec, a.distSpec, 32);
 }
 
@@ -31,7 +31,7 @@ Ruler::Ruler(Base* p, const Vector& ptr1, const Vector& ptr2,
   skyFrame = sky;
   dist = 0;
   distSystem = distsys;
-  distDist = distformat;
+  distFormat = distformat;
   //  strncpy(distSpec, spec, 32);
   distSpec[0] = '\0';
 
@@ -297,7 +297,7 @@ void Ruler::updateHandles()
   Vector a = ptr->mapFromRef(p1,coordSystem,skyFrame);
   Vector b = ptr->mapFromRef(p2,coordSystem,skyFrame);
   p3 = ptr->mapToRef(Vector(b[0],a[1]),coordSystem,skyFrame);
-  dist = ptr->mapDistFromRef(p2, p1, distSystem, distDist);
+  dist = ptr->mapDistFromRef(p2, p1, distSystem, distFormat);
 
   // generate handles in canvas coords
   handle[0] = parent->mapFromRef(p1,Coord::CANVAS);
@@ -431,7 +431,7 @@ void Ruler::setCoordSystem(Coord::CoordSystem sys, Coord::SkyFrame sky,
   coordSystem = sys;
   skyFrame = sky;
   distSystem = dsys;
-  distDist = dist;
+  distFormat = dist;
   updateBBox();
 }
 
@@ -460,7 +460,7 @@ void Ruler::distToStr(ostringstream& str)
     break;
   default:
     if (parent->findFits()->hasWCSCel(distSystem))
-      switch (distDist) {
+      switch (distFormat) {
       case Coord::DEGREE:
 	str << " deg";
 	break;
@@ -521,7 +521,7 @@ void Ruler::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     str << " ruler=";
     coord.listCoordSystem(str, coordSystem, skyFrame, ptr);
     str << ' ';
-    coord.listDistSystem(str, distSystem, distDist, ptr);
+    coord.listDistSystem(str, distSystem, distFormat, ptr);
     listProperties(str, 0);
   }
 }
@@ -539,7 +539,7 @@ void Ruler::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   sysstr << ends;
 
   ostringstream diststr;
-  coord.listDistSystem(diststr, distSystem, distDist, ptr);
+  coord.listDistSystem(diststr, distSystem, distFormat, ptr);
   diststr << ends;
 
   XMLRowInit();

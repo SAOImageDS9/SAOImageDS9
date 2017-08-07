@@ -14,7 +14,7 @@ private:
   Coord::SkyFrame skyFrame;
   double dist;
   Coord::CoordSystem distSystem;
-  Coord::DistFormat distDist;
+  Coord::DistFormat distFormat;
   char distSpec[32];
 
 private:
@@ -65,7 +65,7 @@ public:
   Coord::SkyFrame getSkyFrame() {return skyFrame;}
 
   Coord::CoordSystem getDistSystem() {return distSystem;}
-  Coord::DistFormat getDistDist() {return distDist;}
+  Coord::DistFormat getDistFormat() {return distFormat;}
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int, int);
   void listXML(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);

@@ -430,15 +430,15 @@ public:
   void parseMarker(MarkerFormat,istream&);
   int postscriptProc(int prepass);
   void printCoordSystem(Coord::CoordSystem);
-  void printDistFromRef(FitsImage*, const Vector&, const Vector&, Coord::CoordSystem, Coord::SkyDist);
+  void printDistFromRef(FitsImage*, const Vector&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void printDouble(double);
   void printFromRef(FitsImage*, const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
-  void printLenFromRef(FitsImage*, double, Coord::CoordSystem, Coord::SkyDist);
-  void printLenFromRef(FitsImage*, const Vector&, Coord::CoordSystem, Coord::SkyDist);
+  void printLenFromRef(FitsImage*, double, Coord::CoordSystem, Coord::DistFormat);
+  void printLenFromRef(FitsImage*, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void printInteger(int);
   void printSkyFrame(Coord::SkyFrame);
   void printSkyFormat(Coord::SkyFormat);
-  void printSkyDist(Coord::SkyDist);
+  void printDistFormat(Coord::DistFormat);
   void ps();
   void psCrosshair(PSColorSpace);
   virtual void psGraphics(PSColorSpace) {}
@@ -507,8 +507,8 @@ public:
 			  Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   double xmlAngle(const char*, int, double, Coord::AngleFormat, Coord::CoordSystem, Coord::SkyFrame);
   double* xmlAngles(const char*, int, double, int, Coord::AngleFormat, Coord::CoordSystem, Coord::SkyFrame);
-  double* xmlDistance(FitsImage*, const char*, int, Coord::CoordSystem, Coord::SkyDist);
-  Vector* xmlDistance(FitsImage*, const char*, const char*, int, Coord::CoordSystem, Coord::SkyDist);
+  double* xmlDistance(FitsImage*, const char*, int, Coord::CoordSystem, Coord::DistFormat);
+  Vector* xmlDistance(FitsImage*, const char*, const char*, int, Coord::CoordSystem, Coord::DistFormat);
   void ximageToPixmap(Pixmap, XImage*, Coord::InternalSystem);
   virtual void ximageToPixmapMagnifier();
 
@@ -575,7 +575,7 @@ public:
 		Coord::CoordSystem sys1, Coord::SkyFrame sky1,
 		const char* xxname2, const char* yyname2,
 		Coord::CoordSystem sys2, Coord::SkyFrame sky2,
-		double rad, Coord::CoordSystem sys, Coord::SkyDist dist,
+		double rad, Coord::CoordSystem sys, Coord::DistFormat dist,
 		const char* rr);
 
   // IME Analysis Commands
@@ -728,7 +728,7 @@ public:
   // Crop Commands
   void cropCmd();
   void cropCmd(const Vector&, const Vector&, Coord::CoordSystem, Coord::SkyFrame);
-  void cropCenterCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame, const Vector&, Coord::CoordSystem, Coord::SkyDist);
+  void cropCenterCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void cropBeginCmd(const Vector&);
   void cropMotionCmd(const Vector&);
   void cropEndCmd(const Vector&);
@@ -738,7 +738,7 @@ public:
   virtual void crop3dMotionCmd(const Vector&, int) {}
   virtual void crop3dEndCmd(const Vector&, int) {}
   void getCropCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
-  void getCropCenterCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, Coord::CoordSystem, Coord::SkyDist);
+  void getCropCenterCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, Coord::CoordSystem, Coord::DistFormat);
   void getCrop3dCmd(Coord::CoordSystem);
   void hasCropCmd();
 
@@ -777,7 +777,7 @@ public:
   void getFitsHeaderKeywordCmd(int,const char*);
   void getFitsObjectNameCmd();
   void getFitsSizeCmd();
-  void getFitsSizeCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyDist);
+  void getFitsSizeCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::DistFormat);
   void getFitsSliceCmd(int id);
   void getFitsSliceCmd(int id, Coord::CoordSystem sys);
   void hasFitsCmd();
@@ -1113,7 +1113,7 @@ public:
 
   // Measurement Regions
   void createRulerCmd(const Vector&, const Vector&, 
-		      Coord::CoordSystem, Coord::SkyFrame, Coord::CoordSystem, Coord::SkyDist,
+		      Coord::CoordSystem, Coord::SkyFrame, Coord::CoordSystem, Coord::DistFormat,
 		      const char*, int*, int, const char*,
 		      const char*, unsigned short, const char*,
 		      const List<Tag>&, const List<CallBack>& cb);
@@ -1252,37 +1252,37 @@ public:
 
   void getMarkerAngleCmd(int);
   void getMarkerAngleCmd(int, Coord::CoordSystem, Coord::SkyFrame);
-  void getMarkerAnnulusRadiusCmd(int, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerAnnulusRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerBoxFillCmd(int);
-  void getMarkerBoxAnnulusRadiusCmd(int, Coord::CoordSystem, Coord::SkyDist);
-  void getMarkerBoxRadiusCmd(int, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerBoxAnnulusRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
+  void getMarkerBoxRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerBpandaAnglesCmd(int);
   void getMarkerBpandaAnglesCmd(int, Coord::CoordSystem, Coord::SkyFrame);
-  void getMarkerBpandaRadiusCmd(int, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerBpandaRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerCenterCmd(int, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void getMarkerCentroidAutoCmd();
   void getMarkerCentroidRadiusCmd();
   void getMarkerCentroidIterationCmd();
   void getMarkerCentroidOptionCmd();
   void getMarkerCircleFillCmd(int);
-  void getMarkerCircleRadiusCmd(int, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerCircleRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerColorCmd();
   void getMarkerColorCmd(const char*);
   void getMarkerColorCmd(int);
   void getMarkerCompassArrowCmd(int);
   void getMarkerCompassLabelCmd(int);
-  void getMarkerCompassRadiusCmd(int, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerCompassRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerCompassSystemCmd(int);
   void getMarkerCompositeCmd(int);
   void getMarkerCpandaAnglesCmd(int);
   void getMarkerCpandaAnglesCmd(int, Coord::CoordSystem, Coord::SkyFrame);
-  void getMarkerCpandaRadiusCmd(int, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerCpandaRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerEllipseFillCmd(int);
-  void getMarkerEllipseRadiusCmd(int, Coord::CoordSystem, Coord::SkyDist);
-  void getMarkerEllipseAnnulusRadiusCmd(int, Coord::CoordSystem,Coord::SkyDist);
+  void getMarkerEllipseRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
+  void getMarkerEllipseAnnulusRadiusCmd(int, Coord::CoordSystem,Coord::DistFormat);
   void getMarkerEpandaAnglesCmd(int);
   void getMarkerEpandaAnglesCmd(int, Coord::CoordSystem, Coord::SkyFrame);
-  void getMarkerEpandaRadiusCmd(int, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerEpandaRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerEpsilonCmd();
   void getMarkerFontCmd();
   void getMarkerFontCmd(const char*);
@@ -1292,10 +1292,10 @@ public:
   void getMarkerIdAllCmd();
   void getMarkerLineCmd(int, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void getMarkerLineArrowCmd(int);
-  void getMarkerLineLengthCmd(int, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerLineLengthCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerLineWidthCmd();
   void getMarkerLineWidthCmd(int);
-  void getMarkerMapLenFromRefCmd(int, double, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerMapLenFromRefCmd(int, double, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerNumberCmd();
   void getMarkerPointShapeCmd(int);
   void getMarkerPointSizeCmd(int);
@@ -1303,13 +1303,13 @@ public:
   void getMarkerPolygonSegmentCmd(const Vector&);
   void getMarkerPreserveCmd();
   void getMarkerProjectionPointsCmd(int, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
-  void getMarkerProjectionLengthCmd(int, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerProjectionLengthCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerProjectionMethodCmd(int);
-  void getMarkerProjectionWidthCmd(int, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerProjectionWidthCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerPropertyCmd(unsigned short);
   void getMarkerPropertyCmd(const char*, unsigned short);
   void getMarkerPropertyCmd(int, unsigned short);
-  void getMarkerRulerLengthCmd(int, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerRulerLengthCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerRulerPointCmd(int, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void getMarkerRulerSystemCmd(int);
   void getMarkerSegmentSegmentCmd(const Vector&);
@@ -1335,7 +1335,7 @@ public:
   void getMarkerTypeCmd(int);
   void getMarkerVectorCmd(int, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void getMarkerVectorArrowCmd(int);
-  void getMarkerVectorLengthCmd(int, Coord::CoordSystem, Coord::SkyDist);
+  void getMarkerVectorLengthCmd(int, Coord::CoordSystem, Coord::DistFormat);
 
   void hasMarkerHighlitedCmd();
   void hasMarkerPasteCmd();
@@ -1351,8 +1351,8 @@ public:
   void markerAnnulusCreateRadiusCmd(int, const Vector&);
   void markerAnnulusDeleteRadiusCmd(int, int);
   void markerAnnulusRadiusCmd(int, double, double, int, Coord::InternalSystem);
-  void markerAnnulusRadiusCmd(int, double, double, int, Coord::CoordSystem, Coord::SkyDist);
-  void markerAnnulusRadiusCmd(int, const char*, Coord::CoordSystem, Coord::SkyDist);
+  void markerAnnulusRadiusCmd(int, double, double, int, Coord::CoordSystem, Coord::DistFormat);
+  void markerAnnulusRadiusCmd(int, const char*, Coord::CoordSystem, Coord::DistFormat);
 
   void markerBackCmd();
   void markerBackCmd(const char*);
@@ -1361,12 +1361,12 @@ public:
   void markerBoxAnnulusRadiusCmd(int, const Vector&, const Vector&, int, 
 				 Coord::InternalSystem);
   void markerBoxAnnulusRadiusCmd(int, const Vector&, const Vector&, int, 
-				 Coord::CoordSystem, Coord::SkyDist);
-  void markerBoxAnnulusRadiusCmd(int, const char*, Coord::CoordSystem, Coord::SkyDist);
+				 Coord::CoordSystem, Coord::DistFormat);
+  void markerBoxAnnulusRadiusCmd(int, const char*, Coord::CoordSystem, Coord::DistFormat);
   void markerBoxAnnulusCreateRadiusCmd(int, const Vector&);
   void markerBoxAnnulusDeleteRadiusCmd(int, int);
   void markerBoxRadiusCmd(int, const Vector&, Coord::InternalSystem);
-  void markerBoxRadiusCmd(int, const Vector&, Coord::CoordSystem, Coord::SkyDist);
+  void markerBoxRadiusCmd(int, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void markerBpandaCreateAnglesCmd(int, const Vector&);
   void markerBpandaCreateRadiusCmd(int, const Vector&);
   void markerBpandaDeleteCmd(int, int);
@@ -1377,7 +1377,7 @@ public:
 			   Coord::CoordSystem, Coord::SkyFrame);
   void markerBpandaEditCmd(int, const char*, const char*, 
 			   Coord::CoordSystem, Coord::SkyFrame,
-			   Coord::CoordSystem, Coord::SkyDist);
+			   Coord::CoordSystem, Coord::DistFormat);
 
   void markerCallBackCmd(int, CallBack::Type, const char*, const char*);
   void markerCentroidCmd();
@@ -1388,14 +1388,14 @@ public:
   void markerCentroidIterationCmd(int);
   void markerCircleFillCmd(int, int);
   void markerCircleRadiusCmd(int, double, Coord::InternalSystem);
-  void markerCircleRadiusCmd(int, double, Coord::CoordSystem, Coord::SkyDist);
+  void markerCircleRadiusCmd(int, double, Coord::CoordSystem, Coord::DistFormat);
   void markerColorCmd(const char*);
   void markerColorCmd(const char*, const char*);
   void markerColorCmd(int, const char*);
   void markerCompassArrowCmd(int, int, int);
   void markerCompassLabelCmd(int, const char*, const char*);
   void markerCompassRadiusCmd(int, double, Coord::InternalSystem);
-  void markerCompassRadiusCmd(int, double, Coord::CoordSystem, Coord::SkyDist);
+  void markerCompassRadiusCmd(int, double, Coord::CoordSystem, Coord::DistFormat);
   void markerCompassSystemCmd(int, Coord::CoordSystem, Coord::SkyFrame);
   void markerCompositeCmd(int, int);
   void markerCompositeDeleteCmd();
@@ -1410,7 +1410,7 @@ public:
   void markerCpandaEditCmd(int, double, double, int, double, double, int,
 			   Coord::CoordSystem, Coord::SkyFrame);
   void markerCpandaEditCmd(int, const char*, const char*, 
-			   Coord::CoordSystem, Coord::SkyFrame,Coord::CoordSystem, Coord::SkyDist);
+			   Coord::CoordSystem, Coord::SkyFrame,Coord::CoordSystem, Coord::DistFormat);
   void markerCutCmd();
   void markerCutCmd(const char*);
 
@@ -1430,13 +1430,13 @@ public:
   void markerEditEndCmd();
   void markerEllipseFillCmd(int, int);
   void markerEllipseRadiusCmd(int, const Vector&, Coord::InternalSystem);
-  void markerEllipseRadiusCmd(int, const Vector&, Coord::CoordSystem, Coord::SkyDist);
+  void markerEllipseRadiusCmd(int, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void markerEllipseAnnulusRadiusCmd(int, const Vector&, const Vector&, int, 
 				     Coord::InternalSystem);
   void markerEllipseAnnulusRadiusCmd(int, const Vector&, const Vector&, int, 
-				     Coord::CoordSystem, Coord::SkyDist);
+				     Coord::CoordSystem, Coord::DistFormat);
   void markerEllipseAnnulusRadiusCmd(int, const char*, 
-				     Coord::CoordSystem, Coord::SkyDist);
+				     Coord::CoordSystem, Coord::DistFormat);
   void markerEllipseAnnulusCreateRadiusCmd(int, const Vector&);
   void markerEllipseAnnulusDeleteRadiusCmd(int, int);
   void markerEpandaCreateAnglesCmd(int, const Vector&);
@@ -1449,7 +1449,7 @@ public:
 			   Coord::CoordSystem, Coord::SkyFrame);
   void markerEpandaEditCmd(int, const char*, const char*, 
 			   Coord::CoordSystem, Coord::SkyFrame,
-			   Coord::CoordSystem, Coord::SkyDist);
+			   Coord::CoordSystem, Coord::DistFormat);
   void markerEpsilonCmd(int ee) {markerEpsilon = ee;}
 
   void markerFontCmd(const char*);
@@ -1508,7 +1508,7 @@ public:
   void markerPolygonCreateVertexCmd(int, int, const Vector&);
   void markerPolygonDeleteVertexCmd(int, int);
   void markerPolygonResetCmd(int, const Vector&, Coord::InternalSystem);
-  void markerPolygonResetCmd(int, const Vector&, Coord::CoordSystem, Coord::SkyDist);
+  void markerPolygonResetCmd(int, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void markerPreserveCmd(int r) {preserveMarkers = r;}
   void markerPropertyCmd(unsigned short, int);
   void markerPropertyCmd(const char*, unsigned short, int);
@@ -1518,7 +1518,7 @@ public:
 			   Coord::InternalSystem, double);
   void markerProjectionCmd(int, const Vector&, const Vector&, 
 			   Coord::CoordSystem, Coord::SkyFrame, 
-			   double, Coord::CoordSystem, Coord::SkyDist);
+			   double, Coord::CoordSystem, Coord::DistFormat);
 
   void markerRotateBeginCmd(int);
   void markerRotateBeginCmd(const Vector&);
@@ -1528,7 +1528,7 @@ public:
 			   Coord::CoordSystem, Coord::SkyFrame);
   void markerRulerPointCmd(int, const Vector&, const Vector&, Coord::InternalSystem);
   void markerRulerSystemCmd(int, Coord::CoordSystem, Coord::SkyFrame, 
-			    Coord::CoordSystem, Coord::SkyDist);
+			    Coord::CoordSystem, Coord::DistFormat);
 
   void markerSaveCmd(const char*, MarkerFormat, Coord::CoordSystem, Coord::SkyFrame,
 		     Coord::SkyFormat, int strip);
@@ -1536,7 +1536,7 @@ public:
   void markerSegmentCreateVertexCmd(int, int, const Vector&);
   void markerSegmentDeleteVertexCmd(int, int);
   void markerSegmentResetCmd(int, const Vector&, Coord::InternalSystem);
-  void markerSegmentResetCmd(int, const Vector&, Coord::CoordSystem, Coord::SkyDist);
+  void markerSegmentResetCmd(int, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void markerSelectAllCmd();
   void markerSelectCmd(int); // not used
   void markerSelectCmd(const char*);
@@ -1567,7 +1567,7 @@ public:
 
   void markerVectorCmd(int, const Vector&, Coord::InternalSystem, double, double);
   void markerVectorCmd(int, const Vector&, Coord::CoordSystem, Coord::SkyFrame, 
-		       double, Coord::CoordSystem, Coord::SkyDist, double);
+		       double, Coord::CoordSystem, Coord::DistFormat, double);
   void markerVectorArrowCmd(int, int);
 
   void regionHighliteBeginCmd(const Vector& v) {regionSelectBeginCmd(v);}

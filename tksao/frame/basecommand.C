@@ -393,7 +393,7 @@ void Base::cropCmd(const Vector& aa, const Vector& bb,
 void Base::cropCenterCmd(const Vector& vv, 
 			 Coord::CoordSystem sys, Coord::SkyFrame sky, 
 			 const Vector& wh, 
-			 Coord::CoordSystem dsys, Coord::SkyDist dist)
+			 Coord::CoordSystem dsys, Coord::DistFormat dist)
 {
   FitsImage* ptr = currentContext->fits;
   if (!ptr)
@@ -1413,7 +1413,7 @@ void Base::getCropCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
 
 void Base::getCropCenterCmd(Coord::CoordSystem sys, Coord::SkyFrame sky, 
 			    Coord::SkyFormat format, Coord::CoordSystem dcoord,
-			    Coord::SkyDist dist)
+			    Coord::DistFormat dist)
 {
   FitsImage* ptr = currentContext->fits;
   if (!ptr)
@@ -1710,7 +1710,7 @@ void Base::getFitsSizeCmd()
 }
 
 void Base::getFitsSizeCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
-			  Coord::SkyDist dist)
+			  Coord::DistFormat dist)
 {
   if (keyContext->fits) {
     if (!keyContext->fits->hasWCSCel(sys)) {
@@ -2582,7 +2582,7 @@ void Base::matchCmd(const char* xxname1, const char* yyname1,
 		    Coord::CoordSystem sys1, Coord::SkyFrame sky1,
 		    const char* xxname2, const char* yyname2,
 		    Coord::CoordSystem sys2, Coord::SkyFrame sky2,
-		    double rad, Coord::CoordSystem sys, Coord::SkyDist dist,
+		    double rad, Coord::CoordSystem sys, Coord::DistFormat dist,
 		    const char* rrname)
 {
   if (keyContext && keyContext->fits)

@@ -280,7 +280,7 @@ class FitsImage {
 	     Coord::CoordSystem sys1, Coord::SkyFrame sky1,
 	     const char* xxname2, const char* yyname2,
 	     Coord::CoordSystem sys2, Coord::SkyFrame sky2,
-	     double rad, Coord::CoordSystem sys, Coord::SkyDist dist,
+	     double rad, Coord::CoordSystem sys, Coord::DistFormat dist,
 	     const char* rrname);
 
   FitsHead* parseWCS(istream&);
@@ -418,16 +418,16 @@ class FitsImage {
   Vector mapToRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   double mapFromRef3axis(double, Coord::CoordSystem, int);
   double mapToRef3axis(double, Coord::CoordSystem, int);
-  double mapLenFromRef(double, Coord::CoordSystem, Coord::SkyDist =Coord::DEGREE);
-  Vector mapLenFromRef(const Vector&, Coord::CoordSystem, Coord::SkyDist =Coord::DEGREE);
-  double mapLenToRef(double, Coord::CoordSystem, Coord::SkyDist =Coord::DEGREE);
-  Vector mapLenToRef(const Vector&, Coord::CoordSystem, Coord::SkyDist =Coord::DEGREE);
+  double mapLenFromRef(double, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
+  Vector mapLenFromRef(const Vector&, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
+  double mapLenToRef(double, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
+  Vector mapLenToRef(const Vector&, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
   double mapDistFromRef(const Vector&, const Vector&, Coord::CoordSystem,
-		       Coord::SkyDist =Coord::DEGREE);
+		       Coord::DistFormat =Coord::DEGREE);
   void listFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
-  void listLenFromRef(ostream&, double, Coord::CoordSystem, Coord::SkyDist);
-  void listLenFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::SkyDist);
-  void listDistFromRef(ostream&, const Vector&, const Vector&, Coord::CoordSystem, Coord::SkyDist);
+  void listLenFromRef(ostream&, double, Coord::CoordSystem, Coord::DistFormat);
+  void listLenFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
+  void listDistFromRef(ostream&, const Vector&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
 
   const char* getValue(const Vector& v);
   float getValueFloat(const Vector& v) {return data_->getValueFloat(v);}

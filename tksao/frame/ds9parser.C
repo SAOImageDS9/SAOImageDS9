@@ -417,8 +417,8 @@ static Coord::SkyFrame globalRulerSkyFrame;
 static Coord::SkyFrame localRulerSkyFrame;
 static Coord::CoordSystem globalRulerDistSystem;
 static Coord::CoordSystem localRulerDistSystem;
-static Coord::SkyDist globalRulerDistFormat;
-static Coord::SkyDist localRulerDistFormat;
+static Coord::DistFormat globalRulerDistFormat;
+static Coord::DistFormat localRulerDistFormat;
 
 static Coord::CoordSystem globalCompassCoordSystem;
 static Coord::SkyFrame globalCompassSkyFrame;
@@ -3719,7 +3719,7 @@ yyreduce:
 	  globalRulerCoordSystem = localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (4)].integer);
 	  globalRulerSkyFrame = localRulerSkyFrame = (Coord::SkyFrame)(yyvsp[(2) - (4)].integer);
 	  globalRulerDistSystem = localRulerDistSystem = (Coord::CoordSystem)(yyvsp[(3) - (4)].integer);
-	  globalRulerDistFormat = localRulerDistFormat = (Coord::SkyDist)(yyvsp[(4) - (4)].integer);
+	  globalRulerDistFormat = localRulerDistFormat = (Coord::DistFormat)(yyvsp[(4) - (4)].integer);
 	;}
     break;
 
@@ -3739,7 +3739,7 @@ yyreduce:
 	  globalRulerCoordSystem = localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
 	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
 	  globalRulerDistSystem = localRulerDistSystem = Coord::WCS;
-	  globalRulerDistFormat = localRulerDistFormat = (Coord::SkyDist)(yyvsp[(2) - (2)].integer);
+	  globalRulerDistFormat = localRulerDistFormat = (Coord::DistFormat)(yyvsp[(2) - (2)].integer);
 	;}
     break;
 
@@ -3759,7 +3759,7 @@ yyreduce:
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::WCS;
 	  globalRulerSkyFrame = localRulerSkyFrame = (Coord::SkyFrame)(yyvsp[(1) - (2)].integer);
 	  globalRulerDistSystem = localRulerDistSystem = Coord::WCS;
-	  globalRulerDistFormat = localRulerDistFormat = (Coord::SkyDist)(yyvsp[(2) - (2)].integer);
+	  globalRulerDistFormat = localRulerDistFormat = (Coord::DistFormat)(yyvsp[(2) - (2)].integer);
 	;}
     break;
 
@@ -3779,7 +3779,7 @@ yyreduce:
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::WCS;
 	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
 	  globalRulerDistSystem = localRulerDistSystem = Coord::WCS;
-	  globalRulerDistFormat = localRulerDistFormat = (Coord::SkyDist)(yyvsp[(2) - (2)].integer);
+	  globalRulerDistFormat = localRulerDistFormat = (Coord::DistFormat)(yyvsp[(2) - (2)].integer);
 	;}
     break;
 
@@ -3789,7 +3789,7 @@ yyreduce:
 	  globalRulerCoordSystem = localRulerCoordSystem = Coord::IMAGE;
 	  globalRulerSkyFrame = localRulerSkyFrame = Coord::FK5;
 	  globalRulerDistSystem = localRulerDistSystem = Coord::WCS;
-	  globalRulerDistFormat = localRulerDistFormat = (Coord::SkyDist)(yyvsp[(1) - (1)].integer);
+	  globalRulerDistFormat = localRulerDistFormat = (Coord::DistFormat)(yyvsp[(1) - (1)].integer);
 	;}
     break;
 
@@ -3995,7 +3995,7 @@ yyreduce:
 	  localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (4)].integer);
 	  localRulerSkyFrame = (Coord::SkyFrame)(yyvsp[(2) - (4)].integer);
 	  localRulerDistSystem = (Coord::CoordSystem)(yyvsp[(3) - (4)].integer);
-	  localRulerDistFormat = (Coord::SkyDist)(yyvsp[(4) - (4)].integer);
+	  localRulerDistFormat = (Coord::DistFormat)(yyvsp[(4) - (4)].integer);
 	;}
     break;
 
@@ -4015,7 +4015,7 @@ yyreduce:
 	  localRulerCoordSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer);
 	  localRulerSkyFrame = Coord::FK5;
 	  localRulerDistSystem = Coord::WCS;
-	  localRulerDistFormat = (Coord::SkyDist)(yyvsp[(2) - (2)].integer);
+	  localRulerDistFormat = (Coord::DistFormat)(yyvsp[(2) - (2)].integer);
 	;}
     break;
 
@@ -4035,7 +4035,7 @@ yyreduce:
 	  localRulerCoordSystem = Coord::WCS;
 	  localRulerSkyFrame = (Coord::SkyFrame)(yyvsp[(1) - (2)].integer);
 	  localRulerDistSystem = Coord::WCS;
-	  localRulerDistFormat = (Coord::SkyDist)(yyvsp[(2) - (2)].integer);
+	  localRulerDistFormat = (Coord::DistFormat)(yyvsp[(2) - (2)].integer);
 	;}
     break;
 
@@ -4055,7 +4055,7 @@ yyreduce:
 	  localRulerCoordSystem = Coord::WCS;
 	  localRulerSkyFrame = Coord::FK5;
 	  localRulerDistSystem = Coord::WCS;
-	  localRulerDistFormat = (Coord::SkyDist)(yyvsp[(2) - (2)].integer);
+	  localRulerDistFormat = (Coord::DistFormat)(yyvsp[(2) - (2)].integer);
 	;}
     break;
 
@@ -4065,7 +4065,7 @@ yyreduce:
 	  localRulerCoordSystem = Coord::IMAGE;
 	  localRulerSkyFrame = Coord::FK5;
 	  localRulerDistSystem = Coord::WCS;
-	  localRulerDistFormat = (Coord::SkyDist)(yyvsp[(1) - (1)].integer);
+	  localRulerDistFormat = (Coord::DistFormat)(yyvsp[(1) - (1)].integer);
 	;}
     break;
 

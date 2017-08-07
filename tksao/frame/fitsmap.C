@@ -108,14 +108,14 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
 // Map Length
 
 double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
-				Coord::SkyDist dist)
+				Coord::DistFormat dist)
 {
   Vector rr = mapLenFromRef(Vector(dd,0),sys,dist);
   return rr[0];
 }
 
 Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
-				Coord::SkyDist dist)
+				Coord::DistFormat dist)
 {
   // really from image coords
   switch (sys) {
@@ -154,14 +154,14 @@ Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
 }
 
 double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys, 
-			      Coord::SkyDist dist)
+			      Coord::DistFormat dist)
 {
   Vector rr = mapLenToRef(Vector(dd,0), sys, dist);
   return rr[0];
 }
 
 Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
-			      Coord::SkyDist dist)
+			      Coord::DistFormat dist)
 {
   switch (sys) {
   case Coord::IMAGE:
@@ -199,7 +199,7 @@ Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
 }
 
 void FitsImage::listLenFromRef(ostream& str, double dd,
-			       Coord::CoordSystem sys, Coord::SkyDist dist)
+			       Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   double out = mapLenFromRef(dd, sys, dist);
 
@@ -236,7 +236,7 @@ void FitsImage::listLenFromRef(ostream& str, double dd,
 }
 
 void FitsImage::listLenFromRef(ostream& str, const Vector& vv,
-			       Coord::CoordSystem sys, Coord::SkyDist dist)
+			       Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   Vector out = mapLenFromRef(vv, sys, dist);
 
@@ -275,7 +275,7 @@ void FitsImage::listLenFromRef(ostream& str, const Vector& vv,
 // Map Distance
 
 double FitsImage::mapDistFromRef(const Vector& vv1, const Vector& vv2, 
-				 Coord::CoordSystem sys, Coord::SkyDist dist)
+				 Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   switch (sys) {
   case Coord::IMAGE:
@@ -328,7 +328,7 @@ double FitsImage::mapDistFromRef(const Vector& vv1, const Vector& vv2,
 
 void FitsImage::listDistFromRef(ostream& str,
 				const Vector& vv1, const Vector& vv2,
-				Coord::CoordSystem sys, Coord::SkyDist dist)
+				Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   double out = mapDistFromRef(vv1, vv2, sys, dist);
 

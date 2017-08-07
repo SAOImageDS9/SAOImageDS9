@@ -28,19 +28,19 @@ class Coord {
 		 ECLIPTIC, HELIOECLIPTIC};
 
   enum SkyFormat {DEGREES, SEXAGESIMAL};
-  enum SkyDist {DEGREE, ARCMIN, ARCSEC};
+  enum DistFormat {DEGREE, ARCMIN, ARCSEC};
   enum AngleFormat {DEG, RAD};
   enum Orientation {NORMAL, XX, YY, XY};
 
   public:
   void listCoordSystem(ostream&, CoordSystem, SkyFrame, FitsImage*);
-  void listDistSystem(ostream&, CoordSystem, SkyDist, FitsImage*);
+  void listDistSystem(ostream&, CoordSystem, DistFormat, FitsImage*);
   void listProsCoordSystem(ostream&, CoordSystem, SkyFrame);
 
   void strToCoordSystem(const char*, CoordSystem, CoordSystem*, SkyFrame*);
   void strToSkyFormat(const char*, SkyFormat*);
-  void strToSkyDist(const char*, SkyDist*);
-  void strToDistSystem(const char*, CoordSystem, CoordSystem*, SkyDist*);
+  void strToDistFormat(const char*, DistFormat*);
+  void strToDistSystem(const char*, CoordSystem, CoordSystem*, DistFormat*);
   void strToAngleFormat(const char*, AngleFormat*);
 
   const char* coordSystemStr(int ii);

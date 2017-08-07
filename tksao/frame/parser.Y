@@ -965,7 +965,7 @@ crop	: /* empty */ {fr->cropCmd();}
 	{fr->cropCmd(Vector($1,$2), Vector($3,$4),
 	    (Coord::CoordSystem)$5, (Coord::SkyFrame)$6);}
 	| CENTER_ coord coordSystem skyFrame numeric numeric coordSystem skyDist
-	{fr->cropCenterCmd(Vector($2), (Coord::CoordSystem)$3, (Coord::SkyFrame)$4, Vector($5,$6), (Coord::CoordSystem)$7, (Coord::SkyDist)$8);}
+	{fr->cropCenterCmd(Vector($2), (Coord::CoordSystem)$3, (Coord::SkyFrame)$4, Vector($5,$6), (Coord::CoordSystem)$7, (Coord::DistFormat)$8);}
 	| THREED_ crop3d
 	| BEGIN_ numeric numeric {fr->cropBeginCmd(Vector($2,$3));}
 	| MOTION_ numeric numeric {fr->cropMotionCmd(Vector($2,$3));}
@@ -1156,7 +1156,7 @@ getCoord : numeric numeric coordSystem skyFrame skyFormat
 getCrop	: coordSystem skyFrame skyFormat
         {fr->getCropCmd((Coord::CoordSystem)$1, (Coord::SkyFrame)$2, (Coord::SkyFormat)$3);}
 	| CENTER_ coordSystem skyFrame skyFormat coordSystem skyDist
-	{fr->getCropCenterCmd((Coord::CoordSystem)$2, (Coord::SkyFrame)$3, (Coord::SkyFormat)$4, (Coord::CoordSystem)$5, (Coord::SkyDist)$6);}
+	{fr->getCropCenterCmd((Coord::CoordSystem)$2, (Coord::SkyFrame)$3, (Coord::SkyFormat)$4, (Coord::CoordSystem)$5, (Coord::DistFormat)$6);}
 	| THREED_ coordSystem {fr->getCrop3dCmd((Coord::CoordSystem)$2);}
 	;
 
@@ -1213,7 +1213,7 @@ getFits	: NAXES_ /* empty */ {fr->getFitsNAxesCmd();}
 	| OBJECT_ NAME_ {fr->getFitsObjectNameCmd();}
 	| SIZE_ {fr->getFitsSizeCmd();}
 	| SIZE_ coordSystem skyFrame skyDist
-	{fr->getFitsSizeCmd((Coord::CoordSystem)$2,(Coord::SkyFrame)$3,(Coord::SkyDist)$4);}
+	{fr->getFitsSizeCmd((Coord::CoordSystem)$2,(Coord::SkyFrame)$3,(Coord::DistFormat)$4);}
 	| SLICE_ getFitsSlice
 	| WIDTH_ {fr->getFitsWidthCmd();}
 	;
@@ -1710,7 +1710,7 @@ match	: STRING STRING wcsSystem skyFrame STRING STRING wcsSystem skyFrame numeri
 	{
 	  fr->matchCmd($1,$2,(Coord::CoordSystem)$3,(Coord::SkyFrame)$4,
 		       $5,$6,(Coord::CoordSystem)$7,(Coord::SkyFrame)$8,
-		       $9,(Coord::CoordSystem)$10,(Coord::SkyDist)$11,
+		       $9,(Coord::CoordSystem)$10,(Coord::DistFormat)$11,
 		       $12);
 	}
 
@@ -1748,9 +1748,9 @@ marker	: CENTROID_ markerCentroid
 	{fr->markerAnnulusRadiusCmd($1, $4, $5, $6, (Coord::InternalSystem)$7);}
 	| INT ANNULUS_ RADIUS_ numeric numeric INT coordSystem skyDist
 	{fr->markerAnnulusRadiusCmd($1, $4, $5, $6,
-	    (Coord::CoordSystem)$7, (Coord::SkyDist)$8);}
+	    (Coord::CoordSystem)$7, (Coord::DistFormat)$8);}
 	| INT ANNULUS_ RADIUS_ STRING coordSystem skyDist
-	{fr->markerAnnulusRadiusCmd($1, $4,(Coord::CoordSystem)$5,(Coord::SkyDist)$6);}
+	{fr->markerAnnulusRadiusCmd($1, $4,(Coord::CoordSystem)$5,(Coord::DistFormat)$6);}
 
 	| INT BOX_ FILL_ yesno {fr->markerBoxFillCmd($1,$4);}
 	| INT BOXANNULUS_ RADIUS_ numeric numeric numeric INT internalSystem
@@ -1759,15 +1759,15 @@ marker	: CENTROID_ markerCentroid
 	| INT BOXANNULUS_ RADIUS_ numeric numeric numeric INT 
 	    coordSystem skyDist
 	{fr->markerBoxAnnulusRadiusCmd($1, Vector($4, $5), 
-	    Vector($6, $6*$5/$4), $7, (Coord::CoordSystem)$8, (Coord::SkyDist)$9);}
+	    Vector($6, $6*$5/$4), $7, (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
 	| INT BOXANNULUS_ RADIUS_ STRING coordSystem skyDist
-	{fr->markerBoxAnnulusRadiusCmd($1,$4,(Coord::CoordSystem)$5,(Coord::SkyDist)$6);}
+	{fr->markerBoxAnnulusRadiusCmd($1,$4,(Coord::CoordSystem)$5,(Coord::DistFormat)$6);}
 
 	| INT BOX_ RADIUS_ numeric numeric internalSystem
 	{fr->markerBoxRadiusCmd($1, Vector($4,$5), (Coord::InternalSystem)$6);}
 	| INT BOX_ RADIUS_ numeric numeric coordSystem skyDist
 	{fr->markerBoxRadiusCmd($1, Vector($4,$5), 
-	    (Coord::CoordSystem)$6, (Coord::SkyDist)$7);}
+	    (Coord::CoordSystem)$6, (Coord::DistFormat)$7);}
 	| INT BPANDA_ EDIT_ angle angle INT numeric numeric numeric INT 
 	{fr->markerBpandaEditCmd($1, $4, $5, $6,
 	    Vector($7,$8), Vector($9,$9*$8/$7), $10);}
@@ -1783,7 +1783,7 @@ marker	: CENTROID_ markerCentroid
 	| INT BPANDA_ EDIT_ STRING STRING coordSystem skyFrame 
 	    coordSystem skyDist
 	{fr->markerBpandaEditCmd($1, $4, $5, 
-	    (Coord::CoordSystem)$6, (Coord::SkyFrame)$7, (Coord::CoordSystem)$8, (Coord::SkyDist)$9);}
+	    (Coord::CoordSystem)$6, (Coord::SkyFrame)$7, (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
 
 	| INT CALLBACK_ markerCallBack STRING STRING
 	{fr->markerCallBackCmd($1,(CallBack::Type)$3,$4,$5);}
@@ -1791,7 +1791,7 @@ marker	: CENTROID_ markerCentroid
 	| INT CIRCLE_ RADIUS_ numeric internalSystem
 	{fr->markerCircleRadiusCmd($1, $4, (Coord::InternalSystem)$5);}
 	| INT CIRCLE_ RADIUS_ numeric coordSystem skyDist
-	{fr->markerCircleRadiusCmd($1, $4, (Coord::CoordSystem)$5, (Coord::SkyDist)$6);}
+	{fr->markerCircleRadiusCmd($1, $4, (Coord::CoordSystem)$5, (Coord::DistFormat)$6);}
 	| INT COLOR_ STRING {fr->markerColorCmd($1,$3);}
 	| INT COMPASS_ ARROW_ yesno yesno 
 	{fr->markerCompassArrowCmd($1,$4,$5);}
@@ -1800,7 +1800,7 @@ marker	: CENTROID_ markerCentroid
 	| INT COMPASS_ RADIUS_ numeric internalSystem
 	{fr->markerCompassRadiusCmd($1,$4,(Coord::InternalSystem)$5);}
 	| INT COMPASS_ RADIUS_ numeric coordSystem skyDist
-	  {fr->markerCompassRadiusCmd($1,$4,(Coord::CoordSystem)$5,(Coord::SkyDist)$6);}
+	  {fr->markerCompassRadiusCmd($1,$4,(Coord::CoordSystem)$5,(Coord::DistFormat)$6);}
 	| INT COMPASS_ SYSTEM_ coordSystem skyFrame
 	{fr->markerCompassSystemCmd($1, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
 	| INT COMPOSITE_ GLOBAL_ yesno {fr->markerCompositeCmd($1,$4);}
@@ -1815,7 +1815,7 @@ marker	: CENTROID_ markerCentroid
 	| INT CPANDA_ EDIT_ STRING STRING coordSystem skyFrame 
 	    coordSystem skyDist
 	{fr->markerCpandaEditCmd($1, $4, $5, (Coord::CoordSystem)$6, (Coord::SkyFrame)$7,
-	    (Coord::CoordSystem)$8, (Coord::SkyDist)$9);}
+	    (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
 
 	| INT CREATE_ ANNULUS_ RADIUS_ numeric numeric
 	{fr->markerAnnulusCreateRadiusCmd($1,Vector($5,$6));}
@@ -1866,7 +1866,7 @@ marker	: CENTROID_ markerCentroid
 	{fr->markerEllipseRadiusCmd($1, Vector($4, $5), (Coord::InternalSystem)$6);}
 	| INT ELLIPSE_ RADIUS_ numeric numeric coordSystem skyDist
 	{fr->markerEllipseRadiusCmd($1, Vector($4, $5),
-	    (Coord::CoordSystem)$6, (Coord::SkyDist)$7);}
+	    (Coord::CoordSystem)$6, (Coord::DistFormat)$7);}
 	| INT ELLIPSEANNULUS_ RADIUS_ numeric numeric numeric INT
 	    internalSystem
 	{fr->markerEllipseAnnulusRadiusCmd($1, Vector($4,$5), 
@@ -1874,10 +1874,10 @@ marker	: CENTROID_ markerCentroid
 	| INT ELLIPSEANNULUS_ RADIUS_ numeric numeric numeric INT
 	    coordSystem skyDist
 	{fr->markerEllipseAnnulusRadiusCmd($1, Vector($4,$5), 
-	    Vector($6,$6*$5/$4), $7, (Coord::CoordSystem)$8, (Coord::SkyDist)$9);}
+	    Vector($6,$6*$5/$4), $7, (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
 	| INT ELLIPSEANNULUS_ RADIUS_ STRING coordSystem skyDist
 	{fr->markerEllipseAnnulusRadiusCmd($1, $4,
-	    (Coord::CoordSystem)$5, (Coord::SkyDist)$6);}
+	    (Coord::CoordSystem)$5, (Coord::DistFormat)$6);}
 	| INT EPANDA_ EDIT_ angle angle INT numeric numeric numeric INT 
 	{fr->markerEpandaEditCmd($1, $4, $5, $6,
 	    Vector($7,$8), Vector($9,$9*$8/$7), $10);}
@@ -1894,7 +1894,7 @@ marker	: CENTROID_ markerCentroid
 	    coordSystem skyDist
 	{fr->markerEpandaEditCmd($1, $4, $5, 
 	    (Coord::CoordSystem)$6, (Coord::SkyFrame)$7,
-	    (Coord::CoordSystem)$8, (Coord::SkyDist)$9);}
+	    (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
 
 	| INT FONT_ STRING {fr->markerFontCmd($1,$3);}
 	| INT HIGHLITE_ {fr->markerHighliteCmd($1);}
@@ -1920,12 +1920,12 @@ marker	: CENTROID_ markerCentroid
 	{fr->markerPolygonResetCmd($1, Vector($4,$5),(Coord::InternalSystem)$6);}
 	| INT POLYGON_ RESET_ numeric numeric coordSystem skyDist
 	{fr->markerPolygonResetCmd($1, Vector($4,$5),
-	    (Coord::CoordSystem)$6, (Coord::SkyDist)$7);}
+	    (Coord::CoordSystem)$6, (Coord::DistFormat)$7);}
 	| INT SEGMENT_ RESET_ numeric numeric internalSystem
 	{fr->markerSegmentResetCmd($1, Vector($4,$5),(Coord::InternalSystem)$6);}
 	| INT SEGMENT_ RESET_ numeric numeric coordSystem skyDist
 	{fr->markerSegmentResetCmd($1, Vector($4,$5),
-	    (Coord::CoordSystem)$6, (Coord::SkyDist)$7);}
+	    (Coord::CoordSystem)$6, (Coord::DistFormat)$7);}
 	| INT POINT_ SHAPE_ pointShape 
 	{fr->markerPointShapeCmd($1,(Point::PointShape)$4);}
 	| INT POINT_ SIZE_ INT {fr->markerPointSizeCmd($1,$4);}
@@ -1938,7 +1938,7 @@ marker	: CENTROID_ markerCentroid
 	    coordSystem skyDist
 	{fr->markerProjectionCmd($1, Vector($5), Vector($6),
 	    (Coord::CoordSystem)$3, (Coord::SkyFrame)$4, $7,
-	    (Coord::CoordSystem)$8, (Coord::SkyDist)$9);}
+	    (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
 	| INT PROPERTY_ markerProperty yesno 
 	{fr->markerPropertyCmd($1,$3,$4);}
 
@@ -1951,7 +1951,7 @@ marker	: CENTROID_ markerCentroid
 	    (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
 	| INT RULER_ SYSTEM_ coordSystem skyFrame coordSystem skyDist
 	{fr->markerRulerSystemCmd($1, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5,
-	    (Coord::CoordSystem)$6, (Coord::SkyDist)$7);}
+	    (Coord::CoordSystem)$6, (Coord::DistFormat)$7);}
 
 	| INT SELECT_ {fr->markerSelectCmd($1);}
 	| INT SELECT_ ONLY_ {fr->markerSelectOnlyCmd($1);}
@@ -1969,7 +1969,7 @@ marker	: CENTROID_ markerCentroid
 	| INT VECTOR_ POINT_ coordSystem skyFrame coord 
 	    coordSystem skyDist numeric angle
 	{fr->markerVectorCmd($1, Vector($6), (Coord::CoordSystem)$4, (Coord::SkyFrame)$5,
-	    $9, (Coord::CoordSystem)$7, (Coord::SkyDist)$8, $10);}
+	    $9, (Coord::CoordSystem)$7, (Coord::DistFormat)$8, $10);}
 
 	| INT WIDTH_ INT {fr->markerLineWidthCmd($1,$3);}
 
@@ -2170,7 +2170,7 @@ markerCreate :
 	    markerProperties
 	{fr->createRulerCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    fr->mapToRef(Vector($4,$5),Coord::CANVAS),
-	    (Coord::CoordSystem)$6, (Coord::SkyFrame)$7, (Coord::CoordSystem)$8, (Coord::SkyDist)$9,
+	    (Coord::CoordSystem)$6, (Coord::SkyFrame)$7, (Coord::CoordSystem)$8, (Coord::DistFormat)$9,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 	| COMPASS_ numeric numeric 
@@ -2333,31 +2333,31 @@ markerGet : CENTROID_ markerGetCentroid
 	| INT ANGLE_ coordSystem skyFrame
 	{fr->getMarkerAngleCmd($1,(Coord::CoordSystem)$3, (Coord::SkyFrame)$4);}
 	| INT ANNULUS_ RADIUS_ coordSystem skyDist
-	{fr->getMarkerAnnulusRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::SkyDist)$5);}
+	{fr->getMarkerAnnulusRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 
 	| INT BOX_ FILL_ {fr->getMarkerBoxFillCmd($1);}
 	| INT BOXANNULUS_ RADIUS_ coordSystem skyDist
-	{fr->getMarkerBoxAnnulusRadiusCmd($1,(Coord::CoordSystem)$4,(Coord::SkyDist)$5);}
+	{fr->getMarkerBoxAnnulusRadiusCmd($1,(Coord::CoordSystem)$4,(Coord::DistFormat)$5);}
 	| INT BOX_ RADIUS_ coordSystem skyDist
-	{fr->getMarkerBoxRadiusCmd($1,(Coord::CoordSystem)$4, (Coord::SkyDist)$5);}
+	{fr->getMarkerBoxRadiusCmd($1,(Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT BPANDA_ ANGLE_ {fr->getMarkerBpandaAnglesCmd($1);}
 	| INT BPANDA_ ANGLE_ internalSystem {fr->getMarkerBpandaAnglesCmd($1);}
 	| INT BPANDA_ ANGLE_ coordSystem skyFrame
 	{fr->getMarkerBpandaAnglesCmd($1, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
 	| INT BPANDA_ RADIUS_ coordSystem skyDist
-	{fr->getMarkerBpandaRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::SkyDist)$5);}
+	{fr->getMarkerBpandaRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 
 	| INT CENTER_ coordSystem skyFrame skyFormat 
 	{fr->getMarkerCenterCmd($1, (Coord::CoordSystem)$3, (Coord::SkyFrame)$4, 
 	    (Coord::SkyFormat)$5);}
 	| INT CIRCLE_ FILL_ {fr->getMarkerCircleFillCmd($1);}
 	| INT CIRCLE_ RADIUS_ coordSystem skyDist
-	{fr->getMarkerCircleRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::SkyDist)$5);}
+	{fr->getMarkerCircleRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT COLOR_ {fr->getMarkerColorCmd($1);}
 	| INT COMPASS_ ARROW_ {fr->getMarkerCompassArrowCmd($1);}
 	| INT COMPASS_ LABEL_ {fr->getMarkerCompassLabelCmd($1);}
 	| INT COMPASS_ RADIUS_ coordSystem skyDist
-	{fr->getMarkerCompassRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::SkyDist)$5);}
+	{fr->getMarkerCompassRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT COMPASS_ SYSTEM_ {fr->getMarkerCompassSystemCmd($1);}
 	| INT COMPOSITE_ GLOBAL_ {fr->getMarkerCompositeCmd($1);}
 	| INT CPANDA_ ANGLE_ {fr->getMarkerCpandaAnglesCmd($1);}
@@ -2365,30 +2365,30 @@ markerGet : CENTROID_ markerGetCentroid
 	| INT CPANDA_ ANGLE_ coordSystem skyFrame
 	{fr->getMarkerCpandaAnglesCmd($1, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
 	| INT CPANDA_ RADIUS_ coordSystem skyDist
-	{fr->getMarkerCpandaRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::SkyDist)$5);}
+	{fr->getMarkerCpandaRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT ELLIPSE_ FILL_ {fr->getMarkerEllipseFillCmd($1);}
 	| INT ELLIPSE_ RADIUS_ coordSystem skyDist
-	{fr->getMarkerEllipseRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::SkyDist)$5);}
+	{fr->getMarkerEllipseRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT ELLIPSEANNULUS_ RADIUS_ coordSystem skyDist
 	{fr->getMarkerEllipseAnnulusRadiusCmd($1, (Coord::CoordSystem)$4, 
-	    (Coord::SkyDist)$5);}
+	    (Coord::DistFormat)$5);}
 	| INT EPANDA_ ANGLE_ {fr->getMarkerEpandaAnglesCmd($1);}
 	| INT EPANDA_ ANGLE_ internalSystem {fr->getMarkerEpandaAnglesCmd($1);}
 	| INT EPANDA_ ANGLE_ coordSystem skyFrame
 	{fr->getMarkerEpandaAnglesCmd($1, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
 	| INT EPANDA_ RADIUS_ coordSystem skyDist
-	{fr->getMarkerEpandaRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::SkyDist)$5);}
+	{fr->getMarkerEpandaRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT FONT_ {fr->getMarkerFontCmd($1);}
 	| INT HIGHLITE_ {fr->getMarkerHighlitedCmd($1);}
 	| INT LINE_ ARROW_ {fr->getMarkerLineArrowCmd($1);}
 	| INT LINE_ LENGTH_ coordSystem skyDist
-	{fr->getMarkerLineLengthCmd($1, (Coord::CoordSystem)$4, (Coord::SkyDist)$5);}
+	{fr->getMarkerLineLengthCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT LINE_ POINT_ coordSystem skyFrame skyFormat
 	{fr->getMarkerLineCmd($1, (Coord::CoordSystem)$4,
 	    (Coord::SkyFrame)$5, (Coord::SkyFormat)$6);}
 	| INT MAP_ LENGTH_ numeric coordSystem skyDist
 	{fr->getMarkerMapLenFromRefCmd($1, $4,
-	    (Coord::CoordSystem)$5,(Coord::SkyDist)$6);}
+	    (Coord::CoordSystem)$5,(Coord::DistFormat)$6);}
 
 	| INT POLYGON_ FILL_ {fr->getMarkerPolygonFillCmd($1);}
 	| INT POINT_ SHAPE_ {fr->getMarkerPointShapeCmd($1);}
@@ -2398,13 +2398,13 @@ markerGet : CENTROID_ markerGetCentroid
 	    (Coord::SkyFrame)$5, (Coord::SkyFormat)$6);}
 	| INT PROJECTION_ LENGTH_ coordSystem skyDist
 	{fr->getMarkerProjectionLengthCmd($1, (Coord::CoordSystem)$4, 
-	    (Coord::SkyDist)$5);}
+	    (Coord::DistFormat)$5);}
 	| INT PROJECTION_ THICK_ coordSystem skyDist
-	{fr->getMarkerProjectionWidthCmd($1,(Coord::CoordSystem)$4,(Coord::SkyDist)$5);}
+	{fr->getMarkerProjectionWidthCmd($1,(Coord::CoordSystem)$4,(Coord::DistFormat)$5);}
 	| INT PROPERTY_ {fr->getMarkerPropertyCmd($1);}
 	| INT PROPERTY_ markerProperty {fr->getMarkerPropertyCmd($1,$3);}
 	| INT RULER_ LENGTH_ coordSystem skyDist
-	{fr->getMarkerRulerLengthCmd($1,(Coord::CoordSystem)$4,(Coord::SkyDist)$5);}
+	{fr->getMarkerRulerLengthCmd($1,(Coord::CoordSystem)$4,(Coord::DistFormat)$5);}
 	| INT RULER_ POINT_ coordSystem skyFrame skyFormat
 	{fr->getMarkerRulerPointCmd($1, (Coord::CoordSystem)$4,
 	    (Coord::SkyFrame)$5, (Coord::SkyFormat)$6);}
@@ -2419,7 +2419,7 @@ markerGet : CENTROID_ markerGetCentroid
 
 	| INT VECTOR_ ARROW_ {fr->getMarkerVectorArrowCmd($1);}
 	| INT VECTOR_ LENGTH_ coordSystem skyDist
-	{fr->getMarkerVectorLengthCmd($1, (Coord::CoordSystem)$4, (Coord::SkyDist)$5);}
+	{fr->getMarkerVectorLengthCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT VECTOR_ POINT_ coordSystem skyFrame skyFormat
 	{fr->getMarkerVectorCmd($1, (Coord::CoordSystem)$4,
 	    (Coord::SkyFrame)$5, (Coord::SkyFormat)$6);}

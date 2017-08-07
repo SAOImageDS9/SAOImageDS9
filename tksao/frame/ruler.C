@@ -19,7 +19,7 @@ Ruler::Ruler(const Ruler& a) : BaseLine(a)
 
 Ruler::Ruler(Base* p, const Vector& ptr1, const Vector& ptr2,
 	     Coord::CoordSystem sys, Coord::SkyFrame sky, 
-	     Coord::CoordSystem distsys, Coord::SkyDist distfor,
+	     Coord::CoordSystem distsys, Coord::DistFormat distfor,
 	     const char* clr, int* dsh,
 	     int wth, const char* fnt, const char* txt, 
 	     unsigned short prop, const char* cmt,
@@ -423,7 +423,7 @@ int Ruler::isIn(const Vector& vv)
 }
 
 void Ruler::setCoordSystem(Coord::CoordSystem sys, Coord::SkyFrame sky, 
-			   Coord::CoordSystem dsys, Coord::SkyDist dist)
+			   Coord::CoordSystem dsys, Coord::DistFormat dist)
 {
   coordSystem = sys;
   skyFrame = sky;

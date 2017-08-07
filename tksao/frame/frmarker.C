@@ -477,7 +477,7 @@ void Base::createPointCmd(const Vector& center,
 // Measurement Regions
 void Base::createRulerCmd(const Vector& center, const Vector& p2,
 			  Coord::CoordSystem sys, Coord::SkyFrame sky,
-			  Coord::CoordSystem distsys, Coord::SkyDist distdist,
+			  Coord::CoordSystem distsys, Coord::DistFormat distdist,
 			  const char* color, int* dash, 
 			  int width, const char* font,
 			  const char* text, unsigned short prop,
@@ -1168,7 +1168,7 @@ void Base::getMarkerAngleCmd(int id, Coord::CoordSystem sys, Coord::SkyFrame sky
 }
 
 void Base::getMarkerAnnulusRadiusCmd(int id, Coord::CoordSystem sys, 
-				     Coord::SkyDist dist)
+				     Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -1207,7 +1207,7 @@ void Base::getMarkerBoxFillCmd(int id)
 }
 
 void Base::getMarkerBoxAnnulusRadiusCmd(int id, Coord::CoordSystem sys, 
-					Coord::SkyDist dist)
+					Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -1229,7 +1229,7 @@ void Base::getMarkerBoxAnnulusRadiusCmd(int id, Coord::CoordSystem sys,
 }
 
 void Base::getMarkerBoxRadiusCmd(int id, Coord::CoordSystem sys, 
-				 Coord::SkyDist dist)
+				 Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -1296,7 +1296,7 @@ void Base::getMarkerBpandaAnglesCmd(int id, Coord::CoordSystem sys, Coord::SkyFr
 }
 
 void Base::getMarkerBpandaRadiusCmd(int id, Coord::CoordSystem sys, 
-				    Coord::SkyDist dist)
+				    Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -1349,7 +1349,7 @@ void Base::getMarkerCircleFillCmd(int id)
 }
 
 void Base::getMarkerCircleRadiusCmd(int id, Coord::CoordSystem sys,
-				    Coord::SkyDist dist)
+				    Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -1420,7 +1420,7 @@ void Base::getMarkerCpandaAnglesCmd(int id, Coord::CoordSystem sys, Coord::SkyFr
 }
 
 void Base::getMarkerCpandaRadiusCmd(int id, Coord::CoordSystem sys, 
-				    Coord::SkyDist dist)
+				    Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -1526,7 +1526,7 @@ void Base::getMarkerCompassLabelCmd(int id)
 }
 
 void Base::getMarkerCompassRadiusCmd(int id, Coord::CoordSystem sys,
-				     Coord::SkyDist dist)
+				     Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -1592,7 +1592,7 @@ void Base::getMarkerEllipseFillCmd(int id)
 }
 
 void Base::getMarkerEllipseRadiusCmd(int id, Coord::CoordSystem sys, 
-				     Coord::SkyDist dist)
+				     Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -1610,7 +1610,7 @@ void Base::getMarkerEllipseRadiusCmd(int id, Coord::CoordSystem sys,
 }
 
 void Base::getMarkerEllipseAnnulusRadiusCmd(int id, Coord::CoordSystem sys, 
-					    Coord::SkyDist dist)
+					    Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -1681,7 +1681,7 @@ void Base::getMarkerEpandaAnglesCmd(int id, Coord::CoordSystem sys, Coord::SkyFr
 }
 
 void Base::getMarkerEpandaRadiusCmd(int id, Coord::CoordSystem sys, 
-				    Coord::SkyDist dist)
+				    Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -1848,7 +1848,7 @@ void Base::getMarkerLineArrowCmd(int id)
 }
 
 void Base::getMarkerLineLengthCmd(int id, Coord::CoordSystem sys, 
-				  Coord::SkyDist dist)
+				  Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -1901,7 +1901,7 @@ void Base::getMarkerLineWidthCmd(int id)
 
 void Base::getMarkerMapLenFromRefCmd(int id, double dd,
 				     Coord::CoordSystem sys, 
-				     Coord::SkyDist dist)
+				     Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -2008,7 +2008,7 @@ void Base::getMarkerProjectionPointsCmd(int id, Coord::CoordSystem sys,
 }
 
 void Base::getMarkerProjectionLengthCmd(int id, Coord::CoordSystem sys,
-					Coord::SkyDist dist)
+					Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -2027,7 +2027,7 @@ void Base::getMarkerProjectionLengthCmd(int id, Coord::CoordSystem sys,
 }
 
 void Base::getMarkerProjectionWidthCmd(int id, Coord::CoordSystem sys, 
-				       Coord::SkyDist dist)
+				       Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -2103,7 +2103,7 @@ void Base::getMarkerPropertyCmd(int id, unsigned short which)
 }
 
 void Base::getMarkerRulerLengthCmd(int id, Coord::CoordSystem sys, 
-				   Coord::SkyDist dist)
+				   Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -2156,7 +2156,7 @@ void Base::getMarkerRulerSystemCmd(int id)
       Tcl_AppendResult(interp, " ", NULL);
       printCoordSystem(((Ruler*)mm)->getDistSystem());
       Tcl_AppendResult(interp, " ", NULL);
-      printSkyDist(((Ruler*)mm)->getDistDist());
+      printDistFormat(((Ruler*)mm)->getDistDist());
       return;
     }
     mm=mm->next();
@@ -2550,7 +2550,7 @@ void Base::getMarkerVectorArrowCmd(int id)
 }
 
 void Base::getMarkerVectorLengthCmd(int id, Coord::CoordSystem sys,
-				    Coord::SkyDist dist)
+				    Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -2771,7 +2771,7 @@ void Base::markerAnnulusRadiusCmd(int id, double inner, double outer,
 
 void Base::markerAnnulusRadiusCmd(int id, double inner, double outer,
 				  int num, Coord::CoordSystem sys,
-				  Coord::SkyDist dist)
+				  Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -2796,7 +2796,7 @@ void Base::markerAnnulusRadiusCmd(int id, double inner, double outer,
 }
 
 void Base::markerAnnulusRadiusCmd(int id, const char* lev, 
-				  Coord::CoordSystem sys, Coord::SkyDist dist)
+				  Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -2921,7 +2921,7 @@ void Base::markerBoxAnnulusRadiusCmd(int id, const Vector& inner,
 void Base::markerBoxAnnulusRadiusCmd(int id, const Vector& inner,
 				     const Vector& outer, int num,
 				     Coord::CoordSystem sys,
-				     Coord::SkyDist dist)
+				     Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -2947,7 +2947,7 @@ void Base::markerBoxAnnulusRadiusCmd(int id, const Vector& inner,
 
 void Base::markerBoxAnnulusRadiusCmd(int id,const char* lev, 
 				     Coord::CoordSystem sys,
-				     Coord::SkyDist dist)
+				     Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -3046,7 +3046,7 @@ void Base::markerBoxRadiusCmd(int id, const Vector& size,
 }
 
 void Base::markerBoxRadiusCmd(int id, const Vector& size, 
-			      Coord::CoordSystem sys, Coord::SkyDist dist)
+			      Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -3178,7 +3178,7 @@ void Base::markerBpandaEditCmd(int id,
 void Base::markerBpandaEditCmd(int id, 
 			       const char* a, const char* r,
 			       Coord::CoordSystem sys, Coord::SkyFrame sky, 
-			       Coord::CoordSystem rsys, Coord::SkyDist rdist)
+			       Coord::CoordSystem rsys, Coord::DistFormat rdist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -3351,7 +3351,7 @@ void Base::markerCircleRadiusCmd(int id, double radius,
 }
 
 void Base::markerCircleRadiusCmd(int id, double radius, Coord::CoordSystem sys,
-				 Coord::SkyDist dist)
+				 Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -3512,7 +3512,7 @@ void Base::markerCompassRadiusCmd(int id, double r, Coord::InternalSystem sys)
 }
 
 void Base::markerCompassRadiusCmd(int id, double r, Coord::CoordSystem sys, 
-				  Coord::SkyDist dist)
+				  Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -3725,7 +3725,7 @@ void Base::markerCpandaEditCmd(int id, double a1, double a2, int an,
 
 void Base::markerCpandaEditCmd(int id, const char* a, const char* r,
 			       Coord::CoordSystem sys, Coord::SkyFrame sky, 
-			       Coord::CoordSystem rsys, Coord::SkyDist rdist)
+			       Coord::CoordSystem rsys, Coord::DistFormat rdist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -4067,7 +4067,7 @@ void Base::markerEllipseRadiusCmd(int id, const Vector& radius,
 }
 
 void Base::markerEllipseRadiusCmd(int id, const Vector& radius, 
-				  Coord::CoordSystem sys, Coord::SkyDist dist)
+				  Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -4119,7 +4119,7 @@ void Base::markerEllipseAnnulusRadiusCmd(int id,
 					 const Vector& inner,
 					 const Vector& outer, int num,
 					 Coord::CoordSystem sys,
-					 Coord::SkyDist dist)
+					 Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -4146,7 +4146,7 @@ void Base::markerEllipseAnnulusRadiusCmd(int id,
 void Base::markerEllipseAnnulusRadiusCmd(int id, 
 					 const char* lev,
 					 Coord::CoordSystem sys,
-					 Coord::SkyDist dist)
+					 Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -4332,7 +4332,7 @@ void Base::markerEpandaEditCmd(int id,
 void Base::markerEpandaEditCmd(int id, 
 			       const char* a, const char* r,
 			       Coord::CoordSystem sys, Coord::SkyFrame sky, 
-			       Coord::CoordSystem rsys, Coord::SkyDist rdist)
+			       Coord::CoordSystem rsys, Coord::DistFormat rdist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -5587,7 +5587,7 @@ void Base::markerPolygonResetCmd(int id, const Vector& size,
 }
 
 void Base::markerPolygonResetCmd(int id, const Vector& size, 
-				 Coord::CoordSystem sys, Coord::SkyDist dist)
+				 Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -5636,7 +5636,7 @@ void Base::markerProjectionCmd(int id,
 			       const Vector& p1, const Vector& p2, 
 			       Coord::CoordSystem sys, Coord::SkyFrame sky,
 			       double width, 
-			       Coord::CoordSystem wdsys, Coord::SkyDist wddist)
+			       Coord::CoordSystem wdsys, Coord::DistFormat wddist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -5852,7 +5852,7 @@ void Base::markerRulerPointCmd(int id, const Vector& p1, const Vector& p2,
 
 void Base::markerRulerSystemCmd(int id, Coord::CoordSystem sys,
 				Coord::SkyFrame sky,
-				Coord::CoordSystem dsys, Coord::SkyDist dist)
+				Coord::CoordSystem dsys, Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -6070,7 +6070,7 @@ void Base::markerSegmentResetCmd(int id, const Vector& size, Coord::InternalSyst
 }
 
 void Base::markerSegmentResetCmd(int id, const Vector& size, 
-				 Coord::CoordSystem sys, Coord::SkyDist dist)
+				 Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -6490,7 +6490,7 @@ void Base::markerVectorCmd(int id, const Vector& p, Coord::InternalSystem sys,
 void Base::markerVectorCmd(int id, const Vector& p,
 			   Coord::CoordSystem sys, Coord::SkyFrame sky,
 			   double mag,
-			   Coord::CoordSystem dsys, Coord::SkyDist dist,
+			   Coord::CoordSystem dsys, Coord::DistFormat dist,
 			   double ang)
 {
   Marker* mm=markers->head();

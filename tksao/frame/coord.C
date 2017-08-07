@@ -142,7 +142,7 @@ void Coord::listCoordSystem(ostream& str, CoordSystem sys, SkyFrame sky,
   }
 }
 
-void Coord::listDistSystem(ostream& str, CoordSystem sys, SkyDist format, 
+void Coord::listDistSystem(ostream& str, CoordSystem sys, DistFormat format, 
 			   FitsImage* ptr)
 {
   switch (sys) {
@@ -319,7 +319,7 @@ void Coord::strToSkyFormat(const char* str, SkyFormat* format)
     *format = DEGREES;
 }
 
-void Coord::strToSkyDist(const char* str, SkyDist* dist)
+void Coord::strToDistFormat(const char* str, DistFormat* dist)
 {
   if (!str)
     *dist = DEGREE;
@@ -360,7 +360,7 @@ void Coord::strToSkyDist(const char* str, SkyDist* dist)
 }
 
 void Coord::strToDistSystem(const char* str, CoordSystem wcssys, 
-			    CoordSystem* sys, SkyDist* dist)
+			    CoordSystem* sys, DistFormat* dist)
 {
   if (!str) {
     *sys = PHYSICAL;

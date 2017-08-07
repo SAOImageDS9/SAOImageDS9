@@ -1161,7 +1161,7 @@ void Base::printSkyFormat(Coord::SkyFormat format)
   Tcl_AppendResult(interp, coord.skyFormatStr(format), NULL);
 }
 
-void Base::printSkyDist(Coord::SkyDist dist)
+void Base::printDistFormat(Coord::DistFormat dist)
 {
   Tcl_AppendResult(interp, coord.skyDistStr(dist), NULL);
 }
@@ -1177,7 +1177,7 @@ void Base::printFromRef(FitsImage* ptr, const Vector& vv,
 }
 
 void Base::printLenFromRef(FitsImage* ptr, double dd,
-			   Coord::CoordSystem sys, Coord::SkyDist dist)
+			   Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   ostringstream str;
   ptr->listLenFromRef(str, dd, sys, dist);
@@ -1186,7 +1186,7 @@ void Base::printLenFromRef(FitsImage* ptr, double dd,
 }
 
 void Base::printLenFromRef(FitsImage* ptr, const Vector& vv,
-			   Coord::CoordSystem sys, Coord::SkyDist dist)
+			   Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   ostringstream str;
   ptr->listLenFromRef(str, vv, sys, dist);
@@ -1196,7 +1196,7 @@ void Base::printLenFromRef(FitsImage* ptr, const Vector& vv,
 
 void Base::printDistFromRef(FitsImage* ptr, 
 			    const Vector& vv1, const Vector& vv2,
-			    Coord::CoordSystem sys, Coord::SkyDist dist)
+			    Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   ostringstream str;
   ptr->listDistFromRef(str, vv1, vv2, sys, dist);

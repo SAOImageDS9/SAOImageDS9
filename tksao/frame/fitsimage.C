@@ -1373,7 +1373,8 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 		      Coord::CoordSystem sys1, Coord::SkyFrame sky1,
 		      const char* xxname2, const char* yyname2,
 		      Coord::CoordSystem sys2, Coord::SkyFrame sky2,
-		      double rad, Coord::CoordSystem sys, Coord::SkyDist dist,
+		      double rad, Coord::CoordSystem sys, 
+		      Coord::DistFormat dist,
 		      const char* rrname)
 {
   astClearStatus;

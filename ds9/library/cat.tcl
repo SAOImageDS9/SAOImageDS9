@@ -1721,7 +1721,7 @@ proc ProcessCatalog {varname iname cvarname} {
 	    switch -- [lindex $var $i] {
 		incr {
 		    set cvar(sort,dir) "-increasing"
-p		}
+		}
 		decr {
 		    set cvar(sort,dir) "-decreasing"
 		}

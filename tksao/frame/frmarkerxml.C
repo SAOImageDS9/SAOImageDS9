@@ -266,7 +266,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   r2 = r2def;
   Coord::CoordSystem rsys =Coord::PHYSICAL;
   Coord::SkyFrame rsky =Coord::FK5;
-  Coord::SkyDist rdist =Coord::ARCMIN;
+  Coord::DistFormat rdist =Coord::ARCMIN;
 
   // rv,rv2
   char* rv =NULL;
@@ -277,7 +277,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   rv2 = rv2def;
   Coord::CoordSystem rvsys =Coord::PHYSICAL;
   Coord::SkyFrame rvsky =Coord::FK5;
-  Coord::SkyDist rvdist =Coord::ARCMIN;
+  Coord::DistFormat rvdist =Coord::ARCMIN;
 
   // ang
   char* ang =NULL;
@@ -362,7 +362,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
 	if (ref[ii])
 	  coord.strToCoordSystem(ref[ii],wcsSystem_,&rsys,&rsky);
 	if (unit[ii])
-	  coord.strToSkyDist(unit[ii],&rdist);	  
+	  coord.strToDistFormat(unit[ii],&rdist);	  
 	break;
       case XMLR2:
 	r2 = cols[ii];
@@ -373,7 +373,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
 	if (ref[ii])
 	  coord.strToCoordSystem(ref[ii],wcsSystem_,&rvsys,&rvsky);
 	if (unit[ii])
-	  coord.strToSkyDist(unit[ii],&rvdist);	  
+	  coord.strToDistFormat(unit[ii],&rvdist);	  
 	break;
       case XMLRV2:
 	rv2 = cols[ii];
@@ -693,7 +693,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
     Coord::SkyFrame rsky;
     coord.strToCoordSystem(param, wcsSystem_, &rsys, &rsky);
     Coord::CoordSystem dsys;
-    Coord::SkyDist ddist;
+    Coord::DistFormat ddist;
     coord.strToDistSystem(param2, wcsSystem_, &dsys, &ddist);
     createRulerCmd(xmlPoint(ptr, xv, yv, vsys, vsky, vformat, 0),
 		   xmlPoint(ptr, xv, yv, vsys, vsky, vformat, 1),
@@ -910,7 +910,7 @@ List<Vertex>* Base::xmlVertex(FitsImage* ptr,
 }
 
 double* Base::xmlDistance(FitsImage* ptr, const char* r, int cnt, 
-			  Coord::CoordSystem sys, Coord::SkyDist dist)
+			  Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   double* rr = new double[cnt];
 
@@ -930,7 +930,7 @@ double* Base::xmlDistance(FitsImage* ptr, const char* r, int cnt,
 }
 
 Vector* Base::xmlDistance(FitsImage* ptr, const char* r, const char* r2,
-			  int cnt, Coord::CoordSystem sys, Coord::SkyDist dist)
+			  int cnt, Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   Vector* vv = new Vector[cnt];
 

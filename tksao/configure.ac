@@ -1,4 +1,4 @@
-#!/bin/bash -norc
+d#!/bin/bash -norc
 dnl	This file is an input file used by the GNU "autoconf" program to
 dnl	generate the file "configure", which is run during Tcl installation
 dnl	to configure the system for the local environment.
@@ -256,7 +256,6 @@ util/grid2dbase.C
 util/grid3dbase.C
 util/gridbase.C
 util/ps.C
-util/smooth.C
 util/util.C
 vector/vector.C
 vector/vector3d.C

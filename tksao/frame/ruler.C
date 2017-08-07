@@ -527,9 +527,9 @@ void Ruler::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     coord.listCoordSystem(str, coordSystem, skyFrame, ptr);
     str << ' ';
     coord.listDistSystem(str, distSystem, distFormat, ptr);
-
     if (*distSpec)
-      str << " format=" << distSpec;
+      str << " format={" << distSpec << "}";
+
     listProperties(str, 0);
   }
 }

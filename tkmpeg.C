@@ -73,7 +73,7 @@ TkMPEG::TkMPEG(Tcl_Interp* intp)
  int TkMPEG::create(int argc, const char* argv[])
 {
   if (argc == 8) {
-    if (argv[2] == '\0') {
+    if (*argv[2] == '\0') {
 	Tcl_AppendResult(interp, "bad filename", NULL);
 	return TCL_ERROR;
     }
@@ -127,7 +127,7 @@ TkMPEG::TkMPEG(Tcl_Interp* intp)
 
 int TkMPEG::add(int argc, const char* argv[])
 {
-  if (argv[2] == '\0') {
+  if (*argv[2] == '\0') {
     Tcl_AppendResult(interp, "bad image name", NULL);
     return TCL_ERROR;
   }

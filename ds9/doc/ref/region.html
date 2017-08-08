@@ -51,7 +51,8 @@
         </tt></p>
       <p><tt>Ruler <br>
           Usage: ruler x1 y1 x2 y2 #
-          ruler=[pixels|degrees|arcmin|arcsec]</tt></p>
+          ruler=[pixels|degrees|arcmin|arcsec] [format=&lt;spec&gt;]<br>
+        </tt></p>
       <p><tt>Compass <br>
           Usage: compass x1 y1 length # compass=&lt;coordinate
           system&gt; &lt;north label&gt; &lt;east label&gt; [0|1] [0|1]
@@ -259,6 +260,7 @@
 
 
 
+
               pixel coords of original file using LTM/LTV</tt> <br>
             <tt>IMAGE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -272,12 +274,15 @@
 
 
 
+
               pixel coords of current file</tt> <br>
             <tt><tt><tt>FK4,B1950&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
                   &nbsp; # sky coordinate systems</tt> <br>
                 FK5,J2000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 #
+
 
 
 
@@ -292,6 +297,7 @@
 
 #
 
+
                   sky coordinate systems</tt> <br>
               </tt>GALACTIC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -305,10 +311,12 @@
 
 
 
+
               sky coordinate systems</tt> <br>
             <tt>ECLIPTIC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -337,6 +345,7 @@
 
 
 
+
               linear primary WCS</tt> <tt><br>
             </tt></blockquote>
           <tt></tt> </blockquote>
@@ -346,6 +355,7 @@
           <tt>physical</tt> , are valid on a per segment basis. In this
           case, use <tt>tile</tt> to specify which header to use in all
           coordinate conversions. The default is the first header, or <tt>tile
+
 
 
 
@@ -379,10 +389,12 @@
 
 
 
+
             context-dependent (see below)</tt> <br>
           <tt>[num]d&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -405,6 +417,7 @@
 
 
 
+
             radians</tt> <br>
           <tt>[num]p&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -418,10 +431,12 @@
 
 
 
+
             physical pixels</tt> <br>
           <tt>[num]i&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -453,10 +468,12 @@
 
 
 
+
             context-dependent (see below)</tt> <br>
           <tt>[num]"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -479,10 +496,12 @@
 
 
 
+
             arc min</tt> <br>
           <tt>[num]d&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -505,6 +524,7 @@
 
 
 
+
             radians</tt> <br>
           <tt>[num]p&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -518,10 +538,12 @@
 
 
 
+
             physical pixels</tt> <br>
           <tt>[num]i&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -561,6 +583,7 @@
 
 
 
+
             pixel coords of current file</tt> <br>
           <br>
           <tt>LINEAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -575,11 +598,13 @@
 
 
 
+
             linear wcs as defined in file</tt>
           <p><tt>FK4,
               B1950&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -606,6 +631,7 @@
 
 
 
+
               pixel coords of original file using LTM/LTV</tt> <br>
             <tt>AMPLIFIER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -619,10 +645,12 @@
 
 
 
+
               mosaic coords of original file using ATM/ATV</tt> <br>
             <tt>DETECTOR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 #
+
 
 
 
@@ -808,6 +836,7 @@
                       ELLIPTANNULUS is translated into EPANDA<br>
                       SECTOR is ignored<br>
                     </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>FIELD
+
 
 
                         is ignored</tt><br>

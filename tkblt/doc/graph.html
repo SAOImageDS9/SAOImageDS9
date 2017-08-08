@@ -438,23 +438,6 @@
                      Sets the color of the axis and tick labels.  The  default
                      is black.
 
-              <B>-command</B> <I>prefix</I>
-                     Specifies a Tcl command to be invoked when formatting the
-                     axis tick labels. <I>Prefix</I> is a string containing the  name
-                     of  a Tcl proc and any extra arguments for the procedure.
-                     This command is invoked for each major tick on the  axis.
-                     Two additional arguments are passed to the procedure: the
-                     pathname of the widget and the current the numeric  value
-                     of  the  tick.   The procedure returns the formatted tick
-                     label.  If "" is returned, no label will appear  next  to
-                     the  tick.  You can get the standard tick labels again by
-                     setting <I>prefix</I> to "".  The default is "".
-
-                     Please note that this  procedure  is  invoked  while  the
-                     graph  is  redrawn.  You may query configuration options.
-                     But  do  not  them,  because  this  can  have  unexpected
-                     results.
-
               <B>-descending</B> <I>boolean</I>
                      Indicates whether the values along the axis are monotoni-
                      cally increasing or decreasing.  If <I>boolean</I> is true,  the
@@ -541,6 +524,31 @@
               <B>-tickfont</B> <I>fontName</I>
                      Specifies the font for axis tick labels. The  default  is
                      *-Courier-Bold-R-Normal-*-100-*.
+
+              <B>-tickformat</B> <I>formatStr</I>
+                     Specifies a printf-like description to format teh axis
+                     tick labels.  You can get the standard tick labels again by
+                     setting <I>formatStr</I> to "".  The default is "".
+
+              <B>-tickformatcommand</B>, <B>-command</B> <I>prefix</I>
+                     Specifies a Tcl command to be invoked when formatting the
+                     axis tick labels. <I>Prefix</I> is a string containing the  name
+                     of  a Tcl proc and any extra arguments for the procedure.
+                     This command is invoked for each major tick on the  axis.
+                     Two additional arguments are passed to the procedure: the
+                     pathname of the widget and the current the numeric  value
+                     of  the  tick.   The procedure returns the formatted tick
+                     label.  If "" is returned, no label will appear  next  to
+                     the  tick.  You can get the standard tick labels again by
+                     setting <I>prefix</I> to "".  The default is "".
+
+                     The numeric value for the tick might change when using the
+                     <B>-logscale</B> and <B>-tickformat</B> options.
+
+                     Please note that this  procedure  is  invoked  while  the
+                     graph  is  redrawn.  You may query configuration options.
+                     But  do  not  them,  because  this  can  have  unexpected
+                     results.
 
               <B>-ticklength</B> <I>pixels</I>
                      Sets the length of major and minor ticks (minor ticks are

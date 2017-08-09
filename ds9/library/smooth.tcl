@@ -251,7 +251,7 @@ proc MatchSmooth {which} {
     set view [$which has smooth]
     set function [$which get smooth function]
     set radius [$which get smooth radius]
-    set minor [$which get smooth radius minor]
+    set radiusminor [$which get smooth radius minor]
     set sigma [$which get smooth sigma]
     set sigmaminor [$which get smooth sigma minor]
     set angle [$which get smooth angle]

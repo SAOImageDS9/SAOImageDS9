@@ -546,6 +546,9 @@ proc FixPrefs7.4to7.5 {} {
     FixVarRm pds9(threads)
 }
 
+proc FixPrefs7.3to7.4 {} {
+}
+
 proc FixPrefs7.2to7.3 {} {
     global current
     if {$current(mode) == {pointer}} {

@@ -93,7 +93,6 @@ TEA_ADD_TCL_SOURCES([library/tkTable.tcl library/tktable.py])
 #--------------------------------------------------------------------
 
 #CLEANFILES="$CLEANFILES pkgIndex.tcl"
-CLEANFILES="$CLEANFILES tktableConfig.sh"
 if test "${TEA_PLATFORM}" = "windows" ; then
     # Ensure no empty if clauses
     :

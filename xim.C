@@ -25,7 +25,11 @@ extern "C" {
 
 void iisIO(ClientData data, int mask)
 {
+#ifdef _WIN64
+  int fd = (long long)data;
+#else
   int fd = (long)data;
+#endif
 
   if (IISDebug)
     cerr << "iisIO() " << fd << ' ' << mask << endl;
@@ -81,7 +85,11 @@ void setupProc(void* fd, int flags)
 
 void checkProc(void* fdd, int flags)
 {
+#ifdef __WIN32
+  int fd = (long long)fdd;
+#else
   int fd = (int)fdd;
+#endif
   fd_set readfds;
   struct timeval tv = {0,0};
 

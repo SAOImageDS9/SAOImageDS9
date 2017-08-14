@@ -14,7 +14,8 @@ void HtmlScheduleRedraw(HtmlWidget *htmlPtr);
 #define RELAYOUT             0x000010
 #define STY_Invisible       0x040
 #define HTML_Visible   0x01     /* This element produces "ink" */
-#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))
+/*#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))*/
+void* HtmlAlloc(size_t);
 void HtmlTPCantHappen(const char *zFile,int line);
 #if defined(COVERAGE_TEST)
 # define CANT_HAPPEN       HtmlTPCantHappen(__FILE__,__LINE__)

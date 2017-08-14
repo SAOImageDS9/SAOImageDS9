@@ -58,7 +58,8 @@ struct HtmlBlock {
 };
 int HtmlTokenNumber(HtmlElement *p);
 int HtmlIndexCmd(HtmlWidget *htmlPtr,Tcl_Interp *interp,int argc,const char **argv);
-#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))
+/*#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))*/
+void* HtmlAlloc(size_t);
 #define HtmlFree(A)       Tcl_Free((char*)(A))
 #define Html_Unknown 3
 int HtmlNameToType(const char *zType);

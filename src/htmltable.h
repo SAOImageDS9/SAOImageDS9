@@ -122,7 +122,8 @@ struct HtmlRef {
   HtmlMarkupElement markup;
   HtmlElement *pOther;         /* Pointer to some other Html element */
 };
-#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))
+/*#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))*/
+void* HtmlAlloc(size_t);
 #define Html_TH              135
 #define Html_TD              131
 #define Html_EndCAPTION      26

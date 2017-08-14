@@ -391,7 +391,8 @@ void HtmlTPCantHappen(const char *zFile,int line);
 #define Html_TABLE           129
 #define Html_TypeCount       151
 HtmlStyle HtmlPopStyleStack(HtmlWidget *htmlPtr,int tag);
-#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))
+/*#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))*/
+void* HtmlAlloc(size_t);
 typedef struct HtmlStyleStack HtmlStyleStack;
 struct HtmlStyleStack {
   HtmlStyleStack *pNext;   /* Next style on the stack */

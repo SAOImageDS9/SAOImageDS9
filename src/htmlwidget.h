@@ -2,7 +2,8 @@
 #define DLL_EXPORT
 DLL_EXPORT int Tkhtml1_Init(Tcl_Interp *interp);
 #define INTERFACE 0
-#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))
+/*#define HtmlAlloc(A)      ((void*)Tcl_Alloc(A))*/
+void* HtmlAlloc(size_t);
 typedef struct HtmlWidget HtmlWidget;
 #define DEBUG 1
 #if defined(DEBUG)

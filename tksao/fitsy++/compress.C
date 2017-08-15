@@ -29,6 +29,8 @@ FitsCompress::FitsCompress(FitsFile* fits)
     char* which = fits->getString(keyword);
     if (!strncmp(which,"NONE",4))
       quantize_ = NODITHER;
+    if (!strncmp(which,"NO_DITHER",4))
+      quantize_ = NODITHER;
     else if (!strncmp(which,"SUBTRACTIVE_DITHER_1",20))
       quantize_ = SUBDITHER1;
     else if (!strncmp(which,"SUBTRACTIVE_DITHER_2",20))

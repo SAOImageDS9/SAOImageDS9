@@ -9,7 +9,7 @@
 
 class FitsCompress : public FitsFile {
  public:
-  enum QuantMethod {NODITHER,SUBDITHER1,SUBDITHER2};
+  enum QuantMethod {NONE,NODITHER,SUBDITHER1,SUBDITHER2};
 
  protected:
   int bitpix_;

@@ -28,7 +28,7 @@ FitsCompress::FitsCompress(FitsFile* fits)
   if (fits->find(keyword)) {
     char* which = fits->getString(keyword);
     if (!strncmp(which,"NONE",4))
-      quantize_ = NODITHER;
+      quantize_ = NONE;
     if (!strncmp(which,"NO_DITHER",4))
       quantize_ = NODITHER;
     else if (!strncmp(which,"SUBTRACTIVE_DITHER_1",20))
@@ -627,45 +627,39 @@ template <class T> T FitsCompressm<T>::getValue(char* ptr, double zs,
 template <> float FitsCompressm<float>::getValue(char* ptr, double zs, 
 						 double zz, int blank)
 {
-  if (!hasBlank_ && !hasScaling_ && 
-      quantize_ != SUBDITHER1 && quantize_ != SUBDITHER2)
+  if (!hasBlank_ && !hasScaling_ && quantize_==NONE)
     return *ptr;
 
   if (hasBlank_ && *ptr == blank)
     return NAN;
 
   switch (quantize_) {
+  case NONE:
   case NODITHER:
     return hasScaling_ ? (*ptr)*zs + zz : *ptr;
   case SUBDITHER1:
   case SUBDITHER2:
     return unquantize(*ptr,zs,zz);
   }
-
-  // so compiler will not complain
-  return hasScaling_ ? (*ptr)*zs + zz : *ptr;
 }
 
 template <> double FitsCompressm<double>::getValue(char* ptr, double zs, 
 						   double zz, int blank)
 {
-  if (!hasBlank_ && !hasScaling_ && 
-      quantize_ != SUBDITHER1 && quantize_ != SUBDITHER2)
+  if (!hasBlank_ && !hasScaling_ && quantize_==NONE)
     return *ptr;
 
   if (hasBlank_ && *ptr == blank)
     return NAN;
 
   switch (quantize_) {
+  case NONE:
   case NODITHER:
     return hasScaling_ ? (*ptr)*zs + zz : *ptr;
   case SUBDITHER1:
   case SUBDITHER2:
     return unquantize(*ptr,zs,zz);
   }
-
-  // so compiler will not complain
-  return hasScaling_ ? (*ptr)*zs + zz : *ptr;
 }
 
 // getValue short
@@ -679,45 +673,39 @@ template <class T> T FitsCompressm<T>::getValue(short* ptr, double zs,
 template <> float FitsCompressm<float>::getValue(short* ptr, double zs, 
 						 double zz, int blank)
 {
-  if (!hasBlank_ && !hasScaling_ && 
-      quantize_ != SUBDITHER1 && quantize_ != SUBDITHER2)
+  if (!hasBlank_ && !hasScaling_ && quantize_==NONE)
     return *ptr;
 
   if (hasBlank_ && *ptr == blank)
     return NAN;
 
   switch (quantize_) {
+  case NONE:
   case NODITHER:
     return hasScaling_ ? (*ptr)*zs + zz : *ptr;
   case SUBDITHER1:
   case SUBDITHER2:
     return unquantize(*ptr,zs,zz);
   }
-
-  // so compiler will not complain
-  return hasScaling_ ? (*ptr)*zs + zz : *ptr;
 }
 
 template <> double FitsCompressm<double>::getValue(short* ptr, double zs, 
 						   double zz, int blank)
 {
-  if (!hasBlank_ && !hasScaling_ && 
-      quantize_ != SUBDITHER1 && quantize_ != SUBDITHER2)
+  if (!hasBlank_ && !hasScaling_ && quantize_==NONE)
     return *ptr;
 
   if (hasBlank_ && *ptr == blank)
     return NAN;
 
   switch (quantize_) {
+  case NONE:
   case NODITHER:
     return hasScaling_ ? (*ptr)*zs + zz : *ptr;
   case SUBDITHER1:
   case SUBDITHER2:
     return unquantize(*ptr,zs,zz);
   }
-
-  // so compiler will not complain
-  return hasScaling_ ? (*ptr)*zs + zz : *ptr;
 }
 
 // getValue int
@@ -731,14 +719,14 @@ template <class T> T FitsCompressm<T>::getValue(int* ptr, double zs,
 template <> float FitsCompressm<float>::getValue(int* ptr, double zs, 
 						 double zz, int blank)
 {
-  if (!hasBlank_ && !hasScaling_ && 
-      quantize_ != SUBDITHER1 && quantize_ != SUBDITHER2)
+  if (!hasBlank_ && !hasScaling_ && quantize_==NONE)
     return *ptr;
 
   if (hasBlank_ && *ptr == blank)
     return NAN;
 
   switch (quantize_) {
+  case NONE:
   case NODITHER:
     return hasScaling_ ? (*ptr)*zs + zz : *ptr;
   case SUBDITHER1:
@@ -746,22 +734,19 @@ template <> float FitsCompressm<float>::getValue(int* ptr, double zs,
   case SUBDITHER2:
     return unquantizeZero(*ptr,zs,zz);
   }
-
-  // so compiler will not complain
-  return hasScaling_ ? (*ptr)*zs + zz : *ptr;
 }
 
 template <> double FitsCompressm<double>::getValue(int* ptr, double zs, 
 						   double zz, int blank)
 {
-  if (!hasBlank_ && !hasScaling_ && 
-      quantize_ != SUBDITHER1 && quantize_ != SUBDITHER2)
+  if (!hasBlank_ && !hasScaling_ && quantize_==NONE)
     return *ptr;
 
   if (hasBlank_ && *ptr == blank)
     return NAN;
 
   switch (quantize_) {
+  case NONE:
   case NODITHER:
     return hasScaling_ ? (*ptr)*zs + zz : *ptr;
   case SUBDITHER1:
@@ -769,9 +754,6 @@ template <> double FitsCompressm<double>::getValue(int* ptr, double zs,
   case SUBDITHER2:
     return unquantizeZero(*ptr,zs,zz);
   }
-
-  // so compiler will not complain
-  return hasScaling_ ? (*ptr)*zs + zz : *ptr;
 }
 
 // getValue long long
@@ -785,14 +767,14 @@ template <class T> T FitsCompressm<T>::getValue(long long* ptr, double zs,
 template <> float FitsCompressm<float>::getValue(long long* ptr, double zs, 
 						 double zz, int blank)
 {
-  if (!hasBlank_ && !hasScaling_ && 
-      quantize_ != SUBDITHER1 && quantize_ != SUBDITHER2)
+  if (!hasBlank_ && !hasScaling_ && quantize_==NONE)
     return *ptr;
 
   if (hasBlank_ && *ptr == blank)
     return NAN;
 
   switch (quantize_) {
+  case NONE:
   case NODITHER:
     return hasScaling_ ? (*ptr)*zs + zz : *ptr;
   case SUBDITHER1:
@@ -800,22 +782,19 @@ template <> float FitsCompressm<float>::getValue(long long* ptr, double zs,
   case SUBDITHER2:
     return unquantizeZero(*ptr,zs,zz);
   }
-
-  // so compiler will not complain
-  return hasScaling_ ? (*ptr)*zs + zz : *ptr;
 }
 
 template <> double FitsCompressm<double>::getValue(long long* ptr, double zs, 
 						   double zz, int blank)
 {
-  if (!hasBlank_ && !hasScaling_ && 
-      quantize_ != SUBDITHER1 && quantize_ != SUBDITHER2)
+  if (!hasBlank_ && !hasScaling_ && quantize_==NONE)
     return *ptr;
 
   if (hasBlank_ && *ptr == blank)
     return NAN;
 
   switch (quantize_) {
+  case NONE:
   case NODITHER:
     return hasScaling_ ? (*ptr)*zs + zz : *ptr;
   case SUBDITHER1:
@@ -823,9 +802,6 @@ template <> double FitsCompressm<double>::getValue(long long* ptr, double zs,
   case SUBDITHER2:
     return unquantizeZero(*ptr,zs,zz);
   }
-
-  // so compiler will not complain
-  return hasScaling_ ? (*ptr)*zs + zz : *ptr;
 }
 
 // getValue float

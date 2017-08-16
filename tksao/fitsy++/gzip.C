@@ -267,14 +267,15 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	  size_t id = kk*FitsCompressm<T>::width_*FitsCompressm<T>::height_ + jj*FitsCompressm<T>::width_ + ii;
 	  T val =0;
 	  switch (FitsCompressm<T>::quantize_) {
-	  case FitsCompress::NODITHER:
+	  case FitsCompress::NONE:
 	    val = FitsCompressm<T>::getValue((float*)obuf+ll,zs,zz,blank);
 	    break;
+	  case FitsCompress::NODITHER:
 	  case FitsCompress::SUBDITHER1:
 	  case FitsCompress::SUBDITHER2:
 	    val = FitsCompressm<T>::getValue((int*)obuf+ll,zs,zz,blank);
 	    break;
-	  }
+         }
 	  dest[id] = val;
 	}
     break;
@@ -305,9 +306,10 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	  size_t id = kk*FitsCompressm<T>::width_*FitsCompressm<T>::height_ + jj*FitsCompressm<T>::width_ + ii;
 	  T val =0;
 	  switch (FitsCompressm<T>::quantize_) {
-	  case FitsCompress::NODITHER:
+	  case FitsCompress::NONE:
 	    val = FitsCompressm<T>::getValue((double*)obuf+ll,zs,zz,blank);
 	    break;
+	  case FitsCompress::NODITHER:
 	  case FitsCompress::SUBDITHER1:
 	  case FitsCompress::SUBDITHER2:
 	    val = FitsCompressm<T>::getValue((long long*)obuf+ll,zs,zz,blank);

@@ -319,8 +319,6 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
     if (gzcompress_ && !ok) {
       if (gzcompressed(dest, sptr, sdata+heap, 
 		       kkstart, kkstop, jjstart, jjstop, iistart, iistop)) {
-	if (DebugCompress)
-	  cerr << 'z';
 	ok=1;
       }
     }
@@ -329,8 +327,6 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
       initRandom(rr);
       if (compressed(dest, sptr, sdata+heap, 
 		     kkstart, kkstop, jjstart, jjstop, iistart, iistop)) {
-	if (DebugCompress)
-	  cerr << 'c';
 	ok=1;
       }
     }
@@ -338,8 +334,6 @@ template <class T> int FitsCompressm<T>::inflate(FitsFile* fits)
     if (uncompress_ && !ok) {
       if (uncompressed(dest, sptr, sdata+heap, 
 		       kkstart, kkstop, jjstart, jjstop, iistart, iistop)) {
-	if (DebugCompress)
-	  cerr << 'u';
 	ok=1;
       }
     }

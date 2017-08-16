@@ -66,7 +66,7 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 
   zstrm.avail_in = icnt;
   zstrm.next_in = ibuf;
-  zstrm.avail_out = ocnt*sizeof(int);
+  zstrm.avail_out = ocnt*sizeof(long long);
   zstrm.next_out = (Bytef*)obuf;
 
   if (DebugCompress)

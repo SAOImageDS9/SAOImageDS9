@@ -1599,7 +1599,7 @@ void Base::updateBin(const Matrix& mx)
 
   alignWCS();
   updateColorScale();
-  updateNow(MATRIX); // because we have changed zoom
+  update(MATRIX); // because we have changed zoom
 
   // update markers call backs
   // wait til matrices have been updated so that any dialogs will print
@@ -1624,7 +1624,7 @@ void Base::updateBlock(const Vector& vv)
 
   alignWCS();
   updateColorScale();
-  updateNow(MATRIX);
+  update(MATRIX);
 
   // update markers call backs
   // wait til matrices have been updated so that any dialogs will print

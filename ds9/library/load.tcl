@@ -259,10 +259,10 @@ proc FinishLoadPre {} {
 
     UpdateWCS 
 
-    # generate grid so updatemenu is correct
+    # generate grid so UpdateMenu is correct
     GridUpdateCurrent
 
-    # generate contour so updatemenu is correct
+    # generate contour so UpdateMenu is correct
     UpdateContourScale
     UpdateContour
 
@@ -280,13 +280,9 @@ proc FinishLoadPre {} {
     }
 }
 
-proc FinishLoadPost {} {
-    UpdateDS9
-}
-
 proc FinishLoad {} {
     FinishLoadPre
-    FinishLoadPost
+    UpdateDS9
 }
 
 proc IsLocalFile {fn} {

@@ -489,7 +489,7 @@ proc ProcessCommand {argv argc} {
     }
 
     if {$load != 0} {
-	FinishLoadPost
+	UpdateDS9
     }
 }
 

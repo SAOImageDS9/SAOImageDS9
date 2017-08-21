@@ -157,7 +157,7 @@ proc InitAnalysisFile {} {
 	}
     }
 
-    UpdateAnalysisMenu
+#    UpdateAnalysisMenu
 }
 
 proc ProcessAnalysisFile {fn} {

@@ -372,21 +372,6 @@ proc PrefsDialogButtonbarZoom {f} {
 
 # Support
 
-proc UpdateZoomMenuStatic {} {
-    global ds9
-    
-    global debug
-    if {$debug(tcl,update)} {
-	puts stderr "UpdateZoomMenuStatic"
-    }
-
-    if {$ds9(active,num) > 0} {
-	$ds9(mb) entryconfig [msgcat::mc {Zoom}] -state normal
-    } else {
-	$ds9(mb) entryconfig [msgcat::mc {Zoom}] -state disabled
-    }
-}
-
 proc UpdateZoomMenu {} {
     global ds9
     global current
@@ -395,6 +380,12 @@ proc UpdateZoomMenu {} {
     global debug
     if {$debug(tcl,update)} {
 	puts stderr "UpdateZoomMenu"
+    }
+
+    if {$ds9(active,num) > 0} {
+	$ds9(mb) entryconfig [msgcat::mc {Zoom}] -state normal
+    } else {
+	$ds9(mb) entryconfig [msgcat::mc {Zoom}] -state disabled
     }
 
     if {$current(frame) == {}} {

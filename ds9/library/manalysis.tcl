@@ -425,21 +425,6 @@ proc PrefsDialogButtonbarAnalysis {f} {
 	-command {UpdateButtons buttons(analysis)}
 }
 
-proc UpdateAnalysisMenuStatic {} {
-    global ds9
-
-    global debug
-    if {$debug(tcl,update)} {
-	puts stderr "UpdateAnalysisMenuStatic"
-    }
-
-    if {$ds9(active,num) > 0} {
-	$ds9(mb) entryconfig [msgcat::mc {Analysis}] -state normal
-    } else {
-	$ds9(mb) entryconfig [msgcat::mc {Analysis}] -state disabled
-    }
-}
-
 proc UpdateAnalysisMenu {} {
     global ds9
     global current
@@ -448,6 +433,12 @@ proc UpdateAnalysisMenu {} {
     global debug
     if {$debug(tcl,update)} {
 	puts stderr "UpdateAnalysisMenu"
+    }
+
+    if {$ds9(active,num) > 0} {
+	$ds9(mb) entryconfig [msgcat::mc {Analysis}] -state normal
+    } else {
+	$ds9(mb) entryconfig [msgcat::mc {Analysis}] -state disabled
     }
 
     if {$current(frame) != {}} {

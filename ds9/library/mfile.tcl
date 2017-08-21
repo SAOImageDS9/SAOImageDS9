@@ -487,35 +487,6 @@ proc PrefsDialogButtonbarFile {f} {
 
 # Support
 
-proc UpdateFileMenuStatic {} {
-    global ds9
- 
-    global debug
-    if {$debug(tcl,update)} {
-	puts stderr "UpdateFileMenuStatic"
-    }
-
-    if {$ds9(active,num) > 0} {
-	$ds9(mb).file entryconfig "[msgcat::mc {Open}]..." \
-	    -state normal
-	$ds9(mb).file entryconfig [msgcat::mc {Open as}] \
-	    -state normal
-	$ds9(mb).file entryconfig [msgcat::mc {Import}] \
-	    -state normal
-
-	$ds9(buttons).file.open configure -state normal
-    } else {
-	$ds9(mb).file entryconfig "[msgcat::mc {Open}]..." \
-	    -state disabled
-	$ds9(mb).file entryconfig [msgcat::mc {Open as}] \
-	    -state disabled
-	$ds9(mb).file entryconfig [msgcat::mc {Import}] \
-	    -state disabled
-
-	$ds9(buttons).file.open configure -state disabled
-    }
-}
-
 proc UpdateFileMenu {} {
     global ds9
     global current
@@ -529,6 +500,26 @@ proc UpdateFileMenu {} {
 
     set mm $ds9(mb).file
     set bb $ds9(buttons).file
+
+    if {$ds9(active,num) > 0} {
+	$mm entryconfig "[msgcat::mc {Open}]..." \
+	    -state normal
+	$mm entryconfig [msgcat::mc {Open as}] \
+	    -state normal
+	$mm entryconfig [msgcat::mc {Import}] \
+	    -state normal
+
+	$bb.open configure -state normal
+    } else {
+	$mm entryconfig "[msgcat::mc {Open}]..." \
+	    -state disabled
+	$mm entryconfig [msgcat::mc {Open as}] \
+	    -state disabled
+	$mm entryconfig [msgcat::mc {Import}] \
+	    -state disabled
+
+	$bb.open configure -state disabled
+    }
 
     if {$current(frame) != {}} {
 	if {[$current(frame) has fits]} {

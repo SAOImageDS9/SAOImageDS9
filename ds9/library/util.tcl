@@ -66,25 +66,6 @@ proc GetNumCores {} {
     return 1
 }
 
-proc UpdateDS9Static {} {
-    # This routine is only called when an frame is added or deleted
-    # we only change menu items which require at least one frame
-
-    global debug
-    if {$debug(tcl,update)} {
- 	puts stderr "UpdateDS9Static begin..."
-    }
-
-    UpdateFileMenuStatic
-    UpdateFrameMenuStatic
-    UpdateZoomMenuStatic
-    UpdateAnalysisMenuStatic
-    
-    if {$debug(tcl,update)} {
- 	puts stderr "UpdateDS9Static end...\n"
-    }
-}
-
 proc UpdateDS9 {} {
     global ds9
     global current

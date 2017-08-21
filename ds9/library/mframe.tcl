@@ -1026,12 +1026,13 @@ proc PrefsDialogButtonbarFrame {f} {
 
 # Support
 
-proc UpdateFrameMenuStatic {} {
+proc UpdateFrameMenu {} {
     global ds9
+    global current
 
     global debug
     if {$debug(tcl,update)} {
-	puts stderr "UpdateFrameMenuStatic"
+	puts stderr "UpdateFrameMenu"
     }
 
     $ds9(mb).frame entryconfig [msgcat::mc {New Frame RGB}] -state normal
@@ -1121,16 +1122,6 @@ proc UpdateFrameMenuStatic {} {
 	$ds9(buttons).frame.prev configure -state disabled
 	$ds9(buttons).frame.next configure -state disabled
 	$ds9(buttons).frame.last configure -state disabled
-    }
-}
-
-proc UpdateFrameMenu {} {
-    global ds9
-    global current
-
-    global debug
-    if {$debug(tcl,update)} {
-	puts stderr "UpdateFrameMenu"
     }
 
     if {$current(frame) != {}} {

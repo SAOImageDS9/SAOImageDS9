@@ -233,7 +233,6 @@ proc CreateNameNumberFrame {which type} {
     }
 
     UpdateFrameMenuItems
-    UpdateDS9Static
 
     if {$current(frame) != {}} {
 	$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
@@ -273,7 +272,6 @@ proc DeleteAllFrames {} {
 
     UpdateFrameMenuItems
     UpdateActiveFrames
-    UpdateDS9Static
 
     ClearInfoBox
     PixelTableClearDialog
@@ -285,7 +283,6 @@ proc DeleteSingleFrame {which} {
 
     UpdateFrameMenuItems
     UpdateActiveFrames
-    UpdateDS9Static
 
     PixelTableClearDialog
     ClearGraphData

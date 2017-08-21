@@ -105,7 +105,6 @@ proc ProcessNRRDCmd {varname iname sock fn} {
     }
     set param [lindex $var $i]
 
-    StartLoad
     if {$sock != {}} {
 	# xpa
 	if {![ImportNRRDSocket $sock $param $layer]} {

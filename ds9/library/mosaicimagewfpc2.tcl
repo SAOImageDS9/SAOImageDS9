@@ -72,7 +72,6 @@ proc ProcessMosaicImageWFPC2Cmd {varname iname sock fn} {
     }
     set param [lindex $var $i]
 
-    StartLoad
     if {$sock != {}} {
 	# xpa
 	if {![LoadMosaicImageWFPC2Socket $sock $param]} {

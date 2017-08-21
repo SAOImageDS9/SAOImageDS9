@@ -224,7 +224,6 @@ proc ProcessPhotoCmd {varname iname ch fn} {
     }
     set param [lindex $var $i]
 
-    StartLoad
     if {$ch != {}} {
 	# xpa
 	global tcl_platform

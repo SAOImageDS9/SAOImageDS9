@@ -103,7 +103,6 @@ proc ProcessMosaicImageWCSCmd {varname iname sock fn} {
     }
     set param [lindex $var $i]
 
-    StartLoad
     if {$sock != {}} {
 	# xpa
 	if {![LoadMosaicImageWCSSocket $sock $param $layer $opt]} {

@@ -702,7 +702,6 @@ proc AnalysisPipe {which i cmd sync} {
 		    set loadParam(file,name) \
 			"[string tolower [lindex $ianalysis($which,$i,item) 0]].fits"
 
-		    StartLoad
 		    ProcessLoad
 		    FinishLoad
 

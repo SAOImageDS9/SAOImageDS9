@@ -48,7 +48,6 @@ proc ProcessSMosaicIRAFCmd {varname iname sock fn layer} {
 	set opt wcs
     }
 
-    StartLoad
     if {$sock != {}} {
 	# xpa
 	if {0} {

@@ -11,7 +11,6 @@ proc Import {fn format layer mode fn2} {
 	return
     }
 
-    StartLoad
     switch -- $format {
 	array {ImportArrayFile $fn $layer}
 	rgbarray {

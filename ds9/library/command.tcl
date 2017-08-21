@@ -461,7 +461,6 @@ proc ProcessCommand {argv argc} {
 		}
 
 		if {$load == 0} {
-		    StartLoad
 		    incr load
 		}
 

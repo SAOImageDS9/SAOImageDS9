@@ -48,7 +48,6 @@ proc ProcessSRGBCubeCmd {varname iname sock fn} {
 	}
     }
 
-    StartLoad
     if {$sock != {}} {
 	# xpa
 	if {0} {

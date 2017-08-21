@@ -431,7 +431,6 @@ proc IMGSVRParse {varname} {
 	current {}
     }
 
-    StartLoad
     # alloc it because we are going to delete it after load
     set loadParam(load,type) allocgz
     set loadParam(load,layer) {}

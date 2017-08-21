@@ -12,7 +12,6 @@ proc ProcessShmCmd {varname iname ml} {
     global current
     global ds9
 
-    StartLoad
     set done 0
     while {!$done} {
 

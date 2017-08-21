@@ -8,7 +8,6 @@ proc MacOSXOpenDocEvent {fc} {
     global ds9
 
     if {$ds9(event,opendoc) != {}} {
-	StartLoad
 	foreach f $ds9(event,opendoc) {
 	    MultiLoad
 	    LoadFitsFile $f {} {}
@@ -26,7 +25,6 @@ proc MacOSXPrintDocEvent {bye} {
 
 	foreach f $ds9(event,printdoc) {
 	    RealizeDS9
-	    StartLoad
 
 	    MultiLoad
 	    LoadFitsFile $f {} {}

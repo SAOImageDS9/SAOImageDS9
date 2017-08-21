@@ -9,7 +9,6 @@ proc Open {fn format layer mode sys} {
 	return
     }
 
-    StartLoad
     switch -- $format {
 	fits {LoadFitsFile $fn $layer $mode}
 	mosaicimagewcs {LoadMosaicImageWCSFile $fn $layer $sys}

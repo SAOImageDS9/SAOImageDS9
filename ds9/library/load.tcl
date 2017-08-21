@@ -252,9 +252,6 @@ proc ProcessLoadSaveParams {varname} {
     }
 }
 
-proc StartLoad {} {
-}
-
 proc FinishLoadPre {} {
     global loadParam
     global current

@@ -146,7 +146,6 @@ proc ProcessRGBArrayCmd {varname iname sock fn} {
     }
     set param [lindex $var $i]
 
-    StartLoad
     if {$sock != {}} {
 	# xpa
 	if {![ImportRGBArraySocket $sock $param]} {

@@ -55,7 +55,6 @@ proc ProcessENVICmd {varname iname sock fn} {
 	}
     }
 
-    StartLoad
     if {$sock != {}} {
 	# xpa
 	if {0} {

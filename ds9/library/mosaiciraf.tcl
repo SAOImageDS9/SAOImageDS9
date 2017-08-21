@@ -68,7 +68,6 @@ proc ProcessMosaicIRAFCmd {varname iname sock fn} {
     }
     set param [lindex $var $i]
 
-    StartLoad
     if {$sock != {}} {
 	# xpa
 	if {![LoadMosaicIRAFSocket $sock $param $layer]} {

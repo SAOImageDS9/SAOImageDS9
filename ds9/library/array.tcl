@@ -101,7 +101,6 @@ proc ProcessArrayCmd {varname iname sock fn} {
     }
     set param [lindex $var $i]
 
-    StartLoad
     if {$sock != {}} {
 	# xpa
 	if {![ImportArraySocket $sock $param $layer]} {

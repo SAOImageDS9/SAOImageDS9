@@ -70,7 +70,6 @@ proc OpenURLFits {{layer {}} {mode {}}} {
 
     set url $fitsurl
     if {[EntryDialog [msgcat::mc {URL}] [msgcat::mc {Enter URL}] 80 url]} {
-	StartLoad
 	LoadURLFits $url $layer $mode
 	FinishLoad
 
@@ -272,7 +271,6 @@ proc LoadURLFitsHTTP {url layer mode} {
     }
 
     # alloc it because we are going to delete it after load
-    StartLoad
     global loadParam
 
     set loadParam(file,type) fits

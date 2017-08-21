@@ -48,7 +48,6 @@ proc ProcessSMosaicWCSCmd {varname iname sock fn} {
 	set opt wcs
     }
 
-    StartLoad
     if {$sock != {}} {
 	# xpa
 	if {0} {

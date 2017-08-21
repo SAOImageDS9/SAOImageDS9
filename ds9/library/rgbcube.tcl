@@ -127,7 +127,6 @@ proc ProcessRGBCubeCmd {varname iname sock fn} {
     }
     set param [lindex $var $i]
 
-    StartLoad
     if {$sock != {}} {
 	# xpa
 	if {![LoadRGBCubeSocket $sock $param]} {

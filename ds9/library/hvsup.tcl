@@ -1235,7 +1235,6 @@ proc HVParseFITS {varname} {
 	current {}
     }
 
-    StartLoad
     global loadParam
     set loadParam(load,type) allocgz
     set loadParam(load,layer) {}

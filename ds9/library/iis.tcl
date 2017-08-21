@@ -260,7 +260,6 @@ proc IISLoadFrame {which} {
 		([Frame$which get fits width] != $iis(width)) || \
 		([Frame$which get fits height] != $iis(height))} {
 	    
-	    StartLoad
 	    Frame$which iis new $iis(width) $iis(height)
 	    FinishLoad
 	} else {

@@ -564,7 +564,6 @@ proc AlignWCSFrame {} {
 
 	LockFrameCurrent
 	UpdateGraphAxis $current(frame)
-	UpdatePanZoomDialog
     }
 }
 

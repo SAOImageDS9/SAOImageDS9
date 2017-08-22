@@ -66,6 +66,7 @@ proc CreateNameNumberFrame {which type} {
     global pmagnifier
     global bin
     global wcs
+    global rgb
     global colorbar
     global scale
     global minmax
@@ -149,8 +150,8 @@ proc CreateNameNumberFrame {which type} {
 
     # Frame type items
     switch -- [$ds9(next) get type] {
-	base -
-	rgb {}
+	base {}
+	rgb {$ds9(next) rgb system $rgb(system)}
 	3d {
 	    $ds9(next) 3d method $pthreed(method)
 	    $ds9(next) 3d background $pthreed(background)
@@ -1925,7 +1926,6 @@ proc FrameToFront {} {
     }
 
     UpdateGraphLayout $which
-
     UpdateDS9
 }
 

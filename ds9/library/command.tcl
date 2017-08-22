@@ -87,7 +87,6 @@ proc ProcessCommand {argv argc} {
     set file(layer) {}
     set file(mosaic) wcs
 
-    set load 0
     set noopts 0
     set i 0
 
@@ -460,10 +459,6 @@ proc ProcessCommand {argv argc} {
 		    return
 		}
 
-		if {$load == 0} {
-		    incr load
-		}
-
 		switch $ds9(wm) {
 		    x11 -
 		    aqua {CommandLineLoad $item argv i}
@@ -482,15 +477,13 @@ proc ProcessCommand {argv argc} {
 		    }
 		}
 
-		FinishLoadPre
+		LoadUpdate
 	    }
 	}
 	incr i
     }
 
-    if {$load != 0} {
-	UpdateDS9
-    }
+    UpdateDS9
 }
 
 proc CommandLineLoad {item argvname iname} {

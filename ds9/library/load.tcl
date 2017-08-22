@@ -252,12 +252,14 @@ proc ProcessLoadSaveParams {varname} {
     }
 }
 
-proc FinishLoadPre {} {
-    global loadParam
+proc LoadUpdate {} {
     global current
-    global threed
 
-    UpdateWCS 
+    # just in case, frame may have been deleted before FinishLoad during startup
+    if {$current(frame) != {}} {
+	# if header(s) were open, remove them
+	DestroyHeader $current(frame)
+    }
 
     # generate grid so UpdateMenu is correct
     GridUpdateCurrent
@@ -265,23 +267,14 @@ proc FinishLoadPre {} {
     # generate contour so UpdateMenu is correct
     UpdateContourScale
     UpdateContour
+}
 
-    # just in case, frame may have been deleted before FinishLoad during startup
-    if {$current(frame) == {}} {
-	return
-    }
-
-    # if header(s) were open, remove them
-    DestroyHeader $current(frame)
-
+proc FinishLoad {} {
+    LoadUpdate
     # Cube?
     if {[$current(frame) has fits cube]} {
 	CubeDialog
     }
-}
-
-proc FinishLoad {} {
-    FinishLoadPre
     UpdateDS9
 }
 

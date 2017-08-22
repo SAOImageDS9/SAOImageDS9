@@ -270,6 +270,8 @@ proc LoadUpdate {} {
 }
 
 proc FinishLoad {} {
+    global current
+
     LoadUpdate
     # Cube?
     if {[$current(frame) has fits cube]} {

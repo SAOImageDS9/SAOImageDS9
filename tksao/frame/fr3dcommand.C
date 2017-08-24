@@ -299,7 +299,7 @@ void Frame3dBase::get3dViewCmd()
 void Frame3dBase::get3dViewPointCmd()
 {
   ostringstream str;
-  str << vp_ << viewCursor_ << ends;
+  str << vp_ << ' ' << viewCursor_ << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 

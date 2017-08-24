@@ -16,6 +16,7 @@ proc 3DDef {} {
     set threed(az) 0
     set threed(el) 0
     set threed(scale) 1
+    set threed(lock) 0
 
     set threed(method) mip
     set threed(background) none
@@ -166,6 +167,7 @@ proc 3DApplyDialog {} {
 	if {$grid(view)} {
 	    GridUpdateCurrent
 	}
+	Lock3DCurrent
     }
 }
 
@@ -177,6 +179,7 @@ proc 3DResetDialog {} {
     3DViewPoint
     set threed(scale) 1
     3DScale
+    Lock3DCurrent
 }
 
 proc Update3DDialog {} {
@@ -229,6 +232,7 @@ proc 3DViewPoint {} {
 	if {$grid(view)} {
 	    GridUpdateCurrent
 	}
+	Lock3DCurrent
     }
 }
 
@@ -237,7 +241,8 @@ proc 3DViewButton {} {
     global current
 
     if {$current(frame) != {}} {
-	$current(frame) 3d view begin $threed(az) $threed(el)
+	$current(frame) 3d view $threed(az) $threed(el)
+	Lock3DCurrent
     }
 }
 
@@ -246,7 +251,8 @@ proc 3DViewMotion {} {
     global current
 
     if {$current(frame) != {}} {
-	$current(frame) 3d view motion $threed(az) $threed(el)
+	$current(frame) 3d view $threed(az) $threed(el)
+	Lock3DCurrent
     }
 }
 
@@ -255,7 +261,8 @@ proc 3DViewRelease {} {
     global current
 
     if {$current(frame) != {}} {
-	$current(frame) 3d view end $threed(az) $threed(el)
+	$current(frame) 3d view $threed(az) $threed(el)
+	Lock3DCurrent
     }
 }
 
@@ -269,6 +276,7 @@ proc 3DScale {} {
 	if {$grid(view)} {
 	    GridUpdateCurrent
 	}
+	Lock3DCurrent
     }
 }
 
@@ -341,6 +349,47 @@ proc 3DBackground {} {
 
     if {$current(frame) != {}} {
 	$current(frame) 3d background $threed(background)
+    }
+}
+
+proc Match3DCurrent {} {
+    global current
+
+    if {$current(frame) != {}} {
+	Match3DView $current(frame)
+    }
+}
+
+proc Match3DView {which} {
+    global ds9
+    global threed
+    
+    set rr [$which get 3d view]
+    set az [lindex $rr 0]
+    set el [lindex $rr 1]
+    set scale [$which get 3d scale]
+
+    foreach ff $ds9(frames) {
+	if {$ff != $which} {
+	    $ff 3d view $az $el
+	    $ff 3d scale $scale
+	}
+    }
+}
+
+proc Lock3DCurrent {} {
+    global current
+
+    if {$current(frame) != {}} {
+	Lock3DView $current(frame)
+    }
+}
+
+proc Lock3DView {which} {
+    global threed
+
+    if {$threed(lock)} {
+	Match3DView $which
     }
 }
 
@@ -497,6 +546,17 @@ proc Process3DCmd {varname iname} {
 		}
 	    }
 	}
+	match {Match3DCurrent}
+	lock {
+	    incr i
+	    if {!([string range [lindex $var $i] 0 0] == "-")} {
+		set threed(lock) [FromYesNo [lindex $var $i]]
+	    } else {
+		set threed(lock) 1
+		incr i -1
+	    }
+	    Lock3DCurrent
+	}
 	default {Create3DFrame; incr i -1}
     }
 }
@@ -512,6 +572,7 @@ proc ProcessSend3DCmd {proc id param} {
 	scale {$proc $id "$threed(scale)\n"}
 	method {$proc $id "$threed(method)\n"}
 	background {$proc $id "$threed(background)\n"}
+	lock {$proc $id [ToYesNo $threed(lock)]}
 	highlite {
 	    switch [string tolower [lindex $param 1]] {
 		color {$proc $id "$threed(highlite,color)\n"}

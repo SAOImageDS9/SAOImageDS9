@@ -752,9 +752,6 @@ threedHighlite : yesno {fr->set3dHighliteCmd($1);}
 threedView : numeric numeric {fr->set3dViewCmd($1,$2);}
 	| POINT_ numeric numeric numeric numeric numeric
 	  {fr->set3dViewPointCmd(Vector3d($2,$3,$4),Vector($5,$6));}
-        | BEGIN_ numeric numeric {fr->view3dBeginCmd($2,$3);}
-        | MOTION_ numeric numeric {fr->view3dMotionCmd($2,$3);}
-        | END_ numeric numeric {fr->view3dEndCmd($2,$3);}
 	;
 
 analysis : RESET_ {fr->analysisMarkersResetCmd();}

@@ -206,8 +206,6 @@ class Frame3dBase : public Base {
   void set3dScaleCmd(double);
   void set3dViewCmd(float, float);
   void set3dViewPointCmd(const Vector3d&, const Vector&);
-  void view3dMotionCmd(float az, float el) {set3dViewCmd(az,el);}
-  void view3dEndCmd(float az, float el) {set3dViewCmd(az,el);}
 
 #ifdef MAC_OSX_TK
   void macosxLine(Vector&, Vector&, int);

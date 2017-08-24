@@ -193,6 +193,8 @@
         &nbsp;&nbsp;&nbsp; [highlite color]<br>
       </tt><tt><tt>&nbsp;</tt><tt>&nbsp;&nbsp; [compass yes|no]<br>
           &nbsp;&nbsp;&nbsp; [compass color]<br>
+          &nbsp;&nbsp;&nbsp; [match]<br>
+          &nbsp;&nbsp;&nbsp; [lock [yes|no]]<br>
         </tt>&nbsp;&nbsp;&nbsp; [open|close]<br>
       </tt><tt>&nbsp; <br>
         Example:<br>
@@ -209,6 +211,8 @@
         $ds9 -3d highlite color red<br>
       </tt> <tt><tt>$ds9 -3d compass yes<br>
           $ds9 -3d compass color red<br>
+          $ds9 -3d match<br>
+          $ds9 -3d lock yes<br>
         </tt> $ds9 -3d open<br>
         $ds9 -3d close</tt><br>
       <p><b><a name="about"></a>about</b></p>
@@ -507,6 +511,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -526,6 +531,7 @@
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [match &lt;ref&gt; &lt;ref&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -700,8 +706,10 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -876,6 +884,7 @@
 
 
 
+
         [match unique yes|no]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [maxrows
         &lt;number&gt;]</tt><br>
@@ -935,6 +944,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1280,6 +1290,7 @@
         -crosshair [&lt;x&gt; &lt;h&gt; &lt;coordsys&gt;
         [&lt;skyframe&gt;]]<br>
         &nbsp;</tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -1956,8 +1967,9 @@
         &nbsp;&nbsp;&nbsp; &nbsp; [scalelimits [yes|no]]<br>
         &nbsp;&nbsp;&nbsp; &nbsp; [colorbar [yes|no]]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [block [yes|no]]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [smooth [yes|no]]</tt><br>
-      <tt><br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [smooth [yes|no]]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3d [yes|no]]</tt><tt><br>
+      </tt><tt><br>
       </tt><tt> </tt><tt>Example: </tt><tt><br>
         $ds9 -lock frame wcs</tt><tt><br>
       </tt><tt>$ds9 -lock crosshair wcs</tt><tt><br>
@@ -1968,10 +1980,12 @@
       </tt><tt>$ds9 -lock scale yes<br>
         $ds9 -lock scalelimits yes<br>
       </tt><tt>$ds9 -lock colorbar yes</tt><tt><br>
-        $ds9 -lock block yes<br>
-        $ds9 -lock smooth yes<br>
+        $ds9 -lock block yes</tt><tt><br>
+        $ds9 -lock smooth yes</tt><tt><br>
+        $ds9 -lock 3d yes<br>
       </tt>
-      <p><b> <a name="log"></a>log</b></p>
+      <p><b> </b></p>
+      <b><a name="log"></a>log</b>
       <p>Select log scale function for the current frame. <br>
       </p>
       <tt> Syntax: <br>
@@ -2041,7 +2055,8 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [colorbar]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [block]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [smooth]<br>
-      </tt><tt>&nbsp;<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3d]</tt><tt><tt><br>
+            &nbsp; </tt></tt><br>
         Example: <br>
       </tt><tt>$ds9 -match frame wcs <br>
       </tt><tt>$ds9 -match crosshair wcs<br>
@@ -2053,8 +2068,9 @@
         $ds9 -match scalelimits<br>
         $ds9 -match colorbar<br>
         $ds9 -match block<br>
-        $ds9 -match smooth<br>
-        <br>
+      </tt><tt><tt>$ds9 -match smooth<br>
+        </tt>$ds9 -match 3d</tt><br>
+      <tt>&nbsp;<br>
       </tt><b><a name="mecube"></a>mecube</b>
       <p>Load FITS multiple extension file as data cube.<br>
       </p>
@@ -2156,6 +2172,7 @@
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [skyformat
         degrees|sexagesimal]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2416,8 +2433,10 @@
 
 
 
+
         [crosshair]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2781,6 +2800,7 @@
 
 
 
+
         [yes|open]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
         [no|close]<br>
@@ -2821,6 +2841,7 @@
           &lt;filename&gt;<br>
         </tt>&nbsp;&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
       </tt><tt><tt><tt><tt><tt><tt>&nbsp; &nbsp; &nbsp; </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -2945,6 +2966,7 @@
 
 
 
+
                             &nbsp;&nbsp; </tt>[&lt;plotname&gt;] stats<br>
                         </tt></tt>&nbsp;&nbsp;&nbsp; &nbsp; </tt>[&lt;plotname&gt;]
 
@@ -3008,8 +3030,10 @@
 
 
 
+
                     list<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3141,6 +3165,7 @@
 
 
 
+
                 &nbsp;&nbsp; [&lt;plotname&gt;] print<br>
                 &nbsp; &nbsp; &nbsp; [&lt;plotname&gt;] print
                 destination [printer|file] <br>
@@ -3153,6 +3178,7 @@
               </tt>&nbsp; &nbsp; &nbsp; </tt>[&lt;plotname&gt;] close<br>
             <br>
           </tt></tt></tt><tt><tt><tt><tt><tt><tt><tt> -plot </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3312,9 +3338,11 @@
 
 
 
+
               shape
               [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt>&nbsp; &nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3442,7 +3470,9 @@
 
 
 
+
                                                 &nbsp; &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3568,8 +3598,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3695,7 +3727,9 @@
 
 
 
+
                                                           &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3821,6 +3855,7 @@
 
 
 
+
                                                           &nbsp;&nbsp;&nbsp;
 
 
@@ -3884,7 +3919,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4009,8 +4046,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4135,8 +4174,10 @@
 
 
 
+
                                                           &nbsp; &nbsp;
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4262,8 +4303,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4389,7 +4432,9 @@
 
 
 
+
                                                           &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4946,6 +4991,7 @@
 
 
 
+
         &lt;filename&gt; [image|table|slice]</tt> <br>
       <tt> &nbsp;<br>
         Example: <br>
@@ -5184,14 +5230,18 @@
               [radiusminor &lt;value&gt;]<br>
             </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
                   [sigmaminor &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
+
                       [angle &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
         [match]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock [yes|no]]<br>
@@ -5206,8 +5256,10 @@
       </tt><tt>$ds9 -smooth radiusminor 4<br>
       </tt><tt><tt><tt><tt><tt><tt>$ds9 -smooth sigma 2.0<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>$ds9
+
                   -smooth sigmaminor 2.0<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+
 
                       -smooth angle 45<br>
                     </tt></tt></tt></tt></tt></tt></tt>$ds9 -smooth

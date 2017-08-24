@@ -92,6 +92,8 @@ proc FrameMainMenu {} {
 	-command MatchBlockCurrent
     $ds9(mb).frame.match add command -label [msgcat::mc {Smooth}] \
 	-command MatchSmoothCurrent
+    $ds9(mb).frame.match add command -label [msgcat::mc {3D View}] \
+	-command Match3DCurrent
 
     menu $ds9(mb).frame.match.frame
     $ds9(mb).frame.match.frame add command -label [msgcat::mc {WCS}] \
@@ -163,6 +165,8 @@ proc FrameMainMenu {} {
 	-variable block(lock) -command {LockBlockCurrent}
     $ds9(mb).frame.lock add checkbutton -label [msgcat::mc {Smooth}] \
 	-variable smooth(lock) -command {LockSmoothCurrent}
+    $ds9(mb).frame.lock add checkbutton -label [msgcat::mc {3D View}] \
+	-variable threed(lock) -command {Lock3DCurrent}
 
     menu $ds9(mb).frame.lock.frame
     $ds9(mb).frame.lock.frame add radiobutton -label [msgcat::mc {None}] \

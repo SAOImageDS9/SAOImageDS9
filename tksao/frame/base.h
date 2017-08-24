@@ -1720,9 +1720,6 @@ public:
   virtual void set3dRenderMethodCmd(int) {}
   virtual void set3dRenderBackgroundCmd(int) {}
   virtual void set3dPreserveCmd() {}
-  virtual void view3dBeginCmd(float, float) {}
-  virtual void view3dMotionCmd(float, float) {}
-  virtual void view3dEndCmd(float, float) {}
 };
 
 #endif

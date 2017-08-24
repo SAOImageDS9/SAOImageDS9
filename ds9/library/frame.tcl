@@ -2456,6 +2456,7 @@ proc ProcessLockCmd {varname iname} {
     global colorbar
     global block
     global smooth
+    global threed
 
     # we need to be realized
     ProcessRealizeDS9
@@ -2573,6 +2574,16 @@ proc ProcessLockCmd {varname iname} {
 	    }
 	    LockSmoothCurrent
 	}
+	3d {
+	    incr i
+	    if {!([string range [lindex $var $i] 0 0] == "-")} {
+		set threed(lock) [FromYesNo [lindex $var $i]]
+	    } else {
+		set threed(lock) 1
+		incr i -1
+	    }
+	    Lock3DCurrent
+	}
     }
 }
 
@@ -2587,6 +2598,7 @@ proc ProcessSendLockCmd {proc id param} {
     global colorbar
     global block
     global smooth
+    global threed
 
     switch -- [lindex $param 0] {
 	frame -
@@ -2611,6 +2623,7 @@ proc ProcessSendLockCmd {proc id param} {
 	colorbars {$proc $id [ToYesNo $colorbar(lock)]}
 	block {$proc $id [ToYesNo $block(lock)]}
 	smooth {$proc $id [ToYesNo $smooth(lock)]}
+	3d {$proc $id [ToYesNo $threed(lock)]}
     }
 }
 
@@ -2664,6 +2677,7 @@ proc ProcessMatchCmd {varname iname} {
 	colorbars {MatchColorCurrent}
 	block {MatchBlockCurrent}
 	smooth {MatchSmoothCurrent}
+	3d {Match3DCurrent}
     }
 }
 

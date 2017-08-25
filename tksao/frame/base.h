@@ -416,7 +416,6 @@ public:
   void markerAnalysisStats(Marker*, ostream&, int, int, 
 			   BBox*, Coord::CoordSystem, Coord::SkyFrame);
 
-  double mapDistFromRef(const Vector&, const Vector&, Coord::InternalSystem);
   double mapLenFromRef(double, Coord::InternalSystem);
   Vector mapLenFromRef(const Vector&, Coord::InternalSystem);
   double mapLenToRef(double, Coord::InternalSystem);

@@ -50,24 +50,6 @@ double Base::mapAngleToRef(double angle, Coord::CoordSystem sys,
   return zeroTWOPI(rr);
 }
 
-double Base::mapLenFromRef(double d, Coord::InternalSystem sys)
-{
-  Vector r = mapLenFromRef(Vector(d,0),sys);
-  return r[0];
-}
-
-Vector Base::mapLenFromRef(const Vector& v, Coord::InternalSystem sys)
-{
-  switch (sys) {
-  case Coord::CANVAS:
-    return mapLen(v,refToCanvas);
-  case Coord::PANNER:
-    return mapLen(v,refToPanner);
-  default:
-    return Vector();
-  }
-}
-
 double Base::mapLenToRef(double d, Coord::InternalSystem sys)
 {
   Vector r = mapLenToRef(Vector(d,0),sys);

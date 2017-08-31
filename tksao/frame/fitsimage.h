@@ -54,9 +54,7 @@ class WCSx {
 };
 
 class FitsImage {
-#ifdef NEWWCS
   friend class Base;
-#endif
 
  protected:
   Context* context_;        // pointer to context

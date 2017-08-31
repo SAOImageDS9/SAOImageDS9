@@ -114,6 +114,7 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
   return rr[0];
 }
 
+#ifndef NEWWCS
 Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
 				Coord::DistFormat dist)
 {
@@ -152,6 +153,72 @@ Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
   maperr =1;
   return Vector();
 }
+#else
+Vector FitsImage::mapLenFromRef(const Vector& in, Coord::CoordSystem sys, 
+				Coord::DistFormat dist)
+{
+  Vector vv = in;
+  // really from image coords
+  switch (sys) {
+  case Coord::IMAGE:
+    return mapLen(vv,refToImage);
+  case Coord::PHYSICAL:
+    return mapLen(vv,refToPhysical);
+  case Coord::AMPLIFIER:
+    return mapLen(vv,refToPhysical * physicalToAmplifier);
+  case Coord::DETECTOR:
+    return mapLen(vv,refToPhysical * physicalToDetector);
+  default:
+    if (hasWCS(sys)) {
+      int ss = sys-Coord::WCS;
+      Vector out;
+      Vector cc = center();
+      double xx[3], wxx[3];
+      xx[0] = cc[0];
+      xx[1] = cc[0]+vv[0];
+      xx[2] = cc[0];
+      double yy[3], wyy[3];
+      yy[0] = cc[1];
+      yy[1] = cc[1];
+      yy[2] = cc[1]+vv[1];
+      astTran2(ast_[ss],3,xx,yy,1,wxx,wyy);
+
+      double pt0[2];
+      pt0[0] = wxx[0];
+      pt0[1] = wyy[0];
+      double pt1[2];
+      pt1[0] = wxx[1];
+      pt1[1] = wyy[1];
+      double pt2[2];
+      pt2[0] = wxx[2];
+      pt2[1] = wyy[2];
+      double rr1 = astDistance(ast_[ss],pt0,pt1);
+      double rr2 = astDistance(ast_[ss],pt0,pt2);
+
+      if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT))) {
+	out = Vector(radToDeg(rr1),radToDeg(rr2));
+	switch (dist) {
+	case Coord::DEGREE:
+	  break;
+	case Coord::ARCMIN:
+	  out *= 60.;
+	  break;
+	case Coord::ARCSEC:
+	  out *= 60.*60.;
+	  break;
+	}
+      }
+      else
+	out = Vector(rr1,rr2);
+
+      return out;
+    }
+  }
+
+  maperr =1;
+  return Vector();
+}
+#endif
 
 double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys, 
 			      Coord::DistFormat dist)

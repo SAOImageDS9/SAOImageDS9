@@ -1369,6 +1369,7 @@ void FitsImage::load()
   data_ = analysisdata_;
 }
 
+#ifndef NEWWCS
 void FitsImage::match(const char* xxname1, const char* yyname1,
 		      Coord::CoordSystem sys1, Coord::SkyFrame sky1,
 		      const char* xxname2, const char* yyname2,
@@ -1511,6 +1512,154 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   delete [] oxx2;
   delete [] oyy2;
 }
+#else
+void FitsImage::match(const char* xxname1, const char* yyname1,
+		      Coord::CoordSystem sys1, Coord::SkyFrame sky1,
+		      const char* xxname2, const char* yyname2,
+		      Coord::CoordSystem sys2, Coord::SkyFrame sky2,
+		      double rad, Coord::CoordSystem sys, 
+		      Coord::DistFormat dist,
+		      const char* rrname)
+{
+  // only good for skyframe
+
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
+  // get lists
+  Tcl_Obj* listxx1 =
+    Tcl_GetVar2Ex(interp_, xxname1, NULL, TCL_LEAVE_ERR_MSG);
+  Tcl_Obj* listyy1 =
+    Tcl_GetVar2Ex(interp_, yyname1, NULL, TCL_LEAVE_ERR_MSG);
+  Tcl_Obj* listxx2 =
+    Tcl_GetVar2Ex(interp_, xxname2, NULL, TCL_LEAVE_ERR_MSG);
+  Tcl_Obj* listyy2 =
+    Tcl_GetVar2Ex(interp_, yyname2, NULL, TCL_LEAVE_ERR_MSG);
+
+  // get objects
+  int nxx1;
+  Tcl_Obj **objxx1;
+  Tcl_ListObjGetElements(interp_, listxx1, &nxx1, &objxx1);
+  int nyy1;
+  Tcl_Obj **objyy1;
+  Tcl_ListObjGetElements(interp_, listyy1, &nyy1, &objyy1);
+  int nxx2;
+  Tcl_Obj **objxx2;
+  Tcl_ListObjGetElements(interp_, listxx2, &nxx2, &objxx2);
+  int nyy2;
+  Tcl_Obj **objyy2;
+  Tcl_ListObjGetElements(interp_, listyy2, &nyy2, &objyy2);
+
+  // sanity check
+  if (nxx1 != nyy1 || nxx2 != nyy2)
+    return;
+
+  // get doubles
+  double* ixx1 = new double[nxx1];
+  for (int ii=0 ; ii<nxx1 ; ii++)
+    Tcl_GetDoubleFromObj(interp_, objxx1[ii], ixx1+ii);
+  double* iyy1 = new double[nyy1];
+  for (int ii=0 ; ii<nyy1 ; ii++)
+    Tcl_GetDoubleFromObj(interp_, objyy1[ii], iyy1+ii);
+
+  double* xx1 = new double[nxx1];
+  memset(xx1,0,sizeof(double)*nxx1);
+  double* yy1 = new double[nyy1];
+  memset(yy1,0,sizeof(double)*nyy1);
+
+  double* xx2 = new double[nxx2];
+  for (int ii=0 ; ii<nxx2 ; ii++)
+    Tcl_GetDoubleFromObj(interp_, objxx2[ii], xx2+ii);
+  double* yy2 = new double[nyy2];
+  for (int ii=0 ; ii<nyy2 ; ii++)
+    Tcl_GetDoubleFromObj(interp_, objyy2[ii], yy2+ii);
+
+  if (!hasWCS(sys1))
+    return;
+  if (!hasWCS(sys2))
+    return;
+  int ss1 = sys1-Coord::WCS;
+  int ss2 = sys2-Coord::WCS;
+
+  // are both skyframe?
+  if (!((astIsASkyFrame(astGetFrame(ast_[ss1], AST__CURRENT))) &&
+	(astIsASkyFrame(astGetFrame(ast_[ss2], AST__CURRENT)))))
+    return;
+
+  setAstSkyFrame(ast_[ss1],sky1);
+  for (int ii=0; ii<nxx1; ii++) {
+    ixx1[ii] *= M_PI/180.;
+    iyy1[ii] *= M_PI/180.;
+  }
+
+  setAstSkyFrame(ast_[ss2],sky2);
+  for (int ii=0; ii<nxx2; ii++) {
+    xx2[ii] *= M_PI/180.;
+    yy2[ii] *= M_PI/180.;
+  }
+
+  double rr;
+  switch (dist) {
+  case Coord::DEGREE:
+    rr = degToRad(rad);
+    break;
+  case Coord::ARCMIN:
+    rr = degToRad(rad/60.);
+    break;
+  case Coord::ARCSEC:
+    rr = degToRad(rad/60./60.);
+    break;
+  }
+
+  if ((ss1 != ss2) || (sky1 != sky2)) {
+    AstFrameSet* wcs1 = (AstFrameSet*)astCopy(ast_[ss1]);
+    setAstSkyFrame(wcs1,sky1);
+    AstFrameSet* wcs2 = (AstFrameSet*)astCopy(ast_[ss2]);
+    setAstSkyFrame(wcs2,sky2);
+    AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "SKY");
+    if (cvt != AST__NULL)
+      astTran2(cvt, nxx1, ixx1, iyy1, 1, xx1, yy1);
+  }
+  else {
+    memcpy(xx1,ixx1,nxx1*sizeof(double));
+    memcpy(yy1,iyy1,nyy1*sizeof(double));
+  }
+
+  // now compare
+  setAstSkyFrame(ast_[ss2],sky2);
+  Tcl_Obj* objrr = Tcl_NewListObj(0,NULL);
+  for(int jj=0; jj<nxx2; jj++) {
+    for (int ii=0; ii<nxx1; ii++) {
+      double pt1[2];
+      pt1[0] = xx1[ii];
+      pt1[1] = yy1[ii];
+      double pt2[2];
+      pt2[0] = xx2[jj];
+      pt2[1] = yy2[jj];
+      double dd = astDistance(ast_[ss2],pt1,pt2);
+      if ((dd != AST__BAD) && (dd <= rr)) {
+	Tcl_Obj* obj[2];
+	obj[0] = Tcl_NewIntObj(ii+1);
+	obj[1] = Tcl_NewIntObj(jj+1);
+	Tcl_Obj* list = Tcl_NewListObj(2,obj);
+	Tcl_ListObjAppendElement(interp_, objrr, list);
+      }
+    }
+  }
+
+  Tcl_SetVar2Ex(interp_, rrname, NULL, objrr, TCL_LEAVE_ERR_MSG);
+
+  // clean up
+  astEnd; // now, clean up memory
+
+  delete [] ixx1;
+  delete [] iyy1;
+  delete [] xx1;
+  delete [] yy1;
+  delete [] xx2;
+  delete [] yy2;
+}
+#endif
 
 Matrix& FitsImage::matrixToData(Coord::InternalSystem sys)
 {
@@ -2733,6 +2882,7 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
     return Vector();
 }
 
+#ifndef NEWWCS
 Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
 						Coord::SkyFrame sky)
 {
@@ -2763,7 +2913,53 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
 
   return Coord::NORMAL;
 }
+#else
+Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
+						Coord::SkyFrame sky)
+{
+  if (hasWCS(sys)) {
+    int ss = sys-Coord::WCS;
+    astClearStatus; // just to make sure
+    astBegin; // start memory management
 
+    if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
+      setAstSkyFrame(ast_[ss],sky);
+
+    Vector pp = center();
+    double xx[3], yy[3], wx[3], wy[32];
+    xx[0] = pp[0];
+    xx[1] = pp[0];
+    xx[2] = pp[0]+1;
+    yy[0] = pp[1];
+    yy[1] = pp[1]+1;
+    yy[2] = pp[1];
+    astTran2(ast_[ss],3,xx,yy,1,wx,wy);
+
+    double aa[2], bb[2], cc[2];
+    aa[0]= wx[0];
+    aa[1]= wy[0];
+    bb[0]= wx[1];
+    bb[1]= wy[1];
+    cc[0]= wx[2];
+    cc[1]= wy[2];
+    double ang = astAngle(ast_[ss],aa,bb,cc);
+
+    Coord::Orientation rr = Coord::NORMAL;
+    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
+      if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
+	rr = ang>0 ? Coord::NORMAL : Coord::XX;
+      else
+	rr = ang<0 ? Coord::NORMAL : Coord::XX;
+    }
+    astEnd; // now, clean up memory
+    return rr;
+  }
+
+  return Coord::NORMAL;
+}
+#endif
+
+#ifndef NEWWCS
 double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   if (hasWCS(sys)) {
@@ -2786,6 +2982,40 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   }
   return 0;
 }
+#else
+double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  int ss = sys-Coord::WCS;
+  if (ss>=0 && ast_ && ast_[ss]) {
+    astClearStatus; // just to make sure
+    astBegin; // start memory management
+
+    if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
+      setAstSkyFrame(ast_[ss],sky);
+
+    Vector pp = center();
+    double xx[2], yy[2], wx[2], wy[2];
+    xx[0] = pp[0];
+    xx[1] = pp[0];
+    yy[0] = pp[1];
+    yy[1] = pp[1]+1;
+    astTran2(ast_[ss],2,xx,yy,1,wx,wy);
+
+    double aa[2], bb[2];
+    aa[0]= wx[0];
+    aa[1]= wy[0];
+    bb[0]= wx[1];
+    bb[1]= wy[1];
+    double ang = astAxAngle(ast_[ss],aa,bb,2);
+    astEnd; // now, clean up memory
+
+    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
+      return getWCSOrientation(sys,sky) == Coord::NORMAL ? ang : -ang;
+  }
+
+  return 0;
+}
+#endif
 
 // AST
 Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
@@ -2992,7 +3222,7 @@ Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
       if (astOK) {
 	for (int kk=0; kk<num; kk++)
 	  if (checkAst(xout[kk],yout[kk]))
-	    out[ii] = Vector(xout[kk],yout[kk]);
+	    out[kk] = Vector(xout[kk],yout[kk]);
 	return out;
       }
     }

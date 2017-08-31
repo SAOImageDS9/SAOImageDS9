@@ -532,8 +532,10 @@ public:
 
   void calcAlignWCS(FitsImage*, Coord::CoordSystem, Coord::SkyFrame,
 		    Coord::Orientation*, Matrix*, double*);
+#ifndef NEWWCS
   void calcAlignWCS(FitsImage*, FitsImage*, Coord::CoordSystem, Coord::CoordSystem, Coord::SkyFrame,
 		    Coord::Orientation*, Matrix*, double*, Vector*);
+#endif
   Matrix calcAlignWCS(FitsImage*, FitsImage*, Coord::CoordSystem, Coord::CoordSystem, Coord::SkyFrame);
   Vector centroid(const Vector&);
 

@@ -307,6 +307,7 @@ void Base::alignWCS(Coord::CoordSystem sys, Coord::SkyFrame sky)
 	       &wcsOrientation, &wcsOrientationMatrix, &wcsRotation);
 }
 
+#ifndef NEWWCS
 void Base::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
 {
   if (!wcsAlign_ || !ptr || !context->cfits || !hasWCS(wcsSystem_)) {
@@ -319,6 +320,27 @@ void Base::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
   calcAlignWCS(ptr, context->cfits, sys, wcsSystem_, wcsSky_,
 	       &wcsOrientation, &wcsOrientationMatrix, &wcsRotation, &zoom_);
 }
+#else
+void Base::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
+{
+  if (!wcsAlign_ || !ptr || !context->cfits || !hasWCS(wcsSystem_)) {
+    wcsOrientation = Coord::NORMAL;
+    wcsOrientationMatrix.identity();
+    wcsRotation = 0;
+    return;
+  }
+
+  // This calcs the wcs
+  calcAlignWCS(context->cfits, sys, wcsSky_,
+	       &wcsOrientation, &wcsOrientationMatrix, &wcsRotation);
+
+  // and this the zoom
+  Matrix mm = calcAlignWCS(ptr, context->cfits, sys, wcsSystem_, wcsSky_);
+  if (mm[0][0] != 0 && mm[1][1] !=0)
+    zoom_ *= (Vector(mm[0][0],mm[1][0]).length() +
+	      Vector(mm[0][1],mm[1][1]).length())/2.;
+}
+#endif
 
 void Base::calcAlignWCS(FitsImage* fits1, 
 			Coord::CoordSystem sys1, Coord::SkyFrame sky,
@@ -361,6 +383,7 @@ void Base::calcAlignWCS(FitsImage* fits1,
   }
 }
 
+#ifndef NEWWCS
 void Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2, 
 			Coord::CoordSystem sys1, Coord::CoordSystem sys2, 
 			Coord::SkyFrame sky,
@@ -431,10 +454,13 @@ void Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   // zoom
   Vector cd1 = fits1->getWCScdelt(sys1);
   Vector cd2 = fits2->getWCScdelt(sys2);
+
   *zoom = Vector((*zoom)[0]/fabs(cd1[0]/cd2[0]), 
 		 (*zoom)[1]/fabs(cd1[1]/cd2[1]));
 }
+#endif
 
+#ifndef NEWWCS
 Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2, 
 			  Coord::CoordSystem sys1, Coord::CoordSystem sys2, 
 			  Coord::SkyFrame sky)
@@ -612,6 +638,52 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
       Translate(origin);
   }
 }
+#else
+Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2, 
+			  Coord::CoordSystem sys1, Coord::CoordSystem sys2,
+			  Coord::SkyFrame sky)
+{
+  if ((!fits1 || !fits2) || 
+      (fits1 == fits2) ||
+      !(fits1->hasWCS(sys1)) ||
+      !(fits2->hasWCS(sys2)))
+    return Matrix();
+
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
+  int s1 = sys1-Coord::WCS;
+  int s2 = sys2-Coord::WCS;
+  Matrix rr;
+  if ((s1>=0 && fits1->ast_ && fits1->ast_[s1]) &&
+      (s2>=0 && fits2->ast_ && fits2->ast_[s2])) {
+    AstFrameSet* wcs1 = (AstFrameSet*)astCopy(fits1->ast_[s1]);
+    AstFrameSet* wcs2 = (AstFrameSet*)astCopy(fits2->ast_[s2]);
+    astInvert(wcs1);
+    astInvert(wcs2);
+    AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "SKY");
+    if (cvt != AST__NULL) {
+      astInvert(cvt);
+
+      Vector ll;
+      Vector cc1 = fits1->center();
+      astTran2(fits1->ast_[s1], 1, cc1.v, cc1.v+1, 1, ll.v, ll.v+1);
+      Vector ur;
+      Vector cc2 = fits2->center();
+      astTran2(fits2->ast_[s2], 1, cc2.v, cc2.v+1, 1, ur.v, ur.v+1);
+
+      double fit[6];
+      double tol = 1;
+      if (astLinearApprox(cvt, ll.v, ur.v, tol, fit) != AST__BAD)
+	if (fit[2] != 0 && fit[5] !=0)
+	  rr = Matrix(fit[2],fit[4],fit[3],fit[5],fit[0],fit[1]);
+    }
+  }
+
+  astEnd; // now, clean up memory
+  return rr;
+}
+#endif
 
 double Base::calcZoom(Vector src, Vector dest)
 {

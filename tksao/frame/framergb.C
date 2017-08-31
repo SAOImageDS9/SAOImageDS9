@@ -90,6 +90,7 @@ void FrameRGB::alignWCS(Coord::CoordSystem sys, Coord::SkyFrame sky)
   updateRGBMatrices();
 }
 
+#ifndef NEWWCS
 void FrameRGB::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
 {
   if (!wcsAlign_ || !(keyContext->fits) || !ptr || 
@@ -104,6 +105,30 @@ void FrameRGB::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
 
   updateRGBMatrices();
 }
+#else
+void FrameRGB::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
+{
+  if (!wcsAlign_ || !(keyContext->fits) || !ptr || 
+      !keyContext->fits->hasWCS(wcsSystem_)) {
+    wcsOrientation = Coord::NORMAL;
+    wcsOrientationMatrix.identity();
+    wcsRotation = 0;
+  }
+  else {
+    // This calcs the wcs
+    calcAlignWCS(keyContext->fits, sys, wcsSky_,
+		 &wcsOrientation, &wcsOrientationMatrix, &wcsRotation);
+
+    // and this the zoom
+    Matrix mm = calcAlignWCS(ptr, keyContext->fits, sys, wcsSystem_, wcsSky_);
+    if (mm[0][0] != 0 && mm[1][1] !=0)
+      zoom_ *= (Vector(mm[0][0],mm[1][0]).length() +
+		Vector(mm[0][1],mm[1][1]).length())/2.;
+  }
+
+  updateRGBMatrices();
+}
+#endif
 
 int FrameRGB::doRender()
 {

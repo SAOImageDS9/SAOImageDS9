@@ -645,7 +645,7 @@ proc MarkerCreateShape {which x y} {
 		return
 	    }
 	}
-	ruler {append cmd " $x $y $ed(system) $ed(sky) $ed(system) $ed(dformat)"}
+	ruler {append cmd " $x $y $ed(system) $ed(sky) $ed(system) $ed(dformat) ''"}
 	compass {append cmd " 15 $ed(system) $ed(sky) "}
 	{circle point} -
 	{box point} -

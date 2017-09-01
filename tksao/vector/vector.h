@@ -75,20 +75,14 @@ class Vector {
   Vector normalize() 
   {double d = sqrt(v[0]*v[0]+v[1]*v[1]);
     return d ? Vector(v[0]/d,v[1]/d) : Vector();}
+  Vector radToDeg();
+  Vector degToRad();
+
   // restrict vector by bbox
   Vector& clip(const BBox&);
 
   Vector TkCanvasPs(void* canvas);
 };
-
-// This I/O manipulator flips the number stored in iword between 0 and 1
-/*
-inline ios_base& setfoo(ios_base& os)
-{
-  os.iword(Vector::foo) = !os.iword(Vector::foo);
-  return os;
-}
-*/
 
 // Vector separator(int)
 

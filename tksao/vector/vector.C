@@ -44,6 +44,16 @@ Vector& Vector::clip(const BBox& bb)
   return *this;
 }
 
+Vector Vector::radToDeg()
+{
+  return Vector(v[0]*180./M_PI,v[1]*180./M_PI);
+}
+
+Vector Vector::degToRad()
+{
+  return Vector(v[0]*M_PI/180.,v[1]*M_PI/180.);
+}
+
 Vector Vector::TkCanvasPs(void* canvas)
 {
   return Vector(v[0], Tk_CanvasPsY((Tk_Canvas)canvas, v[1]));

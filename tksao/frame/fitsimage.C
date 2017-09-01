@@ -2951,6 +2951,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
       else
 	rr = ang<0 ? Coord::NORMAL : Coord::XX;
     }
+
     astEnd; // now, clean up memory
     return rr;
   }

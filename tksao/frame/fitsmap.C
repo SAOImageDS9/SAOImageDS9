@@ -107,6 +107,7 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
 
 // Map Length
 
+#ifndef NEWWCS
 double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
 				Coord::DistFormat dist)
 {
@@ -114,7 +115,6 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
   return rr[0];
 }
 
-#ifndef NEWWCS
 Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
 				Coord::DistFormat dist)
 {
@@ -154,72 +154,77 @@ Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
   return Vector();
 }
 #else
-Vector FitsImage::mapLenFromRef(const Vector& in, Coord::CoordSystem sys, 
+double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
 				Coord::DistFormat dist)
 {
-  Vector vv = in;
   // really from image coords
   switch (sys) {
   case Coord::IMAGE:
-    return mapLen(vv,refToImage);
+    return dd*refToImage[1].length();
   case Coord::PHYSICAL:
-    return mapLen(vv,refToPhysical);
+    return dd*refToPhysical[1].length();
   case Coord::AMPLIFIER:
-    return mapLen(vv,refToPhysical * physicalToAmplifier);
+    return dd*(refToPhysical * physicalToAmplifier)[1].length();
   case Coord::DETECTOR:
-    return mapLen(vv,refToPhysical * physicalToDetector);
+    return dd*(refToPhysical * physicalToDetector)[1].length();
   default:
-    if (hasWCS(sys)) {
+    {
       int ss = sys-Coord::WCS;
-      Vector out;
-      Vector cc = center();
-      double xx[3], wxx[3];
-      xx[0] = cc[0];
-      xx[1] = cc[0]+vv[0];
-      xx[2] = cc[0];
-      double yy[3], wyy[3];
-      yy[0] = cc[1];
-      yy[1] = cc[1];
-      yy[2] = cc[1]+vv[1];
-      astTran2(ast_[ss],3,xx,yy,1,wxx,wyy);
+      if (sys>=Coord::WCS && ast_ && ast_[ss]) {
+	astClearStatus; // just to make sure
+	astBegin; // start memory management
 
-      double pt0[2];
-      pt0[0] = wxx[0];
-      pt0[1] = wyy[0];
-      double pt1[2];
-      pt1[0] = wxx[1];
-      pt1[1] = wyy[1];
-      double pt2[2];
-      pt2[0] = wxx[2];
-      pt2[1] = wyy[2];
-      double rr1 = astDistance(ast_[ss],pt0,pt1);
-      double rr2 = astDistance(ast_[ss],pt0,pt2);
+	Vector cc = center();
+	double xx[2], wxx[2];
+	xx[0] = cc[0];
+	xx[1] = cc[0];
+	double yy[2], wyy[2];
+	yy[0] = cc[1];
+	yy[1] = cc[1]+dd;
+	astTran2(ast_[ss],2,xx,yy,1,wxx,wyy);
 
-      if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT))) {
-	out = Vector(radToDeg(rr1),radToDeg(rr2));
-	switch (dist) {
-	case Coord::DEGREE:
-	  break;
-	case Coord::ARCMIN:
-	  out *= 60.;
-	  break;
-	case Coord::ARCSEC:
-	  out *= 60.*60.;
-	  break;
+	double pt0[2];
+	pt0[0] = wxx[0];
+	pt0[1] = wyy[0];
+	double pt1[2];
+	pt1[0] = wxx[1];
+	pt1[1] = wyy[1];
+	double out = astDistance(ast_[ss],pt0,pt1);
+
+	if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT))) {
+	  out = radToDeg(out);
+	  switch (dist) {
+	  case Coord::DEGREE:
+	    break;
+	  case Coord::ARCMIN:
+	    out *= 60.;
+	    break;
+	  case Coord::ARCSEC:
+	    out *= 60.*60.;
+	    break;
+	  }
 	}
-      }
-      else
-	out = Vector(rr1,rr2);
 
-      return out;
+	astEnd; // now, clean up memory
+	return out;
+      }
     }
   }
 
   maperr =1;
-  return Vector();
+  return 0;
+}
+
+Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys, 
+				Coord::DistFormat dist)
+{
+  double rx = mapLenFromRef(((Vector)vv)[0],sys,dist);
+  double ry = mapLenFromRef(((Vector)vv)[1],sys,dist);
+  return Vector(rx,ry);
 }
 #endif
 
+#ifndef NEWWCS
 double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys, 
 			      Coord::DistFormat dist)
 {
@@ -264,6 +269,81 @@ Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
   maperr =1;
   return Vector();
 }
+#else
+double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys, 
+			      Coord::DistFormat dist)
+{
+  switch (sys) {
+  case Coord::IMAGE:
+    return dd*imageToRef[1].length();
+  case Coord::PHYSICAL:
+    return dd*physicalToRef[1].length();
+  case Coord::AMPLIFIER:
+    return dd*(amplifierToPhysical * physicalToRef)[1].length();
+  case Coord::DETECTOR:
+    return dd*(detectorToPhysical * physicalToRef)[1].length();
+  default:
+    {
+      int ss = sys-Coord::WCS;
+      if (sys>=Coord::WCS && ast_ && ast_[ss]) {
+	astClearStatus; // just to make sure
+	astBegin; // start memory management
+
+	if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT))) {
+	  dd = degToRad(dd);
+	  switch (dist) {
+	  case Coord::DEGREE:
+	    break;
+	  case Coord::ARCMIN:
+	    dd /= 60.;
+	    break;
+	  case Coord::ARCSEC:
+	    dd /= 60.*60.;
+	    break;
+	  }
+	}
+
+	Vector cc = center();
+	Vector wcc;
+	astTran2(ast_[ss],1,cc.v,cc.v+1,1,wcc.v,wcc.v+1);
+
+	double wxx[2], xx[2];
+	wxx[0] = wcc[0];
+	wxx[1] = wcc[0];
+	double wyy[2], yy[2];
+	wyy[0] = wcc[1];
+	wyy[1] = wcc[1]+dd;
+	astTran2(ast_[ss],2,wxx,wyy,0,xx,yy);
+
+	double pt0[2];
+	pt0[0] = xx[0];
+	pt0[1] = yy[0];
+	double pt1[2];
+	pt1[0] = xx[1];
+	pt1[1] = yy[1];
+
+	astInvert(ast_[ss]);
+	double out = astDistance(ast_[ss],pt0,pt1);
+	astInvert(ast_[ss]);
+	astEnd; // now, clean up memory
+
+	return out;
+      }
+    }
+  }
+
+  maperr =1;
+  return 0;
+}
+
+Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
+			      Coord::DistFormat dist)
+{
+  double rx = mapLenToRef(((Vector)vv)[0],sys,dist);
+  double ry = mapLenToRef(((Vector)vv)[1],sys,dist);
+  return Vector(rx,ry);
+}
+#endif
 
 void FitsImage::listLenFromRef(ostream& str, double dd,
 			       Coord::CoordSystem sys, Coord::DistFormat dist)

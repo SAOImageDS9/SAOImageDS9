@@ -50,6 +50,7 @@ double Base::mapAngleToRef(double angle, Coord::CoordSystem sys,
   return zeroTWOPI(rr);
 }
 
+#ifndef NEWWCS
 double Base::mapLenToRef(double d, Coord::InternalSystem sys)
 {
   Vector r = mapLenToRef(Vector(d,0),sys);
@@ -67,6 +68,39 @@ Vector Base::mapLenToRef(const Vector& v, Coord::InternalSystem sys)
     return Vector();
   }
 }
+#else
+double Base::mapLenToRef(double dd, Coord::InternalSystem sys)
+{
+  switch (sys) {
+  case Coord::CANVAS:
+    return dd*canvasToRef[1].length();
+  case Coord::PANNER:
+    return dd*pannerToRef[1].length();
+  default:
+    return 0;
+  }
+}
+
+Vector Base::mapLenToRef(const Vector& v, Coord::InternalSystem sys)
+{
+  switch (sys) {
+  case Coord::CANVAS:
+    {
+      double rx = ((Vector)v)[0]*canvasToRef[0].length();
+      double ry = ((Vector)v)[1]*canvasToRef[1].length();
+      return Vector(rx,ry);
+    }
+  case Coord::PANNER:
+    {
+      double rx = ((Vector)v)[0]*pannerToRef[0].length();
+      double ry = ((Vector)v)[1]*pannerToRef[1].length();
+      return Vector(rx,ry);
+    }
+  default:
+    return Vector();
+  }
+}
+#endif
 
 Vector FrameBase::mapFromRef(const Vector& vv, Coord::InternalSystem sys)
 {

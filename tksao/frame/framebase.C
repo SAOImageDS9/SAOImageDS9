@@ -131,6 +131,7 @@ void FrameBase::updateBin(const Matrix& mx)
   Base::updateBin(mx);
 }
 
+#ifndef NEWWCS
 void FrameBase::updatePanner()
 {
   Base::updatePanner();
@@ -174,7 +175,7 @@ void FrameBase::updatePanner()
       Vector north = ((npix-orpix2)*mm).normalize();
       Vector epix = keyContext->fits->wcs2pix(Vector(orval[0]+delta[0],orval[1]), wcsSystem_,wcsSky_);
       Vector east = ((epix-orpix2)*mm).normalize();
-	
+
       // sanity check
       Vector diff = (north-east).abs();
       if ((north[0]==0 && north[1]==0) ||
@@ -193,6 +194,64 @@ void FrameBase::updatePanner()
     Tcl_Eval(interp, str.str().c_str());
   }
 }
+#else
+void FrameBase::updatePanner()
+{
+  Base::updatePanner();
+
+  if (usePanner) {
+    ostringstream str;
+
+    str << pannerName << " update " << (void*)pannerPixmap << ';';
+
+    // calculate bbox
+    Vector ll = Vector(0,0) * widgetToPanner;
+    Vector lr = Vector(options->width,0) * widgetToPanner;
+    Vector ur = Vector(options->width,options->height) * widgetToPanner;
+    Vector ul = Vector(0,options->height) * widgetToPanner;
+
+    str << pannerName << " update bbox " 
+	<< ll << ' ' << lr << ' ' << ur << ' ' << ul << ';';
+
+    // calculate image compass vectors
+    Matrix mm = 
+      FlipY() *
+      irafMatrix_ *
+      wcsOrientationMatrix * 
+      Rotate(wcsRotation) *
+      orientationMatrix *
+      Rotate(rotation);
+
+    Vector xx = (Vector(1,0)*mm).normalize();
+    Vector yy = (Vector(0,1)*mm).normalize();
+
+    str << pannerName << " update image compass " 
+	<< xx << ' ' << yy << ';';
+
+    if (keyContext->fits && keyContext->fits->hasWCS(wcsSystem_)) {
+      double rr = keyContext->fits->getWCSRotation(wcsSystem_, wcsSky_);
+      Matrix mx;
+      switch (keyContext->fits->getWCSOrientation(wcsSystem_, wcsSky_)) {
+      case Coord::XX:
+	mx *= FlipX();
+	break;
+      default:
+	break;
+      }
+      mx *= Rotate(rr)*mm;
+      Vector north = (Vector(0,1)*mx).normalize();
+      Vector east = (Vector(-1,0)*mx).normalize();
+
+      str << pannerName << " update wcs compass " 
+	  << north << ' ' << east << ends;
+    }
+    else
+      str << pannerName << " update wcs compass invalid" << ends;
+
+    Tcl_Eval(interp, str.str().c_str());
+  }
+}
+#endif
 
 void FrameBase::x11MagnifierCursor(const Vector& vv)
 {

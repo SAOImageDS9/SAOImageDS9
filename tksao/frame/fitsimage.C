@@ -2867,6 +2867,7 @@ void FitsImage::updatePS(Matrix3d ps)
 
 // WCS
 
+#ifndef NEWWCS
 Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
 {
   if (hasWCS(sys)) {
@@ -2881,6 +2882,35 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
   else
     return Vector();
 }
+#else
+Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
+{
+  int ss = sys-Coord::WCS;
+  if (!(ss>=0 && ast_ && ast_[ss]))
+    return Vector();
+
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
+  Vector cc = center();
+  Vector wcc;
+  astTran2(ast_[ss], 1, cc.v, cc.v+1, 1, wcc.v, wcc.v+1);
+  Vector oo = cc+Vector(1,1);
+  Vector woo;
+  astTran2(ast_[ss], 1, oo.v, oo.v+1, 1, woo.v, woo.v+1);
+
+  double dd = astDistance(ast_[ss], wcc.v, woo.v);
+  astEnd; // now, clean up memory
+  if (dd != AST__BAD) {
+    if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
+      dd *= 180./M_PI;
+    dd /=sqrt(2);
+    return Vector(dd,dd);
+  }
+
+  return Vector(radToDeg(dd)/sqrt(2),0);
+}
+#endif
 
 #ifndef NEWWCS
 Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,

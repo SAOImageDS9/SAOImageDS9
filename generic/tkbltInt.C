@@ -32,8 +32,8 @@
 using namespace std;
 
 extern "C" {
-Tcl_AppInitProc Tkblt_Init;
-Tcl_AppInitProc Tkblt_SafeInit;
+DLLEXPORT Tcl_AppInitProc Tkblt_Init;
+DLLEXPORT Tcl_AppInitProc Tkblt_SafeInit;
 };
 
 Tcl_AppInitProc Blt_VectorCmdInitProc;
@@ -41,7 +41,7 @@ Tcl_AppInitProc Blt_GraphCmdInitProc;
 
 #include "tkbltStubInit.c"
 
-int Tkblt_Init(Tcl_Interp* interp)
+DLLEXPORT int Tkblt_Init(Tcl_Interp* interp)
 {
   Tcl_Namespace *nsPtr;
 
@@ -68,7 +68,7 @@ int Tkblt_Init(Tcl_Interp* interp)
   return TCL_OK;
 }
 
-int Tkblt_SafeInit(Tcl_Interp* interp)
+DLLEXPORT int Tkblt_SafeInit(Tcl_Interp* interp)
 {
   return Tkblt_Init(interp);
 }

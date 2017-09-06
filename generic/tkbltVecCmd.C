@@ -57,6 +57,7 @@
 #include "tkbltOp.h"
 #include "tkbltNsUtil.h"
 #include "tkbltSwitch.h"
+#include "tkbltInt.h"
 
 using namespace Blt;
 

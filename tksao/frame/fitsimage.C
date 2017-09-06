@@ -1170,6 +1170,7 @@ void FitsImage::initWCS()
     }
   }
 
+#ifndef NEWWCS
   // WCSDEP
   if (hd->find("WCSDEP")) {
     char* str = hd->getString("WCSDEP");
@@ -1193,6 +1194,7 @@ void FitsImage::initWCS()
       delete [] str;
     }
   }
+#endif
 
   // WCSx
   char scrpix[] = "CRPIX  ";

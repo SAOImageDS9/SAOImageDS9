@@ -129,7 +129,9 @@ class FitsImage {
   void initBin();
   void initHPX();
   void initWCS();
+#ifndef NEWWCS
   void initWCSPhysical();
+#endif
   Vector getHistCenter();
 
   char* root(const char*);

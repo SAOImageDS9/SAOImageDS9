@@ -1099,7 +1099,9 @@ void FitsImage::initWCS()
 	  for (int ii=0; ii<MULTWCSA; ii++)
 	    ast_[ii] = ptr->ast_[ii];
 
+#ifndef NEWWCS
 	  initWCSPhysical();
+#endif
 	  manageWCS_ =0;
 	  return;
 	}
@@ -1235,7 +1237,9 @@ void FitsImage::initWCS()
     }
   }
 
+#ifndef NEWWCS
   initWCSPhysical();
+#endif
 
   if (DebugWCS) {
     for (int ii=0; ii<MULTWCS; ii++) {
@@ -1258,6 +1262,7 @@ void FitsImage::initWCS()
   }
 }
 
+#ifndef NEWWCS
 void FitsImage::initWCSPhysical()
 {
   // now see if we have a 'physical' wcs, if so, set LTMV keywords
@@ -1283,6 +1288,7 @@ void FitsImage::initWCSPhysical()
     }
   }
 }
+#endif
 
 void FitsImage::initWCS0(const Vector& pix)
 {
@@ -3289,6 +3295,7 @@ int FitsImage::hasWCS(Coord::CoordSystem sys)
   return (sys>=Coord::WCS && ast_ && ast_[ii]) ? 1 : 0;
 }
 
+#ifndef NEWWCS
 int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
 {
   astClearStatus;
@@ -3320,6 +3327,26 @@ int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
 
   return 0;
 }
+#else
+int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
+{
+  astClearStatus;
+
+  int ii = sys-Coord::WCS;
+  if (ii>=0 && ast_ && ast_[ii])
+    if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT))) {
+      // check for xLON/xLAT and xxLN/xxLT
+      //  but GLON/GLAT is ok
+      const char* str = astGetC(ast_[ii], "System");
+      if (!strncmp(str,"Unknown",7))
+	return 0;
+      return 1;
+    }
+
+  return 0;
+}
+
+#endif
 
 int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 {

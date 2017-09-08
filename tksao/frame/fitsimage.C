@@ -3448,6 +3448,8 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
   // DSS,PLT,LIN goes straight to AST
   // we can't send 3D directly to AST
 
+  ast_[ii] = fits2ast(hd);
+  /*
   if (wcs_[ii]->prjcode==WCS_DSS || 
       wcs_[ii]->prjcode==WCS_PLT || 
       (wcs_[ii]->prjcode==WCS_LIN && !strncmp(wcs_[ii]->ptype,"HPX",3)) ||
@@ -3457,7 +3459,7 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
     ast_[ii] = fits2ast(hd);
   else
     ast_[ii] = buildast(ii, hd, prim);
-
+  */
   if (!ast_[ii])
     return;
 
@@ -3505,6 +3507,38 @@ void FitsImage::setAstFormat(AstFrameSet* aa, int id, const char* format)
   str << "Format(" << id << ")=" << format << ends;
   astSet(aa, str.str().c_str());
 }
+
+#ifdef NEWWCS
+void FitsImage::setAstSystem(AstFrameSet* fs, Coord::CoordSystem sys,
+			     Coord::SkyFrame sky)
+{
+  int nn = astGetI(fs,"nframe");
+  char cc = ' ';
+  int ww = sys-Coord::WCS;
+  switch (sys) {
+  case Coord::DATA:
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::AMPLIFIER:
+  case Coord::DETECTOR:
+    // this should not happen
+    return;
+  default:
+    if (ww)
+      cc = ww+'@';
+  }
+
+  for (int ii=0; ii<nn; ii++) {
+    const char* id = astGetC(astGetFrame(fs,ii+1),"Ident");
+    if (cc == id[0]) {
+      astSetI(fs,"current",ii+1);
+      break;
+    }
+  }
+
+  setAstSkyFrame(fs,sky);
+}
+#endif
 
 void FitsImage::setAstSkyFrame(AstFrameSet* aa, Coord::SkyFrame sky)
 {

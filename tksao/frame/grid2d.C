@@ -68,6 +68,7 @@ int Grid2d::doit(RenderMode rm)
     break;
   default:
     {
+#ifndef NEWWCS
       AstFrameSet* wcsfs = (AstFrameSet*)astCopy(fits->getAST(system_));
 
       // set desired skyformat
@@ -81,6 +82,16 @@ int Grid2d::doit(RenderMode rm)
       astAddFrame(frameSet,2,astUnitMap(2,""),wcsfs);
       astSetI(frameSet,"current",astGetI(frameSet,"nframe"));
     }
+#else
+      AstFrameSet* wcs = (AstFrameSet*)astCopy(fits->getAST(system_));
+
+      // add wcs to frameset
+      // this will link frameset to wcs with unitMap
+      astInvert(wcs);
+      astAddFrame(frameSet,2,astUnitMap(2,""),wcs);
+      fits->setAstSystem(frameSet,system_,sky_);
+    }
+#endif
   }
 
   astSet(frameSet,"Title=%s", " ");

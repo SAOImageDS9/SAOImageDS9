@@ -2938,6 +2938,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
 
     // take the cross product and see which way the 3rd axis is pointing
     double w = east[0]*north[1]-east[1]*north[0];
+    cerr << "old: " << radToDeg(w) << endl;
 
     if (!hasWCSCel(sys))
       return w>0 ? Coord::NORMAL : Coord::XX;
@@ -3448,8 +3449,6 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
   // DSS,PLT,LIN goes straight to AST
   // we can't send 3D directly to AST
 
-  ast_[ii] = fits2ast(hd);
-  /*
   if (wcs_[ii]->prjcode==WCS_DSS || 
       wcs_[ii]->prjcode==WCS_PLT || 
       (wcs_[ii]->prjcode==WCS_LIN && !strncmp(wcs_[ii]->ptype,"HPX",3)) ||
@@ -3458,10 +3457,18 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
       (wcs_[ii]->prjcode==WCS_LIN && !strncmp(wcs_[ii]->c1type,"AST",3)))
     ast_[ii] = fits2ast(hd);
   else
-    ast_[ii] = buildast(ii, hd, prim);
-  */
+    ast_[ii] = fits2ast(hd);
+  //    ast_[ii] = buildast(ii, hd, prim);
+
   if (!ast_[ii])
     return;
+
+  if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT))) {
+    if (astGetI(ast_[ii],"LatAxis") == 1) {
+      int orr[] = {2,1};
+      astPermAxes(ast_[ii],orr);
+    }
+  }
 
   // set default skyframe
   if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT)))

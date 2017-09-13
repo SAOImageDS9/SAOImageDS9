@@ -80,8 +80,8 @@ void BaseEllipse::renderXCircle(Drawable drawable, Coord::InternalSystem sys,
 
     Vector ur = fwdMap(r,sys);
     double l = (ur-cc).length() * cos(M_PI_4);
-
     Vector rr(l,l);
+
     Vector st = cc-rr;
     Vector size = rr*2;
 
@@ -120,8 +120,11 @@ void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
   for (int i=0; i<numAnnuli_; i++) {
     Vector r = annuli_[i];
 
-    Vector st = cc-r;
-    Vector size = r*2;
+    Vector ur = fwdMap(r,sys);
+    Vector rr = ur-cc;
+
+    Vector st = cc-rr;
+    Vector size = rr*2;
 
     // Verify size is positive
     // XDrawArc is sensative to bad data, and may hang the XServer

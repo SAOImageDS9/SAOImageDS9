@@ -1065,27 +1065,39 @@ proc ProcessContourCmd {varname iname} {
 	load {
 	    incr i
 	    set fn [lindex $var $i]
-
-	    # backward compatibility
-	    incr i
-	    set sys [lindex $var $i]
-	    incr i
-	    set sky [lindex $var $i]
-	    incr i
-	    set color [lindex $var $i]
-	    incr i
-	    set width [lindex $var $i]
-	    incr i
-	    set dash [lindex $var $i]
-	    incr i [ProcessContourFix sys sky color width dash]
-
 	    if {$fn != {}} {
 		if {[file extension $fn] == {.con}} {
-		    $current(frame) contour load $color $width $dash "\{$fn\}" $sys $sky
+		    # backward compatibility
+		    incr i
+		    set sys [lindex $var $i]
+		    incr i
+		    set sky [lindex $var $i]
+		    incr i
+		    set color [lindex $var $i]
+		    incr i
+		    set width [lindex $var $i]
+		    incr i
+		    set dash [lindex $var $i]
+		    incr i [ProcessContourFix sys sky color width dash]
+		    $current(frame) contour load $color $width $dash \
+			"\{$fn\}" $sys $sky
 		} else {
-		    $current(frame) contour load "\{$fn\}" $color $width $dash
+		    incr i
+		    set color [lindex $var $i]
+		    if {$color == {} || [string range $color 0 0] == "-"} {
+			$current(frame) contour load "\{$fn\}"
+			incr i -1
+		    } else {
+			incr i
+			set width [lindex $var $i]
+			incr i
+			set dash [FromYesNo [lindex $var $i]]
+			$current(frame) contour load "\{$fn\}" \
+			    $color $width $dash
+		    }
 		}
 	    }
+
 	    FileLast contourlfbox $fn
 	    UpdateContourDialog
 	}

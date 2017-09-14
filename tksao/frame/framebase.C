@@ -231,12 +231,17 @@ void FrameBase::updatePanner()
     if (keyContext->fits && keyContext->fits->hasWCS(wcsSystem_)) {
       double rr = keyContext->fits->getWCSRotation(wcsSystem_, wcsSky_);
       Matrix mx;
-      switch (keyContext->fits->getWCSOrientation(wcsSystem_, wcsSky_)) {
-      case Coord::XX:
-	mx *= FlipX();
-	break;
-      default:
-	break;
+
+      AstFrameSet* aa = keyContext->fits->getAST(wcsSystem_);
+      Coord::Orientation oo = 
+	keyContext->fits->getWCSOrientation(wcsSystem_, wcsSky_);
+      if (astIsASkyFrame(astGetFrame(aa, AST__CURRENT))) {
+	if (oo==Coord::XX)
+	  mx *= FlipX();
+      }
+      else {
+	if (oo==Coord::NORMAL)
+	  mx *= FlipX();
       }
       mx *= Rotate(rr)*mm;
       Vector north = (Vector(0,1)*mx).normalize();

@@ -2981,11 +2981,10 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
     Coord::Orientation rr = Coord::NORMAL;
     if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
       if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
-	rr = ang>0 ? Coord::NORMAL : Coord::XX;
+	rr = ang>=0 ? Coord::NORMAL : Coord::XX;
       else
-	rr = ang<0 ? Coord::NORMAL : Coord::XX;
+	rr = ang<=0 ? Coord::NORMAL : Coord::XX;
     }
-
     astEnd; // now, clean up memory
     return rr;
   }
@@ -3461,10 +3460,32 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
 
   if (!ast_[ii])
     return;
+
 #else
+
+  //  astClearStatus; // just to make sure
+  //  astBegin; // start memory management
+
   ast_[ii] = fits2ast(hd);
   if (!ast_[ii])
     return;
+
+  //  astShow(ast_[ii]);
+  int naxes = astGetI(ast_[ii],"Naxes");
+  switch (naxes) {
+  case 1:
+    break;
+  case 2:
+    break;
+  default:
+    {
+      //      const int pick[] = {1,2};
+      //      AstMapping* map;
+      //      AstFrame* fm = (AstFrame*)astPickAxes(ast_[ii], 2, pick, &map);
+      //      astShow(fm);
+    }
+    break;
+  }
 
   if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT))) {
     if (astGetI(ast_[ii],"LatAxis") == 1) {
@@ -3472,11 +3493,14 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
       astPermAxes(ast_[ii],orr);
     }
   }
+
+  //  astEnd; // now, clean up memory
 #endif
 
   // set default skyframe
   if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT)))
     setAstSkyFrame(ast_[ii],Coord::FK5);
+
 }
 
 void FitsImage::astinit0(int ii, FitsHead* hd, FitsHead* prim)

@@ -115,6 +115,9 @@ char* toConstUpper(const char* str)
 
 double zeroTWOPI(double aa)
 {
+  if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))
+    return NAN;
+
   double rr = aa;
   if (rr>0)
     while (rr>=M_TWOPI)
@@ -127,6 +130,9 @@ double zeroTWOPI(double aa)
 
 double zero360(double aa)
 {
+  if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))
+    return NAN;
+
   double rr = aa;
   if (rr>=0)
     while (rr>360)
@@ -139,6 +145,9 @@ double zero360(double aa)
 
 double m180To180(double aa)
 {
+  if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))
+    return NAN;
+
   // incoming 0-360
   double rr = aa;
   if (rr>180)
@@ -146,15 +155,21 @@ double m180To180(double aa)
   return rr;
 }
 
-double degToRad(double dd)
+double degToRad(double aa)
 {
-  double rr =  M_PI*dd/180.;
+  if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))
+    return NAN;
+
+  double rr =  M_PI*aa/180.;
   return zeroTWOPI(rr);
 }
 
-double radToDeg(double rr)
+double radToDeg(double aa)
 {
-  double dd = 180.*rr/M_PI;
+  if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))
+    return NAN;
+
+  double dd = 180.*aa/M_PI;
   return zero360(dd);
 }
 

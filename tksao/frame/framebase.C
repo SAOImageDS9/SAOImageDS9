@@ -232,10 +232,9 @@ void FrameBase::updatePanner()
       double rr = keyContext->fits->getWCSRotation(wcsSystem_, wcsSky_);
       Matrix mx;
 
-      AstFrameSet* aa = keyContext->fits->getAST(wcsSystem_);
       Coord::Orientation oo = 
 	keyContext->fits->getWCSOrientation(wcsSystem_, wcsSky_);
-      if (astIsASkyFrame(astGetFrame(aa, AST__CURRENT))) {
+      if (hasWCSCel(wcsSystem_)) {
 	if (oo==Coord::XX)
 	  mx *= FlipX();
       }

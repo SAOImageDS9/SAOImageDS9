@@ -80,7 +80,7 @@ void BaseEllipse::renderXCircle(Drawable drawable, Coord::InternalSystem sys,
 
     Vector ur = fwdMap(r,sys);
     double l = (ur-cc).length() * cos(M_PI_4);
-    Vector rr(l,l);
+    Vector rr = Vector(l,l).abs();
 
     Vector st = cc-rr;
     Vector size = rr*2;
@@ -121,7 +121,7 @@ void BaseEllipse::renderXEllipse(Drawable drawable, Coord::InternalSystem sys,
     Vector r = annuli_[i];
 
     Vector ur = fwdMap(r,sys);
-    Vector rr = ur-cc;
+    Vector rr = (ur-cc).abs();
 
     Vector st = cc-rr;
     Vector size = rr*2;

@@ -391,7 +391,7 @@ class FitsImage {
   Vector getWCScdelt(Coord::CoordSystem);
   
 #ifdef NEWWCS
-  void setAstSystem(AstFrameSet*, Coord::CoordSystem, Coord::SkyFrame);
+  void setAstSystem(AstFrameSet*, Coord::CoordSystem);
 #endif
   void setAstSkyFrame(AstFrameSet*, Coord::SkyFrame);
   void setAstFormat(AstFrameSet*, int, const char*);

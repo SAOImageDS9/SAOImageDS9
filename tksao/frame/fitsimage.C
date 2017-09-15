@@ -3470,7 +3470,8 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
   if (!ast_[ii])
     return;
 
-  //  astShow(ast_[ii]);
+  setAstSystem(ast_[ii], (Coord::CoordSystem)(ii+Coord::WCS));
+
   int naxes = astGetI(ast_[ii],"Naxes");
   switch (naxes) {
   case 1:
@@ -3544,8 +3545,7 @@ void FitsImage::setAstFormat(AstFrameSet* aa, int id, const char* format)
 }
 
 #ifdef NEWWCS
-void FitsImage::setAstSystem(AstFrameSet* fs, Coord::CoordSystem sys,
-			     Coord::SkyFrame sky)
+void FitsImage::setAstSystem(AstFrameSet* fs, Coord::CoordSystem sys)
 {
   int nn = astGetI(fs,"nframe");
   char cc = ' ';
@@ -3570,8 +3570,6 @@ void FitsImage::setAstSystem(AstFrameSet* fs, Coord::CoordSystem sys,
       break;
     }
   }
-
-  setAstSkyFrame(fs,sky);
 }
 #endif
 

@@ -850,11 +850,6 @@ void Frame3dBase::updatePanner()
 	east = (Vector3d(-1,0)*mm).normalize();
       }
 
-      cerr << endl;
-      cerr << north << ' ' << east << endl;
-      {
-      }
-
       // and update the panner
       str << pannerName << " update wcs compass " 
 	  << north << ' ' << east << ends;
@@ -909,13 +904,17 @@ void Frame3dBase::updatePanner()
 
     if (keyContext->fits && keyContext->fits->hasWCS(wcsSystem_)) {
       Matrix3d mx;
-      switch (keyContext->fits->getWCSOrientation(wcsSystem_, wcsSky_)) {
-      case Coord::XX:
-	mx *= FlipX3d();
-	break;
-      default:
-	break;
+      Coord::Orientation oo = 
+	keyContext->fits->getWCSOrientation(wcsSystem_, wcsSky_);
+      if (hasWCSCel(wcsSystem_)) {
+	if (oo==Coord::XX)
+	  mx *= FlipX3d();
       }
+      else {
+	if (oo==Coord::NORMAL)
+	  mx *= FlipX3d();
+      }
+
       mx *= mm;
       Vector north = (Vector3d(0,1)*mx).normalize();
       Vector east = (Vector3d(-1,0)*mx).normalize();

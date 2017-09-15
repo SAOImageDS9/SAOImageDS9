@@ -229,9 +229,7 @@ void FrameBase::updatePanner()
 	<< xx << ' ' << yy << ';';
 
     if (keyContext->fits && keyContext->fits->hasWCS(wcsSystem_)) {
-      double rr = keyContext->fits->getWCSRotation(wcsSystem_, wcsSky_);
       Matrix mx;
-
       Coord::Orientation oo = 
 	keyContext->fits->getWCSOrientation(wcsSystem_, wcsSky_);
       if (hasWCSCel(wcsSystem_)) {
@@ -242,6 +240,8 @@ void FrameBase::updatePanner()
 	if (oo==Coord::NORMAL)
 	  mx *= FlipX();
       }
+
+      double rr = keyContext->fits->getWCSRotation(wcsSystem_, wcsSky_);
       mx *= Rotate(rr)*mm;
       Vector north = (Vector(0,1)*mx).normalize();
       Vector east = (Vector(-1,0)*mx).normalize();

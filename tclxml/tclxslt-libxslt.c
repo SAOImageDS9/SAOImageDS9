@@ -1507,7 +1507,7 @@ TclXSLTExtFunction(xpathCtxt, nargs)
     valuePush(xpathCtxt, obj);
   } else {
     xmlGenericError(xmlGenericErrorContext,
-		    Tcl_GetStringFromObj(resultPtr, NULL));
+		    "%s", Tcl_GetStringFromObj(resultPtr, NULL));
     /* Need to define a new error code - this is the closest in meaning */
     xpathCtxt->error = XPATH_UNKNOWN_FUNC_ERROR;
   }

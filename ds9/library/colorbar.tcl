@@ -218,8 +218,8 @@ proc ColorbarEnter {x y} {
     $ds9(canvas) focus $current(colorbar)
 
     switch -- $current(colorbar) {
-	colorbar {UpdateFrameInfoBox base}
-	colorbarrgb {UpdateFrameInfoBox rgb}
+	colorbar {LayoutFrameInfoBox base}
+	colorbarrgb {LayoutFrameInfoBox rgb}
     }
 }
 

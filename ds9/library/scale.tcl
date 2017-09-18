@@ -172,7 +172,7 @@ proc UpdateScale {} {
     UpdateScaleDialog
     UpdateContourScale
     UpdateGraphAxis $current(frame)
-    UpdateInfoBoxBase
+    UpdateInfoBoxFrame $current(frame)
     UpdateMain
 }
 

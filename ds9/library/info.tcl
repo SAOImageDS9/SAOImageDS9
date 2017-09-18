@@ -148,13 +148,13 @@ proc CreateInfoPanel {} {
 	-textvariable infobox(angle) -anchor center
 }
 
-proc UpdateFrameInfoBox {which} {
+proc LayoutFrameInfoBox {which} {
     global ds9
     global view
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "UpdateFrameInfoBox"
+	puts stderr "LayoutFrameInfoBox"
     }
 
     switch -- $which {
@@ -383,11 +383,11 @@ proc EnterInfoBox {which} {
 
     global debug
     if {$debug(tcl,events)} {
-	puts stderr "EnterInfo $which"
+	puts stderr "EnterInfoBox $which"
     }
 
-    UpdateFrameInfoBox [$which get type]
-    UpdateWCSInfoBox $which
+    LayoutFrameInfoBox [$which get type]
+    LayoutWCSInfoBox $which
 
     set infobox(frame) "[msgcat::mc {Frame}] [string range $which 5 end]"
     set infobox(angle) [$which get rotate]
@@ -483,8 +483,9 @@ proc RefreshInfoBox {which} {
 
     global debug
     if {$debug(tcl,info)} {
-	puts stderr "RefreshInfoBox"
+	puts stderr "RefreshInfoBox $which"
     }
+    DumpCallStack
 
     if {$which != {}} {
 	switch -- $current(mode) {
@@ -508,30 +509,27 @@ proc RefreshInfoBox {which} {
 	    examine -
 	    iexam {
 		EnterInfoBox $which
-		ClearInfoBoxCoords
+		UpdateInfoBoxFrame $which
 	    }
 	}
     }
     return
 }
 
-proc UpdateInfoBoxBase {} {
+proc UpdateInfoBoxFrame {which} {
     global debug
     if {$debug(tcl,info)} {
-	puts stderr "UpdateInfoBoxBase"
+	puts stderr "UpdateInfoBoxFrame $which"
     }
 
-    global current
     global infobox
-    if {$current(frame) != {}} {
-	$current(frame) get info infobox
-    }
+    $which get info infobox
 }
 
 proc UpdateInfoBox {which x y sys} {
     global debug
     if {$debug(tcl,info)} {
-	puts stderr "UpdateInfoBox $sys"
+	puts stderr "UpdateInfoBox $which $sys"
     }
 
     global ds9
@@ -746,7 +744,7 @@ proc LayoutInfoPanelHorz {} {
     set ds9(info,row,value,green) $row
     set ds9(info,row,value,blue) $row
     incr row
-    UpdateFrameInfoBox base
+    LayoutFrameInfoBox base
 
     # unit
     if {$view(info,bunit)} {
@@ -1013,7 +1011,7 @@ proc LayoutInfoPanelVert {} {
     incr row
     set ds9(info,row,value,blue) $row
     incr row
-    UpdateFrameInfoBox base
+    LayoutFrameInfoBox base
 
     # units
     if {$view(info,bunit)} {

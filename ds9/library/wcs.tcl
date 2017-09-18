@@ -35,7 +35,7 @@ proc UpdateWCS {} {
 	} else {
 	    CoordMenuReset $ds9(mb).wcs wcs system 0 sky skyformat
 	}
-	UpdateWCSInfoBox $current(frame)
+	LayoutWCSInfoBox $current(frame)
     }
 
     # grid
@@ -84,7 +84,7 @@ proc UpdateWCS {} {
     AdjustCoordSystem marker system
 }
 
-proc UpdateWCSInfoBox {which} {
+proc LayoutWCSInfoBox {which} {
     global wcs
     global view
 

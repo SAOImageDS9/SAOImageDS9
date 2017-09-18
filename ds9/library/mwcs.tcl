@@ -41,7 +41,7 @@ proc UpdateWCSMenu {} {
 	} else {
 	    CoordMenuReset $ds9(mb).wcs wcs system 0 sky skyformat
 	}
-	UpdateWCSInfoBox $current(frame)
+	LayoutWCSInfoBox $current(frame)
     } else {
 	$ds9(mb) entryconfig [msgcat::mc {WCS}] -state disabled
     }

@@ -265,7 +265,7 @@ int Zvfs_Mount(
   ZvfsArchive *pArchive;     /* The ZIP archive being mounted */
   Tcl_HashEntry *pEntry;     /* Hash table entry */
   int isNew;                 /* Flag to tell use when a hash entry is new */
-  unsigned char zBuf[100];   /* Space into which to read from the ZIP archive */
+  unsigned char zBuf[128];   /* Space into which to read from the ZIP archive */
   Tcl_HashSearch zSearch;   /* Search all mount points */
 
   if( !local.isInit ) return TCL_ERROR;
@@ -344,7 +344,7 @@ int Zvfs_Mount(
     int isdir;
     ZvfsFile *pZvfs;        /* A new virtual file */
     char *zFullPath;        /* Full pathname of the virtual file */
-    char zName[1024];       /* Space to hold the filename */
+    char zName[2048];       /* Space to hold the filename */
 
     /* Read the next directory entry.  Extract the size of the filename,
     ** the size of the "extra" information, and the offset into the archive
@@ -904,8 +904,8 @@ static Tcl_Channel ZvfsFileOpen(Tcl_Interp *interp, char *zFilename,
   ZvfsChannelInfo *pInfo;
   Tcl_Channel chan;
   static int count = 1;
-  char zName[50];
-  unsigned char zBuf[50];
+  char zName[128];
+  unsigned char zBuf[128];
   int errCode;
 
   pFile = ZvfsLookup(zFilename);
@@ -1121,7 +1121,7 @@ Tcl_Obj *Tobe_FSListVolumesProc _ANSI_ARGS_((void))
   Tcl_HashSearch zSearch;   /* Search all mount points */
   ZvfsArchive *pArchive;     /* The ZIP archive being mounted */
   Tcl_Obj *pVols=0, *pVol;
-  char mountpt[200];
+  char mountpt[2048];
   
   pEntry=Tcl_FirstHashEntry(&local.archiveHash,&zSearch);
   while (pEntry) {

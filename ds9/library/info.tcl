@@ -485,7 +485,6 @@ proc RefreshInfoBox {which} {
     if {$debug(tcl,info)} {
 	puts stderr "RefreshInfoBox $which"
     }
-    DumpCallStack
 
     if {$which != {}} {
 	switch -- $current(mode) {

@@ -55,7 +55,7 @@ FitsMMap::FitsMMap(const char* fn)
 
 FitsMMap::~FitsMMap()
 {
-  if (mapdata_>0)
+  if (mapdata_)
     munmap((caddr_t)mapdata_, mapsize_);
 }
 

@@ -192,13 +192,13 @@ FitsHead::~FitsHead()
     break;
   case MMAP:
 #ifndef __WIN32
-    if (mapdata_>0)
+    if (mapdata_)
       munmap((caddr_t)mapdata_, mapsize_);
 #endif
     break;
   case SHARE:
 #ifndef __WIN32
-    if (mapdata_>0)
+    if (mapdata_)
       shmdt(mapdata_);
 #endif
   case EXTERNAL:

@@ -77,7 +77,7 @@ FitsShareKey::FitsShareKey(int key, const char* filter)
 
 FitsShareKey::~FitsShareKey()
 {
-  if (mapdata_>0)
+  if (mapdata_)
     shmdt(mapdata_);
 }
 

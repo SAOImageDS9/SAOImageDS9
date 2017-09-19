@@ -89,7 +89,7 @@ FitsSMMap::FitsSMMap(const char* hdr, const char* fn)
 
 FitsSMMap::~FitsSMMap()
 {
-  if (mapdata_>0)
+  if (mapdata_)
     munmap((caddr_t)mapdata_, mapsize_);
 }
 

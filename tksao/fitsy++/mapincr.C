@@ -33,7 +33,7 @@ FitsMapIncr::FitsMapIncr()
 
 FitsMapIncr::~FitsMapIncr()
 {
-  if (mapdata_>0)
+  if (mapdata_)
     munmap((caddr_t)mapdata_, mapsize_);
 }
 

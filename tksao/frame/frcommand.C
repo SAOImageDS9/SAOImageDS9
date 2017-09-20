@@ -406,19 +406,22 @@ void FrameBase::rotateEndCmd()
 void FrameBase::saveFitsResampleFileCmd(const char* fn)
 {
   OutFitsFile str(fn);
-  saveFitsResample(str);
+  if (str.valid())
+    saveFitsResample(str);
 }
 
 void FrameBase::saveFitsResampleChannelCmd(const char* ch)
 {
   OutFitsChannel str(interp, ch);
-  saveFitsResample(str);
+  if (str.valid())
+    saveFitsResample(str);
 }
 
 void FrameBase::saveFitsResampleSocketCmd(int ss)
 {
   OutFitsSocket str(ss);
-  saveFitsResample(str);
+  if (str.valid())
+    saveFitsResample(str);
 }
 
 void FrameBase::zoomAboutCmd(const Vector& zz, const Vector& vv)

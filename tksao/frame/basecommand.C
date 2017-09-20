@@ -2759,147 +2759,172 @@ void Base::rotateToCmd(double r)
 void Base::saveFitsFileCmd(const char* fn)
 {
   OutFitsFile str(fn);
-  saveFits(str);
+  if (str.valid())
+    saveFits(str);
 }
 
 void Base::saveFitsChannelCmd(const char* ch)
 {
   OutFitsChannel str(interp, ch);
-  saveFits(str);
+  if (str.valid())
+    saveFits(str);
 }
 
 void Base::saveFitsSocketCmd(int ss)
 {
   OutFitsSocket str(ss);
-  saveFits(str);
+  if (str.valid())
+    saveFits(str);
 }
 
 void Base::saveFitsTableFileCmd(const char* fn)
 {
   OutFitsFile str(fn);
-  saveFitsTable(str);
+  if (str.valid())
+    saveFitsTable(str);
 }
 
 void Base::saveFitsTableChannelCmd(const char* ch)
 {
   OutFitsChannel str(interp, ch);
-  saveFitsTable(str);
+  if (str.valid())
+    saveFitsTable(str);
 }
 
 void Base::saveFitsTableSocketCmd(int ss)
 {
   OutFitsSocket str(ss);
-  saveFitsTable(str);
+  if (str.valid())
+    saveFitsTable(str);
 }
 
 void Base::saveFitsSliceFileCmd(const char* fn)
 {
   OutFitsFile str(fn);
-  saveFitsSlice(str);
+  if (str.valid())
+    saveFitsSlice(str);
 }
 
 void Base::saveFitsSliceChannelCmd(const char* ch)
 {
   OutFitsChannel str(interp, ch);
-  saveFitsSlice(str);
+  if (str.valid())
+    saveFitsSlice(str);
 }
 
 void Base::saveFitsSliceSocketCmd(int ss)
 {
   OutFitsSocket str(ss);
-  saveFitsSlice(str);
+  if (str.valid())
+    saveFitsSlice(str);
 }
 
 void Base::saveFitsExtCubeFileCmd(const char* fn)
 {
   OutFitsFile str(fn);
-  saveFitsExtCube(str);
+  if (str.valid())
+    saveFitsExtCube(str);
 }
 
 void Base::saveFitsExtCubeChannelCmd(const char* ch)
 {
   OutFitsChannel str(interp, ch);
-  saveFitsExtCube(str);
+  if (str.valid())
+    saveFitsExtCube(str);
 }
 
 void Base::saveFitsExtCubeSocketCmd(int ss)
 {
   OutFitsSocket str(ss);
-  saveFitsExtCube(str);
+  if (str.valid())
+    saveFitsExtCube(str);
 }
 
 void Base::saveFitsMosaicFileCmd(const char* fn, int which)
 {
   OutFitsFile str(fn);
-  saveFitsMosaic(str, which);
+  if (str.valid())
+    saveFitsMosaic(str, which);
 }
 
 void Base::saveFitsMosaicChannelCmd(const char* ch, int which)
 {
   OutFitsChannel str(interp, ch);
-  saveFitsMosaic(str, which);
+  if (str.valid())
+    saveFitsMosaic(str, which);
 }
 
 void Base::saveFitsMosaicSocketCmd(int ss, int which)
 {
   OutFitsSocket str(ss);
-  saveFitsMosaic(str, which);
+  if (str.valid())
+    saveFitsMosaic(str, which);
 }
 
 void Base::saveFitsMosaicImageFileCmd(const char* fn)
 {
   OutFitsFile str(fn);
-  saveFitsMosaicImage(str);
+  if (str.valid())
+    saveFitsMosaicImage(str);
 }
 
 void Base::saveFitsMosaicImageChannelCmd(const char* ch)
 {
   OutFitsChannel str(interp, ch);
-  saveFitsMosaicImage(str);
+  if (str.valid())
+    saveFitsMosaicImage(str);
 }
 
 void Base::saveFitsMosaicImageSocketCmd(int ss)
 {
   OutFitsSocket str(ss);
-  saveFitsMosaicImage(str);
+  if (str.valid())
+    saveFitsMosaicImage(str);
 }
 
 void Base::saveArrayFileCmd(const char* fn, FitsFile::ArchType endian)
 {
-  if (currentContext->cfits) {
-    OutFitsFile str(fn);
+  if (!currentContext->cfits)
+    return;
+
+  OutFitsFile str(fn);
+  if (str.valid())
     saveArray(str, endian);
-  }
 }
 
 void Base::saveArrayChannelCmd(const char* ch, FitsFile::ArchType endian)
 {
   OutFitsChannel str(interp, ch);
-  saveArray(str, endian);
+  if (str.valid())
+    saveArray(str, endian);
 }
 
 void Base::saveArraySocketCmd(int ss, FitsFile::ArchType endian)
 {
   OutFitsSocket str(ss);
-  saveArray(str, endian);
+  if (str.valid())
+    saveArray(str, endian);
 }
 
 void Base::saveNRRDFileCmd(const char* fn, FitsFile::ArchType endian)
 {
   OutFitsFile str(fn);
-  saveNRRD(str, endian);
+  if (str.valid())
+    saveNRRD(str, endian);
 }
 
 void Base::saveNRRDChannelCmd(const char* ch, FitsFile::ArchType endian)
 {
   OutFitsChannel str(interp, ch);
-  saveNRRD(str, endian);
+  if (str.valid())
+    saveNRRD(str, endian);
 }
 
 void Base::saveNRRDSocketCmd(int ss, FitsFile::ArchType endian)
 {
   OutFitsSocket str(ss);
-  saveNRRD(str, endian);
+  if (str.valid())
+    saveNRRD(str, endian);
 }
 
 void Base::saveENVIFileCmd(const char* hdr, const char* fn, 
@@ -2907,7 +2932,8 @@ void Base::saveENVIFileCmd(const char* hdr, const char* fn,
 {
   ofstream str(hdr);
   OutFitsFile str2(fn);
-  saveENVI(str, str2, endian);
+  if (str2.valid())
+    saveENVI(str, str2, endian);
 }
 
 void Base::sliceCmd(int id, int ss)

@@ -1519,74 +1519,92 @@ void FrameRGB::loadPhotoCmd(const char* ph, const char* fn)
 
 void FrameRGB::saveFitsRGBImageFileCmd(const char* fn)
 {
-  if (keyContext->fits) {
-    OutFitsFile str(fn);
+  if (!keyContext->fits)
+    return;
+
+  OutFitsFile str(fn);
+  if (str.valid())
     saveFitsRGBImage(str);
-  }
 }
 
 void FrameRGB::saveFitsRGBImageChannelCmd(const char* ch)
 {
-  if (keyContext->fits) {
-    OutFitsChannel str(interp, ch);
+  if (!keyContext->fits)
+    return;
+
+  OutFitsChannel str(interp, ch);
+  if (str.valid())
     saveFitsRGBImage(str);
-  }
 }
 
 void FrameRGB::saveFitsRGBImageSocketCmd(int ss)
 {
-  if (keyContext->fits) {
-    OutFitsSocket str(ss);
+  if (!keyContext->fits)
+    return;
+
+  OutFitsSocket str(ss);
+  if (str.valid())
     saveFitsRGBImage(str);
-  }
 }
 
 void FrameRGB::saveFitsRGBCubeFileCmd(const char* fn)
 {
-  if (keyContext->fits) {
-    OutFitsFile str(fn);
+  if (!keyContext->fits)
+    return;
+
+  OutFitsFile str(fn);
+  if (str.valid())
     saveFitsRGBCube(str);
-  }
 }
 
 void FrameRGB::saveFitsRGBCubeChannelCmd(const char* ch)
 {
-  if (keyContext->fits) {
-    OutFitsChannel str(interp, ch);
+  if (!keyContext->fits)
+    return;
+
+  OutFitsChannel str(interp, ch);
+  if (str.valid())
     saveFitsRGBCube(str);
-  }
 }
 
 void FrameRGB::saveFitsRGBCubeSocketCmd(int ss)
 {
-  if (keyContext->fits) {
-    OutFitsSocket str(ss);
+  if (!keyContext->fits)
+    return;
+
+  OutFitsSocket str(ss);
+  if (str.valid())
     saveFitsRGBCube(str);
-  }
 }
 
 void FrameRGB::saveArrayRGBCubeFileCmd(const char* fn, FitsFile::ArchType endian)
 {
-  if (keyContext->fits) {
-    OutFitsFile str(fn);
+  if (!keyContext->fits)
+    return;
+
+  OutFitsFile str(fn);
+  if (str.valid())
     saveArrayRGBCube(str, endian);
-  }
 }
 
 void FrameRGB::saveArrayRGBCubeChannelCmd(const char* ch, FitsFile::ArchType endian)
 {
-  if (keyContext->fits) {
-    OutFitsChannel str(interp, ch);
+  if (!keyContext->fits)
+    return;
+
+  OutFitsChannel str(interp, ch);
+  if (str.valid())
     saveArrayRGBCube(str, endian);
-  }
 }
 
 void FrameRGB::saveArrayRGBCubeSocketCmd(int ss, FitsFile::ArchType endian)
 {
-  if (keyContext->fits) {
-    OutFitsSocket str(ss);
+  if (!keyContext->fits)
+    return;
+
+  OutFitsSocket str(ss);
+  if (str.valid())
     saveArrayRGBCube(str, endian);
-  }
 }
 
 void FrameRGB::savePhotoCmd(const char* ph)

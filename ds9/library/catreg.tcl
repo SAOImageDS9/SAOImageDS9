@@ -30,6 +30,7 @@ proc CATReg {varname row interactive resultname} {
     # text: subst
     # size1: expr
     # size2: expr
+    # units: constant
     # angle: expr
 
     # valid cols?

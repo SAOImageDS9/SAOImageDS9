@@ -194,7 +194,7 @@ switch $ds9(wm) {
 	    source $ds9(root)/tcl8/8.5/msgcat-1.5.2.tm
 	}
 	if {![namespace exists http]} {
-	    source $ds9(root)/tcl8/8.6/http-2.8.9.tm
+	    source $ds9(root)/tcl8/8.6/http-2.8.11.tm
 	    source $ds9(root)/library/htp.tcl
 	}
 

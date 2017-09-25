@@ -73,6 +73,7 @@ proc VOCancel {varname} {
 
     # set state to 0 so that we don't process the finish proc
     set var(active) 0
+    set var(valid) 0
 
     if {[info exists var(token)]} {
 	http::reset $var(token)
@@ -110,13 +111,7 @@ proc VODone {varname} {
     global $varname
 
     VOReset $varname
-}
-
-proc VOCancelled {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    VOReset $varname
+    set var(valid) 1
 }
 
 proc VOError {varname message} {
@@ -125,9 +120,10 @@ proc VOError {varname message} {
 
     Error $message
     VOReset $varname
+    set var(valid) 0
 }
 
-proc VODialog {{sync 0}} {
+proc VODialog {} {
     global ivo
     global pvo
 
@@ -145,7 +141,6 @@ proc VODialog {{sync 0}} {
     # variables
     set var(top) $ivo(top)
     set var(mb) $ivo(mb)
-    set var(sync) $sync
     set var(url) {}
 
     # create the window
@@ -238,66 +233,42 @@ proc VOApply {varname} {
     set ivo(server,url) {}
     set ivo(server,button) {}
 
-    VOFindServer $varname
-    if {$var(url) != {}} {
-	VOLoad $varname 
-    } else {
-	VOLoadDefault $varname
+    # first try
+    if {$pvo(server) != {}} {
+	set var(valid) 0
+	set var(url) $pvo(server)
+	VOLoad $varname
+	if {$var(valid)} {
+	    VOKeepAlive 0
+	    return
+	}
+    }
+    
+    # next try
+    set var(valid) 0
+    set var(url) {http://cxc.harvard.edu/chandraed/list.txt}
+    VOLoad $varname
+    if {$var(valid)} {
+	VOKeepAlive 0
+	return
     }
 
-    # start or stop the keep-alive, as needed
-    VOKeepAlive 0
-}
+    # last try
+    set var(url) {http://xray1.physics.rutgers.edu/vo/list.txtt}
+    VOLoad $varname
+    if {$var(valid)} {
+	VOKeepAlive 0
+	return
+    }
 
-proc VOLoadDefault {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    # hardcode
+    # default
     VOError $varname "Unable to access VO server list, please verify internet connection. Using default list."
 
     set rr {xray1.physics.rutgers.edu:28571	Rutgers Primary MOOC X-ray Analysis Server	http://xray1.physics.rutgers.edu/archive.html
 rinzai.rutgers.edu:28571	Rutgers X-ray Analysis Server #2	http://rinzai.rutgers.edu/archive.html}
-
     VOParse $varname $rr
-}
 
-proc VOFindServer {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global pvo
-    if {[VOCheckServer $varname $pvo(server)]} {
-	return
-    }
-    if {[VOCheckServer $varname {http://cxc.harvard.edu/chandraed/list.txt}]} {
-	return
-    }
-    if {[VOCheckServer $varname {http://cxc.harvard.edu/chandraed/test.txt}]} {
-	return
-    }
-    if {[VOCheckServer $varname {http://chandra-ed.rutgers.edu/vo/list.txt}]} {
-	return
-    }
-    if {[VOCheckServer $varname {http://chandra-ed.cfa.harvard.edu/vo/list.txt}]} {
-	return
-    }
-}
-
-proc VOCheckServer {varname url} {
-    upvar #0 $varname var
-    global $varname
-
-    ParseURL $url rr
-    set var(url) $url
-
-    if {[checkdns $rr(authority) 3 1] == 0} {
-	set var(url) $url
-	return 1
-    } else {
-	set var(url) {}
-	return 0
-    }
+    VOKeepAlive 0
 }
 
 proc VOLoad {varname} {
@@ -305,34 +276,16 @@ proc VOLoad {varname} {
     global $varname
 
     global ihttp
-    if {$var(sync)} {
-	if {![catch {set var(token) [http::geturl $var(url) \
-					 -timeout $ihttp(timeout) \
-					 -headers "[ProxyHTTP]"]
-	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
+    if {![catch {set var(token) [http::geturl $var(url) \
+				     -timeout $ihttp(timeout) \
+				     -headers "[ProxyHTTP]"]
+    }]} {
+	# reset errorInfo (may be set in http::geturl)
+	global errorInfo
+	set errorInfo {}
 
-	    set var(active) 1
-	    VOFinish $varname $var(token)
-	} else {
-	    VOLoadDefault $varname
-	}
-    } else {
-	if {![catch {set var(token) [http::geturl $var(url) \
-					 -timeout $ihttp(timeout) \
-					 -command [list VOFinish $varname] \
-					 -headers "[ProxyHTTP]"]
-	}]} {
-	    # reset errorInfo (may be set in http::geturl)
-	    global errorInfo
-	    set errorInfo {}
-
-	    set var(active) 1
-	} else {
-	    VOLoadDefault $varname
-	}
+	set var(active) 1
+	VOFinish $varname $var(token)
     }
 }
 
@@ -341,7 +294,8 @@ proc VOFinish {varname token} {
     global $varname
 
     if {!($var(active))} {
-	VOCancelled $varname
+	VOReset $varname
+	set var(valid) 0
 	return
     }
 
@@ -387,8 +341,6 @@ proc VOFinish {varname token} {
 		}
 	    }
 	}
-
-	default {VOError $varname [msgcat::mc {An error has occurred while updating VO server list}]}
     }
 }
 
@@ -446,7 +398,7 @@ proc VOCheck {varname ii} {
 	if {$pvo(hv)} {
 	    set url [lindex $ivo(server,url) $ii]
 	    ParseURL $url r
-	    HV "vo$ii" "$r(authority)" $url {} $var(sync)
+	    HV "vo$ii" "$r(authority)" $url {} 1
 	}
     } else {
 	switch $pvo(method) {
@@ -543,7 +495,7 @@ proc ProcessVOCmd {varname iname} {
 	connect {
 	    incr i
 
-	    VODialog 1
+	    VODialog
 
 	    # find best match
 	    set ii [lsearch $ivo(server,url) "*[lindex $var $i]*"]
@@ -555,7 +507,7 @@ proc ProcessVOCmd {varname iname} {
 	disconnect {
 	    incr i
 
-	    VODialog 1
+	    VODialog
 
 	    # find best match
 	    set ii [lsearch $ivo(server,url) "*[lindex $var $i]*"]
@@ -565,7 +517,7 @@ proc ProcessVOCmd {varname iname} {
 	    }
 	}
 	default {
-	    VODialog 1
+	    VODialog
 
 	    # find best match
 	    set ii [lsearch $ivo(server,url) "*[lindex $var $i]*"]
@@ -598,7 +550,7 @@ proc ProcessSendVOCmd {proc id param} {
 	    $proc $id $rr
 	}
 	default {
-	    VODialog 1
+	    VODialog
 	    # all possible connections
 	    set len [llength $ivo(server,button)]
 	    set rr {}

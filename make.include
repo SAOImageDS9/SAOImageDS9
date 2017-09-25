@@ -1,6 +1,5 @@
 # tcl 8.6.6
 # tk 8.6.6
-# tclcheckdns 1.1
 # tcliis 1.0
 # tcllib 1.18
 # tclsignal 1.4
@@ -53,7 +52,7 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tclcheckdns tcliis tclsignal tclxml tclzvfs tls xpa
+.PHONY	: all dirs ds9 tcliis tclsignal tclxml tclzvfs tls xpa
 .PHONY	: tkblt tkcon tkhtml1 tkimg tkmpeg tksao tktable
 .PHONY	: ast funtools
 
@@ -86,23 +85,6 @@ ds9/$(OS)/Makefile :
 	$(WITHTK) \
 	$(PREFIX) \
 	$(STD)
-
-#-------------------------- tclcheckdns
-
-tclcheckdns : tclcheckdns/Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tclcheckdns -j $(JOBS) install
-
-tclcheckdns/Makefile :
-	@echo ""
-	@echo "*** $@ ***"
-	cd tclcheckdns; \
-	./configure \
-	$(WITHTCL) \
-	$(PREFIX) \
-	$(STD) \
-	$(CACHE)
 
 #-------------------------- tcliis
 
@@ -452,13 +434,13 @@ scrub :
 
 .PHONY	: clean
 .PHONY	: dirsclean ds9clean localclean
-.PHONY	: tclcheckdnsclean tcliisclean tclsignalclean 
+.PHONY	: tcliisclean tclsignalclean 
 .PHONY	: tclxmlclean tclzvfsclean tlsclean
 .PHONY	: tkbltclean tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksaoclean astclean funtoolsclean tktableclean xpaclean
 
 clean	: tclclean tkclean \
-	tclcheckdnsclean tcliisclean tclsignalclean \
+	tcliisclean tclsignalclean \
 	tclzvfsclean tlsclean tclxmlclean xpaclean \
 	tkbltclean tkconclean tktableclean tkimgclean \
 	tkmpegclean tkhtml1clean \

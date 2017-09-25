@@ -61,9 +61,6 @@ TEA_LOAD_CONFIG(jpegtcl)
 TEA_PATH_CONFIG(zlibtcl)
 TEA_LOAD_CONFIG(zlibtcl)
 
-TEA_PATH_CONFIG(tclcheckdns)
-TEA_LOAD_CONFIG(tclcheckdns)
-
 TEA_PATH_CONFIG(tcliis)
 TEA_LOAD_CONFIG(tcliis)
 

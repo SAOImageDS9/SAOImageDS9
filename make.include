@@ -462,11 +462,6 @@ localclean :
 	@echo "*** $@ ***"
 	-rm -f core *~ *#
 
-tclcheckdnsclean :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tclcheckdns clean
-
 tcliisclean :
 	@echo ""
 	@echo "*** $@ ***"
@@ -545,7 +540,7 @@ xpaclean :
 #-------------------------- distclean
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
-.PHONY	: tclcheckdnsdistclean tcliisdistclean tclsignaldistclean 
+.PHONY	: tcliisdistclean tclsignaldistclean 
 .PHONY	: tclxmldistclean tclzvfsdistclean tlsdistclean
 .PHONY	: tkbltdistclean tkcondistclean tkhtml1distclean 
 .PHONY	: tkimgdistclean tkmpegdistclean 
@@ -553,7 +548,7 @@ xpaclean :
 .PHONY	: tktabledistclean xpadistclean
 
 distclean : tcldistclean tkdistclean \
-	tclcheckdnsdistclean tcliisdistclean tclsignaldistclean \
+	tcliisdistclean tclsignaldistclean \
 	tclzvfsdistclean tlsdistclean tclxmldistclean xpadistclean \
 	tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
 	tkmpegdistclean tkhtml1distclean \
@@ -575,11 +570,6 @@ localdistclean :
 	@echo "*** $@ ***"
 	-rm -f core *~ *#
 	-rm -f config.log config.status config.cache Makefile 
-
-tclcheckdnsdistclean :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tclcheckdns distclean
 
 tcliisdistclean :
 	@echo ""

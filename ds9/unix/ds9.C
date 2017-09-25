@@ -138,12 +138,6 @@ int SAOAppInit(Tcl_Interp *interp)
   Tcl_StaticPackage (interp, "Tktable", Tktable_Init, 
 		     (Tcl_PackageInitProc*)NULL);
 
-  // Tclcheckdns
-  if (Tclcheckdns_Init(interp) == TCL_ERROR)
-    return TCL_ERROR;
-  Tcl_StaticPackage (interp, "tclcheckdns", Tclcheckdns_Init, 
-		     (Tcl_PackageInitProc*)NULL);
-
   // Tls
   if (Tls_Init(interp) == TCL_ERROR)
     return TCL_ERROR;

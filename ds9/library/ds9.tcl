@@ -317,10 +317,6 @@ switch $ds9(wm) {
 	package require xmlrpc
 
 	package require DS9
-
-	proc checkdns {a b {c {}}} {
-	    return 0
-	}
     }
 }
 

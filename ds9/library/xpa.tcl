@@ -9,23 +9,6 @@ proc InitXPA {} {
     global pds9
     global env
 
-    # this is needed
-    # if there is a problem (usually with VPN), XPA will hang
-    # so preempt and set to local before XPAINIT
-    if {[info exists env(XPA_METHOD)]} {
-	if {$env(XPA_METHOD) != {local}} {
-	    if {[checkdns {} 5]} {
-		set env(XPA_METHOD) local
-		Error [msgcat::mc {XPA unable to verify hostname, setting XPA_METHOD to LOCAL}]
-	    }
-	}
-    } else {
-	if {[checkdns {} 5]} {
-	    set env(XPA_METHOD) local
-	    Error [msgcat::mc {XPA unable to verify hostname, setting XPA_METHOD to LOCAL}]
-	}
-    }
-    
     switch -- $ds9(wm) {
 	x11 -
 	win32 {}

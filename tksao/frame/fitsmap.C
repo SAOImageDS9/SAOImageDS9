@@ -289,31 +289,33 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
 	astClearStatus; // just to make sure
 	astBegin; // start memory management
 
-	if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT))) {
-	  dd = degToRad(dd);
+	AstFrameSet* wcs = (AstFrameSet*)astCopy(ast_[ss]);
+	double rdd = dd;
+	if (astIsASkyFrame(astGetFrame(wcs, AST__CURRENT))) {
+	  rdd = degToRad(dd);
 	  switch (dist) {
 	  case Coord::DEGREE:
 	    break;
 	  case Coord::ARCMIN:
-	    dd /= 60.;
+	    rdd /= 60.;
 	    break;
 	  case Coord::ARCSEC:
-	    dd /= 60.*60.;
+	    rdd /= 60.*60.;
 	    break;
 	  }
 	}
 
 	Vector cc = center();
 	Vector wcc;
-	astTran2(ast_[ss],1,cc.v,cc.v+1,1,wcc.v,wcc.v+1);
+	astTran2(wcs,1,cc.v,cc.v+1,1,wcc.v,wcc.v+1);
 
 	double wxx[2], xx[2];
 	wxx[0] = wcc[0];
 	wxx[1] = wcc[0];
 	double wyy[2], yy[2];
 	wyy[0] = wcc[1];
-	wyy[1] = wcc[1]+dd;
-	astTran2(ast_[ss],2,wxx,wyy,0,xx,yy);
+	wyy[1] = wcc[1]+rdd;
+	astTran2(wcs,2,wxx,wyy,0,xx,yy);
 
 	double pt0[2];
 	pt0[0] = xx[0];
@@ -322,9 +324,8 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
 	pt1[0] = xx[1];
 	pt1[1] = yy[1];
 
-	astInvert(ast_[ss]);
-	double out = astDistance(ast_[ss],pt0,pt1);
-	astInvert(ast_[ss]);
+	astInvert(wcs);
+	double out = astDistance(wcs,pt0,pt1);
 	astEnd; // now, clean up memory
 
 	return out;

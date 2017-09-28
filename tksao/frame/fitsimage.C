@@ -2898,7 +2898,6 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
     return 0;
 
   astClearStatus; // just to make sure
-  astBegin; // start memory management
 
   Vector cc = center();
   double xx[2], wxx[2];
@@ -2918,35 +2917,46 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
   double out = astDistance(ast_[ss],pt0,pt1);
 
   if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
-    out = radToDeg(out);
-
-  astEnd; // now, clean up memory
-
-  return out;
+    return radToDeg(out);
+  else
+    return out;
 }
 
-Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
+double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
 {
   int ss = sys-Coord::WCS;
   if (!(ss>=0 && ast_ && ast_[ss]))
-    return Vector();
+    return 0;
+
+  astClearStatus; // just to make sure
 
   Vector cc = center();
-  Vector wcc;
-  astTran2(ast_[ss], 1, cc.v, cc.v+1, 1, wcc.v, wcc.v+1);
-  Vector oo = cc+Vector(1,1);
-  Vector woo;
-  astTran2(ast_[ss], 1, oo.v, oo.v+1, 1, woo.v, woo.v+1);
+  double xx[3], wxx[3];
+  xx[0] = cc[0];
+  xx[1] = cc[0];
+  xx[2] = cc[0];
+  double yy[3], wyy[3];
+  yy[0] = cc[1];
+  yy[1] = cc[1]+1;
+  yy[2] = cc[1]+1;
+  astTran2(ast_[ss],3,xx,yy,1,wxx,wyy);
 
-  double dd = astDistance(ast_[ss], wcc.v, woo.v);
-  if (dd != AST__BAD) {
-    if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
-      dd *= 180./M_PI;
-    dd /=sqrt(2);
-    return Vector(dd,dd);
-  }
+  double pt0[2];
+  pt0[0] = wxx[0];
+  pt0[1] = wyy[0];
+  double pt1[2];
+  pt1[0] = wxx[1];
+  pt1[1] = wyy[1];
+  double pt2[2];
+  pt2[0] = wxx[2];
+  pt2[1] = wyy[2];
+  double ll = astDistance(ast_[ss],pt0,pt1);
+  double mm = astDistance(ast_[ss],pt0,pt2);
+
+  if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
+    return radToDeg(ll)*radToDeg(mm);
   else
-    return Vector();
+    return ll*mm;
 }
 #endif
 
@@ -2990,7 +3000,6 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
     return Coord::NORMAL;
 
   astClearStatus; // just to make sure
-  astBegin; // start memory management
 
   if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
     setAstSkyFrame(ast_[ss],sky);
@@ -3021,7 +3030,6 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
     else
       rr = ang<=0 ? Coord::NORMAL : Coord::XX;
   }
-  astEnd; // now, clean up memory
 
   return rr;
 }
@@ -3058,7 +3066,6 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
     return 0;
 
   astClearStatus; // just to make sure
-  astBegin; // start memory management
 
   if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
     setAstSkyFrame(ast_[ss],sky);
@@ -3077,7 +3084,6 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   bb[0]= wx[1];
   bb[1]= wy[1];
   double ang = astAxAngle(ast_[ss],aa,bb,2);
-  astEnd; // now, clean up memory
 
   if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
     return getWCSOrientation(sys,sky) == Coord::NORMAL ? ang : -ang;
@@ -3303,24 +3309,20 @@ Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
 
 double FitsImage::wcsdist(Vector a, Vector b, Coord::CoordSystem sys)
 {
-  astClearStatus;
+  int ss = sys-Coord::WCS;
+  if (!(ss>=0 && ast_ && ast_[ss]))
+    return 0;
 
-  int ii = sys-Coord::WCS;
+  astClearStatus; // just to make sure
+
   double rr=0;
-  if (ii>=0 && ast_ && ast_[ii]) {
-    if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT))) {
-      Vector aa = a*M_PI/180.;
-      Vector bb = b*M_PI/180.;
-      rr = astDistance(ast_[ii], aa.v, bb.v) *180./M_PI;
-    }
-    else
-      rr = astDistance(ast_[ii], a.v, b.v);
-
-    if (!astOK) {
-      maperr =1;
-      return 0;
-    }
+  if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT))) {
+    Vector aa = a*M_PI/180.;
+    Vector bb = b*M_PI/180.;
+    rr = astDistance(ast_[ss], aa.v, bb.v) *180./M_PI;
   }
+  else
+    rr = astDistance(ast_[ss], a.v, b.v);
 
   return rr;
 }

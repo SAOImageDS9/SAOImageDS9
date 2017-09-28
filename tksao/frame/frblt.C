@@ -374,27 +374,28 @@ int Base::markerAnalysisRadial(Marker* pp, double** x, double** y, double** e,
   if (ptr->hasWCS(sys)) {
 #ifndef NEWWCS
     Vector cdelt= ptr->getWCScdelt(sys);
-    if (ptr->hasWCSCel(sys)) {
-      unit =1;
-      xaxis = fabs(cdelt[0]*60*60);
-    }
-    else {
-      unit =2;
-      xaxis = fabs(cdelt[0]);
-    }
+    double ll = fabs(cdelt[0]);
 #else
-    xaxis = ptr->getWCSPixelSize(sys);
+    double ll = ptr->getWCSPixelSize(sys);
+#endif
+
     if (ptr->hasWCSCel(sys)) {
       unit =1;
-      xaxis *= 60*60;
+      xaxis = ll*60*60;
     }
     else {
       unit =2;
+      xaxis = ll;
     }
-#endif
   }
-
+    
+#ifndef NEWWCS
   Vector cdelt= ptr->getWCScdelt(sys);
+  double aa = fabs(cdelt[0]*cdelt[1]);
+#else
+  double aa = ptr->getWCSPixelArea(sys);
+#endif
+
   for (int kk=0; kk<num; kk++) {
     double err = sqrt(fabs(sum[kk]));
     double area =0;
@@ -407,11 +408,11 @@ int Base::markerAnalysisRadial(Marker* pp, double** x, double** y, double** e,
       break;
     case 1:
       // Cel WCS
-      area = fabs(cdelt[0]*cdelt[1]*60*60*60*60*cnt[kk]);
+      area = aa*60*60*60*60*cnt[kk];
       break;
     case 2:
       // Linear WCS
-      area = fabs(cdelt[0]*cdelt[1]*cnt[kk]);
+      area = aa*cnt[kk];
       break;
     }
 
@@ -436,7 +437,7 @@ int Base::markerAnalysisRadial(Marker* pp, double** x, double** y, double** e,
 // for panda regions
 int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e, 
 			       int num, Vector* annuli, 
-			       int aa, double* angles,
+			       int na, double* angles,
 			       BBox* bb, Coord::CoordSystem sys)
 
 {
@@ -449,10 +450,10 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
   int srcw = ptr->width();
   FitsBound* params = ptr->getDataParams(currentContext->secMode());
 
-  double sum[num][aa];
-  memset(sum,0,num*aa*sizeof(double));
-  int cnt[num][aa];
-  memset(cnt,0,num*aa*sizeof(int));
+  double sum[num][na];
+  memset(sum,0,num*na*sizeof(double));
+  int cnt[num][na];
+  memset(cnt,0,num*na*sizeof(int));
 
   for (int kk=0; kk<num; kk++) {
     // take the bbox and extend to lower/upper pixel boundaries
@@ -461,7 +462,7 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
 
     // main loop
     SETSIGBUS
-      for (int qq=0; qq<aa; qq++) {
+      for (int qq=0; qq<na; qq++) {
 
 	for (int jj=ll[1]; jj<ur[1]; jj++) {
 	  for (int ii=ll[0]; ii<ur[0]; ii++) {
@@ -487,36 +488,37 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
     CLEARSIGBUS
   }
 
-  *x = (double*)malloc(num*aa*sizeof(double));
-  *y = (double*)malloc(num*aa*sizeof(double));
-  *e = (double*)malloc(num*aa*sizeof(double));
+  *x = (double*)malloc(num*na*sizeof(double));
+  *y = (double*)malloc(num*na*sizeof(double));
+  *e = (double*)malloc(num*na*sizeof(double));
 
   int unit =0;
   double xaxis =1;
   if (ptr->hasWCS(sys)) {
 #ifndef NEWWCS
     Vector cdelt= ptr->getWCScdelt(sys);
-    if (ptr->hasWCSCel(sys)) {
-      unit =1;
-      xaxis = fabs(cdelt[0]*60*60);
-    }
-    else {
-      unit =2;
-      xaxis = fabs(cdelt[0]);
-    }
+    double ll = fabs(cdelt[0]);
 #else
-    xaxis = ptr->getWCSPixelSize(sys);
+    double ll = ptr->getWCSPixelSize(sys);
+#endif
+
     if (ptr->hasWCSCel(sys)) {
       unit =1;
-      xaxis *= 60*60;
+      xaxis = ll*60*60;
     }
     else {
       unit =2;
+      xaxis = ll;
     }
-#endif
   }
 
+#ifndef NEWWCS
   Vector cdelt= ptr->getWCScdelt(sys);
+  double aa = fabs(cdelt[0]*cdelt[1]);
+#else
+  double aa= ptr->getWCSPixelArea(sys);
+#endif
+
   for (int qq=0; qq<aa; qq++) {
     for (int kk=0; kk<num; kk++) {
       double err = sqrt(fabs(sum[kk][qq]));
@@ -530,11 +532,11 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
 	break;
       case 1:
 	// Cel WCS
-	area = fabs(cdelt[0]*cdelt[1]*60*60*60*60*cnt[kk][qq]);
+	area = aa*60*60*60*60*cnt[kk][qq];
 	break;
       case 2:
 	// Linear WCS
-	area = fabs(cdelt[0]*cdelt[1]*cnt[kk][qq]);
+	area = aa*cnt[kk][qq];
 	break;
       }
 
@@ -830,9 +832,14 @@ int Base::markerAnalysisStats1(Marker* pp,FitsImage* ptr, ostream& str,
     return 0;
   default: 
     {
+#ifndef NEWWCS
       Vector cdelt= ptr->getWCScdelt(sys);
+      double ll = fabs(cdelt[0]);
+#else
+      double ll = ptr->getWCSPixelSize(sys);
+#endif
       if (ptr->hasWCSCel(sys)) {
-	str << "1 pixel = "<< fabs(cdelt[0]*60*60) << " arcsec";
+	str << "1 pixel = "<< ll*60*60 << " arcsec";
 	str << endl << endl;
 	str << "reg\t" << "sum\t" << "error\t\t" 
 	    << "area\t\t" << "surf_bri\t\t" << "surf_err" << endl
@@ -843,7 +850,7 @@ int Base::markerAnalysisStats1(Marker* pp,FitsImage* ptr, ostream& str,
 	return 1;
       }
       else {
-	str << "1 pixel = "<< fabs(cdelt[0]);
+	str << "1 pixel = "<< ll;
 	str << endl << endl;
 	str << "reg\t" << "sum\t" << "error\t\t" 
 	    << "area\t\t" << "surf_bri\t\t" << "surf_err" << endl
@@ -871,15 +878,25 @@ void Base::markerAnalysisStats2(FitsImage* ptr, ostream& str,
   case 1:
     {
       // Cel WCS
+#ifndef NEWWCS
       Vector cdelt= ptr->getWCScdelt(sys);
-      area = fabs(cdelt[0]*cdelt[1]*60*60*60*60*cnt);
+      double aa = fabs(cdelt[0]*cdelt[1]);
+#else
+      double aa = ptr->getWCSPixelArea(sys);
+#endif
+      area = aa*60*60*60*60*cnt;
     }
     break;
   case 2:
     {
       // Linear WCS
+#ifndef NEWWCS
       Vector cdelt= ptr->getWCScdelt(sys);
-      area = fabs(cdelt[0]*cdelt[1]*cnt);
+      double aa = fabs(cdelt[0]*cdelt[1]);
+#else
+      double aa = ptr->getWCSPixelArea(sys);
+#endif
+      area = aa*cnt;
     }
     break;
   }

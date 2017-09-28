@@ -388,9 +388,11 @@ class FitsImage {
   {return (wcs_ && wcs_[sys-Coord::WCS]) ? wcs_[sys-Coord::WCS]->wcsname : NULL;}
   Coord::Orientation getWCSOrientation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSRotation(Coord::CoordSystem, Coord::SkyFrame);
+#ifndef NEWWCS
   Vector getWCScdelt(Coord::CoordSystem);
-#ifdef NEWWCS
+#else
   double getWCSPixelSize(Coord::CoordSystem);
+  double getWCSPixelArea(Coord::CoordSystem);
 #endif
   
 #ifdef NEWWCS

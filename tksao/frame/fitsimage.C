@@ -2891,6 +2891,40 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
     return Vector();
 }
 #else
+double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
+{
+  int ss = sys-Coord::WCS;
+  if (!(ss>=0 && ast_ && ast_[ss]))
+    return 0;
+
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
+  Vector cc = center();
+  double xx[2], wxx[2];
+  xx[0] = cc[0];
+  xx[1] = cc[0];
+  double yy[2], wyy[2];
+  yy[0] = cc[1];
+  yy[1] = cc[1]+1;
+  astTran2(ast_[ss],2,xx,yy,1,wxx,wyy);
+
+  double pt0[2];
+  pt0[0] = wxx[0];
+  pt0[1] = wyy[0];
+  double pt1[2];
+  pt1[0] = wxx[1];
+  pt1[1] = wyy[1];
+  double out = astDistance(ast_[ss],pt0,pt1);
+
+  if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
+    out = radToDeg(out);
+
+  astEnd; // now, clean up memory
+
+  return out;
+}
+
 Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
 {
   int ss = sys-Coord::WCS;
@@ -2951,45 +2985,45 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
 Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
 						Coord::SkyFrame sky)
 {
-  if (hasWCS(sys)) {
-    int ss = sys-Coord::WCS;
-    astClearStatus; // just to make sure
-    astBegin; // start memory management
+  int ss = sys-Coord::WCS;
+  if (!(ss>=0 && ast_ && ast_[ss]))
+    return Coord::NORMAL;
 
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
+  if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
+    setAstSkyFrame(ast_[ss],sky);
+
+  Vector pp = center();
+  double xx[3], yy[3], wx[3], wy[32];
+  xx[0] = pp[0];
+  xx[1] = pp[0];
+  xx[2] = pp[0]+1;
+  yy[0] = pp[1];
+  yy[1] = pp[1]+1;
+  yy[2] = pp[1];
+  astTran2(ast_[ss],3,xx,yy,1,wx,wy);
+
+  double aa[2], bb[2], cc[2];
+  aa[0]= wx[0];
+  aa[1]= wy[0];
+  bb[0]= wx[1];
+  bb[1]= wy[1];
+  cc[0]= wx[2];
+  cc[1]= wy[2];
+  double ang = astAngle(ast_[ss],aa,bb,cc);
+
+  Coord::Orientation rr = Coord::NORMAL;
+  if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
     if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
-      setAstSkyFrame(ast_[ss],sky);
-
-    Vector pp = center();
-    double xx[3], yy[3], wx[3], wy[32];
-    xx[0] = pp[0];
-    xx[1] = pp[0];
-    xx[2] = pp[0]+1;
-    yy[0] = pp[1];
-    yy[1] = pp[1]+1;
-    yy[2] = pp[1];
-    astTran2(ast_[ss],3,xx,yy,1,wx,wy);
-
-    double aa[2], bb[2], cc[2];
-    aa[0]= wx[0];
-    aa[1]= wy[0];
-    bb[0]= wx[1];
-    bb[1]= wy[1];
-    cc[0]= wx[2];
-    cc[1]= wy[2];
-    double ang = astAngle(ast_[ss],aa,bb,cc);
-
-    Coord::Orientation rr = Coord::NORMAL;
-    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
-      if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
-	rr = ang>=0 ? Coord::NORMAL : Coord::XX;
-      else
-	rr = ang<=0 ? Coord::NORMAL : Coord::XX;
-    }
-    astEnd; // now, clean up memory
-    return rr;
+      rr = ang>=0 ? Coord::NORMAL : Coord::XX;
+    else
+      rr = ang<=0 ? Coord::NORMAL : Coord::XX;
   }
+  astEnd; // now, clean up memory
 
-  return Coord::NORMAL;
+  return rr;
 }
 #endif
 
@@ -3020,32 +3054,33 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
 double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   int ss = sys-Coord::WCS;
-  if (ss>=0 && ast_ && ast_[ss]) {
-    astClearStatus; // just to make sure
-    astBegin; // start memory management
+  if (!(ss>=0 && ast_ && ast_[ss]))
+    return 0;
 
-    if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
-      setAstSkyFrame(ast_[ss],sky);
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
 
-    Vector pp = center();
-    double xx[2], yy[2], wx[2], wy[2];
-    xx[0] = pp[0];
-    xx[1] = pp[0];
-    yy[0] = pp[1];
-    yy[1] = pp[1]+1;
-    astTran2(ast_[ss],2,xx,yy,1,wx,wy);
+  if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
+    setAstSkyFrame(ast_[ss],sky);
 
-    double aa[2], bb[2];
-    aa[0]= wx[0];
-    aa[1]= wy[0];
-    bb[0]= wx[1];
-    bb[1]= wy[1];
-    double ang = astAxAngle(ast_[ss],aa,bb,2);
-    astEnd; // now, clean up memory
+  Vector pp = center();
+  double xx[2], yy[2], wx[2], wy[2];
+  xx[0] = pp[0];
+  xx[1] = pp[0];
+  yy[0] = pp[1];
+  yy[1] = pp[1]+1;
+  astTran2(ast_[ss],2,xx,yy,1,wx,wy);
 
-    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
-      return getWCSOrientation(sys,sky) == Coord::NORMAL ? ang : -ang;
-  }
+  double aa[2], bb[2];
+  aa[0]= wx[0];
+  aa[1]= wy[0];
+  bb[0]= wx[1];
+  bb[1]= wy[1];
+  double ang = astAxAngle(ast_[ss],aa,bb,2);
+  astEnd; // now, clean up memory
+
+  if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
+    return getWCSOrientation(sys,sky) == Coord::NORMAL ? ang : -ang;
 
   return 0;
 }

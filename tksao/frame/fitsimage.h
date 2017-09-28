@@ -389,6 +389,9 @@ class FitsImage {
   Coord::Orientation getWCSOrientation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSRotation(Coord::CoordSystem, Coord::SkyFrame);
   Vector getWCScdelt(Coord::CoordSystem);
+#ifdef NEWWCS
+  double getWCSPixelSize(Coord::CoordSystem);
+#endif
   
 #ifdef NEWWCS
   void setAstSystem(AstFrameSet*, Coord::CoordSystem);

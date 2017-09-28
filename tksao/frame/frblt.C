@@ -369,25 +369,32 @@ int Base::markerAnalysisRadial(Marker* pp, double** x, double** y, double** e,
   *y = (double*)malloc(num*sizeof(double));
   *e = (double*)malloc(num*sizeof(double));
 
-  int unit;
-  Vector cdelt;
+  int unit =0;
   double xaxis =1;
-  if (ptr->hasWCS(sys))
+  if (ptr->hasWCS(sys)) {
+#ifndef NEWWCS
+    Vector cdelt= ptr->getWCScdelt(sys);
     if (ptr->hasWCSCel(sys)) {
       unit =1;
-      cdelt= ptr->getWCScdelt(sys);
       xaxis = fabs(cdelt[0]*60*60);
     }
     else {
       unit =2;
-      cdelt= ptr->getWCScdelt(sys);
       xaxis = fabs(cdelt[0]);
     }
-  else {
-    unit =0;
-    xaxis =1;
+#else
+    xaxis = ptr->getWCSPixelSize(sys);
+    if (ptr->hasWCSCel(sys)) {
+      unit =1;
+      xaxis *= 60*60;
+    }
+    else {
+      unit =2;
+    }
+#endif
   }
 
+  Vector cdelt= ptr->getWCScdelt(sys);
   for (int kk=0; kk<num; kk++) {
     double err = sqrt(fabs(sum[kk]));
     double area =0;
@@ -484,25 +491,32 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
   *y = (double*)malloc(num*aa*sizeof(double));
   *e = (double*)malloc(num*aa*sizeof(double));
 
-  int unit;
-  Vector cdelt;
+  int unit =0;
   double xaxis =1;
-  if (ptr->hasWCS(sys))
+  if (ptr->hasWCS(sys)) {
+#ifndef NEWWCS
+    Vector cdelt= ptr->getWCScdelt(sys);
     if (ptr->hasWCSCel(sys)) {
       unit =1;
-      cdelt= ptr->getWCScdelt(sys);
       xaxis = fabs(cdelt[0]*60*60);
     }
     else {
       unit =2;
-      cdelt= ptr->getWCScdelt(sys);
       xaxis = fabs(cdelt[0]);
     }
-  else {
-    unit =0;
-    xaxis =1;
+#else
+    xaxis = ptr->getWCSPixelSize(sys);
+    if (ptr->hasWCSCel(sys)) {
+      unit =1;
+      xaxis *= 60*60;
+    }
+    else {
+      unit =2;
+    }
+#endif
   }
 
+  Vector cdelt= ptr->getWCScdelt(sys);
   for (int qq=0; qq<aa; qq++) {
     for (int kk=0; kk<num; kk++) {
       double err = sqrt(fabs(sum[kk][qq]));

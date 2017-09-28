@@ -458,15 +458,15 @@ double FitsImage::mapDistFromRef(const Vector& vv1, const Vector& vv2,
       if (hasWCSCel(sys)) {
 	switch (dist) {
 	case Coord::DEGREE:
-	  return wcsdist(v1,v2,sys);
+	  return getWCSDist(v1,v2,sys);
 	case Coord::ARCMIN:
-	  return wcsdist(v1,v2,sys)*60;
+	  return getWCSDist(v1,v2,sys)*60;
 	case Coord::ARCSEC:
-	  return wcsdist(v1,v2,sys)*60*60;
+	  return getWCSDist(v1,v2,sys)*60*60;
 	}
       }
       else
-	return wcsdist(v1,v2,sys);
+	return getWCSDist(v1,v2,sys);
     }
   }
 

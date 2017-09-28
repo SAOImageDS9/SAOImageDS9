@@ -3307,7 +3307,7 @@ Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
   return out;
 }
 
-double FitsImage::wcsdist(Vector a, Vector b, Coord::CoordSystem sys)
+double FitsImage::getWCSDist(Vector a, Vector b, Coord::CoordSystem sys)
 {
   int ss = sys-Coord::WCS;
   if (!(ss>=0 && ast_ && ast_[ss]))

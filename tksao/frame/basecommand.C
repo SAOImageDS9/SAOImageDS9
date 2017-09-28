@@ -1755,8 +1755,8 @@ void Base::getFitsSizeCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
     for (int ii=1; ii<4; ii++)
       wbb.bound(ww[ii]);
 
-    Vector ss(keyContext->fits->wcsdist(wbb.ll,wbb.lr(),sys),
-	      keyContext->fits->wcsdist(wbb.ll,wbb.ul(),sys));
+    Vector ss(keyContext->fits->getWCSDist(wbb.ll,wbb.lr(),sys),
+	      keyContext->fits->getWCSDist(wbb.ll,wbb.ul(),sys));
 
     ostringstream str;
     str << fixed;

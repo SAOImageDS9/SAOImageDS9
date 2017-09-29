@@ -1656,8 +1656,7 @@ proc ProcessCatalog {varname iname cvarname} {
 	    CATGenerate $cvarname
 	}
 	regions {CATGenerateRegions $cvarname}
-	retrieve -
-	retreive {CATApply $cvarname 1}
+	retrieve {CATApply $cvarname 1}
 	samp {
 	    global ds9
 	    global samp

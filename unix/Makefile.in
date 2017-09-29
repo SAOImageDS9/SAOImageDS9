@@ -26,7 +26,7 @@ CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 .PHONY	: saods9 tcl tk
 
 saods9	: dirs tcl tk \
-	tclcheckdns tcliis tclsignal \
+	tcliis tclsignal \
 	tclzvfs tls tclxml xpa \
 	tkblt tktable tkimg \
 	tkmpeg tkhtml1 tkcon \

@@ -2881,11 +2881,24 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
   if (hasWCS(sys)) {
     int ii = sys-Coord::WCS;
 
-    // The scaling factor mag is in cdelt
-    if (!wcs_[ii]->coorflip)
-      return Vector(wcs_[ii]->cdelt[0], wcs_[ii]->cdelt[1]);
-    else
-      return Vector(wcs_[ii]->cdelt[1], wcs_[ii]->cdelt[0]);
+    // special case
+    if (wcs_[ii]->pc[0] != 1 && wcs_[ii]->pc[3] != 1) {
+      double pc1 = sqrt(wcs_[ii]->pc[0]*wcs_[ii]->pc[0] +
+			wcs_[ii]->pc[2]*wcs_[ii]->pc[2]);
+      double pc2 = sqrt(wcs_[ii]->pc[1]*wcs_[ii]->pc[1] +
+			wcs_[ii]->pc[3]*wcs_[ii]->pc[3]);
+      if (!wcs_[ii]->coorflip)
+	return Vector(pc1, pc2);
+      else
+	return Vector(pc2, pc1);
+    }
+    else {
+      // The scaling factor mag is in cdelt
+      if (!wcs_[ii]->coorflip)
+	return Vector(wcs_[ii]->cdelt[0], wcs_[ii]->cdelt[1]);
+      else
+	return Vector(wcs_[ii]->cdelt[1], wcs_[ii]->cdelt[0]);
+    }
   }
   else
     return Vector();
@@ -2900,13 +2913,15 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
   astClearStatus; // just to make sure
 
   Vector cc = center();
-  double xx[2], wxx[2];
+  double xx[3], wxx[3];
   xx[0] = cc[0];
   xx[1] = cc[0];
-  double yy[2], wyy[2];
+  xx[2] = cc[0];
+  double yy[3], wyy[3];
   yy[0] = cc[1];
   yy[1] = cc[1]+1;
-  astTran2(ast_[ss],2,xx,yy,1,wxx,wyy);
+  yy[2] = cc[1]+1;
+  astTran2(ast_[ss],3,xx,yy,1,wxx,wyy);
 
   double pt0[2];
   pt0[0] = wxx[0];
@@ -2914,7 +2929,10 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
   double pt1[2];
   pt1[0] = wxx[1];
   pt1[1] = wyy[1];
-  double out = astDistance(ast_[ss],pt0,pt1);
+  double pt2[2];
+  pt2[0] = wxx[2];
+  pt2[1] = wyy[2];
+  double out = (astDistance(ast_[ss],pt0,pt1)+astDistance(ast_[ss],pt0,pt2))/2.;
 
   if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
     return radToDeg(out);
@@ -2998,6 +3016,8 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   int ss = sys-Coord::WCS;
   if (!(ss>=0 && ast_ && ast_[ss]))
     return Coord::NORMAL;
+
+  cerr << getWCSPixelSize(sys) << endl;
 
   astClearStatus; // just to make sure
 

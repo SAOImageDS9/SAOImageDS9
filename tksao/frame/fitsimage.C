@@ -2882,7 +2882,7 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
     int ii = sys-Coord::WCS;
 
     // special case
-    if (wcs_[ii]->pc[0] != 1 && wcs_[ii]->pc[1] != 0) {
+    if (wcs_[ii]->pc[0] != 1 && wcs_[ii]->cdelt[0] == 1) {
       double pc1 = sqrt(wcs_[ii]->pc[0]*wcs_[ii]->pc[0] +
 			wcs_[ii]->pc[2]*wcs_[ii]->pc[2]);
       double pc2 = sqrt(wcs_[ii]->pc[1]*wcs_[ii]->pc[1] +

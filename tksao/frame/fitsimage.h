@@ -383,8 +383,7 @@ class FitsImage {
 
   WorldCoor* getWCS(Coord::CoordSystem sys) 
   {return (wcs_ && wcs_[sys-Coord::WCS]) ? wcs_[sys-Coord::WCS] : NULL;}
-  const char* getWCSName(Coord::CoordSystem sys) 
-  {return (wcs_ && wcs_[sys-Coord::WCS]) ? wcs_[sys-Coord::WCS]->wcsname : NULL;}
+  const char* getWCSName(Coord::CoordSystem);
   Coord::Orientation getWCSOrientation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSRotation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSDist(Vector, Vector, Coord::CoordSystem);

@@ -3017,8 +3017,6 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   if (!(ss>=0 && ast_ && ast_[ss]))
     return Coord::NORMAL;
 
-  cerr << getWCSPixelSize(sys) << endl;
-
   astClearStatus; // just to make sure
 
   if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
@@ -3109,6 +3107,26 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
     return getWCSOrientation(sys,sky) == Coord::NORMAL ? ang : -ang;
 
   return 0;
+}
+#endif
+
+#ifndef NEWWCS
+const char* FitsImage::getWCSName(Coord::CoordSystem sys) 
+{
+  return (wcs_ && wcs_[sys-Coord::WCS]) ? 
+    wcs_[sys-Coord::WCS]->wcsname : NULL;
+}
+#else
+const char* FitsImage::getWCSName(Coord::CoordSystem sys) 
+{
+  int ss = sys-Coord::WCS;
+  if (!(ss>=0 && ast_ && ast_[ss]))
+    return NULL;
+
+  if (fits_->find("WCSNAME"))
+    return fits_->getString("WCSNAME");
+  else
+    return NULL;
 }
 #endif
 
@@ -3520,30 +3538,11 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
 
 #else
 
-  //  astClearStatus; // just to make sure
-  //  astBegin; // start memory management
-
   ast_[ii] = fits2ast(hd);
   if (!ast_[ii])
     return;
 
   setAstSystem(ast_[ii], (Coord::CoordSystem)(ii+Coord::WCS));
-
-  int naxes = astGetI(ast_[ii],"Naxes");
-  switch (naxes) {
-  case 1:
-    break;
-  case 2:
-    break;
-  default:
-    {
-      //      const int pick[] = {1,2};
-      //      AstMapping* map;
-      //      AstFrame* fm = (AstFrame*)astPickAxes(ast_[ii], 2, pick, &map);
-      //      astShow(fm);
-    }
-    break;
-  }
 
   if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT))) {
     if (astGetI(ast_[ii],"LatAxis") == 1) {
@@ -3551,8 +3550,6 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
       astPermAxes(ast_[ii],orr);
     }
   }
-
-  //  astEnd; // now, clean up memory
 #endif
 
   // set default skyframe

@@ -446,6 +446,7 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
 
   // WCS
   if (currentContext->fits->hasWCS(Coord::WCS)) {
+#ifndef NEWWCS
     WorldCoor* wcs = currentContext->fits->getWCS(Coord::WCS);
 
     // abort if this is a DSS, ZPN, TNX
@@ -503,6 +504,26 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
     dst.appendReal("CD1_2", cd.matrix(0,1), 9, NULL);
     dst.appendReal("CD2_1", cd.matrix(1,0), 9, NULL);
     dst.appendReal("CD2_2", cd.matrix(1,1), 9, NULL);
+#else
+
+    if (src->find("RADESYS"))
+      dst.appendString("RADESYS", src->getString("RADESYS"), NULL);
+    if (src->find("EQUINOX"))
+      dst.appendReal("EQUINOX", src->getReal("EQUINOX",2000), 9, NULL);
+    if (src->find("CTYPE1"))
+      dst.appendString("CTYPE1", src->getString("CTYPE1"), NULL);
+    if (src->find("CTYPE2"))
+      dst.appendString("CTYPE2", src->getString("CTYPE2"), NULL);
+    if (src->find("CRVAL1"))
+      dst.appendReal("CRVAL1", src->getReal("CRVAL1",1), 9, NULL);
+    if (src->find("CRVAL2"))
+      dst.appendReal("CRVAL2", src->getReal("CRVAL2",1), 9, NULL);
+    if (src->find("CUNIT1"))
+      dst.appendString("CUNIT1", src->getString("CUNIT1"), NULL);
+    if (src->find("CUNIT2"))
+      dst.appendString("CUNIT2", src->getString("CUNIT2"), NULL);
+
+#endif
   }
 }
 

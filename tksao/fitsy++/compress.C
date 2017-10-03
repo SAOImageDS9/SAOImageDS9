@@ -15,6 +15,8 @@ FitsCompress::FitsCompress(FitsFile* fits)
   width_ = fits->getInteger("ZNAXIS1",0);
   height_ = fits->getInteger("ZNAXIS2",0);
   depth_ = fits->getInteger("ZNAXIS3",1);
+  if (depth_<1)
+    depth_ =1;
   ww_ = fits->getInteger("ZTILE1",width_);
   hh_ = fits->getInteger("ZTILE2",1);
   dd_ = fits->getInteger("ZTILE3",1);

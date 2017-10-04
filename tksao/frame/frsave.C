@@ -377,38 +377,30 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
   Vector center = Vector(options->width, options->height)/2.;
 
   // OBJECT
-  char* object = src->getStringCopy("OBJECT");
-  if (object) {
+  char* object = src->getString("OBJECT");
+  if (object)
     dst.appendString("OBJECT", object, NULL);
-    delete [] object;
-  }
 
   // DATE-OBS
-  char* date = src->getStringCopy("DATE");
-  if (date) {
+  char* date = src->getString("DATE");
+  if (date)
     dst.appendString("DATE", date, NULL);
-    delete [] date;
-  }
-  char* dateobs = src->getStringCopy("DATE-OBS");
-  if (dateobs) {
+
+  char* dateobs = src->getString("DATE-OBS");
+  if (dateobs)
     dst.appendString("DATE-OBS", dateobs, NULL);
-    delete [] dateobs;
-  }
-  char* timeobs = src->getStringCopy("TIME-OBS");
-  if (timeobs) {
+
+  char* timeobs = src->getString("TIME-OBS");
+  if (timeobs)
     dst.appendString("TIME-OBS", timeobs, NULL);
-    delete [] timeobs;
-  }
-  char* dateend = src->getStringCopy("DATE-END");
-  if (dateend) {
+
+  char* dateend = src->getString("DATE-END");
+  if (dateend)
     dst.appendString("DATE-END", dateend, NULL);
-    delete [] dateend;
-  }
-  char* timeend = src->getStringCopy("TIME-END");
-  if (timeend) {
+
+  char* timeend = src->getString("TIME-END");
+  if (timeend)
     dst.appendString("TIME-END", timeend, NULL);
-    delete [] timeend;
-  }
 
   // LTMV,DTMV
   if (!isMosaic()) {
@@ -463,17 +455,13 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
     dst.appendReal("CRVAL1", wcs->crval[0], 9, NULL);
     dst.appendReal("CRVAL2", wcs->crval[1], 9, NULL);
 
-    char* cunit1 = src->getStringCopy("CUNIT1");
-    if (cunit1) {
+    char* cunit1 = src->getString("CUNIT1");
+    if (cunit1)
       dst.appendString("CUNIT1", cunit1, NULL);
-      delete [] cunit1;
-    }
 
-    char* cunit2 = src->getStringCopy("CUNIT2");
-    if (cunit2) {
+    char* cunit2 = src->getString("CUNIT2");
+    if (cunit2)
       dst.appendString("CUNIT2", cunit2, NULL);
-      delete [] cunit2;
-    }
 
     // crpix
     Vector crpix = Vector(wcs->crpix[0],wcs->crpix[1]) * 
@@ -507,21 +495,21 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
 #else
 
     if (src->find("RADESYS"))
-      dst.appendString("RADESYS", src->getStringCopy("RADESYS"), NULL);
+      dst.appendString("RADESYS", src->getString("RADESYS"), NULL);
     if (src->find("EQUINOX"))
       dst.appendReal("EQUINOX", src->getReal("EQUINOX",2000), 9, NULL);
     if (src->find("CTYPE1"))
-      dst.appendString("CTYPE1", src->getStringCopy("CTYPE1"), NULL);
+      dst.appendString("CTYPE1", src->getString("CTYPE1"), NULL);
     if (src->find("CTYPE2"))
-      dst.appendString("CTYPE2", src->getStringCopy("CTYPE2"), NULL);
+      dst.appendString("CTYPE2", src->getString("CTYPE2"), NULL);
     if (src->find("CRVAL1"))
       dst.appendReal("CRVAL1", src->getReal("CRVAL1",1), 9, NULL);
     if (src->find("CRVAL2"))
       dst.appendReal("CRVAL2", src->getReal("CRVAL2",1), 9, NULL);
     if (src->find("CUNIT1"))
-      dst.appendString("CUNIT1", src->getStringCopy("CUNIT1"), NULL);
+      dst.appendString("CUNIT1", src->getString("CUNIT1"), NULL);
     if (src->find("CUNIT2"))
-      dst.appendString("CUNIT2", src->getStringCopy("CUNIT2"), NULL);
+      dst.appendString("CUNIT2", src->getString("CUNIT2"), NULL);
 
 #endif
   }

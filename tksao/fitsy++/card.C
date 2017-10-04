@@ -4,6 +4,9 @@
 
 #include "card.h"
 
+// only used to return pointer to internal string
+char FitsCard::buf_[FTY_CARDLEN];
+
 FitsCard::FitsCard()
 {
   card_ = new char[FTY_CARDLEN];

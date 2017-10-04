@@ -455,9 +455,8 @@ void FitsHist::mapWCSString(FitsHead* head, char* w,
   istr << prim << xcol_->index() << w << ends;
 
   if (head->find(istr.str().c_str())) {
-    char* cc = head->getStringCopy(istr.str().c_str());
-    head_->appendString(out, cc, NULL);
-    delete [] cc;
+    char* str = head->getString(istr.str().c_str());
+    head_->appendString(out, str, NULL);
   }
 }
 
@@ -479,13 +478,10 @@ void FitsHist::mapWCSString(FitsHead* head, char* w,
 
   if (head->find(istr1.str().c_str()) || 
       head->find(istr2.str().c_str())) {
-    char* cc1 = head->getStringCopy(istr1.str().c_str());
-    char* cc2 = head->getStringCopy(istr2.str().c_str());
-
+    char* cc1 = head->getString(istr1.str().c_str());
     head_->appendString(ostr1.str().c_str(), cc1, NULL);
+    char* cc2 = head->getString(istr2.str().c_str());
     head_->appendString(ostr2.str().c_str(), cc2, NULL);
-    delete [] cc1;
-    delete [] cc2;
   }
 }
 

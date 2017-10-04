@@ -28,16 +28,15 @@ FitsCompress::FitsCompress(FitsFile* fits)
   quantize_ = NODITHER;
   char keyword[] = "ZQUANTIZ";
   if (fits->find(keyword)) {
-    char* which = fits->getStringCopy(keyword);
-    if (!strncmp(which,"NONE",4))
+    char* str = fits->getString(keyword);
+    if (!strncmp(str,"NONE",4))
       quantize_ = NONE;
-    if (!strncmp(which,"NO_DITHER",4))
+    if (!strncmp(str,"NO_DITHER",4))
       quantize_ = NODITHER;
-    else if (!strncmp(which,"SUBTRACTIVE_DITHER_1",20))
+    else if (!strncmp(str,"SUBTRACTIVE_DITHER_1",20))
       quantize_ = SUBDITHER1;
-    else if (!strncmp(which,"SUBTRACTIVE_DITHER_2",20))
+    else if (!strncmp(str,"SUBTRACTIVE_DITHER_2",20))
       quantize_ = SUBDITHER2;
-    delete [] which;
   }
   quantOffset_ = fits->getInteger("ZDITHER0",1);
 
@@ -97,9 +96,8 @@ int FitsCompress::initHeader(FitsFile* fits)
   //  FitsTableHDU* srcHDU = (FitsTableHDU*)(srcHead->hdu());
 
   if (srcHead->find("ZTENSION")) {
-    char* str = srcHead->getStringCopy("ZTENSION");
+    char* str = srcHead->getString("ZTENSION");
     head_ = new FitsHead(width_, height_, depth_, bitpix_, str);
-    delete [] str;
   }
   else
     head_ = new FitsHead(width_, height_, depth_, bitpix_);
@@ -153,13 +151,10 @@ int FitsCompress::initHeader(FitsFile* fits)
     // eat this one
     if (!strncmp(key,"EXTNAME",7)) {
       FitsCard cc(ptr);
-      char* str = cc.getStringCopy();
+      char* str = cc.getString();
       if (str) {
-	if (!strncmp(str,"COMPRESSED_IMAGE",8)) {
-	  delete [] str;
+	if (!strncmp(str,"COMPRESSED_IMAGE",8))
 	  continue;
-	}
-	delete [] str;
       }
     }
 
@@ -182,19 +177,17 @@ int FitsCompress::initHeader(FitsFile* fits)
     }
     if (!strncmp(key,"ZHECKSUM",8)) {
       FitsCard cc(ptr);
-      char* str = cc.getStringCopy();
+      char* str = cc.getString();
       if (str) {
 	head_->appendString("CHECKSUM",str,NULL);
-	delete [] str;
 	continue;
       }
     }
     if (!strncmp(key,"ZDATASUM",8)) {
       FitsCard cc(ptr);
-      char* str = cc.getStringCopy();
+      char* str = cc.getString();
       if (str) {
 	head_->appendString("DATASUM",str,NULL);
-	delete [] str;
 	continue;
       }
     }

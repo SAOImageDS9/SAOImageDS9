@@ -210,7 +210,7 @@ FitsAsciiTableHDU::FitsAsciiTableHDU(FitsHead* head) : FitsTableHDU(head)
 
   size_t offset = 0;
   for (int i=0; i<tfields_; i++) {
-    char* tform = head->getStringCopy(keycat("TFORM",i+1));
+    char* tform = head->getString(keycat("TFORM",i+1));
     char type = 'F';
     if (tform) {
       string x(tform);
@@ -236,7 +236,6 @@ FitsAsciiTableHDU::FitsAsciiTableHDU(FitsHead* head) : FitsTableHDU(head)
       break;
     }
 
-    delete [] tform;
     if (cols_[i])
       offset += cols_[i]->width();
   }
@@ -248,7 +247,7 @@ FitsBinTableHDU::FitsBinTableHDU(FitsHead* head) : FitsTableHDU(head)
 
   int offset =0;
   for (int i=0; i<tfields_; i++) {
-    char* tform = head->getStringCopy(keycat("TFORM",i+1));
+    char* tform = head->getString(keycat("TFORM",i+1));
     int repeat;
     char type = 'J';
     if (tform) {
@@ -315,7 +314,6 @@ FitsBinTableHDU::FitsBinTableHDU(FitsHead* head) : FitsTableHDU(head)
       break;
     }
 
-    delete [] tform;
     if (cols_[i])
       offset += cols_[i]->width();
   }

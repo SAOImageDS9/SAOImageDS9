@@ -40,14 +40,13 @@ template<class T> FitsRicem<T>::FitsRicem(FitsFile* fits)
     name[5] = '0'+ii;
     val[4] = '0'+ii;
     if (fits->find(name)) {
-      char* which = fits->getStringCopy(name);
-      if (!strncmp(which,"BLOCK",4))
+      char* str = fits->getString(name);
+      if (!strncmp(str,"BLOCK",4))
 	block_ = fits->getInteger(val,32);
-      else if (!strncmp(which,"BYTEPIX",4))
+      else if (!strncmp(str,"BYTEPIX",4))
 	bytepix_ = fits->getInteger(val,4);
-      else if (!strncmp(which,"NOISEBIT",4))
+      else if (!strncmp(str,"NOISEBIT",4))
 	noisebit_ = fits->getInteger(val,4);
-      delete [] which;
     }
   }
 

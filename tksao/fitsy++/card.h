@@ -19,7 +19,7 @@ private:
   char* card_;
   int managed;
   // only used to return pointer to internal string
-  char buf_[FTY_CARDLEN];
+  static char buf_[FTY_CARDLEN];
 
 public:
   FitsCard();

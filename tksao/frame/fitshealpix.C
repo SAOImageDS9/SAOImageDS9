@@ -25,7 +25,7 @@ void FitsImage::initHPX()
   if (fits_->pHPXSystem() >= 0)
     coord = (FitsHPX::CoordSys)fits_->pHPXSystem();
   else {
-    char* str = head->getStringCopy("COORDSYS");
+    char* str = head->getString("COORDSYS");
     if (str) {
       if (str[0] == 'G')
 	coord = FitsHPX::GAL;
@@ -35,8 +35,6 @@ void FitsImage::initHPX()
 	coord = FitsHPX::EQU;
       else if (str[0] == 'Q')
 	coord = FitsHPX::EQU;
-
-      delete [] str;
     }
   }
 
@@ -45,14 +43,12 @@ void FitsImage::initHPX()
   if (fits_->pHPXOrder() >=0)
     order = (FitsHPX::Order)fits_->pHPXOrder();
   else {
-    char* str = head->getStringCopy("ORDERING");
+    char* str = head->getString("ORDERING");
     if (str) {
       if (str[0] == 'N')
 	order = FitsHPX::NESTED;
       else if (str[0] == 'R')
 	order = FitsHPX::RING;
-
-      delete [] str;
     }
   }
 

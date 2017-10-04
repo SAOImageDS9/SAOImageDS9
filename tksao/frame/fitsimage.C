@@ -898,7 +898,7 @@ void FitsImage::altWCS(istream& str)
   // Process OBJECT keyword
   if (objectKeyword_)
     delete [] objectKeyword_;
-  objectKeyword_ = hh->getStringCopy("OBJECT");
+  objectKeyword_ = dupstr(hh->getString("OBJECT"));
 
   // Process WCS keywords
   if (altHeader_)
@@ -913,7 +913,7 @@ void FitsImage::appendWCS(istream& str)
   FitsHead* hh = parseWCS(str);
 
   // process OBJECT keyword
-  char* obj = hh->getStringCopy("OBJECT");
+  char* obj = dupstr(hh->getString("OBJECT"));
   if (obj) {
     if (objectKeyword_)
       delete [] objectKeyword_;
@@ -1173,7 +1173,7 @@ void FitsImage::initWCS()
 #ifndef NEWWCS
   // WCSDEP
   if (hd->find("WCSDEP")) {
-    char* str = hd->getStringCopy("WCSDEP");
+    char* str = hd->getString("WCSDEP");
     if (str) {
       for (int ii=1; ii<MULTWCS; ii++) {
 	if (wcs_[ii]) {
@@ -1191,7 +1191,6 @@ void FitsImage::initWCS()
 	  }
 	}
       }
-      delete [] str;
     }
   }
 #endif
@@ -1870,7 +1869,7 @@ void FitsImage::process(const char* fn, int id)
       load();
     }
     // HEALPIX
-    else if ((fits_->find("PIXTYPE") && (!strncmp(fits_->getStringCopy("PIXTYPE"),"HEALPIX",4))) || fits_->find("NSIDE")) {
+    else if ((fits_->find("PIXTYPE") && (!strncmp(fits_->getString("PIXTYPE"),"HEALPIX",4))) || fits_->find("NSIDE")) {
       initHPX();
       if (!hpx_ || !hpx_->isValid()) {
 	reset();
@@ -1997,11 +1996,9 @@ void FitsImage::processKeywordsPhysical()
 
   /*
   // Radio data?
-  char* bunit = image_->getStringCopy("BUNIT");
+  char* bunit = image_->getString("BUNIT");
   double cdelt1 = fabs(image_->getReal("CDELT1",0));
-  char* cunit1 = image_->getStringCopy("CUNIT1");
   double cdelt2 = fabs(image_->getReal("CDELT2",0));
-  char* cunit2 = image_->getStringCopy("CUNIT2");
   double bmaj = image_->getReal("BMAJ",0);
   double bmin = image_->getReal("BMIN",0);
 
@@ -2031,7 +2028,7 @@ void FitsImage::processKeywordsParams()
   iparams.set(0, 0, width(), height());
 
   {
-    char* datstr = image_->getStringCopy("DATASEC");
+    char* datstr = image_->getString("DATASEC");
     // default
     Vector v1(1,1);
     Vector v2(size());
@@ -2054,9 +2051,6 @@ void FitsImage::processKeywordsParams()
     datasec = BBox(v1,v2);
     v1 -= Vector(1,1);
     dparams.set(v1[0],v1[1],v2[0],v2[1]);
-
-    if (datstr)
-      delete [] datstr;
   }
 
   // DEBUG
@@ -2113,14 +2107,11 @@ int FitsImage::processKeywordsIRAF(FitsImage* fits)
   // DETSEC
   Coord::Orientation orientation = Coord::NORMAL;
 
-  char* detstr =  image_->getStringCopy("DETSEC");
+  char* detstr =  image_->getString("DETSEC");
   Vector dv1,dv2;
-  if (!(detstr && *detstr && parseSection(detstr,&dv1,&dv2))) {
-    if (detstr)
-      delete [] detstr;
+  if (!(detstr && *detstr && parseSection(detstr,&dv1,&dv2)))
     return 0;
-  }
-  delete [] detstr;
+
   BBox detsec = BBox(dv1,dv2);
 
   int xx = (dv1[0] < dv2[0]);
@@ -2136,22 +2127,19 @@ int FitsImage::processKeywordsIRAF(FitsImage* fits)
     orientation = Coord::YY;
 
   // DETSIZE
-  char* sizestr = image_->getStringCopy("DETSIZE");
+  char* sizestr = image_->getString("DETSIZE");
   Vector sv1(1,1);
   Vector sv2(10000,10000);
   if (sizestr && *sizestr) {
-    if (!(parseSection(sizestr,&sv1,&sv2))) {
-      delete [] sizestr;
+    if (!(parseSection(sizestr,&sv1,&sv2)))
       return 0;
-    }
   }
-  if (sizestr)
-    delete [] sizestr;
+
   BBox detsize = BBox(sv1,sv2);
   
   // CCDSUM
   Vector ccdsum(1,1);
-  char* ccdstr = image_->getStringCopy("CCDSUM");
+  char* ccdstr = image_->getString("CCDSUM");
   if (ccdstr && *ccdstr) {
     double Ns, Np, Ns1, Np1;
     string x(ccdstr);
@@ -2160,8 +2148,6 @@ int FitsImage::processKeywordsIRAF(FitsImage* fits)
     str >> Ns >> Np >> Ns1 >> Np1;
     ccdsum = Vector(1/Ns, 1/Np);
   }
-  if (ccdstr)
-    delete [] ccdstr;
   
   // origin
   Vector origin = detsec.ll * Scale(ccdsum) * Translate(-datasec.ll);
@@ -2242,7 +2228,7 @@ void FitsImage::replaceWCS(istream& str)
   // Process OBJECT keyword
   if (objectKeyword_)
     delete [] objectKeyword_;
-  objectKeyword_ = hh->getStringCopy("OBJECT");
+  objectKeyword_ = dupstr(hh->getString("OBJECT"));
 
   // Process WCS keywords
   if (wcsHeader_)
@@ -2302,7 +2288,7 @@ void FitsImage::resetWCS()
   // Process OBJECT keyword
   if (objectKeyword_)
     delete [] objectKeyword_;
-  objectKeyword_ = image_->getStringCopy("OBJECT");
+  objectKeyword_ = dupstr(image_->getString("OBJECT"));
 
   // Process WCS keywords
   if (wcsHeader_)
@@ -3124,7 +3110,7 @@ const char* FitsImage::getWCSName(Coord::CoordSystem sys)
     return NULL;
 
   if (fits_->find("WCSNAME"))
-    return fits_->getStringCopy("WCSNAME");
+    return dupstr(fits_->getString("WCSNAME"));
   else
     return NULL;
 }
@@ -3864,8 +3850,10 @@ void FitsImage::header2ast(int ii, FitsHead* hd, void* chan)
   if (!hd->find(key1) && !hd->find(key2))
     return;
 
-  char* ctype1 = hd->getStringCopy(key1);
-  char* ctype2 = hd->getStringCopy(key2);
+  char* c1ptr = dupstr(hd->getString(key1));
+  char* c2ptr = dupstr(hd->getString(key2));
+  char* ctype1 = c1ptr;
+  char* ctype2 = c2ptr;
 
   if (ctype1 && !strncmp(ctype1,"GLON",4)) {
     if (!ctype2 || strncmp(ctype2,"GLAT",4)) {
@@ -3924,6 +3912,11 @@ void FitsImage::header2ast(int ii, FitsHead* hd, void* chan)
 
   putFitsCard(chan, key1, ctype1);
   putFitsCard(chan, key2, ctype2);
+
+  if (c1ptr)
+    delete [] c1ptr;
+  if (c2ptr)
+    delete [] c2ptr;
 
   // CRPIX
   strcpy(key1, "CRPIX1 ");
@@ -4144,19 +4137,19 @@ void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan)
     radesys << "RADESYS" << alt << ends;
     if (hd->find(radesys.str().c_str())) {
       // if RADESYS present, use it
-      putFitsCard(chan, "RADESYS", hd->getStringCopy(radesys.str().c_str()));
+      putFitsCard(chan, "RADESYS", hd->getString(radesys.str().c_str()));
     }
     else if (prim && prim->find(radesys.str().c_str())) {
       // if RADESYS present, use it
-      putFitsCard(chan, "RADESYS", prim->getStringCopy(radesys.str().c_str()));
+      putFitsCard(chan, "RADESYS", prim->getString(radesys.str().c_str()));
     }
     else if (hd->find("RADECSYS")) {
       // look for old RADECSYS
-      putFitsCard(chan, "RADESYS", hd->getStringCopy("RADECSYS"));
+      putFitsCard(chan, "RADESYS", hd->getString("RADECSYS"));
     }
     else if (prim && prim->find("RADECSYS")) {
       // look for old RADECSYS
-      putFitsCard(chan, "RADESYS", prim->getStringCopy("RADECSYS"));
+      putFitsCard(chan, "RADESYS", prim->getString("RADECSYS"));
     }
     else {
       // fall back on wcssubs
@@ -4232,14 +4225,14 @@ void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan)
 	ostringstream str;
 	str << "WAT" << jj << "_00" << ii << ends;
 	if (hd->find(str.str().c_str())) {
-	  char* val = hd->getStringCopy(str.str().c_str());
+	  char* val = hd->getString(str.str().c_str());
 	  if (val) {
 	    putFitsCard(chan, str.str().c_str(), val);
 	    delete [] val;
 	  }
 	}
 	else if (prim && prim->find(str.str().c_str())) {
-	  char* val = prim->getStringCopy(str.str().c_str());
+	  char* val = prim->getString(str.str().c_str());
 	  if (val) {
 	    putFitsCard(chan, str.str().c_str(), val);
 	    delete [] val;

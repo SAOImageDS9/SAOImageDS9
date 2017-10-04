@@ -10,7 +10,7 @@
 FitsCompress::FitsCompress(FitsFile* fits)
 {
   bitpix_ = fits->getInteger("ZBITPIX",0);
-  type_ = fits->getStringCopy("ZCMPTYPE");
+  type_ = dupstr(fits->getString("ZCMPTYPE"));
   //  int naxes = fits->getInteger("ZNAXIS",0);
   width_ = fits->getInteger("ZNAXIS1",0);
   height_ = fits->getInteger("ZNAXIS2",0);
@@ -23,7 +23,7 @@ FitsCompress::FitsCompress(FitsFile* fits)
   bscale_ = fits->getReal("ZSCALE",1);
   bzero_ = fits->getReal("ZZERO",0);
   blank_ = fits->getInteger("ZBLANK",0);
-  zmaskcmp_ = fits->getStringCopy("ZMASKCMP");
+  zmaskcmp_ = dupstr(fits->getString("ZMASKCMP"));
 
   quantize_ = NODITHER;
   char keyword[] = "ZQUANTIZ";

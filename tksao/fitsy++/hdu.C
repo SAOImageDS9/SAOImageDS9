@@ -13,10 +13,11 @@ using namespace std;
 
 #include "hdu.h"
 #include "head.h"
+#include "util.h"
 
 FitsHDU::FitsHDU(FitsHead* head)
 {
-  extname_ = head->getStringCopy("EXTNAME");
+  extname_ = dupstr(head->getString("EXTNAME"));
   // trim any spaces at end
   if (extname_) {
     for (int ii=strlen(extname_)-1; ii>=0; ii--) {

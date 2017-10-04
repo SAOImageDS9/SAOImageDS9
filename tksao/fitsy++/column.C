@@ -16,6 +16,7 @@ using namespace std;
 #include "column.h"
 #include "file.h"
 #include "head.h"
+#include "util.h"
 
 FitsColumn::FitsColumn(FitsHead* head, int i, int off)
 {
@@ -24,9 +25,9 @@ FitsColumn::FitsColumn(FitsHead* head, int i, int off)
   offset_ = off;
   type_ = ' ';
 
-  tform_ = head->getStringCopy(keycat("TFORM",i));
-  ttype_ = head->getStringCopy(keycat("TTYPE",i));
-  tunit_ = head->getStringCopy(keycat("TUNIT",i));
+  tform_ = dupstr(head->getString(keycat("TFORM",i)));
+  ttype_ = dupstr(head->getString(keycat("TTYPE",i)));
+  tunit_ = dupstr(head->getString(keycat("TUNIT",i)));
   tscal_ = head->getReal(keycat("TSCAL",i), 1);
   tzero_ = head->getReal(keycat("TZERO",i), 0);
   hastnull_ = head->find(keycat("TNULL",i)) ? 1:0;
@@ -183,7 +184,7 @@ template <> Vector FitsAsciiColumnT<double>::dimension()
 FitsBinColumn::FitsBinColumn(FitsHead* head, int i, int offset)
   : FitsColumn(head, i, offset)
 {
-  tdisp_ = head->getStringCopy(keycat("TDISP",i));
+  tdisp_ = dupstr(head->getString(keycat("TDISP",i)));
 
   repeat_ = 1;
   if (tform_) {

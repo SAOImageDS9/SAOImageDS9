@@ -500,6 +500,10 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
       dst.appendString("RADESYS", src->getString("RADESYS"), NULL);
     if (src->find("EQUINOX"))
       dst.appendReal("EQUINOX", src->getReal("EQUINOX",2000), 9, NULL);
+    if (src->find("EPOCH"))
+      dst.appendReal("EPOCH", src->getReal("EPOCH",2000), 9, NULL);
+    if (src->find("MJD-OBS"))
+      dst.appendReal("MJD-OBS", src->getReal("MJD-OBS",58030.75347), 9, NULL);
     if (src->find("CTYPE1"))
       dst.appendString("CTYPE1", src->getString("CTYPE1"), NULL);
     if (src->find("CTYPE2"))
@@ -514,7 +518,7 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
       dst.appendString("CUNIT2", src->getString("CUNIT2"), NULL);
 
     // crpix
-    if (src->find("CRPIX1") && src->find("CRPIX2")) {
+    if (src->find("CRPIX1") || src->find("CRPIX2")) {
       double crpix1 = src->getReal("CRPIX1",0);
       double crpix2 = src->getReal("CRPIX2",0);
 
@@ -529,9 +533,9 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
       dst.appendReal("CRPIX2", crpix[1], 9, NULL);
     }
 
-    // cd matrix
-    else if (src->find("CD1_1") || src->find("CD1_2") || 
-	     src->find("CD2_1") || src->find("CD2_2")) {
+    // cd 
+    if (src->find("CD1_1") || src->find("CD1_2") || 
+	src->find("CD2_1") || src->find("CD2_2")) {
       // cd keywords
       double cd11 = src->getReal("CD1_1",0);
       double cd12 = src->getReal("CD1_2",0);
@@ -566,7 +570,7 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
       double cdelt1 = src->getReal("CDELT1",1);
       double cdelt2 = src->getReal("CDELT2",1);
 
-      Matrix cd = Vector(cdelt1,cdelt2) * Matrix(pc11, pc12, pc21, pc22,0,0) *
+      Matrix cd = Scale(cdelt1,cdelt2) * Matrix(pc11,pc12,pc21,pc22,0,0) *
 	currentContext->fits->imageToRef * refToUser *
 	wcsOrientationMatrix *
 	Rotate(wcsRotation) *
@@ -590,7 +594,7 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
       double cdelt2 = src->getReal("CDELT2",1);
       double crot2 = src->getReal("CROT2",0);
 
-      Matrix cd = Vector(cdelt1,cdelt2) * Rotate(crot2) *
+      Matrix cd = Scale(cdelt1,cdelt2) * Rotate(crot2) *
 	currentContext->fits->imageToRef * refToUser *
 	wcsOrientationMatrix *
 	Rotate(wcsRotation) *

@@ -503,7 +503,7 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
     if (src->find("EPOCH"))
       dst.appendReal("EPOCH", src->getReal("EPOCH",2000), 9, NULL);
     if (src->find("MJD-OBS"))
-      dst.appendReal("MJD-OBS", src->getReal("MJD-OBS",58030.75347), 9, NULL);
+      dst.appendReal("MJD-OBS", src->getReal("MJD-OBS",51544), 9, NULL);
     if (src->find("CTYPE1"))
       dst.appendString("CTYPE1", src->getString("CTYPE1"), NULL);
     if (src->find("CTYPE2"))

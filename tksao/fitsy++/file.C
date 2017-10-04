@@ -471,6 +471,20 @@ void FitsFile::getComplex(const char* name, double* real, double* img,
   *img = idef;
 }
 
+char* FitsFile::getString(const char* name)
+{
+  if (head_) {
+    char* r = head_->getString(name);
+    if (r)
+      return r;
+    else
+      if (primary_ && inherit_)
+	return primary_->getString(name);
+  }
+
+  return NULL;
+}
+
 char* FitsFile::getStringCopy(const char* name)
 {
   if (head_) {

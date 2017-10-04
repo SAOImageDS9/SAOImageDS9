@@ -326,6 +326,17 @@ void FitsHead::getComplex(const char* name, double* real, double* img,
   }
 }
 
+char* FitsHead::getString(const char* name)
+{
+  char* card = find(name);
+  if (card) {
+    FitsCard c(card);
+    return c.getString();
+  }
+  else
+    return NULL;
+}
+
 char* FitsHead::getStringCopy(const char* name)
 {
   char* card = find(name);

@@ -471,15 +471,15 @@ void FitsFile::getComplex(const char* name, double* real, double* img,
   *img = idef;
 }
 
-char* FitsFile::getString(const char* name)
+char* FitsFile::getStringCopy(const char* name)
 {
   if (head_) {
-    char* r = head_->getString(name);
+    char* r = head_->getStringCopy(name);
     if (r)
       return r;
     else
       if (primary_ && inherit_)
-	return primary_->getString(name);
+	return primary_->getStringCopy(name);
   }
 
   return NULL;

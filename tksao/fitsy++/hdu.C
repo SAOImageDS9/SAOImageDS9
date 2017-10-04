@@ -16,7 +16,7 @@ using namespace std;
 
 FitsHDU::FitsHDU(FitsHead* head)
 {
-  extname_ = head->getString("EXTNAME");
+  extname_ = head->getStringCopy("EXTNAME");
   // trim any spaces at end
   if (extname_) {
     for (int ii=strlen(extname_)-1; ii>=0; ii--) {
@@ -210,7 +210,7 @@ FitsAsciiTableHDU::FitsAsciiTableHDU(FitsHead* head) : FitsTableHDU(head)
 
   size_t offset = 0;
   for (int i=0; i<tfields_; i++) {
-    char* tform = head->getString(keycat("TFORM",i+1));
+    char* tform = head->getStringCopy(keycat("TFORM",i+1));
     char type = 'F';
     if (tform) {
       string x(tform);
@@ -248,7 +248,7 @@ FitsBinTableHDU::FitsBinTableHDU(FitsHead* head) : FitsTableHDU(head)
 
   int offset =0;
   for (int i=0; i<tfields_; i++) {
-    char* tform = head->getString(keycat("TFORM",i+1));
+    char* tform = head->getStringCopy(keycat("TFORM",i+1));
     int repeat;
     char type = 'J';
     if (tform) {

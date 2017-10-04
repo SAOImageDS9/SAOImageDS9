@@ -417,7 +417,7 @@ void FitsFitsMapIncr::processRelax()
 
     // else, check for bin table with keyword PIXTYPE = 'HEALPIX '
     if (head_->isBinTable() && head_->find("PIXTYPE") &&
-	(!strncmp(head_->getString("PIXTYPE"),"HEALPIX",4))) {
+	(!strncmp(head_->getStringCopy("PIXTYPE"),"HEALPIX",4))) {
       found();
       return;
     }

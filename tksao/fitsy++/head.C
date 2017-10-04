@@ -209,7 +209,7 @@ FitsHead::~FitsHead()
 int FitsHead::isImage()
 {
   // just look for SIMPLE, if present it may be of value 'F'
-  char* xtension = getString("XTENSION");
+  char* xtension = getStringCopy("XTENSION");
   char* simple = find("SIMPLE");
   int r = 
     (simple || (xtension && !strncmp(xtension, "IMAGE", 5))) &&
@@ -223,7 +223,7 @@ int FitsHead::isImage()
 
 int FitsHead::isTable()
 {
-  char* xtension = getString("XTENSION");
+  char* xtension = getStringCopy("XTENSION");
   int r = (xtension && (!strncmp(xtension, "TABLE", 5) ||
 			!strncmp(xtension, "BINTABLE", 8)));
 
@@ -233,7 +233,7 @@ int FitsHead::isTable()
 
 int FitsHead::isAsciiTable()
 {
-  char* xtension = getString("XTENSION");
+  char* xtension = getStringCopy("XTENSION");
   int r = (xtension && (!strncmp(xtension, "TABLE", 5)));
 
   delete [] xtension;
@@ -242,7 +242,7 @@ int FitsHead::isAsciiTable()
 
 int FitsHead::isBinTable()
 {
-  char* xtension = getString("XTENSION");
+  char* xtension = getStringCopy("XTENSION");
   int r = (xtension && (!strncmp(xtension, "BINTABLE", 8)));
 
   delete [] xtension;
@@ -262,7 +262,7 @@ void FitsHead::updateHDU()
 
   // just find simple, it might be present but of value 'F'
   char* simple = find("SIMPLE");
-  char* xtension = getString("XTENSION");
+  char* xtension = getStringCopy("XTENSION");
 
   if (xtension)
     inherit_ = getLogical("INHERIT",0);
@@ -326,12 +326,12 @@ void FitsHead::getComplex(const char* name, double* real, double* img,
   }
 }
 
-char* FitsHead::getString(const char* name)
+char* FitsHead::getStringCopy(const char* name)
 {
   char* card = find(name);
   if (card) {
     FitsCard c(card);
-    return c.getString();
+    return c.getStringCopy();
   }
   else
     return NULL;

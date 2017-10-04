@@ -18,6 +18,8 @@ class FitsCard {
 private:
   char* card_;
   int managed;
+  // only used to return pointer to internal string
+  char buf_[FTY_CARDLEN];
 
 public:
   FitsCard();
@@ -62,6 +64,7 @@ public:
   double getReal();
   void getComplex(double*, double*);
   char* getString();
+  char* getStringCopy();
   char* getComment();
   char* getAsString();
 };

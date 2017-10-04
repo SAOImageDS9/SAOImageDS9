@@ -114,7 +114,7 @@ void FitsBlock::initHeader(FitsFile* fits, Vector& block)
 void FitsBlock::initCCDSUM(Vector& block)
 {
   if (head_->find("CCDSUM")) {
-    char* val = head_->getString("CCDSUM");
+    char* val = head_->getStringCopy("CCDSUM");
     float xx,yy;
     istringstream istr(val);
     istr >> xx >> yy;
@@ -131,7 +131,7 @@ void FitsBlock::initCCDSUM(Vector& block)
 void FitsBlock::initKeySEC(const char* key, Vector& block)
 {
   if (head_->find(key)) {
-    char* sec = head_->getString(key);
+    char* sec = head_->getStringCopy(key);
     Vector ll,ur;
     parseSection(sec,&ll,&ur);
     Matrix mm = Translate(-1,-1) *

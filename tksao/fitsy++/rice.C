@@ -40,7 +40,7 @@ template<class T> FitsRicem<T>::FitsRicem(FitsFile* fits)
     name[5] = '0'+ii;
     val[4] = '0'+ii;
     if (fits->find(name)) {
-      char* which = fits->getString(name);
+      char* which = fits->getStringCopy(name);
       if (!strncmp(which,"BLOCK",4))
 	block_ = fits->getInteger(val,32);
       else if (!strncmp(which,"BYTEPIX",4))

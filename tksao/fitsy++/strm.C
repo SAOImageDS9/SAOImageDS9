@@ -551,7 +551,7 @@ template<class T> void FitsFitsStream<T>::processRelax()
 
     // else, check for bin table with keyword PIXTYPE = 'HEALPIX '
     if (this->head_->isBinTable() && this->head_->find("PIXTYPE") &&
-	(!strncmp(this->head_->getString("PIXTYPE"),"HEALPIX",4))) {
+	(!strncmp(this->head_->getStringCopy("PIXTYPE"),"HEALPIX",4))) {
       this->found();
       return;
     }

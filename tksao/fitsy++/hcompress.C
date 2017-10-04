@@ -30,7 +30,7 @@ template<class T> FitsHcompressm<T>::FitsHcompressm(FitsFile* fits)
     name[5] = '0'+ii;
     val[4] = '0'+ii;
     if (fits->find(name)) {
-      char* which = fits->getString(name);
+      char* which = fits->getStringCopy(name);
       if (!strncmp(which,"SMOOTH",4))
 	smooth_ = fits->getInteger(val,4);
       delete [] which;

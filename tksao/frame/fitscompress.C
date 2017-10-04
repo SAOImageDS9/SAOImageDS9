@@ -12,7 +12,7 @@
 void FitsImage::initCompress()
 {
   int bitpix = fits_->getInteger("ZBITPIX",0);
-  char* type = fits_->getString("ZCMPTYPE");
+  char* type = fits_->getStringCopy("ZCMPTYPE");
   if (!bitpix || !type) {
     if (type)
       delete [] type;

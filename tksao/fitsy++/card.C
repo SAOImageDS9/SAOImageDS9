@@ -203,9 +203,8 @@ void FitsCard::getComplex(double* r, double* i)
 
 char* FitsCard::getString()
 {
-  char value[FTY_CARDLEN];
-  value[0] = '\0';
-  value[FTY_CARDLEN-1] = '\0';
+  buf_[0] = '\0';
+  buf_[FTY_CARDLEN-1] = '\0';
 
   int i,j;
 
@@ -223,16 +222,21 @@ char* FitsCard::getString()
       else
 	i++;
     }
-    value[j] = card_[i];
+    buf_[j] = card_[i];
   }
 
   // DON'T strip any spaces
-  //  for (; j && value[j-1]==' '; j--);
-  value[j] = '\0';
+  //  for (; j && buf_[j-1]==' '; j--);
+  buf_[j] = '\0';
 
-  // return result
-  char* cpy = new char[strlen(value)+1];
-  strcpy(cpy, value);
+  return buf_;
+}
+
+char* FitsCard::getStringCopy()
+{
+  getString();
+  char* cpy = new char[strlen(buf_)+1];
+  strcpy(cpy, buf_);
   return cpy;
 }
 

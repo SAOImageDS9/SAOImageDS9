@@ -432,7 +432,7 @@ void FitsHPX::initHeader(FitsFile* fits)
   head_ = new FitsHead(pWidth_, pHeight_, 1, -32);
 
   // OBJECT
-  char* object = src->getString("OBJECT");
+  char* object = src->getStringCopy("OBJECT");
   if (object) {
     head_->appendString("OBJECT", object, NULL);
     delete [] object;

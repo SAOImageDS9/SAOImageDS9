@@ -10,7 +10,7 @@
 FitsCompress::FitsCompress(FitsFile* fits)
 {
   bitpix_ = fits->getInteger("ZBITPIX",0);
-  type_ = fits->getString("ZCMPTYPE");
+  type_ = fits->getStringCopy("ZCMPTYPE");
   //  int naxes = fits->getInteger("ZNAXIS",0);
   width_ = fits->getInteger("ZNAXIS1",0);
   height_ = fits->getInteger("ZNAXIS2",0);
@@ -23,12 +23,12 @@ FitsCompress::FitsCompress(FitsFile* fits)
   bscale_ = fits->getReal("ZSCALE",1);
   bzero_ = fits->getReal("ZZERO",0);
   blank_ = fits->getInteger("ZBLANK",0);
-  zmaskcmp_ = fits->getString("ZMASKCMP");
+  zmaskcmp_ = fits->getStringCopy("ZMASKCMP");
 
   quantize_ = NODITHER;
   char keyword[] = "ZQUANTIZ";
   if (fits->find(keyword)) {
-    char* which = fits->getString(keyword);
+    char* which = fits->getStringCopy(keyword);
     if (!strncmp(which,"NONE",4))
       quantize_ = NONE;
     if (!strncmp(which,"NO_DITHER",4))
@@ -97,7 +97,7 @@ int FitsCompress::initHeader(FitsFile* fits)
   //  FitsTableHDU* srcHDU = (FitsTableHDU*)(srcHead->hdu());
 
   if (srcHead->find("ZTENSION")) {
-    char* str = srcHead->getString("ZTENSION");
+    char* str = srcHead->getStringCopy("ZTENSION");
     head_ = new FitsHead(width_, height_, depth_, bitpix_, str);
     delete [] str;
   }
@@ -153,7 +153,7 @@ int FitsCompress::initHeader(FitsFile* fits)
     // eat this one
     if (!strncmp(key,"EXTNAME",7)) {
       FitsCard cc(ptr);
-      char* str = cc.getString();
+      char* str = cc.getStringCopy();
       if (str) {
 	if (!strncmp(str,"COMPRESSED_IMAGE",8)) {
 	  delete [] str;
@@ -182,7 +182,7 @@ int FitsCompress::initHeader(FitsFile* fits)
     }
     if (!strncmp(key,"ZHECKSUM",8)) {
       FitsCard cc(ptr);
-      char* str = cc.getString();
+      char* str = cc.getStringCopy();
       if (str) {
 	head_->appendString("CHECKSUM",str,NULL);
 	delete [] str;
@@ -191,7 +191,7 @@ int FitsCompress::initHeader(FitsFile* fits)
     }
     if (!strncmp(key,"ZDATASUM",8)) {
       FitsCard cc(ptr);
-      char* str = cc.getString();
+      char* str = cc.getStringCopy();
       if (str) {
 	head_->appendString("DATASUM",str,NULL);
 	delete [] str;

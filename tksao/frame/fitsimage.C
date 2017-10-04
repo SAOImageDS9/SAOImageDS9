@@ -3110,7 +3110,7 @@ const char* FitsImage::getWCSName(Coord::CoordSystem sys)
     return NULL;
 
   if (fits_->find("WCSNAME"))
-    return dupstr(fits_->getString("WCSNAME"));
+    return fits_->getString("WCSNAME");
   else
     return NULL;
 }

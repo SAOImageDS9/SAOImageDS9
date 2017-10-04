@@ -438,6 +438,7 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
 
   // WCS
   if (currentContext->fits->hasWCS(Coord::WCS)) {
+
 #ifndef NEWWCS
     WorldCoor* wcs = currentContext->fits->getWCS(Coord::WCS);
 
@@ -492,6 +493,7 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
     dst.appendReal("CD1_2", cd.matrix(0,1), 9, NULL);
     dst.appendReal("CD2_1", cd.matrix(1,0), 9, NULL);
     dst.appendReal("CD2_2", cd.matrix(1,1), 9, NULL);
+
 #else
 
     if (src->find("RADESYS"))
@@ -503,14 +505,109 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
     if (src->find("CTYPE2"))
       dst.appendString("CTYPE2", src->getString("CTYPE2"), NULL);
     if (src->find("CRVAL1"))
-      dst.appendReal("CRVAL1", src->getReal("CRVAL1",1), 9, NULL);
+      dst.appendReal("CRVAL1", src->getReal("CRVAL1",0), 9, NULL);
     if (src->find("CRVAL2"))
-      dst.appendReal("CRVAL2", src->getReal("CRVAL2",1), 9, NULL);
+      dst.appendReal("CRVAL2", src->getReal("CRVAL2",0), 9, NULL);
     if (src->find("CUNIT1"))
       dst.appendString("CUNIT1", src->getString("CUNIT1"), NULL);
     if (src->find("CUNIT2"))
       dst.appendString("CUNIT2", src->getString("CUNIT2"), NULL);
 
+    // crpix
+    if (src->find("CRPIX1") && src->find("CRPIX2")) {
+      double crpix1 = src->getReal("CRPIX1",0);
+      double crpix2 = src->getReal("CRPIX2",0);
+
+      Vector crpix = Vector(crpix1,crpix2) * 
+	currentContext->fits->imageToWidget *
+	Translate(-center) *
+	Translate(1,0) *
+	FlipY() *
+	Translate(center);
+
+      dst.appendReal("CRPIX1", crpix[0], 9, NULL);
+      dst.appendReal("CRPIX2", crpix[1], 9, NULL);
+    }
+
+    // cd matrix
+    else if (src->find("CD1_1") || src->find("CD1_2") || 
+	     src->find("CD2_1") || src->find("CD2_2")) {
+      // cd keywords
+      double cd11 = src->getReal("CD1_1",0);
+      double cd12 = src->getReal("CD1_2",0);
+      double cd21 = src->getReal("CD2_1",0);
+      double cd22 = src->getReal("CD2_2",0);
+
+      Matrix cd = Matrix(cd11, cd12, cd21, cd22,0,0) *
+	currentContext->fits->imageToRef * refToUser *
+	wcsOrientationMatrix *
+	Rotate(wcsRotation) *
+	orientationMatrix *
+	Scale(zoom_.invert()) *
+	Rotate(rotation) *
+	Translate(center) *
+	Translate(-center) *
+	Translate(1,0) *
+	FlipY() * 
+	Translate(center);
+
+      dst.appendReal("CD1_1", cd.matrix(0,0), 9, NULL);
+      dst.appendReal("CD1_2", cd.matrix(0,1), 9, NULL);
+      dst.appendReal("CD2_1", cd.matrix(1,0), 9, NULL);
+      dst.appendReal("CD2_2", cd.matrix(1,1), 9, NULL);
+    }
+    else if (src->find("PC1_1") || src->find("PC1_2") || 
+	     src->find("PC2_1") || src->find("PC2_2")) {
+      // pc keywords
+      double pc11 = src->getReal("PC1_1",1);
+      double pc12 = src->getReal("PC1_2",0);
+      double pc21 = src->getReal("PC2_1",0);
+      double pc22 = src->getReal("PC2_2",1);
+      double cdelt1 = src->getReal("CDELT1",1);
+      double cdelt2 = src->getReal("CDELT2",1);
+
+      Matrix cd = Vector(cdelt1,cdelt2) * Matrix(pc11, pc12, pc21, pc22,0,0) *
+	currentContext->fits->imageToRef * refToUser *
+	wcsOrientationMatrix *
+	Rotate(wcsRotation) *
+	orientationMatrix *
+	Scale(zoom_.invert()) *
+	Rotate(rotation) *
+	Translate(center) *
+	Translate(-center) *
+	Translate(1,0) *
+	FlipY() * 
+	Translate(center);
+
+      dst.appendReal("CD1_1", cd.matrix(0,0), 9, NULL);
+      dst.appendReal("CD1_2", cd.matrix(0,1), 9, NULL);
+      dst.appendReal("CD2_1", cd.matrix(1,0), 9, NULL);
+      dst.appendReal("CD2_2", cd.matrix(1,1), 9, NULL);
+    }
+    else if (src->find("CDELT1") || src->find("CDELT2")) {
+      // crota2
+      double cdelt1 = src->getReal("CDELT1",1);
+      double cdelt2 = src->getReal("CDELT2",1);
+      double crot2 = src->getReal("CROT2",0);
+
+      Matrix cd = Vector(cdelt1,cdelt2) * Rotate(crot2) *
+	currentContext->fits->imageToRef * refToUser *
+	wcsOrientationMatrix *
+	Rotate(wcsRotation) *
+	orientationMatrix *
+	Scale(zoom_.invert()) *
+	Rotate(rotation) *
+	Translate(center) *
+	Translate(-center) *
+	Translate(1,0) *
+	FlipY() * 
+	Translate(center);
+
+      dst.appendReal("CD1_1", cd.matrix(0,0), 9, NULL);
+      dst.appendReal("CD1_2", cd.matrix(0,1), 9, NULL);
+      dst.appendReal("CD2_1", cd.matrix(1,0), 9, NULL);
+      dst.appendReal("CD2_2", cd.matrix(1,1), 9, NULL);
+    }
 #endif
   }
 }

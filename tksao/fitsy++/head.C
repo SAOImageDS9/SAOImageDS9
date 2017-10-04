@@ -327,17 +327,6 @@ char* FitsHead::getString(const char* name)
     return NULL;
 }
 
-char* FitsHead::getStringCopy(const char* name)
-{
-  char* card = find(name);
-  if (card) {
-    FitsCard c(card);
-    return c.getStringCopy();
-  }
-  else
-    return NULL;
-}
-
 char* FitsHead::getComment(const char* name)
 {
   char* card = find(name);
@@ -354,7 +343,7 @@ char* FitsHead::getKeyword(const char* name)
   char* card = find(name);
   if (card) {
     FitsCard c(card);
-    return c.getAsString();
+    return c.getKeyword();
   }
   else
     return NULL;

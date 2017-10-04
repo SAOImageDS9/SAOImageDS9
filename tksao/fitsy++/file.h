@@ -213,7 +213,6 @@ public:
   void getComplex(const char* name, double* real, double* img, 
 		  double rdef, double idef);
   char* getString(const char* name);
-  char* getStringCopy(const char* name);
   char* getComment(const char* name);
   char* getKeyword(const char* name);
 

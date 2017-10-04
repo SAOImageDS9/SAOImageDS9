@@ -235,14 +235,6 @@ char* FitsCard::getString()
   return buf_;
 }
 
-char* FitsCard::getStringCopy()
-{
-  getString();
-  char* cpy = new char[strlen(buf_)+1];
-  strcpy(cpy, buf_);
-  return cpy;
-}
-
 char* FitsCard::getComment()
 {
   char* cpy = new char[FTY_CARDLEN-7];
@@ -252,7 +244,7 @@ char* FitsCard::getComment()
   return cpy;
 }
 
-char* FitsCard::getAsString()
+char* FitsCard::getKeyword()
 {
   char value[FTY_CARDLEN];
   value[0] = '\0';

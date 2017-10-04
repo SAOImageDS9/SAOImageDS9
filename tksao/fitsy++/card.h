@@ -64,9 +64,8 @@ public:
   double getReal();
   void getComplex(double*, double*);
   char* getString();
-  char* getStringCopy();
   char* getComment();
-  char* getAsString();
+  char* getKeyword();
 };
 
 #endif

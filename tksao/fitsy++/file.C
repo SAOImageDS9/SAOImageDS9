@@ -485,20 +485,6 @@ char* FitsFile::getString(const char* name)
   return NULL;
 }
 
-char* FitsFile::getStringCopy(const char* name)
-{
-  if (head_) {
-    char* r = head_->getStringCopy(name);
-    if (r)
-      return r;
-    else
-      if (primary_ && inherit_)
-	return primary_->getStringCopy(name);
-  }
-
-  return NULL;
-}
-
 char* FitsFile::getComment(const char* name)
 {
   if (head_) {

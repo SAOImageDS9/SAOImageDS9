@@ -120,8 +120,5 @@ void FitsImage::initCompress()
     ; // unknown compression type
   }
 
-  if (type)
-    delete [] type;
-
   return;
 }

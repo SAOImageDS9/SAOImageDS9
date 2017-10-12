@@ -101,7 +101,7 @@ int Grid3d::doit(RenderMode rm)
       // Get 2D SkyFrame
       AstFrameSet* wcs = (AstFrameSet*)astCopy(fits->getAST(system_));
       if (astIsASkyFrame(astGetFrame(wcs, AST__CURRENT)))
-      	fits->setAstSkyFrame(wcs, sky_);
+      	fits->setAstWCSSkyFrame(wcs, sky_);
 
       // Record the index of the current Frame
       int isky = astGetI(wcs, "Current");

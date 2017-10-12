@@ -68,7 +68,7 @@ int Grid25d::doit(RenderMode rm)
       // Get 2D SkyFrame
       AstFrameSet* wcs = (AstFrameSet*)astCopy(fits->getAST(system_));
       if (astIsASkyFrame(astGetFrame(wcs, AST__CURRENT)))
-      	fits->setAstSkyFrame(wcs, sky_);
+      	fits->setAstWCSSkyFrame(wcs, sky_);
       // astShow(wcs);
  
       // Record the index of the current Frame

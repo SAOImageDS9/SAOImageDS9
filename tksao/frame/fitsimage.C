@@ -1447,12 +1447,12 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
       return;
 
     if (astIsASkyFrame(astGetFrame(ast_[0], AST__CURRENT))) {
-      setAstSkyFrame(ast_[ss],sky1);
+      setAstWCSSkyFrame(ast_[ss],sky1);
       for (int ii=0; ii<nxx1; ii++) {
 	ixx1[ii] *= M_PI/180.;
 	iyy1[ii] *= M_PI/180.;
       }	
-      astTran2(ast_[ss], nxx1, ixx1, iyy1, 0, oxx1, oyy1);
+      astWCSTran(ast_[ss], nxx1, ixx1, iyy1, 0, oxx1, oyy1);
     }
   }
 
@@ -1462,12 +1462,12 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
       return;
 
     if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT))) {
-      setAstSkyFrame(ast_[ss],sky2);
+      setAstWCSSkyFrame(ast_[ss],sky2);
       for (int ii=0; ii<nxx2; ii++) {
 	ixx2[ii] *= M_PI/180.;
 	iyy2[ii] *= M_PI/180.;
       }	
-      astTran2(ast_[ss], nxx2, ixx2, iyy2, 0, oxx2, oyy2);
+      astWCSTran(ast_[ss], nxx2, ixx2, iyy2, 0, oxx2, oyy2);
     }
   }
 
@@ -1593,13 +1593,13 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 	(astIsASkyFrame(astGetFrame(ast_[ss2], AST__CURRENT)))))
     return;
 
-  setAstSkyFrame(ast_[ss1],sky1);
+  setAstWCSSkyFrame(ast_[ss1],sky1);
   for (int ii=0; ii<nxx1; ii++) {
     ixx1[ii] *= M_PI/180.;
     iyy1[ii] *= M_PI/180.;
   }
 
-  setAstSkyFrame(ast_[ss2],sky2);
+  setAstWCSSkyFrame(ast_[ss2],sky2);
   for (int ii=0; ii<nxx2; ii++) {
     xx2[ii] *= M_PI/180.;
     yy2[ii] *= M_PI/180.;
@@ -1620,12 +1620,12 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 
   if ((ss1 != ss2) || (sky1 != sky2)) {
     AstFrameSet* wcs1 = (AstFrameSet*)astCopy(ast_[ss1]);
-    setAstSkyFrame(wcs1,sky1);
+    setAstWCSSkyFrame(wcs1,sky1);
     AstFrameSet* wcs2 = (AstFrameSet*)astCopy(ast_[ss2]);
-    setAstSkyFrame(wcs2,sky2);
+    setAstWCSSkyFrame(wcs2,sky2);
     AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "SKY");
     if (cvt != AST__NULL)
-      astTran2(cvt, nxx1, ixx1, iyy1, 1, xx1, yy1);
+      astWCSTran(cvt, nxx1, ixx1, iyy1, 1, xx1, yy1);
   }
   else {
     memcpy(xx1,ixx1,nxx1*sizeof(double));
@@ -1633,7 +1633,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   }
 
   // now compare
-  setAstSkyFrame(ast_[ss2],sky2);
+  setAstWCSSkyFrame(ast_[ss2],sky2);
   Tcl_Obj* objrr = Tcl_NewListObj(0,NULL);
   for(int jj=0; jj<nxx2; jj++) {
     for (int ii=0; ii<nxx1; ii++) {
@@ -2907,7 +2907,7 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
   yy[0] = cc[1];
   yy[1] = cc[1]+1;
   yy[2] = cc[1]+1;
-  astTran2(ast_[ss],3,xx,yy,1,wxx,wyy);
+  astWCSTran(ast_[ss],3,xx,yy,1,wxx,wyy);
 
   double pt0[2];
   pt0[0] = wxx[0];
@@ -2943,7 +2943,7 @@ double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
   yy[0] = cc[1];
   yy[1] = cc[1]+1;
   yy[2] = cc[1]+1;
-  astTran2(ast_[ss],3,xx,yy,1,wxx,wyy);
+  astWCSTran(ast_[ss],3,xx,yy,1,wxx,wyy);
 
   double pt0[2];
   pt0[0] = wxx[0];
@@ -3006,7 +3006,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   astClearStatus; // just to make sure
 
   if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
-    setAstSkyFrame(ast_[ss],sky);
+    setAstWCSSkyFrame(ast_[ss],sky);
 
   Vector pp = center();
   double xx[3], yy[3], wx[3], wy[32];
@@ -3016,7 +3016,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   yy[0] = pp[1];
   yy[1] = pp[1]+1;
   yy[2] = pp[1];
-  astTran2(ast_[ss],3,xx,yy,1,wx,wy);
+  astWCSTran(ast_[ss],3,xx,yy,1,wx,wy);
 
   double aa[2], bb[2], cc[2];
   aa[0]= wx[0];
@@ -3072,7 +3072,7 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   astClearStatus; // just to make sure
 
   if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
-    setAstSkyFrame(ast_[ss],sky);
+    setAstWCSSkyFrame(ast_[ss],sky);
 
   Vector pp = center();
   double xx[2], yy[2], wx[2], wy[2];
@@ -3080,7 +3080,7 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   xx[1] = pp[0];
   yy[0] = pp[1];
   yy[1] = pp[1]+1;
-  astTran2(ast_[ss],2,xx,yy,1,wx,wy);
+  astWCSTran(ast_[ss],2,xx,yy,1,wx,wy);
 
   double aa[2], bb[2];
   aa[0]= wx[0];
@@ -3127,16 +3127,16 @@ Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
     double xx =0;
     double yy =0;
     if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT))) {
-      setAstSkyFrame(ast_[ii],sky);
-      astTran2(ast_[ii], 1, in.v, in.v+1, 1, &xx, &yy);
+      setAstWCSSkyFrame(ast_[ii],sky);
+      astWCSTran(ast_[ii], 1, in.v, in.v+1, 1, &xx, &yy);
       if (astOK)
-	if (checkAst(xx,yy))
+	if (checkAstWCS(xx,yy))
 	  return Vector(radToDeg(xx),yy*180./M_PI);
     }
     else {
-      astTran2(ast_[ii], 1, in.v, in.v+1, 1, &xx, &yy);
+      astWCSTran(ast_[ii], 1, in.v, in.v+1, 1, &xx, &yy);
       if (astOK)
-	if (checkAst(xx,yy))
+	if (checkAstWCS(xx,yy))
 	  return Vector(xx,yy);
     }
   }
@@ -3163,20 +3163,20 @@ Vector* FitsImage::pix2wcs(Vector* in, int num, Coord::CoordSystem sys,
   int ii = sys-Coord::WCS;
   if (ii>=0 && ast_ && ast_[ii]) {
     if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT))) {
-      setAstSkyFrame(ast_[ii],sky);
-      astTran2(ast_[ii], num, xin, yin, 1, xout, yout);
+      setAstWCSSkyFrame(ast_[ii],sky);
+      astWCSTran(ast_[ii], num, xin, yin, 1, xout, yout);
       if (astOK) {
 	for (int ii=0; ii<num; ii++)
-	  if (checkAst(xout[ii],yout[ii]))
+	  if (checkAstWCS(xout[ii],yout[ii]))
 	    out[ii] = Vector(radToDeg(xout[ii]),yout[ii]*180./M_PI);
 	return out;
       }
     }
     else {
-      astTran2(ast_[ii], num, xin, yin, 1, xout, yout);
+      astWCSTran(ast_[ii], num, xin, yin, 1, xout, yout);
       if (astOK) {
 	for (int ii=0; ii<num; ii++)
-	  if (checkAst(xout[ii],yout[ii]))
+	  if (checkAstWCS(xout[ii],yout[ii]))
 	    out[ii] = Vector(xout[ii],yout[ii]);
 	return out;
       }
@@ -3199,9 +3199,9 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
     double yy =0;
     ostringstream str;
     if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT))) {
-      setAstSkyFrame(ast_[ii],sky);
-      astTran2(ast_[ii], 1, in.v, in.v+1, 1, &xx, &yy);
-      if (!astOK || !checkAst(xx,yy)) {
+      setAstWCSSkyFrame(ast_[ii],sky);
+      astWCSTran(ast_[ii], 1, in.v, in.v+1, 1, &xx, &yy);
+      if (!astOK || !checkAstWCS(xx,yy)) {
 	maperr =1;
 	lbuf[0] = '\0';
 	return lbuf;
@@ -3223,16 +3223,16 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 	case Coord::FK5:
 	case Coord::ICRS:
 	  xx = zeroTWOPI(xx);
-	  setAstFormat(ast_[ii],1,"hms.3");
-	  setAstFormat(ast_[ii],2,"+dms.3");
+	  setAstWCSFormat(ast_[ii],1,"hms.3");
+	  setAstWCSFormat(ast_[ii],2,"+dms.3");
 	  break;
 	case Coord::GALACTIC:
 	case Coord::SUPERGALACTIC:
 	case Coord::ECLIPTIC:
 	case Coord::HELIOECLIPTIC:
 	  xx = zeroTWOPI(xx);
-	  setAstFormat(ast_[ii],1,"+dms.3");
-	  setAstFormat(ast_[ii],2,"+dms.3");
+	  setAstWCSFormat(ast_[ii],1,"+dms.3");
+	  setAstWCSFormat(ast_[ii],2,"+dms.3");
 	  break;
 	}
 
@@ -3242,8 +3242,8 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
       }
     }
     else {
-      astTran2(ast_[ii], 1, in.v, in.v+1, 1, &xx, &yy);
-      if (!astOK || !checkAst(xx,yy)) {
+      astWCSTran(ast_[ii], 1, in.v, in.v+1, 1, &xx, &yy);
+      if (!astOK || !checkAstWCS(xx,yy)) {
 	maperr =1;
 	return lbuf;
       }
@@ -3266,17 +3266,17 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
     double xx =0;
     double yy =0;
     if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT))) {
-      setAstSkyFrame(ast_[ii],sky);
+      setAstWCSSkyFrame(ast_[ii],sky);
       Vector rr = in*M_PI/180.;
-      astTran2(ast_[ii], 1, rr.v, &(rr[1]), 0, &xx, &yy);
+      astWCSTran(ast_[ii], 1, rr.v, &(rr[1]), 0, &xx, &yy);
       if (astOK)
-	if (checkAst(xx,yy))
+	if (checkAstWCS(xx,yy))
 	  return Vector(xx,yy);
     }
     else {
-      astTran2(ast_[ii], 1, in.v, in.v+1, 0, &xx, &yy);
+      astWCSTran(ast_[ii], 1, in.v, in.v+1, 0, &xx, &yy);
       if (astOK)
-	if (checkAst(xx,yy))
+	if (checkAstWCS(xx,yy))
 	  return Vector(xx,yy);
     }
   }
@@ -3303,24 +3303,24 @@ Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
   int ii = sys-Coord::WCS;
   if (ii>=0 && ast_ && ast_[ii]) {
     if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT))) {
-      setAstSkyFrame(ast_[ii],sky);
+      setAstWCSSkyFrame(ast_[ii],sky);
       for (int kk=0; kk<num; kk++) {
 	xin[kk] *= M_PI/180.;
 	yin[kk] *= M_PI/180.;
       }
-      astTran2(ast_[ii], num, xin, yin, 0, xout, yout);
+      astWCSTran(ast_[ii], num, xin, yin, 0, xout, yout);
       if (astOK) {
 	for (int kk=0; kk<num; kk++)
-	  if (checkAst(xout[kk],yout[kk]))
+	  if (checkAstWCS(xout[kk],yout[kk]))
 	    out[kk] = Vector(xout[kk],yout[kk]);
 	return out;
       }
     }
     else {
-      astTran2(ast_[ii], num, xin, yin, 0, xout, yout);
+      astWCSTran(ast_[ii], num, xin, yin, 0, xout, yout);
       if (astOK) {
 	for (int kk=0; kk<num; kk++)
-	  if (checkAst(xout[kk],yout[kk]))
+	  if (checkAstWCS(xout[kk],yout[kk]))
 	    out[kk] = Vector(xout[kk],yout[kk]);
 	return out;
       }
@@ -3528,7 +3528,7 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
   if (!ast_[ii])
     return;
 
-  setAstSystem(ast_[ii], (Coord::CoordSystem)(ii+Coord::WCS));
+  setAstWCSSystem(ast_[ii], (Coord::CoordSystem)(ii+Coord::WCS));
 
   if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT))) {
     if (astGetI(ast_[ii],"LatAxis") == 1) {
@@ -3540,7 +3540,7 @@ void FitsImage::astinit(int ii, FitsHead* hd, FitsHead* prim)
 
   // set default skyframe
   if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT)))
-    setAstSkyFrame(ast_[ii],Coord::FK5);
+    setAstWCSSkyFrame(ast_[ii],Coord::FK5);
 
 }
 
@@ -3558,16 +3558,16 @@ void FitsImage::astinit0(int ii, FitsHead* hd, FitsHead* prim)
 
   // set default skyframe
   if (astIsASkyFrame(astGetFrame(ast_[ii], AST__CURRENT)))
-    setAstSkyFrame(ast_[ii],Coord::FK5);
+    setAstWCSSkyFrame(ast_[ii],Coord::FK5);
 }
 
-int FitsImage::checkAst(double x, double y)
+int FitsImage::checkAstWCS(double x, double y)
 {
   // check for reasonable values
   return (fabs(x) < FLT_MAX && fabs(y) < FLT_MAX) ? 1 : 0;
 }
 
-void FitsImage::setAstFormat(AstFrameSet* aa, int id, const char* format)
+void FitsImage::setAstWCSFormat(AstFrameSet* aa, int id, const char* format)
 {
   // is it already set?
   // ast is very slow when changing params
@@ -3584,36 +3584,7 @@ void FitsImage::setAstFormat(AstFrameSet* aa, int id, const char* format)
   astSet(aa, str.str().c_str());
 }
 
-#ifdef NEWWCS
-void FitsImage::setAstSystem(AstFrameSet* fs, Coord::CoordSystem sys)
-{
-  int nn = astGetI(fs,"nframe");
-  char cc = ' ';
-  int ww = sys-Coord::WCS;
-  switch (sys) {
-  case Coord::DATA:
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::AMPLIFIER:
-  case Coord::DETECTOR:
-    // this should not happen
-    return;
-  default:
-    if (ww)
-      cc = ww+'@';
-  }
-
-  for (int ii=0; ii<nn; ii++) {
-    const char* id = astGetC(astGetFrame(fs,ii+1),"Ident");
-    if (cc == id[0]) {
-      astSetI(fs,"current",ii+1);
-      break;
-    }
-  }
-}
-#endif
-
-void FitsImage::setAstSkyFrame(AstFrameSet* aa, Coord::SkyFrame sky)
+void FitsImage::setAstWCSSkyFrame(AstFrameSet* aa, Coord::SkyFrame sky)
 {
   // is sky frame
   if (!astIsASkyFrame(astGetFrame(aa, AST__CURRENT)))
@@ -3672,6 +3643,54 @@ void FitsImage::setAstSkyFrame(AstFrameSet* aa, Coord::SkyFrame sky)
     return;
   }
 }
+
+#ifndef NEWWCS
+
+void FitsImage::astWCSTran(AstFrameSet* ast, int npoint, 
+			   const double* xin, const double* yin,
+			   int forward,
+			   double* xout, double* yout)
+{
+  astTran2(ast, npoint, xin, yin, forward, xout, yout);
+}
+
+#else
+
+void FitsImage::astWCSTran(AstFrameSet* ast, int npoint, 
+			   const double* xin, const double* yin,
+			   int forward,
+			   double* xout, double* yout)
+{
+  astTran2(ast, npoint, xin, yin, forward, xout, yout);
+}
+
+void FitsImage::setAstWCSSystem(AstFrameSet* fs, Coord::CoordSystem sys)
+{
+  int nn = astGetI(fs,"nframe");
+  char cc = ' ';
+  int ww = sys-Coord::WCS;
+  switch (sys) {
+  case Coord::DATA:
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::AMPLIFIER:
+  case Coord::DETECTOR:
+    // this should not happen
+    return;
+  default:
+    if (ww)
+      cc = ww+'@';
+  }
+
+  for (int ii=0; ii<nn; ii++) {
+    const char* id = astGetC(astGetFrame(fs,ii+1),"Ident");
+    if (cc == id[0]) {
+      astSetI(fs,"current",ii+1);
+      break;
+    }
+  }
+}
+#endif
 
 AstFrameSet* FitsImage::fits2ast(FitsHead* hd) 
 {

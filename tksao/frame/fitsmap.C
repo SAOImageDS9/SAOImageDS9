@@ -181,7 +181,7 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
 	double yy[2], wyy[2];
 	yy[0] = cc[1];
 	yy[1] = cc[1]+dd;
-	astTran2(ast_[ss],2,xx,yy,1,wxx,wyy);
+	astWCSTran(ast_[ss],2,xx,yy,1,wxx,wyy);
 
 	double pt0[2];
 	pt0[0] = wxx[0];
@@ -307,7 +307,7 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
 
 	Vector cc = center();
 	Vector wcc;
-	astTran2(wcs,1,cc.v,cc.v+1,1,wcc.v,wcc.v+1);
+	astWCSTran(wcs,1,cc.v,cc.v+1,1,wcc.v,wcc.v+1);
 
 	double wxx[2], xx[2];
 	wxx[0] = wcc[0];
@@ -315,7 +315,7 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
 	double wyy[2], yy[2];
 	wyy[0] = wcc[1];
 	wyy[1] = wcc[1]+rdd;
-	astTran2(wcs,2,wxx,wyy,0,xx,yy);
+	astWCSTran(wcs,2,wxx,wyy,0,xx,yy);
 
 	double pt0[2];
 	pt0[0] = xx[0];

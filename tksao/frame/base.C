@@ -665,10 +665,10 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
       astInvert(cvt);
       Vector ll;
       Vector cc1 = fits1->center();
-      astTran2(fits1->ast_[ss1], 1, cc1.v, cc1.v+1, 1, ll.v, ll.v+1);
+      fits1->astWCSTran(fits1->ast_[ss1], 1, cc1.v, cc1.v+1, 1, ll.v, ll.v+1);
       Vector ur;
       Vector cc2 = fits2->center();
-      astTran2(fits2->ast_[ss2], 1, cc2.v, cc2.v+1, 1, ur.v, ur.v+1);
+      fits2->astWCSTran(fits2->ast_[ss2], 1, cc2.v, cc2.v+1, 1, ur.v, ur.v+1);
 
       double fit[6];
       double tol = 1;

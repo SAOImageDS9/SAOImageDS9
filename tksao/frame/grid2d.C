@@ -73,7 +73,7 @@ int Grid2d::doit(RenderMode rm)
 #ifndef NEWWCS
       // set desired skyformat
       if (astIsASkyFrame(astGetFrame(wcsfs, AST__CURRENT)))
-	fits->setAstSkyFrame(wcsfs, sky_);
+	fits->setAstWCSSkyFrame(wcsfs, sky_);
 
       // add wcs to frameset
       // this will link frame 2 of frameset to frame 3 wcs with unitMap
@@ -87,8 +87,8 @@ int Grid2d::doit(RenderMode rm)
       // this will link frameset to wcs with unitMap
       astInvert(wcsfs);
       astAddFrame(frameSet,2,astUnitMap(2,""),wcsfs);
-      fits->setAstSystem(frameSet,system_);
-      fits->setAstSkyFrame(frameSet,sky_);
+      fits->setAstWCSSystem(frameSet,system_);
+      fits->setAstWCSSkyFrame(frameSet,sky_);
 #endif
     }
   }

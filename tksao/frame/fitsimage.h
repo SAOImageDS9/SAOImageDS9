@@ -142,7 +142,7 @@ class FitsImage {
   void wcsShow(WorldCoor*);
   void astinit(int, FitsHead*, FitsHead*);
   void astinit0(int, FitsHead*, FitsHead*);
-  int checkAst(double, double);
+  int checkAstWCS(double, double);
   AstFrameSet* fits2ast(FitsHead*);  
   AstFrameSet* buildast(int, FitsHead*, FitsHead*);
   AstFrameSet* buildast0(int, FitsHead*, FitsHead*);
@@ -394,11 +394,14 @@ class FitsImage {
   double getWCSPixelArea(Coord::CoordSystem);
 #endif
   
+  void astWCSTran(AstFrameSet*, int npoint, const double*, const double*,
+		  int, double*, double*);
+  
 #ifdef NEWWCS
-  void setAstSystem(AstFrameSet*, Coord::CoordSystem);
+  void setAstWCSSystem(AstFrameSet*, Coord::CoordSystem);
 #endif
-  void setAstSkyFrame(AstFrameSet*, Coord::SkyFrame);
-  void setAstFormat(AstFrameSet*, int, const char*);
+  void setAstWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
+  void setAstWCSFormat(AstFrameSet*, int, const char*);
   AstFrameSet* getAST(Coord::CoordSystem sys) 
     {return (ast_ && ast_[sys-Coord::WCS]) ? ast_[sys-Coord::WCS] : NULL;}
 

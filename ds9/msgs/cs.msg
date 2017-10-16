@@ -1,9 +1,10 @@
 ::msgcat::mcset cs {2D} 
+::msgcat::mcset cs {3D View} 
 ::msgcat::mcset cs {3D} 
 ::msgcat::mcset cs {A postscript generation error has occurred} [encoding convertfrom iso8859-2 {Chyba pøi generování postscriptu}]
 ::msgcat::mcset cs {AIP} 
 ::msgcat::mcset cs {Abort} [encoding convertfrom iso8859-2 {Pøeru¹it}]
-::msgcat::mcset cs {About SAOImage DS9} [encoding convertfrom iso8859-2 {O programu SAOImage DS9}]
+::msgcat::mcset cs {About SAOImageDS9} 
 ::msgcat::mcset cs {About} [encoding convertfrom iso8859-2 {O programu}] 
 ::msgcat::mcset cs {Acknowledgment} [encoding convertfrom iso8859-2 {Podìkování}]
 ::msgcat::mcset cs {Add} [encoding convertfrom iso8859-2 {Pøidat}]
@@ -24,7 +25,6 @@
 ::msgcat::mcset cs {An error has occurred while printing} [encoding convertfrom iso8859-2 {Pøi tisku se vyskytla chyba}]
 ::msgcat::mcset cs {An error has occurred while reading image.} [encoding convertfrom iso8859-2 {Chyba pøi ètení obrázku.}]
 ::msgcat::mcset cs {An error has occurred while saving} [encoding convertfrom iso8859-2 {Chyba pøi ukládání souboru}]
-::msgcat::mcset cs {An error has occurred while updating VO server list} 
 ::msgcat::mcset cs {An error has occurred while writing image.} 
 ::msgcat::mcset cs {An internal error has been detected} [encoding convertfrom iso8859-2 {Byla detekována vnitøní chyba programu}]
 ::msgcat::mcset cs {Analysis Command Log} [encoding convertfrom iso8859-2 {Poøizovat záznam analytických pøíkazù}]
@@ -225,6 +225,7 @@
 ::msgcat::mcset cs {Depth} [encoding convertfrom iso8859-2 {Hloubka}]
 ::msgcat::mcset cs {Detector} [encoding convertfrom iso8859-2 {Detektor}]
 ::msgcat::mcset cs {Dialog Box} [encoding convertfrom iso8859-2 {Dialogové okno}]
+::msgcat::mcset cs {Diameter} 
 ::msgcat::mcset cs {Diamond} [encoding convertfrom iso8859-2 {Diamant}]
 ::msgcat::mcset cs {Dimension} [encoding convertfrom iso8859-2 {Rozmìr}]
 ::msgcat::mcset cs {Direction} 
@@ -247,6 +248,7 @@
 ::msgcat::mcset cs {Ellipse Panda} 
 ::msgcat::mcset cs {Ellipse} [encoding convertfrom iso8859-2 {Elipsa}]
 ::msgcat::mcset cs {Elliptical Annulus} 
+::msgcat::mcset cs {Elliptical Gaussian} 
 ::msgcat::mcset cs {Elliptical Panda} 
 ::msgcat::mcset cs {Enable Confirmation Dialogs} 
 ::msgcat::mcset cs {Enable} [encoding convertfrom iso8859-2 {Povolit}]
@@ -316,6 +318,7 @@
 ::msgcat::mcset cs {Global} 
 ::msgcat::mcset cs {Goto Frame} [encoding convertfrom iso8859-2 {Bì¾ na snímek}]
 ::msgcat::mcset cs {Graph Horz} 
+::msgcat::mcset cs {Graph Parameters} 
 ::msgcat::mcset cs {Graph Vert} 
 ::msgcat::mcset cs {Graphics} 
 ::msgcat::mcset cs {Graphs} [encoding convertfrom iso8859-2 {Grafy}]
@@ -337,6 +340,7 @@
 ::msgcat::mcset cs {High} [encoding convertfrom iso8859-2 {Vysoký}]
 ::msgcat::mcset cs {Histogram Equalization} [encoding convertfrom iso8859-2 {Vyrovnání histogramu}]
 ::msgcat::mcset cs {Histogram} 
+::msgcat::mcset cs {Horizontal Display Size} 
 ::msgcat::mcset cs {Horizontal Graph} [encoding convertfrom iso8859-2 {Horizontální graf}]
 ::msgcat::mcset cs {Horizontal Layout} [encoding convertfrom iso8859-2 {Horizontální rozlo¾ení}]
 ::msgcat::mcset cs {Horizontal} 
@@ -370,8 +374,6 @@
 ::msgcat::mcset cs {Iteration} 
 ::msgcat::mcset cs {JPEG Quality Factor} [encoding convertfrom iso8859-2 {Kvalita JPEGu}]
 ::msgcat::mcset cs {Keep-Alive} 
-::msgcat::mcset cs {Kernel} [encoding convertfrom iso8859-2 {Kernel}]
-::msgcat::mcset cs {Keyboard Shortcuts} [encoding convertfrom iso8859-2 {Klávesnicové zkratky}]
 ::msgcat::mcset cs {Keyboard} [encoding convertfrom iso8859-2 {Klávesnice}]
 ::msgcat::mcset cs {Keyword} 
 ::msgcat::mcset cs {Labels} [encoding convertfrom iso8859-2 {Oznaèení}]
@@ -455,6 +457,8 @@
 ::msgcat::mcset cs {Magenta} 
 ::msgcat::mcset cs {Magnification} 
 ::msgcat::mcset cs {Magnifier} [encoding convertfrom iso8859-2 {Zvìt¹ovaè}]
+::msgcat::mcset cs {Major Radius} 
+::msgcat::mcset cs {Major Sigma} 
 ::msgcat::mcset cs {Major} 
 ::msgcat::mcset cs {Manual} 
 ::msgcat::mcset cs {Mask Parameters} [encoding convertfrom iso8859-2 {Nastavení masky}]
@@ -495,6 +499,8 @@
 ::msgcat::mcset cs {Min Max Parameters} 
 ::msgcat::mcset cs {Min Max} [encoding convertfrom iso8859-2 {Minimum Maximum}]
 ::msgcat::mcset cs {Minimum} 
+::msgcat::mcset cs {Minor Radius} 
+::msgcat::mcset cs {Minor Sigma} 
 ::msgcat::mcset cs {Minor} 
 ::msgcat::mcset cs {Minutes} 
 ::msgcat::mcset cs {Min} 
@@ -509,7 +515,6 @@
 ::msgcat::mcset cs {Mouse Click Epsilon} 
 ::msgcat::mcset cs {Mouse Wheel Bin} 
 ::msgcat::mcset cs {Mouse Wheel Zoom} 
-::msgcat::mcset cs {Mouse and Keyboard} 
 ::msgcat::mcset cs {Move Back} 
 ::msgcat::mcset cs {Move First} 
 ::msgcat::mcset cs {Move Forward} 
@@ -702,6 +707,7 @@
 ::msgcat::mcset cs {Show All} [encoding convertfrom iso8859-2 {Zobrazit v¹e}]
 ::msgcat::mcset cs {Show Command} 
 ::msgcat::mcset cs {Show Compass} 
+::msgcat::mcset cs {Show Grid} 
 ::msgcat::mcset cs {Show Text} 
 ::msgcat::mcset cs {Show/Hide Frames} [encoding convertfrom iso8859-2 {Zobrazit/skrýt snímky}]
 ::msgcat::mcset cs {Show} 
@@ -739,7 +745,7 @@
 ::msgcat::mcset cs {Status} 
 ::msgcat::mcset cs {Step} 
 ::msgcat::mcset cs {Stop} 
-::msgcat::mcset cs {Story of SAOImage DS9} [encoding convertfrom iso8859-2 {Pøíbìh SAOImage DS9}]
+::msgcat::mcset cs {Story of SAOImageDS9} 
 ::msgcat::mcset cs {Story} 
 ::msgcat::mcset cs {Sum} 
 ::msgcat::mcset cs {Sunken} 
@@ -815,6 +821,7 @@
 ::msgcat::mcset cs {VO} 
 ::msgcat::mcset cs {Value} [encoding convertfrom iso8859-2 {Hodnota}]
 ::msgcat::mcset cs {Vector} 
+::msgcat::mcset cs {Vertical Display Size} 
 ::msgcat::mcset cs {Vertical Graph} [encoding convertfrom iso8859-2 {Vertikální graf}]
 ::msgcat::mcset cs {Vertical Layout} [encoding convertfrom iso8859-2 {Vertikální rozlo¾ení}]
 ::msgcat::mcset cs {Vertical Text} 
@@ -833,7 +840,6 @@
 ::msgcat::mcset cs {X Grid} 
 ::msgcat::mcset cs {XPA Information} 
 ::msgcat::mcset cs {XPA not initialized} [encoding convertfrom iso8859-2]
-::msgcat::mcset cs {XPA unable to verify hostname, setting XPA_METHOD to LOCAL} 
 ::msgcat::mcset cs {XPA} 
 ::msgcat::mcset cs {X} 
 ::msgcat::mcset cs {Y Axis Title} 

@@ -1,9 +1,10 @@
 ::msgcat::mcset pt {2D} 
+::msgcat::mcset pt {3D View} 
 ::msgcat::mcset pt {3D} 
 ::msgcat::mcset pt {A postscript generation error has occurred} {Um erro ocorreu ao gerar o postscript}
 ::msgcat::mcset pt {AIP} 
 ::msgcat::mcset pt {Abort} 
-::msgcat::mcset pt {About SAOImage DS9} {Sobre o SAOImage DS9}
+::msgcat::mcset pt {About SAOImageDS9} 
 ::msgcat::mcset pt {About} {Sobre}
 ::msgcat::mcset pt {Acknowledgment} [encoding convertfrom iso8859-1 {Créditos}]
 ::msgcat::mcset pt {Add} {Adicionar}
@@ -24,7 +25,6 @@
 ::msgcat::mcset pt {An error has occurred while printing} {Um erro ocorreu ao imprimir}
 ::msgcat::mcset pt {An error has occurred while reading image.} 
 ::msgcat::mcset pt {An error has occurred while saving} {Um erro ocorreu ao salvar}
-::msgcat::mcset pt {An error has occurred while updating VO server list} 
 ::msgcat::mcset pt {An error has occurred while writing image.} 
 ::msgcat::mcset pt {An internal error has been detected} 
 ::msgcat::mcset pt {Analysis Command Log} [encoding convertfrom iso8859-1 {Registro de Comandos de Análise}]
@@ -225,6 +225,7 @@
 ::msgcat::mcset pt {Depth} {Profundidade}
 ::msgcat::mcset pt {Detector} 
 ::msgcat::mcset pt {Dialog Box} {Box de dialog}
+::msgcat::mcset pt {Diameter} 
 ::msgcat::mcset pt {Diamond} {Diamante}
 ::msgcat::mcset pt {Dimension} [encoding convertfrom iso8859-1 {Dimensão}]
 ::msgcat::mcset pt {Direction} 
@@ -247,6 +248,7 @@
 ::msgcat::mcset pt {Ellipse Panda} 
 ::msgcat::mcset pt {Ellipse} {Elipse}
 ::msgcat::mcset pt {Elliptical Annulus} {Annulus Elipse}
+::msgcat::mcset pt {Elliptical Gaussian} 
 ::msgcat::mcset pt {Elliptical Panda} [encoding convertfrom iso8859-1 {Panda Elíptico}]
 ::msgcat::mcset pt {Enable Confirmation Dialogs} {}
 ::msgcat::mcset pt {Enable} 
@@ -316,6 +318,7 @@
 ::msgcat::mcset pt {Global} 
 ::msgcat::mcset pt {Goto Frame} 
 ::msgcat::mcset pt {Graph Horz} 
+::msgcat::mcset pt {Graph Parameters} 
 ::msgcat::mcset pt {Graph Vert} 
 ::msgcat::mcset pt {Graphics} [encoding convertfrom iso8859-1 {Gráficos}]
 ::msgcat::mcset pt {Graphs} 
@@ -337,6 +340,7 @@
 ::msgcat::mcset pt {High} {Alto}
 ::msgcat::mcset pt {Histogram Equalization} [encoding convertfrom iso8859-1 {Equalização de Histograma}]
 ::msgcat::mcset pt {Histogram} {Histograma}
+::msgcat::mcset pt {Horizontal Display Size} 
 ::msgcat::mcset pt {Horizontal Graph} [encoding convertfrom iso8859-1 {Gráfico Horizontal}]
 ::msgcat::mcset pt {Horizontal Layout} {Layout Horizontal}
 ::msgcat::mcset pt {Horizontal} 
@@ -370,8 +374,6 @@
 ::msgcat::mcset pt {Iteration} 
 ::msgcat::mcset pt {JPEG Quality Factor} {Fator de qualidade JPEG}
 ::msgcat::mcset pt {Keep-Alive} 
-::msgcat::mcset pt {Kernel} 
-::msgcat::mcset pt {Keyboard Shortcuts} {Atalhos do teclado}
 ::msgcat::mcset pt {Keyboard} {Teclado}
 ::msgcat::mcset pt {Keyword} 
 ::msgcat::mcset pt {Labels} {Legendas}
@@ -455,6 +457,8 @@
 ::msgcat::mcset pt {Magenta} {Magenta}
 ::msgcat::mcset pt {Magnification} 
 ::msgcat::mcset pt {Magnifier} {Lente}
+::msgcat::mcset pt {Major Radius} 
+::msgcat::mcset pt {Major Sigma} 
 ::msgcat::mcset pt {Major} 
 ::msgcat::mcset pt {Manual} 
 ::msgcat::mcset pt {Mask Parameters} [encoding convertfrom iso8859-1 {Parâmetros da máscara}]
@@ -495,6 +499,8 @@
 ::msgcat::mcset pt {Min Max Parameters} 
 ::msgcat::mcset pt {Min Max} [encoding convertfrom iso8859-1 {Min Máx}]
 ::msgcat::mcset pt {Minimum} 
+::msgcat::mcset pt {Minor Radius} 
+::msgcat::mcset pt {Minor Sigma} 
 ::msgcat::mcset pt {Minor} {Menor}
 ::msgcat::mcset pt {Minutes} 
 ::msgcat::mcset pt {Min} 
@@ -509,7 +515,6 @@
 ::msgcat::mcset pt {Mouse Click Epsilon} 
 ::msgcat::mcset pt {Mouse Wheel Bin} 
 ::msgcat::mcset pt {Mouse Wheel Zoom} 
-::msgcat::mcset pt {Mouse and Keyboard} 
 ::msgcat::mcset pt {Move Back} 
 ::msgcat::mcset pt {Move First} 
 ::msgcat::mcset pt {Move Forward} 
@@ -702,6 +707,7 @@
 ::msgcat::mcset pt {Show All} {Mostre todos}
 ::msgcat::mcset pt {Show Command} 
 ::msgcat::mcset pt {Show Compass} 
+::msgcat::mcset pt {Show Grid} 
 ::msgcat::mcset pt {Show Text} 
 ::msgcat::mcset pt {Show/Hide Frames} {Mostra/Esconde Frames}
 ::msgcat::mcset pt {Show} {Mostrar}
@@ -739,7 +745,7 @@
 ::msgcat::mcset pt {Status} {Estado}
 ::msgcat::mcset pt {Step} {Passo}
 ::msgcat::mcset pt {Stop} {Parar}
-::msgcat::mcset pt {Story of SAOImage DS9} 
+::msgcat::mcset pt {Story of SAOImageDS9} 
 ::msgcat::mcset pt {Story} 
 ::msgcat::mcset pt {Sum} {Soma}
 ::msgcat::mcset pt {Sunken} 
@@ -815,6 +821,7 @@
 ::msgcat::mcset pt {VO} 
 ::msgcat::mcset pt {Value} {Valor} 
 ::msgcat::mcset pt {Vector} {Vetor}
+::msgcat::mcset pt {Vertical Display Size} 
 ::msgcat::mcset pt {Vertical Graph} [encoding convertfrom iso8859-1 {Gráfico Vertical}]
 ::msgcat::mcset pt {Vertical Layout} {Layout Vertical}
 ::msgcat::mcset pt {Vertical Text} {Texto Vertical}
@@ -833,7 +840,6 @@
 ::msgcat::mcset pt {X Grid} 
 ::msgcat::mcset pt {XPA Information} [encoding convertfrom iso8859-1 {Informação sobre o XPA}]
 ::msgcat::mcset pt {XPA not initialized} [encoding convertfrom iso8859-1 {XPA não inicializado}]
-::msgcat::mcset pt {XPA unable to verify hostname, setting XPA_METHOD to LOCAL} 
 ::msgcat::mcset pt {XPA} 
 ::msgcat::mcset pt {X} 
 ::msgcat::mcset pt {Y Axis Title} 

@@ -1,9 +1,10 @@
 ::msgcat::mcset ja {2D} 
+::msgcat::mcset ja {3D View} 
 ::msgcat::mcset ja {3D} [encoding convertfrom euc-jp "\x33\xbc\xa1\xb8\xb5"]
 ::msgcat::mcset ja {A postscript generation error has occurred} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xb9\xa5\xc8\xa5\xb9\xa5\xaf\xa5\xea\xa5\xd7\xa5\xc8\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xba\xee\xc0\xae\xa4\xcb\xbc\xba\xc7\xd4\xa4\xb7\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
 ::msgcat::mcset ja {AIP} 
 ::msgcat::mcset ja {Abort} 
-::msgcat::mcset ja {About SAOImage DS9} [encoding convertfrom euc-jp "\x53\x41\x4f\x49\x6d\x61\x67\x65\x20\x44\x53\x39\x20\xa4\xcb\xa4\xc4\xa4\xa4\xa4\xc6"]
+::msgcat::mcset ja {About SAOImageDS9} 
 ::msgcat::mcset ja {About} [encoding convertfrom euc-jp "\x44\x53\x39\x20\xa4\xcb\xa4\xc4\xa4\xa4\xa4\xc6"]
 ::msgcat::mcset ja {Acknowledgment} [encoding convertfrom euc-jp "\xbc\xd5\xbc\xad"]
 ::msgcat::mcset ja {Add} [encoding convertfrom euc-jp "\xc4\xc9\xb2\xc3"]
@@ -24,7 +25,6 @@
 ::msgcat::mcset ja {An error has occurred while printing} [encoding convertfrom euc-jp "\xb0\xf5\xba\xfe\xa4\xcb\xbc\xba\xc7\xd4\xa4\xb7\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
 ::msgcat::mcset ja {An error has occurred while reading image.} 
 ::msgcat::mcset ja {An error has occurred while saving} [encoding convertfrom euc-jp "\xca\xdd\xc2\xb8\xa4\xcb\xbc\xba\xc7\xd4\xa4\xb7\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
-::msgcat::mcset ja {An error has occurred while updating VO server list} 
 ::msgcat::mcset ja {An error has occurred while writing image.} 
 ::msgcat::mcset ja {An internal error has been detected} 
 ::msgcat::mcset ja {Analysis Command Log} [encoding convertfrom euc-jp "\xb2\xf2\xc0\xcf\xa5\xb3\xa5\xde\xa5\xf3\xa5\xc9\xa4\xce\xb5\xad\xcf\xbf"]
@@ -225,6 +225,7 @@
 ::msgcat::mcset ja {Depth} [encoding convertfrom euc-jp "\xbf\xbc\xa4\xb5"]
 ::msgcat::mcset ja {Detector} [encoding convertfrom euc-jp "\xb8\xa1\xbd\xd0\xb4\xef\xba\xc2\xc9\xb8"]
 ::msgcat::mcset ja {Dialog Box} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xc3\xa5\xd7\xa5\xa2\xa5\xc3\xa5\xd7\xa5\xe1\xa5\xcb\xa5\xe5\xa1\xbc"]
+::msgcat::mcset ja {Diameter} 
 ::msgcat::mcset ja {Diamond} [encoding convertfrom euc-jp "\xc9\xa9\xb7\xc1"]
 ::msgcat::mcset ja {Dimension} [encoding convertfrom euc-jp "\xbc\xa1\xb8\xb5"]
 ::msgcat::mcset ja {Direction} 
@@ -247,6 +248,7 @@
 ::msgcat::mcset ja {Ellipse Panda} [encoding convertfrom euc-jp "\xc9\xf4\xca\xac\xc2\xca\xb1\xdf"]
 ::msgcat::mcset ja {Ellipse} [encoding convertfrom euc-jp "\xc2\xca\xb1\xdf"]
 ::msgcat::mcset ja {Elliptical Annulus} [encoding convertfrom euc-jp "\xc3\xe6\xc8\xb4\xa4\xad\xc2\xca\xb1\xdf"]
+::msgcat::mcset ja {Elliptical Gaussian} 
 ::msgcat::mcset ja {Elliptical Panda} [encoding convertfrom euc-jp "\xc3\xe6\xc8\xb4\xa4\xad\xc9\xf4\xca\xac\xc2\xca\xb1\xdf"]
 ::msgcat::mcset ja {Enable Confirmation Dialogs} [encoding convertfrom euc-jp "\xb3\xce\xc7\xa7\xa5\xe1\xa5\xc3\xa5\xbb\xa1\xbc\xa5\xb8\xa4\xf2\xc9\xbd\xbc\xa8"]
 ::msgcat::mcset ja {Enable} 
@@ -316,6 +318,7 @@
 ::msgcat::mcset ja {Global} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xed\xa1\xbc\xa5\xd0\xa5\xeb"]
 ::msgcat::mcset ja {Goto Frame} [encoding convertfrom euc-jp "\xbb\xd8\xc4\xea\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xcb\xb0\xdc\xc6\xb0"]
 ::msgcat::mcset ja {Graph Horz} [encoding convertfrom euc-jp "\xb2\xa3\xc3\xc7\xcc\xcc\xbf\xde"]
+::msgcat::mcset ja {Graph Parameters} 
 ::msgcat::mcset ja {Graph Vert} [encoding convertfrom euc-jp "\xbd\xc4\xc3\xc7\xcc\xcc\xbf\xde"]
 ::msgcat::mcset ja {Graphics} 
 ::msgcat::mcset ja {Graphs} 
@@ -337,6 +340,7 @@
 ::msgcat::mcset ja {High} [encoding convertfrom euc-jp "\xbe\xe5\xb8\xc2"]
 ::msgcat::mcset ja {Histogram Equalization} [encoding convertfrom euc-jp "\xa5\xd2\xa5\xb9\xa5\xc8\xa5\xb0\xa5\xe9\xa5\xe0\xc5\xf9\xca\xac\xc9\xdb"]
 ::msgcat::mcset ja {Histogram} [encoding convertfrom euc-jp "\xa5\xd2\xa5\xb9\xa5\xc8\xa5\xb0\xa5\xe9\xa5\xe0"]
+::msgcat::mcset ja {Horizontal Display Size} 
 ::msgcat::mcset ja {Horizontal Graph} [encoding convertfrom euc-jp "\xb2\xa3\xc3\xc7\xcc\xcc"]
 ::msgcat::mcset ja {Horizontal Layout} [encoding convertfrom euc-jp "\xb2\xe8\xc1\xfc\xa4\xce\xbe\xe5\xa4\xcb\xc7\xdb\xc3\xd6"]
 ::msgcat::mcset ja {Horizontal} 
@@ -370,8 +374,6 @@
 ::msgcat::mcset ja {Iteration} [encoding convertfrom euc-jp "\xb7\xab\xa4\xea\xca\xd6\xa4\xb7"]
 ::msgcat::mcset ja {JPEG Quality Factor} [encoding convertfrom euc-jp "\x4a\x50\x45\x47\xa4\xce\xc9\xca\xbc\xc1"]
 ::msgcat::mcset ja {Keep-Alive} 
-::msgcat::mcset ja {Kernel} 
-::msgcat::mcset ja {Keyboard Shortcuts} [encoding convertfrom euc-jp "\xa5\xb7\xa5\xe7\xa1\xbc\xa5\xc8\xa5\xab\xa5\xc3\xa5\xc8"]
 ::msgcat::mcset ja {Keyboard} [encoding convertfrom euc-jp "\xa5\xad\xa1\xbc\xa5\xdc\xa1\xbc\xa5\xc9"]
 ::msgcat::mcset ja {Keyword} 
 ::msgcat::mcset ja {Labels} [encoding convertfrom euc-jp "\xa5\xe9\xa5\xd9\xa5\xeb"]
@@ -455,6 +457,8 @@
 ::msgcat::mcset ja {Magenta} [encoding convertfrom euc-jp "\xc5\xed\xbf\xa7"]
 ::msgcat::mcset ja {Magnification} 
 ::msgcat::mcset ja {Magnifier} [encoding convertfrom euc-jp "\xb3\xc8\xc2\xe7\xbf\xde"]
+::msgcat::mcset ja {Major Radius} 
+::msgcat::mcset ja {Major Sigma} 
 ::msgcat::mcset ja {Major} [encoding convertfrom euc-jp "\xc4\xb9\xbc\xb4"]
 ::msgcat::mcset ja {Manual} [encoding convertfrom euc-jp "\xbc\xea\xc6\xb0"]
 ::msgcat::mcset ja {Mask Parameters} [encoding convertfrom euc-jp "\xa5\xde\xa5\xb9\xa5\xaf\xa4\xce\xc0\xdf\xc4\xea"]
@@ -495,6 +499,8 @@
 ::msgcat::mcset ja {Min Max Parameters} 
 ::msgcat::mcset ja {Min Max} [encoding convertfrom euc-jp "\xba\xc7\xc2\xe7\xa1\xa6\xba\xc7\xbe\xae"]
 ::msgcat::mcset ja {Minimum} 
+::msgcat::mcset ja {Minor Radius} 
+::msgcat::mcset ja {Minor Sigma} 
 ::msgcat::mcset ja {Minor} [encoding convertfrom euc-jp "\xc3\xbb\xbc\xb4"]
 ::msgcat::mcset ja {Minutes} 
 ::msgcat::mcset ja {Min} [encoding convertfrom euc-jp "\xba\xc7\xbe\xae"]
@@ -509,7 +515,6 @@
 ::msgcat::mcset ja {Mouse Click Epsilon} 
 ::msgcat::mcset ja {Mouse Wheel Bin} 
 ::msgcat::mcset ja {Mouse Wheel Zoom} 
-::msgcat::mcset ja {Mouse and Keyboard} 
 ::msgcat::mcset ja {Move Back} [encoding convertfrom euc-jp "\xc1\xb0\xa4\xcb\xb0\xdc\xc6\xb0"]
 ::msgcat::mcset ja {Move First} [encoding convertfrom euc-jp "\xba\xc7\xbd\xe9\xa4\xcb\xb0\xdc\xc6\xb0"]
 ::msgcat::mcset ja {Move Forward} [encoding convertfrom euc-jp "\xbc\xa1\xa4\xcb\xb0\xdc\xc6\xb0"]
@@ -702,6 +707,7 @@
 ::msgcat::mcset ja {Show All} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xc9\xbd\xbc\xa8"]
 ::msgcat::mcset ja {Show Command} 
 ::msgcat::mcset ja {Show Compass} 
+::msgcat::mcset ja {Show Grid} 
 ::msgcat::mcset ja {Show Text} [encoding convertfrom euc-jp "\xca\xb8\xbb\xfa\xa4\xf2\xc9\xbd\xbc\xa8"]
 ::msgcat::mcset ja {Show/Hide Frames} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xce\xc9\xbd\xbc\xa8\x2f\xc8\xf3\xc9\xbd\xbc\xa8"]
 ::msgcat::mcset ja {Show} [encoding convertfrom euc-jp "\xc9\xbd\xbc\xa8"]
@@ -739,7 +745,7 @@
 ::msgcat::mcset ja {Status} [encoding convertfrom euc-jp "\xbe\xf5\xc2\xd6"]
 ::msgcat::mcset ja {Step} [encoding convertfrom euc-jp "\xa5\xb9\xa5\xc6\xa5\xc3\xa5\xd7"]
 ::msgcat::mcset ja {Stop} [encoding convertfrom euc-jp "\xbd\xaa\xce\xbb"]
-::msgcat::mcset ja {Story of SAOImage DS9} 
+::msgcat::mcset ja {Story of SAOImageDS9} 
 ::msgcat::mcset ja {Story} 
 ::msgcat::mcset ja {Sum} [encoding convertfrom euc-jp "\xb9\xe7\xb7\xd7"]
 ::msgcat::mcset ja {Sunken} 
@@ -815,6 +821,7 @@
 ::msgcat::mcset ja {VO} [encoding convertfrom euc-jp "\xb2\xbe\xc1\xdb\xc5\xb7\xca\xb8\xc2\xe6"]
 ::msgcat::mcset ja {Value} [encoding convertfrom euc-jp "\xc3\xcd"]
 ::msgcat::mcset ja {Vector} [encoding convertfrom euc-jp "\xa5\xd9\xa5\xaf\xa5\xc8\xa5\xeb"]
+::msgcat::mcset ja {Vertical Display Size} 
 ::msgcat::mcset ja {Vertical Graph} [encoding convertfrom euc-jp "\xbd\xc4\xc3\xc7\xcc\xcc"]
 ::msgcat::mcset ja {Vertical Layout} [encoding convertfrom euc-jp "\xb2\xe8\xcc\xcc\xa4\xce\xba\xb8\xa4\xcb\xc7\xdb\xc3\xd6"]
 ::msgcat::mcset ja {Vertical Text} 
@@ -833,7 +840,6 @@
 ::msgcat::mcset ja {X Grid} 
 ::msgcat::mcset ja {XPA Information} [encoding convertfrom euc-jp "\x58\x50\x41\xa4\xce\xbe\xf0\xca\xf3"]
 ::msgcat::mcset ja {XPA not initialized} [encoding convertfrom euc-jp "\x58\x50\x41\x20\xa4\xac\xbd\xe9\xb4\xfc\xb2\xbd\xa4\xb5\xa4\xec\xa4\xc6\xa4\xa4\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
-::msgcat::mcset ja {XPA unable to verify hostname, setting XPA_METHOD to LOCAL} 
 ::msgcat::mcset ja {XPA} [encoding convertfrom euc-jp "\x58\x50\x41"]
 ::msgcat::mcset ja {X} 
 ::msgcat::mcset ja {Y Axis Title} 

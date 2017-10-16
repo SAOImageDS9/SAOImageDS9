@@ -1,9 +1,10 @@
 ::msgcat::mcset zh {2D} 
+::msgcat::mcset zh {3D View} 
 ::msgcat::mcset zh {3D} 
 ::msgcat::mcset zh {A postscript generation error has occurred} 
 ::msgcat::mcset zh {AIP} 
 ::msgcat::mcset zh {Abort} 
-::msgcat::mcset zh {About SAOImage DS9} 
+::msgcat::mcset zh {About SAOImageDS9} 
 ::msgcat::mcset zh {About} [encoding convertfrom big5 "\xC3\xF6 \xA9\xF3"]
 ::msgcat::mcset zh {Acknowledgment} 
 ::msgcat::mcset zh {Add} 
@@ -24,7 +25,6 @@
 ::msgcat::mcset zh {An error has occurred while printing} 
 ::msgcat::mcset zh {An error has occurred while reading image.} 
 ::msgcat::mcset zh {An error has occurred while saving} 
-::msgcat::mcset zh {An error has occurred while updating VO server list} 
 ::msgcat::mcset zh {An error has occurred while writing image.} 
 ::msgcat::mcset zh {An internal error has been detected} 
 ::msgcat::mcset zh {Analysis Command Log} 
@@ -225,6 +225,7 @@
 ::msgcat::mcset zh {Depth} 
 ::msgcat::mcset zh {Detector} 
 ::msgcat::mcset zh {Dialog Box} 
+::msgcat::mcset zh {Diameter} 
 ::msgcat::mcset zh {Diamond} 
 ::msgcat::mcset zh {Dimension} 
 ::msgcat::mcset zh {Direction} 
@@ -247,6 +248,7 @@
 ::msgcat::mcset zh {Ellipse Panda} 
 ::msgcat::mcset zh {Ellipse} [encoding convertfrom big5 "\xBE\xF2 \xB6\xEA \xA7\xCE"]
 ::msgcat::mcset zh {Elliptical Annulus} [encoding convertfrom big5 "\xBE\xF2 \xB6\xEA \xB0\xE9"]
+::msgcat::mcset zh {Elliptical Gaussian} 
 ::msgcat::mcset zh {Elliptical Panda} 
 ::msgcat::mcset zh {Enable Confirmation Dialogs} 
 ::msgcat::mcset zh {Enable} 
@@ -316,6 +318,7 @@
 ::msgcat::mcset zh {Global} 
 ::msgcat::mcset zh {Goto Frame} [encoding convertfrom big5 "\xA8\xEC \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Graph Horz} 
+::msgcat::mcset zh {Graph Parameters} 
 ::msgcat::mcset zh {Graph Vert} 
 ::msgcat::mcset zh {Graphics} 
 ::msgcat::mcset zh {Graphs} 
@@ -337,6 +340,7 @@
 ::msgcat::mcset zh {High} 
 ::msgcat::mcset zh {Histogram Equalization} 
 ::msgcat::mcset zh {Histogram} 
+::msgcat::mcset zh {Horizontal Display Size} 
 ::msgcat::mcset zh {Horizontal Graph} 
 ::msgcat::mcset zh {Horizontal Layout} 
 ::msgcat::mcset zh {Horizontal} [encoding convertfrom big5 "\xA4\xF4 \xA5\xAD"]
@@ -370,8 +374,6 @@
 ::msgcat::mcset zh {Iteration} 
 ::msgcat::mcset zh {JPEG Quality Factor} 
 ::msgcat::mcset zh {Keep-Alive} 
-::msgcat::mcset zh {Kernel} 
-::msgcat::mcset zh {Keyboard Shortcuts} 
 ::msgcat::mcset zh {Keyboard} 
 ::msgcat::mcset zh {Keyword} 
 ::msgcat::mcset zh {Labels} 
@@ -455,6 +457,8 @@
 ::msgcat::mcset zh {Magenta} [encoding convertfrom big5 "\xAC\xF5 \xB5\xB5 \xA6\xE2"]
 ::msgcat::mcset zh {Magnification} 
 ::msgcat::mcset zh {Magnifier} [encoding convertfrom big5 "\xA9\xF1 \xA4\x6A \xC3\xE8 \xB5\xF8 \xB5\xA1"]
+::msgcat::mcset zh {Major Radius} 
+::msgcat::mcset zh {Major Sigma} 
 ::msgcat::mcset zh {Major} 
 ::msgcat::mcset zh {Manual} 
 ::msgcat::mcset zh {Mask Parameters} 
@@ -495,6 +499,8 @@
 ::msgcat::mcset zh {Min Max Parameters} 
 ::msgcat::mcset zh {Min Max} 
 ::msgcat::mcset zh {Minimum} 
+::msgcat::mcset zh {Minor Radius} 
+::msgcat::mcset zh {Minor Sigma} 
 ::msgcat::mcset zh {Minor} 
 ::msgcat::mcset zh {Minutes} 
 ::msgcat::mcset zh {Min} 
@@ -509,7 +515,6 @@
 ::msgcat::mcset zh {Mouse Click Epsilon} 
 ::msgcat::mcset zh {Mouse Wheel Bin} 
 ::msgcat::mcset zh {Mouse Wheel Zoom} 
-::msgcat::mcset zh {Mouse and Keyboard} 
 ::msgcat::mcset zh {Move Back} 
 ::msgcat::mcset zh {Move First} 
 ::msgcat::mcset zh {Move Forward} 
@@ -702,6 +707,7 @@
 ::msgcat::mcset zh {Show All} [encoding convertfrom big5 "\xC5\xE3 \xA5\xDC \xA5\xFE \xB3\xA1"]
 ::msgcat::mcset zh {Show Command} 
 ::msgcat::mcset zh {Show Compass} 
+::msgcat::mcset zh {Show Grid} 
 ::msgcat::mcset zh {Show Text} 
 ::msgcat::mcset zh {Show/Hide Frames} 
 ::msgcat::mcset zh {Show} [encoding convertfrom big5 "\xC5\xE3 \xA5\xDC"]
@@ -739,7 +745,7 @@
 ::msgcat::mcset zh {Status} 
 ::msgcat::mcset zh {Step} 
 ::msgcat::mcset zh {Stop} 
-::msgcat::mcset zh {Story of SAOImage DS9} 
+::msgcat::mcset zh {Story of SAOImageDS9} 
 ::msgcat::mcset zh {Story} 
 ::msgcat::mcset zh {Sum} 
 ::msgcat::mcset zh {Sunken} 
@@ -815,6 +821,7 @@
 ::msgcat::mcset zh {VO} 
 ::msgcat::mcset zh {Value} 
 ::msgcat::mcset zh {Vector} [encoding convertfrom big5 "\xA6\x56 \xB6\x71"]
+::msgcat::mcset zh {Vertical Display Size} 
 ::msgcat::mcset zh {Vertical Graph} 
 ::msgcat::mcset zh {Vertical Layout} 
 ::msgcat::mcset zh {Vertical Text} 
@@ -833,7 +840,6 @@
 ::msgcat::mcset zh {X Grid} 
 ::msgcat::mcset zh {XPA Information} 
 ::msgcat::mcset zh {XPA not initialized} 
-::msgcat::mcset zh {XPA unable to verify hostname, setting XPA_METHOD to LOCAL} 
 ::msgcat::mcset zh {XPA} 
 ::msgcat::mcset zh {X} 
 ::msgcat::mcset zh {Y Axis Title} 

@@ -1,9 +1,10 @@
 ::msgcat::mcset de {2D} 
+::msgcat::mcset de {3D View} 
 ::msgcat::mcset de {3D} 
 ::msgcat::mcset de {A postscript generation error has occurred} {Beim Erstellen von Postscript ist ein Fehler aufgetreten} 
 ::msgcat::mcset de {AIP} 
 ::msgcat::mcset de {Abort} 
-::msgcat::mcset de {About SAOImage DS9} [encoding convertfrom iso8859-1 {Über SAOImage DS9}]
+::msgcat::mcset de {About SAOImageDS9} 
 ::msgcat::mcset de {About} [encoding convertfrom iso8859-1 {Über}]
 ::msgcat::mcset de {Acknowledgment} {Danksagung}
 ::msgcat::mcset de {Add} [encoding convertfrom iso8859-1 {Hinzufügen}]
@@ -24,7 +25,6 @@
 ::msgcat::mcset de {An error has occurred while printing} {Beim Drucken ist ein Fehler aufgetreten}
 ::msgcat::mcset de {An error has occurred while reading image.} 
 ::msgcat::mcset de {An error has occurred while saving} {Beim Speichern ist ein Fehler aufgetreten}
-::msgcat::mcset de {An error has occurred while updating VO server list} 
 ::msgcat::mcset de {An error has occurred while writing image.} 
 ::msgcat::mcset de {An internal error has been detected} 
 ::msgcat::mcset de {Analysis Command Log} {Analysebefehlslog}
@@ -225,6 +225,7 @@
 ::msgcat::mcset de {Depth} {Tiefe}
 ::msgcat::mcset de {Detector} {Detektor}
 ::msgcat::mcset de {Dialog Box} {Dialogbox}
+::msgcat::mcset de {Diameter} 
 ::msgcat::mcset de {Diamond} {Raute}
 ::msgcat::mcset de {Dimension} 
 ::msgcat::mcset de {Direction} 
@@ -247,6 +248,7 @@
 ::msgcat::mcset de {Ellipse Panda} {Ellipsen Panda}
 ::msgcat::mcset de {Ellipse} 
 ::msgcat::mcset de {Elliptical Annulus} {Elliptischer Kreisring}
+::msgcat::mcset de {Elliptical Gaussian} 
 ::msgcat::mcset de {Elliptical Panda} {Elliptischer Panda}
 ::msgcat::mcset de {Enable Confirmation Dialogs} [encoding convertfrom iso8859-1 {Bestätigungsdialoge einschalten}]
 ::msgcat::mcset de {Enable} 
@@ -316,6 +318,7 @@
 ::msgcat::mcset de {Global} 
 ::msgcat::mcset de {Goto Frame} 
 ::msgcat::mcset de {Graph Horz} 
+::msgcat::mcset de {Graph Parameters} 
 ::msgcat::mcset de {Graph Vert} 
 ::msgcat::mcset de {Graphics} {Grafik}
 ::msgcat::mcset de {Graphs} 
@@ -337,6 +340,7 @@
 ::msgcat::mcset de {High} {Hoch}
 ::msgcat::mcset de {Histogram Equalization} {Histogrammausgleich}
 ::msgcat::mcset de {Histogram} {Histogramm}
+::msgcat::mcset de {Horizontal Display Size} 
 ::msgcat::mcset de {Horizontal Graph} {Horizontaldarstellung}
 ::msgcat::mcset de {Horizontal Layout} {Horizontales Layout}
 ::msgcat::mcset de {Horizontal} 
@@ -370,8 +374,6 @@
 ::msgcat::mcset de {Iteration} 
 ::msgcat::mcset de {JPEG Quality Factor} [encoding convertfrom iso8859-1 {JPEG Qualitätsfaktor}]
 ::msgcat::mcset de {Keep-Alive} 
-::msgcat::mcset de {Kernel} 
-::msgcat::mcset de {Keyboard Shortcuts} {Tastatur-Shortcuts}
 ::msgcat::mcset de {Keyboard} {Tastatur}
 ::msgcat::mcset de {Keyword} 
 ::msgcat::mcset de {Labels} {Beschriftung}
@@ -455,6 +457,8 @@
 ::msgcat::mcset de {Magenta} 
 ::msgcat::mcset de {Magnification} 
 ::msgcat::mcset de {Magnifier} [encoding convertfrom iso8859-1 {Vergrößerungsglas}]
+::msgcat::mcset de {Major Radius} 
+::msgcat::mcset de {Major Sigma} 
 ::msgcat::mcset de {Major} [encoding convertfrom iso8859-1 {Groß}]
 ::msgcat::mcset de {Manual} {Manuell}
 ::msgcat::mcset de {Mask Parameters} {Maskenparameter}
@@ -495,6 +499,8 @@
 ::msgcat::mcset de {Min Max Parameters} 
 ::msgcat::mcset de {Min Max} 
 ::msgcat::mcset de {Minimum} 
+::msgcat::mcset de {Minor Radius} 
+::msgcat::mcset de {Minor Sigma} 
 ::msgcat::mcset de {Minor} {Gering}
 ::msgcat::mcset de {Minutes} 
 ::msgcat::mcset de {Min} 
@@ -509,7 +515,6 @@
 ::msgcat::mcset de {Mouse Click Epsilon} 
 ::msgcat::mcset de {Mouse Wheel Bin} 
 ::msgcat::mcset de {Mouse Wheel Zoom} 
-::msgcat::mcset de {Mouse and Keyboard} 
 ::msgcat::mcset de {Move Back} 
 ::msgcat::mcset de {Move First} 
 ::msgcat::mcset de {Move Forward} 
@@ -702,6 +707,7 @@
 ::msgcat::mcset de {Show All} {Alle zeigen}
 ::msgcat::mcset de {Show Command} 
 ::msgcat::mcset de {Show Compass} 
+::msgcat::mcset de {Show Grid} 
 ::msgcat::mcset de {Show Text} 
 ::msgcat::mcset de {Show/Hide Frames} {Rahmen zeigen/verstecken}
 ::msgcat::mcset de {Show} 
@@ -739,7 +745,7 @@
 ::msgcat::mcset de {Status} 
 ::msgcat::mcset de {Step} {Stufe}
 ::msgcat::mcset de {Stop} 
-::msgcat::mcset de {Story of SAOImage DS9} 
+::msgcat::mcset de {Story of SAOImageDS9} 
 ::msgcat::mcset de {Story} 
 ::msgcat::mcset de {Sum} {Summieren}
 ::msgcat::mcset de {Sunken} 
@@ -815,6 +821,7 @@
 ::msgcat::mcset de {VO} 
 ::msgcat::mcset de {Value} {Wert}
 ::msgcat::mcset de {Vector} {Vektor}
+::msgcat::mcset de {Vertical Display Size} 
 ::msgcat::mcset de {Vertical Graph} {Vertikaldarstellung}
 ::msgcat::mcset de {Vertical Layout} {Vertikales layout}
 ::msgcat::mcset de {Vertical Text} {Vertikaler text}
@@ -833,7 +840,6 @@
 ::msgcat::mcset de {X Grid} 
 ::msgcat::mcset de {XPA Information} 
 ::msgcat::mcset de {XPA not initialized} {XPA nicht initialisiert}
-::msgcat::mcset de {XPA unable to verify hostname, setting XPA_METHOD to LOCAL} 
 ::msgcat::mcset de {XPA} 
 ::msgcat::mcset de {X} 
 ::msgcat::mcset de {Y Axis Title} 

@@ -1,9 +1,10 @@
 ::msgcat::mcset da {2D} 
+::msgcat::mcset da {3D View} 
 ::msgcat::mcset da {3D} 
 ::msgcat::mcset da {A postscript generation error has occurred} [encoding convertfrom iso8859-1 {En fejl er opstået under postscript generering}]
 ::msgcat::mcset da {AIP} 
 ::msgcat::mcset da {Abort} 
-::msgcat::mcset da {About SAOImage DS9} {Om SAOImage DS9}
+::msgcat::mcset da {About SAOImageDS9} 
 ::msgcat::mcset da {About} {Om}
 ::msgcat::mcset da {Acknowledgment} {Tak}
 ::msgcat::mcset da {Add} [encoding convertfrom iso8859-1 {Tilføj}]
@@ -24,7 +25,6 @@
 ::msgcat::mcset da {An error has occurred while printing} [encoding convertfrom iso8859-1 {Fejl opstået under udskrivning}]
 ::msgcat::mcset da {An error has occurred while reading image.} 
 ::msgcat::mcset da {An error has occurred while saving} [encoding convertfrom iso8859-1 {Fejl opstået under gemning}]
-::msgcat::mcset da {An error has occurred while updating VO server list} 
 ::msgcat::mcset da {An error has occurred while writing image.} 
 ::msgcat::mcset da {An internal error has been detected} 
 ::msgcat::mcset da {Analysis Command Log} {Analyse kommando logbog}
@@ -225,6 +225,7 @@
 ::msgcat::mcset da {Depth} {Dybde}
 ::msgcat::mcset da {Detector} {Detektor}
 ::msgcat::mcset da {Dialog Box} {Dialog vindue}
+::msgcat::mcset da {Diameter} 
 ::msgcat::mcset da {Diamond} {Ruder}
 ::msgcat::mcset da {Dimension} {Dimension}
 ::msgcat::mcset da {Direction} 
@@ -247,6 +248,7 @@
 ::msgcat::mcset da {Ellipse Panda} {Ellipse Panda} 
 ::msgcat::mcset da {Ellipse} {Ellipse}
 ::msgcat::mcset da {Elliptical Annulus} {Elliptisk ringform}
+::msgcat::mcset da {Elliptical Gaussian} 
 ::msgcat::mcset da {Elliptical Panda} {Elliptisk pandaform}
 ::msgcat::mcset da {Enable Confirmation Dialogs} [encoding convertfrom iso8859-1 {Aktiver bekræftelsesdialoger}]
 ::msgcat::mcset da {Enable} 
@@ -316,6 +318,7 @@
 ::msgcat::mcset da {Global} {Global}
 ::msgcat::mcset da {Goto Frame} [encoding convertfrom iso8859-1 {Gå til ramme}]
 ::msgcat::mcset da {Graph Horz} {vandret graf}
+::msgcat::mcset da {Graph Parameters} 
 ::msgcat::mcset da {Graph Vert} {lodret graf}
 ::msgcat::mcset da {Graphics} {Grafisk}
 ::msgcat::mcset da {Graphs} 
@@ -337,6 +340,7 @@
 ::msgcat::mcset da {High} [encoding convertfrom iso8859-1 {Høj}]
 ::msgcat::mcset da {Histogram Equalization} {Histogram udligning}
 ::msgcat::mcset da {Histogram} {Histogram}
+::msgcat::mcset da {Horizontal Display Size} 
 ::msgcat::mcset da {Horizontal Graph} {Vandret graf}
 ::msgcat::mcset da {Horizontal Layout} {Vandret layout}
 ::msgcat::mcset da {Horizontal} 
@@ -370,8 +374,6 @@
 ::msgcat::mcset da {Iteration} 
 ::msgcat::mcset da {JPEG Quality Factor} {JPEG kvalitetsfaktor}
 ::msgcat::mcset da {Keep-Alive} 
-::msgcat::mcset da {Kernel} 
-::msgcat::mcset da {Keyboard Shortcuts} {Tastatur genveje}
 ::msgcat::mcset da {Keyboard} {Tastatur}
 ::msgcat::mcset da {Keyword} 
 ::msgcat::mcset da {Labels} {Etiketter}
@@ -455,6 +457,8 @@
 ::msgcat::mcset da {Magenta} 
 ::msgcat::mcset da {Magnification} 
 ::msgcat::mcset da {Magnifier} [encoding convertfrom iso8859-1 {Forstørrelse}]
+::msgcat::mcset da {Major Radius} 
+::msgcat::mcset da {Major Sigma} 
 ::msgcat::mcset da {Major} 
 ::msgcat::mcset da {Manual} 
 ::msgcat::mcset da {Mask Parameters} {Maske parametre}
@@ -495,6 +499,8 @@
 ::msgcat::mcset da {Min Max Parameters} 
 ::msgcat::mcset da {Min Max} {Min Maks}
 ::msgcat::mcset da {Minimum} 
+::msgcat::mcset da {Minor Radius} 
+::msgcat::mcset da {Minor Sigma} 
 ::msgcat::mcset da {Minor} 
 ::msgcat::mcset da {Minutes} 
 ::msgcat::mcset da {Min} 
@@ -509,7 +515,6 @@
 ::msgcat::mcset da {Mouse Click Epsilon} 
 ::msgcat::mcset da {Mouse Wheel Bin} 
 ::msgcat::mcset da {Mouse Wheel Zoom} 
-::msgcat::mcset da {Mouse and Keyboard} 
 ::msgcat::mcset da {Move Back} {flyt tilbage} 
 ::msgcat::mcset da {Move First} {flyt forrest}
 ::msgcat::mcset da {Move Forward} {flyt frem}
@@ -702,6 +707,7 @@
 ::msgcat::mcset da {Show All} {Vis alle}
 ::msgcat::mcset da {Show Command} 
 ::msgcat::mcset da {Show Compass} 
+::msgcat::mcset da {Show Grid} 
 ::msgcat::mcset da {Show Text} {Vis tekst}
 ::msgcat::mcset da {Show/Hide Frames} {Vis/skjul rammer}
 ::msgcat::mcset da {Show} {Vis}
@@ -739,7 +745,7 @@
 ::msgcat::mcset da {Status} 
 ::msgcat::mcset da {Step} {Trin}
 ::msgcat::mcset da {Stop} 
-::msgcat::mcset da {Story of SAOImage DS9} 
+::msgcat::mcset da {Story of SAOImageDS9} 
 ::msgcat::mcset da {Story} 
 ::msgcat::mcset da {Sum} 
 ::msgcat::mcset da {Sunken} 
@@ -815,6 +821,7 @@
 ::msgcat::mcset da {VO} 
 ::msgcat::mcset da {Value} [encoding convertfrom iso8859-1 {Værdi}]
 ::msgcat::mcset da {Vector} {Vektor}
+::msgcat::mcset da {Vertical Display Size} 
 ::msgcat::mcset da {Vertical Graph} {Lodret graf}
 ::msgcat::mcset da {Vertical Layout} {Lodret layoyt}
 ::msgcat::mcset da {Vertical Text} {Lodret tekst}
@@ -833,7 +840,6 @@
 ::msgcat::mcset da {X Grid} 
 ::msgcat::mcset da {XPA Information} {XPA information}
 ::msgcat::mcset da {XPA not initialized} {XPA ikke startet}
-::msgcat::mcset da {XPA unable to verify hostname, setting XPA_METHOD to LOCAL} 
 ::msgcat::mcset da {XPA} 
 ::msgcat::mcset da {X} 
 ::msgcat::mcset da {Y Axis Title} 

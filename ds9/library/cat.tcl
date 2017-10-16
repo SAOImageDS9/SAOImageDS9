@@ -1638,10 +1638,22 @@ proc ProcessCatalog {varname iname cvarname} {
 	    set cvar(plot,x) [lindex $var $i]
 	    incr i
 	    set cvar(plot,y) [lindex $var $i]
-	    incr i
-	    set cvar(plot,xerr) [lindex $var $i]
-	    incr i
-	    set cvar(plot,yerr) [lindex $var $i]
+	    set cvar(plot,xerr) {}
+	    set cvar(plot,yerr) {}
+	    set xerr [lindex $var [expr $i+1]]
+	    set yerr [lindex $var [expr $i+2]]
+	    if {$xerr != {}} {
+		if {[string range $xerr 0 0 ] != {-}} {
+		    incr i
+		    set cvar(plot,xerr) $xerr
+		    if {$yerr != {}} {
+			if {[string range $yerr 0 0 ] != {-}} {
+			    incr i
+			    set cvar(plot,yerr) $yerr
+			}
+		    }
+		}
+	    }
 	    CATPlotGenerate $cvarname
 	}
 	print {CATPrint $cvarname}

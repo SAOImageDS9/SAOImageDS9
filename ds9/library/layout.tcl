@@ -7,6 +7,7 @@ package provide DS9 1.0
 proc CanvasDef {} {
     global canvas
     global icanvas
+    global pcanvas
     global ds9
 
     # also adjust info.tcl LayoutInfoPanelHorz
@@ -36,6 +37,11 @@ proc CanvasDef {} {
 	aqua {set canvas(gap,bottom) 14}
 	win32 {set canvas(gap,bottom) 0}
     }
+
+    set pcanvas(horz,width) $icanvas(horz,width)
+    set pcanvas(horz,height) $icanvas(horz,height)
+    set pcanvas(vert,width) $icanvas(vert,width)
+    set pcanvas(vert,height) $icanvas(vert,height)
 }
 
 proc BlinkDef {} {

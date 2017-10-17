@@ -1614,10 +1614,37 @@ proc ProcessCatalog {varname iname cvarname} {
 		unique {incr i; set icat(unique) [FromYesNo [lindex $var $i]]}
 		return {incr i; set icat(return) [lindex $var $i]}
 		default {
-		    set icat(match1) "cat[lindex $var $i]"
-		    incr i
-		    set icat(match2) "cat[lindex $var $i]"
-		    CATMatch $current(frame) $icat(match1) $icat(match2)
+		    set icat(match1) {}
+		    set icat(match2) {}
+		    set m1 [lindex $var $i]
+		    set m2 [lindex $var [expr $i+1]]
+		    if {$m1 != {}} {
+			if {[string range $m1 0 0] != {-}} {
+			    if {$m2 != {}} {
+				if {[string range $m2 0 0] != {-}} {
+				    incr i
+				    set icat(match1) "cat$m1"
+				    set icat(match2) "cat$m2"
+				    CATMatch $current(frame) \
+					$icat(match1) $icat(match2)
+				    return
+				}
+			    } else {
+				# error
+				return
+			    }
+			}
+		    }
+		    incr i -1
+		    # find them
+		    set ll [llength $icat(cats)]
+		    if {$ll>1} {
+			set icat(match1) [lindex $icat(cats) [expr $ll-2]]
+			set icat(match2) [lindex $icat(cats) [expr $ll-1]]
+			CATMatch $current(frame) $icat(match1) $icat(match2)
+		    } else {
+			# error
+		    }
 		}
 	    }
 	}

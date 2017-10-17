@@ -228,14 +228,26 @@ proc CATMatch {frame varname1 varname2}  {
 	puts stderr "CATMatch $frame $varname1 $varname2"
     }
 
+    if {$varname1 == {} || $varname2 == {}} {
+	return
+    }
+
     upvar #0 $varname1 var1
     global $varname1
+    if {![info exists var1(tbldb)]} {
+	# error
+	return
+    }
     global $var1(tbldb)
     set t1 $var1(tbldb)
     upvar #0 $t1 T1
 
     upvar #0 $varname2 var2
     global $varname2
+    if {![info exists var2(tbldb)]} {
+	# error
+	return
+    }
     global $var2(tbldb)
     set t2 $var2(tbldb)
     upvar #0 $t2 T2

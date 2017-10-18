@@ -3564,8 +3564,6 @@ void FitsImage::astinit0(int ss, FitsHead* hd, FitsHead* prim)
 int FitsImage::checkAstWCS(double xx, double yy)
 {
   // check for reasonable values
-  if (!(fabs(xx) < FLT_MAX && fabs(yy) < FLT_MAX))
-    cerr << "***BANG***" << xx << ' ' << yy << endl;
   return (fabs(xx) < FLT_MAX && fabs(yy) < FLT_MAX) ? 1 : 0;
 }
 

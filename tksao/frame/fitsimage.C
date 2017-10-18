@@ -3424,27 +3424,27 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 
 // WCSX
 
-int FitsImage::hasWCSx(Coord::CoordSystem sys, int ss)
+int FitsImage::hasWCSx(Coord::CoordSystem sys, int aa)
 {
-  int ii = sys-Coord::WCS;
-  return (ss>=2&&ss<FTY_MAXAXES && sys>=Coord::WCS && wcsx_[ii]) ? 1 : 0;
+  int ss = sys-Coord::WCS;
+  return (aa>=2&&aa<FTY_MAXAXES && sys>=Coord::WCS && wcsx_[ss]) ? 1 : 0;
 }
 
-double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys, int ss)
+double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys, int aa)
 {
-  if (hasWCSx(sys,ss)) {
-    int ii = sys-Coord::WCS;
-    return (in-wcsx_[ii]->crpix[ss])*wcsx_[ii]->cd[ss] + wcsx_[ii]->crval[ss];
+  if (hasWCSx(sys,aa)) {
+    int ss = sys-Coord::WCS;
+    return (in-wcsx_[ss]->crpix[aa])*wcsx_[ss]->cd[aa] + wcsx_[ss]->crval[aa];
   }
   else
     return in;
 }
 
-double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys, int ss)
+double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys, int aa)
 {
-  if (hasWCSx(sys,ss)) {
-    int ii = sys-Coord::WCS;
-    return (in-wcsx_[ii]->crval[ss])/wcsx_[ii]->cd[ss] + wcsx_[ii]->crpix[ss];
+  if (hasWCSx(sys,aa)) {
+    int ss = sys-Coord::WCS;
+    return (in-wcsx_[ss]->crval[aa])/wcsx_[ss]->cd[aa] + wcsx_[ss]->crpix[aa];
   }
   else
     return in;

@@ -191,7 +191,7 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
 	pt1[1] = wyy[1];
 	double out = astDistance(ast_[ss],pt0,pt1);
 
-	if (astIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT))) {
+	if (astWCSIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT))) {
 	  out = radToDeg(out);
 	  switch (dist) {
 	  case Coord::DEGREE:
@@ -291,7 +291,7 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
 
 	AstFrameSet* wcs = (AstFrameSet*)astCopy(ast_[ss]);
 	double rdd = dd;
-	if (astIsASkyFrame(astGetFrame(wcs, AST__CURRENT))) {
+	if (astWCSIsASkyFrame(astGetFrame(wcs, AST__CURRENT))) {
 	  rdd = degToRad(dd);
 	  switch (dist) {
 	  case Coord::DEGREE:

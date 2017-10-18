@@ -72,7 +72,7 @@ int Grid2d::doit(RenderMode rm)
 
 #ifndef NEWWCS
       // set desired skyformat
-      if (astIsASkyFrame(astGetFrame(wcsfs, AST__CURRENT)))
+      if (fits->astWCSIsASkyFrame(astGetFrame(wcsfs, AST__CURRENT)))
 	fits->setAstWCSSkyFrame(wcsfs, sky_);
 
       // add wcs to frameset

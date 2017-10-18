@@ -313,26 +313,5 @@ proc PrefsDialogStartup {} {
     grid $f.xpa -padx 2 -pady 2 -sticky w
     grid $f.samp -padx 2 -pady 2 -sticky w
 
-    set f [ttk::labelframe $w.startup.horz -text \
-	   [msgcat::mc {Horizontal Display Size}]]
-    ttk::label $f.twidth -text [msgcat::mc {Width}]
-    ttk::entry $f.width -textvariable pcanvas(horz,width) -width 8
-    ttk::label $f.theight -text [msgcat::mc {Height}]
-    ttk::entry $f.height -textvariable pcanvas(horz,height) -width 8
-
-    grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
-    grid $f.theight $f.height -padx 2 -pady 2 -sticky w
-
-    set f [ttk::labelframe $w.startup.vert -text \
-	   [msgcat::mc {Vertical Display Size}]]
-    ttk::label $f.twidth -text [msgcat::mc {Width}]
-    ttk::entry $f.width -textvariable pcanvas(vert,width) -width 8
-    ttk::label $f.theight -text [msgcat::mc {Height}]
-    ttk::entry $f.height -textvariable pcanvas(vert,height) -width 8
-
-    grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
-    grid $f.theight $f.height -padx 2 -pady 2 -sticky w
-
-    pack $w.startup.params $w.startup.horz $w.startup.vert \
-	-side top -fill both -expand true
+    pack $w.startup.params -side top -fill both -expand true
 }

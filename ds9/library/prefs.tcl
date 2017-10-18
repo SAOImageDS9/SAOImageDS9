@@ -159,13 +159,6 @@ proc SavePrefs {} {
     puts $ch "array set pcurrent \{ [array get pcurrent] \}"
     puts $ch {array set current [array get pcurrent]}
 
-    global canvas
-    global pcanvas
-    puts $ch "global icanvas"
-    puts $ch "global pcanvas"
-    puts $ch "array set pcanvas \{ [array get pcanvas] \}"
-    puts $ch {array set icanvas [array get pcanvas]}
-
     global view
     global pview
     puts $ch "global view"

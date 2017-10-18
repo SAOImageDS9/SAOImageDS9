@@ -3584,15 +3584,15 @@ void FitsImage::setAstWCSFormat(AstFrameSet* aa, int id, const char* format)
   astSet(aa, str.str().c_str());
 }
 
-void FitsImage::setAstWCSSkyFrame(AstFrameSet* aa, Coord::SkyFrame sky)
+void FitsImage::setAstWCSSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 {
   // is sky frame
-  if (!astWCSIsASkyFrame(astGetFrame(aa, AST__CURRENT)))
+  if (!astWCSIsASkyFrame(astGetFrame(ast, AST__CURRENT)))
     return;
 
   // is it already set?
   // ast is very slow when changing system,equinox
-  const char* str = astGetC(aa, "System");
+  const char* str = astGetC(ast, "System");
 
   // TLON/XLON and HPX will do this
   if (!strncmp(str,"Unknown",3))
@@ -3602,44 +3602,44 @@ void FitsImage::setAstWCSSkyFrame(AstFrameSet* aa, Coord::SkyFrame sky)
   case Coord::FK4_NO_E:
     if (!strncmp(str,"FK4-NO-E",8))
       return;
-    astSet(aa, "System=FK4-NO-E, Equinox=B1950");
+    astSet(ast, "System=FK4-NO-E, Equinox=B1950");
     return;
   case Coord::FK4:
     if (!strncmp(str,"FK4",3))
       return;
-    astSet(aa, "System=FK4, Equinox=B1950");
+    astSet(ast, "System=FK4, Equinox=B1950");
     return;
   case Coord::FK5:
     if (!strncmp(str,"FK5",3))
       return;
-    astSet(aa, "System=FK5, Equinox=J2000");
+    astSet(ast, "System=FK5, Equinox=J2000");
     return;
   case Coord::ICRS:
     if (!strncmp(str,"ICRS",4))
       return;
-    astSet(aa, "System=ICRS");
+    astSet(ast, "System=ICRS");
     return;
   case Coord::GALACTIC:
     if (!strncmp(str,"GALACTIC",8))
       return;
-    astSet(aa, "System=GALACTIC");
+    astSet(ast, "System=GALACTIC");
     return;
   case Coord::SUPERGALACTIC:
     if (!strncmp(str,"SUPERGALACTIC",13))
       return;
-    astSet(aa, "System=SUPERGALACTIC");
+    astSet(ast, "System=SUPERGALACTIC");
     return;
   case Coord::ECLIPTIC:
     if (!strncmp(str,"ECLIPTIC",8))
       return;
-    astSet(aa, "System=ECLIPTIC");
+    astSet(ast, "System=ECLIPTIC");
     // get AST to agree with WCSSUBS
-    astSetD(aa, "EQUINOX", astGetD(aa, "EPOCH"));
+    astSetD(ast, "EQUINOX", astGetD(ast, "EPOCH"));
     return;
   case Coord::HELIOECLIPTIC:
     if (!strncmp(str,"HELIOECLIPTIC",13))
       return;
-    astSet(aa, "System=HELIOECLIPTIC");
+    astSet(ast, "System=HELIOECLIPTIC");
     return;
   }
 }
@@ -3682,9 +3682,9 @@ void FitsImage::astWCSTran(AstFrameSet* ast, int npoint,
   astTran2(ast, npoint, xin, yin, forward, xout, yout);
 }
 
-void FitsImage::setAstWCSSystem(AstFrameSet* fs, Coord::CoordSystem sys)
+void FitsImage::setAstWCSSystem(AstFrameSet* ast, Coord::CoordSystem sys)
 {
-  int nn = astGetI(fs,"nframe");
+  int nn = astGetI(ast,"nframe");
   char cc = ' ';
   int ww = sys-Coord::WCS;
   switch (sys) {
@@ -3701,9 +3701,9 @@ void FitsImage::setAstWCSSystem(AstFrameSet* fs, Coord::CoordSystem sys)
   }
 
   for (int ss=0; ss<nn; ss++) {
-    const char* id = astGetC(astGetFrame(fs,ss+1),"Ident");
+    const char* id = astGetC(astGetFrame(ast,ss+1),"Ident");
     if (cc == id[0]) {
-      astSetI(fs,"current",ss+1);
+      astSetI(ast,"current",ss+1);
       break;
     }
   }

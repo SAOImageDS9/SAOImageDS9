@@ -99,26 +99,26 @@ int Grid3d::doit(RenderMode rm)
       AstFrame *df = astFrame(2, "Domain=DATA");
 
       // Get 2D SkyFrame
-      AstFrameSet* wcs = (AstFrameSet*)astCopy(fits->getAST(system_));
-      if (fits->astWCSIsASkyFrame(astGetFrame(wcs, AST__CURRENT)))
-      	fits->setAstWCSSkyFrame(wcs, sky_);
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
+      if (fits->astWCSIsASkyFrame(astGetFrame(ast, AST__CURRENT)))
+      	fits->setAstWCSSkyFrame(ast, sky_);
 
       // Record the index of the current Frame
-      int isky = astGetI(wcs, "Current");
+      int isky = astGetI(ast, "Current");
 
       // Add the new DATA Frame into the FrameSet, using the ShiftMap to
       // connect it to the existing IMAGE Frame.
-      astAddFrame(wcs, AST__BASE, sm, df);
+      astAddFrame(ast, AST__BASE, sm, df);
 
       // The above call to astAddFrame will have changed the current Frame
       // in the FrameSet to be the new DATA Frame. First record the index of
       // the DATA Frame, and then re-instate the original current Frame (i.e.
       // the SKY Frame).
-      int idata =  astGetI(wcs, "Current");
-      astSetI(wcs, "Current", isky);
+      int idata =  astGetI(ast, "Current");
+      astSetI(ast, "Current", isky);
 
       // make the DATA Frame the new base Frame 
-      astSetI(wcs, "Base", idata);
+      astSetI(ast, "Base", idata);
 
       // Create two 1D Frames and a 1D Mapping describing the third axis
       AstFrame* zbase = astFrame(1,"");
@@ -134,9 +134,9 @@ int Grid3d::doit(RenderMode rm)
 
       // Use astGetFrame and astGetMapping to get the base and current
       // Frames from the 2D FrameSet, and the base->current Mapping.
-      AstFrame* wcsbase = (AstFrame*)astGetFrame(wcs,AST__BASE);
-      AstFrame* wcscurr = (AstFrame*)astGetFrame(wcs,AST__CURRENT);
-      AstMapping* wcsmap = (AstMapping*)astGetMapping(wcs,AST__BASE,AST__CURRENT);
+      AstFrame* wcsbase = (AstFrame*)astGetFrame(ast,AST__BASE);
+      AstFrame* wcscurr = (AstFrame*)astGetFrame(ast,AST__CURRENT);
+      AstMapping* wcsmap = (AstMapping*)astGetMapping(ast,AST__BASE,AST__CURRENT);
       // Combine the 2D and 1D base Frames into a 3D CmpFrame
       // Likewise, combine the 2D and 1D current Frames into a 3D CmpFrame
       AstCmpFrame* cmpwcsbase = astCmpFrame(wcsbase,zbase,"");

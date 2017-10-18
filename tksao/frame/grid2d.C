@@ -68,25 +68,25 @@ int Grid2d::doit(RenderMode rm)
     break;
   default:
     {
-      AstFrameSet* wcsfs = (AstFrameSet*)astCopy(fits->getAST(system_));
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
 
 #ifndef NEWWCS
       // set desired skyformat
-      if (fits->astWCSIsASkyFrame(astGetFrame(wcsfs, AST__CURRENT)))
-	fits->setAstWCSSkyFrame(wcsfs, sky_);
+      if (fits->astWCSIsASkyFrame(astGetFrame(ast, AST__CURRENT)))
+	fits->setAstWCSSkyFrame(ast, sky_);
 
       // add wcs to frameset
       // this will link frame 2 of frameset to frame 3 wcs with unitMap
       // set the current of frameset to last
-      astInvert(wcsfs);
-      astAddFrame(frameSet,2,astUnitMap(2,""),wcsfs);
+      astInvert(ast);
+      astAddFrame(frameSet,2,astUnitMap(2,""),ast);
       astSetI(frameSet,"current",astGetI(frameSet,"nframe"));
 
 #else
       // add wcs to frameset
       // this will link frameset to wcs with unitMap
-      astInvert(wcsfs);
-      astAddFrame(frameSet,2,astUnitMap(2,""),wcsfs);
+      astInvert(ast);
+      astAddFrame(frameSet,2,astUnitMap(2,""),ast);
       fits->setAstWCSSystem(frameSet,system_);
       fits->setAstWCSSkyFrame(frameSet,sky_);
 #endif

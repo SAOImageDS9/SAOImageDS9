@@ -66,29 +66,29 @@ int Grid25d::doit(RenderMode rm)
       AstFrame *df = astFrame(2, "Domain=DATA");
 
       // Get 2D SkyFrame
-      AstFrameSet* wcs = (AstFrameSet*)astCopy(fits->getAST(system_));
-      if (fits->astWCSIsASkyFrame(astGetFrame(wcs, AST__CURRENT)))
-      	fits->setAstWCSSkyFrame(wcs, sky_);
-      // astShow(wcs);
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
+      if (fits->astWCSIsASkyFrame(astGetFrame(ast, AST__CURRENT)))
+      	fits->setAstWCSSkyFrame(ast, sky_);
+      // astShow(ast);
  
       // Record the index of the current Frame
-      int isky = astGetI(wcs, "Current");
+      int isky = astGetI(ast, "Current");
 
       // Add the new DATA Frame into the FrameSet, using the ShiftMap to
       // connect it to the existing IMAGE Frame.
-      astAddFrame(wcs, AST__BASE, sm, df);
+      astAddFrame(ast, AST__BASE, sm, df);
 
       // The above call to astAddFrame will have changed the current Frame
       // in the FrameSet to be the new DATA Frame. First record the index of
       // the DATA Frame, and then re-instate the original current Frame (i.e.
       // the SKY Frame).
-      int idata =  astGetI(wcs, "Current");
-      astSetI(wcs, "Current", isky);
+      int idata =  astGetI(ast, "Current");
+      astSetI(ast, "Current", isky);
 
       // make the DATA Frame the new base Frame 
-      astSetI(wcs, "Base", idata);
+      astSetI(ast, "Base", idata);
 
-      frameSet = wcs;
+      frameSet = ast;
      }
   }
 

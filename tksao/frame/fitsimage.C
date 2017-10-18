@@ -3561,10 +3561,12 @@ void FitsImage::astinit0(int ss, FitsHead* hd, FitsHead* prim)
     setAstWCSSkyFrame(ast_[ss],Coord::FK5);
 }
 
-int FitsImage::checkAstWCS(double x, double y)
+int FitsImage::checkAstWCS(double xx, double yy)
 {
   // check for reasonable values
-  return (fabs(x) < FLT_MAX && fabs(y) < FLT_MAX) ? 1 : 0;
+  if (!(fabs(xx) < FLT_MAX && fabs(yy) < FLT_MAX))
+    cerr << "***BANG***" << xx << ' ' << yy << endl;
+  return (fabs(xx) < FLT_MAX && fabs(yy) < FLT_MAX) ? 1 : 0;
 }
 
 void FitsImage::setAstWCSFormat(AstFrameSet* aa, int id, const char* format)
@@ -4265,14 +4267,12 @@ void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan)
 	  char* val = hd->getString(str.str().c_str());
 	  if (val) {
 	    putFitsCard(chan, str.str().c_str(), val);
-	    delete [] val;
 	  }
 	}
 	else if (prim && prim->find(str.str().c_str())) {
 	  char* val = prim->getString(str.str().c_str());
 	  if (val) {
 	    putFitsCard(chan, str.str().c_str(), val);
-	    delete [] val;
 	  }
 	}
       }

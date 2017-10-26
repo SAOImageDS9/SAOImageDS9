@@ -267,16 +267,17 @@ proc LoadUpdate {} {
     # generate contour so UpdateMenu is correct
     UpdateContourScale
     UpdateContour
+
+    # Cube?
+    if {[$current(frame) has fits cube]} {
+	CubeDialog
+    }
 }
 
 proc FinishLoad {} {
     global current
 
     LoadUpdate
-    # Cube?
-    if {[$current(frame) has fits cube]} {
-	CubeDialog
-    }
     UpdateDS9
 }
 

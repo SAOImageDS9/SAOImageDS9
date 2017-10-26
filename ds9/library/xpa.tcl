@@ -9,6 +9,10 @@ proc InitXPA {} {
     global pds9
     global env
 
+    if {![info exists env(XPA_METHOD)]} {
+	set env(XPA_METHOD) localhost
+    }
+
     switch -- $ds9(wm) {
 	x11 -
 	win32 {}
@@ -2169,6 +2173,7 @@ proc XPAIsLocal {} {
 
     if {[info exists env(XPA_METHOD)]} {
 	switch $env(XPA_METHOD) {
+	    localhost -
 	    unix -
 	    local {return 1}
 	}

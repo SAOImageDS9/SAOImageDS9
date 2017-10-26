@@ -1,0 +1,64 @@
+<!-- =defdoc xpacode xpacode n -->
+<HTML>
+<HEAD>
+<TITLE>Where to Find Example/Test Code</TITLE>
+</HEAD>
+<BODY>
+
+<!-- =section xpacode NAME -->
+<H2><A NAME="xpacode">XPACode: Where to Find Example/Test Code</A></H2>
+
+<!-- =section xpacode SYNOPSIS -->
+<H2>Summary</H2>
+<P>
+The XPA source code directory contains two test programs,
+<EM>stest.c</EM>, and <EM>ctest.c</EM> that can serve as
+examples for writing XPA servers and clients, respectively.
+They also can be used to test various features of XPA.
+
+<!-- =section xpacode DESCRIPTION -->
+<H2>Description</H2>
+<P>
+To build the XPA test programs, execute:
+<PRE>
+   make All
+</PRE>
+in the XPA source directory to generate the <EM>stest</EM> and
+<EM>ctest</EM> programs.  (NB: this should work on all platforms,
+although we have had problems with unresolved externals on one
+Sun/Solaris machine, for reasons still unknown.)
+<P>
+The stest program can be executed with no arguments to start
+an XPA server that contains the access points: xpa, xpa1,
+c_xpa (containing sub-commands cmd1 and cmd2), and i_xpa.
+You then can use xpaset and xpaget to interact with these access points:
+<PRE>
+  cat xpa.c | xpaset xpa      # send to xpa
+  cat xpa.c | xpaset "xpa*"   # send to xpa and xpa1
+  xpaget xpa                  # receive from xpa
+  xpaget xpa*                 # receive from xpa and xpa1
+</PRE>
+etc. You also can use ctest to do the same thing, or to iterate:
+<PRE>
+  ctest -s -l 100 xpa        # send to xpa 100 times
+  ctest -s -l 100 "xpa*"     # send to xpa and xpa1 100 times
+  ctest -g -l 100 xpa        # receive from xpa 100 times
+  ctest -g -l 100 "xpa*"     # receive from xpa and xpa1 100 times
+</PRE>
+More options are available: see the stest.c and ctest.c code itself, which
+were used extensively to debug XPA.
+
+<P>
+The file test.tcl in the XPA source directory gives examples for using the 
+<A HREF="./tcl.html">XPATcl</A>Interface.
+
+<!-- =section xpacode SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =stop -->
+
+<P>
+<A HREF="./help.html">Go to XPA Help Index</A>
+
+<H5>Last updated: September 10, 2003</H5>
+</BODY>
+</HTML>

@@ -1,0 +1,58 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAPoll: execute existing XPA requests>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  int XPAPoll(int msec, int maxreq);
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+It is sometimes desirable to implement a polling loop, i.e., where one
+checks for and processes XPA requests without blocking.  For this
+situation, use the XPAPoll() routine:
+
+  XPAPoll(int msec, int maxreq);
+
+
+The XPAPoll() routine will perform XPAAddSelect() and select(), but with a
+timeout specified in millisecs by the msec argument. If one or more
+XPA requests are made before the timeout expires, the XPAProcessSelect()
+routine is called to process those requests. The maxreq value determines
+how many requests will be processed: if maxreq < 0, then no events are
+processed, but instead, the return value indicates the number of events
+that are pending.  If maxreq == 0, then all currently pending requests
+will be processed.  Otherwise, up to maxreq requests will be processed.
+(The most usual values for maxreq are 0 to process all requests and 1
+to process one request).
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

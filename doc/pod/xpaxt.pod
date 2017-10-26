@@ -1,0 +1,56 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAXt: the XPA Interface to Xt (X Windows)>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+Describes how XPA access points can be added to X Toolkit (Xt) programs.
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+
+XPA supports Xt programs: you can call XPANew(), XPACmdNew(), or
+XPAInfoNew() within any C routine to add XPA server callbacks to an Xt
+program.  Since an Xt program has its own event loop call (i.e.,
+XtAppMainLoop()), it therefore does not need or want to use the XPA
+even loop.  Thus, in order to add XPA access points to the standard Xt
+event loop, the following routine should be called before entering the
+loop:
+
+  int XPAXtAddInput(XtAppContext app, XPA xpa)
+
+
+The XPAAddAddInput() routine will add XPA access points to the Xt event
+loop by making calls to the standard XtAppAddInput() routine. (If the
+XtAppContext argument is NULL, then the alternate XtAddInput() routine
+is used instead.)  If the xpa argument is NULL, then all active XPA
+access points are added to the loop.  If xpa is not NULL, then only
+the specified access point is added.  The latter type of call is used
+to add new access points from within a callback, after the program has
+entered the XtAppMainLoop() even loop.
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

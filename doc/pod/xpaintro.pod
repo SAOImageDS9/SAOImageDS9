@@ -1,0 +1,176 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAIntro: Introduction to the XPA Messaging System>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+A brief introduction to the XPA messaging system, which provides
+seamless communication between all kinds of Unix event-driven
+programs, including X programs, Tcl/Tk programs, and Perl programs.
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+
+The XPA messaging system provides seamless communication between all
+kinds of Unix programs, including X programs, Tcl/Tk programs, and
+Perl programs.  It also provides an easy way for users to communicate
+with these XPA-enabled programs by executing XPA client commands in
+the shell or by utilizing such commands in scripts.  Because XPA works
+both at the programming level and the shell level, it is a powerful
+tool for unifying any analysis environment: users and programmers have
+great flexibility in choosing the best level or levels at which to
+access XPA services, and client access can be extended or modified
+easily at any time.
+
+
+A program becomes an XPA-enabled server by defining named points of
+public access through which data and commands can be exchanged with
+other client programs (and users).  Using standard TCP sockets as
+a transport mechanism, XPA supports both single-point and broadcast
+messaging to and from these servers.  It supports direct communication
+between clients and servers, or indirect communication via an
+intermediate message bus emulation program. Host-based access control
+is implemented, as is as the ability to communicate with XPA servers
+across a network.
+
+
+XPA implements a layered interface that is designed to be useful both
+to software developers and to users.  The interface consists of a
+library of XPA client and server routines for use in programs and a
+suite of high-level user programs built on top of these libraries.
+Using the XPA library, access points can be added to
+Tcl/Tk
+programs, 
+Xt
+programs, or to Unix programs that use the XPA event loop or any
+event loop based on select().  Client access subroutines can be added
+to any Tcl/Tk or Unix program. Client access also is supported at the
+command line via a suite of high-level programs. 
+
+
+The major components of the XPA layered interface are:
+
+
+=over 4
+
+
+
+
+=item *
+
+A set of XPA server routines, centered on 
+XPANew(),
+which are used by XPA server programs to tag public access points with
+string identifiers and to register send and receive callbacks for
+these access points.
+
+
+
+=item *
+
+A set of XPA client routines, centered on the 
+XPASet()
+and
+XPAGet(),
+which are used by external client applications to exchange data and
+commands with an XPA server.
+
+
+
+=item *
+
+High-level programs, centered on
+xpaset
+and
+xpaget,
+which allow data
+and information to be exchanged with XPA server programs from the
+command line and from scripts.  These programs have the command syntax:
+
+  [data] | xpaset  [qualifiers ...]
+           xpaget  [qualifiers ...]
+
+
+
+=item *
+
+An XPA name server program, 
+xpans,
+through which XPA access point names are
+registered by servers and distributed to clients.
+
+
+=back
+
+
+
+
+Defining an XPA access point is easy: a server application calls
+XPANew(),
+XPACmdNew(),
+or the experimental
+XPAInfoNew()
+routine to
+create a named public access point.  An XPA service can specify "send"
+and "receive" callback procedures (or an "info" procedure in the case
+of XPAInfoNew()) to be executed by the program when an external
+process either sends data or commands to this access point or requests
+data or information from this access point.  Either of the callbacks
+can be omitted, so that a particular access point can be specified as
+read-only, read-write, or write-only.  Application-specific client
+data can be associated with these callbacks.  Having defined one or
+more public access points in this way, an XPA server program enters
+its usual event loop (or uses the standard XPA event loop).
+
+
+Clients communicate with these XPA public access points
+using programs such as
+xpaget,
+xpaset, and
+xpainfo
+(at the command line),
+or routines such as
+XPAGet(),
+XPASet(),
+and
+XPAInfo()
+within a program.  Both methods require specification of the name of
+the access point.  The xpaget program returns data or other
+information from an XPA server to its standard output, while the
+xpaset program sends data or commands from its standard input to an
+XPA application. The corresponding API routines set/get data to/from
+memory, returning error messages and other info as needed.  If a
+template
+is used to specify the access point name (e.g., "ds9*"), then
+communication will take place with all servers matching that template.
+
+
+Please note that XPA currently is not thread-safe. All XPA calls must be
+in the same thread.
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

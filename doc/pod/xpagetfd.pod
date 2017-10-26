@@ -1,0 +1,133 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAGetFd: retrieve data from one or more XPA servers and write to files>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  int XPAGetFd(XPA xpa,
+               char *template, char *paramlist, char *mode,
+	       int *fds, char **names, char **messages, int n);
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+Retrieve data from one or more XPA servers whose class:name identifier
+matches the specified
+template
+and write it to files associated with
+one or more standard I/O fds (i.e, handles returned by open()).
+
+
+A 
+template
+of the form "class1:name1" is sent to the
+XPA name server, which returns a list of at most ABS(n) matching XPA
+servers.  A connection is established with each of these servers and
+the paramlist string is passed to the server as the data transfer
+request is initiated. If an XPA struct is passed to the call, then the
+persistent connections are updated as described above. Otherwise,
+temporary connections are made to the servers (which will be closed
+when the call completes).
+
+
+The XPAGetFd() routine then retrieves data from the XPA servers,
+and write these data to the fds associated with one or more fds
+(i.e., results from open). Is n is positive, then there will be n fds
+and the data from each server will be sent to a separate fd. If n is
+negative, then there is only 1 fd and all data is sent to this single
+fd. (The latter is how xpaget is implemented.)
+
+
+A string containing the class:name and ip:port is stored in the name
+array.  If a given server returned an error or the server callback
+sends a message back to the client, then the message will be stored in
+the associated element of the messages array.  NB: if specified, the
+name and messages arrays must be of size n or greater.
+
+
+The returned message string will be of the form:
+
+  XPA$ERROR   error-message (class:name ip:port)
+
+or
+
+  XPA$MESSAGE message 	  (class:name ip:port)
+
+
+Note that when there is an error stored in an messages entry, the
+corresponding bufs and lens entry may or may not be NULL and 0
+(respectively), depending on the particularities of the server.
+
+
+The return value will contain the actual number of servers that were
+processed.  This value thus will hold the number of valid entries in
+the bufs, lens, names, and messages arrays, and can be used to loop
+through these arrays.  In names and/or messages is NULL, no information is
+passed back in that array.
+
+
+The mode string is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  ack		true/false	true		if false, don't wait for ack from server (after callback completes)
+
+
+The ack keyword is not very useful, since the server completes the callback
+in order to return the data anyway.  It is here for completion (and perhaps
+for future usefulness).
+					   
+
+B<Example:>
+
+  #include <xpa.h>
+  #define NXPA 10
+  int  i, got;
+  int fds[NXPA];
+  char *names[NXPA];
+  char *messages[NXPA];
+  for(i=0; i<NXPA; i++)
+    fds[i] = open(...);
+  got = XPAGetFd(NULL, "ds9", "file", NULL, fds, names, messages, NXPA);
+  for(i=0; i<got; i++){
+    if( messages[i] != NULL ){
+      /* error processing */
+      fprintf(stderr, "ERROR: %s (%s)\n", messages[i], names[i]);
+    }
+    if( names[i] )
+      free(names[i]);
+    if( messages[i] )
+      free(messages[i]);
+  }
+
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

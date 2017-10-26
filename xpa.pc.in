@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: @PACKAGE_NAME@
+Description: XPA messaging system for DS9 and other astro tools
+Version: @PACKAGE_VERSION@
+Libs: -L${libdir} -lxpa @EXTRA_LIBS@ -lm
+Cflags: -I${includedir}

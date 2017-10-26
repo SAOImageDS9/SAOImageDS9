@@ -1,0 +1,833 @@
+<!-- =defdoc xpaserver xpaserver 3 -->
+<HTML>
+<HEAD>
+<TITLE>XPA Server API</TITLE>
+</HEAD>
+<BODY>
+
+<!-- =section xpaserver NAME -->
+<H2><A NAME="xpaserver">XPAServer: The XPA Server-side Programming Interface</A></H2>
+
+<!-- =section xpaserver SYNOPSIS -->
+<H2>Summary</H2>
+A description of the XPA server-side programming interface.
+
+<!-- =section xpaserver DESCRIPTION -->
+<H2><A NAME="intro">Introduction to XPA Server Programming</H2></A>
+<P>
+Creating an XPA server is easy: you generally only need to call the
+XPANew() subroutine to define a named XPA access point and set up the
+send and receive callback routines.  You then enter an event loop such
+as XPAMainLoop() to field XPA requests.
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  XPA <A HREF="./server.html#xpanew">XPANew</A>(char *class, char *name, char *help,
+      int (*send_callback)(), void *send_data, char *send_mode,
+      int (*rec_callback)(),  void *rec_data,  char *rec_mode);
+
+  XPA <A HREF="./server.html#xpacmdnew">XPACmdNew</A>(char *class, char *name);
+
+  XPACmd <A HREF="./server.html#xpacmdadd">XPACmdAdd</A>(XPA xpa,
+         char *name, char *help,
+         int (*send_callback)(), void *send_data, char *send_mode,
+         int (*rec_callback)(),  void *rec_data,  char *rec_mode);
+
+  void <A HREF="./server.html#xpacmddel">XPACmdDel</A>(XPA xpa, XPACmd cmd);
+
+  XPA <A HREF="./server.html#xpainfonew">XPAInfoNew</A>(char *class, char *name,
+      int (*info_callback)(), void *info_data, char *info_mode);
+
+  int <A HREF="./server.html#xpafree">XPAFree</A>(XPA xpa);
+
+  void <A HREF="./server.html#xpamainloop">XPAMainLoop</A>(void);
+
+  int <A HREF="./server.html#xpapoll">XPAPoll</A>(int msec, int maxreq);
+
+  void <A HREF="./server.html#xpaatexit">XPAAtExit</A>(void);
+
+  void <A HREF="./server.html#xpacleanup">XPACleanup</A>(void);
+
+</PRE>
+
+<H2>Introduction</H2>
+
+To use the XPA application programming interface, a software developer
+generally will include the xpa.h definitions file:
+<PRE>
+  #include &lt;xpa.h&gt;
+</PRE>
+in the software module that defines or accesses an XPA access point, and
+then will link against the libxpa.a library:
+<PRE>
+  gcc -o foo foo.c libxpa.a
+</PRE>
+XPA has been compiled using both C and C++ compilers.
+
+<P>
+A server program generally defines an XPA access point by calling the
+XPANew() routine and specifies "send" and/or "receive" callback
+procedures to be executed by the program when an external process
+either sends data or commands to this access point or requests data or
+information from this access point. A program also can define several
+sub-commands for a single access point by calling XPACmdNew() and
+XPACmdAdd() instead.  Having defined one or more public access points
+in this way, an XPA server program enters its usual event loop (or
+uses the standard XPA event loop).
+
+<!-- =defdoc xpanew xpanew 3 -->
+
+<!-- =section xpanew NAME -->
+<H2><A NAME="xpanew">XPANew: create a new XPA access point</A></H2>
+
+<!-- =section xpanew SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  XPA XPANew(char *class, char *name, char *help,
+	     int (*send_callback)(),
+	     void *send_data, char *send_mode,
+	     int (*rec_callback)(),
+	     void *rec_data,  char *rec_mode);
+</PRE>
+</B>
+
+<!-- =section xpanew DESCRIPTION -->
+<P>
+Create a new XPA public access point with the class:name
+identifier <A HREF="./template.html">template</A>
+and enter this access point into the XPA name server, so that it
+can be accessed by external processes. XPANew() returns an XPA struct.
+Note that the length of the class and name designations must be less
+than or equal to 1024 characters each.
+
+<P>
+The XPA name server daemon, xpans, will be started automatically if it
+is not running already (assuming it can be found in the path).  The
+program's ip address and listening port are specified by the
+environment variable XPA_NSINET, which takes the form <ip>:<port>.  If
+no such environment variable exists, then xpans is started on the
+current machine listening on port 14285.  It also uses 14286 as a
+known port for its public access point (so that routines do not have
+to go to the name server to find the name server ip and port!)
+As of XPA 2.1.1, version information is exchanged between the xpans
+process and the new access point. If the access point uses an XPA
+major/minor version newer than xpans, a warning is issued by both processes,
+since mixing of new servers and old xpa programs (xpaset, xpaget,
+xpans, etc.) is not likely to work. You can turn off the warning
+message by setting the XPA_VERSIONCHECK environment variable to "false".
+
+<P>
+The help string is meant to be returned by a request from xpaget:
+<PRE>
+  xpaget class:name -help
+</PRE>
+<P>
+A send_callback and/or a receive_callback can be specified; at
+least one of them must be specified.
+
+<P>
+A send_callback can be specified that will be executed in response to
+an external request from the xpaget program, the XPAGet() routine, or
+XPAGetFd() routine. This callback is used to send data to the
+requesting client.
+
+<P>
+The calling sequence for send_callback() is:
+<PRE>
+  int send_callback(void *send_data, void *call_data,
+    char *paramlist, char **buf, size_t *len)
+  {
+    XPA xpa = (XPA)call_data;
+    ...
+    return(stat);
+  }
+</PRE>
+<P>
+The send_mode string is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+<PRE>
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  acl		true/false	true		enable access control
+  freebuf	true/false	true		free buf after callback completes
+</PRE>
+<P>
+The call_data should be recast to the XPA struct as shown.  In
+addition, client-specific data can be passed to the callback in
+send_data.
+
+<P>
+The paramlist will be supplied by the client as qualifying parameters
+for the callback.  There are two ways in which the send_callback()
+routine can send data back to the client:
+
+<P>
+1. The send_callback() routine can fill in a buffer and pass back a
+pointer to this buffer. An integer len also is returned to specify the
+number of bytes of data in buf.  XPA will send this buffer to the
+client after the callback is complete.
+
+<P>
+2. The send_callback can send data directly to the client by writing
+to the fd pointed by the macro:
+<PRE>
+  xpa_datafd(xpa)
+</PRE>
+<P>
+Note that this fd is of the kind returned by socket() or open().
+
+<P>
+If a buf has been allocated by a standard malloc routine, filled, and
+returned to XPA, then freebuf generally is set so that the buffer will
+be freed automatically when the callback is completed and data has
+been sent to the client.  If a static buf is returned, freebuf should
+be set to false to avoid a system error when freeing static storage.
+Note that default value for freebuf implies that the callback will
+allocate a buffer rather than use static storage.
+
+<P>
+On the other hand, if buf is dynamically allocated using a method
+other than a standard malloc/calloc/realloc routine (e.g. using Perl's
+memory allocation and garbage collection scheme), then it is necessary
+to tell XPA how to free the allocated buffer. To do this, use the
+XPASetFree() routine within your callback:
+<PRE>
+  void XPASetFree(XPA xpa, void (*myfree)(void *), void *myfree_ptr);
+</PRE>
+The first argument is the usual XPA handle. The second argument is the
+special routine to call to free your allocated memory. The third
+argument is an optional pointer.  If not NULL, the specified free
+routine is called with that pointer as its sole argument. If NULL, the
+free routine is called with the standard buf pointer as its sole
+argument. This is useful in cases where there is a mapping between the
+buffer pointer and the actual allocated memory location, and the
+special routine is expecting to be passed the former.
+
+<P>
+If, while the callback performs its processing, an error occurs that
+should be communicated to the client, then the routine XPAError should be
+called:
+<PRE>
+  XPAError(XPA xpa, char *s);
+</PRE>
+<P>
+where s is an arbitrary error message.  The returned error message
+string will be of the form:
+<PRE>
+  XPA$ERROR   [error] (class:name ip:port)
+</PRE>
+<P>
+If the callback wants to send a specific acknowledgment message back
+to the client, the routine XPAMessage can be called:
+<PRE>
+  XPAMessage(XPA xpa, char *s);
+</PRE>
+<P>
+where s is an arbitrary error message.  The returned error message
+string will be of the form:
+<PRE>
+  XPA$MESSAGE [message] (class:name ip:port)
+</PRE>
+<P>
+Otherwise, a standard acknowledgment is sent back to the client
+after the callback is completed.
+
+<P>
+The callback routine should return 0 if no error occurs, or -1 to
+signal an error.
+
+<P>
+A receive_callback can be specified that will be executed in response
+to an external request from the xpaset program, or the XPASet (or
+XPASetFd()) routine. This callback is used to process data received
+from an external process.
+
+<P>
+The calling sequence for receive_callback is:
+<PRE>
+  int receive_callback(void *receive_data, void *call_data,
+    char *paramlist, char *buf, size_t len)
+  {
+    XPA xpa = (XPA)call_data;
+    ...
+    return(stat);
+  }
+</PRE>
+<P>
+The mode string is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+<PRE>
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  acl		true/false	true		enable access control
+  buf		true/false	true		server expects data bytes from client
+  fillbuf	true/false	true		read data into buf before executing callback
+  freebuf	true/false	true		free buf after callback completes
+</PRE>
+<P>
+The call_data should be recast to the XPA struct as shown.  In
+addition, client-specific data can be passed to the callback in
+receive_data.
+
+<P>
+The paramlist will be supplied by the client. In addition, if the
+receive_mode keywords buf and fillbuf are true, then on entry into the
+receive_callback() routine, buf will contain the data sent by the
+client. If buf is true but fillbuf is false, it becomes the callback's
+responsibility to retrieve the data from the client, using the data fd
+pointed to by the macro xpa_datafd(xpa).  If freebuf is true, then buf
+will be freed when the callback is complete.
+
+<P>
+If, while the callback is performing its processing, an error occurs
+that should be communicated to the client, then the routine XPAError
+can be called:
+<PRE>
+  XPAError(XPA xpa, char *s);
+</PRE>
+<P>
+where s is an arbitrary error message.
+
+<P>
+The callback routine should return 0 if no error occurs, or -1 to
+signal an error.
+
+<!-- =defdoc xpacmdnew xpacmdnew 3 -->
+
+<!-- =section xpacmdnew NAME -->
+<H2><A NAME="xpacmdnew">XPACmdNew: create a new XPA public access point for commands</A></H2>
+
+<!-- =section xpacmdnew SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  XPA XPACmdNew(char *class, char *name);
+</PRE>
+</B>
+
+<!-- =section xpacmdnew DESCRIPTION -->
+<P>
+Create a new XPA public access point for commands that will share a
+common identifier class:name. Enter this access point into the XPA
+name server, so that it can be accessed by external processes.
+XPACmdNew() returns an XPA struct.
+
+<P>
+It often is more convenient to have one public access point that can
+manage a number of commands, rather than having individual access
+points for each command. For example, it is easier to command the
+ds9 image display using:
+<PRE>
+  echo "colormap I8"   | xpaset ds9
+  echo "scale log"     | xpaset ds9
+  echo "file foo.fits" | xpaset ds9
+</PRE>
+<P>
+then to use:
+<PRE>
+  echo "I8"       | xpaset ds9_colormap
+  echo "log"      | xpaset ds9_scale
+  echo "foo.fits" | xpaset ds9_file
+</PRE>
+<P>
+In the first case, the commands remain the same regardless of the
+target XPA name.  In the second case, the command names must change
+for each instance of ds9.  That is, if a second instance of ds9
+called DS9 were running, it would be commanded either as:
+<PRE>
+  echo "colormap I8"   | xpaset DS9
+  echo "scale log"     | xpaset DS9
+  echo "file foo.fits" | xpaset DS9
+</PRE>
+<P>
+or as:
+<PRE>
+  echo "I8"       | xpaset DS9_colormap
+  echo "log"      | xpaset DS9_scale
+  echo "foo.fits" | xpaset DS9_file
+</PRE>
+<P>
+Thus, in cases where a program is going to manage many commands, it
+generally is easier to define them as commands associated with the
+XPACmdNew() routine, rather than as separate access points using
+XPANew().
+
+<P>
+When XPACmdNew() is called, only the class:name identifier is
+specified.  Each sub-command is subsequently defined using the
+XPACmdAdd() routine.
+
+<!-- =defdoc xpacmdadd xpacmdadd 3 -->
+
+<!-- =section xpacmdadd NAME -->
+<H2><A NAME="xpacmdadd">XPACmdAdd: add a command to an XPA command public access point</A></H2>
+
+<!-- =section xpacmdadd SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  XPACmd XPACmdAdd(XPA xpa, char *name, char *help,
+	           int (*send_callback)(),
+		   void *send_data, char *send_mode,
+         	   int (*rec_callback)(),
+		   void *rec_data,  char *rec_mode);
+</PRE>
+</B>
+
+<!-- =section xpacmdadd DESCRIPTION -->
+<P>
+Add a command to an XPA command access point. The XPA argument specifies the
+XPA struct returned by a call to XPANewCmd(). The name argument is the
+name of the command. The other arguments function identically to the
+arguments in the XPANew() command, i.e., the send_callback and rec_callback
+routines have identical calling sequences to their XPANew() counterparts,
+with the exceptions noted below.
+
+<P>
+When help is requested for a command access point using:
+<PRE>
+  xpaget -h class:name
+</PRE>
+<P>
+all of the command help strings are listed.  To get help for a given
+command, use:
+<PRE>
+  xpaget -h class:name cmd
+</PRE>
+<P>
+Also, the acl keyword in the send_mode and receive_mode strings is
+global to the access point, not local to the command.  Thus, the value
+for the acl mode should be the same in all send_mode (or receive_mode)
+strings for each command in a command access point. (The acl for
+send_mode need not be the same as the acl for receive_mode, though).
+
+<!-- =defdoc xpacmddel xpacmddel 3 -->
+
+<!-- =section xpacmddel NAME -->
+<H2><A NAME="xpacmddel">XPACmdDel: remove a command from an XPA command public access point</A></H2>
+
+<!-- =section xpacmddel SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  void XPACmdDel(XPA xpa, XPACmd cmd);
+</PRE>
+</B>
+
+<!-- =section xpacmddel DESCRIPTION -->
+<P>
+This routine removes a command from the list of available commands in
+a given XPA.  That command will no longer be available for processing.
+
+<!-- =defdoc xpainfonew xpainfonew 3 -->
+
+<!-- =section xpainfonew NAME -->
+<H2><A NAME="xpainfonew">XPAInfoNew: define an XPA info public access point</A></H2>
+
+<!-- =section xpainfonew SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  XPA XPAInfoNew(char *class, char *name,
+	         int (*info_callback)(),
+		 void *info_data, char *info_mode);
+</PRE>
+</B>
+
+<!-- =section xpainfonew DESCRIPTION -->
+<P>
+[NB: this is an experimental interface, new to XPA 2.0, whose value
+and best use is evolving.]
+
+<P>
+A program can register interest in receiving a short message about a
+particular topic from any other process that cares to send such a
+message.  Neither has to be an XPA server.  For example, if a user
+starts to work with a new image file called new.fits, she might
+wish to alert interested programs about this new file by sending a
+short message using xpainfo:
+<PRE>
+  xpainfo IMAGEFILE /data/new.fits
+</PRE>
+
+<P>
+In this example, each process that has used the XPAInfoNew() call to
+register interest in messages associated with the identifier IMAGEFILE
+will have its info_callback() executed with the following calling
+sequence:
+<PRE>
+  int info_cb(void *info_data, void *call_data, char *paramlist)
+  {
+    XPA xpa = (XPA)call_data;
+  }
+</PRE>
+<P>
+The arguments passed to this routine are equivalent to those sent in
+the send_callback() routine.  The main difference is that there is no
+buf sent to the info callback: this mechanism is meant for short
+announcement of messages of interest to many clients.
+
+<P>
+The mode string is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+<PRE>
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  acl		true/false	true		enable access control
+</PRE>
+<P>
+Because no buf is passed to this callback, the usual buf-related keywords
+are not applicable here.
+
+<P>
+The information sent in the parameter list is arbitrary.  However, we
+envision sending information such as file names or XPA access points
+from which to collect more data.  Note that the xpainfo program and
+the XPAInfo() routine that cause the info_callback to execute do not
+wait for the callback to complete before returning.
+
+<!-- =defdoc xpafree xpafree 3 -->
+
+<!-- =section xpafree NAME -->
+<H2><A NAME="xpafree">XPAFree: remove an XPA public access point</A></H2>
+
+<!-- =section xpafree SYNOPSIS -->
+<PRE>
+<B>
+  #include &lt;xpa.h&gt;
+
+  int XPAFree(XPA xpa);
+</B>
+</PRE>
+
+<!-- =section xpafree DESCRIPTION -->
+<P>
+Remove the specified XPA public access point from the name server and
+free all associated storage.  Note that removal from the name server
+happens automatically when the process terminates, so this call is not
+generally needed.  It is used when public access points are being
+defined temporarily and then destroyed when no longer needed.  For
+example, ds9 temporarily creates a public access point when it
+loads a new image for display and destroys it when the image is
+unloaded.
+
+<!-- =defdoc xpamainloop xpamainloop 3 -->
+
+<!-- =section xpamainloop NAME -->
+<H2><A NAME="xpamainloop">XPAMainLoop: optional main loop for XPA</A></H2>
+
+<!-- =section xpamainloop SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  void XPAMainLoop();
+</PRE>
+</B>
+
+<!-- =section xpamainloop DESCRIPTION -->
+<P>
+Once XPA access points have been defined, a program must enter an
+event loop to watch for requests from external programs. This can be
+done in a variety of ways, depending on whether the event loop is
+processing events other than XPA events.  In cases where there are no
+non-XPA events to be processed, the program can simply call the
+XPAMainLoop() event loop.  This loop is implemented essentially as
+follows (error checking is simplified in this example):
+<PRE>
+  FD_ZERO(&readfds);
+  while( XPAAddSelect(NULL, &readfds) ){
+    if( sgot = select(swidth, &readfds, NULL, NULL, NULL) >0 )
+      XPAProcessSelect(&readfds, 0);
+    else
+      break;
+    FD_ZERO(&readfds);
+  }
+</PRE>
+<P>
+The XPAAddSelect() routine sets up the select() readfds variable so
+that select() will wait for I/O on all the active XPA channels.  It
+returns the number of XPAs that are active; the loop will end when
+there are no active XPAs. The standard select() routine is called to
+wait for an external I/O request.  Since no timeout struct is passed
+in argument 5, the select() call hangs until there is an external
+request.  When an external I/O request is made, the XPAProcessSelect()
+routine is executed to process the pending requests.  In this routine,
+the maxreq value determines how many requests will be processed: if
+maxreq <=0, then all currently pending requests will be processed.
+Otherwise, up to maxreq requests will be processed.  (The most usual
+values for maxreq is 0 to process all requests.)
+
+<P>
+If a program has its own Unix select() loop, then XPA access points can
+be added to it by using a variation of the standard XPAMainLoop:
+<PRE>
+  XPAAddSelect(xpa, &readfds);
+  [app-specific ...]
+  if( select(width, &readfds, ...) ){
+    XPAProcessSelect(&readfds, maxreq);
+    [app-specific ...]
+    FD_ZERO(&readfds);
+  }
+</PRE>
+<P>
+XPAAddSelect() is called before select() to add the access points.
+If the first argument is NULL, then all active XPA access points
+are added. Otherwise only the specified access point is added.
+After select() is called, the XPAProcessSelect() routine can be called
+to process XPA requests.  Once again, the maxreq value determines how
+many requests will be processed: if maxreq <=0, then all currently
+pending requests will be processed.  Otherwise, up to maxreq requests
+will be processed.
+
+<P>
+XPA access points can be added to
+<A HREF="./xt.html">Xt event loops</A> (using XtAppMainLoop())
+and
+<A HREF="./tcl.html">Tcl/Tk event loops</A> (using vwait and the Tk loop).
+When using XPA with these event loops, you only need to call:
+<PRE>
+int XPAXtAddInput(XtAppContext app, XPA xpa)
+</PRE>
+or
+<PRE>
+  int XPATclAddInput(XPA xpa)
+</PRE>
+respectively before entering the loop.
+
+<!-- =defdoc xpapoll xpapoll 3 -->
+
+<!-- =section xpapoll NAME -->
+<H2><A NAME="xpapoll">XPAPoll: execute existing XPA requests</A></H2>
+
+<!-- =section xpapoll SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  int XPAPoll(int msec, int maxreq);
+</PRE>
+</B>
+
+<!-- =section xpapoll DESCRIPTION -->
+<P>
+It is sometimes desirable to implement a polling loop, i.e., where one
+checks for and processes XPA requests without blocking.  For this
+situation, use the XPAPoll() routine:
+<PRE>
+  XPAPoll(int msec, int maxreq);
+</PRE>
+<P>
+The XPAPoll() routine will perform XPAAddSelect() and select(), but with a
+timeout specified in millisecs by the msec argument. If one or more
+XPA requests are made before the timeout expires, the XPAProcessSelect()
+routine is called to process those requests. The maxreq value determines
+how many requests will be processed: if maxreq < 0, then no events are
+processed, but instead, the return value indicates the number of events
+that are pending.  If maxreq == 0, then all currently pending requests
+will be processed.  Otherwise, up to maxreq requests will be processed.
+(The most usual values for maxreq are 0 to process all requests and 1
+to process one request).
+
+<!-- =defdoc xpaatexit xpaatexit 3 -->
+
+<!-- =section xpaatexit NAME -->
+<H2><A NAME="xpaatexit">XPAAtExit: install exit handler</A></H2>
+
+<!-- =section xpaatexit SYNOPSIS -->
+<PRE>
+<B>
+  #include &lt;xpa.h&gt;
+
+  void XPAAtExit(void);
+</B>
+</PRE>
+
+<!-- =section xpaatexit DESCRIPTION -->
+<P>
+XPAAtExit() will install an exit handler using atexit() to run XPAFree on all
+XPA access points. This might be useful in cases where Unix sockets are being
+used: if an explicit call to XPAFree() is not made by the program, the Unix
+socket file will not be deleted immediately without an atexit handler. (NB: this
+call should not be made in a Tcl/Tk application. Accessing the Tcl native file
+system after Tcl has shut down all file systems causes the Tcl/Tl program to
+crash).
+
+<!-- =defdoc xpacleanup xpacleanup 3 -->
+
+<!-- =section xpacleanup NAME -->
+<H2><A NAME="xpacleanup">XPACleanup: release reserved XPA memory</A></H2>
+
+<!-- =section xpacleanup SYNOPSIS -->
+<PRE>
+<B>
+  #include &lt;xpa.h&gt;
+
+  void XPACleanup(void);
+</B>
+</PRE>
+
+<!-- =section xpacleanup DESCRIPTION -->
+<P>
+When XPA is initialized, it allocates a small amount of memory for the
+access control list, temp directory path, and reserved commands. This
+memory is found by valgrind to be "still reachable", meaning that "your
+program didn't free some memory it could have". Calling the
+XPACleanup() routine before exiting the program will free this memory
+and make valgrind happy.
+
+<!-- =defdoc xpamacros xpamacros 3 -->
+
+<!-- =section xpamacros NAME -->
+<H2><A NAME="macros">XPA Server Callback Macros</A></H2>
+
+<!-- =section xpamacros SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  xpa_class, xpa_name, xpa_method, xpa_cmdfd, xpa_datafd,
+  xpa_sendian, xpa_cendian
+</PRE>
+</B>
+
+<!-- =section xpamacros DESCRIPTION -->
+<P>
+Server routines have  access to information about the XPA being called via
+the following macros (each of which takes the xpa handle as an argument):
+<PRE>
+  macro		 	explanation
+  ------		-----------
+  xpa_class		class of this xpa
+  xpa_name		name of this xpa
+  xpa_method		method string (inet or local connect info)
+  xpa_cmdfd		fd of command socket
+  xpa_datafd		fd of data socket
+  xpa_sendian		endian-ness of server ("little" or "big")
+  xpa_cendian		endian-ness of client ("little" or "big"
+</PRE>
+<P>
+The argument to these macros is the call_data pointer that is passed
+to the server procedure.  This pointer should be type case to XPA
+in the server routine:
+<PRE>
+  XPA xpa = (XPA)call_data;
+</PRE>
+
+<P>
+The most important of these macros is xpa_datafd().  A server routine
+that sets "fillbuf=false" in receive_mode or send_mode can use this
+macro to perform I/O directly to/from the client, rather than using
+buf.
+
+<P>
+The xpa_cendian and xpa_sendian macros can be used together to determine
+if the data transferred from the client is byte swapped with respect
+to the server. Values for these macros are: "little", "big", or "?".
+In order to do a proper conversion, you still need to know the format
+of the data (i.e., byte swapping is dependent on the size of the data
+element being converted).
+
+<!-- =defdoc xparace xparace 3 -->
+
+<!-- =section xparace NAME -->
+<H2><A NAME="race">XPA Race Conditions</A></H2>
+
+<!-- =section xparace SYNOPSIS -->
+Potential XPA race conditions and how to avoid them.
+
+<!-- =section xparace DESCRIPTION -->
+<P>
+Currently, there is only one known circumstance in which XPA can get
+(temporarily) deadlocked in a race condition: if two or more XPA
+servers send messages to one another using an XPA client routine such
+as XPASet(), they can deadlock while each waits for the other server
+to respond.  (This can happen if the servers call XPAPoll() with a
+time limit, and send messages in between the polling call.)  The
+reason this happens is that both client routines send a string to the
+other server to establish the handshake and then wait for the server
+response. Since each client is waiting for a response, neither is able
+to enter its event-handling loop and respond to the other's
+request. This deadlock will continue until one of the timeout periods
+expire, at which point an error condition will be triggered and the
+timed-out server will return to its event loop.
+
+<P>
+Starting with version 2.1.6, this rare race condition can be
+avoided by setting the XPA_IOCALLSXPA environment variable for servers
+that will make client calls. Setting this variable causes all XPA
+socket IO calls to process outstanding XPA requests whenever the
+primary socket is not ready for IO. This means that a server making a
+client call will (recursively) process incoming server requests while
+waiting for client completion. It also means that a server callback
+routine can handle incoming XPA messages if it makes its own XPA call.
+The semi-public routine oldvalue=XPAIOCallsXPA(newvalue) can be used
+to turn this behavior off and on temporarily. Passing a 0 will turn
+off IO processing, 1 will turn it back on. The old value is returned
+by the call.
+
+<P>
+By default, the XPA_IOCALLSXPA option is turned off, because we judge
+that the added code complication and overhead involved will not be
+justified by the amount of its use.  Moreover, processing XPA requests
+within socket IO can lead to non-intuitive results, since incoming
+server requests will not necessarily be processed to completion in the
+order in which they are received.
+
+<P>
+Aside from setting XPA_IOCALLSXPA, the simplest way to avoid this race
+condition is to multi-process: when you want to send a client message,
+simply start a separate process to call the client routine, so that
+the server is not stopped. It probably is fastest and easiest to use
+fork() and then have the child call the client routine and exit. But
+you also can use either the system() or popen() routine to start one
+of the command line programs and do the same thing. Alternatively, you
+can use XPA's internal launch() routine instead of system(). Based on
+fork() and exec(), this routine is more secure than system() because
+it does not call /bin/sh.
+
+<P>
+Starting with version 2.1.5, you also can send an XPAInfo() message with
+the mode string "ack=false". This will cause the client to send a message
+to the server and then exit without waiting for any return message from
+the server. This UDP-like behavior will avoid the server deadlock when
+sending short XPAInfo messages.
+
+<!-- =section xpaserver SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpanew SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpacmdnew SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpacmdadd SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpacmddel SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpainfonew SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpafree SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpacleanup SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpamainloop SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpapoll SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpamacros SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xparace SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =stop -->
+
+<P>
+<A HREF="./help.html">Go to XPA Help Index</A>
+
+<H5>Last updated: September 10, 2003</H5>
+</BODY>
+</HTML>

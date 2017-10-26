@@ -1,0 +1,38 @@
+Mac OS X Leopard v10.5 (MB427Z/A)
+
+The process has forked and you cannot use this CoreFoundation
+
+http://developer.apple.com/releasenotes/CoreFoundation/CoreFoundation.html
+
+CoreFoundation and fork() Due to the behavior of fork(),
+CoreFoundation cannot be used on the child-side of fork(). If you
+fork(), you must follow that with an exec*() call of some sort, and
+you should not use CoreFoundation APIs within the child, before the
+exec*(). The applies to all higher-level APIs which use
+CoreFoundation, and since you cannot know what those higher-level APIs
+are doing, and whether they are using CoreFoundation APIs, you should
+not use any higher-level APIs either. This includes use of the
+daemon() function.
+
+Additionally, per POSIX, only async-cancel-safe functions are safe to
+use on the child side of fork(), so even use of lower-level
+libSystem/BSD/UNIX APIs should be kept to a minimum, and ideally to
+only async-cancel-safe functions.
+
+This has always been true, and there have been notes made of this on
+various Cocoa developer mailling lists in the past. But CoreFoundation
+is taking some stronger measures now to "enforce" this limitation, so
+we thought it would be worthwhile to add a release note to call this
+out as well. A message is written to stderr when something uses API
+which is definitely known not to be safe in CoreFoundation after
+fork(). If file descriptor 2 has been closed, however, you will get no
+message or notice, which is too bad. We tried to make processes
+terminate in a very recognizable way, and did for a while and that was
+very handy, but backwards binary compatibility prevented us from doing
+so.
+
+--------------
+
+This is the function you set a debug breakpoint on if you try to fork() in Leopard then call a CoreFoundation method:
+
+void __THE_PROCESS_HAS_FORKED_AND_YOU_CANNOT_USE_THIS_COREFOUNDATION_FUNCTIONALITY___YOU_MUST_EXEC__(void);

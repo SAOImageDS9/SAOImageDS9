@@ -1,0 +1,193 @@
+<!-- =defdoc xpacommon xpacommon n -->
+<HTML>
+<HEAD>
+<TITLE>Getting Common Information About Access Points</TITLE>
+</HEAD>
+<BODY>
+
+<!-- =section xpacommon NAME -->
+<H2><A NAME="xpacommon">XPACommon: Getting Common Information About Access Points</A></H2>
+
+<!-- =section xpacommon SYNOPSIS -->
+<H2>Summary</H2>
+<P>
+There are various kinds of generic information you can retrieve about
+an XPA access point by using the xpaget command.
+
+<!-- =section xpacommon DESCRIPTION -->
+<H2>Description</H2>
+<P>
+You can find out which XPA access points have been registered with
+the currently running 
+<A HREF="./xpans.html">XPA name server</A>
+by executing the
+<A HREF="./programs.html#xpaget">xpaget</A>
+command to retrieve info from the XPA name server:
+<PRE>
+  xpaget xpans
+</PRE>
+If, for example, the
+<A HREF="./examples.html">stest</A> test server program
+is running, the following XPA access points will be returned (the specifics
+of the returned info will vary for different machines and users):
+<PRE>
+  XPA xpa gs 838e2f67:1262 eric
+  XPA xpa1 gs 838e2f67:1266 eric
+  XPA c_xpa gs 838e2f67:1267 eric
+  XPA i_xpa i 838e2f67:1268 eric
+</PRE>
+Note that access to this information is subject to the usual
+<A HREF="./acl.html">XPA Access Control</A> restrictions.
+
+<P>
+Each XPA access point supports a number of reserved sub-commands that provide
+access to different kinds of information, e.g. the access control for
+that access point.  These sub-commands can be executed by using
+<A HREF="./programs.html#xpaset">xpaset</A>
+or
+<A HREF="./programs.html#xpaget">xpaget</A>
+at the command line, or
+<A HREF="./client.html#xpaget">XPAGet()</A>
+or
+<A HREF="./client.html#xpaset">XPASet()</A>
+in programs, e.g:
+<PRE>
+  xpaget ds9 -acl
+  xpaget ds9 -help
+  xpaget ds9 env FOO
+
+  xpaset -p ds9 env FOO foofoo
+</PRE>
+With the exception of <B>-help</B> and <B>-version</B>, reserved
+sub-commands are available only on the machine on which the XPA server
+itself is running.
+
+The following reserved sub-commands are defined for all access points:
+<DL>
+
+<P>
+<DT><B>-acl</B> get (set) the access control list [options: host type acl, for set]
+<DD> 
+The 'xpaset' option allows you to add a new acl for a given host, or change
+the acl for an existing host. See
+<A HREF="./acl.html">XPA Access Control</A>
+for more information.
+This access point is available only on the server machine.
+
+<P>
+<DT><B>-env</B> get (set) an environment variable [options: name (value, for set)]
+<DD>
+The 'xpaget' option will return the value of the named environment
+variable.  The 'xpaset' option will set the value of the names
+variable to the specified value.
+This access point is available only on the server machine.
+(Please be advised that we have had problems setting environment
+variables in static Tcl/Tk programs such as ds9 running under Linux.)
+
+<P>
+<DT> <B>-clipboard</B> set(get) information on a named clipboard
+<DD> Clients can store ASCII state information on any number of named
+clipboards. Clipboards of the same name created by clients on
+different machines are kept separate.  The syntax for creating a
+clipboard is:
+<PRE>
+  [data] | xpaset [server] -clipboard add|append [clipboard_name]
+  xpaset -p [server] -clipboard delete [clipboard_name]
+</PRE>
+Use "add" to create a new clipboard or replace the contents of an existing
+one. Use "append" to append to an existing clipboard.
+<P>
+Information on a named clipboard is retrieved using:
+<PRE>
+  xpaget [server] -clipboard [clipboard_name]
+</PRE>
+<P>
+<DT><B>-exec</B> set: execute commands from buffer [options: none]
+<DD>
+If -exec is specified in the paramlist of an 'xpaset' call, then further
+sub-commands will be retrieved from the data buffer.
+
+<P>
+<DT><B>-help</B> get: return help string for this XPA or sub-command [options: name (for sub-commands)]
+<DD>
+Each XPA access point and each XPA sub-command can have a help string
+associated with it that is specified when the access point is defined.
+The -help option will return this help string.  For XPA access points
+that contain user-defined sub-commands, you can get the help string
+for a particular sub-command by specifying its name, or else get the
+help strings for all sub-commands if not name is specified.
+
+<P>
+<DT><B>-ltimeout</B> get (set) the long timeout value [options: seconds|reset]
+<DD>
+The 'xpaget' option will return the value of the long timeout (in seconds).
+The 'xpaset' option will set the value of the long timeout. If "reset" is
+specified, then the timeout value will be reset to the default value.
+
+<P>
+<DT><B>-nsconnect</B> set: re-establish name server connection to all XPA's [options: none]
+<DD>
+If the 
+<A HREF="./xpans.html">XPA Name Server (xpans)</A>
+process has terminated unexpectedly and then re-started, this
+sub-command can be used to re-establish the connection.  You use it by
+sending the command to the [name:port] or [file] of the access point
+instead of to the XPA name (since the latter requires the xpans
+connection!):
+<PRE>
+  xpaset -p 838e2f67:1268 -nsconnect
+</PRE>
+See <A HREF="./xpans.html">xpans</A> for more information.
+
+<P>
+<DT><B>-nsdisconnect</B> set: break name server connection to all XPA's [options: none]
+<DD>
+This sub-command will terminate the connection to the
+<A HREF="./xpans.html">XPA Name Server (xpans)</A>, thereby making
+all access points inaccessible except through their underlying [name:port]
+or [file] identifiers.  I forget why we added it, it seems pretty useless.
+
+<P>
+<DT><B>-stimeout</B> get (set) the short timeout value [options: seconds|reset]
+<DD>
+The 'xpaget' option will return the value of the short timeout (in seconds).
+The 'xpaset' option will set the value of the short timeout. If "reset" is
+specified, then the timeout value will be reset to the default value.
+
+<P>
+<DT><B>-remote</B> set: register xpa with remote server [options: host[:port] [acl]] [-proxy]
+<DD>
+This sub-command will register the XPA access point with the XPA name
+server (xpans) on the specified host (which must already be running).
+The specified host also is given access control to the access point,
+using the specified acl or the default acl of "+" (meaning the remote
+host can xpaset, xpaget, xpainfo or xpaaccess). If the acl is
+specified as "-", then the access point is unregistered. 
+See <A HREF="./inet.html">Communication Between Machines</A>
+for more information on how this sub-command is used.
+
+<P>
+<DT><B>-version</B> get: return XPA version string [options: none]
+<DD>
+The version refers to the version of XPA used to define this access point
+(currently something like 2.0).
+
+</DL>
+
+<P>
+You can add your own reserved commands to all XPA access points by using the
+<A HREF="./server.html#xpacmdadd">XPACmdAdd()</A>
+routine, passing the XPA handle returned by <EM>XPA XPAGetReserved(void)</EM>
+as the first argument. Note again that these will only be available on the
+machine where the XPA service is running.
+
+<!-- =section xpacommon SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =stop -->
+
+<P>
+<A HREF="./help.html">Go to XPA Help Index</A>
+
+<H5>Last updated: September 10, 2003</H5>
+</BODY>
+</HTML>

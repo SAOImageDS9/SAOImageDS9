@@ -1,0 +1,94 @@
+***** html2ps version 1.0 beta5
+***** Command: /proj/rd/linux64/bin/html2ps -C fb -d -g -n -u -W b -x 1 -o xpa.ps help.html
+***** Perl: 5.010001
+***** HTML2PSPATH=
+***** Global file /proj/rd/linux64/lib/html2ps/html2psrc:
+/* Global configuration file for html2ps */
+
+@html2ps {
+  package {
+    ImageMagick: 1;
+    djpeg: 1;
+    TeX: 1;
+    dvips: 1;
+    Ghostscript: 1;
+    libwww-perl: 1;
+    path: "/usr/bin";
+  }
+  paper {
+    type: letter;
+  }
+  hyphenation {
+    en {
+      file: "/proj/rd/linux64/lib/html2ps/hyphen.tex";
+    }
+  }
+}
+*****
+html2ps version 1.0 beta5
+Reading help.html
+Link: intro.html
+Link: template.html
+Link: info.html
+Link: method.html
+Link: inet.html
+Link: users.html
+Link: programs.html
+Link: xpamb.html
+Link: xpans.html
+Link: server.html
+Link: oom.html
+Link: client.html
+Link: xt.html
+Link: tcl.html
+Link: env.html
+Link: acl.html
+Link: changelog.html
+Link: examples.html
+Link: changes.html
+Link: convert.html
+Link: name.html
+At least 21 documents remaining
+Reading intro.html
+At least 20 documents remaining
+Reading template.html
+At least 19 documents remaining
+Reading info.html
+At least 18 documents remaining
+Reading method.html
+At least 17 documents remaining
+Reading inet.html
+At least 16 documents remaining
+Reading users.html
+At least 15 documents remaining
+Reading programs.html
+At least 14 documents remaining
+Reading xpamb.html
+At least 13 documents remaining
+Reading xpans.html
+At least 12 documents remaining
+Reading server.html
+At least 11 documents remaining
+Reading oom.html
+At least 10 documents remaining
+Reading client.html
+At least 9 documents remaining
+Reading xt.html
+At least 8 documents remaining
+Reading tcl.html
+At least 7 documents remaining
+Reading env.html
+At least 6 documents remaining
+Reading acl.html
+At least 5 documents remaining
+Reading changelog.html
+At least 4 documents remaining
+Reading examples.html
+At least 3 documents remaining
+Reading changes.html
+At least 2 documents remaining
+Reading convert.html
+At least 1 document remaining
+Reading name.html
+Inserting cross references
+

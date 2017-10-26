@@ -1,0 +1,69 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPACmdAdd: add a command to an XPA command public access point>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  XPACmd XPACmdAdd(XPA xpa, char *name, char *help,
+	           int (*send_callback)(),
+		   void *send_data, char *send_mode,
+         	   int (*rec_callback)(),
+		   void *rec_data,  char *rec_mode);
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+Add a command to an XPA command access point. The XPA argument specifies the
+XPA struct returned by a call to XPANewCmd(). The name argument is the
+name of the command. The other arguments function identically to the
+arguments in the XPANew() command, i.e., the send_callback and rec_callback
+routines have identical calling sequences to their XPANew() counterparts,
+with the exceptions noted below.
+
+
+When help is requested for a command access point using:
+
+  xpaget -h class:name
+
+
+all of the command help strings are listed.  To get help for a given
+command, use:
+
+  xpaget -h class:name cmd
+
+
+Also, the acl keyword in the send_mode and receive_mode strings is
+global to the access point, not local to the command.  Thus, the value
+for the acl mode should be the same in all send_mode (or receive_mode)
+strings for each command in a command access point. (The acl for
+send_mode need not be the same as the acl for receive_mode, though).
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

@@ -1,0 +1,47 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPACleanup: release reserved XPA memory>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  void XPACleanup(void);
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+When XPA is initialized, it allocates a small amount of memory for the
+access control list, temp directory path, and reserved commands. This
+memory is found by valgrind to be "still reachable", meaning that "your
+program didn't free some memory it could have". Calling the
+XPACleanup() routine before exiting the program will free this memory
+and make valgrind happy.
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

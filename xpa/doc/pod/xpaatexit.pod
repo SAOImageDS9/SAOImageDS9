@@ -1,0 +1,41 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAAtExit: install exit handler>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  void XPAAtExit(void);
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+XPAAtExit() will install an exit handler using atexit() to run XPAFree on all
+XPA access points. This might be useful in cases where Unix sockets are being
+used: if an explicit call to XPAFree() is not made by the program, the Unix
+socket file will not be deleted immediately without an atexit handler. (NB: this
+call should not be made in a Tcl/Tk application. Accessing the Tcl native file
+system after Tcl has shut down all file systems causes the Tcl/Tl program to
+crash).
+
+
+
+
+=cut

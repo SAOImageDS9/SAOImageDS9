@@ -1,0 +1,25 @@
+Hi Eric,
+
+it's me again. Hope everything is ok with you.
+
+I started working with python and because python 2.5 comes with ctypes
+included I started to wrap some XPA functionality. In the web I only
+found PyXPA 0.2 which is very alpha. And with ctypes, we don't need any
+c-code linked in, python package is enough.
+
+Although I have wrapped only the functionality I need for now, I think
+it is already usable. And, of course, when you or anyone is interested
+in it, I can easily add more functionality.
+
+There is no installation needed. Just adjust the path to your libxpa.so
+in XPAClient.py and XPAServer.py and optionally adjust NXPA in
+XCPAClient.py.
+
+Then you can start stest and run test_XPAC.py or run test_XPAS.py and
+issue some xpainfo/get/set commands.
+
+
+
+Regards,
+Bernhard
+

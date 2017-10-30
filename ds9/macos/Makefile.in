@@ -156,7 +156,7 @@ $(MACDIR)/ds9 : ds9base $(PREQS)
 	/Library/Frameworks/Tk.framework/Versions/$(TCL_VERSION)/Tk \
 	@executable_path/../Frameworks/Tk.framework/Tk \
 	"$@"
-	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImageDS9.app
+#	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImageDS9.app
 
 debug	: ds9base $(PREQS)
 	cp -p ds9base $(APPDIR)/Contents/MacOS/ds9
@@ -168,7 +168,7 @@ debug	: ds9base $(PREQS)
 	/Library/Frameworks/Tk.framework/Versions/$(TCL_VERSION)/Tk \
 	@executable_path/../Frameworks/Tk.framework/Tk \
 	$(APPDIR)/Contents/MacOS/ds9
-	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImageDS9.app
+#	cd $(bindir); codesign --deep -f -s "$(ID)" SAOImageDS9.app
 
 tkAppInit.o : tkAppInit.c
 	$(COMPILE) -DTK_LOCAL_APPINIT=SAOAppInit \

@@ -69,7 +69,6 @@ int Grid25d::doit(RenderMode rm)
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
       if (fits->astWCSIsASkyFrame(astGetFrame(ast, AST__CURRENT)))
       	fits->setAstWCSSkyFrame(ast, sky_);
-      // astShow(ast);
  
       // Record the index of the current Frame
       int isky = astGetI(ast, "Current");
@@ -89,7 +88,7 @@ int Grid25d::doit(RenderMode rm)
       astSetI(ast, "Base", idata);
 
       frameSet = ast;
-     }
+    }
   }
 
  if (!frameSet)

@@ -86,7 +86,7 @@ int Grid2d::doit(RenderMode rm)
       // add wcs to frameset
       // this will link frameset to wcs with unitMap
       astInvert(ast);
-      astAddFrame(frameSet,2,astUnitMap(2,""),ast);
+      astAddFrame(frameSet,AST__CURRENT,astUnitMap(2,""),ast);
       fits->setAstWCSSystem(frameSet,system_);
       fits->setAstWCSSkyFrame(frameSet,sky_);
 #endif

@@ -3541,6 +3541,7 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
     //    astSetI(ast_[ss],"Current",2);
     break;
   case 3:
+  case 4:
     {
       AstFrameSet* ast = ast_[ss];
 
@@ -3550,18 +3551,16 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
       astAddFrame(ast, AST__CURRENT, mapc, permc);
 
       int isky = astGetI(ast, "Current");
-      int pickb[3] = {1,2,0};
+      int pickb[4] = {1, 2, 0, 0};
       AstMapping* mapb;
       AstFrame* foo = astFrame(2,"Domain=DATA");
-      astPickAxes(foo, 3, pickb, &mapb);
+      astPickAxes(foo, naxes, pickb, &mapb);
       astInvert(mapb);
       astAddFrame(ast, AST__BASE, mapb, foo);
       int idata =  astGetI(ast, "Current");
       astSetI(ast, "Current", isky);
       astSetI(ast, "Base", idata);
     }
-    break;
-  case 4:
     break;
   }
 
@@ -3709,42 +3708,6 @@ void FitsImage::astWCSTran(AstFrameSet* ast, int npoint,
 			   double* xout, double* yout)
 {
   astTran2(ast, npoint, xin, yin, forward, xout, yout);
-  return;
-  
-  int naxes = astGetI(ast,"Naxes");
-  switch (naxes) {
-  case 1:
-    // error
-    break;
-  case 2:
-    astTran2(ast, npoint, xin, yin, forward, xout, yout);
-    break;
-  case 3:
-    {
-      /*
-      double* ptr_in[3];
-      ptr_in[0] = (double*)xin;
-      ptr_in[1] = (double*)yin;
-      ptr_in[2] = new double[npoint];
-      for (int kk=0; kk<npoint; kk++)
-	ptr_in[2][kk] = 1;
-      
-
-      double* ptr_out[3];
-      ptr_out[0] = (double*)xout;
-      ptr_out[1] = (double*)yout;
-      ptr_out[2] = new double[npoint];
-
-      astTranP(ast, npoint, 3, (const double**)ptr_in, forward, 3, ptr_out);
-
-      if (ptr_in[2])
-	delete [] ptr_in[2];
-      if (ptr_out[2])
-	delete [] ptr_out[2];
-      */
-    }
-    break;
-  }
 }
 
 void FitsImage::setAstWCSSystem(AstFrameSet* ast, Coord::CoordSystem sys)

@@ -3530,15 +3530,19 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
 
   setAstWCSSystem(ast_[ss], (Coord::CoordSystem)(ss+Coord::WCS));
 
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
   int naxes = astGetI(ast_[ss],"Naxes");
   switch (naxes) {
   case 1:
+    break;
   case 2:
-    if (astGetI(ast_[ss],"LatAxis") == 1) {
+    if (astIsASkyFrame(ast_[ss]) && astGetI(ast_[ss],"LatAxis") == 1) {
       int orr[] = {2,1};
       astPermAxes(ast_[ss],orr);
+      //    astSetI(ast_[ss],"Current",2);
     }
-    //    astSetI(ast_[ss],"Current",2);
     break;
   case 3:
   case 4:
@@ -3564,12 +3568,12 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
     break;
   }
 
+  astEnd; // now, clean up memory
 #endif
 
   // set default skyframe
   if (astWCSIsASkyFrame(astGetFrame(ast_[ss], AST__CURRENT)))
     setAstWCSSkyFrame(ast_[ss],Coord::FK5);
-
 }
 
 void FitsImage::astinit0(int ss, FitsHead* hd, FitsHead* prim)
@@ -3691,15 +3695,28 @@ void FitsImage::astWCSTran(AstFrameSet* ast, int npoint,
 
 int FitsImage::astWCSIsASkyFrame(void* ast)
 {
-  astClearStatus; // just to make sure
-  astBegin; // start memory management
+  int naxes = astGetI(ast,"Naxes");
+  switch (naxes) {
+  case 1:
+    return 0;
+  case 2:
+    return astIsASkyFrame(ast);
+  case 3:
+  case 4:
+    {
+      astClearStatus; // just to make sure
+      astBegin; // start memory management
 
-  char* domain = (char*)astGetC(ast,"Domain");
-  char* sky = strstr(domain,"SKY");
+      char* domain = (char*)astGetC(ast,"Domain");
+      char* sky = strstr(domain,"SKY");
 
-  astEnd; // now, clean up memory
+      astEnd; // now, clean up memory
 
-  return sky ? 1 : 0;
+      return sky ? 1 : 0;
+    }
+  default:
+    return 0;
+  }
 }
 
 void FitsImage::astWCSTran(AstFrameSet* ast, int npoint, 

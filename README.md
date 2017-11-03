@@ -1,6 +1,5 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1041781.svg)](https://doi.org/10.5281/zenodo.1041781)
 ![alt-text](http://ds9.si.edu/doc/sun.gif "SAOImageDS9")
-# SAOImageDS9
+# SAOImageDS9 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1041781.svg)](https://doi.org/10.5281/zenodo.1041781)
 
 SAOImageDS9 is an astronomical imaging and data visualization application. DS9 supports FITS images and binary tables,  multiple frame buffers, region manipulation, and many scale algorithms and colormaps. It provides for easy communication with external analysis tasks and is highly configurable and extensible via XPA and SAMP.
 

@@ -44,8 +44,6 @@ public:
   void setSlice(int,int);
 
   Vector mapFromRef(const Vector&, Coord::InternalSystem);
-  Vector3d mapFromRef3d(const Vector& vv, Coord::InternalSystem sys) 
-  {return mapFromRef(vv,sys);}
   Vector mapToRef(const Vector&, Coord::InternalSystem);
 
   // Bin Commands

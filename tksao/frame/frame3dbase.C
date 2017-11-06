@@ -58,7 +58,8 @@ Frame3dBase::~Frame3dBase()
 }
 
 
-void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref, char* var)
+void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
+			     char* var)
 {
   FitsBound* params;
   int mosaic;

@@ -43,6 +43,10 @@ public:
   enum AnalysisTask {STATS,PLOT2D,PLOT3D,RADIAL,PANDA,HISTOGRAM};
   enum AnalysisMethod {SUM,AVERAGE};
 
+ private:
+  Vector* arrow2D(const Vector&, const Vector&, Coord::InternalSystem);
+  Vector* arrow3D(const Vector&, const Vector&, Coord::InternalSystem);
+
 protected:
   int id;
   char type_[64];

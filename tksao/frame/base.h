@@ -114,6 +114,7 @@ class Base : public Widget {
   friend class Vect;
 
 public:
+  enum FrameType {F2D, F3D};
   enum CompressType {NOCOMPRESS, GZ};
   enum FileNameType {ROOTBASE, FULLBASE, ROOT, FULL};
   enum MarkerFormat {DS9, XML, CIAO, SAOTNG, SAOIMAGE, PROS, RAWXY};
@@ -319,11 +320,6 @@ public:
  private:
   void bltHist(char*, char*); // frblt.C
 
-  void getInfoClearName(char*);
-  void getInfoClearValue(char*);
-  void getInfoClearWCS(char*);
-  void getInfoWCS(char*, const Vector3d&, FitsImage*, FitsImage*);
-
   void invalidPixmap();
 
   int updatePixmap(const BBox&);
@@ -347,8 +343,6 @@ public:
   virtual void centerImage();
   void coordToTclArray(FitsImage*, const Vector3d&, Coord::CoordSystem, 
 		       const char*, const char*);
-  void coord3ToTclArray(FitsImage*, const Vector3d&, Coord::CoordSystem,
-			const char*, const char*);
   void createMarker(Marker*);
   void createTemplate(const Vector&, istream&);
   void contourCreatePolygon(List<ContourLevel>&);
@@ -361,6 +355,10 @@ public:
   virtual void encodeTrueColor(unsigned char*, XImage*) =0;
 
   virtual unsigned char* fillImage(int, int, Coord::InternalSystem) =0;
+
+  void getInfoClearName(char*);
+  void getInfoClearValue(char*);
+  void getInfoClearWCS(char*);
 
   Coord::Orientation getOrientation() {return orientation;}
   double getRotation() {return rotation + wcsRotation;}
@@ -530,6 +528,7 @@ public:
   Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item);
   virtual ~Base();
 
+  virtual FrameType frameType() =0;
   void calcAlignWCS(FitsImage*, Coord::CoordSystem, Coord::SkyFrame,
 		    Coord::Orientation*, Matrix*, double*);
 #ifndef NEWWCS
@@ -553,9 +552,7 @@ public:
   int isBinTable();
 
   virtual Vector mapFromRef(const Vector&, Coord::InternalSystem) =0;
-  virtual Vector3d mapFromRef3d(const Vector&, Coord::InternalSystem) =0;
   virtual Vector mapToRef(const Vector&, Coord::InternalSystem) =0;
-  virtual Vector3d mapToRef3d(const Vector&, Coord::InternalSystem) =0;
   double mapAngleFromRef(double,Coord::CoordSystem,Coord::SkyFrame =Coord::FK5);
   double mapAngleToRef(double, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
 
@@ -1025,7 +1022,7 @@ public:
 
   // Info Commands
   void getInfoCmd(char*);
-  virtual void getInfoCmd(const Vector&, Coord::InternalSystem, char*);
+  virtual void getInfoCmd(const Vector&, Coord::InternalSystem, char*) =0;
   void getInfoClipCmd();
   void getValueCmd(const Vector&, Coord::InternalSystem);
 

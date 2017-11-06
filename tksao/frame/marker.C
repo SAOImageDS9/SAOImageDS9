@@ -5,6 +5,8 @@
 #include <tk.h>
 
 #include "marker.h"
+#include "framebase.h"
+#include "frame3dbase.h"
 #include "fitsimage.h"
 
 extern "C" {
@@ -1203,7 +1205,52 @@ Vector Marker::modifyArrow(const Vector& p1, const Vector& p2,
   return nn * Scale(ll-tip) * Translate(aa);
 }
 
-Vector* Marker::arrow(const Vector& p1, const Vector& p2, Coord::InternalSystem sys)
+Vector* Marker::arrow(const Vector& p1, const Vector& p2,
+		      Coord::InternalSystem sys)
+{
+  switch (parent->frameType()) {
+  case Base::F2D:
+    return arrow2D(p1,p2,sys);
+  case Base::F3D:
+    return arrow3D(p1,p2,sys);
+  }
+}
+
+Vector* Marker::arrow2D(const Vector& p1, const Vector& p2,
+			Coord::InternalSystem sys)
+{
+  Vector aa = ((FrameBase*)parent)->mapFromRef(p1,sys);
+  Vector bb = ((FrameBase*)parent)->mapFromRef(p2,sys);
+
+  const int tip = 6;  // length from end of line to tip of arrow
+  const int tail = 2; // length from end of line to tails of arrow
+  const int wc = 2;   // width of arrow at end of line
+  const int wt = 3;   // width of arrow at tails
+
+  Vector vv[6];
+  vv[0] = Vector(0, tip);
+  vv[1] = Vector(-wc, 0);
+  vv[2] = Vector(-wt, -tail);
+  vv[3] = Vector(0, 0);
+  vv[4] = Vector(wt, -tail);
+  vv[5] = Vector(wc, 0);
+
+  Vector dd = (aa-bb).normalize();
+  Matrix mm = Translate(0,-tip) * 
+    Scale(1.5) * 
+    Rotate(-M_PI/2) * 
+    Rotate(-dd.angle()) * 
+    Translate(bb);
+
+  Vector* ww = new Vector[6];
+  for (int ii=0; ii<6; ii++)
+    ww[ii] = vv[ii]*mm;
+
+  return ww;
+}
+
+Vector* Marker::arrow3D(const Vector& p1, const Vector& p2,
+			Coord::InternalSystem sys)
 {
   Vector p3;
   if (((p2-p1)[0]) == 0)
@@ -1211,9 +1258,9 @@ Vector* Marker::arrow(const Vector& p1, const Vector& p2, Coord::InternalSystem 
   else
     p3 = p1+Vector(0,1);
 
-  Vector3d aa = parent->mapFromRef3d(p1,sys);
-  Vector3d bb = parent->mapFromRef3d(p2,sys);
-  Vector3d cc = parent->mapFromRef3d(p3,sys);
+  Vector3d aa = ((Frame3dBase*)parent)->mapFromRef3d(p1,sys);
+  Vector3d bb = ((Frame3dBase*)parent)->mapFromRef3d(p2,sys);
+  Vector3d cc = ((Frame3dBase*)parent)->mapFromRef3d(p3,sys);
 
   const int tip = 6;  // length from end of line to tip of arrow
   const int tail = 2; // length from end of line to tails of arrow

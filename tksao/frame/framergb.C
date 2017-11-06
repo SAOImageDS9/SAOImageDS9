@@ -1227,7 +1227,7 @@ void FrameRGB::getInfoCmd(const Vector& vv, Coord::InternalSystem ref, char* var
     FitsBound* params = sptr->getDataParams(context[ii].secMode());
 
     do {
-      Vector3d rr = mapToRef3d(vv,ref);
+      Vector3d rr = mapToRef(vv,ref);
       Vector img = Vector(rr) * sptr->refToData;
 
       if (img[0]>=params->xmin && img[0]<params->xmax && 

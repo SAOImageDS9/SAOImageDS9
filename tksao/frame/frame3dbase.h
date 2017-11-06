@@ -90,12 +90,16 @@ class Frame3dBase : public Base {
   void calcBorder(Coord::InternalSystem, FrScale::SecMode mode,
 		  Vector3d* vv, int* dd);
   void calcHighlite(Coord::InternalSystem, Vector*, int*);
+  void coord3ToTclArray(FitsImage*, const Vector3d&, Coord::CoordSystem,
+			const char*, const char*);
+  void getInfoWCS(char*, const Vector3d&, FitsImage*, FitsImage*);
 
  protected:
   double calcZoomPanner();
   double calcZoom3d(Vector3d, Vector);
   virtual void cancelDetach() =0;
   void centerImage();
+
 
   int isAzElZero() {return !az_ && !el_;}
 
@@ -132,6 +136,8 @@ class Frame3dBase : public Base {
   Frame3dBase(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~Frame3dBase();
 
+  FrameType frameType() {return F3D;}
+
   void setSlice(int,int);
 
   Vector mapFromRef(const Vector& vv, Coord::InternalSystem sys)
@@ -151,6 +157,9 @@ class Frame3dBase : public Base {
 
   // Clip Commands
   void clipScopeCmd(FrScale::ClipScope) {} // scope is always GLOBAL
+
+  // Info Commands
+  void getInfoCmd(const Vector&, Coord::InternalSystem, char*);
 
   // Coordinate Commands
   void getCursorCmd(Coord::InternalSystem);

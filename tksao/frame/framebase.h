@@ -23,6 +23,8 @@ protected:
   double calcZoomPanner();
   void cancelDetach() {};
 
+  void getInfoWCS(char*, const Vector&, FitsImage*, FitsImage*);
+
   void rotateMotion();
 
   void saveFitsResampleFits(OutFitsStream&);
@@ -38,14 +40,13 @@ public:
   FrameBase(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameBase();
 
+  FrameType frameType() {return F2D;}
   void setSlice(int,int);
 
   Vector mapFromRef(const Vector&, Coord::InternalSystem);
   Vector3d mapFromRef3d(const Vector& vv, Coord::InternalSystem sys) 
   {return mapFromRef(vv,sys);}
   Vector mapToRef(const Vector&, Coord::InternalSystem);
-  Vector3d mapToRef3d(const Vector& vv, Coord::InternalSystem sys) 
-  {return mapToRef(vv,sys);}
 
   // Bin Commands
   void binToFitCmd();
@@ -60,6 +61,9 @@ public:
   // Grid Commands
   void gridCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, 
 	       Grid::GridType, const char*, const char*);
+
+  // Info Commands
+  void getInfoCmd(const Vector&, Coord::InternalSystem, char*);
 
   // Fits Commands
   void saveFitsResample(OutFitsStream&);

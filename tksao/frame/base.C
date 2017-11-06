@@ -746,14 +746,6 @@ void Base::coordToTclArray(FitsImage* ptr, const Vector3d& vv,
   doubleToTclArray(rr[1], var, base, "y");
 }
 
-void Base::coord3ToTclArray(FitsImage* ptr, const Vector3d& vv, 
-			    Coord::CoordSystem out,
-			    const char* var, const char* base)
-{
-  double ss = ptr->mapFromRef3axis(((Vector3d&)vv)[2],out,2);
-  doubleToTclArray(ss, var, base, "z");
-}
-
 int Base::doRender() 
 {
   return context->cfits ? 1 : 0;
@@ -894,55 +886,6 @@ void Base::getInfoClearWCS(char* var)
     Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
     Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
     Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
-  }
-}
-
-void Base::getInfoWCS(char* var, const Vector3d& rr, FitsImage* ptr, 
-		      FitsImage* sptr)
-{
-  Vector img = Vector(rr) * sptr->refToData;
-
-  for (int ii=0; ii<MULTWCS; ii++) {
-    char buf[64];
-    char ww = !ii ? '\0' : '`'+ii;
-    Coord::CoordSystem www = (Coord::CoordSystem)(Coord::WCS+ii);
-
-    if (hasWCS(www)) {
-      char buff[128];
-      Vector uu = img * dataToImage;
-      sptr->pix2wcs(uu, www, wcsSky_, wcsSkyFormat_, buff);
-
-      int argc;
-      const char** argv;
-      Tcl_SplitList(interp, buff, &argc, &argv);
-
-      if (argc > 0 && argv && argv[0])
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),argv[0],0);
-      else
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
-      if (argc > 1 && argv && argv[1])
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),argv[1],0);
-      else
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
-      // use first slice
-      coord3ToTclArray(ptr,rr,www,var,"wcs");
-
-      char* wcsname = (char*)sptr->getWCSName(www);
-      if (wcsname)
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),wcsname,0);
-      else if (argc > 2 && argv && argv[2])
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),argv[2],0);
-      else
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
-	    
-      Tcl_Free((char*)argv);
-    }
-    else {
-      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
-      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
-      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
-      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
-    }
   }
 }
 

@@ -9,6 +9,7 @@
 #include "marker.h"
 #include "context.h"
 #include "ps.h"
+#include "sigbus.h"
 
 // Public
 
@@ -34,6 +35,159 @@ FrameBase::~FrameBase()
 
   if (colormapGCXOR)
     XFreeGC(display, colormapGCXOR);
+}
+
+void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref, char* var)
+{
+  FitsBound* params;
+  int mosaic;
+
+  Vector rr = mapToRef(vv,ref);
+
+  // make sure we have an image
+  FitsImage* ptr = currentContext->cfits;
+  FitsImage* sptr = currentContext->cfits;
+  if (!ptr)
+    goto noFits;
+
+  mosaic = isMosaic();
+  params = sptr->getDataParams(currentContext->secMode());
+
+  if (!mosaic) {
+    Tcl_SetVar2(interp,var,"filename",(char*)sptr->getFileName(ROOTBASE),0);
+    Tcl_SetVar2(interp,var,"object",(char*)sptr->objectKeyword(),0);
+    Tcl_SetVar2(interp,var,"min",(char*)sptr->getMin(),0);
+    Tcl_SetVar2(interp,var,"min,x",(char*)sptr->getMinX(),0);
+    Tcl_SetVar2(interp,var,"min,y",(char*)sptr->getMinY(),0);
+    Tcl_SetVar2(interp,var,"max",(char*)sptr->getMax(),0);
+    Tcl_SetVar2(interp,var,"max,x",(char*)sptr->getMaxX(),0);
+    Tcl_SetVar2(interp,var,"max,y",(char*)sptr->getMaxY(),0);
+    Tcl_SetVar2(interp,var,"low",(char*)sptr->getLow(),0);
+    Tcl_SetVar2(interp,var,"high",(char*)sptr->getHigh(),0);
+  }
+
+  if (((Vector&)vv)[0]<0 && ((Vector&)vv)[1]<0)
+    goto noImage;
+
+  // clear values
+  Tcl_SetVar2(interp,var,"value","",0);
+  Tcl_SetVar2(interp,var,"value,red","",0);
+  Tcl_SetVar2(interp,var,"value,green","",0);
+  Tcl_SetVar2(interp,var,"value,blue","",0);
+
+  do {
+    Vector img = rr * sptr->refToData;
+
+    if (img[0]>=params->xmin && img[0]<params->xmax && 
+	img[1]>=params->ymin && img[1]<params->ymax) {
+
+      if (mosaic) {
+	Tcl_SetVar2(interp,var,"filename",(char*)sptr->getFileName(ROOTBASE),0);
+	Tcl_SetVar2(interp,var,"object",(char*)sptr->objectKeyword(),0);
+	Tcl_SetVar2(interp,var,"min",(char*)sptr->getMin(),0);
+	Tcl_SetVar2(interp,var,"min,x",(char*)sptr->getMinX(),0);
+	Tcl_SetVar2(interp,var,"min,y",(char*)sptr->getMinY(),0);
+	Tcl_SetVar2(interp,var,"max",(char*)sptr->getMax(),0);
+	Tcl_SetVar2(interp,var,"max,x",(char*)sptr->getMaxX(),0);
+	Tcl_SetVar2(interp,var,"max,y",(char*)sptr->getMaxY(),0);
+	Tcl_SetVar2(interp,var,"low",(char*)sptr->getLow(),0);
+	Tcl_SetVar2(interp,var,"high",(char*)sptr->getHigh(),0);
+      }
+
+      SETSIGBUS
+      Tcl_SetVar2(interp,var,"value",(char*)sptr->getValue(img),0);
+      CLEARSIGBUS
+
+      coordToTclArray(sptr,rr,Coord::IMAGE,var,"image");
+      coordToTclArray(sptr,rr,Coord::PHYSICAL,var,"physical");
+      if (hasATMV())
+	coordToTclArray(sptr,rr,Coord::AMPLIFIER,var,"amplifier");
+      else {
+	Tcl_SetVar2(interp,var,"amplifier,x","",0);
+	Tcl_SetVar2(interp,var,"amplifier,y","",0);
+	Tcl_SetVar2(interp,var,"amplifier,z","",0);
+      }
+      if (hasDTMV())
+	coordToTclArray(sptr,rr,Coord::DETECTOR,var,"detector");
+      else {
+	Tcl_SetVar2(interp,var,"detector,x","",0);
+	Tcl_SetVar2(interp,var,"detector,y","",0);
+	Tcl_SetVar2(interp,var,"detector,z","",0);
+      }
+
+      getInfoWCS(var,rr,ptr,sptr);
+      return;
+    }
+    else {
+      if (mosaic) {
+	sptr = sptr->nextMosaic();
+	if (sptr)
+	  params = sptr->getDataParams(currentContext->secMode());
+      }
+      else {
+	getInfoWCS(var,rr,ptr,sptr);
+	goto noImage;
+      }
+    }
+  }
+  while (mosaic && sptr);
+
+  // mosaic gap
+  getInfoWCS(var,rr,ptr,ptr);
+
+  // else, return blanks
+ noFits:
+  getInfoClearName(var);
+
+ noImage:
+  getInfoClearValue(var);
+}
+
+void FrameBase::getInfoWCS(char* var, const Vector& rr, FitsImage* ptr, 
+			   FitsImage* sptr)
+{
+  Vector img = Vector(rr) * sptr->refToData;
+
+  for (int ii=0; ii<MULTWCS; ii++) {
+    char buf[64];
+    char ww = !ii ? '\0' : '`'+ii;
+    Coord::CoordSystem www = (Coord::CoordSystem)(Coord::WCS+ii);
+
+    if (hasWCS(www)) {
+      char buff[128];
+      Vector uu = img * dataToImage;
+      sptr->pix2wcs(uu, www, wcsSky_, wcsSkyFormat_, buff);
+
+      int argc;
+      const char** argv;
+      Tcl_SplitList(interp, buff, &argc, &argv);
+
+      if (argc > 0 && argv && argv[0])
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),argv[0],0);
+      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
+      if (argc > 1 && argv && argv[1])
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),argv[1],0);
+      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
+
+      char* wcsname = (char*)sptr->getWCSName(www);
+      if (wcsname)
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),wcsname,0);
+      else if (argc > 2 && argv && argv[2])
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),argv[2],0);
+      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
+	    
+      Tcl_Free((char*)argv);
+    }
+    else {
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
+    }
+  }
 }
 
 double FrameBase::calcZoomPanner()

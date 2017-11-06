@@ -3424,6 +3424,8 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 
 // WCSX
 
+#ifndef NEWWCS
+
 int FitsImage::hasWCS3D(Coord::CoordSystem sys, int aa)
 {
   int ss = sys-Coord::WCS;
@@ -3449,6 +3451,45 @@ double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys, int aa)
   else
     return in;
 }
+
+#else
+
+int FitsImage::hasWCS3D(Coord::CoordSystem sys, int aa)
+{
+  int ss = sys-Coord::WCS;
+  return (aa>=2&&aa<FTY_MAXAXES && sys>=Coord::WCS && wcsx_[ss]) ? 1 : 0;
+
+  /*
+  if (ss>=0 && ast_ && ast_[ss]) {
+    int naxes = astGetI(ast_[ss],"Naxes");
+    return (aa>=2 && aa<FTY_MAXAXES && naxes >= 3) ? 1 : 0;
+  }
+  else
+    return 0;
+  */
+}
+
+double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys, int aa)
+{
+  if (hasWCS3D(sys,aa)) {
+    int ss = sys-Coord::WCS;
+    return (in-wcsx_[ss]->crpix[aa])*wcsx_[ss]->cd[aa] + wcsx_[ss]->crval[aa];
+  }
+  else
+    return in;
+}
+
+double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys, int aa)
+{
+  if (hasWCS3D(sys,aa)) {
+    int ss = sys-Coord::WCS;
+    return (in-wcsx_[ss]->crval[aa])/wcsx_[ss]->cd[aa] + wcsx_[ss]->crpix[aa];
+  }
+  else
+    return in;
+}
+
+#endif
 
 // WCS/AST support
 

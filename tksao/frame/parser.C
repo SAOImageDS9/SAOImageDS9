@@ -7539,7 +7539,7 @@ yyreduce:
 
   case 551:
 #line 1368 "frame/parser.Y"
-    {fr->hasWCSxCmd((Coord::CoordSystem)(yyvsp[(2) - (2)].integer));;}
+    {fr->hasWCS3DCmd((Coord::CoordSystem)(yyvsp[(2) - (2)].integer));;}
     break;
 
   case 552:

@@ -1365,7 +1365,7 @@ hasWCS	: coordSystem {fr->hasWCSCmd((Coord::CoordSystem)$1);}
 	| EQUATORIAL_ coordSystem {fr->hasWCSEquCmd((Coord::CoordSystem)$2);}
 	| CELESTRIAL_ coordSystem {fr->hasWCSCelCmd((Coord::CoordSystem)$2);}
 	| ALT_ {fr->hasWCSAltCmd();}
-	| THREED_ coordSystem {fr->hasWCSxCmd((Coord::CoordSystem)$2);}
+	| THREED_ coordSystem {fr->hasWCS3DCmd((Coord::CoordSystem)$2);}
 	;
 
 iis	: NEW_ INT INT {fr->iisCmd($2,$3);}

@@ -3424,7 +3424,7 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 
 // WCSX
 
-int FitsImage::hasWCSx(Coord::CoordSystem sys, int aa)
+int FitsImage::hasWCS3D(Coord::CoordSystem sys, int aa)
 {
   int ss = sys-Coord::WCS;
   return (aa>=2&&aa<FTY_MAXAXES && sys>=Coord::WCS && wcsx_[ss]) ? 1 : 0;
@@ -3432,7 +3432,7 @@ int FitsImage::hasWCSx(Coord::CoordSystem sys, int aa)
 
 double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys, int aa)
 {
-  if (hasWCSx(sys,aa)) {
+  if (hasWCS3D(sys,aa)) {
     int ss = sys-Coord::WCS;
     return (in-wcsx_[ss]->crpix[aa])*wcsx_[ss]->cd[aa] + wcsx_[ss]->crval[aa];
   }
@@ -3442,7 +3442,7 @@ double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys, int aa)
 
 double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys, int aa)
 {
-  if (hasWCSx(sys,aa)) {
+  if (hasWCS3D(sys,aa)) {
     int ss = sys-Coord::WCS;
     return (in-wcsx_[ss]->crval[aa])/wcsx_[ss]->cd[aa] + wcsx_[ss]->crpix[aa];
   }

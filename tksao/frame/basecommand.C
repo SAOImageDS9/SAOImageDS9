@@ -2356,9 +2356,9 @@ void Base::hasWCSCelCmd(Coord::CoordSystem sys)
   Tcl_AppendResult(interp, (hasWCSCel(sys) ? "1" : "0"), NULL);
 }
 
-void Base::hasWCSxCmd(Coord::CoordSystem sys)
+void Base::hasWCS3DCmd(Coord::CoordSystem sys)
 {
-  Tcl_AppendResult(interp, (hasWCSx(sys) ? "1" : "0"), NULL);
+  Tcl_AppendResult(interp, (hasWCS3D(sys) ? "1" : "0"), NULL);
 }
 
 void Base::irafAlignCmd(int which)

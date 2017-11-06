@@ -407,7 +407,7 @@ class FitsImage {
     {return (ast_ && ast_[sys-Coord::WCS]) ? ast_[sys-Coord::WCS] : NULL;}
 
   int hasWCS(Coord::CoordSystem);
-  int hasWCSx(Coord::CoordSystem, int);
+  int hasWCS3D(Coord::CoordSystem, int);
   int hasWCSEqu(Coord::CoordSystem);
   int hasWCSCel(Coord::CoordSystem);
 

@@ -124,7 +124,7 @@ int Grid3d::doit(RenderMode rm)
       AstFrame* zbase = astFrame(1,"");
       AstFrame* zcurr = astFrame(1,"");
       AstMapping* zmap;
-      if (fits->hasWCSx(system_,2)) {
+      if (fits->hasWCS3D(system_,2)) {
 	astIntraReg("foo",1,1,bar,0,"testing","me","you");
 	if (!(zmap = (AstMapping*)astIntraMap("foo",1,1,"")))
 	  return 0;

@@ -1549,7 +1549,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 		      const char* rrname)
 {
   // only good for skyframe
-  
+
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
@@ -1603,6 +1603,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 
   if (!hasWCS(sys1) || !hasWCS(sys2))
     return;
+
   int ss1 = sys1-Coord::WCS;
   int ss2 = sys2-Coord::WCS;
 
@@ -1610,13 +1611,15 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   if (!((astWCSIsASkyFrame(ast_[ss1]) && (astWCSIsASkyFrame(ast_[ss2])))))
     return;
 
-  setAstWCSSkyFrame(ast_[ss1],sky1);
+  setAstWCSSystem(newast_, sys1);
+  setAstWCSSkyFrame(newast_, sky1);
   for (int ii=0; ii<nxx1; ii++) {
     ixx1[ii] *= M_PI/180.;
     iyy1[ii] *= M_PI/180.;
   }
 
-  setAstWCSSkyFrame(ast_[ss2],sky2);
+  setAstWCSSystem(newast_, sys2);
+  setAstWCSSkyFrame(newast_, sky2);
   for (int ii=0; ii<nxx2; ii++) {
     xx2[ii] *= M_PI/180.;
     yy2[ii] *= M_PI/180.;
@@ -1635,11 +1638,15 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
     break;
   }
 
-  if ((ss1 != ss2) || (sky1 != sky2)) {
-    AstFrameSet* wcs1 = (AstFrameSet*)astCopy(ast_[ss1]);
+  if (sky1 != sky2) {
+    AstFrameSet* wcs1 = (AstFrameSet*)astCopy(newast_);
+    setAstWCSSystem(wcs1, sys1);
     setAstWCSSkyFrame(wcs1,sky1);
-    AstFrameSet* wcs2 = (AstFrameSet*)astCopy(ast_[ss2]);
+
+    AstFrameSet* wcs2 = (AstFrameSet*)astCopy(newast_);
+    setAstWCSSystem(wcs2, sys2);
     setAstWCSSkyFrame(wcs2,sky2);
+
     AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "SKY");
     if (cvt != AST__NULL)
       astWCSTran(cvt, nxx1, ixx1, iyy1, 1, xx1, yy1);
@@ -1650,7 +1657,8 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   }
 
   // now compare
-  setAstWCSSkyFrame(ast_[ss2],sky2);
+  setAstWCSSystem(newast_, sys2);
+  setAstWCSSkyFrame(newast_, sky2);
   Tcl_Obj* objrr = Tcl_NewListObj(0,NULL);
   for(int jj=0; jj<nxx2; jj++) {
     for (int ii=0; ii<nxx1; ii++) {
@@ -1660,7 +1668,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
       double pt2[2];
       pt2[0] = xx2[jj];
       pt2[1] = yy2[jj];
-      double dd = astDistance(ast_[ss2],pt1,pt2);
+      double dd = astDistance(newast_,pt1,pt2);
       if ((dd != AST__BAD) && (dd <= rr)) {
 	Tcl_Obj* obj[2];
 	obj[0] = Tcl_NewIntObj(ii+1);

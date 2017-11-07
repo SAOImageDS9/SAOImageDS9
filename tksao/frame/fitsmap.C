@@ -274,7 +274,6 @@ Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
 double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys, 
 			      Coord::DistFormat dist)
 {
-  cerr << '*';
   switch (sys) {
   case Coord::IMAGE:
     return dd*imageToRef[1].length();
@@ -292,14 +291,11 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
       }
       
       astClearStatus; // just to make sure
-      astBegin;
+      setAstWCSSystem(newast_, sys);
       maperr =0;
 
-      AstFrameSet* ast = (AstFrameSet*)astCopy(newast_);
-      setAstWCSSystem(ast, sys);
-
       double rdd = dd;
-      if (astWCSIsASkyFrame(ast)) {
+      if (astWCSIsASkyFrame(newast_)) {
 	rdd = degToRad(dd);
 	switch (dist) {
 	case Coord::DEGREE:
@@ -315,7 +311,7 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
 
       Vector cc = center();
       Vector wcc;
-      astWCSTran(ast,1,cc.v,cc.v+1,1,wcc.v,wcc.v+1);
+      astWCSTran(newast_,1,cc.v,cc.v+1,1,wcc.v,wcc.v+1);
 
       double wxx[2], xx[2];
       wxx[0] = wcc[0];
@@ -323,7 +319,7 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
       double wyy[2], yy[2];
       wyy[0] = wcc[1];
       wyy[1] = wcc[1]+rdd;
-      astWCSTran(ast,2,wxx,wyy,0,xx,yy);
+      astWCSTran(newast_,2,wxx,wyy,0,xx,yy);
 
       double pt0[2];
       pt0[0] = xx[0];
@@ -332,9 +328,9 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
       pt1[0] = xx[1];
       pt1[1] = yy[1];
 
-      astInvert(ast);
-      double out = astDistance(ast,pt0,pt1);
-      astEnd; // now, clean up memory
+      astInvert(newast_);
+      double out = astDistance(newast_,pt0,pt1);
+      astInvert(newast_);
 
       return out;
     }

@@ -3162,8 +3162,10 @@ Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
 			  Coord::SkyFrame sky)
 {
-  if (!hasWCS(sys))
+  if (!hasWCS(sys)) {
+    maperr =1;
     return Vector();
+  }
   
   astClearStatus; // just to make sure
   setAstWCSSystem(newast_,sys);
@@ -3172,13 +3174,11 @@ Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   double xx =0;
   double yy =0;
   astWCSTran(newast_, 1, in.v, in.v+1, 1, &xx, &yy);
-  if (astOK) {
-    if (checkAstWCS(xx,yy)) {
-      if (astWCSIsASkyFrame(newast_))
-	return Vector(radToDeg(xx),yy*180./M_PI);
-      else
-	return Vector(xx,yy);
-    }
+  if (astOK && checkAstWCS(xx,yy)) {
+    if (astWCSIsASkyFrame(newast_))
+      return Vector(radToDeg(xx),yy*180./M_PI);
+    else
+      return Vector(xx,yy);
   }
 
   maperr =1;
@@ -3233,8 +3233,10 @@ Vector* FitsImage::pix2wcs(Vector* in, int num, Coord::CoordSystem sys,
 			   Coord::SkyFrame sky)
 {
   Vector* out = new Vector[num];
-  if (!hasWCS(sys))
+  if (!hasWCS(sys)) {
+    maperr =1;
     return out;
+  }
   
   astClearStatus; // just to make sure
   setAstWCSSystem(newast_,sys);
@@ -3271,6 +3273,7 @@ Vector* FitsImage::pix2wcs(Vector* in, int num, Coord::CoordSystem sys,
 }
 #endif
 
+#ifndef NEWWCS
 char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
 			 Coord::SkyFrame sky, Coord::SkyFormat format,
 			 char* lbuf)
@@ -3339,6 +3342,74 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 
   return lbuf;
 }
+#else
+char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
+			 Coord::SkyFrame sky, Coord::SkyFormat format,
+			 char* lbuf)
+{
+  if (!hasWCS(sys)) {
+    maperr =1;
+    lbuf[0] = '\0';
+    return lbuf;
+  }
+  
+  astClearStatus; // just to make sure
+  setAstWCSSystem(newast_,sys);
+  setAstWCSSkyFrame(newast_,sky);
+
+  double xx =0;
+  double yy =0;
+  ostringstream str;
+
+  astWCSTran(newast_, 1, in.v, in.v+1, 1, &xx, &yy);
+  if (astOK && checkAstWCS(xx,yy)) {
+    if (astWCSIsASkyFrame(newast_)) {
+      switch (format) {
+      case Coord::DEGREES:
+	xx =radToDeg(xx); // 0 to 360
+	yy *=180./M_PI;
+
+	str << setprecision(8) << xx << ' ' << yy 
+	    << ' ' << coord.skyFrameStr(sky) << ends;
+	break;
+
+      case Coord::SEXAGESIMAL:
+	switch (sky) {
+	case Coord::FK4:
+	case Coord::FK4_NO_E:
+	case Coord::FK5:
+	case Coord::ICRS:
+	  xx = zeroTWOPI(xx);
+	  setAstWCSFormat(newast_,1,"hms.3");
+	  setAstWCSFormat(newast_,2,"+dms.3");
+	  break;
+	case Coord::GALACTIC:
+	case Coord::SUPERGALACTIC:
+	case Coord::ECLIPTIC:
+	case Coord::HELIOECLIPTIC:
+	  xx = zeroTWOPI(xx);
+	  setAstWCSFormat(newast_,1,"+dms.3");
+	  setAstWCSFormat(newast_,2,"+dms.3");
+	  break;
+	}
+
+	str << astFormat(newast_, 1, xx) << ' ' << astFormat(newast_, 2, yy) 
+	    << ' ' << coord.skyFrameStr(sky) << ends;
+	break;
+      }
+    }
+    else
+      str << setprecision(8) << xx << ' ' << yy << ends;
+
+    strncpy(lbuf, str.str().c_str(), str.str().length());
+    return lbuf;
+  }
+  
+  maperr =1;
+  lbuf[0] = '\0';
+  return lbuf;
+}
+#endif
 
 Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys, 
 			  Coord::SkyFrame sky)

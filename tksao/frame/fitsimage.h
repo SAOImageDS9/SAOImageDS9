@@ -114,6 +114,9 @@ class FitsImage {
   WorldCoor** wcs_;    // wcs list
   WCSx** wcsx_;        // xth Axis WCS
   AstFrameSet** ast_;  // ast frameset;
+#ifdef NEWWCS
+  AstFrameSet* newast_;  // ast frameset;
+#endif
   FitsHead* wcsHeader_; // alt wcs header
   FitsHead* altHeader_; // wcs header for wfpc2
 
@@ -141,6 +144,9 @@ class FitsImage {
 
   void wcsShow(WorldCoor*);
   void astinit(int, FitsHead*, FitsHead*);
+#ifdef NEWWCS
+  void astinit(FitsHead*, FitsHead*);
+#endif
   void astinit0(int, FitsHead*, FitsHead*);
   int checkAstWCS(double, double);
   AstFrameSet* fits2ast(FitsHead*);  
@@ -407,9 +413,9 @@ class FitsImage {
     {return (ast_ && ast_[sys-Coord::WCS]) ? ast_[sys-Coord::WCS] : NULL;}
 
   int hasWCS(Coord::CoordSystem);
-  int hasWCS3D(Coord::CoordSystem, int);
   int hasWCSEqu(Coord::CoordSystem);
   int hasWCSCel(Coord::CoordSystem);
+  int hasWCS3D(Coord::CoordSystem, int);
 
   void updateMatrices(Matrix&, Matrix&, Matrix&, Matrix&, Matrix&);
   void updateMatrices(Matrix3d&, Matrix3d&, Matrix3d&, Matrix3d&);

@@ -109,6 +109,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcs_ =NULL;
   wcsx_ =NULL;
   ast_ =NULL;
+  newast_ =NULL;
   wcsHeader_ =NULL;
   altHeader_ =NULL;
 
@@ -184,6 +185,10 @@ FitsImage::~FitsImage()
  	astAnnul(ast_[ii]);
     delete [] ast_;
   }
+#ifdef NEWWCS
+  if (manageWCS_ && newast_)
+    astAnnul(newast_);
+#endif
 
   if (wcsHeader_)
     delete wcsHeader_;
@@ -1080,6 +1085,11 @@ void FitsImage::initWCS()
   ast_ = new AstFrameSet*[MULTWCSA];
   for (int ii=0; ii<MULTWCSA; ii++)
     ast_[ii] = NULL;
+#ifdef NEWWCS
+  if (manageWCS_ && newast_)
+    astAnnul(newast_);
+  newast_ = NULL;
+#endif
 
   // shareWCS?
   manageWCS_ =1;
@@ -1098,6 +1108,9 @@ void FitsImage::initWCS()
 	    wcsx_[ii] = ptr->wcsx_[ii];
 	  for (int ii=0; ii<MULTWCSA; ii++)
 	    ast_[ii] = ptr->ast_[ii];
+#ifdef NEWWCS
+	  newast_ = ptr->newast_;
+#endif
 
 #ifndef NEWWCS
 	  initWCSPhysical();
@@ -1165,10 +1178,17 @@ void FitsImage::initWCS()
 
       astinit(ii, hd, prim);
 
+#ifndef NEWWCS
       if (DebugAST)
 	astShow(ast_[ii]);
+#endif
     }
   }
+#ifdef NEWWCS
+  astinit(hd, prim);
+  if (DebugAST && newast_)
+    astShow(newast_);
+#endif
 
 #ifndef NEWWCS
   // WCSDEP
@@ -1529,7 +1549,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 		      const char* rrname)
 {
   // only good for skyframe
-
+  
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
@@ -1581,16 +1601,13 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   for (int ii=0 ; ii<nyy2 ; ii++)
     Tcl_GetDoubleFromObj(interp_, objyy2[ii], yy2+ii);
 
-  if (!hasWCS(sys1))
-    return;
-  if (!hasWCS(sys2))
+  if (!hasWCS(sys1) || !hasWCS(sys2))
     return;
   int ss1 = sys1-Coord::WCS;
   int ss2 = sys2-Coord::WCS;
 
   // are both skyframe?
-  if (!((astWCSIsASkyFrame(ast_[ss1]) &&
-	 (astWCSIsASkyFrame(ast_[ss2])))))
+  if (!((astWCSIsASkyFrame(ast_[ss1]) && (astWCSIsASkyFrame(ast_[ss2])))))
     return;
 
   setAstWCSSkyFrame(ast_[ss1],sky1);
@@ -3351,13 +3368,14 @@ double FitsImage::getWCSDist(Vector a, Vector b, Coord::CoordSystem sys)
   return rr;
 }
 
+#ifndef NEWWCS
+
 int FitsImage::hasWCS(Coord::CoordSystem sys)
 {
   int ss = sys-Coord::WCS;
   return (sys>=Coord::WCS && ast_ && ast_[ss]) ? 1 : 0;
 }
 
-#ifndef NEWWCS
 int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
 {
   astClearStatus;
@@ -3389,26 +3407,6 @@ int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
 
   return 0;
 }
-#else
-int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
-{
-  astClearStatus;
-
-  int ss = sys-Coord::WCS;
-  if (ss>=0 && ast_ && ast_[ss])
-    if (astWCSIsASkyFrame(ast_[ss])) {
-      // check for xLON/xLAT and xxLN/xxLT
-      //  but GLON/GLAT is ok
-      const char* str = astGetC(ast_[ss], "System");
-      if (!strncmp(str,"Unknown",7))
-	return 0;
-      return 1;
-    }
-
-  return 0;
-}
-
-#endif
 
 int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 {
@@ -3421,6 +3419,133 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 
   return 0;
 }
+
+#else
+
+int FitsImage::hasWCS(Coord::CoordSystem sys)
+{
+  astClearStatus;
+  astBegin;
+
+  int ss = sys-Coord::WCS;
+  if (ss<0 || !newast_)
+    return 0;
+  
+  int rr =0;
+  int nn = astGetI(newast_,"nframe");
+  char cc = ' ';
+  if (ss)
+    cc = ss+'@';
+
+  for (int ii=0; ii<nn; ii++) {
+    const char* id = astGetC(astGetFrame(newast_,ii+1),"Ident");
+    if (cc == id[0]) {
+      rr =1;
+      break;
+    }
+  }
+
+  astEnd; // now, clean up memory
+  return rr;
+}
+
+int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
+{
+  astClearStatus;
+  astBegin;
+
+  int ss = sys-Coord::WCS;
+  if (ss<0 || !newast_)
+    return 0;
+  
+  int rr =0;
+  int nn = astGetI(newast_, "nframe");
+  char cc = ' ';
+  if (ss)
+    cc = ss+'@';
+
+  for (int ii=0; ii<nn; ii++) {
+    AstFrame* ff = (AstFrame*)astGetFrame(newast_,ii+1);
+    const char* id = astGetC(ff, "Ident");
+    if (cc == id[0]) {
+
+      int naxes = astGetI(ff, "Naxes");
+      switch (naxes) {
+      case 2:
+	rr = astIsASkyFrame(ff);
+	break;
+      case 3:
+      case 4:
+	{
+	  char* domain = (char*)astGetC(ff, "Domain");
+	  char* sky = strstr(domain, "SKY");
+	  rr = sky ? 1 : 0;
+	}
+	break;
+      default:
+	rr =0;
+	break;
+      }
+
+      // check for xLON/xLAT and xxLN/xxLT
+      //  but GLON/GLAT is ok
+      const char* str = astGetC(ff, "System");
+      if (!strncmp(str,"Unknown",7))
+	rr =0;
+      break;
+    }
+  }
+
+  astEnd; // now, clean up memory
+  return rr;
+}
+
+int FitsImage::hasWCSCel(Coord::CoordSystem sys)
+{
+  astClearStatus;
+  astBegin;
+
+  int ss = sys-Coord::WCS;
+  if (ss<0 || !newast_)
+    return 0;
+  
+  int rr =0;
+  int nn = astGetI(newast_, "nframe");
+  char cc = ' ';
+  if (ss)
+    cc = ss+'@';
+
+  for (int ii=0; ii<nn; ii++) {
+    AstFrame* ff = (AstFrame*)astGetFrame(newast_,ii+1);
+    const char* id = astGetC(ff, "Ident");
+    if (cc == id[0]) {
+
+      int naxes = astGetI(ff, "Naxes");
+      switch (naxes) {
+      case 2:
+	rr = astIsASkyFrame(ff);
+	break;
+      case 3:
+      case 4:
+	{
+	  char* domain = (char*)astGetC(ff, "Domain");
+	  char* sky = strstr(domain, "SKY");
+	  rr = sky ? 1 : 0;
+	}
+	break;
+      default:
+	rr =0;
+	break;
+      }
+      break;
+    }
+  }
+
+  astEnd; // now, clean up memory
+  return rr;
+}
+
+#endif
 
 // WCSX
 
@@ -3458,15 +3583,6 @@ int FitsImage::hasWCS3D(Coord::CoordSystem sys, int aa)
 {
   int ss = sys-Coord::WCS;
   return (aa>=2&&aa<FTY_MAXAXES && sys>=Coord::WCS && wcsx_[ss]) ? 1 : 0;
-
-  /*
-  if (ss>=0 && ast_ && ast_[ss]) {
-    int naxes = astGetI(ast_[ss],"Naxes");
-    return (aa>=2 && aa<FTY_MAXAXES && naxes >= 3) ? 1 : 0;
-  }
-  else
-    return 0;
-  */
 }
 
 double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys, int aa)
@@ -3616,6 +3732,63 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
   if (astWCSIsASkyFrame(ast_[ss]))
     setAstWCSSkyFrame(ast_[ss],Coord::FK5);
 }
+
+#ifdef NEWWCS
+void FitsImage::astinit(FitsHead* hd, FitsHead* prim)
+{
+  // just in case
+  if (!hd)
+    return;
+
+  newast_ = fits2ast(hd);
+  if (!newast_)
+    return;
+
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
+  int naxes = astGetI(newast_,"Naxes");
+  switch (naxes) {
+  case 1:
+    break;
+  case 2:
+    if (astIsASkyFrame(astGetFrame(newast_,AST__CURRENT)) &&
+	astGetI(newast_,"LatAxis") == 1) {
+      int orr[] = {2,1};
+      astPermAxes(newast_,orr);
+    }
+    break;
+  case 3:
+  case 4:
+    {
+      AstFrameSet* ast = newast_;
+
+      int pickc[2] = {1,2};
+      AstMapping** mapc = NULL;
+      AstFrame* permc = (AstFrame*)astPickAxes(ast, 2, pickc, &mapc);
+      astAddFrame(ast, AST__CURRENT, mapc, permc);
+
+      int isky = astGetI(ast, "Current");
+      int pickb[4] = {1, 2, 0, 0};
+      AstMapping* mapb;
+      AstFrame* foo = astFrame(2,"Domain=DATA");
+      astPickAxes(foo, naxes, pickb, &mapb);
+      astInvert(mapb);
+      astAddFrame(ast, AST__BASE, mapb, foo);
+      int idata =  astGetI(ast, "Current");
+      astSetI(ast, "Current", isky);
+      astSetI(ast, "Base", idata);
+    }
+    break;
+  }
+
+  astEnd; // now, clean up memory
+
+  // set default skyframe
+  if (astWCSIsASkyFrame(newast_))
+    setAstWCSSkyFrame(newast_,Coord::FK5);
+}
+#endif
 
 void FitsImage::astinit0(int ss, FitsHead* hd, FitsHead* prim)
 {

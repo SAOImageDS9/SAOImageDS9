@@ -642,48 +642,45 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
 			  Coord::CoordSystem sys1, Coord::CoordSystem sys2,
 			  Coord::SkyFrame sky)
 {
-  if ((!fits1 || !fits2) || 
-      (fits1 == fits2) ||
-      !(fits1->hasWCS(sys1)) ||
-      !(fits2->hasWCS(sys2)))
+  cerr << '*';
+  if ((!fits1 || !fits2) || (fits1 == fits2) ||
+      !(fits1->hasWCS(sys1)) || !(fits2->hasWCS(sys2)))
     return Matrix();
 
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  int ss1 = sys1-Coord::WCS;
-  int ss2 = sys2-Coord::WCS;
-  Matrix rr;
-  if ((ss1>=0 && fits1->ast_ && fits1->ast_[ss1]) &&
-      (ss2>=0 && fits2->ast_ && fits2->ast_[ss2])) {
-    AstFrameSet* wcs1 = (AstFrameSet*)astCopy(fits1->ast_[ss1]);
-    AstFrameSet* wcs2 = (AstFrameSet*)astCopy(fits2->ast_[ss2]);
-    astInvert(wcs1);
-    astInvert(wcs2);
-    AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "");
-    if (cvt != AST__NULL) {
-      astInvert(cvt);
-      Vector ll;
-      Vector cc1 = fits1->center();
-      fits1->astWCSTran(fits1->ast_[ss1], 1, cc1.v, cc1.v+1, 1, ll.v, ll.v+1);
-      Vector ur;
-      Vector cc2 = fits2->center();
-      fits2->astWCSTran(fits2->ast_[ss2], 1, cc2.v, cc2.v+1, 1, ur.v, ur.v+1);
+  fits1->setAstWCSSystem(fits1->newast_, sys1);
+  fits2->setAstWCSSystem(fits2->newast_, sys2);
 
-      double fit[6];
-      double tol = 1;
-      if (astLinearApprox(cvt, ll.v, ur.v, tol, fit) != AST__BAD) {
-	// fix the fit from AST
-	if (fit[2] == 0) {
-	  fit[2] =1;
-	  fit[0] =0;
-	}
-	if (fit[5] ==0) {
-	  fit[5] =1;
-	  fit[1] =0;
-	}
-	rr = Matrix(fit[2],fit[4],fit[3],fit[5],fit[0],fit[1]);
+  AstFrameSet* wcs1 = (AstFrameSet*)astCopy(fits1->newast_);
+  AstFrameSet* wcs2 = (AstFrameSet*)astCopy(fits2->newast_);
+  astInvert(wcs1);
+  astInvert(wcs2);
+  AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "");
+  Matrix rr;
+  if (cvt != AST__NULL) {
+    astInvert(cvt);
+    Vector ll;
+    Vector cc1 = fits1->center();
+    fits1->astWCSTran(fits1->newast_, 1, cc1.v, cc1.v+1, 1, ll.v, ll.v+1);
+    Vector ur;
+    Vector cc2 = fits2->center();
+    fits2->astWCSTran(fits2->newast_, 1, cc2.v, cc2.v+1, 1, ur.v, ur.v+1);
+
+    double fit[6];
+    double tol = 1;
+    if (astLinearApprox(cvt, ll.v, ur.v, tol, fit) != AST__BAD) {
+      // fix the fit from AST
+      if (fit[2] == 0) {
+	fit[2] =1;
+	fit[0] =0;
       }
+      if (fit[5] ==0) {
+	fit[5] =1;
+	fit[1] =0;
+      }
+      rr = Matrix(fit[2],fit[4],fit[3],fit[5],fit[0],fit[1]);
     }
   }
 

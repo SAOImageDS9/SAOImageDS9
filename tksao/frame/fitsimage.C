@@ -2914,7 +2914,7 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
 #else
 double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
 {
-  if (sys<Coord::WCS || !newast_)
+  if (!newast_ || sys<Coord::WCS)
     return 0;
 
   astClearStatus; // just to make sure
@@ -2950,11 +2950,11 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
 
 double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
 {
-  int ss = sys-Coord::WCS;
-  if (!(ss>=0 && ast_ && ast_[ss]))
+  if (!newast_ || sys<Coord::WCS)
     return 0;
 
   astClearStatus; // just to make sure
+  setAstWCSSystem(newast_, sys);
 
   Vector cc = center();
   double xx[3], wxx[3];
@@ -2965,7 +2965,7 @@ double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
   yy[0] = cc[1];
   yy[1] = cc[1]+1;
   yy[2] = cc[1]+1;
-  astWCSTran(ast_[ss],3,xx,yy,1,wxx,wyy);
+  astWCSTran(newast_,3,xx,yy,1,wxx,wyy);
 
   double pt0[2];
   pt0[0] = wxx[0];
@@ -2976,10 +2976,10 @@ double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
   double pt2[2];
   pt2[0] = wxx[2];
   pt2[1] = wyy[2];
-  double ll = astDistance(ast_[ss],pt0,pt1);
-  double mm = astDistance(ast_[ss],pt0,pt2);
+  double ll = astDistance(newast_,pt0,pt1);
+  double mm = astDistance(newast_,pt0,pt2);
 
-  if (astWCSIsASkyFrame(ast_[ss]))
+  if (astWCSIsASkyFrame(newast_))
     return radToDeg(ll)*radToDeg(mm);
   else
     return ll*mm;

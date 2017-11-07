@@ -1548,7 +1548,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 		      Coord::DistFormat dist,
 		      const char* rrname)
 {
-  if (!newast_ || !hasWCS(sys1) || !hasWCS(sys2))
+  if (!hasWCS(sys1) || !hasWCS(sys2))
     return;
 
   // only good for skyframe
@@ -2914,7 +2914,7 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
 #else
 double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
 {
-  if (!newast_ || sys<Coord::WCS)
+  if (!hasWCS(sys))
     return 0;
 
   astClearStatus; // just to make sure
@@ -2950,7 +2950,7 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
 
 double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
 {
-  if (!newast_ || sys<Coord::WCS)
+  if (!hasWCS(sys))
     return 0;
 
   astClearStatus; // just to make sure
@@ -3021,14 +3021,12 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
 Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
 						Coord::SkyFrame sky)
 {
-  int ss = sys-Coord::WCS;
-  if (!(ss>=0 && ast_ && ast_[ss]))
+  if (!hasWCS(sys))
     return Coord::NORMAL;
-
+  
   astClearStatus; // just to make sure
-
-  if (astWCSIsASkyFrame(ast_[ss]))
-    setAstWCSSkyFrame(ast_[ss],sky);
+  setAstWCSSystem(newast_,sys);
+  setAstWCSSkyFrame(newast_,sky);
 
   Vector pp = center();
   double xx[3], yy[3], wx[3], wy[32];
@@ -3038,7 +3036,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   yy[0] = pp[1];
   yy[1] = pp[1]+1;
   yy[2] = pp[1];
-  astWCSTran(ast_[ss],3,xx,yy,1,wx,wy);
+  astWCSTran(newast_,3,xx,yy,1,wx,wy);
 
   double aa[2], bb[2], cc[2];
   aa[0]= wx[0];
@@ -3047,11 +3045,11 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   bb[1]= wy[1];
   cc[0]= wx[2];
   cc[1]= wy[2];
-  double ang = astAngle(ast_[ss],aa,bb,cc);
+  double ang = astAngle(newast_,aa,bb,cc);
 
   Coord::Orientation rr = Coord::NORMAL;
   if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
-    if (astWCSIsASkyFrame(ast_[ss]))
+    if (astWCSIsASkyFrame(newast_))
       rr = ang>=0 ? Coord::NORMAL : Coord::XX;
     else
       rr = ang<=0 ? Coord::NORMAL : Coord::XX;
@@ -3087,14 +3085,12 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
 #else
 double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
-  int ss = sys-Coord::WCS;
-  if (!(ss>=0 && ast_ && ast_[ss]))
+  if (!hasWCS(sys))
     return 0;
-
+  
   astClearStatus; // just to make sure
-
-  if (astWCSIsASkyFrame(ast_[ss]))
-    setAstWCSSkyFrame(ast_[ss],sky);
+  setAstWCSSystem(newast_,sys);
+  setAstWCSSkyFrame(newast_,sky);
 
   Vector pp = center();
   double xx[2], yy[2], wx[2], wy[2];
@@ -3102,14 +3098,14 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   xx[1] = pp[0];
   yy[0] = pp[1];
   yy[1] = pp[1]+1;
-  astWCSTran(ast_[ss],2,xx,yy,1,wx,wy);
+  astWCSTran(newast_,2,xx,yy,1,wx,wy);
 
   double aa[2], bb[2];
   aa[0]= wx[0];
   aa[1]= wy[0];
   bb[0]= wx[1];
   bb[1]= wy[1];
-  double ang = astAxAngle(ast_[ss],aa,bb,2);
+  double ang = astAxAngle(newast_,aa,bb,2);
 
   if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
     return getWCSOrientation(sys,sky) == Coord::NORMAL ? ang : -ang;
@@ -3127,10 +3123,6 @@ const char* FitsImage::getWCSName(Coord::CoordSystem sys)
 #else
 const char* FitsImage::getWCSName(Coord::CoordSystem sys) 
 {
-  int ss = sys-Coord::WCS;
-  if (!(ss>=0 && ast_ && ast_[ss]))
-    return NULL;
-
   if (fits_->find("WCSNAME"))
     return fits_->getString("WCSNAME");
   else
@@ -3138,7 +3130,7 @@ const char* FitsImage::getWCSName(Coord::CoordSystem sys)
 }
 #endif
 
-// AST
+#ifndef NEWWCS
 Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
 			  Coord::SkyFrame sky)
 {
@@ -3166,7 +3158,35 @@ Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   maperr =1;
   return Vector();
 }
+#else
+Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
+			  Coord::SkyFrame sky)
+{
+  if (!hasWCS(sys))
+    return Vector();
+  
+  astClearStatus; // just to make sure
+  setAstWCSSystem(newast_,sys);
+  setAstWCSSkyFrame(newast_,sky);
 
+  double xx =0;
+  double yy =0;
+  astWCSTran(newast_, 1, in.v, in.v+1, 1, &xx, &yy);
+  if (astOK) {
+    if (checkAstWCS(xx,yy)) {
+      if (astWCSIsASkyFrame(newast_))
+	return Vector(radToDeg(xx),yy*180./M_PI);
+      else
+	return Vector(xx,yy);
+    }
+  }
+
+  maperr =1;
+  return Vector();
+}
+#endif
+
+#ifndef NEWWCS
 Vector* FitsImage::pix2wcs(Vector* in, int num, Coord::CoordSystem sys,
 			   Coord::SkyFrame sky)
 {
@@ -3208,6 +3228,48 @@ Vector* FitsImage::pix2wcs(Vector* in, int num, Coord::CoordSystem sys,
   maperr =1;
   return out;
 }
+#else
+Vector* FitsImage::pix2wcs(Vector* in, int num, Coord::CoordSystem sys,
+			   Coord::SkyFrame sky)
+{
+  Vector* out = new Vector[num];
+  if (!hasWCS(sys))
+    return out;
+  
+  astClearStatus; // just to make sure
+  setAstWCSSystem(newast_,sys);
+  setAstWCSSkyFrame(newast_,sky);
+
+  double xin[num];
+  double yin[num];
+  double xout[num];
+  double yout[num];
+
+  for (int ii=0; ii<num; ii++) {
+    xin[ii] = (in[ii])[0];
+    yin[ii] = (in[ii])[1];
+  }
+
+  astWCSTran(newast_, num, xin, yin, 1, xout, yout);
+  if (astOK) {
+    if (astWCSIsASkyFrame(newast_)) {
+      for (int ii=0; ii<num; ii++)
+	if (checkAstWCS(xout[ii],yout[ii]))
+	  out[ii] = Vector(radToDeg(xout[ii]),yout[ii]*180./M_PI);
+      return out;
+    }
+    else {
+      for (int ii=0; ii<num; ii++)
+	if (checkAstWCS(xout[ii],yout[ii]))
+	  out[ii] = Vector(xout[ii],yout[ii]);
+      return out;
+    }
+  }
+
+  maperr =1;
+  return out;
+}
+#endif
 
 char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
 			 Coord::SkyFrame sky, Coord::SkyFormat format,
@@ -3429,13 +3491,13 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 
 int FitsImage::hasWCS(Coord::CoordSystem sys)
 {
+  if (!newast_ || sys<Coord::WCS)
+    return 0;
+  
   astClearStatus;
   astBegin;
 
   int ss = sys-Coord::WCS;
-  if (ss<0 || !newast_)
-    return 0;
-  
   int rr =0;
   int nn = astGetI(newast_,"nframe");
   char cc = ' ';
@@ -3456,13 +3518,13 @@ int FitsImage::hasWCS(Coord::CoordSystem sys)
 
 int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
 {
+  if (!newast_ || sys<Coord::WCS)
+    return 0;
+
   astClearStatus;
   astBegin;
 
   int ss = sys-Coord::WCS;
-  if (ss<0 || !newast_)
-    return 0;
-  
   int rr =0;
   int nn = astGetI(newast_, "nframe");
   char cc = ' ';
@@ -3507,13 +3569,13 @@ int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
 
 int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 {
+  if (!newast_ || sys<Coord::WCS)
+    return 0;
+
   astClearStatus;
   astBegin;
 
   int ss = sys-Coord::WCS;
-  if (ss<0 || !newast_)
-    return 0;
-  
   int rr =0;
   int nn = astGetI(newast_, "nframe");
   char cc = ' ';

@@ -169,45 +169,46 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
     return dd*(refToPhysical * physicalToDetector)[1].length();
   default:
     {
-      int ss = sys-Coord::WCS;
-      if (sys>=Coord::WCS && ast_ && ast_[ss]) {
-	astClearStatus; // just to make sure
-	astBegin; // start memory management
-
-	Vector cc = center();
-	double xx[2], wxx[2];
-	xx[0] = cc[0];
-	xx[1] = cc[0];
-	double yy[2], wyy[2];
-	yy[0] = cc[1];
-	yy[1] = cc[1]+dd;
-	astWCSTran(ast_[ss],2,xx,yy,1,wxx,wyy);
-
-	double pt0[2];
-	pt0[0] = wxx[0];
-	pt0[1] = wyy[0];
-	double pt1[2];
-	pt1[0] = wxx[1];
-	pt1[1] = wyy[1];
-	double out = astDistance(ast_[ss],pt0,pt1);
-
-	if (astWCSIsASkyFrame(ast_[ss])) {
-	  out = radToDeg(out);
-	  switch (dist) {
-	  case Coord::DEGREE:
-	    break;
-	  case Coord::ARCMIN:
-	    out *= 60.;
-	    break;
-	  case Coord::ARCSEC:
-	    out *= 60.*60.;
-	    break;
-	  }
-	}
-
-	astEnd; // now, clean up memory
-	return out;
+      if (!hasWCS(sys)) {
+	maperr =1;
+	return 0;
       }
+      
+      astClearStatus; // just to make sure
+      setAstWCSSystem(newast_, sys);
+      maperr =0;
+
+      Vector cc = center();
+      double xx[2], wxx[2];
+      xx[0] = cc[0];
+      xx[1] = cc[0];
+      double yy[2], wyy[2];
+      yy[0] = cc[1];
+      yy[1] = cc[1]+dd;
+      astWCSTran(newast_,2,xx,yy,1,wxx,wyy);
+
+      double pt0[2];
+      pt0[0] = wxx[0];
+      pt0[1] = wyy[0];
+      double pt1[2];
+      pt1[0] = wxx[1];
+      pt1[1] = wyy[1];
+      double out = astDistance(newast_,pt0,pt1);
+
+      if (astWCSIsASkyFrame(newast_)) {
+	out = radToDeg(out);
+	switch (dist) {
+	case Coord::DEGREE:
+	  break;
+	case Coord::ARCMIN:
+	  out *= 60.;
+	  break;
+	case Coord::ARCSEC:
+	  out *= 60.*60.;
+	  break;
+	}
+      }
+      return out;
     }
   }
 
@@ -273,6 +274,7 @@ Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
 double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys, 
 			      Coord::DistFormat dist)
 {
+  cerr << '*';
   switch (sys) {
   case Coord::IMAGE:
     return dd*imageToRef[1].length();
@@ -284,52 +286,57 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
     return dd*(detectorToPhysical * physicalToRef)[1].length();
   default:
     {
-      int ss = sys-Coord::WCS;
-      if (sys>=Coord::WCS && ast_ && ast_[ss]) {
-	astClearStatus; // just to make sure
-	astBegin; // start memory management
-
-	AstFrameSet* ast = (AstFrameSet*)astCopy(ast_[ss]);
-	double rdd = dd;
-	if (astWCSIsASkyFrame(ast)) {
-	  rdd = degToRad(dd);
-	  switch (dist) {
-	  case Coord::DEGREE:
-	    break;
-	  case Coord::ARCMIN:
-	    rdd /= 60.;
-	    break;
-	  case Coord::ARCSEC:
-	    rdd /= 60.*60.;
-	    break;
-	  }
-	}
-
-	Vector cc = center();
-	Vector wcc;
-	astWCSTran(ast,1,cc.v,cc.v+1,1,wcc.v,wcc.v+1);
-
-	double wxx[2], xx[2];
-	wxx[0] = wcc[0];
-	wxx[1] = wcc[0];
-	double wyy[2], yy[2];
-	wyy[0] = wcc[1];
-	wyy[1] = wcc[1]+rdd;
-	astWCSTran(ast,2,wxx,wyy,0,xx,yy);
-
-	double pt0[2];
-	pt0[0] = xx[0];
-	pt0[1] = yy[0];
-	double pt1[2];
-	pt1[0] = xx[1];
-	pt1[1] = yy[1];
-
-	astInvert(ast);
-	double out = astDistance(ast,pt0,pt1);
-	astEnd; // now, clean up memory
-
-	return out;
+      if (!hasWCS(sys)) {
+	maperr =1;
+	return 0;
       }
+      
+      astClearStatus; // just to make sure
+      astBegin;
+      maperr =0;
+
+      AstFrameSet* ast = (AstFrameSet*)astCopy(newast_);
+      setAstWCSSystem(ast, sys);
+
+      double rdd = dd;
+      if (astWCSIsASkyFrame(ast)) {
+	rdd = degToRad(dd);
+	switch (dist) {
+	case Coord::DEGREE:
+	  break;
+	case Coord::ARCMIN:
+	  rdd /= 60.;
+	  break;
+	case Coord::ARCSEC:
+	  rdd /= 60.*60.;
+	  break;
+	}
+      }
+
+      Vector cc = center();
+      Vector wcc;
+      astWCSTran(ast,1,cc.v,cc.v+1,1,wcc.v,wcc.v+1);
+
+      double wxx[2], xx[2];
+      wxx[0] = wcc[0];
+      wxx[1] = wcc[0];
+      double wyy[2], yy[2];
+      wyy[0] = wcc[1];
+      wyy[1] = wcc[1]+rdd;
+      astWCSTran(ast,2,wxx,wyy,0,xx,yy);
+
+      double pt0[2];
+      pt0[0] = xx[0];
+      pt0[1] = yy[0];
+      double pt1[2];
+      pt1[0] = xx[1];
+      pt1[1] = yy[1];
+
+      astInvert(ast);
+      double out = astDistance(ast,pt0,pt1);
+      astEnd; // now, clean up memory
+
+      return out;
     }
   }
 

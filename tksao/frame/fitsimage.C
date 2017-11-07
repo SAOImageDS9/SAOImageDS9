@@ -3563,6 +3563,7 @@ Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
 }
 #endif
 
+#ifndef NEWWCS
 double FitsImage::getWCSDist(Vector a, Vector b, Coord::CoordSystem sys)
 {
   int ss = sys-Coord::WCS;
@@ -3582,9 +3583,29 @@ double FitsImage::getWCSDist(Vector a, Vector b, Coord::CoordSystem sys)
 
   return rr;
 }
+#else
+double FitsImage::getWCSDist(Vector aa, Vector bb, Coord::CoordSystem sys)
+{
+  if (!hasWCS(sys))
+    return 0;
+
+  astClearStatus; // just to make sure
+  setAstWCSSystem(newast_,sys);
+
+  double rr=0;
+  if (astWCSIsASkyFrame(newast_)) {
+    aa *= M_PI/180.;
+    bb *= M_PI/180.;
+    rr = astDistance(newast_, aa.v, bb.v) *180./M_PI;
+  }
+  else
+    rr = astDistance(newast_, aa.v, bb.v);
+
+  return rr;
+}
+#endif
 
 #ifndef NEWWCS
-
 int FitsImage::hasWCS(Coord::CoordSystem sys)
 {
   int ss = sys-Coord::WCS;

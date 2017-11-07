@@ -3170,6 +3170,7 @@ Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   astClearStatus; // just to make sure
   setAstWCSSystem(newast_,sys);
   setAstWCSSkyFrame(newast_,sky);
+  maperr =0;
 
   double xx =0;
   double yy =0;
@@ -3241,6 +3242,7 @@ Vector* FitsImage::pix2wcs(Vector* in, int num, Coord::CoordSystem sys,
   astClearStatus; // just to make sure
   setAstWCSSystem(newast_,sys);
   setAstWCSSkyFrame(newast_,sky);
+  maperr =0;
 
   double xin[num];
   double yin[num];
@@ -3356,6 +3358,7 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   astClearStatus; // just to make sure
   setAstWCSSystem(newast_,sys);
   setAstWCSSkyFrame(newast_,sky);
+  maperr =0;
 
   double xx =0;
   double yy =0;
@@ -3444,7 +3447,6 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
 Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys, 
 			  Coord::SkyFrame sky)
 {
-  cerr << '*';
   if (!hasWCS(sys)) {
     maperr =1;
     return Vector();
@@ -3453,26 +3455,24 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
   astClearStatus; // just to make sure
   setAstWCSSystem(newast_,sys);
   setAstWCSSkyFrame(newast_,sky);
+  maperr =0;
 
   double xx =0;
   double yy =0;
-  if (astWCSIsASkyFrame(newast_)) {
-    Vector rr = in*M_PI/180.;
-    astWCSTran(newast_, 1, rr.v, &(rr[1]), 0, &xx, &yy);
-    if (astOK && checkAstWCS(xx,yy))
-      return Vector(xx,yy);
-  }
-  else {
-    astWCSTran(newast_, 1, in.v, in.v+1, 0, &xx, &yy);
-    if (astOK && checkAstWCS(xx,yy))
-      return Vector(xx,yy);
-  }
+
+  if (astWCSIsASkyFrame(newast_))
+    in *= M_PI/180.;
+
+  astWCSTran(newast_, 1, in.v, in.v+1, 0, &xx, &yy);
+  if (astOK && checkAstWCS(xx,yy))
+    return Vector(xx,yy);
 
   maperr =1;
   return Vector();
 }
 #endif
 
+#ifndef NEWWCS
 Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
 			   Coord::SkyFrame sky)
 {
@@ -3518,6 +3518,50 @@ Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
   maperr =1;
   return out;
 }
+#else
+Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
+			   Coord::SkyFrame sky)
+{
+  Vector* out = new Vector[num];
+  if (!hasWCS(sys)) {
+    maperr =1;
+    return out;
+  }
+    
+  astClearStatus; // just to make sure
+  setAstWCSSystem(newast_,sys);
+  setAstWCSSkyFrame(newast_,sky);
+  maperr =0;
+
+  double xin[num];
+  double yin[num];
+  double xout[num];
+  double yout[num];
+
+  for (int ii=0; ii<num; ii++) {
+    xin[ii] = (in[ii])[0];
+    yin[ii] = (in[ii])[1];
+  }
+
+  if (astWCSIsASkyFrame(newast_)) {
+    for (int kk=0; kk<num; kk++) {
+      xin[kk] *= M_PI/180.;
+      yin[kk] *= M_PI/180.;
+    }
+  }
+  
+  astWCSTran(newast_, num, xin, yin, 0, xout, yout);
+  if (astOK) {
+    for (int kk=0; kk<num; kk++)
+      if (checkAstWCS(xout[kk],yout[kk]))
+	out[kk] = Vector(xout[kk],yout[kk]);
+    return out;
+  }
+
+  maperr =1;
+  return out;
+}
+#endif
 
 double FitsImage::getWCSDist(Vector a, Vector b, Coord::CoordSystem sys)
 {

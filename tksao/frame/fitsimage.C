@@ -3411,6 +3411,7 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 }
 #endif
 
+#ifndef NEWWCS
 Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys, 
 			  Coord::SkyFrame sky)
 {
@@ -3439,6 +3440,38 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
   maperr =1;
   return Vector();
 }
+#else
+Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys, 
+			  Coord::SkyFrame sky)
+{
+  cerr << '*';
+  if (!hasWCS(sys)) {
+    maperr =1;
+    return Vector();
+  }
+    
+  astClearStatus; // just to make sure
+  setAstWCSSystem(newast_,sys);
+  setAstWCSSkyFrame(newast_,sky);
+
+  double xx =0;
+  double yy =0;
+  if (astWCSIsASkyFrame(newast_)) {
+    Vector rr = in*M_PI/180.;
+    astWCSTran(newast_, 1, rr.v, &(rr[1]), 0, &xx, &yy);
+    if (astOK && checkAstWCS(xx,yy))
+      return Vector(xx,yy);
+  }
+  else {
+    astWCSTran(newast_, 1, in.v, in.v+1, 0, &xx, &yy);
+    if (astOK && checkAstWCS(xx,yy))
+      return Vector(xx,yy);
+  }
+
+  maperr =1;
+  return Vector();
+}
+#endif
 
 Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
 			   Coord::SkyFrame sky)

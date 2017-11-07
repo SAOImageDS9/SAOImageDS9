@@ -1548,6 +1548,9 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 		      Coord::DistFormat dist,
 		      const char* rrname)
 {
+  if (!newast_ || !hasWCS(sys1) || !hasWCS(sys2))
+    return;
+
   // only good for skyframe
 
   astClearStatus; // just to make sure
@@ -1601,17 +1604,9 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   for (int ii=0 ; ii<nyy2 ; ii++)
     Tcl_GetDoubleFromObj(interp_, objyy2[ii], yy2+ii);
 
-  if (!hasWCS(sys1) || !hasWCS(sys2))
-    return;
-
-  int ss1 = sys1-Coord::WCS;
-  int ss2 = sys2-Coord::WCS;
-
-  // are both skyframe?
-  if (!((astWCSIsASkyFrame(ast_[ss1]) && (astWCSIsASkyFrame(ast_[ss2])))))
-    return;
-
   setAstWCSSystem(newast_, sys1);
+  if (!astWCSIsASkyFrame(newast_))
+    return;
   setAstWCSSkyFrame(newast_, sky1);
   for (int ii=0; ii<nxx1; ii++) {
     ixx1[ii] *= M_PI/180.;
@@ -1619,6 +1614,8 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   }
 
   setAstWCSSystem(newast_, sys2);
+  if (!astWCSIsASkyFrame(newast_))
+    return;
   setAstWCSSkyFrame(newast_, sky2);
   for (int ii=0; ii<nxx2; ii++) {
     xx2[ii] *= M_PI/180.;
@@ -2917,12 +2914,12 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
 #else
 double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
 {
-  int ss = sys-Coord::WCS;
-  if (!(ss>=0 && ast_ && ast_[ss]))
+  if (sys<Coord::WCS || !newast_)
     return 0;
 
   astClearStatus; // just to make sure
-
+  setAstWCSSystem(newast_, sys);
+  
   Vector cc = center();
   double xx[3], wxx[3];
   xx[0] = cc[0];
@@ -2932,7 +2929,7 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
   yy[0] = cc[1];
   yy[1] = cc[1]+1;
   yy[2] = cc[1]+1;
-  astWCSTran(ast_[ss],3,xx,yy,1,wxx,wyy);
+  astWCSTran(newast_,3,xx,yy,1,wxx,wyy);
 
   double pt0[2];
   pt0[0] = wxx[0];
@@ -2943,9 +2940,9 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
   double pt2[2];
   pt2[0] = wxx[2];
   pt2[1] = wyy[2];
-  double out = (astDistance(ast_[ss],pt0,pt1)+astDistance(ast_[ss],pt0,pt2))/2.;
+  double out = (astDistance(newast_,pt0,pt1)+astDistance(newast_,pt0,pt2))/2.;
 
-  if (astWCSIsASkyFrame(ast_[ss]))
+  if (astWCSIsASkyFrame(newast_))
     return radToDeg(out);
   else
     return out;
@@ -3898,6 +3895,35 @@ void FitsImage::setAstWCSSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
   }
 }
 
+#ifdef NEWWCS
+void FitsImage::setAstWCSSystem(AstFrameSet* ast, Coord::CoordSystem sys)
+{
+  int nn = astGetI(ast,"nframe");
+  char cc = ' ';
+  int ww = sys-Coord::WCS;
+  switch (sys) {
+  case Coord::DATA:
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::AMPLIFIER:
+  case Coord::DETECTOR:
+    // this should not happen
+    return;
+  default:
+    if (ww)
+      cc = ww+'@';
+  }
+
+  for (int ss=0; ss<nn; ss++) {
+    const char* id = astGetC(astGetFrame(ast,ss+1),"Ident");
+    if (cc == id[0]) {
+      astSetI(ast,"current",ss+1);
+      break;
+    }
+  }
+}
+#endif
+
 #ifndef NEWWCS
 
 int FitsImage::astWCSIsASkyFrame(void* ast)
@@ -3949,32 +3975,6 @@ void FitsImage::astWCSTran(AstFrameSet* ast, int npoint,
   astTran2(ast, npoint, xin, yin, forward, xout, yout);
 }
 
-void FitsImage::setAstWCSSystem(AstFrameSet* ast, Coord::CoordSystem sys)
-{
-  int nn = astGetI(ast,"nframe");
-  char cc = ' ';
-  int ww = sys-Coord::WCS;
-  switch (sys) {
-  case Coord::DATA:
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::AMPLIFIER:
-  case Coord::DETECTOR:
-    // this should not happen
-    return;
-  default:
-    if (ww)
-      cc = ww+'@';
-  }
-
-  for (int ss=0; ss<nn; ss++) {
-    const char* id = astGetC(astGetFrame(ast,ss+1),"Ident");
-    if (cc == id[0]) {
-      astSetI(ast,"current",ss+1);
-      break;
-    }
-  }
-}
 #endif
 
 AstFrameSet* FitsImage::fits2ast(FitsHead* hd) 

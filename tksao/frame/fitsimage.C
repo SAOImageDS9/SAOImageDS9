@@ -4019,12 +4019,10 @@ void FitsImage::astinit(FitsHead* hd, FitsHead* prim)
     }
     break;
   }
-
+  
   astEnd; // now, clean up memory
 
-  // set default skyframe
-  if (astWCSIsASkyFrame(newast_))
-    setAstWCSSkyFrame(newast_,Coord::FK5);
+  setAstWCSSkyFrame(newast_,Coord::FK5);
 }
 #endif
 
@@ -4070,6 +4068,7 @@ void FitsImage::setAstWCSFormat(AstFrameSet* aa, int id, const char* format)
 
 void FitsImage::setAstWCSSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 {
+  return;
   // is sky frame
   if (!astWCSIsASkyFrame(ast))
     return;
@@ -4131,6 +4130,7 @@ void FitsImage::setAstWCSSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 #ifdef NEWWCS
 void FitsImage::setAstWCSSystem(AstFrameSet* ast, Coord::CoordSystem sys)
 {
+  return;
   int nn = astGetI(ast,"nframe");
   char cc = ' ';
   int ww = sys-Coord::WCS;

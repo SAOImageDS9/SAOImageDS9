@@ -109,7 +109,9 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcs_ =NULL;
   wcsx_ =NULL;
   ast_ =NULL;
+#ifdef NEWWCS
   newast_ =NULL;
+#endif
   wcsHeader_ =NULL;
   altHeader_ =NULL;
 

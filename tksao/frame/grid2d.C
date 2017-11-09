@@ -82,15 +82,11 @@ int Grid2d::doit(RenderMode rm)
       astAddFrame(frameSet,2,astUnitMap(2,""),ast);
       astSetI(frameSet,"current",astGetI(frameSet,"nframe"));
 #else
-      astClearStatus; // just to make sure
-      astBegin; // start memory management
-
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
 
       fits->setAstWCSSystem(ast, system_);
       fits->setAstWCSSkyFrame(ast, sky_);
       
-      int offset =0;
       int naxes = astGetI(ast,"Naxes");
       switch (naxes) {
       case 1:
@@ -100,40 +96,25 @@ int Grid2d::doit(RenderMode rm)
       case 4:
 	{
 	  int pick[2] = {1, 2};
+	  AstMapping* map =NULL;
+	  AstFrame* perm =NULL;
+	  
 	  astInvert(ast);
-	  AstMapping* mapb =NULL;
-	  AstFrame* permb = (AstFrame*)astPickAxes(ast, 2, pick, &mapb);
-	  astAddFrame(ast, AST__CURRENT, mapb, permb);
+	  perm = (AstFrame*)astPickAxes(ast, 2, pick, &map);
+	  astAddFrame(ast, AST__CURRENT, map, perm);
 	  astInvert(ast);
 	  
-	  AstMapping** mapc =NULL;
-	  AstFrame* permc = (AstFrame*)astPickAxes(ast, 2, pick, &mapc);
-	  astAddFrame(ast, AST__CURRENT, mapc, permc);
-	  
-	  if (0) {
-	  int isky = astGetI(ast, "Current");
-	  int pickb[4] = {1, 2, 0, 0};
-	  AstMapping* mapb;
-	  AstFrame* foo = astFrame(2,"Domain=DATA");
-	  astPickAxes(foo, naxes, pickb, &mapb);
-	  astInvert(mapb);
-	  astAddFrame(ast, AST__BASE, mapb, foo);
-	  int idata =  astGetI(ast, "Current");
-	  astSetI(ast, "Current", isky);
-	  astSetI(ast, "Base", idata);
-	  offset =1;
-	  }
+	  perm = (AstFrame*)astPickAxes(ast, 2, pick, &map);
+	  astAddFrame(ast, AST__CURRENT, map, perm);
 	}
 	break;
       }
-
+      
       // add wcs to frameset
       // this will link frameset to wcs with unitMap
       astInvert(ast);
       astAddFrame(frameSet, AST__CURRENT, astUnitMap(2,""), ast);
-      astSetI(frameSet,"Current",astGetI(frameSet,"nframe")-offset);
-
-      astEnd; // now, clean up memory
+      astSetI(frameSet,"Current",astGetI(frameSet,"nframe"));
 #endif
     }
   }

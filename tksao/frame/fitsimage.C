@@ -4075,7 +4075,6 @@ void FitsImage::setAstWCSFormat(AstFrameSet* aa, int id, const char* format)
 
 void FitsImage::setAstWCSSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 {
-  return;
   // is sky frame
   if (!astWCSIsASkyFrame(ast))
     return;

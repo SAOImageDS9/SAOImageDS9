@@ -4244,6 +4244,36 @@ void FitsImage::astWCSTran(AstFrameSet* ast, int npoint,
 	delete [] ptr_out[2];
     }
     break;
+  case 4:
+    {
+      double* ptr_in[4];
+      ptr_in[0] = (double*)xin;
+      ptr_in[1] = (double*)yin;
+      ptr_in[2] = new double[npoint];
+      ptr_in[3] = new double[npoint];
+      for (int kk=0; kk<npoint; kk++) {
+	ptr_in[2][kk] = 1;
+	ptr_in[3][kk] = 1;
+      }      
+
+      double* ptr_out[4];
+      ptr_out[0] = (double*)xout;
+      ptr_out[1] = (double*)yout;
+      ptr_out[2] = new double[npoint];
+      ptr_out[3] = new double[npoint];
+
+      astTranP(ast, npoint, 4, (const double**)ptr_in, forward, 4, ptr_out);
+
+      if (ptr_in[2])
+	delete [] ptr_in[2];
+      if (ptr_in[3])
+	delete [] ptr_in[3];
+      if (ptr_out[2])
+	delete [] ptr_out[2];
+      if (ptr_out[3])
+	delete [] ptr_out[3];
+    }
+    break;
   }
 }
 

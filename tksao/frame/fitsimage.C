@@ -4211,8 +4211,6 @@ void FitsImage::astWCSTran(AstFrameSet* ast, int npoint,
 			   int forward,
 			   double* xout, double* yout)
 {
-  //  astTran2(ast, npoint, xin, yin, forward, xout, yout);
-
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
   case 1:
@@ -4228,7 +4226,7 @@ void FitsImage::astWCSTran(AstFrameSet* ast, int npoint,
       ptr_in[1] = (double*)yin;
       ptr_in[2] = new double[npoint];
       for (int kk=0; kk<npoint; kk++)
-	ptr_in[2][kk] = 1;
+	ptr_in[2][kk] = forward ? context_->slice(2) : 0;
       
 
       double* ptr_out[3];
@@ -4252,8 +4250,8 @@ void FitsImage::astWCSTran(AstFrameSet* ast, int npoint,
       ptr_in[2] = new double[npoint];
       ptr_in[3] = new double[npoint];
       for (int kk=0; kk<npoint; kk++) {
-	ptr_in[2][kk] = 1;
-	ptr_in[3][kk] = 1;
+	ptr_in[2][kk] = forward ? context_->slice(2) : 0;
+	ptr_in[3][kk] = forward ? context_->slice(3) : 0;
       }      
 
       double* ptr_out[4];
@@ -4266,10 +4264,10 @@ void FitsImage::astWCSTran(AstFrameSet* ast, int npoint,
 
       if (ptr_in[2])
 	delete [] ptr_in[2];
-      if (ptr_in[3])
-	delete [] ptr_in[3];
       if (ptr_out[2])
 	delete [] ptr_out[2];
+      if (ptr_in[3])
+	delete [] ptr_in[3];
       if (ptr_out[3])
 	delete [] ptr_out[3];
     }

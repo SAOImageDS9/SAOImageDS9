@@ -68,9 +68,9 @@ int Grid2d::doit(RenderMode rm)
     break;
   default:
     {
+#ifndef NEWWCS
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
 
-#ifndef NEWWCS
       // set desired skyformat
       if (fits->astWCSIsASkyFrame(ast))
 	fits->setAstWCSSkyFrame(ast, sky_);
@@ -81,14 +81,59 @@ int Grid2d::doit(RenderMode rm)
       astInvert(ast);
       astAddFrame(frameSet,2,astUnitMap(2,""),ast);
       astSetI(frameSet,"current",astGetI(frameSet,"nframe"));
-
 #else
+      astClearStatus; // just to make sure
+      astBegin; // start memory management
+
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
+
+      fits->setAstWCSSystem(ast, system_);
+      fits->setAstWCSSkyFrame(ast, sky_);
+      
+      int offset =0;
+      int naxes = astGetI(ast,"Naxes");
+      switch (naxes) {
+      case 1:
+      case 2:
+	break;
+      case 3:
+      case 4:
+	{
+	  int pick[2] = {1, 2};
+	  astInvert(ast);
+	  AstMapping* mapb =NULL;
+	  AstFrame* permb = (AstFrame*)astPickAxes(ast, 2, pick, &mapb);
+	  astAddFrame(ast, AST__CURRENT, mapb, permb);
+	  astInvert(ast);
+	  
+	  AstMapping** mapc =NULL;
+	  AstFrame* permc = (AstFrame*)astPickAxes(ast, 2, pick, &mapc);
+	  astAddFrame(ast, AST__CURRENT, mapc, permc);
+	  
+	  if (0) {
+	  int isky = astGetI(ast, "Current");
+	  int pickb[4] = {1, 2, 0, 0};
+	  AstMapping* mapb;
+	  AstFrame* foo = astFrame(2,"Domain=DATA");
+	  astPickAxes(foo, naxes, pickb, &mapb);
+	  astInvert(mapb);
+	  astAddFrame(ast, AST__BASE, mapb, foo);
+	  int idata =  astGetI(ast, "Current");
+	  astSetI(ast, "Current", isky);
+	  astSetI(ast, "Base", idata);
+	  offset =1;
+	  }
+	}
+	break;
+      }
+
       // add wcs to frameset
       // this will link frameset to wcs with unitMap
       astInvert(ast);
-      astAddFrame(frameSet,AST__CURRENT,astUnitMap(2,""),ast);
-      fits->setAstWCSSystem(frameSet,system_);
-      fits->setAstWCSSkyFrame(frameSet,sky_);
+      astAddFrame(frameSet, AST__CURRENT, astUnitMap(2,""), ast);
+      astSetI(frameSet,"Current",astGetI(frameSet,"nframe")-offset);
+
+      astEnd; // now, clean up memory
 #endif
     }
   }

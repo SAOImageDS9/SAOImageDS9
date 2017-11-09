@@ -409,9 +409,13 @@ class FitsImage {
 #endif
   void setAstWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
   void setAstWCSFormat(AstFrameSet*, int, const char*);
+#ifndef NEWWCS
   AstFrameSet* getAST(Coord::CoordSystem sys) 
     {return (ast_ && ast_[sys-Coord::WCS]) ? ast_[sys-Coord::WCS] : NULL;}
-
+#else
+  AstFrameSet* getAST(Coord::CoordSystem sys) {return newast_;}
+#endif
+  
   int hasWCS(Coord::CoordSystem);
   int hasWCSEqu(Coord::CoordSystem);
   int hasWCSCel(Coord::CoordSystem);

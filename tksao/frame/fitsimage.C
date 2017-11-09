@@ -3346,7 +3346,9 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 
   return lbuf;
 }
+
 #else
+
 char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
 			 Coord::SkyFrame sky, Coord::SkyFormat format,
 			 char* lbuf)
@@ -3925,8 +3927,8 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
 
   setAstWCSSystem(ast_[ss], (Coord::CoordSystem)(ss+Coord::WCS));
 
-  astClearStatus; // just to make sure
-  astBegin; // start memory management
+  //  astClearStatus; // just to make sure
+  //  astBegin; // start memory management
 
   int naxes = astGetI(ast_[ss],"Naxes");
   switch (naxes) {
@@ -3942,6 +3944,7 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
   case 3:
   case 4:
     {
+      if (0) {
       AstFrameSet* ast = ast_[ss];
 
       int pickc[2] = {1,2};
@@ -3959,11 +3962,12 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
       int idata =  astGetI(ast, "Current");
       astSetI(ast, "Current", isky);
       astSetI(ast, "Base", idata);
+      }
     }
     break;
   }
 
-  astEnd; // now, clean up memory
+  //  astEnd; // now, clean up memory
 #endif
 
   // set default skyframe
@@ -3982,9 +3986,6 @@ void FitsImage::astinit(FitsHead* hd, FitsHead* prim)
   if (!newast_)
     return;
 
-  astClearStatus; // just to make sure
-  astBegin; // start memory management
-
   int naxes = astGetI(newast_,"Naxes");
   switch (naxes) {
   case 1:
@@ -3999,6 +4000,10 @@ void FitsImage::astinit(FitsHead* hd, FitsHead* prim)
   case 3:
   case 4:
     {
+      if (0) {
+      astClearStatus; // just to make sure
+      astBegin; // start memory management
+
       AstFrameSet* ast = newast_;
 
       int pickc[2] = {1,2};
@@ -4016,13 +4021,15 @@ void FitsImage::astinit(FitsHead* hd, FitsHead* prim)
       int idata =  astGetI(ast, "Current");
       astSetI(ast, "Current", isky);
       astSetI(ast, "Base", idata);
+
+      astEnd; // now, clean up memory
+      }
     }
     break;
   }
   
-  astEnd; // now, clean up memory
-
-  setAstWCSSkyFrame(newast_,Coord::FK5);
+  if (astWCSIsASkyFrame(newast_))
+    setAstWCSSkyFrame(newast_,Coord::FK5);
 }
 #endif
 
@@ -4205,7 +4212,40 @@ void FitsImage::astWCSTran(AstFrameSet* ast, int npoint,
 			   int forward,
 			   double* xout, double* yout)
 {
-  astTran2(ast, npoint, xin, yin, forward, xout, yout);
+  //  astTran2(ast, npoint, xin, yin, forward, xout, yout);
+
+  int naxes = astGetI(ast,"Naxes");
+  switch (naxes) {
+  case 1:
+    // error
+    break;
+  case 2:
+    astTran2(ast, npoint, xin, yin, forward, xout, yout);
+    break;
+  case 3:
+    {
+      double* ptr_in[3];
+      ptr_in[0] = (double*)xin;
+      ptr_in[1] = (double*)yin;
+      ptr_in[2] = new double[npoint];
+      for (int kk=0; kk<npoint; kk++)
+	ptr_in[2][kk] = 1;
+      
+
+      double* ptr_out[3];
+      ptr_out[0] = (double*)xout;
+      ptr_out[1] = (double*)yout;
+      ptr_out[2] = new double[npoint];
+
+      astTranP(ast, npoint, 3, (const double**)ptr_in, forward, 3, ptr_out);
+
+      if (ptr_in[2])
+	delete [] ptr_in[2];
+      if (ptr_out[2])
+	delete [] ptr_out[2];
+    }
+    break;
+  }
 }
 
 #endif

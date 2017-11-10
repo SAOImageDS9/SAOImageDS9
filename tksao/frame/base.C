@@ -734,15 +734,6 @@ void Base::centerImage()
   cursor = keyContext->fits->mapToRef(bb,Coord::IMAGE,Coord::FK5);
 }
 
-void Base::coordToTclArray(FitsImage* ptr, const Vector3d& vv, 
-			   Coord::CoordSystem out,
-			   const char* var, const char* base)
-{
-  Vector rr = ptr->mapFromRef(vv, out);
-  doubleToTclArray(rr[0], var, base, "x");
-  doubleToTclArray(rr[1], var, base, "y");
-}
-
 int Base::doRender() 
 {
   return context->cfits ? 1 : 0;

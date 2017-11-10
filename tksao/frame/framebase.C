@@ -102,18 +102,8 @@ void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref, char* va
       coordToTclArray(sptr,rr,Coord::PHYSICAL,var,"physical");
       if (hasATMV())
 	coordToTclArray(sptr,rr,Coord::AMPLIFIER,var,"amplifier");
-      else {
-	Tcl_SetVar2(interp,var,"amplifier,x","",0);
-	Tcl_SetVar2(interp,var,"amplifier,y","",0);
-	Tcl_SetVar2(interp,var,"amplifier,z","",0);
-      }
       if (hasDTMV())
 	coordToTclArray(sptr,rr,Coord::DETECTOR,var,"detector");
-      else {
-	Tcl_SetVar2(interp,var,"detector,x","",0);
-	Tcl_SetVar2(interp,var,"detector,y","",0);
-	Tcl_SetVar2(interp,var,"detector,z","",0);
-      }
 
       getInfoWCS(var,rr,ptr,sptr);
       return;
@@ -188,6 +178,15 @@ void FrameBase::getInfoWCS(char* var, const Vector& rr, FitsImage* ptr,
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
     }
   }
+}
+
+void FrameBase::coordToTclArray(FitsImage* ptr, const Vector& vv, 
+				Coord::CoordSystem out,
+				const char* var, const char* base)
+{
+  Vector rr = ptr->mapFromRef(vv, out);
+  doubleToTclArray(rr[0], var, base, "x");
+  doubleToTclArray(rr[1], var, base, "y");
 }
 
 double FrameBase::calcZoomPanner()

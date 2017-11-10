@@ -121,34 +121,11 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
       CLEARSIGBUS
 
       coordToTclArray(sptr,rr,Coord::IMAGE,var,"image");
-      // use first slice
-      coord3ToTclArray(ptr,rr,Coord::IMAGE,var,"image");
-
       coordToTclArray(sptr,rr,Coord::PHYSICAL,var,"physical");
-      // use first slice
-      coord3ToTclArray(ptr,rr,Coord::PHYSICAL,var,"physical");
-
-      if (hasATMV()) {
+      if (hasATMV())
 	coordToTclArray(sptr,rr,Coord::AMPLIFIER,var,"amplifier");
-	// use first slice
-	coord3ToTclArray(ptr,rr,Coord::AMPLIFIER,var,"amplifier");
-      }
-      else {
-	Tcl_SetVar2(interp,var,"amplifier,x","",0);
-	Tcl_SetVar2(interp,var,"amplifier,y","",0);
-	Tcl_SetVar2(interp,var,"amplifier,z","",0);
-      }
-
-      if (hasDTMV()) {
+      if (hasDTMV())
 	coordToTclArray(sptr,rr,Coord::DETECTOR,var,"detector");
-	// use first slice
-	coord3ToTclArray(ptr,rr,Coord::DETECTOR,var,"detector");
-      }
-      else {
-	Tcl_SetVar2(interp,var,"detector,x","",0);
-	Tcl_SetVar2(interp,var,"detector,y","",0);
-	Tcl_SetVar2(interp,var,"detector,z","",0);
-      }
 
       getInfoWCS(var,rr,ptr,sptr);
       return;
@@ -179,7 +156,7 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
 }
 
 void Frame3dBase::getInfoWCS(char* var, const Vector3d& rr, FitsImage* ptr, 
-		      FitsImage* sptr)
+			     FitsImage* sptr)
 {
   Vector img = Vector(rr) * sptr->refToData;
 
@@ -205,8 +182,7 @@ void Frame3dBase::getInfoWCS(char* var, const Vector3d& rr, FitsImage* ptr,
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),argv[1],0);
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
-      // use first slice
-      coord3ToTclArray(ptr,rr,www,var,"wcs");
+      //      coord3ToTclArray(ptr,rr,www,var,"wcs");
 
       char* wcsname = (char*)sptr->getWCSName(www);
       if (wcsname)
@@ -227,10 +203,14 @@ void Frame3dBase::getInfoWCS(char* var, const Vector3d& rr, FitsImage* ptr,
   }
 }
 
-void Frame3dBase::coord3ToTclArray(FitsImage* ptr, const Vector3d& vv, 
-				   Coord::CoordSystem out,
-				   const char* var, const char* base)
+void Frame3dBase::coordToTclArray(FitsImage* ptr, const Vector3d& vv, 
+				  Coord::CoordSystem out,
+				  const char* var, const char* base)
 {
+  Vector rr = ptr->mapFromRef(vv, out);
+  doubleToTclArray(rr[0], var, base, "x");
+  doubleToTclArray(rr[1], var, base, "y");
+
   double ss = ptr->mapFromRef3axis(((Vector3d&)vv)[2],out,2);
   doubleToTclArray(ss, var, base, "z");
 }

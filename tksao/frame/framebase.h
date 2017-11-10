@@ -22,6 +22,8 @@ protected:
 protected:
   double calcZoomPanner();
   void cancelDetach() {};
+  void coordToTclArray(FitsImage*, const Vector&, Coord::CoordSystem, 
+		       const char*, const char*);
 
   void getInfoWCS(char*, const Vector&, FitsImage*, FitsImage*);
 

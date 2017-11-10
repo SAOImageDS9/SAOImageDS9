@@ -90,8 +90,9 @@ class Frame3dBase : public Base {
   void calcBorder(Coord::InternalSystem, FrScale::SecMode mode,
 		  Vector3d* vv, int* dd);
   void calcHighlite(Coord::InternalSystem, Vector*, int*);
-  void coord3ToTclArray(FitsImage*, const Vector3d&, Coord::CoordSystem,
-			const char*, const char*);
+  void coordToTclArray(FitsImage*, const Vector3d&, Coord::CoordSystem, 
+		       const char*, const char*);
+
   void getInfoWCS(char*, const Vector3d&, FitsImage*, FitsImage*);
 
  protected:

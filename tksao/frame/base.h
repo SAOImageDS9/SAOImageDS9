@@ -341,8 +341,6 @@ public:
   virtual double calcZoomPanner() =0;
   virtual void cancelDetach() =0;
   virtual void centerImage();
-  void coordToTclArray(FitsImage*, const Vector3d&, Coord::CoordSystem, 
-		       const char*, const char*);
   void createMarker(Marker*);
   void createTemplate(const Vector&, istream&);
   void contourCreatePolygon(List<ContourLevel>&);

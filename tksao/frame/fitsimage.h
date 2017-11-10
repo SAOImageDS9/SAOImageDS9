@@ -399,8 +399,13 @@ class FitsImage {
 #endif
   
   int astWCSIsASkyFrame(void*);
+#ifndef NEWWCS
   Vector wcsTran(AstFrameSet*, Vector&, int);
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
+#else
+void wcsTran(AstFrameSet*, int,	const double*, const double*, int,
+	     double*, double*);
+#endif
   
 #ifdef NEWWCS
   void setAstWCSSystem(AstFrameSet*, Coord::CoordSystem);

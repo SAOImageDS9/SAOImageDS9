@@ -4023,9 +4023,9 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
 
 #else
 void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 
-			   const double* xin, const double* yin,
-			   int forward,
-			   double* xout, double* yout)
+			const double* xin, const double* yin,
+			int forward,
+			double* xout, double* yout)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {

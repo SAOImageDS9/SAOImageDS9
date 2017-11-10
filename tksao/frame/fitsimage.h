@@ -403,15 +403,15 @@ class FitsImage {
   Vector wcsTran(AstFrameSet*, Vector&, int);
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
 #else
-void wcsTran(AstFrameSet*, int,	const double*, const double*, int,
-	     double*, double*);
+  void wcsTran(AstFrameSet*, int, const double*, const double*, int,
+	       double*, double*);
 #endif
   
 #ifdef NEWWCS
   void setAstWCSSystem(AstFrameSet*, Coord::CoordSystem);
 #endif
-  void setAstWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
-  void setAstWCSFormat(AstFrameSet*, int, const char*);
+  void setWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
+  void setWCSFormat(AstFrameSet*, int, const char*);
 #ifndef NEWWCS
   AstFrameSet* getAST(Coord::CoordSystem sys) 
     {return (ast_ && ast_[sys-Coord::WCS]) ? ast_[sys-Coord::WCS] : NULL;}

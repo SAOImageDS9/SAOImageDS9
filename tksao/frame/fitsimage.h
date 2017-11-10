@@ -367,7 +367,6 @@ class FitsImage {
   char* pix2wcs(Vector, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
 
   Vector wcs2pix(Vector, Coord::CoordSystem, Coord::SkyFrame);
-  Vector* wcs2pix(Vector*, int, Coord::CoordSystem, Coord::SkyFrame);
 
   double pix2wcsx(double, Coord::CoordSystem, int);
   double wcs2pixx(double, Coord::CoordSystem, int);
@@ -400,8 +399,6 @@ class FitsImage {
 #endif
   
   int astWCSIsASkyFrame(void*);
-  void wcsTran(AstFrameSet*, int, const double*, const double*, int,
-	       double*, double*);
   Vector wcsTran(AstFrameSet*, Vector&, int);
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
   

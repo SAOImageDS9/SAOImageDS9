@@ -1437,6 +1437,18 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   if (nxx1 != nyy1 || nxx2 != nyy2)
     return;
     
+  int ss1 = sys1-Coord::WCS;
+  if (!(ss1>=0 && ast_ && ast_[ss1]))
+    return;
+  if (!astWCSIsASkyFrame(ast_[ss1]))
+    return;
+
+  int ss2 = sys2-Coord::WCS;
+  if (!(ss2>=0 && ast_ && ast_[ss2]))
+    return;
+  if (!astWCSIsASkyFrame(ast_[ss2]))
+    return;
+
   // get doubles
   double* ixx1 = new double[nxx1];
   for (int ii=0 ; ii<nxx1 ; ii++)
@@ -1445,11 +1457,6 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   for (int ii=0 ; ii<nyy1 ; ii++)
     Tcl_GetDoubleFromObj(interp_, objyy1[ii], iyy1+ii);
 
-  double* oxx1 = new double[nxx1];
-  memset(oxx1,0,sizeof(double)*nxx1);
-  double* oyy1 = new double[nyy1];
-  memset(oyy1,0,sizeof(double)*nyy1);
-
   double* ixx2 = new double[nxx2];
   for (int ii=0 ; ii<nxx2 ; ii++)
     Tcl_GetDoubleFromObj(interp_, objxx2[ii], ixx2+ii);
@@ -1457,41 +1464,23 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   for (int ii=0 ; ii<nyy2 ; ii++)
     Tcl_GetDoubleFromObj(interp_, objyy2[ii], iyy2+ii);
 
-  double* oxx2 = new double[nxx2];
-  memset(oxx2,0,sizeof(double)*nxx2);
-  double* oyy2 = new double[nyy2];
-  memset(oyy2,0,sizeof(double)*nyy2);
+  Vector* in1 = new Vector[nxx1];
+  Vector* out1 = new Vector[nxx1];
+  for (int ii=0; ii<nxx1; ii++)
+    in1[ii] = Vector(ixx1[ii],iyy1[ii]).degToRad();
 
   // map from wcs to image
-  {
-    int ss = sys1-Coord::WCS;
-    if (!(ss>=0 && ast_ && ast_[ss]))
-      return;
+  setAstWCSSkyFrame(ast_[ss1],sky1);
+  wcsTran(ast_[ss1], nxx1, in1, 0, out1);
 
-    if (astWCSIsASkyFrame(ast_[ss])) {
-      setAstWCSSkyFrame(ast_[ss],sky1);
-      for (int ii=0; ii<nxx1; ii++) {
-	ixx1[ii] *= M_PI/180.;
-	iyy1[ii] *= M_PI/180.;
-      }	
-      wcsTran(ast_[ss], nxx1, ixx1, iyy1, 0, oxx1, oyy1);
-    }
-  }
+  Vector* in2 = new Vector[nxx2];
+  Vector* out2 = new Vector[nxx2];
+  for (int ii=0; ii<nxx2; ii++)
+    in2[ii] = Vector(ixx2[ii],iyy2[ii]).degToRad();
 
-  {
-    int ss = sys2-Coord::WCS;
-    if (!(ss>=0 && ast_ && ast_[ss]))
-      return;
-
-    if (astWCSIsASkyFrame(ast_[ss])) {
-      setAstWCSSkyFrame(ast_[ss],sky2);
-      for (int ii=0; ii<nxx2; ii++) {
-	ixx2[ii] *= M_PI/180.;
-	iyy2[ii] *= M_PI/180.;
-      }	
-      wcsTran(ast_[ss], nxx2, ixx2, iyy2, 0, oxx2, oyy2);
-    }
-  }
+  // map from wcs to image
+  setAstWCSSkyFrame(ast_[ss2],sky2);
+  wcsTran(ast_[ss2], nxx2, in2, 0, out2);
 
   // radius
   Vector cd = getWCScdelt(sys);
@@ -1514,8 +1503,8 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   Tcl_Obj* objrr = Tcl_NewListObj(0,NULL);
   for(int jj=0; jj<nxx2; jj++) {
     for (int ii=0; ii<nxx1; ii++) {
-      double dx = oxx2[jj]-oxx1[ii];
-      double dy = oyy2[jj]-oyy1[ii];
+      double dx = out2[jj][0]-out1[ii][0];
+      double dy = out2[jj][1]-out1[ii][1];
 
       if (dx*dx + dy*dy < rr) {
 	Tcl_Obj* obj[2];
@@ -1533,13 +1522,8 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   // clean up
   delete [] ixx1;
   delete [] iyy1;
-  delete [] oxx1;
-  delete [] oyy1;
-
   delete [] ixx2;
   delete [] iyy2;
-  delete [] oxx2;
-  delete [] oyy2;
 }
 #else
 void FitsImage::match(const char* xxname1, const char* yyname1,
@@ -3333,21 +3317,16 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
 
   int ss = sys-Coord::WCS;
   if (ss>=0 && ast_ && ast_[ss]) {
-    double xx =0;
-    double yy =0;
     if (astWCSIsASkyFrame(ast_[ss])) {
       setAstWCSSkyFrame(ast_[ss],sky);
-      Vector rr = in*M_PI/180.;
-      wcsTran(ast_[ss], 1, rr.v, &(rr[1]), 0, &xx, &yy);
-      if (astOK)
-	if (checkWCS(xx,yy))
-	  return Vector(xx,yy);
+      Vector out = wcsTran(ast_[ss], in.degToRad(), 0);
+      if (astOK && checkWCS(out))
+	return out;
     }
     else {
-      wcsTran(ast_[ss], 1, in.v, in.v+1, 0, &xx, &yy);
-      if (astOK)
-	if (checkWCS(xx,yy))
-	  return Vector(xx,yy);
+      Vector out = wcsTran(ast_[ss], in, 0);
+      if (astOK || checkWCS(out))
+	return out;
     }
   }
 
@@ -3380,97 +3359,6 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
 
   maperr =1;
   return Vector();
-}
-#endif
-
-#ifndef NEWWCS
-Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
-			   Coord::SkyFrame sky)
-{
-  astClearStatus;
-  double xin[num];
-  double yin[num];
-  double xout[num];
-  double yout[num];
-
-  Vector* out = new Vector[num];
-  for (int ii=0; ii<num; ii++) {
-    xin[ii] = (in[ii])[0];
-    yin[ii] = (in[ii])[1];
-  }
-
-  int ss = sys-Coord::WCS;
-  if (ss>=0 && ast_ && ast_[ss]) {
-    if (astWCSIsASkyFrame(ast_[ss])) {
-      setAstWCSSkyFrame(ast_[ss],sky);
-      for (int kk=0; kk<num; kk++) {
-	xin[kk] *= M_PI/180.;
-	yin[kk] *= M_PI/180.;
-      }
-      wcsTran(ast_[ss], num, xin, yin, 0, xout, yout);
-      if (astOK) {
-	for (int kk=0; kk<num; kk++)
-	  if (checkWCS(xout[kk],yout[kk]))
-	    out[kk] = Vector(xout[kk],yout[kk]);
-	return out;
-      }
-    }
-    else {
-      wcsTran(ast_[ss], num, xin, yin, 0, xout, yout);
-      if (astOK) {
-	for (int kk=0; kk<num; kk++)
-	  if (checkWCS(xout[kk],yout[kk]))
-	    out[kk] = Vector(xout[kk],yout[kk]);
-	return out;
-      }
-    }
-  }
-
-  maperr =1;
-  return out;
-}
-#else
-Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
-			   Coord::SkyFrame sky)
-{
-  Vector* out = new Vector[num];
-  if (!hasWCS(sys)) {
-    maperr =1;
-    return out;
-  }
-    
-  astClearStatus; // just to make sure
-  setAstWCSSystem(newast_,sys);
-  setAstWCSSkyFrame(newast_,sky);
-  maperr =0;
-
-  double xin[num];
-  double yin[num];
-  double xout[num];
-  double yout[num];
-
-  for (int ii=0; ii<num; ii++) {
-    xin[ii] = (in[ii])[0];
-    yin[ii] = (in[ii])[1];
-  }
-
-  if (astWCSIsASkyFrame(newast_)) {
-    for (int kk=0; kk<num; kk++) {
-      xin[kk] *= M_PI/180.;
-      yin[kk] *= M_PI/180.;
-    }
-  }
-  
-  wcsTran(newast_, num, xin, yin, 0, xout, yout);
-  if (astOK) {
-    for (int kk=0; kk<num; kk++)
-      if (checkWCS(xout[kk],yout[kk]))
-	out[kk] = Vector(xout[kk],yout[kk]);
-    return out;
-  }
-
-  maperr =1;
-  return out;
 }
 #endif
 
@@ -4110,14 +3998,6 @@ int FitsImage::astWCSIsASkyFrame(void* ast)
 #endif
 
 #ifndef NEWWCS
-void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 
-			const double* xin, const double* yin,
-			int forward,
-			double* xout, double* yout)
-{
-  astTran2(ast, npoint, xin, yin, forward, xout, yout);
-}
-
 Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
 {
   double xout, yout;

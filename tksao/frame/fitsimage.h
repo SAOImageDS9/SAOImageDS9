@@ -398,7 +398,7 @@ class FitsImage {
   double getWCSPixelArea(Coord::CoordSystem);
 #endif
   
-  int astWCSIsASkyFrame(void*);
+  int wcsIsASkyFrame(void*);
 #ifndef NEWWCS
   Vector wcsTran(AstFrameSet*, Vector&, int);
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);

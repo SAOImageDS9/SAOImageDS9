@@ -649,8 +649,8 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  fits1->setAstWCSSystem(fits1->newast_, sys1);
-  fits2->setAstWCSSystem(fits2->newast_, sys2);
+  fits1->setWCSSystem(fits1->newast_, sys1);
+  fits2->setWCSSystem(fits2->newast_, sys2);
 
   AstFrameSet* wcs1 = (AstFrameSet*)astCopy(fits1->newast_);
   AstFrameSet* wcs2 = (AstFrameSet*)astCopy(fits2->newast_);

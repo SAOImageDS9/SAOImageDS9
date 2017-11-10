@@ -408,7 +408,7 @@ class FitsImage {
 #endif
   
 #ifdef NEWWCS
-  void setAstWCSSystem(AstFrameSet*, Coord::CoordSystem);
+  void setWCSSystem(AstFrameSet*, Coord::CoordSystem);
 #endif
   void setWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
   void setWCSFormat(AstFrameSet*, int, const char*);

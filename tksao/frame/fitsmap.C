@@ -175,7 +175,7 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
       }
       
       astClearStatus; // just to make sure
-      setAstWCSSystem(newast_, sys);
+      setWCSSystem(newast_, sys);
       maperr =0;
 
       Vector cc = center();
@@ -291,7 +291,7 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
       }
       
       astClearStatus; // just to make sure
-      setAstWCSSystem(newast_, sys);
+      setWCSSystem(newast_, sys);
       maperr =0;
 
       double rdd = dd;

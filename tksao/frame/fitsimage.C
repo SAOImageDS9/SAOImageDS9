@@ -1590,7 +1590,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   for (int ii=0 ; ii<nyy2 ; ii++)
     Tcl_GetDoubleFromObj(interp_, objyy2[ii], yy2+ii);
 
-  setAstWCSSystem(newast_, sys1);
+  setWCSSystem(newast_, sys1);
   if (!wcsIsASkyFrame(newast_))
     return;
   setWCSSkyFrame(newast_, sky1);
@@ -1599,7 +1599,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
     iyy1[ii] *= M_PI/180.;
   }
 
-  setAstWCSSystem(newast_, sys2);
+  setWCSSystem(newast_, sys2);
   if (!wcsIsASkyFrame(newast_))
     return;
   setWCSSkyFrame(newast_, sky2);
@@ -1623,11 +1623,11 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 
   if (sky1 != sky2) {
     AstFrameSet* wcs1 = (AstFrameSet*)astCopy(newast_);
-    setAstWCSSystem(wcs1, sys1);
+    setWCSSystem(wcs1, sys1);
     setWCSSkyFrame(wcs1,sky1);
 
     AstFrameSet* wcs2 = (AstFrameSet*)astCopy(newast_);
-    setAstWCSSystem(wcs2, sys2);
+    setWCSSystem(wcs2, sys2);
     setWCSSkyFrame(wcs2,sky2);
 
     AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "SKY");
@@ -1640,7 +1640,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   }
 
   // now compare
-  setAstWCSSystem(newast_, sys2);
+  setWCSSystem(newast_, sys2);
   setWCSSkyFrame(newast_, sky2);
   Tcl_Obj* objrr = Tcl_NewListObj(0,NULL);
   for(int jj=0; jj<nxx2; jj++) {
@@ -2906,7 +2906,7 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
     return 0;
 
   astClearStatus; // just to make sure
-  setAstWCSSystem(newast_, sys);
+  setWCSSystem(newast_, sys);
   
   Vector cc = center();
   double xx[3], wxx[3];
@@ -2942,7 +2942,7 @@ double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
     return 0;
 
   astClearStatus; // just to make sure
-  setAstWCSSystem(newast_, sys);
+  setWCSSystem(newast_, sys);
 
   Vector cc = center();
   double xx[3], wxx[3];
@@ -3013,7 +3013,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
     return Coord::NORMAL;
   
   astClearStatus; // just to make sure
-  setAstWCSSystem(newast_,sys);
+  setWCSSystem(newast_,sys);
   setWCSSkyFrame(newast_,sky);
 
   Vector pp = center();
@@ -3077,7 +3077,7 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
     return 0;
   
   astClearStatus; // just to make sure
-  setAstWCSSystem(newast_,sys);
+  setWCSSystem(newast_,sys);
   setWCSSkyFrame(newast_,sky);
 
   Vector pp = center();
@@ -3152,7 +3152,7 @@ Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   }
   
   astClearStatus; // just to make sure
-  setAstWCSSystem(newast_,sys);
+  setWCSSystem(newast_,sys);
   setWCSSkyFrame(newast_,sky);
   maperr =0;
 
@@ -3250,7 +3250,7 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   }
   
   astClearStatus; // just to make sure
-  setAstWCSSystem(newast_,sys);
+  setWCSSystem(newast_,sys);
   setWCSSkyFrame(newast_,sky);
   maperr =0;
 
@@ -3343,7 +3343,7 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
   }
     
   astClearStatus; // just to make sure
-  setAstWCSSystem(newast_,sys);
+  setWCSSystem(newast_,sys);
   setWCSSkyFrame(newast_,sky);
   maperr =0;
 
@@ -3389,7 +3389,7 @@ double FitsImage::getWCSDist(Vector aa, Vector bb, Coord::CoordSystem sys)
     return 0;
 
   astClearStatus; // just to make sure
-  setAstWCSSystem(newast_,sys);
+  setWCSSystem(newast_,sys);
 
   double rr=0;
   if (wcsIsASkyFrame(newast_)) {
@@ -3720,7 +3720,7 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
   if (!ast_[ss])
     return;
 
-  setAstWCSSystem(ast_[ss], (Coord::CoordSystem)(ss+Coord::WCS));
+  setWCSSystem(ast_[ss], (Coord::CoordSystem)(ss+Coord::WCS));
 
   //  astClearStatus; // just to make sure
   //  astBegin; // start memory management
@@ -3935,7 +3935,7 @@ void FitsImage::setWCSSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 }
 
 #ifdef NEWWCS
-void FitsImage::setAstWCSSystem(AstFrameSet* ast, Coord::CoordSystem sys)
+void FitsImage::setWCSSystem(AstFrameSet* ast, Coord::CoordSystem sys)
 {
   return;
   int nn = astGetI(ast,"nframe");

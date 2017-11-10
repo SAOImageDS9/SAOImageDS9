@@ -4164,22 +4164,11 @@ void FitsImage::setAstWCSSystem(AstFrameSet* ast, Coord::CoordSystem sys)
 #endif
 
 #ifndef NEWWCS
-
 int FitsImage::astWCSIsASkyFrame(void* ast)
 {
   return astIsASkyFrame(astGetFrame(ast,AST__CURRENT));
 }
-
-void FitsImage::astWCSTran(AstFrameSet* ast, int npoint, 
-			   const double* xin, const double* yin,
-			   int forward,
-			   double* xout, double* yout)
-{
-  astTran2(ast, npoint, xin, yin, forward, xout, yout);
-}
-
 #else
-
 int FitsImage::astWCSIsASkyFrame(void* ast)
 {
   int naxes = astGetI(ast,"Naxes");
@@ -4205,7 +4194,17 @@ int FitsImage::astWCSIsASkyFrame(void* ast)
     return 0;
   }
 }
+#endif
 
+#ifndef NEWWCS
+void FitsImage::astWCSTran(AstFrameSet* ast, int npoint, 
+			   const double* xin, const double* yin,
+			   int forward,
+			   double* xout, double* yout)
+{
+  astTran2(ast, npoint, xin, yin, forward, xout, yout);
+}
+#else
 void FitsImage::astWCSTran(AstFrameSet* ast, int npoint, 
 			   const double* xin, const double* yin,
 			   int forward,
@@ -4274,7 +4273,6 @@ void FitsImage::astWCSTran(AstFrameSet* ast, int npoint,
     break;
   }
 }
-
 #endif
 
 AstFrameSet* FitsImage::fits2ast(FitsHead* hd) 

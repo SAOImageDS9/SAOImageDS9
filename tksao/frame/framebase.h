@@ -19,13 +19,15 @@ protected:
 
   Vector iisLastCursor;      // iis cursor state info
 				  
-protected:
-  double calcZoomPanner();
-  void cancelDetach() {};
+ private:
   void coordToTclArray(FitsImage*, const Vector&, Coord::CoordSystem, 
 		       const char*, const char*);
 
   void getInfoWCS(char*, const Vector&, FitsImage*, FitsImage*);
+
+protected:
+  double calcZoomPanner();
+  void cancelDetach() {};
 
   void rotateMotion();
 

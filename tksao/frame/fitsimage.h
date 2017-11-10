@@ -401,9 +401,10 @@ class FitsImage {
 #endif
   
   int astWCSIsASkyFrame(void*);
-  void wcsTran(AstFrameSet*, int npoint, const double*, const double*,
-		  int, double*, double*);
-  Vector wcsTran(AstFrameSet* ast, Vector& in, int forward);
+  void wcsTran(AstFrameSet*, int, const double*, const double*, int,
+	       double*, double*);
+  Vector wcsTran(AstFrameSet*, Vector&, int);
+  void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
   
 #ifdef NEWWCS
   void setAstWCSSystem(AstFrameSet*, Coord::CoordSystem);

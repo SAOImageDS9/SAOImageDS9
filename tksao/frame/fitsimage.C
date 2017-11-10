@@ -3229,6 +3229,38 @@ Vector* FitsImage::pix2wcs(Vector* in, int num, Coord::CoordSystem sys,
   maperr =1;
   return out;
 }
+
+#if 0
+Vector* FitsImage::pix2wcs(Vector* in, int num, Coord::CoordSystem sys,
+			   Coord::SkyFrame sky)
+{
+  astClearStatus;
+
+  Vector* out = new Vector[num];
+  int ss = sys-Coord::WCS;
+  if (ss>=0 && ast_ && ast_[ss]) {
+    if (astWCSIsASkyFrame(ast_[ss])) {
+      setAstWCSSkyFrame(ast_[ss],sky);
+      wcsTran(ast_[ss], num, in, 1, &out);
+      if (astOK) {
+	for (int ii=0; ii<num; ii++)
+	  if (checkWCS(out[ii]))
+	    out[ii].radToDeg();
+	return out;
+      }
+    }
+    else {
+      wcsTran(ast_[ss], num, in, 1, &out);
+      if (astOK)
+	return out;
+    }
+  }
+
+  maperr =1;
+  return out;
+}
+#endif
+
 #else
 Vector* FitsImage::pix2wcs(Vector* in, int num, Coord::CoordSystem sys,
 			   Coord::SkyFrame sky)
@@ -3342,9 +3374,7 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 
   return lbuf;
 }
-
 #else
-
 char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
 			 Coord::SkyFrame sky, Coord::SkyFormat format,
 			 char* lbuf)
@@ -4201,9 +4231,9 @@ int FitsImage::astWCSIsASkyFrame(void* ast)
 
 #ifndef NEWWCS
 void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 
-			   const double* xin, const double* yin,
-			   int forward,
-			   double* xout, double* yout)
+			const double* xin, const double* yin,
+			int forward,
+			double* xout, double* yout)
 {
   astTran2(ast, npoint, xin, yin, forward, xout, yout);
 }
@@ -4214,6 +4244,23 @@ Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
   astTran2(ast, 1, in.v, in.v+1, forward, &xout, &yout);
   return Vector(xout, yout);
 }
+
+void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 
+			Vector* in, int forward, Vector* out)
+{
+  double xin[npoint];
+  double yin[npoint];
+  double xout[npoint];
+  double yout[npoint];
+  for (int ii=0; ii<npoint; ii++) {
+    xin[ii] = in[ii][0];
+    yin[ii] = in[ii][1];
+  }
+  astTran2(ast, npoint, xin, yin, forward, xout, yout);
+  for (int ii=0; ii<npoint; ii++)
+    out[ii] = Vector(xout[ii],yout[ii]);
+}
+
 #else
 void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 
 			   const double* xin, const double* yin,

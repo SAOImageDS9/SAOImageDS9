@@ -45,15 +45,26 @@ Vector& Vector::clip(const BBox& bb)
   return *this;
 }
 
-Vector Vector::radToDeg()
+Vector& Vector::radToDeg()
 {
   // we want the first coord to be 0-360
-  return Vector(::radToDeg(v[0]),v[1]*180./M_PI);
+  v[0] = ::radToDeg(v[0]);
+  v[1] *= 180./M_PI;
+  return *this;
 }
 
-Vector Vector::degToRad()
+Vector& Vector::degToRad()
 {
-  return Vector(v[0]*M_PI/180.,v[1]*M_PI/180.);
+  v[0] *= M_PI/180.;
+  v[1] *= M_PI/180.;
+  return *this;
+}
+
+Vector& Vector::zeroTWOPI()
+{
+  // we want the first coord to be 0-2Pi
+  v[0] = ::zeroTWOPI(v[0]);
+  return *this;
 }
 
 Vector Vector::TkCanvasPs(void* canvas)

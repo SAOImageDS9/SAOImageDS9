@@ -75,8 +75,9 @@ class Vector {
   Vector normalize() 
   {double d = sqrt(v[0]*v[0]+v[1]*v[1]);
     return d ? Vector(v[0]/d,v[1]/d) : Vector();}
-  Vector radToDeg();
-  Vector degToRad();
+  Vector& radToDeg();
+  Vector& degToRad();
+  Vector& zeroTWOPI();
 
   // restrict vector by bbox
   Vector& clip(const BBox&);

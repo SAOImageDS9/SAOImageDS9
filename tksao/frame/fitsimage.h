@@ -365,8 +365,7 @@ class FitsImage {
 
   Vector pix2wcs(Vector, Coord::CoordSystem, Coord::SkyFrame);
   Vector* pix2wcs(Vector*, int, Coord::CoordSystem, Coord::SkyFrame);
-  char* pix2wcs(Vector, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat,
-		char*);
+  char* pix2wcs(Vector, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
 
   Vector wcs2pix(Vector, Coord::CoordSystem, Coord::SkyFrame);
   Vector* wcs2pix(Vector*, int, Coord::CoordSystem, Coord::SkyFrame);

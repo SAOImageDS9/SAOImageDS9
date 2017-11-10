@@ -3281,27 +3281,24 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 			 char* lbuf)
 {
   astClearStatus;
-
+  maperr =0;
+  lbuf[0] = '\0';
+  
   int ss = sys-Coord::WCS;
   if (ss>=0 && ast_ && ast_[ss]) {
-    double xx =0;
-    double yy =0;
     ostringstream str;
     if (astWCSIsASkyFrame(ast_[ss])) {
       setAstWCSSkyFrame(ast_[ss],sky);
-      wcsTran(ast_[ss], 1, in.v, in.v+1, 1, &xx, &yy);
-      if (!astOK || !checkWCS(xx,yy)) {
+      Vector out = wcsTran(ast_[ss], in, 1);
+      if (!(astOK && checkWCS(out))) {
 	maperr =1;
-	lbuf[0] = '\0';
 	return lbuf;
       }
 
       switch (format) {
       case Coord::DEGREES:
-	xx =radToDeg(xx); // 0 to 360
-	yy *=180./M_PI;
-
-	str << setprecision(8) << xx << ' ' << yy 
+	out.radToDeg();
+	str << setprecision(8) << out[0] << ' ' << out[1]
 	    << ' ' << coord.skyFrameStr(sky) << ends;
 	break;
 
@@ -3311,7 +3308,7 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 	case Coord::FK4_NO_E:
 	case Coord::FK5:
 	case Coord::ICRS:
-	  xx = zeroTWOPI(xx);
+	  out.zeroTWOPI();
 	  setAstWCSFormat(ast_[ss],1,"hms.3");
 	  setAstWCSFormat(ast_[ss],2,"+dms.3");
 	  break;
@@ -3319,24 +3316,25 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 	case Coord::SUPERGALACTIC:
 	case Coord::ECLIPTIC:
 	case Coord::HELIOECLIPTIC:
-	  xx = zeroTWOPI(xx);
+	  out.zeroTWOPI();
 	  setAstWCSFormat(ast_[ss],1,"+dms.3");
 	  setAstWCSFormat(ast_[ss],2,"+dms.3");
 	  break;
 	}
 
-	str << astFormat(ast_[ss], 1, xx) << ' ' << astFormat(ast_[ss], 2, yy) 
-	    << ' ' << coord.skyFrameStr(sky) << ends;
+	str << astFormat(ast_[ss],1,out[0]) << ' '
+	    << astFormat(ast_[ss],2,out[1]) << ' '
+	    << coord.skyFrameStr(sky) << ends;
 	break;
       }
     }
     else {
-      wcsTran(ast_[ss], 1, in.v, in.v+1, 1, &xx, &yy);
-      if (!astOK || !checkWCS(xx,yy)) {
-	maperr =1;
-	return lbuf;
+      Vector out = wcsTran(ast_[ss], in, 1);
+      if (astOK && checkWCS(out))
+	if (!(astOK && checkWCS(out))) {
+	  maperr =1;
+	  return lbuf;
       }
-      str << setprecision(8) << xx << ' ' << yy << ends;
     }
 
     strncpy(lbuf, str.str().c_str(), str.str().length());
@@ -3398,8 +3396,9 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 	  break;
 	}
 
-	str << astFormat(newast_, 1, xx) << ' ' << astFormat(newast_, 2, yy) 
-	    << ' ' << coord.skyFrameStr(sky) << ends;
+	str << astFormat(newast_, 1, xx) << ' '
+	    << astFormat(newast_, 2, yy) << ' '
+	    << coord.skyFrameStr(sky) << ends;
 	break;
       }
     }

@@ -148,7 +148,8 @@ class FitsImage {
   void astinit(FitsHead*, FitsHead*);
 #endif
   void astinit0(int, FitsHead*, FitsHead*);
-  int checkAstWCS(double, double);
+  int checkWCS(double, double);
+  int checkWCS(Vector&);
   AstFrameSet* fits2ast(FitsHead*);  
   AstFrameSet* buildast(int, FitsHead*, FitsHead*);
   AstFrameSet* buildast0(int, FitsHead*, FitsHead*);
@@ -401,8 +402,9 @@ class FitsImage {
 #endif
   
   int astWCSIsASkyFrame(void*);
-  void astWCSTran(AstFrameSet*, int npoint, const double*, const double*,
+  void wcsTran(AstFrameSet*, int npoint, const double*, const double*,
 		  int, double*, double*);
+  Vector wcsTran(AstFrameSet* ast, Vector& in, int forward);
   
 #ifdef NEWWCS
   void setAstWCSSystem(AstFrameSet*, Coord::CoordSystem);

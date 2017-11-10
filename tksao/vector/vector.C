@@ -7,6 +7,7 @@
 #include "vector.h"
 #include "vector3d.h"
 #include "fuzzy.h"
+#include "util.h"
 
 // Vector::manip
 
@@ -46,7 +47,8 @@ Vector& Vector::clip(const BBox& bb)
 
 Vector Vector::radToDeg()
 {
-  return Vector(v[0]*180./M_PI,v[1]*180./M_PI);
+  // we want the first coord to be 0-360
+  return Vector(::radToDeg(v[0]),v[1]*180./M_PI);
 }
 
 Vector Vector::degToRad()

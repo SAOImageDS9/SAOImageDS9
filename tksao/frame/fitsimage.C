@@ -1474,7 +1474,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 	ixx1[ii] *= M_PI/180.;
 	iyy1[ii] *= M_PI/180.;
       }	
-      astWCSTran(ast_[ss], nxx1, ixx1, iyy1, 0, oxx1, oyy1);
+      wcsTran(ast_[ss], nxx1, ixx1, iyy1, 0, oxx1, oyy1);
     }
   }
 
@@ -1489,7 +1489,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 	ixx2[ii] *= M_PI/180.;
 	iyy2[ii] *= M_PI/180.;
       }	
-      astWCSTran(ast_[ss], nxx2, ixx2, iyy2, 0, oxx2, oyy2);
+      wcsTran(ast_[ss], nxx2, ixx2, iyy2, 0, oxx2, oyy2);
     }
   }
 
@@ -1648,7 +1648,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 
     AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "SKY");
     if (cvt != AST__NULL)
-      astWCSTran(cvt, nxx1, ixx1, iyy1, 1, xx1, yy1);
+      wcsTran(cvt, nxx1, ixx1, iyy1, 1, xx1, yy1);
   }
   else {
     memcpy(xx1,ixx1,nxx1*sizeof(double));
@@ -2913,7 +2913,9 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
   else
     return Vector();
 }
-#else
+#endif
+
+#ifdef NEWWCS
 double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
 {
   if (!hasWCS(sys))
@@ -2931,7 +2933,7 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
   yy[0] = cc[1];
   yy[1] = cc[1]+1;
   yy[2] = cc[1]+1;
-  astWCSTran(newast_,3,xx,yy,1,wxx,wyy);
+  wcsTran(newast_,3,xx,yy,1,wxx,wyy);
 
   double pt0[2];
   pt0[0] = wxx[0];
@@ -2967,7 +2969,7 @@ double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
   yy[0] = cc[1];
   yy[1] = cc[1]+1;
   yy[2] = cc[1]+1;
-  astWCSTran(newast_,3,xx,yy,1,wxx,wyy);
+  wcsTran(newast_,3,xx,yy,1,wxx,wyy);
 
   double pt0[2];
   pt0[0] = wxx[0];
@@ -3038,7 +3040,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   yy[0] = pp[1];
   yy[1] = pp[1]+1;
   yy[2] = pp[1];
-  astWCSTran(newast_,3,xx,yy,1,wx,wy);
+  wcsTran(newast_,3,xx,yy,1,wx,wy);
 
   double aa[2], bb[2], cc[2];
   aa[0]= wx[0];
@@ -3100,7 +3102,7 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   xx[1] = pp[0];
   yy[0] = pp[1];
   yy[1] = pp[1]+1;
-  astWCSTran(newast_,2,xx,yy,1,wx,wy);
+  wcsTran(newast_,2,xx,yy,1,wx,wy);
 
   double aa[2], bb[2];
   aa[0]= wx[0];
@@ -3133,27 +3135,23 @@ const char* FitsImage::getWCSName(Coord::CoordSystem sys)
 #endif
 
 #ifndef NEWWCS
-Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
+Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
   astClearStatus;
 
   int ss = sys-Coord::WCS;
   if (ss>=0 && ast_ && ast_[ss]) {
-    double xx =0;
-    double yy =0;
     if (astWCSIsASkyFrame(ast_[ss])) {
       setAstWCSSkyFrame(ast_[ss],sky);
-      astWCSTran(ast_[ss], 1, in.v, in.v+1, 1, &xx, &yy);
-      if (astOK)
-	if (checkAstWCS(xx,yy))
-	  return Vector(radToDeg(xx),yy*180./M_PI);
+      Vector out = wcsTran(ast_[ss], in, 1);
+      if (astOK && checkWCS(out))
+	return out.radToDeg();
     }
     else {
-      astWCSTran(ast_[ss], 1, in.v, in.v+1, 1, &xx, &yy);
-      if (astOK)
-	if (checkAstWCS(xx,yy))
-	  return Vector(xx,yy);
+      Vector out = wcsTran(ast_[ss], in, 1);
+      if (astOK && checkWCS(out))
+	  return out;
     }
   }
 
@@ -3176,8 +3174,8 @@ Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 
   double xx =0;
   double yy =0;
-  astWCSTran(newast_, 1, in.v, in.v+1, 1, &xx, &yy);
-  if (astOK && checkAstWCS(xx,yy)) {
+  wcsTran(newast_, 1, in.v, in.v+1, 1, &xx, &yy);
+  if (astOK && checkWCS(xx,yy)) {
     if (astWCSIsASkyFrame(newast_))
       return Vector(radToDeg(xx),yy*180./M_PI);
     else
@@ -3209,19 +3207,19 @@ Vector* FitsImage::pix2wcs(Vector* in, int num, Coord::CoordSystem sys,
   if (ss>=0 && ast_ && ast_[ss]) {
     if (astWCSIsASkyFrame(ast_[ss])) {
       setAstWCSSkyFrame(ast_[ss],sky);
-      astWCSTran(ast_[ss], num, xin, yin, 1, xout, yout);
+      wcsTran(ast_[ss], num, xin, yin, 1, xout, yout);
       if (astOK) {
 	for (int ii=0; ii<num; ii++)
-	  if (checkAstWCS(xout[ii],yout[ii]))
+	  if (checkWCS(xout[ii],yout[ii]))
 	    out[ii] = Vector(radToDeg(xout[ii]),yout[ii]*180./M_PI);
 	return out;
       }
     }
     else {
-      astWCSTran(ast_[ss], num, xin, yin, 1, xout, yout);
+      wcsTran(ast_[ss], num, xin, yin, 1, xout, yout);
       if (astOK) {
 	for (int ii=0; ii<num; ii++)
-	  if (checkAstWCS(xout[ii],yout[ii]))
+	  if (checkWCS(xout[ii],yout[ii]))
 	    out[ii] = Vector(xout[ii],yout[ii]);
 	return out;
       }
@@ -3256,17 +3254,17 @@ Vector* FitsImage::pix2wcs(Vector* in, int num, Coord::CoordSystem sys,
     yin[ii] = (in[ii])[1];
   }
 
-  astWCSTran(newast_, num, xin, yin, 1, xout, yout);
+  wcsTran(newast_, num, xin, yin, 1, xout, yout);
   if (astOK) {
     if (astWCSIsASkyFrame(newast_)) {
       for (int ii=0; ii<num; ii++)
-	if (checkAstWCS(xout[ii],yout[ii]))
+	if (checkWCS(xout[ii],yout[ii]))
 	  out[ii] = Vector(radToDeg(xout[ii]),yout[ii]*180./M_PI);
       return out;
     }
     else {
       for (int ii=0; ii<num; ii++)
-	if (checkAstWCS(xout[ii],yout[ii]))
+	if (checkWCS(xout[ii],yout[ii]))
 	  out[ii] = Vector(xout[ii],yout[ii]);
       return out;
     }
@@ -3291,8 +3289,8 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
     ostringstream str;
     if (astWCSIsASkyFrame(ast_[ss])) {
       setAstWCSSkyFrame(ast_[ss],sky);
-      astWCSTran(ast_[ss], 1, in.v, in.v+1, 1, &xx, &yy);
-      if (!astOK || !checkAstWCS(xx,yy)) {
+      wcsTran(ast_[ss], 1, in.v, in.v+1, 1, &xx, &yy);
+      if (!astOK || !checkWCS(xx,yy)) {
 	maperr =1;
 	lbuf[0] = '\0';
 	return lbuf;
@@ -3333,8 +3331,8 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
       }
     }
     else {
-      astWCSTran(ast_[ss], 1, in.v, in.v+1, 1, &xx, &yy);
-      if (!astOK || !checkAstWCS(xx,yy)) {
+      wcsTran(ast_[ss], 1, in.v, in.v+1, 1, &xx, &yy);
+      if (!astOK || !checkWCS(xx,yy)) {
 	maperr =1;
 	return lbuf;
       }
@@ -3368,8 +3366,8 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   double yy =0;
   ostringstream str;
 
-  astWCSTran(newast_, 1, in.v, in.v+1, 1, &xx, &yy);
-  if (astOK && checkAstWCS(xx,yy)) {
+  wcsTran(newast_, 1, in.v, in.v+1, 1, &xx, &yy);
+  if (astOK && checkWCS(xx,yy)) {
     if (astWCSIsASkyFrame(newast_)) {
       switch (format) {
       case Coord::DEGREES:
@@ -3431,15 +3429,15 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
     if (astWCSIsASkyFrame(ast_[ss])) {
       setAstWCSSkyFrame(ast_[ss],sky);
       Vector rr = in*M_PI/180.;
-      astWCSTran(ast_[ss], 1, rr.v, &(rr[1]), 0, &xx, &yy);
+      wcsTran(ast_[ss], 1, rr.v, &(rr[1]), 0, &xx, &yy);
       if (astOK)
-	if (checkAstWCS(xx,yy))
+	if (checkWCS(xx,yy))
 	  return Vector(xx,yy);
     }
     else {
-      astWCSTran(ast_[ss], 1, in.v, in.v+1, 0, &xx, &yy);
+      wcsTran(ast_[ss], 1, in.v, in.v+1, 0, &xx, &yy);
       if (astOK)
-	if (checkAstWCS(xx,yy))
+	if (checkWCS(xx,yy))
 	  return Vector(xx,yy);
     }
   }
@@ -3467,8 +3465,8 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
   if (astWCSIsASkyFrame(newast_))
     in *= M_PI/180.;
 
-  astWCSTran(newast_, 1, in.v, in.v+1, 0, &xx, &yy);
-  if (astOK && checkAstWCS(xx,yy))
+  wcsTran(newast_, 1, in.v, in.v+1, 0, &xx, &yy);
+  if (astOK && checkWCS(xx,yy))
     return Vector(xx,yy);
 
   maperr =1;
@@ -3500,19 +3498,19 @@ Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
 	xin[kk] *= M_PI/180.;
 	yin[kk] *= M_PI/180.;
       }
-      astWCSTran(ast_[ss], num, xin, yin, 0, xout, yout);
+      wcsTran(ast_[ss], num, xin, yin, 0, xout, yout);
       if (astOK) {
 	for (int kk=0; kk<num; kk++)
-	  if (checkAstWCS(xout[kk],yout[kk]))
+	  if (checkWCS(xout[kk],yout[kk]))
 	    out[kk] = Vector(xout[kk],yout[kk]);
 	return out;
       }
     }
     else {
-      astWCSTran(ast_[ss], num, xin, yin, 0, xout, yout);
+      wcsTran(ast_[ss], num, xin, yin, 0, xout, yout);
       if (astOK) {
 	for (int kk=0; kk<num; kk++)
-	  if (checkAstWCS(xout[kk],yout[kk]))
+	  if (checkWCS(xout[kk],yout[kk]))
 	    out[kk] = Vector(xout[kk],yout[kk]);
 	return out;
       }
@@ -3554,10 +3552,10 @@ Vector* FitsImage::wcs2pix(Vector* in, int num, Coord::CoordSystem sys,
     }
   }
   
-  astWCSTran(newast_, num, xin, yin, 0, xout, yout);
+  wcsTran(newast_, num, xin, yin, 0, xout, yout);
   if (astOK) {
     for (int kk=0; kk<num; kk++)
-      if (checkAstWCS(xout[kk],yout[kk]))
+      if (checkWCS(xout[kk],yout[kk]))
 	out[kk] = Vector(xout[kk],yout[kk]);
     return out;
   }
@@ -4050,10 +4048,16 @@ void FitsImage::astinit0(int ss, FitsHead* hd, FitsHead* prim)
     setAstWCSSkyFrame(ast_[ss],Coord::FK5);
 }
 
-int FitsImage::checkAstWCS(double xx, double yy)
+int FitsImage::checkWCS(double xx, double yy)
 {
   // check for reasonable values
   return (fabs(xx) < FLT_MAX && fabs(yy) < FLT_MAX) ? 1 : 0;
+}
+
+int FitsImage::checkWCS(Vector& vv)
+{
+  // check for reasonable values
+  return (fabs(vv[0]) < FLT_MAX && fabs(vv[1]) < FLT_MAX) ? 1 : 0;
 }
 
 void FitsImage::setAstWCSFormat(AstFrameSet* aa, int id, const char* format)
@@ -4197,15 +4201,22 @@ int FitsImage::astWCSIsASkyFrame(void* ast)
 #endif
 
 #ifndef NEWWCS
-void FitsImage::astWCSTran(AstFrameSet* ast, int npoint, 
+void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 
 			   const double* xin, const double* yin,
 			   int forward,
 			   double* xout, double* yout)
 {
   astTran2(ast, npoint, xin, yin, forward, xout, yout);
 }
+
+Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
+{
+  double xout, yout;
+  astTran2(ast, 1, in.v, in.v+1, forward, &xout, &yout);
+  return Vector(xout, yout);
+}
 #else
-void FitsImage::astWCSTran(AstFrameSet* ast, int npoint, 
+void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 
 			   const double* xin, const double* yin,
 			   int forward,
 			   double* xout, double* yout)

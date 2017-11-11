@@ -400,7 +400,7 @@ class FitsImage {
   
   int wcsIsASkyFrame(AstFrameSet*);
   double wcsDistance(AstFrameSet*, double*, double*);
-  Vector wcsTran(AstFrameSet*, Vector&, int);
+  Vector wcsTran(AstFrameSet*, Vector, int);
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
 #ifdef NEWWCS
   void wcsTran(AstFrameSet*, int, const double*, const double*, int,

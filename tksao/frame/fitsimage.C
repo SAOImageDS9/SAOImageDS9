@@ -3995,7 +3995,7 @@ int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
 #endif
 
 #ifndef NEWWCS
-Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
+Vector FitsImage::wcsTran(AstFrameSet* ast, Vector in, int forward)
 {
   double xout, yout;
   astTran2(ast, 1, in.v, in.v+1, forward, &xout, &yout);
@@ -4029,7 +4029,7 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
 }
 
 #else
-Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
+Vector FitsImage::wcsTran(AstFrameSet* ast, Vector in, int forward)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {

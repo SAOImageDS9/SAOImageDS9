@@ -642,6 +642,7 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
 			  Coord::CoordSystem sys1, Coord::CoordSystem sys2,
 			  Coord::SkyFrame sky)
 {
+  cerr << '*';
   if ((!fits1 || !fits2) || (fits1 == fits2) ||
       !(fits1->hasWCS(sys1)) || !(fits2->hasWCS(sys2)))
     return Matrix();

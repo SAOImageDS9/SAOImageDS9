@@ -4005,10 +4005,11 @@ Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
 void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 
 			Vector* in, int forward, Vector* out)
 {
-  double xin[npoint];
-  double yin[npoint];
-  double xout[npoint];
-  double yout[npoint];
+  double* xin = double[npoint];
+  double* yin = double[npoint];
+  double* xout = double[npoint];
+  double* yout = double[npoint];
+
   for (int ii=0; ii<npoint; ii++) {
     xin[ii] = in[ii][0];
     yin[ii] = in[ii][1];
@@ -4016,6 +4017,15 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
   astTran2(ast, npoint, xin, yin, forward, xout, yout);
   for (int ii=0; ii<npoint; ii++)
     out[ii] = Vector(xout[ii],yout[ii]);
+
+  if (xin)
+    delete [] xin;
+  if (yin)
+    delete [] yin;
+  if (xout)
+    delete [] xout;
+  if (yout)
+    delete [] yout;
 }
 
 #else
@@ -4055,6 +4065,119 @@ Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
     break;
   }
   return Vector();
+}
+
+void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 
+			Vector* in, int forward, Vector* out)
+{
+  int naxes = astGetI(ast,"Naxes");
+  switch (naxes) {
+  case 1:
+    // error
+    break;
+  case 2:
+    {
+      double* xin = new double[npoint];
+      double* yin = new double[npoint];
+      double* xout = new double[npoint];
+      double* yout = new double[npoint];
+
+      for (int ii=0; ii<npoint; ii++) {
+	xin[ii] = in[ii][0];
+	yin[ii] = in[ii][1];
+      }
+      astTran2(ast, npoint, xin, yin, forward, xout, yout);
+      for (int ii=0; ii<npoint; ii++)
+	out[ii] = Vector(xout[ii],yout[ii]);
+
+      if (xin)
+	delete [] xin;
+      if (yin)
+	delete [] yin;
+      if (xout)
+	delete [] xout;
+      if (xout)
+	delete [] xout;
+    }
+    break;
+  case 3:
+    {
+      double* ptr_in[3];
+      ptr_in[0] = new double[npoint];
+      ptr_in[1] = new double[npoint];
+      ptr_in[2] = new double[npoint];
+      double* ptr_out[3];
+      ptr_out[0] = new double[npoint];
+      ptr_out[1] = new double[npoint];
+      ptr_out[2] = new double[npoint];
+
+      for (int kk=0; kk<npoint; kk++) {
+	ptr_in[0][kk] = in[kk][0];
+	ptr_in[1][kk] = in[kk][1];
+	ptr_in[2][kk] = forward ? context_->slice(2) : 0;
+      }      
+      astTranP(ast, npoint, 3, (const double**)ptr_in, forward, 3, ptr_out);
+      for (int kk=0; kk<npoint; kk++)
+	out[kk] = Vector(ptr_out[0][kk], ptr_out[1][kk]);
+
+      if (ptr_in[0])
+	delete [] ptr_in[0];
+      if (ptr_in[1])
+	delete [] ptr_in[1];
+      if (ptr_in[2])
+	delete [] ptr_in[2];
+
+      if (ptr_out[0])
+	delete [] ptr_out[0];
+      if (ptr_out[1])
+	delete [] ptr_out[1];
+      if (ptr_out[2])
+	delete [] ptr_out[2];
+    }
+    break;
+  case 4:
+    {
+      double* ptr_in[4];
+      ptr_in[0] = new double[npoint];
+      ptr_in[1] = new double[npoint];
+      ptr_in[2] = new double[npoint];
+      ptr_in[3] = new double[npoint];
+      double* ptr_out[4];
+      ptr_out[0] = new double[npoint];
+      ptr_out[1] = new double[npoint];
+      ptr_out[2] = new double[npoint];
+      ptr_out[3] = new double[npoint];
+
+      for (int kk=0; kk<npoint; kk++) {
+	ptr_in[0][kk] = in[kk][0];
+	ptr_in[1][kk] = in[kk][1];
+	ptr_in[2][kk] = forward ? context_->slice(2) : 0;
+	ptr_in[3][kk] = forward ? context_->slice(3) : 0;
+      }      
+      astTranP(ast, npoint, 4, (const double**)ptr_in, forward, 4, ptr_out);
+      for (int kk=0; kk<npoint; kk++)
+	out[kk] = Vector(ptr_out[0][kk], ptr_out[1][kk]);
+
+      if (ptr_in[0])
+	delete [] ptr_in[0];
+      if (ptr_in[1])
+	delete [] ptr_in[1];
+      if (ptr_in[2])
+	delete [] ptr_in[2];
+      if (ptr_in[3])
+	delete [] ptr_in[3];
+
+      if (ptr_out[0])
+	delete [] ptr_out[0];
+      if (ptr_out[1])
+	delete [] ptr_out[1];
+      if (ptr_out[2])
+	delete [] ptr_out[2];
+      if (ptr_out[3])
+	delete [] ptr_out[3];
+    }
+    break;
+  }
 }
 
 void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 

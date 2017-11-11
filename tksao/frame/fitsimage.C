@@ -1456,7 +1456,6 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   double* iyy1 = new double[nyy1];
   for (int ii=0 ; ii<nyy1 ; ii++)
     Tcl_GetDoubleFromObj(interp_, objyy1[ii], iyy1+ii);
-
   double* ixx2 = new double[nxx2];
   for (int ii=0 ; ii<nxx2 ; ii++)
     Tcl_GetDoubleFromObj(interp_, objxx2[ii], ixx2+ii);
@@ -1469,16 +1468,15 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   for (int ii=0; ii<nxx1; ii++)
     in1[ii] = Vector(ixx1[ii],iyy1[ii]).degToRad();
 
-  // map from wcs to image
-  setWCSSkyFrame(ast_[ss1],sky1);
-  wcsTran(ast_[ss1], nxx1, in1, 0, out1);
-
   Vector* in2 = new Vector[nxx2];
   Vector* out2 = new Vector[nxx2];
   for (int ii=0; ii<nxx2; ii++)
     in2[ii] = Vector(ixx2[ii],iyy2[ii]).degToRad();
 
-  // map from wcs to image
+  // map from image
+  setWCSSkyFrame(ast_[ss1],sky1);
+  wcsTran(ast_[ss1], nxx1, in1, 0, out1);
+
   setWCSSkyFrame(ast_[ss2],sky2);
   wcsTran(ast_[ss2], nxx2, in2, 0, out2);
 
@@ -1520,10 +1518,22 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   Tcl_SetVar2Ex(interp_, rrname, NULL, objrr, TCL_LEAVE_ERR_MSG);
 
   // clean up
-  delete [] ixx1;
-  delete [] iyy1;
-  delete [] ixx2;
-  delete [] iyy2;
+  if (ixx1)
+    delete [] ixx1;
+  if (iyy1)
+    delete [] iyy1;
+  if (ixx2)
+    delete [] ixx2;
+  if (iyy2)
+    delete [] iyy2;
+  if (in1)
+    delete [] in1;
+  if (out1)
+    delete [] out1;
+  if (in2)
+    delete [] int2;
+  if (out2)
+    delete [] out2;
 }
 #else
 void FitsImage::match(const char* xxname1, const char* yyname1,
@@ -1569,6 +1579,12 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   // sanity check
   if (nxx1 != nyy1 || nxx2 != nyy2)
     return;
+  setWCSSystem(newast_, sys1);
+  if (!wcsIsASkyFrame(newast_))
+    return;
+  setWCSSystem(newast_, sys2);
+  if (!wcsIsASkyFrame(newast_))
+    return;
 
   // get doubles
   double* ixx1 = new double[nxx1];
@@ -1577,36 +1593,20 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   double* iyy1 = new double[nyy1];
   for (int ii=0 ; ii<nyy1 ; ii++)
     Tcl_GetDoubleFromObj(interp_, objyy1[ii], iyy1+ii);
-
-  double* xx1 = new double[nxx1];
-  memset(xx1,0,sizeof(double)*nxx1);
-  double* yy1 = new double[nyy1];
-  memset(yy1,0,sizeof(double)*nyy1);
-
-  double* xx2 = new double[nxx2];
+  double* ixx2 = new double[nxx2];
   for (int ii=0 ; ii<nxx2 ; ii++)
-    Tcl_GetDoubleFromObj(interp_, objxx2[ii], xx2+ii);
-  double* yy2 = new double[nyy2];
+    Tcl_GetDoubleFromObj(interp_, objxx2[ii], ixx2+ii);
+  double* iyy2 = new double[nyy2];
   for (int ii=0 ; ii<nyy2 ; ii++)
-    Tcl_GetDoubleFromObj(interp_, objyy2[ii], yy2+ii);
+    Tcl_GetDoubleFromObj(interp_, objyy2[ii], iyy2+ii);
 
-  setWCSSystem(newast_, sys1);
-  if (!wcsIsASkyFrame(newast_))
-    return;
-  setWCSSkyFrame(newast_, sky1);
-  for (int ii=0; ii<nxx1; ii++) {
-    ixx1[ii] *= M_PI/180.;
-    iyy1[ii] *= M_PI/180.;
-  }
+  Vector* in1 = new Vector[nxx1];
+  for (int ii=0; ii<nxx1; ii++)
+    in1[ii] = Vector(ixx1[ii],iyy1[ii]).degToRad();
 
-  setWCSSystem(newast_, sys2);
-  if (!wcsIsASkyFrame(newast_))
-    return;
-  setWCSSkyFrame(newast_, sky2);
-  for (int ii=0; ii<nxx2; ii++) {
-    xx2[ii] *= M_PI/180.;
-    yy2[ii] *= M_PI/180.;
-  }
+  Vector* ptr2 = new Vector[nxx2];
+  for (int ii=0; ii<nxx2; ii++)
+    ptr2[ii] = Vector(ixx2[ii],iyy2[ii]).degToRad();
 
   double rr;
   switch (dist) {
@@ -1621,6 +1621,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
     break;
   }
 
+  Vector* ptr1 =NULL;
   if (sky1 != sky2) {
     AstFrameSet* wcs1 = (AstFrameSet*)astCopy(newast_);
     setWCSSystem(wcs1, sys1);
@@ -1631,48 +1632,59 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
     setWCSSkyFrame(wcs2,sky2);
 
     AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "SKY");
-    if (cvt != AST__NULL)
-      wcsTran(cvt, nxx1, ixx1, iyy1, 1, xx1, yy1);
-  }
-  else {
-    memcpy(xx1,ixx1,nxx1*sizeof(double));
-    memcpy(yy1,iyy1,nyy1*sizeof(double));
-  }
-
-  // now compare
-  setWCSSystem(newast_, sys2);
-  setWCSSkyFrame(newast_, sky2);
-  Tcl_Obj* objrr = Tcl_NewListObj(0,NULL);
-  for(int jj=0; jj<nxx2; jj++) {
-    for (int ii=0; ii<nxx1; ii++) {
-      double pt1[2];
-      pt1[0] = xx1[ii];
-      pt1[1] = yy1[ii];
-      double pt2[2];
-      pt2[0] = xx2[jj];
-      pt2[1] = yy2[jj];
-      double dd = wcsDistance(newast_,pt1,pt2);
-      if ((dd != AST__BAD) && (dd <= rr)) {
-	Tcl_Obj* obj[2];
-	obj[0] = Tcl_NewIntObj(ii+1);
-	obj[1] = Tcl_NewIntObj(jj+1);
-	Tcl_Obj* list = Tcl_NewListObj(2,obj);
-	Tcl_ListObjAppendElement(interp_, objrr, list);
-      }
+    if (cvt != AST__NULL) {
+      ptr1 = new Vector[nxx1];
+      wcsTran(cvt, nxx1, in1, 1, ptr1);
     }
   }
+  else
+    ptr1 = in1;
 
-  Tcl_SetVar2Ex(interp_, rrname, NULL, objrr, TCL_LEAVE_ERR_MSG);
+  // now compare
+  if (ptr1 && ptr2) {
+    setWCSSystem(newast_, sys2);
+    setWCSSkyFrame(newast_, sky2);
+    Tcl_Obj* objrr = Tcl_NewListObj(0,NULL);
+    for(int jj=0; jj<nxx2; jj++) {
+      for (int ii=0; ii<nxx1; ii++) {
+	double pt1[2];
+	pt1[0] = ptr1[ii][0];
+	pt1[1] = ptr1[ii][1];
+	double pt2[2];
+	pt2[0] = ptr2[jj][0];
+	pt2[1] = ptr2[jj][1];
+	double dd = wcsDistance(newast_,pt1,pt2);
+	if ((dd != AST__BAD) && (dd <= rr)) {
+	  Tcl_Obj* obj[2];
+	  obj[0] = Tcl_NewIntObj(ii+1);
+	  obj[1] = Tcl_NewIntObj(jj+1);
+	  Tcl_Obj* list = Tcl_NewListObj(2,obj);
+	  Tcl_ListObjAppendElement(interp_, objrr, list);
+	}
+      }
+    }
+    Tcl_SetVar2Ex(interp_, rrname, NULL, objrr, TCL_LEAVE_ERR_MSG);
+  }
 
   // clean up
   astEnd; // now, clean up memory
 
-  delete [] ixx1;
-  delete [] iyy1;
-  delete [] xx1;
-  delete [] yy1;
-  delete [] xx2;
-  delete [] yy2;
+  // clean up
+  if (ixx1)
+    delete [] ixx1;
+  if (iyy1)
+    delete [] iyy1;
+  if (ixx2)
+    delete [] ixx2;
+  if (iyy2)
+    delete [] iyy2;
+
+  if (!ptr1 && ptr1!=in1)
+    delete [] ptr1;
+  if (in1)
+    delete [] in1;
+  if (ptr2)
+    delete [] ptr2;
 }
 #endif
 

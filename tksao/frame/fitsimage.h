@@ -405,6 +405,7 @@ class FitsImage {
 #else
   void wcsTran(AstFrameSet*, int, const double*, const double*, int,
 	       double*, double*);
+  Vector wcsTran(AstFrameSet*, Vector&, int);
 #endif
   
 #ifdef NEWWCS

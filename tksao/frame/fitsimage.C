@@ -3156,14 +3156,12 @@ Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   setWCSSkyFrame(newast_,sky);
   maperr =0;
 
-  double xx =0;
-  double yy =0;
-  wcsTran(newast_, 1, in.v, in.v+1, 1, &xx, &yy);
-  if (astOK && checkWCS(xx,yy)) {
+  Vector out = wcsTran(newast_, in, 1);
+  if (astOK && checkWCS(out)) {
     if (wcsIsASkyFrame(newast_))
-      return Vector(radToDeg(xx),yy*180./M_PI);
+      return out.radToDeg();
     else
-      return Vector(xx,yy);
+      return out;
   }
 
   maperr =1;
@@ -3937,7 +3935,6 @@ void FitsImage::setWCSSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 #ifdef NEWWCS
 void FitsImage::setWCSSystem(AstFrameSet* ast, Coord::CoordSystem sys)
 {
-  return;
   int nn = astGetI(ast,"nframe");
   char cc = ' ';
   int ww = sys-Coord::WCS;
@@ -4090,6 +4087,37 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
     break;
   }
 }
+
+Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
+{
+  int naxes = astGetI(ast,"Naxes");
+  switch (naxes) {
+  case 1:
+    // error
+    break;
+  case 2:
+    double xout, yout;
+    astTran2(ast, 1, in.v, in.v+1, forward, &xout, &yout);
+    return Vector(xout, yout);
+  case 3:
+    {
+      double pin[3];
+      double pout[3];
+      pin[0] = in[0];
+      pin[1] = in[1];
+      pin[2] = forward ? context_->slice(2) : 0;
+      astTranN(ast, 1, 3, 1, pin, forward, 1, 3, pout);
+      return Vector(pout[0],pout[1]);
+    }
+    break;
+  case 4:
+    {
+    }
+    break;
+  }
+  return Vector();
+}
+
 #endif
 
 AstFrameSet* FitsImage::fits2ast(FitsHead* hd) 

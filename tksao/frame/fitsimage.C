@@ -1651,7 +1651,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
       double pt2[2];
       pt2[0] = xx2[jj];
       pt2[1] = yy2[jj];
-      double dd = astDistance(newast_,pt1,pt2);
+      double dd = wcsDistance(newast_,pt1,pt2);
       if ((dd != AST__BAD) && (dd <= rr)) {
 	Tcl_Obj* obj[2];
 	obj[0] = Tcl_NewIntObj(ii+1);
@@ -2928,7 +2928,7 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
   double pt2[2];
   pt2[0] = wxx[2];
   pt2[1] = wyy[2];
-  double out = (astDistance(newast_,pt0,pt1)+astDistance(newast_,pt0,pt2))/2.;
+  double out = (wcsDistance(newast_,pt0,pt1)+wcsDistance(newast_,pt0,pt2))/2.;
 
   if (wcsIsASkyFrame(newast_))
     return radToDeg(out);
@@ -2964,8 +2964,8 @@ double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
   double pt2[2];
   pt2[0] = wxx[2];
   pt2[1] = wyy[2];
-  double ll = astDistance(newast_,pt0,pt1);
-  double mm = astDistance(newast_,pt0,pt2);
+  double ll = wcsDistance(newast_,pt0,pt1);
+  double mm = wcsDistance(newast_,pt0,pt2);
 
   if (wcsIsASkyFrame(newast_))
     return radToDeg(ll)*radToDeg(mm);
@@ -3373,10 +3373,10 @@ double FitsImage::getWCSDist(Vector a, Vector b, Coord::CoordSystem sys)
   if (wcsIsASkyFrame(ast_[ss])) {
     Vector aa = a*M_PI/180.;
     Vector bb = b*M_PI/180.;
-    rr = astDistance(ast_[ss], aa.v, bb.v) *180./M_PI;
+    rr = wcsDistance(ast_[ss], aa.v, bb.v) *180./M_PI;
   }
   else
-    rr = astDistance(ast_[ss], a.v, b.v);
+    rr = wcsDistance(ast_[ss], a.v, b.v);
 
   return rr;
 }
@@ -3393,10 +3393,10 @@ double FitsImage::getWCSDist(Vector aa, Vector bb, Coord::CoordSystem sys)
   if (wcsIsASkyFrame(newast_)) {
     aa *= M_PI/180.;
     bb *= M_PI/180.;
-    rr = astDistance(newast_, aa.v, bb.v) *180./M_PI;
+    rr = wcsDistance(newast_, aa.v, bb.v) *180./M_PI;
   }
   else
-    rr = astDistance(newast_, aa.v, bb.v);
+    rr = wcsDistance(newast_, aa.v, bb.v);
 
   return rr;
 }
@@ -3962,12 +3962,12 @@ void FitsImage::setWCSSystem(AstFrameSet* ast, Coord::CoordSystem sys)
 #endif
 
 #ifndef NEWWCS
-int FitsImage::wcsIsASkyFrame(void* ast)
+int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
 {
   return astIsASkyFrame(astGetFrame(ast,AST__CURRENT));
 }
 #else
-int FitsImage::wcsIsASkyFrame(void* ast)
+int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
@@ -4019,6 +4019,44 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
 }
 
 #else
+Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
+{
+  int naxes = astGetI(ast,"Naxes");
+  switch (naxes) {
+  case 1:
+    // error
+    break;
+  case 2:
+    double xout, yout;
+    astTran2(ast, 1, in.v, in.v+1, forward, &xout, &yout);
+    return Vector(xout, yout);
+  case 3:
+    {
+      double pin[3];
+      double pout[3];
+      pin[0] = in[0];
+      pin[1] = in[1];
+      pin[2] = forward ? context_->slice(2) : 0;
+      astTranN(ast, 1, 3, 1, pin, forward, 3, 1, pout);
+      return Vector(pout[0],pout[1]);
+    }
+    break;
+  case 4:
+    {
+      double pin[4];
+      double pout[4];
+      pin[0] = in[0];
+      pin[1] = in[1];
+      pin[2] = forward ? context_->slice(2) : 0;
+      pin[3] = forward ? context_->slice(3) : 0;
+      astTranN(ast, 1, 4, 1, pin, forward, 4, 1, pout);
+      return Vector(pout[0],pout[1]);
+    }
+    break;
+  }
+  return Vector();
+}
+
 void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 
 			const double* xin, const double* yin,
 			int forward,
@@ -4088,7 +4126,15 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
   }
 }
 
-Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
+#endif
+
+#ifndef NEWWCS
+double FitsImage::wcsDistance(AstFrameSet* ast, double* point1, double* point2)
+{
+  return astDistance(ast, point1, point2);
+}
+#else
+double FitsImage::wcsDistance(AstFrameSet* ast, double* point1, double* point2)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
@@ -4096,26 +4142,41 @@ Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
     // error
     break;
   case 2:
-    double xout, yout;
-    astTran2(ast, 1, in.v, in.v+1, forward, &xout, &yout);
-    return Vector(xout, yout);
+    return astDistance(ast, point1, point2);
+    break;
   case 3:
     {
-      double pin[3];
-      double pout[3];
-      pin[0] = in[0];
-      pin[1] = in[1];
-      pin[2] = forward ? context_->slice(2) : 0;
-      astTranN(ast, 1, 3, 1, pin, forward, 1, 3, pout);
-      return Vector(pout[0],pout[1]);
+      double ptr1[3];
+      ptr1[0] = point1[0];
+      ptr1[1] = point1[1];
+      ptr1[2] = 0;
+      double ptr2[3];
+      ptr2[0] = point2[0];
+      ptr2[1] = point2[1];
+      ptr2[2] = 0;
+
+      return astDistance(ast, ptr1, ptr2);
     }
     break;
   case 4:
     {
+      double ptr1[4];
+      ptr1[0] = point1[0];
+      ptr1[1] = point1[1];
+      ptr1[2] = 0;
+      ptr1[3] = 0;
+      double ptr2[4];
+      ptr2[0] = point2[0];
+      ptr2[1] = point2[1];
+      ptr2[2] = 0;
+      ptr2[3] = 0;
+
+      return astDistance(ast, ptr1, ptr2);
     }
     break;
   }
-  return Vector();
+
+  return 0;
 }
 
 #endif

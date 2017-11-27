@@ -1,7 +1,7 @@
 # Region file format: DS9 version 4.1
 global color=green dashlist=8 3 width=2 font="helvetica 10 normal roman" select=1 highlite=1 dash=0 fixed=0 edit=1 move=1 delete=1 include=1 source=1
 wcs0;fk5
-# composite(0 0,180.09929) || composite=0
+# composite(0 0, 0) || composite=0
 box(0.03263380896 0.04947072384,477.889" 905.113",359.99601) ||
 box(359.8453066 0.04895573079,479.258" 901.005",359.99601) ||
 box(0.1767236972 0.06014824241,520.557" 1296.000",359.99601) || # color=blue

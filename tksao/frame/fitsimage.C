@@ -1334,16 +1334,25 @@ void FitsImage::initWCS0(const Vector& pix)
   if (wcs_[0]) {
     Vector cc = mapFromRef(pix, Coord::IMAGE, Coord::FK5);
     WorldCoor* ww = wcs_[0];
-    wcs_[ii] = wcskinit(ww->nxpix, ww->nypix, 
-		       (char*)"RA---TAN", (char*)"DEC--TAN", 
-		       cc[0], cc[1], 0, 0, ww->cd, 0, 0, 0, 2000, 2000);
+    if (!ww->coorflip)
+      wcs_[ii] = wcskinit(ww->nxpix, ww->nypix, 
+			  (char*)"RA---TAN", (char*)"DEC--TAN", 
+			  cc[0], cc[1], 0, 0, ww->cd, 0, 0, 0, 2000, 2000);
+    else
+      wcs_[ii] = wcskinit(ww->nxpix, ww->nypix, 
+			  (char*)"DEC--TAN", (char*)"RA---TAN", 
+			  cc[0], cc[1], 0, 0, ww->cd, 0, 0, 0, 2000, 2000);
     wcs_[ii]->longpole = 999;
     wcs_[ii]->latpole = 999;
+    if (DebugWCS)
+      wcsShow(wcs_[ii]);
 
     if (ast_[ii])
       astAnnul(ast_[ii]);
     ast_[ii] = NULL;
     astinit0(ii, hd, prim);
+    if (DebugAST)
+      astShow(ast_[ii]);
   }
 }
 
@@ -1531,7 +1540,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   if (out1)
     delete [] out1;
   if (in2)
-    delete [] int2;
+    delete [] in2;
   if (out2)
     delete [] out2;
 }
@@ -4017,10 +4026,10 @@ Vector FitsImage::wcsTran(AstFrameSet* ast, Vector in, int forward)
 void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 
 			Vector* in, int forward, Vector* out)
 {
-  double* xin = double[npoint];
-  double* yin = double[npoint];
-  double* xout = double[npoint];
-  double* yout = double[npoint];
+  double* xin = new double[npoint];
+  double* yin = new double[npoint];
+  double* xout = new double[npoint];
+  double* yout = new double[npoint];
 
   for (int ii=0; ii<npoint; ii++) {
     xin[ii] = in[ii][0];

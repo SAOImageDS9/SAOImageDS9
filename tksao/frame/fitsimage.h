@@ -406,6 +406,7 @@ class FitsImage {
   void wcsTran(AstFrameSet*, int, const double*, const double*, int,
 	       double*, double*);
   double wcsDistance(AstFrameSet*, Vector, Vector);
+  double wcsAngle(AstFrameSet*, Vector*);
 #endif
   
 #ifdef NEWWCS

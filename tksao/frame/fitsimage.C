@@ -3010,24 +3010,13 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   setWCSSystem(newast_,sys);
   setWCSSkyFrame(newast_,sky);
 
-  Vector pp = center();
-  double xx[3], yy[3], wx[3], wy[32];
-  xx[0] = pp[0];
-  xx[1] = pp[0];
-  xx[2] = pp[0]+1;
-  yy[0] = pp[1];
-  yy[1] = pp[1]+1;
-  yy[2] = pp[1];
-  wcsTran(newast_,3,xx,yy,1,wx,wy);
-
-  double aa[2], bb[2], cc[2];
-  aa[0]= wx[0];
-  aa[1]= wy[0];
-  bb[0]= wx[1];
-  bb[1]= wy[1];
-  cc[0]= wx[2];
-  cc[1]= wy[2];
-  double ang = astAngle(newast_,aa,bb,cc);
+  Vector in[3];
+  Vector out[3];
+  in[0] = center();
+  in[1] = center()+Vector(0,1);
+  in[2] = center()+Vector(1,0);
+  wcsTran(newast_, 3, in, 1, out);
+  double ang = wcsAngle(newast_,out);
 
   Coord::Orientation rr = Coord::NORMAL;
   if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
@@ -4341,6 +4330,21 @@ double FitsImage::wcsDistance(AstFrameSet* ast, Vector vv1, Vector vv2)
   return 0;
 }
 
+#endif
+
+#ifdef NEWWCS
+double FitsImage::wcsAngle(AstFrameSet* ast, Vector* vv)
+{
+  double aa[2], bb[2], cc[2];
+  aa[0]= vv[0][0];
+  aa[1]= vv[0][1];
+  bb[0]= vv[1][0];
+  bb[1]= vv[1][1];
+  cc[0]= vv[2][0];
+  cc[1]= vv[2][1];
+
+  return astAngle(newast_,aa,bb,cc);
+}
 #endif
 
 AstFrameSet* FitsImage::fits2ast(FitsHead* hd) 

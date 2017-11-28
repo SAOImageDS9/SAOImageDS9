@@ -4335,7 +4335,10 @@ double FitsImage::wcsAngle(AstFrameSet* ast, Vector* vv)
   cc[0]= vv[2][0];
   cc[1]= vv[2][1];
 
-  return astAngle(newast_,aa,bb,cc);
+  double xx= astAngle(newast_,aa,bb,cc);
+  double yy= astAngle(newast_,vv[0].v,vv[1].v,vv[2].v);
+  cerr << xx << '=' << yy << endl;
+  return xx;
 }
 
 double FitsImage::wcsAxAngle(AstFrameSet* ast, Vector* vv)

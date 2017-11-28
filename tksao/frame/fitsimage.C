@@ -4227,48 +4227,6 @@ double FitsImage::wcsDistance(AstFrameSet* ast, double* point1, double* point2)
   return astDistance(ast, point1, point2);
 }
 #else
-double FitsImage::wcsDistance(AstFrameSet* ast, double* point1, double* point2)
-{
-  int naxes = astGetI(ast,"Naxes");
-  switch (naxes) {
-  case 1:
-    // error
-    break;
-  case 2:
-    return astDistance(ast, point1, point2);
-  case 3:
-    {
-      double ptr1[3];
-      ptr1[0] = point1[0];
-      ptr1[1] = point1[1];
-      ptr1[2] = 0;
-      double ptr2[3];
-      ptr2[0] = point2[0];
-      ptr2[1] = point2[1];
-      ptr2[2] = 0;
-
-      return astDistance(ast, ptr1, ptr2);
-    }
-  case 4:
-    {
-      double ptr1[4];
-      ptr1[0] = point1[0];
-      ptr1[1] = point1[1];
-      ptr1[2] = 0;
-      ptr1[3] = 0;
-      double ptr2[4];
-      ptr2[0] = point2[0];
-      ptr2[1] = point2[1];
-      ptr2[2] = 0;
-      ptr2[3] = 0;
-
-      return astDistance(ast, ptr1, ptr2);
-    }
-  }
-
-  return 0;
-}
-
 double FitsImage::wcsDistance(AstFrameSet* ast, Vector vv1, Vector vv2)
 {
   int naxes = astGetI(ast,"Naxes");

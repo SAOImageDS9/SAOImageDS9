@@ -1656,13 +1656,8 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
     Tcl_Obj* objrr = Tcl_NewListObj(0,NULL);
     for(int jj=0; jj<nxx2; jj++) {
       for (int ii=0; ii<nxx1; ii++) {
-	double pt1[2];
-	pt1[0] = ptr1[ii][0];
-	pt1[1] = ptr1[ii][1];
-	double pt2[2];
-	pt2[0] = ptr2[jj][0];
-	pt2[1] = ptr2[jj][1];
-	double dd = wcsDistance(newast_,pt1,pt2);
+	double dd = wcsDistance(newast_,ptr1[ii],ptr2[jj]);
+
 	if ((dd != AST__BAD) && (dd <= rr)) {
 	  Tcl_Obj* obj[2];
 	  obj[0] = Tcl_NewIntObj(ii+1);

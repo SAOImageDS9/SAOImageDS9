@@ -23,8 +23,7 @@ Vector FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
       return pix2wcs(vv * refToImage, out, sky);
   }
 
-  maperr =1;
-  return vv;
+  return Vector();
 }      
 
 void FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
@@ -36,7 +35,6 @@ void FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
     return;
   }
 
-  maperr =1;
   strcpy(buf,"");
 }
 
@@ -57,8 +55,9 @@ Vector FitsImage::mapToRef(const Vector& vv, Coord::CoordSystem in,
       return wcs2pix(vv, in, sky) * imageToRef;
   }
 
+  // special case for parsing regions files
   maperr =1;
-  return vv;
+  return Vector();
 }
 
 void FitsImage::listFromRef(ostream& str, const Vector& vv,
@@ -150,7 +149,6 @@ Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
     }
   }
 
-  maperr =1;
   return Vector();
 }
 #else
@@ -169,15 +167,13 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
     return dd*(refToPhysical * physicalToDetector)[1].length();
   default:
     {
-      if (!hasWCS(sys)) {
-	maperr =1;
-	return 0;
-      }
-      
       astClearStatus; // just to make sure
+
+      if (!hasWCS(sys))
+	return 0;
+      
       setWCSSystem(newast_, sys);
       setWCSSkyFrame(newast_, Coord::FK5);
-      maperr =0;
 
       Vector in[2];
       Vector out[2];
@@ -203,7 +199,6 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
     }
   }
 
-  maperr =1;
   return 0;
 }
 
@@ -258,7 +253,6 @@ Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
     }
   }
 
-  maperr =1;
   return Vector();
 }
 #else
@@ -276,14 +270,11 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
     return dd*(detectorToPhysical * physicalToRef)[1].length();
   default:
     {
-      if (!hasWCS(sys)) {
-	maperr =1;
+      if (!hasWCS(sys))
 	return 0;
-      }
       
       astClearStatus; // just to make sure
       setWCSSystem(newast_, sys);
-      maperr =0;
 
       double rdd = dd;
       if (wcsIsASkyFrame(newast_)) {
@@ -311,7 +302,6 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
     }
   }
 
-  maperr =1;
   return 0;
 }
 
@@ -448,7 +438,6 @@ double FitsImage::mapDistFromRef(const Vector& vv1, const Vector& vv2,
     }
   }
 
-  maperr =1;
   return 0;
 }
 

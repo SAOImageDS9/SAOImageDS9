@@ -4241,7 +4241,6 @@ double FitsImage::wcsDistance(AstFrameSet* ast, double* point1, double* point2)
     break;
   case 2:
     return astDistance(ast, point1, point2);
-    break;
   case 3:
     {
       double ptr1[3];
@@ -4255,7 +4254,6 @@ double FitsImage::wcsDistance(AstFrameSet* ast, double* point1, double* point2)
 
       return astDistance(ast, ptr1, ptr2);
     }
-    break;
   case 4:
     {
       double ptr1[4];
@@ -4271,7 +4269,6 @@ double FitsImage::wcsDistance(AstFrameSet* ast, double* point1, double* point2)
 
       return astDistance(ast, ptr1, ptr2);
     }
-    break;
   }
 
   return 0;
@@ -4286,7 +4283,6 @@ double FitsImage::wcsDistance(AstFrameSet* ast, Vector vv1, Vector vv2)
     break;
   case 2:
     return astDistance(ast, vv1.v, vv2.v);
-    break;
   case 3:
     {
       double ptr1[3];
@@ -4300,7 +4296,6 @@ double FitsImage::wcsDistance(AstFrameSet* ast, Vector vv1, Vector vv2)
 
       return astDistance(ast, ptr1, ptr2);
     }
-    break;
   case 4:
     {
       double ptr1[4];
@@ -4316,7 +4311,6 @@ double FitsImage::wcsDistance(AstFrameSet* ast, Vector vv1, Vector vv2)
 
       return astDistance(ast, ptr1, ptr2);
     }
-    break;
   }
 
   return 0;
@@ -4327,29 +4321,95 @@ double FitsImage::wcsDistance(AstFrameSet* ast, Vector vv1, Vector vv2)
 #ifdef NEWWCS
 double FitsImage::wcsAngle(AstFrameSet* ast, Vector* vv)
 {
-  double aa[2], bb[2], cc[2];
-  aa[0]= vv[0][0];
-  aa[1]= vv[0][1];
-  bb[0]= vv[1][0];
-  bb[1]= vv[1][1];
-  cc[0]= vv[2][0];
-  cc[1]= vv[2][1];
+  int naxes = astGetI(ast,"Naxes");
+  switch (naxes) {
+  case 1:
+    // error
+    break;
+  case 2:
+    return astAngle(newast_,vv[0].v,vv[1].v,vv[2].v);
+  case 3:
+    {
+      double ptr1[3];
+      ptr1[0] = vv[0][0];
+      ptr1[1] = vv[0][1];
+      ptr1[2] = 0;
+      double ptr2[3];
+      ptr2[0] = vv[1][0];
+      ptr2[1] = vv[1][1];
+      ptr2[2] = 0;
+      double ptr3[3];
+      ptr3[0] = vv[2][0];
+      ptr3[1] = vv[2][1];
+      ptr3[2] = 0;
 
-  double xx= astAngle(newast_,aa,bb,cc);
-  double yy= astAngle(newast_,vv[0].v,vv[1].v,vv[2].v);
-  cerr << xx << '=' << yy << endl;
-  return xx;
+      return astAngle(ast, ptr1, ptr2, ptr3);
+    }
+  case 4:
+    {
+      double ptr1[4];
+      ptr1[0] = vv[0][0];
+      ptr1[1] = vv[0][1];
+      ptr1[2] = 0;
+      ptr1[3] = 0;
+      double ptr2[4];
+      ptr2[0] = vv[1][0];
+      ptr2[1] = vv[1][1];
+      ptr2[2] = 0;
+      ptr2[3] = 0;
+      double ptr3[4];
+      ptr3[0] = vv[2][0];
+      ptr3[1] = vv[2][1];
+      ptr3[2] = 0;
+      ptr3[3] = 0;
+
+      return astAngle(ast, ptr1, ptr2, ptr3);
+    }
+  }
+
+  return 0;
 }
 
 double FitsImage::wcsAxAngle(AstFrameSet* ast, Vector* vv)
 {
-  double aa[2], bb[2];
-  aa[0]= vv[0][0];
-  aa[1]= vv[0][1];
-  bb[0]= vv[1][0];
-  bb[1]= vv[1][1];
+  int naxes = astGetI(ast,"Naxes");
+  switch (naxes) {
+  case 1:
+    // error
+    break;
+  case 2:
+    return astAxAngle(newast_, vv[0].v, vv[1].v, 2);
+  case 3:
+    {
+      double ptr1[3];
+      ptr1[0] = vv[0][0];
+      ptr1[1] = vv[0][1];
+      ptr1[2] = 0;
+      double ptr2[3];
+      ptr2[0] = vv[1][0];
+      ptr2[1] = vv[1][1];
+      ptr2[2] = 0;
 
-  return astAxAngle(newast_,aa,bb,2);
+      return astAxAngle(ast, ptr1, ptr2, 2);
+    }
+  case 4:
+    {
+      double ptr1[4];
+      ptr1[0] = vv[0][0];
+      ptr1[1] = vv[0][1];
+      ptr1[2] = 0;
+      ptr1[3] = 0;
+      double ptr2[4];
+      ptr2[0] = vv[1][0];
+      ptr2[1] = vv[1][1];
+      ptr2[2] = 0;
+      ptr2[3] = 0;
+
+      return astAxAngle(ast, ptr1, ptr2, 2);
+    }
+  }
+
+  return 0;
 }
 
 #endif

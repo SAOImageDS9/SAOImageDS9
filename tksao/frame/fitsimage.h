@@ -407,6 +407,7 @@ class FitsImage {
 	       double*, double*);
   double wcsDistance(AstFrameSet*, Vector, Vector);
   double wcsAngle(AstFrameSet*, Vector*);
+  double wcsAxAngle(AstFrameSet*, Vector*);
 #endif
   
 #ifdef NEWWCS

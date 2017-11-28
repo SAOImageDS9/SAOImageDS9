@@ -3368,10 +3368,10 @@ double FitsImage::getWCSDist(Vector aa, Vector bb, Coord::CoordSystem sys)
   if (wcsIsASkyFrame(newast_)) {
     aa *= M_PI/180.;
     bb *= M_PI/180.;
-    rr = wcsDistance(newast_, aa.v, bb.v) *180./M_PI;
+    rr = wcsDistance(newast_, aa, bb) *180./M_PI;
   }
   else
-    rr = wcsDistance(newast_, aa.v, bb.v);
+    rr = wcsDistance(newast_, aa, bb);
 
   return rr;
 }

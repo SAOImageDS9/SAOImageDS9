@@ -179,36 +179,27 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
       setWCSSkyFrame(newast_, Coord::FK5);
       maperr =0;
 
-      Vector cc = center();
-      double xx[2], wxx[2];
-      xx[0] = cc[0];
-      xx[1] = cc[0];
-      double yy[2], wyy[2];
-      yy[0] = cc[1];
-      yy[1] = cc[1]+dd;
-      wcsTran(newast_,2,xx,yy,1,wxx,wyy);
+      Vector in[2];
+      Vector out[2];
+      in[0] = center();
+      in[1] = center()+Vector(0,dd);
+      wcsTran(newast_, 2, in, 1, out);
+      double dd = wcsDistance(newast_,out[0],out[1]);
 
-      double pt0[3];
-      pt0[0] = wxx[0];
-      pt0[1] = wyy[0];
-      double pt1[3];
-      pt1[0] = wxx[1];
-      pt1[1] = wyy[1];
-      double out = wcsDistance(newast_,pt0,pt1);
       if (wcsIsASkyFrame(newast_)) {
-	out = radToDeg(out);
+	dd = radToDeg(dd);
 	switch (dist) {
 	case Coord::DEGREE:
 	  break;
 	case Coord::ARCMIN:
-	  out *= 60.;
+	  dd *= 60.;
 	  break;
 	case Coord::ARCSEC:
-	  out *= 60.*60.;
+	  dd *= 60.*60.;
 	  break;
 	}
       }
-      return out;
+      return dd;
     }
   }
 

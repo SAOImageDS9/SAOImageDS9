@@ -2952,28 +2952,14 @@ double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
   astClearStatus; // just to make sure
   setWCSSystem(newast_, sys);
 
-  Vector cc = center();
-  double xx[3], wxx[3];
-  xx[0] = cc[0];
-  xx[1] = cc[0];
-  xx[2] = cc[0];
-  double yy[3], wyy[3];
-  yy[0] = cc[1];
-  yy[1] = cc[1]+1;
-  yy[2] = cc[1]+1;
-  wcsTran(newast_,3,xx,yy,1,wxx,wyy);
-
-  double pt0[2];
-  pt0[0] = wxx[0];
-  pt0[1] = wyy[0];
-  double pt1[2];
-  pt1[0] = wxx[1];
-  pt1[1] = wyy[1];
-  double pt2[2];
-  pt2[0] = wxx[2];
-  pt2[1] = wyy[2];
-  double ll = wcsDistance(newast_,pt0,pt1);
-  double mm = wcsDistance(newast_,pt0,pt2);
+  Vector in[3];
+  Vector out[3];
+  in[0] = center();
+  in[1] = center()+Vector(1,0);
+  in[2] = center()+Vector(0,1);
+  wcsTran(newast_, 3, in, 1, out);
+  double ll = wcsDistance(newast_,out[0],out[1]);
+  double mm = wcsDistance(newast_,out[0],out[2]);
 
   if (wcsIsASkyFrame(newast_))
     return radToDeg(ll)*radToDeg(mm);

@@ -3331,7 +3331,7 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
 #endif
 
 #ifndef NEWWCS
-double FitsImage::getWCSDist(Vector a, Vector b, Coord::CoordSystem sys)
+double FitsImage::getWCSDist(Vector aa, Vector bb, Coord::CoordSystem sys)
 {
   int ss = sys-Coord::WCS;
   if (!(ss>=0 && ast_ && ast_[ss]))
@@ -3341,12 +3341,12 @@ double FitsImage::getWCSDist(Vector a, Vector b, Coord::CoordSystem sys)
 
   double rr=0;
   if (wcsIsASkyFrame(ast_[ss])) {
-    Vector aa = a*M_PI/180.;
-    Vector bb = b*M_PI/180.;
-    rr = wcsDistance(ast_[ss], aa.v, bb.v) *180./M_PI;
+    aa *= M_PI/180.;
+    bb *= M_PI/180.;
+    rr = wcsDistance(ast_[ss], aa, bb) *180./M_PI;
   }
   else
-    rr = wcsDistance(ast_[ss], a.v, b.v);
+    rr = wcsDistance(ast_[ss], aa, bb);
 
   return rr;
 }
@@ -4222,9 +4222,9 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
 #endif
 
 #ifndef NEWWCS
-double FitsImage::wcsDistance(AstFrameSet* ast, double* point1, double* point2)
+double FitsImage::wcsDistance(AstFrameSet* ast, Vector vv1, Vector vv2)
 {
-  return astDistance(ast, point1, point2);
+  return astDistance(ast, vv1.v, vv2.v);
 }
 #else
 double FitsImage::wcsDistance(AstFrameSet* ast, Vector vv1, Vector vv2)

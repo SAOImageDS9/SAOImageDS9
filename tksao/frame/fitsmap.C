@@ -184,22 +184,22 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
       in[0] = center();
       in[1] = center()+Vector(0,dd);
       wcsTran(newast_, 2, in, 1, out);
-      double dd = wcsDistance(newast_,out[0],out[1]);
+      double rr = wcsDistance(newast_,out[0],out[1]);
 
       if (wcsIsASkyFrame(newast_)) {
-	dd = radToDeg(dd);
+	rr = radToDeg(rr);
 	switch (dist) {
 	case Coord::DEGREE:
 	  break;
 	case Coord::ARCMIN:
-	  dd *= 60.;
+	  rr *= 60.;
 	  break;
 	case Coord::ARCSEC:
-	  dd *= 60.*60.;
+	  rr *= 60.*60.;
 	  break;
 	}
       }
-      return dd;
+      return rr;
     }
   }
 
@@ -301,29 +301,13 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
       }
 
       Vector cc = center();
-      Vector wcc;
-      wcsTran(newast_,1,cc.v,cc.v+1,1,wcc.v,wcc.v+1);
-
-      double wxx[2], xx[2];
-      wxx[0] = wcc[0];
-      wxx[1] = wcc[0];
-      double wyy[2], yy[2];
-      wyy[0] = wcc[1];
-      wyy[1] = wcc[1]+rdd;
-      wcsTran(newast_,2,wxx,wyy,0,xx,yy);
-
-      double pt0[2];
-      pt0[0] = xx[0];
-      pt0[1] = yy[0];
-      double pt1[2];
-      pt1[0] = xx[1];
-      pt1[1] = yy[1];
-
+      Vector wcc = wcsTran(newast_,cc,1);
+      Vector pp = wcsTran(newast_,wcc+Vector(0,rdd),0);
       astInvert(newast_);
-      double out = wcsDistance(newast_,pt0,pt1);
+      double rr = wcsDistance(newast_,cc,pp);
       astInvert(newast_);
 
-      return out;
+      return rr;
     }
   }
 

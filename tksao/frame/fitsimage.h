@@ -209,6 +209,8 @@ class FitsImage {
 
   Matrix3d dataToImage3d;
   Matrix3d imageToData3d;
+  Matrix3d refToImage3d;
+  Matrix3d imageToRef3d;
 
   Matrix3d dataToRef3d;
   Matrix3d refToData3d;
@@ -366,6 +368,10 @@ class FitsImage {
 
   Vector wcs2pix(Vector, Coord::CoordSystem, Coord::SkyFrame);
 
+#ifdef NEWWCS
+  Vector3d pix2wcs(Vector3d, Coord::CoordSystem, Coord::SkyFrame);
+  Vector3d wcs2pix(Vector3d, Coord::CoordSystem, Coord::SkyFrame);
+#endif
   double pix2wcsx(double, Coord::CoordSystem, int);
   double wcs2pixx(double, Coord::CoordSystem, int);
 
@@ -403,6 +409,7 @@ class FitsImage {
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
   double wcsDistance(AstFrameSet*, Vector, Vector);
 #ifdef NEWWCS
+  Vector3d wcsTran(AstFrameSet*, Vector3d&, int);
   double wcsAngle(AstFrameSet*, Vector&, Vector&, Vector&);
   double wcsAxAngle(AstFrameSet*, Vector&, Vector&);
 #endif
@@ -444,6 +451,10 @@ class FitsImage {
   Vector mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   void mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
   Vector mapToRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+#ifdef NEWWCS
+  Vector3d mapFromRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+  Vector3d mapToRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+#endif
   double mapFromRef3axis(double, Coord::CoordSystem, int);
   double mapToRef3axis(double, Coord::CoordSystem, int);
   double mapLenFromRef(double, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);

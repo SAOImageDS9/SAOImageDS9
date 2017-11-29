@@ -105,6 +105,9 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   imageToData3d = Translate3d(-.5, -.5, -.5);
   dataToImage3d = Translate3d( .5,  .5,  .5);
 
+  imageToRef3d = imageToData3d;
+  refToImage3d = dataToImage3d;
+
   manageWCS_ =1;
   wcsx_ =NULL;
 #ifndef NEWWCS
@@ -3119,7 +3122,7 @@ Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   return Vector();
 }
 #else
-Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
+Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
   astClearStatus; // just to make sure
@@ -3140,10 +3143,32 @@ Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 
   return Vector();
 }
+
+Vector3d FitsImage::pix2wcs(Vector3d in, Coord::CoordSystem sys,
+			    Coord::SkyFrame sky)
+{
+  astClearStatus; // just to make sure
+
+  if (!hasWCS(sys))
+    return Vector();
+
+  setWCSSystem(newast_,sys);
+  setWCSSkyFrame(newast_,sky);
+
+  Vector out = wcsTran(newast_, in, 1);
+  if (astOK && checkWCS(out)) {
+    if (wcsIsASkyFrame(newast_))
+      return out.radToDeg();
+    else
+      return out;
+  }
+
+  return Vector3d();
+}
 #endif
 
 #ifndef NEWWCS
-char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
+char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 			 Coord::SkyFrame sky, Coord::SkyFormat format,
 			 char* lbuf)
 {
@@ -3204,7 +3229,7 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   return lbuf;
 }
 #else
-char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys, 
+char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 			 Coord::SkyFrame sky, Coord::SkyFormat format,
 			 char* lbuf)
 {
@@ -3266,7 +3291,7 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 #endif
 
 #ifndef NEWWCS
-Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys, 
+Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
   astClearStatus;
@@ -3290,7 +3315,7 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
   return Vector();
 }
 #else
-Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys, 
+Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
   astClearStatus; // just to make sure
@@ -3309,6 +3334,26 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
   
   maperr =1;
   return Vector();
+}
+
+Vector3d FitsImage::wcs2pix(Vector3d in, Coord::CoordSystem sys,
+			    Coord::SkyFrame sky)
+{
+  astClearStatus; // just to make sure
+
+  if (hasWCS(sys)) {
+    setWCSSystem(newast_,sys);
+    setWCSSkyFrame(newast_,sky);
+
+    if (wcsIsASkyFrame(newast_))
+      in *= M_PI/180.;
+
+    Vector out = wcsTran(newast_, in, 0);
+    if (astOK && checkWCS(out))
+      return out;
+  }
+
+  return Vector3d();
 }
 #endif
 
@@ -4097,6 +4142,42 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
     break;
   }
 }
+
+Vector3d FitsImage::wcsTran(AstFrameSet* ast, Vector3d& in, int forward)
+{
+  int naxes = astGetI(ast,"Naxes");
+  switch (naxes) {
+  case 1:
+  case 2:
+    // error
+    break;
+  case 3:
+    {
+      double pin[3];
+      double pout[3];
+      pin[0] = in[0];
+      pin[1] = in[1];
+      pin[2] = in[3];
+      astTranN(ast, 1, 3, 1, pin, forward, 3, 1, pout);
+      return Vector3d(pout[0],pout[1],pout[2]);
+    }
+    break;
+  case 4:
+    {
+      double pin[4];
+      double pout[4];
+      pin[0] = in[0];
+      pin[1] = in[1];
+      pin[2] = in[3];
+      pin[3] = forward ? context_->slice(3) : 0;
+      astTranN(ast, 1, 4, 1, pin, forward, 4, 1, pout);
+      return Vector3d(pout[0],pout[1],pout[2]);
+    }
+    break;
+  }
+  return Vector3d();
+}
+
 #endif
 
 #ifndef NEWWCS

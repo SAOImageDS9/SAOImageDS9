@@ -113,8 +113,9 @@ class FitsImage {
   int manageWCS_;
   WorldCoor** wcs_;    // wcs list
   WCSx** wcsx_;        // xth Axis WCS
+#ifndef NEWWCS
   AstFrameSet** ast_;  // ast frameset;
-#ifdef NEWWCS
+#else
   AstFrameSet* newast_;  // ast frameset;
 #endif
   FitsHead* wcsHeader_; // alt wcs header

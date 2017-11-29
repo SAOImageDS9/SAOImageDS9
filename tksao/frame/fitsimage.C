@@ -108,8 +108,9 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   manageWCS_ =1;
   wcs_ =NULL;
   wcsx_ =NULL;
+#ifndef NEWWCS
   ast_ =NULL;
-#ifdef NEWWCS
+#else
   newast_ =NULL;
 #endif
   wcsHeader_ =NULL;
@@ -181,13 +182,14 @@ FitsImage::~FitsImage()
     delete [] wcsx_;
   }  
 
+#ifndef NEWWCS
   if (ast_) {
     for (int ii=0; ii<MULTWCSA; ii++)
       if (manageWCS_ && ast_[ii])
  	astAnnul(ast_[ii]);
     delete [] ast_;
   }
-#ifdef NEWWCS
+#else
   if (manageWCS_ && newast_)
     astAnnul(newast_);
 #endif
@@ -1078,6 +1080,7 @@ void FitsImage::initWCS()
   for (int ii=0; ii<MULTWCS; ii++)
     wcsx_[ii] = NULL;
 
+#ifndef NEWWCS
   if (ast_) {
     for (int ii=0; ii<MULTWCSA; ii++)
       if (manageWCS_ && ast_[ii])
@@ -1087,7 +1090,7 @@ void FitsImage::initWCS()
   ast_ = new AstFrameSet*[MULTWCSA];
   for (int ii=0; ii<MULTWCSA; ii++)
     ast_[ii] = NULL;
-#ifdef NEWWCS
+#else
   if (manageWCS_ && newast_)
     astAnnul(newast_);
   newast_ = NULL;
@@ -1108,9 +1111,10 @@ void FitsImage::initWCS()
 	    wcs_[ii] = ptr->wcs_[ii];
 	  for (int ii=0; ii<MULTWCS; ii++)
 	    wcsx_[ii] = ptr->wcsx_[ii];
+#ifndef NEWWCS
 	  for (int ii=0; ii<MULTWCSA; ii++)
 	    ast_[ii] = ptr->ast_[ii];
-#ifdef NEWWCS
+#else
 	  newast_ = ptr->newast_;
 #endif
 
@@ -1347,12 +1351,14 @@ void FitsImage::initWCS0(const Vector& pix)
     if (DebugWCS)
       wcsShow(wcs_[ii]);
 
+#ifndef NEWWCS
     if (ast_[ii])
       astAnnul(ast_[ii]);
     ast_[ii] = NULL;
     astinit0(ii, hd, prim);
     if (DebugAST)
       astShow(ast_[ii]);
+#endif
   }
 }
 
@@ -2329,9 +2335,11 @@ void FitsImage::resetWCS0()
     wcsfree(wcs_[ii]);
   wcs_[ii] = NULL;
 
+#ifndef NEWWCS
   if (ast_[ii])
     astAnnul(ast_[ii]);
   ast_[ii] = NULL;
+#endif
 }
 
 char* FitsImage::root(const char* fn)
@@ -3630,6 +3638,7 @@ void FitsImage::wcsShow(WorldCoor* ww)
   cerr << "wcs->distcode=" << ww->distcode << endl;
 }
 
+#ifndef NEWWCS
 void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
 {
   if (!wcs_[ss]) {
@@ -3643,7 +3652,6 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
   // DSS,PLT,LIN goes straight to AST
   // we can't send 3D directly to AST
 
-#ifndef NEWWCS
   if (wcs_[ss]->prjcode==WCS_DSS || 
       wcs_[ss]->prjcode==WCS_PLT || 
       (wcs_[ss]->prjcode==WCS_LIN && !strncmp(wcs_[ss]->ptype,"HPX",3)) ||
@@ -3657,63 +3665,11 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
   if (!ast_[ss])
     return;
 
-#else
-
-  ast_[ss] = fits2ast(hd);
-  if (!ast_[ss])
-    return;
-
-  setWCSSystem(ast_[ss], (Coord::CoordSystem)(ss+Coord::WCS));
-
-  //  astClearStatus; // just to make sure
-  //  astBegin; // start memory management
-
-  int naxes = astGetI(ast_[ss],"Naxes");
-  switch (naxes) {
-  case 1:
-    break;
-  case 2:
-    if (astIsASkyFrame(astGetFrame(ast_[ss],AST__CURRENT)) &&
-	astGetI(ast_[ss],"LatAxis") == 1) {
-      int orr[] = {2,1};
-      astPermAxes(ast_[ss],orr);
-    }
-    break;
-  case 3:
-  case 4:
-    {
-      if (0) {
-      AstFrameSet* ast = ast_[ss];
-
-      int pickc[2] = {1,2};
-      AstMapping** mapc = NULL;
-      AstFrame* permc = (AstFrame*)astPickAxes(ast, 2, pickc, &mapc);
-      astAddFrame(ast, AST__CURRENT, mapc, permc);
-
-      int isky = astGetI(ast, "Current");
-      int pickb[4] = {1, 2, 0, 0};
-      AstMapping* mapb;
-      AstFrame* foo = astFrame(2,"Domain=DATA");
-      astPickAxes(foo, naxes, pickb, &mapb);
-      astInvert(mapb);
-      astAddFrame(ast, AST__BASE, mapb, foo);
-      int idata =  astGetI(ast, "Current");
-      astSetI(ast, "Current", isky);
-      astSetI(ast, "Base", idata);
-      }
-    }
-    break;
-  }
-
-  //  astEnd; // now, clean up memory
-#endif
-
   // set default skyframe
   if (wcsIsASkyFrame(ast_[ss]))
     setWCSSkyFrame(ast_[ss],Coord::FK5);
 }
-
-#ifdef NEWWCS
+#else
 void FitsImage::astinit(FitsHead* hd, FitsHead* prim)
 {
   // just in case
@@ -3771,6 +3727,7 @@ void FitsImage::astinit(FitsHead* hd, FitsHead* prim)
 }
 #endif
 
+#ifndef NEWWCS
 void FitsImage::astinit0(int ss, FitsHead* hd, FitsHead* prim)
 {
   if (!wcs_[ss]) {
@@ -3787,6 +3744,7 @@ void FitsImage::astinit0(int ss, FitsHead* hd, FitsHead* prim)
   if (wcsIsASkyFrame(ast_[ss]))
     setWCSSkyFrame(ast_[ss],Coord::FK5);
 }
+#endif
 
 int FitsImage::checkWCS(Vector& vv)
 {

@@ -45,9 +45,6 @@ class Frame3dBase : public Base {
 
   double cropsl_;
 
-  Matrix3d dataToImage3d;
-  Matrix3d imageToData3d;
-
   Matrix3d refToUser3d;
   Matrix3d userToRef3d;
   Matrix3d refToWidget3d;

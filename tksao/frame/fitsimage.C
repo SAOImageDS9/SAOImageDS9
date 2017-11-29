@@ -106,9 +106,9 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   dataToImage3d = Translate3d( .5,  .5,  .5);
 
   manageWCS_ =1;
-  wcs_ =NULL;
   wcsx_ =NULL;
 #ifndef NEWWCS
+  wcs_ =NULL;
   ast_ =NULL;
 #else
   newast_ =NULL;
@@ -168,13 +168,6 @@ FitsImage::~FitsImage()
       delete analysisdata_;
   }
 
-  if (wcs_) {
-    for (int ii=0; ii<MULTWCSA; ii++)
-      if (manageWCS_ && wcs_[ii])
-	wcsfree(wcs_[ii]);
-    delete [] wcs_;
-  }  
-
   if (wcsx_) {
     for (int ii=0; ii<MULTWCS; ii++)
       if (manageWCS_ && wcsx_[ii])
@@ -183,6 +176,13 @@ FitsImage::~FitsImage()
   }  
 
 #ifndef NEWWCS
+  if (wcs_) {
+    for (int ii=0; ii<MULTWCSA; ii++)
+      if (manageWCS_ && wcs_[ii])
+	wcsfree(wcs_[ii]);
+    delete [] wcs_;
+  }  
+
   if (ast_) {
     for (int ii=0; ii<MULTWCSA; ii++)
       if (manageWCS_ && ast_[ii])
@@ -1060,16 +1060,6 @@ void FitsImage::iisSetFileName(const char* fn)
 void FitsImage::initWCS()
 {
   // free up wcs and ast arrays
-  if (wcs_) {
-    for (int ii=0; ii<MULTWCSA; ii++)
-      if (manageWCS_ && wcs_[ii])
-	wcsfree(wcs_[ii]);
-    delete [] wcs_;
-  }
-  wcs_ = new WorldCoor*[MULTWCSA];
-  for (int ii=0; ii<MULTWCSA; ii++)
-    wcs_[ii] = NULL;
-
   if (wcsx_) {
     for (int ii=0; ii<MULTWCS; ii++)
       if (manageWCS_ && wcsx_[ii])
@@ -1081,6 +1071,16 @@ void FitsImage::initWCS()
     wcsx_[ii] = NULL;
 
 #ifndef NEWWCS
+  if (wcs_) {
+    for (int ii=0; ii<MULTWCSA; ii++)
+      if (manageWCS_ && wcs_[ii])
+	wcsfree(wcs_[ii]);
+    delete [] wcs_;
+  }
+  wcs_ = new WorldCoor*[MULTWCSA];
+  for (int ii=0; ii<MULTWCSA; ii++)
+    wcs_[ii] = NULL;
+
   if (ast_) {
     for (int ii=0; ii<MULTWCSA; ii++)
       if (manageWCS_ && ast_[ii])
@@ -1107,11 +1107,11 @@ void FitsImage::initWCS()
       FitsImage* sptr = ptr->nextSlice();
       while (sptr) {
 	if (sptr == this) {
-	  for (int ii=0; ii<MULTWCSA; ii++)
-	    wcs_[ii] = ptr->wcs_[ii];
 	  for (int ii=0; ii<MULTWCS; ii++)
 	    wcsx_[ii] = ptr->wcsx_[ii];
 #ifndef NEWWCS
+	  for (int ii=0; ii<MULTWCSA; ii++)
+	    wcs_[ii] = ptr->wcs_[ii];
 	  for (int ii=0; ii<MULTWCSA; ii++)
 	    ast_[ii] = ptr->ast_[ii];
 #else
@@ -1142,6 +1142,7 @@ void FitsImage::initWCS()
     prim = image_->primary() && image_->inherit() ? image_->primary() : NULL;
   }
 
+#ifndef NEWWCS
   // wcsinit is sloooowwww! so try to figure it out first
   // look first for default WCS. Let wcsinit figure it out since there can
   // be many different non-standard wcs's present
@@ -1184,13 +1185,11 @@ void FitsImage::initWCS()
 
       astinit(ii, hd, prim);
 
-#ifndef NEWWCS
       if (DebugAST)
 	astShow(ast_[ii]);
-#endif
     }
   }
-#ifdef NEWWCS
+#else
   astinit(hd, prim);
   if (DebugAST && newast_)
     astShow(newast_);
@@ -1330,6 +1329,7 @@ void FitsImage::initWCS0(const Vector& pix)
     prim = image_->primary() && image_->inherit() ? image_->primary() : NULL;
   }
 
+#ifndef NEWWCS
   int ii = Coord::WCS0-Coord::WCS;
   if (wcs_[ii])
     wcsfree(wcs_[ii]);
@@ -1351,15 +1351,14 @@ void FitsImage::initWCS0(const Vector& pix)
     if (DebugWCS)
       wcsShow(wcs_[ii]);
 
-#ifndef NEWWCS
     if (ast_[ii])
       astAnnul(ast_[ii]);
     ast_[ii] = NULL;
     astinit0(ii, hd, prim);
     if (DebugAST)
       astShow(ast_[ii]);
-#endif
   }
+#endif
 }
 
 void FitsImage::load()
@@ -2330,12 +2329,12 @@ void FitsImage::resetWCS()
 
 void FitsImage::resetWCS0()
 {
+#ifndef NEWWCS
   int ii = Coord::WCS0-Coord::WCS;
   if (wcs_[ii])
     wcsfree(wcs_[ii]);
   wcs_[ii] = NULL;
 
-#ifndef NEWWCS
   if (ast_[ii])
     astAnnul(ast_[ii]);
   ast_[ii] = NULL;
@@ -3595,6 +3594,7 @@ double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys, int aa)
 
 // WCS/AST support
 
+#ifndef NEWWCS
 void FitsImage::wcsShow(WorldCoor* ww)
 {
   if (!ww)
@@ -3638,7 +3638,6 @@ void FitsImage::wcsShow(WorldCoor* ww)
   cerr << "wcs->distcode=" << ww->distcode << endl;
 }
 
-#ifndef NEWWCS
 void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
 {
   if (!wcs_[ss]) {
@@ -4279,6 +4278,7 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
   return frameSet;
 }
 
+#ifndef NEWWCS
 AstFrameSet* FitsImage::buildast(int ss, FitsHead* hd, FitsHead* prim) 
 {
   if (DebugAST)
@@ -4988,3 +4988,4 @@ void FitsImage::putFitsCard(void* chan, const char* key, double value)
   if (DebugAST)
     cerr << str.str().c_str() << endl;
 }
+#endif

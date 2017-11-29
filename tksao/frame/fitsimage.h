@@ -111,9 +111,9 @@ class FitsImage {
   int address[FTY_MAXAXES];
 
   int manageWCS_;
-  WorldCoor** wcs_;    // wcs list
   WCSx** wcsx_;        // xth Axis WCS
 #ifndef NEWWCS
+  WorldCoor** wcs_;    // wcs list
   AstFrameSet** ast_;  // ast frameset;
 #else
   AstFrameSet* newast_;  // ast frameset;
@@ -123,34 +123,26 @@ class FitsImage {
 
   Matrix wcsToRef_;          // iraf/wcs matrix
 
+ private:
+  char* root(const char*);
+  char* strip(const char*);
+
  protected:
   void reset();
-
+  Vector getHistCenter();
+  void smooth(pthread_t*, t_smooth_arg*);
   void process(const char*, int);
   void initCompress();
   void initNRRD();
   void initENVI();
   void initBin();
   void initHPX();
+
   void initWCS();
 #ifndef NEWWCS
   void initWCSPhysical();
-#endif
-  Vector getHistCenter();
-
-  char* root(const char*);
-  char* strip(const char*);
-
-  void smooth(pthread_t*, t_smooth_arg*);
-
   void wcsShow(WorldCoor*);
   void astinit(int, FitsHead*, FitsHead*);
-#ifdef NEWWCS
-  void astinit(FitsHead*, FitsHead*);
-#endif
-  void astinit0(int, FitsHead*, FitsHead*);
-  int checkWCS(Vector&);
-  AstFrameSet* fits2ast(FitsHead*);  
   AstFrameSet* buildast(int, FitsHead*, FitsHead*);
   AstFrameSet* buildast0(int, FitsHead*, FitsHead*);
   void wcs2ast(int, FitsHead*, FitsHead*, void*);
@@ -159,6 +151,12 @@ class FitsImage {
   void putFitsCard(void* chan, const char* key, const char* value);
   void putFitsCard(void* chan, const char* key, int value);
   void putFitsCard(void* chan, const char* key, double value);
+#else
+  void astinit(FitsHead*, FitsHead*);
+#endif
+  void astinit0(int, FitsHead*, FitsHead*);
+  int checkWCS(Vector&);
+  AstFrameSet* fits2ast(FitsHead*);  
 
  public:
   char* fileName;
@@ -385,8 +383,10 @@ class FitsImage {
   void processKeywordsFitsSection();
   int processKeywordsIRAF(FitsImage*);
 
+#ifndef NEWWCS
   WorldCoor* getWCS(Coord::CoordSystem sys) 
   {return (wcs_ && wcs_[sys-Coord::WCS]) ? wcs_[sys-Coord::WCS] : NULL;}
+#endif
   const char* getWCSName(Coord::CoordSystem);
   Coord::Orientation getWCSOrientation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSRotation(Coord::CoordSystem, Coord::SkyFrame);

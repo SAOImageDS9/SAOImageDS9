@@ -133,10 +133,10 @@ void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref, char* va
   getInfoClearValue(var);
 }
 
-void FrameBase::getInfoWCS(char* var, const Vector& rr, FitsImage* ptr, 
+void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* ptr, 
 			   FitsImage* sptr)
 {
-  Vector img = Vector(rr) * sptr->refToData;
+  Vector img = rr * sptr->refToData;
 
   for (int ii=0; ii<MULTWCS; ii++) {
     char buf[64];

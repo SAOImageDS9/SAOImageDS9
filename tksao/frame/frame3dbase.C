@@ -155,7 +155,7 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
   getInfoClearValue(var);
 }
 
-void Frame3dBase::getInfoWCS(char* var, const Vector3d& rr, FitsImage* ptr, 
+void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr, 
 			     FitsImage* sptr)
 {
   Vector img = Vector(rr) * sptr->refToData;

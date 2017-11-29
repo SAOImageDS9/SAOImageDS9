@@ -93,7 +93,7 @@ class Frame3dBase : public Base {
   void coordToTclArray(FitsImage*, const Vector3d&, Coord::CoordSystem, 
 		       const char*, const char*);
 
-  void getInfoWCS(char*, const Vector3d&, FitsImage*, FitsImage*);
+  void getInfoWCS(char*, Vector3d&, FitsImage*, FitsImage*);
 
  protected:
   double calcZoomPanner();

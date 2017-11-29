@@ -3566,8 +3566,30 @@ double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys, int aa)
 
 int FitsImage::hasWCS3D(Coord::CoordSystem sys, int aa)
 {
+  if (!newast_ || sys<Coord::WCS)
+    return 0;
+  
+  astClearStatus;
+  astBegin;
+
   int ss = sys-Coord::WCS;
-  return (aa>=2&&aa<FTY_MAXAXES && sys>=Coord::WCS && wcsx_[ss]) ? 1 : 0;
+  int nn = astGetI(newast_,"nframe");
+  char cc = ' ';
+  if (ss)
+    cc = ss+'@';
+
+  for (int ii=0; ii<nn; ii++) {
+    AstFrame* ff = (AstFrame*)astGetFrame(newast_,ii+1);
+    const char* id = astGetC(ff,"Ident");
+    if (cc == id[0]) {
+      int naxes = astGetI(ff, "Naxes");
+      astEnd; // now, clean up memory
+      return naxes>2 ? 1:0;
+    }
+  }
+
+  astEnd; // now, clean up memory
+  return 0;
 }
 
 double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys, int aa)

@@ -660,8 +660,10 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   Matrix rr;
   if (cvt != AST__NULL) {
     astInvert(cvt);
-    Vector ll = fits1->wcsTran(fits1->newast_, fits1->center(), 1);
-    Vector ur = fits2->wcsTran(fits2->newast_, fits2->center(), 1);
+    Vector cc1 = fits1->center();
+    Vector cc2 = fits2->center();
+    Vector ll = fits1->wcsTran(fits1->newast_, cc1, 1);
+    Vector ur = fits2->wcsTran(fits2->newast_, cc2, 1);
 
     double fit[6];
     double tol = 1;

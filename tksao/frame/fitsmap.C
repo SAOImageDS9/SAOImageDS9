@@ -293,7 +293,8 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
 
       Vector cc = center();
       Vector wcc = wcsTran(newast_,cc,1);
-      Vector pp = wcsTran(newast_,wcc+Vector(0,rdd),0);
+      Vector wpp = wcc+Vector(0,rdd);
+      Vector pp = wcsTran(newast_,wpp,0);
       astInvert(newast_);
       double rr = wcsDistance(newast_,cc,pp);
       astInvert(newast_);

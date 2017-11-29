@@ -3011,7 +3011,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   in[1] = center()+Vector(0,1);
   in[2] = center()+Vector(1,0);
   wcsTran(newast_, 3, in, 1, out);
-  double ang = wcsAngle(newast_,out);
+  double ang = wcsAngle(newast_,out[0],out[1],out[2]);
 
   Coord::Orientation rr = Coord::NORMAL;
   if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
@@ -3063,7 +3063,7 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   in[0] = center();
   in[1] = center()+Vector(0,1);
   wcsTran(newast_, 2, in, 1, out);
-  double ang = wcsAxAngle(newast_,out);
+  double ang = wcsAxAngle(newast_,out[0],out[1]);
 
   if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
     return getWCSOrientation(sys,sky) == Coord::NORMAL ? ang : -ang;
@@ -3934,7 +3934,7 @@ int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
 #endif
 
 #ifndef NEWWCS
-Vector FitsImage::wcsTran(AstFrameSet* ast, Vector in, int forward)
+Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
 {
   double xout, yout;
   astTran2(ast, 1, in.v, in.v+1, forward, &xout, &yout);
@@ -3968,7 +3968,7 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
 }
 
 #else
-Vector FitsImage::wcsTran(AstFrameSet* ast, Vector in, int forward)
+Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
@@ -4171,7 +4171,8 @@ double FitsImage::wcsDistance(AstFrameSet* ast, Vector vv1, Vector vv2)
 #endif
 
 #ifdef NEWWCS
-double FitsImage::wcsAngle(AstFrameSet* ast, Vector* vv)
+double FitsImage::wcsAngle(AstFrameSet* ast, Vector& vv1, Vector& vv2,
+			   Vector& vv3)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
@@ -4179,20 +4180,20 @@ double FitsImage::wcsAngle(AstFrameSet* ast, Vector* vv)
     // error
     break;
   case 2:
-    return astAngle(newast_,vv[0].v,vv[1].v,vv[2].v);
+    return astAngle(newast_,vv1.v,vv2.v,vv3.v);
   case 3:
     {
       double ptr1[3];
-      ptr1[0] = vv[0][0];
-      ptr1[1] = vv[0][1];
+      ptr1[0] = vv1[0];
+      ptr1[1] = vv1[1];
       ptr1[2] = 0;
       double ptr2[3];
-      ptr2[0] = vv[1][0];
-      ptr2[1] = vv[1][1];
+      ptr2[0] = vv2[0];
+      ptr2[1] = vv2[1];
       ptr2[2] = 0;
       double ptr3[3];
-      ptr3[0] = vv[2][0];
-      ptr3[1] = vv[2][1];
+      ptr3[0] = vv3[0];
+      ptr3[1] = vv3[1];
       ptr3[2] = 0;
 
       return astAngle(ast, ptr1, ptr2, ptr3);
@@ -4200,18 +4201,18 @@ double FitsImage::wcsAngle(AstFrameSet* ast, Vector* vv)
   case 4:
     {
       double ptr1[4];
-      ptr1[0] = vv[0][0];
-      ptr1[1] = vv[0][1];
+      ptr1[0] = vv1[0];
+      ptr1[1] = vv1[1];
       ptr1[2] = 0;
       ptr1[3] = 0;
       double ptr2[4];
-      ptr2[0] = vv[1][0];
-      ptr2[1] = vv[1][1];
+      ptr2[0] = vv2[0];
+      ptr2[1] = vv2[1];
       ptr2[2] = 0;
       ptr2[3] = 0;
       double ptr3[4];
-      ptr3[0] = vv[2][0];
-      ptr3[1] = vv[2][1];
+      ptr3[0] = vv3[0];
+      ptr3[1] = vv3[1];
       ptr3[2] = 0;
       ptr3[3] = 0;
 
@@ -4222,7 +4223,7 @@ double FitsImage::wcsAngle(AstFrameSet* ast, Vector* vv)
   return 0;
 }
 
-double FitsImage::wcsAxAngle(AstFrameSet* ast, Vector* vv)
+double FitsImage::wcsAxAngle(AstFrameSet* ast, Vector& vv1, Vector& vv2)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
@@ -4230,16 +4231,16 @@ double FitsImage::wcsAxAngle(AstFrameSet* ast, Vector* vv)
     // error
     break;
   case 2:
-    return astAxAngle(newast_, vv[0].v, vv[1].v, 2);
+    return astAxAngle(newast_, vv1.v, vv2.v, 2);
   case 3:
     {
       double ptr1[3];
-      ptr1[0] = vv[0][0];
-      ptr1[1] = vv[0][1];
+      ptr1[0] = vv1[0];
+      ptr1[1] = vv1[1];
       ptr1[2] = 0;
       double ptr2[3];
-      ptr2[0] = vv[1][0];
-      ptr2[1] = vv[1][1];
+      ptr2[0] = vv2[0];
+      ptr2[1] = vv2[1];
       ptr2[2] = 0;
 
       return astAxAngle(ast, ptr1, ptr2, 2);
@@ -4247,13 +4248,13 @@ double FitsImage::wcsAxAngle(AstFrameSet* ast, Vector* vv)
   case 4:
     {
       double ptr1[4];
-      ptr1[0] = vv[0][0];
-      ptr1[1] = vv[0][1];
+      ptr1[0] = vv1[0];
+      ptr1[1] = vv1[1];
       ptr1[2] = 0;
       ptr1[3] = 0;
       double ptr2[4];
-      ptr2[0] = vv[1][0];
-      ptr2[1] = vv[1][1];
+      ptr2[0] = vv2[0];
+      ptr2[1] = vv2[1];
       ptr2[2] = 0;
       ptr2[3] = 0;
 

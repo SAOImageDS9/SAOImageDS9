@@ -179,7 +179,8 @@ void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr,
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),argv[1],0);
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
-      //      coord3ToTclArray(ptr,rr,www,var,"wcs");
+
+      coordToTclArray(ptr,rr,www,var,"wcs");
 
       char* wcsname = (char*)sptr->getWCSName(www);
       if (wcsname)
@@ -200,6 +201,7 @@ void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr,
   }
 }
 
+#ifndef NEWWCS
 void Frame3dBase::coordToTclArray(FitsImage* ptr, const Vector3d& vv, 
 				  Coord::CoordSystem out,
 				  const char* var, const char* base)
@@ -211,6 +213,17 @@ void Frame3dBase::coordToTclArray(FitsImage* ptr, const Vector3d& vv,
   double ss = ptr->mapFromRef3axis(((Vector3d&)vv)[2],out,2);
   doubleToTclArray(ss, var, base, "z");
 }
+#else
+void Frame3dBase::coordToTclArray(FitsImage* ptr, const Vector3d& vv, 
+				  Coord::CoordSystem out,
+				  const char* var, const char* base)
+{
+  Vector3d rr = ptr->mapFromRef(vv, out);
+  doubleToTclArray(rr[0], var, base, "x");
+  doubleToTclArray(rr[1], var, base, "y");
+  doubleToTclArray(rr[2], var, base, "z");
+}
+#endif
 
 void Frame3dBase::calcBorder(Coord::InternalSystem sys, FrScale::SecMode mode,
 			     Vector3d* vv, int* dd)

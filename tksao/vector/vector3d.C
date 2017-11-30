@@ -7,6 +7,7 @@
 #include "vector3d.h"
 #include "vector.h"
 #include "fuzzy.h"
+#include "util.h"
 
 // Vector3d
 
@@ -32,6 +33,28 @@ Vector3d& Vector3d::operator=(const Vector& a)
   v[1]=a.v[1];
   v[2]=0;
   v[3]=1;
+  return *this;
+}
+
+Vector3d& Vector3d::radToDeg()
+{
+  // we want the first coord to be 0-360
+  v[0] = ::radToDeg(v[0]);
+  v[1] *= 180./M_PI;
+  return *this;
+}
+
+Vector3d& Vector3d::degToRad()
+{
+  v[0] *= M_PI/180.;
+  v[1] *= M_PI/180.;
+  return *this;
+}
+
+Vector3d& Vector3d::zeroTWOPI()
+{
+  // we want the first coord to be 0-2Pi
+  v[0] = ::zeroTWOPI(v[0]);
   return *this;
 }
 

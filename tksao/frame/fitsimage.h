@@ -156,6 +156,7 @@ class FitsImage {
 #endif
   void astinit0(int, FitsHead*, FitsHead*);
   int checkWCS(Vector&);
+  int checkWCS(Vector3d&);
   AstFrameSet* fits2ast(FitsHead*);  
 
  public:

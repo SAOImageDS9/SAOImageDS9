@@ -3155,7 +3155,7 @@ Vector3d FitsImage::pix2wcs(Vector3d in, Coord::CoordSystem sys,
   setWCSSystem(newast_,sys);
   setWCSSkyFrame(newast_,sky);
 
-  Vector out = wcsTran(newast_, in, 1);
+  Vector3d out = wcsTran(newast_, in, 1);
   if (astOK && checkWCS(out)) {
     if (wcsIsASkyFrame(newast_))
       return out.radToDeg();
@@ -3348,7 +3348,7 @@ Vector3d FitsImage::wcs2pix(Vector3d in, Coord::CoordSystem sys,
     if (wcsIsASkyFrame(newast_))
       in *= M_PI/180.;
 
-    Vector out = wcsTran(newast_, in, 0);
+    Vector3d out = wcsTran(newast_, in, 0);
     if (astOK && checkWCS(out))
       return out;
   }
@@ -3815,7 +3815,16 @@ void FitsImage::astinit0(int ss, FitsHead* hd, FitsHead* prim)
 int FitsImage::checkWCS(Vector& vv)
 {
   // check for reasonable values
-  return (fabs(vv[0]) < FLT_MAX && fabs(vv[1]) < FLT_MAX) ? 1 : 0;
+  return (fabs(vv[0]) < FLT_MAX &&
+	  fabs(vv[1]) < FLT_MAX) ? 1 : 0;
+}
+
+int FitsImage::checkWCS(Vector3d& vv)
+{
+  // check for reasonable values
+  return (fabs(vv[0]) < FLT_MAX &&
+	  fabs(vv[1]) < FLT_MAX &&
+	  fabs(vv[2]) < FLT_MAX ) ? 1 : 0;
 }
 
 void FitsImage::setWCSFormat(AstFrameSet* aa, int id, const char* format)
@@ -4157,7 +4166,7 @@ Vector3d FitsImage::wcsTran(AstFrameSet* ast, Vector3d& in, int forward)
       double pout[3];
       pin[0] = in[0];
       pin[1] = in[1];
-      pin[2] = in[3];
+      pin[2] = in[2];
       astTranN(ast, 1, 3, 1, pin, forward, 3, 1, pout);
       return Vector3d(pout[0],pout[1],pout[2]);
     }
@@ -4168,7 +4177,7 @@ Vector3d FitsImage::wcsTran(AstFrameSet* ast, Vector3d& in, int forward)
       double pout[4];
       pin[0] = in[0];
       pin[1] = in[1];
-      pin[2] = in[3];
+      pin[2] = in[2];
       pin[3] = forward ? context_->slice(3) : 0;
       astTranN(ast, 1, 4, 1, pin, forward, 4, 1, pout);
       return Vector3d(pout[0],pout[1],pout[2]);

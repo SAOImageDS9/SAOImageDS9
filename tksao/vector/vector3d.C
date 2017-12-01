@@ -36,28 +36,6 @@ Vector3d& Vector3d::operator=(const Vector& a)
   return *this;
 }
 
-Vector3d& Vector3d::radToDeg()
-{
-  // we want the first coord to be 0-360
-  v[0] = ::radToDeg(v[0]);
-  v[1] *= 180./M_PI;
-  return *this;
-}
-
-Vector3d& Vector3d::degToRad()
-{
-  v[0] *= M_PI/180.;
-  v[1] *= M_PI/180.;
-  return *this;
-}
-
-Vector3d& Vector3d::zeroTWOPI()
-{
-  // we want the first coord to be 0-2Pi
-  v[0] = ::zeroTWOPI(v[0]);
-  return *this;
-}
-
 Vector Vector3d::TkCanvasPs(void* canvas)
 {
   return Vector(v[0], Tk_CanvasPsY((Tk_Canvas)canvas, v[1]));

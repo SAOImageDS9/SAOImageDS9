@@ -75,9 +75,6 @@ class Vector3d {
   Vector3d project()
   {return (v[3]!=1) ? Vector3d(v[0]/v[3],v[1]/v[3],v[2]/v[3]) : *this;}
 
-  Vector3d& radToDeg();
-  Vector3d& degToRad();
-  Vector3d& zeroTWOPI();
   Vector TkCanvasPs(void* canvas);
 };
 ostream& operator<<(ostream&, const Vector3d&);

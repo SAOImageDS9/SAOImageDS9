@@ -1483,12 +1483,12 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   Vector* in1 = new Vector[nxx1];
   Vector* out1 = new Vector[nxx1];
   for (int ii=0; ii<nxx1; ii++)
-    in1[ii] = Vector(ixx1[ii],iyy1[ii]).degToRad();
+    in1[ii] = degToRad(Vector(ixx1[ii],iyy1[ii]));
 
   Vector* in2 = new Vector[nxx2];
   Vector* out2 = new Vector[nxx2];
   for (int ii=0; ii<nxx2; ii++)
-    in2[ii] = Vector(ixx2[ii],iyy2[ii]).degToRad();
+    in2[ii] = degToRad(Vector(ixx2[ii],iyy2[ii]));
 
   // map from image
   setWCSSkyFrame(ast_[ss1],sky1);
@@ -1619,11 +1619,11 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 
   Vector* in1 = new Vector[nxx1];
   for (int ii=0; ii<nxx1; ii++)
-    in1[ii] = Vector(ixx1[ii],iyy1[ii]).degToRad();
+    in1[ii] = degToRad(Vector(ixx1[ii],iyy1[ii]));
 
   Vector* ptr2 = new Vector[nxx2];
   for (int ii=0; ii<nxx2; ii++)
-    ptr2[ii] = Vector(ixx2[ii],iyy2[ii]).degToRad();
+    ptr2[ii] = degToRad(Vector(ixx2[ii],iyy2[ii]));
 
   double rr;
   switch (dist) {
@@ -3110,7 +3110,7 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
       setWCSSkyFrame(ast_[ss],sky);
       Vector out = wcsTran(ast_[ss], in, 1);
       if (astOK && checkWCS(out))
-	return out.radToDeg();
+	return radToDeg(out);
     }
     else {
       Vector out = wcsTran(ast_[ss], in, 1);
@@ -3136,7 +3136,7 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   Vector out = wcsTran(newast_, in, 1);
   if (astOK && checkWCS(out)) {
     if (wcsIsASkyFrame(newast_))
-      return out.radToDeg();
+      return radToDeg(out);
     else
       return out;
   }
@@ -3158,7 +3158,7 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   Vector3d out = wcsTran(newast_, in, 1);
   if (astOK && checkWCS(out)) {
     if (wcsIsASkyFrame(newast_))
-      return out.radToDeg();
+      return radToDeg(out);
     else
       return out;
   }
@@ -3186,7 +3186,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 
       switch (format) {
       case Coord::DEGREES:
-	out.radToDeg();
+	out = radToDeg(out);
 	str << setprecision(8) << out[0] << ' ' << out[1]
 	    << ' ' << coord.skyFrameStr(sky) << ends;
 	break;
@@ -3197,7 +3197,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	case Coord::FK4_NO_E:
 	case Coord::FK5:
 	case Coord::ICRS:
-	  out.zeroTWOPI();
+	  out = zeroTWOPI(out);
 	  setWCSFormat(ast_[ss],1,"hms.3");
 	  setWCSFormat(ast_[ss],2,"+dms.3");
 	  break;
@@ -3205,7 +3205,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	case Coord::SUPERGALACTIC:
 	case Coord::ECLIPTIC:
 	case Coord::HELIOECLIPTIC:
-	  out.zeroTWOPI();
+	  out = zeroTWOPI(out);
 	  setWCSFormat(ast_[ss],1,"+dms.3");
 	  setWCSFormat(ast_[ss],2,"+dms.3");
 	  break;
@@ -3248,7 +3248,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
     if (wcsIsASkyFrame(newast_)) {
       switch (format) {
       case Coord::DEGREES:
-	out.radToDeg();
+	out = radToDeg(out);
 	str << setprecision(8) << out[0] << ' ' << out[1]
 	    << ' ' << coord.skyFrameStr(sky) << ends;
 	break;
@@ -3259,7 +3259,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	case Coord::FK4_NO_E:
 	case Coord::FK5:
 	case Coord::ICRS:
-	  out.zeroTWOPI();
+	  out = zeroTWOPI(out);
 	  setWCSFormat(newast_,1,"hms.3");
 	  setWCSFormat(newast_,2,"+dms.3");
 	  break;
@@ -3267,7 +3267,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	case Coord::SUPERGALACTIC:
 	case Coord::ECLIPTIC:
 	case Coord::HELIOECLIPTIC:
-	  out.zeroTWOPI();
+	  out = zeroTWOPI(out);
 	  setWCSFormat(newast_,1,"+dms.3");
 	  setWCSFormat(newast_,2,"+dms.3");
 	  break;
@@ -3291,16 +3291,18 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 #endif
 
 #ifndef NEWWCS
-Vector FitsImage::wcs2pix(const Vector& in, Coord::CoordSystem sys,
+Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
   astClearStatus;
 
   int ss = sys-Coord::WCS;
   if (ss>=0 && ast_ && ast_[ss]) {
+    Vector in = vv;
     if (wcsIsASkyFrame(ast_[ss])) {
       setWCSSkyFrame(ast_[ss],sky);
-      Vector out = wcsTran(ast_[ss], degToRad(in), 0);
+      in = degToRad(vv);
+      Vector out = wcsTran(ast_[ss], in, 0);
       if (astOK && checkWCS(out))
 	return out;
     }
@@ -3326,7 +3328,7 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
 
     Vector in = vv;
     if (wcsIsASkyFrame(newast_))
-      in *= M_PI/180.;
+      in = degToRad(vv);
 
     Vector out = wcsTran(newast_, in, 0);
     if (astOK && checkWCS(out))
@@ -3348,7 +3350,7 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
 
     Vector3d in = vv;
     if (wcsIsASkyFrame(newast_))
-      in *= M_PI/180.;
+      in = degToRad(vv);
 
     Vector3d out = wcsTran(newast_, in, 0);
     if (astOK && checkWCS(out))
@@ -3360,7 +3362,7 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
 #endif
 
 #ifndef NEWWCS
-double FitsImage::getWCSDist(Vector aa, Vector bb, Coord::CoordSystem sys)
+double FitsImage::getWCSDist(Vector vv1, Vector vv2, Coord::CoordSystem sys)
 {
   int ss = sys-Coord::WCS;
   if (!(ss>=0 && ast_ && ast_[ss]))
@@ -3368,19 +3370,12 @@ double FitsImage::getWCSDist(Vector aa, Vector bb, Coord::CoordSystem sys)
 
   astClearStatus; // just to make sure
 
-  double rr=0;
-  if (wcsIsASkyFrame(ast_[ss])) {
-    aa *= M_PI/180.;
-    bb *= M_PI/180.;
-    rr = wcsDistance(ast_[ss], aa, bb) *180./M_PI;
-  }
-  else
-    rr = wcsDistance(ast_[ss], aa, bb);
-
-  return rr;
+  return wcsIsASkyFrame(ast_[ss]) ?
+    radToDeg(wcsDistance(ast_[ss], degToRad(vv1), degToRad(vv2))) :
+    wcsDistance(ast_[ss], vv1, vv2);
 }
 #else
-double FitsImage::getWCSDist(Vector aa, Vector bb, Coord::CoordSystem sys)
+double FitsImage::getWCSDist(Vector vv1, Vector vv2, Coord::CoordSystem sys)
 {
   if (!hasWCS(sys))
     return 0;
@@ -3388,16 +3383,9 @@ double FitsImage::getWCSDist(Vector aa, Vector bb, Coord::CoordSystem sys)
   astClearStatus; // just to make sure
   setWCSSystem(newast_,sys);
 
-  double rr=0;
-  if (wcsIsASkyFrame(newast_)) {
-    aa *= M_PI/180.;
-    bb *= M_PI/180.;
-    rr = wcsDistance(newast_, aa, bb) *180./M_PI;
-  }
-  else
-    rr = wcsDistance(newast_, aa, bb);
-
-  return rr;
+  return wcsIsASkyFrame(newast_) ?
+    radToDeg(wcsDistance(newast_, degToRad(vv1), degToRad(vv2))) :
+    wcsDistance(newast_, vv1, vv2);
 }
 #endif
 

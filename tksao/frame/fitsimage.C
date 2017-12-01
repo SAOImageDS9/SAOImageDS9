@@ -3105,21 +3105,16 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   astClearStatus;
 
   int ss = sys-Coord::WCS;
-  if (ss>=0 && ast_ && ast_[ss]) {
-    if (wcsIsASkyFrame(ast_[ss])) {
-      setWCSSkyFrame(ast_[ss],sky);
-      Vector out = wcsTran(ast_[ss], in, 1);
-      if (astOK && checkWCS(out))
-	return radToDeg(out);
-    }
-    else {
-      Vector out = wcsTran(ast_[ss], in, 1);
-      if (astOK && checkWCS(out))
-	  return out;
-    }
-  }
+  if (!(ss>=0 && ast_ && ast_[ss]))
+    return Vector();
+  
+  setWCSSkyFrame(ast_[ss],sky);
 
-  return Vector();
+  Vector out = wcsTran(ast_[ss], in, 1);
+  if (astOK && checkWCS(out))
+    return wcsIsASkyFrame(ast_[ss]) ? radToDeg(out) : out;
+  else
+    return Vector();
 }
 #else
 Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
@@ -3134,14 +3129,10 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   setWCSSkyFrame(newast_,sky);
 
   Vector out = wcsTran(newast_, in, 1);
-  if (astOK && checkWCS(out)) {
-    if (wcsIsASkyFrame(newast_))
-      return radToDeg(out);
-    else
-      return out;
-  }
-
-  return Vector();
+  if (astOK && checkWCS(out))
+    return wcsIsASkyFrame(newast_) ? radToDeg(out) : out;
+  else
+    return Vector();
 }
 
 Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
@@ -3156,14 +3147,10 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   setWCSSkyFrame(newast_,sky);
 
   Vector3d out = wcsTran(newast_, in, 1);
-  if (astOK && checkWCS(out)) {
-    if (wcsIsASkyFrame(newast_))
-      return radToDeg(out);
-    else
-      return out;
-  }
-
-  return Vector3d();
+  if (astOK && checkWCS(out))
+    return wcsIsASkyFrame(newast_) ? radToDeg(out) : out;
+  else
+    return Vector3d();
 }
 #endif
 

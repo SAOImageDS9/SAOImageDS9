@@ -364,14 +364,14 @@ class FitsImage {
   int isIIS() {return iisMode_;}
   Vector& iisz() {return iisz_;}
 
-  Vector pix2wcs(Vector, Coord::CoordSystem, Coord::SkyFrame);
-  char* pix2wcs(Vector, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
+  Vector pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
+  char* pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
 
-  Vector wcs2pix(Vector, Coord::CoordSystem, Coord::SkyFrame);
+  Vector wcs2pix(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
 
 #ifdef NEWWCS
-  Vector3d pix2wcs(Vector3d, Coord::CoordSystem, Coord::SkyFrame);
-  Vector3d wcs2pix(Vector3d, Coord::CoordSystem, Coord::SkyFrame);
+  Vector3d pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
+  Vector3d wcs2pix(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
 #endif
   double pix2wcsx(double, Coord::CoordSystem, int);
   double wcs2pixx(double, Coord::CoordSystem, int);
@@ -406,7 +406,7 @@ class FitsImage {
 #endif
   
   int wcsIsASkyFrame(AstFrameSet*);
-  Vector wcsTran(AstFrameSet*, Vector&, int);
+  Vector wcsTran(AstFrameSet*, const Vector&, int);
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
   double wcsDistance(AstFrameSet*, Vector, Vector);
 #ifdef NEWWCS

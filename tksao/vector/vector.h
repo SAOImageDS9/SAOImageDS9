@@ -38,10 +38,9 @@ class Vector {
   Vector(const Vector3d&);
   Vector& operator=(const Vector3d&);
 
-  double& operator[](int i) 
-  {return v[i];} // return element
-  double* vv() 
-  {return v;} // return vector
+  const double& operator[](int i) const {return v[i];} // return element
+  double& operator[](int i) {return v[i];} // return element
+  double* vv() {return v;} // return vector
 
   Vector& origin()
     {v[0]=0; v[1]=0; v[2]=1; return *this;}

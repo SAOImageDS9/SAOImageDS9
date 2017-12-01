@@ -3099,7 +3099,7 @@ const char* FitsImage::getWCSName(Coord::CoordSystem sys)
 #endif
 
 #ifndef NEWWCS
-Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
+Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
   astClearStatus;
@@ -3122,7 +3122,7 @@ Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   return Vector();
 }
 #else
-Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
+Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
   astClearStatus; // just to make sure
@@ -3144,7 +3144,7 @@ Vector FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   return Vector();
 }
 
-Vector3d FitsImage::pix2wcs(Vector3d in, Coord::CoordSystem sys,
+Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {
   astClearStatus; // just to make sure
@@ -3168,7 +3168,7 @@ Vector3d FitsImage::pix2wcs(Vector3d in, Coord::CoordSystem sys,
 #endif
 
 #ifndef NEWWCS
-char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
+char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 			 Coord::SkyFrame sky, Coord::SkyFormat format,
 			 char* lbuf)
 {
@@ -3229,7 +3229,7 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
   return lbuf;
 }
 #else
-char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
+char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 			 Coord::SkyFrame sky, Coord::SkyFormat format,
 			 char* lbuf)
 {
@@ -3291,7 +3291,7 @@ char* FitsImage::pix2wcs(Vector in, Coord::CoordSystem sys,
 #endif
 
 #ifndef NEWWCS
-Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
+Vector FitsImage::wcs2pix(const Vector& in, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
   astClearStatus;
@@ -3315,7 +3315,7 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
   return Vector();
 }
 #else
-Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
+Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
   astClearStatus; // just to make sure
@@ -3324,6 +3324,7 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
     setWCSSystem(newast_,sys);
     setWCSSkyFrame(newast_,sky);
 
+    Vector in = vv;
     if (wcsIsASkyFrame(newast_))
       in *= M_PI/180.;
 
@@ -3336,7 +3337,7 @@ Vector FitsImage::wcs2pix(Vector in, Coord::CoordSystem sys,
   return Vector();
 }
 
-Vector3d FitsImage::wcs2pix(Vector3d in, Coord::CoordSystem sys,
+Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {
   astClearStatus; // just to make sure
@@ -3345,6 +3346,7 @@ Vector3d FitsImage::wcs2pix(Vector3d in, Coord::CoordSystem sys,
     setWCSSystem(newast_,sys);
     setWCSSkyFrame(newast_,sky);
 
+    Vector3d in = vv;
     if (wcsIsASkyFrame(newast_))
       in *= M_PI/180.;
 
@@ -3967,7 +3969,7 @@ int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
 #endif
 
 #ifndef NEWWCS
-Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
+Vector FitsImage::wcsTran(AstFrameSet* ast, const Vector& in, int forward)
 {
   double xout, yout;
   astTran2(ast, 1, in.v, in.v+1, forward, &xout, &yout);
@@ -4001,7 +4003,7 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
 }
 
 #else
-Vector FitsImage::wcsTran(AstFrameSet* ast, Vector& in, int forward)
+Vector FitsImage::wcsTran(AstFrameSet* ast, const Vector& in, int forward)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {

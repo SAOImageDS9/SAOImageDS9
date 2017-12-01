@@ -74,9 +74,9 @@ Vector3d Frame3dBase::mapToRef3d(const Vector& vv, Coord::InternalSystem sys,
   Vector3d ii=xx-zz;
   Vector3d jj=yy-zz;
   Vector3d nn = cross(jj,ii).normalize();
-  double& a = nn[0];
-  double& b = nn[1];
-  double& c = nn[2];
+  double a = nn[0];
+  double b = nn[1];
+  double c = nn[2];
   double d = -a*xx[0] -b*xx[1] -c*xx[2];
 
   Vector ww;

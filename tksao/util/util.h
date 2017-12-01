@@ -21,6 +21,7 @@ using namespace std;
 
 #include "fuzzy.h"
 #include "vector.h"
+#include "vector3d.h"
 
 #ifndef PATH_MAX
 #define PATH_MAX 1024
@@ -91,6 +92,14 @@ extern double zero360(double);
 extern double m180To180(double);
 extern double degToRad(double);
 extern double radToDeg(double);
+
+extern Vector zeroTWOPI(const Vector&);
+extern Vector degToRad(const Vector&);
+extern Vector radToDeg(const Vector&);
+
+extern Vector3d zeroTWOPI(const Vector3d&);
+extern Vector3d degToRad(const Vector3d&);
+extern Vector3d radToDeg(const Vector3d&);
 
 extern int parseSection(char*, Vector*, Vector*);
 

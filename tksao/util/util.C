@@ -128,6 +128,22 @@ double zeroTWOPI(double aa)
   return rr;
 }
 
+Vector zeroTWOPI(const Vector& vv)
+{
+  Vector out = vv;
+  // we want the first coord to be 0-2Pi
+  out[0] = zeroTWOPI(out[0]);
+  return out;
+}
+
+Vector3d zeroTWOPI(const Vector3d& vv)
+{
+  Vector3d out = vv;
+  // we want the first coord to be 0-2Pi
+  out[0] = zeroTWOPI(out[0]);
+  return out;
+}
+
 double zero360(double aa)
 {
   if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))
@@ -171,6 +187,40 @@ double radToDeg(double aa)
 
   double dd = 180.*aa/M_PI;
   return zero360(dd);
+}
+
+Vector radToDeg(const Vector& vv)
+{
+  Vector out = vv;
+  // we want the first coord to be 0-360
+  out[0] = radToDeg(out[0]);
+  out[1] *= 180./M_PI;
+  return out;
+}
+
+Vector3d radToDeg(const Vector3d& vv)
+{
+  Vector3d out = vv;
+  // we want the first coord to be 0-360
+  out[0] = radToDeg(out[0]);
+  out[1] *= 180./M_PI;
+  return out;
+}
+
+Vector degToRad(const Vector& vv)
+{
+  Vector out =vv;
+  out[0] *= M_PI/180.;
+  out[1] *= M_PI/180.;
+  return out;
+}
+
+Vector3d degToRad(const Vector3d& vv)
+{
+  Vector3d out =vv;
+  out[0] *= M_PI/180.;
+  out[1] *= M_PI/180.;
+  return out;
 }
 
 double dmsToDegree(int sign, int degree, int min, double sec)

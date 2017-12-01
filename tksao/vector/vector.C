@@ -7,7 +7,6 @@
 #include "vector.h"
 #include "vector3d.h"
 #include "fuzzy.h"
-#include "util.h"
 
 // Vector::manip
 
@@ -42,28 +41,6 @@ Vector& Vector::clip(const BBox& bb)
     v[1]=ll[1];
   if (v[1]>ur[1])
     v[1]=ur[1];
-  return *this;
-}
-
-Vector& Vector::radToDeg()
-{
-  // we want the first coord to be 0-360
-  v[0] = ::radToDeg(v[0]);
-  v[1] *= 180./M_PI;
-  return *this;
-}
-
-Vector& Vector::degToRad()
-{
-  v[0] *= M_PI/180.;
-  v[1] *= M_PI/180.;
-  return *this;
-}
-
-Vector& Vector::zeroTWOPI()
-{
-  // we want the first coord to be 0-2Pi
-  v[0] = ::zeroTWOPI(v[0]);
   return *this;
 }
 

@@ -3163,14 +3163,15 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   lbuf[0] = '\0';
   
   int ss = sys-Coord::WCS;
-  if (ss>=0 && ast_ && ast_[ss]) {
-    ostringstream str;
-    if (wcsIsASkyFrame(ast_[ss])) {
-      setWCSSkyFrame(ast_[ss],sky);
-      Vector out = wcsTran(ast_[ss], in, 1);
-      if (!(astOK && checkWCS(out)))
-	return lbuf;
+  if (!(ss>=0 && ast_ && ast_[ss]))
+    return lbuf;
+  
+  setWCSSkyFrame(ast_[ss],sky);
 
+  ostringstream str;
+  Vector out = wcsTran(ast_[ss], in, 1);
+  if (astOK && checkWCS(out)) {
+    if (wcsIsASkyFrame(ast_[ss])) {
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
@@ -3203,16 +3204,12 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	break;
       }
     }
-    else {
-      Vector out = wcsTran(ast_[ss], in, 1);
-      if (!(astOK && checkWCS(out)))
-	return lbuf;
+    else
       str << setprecision(8) << out[0] << ' ' << out[1] << ends;
-    }
 
     strncpy(lbuf, str.str().c_str(), str.str().length());
   }
-
+  
   return lbuf;
 }
 #else
@@ -3270,7 +3267,6 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
       str << setprecision(8) << out[0] << ' ' << out[1] << ends;
 
     strncpy(lbuf, str.str().c_str(), str.str().length());
-    return lbuf;
   }
   
   return lbuf;

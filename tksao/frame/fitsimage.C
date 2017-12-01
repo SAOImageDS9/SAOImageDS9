@@ -3300,7 +3300,7 @@ Vector FitsImage::wcs2pix(const Vector& in, Coord::CoordSystem sys,
   if (ss>=0 && ast_ && ast_[ss]) {
     if (wcsIsASkyFrame(ast_[ss])) {
       setWCSSkyFrame(ast_[ss],sky);
-      Vector out = wcsTran(ast_[ss], in.degToRad(), 0);
+      Vector out = wcsTran(ast_[ss], degToRad(in), 0);
       if (astOK && checkWCS(out))
 	return out;
     }

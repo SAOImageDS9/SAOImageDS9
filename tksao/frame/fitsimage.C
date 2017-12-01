@@ -3329,7 +3329,8 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
 #endif
 
 #ifndef NEWWCS
-double FitsImage::getWCSDist(Vector vv1, Vector vv2, Coord::CoordSystem sys)
+double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
+			     Coord::CoordSystem sys)
 {
   int ss = sys-Coord::WCS;
   if (!(ss>=0 && ast_ && ast_[ss]))
@@ -3342,7 +3343,8 @@ double FitsImage::getWCSDist(Vector vv1, Vector vv2, Coord::CoordSystem sys)
     wcsDistance(ast_[ss], vv1, vv2);
 }
 #else
-double FitsImage::getWCSDist(Vector vv1, Vector vv2, Coord::CoordSystem sys)
+double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
+			     Coord::CoordSystem sys)
 {
   if (!hasWCS(sys))
     return 0;
@@ -3406,9 +3408,7 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 
   return 0;
 }
-
 #else
-
 int FitsImage::hasWCS(Coord::CoordSystem sys)
 {
   if (!newast_ || sys<Coord::WCS)
@@ -3531,7 +3531,6 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
   astEnd; // now, clean up memory
   return rr;
 }
-
 #endif
 
 // WCSX
@@ -4109,7 +4108,7 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
   }
 }
 
-Vector3d FitsImage::wcsTran(AstFrameSet* ast, Vector3d& in, int forward)
+Vector3d FitsImage::wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
@@ -4197,8 +4196,8 @@ double FitsImage::wcsDistance(AstFrameSet* ast, Vector vv1, Vector vv2)
 #endif
 
 #ifdef NEWWCS
-double FitsImage::wcsAngle(AstFrameSet* ast, Vector& vv1, Vector& vv2,
-			   Vector& vv3)
+double FitsImage::wcsAngle(AstFrameSet* ast, const Vector& vv1,
+			   const Vector& vv2, const Vector& vv3)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
@@ -4249,7 +4248,8 @@ double FitsImage::wcsAngle(AstFrameSet* ast, Vector& vv1, Vector& vv2,
   return 0;
 }
 
-double FitsImage::wcsAxAngle(AstFrameSet* ast, Vector& vv1, Vector& vv2)
+double FitsImage::wcsAxAngle(AstFrameSet* ast, const Vector& vv1,
+			     const Vector& vv2)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
@@ -4290,7 +4290,6 @@ double FitsImage::wcsAxAngle(AstFrameSet* ast, Vector& vv1, Vector& vv2)
 
   return 0;
 }
-
 #endif
 
 AstFrameSet* FitsImage::fits2ast(FitsHead* hd) 

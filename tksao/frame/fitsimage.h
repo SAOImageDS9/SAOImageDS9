@@ -397,7 +397,7 @@ class FitsImage {
   const char* getWCSName(Coord::CoordSystem);
   Coord::Orientation getWCSOrientation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSRotation(Coord::CoordSystem, Coord::SkyFrame);
-  double getWCSDist(Vector, Vector, Coord::CoordSystem);
+  double getWCSDist(const Vector&, const Vector&, Coord::CoordSystem);
 #ifndef NEWWCS
   Vector getWCScdelt(Coord::CoordSystem);
 #else
@@ -410,9 +410,9 @@ class FitsImage {
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
   double wcsDistance(AstFrameSet*, Vector, Vector);
 #ifdef NEWWCS
-  Vector3d wcsTran(AstFrameSet*, Vector3d&, int);
-  double wcsAngle(AstFrameSet*, Vector&, Vector&, Vector&);
-  double wcsAxAngle(AstFrameSet*, Vector&, Vector&);
+  Vector3d wcsTran(AstFrameSet*, const Vector3d&, int);
+  double wcsAngle(AstFrameSet*, const Vector&, const Vector&, const Vector&);
+  double wcsAxAngle(AstFrameSet*, const Vector&, const Vector&);
 #endif
   
 #ifdef NEWWCS

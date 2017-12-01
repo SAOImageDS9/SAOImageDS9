@@ -4146,12 +4146,14 @@ Vector3d FitsImage::wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
 #endif
 
 #ifndef NEWWCS
-double FitsImage::wcsDistance(AstFrameSet* ast, Vector vv1, Vector vv2)
+double FitsImage::wcsDistance(AstFrameSet* ast, const Vector& vv1,
+			      const Vector& vv2)
 {
   return astDistance(ast, vv1.v, vv2.v);
 }
 #else
-double FitsImage::wcsDistance(AstFrameSet* ast, Vector vv1, Vector vv2)
+double FitsImage::wcsDistance(AstFrameSet* ast, const Vector& vv1,
+			      const Vector& vv2)
 {
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {

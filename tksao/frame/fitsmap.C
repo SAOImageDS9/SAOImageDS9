@@ -20,7 +20,7 @@ Vector FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
     return vv * refToDetector;
   default:
     if (hasWCS(out))
-      return pix2wcs(vv * refToImage3d, out, sky);
+      return pix2wcs(vv * refToImage, out, sky);
   }
 
   return Vector();

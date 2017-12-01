@@ -3180,12 +3180,12 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	break;
 
       case Coord::SEXAGESIMAL:
+	out = zeroTWOPI(out);
 	switch (sky) {
 	case Coord::FK4:
 	case Coord::FK4_NO_E:
 	case Coord::FK5:
 	case Coord::ICRS:
-	  out = zeroTWOPI(out);
 	  setWCSFormat(ast_[ss],1,"hms.3");
 	  setWCSFormat(ast_[ss],2,"+dms.3");
 	  break;
@@ -3193,7 +3193,6 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	case Coord::SUPERGALACTIC:
 	case Coord::ECLIPTIC:
 	case Coord::HELIOECLIPTIC:
-	  out = zeroTWOPI(out);
 	  setWCSFormat(ast_[ss],1,"+dms.3");
 	  setWCSFormat(ast_[ss],2,"+dms.3");
 	  break;
@@ -3238,12 +3237,12 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	break;
 
       case Coord::SEXAGESIMAL:
+	out = zeroTWOPI(out);
 	switch (sky) {
 	case Coord::FK4:
 	case Coord::FK4_NO_E:
 	case Coord::FK5:
 	case Coord::ICRS:
-	  out = zeroTWOPI(out);
 	  setWCSFormat(newast_,1,"hms.3");
 	  setWCSFormat(newast_,2,"+dms.3");
 	  break;
@@ -3251,12 +3250,10 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	case Coord::SUPERGALACTIC:
 	case Coord::ECLIPTIC:
 	case Coord::HELIOECLIPTIC:
-	  out = zeroTWOPI(out);
 	  setWCSFormat(newast_,1,"+dms.3");
 	  setWCSFormat(newast_,2,"+dms.3");
 	  break;
 	}
-
 	str << astFormat(newast_,1,out[0]) << ' '
 	    << astFormat(newast_,2,out[1]) << ' '
 	    << coord.skyFrameStr(sky) << ends;
@@ -3281,19 +3278,12 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
 
   int ss = sys-Coord::WCS;
   if (ss>=0 && ast_ && ast_[ss]) {
-    Vector in = vv;
-    if (wcsIsASkyFrame(ast_[ss])) {
-      setWCSSkyFrame(ast_[ss],sky);
-      in = degToRad(vv);
-      Vector out = wcsTran(ast_[ss], in, 0);
-      if (astOK && checkWCS(out))
+    setWCSSkyFrame(ast_[ss],sky);
+
+    Vector in = wcsIsASkyFrame(ast_[ss]) ? degToRad(vv) : vv;
+    Vector out = wcsTran(ast_[ss], in, 0);
+    if (astOK && checkWCS(out))
 	return out;
-    }
-    else {
-      Vector out = wcsTran(ast_[ss], in, 0);
-      if (astOK && checkWCS(out))
-	return out;
-    }
   }
 
   maperr =1;
@@ -3309,10 +3299,7 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
     setWCSSystem(newast_,sys);
     setWCSSkyFrame(newast_,sky);
 
-    Vector in = vv;
-    if (wcsIsASkyFrame(newast_))
-      in = degToRad(vv);
-
+    Vector in = wcsIsASkyFrame(newast_) ? degToRad(vv) : vv;
     Vector out = wcsTran(newast_, in, 0);
     if (astOK && checkWCS(out))
       return out;
@@ -3331,10 +3318,7 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
     setWCSSystem(newast_,sys);
     setWCSSkyFrame(newast_,sky);
 
-    Vector3d in = vv;
-    if (wcsIsASkyFrame(newast_))
-      in = degToRad(vv);
-
+    Vector3d in = wcsIsASkyFrame(newast_) ? degToRad(vv) : vv;
     Vector3d out = wcsTran(newast_, in, 0);
     if (astOK && checkWCS(out))
       return out;

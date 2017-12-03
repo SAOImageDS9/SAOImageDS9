@@ -45,9 +45,9 @@ extern "C" {
 
 class WCSx {
  public:
-  double crpix[FTY_MAXAXES];
-  double crval[FTY_MAXAXES];
-  double cd[FTY_MAXAXES];
+  double crpix;
+  double crval;
+  double cd;
 
  public:
   WCSx();
@@ -373,8 +373,8 @@ class FitsImage {
   Vector3d pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
   Vector3d wcs2pix(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
 #endif
-  double pix2wcsx(double, Coord::CoordSystem, int);
-  double wcs2pixx(double, Coord::CoordSystem, int);
+  double pix2wcsx(double, Coord::CoordSystem);
+  double wcs2pixx(double, Coord::CoordSystem);
 
   void altWCS(istream&);
   void appendWCS(istream&);
@@ -430,7 +430,7 @@ class FitsImage {
   int hasWCS(Coord::CoordSystem);
   int hasWCSEqu(Coord::CoordSystem);
   int hasWCSCel(Coord::CoordSystem);
-  int hasWCS3D(Coord::CoordSystem, int);
+  int hasWCS3D(Coord::CoordSystem);
 
   void updateMatrices(Matrix&, Matrix&, Matrix&, Matrix&, Matrix&);
   void updateMatrices(Matrix3d&, Matrix3d&, Matrix3d&, Matrix3d&);
@@ -456,8 +456,8 @@ class FitsImage {
   Vector3d mapFromRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   Vector3d mapToRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
 #endif
-  double mapFromRef3axis(double, Coord::CoordSystem, int);
-  double mapToRef3axis(double, Coord::CoordSystem, int);
+  double mapFromRef3axis(double, Coord::CoordSystem);
+  double mapToRef3axis(double, Coord::CoordSystem);
   double mapLenFromRef(double, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
   Vector mapLenFromRef(const Vector&, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
   double mapLenToRef(double, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);

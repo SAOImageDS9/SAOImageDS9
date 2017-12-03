@@ -916,7 +916,7 @@ int Base::hasWCSCel(Coord::CoordSystem sys)
 
 int Base::hasWCS3D(Coord::CoordSystem sys)
 { 
-  return currentContext->cfits && currentContext->cfits->hasWCS3D(sys,2);
+  return currentContext->cfits && currentContext->cfits->hasWCS3D(sys);
 }
 
 Vector Base::imageCenter(FrScale::SecMode mode) 

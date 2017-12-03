@@ -53,11 +53,9 @@ extern "C" {
 
 WCSx::WCSx()
 {
-  for (int ii=0; ii<FTY_MAXAXES; ii++) {
-    crpix[ii] =0;
-    crval[ii] =0;
-    cd[ii] =0;
-  }
+  crpix =0;
+  crval =0;
+  cd =0;
 }
 
 FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
@@ -1230,39 +1228,38 @@ void FitsImage::initWCS()
   char spc[] = "PC _  ";
   char scdelt[] = "CDELT  ";
   for (int ii=0; ii<MULTWCS; ii++) {
-    for (int jj=2; jj<FTY_MAXAXES; jj++) {
+    int jj=2;
     
-      scrpix[5] = '1'+jj;
-      scrpix[6] = !ii ? ' ' : '@'+jj;
-      scrval[5] = '1'+jj;
-      scrval[6] = !ii ? ' ' : '@'+jj;
-      scd[2] = '1'+jj;
-      scd[4] = '1'+jj;
-      scd[5] = !ii ? ' ' : '@'+jj;
-      spc[2] = '1'+jj;
-      spc[4] = '1'+jj;
-      spc[5] = !ii ? ' ' : '@'+jj;
-      scdelt[5] = '1'+jj;
-      scdelt[6] = !ii ? ' ' : '@'+jj;
+    scrpix[5] = '1'+jj;
+    scrpix[6] = !ii ? ' ' : '@'+jj;
+    scrval[5] = '1'+jj;
+    scrval[6] = !ii ? ' ' : '@'+jj;
+    scd[2] = '1'+jj;
+    scd[4] = '1'+jj;
+    scd[5] = !ii ? ' ' : '@'+jj;
+    spc[2] = '1'+jj;
+    spc[4] = '1'+jj;
+    spc[5] = !ii ? ' ' : '@'+jj;
+    scdelt[5] = '1'+jj;
+    scdelt[6] = !ii ? ' ' : '@'+jj;
 
-      if (hd->find(scrpix) && hd->find(scrval)) {
-	if (!wcsx_[ii])
-	  wcsx_[ii] = new WCSx();
-	wcsx_[ii]->crpix[jj] = hd->getReal(scrpix,0);
-	wcsx_[ii]->crval[jj] = hd->getReal(scrval,0);
+    if (hd->find(scrpix) && hd->find(scrval)) {
+      if (!wcsx_[ii])
+	wcsx_[ii] = new WCSx();
+      wcsx_[ii]->crpix = hd->getReal(scrpix,0);
+      wcsx_[ii]->crval = hd->getReal(scrval,0);
 
-	float cd = hd->getReal(scd,0);
-	float pc = hd->getReal(spc,0);
-	float cdelt = hd->getReal(scdelt,0);
-	if (cd)
-	  wcsx_[ii]->cd[jj] = cd;
-	else if (pc && cdelt)
-	  wcsx_[ii]->cd[jj] = pc * cdelt;
-	else if (cdelt)
-	  wcsx_[ii]->cd[jj] = cdelt;
-	else
-	  wcsx_[ii]->cd[jj] = 1;
-      }
+      float cd = hd->getReal(scd,0);
+      float pc = hd->getReal(spc,0);
+      float cdelt = hd->getReal(scdelt,0);
+      if (cd)
+	wcsx_[ii]->cd = cd;
+      else if (pc && cdelt)
+	wcsx_[ii]->cd = pc * cdelt;
+      else if (cdelt)
+	wcsx_[ii]->cd = cdelt;
+      else
+	wcsx_[ii]->cd = 1;
     }
   }
 
@@ -1273,18 +1270,13 @@ void FitsImage::initWCS()
   if (DebugWCS) {
     for (int ii=0; ii<MULTWCS; ii++) {
       if (wcsx_[ii]) {
-	for (int jj=0; jj<FTY_MAXAXES; jj++) {
-	  if (wcsx_[ii]->cd[jj]) {
-	    cerr << "wcsx" << (char)(!ii ? ' ' : '@'+ii) 
-		 << "[" << ii << "]->crpix[" << jj << "]=" 
-		 << wcsx_[ii]->crpix[jj] << endl;
-	    cerr << "wcsx" << (char)(!ii ? ' ' : '@'+ii) 
-		 << "[" << ii << "]->crval[" << jj << "]=" 
-		 << wcsx_[ii]->crval[jj] << endl;
-	    cerr << "wcsx" << (char)(!ii ? ' ' : '@'+ii) 
-		 << "[" << ii << "]->cd[" << jj << "]=" 
-		 << wcsx_[ii]->cd[jj] << endl;
-	  }
+	if (wcsx_[ii]->cd) {
+	  cerr << "wcsx" << (char)(!ii ? ' ' : '@'+ii) 
+	       << "[" << ii << "]->crpix=" << wcsx_[ii]->crpix << endl;
+	  cerr << "wcsx" << (char)(!ii ? ' ' : '@'+ii) 
+	       << "[" << ii << "]->crval=" << wcsx_[ii]->crval << endl;
+	  cerr << "wcsx" << (char)(!ii ? ' ' : '@'+ii) 
+	       << "[" << ii << "]->cd=" << wcsx_[ii]->cd << endl;
 	}
       }
     }
@@ -3537,27 +3529,27 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 
 #ifndef NEWWCS
 
-int FitsImage::hasWCS3D(Coord::CoordSystem sys, int aa)
+int FitsImage::hasWCS3D(Coord::CoordSystem sys)
 {
   int ss = sys-Coord::WCS;
-  return (aa>=2&&aa<FTY_MAXAXES && sys>=Coord::WCS && wcsx_[ss]) ? 1 : 0;
+  return (sys>=Coord::WCS && wcsx_[ss]) ? 1 : 0;
 }
 
-double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys, int aa)
+double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys)
 {
-  if (hasWCS3D(sys,aa)) {
+  if (hasWCS3D(sys)) {
     int ss = sys-Coord::WCS;
-    return (in-wcsx_[ss]->crpix[aa])*wcsx_[ss]->cd[aa] + wcsx_[ss]->crval[aa];
+    return (in-wcsx_[ss]->crpix)*wcsx_[ss]->cd + wcsx_[ss]->crval;
   }
   else
     return in;
 }
 
-double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys, int aa)
+double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys)
 {
-  if (hasWCS3D(sys,aa)) {
+  if (hasWCS3D(sys)) {
     int ss = sys-Coord::WCS;
-    return (in-wcsx_[ss]->crval[aa])/wcsx_[ss]->cd[aa] + wcsx_[ss]->crpix[aa];
+    return (in-wcsx_[ss]->crval)/wcsx_[ss]->cd + wcsx_[ss]->crpix;
   }
   else
     return in;
@@ -3565,7 +3557,7 @@ double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys, int aa)
 
 #else
 
-int FitsImage::hasWCS3D(Coord::CoordSystem sys, int aa)
+int FitsImage::hasWCS3D(Coord::CoordSystem sys)
 {
   if (!newast_ || sys<Coord::WCS)
     return 0;
@@ -3593,21 +3585,21 @@ int FitsImage::hasWCS3D(Coord::CoordSystem sys, int aa)
   return 0;
 }
 
-double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys, int aa)
+double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys)
 {
-  if (hasWCS3D(sys,aa)) {
+  if (hasWCS3D(sys)) {
     int ss = sys-Coord::WCS;
-    return (in-wcsx_[ss]->crpix[aa])*wcsx_[ss]->cd[aa] + wcsx_[ss]->crval[aa];
+    return (in-wcsx_[ss]->crpix)*wcsx_[ss]->cd + wcsx_[ss]->crval;
   }
   else
     return in;
 }
 
-double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys, int aa)
+double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys)
 {
-  if (hasWCS3D(sys,aa)) {
+  if (hasWCS3D(sys)) {
     int ss = sys-Coord::WCS;
-    return (in-wcsx_[ss]->crval[aa])/wcsx_[ss]->cd[aa] + wcsx_[ss]->crpix[aa];
+    return (in-wcsx_[ss]->crval)/wcsx_[ss]->cd + wcsx_[ss]->crpix;
   }
   else
     return in;

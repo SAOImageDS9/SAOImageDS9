@@ -20,13 +20,13 @@ void bar(AstMapping* that, int npoint, int ncoord_in, const double* ptr_in[],
 
   if (forward) {
     for (int ii=0; ii<npoint; ii++)
-      (*ptr_out)[ii] = (.5 + (*ptr_in)[ii] - wcsx[0]->crpix[2]) *
-	wcsx[0]->cd[2] + wcsx[0]->crval[2];
+      (*ptr_out)[ii] = (.5 + (*ptr_in)[ii] - wcsx[0]->crpix) *
+	wcsx[0]->cd + wcsx[0]->crval;
   }
   else {
     for (int ii=0; ii<npoint; ii++)
-      (*ptr_out)[ii] = ((*ptr_in)[ii] - wcsx[0]->crval[2]) /
-	wcsx[0]->cd[2] + wcsx[0]->crpix[2] -.5;
+      (*ptr_out)[ii] = ((*ptr_in)[ii] - wcsx[0]->crval) /
+	wcsx[0]->cd + wcsx[0]->crpix -.5;
   }
 }
 
@@ -124,7 +124,7 @@ int Grid3d::doit(RenderMode rm)
       AstFrame* zbase = astFrame(1,"");
       AstFrame* zcurr = astFrame(1,"");
       AstMapping* zmap;
-      if (fits->hasWCS3D(system_,2)) {
+      if (fits->hasWCS3D(system_)) {
 	astIntraReg("foo",1,1,bar,0,"testing","me","you");
 	if (!(zmap = (AstMapping*)astIntraMap("foo",1,1,"")))
 	  return 0;

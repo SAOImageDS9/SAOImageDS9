@@ -518,32 +518,6 @@ void FitsImage::listDistFromRef(ostream& str,
 
 // 3D
 
-double FitsImage::mapFromRef3axis(double vv, Coord::CoordSystem out)
-{
-  switch (out) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::AMPLIFIER: 
-  case Coord::DETECTOR:
-    return vv+.5;
-  default:
-    return pix2wcsx(vv+.5,out);
-  }
-}      
-
-double FitsImage::mapToRef3axis(double vv, Coord::CoordSystem in)
-{
-  switch (in) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::AMPLIFIER: 
-  case Coord::DETECTOR:
-    return vv-.5;
-  default:
-    return wcs2pixx(vv,in) -.5;
-  }
-}      
-
 double FitsImage::mapFromImage3axis(double vv, Coord::CoordSystem sys)
 {
   if (sys >= Coord::WCS)

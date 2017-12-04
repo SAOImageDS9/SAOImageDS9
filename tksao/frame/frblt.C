@@ -283,7 +283,7 @@ int Base::markerAnalysisPlot3d(Marker* pp, double** x, double** y,
   // main loop
   SETSIGBUS
     for (int kk=0; kk<srcd; kk++) {
-      (*x)[kk] = ptr->mapFromRef3axis(kk+.5+zparams->zmin, sys);
+      (*x)[kk] = ptr->mapFromImage3axis(kk+.5+.5+zparams->zmin, sys);
 
       bool* mptr=msk;
       long* iptr=idx;

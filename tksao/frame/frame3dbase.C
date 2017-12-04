@@ -210,7 +210,7 @@ void Frame3dBase::coordToTclArray(FitsImage* ptr, const Vector3d& vv,
   doubleToTclArray(rr[0], var, base, "x");
   doubleToTclArray(rr[1], var, base, "y");
 
-  double ss = ptr->mapFromRef3axis(((Vector3d&)vv)[2],out);
+  double ss = ptr->mapFromImage3axis(((Vector3d&)vv)[2]+.5,out);
   doubleToTclArray(ss, var, base, "z");
 }
 #else

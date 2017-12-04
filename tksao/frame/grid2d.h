@@ -11,7 +11,7 @@
 
 class Grid2d : public Grid, public Grid2dBase {
  private:
-  int matrixMap(void*, Matrix&, const char*);
+  void* matrixMap(void*, Matrix&, const char*);
   int doit(RenderMode);
 
  public:

@@ -33,23 +33,13 @@ int Grid2d::doit(RenderMode rm)
 
   Context* context = pp->keyContext;
   FitsImage* fits = context->fits;
-
   if (!fits)
     return 1;
-
-  //  int width = fits->width();
-  //  int height = fits->height();
 
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  AstFrameSet* frameSet = NULL;
-  AstPlot* plot = NULL;
-
-  if (!(frameSet = astFrameSet(astFrame(2,"Domain=WIDGET"),""))) {
-    astEnd;
-    return 0;
-  }
+  AstFrameSet* frameSet = astFrameSet(astFrame(2,"Domain=WIDGET"),"");
 
   // map from Widget to Image
   matrixMap(frameSet,fits->widgetToImage,"Domain=IMAGE");
@@ -68,12 +58,11 @@ int Grid2d::doit(RenderMode rm)
     break;
   default:
     {
-#ifndef NEWWCS
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
 
+#ifndef NEWWCS
       // set desired skyformat
-      if (fits->wcsIsASkyFrame(ast))
-	fits->setWCSSkyFrame(ast, sky_);
+      fits->setWCSSkyFrame(ast, sky_);
 
       // add wcs to frameset
       // this will link frame 2 of frameset to frame 3 wcs with unitMap
@@ -82,14 +71,16 @@ int Grid2d::doit(RenderMode rm)
       astAddFrame(frameSet,2,astUnitMap(2,""),ast);
       astSetI(frameSet,"current",astGetI(frameSet,"nframe"));
 #else
-      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
-
       fits->setWCSSystem(ast, system_);
       fits->setWCSSkyFrame(ast, sky_);
       
       int naxes = astGetI(ast,"Naxes");
       switch (naxes) {
       case 1:
+	// error
+	astEnd; // now, clean up memory
+	astGrid2dPtr =NULL;
+	return 0;
       case 2:
 	break;
       case 3:
@@ -160,7 +151,7 @@ int Grid2d::doit(RenderMode rm)
   // and now create astGrid
   astGrid2dPtr = this;
 
-  plot = astPlot(frameSet, gbox, pbox, option_);
+  AstPlot* plot = astPlot(frameSet, gbox, pbox, option_);
   astGrid(plot);
 
   astEnd; // now, clean up memory
@@ -168,7 +159,7 @@ int Grid2d::doit(RenderMode rm)
   return 1;
 }
 
-int Grid2d::matrixMap(void* fs, Matrix& mx, const char* str)
+void* Grid2d::matrixMap(void* fs, Matrix& mx, const char* str)
 {
   AstFrameSet* frameSet = (AstFrameSet*)fs;
 
@@ -176,19 +167,10 @@ int Grid2d::matrixMap(void* fs, Matrix& mx, const char* str)
 		 mx.matrix(0,1),mx.matrix(1,1)};
   double tt[] = {mx.matrix(2,0),mx.matrix(2,1)};
 
-  AstMatrixMap* mm;
-  if (!(mm= astMatrixMap(2, 2, 0, ss, "")))
-    return 0;
-
-  AstShiftMap* sm;
-  if (!(sm = astShiftMap(2, tt, "")))
-    return 0;
-
-  AstCmpMap* cmp;
-  if (!(cmp = astCmpMap(mm, sm, 1, "")))
-    return 0;
+  AstMatrixMap* mm = astMatrixMap(2, 2, 0, ss, "");
+  AstShiftMap* sm = astShiftMap(2, tt, "");
+  AstCmpMap* cmp = astCmpMap(mm, sm, 1, "");
 
   astAddFrame(frameSet, AST__CURRENT, cmp, astFrame(2, str));
-
-  return 1;
+  return frameSet;
 }

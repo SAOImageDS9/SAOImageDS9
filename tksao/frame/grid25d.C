@@ -33,19 +33,13 @@ int Grid25d::doit(RenderMode rm)
 
   Context* context = pp->keyContext;
   FitsImage* fits = context->fits;
-
   if (!fits)
     return 1;
-
-  //  int width = fits->width();
-  //  int height = fits->height();
 
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
   AstFrameSet* frameSet = NULL;
-  FitsBound* params = fits->getDataParams(context->secMode());
-
   switch (system_) {
   case Coord::IMAGE:
     frameSet = (AstFrameSet*)matrixMap(fits->refToImage,"Domain=IMAGE");
@@ -67,8 +61,7 @@ int Grid25d::doit(RenderMode rm)
 
       // Get 2D SkyFrame
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
-      if (fits->wcsIsASkyFrame(ast))
-      	fits->setWCSSkyFrame(ast, sky_);
+      fits->setWCSSkyFrame(ast, sky_);
  
       // Record the index of the current Frame
       int isky = astGetI(ast, "Current");
@@ -91,15 +84,18 @@ int Grid25d::doit(RenderMode rm)
     }
   }
 
- if (!frameSet)
+  if (!frameSet) {
+    astEnd;
     return 0;
-
+  }
+  
   astSet(frameSet,"Title=%s", " ");
 
   // create astPlot
   float gbox[4];
   double pbox[4];
 
+  FitsBound* params = fits->getDataParams(context->secMode());
   Vector ll = Vector(params->xmin,params->ymin);
   Vector ur = Vector(params->xmax,params->ymax);
   //  Vector gll = ll * fits->dataToWidget;

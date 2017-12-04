@@ -567,9 +567,9 @@ void Base::crop3dCmd(double z0, double z1, Coord::CoordSystem sys)
   if (!ptr)
     return;
 
-  // ff/tt ranges 0-n
-  double ff = ptr->mapToRef3axis(z0,sys);
-  double tt = ptr->mapToRef3axis(z1,sys);
+  // ff/tt in data coords
+  double ff = ptr->mapToImage3axis(z0,sys)-.5;
+  double tt = ptr->mapToImage3axis(z1,sys)-.5;
 
   // params is a BBOX in DATA coords 0-n
   currentContext->setCrop3dParams(ff-.5,tt+.5);
@@ -1384,9 +1384,10 @@ void Base::getCoord3axisCmd(double vv, Coord::CoordSystem in,
       printDouble(vv);
     else {
       // use first slice
-      double rr = currentContext->fits->mapToRef3axis(vv,in);
-      double tt = currentContext->fits->mapFromRef3axis(rr,out);
-      printDouble(tt);
+      if (out == Coord::IMAGE)
+	printDouble(currentContext->fits->mapToImage3axis(vv,in));
+      else
+	printDouble(currentContext->fits->mapFromImage3axis(vv,out));
     }
   }
   else
@@ -1440,8 +1441,8 @@ void Base::getCrop3dCmd(Coord::CoordSystem sys)
 
   FitsZBound* zparams =
     currentContext->getDataParams(currentContext->secMode());
-  double ff = ptr->mapFromRef3axis(zparams->zmin+.5,sys);
-  double tt = ptr->mapFromRef3axis(zparams->zmax-.5,sys);
+  double ff = ptr->mapFromImage3axis(zparams->zmin+.5+.5,sys);
+  double tt = ptr->mapFromImage3axis(zparams->zmax-.5+.5,sys);
 
   ostringstream str;
   str << ff << ' ' << tt << ends;
@@ -1793,8 +1794,7 @@ void Base::getFitsSliceCmd(int id, Coord::CoordSystem sys)
 {
   if (currentContext->fits) {
     int ss = currentContext->slice(id);
-    double rr = currentContext->fits->mapFromRef3axis(ss,sys);
-    printDouble(rr);
+    printDouble(currentContext->fits->mapFromImage3axis(ss,sys));
   }
   else
     Tcl_AppendResult(interp, "1", NULL);
@@ -2826,8 +2826,7 @@ void Base::sliceCmd(int id, int ss)
 
 void Base::sliceCmd(int id, double vv, Coord::CoordSystem sys)
 {
-  double rr = currentContext->fits->mapToRef3axis(vv,sys);
-  int ss = currentContext->fits->mapFromRef3axis(rr,Coord::IMAGE);
+  int ss = currentContext->fits->mapToImage3axis(vv,sys);
 
   // IMAGE (ranges 1-n)
   setSlice(id,ss);

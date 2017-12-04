@@ -543,3 +543,19 @@ double FitsImage::mapToRef3axis(double vv, Coord::CoordSystem in)
     return wcs2pixx(vv,in) -.5;
   }
 }      
+
+double FitsImage::mapFromImage3axis(double vv, Coord::CoordSystem sys)
+{
+  if (sys >= Coord::WCS)
+    return pix2wcsx(vv,sys);
+  else
+    return vv;
+}      
+
+double FitsImage::mapToImage3axis(double vv, Coord::CoordSystem sys)
+{
+  if (sys >= Coord::WCS)
+    return wcs2pixx(vv,sys);
+  else
+    return vv;
+}      

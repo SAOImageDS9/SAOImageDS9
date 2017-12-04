@@ -568,8 +568,8 @@ void Base::crop3dCmd(double z0, double z1, Coord::CoordSystem sys)
     return;
 
   // ff/tt in data coords
-  double ff = ptr->mapToImage3axis(z0,sys)-.5;
-  double tt = ptr->mapToImage3axis(z1,sys)-.5;
+  double ff = ptr->mapToImage3d(z0,sys)-.5;
+  double tt = ptr->mapToImage3d(z1,sys)-.5;
 
   // params is a BBOX in DATA coords 0-n
   currentContext->setCrop3dParams(ff-.5,tt+.5);
@@ -1385,9 +1385,9 @@ void Base::getCoord3axisCmd(double vv, Coord::CoordSystem in,
     else {
       // use first slice
       if (out == Coord::IMAGE)
-	printDouble(currentContext->fits->mapToImage3axis(vv,in));
+	printDouble(currentContext->fits->mapToImage3d(vv,in));
       else
-	printDouble(currentContext->fits->mapFromImage3axis(vv,out));
+	printDouble(currentContext->fits->mapFromImage3d(vv,out));
     }
   }
   else
@@ -1441,8 +1441,8 @@ void Base::getCrop3dCmd(Coord::CoordSystem sys)
 
   FitsZBound* zparams =
     currentContext->getDataParams(currentContext->secMode());
-  double ff = ptr->mapFromImage3axis(zparams->zmin+.5+.5,sys);
-  double tt = ptr->mapFromImage3axis(zparams->zmax-.5+.5,sys);
+  double ff = ptr->mapFromImage3d(zparams->zmin+.5+.5,sys);
+  double tt = ptr->mapFromImage3d(zparams->zmax-.5+.5,sys);
 
   ostringstream str;
   str << ff << ' ' << tt << ends;
@@ -1794,7 +1794,7 @@ void Base::getFitsSliceCmd(int id, Coord::CoordSystem sys)
 {
   if (currentContext->fits) {
     int ss = currentContext->slice(id);
-    printDouble(currentContext->fits->mapFromImage3axis(ss,sys));
+    printDouble(currentContext->fits->mapFromImage3d(ss,sys));
   }
   else
     Tcl_AppendResult(interp, "1", NULL);
@@ -2826,7 +2826,7 @@ void Base::sliceCmd(int id, int ss)
 
 void Base::sliceCmd(int id, double vv, Coord::CoordSystem sys)
 {
-  int ss = currentContext->fits->mapToImage3axis(vv,sys);
+  int ss = currentContext->fits->mapToImage3d(vv,sys);
 
   // IMAGE (ranges 1-n)
   setSlice(id,ss);

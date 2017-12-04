@@ -518,18 +518,43 @@ void FitsImage::listDistFromRef(ostream& str,
 
 // 3D
 
-double FitsImage::mapFromImage3axis(double vv, Coord::CoordSystem sys)
+#ifndef NEWWCS
+double FitsImage::mapFromImage3d(double dd, Coord::CoordSystem sys)
 {
   if (sys >= Coord::WCS)
-    return pix2wcsx(vv,sys);
+    return pix2wcsx(dd,sys);
   else
-    return vv;
+    return dd;
 }      
 
-double FitsImage::mapToImage3axis(double vv, Coord::CoordSystem sys)
+double FitsImage::mapToImage3d(double dd, Coord::CoordSystem sys)
 {
   if (sys >= Coord::WCS)
-    return wcs2pixx(vv,sys);
+    return wcs2pixx(dd,sys);
   else
-    return vv;
+    return dd;
 }      
+#else
+double FitsImage::mapFromImage3d(double dd, Coord::CoordSystem sys)
+{
+  if (hasWCS(sys)) {
+    Vector3d cc(center(),dd);
+    Vector3d rr = pix2wcs(cc,sys,Coord::FK5);
+    return rr[2];
+  }
+  else
+    return dd;
+}      
+
+double FitsImage::mapToImage3d(double dd, Coord::CoordSystem sys)
+{
+  if (hasWCS(sys)) {
+    Vector3d cc(center(),1);
+    Vector3d wcc = pix2wcs(cc,sys,Coord::FK5);
+    Vector3d rr = wcs2pix(Vector3d(wcc[0],wcc[1],dd),sys,Coord::FK5);
+    return rr[2];
+  }
+  else
+    return dd;
+}      
+#endif

@@ -11,6 +11,17 @@ extern "C" {
   #include "ast.h"
 }
 
+extern Grid3dBase* astGrid3dPtr;
+
+Grid3d::Grid3d(Widget* p, Coord::CoordSystem sys, Coord::SkyFrame sky, 
+	       Coord::SkyFormat format, GridType t, 
+	       const char* o, const char* v) 
+  : Grid(sys, sky, format, t, v), Grid3dBase(p,o)
+{}
+
+Grid3d::~Grid3d()
+{}
+
 static FitsImage* foobar;
 
 void bar(AstMapping* that, int npoint, int ncoord_in, const double* ptr_in[],
@@ -29,17 +40,6 @@ void bar(AstMapping* that, int npoint, int ncoord_in, const double* ptr_in[],
 	wcsx[0]->cd + wcsx[0]->crpix -.5;
   }
 }
-
-extern Grid3dBase* astGrid3dPtr;
-
-Grid3d::Grid3d(Widget* p, Coord::CoordSystem sys, Coord::SkyFrame sky, 
-	       Coord::SkyFormat format, GridType t, 
-	       const char* o, const char* v) 
-  : Grid(sys, sky, format, t, v), Grid3dBase(p,o)
-{}
-
-Grid3d::~Grid3d()
-{}
 
 int Grid3d::doit(RenderMode rm)
 {

@@ -325,8 +325,8 @@ int Grid3d::doit(RenderMode rm)
 
   astEnd; // now, clean up memory
   astGrid3dPtr =NULL;
-  return 1;
   */
+  return 1;
 }
 
 void* Grid3d::matrixMap(Matrix3d& mx, const char* str)
@@ -359,6 +359,7 @@ void* Grid3d::matrixMap(Matrix3d& mx, const char* str)
 
   return frameSet;
   */
+  return NULL;
 }
 
 #endif

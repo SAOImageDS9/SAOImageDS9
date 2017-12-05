@@ -54,15 +54,46 @@ int Grid25d::doit(RenderMode rm)
     frameSet = (AstFrameSet*)matrixMap(fits->refToDetector,"Domain=DETECTOR");
   default:
     {
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
+
       // imageToData frame/map
       double ss[] = {-.5, -.5};
       AstShiftMap *sm = astShiftMap(2, ss, " ");
       AstFrame *df = astFrame(2, "Domain=DATA");
 
-      // Get 2D SkyFrame
-      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
+#ifndef NEWWCS
       fits->setWCSSkyFrame(ast, sky_);
- 
+#else
+      fits->setWCSSystem(ast, system_);
+      fits->setWCSSkyFrame(ast, sky_);
+
+      int naxes = astGetI(ast,"Naxes");
+      switch (naxes) {
+      case 1:
+	// error
+	astEnd; // now, clean up memory
+	astGrid25dPtr =NULL;
+	return 0;
+      case 2:
+	break;
+      case 3:
+      case 4:
+	{
+	  int pick[2] = {1, 2};
+	  AstMapping* map =NULL;
+	  AstFrame* perm =NULL;
+
+	  astInvert(ast);
+	  perm = (AstFrame*)astPickAxes(ast, 2, pick, &map);
+	  astAddFrame(ast, AST__CURRENT, map, perm);
+	  astInvert(ast);
+
+	  perm = (AstFrame*)astPickAxes(ast, 2, pick, &map);
+	  astAddFrame(ast, AST__CURRENT, map, perm);
+	}
+	break;
+      }
+#endif
       // Record the index of the current Frame
       int isky = astGetI(ast, "Current");
 
@@ -77,18 +108,13 @@ int Grid25d::doit(RenderMode rm)
       int idata =  astGetI(ast, "Current");
       astSetI(ast, "Current", isky);
 
-      // make the DATA Frame the new base Frame 
+      // make the DATA Frame the new base Frame
       astSetI(ast, "Base", idata);
 
       frameSet = ast;
     }
   }
 
-  if (!frameSet) {
-    astEnd;
-    return 0;
-  }
-  
   astSet(frameSet,"Title=%s", " ");
 
   // create astPlot

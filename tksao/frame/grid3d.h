@@ -11,7 +11,7 @@
 
 class Grid3d : public Grid, public Grid3dBase {
  private:
-  void* matrixMap(Matrix&, const char*);
+  void* matrixMap(Matrix3d&, const char*);
   int doit(RenderMode);
 
  public:

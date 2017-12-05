@@ -159,10 +159,8 @@ int Grid2d::doit(RenderMode rm)
   return 1;
 }
 
-void* Grid2d::matrixMap(void* fs, Matrix& mx, const char* str)
+void* Grid2d::matrixMap(void* frameSet, Matrix& mx, const char* str)
 {
-  AstFrameSet* frameSet = (AstFrameSet*)fs;
-
   double ss[] = {mx.matrix(0,0),mx.matrix(1,0),
 		 mx.matrix(0,1),mx.matrix(1,1)};
   double tt[] = {mx.matrix(2,0),mx.matrix(2,1)};
@@ -171,6 +169,6 @@ void* Grid2d::matrixMap(void* fs, Matrix& mx, const char* str)
   AstShiftMap* sm = astShiftMap(2, tt, "");
   AstCmpMap* cmp = astCmpMap(mm, sm, 1, "");
 
-  astAddFrame(frameSet, AST__CURRENT, cmp, astFrame(2, str));
+  astAddFrame((AstFrameSet*)frameSet, AST__CURRENT, cmp, astFrame(2, str));
   return frameSet;
 }

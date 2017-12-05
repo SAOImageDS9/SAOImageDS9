@@ -39,28 +39,27 @@ int Grid25d::doit(RenderMode rm)
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  AstFrameSet* frameSet = NULL;
+  // map from Ref to Image
+  AstFrameSet* frameSet = astFrameSet(astFrame(2,"Domain=Ref"),"");
+  matrixMap(frameSet,fits->refToImage,"Domain=IMAGE");
+
   switch (system_) {
   case Coord::IMAGE:
-    frameSet = (AstFrameSet*)matrixMap(fits->refToImage,"Domain=IMAGE");
     break;
   case Coord::PHYSICAL:
-    frameSet = (AstFrameSet*)matrixMap(fits->refToPhysical,"Domain=PHYSICAL");
+    matrixMap(frameSet,fits->imageToPhysical,"Domain=PHYSICAL");
     break;
   case Coord::AMPLIFIER:
-    frameSet = (AstFrameSet*)matrixMap(fits->refToAmplifier,"Domain=AMPLIFIER");
+    matrixMap(frameSet,fits->imageToAmplifier,"Domain=AMPLIFIER");
     break;
   case Coord::DETECTOR:
-    frameSet = (AstFrameSet*)matrixMap(fits->refToDetector,"Domain=DETECTOR");
+    matrixMap(frameSet,fits->imageToDetector,"Domain=DETECTOR");
+    break;
   default:
     {
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
 
-      // imageToData frame/map
-      double ss[] = {-.5, -.5};
-      AstShiftMap *sm = astShiftMap(2, ss, " ");
-      AstFrame *df = astFrame(2, "Domain=DATA");
-
+      // set desired skyformat
 #ifndef NEWWCS
       fits->setWCSSkyFrame(ast, sky_);
 #else
@@ -94,25 +93,13 @@ int Grid25d::doit(RenderMode rm)
 	break;
       }
 #endif
-      // Record the index of the current Frame
-      int isky = astGetI(ast, "Current");
-
-      // Add the new DATA Frame into the FrameSet, using the ShiftMap to
-      // connect it to the existing IMAGE Frame.
-      astAddFrame(ast, AST__BASE, sm, df);
-
-      // The above call to astAddFrame will have changed the current Frame
-      // in the FrameSet to be the new DATA Frame. First record the index of
-      // the DATA Frame, and then re-instate the original current Frame (i.e.
-      // the SKY Frame).
-      int idata =  astGetI(ast, "Current");
-      astSetI(ast, "Current", isky);
-
-      // make the DATA Frame the new base Frame
-      astSetI(ast, "Base", idata);
-
-      frameSet = ast;
+      // add wcs to frameset
+      // this will link frameset to wcs with unitMap
+      astInvert(ast);
+      astAddFrame(frameSet, AST__CURRENT, astUnitMap(2,""), ast);
+      astSetI(frameSet,"Current",astGetI(frameSet,"nframe"));
     }
+    break;
   }
 
   astSet(frameSet,"Title=%s", " ");
@@ -143,7 +130,7 @@ int Grid25d::doit(RenderMode rm)
   return 1;
 }
 
-void* Grid25d::matrixMap(Matrix& mx, const char* str)
+void Grid25d::matrixMap(void* frameSet, Matrix& mx, const char* str)
 {
   double ss[] = {mx.matrix(0,0),mx.matrix(1,0),
 		 mx.matrix(0,1),mx.matrix(1,1)};
@@ -151,13 +138,7 @@ void* Grid25d::matrixMap(Matrix& mx, const char* str)
 
   AstMatrixMap* mm = astMatrixMap(2, 2, 0, ss, "");
   AstShiftMap* sm = astShiftMap(2, tt, "");
-  AstCmpMap* cmap = astCmpMap(mm, sm, 1, "");
+  AstCmpMap* cmp = astCmpMap(mm, sm, 1, "");
 
-  AstFrame* in = astFrame(2,"Domain=REF");
-  AstFrame* out = astFrame(2,str);
-
-  AstFrameSet* frameSet = astFrameSet(in,"");
-  astAddFrame(frameSet,AST__CURRENT,cmap,out);
-
-  return frameSet;
+  astAddFrame((AstFrameSet*)frameSet, AST__CURRENT, cmp, astFrame(2, str));
 }

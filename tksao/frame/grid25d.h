@@ -11,7 +11,7 @@
 
 class Grid25d : public Grid, public Grid25dBase {
  private:
-  void* matrixMap(Matrix&, const char*);
+  void matrixMap(void*, Matrix&, const char*);
   int doit(RenderMode);
 
  public:

@@ -39,9 +39,8 @@ int Grid2d::doit(RenderMode rm)
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  AstFrameSet* frameSet = astFrameSet(astFrame(2,"Domain=WIDGET"),"");
-
   // map from Widget to Image
+  AstFrameSet* frameSet = astFrameSet(astFrame(2,"Domain=WIDGET"),"");
   matrixMap(frameSet,fits->widgetToImage,"Domain=IMAGE");
 
   switch (system_) {
@@ -60,16 +59,9 @@ int Grid2d::doit(RenderMode rm)
     {
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
 
-#ifndef NEWWCS
       // set desired skyformat
+#ifndef NEWWCS
       fits->setWCSSkyFrame(ast, sky_);
-
-      // add wcs to frameset
-      // this will link frame 2 of frameset to frame 3 wcs with unitMap
-      // set the current of frameset to last
-      astInvert(ast);
-      astAddFrame(frameSet,2,astUnitMap(2,""),ast);
-      astSetI(frameSet,"current",astGetI(frameSet,"nframe"));
 #else
       fits->setWCSSystem(ast, system_);
       fits->setWCSSkyFrame(ast, sky_);
@@ -100,14 +92,14 @@ int Grid2d::doit(RenderMode rm)
 	}
 	break;
       }
-      
+#endif
       // add wcs to frameset
       // this will link frameset to wcs with unitMap
       astInvert(ast);
       astAddFrame(frameSet, AST__CURRENT, astUnitMap(2,""), ast);
       astSetI(frameSet,"Current",astGetI(frameSet,"nframe"));
-#endif
     }
+    break;
   }
 
   astSet(frameSet,"Title=%s", " ");
@@ -159,7 +151,7 @@ int Grid2d::doit(RenderMode rm)
   return 1;
 }
 
-void* Grid2d::matrixMap(void* frameSet, Matrix& mx, const char* str)
+void Grid2d::matrixMap(void* frameSet, Matrix& mx, const char* str)
 {
   double ss[] = {mx.matrix(0,0),mx.matrix(1,0),
 		 mx.matrix(0,1),mx.matrix(1,1)};
@@ -170,5 +162,4 @@ void* Grid2d::matrixMap(void* frameSet, Matrix& mx, const char* str)
   AstCmpMap* cmp = astCmpMap(mm, sm, 1, "");
 
   astAddFrame((AstFrameSet*)frameSet, AST__CURRENT, cmp, astFrame(2, str));
-  return frameSet;
 }

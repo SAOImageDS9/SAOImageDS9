@@ -329,7 +329,7 @@ int Grid3d::doit(RenderMode rm)
   return 1;
 }
 
-void* Grid3d::matrixMap(Matrix3d& mx, const char* str)
+void* Grid3d::matrixMap(Matrix& mx, const char* str)
 {
   /*
   double ss[] = {mx.matrix(0,0),mx.matrix(1,0),

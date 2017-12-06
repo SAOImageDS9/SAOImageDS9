@@ -365,15 +365,15 @@ class FitsImage {
   Vector& iisz() {return iisz_;}
 
   Vector pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
-  char* pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
-
   Vector wcs2pix(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
+
+  char* pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
 
 #ifdef NEWWCS
   Vector3d pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
-  char* pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
-
   Vector3d wcs2pix(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
+
+  char* pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
 #endif
 
   double pix2wcsx(double, Coord::CoordSystem);

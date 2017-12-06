@@ -11,7 +11,11 @@
 
 class Grid3d : public Grid, public Grid3dBase {
  private:
+#ifndef NEWWCS
   void* matrixMap(Matrix&, const char*);
+#else
+  void matrixMap(void*, Matrix3d&, const char*);
+#endif
   int doit(RenderMode);
 
  public:

@@ -70,23 +70,14 @@ int Grid3d::doit(RenderMode rm)
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  AstFrameSet* frameSet = NULL;
-  AstPlot3D* plot = NULL;
-  FitsBound* params = fits->getDataParams(context->secMode());
-  FitsZBound* zparams = context->getDataParams(context->secMode());
+  AstFrameSet* frameSet = astFrameSet(astFrame(3,"Domain=Ref"),"");
+  matrixMap(frameSet,fits->refToImage3d,"Domain=IMAGE");
 
   switch (system_) {
   case Coord::IMAGE:
-    frameSet = (AstFrameSet*)matrixMap(fits->refToImage,"Domain=IMAGE");
-    break;
   case Coord::PHYSICAL:
-    frameSet = (AstFrameSet*)matrixMap(fits->refToPhysical,"Domain=PHYSICAL");
-    break;
   case Coord::AMPLIFIER:
-    frameSet = (AstFrameSet*)matrixMap(fits->refToAmplifier,"Domain=AMPLIFIER");
-    break;
   case Coord::DETECTOR:
-    frameSet = (AstFrameSet*)matrixMap(fits->refToDetector,"Domain=DETECTOR");
     break;
   default:
     {
@@ -148,9 +139,6 @@ int Grid3d::doit(RenderMode rm)
     }
   }
 
-  if (!frameSet)
-    return 0;
-
   astSet(frameSet,"Title=%s", " ");
 
   // create astPlot
@@ -158,6 +146,8 @@ int Grid3d::doit(RenderMode rm)
   double pbox[6];
 
   // params is a BBOX in DATA coords 0-n
+  FitsBound* params = fits->getDataParams(context->secMode());
+  FitsZBound* zparams = context->getDataParams(context->secMode());
   Vector3d ll = Vector3d(params->xmin,params->ymin,zparams->zmin);
   Vector3d ur = Vector3d(params->xmax,params->ymax,zparams->zmax);
 
@@ -172,45 +162,13 @@ int Grid3d::doit(RenderMode rm)
   astGrid3dPtr = this;
   renderMode_ = rm;
 
-  plot = astPlot3D(frameSet, gbox, pbox, option_);
+  AstPlot3D* plot = astPlot3D(frameSet, gbox, pbox, option_);
   //  astShow(plot);
   astGrid(plot);
 
   astEnd; // now, clean up memory
   astGrid3dPtr =NULL;
   return 1;
-}
-
-void* Grid3d::matrixMap(Matrix& mx, const char* str)
-{
-  double ss[] = {mx.matrix(0,0),mx.matrix(1,0),
-		 mx.matrix(0,1),mx.matrix(1,1)};
-  double tt[] = {mx.matrix(2,0),mx.matrix(2,1)};
-
-  AstMatrixMap* mm;
-  if (!(mm= astMatrixMap(2,2,0,ss,"")))
-    return NULL;
-
-  AstShiftMap* sm;
-  if (!(sm = astShiftMap(2,tt,"")))
-    return NULL;
-
-  AstCmpMap* mapxy;
-  if (!(mapxy = astCmpMap(mm,sm,1,"")))
-    return NULL;
-
-  double uu =.5;
-  AstShiftMap* mapz = astShiftMap(1,&uu,"");
-
-  AstCmpMap* cmp = astCmpMap(mapxy,mapz,0,"");
-
-  AstFrame* in = astFrame(3,"Domain=REF");
-  AstFrame* out = astFrame(3,str);
-
-  AstFrameSet* frameSet = astFrameSet(in,"");
-  astAddFrame(frameSet,AST__CURRENT,cmp,out);
-
-  return frameSet;
 }
 
 #else
@@ -323,6 +281,7 @@ int Grid3d::doit(RenderMode rm)
 
   return 1;
 }
+#endif
 
 void Grid3d::matrixMap(void* frameSet, Matrix3d& mx, const char* str)
 {
@@ -337,6 +296,3 @@ void Grid3d::matrixMap(void* frameSet, Matrix3d& mx, const char* str)
 
   astAddFrame((AstFrameSet*)frameSet, AST__CURRENT, cmp, astFrame(3, str));
 }
-
-#endif
-

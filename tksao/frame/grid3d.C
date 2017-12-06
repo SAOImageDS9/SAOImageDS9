@@ -41,6 +41,7 @@ void bar(AstMapping* that, int npoint, int ncoord_in, const double* ptr_in[],
 	wcsx[0]->cd + wcsx[0]->crpix -.5;
   }
 }
+#endif
 
 int Grid3d::doit(RenderMode rm)
 {
@@ -65,8 +66,6 @@ int Grid3d::doit(RenderMode rm)
   if (!fits)
     return 1;
 
-  foobar = fits;
-
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
@@ -81,12 +80,12 @@ int Grid3d::doit(RenderMode rm)
     break;
   default:
     {
-      // Get 2D SkyFrame
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
-      if (fits->wcsIsASkyFrame(ast))
-      	fits->setWCSSkyFrame(ast, sky_);
 
-      // Create two 1D Frames and a 1D Mapping describing the third axis
+#ifndef NEWWCS
+      foobar = fits;
+      fits->setWCSSkyFrame(ast, sky_);
+
       AstFrame* zbase = astFrame(1,"");
       AstFrame* zcurr = astFrame(1,"");
       AstMapping* zmap;
@@ -98,105 +97,17 @@ int Grid3d::doit(RenderMode rm)
       else
 	zmap = (AstMapping*)astUnitMap(1,"");
 
-      // Use astGetFrame and astGetMapping to get the base and current
-      // Frames from the 2D FrameSet, and the base->current Mapping.
       AstFrame* wcsbase = (AstFrame*)astGetFrame(ast,AST__BASE);
       AstFrame* wcscurr = (AstFrame*)astGetFrame(ast,AST__CURRENT);
       AstMapping* wcsmap = (AstMapping*)astGetMapping(ast,AST__BASE,AST__CURRENT);
-      // Combine the 2D and 1D base Frames into a 3D CmpFrame
-      // Likewise, combine the 2D and 1D current Frames into a 3D CmpFrame
       AstCmpFrame* cmpwcsbase = astCmpFrame(wcsbase,zbase,"");
       AstCmpFrame* cmpwcscurr = astCmpFrame(wcscurr,zcurr,"");
 
-      // Combine the 2D and 1D Mappings into a 3D CmpMap
       AstCmpMap* cmpwcsmap = astCmpMap(wcsmap,zmap,0,"");
 
-      // Construct the 3D FrameSet from the new 3D Frames and Mapping
-      AstFrameSet* fs3d = astFrameSet(cmpwcsbase,"");
-      astAddFrame(fs3d, AST__CURRENT, cmpwcsmap, cmpwcscurr);
-
-      // add wcs to frameset
-      // this will link frameset to wcs with unitMap
-      astInvert(fs3d);
-      astAddFrame(frameSet, AST__CURRENT, astUnitMap(3,""), fs3d);
-      astSetI(frameSet,"Current",astGetI(frameSet,"nframe"));
-    }
-  }
-
-  astSet(frameSet,"Title=%s", " ");
-
-  // create astPlot
-  float gbox[6];
-  double pbox[6];
-
-  // params is a BBOX in DATA coords 0-n
-  FitsBound* params = fits->getDataParams(context->secMode());
-  FitsZBound* zparams = context->getDataParams(context->secMode());
-  Vector3d ll = Vector3d(params->xmin,params->ymin,zparams->zmin);
-  Vector3d ur = Vector3d(params->xmax,params->ymax,zparams->zmax);
-
-  pbox[0] = gbox[0] = ll[0];
-  pbox[1] = gbox[1] = ll[1];
-  pbox[2] = gbox[2] = ll[2];
-  pbox[3] = gbox[3] = ur[0];
-  pbox[4] = gbox[4] = ur[1];
-  pbox[5] = gbox[5] = ur[2];
-
-  // and now create astGrid
-  astGrid3dPtr = this;
-  renderMode_ = rm;
-
-  AstPlot3D* plot = astPlot3D(frameSet, gbox, pbox, option_);
-  //  astShow(plot);
-  astGrid(plot);
-
-  astEnd; // now, clean up memory
-  astGrid3dPtr =NULL;
-  return 1;
-}
-
+      ast = astFrameSet(cmpwcsbase,"");
+      astAddFrame(ast, AST__CURRENT, cmpwcsmap, cmpwcscurr);
 #else
-
-int Grid3d::doit(RenderMode rm)
-{
-  Frame3dBase* pp = (Frame3dBase*)parent_;
-
-  mx_ = pp->refToWidget3d;
-  rx_ =
-    Matrix3d(pp->wcsOrientationMatrix) *
-    Matrix3d(pp->orientationMatrix) *
-    RotateZ3d(-pp->wcsRotation) *
-    RotateZ3d(-pp->rotation) *
-    RotateY3d(pp->az_) * 
-    RotateX3d(pp->el_);
-
-  matrix_ = pp->widgetToCanvas;
-  pixmap_ = pp->pixmap;
-  gridGC_ = pp->gridGC_;
-  renderMode_ = rm;
-
-  Context* context = pp->keyContext;
-  FitsImage* fits = context->fits;
-
-  if (!fits)
-    return 1;
-
-  astClearStatus; // just to make sure
-  astBegin; // start memory management
-
-  AstFrameSet* frameSet = astFrameSet(astFrame(3,"Domain=Ref"),"");
-  matrixMap(frameSet,fits->refToImage3d,"Domain=IMAGE");
-
-  switch (system_) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::AMPLIFIER:
-  case Coord::DETECTOR:
-    break;
-  default:
-    {
-      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
-
       fits->setWCSSystem(ast, system_);
       fits->setWCSSkyFrame(ast, sky_);
       
@@ -204,7 +115,22 @@ int Grid3d::doit(RenderMode rm)
       switch (naxes) {
       case 1:
       case 2:
-	// error
+	{
+	  AstFrame* zbase = astFrame(1,"");
+	  AstFrame* zcurr = astFrame(1,"");
+	  AstMapping* zmap = (AstMapping*)astUnitMap(1,"");
+
+	  AstFrame* wcsbase = (AstFrame*)astGetFrame(ast,AST__BASE);
+	  AstFrame* wcscurr = (AstFrame*)astGetFrame(ast,AST__CURRENT);
+	  AstMapping* wcsmap = (AstMapping*)astGetMapping(ast,AST__BASE,AST__CURRENT);
+
+	  AstCmpFrame* cmpwcsbase = astCmpFrame(wcsbase,zbase,"");
+	  AstCmpFrame* cmpwcscurr = astCmpFrame(wcscurr,zcurr,"");
+	  AstCmpMap* cmpwcsmap = astCmpMap(wcsmap,zmap,0,"");
+
+	  ast = astFrameSet(cmpwcsbase,"");
+	  astAddFrame(ast, AST__CURRENT, cmpwcsmap, cmpwcscurr);
+	}
 	break;
       case 3:
 	break;
@@ -224,7 +150,7 @@ int Grid3d::doit(RenderMode rm)
 	}
 	break;
       }
-      
+#endif      
       // add wcs to frameset
       // this will link frameset to wcs with unitMap
       astInvert(ast);
@@ -262,10 +188,8 @@ int Grid3d::doit(RenderMode rm)
 
   astEnd; // now, clean up memory
   astGrid3dPtr =NULL;
-
   return 1;
 }
-#endif
 
 void Grid3d::matrixMap(void* frameSet, Matrix3d& mx, const char* str)
 {

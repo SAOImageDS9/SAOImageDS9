@@ -3126,24 +3126,6 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   else
     return Vector();
 }
-
-Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
-			    Coord::SkyFrame sky)
-{
-  astClearStatus; // just to make sure
-
-  if (!hasWCS(sys))
-    return Vector();
-
-  setWCSSystem(newast_,sys);
-  setWCSSkyFrame(newast_,sky);
-
-  Vector3d out = wcsTran(newast_, in, 1);
-  if (astOK && checkWCS(out))
-    return wcsIsASkyFrame(newast_) ? radToDeg(out) : out;
-  else
-    return Vector3d();
-}
 #endif
 
 #ifndef NEWWCS
@@ -3254,6 +3236,83 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
     }
     else
       str << setprecision(8) << out[0] << ' ' << out[1] << ends;
+
+    strncpy(lbuf, str.str().c_str(), str.str().length());
+  }
+  
+  return lbuf;
+}
+#endif
+
+#ifdef NEWWCS
+Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
+			    Coord::SkyFrame sky)
+{
+  astClearStatus; // just to make sure
+
+  if (!hasWCS(sys))
+    return Vector();
+
+  setWCSSystem(newast_,sys);
+  setWCSSkyFrame(newast_,sky);
+
+  Vector3d out = wcsTran(newast_, in, 1);
+  if (astOK && checkWCS(out))
+    return wcsIsASkyFrame(newast_) ? radToDeg(out) : out;
+  else
+    return Vector3d();
+}
+
+char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
+			 Coord::SkyFrame sky, Coord::SkyFormat format,
+			 char* lbuf)
+{
+  astClearStatus; // just to make sure
+  lbuf[0] = '\0';
+
+  if (!hasWCS(sys))
+    return lbuf;
+
+  setWCSSystem(newast_,sys);
+  setWCSSkyFrame(newast_,sky);
+  
+  ostringstream str;
+  Vector3d out = wcsTran(newast_, in, 1);
+  if (astOK && checkWCS(out)) {
+    if (wcsIsASkyFrame(newast_)) {
+      switch (format) {
+      case Coord::DEGREES:
+	out = radToDeg(out);
+	str << setprecision(8) << out[0] << ' ' << out[1] << ' ' << out[2]
+	    << ' ' << coord.skyFrameStr(sky) << ends;
+	break;
+
+      case Coord::SEXAGESIMAL:
+	out = zeroTWOPI(out);
+	switch (sky) {
+	case Coord::FK4:
+	case Coord::FK4_NO_E:
+	case Coord::FK5:
+	case Coord::ICRS:
+	  setWCSFormat(newast_,1,"hms.3");
+	  setWCSFormat(newast_,2,"+dms.3");
+	  break;
+	case Coord::GALACTIC:
+	case Coord::SUPERGALACTIC:
+	case Coord::ECLIPTIC:
+	case Coord::HELIOECLIPTIC:
+	  setWCSFormat(newast_,1,"+dms.3");
+	  setWCSFormat(newast_,2,"+dms.3");
+	  break;
+	}
+	str << astFormat(newast_,1,out[0]) << ' '
+	    << astFormat(newast_,2,out[1]) << ' '
+	    << out[2] << ' ' << coord.skyFrameStr(sky) << ends;
+	break;
+      }
+    }
+    else
+      str << setprecision(8) << out[0] << ' ' << out[1] << ' ' << out[2] <<ends;
 
     strncpy(lbuf, str.str().c_str(), str.str().length());
   }
@@ -4106,7 +4165,12 @@ Vector3d FitsImage::wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
   switch (naxes) {
   case 1:
   case 2:
-    // error
+      double pin[2];
+      double pout[2];
+      pin[0] = in[0];
+      pin[1] = in[1];
+      astTranN(ast, 1, 2, 1, pin, forward, 2, 1, pout);
+      return Vector3d(pout[0],pout[1],forward ? 1 : 0);
     break;
   case 3:
     {

@@ -371,8 +371,11 @@ class FitsImage {
 
 #ifdef NEWWCS
   Vector3d pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
+  char* pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
+
   Vector3d wcs2pix(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
 #endif
+
   double pix2wcsx(double, Coord::CoordSystem);
   double wcs2pixx(double, Coord::CoordSystem);
 

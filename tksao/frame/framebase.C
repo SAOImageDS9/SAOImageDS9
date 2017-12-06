@@ -37,7 +37,8 @@ FrameBase::~FrameBase()
     XFreeGC(display, colormapGCXOR);
 }
 
-void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref, char* var)
+void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
+			   char* var)
 {
   FitsBound* params;
   int mosaic;
@@ -136,7 +137,7 @@ void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref, char* va
 void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* ptr, 
 			   FitsImage* sptr)
 {
-  Vector img = rr * sptr->refToData;
+  Vector img = rr * sptr->refToImage;
 
   for (int ii=0; ii<MULTWCS; ii++) {
     char buf[64];
@@ -145,8 +146,7 @@ void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* ptr,
 
     if (hasWCS(www)) {
       char buff[128];
-      Vector uu = img * dataToImage;
-      sptr->pix2wcs(uu, www, wcsSky_, wcsSkyFormat_, buff);
+      sptr->pix2wcs(img, www, wcsSky_, wcsSkyFormat_, buff);
 
       int argc;
       const char** argv;

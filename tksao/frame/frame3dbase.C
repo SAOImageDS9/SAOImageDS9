@@ -155,7 +155,7 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
 void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr, 
 			     FitsImage* sptr)
 {
-  Vector img = Vector(rr) * sptr->refToData;
+  Vector3d img = rr * sptr->refToImage3d;
 
   for (int ii=0; ii<MULTWCS; ii++) {
     char buf[64];
@@ -164,8 +164,7 @@ void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr,
 
     if (hasWCS(www)) {
       char buff[128];
-      Vector uu = img * dataToImage;
-      sptr->pix2wcs(uu, www, wcsSky_, wcsSkyFormat_, buff);
+      sptr->pix2wcs(img, www, wcsSky_, wcsSkyFormat_, buff);
 
       int argc;
       const char** argv;
@@ -175,18 +174,22 @@ void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr,
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),argv[0],0);
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
+
       if (argc > 1 && argv && argv[1])
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),argv[1],0);
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
 
-      coordToTclArray(ptr,rr,www,var,"wcs");
-
+      if (argc > 2 && argv && argv[2])
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),argv[2],0);
+      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
+      
       char* wcsname = (char*)sptr->getWCSName(www);
       if (wcsname)
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),wcsname,0);
-      else if (argc > 2 && argv && argv[2])
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),argv[2],0);
+      else if (argc > 3 && argv && argv[3])
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),argv[3],0);
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
 	    

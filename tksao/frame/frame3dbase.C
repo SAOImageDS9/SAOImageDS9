@@ -152,6 +152,57 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
   getInfoClearValue(var);
 }
 
+#ifndef NEWWCS
+void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr, 
+			     FitsImage* sptr)
+{
+  Vector3d img = rr * sptr->refToImage3d;
+
+  for (int ii=0; ii<MULTWCS; ii++) {
+    char buf[64];
+    char ww = !ii ? '\0' : '`'+ii;
+    Coord::CoordSystem www = (Coord::CoordSystem)(Coord::WCS+ii);
+
+    if (hasWCS(www)) {
+      char buff[128];
+      sptr->pix2wcs(Vector(img), www, wcsSky_, wcsSkyFormat_, buff);
+
+      int argc;
+      const char** argv;
+      Tcl_SplitList(interp, buff, &argc, &argv);
+
+      if (argc > 0 && argv && argv[0])
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),argv[0],0);
+      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
+
+      if (argc > 1 && argv && argv[1])
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),argv[1],0);
+      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
+
+      char* wcsname = (char*)sptr->getWCSName(www);
+      if (wcsname)
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),wcsname,0);
+      else if (argc > 2 && argv && argv[2])
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),argv[2],0);
+      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
+	    
+      double ss = ptr->mapFromImage3d(img[2],www);
+      doubleToTclArray(ss,var,varcat(buf,(char*)"wcs",ww,(char*)""),"z");
+
+      Tcl_Free((char*)argv);
+    }
+    else {
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
+    }
+  }
+}
+#else
 void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr, 
 			     FitsImage* sptr)
 {
@@ -203,6 +254,7 @@ void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr,
     }
   }
 }
+#endif
 
 #ifndef NEWWCS
 void Frame3dBase::coordToTclArray(FitsImage* ptr, const Vector3d& vv, 

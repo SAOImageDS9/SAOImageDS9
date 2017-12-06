@@ -736,15 +736,14 @@ int Base::doRender()
   return context->cfits ? 1 : 0;
 }
 
-void Base::doubleToTclArray(double d, const char* var, 
+void Base::doubleToTclArray(double dd, const char* var, 
 			    const char* base, const char* mod)
 {
   ostringstream str;
   str << base << "," << mod << ends;
 
   ostringstream vstr;
-  vstr << setprecision(8) << d << ends;
-  //  vstr << fixed << setw(9) << setprecision(3) << d << ends;
+  vstr << setprecision(8) << dd << ends;
   Tcl_SetVar2(interp, (char*)var, str.str().c_str(), vstr.str().c_str(), 0);
 }
 

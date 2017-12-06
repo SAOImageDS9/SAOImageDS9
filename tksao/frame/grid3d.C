@@ -81,32 +81,10 @@ int Grid3d::doit(RenderMode rm)
     break;
   default:
     {
-      // imageToData frame/map
-      double ss[] = {-.5, -.5};
-      AstShiftMap *sm = astShiftMap(2, ss, " ");
-      AstFrame *df = astFrame(2, "Domain=DATA");
-
       // Get 2D SkyFrame
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
       if (fits->wcsIsASkyFrame(ast))
       	fits->setWCSSkyFrame(ast, sky_);
-
-      // Record the index of the current Frame
-      int isky = astGetI(ast, "Current");
-
-      // Add the new DATA Frame into the FrameSet, using the ShiftMap to
-      // connect it to the existing IMAGE Frame.
-      astAddFrame(ast, AST__BASE, sm, df);
-
-      // The above call to astAddFrame will have changed the current Frame
-      // in the FrameSet to be the new DATA Frame. First record the index of
-      // the DATA Frame, and then re-instate the original current Frame (i.e.
-      // the SKY Frame).
-      int idata =  astGetI(ast, "Current");
-      astSetI(ast, "Current", isky);
-
-      // make the DATA Frame the new base Frame 
-      astSetI(ast, "Base", idata);
 
       // Create two 1D Frames and a 1D Mapping describing the third axis
       AstFrame* zbase = astFrame(1,"");
@@ -134,8 +112,14 @@ int Grid3d::doit(RenderMode rm)
       AstCmpMap* cmpwcsmap = astCmpMap(wcsmap,zmap,0,"");
 
       // Construct the 3D FrameSet from the new 3D Frames and Mapping
-      frameSet = astFrameSet(cmpwcsbase,"");
-      astAddFrame(frameSet, AST__CURRENT, cmpwcsmap, cmpwcscurr);
+      AstFrameSet* fs3d = astFrameSet(cmpwcsbase,"");
+      astAddFrame(fs3d, AST__CURRENT, cmpwcsmap, cmpwcscurr);
+
+      // add wcs to frameset
+      // this will link frameset to wcs with unitMap
+      astInvert(fs3d);
+      astAddFrame(frameSet, AST__CURRENT, astUnitMap(3,""), fs3d);
+      astSetI(frameSet,"Current",astGetI(frameSet,"nframe"));
     }
   }
 

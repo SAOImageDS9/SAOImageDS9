@@ -3466,22 +3466,26 @@ int FitsImage::hasWCS(Coord::CoordSystem sys)
   astBegin;
 
   int ss = sys-Coord::WCS;
-  int rr =0;
-  int nn = astGetI(newast_,"nframe");
+  int nn = astGetI(newast_, "Nframe");
   char cc = ' ';
   if (ss)
     cc = ss+'@';
 
   for (int ii=0; ii<nn; ii++) {
-    const char* id = astGetC(astGetFrame(newast_,ii+1),"Ident");
-    if (cc == id[0]) {
-      rr =1;
-      break;
+    const char* id = astGetC(astGetFrame(newast_,ii+1), "Ident");
+    if (id && *id && cc == id[0]) {
+      astEnd;
+      return 1;
     }
   }
 
-  astEnd; // now, clean up memory
-  return rr;
+  astEnd;
+
+  // if newast_, sys= WCS, and no Ident, then must be AST
+  if (sys == Coord::WCS)
+    return 1;
+
+  return 0;
 }
 
 int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
@@ -3493,8 +3497,7 @@ int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
   astBegin;
 
   int ss = sys-Coord::WCS;
-  int rr =0;
-  int nn = astGetI(newast_, "nframe");
+  int nn = astGetI(newast_, "Nframe");
   char cc = ' ';
   if (ss)
     cc = ss+'@';
@@ -3502,37 +3505,45 @@ int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
   for (int ii=0; ii<nn; ii++) {
     AstFrame* ff = (AstFrame*)astGetFrame(newast_,ii+1);
     const char* id = astGetC(ff, "Ident");
-    if (cc == id[0]) {
-
+    if (id && *id && cc == id[0]) {
       int naxes = astGetI(ff, "Naxes");
       switch (naxes) {
       case 2:
-	rr = astIsASkyFrame(ff);
-	break;
+	{
+	  int rr = astIsASkyFrame(ff);
+	  // check for xLON/xLAT and xxLN/xxLT
+	  //  but GLON/GLAT is ok
+	  const char* str = astGetC(ff, "System");
+	  if (!strncmp(str,"Unknown",7))
+	    rr = 0;
+
+	  astEnd;
+	  return rr;
+	}
       case 3:
       case 4:
 	{
 	  char* domain = (char*)astGetC(ff, "Domain");
 	  char* sky = strstr(domain, "SKY");
-	  rr = sky ? 1 : 0;
+	  astEnd;
+	  return sky ? 1 : 0;
 	}
-	break;
       default:
-	rr =0;
-	break;
+	astEnd;
+	return 0;
       }
-
-      // check for xLON/xLAT and xxLN/xxLT
-      //  but GLON/GLAT is ok
-      const char* str = astGetC(ff, "System");
-      if (!strncmp(str,"Unknown",7))
-	rr =0;
-      break;
     }
   }
 
-  astEnd; // now, clean up memory
-  return rr;
+  // if newast_, sys= WCS, and no Ident, then must be AST
+  if (sys == Coord::WCS) {
+    int rr = astIsASkyFrame(astGetFrame(newast_, AST__CURRENT));
+    astEnd;
+    return rr;
+  }
+
+  astEnd;
+  return 0;
 }
 
 int FitsImage::hasWCSCel(Coord::CoordSystem sys)
@@ -3544,7 +3555,6 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
   astBegin;
 
   int ss = sys-Coord::WCS;
-  int rr =0;
   int nn = astGetI(newast_, "nframe");
   char cc = ' ';
   if (ss)
@@ -3553,31 +3563,40 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
   for (int ii=0; ii<nn; ii++) {
     AstFrame* ff = (AstFrame*)astGetFrame(newast_,ii+1);
     const char* id = astGetC(ff, "Ident");
-    if (cc == id[0]) {
-
+    if (id && *id && cc == id[0]) {
       int naxes = astGetI(ff, "Naxes");
       switch (naxes) {
       case 2:
-	rr = astIsASkyFrame(ff);
-	break;
+	{
+	int rr = astIsASkyFrame(ff);
+	astEnd;
+	return rr;
+	}
       case 3:
       case 4:
 	{
 	  char* domain = (char*)astGetC(ff, "Domain");
 	  char* sky = strstr(domain, "SKY");
-	  rr = sky ? 1 : 0;
+	  astEnd;
+	  return sky ? 1 : 0;
 	}
-	break;
       default:
-	rr =0;
-	break;
+	astEnd;
+	return 0;
       }
       break;
     }
   }
 
-  astEnd; // now, clean up memory
-  return rr;
+  // if newast_, sys= WCS, and no Ident, then must be AST
+  if (sys == Coord::WCS) {
+    int rr = astIsASkyFrame(astGetFrame(newast_, AST__CURRENT));
+    astEnd;
+    return rr;
+  }
+
+  astEnd;
+  return 0;
 }
 #endif
 

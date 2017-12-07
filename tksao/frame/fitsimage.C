@@ -3511,12 +3511,13 @@ int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
       case 2:
 	{
 	  int rr = astIsASkyFrame(ff);
-	  // check for xLON/xLAT and xxLN/xxLT
-	  //  but GLON/GLAT is ok
-	  const char* str = astGetC(ff, "System");
-	  if (!strncmp(str,"Unknown",7))
-	    rr = 0;
-
+	  // no xLON/xLAT and xxLN/xxLT but GLON/GLAT is ok
+	  if (rr) {
+	    const char* str = astGetC(ff, "System");
+	    if (!strncmp(str,"Unknown",7))
+	      rr = 0;
+	  }
+	  
 	  astEnd;
 	  return rr;
 	}
@@ -3568,9 +3569,9 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
       switch (naxes) {
       case 2:
 	{
-	int rr = astIsASkyFrame(ff);
-	astEnd;
-	return rr;
+	  int rr = astIsASkyFrame(ff);
+	  astEnd;
+	  return rr;
 	}
       case 3:
       case 4:

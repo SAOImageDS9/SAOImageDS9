@@ -350,7 +350,7 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       listNonCel(ptr, str, sys);
       break;
     default:
-      if (ptr->hasWCSEqu(sys)) {
+      if (ptr->hasWCSCel(sys)) {
 	double ww = ptr->mapLenFromRef(width,sys,Coord::ARCSEC);
 	switch (format) {
 	case Coord::DEGREES:

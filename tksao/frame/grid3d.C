@@ -156,7 +156,7 @@ int Grid3d::doit(RenderMode rm)
       int id = astGetI(ast,"Current");
       int nf = astGetI(frameSet,"NFrame");
       astInvert(ast);
-      astAddFrame(frameSet, AST__CURRENT, astUnitMap(2,""), ast);
+      astAddFrame(frameSet, AST__CURRENT, astUnitMap(3,""), ast);
       astSetI(frameSet,"Current",id+nf);
     }
   }

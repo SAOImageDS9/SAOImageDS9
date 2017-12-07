@@ -116,7 +116,8 @@ class FitsImage {
   AstFrameSet** ast_;  // ast frameset;
   WCSx** wcsx_;        // xth Axis WCS
 #else
-  AstFrameSet* newast_;  // ast frameset;
+  int* wcs_;
+  AstFrameSet* ast_;  // ast frameset;
 #endif
   FitsHead* wcsHeader_; // alt wcs header
   FitsHead* altHeader_; // wcs header for wfpc2
@@ -427,7 +428,7 @@ class FitsImage {
   AstFrameSet* getAST(Coord::CoordSystem sys) 
     {return (ast_ && ast_[sys-Coord::WCS]) ? ast_[sys-Coord::WCS] : NULL;}
 #else
-  AstFrameSet* getAST(Coord::CoordSystem sys) {return newast_;}
+  AstFrameSet* getAST(Coord::CoordSystem sys) {return ast_;}
 #endif
   
   int hasWCS(Coord::CoordSystem);

@@ -649,11 +649,11 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  fits1->setWCSSystem(fits1->newast_, sys1);
-  fits2->setWCSSystem(fits2->newast_, sys2);
+  fits1->setWCSSystem(fits1->ast_, sys1);
+  fits2->setWCSSystem(fits2->ast_, sys2);
 
-  AstFrameSet* wcs1 = (AstFrameSet*)astCopy(fits1->newast_);
-  AstFrameSet* wcs2 = (AstFrameSet*)astCopy(fits2->newast_);
+  AstFrameSet* wcs1 = (AstFrameSet*)astCopy(fits1->ast_);
+  AstFrameSet* wcs2 = (AstFrameSet*)astCopy(fits2->ast_);
   astInvert(wcs1);
   astInvert(wcs2);
   AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "");
@@ -662,8 +662,8 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
     astInvert(cvt);
     Vector cc1 = fits1->center();
     Vector cc2 = fits2->center();
-    Vector ll = fits1->wcsTran(fits1->newast_, cc1, 1);
-    Vector ur = fits2->wcsTran(fits2->newast_, cc2, 1);
+    Vector ll = fits1->wcsTran(fits1->ast_, cc1, 1);
+    Vector ur = fits2->wcsTran(fits2->ast_, cc2, 1);
 
     double fit[6];
     double tol = 1;

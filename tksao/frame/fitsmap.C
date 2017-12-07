@@ -208,17 +208,17 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
       if (!hasWCS(sys))
 	return 0;
       
-      setWCSSystem(newast_, sys);
-      setWCSSkyFrame(newast_, Coord::FK5);
+      setWCSSystem(ast_, sys);
+      setWCSSkyFrame(ast_, Coord::FK5);
 
       Vector in[2];
       Vector out[2];
       in[0] = center();
       in[1] = center()+Vector(0,dd);
-      wcsTran(newast_, 2, in, 1, out);
-      double rr = wcsDistance(newast_,out[0],out[1]);
+      wcsTran(ast_, 2, in, 1, out);
+      double rr = wcsDistance(ast_,out[0],out[1]);
 
-      if (wcsIsASkyFrame(newast_)) {
+      if (wcsIsASkyFrame(ast_)) {
 	rr = radToDeg(rr);
 	switch (dist) {
 	case Coord::DEGREE:
@@ -310,10 +310,10 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
 	return 0;
       
       astClearStatus; // just to make sure
-      setWCSSystem(newast_, sys);
+      setWCSSystem(ast_, sys);
 
       double rdd = dd;
-      if (wcsIsASkyFrame(newast_)) {
+      if (wcsIsASkyFrame(ast_)) {
 	rdd = degToRad(dd);
 	switch (dist) {
 	case Coord::DEGREE:
@@ -328,12 +328,12 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
       }
 
       Vector cc = center();
-      Vector wcc = wcsTran(newast_,cc,1);
+      Vector wcc = wcsTran(ast_,cc,1);
       Vector wpp = wcc+Vector(0,rdd);
-      Vector pp = wcsTran(newast_,wpp,0);
-      astInvert(newast_);
-      double rr = wcsDistance(newast_,cc,pp);
-      astInvert(newast_);
+      Vector pp = wcsTran(ast_,wpp,0);
+      astInvert(ast_);
+      double rr = wcsDistance(ast_,cc,pp);
+      astInvert(ast_);
 
       return rr;
     }

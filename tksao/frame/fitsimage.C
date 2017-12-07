@@ -3980,28 +3980,26 @@ int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
 #else
 int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
 {
+  astClearStatus;
+  astBegin;
+
+  int rr =0;
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
   case 1:
-    return 0;
+    break;
   case 2:
-    return astIsASkyFrame(astGetFrame(ast,AST__CURRENT));
+    rr = astIsASkyFrame(astGetFrame(ast,AST__CURRENT));
   case 3:
   case 4:
-    {
-      astClearStatus; // just to make sure
-      astBegin; // start memory management
-
-      char* domain = (char*)astGetC(ast,"Domain");
-      char* sky = strstr(domain,"SKY");
-
-      astEnd; // now, clean up memory
-
-      return sky ? 1 : 0;
-    }
+    rr = strstr((char*)astGetC(ast,"Domain"),"SKY") ? 1 : 0;
   default:
-    return 0;
+    break;
   }
+
+  astEnd;
+
+  return rr;
 }
 #endif
 

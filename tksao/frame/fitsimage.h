@@ -111,10 +111,10 @@ class FitsImage {
   int address[FTY_MAXAXES];
 
   int manageWCS_;
-  WCSx** wcsx_;        // xth Axis WCS
 #ifndef NEWWCS
   WorldCoor** wcs_;    // wcs list
   AstFrameSet** ast_;  // ast frameset;
+  WCSx** wcsx_;        // xth Axis WCS
 #else
   AstFrameSet* newast_;  // ast frameset;
 #endif
@@ -359,7 +359,6 @@ class FitsImage {
   int hasDTMV() {return keyDTMV;}
 
   FitsHead* wcsHeader() {return wcsHeader_;}
-  WCSx** wcsx() {return wcsx_;}
 
   int isIIS() {return iisMode_;}
   Vector& iisz() {return iisz_;}
@@ -369,15 +368,16 @@ class FitsImage {
 
   char* pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
 
-#ifdef NEWWCS
+#ifndef NEWWCS
+  WCSx** wcsx() {return wcsx_;}
+  double pix2wcsx(double, Coord::CoordSystem);
+  double wcs2pixx(double, Coord::CoordSystem);
+#else
   Vector3d pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
   Vector3d wcs2pix(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
 
   char* pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
 #endif
-
-  double pix2wcsx(double, Coord::CoordSystem);
-  double wcs2pixx(double, Coord::CoordSystem);
 
   void altWCS(istream&);
   void appendWCS(istream&);

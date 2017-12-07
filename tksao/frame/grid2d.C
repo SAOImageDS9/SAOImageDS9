@@ -95,9 +95,11 @@ int Grid2d::doit(RenderMode rm)
 #endif
       // add wcs to frameset
       // this will link frameset to wcs with unitMap
+      int id = astGetI(ast,"Current");
+      int nf = astGetI(frameSet,"NFrame");
       astInvert(ast);
       astAddFrame(frameSet, AST__CURRENT, astUnitMap(2,""), ast);
-      astSetI(frameSet,"Current",astGetI(frameSet,"nframe"));
+      astSetI(frameSet,"Current",id+nf);
     }
     break;
   }

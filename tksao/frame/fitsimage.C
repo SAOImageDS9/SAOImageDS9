@@ -107,10 +107,10 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   refToImage3d = dataToImage3d;
 
   manageWCS_ =1;
-  wcsx_ =NULL;
 #ifndef NEWWCS
   wcs_ =NULL;
   ast_ =NULL;
+  wcsx_ =NULL;
 #else
   newast_ =NULL;
 #endif
@@ -169,13 +169,6 @@ FitsImage::~FitsImage()
       delete analysisdata_;
   }
 
-  if (wcsx_) {
-    for (int ii=0; ii<MULTWCS; ii++)
-      if (manageWCS_ && wcsx_[ii])
-	delete wcsx_[ii];
-    delete [] wcsx_;
-  }  
-
 #ifndef NEWWCS
   if (wcs_) {
     for (int ii=0; ii<MULTWCSA; ii++)
@@ -190,6 +183,13 @@ FitsImage::~FitsImage()
  	astAnnul(ast_[ii]);
     delete [] ast_;
   }
+
+  if (wcsx_) {
+    for (int ii=0; ii<MULTWCS; ii++)
+      if (manageWCS_ && wcsx_[ii])
+	delete wcsx_[ii];
+    delete [] wcsx_;
+  }  
 #else
   if (manageWCS_ && newast_)
     astAnnul(newast_);
@@ -1060,17 +1060,6 @@ void FitsImage::iisSetFileName(const char* fn)
 
 void FitsImage::initWCS()
 {
-  // free up wcs and ast arrays
-  if (wcsx_) {
-    for (int ii=0; ii<MULTWCS; ii++)
-      if (manageWCS_ && wcsx_[ii])
-	delete wcsx_[ii];
-    delete [] wcsx_;
-  }  
-  wcsx_ = new WCSx*[MULTWCS];
-  for (int ii=0; ii<MULTWCS; ii++)
-    wcsx_[ii] = NULL;
-
 #ifndef NEWWCS
   if (wcs_) {
     for (int ii=0; ii<MULTWCSA; ii++)
@@ -1091,6 +1080,16 @@ void FitsImage::initWCS()
   ast_ = new AstFrameSet*[MULTWCSA];
   for (int ii=0; ii<MULTWCSA; ii++)
     ast_[ii] = NULL;
+
+  if (wcsx_) {
+    for (int ii=0; ii<MULTWCS; ii++)
+      if (manageWCS_ && wcsx_[ii])
+	delete wcsx_[ii];
+    delete [] wcsx_;
+  }  
+  wcsx_ = new WCSx*[MULTWCS];
+  for (int ii=0; ii<MULTWCS; ii++)
+    wcsx_[ii] = NULL;
 #else
   if (manageWCS_ && newast_)
     astAnnul(newast_);
@@ -1108,13 +1107,13 @@ void FitsImage::initWCS()
       FitsImage* sptr = ptr->nextSlice();
       while (sptr) {
 	if (sptr == this) {
-	  for (int ii=0; ii<MULTWCS; ii++)
-	    wcsx_[ii] = ptr->wcsx_[ii];
 #ifndef NEWWCS
 	  for (int ii=0; ii<MULTWCSA; ii++)
 	    wcs_[ii] = ptr->wcs_[ii];
 	  for (int ii=0; ii<MULTWCSA; ii++)
 	    ast_[ii] = ptr->ast_[ii];
+	  for (int ii=0; ii<MULTWCS; ii++)
+	    wcsx_[ii] = ptr->wcsx_[ii];
 #else
 	  newast_ = ptr->newast_;
 #endif
@@ -1219,7 +1218,6 @@ void FitsImage::initWCS()
       }
     }
   }
-#endif
 
   // WCSx
   char scrpix[] = "CRPIX  ";
@@ -1263,9 +1261,7 @@ void FitsImage::initWCS()
     }
   }
 
-#ifndef NEWWCS
   initWCSPhysical();
-#endif
 
   if (DebugWCS) {
     for (int ii=0; ii<MULTWCS; ii++) {
@@ -1281,6 +1277,7 @@ void FitsImage::initWCS()
       }
     }
   }
+#endif
 }
 
 #ifndef NEWWCS
@@ -3643,27 +3640,6 @@ int FitsImage::hasWCS3D(Coord::CoordSystem sys)
   astEnd; // now, clean up memory
   return 0;
 }
-
-double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys)
-{
-  if (hasWCS3D(sys)) {
-    int ss = sys-Coord::WCS;
-    return (in-wcsx_[ss]->crpix)*wcsx_[ss]->cd + wcsx_[ss]->crval;
-  }
-  else
-    return in;
-}
-
-double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys)
-{
-  if (hasWCS3D(sys)) {
-    int ss = sys-Coord::WCS;
-    return (in-wcsx_[ss]->crval)/wcsx_[ss]->cd + wcsx_[ss]->crpix;
-  }
-  else
-    return in;
-}
-
 #endif
 
 // WCS/AST support
@@ -3933,7 +3909,7 @@ void FitsImage::setWCSSystem(AstFrameSet* ast, Coord::CoordSystem sys)
   for (int ss=0; ss<nn; ss++) {
     const char* id = astGetC(astGetFrame(ast,ss+1),"Ident");
     if (cc == id[0]) {
-      astSetI(ast,"current",ss+1);
+      astSetI(ast,"Current",ss+1);
       break;
     }
   }

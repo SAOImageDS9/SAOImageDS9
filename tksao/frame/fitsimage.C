@@ -114,6 +114,9 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
 #else
   ast_ =NULL;
   wcs_ =NULL;
+  wcsEqu_ =NULL;
+  wcsCel_ =NULL;
+  wcs3D_ =NULL;
 #endif
   wcsHeader_ =NULL;
   altHeader_ =NULL;
@@ -192,10 +195,18 @@ FitsImage::~FitsImage()
     delete [] wcsx_;
   }  
 #else
-  if (manageWCS_ && ast_)
-    astAnnul(ast_);
-  if (manageWCS_ && wcs_)
-    delete [] wcs_;
+  if (manageWCS_) {
+    if (ast_)
+      astAnnul(ast_);
+    if (wcs_)
+      delete [] wcs_;
+    if (wcsEqu_)
+      delete [] wcsEqu_;
+    if (wcsCel_)
+      delete [] wcsCel_;
+    if (wcs3D_)
+      delete [] wcs3D_;
+  }
 #endif
 
   if (wcsHeader_)
@@ -1094,12 +1105,26 @@ void FitsImage::initWCS()
   for (int ii=0; ii<MULTWCS; ii++)
     wcsx_[ii] = NULL;
 #else
-  if (manageWCS_ && ast_)
-    astAnnul(ast_);
-  ast_ = NULL;
-  if (manageWCS_ && wcs_)
-    delete [] wcs_;
-  wcs_ = NULL;
+  if (manageWCS_) {
+    if (ast_)
+      astAnnul(ast_);
+    ast_ = NULL;
+    if (wcs_)
+      delete [] wcs_;
+    wcs_ = NULL;
+    if (wcs_)
+      delete [] wcs_;
+    wcs_ = NULL;
+    if (wcsEqu_)
+      delete [] wcsEqu_;
+    wcsEqu_ = NULL;
+    if (wcsCel_)
+      delete [] wcsCel_;
+    wcsCel_ = NULL;
+    if (wcs3D_)
+      delete [] wcs3D_;
+    wcs3D_ = NULL;
+  }
 #endif
 
   // shareWCS?
@@ -1123,6 +1148,9 @@ void FitsImage::initWCS()
 #else
 	  ast_ = ptr->ast_;
 	  wcs_ = ptr->wcs_;
+	  wcsEqu_ = ptr->wcsEqu_;
+	  wcsCel_ = ptr->wcsCel_;
+	  wcs3D_ = ptr->wcs3D_;
 #endif
 
 #ifndef NEWWCS
@@ -1197,7 +1225,12 @@ void FitsImage::initWCS()
     }
   }
 #else
-  astinit(hd, prim);
+  astInit(hd, prim);
+  wcsInit();
+  wcsEquInit();
+  wcsCelInit();
+  wcs3DInit();
+  
   if (DebugAST && ast_)
     astShow(ast_);
 #endif
@@ -3476,114 +3509,18 @@ int FitsImage::hasWCS(Coord::CoordSystem sys)
 
 int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
 {
-  if (!ast_ || sys<Coord::WCS)
+  if (!ast_ || !wcsEqu_ || sys<Coord::WCS)
     return 0;
-
-  astClearStatus;
-  astBegin;
-
-  int ss = sys-Coord::WCS;
-  int nn = astGetI(ast_, "Nframe");
-  char cc = ' ';
-  if (ss)
-    cc = ss+'@';
-
-  for (int ii=0; ii<nn; ii++) {
-    AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
-    const char* id = astGetC(ff, "Ident");
-    if (id && *id && cc == id[0]) {
-      int naxes = astGetI(ff, "Naxes");
-      switch (naxes) {
-      case 2:
-	{
-	  int rr = astIsASkyFrame(ff);
-	  // no xLON/xLAT and xxLN/xxLT but GLON/GLAT is ok
-	  if (rr) {
-	    const char* str = astGetC(ff, "System");
-	    if (!strncmp(str,"Unknown",7))
-	      rr = 0;
-	  }
-	  
-	  astEnd;
-	  return rr;
-	}
-      case 3:
-      case 4:
-	{
-	  char* domain = (char*)astGetC(ff, "Domain");
-	  char* sky = strstr(domain, "SKY");
-	  astEnd;
-	  return sky ? 1 : 0;
-	}
-      default:
-	astEnd;
-	return 0;
-      }
-    }
-  }
-
-  // if ast_, sys= WCS, and no Ident, then must be AST
-  if (sys == Coord::WCS) {
-    int rr = astIsASkyFrame(astGetFrame(ast_, AST__CURRENT));
-    astEnd;
-    return rr;
-  }
-
-  astEnd;
-  return 0;
+  else
+    return wcsEqu_[sys-Coord::WCS];
 }
 
 int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 {
-  if (!ast_ || sys<Coord::WCS)
+  if (!ast_ || !wcsCel_ || sys<Coord::WCS)
     return 0;
-
-  astClearStatus;
-  astBegin;
-
-  int ss = sys-Coord::WCS;
-  int nn = astGetI(ast_, "nframe");
-  char cc = ' ';
-  if (ss)
-    cc = ss+'@';
-
-  for (int ii=0; ii<nn; ii++) {
-    AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
-    const char* id = astGetC(ff, "Ident");
-    if (id && *id && cc == id[0]) {
-      int naxes = astGetI(ff, "Naxes");
-      switch (naxes) {
-      case 2:
-	{
-	  int rr = astIsASkyFrame(ff);
-	  astEnd;
-	  return rr;
-	}
-      case 3:
-      case 4:
-	{
-	  char* domain = (char*)astGetC(ff, "Domain");
-	  char* sky = strstr(domain, "SKY");
-	  astEnd;
-	  return sky ? 1 : 0;
-	}
-      default:
-	astEnd;
-	return 0;
-      }
-      break;
-    }
-  }
-
-  // if ast_, sys= WCS, and no Ident, then must be AST
-  if (sys == Coord::WCS) {
-    int rr = astIsASkyFrame(astGetFrame(ast_, AST__CURRENT));
-    astEnd;
-    return rr;
-  }
-
-  astEnd;
-  return 0;
+  else
+    return wcsCel_[sys-Coord::WCS];
 }
 #endif
 
@@ -3621,30 +3558,10 @@ double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys)
 
 int FitsImage::hasWCS3D(Coord::CoordSystem sys)
 {
-  if (!ast_ || sys<Coord::WCS)
+  if (!ast_ || !wcs3D_ || sys<Coord::WCS)
     return 0;
-  
-  astClearStatus;
-  astBegin;
-
-  int ss = sys-Coord::WCS;
-  int nn = astGetI(ast_,"nframe");
-  char cc = ' ';
-  if (ss)
-    cc = ss+'@';
-
-  for (int ii=0; ii<nn; ii++) {
-    AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
-    const char* id = astGetC(ff,"Ident");
-    if (cc == id[0]) {
-      int naxes = astGetI(ff, "Naxes");
-      astEnd; // now, clean up memory
-      return naxes>2 ? 1:0;
-    }
-  }
-
-  astEnd; // now, clean up memory
-  return 0;
+  else
+    return wcs3D_[sys-Coord::WCS];
 }
 #endif
 
@@ -3725,15 +3642,12 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
     setWCSSkyFrame(ast_[ss],Coord::FK5);
 }
 #else
-void FitsImage::astinit(FitsHead* hd, FitsHead* prim)
+void FitsImage::astInit(FitsHead* hd, FitsHead* prim)
 {
-  // init wcs_ array
-  if (wcs_)
-    delete [] wcs_;
-  wcs_ = new int[MULTWCS];
-  for (int ii=0; ii<MULTWCS; ii++)
-    wcs_[ii] =0;
-
+  if (ast_)
+    astAnnul(ast_);
+  ast_ =NULL;
+  
   // just in case
   if (!hd)
     return;
@@ -3757,12 +3671,30 @@ void FitsImage::astinit(FitsHead* hd, FitsHead* prim)
   case 4:
     break;
   }
+
+  setWCSSkyFrame(ast_,Coord::FK5);
+}
+
+void FitsImage::wcsInit()
+{
+  // init wcs_ array
+  if (wcs_)
+    delete [] wcs_;
+  wcs_ =NULL;
+
+  if (!ast_)
+    return;
+
+  wcs_ = new int[MULTWCS];
+  for (int ii=0; ii<MULTWCS; ii++)
+    wcs_[ii] =0;
   
   // fill out wcs_ array
   astClearStatus;
   astBegin;
 
-  wcs_[0] =1; // since we have ast_, must be
+  // since we have ast_
+  wcs_[0] =1; 
   int nn = astGetI(ast_, "Nframe");
   for (int ii=0; ii<nn; ii++) {
     const char* id = astGetC(astGetFrame(ast_,ii+1), "Ident");
@@ -3773,7 +3705,130 @@ void FitsImage::astinit(FitsHead* hd, FitsHead* prim)
   }
 
   astEnd;
-  setWCSSkyFrame(ast_,Coord::FK5);
+}
+
+void FitsImage::wcsEquInit()
+{
+  // init wcsEqu_ array
+  if (wcsEqu_)
+    delete [] wcsEqu_;
+  wcsEqu_ =NULL;
+
+  if (!ast_)
+    return;
+
+  wcsEqu_ = new int[MULTWCS];
+  for (int ii=0; ii<MULTWCS; ii++)
+    wcsEqu_[ii] =0;
+
+  astClearStatus;
+  astBegin;
+
+  // since we have ast_
+  wcsEqu_[0] = astIsASkyFrame(astGetFrame(ast_, AST__CURRENT));
+  int nn = astGetI(ast_, "Nframe");
+  for (int ii=0; ii<nn; ii++) {
+    AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
+    const char* id = astGetC(ff, "Ident");
+    if (id && *id) {
+      int jj = (*id == ' ') ? 0 : *id-'@';
+
+      int naxes = astGetI(ff, "Naxes");
+      switch (naxes) {
+      case 2:
+	wcsEqu_[jj] = astIsASkyFrame(ff);
+	// no xLON/xLAT and xxLN/xxLT but GLON/GLAT is ok
+	if (wcsEqu_[jj]) {
+	  const char* str = astGetC(ff, "System");
+	  if (!strncmp(str,"Unknown",7))
+	    wcsEqu_[jj] = 0;
+	}
+	break;
+      case 3:
+      case 4:
+	wcsEqu_[jj] = strstr((char*)astGetC(ff, "Domain"), "SKY") ? 1 : 0;
+	break;
+      default:
+	break;
+      }
+    }
+  }
+
+  astEnd;
+}
+
+void FitsImage::wcsCelInit()
+{
+  // init wcsCel_ array
+  if (wcsCel_)
+    delete [] wcsCel_;
+  wcsCel_ =NULL;
+
+  if (!ast_)
+    return;
+
+  wcsCel_ = new int[MULTWCS];
+  for (int ii=0; ii<MULTWCS; ii++)
+    wcsCel_[ii] =0;
+
+  astClearStatus;
+  astBegin;
+
+  // since we have ast_
+  wcsCel_[0] = astIsASkyFrame(astGetFrame(ast_, AST__CURRENT));
+  int nn = astGetI(ast_, "Nframe");
+  for (int ii=0; ii<nn; ii++) {
+    AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
+    const char* id = astGetC(ff, "Ident");
+    if (id && *id) {
+      int jj = (*id == ' ') ? 0 : *id-'@';
+
+      int naxes = astGetI(ff, "Naxes");
+      switch (naxes) {
+      case 2:
+	wcsCel_[jj] = astIsASkyFrame(ff);
+	break;
+      case 3:
+      case 4:
+	wcsCel_[jj] = strstr((char*)astGetC(ff, "Domain"), "SKY") ? 1 : 0;
+	break;
+      default:
+	break;
+      }
+    }
+  }
+
+  astEnd;
+}
+
+void FitsImage::wcs3DInit()
+{
+  // init wcs3D_ array
+  if (wcs3D_)
+    delete [] wcs3D_;
+  wcs3D_ =NULL;
+
+  if (!ast_)
+    return;
+
+  wcs3D_ = new int[MULTWCS];
+  for (int ii=0; ii<MULTWCS; ii++)
+    wcs3D_[ii] =0;
+  
+  astClearStatus;
+  astBegin;
+
+  int nn = astGetI(ast_,"nframe");
+  for (int ii=0; ii<nn; ii++) {
+    AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
+    const char* id = astGetC(ff,"Ident");
+    if (id && *id) {
+      int jj = (*id == ' ') ? 0 : *id-'@';
+      wcs3D_[jj] = (astGetI(ff, "Naxes")>2) ? 1 : 0;
+    }
+  }
+
+  astEnd;
 }
 #endif
 

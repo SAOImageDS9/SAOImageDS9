@@ -116,8 +116,11 @@ class FitsImage {
   AstFrameSet** ast_;  // ast frameset;
   WCSx** wcsx_;        // xth Axis WCS
 #else
-  int* wcs_;
   AstFrameSet* ast_;  // ast frameset;
+  int* wcs_;
+  int* wcsEqu_;
+  int* wcsCel_;
+  int* wcs3D_;
 #endif
   FitsHead* wcsHeader_; // alt wcs header
   FitsHead* altHeader_; // wcs header for wfpc2
@@ -153,7 +156,11 @@ class FitsImage {
   void putFitsCard(void* chan, const char* key, int value);
   void putFitsCard(void* chan, const char* key, double value);
 #else
-  void astinit(FitsHead*, FitsHead*);
+  void astInit(FitsHead*, FitsHead*);
+  void wcsInit();
+  void wcsEquInit();
+  void wcsCelInit();
+  void wcs3DInit();
 #endif
   void astinit0(int, FitsHead*, FitsHead*);
   int checkWCS(Vector&);

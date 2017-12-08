@@ -1,0 +1,936 @@
+<!DOCTYPE html> 
+<html> 
+<head><title>FITS-WCS Coverage</title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss528.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se30.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<h3 class="sectionHead"><span class="titlemark">G  </span> <a 
+ id="x558-7500007"></a><a name="xref_FitsWcsCoverage"></a>FITS-WCS Coverage</h3>
+<div class="sectionTOCS">
+&#x00A0;<span class="subsectionToc" >G.1 <a 
+href="#x558-7510001">Paper I - General Linear Coordinates</a></span>
+<br />&#x00A0;<span class="subsectionToc" >G.2 <a 
+href="#x558-7570002">Paper II - Celestial Coordinates</a></span>
+<br />&#x00A0;<span class="subsectionToc" >G.3 <a 
+href="#x558-7620003">Paper III - Spectral Coordinates</a></span>
+<br />&#x00A0;<span class="subsectionToc" >G.4 <a 
+href="#x558-7650004">Paper IV - Coordinate Distortions</a></span>
+</div>
+<!--l. 49552--><p class="noindent" >This appendix gives details of the <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> class implementation of the conventions
+described in the FITS-WCS papers available at <a 
+href="http://fits.gsfc.nasa.gov/fits_wcs.html" class="url" >http://fits.gsfc.nasa.gov/fits_wcs.html</a>.
+These conventions are used only if the <a 
+href="sun211ss284.html#x310-5020000">Encoding</a> attribute of the FitsChan has the value
+&#x201C;FITS-WCS&#x201D; (whether set explicitly or defaulted). It should always be possible for a
+<a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> to be read (using the <a 
+href="sun211ss160.html#x185-3770000">astRead</a> function) from a FitsChan containing
+a header which conforms to these conventions. However, only those FrameSets
+which are compatible with the FITS-WCS model can be <em>written</em> to a FitsChan using
+the <a 
+href="sun211ss237.html#x262-4540000">astWrite</a> function. For instance, if the current <a 
+href="sun211ss452.html#x479-6710000">Frame</a> of a FrameSet is
+re-mapped using, say, an arbitrary <a 
+href="sun211ss460.html#x487-6790000">MathMap</a> then the FrameSet will no longer be
+compatible with the FITS-WCS model, and so will not be written out successfully to a
+FitsChan.
+<!--l. 49570--><p class="noindent" >The following sub-sections describe the details of the implementation of each of the
+first four FITS-WCS papers. Here, the term &#x201C;pixel axes&#x201D; is used to refer to the FITS
+pixel coordinates (i.e. the centre of the first image pixel has a value 1.0
+on each pixel axis); the term &#x201C;IWC axes&#x201D; is used to refer to the axes of the
+Intermediate World Coordinate system; and the term &#x201C;WCS axes&#x201D; is used to refer
+to the axes of the final physical coordinate system described by the CTYPE<em>i</em>
+keywords.
+<a 
+ id="x558-750001r232"></a>
+<h4 class="subsectionHead"><span class="titlemark">G.1  </span> <a 
+ id="x558-7510001"></a>Paper I - General Linear Coordinates</h4>
+<!--l. 49579--><p class="noindent" >When reading a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> from a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>, these conventions are used if the CTYPE<em>i</em>
+keyword values within the FitsChan do not conform to the conventions described in later
+papers, in which case the axes are assumed to be linear. When writing a FrameSet to a
+FitsChan, these conventions are used for axes which are described by a simple <a 
+href="sun211ss452.html#x479-6710000">Frame</a>
+(<em>i.e.</em> not a <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>, <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a>, <em>etc.</em>).
+                                                                                       
+
+                                                                                       
+<!--l. 49586--><p class="noindent" ><a 
+href="sun211ss491.html#x518-7100000">Table</a> <a 
+href="#x558-7510011">1<!--tex4ht:ref: tab:fitspaper1 --></a> describes the use made by AST of each keyword defined by FITS-WCS paper
+I.
+<div class="table">
+                                                                                       
+
+                                                                                       
+<!--l. 49589--><p class="noindent" ><a 
+ id="x558-7510011"></a><hr class="float"><div class="float" 
+>
+                                                                                       
+
+                                                                                       
+<div class="tabular"> <table id="TBL-11" class="tabular" 
+cellspacing="0" cellpadding="0" rules="groups" 
+><colgroup id="TBL-11-1g"><col 
+id="TBL-11-1"></colgroup><colgroup id="TBL-11-2g"><col 
+id="TBL-11-2"></colgroup><colgroup id="TBL-11-3g"><col 
+id="TBL-11-3"></colgroup><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-1-"><td  style="text-align:center; white-space:nowrap;" id="TBL-11-1-1"  
+class="td11">  <div class="multicolumn"  style="text-align:center; white-space:nowrap;"><b>Keyword</b></div>   </td><td  style="text-align:center; white-space:nowrap;" id="TBL-11-1-2"  
+class="td11">               <div class="multicolumn"  style="text-align:center; white-space:nowrap;"><b>Read</b></div>                </td><td  style="text-align:center; white-space:nowrap;" id="TBL-11-1-3"  
+class="td11">               <div class="multicolumn"  style="text-align:center; white-space:nowrap;"><b>Write</b></div>
+</td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-2-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-2-1"  
+class="td11"> WCSAXES<em>a</em>     </td><td  style="text-align:left;" id="TBL-11-2-2"  
+class="td11"> <!--l. 49596--><p class="noindent" >Ignored.                                                     </td><td  style="text-align:left;" id="TBL-11-2-3"  
+class="td11"> <!--l. 49596--><p class="noindent" >Set to the number of axes in the WCS
+  Frame  -  only  written  if  different  to
+  NAXIS.                                                       </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-3-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-3-1"  
+class="td11"> CRVAL<em>ia</em>         </td><td  style="text-align:left;" id="TBL-11-3-2"  
+class="td11"> <!--l. 49600--><p class="noindent" >Used   to   create   the   pixel   to   WCS
+  <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>.                                                   </td><td  style="text-align:left;" id="TBL-11-3-3"  
+class="td11"> <!--l. 49600--><p class="noindent" >Always    written    (see    &#x201C;Choice    of
+  Reference Point&#x201D; below).                        </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-4-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-4-1"  
+class="td11"> CRPIX<em>ja</em>           </td><td  style="text-align:left;" id="TBL-11-4-2"  
+class="td11"> <!--l. 49603--><p class="noindent" >Used   to   create   the   pixel   to   WCS
+  Mapping.                                                   </td><td  style="text-align:left;" id="TBL-11-4-3"  
+class="td11"> <!--l. 49603--><p class="noindent" >Always    written    (see    &#x201C;Choice    of
+  Reference Point&#x201D; below).                        </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-5-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-5-1"  
+class="td11"> CDELT<em>ia</em>          </td><td  style="text-align:left;" id="TBL-11-5-2"  
+class="td11"> <!--l. 49607--><p class="noindent" >Used   to   create   the   pixel   to   WCS
+  Mapping.                                                   </td><td  style="text-align:left;" id="TBL-11-5-3"  
+class="td11"> <!--l. 49607--><p class="noindent" >Only            written            if            the
+  <a 
+href="sun211ss256.html#x282-4740000">CDMatrix</a> attribute of the FitsChan is
+  set to zero.                                                 </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-6-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-6-1"  
+class="td11"> CROTA<em>i</em>           </td><td  style="text-align:left;" id="TBL-11-6-2"  
+class="td11"> <!--l. 49610--><p class="noindent" >Used   to   create   the   pixel   to   WCS
+  Mapping.                                                   </td><td  style="text-align:left;" id="TBL-11-6-3"  
+class="td11"> <!--l. 49610--><p class="noindent" >Only    written    in    FITS-AIPS    and
+  FITS-AIPS++ encodings.                         </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-7-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-7-1"  
+class="td11"> CTYPE<em>ia</em>          </td><td  style="text-align:left;" id="TBL-11-7-2"  
+class="td11"> <!--l. 49615--><p class="noindent" >Used                                                     to
+  choose the class and attributes of the
+  WCS  Frame,  and  to  create  the  pixel
+  to  WCS  Mapping  (note,  &#x201C;STOKES&#x201D;
+  and &#x201C;COMPLEX&#x201D; axes are treated as
+  unknown linear axes).                             </td><td  style="text-align:left;" id="TBL-11-7-3"  
+class="td11"> <!--l. 49615--><p class="noindent" >Always written (see &#x201C;Use and Choice
+  of CTYPE keywords&#x201D; below).                </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-8-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-8-1"  
+class="td11"> CUNIT<em>ia</em>          </td><td  style="text-align:left;" id="TBL-11-8-2"  
+class="td11"> <!--l. 49620--><p class="noindent" >Used to set the Units attributes of the
+  WCS Frame.                                              </td><td  style="text-align:left;" id="TBL-11-8-3"  
+class="td11"> <!--l. 49620--><p class="noindent" >Only  written  if  the  Units  attribute
+  of   the   WCS   Frame   has   been   set
+  explicitly.  If  so,  the  Units  value  for
+  each axis is used as the CUNIT value.  </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-9-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-9-1"  
+class="td11"> PC<em>i_j</em><em>a</em>              </td><td  style="text-align:left;" id="TBL-11-9-2"  
+class="td11"> <!--l. 49624--><p class="noindent" >Used   to   create   the   pixel   to   WCS
+  Mapping.                                                   </td><td  style="text-align:left;" id="TBL-11-9-3"  
+class="td11"> <!--l. 49624--><p class="noindent" >Only            written            if            the
+  CDMatrix attribute of the FitsChan is
+  set to zero.                                                 </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-10-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-10-1"  
+class="td11"> CD<em>i_j</em><em>a</em>              </td><td  style="text-align:left;" id="TBL-11-10-2"  
+class="td11"> <!--l. 49628--><p class="noindent" >Used   to   create   the   pixel   to   WCS
+  Mapping.                                                   </td><td  style="text-align:left;" id="TBL-11-10-3"  
+class="td11"> <!--l. 49628--><p class="noindent" >Only            written            if            the
+  CDMatrix attribute of the FitsChan is
+  set to a non-zero value.                           </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-11-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-11-1"  
+class="td11"> PV<em>i_ma</em>            </td><td  style="text-align:left;" id="TBL-11-11-2"  
+class="td11"> <!--l. 49631--><p class="noindent" >Ignored for linear axes.                           </td><td  style="text-align:left;" id="TBL-11-11-3"  
+class="td11"> <!--l. 49631--><p class="noindent" >Not written if the axes are linear.          </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-12-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-12-1"  
+class="td11"> PS<em>i_ma</em>             </td><td  style="text-align:left;" id="TBL-11-12-2"  
+class="td11"> <!--l. 49633--><p class="noindent" >Ignored.                                                     </td><td  style="text-align:left;" id="TBL-11-12-3"  
+class="td11"> <!--l. 49633--><p class="noindent" >Not used.                                                   </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-13-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-13-1"  
+class="td11"> WCSNAME<em>a</em>  </td><td  style="text-align:left;" id="TBL-11-13-2"  
+class="td11"> <!--l. 49638--><p class="noindent" >Used  to  set  the  <a 
+href="sun211ss279.html#x305-4970000">Domain</a>  attribute  of
+  the WCS Frame.                                       </td><td  style="text-align:left;" id="TBL-11-13-3"  
+class="td11"> <!--l. 49638--><p class="noindent" >Only written if the Domain attribute
+  of   the   WCS   Frame   has   been   set
+  explicitly.  If  so,  the  Domain  value  is
+  used as the WCSNAME value.              </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-14-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-14-1"  
+class="td11"> CRDER<em>ia</em>         </td><td  style="text-align:left;" id="TBL-11-14-2"  
+class="td11"> <!--l. 49640--><p class="noindent" >Ignored.                                                     </td><td  style="text-align:left;" id="TBL-11-14-3"  
+class="td11"> <!--l. 49640--><p class="noindent" >Not used.                                                   </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-15-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-15-1"  
+class="td11"> CSYER<em>ia</em>          </td><td  style="text-align:left;" id="TBL-11-15-2"  
+class="td11"> <!--l. 49642--><p class="noindent" >Ignored.                                                     </td><td  style="text-align:left;" id="TBL-11-15-3"  
+class="td11"> <!--l. 49642--><p class="noindent" >Not used.                                                   </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-11-16-"><td  style="text-align:left; white-space:nowrap;" id="TBL-11-16-1"  
+class="td11">             </td></tr></table></div>
+<br /> <div class="caption" 
+><span class="id">Table&#x00A0;1: </span><span  
+class="content">Use of FITS-WCS Paper I keywords</span></div><!--tex4ht:label?: x558-7510011 -->
+                                                                                       
+
+                                                                                       
+</div><hr class="endfloat" />
+</div>
+<a 
+ id="x558-751002r101"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">G.1.1  </span> <a 
+ id="x558-7520001"></a>Requirements for a Successful Write Operation</h5>
+<!--l. 49652--><p class="noindent" >When writing a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> in which the WCS <a 
+href="sun211ss452.html#x479-6710000">Frame</a> is a simple Frame to a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>, success
+depends on the <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> from pixel coordinates (the base Frame in the FrameSet) to
+the WCS Frame being linear. The write operation will fail if this is not the
+case.
+<a 
+ id="x558-752001r1826"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">G.1.2  </span> <a 
+ id="x558-7530002"></a>Use and Choice of CTYPE<em>i</em> keywords</h5>
+<!--l. 49659--><p class="noindent" >When reading a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> from a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> the CTYPE<em>i</em> values in the FitsChan are used to
+set the Symbol attributes of the corresponding WCS <a 
+href="sun211ss452.html#x479-6710000">Frame</a>. The Label attributes
+of the WCS Frame are set from the CNAME<em>i</em> keywords, if present in the header.
+Otherwise they are set from the CTYPE<em>i</em> comments strings in the header, so long
+as each axis has a unique non-blank comment. Otherwise, the Label attributes
+are set to the CTYPE<em>i</em> values. The above procedure is over-ridden if the axis
+types conform to the conventions described in paper II or III, as described
+below.
+<!--l. 49668--><p class="noindent" >When writing a FrameSet to a FitsChan, each CTYPE<em>i</em> value is set to the value of
+the Symbol attribute of the corresponding axis in the Frame being written.
+If a value has been set explicitly for the axis Label attribute, it is used
+as the axis comment (except that any existing comments in the FitsChan take
+precedence if the keyword value has not changed). The above procedure is over-ridden
+if the Frame is a <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> or a <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a>, in which case the CTYPE<em>i</em> value is
+derived from the <a 
+href="sun211ss413.html#x439-6310000">System</a> attribute of the Frame and the nature of the pixel to
+WCS <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> according to the conventions of papers II and III, as described
+below.
+<a 
+ id="x558-753001r1827"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">G.1.3  </span> <a 
+ id="x558-7540003"></a>Choice of Reference Point</h5>
+<!--l. 49680--><p class="noindent" >When writing a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> to a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>, the pixel coordinates of the reference point for
+linear axes (i.e. the CRPIX<em>j</em> values) are chosen as follows:
+     <ul class="itemize1">
+     <li class="itemize">If the FrameSet is being written to a FitsChan which previously contained a
+     set of axis descriptions with the same identifying letter, then the
+     previous CRVAL<em>j</em>values are converted into the coordinate system of the <a 
+href="sun211ss452.html#x479-6710000">Frame</a>
+     being written (if possible). These values are then transformed into the
+     pixel Frame, and the closest integer pixel values are used as the CRPIX
+     keywords.
+     </li>
+     <li class="itemize">If the above step could not be performed for any reason, the central pixel
+     is used as the reference point. This requires the image dimensions to be
+     present in the FitsChan in the form of a set of NAXIS<em>j</em> keyword values.
+                                                                                       
+
+                                                                                       
+     </li>
+     <li class="itemize">If both the above two steps failed for any axis, then the pixel reference
+     position is set to a value of 1.0 on the pixel axis.</li></ul>
+<!--l. 49700--><p class="noindent" >The pixel to WCS <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> is then used to find the corresponding CRVAL<em>j</em>values.
+<!--l. 49703--><p class="noindent" >Again, the above procedure is over-ridden if the Frame is a <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> or a <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a>, in
+which case the conventions of papers II and III are used as described below.
+<a 
+ id="x558-754001r1828"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">G.1.4  </span> <a 
+ id="x558-7550004"></a>Choice of Axis Ordering</h5>
+<!--l. 49709--><p class="noindent" >When reading a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> from a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>, WCS axis
+<!--l. 49710--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mi 
+>i</mi></math>
+in the current <a 
+href="sun211ss452.html#x479-6710000">Frame</a> of the resulting FrameSet corresponds to axis
+<!--l. 49712--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mi 
+>i</mi></math> in
+the FITS header.
+<!--l. 49714--><p class="noindent" >When writing a FrameSet to a FitsChan, the axis ordering for the FITS header is chosen
+to make the CD<em>i_j</em> or PC<em>i_j</em> matrix predominately diagonal. This means that the axis
+numbering in the FITS header will not necessarily be the same as that in the AST
+Frame.
+<a 
+ id="x558-755001r1829"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">G.1.5  </span> <a 
+ id="x558-7560005"></a>Alternate Axis Descriptions</h5>
+<!--l. 49720--><p class="noindent" >When reading a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> from a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> which contains alternate axis descriptions,
+each complete set of axis descriptions results in a single <a 
+href="sun211ss452.html#x479-6710000">Frame</a> being added to the
+final FrameSet, connected via an appropriate <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> to the base pixel Frame. The <a 
+href="sun211ss307.html#x333-5250000">Ident</a>
+attribute of the Frame is set to hold the single alphabetical character which is used
+to identify the set of axis descriptions within the FITS header (a single space is used
+for the primary axis descriptions).
+<!--l. 49728--><p class="noindent" >When writing a FrameSet to a FitsChan, it is assumed that the base Frame represents
+pixel coordinates, and the current Frame represents the primary axis descriptions. If
+there are any other Frames present in the FrameSet, an attempt is made to create a
+complete set of &#x201C;alternate&#x201D; set of keywords describing each additional Frame. The first
+character in the Ident attribute of the Frame is used as the single character
+descriptor to be appended to the keyword, with the proviso that a given character can
+only be used once. If a second Frame is found with an Ident attribute which has already
+been used, its Ident attribute is ignored and the next free character is used instead.
+Note, failure to write a set of alternate axis descriptions does not result in
+failure of the entire write operation: the primary axis descriptions are still
+written, together with any other alternate axis descriptions which can be produced
+successfully.
+<a 
+ id="x558-756001r1824"></a>
+<h4 class="subsectionHead"><span class="titlemark">G.2  </span> <a 
+ id="x558-7570002"></a>Paper II - Celestial Coordinates</h4>
+<!--l. 49744--><p class="noindent" >These conventions are used when reading a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> from a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> containing
+appropriate CTYPE<em>i</em> values, and when writing a FrameSet in which the WCS <a 
+href="sun211ss452.html#x479-6710000">Frame</a> is a
+<a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>.
+                                                                                       
+
+                                                                                       
+<!--l. 49749--><p class="noindent" ><a 
+href="sun211ss491.html#x518-7100000">Table</a> <a 
+href="#x558-7570012">2<!--tex4ht:ref: tab:fitspaper2 --></a> describes the use made by AST of each keyword whose meaning is defined or
+extended by FITS-WCS paper II.
+<div class="table">
+                                                                                       
+
+                                                                                       
+<!--l. 49752--><p class="noindent" ><a 
+ id="x558-7570012"></a><hr class="float"><div class="float" 
+>
+                                                                                       
+
+                                                                                       
+<div class="tabular"> <table id="TBL-12" class="tabular" 
+cellspacing="0" cellpadding="0" rules="groups" 
+><colgroup id="TBL-12-1g"><col 
+id="TBL-12-1"></colgroup><colgroup id="TBL-12-2g"><col 
+id="TBL-12-2"></colgroup><colgroup id="TBL-12-3g"><col 
+id="TBL-12-3"></colgroup><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-12-1-"><td  style="text-align:center; white-space:nowrap;" id="TBL-12-1-1"  
+class="td11">  <div class="multicolumn"  style="text-align:center; white-space:nowrap;"><b>Keyword</b></div>  </td><td  style="text-align:center; white-space:nowrap;" id="TBL-12-1-2"  
+class="td11">               <div class="multicolumn"  style="text-align:center; white-space:nowrap;"><b>Read</b></div>                </td><td  style="text-align:center; white-space:nowrap;" id="TBL-12-1-3"  
+class="td11">               <div class="multicolumn"  style="text-align:center; white-space:nowrap;"><b>Write</b></div>
+</td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-12-2-"><td  style="text-align:left; white-space:nowrap;" id="TBL-12-2-1"  
+class="td11"> CTYPE<em>ia</em>        </td><td  style="text-align:left;" id="TBL-12-2-2"  
+class="td11"> <!--l. 49763--><p class="noindent" >All coordinate systems and projection
+  types listed in paper II are supported
+  (note, &#x201C;CUBEFACE&#x201D; axes are treated
+  as unknown linear axes). In addition,
+  &#x0022;-HPX&#x0022; (HEALPix) and &#x0022;-XPH&#x0022; (polar
+  HEALPix) are supported.                       </td><td  style="text-align:left;" id="TBL-12-2-3"  
+class="td11"> <!--l. 49763--><p class="noindent" >Determined  by  the  <a 
+href="sun211ss413.html#x439-6310000">System</a>  attribute
+  of  the  SkyFrame  and  the  <a 
+href="sun211ss433.html#x459-6510000">WcsType</a>
+  attribute  of  the  <a 
+href="sun211ss497.html#x524-7160000">WcsMap</a>  within  the
+  FrameSet.                                                   </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-12-3-"><td  style="text-align:left; white-space:nowrap;" id="TBL-12-3-1"  
+class="td11"> CUNIT<em>ia</em>       </td><td  style="text-align:left;" id="TBL-12-3-2"  
+class="td11"> <!--l. 49765--><p class="noindent" >Ignored (assumed to be &#x2019;degrees&#x2019;).       </td><td  style="text-align:left;" id="TBL-12-3-3"  
+class="td11"> <!--l. 49765--><p class="noindent" >Not written.                                              </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-12-4-"><td  style="text-align:left; white-space:nowrap;" id="TBL-12-4-1"  
+class="td11"> PV<em>i_ma</em>          </td><td  style="text-align:left;" id="TBL-12-4-2"  
+class="td11"> <!--l. 49769--><p class="noindent" >Used       to       create       the       pixel
+  to  WCS  <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>  (values  are  stored
+  as attributes of a WcsMap within this
+  Mapping).                                                  </td><td  style="text-align:left;" id="TBL-12-4-3"  
+class="td11"> <!--l. 49769--><p class="noindent" >Values
+  are obtained from the WcsMap in the
+  pixel to WCS Mapping.                           </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-12-5-"><td  style="text-align:left; white-space:nowrap;" id="TBL-12-5-1"  
+class="td11"> LONPOLE<em>a</em>  </td><td  style="text-align:left;" id="TBL-12-5-2"  
+class="td11"> <!--l. 49774--><p class="noindent" >Used   to   create   the   pixel   to   WCS
+  Mapping.  Also  stored  as  a  <a 
+href="sun211ss369.html#x395-5870000">PVi_m</a>
+  attribute for the longitude axis of the
+  WcsMap.                                                    </td><td  style="text-align:left;" id="TBL-12-5-3"  
+class="td11"> <!--l. 49774--><p class="noindent" >Only   written   if   not   equal   to   the
+  default value defined in paper II (see
+  &#x201C;Choice   of   LONPOLE/LATPOLE&#x201D;
+  below).                                                       </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-12-6-"><td  style="text-align:left; white-space:nowrap;" id="TBL-12-6-1"  
+class="td11"> LATPOLE<em>a</em>   </td><td  style="text-align:left;" id="TBL-12-6-2"  
+class="td11"> <!--l. 49779--><p class="noindent" >Used       to       create       the       pixel
+  to WCS Mapping. Also stored as a PV
+  attribute for the longitude axis of the
+  WcsMap.                                                    </td><td  style="text-align:left;" id="TBL-12-6-3"  
+class="td11"> <!--l. 49779--><p class="noindent" >Only   written   if   not   equal   to   the
+  default value defined in paper II (see
+  &#x201C;Choice   of   LONPOLE/LATPOLE&#x201D;
+  below).                                                       </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-12-7-"><td  style="text-align:left; white-space:nowrap;" id="TBL-12-7-1"  
+class="td11"> RADESYS<em>a</em>   </td><td  style="text-align:left;" id="TBL-12-7-2"  
+class="td11"> <!--l. 49784--><p class="noindent" >Used    to    set    the    attributes    of
+  the  SkyFrame.  All  values  supported
+  except  that  ecliptic  coordinates  are
+  currently always assumed to be FK5.   </td><td  style="text-align:left;" id="TBL-12-7-3"  
+class="td11"> <!--l. 49784--><p class="noindent" >Always  written.  Determined  by  the
+  System attribute of the SkyFrame.        </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-12-8-"><td  style="text-align:left; white-space:nowrap;" id="TBL-12-8-1"  
+class="td11"> EQUINOX<em>a</em>  </td><td  style="text-align:left;" id="TBL-12-8-2"  
+class="td11"> <!--l. 49788--><p class="noindent" >Used  to  set  the  <a 
+href="sun211ss286.html#x312-5040000">Equinox</a>  attribute  of
+  the SkyFrame.                                           </td><td  style="text-align:left;" id="TBL-12-8-3"  
+class="td11"> <!--l. 49788--><p class="noindent" >Written                                                  if
+  relevant. Determined by the Equinox
+  attribute of the SkyFrame.                      </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-12-9-"><td  style="text-align:left; white-space:nowrap;" id="TBL-12-9-1"  
+class="td11"> EPOCH         </td><td  style="text-align:left;" id="TBL-12-9-2"  
+class="td11"> <!--l. 49792--><p class="noindent" >Used  to  set  the  Equinox  attribute  of
+  the SkyFrame.                                           </td><td  style="text-align:left;" id="TBL-12-9-3"  
+class="td11"> <!--l. 49792--><p class="noindent" >Only written if using FITS-AIPS and
+  FITS-AIPS++ encodings. Determined
+  by   the   Equinox   attribute   of   the
+  SkyFrame.                                                 </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-12-10-"><td  style="text-align:left; white-space:nowrap;" id="TBL-12-10-1"  
+class="td11"> MJD-OBS      </td><td  style="text-align:left;" id="TBL-12-10-2"  
+class="td11"> <!--l. 49799--><p class="noindent" >Used  to  set  the  <a 
+href="sun211ss285.html#x311-5030000">Epoch</a>  attribute  of
+  the  SkyFrame.  DATE-OBS  is  used  if
+  MJD-OBS
+  is not present. A default value based
+  on RADESYS and EQUINOX is used
+  if  used  if  DATE-OBS  is  not  present
+  either.                                                         </td><td  style="text-align:left;" id="TBL-12-10-3"  
+class="td11"> <!--l. 49799--><p class="noindent" >Determined  by  the  Epoch  attribute
+  of the SkyFrame. Only written if this
+  attribute  has  been  set  to  an  explicit
+  value  (in  which  case  DATE-OBS  is
+  also written).                                             </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-12-11-"><td  style="text-align:left; white-space:nowrap;" id="TBL-12-11-1"  
+class="td11">            </td></tr></table></div>
+<br /> <div class="caption" 
+><span class="id">Table&#x00A0;2: </span><span  
+class="content">Use of FITS-WCS Paper II keywords</span></div><!--tex4ht:label?: x558-7570012 -->
+                                                                                       
+
+                                                                                       
+</div><hr class="endfloat" />
+</div>
+<a 
+ id="x558-757002r1830"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">G.2.1  </span> <a 
+ id="x558-7580001"></a>Requirements for a Successful Write Operation</h5>
+<!--l. 49809--><p class="noindent" >When writing a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> in which the WCS <a 
+href="sun211ss452.html#x479-6710000">Frame</a> is a <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> to a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>, success
+depends on the following conditions being met:
+     <dl class="enumerate-enumitem"><dt class="enumerate-enumitem">
+ (1) </dt><dd 
+class="enumerate-enumitem">The <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> from pixel coordinates (the base Frame in the FrameSet) to the
+     WCS SkyFrame includes a <a 
+href="sun211ss497.html#x524-7160000">WcsMap</a>.
+     </dd><dt class="enumerate-enumitem">
+ (2) </dt><dd 
+class="enumerate-enumitem">The Mapping prior to the WcsMap (<em>i.e.</em> from pixel to IWC) is linear.
+     </dd><dt class="enumerate-enumitem">
+ (3) </dt><dd 
+class="enumerate-enumitem">The Mapping after the WcsMap (<em>i.e.</em> from native spherical to celestial
+     coordinates) is a spherical rotation for the celestial axes, and linear for
+     any other axes.
+     </dd><dt class="enumerate-enumitem">
+ (4) </dt><dd 
+class="enumerate-enumitem">The <a 
+href="sun211ss414.html#x440-6320000">TabOK</a> attribute is set to a non-zero positive value in the FitsChan,
+     and the longitude and latitude axes are separable. In this case the Mapping
+     will be described by a pair of 1-dimensional look-up tables, using the
+     &#x201C;-TAB&#x201D; algorithm described in FITS-WCS paper III.</dd></dl>
+<!--l. 49827--><p class="noindent" >If none of the above conditions hold, the write operation will be unsuccessful.
+<a 
+ id="x558-758005r1833"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">G.2.2  </span> <a 
+ id="x558-7590002"></a>Choice of LONPOLE/LATPOLE</h5>
+<!--l. 49831--><p class="noindent" >When writing a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> to a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>, the choice of LONPOLE and LATPOLE values is
+determined as follows:
+     <dl class="enumerate-enumitem"><dt class="enumerate-enumitem">
+ (1) </dt><dd 
+class="enumerate-enumitem">If the projection represented by the <a 
+href="sun211ss497.html#x524-7160000">WcsMap</a> is azimuthal, then any values
+     set for attributes &#x201C;PV<em>i</em>_3&#x201D; and &#x201C;PV<em>i</em>_4&#x201D; (where &#x201C;<em>i</em>&#x201D; is the index of the
+     longitude axis) within the WcsMap are used as the LONPOLE and LATPOLE
+     values. Reading a FrameSet from a FITS-WCS header results in the original
+     LONPOLE and LATPOLE values being stored within a WcsMap within the
+     FrameSet. Consequently, if a FrameSet is read from a FITS-WCS header and it
+     is subsequently written out to a new FITS-WCS header, the original LONPOLE
+     and LATPOLE values will usually be used in the new header (the exception
+     being if the WcsMap has been explicitly modified before being written out
+     again). Any extra rotation of the sky is absorbed into the CD<em>i_j</em> or PC<em>i_j</em>
+     matrix (this is possible only if the projection is azimuthal).
+     </dd><dt class="enumerate-enumitem">
+ (2) </dt><dd 
+class="enumerate-enumitem">If the projection represented by the WcsMap is azimuthal but no values have
+     been set for the &#x201C;PV<em>i</em>_3&#x201D; and &#x201C;PV<em>i</em>_4&#x201D; attributes within the WcsMap, then
+                                                                                       
+
+                                                                                       
+     the default LONPOLE and LATPOLE values are used. This results in no LONPOLE
+     or LATPOLE keywords being stored in the header since default values are
+     never stored. Any extra rotation of the sky is absorbed into the CD<em>i_j</em> or
+     PC<em>i_j</em> matrix (this is possible only if the projection is azimuthal).
+     </dd><dt class="enumerate-enumitem">
+ (3) </dt><dd 
+class="enumerate-enumitem">If the projection represented by the WcsMap is not azimuthal, then the values
+     of LONPOLE and LATPOLE are found by transforming the coordinates of the celestial
+     north pole (<em>i.e</em> longitude zero, latitude <!--l. 49861--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-bin">+</mo> <mi 
+>&#x03C0;</mi><mo 
+class="MathClass-bin">/</mo><mn>2</mn></math>)
+     into native spherical coordinates using the inverse of the <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> which follows
+     the WcsMap.
+     </dd></dl>
+<a 
+ id="x558-759004r1834"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">G.2.3  </span> <a 
+ id="x558-7600003"></a>User Defined Fiducial Points</h5>
+<!--l. 49867--><p class="noindent" >When reading a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> from a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>, projection parameters PV<em>i</em>_0, PV<em>i</em>_1 and PV<em>i</em>_2
+(for longitude axis &#x201C;<em>i</em>&#x201D;) are used to indicate a user-defined fiducial point as
+described in section 2.5 of paper II. This results in a shift of IWC origin being
+applied <em>before</em> the <a 
+href="sun211ss497.html#x524-7160000">WcsMap</a> which converts IWC into native spherical coordinates. The
+values of these projection parameters, if supplied, are stored as the corresponding
+<a 
+href="sun211ss369.html#x395-5870000">PVi_m</a> attributes of the WcsMap.
+<!--l. 49877--><p class="noindent" >When writing a FrameSet to a FitsChan, the PV attributes of the WcsMap determine the
+native coordinates of the fiducial point (the fixed defaults for each projection
+described in paper II are used if the PV attributes of the WcsMap have not
+been assigned a value). The corresponding celestial coordinates are used as
+the CRVAL<em>i</em> keywords and the corresponding pixel coordinates as the CRPIX<em>j</em>
+keywords.
+<a 
+ id="x558-760001r1835"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">G.2.4  </span> <a 
+ id="x558-7610004"></a>Common Non-Standard Features</h5>
+<!--l. 49886--><p class="noindent" >A collection of common non-standard features are supported when reading a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> from
+a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>, in addition to those embodied within the available encodings of the
+FitsChan class. These are translated into the equivalent standard features before being
+used to create a FrameSet. Note, the reverse operation is never performed: it is not
+possible to produce non-standard features when writing a FrameSet to a FitsChan (other
+than those embodied in the available encodings of the FitsChan class). The supported
+non-standard features include:
+     <ul class="itemize1">
+     <li class="itemize">EQUINOX keywords with string values equal to a date preceded by the letter
+     B or J (<em>e.g.</em> &#x201C;B1995.0&#x201D;).
+     </li>
+     <li class="itemize">EQUINOX or EPOCH keywords with value zero (these are converted to B1950).
+     </li>
+     <li class="itemize">The IRAF &#x201C;ZPX&#x201D; projection is represented by a <a 
+href="sun211ss497.html#x524-7160000">WcsMap</a> with type of AST__ZPN.
+     <a 
+href="sun211ss376.html#x402-5940000">Projection</a> parameter values are read from any WAT<em>i_nnn</em> keywords, and
+                                                                                       
+
+                                                                                       
+     corresponding <a 
+href="sun211ss369.html#x395-5870000">PVi_m</a> attributes are set in the WcsMap. The WAT<em>i_nnn</em> keywords
+     may specify corrections to the basic ZPN projection by including &#x201C;lngcor&#x201D;
+     or &#x201C;latcor&#x201D; terms. These are supported if they use half cross-terms, in
+     either simple or Chebyshev representation.
+     </li>
+     <li class="itemize">The IRAF &#x201C;TNX&#x201D; projection is represented by a WcsMap with type of AST__TPN
+     (a distorted TAN projection retained within the WcsMap class from an early
+     draft of the FITS-WCS paper II). Projection parameter values are read from
+     any WAT<em>i_nnn</em> keywords, and corresponding PV attributes are set in the
+     WcsMap. If the TNX projection cannot be converted exactly into an AST__TPN
+     projection, ASTWARN keywords are added to the FitsChan containing a warning
+     message (but only if the <a 
+href="sun211ss431.html#x457-6490000">Warnings</a> attribute of the FitsChan is set
+     appropriately). Currently, TNX projections that use half cross-terms, in
+     either simple or Chebyshev representation, are supported.
+     </li>
+     <li class="itemize">&#x201C;QV&#x201D; parameters for TAN projections (as produced by <a 
+href="http://www.starlink.ac.uk/cgi-bin/htxserver/sun242.htx/sun242.html?xref_" >AUTOASTROM</a> <span class="footnote-mark"><a 
+href="#fn40x0" id="fn40x0-bk"><sup class="textsuperscript">40</sup></a></span><a 
+ id="x558-761001f40"></a>
+     are renamed to the equivalent &#x201C;PV&#x201D; parameters.
+     </li>
+     <li class="itemize">TAN projections that have associated &#x201C;PV&#x201D; parameters on the latitude axis
+     are converted to the corresponding TPN (distorted TAN) projections. This
+     conversion can be controlled using the <a 
+href="sun211ss373.html#x399-5910000">PolyTan</a> attribute of the FitsChan
+     class.
+     </li></ul>
+<a 
+ id="x558-761002r1831"></a>
+<h4 class="subsectionHead"><span class="titlemark">G.3  </span> <a 
+ id="x558-7620003"></a>Paper III - Spectral Coordinates</h4>
+<!--l. 49936--><p class="noindent" >These conventions are used when reading a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> from a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> which includes
+appropriate CTYPE<em>i</em> values, and when writing a FrameSet in which the WCS <a 
+href="sun211ss452.html#x479-6710000">Frame</a> is a
+<a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a>.
+<!--l. 49941--><p class="noindent" ><a 
+href="sun211ss491.html#x518-7100000">Table</a> <a 
+href="#x558-7620013">3<!--tex4ht:ref: tab:fitspaper3 --></a> describes the use made by AST of each keyword whose meaning is defined or
+extended by FITS-WCS paper III.
+<div class="table">
+                                                                                       
+
+                                                                                       
+<!--l. 49944--><p class="noindent" ><a 
+ id="x558-7620013"></a><hr class="float"><div class="float" 
+>
+                                                                                       
+
+                                                                                       
+<div class="tabular"><table id="TBL-13" class="tabular" 
+cellspacing="0" cellpadding="0" rules="groups" 
+><colgroup id="TBL-13-1g"><col 
+id="TBL-13-1"></colgroup><colgroup id="TBL-13-2g"><col 
+id="TBL-13-2"></colgroup><colgroup id="TBL-13-3g"><col 
+id="TBL-13-3"></colgroup><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-1-"><td  style="text-align:center; white-space:nowrap;" id="TBL-13-1-1"  
+class="td11">    <div class="multicolumn"  style="text-align:center; white-space:nowrap;"><b>Keyword</b></div>    </td><td  style="text-align:center; white-space:nowrap;" id="TBL-13-1-2"  
+class="td11">                  <div class="multicolumn"  style="text-align:center; white-space:nowrap;"><b>Read</b></div>                </td><td  style="text-align:center; white-space:nowrap;" id="TBL-13-1-3"  
+class="td11">                  <div class="multicolumn"  style="text-align:center; white-space:nowrap;"><b>Write</b></div>
+</td></tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-2-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-2-1"  
+class="td11"> CTYPE<em>ia</em>                 </td><td  style="text-align:left;" id="TBL-13-2-2"  
+class="td11"> <!--l. 49956--><p class="noindent" >All  coordinate  systems  and  projection  types
+   listed  in  paper  III  are  supported  algorithm
+   (the  &#x201C;-LOG&#x201D;  algorithm  may  also  be  applied
+   to   non-spectral   linear   axes;   the   &#x201C;-TAB&#x201D;
+   algorithm requires the <a 
+href="sun211ss414.html#x440-6320000">TabOK</a> attribute to be
+   set in the FitsChan).                                                </td><td  style="text-align:left;" id="TBL-13-2-3"  
+class="td11"> <!--l. 49956--><p class="noindent" >Determined  by  the  <a 
+href="sun211ss413.html#x439-6310000">System</a>  attribute  of  the
+   SpecFrame  and  the  nature  of  the  pixel  to
+   SpecFrame <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>.                                             </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-3-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-3-1"  
+class="td11"> CUNIT<em>ia</em>                 </td><td  style="text-align:left;" id="TBL-13-3-2"  
+class="td11"> <!--l. 49960--><p class="noindent" >Used            to            set            the            Units
+   attribute of the SpecFrame (note, SpecFrames
+   always have an &#x201C;active&#x201D; Units attribute (see
+   <a 
+href="sun211ss179.html#x204-3960000">astSetActiveUnit</a>).                                                   </td><td  style="text-align:left;" id="TBL-13-3-3"  
+class="td11"> <!--l. 49960--><p class="noindent" >Always written.                                                       </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-4-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-4-1"  
+class="td11"> PV<em>i_ma</em>                    </td><td  style="text-align:left;" id="TBL-13-4-2"  
+class="td11"> <!--l. 49964--><p class="noindent" >Used                             to                             create
+   the pixel to WCS Mapping (values are stored
+   as attributes of a <a 
+href="sun211ss454.html#x481-6730000">GrismMap</a>).                               </td><td  style="text-align:left;" id="TBL-13-4-3"  
+class="td11"> <!--l. 49964--><p class="noindent" >Set  from  the  attributes  of  the  GrismMap,  if
+   present, and if set explicitly.                                  </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-5-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-5-1"  
+class="td11"> SPECSYS<em>a</em>               </td><td  style="text-align:left;" id="TBL-13-5-2"  
+class="td11"> <!--l. 49969--><p class="noindent" >Used  to  set  the  <a 
+href="sun211ss409.html#x435-6270000">StdOfRest</a>  attribute  of  the
+   SpecFrame (all systems are supported except
+   CMBDIPOL).                                                           </td><td  style="text-align:left;" id="TBL-13-5-3"  
+class="td11"> <!--l. 49969--><p class="noindent" >Set   from   the   StdOfRest   attribute   of   the
+   SpecFrame,   but   only   if   it   has   been   set
+   explicitly.                                                                  </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-6-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-6-1"  
+class="td11"> SSYSOBS<em>a</em>               </td><td  style="text-align:left;" id="TBL-13-6-2"  
+class="td11"> <!--l. 49971--><p class="noindent" >Ignored.                                                                    </td><td  style="text-align:left;" id="TBL-13-6-3"  
+class="td11"> <!--l. 49971--><p class="noindent" >Never written.                                                         </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-7-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-7-1"  
+class="td11"> OBSGEO-X/Y/Z   </td><td  style="text-align:left;" id="TBL-13-7-2"  
+class="td11"> <!--l. 49977--><p class="noindent" >Used to set the <a 
+href="sun211ss367.html#x393-5850000">ObsLon</a> and <a 
+href="sun211ss366.html#x392-5840000">ObsLat</a> attributes
+   of the Frame (the observers height above sea
+   level is ignored).                                                      </td><td  style="text-align:left;" id="TBL-13-7-3"  
+class="td11"> <!--l. 49977--><p class="noindent" >Set from the ObsLon and ObsLat attributes of
+   the Frame, if they have been set explicitly (it
+   is assumed that the observer is at sea level).      </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-8-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-8-1"  
+class="td11"> MJD-AVG               </td><td  style="text-align:left;" id="TBL-13-8-2"  
+class="td11"> <!--l. 49981--><p class="noindent" >Used   to   set   the   <a 
+href="sun211ss285.html#x311-5030000">Epoch</a>   attributes   of   the
+   SpecFrame.                                                               </td><td  style="text-align:left;" id="TBL-13-8-3"  
+class="td11"> <!--l. 49981--><p class="noindent" >Set                                                                  from
+   the Epoch attribute of the SpecFrame, if it has
+   been set explicitly.                                                   </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-9-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-9-1"  
+class="td11"> SSYSSRC<em>a</em>               </td><td  style="text-align:left;" id="TBL-13-9-2"  
+class="td11"> <!--l. 49986--><p class="noindent" >Used  to  set  the  <a 
+href="sun211ss401.html#x427-6190000">SourceVRF</a>  attribute  of  the
+   SpecFrame (all systems are supported except
+   CMBDIPOL).                                                           </td><td  style="text-align:left;" id="TBL-13-9-3"  
+class="td11"> <!--l. 49986--><p class="noindent" >Set   from   the   SourceVRF   attribute   of   the
+   SpecFrame.                                                               </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-10-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-10-1"  
+class="td11"> ZSOURCE<em>a</em>            </td><td  style="text-align:left;" id="TBL-13-10-2"  
+class="td11"> <!--l. 49995--><p class="noindent" >Used  to  set  the  <a 
+href="sun211ss402.html#x428-6200000">SourceVel</a>  attribute  of  the
+   SpecFrame  (the  SourceVRF  attribute  is  first
+   set  to  the  system  indicated  by  the  SSYSSRC
+   keyword,  and  the  ZSOURCE  value  is  then
+   converted to an apparent radial velocity and
+   stored as the SourceVel attribute).                        </td><td  style="text-align:left;" id="TBL-13-10-3"  
+class="td11"> <!--l. 49995--><p class="noindent" >Set   from   the   SourceVel   attribute   of   the
+   SpecFrame,   if   it   has   been   set   explicitly
+   (the  SourceVel  value  is  first  converted  from
+   apparent radial velocity to redshift).                   </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-11-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-11-1"  
+class="td11"> VELOSYS<em>a</em>              </td><td  style="text-align:left;" id="TBL-13-11-2"  
+class="td11"> <!--l. 49998--><p class="noindent" >Ignored.                                                                    </td><td  style="text-align:left;" id="TBL-13-11-3"  
+class="td11"> <!--l. 49998--><p class="noindent" >Set from the attributes of the SpecFrame that
+   define the standard of rest and the observers
+   position.                                                                    </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-12-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-12-1"  
+class="td11"> RESTFRQ<em>a</em>              </td><td  style="text-align:left;" id="TBL-13-12-2"  
+class="td11"> <!--l. 50004--><p class="noindent" >Used  to  set  the  <a 
+href="sun211ss383.html#x409-6010000">RestFreq</a>  attribute  of  the
+   SpecFrame.                                                               </td><td  style="text-align:left;" id="TBL-13-12-3"  
+class="td11"> <!--l. 50004--><p class="noindent" >Set    from    the    RestFreq    attribute    of    the
+   SpecFrame,  but  only  if  the  System  attribute
+   is  not  set  to  &#x201C;WAVE&#x201D;,  &#x201C;VOPT&#x201D;,  &#x201C;ZOPT&#x201D;  or
+   &#x201C;AWAV&#x201D;,  and  only  if  RestFreq  has  been  set
+   explicitly.                                                                  </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-13-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-13-1"  
+class="td11"> RESTWAV<em>a</em>             </td><td  style="text-align:left;" id="TBL-13-13-2"  
+class="td11"> <!--l. 50010--><p class="noindent" >Used                               to                               set
+   the RestFreq attribute of the SpecFrame (after
+   conversion from wavelength to frequency).       </td><td  style="text-align:left;" id="TBL-13-13-3"  
+class="td11"> <!--l. 50010--><p class="noindent" >Set    from    the    RestFreq    attribute    of    the
+   SpecFrame (after conversion), but only if the
+   System attribute is set to &#x201C;WAVE&#x201D;, &#x201C;VOPT&#x201D;,
+   &#x201C;ZOPT&#x201D; or &#x201C;AWAV&#x201D;, and only if RestFreq has
+   been set explicitly.                                                   </td>
+</tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-14-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-14-1"  
+class="td11"> CNAME<em>ia</em>               </td><td  style="text-align:left;" id="TBL-13-14-2"  
+class="td11"> <!--l. 50014--><p class="noindent" >Used  to  set  the  Label  attributes  of  the  WCS
+   Frame keywords.                                                    </td><td  style="text-align:left;" id="TBL-13-14-3"  
+class="td11"> <!--l. 50014--><p class="noindent" >Set  from  the  Label  attributes  of  the  WCS
+   Frame, if they have been set explicitly.                </td>
+</tr><tr 
+class="hline"><td><hr></td><td><hr></td><td><hr></td></tr><tr  
+ style="vertical-align:baseline;" id="TBL-13-15-"><td  style="text-align:left; white-space:nowrap;" id="TBL-13-15-1"  
+class="td11">                 </td></tr></table></div>
+ <div class="caption" 
+><span class="id">Table&#x00A0;3: </span><span  
+class="content">Use of FITS-WCS Paper III keywords</span></div><!--tex4ht:label?: x558-7620013 -->
+                                                                                       
+
+                                                                                       
+</div><hr class="endfloat" />
+</div>
+<a 
+ id="x558-762002r1836"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">G.3.1  </span> <a 
+ id="x558-7630001"></a>Requirements for a Successful Write Operation</h5>
+<!--l. 50024--><p class="noindent" >When writing a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> in which the WCS <a 
+href="sun211ss452.html#x479-6710000">Frame</a> is a <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a> to a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>, the
+write operation is successful only if the <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> from pixel coordinates (the
+base Frame in the FrameSet) to the SpecFrame satisfies one of the following
+conditions:
+     <dl class="enumerate-enumitem"><dt class="enumerate-enumitem">
+ (1) </dt><dd 
+class="enumerate-enumitem">It is linear.
+     </dd><dt class="enumerate-enumitem">
+ (2) </dt><dd 
+class="enumerate-enumitem">It is logarithmic.
+     </dd><dt class="enumerate-enumitem">
+ (3) </dt><dd 
+class="enumerate-enumitem">It is linear if the SpecFrame were to be re-mapped into one of the other
+     spectral systems supported by FITS-WCS paper III.
+     </dd><dt class="enumerate-enumitem">
+ (4) </dt><dd 
+class="enumerate-enumitem">It contains a <a 
+href="sun211ss454.html#x481-6730000">GrismMap</a>, and the Mapping before the GrismMap (from pixel
+     coordinates to grism parameter) is linear, and the Mapping after the
+     GrismMap is either null or represents a change of spectral system from
+     wavelength (air or vacuum) to one of the supported spectral systems.
+     </dd><dt class="enumerate-enumitem">
+ (5) </dt><dd 
+class="enumerate-enumitem">The <a 
+href="sun211ss414.html#x440-6320000">TabOK</a> attribute is set to a non-zero positive value in the FitsChan.</dd></dl>
+<!--l. 50041--><p class="noindent" >If none of the above conditions hold, the write operation will be unsuccessful. Note,
+if the FitsChan&#x2019;s TabOK attribute is set to a positive non-zero value then any
+Mapping that does not meet any of the earlier conditions will be written out as a
+look-up table, using the &#x201C;-TAB&#x201D; algorithm described in FITS-WCS paper III. If the
+TabOK attribute is to zero (the default) or negative in the FitsChan, then the
+write operation will be unsuccessful unless one of the eaerlier conditions is
+met.<span class="footnote-mark"><a 
+href="#fn41x0" id="fn41x0-bk"><sup class="textsuperscript">41</sup></a></span><a 
+ id="x558-763006f41"></a>
+<a 
+ id="x558-763007r1839"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">G.3.2  </span> <a 
+ id="x558-7640002"></a>Common Non-Standard Features</h5>
+<!--l. 50052--><p class="noindent" >The following non-standard features are supported when reading spectral axes from a
+<a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>:
+     <ul class="itemize1">
+     <li class="itemize">Conversion of &#x201C;-WAV&#x201D;, &#x201C;-FRQ&#x201D; and &#x201C;-VEL&#x201D; algorithm codes (specified in early
+     drafts of paper III) to the corresponding &#x201C;-X2P&#x201D; form.
+     </li>
+     <li class="itemize">Conversion of &#x201C;RESTFREQ&#x201D; to &#x201C;RESTFRQ&#x201D;</li></ul>
+<a 
+ id="x558-764001r1837"></a>
+                                                                                       
+
+                                                                                       
+<h4 class="subsectionHead"><span class="titlemark">G.4  </span> <a 
+ id="x558-7650004"></a>Paper IV - Coordinate Distortions</h4>
+<!--l. 50064--><p class="noindent" >This paper proposes that an additional 4 character code be appended to the
+end of the CTYPE<em>i</em> keyword to specify the nature of any distortion away from
+the basic algorithm described by the first 8 characters of the CTYPE<em>i</em> value.
+Currently AST ignores all such codes when reading a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> from a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>
+(except for the &#x201C;-SIP&#x201D; code defined by the Spitzer Space Telescope project - see
+below). This means that a FrameSet can still be read from such headers, but the
+<a 
+href="sun211ss459.html#x486-6780000">Mapping</a> which gives the WCS position associated with a given pixel position
+will reflect only the basic algorithm and will not include the effects of the
+distortion.
+<!--l. 50074--><p class="noindent" >If such a FrameSet is then written out to a FitsChan, the resulting CTYPE<em>i</em> keywords
+will include no distortion code.
+<a 
+ id="x558-765001r1840"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">G.4.1  </span> <a 
+ id="x558-7660001"></a>The &#x201C;-SIP&#x201D; distortion code</h5>
+<!--l. 50079--><p class="noindent" >The Spitzer Space Telescope project (<a 
+href="http://www.spitzer.caltech.edu/" class="url" >http://www.spitzer.caltech.edu/</a>) has developed its
+own system for encoding 2-dimensional image distortion within a FITS header, based
+on the proposals of paper IV. A description of this system is available in
+<a 
+href="http://ssc.spitzer.caltech.edu/postbcd/doc/shupeADASS.pdf" class="url" >http://ssc.spitzer.caltech.edu/postbcd/doc/shupeADASS.pdf</a>. In this system, the presence
+of distortion is indicated by appending the distortion code &#x201C;-SIP&#x201D; to the CTYPE<em>i</em>
+keyword values for the celestial axes. The distortion takes the form of a polynomial
+function which is applied to the pixel coordinates, after subtraction of the CRPIX<em>j</em>
+values.
+<!--l. 50091--><p class="noindent" >This system is a strictly 2 dimensional system. When reading a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> from a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>
+which includes the &#x201C;-SIP&#x201D; distortion code, AST assumes that it is only applied to the
+first 2 WCS axes in a FITS header (i.e. CTYPE1 and CTYPE2). If the &#x201C;-SIP&#x201D; distortion
+code is attached to other axes, it will be ignored. The distortion itself is
+represented by a <a 
+href="sun211ss470.html#x497-6890000">PolyMap</a> within the resulting FrameSet.
+<!--l. 50099--><p class="noindent" >If a FrameSet is read from a FitsChan which includes &#x201C;-SIP&#x201D; distortion, and an attempt
+is then made to write this FrameSet out to a FitsChan, the write operation will fail
+unless the distortion is insignificant (<em>i.e.</em> is so small that the tests for linearity
+built into AST are passed). In this case, no distortion code will be appended to the
+resulting CTYPE<em>i</em> keyword values.
+<!--l. 50106--><p class="noindent" >
+                                                                                       
+
+                                                                                       
+                                                                                       
+
+                                                                                       
+<div class="footnotes"><!--l. 49925--><p class="noindent" ><span class="footnote-mark"><a 
+href="#fn40x0-bk" id="fn40x0"><sup class="textsuperscript">40</sup></a></span><a 
+href="http://www.astro.gla.ac.uk/users/norman/star/autoastrom/" class="url" >http://www.astro.gla.ac.uk/users/norman/star/autoastrom/</a>
+<!--l. 50049--><p class="noindent" ><span class="footnote-mark"><a 
+href="#fn41x0-bk" id="fn41x0"><sup class="textsuperscript">41</sup></a></span>If the -TAB algorithm is used, the positive value of the TabOK attribute is used as the table version number (the EXTVER
+header) in the associated FITS binary table.                                                      </div>   <div class="crosslinks">
+<div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss528.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se30.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 50107--><p class="noindent" ><a 
+ id="tailsun211se29.html"></a> 
+</body> 
+</html>

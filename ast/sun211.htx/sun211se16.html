@@ -1,0 +1,706 @@
+<!DOCTYPE html> 
+<html> 
+<head><title>Storing AST Objects in FITS Headers (FitsChans)</title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211se15.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se17.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<h3 class="sectionHead"><span class="titlemark">16    </span> <a 
+ id="x17-15700016"></a>Storing AST Objects in FITS Headers (FitsChans)</h3>
+<div class="sectionTOCS">
+&#x00A0;<span class="subsectionToc" >16.1 <a 
+href="#x17-1580001">The Native FITS Encoding</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.2 <a 
+href="#x17-1590002">The FitsChan Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.3 <a 
+href="#x17-1600003">Creating a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.4 <a 
+href="#x17-1610004">Addressing Cards in a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.5 <a 
+href="#x17-1620005">Writing Native Objects to a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.6 <a 
+href="#x17-1630006">Extracting Individual Cards from a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.7 <a 
+href="#x17-1640007">The Native FitsChan Output Format</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.8 <a 
+href="#x17-1650008">Adding Individual Cards to a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.9 <a 
+href="#x17-1660009">Adding Concatenated Cards to a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.10 <a 
+href="#x17-16700010">Reading Native Objects From a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.11 <a 
+href="#x17-16800011">Saving and Restoring Multiple Objects in a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.12 <a 
+href="#x17-16900012">Mixing Native Objects with Other FITS Cards</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.13 <a 
+href="#x17-17000013">Finding and Changing Cards in a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.14 <a 
+href="#x17-17100014">Source and Sink Functions for FitsChans</a></span>
+</div>
+<!--l. 8307--><p class="noindent" >A FITS header is a sequence of 80-character strings, formatted according
+to particular rules defined by the Flexible Image Transport <a 
+href="sun211ss413.html#x439-6310000">System</a> (FITS).
+<a 
+href="http://fits.gsfc.nasa.gov/" >FITS</a><span class="footnote-mark"><a 
+href="#fn24x0" id="fn24x0-bk"><sup class="textsuperscript">24</sup></a></span><a 
+ id="x17-157001f24"></a>
+is a widely-used standard for data interchange in astronomy and has also been adopted as a data
+processing format in some astronomical data reduction systems. The individual 80-character
+strings in a FITS header are usually called <em>cards</em> or <em>header cards</em> (for entirely anachronistic
+reasons).
+<!--l. 8317--><p class="noindent" >A sequence of FITS cards appears as a header at the start of every FITS data file, and sometimes also
+at other points within it, and is used to provide ancillary information which qualifies or
+describes the main array of data stored in the file. As such, FITS headers are prime territory
+for storing information about the coordinate systems associated with data held in FITS
+files.
+                                                                                       
+
+                                                                                       
+<!--l. 8324--><p class="noindent" >In this section, we will examine how to store information in FITS headers directly in the form of AST
+Objects&#x2014;a process which is supported by a specialised class of <a 
+href="sun211ss441.html#x468-6600000">Channel</a> called a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>. Our
+discussion here will turn out to be a transitional step that emphasises the similarities between a
+FitsChan and a Channel (&#x00A7;<a 
+href="sun211se15.html#x16-14100015">15<!--tex4ht:ref: ss:channels --></a>). At the same time, it will prepare us for the next section (&#x00A7;<a 
+href="sun211se17.html#x18-17200017">17<!--tex4ht:ref: ss:foreignfits --></a>), where we
+will examine how to use a FitsChan to tackle some of the more difficult problems that FITS headers
+can present.
+<a 
+ id="x17-157002r173"></a>
+<h4 class="subsectionHead"><span class="titlemark">16.1    </span> <a 
+ id="x17-1580001"></a>The Native FITS Encoding</h4>
+<!--l. 8336--><p class="noindent" >As it turns out, we are not the first to have thought of storing WCS information in FITS headers. In
+fact, the original FITS standard (1981 vintage) defined a set of header keywords for this purpose
+which have been widely used, although they have proved too limited for many practical
+purposes.
+<!--l. 8342--><p class="noindent" >At the time of writing, a number of different ways of using FITS headers for storing WCS information
+are in use, most (although not all) based on the original standard. We will refer to these alternative
+ways of storing the information as FITS <em>encodings</em> but will defer a discussion of their advantages and
+limitations until the next section (&#x00A7;<a 
+href="sun211se17.html#x18-17200017">17<!--tex4ht:ref: ss:foreignfits --></a>).
+<!--l. 8349--><p class="noindent" >Here, we will examine how to store AST Objects directly in FITS headers. In effect, this
+defines a new encoding, which we will term the <em>native encoding</em>. This is a special kind of
+encoding, because not only does it allow us to associate conventional WCS calibration
+information with FITS data, but it also allows any other information that can be expressed in
+terms of AST Objects to be stored as well. In fact, the native encoding provides us with
+facilities roughly analogous to those of the <a 
+href="sun211ss441.html#x468-6600000">Channel</a> (&#x00A7;<a 
+href="sun211se15.html#x16-14100015">15<!--tex4ht:ref: ss:channels --></a>)&#x2014;<em>i.e.</em>&#x00A0;a lossless way of transferring
+AST Objects from program to program&#x2014;but based on FITS headers instead of free-format
+text.
+<a 
+ id="x17-158001r175"></a>
+<h4 class="subsectionHead"><span class="titlemark">16.2    </span> <a 
+ id="x17-1590002"></a>The FitsChan Model</h4>
+<!--l. 8363--><p class="noindent" >I/O between AST Objects and FITS headers is supported by a specialised form of <a 
+href="sun211ss441.html#x468-6600000">Channel</a> called a
+<a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>. A FitsChan contains a buffer which may hold any number, including zero, of FITS header
+cards. This buffer forms a workspace in which you can assemble FITS cards and manipulate them
+before writing them out to a file.
+<!--l. 8369--><p class="noindent" >By default, when a FitsChan is first created, it contains no cards and there are five ways of inserting
+cards into it:
+     <dl class="enumerate-enumitem"><dt class="enumerate-enumitem">
+  (1) </dt><dd 
+class="enumerate-enumitem">You may add cards yourself, one at a time, using <a 
+href="sun211ss153.html#x178-3700000">astPutFits</a> (&#x00A7;<a 
+href="#x17-1650008">16.8<!--tex4ht:ref: ss:addingfitscards --></a>).
+     </dd><dt class="enumerate-enumitem">
+  (2) </dt><dd 
+class="enumerate-enumitem">You may add cards yourself, supplying all cards concatenated into a single string, using
+     <a 
+href="sun211ss150.html#x175-3670000">astPutCards</a> (&#x00A7;<a 
+href="#x17-1660009">16.9<!--tex4ht:ref: ss:addingmulticards --></a>).
+     </dd><dt class="enumerate-enumitem">
+  (3) </dt><dd 
+class="enumerate-enumitem">You may write an AST <a 
+href="sun211ss464.html#x491-6830000">Object</a> to the FitsChan (using <a 
+href="sun211ss237.html#x262-4540000">astWrite</a>), which will have the effect
+     of creating new cards within the FitsChan which describe the Object (&#x00A7;<a 
+href="#x17-1620005">16.5<!--tex4ht:ref: ss:writingnativefits --></a>).
+     </dd><dt class="enumerate-enumitem">
+  (4) </dt><dd 
+class="enumerate-enumitem">You may assign a value to the <a 
+href="sun211ss399.html#x425-6170000">SourceFile</a> attribute of the FitsChan. The value should be
+                                                                                       
+
+                                                                                       
+     the path to a text file holding a set of FITS header cards, one per line. When the SourceFile
+     value is set (using astSetC or <a 
+href="sun211ss177.html#x202-3940000">astSet</a>), the file is opened and the headers copied from it into
+     the FitsChan. The file is then immediately closed.
+     </dd><dt class="enumerate-enumitem">
+  (5) </dt><dd 
+class="enumerate-enumitem">You may specify a source function which reads data from some external store of FITS
+     cards, just like the source associated with a basic Channel (&#x00A7;<a 
+href="sun211se15.html#x16-15400013">15.13<!--tex4ht:ref: ss:channelsource --></a>). If you supply a source
+     function, it will be called when the FitsChan is created in order to fill it with an initial set
+     of cards (&#x00A7;<a 
+href="#x17-17100014">16.14<!--tex4ht:ref: ss:fitssourceandsink --></a>).</dd></dl>
+<!--l. 8398--><p class="noindent" >There are also four ways of removing cards from a FitsChan:
+     <dl class="enumerate-enumitem"><dt class="enumerate-enumitem">
+  (1) </dt><dd 
+class="enumerate-enumitem">You may delete cards yourself, one at a time, using <a 
+href="sun211ss39.html#x64-2560000">astDelFits</a> (&#x00A7;<a 
+href="#x17-17000013">16.13<!--tex4ht:ref: ss:findingandchangingfits --></a>).
+     </dd><dt class="enumerate-enumitem">
+  (2) </dt><dd 
+class="enumerate-enumitem">You  may  read  an  AST  Object  from  the  FitsChan  (using  <a 
+href="sun211ss160.html#x185-3770000">astRead</a>),  which  will  have  the
+     effect of removing those cards from the FitsChan which describe the Object (&#x00A7;<a 
+href="#x17-16700010">16.10<!--tex4ht:ref: ss:readingnativefits --></a>).
+     </dd><dt class="enumerate-enumitem">
+  (3) </dt><dd 
+class="enumerate-enumitem">You may assign a value to the FitsChan&#x2019;s <a 
+href="sun211ss390.html#x416-6080000">SinkFile</a> attribute. When the FitsChan is deleted,
+     any remaining headers are written out to a text file with path equal to the value of the
+     SinkFile attribute.
+     </dd><dt class="enumerate-enumitem">
+  (4) </dt><dd 
+class="enumerate-enumitem">Alternatively, you may specify a sink function which writes data to some external store
+     of FITS cards, just like the sink associated with a basic Channel (&#x00A7;<a 
+href="sun211se15.html#x16-15500014">15.14<!--tex4ht:ref: ss:channelsink --></a>). If you supply
+     a sink function, it will be called when the FitsChan is deleted in order to write out any
+     FITS cards that remain in it (&#x00A7;<a 
+href="#x17-17100014">16.14<!--tex4ht:ref: ss:fitssourceandsink --></a>). Note, the sink function is not called if the SinkFile
+     attribute has been set.</dd></dl>
+<!--l. 8420--><p class="noindent" >Note, in particular, that reading an AST Object from a FitsChan is <em>destructive</em>. That is, it deletes the
+FITS cards that describe the Object. The reason for this is explained in &#x00A7;<a 
+href="sun211se17.html#x18-1770005">17.5<!--tex4ht:ref: ss:destructiveread --></a>.
+<!--l. 8425--><p class="noindent" >In addition to the above, you may also read individual cards from a FitsChan using the function
+<a 
+href="sun211ss51.html#x76-2680000">astFindFits</a> (which is not destructive). This is the main means of writing out FITS cards if you have not
+supplied a sink function. astFindFits also provides a means of searching for particular FITS cards (by
+keyword, for example) and there are other facilities for overwriting cards when required
+(&#x00A7;<a 
+href="#x17-17000013">16.13<!--tex4ht:ref: ss:findingandchangingfits --></a>).
+<a 
+ id="x17-159010r176"></a>
+<h4 class="subsectionHead"><span class="titlemark">16.3    </span> <a 
+ id="x17-1600003"></a>Creating a FitsChan</h4>
+<!--l. 8435--><p class="noindent" >The <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> constructor function, <a 
+href="sun211ss53.html#x78-2700000">astFitsChan</a>, is straightforward to use:
+<div class="fancyvrb" id="fancyvrb189"> <a 
+ id="x17-160002r1"></a>&#x00A0;&#x00A0;#include&#x00A0;&#x0022;ast.h&#x0022;<br class="fancyvrb" /><a 
+ id="x17-160004r2"></a>&#x00A0;&#x00A0;AstFitsChan&#x00A0;*fitschan;<br class="fancyvrb" /><a 
+ id="x17-160006r3"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-160008r4"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x17-160010r5"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-160012r6"></a>&#x00A0;&#x00A0;fitschan&#x00A0;=&#x00A0;astFitsChan(&#x00A0;NULL,&#x00A0;NULL,&#x00A0;&#x0022;Encoding=NATIVE&#x0022;&#x00A0;);</div>
+<!--l. 8449--><p class="noindent" >Here, we have omitted any source or sink functions by supplying NULL pointers for the first two
+arguments. We have also initialised the FitsChan&#x2019;s <a 
+href="sun211ss284.html#x310-5020000">Encoding</a> attribute to NATIVE. This indicates that
+we will be using the native encoding (&#x00A7;<a 
+href="#x17-1580001">16.1<!--tex4ht:ref: ss:nativeencoding --></a>) to store and retrieve Objects. If this was left unspecified,
+the default would depend on the FitsChan&#x2019;s contents. An attempt is made to use whatever encoding
+appears to have been used previously. For an empty FitsChan, the default is NATIVE, but it does no
+harm to be sure.
+                                                                                       
+
+                                                                                       
+<a 
+ id="x17-160013r177"></a>
+<h4 class="subsectionHead"><span class="titlemark">16.4    </span> <a 
+ id="x17-1610004"></a>Addressing Cards in a FitsChan</h4>
+<!--l. 8461--><p class="noindent" >Because a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> contains an ordered sequence of header cards, a mechanism is needed for
+addressing them. This allows you to specify where new cards are to be added, for example, or which
+card is to be deleted.
+<!--l. 8466--><p class="noindent" >This role is filled by the FitsChan&#x2019;s integer <a 
+href="sun211ss258.html#x284-4760000">Card</a> attribute, which gives the index of the <em>current card</em> in
+the FitsChan. You can nominate any card you like to be current, simply by setting a new value for the
+Card attribute, for example:
+<div class="fancyvrb" id="fancyvrb190"> <a 
+ id="x17-161002r1"></a>&#x00A0;&#x00A0;int&#x00A0;icard;<br class="fancyvrb" /><a 
+ id="x17-161004r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-161006r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x17-161008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-161010r5"></a>&#x00A0;&#x00A0;astSetI(&#x00A0;fitschan,&#x00A0;&#x0022;Card&#x0022;,&#x00A0;icard&#x00A0;)</div>
+<!--l. 8481--><p class="noindent" >where &#x201C;icard&#x201D; contains the index of the card on which you wish to operate next. Some functions will
+update the Card attribute as a means of advancing through the sequence of cards, when reading them
+for example, or to indicate which card matches a search criterion.
+<!--l. 8486--><p class="noindent" >The default value for Card is one, which is the index of the first card. This means that you can
+&#x201C;rewind&#x201D; a FitsChan to access its first card by clearing the Card attribute:
+<div class="fancyvrb" id="fancyvrb191"> <a 
+ id="x17-161012r1"></a>&#x00A0;&#x00A0;astClear(&#x00A0;fitschan,&#x00A0;&#x0022;Card&#x0022;&#x00A0;);</div>
+<!--l. 8496--><p class="noindent" >The total number of cards in a FitsChan is given by the integer <a 
+href="sun211ss348.html#x374-5660000">Ncard</a> attribute. This is a read-only
+attribute whose value is automatically updated as you add or remove cards. It means you can address
+all the cards in sequence using a loop such as the following:
+<div class="fancyvrb" id="fancyvrb192"> <a 
+ id="x17-161014r1"></a>&#x00A0;&#x00A0;int&#x00A0;ncard;<br class="fancyvrb" /><a 
+ id="x17-161016r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-161018r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x17-161020r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-161022r5"></a>&#x00A0;&#x00A0;ncard&#x00A0;=&#x00A0;astGetI(&#x00A0;fitschan,&#x00A0;&#x0022;Ncard&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x17-161024r6"></a>&#x00A0;&#x00A0;for&#x00A0;(&#x00A0;icard&#x00A0;=&#x00A0;1;&#x00A0;icard&#x00A0;&#x003C;=&#x00A0;ncard;&#x00A0;icard++&#x00A0;)&#x00A0;{
+<br class="fancyvrb" /><a 
+ id="x17-161026r7"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;astSetI(&#x00A0;fitschan,&#x00A0;&#x0022;Card&#x0022;,&#x00A0;icard&#x00A0;);<br class="fancyvrb" /><a 
+ id="x17-161028r8"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;access&#x00A0;the&#x00A0;current&#x00A0;card&#x003E;<br class="fancyvrb" /><a 
+ id="x17-161030r9"></a>&#x00A0;&#x00A0;}</div>
+<!--l. 8515--><p class="noindent" >However, it is usually possible to write slightly tidier loops based on the <a 
+href="sun211ss51.html#x76-2680000">astFindFits</a> function
+described later (&#x00A7;<a 
+href="#x17-1630006">16.6<!--tex4ht:ref: ss:extractingfitscards --></a> and &#x00A7;<a 
+href="#x17-17000013">16.13<!--tex4ht:ref: ss:findingandchangingfits --></a>).
+<!--l. 8520--><p class="noindent" >If you set the Card attribute to a value larger than Ncard, the FitsChan is regarded
+as being positioned at its <em>end-of-file</em>. In this case there is no current card and an
+attempt to obtain a value for the Card attribute will always return the value
+Ncard&#x00A0;<!--l. 8523--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>&#x00A0;1.
+When a FitsChan is empty, it is always at the end-of-file.
+<a 
+ id="x17-161031r178"></a>
+<h4 class="subsectionHead"><span class="titlemark">16.5    </span> <a 
+ id="x17-1620005"></a>Writing Native Objects to a FitsChan</h4>
+<!--l. 8528--><p class="noindent" >Having created an empty <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> (&#x00A7;<a 
+href="#x17-1600003">16.3<!--tex4ht:ref: ss:creatingafitschan --></a>), you can write any AST <a 
+href="sun211ss464.html#x491-6830000">Object</a> to it in
+the native encoding using the <a 
+href="sun211ss237.html#x262-4540000">astWrite</a> function. Let us assume we are writing a
+<a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>,<span class="footnote-mark"><a 
+href="#fn25x0" id="fn25x0-bk"><sup class="textsuperscript">25</sup></a></span><a 
+ id="x17-162001f25"></a>
+as follows:
+<div class="fancyvrb" id="fancyvrb193"> <a 
+ id="x17-162003r1"></a>&#x00A0;&#x00A0;AstSkyFrame&#x00A0;*skyframe;<br class="fancyvrb" /><a 
+ id="x17-162005r2"></a>&#x00A0;&#x00A0;int&#x00A0;nobj;<br class="fancyvrb" /><a 
+ id="x17-162007r3"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-162009r4"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x17-162011r5"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-162013r6"></a>&#x00A0;&#x00A0;nobj&#x00A0;=&#x00A0;astWrite(&#x00A0;fitschan,&#x00A0;skyframe&#x00A0;);</div>
+                                                                                       
+
+                                                                                       
+<!--l. 8546--><p class="noindent" >Since we have selected the native encoding (&#x00A7;<a 
+href="#x17-1580001">16.1<!--tex4ht:ref: ss:nativeencoding --></a>), there are no restrictions on the class of Object we
+may write, so astWrite should always return a value of one, unless an error occurs. Unlike a basic
+<a 
+href="sun211ss441.html#x468-6600000">Channel</a> (&#x00A7;<a 
+href="sun211se15.html#x16-1440003">15.3<!--tex4ht:ref: ss:writingtoachannel --></a>), this write operation will not produce any output from our program. The FITS headers
+produced are simply stored inside the FitsChan.
+<!--l. 8554--><p class="noindent" >After this write operation, the <a 
+href="sun211ss348.html#x374-5660000">Ncard</a> attribute will be updated to reflect the number of new cards
+added to the FitsChan and the <a 
+href="sun211ss258.html#x284-4760000">Card</a> attribute will point at the card immediately after the last one
+written. Since our FitsChan was initially empty, the Card attribute will, in this example, point at the
+end-of-file (&#x00A7;<a 
+href="#x17-1610004">16.4<!--tex4ht:ref: ss:addressingfitscards --></a>).
+<!--l. 8561--><p class="noindent" >The FITS standard imposes a limit of 68 characters on the length of strings which may be stored in a
+single header card. Sometimes, a description of an AST Object involves the use of strings which
+exceed this limit (<em>e.g.</em>&#x00A0;a <a 
+href="sun211ss452.html#x479-6710000">Frame</a> title can be of arbitrary length). If this occurs, the long string will be
+split over two or more header cards. Each &#x201C;continuation&#x201D; card will have the keyword <code>CONTINUE</code> in
+columns 1 to 8, and will contain a space in column 9 (instead of the usual equals sign). An ampersand
+(&#x201C;<code>&#x0026;</code>&#x201D;) is appended to the end of each of the strings (except the last one) to indicate that the string is
+continued on the next card.
+<!--l. 8572--><p class="noindent" >Note, this splitting of long strings over several cards only occurs when writing AST Objects to a
+FitsChan using the astWrite function and the <em>native</em> encoding. If a long string is stored in
+a FitsChan using (for instance) the <a 
+href="sun211ss153.html#x178-3700000">astPutFits</a> or <a 
+href="sun211ss150.html#x175-3670000">astPutCards</a> function, it will simply be
+truncated.
+<a 
+ id="x17-162014r179"></a>
+<h4 class="subsectionHead"><span class="titlemark">16.6    </span> <a 
+ id="x17-1630006"></a>Extracting Individual Cards from a FitsChan</h4>
+<!--l. 8580--><p class="noindent" >To examine the contents of the <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> after writing the <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> above (&#x00A7;<a 
+href="#x17-1620005">16.5<!--tex4ht:ref: ss:writingnativefits --></a>), we must write a
+simple loop to extract each card in turn and print it out. We must also remember to rewind the
+FitsChan first, <em>e.g.</em>&#x00A0;using <a 
+href="sun211ss21.html#x46-2380000">astClear</a>. The following loop would do:
+<div class="fancyvrb" id="fancyvrb194"> <a 
+ id="x17-163002r1"></a>&#x00A0;&#x00A0;#include&#x00A0;&#x003C;stdio.h&#x003E;<br class="fancyvrb" /><a 
+ id="x17-163004r2"></a>&#x00A0;&#x00A0;char&#x00A0;card[&#x00A0;81&#x00A0;];<br class="fancyvrb" /><a 
+ id="x17-163006r3"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-163008r4"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x17-163010r5"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-163012r6"></a>&#x00A0;&#x00A0;astClear(&#x00A0;fitschan,&#x00A0;&#x0022;Card&#x0022;&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x17-163014r7"></a>&#x00A0;&#x00A0;while&#x00A0;(&#x00A0;astFindFits(&#x00A0;fitschan,&#x00A0;&#x0022;%f&#x0022;,&#x00A0;card,&#x00A0;1&#x00A0;)&#x00A0;)&#x00A0;(void)&#x00A0;printf(&#x00A0;&#x0022;%s&#x005C;n&#x0022;,&#x00A0;card&#x00A0;);</div>
+<!--l. 8598--><p class="noindent" >Here, we have used the <a 
+href="sun211ss51.html#x76-2680000">astFindFits</a> function to find a FITS card by keyword. It is given a keyword
+template of &#x201C;%f&#x201D;, which matches any FITS keyword, so it always finds the current card,
+which it returns. Its fourth argument is set to 1, to indicate that the <a 
+href="sun211ss258.html#x284-4760000">Card</a> attribute should be
+incremented afterwards so that the following card will be found the next time around
+the loop. astFindFits returns zero when it reaches the end-of-file and this terminates the
+loop.
+<!--l. 8606--><p class="noindent" >If we were storing the FITS headers in an output FITS file instead of printing them out,
+we might use a loop like this but replace &#x201C;printf&#x201D; with a suitable data storage operation.
+This would only be necessary if we had not provided a sink function for the FitsChan
+(&#x00A7;<a 
+href="#x17-17100014">16.14<!--tex4ht:ref: ss:fitssourceandsink --></a>).
+<a 
+ id="x17-163015r180"></a>
+<h4 class="subsectionHead"><span class="titlemark">16.7    </span> <a 
+ id="x17-1640007"></a>The Native FitsChan Output Format</h4>
+<!--l. 8614--><p class="noindent" >If we print out the FITS header cards describing the <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> we wrote earlier (&#x00A7;<a 
+href="#x17-1620005">16.5<!--tex4ht:ref: ss:writingnativefits --></a>), we should
+obtain something like the following:
+                                                                                       
+
+                                                                                       
+<div class="fancyvrb" id="fancyvrb195"> <a 
+ id="x17-164002r1"></a>&#x00A0;&#x00A0;COMMENT&#x00A0;AST&#x00A0;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++&#x00A0;AST<br class="fancyvrb" /><a 
+ id="x17-164004r2"></a>&#x00A0;&#x00A0;COMMENT&#x00A0;AST&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Beginning&#x00A0;of&#x00A0;AST&#x00A0;data&#x00A0;for&#x00A0;SkyFrame&#x00A0;object&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;AST
+<br class="fancyvrb" /><a 
+ id="x17-164006r3"></a>&#x00A0;&#x00A0;COMMENT&#x00A0;AST&#x00A0;................................................................&#x00A0;AST
+<br class="fancyvrb" /><a 
+ id="x17-164008r4"></a>&#x00A0;&#x00A0;BEGAST_A=&#x00A0;&#x2019;SkyFrame&#x2019;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;/&#x00A0;Description&#x00A0;of&#x00A0;celestial&#x00A0;coordinate&#x00A0;system
+<br class="fancyvrb" /><a 
+ id="x17-164010r5"></a>&#x00A0;&#x00A0;NAXES_A&#x00A0;=&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;2&#x00A0;/&#x00A0;Number&#x00A0;of&#x00A0;coordinate&#x00A0;axes
+<br class="fancyvrb" /><a 
+ id="x17-164012r6"></a>&#x00A0;&#x00A0;AX1_A&#x00A0;&#x00A0;&#x00A0;=&#x00A0;&#x2019;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x2019;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;/&#x00A0;Axis&#x00A0;number&#x00A0;1<br class="fancyvrb" /><a 
+ id="x17-164014r7"></a>&#x00A0;&#x00A0;BEGAST_B=&#x00A0;&#x2019;SkyAxis&#x00A0;&#x2019;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;/&#x00A0;Celestial&#x00A0;coordinate&#x00A0;axis
+<br class="fancyvrb" /><a 
+ id="x17-164016r8"></a>&#x00A0;&#x00A0;ENDAST_A=&#x00A0;&#x2019;SkyAxis&#x00A0;&#x2019;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;/&#x00A0;End&#x00A0;of&#x00A0;object&#x00A0;definition<br class="fancyvrb" /><a 
+ id="x17-164018r9"></a>&#x00A0;&#x00A0;AX2_A&#x00A0;&#x00A0;&#x00A0;=&#x00A0;&#x2019;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x2019;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;/&#x00A0;Axis&#x00A0;number&#x00A0;2
+<br class="fancyvrb" /><a 
+ id="x17-164020r10"></a>&#x00A0;&#x00A0;BEGAST_C=&#x00A0;&#x2019;SkyAxis&#x00A0;&#x2019;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;/&#x00A0;Celestial&#x00A0;coordinate&#x00A0;axis
+<br class="fancyvrb" /><a 
+ id="x17-164022r11"></a>&#x00A0;&#x00A0;ENDAST_B=&#x00A0;&#x2019;SkyAxis&#x00A0;&#x2019;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;/&#x00A0;End&#x00A0;of&#x00A0;object&#x00A0;definition
+<br class="fancyvrb" /><a 
+ id="x17-164024r12"></a>&#x00A0;&#x00A0;ISA_A&#x00A0;&#x00A0;&#x00A0;=&#x00A0;&#x2019;Frame&#x00A0;&#x00A0;&#x00A0;&#x2019;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;/&#x00A0;Coordinate&#x00A0;system&#x00A0;description
+<br class="fancyvrb" /><a 
+ id="x17-164026r13"></a>&#x00A0;&#x00A0;SYSTEM_A=&#x00A0;&#x2019;FK4-NO-E&#x2019;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;/&#x00A0;Celestial&#x00A0;coordinate&#x00A0;system&#x00A0;type
+<br class="fancyvrb" /><a 
+ id="x17-164028r14"></a>&#x00A0;&#x00A0;EPOCH_A&#x00A0;=&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;1958.0&#x00A0;/&#x00A0;Besselian&#x00A0;epoch&#x00A0;of&#x00A0;observation
+<br class="fancyvrb" /><a 
+ id="x17-164030r15"></a>&#x00A0;&#x00A0;ENDAST_C=&#x00A0;&#x2019;SkyFrame&#x2019;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;/&#x00A0;End&#x00A0;of&#x00A0;object&#x00A0;definition
+<br class="fancyvrb" /><a 
+ id="x17-164032r16"></a>&#x00A0;&#x00A0;COMMENT&#x00A0;AST&#x00A0;................................................................&#x00A0;AST
+<br class="fancyvrb" /><a 
+ id="x17-164034r17"></a>&#x00A0;&#x00A0;COMMENT&#x00A0;AST&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;End&#x00A0;of&#x00A0;AST&#x00A0;data&#x00A0;for&#x00A0;SkyFrame&#x00A0;object&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;AST
+<br class="fancyvrb" /><a 
+ id="x17-164036r18"></a>&#x00A0;&#x00A0;COMMENT&#x00A0;AST&#x00A0;----------------------------------------------------------------&#x00A0;AST</div>
+<!--l. 8641--><p class="noindent" >As you can see, this resembles the information that would be written to a basic <a 
+href="sun211ss441.html#x468-6600000">Channel</a> to describe
+the same SkyFrame (&#x00A7;<a 
+href="sun211se15.html#x16-1490008">15.8<!--tex4ht:ref: ss:textualoutputformat --></a>), except that it has been formatted into 80-character header cards according
+to FITS conventions.
+<!--l. 8646--><p class="noindent" >There are also a number of other differences worth noting:
+     <dl class="enumerate-enumitem"><dt class="enumerate-enumitem">
+  (1) </dt><dd 
+class="enumerate-enumitem">There is no unnecessary information about default values provided for the benefit of the
+     human reader. This is because the <a 
+href="sun211ss293.html#x319-5110000">Full</a> attribute for a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> defaults to <!--l. 8651--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2212;</mo></math>1,
+     thus suppressing this information (<em>c.f.</em>&#x00A0;&#x00A7;<a 
+href="sun211se15.html#x16-1500009">15.9<!--tex4ht:ref: ss:controllingchanneloutput --></a>). You can restore the information if you wish
+     by setting Full to 0 or <!--l. 8653--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>1,
+     in which case additional COMMENT cards will be generated to hold it.
+     </dd><dt class="enumerate-enumitem">
+  (2) </dt><dd 
+class="enumerate-enumitem">The information is not indented, because FITS does not allow this. However, if you change
+     the Full attribute to 0 or <!--l. 8657--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>1,
+     comments will be included that are intended to help break up the sequence of headers
+     and highlight its structure. This will probably only be of use if you are attempting to track
+     down a problem by examining the FITS cards produced in detail.
+     </dd><dt class="enumerate-enumitem">
+  (3) </dt><dd 
+class="enumerate-enumitem">The FITS keywords which appear to the left of the &#x201C;<!--l. 8663--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">=</mo></math>&#x201D;
+     signs have additional characters (&#x201C;_A&#x201D;, &#x201C;_B&#x201D;, <em>etc.</em>) appended to them. This is done in order
+     to make each keyword unique.</dd></dl>
+<!--l. 8668--><p class="noindent" >This last point is worth further comment and is necessary because the FITS standard only allows for
+certain keywords (such as COMMENT and HISTORY) to appear more than once. <a 
+href="sun211ss237.html#x262-4540000">astWrite</a> therefore
+appends an arbitrary sequence of two characters to each new keyword it generates in order to ensure
+that it does not duplicate any already present in the FitsChan.
+<!--l. 8675--><p class="noindent" >The main risk from not following this convention is that some software might ignore (say) all but the
+last occurrence of a keyword before passing the FITS headers on. Such an event is unlikely, but
+would obviously destroy the information present, so astWrite enforces the uniqueness of the
+keywords it uses. The extra characters added are ignored when the information is read
+back.
+                                                                                       
+
+                                                                                       
+<!--l. 8682--><p class="noindent" >As with a basic Channel, you can also suppress the comments produced in a FitsChan by setting the
+boolean (integer) <a 
+href="sun211ss272.html#x298-4900000">Comment</a> attribute to zero (&#x00A7;<a 
+href="sun211se15.html#x16-15100010">15.10<!--tex4ht:ref: ss:channelcommenting --></a>). However, FITS headers are traditionally
+generously commented, so this is not recommended.
+<a 
+ id="x17-164040r181"></a>
+<h4 class="subsectionHead"><span class="titlemark">16.8    </span> <a 
+ id="x17-1650008"></a>Adding Individual Cards to a FitsChan</h4>
+<!--l. 8689--><p class="noindent" >To insert individual cards into a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>, prior to reading them back as Objects for example,
+you should use the <a 
+href="sun211ss153.html#x178-3700000">astPutFits</a> function. You can insert a card in front of the current one as
+follows:
+<div class="fancyvrb" id="fancyvrb196"> <a 
+ id="x17-165002r1"></a>&#x00A0;&#x00A0;astPutFits(&#x00A0;fitschan,&#x00A0;card,&#x00A0;0&#x00A0;);</div>
+<!--l. 8699--><p class="noindent" >where the third argument of zero indicates that the current card should not be overwritten. Note that
+facilities are not provided by AST for formatting the card contents.
+<!--l. 8703--><p class="noindent" >After inserting a card, the FitsChan&#x2019;s <a 
+href="sun211ss258.html#x284-4760000">Card</a> attribute points at the original Card, or at the end-of-file if
+the FitsChan was originally empty. Entering a sequence of cards is therefore straightforward. If
+&#x201C;cards&#x201D; is an array of pointers to strings containing FITS header cards and &#x201C;ncards&#x201D; is the
+number of cards, then a loop such as the following will insert the cards in sequence into a
+FitsChan:
+<div class="fancyvrb" id="fancyvrb197"> <a 
+ id="x17-165004r1"></a>&#x00A0;&#x00A0;#define&#x00A0;MAXCARD&#x00A0;100<br class="fancyvrb" /><a 
+ id="x17-165006r2"></a>&#x00A0;&#x00A0;char&#x00A0;*cards[&#x00A0;MAXCARD&#x00A0;];<br class="fancyvrb" /><a 
+ id="x17-165008r3"></a>&#x00A0;&#x00A0;int&#x00A0;ncard;<br class="fancyvrb" /><a 
+ id="x17-165010r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-165012r5"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x17-165014r6"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x17-165016r7"></a>&#x00A0;&#x00A0;for&#x00A0;(&#x00A0;icard&#x00A0;=&#x00A0;0;&#x00A0;icard&#x00A0;&#x003C;&#x00A0;ncard;&#x00A0;icard++&#x00A0;)&#x00A0;astPutFits(&#x00A0;fitschan,&#x00A0;cards[&#x00A0;icard&#x00A0;],&#x00A0;0&#x00A0;);</div>
+<!--l. 8722--><p class="noindent" >The string containing a card need not be null terminated if it is at least 80 characters long (we have not
+allocated space for the strings themselves in this brief example).
+<!--l. 8726--><p class="noindent" >Note that astPutFits enforces the validity of a FitsChan by rejecting any cards which do not adhere to
+the FITS standard. If any such cards are detected, an error will result.
+<a 
+ id="x17-165017r182"></a>
+<h4 class="subsectionHead"><span class="titlemark">16.9    </span> <a 
+ id="x17-1660009"></a>Adding Concatenated Cards to a FitsChan</h4>
+<!--l. 8732--><p class="noindent" >If you have all your cards concatenated together into a single long string, each occupying 80
+characters (with no delimiters), you can insert them into a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> in a single call using <a 
+href="sun211ss150.html#x175-3670000">astPutCards</a>.
+This call first empties the supplied FitsChan of any existing cards, then inserts the new cards, and
+finally rewinds the FitsChan so that a subsequent call to <a 
+href="sun211ss160.html#x185-3770000">astRead</a> will start reading from the first
+supplied card. The astPutCards function uses <a 
+href="sun211ss153.html#x178-3700000">astPutFits</a> internally to interpret and store each
+individual card, and so the caveats in &#x00A7;<a 
+href="#x17-1650008">16.8<!--tex4ht:ref: ss:addingfitscards --></a> should be read.
+<!--l. 8745--><p class="noindent" >For instance, if you are using the CFITSIO library for access to FITS files, you can use the CFITSIO
+fits_hdr2str function to obtain a string suitable for passing to astPutCards:
+<div class="fancyvrb" id="fancyvrb198"> <a 
+ id="x17-166002r1"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-166004r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-166006r3"></a>&#x00A0;&#x00A0;if(&#x00A0;!fits_hdr2str(&#x00A0;fptr,&#x00A0;0,&#x00A0;NULL,&#x00A0;0,&#x00A0;&#x0026;header,&#x00A0;&#x0026;nkeys,&#x00A0;&#x0026;status&#x00A0;)&#x00A0;)
+<br class="fancyvrb" /><a 
+ id="x17-166008r4"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;fitschan&#x00A0;=&#x00A0;astFitsChan(&#x00A0;NULL,&#x00A0;NULL,&#x00A0;&#x0022;&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x17-166010r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;astPutCards(&#x00A0;fitschan,&#x00A0;header&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x17-166012r6"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;header&#x00A0;=&#x00A0;free(&#x00A0;header&#x00A0;);<br class="fancyvrb" /><a 
+ id="x17-166014r7"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;wcsinfo&#x00A0;=&#x00A0;astRead(&#x00A0;fitschan&#x00A0;);<br class="fancyvrb" /><a 
+ id="x17-166016r8"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-166018r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x17-166020r10"></a>&#x00A0;&#x00A0;}</div>
+<a 
+ id="x17-166021r183"></a>
+                                                                                       
+
+                                                                                       
+<h4 class="subsectionHead"><span class="titlemark">16.10    </span> <a 
+ id="x17-16700010"></a>Reading Native Objects From a FitsChan</h4>
+<!--l. 8768--><p class="noindent" >Once you have stored a FITS header description of an <a 
+href="sun211ss464.html#x491-6830000">Object</a> in a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> using the native encoding
+(&#x00A7;<a 
+href="#x17-1620005">16.5<!--tex4ht:ref: ss:writingnativefits --></a>), you can read it back using <a 
+href="sun211ss160.html#x185-3770000">astRead</a> in much the same way as with a basic <a 
+href="sun211ss441.html#x468-6600000">Channel</a> (&#x00A7;<a 
+href="sun211se15.html#x16-1450004">15.4<!--tex4ht:ref: ss:readingfromachannel --></a>).
+Similar comments about validating the Object you read also apply (&#x00A7;<a 
+href="sun211se15.html#x16-1470006">15.6<!--tex4ht:ref: ss:validatinginput --></a>). If you have just written to
+the FitsChan, you must remember to rewind it first:
+<div class="fancyvrb" id="fancyvrb199"> <a 
+ id="x17-167002r1"></a>&#x00A0;&#x00A0;AstObject&#x00A0;*object;<br class="fancyvrb" /><a 
+ id="x17-167004r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-167006r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x17-167008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-167010r5"></a>&#x00A0;&#x00A0;astClear(&#x00A0;fitschan,&#x00A0;&#x0022;Card&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x17-167012r6"></a>&#x00A0;&#x00A0;object&#x00A0;=&#x00A0;astRead(&#x00A0;fitschan&#x00A0;);</div>
+<!--l. 8787--><p class="noindent" >An important feature of a FitsChan is that read operations are destructive. This means that if an Object
+description is found, it will be consumed by astRead which will remove all the cards involved,
+including associated COMMENT cards, from the FitsChan. Thus, if you write an Object to a FitsChan,
+rewind, and read the same Object back, you should end up with the original FitsChan contents. If you
+need to circumvent this behaviour for any reason, it is a simple matter to make a copy of a FitsChan
+using <a 
+href="sun211ss34.html#x59-2510000">astCopy</a> (&#x00A7;<a 
+href="sun211se4.html#x5-4900013">4.13<!--tex4ht:ref: ss:copyingobjects --></a>). If you then read from the copy, the original FitsChan will remain
+untouched.
+<!--l. 8798--><p class="noindent" >After a read completes, the FitsChan&#x2019;s <a 
+href="sun211ss258.html#x284-4760000">Card</a> attribute identifies the card immediately following the last
+card read, or the end-of-file of there are no more cards.
+<!--l. 8802--><p class="noindent" >Since the <em>native</em> encoding is being used, any long strings involved in the object description will have
+been split into two or more adjacent contuation cards when the Object was stored in the header using
+function <a 
+href="sun211ss237.html#x262-4540000">astWrite</a>. The astRead function reverses this process by concatenating any such adjacent
+continuation cards to re-create the original long string.
+<a 
+ id="x17-167013r184"></a>
+<h4 class="subsectionHead"><span class="titlemark">16.11    </span> <a 
+ id="x17-16800011"></a>Saving and Restoring Multiple Objects in a FitsChan</h4>
+<!--l. 8811--><p class="noindent" >When using the native FITS encoding, multiple Objects may be stored and all I/O operations are
+sequential. This means that you can simply write a sequence of Objects to a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>. After each write
+operation, the <a 
+href="sun211ss258.html#x284-4760000">Card</a> attribute will be updated so that the next write appends the next <a 
+href="sun211ss464.html#x491-6830000">Object</a>
+description to the previous one.
+<!--l. 8817--><p class="noindent" >If you then rewind the FitsChan, you can read the Objects back in the original order. Reading
+them back will, of course, remove their descriptions from the FitsChan (&#x00A7;<a 
+href="#x17-16700010">16.10<!--tex4ht:ref: ss:readingnativefits --></a>) but the
+behaviour of the Card attribute is such that successive reads will simply return each Object in
+sequence.
+<!--l. 8823--><p class="noindent" >The only thing that may require care, given that a FitsChan can always be addressed randomly by
+setting its Card attribute, is to avoid writing one Object on top of another. For obvious reasons, the
+Object descriptions in a FitsChan must remain separate if they are to make sense when read
+back.
+<a 
+ id="x17-168001r185"></a>
+<h4 class="subsectionHead"><span class="titlemark">16.12    </span> <a 
+ id="x17-16900012"></a>Mixing Native Objects with Other FITS Cards</h4>
+<!--l. 8831--><p class="noindent" >Of course, any real FITS header will contain other information besides AST Objects, if only the
+mandatory FITS cards that must accompany all FITS data. When FITS headers are read in from a real
+dataset, therefore, any native AST <a 
+href="sun211ss464.html#x491-6830000">Object</a> descriptions will be inter-mixed with many other
+cards.
+                                                                                       
+
+                                                                                       
+<!--l. 8837--><p class="noindent" >Because this is the normal state of affairs, the boolean (integer) <a 
+href="sun211ss393.html#x419-6110000">Skip</a> attribute for a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> defaults to
+one. This means that when you read an Object From a FitsChan, any irrelevant cards will simply be
+skipped over until the start of the next Object description, if any, is found. If you start reading part
+way through an Object description, no error will result. The remainder of the description will simply
+be skipped.
+<!--l. 8845--><p class="noindent" >Setting Skip to zero will change this behaviour to resemble that of a basic <a 
+href="sun211ss441.html#x468-6600000">Channel</a> (&#x00A7;<a 
+href="sun211se15.html#x16-15300012">15.12<!--tex4ht:ref: ss:mixingchanneltext --></a>), where
+extraneous data are not permitted by default, but this will probably rarely be useful.
+<a 
+ id="x17-169001r186"></a>
+<h4 class="subsectionHead"><span class="titlemark">16.13    </span> <a 
+ id="x17-17000013"></a>Finding and Changing Cards in a FitsChan</h4>
+<!--l. 8851--><p class="noindent" >You can search for, and retrieve, particular cards in a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> by keyword, using the function
+<a 
+href="sun211ss51.html#x76-2680000">astFindFits</a>. This performs a search, starting at the current card, until it finds a card whose keyword
+matches the template you supply, or the end-of-file is reached.
+<!--l. 8856--><p class="noindent" >If a suitable card is found, astFindFits optionally returns the card&#x2019;s contents and then sets the
+FitsChan&#x2019;s <a 
+href="sun211ss258.html#x284-4760000">Card</a> attribute either to identify the card found, or the one following it. The way
+you want the Card attribute to be set is indicated by the final boolean (int) argument to
+astFindFits. A value of one is returned to indicate success. If a suitable card cannot be found,
+astFindFits returns a value of zero to indicate failure and sets the FitsChan&#x2019;s Card attribute to the
+end-of-file.
+<!--l. 8865--><p class="noindent" >Requesting that the Card attribute be set to indicate the card that astFindFits finds is useful if you
+want to replace that card with a new one, as in this example:
+<div class="fancyvrb" id="fancyvrb200"> <a 
+ id="x17-170002r1"></a>&#x00A0;&#x00A0;char&#x00A0;newcard[&#x00A0;81&#x00A0;];<br class="fancyvrb" /><a 
+ id="x17-170004r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-170006r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x17-170008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x17-170010r5"></a>&#x00A0;&#x00A0;(void)&#x00A0;astFindFits(&#x00A0;fitschan,&#x00A0;&#x0022;AIRMASS&#x0022;,&#x00A0;NULL,&#x00A0;0&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x17-170012r6"></a>&#x00A0;&#x00A0;astPutFits(&#x00A0;fitschan,&#x00A0;newcard,&#x00A0;1&#x00A0;);</div>
+<!--l. 8880--><p class="noindent" >Here, astFindFits is used to search for a card with the keyword AIRMASS, with a NULL
+pointer being given to indicate that we do not want the card&#x2019;s contents returned. If the
+card is found, <a 
+href="sun211ss153.html#x178-3700000">astPutFits</a> then overwrites it with a new card. Otherwise, the Card attribute
+ends up pointing at the end-of-file and the new card is simply appended to the end of the
+FitsChan.
+<!--l. 8887--><p class="noindent" >A similar approach can be used to delete selected cards from a FitsChan using <a 
+href="sun211ss39.html#x64-2560000">astDelFits</a>, which
+deletes the current card:
+<div class="fancyvrb" id="fancyvrb201"> <a 
+ id="x17-170014r1"></a>&#x00A0;&#x00A0;if&#x00A0;(&#x00A0;astFindFits(&#x00A0;fitschan,&#x00A0;&#x0022;BSCALE&#x0022;,&#x00A0;NULL,&#x00A0;0&#x00A0;)&#x00A0;)&#x00A0;astDelFits(&#x00A0;fitschan&#x00A0;);</div>
+<!--l. 8896--><p class="noindent" >This deletes the first card, if any, with the BSCALE keyword.
+<!--l. 8898--><p class="noindent" >Requesting that astFindFits increments the Card attribute to identify the card following the one found
+is more useful when writing loops. For example, the following loop extracts each card
+whose keyword matches the template &#x201C;CD%6d&#x201D; (that is, &#x201C;CD&#x201D; followed by six decimal
+digits):
+<div class="fancyvrb" id="fancyvrb202"> <a 
+ id="x17-170016r1"></a>&#x00A0;&#x00A0;while&#x00A0;(&#x00A0;astFindFits(&#x00A0;fitschan,&#x00A0;&#x0022;CD%6d&#x0022;,&#x00A0;card,&#x00A0;1&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x17-170018r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;process&#x00A0;the&#x00A0;card&#x2019;s&#x00A0;contents&#x003E;<br class="fancyvrb" /><a 
+ id="x17-170020r3"></a>&#x00A0;&#x00A0;}</div>
+<!--l. 8912--><p class="noindent" >For further details of keyword templates, see the description of astFindFits in Appendix&#x00A0;<a 
+href="sun211se24.html#x25-2170002">B<!--tex4ht:ref: ss:functiondescriptions --></a>.
+<a 
+ id="x17-170021r187"></a>
+                                                                                       
+
+                                                                                       
+<h4 class="subsectionHead"><span class="titlemark">16.14    </span> <a 
+ id="x17-17100014"></a>Source and Sink Functions for FitsChans</h4>
+<!--l. 8917--><p class="noindent" >The use of source and sink functions with a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> is optional. This is because you can always
+arrange to explicitly fill a FitsChan with FITS cards (&#x00A7;<a 
+href="#x17-1650008">16.8<!--tex4ht:ref: ss:addingfitscards --></a> and &#x00A7;<a 
+href="#x17-1660009">16.9<!--tex4ht:ref: ss:addingmulticards --></a>) and you can also
+extract any cards that remain and write them out yourself (&#x00A7;<a 
+href="#x17-1630006">16.6<!--tex4ht:ref: ss:extractingfitscards --></a>) before you delete the
+FitsChan.
+<!--l. 8924--><p class="noindent" >If you choose to use these functions, however, they behave in a very similar manner to those used by a
+<a 
+href="sun211ss441.html#x468-6600000">Channel</a> (&#x00A7;<a 
+href="sun211se15.html#x16-15400013">15.13<!--tex4ht:ref: ss:channelsource --></a> and &#x00A7;<a 
+href="sun211se15.html#x16-15500014">15.14<!--tex4ht:ref: ss:channelsink --></a>). You supply pointers to these functions, as arguments to the
+constructor function <a 
+href="sun211ss53.html#x78-2700000">astFitsChan</a> when you create the FitsChan (&#x00A7;<a 
+href="#x17-1600003">16.3<!--tex4ht:ref: ss:creatingafitschan --></a>). The source function is
+invoked implicitly at this point to fill the FitsChan with FITS cards and the FitsChan is
+then rewound, so that the first card becomes current. The sink function is automatically
+invoked later, when the FitsChan is deleted, in order to write out any cards that remain in
+it.
+<!--l. 8935--><p class="noindent" >The only real difference between the source and sink functions for a FitsChan and a basic
+Channel is that FITS cards are limited in length to 80&#x00A0;characters, so the choice of buffer size is
+simplified. The &#x201C;Source&#x201D; and &#x201C;Sink&#x201D; functions in &#x00A7;<a 
+href="sun211se15.html#x16-15400013">15.13<!--tex4ht:ref: ss:channelsource --></a> and &#x00A7;<a 
+href="sun211se15.html#x16-15500014">15.14<!--tex4ht:ref: ss:channelsink --></a> could therefore be used
+to access FITS headers stored in text files simply by changing LEN to be 80. If you were
+not accessing a text file, however, appropriate changes to the I/O statements would be
+needed since the separating newline characters would be absent. The details obviously
+depend on the format of the file you are handling, which need not necessarily be a true FITS
+file.
+                                                                                       
+
+                                                                                       
+<!--l. 8947--><p class="noindent" >
+                                                                                       
+
+                                                                                       
+                                                                                       
+
+                                                                                       
+<div class="footnotes"><!--l. 8310--><p class="noindent" ><span class="footnote-mark"><a 
+href="#fn24x0-bk" id="fn24x0"><sup class="textsuperscript">24</sup></a></span>http://fits.gsfc.nasa.gov/
+<!--l. 8533--><p class="noindent" ><span class="footnote-mark"><a 
+href="#fn25x0-bk" id="fn25x0"><sup class="textsuperscript">25</sup></a></span>More probably, you would want to write a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a>, but for purposes of illustration a SkyFrame contains a more
+manageable amount of data.                                                                 </div> <div class="crosslinks">
+<div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211se15.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World
+Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se17.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 8948--><p class="noindent" ><a 
+ id="tailsun211se16.html"></a> 
+</body> 
+</html>

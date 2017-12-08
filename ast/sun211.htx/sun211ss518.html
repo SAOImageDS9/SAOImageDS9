@@ -1,0 +1,58 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astGrow </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss517.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss519.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 49081--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x547-7390000"></a> astGrow </h3>  <p class="subtitle"> Allocate memory for an adjustable array  </p> </h3> </header><a 
+ id="Q1-547-1791"></a> <a 
+ id="Q1-547-1792"></a> <a name="xref_astGrow"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+function allocates memory in which to store an array of data whose eventual size
+is unknown. It should be invoked whenever a new array size is determined and
+will appropriately increase the amount of memory allocated when necessary. In
+general, it will over-allocate in anticipation of future growth so that the
+amount of memory does not need adjusting on every invocation.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void
+<!--l. 49081--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astGrow(
+                                                                                       
+
+                                                                                       
+void <!--l. 49081--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>ptr,
+int n, size_t size )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> ptr  </h5><div class="sstsub"> Pointer to previously allocated memory (or
+NULL if none has yet been allocated).  </div> <h5 class="ssth5"> n  </h5><div class="sstsub"> Number of array elements to be stored (may
+be zero).  </div> <h5 class="ssth5"> size  </h5><div class="sstsub"> The size of each array element.  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astGrow()  </h5><div class="sstsub"> If
+the memory was allocated successfully, a pointer to the start of the possibly new
+memory region is returned (this may be the same as the original pointer).  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 49081--><p class="noindent" >When new memory is allocated, the existing contents are preserved.
+<li >
+<!--l. 49081--><p class="noindent" >This function does not free memory once it is allocated, so the size allocated grows
+to accommodate the maximum size of the array (or <code>&#x0022;</code> high water mark<code>&#x0022;</code> ). Other
+memory handling routines may be used to free the memory (or alter its size) if
+necessary.
+<li >
+<!--l. 49081--><p class="noindent" >If this function is invoked with the global error status set, or if it fails for any
+reason, the original pointer value is returned and the memory contents are unchanged.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss517.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss519.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 49550--><p class="noindent" ><a 
+ id="tailsun211ss518.html"></a> </div> 
+</body> 
+</html>

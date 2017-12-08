@@ -1,0 +1,50 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> UnitNormMap </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss495.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss497.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 47614--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x523-7150000"></a> UnitNormMap </h3>  <p class="subtitle"> Convert a vector to a unit vector and its norm, relative to a specified
+centre  </p> </h3> </header><a 
+ id="Q1-523-1723"></a> <a 
+ id="Q1-523-1724"></a> <a name="xref_UnitNormMap"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> The forward transformation of a UnitNormMap subtracts the
+specified centre and then transforms the resulting vector to a unit vector and
+the vector norm. The output contains one more coordinate than the input: the
+initial <a 
+href="sun211ss353.html#x379-5710000">Nin</a> outputs are in the same order as the input; the final output is the
+norm.
+<!--l. 47614--><p class="noindent" >The inverse transformation of a UnitNormMap multiplies each component of the provided
+vector by the provided norm and adds the specified centre. The output contains one
+fewer coordinate than the input: the initial Nin inputs are in the same order as the
+output; the final input is the norm.
+<!--l. 47614--><p class="noindent" >UnitNormMap enables radially symmetric transformations, as follows: <ul class="sstitemlist">
+<li >
+<!--l. 47614--><p class="noindent" >apply a UnitNormMap to produce a unit vector and norm (radius)
+<li >
+<!--l. 47614--><p class="noindent" >apply a one-dimensional mapping to the norm (radius), while passing the unit vector
+unchanged
+<li >
+<!--l. 47614--><p class="noindent" >apply the same UnitNormMap in the inverse direction to produce the result  </li></ul>  </div>
+<h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> <a 
+href="sun211ss230.html#x255-4470000">astUnitNormMap</a>  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues"> The UnitNormMap class inherits
+from the <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> The UnitNormMap class does not define any new
+attributes beyond those which are applicable to all Mappings.  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> The
+UnitNormMap class does not define any new functions beyond those which are applicable
+to all Mappings.  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss495.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss497.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss496.html"></a> </div> 
+</body> 
+</html>

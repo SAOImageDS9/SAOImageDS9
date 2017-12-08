@@ -1,0 +1,91 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> TabOK </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss413.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss415.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 42096--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x440-6320000"></a> TabOK </h3>  <p class="subtitle"> Should the FITS-WCS -TAB algorithm be recognised?  </p> </h3> </header><a 
+ id="Q1-440-1476"></a> <a 
+ id="Q1-440-1477"></a> <a name="xref_TabOK"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+attribute is an integer value which indicates if the <code>&#x0022;</code> -TAB<code>&#x0022;</code> algorithm, defined in
+FITS-WCS paper III, should be supported by the <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>. The default value is zero. A
+zero or negative value results in no support for -TAB axes (i.e. axes that have <code>&#x0022;</code> -TAB<code>&#x0022;</code>
+in their CTYPE keyword value). In this case, the <a 
+href="sun211ss237.html#x262-4540000">astWrite</a> method will return zero if
+the write operation would required the use of the -TAB algorithm, and the <a 
+href="sun211ss160.html#x185-3770000">astRead</a>
+method will return a NULL pointer if any axis in the supplied header uses the -TAB
+algorithm.
+<!--l. 42096--><p class="noindent" >If TabOK is set to a non-zero positive integer, these methods will recognise and
+convert axes described by the -TAB algorithm, as follows:
+<!--l. 42096--><p class="noindent" >The astWrite method will generate headers that use the -TAB algorithm (if possible) if
+no other known FITS-WCS algorithm can be used to describe the supplied <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a>. This
+will result in a table of coordinate values and index vectors being stored
+in the FitsChan. After the write operation, the calling application should
+check to see if such a table has been stored in the FitsChan. If so, the table
+should be retrived from the FitsChan using the <a 
+href="sun211ss78.html#x103-2950000">astGetTables</a> method, and the data
+(and headers) within it copied into a new FITS binary table extension. See
+astGetTables for more information. The FitsChan uses a <a 
+href="sun211ss450.html#x477-6690000">FitsTable</a> object to store the
+table data and headers. This FitsTable will contain the required columns and
+headers as described by FITS-WCS paper III - the coordinates array will be in a
+column named <code>&#x0022;</code> COORDS<code>&#x0022;</code> , and the index vector(s) will be in columns named <code>&#x0022;</code>
+INDEX<!--l. 42096--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>i<!--l. 42096--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math><code>&#x0022;</code>
+(where <!--l. 42096--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>i<!--l. 42096--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+is the index of the corresponding FITS WCS axis). Note, index vectors are only created
+                                                                                       
+
+                                                                                       
+if required. The EXTNAME value will be set to the value of the AST__TABEXTNAME constant
+(currently <code>&#x0022;</code> WCS-TAB<code>&#x0022;</code> ). The EXTVER header will be set to the positive integer value
+assigned to the TabOK attribute. No value will be stored for the EXTLEVEL header, and
+should therefore be considered to default to 1.
+<!--l. 42096--><p class="noindent" >The astRead method will generate a FrameSet from headers that use the -TAB algorithm so
+long as the necessary FITS binary tables are made available. There are two ways to do
+this: firstly, if the application knows which FITS binary tables will be needed, then
+it can create a Fitstable describing each such table and store it in the FitsChan
+(using method <a 
+href="sun211ss156.html#x181-3730000">astPutTables</a> or <a 
+href="sun211ss154.html#x179-3710000">astPutTable</a>) before invoking the astRead method.
+Secondly, if the application does not know which FITS binary tables will be needed by
+astRead, then it can register a call-back function with the FitsChan using method
+<a 
+href="sun211ss209.html#x234-4260000">astTableSource</a>. This call-back function will be called from within astRead if and when
+a -TAB header is encountered. When called, its arguments will give the name, version
+and level of the FITS extension containing a required table. The call-back function
+should read this table from an external FITS file, and create a corresponding
+FitsTable which it should then return to astRead. Note, currently astRead can only
+handle -TAB headers that describe 1-dimensional (i.e. separable) axes.  </div> <dl class="sst">Type: </dl><dd class="sst">
+Integer.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> FitsChan  </h5><div class="sstsub"> All FitsChans have this attribute.  </div>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss413.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss415.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss414.html"></a> </div> 
+</body> 
+</html>

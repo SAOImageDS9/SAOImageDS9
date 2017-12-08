@@ -1,0 +1,40 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Clean </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss262.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss264.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 34645--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x289-4810000"></a> Clean </h3>  <p class="subtitle"> Remove cards used whilst reading even if an error occurs?  </p> </h3> </header><a 
+ id="Q1-289-1023"></a> <a 
+ id="Q1-289-1024"></a> <a name="xref_Clean"></a>  <h4 class="ssth4">Description:
+</h4><div class="sstvalues"> This attribute indicates whether or not cards should be removed from the <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> if
+an error occurs within <a 
+href="sun211ss160.html#x185-3770000">astRead</a>. A succesful read on a FitsChan always results in the
+removal of the cards which were involved in the description of the returned <a 
+href="sun211ss464.html#x491-6830000">Object</a>.
+However, in the event of an error during the read (for instance if the cards in the
+FitsChan have illegal values, or if some required cards are missing) no cards will be
+removed from the FitsChan if the Clean attribute is zero (the default). If Clean is
+non-zero then any cards which were used in the aborted attempt to read an object will
+be removed.
+<!--l. 34645--><p class="noindent" >This provides a means of <code>&#x0022;</code> cleaning<code>&#x0022;</code> a FitsChan of WCS related cards which works even
+in the event of the cards not forming a legal WCS description.  </div> <dl class="sst">Type: </dl><dd class="sst"> Integer
+(boolean).  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> FitsChan  </h5><div class="sstsub"> All FitsChans have this attribute.  </div>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss262.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss264.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss263.html"></a> </div> 
+</body> 
+</html>

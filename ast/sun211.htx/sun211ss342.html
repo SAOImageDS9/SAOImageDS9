@@ -1,0 +1,62 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> MinAxes </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+                                                                                       
+
+                                                                                       
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss341.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss343.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 38792--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x368-5600000"></a> MinAxes </h3>  <p class="subtitle"> Minimum number of Frame axes to match  </p> </h3> </header><a 
+ id="Q1-368-1260"></a> <a 
+ id="Q1-368-1261"></a> <a name="xref_MinAxes"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute
+controls how a <a 
+href="sun211ss452.html#x479-6710000">Frame</a> behaves when it is used (by <a 
+href="sun211ss52.html#x77-2690000">astFindFrame</a>) as a template to match
+another (target) Frame. It specifies the minimum number of axes that the target Frame
+may have in order to match the template.
+<!--l. 38792--><p class="noindent" >Normally, this value will equal the number of Frame axes, so that a template Frame will
+only match another Frame with the same number of axes as itself. By setting a
+different value, however, the matching process may be used to identify Frames with
+specified numbers of axes.  </div> <dl class="sst">Type: </dl><dd class="sst"> Integer.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Frame  </h5><div class="sstsub"> The
+default MinAxes value for a Frame is equal to the number of Frame axes (<a 
+href="sun211ss347.html#x373-5650000">Naxes</a>
+attribute).  </div> <h5 class="ssth5"> <a 
+href="sun211ss443.html#x470-6620000">CmpFrame</a>  </h5><div class="sstsub"> The MinAxes attribute of a CmpFrame defaults to zero.
+Combined with the <a 
+href="sun211ss340.html#x366-5580000">MaxAxes</a> default of 1000000 (for a CmpFrame), this means that the
+default behaviour for a CmpFrame is to match any target Frame that consists
+of a subset of the axes in the template CmpFrame. To change this so that a
+CmpFrame will only match Frames that have the same number of axes, you should
+set the CmpFrame MinAxes and MaxAxes attributes to the number of axes in the
+CmpFrame.  </div> <h5 class="ssth5"> <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a>  </h5><div class="sstsub"> The MinAxes attribute of a FrameSet is the same as
+that of its current Frame (as specified by the <a 
+href="sun211ss273.html#x299-4910000">Current</a> attribute).  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 38792--><p class="noindent" >When setting a MinAxes value, the value of the MaxAxes attribute may also be silently
+changed so that it remains consistent with (i.e. is not less than) the new value. The
+default MinAxes value may also be reduced to remain consistent with the MaxAxes
+value.
+<li >
+<!--l. 38792--><p class="noindent" >If a template Frame is used to match a target with a different number of axes, the
+<a 
+href="sun211ss339.html#x365-5570000">MatchEnd</a> attribute of the template is used to determine how the individual axes of each
+Frame should match.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss341.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss343.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss342.html"></a> </div> 
+</body> 
+</html>

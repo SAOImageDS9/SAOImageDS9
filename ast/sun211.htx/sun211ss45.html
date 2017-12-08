@@ -1,0 +1,71 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astEllipsePars </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss44.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss46.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 14600--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x70-2620000"></a> astEllipsePars </h3>  <p class="subtitle"> Returns the geometric parameters of an Ellipse  </p> </h3> </header><a 
+ id="Q1-70-368"></a> <a 
+ id="Q1-70-369"></a> <a name="xref_astEllipsePars"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This function returns the geometric parameters describing
+the supplied ellipse.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astEllipsePars( AstEllipse
+<!--l. 14600--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this, double
+centre[2], double <!--l. 14600--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>a,
+double <!--l. 14600--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>b,
+double <!--l. 14600--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>angle,
+double p1[2], double p2[2] )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the <a 
+href="sun211ss474.html#x501-6930000">Region</a>.  </div> <h5 class="ssth5">
+centre  </h5><div class="sstsub"> The coordinates of the <a 
+href="sun211ss448.html#x475-6670000">Ellipse</a> centre are returned in this arrays.  </div> <h5 class="ssth5"> a
+</h5><div class="sstsub"> Returned holding the half-length of the first axis of the ellipse.  </div> <h5 class="ssth5"> b  </h5><div class="sstsub">
+Returned holding the half-length of the second axis of the ellipse.  </div> <h5 class="ssth5"> angle  </h5><div class="sstsub"> If
+the coordinate system in which the Ellipse is defined has axes (X,Y), then <code>&#x0022;</code>
+<!--l. 14600--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>angle<code>&#x0022;</code>
+is returned holding the angle from the positive direction of the Y axis to the first
+axis of the ellipse, in radians. Positive rotation is in the same sense as rotation
+from the positive direction of Y to the positive direction of X.  </div> <h5 class="ssth5"> p1  </h5><div class="sstsub"> An array in
+which to return the coordinates at one of the two ends of the first axis of the
+ellipse. A NULL pointer can be supplied if these coordinates are not needed.  </div> <h5 class="ssth5"> p2  </h5><div class="sstsub"> An
+array in which to return the coordinates at one of the two ends of the second axis of
+the ellipse. A NULL pointer can be supplied if these coordinates are not needed.  </div>  </div>
+<h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 14600--><p class="noindent" >If the coordinate system represented by the Ellipse has been changed since it was first
+created, the returned parameters refer to the new (changed) coordinate system, rather
+than the original coordinate system. Note however that if the transformation from
+original to new coordinate system is non-linear, the shape represented by the supplied
+Ellipse object may not be an accurate ellipse.
+<li >
+<!--l. 14600--><p class="noindent" >Values of AST__BAD are returned for the parameters without error if the ellipse is
+degenerate or undefined.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss44.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss46.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss45.html"></a> </div> 
+</body> 
+</html>

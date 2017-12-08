@@ -1,0 +1,63 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astRemoveFrame </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss166.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss168.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 26321--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x192-3840000"></a> astRemoveFrame </h3>  <p class="subtitle"> Remove a Frame from a FrameSet  </p> </h3> </header><a 
+ id="Q1-192-734"></a> <a 
+ id="Q1-192-735"></a> <a name="xref_astRemoveFrame"></a>  <h4 class="ssth4">Description:
+</h4><div class="sstvalues"> This function removes a <a 
+href="sun211ss452.html#x479-6710000">Frame</a> from a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a>. All other Frames in the
+FrameSet have their indices re-numbered from one (if necessary), but
+are otherwise unchanged.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astRemoveFrame( AstFrameSet
+<!--l. 26321--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+int iframe )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the FrameSet.  </div> <h5 class="ssth5"> iframe  </h5><div class="sstsub"> The index
+                                                                                       
+
+                                                                                       
+within the FrameSet of the Frame to be removed. This value should lie in the range from
+1 to the number of Frames in the FrameSet (as given by its <a 
+href="sun211ss352.html#x378-5700000">Nframe</a> attribute).  </div>  </div>
+<h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 26321--><p class="noindent" >Removing a Frame from a FrameSet does not affect the relationship between other
+Frames in the FrameSet, even if they originally depended on the Frame being
+removed.
+<li >
+<!--l. 26321--><p class="noindent" >The number of Frames in a FrameSet cannot be reduced to zero. An error will result if
+an attempt is made to remove the only remaining Frame.
+<li >
+<!--l. 26321--><p class="noindent" >A value of AST__BASE or AST__CURRENT may be given for the <code>&#x0022;</code> iframe<code>&#x0022;</code> parameter to
+specify the base Frame or the current Frame respectively.
+<li >
+<!--l. 26321--><p class="noindent" >If a FrameSet<code>&#x2019;</code> s base or current Frame is removed, the <a 
+href="sun211ss252.html#x278-4700000">Base</a> or <a 
+href="sun211ss273.html#x299-4910000">Current</a> attribute
+(respectively) of the FrameSet will have its value cleared, so that another Frame will
+then assume its role by default.
+<li >
+<!--l. 26321--><p class="noindent" >If any other Frame is removed, the base and current Frames will remain the same.
+To ensure this, the Base and/or Current attributes of the FrameSet will be
+changed, if necessary, to reflect any change in the indices of these Frames.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss166.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss168.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss167.html"></a> </div> 
+</body> 
+</html>

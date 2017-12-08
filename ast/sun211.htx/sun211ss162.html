@@ -1,0 +1,466 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astRebin&#x003C;X&#x003E; </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+                                                                                       
+
+                                                                                       
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss161.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss163.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 25558--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x187-3790000"></a> astRebin<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+</h3>  <p class="subtitle"> Rebin a region of a data grid  </p> </h3> </header><a 
+ id="Q1-187-719"></a> <a 
+ id="Q1-187-720"></a> <a name="xref_astRebin$<$X$>$"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This is a set of functions
+for rebinning gridded data (e.g. an image) under the control of a geometrical
+transformation, which is specified by a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>. The functions operate on a
+pair of data grids (input and output), each of which may have any number of
+dimensions. Rebinning may be restricted to a specified region of the input
+grid. An associated grid of error estimates associated with the input data
+may also be supplied (in the form of variance values), so as to produce error
+estimates for the rebined output data. Propagation of missing data (bad pixels) is
+supported.
+<!--l. 25558--><p class="noindent" >Note, if you will be rebining a sequence of input arrays and
+then co-adding them into a single array, the alternative
+<a 
+href="sun211ss163.html#x188-3800000">astRebinSeq<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>
+functions will in general be more efficient.
+<!--l. 25558--><p class="noindent" >You should use a rebinning function which matches the
+numerical type of the data you are processing by replacing
+<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in the generic function name astRebin<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+by an appropriate 1- or 2-character type code. For example, if you are rebinning
+data with type <code>&#x0022;</code> float<code>&#x0022;</code> , you should use the function astRebinF (see the <code>&#x0022;</code>
+Data Type Codes<code>&#x0022;</code> section below for the codes appropriate to other numerical
+types).
+<!--l. 25558--><p class="noindent" >Rebinning of the grid of input data is performed by transforming the coordinates of the
+centre of each input grid element (or pixel) into the coordinate system of the output
+grid. The input pixel value is then divided up and assigned to the output pixels in the
+neighbourhood of the central output coordinates. A choice of schemes are provided for
+determining how each input pixel value is divided up between the output pixels. In
+general, each output pixel may be assigned values from more than one input pixel. All
+contributions to a given output pixel are summed to produce the final output pixel
+value. Output pixels can be set to the supplied bad value if they receive contributions
+from an insufficient number of input pixels. This is controlled by the <code>&#x0022;</code> wlim<code>&#x0022;</code>
+parameter.
+<!--l. 25558--><p class="noindent" >Input pixel coordinates are transformed into the coordinate system of the output grid
+using the forward transformation of the Mapping which is supplied. This means
+that geometrical features in the input data are subjected to the Mapping<code>&#x2019;</code> s
+forward transformation as they are transferred from the input to the output
+grid.
+<!--l. 25558--><p class="noindent" >In practice, transforming the coordinates of every pixel of a large data grid can be
+time-consuming, especially if the Mapping involves complicated functions, such as sky
+projections. To improve performance, it is therefore possible to approximate non-linear
+Mappings by a set of linear transformations which are applied piece-wise to separate
+sub-regions of the data. This approximation process is applied automatically by an
+adaptive algorithm, under control of an accuracy criterion which expresses the maximum
+tolerable geometrical distortion which may be introduced, as a fraction of a
+                                                                                       
+
+                                                                                       
+pixel.
+<!--l. 25558--><p class="noindent" >This algorithm first attempts to approximate the Mapping with a linear transformation
+applied over the whole region of the input grid which is being used. If this proves to
+be insufficiently accurate, the input region is sub-divided into two along its
+largest dimension and the process is repeated within each of the resulting
+sub-regions. This process of sub-division continues until a sufficiently good linear
+approximation is found, or the region to which it is being applied becomes too
+small (in which case the original Mapping is used directly).  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void
+astRebin<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>(
+AstMapping <!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+double wlim, int ndim_in, const int lbnd_in[], const int ubnd_in[], const
+<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in[], const <!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in_var[], int spread, const double params[], int flags, double tol, int maxpix,
+<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+badval, int ndim_out, const int lbnd_out[], const int ubnd_out[], const int lbnd[], const int ubnd[],
+<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+out[], <!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+out_var[] );  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to a Mapping, whose forward transformation
+will be used to transform the coordinates of pixels in the input grid into the
+coordinate system of the output grid.
+<!--l. 25558--><p class="noindent" >The number of input coordinates used by this Mapping (as given by its <a 
+href="sun211ss353.html#x379-5710000">Nin</a> attribute)
+should match the number of input grid dimensions given by the value of <code>&#x0022;</code> ndim_in<code>&#x0022;</code>
+below. Similarly, the number of output coordinates (<a 
+href="sun211ss359.html#x385-5770000">Nout</a> attribute) should match the
+number of output grid dimensions given by <code>&#x0022;</code> ndim_out<code>&#x0022;</code> .  </div> <h5 class="ssth5"> wlim  </h5><div class="sstsub"> Gives the required
+number of input pixel values which must contribute to an output pixel in order for the
+output pixel value to be considered valid. If the sum of the input pixel weights
+contributing to an output pixel is less than the supplied <code>&#x0022;</code> wlim<code>&#x0022;</code> value, then the
+output pixel value is returned set to the supplied bad value.  </div> <h5 class="ssth5"> ndim_in  </h5><div class="sstsub"> The number
+of dimensions in the input grid. This should be at least one.  </div> <h5 class="ssth5"> lbnd_in  </h5><div class="sstsub"> Pointer to
+an array of integers, with <code>&#x0022;</code> ndim_in<code>&#x0022;</code> elements, containing the coordinates
+of the centre of the first pixel in the input grid along each dimension.  </div> <h5 class="ssth5">
+ubnd_in  </h5><div class="sstsub"> Pointer to an array of integers, with <code>&#x0022;</code> ndim_in<code>&#x0022;</code> elements, containing
+the coordinates of the centre of the last pixel in the input grid along each
+dimension.
+<!--l. 25558--><p class="noindent" >Note that <code>&#x0022;</code> lbnd_in<code>&#x0022;</code> and <code>&#x0022;</code> ubnd_in<code>&#x0022;</code> together define the shape and size of
+the input grid, its extent along a particular (j<code>&#x2019;</code> th) dimension being
+ubnd_in[j]-lbnd_in[j]<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>1
+(assuming the index <code>&#x0022;</code> j<code>&#x0022;</code> to be zero-based). They also define the input grid<code>&#x2019;</code> s
+coordinate system, each pixel having unit extent along each dimension with integral
+coordinate values at its centre.  </div> <h5 class="ssth5"> in  </h5><div class="sstsub"> Pointer to an array, with one element for each
+pixel in the input grid, containing the input data to be rebined. The numerical type of
+this array should match the 1- or 2-character type code appended to the function name
+(e.g. if you are using astRebinF, the type of each array element should be <code>&#x0022;</code> float<code>&#x0022;</code>
+).
+<!--l. 25558--><p class="noindent" >The storage order of data within this array should be such that the index of the first
+grid dimension varies most rapidly and that of the final dimension least rapidly (i.e.
+                                                                                       
+
+                                                                                       
+Fortran array indexing is used).  </div> <h5 class="ssth5"> in_var  </h5><div class="sstsub"> An optional pointer to a second array with
+the same size and type as the <code>&#x0022;</code> in<code>&#x0022;</code> array. If given, this should contain a set of
+non-negative values which represent estimates of the statistical variance associated
+with each element of the <code>&#x0022;</code> in<code>&#x0022;</code> array. If this array is supplied (together with the
+corresponding <code>&#x0022;</code> out_var<code>&#x0022;</code> array), then estimates of the variance of the rebined output
+data will be calculated.
+<!--l. 25558--><p class="noindent" >If no input variance estimates are being provided, a NULL pointer should be given.  </div> <h5 class="ssth5">
+spread  </h5><div class="sstsub"> This parameter specifies the scheme to be used for dividing each input data
+value up amongst the corresponding output pixels. It may be used to select from a set
+of pre-defined schemes by supplying one of the values described in the <code>&#x0022;</code> Pixel
+Spreading Schemes<code>&#x0022;</code> section below. If a value of zero is supplied, then the default
+linear spreading scheme is used (equivalent to supplying the value AST__LINEAR).  </div> <h5 class="ssth5">
+params  </h5><div class="sstsub"> An optional pointer to an array of double which should contain any additional
+parameter values required by the pixel spreading scheme. If such parameters
+are required, this will be noted in the <code>&#x0022;</code> Pixel Spreading Schemes<code>&#x0022;</code> section
+below.
+<!--l. 25558--><p class="noindent" >If no additional parameters are required, this array is not used and a NULL pointer
+may be given.  </div> <h5 class="ssth5"> flags  </h5><div class="sstsub"> The bitwise OR of a set of flag values which may be
+used to provide additional control over the rebinning operation. See the <code>&#x0022;</code>
+Control Flags<code>&#x0022;</code> section below for a description of the options available. If
+no flag values are to be set, a value of zero should be given.  </div> <h5 class="ssth5"> tol  </h5><div class="sstsub"> The
+maximum tolerable geometrical distortion which may be introduced as a result of
+approximating non-linear Mappings by a set of piece-wise linear transformations. This
+should be expressed as a displacement in pixels in the output grid<code>&#x2019;</code> s coordinate
+system.
+<!--l. 25558--><p class="noindent" >If piece-wise linear approximation is not required, a value of zero may be given. This
+will ensure that the Mapping is used without any approximation, but may increase
+execution time.
+<!--l. 25558--><p class="noindent" >If the value is too high, discontinuities between the linear approximations used in
+adjacent panel will be higher, and may cause the edges of the panel to be visible when
+viewing the output image at high contrast. If this is a problem, reduce the tolerance
+value used.  </div> <h5 class="ssth5"> maxpix  </h5><div class="sstsub"> A value which specifies an initial scale size (in pixels) for
+the adaptive algorithm which approximates non-linear Mappings with piece-wise linear
+transformations. Normally, this should be a large value (larger than any dimension of
+the region of the input grid being used). In this case, a first attempt to
+approximate the Mapping by a linear transformation will be made over the entire input
+region.
+<!--l. 25558--><p class="noindent" >If a smaller value is used, the input region will first be divided into sub-regions
+whose size does not exceed <code>&#x0022;</code> maxpix<code>&#x0022;</code> pixels in any dimension. Only at this point will
+attempts at approximation commence.
+<!--l. 25558--><p class="noindent" >This value may occasionally be useful in preventing false convergence of the adaptive
+algorithm in cases where the Mapping appears approximately linear on large scales, but
+has irregularities (e.g. holes) on smaller scales. A value of, say, 50 to 100 pixels
+can also be employed as a safeguard in general-purpose software, since the effect on
+performance is minimal.
+                                                                                       
+
+                                                                                       
+<!--l. 25558--><p class="noindent" >If too small a value is given, it will have the effect of inhibiting linear
+approximation altogether (equivalent to setting <code>&#x0022;</code> tol<code>&#x0022;</code> to zero). Although this
+may degrade performance, accurate results will still be obtained.  </div> <h5 class="ssth5"> badval  </h5><div class="sstsub">
+This argument should have the same type as the elements of the <code>&#x0022;</code> in<code>&#x0022;</code> array. It
+specifies the value used to flag missing data (bad pixels) in the input and output
+arrays.
+<!--l. 25558--><p class="noindent" >If the AST__USEBAD flag is set via the <code>&#x0022;</code> flags<code>&#x0022;</code> parameter, then this value is used to
+test for bad pixels in the <code>&#x0022;</code> in<code>&#x0022;</code> (and <code>&#x0022;</code> in_var<code>&#x0022;</code> ) array(s).
+<!--l. 25558--><p class="noindent" >In all cases, this value is also used to flag any output elements in the <code>&#x0022;</code> out<code>&#x0022;</code> (and <code>&#x0022;</code>
+out_var<code>&#x0022;</code> ) array(s) for which rebined values could not be obtained (see the <code>&#x0022;</code>
+Propagation of Missing Data<code>&#x0022;</code> section below for details of the circumstances under which
+this may occur).  </div> <h5 class="ssth5"> ndim_out  </h5><div class="sstsub"> The number of dimensions in the output grid. This should
+be at least one. It need not necessarily be equal to the number of dimensions in the
+input grid.  </div> <h5 class="ssth5"> lbnd_out  </h5><div class="sstsub"> Pointer to an array of integers, with <code>&#x0022;</code> ndim_out<code>&#x0022;</code> elements,
+containing the coordinates of the centre of the first pixel in the output grid along
+each dimension.  </div> <h5 class="ssth5"> ubnd_out  </h5><div class="sstsub"> Pointer to an array of integers, with <code>&#x0022;</code> ndim_out<code>&#x0022;</code>
+elements, containing the coordinates of the centre of the last pixel in the output grid
+along each dimension.
+<!--l. 25558--><p class="noindent" >Note that <code>&#x0022;</code> lbnd_out<code>&#x0022;</code> and <code>&#x0022;</code> ubnd_out<code>&#x0022;</code> together define the shape, size and coordinate
+system of the output grid in the same way as <code>&#x0022;</code> lbnd_in<code>&#x0022;</code> and <code>&#x0022;</code> ubnd_in<code>&#x0022;</code> define the
+shape, size and coordinate system of the input grid.  </div> <h5 class="ssth5"> lbnd  </h5><div class="sstsub"> Pointer to an array of
+integers, with <code>&#x0022;</code> ndim_in<code>&#x0022;</code> elements, containing the coordinates of the first pixel in
+the region of the input grid which is to be included in the rebined output array.  </div> <h5 class="ssth5">
+ubnd  </h5><div class="sstsub"> Pointer to an array of integers, with <code>&#x0022;</code> ndim_in<code>&#x0022;</code> elements, containing the
+coordinates of the last pixel in the region of the input grid which is to be included
+in the rebined output array.
+<!--l. 25558--><p class="noindent" >Note that <code>&#x0022;</code> lbnd<code>&#x0022;</code> and <code>&#x0022;</code> ubnd<code>&#x0022;</code> together define the shape and position of a
+(hyper-)rectangular region of the input grid which is to be included in the
+rebined output array. This region should lie wholly within the extent of the
+input grid (as defined by the <code>&#x0022;</code> lbnd_in<code>&#x0022;</code> and <code>&#x0022;</code> ubnd_in<code>&#x0022;</code> arrays). Regions of the
+input grid lying outside this region will not be used.  </div> <h5 class="ssth5"> out  </h5><div class="sstsub"> Pointer to an
+array, with one element for each pixel in the output grid, in which the rebined
+data values will be returned. The numerical type of this array should match
+that of the <code>&#x0022;</code> in<code>&#x0022;</code> array, and the data storage order should be such that the
+index of the first grid dimension varies most rapidly and that of the final
+dimension least rapidly (i.e. Fortran array indexing is used).  </div> <h5 class="ssth5"> out_var  </h5><div class="sstsub"> An
+optional pointer to an array with the same type and size as the <code>&#x0022;</code> out<code>&#x0022;</code> array. If
+given, this array will be used to return variance estimates for the rebined
+data values. This array will only be used if the <code>&#x0022;</code> in_var<code>&#x0022;</code> array has also been
+supplied.
+<!--l. 25558--><p class="noindent" >The output variance values will be calculated on the assumption that errors on the
+input data values are statistically independent and that their variance estimates may
+simply be summed (with appropriate weighting factors) when several input pixels
+contribute to an output data value. If this assumption is not valid, then the output
+error estimates may be biased. In addition, note that the statistical errors on
+neighbouring output data values (as well as the estimates of those errors) may often be
+                                                                                       
+
+                                                                                       
+correlated, even if the above assumption about the input data is correct, because of
+the pixel spreading schemes employed.
+<!--l. 25558--><p class="noindent" >If no output variance estimates are required, a NULL pointer should be given.  </div>  </div> <h4 class="ssth4"> Data
+Type Codes  </h4><div class="sstvalues"> To select the appropriate rebinning function, you should replace
+<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in the generic function name astRebin<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+with a 1- or 2-character data type code, so as to match the numerical type
+<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+of the data you are processing, as follows: <ul class="sstitemlist">
+<li >
+<!--l. 25558--><p class="noindent" >D: double
+<li >
+<!--l. 25558--><p class="noindent" >F: float
+<li >
+<!--l. 25558--><p class="noindent" >I: int
+<li >
+<!--l. 25558--><p class="noindent" >B: byte (signed char)
+<li >
+<!--l. 25558--><p class="noindent" >UB: unsigned byte (unsigned char)
+</li>
+</ul>
+<!--l. 25558--><p class="noindent" >For example, astRebinD would be used to process <code>&#x0022;</code> double<code>&#x0022;</code> data, while astRebinI would
+be used to process <code>&#x0022;</code> int<code>&#x0022;</code> data, etc.
+<!--l. 25558--><p class="noindent" >Note that, unlike <a 
+href="sun211ss172.html#x197-3890000">astResample<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>,
+the astRebin<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+set of functions does not yet support unsigned integer data types or integers of different
+sizes.  </div> <h4 class="ssth4"> Pixel Spreading Schemes  </h4><div class="sstvalues"> The pixel spreading scheme specifies the Point Spread
+Function (PSF) applied to each input pixel value as it is copied into the output array.
+It can be thought of as the inverse of the sub-pixel interpolation schemes used by the
+astResample<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+group of functions. That is, in a sub-pixel interpolation scheme the kernel specifies
+the weight to assign to each input pixel when forming the weighted mean of
+the input pixels, whereas the kernel in a pixel spreading scheme specifies
+the fraction of the input data value which is to be assigned to each output
+pixel. As for interpolation, the choice of suitable pixel spreading scheme
+involves stricking a balance between schemes which tend to degrade sharp
+features in the data by smoothing them, and those which attempt to preserve
+sharp features but which often tend to introduce unwanted artifacts. See the
+astResample<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+documentation for further discussion.
+<!--l. 25558--><p class="noindent" >The binning algorithm used has the ability to introduce artifacts not seen when using a
+resampling algorithm. Particularly, when viewing the output image at high contrast,
+systems of curves lines covering the entire image may be visible. These are caused by a
+beating effect between the input pixel positions and the output pixels position, and
+                                                                                       
+
+                                                                                       
+their nature and strength depend critically upon the nature of the Mapping and the
+spreading function being used. In general, the nearest neighbour spreading function
+demonstrates this effect more clearly than the other functions, and for this reason
+should be used with caution.
+<!--l. 25558--><p class="noindent" >The following values (defined in the <code>&#x0022;</code> ast.h<code>&#x0022;</code> header file) may be assigned to the <code>&#x0022;</code> spread<code>&#x0022;</code> parameter. See the
+astResample<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+documentation for details of these schemes including the use of the <code>&#x0022;</code> fspread<code>&#x0022;</code> and <code>&#x0022;</code>
+params<code>&#x0022;</code> parameters:
+<ul class="sstitemlist">
+<li >
+<!--l. 25558--><p class="noindent" >AST__NEAREST
+<li >
+<!--l. 25558--><p class="noindent" >AST__LINEAR
+<li >
+<!--l. 25558--><p class="noindent" >AST__SINC
+<li >
+<!--l. 25558--><p class="noindent" >AST__SINCSINC
+<li >
+<!--l. 25558--><p class="noindent" >AST__SINCCOS
+<li >
+<!--l. 25558--><p class="noindent" >AST__SINCGAUSS
+<li >
+<!--l. 25558--><p class="noindent" >AST__SOMBCOS
+</li>
+</ul>
+<!--l. 25558--><p class="noindent" >In addition, the following schemes can be used with
+astRebin<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+but not with astResample<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+<ul class="sstitemlist">
+<li >
+<!--l. 25558--><p class="noindent" >AST__GAUSS: This scheme uses a kernel of the form
+exp(-k<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x<!--l. 25558--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x),
+with k a positive constant determined by the full-width at half-maximum (FWHM). The
+FWHM should be supplied in units of output pixels by means of the <code>&#x0022;</code> params[1]<code>&#x0022;</code>
+value and should be at least 0.1. The <code>&#x0022;</code> params[0]<code>&#x0022;</code> value should be used to
+specify at what point the Gaussian is truncated to zero. This should be given
+as a number of output pixels on either side of the central output point in
+each dimension (the nearest integer value is used).  </li></ul>  </div> <h4 class="ssth4"> Control Flags  </h4><div class="sstvalues"> The
+following flags are defined in the <code>&#x0022;</code> ast.h<code>&#x0022;</code> header file and may be used to
+provide additional control over the rebinning process. Having selected a set
+of flags, you should supply the bitwise OR of their values via the <code>&#x0022;</code> flags<code>&#x0022;</code>
+parameter:
+<ul class="sstitemlist">
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 25558--><p class="noindent" >AST__USEBAD: Indicates that there may be bad pixels in the input array(s) which must be
+recognised by comparing with the value given for <code>&#x0022;</code> badval<code>&#x0022;</code> and propagated to the output
+array(s). If this flag is not set, all input values are treated literally and the <code>&#x0022;</code>
+badval<code>&#x0022;</code> value is only used for flagging output array values.  </li></ul>  </div> <h4 class="ssth4"> Propagation of
+Missing Data  </h4><div class="sstvalues"> Instances of missing data (bad pixels) in the output grid are identified
+by occurrences of the <code>&#x0022;</code> badval<code>&#x0022;</code> value in the <code>&#x0022;</code> out<code>&#x0022;</code> array. These are produced if
+the sum of the weights of the contributing input pixels is less than <code>&#x0022;</code> wlim<code>&#x0022;</code>
+.
+<!--l. 25558--><p class="noindent" >An input pixel is considered bad (and is consequently ignored) if its data
+value is equal to <code>&#x0022;</code> badval<code>&#x0022;</code> and the AST__USEBAD flag is set via the <code>&#x0022;</code> flags<code>&#x0022;</code>
+parameter.
+<!--l. 25558--><p class="noindent" >In addition, associated output variance estimates (if calculated) may be declared bad
+and flagged with the <code>&#x0022;</code> badval<code>&#x0022;</code> value in the <code>&#x0022;</code> out_var<code>&#x0022;</code> array for similar reasons.
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss161.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss163.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss162.html"></a> </div> 
+</body> 
+</html>

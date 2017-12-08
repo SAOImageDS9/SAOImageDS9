@@ -1,0 +1,258 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astUinterp </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss225.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss227.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 32296--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x251-4430000"></a> astUinterp </h3>  <p class="subtitle"> Perform sub-pixel interpolation on a grid of data  </p> </h3> </header><a 
+ id="Q1-251-911"></a> <a 
+ id="Q1-251-912"></a> <a name="xref_astUinterp"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This is a fictitious function which does not actually exist.
+Instead, this description constitutes a template so that you may implement a
+function with this interface for yourself (and give it any name you wish). A
+pointer to such a function may be passed via the <code>&#x0022;</code> finterp<code>&#x0022;</code> parameter of the
+<a 
+href="sun211ss172.html#x197-3890000">astResample<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>
+functions (q.v.) in order to perform sub-pixel interpolation during
+resampling of gridded data (you must also set the <code>&#x0022;</code> interp<code>&#x0022;</code> parameter of
+astResample<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+                                                                                       
+
+                                                                                       
+to the value AST__UINTERP). This allows you to use your own interpolation algorithm in
+addition to those which are pre-defined.
+<!--l. 32296--><p class="noindent" >The function interpolates an input grid of data (and, optionally, processes
+associated statistical variance estimates) at a specified set of points.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues">
+void astUinterp( int ndim_in, const int lbnd_in[], const int ubnd_in[], const
+<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in[], const <!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in_var[], int npoint, const int offset[], const double
+<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>const
+coords[], const double params[], int flags,
+<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+badval, <!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+out[], <!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+out_var[], int <!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>nbad
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> ndim_in  </h5><div class="sstsub"> The number of dimensions in the input grid. This will be at
+least one.  </div> <h5 class="ssth5"> lbnd_in  </h5><div class="sstsub"> Pointer to an array of integers, with <code>&#x0022;</code> ndim_in<code>&#x0022;</code> elements,
+containing the coordinates of the centre of the first pixel in the input grid along
+each dimension.  </div> <h5 class="ssth5"> ubnd_in  </h5><div class="sstsub"> Pointer to an array of integers, with <code>&#x0022;</code> ndim_in<code>&#x0022;</code> elements,
+containing the coordinates of the centre of the last pixel in the input grid along each
+dimension.
+<!--l. 32296--><p class="noindent" >Note that <code>&#x0022;</code> lbnd_in<code>&#x0022;</code> and <code>&#x0022;</code> ubnd_in<code>&#x0022;</code> together define the shape, size
+and coordinate system of the input grid in the same way as they do in
+astResample<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>.
+</div> <h5 class="ssth5"> in  </h5><div class="sstsub"> Pointer to an array, with one element for each pixel in the input grid,
+containing the input data. This will be the same array as was passed to
+astResample<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+via the <code>&#x0022;</code> in<code>&#x0022;</code> parameter. The numerical type of this array should match that of the data
+being processed.  </div> <h5 class="ssth5"> in_var  </h5><div class="sstsub"> Pointer to an optional second array with the same size and
+type as the <code>&#x0022;</code> in<code>&#x0022;</code> array. If given, this will contain the set of variance values
+associated with the input data and will be the same array as was passed to
+astResample<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+via the <code>&#x0022;</code> in_var<code>&#x0022;</code> parameter.
+<!--l. 32296--><p class="noindent" >If no variance values are being processed, this will be a NULL pointer.  </div> <h5 class="ssth5"> npoint  </h5><div class="sstsub"> The
+number of points at which the input grid is to be interpolated. This will be at least
+one.  </div> <h5 class="ssth5"> offset  </h5><div class="sstsub"> Pointer to an array of integers with <code>&#x0022;</code> npoint<code>&#x0022;</code> elements. For each
+interpolation point, this will contain the zero-based index in the <code>&#x0022;</code> out<code>&#x0022;</code> (and <code>&#x0022;</code>
+out_var<code>&#x0022;</code> ) array(s) at which the interpolated value (and its variance, if required)
+should be stored. For example, the interpolated value for point number <code>&#x0022;</code> point<code>&#x0022;</code> should
+be stored in <code>&#x0022;</code> out[offset[point]]<code>&#x0022;</code> (assuming the index <code>&#x0022;</code> point<code>&#x0022;</code> is zero-based).  </div> <h5 class="ssth5">
+coords  </h5><div class="sstsub"> An array of pointers to double, with <code>&#x0022;</code> ndim_in<code>&#x0022;</code> elements. Element <code>&#x0022;</code>
+coords[coord]<code>&#x0022;</code> will point at the first element of an array of double (with <code>&#x0022;</code> npoint<code>&#x0022;</code>
+elements) which contains the values of coordinate number <code>&#x0022;</code> coord<code>&#x0022;</code> for each
+interpolation point. The value of coordinate number <code>&#x0022;</code> coord<code>&#x0022;</code> for interpolation point
+number <code>&#x0022;</code> point<code>&#x0022;</code> is therefore given by <code>&#x0022;</code> coords[coord][point]<code>&#x0022;</code> (assuming both indices
+are zero-based).
+<!--l. 32296--><p class="noindent" >If any interpolation point has any of its coordinates equal to the value AST__BAD (as
+defined in the <code>&#x0022;</code> ast.h<code>&#x0022;</code> header file), then the corresponding output data (and variance)
+                                                                                       
+
+                                                                                       
+should either be set to the value given by <code>&#x0022;</code> badval<code>&#x0022;</code> , or left unchanged, depending on
+whether the AST__NOBAD flag is specified by <code>&#x0022;</code> flags<code>&#x0022;</code> .  </div> <h5 class="ssth5"> params  </h5><div class="sstsub"> This will
+be a pointer to the same array as was given via the <code>&#x0022;</code> params<code>&#x0022;</code> parameter of
+astResample<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>.
+You may use this to pass any additional parameter values required by your interpolation
+algorithm.  </div> <h5 class="ssth5"> flags  </h5><div class="sstsub"> This will be the same value as was given via the <code>&#x0022;</code> flags<code>&#x0022;</code> parameter of
+astResample<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>.
+You may test this value to provide additional control over the operation of your resampling
+algorithm. Note that the special flag values AST__URESAMP1, 2, 3 &#x0026; 4 are reserved for you
+to use for your own purposes and will not clash with other pre-defined flag values (see
+astResample<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>).
+</div> <h5 class="ssth5"> badval  </h5><div class="sstsub"> This will be the same value as was given via the <code>&#x0022;</code> badval<code>&#x0022;</code> parameter of
+astResample<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>,
+and will have the same numerical type as the data being processed (i.e. as elements
+of the <code>&#x0022;</code> in<code>&#x0022;</code> array). It should be used to test for bad pixels in the input
+grid (but only if the AST__USEBAD flag is set via the <code>&#x0022;</code> flags<code>&#x0022;</code> parameter) and
+(unless the AST__NOBAD flag is set in <code>&#x0022;</code> flags<code>&#x0022;</code> ) for identifying bad output
+values in the <code>&#x0022;</code> out<code>&#x0022;</code> (and <code>&#x0022;</code> out_var<code>&#x0022;</code> ) array(s).  </div> <h5 class="ssth5"> out  </h5><div class="sstsub"> Pointer to an array
+with the same numerical type as the <code>&#x0022;</code> in<code>&#x0022;</code> array, into which the interpolated
+data values should be returned. Note that details of the storage order and
+number of dimensions of this array are not required, since the <code>&#x0022;</code> offset<code>&#x0022;</code> array
+contains all necessary information about where each returned value should be
+stored.
+<!--l. 32296--><p class="noindent" >In general, not all elements of this array (or the <code>&#x0022;</code> out_var<code>&#x0022;</code> array below) may be used
+in any particular invocation of the function. Those which are not used should be
+returned unchanged.  </div> <h5 class="ssth5"> out_var  </h5><div class="sstsub"> Pointer to an optional array with the same type and
+size as the <code>&#x0022;</code> out<code>&#x0022;</code> array, into which variance estimates for the resampled values should
+be returned. This array will only be given if the <code>&#x0022;</code> in_var<code>&#x0022;</code> array has also been
+given.
+<!--l. 32296--><p class="noindent" >If given, it is addressed in exactly the same way (via the <code>&#x0022;</code> offset<code>&#x0022;</code> array) as the <code>&#x0022;</code>
+out<code>&#x0022;</code> array. The values returned should be estimates of the statistical variance of the
+corresponding values in the <code>&#x0022;</code> out<code>&#x0022;</code> array, on the assumption that all errors in input
+data values are statistically independent and that their variance estimates may simply
+be summed (with appropriate weighting factors).
+<!--l. 32296--><p class="noindent" >If no output variance estimates are required, a NULL pointer will be given.  </div> <h5 class="ssth5"> nbad  </h5><div class="sstsub">
+Pointer to an int in which to return the number of interpolation points at which no
+valid interpolated value could be obtained. The maximum value that should be returned
+is <code>&#x0022;</code> npoint<code>&#x0022;</code> , and the minimum is zero (indicating that all output values were
+successfully obtained).  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 32296--><p class="noindent" >The data type <!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+indicates the numerical type of the data being processed, as for
+astResample<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>.
+<li >
+<!--l. 32296--><p class="noindent" >This function will typically be invoked more than once for each invocation of
+astResample<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>.
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 32296--><p class="noindent" >If an error occurs within this function, it should use <a 
+href="sun211ss184.html#x209-4010000">astSetStatus</a> to set the
+AST error status to an error value. This will cause an immediate return from
+astResample<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 32296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>.
+The error value AST__UINER is available for this purpose, but other values may
+also be used (e.g. if you wish to distinguish different types of error).  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss225.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss227.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss226.html"></a> </div> 
+</body> 
+</html>

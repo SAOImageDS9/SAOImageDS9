@@ -1,0 +1,96 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astClip </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss22.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss24.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 12619--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x48-2400000"></a> astClip </h3>  <p class="subtitle"> Set up or remove clipping for a Plot  </p> </h3> </header><a 
+ id="Q1-48-302"></a> <a 
+ id="Q1-48-303"></a> <a name="xref_astClip"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function
+defines regions of a <a 
+href="sun211ss467.html#x494-6860000">Plot</a> which are to be clipped. Any subsequent graphical output
+created using the Plot will then be visible only within the unclipped regions of the
+plotting area. See also the <a 
+href="sun211ss264.html#x290-4820000">Clip</a> attribute.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astClip( AstPlot
+<!--l. 12619--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+int iframe, const double lbnd[], const double ubnd[] )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub">
+Pointer to the Plot.  </div> <h5 class="ssth5"> iframe  </h5><div class="sstsub"> The index of the <a 
+href="sun211ss452.html#x479-6710000">Frame</a> within the Plot to which
+the clipping limits supplied in <code>&#x0022;</code> lbnd<code>&#x0022;</code> and <code>&#x0022;</code> ubnd<code>&#x0022;</code> (below) refer. Clipping
+may be applied to any of the coordinate systems associated with a Plot (as
+defined by the Frames it contains), so this index may take any value from 1 to
+the number of Frames in the Plot (<a 
+href="sun211ss352.html#x378-5700000">Nframe</a> attribute). In addition, the values
+AST__BASE and AST__CURRENT may be used to specify the base and current Frames
+respectively.
+<!--l. 12619--><p class="noindent" >For example, a value of AST__CURRENT causes clipping to be performed in physical
+coordinates, while a value of AST__BASE would clip in graphical coordinates. Clipping
+may also be removed completely by giving a value of AST__NOFRAME. In this case any
+clipping bounds supplied (below) are ignored.  </div> <h5 class="ssth5"> lbnd  </h5><div class="sstsub"> An array with one element for
+each axis of the clipping Frame (identified by the index <code>&#x0022;</code> iframe<code>&#x0022;</code> ). This should
+contain the lower bound, on each axis, of the region which is to remain visible
+(unclipped).  </div> <h5 class="ssth5"> ubnd  </h5><div class="sstsub"> An array with one element for each axis of the clipping Frame
+(identified by the index <code>&#x0022;</code> iframe<code>&#x0022;</code> ). This should contain the upper bound, on
+each axis, of the region which is to remain visible (unclipped).  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 12619--><p class="noindent" >Only one clipping Frame may be active at a time. This function will deactivate any
+previously-established clipping Frame before setting up new clipping limits.
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 12619--><p class="noindent" >The clipping produced by this function is in addition to that specified by the Clip
+attribute which occurs at the edges of the plotting area established when the Plot is
+created (see <a 
+href="sun211ss140.html#x165-3570000">astPlot</a>). The underlying graphics system may also impose further
+clipping.
+<li >
+<!--l. 12619--><p class="noindent" >When testing a graphical position for clipping, it is first transformed into the
+clipping Frame. The resulting coordinate on each axis is then checked against the
+clipping limits (given by <code>&#x0022;</code> lbnd<code>&#x0022;</code> and <code>&#x0022;</code> ubnd<code>&#x0022;</code> ). By default, a position is clipped if
+any coordinate lies outside these limits. However, if a non-zero value is assigned to
+the Plot<code>&#x2019;</code> s <a 
+href="sun211ss265.html#x291-4830000">ClipOp</a> attribute, then a position is only clipped if the coordinates on all
+axes lie outside their clipping limits.
+<li >
+<!--l. 12619--><p class="noindent" >If the lower clipping limit exceeds the upper limit for any axis, then the sense of
+clipping for that axis is reversed (so that coordinate values lying between the limits
+are clipped instead of those lying outside the limits). To produce a <code>&#x0022;</code> hole<code>&#x0022;</code> in a
+coordinate space (that is, an internal region where nothing is plotted), you should
+supply all the bounds in reversed order, and set the ClipOp attribute for the Plot to a
+non-zero value.
+<li >
+<!--l. 12619--><p class="noindent" >Either clipping limit may be set to the value AST__BAD, which is equivalent to
+setting it to infinity (or minus infinity for a lower bound) so that it is not
+used.
+<li >
+<!--l. 12619--><p class="noindent" >If a graphical position results in any bad coordinate values (AST__BAD) when
+transformed into the clipping Frame, then it is treated (for the purposes of producing
+graphical output) as if it were clipped.
+<li >
+<!--l. 12619--><p class="noindent" >When a Plot is used as a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> to transform points (e.g. using <a 
+href="sun211ss219.html#x244-4360000">astTran2</a>), any clipped
+output points are assigned coordinate values of AST__BAD.
+<li >
+<!--l. 12619--><p class="noindent" >An error results if the base Frame of the Plot is not 2-dimensional.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss22.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss24.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss23.html"></a> </div> 
+</body> 
+</html>

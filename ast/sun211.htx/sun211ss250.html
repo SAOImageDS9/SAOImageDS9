@@ -1,0 +1,120 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> AllWarnings </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss249.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss251.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 34230--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x276-4680000"></a> AllWarnings </h3>  <p class="subtitle"> A list of all currently available condition names  </p> </h3> </header><a 
+ id="Q1-276-984"></a> <a 
+ id="Q1-276-985"></a> <a name="xref_AllWarnings"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+This read-only attribute is a space separated list of all the conditions names
+recognized by the <a 
+href="sun211ss431.html#x457-6490000">Warnings</a> attribute. The names are listed below.  </div> <dl class="sst">Type: </dl><dd class="sst">
+String, read-only  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>  </h5><div class="sstsub"> All FitsChans have this attribute.
+</div>  </div> <h4 class="ssth4"> Conditions  </h4><div class="sstvalues"> The following conditions are currently recognised (all are
+case-insensitive):
+<ul class="sstitemlist">
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> BadCel<code>&#x0022;</code> : This condition arises when reading a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> from a non-Native encoded
+FitsChan if an unknown celestial co-ordinate system is specified by the CTYPE
+keywords.
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> BadCTYPE<code>&#x0022;</code> : This condition arises when reading a FrameSet from a non-Native encoded
+FitsChan if an illegal algorithm code is specified by a CTYPE keyword, and the illegal
+code can be converted to an equivalent legal code.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> BadKeyName<code>&#x0022;</code> : This condition arises if a FITS keyword name is encountered that
+contains an illegal character (i.e. one not allowed by the FITS standard).
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> BadKeyValue<code>&#x0022;</code> : This condition arises if the value of a FITS keyword cannot be
+determined from the content of the header card.
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> BadLat<code>&#x0022;</code> : This condition arises when reading a FrameSet from a non-Native encoded
+FitsChan if the latitude of the reference point has an absolute value greater than 90
+degrees. The actual absolute value used is set to exactly 90 degrees in these
+cases.
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> BadMat<code>&#x0022;</code> : This condition arises if the matrix describing the transformation from
+pixel offsets to intermediate world coordinates cannot be inverted. This matrix
+describes the scaling, rotation, shear, etc., applied to the pixel axes, and is
+specified by keywords such as PCi_j, CDi_j, CROTA, etc. For example, the matrix will
+not be invertable if any rows or columns consist entirely of zeros. The FITS-WCS Paper
+I <code>&#x0022;</code> Representation of World Coordinates in FITS<code>&#x0022;</code> by Greisen &#x0026; Calabretta requires that
+this matrix be invertable. Many operations (such as grid plotting) will not be possible
+if the matrix cannot be inverted.
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> BadPV<code>&#x0022;</code> : This condition arises when reading a FrameSet from a non-Native encoded
+FitsChan. It is issued if a <a 
+href="sun211ss369.html#x395-5870000">PVi_m</a> header is found that refers to a projection parameter
+that is not used by the projection type specified by CTYPE, or the PV values are
+otherwise inappropriate for the projection type.
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> BadVal<code>&#x0022;</code> : This condition arises when reading a FrameSet from a non-Native encoded
+FitsChan if it is not possible to convert the value of a FITS keywords to the expected
+type. For instance, this can occur if the FITS header contains a string value for a
+keyword which should have a floating point value, or if the keyword has no value at all
+(i.e. is a comment card).
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> Distortion<code>&#x0022;</code> : This condition arises when reading a FrameSet from a non-Native encoded
+FitsChan if any of the CTYPE keywords specify an unsupported distortion code using
+the <code>&#x0022;</code> 4-3-3<code>&#x0022;</code> format specified in FITS-WCS paper IV. Such distortion codes are
+ignored.
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> NoCTYPE<code>&#x0022;</code> : This condition arises if a default CTYPE value is used within <a 
+href="sun211ss160.html#x185-3770000">astRead</a>, due
+to no value being present in the supplied FitsChan. This condition is only tested for
+when using non-Native encodings.
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> NoEquinox<code>&#x0022;</code> : This condition arises if a default equinox value is used within astRead,
+due to no value being present in the supplied FitsChan. This condition is only tested
+for when using non-Native encodings.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> NoRadesys<code>&#x0022;</code> : This condition arises if a default reference frame is used for an
+equatorial co-ordinate system within astRead, due to no value being present in the
+supplied FitsChan. This condition is only tested for when using non-Native
+encodings.
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> NoLonpole<code>&#x0022;</code> : This condition arises if a default value is used for the LONPOLE keyword
+within astRead, due to no value being present in the supplied FitsChan. This condition
+is only tested for when using non-Native encodings.
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> NoLatpole<code>&#x0022;</code> : This condition arises if a default value is used for the LATPOLE keyword
+within astRead, due to no value being present in the supplied FitsChan. This condition
+is only tested for when using non-Native encodings.
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> NoMjd-obs<code>&#x0022;</code> : This condition arises if a default value is used for the date of
+observation within astRead, due to no value being present in the supplied FitsChan.
+This condition is only tested for when using non-Native encodings.
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> Tnx<code>&#x0022;</code> : This condition arises if a FrameSet is read from a FITS header containing an
+IRAF <code>&#x0022;</code> TNX<code>&#x0022;</code> projection which includes terms not supproted by AST. Such terms are
+ignored and so the resulting FrameSet may be inaccurate.
+<li >
+<!--l. 34230--><p class="noindent" ><code>&#x0022;</code> Zpx<code>&#x0022;</code> : This condition arises if a FrameSet is read from a FITS header containing an
+IRAF <code>&#x0022;</code> ZPX<code>&#x0022;</code> projection which includes <code>&#x0022;</code> lngcor<code>&#x0022;</code> or <code>&#x0022;</code> latcor<code>&#x0022;</code> correction terms. These
+terms are not supported by AST and are ignored. The resulting FrameSet may therefore be
+inaccurate.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss249.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss251.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss250.html"></a> </div> 
+</body> 
+</html>

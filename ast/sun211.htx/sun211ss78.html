@@ -1,0 +1,65 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astGetTables </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss77.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss79.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 17291--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x103-2950000"></a> astGetTables </h3>  <p class="subtitle"> Retrieve any FitsTables currently in a FitsChan  </p> </h3> </header><a 
+ id="Q1-103-467"></a> <a 
+ id="Q1-103-468"></a> <a name="xref_astGetTables"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+If the supplied <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> currently contains any tables, then this function returns a
+pointer to a <a 
+href="sun211ss457.html#x484-6760000">KeyMap</a>. Each entry in the KeyMap is a pointer to a <a 
+href="sun211ss450.html#x477-6690000">FitsTable</a> holding the
+data for a FITS binary table. The key used to access each entry is the FITS extension
+name in which the table should be stored.
+<!--l. 17291--><p class="noindent" >Tables can be present in a FitsChan as a result either of using the <a 
+href="sun211ss154.html#x179-3710000">astPutTable</a> (or
+<a 
+href="sun211ss156.html#x181-3730000">astPutTables</a>) method to store existing tables in the FitsChan, or of using the <a 
+href="sun211ss237.html#x262-4540000">astWrite</a>
+method to write a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> to the FitsChan. For the later case, if the FitsChan <code>&#x0022;</code>
+<a 
+href="sun211ss414.html#x440-6320000">TabOK</a><code>&#x0022;</code> attribute is positive and the FrameSet requires a look-up table to describe one
+or more axes, then the <code>&#x0022;</code> -TAB<code>&#x0022;</code> algorithm code described in FITS-WCS paper III is used
+and the table values are stored in the FitsChan in the form of a FitsTable
+object (see the documentation for the <code>&#x0022;</code> TabOK<code>&#x0022;</code> attribute).  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstKeyMap
+<!--l. 17291--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astGetTables(
+AstFitsChan <!--l. 17291--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the FitsChan.  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astGetTables()  </h5><div class="sstsub">
+A pointer to a deep copy of the KeyMap holding the tables currently in the
+FitsChan, or NULL if the FitsChan does not contain any tables. The returned
+pointer should be annulled using <a 
+href="sun211ss7.html#x32-2240000">astAnnul</a> when no longer needed.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 17291--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss77.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss79.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss78.html"></a> </div> 
+</body> 
+</html>

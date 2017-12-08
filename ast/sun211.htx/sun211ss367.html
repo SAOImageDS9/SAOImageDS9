@@ -1,0 +1,59 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> ObsLon </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss366.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss368.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 39640--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x393-5850000"></a> ObsLon </h3>  <p class="subtitle"> The geodetic longitude of the observer  </p> </h3> </header><a 
+ id="Q1-393-1335"></a> <a 
+ id="Q1-393-1336"></a> <a name="xref_ObsLon"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute
+specifies the geodetic (or equivalently, geocentric) longitude of the observer, in
+degrees, measured positive eastwards. See also attribute <a 
+href="sun211ss366.html#x392-5840000">ObsLat</a>. The basic <a 
+href="sun211ss452.html#x479-6710000">Frame</a> class
+makes no use of this attribute, but specialised subclasses of Frame may use it. For
+instance, the <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a>, <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> and <a 
+href="sun211ss492.html#x519-7110000">TimeFrame</a> classes use it. The default value is
+zero.
+                                                                                       
+
+                                                                                       
+<!--l. 39640--><p class="noindent" >The value is stored internally in radians, but is converted to and from a degrees string for
+access. Some example input formats are: <code>&#x0022;</code> 155:19:23.2<code>&#x0022;</code> , <code>&#x0022;</code> 155 19 23.2<code>&#x0022;</code> , <code>&#x0022;</code> 155:19.387<code>&#x0022;</code>
+, <code>&#x0022;</code> 155.32311<code>&#x0022;</code> , <code>&#x0022;</code> E155.32311<code>&#x0022;</code> , <code>&#x0022;</code> -204.67689<code>&#x0022;</code> , <code>&#x0022;</code> W204.67689<code>&#x0022;</code> . As indicated, the sign of
+the longitude can optionally be indicated using characters <code>&#x0022;</code> E<code>&#x0022;</code> and <code>&#x0022;</code> W<code>&#x0022;</code> in place of the
+usual <code>&#x0022;</code> <!--l. 39640--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math><code>&#x0022;</code>
+and <code>&#x0022;</code> -<code>&#x0022;</code> . When converting the stored value to a string, the format <code>&#x0022;</code> [s]ddd:mm:ss.ss<code>&#x0022;</code>
+is used, when <code>&#x0022;</code> [s]<code>&#x0022;</code> is <code>&#x0022;</code> E<code>&#x0022;</code> or <code>&#x0022;</code> W<code>&#x0022;</code> and the numerical value is chosen to be less than
+180 degrees.  </div> <dl class="sst">Type: </dl><dd class="sst"> String.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Frame  </h5><div class="sstsub"> All Frames have this attribute.
+</div> <h5 class="ssth5"> SpecFrame  </h5><div class="sstsub"> Together with the ObsLon, <a 
+href="sun211ss285.html#x311-5030000">Epoch</a>, <a 
+href="sun211ss379.html#x405-5970000">RefRA</a> and <a 
+href="sun211ss378.html#x404-5960000">RefDec</a> attributes, it defines
+the Doppler shift introduced by the observers diurnal motion around the earths axis,
+which is needed when converting to or from the topocentric standard of rest. The
+maximum velocity error which can be caused by an incorrect value is 0.5 km/s. The
+default value for the attribute is zero.  </div> <h5 class="ssth5"> TimeFrame  </h5><div class="sstsub"> Together with the ObsLon
+attribute, it is used when converting between certain time scales (TDB, TCB, LMST,
+LAST)  </div>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss366.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss368.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss367.html"></a> </div> 
+</body> 
+</html>

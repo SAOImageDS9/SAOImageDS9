@@ -1,0 +1,60 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Equinox </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss285.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss287.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 36341--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x312-5040000"></a> Equinox </h3>  <p class="subtitle"> Epoch of the mean equinox  </p> </h3> </header><a 
+ id="Q1-312-1092"></a> <a 
+ id="Q1-312-1093"></a> <a name="xref_Equinox"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute is used to
+qualify those celestial coordinate systems described by a <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> which are notionally
+based on the ecliptic (the plane of the Earth<code>&#x2019;</code> s orbit around the Sun) and/or the
+Earth<code>&#x2019;</code> s equator.
+<!--l. 36341--><p class="noindent" >Both of these planes are in motion and their positions are difficult to specify
+precisely. In practice, therefore, a model ecliptic and/or equator are used instead.
+These, together with the point on the sky that defines the coordinate origin (the
+intersection of the two planes termed the <code>&#x0022;</code> mean equinox<code>&#x0022;</code> ) move with time according to
+some model which removes the more rapid fluctuations. The SkyFrame class supports both
+the FK4 and FK5 models.
+<!--l. 36341--><p class="noindent" >The position of a fixed source expressed in any of these coordinate systems will appear
+to change with time due to movement of the coordinate system itself (rather than motion
+of the source). Such coordinate systems must therefore be qualified by a moment in time
+(the <code>&#x0022;</code> epoch of the mean equinox<code>&#x0022;</code> or <code>&#x0022;</code> equinox<code>&#x0022;</code> for short) which allows the position of
+the model coordinate system on the sky to be determined. This is the role of the
+Equinox attribute.
+<!--l. 36341--><p class="noindent" >The Equinox attribute is stored as a Modified Julian Date, but when setting
+or getting its value you may use the same formats as for the <a 
+href="sun211ss285.html#x311-5030000">Epoch</a> attribute
+(q.v.).
+<!--l. 36341--><p class="noindent" >The default Equinox value is B1950.0 (Besselian) for the old FK4-based coordinate
+systems (see the <a 
+href="sun211ss413.html#x439-6310000">System</a> attribute) and J2000.0 (Julian) for all others.  </div> <dl class="sst">Type: </dl><dd class="sst">
+Floating point.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> SkyFrame  </h5><div class="sstsub"> All SkyFrames have this attribute.  </div>  </div>
+<h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 36341--><p class="noindent" >Care must be taken to distinguish the Equinox value, which relates to the definition of
+a time-dependent coordinate system (based on solar system reference planes which are in
+motion), from the superficially similar Epoch value. The latter is used to qualify
+coordinate systems where the positions of sources change with time (or appear to do so)
+for a variety of other reasons, such as aberration of light caused by the observer<code>&#x2019;</code> s
+motion, etc.
+<li >
+<!--l. 36341--><p class="noindent" >See the description of the System attribute for details of which qualifying attributes
+apply to each celestial coordinate system.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss285.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss287.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss286.html"></a> </div> 
+</body> 
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astGrfPop </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss79.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss81.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 17419--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x105-2970000"></a> astGrfPop </h3>  <p class="subtitle"> Restore previously saved graphics functions used by a Plot  </p> </h3> </header><a 
+ id="Q1-105-473"></a> <a 
+ id="Q1-105-474"></a> <a name="xref_astGrfPop"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This function restores a snapshot of the graphics functions stored
+                                                                                       
+
+                                                                                       
+previously by calling <a 
+href="sun211ss81.html#x106-2980000">astGrfPush</a>. The restored graphics functions become the current
+graphics functions used by the <a 
+href="sun211ss467.html#x494-6860000">Plot</a>.
+<!--l. 17419--><p class="noindent" >The astGrfPush and astGrfPop functions are intended for situations where it
+is necessary to make temporary changes to the graphics functions used by the
+Plot. The current functions should first be saved by calling astGrfPush.
+New functions should then be registered using <a 
+href="sun211ss82.html#x107-2990000">astGrfSet</a>. The required
+graphics should then be produced. Finally, astGrfPop should be called to
+restore the original graphics functions.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astGrfPop( AstPlot
+<!--l. 17419--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this )
+</div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Plot.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 17419--><p class="noindent" >This function returns without action if there are no snapshots to restore. No error is
+reported in this case.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss79.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss81.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss80.html"></a> </div> 
+</body> 
+</html>

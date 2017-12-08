@@ -1,0 +1,176 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astSlaAdd </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss192.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss194.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 28932--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x218-4100000"></a> astSlaAdd </h3>  <p class="subtitle"> Add a celestial coordinate conversion to an SlaMap  </p> </h3> </header><a 
+ id="Q1-218-812"></a> <a 
+ id="Q1-218-813"></a> <a name="xref_astSlaAdd"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+This function adds one of the standard celestial coordinate system conversions provided
+by the SLALIB Positional Astronomy Library (Starlink User Note SUN/67) to an existing
+<a 
+href="sun211ss479.html#x506-6980000">SlaMap</a>.
+<!--l. 28932--><p class="noindent" >When an SlaMap is first created (using <a 
+href="sun211ss194.html#x219-4110000">astSlaMap</a>), it simply performs a unit (null)
+<a 
+href="sun211ss459.html#x486-6780000">Mapping</a>. By using astSlaAdd (repeatedly if necessary), one or more coordinate
+conversion steps may then be added, which the SlaMap will perform in sequence. This
+allows multi-step conversions between a variety of celestial coordinate systems to be
+assembled out of the building blocks provided by SLALIB.
+<!--l. 28932--><p class="noindent" >Normally, if an SlaMap<code>&#x2019;</code> s <a 
+href="sun211ss312.html#x338-5300000">Invert</a> attribute is zero (the default), then its forward
+transformation is performed by carrying out each of the individual coordinate
+conversions specified by astSlaAdd in the order given (i.e. with the most recently
+added conversion applied last).
+<!--l. 28932--><p class="noindent" >This order is reversed if the SlaMap<code>&#x2019;</code> s Invert attribute is non-zero (or if the inverse
+transformation is requested by any other means) and each individual coordinate
+conversion is also replaced by its own inverse. This process inverts the overall effect
+                                                                                       
+
+                                                                                       
+of the SlaMap. In this case, the first conversion to be applied would be the
+inverse of the one most recently added.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astSlaAdd( AstSlaMap
+<!--l. 28932--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this, const
+char <!--l. 28932--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>cvt,
+const double args[] )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the SlaMap.  </div> <h5 class="ssth5"> cvt  </h5><div class="sstsub"> Pointer to
+a null-terminated string which identifies the celestial coordinate conversion to be
+added to the SlaMap. See the <code>&#x0022;</code> SLALIB Conversions<code>&#x0022;</code> section for details of those
+available.  </div> <h5 class="ssth5"> args  </h5><div class="sstsub"> An array containing argument values for the celestial coordinate
+conversion. The number of arguments required, and hence the number of array elements
+used, depends on the conversion specified (see the <code>&#x0022;</code> SLALIB Conversions<code>&#x0022;</code> section). This
+array is ignored and a NULL pointer may be supplied if no arguments are needed.  </div>  </div>
+<h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 28932--><p class="noindent" >All coordinate values processed by an SlaMap are in radians. The first coordinate is
+the celestial longitude and the second coordinate is the celestial latitude.
+<li >
+<!--l. 28932--><p class="noindent" >When assembling a multi-stage conversion, it can sometimes be difficult to determine
+the most economical conversion path. For example, converting to the standard FK5
+coordinate system as an intermediate stage is often sensible in formulating the
+problem, but may introduce unnecessary extra conversion steps. A solution to this is to
+include all the steps which are (logically) necessary, but then to use <a 
+href="sun211ss190.html#x215-4070000">astSimplify</a> to
+simplify the resulting SlaMap. The simplification process will eliminate any steps
+which turn out not to be needed.
+<li >
+<!--l. 28932--><p class="noindent" >This function does not check to ensure that the sequence of coordinate conversions
+added to an SlaMap is physically meaningful.  </li></ul>  </div> <h4 class="ssth4"> SLALIB Conversions  </h4><div class="sstvalues"> The following
+strings (which are case-insensitive) may be supplied via the <code>&#x0022;</code> cvt<code>&#x0022;</code> parameter to
+indicate which celestial coordinate conversion is to be added to the SlaMap. Each
+string is derived from the name of the SLALIB routine that performs the conversion and
+the relevant documentation (SUN/67) should be consulted for details. Where arguments
+are needed by the conversion, they are listed in parentheses. Values for these
+arguments should be given, via the <code>&#x0022;</code> args<code>&#x0022;</code> array, in the order indicated. The argument
+names match the corresponding SLALIB routine arguments and their values should be
+given using exactly the same units, time scale, calendar, etc. as described in
+SUN/67:
+<ul class="sstitemlist">
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> ADDET<code>&#x0022;</code> (EQ): Add E-terms of aberration.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> SUBET<code>&#x0022;</code> (EQ): Subtract E-terms of aberration.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> PREBN<code>&#x0022;</code> (BEP0,BEP1): Apply Bessel-Newcomb pre-IAU 1976 (FK4) precession model.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> PREC<code>&#x0022;</code> (EP0,EP1): Apply IAU 1975 (FK5) precession model.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> FK45Z<code>&#x0022;</code> (BEPOCH): Convert FK4 to FK5 (no proper motion or parallax).
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> FK54Z<code>&#x0022;</code> (BEPOCH): Convert FK5 to FK4 (no proper motion or parallax).
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> AMP<code>&#x0022;</code> (DATE,EQ): Convert geocentric apparent to mean place.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> MAP<code>&#x0022;</code> (EQ,DATE): Convert mean place to geocentric apparent.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> ECLEQ<code>&#x0022;</code> (DATE): Convert ecliptic coordinates to FK5 J2000.0 equatorial.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> EQECL<code>&#x0022;</code> (DATE): Convert equatorial FK5 J2000.0 to ecliptic coordinates.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> GALEQ<code>&#x0022;</code> : Convert galactic coordinates to FK5 J2000.0 equatorial.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> EQGAL<code>&#x0022;</code> : Convert FK5 J2000.0 equatorial to galactic coordinates.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> HFK5Z<code>&#x0022;</code> (JEPOCH): Convert ICRS coordinates to FK5 J2000.0 equatorial.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> FK5HZ<code>&#x0022;</code> (JEPOCH): Convert FK5 J2000.0 equatorial coordinates to ICRS.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> GALSUP<code>&#x0022;</code> : Convert galactic to supergalactic coordinates.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> SUPGAL<code>&#x0022;</code> : Convert supergalactic coordinates to galactic.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> J2000H<code>&#x0022;</code> : Convert dynamical J2000.0 to ICRS.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> HJ2000<code>&#x0022;</code> : Convert ICRS to dynamical J2000.0.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> R2H<code>&#x0022;</code> (LAST): Convert RA to Hour Angle.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> H2R<code>&#x0022;</code> (LAST): Convert Hour Angle to RA.
+</li>
+</ul>
+<!--l. 28932--><p class="noindent" >For example, to use the <code>&#x0022;</code> ADDET<code>&#x0022;</code> conversion, which takes a single argument EQ,
+you should consult the documentation for the SLALIB routine SLA_ADDET. This
+describes the conversion in detail and shows that EQ is the Besselian epoch of the
+mean equator and equinox. This value should then be supplied to astSlaAdd in
+args[0].
+<!--l. 28932--><p class="noindent" >In addition the following strings may be supplied for more complex conversions which do
+not correspond to any one single SLALIB routine (DIURAB is the magnitude of the diurnal
+aberration vector in units of <code>&#x0022;</code> day/(2.PI)<code>&#x0022;</code> , DATE is the Modified Julian Date of the
+                                                                                       
+
+                                                                                       
+observation, and (OBSX,OBSY,OBZ) are the Heliocentric-Aries-Ecliptic cartesian
+coordinates, in metres, of the observer):
+<ul class="sstitemlist">
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> HPCEQ<code>&#x0022;</code> (DATE,OBSX,OBSY,OBSZ): Convert Helioprojective-Cartesian coordinates to
+J2000.0 equatorial.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> EQHPC<code>&#x0022;</code> (DATE,OBSX,OBSY,OBSZ): Convert J2000.0 equatorial coordinates to
+Helioprojective-Cartesian.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> HPREQ<code>&#x0022;</code> (DATE,OBSX,OBSY,OBSZ): Convert Helioprojective-Radial coordinates to J2000.0
+equatorial.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> EQHPR<code>&#x0022;</code> (DATE,OBSX,OBSY,OBSZ): Convert J2000.0 equatorial coordinates to
+Helioprojective-Radial.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> HEEQ<code>&#x0022;</code> (DATE): Convert helio-ecliptic coordinates to J2000.0 equatorial.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> EQHE<code>&#x0022;</code> (DATE): Convert J2000.0 equatorial coordinates to helio-ecliptic.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> H2E<code>&#x0022;</code> (LAT,DIRUAB): Convert horizon coordinates to equatorial.
+<li >
+<!--l. 28932--><p class="noindent" ><code>&#x0022;</code> E2H<code>&#x0022;</code> (LAT,DIURAB): Convert equatorial coordinates to horizon.
+</li>
+</ul>
+<!--l. 28932--><p class="noindent" >Note, the <code>&#x0022;</code> H2E<code>&#x0022;</code> and <code>&#x0022;</code> E2H<code>&#x0022;</code> conversions convert between topocentric horizon
+coordinates (azimuth,elevation), and apparent local equatorial coordinates (hour
+angle,declination). Thus, the effects of diurnal aberration are taken into
+account in the conversions but the effects of atmospheric refraction are not.
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss192.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss194.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss193.html"></a> </div> 
+</body> 
+</html>

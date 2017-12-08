@@ -1,0 +1,64 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> SourceFile </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss398.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss400.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 41072--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x425-6170000"></a> SourceFile </h3>  <p class="subtitle"> Input file from which to read data  </p> </h3> </header><a 
+ id="Q1-425-1431"></a> <a 
+ id="Q1-425-1432"></a> <a name="xref_SourceFile"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute
+specifies the name of a file from which the <a 
+href="sun211ss441.html#x468-6600000">Channel</a> should read data. If specified it
+is used in preference to any source function specified when the Channel was
+created.
+<!--l. 41072--><p class="noindent" >Assigning a new value to this attribute will cause any previously opened SourceFile to
+be closed. The first subsequent call to <a 
+href="sun211ss160.html#x185-3770000">astRead</a> will attempt to open the new file (an
+error will be reported if the file cannot be opened), and read data from it. All
+subsequent call to astRead will read data from the new file, until the SourceFile
+attribute is cleared or changed.
+<!--l. 41072--><p class="noindent" >Clearing the attribute causes any open SourceFile to be closed. All subsequent data
+reads will use the source function specified when the Channel was created, or will read
+from standard input if no source function was specified.
+<!--l. 41072--><p class="noindent" >If no value has been assigned to SourceFile, a null string will be returned if an
+attempt is made to get the attribute value.  </div> <dl class="sst">Type: </dl><dd class="sst"> String.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5">
+                                                                                       
+
+                                                                                       
+<a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>  </h5><div class="sstsub"> In the case of a FitsChan, the specified SourceFile supplements the
+source function specified when the FitsChan was created, rather than replacing
+the source function. The source file should be a text file (not a FITS file)
+containing one header per line. When a value is assigned to SourceFile, the file is
+opened and read immediately, and all headers read from the file are appended
+to the end of any header already in the FitsChan. The file is then closed.
+Clearing the SourceFile attribute has no further effect, other than nullifying
+the string (i.e. the file name) associated with the attribute.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 41072--><p class="noindent" >Any open SourceFile is closed when the Channel is deleted.
+<li >
+<!--l. 41072--><p class="noindent" >If the Channel is copied or dumped (using <a 
+href="sun211ss34.html#x59-2510000">astCopy</a> or <a 
+href="sun211ss187.html#x212-4040000">astShow</a>) the SourceFile attribute
+is left in a cleared state in the output Channel (i.e. the value of the SourceFile
+attribute is not copied).  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss398.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss400.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+                                                                                       
+
+                                                                                       
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss399.html"></a> </div> 
+</body> 
+</html>

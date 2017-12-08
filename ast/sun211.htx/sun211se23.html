@@ -1,0 +1,157 @@
+<!DOCTYPE html> 
+<html> 
+<head><title>The AST Class Hierarchy</title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211se22.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se24.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<h3 class="sectionHead"><span class="titlemark">A    </span> <a 
+ id="x24-2160001"></a>The AST Class Hierarchy</h3>
+<div class="sectionTOCS">
+</div>
+<!--l. 10919--><p class="noindent" >The following table shows the hierarchy of classes in the AST library. For a description of each class,
+you should consult Appendix&#x00A0;<a 
+href="sun211se26.html#x465-6570004">D<!--tex4ht:ref: ss:classdescriptions --></a>.
+<div class="fancyvrb" id="fancyvrb240"> <a 
+ id="x24-216002r1"></a>&#x00A0;&#x00A0;Object&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Base&#x00A0;class&#x00A0;for&#x00A0;all&#x00A0;AST&#x00A0;Objects<br class="fancyvrb" /><a 
+ id="x24-216004r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Axis&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Store&#x00A0;axis&#x00A0;information
+<br class="fancyvrb" /><a 
+ id="x24-216006r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;SkyAxis&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Store&#x00A0;celestial&#x00A0;axis&#x00A0;information<br class="fancyvrb" /><a 
+ id="x24-216008r4"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Channel&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Basic&#x00A0;(textual)&#x00A0;I/O&#x00A0;channel
+<br class="fancyvrb" /><a 
+ id="x24-216010r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;FitsChan&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;I/O&#x00A0;Channel&#x00A0;using&#x00A0;FITS&#x00A0;header&#x00A0;cards<br class="fancyvrb" /><a 
+ id="x24-216012r6"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;XmlChan&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;I/O&#x00A0;Channel&#x00A0;using&#x00A0;XML
+<br class="fancyvrb" /><a 
+ id="x24-216014r7"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;StcsChan&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;I/O&#x00A0;Channel&#x00A0;using&#x00A0;IVOA&#x00A0;STC-S&#x00A0;descriptions
+<br class="fancyvrb" /><a 
+ id="x24-216016r8"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;KeyMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Store&#x00A0;a&#x00A0;set&#x00A0;of&#x00A0;key/value&#x00A0;pairs<br class="fancyvrb" /><a 
+ id="x24-216018r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Table&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Store&#x00A0;a&#x00A0;2-dimensional&#x00A0;table&#x00A0;of&#x00A0;values
+<br class="fancyvrb" /><a 
+ id="x24-216020r10"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Mapping&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Inter-relate&#x00A0;two&#x00A0;coordinate&#x00A0;systems<br class="fancyvrb" /><a 
+ id="x24-216022r11"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;CmpMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Compound&#x00A0;Mapping
+<br class="fancyvrb" /><a 
+ id="x24-216024r12"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;DssMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Map&#x00A0;points&#x00A0;using&#x00A0;Digitised&#x00A0;Sky&#x00A0;Survey&#x00A0;plate&#x00A0;solution
+<br class="fancyvrb" /><a 
+ id="x24-216026r13"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Frame&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Coordinate&#x00A0;system&#x00A0;description<br class="fancyvrb" /><a 
+ id="x24-216028r14"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;CmpFrame&#x00A0;&#x00A0;-&#x00A0;Compound&#x00A0;Frame
+<br class="fancyvrb" /><a 
+ id="x24-216030r15"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;SpecFluxFrame&#x00A0;-&#x00A0;Observed&#x00A0;value&#x00A0;versus&#x00A0;spectral&#x00A0;position
+<br class="fancyvrb" /><a 
+ id="x24-216032r16"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;FluxFrame&#x00A0;-&#x00A0;Observed&#x00A0;value&#x00A0;at&#x00A0;a&#x00A0;given&#x00A0;fixed&#x00A0;spectral&#x00A0;position
+<br class="fancyvrb" /><a 
+ id="x24-216034r17"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;FrameSet&#x00A0;&#x00A0;-&#x00A0;Set&#x00A0;of&#x00A0;inter-related&#x00A0;coordinate&#x00A0;systems
+<br class="fancyvrb" /><a 
+ id="x24-216036r18"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Plot&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Provide&#x00A0;facilities&#x00A0;for&#x00A0;2D&#x00A0;graphical&#x00A0;output
+<br class="fancyvrb" /><a 
+ id="x24-216038r19"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Plot3D&#x00A0;-&#x00A0;Provide&#x00A0;facilities&#x00A0;for&#x00A0;3D&#x00A0;graphical&#x00A0;output
+<br class="fancyvrb" /><a 
+ id="x24-216040r20"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Region&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Specify&#x00A0;areas&#x00A0;within&#x00A0;a&#x00A0;coordinate&#x00A0;system
+<br class="fancyvrb" /><a 
+ id="x24-216042r21"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Box&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;A&#x00A0;box&#x00A0;region&#x00A0;with&#x00A0;sides&#x00A0;parallel&#x00A0;to&#x00A0;the&#x00A0;axes&#x00A0;of&#x00A0;a&#x00A0;Frame
+<br class="fancyvrb" /><a 
+ id="x24-216044r22"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Circle&#x00A0;-&#x00A0;A&#x00A0;circular&#x00A0;or&#x00A0;spherical&#x00A0;region&#x00A0;within&#x00A0;a&#x00A0;Frame
+<br class="fancyvrb" /><a 
+ id="x24-216046r23"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;CmpRegion&#x00A0;&#x00A0;-&#x00A0;A&#x00A0;combination&#x00A0;of&#x00A0;two&#x00A0;regions&#x00A0;within&#x00A0;a&#x00A0;single&#x00A0;Frame
+<br class="fancyvrb" /><a 
+ id="x24-216048r24"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Ellipse&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;An&#x00A0;elliptical&#x00A0;region&#x00A0;within&#x00A0;a&#x00A0;2-dimensional&#x00A0;Frame
+<br class="fancyvrb" /><a 
+ id="x24-216050r25"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Interval&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Intervals&#x00A0;on&#x00A0;one&#x00A0;or&#x00A0;more&#x00A0;axes&#x00A0;of&#x00A0;a&#x00A0;Frame.
+<br class="fancyvrb" /><a 
+ id="x24-216052r26"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;NullRegion&#x00A0;-&#x00A0;A&#x00A0;boundless&#x00A0;region&#x00A0;within&#x00A0;a&#x00A0;Frame
+<br class="fancyvrb" /><a 
+ id="x24-216054r27"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;PointList&#x00A0;&#x00A0;-&#x00A0;A&#x00A0;collection&#x00A0;of&#x00A0;points&#x00A0;in&#x00A0;a&#x00A0;Frame
+<br class="fancyvrb" /><a 
+ id="x24-216056r28"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Polygon&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;A&#x00A0;polygonal&#x00A0;region&#x00A0;within&#x00A0;a&#x00A0;2-dimensional&#x00A0;Frame
+<br class="fancyvrb" /><a 
+ id="x24-216058r29"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Prism&#x00A0;&#x00A0;-&#x00A0;An&#x00A0;extrusion&#x00A0;of&#x00A0;a&#x00A0;Region&#x00A0;into&#x00A0;orthogonal&#x00A0;dimensions
+<br class="fancyvrb" /><a 
+ id="x24-216060r30"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Stc&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Represents&#x00A0;an&#x00A0;generic&#x00A0;instance&#x00A0;of&#x00A0;an&#x00A0;IVOA&#x00A0;STC-X&#x00A0;description
+<br class="fancyvrb" /><a 
+ id="x24-216062r31"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;StcResourceProfile&#x00A0;-&#x00A0;Represents&#x00A0;an&#x00A0;an&#x00A0;IVOA&#x00A0;STC-X&#x00A0;ResourceProfile
+<br class="fancyvrb" /><a 
+ id="x24-216064r32"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;StcSearchLocation&#x00A0;&#x00A0;-&#x00A0;Represents&#x00A0;an&#x00A0;an&#x00A0;IVOA&#x00A0;STC-X&#x00A0;SearchLocation
+<br class="fancyvrb" /><a 
+ id="x24-216066r33"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;StcCatalogEntryLocation&#x00A0;-&#x00A0;Represents&#x00A0;an&#x00A0;an&#x00A0;IVOA&#x00A0;STC-X&#x00A0;CatalogEntryLocation
+                                                                                       
+
+                                                                                       
+<br class="fancyvrb" /><a 
+ id="x24-216068r34"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;StcObsDataLocation&#x00A0;-&#x00A0;Represents&#x00A0;an&#x00A0;an&#x00A0;IVOA&#x00A0;STC-X&#x00A0;ObsDataLocation
+<br class="fancyvrb" /><a 
+ id="x24-216070r35"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;SkyFrame&#x00A0;&#x00A0;-&#x00A0;Celestial&#x00A0;coordinate&#x00A0;system&#x00A0;description
+<br class="fancyvrb" /><a 
+ id="x24-216072r36"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;SpecFrame&#x00A0;-&#x00A0;Spectral&#x00A0;coordinate&#x00A0;system&#x00A0;description
+<br class="fancyvrb" /><a 
+ id="x24-216074r37"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;DSBSpecFrame&#x00A0;-&#x00A0;Dual&#x00A0;sideband&#x00A0;spectral&#x00A0;coordinate&#x00A0;system&#x00A0;description
+<br class="fancyvrb" /><a 
+ id="x24-216076r38"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;TimeFrame&#x00A0;-&#x00A0;Time&#x00A0;coordinate&#x00A0;system&#x00A0;description
+<br class="fancyvrb" /><a 
+ id="x24-216078r39"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;GrismMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Models&#x00A0;the&#x00A0;spectral&#x00A0;dispersion&#x00A0;produced&#x00A0;by&#x00A0;a&#x00A0;grism
+<br class="fancyvrb" /><a 
+ id="x24-216080r40"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;IntraMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Map&#x00A0;points&#x00A0;using&#x00A0;a&#x00A0;private&#x00A0;transformation&#x00A0;function
+<br class="fancyvrb" /><a 
+ id="x24-216082r41"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;LutMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Transform&#x00A0;1-dimensional&#x00A0;coordinates&#x00A0;using&#x00A0;a&#x00A0;lookup&#x00A0;table
+<br class="fancyvrb" /><a 
+ id="x24-216084r42"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;MathMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Transform&#x00A0;coordinates&#x00A0;using&#x00A0;mathematical&#x00A0;expressions
+<br class="fancyvrb" /><a 
+ id="x24-216086r43"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;MatrixMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Map&#x00A0;positions&#x00A0;by&#x00A0;multiplying&#x00A0;them&#x00A0;by&#x00A0;a&#x00A0;matrix
+<br class="fancyvrb" /><a 
+ id="x24-216088r44"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;NormMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Normalise&#x00A0;coordinates&#x00A0;using&#x00A0;a&#x00A0;supplied&#x00A0;Frame
+<br class="fancyvrb" /><a 
+ id="x24-216090r45"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;PcdMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Apply&#x00A0;2-dimensional&#x00A0;pincushion/barrel&#x00A0;distortion
+<br class="fancyvrb" /><a 
+ id="x24-216092r46"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;PermMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Coordinate&#x00A0;permutation&#x00A0;Mapping
+<br class="fancyvrb" /><a 
+ id="x24-216094r47"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;PolyMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;General&#x00A0;N-dimensional&#x00A0;polynomial&#x00A0;Mapping
+<br class="fancyvrb" /><a 
+ id="x24-216096r48"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;RateMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Calculates&#x00A0;an&#x00A0;element&#x00A0;of&#x00A0;a&#x00A0;Mapping&#x2019;s&#x00A0;Jacobian&#x00A0;matrix
+<br class="fancyvrb" /><a 
+ id="x24-216098r49"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;SelectorMap&#x00A0;&#x00A0;-&#x00A0;Locates&#x00A0;positions&#x00A0;within&#x00A0;a&#x00A0;set&#x00A0;of&#x00A0;Regions
+<br class="fancyvrb" /><a 
+ id="x24-216100r50"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;ShiftMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Shifts&#x00A0;each&#x00A0;axis&#x00A0;by&#x00A0;a&#x00A0;constant&#x00A0;amount
+<br class="fancyvrb" /><a 
+ id="x24-216102r51"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;SlaMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Sequence&#x00A0;of&#x00A0;celestial&#x00A0;coordinate&#x00A0;conversions
+<br class="fancyvrb" /><a 
+ id="x24-216104r52"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;SpecMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Sequence&#x00A0;of&#x00A0;spectral&#x00A0;coordinate&#x00A0;conversions
+<br class="fancyvrb" /><a 
+ id="x24-216106r53"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;SphMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Map&#x00A0;3-d&#x00A0;Cartesian&#x00A0;to&#x00A0;2-d&#x00A0;spherical&#x00A0;coordinates
+<br class="fancyvrb" /><a 
+ id="x24-216108r54"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;SwitchMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Encapuslates&#x00A0;a&#x00A0;set&#x00A0;of&#x00A0;alternate&#x00A0;Mappings
+<br class="fancyvrb" /><a 
+ id="x24-216110r55"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;TimeMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Sequence&#x00A0;of&#x00A0;time&#x00A0;coordinate&#x00A0;conversions
+<br class="fancyvrb" /><a 
+ id="x24-216112r56"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;TranMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Combine&#x00A0;fwd.&#x00A0;and&#x00A0;inv.&#x00A0;transformations&#x00A0;from&#x00A0;two&#x00A0;Mappings
+<br class="fancyvrb" /><a 
+ id="x24-216114r57"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;UnitMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Unit&#x00A0;(null)&#x00A0;Mapping<br class="fancyvrb" /><a 
+ id="x24-216116r58"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;UnitNormMap&#x00A0;&#x00A0;-&#x00A0;Converts&#x00A0;a&#x00A0;vector&#x00A0;to&#x00A0;a&#x00A0;unit&#x00A0;vector&#x00A0;plus&#x00A0;length
+<br class="fancyvrb" /><a 
+ id="x24-216118r59"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;WcsMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Implement&#x00A0;a&#x00A0;FITS-WCS&#x00A0;sky&#x00A0;projection
+<br class="fancyvrb" /><a 
+ id="x24-216120r60"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;WinMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Match&#x00A0;windows&#x00A0;by&#x00A0;scaling&#x00A0;and&#x00A0;shifting&#x00A0;each&#x00A0;axis
+<br class="fancyvrb" /><a 
+ id="x24-216122r61"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;ZoomMap&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;-&#x00A0;Zoom&#x00A0;coordinates&#x00A0;about&#x00A0;the&#x00A0;origin</div>
+                                                                                       
+
+                                                                                       
+<!--l. 10989--><p class="noindent" >
+                                                                                       
+
+                                                                                       
+                                                                                       
+
+                                                                                       
+<div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211se22.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World
+Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se24.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 10990--><p class="noindent" ><a 
+ id="tailsun211se23.html"></a> 
+</body> 
+</html>

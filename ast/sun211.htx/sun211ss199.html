@@ -1,0 +1,93 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astSphMap </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss198.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss200.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 29685--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x224-4160000"></a> astSphMap </h3>  <p class="subtitle"> Create a SphMap  </p> </h3> </header><a 
+ id="Q1-224-830"></a> <a 
+ id="Q1-224-831"></a> <a name="xref_astSphMap"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a new <a 
+href="sun211ss483.html#x510-7020000">SphMap</a>
+and optionally initialises its attributes.
+<!--l. 29685--><p class="noindent" >A SphMap is a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> which transforms points from a 3-dimensional Cartesian
+coordinate system into a 2-dimensional spherical coordinate system (longitude and
+latitude on a unit sphere centred at the origin). It works by regarding the
+input coordinates as position vectors and finding their intersection with the
+sphere surface. The inverse transformation always produces points which are
+a unit distance from the origin (i.e. unit vectors).  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstSphMap
+<!--l. 29685--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astSphMap( const
+char <!--l. 29685--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a null-terminated string containing an
+optional comma-separated list of attribute assignments to be used for initialising
+the new SphMap. The syntax used is identical to that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a> function
+and may include <code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by <code>&#x0022;</code> %<code>&#x0022;</code> symbols in the
+normal way.  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> If the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code> %<code>&#x0022;</code> format specifiers,
+then an optional list of additional arguments may follow it in order to supply
+values to be substituted for these specifiers. The rules for supplying these are
+identical to those for the astSet function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code> function).
+</div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astSphMap()  </h5><div class="sstsub"> A pointer to the new SphMap.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 29685--><p class="noindent" >The spherical coordinates are longitude (positive anti-clockwise looking from the
+positive latitude pole) and latitude. The Cartesian coordinates are right-handed, with
+the x axis (axis 1) at zero longitude and latitude, and the z axis (axis 3) at the
+positive latitude pole.
+<li >
+<!--l. 29685--><p class="noindent" >At either pole, the longitude is set to the value of the <a 
+href="sun211ss372.html#x398-5900000">PolarLong</a> attribute.
+<li >
+<!--l. 29685--><p class="noindent" >If the Cartesian coordinates are all zero, then the longitude and latitude are set to
+the value AST__BAD.
+<li >
+<!--l. 29685--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked
+with the AST error status set, or if it should fail for any reason.  </li></ul>  </div>
+<h4 class="ssth4"> Status Handling  </h4><div class="sstvalues"> The protected interface to this function includes an
+extra parameter at the end of the parameter list descirbed above. This
+parameter is a pointer to the integer inherited status variable: <code>&#x0022;</code> int
+<!--l. 29685--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>status<code>&#x0022;</code>
+.  </div> <h4 class="ssth4"> Status Handling  </h4><div class="sstvalues"> The protected interface to this function includes
+an extra parameter at the end of the parameter list descirbed above. This
+parameter is a pointer to the integer inherited status variable: <code>&#x0022;</code> int
+                                                                                       
+
+                                                                                       
+<!--l. 29685--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>status<code>&#x0022;</code>
+.  </div> <h4 class="ssth4"> Status Handling  </h4><div class="sstvalues"> The protected interface to this function includes
+an extra parameter at the end of the parameter list descirbed above. This
+parameter is a pointer to the integer inherited status variable: <code>&#x0022;</code> int
+<!--l. 29685--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>status<code>&#x0022;</code> .
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss198.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss200.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss199.html"></a> </div> 
+</body> 
+</html>

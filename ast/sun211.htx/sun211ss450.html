@@ -1,0 +1,64 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> FitsTable </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss449.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss451.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 44263--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x477-6690000"></a> FitsTable </h3>  <p class="subtitle"> A representation of a FITS binary table  </p> </h3> </header><a 
+ id="Q1-477-1585"></a> <a 
+ id="Q1-477-1586"></a> <a name="xref_FitsTable"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> The
+FitsTable class is a representation of a FITS binary table. It inherits from the <a 
+href="sun211ss491.html#x518-7100000">Table</a>
+class. The parent Table is used to hold the binary data of the main table,
+and a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> (encapsulated within the FitsTable) is used to hold the FITS
+header.
+<!--l. 44263--><p class="noindent" >Note - it is not recommended to use the FitsTable class to store very large
+tables.
+<!--l. 44263--><p class="noindent" >FitsTables are primarily geared towards the needs of the <code>&#x0022;</code> -TAB<code>&#x0022;</code> algorithm defined in
+FITS-WCS paper 2, and so do not support all features of FITS binary tables. In
+particularly, they do not provide any equivalent to the following features of FITS
+binary tables: <code>&#x0022;</code> heap<code>&#x0022;</code> data (i.e. binary data following the main table), columns
+holding complex values, columns holding variable length arrays, scaled columns, column
+formats, columns holding bit values, 8-byte integer values or logical values.  </div>
+<h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> <a 
+href="sun211ss54.html#x79-2710000">astFitsTable</a>  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues"> The FitsTable class inherits from
+the Table class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> The FitsTable class does not define any new attributes
+beyond those which are applicable to all Tables.  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> In addition to those
+functions applicable to all Tables, the following functions may also be applied to all
+FitsTables:
+<ul class="sstitemlist">
+<li >
+<!--l. 44263--><p class="noindent" ><a 
+href="sun211ss29.html#x54-2460000">astColumnNull</a>: Get/set the null value for a column of a FitsTable
+<li >
+<!--l. 44263--><p class="noindent" ><a 
+href="sun211ss31.html#x56-2480000">astColumnSize</a>: Get number of bytes needed to hold a full column of data
+<li >
+<!--l. 44263--><p class="noindent" ><a 
+href="sun211ss63.html#x88-2800000">astGetColumnData</a>: Retrieve all the data values stored in a column
+<li >
+<!--l. 44263--><p class="noindent" ><a 
+href="sun211ss77.html#x102-2940000">astGetTableHeader</a>: Get the FITS headers from a FitsTable
+<li >
+<!--l. 44263--><p class="noindent" ><a 
+href="sun211ss152.html#x177-3690000">astPutColumnData</a>: Store data values in a column
+<li >
+<!--l. 44263--><p class="noindent" ><a 
+href="sun211ss155.html#x180-3720000">astPutTableHeader</a>: Store FITS headers within a FitsTable  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss449.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss451.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss450.html"></a> </div> 
+</body> 
+</html>

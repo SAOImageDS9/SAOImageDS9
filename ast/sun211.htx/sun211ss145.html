@@ -1,0 +1,120 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astPolyTran </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss144.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss146.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 24033--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x170-3620000"></a> astPolyTran </h3>  <p class="subtitle"> Fit a PolyMap inverse or forward transformation  </p> </h3> </header><a 
+ id="Q1-170-668"></a> <a 
+ id="Q1-170-669"></a> <a name="xref_astPolyTran"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+This function creates a new <a 
+href="sun211ss470.html#x497-6890000">PolyMap</a> which is a copy of the supplied PolyMap, in which a
+specified transformation (forward or inverse) has been replaced by a new polynomial
+transformation. The coefficients of the new transformation are estimated by sampling
+the other transformation and performing a least squares polynomial fit in the opposite
+direction to the sampled positions and values.
+<!--l. 24033--><p class="noindent" >This method can only be used on (1-input,1-output) or (2-input,2-output) PolyMaps.
+<!--l. 24033--><p class="noindent" >The transformation to create is specified by the <code>&#x0022;</code> forward<code>&#x0022;</code> parameter. In what follows
+<code>&#x0022;</code> X<code>&#x0022;</code> refers to the inputs of the PolyMap, and <code>&#x0022;</code> Y<code>&#x0022;</code> to the outputs of the PolyMap. The
+forward transformation transforms input values (X) into output values (Y), and the
+inverse transformation transforms output values (Y) into input values (X). Within a
+PolyMap, each transformation is represented by an independent set of polynomials, P_f
+                                                                                       
+
+                                                                                       
+or P_i: Y=P_f(X) for the forward transformation and X=P_i(Y) for the inverse
+transformation.
+<!--l. 24033--><p class="noindent" >The <code>&#x0022;</code> forward<code>&#x0022;</code> parameter specifies the transformation to be replaced. If it is
+non-zero, a new forward transformation is created by first finding the input values (X)
+using the inverse transformation (which must be available) at a regular grid of
+points (Y) covering a rectangular region of the PolyMap<code>&#x2019;</code> s output space. The
+coefficients of the required forward polynomial, Y=P_f(X), are chosen in order to
+minimise the sum of the squared residuals between the sampled values of Y and
+P_f(X).
+<!--l. 24033--><p class="noindent" >If <code>&#x0022;</code> forward<code>&#x0022;</code> is zero (probably the most likely case), a new inverse transformation is
+created by first finding the output values (Y) using the forward transformation (which
+must be available) at a regular grid of points (X) covering a rectangular region of the
+PolyMap<code>&#x2019;</code> s input space. The coefficients of the required inverse polynomial, X=P_i(Y),
+are chosen in order to minimise the sum of the squared residuals between the sampled
+values of X and P_i(Y).
+<!--l. 24033--><p class="noindent" >This fitting process is performed repeatedly with increasing polynomial orders (starting
+with linear) until the target accuracy is achieved, or a specified maximum order is
+reached. If the target accuracy cannot be achieved even with this maximum-order
+polynomial, the best fitting maximum-order polynomial is returned so long as its accuracy
+is better than <code>&#x0022;</code> maxacc<code>&#x0022;</code> . If it is not, an error is reported.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstPolyMap
+<!--l. 24033--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astPolyTran(
+AstPolyMap <!--l. 24033--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+int forward, double acc, double maxacc, int maxorder, const double
+<!--l. 24033--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>lbnd, const
+double <!--l. 24033--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>ubnd
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the original <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>.  </div> <h5 class="ssth5"> forward  </h5><div class="sstsub"> If non-zero, the
+forward PolyMap transformation is replaced. Otherwise the inverse transformation is
+replaced.  </div> <h5 class="ssth5"> acc  </h5><div class="sstsub"> The target accuracy, expressed as a geodesic distance within the
+PolyMap<code>&#x2019;</code> s input space (if <code>&#x0022;</code> forward<code>&#x0022;</code> is zero) or output space (if <code>&#x0022;</code> forward<code>&#x0022;</code> is
+non-zero).  </div> <h5 class="ssth5"> maxacc  </h5><div class="sstsub"> The maximum allowed accuracy for an acceptable polynomial,
+expressed as a geodesic distance within the PolyMap<code>&#x2019;</code> s input space (if <code>&#x0022;</code> forward<code>&#x0022;</code> is
+zero) or output space (if <code>&#x0022;</code> forward<code>&#x0022;</code> is non-zero).  </div> <h5 class="ssth5"> maxorder  </h5><div class="sstsub"> The maximum allowed
+polynomial order. This is one more than the maximum power of either input axis.
+So for instance, a value of 3 refers to a quadratic polynomial. Note, cross
+terms with total powers greater than or equal to maxorder are not inlcuded in
+the fit. So the maximum number of terms in each of the fitted polynomials is
+maxorder<!--l. 24033--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>(maxorder<!--l. 24033--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>1)/2.
+</div> <h5 class="ssth5"> lbnd  </h5><div class="sstsub"> Pointer to an array holding the lower bounds of a rectangular region within
+the PolyMap<code>&#x2019;</code> s input space (if <code>&#x0022;</code> forward<code>&#x0022;</code> is zero) or output space (if <code>&#x0022;</code> forward<code>&#x0022;</code> is
+non-zero). The new polynomial will be evaluated over this rectangle. The length of this
+array should equal the value of the PolyMap<code>&#x2019;</code> s <a 
+href="sun211ss353.html#x379-5710000">Nin</a> or <a 
+href="sun211ss359.html#x385-5770000">Nout</a> attribute, depending on <code>&#x0022;</code>
+forward<code>&#x0022;</code> .  </div> <h5 class="ssth5"> ubnd  </h5><div class="sstsub"> Pointer to an array holding the upper bounds of a rectangular
+region within the PolyMap<code>&#x2019;</code> s input space (if <code>&#x0022;</code> forward<code>&#x0022;</code> is zero) or output space (if <code>&#x0022;</code>
+forward<code>&#x0022;</code> is non-zero). The new polynomial will be evaluated over this rectangle. The
+length of this array should equal the value of the PolyMap<code>&#x2019;</code> s Nin or Nout attribute,
+depending on <code>&#x0022;</code> forward<code>&#x0022;</code> .  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astPolyTran()  </h5><div class="sstsub"> A pointer to the
+new PolyMap. A NULL pointer will be returned if the fit fails to achieve the
+                                                                                       
+
+                                                                                       
+accuracy specified by <code>&#x0022;</code> maxacc<code>&#x0022;</code> , but no error will be reported.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 24033--><p class="noindent" >This function can only be used on 1D or 2D PolyMaps which have the same number of
+inputs and outputs.
+<li >
+<!--l. 24033--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss144.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss146.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss145.html"></a> </div> 
+</body> 
+</html>

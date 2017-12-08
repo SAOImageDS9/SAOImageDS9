@@ -1,0 +1,59 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astMapPutU </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+                                                                                       
+
+                                                                                       
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss112.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss114.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 20425--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x138-3300000"></a> astMapPutU </h3>  <p class="subtitle"> Add an entry to a KeyMap with an undefined value  </p> </h3> </header><a 
+ id="Q1-138-572"></a> <a 
+ id="Q1-138-573"></a> <a name="xref_astMapPutU"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+This function adds a new entry to a <a 
+href="sun211ss457.html#x484-6760000">KeyMap</a>, but no value is stored with the entry.
+The entry therefore has a special data type represented by symbolic constant
+AST__UNDEFTYPE.
+<!--l. 20425--><p class="noindent" >An example use is to add entries with undefined values to a KeyMap prior to locking
+them with the <a 
+href="sun211ss338.html#x364-5560000">MapLocked</a> attribute. Such entries can act as placeholders for values
+that can be added to the KeyMap later.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astMapPutU( AstKeyMap
+<!--l. 20425--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this, const
+char <!--l. 20425--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>key, const
+char <!--l. 20425--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>comment
+);  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the KeyMap in which to store the supplied value.  </div>
+<h5 class="ssth5"> key  </h5><div class="sstsub"> A character string to be stored with the value, which can later be used to
+identify the value. Trailing spaces are ignored. The supplied string is converted to
+upper case before use if the <a 
+href="sun211ss320.html#x346-5380000">KeyCase</a> attribute is currently set to zero.  </div> <h5 class="ssth5"> comment  </h5><div class="sstsub"> A
+pointer to a null-terminated comment string to be stored with the value. A
+NULL pointer may be supplied, in which case no comment is stored.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 20425--><p class="noindent" >If the supplied key is already in use in the KeyMap, the value associated with the key
+will be removed.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss112.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss114.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss113.html"></a> </div> 
+</body> 
+</html>

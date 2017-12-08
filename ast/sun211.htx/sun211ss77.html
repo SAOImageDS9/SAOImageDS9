@@ -1,0 +1,49 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astGetTableHeader </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss76.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss78.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 17235--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x102-2940000"></a> astGetTableHeader </h3>  <p class="subtitle"> Get the FITS headers from a FitsTable  </p> </h3> </header><a 
+ id="Q1-102-464"></a> <a 
+ id="Q1-102-465"></a> <a name="xref_astGetTableHeader"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This function returns a pointer to a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> holding copies
+of the FITS headers associated with a <a 
+href="sun211ss450.html#x477-6690000">FitsTable</a>.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstFitsChan
+<!--l. 17235--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astGetTableHeader(
+AstFitsTable <!--l. 17235--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the FitsTable.  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5">
+astGetTableHeader()  </h5><div class="sstsub"> A pointer to a deep copy of the FitsChan stored within the
+FitsTable.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 17235--><p class="noindent" >The returned pointer should be annulled using <a 
+href="sun211ss7.html#x32-2240000">astAnnul</a> when it is no longer
+needed.
+<li >
+<!--l. 17235--><p class="noindent" >Changing the contents of the returned FitsChan will have no effect on the FitsTable. To
+modify the FitsTable, the modified FitsChan must be stored in the FitsTable using
+<a 
+href="sun211ss155.html#x180-3720000">astPutTableHeader</a>.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss76.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss78.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss77.html"></a> </div> 
+</body> 
+</html>

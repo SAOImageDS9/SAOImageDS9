@@ -1,0 +1,563 @@
+<!DOCTYPE html> 
+<html> 
+<head><title>Inter-Relating Coordinate Systems (Mappings)</title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211se4.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se6.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<h3 class="sectionHead"><span class="titlemark">5    </span> <a 
+ id="x6-530005"></a>Inter-Relating Coordinate Systems (Mappings)</h3>
+<div class="sectionTOCS">
+&#x00A0;<span class="subsectionToc" >5.1 <a 
+href="#x6-540001">The Mapping Class</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.2 <a 
+href="#x6-550002">The Mapping Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.3 <a 
+href="#x6-560003">Changing Attributes of a Mapping</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.4 <a 
+href="#x6-570004">Input and Output Coordinate Numbers</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.5 <a 
+href="#x6-580005">Forward and Inverse Transformations</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.6 <a 
+href="#x6-590006">Inverting Mappings</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.7 <a 
+href="#x6-600007">Finding the Rate of Change of a Mapping Output</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.8 <a 
+href="#x6-610008">Reporting Coordinate Transformations</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.9 <a 
+href="#x6-620009">Handling Missing (Bad) Coordinate Values</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.10 <a 
+href="#x6-6300010">Example&#x2014;the UnitMap</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.11 <a 
+href="#x6-6400011">Example&#x2014;the PermMap</a></span>
+</div>
+<!--l. 2754--><p class="noindent" >In &#x00A7;<a 
+href="sun211se4.html#x5-340004">4<!--tex4ht:ref: ss:primer --></a> we used the <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> as an example of a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>. We saw how it could be used
+to transform coordinates from its input to its output and back again (&#x00A7;<a 
+href="sun211se4.html#x5-420008">4.8<!--tex4ht:ref: ss:transforming --></a>). We also saw
+how its behaviour could be controlled by setting various attributes, such as the <a 
+href="sun211ss438.html#x464-6560000">Zoom</a>
+factor and the <a 
+href="sun211ss381.html#x407-5990000">Report</a> attribute that made it display coordinate values as it transformed
+them.
+<!--l. 2761--><p class="noindent" >In this section, we will look at Mappings a bit more thoroughly and explore the behaviour which is
+common to all the Mappings provided by AST. This is good background for what follows,
+because many of the Objects we discuss later will also turn out to be Mappings in various
+disguises.
+<a 
+ id="x6-53001r63"></a>
+                                                                                       
+
+                                                                                       
+<h4 class="subsectionHead"><span class="titlemark">5.1    </span> <a 
+ id="x6-540001"></a>The Mapping Class</h4>
+<!--l. 2769--><p class="noindent" >Before we start, it is worth taking a quick look at the <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> class as a whole and some of the
+sub-classes it contains:
+<div class="fancyvrb" id="fancyvrb67"> <a 
+ id="x6-54002r1"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Mapping<br class="fancyvrb" /><a 
+ id="x6-54004r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;CmpMap<br class="fancyvrb" /><a 
+ id="x6-54006r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;DssMap<br class="fancyvrb" /><a 
+ id="x6-54008r4"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;GrismMap<br class="fancyvrb" /><a 
+ id="x6-54010r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;IntraMap<br class="fancyvrb" /><a 
+ id="x6-54012r6"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;LutMap<br class="fancyvrb" /><a 
+ id="x6-54014r7"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;MathMap
+<br class="fancyvrb" /><a 
+ id="x6-54016r8"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;MatrixMap<br class="fancyvrb" /><a 
+ id="x6-54018r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;PermMap<br class="fancyvrb" /><a 
+ id="x6-54020r10"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;PolyMap<br class="fancyvrb" /><a 
+ id="x6-54022r11"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;SlaMap<br class="fancyvrb" /><a 
+ id="x6-54024r12"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;SpecMap<br class="fancyvrb" /><a 
+ id="x6-54026r13"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;TimeMap
+<br class="fancyvrb" /><a 
+ id="x6-54028r14"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;UnitMap<br class="fancyvrb" /><a 
+ id="x6-54030r15"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;WcsMap<br class="fancyvrb" /><a 
+ id="x6-54032r16"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;ZoomMap<br class="fancyvrb" /><a 
+ id="x6-54034r17"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x6-54036r18"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Frame<br class="fancyvrb" /><a 
+ id="x6-54038r19"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;various&#x00A0;types&#x00A0;of&#x00A0;Frame&#x003E;</div>
+<!--l. 2794--><p class="noindent" >The <a 
+href="sun211ss452.html#x479-6710000">Frame</a> sub-class has been separated out here because it is covered in detail in &#x00A7;<a 
+href="sun211se7.html#x8-730007">7<!--tex4ht:ref: ss:frames --></a>. We start by
+looking at the parent class, Mapping.
+<!--l. 2798--><p class="noindent" >AST does not provide a function to create a basic Mapping (<em>i.e.</em>&#x00A0;the astMapping constructor does not
+exist). This is because the Mapping class itself is &#x201C;virtual&#x201D; and basic Mappings are of no use in
+themselves. The Mapping class serves simply to contain the various specialised Mappings that exist.
+However, it provides more than just a convenient heading for them because it bestows all classes
+of Mapping with common properties (<em>e.g.</em>&#x00A0;attributes) and behaviour. By examining the
+Mapping class, we are therefore examining the things that all other Mappings have in
+common.
+<a 
+ id="x6-54039r65"></a>
+<h4 class="subsectionHead"><span class="titlemark">5.2    </span> <a 
+ id="x6-550002"></a>The Mapping Model</h4>
+<!--l. 2811--><p class="noindent" >The concept of a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> was illustrated in Figure&#x00A0;<a 
+href="sun211se2.html#x3-80011">1<!--tex4ht:ref: fig:mapping --></a>. It is a black box which you can supply with a
+set of coordinate values in return for a set of transformed coordinates. The two sets are termed <em>input</em>
+and <em>output</em> coordinates. You can also go back the other way and transform output coordinates back
+into input coordinates, as we saw in &#x00A7;<a 
+href="sun211se4.html#x5-420008">4.8<!--tex4ht:ref: ss:transforming --></a>.
+<a 
+ id="x6-55001r66"></a>
+<h4 class="subsectionHead"><span class="titlemark">5.3    </span> <a 
+ id="x6-560003"></a>Changing Attributes of a Mapping</h4>
+<!--l. 2820--><p class="noindent" >Many classes of <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> have attributes that provide values for parameter used within the
+transformation. For instance, the <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> class has an attribute called &#x201C;<a 
+href="sun211ss438.html#x464-6560000">Zoom</a>&#x201D; that gives the scalar
+value by which each coordinate is to be multiplied. These attribute values should be set when the
+Mapping is created and should not be changed afterwards. Indeed, the AST library will report an
+error if an attempt is made to change the value of a Mapping attribute. This is because, once created,
+Mappings are often later included within other objects such as FrameSets and CmpMaps. This means
+that in general there could be many active references to a single Mapping object within a program.
+Changing an attribute of the Mapping via one particular reference (i.e pointer) would cause all the
+other references to change too, with often undesirable or unpredictable consequences. To avoid
+this, Mappings are considered <em>immutable</em> in most situations. The one exception is if the
+Mapping has not yet been cloned or included in another <a 
+href="sun211ss464.html#x491-6830000">Object</a> (<em>i.e.</em> it has a reference couint
+of one) - changing the attributes of such a Mapping is allowed, and will not generate an
+error.
+<!--l. 2838--><p class="noindent" >Note, the <a 
+href="sun211ss312.html#x338-5300000">Invert</a> attribute of a Mapping is not subject to this rule and can be changed at any
+time.
+<a 
+ id="x6-56001r67"></a>
+                                                                                       
+
+                                                                                       
+<h4 class="subsectionHead"><span class="titlemark">5.4    </span> <a 
+ id="x6-570004"></a>Input and Output Coordinate Numbers</h4>
+<!--l. 2843--><p class="noindent" >In general, the number of coordinates you feed into a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> to represent a single point need not be
+the same as the number that comes out. Often these numbers will be the same, and often they will
+both equal 2 (because 2-dimensional coordinate systems are common), but this needn&#x2019;t necessarily be
+the case.
+<!--l. 2849--><p class="noindent" >The number of coordinates required to specify an input point is represented by the integer attribute
+<a 
+href="sun211ss353.html#x379-5710000">Nin</a> and the number required to specify an output point is represented by <a 
+href="sun211ss359.html#x385-5770000">Nout</a>. These are read-only
+attributes common to all Mappings. Generally, their values are fixed when a Mapping is
+created.
+<!--l. 2855--><p class="noindent" >In &#x00A7;<a 
+href="sun211se4.html#x5-360002">4.2<!--tex4ht:ref: ss:objectcreation --></a>, we saw how the Nin attribute for a <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> was initialised by the call to the constructor
+function <a 
+href="sun211ss240.html#x265-4570000">astZoomMap</a> which created it. In this case, the Nout attribute was not needed and it
+implicitly took the same value as Nin, but we could have enquired about its value had we wanted, as
+follows:
+<div class="fancyvrb" id="fancyvrb68"> <a 
+ id="x6-57002r1"></a>&#x00A0;&#x00A0;#include&#x00A0;&#x0022;ast.h&#x0022;<br class="fancyvrb" /><a 
+ id="x6-57004r2"></a>&#x00A0;&#x00A0;AstZoomMap&#x00A0;*zoommap;<br class="fancyvrb" /><a 
+ id="x6-57006r3"></a>&#x00A0;&#x00A0;int&#x00A0;nout;<br class="fancyvrb" /><a 
+ id="x6-57008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x6-57010r5"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x6-57012r6"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x6-57014r7"></a>&#x00A0;&#x00A0;nout&#x00A0;=&#x00A0;astGetI(&#x00A0;zoommap,&#x00A0;&#x0022;Nout&#x0022;&#x00A0;);</div>
+<a 
+ id="x6-57015r68"></a>
+<h4 class="subsectionHead"><span class="titlemark">5.5    </span> <a 
+ id="x6-580005"></a>Forward and Inverse Transformations</h4>
+<!--l. 2875--><p class="noindent" >We stated earlier that a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> may be used to transform coordinates either from input to output, or
+<em>vice versa</em>. These are termed its <em>forward</em> and <em>inverse</em> transformations.
+<!--l. 2879--><p class="noindent" >This statement was not quite accurate, however, because in general Mappings are only <b>potentially</b>
+capable of working in both directions. In practice, coordinate transformation may only be feasible in
+one direction or the other because some functions are not easily inverted (they may be multi-valued,
+for instance). Allowance must be made for this, so each Mapping has two read-only boolean (integer)
+attributes, <a 
+href="sun211ss425.html#x451-6430000">TranForward</a> and <a 
+href="sun211ss426.html#x452-6440000">TranInverse</a>, which indicate whether each transformation is
+available.
+<!--l. 2888--><p class="noindent" >A transformation is available if the corresponding attribute is non-zero, otherwise it is
+not.<span class="footnote-mark"><a 
+href="#fn11x0" id="fn11x0-bk"><sup class="textsuperscript">11</sup></a></span><a 
+ id="x6-58001f11"></a>
+If you enquire about the value of these attributes, a value of 0 or 1 is returned. Attempting to use a
+Mapping to apply a transformation which is not available will result in an error.
+<a 
+ id="x6-58002r69"></a>
+<h4 class="subsectionHead"><span class="titlemark">5.6    </span> <a 
+ id="x6-590006"></a>Inverting Mappings</h4>
+<!--l. 2897--><p class="noindent" >An important attribute, common to all Mappings, is the <a 
+href="sun211ss312.html#x338-5300000">Invert</a> flag. This is a boolean (integer)
+attribute that can be assigned a new value at any time. If it is non-zero, it has the effect of
+interchanging the <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>&#x2019;s input and output coordinates and the Mapping is then said to be
+<em>inverted</em>. By default, the Invert attribute is zero.
+<!--l. 2904--><p class="noindent" >There is no magic in this. There is no fancy arithmetic involved in inverting mathematical functions,
+for instance. The Invert flag is simply a switch that interchanges a Mapping&#x2019;s input and
+output ports. If it is non-zero, the Mapping&#x2019;s <a 
+href="sun211ss353.html#x379-5710000">Nin</a> and <a 
+href="sun211ss359.html#x385-5770000">Nout</a> attributes are swapped, its
+<a 
+href="sun211ss425.html#x451-6430000">TranForward</a> and <a 
+href="sun211ss426.html#x452-6440000">TranInverse</a> attributes are swapped, and when you ask for what was once
+the forward transformation you get the inverse transformation instead (and <em>vice versa</em>).
+When you return the Invert attribute to zero, or clear it, the Mapping returns to its original
+behaviour.
+                                                                                       
+
+                                                                                       
+<!--l. 2914--><p class="noindent" >Often, the actual value of the Invert attribute is unimportant and you simply wish to invert its boolean
+sense, so that what was the Mapping&#x2019;s input becomes its output and <em>vice versa</em>. This is most easily
+accomplished using <a 
+href="sun211ss94.html#x119-3110000">astInvert</a>, as follows:
+<div class="fancyvrb" id="fancyvrb69"> <a 
+ id="x6-59002r1"></a>&#x00A0;&#x00A0;AstMapping&#x00A0;*mapping;<br class="fancyvrb" /><a 
+ id="x6-59004r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x6-59006r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x6-59008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x6-59010r5"></a>&#x00A0;&#x00A0;astInvert(&#x00A0;mapping&#x00A0;);</div>
+<!--l. 2929--><p class="noindent" >If the Mapping you have happens to be the wrong way around, astInvert allows you to correct the
+problem.
+<a 
+ id="x6-59011r70"></a>
+<h4 class="subsectionHead"><span class="titlemark">5.7    </span> <a 
+ id="x6-600007"></a>Finding the Rate of Change of a Mapping Output</h4>
+<!--l. 2933--><p class="noindent" >The <a 
+href="sun211ss158.html#x183-3750000">astRate</a> function can be used to find the rate of change of any <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> output with
+respect to any Mapping input, at a given input position. The method used produces good
+accuracy (typically a relative error of 10E-10 or less) but may require the Mapping to be
+evaluated 100 or more times. An estimate of the second derivative is also produced by this
+function.
+<a 
+ id="x6-60001r71"></a>
+<h4 class="subsectionHead"><span class="titlemark">5.8    </span> <a 
+ id="x6-610008"></a>Reporting Coordinate Transformations</h4>
+<!--l. 2944--><p class="noindent" >We have already seen (&#x00A7;<a 
+href="sun211se4.html#x5-420008">4.8<!--tex4ht:ref: ss:transforming --></a>) how the boolean (integer) <a 
+href="sun211ss381.html#x407-5990000">Report</a> attribute of a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> works. If it is
+non-zero, the operation of transforming a set of coordinates will result in a report being written to
+standard output. This will display the coordinate values before and after transformation. It can save
+considerable time during program development by eliminating the need to add loops and output
+statements to your program.
+<!--l. 2952--><p class="noindent" >In a finished program, however, you should be careful that the Report attribute is not set to a non-zero
+value unless you want to see the output (there may often be rather a lot of this!). To help prevent
+unwanted output being produced by accident, the Report attribute is unusual in that its value is not
+preserved when a Mapping is copied using <a 
+href="sun211ss34.html#x59-2510000">astCopy</a> (&#x00A7;<a 
+href="sun211se4.html#x5-4900013">4.13<!--tex4ht:ref: ss:copyingobjects --></a>). Instead, it reverts to its default of zero
+(<em>i.e.</em>&#x00A0;un-set) in the copy. It also reverts to zero when a Mapping is written out, <em>e.g.</em>&#x00A0;to a file using a
+<a 
+href="sun211ss441.html#x468-6600000">Channel</a> (&#x00A7;<a 
+href="sun211se15.html#x16-14100015">15<!--tex4ht:ref: ss:channels --></a>).
+<a 
+ id="x6-61001r72"></a>
+<h4 class="subsectionHead"><span class="titlemark">5.9    </span> <a 
+ id="x6-620009"></a>Handling Missing (Bad) Coordinate Values</h4>
+<!--l. 2966--><p class="noindent" >Even when coordinates can, in principle, be transformed in either direction by a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>, there may
+still be instances where specific coordinate values cannot be handled. For example, the Mapping may
+be mathematically intractable (<em>e.g.</em>&#x00A0;singular) in certain places, or it may map a subset of one space on
+to another, so that some points in one space are not represented in the other. Sky projections often
+show this behaviour, since it is quite common to project only half of the celestial sphere on to
+two dimensions, omitting points on the opposite side of the sky. There are many other
+examples.
+<!--l. 2976--><p class="noindent" >To indicate when coordinates cannot be transformed, for whatever reason, AST substitutes a special
+output coordinate value given by the macro AST__BAD (as defined in the &#x201C;ast.h&#x201D; header file). Before
+making use of coordinates generated by any of the AST transformation functions, therefore, you may
+need to check for the presence of this value.
+                                                                                       
+
+                                                                                       
+<!--l. 2983--><p class="noindent" >Because coordinates with the value AST__BAD can be generated in this way, all other AST
+functions are also capable of recognising this value and handling it appropriately. The
+coordinate transformation functions do this by propagating any missing input coordinate
+information through to their output. This means that if you supply coordinates with the value
+AST__BAD, the returned coordinates are also likely to contain this value. Here, for example,
+is what happens if you use a <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> (with <a 
+href="sun211ss438.html#x464-6560000">Zoom</a> factor 5) to transform such a set of
+coordinates:
+<div class="fancyvrb" id="fancyvrb70"> <a 
+ id="x6-62002r1"></a>&#x00A0;&#x00A0;(0,&#x00A0;0)&#x00A0;--&#x003E;&#x00A0;(0,&#x00A0;0)<br class="fancyvrb" /><a 
+ id="x6-62004r2"></a>&#x00A0;&#x00A0;(&#x003C;bad&#x003E;,&#x00A0;2)&#x00A0;--&#x003E;&#x00A0;(&#x003C;bad&#x003E;,&#x00A0;10)<br class="fancyvrb" /><a 
+ id="x6-62006r3"></a>&#x00A0;&#x00A0;(2,&#x00A0;4)&#x00A0;--&#x003E;&#x00A0;(10,&#x00A0;20)<br class="fancyvrb" /><a 
+ id="x6-62008r4"></a>&#x00A0;&#x00A0;(3,&#x00A0;6)&#x00A0;--&#x003E;&#x00A0;(15,&#x00A0;30)
+<br class="fancyvrb" /><a 
+ id="x6-62010r5"></a>&#x00A0;&#x00A0;(4,&#x00A0;&#x003C;bad&#x003E;)&#x00A0;--&#x003E;&#x00A0;(20,&#x00A0;&#x003C;bad&#x003E;)<br class="fancyvrb" /><a 
+ id="x6-62012r6"></a>&#x00A0;&#x00A0;(5,&#x00A0;10)&#x00A0;--&#x003E;&#x00A0;(25,&#x00A0;50)<br class="fancyvrb" /><a 
+ id="x6-62014r7"></a>&#x00A0;&#x00A0;(&#x003C;bad&#x003E;,&#x00A0;&#x003C;bad&#x003E;)&#x00A0;--&#x003E;&#x00A0;(&#x003C;bad&#x003E;,&#x00A0;&#x003C;bad&#x003E;)
+<br class="fancyvrb" /><a 
+ id="x6-62016r8"></a>&#x00A0;&#x00A0;(7,&#x00A0;14)&#x00A0;--&#x003E;&#x00A0;(35,&#x00A0;70)<br class="fancyvrb" /><a 
+ id="x6-62018r9"></a>&#x00A0;&#x00A0;(8,&#x00A0;16)&#x00A0;--&#x003E;&#x00A0;(40,&#x00A0;80)<br class="fancyvrb" /><a 
+ id="x6-62020r10"></a>&#x00A0;&#x00A0;(9,&#x00A0;18)&#x00A0;--&#x003E;&#x00A0;(45,&#x00A0;90)</div>
+<!--l. 3008--><p class="noindent" >The  AST__BAD  value  is  represented  by  the  string
+&#x201C;<!--l. 3008--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>bad<!--l. 3008--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>&#x201D;.
+This is a case of &#x201C;garbage in, garbage out&#x201D; but at least it&#x2019;s consistent garbage that you can
+recognise!
+<!--l. 3012--><p class="noindent" >Note how the presence of the AST__BAD value in one input dimension does not necessarily result in
+the loss of information for all output dimensions. Sometimes, such loss will be unavoidable, but in
+general an attempt is made to preserve information as far as possible. The exact behaviour will
+depend on the Mapping involved.
+<a 
+ id="x6-62021r73"></a>
+<h4 class="subsectionHead"><span class="titlemark">5.10    </span> <a 
+ id="x6-6300010"></a>Example&#x2014;the UnitMap</h4>
+<!--l. 3020--><p class="noindent" >The <a 
+href="sun211ss495.html#x522-7140000">UnitMap</a> is the simplest of Mappings. It is a null <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>. Its purpose is simply to copy
+coordinate values, unaltered, from its input to its output and <em>vice versa</em>.
+<!--l. 3024--><p class="noindent" >A UnitMap has no additional attributes beyond those of a basic Mapping. Its <a 
+href="sun211ss353.html#x379-5710000">Nin</a> and <a 
+href="sun211ss359.html#x385-5770000">Nout</a> attributes
+are always equal and are specified by the first argument supplied to its constructor. For
+example:
+<div class="fancyvrb" id="fancyvrb71"> <a 
+ id="x6-63002r1"></a>&#x00A0;&#x00A0;AstUnitMap&#x00A0;*unitmap;<br class="fancyvrb" /><a 
+ id="x6-63004r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x6-63006r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x6-63008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x6-63010r5"></a>&#x00A0;&#x00A0;unitmap&#x00A0;=&#x00A0;astUnitMap(&#x00A0;2,&#x00A0;&#x0022;&#x0022;&#x00A0;);</div>
+<!--l. 3039--><p class="noindent" >will create a UnitMap that copies 2-dimensional coordinates. Inverting a UnitMap has no effect
+beyond changing the value of its <a 
+href="sun211ss312.html#x338-5300000">Invert</a> attribute.
+<!--l. 3043--><p class="noindent" >The main use of a UnitMap is to allow a Mapping to be supplied when one is required
+(as an argument to a function, for example) but you wish it to leave coordinate values
+unchanged.
+<a 
+ id="x6-63011r74"></a>
+<h4 class="subsectionHead"><span class="titlemark">5.11    </span> <a 
+ id="x6-6400011"></a>Example&#x2014;the PermMap</h4>
+<!--l. 3049--><p class="noindent" >The <a 
+href="sun211ss466.html#x493-6850000">PermMap</a> is a rather more complicated <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> than we have met previously. Its purpose is to
+change the order, or number, of coordinates. It is also able to substitute fixed values for
+coordinates.
+                                                                                       
+
+                                                                                       
+<!--l. 3054--><p class="noindent" >To illustrate its action, suppose our input coordinates are denoted by
+(<!--l. 3055--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>1</mn></mrow></msub 
+><mo 
+class="MathClass-punc">,</mo> <msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>2</mn></mrow></msub 
+><mo 
+class="MathClass-punc">,</mo> <msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>3</mn></mrow></msub 
+><mo 
+class="MathClass-punc">,</mo> <msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>4</mn></mrow></msub 
+></math>)
+in a 4-dimensional space and suppose our output coordinates are to be
+(<!--l. 3056--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>4</mn></mrow></msub 
+><mo 
+class="MathClass-punc">,</mo> <msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>1</mn></mrow></msub 
+><mo 
+class="MathClass-punc">,</mo> <msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>2</mn></mrow></msub 
+><mo 
+class="MathClass-punc">,</mo> <msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>3</mn></mrow></msub 
+></math>). Our
+PermMap, therefore, should rotate the coordinate values by one position.
+<!--l. 3059--><p class="noindent" >To create such a PermMap, we first set up two integer arrays. One of these, &#x201C;outperm&#x201D;, controls the
+selection of input coordinates for use in the output and the other, &#x201C;inperm&#x201D;, controls selection of
+output coordinates for use in the input:
+<div class="fancyvrb" id="fancyvrb72"> <a 
+ id="x6-64002r1"></a>&#x00A0;&#x00A0;int&#x00A0;outperm[&#x00A0;4&#x00A0;]&#x00A0;=&#x00A0;{&#x00A0;4,&#x00A0;1,&#x00A0;2,&#x00A0;3&#x00A0;};<br class="fancyvrb" /><a 
+ id="x6-64004r2"></a>&#x00A0;&#x00A0;int&#x00A0;inperm[&#x00A0;4&#x00A0;]&#x00A0;=&#x00A0;{&#x00A0;2,&#x00A0;3,&#x00A0;4,&#x00A0;1&#x00A0;};</div>
+<!--l. 3071--><p class="noindent" >Note that the numbers we store in these arrays are the indices of the coordinates that we want to
+select. We have chosen these so that the forward and inverse transformations will perform
+complementary permutations on the coordinates.
+<!--l. 3076--><p class="noindent" >The PermMap is then created by passing these arrays to its constructor, as follows:
+<div class="fancyvrb" id="fancyvrb73"> <a 
+ id="x6-64006r1"></a>&#x00A0;&#x00A0;AstPermMap&#x00A0;*permmap;<br class="fancyvrb" /><a 
+ id="x6-64008r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x6-64010r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x6-64012r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x6-64014r5"></a>&#x00A0;&#x00A0;permmap&#x00A0;=&#x00A0;astPermMap(&#x00A0;4,&#x00A0;inperm,&#x00A0;4,&#x00A0;outperm,&#x00A0;NULL,&#x00A0;&#x0022;&#x0022;&#x00A0;);</div>
+<!--l. 3089--><p class="noindent" >Note that we specify the number of input and output coordinates separately, but set both to 4 in this
+example. The resulting PermMap would have the following effect when used to transform
+coordinates:
+<div class="fancyvrb" id="fancyvrb74"> <a 
+ id="x6-64016r1"></a>&#x00A0;&#x00A0;Forward:<br class="fancyvrb" /><a 
+ id="x6-64018r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(1,&#x00A0;2,&#x00A0;3,&#x00A0;4)&#x00A0;--&#x003E;&#x00A0;(4,&#x00A0;1,&#x00A0;2,&#x00A0;3)<br class="fancyvrb" /><a 
+ id="x6-64020r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(2,&#x00A0;4,&#x00A0;6,&#x00A0;8)&#x00A0;--&#x003E;&#x00A0;(8,&#x00A0;2,&#x00A0;4,&#x00A0;6)
+<br class="fancyvrb" /><a 
+ id="x6-64022r4"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(3,&#x00A0;6,&#x00A0;9,&#x00A0;12)&#x00A0;--&#x003E;&#x00A0;(12,&#x00A0;3,&#x00A0;6,&#x00A0;9)<br class="fancyvrb" /><a 
+ id="x6-64024r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(4,&#x00A0;8,&#x00A0;12,&#x00A0;16)&#x00A0;--&#x003E;&#x00A0;(16,&#x00A0;4,&#x00A0;8,&#x00A0;12)
+<br class="fancyvrb" /><a 
+ id="x6-64026r6"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(5,&#x00A0;10,&#x00A0;15,&#x00A0;20)&#x00A0;--&#x003E;&#x00A0;(20,&#x00A0;5,&#x00A0;10,&#x00A0;15)<br class="fancyvrb" /><a 
+ id="x6-64028r7"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x6-64030r8"></a>&#x00A0;&#x00A0;Inverse:<br class="fancyvrb" /><a 
+ id="x6-64032r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(4,&#x00A0;1,&#x00A0;2,&#x00A0;3)&#x00A0;--&#x003E;&#x00A0;(1,&#x00A0;2,&#x00A0;3,&#x00A0;4)
+<br class="fancyvrb" /><a 
+ id="x6-64034r10"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(8,&#x00A0;2,&#x00A0;4,&#x00A0;6)&#x00A0;--&#x003E;&#x00A0;(2,&#x00A0;4,&#x00A0;6,&#x00A0;8)<br class="fancyvrb" /><a 
+ id="x6-64036r11"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(12,&#x00A0;3,&#x00A0;6,&#x00A0;9)&#x00A0;--&#x003E;&#x00A0;(3,&#x00A0;6,&#x00A0;9,&#x00A0;12)
+<br class="fancyvrb" /><a 
+ id="x6-64038r12"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(16,&#x00A0;4,&#x00A0;8,&#x00A0;12)&#x00A0;--&#x003E;&#x00A0;(4,&#x00A0;8,&#x00A0;12,&#x00A0;16)<br class="fancyvrb" /><a 
+ id="x6-64040r13"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(20,&#x00A0;5,&#x00A0;10,&#x00A0;15)&#x00A0;--&#x003E;&#x00A0;(5,&#x00A0;10,&#x00A0;15,&#x00A0;20)</div>
+<!--l. 3109--><p class="noindent" >If the number of input and output coordinates are unequal so, also, will be the size of the &#x201C;outperm&#x201D;
+and &#x201C;inperm&#x201D; arrays. This means, however, that we cannot fill them with coordinate indices so
+that they perform complementary permutations, because one transformation will lose
+information (discard a coordinate) that the other cannot recover. To give an example, consider the
+following:
+<div class="fancyvrb" id="fancyvrb75"> <a 
+ id="x6-64042r1"></a>&#x00A0;&#x00A0;int&#x00A0;outperm[&#x00A0;3&#x00A0;]&#x00A0;=&#x00A0;{&#x00A0;4,&#x00A0;3,&#x00A0;2&#x00A0;};<br class="fancyvrb" /><a 
+ id="x6-64044r2"></a>&#x00A0;&#x00A0;int&#x00A0;inperm[&#x00A0;4&#x00A0;]&#x00A0;=&#x00A0;{&#x00A0;-1,&#x00A0;3,&#x00A0;2,&#x00A0;1&#x00A0;};<br class="fancyvrb" /><a 
+ id="x6-64046r3"></a>&#x00A0;&#x00A0;double&#x00A0;con[&#x00A0;1&#x00A0;]&#x00A0;=&#x00A0;{&#x00A0;99.004&#x00A0;};</div>
+<!--l. 3124--><p class="noindent" >In  this  case,  the  forward  transformation  will  change
+(<!--l. 3125--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>1</mn></mrow></msub 
+><mo 
+class="MathClass-punc">,</mo> <msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>2</mn></mrow></msub 
+><mo 
+class="MathClass-punc">,</mo> <msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>3</mn></mrow></msub 
+><mo 
+class="MathClass-punc">,</mo> <msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>4</mn></mrow></msub 
+></math>) into
+(<!--l. 3125--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>4</mn></mrow></msub 
+><mo 
+class="MathClass-punc">,</mo> <msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>3</mn></mrow></msub 
+><mo 
+class="MathClass-punc">,</mo> <msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>2</mn></mrow></msub 
+></math>) and will
+discard <!--l. 3125--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><msub><mrow 
+><mi 
+>x</mi></mrow><mrow 
+><mn>1</mn></mrow></msub 
+></math>.
+The inverse transformation restores the original coordinate order, but has no value to
+assign to the first coordinate. In this case, the number entered in the &#x201C;inperm&#x201D; array is
+<!--l. 3128--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2212;</mo></math>1.
+<!--l. 3130--><p class="noindent" >This negative value indicates that the coordinate value should be obtained by addressing the first
+element of the &#x201C;con&#x201D; array (<em>i.e.</em>&#x00A0;element zero). This array, ignored in the previous example, may then
+be used to supply a value for the missing coordinate.
+<!--l. 3136--><p class="noindent" >The constructor function:
+                                                                                       
+
+                                                                                       
+<div class="fancyvrb" id="fancyvrb76"> <a 
+ id="x6-64048r1"></a>&#x00A0;&#x00A0;permmap&#x00A0;=&#x00A0;astPermMap(&#x00A0;4,&#x00A0;inperm,&#x00A0;3,&#x00A0;outperm,&#x00A0;con,&#x00A0;&#x0022;&#x0022;&#x00A0;);</div>
+<!--l. 3144--><p class="noindent" >will then create a PermMap with the following effect when used to transform coordinates:
+<div class="fancyvrb" id="fancyvrb77"> <a 
+ id="x6-64050r1"></a>&#x00A0;&#x00A0;Forward:<br class="fancyvrb" /><a 
+ id="x6-64052r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(1,&#x00A0;2,&#x00A0;3,&#x00A0;4)&#x00A0;--&#x003E;&#x00A0;(4,&#x00A0;3,&#x00A0;2)<br class="fancyvrb" /><a 
+ id="x6-64054r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(2,&#x00A0;4,&#x00A0;6,&#x00A0;8)&#x00A0;--&#x003E;&#x00A0;(8,&#x00A0;6,&#x00A0;4)<br class="fancyvrb" /><a 
+ id="x6-64056r4"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(3,&#x00A0;6,&#x00A0;9,&#x00A0;12)&#x00A0;--&#x003E;&#x00A0;(12,&#x00A0;9,&#x00A0;6)
+<br class="fancyvrb" /><a 
+ id="x6-64058r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(4,&#x00A0;8,&#x00A0;12,&#x00A0;16)&#x00A0;--&#x003E;&#x00A0;(16,&#x00A0;12,&#x00A0;8)<br class="fancyvrb" /><a 
+ id="x6-64060r6"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(5,&#x00A0;10,&#x00A0;15,&#x00A0;20)&#x00A0;--&#x003E;&#x00A0;(20,&#x00A0;15,&#x00A0;10)<br class="fancyvrb" /><a 
+ id="x6-64062r7"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x6-64064r8"></a>&#x00A0;&#x00A0;Inverse:
+<br class="fancyvrb" /><a 
+ id="x6-64066r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(4,&#x00A0;3,&#x00A0;2)&#x00A0;--&#x003E;&#x00A0;(99.004,&#x00A0;2,&#x00A0;3,&#x00A0;4)<br class="fancyvrb" /><a 
+ id="x6-64068r10"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(8,&#x00A0;6,&#x00A0;4)&#x00A0;--&#x003E;&#x00A0;(99.004,&#x00A0;4,&#x00A0;6,&#x00A0;8)<br class="fancyvrb" /><a 
+ id="x6-64070r11"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(12,&#x00A0;9,&#x00A0;6)&#x00A0;--&#x003E;&#x00A0;(99.004,&#x00A0;6,&#x00A0;9,&#x00A0;12)
+<br class="fancyvrb" /><a 
+ id="x6-64072r12"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(16,&#x00A0;12,&#x00A0;8)&#x00A0;--&#x003E;&#x00A0;(99.004,&#x00A0;8,&#x00A0;12,&#x00A0;16)<br class="fancyvrb" /><a 
+ id="x6-64074r13"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(20,&#x00A0;15,&#x00A0;10)&#x00A0;--&#x003E;&#x00A0;(99.004,&#x00A0;10,&#x00A0;15,&#x00A0;20)</div>
+<!--l. 3163--><p class="noindent" >The &#x201C;con&#x201D; array may contain more than one value if necessary and may be
+addressed by both the &#x201C;inperm&#x201D; and &#x201C;outperm&#x201D; arrays using coordinate indices
+<!--l. 3165--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2212;</mo></math>1,
+<!--l. 3165--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2212;</mo></math>2,
+<!--l. 3165--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2212;</mo></math>3,&#x00A0;<em>etc.</em>&#x00A0;to
+refer to the first, second, third,&#x00A0;<em>etc.</em>&#x00A0;elements.
+<!--l. 3168--><p class="noindent" >If there is no suitable replacement value that can be supplied <em>via</em> the &#x201C;con&#x201D; array, a value of zero may
+be entered into the &#x201C;outperm&#x201D; and/or &#x201C;inperm&#x201D; arrays. This causes the value AST__BAD to be used
+for the affected coordinate (as defined in the &#x201C;ast.h&#x201D; header file), thus indicating a missing coordinate
+value (&#x00A7;<a 
+href="#x6-620009">5.9<!--tex4ht:ref: ss:badcoordinates --></a>).
+<!--l. 3175--><p class="noindent" >The principle use for a PermMap lies in matching a coordinate system to a data array where there is a
+choice of storage order for the data. PermMaps are also useful for discarding unwanted coordinates so
+as to reduce the number of dimensions, such as when selecting a &#x201C;slice&#x201D; from a multi-dimensional
+array.
+                                                                                       
+
+                                                                                       
+                                                                                       
+
+                                                                                       
+<div class="footnotes"><!--l. 2891--><p class="noindent" ><span class="footnote-mark"><a 
+href="#fn11x0-bk" id="fn11x0"><sup class="textsuperscript">11</sup></a></span>Most of the Mappings provided by the AST library work in both directions, although the <a 
+href="sun211ss458.html#x485-6770000">LutMap</a> can behave
+otherwise.                                                                               </div> <div class="crosslinks">
+<div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211se4.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World
+Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se6.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 3182--><p class="noindent" ><a 
+ id="tailsun211se5.html"></a> 
+</body> 
+</html>

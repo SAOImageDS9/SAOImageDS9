@@ -1,0 +1,237 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astConvert </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss31.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss33.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 13575--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x57-2490000"></a> astConvert </h3>  <p class="subtitle"> Determine how to convert between two coordinate systems  </p> </h3> </header><a 
+ id="Q1-57-329"></a> <a 
+ id="Q1-57-330"></a> <a name="xref_astConvert"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This function compares two Frames and determines whether it is
+possible to convert between the coordinate systems which they represent. If
+conversion is possible, it returns a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> which describes the conversion
+and which may be used (as a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>) to transform coordinate values in either
+direction.
+<!--l. 13575--><p class="noindent" >The same function may also be used to determine how to convert between two FrameSets
+(or between a <a 
+href="sun211ss452.html#x479-6710000">Frame</a> and a FrameSet, or vice versa). This mode is intended for use when
+(for example) two images have been calibrated by attaching a FrameSet to each.
+astConvert might then be used to search for a celestial coordinate system that both
+images have in common, and the result could then be used to convert between the pixel
+coordinates of both images &#x2013; having effectively used their celestial coordinate systems
+to align them.
+<!--l. 13575--><p class="noindent" >When using FrameSets, there may be more than one possible intermediate coordinate
+system in which to perform the conversion (for instance, two FrameSets might both have
+celestial coordinates, detector coordinates, pixel coordinates, etc.). A comma-separated
+list of coordinate system domains may therefore be given which defines a priority order
+                                                                                       
+
+                                                                                       
+to use when selecting the intermediate coordinate system. The path used for conversion
+must go via an intermediate coordinate system whose <a 
+href="sun211ss279.html#x305-4970000">Domain</a> attribute matches one of the
+domains given. If conversion cannot be achieved using the first domain, the next one
+is considered, and so on, until success is achieved.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstFrameSet
+<!--l. 13575--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astConvert(
+AstFrame <!--l. 13575--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>from,
+AstFrame <!--l. 13575--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>to, const
+char <!--l. 13575--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>domainlist
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> from  </h5><div class="sstsub"> Pointer to a Frame which represents the <code>&#x0022;</code> source<code>&#x0022;</code> coordinate
+system. This is the coordinate system in which you already have coordinates
+available.
+<!--l. 13575--><p class="noindent" >If a FrameSet is given, its current Frame (as determined by its <a 
+href="sun211ss273.html#x299-4910000">Current</a> attribute) is
+taken to describe the source coordinate system. Note that the <a 
+href="sun211ss252.html#x278-4700000">Base</a> attribute of
+this FrameSet may be modified by this function to indicate which intermediate
+coordinate system was used (see under <code>&#x0022;</code> FrameSets<code>&#x0022;</code> in the <code>&#x0022;</code> Applicability<code>&#x0022;</code> section
+for details).  </div> <h5 class="ssth5"> to  </h5><div class="sstsub"> Pointer to a Frame which represents the <code>&#x0022;</code> destination<code>&#x0022;</code>
+coordinate system. This is the coordinate system into which you wish to convert your
+coordinates.
+<!--l. 13575--><p class="noindent" >If a FrameSet is given, its current Frame (as determined by its Current attribute) is
+taken to describe the destination coordinate system. Note that the Base attribute of
+this FrameSet may be modified by this function to indicate which intermediate
+coordinate system was used (see under <code>&#x0022;</code> FrameSets<code>&#x0022;</code> in the <code>&#x0022;</code> Applicability<code>&#x0022;</code> section for
+details).  </div> <h5 class="ssth5"> domainlist  </h5><div class="sstsub"> Pointer to a null-terminated character string containing a
+comma-separated list of Frame domains. This may be used to define a priority order for
+the different intermediate coordinate systems that might be used to perform the
+conversion.
+<!--l. 13575--><p class="noindent" >The function will first try to obtain a conversion by making use only of an
+intermediate coordinate system whose Domain attribute matches the first domain in this
+list. If this fails, the second domain in the list will be used, and so on,
+until conversion is achieved. A blank domain (e.g. two consecutive commas)
+indicates that all coordinate systems should be considered, regardless of their
+domains.
+<!--l. 13575--><p class="noindent" >This list is case-insensitive and all white space is ignored. If you do not wish to
+restrict the domain in this way, you should supply an empty string. This is normally
+appropriate if either of the source or destination coordinate systems are described by
+Frames (rather than FrameSets), since there is then usually only one possible choice
+of intermediate coordinate system.  </div>  </div> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> <a 
+href="sun211ss446.html#x473-6650000">DSBSpecFrame</a>  </h5><div class="sstsub"> If the
+<a 
+href="sun211ss244.html#x270-4620000">AlignSideBand</a> attribute is non-zero, alignment occurs in the upper sideband
+expressed within the spectral system and standard of rest given by attributes
+<a 
+href="sun211ss247.html#x273-4650000">AlignSystem</a> and <a 
+href="sun211ss246.html#x272-4640000">AlignStdOfRest</a>. If AlignSideBand is zero, the two DSBSpecFrames
+are aligned as if they were simple SpecFrames (i.e. the <a 
+href="sun211ss386.html#x412-6040000">SideBand</a> is ignored).
+</div> <h5 class="ssth5"> Frame  </h5><div class="sstsub"> This function applies to all Frames. Alignment occurs within the
+coordinate system given by attribute AlignSystem.  </div> <h5 class="ssth5"> FrameSet  </h5><div class="sstsub"> If either of the <code>&#x0022;</code>
+from<code>&#x0022;</code> or <code>&#x0022;</code> to<code>&#x0022;</code> parameters is a pointer to a FrameSet, then astConvert will
+attempt to convert from the coordinate system described by the current Frame
+of the <code>&#x0022;</code> from<code>&#x0022;</code> FrameSet to that described by the current Frame of the <code>&#x0022;</code> to<code>&#x0022;</code>
+FrameSet.
+                                                                                       
+
+                                                                                       
+<!--l. 13575--><p class="noindent" >To achieve this, it will consider all of the Frames within each FrameSet as a possible
+way of reaching an intermediate coordinate system that can be used for the conversion.
+There is then the possibility that more than one conversion path may exist and, unless
+the choice is sufficiently restricted by the <code>&#x0022;</code> domainlist<code>&#x0022;</code> string, the sequence in
+which the Frames are considered can be important. In this case, the search for a
+conversion path proceeds as follows: <ul class="sstitemlist">
+<li >
+<!--l. 13575--><p class="noindent" >Each field in the <code>&#x0022;</code> domainlist<code>&#x0022;</code> string is considered in turn.
+<li >
+<!--l. 13575--><p class="noindent" >The Frames within each FrameSet are considered in a specific order: (1) the base Frame
+is always considered first, (2) after this come all the other Frames in Frame-index
+order (but omitting the base and current Frames), (3) the current Frame is always
+considered last. However, if either FrameSet<code>&#x2019;</code> s <a 
+href="sun211ss312.html#x338-5300000">Invert</a> attribute is set to a non-zero
+value (so that the FrameSet is inverted), then its Frames are considered in reverse
+order. (Note that this still means that the base Frame is considered first and the
+current Frame last, because the Invert value will also cause these Frames to swap
+places.)
+<li >
+<!--l. 13575--><p class="noindent" >All source Frames are first considered (in the appropriate order) for conversion to the
+first destination Frame. If no suitable intermediate coordinate system emerges, they
+are then considered again for conversion to the second destination Frame (in the
+appropriate order), and so on.
+<li >
+<!--l. 13575--><p class="noindent" >Generally, the first suitable intermediate coordinate system found is used.
+However, the overall Mapping between the source and destination coordinate
+systems is also examined. Preference is given to cases where both the forward
+and inverse transformations are defined (as indicated by the <a 
+href="sun211ss425.html#x451-6430000">TranForward</a> and
+<a 
+href="sun211ss426.html#x452-6440000">TranInverse</a> attributes). If only one transformation is defined, the forward one is
+preferred.
+<li >
+<!--l. 13575--><p class="noindent" >If the domain of the intermediate coordinate system matches the current <code>&#x0022;</code> domainlist<code>&#x0022;</code>
+field, the conversion path is accepted. Otherwise, the next <code>&#x0022;</code> domainlist<code>&#x0022;</code> field is
+considered and the process repeated.
+</li>
+</ul>
+<!--l. 13575--><p class="noindent" >If conversion is possible, the Base attributes of the two FrameSets will be modified on
+exit to identify the Frames used to access the intermediate coordinate system which was
+finally accepted.
+<!--l. 13575--><p class="noindent" >Note that it is possible to force a particular Frame within a FrameSet to be used as
+the basis for the intermediate coordinate system, if it is suitable, by (a) focussing
+attention on it by specifying its domain in the <code>&#x0022;</code> domainlist<code>&#x0022;</code> string, or (b) making it
+the base Frame, since this is always considered first.  </div> <h5 class="ssth5"> <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a>  </h5><div class="sstsub"> Alignment
+occurs within the spectral system and standard of rest given by attributes
+AlignSystem and AlignStdOfRest.  </div> <h5 class="ssth5"> <a 
+href="sun211ss492.html#x519-7110000">TimeFrame</a>  </h5><div class="sstsub"> Alignment occurs within the time
+system and time scale given by attributes AlignSystem and <a 
+href="sun211ss248.html#x274-4660000">AlignTimeScale</a>.  </div>
+                                                                                       
+
+                                                                                       
+</div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astConvert()  </h5><div class="sstsub"> If the requested coordinate conversion is
+possible, the function returns a pointer to a FrameSet which describes the
+conversion. Otherwise, a null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) is returned without
+error.
+<!--l. 13575--><p class="noindent" >If a FrameSet is returned, it will contain two Frames. Frame number 1 (its base Frame)
+will describe the source coordinate system, corresponding to the <code>&#x0022;</code> from<code>&#x0022;</code> parameter.
+Frame number 2 (its current Frame) will describe the destination coordinate system,
+corresponding to the <code>&#x0022;</code> to<code>&#x0022;</code> parameter. The Mapping which inter-relates these two
+Frames will perform the required conversion between their respective coordinate
+systems.
+<!--l. 13575--><p class="noindent" >Note that a FrameSet may be used both as a Mapping and as a Frame. If the result is
+used as a Mapping (e.g. with <a 
+href="sun211ss219.html#x244-4360000">astTran2</a>), then it provides a means of converting
+coordinates from the source to the destination coordinate system (or vice versa if its
+inverse transformation is selected). If it is used as a Frame, its attributes will
+describe the destination coordinate system.  </div>  </div> <h4 class="ssth4">Examples: </h4><div class="sstvalues"> <dl class="sstexamplesubsection"> cvt = astConvert( a, b, <code>&#x0022;</code> <code>&#x0022;</code>
+);  </dl><dd class="sst"> Attempts to convert between the coordinate systems represented by <code>&#x0022;</code> a<code>&#x0022;</code> and <code>&#x0022;</code>
+b<code>&#x0022;</code> (assumed to be Frames). If successful, a FrameSet is returned via the <code>&#x0022;</code>
+cvt<code>&#x0022;</code> pointer which may be used to apply the conversion to sets of coordinates
+(e.g. using astTran2).  </dd> <dl class="sstexamplesubsection"> cvt = astConvert( <a 
+href="sun211ss191.html#x216-4080000">astSkyFrame</a>(<code>&#x0022;</code> <code>&#x0022;</code> ), astSkyFrame(<code>&#x0022;</code>
+<a 
+href="sun211ss286.html#x312-5040000">Equinox</a>=2005<code>&#x0022;</code> ), <code>&#x0022;</code> <code>&#x0022;</code> );  </dl><dd class="sst"> Creates a FrameSet which describes precession in
+the default FK5 celestial coordinate system between equinoxes J2000 (also the
+default) and J2005. The returned <code>&#x0022;</code> cvt<code>&#x0022;</code> pointer may then be passed to astTran2 to
+apply this precession correction to any number of coordinate values given in
+radians.
+<!--l. 13575--><p class="noindent" >Note that the returned FrameSet also contains information about how to format
+coordinate values. This means that setting its <a 
+href="sun211ss381.html#x407-5990000">Report</a> attribute to 1 is a simple way to
+obtain printed output (formatted in sexagesimal notation) to show the coordinate values
+before and after conversion.  </dd> <dl class="sstexamplesubsection"> cvt = astConvert( a, b, <code>&#x0022;</code> sky,detector,<code>&#x0022;</code> );  </dl><dd class="sst"> Attempts
+to convert between the coordinate systems represented by the current Frames of <code>&#x0022;</code> a<code>&#x0022;</code> and
+<code>&#x0022;</code> b<code>&#x0022;</code> (now assumed to be FrameSets), via the intermediate <code>&#x0022;</code> SKY<code>&#x0022;</code> coordinate system.
+This, by default, is the Domain associated with a celestial coordinate system
+represented by a <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>.
+<!--l. 13575--><p class="noindent" >If this fails (for example, because either FrameSet lacks celestial coordinate
+information), then the user-defined <code>&#x0022;</code> DETECTOR<code>&#x0022;</code> coordinate system is used instead. If
+this also fails, then all other possible ways of achieving conversion are considered
+before giving up.
+<!--l. 13575--><p class="noindent" >The returned pointer <code>&#x0022;</code> cvt<code>&#x0022;</code> indicates whether conversion was possible and will have the
+value AST__NULL if it was not. If conversion was possible, <code>&#x0022;</code> cvt<code>&#x0022;</code> will point at a new
+FrameSet describing the conversion.
+<!--l. 13575--><p class="noindent" >The Base attributes of the two FrameSets will be set by astConvert to indicate which of
+their Frames was used for the intermediate coordinate system. This means that you can
+subsequently determine which coordinate system was used by enquiring the Domain
+attribute of either base Frame.  </dd>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 13575--><p class="noindent" >The Mapping represented by the returned FrameSet results in alignment taking place in
+                                                                                       
+
+                                                                                       
+the coordinate system specified by the AlignSystem attribute of the <code>&#x0022;</code> to<code>&#x0022;</code> Frame. See
+the description of the AlignSystem attribute for further details.
+<li >
+<!--l. 13575--><p class="noindent" >When aligning (say) two images, which have been calibrated by attaching FrameSets to
+them, it is usually necessary to convert between the base Frames (representing <code>&#x0022;</code>
+native<code>&#x0022;</code> pixel coordinates) of both FrameSets. This may be achieved by inverting the
+FrameSets (e.g. using <a 
+href="sun211ss94.html#x119-3110000">astInvert</a>) so as to interchange their base and current Frames
+before using astConvert.
+<li >
+<!--l. 13575--><p class="noindent" >A null Object pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss31.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss33.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss32.html"></a> </div> 
+</body> 
+</html>

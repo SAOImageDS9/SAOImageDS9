@@ -1,0 +1,137 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> ast_link </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211se27.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss502.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 48014--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x529-7210000"></a> ast_link </h3>  <p class="subtitle"> Link a program with the AST library  </p> </h3> </header><a 
+ id="Q1-529-1739"></a> <a 
+ id="Q1-529-1740"></a> <a name="xref_ast_link"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This command
+should be used when building programs which use the AST library, in order to
+generate the correct arguments to allow the compiler to link your program. The
+arguments generated are written to standard output but may be substituted into
+the compiler command line in the standard UNIX way using backward quotes (see
+below).
+<!--l. 48014--><p class="noindent" >By default, it is assumed that you are building a stand-alone program which does not
+produce graphical output. However, switches are provided for linking other types of
+program.  </div> <h4 class="ssth4">Invocation </h4><div class="sstvalues"> cc program.c -L/star/lib &#x2018;ast_link [switches]&#x2018; -o program  </div>
+<h4 class="ssth4">Examples: </h4><div class="sstvalues"> <dl class="sstexamplesubsection"> cc display.c -L/star/lib &#x2018;ast_link -pgplot&#x2018; -o display  </dl><dd class="sst"> Compiles and links
+a C program called &#x201C;display<code>&#x2019;</code> <code>&#x2019;</code> which uses the standard version of PGPLOT for graphical
+output.  </dd> <dl class="sstexamplesubsection"> cc plotit.c -L. -L/star/lib &#x2018;ast_link -grf&#x2018; -lgrf -o plotit  </dl><dd class="sst"> Compiles and
+links a C program &#x201C;plotit<code>&#x2019;</code> <code>&#x2019;</code> . The &#x201C;-grf<code>&#x2019;</code> <code>&#x2019;</code> switch indicates that graphical output will
+be delivered through a graphical interface which you have implemented yourself, which
+corresponds to the interface required by the current version of AST. Here, this
+interface is supplied by means of the &#x201C;-lgrf<code>&#x2019;</code> <code>&#x2019;</code> library reference.  </dd> <dl class="sstexamplesubsection"> cc plotit.c -L.
+-L/star/lib &#x2018;ast_link -grf_v2.0&#x2018; -lgrf -o plotit  </dl><dd class="sst"> Compiles and links a C program
+&#x201C;plotit<code>&#x2019;</code> <code>&#x2019;</code> . The &#x201C;-grf_v2.0<code>&#x2019;</code> <code>&#x2019;</code> switch indicates that graphical output will be
+delivered through a graphical interface which you have implemented yourself,
+which corresponds to the interface required by version 2.0 of AST. Here, this
+interface is supplied by means of the &#x201C;-lgrf<code>&#x2019;</code> <code>&#x2019;</code> library reference.  </dd>  </div> <h4 class="ssth4"> Switches  </h4><div class="sstvalues">
+The following switches may optionally be given to this command to modify its
+behaviour:
+<ul class="sstitemlist">
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-csla<code>&#x2019;</code> <code>&#x2019;</code> : Ignored. Provided for backward compatibility only.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-fsla<code>&#x2019;</code> <code>&#x2019;</code> : Ignored. Provided for backward compatibility only.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-ems<code>&#x2019;</code> <code>&#x2019;</code> : Requests that the program be linked so that error messages produced by the
+AST library are delivered via the Starlink EMS (Error Message Service) library
+(Starlink <a 
+href="sun211ss413.html#x439-6310000">System</a> Note SSN/4). By default, error messages are simply written to standard
+error.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-drama<code>&#x2019;</code> <code>&#x2019;</code> : Requests that the program be linked so that error messages produced by the
+AST library are delivered via the DRAMA Ers (Error Reporting Service) library. By
+default, error messages are simply written to standard error.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-grf<code>&#x2019;</code> <code>&#x2019;</code> : Requests that no arguments be generated to specify which 2D graphics system
+is used to display output from the AST library. You should use this option only if you
+have implemented an interface to a new graphics system yourself and wish to provide
+your own arguments for linking with it. This switch differs from the other
+&#x201C;grf<code>&#x2019;</code> <code>&#x2019;</code> switches in that it assumes that your graphics module implements the
+complete interface required by the current version of AST. If future versions
+of AST introduce new functions to the graphics interface, this switch will
+cause &#x201C;unresolved symbol<code>&#x2019;</code> <code>&#x2019;</code> errors to occur during linking, warning you that
+you need to implement new functions in your graphics module. To avoid such
+errors, you can use one of the other, version-specific, switches in place of
+the &#x201C;-grf<code>&#x2019;</code> <code>&#x2019;</code> switch, but these will cause run-time errors to be reported if
+any AST function is invoked which requires facilities not in the implemented
+interface.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-grf_v2.0<code>&#x2019;</code> <code>&#x2019;</code> : This switch is equivalent to the &#x201C;-mygrf<code>&#x2019;</code> <code>&#x2019;</code> switch. It indicates that
+you want to link with your own graphics module which implements the 2D graphics
+interface required by V2.0 of AST.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-grf_v3.2<code>&#x2019;</code> <code>&#x2019;</code> : Indicates that you want to link with your own graphics module which
+implements the 2D graphics interface required by V3.2 of AST.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-grf_v5.6<code>&#x2019;</code> <code>&#x2019;</code> : Indicates that you want to link with your own graphics module which
+implements the 2D graphics interface required by V5.6 of AST.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-myerr<code>&#x2019;</code> <code>&#x2019;</code> : Requests that no arguments be generated to specify how error messages
+produced by the AST library should be delivered. You should use this option only if you
+have implemented an interface to a new error delivery system yourself and wish to
+provide your own arguments for linking with it.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-mygrf<code>&#x2019;</code> <code>&#x2019;</code> : This switch has been superceeded by the &#x201C;-grf<code>&#x2019;</code> <code>&#x2019;</code> switch, but is
+                                                                                       
+
+                                                                                       
+retained in order to allow applications to be linked with a graphics module which
+implements the 2D interface used by AST V2.0. It is equivalent to the &#x201C;-grf_v2.0<code>&#x2019;</code> <code>&#x2019;</code>
+switch.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-pgp<code>&#x2019;</code> <code>&#x2019;</code> : Requests that the program be linked so that 2D graphical output from the AST
+library is displayed via the Starlink version of the PGPLOT graphics package (which
+uses GKS for its output). By default, no 2D graphics package is linked and this will
+result in an error at run time if AST routines are invoked that attempt to generate
+graphical output.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-pgplot<code>&#x2019;</code> <code>&#x2019;</code> : Requests that the program be linked so that 2D graphical output from the
+AST library is displayed via the standard (or &#x201C;native<code>&#x2019;</code> <code>&#x2019;</code> ) version of the PGPLOT
+graphics package. By default, no 2D graphics package is linked and this will result in
+an error at run time if AST routines are invoked that attempt to generate graphical
+output.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-grf3d<code>&#x2019;</code> <code>&#x2019;</code> : Requests that no arguments be generated to specify which 3D graphics
+system is used to display output from the AST library. You should use this option only
+if you have implemented an interface to a new 3D graphics system yourself and wish to
+provide your own arguments for linking with it.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-pgp3d<code>&#x2019;</code> <code>&#x2019;</code> : Requests that the program be linked so that 3D graphical output from the
+AST library is displayed via the Starlink version of the PGPLOT graphics package (which
+uses GKS for its output). By default, no 3D graphics package is linked and this will
+result in an error at run time if AST routines are invoked that attempt to generate
+graphical output.
+<li >
+<!--l. 48014--><p class="noindent" >&#x201C;-pgplot3d<code>&#x2019;</code> <code>&#x2019;</code> : Requests that the program be linked so that 3D graphical output from
+the AST library is displayed via the standard (or &#x201C;native<code>&#x2019;</code> <code>&#x2019;</code> ) version of the PGPLOT
+graphics package. By default, no 3D graphics package is linked and this will result in
+an error at run time if AST routines are invoked that attempt to generate graphical
+output.  </li></ul>  </div> <h4 class="ssth4"> ERFA &#x0026; PAL  </h4><div class="sstvalues"> The AST distribution includes bundled copies of the ERFA and
+PAL libraries. These will be used for fundamental positional astronomy calculations
+unless the <code>&#x0022;</code> &#x2013;with-external_pal<code>&#x0022;</code> option was used when AST was configured. If <code>&#x0022;</code>
+&#x2013;with-external_pal<code>&#x0022;</code> is used, this script will include <code>&#x0022;</code> -lpal<code>&#x0022;</code> in the returned list of
+linking options, and the user should then ensure that external copies of the
+PAL and ERFA libraries are available (ERFA functions are used within PAL).
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211se27.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss502.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 48183--><p class="noindent" ><a 
+ id="tailsun211ss501.html"></a> </div> 
+</body> 
+</html>

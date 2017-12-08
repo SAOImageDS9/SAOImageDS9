@@ -1,0 +1,55 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astUnlock </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss230.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss232.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 32904--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x256-4480000"></a> astUnlock </h3>  <p class="subtitle"> Unlock an Object for use by other threads  </p> </h3> </header><a 
+ id="Q1-256-926"></a> <a 
+ id="Q1-256-927"></a> <a name="xref_astUnlock"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> Unlocks
+an <a 
+href="sun211ss464.html#x491-6830000">Object</a> previously locked using <a 
+href="sun211ss98.html#x123-3150000">astLock</a>, so that other threads can use the
+Object. See astLock for further details.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astUnlock( AstObject
+<!--l. 32904--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+int report )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Object to be unlocked.  </div> <h5 class="ssth5"> report  </h5><div class="sstsub">
+If non-zero, an error will be reported if the supplied Object, or any Object contained
+within the supplied Object, is not currently locked by the running thread. If
+zero, such Objects will be left unchanged, and no error will be reported.  </div>  </div>
+<h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Object  </h5><div class="sstsub"> This function applies to all Objects.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 32904--><p class="noindent" >This function attempts to execute even if the global error status is set, but no
+further error report will be made if it subsequently fails under these circumstances.
+<li >
+<!--l. 32904--><p class="noindent" >All unlocked Objects are excluded from AST context handling until they are re-locked
+using astLock.
+<li >
+<!--l. 32904--><p class="noindent" >This function is only available in the C interface.
+<li >
+<!--l. 32904--><p class="noindent" >This function returns without action if the Object is not currently locked by any
+thread. If it is locked by the running thread, it is unlocked. If it is locked by
+another thread, an error will be reported if <code>&#x0022;</code> error<code>&#x0022;</code> is non-zero.
+<li >
+<!--l. 32904--><p class="noindent" >This function returns without action if the AST library has been built without POSIX
+thread support (i.e. the <code>&#x0022;</code> -with-pthreads<code>&#x0022;</code> option was not specified when running the <code>&#x0022;</code>
+configure<code>&#x0022;</code> script).  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss230.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss232.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss231.html"></a> </div> 
+</body> 
+</html>

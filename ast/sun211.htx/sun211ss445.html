@@ -1,0 +1,58 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> CmpRegion </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss444.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss446.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 43819--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x472-6640000"></a> CmpRegion </h3>  <p class="subtitle"> A combination of two regions within a single Frame  </p> </h3> </header><a 
+ id="Q1-472-1570"></a> <a 
+ id="Q1-472-1571"></a> <a name="xref_CmpRegion"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> A
+CmpRegion is a <a 
+href="sun211ss474.html#x501-6930000">Region</a> which allows two component Regions (of any class) to be
+combined to form a more complex Region. This combination may be performed a
+boolean AND, OR or XOR (exclusive OR) operator. If the AND operator is used,
+then a position is inside the CmpRegion only if it is inside both of its two
+component Regions. If the OR operator is used, then a position is inside the
+CmpRegion if it is inside either (or both) of its two component Regions. If the XOR
+operator is used, then a position is inside the CmpRegion if it is inside one
+but not both of its two component Regions. Other operators can be formed by
+negating one or both component Regions before using them to construct a new
+CmpRegion.
+<!--l. 43819--><p class="noindent" >The two component Region need not refer to the same coordinate <a 
+href="sun211ss452.html#x479-6710000">Frame</a>, but it must be
+possible for the <a 
+href="sun211ss32.html#x57-2490000">astConvert</a> function to determine a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> between them (an error will
+be reported otherwise when the CmpRegion is created). For instance, a CmpRegion may
+combine a Region defined within an ICRS <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> with a Region defined within a
+Galactic SkyFrame. This is acceptable because the SkyFrame class knows how to convert
+between these two systems, and consequently the astConvert function will also be able
+to convert between them. In such cases, the second component Region will be
+mapped into the coordinate Frame of the first component Region, and the Frame
+represented by the CmpRegion as a whole will be the Frame of the first component
+Region.
+<!--l. 43819--><p class="noindent" >Since a CmpRegion is itself a Region, it can be used as a component in forming further
+CmpRegions. Regions of arbitrary complexity may be built from simple individual Regions
+in this way.  </div> <h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> <a 
+href="sun211ss27.html#x52-2440000">astCmpRegion</a>  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues"> The CmpRegion class
+inherits from the Region class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> The CmpRegion class does not define any
+new attributes beyond those which are applicable to all Regions.  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> The
+CmpRegion class does not define any new functions beyond those which are applicable to
+all Regions.  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss444.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss446.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss445.html"></a> </div> 
+</body> 
+</html>

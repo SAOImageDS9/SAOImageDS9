@@ -1,0 +1,50 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Edge(axis) </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss282.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss284.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 35503--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x309-5010000"></a> Edge(axis) </h3>  <p class="subtitle"> Which edges to label in a Plot  </p> </h3> </header><a 
+ id="Q1-309-1083"></a> <a 
+ id="Q1-309-1084"></a> <a name="xref_Edge(axis)"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute
+controls the appearance of an annotated coordinate grid (drawn with the <a 
+href="sun211ss83.html#x108-3000000">astGrid</a>
+function) by determining which edges of a <a 
+href="sun211ss467.html#x494-6860000">Plot</a> are used for displaying numerical and
+descriptive axis labels. It takes a separate value for each physical axis of the Plot
+so that, for instance, the setting <code>&#x0022;</code> Edge(2)=left<code>&#x0022;</code> specifies which edge to use to
+display labels for the second axis.
+<!--l. 35503--><p class="noindent" >The values <code>&#x0022;</code> left<code>&#x0022;</code> , <code>&#x0022;</code> top<code>&#x0022;</code> , <code>&#x0022;</code> right<code>&#x0022;</code> and <code>&#x0022;</code> bottom<code>&#x0022;</code> (or any abbreviation) can be
+supplied for this attribute. The default is usually <code>&#x0022;</code> bottom<code>&#x0022;</code> for the first axis and <code>&#x0022;</code>
+left<code>&#x0022;</code> for the second axis. However, if exterior labelling was requested (see the
+<a 
+href="sun211ss327.html#x353-5450000">Labelling</a> attribute) but cannot be produced using these default Edge values, then the
+default values will be swapped if this enables exterior labelling to be produced.
+</div> <dl class="sst">Type: </dl><dd class="sst"> String.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Plot  </h5><div class="sstsub"> All Plots have this attribute.  </div> <h5 class="ssth5">
+<a 
+href="sun211ss468.html#x495-6870000">Plot3D</a>  </h5><div class="sstsub"> The Plot3D class ignores this attributes. Instead it uses its own
+<a 
+href="sun211ss384.html#x410-6020000">RootCorner</a> attribute to determine which edges of the 3D plot to label.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 35503--><p class="noindent" >In some circumstances, numerical labels will be drawn along internal grid lines instead
+of at the edges of the plotting area (see the Labelling attribute). In this case, the
+Edge attribute only affects the placement of the descriptive labels (these are
+drawn at the edges of the plotting area, rather than along the axis lines).  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss282.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss284.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss283.html"></a> </div> 
+</body> 
+</html>

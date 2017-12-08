@@ -1,0 +1,161 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> StcsChan </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss488.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss490.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 47148--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x516-7080000"></a> StcsChan </h3>  <p class="subtitle"> I/O Channel using STC-S to represent Objects  </p> </h3> </header><a 
+ id="Q1-516-1702"></a> <a 
+ id="Q1-516-1703"></a> <a name="xref_StcsChan"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> A
+StcsChan is a specialised form of <a 
+href="sun211ss441.html#x468-6600000">Channel</a> which supports STC-S I/O operations. Writing
+an <a 
+href="sun211ss464.html#x491-6830000">Object</a> to an StcsChan (using <a 
+href="sun211ss237.html#x262-4540000">astWrite</a>) will, if the Object is suitable, generate an
+                                                                                       
+
+                                                                                       
+STC-S description of that Object, and reading from an StcsChan will create a new Object
+from its STC-S description.
+<!--l. 47148--><p class="noindent" >When an STC-S description is read using <a 
+href="sun211ss160.html#x185-3770000">astRead</a>, the returned AST Object may be 1) a
+<a 
+href="sun211ss469.html#x496-6880000">PointList</a> describing the STC AstroCoords (i.e. a single point of interest within the
+coordinate frame described by the STC-S description), or 2) a <a 
+href="sun211ss474.html#x501-6930000">Region</a> describing the STC
+AstrCoordsArea (i.e. an area or volume of interest within the coordinate frame
+described by the STC-S description), or 3) a <a 
+href="sun211ss457.html#x484-6760000">KeyMap</a> containing the uninterpreted
+property values read form the STC-S description, or 4) a KeyMap containing any
+combination of the first 3 options. The attributes <a 
+href="sun211ss405.html#x431-6230000">StcsArea</a>, <a 
+href="sun211ss406.html#x432-6240000">StcsCoords</a> and <a 
+href="sun211ss408.html#x434-6260000">StcsProps</a>
+control which of the above is returned by astRead.
+<!--l. 47148--><p class="noindent" >When an STC-S description is created from an AST Object using astWrite, the AST Object
+must be either a Region or a KeyMap. If it is a Region, it is assumed to define the
+AstroCoordsArea or (if the Region is a single point) the AstroCoords to write to the
+STC-S description. If the Object is a KeyMap, it may contain an entry with the key <code>&#x0022;</code>
+AREA<code>&#x0022;</code> , holding a Region to be used to define the AstroCoordsArea. It may also contain
+an entry with the key <code>&#x0022;</code> COORDS<code>&#x0022;</code> , holding a Region (a PointList) to be used to create
+the AstroCoords. It may also contain an entry with key <code>&#x0022;</code> PROPS<code>&#x0022;</code> , holding a KeyMap that
+contains uninterpreted property values to be used as defaults for any STC-S properties
+that are not determined by the other supplied Regions. In addition, a KeyMap supplied
+to astWrite may itself hold the default STC-S properties (rather than defaults
+being held in a secondary KeyMap, stored as the <code>&#x0022;</code> PROPS<code>&#x0022;</code> entry in the supplied
+KeyMap).
+<!--l. 47148--><p class="noindent" >The astRead and astWrite functions work together so that any Object returned by astRead
+can immediately be re-written using astWrite.
+<!--l. 47148--><p class="noindent" >Normally, when you use an StcsChan, you should provide <code>&#x0022;</code> source<code>&#x0022;</code> and <code>&#x0022;</code> sink<code>&#x0022;</code>
+functions which connect it to an external data store by reading and writing the
+resulting text. These functions should perform any conversions needed between
+external character encodings and the internal ASCII encoding. If no such functions
+are supplied, a Channel will read from standard input and write to standard
+output.
+<!--l. 47148--><p class="noindent" >Alternatively, an <a 
+href="sun211ss499.html#x526-7180000">XmlChan</a> can be told to read or write from specific text files using
+the <a 
+href="sun211ss390.html#x416-6080000">SinkFile</a> and <a 
+href="sun211ss399.html#x425-6170000">SourceFile</a> attributes, in which case no sink or source function need
+be supplied.
+<!--l. 47148--><p class="noindent" >Support for STC-S is currently based on the IVOA document <code>&#x0022;</code> STC-S: Space-Time
+Coordinate (STC) Metadata Linear String Implementation<code>&#x0022;</code> , version 1.30 (dated 5th
+December 2007), available at http://www.ivoa.net/Documents/latest/STC-S.html. Note,
+this document is a recommednation only and does not constitute an accepted IVOA
+standard.
+<!--l. 47148--><p class="noindent" >The full text of version 1.30 is supported by the StcsChan class, with the following
+exceptions and provisos:
+<ul class="sstitemlist">
+<li >
+<!--l. 47148--><p class="noindent" >When reading an STC-S phrase, case is ignored except when reading units strings.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 47148--><p class="noindent" >There is no support for multiple intervals specified within a TimeInterval,
+PositionInterval, SpectralInterval or RedshiftInterval.
+<li >
+<!--l. 47148--><p class="noindent" >If the ET timescale is specified, TT is used instead.
+<li >
+<!--l. 47148--><p class="noindent" >If the TEB timescale is specified, TDB is used instead.
+<li >
+<!--l. 47148--><p class="noindent" >The LOCAL timescale is not supported.
+<li >
+<!--l. 47148--><p class="noindent" >The AST <a 
+href="sun211ss492.html#x519-7110000">TimeFrame</a> and <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> classes do not currently
+allow a reference position to be specified. Consequently, any
+<!--l. 47148--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>refpos<!--l. 47148--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+specified within the Time or Space sub-phrase of an STC-S document is ignored.
+<li >
+<!--l. 47148--><p class="noindent" >The Convex identifier for the space sub-phrase is not supported.
+<li >
+<!--l. 47148--><p class="noindent" >The GEO_C and GEO_D space frames are not supported.
+<li >
+<!--l. 47148--><p class="noindent" >The UNITSPHERE and SPHER3 space flavours are not supported.
+<li >
+<!--l. 47148--><p class="noindent" >If any Error values are supplied in a space sub-phrase, then the number of
+values supplied should equal the number of spatial axes, and the values are
+assumed to specify an error box (i.e. error circles, ellipses, etc, are not
+supported).
+<li >
+<!--l. 47148--><p class="noindent" >The spectral and redshift sub-phrases do not support the following
+<!--l. 47148--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>refpos<!--l. 47148--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+values: LOCAL_GROUP_CENTER, UNKNOWNRefPos, EMBARYCENTER, MOON, MERCURY, VENUS, MARS,
+JUPITER, SATURN, URANUS, NEPTUNE, PLUTO.
+<li >
+<!--l. 47148--><p class="noindent" >Error values are supported but error ranges are not.
+<li >
+<!--l. 47148--><p class="noindent" >Resolution, PixSize and Size values are ignored.
+<li >
+<!--l. 47148--><p class="noindent" >Space velocity sub-phrases are ignored.  </li></ul>  </div> <h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> <a 
+href="sun211ss205.html#x230-4220000">astStcsChan</a>  </div> <h4 class="ssth4">
+Inheritance  </h4><div class="sstvalues"> The StcsChan class inherits from the Channel class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> In
+addition to those attributes common to all Channels, every StcsChan also has the
+following attributes:
+<ul class="sstitemlist">
+<li >
+<!--l. 47148--><p class="noindent" ><a 
+href="sun211ss405.html#x431-6230000">StcsArea</a>: Return the CoordinateArea component after reading an STC-S?
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 47148--><p class="noindent" ><a 
+href="sun211ss406.html#x432-6240000">StcsCoords</a>: Return the Coordinates component after reading an STC-S?
+<li >
+<!--l. 47148--><p class="noindent" ><a 
+href="sun211ss407.html#x433-6250000">StcsLength</a>: Controls output buffer length
+<li >
+<!--l. 47148--><p class="noindent" ><a 
+href="sun211ss408.html#x434-6260000">StcsProps</a>: Return the STC-S properties after reading an STC-S?  </li></ul>  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> The
+StcsChan class does not define any new functions beyond those which are applicable to
+all Channels.  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss488.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss490.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss489.html"></a> </div> 
+</body> 
+</html>

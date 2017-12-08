@@ -1,0 +1,58 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> ReportLevel </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss381.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss383.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 40244--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x408-6000000"></a> ReportLevel </h3>  <p class="subtitle"> Determines which read/write conditions are reported  </p> </h3> </header><a 
+ id="Q1-408-1380"></a> <a 
+ id="Q1-408-1381"></a> <a name="xref_ReportLevel"></a>  <h4 class="ssth4">Description:
+</h4><div class="sstvalues"> This attribute determines which, if any, of the conditions that occur whilst reading
+or writing an <a 
+href="sun211ss464.html#x491-6830000">Object</a> should be reported. These conditions will generate either a fatal
+error or a warning, as determined by attribute <a 
+href="sun211ss410.html#x436-6280000">Strict</a>. ReportLevel can take any of the
+following values:
+<!--l. 40244--><p class="noindent" >0 - Do not report any conditions.
+<!--l. 40244--><p class="noindent" >1 - <a 
+href="sun211ss381.html#x407-5990000">Report</a> only conditions where significant information content has been changed. For
+instance, an unsupported time-scale has been replaced by a supported near-equivalent
+time-scale. Another example is if a basic <a 
+href="sun211ss441.html#x468-6600000">Channel</a> unexpected encounters data items that
+may have been introduced by later versions of AST.
+<!--l. 40244--><p class="noindent" >2 - Report the above, and in addition report significant default values. For instance,
+if no time-scale was specified when reading an Object from an external data source,
+report the default time-scale that is being used.
+<!--l. 40244--><p class="noindent" >3 - Report the above, and in addition report any other potentially interesting
+conditions that have no significant effect on the conversion. For instance, report if a
+time-scale of <code>&#x0022;</code> TT<code>&#x0022;</code> (terrestrial time) is used in place of <code>&#x0022;</code> ET<code>&#x0022;</code> (ephemeris
+time). This change has no signficiant effect because ET is the predecessor of,
+and is continuous with, TT. Synonyms such as <code>&#x0022;</code> IAT<code>&#x0022;</code> and <code>&#x0022;</code> TAI<code>&#x0022;</code> are another
+example.
+<!--l. 40244--><p class="noindent" >The default value is 1. Note, there are many other conditions that can occur whilst
+reading or writing an Object that completely prevent the conversion taking place. Such
+conditions will always generate errors, irrespective of the ReportLevel and Strict
+attributes.  </div> <dl class="sst">Type: </dl><dd class="sst"> Integer (boolean).  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Channel  </h5><div class="sstsub"> All Channels have
+                                                                                       
+
+                                                                                       
+this attribute.  </div> <h5 class="ssth5"> <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>  </h5><div class="sstsub"> All the conditions selected by the FitsChan <a 
+href="sun211ss431.html#x457-6490000">Warnings</a>
+attribute are reported at level 1.  </div>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss381.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss383.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss382.html"></a> </div> 
+</body> 
+</html>

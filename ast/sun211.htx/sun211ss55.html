@@ -1,0 +1,90 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astFluxFrame </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss54.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss56.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 15754--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x80-2720000"></a> astFluxFrame </h3>  <p class="subtitle"> Create a FluxFrame  </p> </h3> </header><a 
+ id="Q1-80-398"></a> <a 
+ id="Q1-80-399"></a> <a name="xref_astFluxFrame"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a new
+<a 
+href="sun211ss451.html#x478-6700000">FluxFrame</a> and optionally initialises its attributes.
+<!--l. 15754--><p class="noindent" >A FluxFrame is a specialised form of one-dimensional <a 
+href="sun211ss452.html#x479-6710000">Frame</a> which represents various
+systems used to represent the signal level in an observation. The particular coordinate
+system to be used is specified by setting the FluxFrame<code>&#x2019;</code> s <a 
+href="sun211ss413.html#x439-6310000">System</a> attribute qualified,
+as necessary, by other attributes such as the units, etc (see the description of the
+System attribute for details).
+<!--l. 15754--><p class="noindent" >All flux values are assumed to be measured at the same frequency or
+wavelength (as given by the <a 
+href="sun211ss404.html#x430-6220000">SpecVal</a> attribute). Thus this class is more
+appropriate for use with images rather than spectra.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstFluxFrame
+<!--l. 15754--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astFluxFrame( double specval,
+AstSpecFrame <!--l. 15754--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>specfrm,
+const char <!--l. 15754--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> specval  </h5><div class="sstsub"> The spectral value to which the flux values refer,
+given in the spectral coordinate system specified by <code>&#x0022;</code> specfrm<code>&#x0022;</code> . The value supplied
+for the <code>&#x0022;</code> specval<code>&#x0022;</code> parameter becomes the default value for the SpecVal attribute. A
+value of AST__BAD may be supplied if the spectral position is unknown, but this may
+result in it not being possible for the <a 
+href="sun211ss32.html#x57-2490000">astConvert</a> function to determine a
+<a 
+href="sun211ss459.html#x486-6780000">Mapping</a> between the new FluxFrame and some other FluxFrame.  </div> <h5 class="ssth5"> specfrm  </h5><div class="sstsub"> A
+pointer to a <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a> describing the spectral coordinate system in which the
+<code>&#x0022;</code> specval<code>&#x0022;</code> parameter is given. A deep copy of this object is taken, so any
+subsequent changes to the SpecFrame using the supplied pointer will have no
+effect on the new FluxFrame. A NULL pointer can be supplied if AST__BAD is
+supplied for <code>&#x0022;</code> specval<code>&#x0022;</code> .  </div> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a null-terminated string
+containing an optional comma-separated list of attribute assignments to be used for
+initialising the new FluxFrame. The syntax used is identical to that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a>
+function and may include <code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by <code>&#x0022;</code> %<code>&#x0022;</code> symbols in
+the normal way. If no initialisation is required, a zero-length string may be
+supplied.  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> If the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code> %<code>&#x0022;</code> format specifiers,
+                                                                                       
+
+                                                                                       
+then an optional list of additional arguments may follow it in order to supply
+values to be substituted for these specifiers. The rules for supplying these are
+identical to those for the astSet function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code> function).  </div>  </div>
+<h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astFluxFrame()  </h5><div class="sstsub"> A pointer to the new FluxFrame.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 15754--><p class="noindent" >When conversion between two FluxFrames is requested (as when supplying FluxFrames to
+astConvert), account will be taken of the nature of the flux coordinate systems they
+represent, together with any qualifying attribute values, including the <a 
+href="sun211ss247.html#x273-4650000">AlignSystem</a>
+attribute. The results will therefore fully reflect the relationship between positions
+measured in the two systems. In addition, any difference in the Unit attributes of the
+two systems will also be taken into account.
+<li >
+<!--l. 15754--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss54.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss56.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss55.html"></a> </div> 
+</body> 
+</html>

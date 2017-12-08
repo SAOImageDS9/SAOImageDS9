@@ -1,0 +1,151 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astMapPut1&#x003C;X&#x003E; </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss110.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss112.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 20250--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x136-3280000"></a> astMapPut1<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+</h3>  <p class="subtitle"> Add a vector value to a KeyMap  </p> </h3> </header><a 
+ id="Q1-136-566"></a> <a 
+ id="Q1-136-567"></a> <a name="xref_astMapPut1$<$X$>$"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This is a set of
+functions for adding vector values to a <a 
+href="sun211ss457.html#x484-6760000">KeyMap</a>. You should use a function which
+matches the data type of the data you wish to add to the KeyMap by replacing
+<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in the generic function name astMapPut1<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+by an appropriate 1-character type code (see the <code>&#x0022;</code> Data Type Codes<code>&#x0022;</code> section
+below for the code appropriate to each supported data type).  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void
+astMapPut1<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>(
+AstKeyMap <!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this, const
+char <!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>key, int size, const
+<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>type
+value[], const char <!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>comment
+);  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the KeyMap in which to store the supplied values.
+</div> <h5 class="ssth5"> key  </h5><div class="sstsub"> A character string to be stored with the values, which can later be used to
+identify the values. Trailing spaces are ignored. The supplied string is converted to
+upper case before use if the <a 
+href="sun211ss320.html#x346-5380000">KeyCase</a> attribute is currently set to zero.  </div> <h5 class="ssth5"> size  </h5><div class="sstsub"> The
+number of elements in the supplied array of values.  </div> <h5 class="ssth5"> value  </h5><div class="sstsub"> The array of values to
+be stored. The data type of this value should match the 1-character type code
+appended to the function name (e.g. if you are using astMapPut1A, the type
+of this value should be <code>&#x0022;</code> array of pointers to AstObject<code>&#x0022;</code> ).  </div> <h5 class="ssth5"> comment  </h5><div class="sstsub"> A
+pointer to a null-terminated comment string to be stored with the values. A
+NULL pointer may be supplied, in which case no comment is stored.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 20250--><p class="noindent" >If the supplied key is already in use in the KeyMap, the new values will replace the old
+values.  </li></ul>  </div> <h4 class="ssth4"> Data Type Codes  </h4><div class="sstvalues"> To select the appropriate function, you should replace
+<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in the generic function name astMapPut1<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+with a 1-character data type code, so as to match the data type
+<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>type
+of the data you are processing, as follows: <ul class="sstitemlist">
+<li >
+<!--l. 20250--><p class="noindent" >D: double
+<li >
+<!--l. 20250--><p class="noindent" >F: float
+<li >
+<!--l. 20250--><p class="noindent" >I: int
+<li >
+<!--l. 20250--><p class="noindent" >C: <code>&#x0022;</code> const<code>&#x0022;</code> pointer to null terminated character string
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 20250--><p class="noindent" >A: Pointer to AstObject
+<li >
+<!--l. 20250--><p class="noindent" >P: Generic <code>&#x0022;</code> void <!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math><code>&#x0022;</code>
+pointer
+<li >
+<!--l. 20250--><p class="noindent" >S: short int
+<li >
+<!--l. 20250--><p class="noindent" >B: Unsigned byte (i.e. char)
+</li>
+</ul>
+<!--l. 20250--><p class="noindent" >For example, astMapPut1D would be used to store <code>&#x0022;</code> double<code>&#x0022;</code> values, while astMapPut1I
+would be used to store <code>&#x0022;</code> int<code>&#x0022;</code> , etc.
+<!--l. 20250--><p class="noindent" >Note that KeyMaps containing generic <code>&#x0022;</code> void
+<!--l. 20250--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math><code>&#x0022;</code>
+pointers cannot be written out using <a 
+href="sun211ss187.html#x212-4040000">astShow</a> or <a 
+href="sun211ss237.html#x262-4540000">astWrite</a>. An error will be reported if
+this is attempted.  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss110.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss112.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss111.html"></a> </div> 
+</body> 
+</html>

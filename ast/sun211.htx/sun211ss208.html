@@ -1,0 +1,97 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astTable </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss207.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss209.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 30483--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x233-4250000"></a> astTable </h3>  <p class="subtitle"> Create a Table  </p> </h3> </header><a 
+ id="Q1-233-857"></a> <a 
+ id="Q1-233-858"></a> <a name="xref_astTable"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a new empty
+<a 
+href="sun211ss491.html#x518-7100000">Table</a> and optionally initialises its attributes.
+<!--l. 30483--><p class="noindent" >The Table class is a type of <a 
+href="sun211ss457.html#x484-6760000">KeyMap</a> that represents a two-dimensional table of values. The
+astMapGet... and astMapPut... methods provided by the KeyMap class should be used for
+storing and retrieving values from individual cells within a Table. Each entry in the
+KeyMap represents a single cell of the table and has an associated key of the form <code>&#x0022;</code>
+<!--l. 30483--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>COL<!--l. 30483--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>(i)<code>&#x0022;</code>
+where <code>&#x0022;</code> <!--l. 30483--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>COL<!--l. 30483--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math><code>&#x0022;</code>
+is the name of a table column and <code>&#x0022;</code> i<code>&#x0022;</code> is the row index (the first row is row 1). Keys
+of this form should always be used when using KeyMap methods to access entries within a
+Table.
+<!--l. 30483--><p class="noindent" >Columns must be declared using the <a 
+href="sun211ss2.html#x27-2190000">astAddColumn</a> method before values can be stored
+within them. This also fixes the type and shape of the values that may be stored in any
+cell of the column. Cells may contain scalar or vector values of any data type
+supported by the KeyMap class. Multi-dimensional arrays may also be stored, but these
+must be vectorised when storing and retrieving them within a table cell. All cells
+within a single column must have the same type and shape (specified when the column is
+declared).
+<!--l. 30483--><p class="noindent" >Tables may have parameters that describe global properties of the entire table. These
+are stored as entries in the parent KeyMap and can be access using the get and set
+method of the KeyMap class. However, parameters must be declared using the
+<a 
+href="sun211ss4.html#x29-2210000">astAddParameter</a> method before being accessed.
+<!--l. 30483--><p class="noindent" >Note - since accessing entries within a KeyMap is a relatively slow process, it is not
+recommended to use the Table class to store very large tables.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstTable
+<!--l. 30483--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astTable( const
+char <!--l. 30483--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a null-terminated string containing an
+optional comma-separated list of attribute assignments to be used for initialising the
+new Table. The syntax used is identical to that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a> function and may include
+<code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by <code>&#x0022;</code> %<code>&#x0022;</code> symbols in the normal way.  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> If
+the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code> %<code>&#x0022;</code> format specifiers, then an optional list of
+additional arguments may follow it in order to supply values to be substituted for
+these specifiers. The rules for supplying these are identical to those for the astSet
+function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code> function).  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astTable()  </h5><div class="sstsub"> A
+                                                                                       
+
+                                                                                       
+pointer to the new Table.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 30483--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked
+with the AST error status set, or if it should fail for any reason.  </li></ul>  </div>
+<h4 class="ssth4"> Status Handling  </h4><div class="sstvalues"> The protected interface to this function includes an
+extra parameter at the end of the parameter list described above. This
+parameter is a pointer to the integer inherited status variable: <code>&#x0022;</code> int
+<!--l. 30483--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>status<code>&#x0022;</code> .
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss207.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss209.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss208.html"></a> </div> 
+</body> 
+</html>

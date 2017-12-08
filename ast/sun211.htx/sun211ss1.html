@@ -1,0 +1,82 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astSet </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211se24.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss2.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 11097--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x26-2180000"></a> astSet </h3>  <p class="subtitle"> Set attribute values for an Object  </p> </h3> </header><a 
+ id="Q1-26-236"></a> <a 
+ id="Q1-26-237"></a> <a name="xref_astSet"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function assigns a set of attribute
+values to an <a 
+href="sun211ss464.html#x491-6830000">Object</a>, over-riding any previous values. The attributes and their new values
+are specified via a character string, which should contain a comma-separated list of the
+form:
+<!--l. 11097--><p class="noindent" ><code>&#x0022;</code> attribute_1 = value_1, attribute_2 = value_2, ... <code>&#x0022;</code>
+<!--l. 11097--><p class="noindent" >where <code>&#x0022;</code> attribute_n<code>&#x0022;</code> specifies an attribute name, and the value to the right of each <code>&#x0022;</code> =<code>&#x0022;</code> sign should be
+a suitable textual representation of the value to be assigned. This value will be interpreted according
+to the attribute<code>&#x2019;</code> s data type.
+<!--l. 11097--><p class="noindent" >The string supplied may also contain <code>&#x0022;</code> printf<code>&#x0022;</code> -style format specifiers, identified by <code>&#x0022;</code> %<code>&#x0022;</code> signs in the
+usual way. If present, these will be substituted by values supplied as additional optional arguments
+(using the normal <code>&#x0022;</code> printf<code>&#x0022;</code> rules) before the string is used.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues">  void astSet( AstObject
+<!--l. 11097--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this, const
+char <!--l. 11097--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>settings,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Object.  </div> <h5 class="ssth5"> settings  </h5><div class="sstsub"> Pointer to a
+null-terminated character string containing a comma-separated list of attribute
+settings in the form described above.  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> Optional additional arguments which
+supply values to be substituted for any <code>&#x0022;</code> printf<code>&#x0022;</code> -style format specifiers that
+appear in the <code>&#x0022;</code> settings<code>&#x0022;</code> string.  </div>  </div> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Object  </h5><div class="sstsub"> This function
+applies to all Objects.  </div>  </div> <h4 class="ssth4">Examples: </h4><div class="sstvalues"> <dl class="sstexamplesubsection"> astSet( map, <code>&#x0022;</code> <a 
+href="sun211ss381.html#x407-5990000">Report</a> = 1, <a 
+href="sun211ss438.html#x464-6560000">Zoom</a> = 25.0<code>&#x0022;</code>
+);  </dl><dd class="sst"> Sets the Report attribute for Object <code>&#x0022;</code> map<code>&#x0022;</code> to the value 1 and the Zoom
+attribute to 25.0.  </dd> <dl class="sstexamplesubsection"> astSet( frame, <code>&#x0022;</code> Label( %d ) =Offset along axis %d<code>&#x0022;</code> , axis,
+axis );  </dl><dd class="sst"> Sets the <a 
+href="sun211ss323.html#x349-5410000">Label(axis)</a> attribute for Object <code>&#x0022;</code> frame<code>&#x0022;</code> to a suitable
+string, where the axis number is obtained from <code>&#x0022;</code> axis<code>&#x0022;</code> , a variable of type
+int.  </dd> <dl class="sstexamplesubsection"> astSet( frame, <code>&#x0022;</code> <a 
+href="sun211ss420.html#x446-6380000">Title</a> =%s<code>&#x0022;</code> , mystring );  </dl><dd class="sst"> Sets the Title attribute
+for Object <code>&#x0022;</code> frame<code>&#x0022;</code> to the contents of the string <code>&#x0022;</code> mystring<code>&#x0022;</code> .  </dd>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 11097--><p class="noindent" >Attribute names are not case sensitive and may be surrounded by white space.
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 11097--><p class="noindent" >White space may also surround attribute values, where it will generally be ignored
+(except for string-valued attributes where it is significant and forms part of the
+value to be assigned).
+<li >
+<!--l. 11097--><p class="noindent" >To include a literal comma in the value assigned to an attribute, the whole attribute
+value should be enclosed in quotation markes. Alternatively, you can use <code>&#x0022;</code> %s<code>&#x0022;</code> format
+and supply the value as a separate additional argument to astSet (or use the astSetC
+function instead).
+<li >
+<!--l. 11097--><p class="noindent" >The same procedure may be adopted if <code>&#x0022;</code> %<code>&#x0022;</code> signs are to be included and are not to be
+interpreted as format specifiers (alternatively, the <code>&#x0022;</code> printf<code>&#x0022;</code> convention of writing <code>&#x0022;</code>
+%%<code>&#x0022;</code> may be used).
+<li >
+<!--l. 11097--><p class="noindent" >An error will result if an attempt is made to set a value for a read-only attribute.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211se24.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss2.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss1.html"></a> </div> 
+</body> 
+</html>

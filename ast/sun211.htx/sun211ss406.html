@@ -1,0 +1,75 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> StcsCoords </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss405.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss407.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 41409--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x432-6240000"></a> StcsCoords </h3>  <p class="subtitle"> Return the Coordinates component when reading an STC-S document?  </p> </h3> </header><a 
+ id="Q1-432-1452"></a> <a 
+ id="Q1-432-1453"></a> <a name="xref_StcsCoords"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This is a boolean attribute which controls what is returned by the
+<a 
+href="sun211ss160.html#x185-3770000">astRead</a> function when it is used to read from an <a 
+href="sun211ss489.html#x516-7080000">StcsChan</a>. If StcsCoords is set
+non-zero, then a <a 
+href="sun211ss469.html#x496-6880000">PointList</a> representing the STC Coordinates will be returned by
+astRead. If StcsCoords is set to zero (the default), then the STC Coordinates will not
+be returned.  </div> <dl class="sst">Type: </dl><dd class="sst"> Integer (boolean).  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> StcsChan  </h5><div class="sstsub"> All StcsChans
+have this attribute.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 41409--><p class="noindent" >Other attributes such as <a 
+href="sun211ss405.html#x431-6230000">StcsArea</a> and <a 
+href="sun211ss408.html#x434-6260000">StcsProps</a> can be used to specify other Objects to
+be returned by astRead. If more than one of these attributes is set non-zero, then the
+actual <a 
+href="sun211ss464.html#x491-6830000">Object</a> returned by astRead will be a <a 
+href="sun211ss457.html#x484-6760000">KeyMap</a>, containing the requested Objects.
+In this case, the PointList representing the STC Coordinates will be stored in the
+returned KeyMap using the key <code>&#x0022;</code> COORDS<code>&#x0022;</code> . If StcsCoords is the only attribute to be set
+non-zero, then the Object returned by astRead will be the Coordinates PointList
+itself.
+<li >
+<!--l. 41409--><p class="noindent" >The Coordinates component is specified by the additional axis values embedded within
+the body of each STC-S sub-phrase that represents an extended area. Sub-phrases that
+represent a single value ( that is, have identifiers <code>&#x0022;</code> Time<code>&#x0022;</code> , <code>&#x0022;</code> Position<code>&#x0022;</code> , <code>&#x0022;</code>
+Spectral<code>&#x0022;</code> or <code>&#x0022;</code> Redshift<code>&#x0022;</code> ) are not considered to be be part of the STC Coordinates
+component.
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 41409--><p class="noindent" >If the STC-S documents does not contain a Coordinates component, then a NULL object
+pointer will be returned by astRead if the Coordinates component is the only object
+being returned. If other objects are also being returned (see attributes StcsProps and
+StcsArea), then the returned KeyMap will contain a <code>&#x0022;</code> COORDS<code>&#x0022;</code> key only if the
+Coordinates component is read succesfully.
+<li >
+<!--l. 41409--><p class="noindent" >The <a 
+href="sun211ss492.html#x519-7110000">TimeFrame</a> used to represent a time STC-S sub-phrase will have its <a 
+href="sun211ss418.html#x444-6360000">TimeOrigin</a>
+attribute set to the sub-phrase start time. If no start time is specified by the
+sub-phrase, then the stop time will be used instead. If no stop time is specified by
+the sub-phrase, then the single time value specified in the sub-phrase will be used
+instead. Subsequently clearing the TimeOrigin attribute (or setting its value to zero)
+will cause the TimeFrame to reprsent absolute times.
+<li >
+<!--l. 41409--><p class="noindent" >The <a 
+href="sun211ss285.html#x311-5030000">Epoch</a> attribute for the returned <a 
+href="sun211ss474.html#x501-6930000">Region</a> is set in the same way as the TimeOrigin
+attribute (see above).  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss405.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss407.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss406.html"></a> </div> 
+</body> 
+</html>

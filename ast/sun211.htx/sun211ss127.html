@@ -1,0 +1,62 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astNorm </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss126.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss128.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 22094--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x152-3440000"></a> astNorm </h3>  <p class="subtitle"> Normalise a set of Frame coordinates  </p> </h3> </header><a 
+ id="Q1-152-614"></a> <a 
+ id="Q1-152-615"></a> <a name="xref_astNorm"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+This function normalises a set of <a 
+href="sun211ss452.html#x479-6710000">Frame</a> coordinate values which might be
+unsuitable for display (e.g. may lie outside the expected range) into a set of
+acceptable values suitable for display.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astNorm( AstFrame
+<!--l. 22094--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+double value[] )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Frame.  </div> <h5 class="ssth5"> value  </h5><div class="sstsub"> An array of
+double, with one element for each Frame axis (<a 
+href="sun211ss347.html#x373-5650000">Naxes</a> attribute). Initially, this should
+contain a set of coordinate values representing a point in the space which the Frame
+describes. If these values lie outside the expected range for the Frame, they will be
+replaced with more acceptable (normalised) values. Otherwise, they will be returned
+unchanged.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 22094--><p class="noindent" >For some classes of Frame, whose coordinate values are not constrained, this
+function will never modify the values supplied. However, for Frames whose axes
+represent cyclic quantities (such as angles or positions on the sky), coordinates
+will typically be wrapped into an appropriate standard range, such as zero to
+2<!--l. 22094--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>pi.
+<li >
+<!--l. 22094--><p class="noindent" >The <a 
+href="sun211ss462.html#x489-6810000">NormMap</a> class is a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> which can be used to normalise a set of points using the
+astNorm function of a specified Frame.
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 22094--><p class="noindent" >It is intended to be possible to put any set of coordinates into a form suitable for
+display by using this function to normalise them, followed by appropriate formatting
+(using <a 
+href="sun211ss56.html#x81-2730000">astFormat</a>).  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss126.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss128.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss127.html"></a> </div> 
+</body> 
+</html>

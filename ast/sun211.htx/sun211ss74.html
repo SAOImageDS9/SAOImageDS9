@@ -1,0 +1,59 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astGetStcCoord </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss73.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss75.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 17119--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x99-2910000"></a> astGetStcCoord </h3>  <p class="subtitle"> Return information about an AstroCoords element stored in an
+                                                                                       
+
+                                                                                       
+Stc  </p> </h3> </header><a 
+ id="Q1-99-455"></a> <a 
+ id="Q1-99-456"></a> <a name="xref_astGetStcCoord"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> When any sub-class of <a 
+href="sun211ss484.html#x511-7030000">Stc</a> is created, the constructor
+function allows one or more AstroCoords elements to be stored within the Stc. This
+function allows any one of these AstroCoords elements to be retrieved. The
+format of the returned information is the same as that used to pass the original
+information to the Stc constructor. That is, the information is returned in a <a 
+href="sun211ss457.html#x484-6760000">KeyMap</a>
+structure containing elements with one or more of the keys given by symbolic
+constants AST__STCNAME, AST__STCVALUE, AST__STCERROR, AST__STCRES, AST__STCSIZE and
+AST__STCPIXSZ.
+<!--l. 17119--><p class="noindent" >If the coordinate system represented by the Stc has been changed since it was created
+(for instance, by changing its <a 
+href="sun211ss413.html#x439-6310000">System</a> attribute), then the sizes and positions in the
+returned KeyMap will reflect the change in coordinate system.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstKeyMap
+<!--l. 17119--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astGetStcCoord(
+AstStc <!--l. 17119--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+int icoord )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Stc.  </div> <h5 class="ssth5"> icoord  </h5><div class="sstsub"> The index of the
+AstroCoords element required. The first has index one. The number of AstroCoords
+elements in the Stc can be found using function astGetStcNcoord.  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5">
+astGetStcCoord()  </h5><div class="sstsub"> A pointer to a new KeyMap containing the required information.  </div>  </div>
+<h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 17119--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss73.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss75.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss74.html"></a> </div> 
+</body> 
+</html>

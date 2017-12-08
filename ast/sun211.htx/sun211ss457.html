@@ -1,0 +1,162 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> KeyMap </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss456.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss458.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 44903--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x484-6760000"></a> KeyMap </h3>  <p class="subtitle"> Store a set of key/value pairs  </p> </h3> </header><a 
+ id="Q1-484-1606"></a> <a 
+ id="Q1-484-1607"></a> <a name="xref_KeyMap"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> The KeyMap class is used
+to store a set of values with associated keys which identify the values. The keys are
+strings. These may be case sensitive or insensitive as selected by the <a 
+href="sun211ss320.html#x346-5380000">KeyCase</a>
+                                                                                       
+
+                                                                                       
+attribute, and trailing spaces are ignored. The value associated with a key can be
+integer (signed 4 and 2 byte, or unsigned 1 byte), floating point (single or double
+precision), void pointer, character string or AST <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer. Each value can be a
+scalar or a one-dimensional vector. A KeyMap is conceptually similar to a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> in
+that a KeyMap transforms an input into an output - the input is the key, and the
+output is the value associated with the key. However, this is only a conceptual
+similarity, and it should be noted that the KeyMap class inherits from the Object
+class rather than the Mapping class. The methods of the Mapping class cannot be
+used with a KeyMap.  </div> <h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> <a 
+href="sun211ss96.html#x121-3130000">astKeyMap</a>  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues"> The
+KeyMap class inherits from the Object class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> In addition to
+those attributes common to all Objects, every KeyMap also has the following
+attributes:
+<ul class="sstitemlist">
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss320.html#x346-5380000">KeyCase</a>: Sets the case in which keys are stored
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss321.html#x347-5390000">KeyError</a>: <a 
+href="sun211ss381.html#x407-5990000">Report</a> an error if the requested key does not exist?
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss392.html#x418-6100000">SizeGuess</a>: The expected size of the KeyMap.
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss398.html#x424-6160000">SortBy</a>: Determines how keys are sorted in a KeyMap.
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss338.html#x364-5560000">MapLocked</a>: Prevent new entries being added to the KeyMap?  </li></ul>  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> In addition
+to those functions applicable to all Objects, the following functions may also be
+applied to all KeyMaps:
+<ul class="sstitemlist">
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss102.html#x127-3190000">astMapDefined</a>: Does a KeyMap contain a defined value for a key?
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss103.html#x128-3200000">astMapGet0<!--l. 44903--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 44903--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>:
+Get a named scalar entry from a KeyMap
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss104.html#x129-3210000">astMapGet1<!--l. 44903--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 44903--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>:
+Get a named vector entry from a KeyMap
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss105.html#x130-3220000">astMapGetElem<!--l. 44903--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 44903--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>:
+Get an element of a named vector entry from a KeyMap
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss106.html#x131-3230000">astMapHasKey</a>: Does the KeyMap contain a named entry?
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss107.html#x132-3240000">astMapKey</a>: Return the key name at a given index in the KeyMap
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss108.html#x133-3250000">astMapLenC</a>: Get the length of a named character entry in a KeyMap
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss109.html#x134-3260000">astMapLength</a>: Get the length of a named entry in a KeyMap
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss101.html#x126-3180000">astMapCopy</a>: Copy entries from one KeyMap into another
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss110.html#x135-3270000">astMapPut0<!--l. 44903--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 44903--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>:
+Add a new scalar entry to a KeyMap
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss111.html#x136-3280000">astMapPut1<!--l. 44903--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 44903--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>:
+Add a new vector entry to a KeyMap
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss112.html#x137-3290000">astMapPutElem<!--l. 44903--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 44903--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>:
+Puts a value into a vector entry in a KeyMap
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss113.html#x138-3300000">astMapPutU</a>: Add a new entry to a KeyMap with an undefined value
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss115.html#x140-3320000">astMapRemove</a>: Removed a named entry from a KeyMap
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss116.html#x141-3330000">astMapRename</a>: Rename an existing entry in a KeyMap
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss117.html#x142-3340000">astMapSize</a>: Get the number of entries in a KeyMap
+<li >
+<!--l. 44903--><p class="noindent" ><a 
+href="sun211ss119.html#x144-3360000">astMapType</a>: Return the data type of a named entry in a map  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss456.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss458.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss457.html"></a> </div> 
+</body> 
+</html>

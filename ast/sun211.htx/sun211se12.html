@@ -1,0 +1,477 @@
+<!DOCTYPE html> 
+<html> 
+<head><title>An Introduction to Coordinate System Conversions</title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211se11.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se13.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<h3 class="sectionHead"><span class="titlemark">12    </span> <a 
+ id="x13-11500012"></a>An Introduction to Coordinate System Conversions</h3>
+<div class="sectionTOCS">
+&#x00A0;<span class="subsectionToc" >12.1 <a 
+href="#x13-1160001">Converting between Celestial Coordinate Systems</a></span>
+<br />&#x00A0;<span class="subsectionToc" >12.2 <a 
+href="#x13-1170002">Converting between Spectral Coordinate Systems</a></span>
+<br />&#x00A0;<span class="subsectionToc" >12.3 <a 
+href="#x13-1180003">Converting between Time Coordinate Systems</a></span>
+<br />&#x00A0;<span class="subsectionToc" >12.4 <a 
+href="#x13-1190004">Handling SkyFrame Axis Permutations</a></span>
+<br />&#x00A0;<span class="subsectionToc" >12.5 <a 
+href="#x13-1200005">Converting Between Frames</a></span>
+<br />&#x00A0;<span class="subsectionToc" >12.6 <a 
+href="#x13-1210006">The Choice of Alignment System</a></span>
+</div>
+<!--l. 5972--><p class="noindent" >In this section, we start to look at techniques for converting between different coordinate systems. At
+this stage, the tools we have available are Frames (&#x00A7;<a 
+href="sun211se7.html#x8-730007">7<!--tex4ht:ref: ss:frames --></a>), SkyFrames (&#x00A7;<a 
+href="sun211se8.html#x9-900008">8<!--tex4ht:ref: ss:skyframes --></a>), SpecFrames (&#x00A7;<a 
+href="sun211se9.html#x10-990009">9<!--tex4ht:ref: ss:specframes --></a>), TimeFrames
+(&#x00A7;<a 
+href="sun211se10.html#x11-10700010">10<!--tex4ht:ref: ss:timeframes --></a>) and various Mappings (&#x00A7;<a 
+href="sun211se5.html#x6-530005">5<!--tex4ht:ref: ss:mappings --></a>). These are sufficient to allow us to begin examining the problem, but
+more sophisticated approaches will also emerge later (&#x00A7;<a 
+href="sun211se14.html#x15-1350002">14.2<!--tex4ht:ref: ss:framesetconverting --></a>).
+<a 
+ id="x13-115001r126"></a>
+<h4 class="subsectionHead"><span class="titlemark">12.1    </span> <a 
+ id="x13-1160001"></a>Converting between Celestial Coordinate Systems</h4>
+<!--l. 5982--><p class="noindent" >We begin by examining how to convert between two celestial coordinate systems represented by
+SkyFrames, as this is both an illuminating and practical example. Consider the problem of converting
+celestial coordinates between:
+     <dl class="enumerate-enumitem"><dt class="enumerate-enumitem">
+  (1) </dt><dd 
+class="enumerate-enumitem">The old FK4 system, with no E terms, a Besselian epoch of 1958.0 and a Besselian equinox
+     of 1960.0.
+     </dd><dt class="enumerate-enumitem">
+  (2) </dt><dd 
+class="enumerate-enumitem">An ecliptic coordinate system based on the mean equinox and ecliptic of Julian epoch
+     2010.5.</dd></dl>
+<!--l. 5995--><p class="noindent" >This example is arbitrary but not completely unrealistic. Unless you already have expertise with such
+conversions, you are unlikely to find it straightforward.
+                                                                                       
+
+                                                                                       
+<!--l. 5999--><p class="noindent" >Using AST, we begin by creating two SkyFrames to represent these coordinate systems, as
+follows:
+<div class="fancyvrb" id="fancyvrb124"> <a 
+ id="x13-116004r1"></a>&#x00A0;&#x00A0;#include&#x00A0;&#x0022;ast.h&#x0022;<br class="fancyvrb" /><a 
+ id="x13-116006r2"></a>&#x00A0;&#x00A0;AstSkyFrame&#x00A0;*skyframe1,&#x00A0;*skyframe2;<br class="fancyvrb" /><a 
+ id="x13-116008r3"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-116010r4"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x13-116012r5"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x13-116014r6"></a>&#x00A0;&#x00A0;skyframe1&#x00A0;=&#x00A0;astSkyFrame(&#x00A0;&#x0022;System=FK4-NO-E,&#x00A0;Epoch=B1958,&#x00A0;Equinox=B1960&#x0022;&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x13-116016r7"></a>&#x00A0;&#x00A0;skyframe2&#x00A0;=&#x00A0;astSkyFrame(&#x00A0;&#x0022;System=Ecliptic,&#x00A0;Equinox=J2010.5&#x0022;&#x00A0;);</div>
+<!--l. 6014--><p class="noindent" >Note how specifying the coordinate systems consists simply of initialising the attributes of each
+<a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> appropriately. The next step is to find a way of converting between these SkyFrames. This is
+done using <a 
+href="sun211ss32.html#x57-2490000">astConvert</a>, as follows:
+<div class="fancyvrb" id="fancyvrb125"> <a 
+ id="x13-116018r1"></a>&#x00A0;&#x00A0;AstFrameSet&#x00A0;*cvt;<br class="fancyvrb" /><a 
+ id="x13-116020r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-116022r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x13-116024r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-116026r5"></a>&#x00A0;&#x00A0;cvt&#x00A0;=&#x00A0;astConvert(&#x00A0;skyframe1,&#x00A0;skyframe2,&#x00A0;&#x0022;&#x0022;&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x13-116028r6"></a>&#x00A0;&#x00A0;if&#x00A0;(&#x00A0;cvt&#x00A0;==&#x00A0;AST__NULL&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x13-116030r7"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;conversion&#x00A0;is&#x00A0;not&#x00A0;possible&#x003E;<br class="fancyvrb" /><a 
+ id="x13-116032r8"></a>&#x00A0;&#x00A0;}&#x00A0;else&#x00A0;{<br class="fancyvrb" /><a 
+ id="x13-116034r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;conversion&#x00A0;is&#x00A0;possible&#x003E;<br class="fancyvrb" /><a 
+ id="x13-116036r10"></a>&#x00A0;&#x00A0;}</div>
+<!--l. 6034--><p class="noindent" >The third argument of astConvert is not used here and should be an empty string.
+<!--l. 6037--><p class="noindent" >astConvert will return a null result, AST__NULL (as defined in the &#x201C;ast.h&#x201D; header file), if conversion is
+not possible. In this example, conversion is possible, so it will return a pointer to a new <a 
+href="sun211ss464.html#x491-6830000">Object</a> that
+describes the conversion.
+<!--l. 6042--><p class="noindent" >The Object returned is called a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a>. We have not discussed FrameSets yet (&#x00A7;<a 
+href="sun211se13.html#x14-12200013">13<!--tex4ht:ref: ss:framesets --></a>), but for the
+present purposes we can consider them simply as Objects that can behave both as Mappings and as
+Frames. It is the FrameSet&#x2019;s behaviour as a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> in which we are mainly interested here, because
+the Mapping it implements is the one we require&#x2014;<em>i.e.</em>&#x00A0;it converts between the two celestial coordinate
+systems (&#x00A7;<a 
+href="sun211se14.html#x15-1340001">14.1<!--tex4ht:ref: ss:framesetsfromconvert --></a>).
+<!--l. 6050--><p class="noindent" >For example, if &#x201C;alpha1&#x201D; and &#x201C;delta1&#x201D; are two arrays containing the longitude and latitude, in radians,
+of N points on the sky in the original coordinate system (corresponding to &#x201C;skyframe1&#x201D;), then
+they could be converted into the new coordinate system (represented by &#x201C;skyframe2&#x201D;) as
+follows:
+<div class="fancyvrb" id="fancyvrb126"> <a 
+ id="x13-116038r1"></a>&#x00A0;&#x00A0;#define&#x00A0;N&#x00A0;10<br class="fancyvrb" /><a 
+ id="x13-116040r2"></a>&#x00A0;&#x00A0;double&#x00A0;alpha1[&#x00A0;N&#x00A0;],&#x00A0;delta1[&#x00A0;N&#x00A0;];<br class="fancyvrb" /><a 
+ id="x13-116042r3"></a>&#x00A0;&#x00A0;double&#x00A0;alpha2[&#x00A0;N&#x00A0;],&#x00A0;delta2[&#x00A0;N&#x00A0;];<br class="fancyvrb" /><a 
+ id="x13-116044r4"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x13-116046r5"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x13-116048r6"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-116050r7"></a>&#x00A0;&#x00A0;astTran2(&#x00A0;cvt,&#x00A0;N,&#x00A0;alpha1,&#x00A0;delta1,&#x00A0;1,&#x00A0;alpha2,&#x00A0;delta2&#x00A0;);</div>
+<!--l. 6068--><p class="noindent" >The new coordinates are returned <em>via</em> the &#x201C;alpha2&#x201D; and &#x201C;delta2&#x201D; arrays. To transform coordinates in
+the opposite direction, we simply invert the 5th (boolean int) argument to <a 
+href="sun211ss219.html#x244-4360000">astTran2</a>, as
+follows:
+<div class="fancyvrb" id="fancyvrb127"> <a 
+ id="x13-116052r1"></a>&#x00A0;&#x00A0;astTran2(&#x00A0;cvt,&#x00A0;N,&#x00A0;alpha2,&#x00A0;delta2,&#x00A0;0,&#x00A0;alpha1,&#x00A0;delta1&#x00A0;);</div>
+<!--l. 6079--><p class="noindent" >The FrameSet returned by astConvert also contains information about the SkyFrames used in the
+conversion (&#x00A7;<a 
+href="sun211se14.html#x15-1340001">14.1<!--tex4ht:ref: ss:framesetsfromconvert --></a>). As we mentioned above, a FrameSet may be used as a <a 
+href="sun211ss452.html#x479-6710000">Frame</a> and in this case it
+behaves like the &#x201C;destination&#x201D; Frame used in the conversion (<em>i.e.</em>&#x00A0;like &#x201C;skyframe2&#x201D;). We could
+therefore use the &#x201C;cvt&#x201D; FrameSet to calculate the distance between two points (with coordinates in
+radians) in the destination coordinate system, using <a 
+href="sun211ss41.html#x66-2580000">astDistance</a>:
+<div class="fancyvrb" id="fancyvrb128"> <a 
+ id="x13-116054r1"></a>&#x00A0;&#x00A0;double&#x00A0;distance,&#x00A0;point1[&#x00A0;2&#x00A0;],&#x00A0;point2[&#x00A0;2&#x00A0;];<br class="fancyvrb" /><a 
+ id="x13-116056r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-116058r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x13-116060r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-116062r5"></a>&#x00A0;&#x00A0;distance&#x00A0;=&#x00A0;astDistance(&#x00A0;cvt,&#x00A0;point1,&#x00A0;point2&#x00A0;);</div>
+                                                                                       
+
+                                                                                       
+<!--l. 6098--><p class="noindent" >and the result would be the same as if the &#x201C;skyframe2&#x201D; SkyFrame had been used.
+<!--l. 6101--><p class="noindent" >Another way to see how the FrameSet produced by astConvert retains information about the
+coordinate systems involved is to set its <a 
+href="sun211ss381.html#x407-5990000">Report</a> attribute (inherited from the Mapping class) so that it
+displays the coordinates before and after conversion (&#x00A7;<a 
+href="sun211se4.html#x5-420008">4.8<!--tex4ht:ref: ss:transforming --></a>):
+<div class="fancyvrb" id="fancyvrb129"> <a 
+ id="x13-116064r1"></a>&#x00A0;&#x00A0;astSet(&#x00A0;cvt,&#x00A0;&#x0022;Report=1&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x13-116066r2"></a>&#x00A0;&#x00A0;astTran2(&#x00A0;cvt,&#x00A0;N,&#x00A0;alpha1,&#x00A0;delta1,&#x00A0;1,&#x00A0;alpha2,&#x00A0;delta2&#x00A0;);</div>
+<!--l. 6113--><p class="noindent" >The output from this might look like the following:
+<div class="fancyvrb" id="fancyvrb130"> <a 
+ id="x13-116068r1"></a>&#x00A0;&#x00A0;(2:06:03.0,&#x00A0;34:22:39)&#x00A0;--&#x003E;&#x00A0;(42.1087,&#x00A0;20.2717)<br class="fancyvrb" /><a 
+ id="x13-116070r2"></a>&#x00A0;&#x00A0;(2:08:20.6,&#x00A0;35:31:24)&#x00A0;--&#x003E;&#x00A0;(43.0197,&#x00A0;21.1705)
+<br class="fancyvrb" /><a 
+ id="x13-116072r3"></a>&#x00A0;&#x00A0;(2:10:38.1,&#x00A0;36:40:09)&#x00A0;--&#x003E;&#x00A0;(43.9295,&#x00A0;22.0716)<br class="fancyvrb" /><a 
+ id="x13-116074r4"></a>&#x00A0;&#x00A0;(2:12:55.6,&#x00A0;37:48:55)&#x00A0;--&#x003E;&#x00A0;(44.8382,&#x00A0;22.9753)
+<br class="fancyvrb" /><a 
+ id="x13-116076r5"></a>&#x00A0;&#x00A0;(2:15:13.1,&#x00A0;38:57:40)&#x00A0;--&#x003E;&#x00A0;(45.7459,&#x00A0;23.8814)<br class="fancyvrb" /><a 
+ id="x13-116078r6"></a>&#x00A0;&#x00A0;(2:17:30.6,&#x00A0;40:06:25)&#x00A0;--&#x003E;&#x00A0;(46.6528,&#x00A0;24.7901)
+<br class="fancyvrb" /><a 
+ id="x13-116080r7"></a>&#x00A0;&#x00A0;(2:19:48.1,&#x00A0;41:15:11)&#x00A0;--&#x003E;&#x00A0;(47.5589,&#x00A0;25.7013)<br class="fancyvrb" /><a 
+ id="x13-116082r8"></a>&#x00A0;&#x00A0;(2:22:05.6,&#x00A0;42:23:56)&#x00A0;--&#x003E;&#x00A0;(48.4644,&#x00A0;26.6149)
+<br class="fancyvrb" /><a 
+ id="x13-116084r9"></a>&#x00A0;&#x00A0;(2:24:23.1,&#x00A0;43:32:41)&#x00A0;--&#x003E;&#x00A0;(49.3695,&#x00A0;27.5311)<br class="fancyvrb" /><a 
+ id="x13-116086r10"></a>&#x00A0;&#x00A0;(2:26:40.6,&#x00A0;44:41:27)&#x00A0;--&#x003E;&#x00A0;(50.2742,&#x00A0;28.4499)</div>
+<!--l. 6128--><p class="noindent" >Here, we see that the input FK4 equatorial coordinate values (given in radians) have been formatted
+automatically in sexagesimal notation using the conventional hours for right ascension and degrees
+for declination. Conversely, the output ecliptic coordinates are shown in decimal degrees, as is
+conventional for ecliptic coordinates. Both are displayed using the default precision of 7
+digits.<span class="footnote-mark"><a 
+href="#fn20x0" id="fn20x0-bk"><sup class="textsuperscript">20</sup></a></span><a 
+ id="x13-116087f20"></a>
+<!--l. 6137--><p class="noindent" >In fact, the &#x201C;cvt&#x201D; FrameSet has access to all the information in the original SkyFrames which were
+passed to astConvert. If you had set a new Digits attribute value for either of these, the formatting
+above would reflect the different precision you requested by displaying a greater or smaller number of
+digits.
+<a 
+ id="x13-116088r128"></a>
+<h4 class="subsectionHead"><span class="titlemark">12.2    </span> <a 
+ id="x13-1170002"></a>Converting between Spectral Coordinate Systems</h4>
+<!--l. 6145--><p class="noindent" >The principles described in the previous section for converting between celestial coordinate
+systems also apply to the task of converting between spectral coordinate systems. As
+an example, let&#x2019;s look at how we might convert between frequency measured in
+<!--l. 6148--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mi 
+>G</mi><mi 
+>H</mi><mi 
+>z</mi></math>
+as measured in the rest frame of the telescope, and radio velocity measured in
+<!--l. 6149--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mi 
+>k</mi><mi 
+>m</mi><mo 
+class="MathClass-bin">/</mo><mi 
+>s</mi></math>
+measured with respect the kinematic Local Standard of Rest.
+<!--l. 6152--><p class="noindent" >First we create a default <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a>, and then set its attributes to describe the required radio velocity
+system (this is slightly more convenient, given the relatively large number of attributes, than
+specifying the attribute values in a single string such as would be passed to the SpecFrame
+constructor). We then take a copy of this SpecFrame, and change the attribute values so that the copy
+describes the original frequency system (modifying a copy, rather than creating a new SpecFrame
+from scratch, avoids the need to specify the epoch, reference position, <em>etc</em> a second time since they are
+all inherited by the copy):
+                                                                                       
+
+                                                                                       
+<div class="fancyvrb" id="fancyvrb131"> <a 
+ id="x13-117002r1"></a>&#x00A0;&#x00A0;#include&#x00A0;&#x0022;ast.h&#x0022;<br class="fancyvrb" /><a 
+ id="x13-117004r2"></a>&#x00A0;&#x00A0;AstSpecFrame&#x00A0;*specframe1,&#x00A0;*specframe2;<br class="fancyvrb" /><a 
+ id="x13-117006r3"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-117008r4"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x13-117010r5"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x13-117012r6"></a>&#x00A0;&#x00A0;specframe1&#x00A0;=&#x00A0;astSpecFrame(&#x00A0;&#x0022;&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x13-117014r7"></a>&#x00A0;&#x00A0;astSet(&#x00A0;specframe1,&#x00A0;&#x0022;System=vradio&#x0022;&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x13-117016r8"></a>&#x00A0;&#x00A0;astSet(&#x00A0;specframe1,&#x00A0;&#x0022;Unit=km/s&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x13-117018r9"></a>&#x00A0;&#x00A0;astSet(&#x00A0;specframe1,&#x00A0;&#x0022;Epoch=1996-Oct-2&#x00A0;12:13:56.985&#x0022;&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x13-117020r10"></a>&#x00A0;&#x00A0;astSet(&#x00A0;specframe1,&#x00A0;&#x0022;ObsLon=W155:28:18&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x13-117022r11"></a>&#x00A0;&#x00A0;astSet(&#x00A0;specframe1,&#x00A0;&#x0022;ObsLat=N19:49:34&#x0022;&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x13-117024r12"></a>&#x00A0;&#x00A0;astSet(&#x00A0;specframe1,&#x00A0;&#x0022;RefRA=18:14:50.6&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x13-117026r13"></a>&#x00A0;&#x00A0;astSet(&#x00A0;specframe1,&#x00A0;&#x0022;RefDec=-4:40:49&#x0022;&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x13-117028r14"></a>&#x00A0;&#x00A0;astSet(&#x00A0;specframe1,&#x00A0;&#x0022;RestFreq=230.538&#x00A0;GHz&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x13-117030r15"></a>&#x00A0;&#x00A0;astSet(&#x00A0;specframe1,&#x00A0;&#x0022;StdOfRest=LSRK&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x13-117032r16"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x13-117034r17"></a>&#x00A0;&#x00A0;specframe2&#x00A0;=&#x00A0;astCopy(&#x00A0;specframe1&#x00A0;);<br class="fancyvrb" /><a 
+ id="x13-117036r18"></a>&#x00A0;&#x00A0;astSet(&#x00A0;specframe1,&#x00A0;&#x0022;System=freq&#x0022;&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x13-117038r19"></a>&#x00A0;&#x00A0;astSet(&#x00A0;specframe1,&#x00A0;&#x0022;Unit=GHz&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x13-117040r20"></a>&#x00A0;&#x00A0;astSet(&#x00A0;specframe1,&#x00A0;&#x0022;StdOfRest=Topocentric&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x13-117042r21"></a>&#x00A0;&#x00A0;</div>
+<!--l. 6188--><p class="noindent" >Note, the fact that a SpecFrame has only a single axis means that we were able to refer to the
+Unit attribute without an axis index. The other attributes are: the time of of observation
+(<a 
+href="sun211ss285.html#x311-5030000">Epoch</a>), the geographical position of the telescope (<a 
+href="sun211ss366.html#x392-5840000">ObsLat</a> &#x0026; <a 
+href="sun211ss367.html#x393-5850000">ObsLon</a>), the position of the
+source on the sky (<a 
+href="sun211ss379.html#x405-5970000">RefRA</a> &#x0026; <a 
+href="sun211ss378.html#x404-5960000">RefDec</a>), the rest frequency (<a 
+href="sun211ss383.html#x409-6010000">RestFreq</a>) and the standard of rest
+(<a 
+href="sun211ss409.html#x435-6270000">StdOfRest</a>).
+<!--l. 6195--><p class="noindent" >The next step is to find a way of converting between these SpecFrames. We use exactly the same code
+that we did in the previous section where we were converting between celestial coordinate
+systems:
+<div class="fancyvrb" id="fancyvrb132"> <a 
+ id="x13-117044r1"></a>&#x00A0;&#x00A0;AstFrameSet&#x00A0;*cvt;<br class="fancyvrb" /><a 
+ id="x13-117046r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-117048r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x13-117050r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-117052r5"></a>&#x00A0;&#x00A0;cvt&#x00A0;=&#x00A0;astConvert(&#x00A0;specframe1,&#x00A0;specframe2,&#x00A0;&#x0022;&#x0022;&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x13-117054r6"></a>&#x00A0;&#x00A0;if&#x00A0;(&#x00A0;cvt&#x00A0;==&#x00A0;AST__NULL&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x13-117056r7"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;conversion&#x00A0;is&#x00A0;not&#x00A0;possible&#x003E;<br class="fancyvrb" /><a 
+ id="x13-117058r8"></a>&#x00A0;&#x00A0;}&#x00A0;else&#x00A0;{<br class="fancyvrb" /><a 
+ id="x13-117060r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;conversion&#x00A0;is&#x00A0;possible&#x003E;<br class="fancyvrb" /><a 
+ id="x13-117062r10"></a>&#x00A0;&#x00A0;}</div>
+<!--l. 6214--><p class="noindent" >A before, this will give us a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> (assuming conversion is possible, which should always be the
+case for our example), and we can use the FrameSet to convert between the two spectral coordinate
+systems. We use <a 
+href="sun211ss218.html#x243-4350000">astTran1</a> in place of <a 
+href="sun211ss219.html#x244-4360000">astTran2</a> since a SpecFrame has only one axis (unlike a <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>
+which has two).
+<!--l. 6220--><p class="noindent" >For example, if &#x201C;frq&#x201D; is an array containing the observed frequency, in GHz, of N spectral channels
+(describe by &#x201C;specframe1&#x201D;), then they could be converted into the new coordinate system (represented
+by &#x201C;specframe2&#x201D;) as follows:
+<div class="fancyvrb" id="fancyvrb133"> <a 
+ id="x13-117064r1"></a>&#x00A0;&#x00A0;#define&#x00A0;N&#x00A0;10<br class="fancyvrb" /><a 
+ id="x13-117066r2"></a>&#x00A0;&#x00A0;double&#x00A0;frq[&#x00A0;N&#x00A0;];<br class="fancyvrb" /><a 
+ id="x13-117068r3"></a>&#x00A0;&#x00A0;double&#x00A0;vel[&#x00A0;N&#x00A0;];<br class="fancyvrb" /><a 
+ id="x13-117070r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-117072r5"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x13-117074r6"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-117076r7"></a>&#x00A0;&#x00A0;astTran1(&#x00A0;cvt,&#x00A0;N,&#x00A0;frq,&#x00A0;1,&#x00A0;vel&#x00A0;);</div>
+<!--l. 6237--><p class="noindent" >The radio velocity values are returned in the &#x201C;vel&#x201D; array.
+<a 
+ id="x13-117077r129"></a>
+<h4 class="subsectionHead"><span class="titlemark">12.3    </span> <a 
+ id="x13-1180003"></a>Converting between Time Coordinate Systems</h4>
+<!--l. 6241--><p class="noindent" >All the principles outlined in the previous section about aligning spectral cocordinate systems
+(SpecFrames) can be applied directly to the problem of aligning time coordinate systems
+(TimeFrames).
+<a 
+ id="x13-118001r130"></a>
+<h4 class="subsectionHead"><span class="titlemark">12.4    </span> <a 
+ id="x13-1190004"></a>Handling SkyFrame Axis Permutations</h4>
+<!--l. 6247--><p class="noindent" >We can illustrate an important point if we swap the axis order of either <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> in the example
+above (&#x00A7;<a 
+href="#x13-1160001">12.1<!--tex4ht:ref: ss:convertingskyframes --></a>) before identifying the conversion. Let&#x2019;s assume we use <a 
+href="sun211ss137.html#x162-3540000">astPermAxes</a> (&#x00A7;<a 
+href="sun211se7.html#x8-820009">7.9<!--tex4ht:ref: ss:permutingaxes --></a>) to do this to
+the second SkyFrame, before applying <a 
+href="sun211ss32.html#x57-2490000">astConvert</a>, as follows:
+<div class="fancyvrb" id="fancyvrb134"> <a 
+ id="x13-119002r1"></a>&#x00A0;&#x00A0;int&#x00A0;perm[&#x00A0;2&#x00A0;]&#x00A0;=&#x00A0;{&#x00A0;2,&#x00A0;1&#x00A0;};<br class="fancyvrb" /><a 
+ id="x13-119004r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-119006r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x13-119008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-119010r5"></a>&#x00A0;&#x00A0;astPermAxes(&#x00A0;skyframe2,&#x00A0;perm&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x13-119012r6"></a>&#x00A0;&#x00A0;cvt&#x00A0;=&#x00A0;astConvert(&#x00A0;skyframe1,&#x00A0;skyframe2,&#x00A0;&#x0022;&#x0022;&#x00A0;);</div>
+                                                                                       
+
+                                                                                       
+<!--l. 6264--><p class="noindent" >Now, the destination SkyFrame system no longer represents the coordinate system:
+     <div class="quote">
+     <!--l. 6268--><p class="noindent" >(ecliptic&#x00A0;longitude, ecliptic&#x00A0;latitude)</div>
+<!--l. 6271--><p class="noindent" >but instead represents the transposed system:
+     <div class="quote">
+     <!--l. 6274--><p class="noindent" >(ecliptic&#x00A0;latitude, ecliptic&#x00A0;longitude)</div>
+<!--l. 6277--><p class="noindent" >As a consequence, when we use the <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> returned by astConvert to apply a coordinate
+transformation, we obtain something like the following:
+<div class="fancyvrb" id="fancyvrb135"> <a 
+ id="x13-119014r1"></a>&#x00A0;&#x00A0;(2:06:03.0,&#x00A0;34:22:39)&#x00A0;--&#x003E;&#x00A0;(20.2717,&#x00A0;42.1087)<br class="fancyvrb" /><a 
+ id="x13-119016r2"></a>&#x00A0;&#x00A0;(2:08:20.6,&#x00A0;35:31:24)&#x00A0;--&#x003E;&#x00A0;(21.1705,&#x00A0;43.0197)
+<br class="fancyvrb" /><a 
+ id="x13-119018r3"></a>&#x00A0;&#x00A0;(2:10:38.1,&#x00A0;36:40:09)&#x00A0;--&#x003E;&#x00A0;(22.0716,&#x00A0;43.9295)<br class="fancyvrb" /><a 
+ id="x13-119020r4"></a>&#x00A0;&#x00A0;(2:12:55.6,&#x00A0;37:48:55)&#x00A0;--&#x003E;&#x00A0;(22.9753,&#x00A0;44.8382)
+<br class="fancyvrb" /><a 
+ id="x13-119022r5"></a>&#x00A0;&#x00A0;(2:15:13.1,&#x00A0;38:57:40)&#x00A0;--&#x003E;&#x00A0;(23.8814,&#x00A0;45.7459)<br class="fancyvrb" /><a 
+ id="x13-119024r6"></a>&#x00A0;&#x00A0;(2:17:30.6,&#x00A0;40:06:25)&#x00A0;--&#x003E;&#x00A0;(24.7901,&#x00A0;46.6528)
+<br class="fancyvrb" /><a 
+ id="x13-119026r7"></a>&#x00A0;&#x00A0;(2:19:48.1,&#x00A0;41:15:11)&#x00A0;--&#x003E;&#x00A0;(25.7013,&#x00A0;47.5589)<br class="fancyvrb" /><a 
+ id="x13-119028r8"></a>&#x00A0;&#x00A0;(2:22:05.6,&#x00A0;42:23:56)&#x00A0;--&#x003E;&#x00A0;(26.6149,&#x00A0;48.4644)
+<br class="fancyvrb" /><a 
+ id="x13-119030r9"></a>&#x00A0;&#x00A0;(2:24:23.1,&#x00A0;43:32:41)&#x00A0;--&#x003E;&#x00A0;(27.5311,&#x00A0;49.3695)<br class="fancyvrb" /><a 
+ id="x13-119032r10"></a>&#x00A0;&#x00A0;(2:26:40.6,&#x00A0;44:41:27)&#x00A0;--&#x003E;&#x00A0;(28.4499,&#x00A0;50.2742)</div>
+<!--l. 6294--><p class="noindent" >When compared to the original (&#x00A7;<a 
+href="#x13-1160001">12.1<!--tex4ht:ref: ss:convertingskyframes --></a>), the output coordinate order has been swapped to compensate
+for the different destination SkyFrame axis order.
+<!--l. 6298--><p class="noindent" >In all, there are four possible axis combinations, corresponding to two possible axis orders for each of
+the source and destination SkyFrames, and astConvert will convert correctly between any of these.
+The point to note is that a SkyFrame contains knowledge about how to convert to and from other
+SkyFrames. Since its two axes (longitude and latitude) are distinguishable, the conversion is able to
+take account of the axis order.
+<!--l. 6306--><p class="noindent" >If you need to identify the axes of a SkyFrame explicitly, taking into account any axis permutations,
+the <a 
+href="sun211ss328.html#x354-5460000">LatAxis</a> and <a 
+href="sun211ss334.html#x360-5520000">LonAxis</a> attributes can be used. These are read-only attributes which give the indices
+of the latitude and longitude axes respectively.
+<a 
+ id="x13-119033r131"></a>
+<h4 class="subsectionHead"><span class="titlemark">12.5    </span> <a 
+ id="x13-1200005"></a>Converting Between Frames</h4>
+<!--l. 6313--><p class="noindent" >Having seen how clever SkyFrames are (&#x00A7;<a 
+href="#x13-1160001">12.1<!--tex4ht:ref: ss:convertingskyframes --></a> and &#x00A7;<a 
+href="#x13-1190004">12.4<!--tex4ht:ref: ss:convertingpermutedaxes --></a>), we will next examine how dumb a basic
+<a 
+href="sun211ss452.html#x479-6710000">Frame</a> can be in comparison. For example, if we create two 2-dimensional Frames and use <a 
+href="sun211ss32.html#x57-2490000">astConvert</a>
+to derive a conversion between them, as follows:
+<div class="fancyvrb" id="fancyvrb136"> <a 
+ id="x13-120002r1"></a>&#x00A0;&#x00A0;AstFrame&#x00A0;*frame1,&#x00A0;*frame2;<br class="fancyvrb" /><a 
+ id="x13-120004r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-120006r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x13-120008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x13-120010r5"></a>&#x00A0;&#x00A0;frame1&#x00A0;=&#x00A0;astFrame(&#x00A0;2,&#x00A0;&#x0022;&#x0022;&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x13-120012r6"></a>&#x00A0;&#x00A0;frame2&#x00A0;=&#x00A0;astFrame(&#x00A0;2,&#x00A0;&#x0022;&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x13-120014r7"></a>&#x00A0;&#x00A0;cvt&#x00A0;=&#x00A0;astConvert(&#x00A0;frame1,&#x00A0;frame2,&#x00A0;&#x0022;&#x0022;&#x00A0;);</div>
+<!--l. 6331--><p class="noindent" >then the coordinate transformation which the &#x201C;cvt&#x201D; <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> performs will be as follows:
+                                                                                       
+
+                                                                                       
+<div class="fancyvrb" id="fancyvrb137"> <a 
+ id="x13-120016r1"></a>&#x00A0;&#x00A0;(1,&#x00A0;2)&#x00A0;--&#x003E;&#x00A0;(1,&#x00A0;2)<br class="fancyvrb" /><a 
+ id="x13-120018r2"></a>&#x00A0;&#x00A0;(2,&#x00A0;4)&#x00A0;--&#x003E;&#x00A0;(2,&#x00A0;4)<br class="fancyvrb" /><a 
+ id="x13-120020r3"></a>&#x00A0;&#x00A0;(3,&#x00A0;6)&#x00A0;--&#x003E;&#x00A0;(3,&#x00A0;6)<br class="fancyvrb" /><a 
+ id="x13-120022r4"></a>&#x00A0;&#x00A0;(4,&#x00A0;8)&#x00A0;--&#x003E;&#x00A0;(4,&#x00A0;8)<br class="fancyvrb" /><a 
+ id="x13-120024r5"></a>&#x00A0;&#x00A0;(5,&#x00A0;10)&#x00A0;--&#x003E;&#x00A0;(5,&#x00A0;10)</div>
+<!--l. 6342--><p class="noindent" >This is an identity transformation, exactly the same as a <a 
+href="sun211ss495.html#x522-7140000">UnitMap</a> (&#x00A7;<a 
+href="sun211se5.html#x6-6300010">5.10<!--tex4ht:ref: ss:unitmapexample --></a>). Even if we permute the axis
+order of our Frames, as we did above (&#x00A7;<a 
+href="#x13-1190004">12.4<!--tex4ht:ref: ss:convertingpermutedaxes --></a>), we will fare no better. The conversion between our two
+basic Frames will always be an identity transformation.
+<!--l. 6348--><p class="noindent" >The reason for this is that, unlike a <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>, all basic Frames start life the same and have axes that
+are indistinguishable. Therefore, permuting their axes doesn&#x2019;t make them look any different&#x2014;they
+still represent the same coordinate system.
+<a 
+ id="x13-120025r132"></a>
+<h4 class="subsectionHead"><span class="titlemark">12.6    </span> <a 
+ id="x13-1210006"></a>The Choice of Alignment System</h4>
+<!--l. 6417--><p class="noindent" >In practice, when AST is asked to find a conversion between two Frames describing two different
+coordinate systems on a given physical domain, it uses an intermediate &#x201C;alignment&#x201D; system. Thus,
+when finding a conversion from system A to system B, AST first finds the <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> from system A to
+some alignment system, system C, and then finds the Mapping from this system C to the required
+system B. It finally concatenates these two Mappings to get the Mapping from system A to system
+B.
+<!--l. 6425--><p class="noindent" >One advantage of this is that it cuts down the number of conversion algorithms required. If there are
+<!--l. 6426--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mi 
+>N</mi></math> different
+Systems which may be used to describe positions within the <a 
+href="sun211ss279.html#x305-4970000">Domain</a>, then this approach requires about
+<!--l. 6428--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mn>2</mn> <mo 
+class="MathClass-bin">&#x2217;</mo><mi 
+>N</mi></math> conversion
+algorithms to be written. The alternative approach of going directly from system A to system B would require
+about <!--l. 6429--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mi 
+>N</mi> <mo 
+class="MathClass-bin">&#x2217;</mo><mi 
+>N</mi></math>
+conversion algorithms.
+<!--l. 6432--><p class="noindent" >In addition, the use of an intermediate alignment system highlights the nature of the conversion
+process. What do we mean by saying that a Mapping &#x201C;converts a position in one coordinate system
+into the corresponding position in another&#x201D;? In practice, it means that the input and output
+coordinates correspond to the same coordinates <em>in some third coordinate system</em>. The choice of this third
+coordinate system, the &#x201C;alignment&#x201D; system, can completely alter the nature of the Mapping. The
+<a 
+href="sun211ss452.html#x479-6710000">Frame</a> class has an attribute called <a 
+href="sun211ss247.html#x273-4650000">AlignSystem</a> which can be used to specify the alignment
+system.
+<!--l. 6442--><p class="noindent" >As an example, consider the case of aligning two spectra calibrated in radio velocity, but each with
+a different rest frequency (each spectrum will be described by a <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a>). Since the
+rest frequencies differ, a given velocity will correspond to different frequencies in the two
+spectra. So when we come to &#x201C;align&#x201D; these two spectra (that is, find a Mapping which
+converts positions in one SpecFrame to the corresponding positions in the other), we have the
+choice of aligning the frequencies or aligning the velocities. Different Mappings will be
+required to describe these two forms of alignment. If we set AlignSystem to &#x201C;Freq&#x201D; then the
+returned Mapping will align the frequencies described by the two SpecFrames. On the
+other hand, if we set AlignSystem to &#x201C;Vradio&#x201D; then the returned Mapping will align the
+velocities.
+<!--l. 6455--><p class="noindent" >Some choices of alignment system are redundant. For instance, in the above example, changing the
+alignment system from frequency to wavelength has no effect on the returned Mapping: if two spectra
+are aligned in frequency they will also be aligned in wavelength (assuming the speed of light doesn&#x2019;t
+change).
+                                                                                       
+
+                                                                                       
+<!--l. 6461--><p class="noindent" >The default value for AlignSystem depends on the class of Frame. For a SpecFrame, the default is
+wavelength (or equivalently, frequency) since this is the system in which observations are usually
+made. The SpecFrame class also has an attribute called <a 
+href="sun211ss246.html#x272-4640000">AlignStdOfRest</a> which allows the standard of
+rest of the alignment system to be specified. Similarly, the <a 
+href="sun211ss492.html#x519-7110000">TimeFrame</a> class has an attribute called
+<a 
+href="sun211ss248.html#x274-4660000">AlignTimeScale</a> which allows the time scale of the alignment system to be specified. Currently, the
+<a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> uses ICRS as the default for AlignSystem, since this is a close approximation to an inertial
+frame of rest.
+                                                                                       
+
+                                                                                       
+                                                                                       
+
+                                                                                       
+<div class="footnotes"><!--l. 6135--><p class="noindent" ><span class="footnote-mark"><a 
+href="#fn20x0-bk" id="fn20x0"><sup class="textsuperscript">20</sup></a></span>The leading digit is zero and is therefore not seen in this particular example.                          </div> <div class="crosslinks">
+<div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211se11.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World
+Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se13.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 6472--><p class="noindent" ><a 
+ id="tailsun211se12.html"></a> 
+</body> 
+</html>

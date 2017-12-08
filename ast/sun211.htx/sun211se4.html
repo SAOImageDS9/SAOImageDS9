@@ -1,0 +1,950 @@
+<!DOCTYPE html> 
+<html> 
+<head><title>An AST Object Primer</title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211se3.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se5.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<h3 class="sectionHead"><span class="titlemark">4    </span> <a 
+ id="x5-340004"></a>An AST Object Primer</h3>
+<div class="sectionTOCS">
+&#x00A0;<span class="subsectionToc" >4.1 <a 
+href="#x5-350001">AST Objects</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.2 <a 
+href="#x5-360002">Object Creation and Pointers</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.3 <a 
+href="#x5-370003">The Object Hierarchy</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.4 <a 
+href="#x5-380004">Displaying Objects</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.5 <a 
+href="#x5-390005">Getting Attribute Values</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.6 <a 
+href="#x5-400006">Setting Attribute Values</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.7 <a 
+href="#x5-410007">Testing, Clearing and Defaulting Attributes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.8 <a 
+href="#x5-420008">Transforming Coordinates</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.9 <a 
+href="#x5-430009">Managing Object Pointers</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.10 <a 
+href="#x5-4400010">AST Pointer Contexts&#x2014;Begin and End</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.11 <a 
+href="#x5-4500011">Exporting, Importing and Exempting AST Pointers</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.12 <a 
+href="#x5-4600012">AST Objects within Multi-threaded Applications</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.13 <a 
+href="#x5-4900013">Copying Objects</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.14 <a 
+href="#x5-5000014">C Pointer Types</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.15 <a 
+href="#x5-5100015">Error Detection</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.16 <a 
+href="#x5-5200016">Sharing the Error Status</a></span>
+</div>
+<!--l. 1681--><p class="noindent" >The AST library deals throughout with entities called Objects and a basic understanding of how to handle these
+                                                                                       
+
+                                                                                       
+is needed before you can use the library effectively. If you are already familiar with an object-oriented language,
+such as C<!--l. 1684--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-bin">+</mo> <mo 
+class="MathClass-bin">+</mo></math>,
+few of the concepts should seem new to you. Be aware, however, that AST is designed to be used
+<em>via</em> fairly conventional C and Fortran interfaces, so some things have to be done a little
+differently.
+<!--l. 1689--><p class="noindent" >If you are not already familiar with object-oriented programming, then don&#x2019;t worry&#x2014;we will not
+emphasise this aspect more than is necessary and will not assume any background knowledge.
+Instead, this section concentrates on presenting all the fundamental information you will need,
+explaining how AST Objects behave and how to manipulate them from conventional C
+programs.
+<!--l. 1696--><p class="noindent" >If you like to read documents from cover to cover, then you can consider this section as an
+introduction to the programming techniques used in the rest of the document. Otherwise, you may
+prefer to skim through it on a first reading and return to it later as reference material.
+<a 
+ id="x5-34001r44"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.1    </span> <a 
+ id="x5-350001"></a>AST Objects</h4>
+<!--l. 1704--><p class="noindent" >An AST <a 
+href="sun211ss464.html#x491-6830000">Object</a> is an entity which is used to store information and Objects come in various kinds,
+called <em>classes</em>, according to the sort of information they hold. Throughout this section, we will make
+use of a simple Object belonging to the &#x201C;<a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a>&#x201D; class to illustrate many of the basic
+concepts.
+<!--l. 1710--><p class="noindent" >A ZoomMap is an Object that contains a recipe for converting coordinates between two hypothetical
+coordinate systems. It does this by multiplying all the coordinate values by a constant called the <em><a 
+href="sun211ss438.html#x464-6560000">Zoom</a>
+factor</em>. A ZoomMap is a very simple Object which exists mainly for use in examples. It allows us to
+illustrate the ways in which Objects are manipulated and to introduce the concept of a
+<a 
+href="sun211ss459.html#x486-6780000">Mapping</a>&#x2014;a recipe for converting coordinates&#x2014;which is fundamental to the way the AST library
+works.
+<a 
+ id="x5-35001r46"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.2    </span> <a 
+ id="x5-360002"></a>Object Creation and Pointers</h4>
+<!--l. 1721--><p class="noindent" >Let us first consider how to create a <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a>. This is done very simply as follows:
+<div class="fancyvrb" id="fancyvrb27"> <a 
+ id="x5-36002r1"></a>&#x00A0;&#x00A0;#include&#x00A0;&#x0022;ast.h&#x0022;<br class="fancyvrb" /><a 
+ id="x5-36004r2"></a>&#x00A0;&#x00A0;AstZoomMap&#x00A0;*zoommap;<br class="fancyvrb" /><a 
+ id="x5-36006r3"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-36008r4"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-36010r5"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-36012r6"></a>&#x00A0;&#x00A0;zoommap&#x00A0;=&#x00A0;astZoomMap(&#x00A0;2,&#x00A0;5.0,&#x00A0;&#x0022;&#x0022;&#x00A0;)</div>
+<!--l. 1735--><p class="noindent" >The first step is to include the header file &#x201C;ast.h&#x201D; which declares the interface to the AST library. We then declare a pointer
+of type AstZoomMap<!--l. 1737--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+to receive the result and invoke the function <a 
+href="sun211ss240.html#x265-4570000">astZoomMap</a> to create the ZoomMap. The pattern is the
+same for all other classes of AST <a 
+href="sun211ss464.html#x491-6830000">Object</a>&#x2014;you simply prefix &#x201C;ast&#x201D; to the class name to obtain
+the function that creates the Object and prefix &#x201C;Ast&#x201D; to obtain the type of the returned
+pointer.
+<!--l. 1743--><p class="noindent" >These functions are called <em>constructor functions</em>, or simply <em>constructors</em> (you can find an individual
+description of all AST functions in Appendix&#x00A0;<a 
+href="sun211se24.html#x25-2170002">B<!--tex4ht:ref: ss:functiondescriptions --></a>) and the arguments passed to the constructor are used
+to initialise the new Object. In this case, we specify 2 as the number of coordinates (<em>i.e.</em>&#x00A0;we are
+going to work in a 2-dimensional space) and 5.0 as the <a 
+href="sun211ss438.html#x464-6560000">Zoom</a> factor to be applied. Note that
+this is a C double value. We will return to the final argument, an empty string, shortly
+(&#x00A7;<a 
+href="#x5-400006">4.6<!--tex4ht:ref: ss:attributeinitialisation --></a>).
+                                                                                       
+
+                                                                                       
+<!--l. 1753--><p class="noindent" >The value returned by the constructor is termed an <em>Object pointer</em> or, in this case, a <em>ZoomMap pointer</em>
+and is used to refer to the Object. You perform all subsequent operations on the Object by passing this
+pointer to other AST functions.
+<a 
+ id="x5-36013r47"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.3    </span> <a 
+ id="x5-370003"></a>The Object Hierarchy</h4>
+<!--l. 1760--><p class="noindent" >Now that we have created our first <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a>, let us examine how it relates to other kinds of <a 
+href="sun211ss464.html#x491-6830000">Object</a>
+before investigating what we can do with it.
+<!--l. 1764--><p class="noindent" >We have so far indicated that a ZoomMap is a kind of Object and have also mentioned that it is a kind
+of <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> as well. These statements can be represented very simply using the following
+hierarchy:
+<div class="fancyvrb" id="fancyvrb28"> <a 
+ id="x5-37002r1"></a>&#x00A0;&#x00A0;Object<br class="fancyvrb" /><a 
+ id="x5-37004r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Mapping<br class="fancyvrb" /><a 
+ id="x5-37006r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;ZoomMap</div>
+<!--l. 1776--><p class="noindent" >which is a way of stating that a ZoomMap is a special class of Mapping, while a Mapping, in turn, is a
+special class of Object. This is exactly like saying that an Oak is a special form of Tree, while a Tree, in
+turn, is a special form of Plant. This may seem almost trivial, but before you turn to read
+something less dull, be assured that it is a very important idea to keep in mind in what
+follows.
+<!--l. 1783--><p class="noindent" >If we look at some of the other Objects used by the AST library, we can see how these are all related in
+a similar way (don&#x2019;t worry about what they do at this stage):
+<div class="fancyvrb" id="fancyvrb29"> <a 
+ id="x5-37008r1"></a>&#x00A0;&#x00A0;Object<br class="fancyvrb" /><a 
+ id="x5-37010r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Mapping<br class="fancyvrb" /><a 
+ id="x5-37012r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Frame<br class="fancyvrb" /><a 
+ id="x5-37014r4"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;FrameSet<br class="fancyvrb" /><a 
+ id="x5-37016r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Plot<br class="fancyvrb" /><a 
+ id="x5-37018r6"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;UnitMap
+<br class="fancyvrb" /><a 
+ id="x5-37020r7"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;ZoomMap<br class="fancyvrb" /><a 
+ id="x5-37022r8"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Channel<br class="fancyvrb" /><a 
+ id="x5-37024r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;FitsChan<br class="fancyvrb" /><a 
+ id="x5-37026r10"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;XmlChan</div>
+<!--l. 1803--><p class="noindent" >Notice that there are several different types of Mapping available (<em>i.e.</em>&#x00A0;there are classes of
+Object indented beneath the &#x201C;Mapping&#x201D; heading) and, in addition, other types of Object
+which are not Mappings&#x2014;Channels for instance (which are at the same hierarchical level as
+Mappings).
+<!--l. 1809--><p class="noindent" >The most specialised Object we have shown here is the <a 
+href="sun211ss467.html#x494-6860000">Plot</a> (which we will not discuss in detail until
+&#x00A7;<a 
+href="sun211se21.html#x22-19600021">21<!--tex4ht:ref: ss:plots --></a>). As you can see, a Plot is a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a>&#x2026;&#x00A0;and a <a 
+href="sun211ss452.html#x479-6710000">Frame</a>&#x2026;&#x00A0;and a Mapping&#x2026;&#x00A0;and, like everything else,
+ultimately an Object.
+<!--l. 1814--><p class="noindent" >What this means is that you can use a Plot not only for its own specialised behaviour, but also
+whenever any of these other less-specialised classes of Object is called for. The general rule is that
+an Object of a particular class may substitute for any of the classes appearing above it in
+this hierarchy. The Object is then said to <em>inherit</em> the behaviour of these higher classes. We
+can therefore use our ZoomMap whenever a ZoomMap, a Mapping or an Object is called
+for.
+<!--l. 1823--><p class="noindent" >Sometimes, this can lead to some spectacular short-cuts by avoiding the need to break large Objects
+down in order to access their components. With some practice and a little lateral thinking you should
+soon be able to spot opportunities for this.
+<!--l. 1828--><p class="noindent" >You can find the full <em>class hierarchy</em>, as this is called, for the AST library in Appendix&#x00A0;<a 
+href="sun211se23.html#x24-2160001">A<!--tex4ht:ref: ss:classhierarchy --></a> and you
+may need to refer to it occasionally until you are familiar with the classes you need to
+use.
+<a 
+ id="x5-37027r48"></a>
+                                                                                       
+
+                                                                                       
+<h4 class="subsectionHead"><span class="titlemark">4.4    </span> <a 
+ id="x5-380004"></a>Displaying Objects</h4>
+<!--l. 1835--><p class="noindent" >Let us now return to the <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> that we created earlier (&#x00A7;<a 
+href="#x5-360002">4.2<!--tex4ht:ref: ss:objectcreation --></a>) and examine what it&#x2019;s made of. There
+is a function for doing this, called <a 
+href="sun211ss187.html#x212-4040000">astShow</a>, which is provided mainly for looking at Objects while you
+are debugging programs.
+<!--l. 1840--><p class="noindent" >If you consult the description of astShow in Appendix&#x00A0;<a 
+href="sun211se24.html#x25-2170002">B<!--tex4ht:ref: ss:functiondescriptions --></a>, you will find that it takes a pointer to an <a 
+href="sun211ss464.html#x491-6830000">Object</a> (of
+type AstObject<!--l. 1842--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>)
+as its argument. Although we have only a ZoomMap pointer available, this is not a problem. If you
+refer to the brief class hierarchy described above (&#x00A7;<a 
+href="#x5-370003">4.3<!--tex4ht:ref: ss:mappinghierarchy --></a>), you will see that a ZoomMap is an Object,
+albeit a specialised one, so it inherits the properties of all Objects and can be substituted wherever an
+Object is required. We can therefore pass our ZoomMap pointer directly to astShow, as
+follows:
+<div class="fancyvrb" id="fancyvrb30"> <a 
+ id="x5-38002r1"></a>&#x00A0;&#x00A0;astShow(&#x00A0;zoommap&#x00A0;);</div>
+<!--l. 1856--><p class="noindent" >The output from this will appear on the standard output stream and should look like the
+following:
+<div class="fancyvrb" id="fancyvrb31"> <a 
+ id="x5-38004r1"></a>&#x00A0;&#x00A0;Begin&#x00A0;ZoomMap<br class="fancyvrb" /><a 
+ id="x5-38006r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Nin&#x00A0;=&#x00A0;2<br class="fancyvrb" /><a 
+ id="x5-38008r3"></a>&#x00A0;&#x00A0;IsA&#x00A0;Mapping<br class="fancyvrb" /><a 
+ id="x5-38010r4"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Zoom&#x00A0;=&#x00A0;5<br class="fancyvrb" /><a 
+ id="x5-38012r5"></a>&#x00A0;&#x00A0;End&#x00A0;ZoomMap</div>
+<!--l. 1869--><p class="noindent" >Here, the &#x201C;Begin&#x201D; and &#x201C;End&#x201D; lines mark the beginning and end of the ZoomMap, while the values 2
+and 5 are simply the values we supplied to initialise it (&#x00A7;<a 
+href="#x5-360002">4.2<!--tex4ht:ref: ss:objectcreation --></a>). These have been given simple names to
+make them easy to refer to.
+<!--l. 1874--><p class="noindent" >The line in the middle which says &#x201C;IsA&#x00A0;<a 
+href="sun211ss459.html#x486-6780000">Mapping</a>&#x201D; is a dividing line between the two values. It
+indicates that the &#x201C;<a 
+href="sun211ss353.html#x379-5710000">Nin</a>&#x201D; value is a property shared by all Mappings, so the ZoomMap has inherited
+this from its <em>parent class</em> (Mapping). The &#x201C;<a 
+href="sun211ss438.html#x464-6560000">Zoom</a>&#x201D; value, however, is specific to a ZoomMap and isn&#x2019;t
+shared by other kinds of Mappings.
+<a 
+ id="x5-38013r49"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.5    </span> <a 
+ id="x5-390005"></a>Getting Attribute Values</h4>
+<!--l. 1882--><p class="noindent" >We saw above (&#x00A7;<a 
+href="#x5-380004">4.4<!--tex4ht:ref: ss:displayingobjects --></a>) how to display the internal values of an <a 
+href="sun211ss464.html#x491-6830000">Object</a>, but what about accessing these
+values from a program? Not all internal Object values are accessible in this way, but many are. Those
+that are, are called <em>attributes</em>. A description of all the attributes used by the AST library can be found in
+Appendix&#x00A0;<a 
+href="sun211se25.html#x266-4580003">C<!--tex4ht:ref: ss:attributedescriptions --></a>.
+<!--l. 1889--><p class="noindent" >Attributes come in several data types (character string, integer, boolean and floating point) and there
+is a standard way of obtaining their values. As an example, consider obtaining the value of the <a 
+href="sun211ss353.html#x379-5710000">Nin</a>
+attribute for the <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> created earlier. This could be done as follows:
+<div class="fancyvrb" id="fancyvrb32"> <a 
+ id="x5-39002r1"></a>&#x00A0;&#x00A0;int&#x00A0;nin;<br class="fancyvrb" /><a 
+ id="x5-39004r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-39006r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-39008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-39010r5"></a>&#x00A0;&#x00A0;nin&#x00A0;=&#x00A0;astGetI(&#x00A0;zoommap,&#x00A0;&#x0022;Nin&#x0022;&#x00A0;);</div>
+<!--l. 1905--><p class="noindent" >Here, the function astGetI is used to extract the attribute value by giving it the ZoomMap pointer and
+the attribute name (attribute names are not case sensitive, but we have used consistent capitalisation
+in this document in order to identify them). Remember to use the &#x201C;ast.h&#x201D; header file to include the
+function prototype.
+<!--l. 1911--><p class="noindent" >If we had wanted the value of the <a 
+href="sun211ss438.html#x464-6560000">Zoom</a> attribute, we would probably have used astGetD instead, this
+being a double version of the same function, for example:
+                                                                                       
+
+                                                                                       
+<div class="fancyvrb" id="fancyvrb33"> <a 
+ id="x5-39012r1"></a>&#x00A0;&#x00A0;double&#x00A0;zoom;<br class="fancyvrb" /><a 
+ id="x5-39014r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-39016r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-39018r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-39020r5"></a>&#x00A0;&#x00A0;zoom&#x00A0;=&#x00A0;astGetD(&#x00A0;zoommap,&#x00A0;&#x0022;Zoom&#x0022;&#x00A0;);</div>
+<!--l. 1925--><p class="noindent" >However, we could equally well have read the Nin value as double, or the Zoom value as an integer,
+or whatever we wanted.
+<!--l. 1928--><p class="noindent" >The data type you want returned is specified simply by replacing the final character of the astGetX
+function name with C&#x00A0;(character string), D&#x00A0;(double), F&#x00A0;(float), I&#x00A0;(int) or L&#x00A0;(long). If possible, the
+value is converted to the type you want. If not, an error message will result. Note that all floating
+point values are stored internally as double, and all integer values as int. Boolean values are also
+stored as integers, but only take the values 1 and 0 (for true/false).
+<a 
+ id="x5-39021r50"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.6    </span> <a 
+ id="x5-400006"></a>Setting Attribute Values</h4>
+<!--l. 1938--><p class="noindent" >Some attribute values are read-only and cannot be altered after an <a 
+href="sun211ss464.html#x491-6830000">Object</a> has been created. The <a 
+href="sun211ss353.html#x379-5710000">Nin</a>
+attribute of a <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> (describing the number of coordinates) is like this. It is defined when the
+ZoomMap is created, but cannot then be altered.
+<!--l. 1943--><p class="noindent" >Other attributes, however, can be modified whenever you want. A ZoomMap&#x2019;s <a 
+href="sun211ss438.html#x464-6560000">Zoom</a> attribute is like
+this. If we wanted to change it, this could be done simply as follows:
+<div class="fancyvrb" id="fancyvrb34"> <a 
+ id="x5-40002r1"></a>&#x00A0;&#x00A0;astSetD(&#x00A0;zoommap,&#x00A0;&#x0022;Zoom&#x0022;,&#x00A0;99.6&#x00A0;);</div>
+<!--l. 1953--><p class="noindent" >which sets the value to 99.6. As when getting an attribute value (&#x00A7;<a 
+href="#x5-390005">4.5<!--tex4ht:ref: ss:gettingattributes --></a>), you have a choice of which data
+type you will use to supply the new value. For instance, you could use an integer value, as
+in:
+<div class="fancyvrb" id="fancyvrb35"> <a 
+ id="x5-40004r1"></a>&#x00A0;&#x00A0;astSetI(&#x00A0;zoommap,&#x00A0;&#x0022;Zoom&#x0022;,&#x00A0;99&#x00A0;);</div>
+<!--l. 1964--><p class="noindent" >and the necessary data conversion would occur. You specify the data type you want to supply simply
+by replacing the final character of the astSetX function name with C&#x00A0;(character string), D&#x00A0;(double),
+F&#x00A0;(float), I&#x00A0;(int) or L&#x00A0;(long). Setting a boolean attribute to any non-zero integer causes it to take the
+value 1.
+<!--l. 1970--><p class="noindent" >An alternative way of setting attribute values for Objects is to use the <a 
+href="sun211ss177.html#x202-3940000">astSet</a> function (<em>i.e.</em>&#x00A0;with no final
+character specifying a data type). In this case, you supply the attribute values in a character
+string. The big advantage of this method is that you can assign values to several attributes
+at once, separating them with commas. This also reads more naturally in programs. For
+example:
+<div class="fancyvrb" id="fancyvrb36"> <a 
+ id="x5-40006r1"></a>&#x00A0;&#x00A0;astSet(&#x00A0;zoommap,&#x00A0;&#x0022;Zoom=99.6,&#x00A0;Report=1&#x0022;&#x00A0;);</div>
+<!--l. 1983--><p class="noindent" >would set values for both the Zoom attribute and the <a 
+href="sun211ss381.html#x407-5990000">Report</a> attribute (about which more
+shortly&#x2014;&#x00A7;<a 
+href="#x5-420008">4.8<!--tex4ht:ref: ss:transforming --></a>). You don&#x2019;t really have to worry about data types with this method, as any character
+representation will do. Note, when using astSet, a literal comma may be included in an attribute value
+by enclosed the value in quotation marks:
+                                                                                       
+
+                                                                                       
+<div class="fancyvrb" id="fancyvrb37"> <a 
+ id="x5-40008r1"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;astSet(&#x00A0;skyframe,&#x00A0;&#x2019;SkyRef=&#x0022;12:13:32,-23:12:44&#x0022;&#x2019;&#x00A0;);</div>
+<!--l. 1995--><p class="noindent" >Another attractive feature of astSet is that you can build the character string which contains the
+attribute settings in the same way as when using the C run time library &#x201C;printf&#x201D; function. This is most
+useful when the values you want to set are held in other variables. For example:
+<div class="fancyvrb" id="fancyvrb38"> <a 
+ id="x5-40010r1"></a>&#x00A0;&#x00A0;double&#x00A0;zoom&#x00A0;=&#x00A0;99.6;<br class="fancyvrb" /><a 
+ id="x5-40012r2"></a>&#x00A0;&#x00A0;int&#x00A0;report&#x00A0;=&#x00A0;1;<br class="fancyvrb" /><a 
+ id="x5-40014r3"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-40016r4"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-40018r5"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-40020r6"></a>&#x00A0;&#x00A0;astSet(&#x00A0;zoommap,&#x00A0;&#x0022;Zoom=%g,&#x00A0;Report=%d&#x0022;,&#x00A0;zoom,&#x00A0;report&#x00A0;);</div>
+<!--l. 2012--><p class="noindent" >would replace the &#x201C;%&#x201D; conversion specifications by the values supplied as additional arguments. Any
+number of additional arguments may be supplied and the formatting rules are exactly the same as for
+the C &#x201C;printf&#x201D; family of functions. This is a very flexible technique, but does contain one
+pitfall:
+     <div class="quote">
+     <!--l. 2019--><p class="noindent" ><b>Pitfall.</b> The default precision used by &#x201C;printf&#x201D; (and astSet) for floating point values
+     is only 6 decimal digits, corresponding approximately to float on most machines,
+     whereas the AST library stores such values internally as doubles. You should be
+     careful to specify a larger precision (such as DBL_DIG, as defined in <!--l. 2024--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>float.h<!--l. 2024--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>)
+     when necessary. For example:
+     <div class="fancyvrb" id="fancyvrb39">  <a 
+ id="x5-40022r1"></a>&#x00A0;&#x00A0;#include&#x00A0;&#x003C;float.h&#x003E;<br class="fancyvrb" /><a 
+ id="x5-40024r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-40026r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-40028r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-40030r5"></a>&#x00A0;&#x00A0;astSet(&#x00A0;zoommap,&#x00A0;&#x0022;Zoom=%.*g&#x0022;,&#x00A0;DBL_DIG,&#x00A0;double_value&#x00A0;);</div>
+     </div>
+<!--l. 2037--><p class="noindent" >Substituted strings may contain commas and this is a useful way of assigning such strings
+as attribute values without the comma being interpreted as an assignment separator, for
+example:
+<div class="fancyvrb" id="fancyvrb40"> <a 
+ id="x5-40032r1"></a>&#x00A0;&#x00A0;astSet(&#x00A0;object,&#x00A0;&#x0022;Attribute=%s&#x0022;,&#x00A0;&#x0022;A&#x00A0;string,&#x00A0;containing&#x00A0;a&#x00A0;comma&#x0022;&#x00A0;);</div>
+<!--l. 2047--><p class="noindent" >This is equivalent to using astSetC and one of these two methods should always be used when
+assigning string attribute values which might potentially contain a comma (<em>e.g.</em>&#x00A0;strings obtained from
+an external source). However, you should not attempt to use astSet to substitute strings that contain
+newline characters, since these are used internally as separators between adjacent attribute
+assignments.
+<!--l. 2055--><p class="noindent" >Finally, a very convenient way of setting attribute values is to do so at the same time as you create an
+Object. Every Object constructor function has a final character string argument which allows you to do
+this. Although you can simply supply an empty string, it is an ideal opportunity to initialise the Object
+to have just the attributes you want. For example, we might have created our original ZoomMap
+with:
+<div class="fancyvrb" id="fancyvrb41"> <a 
+ id="x5-40034r1"></a>&#x00A0;&#x00A0;zoommap&#x00A0;=&#x00A0;astZoomMap(&#x00A0;2,&#x00A0;5.0,&#x00A0;&#x0022;Report=1&#x0022;&#x00A0;);</div>
+<!--l. 2068--><p class="noindent" >and it would then start life with its Report attribute set to 1. The &#x201C;printf&#x201D;-style substitution described
+above may also be used here.
+<a 
+ id="x5-40035r51"></a>
+                                                                                       
+
+                                                                                       
+<h4 class="subsectionHead"><span class="titlemark">4.7    </span> <a 
+ id="x5-410007"></a>Testing, Clearing and Defaulting Attributes</h4>
+<!--l. 2074--><p class="noindent" >You can use the astGetX family of functions (&#x00A7;<a 
+href="#x5-390005">4.5<!--tex4ht:ref: ss:gettingattributes --></a>) to get a value for any <a 
+href="sun211ss464.html#x491-6830000">Object</a> attribute at any time,
+regardless of whether a value has previously been set for it. If no value has been set, the AST library
+will generate a suitable default value.
+<!--l. 2080--><p class="noindent" >Often, the default value of an attribute will not simply be trivial (zero or blank) but may involve
+considerable processing to calculate. Wherever possible, defaults are designed to be real-life, sensible
+values that convey information about the state of the Object. In particular, they may often be based on
+the values of other attributes, so their values may change in response to changes in these other
+attributes. The <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> class that we have studied so far is a little too simple to show this behaviour,
+but we will meet it later on.
+<!--l. 2090--><p class="noindent" >An attribute that returns a default value in this way is said to be <em>un-set</em>. Conversely, once an explicit
+value has been assigned to an attribute, it becomes <em>set</em> and will always return precisely that value,
+never a default.
+<!--l. 2095--><p class="noindent" >The distinction between set and un-set attributes is important and affects the behaviour of several key
+routines in the AST library. You can test if an attribute is set using the function <a 
+href="sun211ss210.html#x235-4270000">astTest</a>, which returns a
+boolean (integer) result, as in:
+<div class="fancyvrb" id="fancyvrb42"> <a 
+ id="x5-41002r1"></a>&#x00A0;&#x00A0;if&#x00A0;(&#x00A0;astTest(&#x00A0;zoommap,&#x00A0;&#x0022;Report&#x0022;&#x00A0;)&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x5-41004r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;the&#x00A0;Report&#x00A0;attribute&#x00A0;is&#x00A0;set&#x003E;<br class="fancyvrb" /><a 
+ id="x5-41006r3"></a>&#x00A0;&#x00A0;}</div>
+<!--l. 2109--><p class="noindent" >Once an attribute is set, you can return it to its un-set state using <a 
+href="sun211ss21.html#x46-2380000">astClear</a>. The effect is as if it had
+never been set in the first place. For example:
+<div class="fancyvrb" id="fancyvrb43"> <a 
+ id="x5-41008r1"></a>&#x00A0;&#x00A0;astClear(&#x00A0;zoommap,&#x00A0;&#x0022;Report&#x0022;&#x00A0;);</div>
+<!--l. 2119--><p class="noindent" >would ensure that the default value of the <a 
+href="sun211ss381.html#x407-5990000">Report</a> attribute is used subsequently.
+<a 
+ id="x5-41009r52"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.8    </span> <a 
+ id="x5-420008"></a>Transforming Coordinates</h4>
+<!--l. 2126--><p class="noindent" >We now have the necessary apparatus to start using our <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> to show what it is really for. Here,
+we will also encounter a routine that is a little more fussy about the type of pointer it will
+accept.
+<!--l. 2130--><p class="noindent" >The purpose of a ZoomMap is to multiply coordinates by a constant zoom factor. To witness this in
+action, we will first set the <a 
+href="sun211ss381.html#x407-5990000">Report</a> attribute for our ZoomMap to a non-zero value:
+<div class="fancyvrb" id="fancyvrb44"> <a 
+ id="x5-42002r1"></a>&#x00A0;&#x00A0;astSet(&#x00A0;zoommap,&#x00A0;&#x0022;Report=1&#x0022;&#x00A0;);</div>
+<!--l. 2140--><p class="noindent" >This boolean (integer) attribute, which is present in all Mappings (and a ZoomMap is a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>),
+causes the automatic display of all coordinate values that the Mapping converts. It is not a good idea
+to leave this feature turned on in a finished program, but it can save a lot of work during
+debugging.
+<!--l. 2146--><p class="noindent" >Our next step is to set up some coordinates for the ZoomMap to work on, using two arrays &#x201C;xin&#x201D; and
+&#x201C;yin&#x201D;, and two arrays to receive the transformed coordinates, &#x201C;xout&#x201D; and &#x201C;yout&#x201D;. Note that these are
+arrays of double, as are all coordinate data processed by the AST library:
+                                                                                       
+
+                                                                                       
+<div class="fancyvrb" id="fancyvrb45"> <a 
+ id="x5-42004r1"></a>&#x00A0;&#x00A0;double&#x00A0;xin[&#x00A0;10&#x00A0;]&#x00A0;=&#x00A0;{&#x00A0;0.0,&#x00A0;1.0,&#x00A0;2.0,&#x00A0;3.0,&#x00A0;4.0,&#x00A0;5.0,&#x00A0;6.0,&#x00A0;7.0,&#x00A0;8.0,&#x00A0;9.0&#x00A0;};
+<br class="fancyvrb" /><a 
+ id="x5-42006r2"></a>&#x00A0;&#x00A0;double&#x00A0;yin[&#x00A0;10&#x00A0;]&#x00A0;=&#x00A0;{&#x00A0;0.0,&#x00A0;2.0,&#x00A0;4.0,&#x00A0;6.0,&#x00A0;8.0,&#x00A0;10.0,&#x00A0;12.0,&#x00A0;14.0,&#x00A0;16.0,&#x00A0;18.0&#x00A0;};
+<br class="fancyvrb" /><a 
+ id="x5-42008r3"></a>&#x00A0;&#x00A0;double&#x00A0;xout[&#x00A0;10&#x00A0;];<br class="fancyvrb" /><a 
+ id="x5-42010r4"></a>&#x00A0;&#x00A0;double&#x00A0;yout[&#x00A0;10&#x00A0;];</div>
+<!--l. 2161--><p class="noindent" >We will now use the function <a 
+href="sun211ss219.html#x244-4360000">astTran2</a> to transform the input coordinates. This is the most
+commonly-used (2-dimensional) coordinate transformation function. If you look at its description in
+Appendix&#x00A0;<a 
+href="sun211se24.html#x25-2170002">B<!--tex4ht:ref: ss:functiondescriptions --></a>, you will see that it requires a pointer to a Mapping, so we cannot supply just any old
+<a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer, as we could with the functions discussed previously. If we passed it a pointer to an
+inappropriate Object, an error message would result.
+<!--l. 2169--><p class="noindent" >Fortunately, a ZoomMap is a Mapping (Appendix&#x00A0;<a 
+href="sun211se23.html#x24-2160001">A<!--tex4ht:ref: ss:classhierarchy --></a>), so we can use it with astTran2 to transform our
+coordinates, as follows:
+<div class="fancyvrb" id="fancyvrb46"> <a 
+ id="x5-42012r1"></a>&#x00A0;&#x00A0;astTran2(&#x00A0;zoommap,&#x00A0;10,&#x00A0;xin,&#x00A0;yin,&#x00A0;1,&#x00A0;xout,&#x00A0;yout&#x00A0;);</div>
+<!--l. 2178--><p class="noindent" >Here, 10 is the number of points we want to transform and the fifth argument value of 1 indicates that
+we want to transform in the <em>forward</em> direction (from input to output).
+<!--l. 2182--><p class="noindent" >Because our ZoomMap&#x2019;s Report attribute is set to 1, this will cause the effects of the ZoomMap on the
+coordinates to be displayed on the standard output stream:
+<div class="fancyvrb" id="fancyvrb47"> <a 
+ id="x5-42014r1"></a>&#x00A0;&#x00A0;(0,&#x00A0;0)&#x00A0;--&#x003E;&#x00A0;(0,&#x00A0;0)<br class="fancyvrb" /><a 
+ id="x5-42016r2"></a>&#x00A0;&#x00A0;(1,&#x00A0;2)&#x00A0;--&#x003E;&#x00A0;(5,&#x00A0;10)<br class="fancyvrb" /><a 
+ id="x5-42018r3"></a>&#x00A0;&#x00A0;(2,&#x00A0;4)&#x00A0;--&#x003E;&#x00A0;(10,&#x00A0;20)<br class="fancyvrb" /><a 
+ id="x5-42020r4"></a>&#x00A0;&#x00A0;(3,&#x00A0;6)&#x00A0;--&#x003E;&#x00A0;(15,&#x00A0;30)<br class="fancyvrb" /><a 
+ id="x5-42022r5"></a>&#x00A0;&#x00A0;(4,&#x00A0;8)&#x00A0;--&#x003E;&#x00A0;(20,&#x00A0;40)
+<br class="fancyvrb" /><a 
+ id="x5-42024r6"></a>&#x00A0;&#x00A0;(5,&#x00A0;10)&#x00A0;--&#x003E;&#x00A0;(25,&#x00A0;50)<br class="fancyvrb" /><a 
+ id="x5-42026r7"></a>&#x00A0;&#x00A0;(6,&#x00A0;12)&#x00A0;--&#x003E;&#x00A0;(30,&#x00A0;60)<br class="fancyvrb" /><a 
+ id="x5-42028r8"></a>&#x00A0;&#x00A0;(7,&#x00A0;14)&#x00A0;--&#x003E;&#x00A0;(35,&#x00A0;70)<br class="fancyvrb" /><a 
+ id="x5-42030r9"></a>&#x00A0;&#x00A0;(8,&#x00A0;16)&#x00A0;--&#x003E;&#x00A0;(40,&#x00A0;80)<br class="fancyvrb" /><a 
+ id="x5-42032r10"></a>&#x00A0;&#x00A0;(9,&#x00A0;18)&#x00A0;--&#x003E;&#x00A0;(45,&#x00A0;90)</div>
+<!--l. 2201--><p class="noindent" >This shows the coordinate values of each point both before and after the ZoomMap is applied. You can
+see that each coordinate value has been multiplied by the factor 5 determined by the <a 
+href="sun211ss438.html#x464-6560000">Zoom</a>
+attribute value. The transformed coordinates are now stored in the &#x201C;xout&#x201D; and &#x201C;yout&#x201D;
+arrays.
+<!--l. 2207--><p class="noindent" >If we wanted to transform in the opposite direction, we need simply change the fifth argument of
+astTran2 from 1 to 0. We can also feed the output coordinates from the above back into the
+function:
+<div class="fancyvrb" id="fancyvrb48"> <a 
+ id="x5-42034r1"></a>&#x00A0;&#x00A0;astTran2(&#x00A0;zoommap,&#x00A0;10,&#x00A0;xout,&#x00A0;yout,&#x00A0;0,&#x00A0;xin,&#x00A0;yin&#x00A0;);</div>
+<!--l. 2217--><p class="noindent" >The output would then look like:
+<div class="fancyvrb" id="fancyvrb49"> <a 
+ id="x5-42036r1"></a>&#x00A0;&#x00A0;(0,&#x00A0;0)&#x00A0;--&#x003E;&#x00A0;(0,&#x00A0;0)<br class="fancyvrb" /><a 
+ id="x5-42038r2"></a>&#x00A0;&#x00A0;(5,&#x00A0;10)&#x00A0;--&#x003E;&#x00A0;(1,&#x00A0;2)<br class="fancyvrb" /><a 
+ id="x5-42040r3"></a>&#x00A0;&#x00A0;(10,&#x00A0;20)&#x00A0;--&#x003E;&#x00A0;(2,&#x00A0;4)<br class="fancyvrb" /><a 
+ id="x5-42042r4"></a>&#x00A0;&#x00A0;(15,&#x00A0;30)&#x00A0;--&#x003E;&#x00A0;(3,&#x00A0;6)<br class="fancyvrb" /><a 
+ id="x5-42044r5"></a>&#x00A0;&#x00A0;(20,&#x00A0;40)&#x00A0;--&#x003E;&#x00A0;(4,&#x00A0;8)
+<br class="fancyvrb" /><a 
+ id="x5-42046r6"></a>&#x00A0;&#x00A0;(25,&#x00A0;50)&#x00A0;--&#x003E;&#x00A0;(5,&#x00A0;10)<br class="fancyvrb" /><a 
+ id="x5-42048r7"></a>&#x00A0;&#x00A0;(30,&#x00A0;60)&#x00A0;--&#x003E;&#x00A0;(6,&#x00A0;12)<br class="fancyvrb" /><a 
+ id="x5-42050r8"></a>&#x00A0;&#x00A0;(35,&#x00A0;70)&#x00A0;--&#x003E;&#x00A0;(7,&#x00A0;14)<br class="fancyvrb" /><a 
+ id="x5-42052r9"></a>&#x00A0;&#x00A0;(40,&#x00A0;80)&#x00A0;--&#x003E;&#x00A0;(8,&#x00A0;16)<br class="fancyvrb" /><a 
+ id="x5-42054r10"></a>&#x00A0;&#x00A0;(45,&#x00A0;90)&#x00A0;--&#x003E;&#x00A0;(9,&#x00A0;18)</div>
+<!--l. 2234--><p class="noindent" >This is termed the <em>inverse</em> transformation (we have converted from output to input) and
+you can see that the original coordinates have been recovered by dividing by the Zoom
+factor.
+<a 
+ id="x5-42055r53"></a>
+                                                                                       
+
+                                                                                       
+<h4 class="subsectionHead"><span class="titlemark">4.9    </span> <a 
+ id="x5-430009"></a>Managing Object Pointers</h4>
+<!--l. 2240--><p class="noindent" >So far, we have looked at creating Objects and using them in various simple ways but have not yet
+considered how to get rid of them again.
+<!--l. 2243--><p class="noindent" >Every <a 
+href="sun211ss464.html#x491-6830000">Object</a> consumes various computer resources (principally memory) and should be disposed of
+when it is no longer required, so as to free up these resources. One way of doing this (not necessarily
+the best&#x2014;&#x00A7;<a 
+href="#x5-4400010">4.10<!--tex4ht:ref: ss:contexts --></a>) is to <em>annul</em> each Object pointer once you have finished with it, using <a 
+href="sun211ss7.html#x32-2240000">astAnnul</a>. For
+example:
+<div class="fancyvrb" id="fancyvrb50"> <a 
+ id="x5-43002r1"></a>&#x00A0;&#x00A0;zoommap&#x00A0;=&#x00A0;astAnnul(&#x00A0;zoommap&#x00A0;);</div>
+<!--l. 2255--><p class="noindent" >This indicates that you have finished with the pointer. Since astAnnul always returns the null value
+AST__NULL (as defined in &#x201C;ast.h&#x201D;), the recommended way of using it, as here, is to assign the
+returned value to the pointer being annulled. This ensures that any attempt to use the pointer again
+will generate an error message.
+<!--l. 2261--><p class="noindent" >In general, this process may not delete the Object, because there may still be other pointers
+associated with it. However, each Object maintains a count of the number of pointers associated
+with it and will be deleted if you annul the final pointer. Using astAnnul consistently will
+therefore ensure that all Objects are disposed of at the correct time. You can determine
+how many pointers are associated with an Object by examining its (read-only) <a 
+href="sun211ss377.html#x403-5950000">RefCount</a>
+attribute.
+<a 
+ id="x5-43003r54"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.10    </span> <a 
+ id="x5-4400010"></a>AST Pointer Contexts&#x2014;Begin and End</h4>
+<!--l. 2271--><p class="noindent" >The use of <a 
+href="sun211ss7.html#x32-2240000">astAnnul</a> (&#x00A7;<a 
+href="#x5-430009">4.9<!--tex4ht:ref: ss:annullingpointers --></a>) is not completely foolproof, however. Consider the following:
+<div class="fancyvrb" id="fancyvrb51"> <a 
+ id="x5-44002r1"></a>&#x00A0;&#x00A0;astShow(&#x00A0;astZoomMap(&#x00A0;2,&#x00A0;5.0,&#x00A0;&#x0022;&#x0022;&#x00A0;)&#x00A0;);</div>
+<!--l. 2280--><p class="noindent" >This creates a <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> and displays it on standard output (&#x00A7;<a 
+href="#x5-380004">4.4<!--tex4ht:ref: ss:displayingobjects --></a>). Using function invocations as
+arguments to other functions in this way is very convenient because it avoids the need for
+intermediate pointer variables. However, the pointer generated by <a 
+href="sun211ss240.html#x265-4570000">astZoomMap</a> is still active, and
+since we have not stored its value, we cannot use astAnnul to annul it. The ZoomMap will therefore
+stay around until the end of the program.
+<!--l. 2288--><p class="noindent" >A simple way to avoid this problem is to enclose all use of AST functions between invocations of
+<a 
+href="sun211ss13.html#x38-2300000">astBegin</a> and <a 
+href="sun211ss47.html#x72-2640000">astEnd</a>, for example:
+<div class="fancyvrb" id="fancyvrb52"> <a 
+ id="x5-44004r1"></a>&#x00A0;&#x00A0;astBegin;<br class="fancyvrb" /><a 
+ id="x5-44006r2"></a>&#x00A0;&#x00A0;astShow(&#x00A0;astZoomMap(&#x00A0;2,&#x00A0;5.0,&#x00A0;&#x0022;&#x0022;&#x00A0;)&#x00A0;);<br class="fancyvrb" /><a 
+ id="x5-44008r3"></a>&#x00A0;&#x00A0;astEnd;</div>
+<!--l. 2299--><p class="noindent" >When the expansion of astEnd (which is a macro) executes, every <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer created since the
+previous use of astBegin (also a macro) is automatically annulled and any Objects left without
+pointers are deleted. This provides a simple solution to managing Objects and their pointers, and
+allows you to create Objects very freely without needing to keep detailed track of each one. Because
+this is so convenient, we implicitly assume that astBegin and astEnd are used in most of the examples
+given in this document. Pointer management is not generally shown explicitly unless it is particularly
+relevant to the point being illustrated.
+                                                                                       
+
+                                                                                       
+<!--l. 2310--><p class="noindent" >If necessary, astBegin and astEnd may be nested, like blocks delimited by &#x201C;{&#x2026;}&#x201D; in C, to define a series
+of AST pointer contexts. Each use of astEnd will then annul only those Object pointers created since
+the matching use of astBegin.
+<a 
+ id="x5-44009r55"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.11    </span> <a 
+ id="x5-4500011"></a>Exporting, Importing and Exempting AST Pointers</h4>
+<!--l. 2316--><p class="noindent" >The <a 
+href="sun211ss50.html#x75-2670000">astExport</a> function allows you to export particular pointers from one AST context (&#x00A7;<a 
+href="#x5-4400010">4.10<!--tex4ht:ref: ss:contexts --></a>) to the
+next outer one, as follows:
+<div class="fancyvrb" id="fancyvrb53"> <a 
+ id="x5-45002r1"></a>&#x00A0;&#x00A0;astExport(&#x00A0;zoommap&#x00A0;);</div>
+<!--l. 2326--><p class="noindent" >This would identify the pointer stored in &#x201C;zoommap&#x201D; as being required after the end of the current
+AST context. It causes any pointers nominated in this way to survive the next use of <a 
+href="sun211ss47.html#x72-2640000">astEnd</a> (but only
+one such use) unscathed, so that they are available to the next outer context. This facility is
+not needed often, but is invaluable when the purpose of your <a 
+href="sun211ss13.html#x38-2300000">astBegin</a>&#x2026;astEnd block is
+basically to generate an <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer. Without this, there is no way of getting that pointer
+out.
+<!--l. 2336--><p class="noindent" >The <a 
+href="sun211ss89.html#x114-3060000">astImport</a> routine can be used in a similar manner to import a pointer into the current context, so
+that it is deleted when the current context is closed using astEnd.
+<!--l. 2340--><p class="noindent" >Sometimes, you may also want to exempt a pointer from all the effects of AST contexts. You should
+not need to do this often, but it will prove essential if you ever need to write a library of functions that
+stores AST pointers as part of its own internal data. Without some form of exemption, the caller of
+your routines could cause the pointers you have stored to be annulled&#x2014;thus corrupting your internal
+data&#x2014;simply by using astEnd. To avoid this, you should use <a 
+href="sun211ss49.html#x74-2660000">astExempt</a> on each pointer that you
+store, for example:
+<div class="fancyvrb" id="fancyvrb54"> <a 
+ id="x5-45004r1"></a>&#x00A0;&#x00A0;astExempt(&#x00A0;zoommap&#x00A0;);</div>
+<!--l. 2355--><p class="noindent" >This will prevent the pointer being affected by any subsequent use of astEnd. Of course, it then
+becomes your responsibility to annul this pointer (using <a 
+href="sun211ss7.html#x32-2240000">astAnnul</a>) when it is no longer
+required.
+<a 
+ id="x5-45005r56"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.12    </span> <a 
+ id="x5-4600012"></a>AST Objects within Multi-threaded Applications</h4>
+<!--l. 2362--><p class="noindent" >When the AST library is built from source, the build process checks to see if the POSIX threads library
+(&#x201C;<code>pthreads</code>&#x201D;) is available. If so, appropriate <code>pthreads</code> calls are inserted into the AST source code to
+ensure that AST is thread-safe, and the AST__THREADSAFE macro (defined in the &#x201C;ast.h&#x201D; header
+file) is set to &#x201C;<code>1</code>&#x201D;. If the <code>pthreads</code> library cannot be found when AST is built, a working version of the
+AST library will still be created, but it will not be thread-safe. In this case the AST__THREADSAFE
+macro will be set to &#x201C;<code>0</code>&#x201D; in ast.h. The rest of this section assumes that the thread-safe version of AST is
+being used.
+                                                                                       
+
+                                                                                       
+<!--l. 2373--><p class="noindent" >Note, some AST functions call externally specified functions (<em>e.g.</em> the source and sink functions used
+by the <a 
+href="sun211ss441.html#x468-6600000">Channel</a> class or the graphics primitives functions used by the <a 
+href="sun211ss467.html#x494-6860000">Plot</a> class). AST does not know
+whether such functions are thread-safe or not. For this reason, invocations of these functions within a
+multi-threaded environment are serialised using a mutex in order to avoid two or more threads
+executing an external function simultaneously.
+<!--l. 2381--><p class="noindent" >If an application uses more than one thread, the possibility arises that an <a 
+href="sun211ss464.html#x491-6830000">Object</a> created by one thread
+may be accessed by another thread, potentially simultaneously. If any of the threads modifies
+any aspect of the Object, this could lead to serious problems within the other threads. For
+this reason, some restrictions are placed on how Objects can be used in a multi-threaded
+application.
+<a 
+ id="x5-46001r1"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">4.12.1    </span> <a 
+ id="x5-470001"></a>Locking AST Objects for Exclusive Use</h5>
+<!--l. 2389--><p class="noindent" >The basic restriction is that a thread can only access Objects that it has previously locked for its own
+exclusive use. If a thread attempts to access any <a 
+href="sun211ss464.html#x491-6830000">Object</a> that it has not locked, an error is
+reported.
+<!--l. 2393--><p class="noindent" >The <a 
+href="sun211ss7.html#x32-2240000">astAnnul</a> function is the one exception to this restriction. Pointers for Objects not currently locked
+by the calling thread can be annulled succesfully using astAnnul. This means that a thread that has
+finished with an Object pointer can unlock the Object by passing the pointer to <a 
+href="sun211ss231.html#x256-4480000">astUnlock</a> (so that
+other threads can use the Object via their own cloned pointers), and can then annul the pointer using
+astAnnul. Note, however, that an error will be reported by astAnnul if the supplied pointer has been
+locked by another thread using <a 
+href="sun211ss98.html#x123-3150000">astLock</a>.
+<!--l. 2402--><p class="noindent" >When an Object is created, it is initially locked by the calling thread. Therefore a thread does not need
+to lock an Object explicitly if it was created in the same thread.
+<!--l. 2406--><p class="noindent" >If the Object pointer is then passed to another thread, the first thread must unlock the Object using
+astUnlock and the second thread must then lock it using astLock.
+<!--l. 2410--><p class="noindent" >If a thread attempts to lock an Object that is already locked by another thread, it can choose to report
+an error immediately or to wait until the Object is available.
+<!--l. 2414--><p class="noindent" >The <a 
+href="sun211ss213.html#x238-4300000">astThread</a> function can be used to determine whether an Object is locked by the running thread,
+locked by another thread, or unlocked.
+<!--l. 2417--><p class="noindent" >If two or more threads need simultaneous access to an Object, a deep copy of the Object should be
+taken for each thread, using <a 
+href="sun211ss34.html#x59-2510000">astCopy</a>, and then the copies should be unlocked and passed to the othe
+threads, which should then lock them. Note, if a thread modifies the Object, the modification will
+have no effect on the other threads, because the Object copies are independent of each
+other.
+<a 
+ id="x5-47001r58"></a>
+<h5 class="subsubsectionHead"><span class="titlemark">4.12.2    </span> <a 
+ id="x5-480002"></a>AST Pointer Contexts</h5>
+<!--l. 2426--><p class="noindent" >Each thread maintains its own set of nested AST contexts, so when <a 
+href="sun211ss47.html#x72-2640000">astEnd</a> is called, only Objects that
+are locked by the current thread will be annulled.
+<!--l. 2430--><p class="noindent" >If an <a 
+href="sun211ss464.html#x491-6830000">Object</a> is unlocked by a thread using <a 
+href="sun211ss231.html#x256-4480000">astUnlock</a>, it is exempted from context handling
+so that subsequent invocations of astEnd will not cause it to be annulled (this is similar
+to using <a 
+href="sun211ss49.html#x74-2660000">astExempt</a> on the Object). When the Object is subsequently locked by another
+thread using <a 
+href="sun211ss98.html#x123-3150000">astLock</a>, it will be imported into the context that was active when astLock was
+called.
+                                                                                       
+
+                                                                                       
+<a 
+ id="x5-48001r57"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.13    </span> <a 
+ id="x5-4900013"></a>Copying Objects</h4>
+<!--l. 2440--><p class="noindent" >The AST library makes extensive use of pointers, not only for accessing Objects directly, but also as a
+means of storing Objects inside other Objects (a number of classes of <a 
+href="sun211ss464.html#x491-6830000">Object</a> are designed to hold
+collections of other Objects). Rather than copy an Object in its entirety, a pointer to the interior Object
+is simply stored in the enclosing Object.
+<!--l. 2447--><p class="noindent" >This means that Objects may frequently not be completely independent of each other because, for
+instance, they both contain pointers to the same sub-Object. In this situation, changing
+one Object (say assigning an attribute value) may affect the other one <em>via</em> the common
+Object.
+<!--l. 2453--><p class="noindent" >It is difficult to describe all cases where this may happen, so you should always be alert to the
+possibility. Fortunately, there is a simple solution. If you require two Objects to be independent, then
+simply use <a 
+href="sun211ss34.html#x59-2510000">astCopy</a> to make a copy of one, <em>e.g.</em>:
+<div class="fancyvrb" id="fancyvrb55"> <a 
+ id="x5-49002r1"></a>&#x00A0;&#x00A0;AstZoomMap&#x00A0;*zoommap1,&#x00A0;*zoommap2;<br class="fancyvrb" /><a 
+ id="x5-49004r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-49006r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-49008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-49010r5"></a>&#x00A0;&#x00A0;zoommap2&#x00A0;=&#x00A0;astCopy(&#x00A0;zoommap1&#x00A0;);</div>
+<!--l. 2468--><p class="noindent" >This process will create a true copy of any Object and return a pointer to the copy. This copy will not
+contain any pointers to any component of the original Object (everything is duplicated), so
+you can then modify it safely, without fear of affecting either the original or any other
+Object.
+<a 
+ id="x5-49011r60"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.14    </span> <a 
+ id="x5-5000014"></a>C Pointer Types</h4>
+<!--l. 2478--><p class="noindent" >At this point it is necessary to confess to a small amount of deception. So far, we have been passing
+<a 
+href="sun211ss464.html#x491-6830000">Object</a> pointers to AST functions in order to perform operations on those Objects. In fact, however,
+what we were using were not true C functions at all, but merely macros which invoke a
+related set of hidden functions with essentially the same arguments. In practical terms,
+this makes very little difference to how you use the functions, as we will continue to call
+them.<span class="footnote-mark"><a 
+href="#fn9x0" id="fn9x0-bk"><sup class="textsuperscript">9</sup></a></span><a 
+ id="x5-50001f9"></a>
+<!--l. 2489--><p class="noindent" >The reason for this deception has to do with the rules for data typing in C. Recall that most AST
+functions can be used to process Objects from a range of different classes (&#x00A7;<a 
+href="#x5-370003">4.3<!--tex4ht:ref: ss:objecthierarchy --></a>). In C, this means
+passing different pointer types to the same function and most C compilers will not permit this (at
+least, not without grumbling) because it usually indicates a programming error. In AST, however, it is
+perfectly safe if done properly. Some way is therefore needed of circumventing the normal compiler
+checking.
+<!--l. 2498--><p class="noindent" >The normal way of doing this in C is with a cast. This approach quickly becomes cumbersome,
+however, so we have adopted the strategy of wrapping each function in a macro which applies the
+appropriate cast for you. This means that you can pass pointers of any type to any AST function. For
+example, in passing a <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> pointer to <a 
+href="sun211ss187.html#x212-4040000">astShow</a>:
+<div class="fancyvrb" id="fancyvrb56"> <a 
+ id="x5-50003r1"></a>&#x00A0;&#x00A0;AstZoomMap&#x00A0;*zoommap;<br class="fancyvrb" /><a 
+ id="x5-50005r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-50007r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-50009r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-50011r5"></a>&#x00A0;&#x00A0;zoommap&#x00A0;=&#x00A0;astZoomMap(&#x00A0;2,&#x00A0;5.0,&#x00A0;&#x0022;&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x5-50013r6"></a>&#x00A0;&#x00A0;astShow(&#x00A0;zoommap&#x00A0;);</div>
+<!--l. 2515--><p class="noindent" >we are exploiting this mechanism to avoid a compiler warning, because the notional type of astShow&#x2019;s parameter
+is AstObject<!--l. 2516--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math> (not
+AstZoomMap<!--l. 2517--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>).
+                                                                                       
+
+                                                                                       
+<!--l. 2519--><p class="noindent" >We must still guard against programming errors, however, so every pointer&#x2019;s type is checked by the
+enclosing macro immediately before any AST function executes. This allows pointer mis-matches (in
+the more liberal AST sense&#x2014;<em>i.e.</em>&#x00A0;taking account of the class hierarchy, rather than the stricter C sense)
+to be detected at run-time and a suitable error message will be reported. This message should also
+identify the line where the error occurs.
+<!--l. 2527--><p class="noindent" >A similar strategy is used when pointers are returned by AST functions (<em>i.e.</em>&#x00A0;as the function result). In this case the
+pointer is cast to void<!--l. 2529--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>,
+although we retain the notional pointer type in the function&#x2019;s documentation (<em>e.g.</em>&#x00A0;Appendix&#x00A0;<a 
+href="sun211se24.html#x25-2170002">B<!--tex4ht:ref: ss:functiondescriptions --></a>). This
+allows you to assign function results to pointer variables without using an explicit cast. For example,
+the <a 
+href="sun211ss160.html#x185-3770000">astRead</a> function returns an Object pointer, but might be used to read (say) a ZoomMap as
+follows:
+<div class="fancyvrb" id="fancyvrb57"> <a 
+ id="x5-50015r1"></a>&#x00A0;&#x00A0;AstChannel&#x00A0;*channel;<br class="fancyvrb" /><a 
+ id="x5-50017r2"></a>&#x00A0;&#x00A0;AstZoomMap&#x00A0;*zoommap;<br class="fancyvrb" /><a 
+ id="x5-50019r3"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-50021r4"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-50023r5"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-50025r6"></a>&#x00A0;&#x00A0;zoommap&#x00A0;=&#x00A0;astRead(&#x00A0;channel&#x00A0;);</div>
+<!--l. 2547--><p class="noindent" >Strictly, there is a C pointer mis-match here, but it is ignored because the operation makes perfect
+sense to AST.
+<!--l. 2551--><p class="noindent" ><b>There is an important exception to this, however, in that constructor functions always return
+strongly-typed pointers.</b> What we mean by this is that the returned pointer is never implicitly cast to
+void<!--l. 2553--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>.
+You must therefore match pointer types when you initially create an Object using its constructor, such
+as in the following:
+<div class="fancyvrb" id="fancyvrb58"> <a 
+ id="x5-50027r1"></a>&#x00A0;&#x00A0;AstZoomMap&#x00A0;*zoommap;<br class="fancyvrb" /><a 
+ id="x5-50029r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-50031r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-50033r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-50035r5"></a>&#x00A0;&#x00A0;zoommap&#x00A0;=&#x00A0;astZoomMap(&#x00A0;2,&#x00A0;5.0,&#x00A0;&#x0022;&#x0022;&#x00A0;);</div>
+<!--l. 2566--><p class="noindent" >If the variable receiving the pointer is of a different type, an appropriate cast should be used, as
+in:
+<div class="fancyvrb" id="fancyvrb59"> <a 
+ id="x5-50037r1"></a>&#x00A0;&#x00A0;AstMapping&#x00A0;*mapping;<br class="fancyvrb" /><a 
+ id="x5-50039r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-50041r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-50043r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-50045r5"></a>&#x00A0;&#x00A0;mapping&#x00A0;=&#x00A0;(AstMapping&#x00A0;*)&#x00A0;astZoomMap(&#x00A0;2,&#x00A0;5.0,&#x00A0;&#x0022;&#x0022;&#x00A0;);</div>
+<!--l. 2579--><p class="noindent" >This is an encouragement for you to declare your pointer types consistently, since this is of great
+benefit to anyone trying to understand your software.
+<!--l. 2583--><p class="noindent" >Finally, we should also make one more small confession&#x2014;AST pointers are not really pointers at all.
+Although they behave like pointers, the actual &#x201C;values&#x201D; stored are not the addresses of C
+data structures. This means that you cannot de-reference an AST pointer to examine the
+data within (although you can use astShow instead&#x2014;&#x00A7;<a 
+href="#x5-380004">4.4<!--tex4ht:ref: ss:displayingobjects --></a>). This is necessary so that AST
+pointers can be made unique even although several of them might reference the same
+Object.
+<a 
+ id="x5-50046r61"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.15    </span> <a 
+ id="x5-5100015"></a>Error Detection</h4>
+<!--l. 2594--><p class="noindent" >If an error occurs in an AST function (for example, if you supply an invalid argument, such as a
+pointer to the wrong class of <a 
+href="sun211ss464.html#x491-6830000">Object</a>), an error message will be written to the standard error stream and
+the function will immediately return.
+                                                                                       
+
+                                                                                       
+<!--l. 2599--><p class="noindent" >To indicate than an error has occurred, an AST <em>error status</em> value is used.
+This integer value is stored internally by AST and is initially clear (<em>i.e.</em>&#x00A0;set to
+zero<span class="footnote-mark"><a 
+href="#fn10x0" id="fn10x0-bk"><sup class="textsuperscript">10</sup></a></span><a 
+ id="x5-51001f10"></a>
+to indicate no error). If an error occurs, it becomes set to a different <em>error value</em>, which allows you to
+detect the error, as follows:
+<div class="fancyvrb" id="fancyvrb60"> <a 
+ id="x5-51003r1"></a>&#x00A0;&#x00A0;zoommap&#x00A0;=&#x00A0;astZoomMap(&#x00A0;2,&#x00A0;5.0,&#x00A0;&#x0022;Title=My&#x00A0;ZoomMap&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x5-51005r2"></a>&#x00A0;&#x00A0;if&#x00A0;(&#x00A0;!astOK&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x5-51007r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;an&#x00A0;error&#x00A0;has&#x00A0;occurred&#x003E;<br class="fancyvrb" /><a 
+ id="x5-51009r4"></a>&#x00A0;&#x00A0;}</div>
+<!--l. 2619--><p class="noindent" >The macro <a 
+href="sun211ss130.html#x155-3470000">astOK</a> is used to test whether the AST error status is still OK. In this example it would not
+be, because we have attempted to set a value for the <a 
+href="sun211ss420.html#x446-6380000">Title</a> attribute of a <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> and a ZoomMap
+does not have such an attribute. The actual value of the AST error status can be obtained using the
+<a 
+href="sun211ss200.html#x225-4170000">astStatus</a> macro, as follows:
+<div class="fancyvrb" id="fancyvrb61"> <a 
+ id="x5-51011r1"></a>&#x00A0;&#x00A0;int&#x00A0;status;<br class="fancyvrb" /><a 
+ id="x5-51013r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-51015r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-51017r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-51019r5"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-51021r6"></a>&#x00A0;&#x00A0;status&#x00A0;=&#x00A0;astStatus;</div>
+<!--l. 2636--><p class="noindent" >A consequence of the AST error status being set is that almost all AST functions will subsequently
+cease to function and will instead simply return without action. This means that you do not need to
+use astOK to check for errors very frequently. Instead, you can usually simply invoke a succession of
+AST functions. If an error occurs in any of them, the following ones will do nothing and you can check
+for the error at the end, for example:
+<div class="fancyvrb" id="fancyvrb62"> <a 
+ id="x5-51023r1"></a>&#x00A0;&#x00A0;astFunctionA(&#x00A0;...&#x00A0;);<br class="fancyvrb" /><a 
+ id="x5-51025r2"></a>&#x00A0;&#x00A0;astFunctionB(&#x00A0;...&#x00A0;);<br class="fancyvrb" /><a 
+ id="x5-51027r3"></a>&#x00A0;&#x00A0;astFunctionC(&#x00A0;...&#x00A0;);<br class="fancyvrb" /><a 
+ id="x5-51029r4"></a>&#x00A0;&#x00A0;if&#x00A0;(&#x00A0;!astOK&#x00A0;)&#x00A0;{
+<br class="fancyvrb" /><a 
+ id="x5-51031r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;an&#x00A0;error&#x00A0;has&#x00A0;occurred&#x003E;<br class="fancyvrb" /><a 
+ id="x5-51033r6"></a>&#x00A0;&#x00A0;}</div>
+<!--l. 2655--><p class="noindent" >There are, however, a few functions which do not adhere to this general rule and which will attempt to
+execute if the AST error status is set. These functions, such as <a 
+href="sun211ss7.html#x32-2240000">astAnnul</a>, are concerned with cleaning
+up and recovering resources. For example, in the following:
+<div class="fancyvrb" id="fancyvrb63"> <a 
+ id="x5-51035r1"></a>&#x00A0;&#x00A0;zoommap&#x00A0;=&#x00A0;astZoomMap(&#x00A0;2,&#x00A0;5.0,&#x00A0;&#x0022;&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x5-51037r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-51039r3"></a>&#x00A0;&#x00A0;astFunctionX(&#x00A0;...&#x00A0;);<br class="fancyvrb" /><a 
+ id="x5-51041r4"></a>&#x00A0;&#x00A0;astFunctionY(&#x00A0;...&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x5-51043r5"></a>&#x00A0;&#x00A0;astFunctionZ(&#x00A0;...&#x00A0;);<br class="fancyvrb" /><a 
+ id="x5-51045r6"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-51047r7"></a>&#x00A0;&#x00A0;zoommap&#x00A0;=&#x00A0;astAnnul(&#x00A0;zoommap&#x00A0;);<br class="fancyvrb" /><a 
+ id="x5-51049r8"></a>&#x00A0;&#x00A0;if&#x00A0;(&#x00A0;!astOK&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x5-51051r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;an&#x00A0;error&#x00A0;has&#x00A0;occurred&#x003E;<br class="fancyvrb" /><a 
+ id="x5-51053r10"></a>&#x00A0;&#x00A0;}</div>
+<!--l. 2675--><p class="noindent" >astAnnul will execute normally in order to recover the resources associated with the ZoomMap that
+was created earlier, regardless of whether an error has occurred in any of the intermediate
+functions. Functions which behave in this way are noted in the relevant descriptions in
+Appendix&#x00A0;<a 
+href="sun211se24.html#x25-2170002">B<!--tex4ht:ref: ss:functiondescriptions --></a>.
+<!--l. 2681--><p class="noindent" >If a serious error occurs, you will probably want to abort your program, but sometimes you may want
+to recover and carry on. Because very few AST functions will execute once the AST error
+status has been set, you must first clear this status by using the <a 
+href="sun211ss22.html#x47-2390000">astClearStatus</a> macro, as
+follows:
+<div class="fancyvrb" id="fancyvrb64"> <a 
+ id="x5-51055r1"></a>&#x00A0;&#x00A0;astClearStatus;</div>
+                                                                                       
+
+                                                                                       
+<!--l. 2693--><p class="noindent" >This will restore the AST error status to its OK value, so that AST functions execute normally
+again.
+<!--l. 2696--><p class="noindent" >Occasionally, you may also need to set the AST error status to an explicit error value (see &#x00A7;<a 
+href="sun211se15.html#x16-15500014">15.14<!--tex4ht:ref: ss:channelsink --></a> for an
+example). This is done using <a 
+href="sun211ss184.html#x209-4010000">astSetStatus</a> and can be used to communicate to AST that an error has
+occurred in some other item of software, for example:
+<div class="fancyvrb" id="fancyvrb65"> <a 
+ id="x5-51057r1"></a>&#x00A0;&#x00A0;int&#x00A0;new_status;<br class="fancyvrb" /><a 
+ id="x5-51059r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-51061r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-51063r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-51065r5"></a>&#x00A0;&#x00A0;astSetStatus(&#x00A0;new_status&#x00A0;);</div>
+<!--l. 2712--><p class="noindent" >The effect is that most AST routines will subsequently return without action, just as if an error had
+occurred within the AST library itself.
+<a 
+ id="x5-51066r62"></a>
+<h4 class="subsectionHead"><span class="titlemark">4.16    </span> <a 
+ id="x5-5200016"></a>Sharing the Error Status</h4>
+<!--l. 2718--><p class="noindent" >In some software, it is usual to maintain a single integer error status variable which is accessed by
+each function as it executes. If an error occurs, this status variable is set and other functions can detect
+this and take appropriate action.
+<!--l. 2723--><p class="noindent" >If you use AST in such a situation, it can be awkward to have a separate internal error status used by
+AST functions alone. To remedy this, AST is capable of sharing the error status variable used by any
+other software, so long as they use the same conventions (<em>i.e.</em>&#x00A0;a C int with the same &#x201C;OK&#x201D; value). To
+enable this facility, you should pass the address of your status variable to <a 
+href="sun211ss234.html#x259-4510000">astWatch</a>, as
+follows:
+<div class="fancyvrb" id="fancyvrb66"> <a 
+ id="x5-52002r1"></a>&#x00A0;&#x00A0;int&#x00A0;my_status;<br class="fancyvrb" /><a 
+ id="x5-52004r2"></a>&#x00A0;&#x00A0;int&#x00A0;*old_address;<br class="fancyvrb" /><a 
+ id="x5-52006r3"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-52008r4"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x5-52010r5"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x5-52012r6"></a>&#x00A0;&#x00A0;old_address&#x00A0;=&#x00A0;astWatch(&#x00A0;&#x0026;my_status&#x00A0;);</div>
+<!--l. 2742--><p class="noindent" >Henceforth, instead of using its own internal error status variable, AST will use the one you supply, so
+that it can detect errors flagged by other parts of your software. The address of the original error
+status variable is returned by astWatch, so you can restore the original behaviour later if
+necessary.
+<!--l. 2748--><p class="noindent" >Note that this facility is not available <em>via</em> the Fortran interface to the AST library.
+                                                                                       
+
+                                                                                       
+                                                                                       
+
+                                                                                       
+<div class="footnotes"><!--l. 2487--><p class="noindent" ><span class="footnote-mark"><a 
+href="#fn9x0-bk" id="fn9x0"><sup class="textsuperscript">9</sup></a></span>About the only difference is that you cannot store a pointer to an AST &#x201C;function&#x201D; in a variable and use the variable&#x2019;s
+value to invoke that function again later.
+<!--l. 2605--><p class="noindent" ><span class="footnote-mark"><a 
+href="#fn10x0-bk" id="fn10x0"><sup class="textsuperscript">10</sup></a></span>We will assume throughout that the &#x201C;OK&#x201D; value is zero, as it currently is. However, a different value could, in principle,
+be used if the environment in which AST is running requires it. This is why a simple interface is provided to isolate you from
+the actual value of the error status.                                                            </div> <div class="crosslinks">
+<div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211se3.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World
+Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se5.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 2752--><p class="noindent" ><a 
+ id="tailsun211se4.html"></a> 
+</body> 
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astEllipse </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss43.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss45.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 14520--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x69-2610000"></a> astEllipse </h3>  <p class="subtitle"> Create a Ellipse  </p> </h3> </header><a 
+ id="Q1-69-365"></a> <a 
+ id="Q1-69-366"></a> <a name="xref_astEllipse"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a new
+<a 
+href="sun211ss448.html#x475-6670000">Ellipse</a> and optionally initialises its attributes.
+<!--l. 14520--><p class="noindent" >A Ellipse is a <a 
+href="sun211ss474.html#x501-6930000">Region</a> which represents a elliptical area
+within the supplied 2-dimensional <a 
+href="sun211ss452.html#x479-6710000">Frame</a>.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstEllipse
+<!--l. 14520--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astEllipse(
+AstFrame <!--l. 14520--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>frame,
+int form, const double centre[2], const double point1[2], const double point2[2], AstRegion
+<!--l. 14520--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>unc, const
+char <!--l. 14520--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> frame  </h5><div class="sstsub"> A pointer to the Frame in which the region is defined. It
+must have exactly 2 axes. A deep copy is taken of the supplied Frame. This means that
+any subsequent changes made to the Frame using the supplied pointer will have no effect
+                                                                                       
+
+                                                                                       
+the Region.  </div> <h5 class="ssth5"> form  </h5><div class="sstsub"> Indicates how the ellipse is described by the remaining
+parameters. A value of zero indicates that the ellipse is specified by a centre
+position and two positions on the circumference. A value of one indicates that
+the ellipse is specified by its centre position, the half-lengths of its two
+axes, and the orientation of its first axis.  </div> <h5 class="ssth5"> centre  </h5><div class="sstsub"> An array of 2 doubles,
+containing the coordinates at the centre of the ellipse.  </div> <h5 class="ssth5"> point1  </h5><div class="sstsub"> An array of 2
+doubles. If <code>&#x0022;</code> form<code>&#x0022;</code> is zero, this array should contain the coordinates of one
+of the four points where an axis of the ellipse crosses the circumference of
+the ellipse. If <code>&#x0022;</code> form<code>&#x0022;</code> is one, it should contain the lengths of semi-major
+and semi-minor axes of the ellipse, given as geodesic distances within the
+Frame.  </div> <h5 class="ssth5"> point2  </h5><div class="sstsub"> An array of 2 doubles. If <code>&#x0022;</code> form<code>&#x0022;</code> is zero, this array should
+containing the coordinates at some other point on the circumference of the ellipse,
+distinct from <code>&#x0022;</code> point1<code>&#x0022;</code> . If <code>&#x0022;</code> form<code>&#x0022;</code> is one, the first element of this array
+should hold the angle between the second axis of the Frame and the first ellipse
+axis (i.e. the ellipse axis which is specified first in the <code>&#x0022;</code> point1<code>&#x0022;</code> array),
+and the second element will be ignored. The angle should be given in radians,
+measured positive in the same sense as rotation from the positive direction of the
+second Frame axis to the positive direction of the first Frame axis.  </div> <h5 class="ssth5"> unc  </h5><div class="sstsub">
+An optional pointer to an existing Region which specifies the uncertainties
+associated with the boundary of the Ellipse being created. The uncertainty in
+any point on the boundary of the Ellipse is found by shifting the supplied <code>&#x0022;</code>
+uncertainty<code>&#x0022;</code> Region so that it is centred at the boundary point being considered. The
+area covered by the shifted uncertainty Region then represents the uncertainty
+in the boundary position. The uncertainty is assumed to be the same for all
+points.
+<!--l. 14520--><p class="noindent" >If supplied, the uncertainty Region must be of a class for which all instances are
+centro-symetric (e.g. <a 
+href="sun211ss440.html#x467-6590000">Box</a>, <a 
+href="sun211ss442.html#x469-6610000">Circle</a>, Ellipse, etc.) or be a <a 
+href="sun211ss472.html#x499-6910000">Prism</a> containing
+centro-symetric component Regions. A deep copy of the supplied Region will be taken, so
+subsequent changes to the uncertainty Region using the supplied pointer will have no
+effect on the created Ellipse. Alternatively, a NULL <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer may be supplied, in
+which case a default uncertainty is used equivalent to a box 1.0E-6 of the size of the
+Ellipse being created.
+<!--l. 14520--><p class="noindent" >The uncertainty Region has two uses: 1) when the <a 
+href="sun211ss134.html#x159-3510000">astOverlap</a> function compares two
+Regions for equality the uncertainty Region is used to determine the tolerance on the
+comparison, and 2) when a Region is mapped into a different coordinate system and
+subsequently simplified (using <a 
+href="sun211ss190.html#x215-4070000">astSimplify</a>), the uncertainties are used to
+determine if the transformed boundary can be accurately represented by a specific
+shape of Region.  </div> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a null-terminated string containing an
+optional comma-separated list of attribute assignments to be used for initialising
+the new Ellipse. The syntax used is identical to that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a> function
+and may include <code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by <code>&#x0022;</code> %<code>&#x0022;</code> symbols in the
+normal way.  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> If the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code> %<code>&#x0022;</code> format specifiers,
+then an optional list of additional arguments may follow it in order to supply
+values to be substituted for these specifiers. The rules for supplying these are
+identical to those for the astSet function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code> function).  </div>
+</div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astEllipse()  </h5><div class="sstsub"> A pointer to the new Ellipse.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 14520--><p class="noindent" >A null Object pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss43.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss45.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss44.html"></a> </div> 
+</body> 
+</html>

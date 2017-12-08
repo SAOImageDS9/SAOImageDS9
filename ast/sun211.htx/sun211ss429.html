@@ -1,0 +1,81 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> UseDefs </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss428.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss430.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 42929--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x455-6470000"></a> UseDefs </h3>  <p class="subtitle"> Use default values for unspecified attributes?  </p> </h3> </header><a 
+ id="Q1-455-1521"></a> <a 
+ id="Q1-455-1522"></a> <a name="xref_UseDefs"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+attribute specifies whether default values should be used internally for object
+attributes which have not been assigned a value explicitly. If a non-zero value (the
+default) is supplied for UseDefs, then default values will be used for attributes which
+have not explicitly been assigned a value. If zero is supplied for UseDefs, then an
+error will be reported if an attribute for which no explicit value has been supplied is
+needed internally within AST.
+                                                                                       
+
+                                                                                       
+<!--l. 42929--><p class="noindent" >Many attributes (including the UseDefs attribute itself) are unaffected by the setting
+of the UseDefs attribute, and default values will always be used without error for such
+attributes. The <code>&#x0022;</code> Applicability:<code>&#x0022;</code> section below lists the attributes which are affected
+by the setting of UseDefs.
+<!--l. 42929--><p class="noindent" >Note, UseDefs only affects access to attributes internally within AST. The public
+accessor functions such as astGetC is unaffected by the UseDefs attribute - default
+values will always be returned if no value has been set. Application code should use
+the <a 
+href="sun211ss210.html#x235-4270000">astTest</a> function if required to determine if a value has been set for an attribute.
+</div> <dl class="sst">Type: </dl><dd class="sst"> Integer (boolean).  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> <a 
+href="sun211ss464.html#x491-6830000">Object</a>  </h5><div class="sstsub"> All Objects have this attribute,
+but ignore its setting except as described below for individual classes.  </div> <h5 class="ssth5"> <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a>  </h5><div class="sstsub">
+The default value of UseDefs for a FrameSet is redefined to be the UseDefs value of its
+current <a 
+href="sun211ss452.html#x479-6710000">Frame</a>.  </div> <h5 class="ssth5"> <a 
+href="sun211ss443.html#x470-6620000">CmpFrame</a>  </h5><div class="sstsub"> The default value of UseDefs for a CmpFrame is
+redefined to be the UseDefs value of its first component Frame.  </div> <h5 class="ssth5"> <a 
+href="sun211ss474.html#x501-6930000">Region</a>  </h5><div class="sstsub"> The
+default value of UseDefs for a Region is redefined to be the UseDefs value of its
+encapsulated Frame.  </div> <h5 class="ssth5"> Frame  </h5><div class="sstsub"> If UseDefs is zero, an error is reported when
+aligning Frames if the <a 
+href="sun211ss285.html#x311-5030000">Epoch</a>, <a 
+href="sun211ss366.html#x392-5840000">ObsLat</a> or <a 
+href="sun211ss367.html#x393-5850000">ObsLon</a> attribute is required but has not
+been assigned a value explicitly.  </div> <h5 class="ssth5"> <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>  </h5><div class="sstsub"> If UseDefs is zero, an error
+is reported when aligning SkyFrames if any of the following attributes are
+required but have not been assigned a value explicitly: Epoch, <a 
+href="sun211ss286.html#x312-5040000">Equinox</a>.  </div> <h5 class="ssth5">
+<a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a>  </h5><div class="sstsub"> If UseDefs is zero, an error is reported when aligning SpecFrames
+if any of the following attributes are required but have not been assigned a
+value explicitly: Epoch, <a 
+href="sun211ss379.html#x405-5970000">RefRA</a>, <a 
+href="sun211ss378.html#x404-5960000">RefDec</a>, <a 
+href="sun211ss383.html#x409-6010000">RestFreq</a>, <a 
+href="sun211ss402.html#x428-6200000">SourceVel</a>, <a 
+href="sun211ss409.html#x435-6270000">StdOfRest</a>.  </div> <h5 class="ssth5">
+<a 
+href="sun211ss446.html#x473-6650000">DSBSpecFrame</a>  </h5><div class="sstsub"> If UseDefs is zero, an error is reported when aligning DSBSpecFrames or
+when accessing the <a 
+href="sun211ss308.html#x334-5260000">ImagFreq</a> attribute if any of the following attributes are
+required but have not been assigned a value explicitly: Epoch, <a 
+href="sun211ss274.html#x300-4920000">DSBCentre</a>, <a 
+href="sun211ss306.html#x332-5240000">IF</a>.  </div>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss428.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss430.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss429.html"></a> </div> 
+</body> 
+</html>

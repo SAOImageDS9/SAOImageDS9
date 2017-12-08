@@ -1,0 +1,50 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> SlaMap </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss478.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss480.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 46552--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x506-6980000"></a> SlaMap </h3>  <p class="subtitle"> Sequence of celestial coordinate conversions  </p> </h3> </header><a 
+ id="Q1-506-1672"></a> <a 
+ id="Q1-506-1673"></a> <a name="xref_SlaMap"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> An SlaMap
+is a specialised form of <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> which can be used to represent a sequence
+of conversions between standard celestial (longitude, latitude) coordinate
+systems.
+<!--l. 46552--><p class="noindent" >When an SlaMap is first created, it simply performs a unit (null) Mapping on a pair of
+coordinates. Using the <a 
+href="sun211ss193.html#x218-4100000">astSlaAdd</a> function, a series of coordinate conversion steps may
+then be added, selected from those provided by the SLALIB Positional Astronomy Library
+(Starlink User Note SUN/67). This allows multi-step conversions between a variety of
+celestial coordinate systems to be assembled out of the building blocks provided by
+SLALIB.
+<!--l. 46552--><p class="noindent" >For details of the individual coordinate conversions available, see the description of
+the astSlaAdd function.  </div> <h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> <a 
+href="sun211ss194.html#x219-4110000">astSlaMap</a> (also see astSlaAdd)  </div> <h4 class="ssth4">
+Inheritance  </h4><div class="sstvalues"> The SlaMap class inherits from the Mapping class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> The
+SlaMap class does not define any new attributes beyond those which are applicable to
+all Mappings.  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> In addition to those functions applicable to all Mappings,
+the following function may also be applied to all SlaMaps:
+<ul class="sstitemlist">
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 46552--><p class="noindent" ><a 
+href="sun211ss193.html#x218-4100000">astSlaAdd</a>: Add a celestial coordinate conversion to an SlaMap  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss478.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss480.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss479.html"></a> </div> 
+</body> 
+</html>

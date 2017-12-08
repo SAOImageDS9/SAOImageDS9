@@ -1,0 +1,54 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astChrCase </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss506.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss508.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 48505--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x536-7280000"></a> astChrCase </h3>  <p class="subtitle"> Convert a string to upper or lower case  </p> </h3> </header><a 
+ id="Q1-536-1758"></a> <a 
+ id="Q1-536-1759"></a> <a name="xref_astChrCase"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+function converts a supplied string to upper or lower case, storing the result in a
+supplied buffer. The <a 
+href="sun211ss528.html#x557-7490000">astStringCase</a> function is similar, but stores the result
+in a dynamically allocated buffer.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astChrCase( const char
+<!--l. 48505--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>in, char
+<!--l. 48505--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>out, int upper, int
+blen, int <!--l. 48505--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>status
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> in  </h5><div class="sstsub"> Pointer to the null terminated string to be converted. If this
+is NULL, the supplied contents of the <code>&#x0022;</code> out<code>&#x0022;</code> string are used as the input string.  </div> <h5 class="ssth5">
+out  </h5><div class="sstsub"> Pointer to the buffer to receive the converted string. The length of this
+buffer is given by <code>&#x0022;</code> blen<code>&#x0022;</code> . If NULL is supplied for <code>&#x0022;</code> in<code>&#x0022;</code> , then the supplied
+contents of <code>&#x0022;</code> out<code>&#x0022;</code> are converted and written back into <code>&#x0022;</code> out<code>&#x0022;</code> over-writing the
+supplied contents.  </div> <h5 class="ssth5"> upper  </h5><div class="sstsub"> If non-zero, the string is converted to upper case.
+Otherwise it is converted to lower case.  </div> <h5 class="ssth5"> blen  </h5><div class="sstsub"> The length of the output buffer.
+                                                                                       
+
+                                                                                       
+Ignored if <code>&#x0022;</code> in<code>&#x0022;</code> is NULL. No more than <code>&#x0022;</code> blen - 1<code>&#x0022;</code> characters will be copied
+from <code>&#x0022;</code> in<code>&#x0022;</code> to <code>&#x0022;</code> out<code>&#x0022;</code> , and a terminating null character will then be added.  </div>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss506.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss508.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 49550--><p class="noindent" ><a 
+ id="tailsun211ss507.html"></a> </div> 
+</body> 
+</html>

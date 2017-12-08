@@ -1,0 +1,59 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astOffset </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss130.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss132.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 22365--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x156-3480000"></a> astOffset </h3>  <p class="subtitle"> Calculate an offset along a geodesic curve  </p> </h3> </header><a 
+ id="Q1-156-626"></a> <a 
+ id="Q1-156-627"></a> <a name="xref_astOffset"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+function finds the <a 
+href="sun211ss452.html#x479-6710000">Frame</a> coordinate values of a point which is offset a specified
+distance along the geodesic curve between two other points.
+<!--l. 22365--><p class="noindent" >For example, in a basic Frame, this offset will be along the straight line joining two
+points. For a more specialised Frame describing a sky coordinate system, however, it would
+be along the great circle passing through two sky positions.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astOffset(
+AstFrame <!--l. 22365--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+const double point1[], const double point2[], double offset, double point3[] )  </div>
+<h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Frame.  </div> <h5 class="ssth5"> point1  </h5><div class="sstsub"> An array of double, with one
+element for each Frame axis (<a 
+href="sun211ss347.html#x373-5650000">Naxes</a> attribute). This should contain the coordinates of
+the point marking the start of the geodesic curve.  </div> <h5 class="ssth5"> point2  </h5><div class="sstsub"> An array of double, with
+one element for each Frame axis This should contain the coordinates of the point
+marking the end of the geodesic curve.  </div> <h5 class="ssth5"> offset  </h5><div class="sstsub"> The required offset from the first
+point along the geodesic curve. If this is positive, it will be towards the second
+point. If it is negative, it will be in the opposite direction. This offset need not
+imply a position lying between the two points given, as the curve will be extrapolated
+if necessary.  </div> <h5 class="ssth5"> point3  </h5><div class="sstsub"> An array of double, with one element for each Frame axis
+in which the coordinates of the required point will be returned.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 22365--><p class="noindent" >The geodesic curve used by this function is the path of shortest distance between two
+points, as defined by the <a 
+href="sun211ss41.html#x66-2580000">astDistance</a> function.
+<li >
+<!--l. 22365--><p class="noindent" >This function will return <code>&#x0022;</code> bad<code>&#x0022;</code> coordinate values (AST__BAD) if any of the input
+coordinates has this value.
+<li >
+<!--l. 22365--><p class="noindent" ><code>&#x0022;</code> Bad<code>&#x0022;</code> coordinate values will also be returned if the two points supplied are
+coincident (or otherwise fail to uniquely specify a geodesic curve) but the requested
+offset is non-zero.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss130.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss132.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss131.html"></a> </div> 
+</body> 
+</html>

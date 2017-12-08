@@ -1,0 +1,85 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> TimeFrame </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss491.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss493.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 47444--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x519-7110000"></a> TimeFrame </h3>  <p class="subtitle"> Time coordinate system description  </p> </h3> </header><a 
+ id="Q1-519-1711"></a> <a 
+ id="Q1-519-1712"></a> <a name="xref_TimeFrame"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> A TimeFrame is a
+specialised form of one-dimensional <a 
+href="sun211ss452.html#x479-6710000">Frame</a> which represents various coordinate systems
+used to describe positions in time.
+<!--l. 47444--><p class="noindent" >A TimeFrame represents a moment in time as either an Modified Julian Date (MJD), a
+Julian Date (JD), a Besselian epoch or a Julian epoch, as determined by the <a 
+href="sun211ss413.html#x439-6310000">System</a>
+attribute. Optionally, a zero point can be specified (using attribute <a 
+href="sun211ss418.html#x444-6360000">TimeOrigin</a>) which
+results in the TimeFrame representing time offsets from the specified zero
+point.
+<!--l. 47444--><p class="noindent" >Even though JD and MJD are defined as being in units of days, the TimeFrame class
+allows other units to be used (via the Unit attribute) on the basis of simple scalings
+(60 seconds = 1 minute, 60 minutes = 1 hour, 24 hours = 1 day, 365.25 days
+= 1 year). Likewise, Julian epochs can be described in units other than the
+usual years. Besselian epoch are always represented in units of (tropical)
+years.
+<!--l. 47444--><p class="noindent" >The <a 
+href="sun211ss419.html#x445-6370000">TimeScale</a> attribute allows the time scale to be specified (that is, the physical
+process used to define the rate of flow of time). MJD, JD and Julian epoch can be used
+to represent a time in any supported time scale. However, Besselian epoch may only be
+used with the <code>&#x0022;</code> TT<code>&#x0022;</code> (Terrestrial Time) time scale. The list of supported time scales
+includes universal time and siderial time. Strictly, these represent angles rather than
+time scales, but are included in the list since they are in common use and are often
+thought of as time scales.
+<!--l. 47444--><p class="noindent" >When a time value is formatted it can be formated either as a simple floating point
+value, or as a Gregorian date (see the Format attribute).  </div> <h4 class="ssth4">Constructor Function </h4><div class="sstvalues">
+<a 
+href="sun211ss215.html#x240-4320000">astTimeFrame</a>  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues"> The TimeFrame class inherits from the Frame class.  </div> <h4 class="ssth4">
+Attributes  </h4><div class="sstvalues"> In addition to those attributes common to all Frames, every TimeFrame also
+has the following attributes:
+<ul class="sstitemlist">
+<li >
+<!--l. 47444--><p class="noindent" ><a 
+href="sun211ss248.html#x274-4660000">AlignTimeScale</a>: Time scale in which to align TimeFrames
+<li >
+<!--l. 47444--><p class="noindent" ><a 
+href="sun211ss322.html#x348-5400000">LTOffset</a>: The offset of Local Time from UTC, in hours.
+<li >
+<!--l. 47444--><p class="noindent" ><a 
+href="sun211ss418.html#x444-6360000">TimeOrigin</a>: The zero point for TimeFrame axis values
+<li >
+<!--l. 47444--><p class="noindent" ><a 
+href="sun211ss419.html#x445-6370000">TimeScale</a>: The timescale used by the TimeFrame
+</li>
+</ul>
+                                                                                       
+
+                                                                                       
+<!--l. 47444--><p class="noindent" >Several of the Frame attributes inherited by the TimeFrame class refer to a specific
+axis of the Frame (for instance <a 
+href="sun211ss427.html#x453-6450000">Unit(axis)</a>, <a 
+href="sun211ss323.html#x349-5410000">Label(axis)</a>, etc). Since a TimeFrame is
+strictly one-dimensional, it allows these attributes to be specified without an axis
+index. So for instance, <code>&#x0022;</code> Unit<code>&#x0022;</code> is allowed in place of <code>&#x0022;</code> Unit(1)<code>&#x0022;</code> .  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> In
+addition to those functions applicable to all Frames, the following functions may also
+be applied to all TimeFrames:
+<ul class="sstitemlist">
+<li >
+<!--l. 47444--><p class="noindent" ><a 
+href="sun211ss35.html#x60-2520000">astCurrentTime</a>: Return the current system time  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss491.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss493.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss492.html"></a> </div> 
+</body> 
+</html>

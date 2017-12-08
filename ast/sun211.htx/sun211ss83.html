@@ -1,0 +1,52 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astGrid </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss82.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss84.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 17966--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x108-3000000"></a> astGrid </h3>  <p class="subtitle"> Draw a set of labelled coordinate axes  </p> </h3> </header><a 
+ id="Q1-108-482"></a> <a 
+ id="Q1-108-483"></a> <a name="xref_astGrid"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function draws
+a complete annotated set of coordinate axes for a <a 
+href="sun211ss467.html#x494-6860000">Plot</a> with (optionally) a coordinate grid
+superimposed. Details of the axes and grid can be controlled by setting values for the
+various attributes defined by the Plot class (q.v.).  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astGrid( AstPlot
+<!--l. 17966--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this )
+</div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Plot.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 17966--><p class="noindent" >If the supplied Plot is a <a 
+href="sun211ss468.html#x495-6870000">Plot3D</a>, the axes will be annotated using three 2-dimensional
+Plots, one for each 2D plane in the 3D current coordinate system. The plots will be <code>&#x0022;</code>
+pasted<code>&#x0022;</code> onto 3 faces of the cuboid graphics volume specified when the Plot3D
+was constructed. The faces to be used can be controlled by the <code>&#x0022;</code> <a 
+href="sun211ss384.html#x410-6020000">RootCorner</a><code>&#x0022;</code>
+attribute.
+<li >
+<!--l. 17966--><p class="noindent" >An error results if either the current <a 
+href="sun211ss452.html#x479-6710000">Frame</a> or the base Frame of the Plot is not
+2-dimensional or (for a Plot3D) 3-dimensional.
+<li >
+<!--l. 17966--><p class="noindent" >An error also results if the transformation between the base and current Frames of the
+Plot is not defined in either direction (i.e. the Plot<code>&#x2019;</code> s <a 
+href="sun211ss425.html#x451-6430000">TranForward</a> or <a 
+href="sun211ss426.html#x452-6440000">TranInverse</a>
+attribute is zero).  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss82.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss84.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss83.html"></a> </div> 
+</body> 
+</html>

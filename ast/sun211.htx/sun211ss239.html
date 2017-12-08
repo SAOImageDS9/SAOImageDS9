@@ -1,0 +1,101 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astXmlChan </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss238.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss240.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 33585--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x264-4560000"></a> astXmlChan </h3>  <p class="subtitle"> Create an XmlChan  </p> </h3> </header><a 
+ id="Q1-264-950"></a> <a 
+ id="Q1-264-951"></a> <a name="xref_astXmlChan"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a new
+<a 
+href="sun211ss499.html#x526-7180000">XmlChan</a> and optionally initialises its attributes.
+<!--l. 33585--><p class="noindent" >A XmlChan is a specialised form of <a 
+href="sun211ss441.html#x468-6600000">Channel</a> which supports XML I/O operations. Writing
+an <a 
+href="sun211ss464.html#x491-6830000">Object</a> to an XmlChan (using <a 
+href="sun211ss237.html#x262-4540000">astWrite</a>) will, if the Object is suitable, generate an
+XML description of that Object, and reading from an XmlChan will create a new Object
+from its XML description.
+<!--l. 33585--><p class="noindent" >Normally, when you use an XmlChan, you should provide <code>&#x0022;</code> source<code>&#x0022;</code> and <code>&#x0022;</code> sink<code>&#x0022;</code> functions
+which connect it to an external data store by reading and writing the resulting XML
+                                                                                       
+
+                                                                                       
+text. By default, however, an XmlChan will read from standard input and write to
+standard output.
+<!--l. 33585--><p class="noindent" >Alternatively, an XmlChan can be told to read or write from specific
+text files using the <a 
+href="sun211ss390.html#x416-6080000">SinkFile</a> and <a 
+href="sun211ss399.html#x425-6170000">SourceFile</a> attributes, in which case
+no sink or source function need be supplied.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstXmlChan
+<!--l. 33585--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astXmlChan( const char
+<!--l. 33585--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>(<!--l. 33585--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+source)( void ), void (<!--l. 33585--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+sink)( const char <!--l. 33585--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math> ),
+const char <!--l. 33585--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> source  </h5><div class="sstsub"> Pointer to a source function that takes no arguments and
+returns a pointer to a null-terminated string. If no value has been set for the
+SourceFile attribute, this function will be used by the XmlChan to obtain lines of
+input text. On each invocation, it should return a pointer to the next input line read
+from some external data store, and a NULL pointer when there are no more lines to
+read.
+<!--l. 33585--><p class="noindent" >If <code>&#x0022;</code> source<code>&#x0022;</code> is NULL and no value has been set for the SourceFile attribute, the
+XmlChan will read from standard input instead.  </div> <h5 class="ssth5"> sink  </h5><div class="sstsub"> Pointer to a sink function
+that takes a pointer to a null-terminated string as an argument and returns
+void. If no value has been set for the SinkFile attribute, this function will
+be used by the XmlChan to deliver lines of output text. On each invocation,
+it should deliver the contents of the string supplied to some external data
+store.
+<!--l. 33585--><p class="noindent" >If <code>&#x0022;</code> sink<code>&#x0022;</code> is NULL, and no value has been set for the SinkFile attribute, the XmlChan
+will write to standard output instead.  </div> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a null-terminated string
+containing an optional comma-separated list of attribute assignments to be used for
+initialising the new XmlChan. The syntax used is identical to that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a>
+function and may include <code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by <code>&#x0022;</code> %<code>&#x0022;</code> symbols in the
+normal way.  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> If the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code> %<code>&#x0022;</code> format specifiers,
+then an optional list of additional arguments may follow it in order to supply
+values to be substituted for these specifiers. The rules for supplying these are
+identical to those for the astSet function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code> function).  </div>
+</div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astXmlChan()  </h5><div class="sstsub"> A pointer to the new XmlChan.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 33585--><p class="noindent" >If the external data source or sink uses a character encoding other than ASCII, the
+supplied source and sink functions should translate between the external character
+encoding and the internal ASCII encoding used by AST.
+<li >
+<!--l. 33585--><p class="noindent" >A null Object pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss238.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss240.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss239.html"></a> </div> 
+</body> 
+</html>

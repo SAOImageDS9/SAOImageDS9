@@ -1,0 +1,120 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astSetActiveUnit </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss178.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss180.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 27899--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x204-3960000"></a> astSetActiveUnit </h3>  <p class="subtitle"> Specify how the Unit attribute should be used  </p> </h3> </header><a 
+ id="Q1-204-770"></a> <a 
+ id="Q1-204-771"></a> <a name="xref_astSetActiveUnit"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+This function sets the current value of the ActiveUnit flag for a <a 
+href="sun211ss452.html#x479-6710000">Frame</a>, which controls
+how the Frame behaves when it is used (by <a 
+href="sun211ss52.html#x77-2690000">astFindFrame</a> or <a 
+href="sun211ss32.html#x57-2490000">astConvert</a>) to match another
+Frame. If the ActiveUnit flag is set in both template and target Frames then the
+returned <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> takes into account any differences in axis units. The default value
+for simple Frames is zero, which preserves the behaviour of versions of AST prior to
+version 2.0.
+<!--l. 27899--><p class="noindent" >If the ActiveUnit flag of either Frame is zero, then the Mapping will ignore any
+difference in the Unit attributes of corresponding template and target axes. In this
+mode, the Unit attributes are purely descriptive commentary for the benefit of human
+readers and do not influence the Mappings between Frames. This is the behaviour
+which all Frames had in older version of AST, prior to the introduction of this
+attribute.
+<!--l. 27899--><p class="noindent" >If the ActiveUnit flag of both Frames is non-zero, then the Mapping from template to
+target will take account of any difference in the axis Unit attributes, where-ever
+possible. For instance, if corresponding target and template axes have Unit strings of
+<code>&#x0022;</code> km<code>&#x0022;</code> and <code>&#x0022;</code> m<code>&#x0022;</code> , then the <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> class will use a <a 
+href="sun211ss500.html#x527-7190000">ZoomMap</a> to connect them which
+introduces a scaling of 1000. If no Mapping can be found between the corresponding
+units string, then an error is reported. In this mode, it is assumed that values of
+the Unit attribute conform to the syntax for units strings described in the
+FITS WCS Paper I <code>&#x0022;</code> Representations of world coordinates in FITS<code>&#x0022;</code> (Greisen &#x0026;
+Calabretta). Particularly, any of the named unit symbols, functions, operators or
+standard multiplier prefixes listed within that paper can be used within a units
+string. A units string may contain symbols for unit which are not listed in the
+                                                                                       
+
+                                                                                       
+FITS paper, but transformation to any other units will then not be possible
+(except to units which depend only on the same unknown units - thus <code>&#x0022;</code> flops<code>&#x0022;</code> can
+be transformed to <code>&#x0022;</code> Mflops<code>&#x0022;</code> even though <code>&#x0022;</code> flops<code>&#x0022;</code> is not a standard FITS unit
+symbol).
+<!--l. 27899--><p class="noindent" >A range of common non-standard variations of unit names and multiplier prefixes are
+also allowed, such as adding an <code>&#x0022;</code> s<code>&#x0022;</code> to the end of Angstrom, using a lower case <code>&#x0022;</code> a<code>&#x0022;</code> at
+the start of <code>&#x0022;</code> angstrom<code>&#x0022;</code> , <code>&#x0022;</code> micron<code>&#x0022;</code> instead of <code>&#x0022;</code> um<code>&#x0022;</code> , <code>&#x0022;</code> sec<code>&#x0022;</code> instead of <code>&#x0022;</code> s<code>&#x0022;</code> ,
+etc.
+<!--l. 27899--><p class="noindent" >If the ActiveUnit flag is non-zero, setting a new Unit value for an axis may also
+change its Label and Symbol attributes. For instance, if an axis has Unit <code>&#x0022;</code> Hz<code>&#x0022;</code> and
+Label <code>&#x0022;</code> frequency<code>&#x0022;</code> , then changing its Unit to <code>&#x0022;</code> log(Hz)<code>&#x0022;</code> will change its Label to <code>&#x0022;</code>
+log( frequency )<code>&#x0022;</code> . In addition, the <a 
+href="sun211ss439.html#x466-6580000">Axis</a> Format attribute will be cleared when-ever a
+new value is assigned to the Unit attribute.
+<!--l. 27899--><p class="noindent" >Note, if a non-zero value is set for the ActiveUnit flag, then changing a Unit value for
+the current Frame within a FrameSet will result in the Frame being re-mapped (that is, the
+Mappings which define the relationships between Frames within the FrameSet will be modified
+to take into account the change in Units).  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astSetActiveUnit( AstFrame
+<!--l. 27899--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+int value )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Frame.  </div> <h5 class="ssth5"> value  </h5><div class="sstsub"> The new value to
+use.  </div>  </div> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>  </h5><div class="sstsub"> The ActiveUnit flag for a SkyFrame is always 0 (any
+value supplied using this function is ignored).  </div> <h5 class="ssth5"> <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a>  </h5><div class="sstsub"> The ActiveUnit flag for
+a SpecFrame is always 1 (any value supplied using this function is ignored).  </div> <h5 class="ssth5">
+<a 
+href="sun211ss451.html#x478-6700000">FluxFrame</a>  </h5><div class="sstsub"> The ActiveUnit flag for a FluxFrame is always 1 (any value supplied using
+this function is ignored).  </div> <h5 class="ssth5"> <a 
+href="sun211ss443.html#x470-6620000">CmpFrame</a>  </h5><div class="sstsub"> The default ActiveUnit flag for a
+CmpFrame is 1 if both of the component Frames are using active units, and zero
+otherwise. When a new value is set for the ActiveUnit flag, the flag value is
+propagated to the component Frames. This change will be reflected through all
+references to the component Frames, not just those encapsulated within the
+CmpFrame.  </div> <h5 class="ssth5"> <a 
+href="sun211ss474.html#x501-6930000">Region</a>:  </h5><div class="sstsub"> Regions always use active units if possible.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 27899--><p class="noindent" >The ActiveUnit flag resembles a Frame attribute, except that it cannot
+be tested or cleared, and it cannot be accessed using the generic
+<a 
+href="sun211ss61.html#x86-2780000">astGet<!--l. 27899--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27899--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>
+and <a 
+href="sun211ss178.html#x203-3950000">astSet<!--l. 27899--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27899--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>
+functions.
+<li >
+<!--l. 27899--><p class="noindent" >The <a 
+href="sun211ss62.html#x87-2790000">astGetActiveUnit</a> function can be used to retrieve the current value of the
+ActiveUnit flag.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss178.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss180.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss179.html"></a> </div> 
+</body> 
+</html>

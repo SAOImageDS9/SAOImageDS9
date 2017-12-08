@@ -1,0 +1,4159 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=latex 2015.6.17)  26 OCT 2016 16:44
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**\makeatletter\def\HCode{\futurelet\HCode\HChar}\def\HChar{\ifx"\HCode\def\HCo
+de"##1"{\Link##1}\expandafter\HCode\else\expandafter\Link\fi}\def\Link#1.a.b.c.
+{\g@addto@macro\@documentclasshook{\RequirePackage[#1,html]{tex4ht}}\let\HCode\
+documentstyle\def\documentstyle{\let\documentstyle\HCode\expandafter\def\csname
+ tex4ht\endcsname{#1,html}\def\HCode####1{\documentstyle[tex4ht,}\@ifnextchar[{
+\HCode}{\documentstyle[tex4ht]}}}\makeatother\HCode starlinkxhtml.cfg,,charset=
+utf-8,fn-in.a.b.c.\input  /home/dsb/airlock/ast/sun211_htx/sun211.tex
+(/home/dsb/airlock/ast/sun211_htx/sun211.tex (/stardev/git/starlink/application
+s/latexsupport/starlink.cls
+Document Class: starlink 
+........passing options to article......
+(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+..........Article!..........
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is not detected.
+) (/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.def
+File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
+LaTeX Font Info:    Redeclaring font encoding T1 on input line 43.
+)) (/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2008/03/30 v1.1d Input encoding file
+\inpenc@prehook=\toks14
+\inpenc@posthook=\toks15
+(/usr/share/texlive/texmf-dist/tex/latex/base/utf8.def
+File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
+Now handling font encoding OML ...
+... no UTF-8 mapping file for font encoding OML
+Now handling font encoding T1 ...
+... processing UTF-8 mapping file for font encoding T1
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.dfu
+File: t1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
+   defining Unicode char U+00A1 (decimal 161)
+   defining Unicode char U+00A3 (decimal 163)
+   defining Unicode char U+00AB (decimal 171)
+   defining Unicode char U+00BB (decimal 187)
+   defining Unicode char U+00BF (decimal 191)
+   defining Unicode char U+00C0 (decimal 192)
+   defining Unicode char U+00C1 (decimal 193)
+   defining Unicode char U+00C2 (decimal 194)
+   defining Unicode char U+00C3 (decimal 195)
+   defining Unicode char U+00C4 (decimal 196)
+   defining Unicode char U+00C5 (decimal 197)
+   defining Unicode char U+00C6 (decimal 198)
+   defining Unicode char U+00C7 (decimal 199)
+   defining Unicode char U+00C8 (decimal 200)
+   defining Unicode char U+00C9 (decimal 201)
+   defining Unicode char U+00CA (decimal 202)
+   defining Unicode char U+00CB (decimal 203)
+   defining Unicode char U+00CC (decimal 204)
+   defining Unicode char U+00CD (decimal 205)
+   defining Unicode char U+00CE (decimal 206)
+   defining Unicode char U+00CF (decimal 207)
+   defining Unicode char U+00D0 (decimal 208)
+   defining Unicode char U+00D1 (decimal 209)
+   defining Unicode char U+00D2 (decimal 210)
+   defining Unicode char U+00D3 (decimal 211)
+   defining Unicode char U+00D4 (decimal 212)
+   defining Unicode char U+00D5 (decimal 213)
+   defining Unicode char U+00D6 (decimal 214)
+   defining Unicode char U+00D8 (decimal 216)
+   defining Unicode char U+00D9 (decimal 217)
+   defining Unicode char U+00DA (decimal 218)
+   defining Unicode char U+00DB (decimal 219)
+   defining Unicode char U+00DC (decimal 220)
+   defining Unicode char U+00DD (decimal 221)
+   defining Unicode char U+00DE (decimal 222)
+   defining Unicode char U+00DF (decimal 223)
+   defining Unicode char U+00E0 (decimal 224)
+   defining Unicode char U+00E1 (decimal 225)
+   defining Unicode char U+00E2 (decimal 226)
+   defining Unicode char U+00E3 (decimal 227)
+   defining Unicode char U+00E4 (decimal 228)
+   defining Unicode char U+00E5 (decimal 229)
+   defining Unicode char U+00E6 (decimal 230)
+   defining Unicode char U+00E7 (decimal 231)
+   defining Unicode char U+00E8 (decimal 232)
+   defining Unicode char U+00E9 (decimal 233)
+   defining Unicode char U+00EA (decimal 234)
+   defining Unicode char U+00EB (decimal 235)
+   defining Unicode char U+00EC (decimal 236)
+   defining Unicode char U+00ED (decimal 237)
+   defining Unicode char U+00EE (decimal 238)
+   defining Unicode char U+00EF (decimal 239)
+   defining Unicode char U+00F0 (decimal 240)
+   defining Unicode char U+00F1 (decimal 241)
+   defining Unicode char U+00F2 (decimal 242)
+   defining Unicode char U+00F3 (decimal 243)
+   defining Unicode char U+00F4 (decimal 244)
+   defining Unicode char U+00F5 (decimal 245)
+   defining Unicode char U+00F6 (decimal 246)
+   defining Unicode char U+00F8 (decimal 248)
+   defining Unicode char U+00F9 (decimal 249)
+   defining Unicode char U+00FA (decimal 250)
+   defining Unicode char U+00FB (decimal 251)
+   defining Unicode char U+00FC (decimal 252)
+   defining Unicode char U+00FD (decimal 253)
+   defining Unicode char U+00FE (decimal 254)
+   defining Unicode char U+00FF (decimal 255)
+   defining Unicode char U+0102 (decimal 258)
+   defining Unicode char U+0103 (decimal 259)
+   defining Unicode char U+0104 (decimal 260)
+   defining Unicode char U+0105 (decimal 261)
+   defining Unicode char U+0106 (decimal 262)
+   defining Unicode char U+0107 (decimal 263)
+   defining Unicode char U+010C (decimal 268)
+   defining Unicode char U+010D (decimal 269)
+   defining Unicode char U+010E (decimal 270)
+   defining Unicode char U+010F (decimal 271)
+   defining Unicode char U+0110 (decimal 272)
+   defining Unicode char U+0111 (decimal 273)
+   defining Unicode char U+0118 (decimal 280)
+   defining Unicode char U+0119 (decimal 281)
+   defining Unicode char U+011A (decimal 282)
+   defining Unicode char U+011B (decimal 283)
+   defining Unicode char U+011E (decimal 286)
+   defining Unicode char U+011F (decimal 287)
+   defining Unicode char U+0130 (decimal 304)
+   defining Unicode char U+0131 (decimal 305)
+   defining Unicode char U+0132 (decimal 306)
+   defining Unicode char U+0133 (decimal 307)
+   defining Unicode char U+0139 (decimal 313)
+   defining Unicode char U+013A (decimal 314)
+   defining Unicode char U+013D (decimal 317)
+   defining Unicode char U+013E (decimal 318)
+   defining Unicode char U+0141 (decimal 321)
+   defining Unicode char U+0142 (decimal 322)
+   defining Unicode char U+0143 (decimal 323)
+   defining Unicode char U+0144 (decimal 324)
+   defining Unicode char U+0147 (decimal 327)
+   defining Unicode char U+0148 (decimal 328)
+   defining Unicode char U+014A (decimal 330)
+   defining Unicode char U+014B (decimal 331)
+   defining Unicode char U+0150 (decimal 336)
+   defining Unicode char U+0151 (decimal 337)
+   defining Unicode char U+0152 (decimal 338)
+   defining Unicode char U+0153 (decimal 339)
+   defining Unicode char U+0154 (decimal 340)
+   defining Unicode char U+0155 (decimal 341)
+   defining Unicode char U+0158 (decimal 344)
+   defining Unicode char U+0159 (decimal 345)
+   defining Unicode char U+015A (decimal 346)
+   defining Unicode char U+015B (decimal 347)
+   defining Unicode char U+015E (decimal 350)
+   defining Unicode char U+015F (decimal 351)
+   defining Unicode char U+0160 (decimal 352)
+   defining Unicode char U+0161 (decimal 353)
+   defining Unicode char U+0162 (decimal 354)
+   defining Unicode char U+0163 (decimal 355)
+   defining Unicode char U+0164 (decimal 356)
+   defining Unicode char U+0165 (decimal 357)
+   defining Unicode char U+016E (decimal 366)
+   defining Unicode char U+016F (decimal 367)
+   defining Unicode char U+0170 (decimal 368)
+   defining Unicode char U+0171 (decimal 369)
+   defining Unicode char U+0178 (decimal 376)
+   defining Unicode char U+0179 (decimal 377)
+   defining Unicode char U+017A (decimal 378)
+   defining Unicode char U+017B (decimal 379)
+   defining Unicode char U+017C (decimal 380)
+   defining Unicode char U+017D (decimal 381)
+   defining Unicode char U+017E (decimal 382)
+   defining Unicode char U+200C (decimal 8204)
+   defining Unicode char U+2013 (decimal 8211)
+   defining Unicode char U+2014 (decimal 8212)
+   defining Unicode char U+2018 (decimal 8216)
+   defining Unicode char U+2019 (decimal 8217)
+   defining Unicode char U+201A (decimal 8218)
+   defining Unicode char U+201C (decimal 8220)
+   defining Unicode char U+201D (decimal 8221)
+   defining Unicode char U+201E (decimal 8222)
+   defining Unicode char U+2030 (decimal 8240)
+   defining Unicode char U+2031 (decimal 8241)
+   defining Unicode char U+2039 (decimal 8249)
+   defining Unicode char U+203A (decimal 8250)
+   defining Unicode char U+2423 (decimal 9251)
+)
+Now handling font encoding OT1 ...
+... processing UTF-8 mapping file for font encoding OT1
+(/usr/share/texlive/texmf-dist/tex/latex/base/ot1enc.dfu
+File: ot1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
+   defining Unicode char U+00A1 (decimal 161)
+   defining Unicode char U+00A3 (decimal 163)
+   defining Unicode char U+00B8 (decimal 184)
+   defining Unicode char U+00BF (decimal 191)
+   defining Unicode char U+00C5 (decimal 197)
+   defining Unicode char U+00C6 (decimal 198)
+   defining Unicode char U+00D8 (decimal 216)
+   defining Unicode char U+00DF (decimal 223)
+   defining Unicode char U+00E6 (decimal 230)
+   defining Unicode char U+00EC (decimal 236)
+   defining Unicode char U+00ED (decimal 237)
+   defining Unicode char U+00EE (decimal 238)
+   defining Unicode char U+00EF (decimal 239)
+   defining Unicode char U+00F8 (decimal 248)
+   defining Unicode char U+0131 (decimal 305)
+   defining Unicode char U+0141 (decimal 321)
+   defining Unicode char U+0142 (decimal 322)
+   defining Unicode char U+0152 (decimal 338)
+   defining Unicode char U+0153 (decimal 339)
+   defining Unicode char U+2013 (decimal 8211)
+   defining Unicode char U+2014 (decimal 8212)
+   defining Unicode char U+2018 (decimal 8216)
+   defining Unicode char U+2019 (decimal 8217)
+   defining Unicode char U+201C (decimal 8220)
+   defining Unicode char U+201D (decimal 8221)
+)
+Now handling font encoding OMS ...
+... processing UTF-8 mapping file for font encoding OMS
+(/usr/share/texlive/texmf-dist/tex/latex/base/omsenc.dfu
+File: omsenc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
+   defining Unicode char U+00A7 (decimal 167)
+   defining Unicode char U+00B6 (decimal 182)
+   defining Unicode char U+00B7 (decimal 183)
+   defining Unicode char U+2020 (decimal 8224)
+   defining Unicode char U+2021 (decimal 8225)
+   defining Unicode char U+2022 (decimal 8226)
+)
+Now handling font encoding OMX ...
+... no UTF-8 mapping file for font encoding OMX
+Now handling font encoding U ...
+... no UTF-8 mapping file for font encoding U
+   defining Unicode char U+00A9 (decimal 169)
+   defining Unicode char U+00AA (decimal 170)
+   defining Unicode char U+00AE (decimal 174)
+   defining Unicode char U+00BA (decimal 186)
+   defining Unicode char U+02C6 (decimal 710)
+   defining Unicode char U+02DC (decimal 732)
+   defining Unicode char U+200C (decimal 8204)
+   defining Unicode char U+2026 (decimal 8230)
+   defining Unicode char U+2122 (decimal 8482)
+   defining Unicode char U+2423 (decimal 9251)
+)) (/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype.sty
+Package: microtype 2013/05/23 v2.5a Micro-typographical refinements (RS)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+\MT@toks=\toks17
+\MT@count=\count87
+LaTeX Info: Redefining \textls on input line 766.
+\MT@outer@kern=\dimen103
+LaTeX Info: Redefining \textmicrotypecontext on input line 1285.
+\MT@listname@count=\count88
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype-pdftex.def
+File: microtype-pdftex.def 2013/05/23 v2.5a Definitions specific to pdftex (RS)
+
+LaTeX Info: Redefining \lsstyle on input line 915.
+LaTeX Info: Redefining \lslig on input line 915.
+\MT@outer@space=\skip43
+)
+Package microtype Info: Loading configuration file microtype.cfg.
+(/usr/share/texlive/texmf-dist/tex/latex/microtype/microtype.cfg
+File: microtype.cfg 2013/05/23 v2.5a microtype main configuration file (RS)
+)) (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2013/01/14 v2.14 AMS math features
+\@mathmargin=\skip44
+For additional information on amsmath, use the `?' option.
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks18
+\ex@=\dimen104
+)) (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen105
+) (/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count89
+LaTeX Info: Redefining \frac on input line 210.
+\uproot@=\count90
+\leftroot@=\count91
+LaTeX Info: Redefining \overline on input line 306.
+\classnum@=\count92
+\DOTSCASE@=\count93
+LaTeX Info: Redefining \ldots on input line 378.
+LaTeX Info: Redefining \dots on input line 381.
+LaTeX Info: Redefining \cdots on input line 466.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen106
+LaTeX Font Info:    Redeclaring font encoding OML on input line 566.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 567.
+\macc@depth=\count94
+\c@MaxMatrixCols=\count95
+\dotsspace@=\muskip10
+\c@parentequation=\count96
+\dspbrk@lvl=\count97
+\tag@help=\toks19
+\row@=\count98
+\column@=\count99
+\maxfields@=\count100
+\andhelp@=\toks20
+\eqnshift@=\dimen107
+\alignsep@=\dimen108
+\tagshift@=\dimen109
+\tagwidth@=\dimen110
+\totwidth@=\dimen111
+\lineht@=\dimen112
+\@envbody=\toks21
+\multlinegap=\skip45
+\multlinetaggap=\skip46
+\mathdisplay@stack=\toks22
+LaTeX Info: Redefining \[ on input line 2665.
+LaTeX Info: Redefining \] on input line 2666.
+) (/usr/share/texlive/texmf-dist/tex/latex/psnfss/mathpazo.sty
+Package: mathpazo 2005/04/12 PSNFSS-v9.2a Palatino w/ Pazo Math (D.Puga, WaS) 
+\symupright=\mathgroup4
+) (/usr/share/texlive/texmf-dist/tex/latex/siunitx/siunitx.sty (/usr/share/texl
+ive/texmf-dist/tex/latex/l3kernel/expl3.sty (/usr/share/texlive/texmf-dist/tex/
+latex/l3kernel/l3names.sty (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3
+bootstrap.sty
+Package: l3bootstrap 2014/01/04 v4640 L3 Experimental bootstrap code
+)
+Package: l3names 2014/01/04 v4640 L3 Namespace for primitives
+) (/usr/share/texlive/texmf-dist/tex/latex/etex-pkg/etex.sty
+Package: etex 1998/03/26 v2.0 eTeX basic definition package (PEB)
+\et@xins=\count101
+)
+Package: expl3 2014/01/07 v4646 L3 Experimental code bundle wrapper
+(/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3basics.sty
+Package: l3basics 2014/01/04 v4642 L3 Basic definitions
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3expan.sty
+Package: l3expan 2014/01/04 v4642 L3 Argument expansion
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3tl.sty
+Package: l3tl 2013/12/27 v4625 L3 Token lists
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3seq.sty
+Package: l3seq 2013/12/14 v4623 L3 Sequences and stacks
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3int.sty
+Package: l3int 2013/08/02 v4583 L3 Integers
+\c_max_int=\count102
+\l_tmpa_int=\count103
+\l_tmpb_int=\count104
+\g_tmpa_int=\count105
+\g_tmpb_int=\count106
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3quark.sty
+Package: l3quark 2013/12/14 v4623 L3 Quarks
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3prg.sty
+Package: l3prg 2014/01/04 v4642 L3 Control structures
+\g__prg_map_int=\count107
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3clist.sty
+Package: l3clist 2013/07/28 v4581 L3 Comma separated lists
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3token.sty
+Package: l3token 2013/08/25 v4587 L3 Experimental token manipulation
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3prop.sty
+Package: l3prop 2013/12/14 v4623 L3 Property lists
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3msg.sty
+Package: l3msg 2013/07/28 v4581 L3 Messages
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3file.sty
+Package: l3file 2013/10/13 v4596 L3 File and I/O operations
+\l_iow_line_count_int=\count108
+\l__iow_target_count_int=\count109
+\l__iow_current_line_int=\count110
+\l__iow_current_word_int=\count111
+\l__iow_current_indentation_int=\count112
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3skip.sty
+Package: l3skip 2013/07/28 v4581 L3 Dimensions and skips
+\c_zero_dim=\dimen113
+\c_max_dim=\dimen114
+\l_tmpa_dim=\dimen115
+\l_tmpb_dim=\dimen116
+\g_tmpa_dim=\dimen117
+\g_tmpb_dim=\dimen118
+\c_zero_skip=\skip47
+\c_max_skip=\skip48
+\l_tmpa_skip=\skip49
+\l_tmpb_skip=\skip50
+\g_tmpa_skip=\skip51
+\g_tmpb_skip=\skip52
+\c_zero_muskip=\muskip11
+\c_max_muskip=\muskip12
+\l_tmpa_muskip=\muskip13
+\l_tmpb_muskip=\muskip14
+\g_tmpa_muskip=\muskip15
+\g_tmpb_muskip=\muskip16
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3keys.sty
+Package: l3keys 2013/12/08 v4614 L3 Experimental key-value interfaces
+\g__keyval_level_int=\count113
+\l_keys_choice_int=\count114
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3fp.sty
+Package: l3fp 2014/01/04 v4642 L3 Floating points
+\c__fp_leading_shift_int=\count115
+\c__fp_middle_shift_int=\count116
+\c__fp_trailing_shift_int=\count117
+\c__fp_big_leading_shift_int=\count118
+\c__fp_big_middle_shift_int=\count119
+\c__fp_big_trailing_shift_int=\count120
+\c__fp_Bigg_leading_shift_int=\count121
+\c__fp_Bigg_middle_shift_int=\count122
+\c__fp_Bigg_trailing_shift_int=\count123
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3box.sty
+Package: l3box 2013/07/28 v4581 L3 Experimental boxes
+\c_empty_box=\box28
+\l_tmpa_box=\box29
+\l_tmpb_box=\box30
+\g_tmpa_box=\box31
+\g_tmpb_box=\box32
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3coffins.sty
+Package: l3coffins 2013/12/14 v4624 L3 Coffin code layer
+\l__coffin_internal_box=\box33
+\l__coffin_internal_dim=\dimen119
+\l__coffin_offset_x_dim=\dimen120
+\l__coffin_offset_y_dim=\dimen121
+\l__coffin_x_dim=\dimen122
+\l__coffin_y_dim=\dimen123
+\l__coffin_x_prime_dim=\dimen124
+\l__coffin_y_prime_dim=\dimen125
+\c_empty_coffin=\box34
+\l__coffin_aligned_coffin=\box35
+\l__coffin_aligned_internal_coffin=\box36
+\l_tmpa_coffin=\box37
+\l_tmpb_coffin=\box38
+\l__coffin_display_coffin=\box39
+\l__coffin_display_coord_coffin=\box40
+\l__coffin_display_pole_coffin=\box41
+\l__coffin_display_offset_dim=\dimen126
+\l__coffin_display_x_dim=\dimen127
+\l__coffin_display_y_dim=\dimen128
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3color.sty
+Package: l3color 2012/08/29 v4156 L3 Experimental color support
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3luatex.sty
+Package: l3luatex 2013/07/28 v4581 L3 Experimental LuaTeX-specific functions
+\g__cctab_allocate_int=\count124
+\g__cctab_stack_int=\count125
+) (/usr/share/texlive/texmf-dist/tex/latex/l3kernel/l3candidates.sty
+Package: l3candidates 2014/01/06 v4643 L3 Experimental additions to l3kernel
+\l__box_top_dim=\dimen129
+\l__box_bottom_dim=\dimen130
+\l__box_left_dim=\dimen131
+\l__box_right_dim=\dimen132
+\l__box_top_new_dim=\dimen133
+\l__box_bottom_new_dim=\dimen134
+\l__box_left_new_dim=\dimen135
+\l__box_right_new_dim=\dimen136
+\l__box_internal_box=\box42
+\l__coffin_bounding_shift_dim=\dimen137
+\l__coffin_left_corner_dim=\dimen138
+\l__coffin_right_corner_dim=\dimen139
+\l__coffin_bottom_corner_dim=\dimen140
+\l__coffin_top_corner_dim=\dimen141
+\l__coffin_scaled_total_height_dim=\dimen142
+\l__coffin_scaled_width_dim=\dimen143
+)) (/usr/share/texlive/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+Package: xparse 2013/12/31 v4634 L3 Experimental document command parser
+\l__xparse_current_arg_int=\count126
+\l__xparse_m_args_int=\count127
+\l__xparse_mandatory_args_int=\count128
+\l__xparse_processor_int=\count129
+\l__xparse_v_nesting_int=\count130
+)
+Package: siunitx 2013/07/31 v2.5s A comprehensive (SI) units package
+(/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty
+Package: array 2008/09/09 v2.4c Tabular extension package (FMi)
+\col@sep=\dimen144
+\extrarowheight=\dimen145
+\NC@list=\toks23
+\extratabsurround=\skip53
+\backup@length=\skip54
+) (/usr/share/texlive/texmf-dist/tex/latex/l3packages/l3keys2e/l3keys2e.sty
+Package: l3keys2e 2013/12/31 v4634 LaTeX2e option processing using LaTeX3 keys
+)
+Variant \tl_if_blank:VTF already defined; not changing it on line 50
+\l__siunitx_tmp_box=\box43
+\l__siunitx_tmp_dim=\dimen146
+\l__siunitx_tmp_int=\count131
+Variant \prop_get:NVNT already defined; not changing it on line 371
+Variant \prop_get:NVNF already defined; not changing it on line 372
+Variant \prop_get:NVNTF already defined; not changing it on line 373
+\l__siunitx_number_mantissa_length_int=\count132
+\l__siunitx_number_uncert_length_int=\count133
+\l__siunitx_round_int=\count134
+\l__siunitx_process_decimal_int=\count135
+\l__siunitx_process_uncertainty_int=\count136
+\l__siunitx_process_fixed_int=\count137
+\l__siunitx_process_integer_min_int=\count138
+\l__siunitx_process_precision_int=\count139
+\l__siunitx_group_min_int=\count140
+\l__siunitx_angle_marker_box=\box44
+\l__siunitx_angle_unit_box=\box45
+\l__siunitx_angle_marker_dim=\dimen147
+\l__siunitx_angle_unit_dim=\dimen148
+\l__siunitx_unit_int=\count141
+\l__siunitx_unit_denominator_int=\count142
+\l__siunitx_unit_numerator_int=\count143
+\l__siunitx_unit_prefix_int=\count144
+\l__siunitx_unit_prefix_base_int=\count145
+\l__siunitx_unit_prefix_gram_int=\count146
+\l__siunitx_number_product_int=\count147
+\c__siunitx_one_fill_skip=\skip55
+\l__siunitx_table_unit_align_skip=\skip56
+\l__siunitx_table_exponent_dim=\dimen149
+\l__siunitx_table_integer_dim=\dimen150
+\l__siunitx_table_mantissa_dim=\dimen151
+\l__siunitx_table_marker_dim=\dimen152
+\l__siunitx_table_result_dim=\dimen153
+\l__siunitx_table_uncert_dim=\dimen154
+\l__siunitx_table_fill_pre_dim=\dimen155
+\l__siunitx_table_fill_post_dim=\dimen156
+\l__siunitx_table_fill_mid_dim=\dimen157
+\l__siunitx_table_pre_box=\box46
+\l__siunitx_table_post_box=\box47
+\l__siunitx_table_mantissa_box=\box48
+\l__siunitx_table_result_box=\box49
+\l__siunitx_table_number_align_skip=\skip57
+\l__siunitx_table_text_align_skip=\skip58
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \DeclareBinaryPrefix with arg. spec. 'mmm' on line
+. 7101.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \DeclareSIPostPower with arg. spec. 'mm' on line
+. 7104.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \DeclareSIPrefix with arg. spec. 'mmm' on line
+. 7107.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \DeclareSIPrePower with arg. spec. 'mm' on line
+. 7110.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \DeclareSIQualifier with arg. spec. 'mm' on line
+. 7113.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \DeclareSIUnit with arg. spec. 'O{}mm' on line
+. 7116.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \DeclareSIUnitWithOptions with arg. spec. 'mmm' on
+. line 7119.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \ang with arg. spec. 'o>{\SplitArgument {2}{;}}m'
+. on line 7134.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \num with arg. spec. 'om' on line 7142.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \numlist with arg. spec. 'o>{\SplitList {;}}m' on
+. line 7150.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \numrange with arg. spec. 'omm' on line 7158.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \SIlist with arg. spec. 'o>{\SplitList {;}}mm' on
+. line 7169.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \SIrange with arg. spec. 'ommm' on line 7180.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \SI with arg. spec. 'omom' on line 7191.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \sisetup with arg. spec. 'm' on line 7194.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \tablenum with arg. spec. 'om' on line 7206.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \si with arg. spec. 'om' on line 7217.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \__siunitx_bookmark_num:w with arg. spec. 'om' on
+. line 7262.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \__siunitx_bookmark_numrange:w with arg. spec.
+. 'omm' on line 7264.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \__siunitx_bookmark_SI:w with arg. spec. 'omom' on
+. line 7266.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \__siunitx_bookmark_SIlist:w with arg. spec. 'omm'
+. on line 7268.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \__siunitx_bookmark_SIrange:w with arg. spec.
+. 'ommm' on line 7270.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \__siunitx_bookmark_si:w with arg. spec. 'om' on
+. line 7271.
+.................................................
+\g__file_internal_ior=\read1
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/translator/translator.sty
+Package: translator 2010/06/12 ver 1.10
+
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/translator/translator-language-
+mappings.tex))) (/usr/share/texlive/texmf-dist/tex/latex/titlesec/titlesec.sty
+Package: titlesec 2011/12/15 v2.10.0 Sectioning titles
+\ttl@box=\box50
+\beforetitleunit=\skip59
+\aftertitleunit=\skip60
+\ttl@plus=\dimen158
+\ttl@minus=\dimen159
+\ttl@toksa=\toks24
+\titlewidth=\dimen160
+\titlewidthlast=\dimen161
+\titlewidthfirst=\dimen162
+) (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+) (/usr/share/texlive/texmf-dist/tex/latex/latexconfig/graphics.cfg
+File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
+)
+Package graphics Info: Driver file: dvips.def on input line 91.
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/dvips.def
+File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+))
+\Gin@req@height=\dimen163
+\Gin@req@width=\dimen164
+) (/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
+\bigstrutjot=\dimen165
+) (/usr/share/texlive/texmf-dist/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2011/09/28 v3.5.2 Customized lists
+\labelindent=\skip61
+\enit@outerparindent=\dimen166
+\enit@toks=\toks25
+\enit@inbox=\box51
+\enitdp@description=\count148
+) (/usr/share/texlive/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/color.cfg
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Package option `usenames' ignored on input line 216.
+Package xcolor Info: Driver file: dvips.def on input line 225.
+(/usr/share/texlive/texmf-dist/tex/latex/colortbl/colortbl.sty
+Package: colortbl 2012/02/13 v1.0a Color table columns (DPC)
+\everycr=\toks26
+\minrowclearance=\skip62
+)
+\rownum=\count149
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/dvipsnam.def
+File: dvipsnam.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+) (/usr/share/texlive/texmf-dist/tex/latex/xcolor/svgnam.def
+File: svgnam.def 2007/01/21 v2.11 Predefined colors according to SVG 1.1 (UK)
+)) (/usr/share/texlive/texmf-dist/tex/latex/mdframed/mdframed.sty
+Package: mdframed 2013/07/01 1.9b: mdframed
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+))) (/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2011/01/03 v2.1 e-TeX tools for LaTeX
+\etb@tempcnta=\count150
+) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/zref-abspage.sty
+Package: zref-abspage 2012/04/04 v2.24 Module abspage for zref (HO)
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/zref-base.sty
+Package: zref-base 2012/04/04 v2.24 Module base for zref (HO)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode is ignored in DVI mode.
+) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/auxhook.sty
+Package: auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
+)
+Package zref Info: New property list: main on input line 759.
+Package zref Info: New property: default on input line 760.
+Package zref Info: New property: page on input line 761.
+) (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/atbegshi.sty
+Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
+)
+\c@abspage=\count151
+Package zref Info: New property: abspage on input line 62.
+) (/usr/share/texlive/texmf-dist/tex/latex/needspace/needspace.sty
+Package: needspace 2010/09/12 v1.3d reserve vertical space
+)
+\mdf@templength=\skip63
+\c@mdf@globalstyle@cnt=\count152
+\mdf@skipabove@length=\skip64
+\mdf@skipbelow@length=\skip65
+\mdf@leftmargin@length=\skip66
+\mdf@rightmargin@length=\skip67
+\mdf@innerleftmargin@length=\skip68
+\mdf@innerrightmargin@length=\skip69
+\mdf@innertopmargin@length=\skip70
+\mdf@innerbottommargin@length=\skip71
+\mdf@splittopskip@length=\skip72
+\mdf@splitbottomskip@length=\skip73
+\mdf@outermargin@length=\skip74
+\mdf@innermargin@length=\skip75
+\mdf@linewidth@length=\skip76
+\mdf@innerlinewidth@length=\skip77
+\mdf@middlelinewidth@length=\skip78
+\mdf@outerlinewidth@length=\skip79
+\mdf@roundcorner@length=\skip80
+\mdf@footenotedistance@length=\skip81
+\mdf@userdefinedwidth@length=\skip82
+\mdf@needspace@length=\skip83
+\mdf@frametitleaboveskip@length=\skip84
+\mdf@frametitlebelowskip@length=\skip85
+\mdf@frametitlerulewidth@length=\skip86
+\mdf@frametitleleftmargin@length=\skip87
+\mdf@frametitlerightmargin@length=\skip88
+\mdf@shadowsize@length=\skip89
+\mdf@extratopheight@length=\skip90
+\mdf@subtitleabovelinewidth@length=\skip91
+\mdf@subtitlebelowlinewidth@length=\skip92
+\mdf@subtitleaboveskip@length=\skip93
+\mdf@subtitlebelowskip@length=\skip94
+\mdf@subtitleinneraboveskip@length=\skip95
+\mdf@subtitleinnerbelowskip@length=\skip96
+\mdf@subsubtitleabovelinewidth@length=\skip97
+\mdf@subsubtitlebelowlinewidth@length=\skip98
+\mdf@subsubtitleaboveskip@length=\skip99
+\mdf@subsubtitlebelowskip@length=\skip100
+\mdf@subsubtitleinneraboveskip@length=\skip101
+\mdf@subsubtitleinnerbelowskip@length=\skip102
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty (/usr/share
+/texlive/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty (/usr/share/texlive/texmf-
+dist/tex/latex/pgf/utilities/pgfrcs.sty (/usr/share/texlive/texmf-dist/tex/gene
+ric/pgf/utilities/pgfutil-common.tex
+\pgfutil@everybye=\toks27
+\pgfutil@tempdima=\dimen167
+\pgfutil@tempdimb=\dimen168
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfutil-common-lists.t
+ex)) (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def
+\pgfutil@abb=\box52
+(/usr/share/texlive/texmf-dist/tex/latex/ms/everyshi.sty
+Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
+)) (/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex
+Package: pgfrcs 2013/12/20 v3.0.0 (rcs-revision 1.28)
+))
+Package: pgf 2013/12/18 v3.0.0 (rcs-revision 1.14)
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty (/usr/share
+/texlive/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty (/usr/share/texlive/te
+xmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex
+Package: pgfsys 2013/11/30 v3.0.0 (rcs-revision 1.47)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex
+\pgfkeys@pathtoks=\toks28
+\pgfkeys@temptoks=\toks29
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfkeysfiltered.code.t
+ex
+\pgfkeys@tmptoks=\toks30
+))
+\pgf@x=\dimen169
+\pgf@y=\dimen170
+\pgf@xa=\dimen171
+\pgf@ya=\dimen172
+\pgf@xb=\dimen173
+\pgf@yb=\dimen174
+\pgf@xc=\dimen175
+\pgf@yc=\dimen176
+\w@pgf@writea=\write3
+\r@pgf@reada=\read2
+\c@pgf@counta=\count153
+\c@pgf@countb=\count154
+\c@pgf@countc=\count155
+\c@pgf@countd=\count156
+\t@pgf@toka=\toks31
+\t@pgf@tokb=\toks32
+\t@pgf@tokc=\toks33
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg
+File: pgf.cfg 2008/05/14  (rcs-revision 1.7)
+)
+Driver file for pgf: pgfsys-tex4ht.def
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-tex4ht.def
+File: pgfsys-tex4ht.def 2013/08/06  (rcs-revision 1.25)
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-svg.de
+f
+File: pgfsys-common-svg.def 2013/08/28  (rcs-revision 1.24)
+\pgf@sys@svg@objectcount=\count157
+\pgf@sys@svg@scopecount=\count158
+)
+\pgf@sys@svg@picnum=\count159
+\pgf@sys@svg@nodenum=\count160
+\pgfsys@foreignobject@Box=\box53
+\pgf@s=\dimen177
+\pgf@t=\dimen178
+))
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.
+tex
+File: pgfsyssoftpath.code.tex 2013/09/09  (rcs-revision 1.9)
+\pgfsyssoftpath@smallbuffer@items=\count161
+\pgfsyssoftpath@bigbuffer@items=\count162
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.
+tex
+File: pgfsysprotocol.code.tex 2006/10/16  (rcs-revision 1.4)
+)) (/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex
+Package: pgfcore 2010/04/11 v3.0.0 (rcs-revision 1.7)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex (/usr/shar
+e/texlive/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex (/usr/share/texl
+ive/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex) (/usr/share/texlive/t
+exmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex
+\pgfmath@dimen=\dimen179
+\pgfmath@count=\count163
+\pgfmath@box=\box54
+\pgfmath@toks=\toks34
+\pgfmath@stack@operand=\toks35
+\pgfmath@stack@operation=\toks36
+) (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code
+.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonomet
+ric.code.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.cod
+e.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison
+.code.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.
+tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code
+.tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.
+tex)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.integerari
+thmetics.code.tex))) (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmat
+hfloat.code.tex
+\c@pgfmathroundto@lastzeros=\count164
+))
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.te
+x
+File: pgfcorepoints.code.tex 2013/10/07  (rcs-revision 1.27)
+\pgf@picminx=\dimen180
+\pgf@picmaxx=\dimen181
+\pgf@picminy=\dimen182
+\pgf@picmaxy=\dimen183
+\pgf@pathminx=\dimen184
+\pgf@pathmaxx=\dimen185
+\pgf@pathminy=\dimen186
+\pgf@pathmaxy=\dimen187
+\pgf@xx=\dimen188
+\pgf@xy=\dimen189
+\pgf@yx=\dimen190
+\pgf@yy=\dimen191
+\pgf@zx=\dimen192
+\pgf@zy=\dimen193
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.
+code.tex
+File: pgfcorepathconstruct.code.tex 2013/10/07  (rcs-revision 1.29)
+\pgf@path@lastx=\dimen194
+\pgf@path@lasty=\dimen195
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code
+.tex
+File: pgfcorepathusage.code.tex 2013/12/13  (rcs-revision 1.23)
+\pgf@shorten@end@additional=\dimen196
+\pgf@shorten@start@additional=\dimen197
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.te
+x
+File: pgfcorescopes.code.tex 2013/10/09  (rcs-revision 1.44)
+\pgfpic=\box55
+\pgf@hbox=\box56
+\pgf@layerbox@main=\box57
+\pgf@picture@serial@count=\count165
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.c
+ode.tex
+File: pgfcoregraphicstate.code.tex 2013/09/19  (rcs-revision 1.11)
+\pgflinewidth=\dimen198
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformation
+s.code.tex
+File: pgfcoretransformations.code.tex 2013/10/10  (rcs-revision 1.17)
+\pgf@pt@x=\dimen199
+\pgf@pt@y=\dimen200
+\pgf@pt@temp=\dimen201
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
+File: pgfcorequick.code.tex 2008/10/09  (rcs-revision 1.3)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.t
+ex
+File: pgfcoreobjects.code.tex 2006/10/11  (rcs-revision 1.2)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing
+.code.tex
+File: pgfcorepathprocessing.code.tex 2013/09/09  (rcs-revision 1.9)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.te
+x
+File: pgfcorearrows.code.tex 2013/11/07  (rcs-revision 1.40)
+Normal \dimen register pool exhausted, switching to extended pool.
+\pgfarrowsep=\dimen256
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
+File: pgfcoreshade.code.tex 2013/07/15  (rcs-revision 1.15)
+\pgf@max=\dimen257
+\pgf@sys@shading@range@num=\count166
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
+File: pgfcoreimage.code.tex 2013/07/15  (rcs-revision 1.18)
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.
+tex
+File: pgfcoreexternal.code.tex 2013/07/15  (rcs-revision 1.20)
+\pgfexternal@startupbox=\box58
+))
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.te
+x
+File: pgfcorelayers.code.tex 2013/07/18  (rcs-revision 1.7)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.c
+ode.tex
+File: pgfcoretransparency.code.tex 2013/09/30  (rcs-revision 1.5)
+)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.
+tex
+File: pgfcorepatterns.code.tex 2013/11/07  (rcs-revision 1.5)
+)))
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
+File: pgfmoduleshapes.code.tex 2013/10/31  (rcs-revision 1.34)
+\pgfnodeparttextbox=\box59
+) (/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
+File: pgfmoduleplot.code.tex 2013/07/31  (rcs-revision 1.12)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65
+.sty
+Package: pgfcomp-version-0-65 2007/07/03 v3.0.0 (rcs-revision 1.7)
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.190   \pgfusepathqfill}
+                         
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.190   \pgfusepathqfill}
+                         
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.190   \pgfusepathqfill}
+                         
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.190   \pgfusepathqfill}
+                         
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.190   \pgfusepathqfill}
+                         
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.209   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.214   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.214   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.214   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.214   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.214   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.214   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.214   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.221   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.221   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.221   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.221   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.221   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.221   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.221   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.226   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.226   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.226   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.226   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.226   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.226   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.226   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.232   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.232   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.232   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.232   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.232   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.232   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.232   \pgfusepathqstroke}
+                           
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.237   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.237   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.237   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.237   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.237   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.237   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.237   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.237   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.237   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.245   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.245   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.245   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.245   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.245   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.245   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+! Undefined control sequence.
+\pgfsys@svg@newline ->\Hnewline 
+                                
+l.245   \pgfusepathqfillstroke}
+                               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+\pgf@nodesepstart=\dimen258
+\pgf@nodesepend=\dimen259
+)
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18
+.sty
+Package: pgfcomp-version-1-18 2007/07/23 v3.0.0 (rcs-revision 1.1)
+)) (/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgffor.sty (/usr/shar
+e/texlive/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty (/usr/share/texlive/te
+xmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex)) (/usr/share/texlive/texmf
+-dist/tex/latex/pgf/math/pgfmath.sty (/usr/share/texlive/texmf-dist/tex/generic
+/pgf/math/pgfmath.code.tex)) (/usr/share/texlive/texmf-dist/tex/generic/pgf/uti
+lities/pgffor.code.tex
+Package: pgffor 2013/12/13 v3.0.0 (rcs-revision 1.25)
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)
+\pgffor@iter=\dimen260
+\pgffor@skip=\dimen261
+\pgffor@stack=\toks37
+\pgffor@toks=\toks38
+))
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
+Package: tikz 2013/12/13 v3.0.0 (rcs-revision 1.142)
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers
+.code.tex
+File: pgflibraryplothandlers.code.tex 2013/08/31 v3.0.0 (rcs-revision 1.20)
+\pgf@plot@mark@count=\count167
+\pgfplotmarksize=\dimen262
+)
+\tikz@lastx=\dimen263
+\tikz@lasty=\dimen264
+\tikz@lastxsaved=\dimen265
+\tikz@lastysaved=\dimen266
+\tikzleveldistance=\dimen267
+\tikzsiblingdistance=\dimen268
+\tikz@figbox=\box60
+\tikz@figbox@bg=\box61
+\tikz@tempbox=\box62
+\tikz@tempbox@bg=\box63
+\tikztreelevel=\count168
+\tikznumberofchildren=\count169
+\tikznumberofcurrentchild=\count170
+\tikz@fig@count=\count171
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
+File: pgfmodulematrix.code.tex 2013/09/17  (rcs-revision 1.8)
+\pgfmatrixcurrentrow=\count172
+\pgfmatrixcurrentcolumn=\count173
+\pgf@matrix@numberofcolumns=\count174
+)
+\tikz@expandcount=\count175
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2008/06/17 v3.0.0 (rcs-revision 1.2)
+))) (/usr/share/texlive/texmf-dist/tex/latex/mdframed/md-frame-1.mdf
+File: md-frame-1.mdf 2013/07/01\ 1.9b: md-frame-1
+)
+\mdf@frametitlebox=\box64
+\mdf@footnotebox=\box65
+\mdf@splitbox@one=\box66
+\mdf@splitbox@two=\box67
+\mdf@splitbox@save=\box68
+\mdfsplitboxwidth=\skip103
+\mdfsplitboxtotalwidth=\skip104
+\mdfsplitboxheight=\skip105
+\mdfsplitboxdepth=\skip106
+\mdfsplitboxtotalheight=\skip107
+\mdfframetitleboxwidth=\skip108
+\mdfframetitleboxtotalwidth=\skip109
+\mdfframetitleboxheight=\skip110
+\mdfframetitleboxdepth=\skip111
+\mdfframetitleboxtotalheight=\skip112
+\mdffootnoteboxwidth=\skip113
+\mdffootnoteboxtotalwidth=\skip114
+\mdffootnoteboxheight=\skip115
+\mdffootnoteboxdepth=\skip116
+\mdffootnoteboxtotalheight=\skip117
+\mdftotallinewidth=\skip118
+\mdfboundingboxwidth=\skip119
+\mdfboundingboxtotalwidth=\skip120
+\mdfboundingboxheight=\skip121
+\mdfboundingboxdepth=\skip122
+\mdfboundingboxtotalheight=\skip123
+\mdf@freevspace@length=\skip124
+\mdf@horizontalwidthofbox@length=\skip125
+\mdf@verticalmarginwhole@length=\skip126
+\mdf@horizontalspaceofbox=\skip127
+\mdfsubtitleheight=\skip128
+\mdfsubsubtitleheight=\skip129
+\c@mdfcountframes=\count176
+
+****** mdframed patching \endmdf@trivlist
+
+****** -- success******
+
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \newmdtheoremenv with arg. spec. 'O{} m o m o ' on
+. line 601.
+.................................................
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining document command \mdtheorem with arg. spec. ' O{} m o m o ' on line
+. 701.
+.................................................
+\mdf@envdepth=\count177
+\c@mdf@env@i=\count178
+\c@mdf@env@ii=\count179
+\c@mdf@zref@counter=\count180
+Package zref Info: New property: mdf@pagevalue on input line 895.
+) (/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty
+Package: longtable 2004/02/01 v4.11 Multi-page Table package (DPC)
+\LTleft=\skip130
+\LTright=\skip131
+\LTpre=\skip132
+\LTpost=\skip133
+\LTchunksize=\count181
+\LTcapwidth=\dimen269
+\LT@head=\box69
+\LT@firsthead=\box70
+\LT@foot=\box71
+\LT@lastfoot=\box72
+\LT@cols=\count182
+\LT@rows=\count183
+\c@LT@tables=\count184
+\c@LT@chunks=\count185
+\LT@p@ftn=\toks39
+) (/usr/share/texlive/texmf-dist/tex/latex/rotating/rotating.sty
+Package: rotating 2009/03/28 v2.16a rotated objects in LaTeX
+(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\c@r@tfl@t=\count186
+\rotFPtop=\skip134
+\rotFPbot=\skip135
+\rot@float@box=\box73
+\rot@mess@toks=\toks40
+) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/pdflscape.sty
+Package: pdflscape 2008/08/11 v0.10 Display of landscape pages in PDF (HO)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/lscape.sty
+Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
+) (/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+Package pdflscape Info: Auto-detected driver: dvips (dvips) on input line 124.
+) (/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2010/09/12 v5.6 Page Geometry
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+\Gm@cnth=\count187
+\Gm@cntv=\count188
+\c@Gm@tempcnt=\count189
+\Gm@bindingoffset=\dimen270
+\Gm@wd@mp=\dimen271
+\Gm@odd@mp=\dimen272
+\Gm@even@mp=\dimen273
+\Gm@layoutwidth=\dimen274
+\Gm@layoutheight=\dimen275
+\Gm@layouthoffset=\dimen276
+\Gm@layoutvoffset=\dimen277
+\Gm@dimlist=\toks41
+) (/usr/share/texlive/texmf-dist/tex/latex/titling/titling.sty
+Package: titling 2009/09/04 v2.1d maketitle typesetting
+\thanksmarkwidth=\skip136
+\thanksmargin=\skip137
+\droptitle=\skip138
+) (/usr/share/texlive/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+\fancy@headwidth=\skip139
+\f@ncyO@elh=\skip140
+\f@ncyO@erh=\skip141
+\f@ncyO@olh=\skip142
+\f@ncyO@orh=\skip143
+\f@ncyO@elf=\skip144
+\f@ncyO@erf=\skip145
+\f@ncyO@olf=\skip146
+\f@ncyO@orf=\skip147
+) (/usr/share/texlive/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2012/11/06 v6.83m Hypertext links for LaTeX
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+Package: hobsub-hyperref 2012/05/28 v1.13 Bundle oberdiek, subset hyperref (HO)
+
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty
+Package: hobsub-generic 2012/05/28 v1.13 Bundle oberdiek, subset generic (HO)
+Package: hobsub 2012/05/28 v1.13 Construct package bundles (HO)
+Package hobsub Info: Skipping package `infwarerr' (already loaded).
+Package hobsub Info: Skipping package `ltxcmds' (already loaded).
+Package hobsub Info: Skipping package `ifluatex' (already loaded).
+Package hobsub Info: Skipping package `ifvtex' (already loaded).
+Package: intcalc 2007/09/27 v1.1 Expandable calculations with integers (HO)
+Package hobsub Info: Skipping package `ifpdf' (already loaded).
+Package hobsub Info: Skipping package `etexcmds' (already loaded).
+Package hobsub Info: Skipping package `kvsetkeys' (already loaded).
+Package hobsub Info: Skipping package `kvdefinekeys' (already loaded).
+Package hobsub Info: Skipping package `pdftexcmds' (already loaded).
+Package: pdfescape 2011/11/25 v1.13 Implements pdfTeX's escape features (HO)
+Package: bigintcalc 2012/04/08 v1.3 Expandable calculations on big integers (HO
+)
+Package: bitset 2011/01/30 v1.1 Handle bit-vector datatype (HO)
+Package: uniquecounter 2011/01/30 v1.2 Provide unlimited unique counter (HO)
+)
+Package hobsub Info: Skipping package `hobsub' (already loaded).
+Package: letltxmacro 2010/09/02 v1.4 Let assignment for LaTeX macros (HO)
+Package: hopatch 2012/05/28 v1.2 Wrapper for package hooks (HO)
+Package: xcolor-patch 2011/01/30 xcolor patch
+Package: atveryend 2011/06/30 v1.8 Hooks at the very end of document (HO)
+Package hobsub Info: Skipping package `atbegshi' (already loaded).
+Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
+Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
+)
+\@linkdim=\dimen278
+\Hy@linkcounter=\count190
+\Hy@pagecounter=\count191
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2012/11/06 v6.83m Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+)
+\Hy@SavedSpaceFactor=\count192
+(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/hyperref.cfg
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+Package hyperref Info: Option `pdfusetitle' set `true' on input line 4319.
+Package hyperref Info: Option `breaklinks' set `true' on input line 4319.
+Package hyperref Info: Option `pdfdisplaydoctitle' set `true' on input line 431
+9.
+Package hyperref Info: Option `colorlinks' set `true' on input line 4319.
+Package hyperref Info: Hyper figures OFF on input line 4443.
+Package hyperref Info: Link nesting OFF on input line 4448.
+Package hyperref Info: Hyper index ON on input line 4451.
+Package hyperref Info: Plain pages OFF on input line 4458.
+Package hyperref Info: Backreferencing ON on input line 4461.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4688.
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/backref.sty
+Package: backref 2012/07/25 v1.38 Bibliographical back referencing
+(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
+Package: rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+82.
+))
+\c@Hy@tempcnt=\count193
+(/usr/share/texlive/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip17
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 5041.
+\XeTeXLinkMargin=\dimen279
+\Fld@menulength=\count194
+\Field@Width=\dimen280
+\Fld@charsize=\dimen281
+\Field@toks=\toks42
+Package hyperref Info: Hyper figures OFF on input line 6295.
+Package hyperref Info: Link nesting OFF on input line 6300.
+Package hyperref Info: Hyper index ON on input line 6303.
+Package hyperref Info: backreferencing ON on input line 6308.
+Package hyperref Info: Link coloring ON on input line 6313.
+Package hyperref Info: Link coloring with OCG OFF on input line 6320.
+Package hyperref Info: PDF/A mode OFF on input line 6325.
+LaTeX Info: Redefining \ref on input line 6365.
+LaTeX Info: Redefining \pageref on input line 6369.
+\Hy@abspage=\count195
+
+Package hyperref Message: Stopped early.
+
+)
+
+Package hyperref Message: Driver: htex4ht.
+
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/htex4ht.def
+File: htex4ht.def 2012/11/06 v6.83m Hyperref driver for TeX4ht
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/tex4ht.sty
+version 2008-10-27-17:23
+Package: tex4ht 
+--------------------------------------
+--- Note --- for _ at preamble, use the command line option `early_'
+--------------------------------------
+--------------------------------------
+--- Note --- for ^ at preamble, use the command line option `early^'
+--------------------------------------
+\tmp:toks=\toks43
+)) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/usepackage.4ht
+version 2009-05-21-09:32
+) (/usr/share/texlive/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 2008/02/07
+
+Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix 
+<2008/02/07> (tvz)
+\FV@CodeLineNo=\count196
+\FV@InFile=\read3
+\FV@TabBox=\box74
+\c@FancyVerbLine=\count197
+\FV@StepNumber=\count198
+\FV@OutFile=\write4
+) (/usr/share/texlive/texmf-dist/tex/latex/base/makeidx.sty
+Package: makeidx 2000/03/29 v1.0m Standard LaTeX package
+)
+\c@enumdescc=\count199
+\c@enumdescci=\count200
+\enitdp@enumdesc=\count201
+(/usr/share/texlive/texmf-dist/tex/latex/eqparbox/eqparbox.sty
+Package: eqparbox 2013/03/15 v4.0 Create equal-widthed boxes
+\eqp@tempdima=\skip148
+\eqp@tempdimb=\skip149
+\eqp@tabular@box=\box75
+\eqp@list@box=\box76
+\eqp@list@indent=\skip150
+(/usr/share/texlive/texmf-dist/tex/latex/environ/environ.sty
+Package: environ 2013/04/01 v0.3 A new environment syntax
+(/usr/share/texlive/texmf-dist/tex/latex/trimspaces/trimspaces.sty
+Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
+)))
+Normal \count register pool exhausted, switching to extended pool.
+\c@desc=\count277
+\enitdp@aligndesc=\count278
+\fmbox=\box77
+(/stardev/git/starlink/applications/latexsupport/starabbrev.sty) (/stardev/git/
+starlink/applications/latexsupport/starstyle.sty
+Package: starstyle 
+) (/stardev/git/starlink/applications/latexsupport/sst.sty
+Package: sst 
+\c@sstrefsection=\count279
+(/usr/share/texlive/texmf-dist/tex/latex/titlesec/ttlkeys.def
+File: ttlkeys.def 2011/12/15
+\c@ttlp@side=\count280
+\ttlp@side=\count281
+))) (/stardev/git/starlink/applications/latexsupport/starlinkxhtml.cfg (/usr/sh
+are/texlive/texmf-dist/tex/generic/tex4ht/tex4ht.4ht
+version 2009-01-07-07:11
+--------------------------------------
+--- Note --- for additional information, use the command line option `info'
+--------------------------------------
+::::::::::::::::::::::::::::::::::::::::::
+ TeX4ht info is available in the log file 
+::::::::::::::::::::::::::::::::::::::::::
+--------------------------------------
+--- Note --- For MathML on MSIE + MathPlayer use the command line option `mathp
+layer'
+--------------------------------------
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/tex4ht.sty
+version 2008-10-27-17:23
+--- needs --- tex4ht sun211 ---
+\tmp:cnt=\count282
+\openout15 = `sun211.tmp'.
+
+(./sun211.tmp)
+\tmp:dim=\skip151
+--------------------------------------
+--- Note --- for XML code, use the command line option `xml' or `xhtml'
+--------------------------------------
+(./sun211.xref)
+\:refout=\write5
+\openout5 = `sun211.xref'.
+
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht
+--------------------------------------
+--- Note --- to remove the <?xml version=...?> processing instruction use the c
+ommand line option `no-VERSION'
+--------------------------------------
+--------------------------------------
+--- Note --- to remove the DOCTYPE declaration use the command line option `no-
+DOCTYPE'
+--------------------------------------
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)
+--------------------------------------
+--- Note --- for marking of the base font, use the command line option `fonts+'
+
+--------------------------------------
+--------------------------------------
+--- Note --- for non active _, use the command line option `no_'
+--------------------------------------
+--------------------------------------
+--- Note --- for _ of catcode 13, use the command line option `_13'
+--------------------------------------
+--------------------------------------
+--- Note --- for non active ^, use the command line option `no^'
+--------------------------------------
+--------------------------------------
+--- Note --- for ^ of catcode 13, use the command line option `^13'
+--------------------------------------
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht
+--------------------------------------
+--- Note --- to ignore CSS font decoration, use the `NoFonts' command line opti
+on
+--------------------------------------
+--------------------------------------
+--- Note --- for jpg bitmaps of pictures, use the `jpg' command line option. (C
+haracter bitmaps are controled only by `g' records of tex4ht.env and `-g' switc
+hes of tex4ht.c) 
+--------------------------------------
+--------------------------------------
+--- Note --- for gif bitmaps of pictures, use the `gif' command line option. (C
+haracter bitmaps are controled only by `g' records of tex4ht.env and `-g' switc
+hes of tex4ht.c) 
+--------------------------------------
+--------------------------------------
+--- Note --- for content and toc in 2 frames, use the command line option `fram
+es'
+--------------------------------------
+--------------------------------------
+--- Note --- for content, toc, and footnotes in 3 frames, use the command line 
+option `frames-fn'
+--------------------------------------
+--------------------------------------
+--- Note --- for file extension name xht, use the command line option `xht'
+--------------------------------------
+TeX4ht package options: charset=utf-8,fn-in,html,htex4ht,mathml,ext=html,charse
+t="utf-8"
+--------------------------------------
+--- Note --- to ignore CSS code, use the command line option `-css
+--------------------------------------
+--------------------------------------
+--- Note --- for inline CSS code, use the command line option `css-in'
+--------------------------------------
+--------------------------------------
+--- Note --- for pop ups on mouse over, use the command line option `mouseover'
+
+--------------------------------------
+--------------------------------------
+--- Note --- for addressing images in a subdirectory, use the command line opti
+on `imgdir:.../'
+--------------------------------------
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)
+\:tokwrite=\toks44
+\:tokpage=\toks45
+--------------------------------------
+--- Note --- for back links to toc, use the command line option `sections+'
+--------------------------------------
+--------------------------------------
+--- Note --- for linear crosslinks of pages, use the command line option `next'
+
+--------------------------------------
+\openout15 = `sun211.4ct'.
+
+\:tocout=\write6
+\openout6 = `sun211.4tc'.
+
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht) (/usr/share/
+texlive/texmf-dist/tex/generic/tex4ht/latex.4ht
+version 2009-05-21-09:32
+--------------------------------------
+--- Note --- for links into captions, instead of float heads, use the command l
+ine option `refcaption'
+--------------------------------------
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht
+--------------------------------------
+--- Note --- For mini tocs immediately aftter the header use the command line o
+ption `minitoc<'
+--------------------------------------
+--------------------------------------
+--- Note --- for enumerated list elements with valued data, use the command lin
+e option `enumerate+'
+--------------------------------------
+--------------------------------------
+--- Note --- for enumerated list elements li's with value attributes, use the c
+ommand line option `enumerate-'
+--------------------------------------
+--------------------------------------
+--- Note --- for CSS2 code, use the command line option `css2'
+--------------------------------------
+--------------------------------------
+--- Note --- for pictorial tabular, use the command line option `pic-tabular'
+--------------------------------------
+--------------------------------------
+--- Note --- for bitmap fbox'es, use the command line option `pic-fbox'
+--------------------------------------
+--------------------------------------
+--- Note --- for bitmap framebox'es, use the command line option `pic-framebox'
+
+--------------------------------------
+\fn:box=\box78
+--------------------------------------
+--- Note --- for tracing of latex font commands, use the command line option `f
+onts'
+--------------------------------------
+--------------------------------------
+--- Note --- for width specifications of tabular p entries, use the `p-width' c
+ommand line option or a configuration similar to \Configure{HColWidth}{\HCode{ 
+style="width:\HColWidth"}}
+--------------------------------------
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/fontmath.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+\tmp:bx=\box79
+LaTeX Font Info:    Try loading font information for T1+ppl on input line 1369.
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ppl.fd
+File: t1ppl.fd 2001/06/04 font definitions for T1/ppl.
+) [1
+
+]
+LaTeX Font Info:    Try loading font information for OT1+ppl on input line 1375
+.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1ppl.fd
+File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
+)
+LaTeX Font Info:    Try loading font information for OML+zplm on input line 137
+5.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omlzplm.fd
+File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
+)
+LaTeX Font Info:    Try loading font information for OMS+zplm on input line 137
+5.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omszplm.fd
+File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
+)
+LaTeX Font Info:    Try loading font information for OMX+zplm on input line 137
+5.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omxzplm.fd
+File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
+)
+LaTeX Font Info:    Try loading font information for OT1+zplm on input line 137
+5.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/ot1zplm.fd
+File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
+) [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18] 
+[19] [20] [21] [22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34]
+[35] [36] [37] [38] [39] [40] [41] [42] [43] [44] [45] [46] [47] [48]
+--------------------------------------
+--- Note --- for sources failing to produce clean mathml code, try the command 
+line option `mathml-'
+--------------------------------------
+[49] [50] [51] [52] [53]) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/htm
+l-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/array.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/color.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/colortbl.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/article.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht
+--------------------------------------
+--- Note --- for automatic sectioning pagination, use the command line option `
+1', `2', `3', '4', '5', '6', or '7'
+--------------------------------------
+--------------------------------------
+--- Note --- for files named derived from section titles, use the command line 
+option `sec-filename'
+--------------------------------------
+--------------------------------------
+--- Note --- for i-columns index, use the command line option `index=i' (e.g., 
+index=2)
+--------------------------------------
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/inputenc.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/utf8.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/microtype.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/amsmath.4ht
+version 2009-05-21-09:32
+\tmp:muskip=\muskip18
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/amstext.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/amsbsy.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/amsopn.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/titlesec.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/graphicx.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/graphics.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht
+--------------------------------------
+--- Note --- if included graphics are of degraded quality, try the command line
+ options `graphics-num' or `graphics-'. The `num' should provide the density of
+ pixels in the bitmaps (e.g., 110). 
+--------------------------------------
+--------------------------------------
+--- Note --- for key dimensions try the option `Gin-dim'; for key dimensions wh
+en bounding box is unavailable try `Gin-dim+'; neither is recommended
+--------------------------------------
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/dvips.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/multirow.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/enumitem.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/xcolor.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/color.4ht
+version 2009-05-21-09:32
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texl
+ive/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/dvipsnam.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/dvipsnam.def) (/usr/share/tex
+live/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texlive/texmf-dist/te
+x/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/svgnam.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/latex/xcolor/svgnam.def) (/usr/share/texlive
+/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texlive/texmf-dist/tex/ge
+neric/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/pgf.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/everyshi.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/longtable.4ht
+version 2009-05-21-09:32
+\LT:box=\box80
+\LT:ebox=\box81
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht
+--------------------------------------
+--- Note --- for pictorial longtable, use the command line option `pic-longtabl
+e'
+--------------------------------------
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/rotating.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/ifthen.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/hyperref.4ht
+version 2011-01-30-16:01
+(/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
+Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
+)
+\c@section@level=\count283
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/nameref.4ht
+version 2013-06-28-15:01
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht))
+LaTeX Info: Redefining \autoref on input line 100.
+\Hy@SectionHShift=\skip152
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/pd1enc.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/url.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht
+--------------------------------------
+--- Note --- for URL encoding within href use the command line option `url-enc'
+
+--------------------------------------
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/fancyvrb.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/usr/share
+/texlive/texmf-dist/tex/generic/tex4ht/makeidx.4ht
+version 2009-05-21-09:32
+(/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texliv
+e/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht)) (/stardev/g
+it/starlink/applications/latexsupport/starstyle.4ht
+...WithoutChapters stalrinkxhtml.cfg...
+... typesetting html across multiple pages...
+... typesetting html across multiple pages...
+) (/stardev/git/starlink/applications/latexsupport/sst.4ht
+\c@attributesec=\count284
+\c@phantomtocsection=\count285
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4.4ht) (/usr/share/texl
+ive/texmf-dist/tex/generic/tex4ht/unicode.4ht
+version 2010-12-18-17:40
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/mathml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html-mml.4ht
+version 2009-04-18-11:08
+) (/usr/share/texlive/texmf-dist/tex/generic/tex4ht/html4-uni.4ht))
+\c@minimycount=\count286
+\myminipagewidth=\skip153
+(/usr/share/texlive/texmf-dist/tex/latex/fp/fp.sty
+Package: fp 1995/04/02
+`Fixed Point Package', Version 0.8, April 2, 1995 (C) Michael Mehlich (/usr/sha
+re/texlive/texmf-dist/tex/latex/fp/defpattern.sty
+Package: defpattern 1994/10/12
+\actioncount=\count287
+) (/usr/share/texlive/texmf-dist/tex/latex/fp/fp-basic.sty
+Package: fp-basic 1996/05/13
+\FP@xs=\count288
+\FP@xia=\count289
+\FP@xib=\count290
+\FP@xfa=\count291
+\FP@xfb=\count292
+\FP@rega=\count293
+\FP@regb=\count294
+\FP@regs=\count295
+\FP@times=\count296
+) (/usr/share/texlive/texmf-dist/tex/latex/fp/fp-addons.sty
+Package: fp-addons 1995/03/15
+) (/usr/share/texlive/texmf-dist/tex/latex/fp/fp-snap.sty
+Package: fp-snap 1995/04/05
+) (/usr/share/texlive/texmf-dist/tex/latex/fp/fp-exp.sty
+Package: fp-exp 1995/04/03
+) (/usr/share/texlive/texmf-dist/tex/latex/fp/fp-trigo.sty
+Package: fp-trigo 1995/04/14
+) (/usr/share/texlive/texmf-dist/tex/latex/fp/fp-pas.sty
+Package: fp-pas 1994/08/29
+) (/usr/share/texlive/texmf-dist/tex/latex/fp/fp-random.sty
+Package: fp-random 1995/02/23
+\FPseed=\count297
+) (/usr/share/texlive/texmf-dist/tex/latex/fp/fp-eqn.sty
+Package: fp-eqn 1995/04/03
+) (/usr/share/texlive/texmf-dist/tex/latex/fp/fp-upn.sty
+Package: fp-upn 1996/10/21
+) (/usr/share/texlive/texmf-dist/tex/latex/fp/fp-eval.sty
+Package: fp-eval 1995/04/03
+)) (./sun211.aux
+
+LaTeX Warning: Label `astSet' multiply defined.
+
+)
+\openout1 = `sun211.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 133.
+LaTeX Font Info:    ... okay on input line 133.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 133.
+LaTeX Font Info:    ... okay on input line 133.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 133.
+LaTeX Font Info:    ... okay on input line 133.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 133.
+LaTeX Font Info:    ... okay on input line 133.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 133.
+LaTeX Font Info:    ... okay on input line 133.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 133.
+LaTeX Font Info:    ... okay on input line 133.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 133.
+LaTeX Font Info:    ... okay on input line 133.
+LaTeX Info: Redefining \microtypecontext on input line 133.
+Package microtype Info: Generating DVI output.
+Package microtype Info: No character protrusion.
+Package microtype Info: No font expansion.
+Package microtype Info: No adjustment of tracking.
+Package microtype Info: No adjustment of interword spacing.
+Package microtype Info: No adjustment of character kerning.
+Now handling font encoding TS1 ...
+... processing UTF-8 mapping file for font encoding TS1
+(/usr/share/texlive/texmf-dist/tex/latex/base/ts1enc.dfu
+File: ts1enc.dfu 2008/04/05 v1.1m UTF-8 support for inputenc
+   defining Unicode char U+00A2 (decimal 162)
+   defining Unicode char U+00A3 (decimal 163)
+   defining Unicode char U+00A4 (decimal 164)
+   defining Unicode char U+00A5 (decimal 165)
+   defining Unicode char U+00A6 (decimal 166)
+   defining Unicode char U+00A7 (decimal 167)
+   defining Unicode char U+00A8 (decimal 168)
+   defining Unicode char U+00A9 (decimal 169)
+   defining Unicode char U+00AA (decimal 170)
+   defining Unicode char U+00AC (decimal 172)
+   defining Unicode char U+00AE (decimal 174)
+   defining Unicode char U+00AF (decimal 175)
+   defining Unicode char U+00B0 (decimal 176)
+   defining Unicode char U+00B1 (decimal 177)
+   defining Unicode char U+00B2 (decimal 178)
+   defining Unicode char U+00B3 (decimal 179)
+   defining Unicode char U+00B4 (decimal 180)
+   defining Unicode char U+00B5 (decimal 181)
+   defining Unicode char U+00B6 (decimal 182)
+   defining Unicode char U+00B7 (decimal 183)
+   defining Unicode char U+00B9 (decimal 185)
+   defining Unicode char U+00BA (decimal 186)
+   defining Unicode char U+00BC (decimal 188)
+   defining Unicode char U+00BD (decimal 189)
+   defining Unicode char U+00BE (decimal 190)
+   defining Unicode char U+00D7 (decimal 215)
+   defining Unicode char U+00F7 (decimal 247)
+   defining Unicode char U+0192 (decimal 402)
+   defining Unicode char U+02C7 (decimal 711)
+   defining Unicode char U+02D8 (decimal 728)
+   defining Unicode char U+02DD (decimal 733)
+   defining Unicode char U+0E3F (decimal 3647)
+   defining Unicode char U+2016 (decimal 8214)
+   defining Unicode char U+2020 (decimal 8224)
+   defining Unicode char U+2021 (decimal 8225)
+   defining Unicode char U+2022 (decimal 8226)
+   defining Unicode char U+2030 (decimal 8240)
+   defining Unicode char U+2031 (decimal 8241)
+   defining Unicode char U+203B (decimal 8251)
+   defining Unicode char U+203D (decimal 8253)
+   defining Unicode char U+2044 (decimal 8260)
+   defining Unicode char U+204E (decimal 8270)
+   defining Unicode char U+2052 (decimal 8274)
+   defining Unicode char U+20A1 (decimal 8353)
+   defining Unicode char U+20A4 (decimal 8356)
+   defining Unicode char U+20A6 (decimal 8358)
+   defining Unicode char U+20A9 (decimal 8361)
+   defining Unicode char U+20AB (decimal 8363)
+   defining Unicode char U+20AC (decimal 8364)
+   defining Unicode char U+20B1 (decimal 8369)
+   defining Unicode char U+2103 (decimal 8451)
+   defining Unicode char U+2116 (decimal 8470)
+   defining Unicode char U+2117 (decimal 8471)
+   defining Unicode char U+211E (decimal 8478)
+   defining Unicode char U+2120 (decimal 8480)
+   defining Unicode char U+2122 (decimal 8482)
+   defining Unicode char U+2126 (decimal 8486)
+   defining Unicode char U+2127 (decimal 8487)
+   defining Unicode char U+212E (decimal 8494)
+   defining Unicode char U+2190 (decimal 8592)
+   defining Unicode char U+2191 (decimal 8593)
+   defining Unicode char U+2192 (decimal 8594)
+   defining Unicode char U+2193 (decimal 8595)
+   defining Unicode char U+2329 (decimal 9001)
+   defining Unicode char U+232A (decimal 9002)
+   defining Unicode char U+2422 (decimal 9250)
+   defining Unicode char U+25E6 (decimal 9702)
+   defining Unicode char U+25EF (decimal 9711)
+   defining Unicode char U+266A (decimal 9834)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/beamer/translator/dicts/translator-bas
+ic-dictionary/translator-basic-dictionary-English.dict
+Dictionary: translator-basic-dictionary, Language: English 
+)
+(/usr/share/texlive/texmf-dist/tex/latex/siunitx/config/siunitx-abbreviations.c
+fg
+File: siunitx-abbreviations.cfg 2013/07/31 v2.5s siunitx: Abbreviated units
+)
+\AtBeginShipoutBox=\box82
+*geometry* driver: auto-detecting
+*geometry* detected driver: dvips
+*geometry* verbose mode - [ preamble ] result:
+* driver: dvips
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* hratio: 1:1
+* vratio: 1:1
+* modes: twoside 
+* h-part:(L,W,R)=(79.52545pt, 455.24408pt, 79.52547pt)
+* v-part:(T,H,B)=(70.2783pt, 654.41338pt, 70.2783pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=455.24408pt
+* \textheight=654.41338pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=-38.99168pt
+* \headheight=42.67912pt
+* \headsep=25.0pt
+* \topskip=11.0pt
+* \footskip=30.0pt
+* \marginparwidth=59.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidetrue
+* \@mparswitchtrue
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+Package hyperref Info: Link coloring ON on input line 133.
+LaTeX Info: Redefining \ref on input line 133.
+LaTeX Info: Redefining \pageref on input line 133.
+LaTeX Info: Redefining \nameref on input line 133.
+\c__siunitx_mathsf_int=\count298
+\c__siunitx_mathtt_int=\count299
+--- file sun211.css ---
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 145.
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+--- file sun211.css ---
+(/stardev/git/starlink/applications/latexsupport/starlink_basic.css [1] [2] [3]
+[4] [5] [6] [7] [8] [9] [10] [11] [12]) (/stardev/git/starlink/applications/lat
+exsupport/sst.css [13])) [14]
+LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <10.95> not available
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 60.
+l.60 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figures/
+fronta.pdf (no BoundingBox) ---
+l. 60 --- needs --- sun211_figures/fronta.png ---
+l.60 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figures/
+frontb.pdf (no BoundingBox) ---
+l. 60 --- needs --- sun211_figures/frontb.png ---
+l.60 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figures/
+frontc.pdf (no BoundingBox) ---
+l. 60 --- needs --- sun211_figures/frontc.png ---
+[1]
+....No chapters....
+(./sun211.4ct [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16
+] [17] [18]) [19]
+--- file sun211se1.html ---
+(./sun211.4ct) [20] [21]
+LaTeX Font Info:    Try loading font information for OMS+ppl on input line 180.
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsppl.fd
+File: omsppl.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ppl/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 180.
+[22] [23] [24
+
+] [25]
+--- file sun211se2.html ---
+(./sun211.4ct) [26
+
+] [27
+
+]
+l.265 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figures
+/mapping.pdf (no BoundingBox) ---
+l. 265 --- needs --- sun211_figures/mapping.png ---
+[28
+
+] [29
+
+] [30] [31
+
+]
+l.355 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figures
+/series.pdf (no BoundingBox) ---
+l. 355 --- needs --- sun211_figures/series.png ---
+[32
+
+] [33
+
+] [34
+
+]
+l.371 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figures
+/parallel.pdf (no BoundingBox) ---
+l. 371 --- needs --- sun211_figures/parallel.png ---
+[35
+
+] [36
+
+] [37
+
+]
+l.393 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figures
+/complex.pdf (no BoundingBox) ---
+l. 393 --- needs --- sun211_figures/complex.png ---
+[38
+
+] [39
+
+] [40
+
+]
+l.416 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figures
+/frames.pdf (no BoundingBox) ---
+l. 416 --- needs --- sun211_figures/frames.png ---
+[41
+
+] [42
+
+] [43
+
+]
+l.461 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figures
+/cmpframe.pdf (no BoundingBox) ---
+l. 461 --- needs --- sun211_figures/cmpframe.png ---
+[44
+
+] [45
+
+] [46
+
+]
+l.484 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figures
+/frameset.pdf (no BoundingBox) ---
+l. 484 --- needs --- sun211_figures/frameset.png ---
+[47
+
+] [48
+
+] [49] [50
+
+]
+l.613 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figures
+/gridplot_bw.pdf (no BoundingBox) ---
+l. 613 --- needs --- sun211_figures/gridplot_bw.png ---
+[51
+
+] [52
+
+] [53
+
+]
+--- file sun211se3.html ---
+(./sun211.4ct) [54
+
+] [55] [56] [57] [58] [59] [60]
+Overfull \hbox (154.57278pt too wide) in paragraph at lines 1117--1126
+[][] [][][] 
+ []
+
+[61] [62] [63]
+LaTeX Font Info:    Font shape `T1/ppl/bx/it' in size <10.95> not available
+(Font)              Font shape `T1/ppl/b/it' tried instead on input line 1337.
+[64] [65] [66
+
+]
+l.1433 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figure
+s/overgrid_bw.pdf (no BoundingBox) ---
+l. 1433 --- needs --- sun211_figures/overgrid_bw.png ---
+[67
+
+] [68
+
+] [69] [70] [71
+
+]
+--- file sun211se4.html ---
+(./sun211.4ct) [72
+
+] [73] [74] [75] [76] [77] [78] [79] [80] [81] [82] [83] [84] [85] [86] [87
+
+]
+--- file sun211se5.html ---
+(./sun211.4ct) [88
+
+] [89] [90] [91] [92] [93] [94] [95
+
+]
+--- file sun211se6.html ---
+(./sun211.4ct) [96
+
+] [97] [98] [99] [100] [101
+
+]
+l.3461 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figure
+s/simpexamp.pdf (no BoundingBox) ---
+l. 3461 --- needs --- sun211_figures/simpexamp.png ---
+[102
+
+] [103
+
+] [104
+
+] [105]
+--- file sun211se7.html ---
+(./sun211.4ct) [106
+
+] [107] [108] [109] [110] [111] [112] [113] [114] [115] [116] [117] [118] [119]
+[120] [121] [122] [123] [124
+
+] [125
+
+] [126
+
+] [127
+
+] [128
+
+] [129
+
+] [130
+
+] [131
+
+] [132
+
+] [133
+
+] [134
+
+] [135
+
+] [136
+
+] [137]
+--- file sun211se8.html ---
+(./sun211.4ct) [138
+
+] [139] [140] [141] [142] [143] [144] [145] [146] [147] [148
+
+] [149]
+--- file sun211se9.html ---
+(./sun211.4ct) [150
+
+] [151] [152] [153] [154] [155] [156] [157] [158
+
+] [159]
+--- file sun211se10.html ---
+(./sun211.4ct) [160
+
+] [161] [162] [163
+
+]
+--- file sun211se11.html ---
+(./sun211.4ct) [164
+
+] [165] [166
+
+] [167]
+--- file sun211se12.html ---
+(./sun211.4ct) [168
+
+] [169] [170] [171] [172] [173] [174] [175
+
+]
+--- file sun211se13.html ---
+(./sun211.4ct) [176
+
+] [177] [178] [179
+
+]
+l.6644 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figure
+s/fsexample.pdf (no BoundingBox) ---
+l. 6644 --- needs --- sun211_figures/fsexample.png ---
+[180
+
+] [181
+
+] [182] [183] [184] [185
+
+]
+--- file sun211se14.html ---
+(./sun211.4ct) [186
+
+] [187
+
+]
+l.6962 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figure
+s/fsconvert.pdf (no BoundingBox) ---
+l. 6962 --- needs --- sun211_figures/fsconvert.png ---
+[188
+
+] [189
+
+] [190
+
+]
+l.7003 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figure
+s/fsalign.pdf (no BoundingBox) ---
+l. 7003 --- needs --- sun211_figures/fsalign.png ---
+[191
+
+] [192
+
+] [193] [194] [195] [196
+
+]
+l.7292 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figure
+s/fsremap.pdf (no BoundingBox) ---
+l. 7292 --- needs --- sun211_figures/fsremap.png ---
+[197
+
+] [198
+
+] [199] [200] [201
+
+]
+l.7484 --- TeX4ht warning --- Cannot determine size of graphic in sun211_figure
+s/fsmerge.pdf (no BoundingBox) ---
+l. 7484 --- needs --- sun211_figures/fsmerge.png ---
+[202
+
+] [203
+
+] [204
+
+] [205]
+--- file sun211se15.html ---
+(./sun211.4ct) [206
+
+] [207] [208] [209]
+Overfull \hbox (41.40536pt too wide) in paragraph at lines 7794--7815
+[] 
+ []
+
+[210] [211]
+Overfull \hbox (41.40536pt too wide) in paragraph at lines 7924--7996
+[] 
+ []
+
+[212] [213] [214] [215] [216] [217
+
+]
+--- file sun211se16.html ---
+(./sun211.4ct) [218
+
+] [219] [220] [221]
+Overfull \hbox (250.76509pt too wide) in paragraph at lines 8619--8638
+[][] [][][] 
+ []
+
+[222] [223] [224] [225] [226] [227] [228
+
+] [229]
+--- file sun211se17.html ---
+(./sun211.4ct) [230
+
+] [231] [232]
+Overfull \hbox (30.08862pt too wide) in paragraph at lines 9119--9145
+[][] [][][] 
+ []
+
+[233] [234] [235] [236] [237] [238] [239
+
+]
+--- file sun211se18.html ---
+(./sun211.4ct) [240
+
+] [241] [242] [243
+
+]
+--- file sun211se19.html ---
+(./sun211.4ct) [244
+
+] [245
+
+]
+--- file sun211se20.html ---
+(./sun211.4ct) [246
+
+] [247] [248] [249]
+Overfull \hbox (69.69722pt too wide) in paragraph at lines 9973--9987
+[][] [][][] 
+ []
+
+[250] [251]
+Overfull \hbox (47.06374pt too wide) in paragraph at lines 10129--10158
+[][] [][][] 
+ []
+
+[252] [253] [254] [255
+
+]
+--- file sun211se21.html ---
+(./sun211.4ct) [256
+
+] [257] [258] [259] [260] [261] [262] [263] [264] [265
+
+]
+--- file sun211se22.html ---
+(./sun211.4ct) [266
+
+] [267] [268
+
+] [269]
+--- file sun211se23.html ---
+(./sun211.4ct) [270
+
+] [271] [272
+
+] [273]
+--- file sun211se24.html ---
+(./sun211.4ct)
+--- file sun211ss1.html ---
+[274
+
+]
+--- file sun211ss2.html ---
+[275]
+--- file sun211ss3.html ---
+[276]
+--- file sun211ss4.html ---
+--- file sun211ss5.html ---
+[277]
+--- file sun211ss6.html ---
+[278]
+--- file sun211ss7.html ---
+--- file sun211ss8.html ---
+[279]
+--- file sun211ss9.html ---
+--- file sun211ss10.html ---
+[280]
+--- file sun211ss11.html ---
+--- file sun211ss12.html ---
+[281]
+--- file sun211ss13.html ---
+--- file sun211ss14.html ---
+[282]
+--- file sun211ss15.html ---
+--- file sun211ss16.html ---
+[283] [284]
+--- file sun211ss17.html ---
+[285]
+--- file sun211ss18.html ---
+--- file sun211ss19.html ---
+[286] [287]
+--- file sun211ss20.html ---
+--- file sun211ss21.html ---
+[288]
+--- file sun211ss22.html ---
+--- file sun211ss23.html ---
+[289]
+--- file sun211ss24.html ---
+[290]
+--- file sun211ss25.html ---
+[291]
+--- file sun211ss26.html ---
+[292]
+--- file sun211ss27.html ---
+[293]
+--- file sun211ss28.html ---
+[294]
+--- file sun211ss29.html ---
+[295]
+--- file sun211ss30.html ---
+[296]
+--- file sun211ss31.html ---
+--- file sun211ss32.html ---
+[297] [298] [299] [300]
+--- file sun211ss33.html ---
+[301] [302]
+--- file sun211ss34.html ---
+--- file sun211ss35.html ---
+[303]
+--- file sun211ss36.html ---
+[304]
+--- file sun211ss37.html ---
+[305]
+--- file sun211ss38.html ---
+[306]
+--- file sun211ss39.html ---
+--- file sun211ss40.html ---
+[307]
+--- file sun211ss41.html ---
+--- file sun211ss42.html ---
+[308]
+--- file sun211ss43.html ---
+--- file sun211ss44.html ---
+[309] [310]
+--- file sun211ss45.html ---
+--- file sun211ss46.html ---
+[311]
+--- file sun211ss47.html ---
+--- file sun211ss48.html ---
+[312]
+--- file sun211ss49.html ---
+--- file sun211ss50.html ---
+--- file sun211ss51.html ---
+[313] [314] [315]
+--- file sun211ss52.html ---
+[316] [317] [318] [319] [320]
+--- file sun211ss53.html ---
+[321] [322]
+--- file sun211ss54.html ---
+[323]
+--- file sun211ss55.html ---
+[324]
+--- file sun211ss56.html ---
+--- file sun211ss57.html ---
+[325]
+--- file sun211ss58.html ---
+[326] [327]
+--- file sun211ss59.html ---
+--- file sun211ss60.html ---
+[328]
+--- file sun211ss61.html ---
+--- file sun211ss62.html ---
+[329]
+--- file sun211ss63.html ---
+[330]
+--- file sun211ss64.html ---
+[331] [332]
+--- file sun211ss65.html ---
+--- file sun211ss66.html ---
+[333]
+--- file sun211ss67.html ---
+[334]
+--- file sun211ss68.html ---
+--- file sun211ss69.html ---
+[335]
+--- file sun211ss70.html ---
+--- file sun211ss71.html ---
+--- file sun211ss72.html ---
+[336]
+--- file sun211ss73.html ---
+[337]
+--- file sun211ss74.html ---
+[338]
+--- file sun211ss75.html ---
+--- file sun211ss76.html ---
+[339]
+--- file sun211ss77.html ---
+--- file sun211ss78.html ---
+--- file sun211ss79.html ---
+[340]
+--- file sun211ss80.html ---
+[341]
+--- file sun211ss81.html ---
+--- file sun211ss82.html ---
+[342] [343] [344] [345] [346] [347] [348]
+--- file sun211ss83.html ---
+--- file sun211ss84.html ---
+[349]
+--- file sun211ss85.html ---
+[350]
+--- file sun211ss86.html ---
+--- file sun211ss87.html ---
+--- file sun211ss88.html ---
+[351]
+--- file sun211ss89.html ---
+--- file sun211ss90.html ---
+[352]
+--- file sun211ss91.html ---
+[353]
+--- file sun211ss92.html ---
+[354]
+--- file sun211ss93.html ---
+[355] [356]
+--- file sun211ss94.html ---
+--- file sun211ss95.html ---
+[357]
+--- file sun211ss96.html ---
+[358]
+--- file sun211ss97.html ---
+[359]
+--- file sun211ss98.html ---
+[360]
+--- file sun211ss99.html ---
+[361]
+--- file sun211ss100.html ---
+[362] [363]
+--- file sun211ss101.html ---
+--- file sun211ss102.html ---
+[364]
+--- file sun211ss103.html ---
+[365] [366]
+--- file sun211ss104.html ---
+[367]
+--- file sun211ss105.html ---
+[368] [369]
+--- file sun211ss106.html ---
+--- file sun211ss107.html ---
+[370]
+--- file sun211ss108.html ---
+[371]
+--- file sun211ss109.html ---
+--- file sun211ss110.html ---
+[372]
+--- file sun211ss111.html ---
+[373] [374]
+--- file sun211ss112.html ---
+[375]
+--- file sun211ss113.html ---
+[376]
+--- file sun211ss114.html ---
+[377]
+--- file sun211ss115.html ---
+--- file sun211ss116.html ---
+--- file sun211ss117.html ---
+--- file sun211ss118.html ---
+[378]
+--- file sun211ss119.html ---
+[379]
+--- file sun211ss120.html ---
+[380]
+--- file sun211ss121.html ---
+[381] [382]
+--- file sun211ss122.html ---
+[383]
+--- file sun211ss123.html ---
+[384] [385] [386] [387] [388] [389] [390] [391] [392] [393] [394] [395]
+--- file sun211ss124.html ---
+[396]
+--- file sun211ss125.html ---
+[397]
+--- file sun211ss126.html ---
+--- file sun211ss127.html ---
+[398]
+--- file sun211ss128.html ---
+--- file sun211ss129.html ---
+[399]
+--- file sun211ss130.html ---
+[400]
+--- file sun211ss131.html ---
+--- file sun211ss132.html ---
+[401]
+--- file sun211ss133.html ---
+[402] [403] [404]
+--- file sun211ss134.html ---
+[405]
+--- file sun211ss135.html ---
+[406]
+--- file sun211ss136.html ---
+[407]
+--- file sun211ss137.html ---
+--- file sun211ss138.html ---
+[408] [409]
+--- file sun211ss139.html ---
+[410]
+--- file sun211ss140.html ---
+[411] [412]
+--- file sun211ss141.html ---
+[413] [414]
+--- file sun211ss142.html ---
+[415]
+--- file sun211ss143.html ---
+[416]
+--- file sun211ss144.html ---
+[417]
+--- file sun211ss145.html ---
+[418] [419]
+--- file sun211ss146.html ---
+[420]
+--- file sun211ss147.html ---
+[421]
+--- file sun211ss148.html ---
+--- file sun211ss149.html ---
+[422]
+--- file sun211ss150.html ---
+--- file sun211ss151.html ---
+--- file sun211ss152.html ---
+[423]
+--- file sun211ss153.html ---
+--- file sun211ss154.html ---
+[424]
+--- file sun211ss155.html ---
+--- file sun211ss156.html ---
+[425]
+--- file sun211ss157.html ---
+[426] [427]
+--- file sun211ss158.html ---
+--- file sun211ss159.html ---
+[428]
+--- file sun211ss160.html ---
+[429]
+--- file sun211ss161.html ---
+--- file sun211ss162.html ---
+[430] [431] [432] [433] [434] [435] [436]
+--- file sun211ss163.html ---
+[437] [438] [439] [440] [441] [442] [443]
+--- file sun211ss164.html ---
+--- file sun211ss165.html ---
+[444]
+--- file sun211ss166.html ---
+--- file sun211ss167.html ---
+[445]
+--- file sun211ss168.html ---
+--- file sun211ss169.html ---
+[446]
+--- file sun211ss170.html ---
+--- file sun211ss171.html ---
+--- file sun211ss172.html ---
+[447] [448] [449] [450] [451] [452] [453] [454] [455] [456] [457] [458]
+--- file sun211ss173.html ---
+[459]
+--- file sun211ss174.html ---
+--- file sun211ss175.html ---
+[460]
+--- file sun211ss176.html ---
+[461]
+--- file sun211ss177.html ---
+[462]
+--- file sun211ss178.html ---
+[463]
+--- file sun211ss179.html ---
+[464]
+--- file sun211ss180.html ---
+[465] [466]
+--- file sun211ss181.html ---
+[467]
+--- file sun211ss182.html ---
+[468]
+--- file sun211ss183.html ---
+--- file sun211ss184.html ---
+--- file sun211ss185.html ---
+[469]
+--- file sun211ss186.html ---
+[470]
+--- file sun211ss187.html ---
+--- file sun211ss188.html ---
+--- file sun211ss189.html ---
+--- file sun211ss190.html ---
+[471]
+--- file sun211ss191.html ---
+[472] [473]
+--- file sun211ss192.html ---
+--- file sun211ss193.html ---
+[474] [475] [476]
+--- file sun211ss194.html ---
+[477]
+--- file sun211ss195.html ---
+[478] [479] [480] [481]
+--- file sun211ss196.html ---
+[482]
+--- file sun211ss197.html ---
+[483]
+--- file sun211ss198.html ---
+[484] [485]
+--- file sun211ss199.html ---
+[486]
+--- file sun211ss200.html ---
+--- file sun211ss201.html ---
+[487]
+--- file sun211ss202.html ---
+[488]
+--- file sun211ss203.html ---
+[489]
+--- file sun211ss204.html ---
+[490]
+--- file sun211ss205.html ---
+[491]
+--- file sun211ss206.html ---
+[492]
+--- file sun211ss207.html ---
+[493] [494]
+--- file sun211ss208.html ---
+[495]
+--- file sun211ss209.html ---
+[496]
+--- file sun211ss210.html ---
+--- file sun211ss211.html ---
+[497]
+--- file sun211ss212.html ---
+[498]
+--- file sun211ss213.html ---
+[499]
+--- file sun211ss214.html ---
+[500] [501] [502]
+--- file sun211ss215.html ---
+[503] [504]
+--- file sun211ss216.html ---
+--- file sun211ss217.html ---
+[505]
+--- file sun211ss218.html ---
+--- file sun211ss219.html ---
+[506]
+--- file sun211ss220.html ---
+[507]
+--- file sun211ss221.html ---
+[508]
+--- file sun211ss222.html ---
+[509]
+--- file sun211ss223.html ---
+[510]
+--- file sun211ss224.html ---
+[511]
+--- file sun211ss225.html ---
+[512]
+--- file sun211ss226.html ---
+[513] [514] [515]
+--- file sun211ss227.html ---
+[516]
+--- file sun211ss228.html ---
+[517] [518] [519] [520]
+--- file sun211ss229.html ---
+--- file sun211ss230.html ---
+[521]
+--- file sun211ss231.html ---
+[522]
+--- file sun211ss232.html ---
+[523]
+--- file sun211ss233.html ---
+[524]
+--- file sun211ss234.html ---
+--- file sun211ss235.html ---
+[525] [526]
+--- file sun211ss236.html ---
+[527]
+--- file sun211ss237.html ---
+[528]
+--- file sun211ss238.html ---
+--- file sun211ss239.html ---
+[529]
+--- file sun211ss240.html ---
+[530] [531] [532
+
+] [533] [534] [535] [536] [537] [538] [539] [540] [541] [542] [543] [544]
+--- file sun211se25.html ---
+(./sun211.4ct)
+--- file sun211ss241.html ---
+--- file sun211ss242.html ---
+[545
+
+]
+--- file sun211ss243.html ---
+--- file sun211ss244.html ---
+[546]
+--- file sun211ss245.html ---
+[547]
+--- file sun211ss246.html ---
+[548]
+--- file sun211ss247.html ---
+--- file sun211ss248.html ---
+[549]
+--- file sun211ss249.html ---
+--- file sun211ss250.html ---
+[550] [551]
+--- file sun211ss251.html ---
+[552]
+--- file sun211ss252.html ---
+--- file sun211ss253.html ---
+--- file sun211ss254.html ---
+[553]
+--- file sun211ss255.html ---
+--- file sun211ss256.html ---
+--- file sun211ss257.html ---
+[554]
+--- file sun211ss258.html ---
+--- file sun211ss259.html ---
+[555]
+--- file sun211ss260.html ---
+--- file sun211ss261.html ---
+--- file sun211ss262.html ---
+--- file sun211ss263.html ---
+--- file sun211ss264.html ---
+[556]
+--- file sun211ss265.html ---
+--- file sun211ss266.html ---
+[557]
+--- file sun211ss267.html ---
+--- file sun211ss268.html ---
+--- file sun211ss269.html ---
+[558]
+--- file sun211ss270.html ---
+--- file sun211ss271.html ---
+--- file sun211ss272.html ---
+[559]
+--- file sun211ss273.html ---
+--- file sun211ss274.html ---
+[560]
+--- file sun211ss275.html ---
+--- file sun211ss276.html ---
+--- file sun211ss277.html ---
+[561]
+--- file sun211ss278.html ---
+[562]
+--- file sun211ss279.html ---
+--- file sun211ss280.html ---
+[563]
+--- file sun211ss281.html ---
+--- file sun211ss282.html ---
+[564]
+--- file sun211ss283.html ---
+--- file sun211ss284.html ---
+[565] [566] [567] [568] [569] [570] [571] [572] [573] [574]
+--- file sun211ss285.html ---
+[575] [576]
+--- file sun211ss286.html ---
+--- file sun211ss287.html ---
+[577] [578]
+--- file sun211ss288.html ---
+[579]
+--- file sun211ss289.html ---
+--- file sun211ss290.html ---
+[580]
+--- file sun211ss291.html ---
+--- file sun211ss292.html ---
+[581] [582] [583]
+--- file sun211ss293.html ---
+--- file sun211ss294.html ---
+[584]
+--- file sun211ss295.html ---
+--- file sun211ss296.html ---
+[585]
+--- file sun211ss297.html ---
+--- file sun211ss298.html ---
+--- file sun211ss299.html ---
+[586]
+--- file sun211ss300.html ---
+--- file sun211ss301.html ---
+--- file sun211ss302.html ---
+--- file sun211ss303.html ---
+[587]
+--- file sun211ss304.html ---
+--- file sun211ss305.html ---
+--- file sun211ss306.html ---
+[588]
+--- file sun211ss307.html ---
+--- file sun211ss308.html ---
+--- file sun211ss309.html ---
+[589]
+--- file sun211ss310.html ---
+[590]
+--- file sun211ss311.html ---
+--- file sun211ss312.html ---
+[591]
+--- file sun211ss313.html ---
+--- file sun211ss314.html ---
+--- file sun211ss315.html ---
+[592]
+--- file sun211ss316.html ---
+--- file sun211ss317.html ---
+--- file sun211ss318.html ---
+[593]
+--- file sun211ss319.html ---
+--- file sun211ss320.html ---
+[594]
+--- file sun211ss321.html ---
+--- file sun211ss322.html ---
+--- file sun211ss323.html ---
+[595]
+--- file sun211ss324.html ---
+--- file sun211ss325.html ---
+[596]
+--- file sun211ss326.html ---
+[597]
+--- file sun211ss327.html ---
+--- file sun211ss328.html ---
+--- file sun211ss329.html ---
+--- file sun211ss330.html ---
+[598]
+--- file sun211ss331.html ---
+--- file sun211ss332.html ---
+[599]
+--- file sun211ss333.html ---
+[600]
+--- file sun211ss334.html ---
+--- file sun211ss335.html ---
+[601]
+--- file sun211ss336.html ---
+--- file sun211ss337.html ---
+[602]
+--- file sun211ss338.html ---
+--- file sun211ss339.html ---
+--- file sun211ss340.html ---
+[603]
+--- file sun211ss341.html ---
+--- file sun211ss342.html ---
+[604]
+--- file sun211ss343.html ---
+[605]
+--- file sun211ss344.html ---
+--- file sun211ss345.html ---
+[606]
+--- file sun211ss346.html ---
+--- file sun211ss347.html ---
+--- file sun211ss348.html ---
+--- file sun211ss349.html ---
+--- file sun211ss350.html ---
+[607]
+--- file sun211ss351.html ---
+--- file sun211ss352.html ---
+--- file sun211ss353.html ---
+[608]
+--- file sun211ss354.html ---
+--- file sun211ss355.html ---
+--- file sun211ss356.html ---
+--- file sun211ss357.html ---
+[609]
+--- file sun211ss358.html ---
+--- file sun211ss359.html ---
+[610]
+--- file sun211ss360.html ---
+--- file sun211ss361.html ---
+--- file sun211ss362.html ---
+[611]
+--- file sun211ss363.html ---
+--- file sun211ss364.html ---
+--- file sun211ss365.html ---
+[612]
+--- file sun211ss366.html ---
+--- file sun211ss367.html ---
+[613]
+--- file sun211ss368.html ---
+--- file sun211ss369.html ---
+[614]
+--- file sun211ss370.html ---
+[615]
+--- file sun211ss371.html ---
+--- file sun211ss372.html ---
+--- file sun211ss373.html ---
+[616]
+--- file sun211ss374.html ---
+--- file sun211ss375.html ---
+[617]
+--- file sun211ss376.html ---
+--- file sun211ss377.html ---
+--- file sun211ss378.html ---
+--- file sun211ss379.html ---
+[618]
+--- file sun211ss380.html ---
+--- file sun211ss381.html ---
+[619]
+--- file sun211ss382.html ---
+--- file sun211ss383.html ---
+[620]
+--- file sun211ss384.html ---
+[621]
+--- file sun211ss385.html ---
+--- file sun211ss386.html ---
+--- file sun211ss387.html ---
+[622]
+--- file sun211ss388.html ---
+[623]
+--- file sun211ss389.html ---
+--- file sun211ss390.html ---
+[624]
+--- file sun211ss391.html ---
+--- file sun211ss392.html ---
+[625]
+--- file sun211ss393.html ---
+--- file sun211ss394.html ---
+[626]
+--- file sun211ss395.html ---
+[627]
+--- file sun211ss396.html ---
+[628]
+--- file sun211ss397.html ---
+--- file sun211ss398.html ---
+[629]
+--- file sun211ss399.html ---
+[630]
+--- file sun211ss400.html ---
+--- file sun211ss401.html ---
+[631]
+--- file sun211ss402.html ---
+--- file sun211ss403.html ---
+[632]
+--- file sun211ss404.html ---
+--- file sun211ss405.html ---
+[633]
+--- file sun211ss406.html ---
+[634]
+--- file sun211ss407.html ---
+--- file sun211ss408.html ---
+[635]
+--- file sun211ss409.html ---
+[636]
+--- file sun211ss410.html ---
+--- file sun211ss411.html ---
+[637]
+--- file sun211ss412.html ---
+--- file sun211ss413.html ---
+[638] [639] [640] [641] [642]
+--- file sun211ss414.html ---
+[643]
+--- file sun211ss415.html ---
+[644]
+--- file sun211ss416.html ---
+--- file sun211ss417.html ---
+[645]
+--- file sun211ss418.html ---
+[646]
+--- file sun211ss419.html ---
+[647]
+--- file sun211ss420.html ---
+[648]
+--- file sun211ss421.html ---
+--- file sun211ss422.html ---
+--- file sun211ss423.html ---
+[649]
+--- file sun211ss424.html ---
+--- file sun211ss425.html ---
+--- file sun211ss426.html ---
+[650]
+--- file sun211ss427.html ---
+--- file sun211ss428.html ---
+[651]
+--- file sun211ss429.html ---
+[652]
+--- file sun211ss430.html ---
+[653]
+--- file sun211ss431.html ---
+[654]
+--- file sun211ss432.html ---
+--- file sun211ss433.html ---
+[655]
+--- file sun211ss434.html ---
+--- file sun211ss435.html ---
+[656] [657] [658]
+--- file sun211ss436.html ---
+--- file sun211ss437.html ---
+[659]
+--- file sun211ss438.html ---
+[660] [661
+
+] [662] [663] [664] [665] [666] [667] [668] [669] [670]
+--- file sun211se26.html ---
+(./sun211.4ct)
+--- file sun211ss439.html ---
+--- file sun211ss440.html ---
+--- file sun211ss441.html ---
+[671
+
+]
+--- file sun211ss442.html ---
+[672]
+--- file sun211ss443.html ---
+--- file sun211ss444.html ---
+[673]
+--- file sun211ss445.html ---
+--- file sun211ss446.html ---
+[674]
+--- file sun211ss447.html ---
+[675]
+--- file sun211ss448.html ---
+--- file sun211ss449.html ---
+[676] [677] [678] [679]
+--- file sun211ss450.html ---
+--- file sun211ss451.html ---
+[680]
+--- file sun211ss452.html ---
+[681] [682] [683]
+--- file sun211ss453.html ---
+[684]
+--- file sun211ss454.html ---
+[685]
+--- file sun211ss455.html ---
+[686]
+--- file sun211ss456.html ---
+--- file sun211ss457.html ---
+[687] [688]
+--- file sun211ss458.html ---
+[689]
+--- file sun211ss459.html ---
+[690]
+--- file sun211ss460.html ---
+[691]
+--- file sun211ss461.html ---
+--- file sun211ss462.html ---
+[692]
+--- file sun211ss463.html ---
+--- file sun211ss464.html ---
+[693] [694]
+--- file sun211ss465.html ---
+[695]
+--- file sun211ss466.html ---
+--- file sun211ss467.html ---
+[696] [697] [698] [699] [700]
+--- file sun211ss468.html ---
+[701]
+--- file sun211ss469.html ---
+[702]
+--- file sun211ss470.html ---
+--- file sun211ss471.html ---
+[703]
+--- file sun211ss472.html ---
+[704]
+--- file sun211ss473.html ---
+--- file sun211ss474.html ---
+[705] [706]
+--- file sun211ss475.html ---
+[707]
+--- file sun211ss476.html ---
+--- file sun211ss477.html ---
+[708]
+--- file sun211ss478.html ---
+[709]
+--- file sun211ss479.html ---
+--- file sun211ss480.html ---
+[710]
+--- file sun211ss481.html ---
+[711]
+--- file sun211ss482.html ---
+[712]
+--- file sun211ss483.html ---
+--- file sun211ss484.html ---
+[713]
+--- file sun211ss485.html ---
+--- file sun211ss486.html ---
+[714]
+--- file sun211ss487.html ---
+--- file sun211ss488.html ---
+--- file sun211ss489.html ---
+[715] [716] [717]
+--- file sun211ss490.html ---
+[718]
+--- file sun211ss491.html ---
+[719]
+--- file sun211ss492.html ---
+[720] [721]
+--- file sun211ss493.html ---
+--- file sun211ss494.html ---
+--- file sun211ss495.html ---
+[722]
+--- file sun211ss496.html ---
+--- file sun211ss497.html ---
+[723] [724]
+--- file sun211ss498.html ---
+--- file sun211ss499.html ---
+[725]
+--- file sun211ss500.html ---
+[726] [727
+
+] [728] [729] [730]
+--- file sun211se27.html ---
+(./sun211.4ct)
+--- file sun211ss501.html ---
+\fn:box2=\box83
+[731
+
+] [732]
+--- file sun211ss502.html ---
+[733] [734] [735] [736] [737
+
+]
+--- file sun211se28.html ---
+(./sun211.4ct)
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10.95> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 48199.
+
+[738
+
+]
+--- file sun211ss503.html ---
+[739]
+--- file sun211ss504.html ---
+--- file sun211ss505.html ---
+[740]
+--- file sun211ss506.html ---
+--- file sun211ss507.html ---
+[741]
+--- file sun211ss508.html ---
+--- file sun211ss509.html ---
+--- file sun211ss510.html ---
+--- file sun211ss511.html ---
+[742]
+--- file sun211ss512.html ---
+--- file sun211ss513.html ---
+[743]
+--- file sun211ss514.html ---
+[744] [745]
+--- file sun211ss515.html ---
+[746]
+--- file sun211ss516.html ---
+--- file sun211ss517.html ---
+--- file sun211ss518.html ---
+[747]
+--- file sun211ss519.html ---
+--- file sun211ss520.html ---
+[748]
+--- file sun211ss521.html ---
+--- file sun211ss522.html ---
+[749]
+--- file sun211ss523.html ---
+--- file sun211ss524.html ---
+--- file sun211ss525.html ---
+[750]
+--- file sun211ss526.html ---
+--- file sun211ss527.html ---
+[751]
+--- file sun211ss528.html ---
+[752] [753] [754]
+--- file sun211se29.html ---
+(./sun211.4ct) [755
+
+] [756] [757
+
+] [758
+
+]
+LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 496
+86.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 49686.
+
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbullet' on input line 49686.
+
+[759
+
+] [760] [761] [762
+
+] [763
+
+] [764
+
+] [765] [766] [767
+
+]
+LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <9> not available
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 49948.
+[768
+
+] [769
+
+] [770] [771]
+--- file sun211se30.html ---
+(./sun211.4ct [772
+
+] [773]) [774] [775] [776] [777] [778] [779] [780] [781] [782] [783] [784] [785
+] [786] [787] [788] [789] [790] [791] [792] [793] [794] [795] [796] [797] [798]
+[799] [800] [801] [802] [803] [804] [805] [806] [807] [808] [809] [810] [811] [
+812] [813] [814] [815] [816] [817] [818] [819] [820] [821] [822] [823] [824] [8
+25] [826] [827] [828] [829
+
+]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 52853.
+[830]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 52853.
+(./sun211.aux)
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 52853.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 52853.
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+ )
+(\end occurred inside a group at level 1)
+
+### simple group (level 1) entered at line 6507 ({)
+### bottom level 
+Here is how much of TeX's memory you used:
+ 47089 strings out of 495026
+ 844056 string characters out of 6181541
+ 1088287 words of memory out of 5000000
+ 49167 multiletter control sequences out of 15000+600000
+ 31967 words of font info for 82 fonts, out of 8000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 263i,11n,66p,10930b,17619s stack positions out of 5000i,500n,10000p,200000b,80000s
+
+Output written on sun211.dvi (897 pages, 5900516 bytes).

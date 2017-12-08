@@ -1,0 +1,141 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astSwitchMap </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss206.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss208.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 30393--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x232-4240000"></a> astSwitchMap </h3>  <p class="subtitle"> Create a SwitchMap  </p> </h3> </header><a 
+ id="Q1-232-854"></a> <a 
+ id="Q1-232-855"></a> <a name="xref_astSwitchMap"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a new
+<a 
+href="sun211ss490.html#x517-7090000">SwitchMap</a> and optionally initialises its attributes.
+<!--l. 30393--><p class="noindent" >A SwitchMap is a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> which represents a set of alternate Mappings, each of which is
+used to transform positions within a particular region of the input or output
+coordinate system of the SwitchMap.
+<!--l. 30393--><p class="noindent" >A SwitchMap can encapsulate any number of Mappings, but they must all have the same
+number of inputs (<a 
+href="sun211ss353.html#x379-5710000">Nin</a> attribute value) and the same number of outputs (<a 
+href="sun211ss359.html#x385-5770000">Nout</a> attribute
+value). The SwitchMap itself inherits these same values for its Nin and Nout
+attributes. Each of these Mappings represents a <code>&#x0022;</code> route<code>&#x0022;</code> through the switch, and are
+referred to as <code>&#x0022;</code> route<code>&#x0022;</code> Mappings below. Each route Mapping transforms positions between
+the input and output coordinate space of the entire SwitchMap, but only one Mapping
+will be used to transform any given position. The selection of the appropriate route
+Mapping to use with any given input position is made by another Mapping, called the <code>&#x0022;</code>
+selector<code>&#x0022;</code> Mapping. Each SwitchMap encapsulates two selector Mappings in addition to
+its route Mappings; one for use with the SwitchMap<code>&#x2019;</code> s forward transformation
+(called the <code>&#x0022;</code> forward selector Mapping<code>&#x0022;</code> ), and one for use with the SwitchMap<code>&#x2019;</code> s
+inverse transformation (called the <code>&#x0022;</code> inverse selector Mapping<code>&#x0022;</code> ). The forward
+selector Mapping must have the same number of inputs as the route Mappings, but
+should have only one output. Likewise, the inverse selector Mapping must have
+the same number of outputs as the route Mappings, but should have only one
+input.
+<!--l. 30393--><p class="noindent" >When the SwitchMap is used to transform a position in the forward direction (from input
+to output), each supplied input position is first transformed by the forward
+transformation of the forward selector Mapping. This produces a single output value for
+each input position referred to as the selector value. The nearest integer to the
+selector value is found, and is used to index the array of route Mappings (the first
+supplied route Mapping has index 1, the second route Mapping has index 2, etc). If the
+nearest integer to the selector value is less than 1 or greater than the number of
+route Mappings, then the SwitchMap output position is set to a value of AST__BAD on
+every axis. Otherwise, the forward transformation of the selected route Mapping is
+used to transform the supplied input position to produce the SwitchMap output
+                                                                                       
+
+                                                                                       
+position.
+<!--l. 30393--><p class="noindent" >When the SwitchMap is used to transform a position in the inverse direction (from <code>&#x0022;</code>
+output<code>&#x0022;</code> to <code>&#x0022;</code> input<code>&#x0022;</code> ), each supplied <code>&#x0022;</code> output<code>&#x0022;</code> position is first transformed by
+the inverse transformation of the inverse selector Mapping. This produces a
+selector value for each <code>&#x0022;</code> output<code>&#x0022;</code> position. Again, the nearest integer to the
+selector value is found, and is used to index the array of route Mappings. If this
+selector index value is within the bounds of the array of route Mappings, then the
+inverse transformation of the selected route Mapping is used to transform the
+supplied <code>&#x0022;</code> output<code>&#x0022;</code> position to produce the SwitchMap <code>&#x0022;</code> input<code>&#x0022;</code> position. If the
+selector index value is outside the bounds of the array of route Mappings,
+then the SwitchMap <code>&#x0022;</code> input<code>&#x0022;</code> position is set to a value of AST__BAD on every
+axis.
+<!--l. 30393--><p class="noindent" >In practice, appropriate selector Mappings should be chosen to associate a different
+route Mapping with each region of coordinate space. Note that the <a 
+href="sun211ss475.html#x502-6940000">SelectorMap</a> class of
+Mapping is particularly appropriate for this purpose.
+<!--l. 30393--><p class="noindent" >If a compound Mapping contains a SwitchMap in series with its own inverse, the
+combination of the two adjacent SwitchMaps will be replaced by a <a 
+href="sun211ss495.html#x522-7140000">UnitMap</a> when the
+compound Mapping is simplified using <a 
+href="sun211ss190.html#x215-4070000">astSimplify</a>.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstSwitchMap
+<!--l. 30393--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astSwitchMap( AstMapping
+<!--l. 30393--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>fsmap, AstMapping
+<!--l. 30393--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>ismap, int nroute,
+AstMapping <!--l. 30393--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>routemaps[],
+const char <!--l. 30393--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> fsmap  </h5><div class="sstsub"> Pointer to the forward selector Mapping. This must
+have a defined forward transformation, but need not have a defined inverse
+transformation. It must have one output, and the number of inputs must match the
+number of inputs of each of the supplied route Mappings. NULL may be supplied,
+in which case the SwitchMap will have an undefined forward Mapping.  </div> <h5 class="ssth5"> ismap
+</h5><div class="sstsub"> Pointer to the inverse selector Mapping. This must have a defined inverse
+transformation, but need not have a defined forward transformation. It must have one
+input, and the number of outputs must match the number of outputs of each of the
+supplied route Mappings. NULL may be supplied, in which case the SwitchMap
+will have an undefined inverse Mapping.  </div> <h5 class="ssth5"> nroute  </h5><div class="sstsub"> The number of supplied
+route Mappings.  </div> <h5 class="ssth5"> routemaps  </h5><div class="sstsub"> An array of pointers to the route Mappings.
+All the supplied route Mappings must have common values for the Nin and Nout
+attributes, and these values define the number of inputs and outputs of the
+SwitchMap.  </div> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a null-terminated string containing an optional
+comma-separated list of attribute assignments to be used for initialising the
+new SwitchMap. The syntax used is identical to that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a> function
+and may include <code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by <code>&#x0022;</code> %<code>&#x0022;</code> symbols in the
+normal way.  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> If the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code> %<code>&#x0022;</code> format specifiers,
+then an optional list of additional arguments may follow it in order to supply
+values to be substituted for these specifiers. The rules for supplying these are
+identical to those for the astSet function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code> function).  </div>  </div>
+<h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astSwitchMap()  </h5><div class="sstsub"> A pointer to the new SwitchMap.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 30393--><p class="noindent" >Note that the component Mappings supplied are not copied by astSwitchMap (the new
+SwitchMap simply retains a reference to them). They may continue to be used for other
+purposes, but should not be deleted. If a SwitchMap containing a copy of its
+component Mappings is required, then a copy of the SwitchMap should be made using
+<a 
+href="sun211ss34.html#x59-2510000">astCopy</a>.
+<li >
+<!--l. 30393--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss206.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss208.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss207.html"></a> </div> 
+</body> 
+</html>

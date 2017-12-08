@@ -1,0 +1,45 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> ImagFreq </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss307.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss309.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 37366--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x334-5260000"></a> ImagFreq </h3>  <p class="subtitle"> The image sideband equivalent of the rest frequency  </p> </h3> </header><a 
+ id="Q1-334-1158"></a> <a 
+ id="Q1-334-1159"></a> <a name="xref_ImagFreq"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+This is a read-only attribute giving the frequency which corresponds to the rest
+frequency but is in the opposite sideband.
+<!--l. 37366--><p class="noindent" >The value is calculated by first transforming the rest frequency (given by the <a 
+href="sun211ss383.html#x409-6010000">RestFreq</a>
+attribute) from the standard of rest of the source (given by the <a 
+href="sun211ss402.html#x428-6200000">SourceVel</a> and
+<a 
+href="sun211ss401.html#x427-6190000">SourceVRF</a> attributes) to the standard of rest of the observer (i.e. the topocentric
+standard of rest). The resulting topocentric frequency is assumed to be in the same
+sideband as the value given for the <a 
+href="sun211ss274.html#x300-4920000">DSBCentre</a> attribute (the <code>&#x0022;</code> observed<code>&#x0022;</code> sideband), and
+is transformed to the other sideband (the <code>&#x0022;</code> image<code>&#x0022;</code> sideband). The new frequency is
+converted back to the standard of rest of the source, and the resulting value is
+returned as the attribute value, in units of GHz.  </div> <dl class="sst">Type: </dl><dd class="sst"> Floating point,
+                                                                                       
+
+                                                                                       
+read-only.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> <a 
+href="sun211ss446.html#x473-6650000">DSBSpecFrame</a>  </h5><div class="sstsub"> All DSBSpecFrames have this attribute.  </div>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss307.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss309.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss308.html"></a> </div> 
+</body> 
+</html>

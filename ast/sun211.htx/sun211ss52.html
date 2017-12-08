@@ -1,0 +1,302 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astFindFrame </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss51.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss53.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 15401--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x77-2690000"></a> astFindFrame </h3>  <p class="subtitle"> Find a coordinate system with specified characteristics  </p> </h3> </header><a 
+ id="Q1-77-389"></a> <a 
+ id="Q1-77-390"></a> <a name="xref_astFindFrame"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This function uses a <code>&#x0022;</code> template<code>&#x0022;</code> <a 
+href="sun211ss452.html#x479-6710000">Frame</a> to search another Frame (or
+<a 
+href="sun211ss453.html#x480-6720000">FrameSet</a>) to identify a coordinate system which has a specified set of characteristics.
+If a suitable coordinate system can be found, the function returns a pointer to a
+FrameSet which describes the required coordinate system and how to convert coordinates
+to and from it.
+<!--l. 15401--><p class="noindent" >This function is provided to help answer general questions about coordinate systems,
+such as typically arise when coordinate information is imported into a program as part
+of an initially unknown dataset. For example: <ul class="sstitemlist">
+<li >
+<!--l. 15401--><p class="noindent" >Is there a wavelength scale?
+<li >
+<!--l. 15401--><p class="noindent" >Is there a 2-dimensional coordinate system?
+<li >
+<!--l. 15401--><p class="noindent" >Is there a celestial coordinate system?
+<li >
+<!--l. 15401--><p class="noindent" >Can I plot the data in ecliptic coordinates?
+</li>
+</ul>
+<!--l. 15401--><p class="noindent" >You can also use this function as a means of reconciling a user<code>&#x2019;</code> s preference for a
+particular coordinate system (for example, what type of axes to draw) with what is
+actually possible given the coordinate information available.
+<!--l. 15401--><p class="noindent" >To perform a search, you supply a <code>&#x0022;</code> target<code>&#x0022;</code> Frame (or FrameSet) which represents the
+set of coordinate systems to be searched. If a basic Frame is given as the target, this
+set of coordinate systems consists of the one described by this Frame, plus all
+other <code>&#x0022;</code> virtual<code>&#x0022;</code> coordinate systems which can potentially be reached from it by
+applying built-in conversions (for example, any of the celestial coordinate
+conversions known to the AST library would constitute a <code>&#x0022;</code> built-in<code>&#x0022;</code> conversion). If a
+FrameSet is given as the target, the set of coordinate systems to be searched
+consists of the union of those represented by all the individual Frames within
+it.
+<!--l. 15401--><p class="noindent" >To select from this large set of possible coordinate systems, you supply a <code>&#x0022;</code> template<code>&#x0022;</code>
+Frame which is an instance of the type of Frame you are looking for. Effectively,
+you then ask the function to <code>&#x0022;</code> find a coordinate system that looks like this<code>&#x0022;</code>
+.
+                                                                                       
+
+                                                                                       
+<!--l. 15401--><p class="noindent" >You can make your request more or less specific by setting attribute values for the
+template Frame. If a particular attribute is set in the template, then the function
+will only find coordinate systems which have exactly the same value for that attribute.
+If you leave a template attribute un-set, however, then the function has discretion
+about the value the attribute should have in any coordinate system it finds. The
+attribute will then take its value from one of the actual (rather than virtual)
+coordinate systems in the target. If the target is a FrameSet, its <a 
+href="sun211ss273.html#x299-4910000">Current</a>
+attribute will be modified to indicate which of its Frames was used for this
+purpose.
+<!--l. 15401--><p class="noindent" >The result of this process is a coordinate system represented by a hybrid Frame
+which acquires some attributes from the template (but only if they were set)
+and the remainder from the target. This represents the <code>&#x0022;</code> best compromise<code>&#x0022;</code>
+between what you asked for and what was available. A <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> is then generated
+which converts from the target coordinate system to this hybrid one, and the
+returned FrameSet encapsulates all of this information.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstFrameSet
+<!--l. 15401--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astFindFrame(
+AstFrame <!--l. 15401--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>target,
+AstFrame <!--l. 15401--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>template,
+const char <!--l. 15401--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>domainlist
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> target  </h5><div class="sstsub"> Pointer to the target Frame (or FrameSet).
+<!--l. 15401--><p class="noindent" >Note that if a FrameSet is supplied (and a suitable coordinate system is found), then
+its Current attribute will be modified to indicate which Frame was used to obtain
+attribute values which were not specified by the template. This Frame will, in some
+sense, represent the <code>&#x0022;</code> closest<code>&#x0022;</code> non-virtual coordinate system to the one you requested.
+</div> <h5 class="ssth5"> template  </h5><div class="sstsub"> Pointer to the template Frame, which should be an instance of the type of
+Frame you wish to find. If you wanted to find a Frame describing a celestial coordinate
+system, for example, then you might use a <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> here. See the <code>&#x0022;</code> Examples<code>&#x0022;</code> section
+for more ideas.  </div> <h5 class="ssth5"> domainlist  </h5><div class="sstsub"> Pointer to a null-terminated character string
+containing a comma-separated list of Frame domains. This may be used to establish
+a priority order for the different types of coordinate system that might be
+found.
+<!--l. 15401--><p class="noindent" >The function will first try to find a suitable coordinate system whose <a 
+href="sun211ss279.html#x305-4970000">Domain</a> attribute
+equals the first domain in this list. If this fails, the second domain in the list will
+be used, and so on, until a result is obtained. A blank domain (e.g. two consecutive
+commas) indicates that any coordinate system is acceptable (subject to the template)
+regardless of its domain.
+<!--l. 15401--><p class="noindent" >This list is case-insensitive and all white space is ignored. If you do not wish to
+restrict the domain in this way, you should supply an empty string.  </div>  </div> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5">
+Frame  </h5><div class="sstsub"> This function applies to all Frames.  </div> <h5 class="ssth5"> FrameSet  </h5><div class="sstsub"> If the target is a FrameSet,
+the possibility exists that several of the Frames within it might be matched by the
+template. Unless the choice is sufficiently restricted by the <code>&#x0022;</code> domainlist<code>&#x0022;</code> string, the
+sequence in which Frames are searched can then become important. In this case, the
+search proceeds as follows: <ul class="sstitemlist">
+<li >
+<!--l. 15401--><p class="noindent" >Each field in the <code>&#x0022;</code> domainlist<code>&#x0022;</code> string is considered in turn.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 15401--><p class="noindent" >An attempt is made to match the template to each of the target<code>&#x2019;</code> s Frames in the order:
+(1) the current Frame, (2) the base Frame, (3) each remaining Frame in the order of
+being added to the target FrameSet.
+<li >
+<!--l. 15401--><p class="noindent" >Generally, the first match found is used. However, the Mapping between the target
+coordinate system and the resulting Frame is also examined. Preference is given to
+cases where both the forward and inverse transformations are defined (as indicated by
+the <a 
+href="sun211ss425.html#x451-6430000">TranForward</a> and <a 
+href="sun211ss426.html#x452-6440000">TranInverse</a> attributes). If only one transformation is defined, the
+forward one is preferred.
+<li >
+<!--l. 15401--><p class="noindent" >If a match is found and the domain of the resulting Frame also matches the current <code>&#x0022;</code>
+domainlist<code>&#x0022;</code> field, it is accepted. Otherwise, the next <code>&#x0022;</code> domainlist<code>&#x0022;</code> field is
+considered and the process repeated.
+</li>
+</ul>
+<!--l. 15401--><p class="noindent" >If a suitable coordinate system is found, the Current attribute of the target FrameSet
+will be modified on exit to identify the Frame whose match with the target was
+eventually accepted.  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astFindFrame()  </h5><div class="sstsub"> If the search is successful,
+the function returns a pointer to a FrameSet which contains the Frame found
+and a description of how to convert to (and from) the coordinate system it
+represents. Otherwise, a null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) is returned without
+error.
+<!--l. 15401--><p class="noindent" >If a FrameSet is returned, it will contain two Frames. Frame number 1 (its base Frame)
+represents the target coordinate system and will be the same as the (base Frame of the)
+target. Frame number 2 (its current Frame) will be a Frame representing the
+coordinate system which the function found. The Mapping which inter-relates these
+two Frames will describe how to convert between their respective coordinate
+systems.
+<!--l. 15401--><p class="noindent" >Note that a FrameSet may be used both as a Mapping and as a Frame. If the result is
+used as a Mapping (e.g. with <a 
+href="sun211ss219.html#x244-4360000">astTran2</a>), then it provides a means of converting
+coordinates from the target coordinate system into the new coordinate system that was
+found (and vice versa if its inverse transformation is selected). If it is used as a
+Frame, its attributes will describe the new coordinate system.  </div>  </div> <h4 class="ssth4">Examples: </h4><div class="sstvalues"> <dl class="sstexamplesubsection"> result =
+astFindFrame( target, <a 
+href="sun211ss57.html#x82-2740000">astFrame</a>( 3, <code>&#x0022;</code> <code>&#x0022;</code> ), <code>&#x0022;</code> <code>&#x0022;</code> );  </dl><dd class="sst"> Searches for a 3-dimensional
+coordinate system in the target Frame (or FrameSet). No attributes have been
+set in the template Frame (created by astFrame), so no restriction has been
+placed on the required coordinate system, other than that it should have 3
+dimensions. The first suitable Frame found will be returned as part of the <code>&#x0022;</code>
+result<code>&#x0022;</code> FrameSet.  </dd> <dl class="sstexamplesubsection"> result = astFindFrame( target, <a 
+href="sun211ss191.html#x216-4080000">astSkyFrame</a>( <code>&#x0022;</code> <code>&#x0022;</code> ), <code>&#x0022;</code> <code>&#x0022;</code> );  </dl><dd class="sst">
+Searches for a celestial coordinate system in the target Frame (or FrameSet).
+The type of celestial coordinate system is unspecified, so astFindFrame will
+return the first one found as part of the <code>&#x0022;</code> result<code>&#x0022;</code> FrameSet. If the target is a
+FrameSet, then its Current attribute will be updated to identify the Frame that was
+used.
+<!--l. 15401--><p class="noindent" >If no celestial coordinate system can be found, a value of AST__NULL will be returned
+without error.  </dd> <dl class="sstexamplesubsection"> result = astFindFrame( target, astSkyFrame( <code>&#x0022;</code> <a 
+href="sun211ss340.html#x366-5580000">MaxAxes</a>=100<code>&#x0022;</code> ), <code>&#x0022;</code> <code>&#x0022;</code> );
+                                                                                       
+
+                                                                                       
+</dl><dd class="sst"> This is like the last example, except that in the event of the target being a
+<a 
+href="sun211ss443.html#x470-6620000">CmpFrame</a>, the component Frames encapsulated by the CmpFrame will be searched for a
+SkyFrame. If found, the returned Mapping will included a <a 
+href="sun211ss466.html#x493-6850000">PermMap</a> which selects the
+required axes from the target CmpFrame.
+<!--l. 15401--><p class="noindent" >This is acomplished by setting the MaxAxes attribute of the template SkyFrame to a
+large number (larger than or equal to the number of axes in the target CmpFrame). This
+allows the SkyFrame to be used as a match for Frames containing from 2 to 100 axes.  </dd> <dl class="sstexamplesubsection">
+result = astFindFrame( target, astSkyFrame( <code>&#x0022;</code> <a 
+href="sun211ss413.html#x439-6310000">System</a>=FK5<code>&#x0022;</code> ), <code>&#x0022;</code> <code>&#x0022;</code> );  </dl><dd class="sst"> Searches for an
+equatorial (FK5) coordinate system in the target. The <a 
+href="sun211ss286.html#x312-5040000">Equinox</a> value for the
+coordinate system has not been specified, so will be obtained from the target. If
+the target is a FrameSet, its Current attribute will be updated to indicate
+which SkyFrame was used to obtain this value.  </dd> <dl class="sstexamplesubsection"> result = astFindFrame( target,
+astFrame( 2, <code>&#x0022;</code> <code>&#x0022;</code> ), <code>&#x0022;</code> sky,pixel,<code>&#x0022;</code> );  </dl><dd class="sst"> Searches for a 2-dimensional coordinate
+system in the target. Initially, a search is made for a suitable coordinate
+system whose Domain attribute has the value <code>&#x0022;</code> SKY<code>&#x0022;</code> . If this search fails, a
+search is then made for one with the domain <code>&#x0022;</code> PIXEL<code>&#x0022;</code> . If this also fails,
+then any 2-dimensional coordinate system is returned as part of the <code>&#x0022;</code> result<code>&#x0022;</code>
+FrameSet.
+<!--l. 15401--><p class="noindent" >Only if no 2-dimensional coordinate systems can be reached by applying built-in
+conversions to any of the Frames in the target will a value of AST__NULL be returned.  </dd>
+<dl class="sstexamplesubsection"> result = astFindFrame( target, astFrame( 1, <code>&#x0022;</code> Domain=WAVELENGTH<code>&#x0022;</code> ), <code>&#x0022;</code> <code>&#x0022;</code> );  </dl><dd class="sst"> Searches
+for any 1-dimensional coordinate system in the target which has the domain <code>&#x0022;</code>
+WAVELENGTH<code>&#x0022;</code> .  </dd> <dl class="sstexamplesubsection"> result = astFindFrame( target, astFrame( 1, <code>&#x0022;</code> <code>&#x0022;</code> ), <code>&#x0022;</code> wavelength<code>&#x0022;</code> );  </dl><dd class="sst">
+This example has exactly the same effect as that above. It illustrates the equivalence
+of the template<code>&#x2019;</code> s Domain attribute and the fields in the <code>&#x0022;</code> domainlist<code>&#x0022;</code> string.  </dd> <dl class="sstexamplesubsection">
+result = astFindFrame( target, astFrame( 1, <code>&#x0022;</code> MaxAxes=3<code>&#x0022;</code> ), <code>&#x0022;</code> <code>&#x0022;</code> );  </dl><dd class="sst"> This is a more
+advanced example which will search for any coordinate system in the target having 1, 2
+or 3 dimensions. The Frame returned (as part of the <code>&#x0022;</code> result<code>&#x0022;</code> FrameSet) will
+always be 1-dimensional, but will be related to the coordinate system that was
+found by a suitable Mapping (e.g. a PermMap) which simply extracts the first
+axis.
+<!--l. 15401--><p class="noindent" >If we had wanted a Frame representing the actual (1, 2 or 3-dimensional) coordinate
+system found, we could set the <a 
+href="sun211ss374.html#x400-5920000">PreserveAxes</a> attribute to a non-zero value in the
+template.  </dd> <dl class="sstexamplesubsection"> result = astFindFrame( target, astSkyFrame( <code>&#x0022;</code> <a 
+href="sun211ss371.html#x397-5890000">Permute</a>=0<code>&#x0022;</code> ), <code>&#x0022;</code> <code>&#x0022;</code> );  </dl><dd class="sst">
+Searches for any celestial coordinate system in the target, but only finds one if its
+axes are in the conventional (longitude,latitude) order and have not been permuted
+(e.g. with <a 
+href="sun211ss137.html#x162-3540000">astPermAxes</a>).  </dd>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 15401--><p class="noindent" >The Mapping represented by the returned FrameSet results in alignment taking
+place in the coordinate system specified by the <a 
+href="sun211ss247.html#x273-4650000">AlignSystem</a> attribute of the <code>&#x0022;</code>
+template<code>&#x0022;</code> Frame. See the description of the AlignSystem attribute for further
+details.
+<li >
+<!--l. 15401--><p class="noindent" >Beware of setting the Domain attribute of the template and then using a <code>&#x0022;</code> domainlist<code>&#x0022;</code>
+string which does not include the template<code>&#x2019;</code> s domain (or a blank field). If you do so,
+no coordinate system will be found.
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 15401--><p class="noindent" >A null Object pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div> <h4 class="ssth4"> More on Using Templates
+</h4><div class="sstvalues"> A Frame (describing a coordinate system) will be found by this function if (a) it is <code>&#x0022;</code>
+matched<code>&#x0022;</code> by the template you supply, and (b) the value of its Domain attribute appears
+in the <code>&#x0022;</code> domainlist<code>&#x0022;</code> string (except that a blank field in this string permits any
+domain). A successful match by the template depends on a number of criteria, as
+outlined below: <ul class="sstitemlist">
+<li >
+<!--l. 15401--><p class="noindent" >In general, a template will only match another Frame which belongs to the same class as
+the template, or to a derived (more specialised) class. For example, a SkyFrame
+template will match any other SkyFrame, but will not match a basic Frame. Conversely, a
+basic Frame template will match any class of Frame.
+<li >
+<!--l. 15401--><p class="noindent" >The exception to this is that a Frame of any class can be used to match a CmpFrame, if
+that CmpFrame contains a Frame of the same class as the template. Note however, the
+MaxAxes and <a 
+href="sun211ss342.html#x368-5600000">MinAxes</a> attributes of the template must be set to suitable values to allow
+it to match the CmpFrame. That is, the MinAxes attribute must be less than or equal to
+the number of axes in the target, and the MaxAxes attribute must be greater than or
+equal to the number of axes in the target.
+<li >
+<!--l. 15401--><p class="noindent" >If using a CmpFrame as a template frame, the MinAxes and MaxAxes for the template are
+determined by the MinAxes and MaxAxes values of the component Frames within the
+template. So if you want a template CmpFrame to be able to match Frames with different
+numbers of axes, then you must set the MaxAxes and/or MinAxes attributes in the
+component template Frames, before combining them together into the template
+CmpFrame.
+<li >
+<!--l. 15401--><p class="noindent" >If a template has a value set for any of its main attributes, then it will only match
+Frames which have an identical value for that attribute (or which can be transformed,
+using a built-in conversion, so that they have the required value for that attribute).
+If any attribute in the template is un-set, however, then Frames are matched regardless
+of the value they may have for that attribute. You may therefore make a template more
+or less specific by choosing the attributes for which you set values. This requirement
+does not apply to <code>&#x2019;</code> descriptive<code>&#x2019;</code> attributes such as titles, labels, symbols,
+etc.
+<li >
+<!--l. 15401--><p class="noindent" >An important application of this principle involves the Domain attribute. Setting the
+Domain attribute of the template has the effect of restricting the search to a
+particular type of Frame (with the domain you specify). Conversely, if the Domain
+attribute is not set in the template, then the domain of the Frame found is not
+relevant, so all Frames are searched. Note that the <code>&#x0022;</code> domainlist<code>&#x0022;</code> string provides an
+alternative way of restricting the search in the same manner, but is a more convenient
+interface if you wish to search automatically for another domain if the first search
+fails.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 15401--><p class="noindent" >Normally, a template will only match a Frame which has the same number of axes as
+itself. However, for some classes of template, this default behaviour may be changed by
+means of the MinAxes, MaxAxes and <a 
+href="sun211ss339.html#x365-5570000">MatchEnd</a> attributes. In addition, the behaviour of a
+template may be influenced by its Permute and PreserveAxes attributes, which control
+whether it matches Frames whose axes have been permuted, and whether this permutation
+is retained in the Frame which is returned (as opposed to returning the axes in the
+order specified in the template, which is the default behaviour). You should consult
+the descriptions of these attributes for details of this more advanced use of
+templates.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss51.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss53.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss52.html"></a> </div> 
+</body> 
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astSelectorMap </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss175.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss177.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 27595--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x201-3930000"></a> astSelectorMap </h3>  <p class="subtitle"> Create a SelectorMap  </p> </h3> </header><a 
+ id="Q1-201-761"></a> <a 
+ id="Q1-201-762"></a> <a name="xref_astSelectorMap"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a
+new <a 
+href="sun211ss475.html#x502-6940000">SelectorMap</a> and optionally initialises its attributes.
+<!--l. 27595--><p class="noindent" >A SelectorMap is a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> that identifies which <a 
+href="sun211ss474.html#x501-6930000">Region</a> contains a given input
+position.
+<!--l. 27595--><p class="noindent" >A SelectorMap encapsulates a number of Regions that all have the same number of axes
+and represent the same coordinate <a 
+href="sun211ss452.html#x479-6710000">Frame</a>. The number of inputs (<a 
+href="sun211ss353.html#x379-5710000">Nin</a> attribute) of the
+SelectorMap equals the number of axes spanned by one of the encapsulated Region. All
+SelectorMaps have only a single output. SelectorMaps do not define an inverse
+transformation.
+<!--l. 27595--><p class="noindent" >For each input position, the forward transformation of a SelectorMap searches through
+the encapsulated Regions (in the order supplied when the SelectorMap was created)
+until a Region is found which contains the input position. The index associated
+with this Region is returned as the SelectorMap output value (the index value
+is the position of the Region within the list of Regions supplied when the
+SelectorMap was created, starting at 1 for the first Region). If an input position is
+not contained within any Region, a value of zero is returned by the forward
+transformation.
+<!--l. 27595--><p class="noindent" >If a compound Mapping contains a SelectorMap in series with its own inverse, the
+combination of the two adjacent SelectorMaps will be replaced by a <a 
+href="sun211ss495.html#x522-7140000">UnitMap</a> when the
+compound Mapping is simplified using <a 
+href="sun211ss190.html#x215-4070000">astSimplify</a>.
+                                                                                       
+
+                                                                                       
+<!--l. 27595--><p class="noindent" >In practice, SelectorMaps are often used in conjunction with SwitchMaps.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstSelectorMap
+<!--l. 27595--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astSelectorMap( int nreg,
+AstRegion <!--l. 27595--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>regs[], double
+badval, const char <!--l. 27595--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> nreg  </h5><div class="sstsub"> The number of supplied Regions.  </div> <h5 class="ssth5"> regs  </h5><div class="sstsub"> An array of
+pointers to the Regions. All the supplied Regions must relate to the same coordinate
+Frame. The number of axes in this coordinate Frame defines the number of inputs for the
+SelectorMap.  </div> <h5 class="ssth5"> badval  </h5><div class="sstsub"> The value to be returned by the forward transformation of the
+SelectorMap for any input positions that have a bad (AST__BAD) value on any
+axis.  </div> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a null-terminated string containing an optional
+comma-separated list of attribute assignments to be used for initialising the
+new SelectorMap. The syntax used is identical to that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a> function
+and may include <code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by <code>&#x0022;</code> %<code>&#x0022;</code> symbols in the
+normal way.  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> If the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code> %<code>&#x0022;</code> format specifiers,
+then an optional list of additional arguments may follow it in order to supply
+values to be substituted for these specifiers. The rules for supplying these are
+identical to those for the astSet function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code> function).  </div>  </div>
+<h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astSelectorMap()  </h5><div class="sstsub"> A pointer to the new SelectorMap.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 27595--><p class="noindent" >Deep copies are taken of the supplied Regions. This means that any subsequent changes
+made to the component Regions using the supplied pointers will have no effect on the
+SelectorMap.
+<li >
+<!--l. 27595--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss175.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss177.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss176.html"></a> </div> 
+</body> 
+</html>

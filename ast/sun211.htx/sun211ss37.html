@@ -1,0 +1,74 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astDSBSpecFrame </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss36.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss38.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 14013--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x62-2540000"></a> astDSBSpecFrame </h3>  <p class="subtitle"> Create a DSBSpecFrame  </p> </h3> </header><a 
+ id="Q1-62-344"></a> <a 
+ id="Q1-62-345"></a> <a name="xref_astDSBSpecFrame"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a
+new <a 
+href="sun211ss446.html#x473-6650000">DSBSpecFrame</a> and optionally initialises its attributes.
+<!--l. 14013--><p class="noindent" >A DSBSpecFrame is a specialised form of <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a> which represents positions in a
+spectrum obtained using a dual sideband instrument. Such an instrument produces a
+spectrum in which each point contains contributions from two distinctly different
+frequencies, one from the <code>&#x0022;</code> lower side band<code>&#x0022;</code> (LSB) and one from the <code>&#x0022;</code> upper side band<code>&#x0022;</code>
+(USB). Corresponding LSB and USB frequencies are connected by the fact that they are an
+equal distance on either side of a fixed central frequency known as the <code>&#x0022;</code> Local
+Oscillator<code>&#x0022;</code> (LO) frequency.
+<!--l. 14013--><p class="noindent" >When quoting a position within such a spectrum, it is necessary to indicate whether the
+quoted position is the USB position or the corresponding LSB position. The <a 
+href="sun211ss386.html#x412-6040000">SideBand</a>
+attribute provides this indication. Another option that the SideBand attribute
+provides is to represent a spectral position by its topocentric offset from the LO
+frequency.
+<!--l. 14013--><p class="noindent" >In practice, the LO frequency is specified by giving the distance from the LO
+frequency to some <code>&#x0022;</code> central<code>&#x0022;</code> spectral position. Typically this central position
+is that of some interesting spectral feature. The distance from this central
+position to the LO frequency is known as the <code>&#x0022;</code> intermediate frequency<code>&#x0022;</code> (<a 
+href="sun211ss306.html#x332-5240000">IF</a>). The
+value supplied for IF can be a signed value in order to indicate whether the LO
+frequency is above or below the central position.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstDSBSpecFrame
+<!--l. 14013--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astDSBSpecFrame(
+const char <!--l. 14013--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a null-terminated string containing an
+optional comma-separated list of attribute assignments to be used for initialising the
+new DSBSpecFrame. The syntax used is identical to that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a> function and may
+include <code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by <code>&#x0022;</code> %<code>&#x0022;</code> symbols in the normal way.  </div> <h5 class="ssth5">
+                                                                                       
+
+                                                                                       
+...  </h5><div class="sstsub"> If the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code> %<code>&#x0022;</code> format specifiers, then an optional
+list of additional arguments may follow it in order to supply values to be
+substituted for these specifiers. The rules for supplying these are identical to
+those for the astSet function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code> function).  </div>  </div> <h4 class="ssth4">Returned
+Value </h4><div class="sstvalues"> <h5 class="ssth5"> astDSBSpecFrame()  </h5><div class="sstsub"> A pointer to the new DSBSpecFrame.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 14013--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss36.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss38.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss37.html"></a> </div> 
+</body> 
+</html>

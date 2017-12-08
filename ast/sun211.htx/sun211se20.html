@@ -1,0 +1,618 @@
+<!DOCTYPE html> 
+<html> 
+<head><title>Creating Your Own Private Mappings (IntraMaps)</title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211se19.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se21.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<h3 class="sectionHead"><span class="titlemark">20    </span> <a 
+ id="x21-18300020"></a>Creating Your Own Private Mappings (IntraMaps)</h3>
+<div class="sectionTOCS">
+&#x00A0;<span class="subsectionToc" >20.1 <a 
+href="#x21-1840001">The Need for Extensibility</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.2 <a 
+href="#x21-1850002">The IntraMap Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.3 <a 
+href="#x21-1860003">Limitations of IntraMaps</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.4 <a 
+href="#x21-1870004">Writing a Transformation Function</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.5 <a 
+href="#x21-1880005">Registering a Transformation Function</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.6 <a 
+href="#x21-1890006">Creating an IntraMap</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.7 <a 
+href="#x21-1900007">Restricted Implementations of Transformation Functions</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.8 <a 
+href="#x21-1910008">Variable Numbers of Coordinates</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.9 <a 
+href="#x21-1920009">Adapting a Transformation Function to Individual IntraMaps</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.10 <a 
+href="#x21-19300010">Simplifying IntraMaps</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.11 <a 
+href="#x21-19400011">Writing and Reading IntraMaps</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.12 <a 
+href="#x21-19500012">Managing Transformation Functions in Libraries</a></span>
+</div>
+<a 
+ id="x21-183001r198"></a>
+<h4 class="subsectionHead"><span class="titlemark">20.1    </span> <a 
+ id="x21-1840001"></a>The Need for Extensibility</h4>
+<!--l. 9692--><p class="noindent" >However many <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> classes are provided by AST, sooner or later you will want to transform
+coordinates in some way that has not been foreseen. You might want to plot a graph in some novel
+curvilinear coordinate system (perhaps you already have a WCS system in your software and just
+want to use AST for its graphical capabilities). Alternatively, you might need to calibrate a
+complex dataset (like an objective prism plate) where each position must be converted
+to world coordinates with reference to calibration data under the control of an elaborate
+algorithm.
+<!--l. 9702--><p class="noindent" >In such cases, it is clear that the basic pre-formed components provided by AST for building
+Mappings are just not enough. What you need is access to a programming language. However, if you
+write your own software to transform coordinate values, then it must be made available in the form of
+an AST class (from which you can create Objects) before it can be used in conjunction with other AST
+facilities.
+                                                                                       
+
+                                                                                       
+<!--l. 9710--><p class="noindent" >At this point you might consider writing your own AST class, but this is not recommended. Not only
+would the internal conventions used by AST take some time to master, but you might also find
+yourself having to change your software whenever a new version of AST was released. Fortunately,
+there is a much easier route provided by the <a 
+href="sun211ss456.html#x483-6750000">IntraMap</a> class.
+<a 
+ id="x21-184001r201"></a>
+<h4 class="subsectionHead"><span class="titlemark">20.2    </span> <a 
+ id="x21-1850002"></a>The IntraMap Model</h4>
+<!--l. 9719--><p class="noindent" >To allow you to write your own Mappings, AST provides a special kind of <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> called an
+<a 
+href="sun211ss456.html#x483-6750000">IntraMap</a>. An IntraMap is a sort of &#x201C;wrapper&#x201D; for a coordinate transformation function written in C.
+You write this function yourself and then register it with AST. This, in effect, creates a new class from
+which you can create Mappings (<em>i.e.</em>&#x00A0;IntraMaps) which will transform coordinates in whatever way
+your transformation function specifies.
+<!--l. 9727--><p class="noindent" >Because IntraMaps are Mappings, they may be used in the same way as any other Mapping. For
+instance, they may be combined in series or parallel with other Mappings using a <a 
+href="sun211ss444.html#x471-6630000">CmpMap</a> (&#x00A7;<a 
+href="sun211se6.html#x7-650006">6<!--tex4ht:ref: ss:cmpmaps --></a>), they
+may be inverted (&#x00A7;<a 
+href="sun211se5.html#x6-590006">5.6<!--tex4ht:ref: ss:invertingmappings --></a>), you may enquire about their attributes (&#x00A7;<a 
+href="sun211se4.html#x5-390005">4.5<!--tex4ht:ref: ss:gettingattributes --></a>), they may be inserted into
+FrameSets (&#x00A7;<a 
+href="sun211se13.html#x14-12200013">13<!--tex4ht:ref: ss:framesets --></a>), <em>etc.</em> They do, however, have some important limitations of which you should be
+aware before we go on to consider how to create them.
+<a 
+ id="x21-185001r202"></a>
+<h4 class="subsectionHead"><span class="titlemark">20.3    </span> <a 
+ id="x21-1860003"></a>Limitations of IntraMaps</h4>
+<!--l. 9738--><p class="noindent" >By now, you might be wondering why any other kind of <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> is required at all. After all, why not
+simply write your own coordinate transformation functions in C, wrap them up in IntraMaps and do
+away with all the other Mapping classes in AST?
+<!--l. 9743--><p class="noindent" >The reason is not too hard to find. Any transformation function you write is created solely by you, so
+it is a private extension which does not form a permanent part of AST. If you use it to calibrate some
+data and then pass that data to someone else, who has only the standard version of AST, then they will
+not be able to interpret it.
+<!--l. 9749--><p class="noindent" >Thus, while an <a 
+href="sun211ss456.html#x483-6750000">IntraMap</a> is fine for use by you and your collaborators (who we assume have access to
+the same transformation functions), it does not address the need for universal data exchange like other
+AST Mappings do. This is where the &#x201C;Intra&#x201D; in the class name &#x201C;IntraMap&#x201D; comes from, implying
+private or internal usage.
+<!--l. 9755--><p class="noindent" >For this reason, it is unwise to store IntraMaps in datasets, unless they will be used solely for
+communication between collaborating items of software which share conventions about their use. A
+private database describing coordinate systems on a graphics device might be an example where
+IntraMaps would be suitable, because the data would probably never be accessed by anyone else&#x2019;s
+software. Restricting IntraMap usage to within a single program (<em>i.e.</em> never writing it out) is, of course,
+completely safe.
+<!--l. 9764--><p class="noindent" >If, by accident, an IntraMap should happen to escape as part of a dataset, then the unsuspecting
+recipient is likely to receive an error message when they attempt to read the data. However, AST will
+associate details of the IntraMap&#x2019;s transformation function and its author (if provided) with the data,
+so that the recipient can make an intelligent enquiry to obtain the necessary software if this proves
+essential.
+<a 
+ id="x21-186001r203"></a>
+<h4 class="subsectionHead"><span class="titlemark">20.4    </span> <a 
+ id="x21-1870004"></a>Writing a Transformation Function</h4>
+<!--l. 9774--><p class="noindent" >The first stage in creating an <a 
+href="sun211ss456.html#x483-6750000">IntraMap</a> is to write the coordinate transformation function. This should
+                                                                                       
+
+                                                                                       
+have a calling interface like the <a 
+href="sun211ss223.html#x248-4400000">astTranP</a> function provided by AST (<em>q.v.</em>). Here is a simple example
+of a suitable transformation function which transforms coordinates by squaring them:
+<a name="xref_SqrTran"></a>
+<div class="fancyvrb" id="fancyvrb216"> <a 
+ id="x21-187002r1"></a>&#x00A0;&#x00A0;#include&#x00A0;&#x0022;ast.h&#x0022;<br class="fancyvrb" /><a 
+ id="x21-187004r2"></a>&#x00A0;&#x00A0;#include&#x00A0;&#x003C;math.h&#x003E;<br class="fancyvrb" /><a 
+ id="x21-187006r3"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-187008r4"></a>&#x00A0;&#x00A0;void&#x00A0;SqrTran(&#x00A0;AstMapping&#x00A0;*this,&#x00A0;int&#x00A0;npoint,&#x00A0;int&#x00A0;ncoord_in,
+<br class="fancyvrb" /><a 
+ id="x21-187010r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;const&#x00A0;double&#x00A0;*ptr_in[],&#x00A0;int&#x00A0;forward,&#x00A0;int&#x00A0;ncoord_out,
+<br class="fancyvrb" /><a 
+ id="x21-187012r6"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;double&#x00A0;*ptr_out[]&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x21-187014r7"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;int&#x00A0;point,&#x00A0;coord;<br class="fancyvrb" /><a 
+ id="x21-187016r8"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;double&#x00A0;x;<br class="fancyvrb" /><a 
+ id="x21-187018r9"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x21-187020r10"></a>&#x00A0;&#x00A0;/*&#x00A0;Forward&#x00A0;transformation.&#x00A0;*/<br class="fancyvrb" /><a 
+ id="x21-187022r11"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;if&#x00A0;(&#x00A0;forward&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x21-187024r12"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;for&#x00A0;(&#x00A0;point&#x00A0;=&#x00A0;0;&#x00A0;point&#x00A0;&#x003C;&#x00A0;npoint;&#x00A0;point++&#x00A0;)&#x00A0;{
+<br class="fancyvrb" /><a 
+ id="x21-187026r13"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;for&#x00A0;(&#x00A0;coord&#x00A0;=&#x00A0;0;&#x00A0;coord&#x00A0;&#x003C;&#x00A0;ncoord_in;&#x00A0;coord++&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x21-187028r14"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;x&#x00A0;=&#x00A0;ptr_in[&#x00A0;coord&#x00A0;][&#x00A0;point&#x00A0;];
+<br class="fancyvrb" /><a 
+ id="x21-187030r15"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;ptr_out[&#x00A0;coord&#x00A0;][&#x00A0;point&#x00A0;]&#x00A0;=&#x00A0;(&#x00A0;x&#x00A0;==&#x00A0;AST__BAD&#x00A0;)&#x00A0;?&#x00A0;AST__BAD&#x00A0;:&#x00A0;x&#x00A0;*&#x00A0;x;<br class="fancyvrb" /><a 
+ id="x21-187032r16"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}<br class="fancyvrb" /><a 
+ id="x21-187034r17"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}
+<br class="fancyvrb" /><a 
+ id="x21-187036r18"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-187038r19"></a>&#x00A0;&#x00A0;/*&#x00A0;Inverse&#x00A0;transformation.&#x00A0;*/<br class="fancyvrb" /><a 
+ id="x21-187040r20"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}&#x00A0;else&#x00A0;{<br class="fancyvrb" /><a 
+ id="x21-187042r21"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;for&#x00A0;(&#x00A0;point&#x00A0;=&#x00A0;0;&#x00A0;point&#x00A0;&#x003C;&#x00A0;npoint;&#x00A0;point++&#x00A0;)&#x00A0;{
+<br class="fancyvrb" /><a 
+ id="x21-187044r22"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;for&#x00A0;(&#x00A0;coord&#x00A0;=&#x00A0;0;&#x00A0;coord&#x00A0;&#x003C;&#x00A0;ncoord_in;&#x00A0;coord++&#x00A0;)&#x00A0;{
+<br class="fancyvrb" /><a 
+ id="x21-187046r23"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;x&#x00A0;=&#x00A0;ptr_in[&#x00A0;coord&#x00A0;][&#x00A0;point&#x00A0;];<br class="fancyvrb" /><a 
+ id="x21-187048r24"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;ptr_out[&#x00A0;coord&#x00A0;][&#x00A0;point&#x00A0;]&#x00A0;=
+<br class="fancyvrb" /><a 
+ id="x21-187050r25"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;(&#x00A0;x&#x00A0;&#x003C;&#x00A0;0.0&#x00A0;||&#x00A0;x&#x00A0;==&#x00A0;AST__BAD&#x00A0;)&#x00A0;?&#x00A0;AST__BAD&#x00A0;:&#x00A0;sqrt(&#x00A0;x&#x00A0;);<br class="fancyvrb" /><a 
+ id="x21-187052r26"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}<br class="fancyvrb" /><a 
+ id="x21-187054r27"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}<br class="fancyvrb" /><a 
+ id="x21-187056r28"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}<br class="fancyvrb" /><a 
+ id="x21-187058r29"></a>&#x00A0;&#x00A0;}</div>
+<!--l. 9815--><p class="noindent" >As you can see, the function comes in two halves which implement the forward and inverse
+coordinate transformations. The number of points to be transformed (&#x201C;npoint&#x201D;) and the numbers of
+input and output coordinates per point (&#x201C;ncoord_in&#x201D; and &#x201C;ncoord_out&#x201D;&#x2014;in this case both are
+assumed equal) are passed to the function. A pair of loops then accesses all the coordinate values.
+Note that it is legitimate to omit one or other of the forward/inverse transformations and simply not
+to implement it, if it will not be required. It is also permissible to require that the numbers of input and
+output coordinates be fixed (<em>e.g.</em>&#x00A0;at 2), or to write the function so that it can handle arbitrary
+dimensionality, as here.
+<!--l. 9827--><p class="noindent" >Before using an incoming coordinate, the function must first check that it is not set to the value
+AST__BAD, which indicates missing data (&#x00A7;<a 
+href="sun211se5.html#x6-620009">5.9<!--tex4ht:ref: ss:badcoordinates --></a>). If it is, the same value is also assigned to any affected
+output coordinates. The value AST__BAD is also generated if any coordinates cannot be transformed.
+In this example, this can happen with the inverse transformation if negative values are encountered,
+so that the square root cannot be taken.
+<!--l. 9835--><p class="noindent" >There are very few restrictions on what a coordinate transformation function may do. For example, it
+may freely perform I/O to access any external data needed, it may invoke other AST facilities (but
+beware of unwanted recursion), <em>etc.</em> Typically, you may also want to pass information to it <em>via</em>&#x00A0;global
+variables. Remember, however, that whatever facilities the transformation function requires must be
+available in every program which uses it.
+<!--l. 9843--><p class="noindent" >Generally, it is not a good idea to retain context information within a transformation function. That
+is, it should transform each set of coordinates as a single point and retain no memory of
+the points it has transformed before. This is in order to conform with the AST model of a
+<a 
+href="sun211ss459.html#x486-6780000">Mapping</a>.
+<!--l. 9849--><p class="noindent" >If an error occurs within a transformation function, it should use the <a 
+href="sun211ss184.html#x209-4010000">astSetStatus</a> function (&#x00A7;<a 
+href="sun211se4.html#x5-5100015">4.15<!--tex4ht:ref: ss:errordetection --></a>)
+to set the AST status to an error value before returning. This will alert AST to the error,
+causing it to abort the current operation. The error value AST__ITFER is available for this
+purpose, but other values may also be used (<em>e.g.</em>&#x00A0;if you wish to distinguish different types of
+error).
+<a 
+ id="x21-187059r204"></a>
+<h4 class="subsectionHead"><span class="titlemark">20.5    </span> <a 
+ id="x21-1880005"></a>Registering a Transformation Function</h4>
+<!--l. 9859--><p class="noindent" >Having written your coordinate transformation function, the next step is to register it with AST.
+                                                                                       
+
+                                                                                       
+Registration is performed using <a 
+href="sun211ss93.html#x118-3100000">astIntraReg</a>, as follows:
+<div class="fancyvrb" id="fancyvrb217"> <a 
+ id="x21-188002r1"></a>&#x00A0;&#x00A0;void&#x00A0;SqrTran(&#x00A0;AstMapping&#x00A0;*,&#x00A0;int,&#x00A0;int,&#x00A0;const&#x00A0;double&#x00A0;*[],&#x00A0;int,&#x00A0;int,&#x00A0;double&#x00A0;*[]&#x00A0;);<br class="fancyvrb" /><a 
+ id="x21-188004r2"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x21-188006r3"></a>&#x00A0;&#x00A0;const&#x00A0;char&#x00A0;*author,&#x00A0;*contact,&#x00A0;*purpose;<br class="fancyvrb" /><a 
+ id="x21-188008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-188010r5"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x21-188012r6"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x21-188014r7"></a>&#x00A0;&#x00A0;purpose&#x00A0;=&#x00A0;&#x0022;Square&#x00A0;each&#x00A0;coordinate&#x00A0;value&#x0022;;<br class="fancyvrb" /><a 
+ id="x21-188016r8"></a>&#x00A0;&#x00A0;author&#x00A0;=&#x00A0;&#x00A0;&#x0022;R.F.&#x00A0;Warren-Smith&#x00A0;&#x0026;&#x00A0;D.S.&#x00A0;Berry&#x0022;;
+<br class="fancyvrb" /><a 
+ id="x21-188018r9"></a>&#x00A0;&#x00A0;contact&#x00A0;=&#x00A0;&#x0022;http://www.starlink.ac.uk/cgi-bin/htxserver/sun211.htx/?xref_SqrTran&#x0022;;<br class="fancyvrb" /><a 
+ id="x21-188020r10"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x21-188022r11"></a>&#x00A0;&#x00A0;astIntraReg(&#x00A0;&#x0022;SqrTran&#x0022;,&#x00A0;2,&#x00A0;2,&#x00A0;SqrTran,&#x00A0;0,&#x00A0;purpose,&#x00A0;author,&#x00A0;contact&#x00A0;);</div>
+<!--l. 9879--><p class="noindent" >Note that you should also provide a function prototype to describe the transformation function (the
+implementation of the function itself would suffice, of course).
+<!--l. 9883--><p class="noindent" >The first argument to astIntraReg is a name by which the transformation function will be known. This
+will be used when we come to create an <a 
+href="sun211ss456.html#x483-6750000">IntraMap</a> and is case sensitive. We recommend that you use
+the actual function name here and make this sufficiently unusual that it is unlikely to clash with any
+other functions in most people&#x2019;s software.
+<!--l. 9890--><p class="noindent" >The next two arguments specify the number of input and output coordinates which the
+transformation function will handle. These correspond with the <a 
+href="sun211ss353.html#x379-5710000">Nin</a> and <a 
+href="sun211ss359.html#x385-5770000">Nout</a> attributes of the
+IntraMap we will create. Here, we have set them both to 2, which means that we will only be able to
+create IntraMaps with 2 input and 2 output coordinates (despite the fact that the transformation
+function can actually handle other dimensionalities). We will see later (&#x00A7;<a 
+href="#x21-1910008">20.8<!--tex4ht:ref: ss:variableintramapcoordinates --></a>) how to remove this
+restriction.
+<!--l. 9900--><p class="noindent" >The fourth argument should contain a set of flags which describe the transformation function in a little
+more detail. We will return to this shortly (&#x00A7;<a 
+href="#x21-1900007">20.7<!--tex4ht:ref: ss:restrictedintramaps --></a> &#x0026; &#x00A7;<a 
+href="#x21-19300010">20.10<!--tex4ht:ref: ss:simplifyingintramaps --></a>). For now, we supply a value of
+zero.
+<!--l. 9905--><p class="noindent" >The remaining arguments are character strings which document the transformation function,
+mainly for the benefit of anyone who is unfortunate enough to encounter a reference to it in
+their data which they cannot interpret. As explained above (&#x00A7;<a 
+href="#x21-1860003">20.3<!--tex4ht:ref: ss:intramaplimitations --></a>), you should try and
+avoid this, but accidents will happen, so you should always provide strings containing the
+following:
+     <dl class="enumerate-enumitem"><dt class="enumerate-enumitem">
+  (1) </dt><dd 
+class="enumerate-enumitem">A short description of what the transformation function is for.
+     </dd><dt class="enumerate-enumitem">
+  (2) </dt><dd 
+class="enumerate-enumitem">The name of the author.
+     </dd><dt class="enumerate-enumitem">
+  (3) </dt><dd 
+class="enumerate-enumitem">Contact details, such as an e-mail or WWW address.</dd></dl>
+<!--l. 9919--><p class="noindent" >The idea is that anyone finding an IntraMap in their data, but lacking the necessary transformation
+function, should be able to contact the author and make a sensible enquiry in order to obtain it.
+If you expect many enquiries, you may like to set up a World Wide Web page and use
+that instead (in the example above, we use the WWW address of the relevant part of this
+document).
+<a 
+ id="x21-188026r205"></a>
+                                                                                       
+
+                                                                                       
+<h4 class="subsectionHead"><span class="titlemark">20.6    </span> <a 
+ id="x21-1890006"></a>Creating an IntraMap</h4>
+<!--l. 9928--><p class="noindent" >Once a transformation function has been registered, creating an <a 
+href="sun211ss456.html#x483-6750000">IntraMap</a> from it is simple:
+<div class="fancyvrb" id="fancyvrb218"> <a 
+ id="x21-189002r1"></a>&#x00A0;&#x00A0;AstIntraMap&#x00A0;*intramap;<br class="fancyvrb" /><a 
+ id="x21-189004r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-189006r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x21-189008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-189010r5"></a>&#x00A0;&#x00A0;intramap&#x00A0;=&#x00A0;astIntraMap(&#x00A0;&#x0022;SqrTran&#x0022;,&#x00A0;2,&#x00A0;2,&#x00A0;&#x0022;&#x0022;&#x00A0;);</div>
+<!--l. 9941--><p class="noindent" >We simply use the <a 
+href="sun211ss92.html#x117-3090000">astIntraMap</a> constructor function and pass it the name of the transformation
+function to use. This name is the same (case sensitive) one that we associated with the function when
+we registered it using <a 
+href="sun211ss93.html#x118-3100000">astIntraReg</a> (&#x00A7;<a 
+href="#x21-1880005">20.5<!--tex4ht:ref: ss:registeringintramaps --></a>).
+<!--l. 9946--><p class="noindent" >You can, of course, register any number of transformation functions and select which one to use
+whenever you create an IntraMap. You can also create any number of independent IntraMaps using
+each transformation function. In this sense, each transformation function you register effectively
+creates a new &#x201C;sub-class&#x201D; of IntraMap, from which you can create Objects just like any other class.
+However, an error will occur if you attempt to use a transformation function that has not yet been
+registered.
+<!--l. 9955--><p class="noindent" >The second and third arguments to astIntraMap are the numbers of input and output coordinates.
+These define the <a 
+href="sun211ss353.html#x379-5710000">Nin</a> and <a 
+href="sun211ss359.html#x385-5770000">Nout</a> attributes for the IntraMap that is created and they must match the
+corresponding numbers given when the transformation function was registered.
+<!--l. 9960--><p class="noindent" >The final argument is the usual attribute initialisation string. You may set attribute values for an
+IntraMap in exactly the same way as for any other <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> (&#x00A7;<a 
+href="sun211se4.html#x5-400006">4.6<!--tex4ht:ref: ss:settingattributes --></a>, and also see &#x00A7;<a 
+href="#x21-1920009">20.9<!--tex4ht:ref: ss:intraflag --></a>).
+<a 
+ id="x21-189011r206"></a>
+<h4 class="subsectionHead"><span class="titlemark">20.7    </span> <a 
+ id="x21-1900007"></a>Restricted Implementations of Transformation Functions</h4>
+<!--l. 9967--><p class="noindent" >You may not always want to use both the forward and inverse transformations when you create an
+<a 
+href="sun211ss456.html#x483-6750000">IntraMap</a>, so it is possible to omit either from the underlying coordinate transformation function.
+Consider the following, for example:
+<div class="fancyvrb" id="fancyvrb219"> <a 
+ id="x21-190002r1"></a>&#x00A0;&#x00A0;void&#x00A0;Poly3Tran(&#x00A0;AstMapping&#x00A0;*this,&#x00A0;int&#x00A0;npoint,&#x00A0;int&#x00A0;ncoord_in,<br class="fancyvrb" /><a 
+ id="x21-190004r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;const&#x00A0;double&#x00A0;*ptr_in[],&#x00A0;int&#x00A0;forward,&#x00A0;int&#x00A0;ncoord_out,
+<br class="fancyvrb" /><a 
+ id="x21-190006r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;double&#x00A0;*ptr_out[]&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x21-190008r4"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;double&#x00A0;x;<br class="fancyvrb" /><a 
+ id="x21-190010r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;int&#x00A0;point;<br class="fancyvrb" /><a 
+ id="x21-190012r6"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x21-190014r7"></a>&#x00A0;&#x00A0;/*&#x00A0;Forward&#x00A0;transformation.&#x00A0;*/<br class="fancyvrb" /><a 
+ id="x21-190016r8"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;for&#x00A0;(&#x00A0;point&#x00A0;=&#x00A0;0;&#x00A0;point&#x00A0;&#x003C;&#x00A0;npoint;&#x00A0;point++&#x00A0;)&#x00A0;{
+<br class="fancyvrb" /><a 
+ id="x21-190018r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;x&#x00A0;=&#x00A0;ptr_in[&#x00A0;0&#x00A0;][&#x00A0;point&#x00A0;];<br class="fancyvrb" /><a 
+ id="x21-190020r10"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;ptr_out[&#x00A0;0&#x00A0;][&#x00A0;point&#x00A0;]&#x00A0;=&#x00A0;(&#x00A0;x&#x00A0;==&#x00A0;AST__BAD&#x00A0;)&#x00A0;?&#x00A0;AST__BAD&#x00A0;:
+<br class="fancyvrb" /><a 
+ id="x21-190022r11"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;6.18&#x00A0;+&#x00A0;x&#x00A0;*&#x00A0;(&#x00A0;0.12&#x00A0;+&#x00A0;x&#x00A0;*&#x00A0;(&#x00A0;-0.003&#x00A0;+&#x00A0;x&#x00A0;*&#x00A0;0.0000101&#x00A0;)&#x00A0;);<br class="fancyvrb" /><a 
+ id="x21-190024r12"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}<br class="fancyvrb" /><a 
+ id="x21-190026r13"></a>&#x00A0;&#x00A0;}</div>
+<!--l. 9990--><p class="noindent" >This implements a 1-dimensional cubic polynomial transformation. Since this is somewhat awkward
+to invert, however, we have only implemented the forward transformation. When registering the
+function, this is indicated via the &#x201C;flags&#x201D; argument to <a 
+href="sun211ss93.html#x118-3100000">astIntraReg</a>, as follows:
+<div class="fancyvrb" id="fancyvrb220"> <a 
+ id="x21-190028r1"></a>&#x00A0;&#x00A0;void&#x00A0;Poly3Tran(&#x00A0;AstMapping&#x00A0;*,&#x00A0;int,&#x00A0;int,&#x00A0;const&#x00A0;double&#x00A0;*[],&#x00A0;int,&#x00A0;int,&#x00A0;double&#x00A0;*[]&#x00A0;);<br class="fancyvrb" /><a 
+ id="x21-190030r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-190032r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x21-190034r4"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x21-190036r5"></a>&#x00A0;&#x00A0;astIntraReg(&#x00A0;&#x0022;Poly3Tran&#x0022;,&#x00A0;1,&#x00A0;1,&#x00A0;Poly3Tran,&#x00A0;AST__NOINV,<br class="fancyvrb" /><a 
+ id="x21-190038r6"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;purpose,&#x00A0;author,&#x00A0;contact&#x00A0;);</div>
+<!--l. 10006--><p class="noindent" >Here, the fifth argument has been set to the flag value AST__NOINV to indicate the lack of an inverse.
+If the forward transformation were absent, we would use AST__NOFOR instead. Flag values for this
+argument may be combined using a bitwise OR if necessary.
+<a 
+ id="x21-190039r207"></a>
+                                                                                       
+
+                                                                                       
+<h4 class="subsectionHead"><span class="titlemark">20.8    </span> <a 
+ id="x21-1910008"></a>Variable Numbers of Coordinates</h4>
+<!--l. 10013--><p class="noindent" >In our earlier examples, we have used a fixed number of input and output coordinates when
+registering a coordinate transformation function. It is not necessary to impose this restriction,
+however, if the transformation function can cope with a variable number of coordinates (as with the
+example in &#x00A7;<a 
+href="#x21-1870004">20.4<!--tex4ht:ref: ss:transformationfunctions --></a>). We indicate the acceptability of a variable number when registering the
+transformation function by supplying the value AST__ANY for the number of input and/or output
+coordinates, as follows:
+<div class="fancyvrb" id="fancyvrb221"> <a 
+ id="x21-191002r1"></a>&#x00A0;&#x00A0;astIntraReg(&#x00A0;&#x0022;SqrTran&#x0022;,&#x00A0;AST__ANY,&#x00A0;AST__ANY,&#x00A0;SqrTran,&#x00A0;0,<br class="fancyvrb" /><a 
+ id="x21-191004r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;purpose,&#x00A0;author,&#x00A0;contact&#x00A0;);</div>
+<!--l. 10030--><p class="noindent" >The result is that an <a 
+href="sun211ss456.html#x483-6750000">IntraMap</a> may now be created with any number of input and output coordinates.
+For example:
+<div class="fancyvrb" id="fancyvrb222"> <a 
+ id="x21-191006r1"></a>&#x00A0;&#x00A0;AstIntraMap&#x00A0;*intramap1,&#x00A0;*intramap2;<br class="fancyvrb" /><a 
+ id="x21-191008r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-191010r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x21-191012r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-191014r5"></a>&#x00A0;&#x00A0;intramap1&#x00A0;=&#x00A0;astIntraMap(&#x00A0;&#x0022;SqrTran&#x0022;,&#x00A0;1,&#x00A0;1,&#x00A0;&#x0022;&#x0022;&#x00A0;);
+<br class="fancyvrb" /><a 
+ id="x21-191016r6"></a>&#x00A0;&#x00A0;intramap2&#x00A0;=&#x00A0;astIntraMap(&#x00A0;&#x0022;SqrTran&#x0022;,&#x00A0;3,&#x00A0;3,&#x00A0;&#x0022;Invert=1&#x0022;&#x00A0;);</div>
+<!--l. 10044--><p class="noindent" >It is possible to fix either the number of input or output coordinates (by supplying an explicit number
+to <a 
+href="sun211ss93.html#x118-3100000">astIntraReg</a>), but more subtle restrictions on the number of coordinates, such as requiring that <a 
+href="sun211ss353.html#x379-5710000">Nin</a>
+and <a 
+href="sun211ss359.html#x385-5770000">Nout</a> be equal, are not supported. This means that:
+<div class="fancyvrb" id="fancyvrb223"> <a 
+ id="x21-191018r1"></a>&#x00A0;&#x00A0;intramap&#x00A0;=&#x00A0;astIntraMap(&#x00A0;&#x0022;SqrTran&#x0022;,&#x00A0;1,&#x00A0;2,&#x00A0;&#x0022;&#x0022;&#x00A0;);</div>
+<!--l. 10055--><p class="noindent" >will be accepted without error, although the transformation function cannot actually handle
+such a combination sensibly. If this is important, it would be worth adding a check within
+the transformation function itself, so that the error would be detected when it came to be
+used.
+<a 
+ id="x21-191019r208"></a>
+<h4 class="subsectionHead"><span class="titlemark">20.9    </span> <a 
+ id="x21-1920009"></a>Adapting a Transformation Function to Individual IntraMaps</h4>
+<!--l. 10063--><p class="noindent" >In the examples given so far, our coordinate transformation functions have not made use of the &#x201C;this&#x201D;
+pointer passed to them (which identifies the <a 
+href="sun211ss456.html#x483-6750000">IntraMap</a> whose transformation we are implementing).
+In practice, this will often be the case. However, the presence of the &#x201C;this&#x201D; pointer allows the
+transformation function to invoke any other AST function on the IntraMap, and this permits
+enquiries about its attributes. The transformation function&#x2019;s behaviour can therefore be
+modified according to any attribute values which are set. This turns out to be a useful
+thing to do, so each IntraMap has a special <a 
+href="sun211ss311.html#x337-5290000">IntraFlag</a> attribute reserved for exactly this
+purpose.
+<!--l. 10074--><p class="noindent" >Consider, for instance, the case where the transformation function has access to several alternative sets
+of internally-stored data which it may apply to perform its transformation. Rather than implement
+many different versions of the transformation function, you may switch between them by
+setting a value for the IntraFlag attribute when you create an instance of an IntraMap, for
+example:
+<div class="fancyvrb" id="fancyvrb224"> <a 
+ id="x21-192002r1"></a>&#x00A0;&#x00A0;intramap1&#x00A0;=&#x00A0;astIntraMap(&#x00A0;&#x0022;MyTran&#x0022;,&#x00A0;2,&#x00A0;2,&#x00A0;&#x0022;IntraFlag=A&#x0022;&#x00A0;);<br class="fancyvrb" /><a 
+ id="x21-192004r2"></a>&#x00A0;&#x00A0;intramap2&#x00A0;=&#x00A0;astIntraMap(&#x00A0;&#x0022;MyTran&#x0022;,&#x00A0;2,&#x00A0;2,&#x00A0;&#x0022;IntraFlag=B&#x0022;&#x00A0;);</div>
+                                                                                       
+
+                                                                                       
+<!--l. 10088--><p class="noindent" >The transformation function may then enquire the value of the IntraFlag attribute (<em>e.g.</em>&#x00A0;using astGetC
+and passing it the &#x201C;this&#x201D; pointer) and use whichever dataset is required for that particular
+IntraMap.
+<!--l. 10093--><p class="noindent" >This approach is particularly useful when the number of possible transformations is unbounded or
+not known in advance, in which case the IntraFlag attribute may be used to hold numerical values
+encoded as part of a character string (effectively using them as data for the IntraMap). It is also
+superior to the use of a global switch for communication (<em>e.g.</em>&#x00A0;setting an index to select the &#x201C;current&#x201D;
+data before using the IntraMap), because it continues to work when several IntraMaps are embedded
+within a more complex compound <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>, when you may have no control over the order in which
+they are used.
+<a 
+ id="x21-192005r209"></a>
+<h4 class="subsectionHead"><span class="titlemark">20.10    </span> <a 
+ id="x21-19300010"></a><a name="xref_MaxTran"></a>Simplifying IntraMaps</h4>
+<!--l. 10105--><p class="noindent" >A notable disadvantage of IntraMaps is that they are &#x201C;black boxes&#x201D; as far as AST is concerned. This
+means that they have limited ability to participate in the simplification of compound Mappings
+performed, <em>e.g.</em>, by <a 
+href="sun211ss190.html#x215-4070000">astSimplify</a> (&#x00A7;<a 
+href="sun211se6.html#x7-720007">6.7<!--tex4ht:ref: ss:simplifyingcmpmaps --></a>), because AST cannot know how they interact with other
+Mappings. In reality, of course, they will often implement such specialised coordinate transformations
+that the simplification possibilities will be rather limited anyway.
+<!--l. 10114--><p class="noindent" >One important simplification, however, is the ability of a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> to cancel with its own inverse to
+yield a unit Mapping (a <a 
+href="sun211ss495.html#x522-7140000">UnitMap</a>). This is important because Mappings are frequently used to relate
+a dataset to some external standard (a celestial coordinate system, for example). When
+inter-relating two similar datasets calibrated using the same standard, part of the Mapping often
+cancels, because it is applied first in one direction and then the other, effectively eliminating
+the reference to the standard. This is often a useful simplification and can lead to greater
+efficiency.
+<!--l. 10124--><p class="noindent" >Many transformations have this property of cancelling with their own inverse, but not necessarily all.
+Consider the following transformation function, for example:
+<div class="fancyvrb" id="fancyvrb225"> <a 
+ id="x21-193002r1"></a>&#x00A0;&#x00A0;void&#x00A0;MaxTran(&#x00A0;AstMapping&#x00A0;*this,&#x00A0;int&#x00A0;npoint,&#x00A0;int&#x00A0;ncoord_in,<br class="fancyvrb" /><a 
+ id="x21-193004r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;const&#x00A0;double&#x00A0;*ptr_in[],&#x00A0;int&#x00A0;forward,&#x00A0;int&#x00A0;ncoord_out,
+<br class="fancyvrb" /><a 
+ id="x21-193006r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;double&#x00A0;*ptr_out[]&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x21-193008r4"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;double&#x00A0;hi,&#x00A0;x;<br class="fancyvrb" /><a 
+ id="x21-193010r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;int&#x00A0;coord,&#x00A0;point;<br class="fancyvrb" /><a 
+ id="x21-193012r6"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x21-193014r7"></a>&#x00A0;&#x00A0;/*&#x00A0;Forward&#x00A0;transformation.&#x00A0;*/<br class="fancyvrb" /><a 
+ id="x21-193016r8"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;if&#x00A0;(&#x00A0;forward&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x21-193018r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;for&#x00A0;(&#x00A0;point&#x00A0;=&#x00A0;0;&#x00A0;point&#x00A0;&#x003C;&#x00A0;npoint;&#x00A0;point++&#x00A0;)&#x00A0;{
+<br class="fancyvrb" /><a 
+ id="x21-193020r10"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;hi&#x00A0;=&#x00A0;AST__BAD;<br class="fancyvrb" /><a 
+ id="x21-193022r11"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;for&#x00A0;(&#x00A0;coord&#x00A0;=&#x00A0;0;&#x00A0;coord&#x00A0;&#x003C;&#x00A0;ncoord_in;&#x00A0;coord++&#x00A0;)&#x00A0;{
+<br class="fancyvrb" /><a 
+ id="x21-193024r12"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;x&#x00A0;=&#x00A0;ptr_in[&#x00A0;coord&#x00A0;][&#x00A0;point&#x00A0;];<br class="fancyvrb" /><a 
+ id="x21-193026r13"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;if&#x00A0;(&#x00A0;x&#x00A0;!=&#x00A0;AST__BAD&#x00A0;)&#x00A0;{
+<br class="fancyvrb" /><a 
+ id="x21-193028r14"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;if&#x00A0;(&#x00A0;x&#x00A0;&#x003E;&#x00A0;hi&#x00A0;||&#x00A0;hi&#x00A0;==&#x00A0;AST__BAD&#x00A0;)&#x00A0;hi&#x00A0;=&#x00A0;x;<br class="fancyvrb" /><a 
+ id="x21-193030r15"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}<br class="fancyvrb" /><a 
+ id="x21-193032r16"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}
+<br class="fancyvrb" /><a 
+ id="x21-193034r17"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;ptr_out[&#x00A0;0&#x00A0;][&#x00A0;point&#x00A0;]&#x00A0;=&#x00A0;hi;<br class="fancyvrb" /><a 
+ id="x21-193036r18"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}<br class="fancyvrb" /><a 
+ id="x21-193038r19"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-193040r20"></a>&#x00A0;&#x00A0;/*&#x00A0;Inverse&#x00A0;transformation.&#x00A0;*/<br class="fancyvrb" /><a 
+ id="x21-193042r21"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}&#x00A0;else&#x00A0;{
+<br class="fancyvrb" /><a 
+ id="x21-193044r22"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;for&#x00A0;(&#x00A0;coord&#x00A0;=&#x00A0;0;&#x00A0;coord&#x00A0;&#x003C;&#x00A0;ncoord_out;&#x00A0;coord++&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x21-193046r23"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;for&#x00A0;(&#x00A0;point&#x00A0;=&#x00A0;0;&#x00A0;point&#x00A0;&#x003C;&#x00A0;npoint;&#x00A0;point++&#x00A0;)&#x00A0;{
+<br class="fancyvrb" /><a 
+ id="x21-193048r24"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;ptr_out[&#x00A0;coord&#x00A0;][&#x00A0;point&#x00A0;]&#x00A0;=&#x00A0;ptr_in[&#x00A0;0&#x00A0;][&#x00A0;point&#x00A0;];<br class="fancyvrb" /><a 
+ id="x21-193050r25"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}<br class="fancyvrb" /><a 
+ id="x21-193052r26"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}<br class="fancyvrb" /><a 
+ id="x21-193054r27"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;}<br class="fancyvrb" /><a 
+ id="x21-193056r28"></a>&#x00A0;&#x00A0;}</div>
+<!--l. 10161--><p class="noindent" >This function takes any number of input coordinates and returns a single output
+coordinate which is the maximum value of the input coordinates. Its inverse
+(actually a &#x201C;pseudo-inverse&#x201D;) sets all the input coordinates to the value of the output
+coordinate.<span class="footnote-mark"><a 
+href="#fn33x0" id="fn33x0-bk"><sup class="textsuperscript">33</sup></a></span><a 
+ id="x21-193057f33"></a>
+<!--l. 10169--><p class="noindent" >If this function is applied in the forward direction and then in the inverse direction, it does <b>not</b> in
+general restore the original coordinate values. However, if applied in the inverse direction and then
+the forward direction, it does. Hence, replacing the sequence of operations with an equivalent
+UnitMap is possible in the latter case, but not in the former.
+                                                                                       
+
+                                                                                       
+<!--l. 10176--><p class="noindent" >To distinguish these possibilities, two flag values are provided for use with <a 
+href="sun211ss93.html#x118-3100000">astIntraReg</a> to indicate
+what simplification (if any) is possible. For example, to register the above transformation function, we
+might use:
+<div class="fancyvrb" id="fancyvrb226"> <a 
+ id="x21-193059r1"></a>&#x00A0;&#x00A0;void&#x00A0;MaxTran(&#x00A0;AstMapping&#x00A0;*,&#x00A0;int,&#x00A0;int,&#x00A0;const&#x00A0;double&#x00A0;*[],&#x00A0;int,&#x00A0;int,&#x00A0;double&#x00A0;*[]&#x00A0;);<br class="fancyvrb" /><a 
+ id="x21-193061r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-193063r3"></a>&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x21-193065r4"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x21-193067r5"></a>&#x00A0;&#x00A0;astIntraReg(&#x00A0;&#x0022;MaxTran&#x0022;,&#x00A0;AST__ANY,&#x00A0;1,&#x00A0;MaxTran,&#x00A0;AST__SIMPIF,<br class="fancyvrb" /><a 
+ id="x21-193069r6"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;purpose,&#x00A0;author,&#x00A0;contact&#x00A0;);</div>
+<!--l. 10192--><p class="noindent" >Here, the flag value AST__SIMPIF supplied for the fifth argument indicates that simplification is
+possible if the transformation is applied in the inverse direction followed by the forward direction. To
+indicate the complementary case, the flag AST__SIMPFI would be used instead. If both simplifications
+are possible (as with the SqrTran function in &#x00A7;<a 
+href="#x21-1870004">20.4<!--tex4ht:ref: ss:transformationfunctions --></a>), then we would use the bitwise OR of both
+values.
+<!--l. 10200--><p class="noindent" >In practice, some judgement is usually necessary when deciding whether to allow simplification. For
+example, seen in one light our SqrTran function (&#x00A7;<a 
+href="#x21-1870004">20.4<!--tex4ht:ref: ss:transformationfunctions --></a>) does not cancel with its own inverse, because
+squaring a coordinate value and then taking its square root can change the original value, if this was
+negative. Therefore, replacing this combination with a UnitMap will change the behaviour of a
+compound Mapping and should not be allowed. Seen in another light, however, where the
+coordinates being processed are intrinsically all positive, it is a permissible and probably useful
+simplification.
+<!--l. 10211--><p class="noindent" >If such distinctions are ever important in practice, it is simple to register the same transformation
+function twice with different flag values (use a separate name for each) and then use whichever is
+appropriate when creating an <a 
+href="sun211ss456.html#x483-6750000">IntraMap</a>.
+<a 
+ id="x21-193070r210"></a>
+<h4 class="subsectionHead"><span class="titlemark">20.11    </span> <a 
+ id="x21-19400011"></a>Writing and Reading IntraMaps</h4>
+<!--l. 10218--><p class="noindent" >It is most important to realise that when you write an <a 
+href="sun211ss456.html#x483-6750000">IntraMap</a> to a <a 
+href="sun211ss441.html#x468-6600000">Channel</a> (&#x00A7;<a 
+href="sun211se15.html#x16-1440003">15.3<!--tex4ht:ref: ss:writingtoachannel --></a>), the
+transformation function which it uses is not stored with it. To do so is impossible, because the function
+has been compiled and loaded into memory ready for execution before AST gets to see it. However,
+AST does store the name associated with the transformation function and various details about the
+IntraMap itself.
+<!--l. 10227--><p class="noindent" >This means that any program attempting to read the IntraMap (&#x00A7;<a 
+href="sun211se15.html#x16-1450004">15.4<!--tex4ht:ref: ss:readingfromachannel --></a>) cannot make use of it unless it
+also has independent access to the original transformation function. If it does not have access to this
+function, an error will occur at the point where the IntraMap is read and the associated
+error message will direct the user to the author of the transformation function for more
+information.
+<!--l. 10235--><p class="noindent" >However, if the necessary transformation function is available, and has been registered before the read
+operation takes place, then AST is able to re-create the original IntraMap and will do so.
+Registration of the transformation function must, of course, use the same name (and, in
+fact, be identical in most particulars) as was used in the original program which wrote the
+data.
+<!--l. 10242--><p class="noindent" >This means that a set of co-operating programs which all have access to the same set of transformation
+functions and register them in identical fashion (see &#x00A7;<a 
+href="#x21-19500012">20.12<!--tex4ht:ref: ss:intramaplibrary --></a> for how this can best be achieved) can
+freely exchange data that contain IntraMaps. The need to avoid exporting such data to unsuspecting
+third parties (&#x00A7;<a 
+href="#x21-1860003">20.3<!--tex4ht:ref: ss:intramaplimitations --></a>) must, however, be re-iterated.
+                                                                                       
+
+                                                                                       
+<a 
+ id="x21-194001r211"></a>
+<h4 class="subsectionHead"><span class="titlemark">20.12    </span> <a 
+ id="x21-19500012"></a>Managing Transformation Functions in Libraries</h4>
+<!--l. 10251--><p class="noindent" >If you are developing a large suite of data reduction software, you may have a need to use IntraMaps
+at various points within it. Very probably this will occur in unrelated modules which are compiled
+separately and then stored in a library. Since the transformation functions required must be registered
+before they can be used, this makes it difficult to decide where to perform this registration, especially
+since any particular data reduction program may use an arbitrary subset of the modules in your
+library.
+<!--l. 10260--><p class="noindent" >To assist with this problem, AST allows you to perform the same registration of a transformation
+function any number of times, so long as it is performed using an identical invocation of <a 
+href="sun211ss93.html#x118-3100000">astIntraReg</a>
+on each occasion (<em>i.e.</em>&#x00A0;all of its arguments must be identical). This means you do not have to keep track
+of whether a particular function has already been registered but could, in fact, register it on each
+occasion immediately before it is required (wherever that may be). In order that all registrations are
+identical, however, it is recommended that you group them all together into a single function, perhaps
+as follows:
+<div class="fancyvrb" id="fancyvrb227"> <a 
+ id="x21-195002r1"></a>&#x00A0;&#x00A0;void&#x00A0;MyTrans(&#x00A0;void&#x00A0;)&#x00A0;{<br class="fancyvrb" /><a 
+ id="x21-195004r2"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-195006r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x21-195008r4"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-195010r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;astIntraReg(&#x00A0;&#x0022;MaxTran&#x0022;,&#x00A0;AST__ANY,&#x00A0;1,&#x00A0;MaxTran,&#x00A0;AST__SIMPIF,
+<br class="fancyvrb" /><a 
+ id="x21-195012r6"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;purpose,&#x00A0;author,&#x00A0;contact&#x00A0;);<br class="fancyvrb" /><a 
+ id="x21-195014r7"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-195016r8"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x21-195018r9"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x21-195020r10"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;astIntraReg(&#x00A0;&#x0022;Poly3Tran&#x0022;,&#x00A0;1,&#x00A0;1,&#x00A0;Poly3Tran,&#x00A0;AST__NOINV,<br class="fancyvrb" /><a 
+ id="x21-195022r11"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;purpose,&#x00A0;author,&#x00A0;contact&#x00A0;);<br class="fancyvrb" /><a 
+ id="x21-195024r12"></a>&#x00A0;&#x00A0;
+<br class="fancyvrb" /><a 
+ id="x21-195026r13"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;...<br class="fancyvrb" /><a 
+ id="x21-195028r14"></a>&#x00A0;&#x00A0;<br class="fancyvrb" /><a 
+ id="x21-195030r15"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;astIntraReg(&#x00A0;&#x0022;SqrTran&#x0022;,&#x00A0;2,&#x00A0;2,&#x00A0;SqrTran,&#x00A0;0,<br class="fancyvrb" /><a 
+ id="x21-195032r16"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;purpose,&#x00A0;author,&#x00A0;contact&#x00A0;);<br class="fancyvrb" /><a 
+ id="x21-195034r17"></a>&#x00A0;&#x00A0;}</div>
+<!--l. 10293--><p class="noindent" >You can then simply invoke this function wherever necessary. It is, in fact, particularly important to
+register all relevant transformation functions in this way before you attempt to read an <a 
+href="sun211ss464.html#x491-6830000">Object</a> that
+might be (or contain) an <a 
+href="sun211ss456.html#x483-6750000">IntraMap</a> (&#x00A7;<a 
+href="#x21-19400011">20.11<!--tex4ht:ref: ss:readingandwritingintramaps --></a>). This is because you may not know in advance which of
+these transformation functions the IntraMap will use, so they must all be available in order to avoid an
+error.
+                                                                                       
+
+                                                                                       
+                                                                                       
+
+                                                                                       
+<div class="footnotes"><!--l. 10167--><p class="noindent" ><span class="footnote-mark"><a 
+href="#fn33x0-bk" id="fn33x0"><sup class="textsuperscript">33</sup></a></span>Remember that &#x201C;ptr_in&#x201D; identifies the original &#x201C;output&#x201D; coordinates when applying the inverse transformation and
+&#x201C;ptr_out&#x201D; identifies the original &#x201C;input&#x201D; coordinates.                                               </div> <div class="crosslinks">
+<div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211se19.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World
+Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se21.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 10302--><p class="noindent" ><a 
+ id="tailsun211se20.html"></a> 
+</body> 
+</html>

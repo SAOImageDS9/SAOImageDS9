@@ -1,0 +1,45 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Grf </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss294.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss296.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 36964--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x321-5130000"></a> Grf </h3>  <p class="subtitle"> Use Grf functions registered through astGrfSet?  </p> </h3> </header><a 
+ id="Q1-321-1119"></a> <a 
+ id="Q1-321-1120"></a> <a name="xref_Grf"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+attribute selects the functions which are used to draw graphics by the <a 
+href="sun211ss467.html#x494-6860000">Plot</a>
+class. If it is zero, then the functions in the graphics interface selected at
+link-time are used (see the <a 
+href="sun211ss501.html#x529-7210000">ast_link</a> script). Otherwise, functions registered using
+<a 
+href="sun211ss82.html#x107-2990000">astGrfSet</a> are used. In this case, if a function is needed which has not been
+registered, then the function in the graphics interface selected at link-time is
+used.
+<!--l. 36964--><p class="noindent" >The default is to use the graphics interface  </div> <dl class="sst">Type: </dl><dd class="sst"> Integer (boolean).  </dd>
+<h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Plot  </h5><div class="sstsub"> All Plots have this attribute.  </div> <h5 class="ssth5"> <a 
+href="sun211ss468.html#x495-6870000">Plot3D</a>  </h5><div class="sstsub"> The Plot3D class
+ignores this attributes, assuming a value of zero.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 36964--><p class="noindent" >The value of this attribute is not saved when the Plot is written out through a <a 
+href="sun211ss441.html#x468-6600000">Channel</a>
+to an external data store. On re-loading such a Plot using <a 
+href="sun211ss160.html#x185-3770000">astRead</a>, the attribute will
+be cleared, resulting in the graphics interface selected at link-time being used.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss294.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss296.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss295.html"></a> </div> 
+</body> 
+</html>

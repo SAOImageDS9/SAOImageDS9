@@ -1,0 +1,91 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> StdOfRest </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss408.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss410.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 41584--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x435-6270000"></a> StdOfRest </h3>  <p class="subtitle"> Standard of rest  </p> </h3> </header><a 
+ id="Q1-435-1461"></a> <a 
+ id="Q1-435-1462"></a> <a name="xref_StdOfRest"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute identifies the
+standard of rest to which the spectral axis values of a <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a> refer, and may take
+any of the values listed in the <code>&#x0022;</code> Standards of Rest<code>&#x0022;</code> section (below).
+<!--l. 41584--><p class="noindent" >The default StdOfRest value is <code>&#x0022;</code> Helio<code>&#x0022;</code> .  </div> <dl class="sst">Type: </dl><dd class="sst"> String.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> SpecFrame
+</h5><div class="sstsub"> All SpecFrames have this attribute.  </div>  </div> <h4 class="ssth4"> Standards of Rest  </h4><div class="sstvalues"> The SpecFrame class
+supports the following StdOfRest values (all are case-insensitive):
+<ul class="sstitemlist">
+<li >
+<!--l. 41584--><p class="noindent" ><code>&#x0022;</code> Topocentric<code>&#x0022;</code> , <code>&#x0022;</code> Topocent<code>&#x0022;</code> or <code>&#x0022;</code> Topo<code>&#x0022;</code> : The observers rest-frame (assumed to
+be on the surface of the earth). Spectra recorded in this standard of rest
+suffer a Doppler shift which varies over the course of a day because of the
+rotation of the observer around the axis of the earth. This standard of rest
+must be qualified using the <a 
+href="sun211ss366.html#x392-5840000">ObsLat</a>, <a 
+href="sun211ss367.html#x393-5850000">ObsLon</a>, <a 
+href="sun211ss365.html#x391-5830000">ObsAlt</a>, <a 
+href="sun211ss285.html#x311-5030000">Epoch</a>, <a 
+href="sun211ss379.html#x405-5970000">RefRA</a> and <a 
+href="sun211ss378.html#x404-5960000">RefDec</a>
+attributes.
+<li >
+<!--l. 41584--><p class="noindent" ><code>&#x0022;</code> Geocentric<code>&#x0022;</code> , <code>&#x0022;</code> Geocentr<code>&#x0022;</code> or <code>&#x0022;</code> Geo<code>&#x0022;</code> : The rest-frame of the earth centre. Spectra
+recorded in this standard of rest suffer a Doppler shift which varies over the course
+of a year because of the rotation of the earth around the Sun. This standard of rest
+must be qualified using the Epoch, RefRA and RefDec attributes.
+<li >
+<!--l. 41584--><p class="noindent" ><code>&#x0022;</code> Barycentric<code>&#x0022;</code> , <code>&#x0022;</code> Barycent<code>&#x0022;</code> or <code>&#x0022;</code> Bary<code>&#x0022;</code> : The rest-frame of the solar-system
+barycentre. Spectra recorded in this standard of rest suffer a Doppler shift which
+depends both on the velocity of the Sun through the Local Standard of Rest, and on the
+movement of the planets through the solar system. This standard of rest must be
+qualified using the Epoch, RefRA and RefDec attributes.
+<li >
+<!--l. 41584--><p class="noindent" ><code>&#x0022;</code> Heliocentric<code>&#x0022;</code> , <code>&#x0022;</code> Heliocen<code>&#x0022;</code> or <code>&#x0022;</code> Helio<code>&#x0022;</code> : The rest-frame of the Sun. Spectra recorded
+in this standard of rest suffer a Doppler shift which depends on the velocity of the
+Sun through the Local Standard of Rest. This standard of rest must be qualified using
+the RefRA and RefDec attributes.
+<li >
+<!--l. 41584--><p class="noindent" ><code>&#x0022;</code> LSRK<code>&#x0022;</code> , <code>&#x0022;</code> LSR<code>&#x0022;</code> : The rest-frame of the kinematical Local Standard of Rest. Spectra
+                                                                                       
+
+                                                                                       
+recorded in this standard of rest suffer a Doppler shift which depends on the velocity
+of the kinematical Local Standard of Rest through the galaxy. This standard of rest
+must be qualified using the RefRA and RefDec attributes.
+<li >
+<!--l. 41584--><p class="noindent" ><code>&#x0022;</code> LSRD<code>&#x0022;</code> : The rest-frame of the dynamical Local Standard of Rest. Spectra recorded in
+this standard of rest suffer a Doppler shift which depends on the velocity of the
+dynamical Local Standard of Rest through the galaxy. This standard of rest must be
+qualified using the RefRA and RefDec attributes.
+<li >
+<!--l. 41584--><p class="noindent" ><code>&#x0022;</code> Galactic<code>&#x0022;</code> , <code>&#x0022;</code> Galactoc<code>&#x0022;</code> or <code>&#x0022;</code> Gal<code>&#x0022;</code> : The rest-frame of the galactic centre. Spectra
+recorded in this standard of rest suffer a Doppler shift which depends on the velocity
+of the galactic centre through the local group. This standard of rest must be qualified
+using the RefRA and RefDec attributes.
+<li >
+<!--l. 41584--><p class="noindent" ><code>&#x0022;</code> Local_group<code>&#x0022;</code> , <code>&#x0022;</code> Localgrp<code>&#x0022;</code> or <code>&#x0022;</code> LG<code>&#x0022;</code> : The rest-frame of the local group. This
+standard of rest must be qualified using the RefRA and RefDec attributes.
+<li >
+<!--l. 41584--><p class="noindent" ><code>&#x0022;</code> Source<code>&#x0022;</code> , or <code>&#x0022;</code> src<code>&#x0022;</code> : The rest-frame of the source. This standard of rest must be
+qualified using the RefRA, RefDec and <a 
+href="sun211ss402.html#x428-6200000">SourceVel</a> attributes.
+</li>
+</ul>
+<!--l. 41584--><p class="noindent" >Where more than one alternative <a 
+href="sun211ss413.html#x439-6310000">System</a> value is shown above, the first of these will be
+returned when an enquiry is made.  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss408.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss410.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss409.html"></a> </div> 
+</body> 
+</html>

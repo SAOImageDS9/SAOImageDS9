@@ -1,0 +1,49 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Interval </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss454.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss456.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 44739--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x482-6740000"></a> Interval </h3>  <p class="subtitle"> A region representing an interval on one or more axes of a Frame  </p> </h3> </header><a 
+ id="Q1-482-1600"></a> <a 
+ id="Q1-482-1601"></a> <a name="xref_Interval"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> The Interval class implements a <a 
+href="sun211ss474.html#x501-6930000">Region</a> which represents upper and/or
+                                                                                       
+
+                                                                                       
+lower limits on one or more axes of a <a 
+href="sun211ss452.html#x479-6710000">Frame</a>. For a point to be within the region
+represented by the Interval, the point must satisfy all the restrictions placed on all
+the axes. The point is outside the region if it fails to satisfy any one of the
+restrictions. Each axis may have either an upper limit, a lower limit, both or neither.
+If both limits are supplied but are in reverse order (so that the lower limit is
+greater than the upper limit), then the interval is an excluded interval, rather than
+an included interval.
+<!--l. 44739--><p class="noindent" >Note, The Interval class makes no allowances for cyclic nature of some coordinate
+systems (such as <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> coordinates). A <a 
+href="sun211ss440.html#x467-6590000">Box</a> should usually be used in these cases
+since this requires the user to think about suitable upper and lower limits,  </div>
+<h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> <a 
+href="sun211ss91.html#x116-3080000">astInterval</a>  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues"> The Interval class inherits from the
+Region class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> The Interval class does not define any new attributes
+beyond those which are applicable to all Regions.  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> The Interval class
+does not define any new functions beyond those which are applicable to all Regions.
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss454.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss456.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss455.html"></a> </div> 
+</body> 
+</html>

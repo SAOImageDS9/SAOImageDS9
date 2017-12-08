@@ -1,0 +1,58 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> LabelUnits(axis) </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss324.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss326.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+                                                                                       
+
+                                                                                       
+<!--l. 38074--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x351-5430000"></a> LabelUnits(axis) </h3>  <p class="subtitle"> Use axis unit descriptions in a Plot?  </p> </h3> </header><a 
+ id="Q1-351-1209"></a> <a 
+ id="Q1-351-1210"></a> <a name="xref_LabelUnits(axis)"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+attribute controls the appearance of an annotated coordinate grid (drawn with the
+<a 
+href="sun211ss83.html#x108-3000000">astGrid</a> function) by determining whether the descriptive labels drawn for each axis of
+a <a 
+href="sun211ss467.html#x494-6860000">Plot</a> should include a description of the units being used on the axis. It takes a
+separate value for each physical axis of a Plot so that, for instance, the setting <code>&#x0022;</code>
+LabelUnits(2)=1<code>&#x0022;</code> specifies that a unit description should be included in the label for
+the second axis.
+<!--l. 38074--><p class="noindent" >If the LabelUnits value of a Plot axis is non-zero, a unit description will be included
+in the descriptive label for that axis, otherwise it will be omitted. The default
+behaviour is to include a unit description unless the current <a 
+href="sun211ss452.html#x479-6710000">Frame</a> of the Plot is a
+<a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> representing equatorial, ecliptic, galactic or supergalactic coordinates, in
+which case it is omitted.  </div> <dl class="sst">Type: </dl><dd class="sst"> Integer (boolean).  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Plot  </h5><div class="sstsub"> All
+Plots have this attribute.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 38074--><p class="noindent" >The text used for the unit description is obtained from the Plot<code>&#x2019;</code> s <a 
+href="sun211ss427.html#x453-6450000">Unit(axis)</a>
+attribute.
+<li >
+<!--l. 38074--><p class="noindent" >If no axis is specified, (e.g. <code>&#x0022;</code> LabelUnits<code>&#x0022;</code> instead of <code>&#x0022;</code> LabelUnits(2)<code>&#x0022;</code> ),
+then a <code>&#x0022;</code> set<code>&#x0022;</code> or <code>&#x0022;</code> clear<code>&#x0022;</code> operation will affect the attribute value of all the
+Plot axes, while a <code>&#x0022;</code> get<code>&#x0022;</code> or <code>&#x0022;</code> test<code>&#x0022;</code> operation will use just the LabelUnits(1)
+value.
+<li >
+<!--l. 38074--><p class="noindent" >If the current Frame of the Plot is not a SkyFrame, but includes axes which were
+extracted from a SkyFrame, then the default behaviour is to include a unit
+description only for those axes which were not extracted from a SkyFrame.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss324.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss326.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss325.html"></a> </div> 
+</body> 
+</html>

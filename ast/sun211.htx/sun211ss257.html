@@ -1,0 +1,46 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> CarLin </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss256.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss258.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 34492--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x283-4750000"></a> CarLin </h3>  <p class="subtitle"> Ignore spherical rotations on CAR projections?  </p> </h3> </header><a 
+ id="Q1-283-1005"></a> <a 
+ id="Q1-283-1006"></a> <a name="xref_CarLin"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+attribute is a boolean value which specifies how FITS <code>&#x0022;</code> CAR<code>&#x0022;</code> (plate carree, or
+<code>&#x0022;</code> Cartesian<code>&#x0022;</code> ) projections should be treated when reading a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> from a
+foreign encoded FITS header. If zero (the default), it is assumed that the CAR
+projection conforms to the conventions described in the FITS world coordinate system
+(FITS-WCS) paper II <code>&#x0022;</code> Representation of Celestial Coordinates in FITS<code>&#x0022;</code> by M.
+Calabretta &#x0026; E.W. Greisen. If CarLin is non-zero, then these conventions are
+ignored, and it is assumed that the mapping from pixel coordinates to celestial
+coordinates is a simple linear transformation (hence the attribute name <code>&#x0022;</code> CarLin<code>&#x0022;</code> ).
+This is appropriate for some older FITS data which claims to have a <code>&#x0022;</code> CAR<code>&#x0022;</code>
+projection, but which in fact do not conform to the conventions of the FITS-WCS
+paper.
+<!--l. 34492--><p class="noindent" >The FITS-WCS paper specifies that headers which include a CAR projection represent a
+linear mapping from pixel coordinates to <code>&#x0022;</code> native spherical coordinates<code>&#x0022;</code> , NOT
+celestial coordinates. An extra mapping is then required from native spherical to
+celestial. This mapping is a 3D rotation and so the overall <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> from pixel to
+celestial coordinates is NOT linear. See the FITS-WCS papers for further details.  </div>
+<dl class="sst">Type: </dl><dd class="sst"> Integer (boolean).  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>  </h5><div class="sstsub"> All FitsChans have this
+attribute.  </div>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss256.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss258.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss257.html"></a> </div> 
+</body> 
+</html>

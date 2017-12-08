@@ -1,0 +1,49 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> NatLat </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss344.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss346.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 38926--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x371-5630000"></a> NatLat </h3>  <p class="subtitle"> Native latitude of the reference point of a FITS-WCS projection  </p> </h3> </header><a 
+ id="Q1-371-1269"></a> <a 
+ id="Q1-371-1270"></a> <a name="xref_NatLat"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute gives the latitude of the reference point of the FITS-WCS
+projection implemented by a <a 
+href="sun211ss497.html#x524-7160000">WcsMap</a>. The value is in radians in the <code>&#x0022;</code> native spherical<code>&#x0022;</code>
+coordinate system. This value is fixed for most projections, for instance it is
+PI/2 (90 degrees) for all zenithal projections. For some projections (e.g. the
+conics) the value is not fixed, but is specified by parameter one on the latitude
+axis.
+<!--l. 38926--><p class="noindent" >FITS-WCS paper II introduces the concept of a <code>&#x0022;</code> fiducial point<code>&#x0022;</code> which is logical
+distinct from the projection reference point. It is easy to confuse the use of these
+two points. The fiducial point is the point which has celestial coordinates given by
+the CRVAL FITS keywords. The native spherical coordinates for this point default to the
+                                                                                       
+
+                                                                                       
+values of the NatLat and <a 
+href="sun211ss346.html#x372-5640000">NatLon</a>, but these defaults mey be over-ridden by values stored
+in the PVi_j keywords. Put another way, the CRVAL keywords will by default give the
+celestial coordinates of the projection reference point, but may refer to some other
+point if alternative native longitude and latitude values are provided through the
+PVi_j keywords.
+<!--l. 38926--><p class="noindent" >The NatLat attribute is read-only.  </div> <dl class="sst">Type: </dl><dd class="sst"> Floating point, read-only.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues">
+<h5 class="ssth5"> WcsMap  </h5><div class="sstsub"> All WcsMaps have this attribute.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 38926--><p class="noindent" >A default value of AST__BAD is used if no latitude value is available.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss344.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss346.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss345.html"></a> </div> 
+</body> 
+</html>

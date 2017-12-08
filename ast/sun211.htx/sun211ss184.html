@@ -1,0 +1,41 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astSetStatus </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss183.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss185.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 28257--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x209-4010000"></a> astSetStatus </h3>  <p class="subtitle"> Set the AST error status to an explicit value  </p> </h3> </header><a 
+ id="Q1-209-785"></a> <a 
+ id="Q1-209-786"></a> <a name="xref_astSetStatus"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+This function sets the AST error status to the value supplied. It does not cause any
+error message to be produced and should not be used as part of normal error reporting.
+Its purpose is simply to communicate to AST that an error has occurred in some other
+item of software.
+<!--l. 28257--><p class="noindent" >For example, a source or sink function supplied as an argument to <a 
+href="sun211ss17.html#x42-2340000">astChannel</a> or
+<a 
+href="sun211ss53.html#x78-2700000">astFitsChan</a> might use this to signal that an input/output error has occurred. AST could
+then respond by terminating the current read or write operation.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void
+astSetStatus( int status_value )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> status_value  </h5><div class="sstsub"> The new error status
+value to be set.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 28257--><p class="noindent" >If the AST error status is set to an error value, most AST functions will not execute
+and will simply return without action. To clear the error status and restore normal
+behaviour, use <a 
+href="sun211ss22.html#x47-2390000">astClearStatus</a>.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss183.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss185.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss184.html"></a> </div> 
+</body> 
+</html>

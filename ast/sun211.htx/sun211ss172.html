@@ -1,0 +1,795 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astResample&#x003C;X&#x003E; </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss171.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss173.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 27320--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x197-3890000"></a> astResample<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+</h3>  <p class="subtitle"> Resample a region of a data grid  </p> </h3> </header><a 
+ id="Q1-197-749"></a> <a 
+ id="Q1-197-750"></a> <a name="xref_astResample$<$X$>$"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This is a set of functions for
+resampling gridded data (e.g. an image) under the control of a geometrical
+transformation, which is specified by a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>. The functions operate on a
+pair of data grids (input and output), each of which may have any number of
+dimensions. Resampling may be restricted to a specified region of the output grid. An
+associated grid of error estimates associated with the input data may also be
+supplied (in the form of variance values), so as to produce error estimates
+for the resampled output data. Propagation of missing data (bad pixels) is
+supported.
+<!--l. 27320--><p class="noindent" >You should use a resampling function which matches the
+numerical type of the data you are processing by replacing
+<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in the generic function name astResample<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+by an appropriate 1- or 2-character type code. For example, if you are resampling
+data with type <code>&#x0022;</code> float<code>&#x0022;</code> , you should use the function astResampleF (see the <code>&#x0022;</code>
+Data Type Codes<code>&#x0022;</code> section below for the codes appropriate to other numerical
+types).
+<!--l. 27320--><p class="noindent" >Resampling of the grid of input data is performed by transforming the coordinates of
+the centre of each output grid element (or pixel) into the coordinate system of the
+input grid. Since the resulting coordinates will not, in general, coincide with the
+centre of an input pixel, sub-pixel interpolation is performed between the neighbouring
+input pixels. This produces a resampled value which is then assigned to the output
+pixel. A choice of sub-pixel interpolation schemes is provided, but you may also
+implement your own.
+<!--l. 27320--><p class="noindent" >This algorithm samples the input data value, it does not integrate it. Thus total data value
+in the input image will not, in general, be conserved. However, an option is provided (see
+the <code>&#x0022;</code> Control Flags<code>&#x0022;</code> section below) which can produce approximate flux conservation by
+scaling the output values using the ratio of the output pixel size to the input pixel
+size. However, if accurate flux conservation is important to you, consder using the
+<a 
+href="sun211ss162.html#x187-3790000">astRebin<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>
+or <a 
+href="sun211ss163.html#x188-3800000">astRebinSeq<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>
+family of functions instead.
+<!--l. 27320--><p class="noindent" >Output pixel coordinates are transformed into the coordinate system of the
+input grid using the inverse transformation of the Mapping which is supplied.
+This means that geometrical features in the input data are subjected to the
+Mapping<code>&#x2019;</code> s forward transformation as they are transferred from the input to the
+output grid (although the Mapping<code>&#x2019;</code> s forward transformation is not explicitly
+used).
+<!--l. 27320--><p class="noindent" >In practice, transforming the coordinates of every pixel of a large data grid can be
+time-consuming, especially if the Mapping involves complicated functions, such as sky
+projections. To improve performance, it is therefore possible to approximate non-linear
+                                                                                       
+
+                                                                                       
+Mappings by a set of linear transformations which are applied piece-wise to separate
+sub-regions of the data. This approximation process is applied automatically by an
+adaptive algorithm, under control of an accuracy criterion which expresses the maximum
+tolerable geometrical distortion which may be introduced, as a fraction of a
+pixel.
+<!--l. 27320--><p class="noindent" >This algorithm first attempts to approximate the Mapping with a linear transformation
+applied over the whole region of the output grid which is being used. If this proves to
+be insufficiently accurate, the output region is sub-divided into two along its
+largest dimension and the process is repeated within each of the resulting
+sub-regions. This process of sub-division continues until a sufficiently good linear
+approximation is found, or the region to which it is being applied becomes too
+small (in which case the original Mapping is used directly).  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> int
+astResample<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>(
+AstMapping <!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+int ndim_in, const int lbnd_in[], const int ubnd_in[], const
+<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in[], const <!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in_var[], int interp, void (<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+finterp)( void ), const double params[], int flags, double tol, int maxpix,
+<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+badval, int ndim_out, const int lbnd_out[], const int ubnd_out[], const int lbnd[], const int ubnd[],
+<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+out[], <!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+out_var[] );  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to a Mapping, whose inverse transformation
+will be used to transform the coordinates of pixels in the output grid into
+the coordinate system of the input grid. This yields the positions which are
+used to obtain resampled values by sub-pixel interpolation within the input
+grid.
+<!--l. 27320--><p class="noindent" >The number of input coordinates used by this Mapping (as given by its <a 
+href="sun211ss353.html#x379-5710000">Nin</a> attribute)
+should match the number of input grid dimensions given by the value of <code>&#x0022;</code> ndim_in<code>&#x0022;</code>
+below. Similarly, the number of output coordinates (<a 
+href="sun211ss359.html#x385-5770000">Nout</a> attribute) should match the
+number of output grid dimensions given by <code>&#x0022;</code> ndim_out<code>&#x0022;</code> .  </div> <h5 class="ssth5"> ndim_in  </h5><div class="sstsub"> The number of
+dimensions in the input grid. This should be at least one.  </div> <h5 class="ssth5"> lbnd_in  </h5><div class="sstsub"> Pointer to
+an array of integers, with <code>&#x0022;</code> ndim_in<code>&#x0022;</code> elements, containing the coordinates
+of the centre of the first pixel in the input grid along each dimension.  </div> <h5 class="ssth5">
+ubnd_in  </h5><div class="sstsub"> Pointer to an array of integers, with <code>&#x0022;</code> ndim_in<code>&#x0022;</code> elements, containing
+the coordinates of the centre of the last pixel in the input grid along each
+dimension.
+<!--l. 27320--><p class="noindent" >Note that <code>&#x0022;</code> lbnd_in<code>&#x0022;</code> and <code>&#x0022;</code> ubnd_in<code>&#x0022;</code> together define the shape and size of
+the input grid, its extent along a particular (j<code>&#x2019;</code> th) dimension being
+ubnd_in[j]-lbnd_in[j]<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>1
+(assuming the index <code>&#x0022;</code> j<code>&#x0022;</code> to be zero-based). They also define the input grid<code>&#x2019;</code> s
+coordinate system, each pixel having unit extent along each dimension with integral
+coordinate values at its centre.  </div> <h5 class="ssth5"> in  </h5><div class="sstsub"> Pointer to an array, with one element for each
+pixel in the input grid, containing the input data to be resampled. The numerical type
+of this array should match the 1- or 2-character type code appended to the function
+name (e.g. if you are using astResampleF, the type of each array element should be <code>&#x0022;</code>
+                                                                                       
+
+                                                                                       
+float<code>&#x0022;</code> ).
+<!--l. 27320--><p class="noindent" >The storage order of data within this array should be such that the index of the first
+grid dimension varies most rapidly and that of the final dimension least rapidly (i.e.
+Fortran array indexing is used).  </div> <h5 class="ssth5"> in_var  </h5><div class="sstsub"> An optional pointer to a second array with
+the same size and type as the <code>&#x0022;</code> in<code>&#x0022;</code> array. If given, this should contain a set of
+non-negative values which represent estimates of the statistical variance associated
+with each element of the <code>&#x0022;</code> in<code>&#x0022;</code> array. If this array is supplied (together with the
+corresponding <code>&#x0022;</code> out_var<code>&#x0022;</code> array), then estimates of the variance of the resampled output
+data will be calculated.
+<!--l. 27320--><p class="noindent" >If no input variance estimates are being provided, a NULL pointer should be
+given.  </div> <h5 class="ssth5"> interp  </h5><div class="sstsub"> This parameter specifies the scheme to be used for sub-pixel
+interpolation within the input grid. It may be used to select from a set of
+pre-defined schemes by supplying one of the values described in the <code>&#x0022;</code> Sub-Pixel
+Interpolation Schemes<code>&#x0022;</code> section below. If a value of zero is supplied, then the
+default linear interpolation scheme is used (equivalent to supplying the value
+AST__LINEAR).
+<!--l. 27320--><p class="noindent" >Alternatively, you may supply a value which indicates that you will provide your own
+function to perform sub-pixel interpolation by means of the <code>&#x0022;</code> finterp <code>&#x0022;</code> parameter.
+Again, see the <code>&#x0022;</code> Sub-Pixel Interpolation Schemes<code>&#x0022;</code> section below for details.  </div> <h5 class="ssth5"> finterp
+</h5><div class="sstsub"> If the value given for the <code>&#x0022;</code> interp<code>&#x0022;</code> parameter indicates that you will provide your
+own function for sub-pixel interpolation, then a pointer to that function should be
+given here. For details of the interface which the function should have (several are
+possible, depending on the value of <code>&#x0022;</code> interp<code>&#x0022;</code> ), see the <code>&#x0022;</code> Sub-Pixel Interpolation
+Schemes<code>&#x0022;</code> section below.
+<!--l. 27320--><p class="noindent" >If the <code>&#x0022;</code> interp<code>&#x0022;</code> parameter has any other value, corresponding to one of the pre-defined
+interpolation schemes, then this function will not be used and you may supply a NULL
+pointer.  </div> <h5 class="ssth5"> params  </h5><div class="sstsub"> An optional pointer to an array of double which should contain any
+additional parameter values required by the sub-pixel interpolation scheme. If such
+parameters are required, this will be noted in the <code>&#x0022;</code> Sub-Pixel Interpolation Schemes<code>&#x0022;</code>
+section below (you may also use this array to pass values to your own interpolation
+function).
+<!--l. 27320--><p class="noindent" >If no additional parameters are required, this array is not used and a NULL pointer
+may be given.  </div> <h5 class="ssth5"> flags  </h5><div class="sstsub"> The bitwise OR of a set of flag values which may be
+used to provide additional control over the resampling operation. See the <code>&#x0022;</code>
+Control Flags<code>&#x0022;</code> section below for a description of the options available. If
+no flag values are to be set, a value of zero should be given.  </div> <h5 class="ssth5"> tol  </h5><div class="sstsub"> The
+maximum tolerable geometrical distortion which may be introduced as a result of
+approximating non-linear Mappings by a set of piece-wise linear transformations. This
+should be expressed as a displacement in pixels in the input grid<code>&#x2019;</code> s coordinate
+system.
+<!--l. 27320--><p class="noindent" >If piece-wise linear approximation is not required, a value of zero may be given. This
+will ensure that the Mapping is used without any approximation, but may increase
+execution time.  </div> <h5 class="ssth5"> maxpix  </h5><div class="sstsub"> A value which specifies an initial scale size (in pixels)
+for the adaptive algorithm which approximates non-linear Mappings with piece-wise
+linear transformations. Normally, this should be a large value (larger than any
+dimension of the region of the output grid being used). In this case, a first attempt
+                                                                                       
+
+                                                                                       
+to approximate the Mapping by a linear transformation will be made over the entire
+output region.
+<!--l. 27320--><p class="noindent" >If a smaller value is used, the output region will first be divided into sub-regions
+whose size does not exceed <code>&#x0022;</code> maxpix<code>&#x0022;</code> pixels in any dimension. Only at this point will
+attempts at approximation commence.
+<!--l. 27320--><p class="noindent" >This value may occasionally be useful in preventing false convergence of the adaptive
+algorithm in cases where the Mapping appears approximately linear on large scales, but
+has irregularities (e.g. holes) on smaller scales. A value of, say, 50 to 100 pixels
+can also be employed as a safeguard in general-purpose software, since the effect on
+performance is minimal.
+<!--l. 27320--><p class="noindent" >If too small a value is given, it will have the effect of inhibiting linear
+approximation altogether (equivalent to setting <code>&#x0022;</code> tol<code>&#x0022;</code> to zero). Although this
+may degrade performance, accurate results will still be obtained.  </div> <h5 class="ssth5"> badval  </h5><div class="sstsub">
+This argument should have the same type as the elements of the <code>&#x0022;</code> in<code>&#x0022;</code> array. It
+specifies the value used to flag missing data (bad pixels) in the input and output
+arrays.
+<!--l. 27320--><p class="noindent" >If the AST__USEBAD flag is set via the <code>&#x0022;</code> flags<code>&#x0022;</code> parameter, then this value is used to
+test for bad pixels in the <code>&#x0022;</code> in<code>&#x0022;</code> (and <code>&#x0022;</code> in_var<code>&#x0022;</code> ) array(s).
+<!--l. 27320--><p class="noindent" >Unless the AST__NOBAD flag is set via the <code>&#x0022;</code> flags<code>&#x0022;</code> parameter, this value is also used
+to flag any output elements in the <code>&#x0022;</code> out<code>&#x0022;</code> (and <code>&#x0022;</code> out_var<code>&#x0022;</code> ) array(s) for which
+resampled values could not be obtained (see the <code>&#x0022;</code> Propagation of Missing Data<code>&#x0022;</code>
+section below for details of the circumstances under which this may occur). The
+astResample<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+function return value indicates whether any such values have been produced. If the
+AST__NOBAD flag is set. then output array elements for which no resampled value could
+be obtained are left set to the value they had on entry to this function.  </div> <h5 class="ssth5"> ndim_out  </h5><div class="sstsub">
+The number of dimensions in the output grid. This should be at least one. It need not
+necessarily be equal to the number of dimensions in the input grid.  </div> <h5 class="ssth5"> lbnd_out  </h5><div class="sstsub">
+Pointer to an array of integers, with <code>&#x0022;</code> ndim_out<code>&#x0022;</code> elements, containing the coordinates
+of the centre of the first pixel in the output grid along each dimension.  </div> <h5 class="ssth5">
+ubnd_out  </h5><div class="sstsub"> Pointer to an array of integers, with <code>&#x0022;</code> ndim_out<code>&#x0022;</code> elements, containing
+the coordinates of the centre of the last pixel in the output grid along each
+dimension.
+<!--l. 27320--><p class="noindent" >Note that <code>&#x0022;</code> lbnd_out<code>&#x0022;</code> and <code>&#x0022;</code> ubnd_out<code>&#x0022;</code> together define the shape, size and coordinate
+system of the output grid in the same way as <code>&#x0022;</code> lbnd_in<code>&#x0022;</code> and <code>&#x0022;</code> ubnd_in<code>&#x0022;</code> define the
+shape, size and coordinate system of the input grid.  </div> <h5 class="ssth5"> lbnd  </h5><div class="sstsub"> Pointer to an array of
+integers, with <code>&#x0022;</code> ndim_out<code>&#x0022;</code> elements, containing the coordinates of the first pixel in
+the region of the output grid for which a resampled value is to be calculated.  </div> <h5 class="ssth5"> ubnd
+</h5><div class="sstsub"> Pointer to an array of integers, with <code>&#x0022;</code> ndim_out<code>&#x0022;</code> elements, containing the coordinates
+of the last pixel in the region of the output grid for which a resampled value is to be
+calculated.
+<!--l. 27320--><p class="noindent" >Note that <code>&#x0022;</code> lbnd<code>&#x0022;</code> and <code>&#x0022;</code> ubnd<code>&#x0022;</code> together define the shape and position of a
+(hyper-)rectangular region of the output grid for which resampled values should be
+produced. This region should lie wholly within the extent of the output grid (as
+defined by the <code>&#x0022;</code> lbnd_out<code>&#x0022;</code> and <code>&#x0022;</code> ubnd_out<code>&#x0022;</code> arrays). Regions of the output grid
+                                                                                       
+
+                                                                                       
+lying outside this region will not be modified.  </div> <h5 class="ssth5"> out  </h5><div class="sstsub"> Pointer to an array,
+with one element for each pixel in the output grid, into which the resampled
+data values will be returned. The numerical type of this array should match
+that of the <code>&#x0022;</code> in<code>&#x0022;</code> array, and the data storage order should be such that the
+index of the first grid dimension varies most rapidly and that of the final
+dimension least rapidly (i.e. Fortran array indexing is used).  </div> <h5 class="ssth5"> out_var  </h5><div class="sstsub"> An
+optional pointer to an array with the same type and size as the <code>&#x0022;</code> out<code>&#x0022;</code> array. If
+given, this array will be used to return variance estimates for the resampled
+data values. This array will only be used if the <code>&#x0022;</code> in_var<code>&#x0022;</code> array has also been
+supplied.
+<!--l. 27320--><p class="noindent" >The output variance values will be calculated on the assumption that errors on the
+input data values are statistically independent and that their variance estimates may
+simply be summed (with appropriate weighting factors) when several input pixels
+contribute to an output data value. If this assumption is not valid, then the output
+error estimates may be biased. In addition, note that the statistical errors on
+neighbouring output data values (as well as the estimates of those errors) may often be
+correlated, even if the above assumption about the input data is correct, because of
+the sub-pixel interpolation schemes employed.
+<!--l. 27320--><p class="noindent" >If no output variance estimates are required, a NULL pointer should be given.  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5">
+astResample<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>()
+</h5><div class="sstsub"> The number of output pixels for which no valid resampled value could be obtained.
+Thus, in the absence of any error, a returned value of zero indicates that all the
+required output pixels received valid resampled data values (and variances). See the <code>&#x0022;</code>
+badval<code>&#x0022;</code> and <code>&#x0022;</code> flags<code>&#x0022;</code> parameters.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 27320--><p class="noindent" >A value of zero will be returned if this function is invoked with the global
+error status set, or if it should fail for any reason.  </li></ul>  </div> <h4 class="ssth4"> Data Type
+Codes  </h4><div class="sstvalues"> To select the appropriate resampling function, you should replace
+<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in the generic function name astResample<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+with a 1- or 2-character data type code, so as to match the numerical type
+<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+of the data you are processing, as follows: <ul class="sstitemlist">
+<li >
+<!--l. 27320--><p class="noindent" >D: double
+<li >
+<!--l. 27320--><p class="noindent" >F: float
+<li >
+<!--l. 27320--><p class="noindent" >L: long int (may be 32 or 64 bit)
+<li >
+<!--l. 27320--><p class="noindent" >K: 64 bit int
+<li >
+<!--l. 27320--><p class="noindent" >UL: unsigned long int (may be 32 or 64 bit)
+<li >
+<!--l. 27320--><p class="noindent" >UK: unsigned 64 bit int
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 27320--><p class="noindent" >I: int
+<li >
+<!--l. 27320--><p class="noindent" >UI: unsigned int
+<li >
+<!--l. 27320--><p class="noindent" >S: short int
+<li >
+<!--l. 27320--><p class="noindent" >US: unsigned short int
+<li >
+<!--l. 27320--><p class="noindent" >B: byte (signed char)
+<li >
+<!--l. 27320--><p class="noindent" >UB: unsigned byte (unsigned char)
+</li>
+</ul>
+<!--l. 27320--><p class="noindent" >For example, astResampleD would be used to process <code>&#x0022;</code> double<code>&#x0022;</code> data, while astResampleS
+would be used to process <code>&#x0022;</code> short int<code>&#x0022;</code> data, etc.  </div> <h4 class="ssth4"> Sub-Pixel Interpolation Schemes  </h4><div class="sstvalues">
+There is no such thing as a perfect sub-pixel interpolation scheme and, in practice,
+all resampling will result in some degradation of gridded data. A range of schemes is
+therefore provided, from which you can choose the one which best suits your
+needs.
+<!--l. 27320--><p class="noindent" >In general, a balance must be struck between schemes which tend to degrade sharp
+features in the data by smoothing them, and those which attempt to preserve sharp
+features. The latter will often tend to introduce unwanted oscillations, typically
+visible as <code>&#x0022;</code> ringing<code>&#x0022;</code> around sharp features and edges, especially if the data are
+under-sampled (i.e. if the sharpest features are less than about two pixels across). In
+practice, a good interpolation scheme is likely to be a compromise and may exhibit some
+aspects of both these features.
+<!--l. 27320--><p class="noindent" >For under-sampled data, some interpolation schemes may appear to preserve data
+resolution because they transform single input pixels into single output pixels, rather
+than spreading their data between several output pixels. While this may look better
+cosmetically, it can result in a geometrical shift of sharp features in the data.
+You should beware of this if you plan to use such features (e.g.) for image
+alignment.
+<!--l. 27320--><p class="noindent" >The following are two easy-to-use sub-pixel interpolation schemes which are generally
+applicable. They are selected by supplying the appropriate value (defined in the <code>&#x0022;</code>
+ast.h<code>&#x0022;</code> header file) via the <code>&#x0022;</code> interp<code>&#x0022;</code> parameter. In these cases, the <code>&#x0022;</code> finterp<code>&#x0022;</code> and <code>&#x0022;</code>
+params<code>&#x0022;</code> parameters are not used:
+<ul class="sstitemlist">
+<li >
+<!--l. 27320--><p class="noindent" >AST__NEAREST: This is the simplest possible scheme, in which the value of the input
+pixel with the nearest centre to the interpolation point is used. This is very quick to
+execute and will preserve single-pixel features in the data, but may displace them by
+up to half their width along each dimension. It often gives a good cosmetic result, so
+                                                                                       
+
+                                                                                       
+is useful for quick-look processing, but is unsuitable if accurate geometrical
+transformation is required.
+<li >
+<!--l. 27320--><p class="noindent" >AST__LINEAR: This is the default scheme, which uses linear interpolation between the
+nearest neighbouring pixels in the input grid (there are two neighbours in one
+dimension, four neighbours in two dimensions, eight in three dimensions, etc.). It is
+superior to the nearest-pixel scheme (above) in not displacing features in the data,
+yet it still executes fairly rapidly. It is generally a safe choice if you do not have
+any particular reason to favour another scheme, since it cannot introduce oscillations.
+However, it does introduce some spatial smoothing which varies according to the
+distance of the interpolation point from the neighbouring pixels. This can degrade
+the shape of sharp features in the data in a position-dependent way. It may
+also show in the output variance grid (if used) as a pattern of stripes or
+fringes.
+</li>
+</ul>
+<!--l. 27320--><p class="noindent" >An alternative set of interpolation schemes is based on forming the interpolated value
+from the weighted sum of a set of surrounding pixel values (not necessarily just the
+nearest neighbours). This approach has its origins in the theory of digital filtering,
+in which interpolated values are obtained by conceptually passing the sampled data
+(represented by a grid of delta functions) through a linear filter which implements a
+convolution. Because the convolution kernel is continuous, the convolution
+yields a continuous function which may then be evaluated at fractional pixel
+positions. The (possibly multi-dimensional) kernel is usually regarded as <code>&#x0022;</code>
+separable<code>&#x0022;</code> and formed from the product of a set of identical 1-dimensional kernel
+functions, evaluated along each dimension. Different interpolation schemes are
+then distinguished by the choice of this 1-dimensional interpolation kernel.
+The number of surrounding pixels which contribute to the result may also be
+varied.
+<!--l. 27320--><p class="noindent" >From a practical standpoint, it is useful to divide the weighted sum of pixel values by
+the sum of the weights when determining the interpolated value. Strictly, this means
+that a true convolution is no longer being performed. However, the distinction is
+rarely important in practice because (for slightly subtle reasons) the sum of
+weights is always approximately constant for good interpolation kernels. The
+advantage of this technique, which is used here, is that it can easily accommodate
+missing data and tends to minimise unwanted oscillations at the edges of the data
+grid.
+<!--l. 27320--><p class="noindent" >In the following schemes, which are based on a 1-dimensional interpolation kernel, the
+first element of the <code>&#x0022;</code> params<code>&#x0022;</code> array should be used to specify how many pixels are
+to contribute to the interpolated result on either side of the interpolation
+point in each dimension (the nearest integer value is used). Execution time
+increases rapidly with this number. Typically, a value of 2 is appropriate and
+the minimum value used will be 1 (i.e. two pixels altogether, one on either
+side of the interpolation point). A value of zero or less may be given for <code>&#x0022;</code>
+params[0]<code>&#x0022;</code> to indicate that a suitable number of pixels should be calculated
+automatically.
+                                                                                       
+
+                                                                                       
+<!--l. 27320--><p class="noindent" >In each of these cases, the <code>&#x0022;</code> finterp<code>&#x0022;</code> parameter is not used:
+<ul class="sstitemlist">
+<li >
+<!--l. 27320--><p class="noindent" >AST__GAUSS: This scheme uses a kernel of the form
+exp(-k<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x),
+with k a positive constant. The full-width at half-maximum (FWHM) is given by <code>&#x0022;</code>
+params[1]<code>&#x0022;</code> to zero will select the number of contributing pixels so as to utilise the
+width of the kernel out to where the envelope declines to 1% of its maximum
+value). This kernel suppresses noise at the expense of smoothing the output
+array.
+<li >
+<!--l. 27320--><p class="noindent" >AST__SINC: This scheme uses a sinc(pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x)
+kernel, where x is the pixel offset from the interpolation point and sinc(z)=sin(z)/z.
+This sometimes features as an <code>&#x0022;</code> optimal<code>&#x0022;</code> interpolation kernel in books on image
+processing. Its supposed optimality depends on the assumption that the data are
+band-limited (i.e. have no spatial frequencies above a certain value) and are
+adequately sampled. In practice, astronomical data rarely meet these requirements. In
+addition, high spatial frequencies are often present due (e.g.) to image defects and
+cosmic ray events. Consequently, substantial ringing can be experienced with this
+kernel. The kernel also decays slowly with distance, so that many surrounding pixels
+are required, leading to poor performance. Abruptly truncating it, by using only a few
+neighbouring pixels, improves performance and may reduce ringing (if <code>&#x0022;</code> params[0]<code>&#x0022;</code> is
+set to zero, then only two pixels will be used on either side). However, a more gradual
+truncation, as implemented by other kernels, is generally to be preferred.
+This kernel is provided mainly so that you can convince yourself not to use
+it!
+<li >
+<!--l. 27320--><p class="noindent" >AST__SINCSINC: This scheme uses an improved kernel, of the form
+sinc(pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x).sinc(k<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x),
+with k a constant, out to the point where
+sinc(k<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x)
+goes to zero, and zero beyond. The second sinc() factor provides an <code>&#x0022;</code> envelope<code>&#x0022;</code> which gradually rolls
+off the normal sinc(pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x)
+kernel at large offsets. The width of this envelope is specified by giving the number
+of pixels offset at which it goes to zero by means of the <code>&#x0022;</code> params[1]<code>&#x0022;</code> value, which
+should be at least 1.0 (in addition, setting <code>&#x0022;</code> params[0]<code>&#x0022;</code> to zero will select the
+number of contributing pixels so as to utilise the full width of the kernel, out to
+where it reaches zero). The case given by <code>&#x0022;</code> params[0]=2, params[1]=2<code>&#x0022;</code> is typically a
+good choice and is sometimes known as the Lanczos kernel. This is a valuable
+general-purpose interpolation scheme, intermediate in its visual effect on
+images between the AST__NEAREST and AST__LINEAR schemes. Although the kernel is
+slightly oscillatory, ringing is adequately suppressed if the data are well
+sampled.
+<li >
+<!--l. 27320--><p class="noindent" >AST__SINCCOS: This scheme uses a kernel of the form
+sinc(pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x).cos(k<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x),
+with k a constant, out to the point where
+                                                                                       
+
+                                                                                       
+cos(k<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x)
+goes to zero, and zero beyond. As above, the cos() factor provides an envelope
+which gradually rolls off the sinc() kernel at large offsets. The width of this
+envelope is specified by giving the number of pixels offset at which it goes
+to zero by means of the <code>&#x0022;</code> params[1]<code>&#x0022;</code> value, which should be at least 1.0 (in
+addition, setting <code>&#x0022;</code> params[0]<code>&#x0022;</code> to zero will select the number of contributing
+pixels so as to utilise the full width of the kernel, out to where it reaches
+zero). This scheme gives similar results to the AST__SINCSINC scheme, which it
+resembles.
+<li >
+<!--l. 27320--><p class="noindent" >AST__SINCGAUSS: This scheme uses a kernel of the form
+sinc(pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x).exp(-k<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x),
+with k a positive constant. Here, the sinc() kernel is rolled off using a Gaussian
+envelope which is specified by giving its full-width at half-maximum (FWHM) by means of
+the <code>&#x0022;</code> params[1]<code>&#x0022;</code> value, which should be at least 0.1 (in addition, setting <code>&#x0022;</code> params[0]<code>&#x0022;</code>
+to zero will select the number of contributing pixels so as to utilise the width of the
+kernel out to where the envelope declines to 1% of its maximum value). On astronomical
+images and spectra, good results are often obtained by approximately matching the FWHM
+of the envelope function, given by <code>&#x0022;</code> params[1]<code>&#x0022;</code> , to the point spread function of
+the input data. However, there does not seem to be any theoretical reason for
+this.
+<li >
+<!--l. 27320--><p class="noindent" >AST__SOMB: This scheme uses a somb(pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x)
+kernel (a <code>&#x0022;</code> sombrero<code>&#x0022;</code> function), where x is the pixel offset from the interpolation point and
+somb(z)=2<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>J1(z)/z
+(J1 is a Bessel function of the first kind of order 1). It is similar to the AST__SINC
+kernel, and has the same parameter usage.
+<li >
+<!--l. 27320--><p class="noindent" >AST__SOMBCOS: This scheme uses a kernel of the form
+somb(pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x).cos(k<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x),
+with k a constant, out to the point where
+cos(k<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>pi<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x)
+goes to zero, and zero beyond. It is similar to the AST__SINCCOS kernel, and has the
+same parameter usage.
+</li>
+</ul>
+<!--l. 27320--><p class="noindent" >In addition, the following schemes are provided which are not based on a 1-dimensional
+kernel:
+<ul class="sstitemlist">
+<li >
+<!--l. 27320--><p class="noindent" >AST__BLOCKAVE: This scheme simply takes an average of all the pixels on the input grid
+in a cube centred on the interpolation point. The number of pixels in the cube is
+determined by the value of the first element of the <code>&#x0022;</code> params<code>&#x0022;</code> array, which gives the
+number of pixels in each dimension on either side of the central point. Hence a block
+of (2 <!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+params[0])<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><code><mstyle 
+class="text"><mtext  >^</mtext></mstyle></code></math>ndim_in
+                                                                                       
+
+                                                                                       
+pixels in the input grid will be examined to determine the value of the output pixel.
+If the variance is not being used (var_in or var_out = NULL) then all valid pixels in
+this cube will be averaged in to the result with equal weight. If variances are being
+used, then each input pixel will be weighted proportionally to the reciprocal
+of its variance; any pixel without a valid variance will be discarded. This
+scheme is suitable where the output grid is much coarser than the input grid;
+if the ratio of pixel sizes is R then a suitable value of params[0] may be
+R/2.
+</li>
+</ul>
+<!--l. 27320--><p class="noindent" >Finally, supplying the following values for <code>&#x0022;</code> interp<code>&#x0022;</code> allows you to implement your own
+sub-pixel interpolation scheme by means of your own function. You should supply a
+pointer to this function via the <code>&#x0022;</code> finterp<code>&#x0022;</code> parameter:
+<ul class="sstitemlist">
+<li >
+<!--l. 27320--><p class="noindent" >AST__UKERN1: In this scheme, you supply a function to evaluate your own 1-dimensional
+interpolation kernel, which is then used to perform sub-pixel interpolation (as
+described above). The function you supply should have the same interface as the
+fictitious <a 
+href="sun211ss227.html#x252-4440000">astUkern1</a> function (q.v.). In addition, a value should be given via <code>&#x0022;</code>
+params[0]<code>&#x0022;</code> to specify the number of neighbouring pixels which are to contribute to each
+interpolated value (in the same way as for the pre-defined interpolation schemes
+described above). Other elements of the <code>&#x0022;</code> params<code>&#x0022;</code> array are available to pass values to
+your interpolation function.
+<li >
+<!--l. 27320--><p class="noindent" >AST__UINTERP: This is a completely general scheme, in which your interpolation function has
+access to all of the input data. This allows you to implement any interpolation algorithm
+you choose, which could (for example) be non-linear, or adaptive. In this case, the
+astResample<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+functions play no role in the sub-pixel interpolation process and simply
+handle the geometrical transformation of coordinates and other housekeeping.
+The function you supply should have the same interface as the fictitious
+<a 
+href="sun211ss226.html#x251-4430000">astUinterp</a> function (q.v.). In this case, the <code>&#x0022;</code> params<code>&#x0022;</code> parameter is not used by
+astResample<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 27320--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>,
+but is available to pass values to your interpolation function.  </li></ul>  </div> <h4 class="ssth4"> Control Flags  </h4><div class="sstvalues">
+The following flags are defined in the <code>&#x0022;</code> ast.h<code>&#x0022;</code> header file and may be used to
+provide additional control over the resampling process. Having selected a set
+of flags, you should supply the bitwise OR of their values via the <code>&#x0022;</code> flags<code>&#x0022;</code>
+parameter:
+<ul class="sstitemlist">
+<li >
+<!--l. 27320--><p class="noindent" >AST__NOBAD: Indicates that any output array elements for which no resampled value could
+be obtained should be left set to the value they had on entry to this function. If
+this flag is not supplied, such output array elements are set to the value
+supplied for parameter <code>&#x0022;</code> badval<code>&#x0022;</code> . Note, this flag cannot be used in conjunction
+with the AST__CONSERVEFLUX flag (an error will be reported if both flags are
+specified).
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 27320--><p class="noindent" >AST__URESAMP1, 2, 3 &#x0026; 4: A set of four flags which are reserved for your own use. They
+may be used to pass private information to any sub-pixel interpolation function which
+you implement yourself. They are ignored by all the pre-defined interpolation
+schemes.
+<li >
+<!--l. 27320--><p class="noindent" >AST__USEBAD: Indicates that there may be bad pixels in the input array(s) which must be
+recognised by comparing with the value given for <code>&#x0022;</code> badval<code>&#x0022;</code> and propagated to the output
+array(s). If this flag is not set, all input values are treated literally and the <code>&#x0022;</code>
+badval<code>&#x0022;</code> value is only used for flagging output array values.
+<li >
+<!--l. 27320--><p class="noindent" >AST__CONSERVEFLUX: Indicates that the output pixel values should be scaled in such a
+way as to preserve (approximately) the total data value in a feature on the sky.
+Without this flag, each output pixel value represents an instantaneous sample of the
+input data values at the corresponding input position. This is appropriate if the input
+data represents the spatial density of some quantity (e.g. surface brightness
+in Janskys per square arc-second) because the output pixel values will have
+the same normalisation and units as the input pixel values. However, if the
+input data values represent flux (or some other physical quantity) per pixel,
+then the AST__CONSERVEFLUX flag could be used. This causes each output pixel
+value to be scaled by the ratio of the output pixel size to the input pixel
+size.
+</li>
+</ul>
+<!--l. 27320--><p class="noindent" >This flag can only be used if the Mapping is successfully approximated by one or more
+linear transformations. Thus an error will be reported if it used when the <code>&#x0022;</code> tol<code>&#x0022;</code>
+parameter is set to zero (which stops the use of linear approximations), or if the
+Mapping is too non-linear to be approximated by a piece-wise linear transformation. The
+ratio of output to input pixel size is evaluated once for each panel of the piece-wise
+linear approximation to the Mapping, and is assumed to be constant for all output
+pixels in the panel. The scaling factors for adjacent panels will in general differ
+slightly, and so the joints between panels may be visible when viewing the output
+image at high contrast. If this is a problem, reduce the value of the <code>&#x0022;</code> tol<code>&#x0022;</code>
+parameter until the difference between adjacent panels is sufficiently small to be
+insignificant.
+<!--l. 27320--><p class="noindent" >Note, this flag cannot be used in conjunction with the AST__NOBAD flag (an error will
+be reported if both flags are specified).  </div> <h4 class="ssth4"> Propagation of Missing Data  </h4><div class="sstvalues"> Unless the
+AST__NOBAD flag is specified, instances of missing data (bad pixels) in the output grid
+are identified by occurrences of the <code>&#x0022;</code> badval<code>&#x0022;</code> value in the <code>&#x0022;</code> out<code>&#x0022;</code> array. These may be
+produced if any of the following happen:
+<ul class="sstitemlist">
+<li >
+<!--l. 27320--><p class="noindent" >The input position (the transformed position of the output pixel<code>&#x2019;</code> s centre) lies
+outside the boundary of the grid of input pixels.
+<li >
+<!--l. 27320--><p class="noindent" >The input position lies inside the boundary of a bad input pixel. In this context, an
+input pixel is considered bad if its data value is equal to <code>&#x0022;</code> badval<code>&#x0022;</code> and the
+                                                                                       
+
+                                                                                       
+AST__USEBAD flag is set via the <code>&#x0022;</code> flags<code>&#x0022;</code> parameter. (Positions which have half-integral
+coordinate values, and therefore lie on a pixel boundary, are regarded as lying within
+the pixel with the larger, i.e. more positive, index.)
+<li >
+<!--l. 27320--><p class="noindent" >The set of neighbouring input pixels (excluding those which are bad) is unsuitable for
+calculating an interpolated value. Whether this is true may depend on the sub-pixel
+interpolation scheme in use.
+<li >
+<!--l. 27320--><p class="noindent" >The interpolated value lies outside the range which can be represented using the data
+type of the <code>&#x0022;</code> out<code>&#x0022;</code> array.
+</li>
+</ul>
+<!--l. 27320--><p class="noindent" >In addition, associated output variance estimates (if calculated) may be declared bad
+and flagged with the <code>&#x0022;</code> badval<code>&#x0022;</code> value in the <code>&#x0022;</code> out_var<code>&#x0022;</code> array under any of the following
+circumstances:
+<ul class="sstitemlist">
+<li >
+<!--l. 27320--><p class="noindent" >The associated resampled data value (in the <code>&#x0022;</code> out<code>&#x0022;</code> array) is bad.
+<li >
+<!--l. 27320--><p class="noindent" >The set of neighbouring input pixels which contributed to the output data value do not
+all have valid variance estimates associated with them. In this context, an input
+variance estimate may be regarded as bad either because it has the value <code>&#x0022;</code> badval<code>&#x0022;</code> (and
+the AST__USEBAD flag is set), or because it is negative.
+<li >
+<!--l. 27320--><p class="noindent" >The set of neighbouring input pixels for which valid variance values are available is
+unsuitable for calculating an overall variance value. Whether this is true may depend
+on the sub-pixel interpolation scheme in use.
+<li >
+<!--l. 27320--><p class="noindent" >The variance value lies outside the range which can be represented using the data type
+of the <code>&#x0022;</code> out_var<code>&#x0022;</code> array.
+</li>
+</ul>
+<!--l. 27320--><p class="noindent" >If the AST__NOBAD flag is specified via parameter <code>&#x0022;</code> flags<code>&#x0022;</code> , then output array elements
+that would otherwise be set to <code>&#x0022;</code> badval<code>&#x0022;</code> are instead left holding the value they had on
+entry to this function. The number of such array elements is returned as the function
+value.  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss171.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss173.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss172.html"></a> </div> 
+</body> 
+</html>

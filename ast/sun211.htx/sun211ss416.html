@@ -1,0 +1,56 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> TextLabGap(axis) </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss415.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss417.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 42200--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x442-6340000"></a> TextLabGap(axis) </h3>  <p class="subtitle"> Spacing of descriptive axis labels for a Plot  </p> </h3> </header><a 
+ id="Q1-442-1482"></a> <a 
+ id="Q1-442-1483"></a> <a name="xref_TextLabGap(axis)"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+This attribute controls the appearance of an annotated coordinate grid (drawn with the
+<a 
+href="sun211ss83.html#x108-3000000">astGrid</a> function) by determining where descriptive axis labels are placed relative to
+the axes they describe. It takes a separate value for each physical axis of a <a 
+href="sun211ss467.html#x494-6860000">Plot</a> so
+that, for instance, the setting <code>&#x0022;</code> TextLabGap(2)=0.01<code>&#x0022;</code> specifies where the descriptive
+label for the second axis should be drawn.
+<!--l. 42200--><p class="noindent" >For each axis, the TextLabGap value gives the spacing between the descriptive label and
+the edge of a box enclosing all other parts of the annotated grid (excluding
+other descriptive labels). The gap is measured to the nearest edge of the label
+(i.e. the top or the bottom). Positive values cause the descriptive label to be
+placed outside the bounding box, while negative values cause it to be placed
+inside.
+<!--l. 42200--><p class="noindent" >The TextLabGap value should be given as a fraction of the
+minimum dimension of the plotting area, the default value being
+<!--l. 42200--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>0.01.
+</div> <dl class="sst">Type: </dl><dd class="sst"> Floating point.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Plot  </h5><div class="sstsub"> All Plots have this attribute.  </div>  </div>
+<h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 42200--><p class="noindent" >If drawn, descriptive labels are always placed at the edges of the plotting area, even
+although the corresponding numerical labels may be drawn along axis lines in the
+interior of the plotting area (see the <a 
+href="sun211ss327.html#x353-5450000">Labelling</a> attribute).
+<li >
+<!--l. 42200--><p class="noindent" >If no axis is specified, (e.g. <code>&#x0022;</code> TextLabGap<code>&#x0022;</code> instead of <code>&#x0022;</code> TextLabGap(2)<code>&#x0022;</code> ), then a <code>&#x0022;</code>
+set<code>&#x0022;</code> or <code>&#x0022;</code> clear<code>&#x0022;</code> operation will affect the attribute value of all the Plot axes,
+while a <code>&#x0022;</code> get<code>&#x0022;</code> or <code>&#x0022;</code> test<code>&#x0022;</code> operation will use just the TextLabGap(1) value.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss415.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss417.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss416.html"></a> </div> 
+</body> 
+</html>

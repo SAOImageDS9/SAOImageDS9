@@ -1,0 +1,56 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astChrSplit </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss510.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss512.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 48666--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x540-7320000"></a> astChrSplit </h3>  <p class="subtitle"> Extract words from a supplied string  </p> </h3> </header><a 
+ id="Q1-540-1770"></a> <a 
+ id="Q1-540-1771"></a> <a name="xref_astChrSplit"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+function extracts all space-separated words form the supplied string and
+returns them in an array of dynamically allocated strings.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> char
+<!--l. 48666--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math><!--l. 48666--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astChrSplit_(
+const char <!--l. 48666--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>str,
+int <!--l. 48666--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>n
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> str  </h5><div class="sstsub"> Pointer to the string to be split.  </div> <h5 class="ssth5"> n  </h5><div class="sstsub"> Address of
+an int in which to return the number of words returned.  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5">
+astChrSplit()  </h5><div class="sstsub"> A pointer to a dynamically allocated array containing <code>&#x0022;</code>
+<!--l. 48666--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>n<code>&#x0022;</code>
+elements. Each element is a pointer to a dynamically allocated character string
+containing a word extracted from the supplied string. Each of these words will have no
+leading or trailing white space.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 48666--><p class="noindent" >A NULL pointer is returned if this function is invoked with the global error status set
+or if it should fail for any reason, or if the supplied string contains no words.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss510.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss512.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 49550--><p class="noindent" ><a 
+ id="tailsun211ss511.html"></a> </div> 
+</body> 
+</html>

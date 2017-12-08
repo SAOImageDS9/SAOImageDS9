@@ -1,0 +1,68 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Adaptive </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss241.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss243.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 33771--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x268-4600000"></a> Adaptive </h3>  <p class="subtitle"> Should the area adapt to changes in the coordinate system?  </p> </h3> </header><a 
+ id="Q1-268-960"></a> <a 
+ id="Q1-268-961"></a> <a name="xref_Adaptive"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> The coordinate system represented by a <a 
+href="sun211ss474.html#x501-6930000">Region</a> may be changed by assigning
+new values to attributes such as <a 
+href="sun211ss413.html#x439-6310000">System</a>, Unit, etc. For instance, a Region representing
+an area on the sky in ICRS coordinates may have its System attribute changed so that it
+represents (say) Galactic coordinates instead of ICRS. This attribute controls what
+happens when the coordinate system represented by a Region is changed in this
+way.
+                                                                                       
+
+                                                                                       
+<!--l. 33771--><p class="noindent" >If Adaptive is non-zero (the default), then area represented by the Region adapts to
+the new coordinate system. That is, the numerical values which define the area
+represented by the Region are changed by mapping them from the old coordinate system
+into the new coordinate system. Thus the Region continues to represent the same
+physical area.
+<!--l. 33771--><p class="noindent" >If Adaptive is zero, then area represented by the Region does not adapt to the new
+coordinate system. That is, the numerical values which define the area represented by
+the Region are left unchanged. Thus the physical area represented by the Region will
+usually change.
+<!--l. 33771--><p class="noindent" >As an example, consider a Region describe a range of wavelength from 2000 Angstrom to
+4000 Angstrom. If the Unit attribute for the Region is changed from Angstrom to <code>&#x0022;</code> nm<code>&#x0022;</code>
+(nanometre), what happens depends on the setting of Adaptive. If Adaptive is
+non-zero, the <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> from the old to the new coordinate system is found. In this
+case it is a simple scaling by a factor of 0.1 (since 1 Angstrom is 0.1 nm).
+This Mapping is then used to modify the numerical values within the Region,
+changing 2000 to 200 and 4000 to 400. Thus the modified region represents 200
+nm to 400 nm, the same physical space as the original 2000 Angstrom to 4000
+Angstrom. However, if Adaptive had been zero, then the numerical values would not
+have been changed, resulting in the final Region representing 2000 nm to 4000
+nm.
+<!--l. 33771--><p class="noindent" >Setting Adaptive to zero can be necessary if you want correct inaccurate attribute
+settings in an existing Region. For instance, when creating a Region you may not know
+what <a 
+href="sun211ss285.html#x311-5030000">Epoch</a> value to use, so you would leave Epoch unset resulting in some default
+value being used. If at some later point in the application, the correct Epoch
+value is determined, you could assign the correct value to the Epoch attribute.
+However, you would first need to set Adaptive temporarily to zero, because
+otherwise the area represented by the Region would be Mapped from the spurious
+default Epoch to the new correct Epoch, which is not what is required.  </div> <dl class="sst">Type: </dl><dd class="sst">
+Integer (boolean).  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Region  </h5><div class="sstsub"> All Regions have this attribute.  </div>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss241.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss243.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss242.html"></a> </div> 
+</body> 
+</html>

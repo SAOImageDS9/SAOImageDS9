@@ -1,0 +1,179 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Region </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss473.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss475.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 46296--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x501-6930000"></a> Region </h3>  <p class="subtitle"> Represents a region within a coordinate system  </p> </h3> </header><a 
+ id="Q1-501-1657"></a> <a 
+ id="Q1-501-1658"></a> <a name="xref_Region"></a>  <h4 class="ssth4">Description:
+</h4><div class="sstvalues"> This class provides the basic facilities for describing a region within a
+specified coordinate system. However, the Region class does not have a constructor
+function of its own, as it is simply a container class for a family of specialised
+sub-classes such as <a 
+href="sun211ss442.html#x469-6610000">Circle</a>, <a 
+href="sun211ss440.html#x467-6590000">Box</a>, etc, which implement Regions with particular
+shapes.
+<!--l. 46296--><p class="noindent" >All sub-classes of Region require a <a 
+href="sun211ss452.html#x479-6710000">Frame</a> to be supplied when the Region is created.
+This Frame describes the coordinate system in which the Region is defined, and is
+referred to as the <code>&#x0022;</code> encapsulated Frame<code>&#x0022;</code> below. Constructors will also typically
+required one or more positions to be supplied which define the location and
+extent of the region. These positions must be supplied within the encapsulated
+Frame.
+<!--l. 46296--><p class="noindent" >The Region class inherits from the Frame class, and so a Region can be supplied
+                                                                                       
+
+                                                                                       
+where-ever a Frame is expected. In these cases, supplying a Region is equivalent to
+supplying a reference to its encapsulated Frame. Thus all the methods of the Frame
+class can be used on the Region class. For instance, the <a 
+href="sun211ss56.html#x81-2730000">astFormat</a> function may be used
+on a Region to format an axis value.
+<!--l. 46296--><p class="noindent" >In addition, since Frame inherits from <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>, a Region is also a sort
+of Mapping. Transforming positions by supplying a Region to one of the
+astTran<!--l. 46296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 46296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+functions is the way to determine if a given position is inside or outside the Region.
+When used as a Mapping, most classes of Frame are equivalent to a <a 
+href="sun211ss495.html#x522-7140000">UnitMap</a>.
+However, the Region class modifies this behaviour so that a Region acts like a
+UnitMap only for input positions which are within the area represented by the
+Region. Input positions which are outside the area produce bad output values
+(i.e. the output values are equal to AST__BAD). This behaviour is the same for
+both the forward and the inverse transformation. In this sense the <code>&#x0022;</code> inverse
+transformation<code>&#x0022;</code> is not a true inverse of the forward transformation, since
+applying the forward transformation to a point outside the Region, and then
+applying the inverse transformation results, in a set of AST__BAD axis values
+rather than the original axis values. If required, the <a 
+href="sun211ss169.html#x194-3860000">astRemoveRegions</a> function
+can be used to remove the <code>&#x0022;</code> masking<code>&#x0022;</code> effect of any Regions contained within a
+compound Mapping or <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a>. It does this by replacing each Region with a
+UnitMap or equivalent Frame (depending on the context in which the Region is
+used).
+<!--l. 46296--><p class="noindent" >If the coordinate system represented by the Region is changed (by changing the values
+of one or more of the attribute which the Region inherits from its encapsulated Frame),
+the area represented by the Region is mapped into the new coordinate system. For
+instance, let<code>&#x2019;</code> s say a Circle (a subclass of Region) is created, a <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> being
+supplied to the constructor so that the Circle describes a circular area on the sky in
+FK4 equatorial coordinates. Since Region inherits from Frame, the Circle will have
+a <a 
+href="sun211ss413.html#x439-6310000">System</a> attribute and this attribute will be set to <code>&#x0022;</code> FK4<code>&#x0022;</code> . If the System
+attribute of the Region is then changed from FK4 to FK5, the circular area
+represented by the Region will automatically be mapped from the FK4 system into
+the FK5 system. In general, changing the coordinate system in this way may
+result in the region changing shape - for instance, a circle may change into an
+ellipse if the transformation from the old to the new coordinate system is
+linear but with different scales on each axis. Thus the specific class of a
+Region cannot be used as a guarantee of the shape in any particular coordinate
+system. If the <a 
+href="sun211ss190.html#x215-4070000">astSimplify</a> function is used on a Region, it will endeavour
+to return a new Region of a sub-class which accurately describes the shape
+in the current coordinate system of the Region (but this may not always be
+possible).
+<!--l. 46296--><p class="noindent" >It is possible to negate an existing Region so that it represents all areas of the
+encapsulated Frame except for the area specified when the Region was created.  </div>
+<h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> None.  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues"> The Region class inherits from the Frame
+class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> In addition to those attributes common to all Frames, every
+Region also has the following attributes:
+<ul class="sstitemlist">
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss242.html#x268-4600000">Adaptive</a>: Should the area adapt to changes in the coordinate system?
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss351.html#x377-5690000">Negated</a>: Has the original region been negated?
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss266.html#x292-4840000">Closed</a>: Should the boundary be considered to be inside the region?
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss341.html#x367-5590000">MeshSize</a>: Number of points used to create a mesh covering the Region
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss288.html#x314-5060000">FillFactor</a>: Fraction of the Region which is of interest
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss255.html#x281-4730000">Bounded</a>: Is the Region bounded?
+</li>
+</ul>
+<!--l. 46296--><p class="noindent" >Every Region also inherits any further attributes that belong to the encapsulated
+Frame, regardless of that Frame<code>&#x2019;</code> s class. (For example, the <a 
+href="sun211ss286.html#x312-5040000">Equinox</a> attribute, defined
+by the SkyFrame class, is inherited by any Region which represents a SkyFrame.)  </div> <h4 class="ssth4">
+Functions  </h4><div class="sstvalues"> In addition to those functions applicable to all Frames, the following
+functions may also be applied to all Regions:
+<ul class="sstitemlist">
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss69.html#x94-2860000">astGetRegionBounds</a>: Get the bounds of a Region
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss70.html#x95-2870000">astGetRegionFrame</a>: Get a copy of the Frame represent by a Region
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss71.html#x96-2880000">astGetRegionFrameSet</a>: Get a copy of the Frameset encapsulated by a Region
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss72.html#x97-2890000">astGetRegionMesh</a>: Get a mesh of points covering a Region
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss73.html#x98-2900000">astGetRegionPoints</a>: Get the positions that define a Region
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss79.html#x104-2960000">astGetUnc</a>: Obtain uncertainty information from a Region
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss114.html#x139-3310000">astMapRegion</a>: Transform a Region into a new coordinate system
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss126.html#x151-3430000">astNegate</a>: Toggle the value of the Negated attribute
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss134.html#x159-3510000">astOverlap</a>: Determines the nature of the overlap between two Regions
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss121.html#x146-3380000">astMask<!--l. 46296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 46296--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>:
+Mask a region of a data grid
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss185.html#x210-4020000">astSetUnc</a>: Associate a new uncertainty with a Region
+<li >
+<!--l. 46296--><p class="noindent" ><a 
+href="sun211ss189.html#x214-4060000">astShowMesh</a>: Display a mesh of points on the surface of a Region  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss473.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss475.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss474.html"></a> </div> 
+</body> 
+</html>

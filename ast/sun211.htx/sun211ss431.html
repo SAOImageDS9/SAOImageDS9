@@ -1,0 +1,56 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Warnings </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss430.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss432.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 43074--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x457-6490000"></a> Warnings </h3>  <p class="subtitle"> Controls the issuing of warnings about various conditions  </p> </h3> </header><a 
+ id="Q1-457-1527"></a> <a 
+ id="Q1-457-1528"></a> <a name="xref_Warnings"></a>
+                                                                                       
+
+                                                                                       
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute controls the issuing of warnings about selected conditions
+when an <a 
+href="sun211ss464.html#x491-6830000">Object</a> or keyword is read from or written to a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>. The value supplied for
+the Warnings attribute should consist of a space separated list of condition names (see
+the <a 
+href="sun211ss250.html#x276-4680000">AllWarnings</a> attribute for a list of the currently defined names). Each name
+indicates a condition which should be reported. The default value for Warnings
+is the string <code>&#x0022;</code> BadKeyName BadKeyValue Tnx Zpx BadCel BadMat BadPV BadCTYPE<code>&#x0022;</code>
+.
+<!--l. 43074--><p class="noindent" >The text of any warning will be stored within the FitsChan in the form of one or more
+new header cards with keyword ASTWARN. If required, applications can check
+the FitsChan for ASTWARN cards (using <a 
+href="sun211ss51.html#x76-2680000">astFindFits</a>) after the call to <a 
+href="sun211ss160.html#x185-3770000">astRead</a>
+or <a 
+href="sun211ss237.html#x262-4540000">astWrite</a> has been performed, and report the text of any such cards to the
+user. ASTWARN cards will be propagated to any output header unless they are
+deleted from the FitsChan using <a 
+href="sun211ss39.html#x64-2560000">astDelFits</a>.  </div> <dl class="sst">Type: </dl><dd class="sst"> String  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5">
+FitsChan  </h5><div class="sstsub"> All FitsChans have this attribute.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> This attribute only
+controls the warnings that are to be stored as a set of header cards in the
+FitsChan as described above. It has no effect on the storage of warnings in
+the parent <a 
+href="sun211ss441.html#x468-6600000">Channel</a> structure. All warnings are stored in the parent Channel
+structure, from where they can be retrieved using the <a 
+href="sun211ss233.html#x258-4500000">astWarnings</a> function.
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss430.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss432.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss431.html"></a> </div> 
+</body> 
+</html>

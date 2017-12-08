@@ -1,0 +1,37 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astMemCaching </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss520.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss522.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 49199--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x550-7420000"></a> astMemCaching </h3>  <p class="subtitle"> Controls whether allocated but unused memory is cached in this
+module  </p> </h3> </header><a 
+ id="Q1-550-1800"></a> <a 
+ id="Q1-550-1801"></a> <a name="xref_astMemCaching"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function sets a flag indicating if allocated but
+unused memory should be cached or not. It also returns the original value of the
+flag.
+<!--l. 49199--><p class="noindent" >If caching is switched on or off as a result of this call, then the current contents of
+the cache are discarded.
+<!--l. 49199--><p class="noindent" >Note, each thread has a separate cache. Calling this function affects only the
+currently executing thread.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> int astMemCaching( int newval )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5">
+newval  </h5><div class="sstsub"> The new value for the MemoryCaching tuning parameter (see <a 
+href="sun211ss224.html#x249-4410000">astTune</a> in
+objectc.c). If AST__TUNULL is supplied, the current value is left unchanged.  </div>  </div>
+<h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astMemCaching()  </h5><div class="sstsub"> The original value of the MemoryCaching tuning
+parameter.  </div>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss520.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss522.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 49550--><p class="noindent" ><a 
+ id="tailsun211ss521.html"></a> </div> 
+</body> 
+</html>

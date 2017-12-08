@@ -1,0 +1,71 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> TimeOrigin </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss417.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss419.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 42318--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x444-6360000"></a> TimeOrigin </h3>  <p class="subtitle"> The zero point for TimeFrame axis values  </p> </h3> </header><a 
+ id="Q1-444-1488"></a> <a 
+ id="Q1-444-1489"></a> <a name="xref_TimeOrigin"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+specifies the origin from which all time values are measured. The default value (zero)
+results in the <a 
+href="sun211ss492.html#x519-7110000">TimeFrame</a> describing absolute time values in the system given by the
+<a 
+href="sun211ss413.html#x439-6310000">System</a> attribute (e.g. MJD, Julian epoch, etc). If a TimeFrame is to be used to
+describe elapsed time since some origin, the TimeOrigin attribute should be set to hold
+the required origin value. The TimeOrigin value stored inside the TimeFrame
+structure is modified whenever TimeFrame attribute values are changed so that it
+refers to the original moment in time.  </div> <dl class="sst">Type: </dl><dd class="sst"> Floating point.  </dd> <h4 class="ssth4">Applicability
+</h4><div class="sstvalues"> <h5 class="ssth5"> TimeFrame  </h5><div class="sstsub"> All TimeFrames have this attribute.  </div>  </div> <h4 class="ssth4"> Input Formats  </h4><div class="sstvalues"> The
+formats accepted when setting a TimeOrigin value are listed below. They are all
+case-insensitive and are generally tolerant of extra white space and alternative field
+delimiters:
+<ul class="sstitemlist">
+<li >
+<!--l. 42318--><p class="noindent" >Besselian <a 
+href="sun211ss285.html#x311-5030000">Epoch</a>: Expressed in decimal years, with or without decimal places (<code>&#x0022;</code> B1950<code>&#x0022;</code>
+or <code>&#x0022;</code> B1976.13<code>&#x0022;</code> for example).
+<li >
+<!--l. 42318--><p class="noindent" >Julian Epoch: Expressed in decimal years, with or without decimal places (<code>&#x0022;</code> J2000<code>&#x0022;</code> or <code>&#x0022;</code>
+J2100.9<code>&#x0022;</code> for example).
+<li >
+<!--l. 42318--><p class="noindent" >Units: An unqualified decimal value is interpreted as a value in the system specified
+by the TimeFrame<code>&#x2019;</code> s System attribute, in the units given by the TimeFrame<code>&#x2019;</code> s Unit
+attribute. Alternatively, an appropriate unit string can be appended to the end of the
+floating point value (<code>&#x0022;</code> 123.4 d<code>&#x0022;</code> for example), in which case the supplied value is
+scaled into the units specified by the Unit attribute.
+<li >
+<!--l. 42318--><p class="noindent" >Julian Date: With or without decimal places (<code>&#x0022;</code> JD 2454321.9<code>&#x0022;</code> for example).
+<li >
+<!--l. 42318--><p class="noindent" >Modified Julian Date: With or without decimal places (<code>&#x0022;</code> MJD 54321.4<code>&#x0022;</code> for example).
+<li >
+<!--l. 42318--><p class="noindent" >Gregorian Calendar Date: With the month expressed either as an integer or a 3-character
+abbreviation, and with optional decimal places to represent a fraction of a day (<code>&#x0022;</code>
+1996-10-2<code>&#x0022;</code> or <code>&#x0022;</code> 1996-Oct-2.6<code>&#x0022;</code> for example). If no fractional part of a day is given,
+the time refers to the start of the day (zero hours).
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 42318--><p class="noindent" >Gregorian Date and Time: Any calendar date (as above) but with a fraction of a day
+expressed as hours, minutes and seconds (<code>&#x0022;</code> 1996-Oct-2 12:13:56.985<code>&#x0022;</code> for example). The
+date and time can be separated by a space or by a <code>&#x0022;</code> T<code>&#x0022;</code> (as used by ISO8601 format).  </li></ul>  </div>
+<h4 class="ssth4"> Output Format  </h4><div class="sstvalues"> When enquiring TimeOrigin values, the returned formatted floating
+point value represents a value in the TimeFrame<code>&#x2019;</code> s System, in the unit specified by the
+TimeFrame<code>&#x2019;</code> s Unit attribute.  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss417.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss419.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss418.html"></a> </div> 
+</body> 
+</html>

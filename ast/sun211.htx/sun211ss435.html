@@ -1,0 +1,300 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> XmlFormat </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss434.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss436.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 43381--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x461-6530000"></a> XmlFormat </h3>  <p class="subtitle"> System for formatting Objects as XML  </p> </h3> </header><a 
+ id="Q1-461-1539"></a> <a 
+ id="Q1-461-1540"></a> <a name="xref_XmlFormat"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute
+specifies the formatting system to use when AST Objects are written out as XML through
+an <a 
+href="sun211ss499.html#x526-7180000">XmlChan</a>. It affects the behaviour of the <a 
+href="sun211ss237.html#x262-4540000">astWrite</a> function when they are used to
+transfer any AST <a 
+href="sun211ss464.html#x491-6830000">Object</a> to or from an external XML representation.
+<!--l. 43381--><p class="noindent" >The XmlChan class allows AST objects to be represented in the form of XML in several
+ways (conventions) and the XmlFormat attribute is used to specify which of these should
+be used. The formatting options available are outlined in the <code>&#x0022;</code> Formats Available<code>&#x0022;</code>
+section below.
+<!--l. 43381--><p class="noindent" >By default, an XmlChan will attempt to determine which format system is already in use,
+and will set the default XmlFormat value accordingly (so that subsequent I/O operations
+adopt the same conventions). It does this by looking for certain critical items which
+only occur in particular formats. For details of how this works, see the <code>&#x0022;</code> Choice of
+                                                                                       
+
+                                                                                       
+Default Format<code>&#x0022;</code> section below. If you wish to ensure that a particular format system is
+used, independently of any XML already read, you should set an explicit XmlFormat value
+yourself.  </div> <dl class="sst">Type: </dl><dd class="sst"> String.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> XmlChan  </h5><div class="sstsub"> All XmlChans have this
+attribute.  </div>  </div> <h4 class="ssth4"> Formats Available  </h4><div class="sstvalues"> The XmlFormat attribute can take any of the
+following (case insensitive) string values to select the corresponding formatting
+system:
+<ul class="sstitemlist">
+<li >
+<!--l. 43381--><p class="noindent" ><code>&#x0022;</code> NATIVE<code>&#x0022;</code> : This is a direct conversion to XML of the heirarchical format used by a
+standard XML channel (and also by the NATIVE encoding of a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>).
+<li >
+<!--l. 43381--><p class="noindent" ><code>&#x0022;</code> QUOTED<code>&#x0022;</code> : This is the same as NATIVE format except that extra information is included
+which allows client code to convert the XML into a form which can be read by a standard
+AST <a 
+href="sun211ss441.html#x468-6600000">Channel</a>. This extra information indicates which AST attribute values should be
+enclosed in quotes before being passed to a Channel.
+<li >
+<!--l. 43381--><p class="noindent" ><code>&#x0022;</code> IVOA<code>&#x0022;</code> : This is a format that uses an early draft of the STC-X schema developed by
+the International Virtual Observatory Alliance (IVOA - see <code>&#x0022;</code> http://www.ivoa.net/<code>&#x0022;</code> ) to
+describe coordinate systems, regions, mappings, etc. Support is limited to V1.20
+described at <code>&#x0022;</code> http://www.ivoa.net/Documents/WD/STC/STC-20050225.html<code>&#x0022;</code> . Since the
+version of STC-X finally adopted by the IVOA differs in several significant
+respects from V1.20, this format is now mainly of historical interest. Note, the
+alternative <code>&#x0022;</code> STC-S<code>&#x0022;</code> format (a simpler non-XML encoding of the STC metadata) is
+supported by the <a 
+href="sun211ss489.html#x516-7080000">StcsChan</a> class.  </li></ul>  </div> <h4 class="ssth4"> Choice of Default Format;  </h4><div class="sstvalues"> If the XmlFormat
+attribute of an XmlChan is not set, the default value it takes is determined by the
+presence of certain critical items within the document most recently read using
+<a 
+href="sun211ss160.html#x185-3770000">astRead</a>. The sequence of decision used to arrive at the default value is as
+follows:
+<ul class="sstitemlist">
+<li >
+<!--l. 43381--><p class="noindent" >If the previous document read contained any elements in any of the STC namespaces (<code>&#x0022;</code>
+urn:nvo-stc<code>&#x0022;</code> , <code>&#x0022;</code> urn:nvo-coords<code>&#x0022;</code> or <code>&#x0022;</code> urn:nvo-region<code>&#x0022;</code> ), then the default value is
+IVOA.
+<li >
+<!--l. 43381--><p class="noindent" >If the previous document read contained any elements in the AST namespace which
+had an associated XML attribute called <code>&#x0022;</code> quoted<code>&#x0022;</code> , then the default value is
+QUOTED.
+<li >
+<!--l. 43381--><p class="noindent" >Otherwise, if none of these conditions is met (as would be the case if no document had
+yet been read), then NATIVE format is used.
+</li>
+</ul>
+<!--l. 43381--><p class="noindent" >Setting an explicit value for the XmlFormat attribute always over-rides this
+default behaviour.  </div> <h4 class="ssth4"> The IVOA Format  </h4><div class="sstvalues"> The IVOA support caters only for
+certain parts of V1.20 of the draft Space-Time Coordinate (STC) schema (see
+                                                                                       
+
+                                                                                       
+http://www.ivoa.net/Documents/WD/STC/STC-20050225.html). Note, this draft has now been
+superceded by an officially adopted version that differs in several significant
+respects from V1.20. Consequently, the <code>&#x0022;</code> IVOA<code>&#x0022;</code> XmlChan format is of historical interest
+only.
+<!--l. 43381--><p class="noindent" >The following points should be noted when using an XmlChan to read or write STC
+information (note, this list is currently incomplete):
+<ul class="sstitemlist">
+<li >
+<!--l. 43381--><p class="noindent" >Objects can currently only be read using this format, not written.
+<li >
+<!--l. 43381--><p class="noindent" >The AST object generated by reading an
+<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>STCMetadata<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+element will be an instance of one of the AST <code>&#x0022;</code> <a 
+href="sun211ss484.html#x511-7030000">Stc</a><code>&#x0022;</code> classes: <a 
+href="sun211ss487.html#x514-7060000">StcResourceProfile</a>,
+<a 
+href="sun211ss488.html#x515-7070000">StcSearchLocation</a>, <a 
+href="sun211ss485.html#x512-7040000">StcCatalogEntryLocation</a>, <a 
+href="sun211ss486.html#x513-7050000">StcObsDataLocation</a>.
+<li >
+<!--l. 43381--><p class="noindent" >When reading an <!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>STCMetadata<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+element, the axes in the returned AST Object will be in the order space, time,
+spectral, redshift, irrespective of the order in which the axes occur in the
+<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>STCMetadata<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+element. If the supplied <!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>STCMetadata<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+element does not contain all of these axes, the returned AST Object will also omit
+them, but the ordering of those axes which are present will be as stated above. If the
+spatial frame represents a celestial coordinate system the spatial axes will be in the
+order (longitude, latitude).
+<li >
+<!--l. 43381--><p class="noindent" >Until such time as the AST <a 
+href="sun211ss492.html#x519-7110000">TimeFrame</a> is complete, a simple 1-dimensional
+<a 
+href="sun211ss452.html#x479-6710000">Frame</a> (with <a 
+href="sun211ss279.html#x305-4970000">Domain</a> set to TIME) will be used to represent the STC
+<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>TimeFrame<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+element. Consequently, most of the information within a
+<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>TimeFrame<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+element is currently ignored.
+<li >
+<!--l. 43381--><p class="noindent" ><!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>SpaceFrame<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+elements can only be read if they describe a celestial longitude and latitude axes
+supported by the AST <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> class. The space axes will be returned in the order
+(longitude, latitude).
+<li >
+<!--l. 43381--><p class="noindent" >Velocities associated with SpaceFrames cannot be read.
+<li >
+<!--l. 43381--><p class="noindent" >Any <!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>GenericCoordFrame<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+elements within an <!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>AstroCoordSystem<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+element are currently ignored.
+<li >
+<!--l. 43381--><p class="noindent" >Any second or subsequent <!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>AstroCoordSystem<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+found within an STCMetaData element is ignored.
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 43381--><p class="noindent" >Any second or subsequent <!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>AstroCoordArea<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+found within an STCMetaData element is ignored.
+<li >
+<!--l. 43381--><p class="noindent" >Any <!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>OffsetCenter<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+found within a <!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>SpaceFrame<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+is ignored.
+<li >
+<!--l. 43381--><p class="noindent" >Any CoordFlavor element found within a
+<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>SpaceFrame<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+is ignored.
+<li >
+<!--l. 43381--><p class="noindent" ><!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>SpaceFrame<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+elements can only be read if they refer to one of the following space reference frames:
+ICRS, GALACTIC_II, SUPER_GALACTIC, HEE, FK4, FK5, ECLIPTIC.
+<li >
+<!--l. 43381--><p class="noindent" ><!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>SpaceFrame<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+elements can only be read if the reference position is TOPOCENTER. Also, any planetary
+ephemeris is ignored.
+<li >
+<!--l. 43381--><p class="noindent" >Regions: there is currently no support for STC regions of type Sector, ConvexHull or
+SkyIndex.
+<li >
+<!--l. 43381--><p class="noindent" >The AST <a 
+href="sun211ss474.html#x501-6930000">Region</a> read from a CoordInterval element is considered to be open if either the
+lo_include or the hi_include attribute is set to false.
+<li >
+<!--l. 43381--><p class="noindent" ><!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>RegionFile<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+elements are not supported.
+<li >
+<!--l. 43381--><p class="noindent" >Vertices within <!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math><a 
+href="sun211ss471.html#x498-6900000">Polygon</a><!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+elements are always considered to be joined using great circles (that is,
+<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>SmallCircle<!--l. 43381--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+elements are ignored).  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss434.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss436.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss435.html"></a> </div> 
+</body> 
+</html>

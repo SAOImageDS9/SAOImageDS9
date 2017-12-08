@@ -1,0 +1,72 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astPolyCurve </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss142.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss144.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 23758--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x168-3600000"></a> astPolyCurve </h3>  <p class="subtitle"> Draw a series of connected geodesic curves  </p> </h3> </header><a 
+ id="Q1-168-662"></a> <a 
+ id="Q1-168-663"></a> <a name="xref_astPolyCurve"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+function joins a series of points specified in the physical coordinate system of a <a 
+href="sun211ss467.html#x494-6860000">Plot</a>
+by drawing a sequence of geodesic curves. It is equivalent to making repeated use of
+the <a 
+href="sun211ss36.html#x61-2530000">astCurve</a> function (q.v.), except that astPolyCurve will generally be more efficient
+when drawing many geodesic curves end-to-end. A typical application of this might be in
+drawing contour lines.
+<!--l. 23758--><p class="noindent" >As with astCurve, full account is taken of the <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> between physical
+and graphical coordinate systems. This includes any discontinuities and
+clipping established using <a 
+href="sun211ss23.html#x48-2400000">astClip</a>.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astPolyCurve( AstPlot
+<!--l. 23758--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this, int npoint, int ncoord,
+int indim, const double <!--l. 23758--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>in
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Plot.  </div> <h5 class="ssth5"> npoint  </h5><div class="sstsub"> The number of points between
+which geodesic curves are to be drawn.  </div> <h5 class="ssth5"> ncoord  </h5><div class="sstsub"> The number of coordinates being
+supplied for each point (i.e. the number of axes in the current <a 
+href="sun211ss452.html#x479-6710000">Frame</a> of the Plot, as
+given by its <a 
+href="sun211ss347.html#x373-5650000">Naxes</a> attribute).  </div> <h5 class="ssth5"> indim  </h5><div class="sstsub"> The number of elements along the second
+dimension of the <code>&#x0022;</code> in<code>&#x0022;</code> array (which contains the input coordinates). This value is
+required so that the coordinate values can be correctly located if they do not entirely
+fill this array. The value given should not be less than <code>&#x0022;</code> npoint<code>&#x0022;</code> .  </div> <h5 class="ssth5"> in  </h5><div class="sstsub"> The
+                                                                                       
+
+                                                                                       
+address of the first element in a 2-dimensional array of shape <code>&#x0022;</code> [ncoord][indim]<code>&#x0022;</code>
+giving the physical coordinates of the points which are to be joined in sequence by
+geodesic curves. These should be stored such that the value of coordinate number <code>&#x0022;</code>
+coord<code>&#x0022;</code> for point number <code>&#x0022;</code> point<code>&#x0022;</code> is found in element <code>&#x0022;</code> in[coord][point]<code>&#x0022;</code> .  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 23758--><p class="noindent" >No curve is drawn on either side of any point which has any coordinate equal to the
+value AST__BAD.
+<li >
+<!--l. 23758--><p class="noindent" >An error results if the base Frame of the Plot is not 2-dimensional.
+<li >
+<!--l. 23758--><p class="noindent" >An error also results if the transformation between the current and base Frames of
+the Plot is not defined (i.e. the Plot<code>&#x2019;</code> s <a 
+href="sun211ss426.html#x452-6440000">TranInverse</a> attribute is zero).  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss142.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss144.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss143.html"></a> </div> 
+</body> 
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astGetRefPos </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss67.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss69.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 16695--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x93-2850000"></a> astGetRefPos </h3>  <p class="subtitle"> Return the reference position in a specified celestial coordinate
+system  </p> </h3> </header><a 
+ id="Q1-93-437"></a> <a 
+ id="Q1-93-438"></a> <a name="xref_astGetRefPos"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function returns the reference position (specified
+by attributes <a 
+href="sun211ss379.html#x405-5970000">RefRA</a> and <a 
+href="sun211ss378.html#x404-5960000">RefDec</a>) converted to the celestial coordinate system
+represented by a supplied <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>. The celestial longitude and latitude
+values are returned in radians.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astGetRefPos( AstSpecFrame
+<!--l. 16695--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+AstSkyFrame <!--l. 16695--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>frm,
+double <!--l. 16695--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>lon,
+double <!--l. 16695--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>lat
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a>.  </div> <h5 class="ssth5"> frm  </h5><div class="sstsub"> Pointer to the SkyFrame
+which defines the required celestial coordinate system. If NULL is supplied, then the
+longitude and latitude values are returned as FK5 J2000 RA and Dec values.  </div> <h5 class="ssth5"> lon  </h5><div class="sstsub"> A
+pointer to a double in which to store the longitude of the reference point, in the
+coordinate system represented by the supplied SkyFrame (radians).  </div> <h5 class="ssth5"> lat  </h5><div class="sstsub"> A
+pointer to a double in which to store the latitude of the reference point, in the
+coordinate system represented by the supplied SkyFrame (radians).  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 16695--><p class="noindent" >Values of AST__BAD will be returned if this function is invoked with the AST error
+status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss67.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss69.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss68.html"></a> </div> 
+</body> 
+</html>

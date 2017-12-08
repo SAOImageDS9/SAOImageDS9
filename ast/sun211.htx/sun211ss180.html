@@ -1,0 +1,189 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astSetFits&#x003C;X&#x003E; </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss179.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss181.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 28049--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x205-3970000"></a> astSetFits<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+</h3>  <p class="subtitle"> Store a keyword value in a FitsChan  </p> </h3> </header><a 
+ id="Q1-205-773"></a> <a 
+ id="Q1-205-774"></a> <a name="xref_astSetFits$<$X$>$"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This is a family of
+functions which store values for named keywords within a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> at the current card
+                                                                                       
+
+                                                                                       
+position. The supplied keyword value can either over-write an existing keyword value,
+or can be inserted as a new header card into the FitsChan.
+<!--l. 28049--><p class="noindent" >The keyword data type is selected by replacing
+<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in the function name by one of the following strings representing the recognised FITS
+data
+<!--l. 28049--><p class="noindent" >types:
+<ul class="sstitemlist">
+<li >
+<!--l. 28049--><p class="noindent" >CF - Complex floating point values.
+<li >
+<!--l. 28049--><p class="noindent" >CI - Complex integer values.
+<li >
+<!--l. 28049--><p class="noindent" >F - Floating point values.
+<li >
+<!--l. 28049--><p class="noindent" >I - Integer values.
+<li >
+<!--l. 28049--><p class="noindent" >L - Logical (i.e. boolean) values.
+<li >
+<!--l. 28049--><p class="noindent" >S - String values.
+<li >
+<!--l. 28049--><p class="noindent" >CN - A <code>&#x0022;</code> CONTINUE<code>&#x0022;</code> value, these are treated like string values, but are encoded without
+an equals sign.
+</li>
+</ul>
+<!--l. 28049--><p class="noindent" >The data type of the <code>&#x0022;</code> value<code>&#x0022;</code> parameter depends on
+<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+as follows:
+<ul class="sstitemlist">
+<li >
+<!--l. 28049--><p class="noindent" >CF - <code>&#x0022;</code> double <!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math><code>&#x0022;</code>
+(a pointer to a 2 element array holding the real and imaginary parts of the complex
+value).
+<li >
+<!--l. 28049--><p class="noindent" >CI - <code>&#x0022;</code> int <!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math><code>&#x0022;</code>
+(a pointer to a 2 element array holding the real and imaginary parts of the complex
+value).
+<li >
+<!--l. 28049--><p class="noindent" >F - <code>&#x0022;</code> double<code>&#x0022;</code> .
+<li >
+<!--l. 28049--><p class="noindent" >I - <code>&#x0022;</code> int<code>&#x0022;</code> .
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 28049--><p class="noindent" >L - <code>&#x0022;</code> int<code>&#x0022;</code> .
+<li >
+<!--l. 28049--><p class="noindent" >S - <code>&#x0022;</code> const char <!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math><code>&#x0022;</code>
+.
+<li >
+<!--l. 28049--><p class="noindent" >CN - <code>&#x0022;</code> const char <!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math><code>&#x0022;</code> .  </li></ul>  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void
+astSetFits<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>(
+AstFitsChan <!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+const char <!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>name,
+<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>type
+value, const char <!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>comment,
+int overwrite )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the FitsChan.  </div> <h5 class="ssth5"> name  </h5><div class="sstsub"> Pointer to a
+null-terminated character string containing the FITS keyword name. This may be a
+complete FITS header card, in which case the keyword to use is extracted from it. No
+more than 80 characters are read from this string.  </div> <h5 class="ssth5"> value  </h5><div class="sstsub"> The keyword value
+to store with the named keyword. The data type of this parameter depends on
+<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+as described above.  </div> <h5 class="ssth5"> comment  </h5><div class="sstsub"> A pointer to a null terminated string holding a
+comment to associated with the keyword. If a NULL pointer or a blank string is
+supplied, then any comment included in the string supplied for the <code>&#x0022;</code> name<code>&#x0022;</code> parameter is
+used instead. If <code>&#x0022;</code> name<code>&#x0022;</code> contains no comment, then any existing comment in the card
+being over-written is retained. Otherwise, no comment is stored with the card.  </div> <h5 class="ssth5">
+overwrite  </h5><div class="sstsub"> If non-zero, the new card formed from the supplied keyword name,
+value and comment string over-writes the current card, and the current card is
+incremented to refer to the next card (see the <code>&#x0022;</code> <a 
+href="sun211ss258.html#x284-4760000">Card</a><code>&#x0022;</code> attribute). If zero,
+the new card is inserted in front of the current card and the current card is
+left unchanged. In either case, if the current card on entry points to the <code>&#x0022;</code>
+end-of-file<code>&#x0022;</code> , the new card is appended to the end of the list.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 28049--><p class="noindent" >The function <a 
+href="sun211ss182.html#x207-3990000">astSetFitsU</a> can be used to indicate that no value is associated with a
+keyword.
+<li >
+<!--l. 28049--><p class="noindent" >The function <a 
+href="sun211ss181.html#x206-3980000">astSetFitsCM</a> can be used to store a pure comment card (i.e. a card with a
+blank keyword).
+<li >
+<!--l. 28049--><p class="noindent" >To assign a new value for an existing keyword within a FitsChan, first find
+the card describing the keyword using <a 
+href="sun211ss51.html#x76-2680000">astFindFits</a>, and then use one of the
+astSetFits<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 28049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+family to over-write the old value.
+<li >
+<!--l. 28049--><p class="noindent" >If, on exit, there are no cards following the card written by this function, then the
+current card is left pointing at the <code>&#x0022;</code> end-of-file<code>&#x0022;</code> .
+<li >
+<!--l. 28049--><p class="noindent" >An error will be reported if the keyword name does not conform to FITS requirements.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss179.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss181.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss180.html"></a> </div> 
+</body> 
+</html>

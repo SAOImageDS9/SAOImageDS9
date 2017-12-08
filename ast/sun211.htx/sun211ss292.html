@@ -1,0 +1,160 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Format(axis) </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss291.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss293.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 36817--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x318-5100000"></a> Format(axis) </h3>  <p class="subtitle"> Format specification for axis values  </p> </h3> </header><a 
+ id="Q1-318-1110"></a> <a 
+ id="Q1-318-1111"></a> <a name="xref_Format(axis)"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+attribute specifies the format to be used when displaying coordinate values associated
+with a particular <a 
+href="sun211ss452.html#x479-6710000">Frame</a> axis (i.e. to convert values from binary to character form). It
+is interpreted by the <a 
+href="sun211ss56.html#x81-2730000">astFormat</a> function and determines the formatting which it
+applies.
+<!--l. 36817--><p class="noindent" >If no Format value is set for a Frame axis, a default value is supplied instead. This
+is based on the value of the Digits, or Digits(axis), attribute and is chosen so that
+it displays the requested number of digits of precision.  </div> <dl class="sst">Type: </dl><dd class="sst"> String.  </dd>
+                                                                                       
+
+                                                                                       
+<h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Frame  </h5><div class="sstsub"> The Frame class interprets this attribute as a format
+specification string to be passed to the C <code>&#x0022;</code> printf<code>&#x0022;</code> function (e.g. <code>&#x0022;</code> %1.7G<code>&#x0022;</code> )
+in order to format a single coordinate value (supplied as a double precision
+number).
+<!--l. 36817--><p class="noindent" >When supplying a value for this attribute, beware that the <code>&#x0022;</code> %<code>&#x0022;</code> character may be
+interpreted directly as a format specification by some printf-like functions (such as
+<a 
+href="sun211ss177.html#x202-3940000">astSet</a>). You may need to double it (i.e. use <code>&#x0022;</code> %%<code>&#x0022;</code> ) to avoid this.  </div> <h5 class="ssth5"> <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>  </h5><div class="sstsub"> The
+SkyFrame class re-defines the syntax and default value of the Format string to allow
+the formatting of sexagesimal values as appropriate for the particular celestial
+coordinate system being represented. The syntax of SkyFrame Format strings
+is described (below) in the <code>&#x0022;</code> SkyFrame Formats<code>&#x0022;</code> section.  </div> <h5 class="ssth5"> <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a>  </h5><div class="sstsub"> The
+Format attribute of a FrameSet axis is the same as that of its current Frame (as
+specified by the <a 
+href="sun211ss273.html#x299-4910000">Current</a> attribute). Note that the syntax of the Format string
+is also determined by the current Frame.  </div> <h5 class="ssth5"> <a 
+href="sun211ss492.html#x519-7110000">TimeFrame</a>  </h5><div class="sstsub"> The TimeFrame class
+extends the syntax of the Format string to allow the formatting of TimeFrame axis
+values as Gregorian calendar dates and times. The syntax of TimeFrame Format
+strings is described (below) in the <code>&#x0022;</code> TimeFrame Formats<code>&#x0022;</code> section.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 36817--><p class="noindent" >When specifying this attribute by name, it should be subscripted with the number of the
+Frame axis to which it applies.  </li></ul>  </div> <h4 class="ssth4"> SkyFrame Formats  </h4><div class="sstvalues"> The Format string supplied for
+a SkyFrame should contain zero or more of the following characters. These may occur in
+any order, but the following is recommended for clarity:
+<ul class="sstitemlist">
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> <!--l. 36817--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math><code>&#x0022;</code> :
+Indicates that a plus sign should be prefixed to positive values. By default, no plus
+sign is used.
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> z<code>&#x0022;</code> : Indicates that leading zeros should be prefixed to the value so that the first
+field is of constant width, as would be required in a fixed-width table (leading zeros
+are always prefixed to any fields that follow). By default, no leading zeros are
+added.
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> i<code>&#x0022;</code> : Use the standard ISO field separator (a colon) between fields. This is the
+default behaviour.
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> b<code>&#x0022;</code> : Use a blank to separate fields.
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> l<code>&#x0022;</code> : Use a letter (<code>&#x0022;</code> h<code>&#x0022;</code> /<code>&#x0022;</code> d<code>&#x0022;</code> , <code>&#x0022;</code> m<code>&#x0022;</code> or <code>&#x0022;</code> s<code>&#x0022;</code> as appropriate) to separate
+fields.
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> g<code>&#x0022;</code> : Use a letter and symbols to separate fields (<code>&#x0022;</code> h<code>&#x0022;</code> /<code>&#x0022;</code> d<code>&#x0022;</code> , <code>&#x0022;</code> m<code>&#x0022;</code> or <code>&#x0022;</code> s<code>&#x0022;</code> , etc, as
+appropriate), but include escape sequences in the formatted value so that the <a 
+href="sun211ss467.html#x494-6860000">Plot</a>
+class will draw the separators as small super-scripts. The default escape sequences are
+                                                                                       
+
+                                                                                       
+optimised for the pgplot graphics package, but new escape sequences may be specified
+using function astSetSkyDelim.
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> d<code>&#x0022;</code> : Include a degrees field. Expressing the angle purely in degrees is also the
+default if none of <code>&#x0022;</code> h<code>&#x0022;</code> , <code>&#x0022;</code> m<code>&#x0022;</code> , <code>&#x0022;</code> s<code>&#x0022;</code> or <code>&#x0022;</code> t<code>&#x0022;</code> are given.
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> h<code>&#x0022;</code> : Express the angle as a time and include an hours field (where 24 hours
+correspond to 360 degrees). Expressing the angle purely in hours is also the default if
+<code>&#x0022;</code> t<code>&#x0022;</code> is given without either <code>&#x0022;</code> m<code>&#x0022;</code> or <code>&#x0022;</code> s<code>&#x0022;</code> .
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> m<code>&#x0022;</code> : Include a minutes field. By default this is not included.
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> s<code>&#x0022;</code> : Include a seconds field. By default this is not included. This request is
+ignored if <code>&#x0022;</code> d<code>&#x0022;</code> or <code>&#x0022;</code> h<code>&#x0022;</code> is given, unless a minutes field is also included.
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> t<code>&#x0022;</code> : Express the angle as a time (where 24 hours correspond to 360 degrees). This
+option is ignored if either <code>&#x0022;</code> d<code>&#x0022;</code> or <code>&#x0022;</code> h<code>&#x0022;</code> is given and is intended for use where the
+value is to be expressed purely in minutes and/or seconds of time (with no hours
+field). If <code>&#x0022;</code> t<code>&#x0022;</code> is given without <code>&#x0022;</code> d<code>&#x0022;</code> , <code>&#x0022;</code> h<code>&#x0022;</code> , <code>&#x0022;</code> m<code>&#x0022;</code> or <code>&#x0022;</code> s<code>&#x0022;</code> being present, then it is
+equivalent to <code>&#x0022;</code> h<code>&#x0022;</code> .
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> .<code>&#x0022;</code> : Indicates that decimal places are to be given for the final field in the
+formatted string (whichever field this is). The <code>&#x0022;</code> .<code>&#x0022;</code> should be followed immediately by
+an unsigned integer which gives the number of decimal places required, or by an
+asterisk. If an asterisk is supplied, a default number of decimal places is used which
+is based on the value of the Digits attribute.
+</li>
+</ul>
+<!--l. 36817--><p class="noindent" >All of the above format specifiers are case-insensitive. If several characters make
+conflicting requests (e.g. if both <code>&#x0022;</code> i<code>&#x0022;</code> and <code>&#x0022;</code> b<code>&#x0022;</code> appear), then the character
+occurring last takes precedence, except that <code>&#x0022;</code> d<code>&#x0022;</code> and <code>&#x0022;</code> h<code>&#x0022;</code> always override <code>&#x0022;</code> t<code>&#x0022;</code>
+.
+<!--l. 36817--><p class="noindent" >If the format string starts with a percentage sign (%), then the whole format
+string is assumed to conform to the syntax defined by the Frame class, and the
+axis values is formated as a decimal radians value.  </div> <h4 class="ssth4"> TimeFrame Formats  </h4><div class="sstvalues"> The
+Format string supplied for a TimeFrame should either use the syntax defined by
+the base Frame class (i.e. a C <code>&#x0022;</code> printf<code>&#x0022;</code> format string), or the extended <code>&#x0022;</code>
+iso<code>&#x0022;</code> syntax described below (the default value is inherited from the Frame
+class):
+<ul class="sstitemlist">
+<li >
+<!--l. 36817--><p class="noindent" >C <code>&#x0022;</code> printf<code>&#x0022;</code> syntax: If the Format string is a C <code>&#x0022;</code> printf<code>&#x0022;</code> format description such as <code>&#x0022;</code>
+%1.7G<code>&#x0022;</code> , the TimeFrame axis value will be formatted without change as a floating point
+value using this format. The formatted string will thus represent an offset from the
+                                                                                       
+
+                                                                                       
+zero point specified by the TimeFrame<code>&#x2019;</code> s <a 
+href="sun211ss418.html#x444-6360000">TimeOrigin</a> attribute, measured in units given
+by the TimeFrame<code>&#x2019;</code> s Unit attribute.
+<li >
+<!--l. 36817--><p class="noindent" ><code>&#x0022;</code> iso<code>&#x0022;</code> syntax: This is used to format a TimeFrame axis value as a Gregorian date
+followed by an optional time of day. If the Format value commences with the string <code>&#x0022;</code>
+iso<code>&#x0022;</code> then the TimeFrame axis value will be converted to an absolute MJD, including the
+addition of the current TimeOrigin value, and then formatted as a Gregorian date using
+the format <code>&#x0022;</code> yyyy-mm-dd<code>&#x0022;</code> . Optionally, the Format value may include an integer
+precision following the <code>&#x0022;</code> iso<code>&#x0022;</code> specification (e.g. <code>&#x0022;</code> iso.2<code>&#x0022;</code> ), in which case the time
+of day will be appended to the formatted date (if no time of day is included, the date
+field is rounded to the nearest day). The integer value in the Format string indicates
+the number of decimal places to use in the seconds field. For instance, a Format value
+of <code>&#x0022;</code> iso.0<code>&#x0022;</code> produces a time of day of the form <code>&#x0022;</code> hh:mm:ss<code>&#x0022;</code> , and a Format value
+of <code>&#x0022;</code> iso.2<code>&#x0022;</code> produces a time of day of the form <code>&#x0022;</code> hh:mm:ss.ss<code>&#x0022;</code> . The date and
+time fields will be separated by a space unless <code>&#x2019;</code> T<code>&#x2019;</code> is appended to the end of
+string, in which case the letter T (upper case) will be used as the separator.
+The value of the Digits attribute is ignored when using this <code>&#x0022;</code> iso<code>&#x0022;</code> format.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss291.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss293.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss292.html"></a> </div> 
+</body> 
+</html>

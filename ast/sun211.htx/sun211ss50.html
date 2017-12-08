@@ -1,0 +1,43 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astExport </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss49.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss51.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 14814--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x75-2670000"></a> astExport </h3>  <p class="subtitle"> Export an Object pointer to an outer context  </p> </h3> </header><a 
+ id="Q1-75-383"></a> <a 
+ id="Q1-75-384"></a> <a name="xref_astExport"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+This function exports an <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer from the current AST context into the
+context that encloses the current one. This means that the pointer will no longer
+be annulled when the current context is ended (with <a 
+href="sun211ss47.html#x72-2640000">astEnd</a>), but only when
+the next outer context (if any) ends.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astExport( AstObject
+<!--l. 14814--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this )
+</div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Object pointer to be exported.  </div>  </div> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Object  </h5><div class="sstsub"> This
+function applies to all Objects.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 14814--><p class="noindent" >It is only sensible to apply this function to pointers that have been created
+within (or exported to) the current context and have not been rendered exempt
+using <a 
+href="sun211ss49.html#x74-2660000">astExempt</a>. Applying it to an unsuitable Object pointer has no effect.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss49.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss51.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss50.html"></a> </div> 
+</body> 
+</html>

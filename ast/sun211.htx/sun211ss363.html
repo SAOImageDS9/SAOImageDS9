@@ -1,0 +1,50 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> NumLabGap(axis) </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss362.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss364.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 39484--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x389-5810000"></a> NumLabGap(axis) </h3>  <p class="subtitle"> Spacing of numerical labels for a Plot  </p> </h3> </header><a 
+ id="Q1-389-1323"></a> <a 
+ id="Q1-389-1324"></a> <a name="xref_NumLabGap(axis)"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+attribute controls the appearance of an annotated coordinate grid (drawn with the
+<a 
+href="sun211ss83.html#x108-3000000">astGrid</a> function) by determining where numerical axis labels are placed relative to the
+axes they describe. It takes a separate value for each physical axis of a <a 
+href="sun211ss467.html#x494-6860000">Plot</a> so that,
+for instance, the setting <code>&#x0022;</code> NumLabGap(2)=-0.01<code>&#x0022;</code> specifies where the numerical label for
+the second axis should be drawn.
+<!--l. 39484--><p class="noindent" >For each axis, the NumLabGap value gives the spacing between the axis line (or edge of
+the plotting area, if appropriate) and the nearest edge of the corresponding numerical
+axis labels. Positive values cause the descriptive label to be placed on the opposite
+side of the line to the default tick marks, while negative values cause it to be placed
+on the same side.
+<!--l. 39484--><p class="noindent" >The NumLabGap value should be given as a fraction of the
+minimum dimension of the plotting area, the default value being
+<!--l. 39484--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>0.01.
+</div> <dl class="sst">Type: </dl><dd class="sst"> Floating point.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Plot  </h5><div class="sstsub"> All Plots have this attribute.  </div>  </div>
+<h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 39484--><p class="noindent" >If no axis is specified, (e.g. <code>&#x0022;</code> NumLabGap<code>&#x0022;</code> instead of <code>&#x0022;</code> NumLabGap(2)<code>&#x0022;</code> ), then a <code>&#x0022;</code> set<code>&#x0022;</code>
+or <code>&#x0022;</code> clear<code>&#x0022;</code> operation will affect the attribute value of all the Plot axes,
+while a <code>&#x0022;</code> get<code>&#x0022;</code> or <code>&#x0022;</code> test<code>&#x0022;</code> operation will use just the NumLabGap(1) value.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss362.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss364.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss363.html"></a> </div> 
+</body> 
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Epoch </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss284.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss286.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 36274--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x311-5030000"></a> Epoch </h3>  <p class="subtitle"> Epoch of observation  </p> </h3> </header><a 
+ id="Q1-311-1089"></a> <a 
+ id="Q1-311-1090"></a> <a name="xref_Epoch"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute is used to qualify
+the coordinate systems described by a <a 
+href="sun211ss452.html#x479-6710000">Frame</a>, by giving the moment in time when the
+coordinates are known to be correct. Often, this will be the date of observation, and
+is important in cases where coordinates systems move with respect to each other over
+the course of time.
+<!--l. 36274--><p class="noindent" >The Epoch attribute is stored as a Modified Julian Date, but when setting its
+value it may be given in a variety of formats. See the <code>&#x0022;</code> Input Formats<code>&#x0022;</code> section
+(below) for details. Strictly, the Epoch value should be supplied in the TDB
+timescale, but for some purposes (for instance, for converting sky positions between
+different types of equatorial system) the timescale is not significant, and UTC may
+be used.  </div> <dl class="sst">Type: </dl><dd class="sst"> Floating point.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Frame  </h5><div class="sstsub"> All Frames have
+this attribute. The basic Frame class provides a default of J2000.0 (Julian)
+but makes no use of the Epoch value. This is because the Frame class does not
+distinguish between different Cartesian coordinate systems (see the <a 
+href="sun211ss413.html#x439-6310000">System</a>
+attribute).  </div> <h5 class="ssth5"> <a 
+href="sun211ss443.html#x470-6620000">CmpFrame</a>  </h5><div class="sstsub"> The default Epoch value for a CmpFrame is selected
+as follows; if the Epoch attribute has been set in the first component Frame
+then the Epoch value from the first component Frame is used as the default for
+the CmpFrame. Otherwise, if the Epoch attribute has been set in the second
+component Frame then the Epoch value from the second component Frame is used
+as the default for the CmpFrame. Otherwise, the default Epoch value from the
+first component Frame is used as the default for the CmpFrame. When the Epoch
+attribute of a CmpFrame is set or cleared, it is also set or cleared in the
+two component Frames.  </div> <h5 class="ssth5"> <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a>  </h5><div class="sstsub"> The Epoch attribute of a FrameSet is the
+same as that of its current Frame (as specified by the <a 
+href="sun211ss273.html#x299-4910000">Current</a> attribute).  </div> <h5 class="ssth5">
+<a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>  </h5><div class="sstsub"> The coordinates of sources within a SkyFrame can changed with time for
+various reasons, including: (i) changing aberration of light caused by the
+observer<code>&#x2019;</code> s velocity (e.g. due to the Earth<code>&#x2019;</code> s motion around the Sun), (ii)
+changing gravitational deflection by the Sun due to changes in the observer<code>&#x2019;</code> s
+position with time, (iii) fictitious motion due to rotation of non-inertial
+coordinate systems (e.g. the old FK4 system), and (iv) proper motion of the
+source itself (although this last effect is not handled by the SkyFrame class
+because it affects individual sources rather than the coordinate system as a
+whole).
+<!--l. 36274--><p class="noindent" >The default Epoch value in a SkyFrame is B1950.0 (Besselian) for the old FK4-based
+                                                                                       
+
+                                                                                       
+coordinate systems (see the System attribute) and J2000.0 (Julian) for all
+others.
+<!--l. 36274--><p class="noindent" >Care must be taken to distinguish the Epoch value, which relates to motion (or apparent
+motion) of the source, from the superficially similar <a 
+href="sun211ss286.html#x312-5040000">Equinox</a> value. The latter is used
+to qualify a coordinate system which is itself in motion in a (notionally) predictable
+way as a result of being referred to a slowly moving reference plane (e.g. the
+equator).
+<!--l. 36274--><p class="noindent" >See the description of the System attribute for details of which qualifying attributes
+apply to each celestial coordinate system.  </div> <h5 class="ssth5"> <a 
+href="sun211ss492.html#x519-7110000">TimeFrame</a>  </h5><div class="sstsub"> A TimeFrame describes a
+general time axis and so cannot be completely characterised by a single Epoch value.
+For this reason the TimeFrame class makes no use of the Epoch attribute. However, user
+code can still make use of the attribute if necessary to represent a <code>&#x0022;</code> typical<code>&#x0022;</code> time
+spanned by the TimeFrame. The default Epoch value for a TimeFrame will be the TDB
+equivalent of the current value of the TimeFrame<code>&#x2019;</code> s <a 
+href="sun211ss418.html#x444-6360000">TimeOrigin</a> attribute. If no value
+has been set for TimeOrigin, then the default Epoch value is J2000.0.  </div>  </div> <h4 class="ssth4"> Input
+Formats  </h4><div class="sstvalues"> The formats accepted when setting an Epoch value are listed below. They are
+all case-insensitive and are generally tolerant of extra white space and alternative
+field delimiters:
+<ul class="sstitemlist">
+<li >
+<!--l. 36274--><p class="noindent" >Besselian Epoch: Expressed in decimal years, with or without decimal places (<code>&#x0022;</code> B1950<code>&#x0022;</code>
+or <code>&#x0022;</code> B1976.13<code>&#x0022;</code> for example).
+<li >
+<!--l. 36274--><p class="noindent" >Julian Epoch: Expressed in decimal years, with or without decimal places (<code>&#x0022;</code> J2000<code>&#x0022;</code> or <code>&#x0022;</code>
+J2100.9<code>&#x0022;</code> for example).
+<li >
+<!--l. 36274--><p class="noindent" >Year: Decimal years, with or without decimal places (<code>&#x0022;</code> 1996.8<code>&#x0022;</code> for example). Such
+values are interpreted as a Besselian epoch (see above) if less than 1984.0 and as a
+Julian epoch otherwise.
+<li >
+<!--l. 36274--><p class="noindent" >Julian Date: With or without decimal places (<code>&#x0022;</code> JD 2454321.9<code>&#x0022;</code> for example).
+<li >
+<!--l. 36274--><p class="noindent" >Modified Julian Date: With or without decimal places (<code>&#x0022;</code> MJD 54321.4<code>&#x0022;</code> for example).
+<li >
+<!--l. 36274--><p class="noindent" >Gregorian Calendar Date: With the month expressed either as an integer or a 3-character
+abbreviation, and with optional decimal places to represent a fraction of a day (<code>&#x0022;</code>
+1996-10-2<code>&#x0022;</code> or <code>&#x0022;</code> 1996-Oct-2.6<code>&#x0022;</code> for example). If no fractional part of a day is given,
+the time refers to the start of the day (zero hours).
+<li >
+<!--l. 36274--><p class="noindent" >Gregorian Date and Time: Any calendar date (as above) but with a fraction of a day
+expressed as hours, minutes and seconds (<code>&#x0022;</code> 1996-Oct-2 12:13:56.985<code>&#x0022;</code> for example). The
+date and time can be separated by a space or by a <code>&#x0022;</code> T<code>&#x0022;</code> (as used by ISO8601
+format).  </li></ul>  </div> <h4 class="ssth4"> Output Format  </h4><div class="sstvalues"> When enquiring Epoch values, the format used
+is the <code>&#x0022;</code> Year<code>&#x0022;</code> format described under <code>&#x0022;</code> Input Formats<code>&#x0022;</code> . This is a value in
+                                                                                       
+
+                                                                                       
+decimal years which will be a Besselian epoch if less than 1984.0 and a Julian
+epoch otherwise. By omitting any character prefix, this format allows the Epoch
+value to be obtained as either a character string or a floating point value.
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss284.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss286.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss285.html"></a> </div> 
+</body> 
+</html>

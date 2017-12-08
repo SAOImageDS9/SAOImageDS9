@@ -1,0 +1,62 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astColumnShape </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss29.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss31.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 13232--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x55-2470000"></a> astColumnShape </h3>  <p class="subtitle"> Returns the shape of the values in a named column  </p> </h3> </header><a 
+ id="Q1-55-323"></a> <a 
+ id="Q1-55-324"></a> <a name="xref_astColumnShape"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+This function returns the number of dimensions spaned by each value in a named column of a
+<a 
+href="sun211ss491.html#x518-7100000">Table</a>, together with the length of each dimension. These are the values supplied when
+the column was created using <a 
+href="sun211ss2.html#x27-2190000">astAddColumn</a>.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astColumnShape( AstTable
+<!--l. 13232--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this, const char
+<!--l. 13232--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>column, int
+mxdim, int <!--l. 13232--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>ndim,
+int <!--l. 13232--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>dims )
+</div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Table.  </div> <h5 class="ssth5"> column  </h5><div class="sstsub"> The character string holding
+the upper case name of the column. Trailing spaces are ignored.  </div> <h5 class="ssth5"> mxdim  </h5><div class="sstsub"> The length
+of the <code>&#x0022;</code> dims<code>&#x0022;</code> array.  </div> <h5 class="ssth5"> ndim  </h5><div class="sstsub"> Pointer to an int in which to return the number of
+dimensions spanned by values in the named column. This will be zero if the column
+contains scalar values.  </div> <h5 class="ssth5"> dims  </h5><div class="sstsub"> Pointer to an array in which to return the length of
+each dimension. Any excess trailing elements will be filled with the value 1.  </div>  </div>
+<h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 13232--><p class="noindent" >No error is reported if the requested column cannot be found in the given Table. A
+value of zero is returned for <code>&#x0022;</code> ndim<code>&#x0022;</code> and the supplied values in <code>&#x0022;</code> dims<code>&#x0022;</code> are left
+unchanged.
+<li >
+<!--l. 13232--><p class="noindent" >A value of zero is returned for <code>&#x0022;</code> ndim<code>&#x0022;</code> if an error occurs.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss29.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss31.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss30.html"></a> </div> 
+</body> 
+</html>

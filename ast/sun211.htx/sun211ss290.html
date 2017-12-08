@@ -1,0 +1,52 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> FitsDigits </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss289.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss291.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 36576--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x316-5080000"></a> FitsDigits </h3>  <p class="subtitle"> Digits of precision for floating point FITS values  </p> </h3> </header><a 
+ id="Q1-316-1104"></a> <a 
+ id="Q1-316-1105"></a> <a name="xref_FitsDigits"></a>  <h4 class="ssth4">Description:
+</h4><div class="sstvalues"> This attribute gives the number of significant decimal digits to use when
+formatting floating point values for inclusion in the FITS header cards within a
+<a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>.
+<!--l. 36576--><p class="noindent" >By default, a positive value is used which results in no loss of information, assuming
+that the value<code>&#x2019;</code> s precision is double. Usually, this causes no problems.
+<!--l. 36576--><p class="noindent" >However, to adhere strictly to the recommendations of the FITS standard, the width of
+the formatted value (including sign, decimal point and exponent) ought not to
+be more than 20 characters. If you are concerned about this, you should set
+                                                                                       
+
+                                                                                       
+FitsDigits to a negative value, such as -15. In this case, the absolute value
+(<!--l. 36576--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>15)
+indicates the maximum number of significant digits to use, but the actual number used
+may be fewer than this to ensure that the FITS recommendations are satisfied. When
+using this approach, the resulting number of significant digits may depend on
+the value being formatted and on the presence of any sign, decimal point or
+exponent.
+<!--l. 36576--><p class="noindent" >The value of this attribute is effective when FITS header cards are output, either
+using <a 
+href="sun211ss51.html#x76-2680000">astFindFits</a> or by the action of the FitsChan<code>&#x2019;</code> s sink function when it is finally
+deleted.  </div> <dl class="sst">Type: </dl><dd class="sst"> Integer.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> FitsChan  </h5><div class="sstsub"> All FitsChans have this
+attribute.  </div>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss289.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss291.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss290.html"></a> </div> 
+</body> 
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> AlignSideBand </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss243.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss245.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 33872--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x270-4620000"></a> AlignSideBand </h3>  <p class="subtitle"> Should the SideBand attribute be taken into account when aligning
+this <a 
+href="sun211ss446.html#x473-6650000">DSBSpecFrame</a> with another DSBSpecFrame?  </p> </h3> </header><a 
+ id="Q1-270-966"></a> <a 
+ id="Q1-270-967"></a> <a name="xref_AlignSideBand"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute
+controls how a DSBSpecFrame behaves when an attempt is made to align it with another
+DSBSpecFrame using <a 
+href="sun211ss52.html#x77-2690000">astFindFrame</a> or <a 
+href="sun211ss32.html#x57-2490000">astConvert</a>. If both DSBSpecFrames have a non-zero
+value for AlignSideBand, the value of the <a 
+href="sun211ss386.html#x412-6040000">SideBand</a> attribute in each DSBSpecFrame is
+used so that alignment occurs between sidebands. That is, if one DSBSpecFrame
+represents USB and the other represents LSB then astFindFrame and astConvert will
+recognise that the DSBSpecFrames represent different sidebands and will take this into
+account when constructing the <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> that maps positions in one DSBSpecFrame into the
+other. If AlignSideBand in either DSBSpecFrame is set to zero, then the values of the
+SideBand attributes are ignored. In the above example, this would result in
+a frequency in the first DSBSpecFrame being mapped onto the same frequency
+in the second DSBSpecFrame, even though those frequencies refer to different
+sidebands. In other words, if either AlignSideBand attribute is zero, then the two
+DSBSpecFrames aligns like basic SpecFrames. The default value for AlignSideBand is
+zero.
+<!--l. 33872--><p class="noindent" >When astFindFrame or astConvert is used on two DSBSpecFrames (potentially describing
+different spectral coordinate systems and/or sidebands), it returns a Mapping which can
+be used to transform a position in one DSBSpecFrame into the corresponding position
+in the other. The Mapping is made up of the following steps in the indicated
+order:
+<ul class="sstitemlist">
+<li >
+<!--l. 33872--><p class="noindent" >If both DSBSpecFrames have a value of 1 for the AlignSideBand attribute, map values
+from the target<code>&#x2019;</code> s current sideband (given by its SideBand attribute) to the
+observed sideband (whether USB or LSB). If the target already represents the
+observed sideband, this step will leave the values unchanged. If either of the two
+DSBSpecFrames have a value of zero for its AlignSideBand attribute, then this step is
+omitted.
+<li >
+<!--l. 33872--><p class="noindent" >Map the values from the spectral system of the target to the spectral system of the
+template. This Mapping takes into account all the inherited <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a> attributes such
+as <a 
+href="sun211ss413.html#x439-6310000">System</a>, <a 
+href="sun211ss409.html#x435-6270000">StdOfRest</a>, Unit, etc.
+<li >
+<!--l. 33872--><p class="noindent" >If both DSBSpecFrames have a value of 1 for the AlignSideBand attribute, map values
+from the result<code>&#x2019;</code> s observed sideband to the result<code>&#x2019;</code> s current sideband (given by its
+SideBand attribute). If the result already represents the observed sideband, this step
+will leave the values unchanged. If either of the two DSBSpecFrames have a value of
+zero for its AlignSideBand attribute, then this step is omitted.  </li></ul>  </div> <dl class="sst">Type: </dl><dd class="sst"> Integer
+(boolean).  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> DSBSpecFrame  </h5><div class="sstsub"> All DSBSpecFrames have this attribute.  </div>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss243.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss245.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss244.html"></a> </div> 
+</body> 
+</html>

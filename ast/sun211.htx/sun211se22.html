@@ -1,0 +1,131 @@
+<!DOCTYPE html> 
+<html> 
+<head><title>Compiling and Linking Software that Uses AST</title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211se21.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se23.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<h3 class="sectionHead"><span class="titlemark">22    </span> <a 
+ id="x23-21200022"></a>Compiling and Linking Software that Uses AST</h3>
+<div class="sectionTOCS">
+&#x00A0;<span class="subsectionToc" >22.1 <a 
+href="#x23-2130001">Accessing the &#x201C;ast.h&#x201D; Header File</a></span>
+<br />&#x00A0;<span class="subsectionToc" >22.2 <a 
+href="#x23-2140002">Linking with AST Facilities</a></span>
+<br />&#x00A0;<span class="subsectionToc" >22.3 <a 
+href="#x23-2150003">Building ADAM Applications that Use AST</a></span>
+</div>
+<!--l. 10819--><p class="noindent" >A small number of UNIX commands are provided by AST to assist with the process of building software.
+A description of these can be found in Appendix&#x00A0;<a 
+href="sun211se27.html#x528-7200005">E<!--tex4ht:ref: ss:commanddescriptions --></a> and their use is discussed here. Note that in order
+to access these commands, the appropriate directory (normally &#x201C;/star/bin&#x201D;) should be on your
+PATH.<span class="footnote-mark"><a 
+href="#fn37x0" id="fn37x0-bk"><sup class="textsuperscript">37</sup></a></span><a 
+ id="x23-212001f37"></a>
+<a 
+ id="x23-212002r228"></a>
+<h4 class="subsectionHead"><span class="titlemark">22.1    </span> <a 
+ id="x23-2130001"></a>Accessing the &#x201C;ast.h&#x201D; Header File</h4>
+<!--l. 10829--><p class="noindent" >The &#x201C;ast.h&#x201D; header file defines the external interface to the AST library, including all constants,
+function prototypes, macros, <em>etc.</em>. This file should be located using the usual compiler options for
+finding C include files, for instance:
+<div class="fancyvrb" id="fancyvrb236"> <a 
+ id="x23-213002r1"></a>&#x00A0;&#x00A0;cc&#x00A0;prog.c&#x00A0;-I/star/include&#x00A0;-o&#x00A0;prog</div>
+<!--l. 10840--><p class="noindent" >This is preferable to specifying the file&#x2019;s absolute name within your software.
+<a 
+ id="x23-213003r230"></a>
+<h4 class="subsectionHead"><span class="titlemark">22.2    </span> <a 
+ id="x23-2140002"></a>Linking with AST Facilities</h4>
+<!--l. 10845--><p class="noindent" >C programs which use AST facilities may be linked by including execution of the command &#x201C;<a 
+href="sun211ss501.html#x529-7210000">ast_link</a>&#x201D;
+on the compiler command line. Thus, to compile and link a program called &#x201C;prog&#x201D;, the following
+might be used:
+<div class="fancyvrb" id="fancyvrb237"> <a 
+ id="x23-214002r1"></a>&#x00A0;&#x00A0;cc&#x00A0;prog.c&#x00A0;-L/star/lib&#x00A0;&#x2018;ast_link&#x2018;&#x00A0;-o&#x00A0;prog</div>
+                                                                                       
+
+                                                                                       
+<!--l. 10856--><p class="noindent" >Note the use of backward quote characters, which cause the &#x201C;ast_link&#x201D; command to be executed and
+its result substituted into the compiler command. An alternative is to save the output from &#x201C;ast_link&#x201D;
+in (say) a shell variable and use this instead. You may find this a little faster if you are building
+software repeatedly during development.
+<!--l. 10863--><p class="noindent" >Programs which use AST can also be linked in a number of other ways, depending on the facilities
+they require. In the example above, we have used the default method which assumes that the program
+will not be generating graphical output, so that no graphics libraries need be linked. If you need other
+facilities, then various switches can be applied to the &#x201C;ast_link&#x201D; command in order to control the
+linking process.
+<!--l. 10871--><p class="noindent" >For example, if you were producing graphical output using the PGPLOT
+graphics package, you could link with the AST/PGPLOT interface by using the
+&#x201C;<!--l. 10873--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2212;</mo></math>pgplot&#x201D; switch with
+&#x201C;ast_link&#x201D;, as follows:<span class="footnote-mark"><a 
+href="#fn38x0" id="fn38x0-bk"><sup class="textsuperscript">38</sup></a></span><a 
+ id="x23-214003f38"></a>
+<div class="fancyvrb" id="fancyvrb238"> <a 
+ id="x23-214005r1"></a>&#x00A0;&#x00A0;cc&#x00A0;prog.c&#x00A0;-L/star/lib&#x00A0;&#x2018;ast_link&#x00A0;-pgplot&#x2018;&#x00A0;-o&#x00A0;prog</div>
+<!--l. 10883--><p class="noindent" >See the &#x201C;ast_link&#x201D; command description in Appendix&#x00A0;<a 
+href="sun211se27.html#x528-7200005">E<!--tex4ht:ref: ss:commanddescriptions --></a> for details of the options available.
+<a 
+ id="x23-214006r231"></a>
+<h4 class="subsectionHead"><span class="titlemark">22.3    </span> <a 
+ id="x23-2150003"></a>Building ADAM Applications that Use AST</h4>
+<!--l. 10888--><p class="noindent" >Users of Starlink&#x2019;s <a 
+href="http://www.starlink.ac.uk/cgi-bin/htxserver/sg4.htx/sg4.html?xref_" >ADAM</a> programming environment (SG/4) on UNIX should use the
+&#x201C;<a 
+href="http://www.starlink.ac.uk/cgi-bin/htxserver/sun144.htx/sun144.html?xref_ADAM_link_scripts" >alink</a>&#x201D; command (<a 
+href="http://www.starlink.ac.uk/cgi-bin/htxserver/sun144.htx/sun144.html?xref_" >SUN/144</a>) to compile and link applications and can access the AST
+library by including execution of the command &#x201C;<a 
+href="sun211ss502.html#x530-7220000">ast_link_adam</a>&#x201D; on the command line, as
+follows:
+<!--l. 10895--><p class="noindent" ><div class="small">
+<div class="fancyvrb" id="fancyvrb239"> <a 
+ id="x23-215002r1"></a>&#x00A0;&#x00A0;alink&#x00A0;adamprog.c&#x00A0;&#x2018;ast_link_adam&#x2018;</div>
+<!--l. 10899--><p class="noindent" ></div>
+<!--l. 10901--><p class="noindent" >Note the use of backward quote characters.
+<!--l. 10903--><p class="noindent" >By default, AST error messages produced by applications built in this way will be delivered <em>via</em> the
+Starlink EMS Error Message Service (<a 
+href="http://www.starlink.ac.uk/cgi-bin/htxserver/ssn4.htx/ssn4.html?xref_" >SSN/4</a>) so that error handling by AST is consistent with the
+<a 
+href="http://www.starlink.ac.uk/cgi-bin/htxserver/sun104.htx/sun104.html?xref_inherited_status" ><em>inherited status</em></a> error handling normally used in Starlink software.
+<!--l. 10910--><p class="noindent" >Switches may be given to the &#x201C;ast_link_adam&#x201D; command (in a similar way to &#x201C;<a 
+href="sun211ss501.html#x529-7210000">ast_link</a>&#x201D;&#x2014;&#x00A7;<a 
+href="#x23-2140002">22.2<!--tex4ht:ref: ss:linking --></a>) in
+order to link with additional AST-related facilities, such as a graphics interface. See the
+&#x201C;ast_link_adam&#x201D; command description in Appendix&#x00A0;<a 
+href="sun211se27.html#x528-7200005">E<!--tex4ht:ref: ss:commanddescriptions --></a> for details of the options available.
+                                                                                       
+
+                                                                                       
+<!--l. 10917--><p class="noindent" >
+                                                                                       
+
+                                                                                       
+                                                                                       
+
+                                                                                       
+<div class="footnotes"><!--l. 10825--><p class="noindent" ><span class="footnote-mark"><a 
+href="#fn37x0-bk" id="fn37x0"><sup class="textsuperscript">37</sup></a></span>If you have not installed AST in the usual location, then substitute the appropriate directory in place of &#x201C;/star&#x201D;
+wherever it occurs.
+<!--l. 10875--><p class="noindent" ><span class="footnote-mark"><a 
+href="#fn38x0-bk" id="fn38x0"><sup class="textsuperscript">38</sup></a></span>Use the &#x201C;<!--l. 10875--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2212;</mo></math>pgp&#x201D;
+option instead if you wish to use the Starlink version of PGPLOT which uses GKS to generate its output.        </div> <div class="crosslinks">
+<div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211se21.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World
+Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se23.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 10918--><p class="noindent" ><a 
+ id="tailsun211se22.html"></a> 
+</body> 
+</html>

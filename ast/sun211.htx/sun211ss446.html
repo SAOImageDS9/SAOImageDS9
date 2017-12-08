@@ -1,0 +1,71 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> DSBSpecFrame </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss445.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss447.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+                                                                                       
+
+                                                                                       
+<!--l. 43888--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x473-6650000"></a> DSBSpecFrame </h3>  <p class="subtitle"> Dual sideband spectral coordinate system description  </p> </h3> </header><a 
+ id="Q1-473-1573"></a> <a 
+ id="Q1-473-1574"></a> <a name="xref_DSBSpecFrame"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> A DSBSpecFrame is a specialised form of <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a> which represents
+positions in a spectrum obtained using a dual sideband instrument. Such an instrument
+produces a spectrum in which each point contains contributions from two distinctly
+different frequencies, one from the <code>&#x0022;</code> lower side band<code>&#x0022;</code> (LSB) and one from the <code>&#x0022;</code> upper
+side band<code>&#x0022;</code> (USB). Corresponding LSB and USB frequencies are connected by the fact that
+they are an equal distance on either side of a fixed central frequency known as the <code>&#x0022;</code>
+Local Oscillator<code>&#x0022;</code> (LO) frequency.
+<!--l. 43888--><p class="noindent" >When quoting a position within such a spectrum, it is necessary to indicate whether the
+quoted position is the USB position or the corresponding LSB position. The <a 
+href="sun211ss386.html#x412-6040000">SideBand</a>
+attribute provides this indication. Another option that the SideBand attribute
+provides is to represent a spectral position by its topocentric offset from the LO
+frequency.
+<!--l. 43888--><p class="noindent" >In practice, the LO frequency is specified by giving the distance from the LO frequency
+to some <code>&#x0022;</code> central<code>&#x0022;</code> spectral position. Typically this central position is that of some
+interesting spectral feature. The distance from this central position to the LO
+frequency is known as the <code>&#x0022;</code> intermediate frequency<code>&#x0022;</code> (<a 
+href="sun211ss306.html#x332-5240000">IF</a>). The value supplied for IF can
+be a signed value in order to indicate whether the LO frequency is above or below the
+central position.  </div> <h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> <a 
+href="sun211ss37.html#x62-2540000">astDSBSpecFrame</a>  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues"> The
+DSBSpecFrame class inherits from the SpecFrame class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> In addition to
+those attributes common to all SpecFrames, every DSBSpecFrame also has the following
+attributes:
+<ul class="sstitemlist">
+<li >
+<!--l. 43888--><p class="noindent" ><a 
+href="sun211ss244.html#x270-4620000">AlignSideBand</a>: Should alignment occur between sidebands?
+<li >
+<!--l. 43888--><p class="noindent" ><a 
+href="sun211ss274.html#x300-4920000">DSBCentre</a>: The central position of interest.
+<li >
+<!--l. 43888--><p class="noindent" ><a 
+href="sun211ss306.html#x332-5240000">IF</a>: The intermediate frequency used to define the LO frequency.
+<li >
+<!--l. 43888--><p class="noindent" ><a 
+href="sun211ss308.html#x334-5260000">ImagFreq</a>: The image sideband equivalent of the rest frequency.
+<li >
+<!--l. 43888--><p class="noindent" ><a 
+href="sun211ss386.html#x412-6040000">SideBand</a>: Indicates which sideband the DSBSpecFrame represents.  </li></ul>  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> The
+DSBSpecFrame class does not define any new functions beyond those which are applicable
+to all SpecFrames.  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss445.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss447.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss446.html"></a> </div> 
+</body> 
+</html>

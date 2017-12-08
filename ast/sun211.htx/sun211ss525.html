@@ -1,0 +1,63 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astStore </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss524.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss526.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 49377--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x554-7460000"></a> astStore </h3>  <p class="subtitle"> Store data in dynamically allocated memory  </p> </h3> </header><a 
+ id="Q1-554-1812"></a> <a 
+ id="Q1-554-1813"></a> <a name="xref_astStore"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function
+stores data in dynamically allocated memory, allocating the memory (or adjusting the size
+of previously allocated memory) to match the amount of data to be stored.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void
+<!--l. 49377--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astStore( void
+<!--l. 49377--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>ptr, const
+void <!--l. 49377--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>data,
+size_t size )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> ptr  </h5><div class="sstsub"> Pointer to previously allocated memory (or NULL if
+none has yet been allocated).  </div> <h5 class="ssth5"> data  </h5><div class="sstsub"> Pointer to the start of the data to be stored.
+This may be given as NULL if there are no data, in which case it will be ignored and
+this function behaves like <a 
+href="sun211ss522.html#x551-7430000">astRealloc</a>, preserving the existing memory contents.  </div> <h5 class="ssth5">
+size  </h5><div class="sstsub"> The total size of the data to be stored and/or the size of memory to be
+allocated. This may be zero, in which case the data parameter is ignored, any
+previously-allocated memory is freed and a NULL pointer is returned.  </div>  </div> <h4 class="ssth4">Returned Value
+</h4><div class="sstvalues"> <h5 class="ssth5"> astStore()  </h5><div class="sstsub"> If the data were stored successfully, a pointer to the start of the
+possibly new memory region is returned (this may be the same as the original
+                                                                                       
+
+                                                                                       
+pointer). If size was given as zero, a NULL pointer is returned.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 49377--><p class="noindent" >This is a convenience function for use when storing data of arbitrary size in memory
+which is to be allocated dynamically. It is appropriate when the size of the data will
+not change frequently because the size of the memory region will be adjusted to fit the
+data on every invocation.
+<li >
+<!--l. 49377--><p class="noindent" >If this function is invoked with the error status set, or if it fails for any reason,
+the original pointer value is returned and the memory contents are unchanged.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss524.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss526.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 49550--><p class="noindent" ><a 
+ id="tailsun211ss525.html"></a> </div> 
+</body> 
+</html>

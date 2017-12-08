@@ -1,0 +1,1875 @@
+<!DOCTYPE html> 
+<html> 
+<head>
+<title>AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="titlesection">
+<!--l. 60--><p class="noindent" >
+                                                                                       
+
+                                                                                       
+                                                                                       <div class="flushright" 
+>
+<!--l. 60--><p class="noindent" >
+ <b>SUN/211.27</b></div>
+<!--l. 60--><p class="noindent" >Starlink Project<br 
+class="newline" />Starlink User Note&#x00A0;211.27<br 
+class="newline" />
+                                                                                       <div class="flushright" 
+>
+<!--l. 60--><p class="noindent" >
+<!--l. 60--><p class="noindent" >R.F. Warren-Smith &#x0026; D.S. Berry
+<!--l. 60--><p class="noindent" >26th October 2016
+<!--l. 60--><p class="noindent" >Copyright (C) 2014 Science &#x0026; Technology Facilities Council</div>
+<!--l. 60--><p class="noindent" ><HR> <div class="titleformat">
+<!--l. 60--><p class="noindent" ><span>AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</span>
+<!--l. 60--><p class="noindent" ><span>V8.3</span>
+<!--l. 60--><p class="noindent" ><span>Programmer&#x2019;s Guide<br 
+class="newline" />(C Version)</span> </div> <div class="center">  <img 
+src="sun211_figures/fronta.png" alt="pdfpict"  
+ width="25%" > &#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;                                                                                                          <img 
+src="sun211_figures/frontb.png" alt="pdfpict"  
+ width="25%" >
+&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;                                                                                                                                             <img 
+src="sun211_figures/frontc.png" alt="pdfpict"  
+ width="25%" >  <HR>
+</div>
+<br 
+class="newline" />
+                                                                                       
+
+                                                                                       
+</div>
+<a 
+ id="Q1-1-1"></a>
+<h3 class="likesectionHead"><a 
+ id="x1-1000"></a>Abstract</h3>
+<!--l. 60--><p class="noindent" >The AST library provides a comprehensive range of facilities for attaching world coordinate systems
+to astronomical data, for retrieving and interpreting that information in a variety of formats, including
+FITS-WCS, and for generating graphical output based on it.
+<!--l. 60--><p class="noindent" >This programmer&#x2019;s manual should be of interest to anyone writing astronomical applications which
+need to manipulate coordinate system data, especially celestial or spectral coordinate systems. AST is
+portable and environment-independent.  <a 
+ id="toc"></a>
+<a 
+ id="Q1-1-3"></a>
+<h3 class="likesectionHead"><a 
+ id="x1-2000"></a>Contents</h3>
+<div class="tableofcontents">
+<span class="sectionToc" >1 <a 
+href="sun211se1.html#x2-30001" id="QQ2-2-5">Introduction</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.1 <a 
+href="sun211se1.html#x2-40001" id="QQ2-2-6">What Problems Does AST Tackle?</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.2 <a 
+href="sun211se1.html#x2-50002" id="QQ2-2-7">Other Design Objectives</a></span>
+<br />&#x00A0;<span class="subsectionToc" >1.3 <a 
+href="sun211se1.html#x2-60003" id="QQ2-2-8">What Does &#x201C;AST&#x201D; Stand For?</a></span>
+<br /><span class="sectionToc" >2 <a 
+href="sun211se2.html#x3-70002" id="QQ2-3-9">Overview of AST Concepts</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.1 <a 
+href="sun211se2.html#x3-80001" id="QQ2-3-10">Relationships Between Coordinate Systems</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.2 <a 
+href="sun211se2.html#x3-90002" id="QQ2-3-12">Mappings Available</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.3 <a 
+href="sun211se2.html#x3-100003" id="QQ2-3-13">Compound Mappings</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.4 <a 
+href="sun211se2.html#x3-110004" id="QQ2-3-17">Representing Coordinate Systems</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.5 <a 
+href="sun211se2.html#x3-120005" id="QQ2-3-20">Networks of Coordinate Systems</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.6 <a 
+href="sun211se2.html#x3-130006" id="QQ2-3-22">Input/Output Facilities</a></span>
+<br />&#x00A0;<span class="subsectionToc" >2.7 <a 
+href="sun211se2.html#x3-140007" id="QQ2-3-23">Producing Graphical Output</a></span>
+<br /><span class="sectionToc" >3 <a 
+href="sun211se3.html#x4-150003" id="QQ2-4-25">How To&#x2026;</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.1 <a 
+href="sun211se3.html#x4-160001" id="QQ2-4-26">&#x2026;Obtain and Install AST</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.2 <a 
+href="sun211se3.html#x4-170002" id="QQ2-4-27">&#x2026;Structure an AST Program</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.3 <a 
+href="sun211se3.html#x4-180003" id="QQ2-4-28">&#x2026;Build an AST Program</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.4 <a 
+href="sun211se3.html#x4-190004" id="QQ2-4-29">&#x2026;Read a WCS Calibration from a Dataset</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.5 <a 
+href="sun211se3.html#x4-200005" id="QQ2-4-30">&#x2026;Validate WCS Information</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.6 <a 
+href="sun211se3.html#x4-210006" id="QQ2-4-31">&#x2026;Display AST Data</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.7 <a 
+href="sun211se3.html#x4-220007" id="QQ2-4-32">&#x2026;Convert Between Pixel and World Coordinates</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.8 <a 
+href="sun211se3.html#x4-230008" id="QQ2-4-33">&#x2026;Test if a WCS is a Celestial Coordinate System</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.9 <a 
+href="sun211se3.html#x4-240009" id="QQ2-4-34">&#x2026;Test if a WCS is a Spectral Coordinate System</a></span>
+                                                                                       
+
+                                                                                       
+<br />&#x00A0;<span class="subsectionToc" >3.10 <a 
+href="sun211se3.html#x4-2500010" id="QQ2-4-35">&#x2026;Format Coordinates for Display</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.11 <a 
+href="sun211se3.html#x4-2600011" id="QQ2-4-36">&#x2026;Display Coordinates as they are Transformed</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.12 <a 
+href="sun211se3.html#x4-2700012" id="QQ2-4-37">&#x2026;Read Coordinates Entered by a User</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.13 <a 
+href="sun211se3.html#x4-2800013" id="QQ2-4-38">&#x2026;Create a New WCS Calibration</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.14 <a 
+href="sun211se3.html#x4-2900014" id="QQ2-4-39">&#x2026;Modify a WCS Calibration</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.15 <a 
+href="sun211se3.html#x4-3000015" id="QQ2-4-40">&#x2026;Write a Modified WCS Calibration to a Dataset</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.16 <a 
+href="sun211se3.html#x4-3100016" id="QQ2-4-41">&#x2026;Display a Graphical Coordinate Grid</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.17 <a 
+href="sun211se3.html#x4-3200017" id="QQ2-4-43">&#x2026;Switch to Plot a Different Celestial Coordinate Grid</a></span>
+<br />&#x00A0;<span class="subsectionToc" >3.18 <a 
+href="sun211se3.html#x4-3300018" id="QQ2-4-44">&#x2026;Give a User Control Over the Appearance of a Plot</a></span>
+<br /><span class="sectionToc" >4 <a 
+href="sun211se4.html#x5-340004" id="QQ2-5-45">An AST Object Primer</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.1 <a 
+href="sun211se4.html#x5-350001" id="QQ2-5-46">AST Objects</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.2 <a 
+href="sun211se4.html#x5-360002" id="QQ2-5-47">Object Creation and Pointers</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.3 <a 
+href="sun211se4.html#x5-370003" id="QQ2-5-48">The Object Hierarchy</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.4 <a 
+href="sun211se4.html#x5-380004" id="QQ2-5-49">Displaying Objects</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.5 <a 
+href="sun211se4.html#x5-390005" id="QQ2-5-50">Getting Attribute Values</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.6 <a 
+href="sun211se4.html#x5-400006" id="QQ2-5-51">Setting Attribute Values</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.7 <a 
+href="sun211se4.html#x5-410007" id="QQ2-5-52">Testing, Clearing and Defaulting Attributes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.8 <a 
+href="sun211se4.html#x5-420008" id="QQ2-5-53">Transforming Coordinates</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.9 <a 
+href="sun211se4.html#x5-430009" id="QQ2-5-54">Managing Object Pointers</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.10 <a 
+href="sun211se4.html#x5-4400010" id="QQ2-5-55">AST Pointer Contexts&#x2014;Begin and End</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.11 <a 
+href="sun211se4.html#x5-4500011" id="QQ2-5-56">Exporting, Importing and Exempting AST Pointers</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.12 <a 
+href="sun211se4.html#x5-4600012" id="QQ2-5-57">AST Objects within Multi-threaded Applications</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >4.12.1 <a 
+href="sun211se4.html#x5-470001" id="QQ2-5-58">Locking AST Objects for Exclusive Use</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >4.12.2 <a 
+href="sun211se4.html#x5-480002" id="QQ2-5-59">AST Pointer Contexts</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.13 <a 
+href="sun211se4.html#x5-4900013" id="QQ2-5-60">Copying Objects</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.14 <a 
+href="sun211se4.html#x5-5000014" id="QQ2-5-61">C Pointer Types</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.15 <a 
+href="sun211se4.html#x5-5100015" id="QQ2-5-62">Error Detection</a></span>
+<br />&#x00A0;<span class="subsectionToc" >4.16 <a 
+href="sun211se4.html#x5-5200016" id="QQ2-5-63">Sharing the Error Status</a></span>
+<br /><span class="sectionToc" >5 <a 
+href="sun211se5.html#x6-530005" id="QQ2-6-64">Inter-Relating Coordinate Systems (Mappings)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.1 <a 
+href="sun211se5.html#x6-540001" id="QQ2-6-65">The Mapping Class</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.2 <a 
+href="sun211se5.html#x6-550002" id="QQ2-6-66">The Mapping Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.3 <a 
+href="sun211se5.html#x6-560003" id="QQ2-6-67">Changing Attributes of a Mapping</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.4 <a 
+href="sun211se5.html#x6-570004" id="QQ2-6-68">Input and Output Coordinate Numbers</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.5 <a 
+href="sun211se5.html#x6-580005" id="QQ2-6-69">Forward and Inverse Transformations</a></span>
+                                                                                       
+
+                                                                                       
+<br />&#x00A0;<span class="subsectionToc" >5.6 <a 
+href="sun211se5.html#x6-590006" id="QQ2-6-70">Inverting Mappings</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.7 <a 
+href="sun211se5.html#x6-600007" id="QQ2-6-71">Finding the Rate of Change of a Mapping Output</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.8 <a 
+href="sun211se5.html#x6-610008" id="QQ2-6-72">Reporting Coordinate Transformations</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.9 <a 
+href="sun211se5.html#x6-620009" id="QQ2-6-73">Handling Missing (Bad) Coordinate Values</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.10 <a 
+href="sun211se5.html#x6-6300010" id="QQ2-6-74">Example&#x2014;the UnitMap</a></span>
+<br />&#x00A0;<span class="subsectionToc" >5.11 <a 
+href="sun211se5.html#x6-6400011" id="QQ2-6-75">Example&#x2014;the PermMap</a></span>
+<br /><span class="sectionToc" >6 <a 
+href="sun211se6.html#x7-650006" id="QQ2-7-76">Compound Mappings (CmpMaps)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >6.1 <a 
+href="sun211se6.html#x7-660001" id="QQ2-7-77">Combining Mappings in Series</a></span>
+<br />&#x00A0;<span class="subsectionToc" >6.2 <a 
+href="sun211se6.html#x7-670002" id="QQ2-7-78">Combining Mappings in Parallel</a></span>
+<br />&#x00A0;<span class="subsectionToc" >6.3 <a 
+href="sun211se6.html#x7-680003" id="QQ2-7-79">The Component Mappings</a></span>
+<br />&#x00A0;<span class="subsectionToc" >6.4 <a 
+href="sun211se6.html#x7-690004" id="QQ2-7-80">Creating More Complex Mappings</a></span>
+<br />&#x00A0;<span class="subsectionToc" >6.5 <a 
+href="sun211se6.html#x7-700005" id="QQ2-7-81">Example&#x2014;Transforming Between Two Calibrated Images</a></span>
+<br />&#x00A0;<span class="subsectionToc" >6.6 <a 
+href="sun211se6.html#x7-710006" id="QQ2-7-82">Over-Complex Compound Mappings</a></span>
+<br />&#x00A0;<span class="subsectionToc" >6.7 <a 
+href="sun211se6.html#x7-720007" id="QQ2-7-83">Simplifying Compound Mappings</a></span>
+<br /><span class="sectionToc" >7 <a 
+href="sun211se7.html#x8-730007" id="QQ2-8-85">Representing Coordinate Systems (Frames)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.1 <a 
+href="sun211se7.html#x8-740001" id="QQ2-8-86">The Frame Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.2 <a 
+href="sun211se7.html#x8-750002" id="QQ2-8-87">Creating a Frame</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.3 <a 
+href="sun211se7.html#x8-760003" id="QQ2-8-88">Using a Frame as a Mapping</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.4 <a 
+href="sun211se7.html#x8-770004" id="QQ2-8-89">Frame Axis Attributes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.5 <a 
+href="sun211se7.html#x8-780005" id="QQ2-8-90">Frame Attributes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.6 <a 
+href="sun211se7.html#x8-790006" id="QQ2-8-91">Formatting Axis Values</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.7 <a 
+href="sun211se7.html#x8-800007" id="QQ2-8-92">Normalising Frame Coordinates</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.8 <a 
+href="sun211se7.html#x8-810008" id="QQ2-8-93">Reading Formatted Axis Values</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.9 <a 
+href="sun211se7.html#x8-820009" id="QQ2-8-94">Permuting Frame Axes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.10 <a 
+href="sun211se7.html#x8-8300010" id="QQ2-8-95">Selecting Frame Axes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.11 <a 
+href="sun211se7.html#x8-8400011" id="QQ2-8-96">Calculating Distances, Angles and Offsets</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.12 <a 
+href="sun211se7.html#x8-8500012" id="QQ2-8-97">The Domain Attribute</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.13 <a 
+href="sun211se7.html#x8-8600013" id="QQ2-8-98">Conventions for Domain Names</a></span>
+<br />&#x00A0;<span class="subsectionToc" >7.14 <a 
+href="sun211se7.html#x8-8700014" id="QQ2-8-99">The Unit Attribute</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >7.14.1 <a 
+href="sun211se7.html#x8-880001" id="QQ2-8-100">The Syntax for Unit Strings</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >7.14.2 <a 
+href="sun211se7.html#x8-890002" id="QQ2-8-101">Side-effects of Changing the Unit attribute</a></span>
+<br /><span class="sectionToc" >8 <a 
+href="sun211se8.html#x9-900008" id="QQ2-9-102">Celestial Coordinate Systems (SkyFrames)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >8.1 <a 
+href="sun211se8.html#x9-910001" id="QQ2-9-103">The SkyFrame Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >8.2 <a 
+href="sun211se8.html#x9-920002" id="QQ2-9-104">Creating a SkyFrame</a></span>
+                                                                                       
+
+                                                                                       
+<br />&#x00A0;<span class="subsectionToc" >8.3 <a 
+href="sun211se8.html#x9-930003" id="QQ2-9-105">Specifying a Particular Celestial Coordinate System</a></span>
+<br />&#x00A0;<span class="subsectionToc" >8.4 <a 
+href="sun211se8.html#x9-940004" id="QQ2-9-106">Attributes which Qualify Celestial Coordinate Systems</a></span>
+<br />&#x00A0;<span class="subsectionToc" >8.5 <a 
+href="sun211se8.html#x9-950005" id="QQ2-9-107">Using Default SkyFrame Attributes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >8.6 <a 
+href="sun211se8.html#x9-960006" id="QQ2-9-108">Formatting Celestial Coordinates</a></span>
+<br />&#x00A0;<span class="subsectionToc" >8.7 <a 
+href="sun211se8.html#x9-970007" id="QQ2-9-109">Reading Formatted Celestial Coordinates</a></span>
+<br />&#x00A0;<span class="subsectionToc" >8.8 <a 
+href="sun211se8.html#x9-980008" id="QQ2-9-110">Representing Offsets from a Specified Sky Position</a></span>
+<br /><span class="sectionToc" >9 <a 
+href="sun211se9.html#x10-990009" id="QQ2-10-111">Spectral Coordinate Systems (SpecFrames)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >9.1 <a 
+href="sun211se9.html#x10-1000001" id="QQ2-10-112">The SpecFrame Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >9.2 <a 
+href="sun211se9.html#x10-1010002" id="QQ2-10-113">Creating a SpecFrame</a></span>
+<br />&#x00A0;<span class="subsectionToc" >9.3 <a 
+href="sun211se9.html#x10-1020003" id="QQ2-10-114">Specifying a Particular Spectral Coordinate System</a></span>
+<br />&#x00A0;<span class="subsectionToc" >9.4 <a 
+href="sun211se9.html#x10-1030004" id="QQ2-10-115">Attributes which Qualify Spectral Coordinate Systems</a></span>
+<br />&#x00A0;<span class="subsectionToc" >9.5 <a 
+href="sun211se9.html#x10-1040005" id="QQ2-10-116">Using Default SpecFrame Attributes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >9.6 <a 
+href="sun211se9.html#x10-1050006" id="QQ2-10-117">Creating Spectral Cubes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >9.7 <a 
+href="sun211se9.html#x10-1060007" id="QQ2-10-118">Handling Dual-Sideband Spectra</a></span>
+<br /><span class="sectionToc" >10 <a 
+href="sun211se10.html#x11-10700010" id="QQ2-11-119">Time Systems (TimeFrames)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >10.1 <a 
+href="sun211se10.html#x11-1080001" id="QQ2-11-120">The TimeFrame Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >10.2 <a 
+href="sun211se10.html#x11-1090002" id="QQ2-11-121">Creating a TimeFrame</a></span>
+<br />&#x00A0;<span class="subsectionToc" >10.3 <a 
+href="sun211se10.html#x11-1100003" id="QQ2-11-122">Specifying a Particular Time System</a></span>
+<br />&#x00A0;<span class="subsectionToc" >10.4 <a 
+href="sun211se10.html#x11-1110004" id="QQ2-11-123">Attributes which Qualify Time Coordinate Systems</a></span>
+<br /><span class="sectionToc" >11 <a 
+href="sun211se11.html#x12-11200011" id="QQ2-12-124">Compound Frames (CmpFrames)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >11.1 <a 
+href="sun211se11.html#x12-1130001" id="QQ2-12-125">Creating a CmpFrame</a></span>
+<br />&#x00A0;<span class="subsectionToc" >11.2 <a 
+href="sun211se11.html#x12-1140002" id="QQ2-12-126">The Attributes of a CmpFrame</a></span>
+<br /><span class="sectionToc" >12 <a 
+href="sun211se12.html#x13-11500012" id="QQ2-13-127">An Introduction to Coordinate System Conversions</a></span>
+<br />&#x00A0;<span class="subsectionToc" >12.1 <a 
+href="sun211se12.html#x13-1160001" id="QQ2-13-128">Converting between Celestial Coordinate Systems</a></span>
+<br />&#x00A0;<span class="subsectionToc" >12.2 <a 
+href="sun211se12.html#x13-1170002" id="QQ2-13-129">Converting between Spectral Coordinate Systems</a></span>
+<br />&#x00A0;<span class="subsectionToc" >12.3 <a 
+href="sun211se12.html#x13-1180003" id="QQ2-13-130">Converting between Time Coordinate Systems</a></span>
+<br />&#x00A0;<span class="subsectionToc" >12.4 <a 
+href="sun211se12.html#x13-1190004" id="QQ2-13-131">Handling SkyFrame Axis Permutations</a></span>
+<br />&#x00A0;<span class="subsectionToc" >12.5 <a 
+href="sun211se12.html#x13-1200005" id="QQ2-13-132">Converting Between Frames</a></span>
+<br />&#x00A0;<span class="subsectionToc" >12.6 <a 
+href="sun211se12.html#x13-1210006" id="QQ2-13-133">The Choice of Alignment System</a></span>
+<br /><span class="sectionToc" >13 <a 
+href="sun211se13.html#x14-12200013" id="QQ2-14-134">Coordinate System Networks (FrameSets)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >13.1 <a 
+href="sun211se13.html#x14-1230001" id="QQ2-14-135">The FrameSet Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >13.2 <a 
+href="sun211se13.html#x14-1240002" id="QQ2-14-136">Creating a FrameSet</a></span>
+<br />&#x00A0;<span class="subsectionToc" >13.3 <a 
+href="sun211se13.html#x14-1250003" id="QQ2-14-137">Adding New Frames to a FrameSet</a></span>
+<br />&#x00A0;<span class="subsectionToc" >13.4 <a 
+href="sun211se13.html#x14-1260004" id="QQ2-14-139">The Base and Current Frames</a></span>
+                                                                                       
+
+                                                                                       
+<br />&#x00A0;<span class="subsectionToc" >13.5 <a 
+href="sun211se13.html#x14-1270005" id="QQ2-14-140">Referring to the Base and Current Frames</a></span>
+<br />&#x00A0;<span class="subsectionToc" >13.6 <a 
+href="sun211se13.html#x14-1280006" id="QQ2-14-141">Using a FrameSet as a Mapping</a></span>
+<br />&#x00A0;<span class="subsectionToc" >13.7 <a 
+href="sun211se13.html#x14-1290007" id="QQ2-14-142">Extracting a Mapping from a FrameSet</a></span>
+<br />&#x00A0;<span class="subsectionToc" >13.8 <a 
+href="sun211se13.html#x14-1300008" id="QQ2-14-143">Using a FrameSet as a Frame</a></span>
+<br />&#x00A0;<span class="subsectionToc" >13.9 <a 
+href="sun211se13.html#x14-1310009" id="QQ2-14-144">Extracting a Frame from a FrameSet</a></span>
+<br />&#x00A0;<span class="subsectionToc" >13.10 <a 
+href="sun211se13.html#x14-13200010" id="QQ2-14-145">Removing a Frame from a FrameSet</a></span>
+<br /><span class="sectionToc" >14 <a 
+href="sun211se14.html#x15-13300014" id="QQ2-15-146">Higher Level Operations on FrameSets</a></span>
+<br />&#x00A0;<span class="subsectionToc" >14.1 <a 
+href="sun211se14.html#x15-1340001" id="QQ2-15-147">Creating FrameSets with astConvert</a></span>
+<br />&#x00A0;<span class="subsectionToc" >14.2 <a 
+href="sun211se14.html#x15-1350002" id="QQ2-15-149">Converting between FrameSet Coordinate Systems</a></span>
+<br />&#x00A0;<span class="subsectionToc" >14.3 <a 
+href="sun211se14.html#x15-1360003" id="QQ2-15-151">Example&#x2014;Registering Two Images</a></span>
+<br />&#x00A0;<span class="subsectionToc" >14.4 <a 
+href="sun211se14.html#x15-1370004" id="QQ2-15-152">Re-Defining a FrameSet Coordinate System</a></span>
+<br />&#x00A0;<span class="subsectionToc" >14.5 <a 
+href="sun211se14.html#x15-1380005" id="QQ2-15-154">Example&#x2014;Binning an Image</a></span>
+<br />&#x00A0;<span class="subsectionToc" >14.6 <a 
+href="sun211se14.html#x15-1390006" id="QQ2-15-155">Maintaining the Integrity of FrameSets</a></span>
+<br />&#x00A0;<span class="subsectionToc" >14.7 <a 
+href="sun211se14.html#x15-1400007" id="QQ2-15-156">Merging FrameSets</a></span>
+<br /><span class="sectionToc" >15 <a 
+href="sun211se15.html#x16-14100015" id="QQ2-16-158">Saving and Restoring Objects (Channels)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.1 <a 
+href="sun211se15.html#x16-1420001" id="QQ2-16-159">The Channel Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.2 <a 
+href="sun211se15.html#x16-1430002" id="QQ2-16-160">Creating a Channel</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.3 <a 
+href="sun211se15.html#x16-1440003" id="QQ2-16-161">Writing Objects to a Channel</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.4 <a 
+href="sun211se15.html#x16-1450004" id="QQ2-16-162">Reading Objects from a Channel</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.5 <a 
+href="sun211se15.html#x16-1460005" id="QQ2-16-163">Saving and Restoring Multiple Objects</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.6 <a 
+href="sun211se15.html#x16-1470006" id="QQ2-16-164">Validating Input</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.7 <a 
+href="sun211se15.html#x16-1480007" id="QQ2-16-165">Storing an ID String with an Object</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.8 <a 
+href="sun211se15.html#x16-1490008" id="QQ2-16-166">The Textual Output Format</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.9 <a 
+href="sun211se15.html#x16-1500009" id="QQ2-16-167">Controlling the Amount of Output</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.10 <a 
+href="sun211se15.html#x16-15100010" id="QQ2-16-168">Controlling Commenting</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.11 <a 
+href="sun211se15.html#x16-15200011" id="QQ2-16-169">Editing Textual Output</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.12 <a 
+href="sun211se15.html#x16-15300012" id="QQ2-16-170">Mixing Objects with other Text</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.13 <a 
+href="sun211se15.html#x16-15400013" id="QQ2-16-171">Reading Objects from Files</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.14 <a 
+href="sun211se15.html#x16-15500014" id="QQ2-16-172">Writing Objects to Files</a></span>
+<br />&#x00A0;<span class="subsectionToc" >15.15 <a 
+href="sun211se15.html#x16-15600015" id="QQ2-16-173">Reading and Writing Objects to other Places</a></span>
+<br /><span class="sectionToc" >16 <a 
+href="sun211se16.html#x17-15700016" id="QQ2-17-174">Storing AST Objects in FITS Headers (FitsChans)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.1 <a 
+href="sun211se16.html#x17-1580001" id="QQ2-17-175">The Native FITS Encoding</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.2 <a 
+href="sun211se16.html#x17-1590002" id="QQ2-17-176">The FitsChan Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.3 <a 
+href="sun211se16.html#x17-1600003" id="QQ2-17-177">Creating a FitsChan</a></span>
+                                                                                       
+
+                                                                                       
+<br />&#x00A0;<span class="subsectionToc" >16.4 <a 
+href="sun211se16.html#x17-1610004" id="QQ2-17-178">Addressing Cards in a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.5 <a 
+href="sun211se16.html#x17-1620005" id="QQ2-17-179">Writing Native Objects to a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.6 <a 
+href="sun211se16.html#x17-1630006" id="QQ2-17-180">Extracting Individual Cards from a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.7 <a 
+href="sun211se16.html#x17-1640007" id="QQ2-17-181">The Native FitsChan Output Format</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.8 <a 
+href="sun211se16.html#x17-1650008" id="QQ2-17-182">Adding Individual Cards to a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.9 <a 
+href="sun211se16.html#x17-1660009" id="QQ2-17-183">Adding Concatenated Cards to a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.10 <a 
+href="sun211se16.html#x17-16700010" id="QQ2-17-184">Reading Native Objects From a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.11 <a 
+href="sun211se16.html#x17-16800011" id="QQ2-17-185">Saving and Restoring Multiple Objects in a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.12 <a 
+href="sun211se16.html#x17-16900012" id="QQ2-17-186">Mixing Native Objects with Other FITS Cards</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.13 <a 
+href="sun211se16.html#x17-17000013" id="QQ2-17-187">Finding and Changing Cards in a FitsChan</a></span>
+<br />&#x00A0;<span class="subsectionToc" >16.14 <a 
+href="sun211se16.html#x17-17100014" id="QQ2-17-188">Source and Sink Functions for FitsChans</a></span>
+<br /><span class="sectionToc" >17 <a 
+href="sun211se17.html#x18-17200017" id="QQ2-18-189">Using Foreign FITS Encodings</a></span>
+<br />&#x00A0;<span class="subsectionToc" >17.1 <a 
+href="sun211se17.html#x18-1730001" id="QQ2-18-190">The Foreign FITS Encodings</a></span>
+<br />&#x00A0;<span class="subsectionToc" >17.2 <a 
+href="sun211se17.html#x18-1740002" id="QQ2-18-191">Limitations of Foreign Encodings</a></span>
+<br />&#x00A0;<span class="subsectionToc" >17.3 <a 
+href="sun211se17.html#x18-1750003" id="QQ2-18-192">Identifying Foreign Encodings on Input</a></span>
+<br />&#x00A0;<span class="subsectionToc" >17.4 <a 
+href="sun211se17.html#x18-1760004" id="QQ2-18-193">Reading Foreign WCS Information from a FITS Header</a></span>
+<br />&#x00A0;<span class="subsectionToc" >17.5 <a 
+href="sun211se17.html#x18-1770005" id="QQ2-18-194">Removing WCS Information from FITS Headers&#x2014;the Destructive Read</a></span>
+<br />&#x00A0;<span class="subsectionToc" >17.6 <a 
+href="sun211se17.html#x18-1780006" id="QQ2-18-195">Propagating WCS Information through Data Processing Steps</a></span>
+<br />&#x00A0;<span class="subsectionToc" >17.7 <a 
+href="sun211se17.html#x18-1790007" id="QQ2-18-196">Writing Foreign WCS Information to a FITS Header</a></span>
+<br /><span class="sectionToc" >18 <a 
+href="sun211se18.html#x19-18000018" id="QQ2-19-197">Storing AST Objects as XML (XmlChan)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >18.1 <a 
+href="sun211se18.html#x19-1810001" id="QQ2-19-198">Reading IVOA Space-Time-Coordinates XML (STC-X) Descriptions</a></span>
+<br /><span class="sectionToc" >19 <a 
+href="sun211se19.html#x20-18200019" id="QQ2-20-199">Reading and writing STC-S descriptions (StcsChans)</a></span>
+<br /><span class="sectionToc" >20 <a 
+href="sun211se20.html#x21-18300020" id="QQ2-21-200">Creating Your Own Private Mappings (IntraMaps)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.1 <a 
+href="sun211se20.html#x21-1840001" id="QQ2-21-201">The Need for Extensibility</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.2 <a 
+href="sun211se20.html#x21-1850002" id="QQ2-21-202">The IntraMap Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.3 <a 
+href="sun211se20.html#x21-1860003" id="QQ2-21-203">Limitations of IntraMaps</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.4 <a 
+href="sun211se20.html#x21-1870004" id="QQ2-21-204">Writing a Transformation Function</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.5 <a 
+href="sun211se20.html#x21-1880005" id="QQ2-21-205">Registering a Transformation Function</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.6 <a 
+href="sun211se20.html#x21-1890006" id="QQ2-21-206">Creating an IntraMap</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.7 <a 
+href="sun211se20.html#x21-1900007" id="QQ2-21-207">Restricted Implementations of Transformation Functions</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.8 <a 
+href="sun211se20.html#x21-1910008" id="QQ2-21-208">Variable Numbers of Coordinates</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.9 <a 
+href="sun211se20.html#x21-1920009" id="QQ2-21-209">Adapting a Transformation Function to Individual IntraMaps</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.10 <a 
+href="sun211se20.html#x21-19300010" id="QQ2-21-210">Simplifying IntraMaps</a></span>
+<br />&#x00A0;<span class="subsectionToc" >20.11 <a 
+href="sun211se20.html#x21-19400011" id="QQ2-21-211">Writing and Reading IntraMaps</a></span>
+                                                                                       
+
+                                                                                       
+<br />&#x00A0;<span class="subsectionToc" >20.12 <a 
+href="sun211se20.html#x21-19500012" id="QQ2-21-212">Managing Transformation Functions in Libraries</a></span>
+<br /><span class="sectionToc" >21 <a 
+href="sun211se21.html#x22-19600021" id="QQ2-22-213">Producing Graphical Output (Plots)</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.1 <a 
+href="sun211se21.html#x22-1970001" id="QQ2-22-214">The Plot Model</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.2 <a 
+href="sun211se21.html#x22-1980002" id="QQ2-22-215">Plotting Symbols</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.3 <a 
+href="sun211se21.html#x22-1990003" id="QQ2-22-216">Plotting Geodesic Curves</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.4 <a 
+href="sun211se21.html#x22-2000004" id="QQ2-22-217">Plotting Curves Parallel to Axes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.5 <a 
+href="sun211se21.html#x22-2010005" id="QQ2-22-218">Plotting Generalized Curves</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.6 <a 
+href="sun211se21.html#x22-2020006" id="QQ2-22-219">Clipping</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.7 <a 
+href="sun211se21.html#x22-2030007" id="QQ2-22-220">Using a Plot as a Mapping</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.8 <a 
+href="sun211se21.html#x22-2040008" id="QQ2-22-221">Using a Plot as a Frame</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.9 <a 
+href="sun211se21.html#x22-2050009" id="QQ2-22-222">Regions of Valid Physical Coordinates</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.10 <a 
+href="sun211se21.html#x22-20600010" id="QQ2-22-223">Plotting Borders</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.11 <a 
+href="sun211se21.html#x22-20700011" id="QQ2-22-224">Plotting Text</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.12 <a 
+href="sun211se21.html#x22-20800012" id="QQ2-22-225">Plotting a Grid</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.13 <a 
+href="sun211se21.html#x22-20900013" id="QQ2-22-226">Controlling the Appearance of Sub-strings</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.14 <a 
+href="sun211se21.html#x22-21000014" id="QQ2-22-227">Producing Logarithmic Axes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >21.15 <a 
+href="sun211se21.html#x22-21100015" id="QQ2-22-228">Choosing a Graphics Package</a></span>
+<br /><span class="sectionToc" >22 <a 
+href="sun211se22.html#x23-21200022" id="QQ2-23-229">Compiling and Linking Software that Uses AST</a></span>
+<br />&#x00A0;<span class="subsectionToc" >22.1 <a 
+href="sun211se22.html#x23-2130001" id="QQ2-23-230">Accessing the &#x201C;ast.h&#x201D; Header File</a></span>
+<br />&#x00A0;<span class="subsectionToc" >22.2 <a 
+href="sun211se22.html#x23-2140002" id="QQ2-23-231">Linking with AST Facilities</a></span>
+<br />&#x00A0;<span class="subsectionToc" >22.3 <a 
+href="sun211se22.html#x23-2150003" id="QQ2-23-232">Building ADAM Applications that Use AST</a></span>
+<br /><span class="sectionToc" >A <a 
+href="sun211se23.html#x24-2160001" id="QQ2-24-233">The AST Class Hierarchy</a></span>
+<br /><span class="sectionToc" >B <a 
+href="sun211se24.html#x25-2170002" id="QQ2-25-234">AST Function Descriptions</a></span>
+<br /><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss1.html#Q1-26-236">   astSet &#x2013; Set attribute values for an Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss2.html#Q1-27-239">      astAddColumn &#x2013; Add a new
+column definition to a table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss3.html#Q1-28-242">      astAddFrame &#x2013; Add a Frame to a FrameSet
+to define a new coordinate system </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss4.html#Q1-29-245">      astAddParameter &#x2013; Add a new global
+parameter definition to a table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss5.html#Q1-30-248">      astAddVariant &#x2013; Store a new variant Mapping
+for the current Frame in a FrameSet </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss6.html#Q1-31-251">      astAngle &#x2013; Calculate the angle subtended
+by two points at a third point </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss7.html#Q1-32-254">      astAnnul &#x2013; Annul a pointer to an Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss8.html#Q1-33-257">
+astAxAngle &#x2013; Returns the angle from an axis, to a line through two points </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss9.html#Q1-34-260">
+astAxDistance &#x2013; Find the distance between two axis values </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss10.html#Q1-35-263">      astAxNorm &#x2013;
+Normalise an array of axis values </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss11.html#Q1-36-266">      astAxOffset &#x2013; Add an increment onto a
+supplied axis value </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss12.html#Q1-37-269">      astBBuf &#x2013; Begin a new graphical buffering context </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss13.html#Q1-38-272">
+astBegin &#x2013; Begin a new AST context </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss14.html#Q1-39-275">      astBorder &#x2013; Draw a border around
+valid regions of a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss15.html#Q1-40-278">      astBoundingBox &#x2013; Return a bounding box for
+previously drawn graphics </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss16.html#Q1-41-281">      astBox &#x2013; Create a Box </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss17.html#Q1-42-284">      astChannel &#x2013; Create
+a Channel </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss18.html#Q1-43-287">      astChannelData &#x2013; Return a pointer to user-supplied data stored
+with a Channel </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss19.html#Q1-44-290">      astCircle &#x2013; Create a Circle </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss20.html#Q1-45-293">      astCirclePars &#x2013; Returns the
+                                                                                       
+
+                                                                                       
+geometric parameters of an Circle </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss21.html#Q1-46-296">      astClear &#x2013; Clear attribute values for an
+Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss22.html#Q1-47-299">      astClearStatus &#x2013; Clear the AST error status </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss23.html#Q1-48-302">      astClip &#x2013; Set up or
+remove clipping for a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss24.html#Q1-49-305">      astClone &#x2013; Clone (duplicate) an Object pointer </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss25.html#Q1-50-308">
+astCmpFrame &#x2013; Create a CmpFrame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss26.html#Q1-51-311">      astCmpMap &#x2013; Create a CmpMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss27.html#Q1-52-314">
+astCmpRegion &#x2013; Create a CmpRegion </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss28.html#Q1-53-317">      astColumnName &#x2013; Get the name
+of the column at a given index within the Table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss29.html#Q1-54-320">      astColumnNull &#x2013; Get or
+set the null value for an integer column of a FITS table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss30.html#Q1-55-323">      astColumnShape
+&#x2013; Returns the shape of the values in a named column </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss31.html#Q1-56-326">      astColumnSize
+&#x2013; Get the number of bytes needed to hold a full column of data </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss32.html#Q1-57-329">
+astConvert &#x2013; Determine how to convert between two coordinate systems </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss33.html#Q1-58-332">
+astConvex<!--l. 333--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 333--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Create a new Polygon representing the convex hull of a 2D data grid </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss34.html#Q1-59-335">
+astCopy &#x2013; Copy an Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss35.html#Q1-60-338">      astCurrentTime &#x2013; Return the current system
+time </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss36.html#Q1-61-341">      astCurve &#x2013; Draw a geodesic curve </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss37.html#Q1-62-344">      astDSBSpecFrame &#x2013; Create a
+DSBSpecFrame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss38.html#Q1-63-347">      astDecompose &#x2013; Decompose a Mapping into two component
+Mappings </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss39.html#Q1-64-350">      astDelFits &#x2013; Delete the current FITS card in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss40.html#Q1-65-353">      astDelete
+&#x2013; Delete an Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss41.html#Q1-66-356">      astDistance &#x2013; Calculate the distance between two points
+in a Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss42.html#Q1-67-359">      astDownsize &#x2013; Reduce the number of vertices in a Polygon </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss43.html#Q1-68-362">
+astEBuf &#x2013; End the current graphical buffering context </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss44.html#Q1-69-365">      astEllipse &#x2013; Create a
+Ellipse </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss45.html#Q1-70-368">      astEllipsePars &#x2013; Returns the geometric parameters of an Ellipse </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss46.html#Q1-71-371">
+astEmptyFits &#x2013; Delete all cards in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss47.html#Q1-72-374">      astEnd &#x2013; End an AST context
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss48.html#Q1-73-377">   astEscapes &#x2013; Control whether graphical escape sequences are included in
+strings </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss49.html#Q1-74-380">      astExempt &#x2013; Exempt an Object pointer from AST context handling </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss50.html#Q1-75-383">
+astExport &#x2013; Export an Object pointer to an outer context </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss51.html#Q1-76-386">      astFindFits &#x2013; Find a
+FITS card in a FitsChan by keyword </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss52.html#Q1-77-389">      astFindFrame &#x2013; Find a coordinate system
+with specified characteristics </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss53.html#Q1-78-392">      astFitsChan &#x2013; Create a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss54.html#Q1-79-395">      astFitsTable
+&#x2013; Create a FitsTable </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss55.html#Q1-80-398">      astFluxFrame &#x2013; Create a FluxFrame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss56.html#Q1-81-401">      astFormat &#x2013;
+Format a coordinate value for a Frame axis </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss57.html#Q1-82-404">      astFrame &#x2013; Create a Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss58.html#Q1-83-407">
+astFrameSet &#x2013; Create a FrameSet </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss59.html#Q1-84-410">      astFromString &#x2013; Re-create an Object from
+an in-memory serialisation </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss60.html#Q1-85-413">      astGenCurve &#x2013; Draw a generalized curve </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss61.html#Q1-86-416">
+astGet<!--l. 417--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 417--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Get an attribute value for an Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss62.html#Q1-87-419">      astGetActiveUnit &#x2013; Determines how the
+Unit attribute will be used </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss63.html#Q1-88-422">      astGetColumnData &#x2013; Retrieve all the data values
+stored in a column </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss64.html#Q1-89-425">      astGetFits<!--l. 426--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 426--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Get a named keyword value from a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss65.html#Q1-90-428">      astGetFrame &#x2013; Obtain a
+pointer to a specified Frame in a FrameSet </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss66.html#Q1-91-431">      astGetGrfContext &#x2013; Return
+the KeyMap that describes a Plot<code>&#x2019;</code> s graphics context </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss67.html#Q1-92-434">      astGetMapping
+&#x2013; Obtain a Mapping that converts between two Frames in a FrameSet </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss68.html#Q1-93-437">
+astGetRefPos &#x2013; Return the reference position in a specified celestial coordinate
+system </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss69.html#Q1-94-440">      astGetRegionBounds &#x2013; Returns the bounding box of Region </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss70.html#Q1-95-443">
+astGetRegionFrame &#x2013; Obtain a pointer to the encapsulated Frame within a Region
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss71.html#Q1-96-446">   astGetRegionFrameSet &#x2013; Obtain a pointer to the encapsulated FrameSet
+within a Region </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss72.html#Q1-97-449">      astGetRegionMesh &#x2013; Return a mesh of points covering the
+surface or volume of a Region </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss73.html#Q1-98-452">      astGetRegionPoints &#x2013; Returns the positions
+that define the given Region </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss74.html#Q1-99-455">      astGetStcCoord &#x2013; Return information about
+an AstroCoords element stored in an Stc </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss75.html#Q1-100-458">      astGetStcNCoord &#x2013; Return the
+number of AstroCoords elements stored in an Stc </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss76.html#Q1-101-461">      astGetStcRegion &#x2013; Obtain
+a copy of the encapsulated Region within a Stc </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss77.html#Q1-102-464">      astGetTableHeader &#x2013; Get
+                                                                                       
+
+                                                                                       
+the FITS headers from a FitsTable </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss78.html#Q1-103-467">      astGetTables &#x2013; Retrieve any FitsTables
+currently in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss79.html#Q1-104-470">      astGetUnc &#x2013; Obtain uncertainty information from
+a Region </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss80.html#Q1-105-473">      astGrfPop &#x2013; Restore previously saved graphics functions used by
+a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss81.html#Q1-106-476">      astGrfPush &#x2013; Save the current graphics functions used by a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss82.html#Q1-107-479">
+astGrfSet &#x2013; Register a graphics function for use by a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss83.html#Q1-108-482">      astGrid &#x2013; Draw a
+set of labelled coordinate axes </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss84.html#Q1-109-485">      astGridLine &#x2013; Draw a grid line (or axis) for
+a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss85.html#Q1-110-488">      astGrismMap &#x2013; Create a GrismMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss86.html#Q1-111-491">      astHasAttribute &#x2013; Test if an
+Object has a named attribute </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss87.html#Q1-112-494">      astHasColumn &#x2013; Returns a flag indicating if
+a column is present in a Table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss88.html#Q1-113-497">      astHasParameter &#x2013; Returns a flag indicating
+if a named global parameter is present in a Table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss89.html#Q1-114-500">      astImport &#x2013; Import
+an Object pointer to the current context </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss90.html#Q1-115-503">      astIntersect &#x2013; Find the point of
+intersection between two geodesic curves </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss91.html#Q1-116-506">      astInterval &#x2013; Create a Interval </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss92.html#Q1-117-509">
+astIntraMap &#x2013; Create an IntraMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss93.html#Q1-118-512">      astIntraReg &#x2013; Register a transformation
+function for use by an IntraMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss94.html#Q1-119-515">      astInvert &#x2013; Invert a Mapping </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss95.html#Q1-120-518">
+astIsA<!--l. 519--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Class<!--l. 519--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Test membership of a class by an Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss96.html#Q1-121-521">      astKeyMap &#x2013; Create a KeyMap
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss97.html#Q1-122-524">   astLinearApprox &#x2013; Obtain a linear approximation to a Mapping, if
+appropriate </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss98.html#Q1-123-527">      astLock &#x2013; Lock an Object for exclusive use by the calling thread
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss99.html#Q1-124-530">   astLutMap &#x2013; Create a LutMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss100.html#Q1-125-533">      astMapBox &#x2013; Find a bounding box for a
+Mapping </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss101.html#Q1-126-536">      astMapCopy &#x2013; Copy entries from one KeyMap into another </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss102.html#Q1-127-539">
+astMapDefined &#x2013; Check if a KeyMap contains a defined value for a key </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss103.html#Q1-128-542">
+astMapGet0<!--l. 543--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 543--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Get a scalar value from a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss104.html#Q1-129-545">      astMapGet1<!--l. 546--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 546--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Get a vector value from a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss105.html#Q1-130-548">      astMapGetElem<!--l. 549--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 549--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Get a single element of a vector value from a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss106.html#Q1-131-551">      astMapHasKey
+&#x2013; Check if an entry with a given key exists in a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss107.html#Q1-132-554">      astMapKey
+&#x2013; Get the key at a given index within the KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss108.html#Q1-133-557">       astMapLenC
+&#x2013; Get the number of characters in a character entry in a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss109.html#Q1-134-560">
+astMapLength &#x2013; Get the vector length of an entry in a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss110.html#Q1-135-563">
+astMapPut0<!--l. 564--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 564--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Add a scalar value to a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss111.html#Q1-136-566">      astMapPut1<!--l. 567--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 567--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Add a vector value to a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss112.html#Q1-137-569">      astMapPutElem<!--l. 570--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 570--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Put a value into an element of a vector value in a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss113.html#Q1-138-572">      astMapPutU &#x2013; Add
+an entry to a KeyMap with an undefined value </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss114.html#Q1-139-575">      astMapRegion &#x2013; Transform a
+Region into a new Frame using a given Mapping </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss115.html#Q1-140-578">      astMapRemove &#x2013; Removed
+a named entry from a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss116.html#Q1-141-581">      astMapRename &#x2013; Rename an existing KeyMap
+entry </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss117.html#Q1-142-584">      astMapSize &#x2013; Get the number of entries in a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss118.html#Q1-143-587">      astMapSplit &#x2013;
+Split a Mapping up into parallel component Mappings </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss119.html#Q1-144-590">      astMapType &#x2013; Get the
+data type of an entry in a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss120.html#Q1-145-593">      astMark &#x2013; Draw a set of markers for a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss121.html#Q1-146-596">
+astMask<!--l. 597--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 597--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Mask a region of a data grid </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss122.html#Q1-147-599">      astMatchAxes &#x2013; Find any corresponding
+axes in two Frames </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss123.html#Q1-148-602">      astMathMap &#x2013; Create a MathMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss124.html#Q1-149-605">      astMatrixMap
+&#x2013; Create a MatrixMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss125.html#Q1-150-608">      astMirrorVariants &#x2013; Make the current Frame
+mirror the variant Mappings in another Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss126.html#Q1-151-611">      astNegate &#x2013; Negate
+the area represented by a Region </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss127.html#Q1-152-614">      astNorm &#x2013; Normalise a set of Frame
+coordinates </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss128.html#Q1-153-617">      astNormMap &#x2013; Create a NormMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss129.html#Q1-154-620">      astNullRegion &#x2013;
+Create a NullRegion </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss130.html#Q1-155-623">      astOK &#x2013; Test whether AST functions have been
+successful </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss131.html#Q1-156-626">      astOffset &#x2013; Calculate an offset along a geodesic curve </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss132.html#Q1-157-629">
+                                                                                       
+
+                                                                                       
+astOffset2 &#x2013; Calculate an offset along a geodesic curve in a 2D Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss133.html#Q1-158-632">
+astOutline<!--l. 633--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 633--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Create a new Polygon outling values in a 2D data grid </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss134.html#Q1-159-635">      astOverlap &#x2013; Test
+if two regions overlap each other </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss135.html#Q1-160-638">      astParameterName &#x2013; Get the name of the
+global parameter at a given index within the Table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss136.html#Q1-161-641">      astPcdMap &#x2013; Create a
+PcdMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss137.html#Q1-162-644">      astPermAxes &#x2013; Permute the axis order in a Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss138.html#Q1-163-647">      astPermMap
+&#x2013; Create a PermMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss139.html#Q1-164-650">      astPickAxes &#x2013; Create a new Frame by picking axes from
+an existing one </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss140.html#Q1-165-653">      astPlot &#x2013; Create a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss141.html#Q1-166-656">      astPlot3D &#x2013; Create a Plot3D </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss142.html#Q1-167-659">
+astPointList &#x2013; Create a PointList </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss143.html#Q1-168-662">      astPolyCurve &#x2013; Draw a series of connected
+geodesic curves </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss144.html#Q1-169-665">      astPolyMap &#x2013; Create a PolyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss145.html#Q1-170-668">      astPolyTran &#x2013; Fit a
+PolyMap inverse or forward transformation </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss146.html#Q1-171-671">      astPolygon &#x2013; Create a Polygon
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss147.html#Q1-172-674">   astPrism &#x2013; Create a Prism </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss148.html#Q1-173-677">      astPurgeRows &#x2013; Remove all empty rows from
+a table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss149.html#Q1-174-680">      astPurgeWCS &#x2013; Delete all cards in the FitsChan describing WCS
+information </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss150.html#Q1-175-683">      astPutCards &#x2013; Store a set of FITS header cards in a FitsChan
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss151.html#Q1-176-686">   astPutChannelData &#x2013; Store arbitrary data to be passed to a source or sink
+function </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss152.html#Q1-177-689">      astPutColumnData &#x2013; Store new data values for all rows of a
+column </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss153.html#Q1-178-692">      astPutFits &#x2013; Store a FITS header card in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss154.html#Q1-179-695">      astPutTable
+&#x2013; Store a single FitsTable in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss155.html#Q1-180-698">      astPutTableHeader &#x2013; Store new
+FITS headers in a FitsTable </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss156.html#Q1-181-701">      astPutTables &#x2013; Store one or more FitsTables in
+a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss157.html#Q1-182-704">      astQuadApprox &#x2013; Obtain a quadratic approximation to a 2D
+Mapping </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss158.html#Q1-183-707">      astRate &#x2013; Calculate the rate of change of a Mapping output </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss159.html#Q1-184-710">
+astRateMap &#x2013; Create a RateMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss160.html#Q1-185-713">      astRead &#x2013; Read an Object from a Channel
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss161.html#Q1-186-716">   astReadFits &#x2013; Read cards into a FitsChan from the source function </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss162.html#Q1-187-719">
+astRebin<!--l. 720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Rebin a region of a data grid </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss163.html#Q1-188-722">      astRebinSeq<!--l. 723--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 723--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Rebin a region of a sequence of data grids </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss164.html#Q1-189-725">      astRegionOutline &#x2013; Draw the outline
+of an AST Region </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss165.html#Q1-190-728">      astRemapFrame &#x2013; Modify a Frame<code>&#x2019;</code> s relationship to other
+Frames in a FrameSet </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss166.html#Q1-191-731">      astRemoveColumn &#x2013; Remove a column from a table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss167.html#Q1-192-734">
+astRemoveFrame &#x2013; Remove a Frame from a FrameSet </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss168.html#Q1-193-737">      astRemoveParameter
+&#x2013; Remove a global parameter from a table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss169.html#Q1-194-740">      astRemoveRegions &#x2013; Remove
+any Regions from a Mapping </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss170.html#Q1-195-743">      astRemoveRow &#x2013; Remove a row from a
+table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss171.html#Q1-196-746">      astRemoveTables &#x2013; Remove one or more tables from a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss172.html#Q1-197-749">
+astResample<!--l. 750--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 750--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Resample a region of a data grid </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss173.html#Q1-198-752">      astResolve &#x2013; Resolve a vector
+into two orthogonal components </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss174.html#Q1-199-755">       astRetainFits &#x2013; Indicate that
+the current card in a FitsChan should be retained </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss175.html#Q1-200-758">      astSame &#x2013; Test
+if two AST pointers refer to the same Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss176.html#Q1-201-761">       astSelectorMap &#x2013;
+Create a SelectorMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss177.html#Q1-202-764">      astSet &#x2013; Set attribute values for an Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss178.html#Q1-203-767">
+astSet<!--l. 768--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 768--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Set an attribute value for an Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss179.html#Q1-204-770">      astSetActiveUnit &#x2013; Specify how the Unit
+attribute should be used </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss180.html#Q1-205-773">      astSetFits<!--l. 774--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 774--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+&#x2013; Store a keyword value in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss181.html#Q1-206-776">      astSetFitsCM &#x2013; Store a comment card in
+a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss182.html#Q1-207-779">      astSetFitsU &#x2013; Store an undefined keyword value in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss183.html#Q1-208-782">
+astSetRefPos &#x2013; Set the reference position in a specified celestial coordinate system
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss184.html#Q1-209-785">   astSetStatus &#x2013; Set the AST error status to an explicit value </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss185.html#Q1-210-788">      astSetUnc &#x2013;
+Store uncertainty information in a Region </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss186.html#Q1-211-791">      astShiftMap &#x2013; Create a ShiftMap
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss187.html#Q1-212-794">   astShow &#x2013; Display a textual representation of an Object on standard output
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss188.html#Q1-213-797">   astShowFits &#x2013; Display the contents of a FitsChan on standard output </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss189.html#Q1-214-800">
+                                                                                       
+
+                                                                                       
+astShowMesh &#x2013; Display a mesh of points covering the surface of a Region </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss190.html#Q1-215-803">
+astSimplify &#x2013; Simplify a Mapping </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss191.html#Q1-216-806">      astSkyFrame &#x2013; Create a SkyFrame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss192.html#Q1-217-809">
+astSkyOffsetMap &#x2013; Returns a Mapping which goes from absolute coordinates
+to offset coordinates </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss193.html#Q1-218-812">      astSlaAdd &#x2013; Add a celestial coordinate conversion
+to an SlaMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss194.html#Q1-219-815">      astSlaMap &#x2013; Create an SlaMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss195.html#Q1-220-818">      astSpecAdd &#x2013; Add a
+spectral coordinate conversion to a SpecMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss196.html#Q1-221-821">      astSpecFluxFrame &#x2013; Create
+a SpecFluxFrame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss197.html#Q1-222-824">      astSpecFrame &#x2013; Create a SpecFrame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss198.html#Q1-223-827">      astSpecMap
+&#x2013; Create a SpecMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss199.html#Q1-224-830">      astSphMap &#x2013; Create a SphMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss200.html#Q1-225-833">      astStatus &#x2013;
+Obtain the current AST error status value </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss201.html#Q1-226-836">      astStcCatalogEntryLocation
+&#x2013; Create a StcCatalogEntryLocation </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss202.html#Q1-227-839">      astStcObsDataLocation &#x2013; Create a
+StcObsDataLocation </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss203.html#Q1-228-842">      astStcResourceProfile &#x2013; Create a StcResourceProfile </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss204.html#Q1-229-845">
+astStcSearchLocation &#x2013; Create a StcSearchLocation </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss205.html#Q1-230-848">      astStcsChan &#x2013; Create
+an StcsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss206.html#Q1-231-851">      astStripEscapes &#x2013; Remove AST escape sequences from a
+string </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss207.html#Q1-232-854">      astSwitchMap &#x2013; Create a SwitchMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss208.html#Q1-233-857">      astTable &#x2013; Create a Table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss209.html#Q1-234-860">
+astTableSource &#x2013; Register a source function for accessing tables in FITS files </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss210.html#Q1-235-863">
+astTest &#x2013; Test if an Object attribute value is set </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss211.html#Q1-236-866">      astTestFits &#x2013; See if a named
+keyword has a defined value in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss212.html#Q1-237-869">      astText &#x2013; Draw a text string for a
+Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss213.html#Q1-238-872">      astThread &#x2013; Determine the thread that owns an Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss214.html#Q1-239-875">      astTimeAdd
+&#x2013; Add a time coordinate conversion to a TimeMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss215.html#Q1-240-878">      astTimeFrame &#x2013; Create
+a TimeFrame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss216.html#Q1-241-881">      astTimeMap &#x2013; Create a TimeMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss217.html#Q1-242-884">      astToString &#x2013; Create an
+in-memory serialisation of an Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss218.html#Q1-243-887">      astTran1 &#x2013; Transform 1-dimensional
+coordinates </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss219.html#Q1-244-890">      astTran2 &#x2013; Transform 2-dimensional coordinates </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss220.html#Q1-245-893">      astTranGrid
+&#x2013; Transform a grid of positions </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss221.html#Q1-246-896">      astTranMap &#x2013; Create a TranMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss222.html#Q1-247-899">      astTranN
+&#x2013; Transform N-dimensional coordinates </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss223.html#Q1-248-902">      astTranP &#x2013; Transform N-dimensional
+coordinates held in separate arrays </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss224.html#Q1-249-905">      astTune &#x2013; Set or get an integer-valued
+AST global tuning parameter </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss225.html#Q1-250-908">      astTuneC &#x2013; Set or get a character-valued AST
+global tuning parameter </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss226.html#Q1-251-911">      astUinterp &#x2013; Perform sub-pixel interpolation on
+a grid of data </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss227.html#Q1-252-914">      astUkern1 &#x2013; 1-dimensional sub-pixel interpolation kernel
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss228.html#Q1-253-917">   astUnformat &#x2013; Read a formatted coordinate value for a Frame axis </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss229.html#Q1-254-920">
+astUnitMap &#x2013; Create a UnitMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss230.html#Q1-255-923">      astUnitNormMap &#x2013; Create a UnitNormMap
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss231.html#Q1-256-926">   astUnlock &#x2013; Unlock an Object for use by other threads </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss232.html#Q1-257-929">      astVersion &#x2013;
+Return the version of the AST library being used </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss233.html#Q1-258-932">      astWarnings &#x2013; Returns
+any warnings issued by the previous read or write operation </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss234.html#Q1-259-935">      astWatch &#x2013;
+Identify a new error status variable for the AST library </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss235.html#Q1-260-938">      astWcsMap &#x2013; Create
+a WcsMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss236.html#Q1-261-941">      astWinMap &#x2013; Create a WinMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss237.html#Q1-262-944">      astWrite &#x2013; Write an Object to a
+Channel </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss238.html#Q1-263-947">      astWriteFits &#x2013; Write out all cards in a FitsChan to the sink function
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss239.html#Q1-264-950">   astXmlChan &#x2013; Create an XmlChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss240.html#Q1-265-953">      astZoomMap &#x2013; Create a ZoomMap </a></div>
+<br /><span class="sectionToc" >C <a 
+href="sun211se25.html#x266-4580003" id="QQ2-266-955">AST Attribute Descriptions</a></span>
+<br /><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss241.html#Q1-267-957">   Abbrev(axis) &#x2013; Abbreviate leading fields within numerical axis labels?
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss242.html#Q1-268-960">   Adaptive &#x2013; Should the area adapt to changes in the coordinate system?
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss243.html#Q1-269-963">   AlignOffset &#x2013; Align SkyFrames using the offset coordinate system? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss244.html#Q1-270-966">
+AlignSideBand &#x2013; Should the SideBand attribute be taken into account when
+aligning this DSBSpecFrame with another DSBSpecFrame? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss245.html#Q1-271-969">      AlignSpecOffset
+&#x2013; Align SpecFrames using the offset coordinate system? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss246.html#Q1-272-972">      AlignStdOfRest &#x2013;
+Standard of rest to use when aligning SpecFrames </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss247.html#Q1-273-975">      AlignSystem &#x2013; Coordinate
+system in which to align the Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss248.html#Q1-274-978">      AlignTimeScale &#x2013; Time scale to use
+when aligning TimeFrames </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss249.html#Q1-275-981">      AllVariants &#x2013; A list of the variant Mappings
+                                                                                       
+
+                                                                                       
+associated with the current Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss250.html#Q1-276-984">      AllWarnings &#x2013; A list of all currently
+available condition names </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss251.html#Q1-277-987">      AsTime(axis) &#x2013; Format celestal coordinates
+as times? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss252.html#Q1-278-990">      Base &#x2013; FrameSet base Frame index </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss253.html#Q1-279-993">      Border &#x2013; Draw a border
+around valid regions of a Plot? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss254.html#Q1-280-996">      Bottom(axis) &#x2013; Lowest axis value to display
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss255.html#Q1-281-999">   Bounded &#x2013; Is the Region bounded? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss256.html#Q1-282-1002">      CDMatrix &#x2013; Use CDi_j keywords to
+represent pixel scaling, rotation, etc? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss257.html#Q1-283-1005">      CarLin &#x2013; Ignore spherical rotations
+on CAR projections? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss258.html#Q1-284-1008">      Card &#x2013; Index of current FITS card in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss259.html#Q1-285-1011">
+CardComm &#x2013; The comment for the current card in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss260.html#Q1-286-1014">      CardName &#x2013;
+The keyword name of the current card in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss261.html#Q1-287-1017">      CardType &#x2013; The data
+type of the current card in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss262.html#Q1-288-1020">      Class &#x2013; Object class name </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss263.html#Q1-289-1023">      Clean &#x2013;
+Remove cards used whilst reading even if an error occurs? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss264.html#Q1-290-1026">      Clip &#x2013; Clip lines
+and/or markers at the Plot boundary? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss265.html#Q1-291-1029">      ClipOp &#x2013; Combine Plot clipping
+limits using a boolean OR? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss266.html#Q1-292-1032">      Closed &#x2013; Should the boundary be considered to
+be inside the region? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss267.html#Q1-293-1035">      Colour(element) &#x2013; Colour index for a Plot element </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss268.html#Q1-294-1038">
+ColumnLenC(column) &#x2013; The largest string length of any value in a column </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss269.html#Q1-295-1041">
+ColumnLength(column) &#x2013; The number of elements in each value in a column
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss270.html#Q1-296-1044">   ColumnNdim(column) &#x2013; The number of axes spanned by each value in a
+column </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss271.html#Q1-297-1047">      ColumnType(column) &#x2013; The data type of each value in a column </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss272.html#Q1-298-1050">
+Comment &#x2013; Include textual comments in output? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss273.html#Q1-299-1053">      Current &#x2013; FrameSet current
+Frame index </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss274.html#Q1-300-1056">      DSBCentre &#x2013; The central position of interest in a dual sideband
+spectrum </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss275.html#Q1-301-1059">      DefB1950 &#x2013; Use FK4 B1950 as defaults? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss276.html#Q1-302-1062">      Digits/Digits(axis) &#x2013;
+Number of digits of precision </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss277.html#Q1-303-1065">      Direction(axis) &#x2013; Display axis in conventional
+direction? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss278.html#Q1-304-1068">      Disco &#x2013; PcdMap pincushion/barrel distortion coefficient </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss279.html#Q1-305-1071">
+Domain &#x2013; Coordinate system domain </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss280.html#Q1-306-1074">      DrawAxes(axis) &#x2013; Draw axes for a Plot?
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss281.html#Q1-307-1077">   DrawTitle &#x2013; Draw a title for a Plot? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss282.html#Q1-308-1080">      Dut1 &#x2013; The UT1-UTC correction </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss283.html#Q1-309-1083">
+Edge(axis) &#x2013; Which edges to label in a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss284.html#Q1-310-1086">      Encoding &#x2013; System for encoding
+Objects as FITS headers </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss285.html#Q1-311-1089">      Epoch &#x2013; Epoch of observation </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss286.html#Q1-312-1092">      Equinox &#x2013; Epoch
+of the mean equinox </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss287.html#Q1-313-1095">      Escape &#x2013; Allow changes of character attributes within
+strings? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss288.html#Q1-314-1098">      FillFactor &#x2013; Fraction of the Region which is of interest </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss289.html#Q1-315-1101">      FitsAxisOrder
+&#x2013; Frame title </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss290.html#Q1-316-1104">      FitsDigits &#x2013; Digits of precision for floating point FITS values
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss291.html#Q1-317-1107">   Font(element) &#x2013; Character font for a Plot element </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss292.html#Q1-318-1110">      Format(axis) &#x2013; Format
+specification for axis values </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss293.html#Q1-319-1113">      Full &#x2013; Set level of output detail </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss294.html#Q1-320-1116">      Gap(axis) &#x2013;
+Interval between linearly spaced major axis values of a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss295.html#Q1-321-1119">      Grf &#x2013; Use Grf
+functions registered through astGrfSet? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss296.html#Q1-322-1122">      Grid &#x2013; Draw grid lines for a Plot?
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss297.html#Q1-323-1125">   GrismAlpha &#x2013; The angle of incidence of the incoming light on the grating
+surface </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss298.html#Q1-324-1128">      GrismEps &#x2013; The angle between the normal and the dispersion plane
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss299.html#Q1-325-1131">   GrismG &#x2013; The grating ruling density </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss300.html#Q1-326-1134">      GrismM &#x2013; The interference order
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss301.html#Q1-327-1137">   GrismNR &#x2013; The refractive index at the reference wavelength </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss302.html#Q1-328-1140">      GrismNRP
+&#x2013; The rate of change of refractive index with wavelength </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss303.html#Q1-329-1143">      GrismTheta &#x2013;
+Angle between normal to detector plane and reference ray </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss304.html#Q1-330-1146">      GrismWaveR
+&#x2013; The reference wavelength </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss305.html#Q1-331-1149">      ID &#x2013; Object identification string </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss306.html#Q1-332-1152">      IF &#x2013; The
+intermediate frequency in a dual sideband spectrum </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss307.html#Q1-333-1155">      Ident &#x2013; Permanent
+Object identification string </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss308.html#Q1-334-1158">      ImagFreq &#x2013; The image sideband equivalent of the
+rest frequency </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss309.html#Q1-335-1161">      Indent &#x2013; Specifies the indentation to use in text produced by
+a Channel </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss310.html#Q1-336-1164">      InternalUnit(axis) &#x2013; Physical units for unformated axis values </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss311.html#Q1-337-1167">
+IntraFlag &#x2013; IntraMap identification string </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss312.html#Q1-338-1170">      Invert &#x2013; Mapping inversion flag
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss313.html#Q1-339-1173">   Invisible &#x2013; Draw graphics using invisible ink? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss314.html#Q1-340-1176">      IsLatAxis(axis) &#x2013; Is the
+specified celestial axis a latitude axis? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss315.html#Q1-341-1179">      IsLinear &#x2013; Is the Mapping linear? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss316.html#Q1-342-1182">
+                                                                                       
+
+                                                                                       
+IsLonAxis(axis) &#x2013; Is the specified celestial axis a longitude axis? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss317.html#Q1-343-1185">      IsSimple
+&#x2013; Has the Mapping been simplified? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss318.html#Q1-344-1188">      IterInverse &#x2013; Provide an iterative
+inverse transformation? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss319.html#Q1-345-1191">      Iwc &#x2013; Include a Frame representing FITS-WCS
+intermediate world coordinates? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss320.html#Q1-346-1194">      KeyCase &#x2013; Are keys case sensitive? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss321.html#Q1-347-1197">
+KeyError &#x2013; Report an error when getting the value of a non-existant KeyMap
+entry? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss322.html#Q1-348-1200">      LTOffset &#x2013; The offset from UTC to Local Time, in hours </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss323.html#Q1-349-1203">      Label(axis)
+&#x2013; Axis label </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss324.html#Q1-350-1206">      LabelAt(axis) &#x2013; Where to place numerical labels for a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss325.html#Q1-351-1209">
+LabelUnits(axis) &#x2013; Use axis unit descriptions in a Plot? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss326.html#Q1-352-1212">      LabelUp(axis) &#x2013;
+Draw numerical Plot labels upright? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss327.html#Q1-353-1215">      Labelling &#x2013; Label and tick placement
+option for a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss328.html#Q1-354-1218">      LatAxis &#x2013; Index of the latitude axis </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss329.html#Q1-355-1221">      ListSize &#x2013; Number
+of points in a PointList </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss330.html#Q1-356-1224">      LogGap(axis) &#x2013; Interval between major axis values of
+a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss331.html#Q1-357-1227">      LogLabel(axis) &#x2013; Use exponential format for numerical axis labels? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss332.html#Q1-358-1230">
+LogPlot(axis) &#x2013; Map the plot logarithmically onto the screen? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss333.html#Q1-359-1233">      LogTicks(axis) &#x2013;
+Space the major tick marks logarithmically? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss334.html#Q1-360-1236">      LonAxis &#x2013; Index of the longitude
+axis </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss335.html#Q1-361-1239">      LutEpsilon &#x2013; The relative error of the values held in the took-up table
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss336.html#Q1-362-1242">   LutInterp &#x2013; Look-up table interpolation method </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss337.html#Q1-363-1245">      MajTickLen(axis) &#x2013;
+Length of major tick marks for a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss338.html#Q1-364-1248">      MapLocked &#x2013; Prevent new entries
+being added to a KeyMap? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss339.html#Q1-365-1251">      MatchEnd &#x2013; Match trailing axes? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss340.html#Q1-366-1254">      MaxAxes
+&#x2013; Maximum number of Frame axes to match </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss341.html#Q1-367-1257">      MeshSize &#x2013; Number of points
+used to represent the boundary of a Region </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss342.html#Q1-368-1260">      MinAxes &#x2013; Minimum number
+of Frame axes to match </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss343.html#Q1-369-1263">      MinTick(axis) &#x2013; Density of minor tick marks for a
+Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss344.html#Q1-370-1266">      MinTickLen(axis) &#x2013; Length of minor tick marks for a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss345.html#Q1-371-1269">      NatLat &#x2013;
+Native latitude of the reference point of a FITS-WCS projection </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss346.html#Q1-372-1272">      NatLon &#x2013;
+Native longitude of the reference point of a FITS-WCS projection </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss347.html#Q1-373-1275">      Naxes &#x2013;
+Number of Frame axes </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss348.html#Q1-374-1278">      Ncard &#x2013; Number of FITS header cards in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss349.html#Q1-375-1281">
+Ncolumn &#x2013; The number of columns in the table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss350.html#Q1-376-1284">      NegLon &#x2013; Display negative
+longitude values? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss351.html#Q1-377-1287">      Negated &#x2013; Region negation flag </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss352.html#Q1-378-1290">      Nframe &#x2013; Number
+of Frames in a FrameSet </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss353.html#Q1-379-1293">      Nin &#x2013; Number of input coordinates for a Mapping
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss354.html#Q1-380-1296">   NiterInverse &#x2013; Maximum number of iterations for the iterative inverse
+transformation </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss355.html#Q1-381-1299">      Nkey &#x2013; Number of unique FITS keywords in a FitsChan </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss356.html#Q1-382-1302">
+Nobject &#x2013; Number of Objects in class </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss357.html#Q1-383-1305">      Norm(axis) &#x2013; Specifies the plane upon
+which a Plot3D draws text and markers </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss358.html#Q1-384-1308">      NormUnit(axis) &#x2013; Normalised physical
+units for formatted axis values </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss359.html#Q1-385-1311">      Nout &#x2013; Number of output coordinates for
+a Mapping </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss360.html#Q1-386-1314">      Nparameter &#x2013; The number of global parameters in the table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss361.html#Q1-387-1317">
+Nrow &#x2013; The number of rows in the table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss362.html#Q1-388-1320">      NumLab(axis) &#x2013; Draw numerical
+axis labels for a Plot? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss363.html#Q1-389-1323">      NumLabGap(axis) &#x2013; Spacing of numerical labels for a
+Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss364.html#Q1-390-1326">      ObjSize &#x2013; The in-memory size of the Object </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss365.html#Q1-391-1329">      ObsAlt &#x2013; The geodetic
+altitude of the observer </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss366.html#Q1-392-1332">      ObsLat &#x2013; The geodetic latitude of the observer </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss367.html#Q1-393-1335">
+ObsLon &#x2013; The geodetic longitude of the observer </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss368.html#Q1-394-1338">      PVMax(i) &#x2013; Maximum
+number of FITS-WCS projection parameters </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss369.html#Q1-395-1341">      PVi_m &#x2013; FITS-WCS projection
+parameters </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss370.html#Q1-396-1344">      PcdCen(axis) &#x2013; Centre coordinates of pincushion/barrel
+distortion </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss371.html#Q1-397-1347">      Permute &#x2013; Permute axis order? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss372.html#Q1-398-1350">      PolarLong &#x2013; The longitude
+value to assign to either pole </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss373.html#Q1-399-1353">      PolyTan &#x2013; Use PVi_m keywords to define
+distorted TAN projection? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss374.html#Q1-400-1356">      PreserveAxes &#x2013; Preserve axes? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss375.html#Q1-401-1359">      ProjP(m) &#x2013;
+FITS-WCS projection parameters </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss376.html#Q1-402-1362">      Projection &#x2013; Sky projection description
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss377.html#Q1-403-1365">   RefCount &#x2013; Count of active Object pointers </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss378.html#Q1-404-1368">      RefDec &#x2013; The declination of
+the reference point </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss379.html#Q1-405-1371">      RefRA &#x2013; The right ascension of the reference point </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss380.html#Q1-406-1374">
+RegionClass &#x2013; The AST class name of the Region encapsulated within an Stc
+                                                                                       
+
+                                                                                       
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss381.html#Q1-407-1377">   Report &#x2013; Report transformed coordinates? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss382.html#Q1-408-1380">      ReportLevel &#x2013; Determines
+which read/write conditions are reported </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss383.html#Q1-409-1383">      RestFreq &#x2013; The rest frequency </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss384.html#Q1-410-1386">
+RootCorner &#x2013; Specifies which edges of the 3D box should be annotated </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss385.html#Q1-411-1389">      Seed
+&#x2013; Random number seed for a MathMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss386.html#Q1-412-1392">      SideBand &#x2013; Indicates which sideband
+a dual sideband spectrum represents </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss387.html#Q1-413-1395">      SimpFI &#x2013; Forward-inverse MathMap
+pairs simplify? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss388.html#Q1-414-1398">      SimpIF &#x2013; Inverse-forward MathMap pairs simplify? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss389.html#Q1-415-1401">
+SimpVertices &#x2013; Simplify a Polygon by transforming its vertices? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss390.html#Q1-416-1404">      SinkFile
+&#x2013; Output file to which to data should be written </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss391.html#Q1-417-1407">      Size(element) &#x2013; Character
+size for a Plot element </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss392.html#Q1-418-1410">      SizeGuess &#x2013; The expected size of the KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss393.html#Q1-419-1413">
+Skip &#x2013; Skip irrelevant data? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss394.html#Q1-420-1416">      SkyRef(axis) &#x2013; Position defining the offset
+coordinate system </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss395.html#Q1-421-1419">      SkyRefIs &#x2013; Selects the nature of the offset coordinate
+system </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss396.html#Q1-422-1422">      SkyRefP(axis) &#x2013; Position on primary meridian of offset coordinate
+system </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss397.html#Q1-423-1425">      SkyTol &#x2013; The smallest significant shift in sky coordinates </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss398.html#Q1-424-1428">      SortBy
+&#x2013; Determines how keys are sorted in a KeyMap </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss399.html#Q1-425-1431">      SourceFile &#x2013; Input file from
+which to read data </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss400.html#Q1-426-1434">      SourceSys &#x2013; Spectral system in which the source velocity
+is stored </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss401.html#Q1-427-1437">      SourceVRF &#x2013; Rest frame in which the source velocity is stored </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss402.html#Q1-428-1440">
+SourceVel &#x2013; The source velocity </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss403.html#Q1-429-1443">      SpecOrigin &#x2013; The zero point for SpecFrame
+axis values </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss404.html#Q1-430-1446">      SpecVal &#x2013; The spectral position at which flux values are measured
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss405.html#Q1-431-1449">   StcsArea &#x2013; Return the CoordinateArea component when reading an STC-S
+document? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss406.html#Q1-432-1452">      StcsCoords &#x2013; Return the Coordinates component when reading
+an STC-S document? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss407.html#Q1-433-1455">      StcsLength &#x2013; Controls output line length </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss408.html#Q1-434-1458">      StcsProps
+&#x2013; Return all properties when reading an STC-S document? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss409.html#Q1-435-1461">      StdOfRest &#x2013;
+Standard of rest </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss410.html#Q1-436-1464">      Strict &#x2013; Report an error if any unexpeted data items are
+found? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss411.html#Q1-437-1467">      Style(element) &#x2013; Line style for a Plot element </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss412.html#Q1-438-1470">      Symbol(axis) &#x2013; Axis
+symbol </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss413.html#Q1-439-1473">      System &#x2013; Coordinate system used to describe positions within the
+domain </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss414.html#Q1-440-1476">      TabOK &#x2013; Should the FITS-WCS -TAB algorithm be recognised? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss415.html#Q1-441-1479">
+TextLab(axis) &#x2013; Draw descriptive axis labels for a Plot? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss416.html#Q1-442-1482">      TextLabGap(axis)
+&#x2013; Spacing of descriptive axis labels for a Plot </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss417.html#Q1-443-1485">      TickAll &#x2013; Draw tick marks on
+all edges of a Plot? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss418.html#Q1-444-1488">      TimeOrigin &#x2013; The zero point for TimeFrame axis values
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss419.html#Q1-445-1491">   TimeScale &#x2013; Time scale </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss420.html#Q1-446-1494">      Title &#x2013; Frame title </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss421.html#Q1-447-1497">      TitleGap &#x2013; Vertical spacing
+for a Plot title </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss422.html#Q1-448-1500">      Tol &#x2013; Plotting tolerance </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss423.html#Q1-449-1503">      TolInverse &#x2013; Target relative error
+for the iterative inverse transformation </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss424.html#Q1-450-1506">      Top(axis) &#x2013; Highest axis value to
+display </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss425.html#Q1-451-1509">      TranForward &#x2013; Forward transformation defined? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss426.html#Q1-452-1512">      TranInverse
+&#x2013; Inverse transformation defined? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss427.html#Q1-453-1515">      Unit(axis) &#x2013; Physical units for formatted
+axis values </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss428.html#Q1-454-1518">      UnitRadius &#x2013; SphMap input vectors lie on a unit sphere? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss429.html#Q1-455-1521">
+UseDefs &#x2013; Use default values for unspecified attributes? </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss430.html#Q1-456-1524">      Variant &#x2013; Indicates
+which variant of the current Frame is to be used </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss431.html#Q1-457-1527">      Warnings &#x2013; Controls the
+issuing of warnings about various conditions </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss432.html#Q1-458-1530">      WcsAxis(lonlat) &#x2013; FITS-WCS
+projection axes </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss433.html#Q1-459-1533">      WcsType &#x2013; FITS-WCS projection type </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss434.html#Q1-460-1536">      Width(element) &#x2013;
+Line width for a Plot element </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss435.html#Q1-461-1539">      XmlFormat &#x2013; System for formatting Objects
+as XML </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss436.html#Q1-462-1542">      XmlLength &#x2013; Controls output buffer length </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss437.html#Q1-463-1545">      XmlPrefix &#x2013; The
+namespace prefix to use when writing </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss438.html#Q1-464-1548">      Zoom &#x2013; ZoomMap scale factor </a></div>
+<br /><span class="sectionToc" >D <a 
+href="sun211se26.html#x465-6570004" id="QQ2-465-1550">AST Class Descriptions</a></span>
+<br /><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss439.html#Q1-466-1552">   Axis &#x2013; Store axis information </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss440.html#Q1-467-1555">      Box &#x2013; A box region with sides parallel to
+the axes of a Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss441.html#Q1-468-1558">      Channel &#x2013; Basic (textual) I/O channel </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss442.html#Q1-469-1561">      Circle &#x2013; A
+circular or spherical region within a Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss443.html#Q1-470-1564">      CmpFrame &#x2013; Compound Frame
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss444.html#Q1-471-1567">   CmpMap &#x2013; Compound Mapping </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss445.html#Q1-472-1570">      CmpRegion &#x2013; A combination of two
+                                                                                       
+
+                                                                                       
+regions within a single Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss446.html#Q1-473-1573">      DSBSpecFrame &#x2013; Dual sideband spectral
+coordinate system description </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss447.html#Q1-474-1576">      DssMap &#x2013; Map points using a Digitised Sky
+Survey plate solution </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss448.html#Q1-475-1579">      Ellipse &#x2013; An elliptical region within a 2-dimensional
+Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss449.html#Q1-476-1582">      FitsChan &#x2013; I/O Channel using FITS header cards to represent
+Objects </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss450.html#Q1-477-1585">      FitsTable &#x2013; A representation of a FITS binary table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss451.html#Q1-478-1588">      FluxFrame
+&#x2013; Measured flux description </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss452.html#Q1-479-1591">      Frame &#x2013; Coordinate system description </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss453.html#Q1-480-1594">
+FrameSet &#x2013; Set of inter-related coordinate systems </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss454.html#Q1-481-1597">      GrismMap &#x2013; Transform
+1-dimensional coordinates using a grism dispersion equation </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss455.html#Q1-482-1600">      Interval &#x2013; A
+region representing an interval on one or more axes of a Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss456.html#Q1-483-1603">      IntraMap &#x2013;
+Map points using a private transformation function </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss457.html#Q1-484-1606">      KeyMap &#x2013; Store a set
+of key/value pairs </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss458.html#Q1-485-1609">      LutMap &#x2013; Transform 1-dimensional coordinates using a
+lookup table </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss459.html#Q1-486-1612">      Mapping &#x2013; Inter-relate two coordinate systems </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss460.html#Q1-487-1615">      MathMap &#x2013;
+Transform coordinates using mathematical expressions </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss461.html#Q1-488-1618">      MatrixMap &#x2013; Map
+coordinates by multiplying by a matrix </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss462.html#Q1-489-1621">      NormMap &#x2013; Normalise coordinates
+using a supplied Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss463.html#Q1-490-1624">      NullRegion &#x2013; A boundless region within a Frame
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss464.html#Q1-491-1627">   Object &#x2013; Base class for all AST Objects </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss465.html#Q1-492-1630">      PcdMap &#x2013; Apply 2-dimensional
+pincushion/barrel distortion </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss466.html#Q1-493-1633">      PermMap &#x2013; Coordinate permutation Mapping </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss467.html#Q1-494-1636">
+Plot &#x2013; Provide facilities for 2D graphical output </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss468.html#Q1-495-1639">      Plot3D &#x2013; Provide facilities for
+3D graphical output </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss469.html#Q1-496-1642">      PointList &#x2013; A collection of points in a Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss470.html#Q1-497-1645">      PolyMap
+&#x2013; Map coordinates using polynomial functions </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss471.html#Q1-498-1648">      Polygon &#x2013; A polygonal
+region within a 2-dimensional Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss472.html#Q1-499-1651">      Prism &#x2013; An extrusion of a region into
+higher dimensions </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss473.html#Q1-500-1654">      RateMap &#x2013; Mapping which represents differentiation
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss474.html#Q1-501-1657">   Region &#x2013; Represents a region within a coordinate system </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss475.html#Q1-502-1660">      SelectorMap
+&#x2013; A Mapping that locates positions within one of a set of alternate Regions </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss476.html#Q1-503-1663">
+ShiftMap &#x2013; Add a constant value to each coordinate </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss477.html#Q1-504-1666">      SkyAxis &#x2013; Store celestial
+axis information </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss478.html#Q1-505-1669">      SkyFrame &#x2013; Celestial coordinate system description </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss479.html#Q1-506-1672">
+SlaMap &#x2013; Sequence of celestial coordinate conversions </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss480.html#Q1-507-1675">      SpecFluxFrame &#x2013;
+Compound spectrum/flux Frame </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss481.html#Q1-508-1678">      SpecFrame &#x2013; Spectral coordinate system
+description </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss482.html#Q1-509-1681">      SpecMap &#x2013; Sequence of spectral coordinate conversions </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss483.html#Q1-510-1684">
+SphMap &#x2013; Map 3-d Cartesian to 2-d spherical coordinates </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss484.html#Q1-511-1687">      Stc &#x2013; Represents
+an instance of the IVOA STC class </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss485.html#Q1-512-1690">      StcCatalogEntryLocation &#x2013; Correspond to
+the IVOA STCCatalogEntryLocation class </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss486.html#Q1-513-1693">      StcObsDataLocation &#x2013; Correspond
+to the IVOA ObsDataLocation class </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss487.html#Q1-514-1696">      StcResourceProfile &#x2013; Correspond to
+the IVOA STCResourceProfile class </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss488.html#Q1-515-1699">      StcSearchLocation &#x2013; Correspond to
+the IVOA SearchLocation class </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss489.html#Q1-516-1702">      StcsChan &#x2013; I/O Channel using STC-S to
+represent Objects </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss490.html#Q1-517-1705">      SwitchMap &#x2013; A Mapping that encapsulates a set of alternate
+Mappings </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss491.html#Q1-518-1708">      Table &#x2013; A 2-dimensional table of values </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss492.html#Q1-519-1711">      TimeFrame &#x2013; Time
+coordinate system description </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss493.html#Q1-520-1714">      TimeMap &#x2013; Sequence of time coordinate
+conversions </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss494.html#Q1-521-1717">      TranMap &#x2013; Mapping with specified forward and inverse
+transformations </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss495.html#Q1-522-1720">      UnitMap &#x2013; Unit (null) Mapping </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss496.html#Q1-523-1723">      UnitNormMap &#x2013; Convert
+a vector to a unit vector and its norm, relative to a specified centre </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss497.html#Q1-524-1726">      WcsMap
+&#x2013; Implement a FITS-WCS sky projection </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss498.html#Q1-525-1729">      WinMap &#x2013; Map one window on
+to another by scaling and shifting each axis </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss499.html#Q1-526-1732">      XmlChan &#x2013; I/O Channel using
+XML to represent Objects </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss500.html#Q1-527-1735">      ZoomMap &#x2013; Zoom coordinates about the origin </a></div>
+<br /><span class="sectionToc" >E <a 
+href="sun211se27.html#x528-7200005" id="QQ2-528-1737">UNIX Command Descriptions</a></span>
+<br /><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss501.html#Q1-529-1739">   ast_link &#x2013; Link a program with the AST library </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss502.html#Q1-530-1742">      ast_link_adam
+&#x2013; Link an ADAM program with the AST library </a></div>
+                                                                                       
+
+                                                                                       
+<br /><span class="sectionToc" >F <a 
+href="sun211se28.html#x531-7230006" id="QQ2-531-1744">AST Memory Management and Utility Functions</a></span>
+<br /><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss503.html#Q1-532-1746">   astAppendString &#x2013; Append a string to another string which grows dynamically
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss504.html#Q1-533-1749">   astAppendStringf &#x2013; Append a string to another string, allowing printf format
+specifiers </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss505.html#Q1-534-1752">      astCalloc &#x2013; Allocate and initialise memory </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss506.html#Q1-535-1755">      astChr2Double
+&#x2013; read a double value from a string </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss507.html#Q1-536-1758">      astChrCase &#x2013; Convert a string to
+upper or lower case </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss508.html#Q1-537-1761">      astChrLen &#x2013; Determine the used length of a string </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss509.html#Q1-538-1764">
+astChrMatch &#x2013; Case insensitive string comparison </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss510.html#Q1-539-1767">      astChrMatchN &#x2013; Case
+insensitive string comparison of at most N characters </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss511.html#Q1-540-1770">      astChrSplit &#x2013; Extract
+words from a supplied string </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss512.html#Q1-541-1773">      astChrSplitC &#x2013; Split a string using a specified
+character delimiter </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss513.html#Q1-542-1776">      astChrSplitRE &#x2013; Extract sub-strings matching a specified
+regular expression </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss514.html#Q1-543-1779">      astChrSub &#x2013; Performs substitutions on a supplied string
+</a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss515.html#Q1-544-1782">   astChrTrunc &#x2013; Terminate a string to exclude trailing spaces </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss516.html#Q1-545-1785">      astFree &#x2013;
+Free previously allocated memory </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss517.html#Q1-546-1788">      astFreeDouble &#x2013; Free previously double
+allocated memory </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss518.html#Q1-547-1791">      astGrow &#x2013; Allocate memory for an adjustable array </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss519.html#Q1-548-1794">
+astIsDynamic &#x2013; Returns a flag indicating if memory was allocated dynamically </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss520.html#Q1-549-1797">
+astMalloc &#x2013; Allocate memory </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss521.html#Q1-550-1800">      astMemCaching &#x2013; Controls whether allocated
+but unused memory is cached in this module </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss522.html#Q1-551-1803">      astRealloc &#x2013; Change the size
+of a dynamically allocated region of memory </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss523.html#Q1-552-1806">      astRemoveLeadingBlanks &#x2013;
+Remove any leading white space from a string </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss524.html#Q1-553-1809">      astSizeOf &#x2013; Determine the
+size of a dynamically allocated region of memory </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss525.html#Q1-554-1812">      astStore &#x2013; Store data in
+dynamically allocated memory </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss526.html#Q1-555-1815">      astString &#x2013; Create a C string from an array
+of characters </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss527.html#Q1-556-1818">      astStringArray &#x2013; Create an array of C strings from an array
+of characters </a></div><div class="subsectionToc" ><span class="mark"></span><a 
+href="sun211ss528.html#Q1-557-1821">      astStringCase &#x2013; Convert a string to upper or lower case </a></div>
+<br /><span class="sectionToc" >G <a 
+href="sun211se29.html#x558-7500007" id="QQ2-558-1823">FITS-WCS Coverage</a></span>
+<br />&#x00A0;<span class="subsectionToc" >G.1 <a 
+href="sun211se29.html#x558-7510001" id="QQ2-558-1824">Paper I - General Linear Coordinates</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >G.1.1 <a 
+href="sun211se29.html#x558-7520001" id="QQ2-558-1826">Requirements for a Successful Write Operation</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >G.1.2 <a 
+href="sun211se29.html#x558-7530002" id="QQ2-558-1827">Use and Choice of CTYPE<em>i</em> keywords</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >G.1.3 <a 
+href="sun211se29.html#x558-7540003" id="QQ2-558-1828">Choice of Reference Point</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >G.1.4 <a 
+href="sun211se29.html#x558-7550004" id="QQ2-558-1829">Choice of Axis Ordering</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >G.1.5 <a 
+href="sun211se29.html#x558-7560005" id="QQ2-558-1830">Alternate Axis Descriptions</a></span>
+<br />&#x00A0;<span class="subsectionToc" >G.2 <a 
+href="sun211se29.html#x558-7570002" id="QQ2-558-1831">Paper II - Celestial Coordinates</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >G.2.1 <a 
+href="sun211se29.html#x558-7580001" id="QQ2-558-1833">Requirements for a Successful Write Operation</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >G.2.2 <a 
+href="sun211se29.html#x558-7590002" id="QQ2-558-1834">Choice of LONPOLE/LATPOLE</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >G.2.3 <a 
+href="sun211se29.html#x558-7600003" id="QQ2-558-1835">User Defined Fiducial Points</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >G.2.4 <a 
+href="sun211se29.html#x558-7610004" id="QQ2-558-1836">Common Non-Standard Features</a></span>
+<br />&#x00A0;<span class="subsectionToc" >G.3 <a 
+href="sun211se29.html#x558-7620003" id="QQ2-558-1837">Paper III - Spectral Coordinates</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >G.3.1 <a 
+href="sun211se29.html#x558-7630001" id="QQ2-558-1839">Requirements for a Successful Write Operation</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >G.3.2 <a 
+href="sun211se29.html#x558-7640002" id="QQ2-558-1840">Common Non-Standard Features</a></span>
+<br />&#x00A0;<span class="subsectionToc" >G.4 <a 
+href="sun211se29.html#x558-7650004" id="QQ2-558-1841">Paper IV - Coordinate Distortions</a></span>
+<br />&#x00A0;&#x00A0;<span class="subsubsectionToc" >G.4.1 <a 
+href="sun211se29.html#x558-7660001" id="QQ2-558-1842">The &#x201C;-SIP&#x201D; distortion code</a></span>
+                                                                                       
+
+                                                                                       
+<br /><span class="sectionToc" >H <a 
+href="sun211se30.html#x559-7670008" id="QQ2-559-1843">Release Notes</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.1 <a 
+href="sun211se30.html#x559-7680001" id="QQ2-559-1844">Changes Introduced in V1.1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.2 <a 
+href="sun211se30.html#x559-7690002" id="QQ2-559-1845">Changes Introduced in V1.2</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.3 <a 
+href="sun211se30.html#x559-7700003" id="QQ2-559-1846">Changes Introduced in V1.3</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.4 <a 
+href="sun211se30.html#x559-7710004" id="QQ2-559-1847">Changes Introduced in V1.4</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.5 <a 
+href="sun211se30.html#x559-7720005" id="QQ2-559-1848">Changes Introduced in V1.5</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.6 <a 
+href="sun211se30.html#x559-7730006" id="QQ2-559-1849">Changes Introduced in V1.6</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.7 <a 
+href="sun211se30.html#x559-7740007" id="QQ2-559-1850">Changes Introduced in V1.7</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.8 <a 
+href="sun211se30.html#x559-7750008" id="QQ2-559-1851">Changes Introduced in V1.8-2</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.9 <a 
+href="sun211se30.html#x559-7760009" id="QQ2-559-1852">Changes Introduced in V1.8-3</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.10 <a 
+href="sun211se30.html#x559-77700010" id="QQ2-559-1853">Changes Introduced in V1.8-4</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.11 <a 
+href="sun211se30.html#x559-77800011" id="QQ2-559-1854">Changes Introduced in V1.8-5</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.12 <a 
+href="sun211se30.html#x559-77900012" id="QQ2-559-1855">Changes Introduced in V1.8-7</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.13 <a 
+href="sun211se30.html#x559-78000013" id="QQ2-559-1856">Changes Introduced in V1.8-8</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.14 <a 
+href="sun211se30.html#x559-78100014" id="QQ2-559-1857">Changes Introduced in V1.8-13</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.15 <a 
+href="sun211se30.html#x559-78200015" id="QQ2-559-1858">Changes Introduced in V2.0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.16 <a 
+href="sun211se30.html#x559-78300016" id="QQ2-559-1859">Changes Introduced in V3.0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.17 <a 
+href="sun211se30.html#x559-78400017" id="QQ2-559-1860">Changes Introduced in V3.1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.18 <a 
+href="sun211se30.html#x559-78500018" id="QQ2-559-1861">Changes Introduced in V3.2</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.19 <a 
+href="sun211se30.html#x559-78600019" id="QQ2-559-1862">Changes Introduced in V3.3</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.20 <a 
+href="sun211se30.html#x559-78700020" id="QQ2-559-1863">Changes Introduced in V3.4</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.21 <a 
+href="sun211se30.html#x559-78800021" id="QQ2-559-1864">Changes Introduced in V3.5</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.22 <a 
+href="sun211se30.html#x559-78900022" id="QQ2-559-1865">Changes Introduced in V3.6</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.23 <a 
+href="sun211se30.html#x559-79000023" id="QQ2-559-1866">Changes Introduced in V3.7</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.24 <a 
+href="sun211se30.html#x559-79100024" id="QQ2-559-1867">Changes Introduced in V4.0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.25 <a 
+href="sun211se30.html#x559-79200025" id="QQ2-559-1868">Changes Introduced in V4.1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.26 <a 
+href="sun211se30.html#x559-79300026" id="QQ2-559-1869">Changes Introduced in V4.2</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.27 <a 
+href="sun211se30.html#x559-79400027" id="QQ2-559-1870">Changes Introduced in V4.3</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.28 <a 
+href="sun211se30.html#x559-79500028" id="QQ2-559-1871">Changes Introduced in V4.4</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.29 <a 
+href="sun211se30.html#x559-79600029" id="QQ2-559-1872">Changes Introduced in V4.5</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.30 <a 
+href="sun211se30.html#x559-79700030" id="QQ2-559-1873">Changes Introduced in V4.6</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.31 <a 
+href="sun211se30.html#x559-79800031" id="QQ2-559-1874">Changes Introduced in V5.0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.32 <a 
+href="sun211se30.html#x559-79900032" id="QQ2-559-1875">Changes Introduced in V5.1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.33 <a 
+href="sun211se30.html#x559-80000033" id="QQ2-559-1876">Changes Introduced in V5.2</a></span>
+                                                                                       
+
+                                                                                       
+<br />&#x00A0;<span class="subsectionToc" >H.34 <a 
+href="sun211se30.html#x559-80100034" id="QQ2-559-1877">Changes Introduced in V5.3</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.35 <a 
+href="sun211se30.html#x559-80200035" id="QQ2-559-1878">Changes Introduced in V5.3-1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.36 <a 
+href="sun211se30.html#x559-80300036" id="QQ2-559-1879">Changes Introduced in V5.3-2</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.37 <a 
+href="sun211se30.html#x559-80400037" id="QQ2-559-1880">Changes Introduced in V5.4-0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.38 <a 
+href="sun211se30.html#x559-80500038" id="QQ2-559-1881">Changes Introduced in V5.5-0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.39 <a 
+href="sun211se30.html#x559-80600039" id="QQ2-559-1882">Changes Introduced in V5.6-0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.40 <a 
+href="sun211se30.html#x559-80700040" id="QQ2-559-1883">ChangesIntroduced in V5.6-1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.41 <a 
+href="sun211se30.html#x559-80800041" id="QQ2-559-1884">Changes Introduced in V5.7-0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.42 <a 
+href="sun211se30.html#x559-80900042" id="QQ2-559-1885">Changes Introduced in V5.7-1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.43 <a 
+href="sun211se30.html#x559-81000043" id="QQ2-559-1886">Changes Introduced in V5.7-2</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.44 <a 
+href="sun211se30.html#x559-81100044" id="QQ2-559-1887">Changes Introduced in V6.0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.45 <a 
+href="sun211se30.html#x559-81200045" id="QQ2-559-1888">Changes Introduced in V6.0-1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.46 <a 
+href="sun211se30.html#x559-81300046" id="QQ2-559-1889">Changes Introduced in V7.0.0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.47 <a 
+href="sun211se30.html#x559-81400047" id="QQ2-559-1890">Changes Introduced in V7.0.1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.48 <a 
+href="sun211se30.html#x559-81500048" id="QQ2-559-1891">Changes Introduced in V7.0.2</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.49 <a 
+href="sun211se30.html#x559-81600049" id="QQ2-559-1892">Changes Introduced in V7.0.3</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.50 <a 
+href="sun211se30.html#x559-81700050" id="QQ2-559-1893">Changes Introduced in V7.0.4</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.51 <a 
+href="sun211se30.html#x559-81800051" id="QQ2-559-1894">Changes Introduced in V7.0.5</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.52 <a 
+href="sun211se30.html#x559-81900052" id="QQ2-559-1895">Changes Introduced in V7.0.6</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.53 <a 
+href="sun211se30.html#x559-82000053" id="QQ2-559-1896">Changes Introduced in V7.1.0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.54 <a 
+href="sun211se30.html#x559-82100054" id="QQ2-559-1897">Changes Introduced in V7.1.1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.55 <a 
+href="sun211se30.html#x559-82200055" id="QQ2-559-1898">Changes Introduced in V7.2.0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.56 <a 
+href="sun211se30.html#x559-82300056" id="QQ2-559-1899">Changes Introduced in V7.3.0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.57 <a 
+href="sun211se30.html#x559-82400057" id="QQ2-559-1900">Changes Introduced in V7.3.1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.58 <a 
+href="sun211se30.html#x559-82500058" id="QQ2-559-1901">Changes Introduced in V7.3.2</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.59 <a 
+href="sun211se30.html#x559-82600059" id="QQ2-559-1902">Changes Introduced in V7.3.3</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.60 <a 
+href="sun211se30.html#x559-82700060" id="QQ2-559-1903">Changes Introduced in V7.3.4</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.61 <a 
+href="sun211se30.html#x559-82800061" id="QQ2-559-1904">Changes Introduced in V8.0.0</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.62 <a 
+href="sun211se30.html#x559-82900062" id="QQ2-559-1905">Changes Introduced in V8.0.1</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.63 <a 
+href="sun211se30.html#x559-83000063" id="QQ2-559-1906">Changes Introduced in V8.0.2</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.64 <a 
+href="sun211se30.html#x559-83100064" id="QQ2-559-1907">Changes Introduced in V8.0.3</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.65 <a 
+href="sun211se30.html#x559-83200065" id="QQ2-559-1908">Changes Introduced in V8.0.4</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.66 <a 
+href="sun211se30.html#x559-83300066" id="QQ2-559-1909">Changes Introduced in V8.0.5</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.67 <a 
+href="sun211se30.html#x559-83400067" id="QQ2-559-1910">Changes Introduced in V8.1.0</a></span>
+                                                                                       
+
+                                                                                       
+<br />&#x00A0;<span class="subsectionToc" >H.68 <a 
+href="sun211se30.html#x559-83500068" id="QQ2-559-1911">Changes Introduced in V8.2</a></span>
+<br />&#x00A0;<span class="subsectionToc" >H.69 <a 
+href="sun211se30.html#x559-83600069" id="QQ2-559-1912">Changes Introduced in V8.3</a></span>
+</div>
+<div class="center">
+<!--l. 64--><p class="noindent" ><em>This is the C version of this document.<br 
+class="newline" />For the Fortran version, please see <a 
+href="http://www.starlink.ac.uk/cgi-bin/htxserver/sun210.htx/sun210.html?xref_" >SUN/210</a>.</em> </div>
+<a 
+ id="x1-2001r1"></a>
+<a 
+ id="x1-6001r5"></a>
+
+<a 
+ id="x1-14002r9"></a>
+
+<a 
+ id="x1-33073r25"></a>
+
+<a 
+ id="x1-52013r45"></a>
+
+<a 
+ id="x1-64075r64"></a>
+
+<a 
+ id="x1-72015r76"></a>
+
+<a 
+ id="x1-89001r85"></a>
+
+<a 
+ id="x1-98001r102"></a>
+
+<a 
+ id="x1-106007r111"></a>
+
+<a 
+ id="x1-111001r119"></a>
+
+<a 
+ id="x1-114003r124"></a>
+
+<a 
+ id="x1-121001r127"></a>
+
+<a 
+ id="x1-132003r134"></a>
+
+<a 
+ id="x1-140012r146"></a>
+
+<a 
+ id="x1-156001r158"></a>
+
+<a 
+ id="x1-171001r174"></a>
+
+<a 
+ id="x1-179044r189"></a>
+
+<a 
+ id="x1-181001r197"></a>
+
+<a 
+ id="x1-182001r199"></a>
+
+<a 
+ id="x1-195035r200"></a>
+
+<a 
+ id="x1-211003r213"></a>
+
+<a 
+ id="x1-215003r229"></a>
+
+<a 
+ id="x1-216123r233"></a>
+
+<a 
+ id="x1-457001r234"></a>
+
+<a 
+ id="x1-656001r955"></a>
+
+<a 
+ id="x1-719001r1550"></a>
+
+<a 
+ id="x1-722001r1737"></a>
+
+<a 
+ id="x1-749001r1744"></a>
+
+<a 
+ id="x1-766001r1823"></a>
+ 
+</body> 
+</html>
+                                                                                       
+
+                                                                                       
+                                                                                       
+
+

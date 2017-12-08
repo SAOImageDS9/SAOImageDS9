@@ -1,0 +1,62 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astPutTables </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss155.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss157.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 24658--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x181-3730000"></a> astPutTables </h3>  <p class="subtitle"> Store one or more FitsTables in a FitsChan  </p> </h3> </header><a 
+ id="Q1-181-701"></a> <a 
+ id="Q1-181-702"></a> <a name="xref_astPutTables"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+function allows representations of one or more FITS binary tables to be stored in a
+<a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>. For instance, these may provide the coordinate look-up tables needed
+subequently when reading FITS-WCS headers for axes described using the <code>&#x0022;</code> -TAB<code>&#x0022;</code>
+algorithm. Since, in general, the calling application may not know which tables will be
+needed - if any - prior to calling <a 
+href="sun211ss160.html#x185-3770000">astRead</a>, the astTablesSource function provides
+an alternative mechanism in which a caller-supplied function is invoked to
+store a named table in the FitsChan.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astPutTables( AstFitsChan
+<!--l. 24658--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this, AstKeyMap
+<!--l. 24658--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>tables
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the FitsChan.  </div> <h5 class="ssth5"> tables  </h5><div class="sstsub"> Pointer to a <a 
+href="sun211ss457.html#x484-6760000">KeyMap</a>
+holding the tables that are to be added to the FitsChan. Each entry should hold a
+scalar value which is a pointer to a <a 
+href="sun211ss450.html#x477-6690000">FitsTable</a> to be added to the FitsChan. Any
+unusable entries are ignored. The key associated with each entry should be the name of
+the FITS binary extension from which the table was read. If a FitsTable with the
+associated key already exists in the FitsChan, it is replaced with the new one. A deep
+copy of each usable FitsTable is stored in the FitsChan, so any subsequent changes made
+to the FitsTables will have no effect on the behaviour of the FitsChan.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 24658--><p class="noindent" >Tables stored in the FitsChan may be retrieved using <a 
+href="sun211ss78.html#x103-2950000">astGetTables</a>.
+<li >
+<!--l. 24658--><p class="noindent" >The tables in the supplied KeyMap are added to any tables already in the FitsChan.
+<li >
+<!--l. 24658--><p class="noindent" >The <a 
+href="sun211ss154.html#x179-3710000">astPutTable</a> method provides a simpler means of adding a single table to a FitsChan.
+</li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss155.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss157.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss156.html"></a> </div> 
+</body> 
+</html>

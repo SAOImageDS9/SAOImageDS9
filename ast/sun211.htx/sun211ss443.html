@@ -1,0 +1,59 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> CmpFrame </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss442.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss444.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 43718--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x470-6620000"></a> CmpFrame </h3>  <p class="subtitle"> Compound Frame  </p> </h3> </header><a 
+ id="Q1-470-1564"></a> <a 
+ id="Q1-470-1565"></a> <a name="xref_CmpFrame"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> A CmpFrame is a compound <a 
+href="sun211ss452.html#x479-6710000">Frame</a> which
+allows two component Frames (of any class) to be merged together to form a more
+complex Frame. The axes of the two component Frames then appear together in the
+resulting CmpFrame (those of the first Frame, followed by those of the second
+Frame).
+<!--l. 43718--><p class="noindent" >Since a CmpFrame is itself a Frame, it can be used as a component in forming further
+CmpFrames. Frames of arbitrary complexity may be built from simple individual Frames in
+this way.
+<!--l. 43718--><p class="noindent" >Also since a Frame is a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>, a CmpFrame can also be used as a Mapping. Normally, a
+CmpFrame is simply equivalent to a <a 
+href="sun211ss495.html#x522-7140000">UnitMap</a>, but if either of the component Frames
+within a CmpFrame is a <a 
+href="sun211ss474.html#x501-6930000">Region</a> (a sub-class of Frame), then the CmpFrame will use the
+Region as a Mapping when transforming values for axes described by the Region. Thus
+input axis values corresponding to positions which are outside the Region will result
+in bad output axis values.  </div> <h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> <a 
+href="sun211ss25.html#x50-2420000">astCmpFrame</a>  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues"> The
+CmpFrame class inherits from the Frame class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> The CmpFrame class does
+not define any new attributes beyond those which are applicable to all Frames.
+However, the attributes of the component Frames can be accessed as if they were
+attributes of the CmpFrame. For instance, if a CmpFrame contains a <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a> and a
+<a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>, then the CmpFrame will recognise the <code>&#x0022;</code> <a 
+href="sun211ss286.html#x312-5040000">Equinox</a><code>&#x0022;</code> attribute and forward
+access requests to the component SkyFrame. Likewise, it will recognise the <code>&#x0022;</code>
+<a 
+href="sun211ss383.html#x409-6010000">RestFreq</a><code>&#x0022;</code> attribute and forward access requests to the component SpecFrame.
+An axis index can optionally be appended to the end of any attribute name,
+in which case the request to access the attribute will be forwarded to the
+primary Frame defining the specified axis.  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> The CmpFrame class does
+not define any new functions beyond those which are applicable to all Frames.
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss442.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss444.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss443.html"></a> </div> 
+</body> 
+</html>

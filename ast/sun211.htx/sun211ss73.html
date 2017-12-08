@@ -1,0 +1,109 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astGetRegionPoints </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss72.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss74.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 17064--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x98-2900000"></a> astGetRegionPoints </h3>  <p class="subtitle"> Returns the positions that define the given Region  </p> </h3> </header><a 
+ id="Q1-98-452"></a> <a 
+ id="Q1-98-453"></a> <a name="xref_astGetRegionPoints"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This function returns the axis values at the points that define the supplied
+<a 
+href="sun211ss474.html#x501-6930000">Region</a>. The particular meaning of these points will depend on the type of class supplied,
+as listed below under <code>&#x0022;</code> Applicability:<code>&#x0022;</code> .  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astGetRegionPoints( AstRegion
+<!--l. 17064--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this, int maxpoint, int
+maxcoord, int <!--l. 17064--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>npoint,
+double <!--l. 17064--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>points
+                                                                                       
+
+                                                                                       
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Region.  </div> <h5 class="ssth5"> maxpoint  </h5><div class="sstsub"> If zero,
+the number of points needed to define the Region is returned in <code>&#x0022;</code>
+<!--l. 17064--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>npoint<code>&#x0022;</code> ,
+but no axis values are returned and all other parameters are ignored. If not zero, the
+supplied value should be the length of the second dimension of the <code>&#x0022;</code> points<code>&#x0022;</code> array. An
+error is reported if the number of points needed to define the Region exceeds this
+number.  </div> <h5 class="ssth5"> maxcoord  </h5><div class="sstsub"> The length of the first dimension of the <code>&#x0022;</code> points<code>&#x0022;</code> array. An
+error is reported if the number of axes in the supplied Region exceeds this number.  </div> <h5 class="ssth5">
+npoint  </h5><div class="sstsub"> A pointer to an integer in which to return the number of points defining the
+Region.  </div> <h5 class="ssth5"> points  </h5><div class="sstsub"> The address of the first element in a 2-dimensional array of shape
+<code>&#x0022;</code> [maxcoord][maxpoint]<code>&#x0022;</code> , in which to return the coordinate values at the positions
+that define the Region. These are stored such that the value of coordinate number <code>&#x0022;</code>
+coord<code>&#x0022;</code> for point number <code>&#x0022;</code> point<code>&#x0022;</code> is found in element <code>&#x0022;</code> points[coord][point]<code>&#x0022;</code>
+.  </div>  </div> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Region  </h5><div class="sstsub"> All Regions have this attribute.  </div> <h5 class="ssth5"> <a 
+href="sun211ss440.html#x467-6590000">Box</a>  </h5><div class="sstsub"> The
+first returned position is the Box centre, and the second is a Box corner.  </div> <h5 class="ssth5">
+<a 
+href="sun211ss442.html#x469-6610000">Circle</a>  </h5><div class="sstsub"> The first returned position is the Circle centre, and the second is
+a point on the circumference.  </div> <h5 class="ssth5"> <a 
+href="sun211ss445.html#x472-6640000">CmpRegion</a>  </h5><div class="sstsub"> Returns a value of zero for <code>&#x0022;</code>
+<!--l. 17064--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>npoint<code>&#x0022;</code>
+and leaves the supplied array contents unchanged. To find the points defining a
+CmpRegion, use this method on the component Regions, which can be accessed by invoking
+<a 
+href="sun211ss38.html#x63-2550000">astDecompose</a> on the CmpRegion.  </div> <h5 class="ssth5"> <a 
+href="sun211ss448.html#x475-6670000">Ellipse</a>  </h5><div class="sstsub"> The first returned position is the Ellipse
+centre. The second is the end of one of the axes of the ellipse. The third is some
+other point on the circumference of the ellipse, distinct from the second point.  </div> <h5 class="ssth5">
+<a 
+href="sun211ss455.html#x482-6740000">Interval</a>  </h5><div class="sstsub"> The first point corresponds to the lower bounds position, and the
+second point corresponds to the upper bounds position. These are reversed to
+indicate an extcluded interval rather than an included interval. See the Interval
+constructor for more information.  </div> <h5 class="ssth5"> <a 
+href="sun211ss463.html#x490-6820000">NullRegion</a>  </h5><div class="sstsub"> Returns a value of zero for <code>&#x0022;</code>
+<!--l. 17064--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>npoint<code>&#x0022;</code>
+and leaves the supplied array contents unchanged.  </div> <h5 class="ssth5"> <a 
+href="sun211ss469.html#x496-6880000">PointList</a>  </h5><div class="sstsub"> The positions
+returned are those that were supplied when the PointList was constructed.  </div> <h5 class="ssth5">
+<a 
+href="sun211ss471.html#x498-6900000">Polygon</a>  </h5><div class="sstsub"> The positions returned are the vertex positions that were supplied
+when the Polygon was constructed.  </div> <h5 class="ssth5"> <a 
+href="sun211ss472.html#x499-6910000">Prism</a>  </h5><div class="sstsub"> Returns a value of zero for <code>&#x0022;</code>
+<!--l. 17064--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>npoint<code>&#x0022;</code>
+and leaves the supplied array contents unchanged. To find the points defining a Prism,
+use this method on the component Regions, which can be accessed by invoking
+astDecompose on the CmpRegion.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 17064--><p class="noindent" >If the coordinate system represented by the Region has been changed since it was first
+created, the returned axis values refer to the new (changed) coordinate system, rather
+than the original coordinate system. Note however that if the transformation from
+original to new coordinate system is non-linear, the shape within the new coordinate
+system may be distorted, and so may not match that implied by the name of the Region
+subclass (Circle, Box, etc).  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss72.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss74.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss73.html"></a> </div> 
+</body> 
+</html>

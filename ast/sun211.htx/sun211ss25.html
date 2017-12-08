@@ -1,0 +1,87 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astCmpFrame </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss24.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss26.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 12755--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x50-2420000"></a> astCmpFrame </h3>  <p class="subtitle"> Create a CmpFrame  </p> </h3> </header><a 
+ id="Q1-50-308"></a> <a 
+ id="Q1-50-309"></a> <a name="xref_astCmpFrame"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a new
+<a 
+href="sun211ss443.html#x470-6620000">CmpFrame</a> and optionally initialises its attributes.
+<!--l. 12755--><p class="noindent" >A CmpFrame is a compound <a 
+href="sun211ss452.html#x479-6710000">Frame</a> which allows two component Frames (of any class) to be
+merged together to form a more complex Frame. The axes of the two component Frames then
+appear together in the resulting CmpFrame (those of the first Frame, followed by those
+of the second Frame).
+<!--l. 12755--><p class="noindent" >Since a CmpFrame is itself a Frame, it can be used as a component in forming further
+CmpFrames. Frames of arbitrary complexity may be built from simple individual Frames in
+this way.
+<!--l. 12755--><p class="noindent" >Also since a Frame is a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>, a CmpFrame can also be used as a Mapping. Normally, a
+CmpFrame is simply equivalent to a <a 
+href="sun211ss495.html#x522-7140000">UnitMap</a>, but if either of the component
+Frames within a CmpFrame is a <a 
+href="sun211ss474.html#x501-6930000">Region</a> (a sub-class of Frame), then the CmpFrame
+will use the Region as a Mapping when transforming values for axes described
+by the Region. Thus input axis values corresponding to positions which are
+outside the Region will result in bad output axis values.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstCmpFrame
+<!--l. 12755--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astCmpFrame(
+AstFrame <!--l. 12755--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>frame1,
+AstFrame <!--l. 12755--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>frame2,
+const char <!--l. 12755--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> frame1  </h5><div class="sstsub"> Pointer to the first component Frame.  </div> <h5 class="ssth5"> frame2  </h5><div class="sstsub">
+Pointer to the second component Frame.  </div> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a null-terminated string
+containing an optional comma-separated list of attribute assignments to be used for
+initialising the new CmpFrame. The syntax used is identical to that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a>
+function and may include <code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by <code>&#x0022;</code> %<code>&#x0022;</code> symbols in the
+normal way.  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> If the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code> %<code>&#x0022;</code> format specifiers,
+then an optional list of additional arguments may follow it in order to supply
+values to be substituted for these specifiers. The rules for supplying these are
+identical to those for the astSet function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code> function).  </div>  </div>
+<h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astCmpFrame()  </h5><div class="sstsub"> A pointer to the new CmpFrame.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 12755--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked
+with the AST error status set, or if it should fail for any reason.  </li></ul>  </div>
+<h4 class="ssth4"> Status Handling  </h4><div class="sstvalues"> The protected interface to this function includes an
+extra parameter at the end of the parameter list descirbed above. This
+parameter is a pointer to the integer inherited status variable: <code>&#x0022;</code> int
+                                                                                       
+
+                                                                                       
+<!--l. 12755--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>status<code>&#x0022;</code> .
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss24.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss26.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss25.html"></a> </div> 
+</body> 
+</html>

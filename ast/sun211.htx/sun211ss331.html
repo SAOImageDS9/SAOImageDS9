@@ -1,0 +1,51 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> LogLabel(axis) </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss330.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss332.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 38292--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x357-5490000"></a> LogLabel(axis) </h3>  <p class="subtitle"> Use exponential format for numerical axis labels?  </p> </h3> </header><a 
+ id="Q1-357-1227"></a> <a 
+ id="Q1-357-1228"></a> <a name="xref_LogLabel(axis)"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+This attribute controls the appearance of an annotated coordinate grid (drawn with the
+<a 
+href="sun211ss83.html#x108-3000000">astGrid</a> function) by determining whether the numerical axis labels should be in normal
+decimal form or should be represented as 10 raised to the appropriate power. That is,
+an axis value of 1000.0 will be drawn as <code>&#x0022;</code> 1000.0<code>&#x0022;</code> if LogLabel is zero, but as <code>&#x0022;</code>
+10<!--l. 38292--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><code><mstyle 
+class="text"><mtext  >^</mtext></mstyle></code></math>3<code>&#x0022;</code> if
+LogLabel is non-zero. If graphical escape sequences are supported (see attribute <a 
+href="sun211ss287.html#x313-5050000">Escape</a>),
+the power in such exponential labels will be drawn as a small superscript instead of using
+a <code>&#x0022;</code> <!--l. 38292--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><code><mstyle 
+class="text"><mtext  >^</mtext></mstyle></code></math><code>&#x0022;</code>
+character to represent exponentiation.
+<!--l. 38292--><p class="noindent" >The default is to produce exponential labels if the major tick marks are logarithmically
+spaced (see the LogTicks attribute).  </div> <dl class="sst">Type: </dl><dd class="sst"> Integer (boolean).  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> <a 
+href="sun211ss467.html#x494-6860000">Plot</a>
+</h5><div class="sstsub"> All Plots have this attribute.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 38292--><p class="noindent" >If no axis is specified, (e.g. <code>&#x0022;</code> LogLabel<code>&#x0022;</code> instead of <code>&#x0022;</code> LogLabel(2)<code>&#x0022;</code> ), then a <code>&#x0022;</code> set<code>&#x0022;</code>
+or <code>&#x0022;</code> clear<code>&#x0022;</code> operation will affect the attribute value of all the Plot axes,
+while a <code>&#x0022;</code> get<code>&#x0022;</code> or <code>&#x0022;</code> test<code>&#x0022;</code> operation will use just the LogLabel(1) value.  </li></ul>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss330.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss332.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss331.html"></a> </div> 
+</body> 
+</html>

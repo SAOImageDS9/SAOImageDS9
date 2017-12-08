@@ -1,0 +1,124 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Plot3D </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss467.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss469.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 45898--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x495-6870000"></a> Plot3D </h3>  <p class="subtitle"> Provide facilities for 3D graphical output  </p> </h3> </header><a 
+ id="Q1-495-1639"></a> <a 
+ id="Q1-495-1640"></a> <a name="xref_Plot3D"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> A
+Plot3D is a specialised form of <a 
+href="sun211ss467.html#x494-6860000">Plot</a> that provides facilities for producing
+3D graphical output, including fully annotated 3D coordinate grids. The base
+<a 
+href="sun211ss452.html#x479-6710000">Frame</a> in a Plot3D describes a 3-dimensional <code>&#x0022;</code> graphical<code>&#x0022;</code> coordinate system. The
+axes of this coordinate system are assumed to be right-handed (that is, if X
+appears horizontally to the right and Y vertically upwards, then Z is out of the
+screen towards the viewer), and are assumed to be equally scaled (that is, the
+same units are used to measure positions on each of the 3 axes). The upper and
+lower bounds of a volume within this graphical coordinate system is specified
+when the Plot3D is created, and all subsequent graphics are <code>&#x0022;</code> drawn<code>&#x0022;</code> in this
+volume.
+<!--l. 45898--><p class="noindent" >The Plot3D class does not itself include any ability to draw on a graphics device.
+Instead it calls upon function in an externally supplied module (the <code>&#x0022;</code> grf3d<code>&#x0022;</code> module)
+to do the required drawing. A module should be written that implements the functions of
+the grf3d interface using the facilities of a specific graphics system This module
+should then be linked into the application so that the Plot3D class can use its
+functions (see the description of the <a 
+href="sun211ss501.html#x529-7210000">ast_link</a> commands for details of how
+to do this). The grf3d interface defines a few simple functions for drawing
+primitives such as straight lines, markers and character strings. These functions
+all accept positions in the 3D graphics coordinate system (the base Frame of
+the Plot3D), and so the grf3d module must also manage the projection of these
+3D coordinates onto the 2D viewing surface, including the choice of <code>&#x0022;</code> eye<code>&#x0022;</code>
+/<code>&#x0022;</code> camera<code>&#x0022;</code> position, direction of viewing, etc. The AST library includes a
+sample implementation of the grf3d interface based on the PGPLOT graphics system
+(see file grf3d_pgplot.c). This implementation also serves to document the
+grf3d interface itself and should be consulted for details before writing a new
+implementation.
+                                                                                       
+
+                                                                                       
+<!--l. 45898--><p class="noindent" >The current Frame of a Plot3D describes a <code>&#x0022;</code> physical<code>&#x0022;</code> 3-dimensional coordinate system,
+which is the coordinate system in which plotting operations are specified when invoking
+the methods of the Plot3D class. The results of each plotting operation are
+automatically transformed into 3D graphical coordinates before being plotted using the
+facilities of the grf3d module linked into the application. Note, at least one of the
+three axes of the current Frame must be independent of the other two current Frame
+axes.
+<!--l. 45898--><p class="noindent" >You may select different physical coordinate systems in which to plot (including the
+native graphical coordinate system itself) by selecting different Frames as the current
+Frame of a Plot3D, using its <a 
+href="sun211ss273.html#x299-4910000">Current</a> attribute.
+<!--l. 45898--><p class="noindent" >Like any <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a>, a Plot3D may also be used as a Frame. In this case, it behaves like
+its current Frame, which describes the physical coordinate system.
+<!--l. 45898--><p class="noindent" >When used as a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a>, a Plot3D describes the inter-relation between 3D graphical
+coordinates (its base Frame) and 3D physical coordinates (its current Frame).
+<!--l. 45898--><p class="noindent" >Although the Plot3D class inherits from the Plot class, several of the facilities of
+the Plot class are not available in the Plot3D class, and an error will be reported if
+any attempt is made to use them. Specifically, the Plot3D class does not support
+clipping using the <a 
+href="sun211ss23.html#x48-2400000">astClip</a> function. Nor does it support the specification of graphics
+primitive functions at run-time using the <a 
+href="sun211ss82.html#x107-2990000">astGrfSet</a>, <a 
+href="sun211ss80.html#x105-2970000">astGrfPop</a>, <a 
+href="sun211ss81.html#x106-2980000">astGrfPush</a> and
+<a 
+href="sun211ss66.html#x91-2830000">astGetGrfContext</a> functions.  </div> <h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> <a 
+href="sun211ss141.html#x166-3580000">astPlot3D</a>  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues">
+The Plot3D class inherits from the Plot class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> In addition
+to those attributes common to all Plots, every Plot3D also has the following
+attributes:
+<ul class="sstitemlist">
+<li >
+<!--l. 45898--><p class="noindent" >Norm: Normal vector defining the 2D plane used for text and markers
+<li >
+<!--l. 45898--><p class="noindent" ><a 
+href="sun211ss384.html#x410-6020000">RootCorner</a>: Specifies which edges of the 3D box should be annotated.
+</li>
+</ul>
+<!--l. 45898--><p class="noindent" >Some attributes of the Plot class refer to specific physical coordinate axes (e.g. Gap,
+LabelUp, DrawAxes, etc). For a basic Plot, the axis index must be 1 or 2, but for a
+Plot3D the axis index can be 1, 2 or 3.
+<!--l. 45898--><p class="noindent" >Certain Plot attributes are ignored by the Plot3D class (e.g. Edge, <a 
+href="sun211ss281.html#x307-4990000">DrawTitle</a>,
+<a 
+href="sun211ss421.html#x447-6390000">TitleGap</a>, etc). Consult the Plot attribute documentation for details. All other
+Plot attributes can be set for a specific plane of the 3-d plot by appending
+one of the strings <code>&#x0022;</code> _XY<code>&#x0022;</code> , <code>&#x0022;</code> _XZ<code>&#x0022;</code> or <code>&#x0022;</code> _YZ<code>&#x0022;</code> to the end of the Plot attribute
+name. For instance, <code>&#x0022;</code> <a 
+href="sun211ss296.html#x322-5140000">Grid</a>_YZ<code>&#x0022;</code> refers to the <code>&#x0022;</code> Grid<code>&#x0022;</code> attribute for the plane
+spanning the second (Y) and third (Z) axes of the 3-d plot.  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> The
+Plot3D class does not define any new functions beyond those which are applicable
+to all Plots. Note, however, that the following methods inherited from the
+Plot class cannot be used with a Plot3D and will report an error if called:
+<ul class="sstitemlist">
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 45898--><p class="noindent" ><a 
+href="sun211ss15.html#x40-2320000">astBoundingBox</a>, astClip, <a 
+href="sun211ss36.html#x61-2530000">astCurve</a>, <a 
+href="sun211ss60.html#x85-2770000">astGenCurve</a>, astGetGrfContext, astGrfPop,
+astGrfPush, astGrfSet, <a 
+href="sun211ss84.html#x109-3010000">astGridLine</a>, <a 
+href="sun211ss143.html#x168-3600000">astPolyCurve</a>.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss467.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss469.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss468.html"></a> </div> 
+</body> 
+</html>

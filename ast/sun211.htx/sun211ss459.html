@@ -1,0 +1,140 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Mapping </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss458.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss460.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 45081--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x486-6780000"></a> Mapping </h3>  <p class="subtitle"> Inter-relate two coordinate systems  </p> </h3> </header><a 
+ id="Q1-486-1612"></a> <a 
+ id="Q1-486-1613"></a> <a name="xref_Mapping"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This class
+provides the basic facilities for transforming a set of coordinates (representing <code>&#x0022;</code>
+input<code>&#x0022;</code> points) to give a new set of coordinates (representing <code>&#x0022;</code> output<code>&#x0022;</code> points).
+It is used to describe the relationship which exists between two different
+coordinate systems and to implement operations which make use of this (such as
+transforming coordinates and resampling grids of data). However, the Mapping class
+does not have a constructor function of its own, as it is simply a container
+class for a family of specialised Mappings which implement particular types of
+coordinate transformation.  </div> <h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> None.  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues"> The
+Mapping class inherits from the <a 
+href="sun211ss464.html#x491-6830000">Object</a> class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> In addition to
+those attributes common to all Objects, every Mapping also has the following
+attributes:
+<ul class="sstitemlist">
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss312.html#x338-5300000">Invert</a>: Mapping inversion flag
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss315.html#x341-5330000">IsLinear</a>: Is the Mapping linear?
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss317.html#x343-5350000">IsSimple</a>: Has the Mapping been simplified?
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss353.html#x379-5710000">Nin</a>: Number of input coordinates for a Mapping
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss359.html#x385-5770000">Nout</a>: Number of output coordinates for a Mapping
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss381.html#x407-5990000">Report</a>: Report transformed coordinates?
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss425.html#x451-6430000">TranForward</a>: Forward transformation defined?
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss426.html#x452-6440000">TranInverse</a>: Inverse transformation defined?  </li></ul>  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> In addition to those
+functions applicable to all Objects, the following functions may also be applied to all
+Mappings:
+<ul class="sstitemlist">
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss38.html#x63-2550000">astDecompose</a>: Decompose a Mapping into two component Mappings
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss220.html#x245-4370000">astTranGrid</a>: Transform a grid of positions
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss94.html#x119-3110000">astInvert</a>: Invert a Mapping
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss97.html#x122-3140000">astLinearApprox</a>: Calculate a linear approximation to a Mapping
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss100.html#x125-3170000">astMapBox</a>: Find a bounding box for a Mapping
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss118.html#x143-3350000">astMapSplit</a>: Split a Mapping up into parallel component Mappings
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss157.html#x182-3740000">astQuadApprox</a>: Calculate a quadratic approximation to a 2D Mapping
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss158.html#x183-3750000">astRate</a>: Calculate the rate of change of a Mapping output
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss162.html#x187-3790000">astRebin<!--l. 45081--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 45081--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>:
+Rebin a region of a data grid
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss163.html#x188-3800000">astRebinSeq<!--l. 45081--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 45081--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>:
+Rebin a region of a sequence of data grids
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss172.html#x197-3890000">astResample<!--l. 45081--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 45081--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math></a>:
+Resample a region of a data grid
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss169.html#x194-3860000">astRemoveRegions</a>: Remove any Regions from a Mapping
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss190.html#x215-4070000">astSimplify</a>: Simplify a Mapping
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss218.html#x243-4350000">astTran1</a>: Transform 1-dimensional coordinates
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss219.html#x244-4360000">astTran2</a>: Transform 2-dimensional coordinates
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss222.html#x247-4390000">astTranN</a>: Transform N-dimensional coordinates
+<li >
+<!--l. 45081--><p class="noindent" ><a 
+href="sun211ss223.html#x248-4400000">astTranP</a>: Transform N-dimensional coordinates held in separate arrays  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss458.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss460.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss459.html"></a> </div> 
+</body> 
+</html>

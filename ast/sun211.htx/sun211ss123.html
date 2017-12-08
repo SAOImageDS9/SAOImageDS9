@@ -1,0 +1,940 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astMathMap </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss122.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss124.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 21820--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x148-3400000"></a> astMathMap </h3>  <p class="subtitle"> Create a MathMap  </p> </h3> </header><a 
+ id="Q1-148-602"></a> <a 
+ id="Q1-148-603"></a> <a name="xref_astMathMap"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a new
+<a 
+href="sun211ss460.html#x487-6790000">MathMap</a> and optionally initialises its attributes.
+<!--l. 21820--><p class="noindent" >A MathMap is a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> which allows you to specify a set of forward and/or inverse
+transformation functions using arithmetic operations and mathematical functions similar
+to those available in C. The MathMap interprets these functions at run-time, whenever
+its forward or inverse transformation is required. Because the functions are not
+compiled in the normal sense (unlike an <a 
+href="sun211ss456.html#x483-6750000">IntraMap</a>), they may be used to describe
+coordinate transformations in a transportable manner. A MathMap therefore provides a
+flexible way of defining new types of Mapping whose descriptions may be stored as
+part of a dataset and interpreted by other programs.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstMathMap
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astMathMap( int nin, int nout,
+int nfwd, const char <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>fwd[],
+int ninv, const char <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>inv[],
+const char <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> nin  </h5><div class="sstsub"> Number of input variables for the MathMap. This determines
+the value of its <a 
+href="sun211ss353.html#x379-5710000">Nin</a> attribute.  </div> <h5 class="ssth5"> nout  </h5><div class="sstsub"> Number of output variables for the MathMap.
+This determines the value of its <a 
+href="sun211ss359.html#x385-5770000">Nout</a> attribute.  </div> <h5 class="ssth5"> nfwd  </h5><div class="sstsub"> The number of forward
+transformation functions being supplied. This must be at least equal to <code>&#x0022;</code> nout<code>&#x0022;</code> ,
+but may be increased to accommodate any additional expressions which define
+intermediate variables for the forward transformation (see the <code>&#x0022;</code> Calculating
+Intermediate Values<code>&#x0022;</code> section below).  </div> <h5 class="ssth5"> fwd  </h5><div class="sstsub"> An array (with <code>&#x0022;</code> nfwd<code>&#x0022;</code> elements) of
+pointers to null terminated strings which contain the expressions defining the
+forward transformation. The syntax of these expressions is described below.  </div> <h5 class="ssth5">
+ninv  </h5><div class="sstsub"> The number of inverse transformation functions being supplied. This
+must be at least equal to <code>&#x0022;</code> nin<code>&#x0022;</code> , but may be increased to accommodate any
+additional expressions which define intermediate variables for the inverse
+transformation (see the <code>&#x0022;</code> Calculating Intermediate Values<code>&#x0022;</code> section below).  </div> <h5 class="ssth5"> inv  </h5><div class="sstsub"> An
+array (with <code>&#x0022;</code> ninv<code>&#x0022;</code> elements) of pointers to null terminated strings which
+contain the expressions defining the inverse transformation. The syntax of these
+expressions is described below.  </div> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a null-terminated string
+containing an optional comma-separated list of attribute assignments to be used for
+initialising the new MathMap. The syntax used is identical to that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a>
+function and may include <code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by <code>&#x0022;</code> %<code>&#x0022;</code> symbols in
+the normal way. If no initialisation is required, a zero-length string may be
+supplied.  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> If the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code> %<code>&#x0022;</code> format specifiers,
+then an optional list of additional arguments may follow it in order to supply
+values to be substituted for these specifiers. The rules for supplying these are
+identical to those for the astSet function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code> function).  </div>
+                                                                                       
+
+                                                                                       
+</div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astMathMap()  </h5><div class="sstsub"> A pointer to the new MathMap.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 21820--><p class="noindent" >The sequence of numbers produced by the random number functions available within a
+MathMap is normally unpredictable and different for each MathMap. However, this
+behaviour may be controlled by means of the MathMap<code>&#x2019;</code> s <a 
+href="sun211ss385.html#x411-6030000">Seed</a> attribute.
+<li >
+<!--l. 21820--><p class="noindent" >Normally, compound Mappings (CmpMaps) which involve MathMaps will not be subject to
+simplification (e.g. using <a 
+href="sun211ss190.html#x215-4070000">astSimplify</a>) because AST cannot know how different MathMaps
+will interact. However, in the special case where a MathMap occurs in series with its
+own inverse, then simplification may be possible. Whether simplification does, in fact,
+occur under these circumstances is controlled by the MathMap<code>&#x2019;</code> s <a 
+href="sun211ss387.html#x413-6050000">SimpFI</a> and <a 
+href="sun211ss388.html#x414-6060000">SimpIF</a>
+attributes.
+<li >
+<!--l. 21820--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div> <h4 class="ssth4"> Defining Transformation
+Functions  </h4><div class="sstvalues"> A MathMap<code>&#x2019;</code> s transformation functions are supplied as a set of expressions
+in an array of character strings. Normally you would supply the same number of
+expressions for the forward transformation, via the <code>&#x0022;</code> fwd<code>&#x0022;</code> parameter, as there are
+output variables (given by the MathMap<code>&#x2019;</code> s Nout attribute). For instance, if Nout is 2
+you might use: <ul class="sstitemlist">
+<li >
+<!--l. 21820--><p class="noindent" ><code>&#x0022;</code> r = sqrt( x <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+x <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>  y
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math> y
+)<code>&#x0022;</code>
+<li >
+<!--l. 21820--><p class="noindent" ><code>&#x0022;</code> theta = atan2( y, x )<code>&#x0022;</code>
+</li>
+</ul>
+<!--l. 21820--><p class="noindent" >which defines a transformation from Cartesian to polar coordinates. Here, the variables
+that appear on the left of each expression (<code>&#x0022;</code> r<code>&#x0022;</code> and <code>&#x0022;</code> theta<code>&#x0022;</code> ) provide names for the
+output variables and those that appear on the right (<code>&#x0022;</code> x<code>&#x0022;</code> and <code>&#x0022;</code> y<code>&#x0022;</code> ) are references to
+input variables.
+<!--l. 21820--><p class="noindent" >To complement this, you must also supply expressions for the inverse transformation via
+the <code>&#x0022;</code> inv<code>&#x0022;</code> parameter. In this case, the number of expressions given would normally
+match the number of MathMap input coordinates (given by the Nin attribute). If Nin is
+2, you might use: <ul class="sstitemlist">
+<li >
+<!--l. 21820--><p class="noindent" ><code>&#x0022;</code> x = r <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+cos( theta )<code>&#x0022;</code>
+<li >
+<!--l. 21820--><p class="noindent" ><code>&#x0022;</code> y = r <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+sin( theta )<code>&#x0022;</code>
+                                                                                       
+
+                                                                                       
+</li>
+</ul>
+<!--l. 21820--><p class="noindent" >which expresses the transformation from polar to Cartesian coordinates. Note
+that here the input variables (<code>&#x0022;</code> x<code>&#x0022;</code> and <code>&#x0022;</code> y<code>&#x0022;</code> ) are named on the left of each
+expression, and the output variables (<code>&#x0022;</code> r<code>&#x0022;</code> and <code>&#x0022;</code> theta<code>&#x0022;</code> ) are referenced on the
+right.
+<!--l. 21820--><p class="noindent" >Normally, you cannot refer to a variable on the right of an expression unless it
+is named on the left of an expression in the complementary set of functions.
+Therefore both sets of functions (forward and inverse) must be formulated using the
+same consistent set of variable names. This means that if you wish to leave
+one of the transformations undefined, you must supply dummy expressions which
+simply name each of the output (or input) variables. For example, you might use:
+<ul class="sstitemlist">
+<li >
+<!--l. 21820--><p class="noindent" ><code>&#x0022;</code> x<code>&#x0022;</code>
+<li >
+<!--l. 21820--><p class="noindent" ><code>&#x0022;</code> y<code>&#x0022;</code>
+</li>
+</ul>
+<!--l. 21820--><p class="noindent" >for the inverse transformation above, which serves to name the input variables but
+without defining an inverse transformation.  </div> <h4 class="ssth4"> Calculating Intermediate Values  </h4><div class="sstvalues"> It is
+sometimes useful to calculate intermediate values and then to use these in the final
+expressions for the output (or input) variables. This may be done by supplying
+additional expressions for the forward (or inverse) transformation functions. For
+instance, the following array of five expressions describes 2-dimensional pin-cushion
+distortion: <ul class="sstitemlist">
+<li >
+<!--l. 21820--><p class="noindent" ><code>&#x0022;</code> r = sqrt( xin <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+xin <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>
+yin <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+yin )<code>&#x0022;</code>
+<li >
+<!--l. 21820--><p class="noindent" ><code>&#x0022;</code> rout = r <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+( 1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>
+0.1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math> r
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math> r
+)<code>&#x0022;</code>
+<li >
+<!--l. 21820--><p class="noindent" ><code>&#x0022;</code> theta = atan2( yin, xin )<code>&#x0022;</code>
+<li >
+<!--l. 21820--><p class="noindent" ><code>&#x0022;</code> xout = rout <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+cos( theta )<code>&#x0022;</code>
+<li >
+<!--l. 21820--><p class="noindent" ><code>&#x0022;</code> yout = rout <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+sin( theta )<code>&#x0022;</code>
+                                                                                       
+
+                                                                                       
+</li>
+</ul>
+<!--l. 21820--><p class="noindent" >Here, we first calculate three intermediate results (<code>&#x0022;</code> r<code>&#x0022;</code> , <code>&#x0022;</code> rout<code>&#x0022;</code> and <code>&#x0022;</code> theta<code>&#x0022;</code> ) and
+then use these to calculate the final results (<code>&#x0022;</code> xout<code>&#x0022;</code> and <code>&#x0022;</code> yout<code>&#x0022;</code> ). The MathMap knows
+that only the final two results constitute values for the output variables because its
+Nout attribute is set to 2. You may define as many intermediate variables in this way
+as you choose. Having defined a variable, you may then refer to it on the right of any
+subsequent expressions.
+<!--l. 21820--><p class="noindent" >Note that when defining the inverse transformation you may only refer to the output
+variables <code>&#x0022;</code> xout<code>&#x0022;</code> and <code>&#x0022;</code> yout<code>&#x0022;</code> . The intermediate variables <code>&#x0022;</code> r<code>&#x0022;</code> , <code>&#x0022;</code> rout<code>&#x0022;</code> and <code>&#x0022;</code> theta<code>&#x0022;</code>
+(above) are private to the forward transformation and may not be referenced by the
+inverse transformation. The inverse transformation may, however, define its own private
+intermediate variables.  </div> <h4 class="ssth4"> Expression Syntax  </h4><div class="sstvalues"> The expressions given for the forward
+and inverse transformations closely follow the syntax of the C programming language
+(with some extensions for compatibility with Fortran). They may contain references to
+variables and literal constants, together with arithmetic, boolean, relational and
+bitwise operators, and function invocations. A set of symbolic constants is also
+available. Each of these is described in detail below. Parentheses may be used
+to over-ride the normal order of evaluation. There is no built-in limit to
+the length of expressions and they are insensitive to case or the presence of
+additional white space.  </div> <h4 class="ssth4"> Variables  </h4><div class="sstvalues"> Variable names must begin with an alphabetic
+character and may contain only alphabetic characters, digits, and the underscore
+character <code>&#x0022;</code> _<code>&#x0022;</code> . There is no built-in limit to the length of variable names.  </div> <h4 class="ssth4">
+Literal Constants  </h4><div class="sstvalues"> Literal constants, such as <code>&#x0022;</code> 0<code>&#x0022;</code> , <code>&#x0022;</code> 1<code>&#x0022;</code> , <code>&#x0022;</code> 0.007<code>&#x0022;</code> or <code>&#x0022;</code>
+2.505e-16<code>&#x0022;</code> may appear in expressions, with the decimal point and exponent being
+optional (a <code>&#x0022;</code> D<code>&#x0022;</code> may also be used as an exponent character for compatibility with
+Fortran). A unary minus <code>&#x0022;</code> -<code>&#x0022;</code> may be used as a prefix.  </div> <h4 class="ssth4"> Arithmetic Precision  </h4><div class="sstvalues"> All
+arithmetic is floating point, performed in double precision.  </div> <h4 class="ssth4"> Propagation of
+Missing Data  </h4><div class="sstvalues"> Unless indicated otherwise, if any argument of a function or
+operator has the value AST__BAD (indicating missing data), then the result of that
+function or operation is also AST__BAD, so that such values are propagated
+automatically through all operations performed by MathMap transformations. The special
+value AST__BAD can be represented in expressions by the symbolic constant <code>&#x0022;</code>
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>bad<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math><code>&#x0022;</code>
+.
+<!--l. 21820--><p class="noindent" >A <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>bad<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+result (i.e. equal to AST__BAD) is also produced in response to any numerical error
+(such as division by zero or numerical overflow), or if an invalid argument value is
+provided to a function or operator.  </div> <h4 class="ssth4"> Arithmetic Operators  </h4><div class="sstvalues"> The following arithmetic
+operators are available: <ul class="sstitemlist">
+<li >
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>
+x2: Sum of <code>&#x0022;</code> x1<code>&#x0022;</code> and <code>&#x0022;</code> x2<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >x1 - x2: Difference of <code>&#x0022;</code> x1<code>&#x0022;</code> and <code>&#x0022;</code> x2<code>&#x0022;</code> .
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+x2: Product of <code>&#x0022;</code> x1<code>&#x0022;</code> and <code>&#x0022;</code> x1<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >x1 / x2: Ratio of <code>&#x0022;</code> x1<code>&#x0022;</code> and <code>&#x0022;</code> x2<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+x2: <code>&#x0022;</code> x1<code>&#x0022;</code> raised to the power of <code>&#x0022;</code> x2<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math> x:
+Unary plus, has no effect on its argument.
+<li >
+<!--l. 21820--><p class="noindent" >- x: Unary minus, negates its argument.  </li></ul>  </div> <h4 class="ssth4"> Boolean Operators  </h4><div class="sstvalues"> Boolean
+values are represented using zero to indicate false and non-zero to indicate
+true. In addition, the value AST__BAD is taken to mean <code>&#x0022;</code> unknown<code>&#x0022;</code> . The
+values returned by boolean operators may therefore be 0, 1 or AST__BAD.
+Where appropriate, <code>&#x0022;</code> tri-state<code>&#x0022;</code> logic is implemented. For example, <code>&#x0022;</code>
+a<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-rel">|</mo></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-rel">|</mo></math>b<code>&#x0022;</code>
+may evaluate to 1 if <code>&#x0022;</code> a<code>&#x0022;</code> is non-zero, even if <code>&#x0022;</code> b<code>&#x0022;</code> has the value AST__BAD. This is
+because the result of the operation would not be affected by the value of <code>&#x0022;</code> b<code>&#x0022;</code> , so
+long as <code>&#x0022;</code> a<code>&#x0022;</code> is non-zero.
+<!--l. 21820--><p class="noindent" >The following boolean operators are available: <ul class="sstitemlist">
+<li >
+<!--l. 21820--><p class="noindent" >x1 &#x0026;&#x0026; x2: Boolean AND between <code>&#x0022;</code> x1<code>&#x0022;</code> and <code>&#x0022;</code> x2<code>&#x0022;</code> , returning 1 if both <code>&#x0022;</code> x1<code>&#x0022;</code> and <code>&#x0022;</code> x2<code>&#x0022;</code> are
+non-zero, and 0 otherwise. This operator implements tri-state logic. (The synonym <code>&#x0022;</code>
+.and.<code>&#x0022;</code> is also provided for compatibility with Fortran.)
+<li >
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-rel">|</mo></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-rel">|</mo></math>
+x2: Boolean OR between <code>&#x0022;</code> x1<code>&#x0022;</code> and <code>&#x0022;</code> x2<code>&#x0022;</code> , returning 1 if either <code>&#x0022;</code> x1<code>&#x0022;</code> or <code>&#x0022;</code> x2<code>&#x0022;</code> are
+non-zero, and 0 otherwise. This operator implements tri-state logic. (The synonym <code>&#x0022;</code>
+.or.<code>&#x0022;</code> is also provided for compatibility with Fortran.)
+<li >
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><code><mstyle 
+class="text"><mtext  >^</mtext></mstyle></code></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><code><mstyle 
+class="text"><mtext  >^</mtext></mstyle></code></math>
+x2: Boolean exclusive OR (XOR) between <code>&#x0022;</code> x1<code>&#x0022;</code> and <code>&#x0022;</code> x2<code>&#x0022;</code> , returning 1 if exactly one of
+<code>&#x0022;</code> x1<code>&#x0022;</code> and <code>&#x0022;</code> x2<code>&#x0022;</code> is non-zero, and 0 otherwise. Tri-state logic is not used with this
+operator. (The synonyms <code>&#x0022;</code> .neqv.<code>&#x0022;</code> and <code>&#x0022;</code> .xor.<code>&#x0022;</code> are also provided for compatibility with
+Fortran, although the second of these is not standard.)
+<li >
+<!--l. 21820--><p class="noindent" >x1 .eqv. x2: This is provided only for compatibility with Fortran and tests whether
+the boolean states of <code>&#x0022;</code> x1<code>&#x0022;</code> and <code>&#x0022;</code> x2<code>&#x0022;</code> (i.e. true/false) are equal. It is the
+negative of the exclusive OR (XOR) function. Tri-state logic is not used with this
+operator.
+<li >
+<!--l. 21820--><p class="noindent" >! x: Boolean unary NOT operation, returning 1 if <code>&#x0022;</code> x<code>&#x0022;</code> is zero, and 0 otherwise.
+(The synonym <code>&#x0022;</code> .not.<code>&#x0022;</code> is also provided for compatibility with Fortran.)  </li></ul>  </div> <h4 class="ssth4">
+                                                                                       
+
+                                                                                       
+Relational Operators  </h4><div class="sstvalues"> Relational operators return the boolean result (0 or
+1) of comparing the values of two floating point values for equality or
+inequality. The value AST__BAD may also be returned if either argument is
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>bad<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>.
+<!--l. 21820--><p class="noindent" >The following relational operators are available: <ul class="sstitemlist">
+<li >
+<!--l. 21820--><p class="noindent" >x1 == x2: Tests whether <code>&#x0022;</code> x1<code>&#x0022;</code> equals <code>&#x0022;</code> x1<code>&#x0022;</code> . (The synonym <code>&#x0022;</code> .eq.<code>&#x0022;</code> is also provided for
+compatibility with Fortran.)
+<li >
+<!--l. 21820--><p class="noindent" >x1 != x2: Tests whether <code>&#x0022;</code> x1<code>&#x0022;</code> is unequal to <code>&#x0022;</code> x2<code>&#x0022;</code> . (The synonym <code>&#x0022;</code> .ne.<code>&#x0022;</code> is also
+provided for compatibility with Fortran.)
+<li >
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+x2: Tests whether <code>&#x0022;</code> x1<code>&#x0022;</code> is greater than <code>&#x0022;</code> x2<code>&#x0022;</code> . (The synonym <code>&#x0022;</code> .gt.<code>&#x0022;</code> is also provided
+for compatibility with Fortran.)
+<li >
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>=
+x2: Tests whether <code>&#x0022;</code> x1<code>&#x0022;</code> is greater than or equal to <code>&#x0022;</code> x2<code>&#x0022;</code> . (The synonym <code>&#x0022;</code> .ge.<code>&#x0022;</code> is
+also provided for compatibility with Fortran.)
+<li >
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>
+x2: Tests whether <code>&#x0022;</code> x1<code>&#x0022;</code> is less than <code>&#x0022;</code> x2<code>&#x0022;</code> . (The synonym <code>&#x0022;</code> .lt.<code>&#x0022;</code> is also provided for
+compatibility with Fortran.)
+<li >
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>=
+x2: Tests whether <code>&#x0022;</code> x1<code>&#x0022;</code> is less than or equal to <code>&#x0022;</code> x2<code>&#x0022;</code> . (The synonym <code>&#x0022;</code> .le.<code>&#x0022;</code> is also
+provided for compatibility with Fortran.)
+</li>
+</ul>
+<!--l. 21820--><p class="noindent" >Note that relational operators cannot usefully be used to compare values with the
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>bad<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+value (representing missing data), because the result is always
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>bad<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>.
+The isbad() function should be used instead.  </div> <h4 class="ssth4"> Bitwise Operators  </h4><div class="sstvalues"> The bitwise
+operators provided by C are often useful when operating on raw data (e.g. from
+instruments), so they are also provided for use in MathMap expressions. In this case,
+however, the values on which they operate are floating point values rather than pure
+integers. In order to produce results which match the pure integer case, the operands
+are regarded as fixed point binary numbers (i.e. with the binary equivalent
+of a decimal point) with negative numbers represented using twos-complement
+notation. For integer values, the resulting bit pattern corresponds to that of
+the equivalent signed integer (digits to the right of the point being zero).
+Operations on the bits representing the fractional part are also possible,
+however.
+<!--l. 21820--><p class="noindent" >The following bitwise operators are available: <ul class="sstitemlist">
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+x2: Rightward bit shift. The integer value of <code>&#x0022;</code> x2<code>&#x0022;</code> is taken (rounding towards zero)
+and the bits representing <code>&#x0022;</code> x1<code>&#x0022;</code> are then shifted this number of places to the right (or
+to the left if the number of places is negative). This is equivalent to dividing <code>&#x0022;</code> x1<code>&#x0022;</code>
+by the corresponding power of 2.
+<li >
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>
+x2: Leftward bit shift. The integer value of <code>&#x0022;</code> x2<code>&#x0022;</code> is taken (rounding towards zero),
+and the bits representing <code>&#x0022;</code> x1<code>&#x0022;</code> are then shifted this number of places to the left (or
+to the right if the number of places is negative). This is equivalent to multiplying <code>&#x0022;</code>
+x1<code>&#x0022;</code> by the corresponding power of 2.
+<li >
+<!--l. 21820--><p class="noindent" >x1 &#x0026; x2: Bitwise AND between the bits of <code>&#x0022;</code> x1<code>&#x0022;</code> and those of <code>&#x0022;</code> x2<code>&#x0022;</code> (equivalent to a
+boolean AND applied at each bit position in turn).
+<li >
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-rel">|</mo></math>
+x2: Bitwise OR between the bits of <code>&#x0022;</code> x1<code>&#x0022;</code> and those of <code>&#x0022;</code> x2<code>&#x0022;</code> (equivalent to a boolean OR
+applied at each bit position in turn).
+<li >
+<!--l. 21820--><p class="noindent" >x1 <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><code><mstyle 
+class="text"><mtext  >^</mtext></mstyle></code></math>
+x2: Bitwise exclusive OR (XOR) between the bits of <code>&#x0022;</code> x1<code>&#x0022;</code> and those of <code>&#x0022;</code> x2<code>&#x0022;</code> (equivalent
+to a boolean XOR applied at each bit position in turn).
+</li>
+</ul>
+<!--l. 21820--><p class="noindent" >Note that no bit inversion operator (<code>&#x0022;</code> <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x223C;</mo></math><code>&#x0022;</code>
+in C) is provided. This is because inverting the bits of a twos-complement fixed point
+binary number is equivalent to simply negating it. This differs from the pure integer case
+because bits to the right of the binary point are also inverted. To invert only those bits
+to the left of the binary point, use a bitwise exclusive OR with the value -1 (i.e. <code>&#x0022;</code>
+x<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><code><mstyle 
+class="text"><mtext  >^</mtext></mstyle></code></math>-1<code>&#x0022;</code>
+).  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> The following functions are available: <ul class="sstitemlist">
+<li >
+<!--l. 21820--><p class="noindent" >abs(x): Absolute value of <code>&#x0022;</code> x<code>&#x0022;</code> (sign removal), same as fabs(x).
+<li >
+<!--l. 21820--><p class="noindent" >acos(x): Inverse cosine of <code>&#x0022;</code> x<code>&#x0022;</code> , in radians.
+<li >
+<!--l. 21820--><p class="noindent" >acosd(x): Inverse cosine of <code>&#x0022;</code> x<code>&#x0022;</code> , in degrees.
+<li >
+<!--l. 21820--><p class="noindent" >acosh(x): Inverse hyperbolic cosine of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >acoth(x): Inverse hyperbolic cotangent of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 21820--><p class="noindent" >acsch(x): Inverse hyperbolic cosecant of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >aint(x): Integer part of <code>&#x0022;</code> x<code>&#x0022;</code> (round towards zero), same as int(x).
+<li >
+<!--l. 21820--><p class="noindent" >asech(x): Inverse hyperbolic secant of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >asin(x): Inverse sine of <code>&#x0022;</code> x<code>&#x0022;</code> , in radians.
+<li >
+<!--l. 21820--><p class="noindent" >asind(x): Inverse sine of <code>&#x0022;</code> x<code>&#x0022;</code> , in degrees.
+<li >
+<!--l. 21820--><p class="noindent" >asinh(x): Inverse hyperbolic sine of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >atan(x): Inverse tangent of <code>&#x0022;</code> x<code>&#x0022;</code> , in radians.
+<li >
+<!--l. 21820--><p class="noindent" >atand(x): Inverse tangent of <code>&#x0022;</code> x<code>&#x0022;</code> , in degrees.
+<li >
+<!--l. 21820--><p class="noindent" >atanh(x): Inverse hyperbolic tangent of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >atan2(x1, x2): Inverse tangent of <code>&#x0022;</code> x1/x2<code>&#x0022;</code> , in radians.
+<li >
+<!--l. 21820--><p class="noindent" >atan2d(x1, x2): Inverse tangent of <code>&#x0022;</code> x1/x2<code>&#x0022;</code> , in degrees.
+<li >
+<!--l. 21820--><p class="noindent" >ceil(x): Smallest integer value not less then <code>&#x0022;</code> x<code>&#x0022;</code> (round towards plus infinity).
+<li >
+<!--l. 21820--><p class="noindent" >cos(x): Cosine of <code>&#x0022;</code> x<code>&#x0022;</code> in radians.
+<li >
+<!--l. 21820--><p class="noindent" >cosd(x): Cosine of <code>&#x0022;</code> x<code>&#x0022;</code> in degrees.
+<li >
+<!--l. 21820--><p class="noindent" >cosh(x): Hyperbolic cosine of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >coth(x): Hyperbolic cotangent of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >csch(x): Hyperbolic cosecant of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >dim(x1, x2): Returns <code>&#x0022;</code> x1-x2<code>&#x0022;</code> if <code>&#x0022;</code> x1<code>&#x0022;</code> is greater than <code>&#x0022;</code> x2<code>&#x0022;</code> , otherwise 0.
+<li >
+<!--l. 21820--><p class="noindent" >exp(x): Exponential function of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >fabs(x): Absolute value of <code>&#x0022;</code> x<code>&#x0022;</code> (sign removal), same as abs(x).
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 21820--><p class="noindent" >floor(x): Largest integer not greater than <code>&#x0022;</code> x<code>&#x0022;</code> (round towards minus infinity).
+<li >
+<!--l. 21820--><p class="noindent" >fmod(x1, x2): Remainder when <code>&#x0022;</code> x1<code>&#x0022;</code> is divided by <code>&#x0022;</code> x2<code>&#x0022;</code> , same as mod(x1, x2).
+<li >
+<!--l. 21820--><p class="noindent" >gauss(x1, x2): Random sample from a Gaussian distribution with mean <code>&#x0022;</code> x1<code>&#x0022;</code> and standard
+deviation <code>&#x0022;</code> x2<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >int(x): Integer part of <code>&#x0022;</code> x<code>&#x0022;</code> (round towards zero), same as aint(x).
+<li >
+<!--l. 21820--><p class="noindent" >isbad(x): Returns 1 if <code>&#x0022;</code> x<code>&#x0022;</code> has the
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>bad<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+value (AST__BAD), otherwise 0.
+<li >
+<!--l. 21820--><p class="noindent" >log(x): Natural logarithm of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >log10(x): Logarithm of <code>&#x0022;</code> x<code>&#x0022;</code> to base 10.
+<li >
+<!--l. 21820--><p class="noindent" >max(x1, x2, ...): Maximum of two or more values.
+<li >
+<!--l. 21820--><p class="noindent" >min(x1, x2, ...): Minimum of two or more values.
+<li >
+<!--l. 21820--><p class="noindent" >mod(x1, x2): Remainder when <code>&#x0022;</code> x1<code>&#x0022;</code> is divided by <code>&#x0022;</code> x2<code>&#x0022;</code> , same as fmod(x1, x2).
+<li >
+<!--l. 21820--><p class="noindent" >nint(x): Nearest integer to <code>&#x0022;</code> x<code>&#x0022;</code> (round to nearest).
+<li >
+<!--l. 21820--><p class="noindent" >poisson(x): Random integer-valued sample from a Poisson distribution with mean <code>&#x0022;</code> x<code>&#x0022;</code>
+.
+<li >
+<!--l. 21820--><p class="noindent" >pow(x1, x2): <code>&#x0022;</code> x1<code>&#x0022;</code> raised to the power of <code>&#x0022;</code> x2<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >qif(x1, x2, x3): Returns <code>&#x0022;</code> x2<code>&#x0022;</code> if <code>&#x0022;</code> x1<code>&#x0022;</code> is true, and <code>&#x0022;</code> x3<code>&#x0022;</code> otherwise.
+<li >
+<!--l. 21820--><p class="noindent" >rand(x1, x2): Random sample from a uniform distribution in the range <code>&#x0022;</code> x1<code>&#x0022;</code> to <code>&#x0022;</code> x2<code>&#x0022;</code>
+inclusive.
+<li >
+<!--l. 21820--><p class="noindent" >sech(x): Hyperbolic secant of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >sign(x1, x2): Absolute value of <code>&#x0022;</code> x1<code>&#x0022;</code> with the sign of <code>&#x0022;</code> x2<code>&#x0022;</code> (transfer of sign).
+<li >
+<!--l. 21820--><p class="noindent" >sin(x): Sine of <code>&#x0022;</code> x<code>&#x0022;</code> in radians.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 21820--><p class="noindent" >sinc(x): Sinc function of <code>&#x0022;</code> x<code>&#x0022;</code> [= <code>&#x0022;</code> sin(x)/x<code>&#x0022;</code> ].
+<li >
+<!--l. 21820--><p class="noindent" >sind(x): Sine of <code>&#x0022;</code> x<code>&#x0022;</code> in degrees.
+<li >
+<!--l. 21820--><p class="noindent" >sinh(x): Hyperbolic sine of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >sqr(x): Square of <code>&#x0022;</code> x<code>&#x0022;</code> (= <code>&#x0022;</code> x<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>x<code>&#x0022;</code>
+).
+<li >
+<!--l. 21820--><p class="noindent" >sqrt(x): Square root of <code>&#x0022;</code> x<code>&#x0022;</code> .
+<li >
+<!--l. 21820--><p class="noindent" >tan(x): Tangent of <code>&#x0022;</code> x<code>&#x0022;</code> in radians.
+<li >
+<!--l. 21820--><p class="noindent" >tand(x): Tangent of <code>&#x0022;</code> x<code>&#x0022;</code> in degrees.
+<li >
+<!--l. 21820--><p class="noindent" >tanh(x): Hyperbolic tangent of <code>&#x0022;</code> x<code>&#x0022;</code> .  </li></ul>  </div> <h4 class="ssth4"> Symbolic Constants  </h4><div class="sstvalues">
+The following symbolic constants are available (the enclosing <code>&#x0022;</code>
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math><code>&#x0022;</code>
+brackets must be included): <ul class="sstitemlist">
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>bad<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+The <code>&#x0022;</code> bad<code>&#x0022;</code> value (AST__BAD) used to flag missing data. Note that you cannot
+usefully compare values with this constant because the result is always
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>bad<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>.
+The isbad() function should be used instead.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>dig<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+Number of decimal digits of precision available in a floating point (double)
+value.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>e<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+<a 
+href="sun211ss252.html#x278-4700000">Base</a> of natural logarithms.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>epsilon<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+Smallest positive number such that
+1.0<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>epsilon<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+is distinguishable from unity.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>mant_dig<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+The number of base <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>radix<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+digits stored in the mantissa of a floating point (double) value.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>max<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+Maximum representable floating point (double) value.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>max_10_exp<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+Maximum integer such that 10 raised to that power can be represented as a floating
+point (double) value.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>max_exp<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+Maximum integer such that <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>radix<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+raised to that power minus 1 can be represented as a floating point (double)
+value.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>min<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+Smallest positive number which can be represented as a normalised floating point
+(double) value.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>min_10_exp<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+Minimum negative integer such that 10 raised to that power can be represented as a
+normalised floating point (double) value.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>min_exp<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+Minimum negative integer such that
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>radix<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+raised to that power minus 1 can be represented as a normalised floating point (double)
+value.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>pi<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+Ratio of the circumference of a circle to its diameter.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>radix<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+The radix (number base) used to represent the mantissa of floating point (double)
+values.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>rounds<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>:
+The mode used for rounding floating point results after addition. Possible values
+include: -1 (indeterminate), 0 (toward zero), 1 (to nearest), 2 (toward plus
+infinity) and 3 (toward minus infinity). Other values indicate machine-dependent
+behaviour.  </li></ul>  </div> <h4 class="ssth4"> Evaluation Precedence and Associativity  </h4><div class="sstvalues"> Items appearing in
+expressions are evaluated in the following order (highest precedence first):
+<ul class="sstitemlist">
+<li >
+<!--l. 21820--><p class="noindent" >Constants and variables
+<li >
+<!--l. 21820--><p class="noindent" >Function arguments and parenthesised expressions
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 21820--><p class="noindent" >Function invocations
+<li >
+<!--l. 21820--><p class="noindent" >Unary <!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>
+- ! .not.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+/
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>
+-
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math> .lt.
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>= .le.
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math> .gt.
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>=
+.ge.
+<li >
+<!--l. 21820--><p class="noindent" >== .eq. != .ne.
+<li >
+<!--l. 21820--><p class="noindent" >&#x0026;
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><code><mstyle 
+class="text"><mtext  >^</mtext></mstyle></code></math>
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-rel">|</mo></math>
+<li >
+<!--l. 21820--><p class="noindent" >&#x0026;&#x0026; .and.
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><code><mstyle 
+class="text"><mtext  >^</mtext></mstyle></code></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><code><mstyle 
+class="text"><mtext  >^</mtext></mstyle></code></math>
+<li >
+<!--l. 21820--><p class="noindent" ><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-rel">|</mo></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-rel">|</mo></math>
+.or
+<li >
+<!--l. 21820--><p class="noindent" >.eqv. .neqv. .xor.
+</li>
+</ul>
+                                                                                       
+
+                                                                                       
+<!--l. 21820--><p class="noindent" >All operators associate from left-to-right, except for unary
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>, unary -, !, .not. and
+<!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math><!--l. 21820--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>
+which associate from right-to-left.  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss122.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss124.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss123.html"></a> </div> 
+</body> 
+</html>

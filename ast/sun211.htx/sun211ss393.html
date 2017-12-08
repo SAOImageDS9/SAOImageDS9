@@ -1,0 +1,38 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Skip </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss392.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss394.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 40703--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x419-6110000"></a> Skip </h3>  <p class="subtitle"> Skip irrelevant data?  </p> </h3> </header><a 
+ id="Q1-419-1413"></a> <a 
+ id="Q1-419-1414"></a> <a name="xref_Skip"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This is a boolean attribute which
+indicates whether the <a 
+href="sun211ss464.html#x491-6830000">Object</a> data being read through a <a 
+href="sun211ss441.html#x468-6600000">Channel</a> are inter-mixed with
+other, irrelevant, external data.
+<!--l. 40703--><p class="noindent" >If Skip is zero (the default), then the source of input data is expected to contain
+descriptions of AST Objects and comments and nothing else (if anything else is read, an
+error will result). If Skip is non-zero, then any non-Object data encountered between
+Objects will be ignored and simply skipped over in order to reach the next Object.  </div>
+<dl class="sst">Type: </dl><dd class="sst"> Integer (boolean).  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Channel  </h5><div class="sstsub"> All Channels have this
+attribute.  </div> <h5 class="ssth5"> <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>  </h5><div class="sstsub"> The FitsChan class sets the default value of this
+attribute to 1, so that all irrelevant FITS headers will normally be ignored.  </div>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss392.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss394.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss393.html"></a> </div> 
+</body> 
+</html>

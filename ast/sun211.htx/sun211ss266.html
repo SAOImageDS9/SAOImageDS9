@@ -1,0 +1,45 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Closed </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss265.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss267.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 34758--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x292-4840000"></a> Closed </h3>  <p class="subtitle"> Should the boundary be considered to be inside the region?  </p> </h3> </header><a 
+ id="Q1-292-1032"></a> <a 
+ id="Q1-292-1033"></a> <a name="xref_Closed"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute controls whether points on the boundary of a <a 
+href="sun211ss474.html#x501-6930000">Region</a> are
+considered to be inside or outside the region. If the attribute value is non-zero (the
+default), points on the boundary are considered to be inside the region (that is, the
+Region is <code>&#x0022;</code> closed<code>&#x0022;</code> ). However, if the attribute value is zero, points on the bounary
+are considered to be outside the region.  </div> <dl class="sst">Type: </dl><dd class="sst"> Integer (boolean).  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5">
+Region  </h5><div class="sstsub"> All Regions have this attribute.  </div> <h5 class="ssth5"> <a 
+href="sun211ss469.html#x496-6880000">PointList</a>  </h5><div class="sstsub"> The value of the Closed
+attribute is ignored by PointList regions. If the PointList region has not been
+                                                                                       
+
+                                                                                       
+negated, then it is always assumed to be closed. If the PointList region has been
+negated, then it is always assumed to be open. This is required since points have zero
+volume and therefore consist entirely of boundary.  </div> <h5 class="ssth5"> <a 
+href="sun211ss445.html#x472-6640000">CmpRegion</a>  </h5><div class="sstsub"> The default Closed
+value for a CmpRegion is the Closed value of its first component Region.  </div> <h5 class="ssth5"> <a 
+href="sun211ss484.html#x511-7030000">Stc</a>  </h5><div class="sstsub"> The
+default Closed value for an Stc is the Closed value of its encapsulated Region.  </div>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss265.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss267.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss266.html"></a> </div> 
+</body> 
+</html>

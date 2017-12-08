@@ -1,0 +1,86 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astThread </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss212.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss214.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 30882--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x238-4300000"></a> astThread </h3>  <p class="subtitle"> Determine the thread that owns an Object  </p> </h3> </header><a 
+ id="Q1-238-872"></a> <a 
+ id="Q1-238-873"></a> <a name="xref_astThread"></a>  <h4 class="ssth4">Description:
+</h4><div class="sstvalues"> Returns an integer that indicates whether the supplied <a 
+href="sun211ss464.html#x491-6830000">Object</a> (or
+Object pointer) is currently unlocked, or is currently locked by the
+running thread, or another thread.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> int astThread( AstObject
+<!--l. 30882--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+int ptr )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Object to be checked.  </div> <h5 class="ssth5"> ptr  </h5><div class="sstsub"> If
+non-zero, returns information about the supplied Object pointer, rather than the Object
+structure itself. See <code>&#x0022;</code> Object Pointers and Structures<code>&#x0022;</code> below.  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5">
+astThread()  </h5><div class="sstsub"> A value of AST__UNLOCKED is returned if the Object (or pointer) is
+currently unlocked (i.e. has been unlocked using <a 
+href="sun211ss231.html#x256-4480000">astUnlock</a> but has not yet been locked
+using <a 
+href="sun211ss98.html#x123-3150000">astLock</a>). A value of AST__RUNNING is returned if the Object (or pointer) is
+currently locked by the running thread. A value of AST__OTHER is returned if the
+Object (or pointer) is currently locked by the another thread.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 30882--><p class="noindent" >This function attempts to execute even if the global error status is set, but no
+further error report will be made if it subsequently fails under these circumstances.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 30882--><p class="noindent" >This function is only available in the C interface.
+<li >
+<!--l. 30882--><p class="noindent" >This function always returns AST__RUNNING if the AST library has been built without
+POSIX thread support (i.e. the <code>&#x0022;</code> -with-pthreads<code>&#x0022;</code> option was not specified when running
+the <code>&#x0022;</code> configure<code>&#x0022;</code> script).  </li></ul>  </div> <h4 class="ssth4"> Object Pointers and Structures  </h4><div class="sstvalues"> At any one time, an AST
+Object can have several distinct pointers, any one of which can be used to access the
+Object structure. For instance, the <a 
+href="sun211ss24.html#x49-2410000">astClone</a> function will produce a new distinct
+pointer for a given Object. In fact, an AST <code>&#x0022;</code> pointer<code>&#x0022;</code> is not a real pointer at all -
+it is an identifier for a <code>&#x0022;</code> handle<code>&#x0022;</code> structure, encoded to make it look like a
+pointer. Each handle contains (amongst othere things) a <code>&#x0022;</code> real<code>&#x0022;</code> pointer to
+the Object structure. This allows more than one handle to refer to the same
+Object structure. So when you call astClone (for instance) you get back an
+identifier for a new handle that refers to the same Object as the supplied
+handle.
+<!--l. 30882--><p class="noindent" >In order to use an Object for anything useful, it must be locked for use by the running
+thread (either implicitly at creation or explicitly using astLock). The identity of
+the thread is stored in both the Object structure, and in the handle that was
+passed to astLock (or returned by the constructor function). Thus it is possible
+for a thread to have active pointers for Objects that are currently locked by
+another thread. In general, if such a pointer is passed to an AST function
+an error will be reported indicating that the Object is currently locked by
+another thread. The two exceptions to this is that <a 
+href="sun211ss7.html#x32-2240000">astAnnul</a> can be used to annull
+such a pointer, and this function can be used to return information about the
+pointer.
+<!--l. 30882--><p class="noindent" >The other practical consequence of this is that when <a 
+href="sun211ss47.html#x72-2640000">astEnd</a> is called, all active
+pointers currently owned by the running thread (at the current context level) are
+annulled. This includes pointers for Objects that are currently locked by other
+threads.
+<!--l. 30882--><p class="noindent" >If the <code>&#x0022;</code> ptr<code>&#x0022;</code> parameter is zero, then the returned value describes the Object
+structure itself. If <code>&#x0022;</code> ptr<code>&#x0022;</code> is non-zero, then the returned value describes
+the supplied Object pointer (i.e. handle), rather than the Object structure.
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss212.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss214.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss213.html"></a> </div> 
+</body> 
+</html>

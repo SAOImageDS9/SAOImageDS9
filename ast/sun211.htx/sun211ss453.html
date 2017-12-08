@@ -1,0 +1,120 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> FrameSet </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss452.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss454.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 44626--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x480-6720000"></a> FrameSet </h3>  <p class="subtitle"> Set of inter-related coordinate systems  </p> </h3> </header><a 
+ id="Q1-480-1594"></a> <a 
+ id="Q1-480-1595"></a> <a name="xref_FrameSet"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> A FrameSet
+consists of a set of one or more Frames (which describe coordinate systems), connected
+together by Mappings (which describe how the coordinate systems are inter-related). A
+FrameSet makes it possible to obtain a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> between any pair of these Frames
+(i.e. to convert between any of the coordinate systems which it describes).
+The individual Frames are identified within the FrameSet by an integer index,
+with Frames being numbered consecutively from one as they are added to the
+FrameSet.
+<!--l. 44626--><p class="noindent" >Every FrameSet has a <code>&#x0022;</code> base<code>&#x0022;</code> <a 
+href="sun211ss452.html#x479-6710000">Frame</a> and a <code>&#x0022;</code> current<code>&#x0022;</code> Frame (which are allowed to be the
+same). Any of the Frames may be nominated to hold these positions, and the choice
+is determined by the values of the FrameSet<code>&#x2019;</code> s <a 
+href="sun211ss252.html#x278-4700000">Base</a> and <a 
+href="sun211ss273.html#x299-4910000">Current</a> attributes,
+which hold the indices of the relevant Frames. By default, the first Frame
+added to a FrameSet is its base Frame, and the last one added is its current
+Frame.
+<!--l. 44626--><p class="noindent" >The base Frame describes the <code>&#x0022;</code> native<code>&#x0022;</code> coordinate system of whatever the FrameSet is
+used to calibrate (e.g. the pixel coordinates of an image) and the current Frame
+describes the <code>&#x0022;</code> apparent<code>&#x0022;</code> coordinate system in which it should be viewed (e.g.
+displayed, etc.). Any further Frames represent a library of alternative coordinate
+systems, which may be selected by making them current.
+<!--l. 44626--><p class="noindent" >When a FrameSet is used in a context that requires a Frame, (e.g. obtaining its <a 
+href="sun211ss420.html#x446-6380000">Title</a>
+value, or number of axes), the current Frame is used. A FrameSet may therefore be used
+in place of its current Frame in most situations.
+<!--l. 44626--><p class="noindent" >When a FrameSet is used in a context that requires a Mapping, the Mapping used is the
+one between its base Frame and its current Frame. Thus, a FrameSet may be used to
+convert <code>&#x0022;</code> native<code>&#x0022;</code> coordinates into <code>&#x0022;</code> apparent<code>&#x0022;</code> ones, and vice versa. Like any
+Mapping, a FrameSet may also be inverted (see <a 
+href="sun211ss94.html#x119-3110000">astInvert</a>), which has the effect of
+interchanging its base and current Frames and hence of reversing the Mapping between
+them.
+<!--l. 44626--><p class="noindent" >Regions may be added into a FrameSet (since a <a 
+href="sun211ss474.html#x501-6930000">Region</a> is a type of Frame), either
+explicitly or as components within CmpFrames. In this case the Mapping between a pair
+                                                                                       
+
+                                                                                       
+of Frames within a FrameSet will include the effects of the clipping produced by any
+Regions included in the path between the Frames.  </div> <h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> <a 
+href="sun211ss58.html#x83-2750000">astFrameSet</a>  </div> <h4 class="ssth4">
+Inheritance  </h4><div class="sstvalues"> The FrameSet class inherits from the Frame class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> In
+addition to those attributes common to all Frames, every FrameSet also has the
+following attributes:
+<ul class="sstitemlist">
+<li >
+<!--l. 44626--><p class="noindent" ><a 
+href="sun211ss249.html#x275-4670000">AllVariants</a>: List of all variant mappings store with current Frame
+<li >
+<!--l. 44626--><p class="noindent" ><a 
+href="sun211ss252.html#x278-4700000">Base</a>: FrameSet base Frame index
+<li >
+<!--l. 44626--><p class="noindent" ><a 
+href="sun211ss273.html#x299-4910000">Current</a>: FrameSet current Frame index
+<li >
+<!--l. 44626--><p class="noindent" ><a 
+href="sun211ss352.html#x378-5700000">Nframe</a>: Number of Frames in a FrameSet
+<li >
+<!--l. 44626--><p class="noindent" ><a 
+href="sun211ss430.html#x456-6480000">Variant</a>: Name of variant mapping in use by current Frame
+</li>
+</ul>
+<!--l. 44626--><p class="noindent" >Every FrameSet also inherits any further attributes that belong to its current Frame,
+regardless of that Frame<code>&#x2019;</code> s class. (For example, the <a 
+href="sun211ss286.html#x312-5040000">Equinox</a> attribute, defined by the
+<a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> class, is inherited by any FrameSet which has a SkyFrame as its current
+Frame.) The set of attributes belonging to a FrameSet may therefore change when a
+new current Frame is selected.  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> In addition to those functions
+applicable to all Frames, the following functions may also be applied to all
+FrameSets:
+<ul class="sstitemlist">
+<li >
+<!--l. 44626--><p class="noindent" ><a 
+href="sun211ss3.html#x28-2200000">astAddFrame</a>: Add a Frame to a FrameSet to define a new coordinate system
+<li >
+<!--l. 44626--><p class="noindent" ><a 
+href="sun211ss5.html#x30-2220000">astAddVariant</a>: Add a variant Mapping to the current Frame
+<li >
+<!--l. 44626--><p class="noindent" ><a 
+href="sun211ss65.html#x90-2820000">astGetFrame</a>: Obtain a pointer to a specified Frame in a FrameSet
+<li >
+<!--l. 44626--><p class="noindent" ><a 
+href="sun211ss67.html#x92-2840000">astGetMapping</a>: Obtain a Mapping between two Frames in a FrameSet
+<li >
+<!--l. 44626--><p class="noindent" ><a 
+href="sun211ss125.html#x150-3420000">astMirrorVariants</a>: Make the current Frame mirror variant Mappings in another
+Frame
+<li >
+<!--l. 44626--><p class="noindent" ><a 
+href="sun211ss165.html#x190-3820000">astRemapFrame</a>: Modify a Frame<code>&#x2019;</code> s relationship to the other Frames in a FrameSet
+<li >
+<!--l. 44626--><p class="noindent" ><a 
+href="sun211ss167.html#x192-3840000">astRemoveFrame</a>: Remove a Frame from a FrameSet  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss452.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss454.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss453.html"></a> </div> 
+</body> 
+</html>

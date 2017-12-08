@@ -1,0 +1,183 @@
+<!DOCTYPE html> 
+<html> 
+<head><title>Storing AST Objects as XML (XmlChan)</title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211se17.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se19.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<h3 class="sectionHead"><span class="titlemark">18    </span> <a 
+ id="x19-18000018"></a>Storing AST Objects as XML (XmlChan)</h3>
+<div class="sectionTOCS">
+&#x00A0;<span class="subsectionToc" >18.1 <a 
+href="#x19-1810001">Reading IVOA Space-Time-Coordinates XML (STC-X) Descriptions</a></span>
+</div>
+<!--l. 9540--><p class="noindent" ><a 
+href="http://www.w3.org/XML/" >XML</a><span class="footnote-mark"><a 
+href="#fn32x0" id="fn32x0-bk"><sup class="textsuperscript">32</sup></a></span><a 
+ id="x19-180001f32"></a>
+is fast becoming the standard format for passing structured data around the internet, and much
+general purpose software has been written for tasks such as the parsing, editing, display and
+transformation of XML data. The <a 
+href="sun211ss499.html#x526-7180000">XmlChan</a> class (a specialised form of <a 
+href="sun211ss441.html#x468-6600000">Channel</a>) provides facilities for
+storing AST objects externally in the form of XML documents, thus allowing such software to be
+used.
+<!--l. 9548--><p class="noindent" >The primary XML format used by the XmlChan class is a fairly close transliteration of
+the AST native format produced by the basic Channel class. Currently, there is no DTD
+or schema defining the structure of data produced in this format by an XmlChan. The
+following is a native AST representation of a simple 1-D <a 
+href="sun211ss452.html#x479-6710000">Frame</a> (including comments and with
+the <a 
+href="sun211ss293.html#x319-5110000">Full</a> attribute set to zero so that some default attribute values are included as extra
+comments):
+<div class="fancyvrb" id="fancyvrb213"> <a 
+ id="x19-180003r1"></a>&#x00A0;&#x00A0;&#x00A0;Begin&#x00A0;Frame&#x00A0;&#x00A0;&#x00A0;&#x00A0;#&#x00A0;Coordinate&#x00A0;system&#x00A0;description<br class="fancyvrb" /><a 
+ id="x19-180005r2"></a>&#x00A0;&#x00A0;#&#x00A0;&#x00A0;&#x00A0;Title&#x00A0;=&#x00A0;&#x0022;1-d&#x00A0;coordinate&#x00A0;system&#x0022;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;#&#x00A0;Title&#x00A0;of&#x00A0;coordinate&#x00A0;system
+<br class="fancyvrb" /><a 
+ id="x19-180007r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Naxes&#x00A0;=&#x00A0;1&#x00A0;&#x00A0;&#x00A0;#&#x00A0;Number&#x00A0;of&#x00A0;coordinate&#x00A0;axes<br class="fancyvrb" /><a 
+ id="x19-180009r4"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Domain&#x00A0;=&#x00A0;&#x0022;SCREEN&#x0022;&#x00A0;&#x00A0;&#x00A0;#&#x00A0;Coordinate&#x00A0;system&#x00A0;domain
+<br class="fancyvrb" /><a 
+ id="x19-180011r5"></a>&#x00A0;&#x00A0;#&#x00A0;&#x00A0;&#x00A0;Lbl1&#x00A0;=&#x00A0;&#x0022;Axis&#x00A0;1&#x0022;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;#&#x00A0;Label&#x00A0;for&#x00A0;axis&#x00A0;1<br class="fancyvrb" /><a 
+ id="x19-180013r6"></a>&#x00A0;&#x00A0;#&#x00A0;&#x00A0;&#x00A0;Uni1&#x00A0;=&#x00A0;&#x0022;cm&#x0022;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;#&#x00A0;Units&#x00A0;for&#x00A0;axis&#x00A0;1
+<br class="fancyvrb" /><a 
+ id="x19-180015r7"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Ax1&#x00A0;=&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;#&#x00A0;Axis&#x00A0;number&#x00A0;1<br class="fancyvrb" /><a 
+ id="x19-180017r8"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Begin&#x00A0;Axis&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;#&#x00A0;Coordinate&#x00A0;axis
+<br class="fancyvrb" /><a 
+ id="x19-180019r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;Unit&#x00A0;=&#x00A0;&#x0022;cm&#x0022;&#x00A0;&#x00A0;&#x00A0;#&#x00A0;Axis&#x00A0;units<br class="fancyvrb" /><a 
+ id="x19-180021r10"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;End&#x00A0;Axis<br class="fancyvrb" /><a 
+ id="x19-180023r11"></a>&#x00A0;&#x00A0;&#x00A0;End&#x00A0;Frame</div>
+<!--l. 9572--><p class="noindent" >The corresponding XmlChan output would look like:
+                                                                                       
+
+                                                                                       
+<div class="fancyvrb" id="fancyvrb214"> <a 
+ id="x19-180025r1"></a>&#x00A0;&#x00A0;&#x00A0;&#x003C;Frame&#x00A0;xmlns=&#x0022;http://www.starlink.ac.uk/ast/xml/&#x0022;<br class="fancyvrb" /><a 
+ id="x19-180027r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;desc=&#x0022;Coordinate&#x00A0;system&#x00A0;description&#x0022;&#x003E;
+<br class="fancyvrb" /><a 
+ id="x19-180029r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;_attribute&#x00A0;name=&#x0022;Title&#x0022;&#x00A0;quoted=&#x0022;true&#x0022;&#x00A0;value=&#x0022;1-d&#x00A0;coordinate&#x00A0;system&#x0022;
+<br class="fancyvrb" /><a 
+ id="x19-180031r4"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;desc=&#x0022;Title&#x00A0;of&#x00A0;coordinate&#x00A0;system&#x0022;&#x00A0;default=&#x0022;true&#x0022;/&#x003E;
+<br class="fancyvrb" /><a 
+ id="x19-180033r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;_attribute&#x00A0;name=&#x0022;Naxes&#x0022;&#x00A0;value=&#x0022;1&#x0022;&#x00A0;desc=&#x0022;Number&#x00A0;of&#x00A0;coordinate&#x00A0;axes&#x0022;/&#x003E;
+<br class="fancyvrb" /><a 
+ id="x19-180035r6"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;_attribute&#x00A0;name=&#x0022;Domain&#x0022;&#x00A0;quoted=&#x0022;true&#x0022;&#x00A0;value=&#x0022;SCREEN&#x0022;
+<br class="fancyvrb" /><a 
+ id="x19-180037r7"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;desc=&#x0022;Coordinate&#x00A0;system&#x00A0;domain&#x0022;/&#x003E;<br class="fancyvrb" /><a 
+ id="x19-180039r8"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;_attribute&#x00A0;name=&#x0022;Lbl1&#x0022;&#x00A0;quoted=&#x0022;true&#x0022;&#x00A0;value=&#x0022;Axis&#x00A0;1&#x0022;
+<br class="fancyvrb" /><a 
+ id="x19-180041r9"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;desc=&#x0022;Label&#x00A0;for&#x00A0;axis&#x00A0;1&#x0022;&#x00A0;default=&#x0022;true&#x0022;/&#x003E;
+<br class="fancyvrb" /><a 
+ id="x19-180043r10"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;_attribute&#x00A0;name=&#x0022;Uni1&#x0022;&#x00A0;quoted=&#x0022;true&#x0022;&#x00A0;value=&#x0022;cm&#x0022;<br class="fancyvrb" /><a 
+ id="x19-180045r11"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;desc=&#x0022;Units&#x00A0;for&#x00A0;axis&#x00A0;1&#x0022;&#x00A0;default=&#x0022;true&#x0022;/&#x003E;
+<br class="fancyvrb" /><a 
+ id="x19-180047r12"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;Axis&#x00A0;label=&#x0022;Ax1&#x0022;&#x00A0;desc=&#x0022;Coordinate&#x00A0;axis&#x0022;&#x003E;<br class="fancyvrb" /><a 
+ id="x19-180049r13"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;!--Axis&#x00A0;number&#x00A0;1--&#x003E;
+<br class="fancyvrb" /><a 
+ id="x19-180051r14"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;_attribute&#x00A0;name=&#x0022;Unit&#x0022;&#x00A0;quoted=&#x0022;true&#x0022;&#x00A0;value=&#x0022;cm&#x0022;&#x00A0;desc=&#x0022;Axis&#x00A0;units&#x0022;/&#x003E;<br class="fancyvrb" /><a 
+ id="x19-180053r15"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;/Axis&#x003E;<br class="fancyvrb" /><a 
+ id="x19-180055r16"></a>&#x00A0;&#x00A0;&#x00A0;&#x003C;/Frame&#x003E;</div>
+<!--l. 9596--><p class="noindent" >Notes:
+     <dl class="enumerate-enumitem"><dt class="enumerate-enumitem">
+  (1) </dt><dd 
+class="enumerate-enumitem">The AST class name is used as the name for an XML element which contain a description
+     of an AST object.
+     </dd><dt class="enumerate-enumitem">
+  (2) </dt><dd 
+class="enumerate-enumitem">AST attributes are described by XML elements with the name &#x201C;_attribute&#x201D;. Unfortunately,
+     the  word  &#x201C;attribute&#x201D;  is  also  used  by  XML  to  refer  to  a  &#x201C;name=value&#x201D;  pair  within  an
+     element start tag. So for instance, the &#x201C;<a 
+href="sun211ss420.html#x446-6380000">Title</a>&#x201D; attribute of the AST Frame object is described
+     within an XML element with name &#x201C;_attribute&#x201D; in which the XML attribute &#x201C;name&#x201D; has
+     the value &#x201C;Title&#x201D;, and the XML attribute &#x201C;value&#x201D; has the value &#x201C;1-d coordinate system&#x201D;.
+     The moral is always to be clear clear about the context (AST or XML) in which the word
+     <em>attribute</em> is being used!
+     </dd><dt class="enumerate-enumitem">
+  (3) </dt><dd 
+class="enumerate-enumitem">The  XML  includes  comments  both  as  XML  attributes  with  the  name  &#x201C;desc&#x201D;,  and  as
+     separate comment tags.
+     </dd><dt class="enumerate-enumitem">
+  (4) </dt><dd 
+class="enumerate-enumitem">Elements which describe default values are identified by the fact that they have an XML
+     attribute called &#x201C;default&#x201D; set to the value &#x201C;true&#x201D;. These elements are ignored when being
+     read back into an XmlChan.
+     </dd><dt class="enumerate-enumitem">
+  (5) </dt><dd 
+class="enumerate-enumitem">The  outer-most  XML  element  of  an  AST  object  will  set  the  default  namespace  to
+     <span class="obeylines-h"><span class="verb">http://www.starlink.ac.uk/ast/xml/</span></span> which will be inherited by all nested elements.
+     </dd></dl>
+<!--l. 9626--><p class="noindent" >The XmlChan class changes the default value for the <a 
+href="sun211ss272.html#x298-4900000">Comment</a> and Full attributes (inherited from the
+base Channel class) to zero and -1, resulting in terse output by default. With the default values for
+these attributes, the above XML is reduced to the following:
+<div class="fancyvrb" id="fancyvrb215"> <a 
+ id="x19-180062r1"></a>&#x00A0;&#x00A0;&#x00A0;&#x003C;Frame&#x00A0;xmlns=&#x0022;http://www.starlink.ac.uk/ast/xml/&#x0022;&#x003E;<br class="fancyvrb" /><a 
+ id="x19-180064r2"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;_attribute&#x00A0;name=&#x0022;Naxes&#x0022;&#x00A0;value=&#x0022;1&#x0022;/&#x003E;
+<br class="fancyvrb" /><a 
+ id="x19-180066r3"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;_attribute&#x00A0;name=&#x0022;Domain&#x0022;&#x00A0;quoted=&#x0022;true&#x0022;&#x00A0;value=&#x0022;SCREEN&#x0022;/&#x003E;<br class="fancyvrb" /><a 
+ id="x19-180068r4"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;Axis&#x00A0;label=&#x0022;Ax1&#x0022;&#x003E;
+<br class="fancyvrb" /><a 
+ id="x19-180070r5"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;_attribute&#x00A0;name=&#x0022;Unit&#x0022;&#x00A0;quoted=&#x0022;true&#x0022;&#x00A0;value=&#x0022;cm&#x0022;/&#x003E;<br class="fancyvrb" /><a 
+ id="x19-180072r6"></a>&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x00A0;&#x003C;/Axis&#x003E;<br class="fancyvrb" /><a 
+ id="x19-180074r7"></a>&#x00A0;&#x00A0;&#x00A0;&#x003C;/Frame&#x003E;</div>
+                                                                                       
+
+                                                                                       
+<!--l. 9644--><p class="noindent" >The XmlChan class uses the <a 
+href="sun211ss393.html#x419-6110000">Skip</a> attributes very similarly to the Channel class. If Skip is zero (the
+default) then an error will be reported if the text supplied by the source function does not begin with
+an AST <a 
+href="sun211ss464.html#x491-6830000">Object</a>. If Skip is non-zero, then initial text is skipped over without error until the start
+of an AST object is found. this allows an AST object to be located within a larger XML
+document.
+<a 
+ id="x19-180075r196"></a>
+<h4 class="subsectionHead"><span class="titlemark">18.1    </span> <a 
+ id="x19-1810001"></a>Reading IVOA Space-Time-Coordinates XML (STC-X) Descriptions</h4>
+<!--l. 9652--><p class="noindent" >The <a 
+href="sun211ss499.html#x526-7180000">XmlChan</a> class also provides support for reading (but not writing) XML documents which use a
+restricted subset of an early draft (V1.20) of the IVOA Space-Time-Coordinates XML (STC-X) system.
+The version of STC-X finally adopted by the IVOA differs in several significant respects from V1.20,
+and so the STC-X support currently provided by AST is mainly of historical interest. Note,
+AST also supports the alternative &#x201C;STC-S&#x201D; linear string description of the STC model (see
+&#x00A7;<a 
+href="sun211se19.html#x20-18200019">19<!--tex4ht:ref: ss:stcschans --></a>).
+<!--l. 9660--><p class="noindent" >STC-X V1.20 is documented at <a 
+href="http://www.ivoa.net/Documents/WD/STC/STC-20050225.html" class="url" >http://www.ivoa.net/Documents/WD/STC/STC-_20050225.html</a>, and
+the current version is documented at <a 
+href="http://www.ivoa.net/Documents/latest/STC-X.html" class="url" >http://www.ivoa.net/Documents/latest/STC-_X.html</a>.
+<!--l. 9665--><p class="noindent" >When an STC-X document is read using an XmlChan, the read operation produces an AST
+<a 
+href="sun211ss464.html#x491-6830000">Object</a> of the <a 
+href="sun211ss484.html#x511-7030000">Stc</a> class, which is itself a subclass of <a 
+href="sun211ss474.html#x501-6930000">Region</a>. Specifically, each such Object
+will be an instance of <a 
+href="sun211ss488.html#x515-7070000">StcSearchLocation</a>, <a 
+href="sun211ss487.html#x514-7060000">StcResourceProfile</a>, <a 
+href="sun211ss485.html#x512-7040000">StcCatalogEntryLocation</a> or
+<a 
+href="sun211ss486.html#x513-7050000">StcObsDataLocation</a>. See the description of the XmlChan class and the <a 
+href="sun211ss435.html#x461-6530000">XmlFormat</a> attribute for further
+details.
+                                                                                       
+
+                                                                                       
+                                                                                       
+
+                                                                                       
+<div class="footnotes"><!--l. 9540--><p class="noindent" ><span class="footnote-mark"><a 
+href="#fn32x0-bk" id="fn32x0"><sup class="textsuperscript">32</sup></a></span>http://www.w3.org/XML/                                                              </div> <div class="crosslinks">
+<div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211se17.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World
+Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211se19.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 9673--><p class="noindent" ><a 
+ id="tailsun211se18.html"></a> 
+</body> 
+</html>

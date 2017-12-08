@@ -1,0 +1,77 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> SkyRefP(axis) </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss395.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss397.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 40891--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x422-6140000"></a> SkyRefP(axis) </h3>  <p class="subtitle"> Position on primary meridian of offset coordinate system  </p> </h3> </header><a 
+ id="Q1-422-1422"></a> <a 
+ id="Q1-422-1423"></a> <a name="xref_SkyRefP(axis)"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute is used to control the orientation of the offset
+coordinate system defined by attributes SkyRef and <a 
+href="sun211ss395.html#x421-6130000">SkyRefIs</a>. If used, it should be set
+to hold the longitude and latitude of a point within the coordinate system
+specified by the <a 
+href="sun211ss413.html#x439-6310000">System</a> attribute. The offset coordinate system represented by the
+<a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a> will then be rotated in order to put the position supplied for SkyRefP on
+the zero longitude meridian. This rotation is about an axis from the centre
+of the celestial sphere to the point specified by the SkyRef attribute. The
+default value for SkyRefP is usually the north pole (that is, a latitude of
+<!--l. 40891--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>90
+degrees in the coordinate system specified by the System attribute). The exception to
+this is if the SkyRef attribute is itself set to either the north or south pole. In
+these cases the default for SkyRefP is the origin (that is, a (0,0) in the coordinate
+system specified by the System attribute).
+<!--l. 40891--><p class="noindent" >If an integer axis index is included in the attribute name (e.g. <code>&#x0022;</code> SkyRefP(1)<code>&#x0022;</code> ) then
+the attribute value should be supplied as a single floating point axis value, in
+radians, when setting a value for the attribute, and will be returned in the same form
+when getting the value of the attribute. In this case the integer axis index should be
+<code>&#x0022;</code> 1<code>&#x0022;</code> or <code>&#x0022;</code> 2<code>&#x0022;</code> (the values to use for longitude and latitude axes are given by the
+<a 
+href="sun211ss334.html#x360-5520000">LonAxis</a> and <a 
+href="sun211ss328.html#x354-5460000">LatAxis</a> attributes).
+<!--l. 40891--><p class="noindent" >If no axis index is included in the attribute name (e.g. <code>&#x0022;</code> SkyRefP<code>&#x0022;</code> ) then the
+attribute value should be supplied as a character string containing two formatted axis
+values (an axis 1 value followed by a comma, followed by an axis 2 value). The same
+form will be used when getting the value of the attribute.  </div> <dl class="sst">Type: </dl><dd class="sst"> Floating point.
+</dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> SkyFrame  </h5><div class="sstsub"> All SkyFrames have this attribute.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 40891--><p class="noindent" >If the position given by the SkyRef attribute defines the origin of the offset
+coordinate system (that is, if the SkyRefIs attribute is set to <code>&#x0022;</code> origin<code>&#x0022;</code> ), then there
+will in general be two orientations which will put the supplied SkyRefP position on the
+zero longitude meridian. The orientation which is actually used is the one which
+gives the SkyRefP position a positive latitude in the offset coordinate system
+(the other possible orientation would give the SkyRefP position a negative
+latitude).
+<li >
+<!--l. 40891--><p class="noindent" >An error will be reported if an attempt is made to use a SkyRefP value which is
+co-incident with SkyRef or with the point diametrically opposite to SkyRef on the
+celestial sphere. The reporting of this error is deferred until the SkyRef and SkyRefP
+attribute values are used within a calculation.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 40891--><p class="noindent" >If the System attribute of the SkyFrame is changed, any position given for SkyRefP is
+transformed into the new System.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss395.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss397.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss396.html"></a> </div> 
+</body> 
+</html>

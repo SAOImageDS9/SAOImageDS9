@@ -1,0 +1,146 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astWcsMap </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss234.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss236.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 33278--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x260-4520000"></a> astWcsMap </h3>  <p class="subtitle"> Create a WcsMap  </p> </h3> </header><a 
+ id="Q1-260-938"></a> <a 
+ id="Q1-260-939"></a> <a name="xref_astWcsMap"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a new <a 
+href="sun211ss497.html#x524-7160000">WcsMap</a>
+and optionally initialises its attributes.
+<!--l. 33278--><p class="noindent" >A WcsMap is used to represent sky coordinate projections as described in the
+(draft) FITS world coordinate system (FITS-WCS) paper by E.W. Griesen and M.
+Calabretta (A &#x0026; A, in preparation). This paper defines a set of functions, or sky
+projections, which transform longitude-latitude pairs representing spherical
+celestial coordinates into corresponding pairs of Cartesian coordinates (and vice
+versa).
+                                                                                       
+
+                                                                                       
+<!--l. 33278--><p class="noindent" >A WcsMap is a specialised form of <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> which implements these sky projections and
+applies them to a specified pair of coordinates. All the projections in the FITS-WCS
+paper are supported, plus the now deprecated <code>&#x0022;</code> TAN with polynomial correction terms<code>&#x0022;</code>
+projection which is refered to here by the code <code>&#x0022;</code> TPN<code>&#x0022;</code> . Using the FITS-WCS
+terminology, the transformation is between <code>&#x0022;</code> native spherical<code>&#x0022;</code> and <code>&#x0022;</code> projection plane<code>&#x0022;</code>
+coordinates. These coordinates may, optionally, be embedded in a space with
+more than two dimensions, the remaining coordinates being copied unchanged.
+Note, however, that for consistency with other AST facilities, a WcsMap handles
+coordinates that represent angles in radians (rather than the degrees used by
+FITS-WCS).
+<!--l. 33278--><p class="noindent" >The type of FITS-WCS projection to be used and the coordinates (axes) to which it
+applies are specified when a WcsMap is first created. The projection type may
+subsequently be determined using the <a 
+href="sun211ss433.html#x459-6510000">WcsType</a> attribute and the coordinates on which it
+acts may be determined using the <a 
+href="sun211ss432.html#x458-6500000">WcsAxis(lonlat)</a> attribute.
+<!--l. 33278--><p class="noindent" >Each WcsMap also allows up to 100 <code>&#x0022;</code> projection parameters<code>&#x0022;</code> to be associated with
+each axis. These specify the precise form of the projection, and are accessed
+using <a 
+href="sun211ss369.html#x395-5870000">PVi_m</a> attribute, where <code>&#x0022;</code> i<code>&#x0022;</code> is the integer axis index (starting at 1),
+and m is an integer <code>&#x0022;</code> parameter index<code>&#x0022;</code> in the range 0 to 99. The number of
+projection parameters required by each projection, and their meanings, are dependent
+upon the projection type (most projections either do not use any projection
+parameters, or use parameters 1 and 2 associated with the latitude axis). Before
+creating a WcsMap you should consult the FITS-WCS paper for details of which
+projection parameters are required, and which have defaults. When creating
+the WcsMap, you must explicitly set values for all those required projection
+parameters which do not have defaults defined in this paper.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstWcsMap
+<!--l. 33278--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astWcsMap(
+int ncoord, int type, int lonax, int latax, const char
+<!--l. 33278--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> ncoord  </h5><div class="sstsub"> The number of coordinate values for each point to be
+transformed (i.e. the number of dimensions of the space in which the points will
+reside). This must be at least 2. The same number is applicable to both input and
+output points.  </div> <h5 class="ssth5"> type  </h5><div class="sstsub"> The type of FITS-WCS projection to apply. This should be given
+using a macro value such as AST__TAN (for a tangent plane projection), where the
+characters following the double underscore give the projection type code (in upper
+case) as used in the FITS-WCS <code>&#x0022;</code> CTYPEi<code>&#x0022;</code> keyword. You should consult the FITS-WCS paper
+for a list of the available projections. The additional code of AST__TPN can be
+supplied which represents a TAN projection with polynomial correction terms as defined
+in an early draft of the FITS-WCS paper.  </div> <h5 class="ssth5"> lonax  </h5><div class="sstsub"> The index of the longitude
+axis. This should lie in the range 1 to <code>&#x0022;</code> ncoord<code>&#x0022;</code> .  </div> <h5 class="ssth5"> latax  </h5><div class="sstsub"> The index of the
+latitude axis. This should lie in the range 1 to <code>&#x0022;</code> ncoord<code>&#x0022;</code> and be distinct from <code>&#x0022;</code>
+lonax<code>&#x0022;</code> .  </div> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a null-terminated string containing an optional
+comma-separated list of attribute assignments to be used for initialising the new
+WcsMap. The syntax used is identical to that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a> function and may
+include <code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by <code>&#x0022;</code> %<code>&#x0022;</code> symbols in the normal
+way.
+<!--l. 33278--><p class="noindent" >If the sky projection to be implemented requires projection parameter values to be set,
+then this should normally be done here via the PVi_m attribute (see the <code>&#x0022;</code> Examples<code>&#x0022;</code>
+                                                                                       
+
+                                                                                       
+section). Setting values for these parameters is mandatory if they do not have default
+values (as defined in the FITS-WCS paper).  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> If the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code>
+%<code>&#x0022;</code> format specifiers, then an optional list of additional arguments may follow it in
+order to supply values to be substituted for these specifiers. The rules for supplying
+these are identical to those for the astSet function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code>
+function).  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astWcsMap()  </h5><div class="sstsub"> A pointer to the new WcsMap.  </div>  </div>
+<h4 class="ssth4">Examples: </h4><div class="sstvalues"> <dl class="sstexamplesubsection"> wcsmap = astWcsMap( 2, AST__MER, 1, 2, <code>&#x0022;</code> <code>&#x0022;</code> );  </dl><dd class="sst"> Creates a WcsMap that
+implements a FITS-WCS Mercator projection on pairs of coordinates, with coordinates
+1 and 2 representing the longitude and latitude respectively. Note that the
+FITS-WCS Mercator projection does not require any projection parameters.  </dd> <dl class="sstexamplesubsection">
+wcsmap = astWcsMap( 3, AST__COE, 2, 3, <code>&#x0022;</code> PV3_1=40.0<code>&#x0022;</code> );  </dl><dd class="sst"> Creates a WcsMap
+that implements a FITS-WCS conical equal area projection. The WcsMap acts on
+points in a 3-dimensional space; coordinates 2 and 3 represent longitude and
+latitude respectively, while the values of coordinate 1 are copied unchanged.
+<a 
+href="sun211ss376.html#x402-5940000">Projection</a> parameter 1 associatyed with the latitude axis (corresponding to FITS
+keyword <code>&#x0022;</code> PV3_1<code>&#x0022;</code> ) is required and has no default, so is set explicitly to
+40.0 degrees. Projection parameter 2 (corresponding to FITS keyword <code>&#x0022;</code> PV3_2<code>&#x0022;</code> )
+is required but has a default of zero, so need not be specified.  </dd>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 33278--><p class="noindent" >The forward transformation of a WcsMap converts between FITS-WCS <code>&#x0022;</code> native spherical<code>&#x0022;</code>
+and <code>&#x0022;</code> relative physical<code>&#x0022;</code> coordinates, while the inverse transformation converts in the
+opposite direction. This arrangement may be reversed, if required, by using <a 
+href="sun211ss94.html#x119-3110000">astInvert</a>
+or by setting the <a 
+href="sun211ss312.html#x338-5300000">Invert</a> attribute to a non-zero value.
+<li >
+<!--l. 33278--><p class="noindent" >If any set of coordinates cannot be transformed (for example, many projections do not
+cover the entire celestial sphere), then a WcsMap will yield coordinate values of
+AST__BAD.
+<li >
+<!--l. 33278--><p class="noindent" >The validity of any projection parameters given via the PVi_m parameter in the <code>&#x0022;</code>
+options<code>&#x0022;</code> string is not checked by this function. However, their validity is checked
+when the resulting WcsMap is used to transform coordinates, and an error will result if
+the projection parameters do not satisfy all the required constraints (as defined in
+the FITS-WCS paper).
+<li >
+<!--l. 33278--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked
+with the AST error status set, or if it should fail for any reason.  </li></ul>  </div>
+<h4 class="ssth4"> Status Handling  </h4><div class="sstvalues"> The protected interface to this function includes an
+extra parameter at the end of the parameter list descirbed above. This
+parameter is a pointer to the integer inherited status variable: <code>&#x0022;</code> int
+<!--l. 33278--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>status<code>&#x0022;</code> .
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss234.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss236.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss235.html"></a> </div> 
+</body> 
+</html>

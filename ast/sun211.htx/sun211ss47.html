@@ -1,0 +1,43 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astEnd </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss46.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss48.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 14674--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x72-2640000"></a> astEnd </h3>  <p class="subtitle"> End an AST context  </p> </h3> </header><a 
+ id="Q1-72-374"></a> <a 
+ id="Q1-72-375"></a> <a name="xref_astEnd"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This macro invokes a function to end
+an AST context which was begun with a matching invocation of <a 
+href="sun211ss13.html#x38-2300000">astBegin</a>. Any <a 
+href="sun211ss464.html#x491-6830000">Object</a>
+pointers created within this context will be annulled (just as if <a 
+href="sun211ss7.html#x32-2240000">astAnnul</a> had been
+invoked) and will cease to be valid afterwards, unless they have previously been
+exported using <a 
+href="sun211ss50.html#x75-2670000">astExport</a> or rendered exempt using <a 
+href="sun211ss49.html#x74-2660000">astExempt</a>. If annulling a pointer
+causes an Object<code>&#x2019;</code> s <a 
+href="sun211ss377.html#x403-5950000">RefCount</a> attribute to fall to zero (which happens when the last
+pointer to it is annulled), then the Object will be deleted.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void
+astEnd  </div> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Object  </h5><div class="sstsub"> This macro applies to all Objects.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 14674--><p class="noindent" >astEnd attempts to execute even if the AST error status is set.
+<li >
+<!--l. 14674--><p class="noindent" >Contexts delimited by astBegin and astEnd may be nested to any depth.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss46.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss48.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss47.html"></a> </div> 
+</body> 
+</html>

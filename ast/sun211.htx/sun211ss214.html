@@ -1,0 +1,191 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astTimeAdd </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss213.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss215.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 31111--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x239-4310000"></a> astTimeAdd </h3>  <p class="subtitle"> Add a time coordinate conversion to a TimeMap  </p> </h3> </header><a 
+ id="Q1-239-875"></a> <a 
+ id="Q1-239-876"></a> <a name="xref_astTimeAdd"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+function adds one of the standard time coordinate system conversions listed below to an
+existing <a 
+href="sun211ss493.html#x520-7120000">TimeMap</a>.
+<!--l. 31111--><p class="noindent" >When a TimeMap is first created (using <a 
+href="sun211ss216.html#x241-4330000">astTimeMap</a>), it simply performs a unit (null)
+<a 
+href="sun211ss459.html#x486-6780000">Mapping</a>. By using astTimeAdd (repeatedly if necessary), one or more coordinate
+conversion steps may then be added, which the TimeMap will perform in sequence. This
+allows multi-step conversions between a variety of time coordinate systems to be
+assembled out of the building blocks provided by this class.
+<!--l. 31111--><p class="noindent" >Normally, if a TimeMap<code>&#x2019;</code> s <a 
+href="sun211ss312.html#x338-5300000">Invert</a> attribute is zero (the default), then its forward
+                                                                                       
+
+                                                                                       
+transformation is performed by carrying out each of the individual coordinate
+conversions specified by astTimeAdd in the order given (i.e. with the most recently
+added conversion applied last).
+<!--l. 31111--><p class="noindent" >This order is reversed if the TimeMap<code>&#x2019;</code> s Invert attribute is non-zero (or if the
+inverse transformation is requested by any other means) and each individual coordinate
+conversion is also replaced by its own inverse. This process inverts the overall effect
+of the TimeMap. In this case, the first conversion to be applied would be the
+inverse of the one most recently added.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> void astTimeAdd( AstTimeMap
+<!--l. 31111--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this, const
+char <!--l. 31111--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>cvt,
+const double args[] )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the TimeMap.  </div> <h5 class="ssth5"> cvt  </h5><div class="sstsub"> Pointer
+to a null-terminated string which identifies the time coordinate conversion to be added
+to the TimeMap. See the <code>&#x0022;</code> Available Conversions<code>&#x0022;</code> section for details of those
+available.  </div> <h5 class="ssth5"> args  </h5><div class="sstsub"> An array containing argument values for the time coordinate
+conversion. The number of arguments required, and hence the number of array elements
+used, depends on the conversion specified (see the <code>&#x0022;</code> Available Conversions<code>&#x0022;</code> section).
+This array is ignored and a NULL pointer may be supplied if no arguments are needed.  </div>
+</div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 31111--><p class="noindent" >When assembling a multi-stage conversion, it can sometimes be difficult to determine
+the most economical conversion path. A solution to this is to include all the steps
+which are (logically) necessary, but then to use <a 
+href="sun211ss190.html#x215-4070000">astSimplify</a> to simplify the resulting
+TimeMap. The simplification process will eliminate any steps which turn out not to be
+needed.
+<li >
+<!--l. 31111--><p class="noindent" >This function does not check to ensure that the sequence of coordinate conversions
+added to a TimeMap is physically meaningful.  </li></ul>  </div> <h4 class="ssth4"> Available Conversions  </h4><div class="sstvalues"> The following
+strings (which are case-insensitive) may be supplied via the <code>&#x0022;</code> cvt<code>&#x0022;</code> parameter to
+indicate which time coordinate conversion is to be added to the TimeMap. Where
+arguments are needed by the conversion, they are listed in parentheses. Values for
+these arguments should be given, via the <code>&#x0022;</code> args<code>&#x0022;</code> array, in the order indicated. Units
+and argument names are described at the end of the list of conversions, and <code>&#x0022;</code> MJD<code>&#x0022;</code>
+means Modified Julian Date.
+<ul class="sstitemlist">
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> MJDTOMJD<code>&#x0022;</code> (MJDOFF1,MJDOFF2): Convert MJD from one offset to another.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> MJDTOJD<code>&#x0022;</code> (MJDOFF,JDOFF): Convert MJD to Julian Date.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> JDTOMJD<code>&#x0022;</code> (JDOFF,MJDOFF): Convert Julian Date to MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> MJDTOBEP<code>&#x0022;</code> (MJDOFF,BEPOFF): Convert MJD to Besselian epoch.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> BEPTOMJD<code>&#x0022;</code> (BEPOFF,MJDOFF): Convert Besselian epoch to MJD.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> MJDTOJEP<code>&#x0022;</code> (MJDOFF,JEPOFF): Convert MJD to Julian epoch.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> JEPTOMJD<code>&#x0022;</code> (JEPOFF,MJDOFF): Convert Julian epoch to MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> TAITOUTC<code>&#x0022;</code> (MJDOFF): Convert a TAI MJD to a UTC MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> UTCTOTAI<code>&#x0022;</code> (MJDOFF): Convert a UTC MJD to a TAI MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> TAITOTT<code>&#x0022;</code> (MJDOFF): Convert a TAI MJD to a TT MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> TTTOTAI<code>&#x0022;</code> (MJDOFF): Convert a TT MJD to a TAI MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> TTTOTDB<code>&#x0022;</code> (MJDOFF, OBSLON, OBSLAT, OBSALT): Convert a TT MJD to a TDB MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> TDBTOTT<code>&#x0022;</code> (MJDOFF, OBSLON, OBSLAT, OBSALT): Convert a TDB MJD to a TT MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> TTTOTCG<code>&#x0022;</code> (MJDOFF): Convert a TT MJD to a TCG MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> TCGTOTT<code>&#x0022;</code> (MJDOFF): Convert a TCG MJD to a TT MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> TDBTOTCB<code>&#x0022;</code> (MJDOFF): Convert a TDB MJD to a TCB MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> TCBTOTDB<code>&#x0022;</code> (MJDOFF): Convert a TCB MJD to a TDB MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> UTTOGMST<code>&#x0022;</code> (MJDOFF): Convert a UT MJD to a GMST MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> GMSTTOUT<code>&#x0022;</code> (MJDOFF): Convert a GMST MJD to a UT MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> GMSTTOLMST<code>&#x0022;</code> (MJDOFF, OBSLON, OBSLAT): Convert a GMST MJD to a LMST MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> LMSTTOGMST<code>&#x0022;</code> (MJDOFF, OBSLON, OBSLAT): Convert a LMST MJD to a GMST MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> LASTTOLMST<code>&#x0022;</code> (MJDOFF, OBSLON, OBSLAT): Convert a GMST MJD to a LMST MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> LMSTTOLAST<code>&#x0022;</code> (MJDOFF, OBSLON, OBSLAT): Convert a LMST MJD to a GMST MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> UTTOUTC<code>&#x0022;</code> (DUT1): Convert a UT1 MJD to a UTC MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> UTCTOUT<code>&#x0022;</code> (DUT1): Convert a UTC MJD to a UT1 MJD.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> LTTOUTC<code>&#x0022;</code> (LTOFF): Convert a Local Time MJD to a UTC MJD.
+<li >
+<!--l. 31111--><p class="noindent" ><code>&#x0022;</code> UTCTOLT<code>&#x0022;</code> (LTOFF): Convert a UTC MJD to a Local Time MJD.
+</li>
+</ul>
+<!--l. 31111--><p class="noindent" >The units for the values processed by the above conversions are as follows:
+<ul class="sstitemlist">
+<li >
+<!--l. 31111--><p class="noindent" >Julian epochs and offsets: Julian years
+<li >
+<!--l. 31111--><p class="noindent" >Besselian epochs and offsets: Tropical years
+<li >
+<!--l. 31111--><p class="noindent" >Modified Julian Dates and offsets: days
+<li >
+<!--l. 31111--><p class="noindent" >Julian Dates and offsets: days
+</li>
+</ul>
+<!--l. 31111--><p class="noindent" >The arguments used in the above conversions are the zero-points used by the
+astTransform function. The axis values supplied and returned by astTransform are
+offsets away from these zero-points:
+<ul class="sstitemlist">
+<li >
+<!--l. 31111--><p class="noindent" >MJDOFF: The zero-point being used with MJD values.
+<li >
+<!--l. 31111--><p class="noindent" >JDOFF: The zero-point being used with Julian Date values.
+<li >
+<!--l. 31111--><p class="noindent" >BEPOFF: The zero-point being used with Besselian epoch values.
+<li >
+<!--l. 31111--><p class="noindent" >JEPOFF: The zero-point being used with Julian epoch values.
+<li >
+<!--l. 31111--><p class="noindent" >OBSLON: Observer longitude in radians
+(<!--l. 31111--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>ve
+westwards).
+<li >
+<!--l. 31111--><p class="noindent" >OBSLAT: Observer geodetic latitude (IAU 1975) in radians
+(<!--l. 31111--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>ve
+northwards).
+<li >
+<!--l. 31111--><p class="noindent" >OBSALT: Observer geodetic altitude (IAU 1975) in metres.
+<li >
+<!--l. 31111--><p class="noindent" >DUT1: The UT1-UTC value to use.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 31111--><p class="noindent" >LTOFF: The offset between Local Time and UTC (in hours, positive for time zones east of
+Greenwich).  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss213.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss215.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss214.html"></a> </div> 
+</body> 
+</html>

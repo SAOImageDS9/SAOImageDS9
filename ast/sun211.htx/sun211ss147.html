@@ -1,0 +1,82 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astPrism </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss146.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss148.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 24257--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x172-3640000"></a> astPrism </h3>  <p class="subtitle"> Create a Prism  </p> </h3> </header><a 
+ id="Q1-172-674"></a> <a 
+ id="Q1-172-675"></a> <a name="xref_astPrism"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a new <a 
+href="sun211ss472.html#x499-6910000">Prism</a> and
+optionally initialises its attributes.
+<!--l. 24257--><p class="noindent" >A Prism is a <a 
+href="sun211ss474.html#x501-6930000">Region</a> which represents an extrusion of an existing Region into one or more
+orthogonal dimensions (specified by another Region). If the Region to be extruded has N
+                                                                                       
+
+                                                                                       
+axes, and the Region defining the extrusion has M axes, then the resulting Prism will have
+(M<!--l. 24257--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>N)
+axes. A point is inside the Prism if the first N axis values correspond to a point
+inside the Region being extruded, and the remaining M axis values correspond to a point
+inside the Region defining the extrusion.
+<!--l. 24257--><p class="noindent" >As an example, a cylinder can be represented by extruding an existing <a 
+href="sun211ss442.html#x469-6610000">Circle</a>, using an <a 
+href="sun211ss455.html#x482-6740000">Interval</a>
+to define the extrusion. Ih this case, the Interval would have a single axis and would
+specify the upper and lower limits of the cylinder along its length.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstPrism
+<!--l. 24257--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astPrism( AstRegion
+<!--l. 24257--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>region1, AstRegion
+<!--l. 24257--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>region2, const
+char <!--l. 24257--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> region1  </h5><div class="sstsub"> Pointer to the Region to be extruded.  </div> <h5 class="ssth5"> region2  </h5><div class="sstsub">
+Pointer to the Region defining the extent of the extrusion.  </div> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a
+null-terminated string containing an optional comma-separated list of attribute
+assignments to be used for initialising the new Prism. The syntax used is identical to
+that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a> function and may include <code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by
+<code>&#x0022;</code> %<code>&#x0022;</code> symbols in the normal way.  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> If the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code> %<code>&#x0022;</code> format
+specifiers, then an optional list of additional arguments may follow it in order to
+supply values to be substituted for these specifiers. The rules for supplying
+these are identical to those for the astSet function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code>
+function).  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astPrism()  </h5><div class="sstsub"> A pointer to the new Prism.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 24257--><p class="noindent" >Deep copies are taken of the supplied Regions. This means that any subsequent changes
+made to the component Regions using the supplied pointers will have no effect on the
+Prism.
+<li >
+<!--l. 24257--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss146.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss148.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss147.html"></a> </div> 
+</body> 
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> AlignStdOfRest </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss245.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss247.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 33957--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x272-4640000"></a> AlignStdOfRest </h3>  <p class="subtitle"> Standard of rest to use when aligning SpecFrames  </p> </h3> </header><a 
+ id="Q1-272-972"></a> <a 
+ id="Q1-272-973"></a> <a name="xref_AlignStdOfRest"></a>  <h4 class="ssth4">Description:
+</h4><div class="sstvalues"> This attribute controls how a <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a> behaves when it is used (by <a 
+href="sun211ss52.html#x77-2690000">astFindFrame</a> or
+<a 
+href="sun211ss32.html#x57-2490000">astConvert</a>) as a template to match another (target) SpecFrame. It identifies the
+standard of rest in which alignment is to occur. See the <a 
+href="sun211ss409.html#x435-6270000">StdOfRest</a> attribute for a
+desription of the values which may be assigned to this attribute. The default
+AlignStdOfRest value is <code>&#x0022;</code> Helio<code>&#x0022;</code> (heliographic).
+<!--l. 33957--><p class="noindent" >When astFindFrame or astConvert is used on two SpecFrames (potentially describing
+different spectral coordinate systems), it returns a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> which can be used to
+transform a position in one SpecFrame into the corresponding position in the other. The
+Mapping is made up of the following steps in the indicated order:
+<ul class="sstitemlist">
+<li >
+<!--l. 33957--><p class="noindent" >Map values from the system used by the target (wavelength, apparent radial velocity,
+etc) to the system specified by the <a 
+href="sun211ss247.html#x273-4650000">AlignSystem</a> attribute, using the target<code>&#x2019;</code> s rest
+frequency if necessary.
+<li >
+<!--l. 33957--><p class="noindent" >Map these values from the target<code>&#x2019;</code> s standard of rest to the standard of rest
+specified by the AlignStdOfRest attribute, using the <a 
+href="sun211ss285.html#x311-5030000">Epoch</a>, <a 
+href="sun211ss366.html#x392-5840000">ObsLat</a>, <a 
+href="sun211ss367.html#x393-5850000">ObsLon</a>,
+<a 
+href="sun211ss365.html#x391-5830000">ObsAlt</a>, <a 
+href="sun211ss378.html#x404-5960000">RefDec</a> and <a 
+href="sun211ss379.html#x405-5970000">RefRA</a> attributes of the target to define the two standards of
+rest.
+<li >
+<!--l. 33957--><p class="noindent" >Map these values from the standard of rest specified by the AlignStdOfRest attribute,
+to the template<code>&#x2019;</code> s standard of rest, using the Epoch, ObsLat, ObsLon, ObsAlt,
+RefDec and RefRA attributes of the template to define the two standards of
+rest.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 33957--><p class="noindent" >Map these values from the system specified by the AlignSystem attribute, to the system
+used by the template, using the template<code>&#x2019;</code> s rest frequency if necessary.  </li></ul>  </div> <dl class="sst">Type: </dl><dd class="sst">
+String.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> SpecFrame  </h5><div class="sstsub"> All SpecFrames have this attribute.  </div>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss245.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss247.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss246.html"></a> </div> 
+</body> 
+</html>

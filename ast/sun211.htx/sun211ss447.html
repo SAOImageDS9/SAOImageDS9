@@ -1,0 +1,51 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> DssMap </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss446.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss448.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 43935--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x474-6660000"></a> DssMap </h3>  <p class="subtitle"> Map points using a Digitised Sky Survey plate solution  </p> </h3> </header><a 
+ id="Q1-474-1576"></a> <a 
+ id="Q1-474-1577"></a> <a name="xref_DssMap"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues">
+The DssMap class implements a <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> which transforms between 2-dimensional pixel
+coordinates and an equatorial sky coordinate system (right ascension and declination)
+using a Digitised Sky Survey (DSS) astrometric plate solution.
+<!--l. 43935--><p class="noindent" >The input coordinates are pixel numbers along the first and second dimensions of an
+                                                                                       
+
+                                                                                       
+image, where the centre of the first pixel is located at (1,1) and the spacing between
+pixel centres is unity.
+<!--l. 43935--><p class="noindent" >The output coordinates are right ascension and declination in radians. The celestial
+coordinate system used (FK4, FK5, etc.) is unspecified, and will usually be indicated
+by appropriate keywords in a FITS header.  </div> <h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> The DssMap class does
+not have a constructor function. A DssMap is created only as a by-product of reading a
+<a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> (using <a 
+href="sun211ss160.html#x185-3770000">astRead</a>) from a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a> which contains FITS header cards describing a
+DSS plate solution, and whose <a 
+href="sun211ss284.html#x310-5020000">Encoding</a> attribute is set to <code>&#x0022;</code> DSS<code>&#x0022;</code> . The result of such
+a read, if successful, is a FrameSet whose base and current Frames are related by a
+DssMap.  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues"> The DssMap class inherits from the Mapping class.  </div> <h4 class="ssth4">
+Attributes  </h4><div class="sstvalues"> The DssMap class does not define any new attributes beyond those
+which are applicable to all Mappings.  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> The DssMap class does not
+define any new functions beyond those which are applicable to all Mappings.
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss446.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss448.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss447.html"></a> </div> 
+</body> 
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> Encoding </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss283.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss285.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 36126--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x310-5020000"></a> Encoding </h3>  <p class="subtitle"> System for encoding Objects as FITS headers  </p> </h3> </header><a 
+ id="Q1-310-1086"></a> <a 
+ id="Q1-310-1087"></a> <a name="xref_Encoding"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This
+attribute specifies the encoding system to use when AST Objects are stored as FITS
+header cards in a <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>. It affects the behaviour of the <a 
+href="sun211ss237.html#x262-4540000">astWrite</a> and <a 
+href="sun211ss160.html#x185-3770000">astRead</a>
+functions when they are used to transfer any AST <a 
+href="sun211ss464.html#x491-6830000">Object</a> to or from an external
+representation consisting of FITS header cards (i.e. whenever a write or read operation
+is performed using a FitsChan as the I/O <a 
+href="sun211ss441.html#x468-6600000">Channel</a>).
+<!--l. 36126--><p class="noindent" >There are several ways (conventions) by which coordinate system information may be
+represented in the form of FITS headers and the Encoding attribute is used to specify
+which of these should be used. The encoding options available are outlined in the <code>&#x0022;</code>
+                                                                                       
+
+                                                                                       
+Encodings Available<code>&#x0022;</code> section below, and in more detail in the sections which
+follow.
+<!--l. 36126--><p class="noindent" >Encoding systems differ in the range of possible Objects (e.g. classes) they can
+represent, in the restrictions they place on these Objects (e.g. compatibility with
+some externally-defined coordinate system model) and in the number of Objects that can
+be stored together in any particular set of FITS header cards (e.g. multiple Objects,
+or only a single Object). The choice of encoding also affects the range of external
+applications which can potentially read and interpret the FITS header cards
+produced.
+<!--l. 36126--><p class="noindent" >The encoding options available are not necessarily mutually exclusive, and it may
+sometimes be possible to store multiple Objects (or the same Object several times)
+using different encodings within the same set of FITS header cards. This possibility
+increases the likelihood of other applications being able to read and interpret the
+information.
+<!--l. 36126--><p class="noindent" >By default, a FitsChan will attempt to determine which encoding system is already in
+use, and will set the default Encoding value accordingly (so that subsequent I/O
+operations adopt the same conventions). It does this by looking for certain
+critical FITS keywords which only occur in particular encodings. For details
+of how this works, see the <code>&#x0022;</code> Choice of Default Encoding<code>&#x0022;</code> section below. If
+you wish to ensure that a particular encoding system is used, independently
+of any FITS cards already present, you should set an explicit Encoding value
+yourself.  </div> <dl class="sst">Type: </dl><dd class="sst"> String.  </dd> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> FitsChan  </h5><div class="sstsub"> All FitsChans have this
+attribute.  </div>  </div> <h4 class="ssth4"> Encodings Available  </h4><div class="sstvalues"> The Encoding attribute can take any of
+the following (case insensitive) string values to select the corresponding
+encoding
+<!--l. 36126--><p class="noindent" >system:
+<ul class="sstitemlist">
+<li >
+<!--l. 36126--><p class="noindent" ><code>&#x0022;</code> DSS<code>&#x0022;</code> : Encodes coordinate system information in FITS header cards using the
+convention developed at the Space Telescope Science Institute (STScI) for the Digitised
+Sky Survey (DSS) astrometric plate calibrations. The main advantages of this encoding
+are that FITS images which use it are widely available and it is understood by a number
+of important and well-established astronomy applications. For further details, see the
+section <code>&#x0022;</code> The DSS Encoding<code>&#x0022;</code> below.
+<li >
+<!--l. 36126--><p class="noindent" ><code>&#x0022;</code> FITS-WCS<code>&#x0022;</code> : Encodes coordinate system information in FITS header cards using the
+conventions described in the FITS world coordinate system (FITS-WCS) papers by E.W.
+Greisen, M. Calabretta, et al. The main advantages of this encoding are that it should
+be understood by any FITS-WCS compliant application and is likely to be adopted widely
+for FITS data in future. For further details, see the section <code>&#x0022;</code> The FITS-WCS Encoding<code>&#x0022;</code>
+below.
+<li >
+<!--l. 36126--><p class="noindent" ><code>&#x0022;</code> FITS-PC<code>&#x0022;</code> : Encodes coordinate system information in FITS header cards using the
+conventions described in an earlier draft of the FITS world coordinate system papers by
+E.W. Greisen and M. Calabretta. This encoding uses a combination of CDELTi and PCiiijjj
+                                                                                       
+
+                                                                                       
+keywords to describe the scale and rotation of the pixel axes. This encoding is
+included to support existing data and software which uses these now superceded
+conventions. In general, the <code>&#x0022;</code> FITS-WCS<code>&#x0022;</code> encoding (which uses CDi_j or PCi_j keywords
+to describe the scale and rotation) should be used in preference to <code>&#x0022;</code> FITS-PC<code>&#x0022;</code>
+.
+<li >
+<!--l. 36126--><p class="noindent" ><code>&#x0022;</code> FITS-IRAF<code>&#x0022;</code> : Encodes coordinate system information in FITS header cards using the
+conventions described in the document <code>&#x0022;</code> World Coordinate Systems Representations Within
+the FITS Format<code>&#x0022;</code> by R.J. Hanisch and D.G. Wells, 1988. This encoding is currently
+employed by the IRAF data analysis facility, so its use will facilitate data exchange
+with IRAF. Its main advantages are that it is a stable convention which approximates to
+a subset of the propsed FITS-WCS encoding (above). This makes it suitable as an interim
+method for storing coordinate system information in FITS headers until the FITS-WCS
+encoding becomes stable. Since many datasets currently use the FITS-IRAF encoding,
+conversion of data from FITS-IRAF to the final form of FITS-WCS is likely to be well
+supported.
+<li >
+<!--l. 36126--><p class="noindent" ><code>&#x0022;</code> FITS-AIPS<code>&#x0022;</code> : Encodes coordinate system information in FITS header cards using the
+conventions originally introduced by the AIPS data analysis facility. This is base on
+the use of CDELTi and CROTAi keuwords to desribe the scale and rotation of each axis.
+These conventions have been superceded but are still widely used.
+<li >
+<!--l. 36126--><p class="noindent" ><code>&#x0022;</code> FITS-AIPS<!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math><!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math><code>&#x0022;</code>
+: Encodes coordinate system information in FITS header cards using the conventions used by the
+AIPS<!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math><!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>
+project. This is an extension of FITS-AIPS which includes some of the features of
+FITS-IRAF and FITS-PC.
+<li >
+<!--l. 36126--><p class="noindent" ><code>&#x0022;</code> FITS-CLASS<code>&#x0022;</code> : Encodes coordinate system information in FITS header cards using the
+conventions used by the CLASS project. CLASS is a software package for reducing
+single-dish radio and sub-mm spectroscopic data. See the section <code>&#x0022;</code> CLASS FITS format<code>&#x0022;</code>
+at http://www.iram.fr/IRAMFR/GILDAS/doc/html/class-html/.
+<li >
+<!--l. 36126--><p class="noindent" ><code>&#x0022;</code> NATIVE<code>&#x0022;</code> : Encodes AST Objects in FITS header cards using a convention which is
+private to the AST library (but adheres to the general FITS standard) and which uses
+FITS keywords that will not clash with other encoding systems. The main advantages of
+this are that any class of AST Object may be encoded, and any (reasonable) number of
+Objects may be stored sequentially in the same FITS header. This makes FITS
+headers an almost loss-less communication path for passing AST Objects between
+applications (although all such applications must, of course, make use of the AST
+library to interpret the information). For further details, see the section <code>&#x0022;</code>
+The NATIVE Encoding<code>&#x0022;</code> below.  </li></ul>  </div> <h4 class="ssth4"> Choice of Default Encoding  </h4><div class="sstvalues"> If the Encoding
+attribute of a FitsChan is not set, the default value it takes is determined by the
+presence of certain critical FITS keywords within the FitsChan. The sequence of
+decisions
+<!--l. 36126--><p class="noindent" >used to arrive at the default value is as follows:
+                                                                                       
+
+                                                                                       
+<ul class="sstitemlist">
+<li >
+<!--l. 36126--><p class="noindent" >If the FitsChan contains any keywords beginning with the string <code>&#x0022;</code> BEGAST<code>&#x0022;</code> , then NATIVE
+encoding is used,
+<li >
+<!--l. 36126--><p class="noindent" >Otherwise, FITS-CLASS is used if the FitsChan contains a DELTAV keyword and a keyword
+of the form VELO-xxx, where xxx indicates one of the rest frames used by class (e.g. <code>&#x0022;</code>
+VELO-LSR<code>&#x0022;</code> ), or <code>&#x0022;</code> VLSR<code>&#x0022;</code> .
+<li >
+<!--l. 36126--><p class="noindent" >Otherwise, if the FitsChan contains a CTYPE keyword which
+represents a spectral axis using the conventions of the AIPS and
+AIPS<!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math><!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>
+projects (e.g. <code>&#x0022;</code> FELO-LSR<code>&#x0022;</code> , etc), then one of FITS-AIPS or
+FITS-AIPS<!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math><!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>
+encoding is used. FITS-AIPS<!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math><!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>
+is used if any of the keywords CDi_j, PROJP, LONPOLE or LATPOLE are found in the
+FitsChan. Otherwise FITS-AIPS is used.
+<li >
+<!--l. 36126--><p class="noindent" >Otherwise, if the FitsChan contains a keyword of the form <code>&#x0022;</code> PCiiijjj<code>&#x0022;</code> , where <code>&#x0022;</code> i<code>&#x0022;</code> and
+<code>&#x0022;</code> j<code>&#x0022;</code> are single digits, then FITS-PC encoding is used,
+<li >
+<!--l. 36126--><p class="noindent" >Otherwise, if the FitsChan contains a keyword of the form <code>&#x0022;</code> CDiiijjj<code>&#x0022;</code> , where <code>&#x0022;</code> i<code>&#x0022;</code> and
+<code>&#x0022;</code> j<code>&#x0022;</code> are single digits, then FITS-IRAF encoding is used,
+<li >
+<!--l. 36126--><p class="noindent" >Otherwise, if the FitsChan contains a keyword of the form <code>&#x0022;</code> CDi_j<code>&#x0022;</code> , and at least one
+of RADECSYS, PROJPi, or CjVALi where <code>&#x0022;</code> i<code>&#x0022;</code> and <code>&#x0022;</code> j<code>&#x0022;</code> are single digits, then FITS-IRAF
+encoding is used.
+<li >
+<!--l. 36126--><p class="noindent" >Otherwise, if the FitsChan contains any keywords of the form PROJPi, CjVALi
+or RADECSYS, where <code>&#x0022;</code> i<code>&#x0022;</code> and <code>&#x0022;</code> j<code>&#x0022;</code> are single digits, then FITS-PC encoding is
+used.
+<li >
+<!--l. 36126--><p class="noindent" >Otherwise, if the FitsChan contains a keyword of the form CROTAi, where <code>&#x0022;</code> i<code>&#x0022;</code> is a
+single digit, then FITS-AIPS encoding is used.
+<li >
+<!--l. 36126--><p class="noindent" >Otherwise, if the FitsChan contains a keyword of the form CRVALi, where <code>&#x0022;</code> i<code>&#x0022;</code> is a
+single digit, then FITS-WCS encoding is used.
+<li >
+<!--l. 36126--><p class="noindent" >Otherwise, if the FitsChan contains the <code>&#x0022;</code> PLTRAH<code>&#x0022;</code> keyword, then DSS encoding is
+used,
+<li >
+<!--l. 36126--><p class="noindent" >Otherwise, if none of these conditions is met (as would be the case when using an empty
+FitsChan), then NATIVE encoding is used.
+                                                                                       
+
+                                                                                       
+</li>
+</ul>
+<!--l. 36126--><p class="noindent" >Except for the NATIVE and DSS encodings, all the above checks also require that the
+header contains at least one CTYPE, CRPIX and CRVAL keyword (otherwise the checking
+process continues to the next case).
+<!--l. 36126--><p class="noindent" >Setting an explicit value for the Encoding attribute always over-rides this default
+behaviour.
+<!--l. 36126--><p class="noindent" >Note that when writing information to a FitsChan, the choice of encoding will depend
+greatly on the type of application you expect to be reading the information in future.
+If you do not know this, there may sometimes be an advantage in writing the information
+several times, using a different encoding on each occasion.  </div> <h4 class="ssth4"> The DSS Encoding  </h4><div class="sstvalues"> The
+DSS encoding uses FITS header cards to store a multi-term polynomial which relates
+pixel positions on a digitised photographic plate to celestial coordinates (right
+ascension and declination). This encoding may only be used to store a single AST Object
+in any set of FITS header cards, and that Object must be a <a 
+href="sun211ss453.html#x480-6720000">FrameSet</a> which conforms to
+the STScI/DSS coordinate system model (this means the <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> which relates its base
+and current Frames must include either a <a 
+href="sun211ss447.html#x474-6660000">DssMap</a> or a <a 
+href="sun211ss497.html#x524-7160000">WcsMap</a> with type AST__TAN or
+AST__TPN).
+<!--l. 36126--><p class="noindent" >When reading a DSS encoded Object (using astRead), the FitsChan concerned must
+initially be positioned at the first card (its <a 
+href="sun211ss258.html#x284-4760000">Card</a> attribute must equal 1) and the
+result of the read, if successful, will always be a pointer to a FrameSet. The base
+<a 
+href="sun211ss452.html#x479-6710000">Frame</a> of this FrameSet represents DSS pixel coordinates, and the current Frame
+represents DSS celestial coordinates. Such a read is always destructive and causes the
+FITS header cards required for the construction of the FrameSet to be removed from the
+FitsChan, which is then left positioned at the <code>&#x0022;</code> end-of-file<code>&#x0022;</code> . A subsequent read using
+the same encoding will therefore not return another FrameSet, even if the FitsChan is
+rewound.
+<!--l. 36126--><p class="noindent" >When astWrite is used to store a FrameSet using DSS encoding, an attempt is first made
+to simplify the FrameSet to see if it conforms to the DSS model. Specifically, the
+current Frame must be a FK5 <a 
+href="sun211ss478.html#x505-6970000">SkyFrame</a>; the projection must be a tangent plane (gnomonic)
+projection with polynomial corrections conforming to DSS requirements, and north must
+be parallel to the second base Frame axis.
+<!--l. 36126--><p class="noindent" >If the simplification process succeeds, a description of the FrameSet is written to the
+FitsChan using appropriate DSS FITS header cards. The base Frame of the FrameSet is
+used to form the DSS pixel coordinate system and the current Frame gives the DSS
+celestial coordinate system. A successful write operation will over-write any existing
+DSS encoded data in the FitsChan, but will not affect other (non-DSS) header cards. If
+a destructive read of a DSS encoded Object has previously occurred, then an
+attempt will be made to store the FITS header cards back in their original
+locations.
+<!--l. 36126--><p class="noindent" >If an attempt to simplify a FrameSet to conform to the DSS model fails (or if the
+Object supplied is not a FrameSet), then no data will be written to the FitsChan and
+astWrite will return zero. No error will result.  </div> <h4 class="ssth4"> The FITS-WCS Encoding  </h4><div class="sstvalues"> The
+FITS-WCS convention uses FITS header cards to describe the relationship between pixels
+in an image (not necessarily 2-dimensional) and one or more related <code>&#x0022;</code> world coordinate
+                                                                                       
+
+                                                                                       
+systems<code>&#x0022;</code> . The FITS-WCS encoding may only be used to store a single AST Object in any
+set of FITS header cards, and that Object must be a FrameSet which conforms to the
+FITS-WCS model (the FrameSet may, however, contain multiple Frames which will be result
+in multiple FITS <code>&#x0022;</code> alternate axis descriptions<code>&#x0022;</code> ). Details of the use made by this
+Encoding of the conventions described in the FITS-WCS papers are given in the
+appendix <code>&#x0022;</code> FITS-WCS Coverage<code>&#x0022;</code> of this document. A few main points are described
+below.
+<!--l. 36126--><p class="noindent" >The rotation and scaling of the intermediate world coordinate system can be specified
+using either <code>&#x0022;</code> CDi_j<code>&#x0022;</code> keywords, or <code>&#x0022;</code> PCi_j<code>&#x0022;</code> together with <code>&#x0022;</code> CDELTi<code>&#x0022;</code> keywords. When
+writing a FrameSet to a FitsChan, the the value of the <a 
+href="sun211ss256.html#x282-4740000">CDMatrix</a> attribute of the
+FitsChan determines which system is used.
+<!--l. 36126--><p class="noindent" >In addition, this encoding supports the <code>&#x0022;</code> TAN with polynomial correction terms<code>&#x0022;</code>
+projection which was included in a draft of the FITS-WCS paper, but was not present in
+the final version. A <code>&#x0022;</code> TAN with polynomial correction terms<code>&#x0022;</code> projection is
+represented using a WcsMap with type AST__TPN (rather than AST__TAN which is
+used to represent simple TAN projections). When reading a FITS header, a CTYPE
+keyword value including a <code>&#x0022;</code> -TAN<code>&#x0022;</code> code results in an AST__TPN projection if
+there are any projection parameters (given by the <a 
+href="sun211ss369.html#x395-5870000">PVi_m</a> keywords) associated
+with the latitude axis, or if there are projection parameters associated with
+the longitude axis for m greater than 4. When writing a FrameSet to a FITS
+header, an AST__TPN projection gives rise to a CTYPE value including the normal <code>&#x0022;</code>
+-TAN<code>&#x0022;</code> code, but the projection parameters are stored in keywords with names <code>&#x0022;</code>
+QVi_m<code>&#x0022;</code> , instead of the usual <code>&#x0022;</code> PVi_m<code>&#x0022;</code> . Since these QV parameters are not
+part of the FITS-WCS standard they will be ignored by other non-AST software,
+resulting in the WCS being interpreted as a simple TAN projection without any
+corrections. This should be seen as an interim solution until such time as an
+agreed method for describing projection distortions within FITS-WCS has been
+published.
+<!--l. 36126--><p class="noindent" >AST extends the range of celestial coordinate systems which may be described using
+this encoding by allowing the inclusion of <code>&#x0022;</code> AZ&#x2013;<code>&#x0022;</code> and <code>&#x0022;</code> EL&#x2013;<code>&#x0022;</code> as the coordinate
+specification within CTYPE values. These form a longitude/latitude pair of axes
+which describe azimuth and elevation. The geographic position of the observer
+should be supplied using the OBSGEO-X/Y/Z keywords described in FITS-WCS paper
+III. Currently, a simple model is used which includes diurnal aberration, but
+ignores atmospheric refraction, polar motion, etc. These may be added in a later
+release.
+<!--l. 36126--><p class="noindent" >If an AST SkyFrame that represents offset rather than absolute coordinates (see
+attribute <a 
+href="sun211ss395.html#x421-6130000">SkyRefIs</a>) is written to a FitsChan using FITS-WCS encoding, two alternate
+axis descriptions will be created. One will describe the offset coordinates, and will
+use <code>&#x0022;</code> OFLN<code>&#x0022;</code> and <code>&#x0022;</code> OFLT<code>&#x0022;</code> as the axis codes in the CTYPE keywords. The other will
+describe absolute coordinates as specified by the <a 
+href="sun211ss413.html#x439-6310000">System</a> attribute of the SkyFrame,
+using the usual CTYPE codes (<code>&#x0022;</code> RA&#x2013;<code>&#x0022;</code> /<code>&#x0022;</code> DEC-<code>&#x0022;</code> , etc). In addition, the absolute
+coordinates description will contain AST-specific keywords (SREF1/2, SREFP1/2 and
+SREFIS) that allow the header to be read back into AST in order to reconstruct the
+original SkyFrame.
+<!--l. 36126--><p class="noindent" >When reading a FITS-WCS encoded Object (using astRead), the FitsChan concerned must
+                                                                                       
+
+                                                                                       
+initially be positioned at the first card (its Card attribute must equal 1) and the
+result of the read, if successful, will always be a pointer to a FrameSet. The base
+Frame of this FrameSet represents FITS-WCS pixel coordinates, and the current Frame
+represents the physical coordinate system described by the FITS-WCS primary
+axis descriptions. If secondary axis descriptions are also present, then the
+FrameSet may contain additional (non-current) Frames which represent these. Such
+a read is always destructive and causes the FITS header cards required for
+the construction of the FrameSet to be removed from the FitsChan, which is
+then left positioned at the <code>&#x0022;</code> end-of-file<code>&#x0022;</code> . A subsequent read using the same
+encoding will therefore not return another FrameSet, even if the FitsChan is
+rewound.
+<!--l. 36126--><p class="noindent" >When astWrite is used to store a FrameSet using FITS-WCS encoding, an attempt is first
+made to simplify the FrameSet to see if it conforms to the FITS-WCS model. If this
+simplification process succeeds (as it often should, as the model is reasonably
+flexible), a description of the FrameSet is written to the FitsChan using appropriate
+FITS header cards. The base Frame of the FrameSet is used to form the FITS-WCS pixel
+coordinate system and the current Frame gives the physical coordinate system to be
+described by the FITS-WCS primary axis descriptions. Any additional Frames
+in the FrameSet may be used to construct secondary axis descriptions, where
+appropriate.
+<!--l. 36126--><p class="noindent" >A successful write operation will over-write any existing FITS-WCS encoded data in the
+FitsChan, but will not affect other (non-FITS-WCS) header cards. If a destructive read
+of a FITS-WCS encoded Object has previously occurred, then an attempt will be made to
+store the FITS header cards back in their original locations. Otherwise, the
+new cards will be inserted following any other FITS-WCS related header cards
+present or, failing that, in front of the current card (as given by the Card
+attribute).
+<!--l. 36126--><p class="noindent" >If an attempt to simplify a FrameSet to conform to the FITS-WCS model fails (or if the
+Object supplied is not a FrameSet), then no data will be written to the FitsChan and
+astWrite will return zero. No error will result.  </div> <h4 class="ssth4"> The FITS-IRAF Encoding  </h4><div class="sstvalues"> The
+FITS-IRAF encoding can, for most purposes, be considered as a subset of the FITS-WCS
+encoding (above), although it differs in the details of the FITS keywords used.
+It is used in exactly the same way and has the same restrictions, but with
+the
+<!--l. 36126--><p class="noindent" >addition of the following:
+<ul class="sstitemlist">
+<li >
+<!--l. 36126--><p class="noindent" >The only celestial coordinate systems that may be represented are equatorial, galactic
+and ecliptic,
+<li >
+<!--l. 36126--><p class="noindent" >Sky projections can be represented only if any associated projection parameters are set
+to their default values.
+<li >
+<!--l. 36126--><p class="noindent" >Secondary axis descriptions are not supported, so when writing a FrameSet to a
+FitsChan, only information from the base and current Frames will be stored.
+                                                                                       
+
+                                                                                       
+</li>
+</ul>
+<!--l. 36126--><p class="noindent" >Note that this encoding is provided mainly as an interim measure to provide a more
+stable alternative to the FITS-WCS encoding until the FITS standard for encoding WCS
+information is finalised. The name <code>&#x0022;</code> FITS-IRAF<code>&#x0022;</code> indicates the general keyword
+conventions used and does not imply that this encoding will necessarily support all
+features of the WCS scheme used by IRAF software. Nevertheless, an attempt has been
+made to support a few such features where they are known to be used by important
+sources of data.
+<!--l. 36126--><p class="noindent" >When writing a FrameSet using the FITS-IRAF encoding, axis rotations are specified by a
+matrix of FITS keywords of the form <code>&#x0022;</code> CDi_j<code>&#x0022;</code> , where <code>&#x0022;</code> i<code>&#x0022;</code> and <code>&#x0022;</code> j<code>&#x0022;</code> are single digits.
+The alternative form <code>&#x0022;</code> CDiiijjj<code>&#x0022;</code> , which is also in use, is recognised when reading an
+Object, but is never written.
+<!--l. 36126--><p class="noindent" >In addition, the experimental IRAF <code>&#x0022;</code> ZPX<code>&#x0022;</code> and <code>&#x0022;</code> TNX<code>&#x0022;</code> sky projections will be accepted
+when reading, but will never be written (the corresponding FITS <code>&#x0022;</code> ZPN<code>&#x0022;</code> or <code>&#x0022;</code> distorted
+TAN<code>&#x0022;</code> projection being used instead). However, there are restrictions on the use of
+these experimental projections. For <code>&#x0022;</code> ZPX<code>&#x0022;</code> , longitude and latitude correction surfaces
+(appearing as <code>&#x0022;</code> lngcor<code>&#x0022;</code> or <code>&#x0022;</code> latcor<code>&#x0022;</code> terms in the IRAF-specific <code>&#x0022;</code> WAT<code>&#x0022;</code> keywords) are
+not supported. For <code>&#x0022;</code> TNX<code>&#x0022;</code> projections, only cubic surfaces encoded as simple
+polynomials with <code>&#x0022;</code> half cross-terms<code>&#x0022;</code> are supported. If an un-usable <code>&#x0022;</code> TNX<code>&#x0022;</code> or <code>&#x0022;</code>
+ZPX<code>&#x0022;</code> projection is encountered while reading from a FitsChan, a simpler form
+of TAN or ZPN projection is used which ignores the unsupported features and
+may therefore be inaccurate. If this happens, a warning message is added to
+the contents of the FitsChan as a set of cards using the keyword <code>&#x0022;</code> ASTWARN<code>&#x0022;</code>
+.
+<!--l. 36126--><p class="noindent" >You should not normally attempt to mix the foreign FITS encodings within the same
+FitsChan, since there is a risk that keyword clashes may occur.  </div> <h4 class="ssth4"> The FITS-PC Encoding
+</h4><div class="sstvalues"> The FITS-PC encoding can, for most purposes, be considered as equivalent to the
+FITS-WCS encoding (above), although it differs in the details of the FITS keywords
+used. It is used in exactly the same way and has the same restrictions.  </div> <h4 class="ssth4"> The
+FITS-AIPS Encoding  </h4><div class="sstvalues"> The FITS-AIPS encoding can, for most purposes, be considered as
+equivalent to the FITS-WCS encoding (above), although it differs in the details of the
+FITS keywords used. It is used in exactly the same way and has the same restrictions,
+but with the
+<!--l. 36126--><p class="noindent" >addition of the following:
+<ul class="sstitemlist">
+<li >
+<!--l. 36126--><p class="noindent" >The only celestial coordinate systems that may be represented are equatorial, galactic
+and ecliptic,
+<li >
+<!--l. 36126--><p class="noindent" >Spectral axes can only be represented if they represent frequency, radio velocity or
+optical velocity, and are linearly sampled in frequency. In addition, the standard of
+rest must be LSRK, LSRD, barycentric or geocentric.
+<li >
+<!--l. 36126--><p class="noindent" >Sky projections can be represented only if any associated projection parameters are set
+                                                                                       
+
+                                                                                       
+to their default values.
+<li >
+<!--l. 36126--><p class="noindent" >The AIT, SFL and MER projections can only be written if the CRVAL keywords are zero for
+both longitude and latitude axes.
+<li >
+<!--l. 36126--><p class="noindent" >Secondary axis descriptions are not supported, so when writing a FrameSet to a
+FitsChan, only information from the base and current Frames will be stored.
+<li >
+<!--l. 36126--><p class="noindent" >If there are more than 2 axes in the base and current Frames, any rotation
+must be restricted to the celestial plane, and must involve no shear.  </li></ul>  </div> <h4 class="ssth4"> The
+FITS-AIPS<!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math><!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>
+Encoding  </h4><div class="sstvalues"> The FITS-AIPS<!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math><!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>
+encoding is based on the FITS-AIPS encoding, but includes some features of the
+FITS-IRAF and FITS-PC encodings. Specifically, any celestial projections supported by
+FITS-PC may be used, including those which require parameterisation, and the axis
+rotation and scaling may be specified using CDi_j keywords. When writing a FITS header,
+rotation will be specified using CROTA/CDELT keywords if possible, otherwise CDi_j
+keywords will be used instead.  </div> <h4 class="ssth4"> The FITS-CLASS Encoding  </h4><div class="sstvalues"> The FITS-CLASS encoding
+uses the conventions of the CLASS project. These are described in the section <code>&#x0022;</code>
+Developer Manual<code>&#x0022;</code> /<code>&#x0022;</code> CLASS FITS
+<!--l. 36126--><p class="noindent" >Format<code>&#x0022;</code> contained in the CLASS documentation at:
+<!--l. 36126--><p class="noindent" >http://www.iram.fr/IRAMFR/GILDAS/doc/html/class-html/class.html.
+<!--l. 36126--><p class="noindent" >This encoding is similar to FITS-AIPS with the following restrictions:
+<ul class="sstitemlist">
+<li >
+<!--l. 36126--><p class="noindent" >When a <a 
+href="sun211ss481.html#x508-7000000">SpecFrame</a> is created by reading a FITS-CLASS header, the attributes describing
+the observer<code>&#x2019;</code> s position (<a 
+href="sun211ss366.html#x392-5840000">ObsLat</a>, <a 
+href="sun211ss367.html#x393-5850000">ObsLon</a> and <a 
+href="sun211ss365.html#x391-5830000">ObsAlt</a>) are left unset because the CLASS
+encoding does not specify these values. Conversions to or from the topocentric standard
+of rest will therefore be inaccurate (typically by up to about 0.5 km/s) unless
+suitable values are assigned to these attributes after the FrameSet has been
+created.
+<li >
+<!--l. 36126--><p class="noindent" >When writing a FrameSet to a FITS-CLASS header, the current Frame in the FrameSet must
+have at least 3 WCS axes, of which one must be a linear spectral axis. The spectral
+axis in the created header will always describe frequency. If the spectral axis in the
+supplied FrameSet refers to some other system (e.g. radio velocity, etc), then it will
+be converted to frequency.
+<li >
+<!--l. 36126--><p class="noindent" >There must be a pair of celestial axes - either (RA,Dec) or (GLON,GLAT). RA and Dec
+must be either FK4/B1950 or FK5/J2000.
+<li >
+<!--l. 36126--><p class="noindent" >A limited range of projection codes (TAN, ARC, STG, AIT, SFL, SIN) can be used. For AIT
+and SFL, the reference point must be at the origin of longitude and latitude. For SIN,
+the associated projection parameters must both be zero.
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 36126--><p class="noindent" >No rotation of the celestial axes is allowed, unless the spatial axes are degenerate
+(i.e. cover only a single pixel).
+<li >
+<!--l. 36126--><p class="noindent" >The frequency axis in the created header will always describe frequency in the source
+rest frame. If the supplied FrameSet uses some other standard of rest then suitable
+conversion will be applied.
+<li >
+<!--l. 36126--><p class="noindent" >The source velocity must be defined. In other words, the SpecFrame attributes <a 
+href="sun211ss402.html#x428-6200000">SourceVel</a>
+and <a 
+href="sun211ss401.html#x427-6190000">SourceVRF</a> must have been assigned values.
+<li >
+<!--l. 36126--><p class="noindent" >The frequency axis in a FITS-CLASS header does not represent absolute frequency, but
+instead represents offsets from the rest frequency in the standard of rest of the
+source.
+</li>
+</ul>
+<!--l. 36126--><p class="noindent" >When writing a FrameSet out using FITS-CLASS encoding, the current Frame may be temporarily
+modified if this will allow the header to be produced. If this is done, the associated
+pixel-<!--l. 36126--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>WCS
+Mapping will also be modified to take account of the changes to the Frame. The
+modifications performed include re-ordering axes (WCS axes, not pixel axes), changing
+spectral coordinate system and standard of rest, changing the celestial coordinate
+system and reference equinox, and changing axis units.  </div> <h4 class="ssth4"> The NATIVE Encoding  </h4><div class="sstvalues"> The
+NATIVE encoding may be used to store a description of any class of AST Object in the
+form of FITS header cards, and (for most practical purposes) any number of
+these Object descriptions may be stored within a single set of FITS cards. If
+multiple Object descriptions are stored, they are written and read sequentially.
+The NATIVE encoding makes use of unique FITS keywords which are designed not
+to clash with keywords that have already been used for other purposes (if a
+potential clash is detected, an alternative keyword is constructed to avoid the
+clash).
+<!--l. 36126--><p class="noindent" >When reading a NATIVE encoded object from a FitsChan (using astRead), FITS header cards
+are read, starting at the current card (as determined by the Card attribute), until the
+start of the next Object description is found. This description is then read and
+converted into an AST Object, for which a pointer is returned. Such a read is always
+destructive and causes all the FITS header cards involved in the Object description
+to be removed from the FitsChan, which is left positioned at the following
+card.
+<!--l. 36126--><p class="noindent" >The Object returned may be of any class, depending on the description that was read,
+and other AST routines may be used to validate it (for example, by examining its <a 
+href="sun211ss262.html#x288-4800000">Class</a>
+or <a 
+href="sun211ss305.html#x331-5230000">ID</a> attribute using astGetC). If further NATIVE encoded Object descriptions exist in
+the FitsChan, subsequent calls to astRead will return the Objects they describe in
+sequence (and destroy their descriptions) until no more remain between the current card
+and the <code>&#x0022;</code> end-of-file<code>&#x0022;</code> .
+<!--l. 36126--><p class="noindent" >When astWrite is used to write an Object using NATIVE encoding, a description of the
+                                                                                       
+
+                                                                                       
+Object is inserted immediately before the current card (as determined by the Card
+attribute). Multiple Object descriptions may be written in this way and are stored
+separately (and sequentially if the Card attribute is not modified between the writes).
+A write operation using the NATIVE encoding does not over-write previously written
+Object descriptions. Note, however, that subsequent behaviour is undefined if an Object
+description is written inside a previously-written description, so this should be
+avoided.
+<!--l. 36126--><p class="noindent" >When an Object is written to a FitsChan using NATIVE encoding, astWrite should (barring
+errors) always transfer data and return a value of 1.  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss283.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss285.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss284.html"></a> </div> 
+</body> 
+</html>

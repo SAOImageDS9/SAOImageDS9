@@ -1,0 +1,66 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astRead </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss159.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss161.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+                                                                                       
+
+                                                                                       
+<!--l. 25010--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x185-3770000"></a> astRead </h3>  <p class="subtitle"> Read an Object from a Channel  </p> </h3> </header><a 
+ id="Q1-185-713"></a> <a 
+ id="Q1-185-714"></a> <a name="xref_astRead"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function reads the
+next <a 
+href="sun211ss464.html#x491-6830000">Object</a> from a <a 
+href="sun211ss441.html#x468-6600000">Channel</a> and returns a pointer to the new Object.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstObject
+<!--l. 25010--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astRead(
+AstChannel <!--l. 25010--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this
+)  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Channel.  </div>  </div> <h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> <a 
+href="sun211ss449.html#x476-6680000">FitsChan</a>  </h5><div class="sstsub"> All
+successful use of astRead on a FitsChan is destructive, so that FITS header cards are
+consumed in the process of reading an Object, and are removed from the FitsChan (this
+deletion can be prevented for specific cards by calling the FitsChan <a 
+href="sun211ss174.html#x199-3910000">astRetainFits</a>
+function). An unsuccessful call of astRead (for instance, caused by the FitsChan not
+containing the necessary FITS headers cards needed to create an Object) results in the
+contents of the FitsChan being left unchanged.  </div> <h5 class="ssth5"> <a 
+href="sun211ss489.html#x516-7080000">StcsChan</a>  </h5><div class="sstsub"> The AST Object returned by
+a successful use of astRead on an StcsChan, will be either a <a 
+href="sun211ss474.html#x501-6930000">Region</a> or a <a 
+href="sun211ss457.html#x484-6760000">KeyMap</a>,
+depending on the values of the <a 
+href="sun211ss405.html#x431-6230000">StcsArea</a>, <a 
+href="sun211ss406.html#x432-6240000">StcsCoords</a> and <a 
+href="sun211ss408.html#x434-6260000">StcsProps</a> attributes. See
+the documentation for these attributes for further information.  </div>  </div> <h4 class="ssth4">Returned
+Value </h4><div class="sstvalues"> <h5 class="ssth5"> astRead()  </h5><div class="sstsub"> A pointer to the new Object. The class to which this will
+belong is determined by the input data, so is not known in advance.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 25010--><p class="noindent" >A null Object pointer (AST__NULL) will be returned, without error, if the Channel
+contains no further Objects to be read.
+<li >
+<!--l. 25010--><p class="noindent" >A null Object pointer will also be returned if this function is invoked with the AST
+error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss159.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss161.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss160.html"></a> </div> 
+</body> 
+</html>

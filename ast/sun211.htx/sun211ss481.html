@@ -1,0 +1,95 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> SpecFrame </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss480.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss482.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 46678--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x508-7000000"></a> SpecFrame </h3>  <p class="subtitle"> Spectral coordinate system description  </p> </h3> </header><a 
+ id="Q1-508-1678"></a> <a 
+ id="Q1-508-1679"></a> <a name="xref_SpecFrame"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> A SpecFrame
+is a specialised form of one-dimensional <a 
+href="sun211ss452.html#x479-6710000">Frame</a> which represents various coordinate
+systems used to describe positions within an electro-magnetic spectrum. The
+particular coordinate system to be used is specified by setting the SpecFrame<code>&#x2019;</code>
+s <a 
+href="sun211ss413.html#x439-6310000">System</a> attribute (the default is wavelength) qualified, as necessary, by
+other attributes such as the rest frequency, the standard of rest, the epoch
+of observation, units, etc (see the description of the System attribute for
+details).
+<!--l. 46678--><p class="noindent" >By setting a value for thr <a 
+href="sun211ss403.html#x429-6210000">SpecOrigin</a> attribute, a SpecFrame can be made to represent
+offsets from a given spectral position, rather than absolute spectral values.  </div>
+<h4 class="ssth4">Constructor Function </h4><div class="sstvalues"> <a 
+href="sun211ss197.html#x222-4140000">astSpecFrame</a>  </div> <h4 class="ssth4"> Inheritance  </h4><div class="sstvalues"> The SpecFrame class inherits from
+the Frame class.  </div> <h4 class="ssth4"> Attributes  </h4><div class="sstvalues"> In addition to those attributes common to all Frames,
+every SpecFrame also has the following attributes:
+<ul class="sstitemlist">
+<li >
+<!--l. 46678--><p class="noindent" ><a 
+href="sun211ss245.html#x271-4630000">AlignSpecOffset</a>: Align SpecFrames using the offset coordinate system?
+<li >
+<!--l. 46678--><p class="noindent" ><a 
+href="sun211ss246.html#x272-4640000">AlignStdOfRest</a>: Standard of rest in which to align SpecFrames
+<li >
+<!--l. 46678--><p class="noindent" ><a 
+href="sun211ss378.html#x404-5960000">RefDec</a>: Declination of the source (FK5 J2000)
+<li >
+<!--l. 46678--><p class="noindent" ><a 
+href="sun211ss379.html#x405-5970000">RefRA</a>: Right ascension of the source (FK5 J2000)
+                                                                                       
+
+                                                                                       
+<li >
+<!--l. 46678--><p class="noindent" ><a 
+href="sun211ss383.html#x409-6010000">RestFreq</a>: Rest frequency
+<li >
+<!--l. 46678--><p class="noindent" ><a 
+href="sun211ss400.html#x426-6180000">SourceSys</a>: Source velocity spectral system
+<li >
+<!--l. 46678--><p class="noindent" ><a 
+href="sun211ss402.html#x428-6200000">SourceVel</a>: Source velocity
+<li >
+<!--l. 46678--><p class="noindent" ><a 
+href="sun211ss401.html#x427-6190000">SourceVRF</a>: Source velocity rest frame
+<li >
+<!--l. 46678--><p class="noindent" ><a 
+href="sun211ss403.html#x429-6210000">SpecOrigin</a>: The zero point for SpecFrame axis values
+<li >
+<!--l. 46678--><p class="noindent" ><a 
+href="sun211ss409.html#x435-6270000">StdOfRest</a>: Standard of rest
+</li>
+</ul>
+<!--l. 46678--><p class="noindent" >Several of the Frame attributes inherited by the SpecFrame class refer to a specific
+axis of the Frame (for instance <a 
+href="sun211ss427.html#x453-6450000">Unit(axis)</a>, <a 
+href="sun211ss323.html#x349-5410000">Label(axis)</a>, etc). Since a SpecFrame is
+strictly one-dimensional, it allows these attributes to be specified without an axis
+index. So for instance, <code>&#x0022;</code> Unit<code>&#x0022;</code> is allowed in place of <code>&#x0022;</code> Unit(1)<code>&#x0022;</code> .  </div> <h4 class="ssth4"> Functions  </h4><div class="sstvalues"> In
+addition to those functions applicable to all Frames, the following functions may also
+be applied to all SpecFrames:
+<ul class="sstitemlist">
+<li >
+<!--l. 46678--><p class="noindent" ><a 
+href="sun211ss183.html#x208-4000000">astSetRefPos</a>: Set reference position in any celestial system
+<li >
+<!--l. 46678--><p class="noindent" ><a 
+href="sun211ss68.html#x93-2850000">astGetRefPos</a>: Get reference position in any celestial system  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss480.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss482.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+                                                                                       
+
+                                                                                       
+<!--l. 47839--><p class="noindent" ><a 
+ id="tailsun211ss481.html"></a> </div> 
+</body> 
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astSpecMap </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss197.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss199.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 29587--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x223-4150000"></a> astSpecMap </h3>  <p class="subtitle"> Create a SpecMap  </p> </h3> </header><a 
+ id="Q1-223-827"></a> <a 
+ id="Q1-223-828"></a> <a name="xref_astSpecMap"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This function creates a new
+<a 
+href="sun211ss482.html#x509-7010000">SpecMap</a> and optionally initialises its attributes.
+<!--l. 29587--><p class="noindent" >An SpecMap is a specialised form of <a 
+href="sun211ss459.html#x486-6780000">Mapping</a> which can be used to represent a sequence
+of conversions between standard spectral coordinate systems. This includes conversions
+between frequency, wavelength, and various forms of velocity, as well as conversions
+between different standards of rest.
+<!--l. 29587--><p class="noindent" >When a SpecMap is first created, it simply performs a unit (null) Mapping. Using the
+<a 
+href="sun211ss195.html#x220-4120000">astSpecAdd</a> function, a series of coordinate conversion steps may then be added,
+selected from the list of supported conversions. This allows multi-step conversions
+                                                                                       
+
+                                                                                       
+between a variety of spectral coordinate systems to be assembled out of the building
+blocks provided by this class.
+<!--l. 29587--><p class="noindent" >For details of the individual coordinate conversions available, see the description of
+the astSpecAdd function.
+<!--l. 29587--><p class="noindent" >Conversions are available to transform between standards of rest. Such conversions need
+to know the source position as an RA and DEC. This information can be supplied in the
+form of parameters for the relevant conversions, in which case the SpecMap is
+1-dimensional, simply transforming the spectral axis values. This means that the same
+source position will always be used by the SpecMap. However, this may not be
+appropriate for an accurate description of a 3-D spectral cube, where changes of
+spatial position can produce significant changes in the Doppler shift introduced when
+transforming between standards of rest. For this situation, a 3-dimensional SpecMap can
+be created in which axes 2 and 3 correspond to the source RA and DEC The SpecMap simply
+copies values for axes 2 and 3 from input to output).  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstSpecMap
+<!--l. 29587--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astSpecMap( int nin, int
+flags, const char <!--l. 29587--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>options,
+... )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> nin  </h5><div class="sstsub"> The number of inputs to the Mapping (this will also equal
+the number of outputs). This value must be either 1 or 3. In either case, the first
+input and output correspoindis the spectral axis. For a 3-axis SpecMap, the second and
+third axes give the RA and DEC (J2000 FK5) of the source. This positional information
+is used by conversions which transform between standards of rest, and replaces the <code>&#x0022;</code>
+RA<code>&#x0022;</code> and <code>&#x0022;</code> DEC<code>&#x0022;</code> arguments for the individual conversions listed in description of the <code>&#x0022;</code>
+SpecAdd<code>&#x0022;</code> function.  </div> <h5 class="ssth5"> flags  </h5><div class="sstsub"> This parameter is reserved for future use and should
+currently always be set to zero.  </div> <h5 class="ssth5"> options  </h5><div class="sstsub"> Pointer to a null-terminated string
+containing an optional comma-separated list of attribute assignments to be used for
+initialising the new SpecMap. The syntax used is identical to that for the <a 
+href="sun211ss177.html#x202-3940000">astSet</a>
+function and may include <code>&#x0022;</code> printf<code>&#x0022;</code> format specifiers identified by <code>&#x0022;</code> %<code>&#x0022;</code> symbols in
+the normal way. If no initialisation is required, a zero-length string may be
+supplied.  </div> <h5 class="ssth5"> ...  </h5><div class="sstsub"> If the <code>&#x0022;</code> options<code>&#x0022;</code> string contains <code>&#x0022;</code> %<code>&#x0022;</code> format specifiers,
+then an optional list of additional arguments may follow it in order to supply
+values to be substituted for these specifiers. The rules for supplying these are
+identical to those for the astSet function (and for the C <code>&#x0022;</code> printf<code>&#x0022;</code> function).  </div>
+</div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astSpecMap()  </h5><div class="sstsub"> A pointer to the new SpecMap.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues">
+<ul class="sstitemlist">
+<li >
+<!--l. 29587--><p class="noindent" >The nature and units of the coordinate values supplied for the first input (i.e. the
+spectral input) of a SpecMap must be appropriate to the first conversion step applied
+by the SpecMap. For instance, if the first conversion step is <code>&#x0022;</code> FRTOVL<code>&#x0022;</code> (frequency to
+relativistic velocity), then the coordinate values for the first input should be
+frequency in units of Hz. Similarly, the nature and units of the coordinate
+values returned by a SpecMap will be determined by the last conversion step
+applied by the SpecMap. For instance, if the last conversion step is <code>&#x0022;</code> VLTOVO<code>&#x0022;</code>
+(relativistic velocity to optical velocity), then the coordinate values for the
+first output will be optical velocity in units of metres per second. See the
+description of the astSpecAdd function for the units expected and returned by each
+conversion.
+<li >
+                                                                                       
+
+                                                                                       
+<!--l. 29587--><p class="noindent" >A null <a 
+href="sun211ss464.html#x491-6830000">Object</a> pointer (AST__NULL) will be returned if this function is invoked with the
+AST error status set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss197.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss199.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss198.html"></a> </div> 
+</body> 
+</html>

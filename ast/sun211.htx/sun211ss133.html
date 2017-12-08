@@ -1,0 +1,247 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astOutline&#x003C;X&#x003E; </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss132.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss134.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 22720--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x158-3500000"></a> astOutline<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+</h3>  <p class="subtitle"> Create a new Polygon outling values in a 2D data grid  </p> </h3> </header><a 
+ id="Q1-158-632"></a> <a 
+ id="Q1-158-633"></a> <a name="xref_astOutline$<$X$>$"></a>  <h4 class="ssth4">Description: </h4><div class="sstvalues"> This is a
+set of functions that create a <a 
+href="sun211ss471.html#x498-6900000">Polygon</a> enclosing a single contiguous set of pixels
+that have a specified value within a gridded 2-dimensional data array (e.g. an
+image).
+<!--l. 22720--><p class="noindent" >A basic 2-dimensional <a 
+href="sun211ss452.html#x479-6710000">Frame</a> is used to represent the pixel coordinate system in the
+returned Polygon. The <a 
+href="sun211ss279.html#x305-4970000">Domain</a> attribute is set to <code>&#x0022;</code> PIXEL<code>&#x0022;</code> , the <a 
+href="sun211ss420.html#x446-6380000">Title</a> attribute is set
+to <code>&#x0022;</code> Pixel coordinates<code>&#x0022;</code> , and the Unit attribute for each axis is set to <code>&#x0022;</code> pixel<code>&#x0022;</code> . All
+other attributes are left unset. The nature of the pixel coordinate system is
+determined by parameter <code>&#x0022;</code> starpix<code>&#x0022;</code> .
+<!--l. 22720--><p class="noindent" >The <code>&#x0022;</code> maxerr<code>&#x0022;</code> and <code>&#x0022;</code> maxvert<code>&#x0022;</code> parameters can be used to control how accurately the
+returned Polygon represents the required region in the data array. The number of
+vertices in the returned Polygon will be the minimum needed to achieve the required
+accuracy.
+                                                                                       
+
+                                                                                       
+<!--l. 22720--><p class="noindent" >You should use a function which matches the numerical type of the data you are processing by replacing
+<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in the generic function name astOutline<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+by an appropriate 1- or 2-character type code. For example, if you are procesing data with
+type <code>&#x0022;</code> float<code>&#x0022;</code> , you should use the function astOutlineF (see the <code>&#x0022;</code> Data Type Codes<code>&#x0022;</code>
+section below for the codes appropriate to other numerical types).  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> AstPolygon
+<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astOutline<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>(
+<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+value, int oper, const <!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+array[], const int lbnd[2], const int ubnd[2], double maxerr, int maxvert, const int
+inside[2], int starpix )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> value  </h5><div class="sstsub"> A data value that specifies
+the pixels to be outlined.  </div> <h5 class="ssth5"> oper  </h5><div class="sstsub"> Indicates how the <code>&#x0022;</code> value<code>&#x0022;</code> parameter is
+used to select the outlined pixels. It can have any of the following values:
+<ul class="sstitemlist">
+<li >
+<!--l. 22720--><p class="noindent" >AST__LT: outline pixels with value less than <code>&#x0022;</code> value<code>&#x0022;</code> .
+<li >
+<!--l. 22720--><p class="noindent" >AST__LE: outline pixels with value less than or equal to <code>&#x0022;</code> value<code>&#x0022;</code> .
+<li >
+<!--l. 22720--><p class="noindent" >AST__EQ: outline pixels with value equal to <code>&#x0022;</code> value<code>&#x0022;</code> .
+<li >
+<!--l. 22720--><p class="noindent" >AST__NE: outline pixels with value not equal to <code>&#x0022;</code> value<code>&#x0022;</code> .
+<li >
+<!--l. 22720--><p class="noindent" >AST__GE: outline pixels with value greater than or equal to <code>&#x0022;</code> value<code>&#x0022;</code> .
+<li >
+<!--l. 22720--><p class="noindent" >AST__GT: outline pixels with value greater than <code>&#x0022;</code> value<code>&#x0022;</code> .  </li></ul>  </div> <h5 class="ssth5"> array  </h5><div class="sstsub"> Pointer to a
+2-dimensional array containing the data to be processed. The numerical type of this
+array should match the 1- or 2-character type code appended to the function name (e.g.
+if you are using astOutlineF, the type of each array element should be <code>&#x0022;</code> float<code>&#x0022;</code>
+).
+<!--l. 22720--><p class="noindent" >The storage order of data within this array should be such that the index of the first
+grid dimension varies most rapidly and that of the second dimension least rapidly (i.e.
+Fortran array indexing is used).  </div> <h5 class="ssth5"> lbnd  </h5><div class="sstsub"> Pointer to an array of two integers
+containing the pixel index of the first pixel in the input grid along each dimension.  </div>
+<h5 class="ssth5"> ubnd  </h5><div class="sstsub"> Pointer to an array of two integers containing the pixel index of the last
+pixel in the input grid along each dimension.
+<!--l. 22720--><p class="noindent" >Note that <code>&#x0022;</code> lbnd<code>&#x0022;</code> and <code>&#x0022;</code> ubnd<code>&#x0022;</code> together define the shape and size of the
+input pixel grid, its extent along a particular (j<code>&#x2019;</code> th) dimension being
+ubnd[j]-lbnd[j]<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>1
+pixels. For FITS images, the lbnd values will be 1 and the ubnd values will be
+equal to the NAXISi header values. Other data systems, such as the Starlink NDF
+system, allow an arbitrary pixel origin to be used (i.e. lbnd is not necessarily
+1).
+<!--l. 22720--><p class="noindent" >These bounds also define the input grid<code>&#x2019;</code> s floating point coordinate system, each pixel
+                                                                                       
+
+                                                                                       
+having unit extent along each dimension with integral coordinate values at its centre
+or upper corner, as selected by parameter <code>&#x0022;</code> starpix<code>&#x0022;</code> .  </div> <h5 class="ssth5"> maxerr  </h5><div class="sstsub"> Together with <code>&#x0022;</code>
+maxvert<code>&#x0022;</code> , this determines how accurately the returned Polygon represents the required
+region of the data array. It gives the target discrepancy between the returned Polygon
+and the accurate outline in the data array, expressed as a number of pixels.
+Insignificant vertices are removed from the accurate outline, one by one, until the
+number of vertices remaining in the returned Polygon equals <code>&#x0022;</code> maxvert<code>&#x0022;</code> , or the
+largest discrepancy between the accurate outline and the returned Polygon is
+greater than <code>&#x0022;</code> maxerr<code>&#x0022;</code> . If <code>&#x0022;</code> maxerr<code>&#x0022;</code> is zero or less, its value is ignored and
+the returned Polygon will have the number of vertices specified by <code>&#x0022;</code> maxvert<code>&#x0022;</code>
+.  </div> <h5 class="ssth5"> maxvert  </h5><div class="sstsub"> Together with <code>&#x0022;</code> maxerr<code>&#x0022;</code> , this determines how accurately the
+returned Polygon represents the required region of the data array. It gives
+the maximum allowed number of vertices in the returned Polygon. Insignificant
+vertices are removed from the accurate outline, one by one, until the number of
+vertices remaining in the returned Polygon equals <code>&#x0022;</code> maxvert<code>&#x0022;</code> , or the largest
+discrepancy between the accurate outline and the returned Polygon is greater than <code>&#x0022;</code>
+maxerr<code>&#x0022;</code> . If <code>&#x0022;</code> maxvert<code>&#x0022;</code> is less than 3, its value is ignored and the number of
+vertices in the returned Polygon will be the minimum needed to ensure that the
+discrepancy between the accurate outline and the returned Polygon is less than
+<code>&#x0022;</code> maxerr<code>&#x0022;</code> .  </div> <h5 class="ssth5"> inside  </h5><div class="sstsub"> Pointer to an array of two integers containing the
+pixel indices of a pixel known to be inside the required region. This is needed
+because the supplied data array may contain several disjoint areas of pixels
+that satisfy the criterion specified by <code>&#x0022;</code> value<code>&#x0022;</code> and <code>&#x0022;</code> oper<code>&#x0022;</code> . In such cases,
+the area described by the returned Polygon will be the one that contains the
+pixel specified by <code>&#x0022;</code> inside<code>&#x0022;</code> . If the specified pixel is outside the bounds
+given by <code>&#x0022;</code> lbnd<code>&#x0022;</code> and <code>&#x0022;</code> ubnd<code>&#x0022;</code> , or has a value that does not meet the criterion
+specified by <code>&#x0022;</code> value<code>&#x0022;</code> and <code>&#x0022;</code> oper<code>&#x0022;</code> , then this function will search for a suitable
+pixel. The search starts at the central pixel and proceeds in a spiral manner
+until a pixel is found that meets the specified crierion.  </div> <h5 class="ssth5"> starpix  </h5><div class="sstsub"> A flag
+indicating the nature of the pixel coordinate system used to describe the vertex
+positions in the returned Polygon. If non-zero, the standard Starlink definition of
+pixel coordinate is used in which a pixel with integer index I spans a range
+of pixel coordinate from (I-1) to I (i.e. pixel corners have integral pixel
+coordinates). If zero, the definition of pixel coordinate used by other AST
+functions such as astResample, astMask, etc., is used. In this definition, a
+pixel with integer index I spans a range of pixel coordinate from (I-0.5) to
+(I<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">+</mo></math>0.5)
+(i.e. pixel centres have integral pixel coordinates).  </div>  </div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5">
+astOutline<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>()
+</h5><div class="sstsub"> A pointer to the required Polygon.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 22720--><p class="noindent" >This function proceeds by first finding a very accurate polygon, and then removing
+insignificant vertices from this fine polygon using <a 
+href="sun211ss42.html#x67-2590000">astDownsize</a>.
+<li >
+<!--l. 22720--><p class="noindent" >The returned Polygon is the outer boundary of the contiguous set of pixels that
+includes ths specified <code>&#x0022;</code> inside<code>&#x0022;</code> point, and satisfy the specified value requirement.
+This set of pixels may potentially include <code>&#x0022;</code> holes<code>&#x0022;</code> where the pixel values fail
+                                                                                       
+
+                                                                                       
+to meet the specified value requirement. Such holes will be ignored by this
+function.
+<li >
+<!--l. 22720--><p class="noindent" >NULL will be returned if this function is invoked with the global
+error status set, or if it should fail for any reason.  </li></ul>  </div> <h4 class="ssth4"> Data Type
+Codes  </h4><div class="sstvalues"> To select the appropriate masking function, you should replace
+<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+in the generic function name astOutline<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>X<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+with a 1- or 2-character data type code, so as to match the numerical type
+<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003C;</mo></math>Xtype<!--l. 22720--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" > <mo 
+class="MathClass-rel">&#x003E;</mo></math>
+of the data you are processing, as follows: <ul class="sstitemlist">
+<li >
+<!--l. 22720--><p class="noindent" >D: double
+<li >
+<!--l. 22720--><p class="noindent" >F: float
+<li >
+<!--l. 22720--><p class="noindent" >L: long int
+<li >
+<!--l. 22720--><p class="noindent" >UL: unsigned long int
+<li >
+<!--l. 22720--><p class="noindent" >I: int
+<li >
+<!--l. 22720--><p class="noindent" >UI: unsigned int
+<li >
+<!--l. 22720--><p class="noindent" >S: short int
+<li >
+<!--l. 22720--><p class="noindent" >US: unsigned short int
+<li >
+<!--l. 22720--><p class="noindent" >B: byte (signed char)
+<li >
+<!--l. 22720--><p class="noindent" >UB: unsigned byte (unsigned char)
+</li>
+</ul>
+<!--l. 22720--><p class="noindent" >For example, astOutlineD would be used to process <code>&#x0022;</code> double<code>&#x0022;</code> data, while astOutlineS
+would be used to process <code>&#x0022;</code> short int<code>&#x0022;</code> data, etc.  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss132.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss134.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss133.html"></a> </div> 
+</body> 
+</html>

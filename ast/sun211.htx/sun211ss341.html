@@ -1,0 +1,45 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> MeshSize </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss340.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss342.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 38730--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x367-5590000"></a> MeshSize </h3>  <p class="subtitle"> Number of points used to represent the boundary of a Region  </p> </h3> </header><a 
+ id="Q1-367-1257"></a> <a 
+ id="Q1-367-1258"></a> <a name="xref_MeshSize"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This attribute controls how many points are used when creating a mesh of
+points covering the boundary or volume of a <a 
+href="sun211ss474.html#x501-6930000">Region</a>. Such a mesh is returned by the
+<a 
+href="sun211ss72.html#x97-2890000">astGetRegionMesh</a> method. The boundary mesh is also used when testing for overlap
+between two Regions: each point in the bomdary mesh of the first Region is checked to
+see if it is inside or outside the second Region. Thus, the reliability of the overlap
+check depends on the value assigned to this attribute. If the value used is
+very low, it is possible for overlaps to go unnoticed. High values produce
+more reliable results, but can result in the overlap test being very slow. The
+default value is 200 for two dimensional Regions and 2000 for three or more
+dimensional Regions (this attribute is not used for 1-dimensional regions since
+the boundary of a simple 1-d Region can only ever have two points). A value
+of five is used if the supplied value is less than five.  </div> <dl class="sst">Type: </dl><dd class="sst"> Integer.  </dd>
+<h4 class="ssth4">Applicability </h4><div class="sstvalues"> <h5 class="ssth5"> Region  </h5><div class="sstsub"> All Regions have this attribute.  </div> <h5 class="ssth5"> <a 
+href="sun211ss445.html#x472-6640000">CmpRegion</a>  </h5><div class="sstsub"> The default
+MeshSize for a CmpRegion is the MeshSize of its first component Region.  </div> <h5 class="ssth5"> <a 
+href="sun211ss484.html#x511-7030000">Stc</a>  </h5><div class="sstsub">
+The default MeshSize for an Stc is the MeshSize of its encapsulated Region.  </div>
+</div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss340.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss342.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 43487--><p class="noindent" ><a 
+ id="tailsun211ss341.html"></a> </div> 
+</body> 
+</html>

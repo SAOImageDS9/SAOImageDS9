@@ -1,0 +1,944 @@
+
+/* sun211.css from sun211.tex (TeX4ht, 2016-10-26 16:44:00) */
+/* start css.sty */
+.pplr8t-x-x-109{}
+.zplmb7y-x-x-109{font-weight: bold;}
+.zplmb7y-x-x-109{font-weight: bold;}
+.zplmb7y-x-x-109{font-weight: bold;}
+.zplmb7y-x-x-80{font-size:72%;font-weight: bold;}
+.zplmb7y-x-x-80{font-weight: bold;}
+.zplmb7y-x-x-80{font-weight: bold;}
+.zplmb7y-x-x-60{font-size:54%;font-weight: bold;}
+.zplmb7y-x-x-60{font-weight: bold;}
+.zplmb7y-x-x-60{font-weight: bold;}
+.zplmr7v-x-x-109{}
+.zplmr7v-x-x-80{font-size:72%;}
+.zplmr7v-x-x-60{font-size:54%;}
+.pplr7t-x-x-109{}
+.pplr7t-x-x-80{font-size:72%;}
+.pplr7t-x-x-60{font-size:54%;}
+.zplmr7m-x-x-109{font-style: italic;}
+.zplmr7m-x-x-109{font-style: italic;}
+.zplmr7m-x-x-109{font-style: italic;}
+.zplmr7m-x-x-80{font-size:72%;font-style: italic;}
+.zplmr7m-x-x-80{font-style: italic;}
+.zplmr7m-x-x-80{font-style: italic;}
+.zplmr7m-x-x-60{font-size:54%;font-style: italic;}
+.zplmr7m-x-x-60{font-style: italic;}
+.zplmr7m-x-x-60{font-style: italic;}
+.zplmr7y-x-x-109{}
+.zplmr7y-x-x-80{font-size:72%;}
+.zplmr7y-x-x-60{font-size:54%;}
+.zplmr7t-x-x-109{}
+.zplmr7t-x-x-80{font-size:72%;}
+.zplmr7t-x-x-60{font-size:54%;}
+.ectt-1095{ font-family: monospace;}
+.ectt-1095{ font-family: monospace;}
+.ectt-1095{ font-family: monospace;}
+.pplb8t-x-x-109{font-weight: bold;}
+.pplb8t-x-x-109{font-weight: bold;}
+.pplri8t-x-x-109{font-style: italic;}
+.pplri8t-x-x-109{font-style: italic;}
+.pplr8t-x-x-90{font-size:81%;}
+.ectt-0900{font-size:81%; font-family: monospace;}
+.ectt-0900{ font-family: monospace;}
+.ectt-0900{ font-family: monospace;}
+.pplr7t-x-x-90{font-size:81%;}
+.zplmr7y-x-x-90{font-size:81%;}
+.pplbi8t-x-x-109{font-style: italic; font-weight: bold;}
+.pplr8t-x-x-120{font-size:109%;}
+.pplri8t-x-x-90{font-size:81%;font-style: italic;}
+.pplri8t-x-x-90{font-style: italic;}
+.ecit-1095{ font-style: italic; font-family: monospace;}
+.ecit-1095{ font-style: italic; font-family: monospace;}
+.ecit-1095{ font-style: italic; font-family: monospace;}
+.pplb8t-x-x-90{font-size:81%;font-weight: bold;}
+.pplb8t-x-x-90{font-weight: bold;}
+p.noindent { text-indent: 0em }
+td p.noindent { text-indent: 0em; margin-top:0em; }
+p.nopar { text-indent: 0em; }
+p.indent{ text-indent: 1.5em }
+@media print {div.crosslinks {visibility:hidden;}}
+a img { border-top: 0; border-left: 0; border-right: 0; }
+center { margin-top:1em; margin-bottom:1em; }
+td center { margin-top:0em; margin-bottom:0em; }
+.Canvas { position:relative; }
+math { text-indent: 0em; }
+li p.indent { text-indent: 0em }
+li p:first-child{ margin-top:0em; }
+li p:last-child, li div:last-child { margin-bottom:0.5em; }
+li p~ul:last-child, li p~ol:last-child{ margin-bottom:0.5em; }
+.enumerate1 {list-style-type:decimal;}
+.enumerate2 {list-style-type:lower-alpha;}
+.enumerate3 {list-style-type:lower-roman;}
+.enumerate4 {list-style-type:upper-alpha;}
+div.newtheorem { margin-bottom: 2em; margin-top: 2em;}
+.obeylines-h,.obeylines-v {white-space: nowrap; }
+div.obeylines-v p { margin-top:0; margin-bottom:0; }
+.overline{ text-decoration:overline; }
+.overline img{ border-top: 1px solid black; }
+td.displaylines {text-align:center; white-space:nowrap;}
+.centerline {text-align:center;}
+.rightline {text-align:right;}
+div.verbatim {font-family: monospace; white-space: nowrap; text-align:left; clear:both; }
+.fbox {padding-left:3.0pt; padding-right:3.0pt; text-indent:0pt; border:solid black 0.4pt; }
+div.fbox {display:table}
+div.center div.fbox {text-align:center; clear:both; padding-left:3.0pt; padding-right:3.0pt; text-indent:0pt; border:solid black 0.4pt; }
+div.minipage{width:100%;}
+div.center, div.center div.center {text-align: center; margin-left:1em; margin-right:1em;}
+div.center div {text-align: left;}
+div.flushright, div.flushright div.flushright {text-align: right;}
+div.flushright div {text-align: left;}
+div.flushleft {text-align: left;}
+.underline{ text-decoration:underline; }
+.underline img{ border-bottom: 1px solid black; margin-bottom:1pt; }
+.framebox-c, .framebox-l, .framebox-r { padding-left:3.0pt; padding-right:3.0pt; text-indent:0pt; border:solid black 0.4pt; }
+.framebox-c {text-align:center;}
+.framebox-l {text-align:left;}
+.framebox-r {text-align:right;}
+span.thank-mark{ vertical-align: super }
+span.footnote-mark sup.textsuperscript, span.footnote-mark a sup.textsuperscript{ font-size:80%; }
+div.footnotes{border-top:solid 1px black; border-bottom:solid 1px black; padding-bottom:1ex; padding-top:0.5ex; margin-right:15%; margin-top:2ex; font-style:italic; font-size:85%;}
+div.footnotes p{margin-top:0; margin-bottom:0; text-indent:0;}
+div.tabular, div.center div.tabular {text-align: center; margin-top:0.5em; margin-bottom:0.5em; }
+table.tabular td p{margin-top:0em;}
+table.tabular {margin-left: auto; margin-right: auto;}
+td p:first-child{ margin-top:0em; }
+td p:last-child{ margin-bottom:0em; }
+div.td00{ margin-left:0pt; margin-right:0pt; }
+div.td01{ margin-left:0pt; margin-right:5pt; }
+div.td10{ margin-left:5pt; margin-right:0pt; }
+div.td11{ margin-left:5pt; margin-right:5pt; }
+table[rules] {border-left:solid black 0.4pt; border-right:solid black 0.4pt; }
+td.td00{ padding-left:0pt; padding-right:0pt; }
+td.td01{ padding-left:0pt; padding-right:5pt; }
+td.td10{ padding-left:5pt; padding-right:0pt; }
+td.td11{ padding-left:5pt; padding-right:5pt; }
+table[rules] {border-left:solid black 0.4pt; border-right:solid black 0.4pt; }
+.hline hr, .cline hr{ height : 1px; margin:0px; }
+.tabbing-right {text-align:right;}
+span.TEX {letter-spacing: -0.125em; }
+span.TEX span.E{ position:relative;top:0.5ex;left:-0.0417em;}
+a span.TEX span.E {text-decoration: none; }
+span.LATEX span.A{ position:relative; top:-0.5ex; left:-0.4em; font-size:85%;}
+span.LATEX span.TEX{ position:relative; left: -0.4em; }
+div.float, div.figure {margin-left: auto; margin-right: auto;}
+div.float img {text-align:center;}
+div.figure img {text-align:center;}
+.marginpar {width:20%; float:right; text-align:left; margin-left:auto; margin-top:0.5em; font-size:85%; text-decoration:underline;}
+.marginpar p{margin-top:0.4em; margin-bottom:0.4em;}
+.equation td{text-align:center; vertical-align:middle; }
+td.eq-no{ width:5%; }
+table.equation { width:100%; } 
+div.math-display, div.par-math-display{text-align:center;}
+mtr.hline mtd{ border-bottom:black solid 1px; padding-top:2px; padding-bottom:0em; }
+mtr.hline mtd mo{ display:none }
+math .texttt { font-family: monospace; }
+math .textit { font-style: italic; }
+math .textsl { font-style: oblique; }
+math .textsf { font-family: sans-serif; }
+math .textbf { font-weight: bold; }
+mo.MathClass-op + mi{margin-left:0.3em}
+mi + mo.MathClass-op{margin-left:0.3em}
+ math mstyle[mathvariant="bold"] mi { font-weight: bold; font-style: normal; } 
+ math mstyle[mathvariant="normal"] mi { font-weight: normal; font-style: normal; } 
+div.tabular, div.center div.tabular {text-align: center; margin-top:0.5em; margin-bottom:0.5em; }
+table.tabular td p{margin-top:0em;}
+table.tabular {margin-left: auto; margin-right: auto;}
+td p:first-child{ margin-top:0em; }
+td p:last-child{ margin-bottom:0em; }
+div.td00{ margin-left:0pt; margin-right:0pt; }
+div.td01{ margin-left:0pt; margin-right:5pt; }
+div.td10{ margin-left:5pt; margin-right:0pt; }
+div.td11{ margin-left:5pt; margin-right:5pt; }
+table[rules] {border-left:solid black 0.4pt; border-right:solid black 0.4pt; }
+td.td00{ padding-left:0pt; padding-right:0pt; }
+td.td01{ padding-left:0pt; padding-right:5pt; }
+td.td10{ padding-left:5pt; padding-right:0pt; }
+td.td11{ padding-left:5pt; padding-right:5pt; }
+table[rules] {border-left:solid black 0.4pt; border-right:solid black 0.4pt; }
+.hline hr, .cline hr{ height : 1px; margin:0px; }
+.partToc a, .partToc, .likepartToc a, .likepartToc {line-height: 200%; font-weight:bold; font-size:110%;}
+.index-item, .index-subitem, .index-subsubitem {display:block}
+div.caption {text-indent:-2em; margin-left:3em; margin-right:1em; text-align:left;}
+div.caption span.id{font-weight: bold; white-space: nowrap; }
+h1.partHead{text-align: center}
+p.bibitem { text-indent: -2em; margin-left: 2em; margin-top:0.6em; margin-bottom:0.6em; }
+p.bibitem-p { text-indent: 0em; margin-left: 2em; margin-top:0.6em; margin-bottom:0.6em; }
+.paragraphHead, .likeparagraphHead { margin-top:2em; font-weight: bold;}
+.subparagraphHead, .likesubparagraphHead { font-weight: bold;}
+.quote {margin-bottom:0.25em; margin-top:0.25em; margin-left:1em; margin-right:1em; text-align:justify;}
+.verse{white-space:nowrap; margin-left:2em}
+div.maketitle {text-align:center;}
+h2.titleHead{text-align:center;}
+div.maketitle{ margin-bottom: 2em; }
+div.author, div.date {text-align:center;}
+div.thanks{text-align:left; margin-left:10%; font-size:85%; font-style:italic; }
+.quotation {margin-bottom:0.25em; margin-top:0.25em; margin-left:1em; }
+.abstract p {margin-left:5%; margin-right:5%;}
+div.abstract {width:100%;}
+.equation-star td{text-align:center; vertical-align:middle; }
+table.equation-star { width:100%; } 
+mtd.align-odd{margin-left:2em; text-align:right;}
+mtd.align-even{margin-right:2em; text-align:left;}
+.boxed{border: 1px solid black; padding-left:2px; padding-right:2px;}
+mo.qopname + mi{margin-left:0.3em}
+mi + mo.qopname{margin-left:0.3em}
+.figure img.graphics {margin-left:10%;}
+dt.enumerate-enumitem{float:left; clear:left; margin-left:1em; margin-right:1em;}
+table[rules] {border-left:solid black 0.4pt; border-right:solid black 0.4pt; }
+div.longtable{text-align:center;}
+P.fancyvrb {white-space: nowrap; margin:0em;}
+table.aligndesc td{vertical-align:top; padding: 0px 5px 0px 5px;}
+table.aligndesc{margin-left:1em;margin-right:1em}
+.sectionToc{display:inline-block;padding-top:1em;padding-bottom:0.3em;}
+.subsectionToc{padding-left:1em; white-space:nowrap; overflow:hidden; text-overflow: ellipsis; display:inline-block; width:95%; padding-left:1em; line-height:100%; }
+.subsubsectionToc{padding-left:3em;font-size:100%}
+.chapterHead,.appendixHead{line-height:150%}
+div#fancyvrb1{ color: MidnightBlue; }
+div#fancyvrb2{ color: MidnightBlue; }
+div#fancyvrb3{ color: MidnightBlue; }
+div#fancyvrb4{ color: MidnightBlue; }
+div#fancyvrb5{ color: MidnightBlue; }
+div#fancyvrb6{ color: MidnightBlue; }
+div#fancyvrb7{ color: MidnightBlue; }
+div#fancyvrb8{ color: MidnightBlue; }
+div#fancyvrb9{ color: MidnightBlue; }
+div#fancyvrb10{ color: MidnightBlue; }
+div#fancyvrb11{ color: MidnightBlue; }
+div#fancyvrb12{ color: MidnightBlue; }
+div#fancyvrb13{ color: MidnightBlue; }
+div#fancyvrb14{ color: MidnightBlue; }
+div#fancyvrb15{ color: MidnightBlue; }
+div#fancyvrb16{ color: MidnightBlue; }
+div#fancyvrb17{ color: MidnightBlue; }
+div#fancyvrb18{ color: MidnightBlue; }
+div#fancyvrb19{ color: MidnightBlue; }
+div#fancyvrb20{ color: MidnightBlue; }
+div#fancyvrb21{ color: MidnightBlue; }
+div#fancyvrb22{ color: MidnightBlue; }
+div#fancyvrb23{ color: MidnightBlue; }
+div#fancyvrb24{ color: MidnightBlue; }
+div#fancyvrb25{ color: MidnightBlue; }
+div#fancyvrb26{ color: MidnightBlue; }
+div#fancyvrb27{ color: MidnightBlue; }
+div#fancyvrb28{ color: MidnightBlue; }
+div#fancyvrb29{ color: MidnightBlue; }
+div#fancyvrb30{ color: MidnightBlue; }
+div#fancyvrb31{ color: MidnightBlue; }
+div#fancyvrb32{ color: MidnightBlue; }
+div#fancyvrb33{ color: MidnightBlue; }
+div#fancyvrb34{ color: MidnightBlue; }
+div#fancyvrb35{ color: MidnightBlue; }
+div#fancyvrb36{ color: MidnightBlue; }
+div#fancyvrb37{ color: MidnightBlue; }
+div#fancyvrb38{ color: MidnightBlue; }
+div#fancyvrb39{ color: MidnightBlue; }
+div#fancyvrb40{ color: MidnightBlue; }
+div#fancyvrb41{ color: MidnightBlue; }
+div#fancyvrb42{ color: MidnightBlue; }
+div#fancyvrb43{ color: MidnightBlue; }
+div#fancyvrb44{ color: MidnightBlue; }
+div#fancyvrb45{ color: MidnightBlue; }
+div#fancyvrb46{ color: MidnightBlue; }
+div#fancyvrb47{ color: MidnightBlue; }
+div#fancyvrb48{ color: MidnightBlue; }
+div#fancyvrb49{ color: MidnightBlue; }
+div#fancyvrb50{ color: MidnightBlue; }
+div#fancyvrb51{ color: MidnightBlue; }
+div#fancyvrb52{ color: MidnightBlue; }
+div#fancyvrb53{ color: MidnightBlue; }
+div#fancyvrb54{ color: MidnightBlue; }
+div#fancyvrb55{ color: MidnightBlue; }
+div#fancyvrb56{ color: MidnightBlue; }
+div#fancyvrb57{ color: MidnightBlue; }
+div#fancyvrb58{ color: MidnightBlue; }
+div#fancyvrb59{ color: MidnightBlue; }
+div#fancyvrb60{ color: MidnightBlue; }
+div#fancyvrb61{ color: MidnightBlue; }
+div#fancyvrb62{ color: MidnightBlue; }
+div#fancyvrb63{ color: MidnightBlue; }
+div#fancyvrb64{ color: MidnightBlue; }
+div#fancyvrb65{ color: MidnightBlue; }
+div#fancyvrb66{ color: MidnightBlue; }
+div#fancyvrb67{ color: MidnightBlue; }
+div#fancyvrb68{ color: MidnightBlue; }
+div#fancyvrb69{ color: MidnightBlue; }
+div#fancyvrb70{ color: MidnightBlue; }
+div#fancyvrb71{ color: MidnightBlue; }
+div#fancyvrb72{ color: MidnightBlue; }
+div#fancyvrb73{ color: MidnightBlue; }
+div#fancyvrb74{ color: MidnightBlue; }
+div#fancyvrb75{ color: MidnightBlue; }
+div#fancyvrb76{ color: MidnightBlue; }
+div#fancyvrb77{ color: MidnightBlue; }
+div#fancyvrb78{ color: MidnightBlue; }
+div#fancyvrb79{ color: MidnightBlue; }
+div#fancyvrb80{ color: MidnightBlue; }
+div#fancyvrb81{ color: MidnightBlue; }
+div#fancyvrb82{ color: MidnightBlue; }
+div#fancyvrb83{ color: MidnightBlue; }
+div#fancyvrb84{ color: MidnightBlue; }
+div#fancyvrb85{ color: MidnightBlue; }
+div#fancyvrb86{ color: MidnightBlue; }
+div#fancyvrb87{ color: MidnightBlue; }
+div#fancyvrb88{ color: MidnightBlue; }
+div#fancyvrb89{ color: MidnightBlue; }
+div#fancyvrb90{ color: MidnightBlue; }
+div#fancyvrb91{ color: MidnightBlue; }
+div#fancyvrb92{ color: MidnightBlue; }
+div#fancyvrb93{ color: MidnightBlue; }
+div#fancyvrb94{ color: MidnightBlue; }
+div#fancyvrb95{ color: MidnightBlue; }
+div#fancyvrb96{ color: MidnightBlue; }
+div#fancyvrb97{ color: MidnightBlue; }
+div#fancyvrb98{ color: MidnightBlue; }
+div#fancyvrb99{ color: MidnightBlue; }
+div#fancyvrb100{ color: MidnightBlue; }
+div#fancyvrb101{ color: MidnightBlue; }
+div#fancyvrb102{ color: MidnightBlue; }
+div#fancyvrb103{ color: MidnightBlue; }
+div#fancyvrb104{ color: MidnightBlue; }
+div#fancyvrb105{ color: MidnightBlue; }
+div#fancyvrb106{ color: MidnightBlue; }
+div#fancyvrb107{ color: MidnightBlue; }
+div#fancyvrb108{ color: MidnightBlue; }
+div#fancyvrb109{ color: MidnightBlue; }
+div#fancyvrb110{ color: MidnightBlue; }
+div#fancyvrb111{ color: MidnightBlue; }
+div#fancyvrb112{ color: MidnightBlue; }
+div#fancyvrb113{ color: MidnightBlue; }
+div#fancyvrb114{ color: MidnightBlue; }
+div#fancyvrb115{ color: MidnightBlue; }
+div#fancyvrb116{ color: MidnightBlue; }
+div#fancyvrb117{ color: MidnightBlue; }
+div#fancyvrb118{ color: MidnightBlue; }
+div#fancyvrb119{ color: MidnightBlue; }
+div#fancyvrb120{ color: MidnightBlue; }
+div#fancyvrb121{ color: MidnightBlue; }
+div#fancyvrb122{ color: MidnightBlue; }
+div#fancyvrb123{ color: MidnightBlue; }
+div#fancyvrb124{ color: MidnightBlue; }
+div#fancyvrb125{ color: MidnightBlue; }
+div#fancyvrb126{ color: MidnightBlue; }
+div#fancyvrb127{ color: MidnightBlue; }
+div#fancyvrb128{ color: MidnightBlue; }
+div#fancyvrb129{ color: MidnightBlue; }
+div#fancyvrb130{ color: MidnightBlue; }
+div#fancyvrb131{ color: MidnightBlue; }
+div#fancyvrb132{ color: MidnightBlue; }
+div#fancyvrb133{ color: MidnightBlue; }
+div#fancyvrb134{ color: MidnightBlue; }
+div#fancyvrb135{ color: MidnightBlue; }
+div#fancyvrb136{ color: MidnightBlue; }
+div#fancyvrb137{ color: MidnightBlue; }
+div#fancyvrb138{ color: MidnightBlue; }
+div#fancyvrb139{ color: MidnightBlue; }
+div#fancyvrb140{ color: MidnightBlue; }
+div#fancyvrb141{ color: MidnightBlue; }
+div#fancyvrb142{ color: MidnightBlue; }
+div#fancyvrb143{ color: MidnightBlue; }
+div#fancyvrb144{ color: MidnightBlue; }
+div#fancyvrb145{ color: MidnightBlue; }
+div#fancyvrb146{ color: MidnightBlue; }
+div#fancyvrb147{ color: MidnightBlue; }
+div#fancyvrb148{ color: MidnightBlue; }
+div#fancyvrb149{ color: MidnightBlue; }
+div#fancyvrb150{ color: MidnightBlue; }
+div#fancyvrb151{ color: MidnightBlue; }
+div#fancyvrb152{ color: MidnightBlue; }
+div#fancyvrb153{ color: MidnightBlue; }
+div#fancyvrb154{ color: MidnightBlue; }
+div#fancyvrb155{ color: MidnightBlue; }
+div#fancyvrb156{ color: MidnightBlue; }
+div#fancyvrb157{ color: MidnightBlue; }
+div#fancyvrb158{ color: MidnightBlue; }
+div#fancyvrb159{ color: MidnightBlue; }
+div#fancyvrb160{ color: MidnightBlue; }
+div#fancyvrb161{ color: MidnightBlue; }
+div#fancyvrb162{ color: MidnightBlue; }
+div#fancyvrb163{ color: MidnightBlue; }
+div#fancyvrb164{ color: MidnightBlue; }
+div#fancyvrb165{ color: MidnightBlue; }
+div#fancyvrb166{ color: MidnightBlue; }
+div#fancyvrb167{ color: MidnightBlue; }
+div#fancyvrb168{ color: MidnightBlue; }
+div#fancyvrb169{ color: MidnightBlue; }
+div#fancyvrb170{ color: MidnightBlue; }
+div#fancyvrb171{ color: MidnightBlue; }
+div#fancyvrb172{ color: MidnightBlue; }
+div#fancyvrb173{ color: MidnightBlue; }
+div#fancyvrb174{ color: MidnightBlue; }
+div#fancyvrb175{ color: MidnightBlue; }
+div#fancyvrb176{ color: MidnightBlue; }
+div#fancyvrb177{ color: MidnightBlue; }
+div#fancyvrb178{ color: MidnightBlue; }
+div#fancyvrb179{ color: MidnightBlue; }
+div#fancyvrb180{ color: MidnightBlue; }
+div#fancyvrb181{ color: MidnightBlue; }
+div#fancyvrb182{ color: MidnightBlue; }
+div#fancyvrb183{ color: MidnightBlue; }
+div#fancyvrb184{ color: MidnightBlue; }
+div#fancyvrb185{ color: MidnightBlue; }
+div#fancyvrb186{ color: MidnightBlue; }
+div#fancyvrb187{ color: MidnightBlue; }
+div#fancyvrb188{ color: MidnightBlue; }
+div#fancyvrb189{ color: MidnightBlue; }
+div#fancyvrb190{ color: MidnightBlue; }
+div#fancyvrb191{ color: MidnightBlue; }
+div#fancyvrb192{ color: MidnightBlue; }
+div#fancyvrb193{ color: MidnightBlue; }
+div#fancyvrb194{ color: MidnightBlue; }
+div#fancyvrb195{ color: MidnightBlue; }
+div#fancyvrb196{ color: MidnightBlue; }
+div#fancyvrb197{ color: MidnightBlue; }
+div#fancyvrb198{ color: MidnightBlue; }
+div#fancyvrb199{ color: MidnightBlue; }
+div#fancyvrb200{ color: MidnightBlue; }
+div#fancyvrb201{ color: MidnightBlue; }
+div#fancyvrb202{ color: MidnightBlue; }
+div#fancyvrb203{ color: MidnightBlue; }
+div#fancyvrb204{ color: MidnightBlue; }
+div#fancyvrb205{ color: MidnightBlue; }
+div#fancyvrb206{ color: MidnightBlue; }
+div#fancyvrb207{ color: MidnightBlue; }
+div#fancyvrb208{ color: MidnightBlue; }
+div#fancyvrb209{ color: MidnightBlue; }
+div#fancyvrb210{ color: MidnightBlue; }
+div#fancyvrb211{ color: MidnightBlue; }
+div#fancyvrb212{ color: MidnightBlue; }
+div#fancyvrb213{ color: MidnightBlue; }
+div#fancyvrb214{ color: MidnightBlue; }
+div#fancyvrb215{ color: MidnightBlue; }
+div#fancyvrb216{ color: MidnightBlue; }
+div#fancyvrb217{ color: MidnightBlue; }
+div#fancyvrb218{ color: MidnightBlue; }
+div#fancyvrb219{ color: MidnightBlue; }
+div#fancyvrb220{ color: MidnightBlue; }
+div#fancyvrb221{ color: MidnightBlue; }
+div#fancyvrb222{ color: MidnightBlue; }
+div#fancyvrb223{ color: MidnightBlue; }
+div#fancyvrb224{ color: MidnightBlue; }
+div#fancyvrb225{ color: MidnightBlue; }
+div#fancyvrb226{ color: MidnightBlue; }
+div#fancyvrb227{ color: MidnightBlue; }
+div#fancyvrb228{ color: MidnightBlue; }
+div#fancyvrb229{ color: MidnightBlue; }
+div#fancyvrb230{ color: MidnightBlue; }
+div#fancyvrb231{ color: MidnightBlue; }
+div#fancyvrb232{ color: MidnightBlue; }
+div#fancyvrb233{ color: MidnightBlue; }
+div#fancyvrb234{ color: MidnightBlue; }
+div#fancyvrb235{ color: MidnightBlue; }
+div#fancyvrb236{ color: MidnightBlue; }
+div#fancyvrb237{ color: MidnightBlue; }
+div#fancyvrb238{ color: MidnightBlue; }
+div#fancyvrb239{ color: MidnightBlue; }
+div#fancyvrb240{ color: MidnightBlue; }
+/* end css.sty */
+
+/*Basic body styling */
+html{
+    background-color:silver;
+}
+
+body{
+    background-color:white;
+}
+
+/* Set up css for the spans:*/
+.sc{font-variant: small-caps;}
+
+.sf{
+    font-family: "Verdana";
+    font-size:85%;
+}
+
+.small{font-size: .8em;}
+
+.tt{
+    font-family: "Droid Sans Mono",monospace;
+    white-space: normal;
+    font-size: 85%;
+    line-space:85%;
+}
+
+/* terminal listings and similar*/
+.terminalv,.verb,.verbatim,.fancyvrb,pre{
+    font-family: "Droid Sans Mono",monospace;
+    white-space: nowrap;
+                                                                                       
+
+                                                                                       
+    color: #191970;
+    font-size: 85%;
+    line-space:85%;
+}
+
+/* starlink tasks*/
+.task{
+    font-family: "Verdana";
+    font-size: 85%;
+}
+
+/*right aligned object*/
+.pushright{
+    float:right;
+}
+
+/*.titlesection{font-size: 100%; line-height: 120%; width:100%}*/
+div.titleformat{
+    font-size: 200%;
+    line-height: 150%;
+    text-align: center;
+    display: block;
+    font-weight: bold;
+}
+
+/*General css for regular body:*/
+body{
+    margin-top: 2em;
+    margin-bottom: 1em;
+    max-width: 45em;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 3em;
+    color: #444;
+                                                                                       
+
+                                                                                       
+    font-family: serif;
+    font-style: normal;
+    font-size: 1em;
+    line-height: 130%;
+    border: 1px solid #fefeef;
+    padding:1em 3em;
+}
+
+/*Turn off indenting of text.*/
+p.indent{
+    text-indent: 0em;
+}
+
+/*CSS font face option*/
+@font-face{font-family: "Droid Sans Mono";}
+
+/*Font for .figure*/
+.figure{
+    font-family: "Verdana",sans-serif;
+    font-size: 80%;
+}
+
+/*Fonts for section headings.*/
+.sectionHead, .likesectionHead, .subsectionHead,.likesubsectionHead, .sstattributeHead{
+    font-family:"Georgia", serif;
+    font-weight:bold;
+    font-size:110%;
+}
+.subsubsectionHead, .likesubsubsectionHead {
+    font-family: "Georgia", serif;
+    font-weight: bold;
+    font-size: 105%;
+}
+
+                                                                                       
+
+                                                                                       
+/* spacing for sectionheads*/
+.sectionHead, .likesectionHead{
+    padding:5px;
+}
+
+/*Fonts for some headings and table of contents entries.*/
+strong, b, .partToc a, .partToc, .likepartToc a, .likepartToc,
+.chapterToc a, .chapterToc, .likechapterToc a, .likechapterToc,
+.appendixToc a, .appendixToc, .addchapToc,
+.paragraphHead, .likeparagraphHead,
+.subparagraphHead, .likesubparagraphHead,
+.caption td.id, .ecbx-0700{
+    font-family: "EB Garamond Bold", serif;
+}
+
+/*Fonts for small caps stuff.*/
+.booksubtitle, .dvday, .sectionHead, .likesectionHead,
+.dvquote-ref, .dvbox .lettrine-line{
+    font-family: "EB Garamond SC", serif;
+}
+
+/*Background colour for sectionHeads (blue)*/
+.likesectionHead,
+.sectionHead{
+    background-color:#ACCFE6;
+    padding:0.5;
+}
+
+/*Fonts for chapter and appendix head*/
+.appendixHead,.chapterHead{
+    line-height:140%;
+}
+
+/*Minipage??? This will be problematic...*/
+                                                                                       
+
+                                                                                       
+div.minipage {
+ float: left;
+ margin: 1ex 1em 1ex 0;
+}
+
+div.minipage:last-child ::after {
+    content "<par></par>";
+    clear: both;
+}
+
+div.minipage + h3{
+  clear:both;
+}
+
+/*Style for tipbox and starlinktextbox (blue background)*/
+.sltextbox,.tipbox{
+    width:80%;
+    border-color:#ACCFE6;
+    margin:0px auto;
+    border-style:solid;
+    border-width:thick;
+    border-radius:15px;
+}
+
+/* tiptox title spacing */
+span.tbtitle + div.tipbox-text{
+    margin-top:10px;
+}
+
+/* tip box title */
+.tbtitle{
+    display:block;
+    font-weight:bold;
+    background-color:#ACCFE6;
+                                                                                       
+
+                                                                                       
+    border-color:#ACCFE6;
+    padding: 1%;
+}
+
+/* tip box text*/
+.tipbox-text{
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-bottom: 0.5em;
+}
+
+/*framed page*/
+.fmpage{
+    border: 1px solid black;
+    display: inline-block;
+}
+
+/*Hide the rules around figures and floats*/
+hr.figure, hr.endfigure, hr.float, hr.endfloat{
+    display:none;
+}
+
+/*Css various for images and captions*/
+img, img.graphics{
+    max-width:100%;
+    display:inline;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.figure img.graphics{
+    margin-left:auto;
+    margin-right:auto;
+}
+                                                                                       
+
+                                                                                       
+
+div.float{
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:3em;
+    margin-bottom:3em;
+    display:block;
+}
+
+div.figure{
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:3em;
+    margin-bottom:3em;
+    display:block;
+}
+
+/* captions */
+div.caption{
+    display:inline-block;
+    caption-side:bottom;
+    max-width:100%;
+}
+
+
+/* enumerated list */
+dd.enumerate-enumitem{
+    padding-left:0.5em;
+}
+
+dt.enumerate-enumitem{
+    float:left;
+    clear:left;
+    margin-left:1em;
+                                                                                       
+
+                                                                                       
+    margin-right:0em;
+}
+
+/*Css for enumerated description list.*/
+.enumdesc{
+    counter-reset: enumdesc-counter;
+}
+
+.enumdesc dt {
+    position: relative;
+    font-weight: bold;
+    font-size: 100%;
+    left: 2.5%;
+    right: 2.5%;
+}
+
+.enumdesc dt:before{
+    content: "(" counter(enumdesc-counter) ")";
+    counter-increment: enumdesc-counter;
+    font-weight: bold;
+    font-size: 100%;
+    padding-left:2.5%;
+    padding-right:1em;
+}
+
+.enumdesc dt, .enumdesc dd{
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+}
+
+/*Css for starlink description list */
+.sldes dl {
+    width: 100%;
+    display:block;
+                                                                                       
+
+                                                                                       
+}
+
+.sldes dt {
+  float:left;
+  clear: left;
+  width: 15%;
+}
+
+.sldes dd {%
+    float: left;
+    width:85%;
+    display:inline-block;
+    margin-left:0%;
+    margin-bottom: 2em;}
+
+.sldes dd p:first-child{
+    margin-top:0%;
+}
+
+/* general description class */
+.description dt {
+    font-weight: bold;
+    margin-left:1.5em;
+}
+
+.description dd{
+    margin-bottom:1em;
+    margin-left:1.5em;
+}
+
+
+/* foot notes */
+div.footnotes{
+    margin-right:0px;
+                                                                                       
+
+                                                                                       
+}
+
+div.footnotes span.footnote-mark{
+    padding-right:5px;
+    padding-left:2px;
+}
+
+/*Css to align div.centers in center*/
+div.center >div {text-align: center;}
+
+
+/* cross links */
+div.crosslinks{
+    display: block;
+    width: 100%;
+    color: #808080;
+    font-size: 85%;
+}
+
+div.crosslinks:first-of-type{
+    margin-bottom: 5ex;
+}
+div.crosslinks:last-of-type{
+    margin-top:5ex;
+}
+
+/* copyright */
+div.copyright{
+    padding-bottom:3ex;
+}
+
+/* navbar */
+ul.nav{
+    list-style: none;
+                                                                                       
+
+                                                                                       
+    padding:0px;
+    text-align:center;
+    clear:both;
+}
+ul.nav li, ul.nav li a {
+    display: inline-block;
+    vertical-align: middle;
+}
+ul.nav li a{
+    border: none;
+    padding:0.1ex 1ex;
+}
+
+ul.nav li.toc-hidden{
+ visibility:hidden;
+ float:left;
+}
+ul.nav li.next{
+    float:right;
+}
+ul.nav li.prev{
+    float:left;
+}
+
+ul.nav li.title{
+    border:none;
+    font-variant:small-caps;
+}
+
+ul.nav li.toc, ul.nav li.toc-hidden{
+    margin:0px 3ex;
+}
+
+ul.nav li.toc{
+                                                                                       
+
+                                                                                       
+        float: right;
+}
+div.crosslinks li a{
+    display:inline-block;
+    text-decoration:none;
+    color:#808080;
+}
+
+div.titlebar{
+    text-align:center;
+    color:silver;
+}
+.crosslinks li > a:hover, .crosslinksr li > a:focus {
+    text-decoration: none;
+    background-color: #ACCFE6;
+}
+div.crosslinks li a:hover, div.crosslinks li a:focus{
+    color:black;
+}
+
+
+table.aligndesc td, table.aligndesc th{
+    padding-bottom:0.25em
+    padding-top:0.25em;
+    vertical-align:top;
+}
+
+/* basic table stuff*/
+td.td {
+    padding-left:5px;
+    padding-right:5px;
+}
+
+/* default latex vertical align is center, not baseline?*/
+                                                                                       
+
+                                                                                       
+td {
+   vertical-align: middle;
+}
+
+
+
+\EndCss
+ /*sst title*/
+h3.sstsectitle{text-align:center;}
+p.subtitle{text-align:center}
+
+/*sst section styling*/
+header.sstreftitle{
+    font-size:1.5em;
+    border-bottom: 5px solid #aaa;
+}
+
+/*Styling for attributesection*/
+div.attributesec:before{
+    content:"";
+    display:block;
+    border-bottom:solid 1px grey;
+    padding-top:1em;
+}
+
+
+/*Styling for table of contents options*/
+.tocdes{
+    width:25em;
+    text-align:left;
+    float:right
+}
+.toccom{
+    margin-left:3em;
+                                                                                       
+
+                                                                                       
+    font-size:100%
+}
+
+
+/*Css styling for basic SST sections and their headings*/
+div.sstvalues{padding-left:5%}
+
+
+/*the sst subsection*/
+div.sstsub{padding-left:5%}
+
+
+
+
+
+/* sst description list*/
+dl.sst{
+    font-weight:bold
+      }
+div.sstusage,dl.sstexamplesubsection{
+    font-family: "Droid Sans Mono",monospace;
+    white-space: nowrap;
+    font-size: 80%;
+    line-space:85%
+}
+dl.sstsub{font-weight:bold;}
+
+

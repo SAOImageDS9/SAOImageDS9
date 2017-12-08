@@ -1,0 +1,59 @@
+<!DOCTYPE html> 
+<html> 
+<head><title> astColumnName </title> 
+<meta charset=utf-8/> 
+<meta name="generator" content="TeX4ht (http://www.tug.org/tex4ht/)" /> 
+<link rel="stylesheet" type="text/css" href="sun211.css" /> 
+ <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML"></script><style type="text/css">.MathJax_MathML {text-indent: 0;}</style></head><body 
+>
+<div class="sstrefsection"><div class="crosslinks"><ul class='nav'> <li class="prev"> <a 
+href="sun211ss27.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss29.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li>
+</ul></div>
+<!--l. 13049--><p class="noindent" ><header class="sstreftitle"><h3 class="sstsectitle"><a 
+ id="x53-2450000"></a> astColumnName </h3>  <p class="subtitle"> Get the name of the column at a given index within the Table  </p> </h3> </header><a 
+ id="Q1-53-317"></a> <a 
+ id="Q1-53-318"></a> <a name="xref_astColumnName"></a>
+<h4 class="ssth4">Description: </h4><div class="sstvalues"> This function returns a string holding the name of the column with the
+given index within the <a 
+href="sun211ss491.html#x518-7100000">Table</a>.
+<!--l. 13049--><p class="noindent" >This function is intended primarily as a means of iterating round all the columns in a
+Table. For this purpose, the number of columns in the Table is given by the <a 
+href="sun211ss349.html#x375-5670000">Ncolumn</a>
+attribute of the Table. This function could then be called in a loop, with the index
+value going from zero to one less than Ncolumn.
+<!--l. 13049--><p class="noindent" >Note, the index associated with a column decreases monotonically with the age of the
+column: the oldest Column in the Table will have index one, and the Column added
+                                                                                       
+
+                                                                                       
+most recently to the Table will have the largest index.  </div> <h4 class="ssth4">Synopsis </h4><div class="sstvalues"> const char
+<!--l. 13049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>astColumnName(
+AstTable <!--l. 13049--><math 
+ xmlns="http://www.w3.org/1998/Math/MathML"  
+display="inline" ><mo 
+class="MathClass-bin">&#x2217;</mo></math>this,
+int index )  </div> <h4 class="ssth4">Parameters: </h4><div class="sstvalues"> <h5 class="ssth5"> this  </h5><div class="sstsub"> Pointer to the Table.  </div> <h5 class="ssth5"> index  </h5><div class="sstsub"> The index into the
+list of columns. The first column has index one, and the last has index <code>&#x0022;</code> Ncolumn<code>&#x0022;</code> .  </div>
+</div> <h4 class="ssth4">Returned Value </h4><div class="sstvalues"> <h5 class="ssth5"> astColumnName()  </h5><div class="sstsub"> A pointer to a null-terminated string containing
+the upper case column name.  </div>  </div> <h4 class="ssth4">Notes: </h4><div class="sstvalues"> <ul class="sstitemlist">
+<li >
+<!--l. 13049--><p class="noindent" >The returned pointer is guaranteed to remain valid and the string to which it points
+will not be over-written for a total of 50 successive invocations of this function.
+After this, the memory containing the string may be re-used, so a copy of the string
+should be made if it is needed for longer than this.
+<li >
+<!--l. 13049--><p class="noindent" >A NULL pointer will be returned if this function is invoked with the AST error status
+set, or if it should fail for any reason.  </li></ul>  </div><div class="crosslinks"> <div class="copyright"><span class="pushright">Copyright (C) 2014 Science &#x0026; Technology Facilities Council</span></div> <ul class='nav'> <li class="prev"> <a 
+href="sun211ss27.html" >&#8592Prev</a>&#x00A0;</li> <li class="title">AST<BR>A Library for
+Handling<BR>World Coordinate Systems<BR>in Astronomy</li> <li class="next"><a 
+href="sun211ss29.html" >Next&#8594</a>&#x00A0;</li> <li class="toc"><a 
+href="sun211.html#toc">TOC &#8593</a></li> </ul></div>
+<!--l. 33670--><p class="noindent" ><a 
+ id="tailsun211ss28.html"></a> </div> 
+</body> 
+</html>

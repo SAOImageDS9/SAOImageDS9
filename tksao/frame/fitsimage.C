@@ -3104,6 +3104,17 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   wcsTran(ast_, 2, in, 1, out);
   double ang = wcsAxAngle(ast_,out[0],out[1]);
 
+  {
+    //    Vector npix = wcsTran(ast_,out[0]+Vector(0,.01),0);
+    //    Vector epix = wcsTran(ast_,out[0]+Vector(.01,0),0);
+    //    Vector north = (npix-in[0]).normalize();
+    //    Vector east = (epix-in[0]).normalize();
+    //    Vector diff = (north-east).abs();
+    //    cerr << diff << endl;
+    //    double bb = -(north.angle()-M_PI_2);
+    //    double aa = (getWCSOrientation(sys,sky) == Coord::NORMAL) ? ang : -ang;
+  }  
+
   if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
     return getWCSOrientation(sys,sky) == Coord::NORMAL ? ang : -ang;
 
@@ -3186,8 +3197,8 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
-	str << setprecision(8) << out[0] << ' ' << out[1]
-	    << ' ' << coord.skyFrameStr(sky) << ends;
+	str << setprecision(8) << out[0] << ' ' << out[1] << ' '
+	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
 
       case Coord::SEXAGESIMAL:
@@ -3210,7 +3221,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	}
 	str << astFormat(ast_[ss],1,out[0]) << ' '
 	    << astFormat(ast_[ss],2,out[1]) << ' '
-	    << coord.skyFrameStr(sky) << ends;
+	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
       }
     }
@@ -3243,8 +3254,9 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
-	str << setprecision(8) << out[0] << ' ' << out[1]
-	    << ' ' << coord.skyFrameStr(sky) << ends;
+	str << setprecision(8) << out[0] << ' ' << out[1] << ' '
+	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
+	
 	break;
 
       case Coord::SEXAGESIMAL:
@@ -3267,7 +3279,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	}
 	str << astFormat(ast_,1,out[0]) << ' '
 	    << astFormat(ast_,2,out[1]) << ' '
-	    << coord.skyFrameStr(sky) << ends;
+	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
       }
     }
@@ -3321,7 +3333,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
       case Coord::DEGREES:
 	out = radToDeg(out);
 	str << setprecision(8) << out[0] << ' ' << out[1] << ' ' << out[2]
-	    << ' ' << coord.skyFrameStr(sky) << ends;
+	    << ' ' << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
 
       case Coord::SEXAGESIMAL:
@@ -3343,8 +3355,8 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 	  break;
 	}
 	str << astFormat(ast_,1,out[0]) << ' '
-	    << astFormat(ast_,2,out[1]) << ' '
-	    << out[2] << ' ' << coord.skyFrameStr(sky) << ends;
+	    << astFormat(ast_,2,out[1]) << ' ' << out[2] << ' '
+	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
       }
     }
@@ -3737,7 +3749,7 @@ void FitsImage::wcsEquInit()
       switch (naxes) {
       case 2:
 	wcsEqu_[jj] = astIsASkyFrame(ff);
-	// no xLON/xLAT and xxLN/xxLT but GLON/GLAT is ok
+	// no xLON/xLAT, xxLN/xxLT or HPX
 	if (wcsEqu_[jj]) {
 	  const char* str = astGetC(ff, "System");
 	  if (!strncmp(str,"Unknown",7))

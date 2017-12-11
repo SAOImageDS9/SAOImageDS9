@@ -52,13 +52,14 @@ proc FileMainMenu {} {
     $ds9(mb).file add separator
     switch $ds9(wm) {
 	x11 -
+	aqua -
 	win32 {
 	    $ds9(mb).file add command -label "[msgcat::mc {Page Setup}]..." \
 		-command PSPageSetup -accelerator "${ds9(shiftctrl)}P"
 	    $ds9(mb).file add command -label "[msgcat::mc {Print}]..." \
 		-command PSPrint -accelerator "${ds9(ctrl)}P"
 	}
-	aqua {
+	foo {
 	    # accelerators don't work with dialog box
 	    $ds9(mb).file add command \
 		-label "[msgcat::mc {Postscript Page Setup}]..." \
@@ -363,13 +364,14 @@ proc CreateButtonsFile {} {
 
     switch $ds9(wm) {
  	x11 -
+	aqua -
 	win32 {
 	    ButtonButton $ds9(buttons).file.page \
 		[string tolower [msgcat::mc {Page Setup}]] PSPageSetup
 	    ButtonButton $ds9(buttons).file.print \
 		[string tolower [msgcat::mc {Print}]] PSPrint
 	}
- 	aqua {
+ 	foo {
 	    ButtonButton $ds9(buttons).file.page \
 		[string tolower [msgcat::mc {Page Setup}]] MacOSXPageSetup
 	    ButtonButton $ds9(buttons).file.print \
@@ -436,6 +438,7 @@ proc PrefsDialogButtonbarFile {f} {
 
     switch $ds9(wm) {
 	x11 -
+	aqua -
 	win32 {
 	    $m add checkbutton \
 		-label "[msgcat::mc {Page Setup}]..." \
@@ -446,7 +449,7 @@ proc PrefsDialogButtonbarFile {f} {
 		-variable pbuttons(file,print) \
 		-command {UpdateButtons buttons(file)}
 	}
-	aqua {
+	foo {
 	    $m add checkbutton \
 		-label "[msgcat::mc {Postscript Page Setup}]..." \
 		-variable pbuttons(file,pspage) \

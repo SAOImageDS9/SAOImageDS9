@@ -1671,11 +1671,11 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   if (sky1 != sky2) {
     setWCSSystem(sys1);
     setWCSSkyFrame(sky1);
-    AstFrameSet* wcs1 = (AstFrameSet*)astCopy(ast_);
+    AstFrameSet* wcs1 = wcsCopy();
 
     setWCSSystem(sys2);
     setWCSSkyFrame(sky2);
-    AstFrameSet* wcs2 = (AstFrameSet*)astCopy(ast_);
+    AstFrameSet* wcs2 = wcsCopy();
 
     AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "SKY");
     if (cvt != AST__NULL) {
@@ -3682,8 +3682,6 @@ void FitsImage::astInit(FitsHead* hd, FitsHead* prim)
   case 4:
     break;
   }
-
-  setWCSSkyFrame(Coord::FK5);
 }
 
 void FitsImage::wcsInit()

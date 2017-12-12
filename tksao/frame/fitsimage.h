@@ -422,8 +422,8 @@ class FitsImage {
   double wcsDistance(AstFrameSet*, const Vector&, const Vector&);
 #ifdef NEWWCS
   Vector3d wcsTran(AstFrameSet*, const Vector3d&, int);
-  double wcsAngle(AstFrameSet*, const Vector&, const Vector&, const Vector&);
-  double wcsAxAngle(AstFrameSet*, const Vector&, const Vector&);
+  double wcsAngle(const Vector&, const Vector&, const Vector&);
+  double wcsAxAngle(const Vector&, const Vector&);
 #endif
   
 #ifdef NEWWCS

@@ -3050,7 +3050,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   in[1] = center()+Vector(0,1);
   in[2] = center()+Vector(1,0);
   wcsTran(ast_, 3, in, 1, out);
-  double ang = wcsAngle(ast_,out[0],out[1],out[2]);
+  double ang = wcsAngle(out[0],out[1],out[2]);
 
   Coord::Orientation rr = Coord::NORMAL;
   if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
@@ -3102,18 +3102,18 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   in[0] = center();
   in[1] = center()+Vector(0,1);
   wcsTran(ast_, 2, in, 1, out);
-  double ang = wcsAxAngle(ast_,out[0],out[1]);
+  double ang = wcsAxAngle(out[0], out[1]);
 
-  {
-    //    Vector npix = wcsTran(ast_,out[0]+Vector(0,.01),0);
-    //    Vector epix = wcsTran(ast_,out[0]+Vector(.01,0),0);
-    //    Vector north = (npix-in[0]).normalize();
-    //    Vector east = (epix-in[0]).normalize();
-    //    Vector diff = (north-east).abs();
-    //    cerr << diff << endl;
-    //    double bb = -(north.angle()-M_PI_2);
-    //    double aa = (getWCSOrientation(sys,sky) == Coord::NORMAL) ? ang : -ang;
-  }  
+  //  {
+  //    Vector npix = wcsTran(ast_,out[0]+Vector(0,.01),0);
+  //    Vector epix = wcsTran(ast_,out[0]+Vector(.01,0),0);
+  //    Vector north = (npix-in[0]).normalize();
+  //    Vector east = (epix-in[0]).normalize();
+  //    Vector diff = (north-east).abs();
+  //    cerr << diff << endl;
+  //    double bb = -(north.angle()-M_PI_2);
+  //    double aa = (getWCSOrientation(sys,sky) == Coord::NORMAL) ? ang : -ang;
+  //  }  
 
   if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
     return getWCSOrientation(sys,sky) == Coord::NORMAL ? ang : -ang;
@@ -4296,16 +4296,16 @@ double FitsImage::wcsDistance(AstFrameSet* ast, const Vector& vv1,
 #endif
 
 #ifdef NEWWCS
-double FitsImage::wcsAngle(AstFrameSet* ast, const Vector& vv1,
-			   const Vector& vv2, const Vector& vv3)
+double FitsImage::wcsAngle(const Vector& vv1, const Vector& vv2,
+			   const Vector& vv3)
 {
-  int naxes = astGetI(ast,"Naxes");
+  int naxes = astGetI(ast_,"Naxes");
   switch (naxes) {
   case 1:
     // error
     break;
   case 2:
-    return astAngle(ast,vv1.v,vv2.v,vv3.v);
+    return astAngle(ast_,vv1.v,vv2.v,vv3.v);
   case 3:
     {
       double ptr1[3];
@@ -4321,7 +4321,7 @@ double FitsImage::wcsAngle(AstFrameSet* ast, const Vector& vv1,
       ptr3[1] = vv3[1];
       ptr3[2] = 0;
 
-      return astAngle(ast, ptr1, ptr2, ptr3);
+      return astAngle(ast_, ptr1, ptr2, ptr3);
     }
   case 4:
     {
@@ -4341,23 +4341,22 @@ double FitsImage::wcsAngle(AstFrameSet* ast, const Vector& vv1,
       ptr3[2] = 0;
       ptr3[3] = 0;
 
-      return astAngle(ast, ptr1, ptr2, ptr3);
+      return astAngle(ast_, ptr1, ptr2, ptr3);
     }
   }
 
   return 0;
 }
 
-double FitsImage::wcsAxAngle(AstFrameSet* ast, const Vector& vv1,
-			     const Vector& vv2)
+double FitsImage::wcsAxAngle(const Vector& vv1, const Vector& vv2)
 {
-  int naxes = astGetI(ast,"Naxes");
+  int naxes = astGetI(ast_,"Naxes");
   switch (naxes) {
   case 1:
     // error
     break;
   case 2:
-    return astAxAngle(ast, vv1.v, vv2.v, 2);
+    return astAxAngle(ast_, vv1.v, vv2.v, 2);
   case 3:
     {
       double ptr1[3];
@@ -4369,7 +4368,7 @@ double FitsImage::wcsAxAngle(AstFrameSet* ast, const Vector& vv1,
       ptr2[1] = vv2[1];
       ptr2[2] = 0;
 
-      return astAxAngle(ast, ptr1, ptr2, 2);
+      return astAxAngle(ast_, ptr1, ptr2, 2);
     }
   case 4:
     {
@@ -4384,7 +4383,7 @@ double FitsImage::wcsAxAngle(AstFrameSet* ast, const Vector& vv1,
       ptr2[2] = 0;
       ptr2[3] = 0;
 
-      return astAxAngle(ast, ptr1, ptr2, 2);
+      return astAxAngle(ast_, ptr1, ptr2, 2);
     }
   }
 

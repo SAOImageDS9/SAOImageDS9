@@ -416,15 +416,18 @@ class FitsImage {
   double getWCSPixelArea(Coord::CoordSystem);
 #endif
   
-  int wcsIsASkyFrame(AstFrameSet*);
-  Vector wcsTran(AstFrameSet*, const Vector&, int);
-  void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
+#ifndef NEWWCS
   double wcsDistance(AstFrameSet*, const Vector&, const Vector&);
-#ifdef NEWWCS
-  Vector3d wcsTran(AstFrameSet*, const Vector3d&, int);
+#else
+  double wcsDistance(const Vector&, const Vector&);
+  Vector3d wcsTran(const Vector3d&, int);
   double wcsAngle(const Vector&, const Vector&, const Vector&);
   double wcsAxAngle(const Vector&, const Vector&);
 #endif
+
+  int wcsIsASkyFrame(AstFrameSet*);
+  Vector wcsTran(AstFrameSet*, const Vector&, int);
+  void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
   
 #ifdef NEWWCS
   void setWCSSystem(AstFrameSet*, Coord::CoordSystem);

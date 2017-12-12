@@ -1693,7 +1693,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
     Tcl_Obj* objrr = Tcl_NewListObj(0,NULL);
     for(int jj=0; jj<nxx2; jj++) {
       for (int ii=0; ii<nxx1; ii++) {
-	double dd = wcsDistance(ast_,ptr1[ii],ptr2[jj]);
+	double dd = wcsDistance(ptr1[ii], ptr2[jj]);
 
 	if ((dd != AST__BAD) && (dd <= rr)) {
 	  Tcl_Obj* obj[2];
@@ -2969,8 +2969,7 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
   in[1] = center()+Vector(1,0);
   in[2] = center()+Vector(0,1);
   wcsTran(ast_, 3, in, 1, out);
-  double dd = (wcsDistance(ast_,out[0],out[1]) +
-	       wcsDistance(ast_,out[0],out[2]))/2.;
+  double dd = (wcsDistance(out[0],out[1]) + wcsDistance(out[0],out[2]))/2.;
 
   if (wcsIsASkyFrame(ast_))
     return radToDeg(dd);
@@ -2992,8 +2991,8 @@ double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
   in[1] = center()+Vector(1,0);
   in[2] = center()+Vector(0,1);
   wcsTran(ast_, 3, in, 1, out);
-  double ll = wcsDistance(ast_,out[0],out[1]);
-  double mm = wcsDistance(ast_,out[0],out[2]);
+  double ll = wcsDistance(out[0], out[1]);
+  double mm = wcsDistance(out[0], out[2]);
 
   if (wcsIsASkyFrame(ast_))
     return radToDeg(ll)*radToDeg(mm);
@@ -3305,7 +3304,7 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   setWCSSystem(ast_,sys);
   setWCSSkyFrame(ast_,sky);
 
-  Vector3d out = wcsTran(ast_, in, 1);
+  Vector3d out = wcsTran(in, 1);
   if (astOK && checkWCS(out))
     return wcsIsASkyFrame(ast_) ? radToDeg(out) : out;
   else
@@ -3326,7 +3325,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   setWCSSkyFrame(ast_,sky);
   
   ostringstream str;
-  Vector3d out = wcsTran(ast_, in, 1);
+  Vector3d out = wcsTran(in, 1);
   if (astOK && checkWCS(out)) {
     if (wcsIsASkyFrame(ast_)) {
       switch (format) {
@@ -3419,7 +3418,7 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
     setWCSSkyFrame(ast_,sky);
 
     Vector3d in = wcsIsASkyFrame(ast_) ? degToRad(vv) : vv;
-    Vector3d out = wcsTran(ast_, in, 0);
+    Vector3d out = wcsTran(in, 0);
     if (astOK && checkWCS(out))
       return out;
   }
@@ -3453,8 +3452,8 @@ double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
   setWCSSystem(ast_,sys);
 
   return wcsIsASkyFrame(ast_) ?
-    radToDeg(wcsDistance(ast_, degToRad(vv1), degToRad(vv2))) :
-    wcsDistance(ast_, vv1, vv2);
+    radToDeg(wcsDistance(degToRad(vv1), degToRad(vv2))) :
+    wcsDistance(vv1, vv2);
 }
 #endif
 
@@ -4201,9 +4200,9 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
   }
 }
 
-Vector3d FitsImage::wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
+Vector3d FitsImage::wcsTran(const Vector3d& in, int forward)
 {
-  int naxes = astGetI(ast,"Naxes");
+  int naxes = astGetI(ast_,"Naxes");
   switch (naxes) {
   case 1:
   case 2:
@@ -4211,7 +4210,7 @@ Vector3d FitsImage::wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
       double pout[2];
       pin[0] = in[0];
       pin[1] = in[1];
-      astTranN(ast, 1, 2, 1, pin, forward, 2, 1, pout);
+      astTranN(ast_, 1, 2, 1, pin, forward, 2, 1, pout);
       return Vector3d(pout[0],pout[1],forward ? 1 : 0);
     break;
   case 3:
@@ -4221,7 +4220,7 @@ Vector3d FitsImage::wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
       pin[0] = in[0];
       pin[1] = in[1];
       pin[2] = in[2];
-      astTranN(ast, 1, 3, 1, pin, forward, 3, 1, pout);
+      astTranN(ast_, 1, 3, 1, pin, forward, 3, 1, pout);
       return Vector3d(pout[0],pout[1],pout[2]);
     }
     break;
@@ -4233,7 +4232,7 @@ Vector3d FitsImage::wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
       pin[1] = in[1];
       pin[2] = in[2];
       pin[3] = forward ? context_->slice(3) : 0;
-      astTranN(ast, 1, 4, 1, pin, forward, 4, 1, pout);
+      astTranN(ast_, 1, 4, 1, pin, forward, 4, 1, pout);
       return Vector3d(pout[0],pout[1],pout[2]);
     }
     break;
@@ -4250,16 +4249,15 @@ double FitsImage::wcsDistance(AstFrameSet* ast, const Vector& vv1,
   return astDistance(ast, vv1.v, vv2.v);
 }
 #else
-double FitsImage::wcsDistance(AstFrameSet* ast, const Vector& vv1,
-			      const Vector& vv2)
+double FitsImage::wcsDistance(const Vector& vv1, const Vector& vv2)
 {
-  int naxes = astGetI(ast,"Naxes");
+  int naxes = astGetI(ast_,"Naxes");
   switch (naxes) {
   case 1:
     // error
     break;
   case 2:
-    return astDistance(ast, vv1.v, vv2.v);
+    return astDistance(ast_, vv1.v, vv2.v);
   case 3:
     {
       double ptr1[3];
@@ -4271,7 +4269,7 @@ double FitsImage::wcsDistance(AstFrameSet* ast, const Vector& vv1,
       ptr2[1] = vv2[1];
       ptr2[2] = 0;
 
-      return astDistance(ast, ptr1, ptr2);
+      return astDistance(ast_, ptr1, ptr2);
     }
   case 4:
     {
@@ -4286,7 +4284,7 @@ double FitsImage::wcsDistance(AstFrameSet* ast, const Vector& vv1,
       ptr2[2] = 0;
       ptr2[3] = 0;
 
-      return astDistance(ast, ptr1, ptr2);
+      return astDistance(ast_, ptr1, ptr2);
     }
   }
 

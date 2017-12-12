@@ -3104,8 +3104,8 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   double ang = wcsAxAngle(out[0], out[1]);
 
   //  {
-  //    Vector npix = wcsTran(ast_,out[0]+Vector(0,.01),0);
-  //    Vector epix = wcsTran(ast_,out[0]+Vector(.01,0),0);
+  //    Vector npix = wcsTran(out[0]+Vector(0,.01),0);
+  //    Vector epix = wcsTran(out[0]+Vector(.01,0),0);
   //    Vector north = (npix-in[0]).normalize();
   //    Vector east = (epix-in[0]).normalize();
   //    Vector diff = (north-east).abs();
@@ -3167,7 +3167,7 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   setWCSSystem(ast_,sys);
   setWCSSkyFrame(ast_,sky);
 
-  Vector out = wcsTran(ast_, in, 1);
+  Vector out = wcsTran(in, 1);
   if (astOK && checkWCS(out))
     return wcsIsASkyFrame(ast_) ? radToDeg(out) : out;
   else
@@ -3247,7 +3247,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   setWCSSkyFrame(ast_,sky);
   
   ostringstream str;
-  Vector out = wcsTran(ast_, in, 1);
+  Vector out = wcsTran(in, 1);
   if (astOK && checkWCS(out)) {
     if (wcsIsASkyFrame(ast_)) {
       switch (format) {
@@ -3399,7 +3399,7 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
     setWCSSkyFrame(ast_,sky);
 
     Vector in = wcsIsASkyFrame(ast_) ? degToRad(vv) : vv;
-    Vector out = wcsTran(ast_, in, 0);
+    Vector out = wcsTran(in, 0);
     if (astOK && checkWCS(out))
       return out;
   }
@@ -4049,16 +4049,16 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
 }
 
 #else
-Vector FitsImage::wcsTran(AstFrameSet* ast, const Vector& in, int forward)
+Vector FitsImage::wcsTran(const Vector& in, int forward)
 {
-  int naxes = astGetI(ast,"Naxes");
+  int naxes = astGetI(ast_,"Naxes");
   switch (naxes) {
   case 1:
     // error
     break;
   case 2:
     double xout, yout;
-    astTran2(ast, 1, in.v, in.v+1, forward, &xout, &yout);
+    astTran2(ast_, 1, in.v, in.v+1, forward, &xout, &yout);
     return Vector(xout, yout);
   case 3:
     {
@@ -4067,7 +4067,7 @@ Vector FitsImage::wcsTran(AstFrameSet* ast, const Vector& in, int forward)
       pin[0] = in[0];
       pin[1] = in[1];
       pin[2] = forward ? context_->slice(2) : 0;
-      astTranN(ast, 1, 3, 1, pin, forward, 3, 1, pout);
+      astTranN(ast_, 1, 3, 1, pin, forward, 3, 1, pout);
       return Vector(pout[0],pout[1]);
     }
     break;
@@ -4079,7 +4079,7 @@ Vector FitsImage::wcsTran(AstFrameSet* ast, const Vector& in, int forward)
       pin[1] = in[1];
       pin[2] = forward ? context_->slice(2) : 0;
       pin[3] = forward ? context_->slice(3) : 0;
-      astTranN(ast, 1, 4, 1, pin, forward, 4, 1, pout);
+      astTranN(ast_, 1, 4, 1, pin, forward, 4, 1, pout);
       return Vector(pout[0],pout[1]);
     }
     break;

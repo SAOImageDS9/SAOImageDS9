@@ -417,8 +417,10 @@ class FitsImage {
 #endif
   
 #ifndef NEWWCS
+  Vector wcsTran(AstFrameSet*, const Vector&, int);
   double wcsDistance(AstFrameSet*, const Vector&, const Vector&);
 #else
+  Vector wcsTran(const Vector&, int);
   double wcsDistance(const Vector&, const Vector&);
   Vector3d wcsTran(const Vector3d&, int);
   double wcsAngle(const Vector&, const Vector&, const Vector&);
@@ -426,7 +428,6 @@ class FitsImage {
 #endif
 
   int wcsIsASkyFrame(AstFrameSet*);
-  Vector wcsTran(AstFrameSet*, const Vector&, int);
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
   
 #ifdef NEWWCS

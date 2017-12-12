@@ -65,7 +65,7 @@ int Grid2d::doit(RenderMode rm)
 #else
       fits->setWCSSystem(system_);
       fits->setWCSSkyFrame(sky_);
-      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
+      AstFrameSet* ast = fits->wcsCopy();
       
       int naxes = astGetI(ast,"Naxes");
       switch (naxes) {

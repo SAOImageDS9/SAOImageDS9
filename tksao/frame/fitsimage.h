@@ -426,7 +426,7 @@ class FitsImage {
   int wcsIsASkyFrame(AstFrameSet*);
   void setWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
 #else
-  AstFrameSet* wcsCopy() {return (AstFrameSet*)ast_;}
+  AstFrameSet* wcsCopy() {return (AstFrameSet*)astCopy(ast_);}
   Vector wcsTran(const Vector&, int);
   Vector3d wcsTran(const Vector3d&, int);
   void wcsTran(int num, Vector* in, int forward, Vector* out)

@@ -1626,10 +1626,10 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   if (nxx1 != nyy1 || nxx2 != nyy2)
     return;
   setWCSSystem(sys1);
-  if (!wcsIsASkyFrame(ast_))
+  if (!wcsIsASkyFrame())
     return;
   setWCSSystem(sys2);
-  if (!wcsIsASkyFrame(ast_))
+  if (!wcsIsASkyFrame())
     return;
 
   // get doubles
@@ -2971,7 +2971,7 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
   wcsTran(3, in, 1, out);
   double dd = (wcsDistance(out[0],out[1]) + wcsDistance(out[0],out[2]))/2.;
 
-  if (wcsIsASkyFrame(ast_))
+  if (wcsIsASkyFrame())
     return radToDeg(dd);
   else
     return dd;
@@ -2994,7 +2994,7 @@ double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
   double ll = wcsDistance(out[0], out[1]);
   double mm = wcsDistance(out[0], out[2]);
 
-  if (wcsIsASkyFrame(ast_))
+  if (wcsIsASkyFrame())
     return radToDeg(ll)*radToDeg(mm);
   else
     return ll*mm;
@@ -3053,7 +3053,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
 
   Coord::Orientation rr = Coord::NORMAL;
   if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
-    if (wcsIsASkyFrame(ast_))
+    if (wcsIsASkyFrame())
       rr = ang>=0 ? Coord::NORMAL : Coord::XX;
     else
       rr = ang<=0 ? Coord::NORMAL : Coord::XX;
@@ -3169,7 +3169,7 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 
   Vector out = wcsTran(in, 1);
   if (astOK && checkWCS(out))
-    return wcsIsASkyFrame(ast_) ? radToDeg(out) : out;
+    return wcsIsASkyFrame() ? radToDeg(out) : out;
   else
     return Vector();
 }
@@ -3249,7 +3249,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   ostringstream str;
   Vector out = wcsTran(in, 1);
   if (astOK && checkWCS(out)) {
-    if (wcsIsASkyFrame(ast_)) {
+    if (wcsIsASkyFrame()) {
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
@@ -3306,7 +3306,7 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 
   Vector3d out = wcsTran(in, 1);
   if (astOK && checkWCS(out))
-    return wcsIsASkyFrame(ast_) ? radToDeg(out) : out;
+    return wcsIsASkyFrame() ? radToDeg(out) : out;
   else
     return Vector3d();
 }
@@ -3327,7 +3327,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   ostringstream str;
   Vector3d out = wcsTran(in, 1);
   if (astOK && checkWCS(out)) {
-    if (wcsIsASkyFrame(ast_)) {
+    if (wcsIsASkyFrame()) {
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
@@ -3398,7 +3398,7 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
     setWCSSystem(sys);
     setWCSSkyFrame(sky);
 
-    Vector in = wcsIsASkyFrame(ast_) ? degToRad(vv) : vv;
+    Vector in = wcsIsASkyFrame() ? degToRad(vv) : vv;
     Vector out = wcsTran(in, 0);
     if (astOK && checkWCS(out))
       return out;
@@ -3417,7 +3417,7 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
     setWCSSystem(sys);
     setWCSSkyFrame(sky);
 
-    Vector3d in = wcsIsASkyFrame(ast_) ? degToRad(vv) : vv;
+    Vector3d in = wcsIsASkyFrame() ? degToRad(vv) : vv;
     Vector3d out = wcsTran(in, 0);
     if (astOK && checkWCS(out))
       return out;
@@ -3451,7 +3451,7 @@ double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
   astClearStatus; // just to make sure
   setWCSSystem(sys);
 
-  return wcsIsASkyFrame(ast_) ?
+  return wcsIsASkyFrame() ?
     radToDeg(wcsDistance(degToRad(vv1), degToRad(vv2))) :
     wcsDistance(vv1, vv2);
 }
@@ -3958,7 +3958,7 @@ void FitsImage::setWCSSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 void FitsImage::setWCSSkyFrame(Coord::SkyFrame sky)
 {
   // is sky frame
-  if (!wcsIsASkyFrame(ast_))
+  if (!wcsIsASkyFrame())
     return;
 
   // is it already set?
@@ -4051,21 +4051,21 @@ int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
   return astIsASkyFrame(astGetFrame(ast,AST__CURRENT));
 }
 #else
-int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
+int FitsImage::wcsIsASkyFrame()
 {
   astClearStatus;
   astBegin;
 
   int rr =0;
-  int naxes = astGetI(ast,"Naxes");
+  int naxes = astGetI(ast_,"Naxes");
   switch (naxes) {
   case 1:
     break;
   case 2:
-    rr = astIsASkyFrame(astGetFrame(ast,AST__CURRENT));
+    rr = astIsASkyFrame(astGetFrame(ast_,AST__CURRENT));
   case 3:
   case 4:
-    rr = strstr((char*)astGetC(ast,"Domain"),"SKY") ? 1 : 0;
+    rr = strstr((char*)astGetC(ast_,"Domain"),"SKY") ? 1 : 0;
   default:
     break;
   }

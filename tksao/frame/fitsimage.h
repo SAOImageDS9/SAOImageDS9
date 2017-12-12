@@ -421,6 +421,7 @@ class FitsImage {
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
   double wcsDistance(AstFrameSet*, const Vector&, const Vector&);
 
+  void setWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
   AstFrameSet* getAST(Coord::CoordSystem sys) 
     {return (ast_ && ast_[sys-Coord::WCS]) ? ast_[sys-Coord::WCS] : NULL;}
 #else
@@ -434,11 +435,11 @@ class FitsImage {
   double wcsAxAngle(const Vector&, const Vector&);
 
   void setWCSSystem(Coord::CoordSystem);
+  void setWCSSkyFrame(Coord::SkyFrame);
   AstFrameSet* getAST(Coord::CoordSystem sys) {return ast_;}
 #endif
 
   int wcsIsASkyFrame(AstFrameSet*);
-  void setWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
   void setWCSFormat(AstFrameSet*, int, const char*);
 
   int hasWCS(Coord::CoordSystem);

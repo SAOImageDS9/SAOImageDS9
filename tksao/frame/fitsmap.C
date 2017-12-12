@@ -209,7 +209,7 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
 	return 0;
       
       setWCSSystem(sys);
-      setWCSSkyFrame(ast_, Coord::FK5);
+      setWCSSkyFrame(Coord::FK5);
 
       Vector in[2];
       Vector out[2];

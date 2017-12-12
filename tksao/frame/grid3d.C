@@ -80,10 +80,10 @@ int Grid3d::doit(RenderMode rm)
     break;
   default:
     {
-      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
 
 #ifndef NEWWCS
       foobar = fits;
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
       fits->setWCSSkyFrame(ast, sky_);
 
       AstFrame* zbase = astFrame(1,"");
@@ -108,8 +108,9 @@ int Grid3d::doit(RenderMode rm)
       ast = astFrameSet(cmpwcsbase,"");
       astAddFrame(ast, AST__CURRENT, cmpwcsmap, cmpwcscurr);
 #else
-      fits->setWCSSystem(ast, system_);
-      fits->setWCSSkyFrame(ast, sky_);
+      fits->setWCSSystem(system_);
+      fits->setWCSSkyFrame(fits->getAST(system_), sky_);
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
       
       int naxes = astGetI(ast,"Naxes");
       switch (naxes) {

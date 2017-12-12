@@ -418,30 +418,29 @@ class FitsImage {
   
 #ifndef NEWWCS
   Vector wcsTran(AstFrameSet*, const Vector&, int);
-  double wcsDistance(AstFrameSet*, const Vector&, const Vector&);
-#else
-  Vector wcsTran(const Vector&, int);
-  double wcsDistance(const Vector&, const Vector&);
-  Vector3d wcsTran(const Vector3d&, int);
-  double wcsAngle(const Vector&, const Vector&, const Vector&);
-  double wcsAxAngle(const Vector&, const Vector&);
-#endif
-
-  int wcsIsASkyFrame(AstFrameSet*);
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
-  
-#ifdef NEWWCS
-  void setWCSSystem(AstFrameSet*, Coord::CoordSystem);
-#endif
-  void setWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
-  void setWCSFormat(AstFrameSet*, int, const char*);
-#ifndef NEWWCS
+  double wcsDistance(AstFrameSet*, const Vector&, const Vector&);
+
   AstFrameSet* getAST(Coord::CoordSystem sys) 
     {return (ast_ && ast_[sys-Coord::WCS]) ? ast_[sys-Coord::WCS] : NULL;}
 #else
+  Vector wcsTran(const Vector&, int);
+  Vector3d wcsTran(const Vector3d&, int);
+  void wcsTran(int num, Vector* in, int forward, Vector* out)
+  {wcsTran(ast_,num,in,forward,out);}
+  void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
+  double wcsDistance(const Vector&, const Vector&);
+  double wcsAngle(const Vector&, const Vector&, const Vector&);
+  double wcsAxAngle(const Vector&, const Vector&);
+
+  void setWCSSystem(Coord::CoordSystem);
   AstFrameSet* getAST(Coord::CoordSystem sys) {return ast_;}
 #endif
-  
+
+  int wcsIsASkyFrame(AstFrameSet*);
+  void setWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
+  void setWCSFormat(AstFrameSet*, int, const char*);
+
   int hasWCS(Coord::CoordSystem);
   int hasWCSEqu(Coord::CoordSystem);
   int hasWCSCel(Coord::CoordSystem);

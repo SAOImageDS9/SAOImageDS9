@@ -57,14 +57,15 @@ int Grid2d::doit(RenderMode rm)
     break;
   default:
     {
-      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
 
       // set desired skyformat
 #ifndef NEWWCS
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
       fits->setWCSSkyFrame(ast, sky_);
 #else
-      fits->setWCSSystem(ast, system_);
-      fits->setWCSSkyFrame(ast, sky_);
+      fits->setWCSSystem(system_);
+      fits->setWCSSkyFrame(fits->getAST(system_), sky_);
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
       
       int naxes = astGetI(ast,"Naxes");
       switch (naxes) {

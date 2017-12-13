@@ -121,6 +121,7 @@ class FitsImage {
   int* wcsEqu_;
   int* wcsCel_;
   int* wcs3D_;
+  int* wcsHPX_;
 #endif
   FitsHead* wcsHeader_; // alt wcs header
   FitsHead* altHeader_; // wcs header for wfpc2
@@ -161,6 +162,7 @@ class FitsImage {
   void wcsEquInit();
   void wcsCelInit();
   void wcs3DInit();
+  void wcsHPXInit();
 #endif
   void astinit0(int, FitsHead*, FitsHead*);
   int checkWCS(Vector&);
@@ -442,6 +444,7 @@ class FitsImage {
   int hasWCSEqu(Coord::CoordSystem);
   int hasWCSCel(Coord::CoordSystem);
   int hasWCS3D(Coord::CoordSystem);
+  int hasWCSHPX(Coord::CoordSystem);
 
   void updateMatrices(Matrix&, Matrix&, Matrix&, Matrix&, Matrix&);
   void updateMatrices(Matrix3d&, Matrix3d&, Matrix3d&, Matrix3d&);
@@ -526,7 +529,7 @@ class FitsImage {
   char* displayWCS();
   FitsHead* head() {return image_->head();}
   char* getKeyword(const char* key) {return fits_->getKeyword(key);}
-  int findKeyword(const char*);
+  int findKeyword(const char* key) {return fits_->find(key);}
 
   int saveFitsPrimHeader(OutFitsStream& str)
   {return image_ ? image_->saveFitsPrimHeader(str) : 0;}

@@ -401,30 +401,25 @@ class FitsImage {
   void processKeywordsFitsSection();
   int processKeywordsIRAF(FitsImage*);
 
-#ifndef NEWWCS
-  WorldCoor* getWCS(Coord::CoordSystem sys) 
-  {return (wcs_ && wcs_[sys-Coord::WCS]) ? wcs_[sys-Coord::WCS] : NULL;}
-#endif
-  const char* getWCSName(Coord::CoordSystem);
   Coord::Orientation getWCSOrientation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSRotation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSDist(const Vector&, const Vector&, Coord::CoordSystem);
+  const char* getWCSName(Coord::CoordSystem);
+
 #ifndef NEWWCS
+  WorldCoor* getWCS(Coord::CoordSystem sys) 
+  {return (wcs_ && wcs_[sys-Coord::WCS]) ? wcs_[sys-Coord::WCS] : NULL;}
   Vector getWCScdelt(Coord::CoordSystem);
-#else
-  double getWCSPixelSize(Coord::CoordSystem);
-  double getWCSPixelArea(Coord::CoordSystem);
-#endif
-  
-#ifndef NEWWCS
   AstFrameSet* getAST(Coord::CoordSystem sys) 
     {return (ast_ && ast_[sys-Coord::WCS]) ? ast_[sys-Coord::WCS] : NULL;}
+
   Vector wcsTran(AstFrameSet*, const Vector&, int);
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
   double wcsDistance(AstFrameSet*, const Vector&, const Vector&);
 
   int wcsIsASkyFrame(AstFrameSet*);
   void setWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
+  void setWCSFormat(AstFrameSet*, int, const char*);
 #else
   AstFrameSet* wcsCopy() {return (AstFrameSet*)astCopy(ast_);}
   Vector wcsTran(const Vector&, int);
@@ -439,9 +434,11 @@ class FitsImage {
   int wcsIsASkyFrame();
   void setWCSSystem(Coord::CoordSystem);
   void setWCSSkyFrame(Coord::SkyFrame);
-#endif
+  void setWCSFormat(int, const char*);
 
-  void setWCSFormat(AstFrameSet*, int, const char*);
+  double getWCSPixelSize(Coord::CoordSystem);
+  double getWCSPixelArea(Coord::CoordSystem);
+#endif
 
   int hasWCS(Coord::CoordSystem);
   int hasWCSEqu(Coord::CoordSystem);

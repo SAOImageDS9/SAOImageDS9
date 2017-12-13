@@ -1625,11 +1625,8 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   // sanity check
   if (nxx1 != nyy1 || nxx2 != nyy2)
     return;
-  setWCSSystem(sys1);
-  if (!wcsIsASkyFrame())
-    return;
-  setWCSSystem(sys2);
-  if (!wcsIsASkyFrame())
+
+  if (!hasWCSCel(sys1) || !hasWCSCel(sys2))
     return;
 
   // get doubles
@@ -2971,7 +2968,7 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
   wcsTran(3, in, 1, out);
   double dd = (wcsDistance(out[0],out[1]) + wcsDistance(out[0],out[2]))/2.;
 
-  return wcsIsASkyFrame() ? radToDeg(dd) : dd;
+  return hasWCSCel(sys) ? radToDeg(dd) : dd;
 }
 
 double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
@@ -2991,7 +2988,7 @@ double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
   double ll = wcsDistance(out[0], out[1]);
   double mm = wcsDistance(out[0], out[2]);
 
-  return wcsIsASkyFrame() ? radToDeg(ll)*radToDeg(mm) : ll*mm;
+  return hasWCSCel(sys) ? radToDeg(ll)*radToDeg(mm) : ll*mm;
 }
 #endif
 
@@ -3047,7 +3044,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
 
   Coord::Orientation rr = Coord::NORMAL;
   if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
-    if (wcsIsASkyFrame())
+    if (hasWCSCel(sys))
       rr = ang>=0 ? Coord::NORMAL : Coord::XX;
     else
       rr = ang<=0 ? Coord::NORMAL : Coord::XX;
@@ -3162,7 +3159,7 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 
   Vector out = wcsTran(in, 1);
   if (astOK && checkWCS(out))
-    return wcsIsASkyFrame() ? radToDeg(out) : out;
+    return hasWCSCel(sys) ? radToDeg(out) : out;
   else
     return Vector();
 }
@@ -3242,7 +3239,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   ostringstream str;
   Vector out = wcsTran(in, 1);
   if (astOK && checkWCS(out)) {
-    if (wcsIsASkyFrame()) {
+    if (hasWCSCel(sys)) {
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
@@ -3299,7 +3296,7 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 
   Vector3d out = wcsTran(in, 1);
   if (astOK && checkWCS(out))
-    return wcsIsASkyFrame() ? radToDeg(out) : out;
+    return hasWCSCel(sys) ? radToDeg(out) : out;
   else
     return Vector3d();
 }
@@ -3320,7 +3317,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   ostringstream str;
   Vector3d out = wcsTran(in, 1);
   if (astOK && checkWCS(out)) {
-    if (wcsIsASkyFrame()) {
+    if (hasWCSCel(sys)) {
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
@@ -3391,7 +3388,7 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
     setWCSSystem(sys);
     setWCSSkyFrame(sky);
 
-    Vector in = wcsIsASkyFrame() ? degToRad(vv) : vv;
+    Vector in = hasWCSCel(sys) ? degToRad(vv) : vv;
     Vector out = wcsTran(in, 0);
     if (astOK && checkWCS(out))
       return out;
@@ -3410,7 +3407,7 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
     setWCSSystem(sys);
     setWCSSkyFrame(sky);
 
-    Vector3d in = wcsIsASkyFrame() ? degToRad(vv) : vv;
+    Vector3d in = hasWCSCel(sys) ? degToRad(vv) : vv;
     Vector3d out = wcsTran(in, 0);
     if (astOK && checkWCS(out))
       return out;
@@ -3444,7 +3441,7 @@ double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
   astClearStatus; // just to make sure
   setWCSSystem(sys);
 
-  return wcsIsASkyFrame() ?
+  return hasWCSCel(sys) ?
     radToDeg(wcsDistance(degToRad(vv1), degToRad(vv2))) :
     wcsDistance(vv1, vv2);
 }
@@ -3676,10 +3673,10 @@ void FitsImage::astInit(FitsHead* hd, FitsHead* prim)
     break;
   }
 
-  if (wcsIsASkyFrame()) {
+  //  if (wcsIsASkyFrame()) {
     //    int base = astGetI(ast_,"Base");
     //    int current = astGetI(ast_,"Current");
-  }
+  //  }
 }
 
 void FitsImage::wcsInit()

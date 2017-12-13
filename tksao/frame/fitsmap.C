@@ -217,7 +217,7 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
       wcsTran(2, in, 1, out);
       double rr = wcsDistance(out[0], out[1]);
 
-      if (wcsIsASkyFrame()) {
+      if (hasWCSCel(sys)) {
 	rr = radToDeg(rr);
 	switch (dist) {
 	case Coord::DEGREE:
@@ -312,7 +312,7 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
       setWCSSystem(sys);
 
       double rdd = dd;
-      if (wcsIsASkyFrame()) {
+      if (hasWCSCel(sys)) {
 	rdd = degToRad(dd);
 	switch (dist) {
 	case Coord::DEGREE:

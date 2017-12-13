@@ -108,8 +108,7 @@ int Grid3d::doit(RenderMode rm)
       ast = astFrameSet(cmpwcsbase,"");
       astAddFrame(ast, AST__CURRENT, cmpwcsmap, cmpwcscurr);
 #else
-      fits->setWCSSystem(system_);
-      fits->setWCSSkyFrame(sky_);
+      fits->setWCSSkyFrame(system_, sky_);
       AstFrameSet* ast = fits->wcsCopy();
       
       int naxes = astGetI(ast,"Naxes");

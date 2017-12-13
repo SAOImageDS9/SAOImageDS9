@@ -1666,12 +1666,10 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 
   Vector* ptr1 =NULL;
   if (sky1 != sky2) {
-    setWCSSystem(sys1);
-    setWCSSkyFrame(sky1);
+    setWCSSkyFrame(sys1, sky1);
     AstFrameSet* wcs1 = wcsCopy();
 
-    setWCSSystem(sys2);
-    setWCSSkyFrame(sky2);
+    setWCSSkyFrame(sys2, sky2);
     AstFrameSet* wcs2 = wcsCopy();
 
     AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "SKY");
@@ -1685,8 +1683,7 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 
   // now compare
   if (ptr1 && ptr2) {
-    setWCSSystem(sys2);
-    setWCSSkyFrame(sky2);
+    setWCSSkyFrame(sys2, sky2);
     Tcl_Obj* objrr = Tcl_NewListObj(0,NULL);
     for(int jj=0; jj<nxx2; jj++) {
       for (int ii=0; ii<nxx1; ii++) {
@@ -2958,7 +2955,7 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
     return 0;
 
   astClearStatus; // just to make sure
-  setWCSSystem(sys);
+  setWCSSkyFrame(sys, Coord::FK5);
   
   Vector in[3];
   Vector out[3];
@@ -2977,7 +2974,7 @@ double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
     return 0;
 
   astClearStatus; // just to make sure
-  setWCSSystem(sys);
+  setWCSSkyFrame(sys, Coord::FK5);
 
   Vector in[3];
   Vector out[3];
@@ -3031,8 +3028,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
     return Coord::NORMAL;
   
   astClearStatus; // just to make sure
-  setWCSSystem(sys);
-  setWCSSkyFrame(sky);
+  setWCSSkyFrame(sys, sky);
 
   Vector in[3];
   Vector out[3];
@@ -3084,8 +3080,7 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
     return 0;
   
   astClearStatus; // just to make sure
-  setWCSSystem(sys);
-  setWCSSkyFrame(sky);
+  setWCSSkyFrame(sys, sky);
 
   Vector in[2];
   Vector out[2];
@@ -3154,8 +3149,7 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   if (!hasWCS(sys))
     return Vector();
   
-  setWCSSystem(sys);
-  setWCSSkyFrame(sky);
+  setWCSSkyFrame(sys, sky);
 
   Vector out = wcsTran(in, 1);
   if (astOK && checkWCS(out))
@@ -3233,8 +3227,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   if (!hasWCS(sys))
     return lbuf;
 
-  setWCSSystem(sys);
-  setWCSSkyFrame(sky);
+  setWCSSkyFrame(sys, sky);
   
   ostringstream str;
   Vector out = wcsTran(in, 1);
@@ -3291,8 +3284,7 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   if (!hasWCS(sys))
     return Vector();
 
-  setWCSSystem(sys);
-  setWCSSkyFrame(sky);
+  setWCSSkyFrame(sys, sky);
 
   Vector3d out = wcsTran(in, 1);
   if (astOK && checkWCS(out))
@@ -3311,8 +3303,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   if (!hasWCS(sys))
     return lbuf;
 
-  setWCSSystem(sys);
-  setWCSSkyFrame(sky);
+  setWCSSkyFrame(sys, sky);
   
   ostringstream str;
   Vector3d out = wcsTran(in, 1);
@@ -3385,8 +3376,7 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
   astClearStatus; // just to make sure
 
   if (hasWCS(sys)) {
-    setWCSSystem(sys);
-    setWCSSkyFrame(sky);
+    setWCSSkyFrame(sys, sky);
 
     Vector in = hasWCSCel(sys) ? degToRad(vv) : vv;
     Vector out = wcsTran(in, 0);
@@ -3404,8 +3394,7 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
   astClearStatus; // just to make sure
 
   if (hasWCS(sys)) {
-    setWCSSystem(sys);
-    setWCSSkyFrame(sky);
+    setWCSSkyFrame(sys, sky);
 
     Vector3d in = hasWCSCel(sys) ? degToRad(vv) : vv;
     Vector3d out = wcsTran(in, 0);
@@ -3439,7 +3428,7 @@ double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
     return 0;
 
   astClearStatus; // just to make sure
-  setWCSSystem(sys);
+  setWCSSkyFrame(sys, Coord::FK5);
 
   return hasWCSCel(sys) ?
     radToDeg(wcsDistance(degToRad(vv1), degToRad(vv2))) :
@@ -3916,8 +3905,6 @@ void FitsImage::setWCSSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
   if (!wcsIsASkyFrame(ast))
     return;
 
-  // is it already set?
-  // ast is very slow when changing system,equinox
   const char* str = astGetC(ast, "System");
 
   // TLON/XLON and HPX will do this
@@ -3969,21 +3956,46 @@ void FitsImage::setWCSSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
     return;
   }
 }
+
 #else
-void FitsImage::setWCSSkyFrame(Coord::SkyFrame sky)
+
+void FitsImage::setWCSSkyFrame(Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
-  // is sky frame
-  if (!wcsIsASkyFrame())
+  int nn = astGetI(ast_,"nframe");
+  char cc = ' ';
+  int ww = sys-Coord::WCS;
+  switch (sys) {
+  case Coord::DATA:
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::AMPLIFIER:
+  case Coord::DETECTOR:
+    // this should not happen
     return;
+  default:
+    if (ww)
+      cc = ww+'@';
+  }
 
-  // is it already set?
-  // ast is very slow when changing system,equinox
+  int found=0;
+  for (int ss=0; ss<nn; ss++) {
+    const char* id = astGetC(astGetFrame(ast_,ss+1),"Ident");
+    if (cc == id[0]) {
+      astSetI(ast_,"Current",ss+1);
+      found =1;
+      break;
+    }
+  }
+
+  // did we find it?
+  if (!found)
+    return; 
+  
+  // is equatorial system?
+  if (!hasWCSEqu(sys))
+    return;
+  
   const char* str = astGetC(ast_, "System");
-
-  // TLON/XLON and HPX will do this
-  if (!strncmp(str,"Unknown",3))
-    return;
-
   switch (sky) {
   case Coord::FK4_NO_E:
     if (!strncmp(str,"FK4-NO-E",8))
@@ -4031,63 +4043,10 @@ void FitsImage::setWCSSkyFrame(Coord::SkyFrame sky)
 }
 #endif
 
-#ifdef NEWWCS
-void FitsImage::setWCSSystem(Coord::CoordSystem sys)
-{
-  int nn = astGetI(ast_,"nframe");
-  char cc = ' ';
-  int ww = sys-Coord::WCS;
-  switch (sys) {
-  case Coord::DATA:
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::AMPLIFIER:
-  case Coord::DETECTOR:
-    // this should not happen
-    return;
-  default:
-    if (ww)
-      cc = ww+'@';
-  }
-
-  for (int ss=0; ss<nn; ss++) {
-    const char* id = astGetC(astGetFrame(ast_,ss+1),"Ident");
-    if (cc == id[0]) {
-      astSetI(ast_,"Current",ss+1);
-      break;
-    }
-  }
-}
-#endif
-
 #ifndef NEWWCS
 int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
 {
   return astIsASkyFrame(astGetFrame(ast,AST__CURRENT));
-}
-#else
-int FitsImage::wcsIsASkyFrame()
-{
-  astClearStatus;
-  astBegin;
-
-  int rr =0;
-  int naxes = astGetI(ast_,"Naxes");
-  switch (naxes) {
-  case 1:
-    break;
-  case 2:
-    rr = astIsASkyFrame(astGetFrame(ast_,AST__CURRENT));
-  case 3:
-  case 4:
-    rr = strstr((char*)astGetC(ast_,"Domain"),"SKY") ? 1 : 0;
-  default:
-    break;
-  }
-
-  astEnd;
-
-  return rr;
 }
 #endif
 

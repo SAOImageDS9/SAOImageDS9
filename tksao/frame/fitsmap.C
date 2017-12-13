@@ -208,7 +208,7 @@ double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
       if (!hasWCS(sys))
 	return 0;
       
-      setWCSSystem(sys);
+      setWCSSkyFrame(sys, Coord::FK5);
 
       Vector in[2];
       Vector out[2];
@@ -309,7 +309,7 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
 	return 0;
       
       astClearStatus; // just to make sure
-      setWCSSystem(sys);
+      setWCSSkyFrame(sys, Coord::FK5);
 
       double rdd = dd;
       if (hasWCSCel(sys)) {

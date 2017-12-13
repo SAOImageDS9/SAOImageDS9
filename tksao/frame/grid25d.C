@@ -63,8 +63,7 @@ int Grid25d::doit(RenderMode rm)
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
       fits->setWCSSkyFrame(ast, sky_);
 #else
-      fits->setWCSSystem(system_);
-      fits->setWCSSkyFrame(sky_);
+      fits->setWCSSkyFrame(system_, sky_);
       AstFrameSet* ast = fits->wcsCopy();
 
       int naxes = astGetI(ast,"Naxes");

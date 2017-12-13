@@ -431,9 +431,7 @@ class FitsImage {
   double wcsAngle(const Vector&, const Vector&, const Vector&);
   double wcsAxAngle(const Vector&, const Vector&);
 
-  int wcsIsASkyFrame();
-  void setWCSSystem(Coord::CoordSystem);
-  void setWCSSkyFrame(Coord::SkyFrame);
+  void setWCSSkyFrame(Coord::CoordSystem, Coord::SkyFrame);
   void setWCSFormat(int, const char*);
 
   double getWCSPixelSize(Coord::CoordSystem);

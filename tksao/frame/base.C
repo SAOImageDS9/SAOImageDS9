@@ -649,11 +649,11 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  fits1->setWCSSystem(sys1);
+  fits1->setWCSSkyFrame(sys1, sky);
   AstFrameSet* wcs1 = fits1->wcsCopy();
   astInvert(wcs1);
 
-  fits2->setWCSSystem(sys2);
+  fits2->setWCSSkyFrame(sys2, sky);
   AstFrameSet* wcs2 = fits2->wcsCopy();
   astInvert(wcs2);
 

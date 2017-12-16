@@ -3126,34 +3126,39 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   setWCSSkyFrame(sys, sky);
 
   if (!hasWCSHPX(sys)) {
-    Vector in[2];
-    Vector out[2];
-    in[0] = center();
-    in[1] = center()+Vector(0,1);
-    wcsTran(2, in, 1, out);
-    double ang = wcsAxAngle(out[0], out[1]);
-
+    double old =0;
     {
-      Vector in[3];
-      Vector out[3];
+      Vector in[2];
+      Vector out[2];
       in[0] = center();
       in[1] = center()+Vector(0,1);
-      in[2] = center()+Vector(1,0);
-      wcsTran(3, in, 1, out);
-      double ang = wcsAngle(out[0],out[1],out[2]);
+      wcsTran(2, in, 1, out);
+      double ang = wcsAxAngle(out[0], out[1]);
 
-      Coord::Orientation rr = Coord::NORMAL;
-      if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
-	if (hasWCSCel(sys))
-	  rr = (ang>=0 ? Coord::NORMAL : Coord::XX);
-	else
-	  rr = (ang<=0 ? Coord::NORMAL : Coord::XX);
-      }
-      cerr << rr << '=' << getWCSOrientation(sys,sky) << endl;
+      if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
+	old = getWCSOrientation(sys,sky) == Coord::NORMAL ? ang : -ang;
     }
 
-    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
-      return getWCSOrientation(sys,sky) == Coord::NORMAL ? ang : -ang;
+    Vector in[3];
+    Vector out[3];
+    in[0] = center();
+    in[1] = center()+Vector(0,1);
+    in[2] = center()+Vector(1,0);
+    wcsTran(3, in, 1, out);
+    double ang = wcsAxAngle(out[0], out[1]);
+    double ang3 = wcsAngle(out[1],out[0],out[2]);
+
+    if ((!(isnan(ang )||isinf(ang) ||(ang ==-DBL_MAX)||(ang ==DBL_MAX))) &&
+	(!(isnan(ang3)||isinf(ang3)||(ang3==-DBL_MAX)||(ang3==DBL_MAX)))) {
+      if ((hasWCSCel(sys) && ang3>0) || (!hasWCSCel(sys) && ang3<0))
+	ang = -ang;
+
+      if (ang != old)
+	cerr << "***BOOM*** " << radToDeg(ang) << '=' << radToDeg(old) << endl;
+      return ang;
+    }
+    else
+      return 0;
   }
   else { // special case for HPX
     Vector cc = center();

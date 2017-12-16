@@ -3028,24 +3028,67 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   if (!hasWCS(sys))
     return Coord::NORMAL;
   
-  astClearStatus; // just to make sure
   setWCSSkyFrame(sys, sky);
 
-  Vector in[3];
-  Vector out[3];
-  in[0] = center();
-  in[1] = center()+Vector(0,1);
-  in[2] = center()+Vector(1,0);
-  wcsTran(3, in, 1, out);
-  double ang = wcsAngle(out[0],out[1],out[2]);
-
+  double ang =0;
   Coord::Orientation rr = Coord::NORMAL;
-  if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
-    if (hasWCSCel(sys))
-      rr = ang>=0 ? Coord::NORMAL : Coord::XX;
-    else
-      rr = ang<=0 ? Coord::NORMAL : Coord::XX;
+  {
+    Vector in[3];
+    Vector out[3];
+    in[0] = center();
+    in[1] = center()+Vector(0,1);
+    in[2] = center()+Vector(1,0);
+    wcsTran(3, in, 1, out);
+    ang = wcsAngle(out[0],out[1],out[2]);
+
+    //    cerr << ang << ':' << radToDeg(ang) << ':';
+    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
+      if (hasWCSCel(sys))
+	rr = (ang>=0 ? Coord::NORMAL : Coord::XX);
+      else
+	rr = (ang<=0 ? Coord::NORMAL : Coord::XX);
+    }
+    //    cerr << rr << '=';
   }
+  if (0) {
+    Vector in[3];
+    Vector out[3];
+    in[0] = center();
+    in[1] = center()+Vector(0,1);
+    in[2] = center()+Vector(1,0);
+    wcsTran(3, in, 1, out);
+    double ang = wcsAngle(out[1],out[0],out[2]);
+
+    //    cerr << ang << ':' << radToDeg(ang) << ':';
+    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
+      // backward
+      if (hasWCSCel(sys))
+	rr = (ang<=0 ? Coord::NORMAL : Coord::XX);
+      else
+	rr = (ang>=0 ? Coord::NORMAL : Coord::XX);
+    }
+    cerr << rr << '=';
+  }
+  if (0) {
+    Vector cc = center();
+    Vector wcc = wcsTran(cc, 1);
+    Vector wnorth = wcc + Vector(0,.001);
+    Vector weast = wcc + Vector(.001,0);
+    Vector north = wcsTran(wnorth,0);
+    Vector east = wcsTran(weast,0);
+    Vector nnorth = north.normalize();
+    Vector neast = east.normalize();
+    double w = neast[0]*nnorth[1] - neast[1]*nnorth[0];
+
+    //    cerr << w << ':';
+    if (hasWCSCel(sys))
+      rr = (w<=0 ? Coord::NORMAL : Coord::XX);
+    else
+      rr = (w>=0 ? Coord::NORMAL : Coord::XX);
+
+    cerr << rr;
+  }
+  //  cerr << endl;
 
   return rr;
 }
@@ -3089,23 +3132,43 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
     in[1] = center()+Vector(0,1);
     wcsTran(2, in, 1, out);
     double ang = wcsAxAngle(out[0], out[1]);
+
+    {
+      Vector in[3];
+      Vector out[3];
+      in[0] = center();
+      in[1] = center()+Vector(0,1);
+      in[2] = center()+Vector(1,0);
+      wcsTran(3, in, 1, out);
+      double ang = wcsAngle(out[0],out[1],out[2]);
+
+      Coord::Orientation rr = Coord::NORMAL;
+      if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
+	if (hasWCSCel(sys))
+	  rr = (ang>=0 ? Coord::NORMAL : Coord::XX);
+	else
+	  rr = (ang<=0 ? Coord::NORMAL : Coord::XX);
+      }
+      cerr << rr << '=' << getWCSOrientation(sys,sky) << endl;
+    }
+
     if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
       return getWCSOrientation(sys,sky) == Coord::NORMAL ? ang : -ang;
   }
   else { // special case for HPX
     Vector cc = center();
     Vector wcc = wcsTran(cc, 1);
-    Vector wup = wcc + Vector(0,.001);
-    Vector up = wcsTran(wup,0);
+    Vector wnorth = wcc + Vector(0,.001);
+    Vector north = wcsTran(wnorth,0);
 
     int current = astGetI(ast_,"Current");
     int base = astGetI(ast_,"Base");
     astSetI(ast_,"Current",base);
-    double ang = wcsAxAngle(cc,up);
+    double ang = wcsAxAngle(cc,north);
     astSetI(ast_,"Current",current);
-    return ang;
+    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
+      return ang;
   }
-
   return 0;
 }
 #endif

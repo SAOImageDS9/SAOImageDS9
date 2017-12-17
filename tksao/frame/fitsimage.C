@@ -3030,68 +3030,22 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   
   setWCSSkyFrame(sys, sky);
 
-  double ang =0;
-  Coord::Orientation rr = Coord::NORMAL;
-  {
-    Vector in[3];
-    Vector out[3];
-    in[0] = center();
-    in[1] = center()+Vector(0,1);
-    in[2] = center()+Vector(1,0);
-    wcsTran(3, in, 1, out);
-    ang = wcsAngle(out[0],out[1],out[2]);
+  Vector in[3];
+  Vector out[3];
+  in[0] = center();
+  in[1] = center()+Vector(0,1);
+  in[2] = center()+Vector(1,0);
+  wcsTran(3, in, 1, out);
+  double ang = wcsAngle(out[1],out[0],out[2]);
 
-    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
-      if (hasWCSCel(sys))
-       rr = (ang>=0 ? Coord::NORMAL : Coord::XX);
-      else
-       rr = (ang<=0 ? Coord::NORMAL : Coord::XX);
-    }
-    cerr << rr << '=';
-  }
-  if (0) {
-    Coord::Orientation rr = Coord::NORMAL;
-    Vector in[3];
-    Vector out[3];
-    in[0] = center();
-    in[1] = center()+Vector(0,1);
-    in[2] = center()+Vector(1,0);
-    wcsTran(3, in, 1, out);
-    double ang = wcsAngle(out[1],out[0],out[2]);
-
-    //    cerr << ang << ':' << radToDeg(ang) << ':';
-    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
-      // backward
-      if (hasWCSCel(sys))
-       rr = (ang<=0 ? Coord::NORMAL : Coord::XX);
-      else
-       rr = (ang>=0 ? Coord::NORMAL : Coord::XX);
-    }
-    cerr << rr << '=';
-  }
-  if (1) {
-    Coord::Orientation rr = Coord::NORMAL;
-    Vector cc = center();
-    Vector wcc = wcsTran(cc, 1);
-    Vector wnorth = wcc + Vector(0,.001);
-    Vector weast = wcc + Vector(.001,0);
-    Vector north = wcsTran(wnorth,0);
-    Vector east = wcsTran(weast,0);
-    Vector nnorth = north.normalize();
-    Vector neast = east.normalize();
-    double ww = neast[0]*nnorth[1] - neast[1]*nnorth[0];
-
-    //    cerr << w << ':';
+  if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
     if (hasWCSCel(sys))
-      rr = (ww<=0 ? Coord::NORMAL : Coord::XX);
+      return ang<=0 ? Coord::NORMAL : Coord::XX;
     else
-      rr = (ww>=0 ? Coord::NORMAL : Coord::XX);
-
-    cerr << rr;
+      return ang>=0 ? Coord::NORMAL : Coord::XX;
   }
-  cerr << endl;
 
-  return rr;
+  return Coord::NORMAL;
 }
 #endif
 

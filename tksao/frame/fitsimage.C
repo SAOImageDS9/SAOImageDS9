@@ -3039,13 +3039,13 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   double ang = wcsAngle(out[1],out[0],out[2]);
 
   if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX))) {
-    if (hasWCSCel(sys))
-      return ang<=0 ? Coord::NORMAL : Coord::XX;
+    if ((hasWCSCel(sys) && ang>0) || (!hasWCSCel(sys) && ang<0))
+      return Coord::XX;
     else
-      return ang>=0 ? Coord::NORMAL : Coord::XX;
+      return Coord::NORMAL;
   }
-
-  return Coord::NORMAL;
+  else 
+    return Coord::NORMAL;
 }
 #endif
 

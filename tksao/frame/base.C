@@ -663,87 +663,37 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
 
   AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs2, wcs1, "");
 
-  if (cvt != AST__NULL) {
-    int naxes1 = astGetI(astGetFrame(cvt,AST__BASE),"Naxes");
-    int naxes2 = astGetI(astGetFrame(cvt,AST__CURRENT),"Naxes");
-    cerr << naxes1 << " x " << naxes2 << endl;
-
-    Vector ll2 = fits2->center() - Vector(10,10);
-    Vector ur2 = fits2->center() + Vector(10,10);
-    double ll[4];
-    ll[0] =ll2[0];
-    ll[1] =ll2[1];
-    ll[2] =1;
-    ll[3] =1;
-    double ur[4];
-    ur[0] =ur2[0];
-    ur[1] =ur2[1];
-    ur[2] =1;
-    ur[3] =1;
-
-    int ss = (naxes1+1)*naxes2;
-    double* fit = new double[ss];
-    double tol = 1;
-    if (astLinearApprox(cvt, ll, ur, tol, fit) == AST__BAD)
-      return rr;
-    for (int ii=0; ii<ss; ii++)
-      cerr << "fit[" << ii << "]=" << fit[ii] << endl;
-
-    switch (naxes2) {
-    case 2:
-      {
-	cerr << "*** 2 ***" << endl;
-	switch (naxes1) {
-	case 2:
-	  rr = Matrix(fit[2],fit[3],fit[4],fit[5],fit[0],fit[1]);
-	  break;
-	case 3:
-	  rr = Matrix(fit[2],fit[3],fit[5],fit[6],fit[0],fit[1]);
-	  break;
-	case 4:
-	  rr = Matrix(fit[2],fit[3],fit[6],fit[7],fit[0],fit[1]);
-	  break;
-	};
-      }
-      break;
-    case 3:
-      {
-	cerr << "*** 3 ***" << endl;
-	switch (naxes1) {
-	case 2:
-	  rr = Matrix(fit[3],fit[4],fit[5],fit[6],fit[0],fit[1]);
-	  break;
-	case 3:
-	  rr = Matrix(fit[3],fit[4],fit[6],fit[7],fit[0],fit[1]);
-	  break;
-	case 4:
-	  rr = Matrix(fit[3],fit[4],fit[7],fit[8],fit[0],fit[1]);
-	  break;
-	};
-      }
-      break;
-    case 4:
-      {
-	cerr << "*** 4 ***" << endl;
-	switch (naxes1) {
-	case 2:
-	  rr = Matrix(fit[4],fit[5],fit[6],fit[7],fit[0],fit[1]);
-	  break;
-	case 3:
-	  rr = Matrix(fit[4],fit[5],fit[7],fit[8],fit[0],fit[1]);
-	  break;
-	case 4:
-	  rr = Matrix(fit[4],fit[5],fit[8],fit[9],fit[0],fit[1]);
-	  break;
-	};
-      }
-      break;
-    }
-
-    cerr << rr << endl;
-    if (fit)
-      delete [] fit;
+  if (!cvt) {
+    astEnd;
+    return rr;
   }
+
+  int naxes1 = astGetI(astGetFrame(cvt,AST__BASE),"Naxes");
+  int naxes2 = astGetI(astGetFrame(cvt,AST__CURRENT),"Naxes");
+
+  Vector ll2 = fits2->center() - Vector(10,10);
+  Vector ur2 = fits2->center() + Vector(10,10);
+  double ll[4];
+  ll[0] =ll2[0];
+  ll[1] =ll2[1];
+  ll[2] =1;
+  ll[3] =1;
+  double ur[4];
+  ur[0] =ur2[0];
+  ur[1] =ur2[1];
+  ur[2] =1;
+  ur[3] =1;
+
+  int ss = (naxes1+1)*naxes2;
+  double* fit = new double[ss];
+  double tol = 1;
+  if (astLinearApprox(cvt, ll, ur, tol, fit) != AST__BAD)
+    rr = Matrix(fit[naxes2], fit[naxes2+1],
+		fit[naxes2+naxes1], fit[naxes2+naxes1+1],
+		fit[0], fit[1]);
+
+  if (fit)
+    delete [] fit;
 
   astEnd; // now, clean up memory
   return rr;

@@ -319,6 +319,9 @@ void Base::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
 
   calcAlignWCS(ptr, context->cfits, sys, wcsSystem_, wcsSky_,
 	       &wcsOrientation, &wcsOrientationMatrix, &wcsRotation, &zoom_);
+
+  cerr << zoom_ << ' ' << wcsRotation << ' ' << radToDeg(wcsRotation) << endl;
+  cerr << wcsOrientationMatrix * Rotate(wcsRotation) * Scale(zoom_) << endl;
 }
 #else
 void Base::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
@@ -646,40 +649,102 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
       !(fits1->hasWCS(sys1)) || !(fits2->hasWCS(sys2)))
     return Matrix();
 
+  Matrix rr;
+
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
   fits1->setWCSSkyFrame(sys1, sky);
   AstFrameSet* wcs1 = fits1->wcsCopy();
   astInvert(wcs1);
-
   fits2->setWCSSkyFrame(sys2, sky);
   AstFrameSet* wcs2 = fits2->wcsCopy();
   astInvert(wcs2);
 
   AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "");
-  Matrix rr;
+
   if (cvt != AST__NULL) {
     astInvert(cvt);
-    Vector cc1 = fits1->center();
-    Vector cc2 = fits2->center();
-    Vector ll = fits1->wcsTran(cc1, 1);
-    Vector ur = fits2->wcsTran(cc2, 1);
 
-    double fit[6];
+    int naxes1 = astGetI(astGetFrame(cvt,AST__CURRENT),"Naxes");
+    int naxes2 = astGetI(astGetFrame(cvt,AST__BASE),"Naxes");
+    cerr << naxes1 << " x " << naxes2 << endl;
+
+    Vector ll2 = fits2->center() - Vector(10,10);
+    Vector ur2 = fits2->center() + Vector(10,10);
+    double ll[4];
+    ll[0] =ll2[0];
+    ll[1] =ll2[1];
+    ll[2] =1;
+    ll[3] =1;
+    double ur[4];
+    ur[0] =ur2[0];
+    ur[1] =ur2[1];
+    ur[2] =1;
+    ur[3] =1;
+
+    int ss = (naxes2+1)*naxes1;
+    double* fit = new double[ss];
     double tol = 1;
-    if (astLinearApprox(cvt, ll.v, ur.v, tol, fit) != AST__BAD) {
-      // fix the fit from AST
-      if (fit[2] == 0) {
-	fit[2] =1;
-	fit[0] =0;
+    if (astLinearApprox(cvt, ll, ur, tol, fit) == AST__BAD)
+      return rr;
+    for (int ii=0; ii<ss; ii++)
+      cerr << "fit[" << ii << "]=" << fit[ii] << endl;
+
+    switch (naxes1) {
+    case 2:
+      {
+	cerr << "*** 2 ***" << endl;
+	switch (naxes2) {
+	case 2:
+	  rr = Matrix(fit[2],fit[3],fit[4],fit[5],fit[0],fit[1]);
+	  break;
+	case 3:
+	  rr = Matrix(fit[2],fit[3],fit[5],fit[6],fit[0],fit[1]);
+	  break;
+	case 4:
+	  rr = Matrix(fit[2],fit[3],fit[6],fit[7],fit[0],fit[1]);
+	  break;
+	};
       }
-      if (fit[5] ==0) {
-	fit[5] =1;
-	fit[1] =0;
+      break;
+    case 3:
+      {
+	cerr << "*** 3 ***" << endl;
+	switch (naxes2) {
+	case 2:
+	  rr = Matrix(fit[3],fit[4],fit[5],fit[6],fit[0],fit[1]);
+	  break;
+	case 3:
+	  rr = Matrix(fit[3],fit[4],fit[6],fit[7],fit[0],fit[1]);
+	  break;
+	case 4:
+	  rr = Matrix(fit[3],fit[4],fit[7],fit[8],fit[0],fit[1]);
+	  break;
+	};
       }
-      rr = Matrix(fit[2],fit[4],fit[3],fit[5],fit[0],fit[1]);
+      break;
+    case 4:
+      {
+	cerr << "*** 4 ***" << endl;
+	switch (naxes2) {
+	case 2:
+	  rr = Matrix(fit[4],fit[5],fit[6],fit[7],fit[0],fit[1]);
+	  break;
+	case 3:
+	  rr = Matrix(fit[4],fit[5],fit[7],fit[8],fit[0],fit[1]);
+	  break;
+	case 4:
+	  rr = Matrix(fit[4],fit[5],fit[8],fit[9],fit[0],fit[1]);
+	  break;
+	};
+      }
+      break;
     }
+
+    cerr << rr << endl;
+    if (fit)
+      delete [] fit;
   }
 
   astEnd; // now, clean up memory

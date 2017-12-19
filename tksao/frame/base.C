@@ -661,13 +661,11 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   AstFrameSet* wcs2 = fits2->wcsCopy();
   astInvert(wcs2);
 
-  AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "");
+  AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs2, wcs1, "");
 
   if (cvt != AST__NULL) {
-    astInvert(cvt);
-
-    int naxes1 = astGetI(astGetFrame(cvt,AST__CURRENT),"Naxes");
-    int naxes2 = astGetI(astGetFrame(cvt,AST__BASE),"Naxes");
+    int naxes1 = astGetI(astGetFrame(cvt,AST__BASE),"Naxes");
+    int naxes2 = astGetI(astGetFrame(cvt,AST__CURRENT),"Naxes");
     cerr << naxes1 << " x " << naxes2 << endl;
 
     Vector ll2 = fits2->center() - Vector(10,10);
@@ -683,7 +681,7 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
     ur[2] =1;
     ur[3] =1;
 
-    int ss = (naxes2+1)*naxes1;
+    int ss = (naxes1+1)*naxes2;
     double* fit = new double[ss];
     double tol = 1;
     if (astLinearApprox(cvt, ll, ur, tol, fit) == AST__BAD)
@@ -691,11 +689,11 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
     for (int ii=0; ii<ss; ii++)
       cerr << "fit[" << ii << "]=" << fit[ii] << endl;
 
-    switch (naxes1) {
+    switch (naxes2) {
     case 2:
       {
 	cerr << "*** 2 ***" << endl;
-	switch (naxes2) {
+	switch (naxes1) {
 	case 2:
 	  rr = Matrix(fit[2],fit[3],fit[4],fit[5],fit[0],fit[1]);
 	  break;
@@ -711,7 +709,7 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
     case 3:
       {
 	cerr << "*** 3 ***" << endl;
-	switch (naxes2) {
+	switch (naxes1) {
 	case 2:
 	  rr = Matrix(fit[3],fit[4],fit[5],fit[6],fit[0],fit[1]);
 	  break;
@@ -727,7 +725,7 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
     case 4:
       {
 	cerr << "*** 4 ***" << endl;
-	switch (naxes2) {
+	switch (naxes1) {
 	case 2:
 	  rr = Matrix(fit[4],fit[5],fit[6],fit[7],fit[0],fit[1]);
 	  break;

@@ -6616,8 +6616,12 @@ f     - A value of .FALSE.
 /* Check whether any transformed coordinates are bad. If so, the
    transformation cannot be linear, so give up trying to fit it. */
             if ( ( out1 == AST__BAD ) || ( out2 == AST__BAD ) ) {
+	      /*
                linear = 0;
                break;
+	      */
+	      out1 = 0;
+	      out2 = 0;
             }
 
 /* If possible, determine the gradient along this dimension, storing
@@ -6809,8 +6813,11 @@ f     - A value of .FALSE.
                for ( coord_out = 0; coord_out < ndim_out; coord_out++ ) {
                   y = ptr_out_t[ coord_out ][ point ];
                   if ( y == AST__BAD ) {
+		    /*
                      linear = 0;
                      break;
+		    */
+		    y = 0;
                   }
 
 /* Apply the fitted transformation to the input coordinates to obtain

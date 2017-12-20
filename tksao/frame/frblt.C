@@ -823,11 +823,11 @@ int Base::markerAnalysisStats1(Marker* pp,FitsImage* ptr, ostream& str,
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
     str << endl;
-    str << "reg\t" << "sum\t" << "error\t\t" 
+    str << "reg\t" << "sum\t\t" << "error\t" 
 	<< "area\t\t" << "surf_bri\t\t" << "surf_err" << endl
 	<< "\t" << "\t" << "\t\t" 
 	<< "(pix**2)\t\t" << "(sum/pix**2)\t\t" << "(sum/pix**2)" << endl
-	<< "---\t" << "---\t" << "-----\t\t" 
+	<< "---\t" << "---\t\t" << "-----\t" 
 	<< "--------\t\t" << "------------\t\t" << "------------" << endl;
     return 0;
   default: 
@@ -841,22 +841,22 @@ int Base::markerAnalysisStats1(Marker* pp,FitsImage* ptr, ostream& str,
       if (ptr->hasWCSCel(sys)) {
 	str << "1 pixel = "<< ll*60*60 << " arcsec";
 	str << endl << endl;
-	str << "reg\t" << "sum\t" << "error\t\t" 
+	str << "reg\t" << "sum\t\t" << "error\t" 
 	    << "area\t\t" << "surf_bri\t\t" << "surf_err" << endl
 	    << "\t" << "\t" << "\t\t" 
 	    << "(arcsec**2)\t\t" << "(sum/arcsec**2)\t" << "(sum/arcsec**2)" << endl
-	    << "---\t" << "---\t" << "-----\t\t" 
+	    << "---\t" << "---\t\t" << "-----\t" 
 	    << "-----------\t\t" << "---------------\t" << "---------------" << endl;
 	return 1;
       }
       else {
 	str << "1 pixel = "<< ll;
 	str << endl << endl;
-	str << "reg\t" << "sum\t" << "error\t\t" 
+	str << "reg\t" << "sum\t\t" << "error\t" 
 	    << "area\t\t" << "surf_bri\t\t" << "surf_err" << endl
 	    << "\t" << "\t" << "\t\t" 
 	    << "(pix**2)\t\t" << "(sum/pix**2)\t\t" << "(sum/pix**2)" << endl
-	    << "---\t" << "---\t" << "-----\t\t" 
+	    << "---\t" << "---\t\t" << "-----\t" 
 	    << "--------\t\t" << "------------\t\t" << "------------" << endl;
 	return 2;
       }
@@ -905,8 +905,10 @@ void Base::markerAnalysisStats2(FitsImage* ptr, ostream& str,
   double brierr = err/area;
 
   str << kk+1 << '\t' 
-      << sum << '\t'
-      << err << "\t\t"
+      << setprecision(8)
+      << sum << "\t\t"
+      << setprecision(6)
+      << err << "\t"
       << area << "\t\t"
       << bri << "\t\t"
       << brierr << endl;
@@ -922,9 +924,10 @@ void Base::markerAnalysisStats3(ostream& str)
 }
 
 void Base::markerAnalysisStats4(ostream& str, int kk, 
-				int cnt, double sum, double sum2, 
+				double cnt, double sum, double sum2, 
 				double median, double min, double max)
 {
+  // up cast int cnt to double to avoid int overflow
   double mean =0;
   double std =0;
   double var =0;
@@ -937,8 +940,10 @@ void Base::markerAnalysisStats4(ostream& str, int kk,
   }
 
   str << kk+1 << '\t' 
+      << setprecision(8)
       << sum << '\t'
       << cnt << '\t'
+      << setprecision(6)
       << mean << '\t'
       << median << '\t'
       << min << '\t'

@@ -403,7 +403,7 @@ public:
   void markerAnalysisStats2(FitsImage*, ostream&, Coord::CoordSystem,
 			    int, int, double, int);
   void markerAnalysisStats3(ostream&);
-  void markerAnalysisStats4(ostream&, int, int, double, double,	
+  void markerAnalysisStats4(ostream&, int, double, double, double,	
 			    double, double, double);
   void markerAnalysisStats(Marker*, ostream&, const BBox&, 
 			   Coord::CoordSystem, Coord::SkyFrame);

@@ -676,14 +676,14 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   double ll[4];
   ll[0] =ll2[0];
   ll[1] =ll2[1];
-  ll[2] =1;
-  ll[3] =1;
+  ll[2] =context->slice(2);
+  ll[3] =context->slice(3);
   double ur[4];
   ur[0] =ur2[0];
   ur[1] =ur2[1];
-  ur[2] =1;
-  ur[3] =1;
-
+  ur[2] =context->slice(2);
+  ur[3] =context->slice(3);
+  
   int ss = (naxes1+1)*naxes2;
   double* fit = new double[ss];
   double tol = 1;

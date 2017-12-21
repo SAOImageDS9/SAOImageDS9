@@ -319,9 +319,6 @@ void Base::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
 
   calcAlignWCS(ptr, context->cfits, sys, wcsSystem_, wcsSky_,
 	       &wcsOrientation, &wcsOrientationMatrix, &wcsRotation, &zoom_);
-
-  cerr << zoom_ << ' ' << wcsRotation << ' ' << radToDeg(wcsRotation) << endl;
-  cerr << wcsOrientationMatrix * Rotate(wcsRotation) * Scale(zoom_) << endl;
 }
 #else
 void Base::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
@@ -688,10 +685,9 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   double* fit = new double[ss];
   double tol = 1;
   if (astLinearApprox(cvt, ll, ur, tol, fit) != AST__BAD)
-    rr = Matrix(fit[naxes2], fit[naxes2+1],
-		fit[naxes2+naxes1], fit[naxes2+naxes1+1],
-		fit[0], fit[1]);
-
+    rr = Matrix(fit[naxes2], fit[naxes2+naxes1],
+  		fit[naxes2+1], fit[naxes2+naxes1+1],
+  		fit[0], fit[1]);
   if (fit)
     delete [] fit;
 

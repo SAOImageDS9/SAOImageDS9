@@ -1,15 +1,15 @@
-***************************
+******************************
 Welcome to SAOImageDS9
-***************************
+******************************
 
 Please Note: The build instructions have changed!
 
 Quick Instructions for those who hate to read instructions.
 To build DS9, just cut and paste the following commands:
 
-***************************
+******************************
 For Linux/X11 MacOS/X11 Cygwin
-***************************
+******************************
 
 % cd SAOImageDS9
 % unix/configure
@@ -17,9 +17,9 @@ For Linux/X11 MacOS/X11 Cygwin
 
 ds9 will be located in SAOImageDS9/bin
 
-***************************
+******************************
 For MacOS
-***************************
+******************************
 
 requires XCode
 
@@ -29,9 +29,9 @@ requires XCode
 
 SAOImageDS9.app will be located in SAOImageDS9/bin
 
-***************************
+******************************
 For Windows
-***************************
+******************************
 
 requires cygwin with mingw compilers
 

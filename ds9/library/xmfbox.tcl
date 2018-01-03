@@ -156,7 +156,7 @@ proc ::tk::MotifFDialog_FileTypes {w} {
     # The filetypes radiobuttons
     # set data(fileType) $data(-defaulttype)
     # Default type to first entry
-    set initialTypeName [lindex $data(-filetypes) 0 0]
+    set initialTypeName [lindex $data(origfiletypes) 0 0]
     if {$data(-typevariable) ne ""} {
 	upvar #0 $data(-typevariable) typeVariable
 	if {[info exists typeVariable]} {
@@ -165,7 +165,7 @@ proc ::tk::MotifFDialog_FileTypes {w} {
     }
     set ix 0
     set data(fileType) 0
-    foreach fltr $data(-filetypes) {
+    foreach fltr $data(origfiletypes) {
 	set fname [lindex $fltr 0]
 	if {[string first $initialTypeName $fname] == 0} {
 	    set data(fileType) $ix
@@ -185,7 +185,7 @@ proc ::tk::MotifFDialog_FileTypes {w} {
     set cnt 0
     if {$data(-filetypes) ne {}} {
 	foreach type $data(-filetypes) {
-	    set title  [lindex [lindex $type 0] 0]
+	    set title  [lindex $type 0]
 	    set filter [lindex $type 1]
 	    ttk::radiobutton $f.b$cnt \
 		-text $title \
@@ -299,6 +299,7 @@ proc ::tk::MotifFDialog_Config {dataName type argList} {
     #    file dialog, but we check for validity of the value to make sure
     #    the application code also runs fine with the TK file dialog.
     #
+    set data(origfiletypes) $data(-filetypes)
     set data(-filetypes) [::tk::FDGetFileTypes $data(-filetypes)]
 
     if {![info exists data(filter)]} {
@@ -739,10 +740,10 @@ proc ::tk::MotifFDialog_BrowseFList {w} {
     $data(fEnt) delete 0 end
     $data(fEnt) insert 0 [::tk::dialog::file::JoinFile $data(selectPath) \
 	    $data(filter)]
-#    $data(fEnt) xview end
- 
-    # if it's a multiple selection box, just put in the filenames 
-    # otherwise put in the full path as usual 
+    $data(fEnt) xview end
+
+    # if it's a multiple selection box, just put in the filenames
+    # otherwise put in the full path as usual
     $data(sEnt) delete 0 end
     if {$data(-multiple) != 0} {
 	$data(sEnt) insert 0 $data(selectFile)
@@ -750,7 +751,7 @@ proc ::tk::MotifFDialog_BrowseFList {w} {
 	$data(sEnt) insert 0 [::tk::dialog::file::JoinFile $data(selectPath) \
 		[lindex $data(selectFile) 0]]
     }
-#    $data(sEnt) xview end
+    $data(sEnt) xview end
 }
 
 # ::tk::MotifFDialog_ActivateFList --
@@ -855,7 +856,7 @@ proc ::tk::MotifFDialog_ActivateSEnt {w} {
    	} else {
    	    set fn $item
    	}
- 	
+
 	if {![file exists $fn]} {
 	    if {$data(type) eq "open"} {
 		tk_messageBox -icon warning -type ok \
@@ -880,7 +881,7 @@ proc ::tk::MotifFDialog_ActivateSEnt {w} {
     if {[info exists data(-typevariable)] && $data(-typevariable) ne ""
 	    && [info exists data(-filetypes)] && $data(-filetypes) ne ""} {
 	upvar #0 $data(-typevariable) typeVariable
-	set typeVariable [lindex $data(-filetypes) $data(fileType) 0]
+	set typeVariable [lindex $data(origfiletypes) $data(fileType) 0]
     }
 
     if {$data(-multiple) != 0} {

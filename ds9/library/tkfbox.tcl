@@ -310,6 +310,7 @@ proc ::tk::dialog::file::Config {dataName type argList} {
 
     # 5. Parse the -filetypes option
     #
+    set data(origfiletypes) $data(-filetypes)
     set data(-filetypes) [::tk::FDGetFileTypes $data(-filetypes)]
 
     if {![winfo exists $data(-parent)]} {
@@ -748,17 +749,17 @@ proc ::tk::dialog::file::ResolveFile {context text defaultext {expandEnv 1}} {
 	set path "$path$defaultext"
     }
 
-     # we want to strip any filtering/ext/blocking instructions 
-     # from the file name
-     
-     set aa [string first "\[" $path]
-     if {$aa > 0} {
+    # we want to strip any filtering/ext/blocking instructions 
+    # from the file name
+    
+    set aa [string first "\[" $path]
+    if {$aa > 0} {
   	set fn [string range $path 0 [expr $aa-1]]
-     } else {
+    } else {
   	set fn $path
-     }
- 
-     if {[catch {file exists $fn}]} {
+    }
+    
+    if {[catch {file exists $fn}]} {
 	# This "if" block can be safely removed if the following code stop
 	# generating errors.
 	#
@@ -1129,7 +1130,9 @@ proc ::tk::dialog::file::Done {w {selectFilePath ""}} {
 	    && [info exists data(filterType)] && $data(filterType) ne ""
 	} then {
 	    upvar #0 $data(-typevariable) typeVariable
-	    set typeVariable [lindex $data(filterType) 0]
+	    set typeVariable [lindex $data(origfiletypes) \
+	            [lsearch -exact $data(-filetypes) $data(filterType)] 0]
+
 	}
     }
     bind $data(okBtn) <Destroy> {}

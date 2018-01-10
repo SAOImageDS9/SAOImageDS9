@@ -496,27 +496,19 @@ void Polygon::listPros(ostream& str, Coord::CoordSystem sys,
     if (ptr->hasWCSCel(sys)) {
       coord.listProsCoordSystem(str,sys,sky);
       str << "; " << type_;
-
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  vertex.head();
-	  do {
-	    Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,sys,sky);
-            str << ' ' << setprecision(10) << setunit('d') << vv;
-	  }
-	  while (vertex.next());
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	vertex.head();
-	do {
+      vertex.head();
+      do {
 	  listRADECPros(ptr,vertex.current()->vector*mm,sys,sky,format);
-	  str << ' ' << ra << ' ' << dec;
-	}
-	while (vertex.next());
-	break;
+	  switch (format) {
+	  case Coord::DEGREES:
+	    str << ' ' << ra << 'd' << ' ' << dec << 'd';
+	    break;
+	  case Coord::SEXAGESIMAL:
+	    str << ' ' << ra << ' ' << dec;
+	    break;
+	  }
       }
+      while (vertex.next());
     }
   }
 

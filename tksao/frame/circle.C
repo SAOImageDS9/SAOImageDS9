@@ -221,24 +221,11 @@ void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
+      listRADEC(ptr,center,sys,sky,format);
       double rr = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC);
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << type_ << '(' 
-	      << setprecision(10) << vv << ',' 
-	      << setprecision(3) << fixed << rr << '"' << ')';
-	  str.unsetf(ios_base::floatfield);
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADEC(ptr,center,sys,sky,format);
-	str << type_ << '(' << ra << ',' << dec << ',' 
-	    << setprecision(3) << fixed << rr << '"' << ')';
-	str.unsetf(ios_base::floatfield);
-	break;
-      }
+      str << type_ << '(' << ra << ',' << dec << ',' 
+	  << setprecision(3) << fixed << rr << '"' << ')';
+      str.unsetf(ios_base::floatfield);
     }
     else
       listNonCel(ptr, str, sys);
@@ -340,23 +327,11 @@ void Circle::listSAOtng(ostream& str,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
+      listRADEC(ptr,center,sys,sky,format);
       double rr = ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-          str << type_ << '('
-              << setprecision(10) << vv << ','
-              << setprecision(8) << rr << ')';
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADEC(ptr,center,sys,sky,format);
-        str << type_ << '('
-            << ra << ',' << dec << ','
-            << setprecision(8) << rr << ')';
-	break;
-      }
+      str << type_ << '('
+	  << ra << ',' << dec << ','
+	  << setprecision(8) << rr << ')';
     }
   }
 

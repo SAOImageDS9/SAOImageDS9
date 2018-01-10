@@ -3190,7 +3190,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
-	str << setprecision(8) << out[0] << ' ' << out[1] << ' '
+	str << setprecision(10) << out[0] << ' ' << out[1] << ' '
 	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
 
@@ -3201,7 +3201,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	case Coord::FK4_NO_E:
 	case Coord::FK5:
 	case Coord::ICRS:
-	  setWCSFormat(ast_[ss],1,"hms.3");
+	  setWCSFormat(ast_[ss],1,"hms.4");
 	  setWCSFormat(ast_[ss],2,"+dms.3");
 	  break;
 	case Coord::GALACTIC:
@@ -3246,7 +3246,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
-	str << setprecision(8) << out[0] << ' ' << out[1] << ' '
+	str << setprecision(10) << out[0] << ' ' << out[1] << ' '
 	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	
 	break;
@@ -3258,7 +3258,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	case Coord::FK4_NO_E:
 	case Coord::FK5:
 	case Coord::ICRS:
-	  setWCSFormat(1,"hms.3");
+	  setWCSFormat(1,"hms.4");
 	  setWCSFormat(2,"+dms.3");
 	  break;
 	case Coord::GALACTIC:
@@ -3322,7 +3322,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
-	str << setprecision(8) << out[0] << ' ' << out[1] << ' ' << out[2]
+	str << setprecision(10) << out[0] << ' ' << out[1] << ' ' << out[2]
 	    << ' ' << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
 
@@ -3333,7 +3333,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 	case Coord::FK4_NO_E:
 	case Coord::FK5:
 	case Coord::ICRS:
-	  setWCSFormat(1,"hms.3");
+	  setWCSFormat(1,"hms.4");
 	  setWCSFormat(2,"+dms.3");
 	  break;
 	case Coord::GALACTIC:

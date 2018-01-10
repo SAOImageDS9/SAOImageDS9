@@ -213,32 +213,15 @@ void Annulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << type_ << '(' << setprecision(10) << vv
-	      << setprecision(3) << fixed;
-	  for (int ii=0; ii<numAnnuli_; ii++) {
-	    double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
-	    str << ',' << rr << '"';
-	  }
-	  str << ')';
-	  str.unsetf(ios_base::floatfield);
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADEC(ptr,center,sys,sky,format);
-	str << type_ << '(' << ra << ',' << dec
-	    << setprecision(3) << fixed;
-	for (int ii=0; ii<numAnnuli_; ii++) {
-	  double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
-	  str << ',' << rr << '"';
-	}
-	str << ')';
-	str.unsetf(ios_base::floatfield);
-	break;
+      listRADEC(ptr,center,sys,sky,format);
+      str << type_ << '(' << ra << ',' << dec
+	  << setprecision(3) << fixed;
+      for (int ii=0; ii<numAnnuli_; ii++) {
+	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
+	str << ',' << rr << '"';
       }
+      str << ')';
+      str.unsetf(ios_base::floatfield);
     }
     else
       listNonCel(ptr, str, sys);
@@ -335,32 +318,23 @@ void Annulus::listPros(ostream& str, Coord::CoordSystem sys,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
+      listRADECPros(ptr,center,sys,sky,format);
+      coord.listProsCoordSystem(str,sys,sky);
+      str << "; " << type_ << ' ';
       switch (format) {
       case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  coord.listProsCoordSystem(str,sys,sky);
-          str << "; " << type_ << ' ' << setprecision(10) << setunit('d') << vv
-              << setprecision(3) << fixed;
-	  for (int ii=0; ii<numAnnuli_; ii++) {
-	    double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
-	    str << ' ' << rr << '"';
-          str.unsetf(ios_base::floatfield);
-	  }
-	}
+	str << ra << 'd' << ' ' << dec << 'd';
 	break;
       case Coord::SEXAGESIMAL:
-	listRADECPros(ptr,center,sys,sky,format);
-	coord.listProsCoordSystem(str,sys,sky);
-        str << "; " << type_ << ' ' << ra << ' ' << dec
-            << setprecision(3) << fixed;
-	for (int ii=0; ii<numAnnuli_; ii++) {
-	  double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
-	  str << ' ' << rr << '"';
-	  str.unsetf(ios_base::floatfield);
-	}
+	str << ra << ' ' << dec;
 	break;
       }
+      str << setprecision(3) << fixed;
+      for (int ii=0; ii<numAnnuli_; ii++) {
+	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
+	str << ' ' << rr << '"';
+      }
+      str.unsetf(ios_base::floatfield);
     }
   }
 

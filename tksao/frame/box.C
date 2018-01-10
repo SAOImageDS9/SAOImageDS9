@@ -268,27 +268,13 @@ void Box::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
+      listRADEC(ptr,center,sys,sky,format);
       Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCSEC);
       double aa = parent->mapAngleFromRef(angle,sys,sky);
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << type_ << '(' 
-	      << setprecision(10) << vv <<  ',' 
-	      << setprecision(3) << fixed << setunit('"') << rr << ',';
-	  str.unsetf(ios_base::floatfield);
-	  str << setprecision(8) << radToDeg(aa) << ')';
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADEC(ptr,center,sys,sky,format);
-	str << type_ << '(' << ra << ',' << dec << ',' 
-	    << setprecision(3) << fixed << setunit('"') << rr << ',';
-	str.unsetf(ios_base::floatfield);
-	str << setprecision(8) << radToDeg(aa) << ')';
-	break;
-      }
+      str << type_ << '(' << ra << ',' << dec << ',' 
+	  << setprecision(3) << fixed << setunit('"') << rr << ',';
+      str.unsetf(ios_base::floatfield);
+      str << setprecision(8) << radToDeg(aa) << ')';
     }
     else
       listNonCel(ptr, str, sys);
@@ -397,24 +383,11 @@ void Box::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
+      listRADEC(ptr,center,sys,sky,format);
       Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::IMAGE);
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-          str << type_ << '('
-              << setprecision(10) << vv << ','
-              << setprecision(8) << rr << ','
-              << setprecision(8) << radToDeg(angle) << ')';
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADEC(ptr,center,sys,sky,format);
-       str << type_ << '(' << ra << ',' << dec << ','
-            << setprecision(8) << rr << ','
-            << setprecision(8) << radToDeg(angle) << ')';
-	break;
-      }
+      str << type_ << '(' << ra << ',' << dec << ','
+	  << setprecision(8) << rr << ','
+	  << setprecision(8) << radToDeg(angle) << ')';
     }
   }
 

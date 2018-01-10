@@ -226,18 +226,8 @@ void Text::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       break;
     default:
       if (ptr->hasWCSCel(sys)) {
-	switch (format) {
-	case Coord::DEGREES:
-	  {
-	    Vector vv = ptr->mapFromRef(center,sys,sky);
-	    str << type_ << '(' << setprecision(10) << vv << ')';
-	  }
-	  break;
-	case Coord::SEXAGESIMAL:
-	  listRADEC(ptr,center,sys,sky,format);
-	  str << type_ << '(' << ra << ',' << dec << ')';
-	  break;
-	}
+	listRADEC(ptr,center,sys,sky,format);
+	str << type_ << '(' << ra << ',' << dec << ')';
       }
       else
 	listNonCel(ptr, str, sys);
@@ -300,19 +290,8 @@ void Text::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-          str << type_ << '(' << setprecision(10) << vv
-              << ", \"" << text << "\")";
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADEC(ptr,center,sys,sky,format);
-	str << type_ << '(' << ra << ',' << dec << ", \"" << text << "\")";
-	break;
-      }
+      listRADEC(ptr,center,sys,sky,format);
+      str << type_ << '(' << ra << ',' << dec << ", \"" << text << "\")";
     }
   }
 

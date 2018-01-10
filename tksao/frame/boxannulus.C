@@ -366,9 +366,9 @@ void BoxAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
+      listRADECPros(ptr,center,sys,sky,format);
       switch (format) {
       case Coord::DEGREES:
-	listRADECPros(ptr,center,sys,sky,format);
 	for (int ii=0; ii<numAnnuli_; ii++) {
 	  coord.listProsCoordSystem(str,sys,sky);
 	  str << "; ";
@@ -391,7 +391,6 @@ void BoxAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
 	}
 	break;
       case Coord::SEXAGESIMAL:
-	listRADECPros(ptr,center,sys,sky,format);
 	for (int ii=0; ii<numAnnuli_; ii++) {
 	  coord.listProsCoordSystem(str,sys,sky);
 	  str << "; ";

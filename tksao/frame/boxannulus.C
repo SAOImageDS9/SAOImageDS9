@@ -286,33 +286,16 @@ void BoxAnnulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
+      listRADEC(ptr,center,sys,sky,format);
       double aa = parent->mapAngleFromRef(angle,sys,sky);
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << "box(" << setprecision(10) << vv
-	      << setprecision(3) << fixed;
-	  for (int ii=0; ii<numAnnuli_; ii++) {
-	    Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
-	    str << ',' << setunit('"') << rr;
-	  }
-	  str.unsetf(ios_base::floatfield);
-	  str << setprecision(8) << ',' << radToDeg(aa) << ')';
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADEC(ptr,center,sys,sky,format);
-	str << "box(" << ra << ',' << dec
-	    << setprecision(3) << fixed;
-	for (int ii=0; ii<numAnnuli_; ii++) {
-	  Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
-	  str << ',' << setunit('"') << rr;
-	}
-	str.unsetf(ios_base::floatfield);
-	str << setprecision(8) << ',' << radToDeg(aa) << ')';
-	break;
+      str << "box(" << ra << ',' << dec
+	  << setprecision(3) << fixed;
+      for (int ii=0; ii<numAnnuli_; ii++) {
+	Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
+	str << ',' << setunit('"') << rr;
       }
+      str.unsetf(ios_base::floatfield);
+      str << setprecision(8) << ',' << radToDeg(aa) << ')';
     }
     else
       listNonCel(ptr, str, sys);
@@ -385,30 +368,26 @@ void BoxAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
     if (ptr->hasWCSCel(sys)) {
       switch (format) {
       case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  for (int ii=0; ii<numAnnuli_; ii++) {
-	    coord.listProsCoordSystem(str,sys,sky);
-	    str << "; ";
+	listRADECPros(ptr,center,sys,sky,format);
+	for (int ii=0; ii<numAnnuli_; ii++) {
+	  coord.listProsCoordSystem(str,sys,sky);
+	  str << "; ";
 
-	    Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
-            str << "box "
-                << setprecision(10) << setunit('d') << vv << ' '
-                << setprecision(3) << setunit('"') << fixed << rr << ' ';
-            str.unsetf(ios_base::floatfield);
+	  Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
+	  str << "box " << ra << 'd' << ' ' << dec << 'd' << ' '
+	      << setprecision(3) << setunit('"') << fixed << rr << ' ';
+	  str.unsetf(ios_base::floatfield);
+	  str << setprecision(8) << radToDeg(angle);
+
+	  if (ii!=0) {
+	    Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys,Coord::ARCSEC);
+	    str << " & !box " << ra << 'd' << ' ' << dec << 'd' << ' '
+		<< setprecision(3) << setunit('"') << fixed << r1 << ' ';
+	    str.unsetf(ios_base::floatfield);
 	    str << setprecision(8) << radToDeg(angle);
-
-	    if (ii!=0) {
-	      Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys,Coord::ARCSEC);
-              str << " & !box "
-                  << setprecision(8) << setunit('d') << vv << ' '
-                  << setprecision(3) << setunit('"') << fixed << r1 << ' ';
-              str.unsetf(ios_base::floatfield);
-              str << setprecision(8) << radToDeg(angle);
-	    }
-
-	    listProsPost(str, strip);
 	  }
+
+	  listProsPost(str, strip);
 	}
 	break;
       case Coord::SEXAGESIMAL:

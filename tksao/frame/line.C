@@ -214,22 +214,11 @@ void Line::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector v1 = ptr->mapFromRef(p1,sys,sky);
-	  Vector v2 = ptr->mapFromRef(p2,sys,sky);
-	  str << type_ << '(' << setprecision(10) << v1 << ',' << v2 << ')';
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	str << type_ << '(';
-	listRADEC(ptr,p1,sys,sky,format);
-	str << ra << ',' << dec << ',';
-	listRADEC(ptr,p2,sys,sky,format);
-	str << ra << ',' << dec << ')';
-	break;
-      }
+      str << type_ << '(';
+      listRADEC(ptr,p1,sys,sky,format);
+      str << ra << ',' << dec << ',';
+      listRADEC(ptr,p2,sys,sky,format);
+      str << ra << ',' << dec << ')';
     }
     else
       listNonCel(ptr, str, sys);
@@ -295,22 +284,11 @@ void Line::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector v1 = ptr->mapFromRef(p1,sys,sky);
-	  Vector v2 = ptr->mapFromRef(p2,sys,sky);
-	  str << type_ << '(' << setprecision(10) << v1 << ',' << v2 << ')';
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	str << type_ << '(';
-	listRADEC(ptr,p1,sys,sky,format);
-	str << ra << ',' << dec << ',';
-	listRADEC(ptr,p2,sys,sky,format);
-	str << ra << ',' << dec << ')';
-	break;
-      }
+      str << type_ << '(';
+      listRADEC(ptr,p1,sys,sky,format);
+      str << ra << ',' << dec << ',';
+      listRADEC(ptr,p2,sys,sky,format);
+      str << ra << ',' << dec << ')';
     }
   }
 

@@ -352,27 +352,13 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     default:
       if (ptr->hasWCSCel(sys)) {
 	double ww = ptr->mapLenFromRef(width,sys,Coord::ARCSEC);
-	switch (format) {
-	case Coord::DEGREES:
-	  {
-	    Vector v1 = ptr->mapFromRef(p1,sys,sky);
-	    Vector v2 = ptr->mapFromRef(p2,sys,sky);
-	    str << type_ << '(' 
-		<< setprecision(10) << v1 << ',' << v2 << ','
-		<< setprecision(3) << fixed << ww << '"' << ')';
-	    str.unsetf(ios_base::floatfield);
-	  }
-	  break;
-	case Coord::SEXAGESIMAL:
-	  str << type_ << '(';
-	  listRADEC(ptr,p1,sys,sky,format);
-	  str << ra << ',' << dec << ',';
-	  listRADEC(ptr,p2,sys,sky,format);
-	  str << ra << ',' << dec << ',';
-	  str << setprecision(3) << fixed << ww << '"' << ')';
-	  str.unsetf(ios_base::floatfield);
-	  break;
-	}
+	str << type_ << '(';
+	listRADEC(ptr,p1,sys,sky,format);
+	str << ra << ',' << dec << ',';
+	listRADEC(ptr,p2,sys,sky,format);
+	str << ra << ',' << dec << ',';
+	str << setprecision(3) << fixed << ww << '"' << ')';
+	str.unsetf(ios_base::floatfield);
       }
       else
 	listNonCel(ptr, str, sys);

@@ -68,27 +68,13 @@ void Vect::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       break;
     default:
       if (ptr->hasWCSCel(sys)) {
+	listRADEC(ptr,p1,sys,sky,format);
 	double rr = ptr->mapLenFromRef((p2-p1).length(),sys,Coord::ARCSEC);
 	double aa = parent->mapAngleFromRef((p2-p1).angle(),sys,sky);
-	switch (format) {
-	case Coord::DEGREES:
-	  {
-	    Vector v1 = ptr->mapFromRef(p1,sys,sky);
-	    str << type_ << '(' 
-		<< setprecision(10) << v1 << ','
-		<< setprecision(3) << fixed << rr << '"' << ',';
-	    str.unsetf(ios_base::floatfield);
-	    str << setprecision(8) << radToDeg(aa) << ')';
-	  }
-	  break;
-	case Coord::SEXAGESIMAL:
-	  listRADEC(ptr,p1,sys,sky,format);
-	  str << type_ << '(' << ra << ',' << dec << ',' 
-	      << setprecision(3) << fixed << rr << '"' << ',';
-	  str.unsetf(ios_base::floatfield);
-	  str << setprecision(8) << radToDeg(aa) << ')';
-	  break;
-	}
+	str << type_ << '(' << ra << ',' << dec << ',' 
+	    << setprecision(3) << fixed << rr << '"' << ',';
+	str.unsetf(ios_base::floatfield);
+	str << setprecision(8) << radToDeg(aa) << ')';
       }
       else
 	listNonCel(ptr, str, sys);

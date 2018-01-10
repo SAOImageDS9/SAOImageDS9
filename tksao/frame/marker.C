@@ -1628,15 +1628,8 @@ void Marker::listXY(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   default:
     if (ptr->hasWCS(sys)) {
       if (ptr->hasWCSCel(sys)) {
-	switch (format) {
-	case Coord::DEGREES:
-	  str << setprecision(10) << ptr->mapFromRef(center,sys,sky);
-	  break;
-	case Coord::SEXAGESIMAL:
-	  listRADEC(ptr,center,sys,sky,format);
-	  str << ra << ' ' << dec;
-	  break;
-	}
+	listRADEC(ptr,center,sys,sky,format);
+	str << ra << ' ' << dec;
       }
       else {
 	str << setprecision(8) << ptr->mapFromRef(center,sys);
@@ -1920,20 +1913,9 @@ void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys,
   default:
     if (ptr->hasWCS(sys)) {
       if (ptr->hasWCSCel(sys)) {
-	switch (format) {
-	case Coord::DEGREES:
-	  {
-	    Vector v = ptr->mapFromRef(vv,sys,sky);
-	    XMLRow(XMLX,v[0],10);
-	    XMLRow(XMLY,v[1],10);
-	  }
-	  break;
-	case Coord::SEXAGESIMAL:
-	  listRADEC(ptr,vv,sys,sky,format);
-	  XMLRow(XMLX,ra);
-	  XMLRow(XMLY,dec);
-	  break;
-	}
+	listRADEC(ptr,vv,sys,sky,format);
+	XMLRow(XMLX,ra);
+	XMLRow(XMLY,dec);
       }
       else {
 	Vector v = ptr->mapFromRef(vv,sys);

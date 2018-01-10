@@ -896,18 +896,8 @@ void Point::listSAOtng(ostream& str, Coord::CoordSystem sys,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-          str << type_ << '(' << setprecision(10) << vv << ')';
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADEC(ptr,center,sys,sky,format);
-	str << type_ << '(' << ra << ',' << dec << ')';
-	break;
-      }
+      listRADEC(ptr,center,sys,sky,format);
+      str << type_ << '(' << ra << ',' << dec << ')';
     }
   }
 

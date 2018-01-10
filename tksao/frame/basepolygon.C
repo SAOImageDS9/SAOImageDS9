@@ -229,43 +229,19 @@ void BasePolygon::listBase(FitsImage* ptr, ostream& str,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  str << type_ << '(';
-	  int first=1;
-	  vertex.head();
-	  do {
-	    if (!first)
-	      str << ',';
-	    first=0;
+      str << type_ << '(';
+      int first=1;
+      vertex.head();
+      do {
+	if (!first)
+	  str << ',';
+	first=0;
 
-	    Vector vv = 
-	      ptr->mapFromRef(vertex.current()->vector*mm,sys,sky);
-	    str << setprecision(10) << vv;
-	  }
-	  while (vertex.next());
-	  str << ')';
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	{
-	  str << type_ << '(';
-	  int first=1;
-	  vertex.head();
-	  do {
-	    if (!first)
-	      str << ',';
-	    first=0;
-
-	    listRADEC(ptr,vertex.current()->vector*mm,sys,sky,format);
-	    str << ra << ',' << dec;
-	  }
-	  while (vertex.next());
-	  str << ')';
-	}
-	break;
+	listRADEC(ptr,vertex.current()->vector*mm,sys,sky,format);
+	str << ra << ',' << dec;
       }
+      while (vertex.next());
+      str << ')';
     }
     else
       listBaseNonCel(ptr, str, mm, sys);

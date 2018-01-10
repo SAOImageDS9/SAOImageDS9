@@ -415,29 +415,21 @@ void Box::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
+      listRADECPros(ptr,center,sys,sky,format);
+      coord.listProsCoordSystem(str,sys,sky);
       Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCSEC);
+      str << "; " << type_ << ' ';
       switch (format) {
       case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  coord.listProsCoordSystem(str,sys,sky);
-          str << "; " << type_ << ' '
-              << setprecision(10) << setunit('d') << vv << ' '
-              << setprecision(3) << fixed << setunit('"') << rr << ' ';
-          str.unsetf(ios_base::floatfield);
-          str << setprecision(8) << radToDeg(angle);
-	}
+	str << ra << 'd' << ' ' << dec << 'd' << ' ';
 	break;
       case Coord::SEXAGESIMAL:
-	listRADECPros(ptr,center,sys,sky,format);
-	coord.listProsCoordSystem(str,sys,sky);
-	str << "; " << type_ << ' '
-            << ra << ' ' << dec << ' '
-            << setprecision(3) << fixed << setunit('"') << rr << ' ';
-        str.unsetf(ios_base::floatfield);
-        str << setprecision(8) << radToDeg(angle);
+	str << ra << ' ' << dec << ' ';
 	break;
       }
+      str << setprecision(3) << fixed << setunit('"') << rr << ' ';
+      str.unsetf(ios_base::floatfield);
+      str << setprecision(8) << radToDeg(angle);
     }
   }
 

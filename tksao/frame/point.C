@@ -760,18 +760,8 @@ void Point::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << type_ << '(' << setprecision(10) << vv << ')';
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADEC(ptr,center,sys,sky,format);
-	str << type_ << '(' << ra << ',' << dec << ')';
-	break;
-      }
+      listRADEC(ptr,center,sys,sky,format);
+      str << type_ << '(' << ra << ',' << dec << ')';
     }
     else
       listNonCel(ptr, str, sys);
@@ -870,19 +860,15 @@ void Point::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
+      listRADECPros(ptr,center,sys,sky,format);
       coord.listProsCoordSystem(str,sys,sky);
-      str << "; ";
-
+      str << "; " << type_ << ' ';
       switch (format) {
       case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-          str << type_ << ' ' << setprecision(10) << setunit('d') << vv;
-	}
+	str << ra << 'd' << ' ' << dec << 'd';
 	break;
       case Coord::SEXAGESIMAL:
-	listRADECPros(ptr,center,sys,sky,format);
-	str << type_ << ' ' << ra << ' ' << dec;
+	str << ra << ' ' << dec;
 	break;
       }
     }

@@ -206,22 +206,10 @@ void Composite::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       break;
     default:
       if (ptr->hasWCSCel(sys)) {
-	switch (format) {
-	case Coord::DEGREES:
-	  {
-	    Vector vv = ptr->mapFromRef(center,sys,sky);
-	    str << type_ << '(' << setprecision(10) << vv << ','
-		<< setprecision(8) 
-		<< radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
-	  }
-	  break;
-	case Coord::SEXAGESIMAL:
-	  listRADEC(ptr,center,sys,sky,format);
-	  str << type_ << '(' << ra << ',' << dec << ',' 
-	      << setprecision(8) 
-	      << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
-	  break;
-	}
+	listRADEC(ptr,center,sys,sky,format);
+	str << type_ << '(' << ra << ',' << dec << ',' 
+	    << setprecision(8) 
+	    << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
       }
       else {
 	Vector vv = ptr->mapFromRef(center,sys);

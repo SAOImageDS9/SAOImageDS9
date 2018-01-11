@@ -357,7 +357,7 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	str << ra << ',' << dec << ',';
 	listRADEC(ptr,p2,sys,sky,format);
 	str << ra << ',' << dec << ',';
-	str << setprecision(3) << fixed << ww << '"' << ')';
+	str << setprecision(parent->precArcsec) << fixed << ww << '"' << ')';
 	str.unsetf(ios_base::floatfield);
       }
       else
@@ -377,7 +377,8 @@ void Projection::listNonCel(FitsImage* ptr, ostream& str,
   Vector v1 = ptr->mapFromRef(p1,sys);
   Vector v2 = ptr->mapFromRef(p2,sys);
   double ww = ptr->mapLenFromRef(width,sys);
-  str << type_ << '(' << setprecision(8) << v1 << ',' << v2 << ',' 
+  str << type_ << '(' << setprecision(parent->precLinear)
+      << v1 << ',' << v2 << ',' 
       << ww << ')';
 }
 

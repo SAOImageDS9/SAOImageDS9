@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "fitsimage.h"
+#include "context.h"
 
 // Map Point
 
@@ -105,14 +106,15 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(8) << mapFromRef(vv, sys);
+    str << setprecision(context_->parent_->precLinear) << mapFromRef(vv, sys);
     break;
   default:
     if (hasWCS(sys)) {
       if (hasWCSCel(sys)) {
 	switch (format) {
 	case Coord::DEGREES:
-	  str << setprecision(10) << mapFromRef(vv, sys, sky);
+	  str << setprecision(context_->parent_->precDeg)
+	      << mapFromRef(vv, sys, sky);
 	  break;
 	case Coord::SEXAGESIMAL:
 	  {
@@ -133,7 +135,8 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
 	}
       }
       else
-	str << setprecision(8) << mapFromRef(vv, sys);
+	str << setprecision(context_->parent_->precLinear)
+	    << mapFromRef(vv, sys);
     }
     else
       str << "0 0";
@@ -360,26 +363,26 @@ void FitsImage::listLenFromRef(ostream& str, double dd,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(8) << out;
+    str << setprecision(context_->parent_->precLinear) << out;
     break;
   default:
     if (hasWCS(sys)) {
       if (hasWCSCel(sys)) {
 	switch (dist) {
 	case Coord::DEGREE:
-	  str << setprecision(10);
+	  str << setprecision(context_->parent_->precDeg);
 	  break;
 	case Coord::ARCMIN:
-	  str << setprecision(5) << fixed;
+	  str << setprecision(context_->parent_->precArcmin) << fixed;
 	  break;
 	case Coord::ARCSEC:
-	  str << setprecision(3) << fixed;
+	  str << setprecision(context_->parent_->precArcsec) << fixed;
 	  break;
 	}
 	str << out;
       }
       else
-	str << setprecision(8) << out;
+	str << setprecision(context_->parent_->precLinear) << out;
     }
     else
       str << "0";
@@ -396,26 +399,26 @@ void FitsImage::listLenFromRef(ostream& str, const Vector& vv,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(8) << out;
+    str << setprecision(context_->parent_->precLinear) << out;
     break;
   default:
     if (hasWCS(sys)) {
       if (hasWCSCel(sys)) {
 	switch (dist) {
 	case Coord::DEGREE:
-	  str << setprecision(10);
+	  str << setprecision(context_->parent_->precDeg);
 	  break;
 	case Coord::ARCMIN:
-	  str << setprecision(5) << fixed;
+	  str << setprecision(context_->parent_->precArcmin) << fixed;
 	  break;
 	case Coord::ARCSEC:
-	  str << setprecision(3) << fixed;
+	  str << setprecision(context_->parent_->precArcsec) << fixed;
 	  break;
 	}
 	str << out;
       }
       else
-	str << setprecision(8) << out;
+	str << setprecision(context_->parent_->precLinear) << out;
     }
     else
       str << "0 0";
@@ -486,26 +489,26 @@ void FitsImage::listDistFromRef(ostream& str,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(8) << out;
+    str << setprecision(context_->parent_->precLinear) << out;
     break;
   default:
     if (hasWCS(sys)) {
       if (hasWCSCel(sys)) {
 	switch (dist) {
 	case Coord::DEGREE:
-	  str << setprecision(10);
+	  str << setprecision(context_->parent_->precDeg);
 	  break;
 	case Coord::ARCMIN:
-	  str << setprecision(5) << fixed;
+	  str << setprecision(context_->parent_->precArcmin) << fixed;
 	  break;
 	case Coord::ARCSEC:
-	  str << setprecision(3) << fixed;
+	  str << setprecision(context_->parent_->precArcsec) << fixed;
 	  break;
 	}
 	str << out;
       }
       else
-	str << setprecision(8) << out;
+	str << setprecision(context_->parent_->precLinear) << out;
     }
     else
       str << "0 0";

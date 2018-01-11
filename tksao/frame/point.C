@@ -773,7 +773,7 @@ void Point::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 void Point::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
 {
   Vector vv = ptr->mapFromRef(center,sys);
-  str << type_ << '(' << setprecision(8) << vv << ')';
+  str << type_ << '(' << setprecision(parent->precLinear) << vv << ')';
 }
 
 void Point::listPost(ostream& str, int conj, int strip)
@@ -826,7 +826,7 @@ void Point::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
   case Coord::AMPLIFIER:
     {
       Vector vv = ptr->mapFromRef(center,Coord::PHYSICAL);
-      str << type_ << '(' << setprecision(8) << vv << ')';
+      str << type_ << '(' << setprecision(parent->precLinear) << vv << ')';
     }
     break;
   default:
@@ -855,7 +855,7 @@ void Point::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       coord.listProsCoordSystem(str,sys,sky);
       str << "; ";
       Vector vv = ptr->mapFromRef(center,sys);
-      str << type_ << ' ' << setprecision(8) << vv;
+      str << type_ << ' ' << setprecision(parent->precLinear) << vv;
     }
     break;
   default:
@@ -891,7 +891,7 @@ void Point::listSAOtng(ostream& str, Coord::CoordSystem sys,
   case Coord::AMPLIFIER:
     {
       Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-      str << type_ << '(' << setprecision(8) << vv << ')';
+      str << type_ << '(' << setprecision(parent->precLinear) << vv << ')';
     }
     break;
   default:
@@ -912,7 +912,7 @@ void Point::listSAOimage(ostream& str, int strip)
   // all coords are in image coords
 
   Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-  str << type_ << '(' << setprecision(8) << vv << ')';
+  str << type_ << '(' << setprecision(parent->precLinear) << vv << ')';
 
   listSAOimagePost(str, strip);
 }

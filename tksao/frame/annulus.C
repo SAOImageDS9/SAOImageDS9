@@ -215,7 +215,7 @@ void Annulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     if (ptr->hasWCSCel(sys)) {
       listRADEC(ptr,center,sys,sky,format);
       str << type_ << '(' << ra << ',' << dec
-	  << setprecision(3) << fixed;
+	  << setprecision(parent->precArcsec) << fixed;
       for (int ii=0; ii<numAnnuli_; ii++) {
 	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
 	str << ',' << rr << '"';
@@ -233,7 +233,7 @@ void Annulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 void Annulus::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
 {
   Vector vv = ptr->mapFromRef(center,sys);
-  str << type_ << '(' << setprecision(8) << vv;
+  str << type_ << '(' << setprecision(parent->precLinear) << vv;
   for (int ii=0; ii<numAnnuli_; ii++) {
     double rr = ptr->mapLenFromRef(annuli_[ii][0],sys);
     str << ',' << rr;
@@ -269,7 +269,7 @@ void Annulus::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
       Vector vv = ptr->mapFromRef(center,Coord::PHYSICAL);
       for (int ii=0; ii<numAnnuli_-1; ii++) {
 	listCiaoPre(str);
-	str << type_ << '(' << setprecision(8) << vv << ','
+	str << type_ << '(' << setprecision(parent->precLinear) << vv << ','
 	    << ptr->mapLenFromRef(annuli_[ii][0],Coord::PHYSICAL) << ','
 	    << ptr->mapLenFromRef(annuli_[ii+1][0],Coord::PHYSICAL) << ')';
 	listCiaoPost(str, strip);
@@ -284,7 +284,7 @@ void Annulus::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
 	double r1 = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCMIN);
 	double r2 = ptr->mapLenFromRef(annuli_[ii+1][0],sys,Coord::ARCMIN);
 	str << type_ << '(' << ra << ',' << dec << ','
-	    << setprecision(5) << fixed 
+	    << setprecision(parent->precArcmin) << fixed 
 	    << r1 << '\'' << ',' << r2 << '\''
 	    << ')';
 	str.unsetf(ios_base::floatfield);
@@ -309,7 +309,7 @@ void Annulus::listPros(ostream& str, Coord::CoordSystem sys,
     {
       Vector vv = ptr->mapFromRef(center,sys);
       coord.listProsCoordSystem(str,sys,sky);
-      str << "; " << type_ << ' ' << setprecision(8) << vv;
+      str << "; " << type_ << ' ' << setprecision(parent->precLinear) << vv;
       for (int ii=0; ii<numAnnuli_; ii++) {
 	double rr = ptr->mapLenFromRef(annuli_[ii][0],Coord::IMAGE);
 	str << ' ' << rr;
@@ -329,7 +329,7 @@ void Annulus::listPros(ostream& str, Coord::CoordSystem sys,
 	str << ra << ' ' << dec;
 	break;
       }
-      str << setprecision(3) << fixed;
+      str << setprecision(parent->precArcsec) << fixed;
       for (int ii=0; ii<numAnnuli_; ii++) {
 	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
 	str << ' ' << rr << '"';
@@ -347,7 +347,7 @@ void Annulus::listSAOimage(ostream& str, int strip)
   listSAOimagePre(str);
 
   Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-  str << type_ << '(' << setprecision(8) << vv;
+  str << type_ << '(' << setprecision(parent->precLinear) << vv;
   for (int ii=0; ii<numAnnuli_; ii++) {
     double rr = ptr->mapLenFromRef(annuli_[ii][0],Coord::IMAGE);
     str << ',' << rr;

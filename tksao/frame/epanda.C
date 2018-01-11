@@ -509,12 +509,13 @@ void Epanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       listRADEC(ptr,center,sys,sky,format);
       str << type_ << '(' 
 	  << ra << ',' << dec << ','
-	  << setprecision(8) << a1 << ',' << a2 <<',' << numAngles_-1 << ','
-	  << setprecision(3) << fixed << setunit('"') << r1 << ',' 
-	  << setunit('"') << r2 << ',';
+	  << setprecision(parent->precLinear) << a1 << ',' << a2 <<','
+	  << numAngles_-1 << ','
+	  << setprecision(parent->precArcsec) << fixed << setunit('"')
+	  << r1 << ',' << setunit('"') << r2 << ',';
       str.unsetf(ios_base::floatfield);
-      str << setprecision(8) << numAnnuli_-1 << ','
-	  << setprecision(8) << radToDeg(aa) << ')';
+      str << setprecision(parent->precLinear) << numAnnuli_-1 << ','
+	  << setprecision(parent->precLinear) << radToDeg(aa) << ')';
     }
     else
       listANonCel(ptr, str, sys);
@@ -534,7 +535,7 @@ void Epanda::listANonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
   Vector r1 = ptr->mapLenFromRef(annuli_[0],sys);
   Vector r2 =  ptr->mapLenFromRef(annuli_[numAnnuli_-1],sys);
   double aa = parent->mapAngleFromRef(angle,sys);
-  str << type_ << '(' << setprecision(8) << vv << ','
+  str << type_ << '(' << setprecision(parent->precLinear) << vv << ','
       << a1 << ',' << a2 << ',' << numAngles_-1 << ','
       << r1 << ',' << r2 << ',' << numAnnuli_-1 << ','
       << radToDeg(aa) << ')';
@@ -586,7 +587,7 @@ void Epanda::listBNonCel(FitsImage* ptr, ostream& str,
       Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys);
       Vector r2 =  ptr->mapLenFromRef(annuli_[ii],sys);	
       str << type_ << '(' 
-	  << setprecision(8) << vv << ','
+	  << setprecision(parent->precLinear) << vv << ','
 	  << a1 << ',' << a2 << ",1,"
 	  << r1 << ',' << r2 << ",1,"
 	  << radToDeg(aa) << ')';
@@ -641,10 +642,11 @@ void Epanda::listBCel(FitsImage* ptr, int ii, int jj, ostream& str,
   Vector r2 =  ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);	
   double aa = parent->mapAngleFromRef(angle,sys,sky);
       
-  str << setprecision(8) << a1 << ',' << a2 << ",1,"
-      << setprecision(3) << fixed << setunit('"') << r1 << ',' << setunit('"') << r2 << ",1,";
+  str << setprecision(parent->precLinear) << a1 << ',' << a2 << ",1,"
+      << setprecision(parent->precArcsec) << fixed << setunit('"')
+      << r1 << ',' << setunit('"') << r2 << ",1,";
   str.unsetf(ios_base::floatfield);
-  str << setprecision(8) << radToDeg(aa) << ')';
+  str << setprecision(parent->precLinear) << radToDeg(aa) << ')';
 		
   if (!strip) {
     if (conj)
@@ -652,20 +654,21 @@ void Epanda::listBCel(FitsImage* ptr, int ii, int jj, ostream& str,
 
     str << " # epanda=";
     if (ii==1 && jj==1 && !strip) {
-      str << '(' << setprecision(8);
+      str << '(' << setprecision(parent->precLinear);
       for (int kk=0; kk<numAngles_; kk++) {
 	double ar = parent->mapAngleFromRef(angles_[kk],sys,sky);
 	str << radToDeg(ar) << ((kk<numAngles_-1) ? ' ' : ')');
       }
 
       str << '(';
-      str << setseparator(' ') << setprecision(3) << fixed;
+      str << setseparator(' ') << setprecision(parent->precArcsec) << fixed;
       for (int kk=0; kk<numAnnuli_; kk++) {
 	Vector rr = ptr->mapLenFromRef(annuli_[kk],sys,Coord::ARCSEC);
 	str << setunit('"') << rr << ((kk<numAnnuli_-1) ? ' ' : ')');
       }
       str.unsetf(ios_base::floatfield);
-      str << setseparator(',') << '(' << setprecision(8) << radToDeg(aa) << ')';
+      str << setseparator(',') << '(' << setprecision(parent->precLinear)
+	  << radToDeg(aa) << ')';
       listProps(str);
     }
     else

@@ -249,6 +249,13 @@ public:
 
   int useCrosshair;
 
+  int precArcsec;
+  int precArcmin;
+  int precDeg;
+  int precLinear;
+  int precHMS;
+  int precDMS;
+
   int markerEpsilon;       // mouse tolerance for select/edit
   int showMarkers;
   int showMarkersText;

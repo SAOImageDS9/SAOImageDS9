@@ -110,7 +110,8 @@ void BaseLine::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
 {
   Vector v1 = ptr->mapFromRef(p1,sys);
   Vector v2 = ptr->mapFromRef(p2,sys);
-  str << type_ << '(' << setprecision(8) << v1 << ',' << v2 << ')';
+  str << type_ << '(' << setprecision(parent->precLinear)
+      << v1 << ',' << v2 << ')';
 }
 
 // special composite funtionallity

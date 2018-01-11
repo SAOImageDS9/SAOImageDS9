@@ -440,7 +440,7 @@ void Polygon::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
 
 	Vector vv = 
 	  ptr->mapFromRef(vertex.current()->vector*mm,Coord::PHYSICAL);
-	str << setprecision(8) << vv;
+	str << setprecision(parent->precLinear) << vv;
       }
       while (vertex.next());
       str << ')';
@@ -487,7 +487,7 @@ void Polygon::listPros(ostream& str, Coord::CoordSystem sys,
       vertex.head();
       do {
 	Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,sys);
-        str << ' ' << setprecision(8) << vv;
+        str << ' ' << setprecision(parent->precLinear) << vv;
       }
       while (vertex.next());
     }
@@ -538,7 +538,7 @@ void Polygon::listSAOtng(ostream& str, Coord::CoordSystem sys,
 	first=0;
 
 	Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,sys);
-        str << setprecision(8) << vv;
+        str << setprecision(parent->precLinear) << vv;
       }
       while (vertex.next());
       str << ')';
@@ -580,7 +580,7 @@ void Polygon::listSAOimage(ostream& str, int strip)
     first=0;
 
     Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,Coord::IMAGE);
-    str << setprecision(8) << vv;
+    str << setprecision(parent->precLinear) << vv;
   }
   while (vertex.next());
 

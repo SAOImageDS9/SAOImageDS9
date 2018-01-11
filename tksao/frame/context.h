@@ -32,6 +32,8 @@ class FitsZBound {
 ostream& operator<<(ostream&, const FitsZBound&);
 
 class Context {
+  friend class FitsImage;
+  
  public:
   enum SmoothFunction {BOXCAR, TOPHAT, GAUSSIAN, ELLIPTIC};
 

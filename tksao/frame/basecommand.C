@@ -1762,14 +1762,14 @@ void Base::getFitsSizeCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
     ostringstream str;
     switch (dist) {
     case Coord::DEGREE:
-      str << setprecision(10);
+      str << setprecision(precDeg);
       break;
     case Coord::ARCMIN:
-      str << setprecision(5) << fixed;
+      str << setprecision(precArcmin) << fixed;
       ss *= 60;
       break;
     case Coord::ARCSEC:
-      str << setprecision(3) << fixed;
+      str << setprecision(precArcsec) << fixed;
       ss *= 60*60;
       break;
     }

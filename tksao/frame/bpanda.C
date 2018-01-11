@@ -541,31 +541,16 @@ void Bpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       if (ang2<=ang1+FLT_EPSILON)
 	ang2 += 360;
 
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << type_ << '(' 
-	      << setprecision(10) << vv << ','
-	      << setprecision(8) << ang1 << ',' << ang2 << ',' 
-	      << setprecision(8) << numAngles_-1 << ','
-	      << setprecision(3) << fixed << setunit('"') << r1 << ',' << setunit('"') << r2 << ',';
-	  str.unsetf(ios_base::floatfield);
-	  str << setprecision(8) << numAnnuli_-1 << ','
-	      << setprecision(8) << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADEC(ptr,center,sys,sky,format);
-	str << type_ << '(' << ra << ',' << dec << ','
-	      << setprecision(8) << ang1 << ',' << ang2 << ',' 
-	      << setprecision(8) << numAngles_-1 << ','
-	      << setprecision(3) << fixed << setunit('"') << r1 << ',' << setunit('"') << r2 << ',';
-	  str.unsetf(ios_base::floatfield);
-	  str << setprecision(8) << numAnnuli_-1 << ','
-	      << setprecision(8) << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
-	break;
-      }
+      listRADEC(ptr,center,sys,sky,format);
+      str << type_ << '(' << ra << ',' << dec << ','
+	  << setprecision(8) << ang1 << ',' << ang2 << ',' 
+	  << setprecision(8) << numAngles_-1 << ','
+	  << setprecision(3) << fixed
+	  << setunit('"') << r1 << ',' << setunit('"') << r2 << ',';
+      str.unsetf(ios_base::floatfield);
+      str << setprecision(8) << numAnnuli_-1 << ','
+	  << setprecision(8)
+	  << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
     }
     else
       listANonCel(ptr, str, sys);

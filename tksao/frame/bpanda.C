@@ -590,31 +590,14 @@ void Bpanda::listB(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  for (int jj=1; jj<numAngles_; jj++) {
-	    for (int ii=1; ii<numAnnuli_; ii++) {
-	      listPre(str, sys, sky, ptr, strip, 0);
-	      str << type_ << '(' << setprecision(10) << vv << ',';
-	      listBCel(ptr, ii, jj, str, sys, sky, format, conj, strip);
-	    }
-	  }
+      listRADEC(ptr,center,sys,sky,format);
+      for (int jj=1; jj<numAngles_; jj++) {
+	for (int ii=1; ii<numAnnuli_; ii++) {
+	  listPre(str, sys, sky, ptr, strip, 0);
+	  str << type_ << '(' << ra << ',' << dec << ',';
+	  listBCel(ptr, ii, jj, str, sys, sky, format, conj, strip);
 	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADEC(ptr,center,sys,sky,format);
-	for (int jj=1; jj<numAngles_; jj++) {
-	  for (int ii=1; ii<numAnnuli_; ii++) {
-	    listPre(str, sys, sky, ptr, strip, 0);
-	    str << type_ << '(' << ra << ',' << dec << ',';
-	    listBCel(ptr, ii, jj, str, sys, sky, format, conj, strip);
-	  }
-	}
-	break;
       }
-      break;
     }
     else
       listBNonCel(ptr, str, sys, sky, format, conj, strip);

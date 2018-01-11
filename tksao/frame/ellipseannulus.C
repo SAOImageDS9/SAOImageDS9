@@ -335,57 +335,42 @@ void EllipseAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  for (int ii=0; ii<numAnnuli_; ii++) {
-	    coord.listProsCoordSystem(str,sys,sky);
-	    str << "; ";
+      listRADECPros(ptr,center,sys,sky,format);
+      for (int ii=0; ii<numAnnuli_; ii++) {
+	coord.listProsCoordSystem(str,sys,sky);
+	str << "; ";
 
-	    Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
-            str << "ellipse "
-                << setprecision(10) << setunit('d') << vv << ' '
-                << setprecision(3) << setunit('"') << fixed << rr << ' ';
-	    str.unsetf(ios_base::floatfield);
-	    str << setprecision(8) << radToDeg(angle);
-
-	    if (ii!=0) {
-	      Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys,Coord::ARCSEC);
-              str << " & !ellipse "
-                  << setprecision(8) << setunit('d') << vv << ' '
-                  << setprecision(3) << setunit('"') << fixed << r1 << ' ';
-              str.unsetf(ios_base::floatfield);
-              str << setprecision(8) << radToDeg(angle);
-	    }
-
-	    listProsPost(str, strip);
-	  }
+	Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
+	str << "ellipse ";
+	switch (format) {
+	case Coord::DEGREES:
+	  str << ra << 'd' << ' ' << dec << 'd' << ' ';
+	  break;
+	case Coord::SEXAGESIMAL:
+	  str << ra << ' ' << dec << ' ';
+	  break;
 	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADECPros(ptr,center,sys,sky,format);
-	for (int ii=0; ii<numAnnuli_; ii++) {
-	  coord.listProsCoordSystem(str,sys,sky);
-	  str << "; ";
+	str << setprecision(3) << setunit('"') << fixed << rr << ' ';
+	str.unsetf(ios_base::floatfield);
+	str << setprecision(8) << radToDeg(angle);
 
-	  Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
-          str << "ellipse " << ra << ' ' << dec << ' '
-              << setprecision(3) << setunit('"') << fixed << rr << ' ';
-          str.unsetf(ios_base::floatfield);
-          str << setprecision(8) << radToDeg(angle);
-
-	  if (ii!=0) {
-	    Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys,Coord::ARCSEC);
-            str << " & !ellipse " << ra << ' ' << dec << ' '
-                << setprecision(3) << setunit('"') << fixed << r1 << ' ';
-            str.unsetf(ios_base::floatfield);
-            str << setprecision(8) << radToDeg(angle);
+	if (ii!=0) {
+	  Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys,Coord::ARCSEC);
+	  str << " & !ellipse ";
+	  switch (format) {
+	  case Coord::DEGREES:
+	    str << ra << 'd' << ' ' << dec << 'd' << ' ';
+	    break;
+	  case Coord::SEXAGESIMAL:
+	    str << ra << ' ' << dec << ' ';
+	    break;
 	  }
-
-	  listProsPost(str, strip);
+	  str << setprecision(3) << setunit('"') << fixed << r1 << ' ';
+	  str.unsetf(ios_base::floatfield);
+	  str << setprecision(8) << radToDeg(angle);
 	}
-	break;
+
+	listProsPost(str, strip);
       }
     }
   }

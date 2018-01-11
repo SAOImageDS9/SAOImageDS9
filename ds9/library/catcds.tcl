@@ -217,15 +217,32 @@ proc CATCDSReader {t sock token} {
 
 proc CATCDSURL {server} {
     switch -- $server {
+	france -
 	cds {return {vizier.u-strasbg.fr}}
-	sao {return {vizier.cfa.harvard.edu}}
-	cadc {return {vizier.hia.nrc.ca}}
+	tokyo -
+	japan -
 	adac {return {vizier.nao.ac.jp}}
-	iucaa {return {vizier.iucaa.ernet.in}}
-	inasan {return {vizier.inasan.ru}}
-	bejing {return {data.bao.ac.cn}}
+	canada -
+	cadc {return {vizier.hia.nrc.ca}}
+	uk -
 	cambridge {return {vizier.ast.cam.ac.uk}}
+	usa -
+	cfa -
+	harvard -
+	sao {return {vizier.cfa.harvard.edu}}
+	hawaii -
 	ukirt {return {www.ukirt.jach.hawaii.edu}}
+	india -
+	iucaa {return {vizier.iucaa.in}}
+	china -
+	bejing {return {vizier.china-vo.org}}
+	safrica -
+	saao {return {viziersaao.chpc.ac.za}}
+	russia -
+	inasan {
+	    # no longer active
+	    return {vizier.u-strasbg.fr}
+	}
     }
 }
 

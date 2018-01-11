@@ -36,6 +36,18 @@ proc CATDef {} {
     set icat(function) 1and2
     set icat(unique) 1
 
+    set icat(server,menu) { \
+	{{CDS, France} cds} \
+	{{Tokyo, Japan} adac} \
+	{{CADC, Canada} cadc} \
+	{{Cambridge, UK} cambridge} \
+	{{CFA, USA} sao} \
+	{{UKIRT-Hawaii, USA} ukirt} \
+	{{IUCAA, India} iucaa} \
+	{{Bejing, China} bejing} \
+	{{SAAO, South Africa} saao} \
+    }
+
     set icat(def) { \
 		       {- {Database} db} \
 		       {{NED} catned ned ned} \
@@ -744,30 +756,21 @@ proc CATAnalysisMenu {} {
 }
 
 proc CATServerMenu {varname} {
+    global icat
+    
     upvar #0 $varname var
     global $varname
 
     $var(mb) add cascade -label [msgcat::mc {Catalog Server}] \
 	-menu $var(mb).server
     menu $var(mb).server
-    $var(mb).server add radiobutton -label {CDS, Strasbourg France} \
-	-variable ${varname}(server) -value cds
-    $var(mb).server add radiobutton -label {CFA, Boston USA} \
-	-variable ${varname}(server) -value sao
-    $var(mb).server add radiobutton -label {CADC, Canada} \
-	-variable ${varname}(server) -value cadc
-    $var(mb).server add radiobutton -label {ADAC, Tokyo Japan} \
-	-variable ${varname}(server) -value adac
-    $var(mb).server add radiobutton -label {IUCAA, Pune India} \
-	-variable ${varname}(server) -value iucaa
-    $var(mb).server add radiobutton -label {INASAN, Russia} \
-	-variable ${varname}(server) -value inasan
-    $var(mb).server add radiobutton -label {BEJING, China} \
-	-variable ${varname}(server) -value bejing
-    $var(mb).server add radiobutton -label {CAMBRIDGE, UK} \
-	-variable ${varname}(server) -value cambridge
-    $var(mb).server add radiobutton -label {UKIRT, Hawaii USA} \
-	-variable ${varname}(server) -value ukirt
+
+    set ll [llength $icat(server,menu)]
+    for {set ii 0} {$ii<$ll} {incr ii} {
+	set item [lindex $icat(server,menu) $ii]
+	$var(mb).server add radiobutton -label [lindex $item 0] \
+	    -variable ${varname}(server) -value [lindex $item 1]
+    }
 }
 
 proc CATSortMenu {varname} {
@@ -1151,6 +1154,7 @@ proc CATBackup {ch which fdir rdir} {
 }
 
 proc PrefsDialogCatalog {} {
+    global icat
     global dprefs
 
     set w $dprefs(tab)
@@ -1182,22 +1186,13 @@ proc PrefsDialogCatalog {} {
 	sym,font,weight, sym,font,slant {}
 
     menu $f.svr.menu
-    $f.svr.menu add radiobutton -label {CDS} \
-	-variable pcat(server) -value cds
-    $f.svr.menu add radiobutton -label {SAO} \
-	-variable pcat(server) -value sao
-    $f.svr.menu add radiobutton -label {CADC} \
-	-variable pcat(server) -value cadc
-    $f.svr.menu add radiobutton -label {ADAC} \
-	-variable pcat(server) -value adac
-    $f.svr.menu add radiobutton -label {IUCAA} \
-	-variable pcat(server) -value iucaa
-    $f.svr.menu add radiobutton -label {BEJING} \
-	-variable pcat(server) -value bejing
-    $f.svr.menu add radiobutton -label {CAMBRIDGE UK} \
-	-variable pcat(server) -value cambridge
-    $f.svr.menu add radiobutton -label {UKIRT HAWAII} \
-	-variable pcat(server) -value ukirt
+
+    set ll [llength $icat(server,menu)]
+    for {set ii 0} {$ii<$ll} {incr ii} {
+	set item [lindex $icat(server,menu) $ii]
+	$f.svr.menu add radiobutton -label [lindex $item 0] \
+	-variable pcat(server) -value [lindex $item 1]
+    }
 
     menu $f.shape.menu
     $f.shape.menu add radiobutton -label [msgcat::mc {Circle}] \

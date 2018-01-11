@@ -1631,9 +1631,8 @@ void Marker::listXY(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	listRADEC(ptr,center,sys,sky,format);
 	str << ra << ' ' << dec;
       }
-      else {
+      else
 	str << setprecision(8) << ptr->mapFromRef(center,sys);
-      }
     }
     break;
   }

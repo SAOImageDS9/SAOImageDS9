@@ -254,33 +254,16 @@ void EllipseAnnulus::list(ostream& str, Coord::CoordSystem sys,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
+      listRADEC(ptr,center,sys,sky,format);
       double aa = parent->mapAngleFromRef(angle,sys,sky);
-      switch (format) {
-      case Coord::DEGREES:
-	{
-	  Vector vv = ptr->mapFromRef(center,sys,sky);
-	  str << "ellipse(" << setprecision(10) << vv
-	      << setprecision(3) << fixed;
-	  for (int ii=0; ii<numAnnuli_; ii++) {
-	    Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
-	    str << ',' << setunit('"') << rr;
-	  }
-	  str.unsetf(ios_base::floatfield);
-	  str << setprecision(8) << ',' << radToDeg(aa) << ')';
-	}
-	break;
-      case Coord::SEXAGESIMAL:
-	listRADEC(ptr,center,sys,sky,format);
-	str << "ellipse(" << ra << ',' << dec
-	    << setprecision(3) << fixed;
-	for (int ii=0; ii<numAnnuli_; ii++) {
-	  Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
-	  str << ',' << setunit('"') << rr;
-	}
-	str.unsetf(ios_base::floatfield);
-	str << setprecision(8) << ',' << radToDeg(aa) << ')';
-	break;
+      str << "ellipse(" << ra << ',' << dec
+	  << setprecision(3) << fixed;
+      for (int ii=0; ii<numAnnuli_; ii++) {
+	Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
+	str << ',' << setunit('"') << rr;
       }
+      str.unsetf(ios_base::floatfield);
+      str << setprecision(8) << ',' << radToDeg(aa) << ')';
     }
     else
       listNonCel(ptr, str, sys);

@@ -503,14 +503,10 @@ void Cpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      double a1 =
-	radToDeg(parent->mapAngleFromRef(angles_[0],sys,sky));
-      double a2 =
-	radToDeg(parent->mapAngleFromRef(angles_[numAngles_-1],sys,sky));
-      double r1 =
-	ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC);
-      double r2 =
-	ptr->mapLenFromRef(annuli_[numAnnuli_-1][0],sys,Coord::ARCSEC);
+      double a1 = radToDeg(parent->mapAngleFromRef(angles_[0],sys,sky));
+      double a2 = radToDeg(parent->mapAngleFromRef(angles_[numAngles_-1],sys,sky));
+      double r1 = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC);
+      double r2 = ptr->mapLenFromRef(annuli_[numAnnuli_-1][0],sys,Coord::ARCSEC);
       if (a2<=a1+FLT_EPSILON)
 	a2 += 360;
 

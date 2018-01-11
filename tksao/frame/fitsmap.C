@@ -365,16 +365,15 @@ void FitsImage::listLenFromRef(ostream& str, double dd,
   default:
     if (hasWCS(sys)) {
       if (hasWCSCel(sys)) {
-	str << fixed;
 	switch (dist) {
 	case Coord::DEGREE:
-	  str << setprecision(7);
+	  str << setprecision(10);
 	  break;
 	case Coord::ARCMIN:
-	  str << setprecision(5);
+	  str << setprecision(5) << fixed;
 	  break;
 	case Coord::ARCSEC:
-	  str << setprecision(3);
+	  str << setprecision(3) << fixed;
 	  break;
 	}
 	str << out;
@@ -402,16 +401,15 @@ void FitsImage::listLenFromRef(ostream& str, const Vector& vv,
   default:
     if (hasWCS(sys)) {
       if (hasWCSCel(sys)) {
-	str << fixed;
 	switch (dist) {
 	case Coord::DEGREE:
-	  str << setprecision(7);
+	  str << setprecision(10);
 	  break;
 	case Coord::ARCMIN:
-	  str << setprecision(5);
+	  str << setprecision(5) << fixed;
 	  break;
 	case Coord::ARCSEC:
-	  str << setprecision(3);
+	  str << setprecision(3) << fixed;
 	  break;
 	}
 	str << out;
@@ -493,16 +491,15 @@ void FitsImage::listDistFromRef(ostream& str,
   default:
     if (hasWCS(sys)) {
       if (hasWCSCel(sys)) {
-	str << fixed;
 	switch (dist) {
 	case Coord::DEGREE:
-	  str << setprecision(7);
+	  str << setprecision(10);
 	  break;
 	case Coord::ARCMIN:
-	  str << setprecision(5);
+	  str << setprecision(5) << fixed;
 	  break;
 	case Coord::ARCSEC:
-	  str << setprecision(3);
+	  str << setprecision(3) << fixed;
 	  break;
 	}
 	str << out;

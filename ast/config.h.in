@@ -47,9 +47,6 @@
 /* The sscanf shows the non-ANSI behaviour reported by Bill Joye */
 #undef HAVE_NONANSI_SSCANF
 
-/* Define to 1 if the Fortran compiler supports the VAX %LOC extension */
-#undef HAVE_PERCENTLOC
-
 /* Use the starmem library for memory management */
 #undef HAVE_STAR_MEM_H
 

@@ -1760,17 +1760,16 @@ void Base::getFitsSizeCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
 	      keyContext->fits->getWCSDist(wbb.ll,wbb.ul(),sys));
 
     ostringstream str;
-    str << fixed;
     switch (dist) {
     case Coord::DEGREE:
-      str << setprecision(7);
+      str << setprecision(10);
       break;
     case Coord::ARCMIN:
-      str << setprecision(5);
+      str << setprecision(5) << fixed;
       ss *= 60;
       break;
     case Coord::ARCSEC:
-      str << setprecision(3);
+      str << setprecision(3) << fixed;
       ss *= 60*60;
       break;
     }

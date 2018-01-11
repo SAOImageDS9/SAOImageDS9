@@ -1949,38 +1949,19 @@ void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys,
   default:
     if (ptr->hasWCS(sys)) {
       if (ptr->hasWCSCel(sys)) {
-	switch (format) {
-	case Coord::DEGREES:
-	  {
-	    double xx[cnt];
-	    double yy[cnt];
-	    for (int ii=0; ii<cnt; ii++) {
-	      Vector v = ptr->mapFromRef(vv[ii],sys,sky);
-	      xx[ii] = v[0];
-	      yy[ii] = v[1];
-	    }
-	    XMLRow(XMLXV,xx,cnt,10);
-	    XMLRow(XMLYV,yy,cnt,10);
-	  }
-	  break;
-	case Coord::SEXAGESIMAL:
-	  {
-	    char* xx[cnt];
-	    char* yy[cnt];
-	    for (int ii=0; ii<cnt; ii++) {
-	      listRADEC(ptr,vv[ii],sys,sky,format);
-	      xx[ii] = dupstr(ra);
-	      yy[ii] = dupstr(dec);
-	    }
-	    XMLRow(XMLXV,xx,cnt);
-	    XMLRow(XMLYV,yy,cnt);
+	char* xx[cnt];
+	char* yy[cnt];
+	for (int ii=0; ii<cnt; ii++) {
+	  listRADEC(ptr,vv[ii],sys,sky,format);
+	  xx[ii] = dupstr(ra);
+	  yy[ii] = dupstr(dec);
+	}
+	XMLRow(XMLXV,xx,cnt);
+	XMLRow(XMLYV,yy,cnt);
 
-	    for (int ii=0; ii<cnt; ii++) {
-	      delete [] xx[ii];
-	      delete [] yy[ii];
-	    }
-	  }
-	  break;
+	for (int ii=0; ii<cnt; ii++) {
+	  delete [] xx[ii];
+	  delete [] yy[ii];
 	}
       }
       else {

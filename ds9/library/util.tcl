@@ -865,6 +865,8 @@ proc PrefsPrecision {} {
 	    $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) \
 	    $pds9(prec,arcmin) $pds9(prec,arcsec)
     }
+    # prefs validation command
+    return true
 }
 
 proc ChangeThreads {} {
@@ -873,6 +875,8 @@ proc ChangeThreads {} {
     foreach ff $ds9(frames) {
 	$ff threads $ds9(threads)
     }
+    # prefs validation command
+    return true
 }
 
 proc PrefsIRAFAlign {} {

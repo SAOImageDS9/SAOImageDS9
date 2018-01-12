@@ -53,6 +53,7 @@ proc PrefsDialog {{which {}}} {
     set dprefs(tabs) {}
 
     PrefsDialogGeneral
+    PrefsDialogPrecision
     PrefsDialogStartup
     PrefsDialogMenu
     PrefsDialogPanner
@@ -292,6 +293,54 @@ proc PrefsDialogGeneral {} {
     pack $w.general.misc $w.general.lang $w.general.font \
 	$w.general.textfont $w.general.color $w.general.mosaic \
 	$w.general.box \
+	-side top -fill both -expand true
+}
+
+proc PrefsDialogPrecision {} {
+    global dprefs
+    global ds9
+    global pds9
+
+    set w $dprefs(tab)
+
+    $dprefs(list) insert end [msgcat::mc {Precision}]
+    lappend dprefs(tabs) [ttk::frame $w.precision]
+
+    # Coordinates
+    set f [ttk::labelframe $w.precision.coord -text [msgcat::mc {Coordinates}]]
+
+    ttk::label $f.tlinear -text [msgcat::mc {Linear}]
+    ttk::entry $f.linear -textvariable pds9(prec,linear) \
+	-validate focusout -validatecommand PrefsPrecision -width 8
+    ttk::label $f.tdeg -text [msgcat::mc {Degrees}]
+    ttk::entry $f.deg -textvariable pds9(prec,deg) \
+	-validate focusout -validatecommand PrefsPrecision -width 8
+    ttk::label $f.thms -text [msgcat::mc {HMS}]
+    ttk::entry $f.hms -textvariable pds9(prec,hms) \
+	-validate focusout -validatecommand PrefsPrecision -width 8
+    ttk::label $f.tdms -text [msgcat::mc {DMS}]
+    ttk::entry $f.dms -textvariable pds9(prec,dms) \
+	-validate focusout -validatecommand PrefsPrecision -width 8
+
+    grid $f.tlinear $f.linear -padx 2 -pady 2 -sticky w
+    grid $f.tdeg $f.deg -padx 2 -pady 2 -sticky w
+    grid $f.thms $f.hms -padx 2 -pady 2 -sticky w
+    grid $f.tdms $f.dms -padx 2 -pady 2 -sticky w
+
+    # Length
+    set f [ttk::labelframe $w.precision.length -text [msgcat::mc {Length}]]
+
+    ttk::label $f.tarcmin -text [msgcat::mc {ArcMin}]
+    ttk::entry $f.arcmin -textvariable pds9(prec,arcmin) \
+	-validate focusout -validatecommand PrefsPrecision -width 8
+    ttk::label $f.tarcsec -text [msgcat::mc {ArcSec}]
+    ttk::entry $f.arcsec -textvariable pds9(prec,arcsec) \
+	-validate focusout -validatecommand PrefsPrecision -width 8
+
+    grid $f.tarcmin $f.arcmin -padx 2 -pady 2 -sticky w
+    grid $f.tarcsec $f.arcsec -padx 2 -pady 2 -sticky w
+
+    pack $w.precision.coord $w.precision.length \
 	-side top -fill both -expand true
 }
 

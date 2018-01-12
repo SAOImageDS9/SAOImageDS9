@@ -118,6 +118,7 @@ proc CommSet {fn paramlist {safemode 0}} {
 	pixeltable {ProcessPixelTableCmd param i}
 	plot {ProcessPlotCmd param i {} $fn}
 	png {ProcessPNGCmd param i {} $fn}
+	precision {ProcessPrecisionCmd param i}
 	prefs {ProcessPrefsCmd param i}
 	preserve {ProcessPreserveCmd param i}
 	print {
@@ -315,6 +316,7 @@ proc CommGet {proc id paramlist fn} {
 	pixeltable {ProcessSendPixelTableCmd $proc $id $param {} $fn}
 	plot {ProcessSendPlotCmd $proc $id $param}
 	png {ProcessSendPNGCmd $proc $id $param {} $fn}
+	precision {ProcessSendPrecisionCmd $proc $id $param}
 	prefs {ProcessSendPrefsCmd $proc $id $param}
 	preserve {ProcessSendPreserveCmd $proc $id $param}
 	pspagesetup {ProcessSendPSPageSetupCmd $proc $id $param}

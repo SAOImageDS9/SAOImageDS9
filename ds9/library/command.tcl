@@ -298,6 +298,7 @@ proc ProcessCommand {argv argc} {
 	    -nopixeltable {PixelTableDestroyDialog}
 	    -plot {incr i; ProcessPlotCmd argv i {} {}}
 	    -png {set file(type) png}
+	    -precision {incr i; ProcessPrecisionCmd argv i}
 	    -port {incr i; set iis(port) [lindex $argv $i]}
 	    -inet_only -
 	    -port_only {

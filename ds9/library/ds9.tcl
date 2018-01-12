@@ -133,10 +133,18 @@ proc DS9Def {} {
 	win32 {set pds9(xpa) 0}
     }
     
-    set pds9(samp) 1
-    set pds9(confirm) 1
     set pds9(bg) white
     set pds9(nan) white
+
+    set pds9(prec,linear) 8
+    set pds9(prec,deg) 10
+    set pds9(prec,hms) 4
+    set pds9(prec,dms) 3
+    set pds9(prec,arcmin) 5
+    set pds9(prec,arcsec) 3
+
+    set pds9(samp) 1
+    set pds9(confirm) 1
     set pds9(iraf) 1
     switch $ds9(wm) {
 	x11 {set pds9(dialog) motif}

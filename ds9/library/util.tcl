@@ -856,6 +856,17 @@ proc PrefsNanColor {} {
     }
 }
 
+proc PrefsPrecision {} {
+    global ds9
+    global pds9
+
+    foreach ff $ds9(frames) {
+	$ff precision $pds9(prec,linear) \
+	    $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) \
+	    $pds9(prec,arcmin) $pds9(prec,arcsec)
+    }
+}
+
 proc ChangeThreads {} {
     global ds9
 
@@ -1152,6 +1163,8 @@ proc FixSpecSystem {sysname defsys} {
 proc DS9Backup {ch which} {
     global pds9
 
+    puts $ch "$which precision $pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,arcmin) $pds9(prec,arcsec)"
+
     puts $ch "$which bg color $pds9(bg)"
     puts $ch "$which nan color $pds9(nan)"
 }
@@ -1167,6 +1180,21 @@ proc ProcessPrefsCmd {varname iname} {
 
     switch -- [string tolower [lindex $var $i]] {
 	clear {ClearPrefs}
+	precision {
+	    incr i
+	    set pds9(prec,linear) [lindex $var $i]
+	    incr i
+	    set pds9(prec,deg) [lindex $var $i]
+	    incr i
+	    set pds9(prec,hms) [lindex $var $i]
+	    incr i
+	    set pds9(prec,dms) [lindex $var $i]
+	    incr i
+	    set pds9(prec,arcmin) [lindex $var $i]
+	    incr i
+	    set pds9(prec,arcsec) [lindex $var $i]
+	    PrefsPrecision
+	}
 	bgcolor {
 	    # backward compatibility
 	    incr i
@@ -1199,11 +1227,38 @@ proc ProcessSendPrefsCmd {proc id param} {
 
     # backward compatibility
     switch -- [string tolower [lindex $param 0]] {
+	precision {$proc $id "$pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,arcmin) $pds9(prec,arcsec)\n"}
 	bgcolor {$proc $id "$pds9(bg)\n"}
 	nancolor {$proc $id "$pds9(nan)\n"}
 	threads {$proc $id "$ds9(threads)\n"}
 	irafalign {$proc $id [ToYesNo $pds9(iraf)]}
     }
+}
+
+proc ProcessPrecisionCmd {varname iname} {
+    upvar $varname var
+    upvar $iname i
+
+    global pds9
+    incr i
+    set pds9(prec,linear) [lindex $var $i]
+    incr i
+    set pds9(prec,deg) [lindex $var $i]
+    incr i
+    set pds9(prec,hms) [lindex $var $i]
+    incr i
+    set pds9(prec,dms) [lindex $var $i]
+    incr i
+    set pds9(prec,arcmin) [lindex $var $i]
+    incr i
+    set pds9(prec,arcsec) [lindex $var $i]
+    PrefsPrecision
+}
+
+proc ProcessSendPrecisionCmd {proc id param} {
+    global pds9
+
+    $proc $id "$pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,arcmin) $pds9(prec,arcsec)\n"
 }
 
 proc ProcessBgCmd {varname iname} {

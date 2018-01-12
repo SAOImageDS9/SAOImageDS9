@@ -136,6 +136,10 @@ proc CreateNameNumberFrame {which type} {
 
     $ds9(next) datasec $scale(datasec)
 
+    $ds9(next) precision $pds9(prec,linear) \
+	$pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) \
+	$pds9(prec,arcmin) $pds9(prec,arcsec)
+    
     $ds9(next) bg color $pds9(bg)
     $ds9(next) nan color $pds9(nan)
     $ds9(next) iraf align $pds9(iraf)

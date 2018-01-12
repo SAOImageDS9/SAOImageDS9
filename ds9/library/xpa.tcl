@@ -425,6 +425,11 @@ proc CreateXPA {} {
 	XPASendPNG {} {} \
 	XPARcvdPNG {} "fillbuf=false"
 
+    xpacmdadd $xpa precision \
+	{} \
+	XPASendPrecision {} {} \
+	XPARcvdPrecision {} {}
+
     xpacmdadd $xpa prefs \
 	{} \
 	XPASendPrefs {} {} \
@@ -1529,6 +1534,19 @@ proc XPARcvdPNG {xpa cdata param buf len} {
 	    {Windows NT} {ProcessPNGCmd param i dummy {}}
 	}
     }
+    XPACatchError $xpa
+}
+
+proc XPASendPrecision {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendPrecisionCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdPrecision {xpa cdata param buf len} {
+    XPADebug "XPARcvdPrecision" $param
+    InitError xpa
+    catch {set i 0; ProcessPrecisionCmd param i}
     XPACatchError $xpa
 }
 

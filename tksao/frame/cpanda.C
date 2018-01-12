@@ -513,12 +513,12 @@ void Cpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       listRADEC(ptr,center,sys,sky,format);
       str << type_ << '(' 
 	  << ra << ',' << dec << ','
-	  << setprecision(parent->precLinear) << a1 << ',' << a2 << ','
+	  << setprecision(parent->precLinear_) << a1 << ',' << a2 << ','
 	  << numAngles_-1 << ','
-	  << setprecision(parent->precArcsec) << fixed << r1 << '"' << ','
+	  << setprecision(parent->precArcsec_) << fixed << r1 << '"' << ','
 	  << r2 << '"' << ',';
       str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLinear) << numAnnuli_-1 << ')';
+      str << setprecision(parent->precLinear_) << numAnnuli_-1 << ')';
     }
     else
       listANonCel(ptr, str, sys);
@@ -537,7 +537,7 @@ void Cpanda::listANonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
   Vector vv = ptr->mapFromRef(center,sys);
   double r1 = ptr->mapLenFromRef(annuli_[0][0],sys);
   double r2 = ptr->mapLenFromRef(annuli_[numAnnuli_-1][0],sys);
-  str << type_ << '(' << setprecision(parent->precLinear) << vv << ','
+  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
       << a1 << ',' << a2 << ',' << numAngles_-1 << ','
       << r1 << ',' << r2 << ',' << numAnnuli_-1 << ')';
 }
@@ -586,7 +586,7 @@ void Cpanda::listBNonCel(FitsImage* ptr, ostream& str,
 
       double r1 = ptr->mapLenFromRef(annuli_[ii-1][0],sys);
       double r2 = ptr->mapLenFromRef(annuli_[ii][0],sys);
-      str << type_ << '(' << setprecision(parent->precLinear) << vv << ','
+      str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
 	  << a1 << ',' << a2 << ",1,"
 	  << r1 << ',' << r2 << ",1)";
 
@@ -635,8 +635,8 @@ void Cpanda::listBCel(FitsImage* ptr, int ii, int jj, ostream& str,
   double r1 = ptr->mapLenFromRef(annuli_[ii-1][0],sys,Coord::ARCSEC);
   double r2 = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
 
-  str << setprecision(parent->precLinear) << a1 << ',' << a2 << ",1,"
-      << setprecision(parent->precArcsec) << fixed << r1 << '"' << ','
+  str << setprecision(parent->precLinear_) << a1 << ',' << a2 << ",1,"
+      << setprecision(parent->precArcsec_) << fixed << r1 << '"' << ','
       << r2 << '"' << ",1)";
   str.unsetf(ios_base::floatfield);
 		
@@ -646,13 +646,13 @@ void Cpanda::listBCel(FitsImage* ptr, int ii, int jj, ostream& str,
 
     str << " # panda=";
     if (ii==1 && jj==1 && !strip) {
-      str << '(' << setprecision(parent->precLinear);
+      str << '(' << setprecision(parent->precLinear_);
       for (int kk=0; kk<numAngles_; kk++) {
 	double aa = parent->mapAngleFromRef(angles_[kk],sys,sky);
 	str << radToDeg(aa) << ((kk<numAngles_-1) ? ' ' : ')');
       }
 
-      str << '(' << setprecision(parent->precArcsec) << fixed;
+      str << '(' << setprecision(parent->precArcsec_) << fixed;
       for (int kk=0; kk<numAnnuli_; kk++) {
 	double rr = ptr->mapLenFromRef(annuli_[kk][0],sys,Coord::ARCSEC);
 	str << rr << '"' << ((kk<numAnnuli_-1) ? ' ' : ')');
@@ -710,7 +710,7 @@ void Cpanda::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
 	    a2 += 360;
 
 	  listCiaoPre(str);
-	  str << "pie(" << setprecision(parent->precLinear) << vv << ','
+	  str << "pie(" << setprecision(parent->precLinear_) << vv << ','
 	      << r1 << ',' << r2 << ',' 
 	      << a1 << ',' << a2 << ')';
 	  listCiaoPost(str, strip);
@@ -731,7 +731,7 @@ void Cpanda::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
 	    a2 += 360;
 
 	  listCiaoPre(str);
-	  str << "pie(" << setprecision(parent->precLinear)
+	  str << "pie(" << setprecision(parent->precLinear_)
 	      << ra << ',' << dec << ',' 
 	      << r1 << '\'' << ',' << r2 << '\'' << ','
 	      << a1 << ',' << a2 << ')';

@@ -328,6 +328,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token POLYGON_
 %token POSTSCRIPT_
 %token POW_
+%token PRECISION_
 %token PRINT_
 %token PRESERVE_
 %token PROJECTION_
@@ -483,6 +484,7 @@ command : DEBUG_ debug
 	| PAN_ pan
 	| PANNER_ panner
 	| QUERY_ CURSOR_ {fr->queryCursorCmd();}
+        | PRECISION_ INT INT INT INT INT INT {fr->precCmd($2,$3,$4,$5,$6,$7);}
 	| POSTSCRIPT_ postscript
 	| RESET_ {fr->resetCmd();}
 	| REGION_ markerLayer region

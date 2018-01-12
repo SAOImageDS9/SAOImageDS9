@@ -224,7 +224,7 @@ void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       listRADEC(ptr,center,sys,sky,format);
       double rr = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC);
       str << type_ << '(' << ra << ',' << dec << ',' 
-	  << setprecision(parent->precArcsec) << fixed << rr << '"' << ')';
+	  << setprecision(parent->precArcsec_) << fixed << rr << '"' << ')';
       str.unsetf(ios_base::floatfield);
     }
     else
@@ -258,7 +258,7 @@ void Circle::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
 {
   Vector vv = ptr->mapFromRef(center,sys);
   double rr = ptr->mapLenFromRef(annuli_[0][0],sys);
-  str << type_ << '(' << setprecision(parent->precLinear) << vv << ','
+  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
       << rr << ')';
 }
 
@@ -292,7 +292,7 @@ void Circle::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
     {
       Vector vv = ptr->mapFromRef(center,Coord::PHYSICAL);
       double rr = ptr->mapLenFromRef(annuli_[0][0],Coord::PHYSICAL);
-      str << type_ << '(' << setprecision(parent->precLinear) << vv << ','
+      str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
 	  << rr << ')';
     }
     break;
@@ -301,7 +301,7 @@ void Circle::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
       listRADEC(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
       double rr = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCMIN);
       str << type_ << '(' << ra << ',' << dec << ',' 
-	  << setprecision(parent->precArcmin) << fixed << rr << '\'' << ')';
+	  << setprecision(parent->precArcmin_) << fixed << rr << '\'' << ')';
       str.unsetf(ios_base::floatfield);
     }
   }
@@ -324,7 +324,7 @@ void Circle::listSAOtng(ostream& str,
     {
       Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
       double rr = ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
-      str << type_ << '(' << setprecision(parent->precLinear) << vv << ','
+      str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
 	  << rr << ')';
     }
     break;
@@ -334,7 +334,7 @@ void Circle::listSAOtng(ostream& str,
       double rr = ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
       str << type_ << '('
 	  << ra << ',' << dec << ','
-	  << setprecision(parent->precLinear) << rr << ')';
+	  << setprecision(parent->precLinear_) << rr << ')';
     }
   }
 
@@ -356,7 +356,7 @@ void Circle::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       Vector vv = ptr->mapFromRef(center,sys);
       double rr = ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
       coord.listProsCoordSystem(str,sys,sky);
-      str << "; " << type_ << ' ' << setprecision(parent->precLinear)
+      str << "; " << type_ << ' ' << setprecision(parent->precLinear_)
 	  << vv << ' ' << rr;
     }
     break;
@@ -374,7 +374,7 @@ void Circle::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	str << ra << ' ' << dec << ' ';
 	break;
       }
-      str << setprecision(parent->precArcsec) << fixed << rr << '"';
+      str << setprecision(parent->precArcsec_) << fixed << rr << '"';
       str.unsetf(ios_base::floatfield);
     }
   }
@@ -388,7 +388,7 @@ void Circle::listSAOimage(ostream& str, int strip)
   listSAOimagePre(str);
 
   Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-  str << type_ << '(' << setprecision(parent->precLinear) << vv << ','
+  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
       << annuli_[0][0] << ')';
 
   listSAOimagePost(str, strip);

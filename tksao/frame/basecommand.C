@@ -1762,14 +1762,14 @@ void Base::getFitsSizeCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
     ostringstream str;
     switch (dist) {
     case Coord::DEGREE:
-      str << setprecision(precDeg);
+      str << setprecision(precDeg_);
       break;
     case Coord::ARCMIN:
-      str << setprecision(precArcmin) << fixed;
+      str << setprecision(precArcmin_) << fixed;
       ss *= 60;
       break;
     case Coord::ARCSEC:
-      str << setprecision(precArcsec) << fixed;
+      str << setprecision(precArcsec_) << fixed;
       ss *= 60*60;
       break;
     }
@@ -2622,6 +2622,17 @@ void Base::pannerCmd(char* n, int w, int h)
 
   // update panner matrices
   update(MATRIX);
+}
+
+void Base::precCmd(int linear, int deg, int hms, int dms, 
+		   int arcmin, int arcsec)
+{
+  precLinear_ = linear;
+  precDeg_ = deg;
+  precHMS_ = hms;
+  precDMS_ = dms;
+  precArcmin_ = arcmin;
+  precArcsec_ = arcsec;
 }
 
 void Base::rotateCmd(double r)

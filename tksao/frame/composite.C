@@ -201,7 +201,7 @@ void Composite::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     case Coord::AMPLIFIER:
       {
 	Vector vv = ptr->mapFromRef(center,sys);
-	str << '(' << setprecision(parent->precLinear) << vv << ',' 
+	str << '(' << setprecision(parent->precLinear_) << vv << ',' 
 	    << radToDeg(parent->mapAngleFromRef(angle,sys)) << ')';
       }
       break;
@@ -209,12 +209,12 @@ void Composite::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       if (ptr->hasWCSCel(sys)) {
 	listRADEC(ptr,center,sys,sky,format);
 	str << '(' << ra << ',' << dec << ',' 
-	    << setprecision(parent->precLinear) 
+	    << setprecision(parent->precLinear_) 
 	    << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
       }
       else {
 	Vector vv = ptr->mapFromRef(center,sys);
-	str << '(' << setprecision(parent->precLinear) << vv << ','
+	str << '(' << setprecision(parent->precLinear_) << vv << ','
 	    << radToDeg(parent->mapAngleFromRef(angle,sys)) << ')';
       }
     }

@@ -260,7 +260,7 @@ void BasePolygon::listBaseNonCel(FitsImage* ptr, ostream& str, Matrix& mm,
     first=0;
 
     Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,sys);
-    str << setprecision(parent->precLinear) << vv;
+    str << setprecision(parent->precLinear_) << vv;
   }
   while (vertex.next());
   str << ')';

@@ -133,12 +133,12 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   useCrosshair = 0;
 
-  precArcsec = 3;
-  precArcmin = 5;
-  precDeg = 10;
-  precLinear = 8;
-  precHMS = 4;
-  precDMS = 3;
+  precLinear_ = 8;
+  precDeg_ = 10;
+  precHMS_ = 4;
+  precDMS_ = 3;
+  precArcmin_ = 5;
+  precArcsec_ = 3;
 
   markerEpsilon = 3;
   showMarkers = 1;
@@ -760,7 +760,7 @@ void Base::doubleToTclArray(double dd, const char* var,
   str << base << "," << mod << ends;
 
   ostringstream vstr;
-  vstr << setprecision(precLinear) << dd << ends;
+  vstr << setprecision(precLinear_) << dd << ends;
   Tcl_SetVar2(interp, (char*)var, str.str().c_str(), vstr.str().c_str(), 0);
 }
 

@@ -3188,14 +3188,14 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   if (astOK && checkWCS(out)) {
     if (wcsIsASkyFrame(ast_[ss])) {
       ostringstream hms;
-      hms << "hms." << context_->parent_->precHMS;
+      hms << "hms." << context_->parent_->precHMS_;
       ostringstream dms;
-      dms << "+dms." << context_->parent_->precDMS;
+      dms << "+dms." << context_->parent_->precDMS_;
 
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
-	str << setprecision(context_->parent_->precDeg)
+	str << setprecision(context_->parent_->precDeg_)
 	    << out[0] << ' ' << out[1] << ' '
 	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
@@ -3225,7 +3225,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
       }
     }
     else
-      str << setprecision(context_->parent_->precLinear)
+      str << setprecision(context_->parent_->precLinear_)
 	  << out[0] << ' ' << out[1] << ends;
 
     strncpy(lbuf, str.str().c_str(), str.str().length());
@@ -3251,14 +3251,14 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   if (astOK && checkWCS(out)) {
     if (hasWCSCel(sys)) {
       ostringstream hms;
-      hms << "hms." << context_->parent_->precHMS;
+      hms << "hms." << context_->parent_->precHMS_;
       ostringstream dms;
-      dms << "+dms." << context_->parent_->precDMS;
+      dms << "+dms." << context_->parent_->precDMS_;
 
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
-	str << setprecision(context_->parent_->precDeg)
+	str << setprecision(context_->parent_->precDeg_)
 	    << out[0] << ' ' << out[1] << ' '
 	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	
@@ -3289,7 +3289,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
       }
     }
     else
-      str << setprecision(context_->parent_->precLinear)
+      str << setprecision(context_->parent_->precLinear_)
 	  << out[0] << ' ' << out[1] << ends;
 
     strncpy(lbuf, str.str().c_str(), str.str().length());
@@ -3334,14 +3334,14 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   if (astOK && checkWCS(out)) {
     if (hasWCSCel(sys)) {
       ostringstream hms;
-      hms << "hms." << context_->parent_->precHMS;
+      hms << "hms." << context_->parent_->precHMS_;
       ostringstream dms;
-      dms << "+dms." << context_->parent_->precDMS;
+      dms << "+dms." << context_->parent_->precDMS_;
 
       switch (format) {
       case Coord::DEGREES:
 	out = radToDeg(out);
-	str << setprecision(context_->parent_->precDeg)
+	str << setprecision(context_->parent_->precDeg_)
 	    << out[0] << ' ' << out[1] << ' ' << out[2]
 	    << ' ' << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
@@ -3371,7 +3371,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
       }
     }
     else
-      str << setprecision(context_->parent_->precLinear)
+      str << setprecision(context_->parent_->precLinear_)
 	  << out[0] << ' ' << out[1] << ' ' << out[2] <<ends;
 
     strncpy(lbuf, str.str().c_str(), str.str().length());

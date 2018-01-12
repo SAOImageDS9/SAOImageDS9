@@ -543,13 +543,13 @@ void Bpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 
       listRADEC(ptr,center,sys,sky,format);
       str << type_ << '(' << ra << ',' << dec << ','
-	  << setprecision(parent->precLinear) << ang1 << ',' << ang2 << ',' 
-	  << setprecision(parent->precLinear) << numAngles_-1 << ','
-	  << setprecision(parent->precArcsec) << fixed
+	  << setprecision(parent->precLinear_) << ang1 << ',' << ang2 << ',' 
+	  << setprecision(parent->precLinear_) << numAngles_-1 << ','
+	  << setprecision(parent->precArcsec_) << fixed
 	  << setunit('"') << r1 << ',' << setunit('"') << r2 << ',';
       str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLinear) << numAnnuli_-1 << ','
-	  << setprecision(parent->precLinear)
+      str << setprecision(parent->precLinear_) << numAnnuli_-1 << ','
+	  << setprecision(parent->precLinear_)
 	  << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
     }
     else
@@ -570,7 +570,7 @@ void Bpanda::listANonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
   Vector r1 = ptr->mapLenFromRef(annuli_[0],sys);
   Vector r2 =  ptr->mapLenFromRef(annuli_[numAnnuli_-1],sys);
   double aa = parent->mapAngleFromRef(angle,sys);
-  str << type_ << '(' << setprecision(parent->precLinear) << vv << ','
+  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
       << a1 << ',' << a2 << ',' << numAngles_-1 << ','
       << r1 << ',' << r2 << ',' << numAnnuli_-1 << ','
       << radToDeg(aa) << ')';
@@ -622,7 +622,7 @@ void Bpanda::listBNonCel(FitsImage* ptr, ostream& str,
       Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys);
       Vector r2 =  ptr->mapLenFromRef(annuli_[ii],sys);	
       str << type_ << '(' 
-	  << setprecision(parent->precLinear) << vv << ','
+	  << setprecision(parent->precLinear_) << vv << ','
 	  << a1 << ',' << a2 << ",1,"
 	  << r1 << ',' << r2 << ",1,"
 	  << radToDeg(aa) << ')';
@@ -677,11 +677,11 @@ void Bpanda::listBCel(FitsImage* ptr, int ii, int jj, ostream& str,
   Vector r2 =  ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);	
   double aa = parent->mapAngleFromRef(angle,sys,sky);
       
-  str << setprecision(parent->precLinear) << a1 << ',' << a2 << ",1,"
-      << setprecision(parent->precArcsec) << fixed << setunit('"')
+  str << setprecision(parent->precLinear_) << a1 << ',' << a2 << ",1,"
+      << setprecision(parent->precArcsec_) << fixed << setunit('"')
       << r1 << ',' << setunit('"') << r2 << ",1,";
   str.unsetf(ios_base::floatfield);
-  str << setprecision(parent->precLinear) << radToDeg(aa) << ')';
+  str << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
 		
   if (!strip) {
     if (conj)
@@ -689,21 +689,21 @@ void Bpanda::listBCel(FitsImage* ptr, int ii, int jj, ostream& str,
 
     str << " # bpanda=";
     if (ii==1 && jj==1 && !strip) {
-      str << '(' << setprecision(parent->precLinear);
+      str << '(' << setprecision(parent->precLinear_);
       for (int kk=0; kk<numAngles_; kk++) {
 	double ar = parent->mapAngleFromRef(angles_[kk],sys,sky);
 	str << radToDeg(ar) << ((kk<numAngles_-1) ? ' ' : ')');
       }
 
       str << '(';
-      str << setseparator(' ') << setprecision(parent->precArcsec) << fixed;
+      str << setseparator(' ') << setprecision(parent->precArcsec_) << fixed;
       for (int kk=0; kk<numAnnuli_; kk++) {
 	Vector rr = ptr->mapLenFromRef(annuli_[kk],sys,Coord::ARCSEC);
 	str << setunit('"') << rr << ((kk<numAnnuli_-1) ? ' ' : ')');
       }
       str.unsetf(ios_base::floatfield);
       str << setseparator(',');
-      str << '(' << setprecision(parent->precLinear) << radToDeg(aa) << ')';
+      str << '(' << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
       listProps(str);
     }
     else

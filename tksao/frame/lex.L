@@ -244,6 +244,7 @@ pointer		{return POINTER_;}
 polygon		{return POLYGON_;}
 postscript	{return POSTSCRIPT_;}
 pow		{return POW_;}
+precision       {return PRECISION_;}
 print		{return PRINT_;}
 preserve	{return PRESERVE_;}
 projection	{return PROJECTION_;}

@@ -279,7 +279,7 @@ void Line::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     {
       Vector v1 = ptr->mapFromRef(p1,Coord::IMAGE);
       Vector v2 = ptr->mapFromRef(p2,Coord::IMAGE);
-      str << type_ << '(' << setprecision(parent->precLinear)
+      str << type_ << '(' << setprecision(parent->precLinear_)
 	  << v1 << ',' << v2 << ')';
     }
     break;

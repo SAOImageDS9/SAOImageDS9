@@ -566,7 +566,7 @@ void Compass::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	listRADEC(ptr,center,sys,sky,format);
 	double rr = ptr->mapLenFromRef(radius,sys,Coord::ARCSEC);
 	str << type_ << '(' << ra << ',' << dec << ',' 
-	    << setprecision(parent->precArcsec) << fixed << rr << '"' << ')';
+	    << setprecision(parent->precArcsec_) << fixed << rr << '"' << ')';
 	str.unsetf(ios_base::floatfield);
       }
       else
@@ -588,7 +588,7 @@ void Compass::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
 {
   Vector vv = ptr->mapFromRef(center,sys);
   double rr = ptr->mapLenFromRef(radius,sys);
-  str << type_ << '(' << setprecision(parent->precLinear) << vv << ','
+  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
       << rr << ')';
 }
 

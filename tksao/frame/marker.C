@@ -1623,7 +1623,7 @@ void Marker::listXY(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear) << ptr->mapFromRef(center,sys);
+    str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
     break;
   default:
     if (ptr->hasWCS(sys)) {
@@ -1632,7 +1632,7 @@ void Marker::listXY(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	str << ra << ' ' << dec;
       }
       else
-	str << setprecision(parent->precLinear) << ptr->mapFromRef(center,sys);
+	str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
     }
     break;
   }
@@ -1688,7 +1688,7 @@ void Marker::XMLRow(XMLColName col, double val, int prec)
 void Marker::XMLRowARCSEC(XMLColName col, double val)
 {
   ostringstream str;
-  str << setprecision(parent->precArcsec) << fixed << val << ends;
+  str << setprecision(parent->precArcsec_) << fixed << val << ends;
 
   if (XMLCol[col])
     delete [] XMLCol[col];
@@ -1715,7 +1715,7 @@ void Marker::XMLRow(XMLColName col, double* val, int cnt, int prec)
 void Marker::XMLRowARCSEC(XMLColName col, double* val, int cnt)
 {
   ostringstream str;
-  str << setprecision(parent->precArcsec) << fixed;
+  str << setprecision(parent->precArcsec_) << fixed;
   for (int ii=0; ii<cnt; ii++) {
     str << val[ii];
     if (ii!=cnt-1)

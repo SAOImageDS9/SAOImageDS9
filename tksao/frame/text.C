@@ -247,7 +247,7 @@ void Text::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 void Text::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
 {
   Vector vv = ptr->mapFromRef(center,sys);
-  str << type_ << '(' << setprecision(parent->precLinear) << vv << ')';
+  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ')';
 }
 
 void Text::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky, 
@@ -285,7 +285,7 @@ void Text::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::AMPLIFIER:
     {
       Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-      str << type_ << '(' << setprecision(parent->precLinear)
+      str << type_ << '(' << setprecision(parent->precLinear_)
 	  << vv << ", \"" << text << "\")";
     }
     break;

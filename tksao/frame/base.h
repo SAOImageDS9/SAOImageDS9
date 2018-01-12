@@ -249,12 +249,12 @@ public:
 
   int useCrosshair;
 
-  int precArcsec;
-  int precArcmin;
-  int precDeg;
-  int precLinear;
-  int precHMS;
-  int precDMS;
+  int precLinear_;
+  int precDeg_;
+  int precHMS_;
+  int precDMS_;
+  int precArcmin_;
+  int precArcsec_;
 
   int markerEpsilon;       // mouse tolerance for select/edit
   int showMarkers;
@@ -1645,6 +1645,9 @@ public:
 
   // Pixel Table Commands
   void getPixelTableCmd(const Vector&, Coord::InternalSystem, int, int, char*);
+
+  // Precision Commands
+  void precCmd(int, int, int, int, int, int);
 
   // Print Commands
 #ifdef MAC_OSX_TK

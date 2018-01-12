@@ -1240,7 +1240,6 @@ proc ProcessPrecisionCmd {varname iname} {
     upvar $iname i
 
     global pds9
-    incr i
     set pds9(prec,linear) [lindex $var $i]
     incr i
     set pds9(prec,deg) [lindex $var $i]

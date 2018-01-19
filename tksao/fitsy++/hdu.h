@@ -17,6 +17,7 @@ class FitsHDU {
  protected:
   char* extname_;             // EXTNAME keyword
   int extver_;                // EXTVER keyword
+  int extlevel_;              // EXTLEVEL keyword
 
   int bitpix_;                // BITPIX keyword
   int naxes_;                 // NAXIS keyword
@@ -40,6 +41,7 @@ public:
 
   const char* extname() {return extname_;}
   int extver() {return extver_;}
+  int extlevel() {return extlevel_;}
   int bitpix() {return bitpix_;}
   int naxes() {return naxes_;}
   int naxis(int ii) {return naxis_[ii];}

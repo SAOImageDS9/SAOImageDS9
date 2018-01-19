@@ -46,6 +46,7 @@ public:
   int width() {return width_;}
   int offset() {return offset_;}
   int index() {return index_;}
+  char type() {return type_;}
 
   const char* tform() {return tform_;}
   const char* ttype() {return ttype_;}
@@ -112,12 +113,20 @@ class FitsBinColumn : public FitsColumn {
 protected:
   char* tdisp_;
   int repeat_;           // repeat count
+  char* tdim_;
+  int tdimM_;
+  int* tdimK_;
   
 public:
   FitsBinColumn(FitsHead*, int, int);
   ~FitsBinColumn();
 
+  const char* tdisp() {return tdisp_;}
   int repeat() {return repeat_;}
+  const char* tdim() {return tdim_;}
+  int tdimM() {return tdimM_;}
+  int* tdimK() {return tdimK_;}
+  int tdimK(int ii) {return tdimK_[ii];}
 };
 
 class FitsBinColumnStr : public FitsBinColumn {

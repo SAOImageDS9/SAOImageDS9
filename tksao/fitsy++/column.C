@@ -195,12 +195,33 @@ FitsBinColumn::FitsBinColumn(FitsHead* head, int i, int offset)
     else
       str >> repeat_ >> type_;
   }
+
+  tdim_ = dupstr(head->getString(keycat("TDIM",i)));
+  tdimM_ =0;
+  tdimK_ =NULL;
+  char dummy;
+  if (tdim_) {
+    string x(tdim_);
+    istringstream str(x);
+    str >> dummy >> tdimM_;
+    if (tdimM_>0) {
+      tdimK_ = new int[tdimM_];
+      for (int ii=0; ii<tdimM_; ii++)
+	str >> dummy >> tdimK_[ii];
+    }
+  }
 }
 
 FitsBinColumn::~FitsBinColumn()
 {
   if (tdisp_)
     delete [] tdisp_;
+
+  if (tdim_)
+    delete [] tdim_;
+
+  if (tdimK_)
+    delete [] tdimK_;
 }
 
 // FitsBinColumnStr

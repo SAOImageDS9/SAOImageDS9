@@ -106,6 +106,8 @@ public:
   FitsHead* primary() {return primary_;}
   int ext() {return ext_;}
   const char* extname() {return head_ ? head_->extname() : NULL;}
+  int extver() {return head_ ? head_->extver() : 1;}
+  int extlevel() {return head_ ? head_->extlevel() : 1;}
   int inherit() {return inherit_;}
   void setValid(int vv) {valid_=vv;}
   int isValid() {return valid_;}

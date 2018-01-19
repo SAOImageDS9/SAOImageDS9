@@ -59,7 +59,8 @@ public:
   int headbytes() {return acard_*FTY_CARDLEN;}
 
   const char* extname() {return hdu_ ? hdu_->extname() : NULL;}
-  int extver() {return hdu_ ? hdu_->extver() : 0;}
+  int extver() {return hdu_ ? hdu_->extver() : 1;}
+  int extlevel() {return hdu_ ? hdu_->extlevel() : 1;}
   int bitpix() {return hdu_ ? hdu_->bitpix() : 0;}
   int naxes() {return hdu_ ? hdu_->naxes() : 0;}
   int naxis(int ii) {return hdu_ ? hdu_->naxis(ii) : 0;}

@@ -28,7 +28,8 @@ FitsHDU::FitsHDU(FitsHead* head)
     }
   }
 
-  extver_ = head->getInteger("EXTVER", 0);
+  extver_ = head->getInteger("EXTVER", 1);
+  extlevel_ = head->getInteger("EXTLEVEL", 1);
 
   bitpix_ = head->getInteger("BITPIX", 0);
   naxes_ = head->getInteger("NAXIS", 0);

@@ -4481,6 +4481,155 @@ double FitsImage::wcsAxAngle(const Vector& vv1, const Vector& vv2)
 }
 #endif
 
+static FitsImage* fitsImagePtr =NULL;
+static void fits2TAB(AstFitsChan* chan, const char* extname,
+		     int extver, int extlevel, int* status)
+{
+  if (!fitsImagePtr) {
+    *status = 1;
+    return;
+  }
+    
+  FitsFile* ptr = fitsImagePtr->fitsFile();
+  FitsFile* ext =NULL;
+  bool first=true;
+  bool found=false;
+  while (!found) {
+    ext = new FitsMosaicNextMMapIncr(ptr);
+    if (!first)
+      delete ptr;
+    first =false;
+    
+    // EOF?
+    if (!ext || !ext->isValid()) {
+      if (ext)
+	delete ext;
+      
+      *status = 1;
+      return;
+    }
+
+    if (!ext->isBinTable())
+      break;
+
+    const char* name = ext->extname();
+    int ver = ext->extver();
+    int level = ext->extlevel();
+    
+    if (name) {
+      if (!strncmp(extname,name,7) && extver==ver && extlevel==level) {
+	found =true;
+	break;
+      }
+    }
+
+    ptr = ext;
+  }  
+
+  // ok, found it
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
+  AstFitsTable* table = (AstFitsTable*)astFitsTable(NULL,"");
+  FitsBinTableHDU* hdu = (FitsBinTableHDU*)ext->head()->hdu();
+
+  for (int ii=0; ii<hdu->cols(); ii++) {
+    FitsBinColumn* col = (FitsBinColumn*)hdu->find(ii);
+
+    int arr = 1;
+    for (int ii=0; ii<col->tdimM(); ii++)
+      arr *= col->tdimK(ii);
+
+    int type;
+    int size;
+    char* data =NULL;
+    switch (col->type()) {
+    case 'I':
+      type = AST__SINTTYPE;
+      data = (char*)new short[arr];
+      size = 2;
+      break;
+    case 'J':
+      type = AST__INTTYPE;
+      data = (char*)new int[arr];
+      size = 4;
+      break;
+    case 'E':
+      type = AST__FLOATTYPE;
+      data = (char*)new float[arr];
+      size = 4;
+      break;
+    case 'D':
+      type = AST__DOUBLETYPE;
+      data = (char*)new double[arr];
+      size = 8;
+      break;
+    default:
+      // not supported
+      astEnd;
+      if (ext)
+	delete ext;
+      *status = 1;
+      return;
+    }
+
+    char blank[] = "";
+    const char* unit = col->tunit();
+    if (!unit)
+      unit = blank;
+    astAddColumn(table, col->ttype(), type, col->tdimM(), col->tdimK(), unit);
+
+    char* ptr = (char*)ext->data();
+    int rows = hdu->rows();
+    int rowlen = hdu->width();
+
+    // will only handle 1d and 2d array
+    int dd = col->tdimK(0);
+    for (int ii=0; ii<rows; ii++, ptr+=rowlen) {
+      for (int jj=0; jj<col->tdimK(1); jj++) {
+	switch (col->type()) {
+	case 'I':
+	  {
+	    short vv = col->value(ptr,jj);
+	    memcpy(data+ii*dd+jj,&vv,2);
+	  }
+	  break;
+	case 'J':
+	  {
+	    int vv = col->value(ptr,jj);
+	    memcpy(data+ii*dd+jj,&vv,4);
+	  }
+	  break;
+	case 'E':
+	  {
+	    float vv = col->value(ptr,jj);
+	    memcpy(data+ii*dd+jj,&vv,4);
+	  }
+	  break;
+	case 'D':
+	  {
+	    double vv = col->value(ptr,jj);
+	    memcpy(data+ii*dd+jj,&vv,8);
+	  }
+	  break;
+	}
+      }
+    }
+    astPutColumnData(table, col->ttype(), 0, dd*size, data);
+
+    if (data)
+      delete [] data;
+  }  
+
+  astPutTable(chan, table, extname);
+  astEnd; // now, clean up memory
+
+  if (ext)
+    delete ext;
+
+  *status = 0;
+}
+
 AstFrameSet* FitsImage::fits2ast(FitsHead* hd) 
 {
   // we may have an error, just reset
@@ -4490,6 +4639,11 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
   AstFitsChan* chan = astFitsChan(NULL, NULL, "");
   if (!astOK || chan == AST__NULL)
     return NULL;
+
+  // enable -TAB
+  astSetI(chan,"TabOK",1);
+  fitsImagePtr = this;
+  astTableSource(chan, fits2TAB);
 
   // no warning messages
   astClear(chan,"Warnings");
@@ -4517,15 +4671,15 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
       astClearStatus;
   }
 
-  // enable -TAB
-  //astSetI(chan,"TabOK",1);
-
   // we may have an error, just reset
   astClearStatus;
   astClear(chan, "Card");
 
   // parse header
   AstFrameSet* frameSet = (AstFrameSet*)astRead(chan);
+
+  // clear pointer
+  fitsImagePtr = NULL;
 
   // do we have anything?
   if (!astOK || frameSet == AST__NULL || 

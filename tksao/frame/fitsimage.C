@@ -4481,16 +4481,10 @@ double FitsImage::wcsAxAngle(const Vector& vv1, const Vector& vv2)
 }
 #endif
 
-static FitsImage* fitsImagePtr =NULL;
 static void fits2TAB(AstFitsChan* chan, const char* extname,
 		     int extver, int extlevel, int* status)
 {
-  if (!fitsImagePtr) {
-    *status = 1;
-    return;
-  }
-    
-  FitsFile* ptr = fitsImagePtr->fitsFile();
+  FitsFile* ptr = ((FitsImage*)astChannelData)->fitsFile();
   FitsFile* ext =NULL;
   bool first=true;
   bool found=false;
@@ -4528,7 +4522,7 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
 
   // ok, found it
   astClearStatus; // just to make sure
-  astBegin; // start memory management
+  //  astBegin; // start memory management
 
   FitsHead* hd = ext->head();
   FitsBinTableHDU* hdu = (FitsBinTableHDU*)hd->hdu();
@@ -4555,39 +4549,9 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
     int width = col->width();
     int repeat = col->repeat();
 
-    if (0) {
-    int type;
-    switch (col->type()) {
-    case 'I':
-      type = AST__SINTTYPE;
-      break;
-    case 'J':
-      type = AST__INTTYPE;
-      break;
-    case 'E':
-      type = AST__FLOATTYPE;
-      break;
-    case 'D':
-      type = AST__DOUBLETYPE;
-      break;
-    default:
-      // not supported
-      astEnd;
-      if (ext)
-	delete ext;
-      *status = 1;
-      return;
-    }
-
-    char blank[] = "";
-    const char* unit = col->tunit();
-    if (!unit)
-      unit = blank;
-    astAddColumn(table, col->ttype(), type, col->tdimM(), col->tdimK(), unit);
-    }
-    
     char* ptr = (char*)ext->data();
     unsigned char* data = new unsigned char[width*rows];
+    memset(data,0,width*rows);
     switch (col->type()) {
     case 'I':
       for (int ii=0; ii<rows; ii++, ptr+=rowlen)
@@ -4625,13 +4589,7 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
 
   astPutTable(chan, table, extname);
 
-  for (int ii=0; ii<cols; ii++) {
-    const char* name = astColumnName(table, ii+1);
-    int size = astColumnSize(table, name);
-    cerr << name << ' ' << size << endl;
-  }
-
-  astEnd; // now, clean up memory
+  //  astEnd; // now, clean up memory
   if (ext)
     delete ext;
 
@@ -4650,7 +4608,7 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
 
   // enable -TAB
   astSetI(chan,"TabOK",1);
-  fitsImagePtr = this;
+  astPutChannelData(chan, this);
   astTableSource(chan, fits2TAB);
 
   // no warning messages
@@ -4685,9 +4643,6 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
 
   // parse header
   AstFrameSet* frameSet = (AstFrameSet*)astRead(chan);
-
-  // clear pointer
-  fitsImagePtr = NULL;
 
   // do we have anything?
   if (!astOK || frameSet == AST__NULL || 

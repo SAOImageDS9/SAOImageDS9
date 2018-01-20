@@ -4530,39 +4530,45 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  AstFitsTable* table = (AstFitsTable*)astFitsTable(NULL,"");
-  FitsBinTableHDU* hdu = (FitsBinTableHDU*)ext->head()->hdu();
+  FitsHead* hd = ext->head();
+  FitsBinTableHDU* hdu = (FitsBinTableHDU*)hd->hdu();
+  int cols = hdu->cols();
+  int rows = hdu->rows();
+  int rowlen = hdu->width();
 
-  for (int ii=0; ii<hdu->cols(); ii++) {
+  // create fitstable
+  AstFitsChan* header = astFitsChan(NULL, NULL, "");
+  char* cards = hd->cards();
+  int ncards = hd->ncard();
+
+  for (int ii=0; ii<ncards; ii++) {
+    char buf[81];
+    strncpy(buf,cards+(ii*80),80);
+    buf[80] = '\0';
+
+    astPutFits(header, buf, 0);
+  }
+  AstFitsTable* table = (AstFitsTable*)astFitsTable(header,"");
+
+  for (int ii=0; ii<cols; ii++) {
     FitsBinColumn* col = (FitsBinColumn*)hdu->find(ii);
+    int width = col->width();
+    int repeat = col->repeat();
 
-    int arr = 1;
-    for (int ii=0; ii<col->tdimM(); ii++)
-      arr *= col->tdimK(ii);
-
+    if (0) {
     int type;
-    int size;
-    char* data =NULL;
     switch (col->type()) {
     case 'I':
       type = AST__SINTTYPE;
-      data = (char*)new short[arr];
-      size = 2;
       break;
     case 'J':
       type = AST__INTTYPE;
-      data = (char*)new int[arr];
-      size = 4;
       break;
     case 'E':
       type = AST__FLOATTYPE;
-      data = (char*)new float[arr];
-      size = 4;
       break;
     case 'D':
       type = AST__DOUBLETYPE;
-      data = (char*)new double[arr];
-      size = 8;
       break;
     default:
       // not supported
@@ -4578,52 +4584,54 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
     if (!unit)
       unit = blank;
     astAddColumn(table, col->ttype(), type, col->tdimM(), col->tdimK(), unit);
-
-    char* ptr = (char*)ext->data();
-    int rows = hdu->rows();
-    int rowlen = hdu->width();
-
-    // will only handle 1d and 2d array
-    int dd = col->tdimK(0);
-    for (int ii=0; ii<rows; ii++, ptr+=rowlen) {
-      for (int jj=0; jj<col->tdimK(1); jj++) {
-	switch (col->type()) {
-	case 'I':
-	  {
-	    short vv = col->value(ptr,jj);
-	    memcpy(data+ii*dd+jj,&vv,2);
-	  }
-	  break;
-	case 'J':
-	  {
-	    int vv = col->value(ptr,jj);
-	    memcpy(data+ii*dd+jj,&vv,4);
-	  }
-	  break;
-	case 'E':
-	  {
-	    float vv = col->value(ptr,jj);
-	    memcpy(data+ii*dd+jj,&vv,4);
-	  }
-	  break;
-	case 'D':
-	  {
-	    double vv = col->value(ptr,jj);
-	    memcpy(data+ii*dd+jj,&vv,8);
-	  }
-	  break;
-	}
-      }
     }
-    astPutColumnData(table, col->ttype(), 0, dd*size, data);
-
+    
+    char* ptr = (char*)ext->data();
+    unsigned char* data = new unsigned char[width*rows];
+    switch (col->type()) {
+    case 'I':
+      for (int ii=0; ii<rows; ii++, ptr+=rowlen)
+	for (int jj=0; jj<repeat; jj++) {
+	  short vv = col->value(ptr,jj);
+	  memcpy(data+ii*width+jj*2,&vv,2);
+	}
+      break;
+    case 'J':
+      for (int ii=0; ii<rows; ii++, ptr+=rowlen)
+	for (int jj=0; jj<repeat; jj++) {
+	  int vv = col->value(ptr,jj);
+	  memcpy(data+ii*width+jj*4,&vv,4);
+	}
+      break;
+    case 'E':
+      for (int ii=0; ii<rows; ii++, ptr+=rowlen)
+	for (int jj=0; jj<repeat; jj++) {
+	  float vv = col->value(ptr,jj);
+	  memcpy(data+ii*width+jj*4,&vv,4);
+	}
+      break;
+    case 'D':
+      for (int ii=0; ii<rows; ii++, ptr+=rowlen)
+	for (int jj=0; jj<repeat; jj++) {
+	  double vv = col->value(ptr,jj);
+	  memcpy(data+ii*width+jj*8,&vv,8);
+	}
+      break;
+    }
+    astPutColumnData(table, col->ttype(), 0, width*rows, data);
     if (data)
       delete [] data;
   }  
 
   astPutTable(chan, table, extname);
-  astEnd; // now, clean up memory
 
+  for (int ii=0; ii<cols; ii++) {
+    const char* name = astColumnName(table, ii+1);
+    int size = astColumnSize(table, name);
+    cerr << name << ' ' << size << endl;
+  }
+
+  astEnd; // now, clean up memory
   if (ext)
     delete ext;
 

@@ -4522,7 +4522,7 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
 
   // ok, found it
   astClearStatus; // just to make sure
-  //  astBegin; // start memory management
+  astBegin; // start memory management
 
   FitsHead* hd = ext->head();
   FitsBinTableHDU* hdu = (FitsBinTableHDU*)hd->hdu();
@@ -4589,7 +4589,7 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
 
   astPutTable(chan, table, extname);
 
-  //  astEnd; // now, clean up memory
+  astEnd; // now, clean up memory
   if (ext)
     delete ext;
 

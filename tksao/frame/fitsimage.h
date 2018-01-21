@@ -117,6 +117,7 @@ class FitsImage {
   WCSx** wcsx_;        // xth Axis WCS
 #else
   AstFrameSet* ast_;  // ast frameset;
+  int astInv_;    // can we inverse?
   int* wcs_;
   int* wcsEqu_;
   int* wcsCel_;

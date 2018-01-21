@@ -308,7 +308,7 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
     return dd*(detectorToPhysical * physicalToRef)[1].length();
   default:
     {
-      if (!hasWCS(sys))
+      if (!hasWCS(sys) || !astInv_)
 	return 0;
       
       astClearStatus; // just to make sure

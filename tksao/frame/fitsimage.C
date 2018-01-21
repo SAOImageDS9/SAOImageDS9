@@ -113,6 +113,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcsx_ =NULL;
 #else
   ast_ =NULL;
+  astInv_ =0;
   wcs_ =NULL;
   wcsEqu_ =NULL;
   wcsCel_ =NULL;
@@ -1148,6 +1149,7 @@ void FitsImage::initWCS()
 	    wcsx_[ii] = ptr->wcsx_[ii];
 #else
 	  ast_ = ptr->ast_;
+	  astInv_ = ptr->astInv_;
 	  wcs_ = ptr->wcs_;
 	  wcsEqu_ = ptr->wcsEqu_;
 	  wcsCel_ = ptr->wcsCel_;
@@ -3404,7 +3406,7 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
 {
   astClearStatus; // just to make sure
 
-  if (hasWCS(sys)) {
+  if (hasWCS(sys) && astInv_) {
     setWCSSkyFrame(sys, sky);
 
     Vector in = hasWCSCel(sys) ? degToRad(vv) : vv;
@@ -3422,7 +3424,7 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
 {
   astClearStatus; // just to make sure
 
-  if (hasWCS(sys)) {
+  if (hasWCS(sys) && astInv_) {
     setWCSSkyFrame(sys, sky);
 
     Vector3d in = hasWCSCel(sys) ? degToRad(vv) : vv;
@@ -4649,6 +4651,11 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
       strncmp(astGetC(frameSet,"Class"), "FrameSet", 8))
     return NULL;
 
+  // warn if no inverse
+  astInv_ = astGetI(frameSet, "TranInverse");
+  if (!astInv_)
+    internalError("Warning: the WCS has no defined inverse. Some functionality may not be available.");
+  
   return frameSet;
 }
 

@@ -384,6 +384,7 @@ class FitsImage {
   double pix2wcsx(double, Coord::CoordSystem);
   double wcs2pixx(double, Coord::CoordSystem);
 #else
+  int astInv() {return astInv_;}
   Vector3d pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
   Vector3d wcs2pix(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
 

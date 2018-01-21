@@ -36,6 +36,9 @@ int Grid25d::doit(RenderMode rm)
   if (!fits)
     return 1;
 
+  if (!fits->astInv())
+    return 1;
+
   astClearStatus; // just to make sure
   astBegin; // start memory management
 

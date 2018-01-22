@@ -3,6 +3,7 @@
  */
 
 #include <xpap.h>
+#include <stdint.h>
 
 #if HAVE_TCL
 

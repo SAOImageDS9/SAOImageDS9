@@ -32631,7 +32631,7 @@ static void TabSourceWrap( void (*tabsource)( void  ),
    this_id = astAnnulId( this_id );
 
 /* Report an error if the source function failed. */
-   if( lstat ) {
+   if( !lstat ) {
       astError( AST__NOTAB, "astRead(%s): The table source function failed to read "
                 "a binary table from extension %s in an external FITS file.",
                 status, astGetClass( this ), extname );

@@ -4501,7 +4501,7 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
       if (ext)
 	delete ext;
       
-      *status = 1;
+      *status = 0;
       return;
     }
 
@@ -4595,7 +4595,7 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
   if (ext)
     delete ext;
 
-  *status = 0;
+  *status = 1;
 }
 
 AstFrameSet* FitsImage::fits2ast(FitsHead* hd) 

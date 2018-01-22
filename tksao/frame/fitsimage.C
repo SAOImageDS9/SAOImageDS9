@@ -4483,6 +4483,58 @@ double FitsImage::wcsAxAngle(const Vector& vv1, const Vector& vv2)
 }
 #endif
 
+#ifndef NEWWCS
+AstFrameSet* FitsImage::fits2ast(FitsHead* hd) 
+{
+  // we may have an error, just reset
+  astClearStatus;
+
+  // new fitschan
+  AstFitsChan* chan = astFitsChan(NULL, NULL, "");
+  if (!astOK || chan == AST__NULL)
+    return NULL;
+
+  // no warning messages
+  astClear(chan,"Warnings");
+
+  // fill up chan
+  char* cards =NULL;
+  int ncards =0;
+
+  if (hd) {
+    cards = hd->cards();
+    ncards = hd->ncard();
+  }
+
+  if (cards == NULL || ncards == 0)
+    return NULL;
+
+  for (int i=0; i<ncards; i++) {
+    char buf[81];
+    strncpy(buf,cards+(i*80),80);
+    buf[80] = '\0';
+
+    astPutFits(chan, buf, 0);
+    // sometimes, we get a bad parse, just ignore
+    if (!astOK)
+      astClearStatus;
+  }
+
+  // we may have an error, just reset
+  astClearStatus;
+  astClear(chan, "Card");
+
+  // parse header
+  AstFrameSet* frameSet = (AstFrameSet*)astRead(chan);
+
+  // do we have anything?
+  if (!astOK || frameSet == AST__NULL || 
+      strncmp(astGetC(frameSet,"Class"), "FrameSet", 8))
+    return NULL;
+  
+  return frameSet;
+}
+#else
 static void fits2TAB(AstFitsChan* chan, const char* extname,
 		     int extver, int extlevel, int* status)
 {
@@ -4658,6 +4710,7 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
   
   return frameSet;
 }
+#endif
 
 #ifndef NEWWCS
 AstFrameSet* FitsImage::buildast(int ss, FitsHead* hd, FitsHead* prim) 

@@ -36,8 +36,10 @@ int Grid25d::doit(RenderMode rm)
   if (!fits)
     return 1;
 
+#ifdef NEWWCS
   if (!fits->astInv())
     return 1;
+#endif
 
   astClearStatus; // just to make sure
   astBegin; // start memory management

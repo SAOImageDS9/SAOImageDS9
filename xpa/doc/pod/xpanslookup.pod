@@ -1,0 +1,126 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPANSLookup: lookup registered XPA access points>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  int XPANSLookup(XPA xpa,
+  	          char *template, char type,
+	          char ***classes, char ***names,
+	          char ***methods, char ***infos)
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+XPA routines act on a class:name identifier in such a way
+that all access points that match the identifier are processed.  It is
+sometimes desirable to choose specific access points from the
+candidates that match the
+template.  In order to do this, the
+XPANSLookup routine can be called to return a list of matches, so that
+specific class:name instances can then be fed to XPAGet(), XPASet(), etc.
+
+ The first argument is an optional XPA struct. If non-NULL, the
+existing name server connection associated with the specified xpa is
+used to query the xpans name server for matching templates. Otherwise,
+a new (temporary) connection is established with the name server.
+
+
+The second argument to XPANSLookup is the class:name 
+template
+to match.
+
+
+The third argument for XPANSLookup() is the type of access and can be
+any combination of:
+
+  type   	explanation
+  ------	-----------
+  g		xpaget calls can be made on this access point
+  s		xpaset calls can be made on this access point
+  i		xpainfo calls can be made on this access point
+
+
+The call typically specifies only one of these at a time.
+
+
+The final arguments are pointers to arrays that will be filled
+in and returned by the name server. The name server will allocate and
+return arrays filled with the classes, names, and methods of all XPA
+access points that match the template
+and have the specified type. Also returned are info strings, which
+generally are used internally by the client routines. These can be
+ignored (but the strings must be freed).  The function returns the
+number of matches. The returned value can be used to loop through the
+matches:
+
+B<Example:>
+
+  #include <xpa.h>
+
+  char **classes;
+  char **names;
+  char **methods;
+  char **infos;
+  int i, n;
+  n = XPANSLookup(NULL, "foo*", "g", &classes, &names, &methods, &infos);
+  for(i=0; i<n; i++){
+    [more specific checks on possibilities ...]
+    [perhaps a call to XPAGet for those that pass, etc. ...]
+    /* don't forget to free alloc'ed strings when done */
+    free(classes[i]);
+    free(names[i]);
+    free(methods[i]);
+    free(infos[i]);
+  }
+  /* free up arrays alloc'ed by names server */
+  if( n > 0 ){
+    free(classes);
+    free(names);
+    free(methods);
+    free(infos);
+  }
+
+
+The specified 
+template
+also can be a host:port specification, for example:
+
+  myhost:12345
+
+
+In this case, no connection is made to the name server. Instead, the
+call will return one entry such that the ip array contains the ip for
+the specified host and the port array contains the port.  The class
+and name entries are set to the character "?", since the class and
+name of the access point are not known. 
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

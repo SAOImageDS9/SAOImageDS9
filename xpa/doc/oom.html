@@ -1,0 +1,52 @@
+<!-- =defdoc xpaoom xpaoom n -->
+<HTML>
+<HEAD>
+<TITLE>Out of Memory</TITLE>
+</HEAD>
+<BODY>
+
+<!-- =section xpaoom NAME -->
+<H2><A NAME="xpaoom">Xpaoom: What happens when XPA runs out of memory?</A></H2>
+
+<!-- =section xpaoom SYNOPSIS -->
+<H2>Summary</H2>
+<P>
+When XPA can't allocate memory, it exits. You can arrange to have it call
+longjmp() instead.
+
+<!-- =section xpaoom DESCRIPTION -->
+<H2>Description</H2>
+<P>
+When an XPA server or client cannot allocate memory, it will attempt to
+output an error message and then exit. If this is not satisfactory (e.g.,
+perhaps your program is interactive and can recover from OOM errors), you
+can tell XPA to call longjmp() to go to a recovery branch. To pass the 
+requisite jmp_buf variable to XPA, make the following call:
+<PRE>
+  XPASaveJmp(void *env);
+</PRE>
+The value of env is the address of a jmp_buf variable that was previously 
+passed to setjmp(). For example:
+<PRE>
+  jmp_buf env;
+  ...
+  if( setjmp(jmp_buf) != 0 ){
+    /* out of memory -- take corrective action, if possible */
+  } else {
+    /* save env for XPA */
+    XPASaveJmp((void *)&jmp_buf);
+  }
+  // enter main loop ...
+</PRE>
+
+<!-- =section xpaoom SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =stop -->
+
+<P>
+<A HREF="./help.html">Go to XPA Help Index</A>
+
+<H5>Last updated: April 7, 2009</H5>
+</BODY>
+</HTML>
+

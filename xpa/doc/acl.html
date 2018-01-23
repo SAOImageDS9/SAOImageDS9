@@ -1,0 +1,137 @@
+<!-- =defdoc xpaacl xpaacl n -->
+<HTML>
+<HEAD>
+<TITLE>XPA Access Control</TITLE>
+</HEAD>
+<BODY>
+
+<!-- =section xpaacl NAME -->
+<H2><A NAME="xpaacl">XPAAcl: Access Control for XPA Messaging</A></H2>
+
+<!-- =section xpaacl SYNOPSIS -->
+<H2>Summary</H2>
+<P>
+XPA supports host-based access control for each XPA access point.  You
+can enable/disable access control using the XPA_ACL environment
+variable. You can specify access to specific XPA access points for
+specific machines using the XPA_DEFACL and XPA_ACLFILE environment
+variables. By default, an XPA access point is accessible only to
+processes running on the same machine (same as X Windows).
+
+<!-- =section xpaacl DESCRIPTION -->
+<H2>Description</H2>
+<P>
+When INET sockets are in use (the default, as specified by the
+<EM>XPA_METHOD</EM> environment variable), XPA supports a host-based
+access control mechanism for individual access points. This mean that
+access can be specified for get, set, or info operations for each
+access point on a machine by machine basis.  For LOCAL sockets, access
+is restricted (by definition) to the host machine.
+
+<P>
+XPA access control is enabled by default, but can be turned off by
+setting the <EM>XPA_ACL</EM> environment variable to <EM>false</EM>.
+In this case, any process can access any XPA server.
+
+<P>
+Assuming that access control is turned on, the ACL for an individual
+XPA access point is set up when that access point is registered
+(although it can be changed later on; see below). This can be done in
+one of two ways:
+
+Firstly, the <EM>XPA_ACLFILE</EM> environment variable can defined to
+point to a file of access controls for individual access points. The format
+of this file is:
+<pre>
+ class:name ip acl
+</pre>
+The first argument is a template that specifies the class:name of the
+access point covered by this ACL. See
+<A HREF="./template.html">XPA Access Points and Templates</A>
+for more information about xpa templates.
+
+<P>
+The second argument is the IP address (in human-readable format) of
+the machine which is being given access.  This argument can be
+<EM>*</EM> to match all IP addresses.  It also can be <EM>$host</EM>
+to match the IP address of the current host.
+
+<P>
+The third argument is a string combination of <EM>s</EM>, <EM>g</EM>,
+or <EM>i</EM> to allow <EM>xpaset</EM>, <EM>xpaget</EM>, or
+<EM>xpainfo</EM> access respectively.  The ACL argument can be
+<EM>+</EM> to give <EM>sgi</EM> access or it can be <EM>-</EM> to turn
+off all access.
+
+<P>
+For example,
+<PRE>
+  *:xpa1  somehost sg
+  *:xpa1  myhost +
+  * * g
+</PRE>
+will allow processes on the machine somehost to make xpaget and xpaset calls,
+allow processes on myhost to make any call, and allow all other hosts to
+make xpaget (but not xpaset) calls.
+
+Secondly, if the <EM>XPA_ACLFILE</EM> does not exist, then a single
+default value for all access points can be specified using the
+<EM>XPA_DEFACL</EM> environment variable.  The default value for this
+variable is:
+<PRE>
+  #define XPA_DEFACL "*:* $host +"
+</PRE>
+meaning that all access points are fully accessible to all processes
+on the current host. Thus, in the absence of any ACL environment variables,
+processes on the current host have full access to all access points
+created on that host. This parallels the X11 xhost mechanism.
+
+<P>
+Access to an individual XPA access point can be changed using the -acl
+parameter for that access point.  For example:
+<PRE>
+  xpaset -p xpa1 -acl "somehost -"
+</PRE>
+will turn off all access control for somehost to the xpa1 access point, while:
+<PRE>
+  xpaset -p XPA:xpa1 -acl "beberly gs"
+</PRE>
+will give beberly xpaget and xpaset access to the access point whose
+class is XPA and whose name is xpa1.
+<P>
+Similarly, the current ACL for a given access point can be retrieved using:
+<PRE>
+  xpaget xpa1 -acl
+</PRE>
+Of course, you must have xpaget access to this XPA access point to
+retrieve its ACL.
+
+<P>
+Note that the XPA access points registered in the <EM>xpans</EM>
+program also behave according to the ACL rules.  That is, you cannot
+use xpaget to view the access points registered with xpans unless
+you have the proper ACL.
+
+<P>
+Note also when a client request is made to an XPA server, the access
+control is checked when the initial connection is established.  This
+access in effect at this time remains in effect so long as the client
+connection is maintained, regardless of whether the access fro that
+XPA is changed later on.
+
+<P>
+We recognize that host-based access control is only relatively secure
+and will consider more stringent security (e.g., private key) in the
+future if the community requires such support.
+
+<!-- =section xpaacl SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =stop -->
+
+<P>
+<A HREF="./help.html">Go to XPA Help Index</A>
+
+<H5>Last updated: September 10, 2003</H5>
+
+</BODY>
+</HTML>

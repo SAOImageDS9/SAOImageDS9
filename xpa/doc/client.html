@@ -1,0 +1,898 @@
+<!-- =defdoc xpaclient xpaclient 3 -->
+<HTML>
+<HEAD>
+<TITLE>XPA Client API</TITLE>
+</HEAD>
+<BODY>
+
+<!-- =section xpaclient NAME -->
+<H2><A NAME="xpaclient">XPAClient: The XPA Client-side Programming Interface</A></H2>
+
+<!-- =section xpaclient SYNOPSIS -->
+<H2>Summary</H2>
+A description of the XPA client-side programming interface.
+
+<!-- =section xpaclient DESCRIPTION -->
+<H2><A NAME="intro">Introduction to XPA Client Programming</H2></A>
+<P>
+Sending/receiving data to/from an XPA access point is easy: you
+generally only need to call the XPAGet() or XPASet() subroutines.
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  int <A HREF="./client.html#xpaget">XPAGet</A>(XPA xpa,
+      char *template, char *paramlist, char *mode,
+      char **bufs, size_t *lens, char **names, char **messages, int n);
+
+  int <A HREF="./client.html#xpaset">XPASet</A>(XPA xpa,
+      char *template, char *paramlist, char *mode,
+      char *buf, size_t len, char **names, char **messages, int n);
+
+  int <A HREF="./client.html#xpainfo">XPAInfo</A>(XPA xpa,
+      char *template, char *paramlist, char *mode,
+      char **names, char **messages, int n);
+
+  int <A HREF="./client.html#xpaaccess">XPAAccess</A>(XPA xpa,
+      char *template, char *paramlist, char *mode,
+      char **names, char **messages, int n);
+
+  int <A HREF="./client.html#xpagetfd">XPAGetFd</A>(XPA xpa,
+      char *template, char *paramlist, char *mode,
+      int *fds, char **names, char **messages, int n);
+
+  int <A HREF="./client.html#xpasetfd">XPASetFd</A>(XPA xpa,
+      char *template, char *paramlist, char *mode,
+      int fd, char **names, char **messages, int n);
+
+  XPA <A HREF="./client.html#xpaopen">XPAOpen</A>(char *mode);
+
+  void <A HREF="./client.html#xpaclose">XPAClose</A>(XPA xpa);
+
+  int <A HREF="./client.html#xpanslookup">XPANSLookup</A>(XPA xpa,
+      char *template, char *type,
+      char ***classes, char ***names, char ***methods, char ***infos);
+</PRE>
+
+<H2>Introduction</H2>
+
+To use the XPA application programming interface, a software developer
+generally will include the xpa.h definitions file:
+<PRE>
+  #include &lt;xpa.h&gt;
+</PRE>
+in the software module that defines or accesses an XPA access point and
+then will link against the libxpa.a library:
+<PRE>
+  gcc -o foo foo.c libxpa.a
+</PRE>
+XPA has been compiled using both C and C++ compilers.
+<P>
+Client communication with XPA public access points generally is
+accomplished using XPAGet() or XPASet() within a program (or xpaget
+and xpaset at the command line).  Both routines require specification
+of the name of the access point.  If a <A HREF="./template.html">template</A>
+is used to specify the access point name (e.g., "ds9*"), then
+communication will take place with all servers matching that template.
+
+<!-- =defdoc xpaget xpaget 3 -->
+
+<!-- =section xpaget NAME -->
+<H2><A NAME="xpaget">XPAGet: retrieve data from one or more XPA servers</A></H2>
+
+<!-- =section xpaget SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  int XPAGet(XPA xpa,
+             char *template, char *paramlist, char *mode,
+             char **bufs, size_t *lens, char **names, char **messages,
+	     int n);
+</PRE>
+</B>
+
+<!-- =section xpaget DESCRIPTION -->
+<P>
+Retrieve data from one or more XPA servers whose class:name identifier
+matches the specified template.
+
+<P>
+A 
+<A HREF="./template.html">template</A>
+of the form "class1:name1" is sent to the
+XPA name server, which returns a list of at most n matching XPA
+servers.  A connection is established with each of these servers and
+the paramlist string is passed to the server as the data transfer
+request is initiated. If an XPA struct is passed to the call, then the
+persistent connections are updated as described above. Otherwise,
+temporary connections are made to the servers (which will be closed
+when the call completes).
+
+<P>
+The XPAGet() routine then retrieves data from at most n XPA servers,
+places these data into n allocated buffers and places the buffer
+pointers in the bufs array. The length of each buffer is stored in the
+lens array. A string containing the class:name and ip:port is stored
+in the name array.  If a given server returned an error or the server
+callback sends a message back to the client, then the message will be
+stored in the associated element of the messages array.  NB: if
+specified, the name and messages arrays must be of size n or greater.
+
+<p>
+The returned message string will be of the form:
+<PRE>
+  XPA$ERROR error-message (class:name ip:port)
+</PRE>
+or
+<PRE>
+  XPA$MESSAGE message (class:name ip:port)
+</PRE>
+<P>
+Note that when there is an error stored in an messages entry, the
+corresponding bufs and lens entry may or may not be NULL and 0
+(respectively), depending on the particularities of the server.
+
+<P>
+The return value will contain the actual number of servers that were
+processed.  This value thus will hold the number of valid entries in
+the bufs, lens, names, and messages arrays, and can be used to loop
+through these arrays.  In names and/or messages is NULL, no information is
+passed back in that array.
+
+<P>
+The bufs, names, and messages arrays should be freed upon completion (if
+they are not NULL);
+
+<P>
+The mode string is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+<PRE>
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  ack		true/false	true		if false, don't wait for ack from server (after callback completes)
+  doxpa		true/false	true		client processes xpa requests
+</PRE>
+<P>
+The ack keyword is not very useful, since the server completes the callback
+in order to return the data anyway.  It is here for completion (and perhaps
+for future usefulness).
+
+<p>
+Normally, an XPA client will process incoming XPA server requests
+while awaiting the completion of the client request.  Setting this
+variable to "false" will prevent XPA server requests from being
+processed by the client.
+					   
+<P>
+<B>Example:</B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  #define NXPA 10
+  int  i, got;
+  size_t  lens[NXPA];
+  char *bufs[NXPA];
+  char *names[NXPA];
+  char *messages[NXPA];
+  got = XPAGet(NULL, "ds9", "file", NULL, bufs, lens, names, messages,
+  NXPA);
+  for(i=0; i&lt;got; i++){
+    if( messages[i] == NULL ){
+      /* process buf contents */
+      ProcessImage(bufs[i], ...);
+      free(bufs[i]);
+    }
+    else{
+      /* error processing */
+      fprintf(stderr, "ERROR: %s (%s)\n", messages[i], names[i]);
+    }
+    if( names[i] )
+      free(names[i]);
+    if( messages[i] )
+      free(messages[i]);
+  }
+</PRE>
+
+<!-- =defdoc xpaset xpaset 3 -->
+
+<!-- =section xpaset NAME -->
+<H2><A NAME="xpaset">XPASet: send data to one or more XPA servers</A></H2>
+
+<!-- =section xpaset SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  int XPASet(XPA xpa,
+             char *template, char *paramlist, char *mode,
+             char *buf, size_t len, char **names, char **messages,
+             int n);
+</PRE>
+</B>
+
+<!-- =section xpaset DESCRIPTION -->
+<P>
+Send data to one or more XPA servers whose class:name identifier
+matches the specified template.
+
+<P>
+A 
+<A HREF="./template.html">template</A>
+of the form "class1:name1" is sent to the
+XPA name server, which returns a list of at most n matching XPA
+servers.  A connection is established with each of these servers and
+the paramlist string is passed to the server as the data transfer
+request is initiated. If an XPA struct is passed to the call, the
+persistent connections are updated as described above. Otherwise,
+temporary connections are made to the servers (which will be closed
+when the call completes).
+
+<P>
+The XPASet() routine transfers data from buf to the XPA servers.
+The length of buf (in bytes) should be placed in the len variable.
+
+<P>
+A string containing the class:name and ip:port of each of these server
+is returned in the name array.  If a given server returned an error or
+the server callback sends a message back to the client, then the
+message will be stored in the associated element of the messages
+array. NB: if specified, the name and messages arrays must be of size
+n or greater.
+
+<p>
+The returned message string will be of the form:
+
+<PRE>
+  XPA$ERROR   [error] (class:name ip:port)
+</PRE>
+or
+<PRE>
+  XPA$MESSAGE [message] (class:name ip:port)
+</PRE>
+<P>
+The return value will contain the actual number of servers that were
+processed.  This value thus will hold the number of valid entries in
+the names and messages arrays, and can be used to loop through these
+arrays.  In names and/or messages is NULL, no information is passed back
+in that particular array.
+
+<P>
+The mode string is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+<PRE>
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  ack		true/false	true		if false, don't wait for ack from server (after callback completes)
+  verify	true/false	false		send buf from XPASet[Fd] to stdout
+  doxpa		true/false	true		client processes xpa requests
+</PRE>
+<P>
+The ack keyword is useful in cases where one does not want to wait for
+the server to complete, e.g. if a lot of processing needs to be done
+by the server on the passed data or when the success of the server
+operation is not relevant to the client.
+
+<p>
+Normally, an XPA client will process incoming XPA server requests
+while awaiting the completion of the client request.  Setting this
+variable to "false" will prevent XPA server requests from being
+processed by the client.
+					   
+<P>
+<B>Example:</B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  #define NXPA 10
+  int  i, got;
+  size_t  len;
+  char *buf;
+  char *names[NXPA];
+  char *messages[NXPA];
+  ...
+  [fill buf with data and set len to the length, in bytes, of the data]
+  ...
+  /* send data to all access points */
+  got = XPASet(NULL, "ds9", "fits", NULL, buf, len, names, messages, NXPA);
+  /* error processing */
+  for(i=0; i&lt;got; i++){
+    if( messages[i] ){
+      fprintf(stderr, "ERROR: %s (%s)\n", messages[i], names[i]);
+    }
+    if( names[i] )    free(names[i]);
+    if( messages[i] ) free(messages[i]);
+  }
+</PRE>
+					   
+<!-- =defdoc xpainfo xpainfo 3 -->
+
+<!-- =section xpainfo NAME -->
+<H2><A NAME="xpainfo">XPAInfo: send short message to one or more XPA servers</A></H2>
+
+<!-- =section xpainfo SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  int XPAInfo(XPA xpa,
+              char *template, char *paramlist, char *mode,
+	      char **names, char **messages, int n);
+</PRE>
+</B>
+
+<!-- =section xpainfo DESCRIPTION -->
+<P>
+Send a short paramlist message to one or more XPA servers whose
+class:name identifier matches the specified
+<A HREF="./template.html">template</A>.
+
+<P>
+A
+<A HREF="./template.html">template</A>
+of the form "class1:name1" is sent to the
+XPA name server, which returns a list of at most n matching XPA
+servers.  A connection is established with each of these servers and
+the paramlist string is passed to the server as the data transfer
+request is initiated. If an XPA struct is passed to the call, then the
+persistent connections are updated as described above. Otherwise,
+temporary connections are made to the servers (which will be closed
+when the call completes).
+
+<P>
+The XPAInfo() routine does not send data from a buf to the XPA
+servers. Only the paramlist is sent.  The semantics of the paramlist
+is not formalized, but at a minimum is should tell the server how to
+get more information.  For example, it might contain the class:name
+of the XPA access point from which the server (acting as a client)
+can obtain more info using XPAGet.
+
+<P>
+A string containing the class:name and ip:port of each server is
+returned in the name array.  If a given server returned an error or
+the server callback sends a message back to the client, then the
+message will be stored in the associated element of the messages
+array.  The returned message string will be of the form:
+<PRE>
+  XPA$ERROR   error-message (class:name ip:port)
+</PRE>
+or
+<PRE>
+  XPA$MESSAGE message 	  (class:name ip:port)
+</PRE>
+<P>
+The return value will contain the actual number of servers that were
+processed.  This value thus will hold the number of valid entries in
+the names and messages arrays, and can be used to loop through these
+arrays.  In names and/or messages is NULL, no information is passed back
+in that array.
+
+<P>
+The following keywords are recognized:
+<PRE>
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  ack		true/false	true		if false, don't wait for ack from server
+</PRE>
+<P>
+When ack is false, XPAInfo() will not wait for an error return from the XPA
+server. This means, in effect, that XPAInfo will send its paramlist string
+to the XPA server and then exit: no information will be sent from the server
+to the client. This UDP-like behavior is essential to avoid race
+conditions in cases where XPA servers are sending info messages to
+other servers. If two servers try to send each other an info message
+at the same time and then wait for an ack, a race condition will result and
+one or both will time out.
+
+<P>
+<B>Example:</B>
+<PRE>
+  (void)XPAInfo(NULL, "IMAGE", "ds9 image", NULL, NULL, NULL, 0);
+</PRE>
+					   
+<!-- =defdoc xpagetfd xpagetfd 3 -->
+
+<!-- =section xpagetfd NAME -->
+<H2><A NAME="xpagetfd">XPAGetFd: retrieve data from one or more XPA servers and write to files</A></H2>
+
+<!-- =section xpagetfd SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  int XPAGetFd(XPA xpa,
+               char *template, char *paramlist, char *mode,
+	       int *fds, char **names, char **messages, int n);
+</PRE>
+</B>
+
+<!-- =section xpagetfd DESCRIPTION -->
+<P>
+Retrieve data from one or more XPA servers whose class:name identifier
+matches the specified
+<A HREF="./template.html">template</A>
+and write it to files associated with
+one or more standard I/O fds (i.e, handles returned by open()).
+
+<P>
+A 
+<A HREF="./template.html">template</A>
+of the form "class1:name1" is sent to the
+XPA name server, which returns a list of at most ABS(n) matching XPA
+servers.  A connection is established with each of these servers and
+the paramlist string is passed to the server as the data transfer
+request is initiated. If an XPA struct is passed to the call, then the
+persistent connections are updated as described above. Otherwise,
+temporary connections are made to the servers (which will be closed
+when the call completes).
+
+<P>
+The XPAGetFd() routine then retrieves data from the XPA servers,
+and write these data to the fds associated with one or more fds
+(i.e., results from open). Is n is positive, then there will be n fds
+and the data from each server will be sent to a separate fd. If n is
+negative, then there is only 1 fd and all data is sent to this single
+fd. (The latter is how xpaget is implemented.)
+
+<P>
+A string containing the class:name and ip:port is stored in the name
+array.  If a given server returned an error or the server callback
+sends a message back to the client, then the message will be stored in
+the associated element of the messages array.  NB: if specified, the
+name and messages arrays must be of size n or greater.
+
+<P>
+The returned message string will be of the form:
+<PRE>
+  XPA$ERROR   error-message (class:name ip:port)
+</PRE>
+or
+<PRE>
+  XPA$MESSAGE message 	  (class:name ip:port)
+</PRE>
+<P>
+Note that when there is an error stored in an messages entry, the
+corresponding bufs and lens entry may or may not be NULL and 0
+(respectively), depending on the particularities of the server.
+
+<P>
+The return value will contain the actual number of servers that were
+processed.  This value thus will hold the number of valid entries in
+the bufs, lens, names, and messages arrays, and can be used to loop
+through these arrays.  In names and/or messages is NULL, no information is
+passed back in that array.
+
+<P>
+The mode string is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+<PRE>
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  ack		true/false	true		if false, don't wait for ack from server (after callback completes)
+</PRE>
+<P>
+The ack keyword is not very useful, since the server completes the callback
+in order to return the data anyway.  It is here for completion (and perhaps
+for future usefulness).
+					   
+<P>
+<B>Example:</B>
+<PRE>
+  #include &lt;xpa.h&gt;
+  #define NXPA 10
+  int  i, got;
+  int fds[NXPA];
+  char *names[NXPA];
+  char *messages[NXPA];
+  for(i=0; i&lt;NXPA; i++)
+    fds[i] = open(...);
+  got = XPAGetFd(NULL, "ds9", "file", NULL, fds, names, messages, NXPA);
+  for(i=0; i&lt;got; i++){
+    if( messages[i] != NULL ){
+      /* error processing */
+      fprintf(stderr, "ERROR: %s (%s)\n", messages[i], names[i]);
+    }
+    if( names[i] )
+      free(names[i]);
+    if( messages[i] )
+      free(messages[i]);
+  }
+</PRE>
+
+<!-- =defdoc xpasetfd xpasetfd 3 -->
+
+<!-- =section xpasetfd NAME -->
+<H2><A NAME="xpasetfd">XPASetFd: send data from stdin to one or more XPA servers</A></H2>
+
+<!-- =section xpasetfd SYNOPSIS -->
+</B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  int XPASetFd(XPA xpa,
+               char *template, char *paramlist, char *mode,
+	       int fd, char **names, char **messages, int n)
+</PRE>
+</B>
+
+<!-- =section xpasetfd DESCRIPTION -->
+<P>
+Read data from a standard I/O fd and send it to one or more XPA
+servers whose class:name identifier matches the specified
+<A HREF="./template.html">template.
+
+<P>
+A
+<A HREF="./template.html">template</A>
+of the form "class1:name1" is sent to the
+XPA name server, which returns a list of at most n matching XPA
+servers.  A connection is established with each of these servers and
+the paramlist string is passed to the server as the data transfer
+request is initiated. If an XPA struct is passed to the call, then the
+persistent connections are updated as described above. Otherwise,
+temporary connections are made to the servers (which will be closed
+when the call completes).
+
+<P>
+The XPASetFd() routine then reads bytes from the specified fd
+until EOF and sends these bytes to the XPA servers.  
+The final parameter n specifies the maximum number of servers to contact.
+A string containing the class:name and ip:port of each server is returned in
+the name array.  If a given server returned an error, then the error
+message will be stored in the associated element of the messages array.
+NB: if specified, the name and messages arrays must be of size n or greater.
+
+<P>
+The return value will contain the actual number of servers that were
+processed.  This value thus will hold the number of valid entries in
+the names and messages arrays, and can be used to loop through these
+arrays.  In names and/or messages is NULL, no information is passed back
+in that array.
+
+<P>
+The mode string is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+<PRE>
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  ack		true/false	true		if false, don't wait for ack from server (after callback completes)
+  verify	true/false	false		send buf from XPASet[Fd] to stdout
+</PRE>
+<P>
+The ack keyword is useful in cases where one does not want to wait for
+the server to complete, e.g. is a lot of processing needs to be done
+on the passed data or when the success of the server operation is not
+relevant to the client.
+
+<P>
+<B>Example:</B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  #define NXPA 10
+  int  i, got;
+  int fd;
+  char *names[NXPA];
+  char *messages[NXPA];
+  fd = open(...);
+  got = XPASetFd(NULL, "ds9", "fits", NULL, fd, names, messages, NXPA);
+  for(i=0; i&lt;got; i++){
+    if( messages[i] != NULL ){
+      /* error processing */
+      fprintf(stderr, "ERROR: %s (%s)\n", messages[i], names[i]);
+    }
+    if( names[i] )
+      free(names[i]);
+    if( messages[i] )
+      free(messages[i]);
+  }
+</PRE>
+
+<!-- =defdoc xpaopen xpaopen 3 -->
+
+<!-- =section xpaopen NAME -->
+<H2><A NAME="xpaopen">XPAOpen: allocate a persistent client handle</A></H2>
+
+<!-- =section xpaopen SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  XPA XPAOpen(char *mode);
+</PRE>
+</B>
+
+<!-- =section xpaopen DESCRIPTION -->
+<P>
+XPAOpen() allocates a persistent XPA struct that can be used with
+calls to XPAGet(), XPASet(), XPAInfo(), XPAGetFd(), and
+XPASetFd(). Persistence means that a connection to an XPA server is
+not closed when one of the above calls is completed but will be
+re-used on successive calls. Using XPAOpen() therefore saves the time
+it takes to connect to a server, which could be significant with slow
+connections or if there will be a large number of exchanges with a
+given access point.  The mode argument currently is ignored ("reserved
+for future use").
+
+<P>
+An XPA struct is returned if XPAOpen() was successful; otherwise NULL
+is returned. This returned struct can be passed as the first argument
+to XPAGet(), etc.  Those calls will update the list of active XPA
+connections.  Already connected servers (from a previous call) are
+left connected and new servers also will be connected.  Old servers
+(from a previous call) that are no longer needed are disconnected.
+The connected servers will remain connected when the next call to
+XPAGet() is made and connections are once again updated.
+
+<P>
+<B>Example:</B>
+<PRE>
+ #include &lt;xpa.h&gt;
+
+  XPA xpa;
+  xpa = XPAOpen(NULL);
+</PRE>
+
+<!-- =defdoc xpaclose xpaclose 3 -->
+
+<!-- =section xpaclose NAME -->
+<H2><A NAME="xpaclose">XPAClose: close a persistent XPA client handle</A></H2>
+
+<!-- =section xpaclose SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  void XPAClose(XPA xpa);
+</PRE>
+</B>
+
+<!-- =section xpaclose DESCRIPTION -->
+<P>
+XPAClose closes the persistent connections associated with this XPA struct
+and frees all allocated space. It also closes the open sockets connections
+to all XPA servers that were opened using this handle.
+
+<P>
+<B>Example:</B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  XPA xpa;
+  XPAClose(xpa);
+</PRE>
+
+<!-- =defdoc xpanslookup xpanslookup 3 -->
+
+<!-- =section xpanslookup NAME -->
+<H2><A NAME="xpanslookup">XPANSLookup: lookup registered XPA access points</A></H2>
+
+<!-- =section xpanslookup SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  int XPANSLookup(XPA xpa,
+  	          char *template, char type,
+	          char ***classes, char ***names,
+	          char ***methods, char ***infos)
+</PRE>
+</B>
+
+<!-- =section xpanslookup DESCRIPTION -->
+<P>
+XPA routines act on a class:name identifier in such a way
+that all access points that match the identifier are processed.  It is
+sometimes desirable to choose specific access points from the
+candidates that match the
+<A HREF="./template.html">template</A>.  In order to do this, the
+XPANSLookup routine can be called to return a list of matches, so that
+specific class:name instances can then be fed to XPAGet(), XPASet(), etc.
+
+<P> The first argument is an optional XPA struct. If non-NULL, the
+existing name server connection associated with the specified xpa is
+used to query the xpans name server for matching templates. Otherwise,
+a new (temporary) connection is established with the name server.
+
+<P>
+The second argument to XPANSLookup is the class:name 
+<A HREF="./template.html">template</A>
+to match.
+
+<P>
+The third argument for XPANSLookup() is the type of access and can be
+any combination of:
+<PRE>
+  type   	explanation
+  ------	-----------
+  g		xpaget calls can be made on this access point
+  s		xpaset calls can be made on this access point
+  i		xpainfo calls can be made on this access point
+</PRE>
+<P>
+The call typically specifies only one of these at a time.
+
+<P>
+The final arguments are pointers to arrays that will be filled
+in and returned by the name server. The name server will allocate and
+return arrays filled with the classes, names, and methods of all XPA
+access points that match the <A HREF="./template.html">template</A>
+and have the specified type. Also returned are info strings, which
+generally are used internally by the client routines. These can be
+ignored (but the strings must be freed).  The function returns the
+number of matches. The returned value can be used to loop through the
+matches:
+
+<B>Example:</B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  char **classes;
+  char **names;
+  char **methods;
+  char **infos;
+  int i, n;
+  n = XPANSLookup(NULL, "foo*", "g", &classes, &names, &methods, &infos);
+  for(i=0; i&lt;n; i++){
+    [more specific checks on possibilities ...]
+    [perhaps a call to XPAGet for those that pass, etc. ...]
+    /* don't forget to free alloc'ed strings when done */
+    free(classes[i]);
+    free(names[i]);
+    free(methods[i]);
+    free(infos[i]);
+  }
+  /* free up arrays alloc'ed by names server */
+  if( n > 0 ){
+    free(classes);
+    free(names);
+    free(methods);
+    free(infos);
+  }
+</PRE>
+<P>
+The specified 
+<A HREF="./template.html">template</A>
+also can be a host:port specification, for example:
+<PRE>
+  myhost:12345
+</PRE>
+<P>
+In this case, no connection is made to the name server. Instead, the
+call will return one entry such that the ip array contains the ip for
+the specified host and the port array contains the port.  The class
+and name entries are set to the character "?", since the class and
+name of the access point are not known. 
+
+<!-- =defdoc xpaaccess xpaaccess 3 -->
+
+<!-- =section xpaaccess NAME -->
+<H2><A NAME="xpaaccess">XPAAccess: return XPA access points matching
+template (XPA 2.1 and above)</A></H2>
+
+<!-- =section xpaaccess SYNOPSIS -->
+<B>
+<PRE>
+  #include &lt;xpa.h&gt;
+
+  int XPAAccess(XPA xpa,
+	        char *template, char *paramlist, char *mode,
+	        char **names, char **messages, int n);
+</PRE>
+</B>
+
+<!-- =section xpaaccess DESCRIPTION -->
+<P>
+The XPAAccess routine returns the public access points that match the
+specified second argument <A HREF="./template.html">template</A> and
+have the specified access type.
+
+<P>
+A
+<A HREF="./template.html">template</A>
+of the form "class1:name1" is sent to the
+XPA name server, which returns a list of at most n matching XPA
+servers.  A connection is established with each of these servers and
+the paramlist string is passed to the server as the data transfer
+request is initiated. If an XPA struct is passed to the call, then the
+persistent connections are updated as described above. Otherwise,
+temporary connections are made to the servers (which will be closed
+when the call completes).
+
+<P>
+The XPAAccess() routine retrieves names from at most n XPA servers
+that match the specified template and that were checked for access
+using the specified mode.  The return string contains both the
+class:name and ip:port.  If a given server returned an error or the
+server callback sends a message back to the client, then the message
+will be stored in the associated element of the messages array.
+NB: if specified, the name and messages arrays must be of size n or greater.
+
+<P>
+The returned message string will be of the form:
+<PRE>
+  XPA$ERROR error-message (class:name ip:port)
+</PRE>
+<P>
+Note that names of matching registered access points are always
+returned but may not be valid; it is not sufficient to assume that the
+returned number of access points is the number of valid access points.
+Rather, it is essential to check the messages array for error
+messages.  Any string in the messages array is an error message and
+indicated that the associated access point is not available.
+
+<P>
+For example, assume that a server registers a number of access points
+but delays entering its event loop. If a call to XPAAccess() is made
+before the event loop is entered, the call will timeout (after waiting
+for the long timeout period) and return an error of the form:
+<PRE>
+  XPA$ERROR: timeout waiting for server authentication (XPA:xpa1)
+</PRE>
+The error means that the XPA access point has been registered but is
+not yet available (because events are not being processed). When the
+server finally enters its event loop, subsequent calls to XPAAccess()
+will return successfully.
+
+<P>
+NB: This routine only works with XPA servers built with XPA 2.1.x and later.
+Servers with older versions of XPA will return the error message:
+
+  XPA$ERROR invalid xpa command in initialization string
+
+If you get this error message, then the old server actually is ready
+for access, since it got to the point of fielding the query! The
+xpaaccess program, for example, ignores this message in order to work
+properly with older servers.
+
+<P>
+The third argument for XPAAccess() is the type of access and can be
+any combination of:
+<PRE>
+  type   	explanation
+  ------	-----------
+  g		xpaget calls can be made on this access point
+  s		xpaset calls can be made on this access point
+  i		xpainfo calls can be made on this access point
+</PRE>
+<P>
+The mode string argument is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+<PRE>
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  ack		true/false	true		if false, don't wait for ack from server (after callback completes)
+</PRE>
+<P>
+The ack keyword is not very useful, since the server completes the callback
+in order to return the data anyway.  It is here for completion (and perhaps
+for future usefulness).
+
+<!-- =section xpaclient SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpaget SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpaset SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpainfo SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpagetfd SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpasetfd SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpaopen SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpaclose SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpanslookup SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =section xpaaccess SEE ALSO -->
+<!-- =text See xpa(n) for a list of XPA help pages -->
+<!-- =stop -->
+
+<P>
+<A HREF="./help.html">Go to XPA Help Index</A>
+
+<H5>Last updated: March 10, 2007</H5>
+
+</BODY>
+</HTML>

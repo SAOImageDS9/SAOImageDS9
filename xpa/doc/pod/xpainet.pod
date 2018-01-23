@@ -1,0 +1,285 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAInet: XPA Communication Between Hosts>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+XPA uses standard inet sockets to support communication between two or
+more host computers.
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+
+When the Communication Method is set to
+B<inet> (as it is by default), XPA can be used to communicate
+between different computers on the Internet.  INET sockets utilize the
+IP address of the given machine and a (usually random) port number to
+communicate between processes on the same machine or between different
+machines on the Internet.  These standard Internet sockets are also
+used by programs such as Netscape, ftp. etc.
+
+
+XPA supports a host-based Access Control mechanism
+to prevent unauthorized access of XPA access points by other computers
+on the Net.  By default, only the machine on which the XPA server is
+running can access XPA services. Therefore, setting up communication
+between a local XPA server machine and a remote client machine
+requires a two-part registration process:
+
+
+
+=over 4
+
+
+
+
+=item *
+
+the XPA service on the local machine must be made known to the 
+remote machine
+
+
+=item *
+
+the remote machine must be given permission to access the local
+XPA service
+
+
+=back
+
+
+
+Three methods by which this remote registration can be accomplished
+are described below.
+
+B<Manual Registration>
+
+The first method is the most basic and does not require the remote
+client to have xpans running.  To use it, the local server simply
+gives a remote client machine access to one or more XPA access points
+using xpaset and the B<-acl> sub-command. For example,
+consider the XPA test program "stest" running on a local machine.  By
+default the access control for the access point named "xpa" is
+restricted to that machine:
+
+  [sh]$ xpaget xpa -acl
+  *:* 123.456.78.910 gisa
+  *:* localhost gisa
+
+Using xpaset and the B<-acl> sub-command, a remote client
+machine can be given permission to perform xpaget, xpaset, xpaaccess,
+or xpainfo operations.  For example, to allow the xpaget operation, the
+following command can be issued on the local machine:
+
+  [sh]$ xpaset -p xpa -acl "remote_machine g"
+
+This results in the following access permissions on the local machine:
+
+  [sh]$ xpaget xpa -acl
+  XPA:xpa 234.567.89.012 g
+  *:* 123.456.78.910 gisa
+  *:* localhost gisa
+
+
+The remote client can now use the local server's xpans name server to
+establish communication with the local XPA service. This can be done
+on a call-by-call basis using the B<-i> switch on xpaset, xpaget, etc:
+
+  [sh]$ xpaget -i "local_machine:12345" xpa
+  class: XPA
+  name: xpa
+  method: 88877766:2778
+  sendian: little
+  cendian: big
+
+Alternatively, the XPA_NSINET variable on the remote machine can be
+set to point directly to xpans on the local machine, removing
+the need to override this value each time an XPA program is run:
+
+  [csh]$ setenv XPA_NSINET 'karapet:$port'
+  [csh]$ xpaget xpa
+  class: XPA
+  name: xpa
+  method: 88877766:2778
+  sendian: little
+  cendian: big
+
+Here, '$port' means to use the default XPA name service port (14285).
+not a port environment variable.
+
+
+Access permission for remote client machines can be stored in a file
+on the local machine pointed to by the B<XPA_ACLFILE> environment
+variable or using the B<XPA_DEFACL> environment variable. See <A
+HREF="./acl.html">XPA Access Control for more information.
+
+B<Remote Registration>
+
+If xpans is running on the remote client machine, then a local xpaset
+command can be used with the B<-remote> sub-command to
+register the local XPA service in the remote name service, while at
+the same time giving the remote machine permission to access the local
+service.  For example, assume again that "stest" is running on the
+local machine and that xpans is also running on the remote machine.
+To register access of this local xpa on the remote machine, use 
+the xpaset and the B<-remote> sub-command:
+
+  [sh]$ ./xpaset -p xpa -remote 'remote_machine:$port' +
+
+To register the local xpa access point on the remote machine with xpaget
+access only, execute:
+
+  [sh]$ ./xpaset -p xpa -remote 'remote_machine:$port' g
+
+Once the remote registration command is executed, the remote client
+machine will have an entry such as the following in its own xpans name
+service:
+
+  [csh]$ xpaget xpans
+  XPA xpa gs 88877766:2839 eric
+
+The xpa access point can now be utilized on the remote machine without
+further setup:
+
+  [csh]$ xpaget xpa
+  class: XPA
+  name: xpa
+  method: 838e2f68:2839
+  sendian: little
+  cendian: big
+
+To unregister remote access from the local machine, use the same
+command but with a '-' argument:
+
+  [sh]$ xpaset -p xpa -remote 'remote_machine:$port' -
+
+The benefit of using remote registration is that communication with
+remote access points can be mixed with that of other access points
+on the remote machine.  Using Access Point
+Names and Templates, one XPA command can be used to send or
+receive messages to the remote and local services.
+
+B<XPANS Proxy Registration>
+
+The two methods described above are useful when the local and remote
+machines are able to communicate freely to one another. This would be
+the case on most Local Area Networks (LANs) where all machines are
+behind the same firewall and there is no port blocking between
+machines on the same LAN.  The situation is more complicated when the
+XPA server is behind a firewall, where outgoing connections are
+allowed, but incoming port blocking is implemented to prevent machines
+outside the firewall from connecting to machines inside the
+firewall. Such incoming port blocking will prevent xpaset and xpaget
+from connecting to an XPA server inside a firewall.
+
+
+To allow locally fire-walled XPA services to register with remote
+machines, we have implemented a proxy service within the xpans name
+server. To register remote proxy service, xpaset and the
+B<-remote> sub-command is again used, but with an additional
+B<-proxy> argument added to the end of the command:
+
+  [sh]$ ./xpaset -p xpa -remote 'remote_machine:$port' g -proxy
+
+Once a remote proxy registration command is executed, the remote
+machine will have an entry such as the following in its own xpans name
+service:
+
+  [csh]$ xpaget xpans
+  XPA xpa gs @88877766:2839 eric
+
+The '@' sign in the name service entry indicates that xpans proxy
+processing is being used for this access point. Other than that, from
+the user's point of view, there is no difference in how this XPA
+access point is contacted using XPA programs (xpaset, xpaget, etc.) or
+libraries:
+
+  [csh]$ xpaget xpa
+  class: XPA
+  name: xpa
+  method: 88877766:3053
+  sendian: little
+  cendian: big
+
+
+Of course, the underlying processing of the XPA requests is very much
+different when xpans proxy is involved. Instead of an XPA program such
+contacting the XPA service directly, it contacts the local xpans.
+Acting as a proxy server, xpans communicates with the XPA service
+using the command channel established at registration time. Commands
+(including establishing a new data channel) are sent between xpans and
+the XPA service to set up a new message transfer, and then data is fed
+to/from the xpa request, through xpans, from/to the XPA service. In
+this way, it can be arranged so that connections between the
+fire-walled XPA service and the remote client are always initiated by
+the XPA service itself. Thus, incoming connections that would be
+blocked by the firewall are avoided. Note that there is a performance
+penalty for using the xpans/proxy service.  Aside from extra overhead
+to set up proxy communication, all data must be sent through the
+intermediate proxy process.
+
+
+The xpans proxy scheme requires that the remote client allow the local
+XPA server machine to connect to the remote xpans/proxy server. If the
+remote client machine also is behind a port-blocking firewall, such
+connections will be disallowed. In this case, the only solution is to
+open up some ports on the remote client machine to allow incoming
+connections to xpans/proxy. Two ports must be opened (for command and
+data channel connections). By default, these two ports are 14285 and
+14287. The port numbers can be changed using the B<XPA_NSINET>
+environment variable. This variable takes the form:
+
+  setenv XPA_NSINET machine:port1[,port2[,port3]]
+
+where port1 is the main connecting port, port2 is the XPA access port,
+and port3 is the secondary data connecting port. The second and third
+ports are optional and default to port1+1 and port1+2, respectively.
+It is port1 and port3 that must be left open for incoming connections.
+
+
+For example, to change the port assignments so that xpans listens
+for registration commands on port 12345 and data commands on port 28573:
+
+  setenv XPA_NSINET myhost:12345
+
+Alternatively, all three ports can be assigned explicitly:
+
+  setenv XPA_NSINET remote:12345,3000,12346
+
+In this case 12345 and 12346 should be open for incoming connections.
+The XPA access port (which need not be open to the outside
+world) is set to 3000.
+
+
+Finally, note that we currently have no mechanism to cope with
+Internet proxy servers (such as SOCKS servers). If an XPA service is
+running on a machine that cannot connect directly to outside machines,
+but goes through a proxy server instead, there currently is no way to
+register that XPA service with a remote machine.  We hope to implement
+support for SOCKS proxy in a future release.
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

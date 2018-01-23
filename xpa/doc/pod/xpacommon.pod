@@ -1,0 +1,266 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPACommon: Getting Common Information About Access Points>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+There are various kinds of generic information you can retrieve about
+an XPA access point by using the xpaget command.
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+
+You can find out which XPA access points have been registered with
+the currently running 
+XPA name server
+by executing the
+xpaget
+command to retrieve info from the XPA name server:
+
+  xpaget xpans
+
+If, for example, the
+stest test server program
+is running, the following XPA access points will be returned (the specifics
+of the returned info will vary for different machines and users):
+
+  XPA xpa gs 838e2f67:1262 eric
+  XPA xpa1 gs 838e2f67:1266 eric
+  XPA c_xpa gs 838e2f67:1267 eric
+  XPA i_xpa i 838e2f67:1268 eric
+
+Note that access to this information is subject to the usual
+XPA Access Control restrictions.
+
+
+Each XPA access point supports a number of reserved sub-commands that provide
+access to different kinds of information, e.g. the access control for
+that access point.  These sub-commands can be executed by using
+xpaset
+or
+xpaget
+at the command line, or
+XPAGet()
+or
+XPASet()
+in programs, e.g:
+
+  xpaget ds9 -acl
+  xpaget ds9 -help
+  xpaget ds9 env FOO
+
+  xpaset -p ds9 env FOO foofoo
+
+With the exception of B<-help> and B<-version>, reserved
+sub-commands are available only on the machine on which the XPA server
+itself is running.
+
+The following reserved sub-commands are defined for all access points:
+
+
+=over 4
+
+
+
+
+
+
+=item *
+
+B<-acl> get (set) the access control list [options: host type acl, for set]
+
+
+The 'xpaset' option allows you to add a new acl for a given host, or change
+the acl for an existing host. See
+XPA Access Control
+for more information.
+This access point is available only on the server machine.
+
+
+
+
+=item *
+
+B<-env> get (set) an environment variable [options: name (value, for set)]
+
+
+The 'xpaget' option will return the value of the named environment
+variable.  The 'xpaset' option will set the value of the names
+variable to the specified value.
+This access point is available only on the server machine.
+(Please be advised that we have had problems setting environment
+variables in static Tcl/Tk programs such as ds9 running under Linux.)
+
+
+
+
+=item *
+
+B<-clipboard> set(get) information on a named clipboard
+
+
+Clients can store ASCII state information on any number of named
+clipboards. Clipboards of the same name created by clients on
+different machines are kept separate.  The syntax for creating a
+clipboard is:
+
+  [data] | xpaset [server] -clipboard add|append [clipboard_name]
+  xpaset -p [server] -clipboard delete [clipboard_name]
+
+Use "add" to create a new clipboard or replace the contents of an existing
+one. Use "append" to append to an existing clipboard.
+
+Information on a named clipboard is retrieved using:
+
+  xpaget [server] -clipboard [clipboard_name]
+
+
+
+
+=item *
+
+B<-exec> set: execute commands from buffer [options: none]
+
+
+If -exec is specified in the paramlist of an 'xpaset' call, then further
+sub-commands will be retrieved from the data buffer.
+
+
+
+
+=item *
+
+B<-help> get: return help string for this XPA or sub-command [options: name (for sub-commands)]
+
+
+Each XPA access point and each XPA sub-command can have a help string
+associated with it that is specified when the access point is defined.
+The -help option will return this help string.  For XPA access points
+that contain user-defined sub-commands, you can get the help string
+for a particular sub-command by specifying its name, or else get the
+help strings for all sub-commands if not name is specified.
+
+
+
+
+=item *
+
+B<-ltimeout> get (set) the long timeout value [options: seconds|reset]
+
+
+The 'xpaget' option will return the value of the long timeout (in seconds).
+The 'xpaset' option will set the value of the long timeout. If "reset" is
+specified, then the timeout value will be reset to the default value.
+
+
+
+
+=item *
+
+B<-nsconnect> set: re-establish name server connection to all XPA's [options: none]
+
+
+If the 
+XPA Name Server (xpans)
+process has terminated unexpectedly and then re-started, this
+sub-command can be used to re-establish the connection.  You use it by
+sending the command to the [name:port] or [file] of the access point
+instead of to the XPA name (since the latter requires the xpans
+connection!):
+
+  xpaset -p 838e2f67:1268 -nsconnect
+
+See xpans for more information.
+
+
+
+
+=item *
+
+B<-nsdisconnect> set: break name server connection to all XPA's [options: none]
+
+
+This sub-command will terminate the connection to the
+XPA Name Server (xpans), thereby making
+all access points inaccessible except through their underlying [name:port]
+or [file] identifiers.  I forget why we added it, it seems pretty useless.
+
+
+
+
+=item *
+
+B<-stimeout> get (set) the short timeout value [options: seconds|reset]
+
+
+The 'xpaget' option will return the value of the short timeout (in seconds).
+The 'xpaset' option will set the value of the short timeout. If "reset" is
+specified, then the timeout value will be reset to the default value.
+
+
+
+
+=item *
+
+B<-remote> set: register xpa with remote server [options: host[:port] [acl]] [-proxy]
+
+
+This sub-command will register the XPA access point with the XPA name
+server (xpans) on the specified host (which must already be running).
+The specified host also is given access control to the access point,
+using the specified acl or the default acl of "+" (meaning the remote
+host can xpaset, xpaget, xpainfo or xpaaccess). If the acl is
+specified as "-", then the access point is unregistered. 
+See Communication Between Machines
+for more information on how this sub-command is used.
+
+
+
+
+=item *
+
+B<-version> get: return XPA version string [options: none]
+
+
+The version refers to the version of XPA used to define this access point
+(currently something like 2.0).
+
+
+
+=back
+
+
+
+
+You can add your own reserved commands to all XPA access points by using the
+XPACmdAdd()
+routine, passing the XPA handle returned by I<XPA XPAGetReserved(void)>
+as the first argument. Note again that these will only be available on the
+machine where the XPA service is running.
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

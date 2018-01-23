@@ -1,0 +1,67 @@
+#!/bin/sh
+
+if [ x"`xpaaccess i_xpa`" != xyes ]; then
+  echo "please start stest before running xpatests ..."
+  exit 1
+fi
+
+LOOPS=100
+TARGET="xpa*"
+ITARGET="i_xpa"
+
+while [ x"$1" != x ]; do
+    case $1 in
+	-a) FLAGS="$FLAGS -m ack=false"
+	    shift
+	    continue;;
+
+	-d) shift
+	    FLAGS="$FLAGS -d $1"
+	    shift
+	    continue;;
+
+	-f) shift
+	    FLAGS="$FLAGS $1"
+	    shift
+	    continue;;
+
+	-l) shift
+	    LOOPS=$1
+	    shift
+	    continue;;
+
+	-q) FLAGS="$FLAGS -q"
+	    shift
+	    continue;;
+
+	-s) shift
+	    SUFFIX=.$1
+	    shift
+	    continue;;
+
+	-t) shift
+	    TARGET=$1
+	    shift
+	    continue;;
+    esac
+done
+FLAGS="-l $LOOPS $FLAGS"
+
+echo " "
+echo "starting xpaget test with flags: $FLAGS"
+./ctest${SUFFIX} ${FLAGS} -g "$TARGET"
+
+echo " "
+echo "starting xpaset test with flags: $FLAGS"
+./ctest${SUFFIX} ${FLAGS} -s "$TARGET"
+
+echo " "
+echo "starting xpaget and xpaset test with flags: $FLAGS"
+./ctest${SUFFIX} ${FLAGS} -b "$TARGET"
+
+echo " "
+echo "starting xpainfo test with flags: $FLAGS"
+./ctest${SUFFIX} ${FLAGS} -i "$ITARGET"
+
+echo " "
+echo 'All done!'

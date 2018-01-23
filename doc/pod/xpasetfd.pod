@@ -1,0 +1,113 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPASetFd: send data from stdin to one or more XPA servers>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  int XPASetFd(XPA xpa,
+               char *template, char *paramlist, char *mode,
+	       int fd, char **names, char **messages, int n)
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+Read data from a standard I/O fd and send it to one or more XPA
+servers whose class:name identifier matches the specified
+template.
+
+
+A
+template
+of the form "class1:name1" is sent to the
+XPA name server, which returns a list of at most n matching XPA
+servers.  A connection is established with each of these servers and
+the paramlist string is passed to the server as the data transfer
+request is initiated. If an XPA struct is passed to the call, then the
+persistent connections are updated as described above. Otherwise,
+temporary connections are made to the servers (which will be closed
+when the call completes).
+
+
+The XPASetFd() routine then reads bytes from the specified fd
+until EOF and sends these bytes to the XPA servers.  
+The final parameter n specifies the maximum number of servers to contact.
+A string containing the class:name and ip:port of each server is returned in
+the name array.  If a given server returned an error, then the error
+message will be stored in the associated element of the messages array.
+NB: if specified, the name and messages arrays must be of size n or greater.
+
+
+The return value will contain the actual number of servers that were
+processed.  This value thus will hold the number of valid entries in
+the names and messages arrays, and can be used to loop through these
+arrays.  In names and/or messages is NULL, no information is passed back
+in that array.
+
+
+The mode string is of the form: "key1=value1,key2=value2,..."
+The following keywords are recognized:
+
+  key   	value		default		explanation
+  ------	--------	--------	-----------
+  ack		true/false	true		if false, don't wait for ack from server (after callback completes)
+  verify	true/false	false		send buf from XPASet[Fd] to stdout
+
+
+The ack keyword is useful in cases where one does not want to wait for
+the server to complete, e.g. is a lot of processing needs to be done
+on the passed data or when the success of the server operation is not
+relevant to the client.
+
+
+B<Example:>
+
+  #include <xpa.h>
+
+  #define NXPA 10
+  int  i, got;
+  int fd;
+  char *names[NXPA];
+  char *messages[NXPA];
+  fd = open(...);
+  got = XPASetFd(NULL, "ds9", "fits", NULL, fd, names, messages, NXPA);
+  for(i=0; i<got; i++){
+    if( messages[i] != NULL ){
+      /* error processing */
+      fprintf(stderr, "ERROR: %s (%s)\n", messages[i], names[i]);
+    }
+    if( names[i] )
+      free(names[i]);
+    if( messages[i] )
+      free(messages[i]);
+  }
+
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

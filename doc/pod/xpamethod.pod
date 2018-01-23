@@ -1,0 +1,99 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAMethod: XPA Communication Methods>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+XPA supports both inet and unix (local) socket communication.
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+
+XPA uses sockets for communication between processes. It supports
+three methods of socket communication: inet, localhost, and unix. In
+general, the same method should be employed for all XPA processes in a
+session and the global environment variable XPA_METHOD should be used
+to set up the desired method. By default, the preferred method is
+"inet", which is appropriate for most users. You can set up a
+different method by typing something like:
+
+  setenv XPA_METHOD local              # unix csh
+  XPA_METHOD=local; export XPA_METHOD  # unix sh, bash, windows/cygwin
+  set XPA_METHOD=localhost             # dos/windows
+
+The options for XPA_METHOD are: B<inet>, B<unix> (or
+B<local>), and B<localhost>. On Unix machines, this
+environment setup command can be placed in your shell init file
+(.cshrc, .profile, .bashrc, etc.) On Windows platforms, it can be
+placed in your AUTOEXEC.BAT file (I think!).
+
+
+By default, B<inet> sockets are used by XPA. These are the standard
+Internet sockets that are used by programs such as Netscape,
+ftp. etc. Inet sockets utilize the IP address of the given machine and
+a (usually random) port number to communicate between processes on the
+same machine or between different machines on the Internet. (Note that
+XPA has an Access Control mechanism to
+prevent unauthorized access of XPA access points by other computers on
+the Net). For users connected to the Internet, this usually is the
+appropriate communication method. For more information about setting
+up XPA communication between machines, see
+Communication Between Machines.
+
+
+In you are using XPA on a machine without an Internet connection, then
+inet sockets are not appropriate. In fact, an XPA process often will
+hang for many seconds while waiting for a response from the Domain
+Name Service (DNS) when using inet sockets. Instead of inet sockets,
+users on Unix platforms can also use B<unix> sockets (also known
+as local sockets). These sockets are based on the local file system
+and do not make use of the DNS. They generally are considered to be
+faster than inet sockets, but they are not implemented under
+Windows. Use local sockets as a first resort if you are on a Unix
+machine that is not connected to the Internet.
+
+
+Users not connected to the Internet also can use B<localhost>
+sockets. These are also inet-type sockets but the IP address used for
+the local machine is the B<localhost> address, 0x7F000001, instead
+of the real IP of the machine. Depending on how sockets are set up for
+a given platform, communication with the DNS usually is not required in
+this case (though of course, XPA cannot interact with other machines).
+The localhost method will generally work on both Unix and Windows
+platforms, but whether the DNS is required or not is subject to
+individual configurations.
+
+
+A final warning/reminder: if your XPA-enabled server hangs at startup
+time and your XPA_METHOD is B<inet>, the problem probably is
+related to an incorrect Internet configuration. This can be confirmed
+by using the B<unix> method or (usually) the B<localhost>
+method. You can use these alternate methods if other hosts do not need
+access to the XPA server.
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+
+=cut

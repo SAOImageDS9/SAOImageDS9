@@ -1,0 +1,90 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPACmdNew: create a new XPA public access point for commands>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  XPA XPACmdNew(char *class, char *name);
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+Create a new XPA public access point for commands that will share a
+common identifier class:name. Enter this access point into the XPA
+name server, so that it can be accessed by external processes.
+XPACmdNew() returns an XPA struct.
+
+
+It often is more convenient to have one public access point that can
+manage a number of commands, rather than having individual access
+points for each command. For example, it is easier to command the
+ds9 image display using:
+
+  echo "colormap I8"   | xpaset ds9
+  echo "scale log"     | xpaset ds9
+  echo "file foo.fits" | xpaset ds9
+
+
+then to use:
+
+  echo "I8"       | xpaset ds9_colormap
+  echo "log"      | xpaset ds9_scale
+  echo "foo.fits" | xpaset ds9_file
+
+
+In the first case, the commands remain the same regardless of the
+target XPA name.  In the second case, the command names must change
+for each instance of ds9.  That is, if a second instance of ds9
+called DS9 were running, it would be commanded either as:
+
+  echo "colormap I8"   | xpaset DS9
+  echo "scale log"     | xpaset DS9
+  echo "file foo.fits" | xpaset DS9
+
+
+or as:
+
+  echo "I8"       | xpaset DS9_colormap
+  echo "log"      | xpaset DS9_scale
+  echo "foo.fits" | xpaset DS9_file
+
+
+Thus, in cases where a program is going to manage many commands, it
+generally is easier to define them as commands associated with the
+XPACmdNew() routine, rather than as separate access points using
+XPANew().
+
+
+When XPACmdNew() is called, only the class:name identifier is
+specified.  Each sub-command is subsequently defined using the
+XPACmdAdd() routine.
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

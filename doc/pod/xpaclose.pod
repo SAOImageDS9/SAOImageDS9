@@ -1,0 +1,53 @@
+=pod
+
+=head1 NAME
+
+
+
+B<XPAClose: close a persistent XPA client handle>
+
+
+
+=head1 SYNOPSIS
+
+
+
+
+
+  #include <xpa.h>
+
+  void XPAClose(XPA xpa);
+
+
+
+
+
+=head1 DESCRIPTION
+
+
+
+
+XPAClose closes the persistent connections associated with this XPA struct
+and frees all allocated space. It also closes the open sockets connections
+to all XPA servers that were opened using this handle.
+
+
+B<Example:>
+
+  #include <xpa.h>
+
+  XPA xpa;
+  XPAClose(xpa);
+
+
+
+
+
+=head1 SEE ALSO
+
+
+
+See xpa(n) for a list of XPA help pages
+
+
+=cut

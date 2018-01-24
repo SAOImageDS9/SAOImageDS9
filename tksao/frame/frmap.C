@@ -155,7 +155,8 @@ Vector FrameBase::mapToRef(const Vector& vv, Coord::InternalSystem sys)
     return vv * pannerToRef;
   case Coord::MAGNIFIER:
     return vv * magnifierToRef;
-  default:
+  case Coord::PS:
+    // should not happen
     return Vector();
   }
 }

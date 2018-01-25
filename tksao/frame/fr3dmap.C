@@ -69,15 +69,12 @@ Vector3d Frame3dBase::mapToRef3d(const Vector& vv, Coord::InternalSystem sys,
   // note: sl is in REF=DATA coordinates
   Vector3d xx = Vector3d(1,0,sl)*refToWidget3d;
   Vector3d yy = Vector3d(0,1,sl)*refToWidget3d;
-  Vector3d zz = Vector3d(0,0,sl)*refToWidget3d;
+  Vector3d oo = Vector3d(0,0,sl)*refToWidget3d;
 
-  Vector3d ii=xx-zz;
-  Vector3d jj=yy-zz;
+  Vector3d ii=xx-oo;
+  Vector3d jj=yy-oo;
   Vector3d nn = cross(jj,ii).normalize();
-  double a = nn[0];
-  double b = nn[1];
-  double c = nn[2];
-  double d = -a*xx[0] -b*xx[1] -c*xx[2];
+  double dd = -(nn*xx);
 
   Vector ww;
   switch (sys) {
@@ -101,7 +98,7 @@ Vector3d Frame3dBase::mapToRef3d(const Vector& vv, Coord::InternalSystem sys,
     break;
   }
 
-  double z = (-a*ww[0] -b*ww[1] -d)/c;
-  return Vector3d(ww,z)*widgetToRef3d;
+  double zz = (-nn[0]*ww[0]-nn[1]*ww[1]-dd) / nn[2];
+  return Vector3d(ww,zz)*widgetToRef3d;
 }
 

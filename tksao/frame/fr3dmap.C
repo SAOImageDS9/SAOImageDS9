@@ -66,16 +66,6 @@ Vector3d Frame3dBase::mapToRef3d(const Vector& vv, Coord::InternalSystem sys,
     break;
   }
  
-  // note: sl is in REF=DATA coordinates
-  Vector3d xx = Vector3d(1,0,sl)*refToWidget3d;
-  Vector3d yy = Vector3d(0,1,sl)*refToWidget3d;
-  Vector3d oo = Vector3d(0,0,sl)*refToWidget3d;
-
-  Vector3d ii=xx-oo;
-  Vector3d jj=yy-oo;
-  Vector3d nn = cross(jj,ii).normalize();
-  double dd = -(nn*xx);
-
   Vector ww;
   switch (sys) {
   case Coord::WIDGET:
@@ -94,11 +84,28 @@ Vector3d Frame3dBase::mapToRef3d(const Vector& vv, Coord::InternalSystem sys,
     ww = vv*magnifierToWidget;
     break;
   default:
-    // na
-    break;
+    // should not happen
+    return Vector3d();
   }
 
-  double zz = (-nn[0]*ww[0]-nn[1]*ww[1]-dd) / nn[2];
-  return Vector3d(ww,zz)*widgetToRef3d;
-}
+  // note: sl is in REF=DATA coordinates
+  Vector3d xx = Vector3d(1,0,sl)*refToWidget3d;
+  Vector3d yy = Vector3d(0,1,sl)*refToWidget3d;
+  Vector3d oo = Vector3d(0,0,sl)*refToWidget3d;
 
+  Vector3d ii=xx-oo;
+  Vector3d jj=yy-oo;
+  Vector3d nn = cross(jj,ii).normalize();
+  double dd = -(nn*xx);
+
+  double zz = (-nn[0]*ww[0]-nn[1]*ww[1]-dd) / nn[2];
+  Vector3d rr = Vector3d(ww,zz)*widgetToRef3d;
+
+  // if othogonal, set to center
+  if (teq(az_,M_PI_2,.001) || teq(az_,3*M_PI_2,.001))
+    rr[0] = vp_[0];
+  if (teq(el_,M_PI_2,.001) || teq(el_,3*M_PI_2,.001))
+    rr[1] = vp_[1];
+
+  return rr;
+}

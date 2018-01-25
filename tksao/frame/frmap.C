@@ -133,7 +133,8 @@ Vector FrameBase::mapFromRef(const Vector& vv, Coord::InternalSystem sys)
     return vv * refToPanner;
   case Coord::MAGNIFIER:
     return vv * refToMagnifier;
-  default:
+  case Coord::PS:
+    // should not happen
     return Vector();
   }
 }

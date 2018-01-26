@@ -31,12 +31,10 @@ void FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
 			   Coord::SkyFrame sky, Coord::SkyFormat format,
 			   char* buf)
 {
-  if (hasWCS(out)) {
+  if (hasWCS(out))
     pix2wcs(vv * refToImage, out, sky, format, buf);
-    return;
-  }
-
-  strcpy(buf,"");
+  else
+    strcpy(buf,"");
 }
 
 Vector FitsImage::mapToRef(const Vector& vv, Coord::CoordSystem in,

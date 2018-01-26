@@ -1409,6 +1409,9 @@ void Marker::listRADEC(FitsImage* ptr,
 {
   char buf[64];
   ptr->mapFromRef(vv,sys,sky,format,buf);
+
+  ra[0] = '\0';
+  dec[0] = '\0';
   string x(buf);
   istringstream wcs(x);
   wcs >> ra >> dec;
@@ -1419,8 +1422,11 @@ void Marker::listRADECPros(FitsImage* ptr,
 			   Coord::SkyFrame sky, Coord::SkyFormat format)
 {
   char buf[64];
-  char decc[32];
   ptr->mapFromRef(vv,sys,sky,format,buf);
+
+  char decc[32];
+  ra[0] = '\0';
+  decc[0] = '\0';
   string x(buf);
   istringstream wcs(x);
   wcs >> ra >> decc;

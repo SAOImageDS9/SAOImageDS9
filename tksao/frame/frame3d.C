@@ -331,7 +331,7 @@ int Frame3d::fillImageJoin(RayTrace* rt)
   int zz = dd[2];
 
   // sanity check
-  if (!ww || !hh || !zz)
+  if (ww<=0 || hh<=0 || zz<=0)
     return 1;
 
   // local var overide
@@ -411,7 +411,7 @@ void Frame3d::fillImageDetach(RayTrace* rt)
   int zz = dd[2];
 
   // sanity check
-  if (!ww || !hh || !zz)
+  if (ww<=0 || hh<=0 || zz<=0)
     return;
 
   nrays_ = ww*hh;

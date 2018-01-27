@@ -171,15 +171,6 @@ double m180To180(double aa)
   return rr;
 }
 
-double degToRad(double aa)
-{
-  if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))
-    return NAN;
-
-  double rr =  M_PI*aa/180.;
-  return zeroTWOPI(rr);
-}
-
 double radToDeg(double aa)
 {
   if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))
@@ -205,6 +196,15 @@ Vector3d radToDeg(const Vector3d& vv)
   out[0] = radToDeg(out[0]);
   out[1] *= 180./M_PI;
   return out;
+}
+
+double degToRad(double aa)
+{
+  if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))
+    return NAN;
+
+  double rr =  M_PI*aa/180.;
+  return zeroTWOPI(rr);
 }
 
 Vector degToRad(const Vector& vv)

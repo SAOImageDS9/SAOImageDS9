@@ -5502,12 +5502,12 @@ yyreduce:
 
   case 86:
 #line 550 "frame/parser.Y"
-    {(yyval.real) = degToRad((yyvsp[(1) - (1)].real));;}
+    {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
   case 87:
 #line 551 "frame/parser.Y"
-    {(yyval.real) = degToRad((yyvsp[(1) - (1)].real));;}
+    {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
   case 88:
@@ -10655,22 +10655,22 @@ yyreduce:
 
   case 1177:
 #line 2709 "frame/parser.Y"
-    {fr->rotateCmd(degToRad((yyvsp[(1) - (1)].real)));;}
+    {fr->rotateCmd(zeroTWOPI(degToRad((yyvsp[(1) - (1)].real))));;}
     break;
 
   case 1178:
 #line 2710 "frame/parser.Y"
-    {fr->rotateCmd(degToRad((yyvsp[(1) - (2)].real)));;}
+    {fr->rotateCmd(zeroTWOPI(degToRad((yyvsp[(1) - (2)].real))));;}
     break;
 
   case 1180:
 #line 2712 "frame/parser.Y"
-    {fr->rotateToCmd(degToRad((yyvsp[(2) - (2)].real)));;}
+    {fr->rotateToCmd(zeroTWOPI(degToRad((yyvsp[(2) - (2)].real))));;}
     break;
 
   case 1181:
 #line 2713 "frame/parser.Y"
-    {fr->rotateToCmd(degToRad((yyvsp[(2) - (3)].real)));;}
+    {fr->rotateToCmd(zeroTWOPI(degToRad((yyvsp[(2) - (3)].real))));;}
     break;
 
   case 1182:
@@ -10680,7 +10680,7 @@ yyreduce:
 
   case 1183:
 #line 2717 "frame/parser.Y"
-    {fr->rotateMotionCmd(degToRad((yyvsp[(1) - (1)].real)));;}
+    {fr->rotateMotionCmd(zeroTWOPI(degToRad((yyvsp[(1) - (1)].real))));;}
     break;
 
   case 1184:

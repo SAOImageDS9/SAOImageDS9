@@ -138,7 +138,7 @@ optangle: /* empty */ {$$ = 0;}
 	| angle {$$ = $1;}
 	;
 
-angle	: numeric {$$ = degToRad($1);} /* assume degree */
+angle	: numeric {$$ = zeroTWOPI(degToRad($1));} /* assume degree */
 	;
 
 value	: numeric {$$ = FITSPTR->mapLenToRef($1, Coord::IMAGE);}

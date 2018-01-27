@@ -1671,12 +1671,12 @@ yyreduce:
 
   case 29:
 #line 171 "frame/prosparser.Y"
-    {(yyval.real) = degToRad((yyvsp[(1) - (1)].real));;}
+    {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
   case 30:
 #line 172 "frame/prosparser.Y"
-    {(yyval.real) = degToRad((yyvsp[(1) - (1)].real));;}
+    {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
   case 31:

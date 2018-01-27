@@ -547,8 +547,8 @@ optangle : /* empty */ {$$ = 0;}
 	| angle {$$ = $1;}
 	;
 
-angle	: numeric {$$ = degToRad($1);} /* assume degree */
-	| ANGDEGREE {$$ = degToRad($1);}
+angle	: numeric {$$ = zeroTWOPI(degToRad($1));} /* assume degree */
+        | ANGDEGREE {$$ = zeroTWOPI(degToRad($1));}
 	| ANGRADIAN {$$=$1;}
 	;
 
@@ -2706,15 +2706,15 @@ rgb	: CHANNEL_ STRING {fr->setRGBChannelCmd($2);}
 	| VIEW_ INT INT INT {fr->setRGBViewCmd($2,$3,$4);}
 	;
 
-rotate	: numeric {fr->rotateCmd(degToRad($1));}
-	| numeric DEGREES_ {fr->rotateCmd(degToRad($1));}
+rotate	: numeric {fr->rotateCmd(zeroTWOPI(degToRad($1)));}
+        | numeric DEGREES_ {fr->rotateCmd(zeroTWOPI(degToRad($1)));}
 	| MOTION_ rotateMotion
-	| TO_ numeric {fr->rotateToCmd(degToRad($2));}
-	| TO_ numeric DEGREES_ {fr->rotateToCmd(degToRad($2));}
+	| TO_ numeric {fr->rotateToCmd(zeroTWOPI(degToRad($2)));}
+        | TO_ numeric DEGREES_ {fr->rotateToCmd(zeroTWOPI(degToRad($2)));}
 	;
 
 rotateMotion : BEGIN_ {fr->rotateBeginCmd();}
-	| numeric {fr->rotateMotionCmd(degToRad($1));}
+        | numeric {fr->rotateMotionCmd(zeroTWOPI(degToRad($1)));}
 	| END_ {fr->rotateEndCmd();}
 	;
 

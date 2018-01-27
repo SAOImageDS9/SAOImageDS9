@@ -1570,7 +1570,7 @@ yyreduce:
 
   case 25:
 #line 141 "frame/saoparser.Y"
-    {(yyval.real) = degToRad((yyvsp[(1) - (1)].real));;}
+    {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
   case 26:

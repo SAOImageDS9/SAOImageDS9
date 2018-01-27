@@ -1653,12 +1653,12 @@ yyreduce:
 
   case 25:
 #line 174 "frame/tngparser.Y"
-    {(yyval.real) = degToRad((yyvsp[(1) - (1)].real));;}
+    {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
   case 26:
 #line 175 "frame/tngparser.Y"
-    {(yyval.real) = degToRad((yyvsp[(1) - (1)].real));;}
+    {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
   case 27:

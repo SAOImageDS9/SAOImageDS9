@@ -519,8 +519,8 @@ void Frame3dBase::set3dScaleCmd(double ss)
 
 void Frame3dBase::set3dViewCmd(float az, float el)
 {
-  az_ = degToRad(az);
-  el_ = degToRad(el);
+  az_ = zeroTWOPI(degToRad(az));
+  el_ = zeroTWOPI(degToRad(el));
   preservecache_ =1;
   update(MATRIX);
 }

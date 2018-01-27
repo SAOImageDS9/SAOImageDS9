@@ -970,7 +970,7 @@ double Base::xmlAngle(const char* angle, int sign, double offset,
 {
   switch (format) {
   case Coord::DEG:
-    return mapAngleToRef(sign*degToRad(atof(angle))+offset, sys, sky);
+    return mapAngleToRef(sign*zeroTWOPI(degToRad(atof(angle)))+offset,sys,sky);
   case Coord::RAD:
     return mapAngleToRef(sign*atof(angle)+offset, sys, sky);
   }
@@ -987,7 +987,8 @@ double* Base::xmlAngles(const char* angle, int sign, double offset, int cnt,
     if (tok)
       switch (format) {
       case Coord::DEG:
-	ang[ii] = mapAngleToRef(sign*degToRad(atof(tok))+offset, sys, sky);
+	ang[ii] =
+	  mapAngleToRef(sign*zeroTWOPI(degToRad(atof(tok)))+offset,sys,sky);
 	break;
       case Coord::RAD:
 	ang[ii] = mapAngleToRef(sign*atof(tok)+offset, sys, sky);

@@ -1654,18 +1654,18 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   for (int ii=0; ii<nxx2; ii++)
     ptr2[ii] = degToRad(Vector(ixx2[ii],iyy2[ii]));
 
-  double rr;
+  double rr = rad;
   switch (dist) {
   case Coord::DEGREE:
-    rr = degToRad(rad);
     break;
   case Coord::ARCMIN:
-    rr = degToRad(rad/60.);
+    rr /= 60.;
     break;
   case Coord::ARCSEC:
-    rr = degToRad(rad/60./60.);
+    rr /= 60.*60.;
     break;
   }
+  rr = zeroTWOPI(degToRad(rr));
 
   Vector* ptr1 =NULL;
   if (sky1 != sky2) {

@@ -3213,7 +3213,7 @@ void Base::markerBpandaEditCmd(int id,
 	    ++acnt;
 	}	
 	for (int i=0; i<acnt; i++)
-	  angles[i] = mapAngleToRef(degToRad(angles[i]),sys,sky);
+	  angles[i] = mapAngleToRef(zeroTWOPI(degToRad(angles[i])),sys,sky);
 
 	int rcnt = 0;
 	Vector radii[MAXANNULI];
@@ -3761,7 +3761,7 @@ void Base::markerCpandaEditCmd(int id, const char* a, const char* r,
 	}	
 	{
 	  for (int i=0; i<acnt; i++)
-	    angles[i] = mapAngleToRef(degToRad(angles[i]),sys,sky);
+	    angles[i] = mapAngleToRef(zeroTWOPI(degToRad(angles[i])),sys,sky);
 	}
 	int rcnt = 0;
 	Vector radii[MAXANNULI];
@@ -4367,7 +4367,7 @@ void Base::markerEpandaEditCmd(int id,
 	    ++acnt;
 	}	
 	for (int i=0; i<acnt; i++)
-	  angles[i] = mapAngleToRef(degToRad(angles[i]),sys,sky);
+	  angles[i] = mapAngleToRef(zeroTWOPI(degToRad(angles[i])),sys,sky);
 
 	int rcnt = 0;
 	Vector radii[MAXANNULI];
@@ -5024,7 +5024,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
       Vector rr(r->value(ptr,0),r->value(ptr,1));
       createBoxCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
 		   keyContext->fits->mapLenToRef(rr, Coord::PHYSICAL), 
-		   degToRad(ang->value(ptr)), 0,
+		   zeroTWOPI(degToRad(ang->value(ptr))), 0,
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
 
     }
@@ -5041,7 +5041,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
       Vector rr(r->value(ptr,0),r->value(ptr,1));
       createBoxCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
 		   keyContext->fits->mapLenToRef(rr, Coord::PHYSICAL), 
-		   degToRad(ang->value(ptr)), 0,
+		   zeroTWOPI(degToRad(ang->value(ptr))), 0,
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
     }
     else if (!strncmp(s2, "RECTAN", 6)) {
@@ -5066,7 +5066,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
 
       createBoxCmd(keyContext->fits->mapToRef(c,Coord::PHYSICAL), 
 		   keyContext->fits->mapLenToRef(d,Coord::PHYSICAL), 
-		   degToRad(ang->value(ptr)), 0,
+		   zeroTWOPI(degToRad(ang->value(ptr))), 0,
 		   color, dash, width, font, text, props, NULL, taglist,cblist);
     }
 
@@ -5074,7 +5074,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
       Vector rr(r->value(ptr,0),r->value(ptr,1));
       createEllipseCmd(keyContext->fits->mapToRef(center, Coord::PHYSICAL),
 		       keyContext->fits->mapLenToRef(rr, Coord::PHYSICAL),
-		       degToRad(ang->value(ptr)), 0,
+		       zeroTWOPI(degToRad(ang->value(ptr))), 0,
 		       color, dash, width, font, text, props, NULL, taglist,cblist);
 
     }
@@ -5082,9 +5082,12 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
       Vector rr0(r->value(ptr,0),0);
       Vector rr1(r->value(ptr,1),0);
       createCpandaCmd(keyContext->fits->mapToRef(center,Coord::PHYSICAL),
-		      degToRad(ang->value(ptr,0)),degToRad(ang->value(ptr,1)),1,
+		      zeroTWOPI(degToRad(ang->value(ptr,0))),
+		      zeroTWOPI(degToRad(ang->value(ptr,1))),
+		      1,
 		      keyContext->fits->mapLenToRef(rr0[0],Coord::PHYSICAL),
-		      keyContext->fits->mapLenToRef(rr1[0],Coord::PHYSICAL), 1,
+		      keyContext->fits->mapLenToRef(rr1[0],Coord::PHYSICAL),
+		      1,
 		      color, dash, width, font, text, props, NULL, taglist,cblist);
 
     }
@@ -5092,9 +5095,12 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color,
       Vector rr0(r->value(ptr,0),r->value(ptr,1));
       Vector rr1(r->value(ptr,2),r->value(ptr,3));
       createEpandaCmd(keyContext->fits->mapToRef(center,Coord::PHYSICAL),
-		      degToRad(ang->value(ptr,0)),degToRad(ang->value(ptr,1)),1,
+		      zeroTWOPI(degToRad(ang->value(ptr,0))),
+		      zeroTWOPI(degToRad(ang->value(ptr,1))),
+		      1,
 		      keyContext->fits->mapLenToRef(rr0,Coord::PHYSICAL),
-		      keyContext->fits->mapLenToRef(rr1,Coord::PHYSICAL), 1,
+		      keyContext->fits->mapLenToRef(rr1,Coord::PHYSICAL),
+		      1,
 		      0,
 		      color, dash, width, font, text, props, NULL, taglist,cblist);
 

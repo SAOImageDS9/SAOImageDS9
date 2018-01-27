@@ -314,7 +314,7 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
 
       double rdd = dd;
       if (hasWCSCel(sys)) {
-	rdd = degToRad(dd);
+	rdd = dd;
 	switch (dist) {
 	case Coord::DEGREE:
 	  break;
@@ -325,6 +325,7 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
 	  rdd /= 60.*60.;
 	  break;
 	}
+	rdd = degToRad(rdd); // no zeroTWOPI since this is a length
       }
 
       Vector cc = center();

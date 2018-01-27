@@ -94,10 +94,12 @@ extern double degToRad(double);
 extern double radToDeg(double);
 
 extern Vector zeroTWOPI(const Vector&);
+extern Vector zero360(const Vector&);
 extern Vector degToRad(const Vector&);
 extern Vector radToDeg(const Vector&);
 
 extern Vector3d zeroTWOPI(const Vector3d&);
+extern Vector3d zero360(const Vector3d&);
 extern Vector3d degToRad(const Vector3d&);
 extern Vector3d radToDeg(const Vector3d&);
 

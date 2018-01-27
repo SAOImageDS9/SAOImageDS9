@@ -3149,7 +3149,7 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 
   Vector out = wcsTran(ast_[ss], in, 1);
   if (astOK && checkWCS(out))
-    return wcsIsASkyFrame(ast_[ss]) ? radToDeg(out) : out;
+    return wcsIsASkyFrame(ast_[ss]) ? zero360(radToDeg(out)) : out;
   else
     return Vector();
 }
@@ -3166,7 +3166,7 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 
   Vector out = wcsTran(in, 1);
   if (astOK && checkWCS(out))
-    return hasWCSCel(sys) ? radToDeg(out) : out;
+    return hasWCSCel(sys) ? zero360(radToDeg(out)) : out;
   else
     return Vector();
 }
@@ -3196,7 +3196,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 
       switch (format) {
       case Coord::DEGREES:
-	out = radToDeg(out);
+	out = zero360(radToDeg(out));
 	str << setprecision(context_->parent_->precDeg_)
 	    << out[0] << ' ' << out[1] << ' '
 	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
@@ -3259,7 +3259,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 
       switch (format) {
       case Coord::DEGREES:
-	out = radToDeg(out);
+	out = zero360(radToDeg(out));
 	str << setprecision(context_->parent_->precDeg_)
 	    << out[0] << ' ' << out[1] << ' '
 	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
@@ -3314,7 +3314,7 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 
   Vector3d out = wcsTran(in, 1);
   if (astOK && checkWCS(out))
-    return hasWCSCel(sys) ? radToDeg(out) : out;
+    return hasWCSCel(sys) ? zero360(radToDeg(out)) : out;
   else
     return Vector3d();
 }
@@ -3342,7 +3342,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 
       switch (format) {
       case Coord::DEGREES:
-	out = radToDeg(out);
+	out = zero360(radToDeg(out));
 	str << setprecision(context_->parent_->precDeg_)
 	    << out[0] << ' ' << out[1] << ' ' << out[2]
 	    << ' ' << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;

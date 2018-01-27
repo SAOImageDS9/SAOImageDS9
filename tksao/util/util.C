@@ -159,6 +159,22 @@ double zero360(double aa)
   return rr;
 }
 
+Vector zero360(const Vector& vv)
+{
+  Vector out = vv;
+  // we want the first coord to be 0-360
+  out[0] = zero360(out[0]);
+  return out;
+}
+
+Vector3d zero360(const Vector3d& vv)
+{
+  Vector out = vv;
+  // we want the first coord to be 0-360
+  out[0] = zero360(out[0]);
+  return out;
+}
+
 double m180To180(double aa)
 {
   if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))
@@ -173,15 +189,13 @@ double m180To180(double aa)
 
 double radToDeg(double aa)
 {
-  double dd = 180.*aa/M_PI;
-  return zero360(dd);
+  return 180.*aa/M_PI;
 }
 
 Vector radToDeg(const Vector& vv)
 {
   Vector out = vv;
-  // we want the first coord to be 0-360
-  out[0] = radToDeg(out[0]);
+  out[0] *= 180./M_PI;
   out[1] *= 180./M_PI;
   return out;
 }
@@ -189,8 +203,7 @@ Vector radToDeg(const Vector& vv)
 Vector3d radToDeg(const Vector3d& vv)
 {
   Vector3d out = vv;
-  // we want the first coord to be 0-360
-  out[0] = radToDeg(out[0]);
+  out[0] *= 180./M_PI;
   out[1] *= 180./M_PI;
   return out;
 }

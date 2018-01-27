@@ -197,8 +197,7 @@ Vector3d radToDeg(const Vector3d& vv)
 
 double degToRad(double aa)
 {
-  double rr =  M_PI*aa/180.;
-  return zeroTWOPI(rr);
+  return  M_PI*aa/180.;
 }
 
 Vector degToRad(const Vector& vv)

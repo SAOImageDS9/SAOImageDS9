@@ -392,8 +392,10 @@ optangle: /* empty */ {$$ = fr->mapAngleToRef(0,localSystem,localSky);}
 	| angle {$$ = $1;}
 	;
 
-angle	: numeric {$$ = fr->mapAngleToRef(degToRad($1),localSystem,localSky);}
-	| ANGDEGREE {$$ = fr->mapAngleToRef(degToRad($1),localSystem,localSky);}
+angle	: numeric
+        {$$ = fr->mapAngleToRef(zeroTWOPI(degToRad($1)),localSystem,localSky);}
+        | ANGDEGREE
+	{$$ = fr->mapAngleToRef(zeroTWOPI(degToRad($1)),localSystem,localSky);}
 	| ANGRADIAN {$$ = fr->mapAngleToRef($1,localSystem,localSky);}
 	;
 

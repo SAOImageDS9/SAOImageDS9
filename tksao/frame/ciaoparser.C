@@ -1586,7 +1586,7 @@ yyreduce:
 
   case 27:
 #line 147 "frame/ciaoparser.Y"
-    {(yyval.real) = degToRad((yyvsp[(1) - (1)].real));;}
+    {(yyval.real) = zeroTWOPI(degToRad((yyvsp[(1) - (1)].real)));;}
     break;
 
   case 28:

@@ -144,7 +144,7 @@ init:	{
 	}
 	;
 
-angle	: numeric {$$ = degToRad($1);}
+angle	: numeric {$$ = zeroTWOPI(degToRad($1));}
 	;
 
 value	: numeric {$$ = FITSPTR->mapLenToRef($1, Coord::PHYSICAL);}

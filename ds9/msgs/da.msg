@@ -193,6 +193,7 @@
 ::msgcat::mcset da {Cursor} 
 ::msgcat::mcset da {Cut} [encoding convertfrom iso8859-1 {Beskær}]
 ::msgcat::mcset da {Cyan} {Cyan}
+::msgcat::mcset da {DMS} 
 ::msgcat::mcset da {DPI} 
 ::msgcat::mcset da {DS9 has detected a newer version of a backup file and therefore will not process this file.} 
 ::msgcat::mcset da {DS9 has detected a newer version of a preferences file.} 
@@ -329,6 +330,7 @@
 ::msgcat::mcset da {Grid} {Net}
 ::msgcat::mcset da {Groove} 
 ::msgcat::mcset da {Groups} {Gupper}
+::msgcat::mcset da {HMS} 
 ::msgcat::mcset da {HTTP} {HTTP}
 ::msgcat::mcset da {Header} {Hovede}
 ::msgcat::mcset da {Height} [encoding convertfrom iso8859-1 {Højde}]
@@ -340,7 +342,6 @@
 ::msgcat::mcset da {High} [encoding convertfrom iso8859-1 {Høj}]
 ::msgcat::mcset da {Histogram Equalization} {Histogram udligning}
 ::msgcat::mcset da {Histogram} {Histogram}
-::msgcat::mcset da {Horizontal Display Size} 
 ::msgcat::mcset da {Horizontal Graph} {Vandret graf}
 ::msgcat::mcset da {Horizontal Layout} {Vandret layout}
 ::msgcat::mcset da {Horizontal} 
@@ -613,6 +614,7 @@
 ::msgcat::mcset da {Postscript Print} {Postscript udskriv}
 ::msgcat::mcset da {Postscript} 
 ::msgcat::mcset da {Power} {Potenslov}
+::msgcat::mcset da {Precision} 
 ::msgcat::mcset da {Preferences} {Foretrukne}
 ::msgcat::mcset da {Preserve During Load} [encoding convertfrom iso8859-1 {Bevar under indlæsning}]
 ::msgcat::mcset da {Previous Frame} [encoding convertfrom iso8859-1 {Foregående ramme}]
@@ -821,7 +823,6 @@
 ::msgcat::mcset da {VO} 
 ::msgcat::mcset da {Value} [encoding convertfrom iso8859-1 {Værdi}]
 ::msgcat::mcset da {Vector} {Vektor}
-::msgcat::mcset da {Vertical Display Size} 
 ::msgcat::mcset da {Vertical Graph} {Lodret graf}
 ::msgcat::mcset da {Vertical Layout} {Lodret layoyt}
 ::msgcat::mcset da {Vertical Text} {Lodret tekst}

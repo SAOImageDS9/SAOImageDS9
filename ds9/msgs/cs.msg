@@ -193,6 +193,7 @@
 ::msgcat::mcset cs {Cursor} [encoding convertfrom iso8859-2 {Kurzor}]
 ::msgcat::mcset cs {Cut} [encoding convertfrom iso8859-2 {Vyøíznout}]
 ::msgcat::mcset cs {Cyan} [encoding convertfrom iso8859-2 {Azurová}]
+::msgcat::mcset cs {DMS} 
 ::msgcat::mcset cs {DPI} 
 ::msgcat::mcset cs {DS9 has detected a newer version of a backup file and therefore will not process this file.} [encoding convertfrom iso8859-2 {Program na¹el novou verzi zálo¾ního souboru a tedy tento soubor nebude zpracován.}]
 ::msgcat::mcset cs {DS9 has detected a newer version of a preferences file.} 
@@ -329,6 +330,7 @@
 ::msgcat::mcset cs {Grid} [encoding convertfrom iso8859-2 {Møí¾ka}]
 ::msgcat::mcset cs {Groove} 
 ::msgcat::mcset cs {Groups} [encoding convertfrom iso8859-2 {Skupiny}]
+::msgcat::mcset cs {HMS} 
 ::msgcat::mcset cs {HTTP} 
 ::msgcat::mcset cs {Header} [encoding convertfrom iso8859-2 {Hlavièka}]
 ::msgcat::mcset cs {Height} [encoding convertfrom iso8859-2 {Vý¹ka}]
@@ -340,7 +342,6 @@
 ::msgcat::mcset cs {High} [encoding convertfrom iso8859-2 {Vysoký}]
 ::msgcat::mcset cs {Histogram Equalization} [encoding convertfrom iso8859-2 {Vyrovnání histogramu}]
 ::msgcat::mcset cs {Histogram} 
-::msgcat::mcset cs {Horizontal Display Size} 
 ::msgcat::mcset cs {Horizontal Graph} [encoding convertfrom iso8859-2 {Horizontální graf}]
 ::msgcat::mcset cs {Horizontal Layout} [encoding convertfrom iso8859-2 {Horizontální rozlo¾ení}]
 ::msgcat::mcset cs {Horizontal} 
@@ -613,6 +614,7 @@
 ::msgcat::mcset cs {Postscript Print} 
 ::msgcat::mcset cs {Postscript} 
 ::msgcat::mcset cs {Power} [encoding convertfrom iso8859-2 {Mocninové}]
+::msgcat::mcset cs {Precision} 
 ::msgcat::mcset cs {Preferences} [encoding convertfrom iso8859-2 {Nastavení}]
 ::msgcat::mcset cs {Preserve During Load} [encoding convertfrom iso8859-2 {Zachovej pøi otevøení}]
 ::msgcat::mcset cs {Previous Frame} [encoding convertfrom iso8859-2 {Pøede¹lí snímek}]
@@ -821,7 +823,6 @@
 ::msgcat::mcset cs {VO} 
 ::msgcat::mcset cs {Value} [encoding convertfrom iso8859-2 {Hodnota}]
 ::msgcat::mcset cs {Vector} 
-::msgcat::mcset cs {Vertical Display Size} 
 ::msgcat::mcset cs {Vertical Graph} [encoding convertfrom iso8859-2 {Vertikální graf}]
 ::msgcat::mcset cs {Vertical Layout} [encoding convertfrom iso8859-2 {Vertikální rozlo¾ení}]
 ::msgcat::mcset cs {Vertical Text} 

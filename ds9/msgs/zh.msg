@@ -193,6 +193,7 @@
 ::msgcat::mcset zh {Cursor} 
 ::msgcat::mcset zh {Cut} 
 ::msgcat::mcset zh {Cyan} [encoding convertfrom big5 "\xAB\x43 \xA6\xE2"]
+::msgcat::mcset zh {DMS} 
 ::msgcat::mcset zh {DPI} 
 ::msgcat::mcset zh {DS9 has detected a newer version of a backup file and therefore will not process this file.} 
 ::msgcat::mcset zh {DS9 has detected a newer version of a preferences file.} 
@@ -329,6 +330,7 @@
 ::msgcat::mcset zh {Grid} 
 ::msgcat::mcset zh {Groove} 
 ::msgcat::mcset zh {Groups} 
+::msgcat::mcset zh {HMS} 
 ::msgcat::mcset zh {HTTP} 
 ::msgcat::mcset zh {Header} 
 ::msgcat::mcset zh {Height} 
@@ -340,7 +342,6 @@
 ::msgcat::mcset zh {High} 
 ::msgcat::mcset zh {Histogram Equalization} 
 ::msgcat::mcset zh {Histogram} 
-::msgcat::mcset zh {Horizontal Display Size} 
 ::msgcat::mcset zh {Horizontal Graph} 
 ::msgcat::mcset zh {Horizontal Layout} 
 ::msgcat::mcset zh {Horizontal} [encoding convertfrom big5 "\xA4\xF4 \xA5\xAD"]
@@ -613,6 +614,7 @@
 ::msgcat::mcset zh {Postscript Print} 
 ::msgcat::mcset zh {Postscript} 
 ::msgcat::mcset zh {Power} [encoding convertfrom big5 "\xAB\xFC \xBC\xC6"]
+::msgcat::mcset zh {Precision} 
 ::msgcat::mcset zh {Preferences} [encoding convertfrom big5 "\xB0\xBE \xA6\x6E \xB3\x5D \xA9\x77"]
 ::msgcat::mcset zh {Preserve During Load} 
 ::msgcat::mcset zh {Previous Frame} [encoding convertfrom big5 "\xAB\x65 \xA4\x40 \xBC\x68 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
@@ -821,7 +823,6 @@
 ::msgcat::mcset zh {VO} 
 ::msgcat::mcset zh {Value} 
 ::msgcat::mcset zh {Vector} [encoding convertfrom big5 "\xA6\x56 \xB6\x71"]
-::msgcat::mcset zh {Vertical Display Size} 
 ::msgcat::mcset zh {Vertical Graph} 
 ::msgcat::mcset zh {Vertical Layout} 
 ::msgcat::mcset zh {Vertical Text} 

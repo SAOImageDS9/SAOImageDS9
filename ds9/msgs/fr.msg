@@ -193,6 +193,7 @@
 ::msgcat::mcset fr {Cursor} {Curseur}
 ::msgcat::mcset fr {Cut} {Couper}
 ::msgcat::mcset fr {Cyan} 
+::msgcat::mcset fr {DMS} 
 ::msgcat::mcset fr {DPI} 
 ::msgcat::mcset fr {DS9 has detected a newer version of a backup file and therefore will not process this file.} 
 ::msgcat::mcset fr {DS9 has detected a newer version of a preferences file.} 
@@ -329,6 +330,7 @@
 ::msgcat::mcset fr {Grid} {Grille} 
 ::msgcat::mcset fr {Groove} 
 ::msgcat::mcset fr {Groups} {Groupes} 
+::msgcat::mcset fr {HMS} 
 ::msgcat::mcset fr {HTTP} 
 ::msgcat::mcset fr {Header} [encoding convertfrom iso8859-1 {Entête}]
 ::msgcat::mcset fr {Height} {Hauteur} 
@@ -340,7 +342,6 @@
 ::msgcat::mcset fr {High} {Haut} 
 ::msgcat::mcset fr {Histogram Equalization} {Egalisation via Histogramme} 
 ::msgcat::mcset fr {Histogram} {Histogramme} 
-::msgcat::mcset fr {Horizontal Display Size} 
 ::msgcat::mcset fr {Horizontal Graph} {Graphique Horizontal} 
 ::msgcat::mcset fr {Horizontal Layout} {Mise en page Horizontale} 
 ::msgcat::mcset fr {Horizontal} 
@@ -613,6 +614,7 @@
 ::msgcat::mcset fr {Postscript Print} 
 ::msgcat::mcset fr {Postscript} 
 ::msgcat::mcset fr {Power} {Puissance}
+::msgcat::mcset fr {Precision} 
 ::msgcat::mcset fr {Preferences} [encoding convertfrom iso8859-1 {Préférences}]
 ::msgcat::mcset fr {Preserve During Load} [encoding convertfrom iso8859-1 {Préserver pendant le chargement}]
 ::msgcat::mcset fr {Previous Frame} [encoding convertfrom iso8859-1 {Fenêtre précédente}]
@@ -821,7 +823,6 @@
 ::msgcat::mcset fr {VO} 
 ::msgcat::mcset fr {Value} 
 ::msgcat::mcset fr {Vector} 
-::msgcat::mcset fr {Vertical Display Size} 
 ::msgcat::mcset fr {Vertical Graph} 
 ::msgcat::mcset fr {Vertical Layout} 
 ::msgcat::mcset fr {Vertical Text} 

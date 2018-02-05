@@ -193,6 +193,7 @@
 ::msgcat::mcset ja {Cursor} [encoding convertfrom euc-jp "\xa5\xab\xa1\xbc\xa5\xbd\xa5\xeb"]
 ::msgcat::mcset ja {Cut} [encoding convertfrom euc-jp "\xc0\xda\xa4\xea\xbc\xe8\xa4\xea"]
 ::msgcat::mcset ja {Cyan} [encoding convertfrom euc-jp "\xbf\xe5\xbf\xa7"]
+::msgcat::mcset ja {DMS} 
 ::msgcat::mcset ja {DPI} 
 ::msgcat::mcset ja {DS9 has detected a newer version of a backup file and therefore will not process this file.} 
 ::msgcat::mcset ja {DS9 has detected a newer version of a preferences file.} 
@@ -329,6 +330,7 @@
 ::msgcat::mcset ja {Grid} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xea\xa5\xc3\xa5\xc9"]
 ::msgcat::mcset ja {Groove} 
 ::msgcat::mcset ja {Groups} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7"]
+::msgcat::mcset ja {HMS} 
 ::msgcat::mcset ja {HTTP} [encoding convertfrom euc-jp "\x48\x54\x54\x50"]
 ::msgcat::mcset ja {Header} [encoding convertfrom euc-jp "\xa5\xd8\xa5\xc3\xa5\xc0"]
 ::msgcat::mcset ja {Height} [encoding convertfrom euc-jp "\xb9\xe2\xa4\xb5"]
@@ -340,7 +342,6 @@
 ::msgcat::mcset ja {High} [encoding convertfrom euc-jp "\xbe\xe5\xb8\xc2"]
 ::msgcat::mcset ja {Histogram Equalization} [encoding convertfrom euc-jp "\xa5\xd2\xa5\xb9\xa5\xc8\xa5\xb0\xa5\xe9\xa5\xe0\xc5\xf9\xca\xac\xc9\xdb"]
 ::msgcat::mcset ja {Histogram} [encoding convertfrom euc-jp "\xa5\xd2\xa5\xb9\xa5\xc8\xa5\xb0\xa5\xe9\xa5\xe0"]
-::msgcat::mcset ja {Horizontal Display Size} 
 ::msgcat::mcset ja {Horizontal Graph} [encoding convertfrom euc-jp "\xb2\xa3\xc3\xc7\xcc\xcc"]
 ::msgcat::mcset ja {Horizontal Layout} [encoding convertfrom euc-jp "\xb2\xe8\xc1\xfc\xa4\xce\xbe\xe5\xa4\xcb\xc7\xdb\xc3\xd6"]
 ::msgcat::mcset ja {Horizontal} 
@@ -613,6 +614,7 @@
 ::msgcat::mcset ja {Postscript Print} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xb9\xa5\xc8\xa5\xb9\xa5\xaf\xa5\xea\xa5\xd7\xa5\xc8\xb0\xf5\xba\xfe"]
 ::msgcat::mcset ja {Postscript} [encoding convertfrom euc-jp "\xa5\xdd\xa5\xb9\xa5\xc8\xa5\xb9\xa5\xaf\xa5\xea\xa5\xd7\xa5\xc8"]
 ::msgcat::mcset ja {Power} [encoding convertfrom euc-jp "\xd1\xd1\xbe\xe8"]
+::msgcat::mcset ja {Precision} 
 ::msgcat::mcset ja {Preferences} [encoding convertfrom euc-jp "\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Preserve During Load} [encoding convertfrom euc-jp "\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf\xc3\xe6\xa4\xcb\xca\xdd\xbb\xfd"]
 ::msgcat::mcset ja {Previous Frame} [encoding convertfrom euc-jp "\xc1\xb0\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0"]
@@ -821,7 +823,6 @@
 ::msgcat::mcset ja {VO} [encoding convertfrom euc-jp "\xb2\xbe\xc1\xdb\xc5\xb7\xca\xb8\xc2\xe6"]
 ::msgcat::mcset ja {Value} [encoding convertfrom euc-jp "\xc3\xcd"]
 ::msgcat::mcset ja {Vector} [encoding convertfrom euc-jp "\xa5\xd9\xa5\xaf\xa5\xc8\xa5\xeb"]
-::msgcat::mcset ja {Vertical Display Size} 
 ::msgcat::mcset ja {Vertical Graph} [encoding convertfrom euc-jp "\xbd\xc4\xc3\xc7\xcc\xcc"]
 ::msgcat::mcset ja {Vertical Layout} [encoding convertfrom euc-jp "\xb2\xe8\xcc\xcc\xa4\xce\xba\xb8\xa4\xcb\xc7\xdb\xc3\xd6"]
 ::msgcat::mcset ja {Vertical Text} 

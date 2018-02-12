@@ -1,6 +1,6 @@
 #include <windows.h>
 
-#define VV "7.6rc"
+#define VV "7.6"
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION    7,6,0,0

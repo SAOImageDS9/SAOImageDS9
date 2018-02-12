@@ -399,56 +399,52 @@ void FitsFile::parseENVI(istream& str)
 
 int FitsFile::find(const char* name)
 {
-  if (head_) {
+  if (head_)
     if (head_->find(name))
       return 1;
-    else
-      if (primary_ && inherit_)
-	if (primary_->find(name))
-	  return 1;
-  }
+
+  if (primary_ && inherit_)
+    if (primary_->find(name))
+      return 1;
 
   return 0;
 }
 
 int FitsFile::getLogical(const char* name, int def)
 {
-  if (head_) {
-    int r = head_->getLogical(name,def);
-    if (r != def)
-      return r;
-    else
-      if (primary_ && inherit_)
-	return primary_->getLogical(name,def);
-  }
+  if (head_)
+    if (head_->find(name))
+      return head_->getLogical(name,def);
+
+  if (primary_ && inherit_)
+    if (primary_->find(name))
+      return primary_->getLogical(name,def);
 
   return def;
 }
 
 int FitsFile::getInteger(const char* name, int def)
 {
-  if (head_) {
-    int r = head_->getInteger(name,def);
-    if (r != def)
-      return r;
-    else
-      if (primary_ && inherit_)
+  if (head_)
+    if (head_->find(name))
+      return head_->getInteger(name,def);
+
+  if (primary_ && inherit_)
+    if (primary_->find(name))
 	return primary_->getInteger(name,def);
-  }
 
   return def;
 }
 
 double FitsFile::getReal(const char* name, double def)
 {
-  if (head_) {
-    double r = head_->getReal(name,def);
-    if (r != def)
-      return r;
-    else
-      if (primary_ && inherit_)
-	return primary_->getReal(name,def);
-  }
+  if (head_)
+    if (head_->find(name))
+      return head_->getReal(name,def);
+
+  if (primary_ && inherit_)
+    if (primary_->find(name))
+      return primary_->getReal(name,def);
 
   return def;
 }
@@ -456,16 +452,17 @@ double FitsFile::getReal(const char* name, double def)
 void FitsFile::getComplex(const char* name, double* real, double* img,
 			  double rdef, double idef)
 {
-  if (head_) {
-    head_->getComplex(name, real, img, rdef, idef);
-    if (*real != rdef || *img != idef)
+  if (head_)
+    if (head_->find(name)) {
+      head_->getComplex(name, real, img, rdef, idef);
       return;
-    else
-      if (primary_ && inherit_) {
-	primary_->getComplex(name, real, img, rdef, idef);
-	return;
-      }
-  }
+    }
+
+  if (primary_ && inherit_)
+    if (primary_->find(name)) {
+      primary_->getComplex(name, real, img, rdef, idef);
+      return;
+    }
 
   *real = rdef;
   *img = idef;
@@ -473,42 +470,39 @@ void FitsFile::getComplex(const char* name, double* real, double* img,
 
 char* FitsFile::getString(const char* name)
 {
-  if (head_) {
-    char* r = head_->getString(name);
-    if (r)
-      return r;
-    else
-      if (primary_ && inherit_)
-	return primary_->getString(name);
-  }
+  if (head_)
+    if (head_->find(name))
+      return head_->getString(name);
+
+  if (primary_ && inherit_)
+    if (primary_->find(name))
+      return primary_->getString(name);
 
   return NULL;
 }
 
 char* FitsFile::getComment(const char* name)
 {
-  if (head_) {
-    char* r = head_->getComment(name);
-    if (r)
-      return r;
-    else
-      if (primary_ && inherit_)
-	return primary_->getComment(name);
-  }
+  if (head_)
+    if (head_->find(name))
+    return head_->getComment(name);
+
+  if (primary_ && inherit_)
+    if (primary_->find(name))
+      return primary_->getComment(name);
 
   return NULL;
 }
 
 char* FitsFile::getKeyword(const char* name)
 {
-  if (head_) {
-    char* r = head_->getKeyword(name);
-    if (r)
-      return r;
-    else
-      if (primary_ && inherit_)
-	return primary_->getKeyword(name);
-  }
+  if (head_)
+    if (head_->find(name))
+    return head_->getKeyword(name);
+
+  if (primary_ && inherit_)
+    if (primary_->find(name))
+      return primary_->getKeyword(name);
 
   return NULL;
 }

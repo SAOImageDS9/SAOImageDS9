@@ -13,7 +13,7 @@ proc BlockDef {} {
     set iblock(mb) .blkmb
 
     set block(lock) 0
-    set block(factor) { 1 1 }
+    set block(factor) {1 1}
 
     array set pblock [array get block]
 }
@@ -113,17 +113,17 @@ proc BlockDialog {} {
     $mb.block add command -label [msgcat::mc {Block Fit}] -command BlockToFit
     $mb.block add separator
     $mb.block add radiobutton -label "[msgcat::mc {Block}] 1" \
-	-variable block(factor) -value { 1 1 } -command ChangeBlock
+	-variable block(factor) -value {1 1} -command ChangeBlock
     $mb.block add radiobutton -label "[msgcat::mc {Block}] 2" \
-	-variable block(factor) -value { 2 2 }  -command ChangeBlock
+	-variable block(factor) -value {2 2}  -command ChangeBlock
     $mb.block add radiobutton -label "[msgcat::mc {Block}] 4" \
-	-variable block(factor) -value { 4 4 } -command ChangeBlock
+	-variable block(factor) -value {4 4} -command ChangeBlock
     $mb.block add radiobutton -label "[msgcat::mc {Block}] 8" \
-	-variable block(factor) -value { 8 8 } -command ChangeBlock
+	-variable block(factor) -value {8 8} -command ChangeBlock
     $mb.block add radiobutton -label "[msgcat::mc {Block}] 16" \
-	-variable block(factor) -value { 16 16 } -command ChangeBlock
+	-variable block(factor) -value {16 16} -command ChangeBlock
     $mb.block add radiobutton -label "[msgcat::mc {Block}] 32" \
- 	-variable block(factor) -value { 32 32 } -command ChangeBlock
+ 	-variable block(factor) -value {32 32} -command ChangeBlock
 
     # Param
     set f [ttk::frame $w.param]
@@ -313,10 +313,10 @@ proc ProcessBlockCmd {varname iname} {
 		    set b1 [lindex $var [expr $i+1]]
 		    set b2 [lindex $var [expr $i+2]]
 		    if {[string is double $b2] && $b2 != {}} {
-			set block(factor) " $b1 $b2 "
+			set block(factor) "$b1 $b2"
 			incr i 2
 		    } else {
-			set block(factor) " $b1 $b1 "
+			set block(factor) "$b1 $b1"
 			incr i
 		    }
 		    ChangeBlock

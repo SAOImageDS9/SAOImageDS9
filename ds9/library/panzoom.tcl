@@ -384,27 +384,27 @@ proc PanZoomDialog {} {
     $mb.zoom add command -label [msgcat::mc {Zoom Fit}] -command ZoomToFit
     $mb.zoom add separator
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 1/32" \
- 	-variable current(zoom) -value { 0.03125 0.03125 } -command ChangeZoom
+ 	-variable current(zoom) -value {0.03125 0.03125} -command ChangeZoom
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 1/16" \
-	-variable current(zoom) -value { 0.0625 0.0625 } -command ChangeZoom
+	-variable current(zoom) -value {0.0625 0.0625} -command ChangeZoom
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 1/8" \
-	-variable current(zoom) -value { 0.125 0.125 } -command ChangeZoom
+	-variable current(zoom) -value {0.125 0.125} -command ChangeZoom
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 1/4" \
-	-variable current(zoom) -value { 0.25 0.25 } -command ChangeZoom
+	-variable current(zoom) -value {0.25 0.25} -command ChangeZoom
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 1/2" \
-	-variable current(zoom) -value { 0.5 0.5 } -command ChangeZoom
+	-variable current(zoom) -value {0.5 0.5} -command ChangeZoom
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 1" \
-	-variable current(zoom) -value { 1 1 } -command ChangeZoom
+	-variable current(zoom) -value {1 1} -command ChangeZoom
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 2" \
-	-variable current(zoom) -value { 2 2 }  -command ChangeZoom
+	-variable current(zoom) -value {2 2}  -command ChangeZoom
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 4" \
-	-variable current(zoom) -value { 4  4 } -command ChangeZoom
+	-variable current(zoom) -value {4 4} -command ChangeZoom
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 8" \
-	-variable current(zoom) -value { 8 8 } -command ChangeZoom
+	-variable current(zoom) -value {8 8} -command ChangeZoom
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 16" \
-	-variable current(zoom) -value { 16 16 } -command ChangeZoom
+	-variable current(zoom) -value {16 16} -command ChangeZoom
     $mb.zoom add radiobutton -label "[msgcat::mc {Zoom}] 32" \
- 	-variable current(zoom) -value { 32 32 } -command ChangeZoom
+ 	-variable current(zoom) -value {32 32} -command ChangeZoom
 
     menu $mb.orient
     $mb.orient add radiobutton -label [msgcat::mc {None}] \
@@ -737,10 +737,10 @@ proc ProcessZoomCmd {varname iname} {
 		    set z1 [lindex $var [expr $i+1]]
 		    set z2 [lindex $var [expr $i+2]]
 		    if {[string is double $z2] && $z2 != {}} {
-			set current(zoom) " $z1 $z2 "
+			set current(zoom) "$z1 $z2"
 			incr i 2
 		    } else {
-			set current(zoom) " $z1 $z1 "
+			set current(zoom) "$z1 $z1"
 			incr i
 		    }
 		    ChangeZoom

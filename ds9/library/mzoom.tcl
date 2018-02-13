@@ -23,27 +23,27 @@ proc ZoomMainMenu {} {
 	-command ZoomToFit
     $ds9(mb).zoom add separator
     $ds9(mb).zoom add radiobutton -label "[msgcat::mc {Zoom}] 1/32" \
-	-variable current(zoom) -value { 0.03125 0.03125 } -command ChangeZoom
+	-variable current(zoom) -value {0.03125 0.03125} -command ChangeZoom
     $ds9(mb).zoom add radiobutton -label "[msgcat::mc {Zoom}] 1/16" \
-	-variable current(zoom) -value { 0.0625 0.0625 }  -command ChangeZoom
+	-variable current(zoom) -value {0.0625 0.0625}  -command ChangeZoom
     $ds9(mb).zoom add radiobutton -label "[msgcat::mc {Zoom}] 1/8" \
-	-variable current(zoom) -value { 0.125 0.125 }  -command ChangeZoom
+	-variable current(zoom) -value {0.125 0.125}  -command ChangeZoom
     $ds9(mb).zoom add radiobutton -label "[msgcat::mc {Zoom}] 1/4" \
-	-variable current(zoom) -value { 0.25 0.25 } -command ChangeZoom
+	-variable current(zoom) -value {0.25 0.25} -command ChangeZoom
     $ds9(mb).zoom add radiobutton -label "[msgcat::mc {Zoom}] 1/2" \
-	-variable current(zoom) -value { 0.5 0.5 } -command ChangeZoom
+	-variable current(zoom) -value {0.5 0.5} -command ChangeZoom
     $ds9(mb).zoom add radiobutton -label "[msgcat::mc {Zoom}] 1" \
-	-variable current(zoom) -value { 1 1 } -command ChangeZoom
+	-variable current(zoom) -value {1 1} -command ChangeZoom
     $ds9(mb).zoom add radiobutton -label "[msgcat::mc {Zoom}] 2" \
-	-variable current(zoom) -value { 2 2 } -command ChangeZoom
+	-variable current(zoom) -value {2 2} -command ChangeZoom
     $ds9(mb).zoom add radiobutton -label "[msgcat::mc {Zoom}] 4" \
-	-variable current(zoom) -value { 4 4 } -command ChangeZoom
+	-variable current(zoom) -value {4 4} -command ChangeZoom
     $ds9(mb).zoom add radiobutton -label "[msgcat::mc {Zoom}] 8" \
-	-variable current(zoom) -value { 8 8 } -command ChangeZoom
+	-variable current(zoom) -value {8 8} -command ChangeZoom
     $ds9(mb).zoom add radiobutton -label "[msgcat::mc {Zoom}] 16" \
-	-variable current(zoom) -value { 16 16 } -command ChangeZoom
+	-variable current(zoom) -value {16 16} -command ChangeZoom
     $ds9(mb).zoom add radiobutton -label "[msgcat::mc {Zoom}] 32" \
-	-variable current(zoom) -value { 32 32 } -command ChangeZoom
+	-variable current(zoom) -value {32 32} -command ChangeZoom
     $ds9(mb).zoom add separator
     $ds9(mb).zoom add radiobutton -label [msgcat::mc {None}] \
 	-variable current(orient) -value none -command ChangeOrient
@@ -85,27 +85,27 @@ proc PrefsDialogZoomMenu {w} {
 	-variable pcurrent(align)
     $m add separator
     $m add radiobutton -label "[msgcat::mc {Zoom}] 1/32" \
-	-variable pcurrent(zoom) -value { 0.03125 0.03125 }
+	-variable pcurrent(zoom) -value {0.03125 0.03125}
     $m add radiobutton -label "[msgcat::mc {Zoom}] 1/16" \
-	-variable pcurrent(zoom) -value { 0.0625 0.0625 }
+	-variable pcurrent(zoom) -value {0.0625 0.0625}
     $m add radiobutton -label "[msgcat::mc {Zoom}] 1/8" \
-	-variable pcurrent(zoom) -value { 0.125 0.125 }
+	-variable pcurrent(zoom) -value {0.125 0.125}
     $m add radiobutton -label "[msgcat::mc {Zoom}] 1/4" \
-	-variable pcurrent(zoom) -value { 0.25 0.25 }
+	-variable pcurrent(zoom) -value {0.25 0.25}
     $m add radiobutton -label "[msgcat::mc {Zoom}] 1/2" \
-	-variable pcurrent(zoom) -value { 0.5 0.5 }
+	-variable pcurrent(zoom) -value {0.5 0.5}
     $m add radiobutton -label "[msgcat::mc {Zoom}] 1" \
-	-variable pcurrent(zoom) -value { 1 1 }
+	-variable pcurrent(zoom) -value {1 1}
     $m add radiobutton -label "[msgcat::mc {Zoom}] 2" \
-	-variable pcurrent(zoom) -value { 2 2 }
+	-variable pcurrent(zoom) -value {2 2}
     $m add radiobutton -label "[msgcat::mc {Zoom}] 4" \
-	-variable pcurrent(zoom) -value { 4 4 }
+	-variable pcurrent(zoom) -value {4 4}
     $m add radiobutton -label "[msgcat::mc {Zoom}] 8" \
-	-variable pcurrent(zoom) -value { 8 8 }
+	-variable pcurrent(zoom) -value {8 8}
     $m add radiobutton -label "[msgcat::mc {Zoom}] 16" \
-	-variable pcurrent(zoom) -value { 16 16 }
+	-variable pcurrent(zoom) -value {16 16}
     $m add radiobutton -label "[msgcat::mc {Zoom}] 32" \
- 	-variable pcurrent(zoom) -value { 32 32 }
+ 	-variable pcurrent(zoom) -value {32 32}
     $m add separator
     $m add radiobutton -label [msgcat::mc {None}] \
 	-variable pcurrent(orient) -value none
@@ -219,37 +219,37 @@ proc CreateButtonsZoom {} {
 	[string tolower [msgcat::mc {Zoom Fit}]] ZoomToFit
     RadioButton $ds9(buttons).zoom.i32 \
  	"[string tolower [msgcat::mc {Zoom}]] 1/32" \
-	current(zoom) { 0.03125 0.03125 } ChangeZoom
+	current(zoom) {0.03125 0.03125} ChangeZoom
     RadioButton $ds9(buttons).zoom.i16 \
 	"[string tolower [msgcat::mc {Zoom}]] 1/16" \
-	current(zoom) { 0.0625 0.0625 } ChangeZoom
+	current(zoom) {0.0625 0.0625} ChangeZoom
     RadioButton $ds9(buttons).zoom.i8 \
 	"[string tolower [msgcat::mc {Zoom}]] 1/8" \
-	current(zoom) { 0.125 0.125 } ChangeZoom
+	current(zoom) {0.125 0.125} ChangeZoom
     RadioButton $ds9(buttons).zoom.i4 \
 	"[string tolower [msgcat::mc {Zoom}]] 1/4" \
-	current(zoom) { 0.25 0.25 } ChangeZoom
+	current(zoom) {0.25 0.25} ChangeZoom
     RadioButton $ds9(buttons).zoom.i2 \
 	"[string tolower [msgcat::mc {Zoom}]] 1/2" \
-	current(zoom) { 0.5 0.5 } ChangeZoom
+	current(zoom) {0.5 0.5} ChangeZoom
     RadioButton $ds9(buttons).zoom.1 \
 	"[string tolower [msgcat::mc {Zoom}]] 1" \
-	current(zoom) { 1 1 } ChangeZoom
+	current(zoom) {1 1} ChangeZoom
     RadioButton $ds9(buttons).zoom.2 \
 	"[string tolower [msgcat::mc {Zoom}]] 2" \
-	current(zoom) { 2 2 } ChangeZoom
+	current(zoom) {2 2} ChangeZoom
     RadioButton $ds9(buttons).zoom.4 \
 	"[string tolower [msgcat::mc {Zoom}]] 4" \
-	current(zoom) { 4 4 } ChangeZoom
+	current(zoom) {4 4} ChangeZoom
     RadioButton $ds9(buttons).zoom.8 \
 	"[string tolower [msgcat::mc {Zoom}]] 8" \
-	current(zoom) { 8 8 } ChangeZoom
+	current(zoom) {8 8} ChangeZoom
     RadioButton $ds9(buttons).zoom.16 \
 	"[string tolower [msgcat::mc {Zoom}]] 16" \
-	current(zoom) { 16 16 } ChangeZoom
+	current(zoom) {16 16} ChangeZoom
     RadioButton $ds9(buttons).zoom.32 \
  	"[string tolower [msgcat::mc {Zoom}]] 32" \
- 	current(zoom) { 32 32 } ChangeZoom
+ 	current(zoom) {32 32} ChangeZoom
 
     RadioButton $ds9(buttons).zoom.none \
 	[string tolower [msgcat::mc {None}]] \

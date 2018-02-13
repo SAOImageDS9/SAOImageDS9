@@ -17,7 +17,7 @@ proc CurrentDef {} {
 
     set current(display) single
     set current(mode) none
-    set current(zoom) { 1 1 }
+    set current(zoom) {1 1}
     set current(rotate) 0
     set current(orient) none
     set current(align) 0

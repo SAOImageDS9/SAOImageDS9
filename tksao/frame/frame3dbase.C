@@ -789,7 +789,7 @@ void Frame3dBase::setSlice(int id, int ss)
 
   if (id==2) {
     currentContext->updateContours();
-    update(BASEONLY);
+    update(PIXMAP);
   }
   else {
     // load the next cube

@@ -1933,10 +1933,15 @@ int Base::updatePixmap(const BBox& bb)
     updateMatrices();
     updatePannerMatrices();
   case BASE:
-    updatePanner();
-  case BASEONLY:
     updateBase();
+    updatePanner();
   case PIXMAP:
+    updatePM(bb);
+    break;
+
+  case BASEONLY:
+    // specal 3D
+    updateBase();
     updatePM(bb);
     break;
   }

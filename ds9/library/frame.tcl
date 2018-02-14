@@ -195,7 +195,10 @@ proc CreateNameNumberFrame {which type} {
 	    $ds9(next) cube axes $cube(axes)
 	    
 	    if {$smooth(view)} {
-		$ds9(next) smooth $smooth(function) $smooth(kernel) $smooth(radius)
+		$ds9(next) smooth $smooth(function) \
+		    $smooth(radius) $smooth(radius,minor) \
+		    $smooth(sigma) $smooth(sigma,minor) \
+		    $smooth(angle)
 	    }
 	}
 	rgb {
@@ -224,7 +227,10 @@ proc CreateNameNumberFrame {which type} {
 		$ds9(next) cube axes $cube(axes)
 
 		if {$smooth(view)} {
-		    $ds9(next) smooth $smooth(function) $smooth(kernel) $smooth(radius)
+		    $ds9(next) smooth $smooth(function) \
+			$smooth(radius) $smooth(radius,minor) \
+			$smooth(sigma) $smooth(sigma,minor) \
+			$smooth(angle)
 		}
 	    }
 	    $ds9(next) rgb channel red

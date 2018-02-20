@@ -1,0 +1,76 @@
+# $Id: cl.fcl,v 1.1.1.1 2004/07/23 19:22:41 tang Exp $
+
+# Scans its command line for various arguments.
+
+# This is based upon example 'ape-05.l' (which is the flex version of
+# 'ch2-05.l') from "lex & yacc" by John R. Levine, Tony Mason, and
+# Doug Brown (by O'Reilly & Associates, ISBN 1-56592-000-7).  For more
+# information on using lex and yacc, see
+# http://www.oreilly.com/catalog/lex/.
+
+# myinput() could have been written much more efficiently because Tcl
+# handles command line arguments as a list.  For the sake of porting
+# the original example to Tcl, I used the same logic found within the
+# original flex code.
+
+%{
+#!/usr/bin/tclsh
+%}
+
+%buffersize 1024
+%option nodefault
+
+%%
+
+-h          |
+-\?         |
+-help       {
+              puts "usage is: $::progName \[-help | -h | -? \] \[-verbose | -v \] \[(-file | -f) filename\]"
+              # actually, the -f option is not handled by this program.
+              # that is left as an exercise to the reader.
+              }
+-v          |
+-verbose    {
+              puts "verbose mode is on"
+              set ::verbose 1
+            }
+
+%%
+
+proc YY_INPUT {buf result max} {
+    upvar $result ret_val
+    upvar $buf buf_data
+    set ret_val [myinput buf_data $max]
+}
+
+set ::offset 0
+proc myinput {buf max} {
+    upvar $buf buf_data
+    if {[llength $::targv] == 0} {
+        # no arguments left, so return an EOF
+        return 0
+    }
+    set len [string length [lindex $::targv 0]]
+    if {$len >= $max} {
+        set copylen [expr {$max - 1}]
+    } else {
+        set copylen $len
+    }
+    if {$len > 0} {
+        set buf_data [string range [lindex $::targv 0] $::offset $copylen]
+    }
+    if {[string length [lindex $::targv 0]] >= $::offset + $copylen} {
+        append buf " "
+        incr copylen
+        set ::offset 0
+        set ::targv [lrange $::targv 1 end]
+    } else {
+        incr ::offset $copylen
+    }
+    return $copylen
+}
+
+set progName $argv0
+set verbose 0
+set ::targv $argv                 ;# holds remainder of argument list
+yylex

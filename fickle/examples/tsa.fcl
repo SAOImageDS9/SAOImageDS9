@@ -1,0 +1,79 @@
+#$Id: tsa.fcl,v 1.1.1.1 2004/07/23 19:22:41 tang Exp $
+
+# Counts lines of comments, logical lines of code, and function
+# invocations in Tcl code.
+
+# The patterns can handle most "normal" Tcl code.  There are some
+# instances where it will not correctly detect a function call.
+
+%{
+#!/usr/bin/tclsh
+
+proc found_func {funcname} {
+    if [info exist ::func($funcname)] {
+        incr ::func($funcname)
+    } else {
+        set ::func($funcname) 1
+    }
+}
+
+proc spin {} {
+    if {$::numlines % 8 == 0} {
+        puts -nonewline "."
+        flush stdout
+    }
+}
+
+set comments 0
+set numlines 0
+set spinner_count 0
+
+%}
+
+%option stack
+%x ARG
+
+%%
+
+<*>^\s*\n            { incr ::numlines; spin }
+<*>;?\s*#.*\n        { incr ::comments; incr ::numlines; spin }
+<*>\n                { yy_pop_state; incr ::numlines; spin }
+<*>\s                # ignore whitespace
+<*>\\(.|\n)          # ignore escaped characters
+<*>\d+               # numbers are ignored
+<INITIAL>\w+         { found_func $yytext; yy_push_state ARG }
+<ARG>\w+             # ignore arguments
+<*>\[\s*\w+          { set start [string first "\["  $yytext]
+                       set func [string range $yytext [expr {$start + 1}] end]
+                       found_func [string trim $func]
+                       yy_push_state ARG }
+<ARG>\]              { yy_pop_state }
+<*>;                 { yy_pop_state }
+<*>.                 # unknown character; ignore it
+
+%%
+
+# start of main
+if {[llength $argv] > 0} {
+    if {[catch {open [lindex $argv 0]} yyin]} {
+        puts stderr "could not open file"
+        exit 0
+    }
+}
+
+yylex
+
+if {[llength $argv] > 0} {
+    close $yyin
+}
+
+puts ""
+puts "Comments:  $comments"
+puts "Num lines: $numlines"
+puts "Function calls:"
+parray func
+set totalcalls 0
+foreach {name calls} [array get func] {
+    incr totalcalls $calls
+}
+puts "Total calls: $totalcalls"

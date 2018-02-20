@@ -188,6 +188,9 @@ source $ds9(root)/library/xmfbox.tcl
 source $ds9(root)/library/xmlrpc.tcl
 source $ds9(root)/library/xpa.tcl
 
+source $ds9(root)/library/parser.tcl
+source $ds9(root)/library/lex.tcl
+
 switch [tk windowingsystem] {
     x11 {}
     aqua {source $ds9(root)/library/macosx.tcl}

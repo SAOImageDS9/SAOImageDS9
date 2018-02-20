@@ -79,3 +79,6 @@ distclean: clean
 	-rm -f Makefile config.cache config.log config.status
 	-rm -rf autom4te.cache
 
+parserclean:
+	-rm -f ../library/parser.tcl ../library/parser.output ../library/parser.tab.tcl ../library/lex.tcl
+

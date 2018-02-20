@@ -96,6 +96,16 @@ proc ProcessCommand {argv argc} {
     while {$i < $argc} {
 	set item [lindex $argv $i]
 	switch -- $item {
+	    -foo {
+		YY_FLUSH_BUFFER
+		yy_scan_string $argv
+		yyparse
+		set argc 0
+	    }
+#		YY_FLUSH_BUFFER
+#		yy_scan_string $argv
+#		yyparse
+
 	    -- {set noopts 1}
 	    -? -
 	    -help -
@@ -165,7 +175,7 @@ proc ProcessCommand {argv argc} {
 	    -geometry {
 		# already processed
 	    }
-	    -gif {set file(type) gif}
+p	    -gif {set file(type) gif}
 	    -green {set current(rgb) green; RGBChannel}
 	    -grid {incr i; ProcessGridCmd argv i}
 	    -nogrid {set grid(view) 0; GridUpdateCurrent}

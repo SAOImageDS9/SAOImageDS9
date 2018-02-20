@@ -1,0 +1,49 @@
+2004-11-13  J. Tang  <tang@jtang.org>
+
+	* Released as fickle version 2.04.
+
+	* Reworded parts of README; included explanation of change to
+	[unput].	
+
+	* Changes some internal variable names.  With the exception of
+	yy_scan_string, all other global variables beginning with 'yy_'
+	are used to keep track of internal fickle states.  (Of course,
+	this is all changed if %option prefix is given.)
+
+	* Fixed a missing parameter within yyless function.  Thanks to Jon
+	Harrison for reporting this.
+
+2004-09-30  J. Tang  <tang@jtang.org>
+
+	* Found some problems when both %option debug and %option prefix
+	enabled.
+
+	* Found a problem with patterns that use vertical bars.
+
+2004-09-30  J. Tang  <tang@jtang.org>
+
+	* Added some more comments; reformatted code slightly.
+
+2004-09-27  J. Tang  <tang@jtang.org>
+
+	* Removed errornous space in "%buffersize" within handle_defs
+	switch.  Thanks to jcw for discovering this.
+
+2004-08-19  J. Tang  <tang@jtang.org>
+
+	* definitions containing backslashses correctly maintain those
+	backslashes during substitution.  thanks to Matt Newman for
+	discovering this bug.
+
+2004-08-18  J. Tang  <tang@jtang.org>
+
+	* added interactive mode (-I option)
+
+2004-08-05  J. Tang  <tang@jtang.org>
+
+	* fixed yy_scan_string; moved comments about to be Tcldoc-friendly
+
+2002-06-24  J. Tang  <tang@jtang.org>
+
+	* fixed spelling and grammar mistakes within README
+

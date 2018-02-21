@@ -2,7 +2,7 @@
 
 # $Id: fickle.tcl,v 1.6 2004/11/14 02:36:28 tang Exp $
 
-set FICKLE_VERSION 2.04
+set FICKLE_VERSION 2.1
 
 #//#
 # Fickle is a lexical analyzer generator written in pure Tcl.  It
@@ -337,7 +337,9 @@ proc write_scanner_utils {} {
     }
     if $::startstates {
         puts $::dest "
-    variable yy_state_stack {}"
+    variable yy_state_stack {}
+    variable yy_state_table
+    array set yy_state_table {INITIAL 1}"
     }
     if $::linenums {
         puts $::dest "
@@ -510,8 +512,8 @@ proc write_scanner_utils {} {
        \}
        if \$yy_done \{"
     if $::callyywrap {
-        puts -nonewline $::dest "           if \{\[${::p}::yywrap\] == 0\} \{
-               return \[${::p}::yyinput\]
+        puts -nonewline $::dest "           if \{\[yywrap\] == 0\} \{
+               return \[yyinput\]
            \} else"
     } else {
         puts -nonewline $::dest "           "
@@ -545,6 +547,8 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
         }
         puts $::dest "proc ${::p}::yy_pop_state \{\} \{
+    variable yy_state_stack
+
     set yy_state_stack \[lrange \$yy_state_stack 0 end-1\]
     if \{\$yy_state_stack == \"\"\} \{
         yy_push_state INITIAL
@@ -576,17 +580,15 @@ proc write_scanner_utils {} {
 
     set yy_state_stack \[lrange \$yy_state_stack 0 end-1\]
     lappend yy_state_stack \$new_state
-\}
-"
+\}"
     }
     
     if $::startstates {
         puts $::dest "
 ${::p}::BEGIN INITIAL
-array set ::${::p}_state_table \{[array get ::state_table]\}"
+"
     }
 }
-
 
 # Writes the actual scanner as a function called <code>yylex</code>.
 # Note that this function may be renamed if the <code>-P</code> flag
@@ -633,7 +635,7 @@ proc ${::p}::yylex \{\} \{
                 \}"
     }
     if $::callyywrap {
-        puts -nonewline $::dest "                if \{\[${::p}::yywrap\] == 0\} \{
+        puts -nonewline $::dest "                if \{\[yywrap\] == 0\} \{
                     set yy_done 0
                     continue
                 \} else"
@@ -663,14 +665,14 @@ proc ${::p}::yylex \{\} \{
         puts -nonewline $::dest "        if \{"
         if $::startstates {
             if {$state_name == ""} {
-                puts -nonewline $::dest "\$::${::p}_state_table(\$yy_current_state) && \\\n                "
+                puts -nonewline $::dest "\$yy_state_table(\$yy_current_state) && \\\n                "
             } elseif {$state_name != "*"} {
                 puts -nonewline $::dest "\$yy_current_state == \"$state_name\" && \\\n                "
             }
         }
-        puts $::dest "\[regexp -start \$yy_index -indices -line $scan_args -- \{\\A($pattern)\} \$yy_buffer ${::p}_match\] > 0\ && \\
-                \[lindex \$${::p}_match 1\] - \$yy_index + 1 > \$yyleng\} \{
-            set yytext \[string range \$yy_buffer \$yy_index \[lindex \$${::p}_match 1\]\]
+        puts $::dest "\[regexp -start \$yy_index -indices -line $scan_args -- \{\\A($pattern)\} \$yy_buffer yy_match\] > 0\ && \\
+                \[lindex \$yy_match 1\] - \$yy_index + 1 > \$yyleng\} \{
+            set yytext \[string range \$yy_buffer \$yy_index \[lindex \$yy_match 1\]\]
             set yyleng \[string length \$yytext\]
             set yy_matched_rule $rule_num"
         if $::debugmode {

@@ -323,10 +323,14 @@ proc write_scanner_utils {} {
 # author's license.  See http://mini.net/tcl/fickle for other details.
 ######
 "
+    puts $::dest "namespace eval ${::p} \{"
+    puts $::dest "\}"
+    puts $::dest ""
+
     if $::callyywrap {
         if $::headers {
-            puts $::dest "# If ${::p}wrap() returns false (zero), then it is assumed that the
-# function has gone ahead and set up ${::p}in to point to another input
+            puts $::dest "# If yywrap() returns false (zero), then it is assumed that the
+# function has gone ahead and set up yyin to point to another input
 # file, and scanning continues.  If it returns true (non-zero), then
 # the scanner terminates, returning 0 to its caller.  Note that in
 # either case, the start condition remains unchanged; it does not
@@ -339,13 +343,13 @@ proc write_scanner_utils {} {
 "
     }
     if $::headers {
-        puts $::dest "# ECHO copies ${::p}text to the scanner's output if no arguments are
-# given.  The scanner writes its ECHO output to the ${::p}out global
+        puts $::dest "# ECHO copies yytext to the scanner's output if no arguments are
+# given.  The scanner writes its ECHO output to the yyout global
 # (default, stdout), which may be redefined by the user simply by
 # assigning it to some other channel.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc ECHO \{\{s \"\"\}\} \{
+    puts $::dest "proc ${::p}::ECHO \{\{s \"\"\}\} \{
     if \{\$s == \"\"\} \{
         puts -nonewline \$::${::p}out \$::${::p}text
     \} else \{
@@ -354,41 +358,41 @@ proc write_scanner_utils {} {
 \}
 "
     if $::headers {
-        puts $::dest "# ${::P}_FLUSH_BUFFER flushes the scanner's internal buffer so that the
+        puts $::dest "# YY_FLUSH_BUFFER flushes the scanner's internal buffer so that the
 # next time the scanner attempts to match a token, it will first
-# refill the buffer using ${::P}_INPUT.
+# refill the buffer using YY_INPUT.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc ${::P}_FLUSH_BUFFER \{\} \{
+    puts $::dest "proc ${::p}::YY_FLUSH_BUFFER \{\} \{
     set ::${::p}_buffer \"\"
     set ::${::p}_index 0
     set ::${::p}_done 0
 \}
 "
     if $::headers {
-        puts $::dest "# ${::p}restart(new_file) may be called to point ${::p}in at the new input
+        puts $::dest "# yyrestart(new_file) may be called to point yyin at the new input
 # file.  The switch-over to the new file is immediate (any previously
-# buffered-up input is lost).  Note that calling ${::p}restart with ${::p}in
+# buffered-up input is lost).  Note that calling yyrestart with yyin
 # as an argument thus throws away the current input buffer and
 # continues scanning the same input file.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc ${::p}restart \{new_file\} \{
+    puts $::dest "proc ${::p}::yyrestart \{new_file\} \{
     set ::${::p}in \$new_file
-    ${::P}_FLUSH_BUFFER
+    ${::p}::YY_FLUSH_BUFFER
 \}
 "       
     if $::headers {
         puts $::dest "# The nature of how it gets its input can be controlled by defining
-# the ${::P}_INPUT macro.  ${::P}_INPUT's calling sequence is
-# \"${::P}_INPUT(buf,result,max_size)\".  Its action is to place up to
+# the YY_INPUT macro.  YY_INPUT's calling sequence is
+# \"YY_INPUT(buf,result,max_size)\".  Its action is to place up to
 # max_size characters in the character array buf and return in the
 # integer variable result either the number of characters read or the
-# constant ${::P}_NULL (0 on Unix systems) to indicate EOF.  The default
-# ${::P}_INPUT reads from the global file-pointer \"${::p}in\".
+# constant YY_NULL (0 on Unix systems) to indicate EOF.  The default
+# YY_INPUT reads from the global file-pointer \"yyin\".
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc ${::P}_INPUT \{buf result max_size\} \{
+    puts $::dest "proc ${::p}::YY_INPUT \{buf result max_size\} \{
     upvar \$result ret_val
     upvar \$buf new_data
     if \{\$::${::p}in != \"\"\} \{"
@@ -413,7 +417,7 @@ proc write_scanner_utils {} {
 # not change the start condition.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc ${::p}_scan_string \{str\} \{
+    puts $::dest "proc ${::p}::yy_scan_string \{str\} \{
     append ::${::p}_buffer \$str
     set ::${::p}in \"\"
 \}
@@ -452,7 +456,7 @@ proc write_scanner_utils {} {
     if \{\[string length \$::${::p}_buffer\] - \$::${::p}_index < $::BUFFER_SIZE\} \{
        set new_buffer_size 0
        if \{\$::${::p}_done == 0\} \{
-           ${::P}_INPUT new_buffer new_buffer_size $::BUFFER_SIZE
+           ${::p}::YY_INPUT new_buffer new_buffer_size $::BUFFER_SIZE
            append ::${::p}_buffer \$new_buffer
            if \{\$new_buffer_size == 0\} \{
                set ::${::p}_done 1
@@ -574,7 +578,7 @@ proc ${::p}lex \{\} \{
     puts $::dest "        if \{\[string length \$::${::p}_buffer\] - \$::${::p}_index < $::BUFFER_SIZE\} \{
             if \{\$::${::p}_done == 0\} \{
                 set ${::p}_new_buffer \"\"
-                ${::P}_INPUT ${::p}_new_buffer ${::p}_buffer_size $::BUFFER_SIZE
+                ${::p}::YY_INPUT ${::p}_new_buffer ${::p}_buffer_size $::BUFFER_SIZE
                 append ::${::p}_buffer \$${::p}_new_buffer
                 if \{\$${::p}_buffer_size == 0 && \\
                         \[string length \$::${::p}_buffer\] - \$::${::p}_index == 0\} \{
@@ -783,7 +787,6 @@ proc fickle_args {argv} {
     set ::suppress 0
     set ::BUFFER_SIZE 1024
     set ::p "yy"
-    set ::P "YY"
     set ::verbose 0
     while {$argvp < [llength $argv]} {
         set arg [lindex $argv $argvp]
@@ -800,7 +803,6 @@ proc fickle_args {argv} {
             "-P" {
                 set prefix [get_param $argv argvp "P"]
                 set ::p [string tolower $prefix]
-                set ::P [string toupper $prefix]
             }
             "--version" { print_fickle_version }
             default {

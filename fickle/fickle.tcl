@@ -325,7 +325,9 @@ proc write_scanner_utils {} {
 "
     puts $::dest "namespace eval ${::p} \{
     variable yytext {}
-    variable yyleng 0"
+    variable yyleng 0
+    variable yyin stdin
+    variable yyout stdout"
     puts $::dest "\}"
     puts $::dest ""
 
@@ -353,10 +355,12 @@ proc write_scanner_utils {} {
     }
     puts $::dest "proc ${::p}::ECHO \{\{s \"\"\}\} \{
     variable yytext
+    variable yyout
+
     if \{\$s == \"\"\} \{
-        puts -nonewline \$::${::p}out \$yytext
+        puts -nonewline \$yyout \$yytext
     \} else \{
-        puts -nonewline \$::${::p}out \$s
+        puts -nonewline \$yyout \$s
     \}
 \}
 "
@@ -381,8 +385,10 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::yyrestart \{new_file\} \{
-    set ::${::p}in \$new_file
-    ${::p}::YY_FLUSH_BUFFER
+    variable yyin
+
+    set yyin \$new_file
+    YY_FLUSH_BUFFER
 \}
 "       
     if $::headers {
@@ -396,16 +402,18 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::YY_INPUT \{buf result max_size\} \{
+    variable yyin
+
     upvar \$result ret_val
     upvar \$buf new_data
-    if \{\$::${::p}in != \"\"\} \{"
+    if \{\$yyin != \"\"\} \{"
     if $::interactive {
-        puts $::dest "        gets \$::${::p}in new_data
-        if \{!\[eof \$::${::p}in\]\} \{
+        puts $::dest "        gets \$yyin new_data
+        if \{!\[eof \$yyin\]\} \{
             append new_data \\n
         \}"
     } else {
-        puts $::dest "        set new_data \[read \$::${::p}in \$max_size\]"
+        puts $::dest "        set new_data \[read \$yyin \$max_size\]"
     }
     puts $::dest "        set ret_val \[string length \$new_data\]
     \} else \{
@@ -421,8 +429,10 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::yy_scan_string \{str\} \{
+    variable yyin
+
     append ::${::p}_buffer \$str
-    set ::${::p}in \"\"
+    set yyin \"\"
 \}
 "
     if $::headers {
@@ -462,7 +472,7 @@ proc write_scanner_utils {} {
     if \{\[string length \$::${::p}_buffer\] - \$::${::p}_index < $::BUFFER_SIZE\} \{
        set new_buffer_size 0
        if \{\$::${::p}_done == 0\} \{
-           ${::p}::YY_INPUT new_buffer new_buffer_size $::BUFFER_SIZE
+           YY_INPUT new_buffer new_buffer_size $::BUFFER_SIZE
            append ::${::p}_buffer \$new_buffer
            if \{\$new_buffer_size == 0\} \{
                set ::${::p}_done 1
@@ -549,13 +559,6 @@ array set ::${::p}_state_table \{[array get ::state_table]\}"
     if $::debugmode {
         puts $::dest "set ::${::p}_flex_debug 1"
     }
-    puts $::dest "if \{!\[info exists ::${::p}in\]\} \{
-    set ::${::p}in \"stdin\"
-\}
-if \{!\[info exists ::${::p}out\]\} \{
-    set ::${::p}out \"stdout\"
-\}
-"
 }
 
 

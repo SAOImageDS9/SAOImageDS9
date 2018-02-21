@@ -47,4 +47,3 @@ to	    {return $yy::TO_}
 
 %%
 
-set ::yy_flex_debug 1

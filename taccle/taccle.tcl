@@ -2,7 +2,7 @@
 
 # $Id: taccle.tcl,v 1.6 2005/03/17 20:42:21 tang Exp $
 
-set TACCLE_VERSION 1.1
+set TACCLE_VERSION 1.2
 
 #//#
 # Taccle is another compiler compiler written in pure Tcl.  reads a
@@ -832,6 +832,9 @@ proc write_parser_utils {} {
 # author's license.  See http://mini.net/tcl/taccle for other details.
 ######
 
+namespace eval ${::p} \{
+\}
+
 proc ${::P}ABORT \{\} \{
     return -code return 1
 \}
@@ -884,7 +887,7 @@ proc write_parser {} {
         set ${::p}state \[lindex \$${::p}state_stack end\]
         if {\$${::p}token == \"\"} {
             set ::${::p}lval \"\"
-            set ${::p}token \[${::p}lex\]
+            set ${::p}token \[${::p}::yylex\]
             set ${::p}buflval \$::${::p}lval
         }
         if {!\[info exists ::${::p}table(\$${::p}state:\$${::p}token)\]} {
@@ -909,7 +912,7 @@ proc write_parser {} {
                     return 1
                 }
                 set ::${::p}lval {}
-                set ${::p}token \[${::p}lex\]
+                set ${::p}token \[${::p}::yylex\]
                 set ${::p}buflval \$::${::p}lval
             }
             continue
@@ -987,11 +990,13 @@ proc write_array {fd name values} {
 # Writes a header file that should be [source]d by the lexer.
 proc write_header_file {} {
     # scan through token_table and write out all non-implicit terminals
+    puts $::header "namespace eval ${::p} \{\}"
+    puts $::header ""
     foreach tok_id $::token_list {
         if {$::token_id_table($tok_id,t) == $::TERMINAL && \
                 [string is integer $tok_id] && $tok_id >= 256} {
             set token $::token_id_table($tok_id)
-            puts $::header "set ::${token} $tok_id"
+            puts $::header "set ${::p}::${token} $tok_id"
         }
     }
     puts $::header "set ::${::p}lval \{\}"

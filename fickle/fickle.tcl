@@ -612,7 +612,7 @@ proc ${::p}::yylex \{\} \{
 
     while \{1\} \{"
     if $::startstates {
-        puts $::dest "        set ${::p}_current_state \[yy_top_state\]"
+        puts $::dest "        set yy_current_state \[yy_top_state\]"
     }
     puts $::dest "        if \{\[string length \$yy_buffer\] - \$yy_index < $::BUFFER_SIZE\} \{
             if \{\$yy_done == 0\} \{
@@ -661,9 +661,9 @@ proc ${::p}::yylex \{\} \{
         puts -nonewline $::dest "        if \{"
         if $::startstates {
             if {$state_name == ""} {
-                puts -nonewline $::dest "\$::${::p}_state_table(\$${::p}_current_state) && \\\n                "
+                puts -nonewline $::dest "\$::${::p}_state_table(\$yy_current_state) && \\\n                "
             } elseif {$state_name != "*"} {
-                puts -nonewline $::dest "\$${::p}_current_state == \"$state_name\" && \\\n                "
+                puts -nonewline $::dest "\$yy_current_state == \"$state_name\" && \\\n                "
             }
         }
         puts $::dest "\[regexp -start \$yy_index -indices -line $scan_args -- \{\\A($pattern)\} \$yy_buffer ${::p}_match\] > 0\ && \\
@@ -672,7 +672,7 @@ proc ${::p}::yylex \{\} \{
             set yyleng \[string length \$yytext\]
             set yy_matched_rule $rule_num"
         if $::debugmode {
-            puts $::dest "            set ${::p}rule_num \"rule at line $rule_line\""
+            puts $::dest "            set yyrule_num \"rule at line $rule_line\""
         }
         puts $::dest "        \}"
         incr rule_num
@@ -682,7 +682,7 @@ proc ${::p}::yylex \{\} \{
             set yytext \[string index \$yy_buffer \$yy_index\]
             set yyleng 1"
     if $::debugmode {
-        puts $::dest "            set ${::p}rule_num \"default rule\""
+        puts $::dest "            set yyrule_num \"default rule\""
     }
     puts $::dest "        \}
         incr yy_index \$yyleng
@@ -693,7 +693,7 @@ proc ${::p}::yylex \{\} \{
         \}"
     if $::debugmode {
         puts $::dest "        if \$yy_flex_debug \{
-            puts stderr \"   --accepting \$${::p}rule_num (\\\"\$yytext\\\")\"
+            puts stderr \"   --accepting \$yyrule_num (\\\"\$yytext\\\")\"
         \}"
     }
     if $::linenums {
@@ -717,7 +717,7 @@ proc ${::p}::yylex \{\} \{
     } else {
         puts -nonewline $::dest "                \{ puts stderr \"unmatched token: \$yytext"
         if $::startstates {
-            puts -nonewline $::dest " in state `\$${::p}_current_state'"
+            puts -nonewline $::dest " in state `\$yy_current_state'"
         }
         puts $::dest "\"; exit -1 \}"
     }

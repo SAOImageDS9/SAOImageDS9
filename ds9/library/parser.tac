@@ -1,5 +1,4 @@
 %{
-
 %}
 
 %token INT_
@@ -7,12 +6,11 @@
 %token STRING_
 
 %token FOOCMD_
+%token EXITCMD_
 
 %token CLOSE_
 %token FIT_
-%token IN_
 %token OPEN_
-%token OUT_
 %token TO_
 
 %%
@@ -24,26 +22,27 @@ commands : commands command
 int : INT_ {set _ $1}
  ;
 
-command : FOOCMD_ zoom
+command : FOOCMD_ foo
+ | EXITCMD_ exit
  ;
 
 numeric	: int {set _ $1}
  | REAL_ {set _ $1}
  ;
 
-zoom : STRING_ {puts "ZOOM $1"}
- | numeric {puts "ZOOM $1"}
- | numeric numeric {puts "ZOOM $1 $2"}
- | OPEN_ {puts "ZOOM open"}
- | CLOSE_ {puts "ZOOM close"}
- | IN_ {puts "ZOOM in"}
- | OUT_ {puts "ZOOM out"}
- | TO_ zoomTo
+foo : STRING_ {puts "STRING $1"}
+ | INT_ {puts "INT $1"}
+ | REAL_ {puts "REAL $1"}
+ | OPEN_ {puts "OPEN"}
+ | CLOSE_ {puts "CLOSE"}
+ | TO_ fooTo
  ;
 
-zoomTo: FIT_ {puts "ZOOM to fit"}
- | numeric {puts "ZOOM to $1"}
- | numeric numeric {puts "ZOOM to $1 $2"}
+fooTo: FIT_ {puts "TO FIT"}
+ | numeric {puts "TO NUMERIC $1"}
+ ;
+
+exit: {puts "EXIT"; QuitDS9}
  ;
 
 %%

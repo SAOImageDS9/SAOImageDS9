@@ -326,6 +326,7 @@ proc write_scanner_utils {} {
     puts $::dest "namespace eval ${::p} \{
     variable yytext {}
     variable yyleng 0
+    variable yy_done 0
     variable yyin stdin
     variable yyout stdout"
     puts $::dest "\}"
@@ -371,9 +372,11 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::YY_FLUSH_BUFFER \{\} \{
+    variable yy_done
+
     set ::${::p}_buffer \"\"
     set ::${::p}_index 0
-    set ::${::p}_done 0
+    set yy_done 0
 \}
 "
     if $::headers {
@@ -469,16 +472,18 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::yyinput \{\} \{
+    variable yy_done
+
     if \{\[string length \$::${::p}_buffer\] - \$::${::p}_index < $::BUFFER_SIZE\} \{
        set new_buffer_size 0
-       if \{\$::${::p}_done == 0\} \{
+       if \{\$yy_done == 0\} \{
            YY_INPUT new_buffer new_buffer_size $::BUFFER_SIZE
            append ::${::p}_buffer \$new_buffer
            if \{\$new_buffer_size == 0\} \{
-               set ::${::p}_done 1
+               set yy_done 1
            \}
        \}
-       if \$::${::p}_done \{"
+       if \$yy_done \{"
     if $::callyywrap {
         puts -nonewline $::dest "           if \{\[${::p}::yywrap\] == 0\} \{
                return \[${::p}::yyinput\]
@@ -546,8 +551,7 @@ proc write_scanner_utils {} {
     
     puts $::dest "# initialize values used by the lexer
 set ::${::p}_buffer \{\}
-set ::${::p}_index 0
-set ::${::p}_done 0"
+set ::${::p}_index 0"
     if $::startstates {
         puts $::dest "set ::${::p}_state_stack \{\}
 ${::p}::BEGIN INITIAL
@@ -575,7 +579,8 @@ proc write_scanner {} {
 # reaches an end-of-file (at which point it returns the value 0) or
 # one of its actions executes a return statement.
 #   -- from the flex(1) man page
-proc ${::p}lex \{\} \{
+proc ${::p}::yylex \{\} \{
+    variable yy_done
     variable yytext
     variable yyleng
 
@@ -584,16 +589,16 @@ proc ${::p}lex \{\} \{
         puts $::dest "        set ${::p}_current_state \[${::p}::yy_top_state\]"
     }
     puts $::dest "        if \{\[string length \$::${::p}_buffer\] - \$::${::p}_index < $::BUFFER_SIZE\} \{
-            if \{\$::${::p}_done == 0\} \{
+            if \{\$yy_done == 0\} \{
                 set ${::p}_new_buffer \"\"
                 ${::p}::YY_INPUT ${::p}_new_buffer ${::p}_buffer_size $::BUFFER_SIZE
                 append ::${::p}_buffer \$${::p}_new_buffer
                 if \{\$${::p}_buffer_size == 0 && \\
                         \[string length \$::${::p}_buffer\] - \$::${::p}_index == 0\} \{
-                    set ::${::p}_done 1
+                    set yy_done 1
                 \}
             \}
-            if \$::${::p}_done \{"
+            if \$yy_done \{"
     if $::debugmode {
         puts $::dest "                if \$::${::p}_flex_debug \{
                     puts stderr \"   --reached end of input buffer\"
@@ -601,7 +606,7 @@ proc ${::p}lex \{\} \{
     }
     if $::callyywrap {
         puts -nonewline $::dest "                if \{\[${::p}::yywrap\] == 0\} \{
-                    set ::${::p}_done 0
+                    set yy_done 0
                     continue
                 \} else"
     } else {

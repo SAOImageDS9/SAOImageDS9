@@ -499,6 +499,7 @@ proc write_scanner_utils {} {
     variable yy_done
 
     if \{\[string length \$yy_buffer\] - \$yy_index < $::BUFFER_SIZE\} \{
+       set new_buffer \"\"
        set new_buffer_size 0
        if \{\$yy_done == 0\} \{
            YY_INPUT new_buffer new_buffer_size $::BUFFER_SIZE
@@ -616,10 +617,11 @@ proc ${::p}::yylex \{\} \{
     }
     puts $::dest "        if \{\[string length \$yy_buffer\] - \$yy_index < $::BUFFER_SIZE\} \{
             if \{\$yy_done == 0\} \{
-                set ${::p}_new_buffer \"\"
-                YY_INPUT ${::p}_new_buffer ${::p}_buffer_size $::BUFFER_SIZE
-                append yy_buffer \$${::p}_new_buffer
-                if \{\$${::p}_buffer_size == 0 && \\
+	        set yy_buffer_size 0
+                set yy_new_buffer \"\"
+                YY_INPUT yy_new_buffer yy_buffer_size $::BUFFER_SIZE
+                append yy_buffer \$yy_new_buffer
+                if \{\$yy_buffer_size == 0 && \\
                         \[string length \$yy_buffer\] - \$yy_index == 0\} \{
                     set yy_done 1
                 \}
@@ -693,7 +695,7 @@ proc ${::p}::yylex \{\} \{
         \}"
     if $::debugmode {
         puts $::dest "        if \$yy_flex_debug \{
-            puts stderr \"   --accepting \$yyrule_num (\\\"\$yytext\\\")\"
+            puts stderr \"   ${::p} --accepting \$yyrule_num (\\\"\$yytext\\\")\"
         \}"
     }
     if $::linenums {

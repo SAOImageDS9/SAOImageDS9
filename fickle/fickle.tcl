@@ -644,7 +644,7 @@ proc ${::p}::yylex \{\} \{
             \}            
         \}
         set yyleng 0
-        set ${::p}_matched_rule -1"
+        set yy_matched_rule -1"
     
     # build up the if statements to determine which rule to execute;
     # lex is greedy and will use the rule that matches the most
@@ -670,7 +670,7 @@ proc ${::p}::yylex \{\} \{
                 \[lindex \$${::p}_match 1\] - \$yy_index + 1 > \$yyleng\} \{
             set yytext \[string range \$yy_buffer \$yy_index \[lindex \$${::p}_match 1\]\]
             set yyleng \[string length \$yytext\]
-            set ${::p}_matched_rule $rule_num"
+            set yy_matched_rule $rule_num"
         if $::debugmode {
             puts $::dest "            set ${::p}rule_num \"rule at line $rule_line\""
         }
@@ -678,7 +678,7 @@ proc ${::p}::yylex \{\} \{
         incr rule_num
     }
     # now add the default case
-    puts $::dest "        if \{\$${::p}_matched_rule == -1\} \{
+    puts $::dest "        if \{\$yy_matched_rule == -1\} \{
             set yytext \[string index \$yy_buffer \$yy_index\]
             set yyleng 1"
     if $::debugmode {
@@ -699,7 +699,7 @@ proc ${::p}::yylex \{\} \{
     if $::linenums {
         puts $::dest "        set numlines \[expr \{\[llength \[split \$yytext \"\\n\"\]\] - 1\}\]"
     }
-    puts $::dest "        switch -- \$${::p}_matched_rule \{"
+    puts $::dest "        switch -- \$yy_matched_rule \{"
     set rule_num 0
     foreach rule $::rule_table {
         puts -nonewline $::dest "            $rule_num "

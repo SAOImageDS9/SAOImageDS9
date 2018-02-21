@@ -331,6 +331,18 @@ proc write_scanner_utils {} {
     variable yy_done 0
     variable yyin stdin
     variable yyout stdout"
+    if $::debugmode {
+        puts $::dest "
+    variable yy_flex_debug 1"
+    }
+    if $::startstates {
+        puts $::dest "
+    variable yy_state_stack {}"
+    }
+    if $::linenums {
+        puts $::dest "
+    variable yylineno 1"
+    }
     puts $::dest "\}"
     puts $::dest ""
 
@@ -521,7 +533,9 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
         }
         puts $::dest "proc ${::p}::yy_push_state \{new_state\} \{
-    lappend ::${::p}_state_stack \$new_state
+    variable yy_state_stack
+
+    lappend yy_state_stack \$new_state
 \}
 "
         if $::headers {
@@ -530,9 +544,9 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
         }
         puts $::dest "proc ${::p}::yy_pop_state \{\} \{
-    set ::${::p}_state_stack \[lrange \$::${::p}_state_stack 0 end-1\]
-    if \{\$::${::p}_state_stack == \"\"\} \{
-        ${::p}::yy_push_state INITIAL
+    set yy_state_stack \[lrange \$yy_state_stack 0 end-1\]
+    if \{\$yy_state_stack == \"\"\} \{
+        yy_push_state INITIAL
     \}
 \}
 "
@@ -541,7 +555,9 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::yy_top_state \{\} \{
-    return \[lindex \$::${::p}_state_stack end\]
+    variable yy_state_stack
+
+    return \[lindex \$yy_state_stack end\]
 \}
 "
         if $::headers {
@@ -554,23 +570,19 @@ proc write_scanner_utils {} {
 # only rules qualified with the start condition will be active.
 #   -- from the flex(1) man page"
         }
-        puts $::dest "proc ${::p}::BEGIN \{new_state\ \{prefix $::p\}\} \{
-    eval set ::\${prefix}_state_stack \[lrange \\\$::\${prefix}_state_stack 0 end-1\]
-    eval lappend ::\${prefix}_state_stack \$new_state
+        puts $::dest "proc ${::p}::BEGIN \{new_state\} \{
+    variable yy_state_stack
+
+    set yy_state_stack \[lrange \$yy_state_stack 0 end-1\]
+    lappend yy_state_stack \$new_state
 \}
 "
     }
     
     if $::startstates {
-        puts $::dest "set ::${::p}_state_stack \{\}
+        puts $::dest "
 ${::p}::BEGIN INITIAL
 array set ::${::p}_state_table \{[array get ::state_table]\}"
-    }
-    if $::linenums {
-        puts $::dest "set ::${::p}lineno 1"
-    }
-    if $::debugmode {
-        puts $::dest "set ::${::p}_flex_debug 1"
     }
 }
 
@@ -594,10 +606,13 @@ proc ${::p}::yylex \{\} \{
     variable yy_done
     variable yytext
     variable yyleng
+    variable yy_flex_debug
+    variable yy_state_table
+    variable yylineno
 
     while \{1\} \{"
     if $::startstates {
-        puts $::dest "        set ${::p}_current_state \[${::p}::yy_top_state\]"
+        puts $::dest "        set ${::p}_current_state \[yy_top_state\]"
     }
     puts $::dest "        if \{\[string length \$yy_buffer\] - \$yy_index < $::BUFFER_SIZE\} \{
             if \{\$yy_done == 0\} \{
@@ -611,8 +626,8 @@ proc ${::p}::yylex \{\} \{
             \}
             if \$yy_done \{"
     if $::debugmode {
-        puts $::dest "                if \$::${::p}_flex_debug \{
-                    puts stderr \" ${::p} --reached end of input buffer\"
+        puts $::dest "                if \$yy_flex_debug \{
+                    puts stderr \"   ${::p} --reached end of input buffer\"
                 \}"
     }
     if $::callyywrap {
@@ -677,7 +692,7 @@ proc ${::p}::yylex \{\} \{
             set yy_index 0
         \}"
     if $::debugmode {
-        puts $::dest "        if \$::${::p}_flex_debug \{
+        puts $::dest "        if \$yy_flex_debug \{
             puts stderr \"   --accepting \$${::p}rule_num (\\\"\$yytext\\\")\"
         \}"
     }
@@ -708,7 +723,7 @@ proc ${::p}::yylex \{\} \{
     }
     puts $::dest "        \}"
     if $::linenums {
-        puts $::dest "        incr ::${::p}lineno \$numlines"
+        puts $::dest "        incr yylineno \$numlines"
     }
     puts $::dest "    \}
     return 0

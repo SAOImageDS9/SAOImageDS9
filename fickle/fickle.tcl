@@ -323,7 +323,9 @@ proc write_scanner_utils {} {
 # author's license.  See http://mini.net/tcl/fickle for other details.
 ######
 "
-    puts $::dest "namespace eval ${::p} \{"
+    puts $::dest "namespace eval ${::p} \{
+    variable yytext {}
+    variable yyleng 0"
     puts $::dest "\}"
     puts $::dest ""
 
@@ -350,8 +352,9 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::ECHO \{\{s \"\"\}\} \{
+    variable yytext
     if \{\$s == \"\"\} \{
-        puts -nonewline \$::${::p}out \$::${::p}text
+        puts -nonewline \$::${::p}out \$yytext
     \} else \{
         puts -nonewline \$::${::p}out \$s
     \}
@@ -423,11 +426,11 @@ proc write_scanner_utils {} {
 \}
 "
     if $::headers {
-        puts $::dest "# unput(c) puts the character c back onto the input stream.  It will
+        puts $::dest "# yyunput(c) puts the character c back onto the input stream.  It will
 # be the next character scanned.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc ${::p}::unput \{c\} \{
+    puts $::dest "proc ${::p}::yyunput \{c\} \{
     set s \[string range \$::${::p}_buffer 0 \[expr \{\$::${::p}_index - 1\}\]\]
     append s \$c
     set ::${::p}_buffer \[append s \[string range \$::${::p}_buffer \$::${::p}_index end\]\]
@@ -436,16 +439,19 @@ proc write_scanner_utils {} {
     if $::headers {
         puts $::dest "# Returns all but the first n characters of the current token back to
 # the input stream, where they will be rescanned when the scanner
-# looks for the next match.  ${::p}text and ${::p}leng are adjusted
+# looks for the next match.  yytext and ${::p}leng are adjusted
 # appropriately.
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::yyless \{n\} \{
+    variable yytext
+    variable yyleng
+
     set s \[string range \$::${::p}_buffer 0 \[expr \{\$::${::p}_index - 1\}\]\]
-    append s \[string range \$::${::p}text \$n end\]
+    append s \[string range \$yytext \$n end\]
     set ::${::p}_buffer \[append s \[string range \$::${::p}_buffer \$::${::p}_index end\]\]
-    set ::${::p}text \[string range \$::${::p}text 0 \[expr \{\$n - 1\}\]\]
-    set ::${::p}leng \[string length \$::${::p}text\]
+    set yytext \[string range \$yytext 0 \[expr \{\$n - 1\}\]\]
+    set yyleng \[string length \$yytext\]
 \}
 "
     if $::headers {
@@ -529,8 +535,6 @@ proc write_scanner_utils {} {
     }
     
     puts $::dest "# initialize values used by the lexer
-set ::${::p}text {}
-set ::${::p}leng 0
 set ::${::p}_buffer \{\}
 set ::${::p}_index 0
 set ::${::p}_done 0"
@@ -569,8 +573,9 @@ proc write_scanner {} {
 # one of its actions executes a return statement.
 #   -- from the flex(1) man page
 proc ${::p}lex \{\} \{
-    upvar #0 ::${::p}text ${::p}text
-    upvar #0 ::${::p}leng ${::p}leng
+    variable yytext
+    variable yyleng
+
     while \{1\} \{"
     if $::startstates {
         puts $::dest "        set ${::p}_current_state \[${::p}::yy_top_state\]"
@@ -604,7 +609,7 @@ proc ${::p}lex \{\} \{
                 \}
             \}            
         \}
-        set ::${::p}leng 0
+        set yyleng 0
         set ${::p}_matched_rule -1"
     
     # build up the if statements to determine which rule to execute;
@@ -628,9 +633,9 @@ proc ${::p}lex \{\} \{
             }
         }
         puts $::dest "\[regexp -start \$::${::p}_index -indices -line $scan_args -- \{\\A($pattern)\} \$::${::p}_buffer ${::p}_match\] > 0\ && \\
-                \[lindex \$${::p}_match 1\] - \$::${::p}_index + 1 > \$::${::p}leng\} \{
-            set ::${::p}text \[string range \$::${::p}_buffer \$::${::p}_index \[lindex \$${::p}_match 1\]\]
-            set ::${::p}leng \[string length \$::${::p}text\]
+                \[lindex \$${::p}_match 1\] - \$::${::p}_index + 1 > \$yyleng\} \{
+            set yytext \[string range \$::${::p}_buffer \$::${::p}_index \[lindex \$${::p}_match 1\]\]
+            set yyleng \[string length \$yytext\]
             set ${::p}_matched_rule $rule_num"
         if $::debugmode {
             puts $::dest "            set ${::p}rule_num \"rule at line $rule_line\""
@@ -640,25 +645,25 @@ proc ${::p}lex \{\} \{
     }
     # now add the default case
     puts $::dest "        if \{\$${::p}_matched_rule == -1\} \{
-            set ::${::p}text \[string index \$::${::p}_buffer \$::${::p}_index\]
-            set ::${::p}leng 1"
+            set yytext \[string index \$::${::p}_buffer \$::${::p}_index\]
+            set yyleng 1"
     if $::debugmode {
         puts $::dest "            set ${::p}rule_num \"default rule\""
     }
     puts $::dest "        \}
-        incr ::${::p}_index \$::${::p}leng
+        incr ::${::p}_index \$yyleng
         # workaround for Tcl's circumflex behavior
-        if \{\[string index \$::${::p}text end\] == \"\\n\"\} \{
+        if \{\[string index \$yytext end\] == \"\\n\"\} \{
             set ::${::p}_buffer \[string range \$::${::p}_buffer \$::${::p}_index end\]
             set ::${::p}_index 0
         \}"
     if $::debugmode {
         puts $::dest "        if \$::${::p}_flex_debug \{
-            puts stderr \"   --accepting \$${::p}rule_num (\\\"\$::${::p}text\\\")\"
+            puts stderr \"   --accepting \$${::p}rule_num (\\\"\$yytext\\\")\"
         \}"
     }
     if $::linenums {
-        puts $::dest "        set numlines \[expr \{\[llength \[split \$::${::p}text \"\\n\"\]\] - 1\}\]"
+        puts $::dest "        set numlines \[expr \{\[llength \[split \$yytext \"\\n\"\]\] - 1\}\]"
     }
     puts $::dest "        switch -- \$${::p}_matched_rule \{"
     set rule_num 0
@@ -676,7 +681,7 @@ proc ${::p}lex \{\} \{
     if {$::suppress == 0} {
         puts $::dest "                \{ ECHO \}"
     } else {
-        puts -nonewline $::dest "                \{ puts stderr \"unmatched token: \$::${::p}text"
+        puts -nonewline $::dest "                \{ puts stderr \"unmatched token: \$yytext"
         if $::startstates {
             puts -nonewline $::dest " in state `\$${::p}_current_state'"
         }

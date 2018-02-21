@@ -75,7 +75,7 @@ $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 
 .PHONY	: distclean
 
-distclean: clean
+distclean: clean parserclean
 	-rm -f Makefile config.cache config.log config.status
 	-rm -rf autom4te.cache
 

@@ -835,24 +835,24 @@ proc write_parser_utils {} {
 namespace eval ${::p} \{
 \}
 
-proc ${::P}ABORT \{\} \{
+proc ${::p}::ABORT \{\} \{
     return -code return 1
 \}
 
-proc ${::P}ACCEPT \{\} \{
+proc ${::p}::ACCEPT \{\} \{
     return -code return 0
 \}
 
-proc ${::p}clearin \{\} \{
+proc ${::p}::yyclearin \{\} \{
     upvar ${::p}token t
     set t \"\"
 \}
 
-proc ${::p}error \{s\} \{
+proc ${::p}::yyerror \{s\} \{
     puts stderr \$s
 \}
 
-proc ${::p}setupvalues \{stack pointer numsyms\} \{
+proc ${::p}::setupvalues \{stack pointer numsyms\} \{
     upvar 1 1 y
     set y \{\}
     for \{set i 1\} \{\$i <= \$numsyms\} \{incr i\} \{
@@ -862,7 +862,7 @@ proc ${::p}setupvalues \{stack pointer numsyms\} \{
     \}
 \}
 
-proc ${::p}unsetupvalues \{numsyms\} \{
+proc ${::p}::unsetupvalues \{numsyms\} \{
     for \{set i 1\} \{\$i <= \$numsyms\} \{incr i\} \{
         upvar 1 \$i y
         unset y
@@ -878,7 +878,7 @@ proc write_parser {} {
     write_array $::dest ::${::p}rules [array get ::rule_table *dc]
     write_array $::dest ::${::p}rules [array get ::rule_table *e]
     
-    puts $::dest "\nproc ${::p}parse {} {
+    puts $::dest "\nproc ${::p}::yyparse {} {
     set ${::p}state_stack {0}
     set ${::p}value_stack {{}}
     set ${::p}token \"\"
@@ -900,7 +900,7 @@ proc write_parser {} {
                 set ${::p}state \[lindex $${::p}state_stack end\]
             }
             if {\[llength \$${::p}state_stack\] == 0} {
-                ${::p}error \"parse error\"
+                ${::p}::yyerror \"parse error\"
                 return 1
             }
             lappend ${::p}state_stack \[set ${::p}state \$::${::p}table($${::p}state:error,target)\]
@@ -908,7 +908,7 @@ proc write_parser {} {
             \# consume tokens until it finds an acceptable one
             while {!\[info exists ::${::p}table(\$${::p}state:\$${::p}token)]} {
                 if {\$${::p}token == 0} {
-                    ${::p}error \"end of file while recovering from error\"
+                    ${::p}::yyerror \"end of file while recovering from error\"
                     return 1
                 }
                 set ::${::p}lval {}
@@ -932,7 +932,7 @@ proc write_parser {} {
                     set ${::p}dc \$::${::p}rules(\$${::p}rule,dc)
                 \}
                 set ${::p}stackpointer \[expr {\[llength \$${::p}state_stack\]-\$${::p}dc}\]
-                ${::p}setupvalues \$${::p}value_stack \$${::p}stackpointer \$${::p}dc
+                ${::p}::setupvalues \$${::p}value_stack \$${::p}stackpointer \$${::p}dc
                 set _ \$1
                 set ::${::p}lval \[lindex \$${::p}value_stack end\]
                 switch -- \$${::p}rule {"
@@ -943,7 +943,7 @@ proc write_parser {} {
     }
 
     puts $::dest "                }
-                ${::p}unsetupvalues \$${::p}dc
+                ${::p}::unsetupvalues \$${::p}dc
                 # pop off tokens from the stack if normal rule
                 if \{!\[info exists ::${::p}rules(\$${::p}rule,e)\]\} \{
                     incr ${::p}stackpointer -1

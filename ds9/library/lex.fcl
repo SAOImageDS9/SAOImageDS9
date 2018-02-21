@@ -7,7 +7,7 @@ source $ds9(root)/library/parser.tab.tcl
 %option nodefault
 %option nointeractive
 %option stack
-%option debug
+#%option debug
 
 D   [0-9]
 E   [Ee][+-]?{D}+

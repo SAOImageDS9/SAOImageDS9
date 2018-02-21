@@ -99,7 +99,7 @@ proc ProcessCommand {argv argc} {
 	    -foo {
 		yy::YY_FLUSH_BUFFER
 		yy::yy_scan_string $argv
-		yyparse
+		yy::yyparse
 		set argc 0
 	    }
 	    -- {set noopts 1}

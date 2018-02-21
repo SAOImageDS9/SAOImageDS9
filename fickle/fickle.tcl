@@ -337,7 +337,7 @@ proc write_scanner_utils {} {
 # revert to INITIAL.
 #   -- from the flex(1) man page"
         }
-        puts $::dest "proc ${::p}wrap \{\} \{
+        puts $::dest "proc ${::p}::yywrap \{\} \{
     return 1
 \}
 "
@@ -427,7 +427,7 @@ proc write_scanner_utils {} {
 # be the next character scanned.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc unput \{c\} \{
+    puts $::dest "proc ${::p}::unput \{c\} \{
     set s \[string range \$::${::p}_buffer 0 \[expr \{\$::${::p}_index - 1\}\]\]
     append s \$c
     set ::${::p}_buffer \[append s \[string range \$::${::p}_buffer \$::${::p}_index end\]\]
@@ -440,7 +440,7 @@ proc write_scanner_utils {} {
 # appropriately.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc ${::p}less \{n\} \{
+    puts $::dest "proc ${::p}::yyless \{n\} \{
     set s \[string range \$::${::p}_buffer 0 \[expr \{\$::${::p}_index - 1\}\]\]
     append s \[string range \$::${::p}text \$n end\]
     set ::${::p}_buffer \[append s \[string range \$::${::p}_buffer \$::${::p}_index end\]\]
@@ -452,7 +452,7 @@ proc write_scanner_utils {} {
         puts $::dest "# input() reads the next character from the input stream.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc input \{\} \{
+    puts $::dest "proc ${::p}::yyinput \{\} \{
     if \{\[string length \$::${::p}_buffer\] - \$::${::p}_index < $::BUFFER_SIZE\} \{
        set new_buffer_size 0
        if \{\$::${::p}_done == 0\} \{
@@ -464,8 +464,8 @@ proc write_scanner_utils {} {
        \}
        if \$::${::p}_done \{"
     if $::callyywrap {
-        puts -nonewline $::dest "           if \{\[${::p}wrap\] == 0\} \{
-               return \[input\]
+        puts -nonewline $::dest "           if \{\[${::p}::yywrap\] == 0\} \{
+               return \[${::p}::yyinput\]
            \} else"
     } else {
         puts -nonewline $::dest "           "
@@ -487,7 +487,7 @@ proc write_scanner_utils {} {
 # BEGIN new_state.
 #   -- from the flex(1) man page"
         }
-        puts $::dest "proc ${::p}_push_state \{new_state\} \{
+        puts $::dest "proc ${::p}::yy_push_state \{new_state\} \{
     lappend ::${::p}_state_stack \$new_state
 \}
 "
@@ -496,10 +496,10 @@ proc write_scanner_utils {} {
 # pushes the state \"INITIAL\".
 #   -- from the flex(1) man page"
         }
-        puts $::dest "proc ${::p}_pop_state \{\} \{
+        puts $::dest "proc ${::p}::yy_pop_state \{\} \{
     set ::${::p}_state_stack \[lrange \$::${::p}_state_stack 0 end-1\]
     if \{\$::${::p}_state_stack == \"\"\} \{
-        ${::p}_push_state INITIAL
+        ${::p}::yy_push_state INITIAL
     \}
 \}
 "
@@ -507,7 +507,7 @@ proc write_scanner_utils {} {
             puts $::dest "# Returns the top of the stack without altering the stack's contents.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc ${::p}_top_state \{\} \{
+    puts $::dest "proc ${::p}::yy_top_state \{\} \{
     return \[lindex \$::${::p}_state_stack end\]
 \}
 "
@@ -521,7 +521,7 @@ proc write_scanner_utils {} {
 # only rules qualified with the start condition will be active.
 #   -- from the flex(1) man page"
         }
-        puts $::dest "proc BEGIN \{new_state\ \{prefix $::p\}\} \{
+        puts $::dest "proc ${::p}::BEGIN \{new_state\ \{prefix $::p\}\} \{
     eval set ::\${prefix}_state_stack \[lrange \\\$::\${prefix}_state_stack 0 end-1\]
     eval lappend ::\${prefix}_state_stack \$new_state
 \}
@@ -536,7 +536,7 @@ set ::${::p}_index 0
 set ::${::p}_done 0"
     if $::startstates {
         puts $::dest "set ::${::p}_state_stack \{\}
-BEGIN INITIAL
+${::p}::BEGIN INITIAL
 array set ::${::p}_state_table \{[array get ::state_table]\}"
     }
     if $::linenums {
@@ -573,7 +573,7 @@ proc ${::p}lex \{\} \{
     upvar #0 ::${::p}leng ${::p}leng
     while \{1\} \{"
     if $::startstates {
-        puts $::dest "        set ${::p}_current_state \[${::p}_top_state\]"
+        puts $::dest "        set ${::p}_current_state \[${::p}::yy_top_state\]"
     }
     puts $::dest "        if \{\[string length \$::${::p}_buffer\] - \$::${::p}_index < $::BUFFER_SIZE\} \{
             if \{\$::${::p}_done == 0\} \{
@@ -592,7 +592,7 @@ proc ${::p}lex \{\} \{
                 \}"
     }
     if $::callyywrap {
-        puts -nonewline $::dest "                if \{\[${::p}wrap\] == 0\} \{
+        puts -nonewline $::dest "                if \{\[${::p}::yywrap\] == 0\} \{
                     set ::${::p}_done 0
                     continue
                 \} else"

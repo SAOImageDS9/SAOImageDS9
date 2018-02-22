@@ -942,8 +942,8 @@ proc write_parser {} {
                 \} else \{
                     set ${::p}dc \$rules(\$rule,dc)
                 \}
-                set ${::p}stackpointer \[expr {\[llength \$state_stack\]-\$${::p}dc}\]
-                setupvalues \$value_stack \$${::p}stackpointer \$${::p}dc
+                set stackpointer \[expr {\[llength \$state_stack\]-\$${::p}dc}\]
+                setupvalues \$value_stack \$stackpointer \$${::p}dc
                 set _ \$1
                 set yylval \[lindex \$value_stack end\]
                 switch -- \$rule {"
@@ -957,9 +957,9 @@ proc write_parser {} {
                 unsetupvalues \$${::p}dc
                 # pop off tokens from the stack if normal rule
                 if \{!\[info exists rules(\$rule,e)\]\} \{
-                    incr ${::p}stackpointer -1
-                    set state_stack \[lrange \$state_stack 0 \$${::p}stackpointer\]
-                    set value_stack \[lrange \$value_stack 0 \$${::p}stackpointer\]
+                    incr stackpointer -1
+                    set state_stack \[lrange \$state_stack 0 \$stackpointer\]
+                    set value_stack \[lrange \$value_stack 0 \$stackpointer\]
                 \}
                 # now do the goto transition
                 lappend state_stack \$table(\[lindex \$state_stack end\]:\$${::p}l,target)

@@ -833,19 +833,24 @@ proc write_parser_utils {} {
 ######
 
 namespace eval ${::p} \{
+    variable yylval {}
+    variable table
+    variable rules
     variable token {}
+
+    namespace export yylex
 \}
 
-proc ${::p}::ABORT \{\} \{
+proc ${::p}::YYABORT \{\} \{
     return -code return 1
 \}
 
-proc ${::p}::ACCEPT \{\} \{
+proc ${::p}::YYACCEPT \{\} \{
     return -code return 0
 \}
 
 proc ${::p}::yyclearin \{\} \{
-    variable token
+     variable token
     set token {}
 \}
 
@@ -874,68 +879,73 @@ proc ${::p}::unsetupvalues \{numsyms\} \{
 # Writes to the destination file the actual parser including LALR(1)
 # table.
 proc write_parser {} {
-    write_array $::dest ::${::p}table [array get ::lalr1_parse]
-    write_array $::dest ::${::p}rules [array get ::rule_table *l]
-    write_array $::dest ::${::p}rules [array get ::rule_table *dc]
-    write_array $::dest ::${::p}rules [array get ::rule_table *e]
+    write_array $::dest ${::p}::table [array get ::lalr1_parse]
+    write_array $::dest ${::p}::rules [array get ::rule_table *l]
+    write_array $::dest ${::p}::rules [array get ::rule_table *dc]
+    write_array $::dest ${::p}::rules [array get ::rule_table *e]
     
     puts $::dest "\nproc ${::p}::yyparse {} {
-    set ${::p}state_stack {0}
+    variable yylval
+    variable table
+    variable rules
+    variable token
+
+    set state_stack {0}
     set ${::p}value_stack {{}}
     set token \"\"
     set ${::p}accepted 0
     while {\$${::p}accepted == 0} {
-        set ${::p}state \[lindex \$${::p}state_stack end\]
+        set ${::p}state \[lindex \$state_stack end\]
         if {\$token == \"\"} {
-            set ::${::p}lval \"\"
-            set token \[${::p}::yylex\]
-            set ${::p}buflval \$::${::p}lval
+            set yylval \"\"
+            set token \[yylex\]
+            set ${::p}buflval \$yylval
         }
-        if {!\[info exists ::${::p}table(\$${::p}state:\$token)\]} {
+        if {!\[info exists table(\$${::p}state:\$token)\]} {
             \# pop off states until error token accepted
-            while {\[llength \$${::p}state_stack\] > 0 && \\
-                       !\[info exists ::${::p}table(\$${::p}state:error)]} {
-                set ${::p}state_stack \[lrange $${::p}state_stack 0 end-1\]
+            while {\[llength \$state_stack\] > 0 && \\
+                       !\[info exists table(\$${::p}state:error)]} {
+                set state_stack \[lrange \$state_stack 0 end-1\]
                 set ${::p}value_stack \[lrange $${::p}value_stack 0 \\
-                                       \[expr {\[llength $${::p}state_stack\] - 1}\]\]
-                set ${::p}state \[lindex $${::p}state_stack end\]
+                                       \[expr {\[llength \$state_stack\] - 1}\]\]
+                set ${::p}state \[lindex \$state_stack end\]
             }
-            if {\[llength \$${::p}state_stack\] == 0} {
+            if {\[llength \$state_stack\] == 0} {
                 ${::p}::yyerror \"parse error\"
                 return 1
             }
-            lappend ${::p}state_stack \[set ${::p}state \$::${::p}table($${::p}state:error,target)\]
+            lappend state_stack \[set ${::p}state \$table($${::p}state:error,target)\]
             lappend ${::p}value_stack {}
             \# consume tokens until it finds an acceptable one
-            while {!\[info exists ::${::p}table(\$${::p}state:\$token)]} {
+            while {!\[info exists table(\$${::p}state:\$token)]} {
                 if {\$token == 0} {
                     ${::p}::yyerror \"end of file while recovering from error\"
                     return 1
                 }
-                set ::${::p}lval {}
-                set token \[${::p}::yylex\]
-                set ${::p}buflval \$::${::p}lval
+                set yylval {}
+                set token \[yylex\]
+                set ${::p}buflval \$yylval
             }
             continue
         }
-        switch -- \$::${::p}table(\$${::p}state:\$token) {
+        switch -- \$table(\$${::p}state:\$token) {
             shift {
-                lappend ${::p}state_stack \$::${::p}table(\$${::p}state:\$token,target)
+                lappend state_stack \$table(\$${::p}state:\$token,target)
                 lappend ${::p}value_stack \$${::p}buflval
                 set token \"\"
             }
             reduce {
-                set ${::p}rule \$::${::p}table(\$${::p}state:\$token,target)
-                set ${::p}l \$::${::p}rules(\$${::p}rule,l)
-                if \{\[info exists ::${::p}rules(\$${::p}rule,e)\]\} \{
-                    set ${::p}dc \$::${::p}rules(\$${::p}rule,e)
+                set ${::p}rule \$table(\$${::p}state:\$token,target)
+                set ${::p}l \$rules(\$${::p}rule,l)
+                if \{\[info exists rules(\$${::p}rule,e)\]\} \{
+                    set ${::p}dc \$rules(\$${::p}rule,e)
                 \} else \{
-                    set ${::p}dc \$::${::p}rules(\$${::p}rule,dc)
+                    set ${::p}dc \$rules(\$${::p}rule,dc)
                 \}
-                set ${::p}stackpointer \[expr {\[llength \$${::p}state_stack\]-\$${::p}dc}\]
+                set ${::p}stackpointer \[expr {\[llength \$state_stack\]-\$${::p}dc}\]
                 ${::p}::setupvalues \$${::p}value_stack \$${::p}stackpointer \$${::p}dc
                 set _ \$1
-                set ::${::p}lval \[lindex \$${::p}value_stack end\]
+                set yylval \[lindex \$${::p}value_stack end\]
                 switch -- \$${::p}rule {"
     for {set i 0} {$i < $::rule_count} {incr i} {
         if {[info exists ::rule_table($i,a)] && [string trim $::rule_table($i,a)] != ""} {
@@ -948,11 +958,11 @@ proc write_parser {} {
                 # pop off tokens from the stack if normal rule
                 if \{!\[info exists ::${::p}rules(\$${::p}rule,e)\]\} \{
                     incr ${::p}stackpointer -1
-                    set ${::p}state_stack \[lrange \$${::p}state_stack 0 \$${::p}stackpointer\]
+                    set state_stack \[lrange \$state_stack 0 \$${::p}stackpointer\]
                     set ${::p}value_stack \[lrange \$${::p}value_stack 0 \$${::p}stackpointer\]
                 \}
                 # now do the goto transition
-                lappend ${::p}state_stack \$::${::p}table(\[lindex \$${::p}state_stack end\]:\$${::p}l,target)
+                lappend state_stack \$table(\[lindex \$state_stack end\]:\$${::p}l,target)
                 lappend ${::p}value_stack \$_
             }
             accept {
@@ -960,7 +970,7 @@ proc write_parser {} {
             }
             goto -
             default {
-                puts stderr \"Internal parser error: illegal command \$::${::p}table(\$${::p}state:\$token)\"
+                puts stderr \"Internal parser error: illegal command \$table(\$${::p}state:\$token)\"
                 return 2
             }
         }
@@ -1000,7 +1010,7 @@ proc write_header_file {} {
             puts $::header "set ${::p}::${token} $tok_id"
         }
     }
-    puts $::header "set ::${::p}lval \{\}"
+    puts $::header "set yylval \{\}"
 }
 
 ######################################################################
@@ -1459,7 +1469,6 @@ proc taccle_args {argv} {
     set write_verbose_file 0
     set out_filename ""
     set ::p "yy"
-    set ::P "YY"
     set ::show_warnings 0
     while {$argvp < [llength $argv]} {
         set arg [lindex $argv $argvp]
@@ -1473,7 +1482,6 @@ proc taccle_args {argv} {
             "-p" {
                 set prefix [get_param $argv argvp "p"]
                 set ::p [string tolower $prefix]
-                set ::P [string toupper $prefix]                
             }
             "--version" { print_taccle_version }
             default {

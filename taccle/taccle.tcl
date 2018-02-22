@@ -893,8 +893,8 @@ proc write_parser {} {
     set state_stack {0}
     set value_stack {{}}
     set token \"\"
-    set ${::p}accepted 0
-    while {\$${::p}accepted == 0} {
+    set accepted 0
+    while {\$accepted == 0} {
         set state \[lindex \$state_stack end\]
         if {\$token == \"\"} {
             set yylval \"\"
@@ -966,7 +966,7 @@ proc write_parser {} {
                 lappend value_stack \$_
             }
             accept {
-                set ${::p}accepted 1
+                set accepted 1
             }
             goto -
             default {

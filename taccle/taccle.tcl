@@ -895,29 +895,29 @@ proc write_parser {} {
     set token \"\"
     set ${::p}accepted 0
     while {\$${::p}accepted == 0} {
-        set ${::p}state \[lindex \$state_stack end\]
+        set state \[lindex \$state_stack end\]
         if {\$token == \"\"} {
             set yylval \"\"
             set token \[yylex\]
             set ${::p}buflval \$yylval
         }
-        if {!\[info exists table(\$${::p}state:\$token)\]} {
+        if {!\[info exists table(\$state:\$token)\]} {
             \# pop off states until error token accepted
             while {\[llength \$state_stack\] > 0 && \\
-                       !\[info exists table(\$${::p}state:error)]} {
+                       !\[info exists table(\$state:error)]} {
                 set state_stack \[lrange \$state_stack 0 end-1\]
                 set ${::p}value_stack \[lrange $${::p}value_stack 0 \\
                                        \[expr {\[llength \$state_stack\] - 1}\]\]
-                set ${::p}state \[lindex \$state_stack end\]
+                set state \[lindex \$state_stack end\]
             }
-            if {\[llength \$state_stack\] == 0} {
+        if {\[llength \$state_stack\] == 0} {
                 ${::p}::yyerror \"parse error\"
                 return 1
             }
-            lappend state_stack \[set ${::p}state \$table($${::p}state:error,target)\]
+            lappend state_stack \[set state \$table(\$state:error,target)\]
             lappend ${::p}value_stack {}
             \# consume tokens until it finds an acceptable one
-            while {!\[info exists table(\$${::p}state:\$token)]} {
+            while {!\[info exists table(\$state:\$token)]} {
                 if {\$token == 0} {
                     ${::p}::yyerror \"end of file while recovering from error\"
                     return 1
@@ -928,14 +928,14 @@ proc write_parser {} {
             }
             continue
         }
-        switch -- \$table(\$${::p}state:\$token) {
+        switch -- \$table(\$state:\$token) {
             shift {
-                lappend state_stack \$table(\$${::p}state:\$token,target)
+                lappend state_stack \$table(\$state:\$token,target)
                 lappend ${::p}value_stack \$${::p}buflval
                 set token \"\"
             }
             reduce {
-                set ${::p}rule \$table(\$${::p}state:\$token,target)
+                set ${::p}rule \$table(\$state:\$token,target)
                 set ${::p}l \$rules(\$${::p}rule,l)
                 if \{\[info exists rules(\$${::p}rule,e)\]\} \{
                     set ${::p}dc \$rules(\$${::p}rule,e)
@@ -970,7 +970,7 @@ proc write_parser {} {
             }
             goto -
             default {
-                puts stderr \"Internal parser error: illegal command \$table(\$${::p}state:\$token)\"
+                puts stderr \"Internal parser error: illegal command \$table(\$state:\$token)\"
                 return 2
             }
         }

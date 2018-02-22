@@ -6,11 +6,8 @@
 %token STRING_
 
 %token FOOCMD_
-%token EXITCMD_
+%token BARCMD_
 
-%token CLOSE_
-%token FIT_
-%token OPEN_
 %token TO_
 
 %%
@@ -19,30 +16,29 @@ commands : commands command
  | command
  ;
 
-int : INT_ {set _ $1}
+command : FOOCMD_ foo
+ | BARCMD_ bar	
  ;
 
-command : FOOCMD_ foo
- | EXITCMD_ exit
+int : INT_ {set _ $1}
  ;
 
 numeric	: int {set _ $1}
  | REAL_ {set _ $1}
  ;
 
-foo : STRING_ {puts "STRING $1"}
- | INT_ {puts "INT $1"}
- | REAL_ {puts "REAL $1"}
- | OPEN_ {puts "OPEN"}
- | CLOSE_ {puts "CLOSE"}
+foo : STRING_ {puts "FOO STRING $1"}
+ | INT_ {puts "FOO INT $1"}
+ | REAL_ {puts "FOO REAL $1"}
  | TO_ fooTo
  ;
 
-fooTo: FIT_ {puts "TO FIT"}
- | numeric {puts "TO NUMERIC $1"}
+fooTo: STRING_ {puts "FOO TO STRING $1"}
+ | numeric {puts "FOO TO NUMERIC $1"}
  ;
 
-exit: {puts "EXIT"; QuitDS9}
+bar : #ANY_ {puts "BAR ANY $1}
+ | INT_ {puts "BAR INT $1"}
  ;
 
 %%

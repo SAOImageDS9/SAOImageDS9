@@ -97,8 +97,9 @@ proc ProcessCommand {argv argc} {
 	set item [lindex $argv $i]
 	switch -- $item {
 	    -foo {
+		puts "argc: $argc"
 		yy::YY_FLUSH_BUFFER
-		yy::yy_scan_string $argv
+		yy::yy_scan_string [string range $argv $i end]
 		yy::yyparse
 		set argc 0
 	    }

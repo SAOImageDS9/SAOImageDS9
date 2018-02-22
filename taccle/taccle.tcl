@@ -1002,16 +1002,16 @@ proc write_array {fd name values} {
 # Writes a header file that should be [source]d by the lexer.
 proc write_header_file {} {
     # scan through token_table and write out all non-implicit terminals
-    puts $::header "namespace eval ${::p} \{\}"
-    puts $::header ""
+    puts $::header "namespace eval ${::p} \{"
     foreach tok_id $::token_list {
         if {$::token_id_table($tok_id,t) == $::TERMINAL && \
                 [string is integer $tok_id] && $tok_id >= 256} {
             set token $::token_id_table($tok_id)
-            puts $::header "set ${::p}::${token} $tok_id"
+            puts $::header "set ${token} $tok_id"
         }
     }
     puts $::header "set yylval \{\}"
+    puts $::header "\}"
 }
 
 ######################################################################

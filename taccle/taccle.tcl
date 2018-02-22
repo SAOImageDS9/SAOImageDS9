@@ -833,6 +833,7 @@ proc write_parser_utils {} {
 ######
 
 namespace eval ${::p} \{
+    variable token {}
 \}
 
 proc ${::p}::ABORT \{\} \{
@@ -844,8 +845,8 @@ proc ${::p}::ACCEPT \{\} \{
 \}
 
 proc ${::p}::yyclearin \{\} \{
-    upvar ${::p}token t
-    set t \"\"
+    variable token
+    set token {}
 \}
 
 proc ${::p}::yyerror \{s\} \{
@@ -881,16 +882,16 @@ proc write_parser {} {
     puts $::dest "\nproc ${::p}::yyparse {} {
     set ${::p}state_stack {0}
     set ${::p}value_stack {{}}
-    set ${::p}token \"\"
+    set token \"\"
     set ${::p}accepted 0
     while {\$${::p}accepted == 0} {
         set ${::p}state \[lindex \$${::p}state_stack end\]
-        if {\$${::p}token == \"\"} {
+        if {\$token == \"\"} {
             set ::${::p}lval \"\"
-            set ${::p}token \[${::p}::yylex\]
+            set token \[${::p}::yylex\]
             set ${::p}buflval \$::${::p}lval
         }
-        if {!\[info exists ::${::p}table(\$${::p}state:\$${::p}token)\]} {
+        if {!\[info exists ::${::p}table(\$${::p}state:\$token)\]} {
             \# pop off states until error token accepted
             while {\[llength \$${::p}state_stack\] > 0 && \\
                        !\[info exists ::${::p}table(\$${::p}state:error)]} {
@@ -906,25 +907,25 @@ proc write_parser {} {
             lappend ${::p}state_stack \[set ${::p}state \$::${::p}table($${::p}state:error,target)\]
             lappend ${::p}value_stack {}
             \# consume tokens until it finds an acceptable one
-            while {!\[info exists ::${::p}table(\$${::p}state:\$${::p}token)]} {
-                if {\$${::p}token == 0} {
+            while {!\[info exists ::${::p}table(\$${::p}state:\$token)]} {
+                if {\$token == 0} {
                     ${::p}::yyerror \"end of file while recovering from error\"
                     return 1
                 }
                 set ::${::p}lval {}
-                set ${::p}token \[${::p}::yylex\]
+                set token \[${::p}::yylex\]
                 set ${::p}buflval \$::${::p}lval
             }
             continue
         }
-        switch -- \$::${::p}table(\$${::p}state:\$${::p}token) {
+        switch -- \$::${::p}table(\$${::p}state:\$token) {
             shift {
-                lappend ${::p}state_stack \$::${::p}table(\$${::p}state:\$${::p}token,target)
+                lappend ${::p}state_stack \$::${::p}table(\$${::p}state:\$token,target)
                 lappend ${::p}value_stack \$${::p}buflval
-                set ${::p}token \"\"
+                set token \"\"
             }
             reduce {
-                set ${::p}rule \$::${::p}table(\$${::p}state:\$${::p}token,target)
+                set ${::p}rule \$::${::p}table(\$${::p}state:\$token,target)
                 set ${::p}l \$::${::p}rules(\$${::p}rule,l)
                 if \{\[info exists ::${::p}rules(\$${::p}rule,e)\]\} \{
                     set ${::p}dc \$::${::p}rules(\$${::p}rule,e)
@@ -959,7 +960,7 @@ proc write_parser {} {
             }
             goto -
             default {
-                puts stderr \"Internal parser error: illegal command \$::${::p}table(\$${::p}state:\$${::p}token)\"
+                puts stderr \"Internal parser error: illegal command \$::${::p}table(\$${::p}state:\$token)\"
                 return 2
             }
         }

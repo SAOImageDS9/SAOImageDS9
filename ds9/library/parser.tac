@@ -47,8 +47,8 @@ exit: {puts "EXIT"; QuitDS9}
 
 %%
 
-proc yyerror {s} {
+proc yy::yyerror {s} {
      puts stderr "parse error:"
-     puts stderr "$::yy_buffer"
-     puts stderr [format "%*s" $::yy_index ^]
+     puts stderr "$yy::yy_buffer"
+     puts stderr [format "%*s" $yy::yy_index ^]
 }

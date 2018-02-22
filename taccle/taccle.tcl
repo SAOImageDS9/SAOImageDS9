@@ -891,7 +891,7 @@ proc write_parser {} {
     variable token
 
     set state_stack {0}
-    set ${::p}value_stack {{}}
+    set value_stack {{}}
     set token \"\"
     set ${::p}accepted 0
     while {\$${::p}accepted == 0} {
@@ -906,7 +906,7 @@ proc write_parser {} {
             while {\[llength \$state_stack\] > 0 && \\
                        !\[info exists table(\$state:error)]} {
                 set state_stack \[lrange \$state_stack 0 end-1\]
-                set ${::p}value_stack \[lrange $${::p}value_stack 0 \\
+                set value_stack \[lrange \$value_stack 0 \\
                                        \[expr {\[llength \$state_stack\] - 1}\]\]
                 set state \[lindex \$state_stack end\]
             }
@@ -915,7 +915,7 @@ proc write_parser {} {
                 return 1
             }
             lappend state_stack \[set state \$table(\$state:error,target)\]
-            lappend ${::p}value_stack {}
+            lappend value_stack {}
             \# consume tokens until it finds an acceptable one
             while {!\[info exists table(\$state:\$token)]} {
                 if {\$token == 0} {
@@ -931,7 +931,7 @@ proc write_parser {} {
         switch -- \$table(\$state:\$token) {
             shift {
                 lappend state_stack \$table(\$state:\$token,target)
-                lappend ${::p}value_stack \$${::p}buflval
+                lappend value_stack \$${::p}buflval
                 set token \"\"
             }
             reduce {
@@ -943,9 +943,9 @@ proc write_parser {} {
                     set ${::p}dc \$rules(\$rule,dc)
                 \}
                 set ${::p}stackpointer \[expr {\[llength \$state_stack\]-\$${::p}dc}\]
-                ${::p}::setupvalues \$${::p}value_stack \$${::p}stackpointer \$${::p}dc
+                ${::p}::setupvalues \$value_stack \$${::p}stackpointer \$${::p}dc
                 set _ \$1
-                set yylval \[lindex \$${::p}value_stack end\]
+                set yylval \[lindex \$value_stack end\]
                 switch -- \$rule {"
     for {set i 0} {$i < $::rule_count} {incr i} {
         if {[info exists ::rule_table($i,a)] && [string trim $::rule_table($i,a)] != ""} {
@@ -959,11 +959,11 @@ proc write_parser {} {
                 if \{!\[info exists rules(\$rule,e)\]\} \{
                     incr ${::p}stackpointer -1
                     set state_stack \[lrange \$state_stack 0 \$${::p}stackpointer\]
-                    set ${::p}value_stack \[lrange \$${::p}value_stack 0 \$${::p}stackpointer\]
+                    set value_stack \[lrange \$value_stack 0 \$${::p}stackpointer\]
                 \}
                 # now do the goto transition
                 lappend state_stack \$table(\[lindex \$state_stack end\]:\$${::p}l,target)
-                lappend ${::p}value_stack \$_
+                lappend value_stack \$_
             }
             accept {
                 set ${::p}accepted 1

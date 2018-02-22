@@ -935,18 +935,18 @@ proc write_parser {} {
                 set token \"\"
             }
             reduce {
-                set ${::p}rule \$table(\$state:\$token,target)
-                set ${::p}l \$rules(\$${::p}rule,l)
-                if \{\[info exists rules(\$${::p}rule,e)\]\} \{
-                    set ${::p}dc \$rules(\$${::p}rule,e)
+                set rule \$table(\$state:\$token,target)
+                set ${::p}l \$rules(\$rule,l)
+                if \{\[info exists rules(\$rule,e)\]\} \{
+                    set ${::p}dc \$rules(\$rule,e)
                 \} else \{
-                    set ${::p}dc \$rules(\$${::p}rule,dc)
+                    set ${::p}dc \$rules(\$rule,dc)
                 \}
                 set ${::p}stackpointer \[expr {\[llength \$state_stack\]-\$${::p}dc}\]
                 ${::p}::setupvalues \$${::p}value_stack \$${::p}stackpointer \$${::p}dc
                 set _ \$1
                 set yylval \[lindex \$${::p}value_stack end\]
-                switch -- \$${::p}rule {"
+                switch -- \$rule {"
     for {set i 0} {$i < $::rule_count} {incr i} {
         if {[info exists ::rule_table($i,a)] && [string trim $::rule_table($i,a)] != ""} {
             puts $::dest "                    $i { $::rule_table($i,a) }"
@@ -956,7 +956,7 @@ proc write_parser {} {
     puts $::dest "                }
                 ${::p}::unsetupvalues \$${::p}dc
                 # pop off tokens from the stack if normal rule
-                if \{!\[info exists ::${::p}rules(\$${::p}rule,e)\]\} \{
+                if \{!\[info exists rules(\$rule,e)\]\} \{
                     incr ${::p}stackpointer -1
                     set state_stack \[lrange \$state_stack 0 \$${::p}stackpointer\]
                     set ${::p}value_stack \[lrange \$${::p}value_stack 0 \$${::p}stackpointer\]

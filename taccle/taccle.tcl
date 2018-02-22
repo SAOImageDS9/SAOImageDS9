@@ -938,12 +938,12 @@ proc write_parser {} {
                 set rule \$table(\$state:\$token,target)
                 set ${::p}l \$rules(\$rule,l)
                 if \{\[info exists rules(\$rule,e)\]\} \{
-                    set ${::p}dc \$rules(\$rule,e)
+                    set dc \$rules(\$rule,e)
                 \} else \{
-                    set ${::p}dc \$rules(\$rule,dc)
+                    set dc \$rules(\$rule,dc)
                 \}
-                set stackpointer \[expr {\[llength \$state_stack\]-\$${::p}dc}\]
-                setupvalues \$value_stack \$stackpointer \$${::p}dc
+                set stackpointer \[expr {\[llength \$state_stack\]-\$dc}\]
+                setupvalues \$value_stack \$stackpointer \$dc
                 set _ \$1
                 set yylval \[lindex \$value_stack end\]
                 switch -- \$rule {"
@@ -954,7 +954,7 @@ proc write_parser {} {
     }
 
     puts $::dest "                }
-                unsetupvalues \$${::p}dc
+                unsetupvalues \$dc
                 # pop off tokens from the stack if normal rule
                 if \{!\[info exists rules(\$rule,e)\]\} \{
                     incr stackpointer -1

@@ -850,7 +850,7 @@ proc ${::p}::YYACCEPT \{\} \{
 \}
 
 proc ${::p}::yyclearin \{\} \{
-     variable token
+    variable token
     set token {}
 \}
 
@@ -894,6 +894,7 @@ proc write_parser {} {
     set value_stack {{}}
     set token \"\"
     set accepted 0
+
     while {\$accepted == 0} {
         set state \[lindex \$state_stack end\]
         if {\$token == \"\"} {
@@ -910,8 +911,8 @@ proc write_parser {} {
                                        \[expr {\[llength \$state_stack\] - 1}\]\]
                 set state \[lindex \$state_stack end\]
             }
-        if {\[llength \$state_stack\] == 0} {
-                ${::p}::yyerror \"parse error\"
+            if {\[llength \$state_stack\] == 0} {
+                yyerror \"parse error\"
                 return 1
             }
             lappend state_stack \[set state \$table(\$state:error,target)\]
@@ -919,7 +920,7 @@ proc write_parser {} {
             \# consume tokens until it finds an acceptable one
             while {!\[info exists table(\$state:\$token)]} {
                 if {\$token == 0} {
-                    ${::p}::yyerror \"end of file while recovering from error\"
+                    yyerror \"end of file while recovering from error\"
                     return 1
                 }
                 set yylval {}
@@ -936,7 +937,7 @@ proc write_parser {} {
             }
             reduce {
                 set rule \$table(\$state:\$token,target)
-                set ${::p}l \$rules(\$rule,l)
+                set ll \$rules(\$rule,l)
                 if \{\[info exists rules(\$rule,e)\]\} \{
                     set dc \$rules(\$rule,e)
                 \} else \{
@@ -962,7 +963,7 @@ proc write_parser {} {
                     set value_stack \[lrange \$value_stack 0 \$stackpointer\]
                 \}
                 # now do the goto transition
-                lappend state_stack \$table(\[lindex \$state_stack end\]:\$${::p}l,target)
+                lappend state_stack \$table(\[lindex \$state_stack end\]:\$ll,target)
                 lappend value_stack \$_
             }
             accept {

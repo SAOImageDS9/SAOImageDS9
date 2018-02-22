@@ -899,7 +899,7 @@ proc write_parser {} {
         if {\$token == \"\"} {
             set yylval \"\"
             set token \[yylex\]
-            set ${::p}buflval \$yylval
+            set buflval \$yylval
         }
         if {!\[info exists table(\$state:\$token)\]} {
             \# pop off states until error token accepted
@@ -924,14 +924,14 @@ proc write_parser {} {
                 }
                 set yylval {}
                 set token \[yylex\]
-                set ${::p}buflval \$yylval
+                set buflval \$yylval
             }
             continue
         }
         switch -- \$table(\$state:\$token) {
             shift {
                 lappend state_stack \$table(\$state:\$token,target)
-                lappend value_stack \$${::p}buflval
+                lappend value_stack \$buflval
                 set token \"\"
             }
             reduce {
@@ -943,7 +943,7 @@ proc write_parser {} {
                     set ${::p}dc \$rules(\$rule,dc)
                 \}
                 set ${::p}stackpointer \[expr {\[llength \$state_stack\]-\$${::p}dc}\]
-                ${::p}::setupvalues \$value_stack \$${::p}stackpointer \$${::p}dc
+                setupvalues \$value_stack \$${::p}stackpointer \$${::p}dc
                 set _ \$1
                 set yylval \[lindex \$value_stack end\]
                 switch -- \$rule {"
@@ -954,7 +954,7 @@ proc write_parser {} {
     }
 
     puts $::dest "                }
-                ${::p}::unsetupvalues \$${::p}dc
+                unsetupvalues \$${::p}dc
                 # pop off tokens from the stack if normal rule
                 if \{!\[info exists rules(\$rule,e)\]\} \{
                     incr ${::p}stackpointer -1

@@ -12,6 +12,8 @@ set FICKLE_VERSION 2.1
 # unput() ok
 # yyless() ok
 # yywrap() ok
+# yyrestart() ok
+# yy_scan_string() ok
 
 # yytext ok
 # yylineno ok
@@ -22,21 +24,14 @@ set FICKLE_VERSION 2.1
 # BEGIN ok
 # ECHO ok
 # YY_INPUT ok
+# YY_FLUSH_BUFFER() ok
 
 # unknown
-# YY_FLUSH_BUFFER()
-# yyrestart()
-# yy_scan_string()
-# push_state()
-# pop_state()
-# top_state()
 
 # yy_buffer
 # yy_index
 # yy_done
 # yy_flex_debug
-# yy_state_stack
-# yy_state_table
 
 #//#
 # Fickle is a lexical analyzer generator written in pure Tcl.  It
@@ -372,9 +367,9 @@ proc write_scanner_utils {} {
     }
     if $::startstates {
         puts $::dest "
-    variable yy_state_stack {}
-    variable yy_state_table
-    array set yy_state_table {INITIAL 1}"
+    variable state_stack {}
+    variable state_table
+    array set state_table {INITIAL 1}"
     }
     if $::linenums {
         puts $::dest "
@@ -571,9 +566,9 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
         }
         puts $::dest "proc ${::p}::push_state \{new_state\} \{
-    variable yy_state_stack
+    variable state_stack
 
-    lappend yy_state_stack \$new_state
+    lappend state_stack \$new_state
 \}
 "
         if $::headers {
@@ -582,10 +577,10 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
         }
         puts $::dest "proc ${::p}::pop_state \{\} \{
-    variable yy_state_stack
+    variable state_stack
 
-    set yy_state_stack \[lrange \$yy_state_stack 0 end-1\]
-    if \{\$yy_state_stack == \"\"\} \{
+    set state_stack \[lrange \$state_stack 0 end-1\]
+    if \{\$state_stack == \"\"\} \{
         push_state INITIAL
     \}
 \}
@@ -595,9 +590,9 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::top_state \{\} \{
-    variable yy_state_stack
+    variable state_stack
 
-    return \[lindex \$yy_state_stack end\]
+    return \[lindex \$state_stack end\]
 \}
 "
         if $::headers {
@@ -611,10 +606,10 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
         }
         puts $::dest "proc ${::p}::BEGIN \{new_state\} \{
-    variable yy_state_stack
+    variable state_stack
 
-    set yy_state_stack \[lrange \$yy_state_stack 0 end-1\]
-    lappend yy_state_stack \$new_state
+    set state_stack \[lrange \$state_stack 0 end-1\]
+    lappend state_stack \$new_state
 \}"
     }
     
@@ -647,7 +642,7 @@ proc ${::p}::yylex \{\} \{
     variable yy_index
     variable yy_done
     variable yy_flex_debug
-    variable yy_state_table
+    variable state_table
 
     while \{1\} \{"
     if $::startstates {
@@ -684,7 +679,7 @@ proc ${::p}::yylex \{\} \{
             \}            
         \}
         set yyleng 0
-        set yy_matched_rule -1"
+        set matched_rule -1"
     
     # build up the if statements to determine which rule to execute;
     # lex is greedy and will use the rule that matches the most
@@ -701,7 +696,7 @@ proc ${::p}::yylex \{\} \{
         puts -nonewline $::dest "        if \{"
         if $::startstates {
             if {$state_name == ""} {
-                puts -nonewline $::dest "\$yy_state_table(\$yy_current_state) && \\\n                "
+                puts -nonewline $::dest "\$state_table(\$yy_current_state) && \\\n                "
             } elseif {$state_name != "*"} {
                 puts -nonewline $::dest "\$yy_current_state == \"$state_name\" && \\\n                "
             }
@@ -710,7 +705,7 @@ proc ${::p}::yylex \{\} \{
                 \[lindex \$yy_match 1\] - \$yy_index + 1 > \$yyleng\} \{
             set yytext \[string range \$yy_buffer \$yy_index \[lindex \$yy_match 1\]\]
             set yyleng \[string length \$yytext\]
-            set yy_matched_rule $rule_num"
+            set matched_rule $rule_num"
         if $::debugmode {
             puts $::dest "            set yyrule_num \"rule at line $rule_line\""
         }
@@ -718,7 +713,7 @@ proc ${::p}::yylex \{\} \{
         incr rule_num
     }
     # now add the default case
-    puts $::dest "        if \{\$yy_matched_rule == -1\} \{
+    puts $::dest "        if \{\$matched_rule == -1\} \{
             set yytext \[string index \$yy_buffer \$yy_index\]
             set yyleng 1"
     if $::debugmode {
@@ -739,7 +734,7 @@ proc ${::p}::yylex \{\} \{
     if $::linenums {
         puts $::dest "        set numlines \[expr \{\[llength \[split \$yytext \"\\n\"\]\] - 1\}\]"
     }
-    puts $::dest "        switch -- \$yy_matched_rule \{"
+    puts $::dest "        switch -- \$matched_rule \{"
     set rule_num 0
     foreach rule $::rule_table {
         puts -nonewline $::dest "            $rule_num "

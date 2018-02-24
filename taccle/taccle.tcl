@@ -4,6 +4,12 @@
 
 set TACCLE_VERSION 1.2
 
+# no yydebug
+# no YYDEBUG
+# no yyerrok
+# no YYERROR
+# no YYRECOVERING
+
 #//#
 # Taccle is another compiler compiler written in pure Tcl.  reads a
 # <em>taccle specification file</em> to generate pure Tcl code that
@@ -837,6 +843,7 @@ namespace eval ${::p} \{
     variable table
     variable rules
     variable token {}
+    variable yycnt 0
 
     namespace export yylex
 \}
@@ -851,7 +858,9 @@ proc ${::p}::YYACCEPT \{\} \{
 
 proc ${::p}::yyclearin \{\} \{
     variable token
+    variable yycnt
     set token {}
+    incr yycnt -1
 \}
 
 proc ${::p}::yyerror \{s\} \{
@@ -889,6 +898,7 @@ proc write_parser {} {
     variable table
     variable rules
     variable token
+    variable yycnt
 
     set state_stack {0}
     set value_stack {{}}
@@ -901,6 +911,9 @@ proc write_parser {} {
             set yylval \"\"
             set token \[yylex\]
             set buflval \$yylval
+	    if {\$token>0} {
+	        incr yycnt
+            }
         }
         if {!\[info exists table(\$state:\$token)\]} {
             \# pop off states until error token accepted

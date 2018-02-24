@@ -6,7 +6,7 @@ source $ds9(root)/library/parser.tab.tcl
 %option caseless
 %option nodefault
 %option nointeractive
-%option stack
+#%option stack
 #%option debug
 
 D   [0-9]
@@ -14,9 +14,11 @@ E   [Ee][+-]?{D}+
 
 %%
 
--foo	    {return $yy::FOOCMD_}
--bar	    {return $yy::BARCMD_}
-
+close	    {return $yy::CLOSE_}
+in	    {return $yy::IN_}
+fit	    {return $yy::FIT_}
+open	    {return $yy::OPEN_}
+out	    {return $yy::OUT_}
 to	    {return $yy::TO_}
 
 # INT

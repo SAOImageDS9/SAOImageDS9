@@ -96,13 +96,6 @@ proc ProcessCommand {argv argc} {
     while {$i < $argc} {
 	set item [lindex $argv $i]
 	switch -- $item {
-	    -foo {
-		puts "argc: $argc"
-		yy::YY_FLUSH_BUFFER
-		yy::yy_scan_string [string range $argv $i end]
-		yy::yyparse
-		set argc 0
-	    }
 	    -- {set noopts 1}
 	    -? -
 	    -help -
@@ -457,7 +450,22 @@ proc ProcessCommand {argv argc} {
 	    }
 	    -zscale {incr i; ProcessZScaleCmd argv i}
 	    -zmax {set scale(mode) zmax; ChangeScaleMode}
-	    -zoom {incr i; ProcessZoomCmd argv i}
+	    -zoom {
+		incr i;
+		puts "***b: $i [lrange $argv $i end]***"
+#		ProcessZoomCmd argv i
+
+		if {1} {
+		    puts "start: $i out of $argc"
+		    yy::YY_FLUSH_BUFFER
+		    yy::yy_scan_string [lrange $argv $i end]
+		    yy::yyparse
+		    puts "found $yy::yycnt"
+		    set cnt [expr $yy::yycnt-1]
+		    incr i $cnt
+		    puts "***a: $i [lrange $argv $i end]***"
+		}
+	    }
 
 	    default {
 		# allow abc, -, and -[foo] but not -abc

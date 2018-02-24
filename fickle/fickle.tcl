@@ -4,6 +4,37 @@
 
 set FICKLE_VERSION 2.1
 
+# no output()
+# no yymore()
+# no REJECT
+
+# input() ok
+# unput() ok
+# yyless() ok
+# yywrap() ok
+
+# yytext ok
+# yylineno ok
+# yyleng ok
+# yyin ok
+# yyout ok
+
+# BEGIN ok
+# ECHO ok
+# YY_INPUT ok
+
+# unknown
+# YY_FLUSH_BUFFER()
+# yyrestart()
+# yy_scan_string()
+
+# yy_buffer
+# yy_index
+# yy_done
+# yy_flex_debug
+# yy_state_stack
+# yy_state_table
+
 #//#
 # Fickle is a lexical analyzer generator written in pure Tcl.  It
 # reads a <em>fickle specification file</em> to generate pure Tcl code
@@ -326,11 +357,12 @@ proc write_scanner_utils {} {
     puts $::dest "namespace eval ${::p} \{
     variable yytext {}
     variable yyleng 0
+    variable yyin stdin
+    variable yyout stdout
+
     variable yy_buffer {}
     variable yy_index 0
-    variable yy_done 0
-    variable yyin stdin
-    variable yyout stdout"
+    variable yy_done 0"
     if $::debugmode {
         puts $::dest "
     variable yy_flex_debug 1"
@@ -458,11 +490,11 @@ proc write_scanner_utils {} {
 \}
 "
     if $::headers {
-        puts $::dest "# yyunput(c) puts the character c back onto the input stream.  It will
+        puts $::dest "# unput(c) puts the character c back onto the input stream.  It will
 # be the next character scanned.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc ${::p}::yyunput \{c\} \{
+    puts $::dest "proc ${::p}::unput \{c\} \{
     variable yy_buffer
     variable yy_index
 
@@ -495,7 +527,7 @@ proc write_scanner_utils {} {
         puts $::dest "# input() reads the next character from the input stream.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc ${::p}::yyinput \{\} \{
+    puts $::dest "proc ${::p}::input \{\} \{
     variable yy_buffer
     variable yy_index
     variable yy_done
@@ -513,7 +545,7 @@ proc write_scanner_utils {} {
        if \$yy_done \{"
     if $::callyywrap {
         puts -nonewline $::dest "           if \{\[yywrap\] == 0\} \{
-               return \[yyinput\]
+               return \[input\]
            \} else"
     } else {
         puts -nonewline $::dest "           "
@@ -535,7 +567,7 @@ proc write_scanner_utils {} {
 # BEGIN new_state.
 #   -- from the flex(1) man page"
         }
-        puts $::dest "proc ${::p}::yy_push_state \{new_state\} \{
+        puts $::dest "proc ${::p}::push_state \{new_state\} \{
     variable yy_state_stack
 
     lappend yy_state_stack \$new_state
@@ -546,12 +578,12 @@ proc write_scanner_utils {} {
 # pushes the state \"INITIAL\".
 #   -- from the flex(1) man page"
         }
-        puts $::dest "proc ${::p}::yy_pop_state \{\} \{
+        puts $::dest "proc ${::p}::pop_state \{\} \{
     variable yy_state_stack
 
     set yy_state_stack \[lrange \$yy_state_stack 0 end-1\]
     if \{\$yy_state_stack == \"\"\} \{
-        yy_push_state INITIAL
+        push_state INITIAL
     \}
 \}
 "
@@ -559,7 +591,7 @@ proc write_scanner_utils {} {
             puts $::dest "# Returns the top of the stack without altering the stack's contents.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc ${::p}::yy_top_state \{\} \{
+    puts $::dest "proc ${::p}::top_state \{\} \{
     variable yy_state_stack
 
     return \[lindex \$yy_state_stack end\]
@@ -604,18 +636,19 @@ proc write_scanner {} {
 # one of its actions executes a return statement.
 #   -- from the flex(1) man page
 proc ${::p}::yylex \{\} \{
+    variable yytext
+    variable yylineno
+    variable yyleng
+
     variable yy_buffer
     variable yy_index
     variable yy_done
-    variable yytext
-    variable yyleng
     variable yy_flex_debug
     variable yy_state_table
-    variable yylineno
 
     while \{1\} \{"
     if $::startstates {
-        puts $::dest "        set yy_current_state \[yy_top_state\]"
+        puts $::dest "        set yy_current_state \[top_state\]"
     }
     puts $::dest "        if \{\[string length \$yy_buffer\] - \$yy_index < $::BUFFER_SIZE\} \{
             if \{\$yy_done == 0\} \{

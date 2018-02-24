@@ -5,46 +5,42 @@
 %token REAL_
 %token STRING_
 
-%token FOOCMD_
-%token BARCMD_
+%start command
 
+%token CLOSE_
+%token IN_
+%token FIT_
+%token OPEN_
+%token OUT_
 %token TO_
 
 %%
 
-commands : commands command
- | command
+command : {ProcessRealizeDS9} zoom
  ;
 
-command : FOOCMD_ foo
- | BARCMD_ bar	
+zoom : numeric {Zoom $1 $1}
+ | numeric numeric {Zoom $1 $2}
+ | OPEN_ {PanZoomDialog}
+ | CLOSE_ {PanZoomDestroyDialog}
+ | IN_ {Zoom 2 2}
+ | OUT_ {Zoom .5 .5}
+ | TO_ zoomTo
  ;
 
-int : INT_ {set _ $1}
+zoomTo: FIT_ {ZoomToFit}
+ | numeric {global zoom; set current(zoom) " $1 $1 "; ChangeZoom}
+ | numeric numeric {global zoom; set current(zoom) " $1 $2 "; ChangeZoom}
  ;
 
-numeric	: int {set _ $1}
+numeric	: INT_ {set _ $1}
  | REAL_ {set _ $1}
- ;
-
-foo : STRING_ {puts "FOO STRING $1"}
- | INT_ {puts "FOO INT $1"}
- | REAL_ {puts "FOO REAL $1"}
- | TO_ fooTo
- ;
-
-fooTo: STRING_ {puts "FOO TO STRING $1"}
- | numeric {puts "FOO TO NUMERIC $1"}
- ;
-
-bar : #ANY_ {puts "BAR ANY $1}
- | INT_ {puts "BAR INT $1"}
  ;
 
 %%
 
-proc yy::yyerror {s} {
-     puts stderr "parse error:"
+proc yy::yyerror {msg} {
+     puts stderr "$msg:"
      puts stderr "$yy::yy_buffer"
      puts stderr [format "%*s" $yy::yy_index ^]
 }

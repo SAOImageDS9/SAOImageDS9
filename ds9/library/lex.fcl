@@ -10,13 +10,16 @@ source $ds9(root)/library/parser.tab.tcl
 %option yylineno
 %option debug
 
+%x FOO
+%s BAR
+
 D   [0-9]
 E   [Ee][+-]?{D}+
 
 %%
 
-close	    {return $yy::CLOSE_}
-in	    {return $yy::IN_}
+<FOO>close	    {return $yy::CLOSE_}
+<BAR>in	    {return $yy::IN_}
 fit	    {return $yy::FIT_}
 open	    {return $yy::OPEN_}
 out	    {return $yy::OUT_}

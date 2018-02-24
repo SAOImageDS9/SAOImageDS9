@@ -543,7 +543,7 @@ proc write_scanner_utils {} {
 # BEGIN new_state.
 #   -- from the flex(1) man page"
         }
-        puts $::dest "proc ${::p}::push_state \{new_state\} \{
+        puts $::dest "proc ${::p}::yy_push_state \{new_state\} \{
     variable state_stack_
 
     lappend state_stack_ \$new_state
@@ -554,12 +554,12 @@ proc write_scanner_utils {} {
 # pushes the state \"INITIAL\".
 #   -- from the flex(1) man page"
         }
-        puts $::dest "proc ${::p}::pop_state \{\} \{
+        puts $::dest "proc ${::p}::yy_pop_state \{\} \{
     variable state_stack_
 
     set state_stack_ \[lrange \$state_stack_ 0 end-1\]
     if \{\$state_stack_ == \"\"\} \{
-        push_state INITIAL
+        yy_push_state INITIAL
     \}
 \}
 "
@@ -567,7 +567,7 @@ proc write_scanner_utils {} {
             puts $::dest "# Returns the top of the stack without altering the stack's contents.
 #   -- from the flex(1) man page"
     }
-    puts $::dest "proc ${::p}::top_state \{\} \{
+    puts $::dest "proc ${::p}::yy_top_state \{\} \{
     variable state_stack_
 
     return \[lindex \$state_stack_ end\]
@@ -624,7 +624,7 @@ proc ${::p}::yylex \{\} \{
 
     while \{1\} \{"
     if $::startstates {
-        puts $::dest "        set current_state \[top_state\]"
+        puts $::dest "        set yy_current_state \[yy_top_state\]"
     }
     puts $::dest "        if \{\[string length \$yy_current_buffer\] - \$index_ < $::BUFFER_SIZE\} \{
             if \{\$done_ == 0\} \{
@@ -674,9 +674,9 @@ proc ${::p}::yylex \{\} \{
         puts -nonewline $::dest "        if \{"
         if $::startstates {
             if {$state_name == ""} {
-                puts -nonewline $::dest "\$state_table_(\$current_state) && \\\n                "
+                puts -nonewline $::dest "\$state_table_(\$yy_current_state) && \\\n                "
             } elseif {$state_name != "*"} {
-                puts -nonewline $::dest "\$current_state == \"$state_name\" && \\\n                "
+                puts -nonewline $::dest "\$yy_current_state == \"$state_name\" && \\\n                "
             }
         }
         puts $::dest "\[regexp -start \$index_ -indices -line $scan_args -- \{\\A($pattern)\} \$yy_current_buffer match\] > 0\ && \\
@@ -730,7 +730,7 @@ proc ${::p}::yylex \{\} \{
     } else {
         puts -nonewline $::dest "                \{ puts stderr \"unmatched token: \$yytext"
         if $::startstates {
-            puts -nonewline $::dest " in state `\$current_state'"
+            puts -nonewline $::dest " in state `\$yy_current_state'"
         }
         puts $::dest "\"; exit -1 \}"
     }
@@ -942,6 +942,7 @@ proc fickle_main {} {
             }
         }
     }
+    puts [array get ::state_table]
 }
 
 ######################################################################

@@ -452,10 +452,10 @@ proc ProcessCommand {argv argc} {
 	    -zmax {set scale(mode) zmax; ChangeScaleMode}
 	    -zoom {
 		incr i;
-		puts "***b: $i [lrange $argv $i end]***"
-#		ProcessZoomCmd argv i
+#		puts "***b: $i [lrange $argv $i end]***"
+		ProcessZoomCmd argv i
 
-		if {1} {
+		if {0} {
 		    puts "start: $i out of $argc"
 		    yy::YY_FLUSH_BUFFER
 		    yy::yy_scan_string [lrange $argv $i end]

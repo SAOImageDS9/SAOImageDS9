@@ -350,7 +350,7 @@ proc write_scanner_utils {} {
         puts $::dest "
     variable state_stack_ {}
     variable state_table_
-    array set state_table_ {INITIAL 1}"
+    array set state_table_ \{[array get ::state_table]\}"
     }
 
     puts $::dest "\}"
@@ -942,7 +942,6 @@ proc fickle_main {} {
             }
         }
     }
-    puts [array get ::state_table]
 }
 
 ######################################################################

@@ -27,6 +27,9 @@ set FICKLE_VERSION 2.1
 # YY_FLUSH_BUFFER()
 # yyrestart()
 # yy_scan_string()
+# push_state()
+# pop_state()
+# top_state()
 
 # yy_buffer
 # yy_index

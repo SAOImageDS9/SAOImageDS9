@@ -1,5 +1,5 @@
 %{
-source $ds9(root)/library/parser.tab.tcl
+source $ds9(root)/library/zoomparser.tab.tcl
 %}
 
 %option noyywrap

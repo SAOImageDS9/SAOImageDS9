@@ -457,10 +457,10 @@ ds9clean :
 	@echo "*** $@ ***"
 	$(MAKE) -C ds9/$(OS) clean
 
-ds9parserclean :
+ds9parsersclean :
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C ds9/$(OS) parserclean
+	$(MAKE) -C ds9/$(OS) parsersclean
 
 localclean :
 	@echo ""

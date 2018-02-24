@@ -1,14 +1,16 @@
 #--------------------------parser
 
-%.tcl: %.fcl
-	tclsh $(prefix)/fickle/fickle.tcl -P zoom $<
+libparsers : zoomparser
+zoomparser : ../library/zoomparser.tcl ../library/zoomlex.tcl
 
-%.tcl: %.tac
+../library/zoomparser.tcl : ../library/zoomparser.tac
 	tclsh $(prefix)/taccle/taccle.tcl -p zoom -d -v -w $<
+../library/zoomlex.tcl : ../library/zoomlex.fcl
+	tclsh $(prefix)/fickle/fickle.tcl -P zoom $<
 
 #--------------------------framework
 
-$(LIBDIR)/library : $(prefix)/ds9/library/parser.tcl $(prefix)/ds9/library/parser.tab.tcl $(prefix)/ds9/library/lex.tcl $(prefix)/ds9/library/*.tcl
+$(LIBDIR)/library : $(prefix)/ds9/library/*.tcl
 	mkdir -p "$@"
 	cp -p $? "$@"
 # must do it this way for win
@@ -75,10 +77,11 @@ $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 
 .PHONY	: distclean
 
-distclean: clean parserclean
+distclean: clean parsersclean
 	-rm -f Makefile config.cache config.log config.status
 	-rm -rf autom4te.cache
 
-parserclean:
-	-rm -f ../library/parser.tcl ../library/parser.output ../library/parser.tab.tcl ../library/lex.tcl
+parsersclean:
+	-rm -f ../library/*.output ../library/*.tab.tcl
+	-rm -f ../library/zoomparser.tcl ../library/zoomlex.tcl
 

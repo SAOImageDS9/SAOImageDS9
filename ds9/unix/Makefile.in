@@ -120,6 +120,7 @@ PREQS	= \
 	$(LIBDIR)/tcl$(TCL_VERSION) \
 	$(LIBDIR)/tcl8 \
 	$(LIBDIR)/tk$(TCL_VERSION) \
+	libparsers \
 	$(LIBDIR)/library \
 	$(LIBDIR)/msgs \
 	$(LIBDIR)/doc \

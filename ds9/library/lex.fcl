@@ -15,35 +15,35 @@ E   [Ee][+-]?{D}+
 
 %%
 
-close	    {return $yy::CLOSE_}
-in	    {return $yy::IN_}
-fit	    {return $yy::FIT_}
-open	    {return $yy::OPEN_}
-out	    {return $yy::OUT_}
-to	    {return $yy::TO_}
+close	    {return $zoom::CLOSE_}
+in	    {return $zoom::IN_}
+fit	    {return $zoom::FIT_}
+open	    {return $zoom::OPEN_}
+out	    {return $zoom::OUT_}
+to	    {return $zoom::TO_}
 
 # INT
-[+-]?{D}+ {set yy::yylval $yytext; return $yy::INT_}
+[+-]?{D}+ {set zoom::yylval $yytext; return $zoom::INT_}
 
 # REAL
 [+-]?{D}+"."?({E})? |
-[+-]?{D}*"."{D}+({E})? {set yy::yylval $yytext; return $yy::REAL_}
+[+-]?{D}*"."{D}+({E})? {set zoom::yylval $yytext; return $zoom::REAL_}
 
 # Quoted STRING
-\"[^\"]*\" {set yy::yylval [string range $yytext 1 end-1]; return $yy::STRING_}
+\"[^\"]*\" {set zoom::yylval [string range $yytext 1 end-1]; return $zoom::STRING_}
 
 # Quoted STRING
-\'[^\']*\' {set yy::yylval [string range $yytext 1 end-1]; return $yy::STRING_}
+\'[^\']*\' {set zoom::yylval [string range $yytext 1 end-1]; return $zoom::STRING_}
 
 # Quoted STRING
-\{[^\}]*\} {set yy::yylval [string range $yytext 1 end-1]; return $yy::STRING_}
+\{[^\}]*\} {set zoom::yylval [string range $yytext 1 end-1]; return $zoom::STRING_}
 
 # STRING
-\S+\S+ {set yy::yylval $yytext; return $yy::STRING_}
+\S+\S+ {set zoom::yylval $yytext; return $zoom::STRING_}
 
 \s        # ignore whitespace
 
-.	  {set yy::yylval $yytext; return $yy::yylval}
+.	  {set zoom::yylval $yytext; return $zoom::yylval}
 
 %%
 

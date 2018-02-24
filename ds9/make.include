@@ -1,10 +1,10 @@
 #--------------------------parser
 
 %.tcl: %.fcl
-	tclsh $(prefix)/fickle/fickle.tcl $<
+	tclsh $(prefix)/fickle/fickle.tcl -P zoom $<
 
 %.tcl: %.tac
-	tclsh $(prefix)/taccle/taccle.tcl -d -v -w $<
+	tclsh $(prefix)/taccle/taccle.tcl -p zoom -d -v -w $<
 
 #--------------------------framework
 

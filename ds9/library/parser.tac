@@ -39,8 +39,8 @@ numeric	: INT_ {set _ $1}
 
 %%
 
-proc yy::yyerror {msg} {
+proc zoom::yyerror {msg} {
      puts stderr "$msg:"
-     puts stderr "$yy::yy_current_buffer"
-     puts stderr [format "%*s" $yy::index_ ^]
+     puts stderr "$zoom::yy_current_buffer"
+     puts stderr [format "%*s" $zoom::index_ ^]
 }

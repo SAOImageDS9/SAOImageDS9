@@ -331,7 +331,8 @@ proc write_scanner_utils {} {
     variable yytext {}
     variable yyleng 0
     variable yyin stdin
-    variable yyout stdout"
+    variable yyout stdout
+    variable yy_current_buffer {}"
     if $::debugmode {
         puts $::dest "
     variable yy_flex_debug 1"
@@ -342,7 +343,6 @@ proc write_scanner_utils {} {
     }
 
     puts $::dest "
-    variable buffer_ {}
     variable index_ 0
     variable done_ 0"
 
@@ -396,11 +396,11 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::YY_FLUSH_BUFFER \{\} \{
-    variable buffer_
+    variable yy_current_buffer
     variable index_
     variable done_
 
-    set buffer_ \"\"
+    set yy_current_buffer \"\"
     set index_ 0
     set done_ 0
 \}
@@ -458,10 +458,10 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::yy_scan_string \{str\} \{
-    variable buffer_
+    variable yy_current_buffer
     variable yyin
 
-    append buffer_ \$str
+    append yy_current_buffer \$str
     set yyin \"\"
 \}
 "
@@ -471,12 +471,12 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::unput \{c\} \{
-    variable buffer_
+    variable yy_current_buffer
     variable index_
 
-    set s \[string range \$buffer_ 0 \[expr \{\$index_ - 1\}\]\]
+    set s \[string range \$yy_current_buffer 0 \[expr \{\$index_ - 1\}\]\]
     append s \$c
-    set buffer_ \[append s \[string range \$buffer_ \$index_ end\]\]
+    set yy_current_buffer \[append s \[string range \$yy_current_buffer \$index_ end\]\]
 \}
 "
     if $::headers {
@@ -487,14 +487,14 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::yyless \{n\} \{
-    variable buffer_
+    variable yy_current_buffer
     variable index_
     variable yytext
     variable yyleng
 
-    set s \[string range \$buffer_ 0 \[expr \{\$index_ - 1\}\]\]
+    set s \[string range \$yy_current_buffer 0 \[expr \{\$index_ - 1\}\]\]
     append s \[string range \$yytext \$n end\]
-    set buffer_ \[append s \[string range \$buffer_ \$index_ end\]\]
+    set yy_current_buffer \[append s \[string range \$yy_current_buffer \$index_ end\]\]
     set yytext \[string range \$yytext 0 \[expr \{\$n - 1\}\]\]
     set yyleng \[string length \$yytext\]
 \}
@@ -504,16 +504,16 @@ proc write_scanner_utils {} {
 #   -- from the flex(1) man page"
     }
     puts $::dest "proc ${::p}::input \{\} \{
-    variable buffer_
+    variable yy_current_buffer
     variable index_
     variable done_
 
-    if \{\[string length \$buffer_\] - \$index_ < $::BUFFER_SIZE\} \{
+    if \{\[string length \$yy_current_buffer\] - \$index_ < $::BUFFER_SIZE\} \{
        set new_buffer \"\"
        set new_buffer_size 0
        if \{\$done_ == 0\} \{
            YY_INPUT new_buffer new_buffer_size $::BUFFER_SIZE
-           append buffer_ \$new_buffer
+           append yy_current_buffer \$new_buffer
            if \{\$new_buffer_size == 0\} \{
                set done_ 1
            \}
@@ -526,12 +526,12 @@ proc write_scanner_utils {} {
     } else {
         puts -nonewline $::dest "           "
     }
-    puts $::dest "if \{\[string length \$buffer_\] - \$index_ == 0\} \{
+    puts $::dest "if \{\[string length \$yy_current_buffer\] - \$index_ == 0\} \{
                return \{\}
            \}
         \}
     \}
-    set c \[string index \$buffer_ \$index_\]
+    set c \[string index \$yy_current_buffer \$index_\]
     incr index_
     return \$c
 \}
@@ -615,25 +615,25 @@ proc ${::p}::yylex \{\} \{
     variable yytext
     variable yylineno
     variable yyleng
+    variable yy_current_buffer
+    variable yy_flex_debug
 
-    variable buffer_
     variable index_
     variable done_
-    variable yy_flex_debug
     variable state_table_
 
     while \{1\} \{"
     if $::startstates {
         puts $::dest "        set current_state \[top_state\]"
     }
-    puts $::dest "        if \{\[string length \$buffer_\] - \$index_ < $::BUFFER_SIZE\} \{
+    puts $::dest "        if \{\[string length \$yy_current_buffer\] - \$index_ < $::BUFFER_SIZE\} \{
             if \{\$done_ == 0\} \{
-	        set yy_buffer_size 0
-                set yy_new_buffer \"\"
-                YY_INPUT yy_new_buffer yy_buffer_size $::BUFFER_SIZE
-                append buffer_ \$yy_new_buffer
-                if \{\$yy_buffer_size == 0 && \\
-                        \[string length \$buffer_\] - \$index_ == 0\} \{
+	        set buffer_size 0
+                set new_buffer \"\"
+                YY_INPUT new_buffer buffer_size $::BUFFER_SIZE
+                append yy_current_buffer \$new_buffer
+                if \{\$buffer_size == 0 && \\
+                        \[string length \$yy_current_buffer\] - \$index_ == 0\} \{
                     set done_ 1
                 \}
             \}
@@ -651,7 +651,7 @@ proc ${::p}::yylex \{\} \{
     } else {
         puts -nonewline $::dest "                "
     }
-    puts $::dest "if \{\[string length \$buffer_\] - \$index_ == 0\} \{
+    puts $::dest "if \{\[string length \$yy_current_buffer\] - \$index_ == 0\} \{
                     break
                 \}
             \}            
@@ -679,9 +679,9 @@ proc ${::p}::yylex \{\} \{
                 puts -nonewline $::dest "\$current_state == \"$state_name\" && \\\n                "
             }
         }
-        puts $::dest "\[regexp -start \$index_ -indices -line $scan_args -- \{\\A($pattern)\} \$buffer_ match\] > 0\ && \\
+        puts $::dest "\[regexp -start \$index_ -indices -line $scan_args -- \{\\A($pattern)\} \$yy_current_buffer match\] > 0\ && \\
                 \[lindex \$match 1\] - \$index_ + 1 > \$yyleng\} \{
-            set yytext \[string range \$buffer_ \$index_ \[lindex \$match 1\]\]
+            set yytext \[string range \$yy_current_buffer \$index_ \[lindex \$match 1\]\]
             set yyleng \[string length \$yytext\]
             set matched_rule $rule_num"
         if $::debugmode {
@@ -692,7 +692,7 @@ proc ${::p}::yylex \{\} \{
     }
     # now add the default case
     puts $::dest "        if \{\$matched_rule == -1\} \{
-            set yytext \[string index \$buffer_ \$index_\]
+            set yytext \[string index \$yy_current_buffer \$index_\]
             set yyleng 1"
     if $::debugmode {
         puts $::dest "            set yyrule_num \"default rule\""
@@ -701,7 +701,7 @@ proc ${::p}::yylex \{\} \{
         incr index_ \$yyleng
         # workaround for Tcl's circumflex behavior
         if \{\[string index \$yytext end\] == \"\\n\"\} \{
-            set buffer_ \[string range \$buffer_ \$index_ end\]
+            set yy_current_buffer \[string range \$yy_current_buffer \$index_ end\]
             set index_ 0
         \}"
     if $::debugmode {

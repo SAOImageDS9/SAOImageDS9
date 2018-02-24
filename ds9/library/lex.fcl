@@ -6,8 +6,9 @@ source $ds9(root)/library/parser.tab.tcl
 %option caseless
 %option nodefault
 %option nointeractive
-#%option stack
-#%option debug
+%option stack
+%option yylineno
+%option debug
 
 D   [0-9]
 E   [Ee][+-]?{D}+

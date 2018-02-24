@@ -41,6 +41,6 @@ numeric	: INT_ {set _ $1}
 
 proc yy::yyerror {msg} {
      puts stderr "$msg:"
-     puts stderr "$yy::yy_buffer"
-     puts stderr [format "%*s" $yy::yy_index ^]
+     puts stderr "$yy::yy_current_buffer"
+     puts stderr [format "%*s" $yy::index_ ^]
 }

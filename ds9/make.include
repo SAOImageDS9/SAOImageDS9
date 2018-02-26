@@ -1,12 +1,19 @@
-#--------------------------parser
+#--------------------------parsers
 
-libparsers : zoomparser
+parsers : zoomparser
+
 zoomparser : ../library/zoomparser.tcl ../library/zoomlex.tcl
 
-../library/zoomparser.tcl : ../library/zoomparser.tac
+../library/zoomparser.tcl : ../parsers/zoomparser.tac
 	tclsh $(prefix)/taccle/taccle.tcl -p zoom -d -v -w $<
-../library/zoomlex.tcl : ../library/zoomlex.fcl
+	mv ../parsers/zoomparser*.tcl ../library/.
+
+../library/zoomlex.tcl : ../parsers/zoomlex.fcl
 	tclsh $(prefix)/fickle/fickle.tcl -P zoom $<
+	mv ../parsers/zoomlex.tcl ../library/.
+
+#%.tcl: %.fcl
+#%.tcl: %.tac
 
 #--------------------------framework
 
@@ -84,4 +91,5 @@ distclean: clean parsersclean
 parsersclean:
 	-rm -f ../library/*.output ../library/*.tab.tcl
 	-rm -f ../library/zoomparser.tcl ../library/zoomlex.tcl
+	-rm -f ../parsers/*.output ../parsers/*.tcl
 

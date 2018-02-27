@@ -1,3 +1,20 @@
+#--------------------------parsers
+
+parsers : zoomparser
+
+zoomparser : ../library/zoomparser.tcl ../library/zoomlex.tcl
+
+../library/zoomparser.tcl : ../parsers/zoomparser.tac
+	tclsh $(prefix)/taccle/taccle.tcl -p zoom -d -v -w $<
+	mv ../parsers/zoomparser*.tcl ../library/.
+
+../library/zoomlex.tcl : ../parsers/zoomlex.fcl
+	tclsh $(prefix)/fickle/fickle.tcl -P zoom $<
+	mv ../parsers/zoomlex.tcl ../library/.
+
+#%.tcl: %.fcl
+#%.tcl: %.tac
+
 #--------------------------framework
 
 $(LIBDIR)/library : $(prefix)/ds9/library/*.tcl
@@ -65,9 +82,14 @@ $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 
 #--------------------------distclean
 
-.PHONY	: distclean
+.PHONY	: distclean parsersclean
 
-distclean: clean
+distclean: clean parsersclean
 	-rm -f Makefile config.cache config.log config.status
 	-rm -rf autom4te.cache
+
+parsersclean:
+	-rm -f ../library/*.output ../library/*.tab.tcl
+	-rm -f ../library/zoomparser.tcl ../library/zoomlex.tcl
+	-rm -f ../parsers/*.output ../parsers/*.tcl
 

@@ -177,8 +177,12 @@ proc UpdateBin {} {
 	puts stderr "UpdateBin"
     }
 
+    # really need this
+    RealizeDS9
+
     LockBinCurrent
     UpdateBinDialog
+    UpdatePanZoomDialog
     UpdateCrosshairDialog
     UpdateCropDialog
     UpdateCubeDialog

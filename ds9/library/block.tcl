@@ -59,8 +59,12 @@ proc Block {bx by} {
 proc UpdateBlock {} {
     global current
 
+    # we need to be realized
+    RealizeDS9
+
     LockBlockCurrent
     UpdateBlockDialog
+    UpdatePanZoomDialog
     UpdateCrosshairDialog
     UpdateCropDialog
     UpdateCubeDialog

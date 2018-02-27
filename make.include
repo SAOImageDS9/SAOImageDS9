@@ -406,13 +406,6 @@ tktable/Makefile :
 	$(STD) \
 	$(CACHE)
 
-#-------------------------- ds9parsers
-
-ds9parsers :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C ds9/$(OS) parsers
-
 #-------------------------- language
 
 .PHONY	: language
@@ -440,7 +433,7 @@ scrub :
 #-------------------------- clean
 
 .PHONY	: clean
-.PHONY	: dirsclean ds9clean ds9parsersclean localclean
+.PHONY	: dirsclean ds9clean localclean
 .PHONY	: tcliisclean tclsignalclean 
 .PHONY	: tclxmlclean tclzvfsclean tlsclean
 .PHONY	: tkbltclean tkconclean tkhtml1clean tkimgclean
@@ -463,11 +456,6 @@ ds9clean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C ds9/$(OS) clean
-
-ds9parsersclean :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C ds9/$(OS) parsersclean
 
 localclean :
 	@echo ""

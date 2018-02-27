@@ -188,9 +188,6 @@ source $ds9(root)/library/xmfbox.tcl
 source $ds9(root)/library/xmlrpc.tcl
 source $ds9(root)/library/xpa.tcl
 
-#source $ds9(root)/library/zoomparser.tcl
-#source $ds9(root)/library/zoomlex.tcl
-
 switch [tk windowingsystem] {
     x11 {}
     aqua {source $ds9(root)/library/macosx.tcl}

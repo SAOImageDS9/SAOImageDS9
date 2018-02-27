@@ -23,23 +23,23 @@ proc BinMainMenu {} {
 	-command BinToFit
     $ds9(mb).bin add separator
     $ds9(mb).bin add radiobutton -label "[msgcat::mc {Bin}] 1" \
-	-variable bin(factor) -value { 1 1 } -command ChangeBinFactor
+	-variable bin(factor) -value {1 1} -command ChangeBinFactor
     $ds9(mb).bin add radiobutton -label "[msgcat::mc {Bin}] 2" \
-	-variable bin(factor) -value { 2 2 } -command ChangeBinFactor
+	-variable bin(factor) -value {2 2} -command ChangeBinFactor
     $ds9(mb).bin add radiobutton -label "[msgcat::mc {Bin}] 4" \
-	-variable bin(factor) -value { 4 4 } -command ChangeBinFactor
+	-variable bin(factor) -value {4 4} -command ChangeBinFactor
     $ds9(mb).bin add radiobutton -label "[msgcat::mc {Bin}] 8" \
-	-variable bin(factor) -value { 8 8 } -command ChangeBinFactor
+	-variable bin(factor) -value {8 8} -command ChangeBinFactor
     $ds9(mb).bin add radiobutton -label "[msgcat::mc {Bin}] 16" \
-	-variable bin(factor) -value { 16 16 } -command ChangeBinFactor
+	-variable bin(factor) -value {16 16} -command ChangeBinFactor
     $ds9(mb).bin add radiobutton -label "[msgcat::mc {Bin}] 32" \
-	-variable bin(factor) -value { 32 32 } -command ChangeBinFactor
+	-variable bin(factor) -value {32 32} -command ChangeBinFactor
     $ds9(mb).bin add radiobutton -label "[msgcat::mc {Bin}] 64" \
-	-variable bin(factor) -value { 64 64 } -command ChangeBinFactor
+	-variable bin(factor) -value {64 64} -command ChangeBinFactor
     $ds9(mb).bin add radiobutton -label "[msgcat::mc {Bin}] 128" \
-	-variable bin(factor) -value { 128 128 } -command ChangeBinFactor
+	-variable bin(factor) -value {128 128} -command ChangeBinFactor
     $ds9(mb).bin add radiobutton -label "[msgcat::mc {Bin}] 256" \
-	-variable bin(factor) -value { 256 256 } -command ChangeBinFactor
+	-variable bin(factor) -value {256 256} -command ChangeBinFactor
     $ds9(mb).bin add separator
     $ds9(mb).bin add radiobutton -label {128x128} \
 	-variable bin(buffersize) -value 128 -command ChangeBinBufferSize 
@@ -76,23 +76,23 @@ proc PrefsDialogBinMenu {w} {
 	-variable pbin(function) -value sum
     $m add separator
     $m add radiobutton -label "[msgcat::mc {Bin}] 1" \
-	-variable pbin(factor) -value { 1 1 }
+	-variable pbin(factor) -value {1 1}
     $m add radiobutton -label "[msgcat::mc {Bin}] 2" \
-	-variable pbin(factor) -value { 2 2 }
+	-variable pbin(factor) -value {2 2}
     $m add radiobutton -label "[msgcat::mc {Bin}] 4" \
-	-variable pbin(factor) -value { 4 4 }
+	-variable pbin(factor) -value {4 4}
     $m add radiobutton -label "[msgcat::mc {Bin}] 8" \
-	-variable pbin(factor) -value { 8 8 }
+	-variable pbin(factor) -value {8 8}
     $m add radiobutton -label "[msgcat::mc {Bin}] 16" \
-	-variable pbin(factor) -value { 16 16 }
+	-variable pbin(factor) -value {16 16}
     $m add radiobutton -label "[msgcat::mc {Bin}] 32" \
-	-variable pbin(factor) -value { 32 32 }
+	-variable pbin(factor) -value {32 32}
     $m add radiobutton -label "[msgcat::mc {Bin}] 64" \
-	-variable pbin(factor) -value { 64 64 }
+	-variable pbin(factor) -value {64 64}
     $m add radiobutton -label "[msgcat::mc {Bin}] 128" \
-	-variable pbin(factor) -value { 128 128 }
+	-variable pbin(factor) -value {128 128}
     $m add radiobutton -label "[msgcat::mc {Bin}] 256" \
-	-variable pbin(factor) -value { 256 256 }
+	-variable pbin(factor) -value {256 256}
     $m add separator
     $m add radiobutton -label {128x128} -variable pbin(buffersize) -value 128
     $m add radiobutton -label {256x256} -variable pbin(buffersize) -value 256
@@ -179,31 +179,31 @@ proc CreateButtonsBin {} {
 
     RadioButton $ds9(buttons).bin.1 \
 	"[string tolower [msgcat::mc {Bin}]] 1" \
-	bin(factor) { 1 1 } ChangeBinFactor
+	bin(factor) {1 1} ChangeBinFactor
     RadioButton $ds9(buttons).bin.2 \
 	"[string tolower [msgcat::mc {Bin}]] 2" \
-	bin(factor) { 2 2 } ChangeBinFactor
+	bin(factor) {2 2} ChangeBinFactor
     RadioButton $ds9(buttons).bin.4 \
 	"[string tolower [msgcat::mc {Bin}]] 4" \
-	bin(factor) { 4 4 } ChangeBinFactor
+	bin(factor) {4 4} ChangeBinFactor
     RadioButton $ds9(buttons).bin.8 \
 	"[string tolower [msgcat::mc {Bin}]] 8" \
-	bin(factor) { 8 8 } ChangeBinFactor
+	bin(factor) {8 8} ChangeBinFactor
     RadioButton $ds9(buttons).bin.16 \
 	"[string tolower [msgcat::mc {Bin}]] 16" \
-	bin(factor) { 16 16 } ChangeBinFactor
+	bin(factor) {16 16} ChangeBinFactor
     RadioButton $ds9(buttons).bin.32 \
 	"[string tolower [msgcat::mc {Bin}]] 32" \
-	bin(factor) { 32 32 } ChangeBinFactor
+	bin(factor) {32 32} ChangeBinFactor
     RadioButton $ds9(buttons).bin.64 \
 	"[string tolower [msgcat::mc {Bin}]] 64" \
-	bin(factor) { 64 64 } ChangeBinFactor
+	bin(factor) {64 64} ChangeBinFactor
     RadioButton $ds9(buttons).bin.128 \
 	"[string tolower [msgcat::mc {Bin}]] 128" \
-	bin(factor) { 128 128 } ChangeBinFactor
+	bin(factor) {128 128} ChangeBinFactor
     RadioButton $ds9(buttons).bin.256 \
 	"[string tolower [msgcat::mc {Bin}]] 256" \
-	bin(factor) { 256 256 } ChangeBinFactor
+	bin(factor) {256 256} ChangeBinFactor
 
     RadioButton $ds9(buttons).bin.128x {128x128} \
 	bin(buffersize) 128 ChangeBinBufferSize 

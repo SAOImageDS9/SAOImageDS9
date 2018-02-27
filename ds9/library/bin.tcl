@@ -15,7 +15,7 @@ proc BinDef {} {
 
     set bin(lock) 0
     set bin(function) sum
-    set bin(factor) { 1 1 }
+    set bin(factor) {1 1}
     set bin(depth) 1
     set bin(buffersize) 1024
 
@@ -246,23 +246,23 @@ proc BinDialog {} {
 	-command BinToFit
     $mb.bin add separator
     $mb.bin add radiobutton -label "[msgcat::mc {Bin}] 1" \
-	-variable bin(factor) -value { 1 1 } -command ChangeBinFactor
+	-variable bin(factor) -value {1 1} -command ChangeBinFactor
     $mb.bin add radiobutton -label "[msgcat::mc {Bin}] 2" \
-	-variable bin(factor) -value { 2 2 } -command ChangeBinFactor
+	-variable bin(factor) -value {2 2} -command ChangeBinFactor
     $mb.bin add radiobutton -label "[msgcat::mc {Bin}] 4" \
-	-variable bin(factor) -value { 4 4 } -command ChangeBinFactor
+	-variable bin(factor) -value {4 4} -command ChangeBinFactor
     $mb.bin add radiobutton -label "[msgcat::mc {Bin}] 8" \
-	-variable bin(factor) -value { 8 8 } -command ChangeBinFactor
+	-variable bin(factor) -value {8 8} -command ChangeBinFactor
     $mb.bin add radiobutton -label "[msgcat::mc {Bin}] 16" \
-	-variable bin(factor) -value { 16 16 } -command ChangeBinFactor
+	-variable bin(factor) -value {16 16} -command ChangeBinFactor
     $mb.bin add radiobutton -label "[msgcat::mc {Bin}] 32" \
-	-variable bin(factor) -value { 32 32 } -command ChangeBinFactor
+	-variable bin(factor) -value {32 32} -command ChangeBinFactor
     $mb.bin add radiobutton -label "[msgcat::mc {Bin}] 64" \
-	-variable bin(factor) -value { 64 64 } -command ChangeBinFactor
+	-variable bin(factor) -value {64 64} -command ChangeBinFactor
     $mb.bin add radiobutton -label "[msgcat::mc {Bin}] 128" \
-	-variable bin(factor) -value { 128 128 } -command ChangeBinFactor
+	-variable bin(factor) -value {128 128} -command ChangeBinFactor
     $mb.bin add radiobutton -label "[msgcat::mc {Bin}] 256" \
-	-variable bin(factor) -value { 256 256 } -command ChangeBinFactor
+	-variable bin(factor) -value {256 256} -command ChangeBinFactor
 
     menu $mb.buffer
     $mb.buffer add radiobutton -label {128x128} \
@@ -771,10 +771,10 @@ proc ProcessBinCmd {varname iname} {
 	    set by [lindex $var [expr $i+1]]
 	    # note: the spaces are needed so that the menus are in sync
 	    if {$by != {} && [string is double $by]} {
-		set bin(factor) " $bx $by "
+		set bin(factor) "$bx $by"
 		incr i
 	    } else {
-		set bin(factor) " $bx $bx "
+		set bin(factor) "$bx $bx"
 	    }
 	    ChangeBinFactor
 	}

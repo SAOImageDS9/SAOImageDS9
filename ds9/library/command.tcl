@@ -453,13 +453,6 @@ proc ProcessCommand {argv argc} {
 	    -zoom {
 		incr i;
 		ProcessZoomCmd argv i
-
-		if {0} {
-		    zoom::YY_FLUSH_BUFFER
-		    zoom::yy_scan_string [lrange $argv $i end]
-		    zoom::yyparse
-		    incr i [expr $zoom::yycnt-1]
-		}
 	    }
 
 	    default {

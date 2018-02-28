@@ -721,6 +721,19 @@ proc ProcessZoomCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
+    zoom::YY_FLUSH_BUFFER
+    zoom::yy_scan_string [lrange $var $i end]
+    zoom::yyparse
+    incr i [expr $zoom::yycnt-1]
+}
+
+proc oProcessZoomCmd {varname iname} {
+    upvar $varname var
+    upvar $iname i
+
+    # we need to be realized
+    ProcessRealizeDS9
+
     global current
     switch -- [string tolower [lindex $var $i]] {
 	open {PanZoomDialog}

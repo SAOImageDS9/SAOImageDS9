@@ -16,7 +16,8 @@
 
 %%
 
-command : {ProcessRealizeDS9} zoom
+command : zoom
+ | zoom STRING_ {zoom::yyclearin}
  ;
 
 zoom : numeric {Zoom $1 $1}
@@ -29,8 +30,8 @@ zoom : numeric {Zoom $1 $1}
  ;
 
 zoomTo: FIT_ {ZoomToFit}
- | numeric {global zoom; set current(zoom) " $1 $1 "; ChangeZoom}
- | numeric numeric {global zoom; set current(zoom) " $1 $2 "; ChangeZoom}
+ | numeric {global zoom; set current(zoom) "$1 $1"; ChangeZoom}
+ | numeric numeric {global zoom; set current(zoom) "$1 $2"; ChangeZoom}
  ;
 
 numeric	: INT_ {set _ $1}

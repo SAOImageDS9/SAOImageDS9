@@ -68,8 +68,6 @@ system		= @system@
 .C.@OBJEXT@:
 	$(COMPILE) -c `@CYGPATH@ $<` -o $@
 
-include ../make.head.include
-
 #--------------------------defines
 
 APPDIR	= zvfsmntpt
@@ -122,7 +120,8 @@ PREQS	= \
 	$(LIBDIR)/tcl$(TCL_VERSION) \
 	$(LIBDIR)/tcl8 \
 	$(LIBDIR)/tk$(TCL_VERSION) \
-	$(PARSERS) \
+	$(prefix)/ds9/parsers/*.tac \
+	$(prefix)/ds9/parsers/*.fcl \
 	$(LIBDIR)/library \
 	$(LIBDIR)/msgs \
 	$(LIBDIR)/doc \

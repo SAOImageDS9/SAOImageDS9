@@ -1,17 +1,16 @@
 #--------------------------parsers
 
-parsers : $(PARSERS)
+vpath %.tac $(prefix)/ds9/parsers
+vpath %.fcl $(prefix)/ds9/parsers
 
-$(prefix)/ds9/library/zoomparser.tcl : $(prefix)/ds9/parsers/zoomparser.tac
-	tclsh $(prefix)/taccle/taccle.tcl -p zoom -d -v -w $<
-	mv $(prefix)/ds9/parsers/zoomparser*.tcl $(prefix)/ds9/library/.
+$(prefix)/ds9/library/%parser.tcl : %parser.tac
+	tclsh $(prefix)/taccle/taccle.tcl -p $* -d -v -w $<
+	mv $(prefix)/ds9/parsers/$*parser.tcl $(@D)
+	mv $(prefix)/ds9/parsers/$*parser.tab.tcl $(@D)
 
-$(prefix)/ds9/library/zoomlex.tcl : $(prefix)/ds9/parsers/zoomlex.fcl
-	tclsh $(prefix)/fickle/fickle.tcl -P zoom $<
-	mv $(prefix)/ds9/parsers/zoomlex.tcl $(prefix)/ds9/library/.
-
-#%.tcl: %.fcl
-#%.tcl: %.tac
+$(prefix)/ds9/library/%lex.tcl : %lex.fcl
+	tclsh $(prefix)/fickle/fickle.tcl -P $* $<
+	mv $(prefix)/ds9/parsers/$*lex.tcl $(@D)
 
 #--------------------------framework
 
@@ -87,5 +86,4 @@ distclean: clean
 	-rm -rf autom4te.cache
 
 parsersclean:
-	-rm -f $(prefix)/ds9/library/*.output
 	-rm -f $(prefix)/ds9/parsers/*.output $(prefix)/ds9/parsers/*.tcl

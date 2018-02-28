@@ -1,5 +1,0 @@
-PARSERS = \
-	$(prefix)/ds9/library/zoomparser.tcl \
-	$(prefix)/ds9/library/zoomlex.tcl
-
-

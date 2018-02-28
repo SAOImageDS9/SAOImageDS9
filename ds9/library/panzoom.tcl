@@ -673,6 +673,19 @@ proc ProcessPanCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
+    pan::YY_FLUSH_BUFFER
+    pan::yy_scan_string [lrange $var $i end]
+    pan::yyparse
+    incr i [expr $pan::yycnt-1]
+}
+
+proc oProcessPanCmd {varname iname} {
+    upvar $varname var
+    upvar $iname i
+
+    # we need to be realized
+    ProcessRealizeDS9
+
     switch -- [string tolower [lindex $var $i]] {
 	open {PanZoomDialog}
 	close {PanZoomDestroyDialog}

@@ -20,6 +20,10 @@ command : zoom
  | zoom STRING_ {zoom::yyclearin}
  ;
 
+numeric	: INT_ {set _ $1}
+ | REAL_ {set _ $1}
+ ;
+
 zoom : numeric {Zoom $1 $1}
  | numeric numeric {Zoom $1 $2}
  | OPEN_ {PanZoomDialog}
@@ -32,10 +36,6 @@ zoom : numeric {Zoom $1 $1}
 zoomTo: FIT_ {ZoomToFit}
  | numeric {global zoom; set current(zoom) "$1 $1"; ChangeZoom}
  | numeric numeric {global zoom; set current(zoom) "$1 $2"; ChangeZoom}
- ;
-
-numeric	: INT_ {set _ $1}
- | REAL_ {set _ $1}
  ;
 
 %%

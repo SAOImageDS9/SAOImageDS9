@@ -1,0 +1,98 @@
+%{
+source $ds9(root)/library/panparser.tab.tcl
+%}
+
+%option noyywrap
+%option caseless
+%option nodefault
+%option nointeractive
+#%option stack
+%option yylineno
+#%option debug
+
+D   [0-9]
+E   [Ee][+-]?{D}+
+
+%%
+
+close	    {return $pan::CLOSE_}
+open	    {return $pan::OPEN_}
+to	    {return $pan::TO_}
+
+wcs	    {return $pan::WCS_}
+wcsa	    {return $pan::WCSA_}
+wcsb	    {return $pan::WCSB_}
+wcsc	    {return $pan::WCSC_}
+wcsd	    {return $pan::WCSD_}
+wcse	    {return $pan::WCSE_}
+wcsf	    {return $pan::WCSF_}
+wcsg	    {return $pan::WCSG_}
+wcsh	    {return $pan::WCSH_}
+wcsi	    {return $pan::WCSI_}
+wcsj	    {return $pan::WCSJ_}
+wcsk	    {return $pan::WCSK_}
+wcsl	    {return $pan::WCSL_}
+wcsm	    {return $pan::WCSM_}
+wcsn	    {return $pan::WCSN_}
+wcso	    {return $pan::WCSO_}
+wcsp	    {return $pan::WCSP_}
+wcsq	    {return $pan::WCSQ_}
+wcsr	    {return $pan::WCSR_}
+wcss	    {return $pan::WCSS_}
+wcst	    {return $pan::WCST_}
+wcsu	    {return $pan::WCSU_}
+wcsv	    {return $pan::WCSV_}
+wcsw	    {return $pan::WCSW_}
+wcsx	    {return $pan::WCSX_}
+wcsy	    {return $pan::WCSY_}
+wcsz	    {return $pan::WCSZ_}
+
+image	    {return $pan::IMAGE_}
+physical    {return $pan::PHYSICAL_}
+amplifier   {return $pan::AMPLIFIER_}
+detector    {return $pan::DETECTOR_}
+
+fk4	    {return $pan::FK4_}
+b1950	    {return $pan::FK4_}
+fk5	    {return $pan::FK5_}
+j2000	    {return $pan::FK5_}
+galactic    {return $pan::GALACTIC_}
+ecliptic    {return $pan::ECLIPTIC_}
+
+# INT
+[+-]?{D}+ {set pan::yylval $yytext; return $pan::INT_}
+
+# REAL
+[+-]?{D}+"."?({E})? |
+[+-]?{D}*"."{D}+({E})? {set pan::yylval $yytext; return $pan::REAL_}
+
+# SEXAGESIMAL
+[+-]?{D}+:{D}+:{D}+"."? |
+[+-]?{D}+:{D}+:{D}*"."{D}+ {set pan::yylval $yytext; return $pan::SEXSTR_}
+
+# HMS
+[+-]?{D}+h{D}+m{D}+"."?s |
+[+-]?{D}+h{D}+m{D}*"."{D}+s {set pan::yylval $yytext; return $pan::HMSSTR_}
+
+# DMS
+[+-]?{D}+d{D}+m{D}+"."?s |
+[+-]?{D}+d{D}+m{D}*"."{D}+s {set pan::yylval $yytext; return $pan::SMSSTR_}
+
+# Quoted STRING
+\"[^\"]*\" {set pan::yylval [string range $yytext 1 end-1]; return $pan::STRING_}
+
+# Quoted STRING
+\'[^\']*\' {set pan::yylval [string range $yytext 1 end-1]; return $pan::STRING_}
+
+# Quoted STRING
+\{[^\}]*\} {set pan::yylval [string range $yytext 1 end-1]; return $pan::STRING_}
+
+# STRING
+\S+\S+ {set pan::yylval $yytext; return $pan::STRING_}
+
+\s        # ignore whitespace
+
+.	  {set pan::yylval $yytext; return $pan::yylval}
+
+%%
+

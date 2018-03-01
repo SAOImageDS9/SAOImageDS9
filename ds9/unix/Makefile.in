@@ -211,7 +211,7 @@ $(LIBDIR)/tk$(TCL_VERSION) :
 
 .PHONY	: clean
 
-clean	:
+clean	: parsersclean
 	$(RM) core *~ *# ds9base ds9 *.zip *.o
 	$(RM) -rf $(APPDIR)
 

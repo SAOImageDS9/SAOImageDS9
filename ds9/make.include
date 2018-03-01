@@ -92,9 +92,11 @@ $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 
 #--------------------------distclean
 
-.PHONY	: distclean
+.PHONY	: distclean parsersclean
 
 distclean: clean
 	-rm -f Makefile config.cache config.log config.status
-	-rm -rf $(prefix)/ds9/parsers/*.tcl $(prefix)/ds9/parsers/*.out
 	-rm -rf autom4te.cache
+
+parsersclean:
+	-rm -rf *# *~ $(prefix)/ds9/parsers/*.tcl $(prefix)/ds9/parsers/*.output

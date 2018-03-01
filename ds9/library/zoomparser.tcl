@@ -53,135 +53,135 @@ proc zoom::unsetupvalues {numsyms} {
 }
 
 array set zoom::table {
-  15:259 shift
+  15:260 shift
   0:257 shift
   0:258 shift
-  0:260 shift
   2:257 reduce
   5:0,target 8
   9:0 reduce
-  6:259,target 11
+  6:260,target 11
   0:261 shift
-  0:266,target 8
+  0:266,target 7
   2:258 reduce
   11:0 reduce
-  2:259 reduce
-  0:263 shift
+  0:262 shift
+  2:260 reduce
+  10:268,target 15
   0:264 shift
-  1:259,target 4
-  4:259 reduce
+  1:260,target 4
+  4:260 reduce
+  7:263,target 11
   0:265 shift
-  6:259 reduce
-  0:266 goto
-  13:259,target 12
-  0:268 goto
-  0:265,target 7
+  6:260 reduce
+  0:266 shift
+  13:260,target 12
+  0:267 goto
+  0:265,target 6
   6:0,target 11
   0:269 goto
+  0:270 goto
   16:0,target 15
   2:0 reduce
-  10:267,target 15
   1:258,target 4
-  9:259,target 6
-  7:262,target 11
+  9:260,target 6
+  9:269,target 14
   6:0 reduce
-  0:264,target 6
-  4:259,target 10
-  16:259,target 15
+  0:264,target 5
+  4:260,target 10
+  16:260,target 15
   1:257,target 4
   17:0,target 3
   12:0 reduce
   9:258,target 2
   10:0,target 1
-  9:268,target 14
-  11:259,target 13
-  0:263,target 5
+  7:271,target 13
+  11:260,target 13
   16:0 reduce
   12:257 shift
-  10:259 reduce
+  10:260 reduce
   12:258 shift
   9:257,target 1
-  12:259 reduce
+  12:260 reduce
   8:0,target 0
-  7:270,target 13
+  7:269,target 12
   3:0 reduce
   1:0,target 4
-  14:259 reduce
+  14:260 reduce
   11:0,target 13
-  2:259,target 5
-  16:259 reduce
+  0:262,target 4
+  2:260,target 5
+  16:260 reduce
   1:257 reduce
-  14:259,target 7
-  10:267 goto
+  14:260,target 7
   1:258 reduce
+  10:268 goto
   7:258,target 2
-  1:259 reduce
-  7:268,target 12
-  12:268 goto
-  3:259 reduce
+  1:260 reduce
+  3:260 reduce
   13:0 reduce
+  12:269 goto
   9:0,target 6
-  0:261,target 4
+  0:261,target 3
   2:258,target 5
   7:257 shift
   2:0,target 5
-  5:259 reduce
+  5:260 reduce
   12:0,target 14
   7:258 shift
   9:257 shift
   17:0 reduce
   9:258 shift
   7:257,target 1
-  5:259,target 8
-  9:259 reduce
-  7:262 shift
-  0:260,target 3
+  5:260,target 8
+  9:260 reduce
+  7:263 shift
   2:257,target 5
-  0:269,target 10
+  0:269,target 9
+  0:270,target 10
   4:0 reduce
-  12:259,target 14
+  12:260,target 14
   3:0,target 9
   13:0,target 12
-  7:268 goto
+  12:269,target 16
   8:0 accept
-  7:270 goto
+  7:269 goto
   10:0 reduce
-  9:268 goto
+  7:271 goto
+  9:269 goto
   0:258,target 2
-  0:268,target 9
   14:0 reduce
   12:258,target 2
-  12:268,target 16
-  3:259,target 9
+  3:260,target 9
   4:0,target 10
   14:0,target 7
-  15:259,target 17
+  15:260,target 17
   0:257,target 1
   1:0 reduce
-  11:259 reduce
-  13:259 reduce
+  11:260 reduce
+  0:267,target 8
+  13:260 reduce
   12:257,target 1
-  10:259,target 2
+  10:260,target 2
   5:0 reduce
 }
 
 array set zoom::rules {
-  9,l 269
-  11,l 269
-  15,l 270
-  2,l 267
-  6,l 269
-  12,l 269
-  3,l 266
-  7,l 269
-  13,l 270
-  0,l 271
-  4,l 268
-  8,l 269
-  10,l 269
-  14,l 270
-  1,l 266
-  5,l 268
+  9,l 270
+  11,l 270
+  15,l 271
+  2,l 268
+  6,l 270
+  12,l 270
+  3,l 267
+  7,l 270
+  13,l 271
+  0,l 272
+  4,l 269
+  8,l 270
+  10,l 270
+  14,l 271
+  1,l 267
+  5,l 269
 }
 
 array set zoom::rules {
@@ -204,22 +204,22 @@ array set zoom::rules {
 }
 
 array set zoom::rules {
-  13,line 37
+  13,line 39
   2,e 1
-  7,line 29
-  10,line 32
-  4,line 24
-  1,line 20
-  15,line 39
-  9,line 31
-  12,line 34
-  6,line 28
-  3,line 21
-  14,line 38
-  8,line 30
-  11,line 33
-  5,line 25
-  2,line 20
+  7,line 31
+  10,line 34
+  4,line 26
+  1,line 22
+  15,line 41
+  9,line 33
+  12,line 36
+  6,line 30
+  3,line 23
+  14,line 40
+  8,line 32
+  11,line 35
+  5,line 27
+  2,line 22
 }
 
 proc zoom::yyparse {} {

@@ -9,21 +9,11 @@ $(prefix)/ds9/parsers/%parser.tcl : %parser.tac
 $(prefix)/ds9/parsers/%lex.tcl : %lex.fcl
 	tclsh $(prefix)/fickle/fickle.tcl -P $* $<
 
-
 #--------------------------library
 
-PARSERS = \
-	$(prefix)/ds9/parsers/zoomparser.tcl \
-	$(prefix)/ds9/parsers/zoomparser.tab.tcl \
-	$(prefix)/ds9/parsers/zoomlex.tcl \
-	$(prefix)/ds9/parsers/panparser.tcl \
-	$(prefix)/ds9/parsers/panparser.tab.tcl \
-	$(prefix)/ds9/parsers/panlex.tcl
-
-#PARSERS = \
-#	$(wildcard $(prefix)/ds9/library/*parser.tcl) \
-#	$(wildcard $(prefix)/ds9/library/*parser.tab.tcl) \
-#	$(wildcard $(prefix)/ds9/library/*lex.tcl)
+SRCP = $(wildcard $(prefix)/ds9/parsers/*.tac)
+SRCL = $(wildcard $(prefix)/ds9/parsers/*.fcl)
+PARSERS = $(SRCP:.tac=.tcl) $(SRCP:.tac=.tab.tcl) $(SRCL:.fcl=.tcl)
 
 $(LIBDIR)/library : $(PARSERS) $(prefix)/ds9/library/*.tcl
 	mkdir -p "$@"

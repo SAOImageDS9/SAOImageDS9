@@ -3,24 +3,37 @@
 vpath %.tac $(prefix)/ds9/parsers
 vpath %.fcl $(prefix)/ds9/parsers
 
-$(prefix)/ds9/library/%parser.tcl : %parser.tac
+$(prefix)/ds9/parsers/%parser.tcl : %parser.tac
 	tclsh $(prefix)/taccle/taccle.tcl -p $* -d -v -w $<
-	mv $(prefix)/ds9/parsers/$*parser.tcl $(@D)
-	mv $(prefix)/ds9/parsers/$*parser.tab.tcl $(@D)
 
-$(prefix)/ds9/library/%lex.tcl : %lex.fcl
+$(prefix)/ds9/parsers/%lex.tcl : %lex.fcl
 	tclsh $(prefix)/fickle/fickle.tcl -P $* $<
-	mv $(prefix)/ds9/parsers/$*lex.tcl $(@D)
 
-#--------------------------framework
 
-$(LIBDIR)/library : $(prefix)/ds9/library/*.tcl
+#--------------------------library
+
+PARSERS = \
+	$(prefix)/ds9/parsers/zoomparser.tcl \
+	$(prefix)/ds9/parsers/zoomparser.tab.tcl \
+	$(prefix)/ds9/parsers/zoomlex.tcl \
+	$(prefix)/ds9/parsers/panparser.tcl \
+	$(prefix)/ds9/parsers/panparser.tab.tcl \
+	$(prefix)/ds9/parsers/panlex.tcl
+
+#PARSERS = \
+#	$(wildcard $(prefix)/ds9/library/*parser.tcl) \
+#	$(wildcard $(prefix)/ds9/library/*parser.tab.tcl) \
+#	$(wildcard $(prefix)/ds9/library/*lex.tcl)
+
+$(LIBDIR)/library : $(PARSERS) $(prefix)/ds9/library/*.tcl
 	mkdir -p "$@"
-	cp -p $? "$@"
+	cp -prf $? "$@"
 # must do it this way for win
 	cd "$@"; \
 	echo "pkg_mkIndex . *.tcl; exit" | tclsh
 	touch "$@"
+
+#--------------------------support
 
 $(LIBDIR)/msgs : $(prefix)/ds9/msgs
 	cp -prf $? "$@"
@@ -79,11 +92,9 @@ $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 
 #--------------------------distclean
 
-.PHONY	: distclean parsersclean
+.PHONY	: distclean
 
 distclean: clean
 	-rm -f Makefile config.cache config.log config.status
+	-rm -rf $(prefix)/ds9/parsers/*.tcl $(prefix)/ds9/parsers/*.out
 	-rm -rf autom4te.cache
-
-parsersclean:
-	-rm -f $(prefix)/ds9/parsers/*.output $(prefix)/ds9/parsers/*.tcl

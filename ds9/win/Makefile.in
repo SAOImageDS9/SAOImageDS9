@@ -213,7 +213,7 @@ DLLs:
 
 .PHONY	: clean
 
-clean	: parsersclean
+clean	:
 	$(RM) core *~ *# ds9base.exe ds9.exe *.zip *.o
 	$(RM) -rf $(APPDIR)
 

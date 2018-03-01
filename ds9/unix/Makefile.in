@@ -120,8 +120,6 @@ PREQS	= \
 	$(LIBDIR)/tcl$(TCL_VERSION) \
 	$(LIBDIR)/tcl8 \
 	$(LIBDIR)/tk$(TCL_VERSION) \
-	$(prefix)/ds9/parsers/*.tac \
-	$(prefix)/ds9/parsers/*.fcl \
 	$(LIBDIR)/library \
 	$(LIBDIR)/msgs \
 	$(LIBDIR)/doc \
@@ -213,7 +211,7 @@ $(LIBDIR)/tk$(TCL_VERSION) :
 
 .PHONY	: clean
 
-clean	: parsersclean
+clean	:
 	$(RM) core *~ *# ds9base ds9 *.zip *.o
 	$(RM) -rf $(APPDIR)
 

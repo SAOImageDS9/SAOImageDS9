@@ -214,7 +214,7 @@ $(LIBDIR)/pcc-i386-snowleopard.tar.gz: $(prefix)/compilers/pcc-i386-snowleopard.
 
 .PHONY	: clean
 
-clean	: parsersclean
+clean	:
 	$(RM) core *~ *# *.o
 	$(RM) -rf $(APPDIR)
 

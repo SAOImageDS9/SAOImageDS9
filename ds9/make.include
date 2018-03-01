@@ -13,9 +13,8 @@ $(prefix)/ds9/parsers/%lex.tcl : %lex.fcl
 
 SRCP = $(wildcard $(prefix)/ds9/parsers/*.tac)
 SRCL = $(wildcard $(prefix)/ds9/parsers/*.fcl)
-PARSERS = $(SRCP:.tac=.tcl) $(SRCP:.tac=.tab.tcl) $(SRCL:.fcl=.tcl)
 
-$(LIBDIR)/library : $(PARSERS) $(prefix)/ds9/library/*.tcl
+$(LIBDIR)/library : $(SRCP:.tac=.tcl) $(SRCP:.tac=.tab.tcl) $(SRCL:.fcl=.tcl) $(prefix)/ds9/library/*.tcl
 	mkdir -p "$@"
 	cp -prf $? "$@"
 # must do it this way for win

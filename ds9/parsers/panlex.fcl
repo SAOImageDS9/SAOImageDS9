@@ -15,7 +15,8 @@ E   [Ee][+-]?{D}+
 
 %%
 
--zscale	    {return $pan::CMD_}
+-zscale     {return $pan::CMD_}
+-zoom       {return $pan::CMD_}
 
 close	    {return $pan::CLOSE_}
 open	    {return $pan::OPEN_}
@@ -88,6 +89,9 @@ ecliptic    {return $pan::ECLIPTIC_}
 
 # Quoted STRING
 \{[^\}]*\} {set pan::yylval [string range $yytext 1 end-1]; return $pan::STRING_}
+
+# CMD
+#-\S+\S+ {set pan::yylval $yytext; return $pan::CMD_}
 
 # STRING
 \S+\S+ {set pan::yylval $yytext; return $pan::STRING_}

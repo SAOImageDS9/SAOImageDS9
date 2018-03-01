@@ -17,7 +17,7 @@
 %%
 
 command : zoom
- | zoom STRING_ {zoom::yyclearin}
+ | zoom {zoom::yyclearin; YYACCEPT} STRING_
  ;
 
 numeric	: INT_ {set _ $1}
@@ -41,7 +41,7 @@ zoomTo: FIT_ {ZoomToFit}
 %%
 
 proc zoom::yyerror {msg} {
-     puts stderr "$msg:"
      puts stderr "$zoom::yy_current_buffer"
-     puts stderr [format "zoom %*s" $zoom::index_ ^]
+     puts stderr [format "%*s" $zoom::index_ ^]
+     puts stderr "$msg:"
 }

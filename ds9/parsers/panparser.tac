@@ -1,8 +1,4 @@
 %{
-namespace eval pan {
-  variable xx {}
-  variable yy {}
-}
 %}
 
 %start command
@@ -62,7 +58,7 @@ namespace eval pan {
 %%
 
 command : pan
-| pan CMD_ {pan::yyclearin}
+| pan {pan::yyclearin; YYACCEPT} CMD_
 ;
 
 numeric	: INT_ {set _ $1}
@@ -128,35 +124,29 @@ skyframe : FK4_ {set _ fk4}
 #   YYABORT
 # }
 
-coord : numeric numeric {set pan::xx $1; set pan::yy $2}
- ;
-
-skycoord : SEXSTR_ SEXSTR_ {set pan::xx $1; set pan::yy $2}
- ;
-
 pan : OPEN_ {PanZoomDialog}
  | CLOSE_ {PanZoomDestroyDialog}
  | TO_ panto
- | coord {Pan $pan::xx $pan::yy physical}
- | coord coordsys {Pan $pan::xx $pan::yy $2}
- | coord wcssys {Pan $pan::xx $pan::yy $2 fk5}
- | coord wcssys skyframe {Pan $pan::xx $pan::yy $2 $3}
- | coord skyframe {Pan $pan::xx $pan::yy wcs $3}
- | skycoord {Pan $pan::xx $pan::yy wcs fk5}
- | skycoord wcssys {Pan $pan::xx $pan::yy $2 fk5}
- | skycoord wcssys skyframe {Pan $pan::xx $pan::yy $2 $3}
- | skycoord skyframe {Pan $pan::xx $pan::yy wcs $2}
+ | numeric numeric {Pan $1 $2 physical}
+ | numeric numeric coordsys {Pan $1 $2 $3}
+ | numeric numeric wcssys {Pan $1 $2 $3 fk5}
+ | numeric numeric skyframe {Pan $1 $2 wcs $3}
+ | numeric numeric wcssys skyframe {Pan $1 $2 $3 $4}
+ | SEXSTR_ SEXSTR_ {Pan $1 $2 wcs fk5}
+ | SEXSTR_ SEXSTR_ wcssys {Pan $1 $2 $3 fk5}
+ | SEXSTR_ SEXSTR_ skyframe {Pan $1 $2 wcs $3}
+ | SEXSTR_ SEXSTR_ wcssys skyframe {Pan $1 $2 $3 $4}
  ;
 
-panto : coord {PanTo $pan::xx $pan::yy physical}
- | coord coordsys {PanTo $pan::xx $pan::yy $2}
- | coord wcssys {PanTo $pan::xx $pan::yy $2 fk5}
- | coord wcssys skyframe {PanTo $pan::xx $pan::yy $2 $3}
- | coord skyframe {PanTo $pan::xx $pan::yy wcs $3}
- | skycoord {PanTo $pan::xx $pan::yy wcs fk5}
- | skycoord wcssys {PanTo $pan::xx $pan::yy $2 fk5}
- | skycoord wcssys skyframe {PanTo $pan::xx $pan::yy $2 $3}
- | skycoord skyframe {PanTo $pan::xx $pan::yy wcs $2}
+panto : numeric numeric {PanTo $1 $2 physical}
+ | numeric numeric coordsys {PanTo $1 $2 $3}
+ | numeric numeric wcssys {PanTo $1 $2 $3 fk5}
+ | numeric numeric skyframe {PanTo $1 $2 wcs $3}
+ | numeric numeric wcssys skyframe {PanTo $1 $2 $3 $4}
+ | SEXSTR_ SEXSTR_ {PanTo $1 $2 wcs fk5}
+ | SEXSTR_ SEXSTR_ wcssys {PanTo $1 $2 $3 fk5}
+ | SEXSTR_ SEXSTR_ skyframe {PanTo $1 $2 wcs $3}
+ | SEXSTR_ SEXSTR_ wcssys skyframe {PanTo $1 $2 $3 $4}
  ;
 
 %%

@@ -43,5 +43,5 @@ zoomTo: FIT_ {ZoomToFit}
 proc zoom::yyerror {msg} {
      puts stderr "$msg:"
      puts stderr "$zoom::yy_current_buffer"
-     puts stderr [format "%*s" $zoom::index_ ^]
+     puts stderr [format "zoom %*s" $zoom::index_ ^]
 }

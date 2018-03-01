@@ -1,4 +1,8 @@
 %{
+namespace eval pan {
+  variable xx {}
+  variable yy {}
+}
 %}
 
 %token INT_
@@ -107,25 +111,28 @@ skyframe : FK4_ {set _ fk4}
  | ECLIPTIC_ {set _ ecliptic}
  ;
 
-coord : numeric numeric {set pan::yy(x) $1; set pan::yy(y) $2}
+coord : numeric numeric {set pan::xx $1; set pan::yy $2}
  ;
 
-skycoord : numeric numeric {set pan::yy(x) $1; set pan::yy(y) $2}
- | SEXSTR_ SEXSTR_ {set pan::yy(x) $1; set pan::yy(y) $2}
+skycoord : numeric numeric {set pan::xx $1; set pan::yy $2}
+ | SEXSTR_ SEXSTR_ {set pan::xx $1; set pan::yy $2}
  ;
 
-pan : {}
- | OPEN_ {PanZoomDialog}
+pan : OPEN_ {PanZoomDialog}
  | CLOSE_ {PanZoomDestroyDialog}
  | TO_ panTo
- | coord
- | coord coordsys
- | skycoord wcssys
- | skycoord wcssys skyframe
- | skycoord skyframe
+ | coord {Pan $pan::xx $pan::yy physical}
+ | coord coordsys {Pan $pan::xx $pan::yy $2}
+ | skycoord wcssys {Pan $pan::xx $pan::yy $2 fk5}
+ | skycoord wcssys skyframe {Pan $pan::xx $pan::yy $2 $3}
+ | skycoord skyframe {Pan $pan::xx $pan::yy wcs $2}
  ;
 
-panTo : {}
+panTo : coord {PanTo $pan::xx $pan::yy physical}
+ | coord coordsys {PanTo $pan::xx $pan::yy $2}
+ | skycoord wcssys {PanTo $pan::xx $pan::yy $2 fk5}
+ | skycoord wcssys skyframe {PanTo $pan::xx $pan::yy $2 $3}
+ | skycoord skyframe {PanTo $pan::xx $pan::yy wcs $2}
  ;
 
 %%
@@ -133,5 +140,5 @@ panTo : {}
 proc pan::yyerror {msg} {
      puts stderr "$msg:"
      puts stderr "$pan::yy_current_buffer"
-     puts stderr [format "%*s" $pan::index_ ^]
+     puts stderr [format "pan %*s" $pan::index_ ^]
 }

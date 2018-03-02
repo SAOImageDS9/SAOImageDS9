@@ -56,7 +56,7 @@
 %%
 
 command : pan
-| pan {pan::yyclearin; YYACCEPT} STRING_
+| pan {yyclearin; YYACCEPT} STRING_
 ;
 
 numeric	: INT_ {set _ $1}
@@ -150,7 +150,8 @@ panto : numeric numeric {PanTo $1 $2 physical fk5}
 %%
 
 proc pan::yyerror {msg} {
-     puts stderr "$pan::yy_current_buffer"
-     puts stderr [format "%*s" $pan::index_ ^]
-     puts stderr "$msg"
+     variable yycnt
+     variable yy_current_buffer
+     
+     Error "$msg: [lindex $yy_current_buffer [expr $yycnt-1]]"
 }

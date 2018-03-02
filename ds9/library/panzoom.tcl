@@ -741,15 +741,16 @@ proc ProcessSendPanCmd {proc id param} {
 
 proc ProcessZoomCmd {varname iname} {
     upvar $varname var
-    upvar $iname i
+    upvar $iname ii
 
     # we need to be realized
     ProcessRealizeDS9
 
     zoom::YY_FLUSH_BUFFER
-    zoom::yy_scan_string [lrange $var $i end]
-    zoom::yyparse
-    incr i [expr $zoom::yycnt-1]
+    zoom::yy_scan_string [lrange $var $ii end]
+    set rr [zoom::yyparse]
+    incr ii [expr $zoom::yycnt-1]
+    return $rr
 }
 
 proc oProcessZoomCmd {varname iname} {

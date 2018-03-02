@@ -22,7 +22,7 @@ $(LIBDIR)/library : $(SRCP:.tac=.tcl) $(SRCP:.tac=.tab.tcl) $(SRCL:.fcl=.tcl) $(
 	echo "pkg_mkIndex . *.tcl; exit" | tclsh
 	touch "$@"
 
-#--------------------------supportt
+#--------------------------support
 
 $(LIBDIR)/msgs : $(prefix)/ds9/msgs
 	cp -prf $? "$@"

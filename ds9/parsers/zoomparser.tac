@@ -7,8 +7,6 @@
 
 %start command
 
-%token CMD_
-
 %token CLOSE_
 %token IN_
 %token FIT_
@@ -19,7 +17,7 @@
 %%
 
 command : zoom
- | zoom {zoom::yyclearin; YYACCEPT} CMD_
+ | zoom {zoom::yyclearin; YYACCEPT} STRING_
  ;
 
 numeric	: INT_ {set _ $1}
@@ -36,8 +34,8 @@ zoom : numeric {Zoom $1 $1}
  ;
 
 zoomTo: FIT_ {ZoomToFit}
- | numeric {global zoom; set current(zoom) "$1 $1"; ChangeZoom}
- | numeric numeric {global zoom; set current(zoom) "$1 $2"; ChangeZoom}
+ | numeric {ZoomTo $1 $1}
+ | numeric numeric {ZoomTo $1 $2}
  ;
 
 %%

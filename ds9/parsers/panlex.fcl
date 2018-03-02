@@ -15,11 +15,6 @@ E   [Ee][+-]?{D}+
 
 %%
 
--pan        {return $pan::CMD_}
--rotate	    {return $pan::CMD_}
--zscale     {return $pan::CMD_}
--zoom       {return $pan::CMD_}
-
 close	    {return $pan::CLOSE_}
 open	    {return $pan::OPEN_}
 to	    {return $pan::TO_}

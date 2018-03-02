@@ -66,15 +66,20 @@ proc CenterFrame {which} {
     }
 }
 
-proc Pan {x y sys {sky {}}} {
+proc PanCanvas {x y} {
     global current
 
     if {$current(frame) != {}} {
-	switch -- $sys {
-	    canvas {$current(frame) pan $x $y}
-	    default {$current(frame) pan $sys $sky $x $y}
-	}
+	$current(frame) pan $x $y
+	UpdatePan $current(frame)
+    }
+}
 
+proc Pan {x y sys sky} {
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) pan $sys $sky $x $y
 	UpdatePan $current(frame)
     }
 }
@@ -217,6 +222,13 @@ proc ChangeZoom {} {
 	$current(frame) zoom to $current(zoom)
 	UpdateZoom $current(frame)
     }
+}
+
+proc ZoomTo {zx zy} {
+    global current
+
+    set current(zoom) "$zx $zy"
+    ChangeZoom
 }
 
 proc Zoom {zx zy} {

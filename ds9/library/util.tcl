@@ -1364,7 +1364,7 @@ proc ProcessCursorCmd {varname iname} {
 	    catalog {MarkerArrowKey $current(frame) $x $y}
 	    crosshair {CrosshairArrowKey $current(frame) $x $y}
 	    colorbar {}
-	    pan {Pan $x $y canvas}
+	    pan {PanCanvas $x $y}
 	    zoom -
 	    rotate -
 	    crop {}
@@ -1386,7 +1386,7 @@ proc CursorCmd {x y} {
 	    catalog {MarkerArrowKey $current(frame) $x $y}
 	    crosshair {CrosshairArrowKey $current(frame) $x $y}
 	    colorbar {}
-	    pan {Pan $x $y canvas}
+	    pan {PanCanvas $x $y}
 	    zoom -
 	    rotate -
 	    crop {}

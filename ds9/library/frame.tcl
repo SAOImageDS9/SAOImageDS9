@@ -1425,13 +1425,13 @@ proc KeyFrame {which K A xx yy} {
 	pan {
 	    switch -- $K {
 		Up -
-		k {Pan 0 1 canvas}
+		k {PanCanvas 0 1}
 		Down -
-		j {Pan 0 -1 canvas}
+		j {PanCanvas 0 -1}
 		Left -
-		h {Pan 1 0 canvas}
+		h {PanCanvas 1 0}
 		Right -
-		l {Pan -1 0 canvas}
+		l {PanCanvas -1 0}
 	    }
 	    UpdateMagnifier $which $xx $yy
 	}

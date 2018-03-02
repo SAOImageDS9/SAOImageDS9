@@ -3,8 +3,6 @@
 
 %start command
 
-%token CMD_
-
 %token INT_
 %token REAL_
 %token STRING_
@@ -58,7 +56,7 @@
 %%
 
 command : pan
-| pan {pan::yyclearin; YYACCEPT} CMD_
+| pan {pan::yyclearin; YYACCEPT} STRING_
 ;
 
 numeric	: INT_ {set _ $1}
@@ -127,8 +125,8 @@ skyframe : FK4_ {set _ fk4}
 pan : OPEN_ {PanZoomDialog}
  | CLOSE_ {PanZoomDestroyDialog}
  | TO_ panto
- | numeric numeric {Pan $1 $2 physical}
- | numeric numeric coordsys {Pan $1 $2 $3}
+ | numeric numeric {Pan $1 $2 physical fk5}
+ | numeric numeric coordsys {Pan $1 $2 $3 fk5}
  | numeric numeric wcssys {Pan $1 $2 $3 fk5}
  | numeric numeric skyframe {Pan $1 $2 wcs $3}
  | numeric numeric wcssys skyframe {Pan $1 $2 $3 $4}
@@ -138,8 +136,8 @@ pan : OPEN_ {PanZoomDialog}
  | SEXSTR_ SEXSTR_ wcssys skyframe {Pan $1 $2 $3 $4}
  ;
 
-panto : numeric numeric {PanTo $1 $2 physical}
- | numeric numeric coordsys {PanTo $1 $2 $3}
+panto : numeric numeric {PanTo $1 $2 physical fk5}
+ | numeric numeric coordsys {PanTo $1 $2 $3 fk5}
  | numeric numeric wcssys {PanTo $1 $2 $3 fk5}
  | numeric numeric skyframe {PanTo $1 $2 wcs $3}
  | numeric numeric wcssys skyframe {PanTo $1 $2 $3 $4}

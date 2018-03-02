@@ -328,6 +328,8 @@ proc write_scanner_utils {} {
 ######
 "
     puts $::dest "namespace eval ${::p} \{
+    variable yylval
+
     variable yytext {}
     variable yyleng 0
     variable yyin stdin
@@ -612,6 +614,8 @@ proc write_scanner {} {
 # one of its actions executes a return statement.
 #   -- from the flex(1) man page
 proc ${::p}::yylex \{\} \{
+    variable yylval
+
     variable yytext
     variable yylineno
     variable yyleng

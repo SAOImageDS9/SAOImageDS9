@@ -1021,10 +1021,9 @@ proc write_header_file {} {
         if {$::token_id_table($tok_id,t) == $::TERMINAL && \
                 [string is integer $tok_id] && $tok_id >= 256} {
             set token $::token_id_table($tok_id)
-            puts $::header "set ${token} $tok_id"
+            puts $::header "variable ${token} $tok_id"
         }
     }
-    puts $::header "set yylval \{\}"
     puts $::header "\}"
 }
 

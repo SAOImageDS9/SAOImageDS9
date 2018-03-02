@@ -900,6 +900,7 @@ proc write_parser {} {
     variable token
     variable yycnt
 
+    set yycnt 0
     set state_stack {0}
     set value_stack {{}}
     set token \"\"

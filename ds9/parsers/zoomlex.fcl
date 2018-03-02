@@ -23,27 +23,27 @@ out	    {return $zoom::OUT_}
 to	    {return $zoom::TO_}
 
 # INT
-[+-]?{D}+ {set zoom::yylval $yytext; return $zoom::INT_}
+[+-]?{D}+ {set yylval $yytext; return $zoom::INT_}
 
 # REAL
 [+-]?{D}+"."?({E})? |
-[+-]?{D}*"."{D}+({E})? {set zoom::yylval $yytext; return $zoom::REAL_}
+[+-]?{D}*"."{D}+({E})? {set yylval $yytext; return $zoom::REAL_}
 
 # Quoted STRING
-\"[^\"]*\" {set zoom::yylval [string range $yytext 1 end-1]; return $zoom::STRING_}
+\"[^\"]*\" {set yylval [string range $yytext 1 end-1]; return $zoom::STRING_}
 
 # Quoted STRING
-\'[^\']*\' {set zoom::yylval [string range $yytext 1 end-1]; return $zoom::STRING_}
+\'[^\']*\' {set yylval [string range $yytext 1 end-1]; return $zoom::STRING_}
 
 # Quoted STRING
-\{[^\}]*\} {set zoom::yylval [string range $yytext 1 end-1]; return $zoom::STRING_}
+\{[^\}]*\} {set yylval [string range $yytext 1 end-1]; return $zoom::STRING_}
 
 # STRING
-\S+\S+ {set zoom::yylval $yytext; return $zoom::STRING_}
+\S+\S+ {set yylval $yytext; return $zoom::STRING_}
 
 \s        # ignore whitespace
 
-.	  {set zoom::yylval $yytext; return $zoom::yylval}
+.	  {set yylval $yytext; return $yylval}
 
 %%
 

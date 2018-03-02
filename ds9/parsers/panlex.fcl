@@ -60,42 +60,42 @@ galactic    {return $pan::GALACTIC_}
 ecliptic    {return $pan::ECLIPTIC_}
 
 # INT
-[+-]?{D}+ {set pan::yylval $yytext; return $pan::INT_}
+[+-]?{D}+ {set yylval $yytext; return $pan::INT_}
 
 # REAL
 [+-]?{D}+"."?({E})? |
-[+-]?{D}*"."{D}+({E})? {set pan::yylval $yytext; return $pan::REAL_}
+[+-]?{D}*"."{D}+({E})? {set yylval $yytext; return $pan::REAL_}
 
 # SEXAGESIMAL
 [+-]?{D}+:{D}+:{D}+"."? |
-[+-]?{D}+:{D}+:{D}*"."{D}+ {set pan::yylval $yytext; return $pan::SEXSTR_}
+[+-]?{D}+:{D}+:{D}*"."{D}+ {set yylval $yytext; return $pan::SEXSTR_}
 
 # HMS
 [+-]?{D}+h{D}+m{D}+"."?s |
-[+-]?{D}+h{D}+m{D}*"."{D}+s {set pan::yylval $yytext; return $pan::HMSSTR_}
+[+-]?{D}+h{D}+m{D}*"."{D}+s {set yylval $yytext; return $pan::HMSSTR_}
 
 # DMS
 [+-]?{D}+d{D}+m{D}+"."?s |
-[+-]?{D}+d{D}+m{D}*"."{D}+s {set pan::yylval $yytext; return $pan::SMSSTR_}
+[+-]?{D}+d{D}+m{D}*"."{D}+s {set yylval $yytext; return $pan::SMSSTR_}
 
 # Quoted STRING
-\"[^\"]*\" {set pan::yylval [string range $yytext 1 end-1]; return $pan::STRING_}
+\"[^\"]*\" {set yylval [string range $yytext 1 end-1]; return $pan::STRING_}
 
 # Quoted STRING
-\'[^\']*\' {set pan::yylval [string range $yytext 1 end-1]; return $pan::STRING_}
+\'[^\']*\' {set yylval [string range $yytext 1 end-1]; return $pan::STRING_}
 
 # Quoted STRING
-\{[^\}]*\} {set pan::yylval [string range $yytext 1 end-1]; return $pan::STRING_}
+\{[^\}]*\} {set yylval [string range $yytext 1 end-1]; return $pan::STRING_}
 
 # CMD
-#-\S+\S+ {set pan::yylval $yytext; return $pan::CMD_}
+#-\S+\S+ {set yylval $yytext; return $pan::CMD_}
 
 # STRING
-\S+\S+ {set pan::yylval $yytext; return $pan::STRING_}
+\S+\S+ {set yylval $yytext; return $pan::STRING_}
 
 \s        # ignore whitespace
 
-.	  {set pan::yylval $yytext; return $pan::yylval}
+.	  {set yylval $yytext; return $yylval}
 
 %%
 

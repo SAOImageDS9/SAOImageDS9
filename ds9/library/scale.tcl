@@ -393,10 +393,9 @@ proc ScaleDestroyDialog {} {
     if {[winfo exists $iscale(top)]} {
 	destroy $iscale(top)
 	destroy $iscale(mb)
+	unset dscale
+	blt::vector destroy $dscale(xdata) $dscale(ydata)
     }
-
-    blt::vector destroy $dscale(xdata) $dscale(ydata)
-    unset dscale
 }
 
 proc ScaleMotionDialog {x y varname} {

@@ -179,9 +179,8 @@ proc BlockDestroyDialog {} {
     if {[winfo exists $iblock(top)]} {
 	destroy $iblock(top)
 	destroy $iblock(mb)
+	unset dblock
     }
-
-    unset dblock
 }
 
 proc UpdateBlockDialog {} {

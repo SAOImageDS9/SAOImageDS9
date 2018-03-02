@@ -555,8 +555,7 @@ proc GraphDestroyDialog {} {
     if {[winfo exists $igraph(top)]} {
 	destroy $igraph(top)
 	destroy $igraph(mb)
+	unset dgraph
     }
-
-    unset dgraph
 }
 

@@ -440,9 +440,8 @@ proc WCSDestroyDialog {} {
     if {[winfo exists $iwcs(top)]} {
 	destroy $iwcs(top)
 	destroy $iwcs(mb)
+	unset dwcs
     }
-
-    unset dwcs
 }
 
 proc WCSSaveDialog {} {

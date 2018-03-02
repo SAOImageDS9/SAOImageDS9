@@ -213,9 +213,8 @@ proc CrosshairDestroyDialog {} {
     if {[winfo exists $icrosshair(top)]} {
 	destroy $icrosshair(top)
 	destroy $icrosshair(mb)
+	unset dcrosshair
     }
-
-    unset dcrosshair
 }
 
 proc UpdateCrosshairDialog {} {

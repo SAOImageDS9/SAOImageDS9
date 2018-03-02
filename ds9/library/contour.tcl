@@ -336,9 +336,8 @@ proc ContourDestroyDialog {} {
     if {[winfo exists $icontour(top)]} {
 	destroy $icontour(top)
 	destroy $icontour(mb)
+	unset dcontour
     }
-
-    unset dcontour
 }
 
 proc ContourGenerateDialog {} {

@@ -181,9 +181,8 @@ proc CropDestroyDialog {} {
     if {[winfo exists $icrop(top)]} {
 	destroy $icrop(top)
 	destroy $icrop(mb)
+	unset dcrop
     }
-
-    unset dcrop
 }
 
 proc UpdateCropMenu {} {

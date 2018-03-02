@@ -122,9 +122,6 @@ proc PixelTableDestroyDialog {} {
     if {[winfo exists $ipixel(top)]} {
 	destroy $ipixel(top)
 	destroy $ipixel(mb)
-    }
-
-    if {[info exists dpixel]} {
 	unset dpixel
     }
 }

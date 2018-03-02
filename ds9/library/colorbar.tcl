@@ -912,9 +912,8 @@ proc ColormapDestroyDialog {} {
     if {[winfo exists $icolorbar(top)]} {
 	destroy $icolorbar(top)
 	destroy $icolorbar(mb)
+	unset dcolorbar
     }
-
-    unset dcolorbar
 }
 
 proc ApplyColormap {} {

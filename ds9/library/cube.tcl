@@ -429,9 +429,8 @@ proc CubeDestroyDialog {} {
     if {[winfo exists $icube(top)]} {
 	destroy $icube(top)
 	destroy $icube(mb)
+	unset dcube
     }
-
-    unset dcube
 }
 
 proc UpdateCubeMenu {} {

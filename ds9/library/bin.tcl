@@ -631,9 +631,8 @@ proc BinDestroyDialog {} {
     if {[winfo exists $ibin(top)]} {
 	destroy $ibin(top)
 	destroy $ibin(mb)
+	unset dbin
     }
-
-    unset dbin
 }
 
 proc MatchBinCurrent {} {

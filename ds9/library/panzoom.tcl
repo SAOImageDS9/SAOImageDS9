@@ -508,9 +508,8 @@ proc PanZoomDestroyDialog {} {
     if {[winfo exists $ipanzoom(top)]} {
 	destroy $ipanzoom(top)
 	destroy $ipanzoom(mb)
+	unset dpanzoom
     }
-
-    unset dpanzoom
 }
 
 proc UpdatePanZoomMenu {} {
@@ -680,15 +679,16 @@ proc PanZoomBackup {ch which} {
 
 proc ProcessPanCmd {varname iname} {
     upvar $varname var
-    upvar $iname i
+    upvar $iname ii
 
     # we need to be realized
     ProcessRealizeDS9
 
     pan::YY_FLUSH_BUFFER
-    pan::yy_scan_string [lrange $var $i end]
-    pan::yyparse
-    incr i [expr $pan::yycnt-1]
+    pan::yy_scan_string [lrange $var $ii end]
+    set rr [pan::yyparse]
+    incr ii [expr $pan::yycnt-1]
+    return $rr
 }
 
 proc oProcessPanCmd {varname iname} {

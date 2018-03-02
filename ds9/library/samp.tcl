@@ -36,7 +36,9 @@ proc SAMPConnect {{verbose 1}} {
     }
 
     # reset samp array
-    catch {unset samp}
+    if {[info exists samp]} {
+	unset samp
+    }
     set samp(apps,image) {}
     set samp(apps,table) {}
     set samp(apps,votable) {}
@@ -54,7 +56,9 @@ proc SAMPConnect {{verbose 1}} {
  	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {unable to locate HUB}]"
 	}
-	catch {unset samp}
+	if {[info exists samp]} {
+	    unset samp
+	}
 	return
     }
 
@@ -65,7 +69,9 @@ proc SAMPConnect {{verbose 1}} {
   	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
-	catch {unset samp}
+	if {[info exists samp]} {
+	    unset samp
+	}
 	return
     }
     set rr [lindex $rr 1]
@@ -100,7 +106,9 @@ proc SAMPConnect {{verbose 1}} {
   	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
-	catch {unset samp}
+	if {[info exists samp]} {
+	    unset samp
+	}
 	return
     }
 
@@ -117,7 +125,9 @@ proc SAMPConnect {{verbose 1}} {
   	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
-	catch {unset samp}
+	if {[info exists samp]} {
+	    unset samp
+	}
 	return
     }
 
@@ -162,7 +172,9 @@ proc SAMPConnect {{verbose 1}} {
   	if {$verbose} {
 	    Error "SAMP: [msgcat::mc {internal error}] $rr"
 	}
-	catch {unset samp}
+	if {[info exists samp]} {
+	    unset samp
+	}
 	return
     }
 
@@ -645,7 +657,9 @@ proc SAMPShutdown {} {
     UpdateCATDialog
 
     # unset samp array
-    catch {unset samp}
+    if {[info exists samp]} {
+	unset samp
+    }
 }
 
 proc SAMPUpdate {} {

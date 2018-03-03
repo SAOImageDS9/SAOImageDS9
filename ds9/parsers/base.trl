@@ -1,0 +1,3 @@
+numeric	: INT_ {set _ $1}
+ | REAL_ {set _ $1}
+ ;

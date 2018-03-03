@@ -88,4 +88,7 @@ distclean: clean
 	-rm -rf autom4te.cache
 
 parsersclean:
-	-rm -rf *# *~ $(prefix)/ds9/parsers/*.tcl $(prefix)/ds9/parsers/*.output
+	-rm -rf $(prefix)/ds9/parsers/*# \
+	    $(prefix)/ds9/parsers/*~ \
+	    $(prefix)/ds9/parsers/*.tcl \
+	    $(prefix)/ds9/parsers/*.output

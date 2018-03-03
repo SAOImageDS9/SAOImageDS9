@@ -878,9 +878,12 @@ proc fickle_args {argv} {
     if {$argvp >= [llength $argv]} {
         # read from stdin
         set ::src stdin
+	set ::in_filename {}
+	set ::in_dir {}
         set out_filename "lex.yy.tcl"
     } else {
         set ::in_filename [lindex $argv $argvp]
+	set ::in_dir [file dirname $::in_filename]
         if {$out_filename == ""} {
             set out_filename [file rootname $::in_filename]
             append out_filename ".tcl"
@@ -927,10 +930,9 @@ proc fickle_main {} {
             }
         } else {
 	    if {[lindex $line 0] == "#tab"} {
-		set dir [file dirname $::in_filename]
 		set fn [lindex $line 1]
 		if {$fn != {}} {
-		    if [catch {open [file join $dir $fn] r} ch] {
+		    if [catch {open [file join $::in_dir $fn] r} ch] {
 			puts stderr "Could not open tab file '$fn'."
 			exit $::IO_ERROR
 		    }
@@ -939,10 +941,9 @@ proc fickle_main {} {
 		}
             } elseif {$file_state == "definitions"} {
 		if {[lindex $line 0] == "#include"} {
-		    set dir [file dirname $::in_filename]
 		    set fn [lindex $line 1]
 		    if {$fn != {}} {
-			if [catch {open [file join $dir $fn] r} ch] {
+			if [catch {open [file join $::in_dir $fn] r} ch] {
 			    puts stderr "Could not open definition file '$fn'."
 			    exit $::IO_ERROR
 			}
@@ -964,17 +965,15 @@ proc fickle_main {} {
                         set file_state "subroutines"
                         break
 		    } elseif {[lindex $line 0] == "#include"} {
-			set dir [file dirname $::in_filename]
 			set fn [lindex $line 1]
 			if {$fn != {}} {
-			    if [catch {open [file join $dir $fn] r} ch] {
+			    if [catch {open [file join $::in_dir $fn] r} ch] {
 				puts stderr "Could not open include file '$fn'."
 				exit $::IO_ERROR
 			    }
 			    while {[gets $ch line] >= 0} {
 				incr ::line_count
-				append rules_buf "\n" \
-				    [strip_only_comments $line]
+				append rules_buf "\n" [strip_only_comments $line]
 			    }			    
 			    catch {close $fn}
 			}

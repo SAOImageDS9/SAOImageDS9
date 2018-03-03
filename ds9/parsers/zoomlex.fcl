@@ -1,20 +1,11 @@
+#tab zoomparser.tab.tcl
+
 %{
 %}
 
-%option noyywrap
-%option caseless
-%option nodefault
-%option nointeractive
-#%option stack
-%option yylineno
-#%option debug
-
-D   [0-9]
-E   [Ee][+-]?{D}+
+#include defs.fin
 
 %%
-
-#tab zoomparser.tab.tcl
 
 close	    {return $CLOSE_}
 in	    {return $IN_}
@@ -26,4 +17,3 @@ to	    {return $TO_}
 #include base.fin
 
 %%
-

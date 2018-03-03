@@ -625,8 +625,9 @@ proc ${::p}::yylex \{\} \{
     variable index_
     variable done_
     variable state_table_
-
-    while \{1\} \{"
+"
+    puts $::dest $::tab
+    puts $::dest "    while \{1\} \{"
     if $::startstates {
         puts $::dest "        set yy_current_state \[yy_top_state\]"
     }
@@ -844,6 +845,7 @@ proc fickle_args {argv} {
     set ::BUFFER_SIZE 1024
     set ::p "yy"
     set ::verbose 0
+    set ::tab {}
     while {$argvp < [llength $argv]} {
         set arg [lindex $argv $argvp]
         switch -- $arg {
@@ -878,13 +880,13 @@ proc fickle_args {argv} {
         set ::src stdin
         set out_filename "lex.yy.tcl"
     } else {
-        set in_filename [lindex $argv $argvp]
+        set ::in_filename [lindex $argv $argvp]
         if {$out_filename == ""} {
-            set out_filename [file rootname $in_filename]
+            set out_filename [file rootname $::in_filename]
             append out_filename ".tcl"
         }
-        if [catch {open $in_filename r} ::src] {
-            puts stderr "Could not open specification file '$in_filename'."
+        if [catch {open $::in_filename r} ::src] {
+            puts stderr "Could not open specification file '$::in_filename'."
             exit $::IO_ERROR
         }
     }
@@ -934,6 +936,32 @@ proc fickle_main {} {
                     if {$line == "%%"} {
                         set file_state "subroutines"
                         break
+		    } elseif {[lindex $line 0] == "#tab"} {
+			set dir [file dirname $::in_filename]
+			set fn [lindex $line 1]
+			if {$fn != {}} {
+			    if [catch {open [file join $dir $fn] r} ch] {
+				puts stderr "Could not open tab file '$fn'."
+				exit $::IO_ERROR
+			    }
+			    catch {set ::tab [read $ch]}
+			    catch {close $fn}
+			}
+		    } elseif {[lindex $line 0] == "#include"} {
+			set dir [file dirname $::in_filename]
+			set fn [lindex $line 1]
+			if {$fn != {}} {
+			    if [catch {open [file join $dir $fn] r} ch] {
+				puts stderr "Could not open include file '$fn'."
+				exit $::IO_ERROR
+			    }
+			    while {[gets $ch line] >= 0} {
+				incr ::line_count
+				append rules_buf "\n" \
+				    [strip_only_comments $line]
+			    }			    
+			    catch {close $fn}
+			}
                     } else {
                         append rules_buf "\n" [strip_only_comments $line]
                     }

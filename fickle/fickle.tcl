@@ -926,8 +926,35 @@ proc fickle_main {} {
                 fickle_error "Syntax error." $::SYNTAX_ERROR
             }
         } else {
-            if {$file_state == "definitions"} {
-                handle_defs $line
+	    if {[lindex $line 0] == "#tab"} {
+		set dir [file dirname $::in_filename]
+		set fn [lindex $line 1]
+		if {$fn != {}} {
+		    if [catch {open [file join $dir $fn] r} ch] {
+			puts stderr "Could not open tab file '$fn'."
+			exit $::IO_ERROR
+		    }
+		    catch {set ::tab [read $ch]}
+		    catch {close $fn}
+		}
+            } elseif {$file_state == "definitions"} {
+		if {[lindex $line 0] == "#include"} {
+		    set dir [file dirname $::in_filename]
+		    set fn [lindex $line 1]
+		    if {$fn != {}} {
+			if [catch {open [file join $dir $fn] r} ch] {
+			    puts stderr "Could not open definition file '$fn'."
+			    exit $::IO_ERROR
+			}
+			while {[gets $ch line] >= 0} {
+			    incr ::line_count
+			    handle_defs $line
+			}			    
+			catch {close $fn}
+		    }
+		} else {
+		    handle_defs $line
+		}
             } elseif {$file_state == "rules"} {
                 # keep reading the rest of the file until EOF or
                 # another '%%' appears
@@ -936,17 +963,6 @@ proc fickle_main {} {
                     if {$line == "%%"} {
                         set file_state "subroutines"
                         break
-		    } elseif {[lindex $line 0] == "#tab"} {
-			set dir [file dirname $::in_filename]
-			set fn [lindex $line 1]
-			if {$fn != {}} {
-			    if [catch {open [file join $dir $fn] r} ch] {
-				puts stderr "Could not open tab file '$fn'."
-				exit $::IO_ERROR
-			    }
-			    catch {set ::tab [read $ch]}
-			    catch {close $fn}
-			}
 		    } elseif {[lindex $line 0] == "#include"} {
 			set dir [file dirname $::in_filename]
 			set fn [lindex $line 1]

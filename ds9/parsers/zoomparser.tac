@@ -1,9 +1,7 @@
 %{
 %}
 
-%token INT_
-%token REAL_
-%token STRING_
+#include base.tin
 
 %start command
 
@@ -16,12 +14,10 @@
 
 %%
 
+#include base.trl
+
 command : zoom
  | zoom {yyclearin; YYACCEPT} STRING_
- ;
-
-numeric	: INT_ {set _ $1}
- | REAL_ {set _ $1}
  ;
 
 zoom : OPEN_ {PanZoomDialog}

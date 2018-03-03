@@ -1,5 +1,4 @@
 %{
-source $ds9(root)/library/panparser.tab.tcl
 %}
 
 %option noyywrap
@@ -15,87 +14,14 @@ E   [Ee][+-]?{D}+
 
 %%
 
-close	    {return $pan::CLOSE_}
-open	    {return $pan::OPEN_}
-to	    {return $pan::TO_}
+#tab panparser.tab.tcl
 
-wcs	    {return $pan::WCS_}
-wcsa	    {return $pan::WCSA_}
-wcsb	    {return $pan::WCSB_}
-wcsc	    {return $pan::WCSC_}
-wcsd	    {return $pan::WCSD_}
-wcse	    {return $pan::WCSE_}
-wcsf	    {return $pan::WCSF_}
-wcsg	    {return $pan::WCSG_}
-wcsh	    {return $pan::WCSH_}
-wcsi	    {return $pan::WCSI_}
-wcsj	    {return $pan::WCSJ_}
-wcsk	    {return $pan::WCSK_}
-wcsl	    {return $pan::WCSL_}
-wcsm	    {return $pan::WCSM_}
-wcsn	    {return $pan::WCSN_}
-wcso	    {return $pan::WCSO_}
-wcsp	    {return $pan::WCSP_}
-wcsq	    {return $pan::WCSQ_}
-wcsr	    {return $pan::WCSR_}
-wcss	    {return $pan::WCSS_}
-wcst	    {return $pan::WCST_}
-wcsu	    {return $pan::WCSU_}
-wcsv	    {return $pan::WCSV_}
-wcsw	    {return $pan::WCSW_}
-wcsx	    {return $pan::WCSX_}
-wcsy	    {return $pan::WCSY_}
-wcsz	    {return $pan::WCSZ_}
+close	    {return $CLOSE_}
+open	    {return $OPEN_}
+to	    {return $TO_}
 
-image	    {return $pan::IMAGE_}
-physical    {return $pan::PHYSICAL_}
-amplifier   {return $pan::AMPLIFIER_}
-detector    {return $pan::DETECTOR_}
-
-fk4	    {return $pan::FK4_}
-b1950	    {return $pan::FK4_}
-fk5	    {return $pan::FK5_}
-j2000	    {return $pan::FK5_}
-galactic    {return $pan::GALACTIC_}
-ecliptic    {return $pan::ECLIPTIC_}
-
-# INT
-[+-]?{D}+ {set yylval $yytext; return $pan::INT_}
-
-# REAL
-[+-]?{D}+"."?({E})? |
-[+-]?{D}*"."{D}+({E})? {set yylval $yytext; return $pan::REAL_}
-
-# SEXAGESIMAL
-[+-]?{D}+:{D}+:{D}+"."? |
-[+-]?{D}+:{D}+:{D}*"."{D}+ {set yylval $yytext; return $pan::SEXSTR_}
-
-# HMS
-[+-]?{D}+h{D}+m{D}+"."?s |
-[+-]?{D}+h{D}+m{D}*"."{D}+s {set yylval $yytext; return $pan::HMSSTR_}
-
-# DMS
-[+-]?{D}+d{D}+m{D}+"."?s |
-[+-]?{D}+d{D}+m{D}*"."{D}+s {set yylval $yytext; return $pan::SMSSTR_}
-
-# Quoted STRING
-\"[^\"]*\" {set yylval [string range $yytext 1 end-1]; return $pan::STRING_}
-
-# Quoted STRING
-\'[^\']*\' {set yylval [string range $yytext 1 end-1]; return $pan::STRING_}
-
-# Quoted STRING
-\{[^\}]*\} {set yylval [string range $yytext 1 end-1]; return $pan::STRING_}
-
-# CMD
-#-\S+\S+ {set yylval $yytext; return $pan::CMD_}
-
-# STRING
-\S+\S+ {set yylval $yytext; return $pan::STRING_}
-
-\s        # ignore whitespace
-
-.	  {set yylval $yytext; return $yylval}
+#include coords.fin
+#include base.fin
 
 %%
 

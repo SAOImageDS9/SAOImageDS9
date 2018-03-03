@@ -1513,13 +1513,14 @@ proc taccle_args {argv} {
         print_taccle_help stderr
         exit $::IO_ERROR
     }
-    set in_filename [lindex $argv $argvp]
+    set ::in_filename [lindex $argv $argvp]
+    set ::in_dir [file dirname $::in_filename]
     if {$out_filename == ""} {
-        set out_filename [file rootname $in_filename]
+        set out_filename [file rootname $::in_filename]
         append out_filename ".tcl"
     }
-    if [catch {open $in_filename r} ::src] {
-        puts stderr "Could not open grammar file '$in_filename'."
+    if [catch {open $::in_filename r} ::src] {
+        puts stderr "Could not open grammar file '$::in_filename'."
         exit $::IO_ERROR
     }
     if [catch {open $out_filename w} ::dest] {
@@ -1580,7 +1581,22 @@ proc taccle_main {} {
             }
         } else {
             if {$file_state == "definitions"} {
-                handle_defs $line
+		if {[lindex $line 0] == "#include"} {
+		    set fn [lindex $line 1]
+		    if {$fn != {}} {
+			if [catch {open [file join $::in_dir $fn] r} ch] {
+			    puts stderr "Could not open definition file '$fn'."
+			    exit $::IO_ERROR
+			}
+			while {[gets $ch line] >= 0} {
+			    incr ::line_count
+			    handle_defs $line
+			}			    
+			catch {close $fn}
+		    }
+		} else {
+		    handle_defs $line
+		}
             } elseif {$file_state == "rules"} {
                 # keep reading the rest of the file until EOF or
                 # another '%%' appears
@@ -1588,6 +1604,19 @@ proc taccle_main {} {
                 while {[gets $::src line] >= 0 && $file_state == "rules"} {
                     if {$line == "%%"} {
                         set file_state "subroutines"
+		    } elseif {[lindex $line 0] == "#include"} {
+			set fn [lindex $line 1]
+			if {$fn != {}} {
+			    if [catch {open [file join $::in_dir $fn] r} ch] {
+				puts stderr "Could not open include file '$fn'."
+				exit $::IO_ERROR
+			    }
+			    while {[gets $ch line] >= 0} {
+				incr ::line_count
+				append rules_buf "\n" [strip_comments $line]
+			    }			    
+			    catch {close $fn}
+			}
                     } else {
                         append rules_buf "\n" [strip_comments $line]
                     }

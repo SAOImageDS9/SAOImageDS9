@@ -1,11 +1,11 @@
 %{
 %}
 
+%start command
+
 #include base.tin
 #include coords.tin
 #include yesno.tin
-
-%start command
 
 %token CLOSE_
 %token COORD_
@@ -61,3 +61,13 @@ survey : 'j' {set _ $1}
  | 'h' {set _ $1}
  | 'k' {set _ $1}
  ;
+
+%%
+
+proc twomass::yyerror {msg} {
+     variable yycnt
+     variable yy_current_buffer
+     variable index_
+     
+     ParserError $msg $yycnt $yy_current_buffer $index_
+}

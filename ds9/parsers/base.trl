@@ -1,7 +1,8 @@
 numeric	: INT_ {set _ $1}
  | REAL_ {set _ $1}
- | error {
-   yyerror "must be: integer or float"
-   YYABORT
- }
  ;
+
+# | error {
+#   yyerror "must be: integer or float"
+#   YYABORT
+# }

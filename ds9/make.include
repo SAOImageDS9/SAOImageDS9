@@ -7,7 +7,7 @@ $(prefix)/ds9/parsers/%parser.tcl : %parser.tac
 	tclsh $(prefix)/taccle/taccle.tcl -p $* -d -v -w $<
 
 $(prefix)/ds9/parsers/%lex.tcl : %lex.fcl
-	tclsh $(prefix)/fickle/fickle.tcl -P $* $<
+	tclsh $(prefix)/fickle/fickle.tcl -P $* -d $<
 
 #--------------------------library
 

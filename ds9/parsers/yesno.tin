@@ -1,0 +1,6 @@
+%token YES_
+%token NO_
+%token ON_
+%token OFF_
+%token TRUE_
+%token FALSE_

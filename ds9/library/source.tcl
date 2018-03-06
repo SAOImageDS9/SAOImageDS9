@@ -188,6 +188,8 @@ source $ds9(root)/library/xmfbox.tcl
 source $ds9(root)/library/xmlrpc.tcl
 source $ds9(root)/library/xpa.tcl
 
+source $ds9(root)/library/twomassparser.tcl
+source $ds9(root)/library/twomasslex.tcl
 source $ds9(root)/library/panparser.tcl
 source $ds9(root)/library/panlex.tcl
 source $ds9(root)/library/zoomparser.tcl

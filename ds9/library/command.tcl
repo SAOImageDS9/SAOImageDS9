@@ -279,12 +279,7 @@ proc ProcessCommand {argv argc} {
 	    -orient {incr i; ProcessOrientCmd argv i}
 	    -pagesetup {incr i; ProcessPageSetupCmd argv i}
 	    -pspagesetup {incr i; ProcessPSPageSetupCmd argv i}
-	    -pan {
-		incr i
-		if {[ProcessPanCmd argv i] != 0} {
-		    return;
-		}
-	    }
+	    -pan {incr i; ProcessPanCmd argv i}
 	    -panner {
 		# backward compatibility
 		set view(panner) 1
@@ -455,12 +450,7 @@ proc ProcessCommand {argv argc} {
 	    }
 	    -zscale {incr i; ProcessZScaleCmd argv i}
 	    -zmax {set scale(mode) zmax; ChangeScaleMode}
-	    -zoom {
-		incr i;
-		if {[ProcessZoomCmd argv i] != 0} {
-		    return;
-		}
-	    }
+	    -zoom {incr i; ProcessZoomCmd argv i}
 
 	    default {
 		# allow abc, -, and -[foo] but not -abc

@@ -686,9 +686,8 @@ proc ProcessPanCmd {varname iname} {
 
     pan::YY_FLUSH_BUFFER
     pan::yy_scan_string [lrange $var $ii end]
-    set rr [pan::yyparse]
+    pan::yyparse
     incr ii [expr $pan::yycnt-1]
-    return $rr
 }
 
 proc oProcessPanCmd {varname iname} {
@@ -748,9 +747,8 @@ proc ProcessZoomCmd {varname iname} {
 
     zoom::YY_FLUSH_BUFFER
     zoom::yy_scan_string [lrange $var $ii end]
-    set rr [zoom::yyparse]
+    zoom::yyparse
     incr ii [expr $zoom::yycnt-1]
-    return $rr
 }
 
 proc oProcessZoomCmd {varname iname} {

@@ -52,6 +52,24 @@ proc ProcessMessage {level message} {
     }
 }
 
+proc ParserError {msg yycnt yy_current_buffer index_} {
+    global ds9
+
+    switch -- $ds9(msg,src) {
+	xpa -
+	hv -
+	samp {
+	    Error "$msg: [lindex $yy_current_buffer [expr $yycnt-1]]"
+	}
+	default {
+	    puts stderr "$msg:"
+	    puts stderr "$yy_current_buffer"
+	    puts stderr [format "%*s" $index_ ^]
+	    QuitDS9
+	}
+    }
+}
+
 # here is where errors from within the canvas widgets 
 # will try to get our attention. 
 # XPA, HV, and SAMP will have already seen any problems

@@ -39,6 +39,7 @@ zoomTo: FIT_ {ZoomToFit}
 proc zoom::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer
+     variable index_
 
-     Error "$msg: [lindex yy_current_buffer [expr $yycnt-1]]"
+     ParserError $msg $yycnt $yy_current_buffer $index_
 }

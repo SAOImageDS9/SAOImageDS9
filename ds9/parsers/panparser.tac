@@ -33,7 +33,7 @@ pan : OPEN_ {PanZoomDialog}
  | SEXSTR_ SEXSTR_ wcssys skyframe {Pan $1 $2 $3 $4}
  ;
 
-panto : | numeric numeric {PanTo $1 $2 physical fk5}
+panto : numeric numeric {PanTo $1 $2 physical fk5}
  | numeric numeric coordsys {PanTo $1 $2 $3 fk5}
  | numeric numeric wcssys {PanTo $1 $2 $3 fk5}
  | numeric numeric skyframe {PanTo $1 $2 wcs $3}

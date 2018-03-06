@@ -62,9 +62,9 @@ proc ParserError {msg yycnt yy_current_buffer index_} {
 	    Error "$msg: [lindex $yy_current_buffer [expr $yycnt-1]]"
 	}
 	default {
-	    puts stderr "$msg:"
 	    puts stderr "$yy_current_buffer"
 	    puts stderr [format "%*s" $index_ ^]
+	    puts stderr "$msg:"
 	    QuitDS9
 	}
     }

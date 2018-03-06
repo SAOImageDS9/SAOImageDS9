@@ -2,12 +2,11 @@ coordsys : IMAGE_ {set _ image}
  | PHYSICAL_ {set _ physical}
  | AMPLIFIER_ {set _ amplifier}
  | DETECTOR_ {set _ detector}
+ | error {
+   yyerror "must be: image|physical|amplifier|detector"
+   YYABORT
+ }
  ;
-
-#| error {
-#   yyerror "must be: image|physical|amplifier|detector"
-#   YYABORT
-# }
 
 wcssys : WCS_ {set _ wcs}
  | WCSA_ {set _ wcsa}
@@ -36,12 +35,11 @@ wcssys : WCS_ {set _ wcs}
  | WCSX_ {set _ wcsx}
  | WCSY_ {set _ wcsy}
  | WCSZ_ {set _ wcsz}
+ | error {
+   yyerror "must be: wcs|wcsa...wcsz"
+   YYABORT
+ }
  ;
-
-# | error {
-#   yyerror "must be: wcs|wcsa...wcsz"
-#   YYABORT
-# }
 
 skyframe : FK4_ {set _ fk4}
  | B1950_ {set _ fk4}
@@ -50,10 +48,8 @@ skyframe : FK4_ {set _ fk4}
  | ICRS_ {set _ icrs}
  | GALACTIC_ {set _ galactic}
  | ECLIPTIC_ {set _ ecliptic}
+ | error {
+   yyerror "must be: fk4|fk5|icrs|galactic|ecliptic"
+   YYABORT
+ }
  ;
-
-# | error {
-#   yyerror "must be: fk4|fk5|icrs|galactic|ecliptic"
-#   YYABORT
-# }
-

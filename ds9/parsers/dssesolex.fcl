@@ -1,0 +1,32 @@
+#tab dssesoparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+coord	    {return $COORD_}
+crosshair   {return $CROSSHAIR_}
+current	    {return $CURRENT_}
+frame	    {return $FRAME_}
+name	    {return $NAME_}
+new	    {return $NEW_}
+open	    {return $OPEN_}
+save	    {return $SAVE_}
+size	    {return $SIZE_}
+survey	    {return $SURVEY_}
+update	    {return $UPDATE_}
+
+dss1	    {return $DSS1_}
+dss2-red    {return $DSS2RED_}
+dss2-blue    {return $DSS2BLUE_}
+dss2-infrared {return $DSS2INFRARED_}
+
+#include yesno.fin
+#include coords.fin
+#include base.fin
+
+%%

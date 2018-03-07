@@ -158,6 +158,18 @@ taken with the UK Schmidt.
 
 proc ProcessESOCmd {varname iname} {
     upvar $varname var
+    upvar $iname ii
+
+    ESODialog
+
+    dsseso::YY_FLUSH_BUFFER
+    dsseso::yy_scan_string [lrange $var $ii end]
+    dsseso::yyparse
+    incr ii [expr $dsseso::yycnt-1]
+}
+
+proc oProcessESOCmd {varname iname} {
+    upvar $varname var
     upvar $iname i
 
     ESODialog

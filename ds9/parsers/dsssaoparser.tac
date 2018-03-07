@@ -2,49 +2,19 @@
 %}
 
 #include yesno.tin
-#include coords.tin
+#include imgsvr.tin
 #include base.tin
 
 %start command
 
-%token CLOSE_
-%token COORD_
-%token CROSSHAIR_
-%token CURRENT_
-%token FRAME_
-%token NAME_
-%token NEW_
-%token OPEN_
-%token UPDATE_
-%token SAVE_
-%token SIZE_
-
 %%
 
 #include yesno.trl
-#include coords.trl
+#include imgsvr.trl
 #include base.trl
 
 command : dsssao
  | dsssao {yyclearin; YYACCEPT} CMD_
- ;
-
-deg : {set _ degrees}
- | DEGREES_ {set _ degrees}
- ;
-
-sex : {set _ sexagesimal}
- | SEXAGESIMAL_ {set _ sexagesimal}
- ;
-
-coordOpt :
- | WCS_
- | FK5_
- | WCS_ FK5_
- ;
-
-sizeOpt : {set _ degrees}
- | skyformat {set _ $1}
  ;
 
 # COORD_ is depricated
@@ -56,7 +26,7 @@ dsssao : {IMGSVRApply dsao 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dsao}
  | STRING_ {global dsao; set dsao(name) $1; IMGSVRApply dsao 1}
- | numeric numeric coordOpt {global dsao; set dsao(x) $1; set dsao(y) $2; set dsao(skyformat) degrees; set dsao(skyformat,msg) degress; IMGSVRApply dsao 1}
+ | numeric numeric coordOpt {global dsao; set dsao(x) $1; set dsao(y) $2; set dsao(skyformat) degrees; set dsao(skyformat,msg) degrees; IMGSVRApply dsao 1}
  | SEXSTR_ SEXSTR_ coordOpt {global dsao; set dsao(x) $1; set dsao(y) $2; set dsao(skyformat) sexagesimal; set dsao(skyformat,msg) sexagesimal; IMGSVRApply dsao 1}
  | SIZE_ numeric numeric sizeOpt {global dsao; set dsao(width) $2; set dsao(height) $3; set dsao(rformat) $4; set dsao(rformat,msg) $4}
  | SAVE_ yesno {global dsao; set dsao(save) $2}
@@ -70,10 +40,6 @@ dsssao : {IMGSVRApply dsao 1}
 
 update : FRAME_ {IMGSVRUpdate dsao; IMGSVRApply dsao 1}
  | CROSSHAIR_ {IMGSVRCrosshair dsao; IMGSVRApply dsao 1}
- ;
-
-frame : NEW_ {set _ new}
- | CURRENT_ {set _ current}
  ;
 
 %%

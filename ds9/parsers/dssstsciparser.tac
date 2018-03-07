@@ -2,23 +2,10 @@
 %}
 
 #include yesno.tin
-#include coords.tin
+#include imgsvr.tin
 #include base.tin
 
 %start command
-
-%token CLOSE_
-%token COORD_
-%token CROSSHAIR_
-%token CURRENT_
-%token FRAME_
-%token NAME_
-%token NEW_
-%token OPEN_
-%token UPDATE_
-%token SAVE_
-%token SIZE_
-%token SURVEY_
 
 %token POSS2RED_
 %token POSS2INFRARED_
@@ -33,29 +20,11 @@
 %%
 
 #include yesno.trl
-#include coords.trl
+#include imgsvr.trl
 #include base.trl
 
 command : dssstsci
  | dssstsci {yyclearin; YYACCEPT} CMD_
- ;
-
-deg : {set _ degrees}
- | DEGREES_ {set _ degrees}
- ;
-
-sex : {set _ sexagesimal}
- | SEXAGESIMAL_ {set _ sexagesimal}
- ;
-
-coordOpt :
- | WCS_
- | FK5_
- | WCS_ FK5_
- ;
-
-sizeOpt : {set _ degrees}
- | skyformat {set _ $1}
  ;
 
 # COORD_ is depricated
@@ -67,7 +36,7 @@ dssstsci : {IMGSVRApply dstscii 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dstscii}
  | STRING_ {global dstscii; set dstscii(name) $1; IMGSVRApply dstscii 1}
- | numeric numeric coordOpt {global dstscii; set dstscii(x) $1; set dstscii(y) $2; set dstscii(skyformat) degrees; set dstscii(skyformat,msg) degress; IMGSVRApply dstscii 1}
+ | numeric numeric coordOpt {global dstscii; set dstscii(x) $1; set dstscii(y) $2; set dstscii(skyformat) degrees; set dstscii(skyformat,msg) degrees; IMGSVRApply dstscii 1}
  | SEXSTR_ SEXSTR_ coordOpt {global dstscii; set dstscii(x) $1; set dstscii(y) $2; set dstscii(skyformat) sexagesimal; set dstscii(skyformat,msg) sexagesimal; IMGSVRApply dstscii 1}
  | SIZE_ numeric numeric sizeOpt {global dstscii; set dstscii(width) $2; set dstscii(height) $3; set dstscii(rformat) $4; set dstscii(rformat,msg) $4}
  | SAVE_ yesno {global dstscii; set dstscii(save) $2}
@@ -82,10 +51,6 @@ dssstsci : {IMGSVRApply dstscii 1}
 
 update : FRAME_ {IMGSVRUpdate dstscii; IMGSVRApply dstscii 1}
  | CROSSHAIR_ {IMGSVRCrosshair dstscii; IMGSVRApply dstscii 1}
- ;
-
-frame : NEW_ {set _ new}
- | CURRENT_ {set _ current}
  ;
 
 survey : POSS2RED_ {set _ poss2ukstu_red}

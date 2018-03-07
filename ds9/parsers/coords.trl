@@ -56,13 +56,3 @@ skyframe : FK4_ {set _ fk4}
 #   yyerror "must be: fk4|fk5|icrs|galactic|ecliptic"
 #   YYABORT
 # }
-
-skyformat : DEGREES_ {set _ degrees}
- | ARCMIN_ {set _ arcmin}
- | ARCSEC_ {set _ arcsec}
- ;
-
-# | error {
-#   yyerror "must be: degrees|arcmin|arcsec"
-#   YYABORT
-# }

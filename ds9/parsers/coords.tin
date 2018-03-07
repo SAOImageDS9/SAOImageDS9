@@ -40,8 +40,3 @@
 %token ECLIPTIC_
 %token J2000_
 %token B1950_
-
-%token DEGREES_
-%token SEXAGESIMAL_
-%token ARCMIN_
-%token ARCSEC_

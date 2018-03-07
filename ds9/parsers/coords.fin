@@ -38,11 +38,6 @@ j2000	    {return $FK5_}
 galactic    {return $GALACTIC_}
 ecliptic    {return $ECLIPTIC_}
 
-degrees	    {return $DEGREES_}
-sexagesimal {return $SEXAGESIMAL_}
-arcmin	    {return $ARCMIN_}
-arcsec	    {return $ARCSEC_}
-
 # SEXAGESIMAL
 [+-]?{D}+:{D}+:{D}+"."? |
 [+-]?{D}+:{D}+:{D}*"."{D}+ {set yylval $yytext; return $SEXSTR_}

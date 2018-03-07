@@ -1,0 +1,31 @@
+deg : {set _ degrees}
+ | DEGREES_ {set _ degrees}
+ ;
+
+sex : {set _ sexagesimal}
+ | SEXAGESIMAL_ {set _ sexagesimal}
+ ;
+
+coordOpt :
+ | WCS_
+ | FK5_
+ | WCS_ FK5_
+ ;
+
+sizeOpt : {set _ degrees}
+ | skyformat {set _ $1}
+ ;
+
+skyformat : DEGREES_ {set _ degrees}
+ | ARCMIN_ {set _ arcmin}
+ | ARCSEC_ {set _ arcsec}
+ ;
+
+frame : NEW_ {set _ new}
+ | CURRENT_ {set _ current}
+ ;
+
+# | error {
+#   yyerror "must be: degrees|arcmin|arcsec"
+#   YYABORT
+# }

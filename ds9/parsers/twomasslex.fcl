@@ -7,21 +7,8 @@
 
 %%
 
-close	    {return $CLOSE_}
-coord	    {return $COORD_}
-crosshair   {return $CROSSHAIR_}
-current	    {return $CURRENT_}
-frame	    {return $FRAME_}
-name	    {return $NAME_}
-new	    {return $NEW_}
-open	    {return $OPEN_}
-save	    {return $SAVE_}
-size	    {return $SIZE_}
-survey	    {return $SURVEY_}
-update	    {return $UPDATE_}
-
 #include yesno.fin
-#include coords.fin
+#include imgsvr.fin
 #include base.fin
 
 %%

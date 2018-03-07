@@ -16,7 +16,7 @@
 #include base.trl
 
 command : pan
-| pan {yyclearin; YYACCEPT} STRING_
+| pan {yyclearin; YYACCEPT} CMD_
 ;
 
 pan : OPEN_ {PanZoomDialog}

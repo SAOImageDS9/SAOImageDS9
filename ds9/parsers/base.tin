@@ -1,3 +1,4 @@
 %token INT_
 %token REAL_
 %token STRING_
+%token CMD_

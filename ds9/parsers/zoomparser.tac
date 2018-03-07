@@ -17,7 +17,7 @@
 #include base.trl
 
 command : zoom
- | zoom {yyclearin; YYACCEPT} STRING_
+ | zoom {yyclearin; YYACCEPT} CMD_
  ;
 
 zoom : OPEN_ {PanZoomDialog}

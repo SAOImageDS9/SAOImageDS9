@@ -14,6 +14,9 @@
 # Quoted STRING
 \{[^\}]*\} {set yylval [string range $yytext 1 end-1]; return $STRING_}
 
+# CMD
+-\w+ {return $CMD_}
+
 # STRING
 \S+\S+ {set yylval $yytext; return $STRING_}
 

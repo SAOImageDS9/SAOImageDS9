@@ -27,7 +27,7 @@
 #include base.trl
 
 command : 2mass
- | 2mass {yyclearin; YYACCEPT} STRING_
+ | 2mass {yyclearin; YYACCEPT} CMD_
  ;
 
 deg : {set _ degrees}
@@ -38,24 +38,28 @@ sex : {set _ sexagesimal}
  | SEXAGESIMAL_ {set _ sexagesimal}
  ;
 
-opt :
+coordOpt :
  | WCS_
  | FK5_
  | WCS_ FK5_
  ;
 
+sizeOpt : {set _ degrees}
+ | skyformat {set _ $1}
+ ;
+
 # COORD_ is depricated
 # NAME_ is depricated
 # new optional WCS_ FK5_, does nothing
+# SIZE_ default is DEGREES_
 
 2mass : {IMGSVRApply dtwomass 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dtwomass}
  | STRING_ {global dtwomass; set dtwomass(name) $1; IMGSVRApply dtwomass 1}
- | numeric numeric opt {global dtwomass; set dtwomass(x) $1; set dtwomass(y) $2; set dtwomass(skyformat) degrees; set dtwomass(skyformat,msg) degress; IMGSVRApply dtwomass 1}
- | SEXSTR_ SEXSTR_ opt {global dtwomass; set dtwomass(x) $1; set dtwomass(y) $2; set dtwomass(skyformat) sexagesimal; set dtwomass(skyformat,msg) sexagesimal; IMGSVRApply dtwomass 1}
- | SIZE_ numeric numeric {global dtwomass; set dtwomass(width) $2; set dtwomass(height) $3; set dtwomass(rformat) degrees; set dtwomass(rformat,msg) degrees}
- | SIZE_ numeric numeric skyformat {global dtwomass; set dtwomass(width) $2; set dtwomass(height) $3; set dtwomass(rformat) $4; set dtwomass(rformat,msg) $4}
+ | numeric numeric coordOpt {global dtwomass; set dtwomass(x) $1; set dtwomass(y) $2; set dtwomass(skyformat) degrees; set dtwomass(skyformat,msg) degress; IMGSVRApply dtwomass 1}
+ | SEXSTR_ SEXSTR_ coordOpt {global dtwomass; set dtwomass(x) $1; set dtwomass(y) $2; set dtwomass(skyformat) sexagesimal; set dtwomass(skyformat,msg) sexagesimal; IMGSVRApply dtwomass 1}
+ | SIZE_ numeric numeric sizeOpt {global dtwomass; set dtwomass(width) $2; set dtwomass(height) $3; set dtwomass(rformat) $4; set dtwomass(rformat,msg) $4}
  | SAVE_ yesno {global dtwomass; set dtwomass(save) $2}
  | FRAME_ frame {global dtwomass; set dtwomass(mode) $2}
  | UPDATE_ update

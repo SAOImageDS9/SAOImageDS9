@@ -145,6 +145,18 @@ taken with the UK Schmidt.
 
 proc ProcessSAOCmd {varname iname} {
     upvar $varname var
+    upvar $iname ii
+
+    SAODialog
+
+    dsssao::YY_FLUSH_BUFFER
+    dsssao::yy_scan_string [lrange $var $ii end]
+    dsssao::yyparse
+    incr ii [expr $dsssao::yycnt-1]
+}
+
+proc oProcessSAOCmd {varname iname} {
+    upvar $varname var
     upvar $iname i
 
     SAODialog

@@ -1,0 +1,37 @@
+#tab dssstsciparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+coord	    {return $COORD_}
+crosshair   {return $CROSSHAIR_}
+current	    {return $CURRENT_}
+frame	    {return $FRAME_}
+name	    {return $NAME_}
+new	    {return $NEW_}
+open	    {return $OPEN_}
+save	    {return $SAVE_}
+size	    {return $SIZE_}
+survey	    {return $SURVEY_}
+update	    {return $UPDATE_}
+
+poss2ukstu_red	{return $POSS2RED_}
+poss2ukstu_ir	{return $POSS2INFRARED_}
+poss2ukstu_blue	{return $POSS2BLUE_}
+poss1_blue	{return $POSS1BLUE_}
+poss1_red	{return $POSS1RED_}
+all		{return $ALL_}
+quickv		{return $QUICKV_}
+phase2_gsc2	{return $GSC2_}
+phase2_gsc2	{return $GSC1_}
+
+#include yesno.fin
+#include coords.fin
+#include base.fin
+
+%%

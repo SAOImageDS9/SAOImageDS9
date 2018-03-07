@@ -170,6 +170,18 @@ taken with the UK Schmidt.
 
 proc ProcessSTSCICmd {varname iname} {
     upvar $varname var
+    upvar $iname ii
+
+    STSCIDialog
+
+    dssstsci::YY_FLUSH_BUFFER
+    dssstsci::yy_scan_string [lrange $var $ii end]
+    dssstsci::yyparse
+    incr ii [expr $dssstsci::yycnt-1]
+}
+
+proc oProcessSTSCICmd {varname iname} {
+    upvar $varname var
     upvar $iname i
 
     STSCIDialog

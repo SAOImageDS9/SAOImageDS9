@@ -1,4 +1,4 @@
-#tab dsssaoparser.tab.tcl
+#tab skyviewparser.tab.tcl
 
 %{
 %}
@@ -15,8 +15,10 @@ frame	    {return $FRAME_}
 name	    {return $NAME_}
 new	    {return $NEW_}
 open	    {return $OPEN_}
+pixels	    {return $PIXELS_}
 save	    {return $SAVE_}
 size	    {return $SIZE_}
+survey	    {return $SURVEY_}
 update	    {return $UPDATE_}
 
 #include yesno.fin

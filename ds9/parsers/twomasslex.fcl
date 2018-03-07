@@ -20,8 +20,8 @@ size	    {return $SIZE_}
 survey	    {return $SURVEY_}
 update	    {return $UPDATE_}
 
-#include base.fin
-#include coords.fin
 #include yesno.fin
+#include coords.fin
+#include base.fin
 
 %%

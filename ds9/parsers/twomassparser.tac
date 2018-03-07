@@ -1,11 +1,11 @@
 %{
 %}
 
-%start command
-
-#include base.tin
-#include coords.tin
 #include yesno.tin
+#include coords.tin
+#include base.tin
+
+%start command
 
 %token CLOSE_
 %token COORD_
@@ -22,9 +22,9 @@
 
 %%
 
-#include base.trl
-#include coords.trl
 #include yesno.trl
+#include coords.trl
+#include base.trl
 
 command : 2mass
  | 2mass {yyclearin; YYACCEPT} STRING_
@@ -38,11 +38,20 @@ sex : {set _ sexagesimal}
  | SEXAGESIMAL_ {set _ sexagesimal}
  ;
 
+opt :
+ | WCS_
+ | FK5_
+ | WCS_ FK5_
+ ;
+
+# COORD_ is depricated
 2mass : {IMGSVRApply dtwomass 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dtwomass}
  | STRING_ {global dtwomass; set dtwomass(name) $1; IMGSVRApply dtwomass 1}
  | NAME_ STRING_ {global dtwomass; set dtwomass(name) $2; IMGSVRApply dtwomass 1}
+ | numeric numeric opt {global dtwomass; set dtwomass(x) $1; set dtwomass(y) $2; set dtwomass(skyformat) degrees; set dtwomass(skyformat,msg) degress; IMGSVRApply dtwomass 1}
+ | SEXSTR_ SEXSTR_ opt {global dtwomass; set dtwomass(x) $1; set dtwomass(y) $2; set dtwomass(skyformat) sexagesimal; set dtwomass(skyformat,msg) sexagesimal; IMGSVRApply dtwomass 1}
  | COORD_ numeric numeric deg {global dtwomass; set dtwomass(x) $2; set dtwomass(y) $3; set dtwomass(skyformat) $4; set dtwomass(skyformat,msg) $4; IMGSVRApply dtwomass 1}
  | COORD_ SEXSTR_ SEXSTR_ sex {global dtwomass; set dtwomass(x) $2; set dtwomass(y) $3; set dtwomass(skyformat) $4; set dtwomass(skyformat,msg) $4; IMGSVRApply dtwomass 1}
  | SIZE_ numeric numeric skyformat {global dtwomass; set dtwomass(width) $2; set dtwomass(height) $3; set dtwomass(rformat) $4; set dtwomass(rformat,msg) $4}

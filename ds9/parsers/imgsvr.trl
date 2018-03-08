@@ -1,3 +1,8 @@
+# COORD_ is depricated
+# NAME_ is depricated
+# new optional WCS_ FK5_, does nothing
+# SIZE_ default is DEGREES_
+
 deg : {set _ degrees}
  | DEGREES_ {set _ degrees}
  ;

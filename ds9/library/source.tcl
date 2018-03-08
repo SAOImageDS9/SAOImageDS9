@@ -188,18 +188,20 @@ source $ds9(root)/library/xmfbox.tcl
 source $ds9(root)/library/xmlrpc.tcl
 source $ds9(root)/library/xpa.tcl
 
-source $ds9(root)/library/twomassparser.tcl
-source $ds9(root)/library/twomasslex.tcl
-source $ds9(root)/library/dsssaoparser.tcl
-source $ds9(root)/library/dsssaolex.tcl
 source $ds9(root)/library/dssesoparser.tcl
 source $ds9(root)/library/dssesolex.tcl
+source $ds9(root)/library/dsssaoparser.tcl
+source $ds9(root)/library/dsssaolex.tcl
 source $ds9(root)/library/dssstsciparser.tcl
 source $ds9(root)/library/dssstscilex.tcl
-source $ds9(root)/library/skyviewparser.tcl
-source $ds9(root)/library/skyviewlex.tcl
+source $ds9(root)/library/nvssparser.tcl
+source $ds9(root)/library/nvsslex.tcl
 source $ds9(root)/library/panparser.tcl
 source $ds9(root)/library/panlex.tcl
+source $ds9(root)/library/skyviewparser.tcl
+source $ds9(root)/library/skyviewlex.tcl
+source $ds9(root)/library/twomassparser.tcl
+source $ds9(root)/library/twomasslex.tcl
 source $ds9(root)/library/zoomparser.tcl
 source $ds9(root)/library/zoomlex.tcl
 

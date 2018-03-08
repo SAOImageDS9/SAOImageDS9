@@ -150,6 +150,18 @@ charting of the Universe.
 
 proc ProcessNVSSCmd {varname iname} {
     upvar $varname var
+    upvar $iname ii
+
+    NVSSDialog
+
+    nvss::YY_FLUSH_BUFFER
+    nvss::yy_scan_string [lrange $var $ii end]
+    nvss::yyparse
+    incr ii [expr $nvss::yycnt-1]
+}
+
+proc oProcessNVSSCmd {varname iname} {
+    upvar $varname var
     upvar $iname i
 
     NVSSDialog

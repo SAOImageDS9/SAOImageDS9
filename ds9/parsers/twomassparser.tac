@@ -17,11 +17,6 @@ command : 2mass
  | 2mass {yyclearin; YYACCEPT} CMD_
  ;
 
-# COORD_ is depricated
-# NAME_ is depricated
-# new optional WCS_ FK5_, does nothing
-# SIZE_ default is DEGREES_
-
 2mass : {IMGSVRApply dtwomass 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dtwomass}

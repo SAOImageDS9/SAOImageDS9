@@ -1,0 +1,14 @@
+#tab vlssparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+#include yesno.fin
+#include imgsvr.fin
+#include base.fin
+
+%%

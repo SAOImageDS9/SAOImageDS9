@@ -19,11 +19,6 @@ command : skyview
  | skyview {yyclearin; YYACCEPT} CMD_
  ;
 
-# COORD_ is depricated
-# NAME_ is depricated
-# new optional WCS_ FK5_, does nothing
-# SIZE_ default is DEGREES_
-
 skyview : {IMGSVRApply dskyview 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dskyview}

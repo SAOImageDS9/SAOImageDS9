@@ -202,6 +202,10 @@ source $ds9(root)/library/skyviewparser.tcl
 source $ds9(root)/library/skyviewlex.tcl
 source $ds9(root)/library/twomassparser.tcl
 source $ds9(root)/library/twomasslex.tcl
+source $ds9(root)/library/vlaparser.tcl
+source $ds9(root)/library/vlalex.tcl
+source $ds9(root)/library/vlssparser.tcl
+source $ds9(root)/library/vlsslex.tcl
 source $ds9(root)/library/zoomparser.tcl
 source $ds9(root)/library/zoomlex.tcl
 

@@ -22,11 +22,6 @@ command : dsseso
  | dsseso {yyclearin; YYACCEPT} CMD_
  ;
 
-# COORD_ is depricated
-# NAME_ is depricated
-# new optional WCS_ FK5_, does nothing
-# SIZE_ default is DEGREES_
-
 dsseso : {IMGSVRApply deso 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy deso}

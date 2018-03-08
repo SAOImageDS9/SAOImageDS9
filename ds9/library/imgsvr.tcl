@@ -582,3 +582,79 @@ proc IMGSVRProcessSendCmd {proc id param vvarname} {
 	default {$proc $id "$vvar(name)\n"}
     }
 }
+
+proc IMGSVRCmdName {varname name} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(name) $name
+    if {$name != {}} {
+	IMGSVRApply $varname 1
+    }
+}
+
+proc IMGSVRCmdCoord {varname xx yy skyformat} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(x) $xx
+    set var(y) $yy
+    set var(skyformat) $skyformat
+    set var(skyformat,msg) $skyformat
+    IMGSVRApply $varname 1
+}
+
+proc IMGSVRCmdSize {varname ww hh rformat} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(width) $ww
+    set var(height) $hh
+    set var(rformat) $rformat
+    set var(rformat,msg) $rformat
+}
+
+proc IMGSVRCmdPixels {varname ww hh} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(width,pixels) $ww
+    set var(height,pixels) $hh
+}
+
+proc IMGSVRCmdSave {varname save} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(save) $save
+}
+
+proc IMGSVRCmdMode {varname mode} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(mode) $mode
+}
+
+proc IMGSVRCmdSurvey {varname survey} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(survey) $survey
+}
+
+proc IMGSVRCmdUpdateFrame {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    IMGSVRUpdate $varname
+    IMGSVRApply $varname 1
+}
+
+proc IMGSVRCmdUpdateCrosshair {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    IMGSVRUpdate $varname
+    IMGSVRApply $varname 1
+}

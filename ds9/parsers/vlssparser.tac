@@ -20,21 +20,21 @@ command : vlss
 vlss : {IMGSVRApply dvlss 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dvlss}
- | STRING_ {global dvlss; set dvlss(name) $1; IMGSVRApply dvlss 1}
- | numeric numeric coordOpt {global dvlss; set dvlss(x) $1; set dvlss(y) $2; set dvlss(skyformat) degrees; set dvlss(skyformat,msg) degrees; IMGSVRApply dvlss 1}
- | SEXSTR_ SEXSTR_ coordOpt {global dvlss; set dvlss(x) $1; set dvlss(y) $2; set dvlss(skyformat) sexagesimal; set dvlss(skyformat,msg) sexagesimal; IMGSVRApply dvlss 1}
- | SIZE_ numeric numeric sizeOpt {global dvlss; set dvlss(width) $2; set dvlss(height) $3; set dvlss(rformat) $4; set dvlss(rformat,msg) $4}
- | SAVE_ yesno {global dvlss; set dvlss(save) $2}
- | FRAME_ frame {global dvlss; set dvlss(mode) $2}
+ | STRING_ {IMGSVRCmdName dvlss $1}
+ | numeric numeric coordOpt {IMGSVRCmdCoord dvlss $1 $2 degrees}
+ | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dvlss $1 $2 sexagesimal}
+ | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dvlss $2 $3 $4}
+ | SAVE_ yesno {IMGSVRCmdSave dvlss $2}
+ | FRAME_ frame {IMGSVRCmdMode dvlss $2}
  | UPDATE_ update
 
- | COORD_ numeric numeric deg {global dvlss; set dvlss(x) $2; set dvlss(y) $3; set dvlss(skyformat) $4; set dvlss(skyformat,msg) $4; IMGSVRApply dvlss 1}
- | COORD_ SEXSTR_ SEXSTR_ sex {global dvlss; set dvlss(x) $2; set dvlss(y) $3; set dvlss(skyformat) $4; set dvlss(skyformat,msg) $4; IMGSVRApply dvlss 1}
- | NAME_ STRING_ {global dvlss; set dvlss(name) $2; IMGSVRApply dvlss 1}
+ | COORD_ numeric numeric deg {IMGSVRCmdCoord dvlss $2 $3 $4}
+ | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dvlss $2 $3 $4}
+ | NAME_ STRING_ {IMGSVRCmdName dvlss $2}
  ;
 
-update : FRAME_ {IMGSVRUpdate dvlss; IMGSVRApply dvlss 1}
- | CROSSHAIR_ {IMGSVRCrosshair dvlss; IMGSVRApply dvlss 1}
+update : FRAME_ {IMGSVRCmdUpdateFrame dvlss}
+ | CROSSHAIR_ {IMGSVRCmdUpdateCrosshair dvlss}
  ;
 
 %%

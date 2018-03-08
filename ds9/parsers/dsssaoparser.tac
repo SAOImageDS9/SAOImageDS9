@@ -20,21 +20,21 @@ command : dsssao
 dsssao : {IMGSVRApply dsao 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dsao}
- | STRING_ {global dsao; set dsao(name) $1; IMGSVRApply dsao 1}
- | numeric numeric coordOpt {global dsao; set dsao(x) $1; set dsao(y) $2; set dsao(skyformat) degrees; set dsao(skyformat,msg) degrees; IMGSVRApply dsao 1}
- | SEXSTR_ SEXSTR_ coordOpt {global dsao; set dsao(x) $1; set dsao(y) $2; set dsao(skyformat) sexagesimal; set dsao(skyformat,msg) sexagesimal; IMGSVRApply dsao 1}
- | SIZE_ numeric numeric sizeOpt {global dsao; set dsao(width) $2; set dsao(height) $3; set dsao(rformat) $4; set dsao(rformat,msg) $4}
- | SAVE_ yesno {global dsao; set dsao(save) $2}
- | FRAME_ frame {global dsao; set dsao(mode) $2}
+ | STRING_ {IMGSVRCmdName dsao $1}
+ | numeric numeric coordOpt {IMGSVRCmdCoord dsao $1 $2 degrees}
+ | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dsao $1 $2 sexagesimal}
+ | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dsao $2 $3 $4}
+ | SAVE_ yesno {IMGSVRCmdSave dsao $2}
+ | FRAME_ frame {IMGSVRCmdMode dsao $2}
  | UPDATE_ update
 
- | COORD_ numeric numeric deg {global dsao; set dsao(x) $2; set dsao(y) $3; set dsao(skyformat) $4; set dsao(skyformat,msg) $4; IMGSVRApply dsao 1}
- | COORD_ SEXSTR_ SEXSTR_ sex {global dsao; set dsao(x) $2; set dsao(y) $3; set dsao(skyformat) $4; set dsao(skyformat,msg) $4; IMGSVRApply dsao 1}
- | NAME_ STRING_ {global dsao; set dsao(name) $2; IMGSVRApply dsao 1}
+ | COORD_ numeric numeric deg {IMGSVRCmdCoord dsao $2 $3 $4}
+ | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dsao $2 $3 $4}
+ | NAME_ STRING_ {IMGSVRCmdName dsao $2}
  ;
 
-update : FRAME_ {IMGSVRUpdate dsao; IMGSVRApply dsao 1}
- | CROSSHAIR_ {IMGSVRCrosshair dsao; IMGSVRApply dsao 1}
+update : FRAME_ {IMGSVRCmdUpdateFrame dsao}
+ | CROSSHAIR_ {IMGSVRCmdUpdateCrosshair dsao}
  ;
 
 %%

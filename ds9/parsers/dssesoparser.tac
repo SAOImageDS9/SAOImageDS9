@@ -25,22 +25,22 @@ command : dsseso
 dsseso : {IMGSVRApply deso 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy deso}
- | STRING_ {global deso; set deso(name) $1; IMGSVRApply deso 1}
- | numeric numeric coordOpt {global deso; set deso(x) $1; set deso(y) $2; set deso(skyformat) degrees; set deso(skyformat,msg) degrees; IMGSVRApply deso 1}
- | SEXSTR_ SEXSTR_ coordOpt {global deso; set deso(x) $1; set deso(y) $2; set deso(skyformat) sexagesimal; set deso(skyformat,msg) sexagesimal; IMGSVRApply deso 1}
- | SIZE_ numeric numeric sizeOpt {global deso; set deso(width) $2; set deso(height) $3; set deso(rformat) $4; set deso(rformat,msg) $4}
- | SAVE_ yesno {global deso; set deso(save) $2}
- | FRAME_ frame {global deso; set deso(mode) $2}
+ | STRING_ {IMGSVRCmdName deso $1}
+ | numeric numeric coordOpt {IMGSVRCmdCoord deso $1 $2 degrees}
+ | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord deso $1 $2 sexagesimal}
+ | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize deso $2 $3 $4}
+ | SAVE_ yesno {IMGSVRCmdSave deso $2}
+ | FRAME_ frame {IMGSVRCmdMode deso $2}
+ | SURVEY_ survey {IMGSVRCmdSurvey deso $2}
  | UPDATE_ update
- | SURVEY_ survey {global deso; set deso(survey) $2}
 
- | COORD_ numeric numeric deg {global deso; set deso(x) $2; set deso(y) $3; set deso(skyformat) $4; set deso(skyformat,msg) $4; IMGSVRApply deso 1}
- | COORD_ SEXSTR_ SEXSTR_ sex {global deso; set deso(x) $2; set deso(y) $3; set deso(skyformat) $4; set deso(skyformat,msg) $4; IMGSVRApply deso 1}
- | NAME_ STRING_ {global deso; set deso(name) $2; IMGSVRApply deso 1}
+ | COORD_ numeric numeric deg {IMGSVRCmdCoord deso $2 $3 $4}
+ | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord deso $2 $3 $4}
+ | NAME_ STRING_ {IMGSVRCmdName deso $2}
  ;
 
-update : FRAME_ {IMGSVRUpdate deso; IMGSVRApply deso 1}
- | CROSSHAIR_ {IMGSVRCrosshair deso; IMGSVRApply deso 1}
+update : FRAME_ {IMGSVRCmdUpdateFrame deso}
+ | CROSSHAIR_ {IMGSVRCmdUpdateCrosshair deso}
  ;
 
 survey : DSS1_ {set _ DSS1}

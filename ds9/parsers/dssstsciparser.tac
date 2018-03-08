@@ -27,25 +27,25 @@ command : dssstsci
  | dssstsci {yyclearin; YYACCEPT} CMD_
  ;
 
-dssstsci : {IMGSVRApply dstscii 1}
+dssstsci : {IMGSVRApply dstsci 1}
  | OPEN_ {}
- | CLOSE_ {ARDestroy dstscii}
- | STRING_ {global dstscii; set dstscii(name) $1; IMGSVRApply dstscii 1}
- | numeric numeric coordOpt {global dstscii; set dstscii(x) $1; set dstscii(y) $2; set dstscii(skyformat) degrees; set dstscii(skyformat,msg) degrees; IMGSVRApply dstscii 1}
- | SEXSTR_ SEXSTR_ coordOpt {global dstscii; set dstscii(x) $1; set dstscii(y) $2; set dstscii(skyformat) sexagesimal; set dstscii(skyformat,msg) sexagesimal; IMGSVRApply dstscii 1}
- | SIZE_ numeric numeric sizeOpt {global dstscii; set dstscii(width) $2; set dstscii(height) $3; set dstscii(rformat) $4; set dstscii(rformat,msg) $4}
- | SAVE_ yesno {global dstscii; set dstscii(save) $2}
- | FRAME_ frame {global dstscii; set dstscii(mode) $2}
+ | CLOSE_ {ARDestroy dstsci}
+ | STRING_ {IMGSVRCmdName dstsci $1}
+ | numeric numeric coordOpt {IMGSVRCmdCoord dstsci $1 $2 degrees}
+ | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dstsci $1 $2 sexagesimal}
+ | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dstsci $2 $3 $4}
+ | SAVE_ yesno {IMGSVRCmdSave dstsci $2}
+ | FRAME_ frame {IMGSVRCmdMode dstsci $2}
+ | SURVEY_ survey {IMGSVRCmdSurvey dstsci $2}
  | UPDATE_ update
- | SURVEY_ survey {global dstscii; set dstscii(survey) $2}
 
- | COORD_ numeric numeric deg {global dstscii; set dstscii(x) $2; set dstscii(y) $3; set dstscii(skyformat) $4; set dstscii(skyformat,msg) $4; IMGSVRApply dstscii 1}
- | COORD_ SEXSTR_ SEXSTR_ sex {global dstscii; set dstscii(x) $2; set dstscii(y) $3; set dstscii(skyformat) $4; set dstscii(skyformat,msg) $4; IMGSVRApply dstscii 1}
- | NAME_ STRING_ {global dstscii; set dstscii(name) $2; IMGSVRApply dstscii 1}
+ | COORD_ numeric numeric deg {IMGSVRCmdCoord dstsci $2 $3 $4}
+ | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dstsci $2 $3 $4}
+ | NAME_ STRING_ {IMGSVRCmdName dstsci $2}
  ;
 
-update : FRAME_ {IMGSVRUpdate dstscii; IMGSVRApply dstscii 1}
- | CROSSHAIR_ {IMGSVRCrosshair dstscii; IMGSVRApply dstscii 1}
+update : FRAME_ {IMGSVRCmdUpdateFrame dstsci}
+ | CROSSHAIR_ {IMGSVRCmdUpdateCrosshair dstsci}
  ;
 
 survey : POSS2RED_ {set _ poss2ukstu_red}

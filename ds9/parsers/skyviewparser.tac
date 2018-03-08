@@ -22,23 +22,23 @@ command : skyview
 skyview : {IMGSVRApply dskyview 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dskyview}
- | STRING_ {global dskyview; set dskyview(name) $1; IMGSVRApply dskyview 1}
- | numeric numeric coordOpt {global dskyview; set dskyview(x) $1; set dskyview(y) $2; set dskyview(skyformat) degrees; set dskyview(skyformat,msg) degrees; IMGSVRApply dskyview 1}
- | SEXSTR_ SEXSTR_ coordOpt {global dskyview; set dskyview(x) $1; set dskyview(y) $2; set dskyview(skyformat) sexagesimal; set dskyview(skyformat,msg) sexagesimal; IMGSVRApply dskyview 1}
- | SIZE_ numeric numeric sizeOpt {global dskyview; set dskyview(width) $2; set dskyview(height) $3; set dskyview(rformat) $4; set dskyview(rformat,msg) $4}
- | PIXELS_ numeric numeric {global dskyview; set dskyview(width,pixels) $2; set dskyview(height,pixels) $3}
- | SAVE_ yesno {global dskyview; set dskyview(save) $2}
- | FRAME_ frame {global dskyview; set dskyview(mode) $2}
+ | STRING_ {IMGSVRCmdName dskyview $1}
+ | numeric numeric coordOpt {IMGSVRCmdCoord dskyview $1 $2 degrees}
+ | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dskyview $1 $2 sexagesimal}
+ | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dskyview $2 $3 $4}
+ | PIXELS_ numeric numeric {IMGSVRCmdPixels dskyview $2 $3}
+ | SAVE_ yesno {IMGSVRCmdSave dskyview $2}
+ | FRAME_ frame {IMGSVRCmdMode dskyview $2}
+ | SURVEY_ STRING_ {IMGSVRCmdSurvey dskyview $2}
  | UPDATE_ update
- | SURVEY_ STRING_ {global dskyview; set dskyview(survey) $2}
 
- | COORD_ numeric numeric deg {global dskyview; set dskyview(x) $2; set dskyview(y) $3; set dskyview(skyformat) $4; set dskyview(skyformat,msg) $4; IMGSVRApply dskyview 1}
- | COORD_ SEXSTR_ SEXSTR_ sex {global dskyview; set dskyview(x) $2; set dskyview(y) $3; set dskyview(skyformat) $4; set dskyview(skyformat,msg) $4; IMGSVRApply dskyview 1}
- | NAME_ STRING_ {global dskyview; set dskyview(name) $2; IMGSVRApply dskyview 1}
+ | COORD_ numeric numeric deg {IMGSVRCmdCoord dskyview $2 $3 $4}
+ | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dskyview $2 $3 $4}
+ | NAME_ STRING_ {IMGSVRCmdName dskyview $2}
  ;
 
-update : FRAME_ {IMGSVRUpdate dskyview; IMGSVRApply dskyview 1}
- | CROSSHAIR_ {IMGSVRCrosshair dskyview; IMGSVRApply dskyview 1}
+update : FRAME_ {IMGSVRCmdUpdateFrame dskyview}
+ | CROSSHAIR_ {IMGSVRCmdUpdateCrosshair dskyview}
  ;
 
 %%

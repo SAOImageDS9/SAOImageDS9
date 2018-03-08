@@ -30,7 +30,7 @@ proc STSCIDialog {} {
 	return
     }
 
-    set varname dstscii
+    set varname dstsci
     upvar #0 $varname var
     global $varname
 
@@ -185,10 +185,10 @@ proc oProcessSTSCICmd {varname iname} {
     upvar $iname i
 
     STSCIDialog
-    IMGSVRProcessCmd $varname $iname dstscii
+    IMGSVRProcessCmd $varname $iname dstsci
 }
 
 proc ProcessSendSTSCICmd {proc id param} {
     STSCIDialog
-    IMGSVRProcessSendCmd $proc $id $param dstscii
+    IMGSVRProcessSendCmd $proc $id $param dstsci
 }

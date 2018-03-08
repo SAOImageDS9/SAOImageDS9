@@ -22,7 +22,7 @@ survey	    {return $SURVEY_}
 update	    {return $UPDATE_}
 
 #include yesno.fin
-#include coords.fin
+#include imgsvr.fin
 #include base.fin
 
 %%

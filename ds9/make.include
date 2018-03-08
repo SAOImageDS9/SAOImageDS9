@@ -3,9 +3,11 @@
 vpath %.tac $(prefix)/ds9/parsers
 vpath %.fcl $(prefix)/ds9/parsers
 
+# -v generate output file
 $(prefix)/ds9/parsers/%parser.tcl : %parser.tac
-	tclsh $(prefix)/taccle/taccle.tcl -p $* -d -v -w $<
+	tclsh $(prefix)/taccle/taccle.tcl -p $* -d -w $<
 
+# -d debug
 $(prefix)/ds9/parsers/%lex.tcl : %lex.fcl
 	tclsh $(prefix)/fickle/fickle.tcl -P $* -d $<
 

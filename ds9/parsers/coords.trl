@@ -9,7 +9,7 @@ coordsys : IMAGE_ {set _ image}
 #   YYABORT
 # }
 
-coordsysdef : {set _ physcial}
+coordsysdef : {set _ physical}
  | coordsys {set _ $1}
  ;
 

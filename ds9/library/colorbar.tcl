@@ -1368,6 +1368,16 @@ proc ProcessSendCmapCmd {proc id param} {
 
 proc ProcessColorbarCmd {varname iname} {
     upvar $varname var
+    upvar $iname ii
+
+    colorbar::YY_FLUSH_BUFFER
+    colorbar::yy_scan_string [lrange $var $ii end]
+    colorbar::yyparse
+    incr ii [expr $colorbar::yycnt-1]
+}
+
+proc oProcessColorbarCmd {varname iname} {
+    upvar $varname var
     upvar $iname i
 
     global colorbar

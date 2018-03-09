@@ -1,0 +1,12 @@
+font		{return $FONT_}
+fontsize	{return $FONTSIZE_}
+fontslant	{return $FONTSLANT_}
+fontstyle	{return $FONTSTYLE_}
+fontweight	{return $FONTWEIGHT_}
+times		{return $TIMES_}
+helvetica	{return $HELVETICA_}
+courier		{return $COURIER_}
+normal		{return $NORMAL_}
+bold		{return $BOLD_}
+roman		{return $ROMAN_}
+italic		{return $ITALIC_}

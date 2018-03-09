@@ -2032,9 +2032,8 @@ proc TileDestroyDialog {} {
     if {[winfo exists $itile(top)]} {
 	destroy $itile(top)
 	destroy $itile(mb)
+	unset dtile
     }
-
-    unset dtile
 }
 
 proc TileApplyDialog {} {

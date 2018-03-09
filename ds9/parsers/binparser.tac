@@ -60,6 +60,8 @@ colsxyz : 'x' {set _ $1}
  | 'X' {set _ $1}
  | 'y' {set _ $1}
  | 'Y' {set _ $1}
+ | 'z' {set _ $1}
+ | 'Z' {set _ $1}
  ;
 
 binAbout : numeric numeric {BinAbout $1 $2}

@@ -778,7 +778,6 @@ proc oProcessBinCmd {varname iname} {
 	    incr i
 	    set bx [lindex $var $i]
 	    set by [lindex $var [expr $i+1]]
-	    # note: the spaces are needed so that the menus are in sync
 	    if {$by != {} && [string is double $by]} {
 		set bin(factor) "$bx $by"
 		incr i

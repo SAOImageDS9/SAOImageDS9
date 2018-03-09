@@ -190,6 +190,8 @@ source $ds9(root)/library/xpa.tcl
 
 source $ds9(root)/library/binparser.tcl
 source $ds9(root)/library/binlex.tcl
+source $ds9(root)/library/blockparser.tcl
+source $ds9(root)/library/blocklex.tcl
 source $ds9(root)/library/dssesoparser.tcl
 source $ds9(root)/library/dssesolex.tcl
 source $ds9(root)/library/dsssaoparser.tcl

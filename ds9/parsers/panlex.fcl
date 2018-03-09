@@ -11,6 +11,7 @@ close	    {return $CLOSE_}
 open	    {return $OPEN_}
 to	    {return $TO_}
 
+#include skyframe.fin
 #include coords.fin
 #include base.fin
 

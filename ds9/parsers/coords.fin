@@ -31,13 +31,6 @@ physical    {return $PHYSICAL_}
 amplifier   {return $AMPLIFIER_}
 detector    {return $DETECTOR_}
 
-fk4	    {return $FK4_}
-b1950	    {return $FK4_}
-fk5	    {return $FK5_}
-j2000	    {return $FK5_}
-galactic    {return $GALACTIC_}
-ecliptic    {return $ECLIPTIC_}
-
 # SEXAGESIMAL
 [+-]?{D}+:{D}+:{D}+"."? |
 [+-]?{D}+:{D}+:{D}*"."{D}+ {set yylval $yytext; return $SEXSTR_}

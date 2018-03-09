@@ -9,6 +9,10 @@ coordsys : IMAGE_ {set _ image}
 #   YYABORT
 # }
 
+coordsysdef : {set _ physcial}
+ | coordsys {set _ $1}
+ ;
+
 wcssys : WCS_ {set _ wcs}
  | WCSA_ {set _ wcsa}
  | WCSB_ {set _ wcsb}
@@ -43,16 +47,7 @@ wcssys : WCS_ {set _ wcs}
 #   YYABORT
 # }
 
-skyframe : FK4_ {set _ fk4}
- | B1950_ {set _ fk4}
- | FK5_ {set _ fk5}
- | J2000_ {set _ fk5}
- | ICRS_ {set _ icrs}
- | GALACTIC_ {set _ galactic}
- | ECLIPTIC_ {set _ ecliptic}
+wcssysdef : {set _ wcs}
+ | wcssys {set _ $1}
  ;
- 
-# | error {
-#   yyerror "must be: fk4|fk5|icrs|galactic|ecliptic"
-#   YYABORT
-# }
+

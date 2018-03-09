@@ -1,0 +1,8 @@
+skyformat : DEGREES_ {set _ degrees}
+ | ARCMIN_ {set _ arcmin}
+ | ARCSEC_ {set _ arcsec}
+ ;
+
+skyformatdef : {set _ degrees}
+ | skyformat {set _ $1}
+ ;

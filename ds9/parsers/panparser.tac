@@ -1,6 +1,7 @@
 %{
 %}
 
+#include skyframe.tin
 #include coords.tin
 #include base.tin
 
@@ -12,6 +13,7 @@
 
 %%
 
+#include skyframe.trl
 #include coords.trl
 #include base.trl
 

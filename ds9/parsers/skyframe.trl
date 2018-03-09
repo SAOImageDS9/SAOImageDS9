@@ -1,0 +1,17 @@
+skyframe : FK4_ {set _ fk4}
+ | B1950_ {set _ fk4}
+ | FK5_ {set _ fk5}
+ | J2000_ {set _ fk5}
+ | ICRS_ {set _ icrs}
+ | GALACTIC_ {set _ galactic}
+ | ECLIPTIC_ {set _ ecliptic}
+ ;
+ 
+# | error {
+#   yyerror "must be: fk4|fk5|icrs|galactic|ecliptic"
+#   YYABORT
+# }
+
+skyframedef : {set _ fk5}
+ | skyframe {set _ $1}
+ ;

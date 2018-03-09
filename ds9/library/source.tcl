@@ -196,6 +196,8 @@ source $ds9(root)/library/cmapparser.tcl
 source $ds9(root)/library/cmaplex.tcl
 source $ds9(root)/library/colorbarparser.tcl
 source $ds9(root)/library/colorbarlex.tcl
+source $ds9(root)/library/cropparser.tcl
+source $ds9(root)/library/croplex.tcl
 source $ds9(root)/library/dssesoparser.tcl
 source $ds9(root)/library/dssesolex.tcl
 source $ds9(root)/library/dsssaoparser.tcl

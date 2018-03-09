@@ -1,10 +1,10 @@
 %{
 %}
 
-%start command
-
 #include coords.tin
 #include base.tin
+
+%start command
 
 %token CLOSE_
 %token OPEN_

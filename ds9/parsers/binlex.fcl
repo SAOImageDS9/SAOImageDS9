@@ -1,0 +1,33 @@
+#tab binparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+about		{return $ABOUT_}
+average		{return $AVERAGE_}
+buffersize	{return $BUFFERSIZE_}
+center		{return $CENTER_}
+close		{return $CLOSE_}
+cols		{return $COLS_}
+colsz		{return $COLSZ_}
+depth		{return $DEPTH_}
+factor		{return $FACTOR_}
+filter		{return $FILTER_}
+fit		{return $FIT_}
+function	{return $FUNCTION_}
+in		{return $IN_}
+lock		{return $LOCK_}
+match		{return $MATCH_}
+open		{return $OPEN_}
+out		{return $OUT_}
+sum		{return $SUM_}
+to		{return $TO_}
+
+#include yesno.fin
+#include base.fin
+
+%%

@@ -721,6 +721,16 @@ proc BinBackupRGB {ch which} {
 
 proc ProcessBinCmd {varname iname} {
     upvar $varname var
+    upvar $iname ii
+
+    bin::YY_FLUSH_BUFFER
+    bin::yy_scan_string [lrange $var $ii end]
+    bin::yyparse
+    incr ii [expr $bin::yycnt-1]
+}
+
+proc oProcessBinCmd {varname iname} {
+    upvar $varname var
     upvar $iname i
 
     global bin

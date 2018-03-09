@@ -1,4 +1,5 @@
-yesno : YES_ {set _ 1}
+yesno : {set _ 1}
+ | YES_ {set _ 1}
  | ON_ {set _ 1}
  | TRUE_ {set _ 1}
  | NO_ {set _ 0}

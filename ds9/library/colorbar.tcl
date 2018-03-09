@@ -1183,6 +1183,19 @@ proc ColorbarBackupCmaps {ch dir} {
 
 proc ProcessCmapCmd {varname iname} {
     upvar $varname var
+    upvar $iname ii
+
+    # we need to be realized
+    ProcessRealizeDS9
+
+    cmap::YY_FLUSH_BUFFER
+    cmap::yy_scan_string [lrange $var $ii end]
+    cmap::yyparse
+    incr ii [expr $cmap::yycnt-1]
+}
+
+proc oProcessCmapCmd {varname iname} {
+    upvar $varname var
     upvar $iname i
 
     global colorbar

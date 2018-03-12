@@ -24,7 +24,7 @@
 #include base.trl
 
 command : cmap
- | cmap {yyclearin; YYACCEPT} CMD_
+ | cmap {yyclearin; YYACCEPT} STRING_
  ;
 
 cmap : STRING_ {CmapCmd $1}

@@ -14,7 +14,7 @@
 #include base.trl
 
 command : 2mass
- | 2mass {yyclearin; YYACCEPT} CMD_
+ | 2mass {yyclearin; YYACCEPT} STRING_
  ;
 
 2mass : {IMGSVRApply dtwomass 1}

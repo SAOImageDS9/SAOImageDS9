@@ -30,7 +30,7 @@
 #include base.trl
 
 command : 3d
- | 3d {yyclearin; YYACCEPT} CMD_
+ | 3d {yyclearin; YYACCEPT} STRING_
  ;
 
 3d : {Create3DFrame}

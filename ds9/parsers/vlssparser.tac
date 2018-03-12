@@ -14,7 +14,7 @@
 #include base.trl
 
 command : vlss
- | vlss {yyclearin; YYACCEPT} CMD_
+ | vlss {yyclearin; YYACCEPT} STRING_
  ;
 
 vlss : {IMGSVRApply dvlss 1}

@@ -21,7 +21,7 @@
 #include base.trl
 
 command : block
- | block {yyclearin; YYACCEPT} CMD_
+ | block {yyclearin; YYACCEPT} STRING_
  ;
 
 block : OPEN_ {BlockDialog}

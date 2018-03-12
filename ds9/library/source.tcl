@@ -218,6 +218,8 @@ source $ds9(root)/library/vlaparser.tcl
 source $ds9(root)/library/vlalex.tcl
 source $ds9(root)/library/vlssparser.tcl
 source $ds9(root)/library/vlsslex.tcl
+source $ds9(root)/library/zscaleparser.tcl
+source $ds9(root)/library/zscalelex.tcl
 source $ds9(root)/library/zoomparser.tcl
 source $ds9(root)/library/zoomlex.tcl
 

@@ -9,10 +9,6 @@ coordsys : IMAGE_ {set _ image}
 #   YYABORT
 # }
 
-coordsysdef : {set _ physical}
- | coordsys {set _ $1}
- ;
-
 wcssys : WCS_ {set _ wcs}
  | WCSA_ {set _ wcsa}
  | WCSB_ {set _ wcsb}
@@ -46,8 +42,4 @@ wcssys : WCS_ {set _ wcs}
 #   yyerror "must be: wcs|wcsa...wcsz"
 #   YYABORT
 # }
-
-wcssysdef : {set _ wcs}
- | wcssys {set _ $1}
- ;
 

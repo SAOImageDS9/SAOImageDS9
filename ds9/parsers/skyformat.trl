@@ -3,6 +3,3 @@ skyformat : DEGREES_ {set _ degrees}
  | ARCSEC_ {set _ arcsec}
  ;
 
-skyformatdef : {set _ degrees}
- | skyformat {set _ $1}
- ;

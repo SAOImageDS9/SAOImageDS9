@@ -32,7 +32,7 @@
 #include base.trl
 
 command : bin
- | bin {yyclearin; YYACCEPT} CMD_
+ | bin {yyclearin; YYACCEPT} STRING_
  ;
 
 bin : CLOSE_ {BinDestroyDialog}

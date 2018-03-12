@@ -16,9 +16,10 @@
 
 #include base.trl
 
-command : zoom
- | zoom {yyclearin; YYACCEPT} CMD_
+command : zoom 
+ | zoom {yyclearin; YYACCEPT} STRING_
  ;
+
 
 zoom : OPEN_ {PanZoomDialog}
  | CLOSE_ {PanZoomDestroyDialog}

@@ -12,6 +12,3 @@ skyframe : FK4_ {set _ fk4}
 #   YYABORT
 # }
 
-skyframedef : {set _ fk5}
- | skyframe {set _ $1}
- ;

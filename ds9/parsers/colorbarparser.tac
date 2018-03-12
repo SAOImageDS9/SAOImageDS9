@@ -26,7 +26,7 @@
 #include base.trl
 
 command : colorbar
- | colorbar {yyclearin; YYACCEPT} CMD_
+ | colorbar {yyclearin; YYACCEPT} STRING_
  ;
 
 colorbar : yesno {global view; set view(colorbar) $1; UpdateView}

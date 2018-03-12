@@ -16,7 +16,7 @@
 #include base.trl
 
 command : skyview
- | skyview {yyclearin; YYACCEPT} CMD_
+ | skyview {yyclearin; YYACCEPT} STRING_
  ;
 
 skyview : {IMGSVRApply dskyview 1}

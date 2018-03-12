@@ -24,7 +24,7 @@
 #include base.trl
 
 command : dssstsci
- | dssstsci {yyclearin; YYACCEPT} CMD_
+ | dssstsci {yyclearin; YYACCEPT} STRING_
  ;
 
 dssstsci : {IMGSVRApply dstsci 1}

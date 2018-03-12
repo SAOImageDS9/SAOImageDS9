@@ -14,7 +14,7 @@
 #include base.trl
 
 command : dsssao
- | dsssao {yyclearin; YYACCEPT} CMD_
+ | dsssao {yyclearin; YYACCEPT} STRING_
  ;
 
 dsssao : {IMGSVRApply dsao 1}

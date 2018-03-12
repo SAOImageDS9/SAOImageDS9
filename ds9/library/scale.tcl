@@ -1009,6 +1009,16 @@ proc ProcessSendMinMaxCmd {proc id param} {
 
 proc ProcessZScaleCmd {varname iname} {
     upvar $varname var
+    upvar $iname ii
+
+    zscale::YY_FLUSH_BUFFER
+    zscale::yy_scan_string [lrange $var $ii end]
+    zscale::yyparse
+    incr ii [expr $zscale::yycnt-1]
+}
+
+proc oProcessZScaleCmd {varname iname} {
+    upvar $varname var
     upvar $iname i
 
     global zscale
@@ -1031,7 +1041,6 @@ proc ProcessZScaleCmd {varname iname} {
 	    ChangeZScale
 	}
 	default {
-	    # for backward compatibility
 	    set scale(mode) zscale
 	    ChangeScaleMode
 	    incr i -1

@@ -19,7 +19,7 @@
 #include base.trl
 
 command : dsseso
- | dsseso {yyclearin; YYACCEPT} CMD_
+ | dsseso {yyclearin; YYACCEPT} STRING_
  ;
 
 dsseso : {IMGSVRApply deso 1}

@@ -17,7 +17,7 @@
 #include base.trl
 
 command : vla
- | vla {yyclearin; YYACCEPT} CMD_
+ | vla {yyclearin; YYACCEPT} STRING_
  ;
 
 vla : {IMGSVRApply dvla 1}

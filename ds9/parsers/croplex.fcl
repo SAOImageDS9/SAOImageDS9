@@ -1,0 +1,24 @@
+#tab cropparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+3d	{return $3D_}
+close	{return $CLOSE_}
+lock	{return $LOCK_}
+match	{return $MATCH_}
+none	{return $NONE_}
+open	{return $OPEN_}
+reset	{return $RESET_}
+
+#include skyformat.fin
+#include skyframe.fin
+#include coords.fin
+#include base.fin
+
+%%
+

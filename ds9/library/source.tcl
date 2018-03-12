@@ -210,6 +210,8 @@ source $ds9(root)/library/panparser.tcl
 source $ds9(root)/library/panlex.tcl
 source $ds9(root)/library/skyviewparser.tcl
 source $ds9(root)/library/skyviewlex.tcl
+source $ds9(root)/library/threedparser.tcl
+source $ds9(root)/library/threedlex.tcl
 source $ds9(root)/library/twomassparser.tcl
 source $ds9(root)/library/twomasslex.tcl
 source $ds9(root)/library/vlaparser.tcl

@@ -24,15 +24,15 @@ command : block
  | block {yyclearin; YYACCEPT} CMD_
  ;
 
-block : CLOSE_ {BlockDestroyDialog}
- | OPEN_ {BlockDialog}
+block : OPEN_ {BlockDialog}
+ | CLOSE_ {BlockDestroyDialog}
  | MATCH_ {MatchBlockCurrent}
  | LOCK_ yesno {global block; set block(lock) $2; LockBlockCurrent}
- | numeric {Block $1 $1}
- | numeric numeric {Block $1 $2}
  | IN_ {Block .5 .5}
  | OUT_ {Block 2 2}
  | TO_ blockTo
+ | numeric {Block $1 $1}
+ | numeric numeric {Block $1 $2}
  ;
 
 blockTo : numeric {global block; set block(factor) "$1 $1"; ChangeBlock}

@@ -28,17 +28,20 @@ command : cmap
  ;
 
 cmap : STRING_ {CmapCmd $1}
- | CLOSE_ {ColormapDestroyDialog}
  | OPEN_ {ColormapDialog}
+ | CLOSE_ {ColormapDestroyDialog}
 # backward compatibility
  | MATCH_ {MatchColorCurrent}
 # backward compatibility
  | LOCK_ yesno {global colorbar; set colorbar(lock) $2; LockColorCurrent}
  | LOAD_ cmapLoad
+# backward compatibility
  | FILE_ cmapLoad
  | SAVE_ STRING_ {SaveColormapFile $2; FileLast colormapfbox $2}
  | INVERT_ yesno {global colorbar; set colorbar(invert) $2; InvertColorbar}
  | TAG_ cmapTag
+ | numeric numeric {CmapValueCmd $1 $2}
+# backward compatibility
  | VALUE_ numeric numeric {CmapValueCmd $2 $3}
  ;
 

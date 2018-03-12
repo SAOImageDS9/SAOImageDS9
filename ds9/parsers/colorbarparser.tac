@@ -40,9 +40,11 @@ colorbar : yesno {global view; set view(colorbar) $1; UpdateView}
  | FONTSIZE_ INT_ {global colorbar; set colorbar(font,size) $2; UpdateView}
  | FONTWEIGHT_ fontweight {global colorbar; set colorbar(font,weight) $2; UpdateView}
  | FONTSLANT_ fontslant {global colorbar; set colorbar(font,slant) $2; UpdateView}
+# backward compatibility
  | FONTSTYLE_ fontstyle
- | ORIENTATION_ orientation {global colorbar; set colorbar(orientation) $2; UpdateView}
  | orientation {global colorbar; set colorbar(orientation) $1; UpdateView}
+# backward compatibility
+ | ORIENTATION_ orientation {global colorbar; set colorbar(orientation) $2; UpdateView}
  | SIZE_ INT_ {global colorbar; set colorbar(size) $2; UpdateView}
  | TICKS_ INT_ {global colorbar; set colorbar(ticks) $2; UpdateView}
  ;

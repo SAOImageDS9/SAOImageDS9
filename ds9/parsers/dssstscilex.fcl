@@ -19,6 +19,7 @@ phase2_gsc1	{return $GSC1_}
 
 #include yesno.fin
 #include imgsvr.fin
-#include base.fin
+#include numeric.fin
+#include string.fin
 
 %%

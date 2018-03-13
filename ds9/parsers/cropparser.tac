@@ -4,7 +4,8 @@
 #include skyformat.tin
 #include skyframe.tin
 #include coords.tin
-#include base.tin
+#include numeric.tin
+#include string.tin
 
 %start command
 
@@ -21,7 +22,7 @@
 #include skyformat.trl
 #include skyframe.trl
 #include coords.trl
-#include base.trl
+#include numeric.trl
 
 command : crop
 | crop {yyclearin; YYACCEPT} STRING_

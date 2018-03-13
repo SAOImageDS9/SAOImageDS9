@@ -2,7 +2,8 @@
 %}
 
 #include yesno.tin
-#include base.tin
+#include numeric.tin
+#include string.tin
 
 %start command
 
@@ -18,7 +19,7 @@
 %%
 
 #include yesno.trl
-#include base.trl
+#include numeric.trl
 
 command : block
  | block {yyclearin; YYACCEPT} STRING_

@@ -13,7 +13,8 @@ to	    {return $TO_}
 
 #include skyframe.fin
 #include coords.fin
-#include base.fin
+#include numeric.fin
+#include string.fin
 
 %%
 

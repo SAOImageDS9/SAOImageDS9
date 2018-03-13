@@ -20,6 +20,7 @@ tag		{return $TAG_}
 value		{return $VALUE_}
 
 #include yesno.fin
-#include base.fin
+#include numeric.fin
+#include string.fin
 
 %%

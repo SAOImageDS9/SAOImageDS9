@@ -21,6 +21,7 @@ vertical	{return $VERTICAL_}
 
 #include yesno.fin
 #include font.fin
-#include base.fin
+#include numeric.fin
+#include string.fin
 
 %%

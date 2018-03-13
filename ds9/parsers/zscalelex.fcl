@@ -12,6 +12,7 @@ sample		{return $SAMPLE_}
 line		{return $LINE_}
 
 #include yesno.fin
-#include base.fin
+#include numeric.fin
+#include string.fin
 
 %%

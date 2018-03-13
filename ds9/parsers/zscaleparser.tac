@@ -2,7 +2,8 @@
 %}
 
 #include yesno.tin
-#include base.tin
+#include numeric.tin
+#include string.tin
 
 %start command
 
@@ -13,16 +14,16 @@
 %%
 
 #include yesno.trl
-#include base.trl
+#include numeric.trl
 
 command : zscale
  | zscale {yyclearin; YYACCEPT} STRING_
  ;
 
 zscale : yesno {global scale; set scale(mode) zscale; ChangeScaleMode}
- | CONTRAST_ {global zscale; set zscale(contrast) zscale; ChangeZScale}
- | SAMPLE_ {global zscale; set zscale(sample) zscale; ChangeZScale}
- | LINE_ {global zscale; set zscale(line) zscale; ChangeZScale}
+ | CONTRAST_ numeric {global zscale; set zscale(contrast) $2; ChangeZScale}
+ | SAMPLE_ INT_ {global zscale; set zscale(sample) $2; ChangeZScale}
+ | LINE_ INT_ {global zscale; set zscale(line) $2; ChangeZScale}
  ;
 
 %%

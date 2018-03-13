@@ -23,6 +23,7 @@ update	    {return $UPDATE_}
 
 #include yesno.fin
 #include imgsvr.fin
-#include base.fin
+#include numeric.fin
+#include string.fin
 
 %%

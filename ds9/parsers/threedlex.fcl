@@ -30,6 +30,7 @@ view		{return $VIEW_}
 vp		{return $VIEW_}
 
 #include yesno.fin
-#include base.fin
+#include numeric.fin
+#include string.fin
 
 %%

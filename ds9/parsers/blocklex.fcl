@@ -17,6 +17,7 @@ out		{return $OUT_}
 to		{return $TO_}
 
 #include yesno.fin
-#include base.fin
+#include numeric.fin
+#include string.fin
 
 %%

@@ -2,7 +2,8 @@
 %}
 
 #include yesno.tin
-#include base.tin
+#include numeric.tin
+#include string.tin
 
 %start command
 
@@ -19,8 +20,7 @@
 %%
 
 #include yesno.trl
-#include base.trl
-
+#include numeric.trl
 
 yes : YES_ {set _ 1}
  | ON_ {set _ 1}

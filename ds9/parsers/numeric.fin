@@ -1,0 +1,7 @@
+# INT
+[+-]?{D}+ {set yylval $yytext; return $INT_}
+
+# REAL
+[+-]?{D}+"."?({E})? |
+[+-]?{D}*"."{D}+({E})? {set yylval $yytext; return $REAL_}
+

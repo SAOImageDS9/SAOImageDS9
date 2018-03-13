@@ -18,7 +18,8 @@ reset	{return $RESET_}
 #include skyformat.fin
 #include skyframe.fin
 #include coords.fin
-#include base.fin
+#include numeric.fin
+#include string.fin
 
 %%
 

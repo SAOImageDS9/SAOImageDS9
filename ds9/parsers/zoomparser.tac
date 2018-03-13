@@ -1,7 +1,8 @@
 %{
 %}
 
-#include base.tin
+#include numeric.tin
+#include string.tin
 
 %start command
 
@@ -14,7 +15,7 @@
 
 %%
 
-#include base.trl
+#include numeric.trl
 
 command : zoom 
  | zoom {yyclearin; YYACCEPT} STRING_

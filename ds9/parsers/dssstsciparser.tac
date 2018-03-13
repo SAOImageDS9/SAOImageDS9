@@ -3,7 +3,8 @@
 
 #include yesno.tin
 #include imgsvr.tin
-#include base.tin
+#include numeric.tin
+#include string.tin
 
 %start command
 
@@ -21,7 +22,7 @@
 
 #include yesno.trl
 #include imgsvr.trl
-#include base.trl
+#include numeric.trl
 
 command : dssstsci
  | dssstsci {yyclearin; YYACCEPT} STRING_

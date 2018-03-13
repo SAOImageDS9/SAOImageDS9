@@ -3,7 +3,8 @@
 
 #include skyframe.tin
 #include coords.tin
-#include base.tin
+#include numeric.tin
+#include string.tin
 
 %start command
 
@@ -15,7 +16,7 @@
 
 #include skyframe.trl
 #include coords.trl
-#include base.trl
+#include numeric.trl
 
 command : pan
 | pan {yyclearin; YYACCEPT} STRING_

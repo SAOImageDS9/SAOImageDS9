@@ -1,0 +1,23 @@
+#tab tileparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+automatic	{return $AUTOMATIC_}
+column		{return $COLUMN_}
+direction	{return $DIRECTION_}
+gap		{return $GAP_}
+grid		{return $GRID_}
+layout		{return $LAYOUT_}
+manual		{return $MANUAL_}
+mode		{return $MODE_}
+row		{return $ROW_}
+
+#include yesno.fin
+#include base.fin
+
+%%

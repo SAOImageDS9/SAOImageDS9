@@ -45,7 +45,7 @@ bin : CLOSE_ {BinDestroyDialog}
  | COLSZ_ cols cols cols {BinCols \"$2\" \"$3\" \"$4\"}
  | FACTOR_ binFactor
  | DEPTH_ INT_ {global bin; set bin(depth) $2; ChangeBinDepth}
- | FILTER_ binFilter
+ | FILTER_ STRING_ {BinFilter $2}
  | FUNCTION_ binFunction {global bin; set bin(function) $2; ChangeBinFunction}
  | IN_ {Bin .5 .5}
  | OUT_ {Bin 2 2}
@@ -70,10 +70,6 @@ binAbout : numeric numeric {BinAbout $1 $2}
 
 binFactor : numeric {global bin; set bin(factor) "$1 $1"; ChangeBinFactor}
  | numeric numeric {global bin; set bin(factor) "$1 $2"; ChangeBinFactor}
- ;
-
-binFilter : {BinFilter {}}
- | STRING_ {BinFilter $1}
  ;
 
 binFunction: AVERAGE_ {set _ average}

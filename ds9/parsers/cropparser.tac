@@ -23,10 +23,6 @@
 #include coords.trl
 #include base.trl
 
-skyformatdef : {set _ degrees}
- | skyformat {set _ $1}
- ;
-
 command : crop
 | crop {yyclearin; YYACCEPT} STRING_
 ;

@@ -127,15 +127,29 @@ proc DestroyHeader {frame} {
     }
 
     for {set id 1} {$id <= $cnt} {incr id} {
-	set varname "hd-$frame-$id"
-	global $varname
-	if {[info exists $varname]} {
-	    SimpleTextDestroy $varname
-	}
+	DestroyHeaderOne $frame $id
+    }
+}
+
+proc DestroyHeaderOne {frame id} {
+    set varname "hd-$frame-$id"
+    global $varname
+    if {[info exists $varname]} {
+	SimpleTextDestroy $varname
     }
 }
 
 proc ProcessHeaderCmd {varname iname} {
+    upvar $varname var
+    upvar $iname ii
+
+    header::YY_FLUSH_BUFFER
+    header::yy_scan_string [lrange $var $ii end]
+    header::yyparse
+    incr ii [expr $header::yycnt-1]
+}
+
+proc oProcessHeaderCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
@@ -156,30 +170,41 @@ proc ProcessHeaderCmd {varname iname} {
     if {$current(frame) != {}} {
 	switch -- $item {
 	    close {
-		set vvarname "hd-$current(frame)-$jj"
-		global $vvarname
-		if {[info exists $vvarname]} {
-		    SimpleTextDestroy $vvarname
-		}
+		CloseHeaderCmd $jj
 		incr i -1
 	    }
 	    save {
-		set fn [lindex $var $i]
-		if {$fn != {}} {
-		    if {[catch {set ch [open "| cat > \"$fn\"" w]}]} {
-			Error [msgcat::mc {An error has occurred while saving}]
-			return
-		    }
-		    puts -nonewline $ch [$current(frame) get fits header $jj]
-		    close $ch
-		}
+		SaveHeaderCmd $jj [lindex $var $i]
 	    }
 	    default {
-		catch {DisplayHeader $current(frame) $jj \
-			   [$current(frame) get fits file name $jj]}
+		DisplayHeaderCmd $jj
 		incr i -1
 	    }
 	}
     }
 }
 
+proc DisplayHeaderCmd {id} {
+    global current
+
+    DisplayHeader $current(frame) $id [$current(frame) get fits file name $id]
+}
+
+proc CloseHeaderCmd {id} {
+    global current
+
+    DestroyHeaderOne $current(frame) $id
+}
+
+proc SaveHeaderCmd {id fn} {
+    global current
+
+    if {$fn != {}} {
+	if {[catch {set ch [open "| cat > \"$fn\"" w]}]} {
+	    Error [msgcat::mc {An error has occurred while saving}]
+	    return
+	}
+	puts -nonewline $ch [$current(frame) get fits header $id]
+	close $ch
+    }
+}

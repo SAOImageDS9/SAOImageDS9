@@ -77,13 +77,12 @@ proc DisplayHeader {frame id title} {
     global current
 
     set varname "hd-$frame-$id"
-    upvar #0 $varname var
     global $varname
-
     SimpleTextDialog $varname $title 80 40 insert top \
 	[$current(frame) get fits header $id]
 
     # create a special text tag for keywords
+    upvar #0 $varname var
     $var(text) tag configure keyword -foreground blue
     
     # color tag keywords
@@ -104,15 +103,12 @@ proc UpdateHeaderDialog {} {
 
     for {set id 1} {$id <= $cnt} {incr id} {
 	set varname "hd-$frame-$id"
-	upvar #0 $varname var
 	global $varname
-	if {![info exists var(top)]} {
-	    continue
-	}
-	if {![winfo exists $var(top)]} {
+	if {![info exists varname]} {
 	    continue
 	}
 
+	upvar #0 $varname var
 	$var(text) delete 1.0 end
 	$var(text) insert end [$frame get fits header $id]
 
@@ -132,13 +128,9 @@ proc DestroyHeader {frame} {
 
     for {set id 1} {$id <= $cnt} {incr id} {
 	set varname "hd-$frame-$id"
-	upvar #0 $varname var
 	global $varname
-
 	if {[info exists $varname]} {
-	    if {[winfo exists $var(top)]} {
-		SimpleTextDestroy $varname
-	    }
+	    SimpleTextDestroy $varname
 	}
     }
 }
@@ -165,10 +157,8 @@ proc ProcessHeaderCmd {varname iname} {
 	switch -- $item {
 	    close {
 		set vvarname "hd-$current(frame)-$jj"
-		upvar #0 $vvarname vvar
 		global $vvarname
-
-		if {[info exists vvar(top)]} {
+		if {[info exists $vvarname]} {
 		    SimpleTextDestroy $vvarname
 		}
 		incr i -1

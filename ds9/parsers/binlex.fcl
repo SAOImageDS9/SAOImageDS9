@@ -11,6 +11,7 @@ about		{return $ABOUT_}
 average		{return $AVERAGE_}
 buffersize	{return $BUFFERSIZE_}
 center		{return $CENTER_}
+clear		{return $CLEAR_}
 close		{return $CLOSE_}
 cols		{return $COLS_}
 colsz		{return $COLSZ_}

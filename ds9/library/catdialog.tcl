@@ -737,6 +737,13 @@ proc CATDestroy {varname} {
 	PlotDestroy $var(plot,var)
     }
 
+    # cat header?
+    set vvarname ${varname}hdr
+    global $vvarname
+    if {[info exists $vvarname]} {
+	SimpleTextDestroy $vvarname
+    }
+
     ARDestroy $varname
 }
 

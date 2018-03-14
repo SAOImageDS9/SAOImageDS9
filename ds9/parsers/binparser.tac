@@ -11,6 +11,7 @@
 %token AVERAGE_
 %token BUFFERSIZE_
 %token CENTER_
+%token CLEAR_
 %token CLOSE_
 %token COLS_
 %token COLSZ_
@@ -40,17 +41,17 @@ bin : CLOSE_ {BinDestroyDialog}
  | OPEN_ {BinDialog}
  | MATCH_ {MatchBinCurrent}
  | LOCK_ yesno {global bin; set bin(lock) $2; LockBinCurrent}
- | ABOUT_ binAbout
+ | ABOUT_ about
  | BUFFERSIZE_ INT_ {global bin; set bin(buffersize) $2; ChangeBinBufferSize}
  | COLS_ cols cols {BinCols \"$2\" \"$3\" \"\"}
  | COLSZ_ cols cols cols {BinCols \"$2\" \"$3\" \"$4\"}
- | FACTOR_ binFactor
+ | FACTOR_ factor
  | DEPTH_ INT_ {global bin; set bin(depth) $2; ChangeBinDepth}
- | FILTER_ STRING_ {BinFilter $2}
- | FUNCTION_ binFunction {global bin; set bin(function) $2; ChangeBinFunction}
+ | FILTER_ filter {BinFilter $2}
+ | FUNCTION_ function {global bin; set bin(function) $2; ChangeBinFunction}
  | IN_ {Bin .5 .5}
  | OUT_ {Bin 2 2}
- | TO_ binTo
+ | TO_ to
  ;
 
 cols : STRING_ {set _ $1}
@@ -65,19 +66,23 @@ colsxyz : 'x' {set _ $1}
  | 'Z' {set _ $1}
  ;
 
-binAbout : numeric numeric {BinAbout $1 $2}
+about : numeric numeric {BinAbout $1 $2}
  | CENTER_ {BinAboutCenter}
  ;
 
-binFactor : numeric {global bin; set bin(factor) "$1 $1"; ChangeBinFactor}
+factor : numeric {global bin; set bin(factor) "$1 $1"; ChangeBinFactor}
  | numeric numeric {global bin; set bin(factor) "$1 $2"; ChangeBinFactor}
  ;
 
-binFunction: AVERAGE_ {set _ average}
+filter : CLEAR_ {set _ {}}
+ | STRING_ {set _ $1}
+ ;
+
+function: AVERAGE_ {set _ average}
  | SUM_ {set _ sum}
  ;
 
-binTo: binFactor
+to: factor
  | FIT_ {BinToFit}
  ;
 

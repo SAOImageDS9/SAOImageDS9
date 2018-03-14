@@ -164,7 +164,7 @@ proc ProcessHeaderCmd {varname iname} {
     if {$current(frame) != {}} {
 	switch -- $item {
 	    close {
-		set vvarname "hd[string range $current(frame) end end]-$jj"
+		set vvarname "hd-$current(frame)-$jj"
 		upvar #0 $vvarname vvar
 		global $vvarname
 

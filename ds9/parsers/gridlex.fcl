@@ -54,6 +54,15 @@ vertical	{return $VERTICAL_}
 view		{return $VIEW_}
 width		{return $WIDTH_}
 
+lll		{return $LLL_}
+llu		{return $LLU_}
+lul		{return $LUL_}
+luu		{return $LUU_}
+ull		{return $ULL_}
+ulu		{return $ULU_}
+uul		{return $UUL_}
+uuu		{return $UUU_}
+
 #include yesno.fin
 #include font.fin
 #include coords.fin

@@ -1138,6 +1138,16 @@ proc GridBackup {ch which} {
 
 proc ProcessGridCmd {varname iname} {
     upvar $varname var
+    upvar $iname ii
+
+    grid::YY_FLUSH_BUFFER
+    grid::yy_scan_string [lrange $var $ii end]
+    grid::yyparse
+    incr ii [expr $grid::yycnt-1]
+}
+
+proc oProcessGridCmd {varname iname} {
+    upvar $varname var
     upvar $iname i
 
     global grid

@@ -848,12 +848,20 @@ proc ProcessSendWidthCmd {proc id param} {
 
 proc ProcessViewCmd {varname iname} {
     upvar $varname var
+    upvar $iname ii
+
+    view::YY_FLUSH_BUFFER
+    view::yy_scan_string [lrange $var $ii end]
+    view::yyparse
+    incr ii [expr $view::yycnt-1]
+}
+
+proc oProcessViewCmd {varname iname} {
+    upvar $varname var
     upvar $iname i
 
     global view
     global rgb
-    global canvas
-    global icanvas
 
     set item [string tolower [lindex $var $i]]
 

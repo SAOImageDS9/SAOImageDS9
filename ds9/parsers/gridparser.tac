@@ -181,7 +181,7 @@ labelsfontstyle : NORMAL_  {global grid; set grid(textlab,weight) normal; set gr
  ;
 
 view : GRID_ yesno {global grid; set grid(grid) $2; GridUpdateCurrent}
- | AXES_ viewaxes
+ | AXES_ viewaxes {GridUpdateCurrent}
  | TITLE_ yesno {global grid; set grid(title) $2; GridUpdateCurrent}
  | BORDER_ yesno {global grid; set grid(border) $2; GridUpdateCurrent}
  | VERTICAL_ yesno {global grid; set grid(numlab,vertical) $2; GridUpdateCurrent}

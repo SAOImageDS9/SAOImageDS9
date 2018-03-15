@@ -16,6 +16,7 @@
 %token BORDER_
 %token COLOR_
 %token CLOSE_
+%token DASH_
 %token DEF_
 %token DEF1_
 %token DEF2_
@@ -116,6 +117,8 @@ system : coordsys {set _ $1}
 gridgrid : yesno {global grid; set grid(grid) $1}
  | COLOR_ STRING_ {global grid; set grid(grid,color) $2}
  | WIDTH_ INT_ {global grid; set grid(grid,color) $2}
+ | DASH_ yesno {global grid; set grid(grid,style) $2}
+ # backward compatible
  | STYLE_ INT_ {global grid; set grid(grid,style) $2}
  | GAP1_ numeric {global grid; set grid(grid,gap1) $2}
  | GAP2_ numeric {global grid; set grid(grid,gap2) $2}
@@ -125,6 +128,8 @@ gridgrid : yesno {global grid; set grid(grid) $1}
 axes : yesno {global grid; set grid(axes) $1}
  | COLOR_ STRING_ {global grid; set grid(axes,color) $2}
  | WIDTH_ INT_ {global grid; set grid(axes,color) $2}
+ | DASH_ yesno {global grid; set grid(axes,style) $2}
+ # backward compatible
  | STYLE_ INT_ {global grid; set grid(axes,style) $2}
  | TYPE_ interiortype {global grid; set grid(axes,type) $2}
  | ORIGIN_ origin {global grid; set grid(axes,origin) $2}
@@ -143,12 +148,16 @@ origin : LLL_ {set _ lll}
 tickmarks : yesno {global grid; set grid(tick) $1}
  | COLOR_ STRING_ {global grid; set grid(tick,color) $2}
  | WIDTH_ INT_ {global grid; set grid(tick,color) $2}
+ | DASH_ yesno {global grid; set grid(tick,style) $2}
+ # backward compatible
  | STYLE_ INT_ {global grid; set grid(tick,style) $2}
  ;
 
 border : yesno {global grid; set grid(border) $1}
  | COLOR_ STRING_ {global grid; set grid(border,color) $2}
  | WIDTH_ INT_ {global grid; set grid(border,color) $2}
+ | DASH_ yesno {global grid; set grid(border,style) $2}
+ # backward compatible
  | STYLE_ INT_ {global grid; set grid(border,style) $2}
  ;
 

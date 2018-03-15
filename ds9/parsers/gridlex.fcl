@@ -7,7 +7,7 @@
 
 %%
 
-analyis		{return $ANALYSIS_}
+analysis	{return $ANALYSIS_}
 axes		{return $AXES_}
 border		{return $BORDER_}
 close		{return $CLOSE_}
@@ -37,7 +37,8 @@ open		{return $OPEN_}
 publication	{return $PUBLICATION_}
 reset		{return $RESET_}
 save		{return $SAVE_}
-sky		{return $SKY_}
+sky		{return $SKYFRAME_}
+skyframe	{return $SKYFRAME_}
 skyformat	{return $SKYFORMAT_}
 style		{return $STYLE_}
 system		{return $SYSTEM_}
@@ -55,6 +56,9 @@ width		{return $WIDTH_}
 
 #include yesno.fin
 #include font.fin
+#include coords.fin
+#include skyframe.fin
+#include skyformat.fin
 #include numeric.fin
 #include string.fin
 

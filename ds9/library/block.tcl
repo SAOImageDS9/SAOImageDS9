@@ -284,23 +284,18 @@ proc BlockBackupRGB {ch which} {
 
 proc ProcessBlockCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    # we need to be realized
-    ProcessRealizeDS9
-
-    block::YY_FLUSH_BUFFER
-    block::yy_scan_string [lrange $var $ii end]
-    block::yyparse
-    incr ii [expr $block::yycnt-1]
-}
-
-proc oProcessBlockCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
 
     # we need to be realized
     ProcessRealizeDS9
+
+    global debug
+    if {$debug(tcl,parser)} {
+	block::YY_FLUSH_BUFFER
+	block::yy_scan_string [lrange $var $i end]
+	block::yyparse
+	incr i [expr $block::yycnt-1]
+    } else {
 
     global block
     switch -- [string tolower [lindex $var $i]] {
@@ -350,6 +345,7 @@ proc oProcessBlockCmd {varname iname} {
 	    }
 	}
     }
+}
 }
 
 proc ProcessSendBlockCmd {proc id param} {

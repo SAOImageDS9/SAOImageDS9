@@ -848,18 +848,16 @@ proc ProcessSendWidthCmd {proc id param} {
 
 proc ProcessViewCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    view::YY_FLUSH_BUFFER
-    view::yy_scan_string [lrange $var $ii end]
-    view::yyparse
-    incr ii [expr $view::yycnt-1]
-}
-
-proc oProcessViewCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	view::YY_FLUSH_BUFFER
+	view::yy_scan_string [lrange $var $i end]
+	view::yyparse
+	incr i [expr $view::yycnt-1]
+    } else {
+	
     global view
     global rgb
 
@@ -1025,6 +1023,7 @@ proc oProcessViewCmd {varname iname} {
 	    UpdateView
 	}
     }
+}
 }
 
 proc ProcessSendViewCmd {proc id param} {

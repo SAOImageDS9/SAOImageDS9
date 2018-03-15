@@ -679,24 +679,19 @@ proc PanZoomBackup {ch which} {
 
 proc ProcessPanCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    # we need to be realized
-    ProcessRealizeDS9
-
-    pan::YY_FLUSH_BUFFER
-    pan::yy_scan_string [lrange $var $ii end]
-    pan::yyparse
-    incr ii [expr $pan::yycnt-1]
-}
-
-proc oProcessPanCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
 
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	pan::YY_FLUSH_BUFFER
+	pan::yy_scan_string [lrange $var $i end]
+	pan::yyparse
+	incr i [expr $pan::yycnt-1]
+    } else {
+	
     switch -- [string tolower [lindex $var $i]] {
 	open {PanZoomDialog}
 	close {PanZoomDestroyDialog}
@@ -724,6 +719,7 @@ proc oProcessPanCmd {varname iname} {
 	}
     }
 }
+}
 
 proc ProcessSendPanCmd {proc id param} {
     global current
@@ -740,24 +736,19 @@ proc ProcessSendPanCmd {proc id param} {
 
 proc ProcessZoomCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    # we need to be realized
-    ProcessRealizeDS9
-
-    zoom::YY_FLUSH_BUFFER
-    zoom::yy_scan_string [lrange $var $ii end]
-    zoom::yyparse
-    incr ii [expr $zoom::yycnt-1]
-}
-
-proc oProcessZoomCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
 
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	zoom::YY_FLUSH_BUFFER
+	zoom::yy_scan_string [lrange $var $i end]
+	zoom::yyparse
+	incr i [expr $zoom::yycnt-1]
+    } else {
+	
     global current
     switch -- [string tolower [lindex $var $i]] {
 	open {PanZoomDialog}
@@ -795,6 +786,7 @@ proc oProcessZoomCmd {varname iname} {
 	    }
 	}
     }
+}
 }
 
 proc ProcessSendZoomCmd {proc id param} {

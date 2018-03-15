@@ -1009,17 +1009,15 @@ proc ProcessSendMinMaxCmd {proc id param} {
 
 proc ProcessZScaleCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    zscale::YY_FLUSH_BUFFER
-    zscale::yy_scan_string [lrange $var $ii end]
-    zscale::yyparse
-    incr ii [expr $zscale::yycnt-1]
-}
-
-proc oProcessZScaleCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
+
+    global debug
+    if {$debug(tcl,parser)} {
+	zscale::YY_FLUSH_BUFFER
+	zscale::yy_scan_string [lrange $var $i end]
+	zscale::yyparse
+	incr i [expr $zscale::yycnt-1]
+    } else {
 
     global zscale
     global scale
@@ -1046,6 +1044,7 @@ proc oProcessZScaleCmd {varname iname} {
 	    incr i -1
 	}
     }
+}
 }
 
 proc ProcessSendZScaleCmd {proc id param} {

@@ -158,22 +158,19 @@ taken with the UK Schmidt.
 
 proc ProcessESOCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    ESODialog
-
-    dsseso::YY_FLUSH_BUFFER
-    dsseso::yy_scan_string [lrange $var $ii end]
-    dsseso::yyparse
-    incr ii [expr $dsseso::yycnt-1]
-}
-
-proc oProcessESOCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
 
     ESODialog
-    IMGSVRProcessCmd $varname $iname deso
+
+    global debug
+    if {$debug(tcl,parser)} {
+	dsseso::YY_FLUSH_BUFFER
+	dsseso::yy_scan_string [lrange $var $i end]
+	dsseso::yyparse
+	incr i [expr $dsseso::yycnt-1]
+    } else {
+	IMGSVRProcessCmd $varname $iname deso
+    }
 }
 
 proc ProcessSendESOCmd {proc id param} {

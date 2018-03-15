@@ -116,7 +116,7 @@ system : coordsys {set _ $1}
 
 gridgrid : yesno {global grid; set grid(grid) $1}
  | COLOR_ STRING_ {global grid; set grid(grid,color) $2}
- | WIDTH_ INT_ {global grid; set grid(grid,color) $2}
+ | WIDTH_ INT_ {global grid; set grid(grid,width) $2}
  | DASH_ yesno {global grid; set grid(grid,style) $2}
  # backward compatible
  | STYLE_ INT_ {global grid; set grid(grid,style) $2}
@@ -127,7 +127,7 @@ gridgrid : yesno {global grid; set grid(grid) $1}
 
 axes : yesno {global grid; set grid(axes) $1}
  | COLOR_ STRING_ {global grid; set grid(axes,color) $2}
- | WIDTH_ INT_ {global grid; set grid(axes,color) $2}
+ | WIDTH_ INT_ {global grid; set grid(axes,width) $2}
  | DASH_ yesno {global grid; set grid(axes,style) $2}
  # backward compatible
  | STYLE_ INT_ {global grid; set grid(axes,style) $2}
@@ -147,7 +147,7 @@ origin : LLL_ {set _ lll}
 
 tickmarks : yesno {global grid; set grid(tick) $1}
  | COLOR_ STRING_ {global grid; set grid(tick,color) $2}
- | WIDTH_ INT_ {global grid; set grid(tick,color) $2}
+ | WIDTH_ INT_ {global grid; set grid(tick,width) $2}
  | DASH_ yesno {global grid; set grid(tick,style) $2}
  # backward compatible
  | STYLE_ INT_ {global grid; set grid(tick,style) $2}
@@ -155,7 +155,7 @@ tickmarks : yesno {global grid; set grid(tick) $1}
 
 border : yesno {global grid; set grid(border) $1}
  | COLOR_ STRING_ {global grid; set grid(border,color) $2}
- | WIDTH_ INT_ {global grid; set grid(border,color) $2}
+ | WIDTH_ INT_ {global grid; set grid(border,width) $2}
  | DASH_ yesno {global grid; set grid(border,style) $2}
  # backward compatible
  | STYLE_ INT_ {global grid; set grid(border,style) $2}

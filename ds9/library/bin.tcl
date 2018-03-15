@@ -721,20 +721,17 @@ proc BinBackupRGB {ch which} {
 
 proc ProcessBinCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    bin::YY_FLUSH_BUFFER
-    bin::yy_scan_string [lrange $var $ii end]
-    bin::yyparse
-    incr ii [expr $bin::yycnt-1]
-}
-
-proc oProcessBinCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
 
-    global bin
+    global debug
+    if {$debug(tcl,parser)} {
+	bin::YY_FLUSH_BUFFER
+	bin::yy_scan_string [lrange $var $i end]
+	bin::yyparse
+	incr i [expr $bin::yycnt-1]
+    } else {
 
+    global bin
     switch -- [string tolower [lindex $var $i]] {
 	close {BinDestroyDialog}
 	open {BinDialog}
@@ -808,6 +805,7 @@ proc oProcessBinCmd {varname iname} {
 	    BinToFit
 	}
     }
+}
 }
 
 proc ProcessSendBinCmd {proc id param} {

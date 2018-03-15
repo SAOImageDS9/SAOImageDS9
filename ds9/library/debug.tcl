@@ -24,6 +24,7 @@ proc DebugDef {} {
     set debug(tcl,ftp) 0
     set debug(tcl,xpa) 0
     set debug(tcl,image) 0
+    set debug(tcl,parser) 1
 
     set debug(tksao,ast) 0
     set debug(tksao,mosaic) 0
@@ -99,6 +100,8 @@ proc DebugMenu {} {
 	-variable debug(tcl,xpa)
     $ds9(mb).debug.tcl add checkbutton -label {IMAGE} \
 	-variable debug(tcl,image)
+    $ds9(mb).debug.tcl add checkbutton -label {DS9Parser} \
+	-variable debug(tcl,parser)
 
     menu $ds9(mb).debug.tksao
     $ds9(mb).debug.tksao add checkbutton -label {AST} \

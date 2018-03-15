@@ -388,23 +388,18 @@ proc CropBackupRGB {ch which} {
 
 proc ProcessCropCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    # we need to be realized
-    ProcessRealizeDS9
-
-    crop::YY_FLUSH_BUFFER
-    crop::yy_scan_string [lrange $var $ii end]
-    crop::yyparse
-    incr ii [expr $crop::yycnt-1]
-}
-
-proc oProcessCropCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
 
     # we need to be realized
     ProcessRealizeDS9
+
+    global debug
+    if {$debug(tcl,parser)} {
+	crop::YY_FLUSH_BUFFER
+	crop::yy_scan_string [lrange $var $i end]
+	crop::yyparse
+	incr i [expr $crop::yycnt-1]
+    } else {
 
     global crop
     global current
@@ -446,6 +441,7 @@ proc oProcessCropCmd {varname iname} {
 
 	    $current(frame) crop center $x $y $sys $sky $w $h $sys $dformat
 	}
+    }
     }
 }
 

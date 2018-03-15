@@ -2308,18 +2308,16 @@ proc ProcessSendSingleCmd {proc id param} {
 
 proc ProcessTileCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    tile::YY_FLUSH_BUFFER
-    tile::yy_scan_string [lrange $var $ii end]
-    tile::yyparse
-    incr ii [expr $tile::yycnt-1]
-}
-
-proc oProcessTileCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	tile::YY_FLUSH_BUFFER
+	tile::yy_scan_string [lrange $var $i end]
+	tile::yyparse
+	incr i [expr $tile::yycnt-1]
+    } else {
+	
     global current
     global tile
 
@@ -2386,6 +2384,7 @@ proc oProcessTileCmd {varname iname} {
 	}
     }
     DisplayMode
+}
 }
 
 proc ProcessSendTileCmd {proc id param} {

@@ -1183,30 +1183,25 @@ proc ColorbarBackupCmaps {ch dir} {
 
 proc ProcessCmapCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
+    upvar $iname i
 
     # we need to be realized
     ProcessRealizeDS9
 
-    cmap::YY_FLUSH_BUFFER
-    cmap::yy_scan_string [lrange $var $ii end]
-    cmap::yyparse
-    incr ii [expr $cmap::yycnt-1]
-}
-
-proc oProcessCmapCmd {varname iname} {
-    upvar $varname var
-    upvar $iname i
-
+    global debug
+    if {$debug(tcl,parser)} {
+	cmap::YY_FLUSH_BUFFER
+	cmap::yy_scan_string [lrange $var $i end]
+	cmap::yyparse
+	incr i [expr $cmap::yycnt-1]
+    } else {
+	
     global colorbar
     global current
 
     global ds9
     global current
     global rgb
-
-    # we need to be realized
-    ProcessRealizeDS9
 
     switch -- [string tolower [lindex $var $i]] {
 	open {ColormapDialog}
@@ -1301,6 +1296,7 @@ proc oProcessCmapCmd {varname iname} {
 	    UpdateColorDialog
 	}
     }
+    }
 }
 
 proc CmapCmd {item} {
@@ -1368,18 +1364,16 @@ proc ProcessSendCmapCmd {proc id param} {
 
 proc ProcessColorbarCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    colorbar::YY_FLUSH_BUFFER
-    colorbar::yy_scan_string [lrange $var $ii end]
-    colorbar::yyparse
-    incr ii [expr $colorbar::yycnt-1]
-}
-
-proc oProcessColorbarCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	colorbar::YY_FLUSH_BUFFER
+	colorbar::yy_scan_string [lrange $var $i end]
+	colorbar::yyparse
+	incr i [expr $colorbar::yycnt-1]
+    } else {
+	
     global colorbar
     global view
 
@@ -1489,6 +1483,7 @@ proc oProcessColorbarCmd {varname iname} {
 	    UpdateView
 	}
     }
+}
 }
 
 proc ProcessSendColorbarCmd {proc id param} {

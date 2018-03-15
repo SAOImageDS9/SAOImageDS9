@@ -104,7 +104,7 @@ proc UpdateHeaderDialog {} {
     for {set id 1} {$id <= $cnt} {incr id} {
 	set varname "hd-$frame-$id"
 	global $varname
-	if {![info exists varname]} {
+	if {![info exists $varname]} {
 	    continue
 	}
 
@@ -141,18 +141,16 @@ proc DestroyHeaderOne {frame id} {
 
 proc ProcessHeaderCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    header::YY_FLUSH_BUFFER
-    header::yy_scan_string [lrange $var $ii end]
-    header::yyparse
-    incr ii [expr $header::yycnt-1]
-}
-
-proc oProcessHeaderCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	header::YY_FLUSH_BUFFER
+	header::yy_scan_string [lrange $var $i end]
+	header::yyparse
+	incr i [expr $header::yycnt-1]
+    } else {
+	
     set item [string tolower [lindex $var $i]]
     switch -- $item {
 	close -
@@ -182,6 +180,7 @@ proc oProcessHeaderCmd {varname iname} {
 	    }
 	}
     }
+}
 }
 
 proc DisplayHeaderCmd {id} {

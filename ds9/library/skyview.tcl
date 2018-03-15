@@ -606,22 +606,19 @@ Maintained by: Laura McDonald lmm@skyview.gsfc.nasa.gov
 
 proc ProcessSkyViewCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    SkyViewDialog
-
-    skyview::YY_FLUSH_BUFFER
-    skyview::yy_scan_string [lrange $var $ii end]
-    skyview::yyparse
-    incr ii [expr $skyview::yycnt-1]
-}
-
-proc oProcessSkyViewCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
 
     SkyViewDialog
-    IMGSVRProcessCmd $varname $iname dskyview
+
+    global debug
+    if {$debug(tcl,parser)} {
+	skyview::YY_FLUSH_BUFFER
+	skyview::yy_scan_string [lrange $var $i end]
+	skyview::yyparse
+	incr i [expr $skyview::yycnt-1]
+    } else {
+	IMGSVRProcessCmd $varname $iname dskyview
+    }
 }
 
 proc ProcessSendSkyViewCmd {proc id param} {

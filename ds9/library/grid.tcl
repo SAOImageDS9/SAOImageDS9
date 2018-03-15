@@ -1138,18 +1138,16 @@ proc GridBackup {ch which} {
 
 proc ProcessGridCmd {varname iname} {
     upvar $varname var
-    upvar $iname ii
-
-    grid::YY_FLUSH_BUFFER
-    grid::yy_scan_string [lrange $var $ii end]
-    grid::yyparse
-    incr ii [expr $grid::yycnt-1]
-}
-
-proc oProcessGridCmd {varname iname} {
-    upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	grid::YY_FLUSH_BUFFER
+	grid::yy_scan_string [lrange $var $i end]
+	grid::yyparse
+	incr i [expr $grid::yycnt-1]
+    } else {
+	
     global grid
     switch -- [string tolower [lindex $var $i]] {
 	open {GridDialog}
@@ -1414,6 +1412,7 @@ proc oProcessGridCmd {varname iname} {
 	    incr i -1
 	}
     }
+}
 }
 
 proc ProcessSendGridCmd {proc id param} {

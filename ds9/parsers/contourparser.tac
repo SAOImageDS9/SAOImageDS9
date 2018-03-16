@@ -62,8 +62,8 @@ contour : yesno {global contour; set contour(view) $1; UpdateContour}
  | OPEN_ {ContourDialog}
  | CLOSE_ {ContourDestroyDialog}
  | CLEAR_ {ContourOffDialog}
- | LOAD_
- | SAVE_
+ | LOAD_ load
+ | SAVE_ save
  | CONVERT_ {Contour2Polygons}
  | LOADLEVELS_
  | SAVELEVELS_
@@ -84,10 +84,22 @@ contour : yesno {global contour; set contour(view) $1; UpdateContour}
  | GENERATE_ {ContourCmdGenerate}
  ;
 
-paste : coordsys STRING_ INT_ yesno
- | wcssys STRING_ INT_ yesno
- | skyframe STRING_ INT_ yesno
- | wcssys skyframe STRING_ INT_ yesno
+load : STRING_ {ContourCmdLoad $1}
+ | STRING_ STRING_ INT_ yesno {ContourCmdLoadOpt $1 $2 $3 $4}
+ | STRING_ coordsys STRING_ INT_ yesno {ContourCmdLoadOrg $1 $2 fk5 $3 $4 $5}
+ | STRING_ wcssys STRING_ INT_ yesno {ContourCmdLoadOrg $1 $2 fk5 $3 $4 $5}
+ | STRING_ skyframe STRING_ INT_ yesno {ContourCmdLoadOrg $1 wcs $2 $3 $4 $5}
+ | STRING_ wcssys skyframe STRING_ INT_ yesno {ContourCmdLoadOrg $1 $2 $3 $4 $5 $6}
+ ;
+
+save : STRING_
+ ;
+
+paste : {ContourCmdPaste}
+ | coordsys STRING_ INT_ yesno {ContourCmdPasteOrg $1 fk5 $2 $3 $4}
+ | wcssys STRING_ INT_ yesno {ContourCmdPasteOrg $1 fk5 $2 $3 $4}
+ | skyframe STRING_ INT_ yesno {ContourCmdPasteOrg wcs $1 $2 $3 $4}
+ | wcssys skyframe STRING_ INT_ yesno {ContourCmdPasteOrg $1 $2 $3 $4 $5}
  ;
 
 method : BLOCK_ {set _ block}

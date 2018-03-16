@@ -486,8 +486,8 @@ proc ContourCPasteDialog {} {
     ttk::separator $w.sep -orient horizontal
     ttk::separator $w.sep2 -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
-#    pack $w.param1 $w.sep2 $w.param2 -side top -fill both -expand true
-    pack $w.param -side top -fill both -expand true
+    pack $w.param1 $w.sep2 $w.param -side top -fill both -expand true
+#    pack $w.param -side top -fill both -expand true
 
     DialogCenter $w 
     DialogWait $w ed(ok)
@@ -1158,7 +1158,7 @@ proc ProcessContourCmd {varname iname} {
 	    set dash [lindex $var $i]
 	    incr i [ProcessContourFix sys sky color width dash]
 
-	    ContourCmdPaste $sys $sky $color $width $dash
+	    ContourCmdPasteOrg $sys $sky $color $width $dash
 	}
 	color {
 	    incr i
@@ -1243,7 +1243,41 @@ proc ProcessContourCmd {varname iname} {
 }
 }
 
-proc ContourCmdPaste {sys sky color width dash} {
+proc ContourCmdLoad {fn} {
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) contour load $fn
+    }
+}
+
+proc ContourCmdLoadParam {fn color width dash} {
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) contour load $fn $color $width $dash
+    }
+}
+
+proc ContourCmdLoadOrg {fn sys sky color width dash} {
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) contour load $color $width $dash $fn $sys $sky
+    }
+}
+
+proc ContourCmdPaste {} {
+    global current
+    global contour
+
+    if {$current(frame) != {} && $contour(copy) != {}} {
+	set cc [$contour(copy) get contour $sys $sky]
+	$current(frame) contour paste cc
+    }
+}
+
+proc ContourCmdPasteOrg {sys sky color width dash} {
     global current
     global contour
 

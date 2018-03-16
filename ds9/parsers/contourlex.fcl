@@ -1,0 +1,54 @@
+#tab contourparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+asinh		{return $ASINH_}
+block		{return $BLOCK_}
+clear		{return $CLEAR_}
+close		{return $CLOSE_}
+color		{return $COLOR_}
+convert		{return $CONVERT_}
+copy		{return $COPY_}
+dash		{return $DASH_}
+exp		{return $EXP_}
+generate	{return $GENERATE_}
+global		{return $GLOBAL_}
+histequ		{return $HISTEQU_}
+levels		{return $LEVELS_}
+limits		{return $LIMITS_}
+linear		{return $LINEAR_}
+load		{return $LOAD_}
+loadlevels	{return $LOADLEVELS_}
+local		{return $LOCAL_}
+log		{return $LOG_}
+method		{return $METHOD_}
+minmax		{return $MINMAX_}
+mode		{return $MODE_}
+nlevels		{return $NLEVELS_}
+open		{return $OPEN_}
+paste		{return $PASTE_}
+pow		{return $POW_}
+save		{return $SAVE_}
+savelevels	{return $SAVELEVELS_}
+scale		{return $SCALE_}
+scope		{return $SCOPE_}
+sinh		{return $SINH_}
+smooth		{return $SMOOTH_}
+sqrt		{return $SQRT_}
+squared		{return $SQUARED_}
+width		{return $WIDTH_}
+zmax		{return $ZMAX_}
+zscale		{return $ZSCALE_}
+
+#include yesno.fin
+#include coords.fin
+#include skyframe.fin
+#include numeric.fin
+#include string.fin
+
+%%

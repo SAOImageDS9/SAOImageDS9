@@ -85,7 +85,7 @@ contour : yesno {global contour; set contour(view) $1; UpdateContour}
  ;
 
 load : STRING_ {ContourCmdLoad $1}
- | STRING_ STRING_ INT_ yesno {ContourCmdLoadOpt $1 $2 $3 $4}
+ | STRING_ STRING_ INT_ yesno {ContourCmdLoadParam $1 $2 $3 $4}
  | STRING_ coordsys STRING_ INT_ yesno {ContourCmdLoadOrg $1 $2 fk5 $3 $4 $5}
  | STRING_ wcssys STRING_ INT_ yesno {ContourCmdLoadOrg $1 $2 fk5 $3 $4 $5}
  | STRING_ skyframe STRING_ INT_ yesno {ContourCmdLoadOrg $1 wcs $2 $3 $4 $5}

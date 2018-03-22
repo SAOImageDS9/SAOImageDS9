@@ -1,0 +1,19 @@
+#tab crosshairparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+lock	    {return $LOCK_}
+match	    {return $MATCH_}
+none	    {return $NONE_}
+
+#include skyframe.fin
+#include coords.fin
+#include numeric.fin
+#include string.fin
+
+%%

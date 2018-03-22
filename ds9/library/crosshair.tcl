@@ -70,6 +70,7 @@ proc CrosshairTo {x y sys sky} {
 		}
 	    }
 	}
+	UpdateCrosshairDialog
     }
 }
 
@@ -262,6 +263,14 @@ proc ProcessCrosshairCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	crosshair::YY_FLUSH_BUFFER
+	crosshair::yy_scan_string [lrange $var $i end]
+	crosshair::yyparse
+	incr i [expr $crosshair::yycnt-1]
+    } else {
+
     switch -- [string tolower [lindex $var $i]] {
 	match {
 	    incr i
@@ -283,9 +292,15 @@ proc ProcessCrosshairCmd {varname iname} {
 	    incr i [FixSpec sys sky format physical fk5 degrees]
 
 	    CrosshairTo $x $y $sys $sky
-	    UpdateCrosshairDialog
 	}
     }
+}
+}
+
+proc CrosshairCmdLock {sys} {
+    global crosshair
+    set crosshair(lock) $sys
+    LockCrosshairCurrent
 }
 
 proc ProcessSendCrosshairCmd {proc id param} {

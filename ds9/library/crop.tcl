@@ -410,8 +410,7 @@ proc ProcessCropCmd {varname iname} {
 	}
 	lock {
 	    incr i
-	    set crop(lock) [lindex $var $i]
-	    LockCropCurrent
+	    CropCmdLock [lindex $var $i]
 	}
 	open {CropDialog}
 	close {CropDestroyDialog}
@@ -442,7 +441,14 @@ proc ProcessCropCmd {varname iname} {
 	    $current(frame) crop center $x $y $sys $sky $w $h $sys $dformat
 	}
     }
-    }
+}
+}
+
+proc CropCmdLock {sys} {
+    global crop
+
+    set crop(lock) sys
+    LockCropCurrent
 }
 
 proc ProcessSendCropCmd {proc id param} {

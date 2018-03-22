@@ -30,11 +30,8 @@ command : crop
 
 crop : OPEN_ {CropDialog}
  | CLOSE_ {CropDestroyDialog}
- | MATCH_ coordsys
- | MATCH_ wcssys
- | LOCK_ coordsys
- | LOCK_ wcssys
- | LOCK_ NONE_
+ | MATCH_ match {MatchCropCurrent $2}
+ | LOCK_ lock {CropCmdLock $2}
  | RESET_ {CropReset}
  | 3D_ 3d
 
@@ -55,6 +52,15 @@ crop : OPEN_ {CropDialog}
  | SEXSTR_ SEXSTR_ numeric numeric skyframe skyformat {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
  | SEXSTR_ SEXSTR_ numeric numeric wcssys skyframe {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 degrees}
  | SEXSTR_ SEXSTR_ numeric numeric wcssys skyframe skyformat {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
+ ;
+
+match : coordsys {set _ $1}
+ | wcssys {set _ $1}
+ ;
+
+lock : coordsys {set _ $1}
+ | wcssys {set _ $1}
+ | NONE_ {set _ none}
  ;
 
 3d : numeric numeric {global current; $current(frame) crop 3d $1 $2 image}

@@ -278,8 +278,7 @@ proc ProcessCrosshairCmd {varname iname} {
 	}
 	lock {
 	    incr i
-	    set crosshair(lock) [lindex $var $i]
-	    LockCrosshairCurrent
+	    CrosshairCmdLock [lindex $var $i]
 	}
 	default {
 	    set x [lindex $var [expr $i+0]]
@@ -299,6 +298,7 @@ proc ProcessCrosshairCmd {varname iname} {
 
 proc CrosshairCmdLock {sys} {
     global crosshair
+
     set crosshair(lock) $sys
     LockCrosshairCurrent
 }

@@ -105,11 +105,11 @@ save : STRING_ {ContourCmdSave $1 physical fk5}
  | STRING_ wcssys skyframe {ContourCmdSave $1 $2 $3}
  ;
 
-paste : {ContourCmdPaste}
- | coordsys STRING_ INT_ yesno {ContourCmdPasteOrg $1 fk5 $2 $3 $4}
- | wcssys STRING_ INT_ yesno {ContourCmdPasteOrg $1 fk5 $2 $3 $4}
- | skyframe STRING_ INT_ yesno {ContourCmdPasteOrg wcs $1 $2 $3 $4}
- | wcssys skyframe STRING_ INT_ yesno {ContourCmdPasteOrg $1 $2 $3 $4 $5}
+paste : {ContourCmdPaste wcs fk5 green 1 no}
+ | coordsys STRING_ INT_ yesno {ContourCmdPaste $1 fk5 $2 $3 $4}
+ | wcssys STRING_ INT_ yesno {ContourCmdPaste $1 fk5 $2 $3 $4}
+ | skyframe STRING_ INT_ yesno {ContourCmdPaste wcs $1 $2 $3 $4}
+ | wcssys skyframe STRING_ INT_ yesno {ContourCmdPaste $1 $2 $3 $4 $5}
  ;
 
 method : BLOCK_ {set _ block}

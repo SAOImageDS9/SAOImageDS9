@@ -1131,9 +1131,8 @@ proc ProcessContourCmd {varname iname} {
 	    ContourCmdLoadLevels [lindex $var $i]
 	}
 	savelevels {
-	    ContourDialog
 	    incr i
-	    ContourSaveLevelsNow [lindex $var $i]
+	    ContourCmdSaveLevels [lindex $var $i]
 	}
 
 	copy {ContourCCopyDialog}
@@ -1151,7 +1150,7 @@ proc ProcessContourCmd {varname iname} {
 	    set dash [lindex $var $i]
 	    incr i [ProcessContourFix sys sky color width dash]
 
-	    ContourCmdPasteOrg $sys $sky $color $width $dash
+	    ContourCmdPaste $sys $sky $color $width $dash
 	}
 	color {
 	    incr i
@@ -1240,7 +1239,7 @@ proc ContourCmdLoad {fn} {
     global current
 
     if {$current(frame) != {} && $fn != {}} {
-	$current(frame) contour load "\{$fn\}"
+	$current(frame) contour load $fn
 	FileLast contourlfbox $fn
 	UpdateContourDialog
     }
@@ -1250,7 +1249,7 @@ proc ContourCmdLoadParam {fn color width dash} {
     global current
 
     if {$current(frame) != {} && $fn != {}} {
-	$current(frame) contour load "\{$fn\}" $color $width $dash
+	$current(frame) contour load $fn $color $width $dash
 	FileLast contourlfbox $fn
 	UpdateContourDialog
     }
@@ -1260,7 +1259,7 @@ proc ContourCmdLoadOrg {fn sys sky color width dash} {
     global current
 
     if {$current(frame) != {} && $fn != {}} {
-	$current(frame) contour load $color $width $dash "\{$fn\}" $sys $sky
+	$current(frame) contour load $color $width $dash $fn $sys $sky
 	FileLast contourlfbox $fn
 	UpdateContourDialog
     }
@@ -1270,7 +1269,7 @@ proc ContourCmdSave {fn sys sky} {
     global current
 
     if {$current(frame) != {} && $fn != {}} {
-	$current(frame) contour save "\{$fn\}" $sys $sky
+	$current(frame) contour save $fn $sys $sky
 	FileLast contoursfbox $fn
     }
 }
@@ -1280,7 +1279,7 @@ proc ContourCmdLoadLevels {fn} {
 
     ContourDialog
     if {$current(frame) != {}} {
-	ContourLoadLevelsNow "\{$fn\}"
+	ContourLoadLevelsNow $fn
 	UpdateContour
     }
 }
@@ -1290,21 +1289,11 @@ proc ContourCmdSaveLevels {fn} {
 
     ContourDialog
     if {$current(frame) != {}} {
-	ContourSaveLevelsNow "\{$fn\}"
+	ContourSaveLevelsNow $fn
     }
 }
 
-proc ContourCmdPaste {} {
-    global current
-    global contour
-
-    if {$current(frame) != {} && $contour(copy) != {}} {
-	set cc [$contour(copy) get contour $sys $sky]
-	$current(frame) contour paste cc
-    }
-}
-
-proc ContourCmdPasteOrg {sys sky color width dash} {
+proc ContourCmdPaste {sys sky color width dash} {
     global current
     global contour
 

@@ -447,7 +447,7 @@ proc ProcessCropCmd {varname iname} {
 proc CropCmdLock {sys} {
     global crop
 
-    set crop(lock) sys
+    set crop(lock) $sys
     LockCropCurrent
 }
 

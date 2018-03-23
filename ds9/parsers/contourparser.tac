@@ -65,8 +65,13 @@ contour : yesno {global contour; set contour(view) $1; UpdateContour}
  | LOAD_ load
  | SAVE_ save
  | CONVERT_ {Contour2Polygons}
+
+ | LOAD_ LEVELS_ STRING_ {ContourCmdLoadLevels $3}
+ | SAVE_ LEVELS_ STRING_ {ContourCmdSaveLevels $3}
+# backward compatibility
  | LOADLEVELS_ STRING_ {ContourCmdLoadLevels $2}
  | SAVELEVELS_ STRING_ {ContourCmdSaveLevels $2}
+
  | COPY_ {ContourCCopyDialog}
  | PASTE_ paste
  | COLOR_ STRING_ {ContourCmdColor $2}

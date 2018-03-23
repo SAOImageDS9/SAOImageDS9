@@ -33,8 +33,8 @@ command : colorbar
 colorbar : yesno {global view; set view(colorbar) $1; UpdateView}
 # backward compatibility
  | MATCH_ {MatchColorCurrent}
-# backward compatibility
  | LOCK_ yesno {global colorbar; set colorbar(lock) $2; LockColorCurrent}
+
  | NUMERICS_ yesno {global colorbar; set colorbar(numerics) $2; UpdateView}
  | SPACE_ space {global colorbar; set colorbar(space) $2; UpdateView}
  | FONT_ font {global colorbar; set colorbar(font) $2; UpdateView}
@@ -43,9 +43,11 @@ colorbar : yesno {global view; set view(colorbar) $1; UpdateView}
  | FONTSLANT_ fontslant {global colorbar; set colorbar(font,slant) $2; UpdateView}
 # backward compatibility
  | FONTSTYLE_ fontstyle
+
  | orientation {global colorbar; set colorbar(orientation) $1; UpdateView}
 # backward compatibility
  | ORIENTATION_ orientation {global colorbar; set colorbar(orientation) $2; UpdateView}
+
  | SIZE_ INT_ {global colorbar; set colorbar(size) $2; UpdateView}
  | TICKS_ INT_ {global colorbar; set colorbar(ticks) $2; UpdateView}
  ;

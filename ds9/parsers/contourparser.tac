@@ -65,8 +65,8 @@ contour : yesno {global contour; set contour(view) $1; UpdateContour}
  | LOAD_ load
  | SAVE_ save
  | CONVERT_ {Contour2Polygons}
- | LOADLEVELS_
- | SAVELEVELS_
+ | LOADLEVELS_ STRING_ {ContourCmdLoadLevels $2}
+ | SAVELEVELS_ STRING_ {ContourCmdSaveLevels $2}
  | COPY_ {ContourCCopyDialog}
  | PASTE_ paste
  | COLOR_ STRING_ {ContourCmdColor $2}
@@ -86,13 +86,18 @@ contour : yesno {global contour; set contour(view) $1; UpdateContour}
 
 load : STRING_ {ContourCmdLoad $1}
  | STRING_ STRING_ INT_ yesno {ContourCmdLoadParam $1 $2 $3 $4}
+# backward compatibility
  | STRING_ coordsys STRING_ INT_ yesno {ContourCmdLoadOrg $1 $2 fk5 $3 $4 $5}
  | STRING_ wcssys STRING_ INT_ yesno {ContourCmdLoadOrg $1 $2 fk5 $3 $4 $5}
  | STRING_ skyframe STRING_ INT_ yesno {ContourCmdLoadOrg $1 wcs $2 $3 $4 $5}
  | STRING_ wcssys skyframe STRING_ INT_ yesno {ContourCmdLoadOrg $1 $2 $3 $4 $5 $6}
  ;
 
-save : STRING_
+save : STRING_ {ContourCmdSave $1 physical fk5}
+ | STRING_ coordsys {ContourCmdSave $1 $2 fk5}
+ | STRING_ wcssys {ContourCmdSave $1 $2 fk5}
+ | STRING_ skyframe {ContourCmdSave $1 wcs $2}
+ | STRING_ wcssys skyframe {ContourCmdSave $1 $2 $3}
  ;
 
 paste : {ContourCmdPaste}

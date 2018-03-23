@@ -1086,27 +1086,25 @@ proc ProcessContourCmd {varname iname} {
 		    incr i
 		    set dash [lindex $var $i]
 		    incr i [ProcessContourFix sys sky color width dash]
-		    $current(frame) contour load $color $width $dash \
-			"\{$fn\}" $sys $sky
+
+		    ContourCmdLoadOrg $fn $sys $sky $color $width $dash
 		} else {
 		    incr i
 		    set color [lindex $var $i]
 		    if {$color == {} || [string range $color 0 0] == "-"} {
-			$current(frame) contour load "\{$fn\}"
 			incr i -1
+
+			ContourCmdLoad $fn
 		    } else {
 			incr i
 			set width [lindex $var $i]
 			incr i
 			set dash [FromYesNo [lindex $var $i]]
-			$current(frame) contour load "\{$fn\}" \
-			    $color $width $dash
+
+			ContourCmdLoadParam $fn $color $width $dash
 		    }
 		}
 	    }
-
-	    FileLast contourlfbox $fn
-	    UpdateContourDialog
 	}
 	save {
 	    incr i
@@ -1125,17 +1123,12 @@ proc ProcessContourCmd {varname iname} {
 	    set dash {}
 	    incr i [ProcessContourFix sys sky color width dash]
 
-	    if {$fn != {}} {
-		$current(frame) contour save "\{$fn\}" $sys $sky
-	    }
-	    FileLast contoursfbox $fn
+	    ContourCmdSave $fn $sys $sky
 	}
 	convert {Contour2Polygons}
 	loadlevels {
-	    ContourDialog
 	    incr i
-	    ContourLoadLevelsNow [lindex $var $i]
-	    UpdateContour
+	    ContourCmdLoadLevels [lindex $var $i]
 	}
 	savelevels {
 	    ContourDialog
@@ -1246,24 +1239,58 @@ proc ProcessContourCmd {varname iname} {
 proc ContourCmdLoad {fn} {
     global current
 
-    if {$current(frame) != {}} {
-	$current(frame) contour load $fn
+    if {$current(frame) != {} && $fn != {}} {
+	$current(frame) contour load "\{$fn\}"
+	FileLast contourlfbox $fn
+	UpdateContourDialog
     }
 }
 
 proc ContourCmdLoadParam {fn color width dash} {
     global current
 
-    if {$current(frame) != {}} {
-	$current(frame) contour load $fn $color $width $dash
+    if {$current(frame) != {} && $fn != {}} {
+	$current(frame) contour load "\{$fn\}" $color $width $dash
+	FileLast contourlfbox $fn
+	UpdateContourDialog
     }
 }
 
 proc ContourCmdLoadOrg {fn sys sky color width dash} {
     global current
 
+    if {$current(frame) != {} && $fn != {}} {
+	$current(frame) contour load $color $width $dash "\{$fn\}" $sys $sky
+	FileLast contourlfbox $fn
+	UpdateContourDialog
+    }
+}
+
+proc ContourCmdSave {fn sys sky} {
+    global current
+
+    if {$current(frame) != {} && $fn != {}} {
+	$current(frame) contour save "\{$fn\}" $sys $sky
+	FileLast contoursfbox $fn
+    }
+}
+
+proc ContourCmdLoadLevels {fn} {
+    global current
+
+    ContourDialog
     if {$current(frame) != {}} {
-	$current(frame) contour load $color $width $dash $fn $sys $sky
+	ContourLoadLevelsNow "\{$fn\}"
+	UpdateContour
+    }
+}
+
+proc ContourCmdSaveLevels {fn} {
+    global current
+
+    ContourDialog
+    if {$current(frame) != {}} {
+	ContourSaveLevelsNow "\{$fn\}"
     }
 }
 

@@ -105,13 +105,14 @@ catalog : {CATTool}
  | FILE_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | LOAD_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | IMPORT_ reader STRING_ {CatalogCmdLoad $3 $2}
+ | STRING_ {CatalogCmdRef $1}
  | STRING_ {CatalogCmdRef $1} cat
  # backward compatibility
+ | CDS_ STRING_ {CatalogCmdRef $2}
  | CDS_ STRING_ {CatalogCmdRef $2} cat
  ;
 
-cat :
- | coordinate
+cat : coordinate
  | ALLCOLS_ {global cvarname; global $cvarname; set ${cvarname}(allcols) 1}
  | ALLROWS_ {global cvarname; global $cvarname; set ${cvarname}(allrows) 1}
  | CANCEL_ {global cvarname; ARCancel $cvarname}

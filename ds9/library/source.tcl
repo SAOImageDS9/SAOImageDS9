@@ -192,6 +192,8 @@ source $ds9(root)/library/binparser.tcl
 source $ds9(root)/library/binlex.tcl
 source $ds9(root)/library/blockparser.tcl
 source $ds9(root)/library/blocklex.tcl
+source $ds9(root)/library/catparser.tcl
+source $ds9(root)/library/catlex.tcl
 source $ds9(root)/library/cmapparser.tcl
 source $ds9(root)/library/cmaplex.tcl
 source $ds9(root)/library/colorbarparser.tcl

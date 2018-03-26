@@ -1236,45 +1236,6 @@ proc PrefsDialogCatalog {} {
 
 # Process Cmds
 
-proc CatalogInitCmd {} {
-    global icat
-
-    set ref [lindex $icat(cats) end]
-    global cvarname
-    set cvarname $ref
-}
-
-proc CatalogRefCmd {ref} {
-    global icat
-    global cvarname
-
-    # backward compatibility
-    if {$ref == "cxc"} {
-	set ref csc
-    }
-
-    # look for reference in current list
-    if {[lsearch $icat(cats) cat${ref}] < 0} {
-	# see if its from our list of cats
-	foreach mm $icat(def) {
-	    set ll [lindex $mm 0]
-	    set ww [lindex $mm 1]
-	    set ss [lindex $mm 2]
-	    set cc [lindex $mm 3]
-
-	    if {$ll != {-} && "cat${ref}" == $ww} {
-		CATDialog $ww $ss $cc $ll sync
-		set cvarname cat${ref}
-		return
-	    }
-	}
-
-	# not a default, assume other name
-	CATDialog catcds cds $ref $ref sync
-    }
-    set cvarname cat${ref}
-}
-
 proc CatalogSymbolLoadCmd {fn} {
     global cvarname
     global $cvarname
@@ -1339,11 +1300,23 @@ proc ProcessCatalogCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global icat
-
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	global icat
+	set ref [lindex $icat(cats) end]
+	global cvarname
+	set cvarname $ref
+
+	cat::YY_FLUSH_BUFFER
+	cat::yy_scan_string [lrange $var $i end]
+	cat::yyparse
+	incr i [expr $cat::yycnt-1]
+    } else {
+
+    global icat
     set item [string tolower [lindex $var $i]]
     switch -- $item {
 	{} {CATTool}
@@ -1361,13 +1334,7 @@ proc ProcessCatalogCmd {varname iname} {
 		csv -
 		tsv {incr i; set reader TSVRead}
 	    }
-
-	    set fn [lindex $var $i]
-	    if {$fn != {}} {
-		CATDialog cattool {} {} {} none
-		CATLoadFn [lindex $icat(cats) end] $fn $reader
-		FileLast catfbox $fn
-	    }
+	    CatalogCmdLoad [lindex $var $i] $reader
 	}
 
 	allcols -
@@ -1502,6 +1469,7 @@ proc ProcessCatalogCmd {varname iname} {
 	}
     }
 }
+}
 
 proc ProcessCatalog {varname iname cvarname} {
     upvar 2 $varname var
@@ -1558,10 +1526,7 @@ proc ProcessCatalog {varname iname cvarname} {
 		csv -
 		tsv {incr i; set writer TSVWrite}
 	    }
-
-	    set fn [lindex $var $i]
-	    CATSaveFn $cvarname $fn $writer
-	    FileLast catfbox $fn
+	    CatalogCmdSave $cvarname [lindex $var $i] $writer
 	}
 	filter {
 	    incr i
@@ -1569,15 +1534,7 @@ proc ProcessCatalog {varname iname cvarname} {
 	    switch -- $item {
 		load {
 		    incr i
-		    set fn [lindex $var $i]
-		    if {[catch {open $fn r} fp]} {
-			Error "[msgcat::mc {Unable to open file}] $fn: $fp"
-			return
-		    }
-		    set flt [read -nonewline $fp]
-		    catch {regsub {\n} $flt " " $flt}
-		    set cvar(filter) [string trim $flt]
-		    catch {close $fp}
+		    CatalogCmdFilter $cvarname [lindex $var $i]
 		}
 		default {
 		    set cvar(filter) $item
@@ -1910,6 +1867,71 @@ proc ProcessCatalog {varname iname cvarname} {
 	    set cvar(coly) [lindex $var $i]
 	    CATGenerate $cvarname
 	}
+    }
+}
+
+proc CatalogCmdRef {ref} {
+    global icat
+    global cvarname
+
+    # backward compatibility
+    if {$ref == "cxc"} {
+	set ref csc
+    }
+
+    # look for reference in current list
+    if {[lsearch $icat(cats) cat${ref}] < 0} {
+	# see if its from our list of cats
+	foreach mm $icat(def) {
+	    set ll [lindex $mm 0]
+	    set ww [lindex $mm 1]
+	    set ss [lindex $mm 2]
+	    set cc [lindex $mm 3]
+
+	    if {$ll != {-} && "cat${ref}" == $ww} {
+		CATDialog $ww $ss $cc $ll sync
+		set cvarname cat${ref}
+		return
+	    }
+	}
+
+	# not a default, assume other name
+	CATDialog catcds cds $ref $ref sync
+    }
+    set cvarname cat${ref}
+}
+
+proc CatalogCmdFilter {cvarname fn} {
+    global $cvarname
+
+    if {$fn != {}} {
+	if {[catch {open $fn r} fp]} {
+	    Error "[msgcat::mc {Unable to open file}] $fn: $fp"
+	    yyerror
+	}
+	set flt [read -nonewline $fp]
+	catch {regsub {\n} $flt " " $flt}
+	set ${cvarname}(filter) [string trim $flt]
+	catch {close $fp}
+    }
+}
+
+proc CatalogCmdLoad {fn reader} {
+    global icat
+
+    if {$fn != {}} {
+	CATDialog cattool {} {} {} none
+	CATLoadFn [lindex $icat(cats) end] $fn $reader
+	FileLast catfbox $fn
+    }
+}
+
+proc CatalogCmdSave {cvarname fn writer} {
+    global icat
+
+    if {$fn != {}} {
+	CATSaveFn $cvarname $3 $2
+    	FileLast catfbox $fn
     }
 }
 

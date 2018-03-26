@@ -1,11 +1,8 @@
 %{
-	global icat
-	set ref [lindex $icat(cats) end]
-	global cvarname
-	set cvarname $ref
 %}
 
 #include yesno.tin
+#include font.tin
 #include skyformat.tin
 #include skyframe.tin
 #include coords.tin
@@ -19,18 +16,30 @@
 %token 1ONLY_
 %token 2NOT1_
 %token 2ONLY_
+%token ADD_
 %token ALLCOLS_
 %token ALLROWS_
+%token ANGLE_
+%token ARROW_
+%token BOX_
+%token BOXCIRCLE_
 %token BROADCAST_
 %token CANCEL_
 %token CDS_
+%token CIRCLE_
 %token CLEAR_
 %token CLOSE_
+%token COLOR_
+%token CONDITION_
 %token COORDINATE_
+%token CROSS_
 %token CROSSHAIR_
 %token CSV_
 %token DEC_
+%token DECR_
+%token DIAMOND_
 %token EDIT_
+%token ELLIPSE_
 %token EXPORT_
 %token ERROR_
 %token FILE_
@@ -39,6 +48,7 @@
 %token HEADER_
 %token HIDE_
 %token IMPORT_
+%token INCR_
 %token LOAD_
 %token LOCATION_
 %token MATCH_
@@ -46,11 +56,13 @@
 %token NAME_
 %token PANTO_
 %token PLOT_
+%token POINT_
 %token PRINT_
 %token PSKY_
 %token PSYSTEM_
 %token RA_
 %token REGIONS_
+%token REMOVE_
 %token RETRIEVE_
 %token RETURN_
 %token SAMP_
@@ -58,16 +70,20 @@
 %token SB_
 %token SEND_
 %token SERVER_
+%token SHAPE_
 %token SHOW_
 %token SIZE_
+%token SIZE2_
 %token SKY_
 %token SKYFORMAT_
 %token SORT_
 %token STARBASE_
 %token SYMBOL_
 %token SYSTEM_ 
+%token TEXT_
 %token TSV_
 %token UNIQUE_
+%token UNITS_
 %token UPDATE_
 %token VOT_
 %token XML_
@@ -75,6 +91,7 @@
 %%
 
 #include yesno.trl
+#include font.trl
 #include skyformat.trl
 #include skyframe.trl
 #include coords.trl
@@ -125,10 +142,10 @@ cat :
  | SIZE_ numeric numeric skyformat {global cvarname; global $cvarname; set ${cvarname}(width) $1; set ${cvarname}(height) $2; set ${cvarname}(rformat) $3; set ${cvarname}(rformat,msg) $3}
  | SKY_ skyframe {global cvarname; global $cvarname; set ${cvarname}(sky) $1; CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]}
  | SKYFORMAT_ skyformat {global cvarname; global $cvarname; set ${cvarname}(skyformat) $2}
- | SORT_ 
- | SYMBOL_ 
- | SYMBOL_ INT_ 
- | SYSTEM_ 
+ | SORT_ sort
+ | SYMBOL_ {global cvarname; global $cvarname; set ${cvarname}(row) 1} symbol
+ | SYMBOL_ INT_ {global cvarname; global $cvarname; set ${cvarname}(row) $2} symbol
+ | SYSTEM_ wcssys {global cvarname; global $cvarname; set ${cvarname}(system) $1; CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]}
  | UPDATE_ {global cvarname; CATUpdate $cvarname}
  | 'x' STRING_ {global cvarname; global $cvarname; set ${cvarname}(colx) $2; CATGenerate $cvarname}
  | RA_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(colx) $2; CATGenerate $cvarname}
@@ -175,6 +192,46 @@ reader : XML_ {set _ VOTRead}
 samp : {global cvarname; SAMPSendTableLoadVotable {} $cvarname}
  | BROADCAST_ {global cvarname; SAMPSendTableLoadVotable {} $cvarname}
  | SEND_ STRING_ {CatalogSAMPCmd $2}
+ ;
+
+sort : STRING_ {global cvarname; global $cvarname; set ${cvarname}(sort) $1; CATTable $cvarname}
+ | STRING_ sortDir {global cvarname; global $cvarname; set ${cvarname}(sort) $1; set ${cvarname}(sort,dir) $2; CATTable $cvarname}
+ ;
+
+sortDir : INCR_ {set _ "-increasing"}
+ | DECR_ {set _ "-decreasing"}
+ ;
+
+symbol : ADD_ {CatalogSymbolAddCmd}
+ | ANGLE_ numeric {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) angle] $2; CATGenerate $cvarname}
+ | COLOR_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) color] $2; CATGenerate $cvarname}
+ | CONDITION_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) condition] $2; CATGenerate $cvarname}
+ | FONT_ font {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) font] $2; CATGenerate $cvarname}
+ | FONTSIZE_ INT_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) fontsize] $2; CATGenerate $cvarname}
+ | FONTWEIGHT_ fontweight {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) fontweight] $2; CATGenerate $cvarname}
+ | FONTSLANT_ fontslant {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) fontslant] $2; CATGenerate $cvarname}
+ | LOAD_ STRING_ {global cvarname; global $cvarname; CatalogSymbolLoadCmd $2}
+ | REMOVE_ {global cvarname; global $cvarname; starbase_rowdel ${cvarname}(symdb) ${cvarname}(row); CATGenerate $cvarname}
+ | SAVE_ STRING_ {global cvarname; global $cvarname; starbase_write ${cvarname}(symdb) $2}
+ | SIZE_ numeric {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) size] $2; CATGenerate $cvarname}
+ | SIZE2_ numeric {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) size2] $2; CATGenerate $cvarname}
+ | SHAPE_ symbolShape {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) shape] $2; CATGenerate $cvarname}
+ | TEXT_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) text] $2; CATGenerate $cvarname}
+ | UNITS_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) units] $2; CATGenerate $cvarname}
+ ;
+
+symbolShape : POINT_ {set _ "circle point"}
+ | CIRCLE_ POINT_ {set _ "circle point"}
+ | BOX_ POINT_ {set _ "box point"}
+ | DIAMOND_ POINT_ {set _ "diamond point"}
+ | CROSS_ POINT_ {set _ "cross point"}
+ | 'x' POINT_ {set _ "x point"}
+ | ARROW_ POINT_ {set _ "arrow point"}
+ | BOXCIRCLE_ POINT_ {set _ "boxcircle point"}
+ | CIRCLE_ {set _ circle}
+ | ELLIPSE_ {set _ ellipse}
+ | BOX_ {set _ box}
+ | TEXT_ {set _ text}
  ;
 
 writer : XML_ {set _ VOTWrite}

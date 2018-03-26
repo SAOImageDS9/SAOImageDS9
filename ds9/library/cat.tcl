@@ -1305,6 +1305,11 @@ proc ProcessCatalogCmd {varname iname} {
 
     global debug
     if {$debug(tcl,parser)} {
+	global icat
+	set ref [lindex $icat(cats) end]
+	global cvarname
+	set cvarname $ref
+
 	cat::YY_FLUSH_BUFFER
 	cat::yy_scan_string [lrange $var $i end]
 	cat::yyparse

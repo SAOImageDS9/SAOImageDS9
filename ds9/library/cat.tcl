@@ -1305,11 +1305,6 @@ proc ProcessCatalogCmd {varname iname} {
 
     global debug
     if {$debug(tcl,parser)} {
-	global icat
-	set ref [lindex $icat(cats) end]
-	global cvarname
-	set cvarname $ref
-
 	cat::YY_FLUSH_BUFFER
 	cat::yy_scan_string [lrange $var $i end]
 	cat::yyparse
@@ -1566,8 +1561,6 @@ proc ProcessCatalog {varname iname cvarname} {
 		unique {incr i; set icat(unique) [FromYesNo [lindex $var $i]]}
 		return {incr i; set icat(return) [lindex $var $i]}
 		default {
-		    set icat(match1) {}
-		    set icat(match2) {}
 		    set m1 [lindex $var $i]
 		    set m2 [lindex $var [expr $i+1]]
 		    if {$m1 != {}} {
@@ -1575,27 +1568,15 @@ proc ProcessCatalog {varname iname cvarname} {
 			    if {$m2 != {}} {
 				if {[string range $m2 0 0] != {-}} {
 				    incr i
-				    set icat(match1) "cat$m1"
-				    set icat(match2) "cat$m2"
-				    CATMatch $current(frame) \
-					$icat(match1) $icat(match2)
+				    CatalogCmdMatchParams "cat$m1" "cat$m2"
 				    return
 				}
-			    } else {
-				# error
-				return
 			    }
 			}
-		    }
-		    incr i -1
-		    # find them
-		    set ll [llength $icat(cats)]
-		    if {$ll>1} {
-			set icat(match1) [lindex $icat(cats) [expr $ll-2]]
-			set icat(match2) [lindex $icat(cats) [expr $ll-1]]
-			CATMatch $current(frame) $icat(match1) $icat(match2)
 		    } else {
-			# error
+			# find them
+			incr i -1
+			CatalogCmdMatch
 		    }
 		}
 	    }
@@ -1923,6 +1904,29 @@ proc CatalogCmdLoad {fn reader} {
 	CATDialog cattool {} {} {} none
 	CATLoadFn [lindex $icat(cats) end] $fn $reader
 	FileLast catfbox $fn
+    }
+}
+
+proc CatalogCmdMatch {} {
+    global icat
+
+    set icat(match1) {}
+    set icat(match2) {}
+    set ll [llength $icat(cats)]
+    if {$ll>1} {
+	CatalogCmdMatchParams [lindex $icat(cats) [expr $ll-2]] \
+	    [lindex $icat(cats) [expr $ll-1]]
+    }
+}
+
+proc CatalogCmdMatchParams {cat1 cat2} {
+    global icat
+    global current
+
+    set icat(match1) $cat1
+    set icat(match2) $cat2
+    if {$current(frame) != {}} {
+	CATMatch $current(frame) $icat(match1) $icat(match2)
     }
 }
 

@@ -83,6 +83,16 @@ update	    {return $UPDATE_}
 vot	    {return $VOT_}
 xml	    {return $XML_}
 
+cds	    {return $CDS_}
+adac	    {return $ADAC_}
+cadc	    {return $CADC_}
+cambridge   {return $CAMBRIDGE_}
+sao	    {return $SAO_}
+ukirt	    {return $UKIRT_}
+iucaa	    {return $IUCAA_}
+bejing	    {return $BEJING_}
+saao	    {return $SAAO_}
+
 #include yesno.fin
 #include font.fin
 #include skyformat.fin

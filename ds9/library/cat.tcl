@@ -457,6 +457,11 @@ proc CATOff {varname} {
     upvar #0 $varname var
     global $varname
 
+    # can happen from xpa,samp,command line
+    if {![info exists var]} {
+	return
+    }
+    
     global $var(catdb)
     if {[info exists $var(catdb)]} {
 	unset $var(catdb)
@@ -1132,7 +1137,7 @@ proc CATBackup {ch which fdir rdir} {
 		set rfn $rdir/${varname}.cat
 
 		catch {file delete -force $fn}
-		CATSaveFn $varname "$fn" VOTWrite
+		CATSaveFn $varname $fn VOTWrite
 		puts $ch "CATLoadFn $varname \"$rfn\" VOTRead"
 	    } else {
 		# internal var
@@ -1236,25 +1241,6 @@ proc PrefsDialogCatalog {} {
 
 # Process Cmds
 
-proc CatalogSAMPCmd {name} {
-    global cvarname
-    global $cvarname
-    global samp
-
-    if {[info exists samp]} {
-	foreach arg $samp(apps,votable) {
-	    foreach {key val} $arg {
-		if {[string tolower $val] == $name} {
-		    SAMPSendTableLoadVotable $key $cvarname
-		    break
-		}
-	    }
-	}
-    } else {
-	Error [msgcat::mc {SAMP: not connected}]
-    }
-}
-
 proc ProcessCatalogCmd {varname iname} {
     upvar $varname var
     upvar $iname i
@@ -1275,159 +1261,159 @@ proc ProcessCatalogCmd {varname iname} {
 	incr i [expr $cat::yycnt-1]
     } else {
 
-    global icat
-    set item [string tolower [lindex $var $i]]
-    switch -- $item {
-	{} {CATTool}
+	global icat
+	set item [string tolower [lindex $var $i]]
+	switch -- $item {
+	    {} {CATTool}
 
-	file -
-	import -
-	load {
-	    incr i
-	    set reader VOTRead
-	    switch -- [lindex $var $i] {
-		xml -
-		vot {incr i; set reader VOTRead}
-		sb -
-		starbase {incr i; set reader starbase_read}
-		csv -
-		tsv {incr i; set reader TSVRead}
-	    }
-	    CatalogCmdLoad [lindex $var $i] $reader
-	}
-
-	allcols -
-	allrows -
-	cancel -
-	clear -
-	close -
-	coordinate -
-	crosshair -
-	dec -
-	edit -
-	export -
-	filter -
-	header -
-	hide -
-	location -
-	match -
-	maxrows -
-	name -
-	panto -
-	plot -
-	print -
-	psky -
-	psystem -
-	ra -
-	regions -
-	retrieve -
-	samp -
-	save -
-	server -
-	show -
-	size -
-	sky -
-	skyformat -
-	sort -
-	symbol -
-	system -
-	update -
-	x -
-	y {ProcessCatalog $varname $iname [lindex $icat(cats) end]}
-
-	default {
-	    # another command
-	    if {[string range $item 0 0] == "-"} {
-		CATTool
-		incr i -1
-		return
+	    file -
+	    import -
+	    load {
+		incr i
+		set reader VOTRead
+		switch -- [lindex $var $i] {
+		    xml -
+		    vot {incr i; set reader VOTRead}
+		    sb -
+		    starbase {incr i; set reader starbase_read}
+		    csv -
+		    tsv {incr i; set reader TSVRead}
+		}
+		CatalogCmdLoad [lindex $var $i] $reader
 	    }
 
-	    # existing cat or load new one?
-	    set ref $item
+	    allcols -
+	    allrows -
+	    cancel -
+	    clear -
+	    close -
+	    coordinate -
+	    crosshair -
+	    dec -
+	    edit -
+	    export -
+	    filter -
+	    header -
+	    hide -
+	    location -
+	    match -
+	    maxrows -
+	    name -
+	    panto -
+	    plot -
+	    print -
+	    psky -
+	    psystem -
+	    ra -
+	    regions -
+	    retrieve -
+	    samp -
+	    save -
+	    server -
+	    show -
+	    size -
+	    sky -
+	    skyformat -
+	    sort -
+	    symbol -
+	    system -
+	    update -
+	    x -
+	    y {ProcessCatalog $varname $iname [lindex $icat(cats) end]}
 
-	    # backward compatibility
-	    if {[string range $ref 0 2] == {cat}} {
-		set ref [string range $ref 3 end]
-	    }
-
-	    incr i
-	    set item [string tolower [lindex $var $i]]
-	    switch -- $item {
-		file -
-		import -
-		load {incr i -1}
-
-		allcols -
-		allrows -
-		cancel -
-		clear -
-		close -
-		coordinate -
-		crosshair -
-		dec -
-		edit -
-		export -
-		filter -
-		header -
-		hide -
-		location -
-		match -
-		maxrows -
-		name -
-		panto -
-		plot -
-		print -
-		psky -
-		psystem -
-		ra -
-		regions -
-		retrieve -
-		samp -
-		save -
-		server -
-		show -
-		size -
-		sky -
-		skyformat -
-		sort -
-		symbol -
-		system -
-		update -
-		x -
-		y {ProcessCatalog $varname $iname cat${ref}}
-
-		default {
-		    # ok, new catalog
+	    default {
+		# another command
+		if {[string range $item 0 0] == "-"} {
+		    CATTool
 		    incr i -1
-		    set item [string tolower [lindex $var $i]]
+		    return
+		}
 
-		    # backward compatibility
-		    switch $item {
-			cds {incr i; set item [string tolower [lindex $var $i]]}
-			cxc {set item csc}
-		    }
+		# existing cat or load new one?
+		set ref $item
 
-		    # see if its from our list of cats
-		    foreach mm $icat(def) {
-			set ll [lindex $mm 0]
-			set ww [lindex $mm 1]
-			set ss [lindex $mm 2]
-			set cc [lindex $mm 3]
+		# backward compatibility
+		if {[string range $ref 0 2] == {cat}} {
+		    set ref [string range $ref 3 end]
+		}
 
-			if {$ll != {-} && "cat${item}" == $ww} {
-			    CATDialog $ww $ss $cc $ll sync
-			    return
+		incr i
+		set item [string tolower [lindex $var $i]]
+		switch -- $item {
+		    file -
+		    import -
+		    load {incr i -1}
+
+		    allcols -
+		    allrows -
+		    cancel -
+		    clear -
+		    close -
+		    coordinate -
+		    crosshair -
+		    dec -
+		    edit -
+		    export -
+		    filter -
+		    header -
+		    hide -
+		    location -
+		    match -
+		    maxrows -
+		    name -
+		    panto -
+		    plot -
+		    print -
+		    psky -
+		    psystem -
+		    ra -
+		    regions -
+		    retrieve -
+		    samp -
+		    save -
+		    server -
+		    show -
+		    size -
+		    sky -
+		    skyformat -
+		    sort -
+		    symbol -
+		    system -
+		    update -
+		    x -
+		    y {ProcessCatalog $varname $iname cat${ref}}
+
+		    default {
+			# ok, new catalog
+			incr i -1
+			set item [string tolower [lindex $var $i]]
+
+			# backward compatibility
+			switch $item {
+			    cds {incr i; set item [string tolower [lindex $var $i]]}
+			    cxc {set item csc}
 			}
-		    }
 
-		    # not a default, assume other name
-		    CATDialog catcds cds $item $item sync
+			# see if its from our list of cats
+			foreach mm $icat(def) {
+			    set ll [lindex $mm 0]
+			    set ww [lindex $mm 1]
+			    set ss [lindex $mm 2]
+			    set cc [lindex $mm 3]
+
+			    if {$ll != {-} && "cat${item}" == $ww} {
+				CATDialog $ww $ss $cc $ll sync
+				return
+			    }
+			}
+
+			# not a default, assume other name
+			CATDialog catcds cds $item $item sync
+		    }
 		}
 	    }
 	}
     }
-}
 }
 
 proc ProcessCatalog {varname iname cvarname} {
@@ -1485,7 +1471,10 @@ proc ProcessCatalog {varname iname cvarname} {
 		csv -
 		tsv {incr i; set writer TSVWrite}
 	    }
-	    CatalogCmdSave $cvarname [lindex $var $i] $writer
+
+	    set fn [lindex $var $i]
+	    CATSaveFn $cvarname $fn $writer
+	    FileLast catfbox $fn
 	}
 	filter {
 	    incr i
@@ -1493,7 +1482,15 @@ proc ProcessCatalog {varname iname cvarname} {
 	    switch -- $item {
 		load {
 		    incr i
-		    CatalogCmdFilter $cvarname [lindex $var $i]
+		    set fn [lindex $var $i]
+		    if {[catch {open $fn r} fp]} {
+			Error "[msgcat::mc {Unable to open file}] $fn: $fp"
+			return
+		    }
+		    set flt [read -nonewline $fp]
+		    catch {regsub {\n} $flt " " $flt}
+		    set cvar(filter) [string trim $flt]
+		    catch {close $fp}
 		}
 		default {
 		    set cvar(filter) $item
@@ -1525,6 +1522,8 @@ proc ProcessCatalog {varname iname cvarname} {
 		unique {incr i; set icat(unique) [FromYesNo [lindex $var $i]]}
 		return {incr i; set icat(return) [lindex $var $i]}
 		default {
+		    set icat(match1) {}
+		    set icat(match2) {}
 		    set m1 [lindex $var $i]
 		    set m2 [lindex $var [expr $i+1]]
 		    if {$m1 != {}} {
@@ -1532,15 +1531,27 @@ proc ProcessCatalog {varname iname cvarname} {
 			    if {$m2 != {}} {
 				if {[string range $m2 0 0] != {-}} {
 				    incr i
-				    CatalogCmdMatchParams "cat$m1" "cat$m2"
+				    set icat(match1) "cat$m1"
+				    set icat(match2) "cat$m2"
+				    CATMatch $current(frame) \
+					$icat(match1) $icat(match2)
 				    return
 				}
+			    } else {
+				# error
+				return
 			    }
 			}
+		    }
+		    incr i -1
+		    # find them
+		    set ll [llength $icat(cats)]
+		    if {$ll>1} {
+			set icat(match1) [lindex $icat(cats) [expr $ll-2]]
+			set icat(match2) [lindex $icat(cats) [expr $ll-1]]
+			CATMatch $current(frame) $icat(match1) $icat(match2)
 		    } else {
-			# find them
-			incr i -1
-			CatalogCmdMatch
+			# error
 		    }
 		}
 	    }
@@ -1596,7 +1607,6 @@ proc ProcessCatalog {varname iname cvarname} {
 	samp {
 	    global ds9
 	    global samp
-
 	    incr i
 	    switch -- [string tolower [lindex $var $i]] {
 		send {
@@ -1671,7 +1681,6 @@ proc ProcessCatalog {varname iname cvarname} {
 		set row [lindex $var $i]
 		incr i
 	    }
-
 	    switch -- [lindex $var $i] {
 		add {
 		    set row [expr [starbase_nrows $cvar(symdb)]+1]
@@ -1754,7 +1763,7 @@ proc ProcessCatalog {varname iname cvarname} {
 		    }
 		}
 		remove {
-		    starbase_rowdecd l $cvar(symdb) $row
+		    starbase_rowdel $cvar(symdb) $row
 		    CATGenerate $cvarname
 		}
 		save {
@@ -1846,7 +1855,50 @@ proc CatalogCmdRef {ref} {
     set cvarname cat${ref}
 }
 
-proc CatalogCmdFilter {cvarname fn} {
+proc CatalogCmdIcat {which value} {
+    global icat
+
+    set icat($which) $value
+}
+
+proc CatalogCmdCat {which value} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+}
+
+proc CatalogCmdGenerate {which value} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+    CATGenerate $cvarname
+}
+
+proc CatalogCmdEdit {value} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(edit) $value
+    CATEdit $cvarname
+}
+
+proc CatalogCmdCoord {xx yy skyframe} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(x) $xx
+    set cvar(y) $yy
+    set cvar(sky) $skyframe
+}
+
+proc CatalogCmdFilterLoad {fn} {
+    global cvarname
     global $cvarname
 
     if {$fn != {}} {
@@ -1859,6 +1911,14 @@ proc CatalogCmdFilter {cvarname fn} {
 	set ${cvarname}(filter) [string trim $flt]
 	catch {close $fp}
     }
+}
+
+proc CatalogCmdFilter {filter} {
+    global cvarname
+    global $cvarname
+
+    set cvar(filter) $filter
+    CATTable $cvarname
 }
 
 proc CatalogCmdLoad {fn reader} {
@@ -1894,13 +1954,112 @@ proc CatalogCmdMatchParams {cat1 cat2} {
     }
 }
 
-proc CatalogCmdSave {cvarname fn writer} {
+proc CatalogCmdMatchError {error eformat} {
     global icat
 
+    set icat(error) $error
+    set icat(eformat) $eformat
+}
+
+proc CatalogCmdPlot {xx yy xerr yerr} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(plot,x) $xx
+    set cvar(plot,y) $yy
+    set cvar(plot,xerr) $xerr
+    set cvar(plot,yerr) $yerr
+    CATGenerate $cvarname
+}
+
+proc CatalogCmdSAMP {} {
+    global cvarname
+    global $cvarname
+    global samp
+
+    if {[info exists samp]} {
+	SAMPSendTableLoadVotable {} $cvarname
+    } else {
+	Error [msgcat::mc {SAMP: not connected}]
+    }
+}
+
+proc CatalogCmdSAMPSend {name} {
+    global cvarname
+    global $cvarname
+    global samp
+
+    if {[info exists samp]} {
+	foreach arg $samp(apps,votable) {
+	    foreach {key val} $arg {
+		if {[string tolower $val] == $name} {
+		    SAMPSendTableLoadVotable $key $cvarname
+		    break
+		}
+	    }
+	}
+    } else {
+	Error [msgcat::mc {SAMP: not connected}]
+    }
+}
+
+proc CatalogCmdSave {fn writer} {
+    global cvarname
+    global $cvarname
+
     if {$fn != {}} {
-	CATSaveFn $cvarname $3 $2
+	CATSaveFn $cvarname $fn $writer
     	FileLast catfbox $fn
     }
+}
+
+proc CatalogCmdSize {width height rformat} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+
+    set $cvar(width) $width
+    set $cvar(height) $height
+    set $cvar(rformat) $rformat
+    set $cvar(rformat,msg) $rformat
+}
+
+proc CatalogCmdSkyframe {skyframe} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+
+    set $cvar(sky) $skyframe
+    CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]
+}
+
+proc CatalogCmdSkyformat {skyformat} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+
+    set $cvar(skyformat) $skyformat
+}
+
+proc CatalogCmdSystem {sys} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+
+    set $cvar(system) sys
+    CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]
+}
+
+proc CatalogCmdSort {col dir} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    set $cvar(sort) $col
+    set $cvar(sort,dir) $dir
+    CATTable $cvarname
 }
 
 proc CatalogCmdSymbol {col value} {
@@ -1909,7 +2068,8 @@ proc CatalogCmdSymbol {col value} {
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 
-    starbase_set $cvar(symdb) $cvar(row) [starbase_colnum $cvar(symdb) $col] $value
+    starbase_set $cvar(symdb) $cvar(row) \
+	[starbase_colnum $cvar(symdb) $col] $value
     CATGenerate $cvarname
 }
 

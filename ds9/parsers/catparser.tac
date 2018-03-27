@@ -88,6 +88,16 @@
 %token VOT_
 %token XML_
 
+%token CDS_
+%token ADAC_
+%token CADC_
+%token CAMBRIDGE_
+%token SAO_
+%token UKIRT_
+%token IUCAA_
+%token BEJING_
+%token SAAO_
+
 %%
 
 #include yesno.trl
@@ -106,14 +116,6 @@ catalog : {CATTool}
  | LOAD_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | IMPORT_ reader STRING_ {CatalogCmdLoad $3 $2}
 
-# | STRING_ {puts aa}
-# | cat
-# | strcat
-
-# | CDS_ STRING_  {puts bb}
-# | CDS_ cat
-# | CDS_ strcat
-
  | cat
  | STRING_ {CatalogCmdRef $1}
  | STRING_ {CatalogCmdRef $1} cat
@@ -123,62 +125,62 @@ catalog : {CATTool}
  ;
 
 cat : coordinate
- | ALLCOLS_ {global cvarname; global $cvarname; set ${cvarname}(allcols) 1}
- | ALLROWS_ {global cvarname; global $cvarname; set ${cvarname}(allrows) 1}
+ | ALLCOLS_ yesno {CatalogCmdCat allcols $2}
+ | ALLROWS_ yesno {CatalogCmdCat allrows $2}
  | CANCEL_ {global cvarname; ARCancel $cvarname}
  | CLEAR_ {global cvarname; CATOff $cvarname}
  | CLOSE_ {global cvarname; CATDestroy $cvarname}
  | COORDINATE_ coordinate
  | CROSSHAIR_ {global cvarname; CATCrosshair $cvarname}
- | EDIT_ yesno {global cvarname; global $cvarname; set ${cvarname}(edit) $2; CATEdit $cvarname}
- | EXPORT_ writer STRING_ {global cvarname; CatalogCmdSave $cvarname $3 $2}
+ | EDIT_ yesno {CatalogCmdEdit $2}
+ | EXPORT_ writer STRING_ {CatalogCmdSave $3 $2}
  | FILTER_ filter
  | HEADER_ {global cvarname; CATHeader $cvarname}
- | HIDE_ {global cvarname; global $cvarname; set ${cvarname}(show) 0; CATGenerate $cvarname}
- | LOCATION_ INT_ {global cvarname; global $cvarname; set ${cvarname}(loc) $2; CATGenerate $cvarname}
+ | HIDE_ {CatalogCmdGenerate show 0}
+ | LOCATION_ INT_ {CatalogCmdGenerate loc $2}
  | MATCH_ match
- | MAXROWS_ INT_ {global cvarname; global $cvarname; set ${cvarname}(max) $2}
- | NAME_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(name) $2}
- | PANTO_ yesno {global cvarname; global $cvarname; set ${cvarname}(panto) $2}
- | PLOT_ STRING_ STRING_ STRING_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(plot,x) $2; set ${cvarname}(plot,y) $3; set ${cvarname}(plot,xerr) $4; set ${cvarname}(plot,yerr) $5; CATPlotGenerate $cvarname}
+ | MAXROWS_ INT_ {CatalogCmdCat max $2}
+ | NAME_ STRING_ {CatalogCmdCat name $2}
+ | PANTO_ yesno {CatalogCmdCat panto $2}
+ | PLOT_ STRING_ STRING_ STRING_ STRING_ {CatalogCmdPlot $2 $3 $4 $5}
  | PRINT_ {global cvarname; CATPrint $cvarname}
- | PSKY_ skyframe {global cvarname; global $cvarname; set ${cvarname}(psky) $2; CATGenerate $cvarname}
- | PSYSTEM_ wcssys {global cvarname; global $cvarname; set ${cvarname}(psystem) $2; CATGenerate $cvarname}
+ | PSKY_ skyframe {CatalogCmdGenerate psky $2}
+ | PSYSTEM_ wcssys {CatalogCmdGenerate psystem $2}
  | REGIONS_ {global cvarname; CATGenerateRegions $cvarname}
  | RETRIEVE_ {global cvarname; CATApply $cvarname 1}
  | SAMP_ samp
- | SAVE_ STRING_ {global cvarname; CatalogCmdSave $cvarname $2 VOTWrite}
- | SERVER_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(server) $2}
- | SHOW_ {global cvarname; global $cvarname; set ${cvarname}(show) 1; CATGenerate $cvarname}
- | SIZE_ numeric numeric skyformat {global cvarname; global $cvarname; set ${cvarname}(width) $1; set ${cvarname}(height) $2; set ${cvarname}(rformat) $3; set ${cvarname}(rformat,msg) $3}
- | SKY_ skyframe {global cvarname; global $cvarname; set ${cvarname}(sky) $1; CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]}
- | SKYFORMAT_ skyformat {global cvarname; global $cvarname; set ${cvarname}(skyformat) $2}
+ | SAVE_ STRING_ {CatalogCmdSave $2 VOTWrite}
+ | SERVER_ server {CatalogCmdCat server $2}
+ | SHOW_ yesno {CatalogCmdGenerate show $2}
+ | SIZE_ numeric numeric skyformat {CatalogCmdSize $1 $2 $3}
+ | SKY_ skyframe {CatalogCmdSkyframe $2}
+ | SKYFORMAT_ skyformat {CatalogCmdSkyformat $2}
  | SORT_ sort
- | SYMBOL_ {global cvarname; global $cvarname; set ${cvarname}(row) 1} symbol
- | SYMBOL_ INT_ {global cvarname; global $cvarname; set ${cvarname}(row) $2} symbol
- | SYSTEM_ wcssys {global cvarname; global $cvarname; set ${cvarname}(system) $1; CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]}
+ | SYMBOL_ {CatalogCmdCat row 1} symbol
+ | SYMBOL_ INT_ {CagtalogCmdCat row $2} symbol
+ | SYSTEM_ wcssys {CatalogCmdSystem $2}
  | UPDATE_ {global cvarname; CATUpdate $cvarname}
- | 'x' STRING_ {global cvarname; global $cvarname; set ${cvarname}(colx) $2; CATGenerate $cvarname}
- | RA_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(colx) $2; CATGenerate $cvarname}
- | 'y' STRING_ {global cvarname; global $cvarname; set ${cvarname}(coly) $2; CATGenerate $cvarname}
- | DEC_ STRING_ {global cvarname; global $cvarname; set ${cvarname}(coly) $2; CATGenerate $cvarname}
+ | 'x' STRING_ {CatalogCmdGenerate colx $2}
+ | RA_ STRING_ {CatalogCmdGenerate colx $2}
+ | 'y' STRING_ {CatalogCmdGenerate coly $2}
+ | DEC_ STRING_ {CatalogCmdGenerate coly $2}
  ;
 
-coordinate : numeric numeric {global cvarname; global $cvarname; set ${cvarname}(x) $1; set ${cvarname}(y) $2; set ${cvarname}(sky) fk5}
- | numeric numeric skyframe {global cvarname; global $cvarname; set ${cvarname}(x) $1; set ${cvarname}(y) $2; set ${cvarname}(sky) $3}
- | SEXSTR_ SEXSTR_ {global cvarname; global $cvarname; set ${cvarname}(x) $1; set ${cvarname}(y) $2; set ${cvarname}(sky) fk5}
- | SEXSTR_ SEXSTR_ skyframe {global cvarname; global $cvarname; set ${cvarname}(x) $1; set ${cvarname}(y) $2; set ${cvarname}(sky) $3}
+coordinate : numeric numeric {CatalogCmdCoord $1 $2 fk5}
+ | numeric numeric skyframe {CatalogCmdCoord $1 $2 $3}
+ | SEXSTR_ SEXSTR_ {CatalogCmdCoord $1 $2 fk5}
+ | SEXSTR_ SEXSTR_ skyframe {CatalogCmdCoord $1 $2 $3}
  ;
 
-filter : LOAD_ STRING_ {global cvarname; CatalogCmdFilter $cvarname $2}
- | STRING_ {global cvarname; global $cvarname; set ${cvarname}(filter) $1; CATable $cvarname}
+filter : LOAD_ STRING_ {CatalogCmdFilterLoad $2}
+ | STRING_ {CatalogCmdFilter $1}
  ;
 
 match : {CatalogCmdMatch}
- | ERROR_ numeric skyformat {global icat; set icat(error) $2; set icat(eformat) $3}
- | FUNCTION_ matchFunction {global icat;  set icat(function) $2}
- | UNIQUE_ yesno {global icat; set icat(unique) $2}
- | RETURN_ matchReturn {global icat;  set icat(return) $2}
+ | ERROR_ numeric skyformat {CatalogCmdMatchError $2 $3}
+ | FUNCTION_ matchFunction {CatalogCmdIcat function $2}
+ | UNIQUE_ yesno {CatalogCmdIcat unique $2}
+ | RETURN_ matchReturn {CatalogCmdIcat return $2}
  | STRING_ STRING_ {CatalogCmdMatchParams $1 $2}
  ;
 
@@ -200,13 +202,24 @@ reader : XML_ {set _ VOTRead}
  | TSV_ {set _ TSVRead}
  ;
 
-samp : {global cvarname; SAMPSendTableLoadVotable {} $cvarname}
- | BROADCAST_ {global cvarname; SAMPSendTableLoadVotable {} $cvarname}
- | SEND_ STRING_ {CatalogSAMPCmd $2}
+samp : {CatalogCmdSAMP}
+ | BROADCAST_ {CatalogCmdSAMP}
+ | SEND_ STRING_ {CatalogCmdSAMPSend $2}
  ;
 
-sort : STRING_ {global cvarname; global $cvarname; set ${cvarname}(sort) $1; CATTable $cvarname}
- | STRING_ sortDir {global cvarname; global $cvarname; set ${cvarname}(sort) $1; set ${cvarname}(sort,dir) $2; CATTable $cvarname}
+server : CDS_ {set _ cds}
+ | ADAC_ {set _ adac}
+ | CADC_ {set _ cadc}
+ | CAMBRIDGE_ {set _ cambridge}
+ | SAO_ {set _ sao}
+ | UKIRT_ {set _ ukirt}
+ | IUCAA_ {set _ iucaa}
+ | BEJING_ {set _ bejing}
+ | SAAO_ {set _ saao}
+ ;
+
+sort : STRING_ {CatalogCmdSort $1 "-increasing"}
+ | STRING_ sortDir {CatalogCmdSort $1 $2}
  ;
 
 sortDir : INCR_ {set _ "-increasing"}
@@ -249,6 +262,8 @@ symbolShape : POINT_ {set _ "circle point"}
  | ELLIPSE_ {set _ ellipse}
  | BOX_ {set _ box}
  | TEXT_ {set _ text}
+# backward compatibility
+ | STRING_ {set _ $1}
  ;
 
 writer : XML_ {set _ VOTWrite}

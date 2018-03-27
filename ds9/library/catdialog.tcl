@@ -684,6 +684,12 @@ proc CATCrosshair {varname} {
 
 proc CATDestroy {varname} {
     upvar #0 $varname var
+
+    # can happen from xpa,samp,command line
+    if {![info exists var]} {
+	return
+    }
+    
     global $varname
     global $var(catdb)
     global $var(tbldb)

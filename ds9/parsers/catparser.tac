@@ -105,9 +105,19 @@ catalog : {CATTool}
  | FILE_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | LOAD_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | IMPORT_ reader STRING_ {CatalogCmdLoad $3 $2}
+
+# | STRING_ {puts aa}
+# | cat
+# | strcat
+
+# | CDS_ STRING_  {puts bb}
+# | CDS_ cat
+# | CDS_ strcat
+
+ | cat
  | STRING_ {CatalogCmdRef $1}
  | STRING_ {CatalogCmdRef $1} cat
- # backward compatibility
+# backward compatibility
  | CDS_ STRING_ {CatalogCmdRef $2}
  | CDS_ STRING_ {CatalogCmdRef $2} cat
  ;
@@ -203,31 +213,37 @@ sortDir : INCR_ {set _ "-increasing"}
  | DECR_ {set _ "-decreasing"}
  ;
 
-symbol : ADD_ {CatalogSymbolAddCmd}
- | ANGLE_ numeric {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) angle] $2; CATGenerate $cvarname}
- | COLOR_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) color] $2; CATGenerate $cvarname}
- | CONDITION_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) condition] $2; CATGenerate $cvarname}
- | FONT_ font {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) font] $2; CATGenerate $cvarname}
- | FONTSIZE_ INT_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) fontsize] $2; CATGenerate $cvarname}
- | FONTWEIGHT_ fontweight {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) fontweight] $2; CATGenerate $cvarname}
- | FONTSLANT_ fontslant {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) fontslant] $2; CATGenerate $cvarname}
- | LOAD_ STRING_ {global cvarname; global $cvarname; CatalogSymbolLoadCmd $2}
- | REMOVE_ {global cvarname; global $cvarname; starbase_rowdel ${cvarname}(symdb) ${cvarname}(row); CATGenerate $cvarname}
- | SAVE_ STRING_ {global cvarname; global $cvarname; starbase_write ${cvarname}(symdb) $2}
- | SIZE_ numeric {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) size] $2; CATGenerate $cvarname}
- | SIZE2_ numeric {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) size2] $2; CATGenerate $cvarname}
- | SHAPE_ symbolShape {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) shape] $2; CATGenerate $cvarname}
- | TEXT_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) text] $2; CATGenerate $cvarname}
- | UNITS_ STRING_ {global cvarname; global $cvarname; starbase_set ${cvarname}(symdb) ${cvarname}(row) [starbase_colnum ${cvarname}(symdb) units] $2; CATGenerate $cvarname}
+symbol : ADD_ {CatalogCmdSymbolAdd}
+ | REMOVE_ {CatalogCmdSymbolRemove}
+ | LOAD_ STRING_ {CatalogCmdSymbolLoad $2}
+ | SAVE_ STRING_ {CatalogCmdSymbolSave $2}
+
+ | ANGLE_ numeric {CatalogCmdSymbol angle $2}
+ | COLOR_ STRING_ {CatalogCmdSymbol color $2}
+ | CONDITION_ STRING_ {CatalogCmdSymbol condition $2}
+ | FONT_ font {CatalogCmdSymbol font $2}
+ | FONTSIZE_ INT_ {CatalogCmdSymbol fontsize $2}
+ | FONTWEIGHT_ fontweight {CatalogCmdSymbol fontweight $2}
+ | FONTSLANT_ fontslant {CatalogCmdSymbol fontslant $2}
+ | SIZE_ numeric {CatalogCmdSymbol size $2}
+ | SIZE2_ numeric {CatalogCmdSymbol size2 $2}
+ | SHAPE_ symbolShape {CatalogCmdSymbol shape $2}
+ | TEXT_ STRING_ {CatalogCmdSymbol text $2}
+ | UNITS_ STRING_ {CatalogCmdSymbol units $2}
  ;
 
 symbolShape : POINT_ {set _ "circle point"}
  | CIRCLE_ POINT_ {set _ "circle point"}
  | BOX_ POINT_ {set _ "box point"}
+ | DIAMOND_ {set _ "diamond point"}
  | DIAMOND_ POINT_ {set _ "diamond point"}
+ | CROSS_ {set _ "cross point"}
  | CROSS_ POINT_ {set _ "cross point"}
+ | 'x' {set _ "x point"}
  | 'x' POINT_ {set _ "x point"}
+ | ARROW_ {set _ "arrow point"}
  | ARROW_ POINT_ {set _ "arrow point"}
+ | BOXCIRCLE_ {set _ "boxcircle point"}
  | BOXCIRCLE_ POINT_ {set _ "boxcircle point"}
  | CIRCLE_ {set _ circle}
  | ELLIPSE_ {set _ ellipse}

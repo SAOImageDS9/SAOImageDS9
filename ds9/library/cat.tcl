@@ -1236,47 +1236,6 @@ proc PrefsDialogCatalog {} {
 
 # Process Cmds
 
-proc CatalogSymbolLoadCmd {fn} {
-    global cvarname
-    global $cvarname
-
-    if {[file exists $fn]} {
-	starbase_read ${cvarname}(symdb) $fn
-	CATGenerate $cvarname
-    } else {
-	Error "[msgcat::mc {Unable to open file}] $fn"
-	return
-    }
-}
-
-proc CatalogSymbolAddCmd {} {
-    global cvarname
-    global $cvarname
-
-    set row [expr [starbase_nrows ${cvarname}(symdb)]+1]
-    starbase_rowins ${cvarname}(symdb) $row
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) shape] $pcat(sym,shape)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) color] $pcat(sym,color)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) width] $pcat(sym,width)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) font] $pcat(sym,font)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) fontsize] \
-	$pcat(sym,font,size)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) fontweight] \
-	$pcat(sym,font,weight)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) fontslant] \
-	$pcat(sym,font,slant)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) units] $pcat(sym,units)
-    CATGenerate ${cvarname}name
-}
-
 proc CatalogSAMPCmd {name} {
     global cvarname
     global $cvarname
@@ -1795,7 +1754,7 @@ proc ProcessCatalog {varname iname cvarname} {
 		    }
 		}
 		remove {
-		    starbase_rowdel $cvar(symdb) $row
+		    starbase_rowdecd l $cvar(symdb) $row
 		    CATGenerate $cvarname
 		}
 		save {
@@ -1942,6 +1901,82 @@ proc CatalogCmdSave {cvarname fn writer} {
 	CATSaveFn $cvarname $3 $2
     	FileLast catfbox $fn
     }
+}
+
+proc CatalogCmdSymbol {col value} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    starbase_set $cvar(symdb) $cvar(row) [starbase_colnum $cvar(symdb) $col] $value
+    CATGenerate $cvarname
+}
+
+proc CatalogCmdSymbolAdd {} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    global pcat
+
+    set row [expr [starbase_nrows $cvar(symdb)]+1]
+    starbase_rowins $cvar(symdb) $row
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) shape] $pcat(sym,shape)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) color] $pcat(sym,color)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) width] $pcat(sym,width)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) font] $pcat(sym,font)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) fontsize] \
+	$pcat(sym,font,size)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) fontweight] \
+	$pcat(sym,font,weight)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) fontslant] \
+	$pcat(sym,font,slant)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) units] $pcat(sym,units)
+    CATGenerate $cvarname
+}
+
+proc CatalogCmdSymbolRemove {} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    starbase_rowdel $cvar(symdb) $cvar(row)
+    CATGenerate $cvarname
+}
+
+proc CatalogCmdSymbolLoad {fn} {
+    global cvarname
+    upvar #0 $cvarname cvar
+    global $cvarname
+    global $cvar(symdb)
+
+    if {[file exists $fn]} {
+	starbase_read $cvar(symdb) $fn
+	CATGenerate $cvarname
+    } else {
+	Error "[msgcat::mc {Unable to open file}] $fn"
+	return
+    }
+}
+
+proc CatalogCmdSymbolSave {fn} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    starbase_write $cvar(symdb) $fn
 }
 
 proc ProcessSendCatalogCmd {proc id param sock fn} {

@@ -1821,7 +1821,6 @@ proc ProcessCatalog {varname iname cvarname} {
 
 proc CatalogCmdCheck {} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
 
     if {![info exists cvar(top)]} {
@@ -1862,7 +1861,7 @@ proc CatalogCmdRef {ref} {
 	}
 
 	# not a default, assume other name
-	CATDialog catcds cds $ref $ref sync
+	CATDialog cat${ref} cds $ref $ref sync
 	set cvarname cat${ref}
     }
 }
@@ -1875,7 +1874,6 @@ proc CatalogCmdIcat {which value} {
 
 proc CatalogCmdCat {which value} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
 
     set cvar($which) $value
@@ -1883,7 +1881,6 @@ proc CatalogCmdCat {which value} {
 
 proc CatalogCmdGenerate {which value} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
 
     set cvar($which) $value
@@ -1892,7 +1889,6 @@ proc CatalogCmdGenerate {which value} {
 
 proc CatalogCmdEdit {value} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
 
     set cvar(edit) $value
@@ -1901,7 +1897,6 @@ proc CatalogCmdEdit {value} {
 
 proc CatalogCmdCoord {xx yy skyframe} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
 
     set cvar(x) $xx
@@ -1911,7 +1906,7 @@ proc CatalogCmdCoord {xx yy skyframe} {
 
 proc CatalogCmdFilterLoad {fn} {
     global cvarname
-    global $cvarname
+    upvar #0 $cvarname cvar
 
     if {$fn != {}} {
 	if {[catch {open $fn r} fp]} {
@@ -1920,14 +1915,14 @@ proc CatalogCmdFilterLoad {fn} {
 	}
 	set flt [read -nonewline $fp]
 	catch {regsub {\n} $flt " " $flt}
-	set ${cvarname}(filter) [string trim $flt]
+	set cvar(filter) [string trim $flt]
 	catch {close $fp}
     }
 }
 
 proc CatalogCmdFilter {filter} {
     global cvarname
-    global $cvarname
+    upvar #0 $cvarname cvar
 
     set cvar(filter) $filter
     CATTable $cvarname
@@ -1975,7 +1970,6 @@ proc CatalogCmdMatchError {error eformat} {
 
 proc CatalogCmdPlot {xx yy xerr yerr} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
 
     set cvar(plot,x) $xx
@@ -1987,7 +1981,6 @@ proc CatalogCmdPlot {xx yy xerr yerr} {
 
 proc CatalogCmdSAMP {} {
     global cvarname
-    global $cvarname
     global samp
 
     if {[info exists samp]} {
@@ -1999,7 +1992,6 @@ proc CatalogCmdSAMP {} {
 
 proc CatalogCmdSAMPSend {name} {
     global cvarname
-    global $cvarname
     global samp
 
     if {[info exists samp]} {
@@ -2018,7 +2010,6 @@ proc CatalogCmdSAMPSend {name} {
 
 proc CatalogCmdSave {fn writer} {
     global cvarname
-    global $cvarname
 
     if {$fn != {}} {
 	CATSaveFn $cvarname $fn $writer
@@ -2028,55 +2019,48 @@ proc CatalogCmdSave {fn writer} {
 
 proc CatalogCmdSize {width height rformat} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
 
-    set $cvar(width) $width
-    set $cvar(height) $height
-    set $cvar(rformat) $rformat
-    set $cvar(rformat,msg) $rformat
+    set cvar(width) $width
+    set cvar(height) $height
+    set cvar(rformat) $rformat
+    set cvar(rformat,msg) $rformat
 }
 
 proc CatalogCmdSkyframe {skyframe} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
 
-    set $cvar(sky) $skyframe
+    set cvar(sky) $skyframe
     CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]
 }
 
 proc CatalogCmdSkyformat {skyformat} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
 
-    set $cvar(skyformat) $skyformat
+    set cvar(skyformat) $skyformat
 }
 
 proc CatalogCmdSystem {sys} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
 
-    set $cvar(system) sys
+    set cvar(system) $sys
     CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]
 }
 
 proc CatalogCmdSort {col dir} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
-    global $cvar(symdb)
 
-    set $cvar(sort) $col
-    set $cvar(sort,dir) $dir
+    set cvar(sort) $col
+    set cvar(sort,dir) $dir
     CATTable $cvarname
 }
 
 proc CatalogCmdSymbol {col value} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 
@@ -2087,7 +2071,6 @@ proc CatalogCmdSymbol {col value} {
 
 proc CatalogCmdSymbolAdd {} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 
@@ -2119,7 +2102,6 @@ proc CatalogCmdSymbolAdd {} {
 
 proc CatalogCmdSymbolRemove {} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 
@@ -2130,7 +2112,6 @@ proc CatalogCmdSymbolRemove {} {
 proc CatalogCmdSymbolLoad {fn} {
     global cvarname
     upvar #0 $cvarname cvar
-    global $cvarname
     global $cvar(symdb)
 
     if {[file exists $fn]} {
@@ -2144,7 +2125,6 @@ proc CatalogCmdSymbolLoad {fn} {
 
 proc CatalogCmdSymbolSave {fn} {
     global cvarname
-    global $cvarname
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 

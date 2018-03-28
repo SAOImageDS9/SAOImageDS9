@@ -457,11 +457,6 @@ proc CATOff {varname} {
     upvar #0 $varname var
     global $varname
 
-    # can happen from xpa,samp,command line
-    if {![info exists var]} {
-	return
-    }
-    
     global $var(catdb)
     if {[info exists $var(catdb)]} {
 	unset $var(catdb)
@@ -1824,6 +1819,23 @@ proc ProcessCatalog {varname iname cvarname} {
     }
 }
 
+proc CatalogCmdCheck {} {
+    global cvarname
+    global $cvarname
+    upvar #0 $cvarname cvar
+
+    if {![info exists cvar(top)]} {
+	Error "[msgcat::mc {Unable to find catalog window}] $cvarname"
+	cat::YYABORT
+	return
+    }
+    if {![winfo exists $cvar(top)]} {
+	Error "[msgcat:: mc {Unable to find catalog window}] $cvarname"
+	cat::YYABORT
+	return
+    }
+}
+
 proc CatalogCmdRef {ref} {
     global icat
     global cvarname
@@ -1851,8 +1863,8 @@ proc CatalogCmdRef {ref} {
 
 	# not a default, assume other name
 	CATDialog catcds cds $ref $ref sync
+	set cvarname cat${ref}
     }
-    set cvarname cat${ref}
 }
 
 proc CatalogCmdIcat {which value} {
@@ -1970,7 +1982,7 @@ proc CatalogCmdPlot {xx yy xerr yerr} {
     set cvar(plot,y) $yy
     set cvar(plot,xerr) $xerr
     set cvar(plot,yerr) $yerr
-    CATGenerate $cvarname
+    CATPlotGenerate $cvarname
 }
 
 proc CatalogCmdSAMP {} {

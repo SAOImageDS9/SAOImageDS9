@@ -116,7 +116,7 @@ catalog : {CATTool}
  | LOAD_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | IMPORT_ reader STRING_ {CatalogCmdLoad $3 $2}
 
- | cat
+ | {CatalogCmdCheck} cat
  | STRING_ {CatalogCmdRef $1}
  | STRING_ {CatalogCmdRef $1} cat
 # backward compatibility

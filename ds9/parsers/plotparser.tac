@@ -2,6 +2,7 @@
 %}
 
 #include yesno.tin
+#include font.tin
 #include numeric.tin
 #include string.tin
 
@@ -10,6 +11,7 @@
 %token A4_
 %token ALIGNED_
 %token ARROW_
+%token AUTO_
 %token AXIS_
 %token BAR_
 %token BARMODE_
@@ -30,8 +32,12 @@
 %token FILE_
 %token FILENAME_
 %token FILL_
+%token FLIP_
 %token FONT_
+%token FORMAT_
 %token GRAY_
+%token GRID_
+%token LABELS_
 %token LANDSCAPE_
 %token LEFT_
 %token LEGAL_
@@ -42,10 +48,14 @@
 %token LIST_
 %token LOAD_
 %token LOADCONFIG_
+%token LOG_
+%token MAX_
+%token MIN_
 %token MODE_
 %token NAME_
 %token NEW_
 %token NORMAL_
+%token NUMBERS_
 %token ORIENT_
 %token OVERLAP_
 %token PAGESETUP_
@@ -67,6 +77,7 @@
 %token SHAPE_
 %token SHOW_
 %token SIZE_
+%token SLANT_
 %token SMOOTH_
 %token SPLUS_
 %token SQUARE_
@@ -77,6 +88,7 @@
 %token TITLE_
 %token TOP_
 %token TRIANGLE_
+%token WEIGHT_
 %token WIDTH_
 %token ZOOM_
 
@@ -88,6 +100,7 @@
 %%
 
 #include yesno.trl
+#include font.trl
 #include numeric.trl
 
 command : plot
@@ -156,6 +169,12 @@ dim : XY_ {set _ xy}
  | XYEXEY_ {set _ xyexey}
  ;
 
+xy : 'x' {set _x}
+ | 'X' {set _ x}
+ | 'y' {set _ y}
+ | 'Y' {set _ y}
+ ;
+
 load : STRING_
  | STRING_ dim
  ;
@@ -193,7 +212,13 @@ mode : POINTER_ {set _ pointer}
  | ZOOM_ {set _ zoom}
  ;
 
-axis :
+axis : xy GRID_ yesno
+ | xy LOG_ yesno
+ | xy FLIP_ yesno
+ | xy AUTO_ yesno
+ | xy MIN_ numeric
+ | xy MAX_ numeric
+ | xy FORMAT_ STRING_
  ;
 
 legend : yesno
@@ -206,14 +231,22 @@ legendPos : RIGHT_ {set _ right}
  | BOTTOM_ {set _ bottom}
  ;
 
-fontt :
+fontt : fontType FONT_ font
+ | fontType FONTSIZE_ INT_
+ | fontType FONTWEIGHT_ fontweight
+ | fontType FONTSLANT_ fontslant
+ | fontType SIZE_ INT_
+ | fontType WEIGHT_ fontweight
+ | fontType SLANT_ fontslant
+ ;
+
+fontType : TITLE_ {set _ title}
+ | LABELS_ {set _ labels}
+ | NUMBERS_ {set _ numbers}
  ;
 
 title : STRING_
- | 'x' STRING_
- | 'X' STRING_
- | 'y' STRING_
- | 'Y' STRING_
+ | xy STRING_
  ;
 
 barmode : NORMAL_ {set _ normal}

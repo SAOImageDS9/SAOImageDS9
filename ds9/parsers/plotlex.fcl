@@ -10,6 +10,7 @@
 a4	    {return $A4_}
 aligned	    {return $ALIGNED_}
 arrow	    {return $ARROW_}
+auto	    {return $AUTO_}
 axis	    {return $AXIS_}
 bar	    {return $BAR_}
 barmode	    {return $BARMODE_}
@@ -30,8 +31,12 @@ error	    {return $ERROR_}
 file	    {return $FILE_}
 filename    {return $FILENAME_}
 fill	    {return $FILL_}
+flip	    {return $FLIP_}
 font	    {return $FONT_}
+format	    {return $FORMAT_}
 gray	    {return $GRAY_}
+grid	    {return $GRID_}
+labels	    {return $LABELS_}
 landscape   {return $LANDSCAPE_}
 left	    {return $LEFT_}
 legal	    {return $LEGAL_}
@@ -42,10 +47,14 @@ linear	    {return $LINEAR_}
 list	    {return $LIST_}
 load	    {return $LOAD_}
 loadconfig  {return $LOADCONFIG_}
+log	    {return $LOG_}
+max	    {return $MAX_}
+min	    {return $MIN_}
 mode	    {return $MODE_}
 name	    {return $NAME_}
 normal	    {return $NORMAL_}
 new	    {return $NEW_}
+numbers	    {return $NUMBERS_}
 orient	    {return $ORIENT_}
 overlap	    {return $OVERLAP_}
 pagesetup   {return $PAGESETUP_}
@@ -67,6 +76,7 @@ select	    {return $SELECT_}
 shape	    {return $SHAPE_}
 show	    {return $SHOW_}
 size	    {return $SIZE_}
+slant	    {return $SLANT_}
 smooth	    {return $SMOOTH_}
 splus	    {return $SPLUS_}
 square	    {return $SQUARE_}
@@ -77,6 +87,7 @@ tabloid	    {return $TABLOID_}
 title	    {return $TITLE_}
 top	    {return $TOP_}
 triangle    {return $TRIANGLE_}
+weight	    {return $WEIGHT_}
 width	    {return $WIDTH_}
 zoom	    {return $ZOOM_}
 
@@ -86,6 +97,7 @@ xyey	    {return $XYEY_}
 xyexey	    {return $XYEXEY_}
 
 #include yesno.fin
+#include font.fin
 #include numeric.fin
 #include string.fin
 

@@ -54,6 +54,7 @@
 %token MATCH_
 %token MAXROWS_
 %token NAME_
+%token NEW_
 %token PANTO_
 %token PLOT_
 %token POINT_
@@ -112,6 +113,7 @@ command : catalog
  ;
 
 catalog : {CATTool}
+ | NEW_ {CATTool}
  | FILE_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | LOAD_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | IMPORT_ reader STRING_ {CatalogCmdLoad $3 $2}
@@ -181,7 +183,7 @@ match : {CatalogCmdMatch}
  | FUNCTION_ matchFunction {CatalogCmdIcat function $2}
  | UNIQUE_ yesno {CatalogCmdIcat unique $2}
  | RETURN_ matchReturn {CatalogCmdIcat return $2}
- | STRING_ STRING_ {CatalogCmdMatchParams $1 $2}
+ | STRING_ STRING_ {CatalogCmdMatchParams "cat$1" "cat$2"}
  ;
 
 matchFunction : 1AND2_ {set _ 1and2}

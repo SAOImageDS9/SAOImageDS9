@@ -50,6 +50,7 @@ location    {return $LOCATION_}
 match	    {return $MATCH_}
 maxrows	    {return $MAXROWS_}
 name	    {return $NAME_}
+new	    {return $NEW_}
 panto	    {return $PANTO_}
 plot	    {return $PLOT_}
 point	    {return $POINT_}

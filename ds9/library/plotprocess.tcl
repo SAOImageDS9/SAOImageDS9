@@ -100,6 +100,13 @@ proc PrefsDialogPlot {} {
 }
 
 proc ProcessPlotCmd {xarname iname buf fn} {
+    global debug
+    if {$debug(tcl,parser)} {
+	plot::YY_FLUSH_BUFFER
+	plot::yy_scan_string [lrange $var $i end]
+	plot::yyparse
+	incr i [expr $plot::yycnt-1]
+    } else {
     upvar $xarname xar
     upvar $iname i
 
@@ -432,6 +439,7 @@ proc ProcessPlotCmd {xarname iname buf fn} {
 
     # force update
     update idletasks
+}
 }
 
 proc ProcessPlotNew {varname xarname iname buf} {

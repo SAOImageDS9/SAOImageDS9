@@ -118,15 +118,15 @@ catalog : {CATTool}
  | LOAD_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | IMPORT_ reader STRING_ {CatalogCmdLoad $3 $2}
 
- | {CatalogCmdCheck} cat
+ | {CatalogCmdCheck} catCmd
  | STRING_ {CatalogCmdRef $1}
- | STRING_ {CatalogCmdRef $1} cat
+ | STRING_ {CatalogCmdRef $1} catCmd
 # backward compatibility
  | CDS_ STRING_ {CatalogCmdRef $2}
- | CDS_ STRING_ {CatalogCmdRef $2} cat
+ | CDS_ STRING_ {CatalogCmdRef $2} catCmd
  ;
 
-cat : coordinate
+catCmd : coordinate
  | ALLCOLS_ yesno {CatalogCmdCat allcols $2}
  | ALLROWS_ yesno {CatalogCmdCat allrows $2}
  | CANCEL_ {global cvarname; ARCancel $cvarname}

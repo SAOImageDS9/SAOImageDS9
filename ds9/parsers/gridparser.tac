@@ -82,17 +82,17 @@ interiortype : INTERIOR_ {set _ interior}
  | EXTERIOR_ {set _ exterior}
  ;
 
-grid : yesno {global grid; set grid(view) $1; GridUpdateCurrent}
+grid : yesno {GridCmdCurrent view $1}
  | OPEN_ {GridDialog}
  | CLOSE_ {GridDestroyDialog}
  # backward compatible
  | TYPE_ type {GridUpdateCurrent}
- | SYSTEM_ system {global grid; set grid(system) $2; GridUpdateCurrent}
- | SKYFRAME_ skyframe {global grid; set grid(sky) $2; GridUpdateCurrent}
- | SKYFORMAT_ skyformat {global grid; set grid(skyformat) $2; GridUpdateCurrent}
+ | SYSTEM_ system {GridCmdCurrent system $2}
+ | SKYFRAME_ skyframe {GridCmdCurrent sky $2}
+ | SKYFORMAT_ skyformat {GridCmdCurrent skyformat $2}
  | GRID_ gridgrid {GridUpdateCurrent}
- | FORMAT1_ STRING_ {global grid; set grid(format1) $2; GridUpdateCurrent}
- | FORMAT2_ STRING_ {global grid; set grid(format2) $2; GridUpdateCurrent}
+ | FORMAT1_ STRING_ {GridCmdCurrent format1 $2}
+ | FORMAT2_ STRING_ {GridCmdCurrent format2 $2}
  | AXES_ axes {GridUpdateCurrent}
  | TICKMARKS_ tickmarks {GridUpdateCurrent}
  | BORDER_ border {GridUpdateCurrent}
@@ -105,34 +105,34 @@ grid : yesno {global grid; set grid(view) $1; GridUpdateCurrent}
  | SAVE_ STRING_ {FileLast gridfbox $2; GridSave $2}
  ;
 
-type : typegrid {global grid; set grid(type) $1}
- | AXES_ interiortype {global grid; set grid(axes,type) $2}
- | NUMERICS_ interiortype {global grid; set grid(numlab,type) $2}
+type : typegrid {GridCmdSet type $1}
+ | AXES_ interiortype {GridCmdSet axes,type $2}
+ | NUMERICS_ interiortype {GridCmdSet numlab,type $2}
  ;
 
 system : coordsys {set _ $1}
  | wcssys {set _ $1}
  ;
 
-gridgrid : yesno {global grid; set grid(grid) $1}
- | COLOR_ STRING_ {global grid; set grid(grid,color) $2}
- | WIDTH_ INT_ {global grid; set grid(grid,width) $2}
- | DASH_ yesno {global grid; set grid(grid,style) $2}
+gridgrid : yesno {GridCmdSet grid $1}
+ | COLOR_ STRING_ {GridCmdSet grid,color $2}
+ | WIDTH_ INT_ {GridCmdSet grid,width $2}
+ | DASH_ yesno {GridCmdSet grid,style $2}
  # backward compatible
- | STYLE_ INT_ {global grid; set grid(grid,style) $2}
- | GAP1_ numeric {global grid; set grid(grid,gap1) $2}
- | GAP2_ numeric {global grid; set grid(grid,gap2) $2}
- | GAP3_ numeric {global grid; set grid(grid,gap3) $2}
+ | STYLE_ INT_ {GridCmdSet grid,style $2}
+ | GAP1_ numeric {GridCmdSet grid,gap1 $2}
+ | GAP2_ numeric {GridCmdSet grid,gap2 $2}
+ | GAP3_ numeric {GridCmdSet grid,gap3 $2}
  ;
 
-axes : yesno {global grid; set grid(axes) $1}
- | COLOR_ STRING_ {global grid; set grid(axes,color) $2}
- | WIDTH_ INT_ {global grid; set grid(axes,width) $2}
- | DASH_ yesno {global grid; set grid(axes,style) $2}
+axes : yesno {GridCmdSet axes $1}
+ | COLOR_ STRING_ {GridCmdSet axes,color $2}
+ | WIDTH_ INT_ {GridCmdSet axes,width $2}
+ | DASH_ yesno {GridCmdSet axes,style $2}
  # backward compatible
- | STYLE_ INT_ {global grid; set grid(axes,style) $2}
- | TYPE_ interiortype {global grid; set grid(axes,type) $2}
- | ORIGIN_ origin {global grid; set grid(axes,origin) $2}
+ | STYLE_ INT_ {GridCmdSet axes,style $2}
+ | TYPE_ interiortype {GridCmdSet axes,type $2}
+ | ORIGIN_ origin {GridCmdSet axes,origin $2}
  ;
  
 origin : LLL_ {set _ lll}
@@ -145,74 +145,74 @@ origin : LLL_ {set _ lll}
  | UUU_ {set _ uuu}
  ;
 
-tickmarks : yesno {global grid; set grid(tick) $1}
- | COLOR_ STRING_ {global grid; set grid(tick,color) $2}
- | WIDTH_ INT_ {global grid; set grid(tick,width) $2}
- | DASH_ yesno {global grid; set grid(tick,style) $2}
+tickmarks : yesno {GridCmdSet tick $1}
+ | COLOR_ STRING_ {GridCmdSet tick,color $2}
+ | WIDTH_ INT_ {GridCmdSet tick,width $2}
+ | DASH_ yesno {GridCmdSet tick,style $2}
  # backward compatible
- | STYLE_ INT_ {global grid; set grid(tick,style) $2}
+ | STYLE_ INT_ {GridCmdSet tick,style $2}
  ;
 
-border : yesno {global grid; set grid(border) $1}
- | COLOR_ STRING_ {global grid; set grid(border,color) $2}
- | WIDTH_ INT_ {global grid; set grid(border,width) $2}
- | DASH_ yesno {global grid; set grid(border,style) $2}
+border : yesno {GridCmdSet border $1}
+ | COLOR_ STRING_ {GridCmdSet border,color $2}
+ | WIDTH_ INT_ {GridCmdSet border,width $2}
+ | DASH_ yesno {GridCmdSet border,style $2}
  # backward compatible
- | STYLE_ INT_ {global grid; set grid(border,style) $2}
+ | STYLE_ INT_ {GridCmdSet border,style $2}
  ;
 
-numerics : yesno {global grid; set grid(numlab) $1}
- | FONT_ font {global grid; set grid(numlab,font) $2}
- | FONTSIZE_ INT_ {global grid; set grid(numlab,size) $2}
- | FONTWEIGHT_ fontWeight {global grid; set grid(numlab,weight) $2}
- | FONTSLANT_ fontSlant {global grid; set grid(numlab,slant) $2}
- | FONTSTYLE_ fontStyle
- | COLOR_ STRING_ {global grid; set grid(numlab,color) $2}
- | GAP1_ numeric {global grid; set grid(numlab,gap1) $2}
- | GAP2_ numeric {global grid; set grid(numlab,gap2) $2}
- | GAP3_ numeric {global grid; set grid(numlab,gap3) $2}
- | TYPE_ interiortype {global grid; set grid(numlab,type) $2}
- | VERTICAL_ yesno {global grid; set grid(numlab,vertical) $2}
+numerics : yesno {GridCmdSet numlab $1}
+ | FONT_ font {GridCmdSet numlab,font $2}
+ | FONTSIZE_ INT_ {GridCmdSet numlab,size $2}
+ | FONTWEIGHT_ fontWeight {GridCmdSet numlab,weight $2}
+ | FONTSLANT_ fontSlant {GridCmdSet numlab,slant $2}
+ | FONTSTYLE_ fontStyle {GridCmdFontStyle numlab $2}
+ | COLOR_ STRING_ {GridCmdSet numlab,color $2}
+ | GAP1_ numeric {GridCmdSet numlab,gap1 $2}
+ | GAP2_ numeric {GridCmdSet numlab,gap2 $2}
+ | GAP3_ numeric {GridCmdSet numlab,gap3 $2}
+ | TYPE_ interiortype {GridCmdSet numlab,type $2}
+ | VERTICAL_ yesno {GridCmdSet numlab,vertical $2}
  ;
 
-title : yesno {global grid; set grid(title) $1}
- | TEXT_ STRING_ {global grid; set grid(title,text) $2}
- | DEF_ yesno {global grid; set grid(title,def) $2}
- | GAP_ numeric {global grid; set grid(title,gap) $2}
- | FONT_ font {global grid; set grid(title,font) $2}
- | FONTSIZE_ INT_ {global grid; set grid(title,size) $2}
- | FONTWEIGHT_ fontWeight {global grid; set grid(title,weight) $2}
- | FONTSLANT_ fontSlant {global grid; set grid(title,slant) $2}
- | FONTSTYLE_ fontStyle
- | COLOR_ STRING_ {global grid; set grid(title,color) $2}
+title : yesno {GridCmdSet title $1}
+ | TEXT_ STRING_ {GridCmdSet title,text $2}
+ | DEF_ yesno {GridCmdSet title,def $2}
+ | GAP_ numeric {GridCmdSet title,gap $2}
+ | FONT_ font {GridCmdSet title,font $2}
+ | FONTSIZE_ INT_ {GridCmdSet title,size $2}
+ | FONTWEIGHT_ fontWeight {GridCmdSet title,weight $2}
+ | FONTSLANT_ fontSlant {GridCmdSet title,slant $2}
+ | FONTSTYLE_ fontStyle {GridCmdFontStyle title $2}
+ | COLOR_ STRING_ {GridCmdSet title,color $2}
  ; 
 
-labels : yesno {global grid; set grid(textlab) $1}
- | TEXT1_ STRING_ {global grid; set grid(textlab,text1) $2}
- | TEXT2_ STRING_ {global grid; set grid(textlab,text2) $2}
- | DEF1_ yesno {global grid; set grid(textlab,def1) $2}
- | DEF2_ yesno {global grid; set grid(textlab,def2) $2}
- | GAP1_ numeric {global grid; set grid(textlab,gap1) $2}
- | GAP2_ numeric {global grid; set grid(textlab,gap2) $2}
- | FONT_ font {global grid; set grid(textlab,font) $2}
- | FONTSIZE_ INT_ {global grid; set grid(textlab,size) $2}
- | FONTWEIGHT_ fontWeight {global grid; set grid(textlab,weight) $2}
- | FONTSLANT_ fontSlant {global grid; set grid(textlab,slant) $2}
- | FONTSTYLE_ fontStyle
- | COLOR_ STRING_ {global grid; set grid(textlab,color) $2}
+labels : yesno {GridCmdSet textlab $1}
+ | TEXT1_ STRING_ {GridCmdSet textlab,text1 $2}
+ | TEXT2_ STRING_ {GridCmdSet textlab,text2 $2}
+ | DEF1_ yesno {GridCmdSet textlab,def1 $2}
+ | DEF2_ yesno {GridCmdSet textlab,def2 $2}
+ | GAP1_ numeric {GridCmdSet textlab,gap1 $2}
+ | GAP2_ numeric {GridCmdSet textlab,gap2 $2}
+ | FONT_ font {GridCmdSet textlab,font $2}
+ | FONTSIZE_ INT_ {GridCmdSet textlab,size $2}
+ | FONTWEIGHT_ fontWeight {GridCmdSet textlab,weight $2}
+ | FONTSLANT_ fontSlant {GridCmdSet textlab,slant $2}
+ | FONTSTYLE_ fontStyle {GridCmdFontStyle textlab $2}
+ | COLOR_ STRING_ {GridCmdSet textlab,color $2}
  ; 
 
-view : GRID_ yesno {global grid; set grid(grid) $1}
+view : GRID_ yesno {GridCmdSet grid $1}
  | AXES_ viewaxes
- | TITLE_ yesno {global grid; set grid(title) $2}
- | BORDER_ yesno {global grid; set grid(border) $2}
- | VERTICAL_ yesno {global grid; set grid(numlab,vertical) $2}
+ | TITLE_ yesno {GridCmdSet title $2}
+ | BORDER_ yesno {GridCmdSet border $2}
+ | VERTICAL_ yesno {GridCmdSet numlab,vertical $2}
  ;
  
-viewaxes : yesno {global grid; set grid(axes) $1}
- | NUMBERS_ yesno {global grid; set grid(numlab) $2}
- | TICKMARKS_ yesno {global grid; set grid(tick) $2}
- | LABELS_ yesno {global grid; set grid(textlab) $2}
+viewaxes : yesno {GridCmdSet axes $1}
+ | NUMBERS_ yesno {GridCmdSet numlab $2}
+ | TICKMARKS_ yesno {GridCmdSet tick $2}
+ | LABELS_ yesno {GridCmdSet textlab $2}
  ;
 
 %%

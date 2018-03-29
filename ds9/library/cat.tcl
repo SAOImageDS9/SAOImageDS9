@@ -1872,7 +1872,7 @@ proc CatalogCmdIcat {which value} {
     set icat($which) $value
 }
 
-proc CatalogCmdCat {which value} {
+proc CatalogCmdSet {which value} {
     global cvarname
     upvar #0 $cvarname cvar
 
@@ -2035,13 +2035,6 @@ proc CatalogCmdSkyframe {skyframe} {
     CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]
 }
 
-proc CatalogCmdSkyformat {skyformat} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(skyformat) $skyformat
-}
-
 proc CatalogCmdSystem {sys} {
     global cvarname
     upvar #0 $cvarname cvar
@@ -2069,7 +2062,7 @@ proc CatalogCmdSymbol {col value} {
     CATGenerate $cvarname
 }
 
-proc CatalogCmdSymbolStyle {value} {
+proc CatalogCmdSymbolFontStyle {value} {
     global cvarname
     upvar #0 $cvarname cvar
     global $cvar(symdb)

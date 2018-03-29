@@ -1415,6 +1415,36 @@ proc ProcessGridCmd {varname iname} {
 }
 }
 
+proc GridCmdSet {which value} {
+    global grid
+
+    set grid($which) $value
+}
+
+proc GridCmdCurrent {which value} {
+    global grid
+
+    set grid($which) $value
+    GridUpdateCurrent
+}
+
+proc GridCmdFontStyle {which value} {
+    switch $value {
+	normal {
+	    set grid($which,weight) normal
+	    set grid($which,slant) roman
+	}
+	bold {
+	    set grid($which,weight) bold
+	    set grid($which,slant) roman
+	}
+	italic {
+	    set grid($which,weight) normal
+	    set grid($which,slant) italic
+	}
+    }
+}
+
 proc ProcessSendGridCmd {proc id param} {
     global grid
 

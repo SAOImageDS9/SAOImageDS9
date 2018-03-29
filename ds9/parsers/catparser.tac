@@ -127,8 +127,8 @@ catalog : {CATTool}
  ;
 
 catCmd : coordinate
- | ALLCOLS_ yesno {CatalogCmdCat allcols $2}
- | ALLROWS_ yesno {CatalogCmdCat allrows $2}
+ | ALLCOLS_ yesno {CatalogCmdSet allcols $2}
+ | ALLROWS_ yesno {CatalogCmdSet allrows $2}
  | CANCEL_ {global cvarname; ARCancel $cvarname}
  | CLEAR_ {global cvarname; CATOff $cvarname}
  | CLOSE_ {global cvarname; CATDestroy $cvarname}
@@ -141,9 +141,9 @@ catCmd : coordinate
  | HIDE_ {CatalogCmdGenerate show 0}
  | LOCATION_ INT_ {CatalogCmdGenerate loc $2}
  | MATCH_ match
- | MAXROWS_ INT_ {CatalogCmdCat max $2}
- | NAME_ STRING_ {CatalogCmdCat name $2}
- | PANTO_ yesno {CatalogCmdCat panto $2}
+ | MAXROWS_ INT_ {CatalogCmdSet max $2}
+ | NAME_ STRING_ {CatalogCmdSet name $2}
+ | PANTO_ yesno {CatalogCmdSet panto $2}
  | PLOT_ STRING_ STRING_ STRING_ STRING_ {CatalogCmdPlot $2 $3 $4 $5}
  | PRINT_ {global cvarname; CATPrint $cvarname}
  | PSKY_ skyframe {CatalogCmdGenerate psky $2}
@@ -152,13 +152,13 @@ catCmd : coordinate
  | RETRIEVE_ {global cvarname; CATApply $cvarname 1}
  | SAMP_ samp
  | SAVE_ STRING_ {CatalogCmdSave $2 VOTWrite}
- | SERVER_ server {CatalogCmdCat server $2}
+ | SERVER_ server {CatalogCmdSet server $2}
  | SHOW_ yesno {CatalogCmdGenerate show $2}
  | SIZE_ numeric numeric skyformat {CatalogCmdSize $2 $3 $4}
  | SKY_ skyframe {CatalogCmdSkyframe $2}
- | SKYFORMAT_ skyformat {CatalogCmdSkyformat $2}
+ | SKYFORMAT_ skyformat {CatalogCmdSet skyformat $2}
  | SORT_ sort
- | SYMBOL_ {CatalogCmdCat row 1} symbol
+ | SYMBOL_ {CatalogCmdSet row 1} symbol
  | SYMBOL_ INT_ {CagtalogCmdCat row $2} symbol
  | SYSTEM_ wcssys {CatalogCmdSystem $2}
  | UPDATE_ {global cvarname; CATUpdate $cvarname}
@@ -240,7 +240,7 @@ symbol : ADD_ {CatalogCmdSymbolAdd}
  | FONTSIZE_ INT_ {CatalogCmdSymbol fontsize $2}
  | FONTWEIGHT_ fontWeight {CatalogCmdSymbol fontweight $2}
  | FONTSLANT_ fontSlant {CatalogCmdSymbol fontslant $2}
- | FONTSTYLE_ fontStyle {CatalogCmdSymbolStyle $2}
+ | FONTSTYLE_ fontStyle {CatalogCmdSymbolFontStyle $2}
  | SIZE_ numeric {CatalogCmdSymbol size $2}
  | SIZE2_ numeric {CatalogCmdSymbol size2 $2}
  | SHAPE_ symbolShape {CatalogCmdSymbol shape $2}

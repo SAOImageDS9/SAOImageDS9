@@ -524,8 +524,8 @@ proc ProcessPlotNewOne {which varname xarname iname buf} {
 }
 
 proc ProcessPlotData {varname xarname iname buf} {
-    upvar #0 $varname var
     global $varname
+    upvar #0 $varname var
 
     upvar 2 $xarname xar
     upvar 2 $iname i
@@ -535,6 +535,74 @@ proc ProcessPlotData {varname xarname iname buf} {
     $var(proc,updategraph) $varname
     PlotStats $varname
     PlotList $varname
+}
+
+proc PlotCmdLoad {fn dim} {
+    global cvarname
+    
+    if {$fn != {}} {
+	PlotLoadDataFile $cvarname $fn $dim
+	FileLast apdatafbox $fn
+    }
+}
+
+proc PlotCmdSave {fn} {
+    global cvarname
+    
+    if {$fn != {}} {
+	PlotSaveDataFile $varname $fn
+	FileLast apdatafbox $fn
+    }
+}
+
+proc PlotCmdStats {value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(stats) $value
+    PlotStats $cvarname
+}
+
+proc PlotCmdList {value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(list) $value
+    PlotList $cvarname
+}
+
+proc PlotCmdLoadConfig {fn} {
+    global cvarname
+    
+    if {$fn != {}} {
+	PlotLoadConfigFile $cvarname $fn
+	FileLast apconfigfbox $fn
+    }
+}
+
+proc PlotCmdSaveConfig {fn} {
+    global cvarname
+    
+    if {$fn != {}} {
+	PlotSaveConfigFile $cvarname $fn
+	FileLast apconfigfbox $fn
+    }
+}
+
+proc PlotCmdMode {value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(mode) $value
+    PlotChangMode $cvarname
+}
+
+proc PlotCmdPlot {which value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+    $cvar(proc,updategraph) $cvarname
 }
 
 # File Menu

@@ -164,9 +164,9 @@ border : yesno {global grid; set grid(border) $1}
 numerics : yesno {global grid; set grid(numlab) $1}
  | FONT_ font {global grid; set grid(numlab,font) $2}
  | FONTSIZE_ INT_ {global grid; set grid(numlab,size) $2}
- | FONTWEIGHT_ fontweight {global grid; set grid(numlab,weight) $2}
- | FONTSLANT_ fontslant {global grid; set grid(numlab,slant) $2}
- | FONTSTYLE_ numlabfontstyle
+ | FONTWEIGHT_ fontWeight {global grid; set grid(numlab,weight) $2}
+ | FONTSLANT_ fontSlant {global grid; set grid(numlab,slant) $2}
+ | FONTSTYLE_ fontStyle
  | COLOR_ STRING_ {global grid; set grid(numlab,color) $2}
  | GAP1_ numeric {global grid; set grid(numlab,gap1) $2}
  | GAP2_ numeric {global grid; set grid(numlab,gap2) $2}
@@ -175,27 +175,17 @@ numerics : yesno {global grid; set grid(numlab) $1}
  | VERTICAL_ yesno {global grid; set grid(numlab,vertical) $2}
  ;
 
-numlabfontstyle : NORMAL_  {global grid; set grid(numlab,weight) normal; set grid(numlab,slant) roman}
- | BOLD_ {global grid; set grid(numlab,weight) bold; set grid(numlab,slant) roman}
- | ITALIC_ {global grid; set grid(numlab,weight) normal; set grid(numlab,slant) italic}
- ;
-
 title : yesno {global grid; set grid(title) $1}
  | TEXT_ STRING_ {global grid; set grid(title,text) $2}
  | DEF_ yesno {global grid; set grid(title,def) $2}
  | GAP_ numeric {global grid; set grid(title,gap) $2}
  | FONT_ font {global grid; set grid(title,font) $2}
  | FONTSIZE_ INT_ {global grid; set grid(title,size) $2}
- | FONTWEIGHT_ fontweight {global grid; set grid(title,weight) $2}
- | FONTSLANT_ fontslant {global grid; set grid(title,slant) $2}
- | FONTSTYLE_ titlefontstyle
+ | FONTWEIGHT_ fontWeight {global grid; set grid(title,weight) $2}
+ | FONTSLANT_ fontSlant {global grid; set grid(title,slant) $2}
+ | FONTSTYLE_ fontStyle
  | COLOR_ STRING_ {global grid; set grid(title,color) $2}
  ; 
-
-titlefontstyle : NORMAL_  {global grid; set grid(title,weight) normal; set grid(title,slant) roman}
- | BOLD_ {global grid; set grid(title,weight) bold; set grid(title,slant) roman}
- | ITALIC_ {global grid; set grid(title,weight) normal; set grid(title,slant) italic}
- ;
 
 labels : yesno {global grid; set grid(textlab) $1}
  | TEXT1_ STRING_ {global grid; set grid(textlab,text1) $2}
@@ -206,16 +196,11 @@ labels : yesno {global grid; set grid(textlab) $1}
  | GAP2_ numeric {global grid; set grid(textlab,gap2) $2}
  | FONT_ font {global grid; set grid(textlab,font) $2}
  | FONTSIZE_ INT_ {global grid; set grid(textlab,size) $2}
- | FONTWEIGHT_ fontweight {global grid; set grid(textlab,weight) $2}
- | FONTSLANT_ fontslant {global grid; set grid(textlab,slant) $2}
- | FONTSTYLE_ labelsfontstyle
+ | FONTWEIGHT_ fontWeight {global grid; set grid(textlab,weight) $2}
+ | FONTSLANT_ fontSlant {global grid; set grid(textlab,slant) $2}
+ | FONTSTYLE_ fontStyle
  | COLOR_ STRING_ {global grid; set grid(textlab,color) $2}
  ; 
-
-labelsfontstyle : NORMAL_  {global grid; set grid(textlab,weight) normal; set grid(textlab,slant) roman}
- | BOLD_ {global grid; set grid(textlab,weight) bold; set grid(textlab,slant) roman}
- | ITALIC_ {global grid; set grid(textlab,weight) normal; set grid(textlab,slant) italic}
- ;
 
 view : GRID_ yesno {global grid; set grid(grid) $1}
  | AXES_ viewaxes

@@ -3,10 +3,16 @@ font : TIMES_ {set _ times}
  | COURIER_ {set _ courier}
  ;
 
-fontweight : NORMAL_ {set _ normal}
+fontWeight : NORMAL_ {set _ normal}
  | BOLD_ {set _ bold}
  ;
 
-fontslant : ROMAN_ {set _ roman}
+fontSlant : ROMAN_ {set _ roman}
  | ITALIC_ {set _ italic}
  ;
+
+fontStyle : NORMAL_ {set _ normal}
+ | BOLD_ {set _ bold}
+ | ITALIC_ {set _ italic}
+ ;
+

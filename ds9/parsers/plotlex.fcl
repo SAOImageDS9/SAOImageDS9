@@ -41,6 +41,7 @@ landscape   {return $LANDSCAPE_}
 left	    {return $LEFT_}
 legal	    {return $LEGAL_}
 legend	    {return $LEGEND_}
+legendtitle {return $LEGEND_}
 letter	    {return $LETTER_}
 line	    {return $LINE_}
 linear	    {return $LINEAR_}
@@ -83,6 +84,7 @@ square	    {return $SQUARE_}
 stacked	    {return $STACKED_}
 stats	    {return $STATS_}
 step	    {return $STEP_}
+style	    {return $STYLE_}
 tabloid	    {return $TABLOID_}
 title	    {return $TITLE_}
 top	    {return $TOP_}

@@ -42,6 +42,7 @@
 %token LEFT_
 %token LEGAL_
 %token LEGEND_
+%token LEGENDTITLE_
 %token LETTER_
 %token LINE_
 %token LINEAR_
@@ -84,6 +85,7 @@
 %token STACKED_
 %token STATS_
 %token STEP_
+%token STYLE_
 %token TABLOID_
 %token TITLE_
 %token TOP_
@@ -117,18 +119,18 @@ plot : new
 plotCmd : DATA_ dim
 
  | LOAD_ load
- | SAVE_ STRING_
- | CLEAR_
- | DUPLICATE_
- | STATS_
- | LIST_
- | LOADCONFIG_ STRING_
- | SAVECONFIG_ STRING_
+ | SAVE_ STRING_ {PlotCmdSave $2}
+ | CLEAR_ {global cvarname; PlotClearData $cvarname}
+ | DUPLICATE_ duplicate
+ | STATS_ yesno {PlotCmdStats $2}
+ | LIST_ yesno {PlotCmdList $2}
+ | LOADCONFIG_ STRING_ {PlotCmdLoadConfig $2}
+ | SAVECONFIG_ STRING_ {PlotCmdSaveConfig $2}
  | PAGESETUP_ pagesetup
  | PRINT_ print
- | CLOSE_
+ | CLOSE_ {global cvarname; PlotDestroy $cvarname}
 
- | MODE_ mode
+ | MODE_ mode {PlotCmdMode $2}
 
  | AXIS_ axis
  | LEGEND_ legend
@@ -175,12 +177,16 @@ xy : 'x' {set _x}
  | 'Y' {set _ y}
  ;
 
-load : STRING_
- | STRING_ dim
+load : STRING_ {PlotCmdLoad $1 xy}
+ | STRING_ dim  {PlotCmdLoad $1 $2}
  ;
  
-pagesetup : ORIENT_ pageOrient
- | SIZE_ pageSize
+duplicate : {global cvarname; PlotDupData $cvarname 1}
+ | INT_ {global cvarname; PlotDupData $cvarname $1}
+ ;
+
+pagesetup : ORIENT_ pageOrient {global ps; set ps(orient) $2}
+ | SIZE_ pageSize {global ps; set ps(size) $2}
  ;
 
 pageOrient : PORTRAIT_ {set _ portrait}
@@ -194,10 +200,10 @@ pageSize : LETTER_ {set _ letter}
  | A4_ {set _ a4}
  ;
  
-print : DESTINATION_ printDest
- | COMMAND_ STRING_
- | FILENAME_ STRING_
- | COLOR_ printColor
+print : DESTINATION_ printDest {global ps; set ps(dest) $2}
+ | COMMAND_ STRING_ {global ps; set ps(cmd) $2}
+ | FILENAME_ STRING_ {global ps; set ps(filename) $2}
+ | COLOR_ printColor {global ps; set ps(color) $2}
  ;
 
 printDest : PRINTER_ {set _ printer}
@@ -212,17 +218,17 @@ mode : POINTER_ {set _ pointer}
  | ZOOM_ {set _ zoom}
  ;
 
-axis : xy GRID_ yesno
- | xy LOG_ yesno
- | xy FLIP_ yesno
- | xy AUTO_ yesno
- | xy MIN_ numeric
- | xy MAX_ numeric
- | xy FORMAT_ STRING_
+axis : xy GRID_ yesno {PlotCmdPlot "axis,$1,grid" $3}
+ | xy LOG_ yesno {PlotCmdPlot $1 "axis,$1,log" $3}
+ | xy FLIP_ yesno {PlotCmdPlot $1 "axis,$1,flip" $3}
+ | xy AUTO_ yesno {PlotCmdPlot $1 "axis,$1,auto" $3}
+ | xy MIN_ numeric {PlotCmdPlot $1 "axis,$1,min" $3}
+ | xy MAX_ numeric {PlotCmdPlot $1 "axis,$1,max" $3}
+ | xy FORMAT_ STRING_ {PlotCmdPlot $1 "axis,$1,format" $3}
  ;
 
-legend : yesno
- | POSITION_ legendPos
+legend : yesno {PlotCmdPlot legend $1}
+ | POSITION_ legendPos {PlotCmdPlot "legend,position" $2}
  ;
  
 legendPos : RIGHT_ {set _ right}
@@ -231,18 +237,22 @@ legendPos : RIGHT_ {set _ right}
  | BOTTOM_ {set _ bottom}
  ;
 
-fontt : fontType FONT_ font
- | fontType FONTSIZE_ INT_
- | fontType FONTWEIGHT_ fontweight
- | fontType FONTSLANT_ fontslant
- | fontType SIZE_ INT_
- | fontType WEIGHT_ fontweight
- | fontType SLANT_ fontslant
+fontt : fontType FONT_ font {PlotCmdPlot "$1,family" $3}
+ | fontType FONTSIZE_ INT_ {PlotCmdPlot "$1,size" $3}
+ | fontType FONTWEIGHT_ fontWeight {PlotCmdPlot "$1,weight" $3}
+ | fontType FONTSLANT_ fontSlant {PlotCmdPlot "$1,slant" $3}
+ | fontType FONTSTYLE_ fontStyle
+ | fontType SIZE_ INT_ {PlotCmdPlot "$1,size" $3}
+ | fontType WEIGHT_ fontWeight {PlotCmdPlot "$1,weight" $3}
+ | fontType SLANT_ fontSlant {PlotCmdPlot "$1,slant" $3}
+ | fontType STYLE_ fontStyle
  ;
 
-fontType : TITLE_ {set _ title}
- | LABELS_ {set _ labels}
- | NUMBERS_ {set _ numbers}
+fontType : TITLE_ {set _ graph,title}
+ | LABELS_ {set _ axis,title}
+ | NUMBERS_ {set _ axis,numbers}
+ | LEGEND_ {set _ legend,font}
+ | LEGENDTITLE_ {set _ legend,title}
  ;
 
 title : STRING_

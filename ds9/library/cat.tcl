@@ -2069,6 +2069,34 @@ proc CatalogCmdSymbol {col value} {
     CATGenerate $cvarname
 }
 
+proc CatalogCmdSymbolStyle {value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    switch $value {
+	normal {
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontweight] normal
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontslant] roman
+	}
+	bold {
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontweight] bold
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontslant] roman
+	}
+	italic {
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontweight] normal
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontslant] italic
+	}
+    }
+    CATGenerate $cvarname
+}
+
 proc CatalogCmdSymbolAdd {} {
     global cvarname
     upvar #0 $cvarname cvar

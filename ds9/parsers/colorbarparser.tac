@@ -35,28 +35,22 @@ colorbar : yesno {global view; set view(colorbar) $1; UpdateView}
  | MATCH_ {MatchColorCurrent}
  | LOCK_ yesno {global colorbar; set colorbar(lock) $2; LockColorCurrent}
 
- | NUMERICS_ yesno {global colorbar; set colorbar(numerics) $2; UpdateView}
- | SPACE_ space {global colorbar; set colorbar(space) $2; UpdateView}
- | FONT_ font {global colorbar; set colorbar(font) $2; UpdateView}
- | FONTSIZE_ INT_ {global colorbar; set colorbar(font,size) $2; UpdateView}
- | FONTWEIGHT_ fontweight {global colorbar; set colorbar(font,weight) $2; UpdateView}
- | FONTSLANT_ fontslant {global colorbar; set colorbar(font,slant) $2; UpdateView}
-# backward compatibility
- | FONTSTYLE_ fontstyle
+ | NUMERICS_ yesno {ColorbarCmdView numerics $2}
+ | SPACE_ space {ColorbarCmdView space $2}
+ | FONT_ font {ColorbarCmdView font $2}
+ | FONTSIZE_ INT_ {ColorbarCmdView font,size $2}
+ | FONTWEIGHT_ fontWeight {ColorbarCmdView font,weight $2}
+ | FONTSLANT_ fontSlant {ColorbarCmdView font,slant $2}
+ | FONTSTYLE_ fontStyle {ColorbarCmdFontStyle $2}
 
- | orientation {global colorbar; set colorbar(orientation) $1; UpdateView}
+ | orientation {ColorbarCmdView orientation $1}
 # backward compatibility
- | ORIENTATION_ orientation {global colorbar; set colorbar(orientation) $2; UpdateView}
+ | ORIENTATION_ orientation {ColorbarCmdView orientation $2}
 
- | SIZE_ INT_ {global colorbar; set colorbar(size) $2; UpdateView}
- | TICKS_ INT_ {global colorbar; set colorbar(ticks) $2; UpdateView}
+ | SIZE_ INT_ {ColorbarCmdView size $2}
+ | TICKS_ INT_ {ColorbarCmdView ticks $2}
  ;
  
-fontstyle : NORMAL_  {global colorbar; set colorbar(font,weight) normal; set colorbar(font,slant) roman; UpdateView}
- | BOLD_ {global colorbar; set colorbar(font,weight) bold; set colorbar(font,slant) roman; UpdateView}
- | ITALIC_ {global colorbar; set colorbar(font,weight) normal; set colorbar(font,slant) italic; UpdateView}
- ;
-
 space : VALUE_ {set _ 1}
  | DISTANCE_ {set _ 0}
  ;

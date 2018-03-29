@@ -1486,6 +1486,41 @@ proc ProcessColorbarCmd {varname iname} {
 }
 }
 
+proc ColorbarCmdView {which value} {
+    global colorbar
+
+    set colorbar($which) $value
+    UpdateView
+}
+
+proc ColorbarCmdFontStyle {value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    switch $value {
+	normal {
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontweigth] normal
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontslant] roman
+	}
+	bold {
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontweight] bold
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontslant] roman
+	}
+	italic {
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) weight] normal
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) slant] italic
+	}
+    }
+    CATGenerate $cvarname
+}
+
 proc ProcessSendColorbarCmd {proc id param} {
     global colorbar
     global view

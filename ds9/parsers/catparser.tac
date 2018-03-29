@@ -154,7 +154,7 @@ catCmd : coordinate
  | SAVE_ STRING_ {CatalogCmdSave $2 VOTWrite}
  | SERVER_ server {CatalogCmdCat server $2}
  | SHOW_ yesno {CatalogCmdGenerate show $2}
- | SIZE_ numeric numeric skyformat {CatalogCmdSize $1 $2 $3}
+ | SIZE_ numeric numeric skyformat {CatalogCmdSize $2 $3 $4}
  | SKY_ skyframe {CatalogCmdSkyframe $2}
  | SKYFORMAT_ skyformat {CatalogCmdSkyformat $2}
  | SORT_ sort
@@ -238,8 +238,9 @@ symbol : ADD_ {CatalogCmdSymbolAdd}
  | CONDITION_ STRING_ {CatalogCmdSymbol condition $2}
  | FONT_ font {CatalogCmdSymbol font $2}
  | FONTSIZE_ INT_ {CatalogCmdSymbol fontsize $2}
- | FONTWEIGHT_ fontweight {CatalogCmdSymbol fontweight $2}
- | FONTSLANT_ fontslant {CatalogCmdSymbol fontslant $2}
+ | FONTWEIGHT_ fontWeight {CatalogCmdSymbol fontweight $2}
+ | FONTSLANT_ fontSlant {CatalogCmdSymbol fontslant $2}
+ | FONTSTYLE_ fontStyle {CatalogCmdSymbolStyle $2}
  | SIZE_ numeric {CatalogCmdSymbol size $2}
  | SIZE2_ numeric {CatalogCmdSymbol size2 $2}
  | SHAPE_ symbolShape {CatalogCmdSymbol shape $2}

@@ -933,6 +933,15 @@ proc ProcessScaleCmd {varname iname} {
     }
 }
 
+proc ScaleCmdSet {which value {cmd {}}} {
+    global scale
+
+    set scale($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
 proc ProcessSendScaleCmd {proc id param} {
     global current
     global scale
@@ -1045,6 +1054,15 @@ proc ProcessZScaleCmd {varname iname} {
 	}
     }
 }
+}
+
+proc ZscaleCmdSet {which value {cmd {}}} {
+    global zscale
+
+    set zscale($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 proc ProcessSendZScaleCmd {proc id param} {

@@ -330,6 +330,15 @@ proc ProcessRGBCmd {varname iname} {
     }
 }
 
+proc RGBCmdSet {which value {cmd {}}} {
+    global rgb
+
+    set rgb($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
 proc ProcessSendRGBCmd {proc id param} {
     global current
     global rgb

@@ -68,9 +68,9 @@ view : layout
  | coordsys yesno {ViewCmdSet info,$1 $2 UpdateView}
  | wcssys yesno {ViewCmdSet info,$1 $2 UpdateView}
  | FRAME_ yesno {ViewCmdSet info,frame $2 UpdateView}
- | RED_ yesno {global rgb; set rgb(red) $2; RGBView}
- | GREEN_ yesno {global rgb; set rgb(green) $2; RGBView}
- | BLUE_ yesno {global rgb; set rgb(blue) $2; RGBView}
+ | RED_ yesno {RGBCmdSet red $2 RGBView}
+ | GREEN_ yesno {RGBCmdSet green $2 RGBView}
+ | BLUE_ yesno {RGBCmdSet blue $2 RGBView}
  ;
 
 layout : HORIZONTAL_ {ViewCmdSet layout horizontal ViewHorzCmd}

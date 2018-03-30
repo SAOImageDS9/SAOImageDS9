@@ -28,7 +28,7 @@ command : block
 block : OPEN_ {BlockDialog}
  | CLOSE_ {BlockDestroyDialog}
  | MATCH_ {MatchBlockCurrent}
- | LOCK_ yesno {global block; set block(lock) $2; LockBlockCurrent}
+ | LOCK_ yesno {BlockCmdSet lock $2 LockBlockCurrent}
  | IN_ {Block .5 .5}
  | OUT_ {Block 2 2}
  | TO_ blockTo
@@ -36,8 +36,8 @@ block : OPEN_ {BlockDialog}
  | numeric numeric {Block $1 $2}
  ;
 
-blockTo : numeric {global block; set block(factor) "$1 $1"; ChangeBlock}
- | numeric numeric {global block; set block(factor) "$1 $2"; ChangeBlock}
+blockTo : numeric {BlockCmdSet factor "$1 $1" ChangeBlock}
+ | numeric numeric {BlockCmdSet factor "$1 $2" ChangeBlock}
  | FIT_ {BlockToFit}
  ; 
 

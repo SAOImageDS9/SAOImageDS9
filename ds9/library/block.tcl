@@ -348,6 +348,15 @@ proc ProcessBlockCmd {varname iname} {
 }
 }
 
+proc BlockCmdSet {which value {cmd {}}} {
+    global block
+
+    set block($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
 proc ProcessSendBlockCmd {proc id param} {
     global block
 

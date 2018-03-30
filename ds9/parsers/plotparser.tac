@@ -16,6 +16,7 @@
 %token BAR_
 %token BARMODE_
 %token BOTTOM_
+%token CAP_
 %token CATROM_
 %token CIRCLE_
 %token CLEAR_
@@ -27,16 +28,21 @@
 %token DATA_
 %token DESTINATION_
 %token DIAMOND_
+%token DISCRETE_
 %token DUPLICATE_
 %token ERROR_
 %token FILE_
 %token FILENAME_
 %token FILL_
+%token FILLCOLOR_
+%token FLAT_
 %token FLIP_
 %token FONT_
 %token FORMAT_
+%token GRAPH_
 %token GRAY_
 %token GRID_
+%token GROOVE_
 %token LABELS_
 %token LANDSCAPE_
 %token LEFT_
@@ -68,10 +74,14 @@
 %token PRINT_
 %token PRINTER_
 %token QUADRATIC_
+%token RAISED_
+%token RANGE_
+%token RELIEF_
 %token RGB_
 %token RIGHT_
 %token SAVE_
 %token SAVECONFIG_
+%token SCALE_
 %token SCATTER_
 %token SCROSS_
 %token SELECT_
@@ -80,16 +90,20 @@
 %token SIZE_
 %token SLANT_
 %token SMOOTH_
+%token SOLID_
 %token SPLUS_
 %token SQUARE_
 %token STACKED_
 %token STATS_
 %token STEP_
 %token STYLE_
+%token SUNKEN_
 %token TABLOID_
 %token TITLE_
 %token TOP_
 %token TRIANGLE_
+%token TYPE_
+%token VIEW_
 %token WEIGHT_
 %token WIDTH_
 %token ZOOM_
@@ -116,42 +130,49 @@ plot : new
  | STRING_ {PlotCmdRef $1} plotCmd
  ;
 
-plotCmd : DATA_ dim
+plotCmd : DATA_ dim #
 
  | LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
  | CLEAR_ {global cvarname; PlotClearData $cvarname}
  | DUPLICATE_ duplicate
- | STATS_ yesno {PlotCmdStats $2}
- | LIST_ yesno {PlotCmdList $2}
+ | STATS_ yesno {PlotCmdSet stats $2 PlotStats}
+ | LIST_ yesno {PlotCmdSet list $2 PlotList}
  | LOADCONFIG_ STRING_ {PlotCmdLoadConfig $2}
  | SAVECONFIG_ STRING_ {PlotCmdSaveConfig $2}
- | PAGESETUP_ pagesetup
- | PRINT_ print
+ | PAGESETUP_ pagesetup #
+ | PRINT_ print #
  | CLOSE_ {global cvarname; PlotDestroy $cvarname}
 
- | MODE_ mode {PlotCmdMode $2}
+ | MODE_ mode {PlotCmdSet mode $2 PlotChangeMode}
 
  | AXIS_ axis
  | LEGEND_ legend
  | FONT_ fontt
  | TITLE_ title
- | BARMODE_ barmode
+ | BARMODE_ barmode {PlotCmdUpdateGraph bar,mode $2}
 
- | SHOW_ yesno
- | SHAPE_ shape
- | SMOOTH_ smooth
- | COLOR_ STRING_
- | WIDTH_ INT_
- | DASH_ yesno
+ | SHOW_ yesno {PlotCmdUpdateElement show $2}
+ | COLOR_ color
+ | FILL_ yesno {PlotCmdUpdateElement fill $2}
+ | FILLCOLOR_ STRING_ {PlotCmdUpdateElement fill,color $2}
  | ERROR_ errorr
- | NAME_ STRING_
+ | NAME_ STRING_ {PlotCmdUpdateElement name $2}
+ | SHAPE_ shape
+ | RELIEF_ relief {PlotCmdUpdateElement bar,relief $2}
+ | SMOOTH_ smooth {PlotCmdUpdateElement smooth $2}
+ | WIDTH_ INT_ {PlotCmdUpdateElement width $2}
+ | DASH_ yesno {PlotCmdUpdateElement dash $2}
 
  | SELECT_ INT_
+
+ # backward compatibility
+ | GRAPH_ oldgraph
+ | LINE_ oldline
+ | VIEW_ oldview
  ;
 
 new : line
- | LINE_ line
  | BAR_ bar
  | SCATTER_ scatter
  ;
@@ -218,17 +239,17 @@ mode : POINTER_ {set _ pointer}
  | ZOOM_ {set _ zoom}
  ;
 
-axis : xy GRID_ yesno {PlotCmdPlot "axis,$1,grid" $3}
- | xy LOG_ yesno {PlotCmdPlot $1 "axis,$1,log" $3}
- | xy FLIP_ yesno {PlotCmdPlot $1 "axis,$1,flip" $3}
- | xy AUTO_ yesno {PlotCmdPlot $1 "axis,$1,auto" $3}
- | xy MIN_ numeric {PlotCmdPlot $1 "axis,$1,min" $3}
- | xy MAX_ numeric {PlotCmdPlot $1 "axis,$1,max" $3}
- | xy FORMAT_ STRING_ {PlotCmdPlot $1 "axis,$1,format" $3}
+axis : xy GRID_ yesno {PlotCmdUpdateGraph "axis,$1,grid" $3}
+ | xy LOG_ yesno {PlotCmdUpdateGraph $1 "axis,$1,log" $3}
+ | xy FLIP_ yesno {PlotCmdUpdateGraph $1 "axis,$1,flip" $3}
+ | xy AUTO_ yesno {PlotCmdUpdateGraph $1 "axis,$1,auto" $3}
+ | xy MIN_ numeric {PlotCmdUpdateGraph $1 "axis,$1,min" $3}
+ | xy MAX_ numeric {PlotCmdUpdateGraph $1 "axis,$1,max" $3}
+ | xy FORMAT_ STRING_ {PlotCmdUpdateGraph $1 "axis,$1,format" $3}
  ;
 
-legend : yesno {PlotCmdPlot legend $1}
- | POSITION_ legendPos {PlotCmdPlot "legend,position" $2}
+legend : yesno {PlotCmdUpdateGraph legend $1}
+ | POSITION_ legendPos {PlotCmdUpdateGraph "legend,position" $2}
  ;
  
 legendPos : RIGHT_ {set _ right}
@@ -237,15 +258,15 @@ legendPos : RIGHT_ {set _ right}
  | BOTTOM_ {set _ bottom}
  ;
 
-fontt : fontType FONT_ font {PlotCmdPlot "$1,family" $3}
- | fontType FONTSIZE_ INT_ {PlotCmdPlot "$1,size" $3}
- | fontType FONTWEIGHT_ fontWeight {PlotCmdPlot "$1,weight" $3}
- | fontType FONTSLANT_ fontSlant {PlotCmdPlot "$1,slant" $3}
- | fontType FONTSTYLE_ fontStyle
- | fontType SIZE_ INT_ {PlotCmdPlot "$1,size" $3}
- | fontType WEIGHT_ fontWeight {PlotCmdPlot "$1,weight" $3}
- | fontType SLANT_ fontSlant {PlotCmdPlot "$1,slant" $3}
- | fontType STYLE_ fontStyle
+fontt : fontType FONT_ font {PlotCmdUpdateGraph "$1,family" $3}
+ | fontType FONTSIZE_ INT_ {PlotCmdUpdateGraph "$1,size" $3}
+ | fontType FONTWEIGHT_ fontWeight {PlotCmdUpdateGraph "$1,weight" $3}
+ | fontType FONTSLANT_ fontSlant {PlotCmdUpdateGraph "$1,slant" $3}
+ | fontType FONTSTYLE_ fontStyle {PlotCmdFontStyle $1 $3}
+ | fontType SIZE_ INT_ {PlotCmdUpdateGraph "$1,size" $3}
+ | fontType WEIGHT_ fontWeight {PlotCmdUpdateGraph "$1,weight" $3}
+ | fontType SLANT_ fontSlant {PlotCmdUpdateGraph "$1,slant" $3}
+ | fontType STYLE_ fontStyle {PlotCmdFontStyle $1 $3}
  ;
 
 fontType : TITLE_ {set _ graph,title}
@@ -265,12 +286,31 @@ barmode : NORMAL_ {set _ normal}
  | OVERLAP_ {set _ overlap}
  ;
 
-shape : shapeShape
- | FILL_ yesno
- | COLOR_ STRING_
+color : STRING_ {PlotCmdUpdateElement color $1}
+# backward compatiabilty
+ | dummy1 STRING_ {PlotCmdUpdateElement color $2}
  ;
 
-shapeShape : CIRCLE_ {set _ circle}
+dummy1 : DISCRETE_
+ | LINE_
+ | STEP_
+ | QUADRATIC_
+ | BAR_
+ | ERROR_
+ ; 
+
+errorr : yesno {PlotCmdUpdateElement error $1}
+ | CAP_ yesno {PlotCmdUpdateElement error,cap $2}
+ | COLOR_ STRING_ {PlotCmdUpdateElement error,color $2}
+ | WIDTH_ INT_ {PlotCmdUpdateElement error,width $2}
+ ;
+
+shape : shapes {PlotCmdUpdateElement shape,symbol $1}
+ | FILL_ yesno {PlotCmdUpdateElement shape,file $2}
+ | COLOR_ STRING_ {PlotCmdUpdateElement shape,color $2}
+ ;
+
+shapes : CIRCLE_ {set _ circle}
  | SQUARE_ {set _ square}
  | DIAMOND_ {set _ diamond}
  | PLUS_ {set _ plus}
@@ -280,6 +320,13 @@ shapeShape : CIRCLE_ {set _ circle}
  | ARROW_ {set _ arrow}
  ;
 
+relief : FLAT_ {set _ flat}
+ | SUNKEN_ {set _ sunken}
+ | RAISED_ {set _ raised}
+ | SOLID_ {set _ solid}
+ | GROOVE_ {set _ groove}
+ ;
+
 smooth : STEP_ {set _ step}
  | LINEAR_ {set _ linear}
  | CUBIC_ {set _ cubic}
@@ -287,9 +334,36 @@ smooth : STEP_ {set _ step}
  | CATROM_ {set _ catrom}
  ;
 
-errorr : yesno
- | COLOR_ STRING_
- | WIDTH_ INT_
+# backward compatibility
+oldgraph : GRID_
+ | LOG_
+ | FLIP_
+ | FORMAT_
+ | RANGE_
+ | LABELS_
+ | TYPE_
+ | SCALE_
+ ;
+
+# backward compatibility
+oldline : DISCRETE_ shapes {PlotCmdUpdateElement shape,symbol $2}
+ | dummy2 WIDTH_ INT_ {PlotCmdUpdateElement width $3}
+ | dummy2 DASH_ yesno {PlotCmdUpdateElement dash $3}
+ | dummy2 STYLE_ yesno {PlotCmdUpdateElement error $3}
+ ;
+
+dummy2 : LINE_
+ | STEP_
+ | QUADRATIC_
+ | ERROR_
+ ; 
+
+# backward compatibility
+oldview : DISCRETE_ yesno {PlotCmdUpdateElement show $2}
+ | LINE_ yesno {PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth linear}
+ | STEP_ yesno {PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth step}
+ | QUADRATIC_ yesno {PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth quadratic}
+ | ERROR_ yesno {PlotCmdUpdateElement error $2}
  ;
 
 %%

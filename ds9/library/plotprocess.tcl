@@ -555,22 +555,6 @@ proc PlotCmdSave {fn} {
     }
 }
 
-proc PlotCmdStats {value} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(stats) $value
-    PlotStats $cvarname
-}
-
-proc PlotCmdList {value} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(list) $value
-    PlotList $cvarname
-}
-
 proc PlotCmdLoadConfig {fn} {
     global cvarname
     
@@ -589,19 +573,50 @@ proc PlotCmdSaveConfig {fn} {
     }
 }
 
-proc PlotCmdMode {value} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(mode) $value
-    PlotChangMode $cvarname
-}
-
-proc PlotCmdPlot {which value} {
+proc PlotCmdSet {which value {cmd {}}} {
     global cvarname
     upvar #0 $cvarname cvar
 
     set cvar($which) $value
+    if {$cmd != {}} {
+	eval $cmd $cvarname
+    }
+}
+
+proc PlotCmdUpdateGraph {which value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+    $cvar(proc,updategraph) $cvarname
+}
+
+proc PlotCmdUpdateElement {which value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+    $cvar(proc,updateelement) $cvarname
+}
+
+proc PlotCmdFontStyle {which value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    switch $value {
+	normal {
+	    set cvar($which,weight) normal
+	    set cvar($which,slant) roman
+	}
+	bold {
+	    set cvar($which,weight) bold
+	    set cvar($which,slant) roman
+	}
+	italic {
+	    set cvar($which,weight) normal
+	    set cvar($which,slant) italic
+	}
+    }
     $cvar(proc,updategraph) $cvarname
 }
 

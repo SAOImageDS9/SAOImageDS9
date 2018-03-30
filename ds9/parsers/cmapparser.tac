@@ -34,14 +34,14 @@ cmap : STRING_ {CmapCmd $1}
 
 # backward compatibility
  | MATCH_ {MatchColorCurrent}
- | LOCK_ yesno {global colorbar; set colorbar(lock) $2; LockColorCurrent}
+ | LOCK_ yesno {ColorbarCmdSet lock $2 LockColorCurrent}
 
  | LOAD_ cmapLoad
 # backward compatibility
  | FILE_ cmapLoad
 
  | SAVE_ STRING_ {SaveColormapFile $2; FileLast colormapfbox $2}
- | INVERT_ yesno {global colorbar; set colorbar(invert) $2; InvertColorbar}
+ | INVERT_ yesno {ColorbarCmdSet invert $2 InvertColorbar}
  | TAG_ cmapTag
 
  | numeric numeric {CmapValueCmd $1 $2}

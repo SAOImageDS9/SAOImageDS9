@@ -1026,6 +1026,15 @@ proc ProcessViewCmd {varname iname} {
 }
 }
 
+proc ViewCmdSet {which value {cmd {}}} {
+    global view
+
+    set view($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
 proc ProcessSendViewCmd {proc id param} {
     global view
 

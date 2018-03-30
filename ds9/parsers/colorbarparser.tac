@@ -30,25 +30,25 @@ command : colorbar
  | colorbar {yyclearin; YYACCEPT} STRING_
  ;
 
-colorbar : yesno {global view; set view(colorbar) $1; UpdateView}
+colorbar : yesno {ViewCmdSet colorbar $1 UpdateView}
 # backward compatibility
  | MATCH_ {MatchColorCurrent}
- | LOCK_ yesno {global colorbar; set colorbar(lock) $2; LockColorCurrent}
+ | LOCK_ yesno {ColorbarCmdSet lock $2 LockColorCurrent}
 
- | NUMERICS_ yesno {ColorbarCmdView numerics $2}
- | SPACE_ space {ColorbarCmdView space $2}
- | FONT_ font {ColorbarCmdView font $2}
- | FONTSIZE_ INT_ {ColorbarCmdView font,size $2}
- | FONTWEIGHT_ fontWeight {ColorbarCmdView font,weight $2}
- | FONTSLANT_ fontSlant {ColorbarCmdView font,slant $2}
- | FONTSTYLE_ fontStyle {ColorbarCmdFontStyle $2}
+ | NUMERICS_ yesno {ColorbarCmdSet numerics $2 UpdateView}
+ | SPACE_ space {ColorbarCmdSet space $2 UpdateView}
+ | FONT_ font {ColorbarCmdSet font $2 UpdateView}
+ | FONTSIZE_ INT_ {ColorbarCmdSet font,size $2 UpdateView}
+ | FONTWEIGHT_ fontWeight {ColorbarCmdSet font,weight $2 UpdateView}
+ | FONTSLANT_ fontSlant {ColorbarCmdSet font,slant $2 UpdateView}
+ | FONTSTYLE_ fontStyle {ColorbarCmdFontStyle $2 UpdateView}
 
- | orientation {ColorbarCmdView orientation $1}
+ | orientation {ColorbarCmdSet orientation $1 UpdateView}
 # backward compatibility
- | ORIENTATION_ orientation {ColorbarCmdView orientation $2}
+ | ORIENTATION_ orientation {ColorbarCmdSet orientation $2 UpdateView}
 
- | SIZE_ INT_ {ColorbarCmdView size $2}
- | TICKS_ INT_ {ColorbarCmdView ticks $2}
+ | SIZE_ INT_ {ColorbarCmdSet size $2 UpdateView}
+ | TICKS_ INT_ {ColorbarCmdSet ticks $2 UpdateView}
  ;
  
 space : VALUE_ {set _ 1}

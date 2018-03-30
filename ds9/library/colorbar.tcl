@@ -1486,11 +1486,13 @@ proc ProcessColorbarCmd {varname iname} {
 }
 }
 
-proc ColorbarCmdView {which value} {
+proc ColorbarCmdSet {which value {cmd {}}} {
     global colorbar
 
     set colorbar($which) $value
-    UpdateView
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 proc ColorbarCmdFontStyle {value} {

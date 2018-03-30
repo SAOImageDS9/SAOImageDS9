@@ -444,11 +444,13 @@ proc ProcessCropCmd {varname iname} {
 }
 }
 
-proc CropCmdLock {sys} {
+proc CropCmdSet {which value {cmd {}}} {
     global crop
 
-    set crop(lock) $sys
-    LockCropCurrent
+    set crop($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 proc ProcessSendCropCmd {proc id param} {

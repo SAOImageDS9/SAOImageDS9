@@ -58,7 +58,7 @@ command : contour
  | contour {yyclearin; YYACCEPT} STRING_
  ;
 
-contour : yesno {global contour; set contour(view) $1; UpdateContour}
+contour : yesno {ContourCmdSet view $1}
  | OPEN_ {ContourDialog}
  | CLOSE_ {ContourDestroyDialog}
  | CLEAR_ {ContourOffDialog}
@@ -74,16 +74,16 @@ contour : yesno {global contour; set contour(view) $1; UpdateContour}
 
  | COPY_ {ContourCCopyDialog}
  | PASTE_ paste
- | COLOR_ STRING_ {ContourCmdColor $2}
- | WIDTH_ INT_ {ContourCmdWidth $2}
- | DASH_ yesno {ContourCmdDash $2}
- | SMOOTH_ INT_ {ContourCmdSmooth $2}
- | METHOD_ method {ContourCmdMethod $2}
- | NLEVELS_ INT_ {ContourCmdNLevels $2}
- | SCALE_ scale {ContourCmdScale $2}
+ | COLOR_ STRING_ {ContourCmdDialog color $2}
+ | WIDTH_ INT_ {ContourCmdDialog width $2}
+ | DASH_ yesno {ContourCmdDialog dash $2}
+ | SMOOTH_ INT_ {ContourCmdGenerateDialog smooth $2}
+ | METHOD_ method {ContourCmdGenerateDialog method $2}
+ | NLEVELS_ INT_ {ContourCmdGenerateDialog nlevel $2}
+ | SCALE_ scale {ContourCmdScale scale $2}
  | LOG_ log
  | MODE_ modes
- | SCOPE_ scope {ContourCmdScope $2}
+ | SCOPE_ scope {ContourCmdMode scope $2}
  | LIMITS_ numeric numeric {ContourCmdLimits $2 $3}
  | LEVELS_ STRING_ {ContourCmdLevels $2}
  | GENERATE_ {ContourCmdGenerate}
@@ -126,12 +126,12 @@ scale : LINEAR_ {set _ linear}
  | HISTEQU_ {set _ histequ}
  ;
 
-log : numeric {ContourCmdLog $1}
- | EXP_ numeric {ContourCmdLog $2}
+log : numeric {ContourCmdScale log $1}
+ | EXP_ numeric {ContourCmdScale log $2}
  ;
 
-modes : numeric {ContourCmdMode $1}
- | mode {ContourCmdMode $1}
+modes : numeric {ContourCmdMode mode $1}
+ | mode {ContourCmdMode mode $1}
  ;
 
 mode : MINMAX_ {set _ minmax}

@@ -808,6 +808,15 @@ proc ProcessBinCmd {varname iname} {
 }
 }
 
+proc BinCmdSet {which value {cmd {}}} {
+    global bin
+
+    set bin($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
 proc ProcessSendBinCmd {proc id param} {
     global bin
     global current

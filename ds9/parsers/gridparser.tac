@@ -82,17 +82,17 @@ interiortype : INTERIOR_ {set _ interior}
  | EXTERIOR_ {set _ exterior}
  ;
 
-grid : yesno {GridCmdCurrent view $1}
+grid : yesno {GridCmdSet view $1 GridUpdateCurrent}
  | OPEN_ {GridDialog}
  | CLOSE_ {GridDestroyDialog}
  # backward compatible
  | TYPE_ type {GridUpdateCurrent}
- | SYSTEM_ system {GridCmdCurrent system $2}
- | SKYFRAME_ skyframe {GridCmdCurrent sky $2}
- | SKYFORMAT_ skyformat {GridCmdCurrent skyformat $2}
+ | SYSTEM_ system {GridCmdSet system $2 GridUpdateCurrent}
+ | SKYFRAME_ skyframe {GridCmdSet sky $2 GridUpdateCurrent}
+ | SKYFORMAT_ skyformat {GridCmdSet skyformat $2 GridUpdateCurrent}
  | GRID_ gridgrid {GridUpdateCurrent}
- | FORMAT1_ STRING_ {GridCmdCurrent format1 $2}
- | FORMAT2_ STRING_ {GridCmdCurrent format2 $2}
+ | FORMAT1_ STRING_ {GridCmdSet format1 $2 GridUpdateCurrent}
+ | FORMAT2_ STRING_ {GridCmdSet format2 $2 GridUpdateCurrent}
  | AXES_ axes {GridUpdateCurrent}
  | TICKMARKS_ tickmarks {GridUpdateCurrent}
  | BORDER_ border {GridUpdateCurrent}

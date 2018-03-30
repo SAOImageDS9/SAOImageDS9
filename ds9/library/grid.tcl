@@ -1415,17 +1415,13 @@ proc ProcessGridCmd {varname iname} {
 }
 }
 
-proc GridCmdSet {which value} {
+proc GridCmdSet {which value {cmd {}}} {
     global grid
 
     set grid($which) $value
-}
-
-proc GridCmdCurrent {which value} {
-    global grid
-
-    set grid($which) $value
-    GridUpdateCurrent
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 proc GridCmdFontStyle {which value} {

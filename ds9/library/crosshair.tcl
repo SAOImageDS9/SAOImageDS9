@@ -296,11 +296,13 @@ proc ProcessCrosshairCmd {varname iname} {
 }
 }
 
-proc CrosshairCmdLock {sys} {
+proc CrosshairCmdSet {which value {cmd {}}} {
     global crosshair
 
-    set crosshair(lock) $sys
-    LockCrosshairCurrent
+    set crosshair($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 proc ProcessSendCrosshairCmd {proc id param} {

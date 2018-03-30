@@ -23,7 +23,7 @@ command : crosshair
  ;
 
 crosshair : MATCH_ match {MatchCrosshairCurrent $2}
- | LOCK_ lock {CrosshairCmdLock $2}
+ | LOCK_ lock {CrosshairCmdSet lock $2 LockCrosshairCurrent}
  | numeric numeric {CrosshairTo $1 $2 physical fk5}
  | numeric numeric coordsys {CrosshairTo $1 $2 $3 fk5}
  | numeric numeric wcssys {CrosshairTo $1 $2 $3 fk5}

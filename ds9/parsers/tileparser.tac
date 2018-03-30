@@ -36,13 +36,13 @@ command : tile
  | tile {yyclearin; YYACCEPT} STRING_
  ;
 
-tile: {global current; set current(display) tile; DisplayMode}
- | yes {global current; set current(display) tile; DisplayMode}
- | no {global current; set current(display) single; DisplayMode}
- | MODE_ tileMode {global tile; set tile(mode) $2; DisplayMode}
+tile: {CurrentCmdSet display tile DisplayMode}
+ | yes {CurrentCmdSet display tile DisplayMode}
+ | no {CurrentCmdSet display single DisplayMode}
+ | MODE_ tileMode {TileCmdSet mode $2 DisplayMode}
  | GRID_ tileGrid
- | COLUMN_ {global tile; set tile(mode) column; DisplayMode}
- | ROW_ {global tile; set tile(mode) row; DisplayMode}
+ | COLUMN_ {TileCmdSet mode column DisplayMode}
+ | ROW_ {TileCmdSet mode row DisplayMode}
  ;
 
 tileMode : GRID_ {set _ grid}
@@ -50,11 +50,11 @@ tileMode : GRID_ {set _ grid}
  | ROW_ {set _ row}
  ;
 
-tileGrid : {global tile; set tile(mode) grid; DisplayMode}
- | MODE_ tileGridMode {global tile; set tile(grid,mode) $2; DisplayMode}
- | DIRECTION_ tileGridDir {global tile; set tile(grid,dir) $2; DisplayMode}
- | LAYOUT_ INT_ INT_ {global tile; set tile(grid,col) $2; set tile(grid,row) $3; set tile(grid,mode) manual; DisplayMode}
- | GAP_ INT_ {global tile; set tile(grid,gap) $2; DisplayMode}
+tileGrid : {TileCmdSet mode grid DisplayMode}
+ | MODE_ tileGridMode {TileCmdSet grid,mode $2 DisplayMode}
+ | DIRECTION_ tileGridDir {TileCmdSet grid,dir $2 DisplayMode}
+ | LAYOUT_ INT_ INT_ {TileCmdSet grid,col $2; TileCmdSet grid,row $3; TileCmdSetgrid,mode manual DisplayMode}
+ | GAP_ INT_ {TileCmdSet grid,gap $2 DisplayMode}
  ;
 
 tileGridMode : AUTOMATIC_ {set _ automatic}

@@ -2210,6 +2210,15 @@ proc ProcessFrameCmd {varname iname} {
     }
 }
 
+proc CurrentCmdSet {which value {cmd {}}} {
+    global current
+
+    set current($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
 proc ProcessSendFrameCmd {proc id param} {
     global ds9
     global current
@@ -2385,6 +2394,15 @@ proc ProcessTileCmd {varname iname} {
     }
     DisplayMode
 }
+}
+
+proc TileCmdSet {which value {cmd {}}} {
+    global tile
+
+    set tile($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 proc ProcessSendTileCmd {proc id param} {

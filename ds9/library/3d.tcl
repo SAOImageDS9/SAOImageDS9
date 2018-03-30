@@ -569,6 +569,15 @@ proc Process3DCmd {varname iname} {
 }
 }
 
+proc ThreedCmdSet {which value {cmd {}}} {
+    global threed
+
+    set threed($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
 proc ProcessSend3DCmd {proc id param} {
     global threed
 

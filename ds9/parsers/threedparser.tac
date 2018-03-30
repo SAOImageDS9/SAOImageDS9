@@ -37,17 +37,17 @@ command : 3d
 3d : {Create3DFrame}
  | OPEN_
  | CLOSE_ {3DDestroyDialog}
- | AZ_ numeric {global threed; set threed(az) $2; 3DViewPoint}
- | EL_ numeric {global threed; set threed(el) $2; 3DViewPoint}
- | VIEW_ numeric numeric {global threed; set threed(az) $2; set threed(el) $3; 3DViewPoint}
- | SCALE_ numeric {global threed; set threed(scale) $2; 3DScale}
- | METHOD_ method {global threed; set threed(method) $2; 3DRenderMethod}
- | BG_ bg {global threed; set threed(background) $2; 3DBackground}
+ | AZ_ numeric {ThreedCmdSet az $2 3DViewPoint}
+ | EL_ numeric {ThreedCmdSet el $2 3DViewPoint}
+ | VIEW_ numeric numeric {ThreedCmdSet az $2; ThreedCmdSet el $3 3DViewPoint}
+ | SCALE_ numeric {ThreedCmdSet scale $2 3DScale}
+ | METHOD_ method {ThreedCmdSet method $2 3DRenderMethod}
+ | BG_ bg {ThreedCmdSet background $2 3DBackground}
  | HIGHLITE_ highlite
  | BORDER_ border
  | COMPASS_ compass
  | MATCH_ {Match3DCurrent}
- | LOCK_ yesno {global threed; set threed(lock) $2; Lock3DCurrent}
+ | LOCK_ yesno {ThreedCmdSet lock $2 Lock3DCurrent}
  ;
 
 method : AIP_ {set _ aip}
@@ -59,16 +59,16 @@ bg : NONE_ {set _ none}
  | EL_ {set _ elevation}
  ;
 
-highlite : COLOR_ STRING_ {global threed; set threed(highlite,color) $2; 3DHighliteColor}
- | yesno {global threed; set threed(highlite) $1; 3DHighlite}
+highlite : COLOR_ STRING_ {ThreedCmdSet highlite,color $2 3DHighliteColor}
+ | yesno {ThreedCmdSet highlite $1 3DHighlite}
  ;
  
-border : COLOR_ STRING_ {global threed; set threed(border,color) $2; 3DBorderColor}
- | yesno {global threed; set threed(border) $1; 3DBorder}
+border : COLOR_ STRING_ {ThreedCmdSet border,color $2 3DBorderColor}
+ | yesno {ThreedCmdSet border $1 3DBorder}
  ;
  
-compass : COLOR_ STRING_ {global threed; set threed(compass,color) $2; 3DCompassColor}
- | yesno {global threed; set threed(compass) $1; 3DCompass}
+compass : COLOR_ STRING_ {ThreedCmdSet compass,color $2 3DCompassColor}
+ | yesno {ThreedCmdSet compass $1 3DCompass}
  ;
  
 %%

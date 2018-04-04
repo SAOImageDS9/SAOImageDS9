@@ -1,3 +1,4 @@
+
 %{
 %}
 
@@ -26,11 +27,14 @@
 %token CUBIC_
 %token DASH_
 %token DATA_
+%token DATASET_
 %token DESTINATION_
 %token DIAMOND_
 %token DISCRETE_
+%token DUP_
 %token DUPLICATE_
 %token ERROR_
+%token ERRORBAR_
 %token FILE_
 %token FILENAME_
 %token FILL_
@@ -114,6 +118,14 @@
 %token XYEY_
 %token XYEXEY_
 
+%token LINEARLINEAR_
+%token LOGLINEAR_
+%token LINEARLOG_
+%token LOGLOG_
+
+%token XAXIS_
+%token YAXIS_
+
 %%
 
 #include yesno.trl
@@ -130,8 +142,7 @@ command : plot
  | SCATTER_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
 
  | NEW_ {PlotCmdNew {}} new
- | NEW_ NAME_ STRING_ {PlotCmdNew $2} new
-# | NEW_ STRING_ {PlotCmdNew $2} new
+ | NEW_ NAME_ STRING_ {PlotCmdNew $3} new
 
  | {PlotCmdCheck} plotCmd
  | STRING_ {PlotCmdRef $1} plotCmd
@@ -143,25 +154,32 @@ new : line
  | SCATTER_ scatter
  ;
  
-line : STDIN_ {PlotCmdAnalysisPlotStdin line}
+line : {PlotCmdLine {} {} {} xy}
+ | STDIN_ {PlotCmdAnalysisPlotStdin line}
  | STRING_ STRING_ STRING_ dim {PlotCmdLine $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdLine $1 $2 $3 $4}
  ;
 
-bar : STDIN_ {PlotCmdAnalysisPlotStdin bar}
+bar : {PlotCmdBar {} {} {} xy}
+ | STDIN_ {PlotCmdAnalysisPlotStdin bar}
  | STRING_ STRING_ STRING_ dim {PlotCmdBar $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdBar $1 $2 $3 $4}
  ;
 
-scatter : STDIN_ {PlotCmdAnalysisPlotStdin scatter}
+scatter : {PlotCmdScatter {} {} {} xy}
+ | STDIN_ {PlotCmdAnalysisPlotStdin scatter}
  | STRING_ STRING_ STRING_ dim  {PlotCmdScatter $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_  {PlotCmdScatter $1 $2 $3 $4}
  ;
 
-xy : 'x' {set _x}
+xy : 'x' {set _ x}
  | 'X' {set _ x}
  | 'y' {set _ y}
  | 'Y' {set _ y}
+ ;
+
+xyaxis : XAXIS_ {set _ x}
+ | YAXIS_ {set _ y}
  ;
 
 dim : XY_ {set _ xy}
@@ -170,11 +188,12 @@ dim : XY_ {set _ xy}
  | XYEXEY_ {set _ xyexey}
  ;
 
-plotCmd : DATA_ dim {PlotCmdData $1}
+plotCmd : DATA_ dim {PlotCmdData $2}
 
  | LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
  | CLEAR_ {global cvarname; PlotClearData $cvarname}
+ | DUP_ duplicate
  | DUPLICATE_ duplicate
  | STATS_ yesno {PlotCmdSet stats $2 PlotStats}
  | LIST_ yesno {PlotCmdSet list $2 PlotList}
@@ -197,6 +216,7 @@ plotCmd : DATA_ dim {PlotCmdData $1}
  | FILL_ yesno {PlotCmdUpdateElement fill $2}
  | FILLCOLOR_ STRING_ {PlotCmdUpdateElement fill,color $2}
  | ERROR_ errorr
+ | ERRORBAR_ errorr
  | NAME_ STRING_ {PlotCmdUpdateElement name $2}
  | SHAPE_ shape
  | RELIEF_ relief {PlotCmdUpdateElement bar,relief $2}
@@ -204,12 +224,13 @@ plotCmd : DATA_ dim {PlotCmdData $1}
  | WIDTH_ INT_ {PlotCmdUpdateElement width $2}
  | DASH_ yesno {PlotCmdUpdateElement dash $2}
 
- | SELECT_ INT_
+ | DATASET_ INT_ {PlotCmdSelect $2}
+ | SELECT_ INT_ {PlotCmdSelect $2}
 
  # backward compatibility
-# | LINE_ oldline
- | GRAPH_ oldgraph
- | VIEW_ oldview
+# | LINE_ oldLine
+ | GRAPH_ oldGraph
+ | VIEW_ oldView
  ;
 
 load : STRING_ {PlotCmdLoad $1 xy}
@@ -255,12 +276,12 @@ mode : POINTER_ {set _ pointer}
  ;
 
 axis : xy GRID_ yesno {PlotCmdUpdateGraph "axis,$1,grid" $3}
- | xy LOG_ yesno {PlotCmdUpdateGraph $1 "axis,$1,log" $3}
- | xy FLIP_ yesno {PlotCmdUpdateGraph $1 "axis,$1,flip" $3}
- | xy AUTO_ yesno {PlotCmdUpdateGraph $1 "axis,$1,auto" $3}
- | xy MIN_ numeric {PlotCmdUpdateGraph $1 "axis,$1,min" $3}
- | xy MAX_ numeric {PlotCmdUpdateGraph $1 "axis,$1,max" $3}
- | xy FORMAT_ STRING_ {PlotCmdUpdateGraph $1 "axis,$1,format" $3}
+ | xy LOG_ yesno {PlotCmdUpdateGraph "axis,$1,log" $3}
+ | xy FLIP_ yesno {PlotCmdUpdateGraph "axis,$1,flip" $3}
+ | xy AUTO_ yesno {PlotCmdUpdateGraph "axis,$1,auto" $3}
+ | xy MIN_ numeric {PlotCmdUpdateGraph "axis,$1,min" $3}
+ | xy MAX_ numeric {PlotCmdUpdateGraph "axis,$1,max" $3}
+ | xy FORMAT_ STRING_ {PlotCmdUpdateGraph "axis,$1,format" $3}
  ;
 
 legend : yesno {PlotCmdUpdateGraph legend $1}
@@ -291,8 +312,10 @@ fontType : TITLE_ {set _ graph,title}
  | LEGENDTITLE_ {set _ legend,title}
  ;
 
-title : STRING_
- | xy STRING_
+title : STRING_ {PlotCmdUpdateGraph graph,title $1}
+ | xy STRING_ {PlotCmdUpdateGraph "axis,$1,title" $1}
+ | xyaxis STRING_ {PlotCmdUpdateGraph "axis,$1,title" $1}
+ | LEGEND_ STRING_ {PlotCmdUpdateGraph legend,title $1}
  ;
 
 barmode : NORMAL_ {set _ normal}
@@ -312,6 +335,7 @@ dummy1 : DISCRETE_
  | QUADRATIC_
  | BAR_
  | ERROR_
+ | ERRORBAR_
  ; 
 
 errorr : yesno {PlotCmdUpdateElement error $1}
@@ -350,18 +374,42 @@ smooth : STEP_ {set _ step}
  ;
 
 # backward compatibility
-oldgraph : GRID_
- | LOG_
- | FLIP_
- | FORMAT_
- | RANGE_
- | LABELS_
- | TYPE_
- | SCALE_
+oldGraph : GRID_ oldGraphGrid
+ | LOG_ xy yesno {PlotCmdUpdateGraph "axis,$2,log" $3}
+ | FLIP_ xy yesno {PlotCmdUpdateGraph "axis,$2,flip" $3}
+ | FORMAT_ xy STRING_ {PlotCmdUpdateGraph "axis,$3,format" $3}
+ | RANGE_ oldGraphRange
+ | LABELS_ oldGraphLabels
+ | TYPE_ oldGraphType
+ | SCALE_ oldGraphScale
+ ;
+
+oldGraphGrid : xy yesno {PlotCmdUpdateGraph "axis,$1,grid" $2}
+ | yesno {PlotCmdUpdateGraph "axis,x,grid" $1; PlotCmdUpdateGraph "axis,y,grid" $1}
+ ;
+
+oldGraphRange : xy AUTO_ yesno {PlotCmdUpdateGraph "axis,$1,auto" $3}
+ | xy MIN_ numeric {PlotCmdUpdateGraph "axis,$1,min" $3}
+ | xy MAX_ numeric {PlotCmdUpdateGraph "axis,$1,max" $3}
+ ;
+
+oldGraphLabels : TITLE_ STRING_ {PlotCmdUpdateGraph graph,title $2}
+ | xyaxis STRING_ {PlotCmdUpdateGraph "axis,$1,title" $2}
+ | LEGEND_ STRING_ {PlotCmdUpdateGraph legend,title $2}
+ ;
+
+oldGraphType : LINE_
+ | BAR_
+ ;
+
+oldGraphScale : LINEARLINEAR_ {PlotCmdUpdateGraph "axis,x,log" 0; PlotCmdUpdateGraph "axis,y,log" 0}
+ | LINEARLOG_ {PlotCmdUpdateGraph "axis,x,log" 0; PlotCmdUpdateGraph "axis,y,log" 1}
+ | LOGLINEAR_ {PlotCmdUpdateGraph "axis,x,log" 1; PlotCmdUpdateGraph "axis,y,log" 0}
+ | LOGLOG_ {PlotCmdUpdateGraph "axis,x,log" 1; PlotCmdUpdateGraph "axis,y,log" 1}
  ;
 
 # backward compatibility
-oldline : DISCRETE_ shapes {PlotCmdUpdateElement shape,symbol $2}
+oldLine : DISCRETE_ shapes {PlotCmdUpdateElement shape,symbol $2}
  | dummy2 WIDTH_ INT_ {PlotCmdUpdateElement width $3}
  | dummy2 DASH_ yesno {PlotCmdUpdateElement dash $3}
  | dummy2 STYLE_ yesno {PlotCmdUpdateElement error $3}
@@ -371,14 +419,19 @@ dummy2 : LINE_
  | STEP_
  | QUADRATIC_
  | ERROR_
+ | ERRORBAR_
  ; 
 
 # backward compatibility
-oldview : DISCRETE_ yesno {PlotCmdUpdateElement show $2}
+oldView : DISCRETE_ yesno {PlotCmdUpdateElement show $2}
  | LINE_ yesno {PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth linear}
  | STEP_ yesno {PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth step}
  | QUADRATIC_ yesno {PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth quadratic}
- | ERROR_ yesno {PlotCmdUpdateElement error $2}
+ | ERROR_ oldViewError
+ | ERRORBAR_ oldViewError
+ ;
+
+oldViewError : yesno {PlotCmdUpdateElement error $1}
  ;
 
 %%

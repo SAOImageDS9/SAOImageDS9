@@ -567,7 +567,7 @@ proc PlotCmdRef {ref} {
 
     # look for reference in current list
     if {[lsearch $iap(windows) $ref] < 0} {
-	Error "[msgcat:: mc {Unable to find plot window}] $ref"
+	Error "[msgcat::mc {Unable to find plot window}] $ref"
 	plot::YYABORT
 	return
     }
@@ -616,6 +616,7 @@ proc PlotCmdAnalysisPlotStdin {which} {
 }
 
 proc PlotCmdData {dim} {
+    global iap
     global cvarname
     upvar #0 $cvarname cvar
 
@@ -628,7 +629,7 @@ proc PlotCmdData {dim} {
 	    }
 	}
 	if {$iap(buf) == {}} {
-	    Error "[msgcat:: mc {Unable to load plot data}] $fn"
+	    Error "[msgcat::mc {Unable to load plot data}] $fn"
 	    plot::YYABORT
 	    return
 	}
@@ -636,7 +637,7 @@ proc PlotCmdData {dim} {
     
     PlotRaise $cvarname
     PlotDataSet $cvarname $dim $iap(buf)
-    $var(proc,updategraph) $cvarname
+    $cvar(proc,updategraph) $cvarname
     PlotStats $cvarname
     PlotList $cvarname
 }
@@ -654,7 +655,7 @@ proc PlotCmdSave {fn} {
     global cvarname
     
     if {$fn != {}} {
-	PlotSaveDataFile $varname $fn
+	PlotSaveDataFile $cvarname $fn
 	FileLast apdatafbox $fn
     }
 }
@@ -728,6 +729,14 @@ proc PlotCmdFontStyle {which value} {
 	}
     }
     $cvar(proc,updategraph) $cvarname
+}
+
+proc PlotCmdSelect {value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(data,current) $value
+    PlotCurrentData $cvarname
 }
 
 # File Menu

@@ -25,11 +25,14 @@ command	    {return $COMMAND_}
 cubic	    {return $CUBIC_}
 dash	    {return $DASH_}
 data	    {return $DATA_}
+dataset	    {return $DATASET_}
 destination {return $DESTINATION_}
 diamond	    {return $DIAMOND_}
 discrete    {return $DISCRETE_}
+dup	    {return $DUP_}
 duplicate   {return $DUPLICATE_}
 error	    {return $ERROR_}
+errorbar    {return $ERRORBAR_}
 file	    {return $FILE_}
 filename    {return $FILENAME_}
 fill	    {return $FILL_}
@@ -112,6 +115,14 @@ xy	    {return $XY_}
 xyex	    {return $XYEX_}
 xyey	    {return $XYEY_}
 xyexey	    {return $XYEXEY_}
+
+linearlinear {return $LINEARLINEAR_}
+loglinear   {return $LOGLINEAR_}
+linearlog   {return $LINEARLOG_}
+loglog      {return $LOGLOG_}
+
+xaxis	    {return XAXIS_}
+yaxis	    {return YAXIS_}
 
 #include yesno.fin
 #include font.fin

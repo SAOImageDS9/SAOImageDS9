@@ -121,8 +121,8 @@ loglinear   {return $LOGLINEAR_}
 linearlog   {return $LINEARLOG_}
 loglog      {return $LOGLOG_}
 
-xaxis	    {return XAXIS_}
-yaxis	    {return YAXIS_}
+xaxis	    {return $XAXIS_}
+yaxis	    {return $YAXIS_}
 
 #include yesno.fin
 #include font.fin

@@ -137,7 +137,7 @@ command : plot
  ;
 
  plot : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
- | LINE_ {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
+ | LINE_ line
  | BAR_ {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
  | SCATTER_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
 
@@ -148,25 +148,30 @@ command : plot
  | STRING_ {PlotCmdRef $1} plotCmd
  ;
 
-new : line
- | LINE_ line
- | BAR_ bar
- | SCATTER_ scatter
+line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
+ # backward compatibility
+ | oldLine
  ;
  
-line : {PlotCmdLine {} {} {} xy}
+new : newLine
+ | LINE_ newLine
+ | BAR_ newBar
+ | SCATTER_ newScatter
+ ;
+ 
+newLine : {PlotCmdLine {} {} {} xy}
  | STDIN_ {PlotCmdAnalysisPlotStdin line}
  | STRING_ STRING_ STRING_ dim {PlotCmdLine $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdLine $1 $2 $3 $4}
  ;
 
-bar : {PlotCmdBar {} {} {} xy}
+newBar : {PlotCmdBar {} {} {} xy}
  | STDIN_ {PlotCmdAnalysisPlotStdin bar}
  | STRING_ STRING_ STRING_ dim {PlotCmdBar $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_ {PlotCmdBar $1 $2 $3 $4}
  ;
 
-scatter : {PlotCmdScatter {} {} {} xy}
+newScatter : {PlotCmdScatter {} {} {} xy}
  | STDIN_ {PlotCmdAnalysisPlotStdin scatter}
  | STRING_ STRING_ STRING_ dim  {PlotCmdScatter $1 $2 $3 $4}
  | STRING_ STRING_ STRING_ INT_  {PlotCmdScatter $1 $2 $3 $4}
@@ -228,7 +233,6 @@ plotCmd : DATA_ dim {PlotCmdData $2}
  | SELECT_ INT_ {PlotCmdSelect $2}
 
  # backward compatibility
-# | LINE_ oldLine
  | GRAPH_ oldGraph
  | VIEW_ oldView
  ;
@@ -313,9 +317,9 @@ fontType : TITLE_ {set _ graph,title}
  ;
 
 title : STRING_ {PlotCmdUpdateGraph graph,title $1}
- | xy STRING_ {PlotCmdUpdateGraph "axis,$1,title" $1}
- | xyaxis STRING_ {PlotCmdUpdateGraph "axis,$1,title" $1}
- | LEGEND_ STRING_ {PlotCmdUpdateGraph legend,title $1}
+ | xy STRING_ {PlotCmdUpdateGraph "axis,$1,title" $2}
+ | xyaxis STRING_ {PlotCmdUpdateGraph "axis,$1,title" $2}
+ | LEGEND_ STRING_ {PlotCmdUpdateGraph legend,title $2}
  ;
 
 barmode : NORMAL_ {set _ normal}

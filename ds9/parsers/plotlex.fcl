@@ -22,6 +22,7 @@ clear	    {return $CLEAR_}
 close	    {return $CLOSE_}
 color	    {return $COLOR_}
 command	    {return $COMMAND_}
+cross	    {return $CROSS_}
 cubic	    {return $CUBIC_}
 dash	    {return $DASH_}
 data	    {return $DATA_}

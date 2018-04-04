@@ -24,6 +24,7 @@
 %token CLOSE_
 %token COLOR_
 %token COMMAND_
+%token CROSS_
 %token CUBIC_
 %token DASH_
 %token DATA_
@@ -359,6 +360,7 @@ shapes : CIRCLE_ {set _ circle}
  | PLUS_ {set _ plus}
  | SPLUS_ {set _ splus}
  | SCROSS_ {set _ scross}
+ | CROSS_ {set _ scross}
  | TRIANGLE_ {set _ triangle}
  | ARROW_ {set _ arrow}
  ;
@@ -416,10 +418,11 @@ oldGraphScale : LINEARLINEAR_ {PlotCmdUpdateGraph "axis,x,log" 0; PlotCmdUpdateG
 oldLine : DISCRETE_ shapes {PlotCmdUpdateElement shape,symbol $2}
  | dummy2 WIDTH_ INT_ {PlotCmdUpdateElement width $3}
  | dummy2 DASH_ yesno {PlotCmdUpdateElement dash $3}
- | dummy2 STYLE_ yesno {PlotCmdUpdateElement error $3}
+ | dummy2 STYLE_ INT_ {PlotCmdUpdateElement error $3}
  ;
 
 dummy2 : LINE_
+ | LINEAR_
  | STEP_
  | QUADRATIC_
  | ERROR_

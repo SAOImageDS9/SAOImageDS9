@@ -95,6 +95,7 @@ square	    {return $SQUARE_}
 stacked	    {return $STACKED_}
 stats	    {return $STATS_}
 step	    {return $STEP_}
+stdin	    {return $STDIN_}
 style	    {return $STYLE_}
 sunken	    {return $SUNKEN_}
 tabloid	    {return $TABLOID_}

@@ -96,6 +96,7 @@
 %token STACKED_
 %token STATS_
 %token STEP_
+%token STDIN_
 %token STYLE_
 %token SUNKEN_
 %token TABLOID_
@@ -123,14 +124,53 @@ command : plot
  | plot {yyclearin; YYACCEPT} STRING_
  ;
 
-plot : new
- | NEW_ new
+ plot : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
+ | LINE_ {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
+ | BAR_ {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
+ | SCATTER_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
+
+ | NEW_ {PlotCmdNew {}} new
+ | NEW_ NAME_ STRING_ {PlotCmdNew $2} new
+# | NEW_ STRING_ {PlotCmdNew $2} new
+
  | {PlotCmdCheck} plotCmd
- | STRING_ {PlotCmdRef $1}
  | STRING_ {PlotCmdRef $1} plotCmd
  ;
 
-plotCmd : DATA_ dim #
+new : line
+ | LINE_ line
+ | BAR_ bar
+ | SCATTER_ scatter
+ ;
+ 
+line : STDIN_ {PlotCmdAnalysisPlotStdin line}
+ | STRING_ STRING_ STRING_ dim {PlotCmdLine $1 $2 $3 $4}
+ | STRING_ STRING_ STRING_ INT_ {PlotCmdLine $1 $2 $3 $4}
+ ;
+
+bar : STDIN_ {PlotCmdAnalysisPlotStdin bar}
+ | STRING_ STRING_ STRING_ dim {PlotCmdBar $1 $2 $3 $4}
+ | STRING_ STRING_ STRING_ INT_ {PlotCmdBar $1 $2 $3 $4}
+ ;
+
+scatter : STDIN_ {PlotCmdAnalysisPlotStdin scatter}
+ | STRING_ STRING_ STRING_ dim  {PlotCmdScatter $1 $2 $3 $4}
+ | STRING_ STRING_ STRING_ INT_  {PlotCmdScatter $1 $2 $3 $4}
+ ;
+
+xy : 'x' {set _x}
+ | 'X' {set _ x}
+ | 'y' {set _ y}
+ | 'Y' {set _ y}
+ ;
+
+dim : XY_ {set _ xy}
+ | XYEX_ {set _ xyex}
+ | XYEY_ {set _ xyey}
+ | XYEXEY_ {set _ xyexey}
+ ;
+
+plotCmd : DATA_ dim {PlotCmdData $1}
 
  | LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
@@ -140,8 +180,8 @@ plotCmd : DATA_ dim #
  | LIST_ yesno {PlotCmdSet list $2 PlotList}
  | LOADCONFIG_ STRING_ {PlotCmdLoadConfig $2}
  | SAVECONFIG_ STRING_ {PlotCmdSaveConfig $2}
- | PAGESETUP_ pagesetup #
- | PRINT_ print #
+ | PAGESETUP_ pagesetup
+ | PRINT_ print
  | CLOSE_ {global cvarname; PlotDestroy $cvarname}
 
  | MODE_ mode {PlotCmdSet mode $2 PlotChangeMode}
@@ -167,35 +207,9 @@ plotCmd : DATA_ dim #
  | SELECT_ INT_
 
  # backward compatibility
+# | LINE_ oldline
  | GRAPH_ oldgraph
- | LINE_ oldline
  | VIEW_ oldview
- ;
-
-new : line
- | BAR_ bar
- | SCATTER_ scatter
- ;
- 
-line : {PlotCmdLine {} {} {} {} xy}
- ;
-
-bar : {PlotCmdBar {} {} {} {} xy}
- ;
-
-scatter : {PlotCmdScatter {} {} {} {} xy}
- ;
-
-dim : XY_ {set _ xy}
- | XYEX_ {set _ xyex}
- | XYEY_ {set _ xyey}
- | XYEXEY_ {set _ xyexey}
- ;
-
-xy : 'x' {set _x}
- | 'X' {set _ x}
- | 'y' {set _ y}
- | 'Y' {set _ y}
  ;
 
 load : STRING_ {PlotCmdLoad $1 xy}
@@ -221,7 +235,8 @@ pageSize : LETTER_ {set _ letter}
  | A4_ {set _ a4}
  ;
  
-print : DESTINATION_ printDest {global ps; set ps(dest) $2}
+print : {PlotCmdPrint}
+ | DESTINATION_ printDest {global ps; set ps(dest) $2}
  | COMMAND_ STRING_ {global ps; set ps(cmd) $2}
  | FILENAME_ STRING_ {global ps; set ps(filename) $2}
  | COLOR_ printColor {global ps; set ps(color) $2}

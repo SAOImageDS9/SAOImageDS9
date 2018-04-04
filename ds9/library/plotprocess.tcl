@@ -100,17 +100,25 @@ proc PrefsDialogPlot {} {
 }
 
 proc ProcessPlotCmd {xarname iname buf fn} {
+    upvar $xarname xar
+    upvar $iname i
+    global iap
+
     global debug
     if {$debug(tcl,parser)} {
+	set ref [lindex $iap(windows) end]
+	global cvarname
+	set cvarname $ref
+	set iap(name) $iap(tt)
+	set iap(buf) $buf
+	set iap(fn) $fn
+
 	plot::YY_FLUSH_BUFFER
-	plot::yy_scan_string [lrange $var $i end]
+	plot::yy_scan_string [lrange $xar $i end]
 	plot::yyparse
 	incr i [expr $plot::yycnt-1]
     } else {
-    upvar $xarname xar
-    upvar $iname i
 
-    global iap
     set varname $iap(tt)
     set id 0
 
@@ -537,6 +545,102 @@ proc ProcessPlotData {varname xarname iname buf} {
     PlotList $varname
 }
 
+proc PlotCmdCheck {} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    if {![info exists cvar(top)]} {
+	Error "[msgcat::mc {Unable to find plot window}] $cvarname"
+	plot::YYABORT
+	return
+    }
+    if {![winfo exists $cvar(top)]} {
+	Error "[msgcat::mc {Unable to find plot window}] $cvarname"
+	plot::YYABORT
+	return
+    }
+}
+
+proc PlotCmdRef {ref} {
+    global iap
+    global cvarname
+
+    # look for reference in current list
+    if {[lsearch $iap(windows) $ref] < 0} {
+	Error "[msgcat:: mc {Unable to find plot window}] $ref"
+	plot::YYABORT
+	return
+    }
+    set cvarname $ref
+    PlotCmdCheck
+}
+
+proc PlotCmdNew {name} {
+    global iap
+
+    if {$name != {}} {
+	set iap(name) $name
+    }
+
+    if {$iap(buf) != {}} {
+	return
+    } elseif {$iap(fn) != {}} {
+	if {[file exists $iap(fn)]} {
+	    set ch [open $iap(fn) r]
+	    set iap(buf) [read $ch]
+	    close $ch
+	    return
+	}
+    }
+    set iap(buf) {}
+}
+
+proc PlotCmdLine {title xaxis yaxis dim} {
+    global iap
+    PlotLine $iap(name) {} $title $xaxis $yaxis $dim $iap(buf)
+}
+
+proc PlotCmdBar {title xaxis yaxis dim} {
+    global iap
+    PlotBar $iap(name) {} $title $xaxis $yaxis $dim $iap(buf)
+}
+
+proc PlotCmdScatter {title xaxis yaxis dim} {
+    global iap
+    PlotScatter $iap(name) {} $title $xaxis $yaxis $dim $iap(buf)
+}
+
+proc PlotCmdAnalysisPlotStdin {which} {
+    global iap
+    AnalysisPlotStdin $which $iap(name) {} $iap(buf)
+}
+
+proc PlotCmdData {dim} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    if {$iap(buf) == {}} {
+	if {$iap(fn) != {}} {
+	    if {[file exists $iap(fn)]} {
+		set ch [open $iap(fn) r]
+		set iap(buf) [read $ch]
+		close $ch
+	    }
+	}
+	if {$iap(buf) == {}} {
+	    Error "[msgcat:: mc {Unable to load plot data}] $fn"
+	    plot::YYABORT
+	    return
+	}
+    }
+    
+    PlotRaise $cvarname
+    PlotDataSet $cvarname $dim $iap(buf)
+    $var(proc,updategraph) $cvarname
+    PlotStats $cvarname
+    PlotList $cvarname
+}
+
 proc PlotCmdLoad {fn dim} {
     global cvarname
     
@@ -581,6 +685,12 @@ proc PlotCmdSet {which value {cmd {}}} {
     if {$cmd != {}} {
 	eval $cmd $cvarname
     }
+}
+
+proc PlotCmdPrint {} {
+    global cvarname
+
+    PlotPostScript $cvarname
 }
 
 proc PlotCmdUpdateGraph {which value} {

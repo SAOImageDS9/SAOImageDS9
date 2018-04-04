@@ -71,6 +71,7 @@
 %token ORIENT_
 %token OVERLAP_
 %token PAGESETUP_
+%token PAGESIZE_
 %token PLUS_
 %token POINTER_
 %token PORTRAIT_
@@ -163,18 +164,21 @@ new : newLine
 newLine : {PlotCmdLine {} {} {} xy}
  | STDIN_ {PlotCmdAnalysisPlotStdin line}
  | STRING_ STRING_ STRING_ dim {PlotCmdLine $1 $2 $3 $4}
+ # backward compatibility
  | STRING_ STRING_ STRING_ INT_ {PlotCmdLine $1 $2 $3 $4}
  ;
 
 newBar : {PlotCmdBar {} {} {} xy}
  | STDIN_ {PlotCmdAnalysisPlotStdin bar}
  | STRING_ STRING_ STRING_ dim {PlotCmdBar $1 $2 $3 $4}
+ # backward compatibility
  | STRING_ STRING_ STRING_ INT_ {PlotCmdBar $1 $2 $3 $4}
  ;
 
 newScatter : {PlotCmdScatter {} {} {} xy}
  | STDIN_ {PlotCmdAnalysisPlotStdin scatter}
  | STRING_ STRING_ STRING_ dim  {PlotCmdScatter $1 $2 $3 $4}
+ # backward compatibility
  | STRING_ STRING_ STRING_ INT_  {PlotCmdScatter $1 $2 $3 $4}
  ;
 
@@ -247,6 +251,7 @@ duplicate : {global cvarname; PlotDupData $cvarname 1}
  ;
 
 pagesetup : ORIENT_ pageOrient {global ps; set ps(orient) $2}
+ | PAGESIZE_ pageSize {global ps; set ps(size) $2}
  | SIZE_ pageSize {global ps; set ps(size) $2}
  ;
 

@@ -69,6 +69,7 @@ numbers	    {return $NUMBERS_}
 orient	    {return $ORIENT_}
 overlap	    {return $OVERLAP_}
 pagesetup   {return $PAGESETUP_}
+pagesize    {return $PAGESIZE_}
 plus	    {return $PLUS_}
 pointer	    {return $POINTER_}
 portrait    {return $PORTRAIT_}

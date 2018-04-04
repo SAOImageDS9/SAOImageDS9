@@ -36,6 +36,7 @@
 %token DUPLICATE_
 %token ERROR_
 %token ERRORBAR_
+%token FAMILY_
 %token FILE_
 %token FILENAME_
 %token FILL_
@@ -305,6 +306,7 @@ legendPos : RIGHT_ {set _ right}
  ;
 
 fontt : fontType FONT_ font {PlotCmdUpdateGraph "$1,family" $3}
+ | fontType FAMILY_ font {PlotCmdUpdateGraph "$1,family" $3}
  | fontType FONTSIZE_ INT_ {PlotCmdUpdateGraph "$1,size" $3}
  | fontType FONTWEIGHT_ fontWeight {PlotCmdUpdateGraph "$1,weight" $3}
  | fontType FONTSLANT_ fontSlant {PlotCmdUpdateGraph "$1,slant" $3}

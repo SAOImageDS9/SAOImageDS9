@@ -34,6 +34,7 @@ dup	    {return $DUP_}
 duplicate   {return $DUPLICATE_}
 error	    {return $ERROR_}
 errorbar    {return $ERRORBAR_}
+family	    {return $FAMILY_}
 file	    {return $FILE_}
 filename    {return $FILENAME_}
 fill	    {return $FILL_}

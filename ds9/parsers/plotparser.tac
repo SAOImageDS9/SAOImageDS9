@@ -13,6 +13,8 @@
 %token ALIGNED_
 %token ARROW_
 %token AUTO_
+%token AXESNUMBERS_
+%token AXESTITLE_
 %token AXIS_
 %token BAR_
 %token BARMODE_
@@ -70,9 +72,12 @@
 %token NORMAL_
 %token NUMBERS_
 %token ORIENT_
+%token ORIENTATION_
 %token OVERLAP_
+%token PAGE_
 %token PAGESETUP_
 %token PAGESIZE_
+%token PALETTE_
 %token PLUS_
 %token POINTER_
 %token PORTRAIT_
@@ -102,6 +107,7 @@
 %token SQUARE_
 %token STACKED_
 %token STATS_
+%token STATISTICS_
 %token STEP_
 %token STDIN_
 %token STYLE_
@@ -207,9 +213,11 @@ plotCmd : DATA_ dim {PlotCmdData $2}
  | DUP_ duplicate
  | DUPLICATE_ duplicate
  | STATS_ yesno {PlotCmdSet stats $2 PlotStats}
+ | STATISTICS_ yesno {PlotCmdSet stats $2 PlotStats}
  | LIST_ yesno {PlotCmdSet list $2 PlotList}
  | LOADCONFIG_ STRING_ {PlotCmdLoadConfig $2}
  | SAVECONFIG_ STRING_ {PlotCmdSaveConfig $2}
+ | PAGE_ pagesetup
  | PAGESETUP_ pagesetup
  | PRINT_ print
  | CLOSE_ {global cvarname; PlotDestroy $cvarname}
@@ -252,6 +260,7 @@ duplicate : {global cvarname; PlotDupData $cvarname 1}
  ;
 
 pagesetup : ORIENT_ pageOrient {global ps; set ps(orient) $2}
+ | ORIENTATION_ pageOrient {global ps; set ps(orient) $2}
  | PAGESIZE_ pageSize {global ps; set ps(size) $2}
  | SIZE_ pageSize {global ps; set ps(size) $2}
  ;
@@ -271,6 +280,7 @@ print : {PlotCmdPrint}
  | DESTINATION_ printDest {global ps; set ps(dest) $2}
  | COMMAND_ STRING_ {global ps; set ps(cmd) $2}
  | FILENAME_ STRING_ {global ps; set ps(filename) $2}
+ | PALETTE_ printColor {global ps; set ps(color) $2}
  | COLOR_ printColor {global ps; set ps(color) $2}
  ;
 
@@ -318,7 +328,9 @@ fontt : fontType FONT_ font {PlotCmdUpdateGraph "$1,family" $3}
  ;
 
 fontType : TITLE_ {set _ graph,title}
+ | AXESTITLE_ {set _ axis,title}
  | LABELS_ {set _ axis,title}
+ | AXESNUMBERS_ {set _ axis,numbers}
  | NUMBERS_ {set _ axis,numbers}
  | LEGEND_ {set _ legend,font}
  | LEGENDTITLE_ {set _ legend,title}

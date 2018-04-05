@@ -11,6 +11,8 @@ a4	    {return $A4_}
 aligned	    {return $ALIGNED_}
 arrow	    {return $ARROW_}
 auto	    {return $AUTO_}
+axesnumbers {return $AXESNUMBERS_}
+axestitle   {return $AXESTITLE_}
 axis	    {return $AXIS_}
 bar	    {return $BAR_}
 barmode	    {return $BARMODE_}
@@ -68,9 +70,12 @@ normal	    {return $NORMAL_}
 new	    {return $NEW_}
 numbers	    {return $NUMBERS_}
 orient	    {return $ORIENT_}
+orientation {return $ORIENTATION_}
 overlap	    {return $OVERLAP_}
+page        {return $PAGE_}
 pagesetup   {return $PAGESETUP_}
 pagesize    {return $PAGESIZE_}
+palette	    {return $PALETTE_}
 plus	    {return $PLUS_}
 pointer	    {return $POINTER_}
 portrait    {return $PORTRAIT_}
@@ -100,6 +105,7 @@ splus	    {return $SPLUS_}
 square	    {return $SQUARE_}
 stacked	    {return $STACKED_}
 stats	    {return $STATS_}
+statistics  {return $STATISTICS_}
 step	    {return $STEP_}
 stdin	    {return $STDIN_}
 style	    {return $STYLE_}

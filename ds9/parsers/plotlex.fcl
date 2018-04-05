@@ -54,7 +54,7 @@ landscape   {return $LANDSCAPE_}
 left	    {return $LEFT_}
 legal	    {return $LEGAL_}
 legend	    {return $LEGEND_}
-legendtitle {return $LEGEND_}
+legendtitle {return $LEGENDTITLE_}
 letter	    {return $LETTER_}
 line	    {return $LINE_}
 linear	    {return $LINEAR_}

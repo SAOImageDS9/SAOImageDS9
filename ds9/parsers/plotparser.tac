@@ -217,8 +217,9 @@ plotCmd : DATA_ dim {PlotCmdData $2}
  | LIST_ yesno {PlotCmdSet list $2 PlotList}
  | LOADCONFIG_ STRING_ {PlotCmdLoadConfig $2}
  | SAVECONFIG_ STRING_ {PlotCmdSaveConfig $2}
- | PAGE_ pagesetup
  | PAGESETUP_ pagesetup
+ # backward compatibility
+ | PAGE_ pagesetup
  | PRINT_ print
  | CLOSE_ {global cvarname; PlotDestroy $cvarname}
 
@@ -235,6 +236,7 @@ plotCmd : DATA_ dim {PlotCmdData $2}
  | FILL_ yesno {PlotCmdUpdateElement fill $2}
  | FILLCOLOR_ STRING_ {PlotCmdUpdateElement fill,color $2}
  | ERROR_ errorr
+ # backward compatibility
  | ERRORBAR_ errorr
  | NAME_ STRING_ {PlotCmdUpdateElement name $2}
  | SHAPE_ shape
@@ -243,8 +245,9 @@ plotCmd : DATA_ dim {PlotCmdData $2}
  | WIDTH_ INT_ {PlotCmdUpdateElement width $2}
  | DASH_ yesno {PlotCmdUpdateElement dash $2}
 
- | DATASET_ INT_ {PlotCmdSelect $2}
  | SELECT_ INT_ {PlotCmdSelect $2}
+ # backward compatibility
+ | DATASET_ INT_ {PlotCmdSelect $2}
 
  # backward compatibility
  | GRAPH_ oldGraph
@@ -328,12 +331,14 @@ fontt : fontType FONT_ font {PlotCmdUpdateGraph "$1,family" $3}
  ;
 
 fontType : TITLE_ {set _ graph,title}
- | AXESTITLE_ {set _ axis,title}
  | LABELS_ {set _ axis,title}
- | AXESNUMBERS_ {set _ axis,numbers}
+ # backward compatibility
+ | AXESTITLE_ {set _ axis,title}
  | NUMBERS_ {set _ axis,numbers}
- | LEGEND_ {set _ legend,font}
- | LEGENDTITLE_ {set _ legend,title}
+ # backward compatibility
+ | AXESNUMBERS_ {set _ axis,numbers}
+ | LEGEND_ {set _ legend,font; puts a}
+ | LEGENDTITLE_ {set _ legend,title; puts b}
  ;
 
 title : STRING_ {PlotCmdUpdateGraph graph,title $1}
@@ -379,9 +384,10 @@ shapes : CIRCLE_ {set _ circle}
  | PLUS_ {set _ plus}
  | SPLUS_ {set _ splus}
  | SCROSS_ {set _ scross}
- | CROSS_ {set _ scross}
  | TRIANGLE_ {set _ triangle}
  | ARROW_ {set _ arrow}
+ # backward compatibility
+ | CROSS_ {set _ scross}
  ;
 
 relief : FLAT_ {set _ flat}
@@ -453,11 +459,8 @@ oldView : DISCRETE_ yesno {PlotCmdUpdateElement show $2}
  | LINE_ yesno {PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth linear}
  | STEP_ yesno {PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth step}
  | QUADRATIC_ yesno {PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth quadratic}
- | ERROR_ oldViewError
- | ERRORBAR_ oldViewError
- ;
-
-oldViewError : yesno {PlotCmdUpdateElement error $1}
+ | ERROR_ yesno {PlotCmdUpdateElement error $2}
+ | ERRORBAR_ yesno {PlotCmdUpdateElement error $2}
  ;
 
 %%

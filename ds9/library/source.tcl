@@ -220,6 +220,8 @@ source $ds9(root)/library/panparser.tcl
 source $ds9(root)/library/panlex.tcl
 source $ds9(root)/library/plotparser.tcl
 source $ds9(root)/library/plotlex.tcl
+source $ds9(root)/library/scaleparser.tcl
+source $ds9(root)/library/scalelex.tcl
 source $ds9(root)/library/skyviewparser.tcl
 source $ds9(root)/library/skyviewlex.tcl
 source $ds9(root)/library/threedparser.tcl

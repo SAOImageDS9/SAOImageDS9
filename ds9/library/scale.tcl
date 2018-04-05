@@ -827,8 +827,15 @@ proc ProcessScaleCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global scale
+    global debug
+    if {$debug(tcl,parser)} {
+	scale::YY_FLUSH_BUFFER
+	scale::yy_scan_string [lrange $var $i end]
+	scale::yyparse
+	incr i [expr $scale::yycnt-1]
+    } else {
 
+    global scale
     switch -- [string tolower [lindex $var $i]] {
 	match {
 	    incr i
@@ -931,6 +938,7 @@ proc ProcessScaleCmd {varname iname} {
 	    ChangeScaleScope
 	}
     }
+}
 }
 
 proc ScaleCmdSet {which value {cmd {}}} {

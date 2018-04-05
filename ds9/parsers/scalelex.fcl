@@ -1,0 +1,39 @@
+#tab scaleparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+asinh	    {return $ASINH_}
+close	    {return $CLOSE_}
+datasec	    {return $DATASEC_}
+exp	    {return $EXP_}
+global	    {return $GLOBAL_}
+histequ	    {return $HISTEQU_}
+limits	    {return $LIMITS_}
+linear	    {return $LINEAR_}
+local	    {return $LOCAL_}
+lock	    {return $LOCK_}
+log	    {return $LOG_}
+match	    {return $MATCH_}
+minmax	    {return $MINMAX_}
+mode	    {return $MODE_}
+open	    {return $OPEN_}
+pow	    {return $POW_}
+scalelimits {return $SCALELIMITS_}
+scope	    {return $SCOPE_}
+sinh	    {return $SINH_}
+sqrt	    {return $SQRT_}
+squared	    {return $SQUARED_}
+user	    {return $USER_}
+zmax	    {return $ZMAX_}
+zscale	    {return $ZSCALE_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+
+%%

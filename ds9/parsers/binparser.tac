@@ -37,8 +37,8 @@ command : bin
  | bin {yyclearin; YYACCEPT} STRING_
  ;
 
-bin : CLOSE_ {BinDestroyDialog}
- | OPEN_ {BinDialog}
+bin : OPEN_ {BinDialog}
+ | CLOSE_ {BinDestroyDialog}
  | MATCH_ {MatchBinCurrent}
  | LOCK_ yesno {BinCmdSet lock $2 LockBinCurrent}
  | ABOUT_ about

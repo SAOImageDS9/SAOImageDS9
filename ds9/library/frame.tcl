@@ -2219,6 +2219,16 @@ proc CurrentCmdSet {which value {cmd {}}} {
     }
 }
 
+proc CurrentCmdDisplay {which} {
+    global current
+    
+    if {$which} {
+	set current(display) blink
+    } else {
+	set current(display) single
+    }
+}
+
 proc ProcessSendFrameCmd {proc id param} {
     global ds9
     global current
@@ -2433,9 +2443,16 @@ proc ProcessBlinkCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	blink::YY_FLUSH_BUFFER
+	blink::yy_scan_string [lrange $var $i end]
+	blink::yyparse
+	incr i [expr $blink::yycnt-1]
+    } else {
+
     global current
     global blink
-
     switch -- [string tolower [lindex $var $i]] {
 	interval {
 	    incr i
@@ -2461,6 +2478,16 @@ proc ProcessBlinkCmd {varname iname} {
 	}
     }
     DisplayMode
+}
+}
+
+proc BlinkCmdSet {which value {cmd {}}} {
+    global blink
+
+    set blink($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 proc ProcessSendBlinkCmd {proc id param} {

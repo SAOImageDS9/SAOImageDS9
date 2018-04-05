@@ -18,6 +18,7 @@ mode		{return $MODE_}
 row		{return $ROW_}
 
 #include yesno.fin
+#include numeric.fin
 #include string.fin
 
 %%

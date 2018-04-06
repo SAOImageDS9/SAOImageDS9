@@ -61,6 +61,13 @@ proc MarkerDef {} {
     set marker(skyformat) degrees
     set marker(strip) 0
 
+    # temp
+    set marker(load,format) $marker(format)
+    set marker(load,system) $marker(system)
+    set marker(load,sky) $marker(sky)
+    set marker(load,sock) {}
+    set marker(load,fn) {}
+
     array set pmarker [array get marker]
     unset pmarker(copy)
     unset pmarker(copy,system)
@@ -70,6 +77,12 @@ proc MarkerDef {} {
     unset pmarker(sky)
     unset pmarker(skyformat)
     unset pmarker(strip)
+
+    unset pmarker(load,format)
+    unset pmarker(load,system)
+    unset pmarker(load,sky)
+    unset pmarker(load,sock)
+    unset pmarker(load,fn)
 
     set pmarker(epsilon) 3
     set pmarker(dformat) degrees
@@ -1391,14 +1404,28 @@ proc MarkerBackup {ch which fdir rdir} {
 proc ProcessRegionsCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
-
-    global ds9
-    global current
     global marker
-    global pmarker
 
     # we need to be realized
     ProcessRealizeDS9
+
+    global debug
+    if {$debug(tcl,parser)} {
+	set marker(load,sock) $sock
+	set marker(load,fn) $fn
+	set marker(load,format) $marker(format)
+	set marker(load,system) $marker(system)
+	set marker(load,sky) $marker(sky)
+	
+	region::YY_FLUSH_BUFFER
+	region::yy_scan_string [lrange $var $i end]
+	region::yyparse
+	incr i [expr $region::yycnt-1]
+    } else {
+
+    global ds9
+    global current
+    global pmarker
 
     switch -- [string tolower [lindex $var $i]] {
 	epsilon {
@@ -1943,6 +1970,86 @@ proc ProcessRegionsCmd {varname iname sock fn} {
 	    }
 	}
     }
+}
+}
+
+proc RegionCmdSet {which value {cmd {}}} {
+    global bin
+
+    set marker($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc PRegionCmdSet {which value {cmd {}}} {
+    global bin
+
+    set pmarker($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc RegionCmdLoad {} {
+    global marker
+    global current
+    
+    if {$marker(load,sock) != {}} {
+	# xpa path
+	# fits regions files not supported  
+	if {$current(frame) != {}} {
+	    if {[$current(frame) has fits]} {
+		$current(frame) marker load \
+		    $marker(load,format) $marker(load,sock) \
+		    $marker(load,system) $marker(load,sky)
+	    }
+	}
+	UpdateGroupDialog
+    } elseif {$marker(load,fn) != {}} {
+	# samp path
+	MarkerLoadFrames $fn $current(frame) \
+	    $marker(load,format) $marker(load,system) $marker(load,sky)
+    }
+}
+
+proc RegionCmdLoadFn {fn all} {
+    global marker
+    global ds9
+
+    if {$all} {
+	set frames $ds9(frames)
+    } else {
+	set frames $current(frame)
+    }    
+    MarkerLoadFrames $fn $frames \
+	$marker(load,format) $marker(load,system) $marker(load,sky)
+}
+
+proc RegionCmdSaveFn {fn} {
+    global marker
+    global current
+
+    if {$current(frame) == {} || ![$current(frame) has fits]} {
+	return
+    }
+
+    $current(frame) marker save "\{$fn\}" $marker(format) \
+	$marker(system) $marker(sky) $marker(skyformat) $marker(strip)
+    FileLast markerfbox $fn
+}
+
+proc RegionCmdList {} {
+    global marker
+    global current
+
+    if {$current(frame) == {} || ![$current(frame) has fits]} {
+	return
+    }
+
+    SimpleTextDialog markertxt [msgcat::mc {Region}] 80 20 insert top \
+	[$current(frame) marker list $marker(format) $marker(system) \
+	     $marker(sky) $marker(skyformat) $marker(strip)]
 }
 
 proc ProcessSendRegionsCmd {proc id param sock fn} {

@@ -37,9 +37,9 @@ front	    {return $FRONT_}
 getinfo	    {return $GETINFO_}
 group	    {return $GROUP_}
 groups	    {return $GROUPS_}
-interation  {return $INTERATION_}
 include	    {return $INCLUDE_}
 invert	    {return $INVERT_}
+iteration   {return $ITERATION_}
 list	    {return $LIST_}
 load	    {return $LOAD_}
 move	    {return $MOVE_}

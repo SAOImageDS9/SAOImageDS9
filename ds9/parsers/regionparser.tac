@@ -40,9 +40,9 @@
 %token GETINFO_
 %token GROUP_
 %token GROUPS_
-%token INTERATION_
 %token INCLUDE_
 %token INVERT_
+%token ITERATION_
 %token LIST_
 %token LOAD_
 %token MOVE_
@@ -120,11 +120,14 @@ command : region
  | region {yyclearin; YYACCEPT} STRING_
  ;
 
-region : props {RegionCmdLoad}
- | LOAD_ loadall props STRING_ {RegionCmdLoadFn $4 $2}
+region : {RegionCmdLoad}
+ | props {RegionCmdLoad}
+ | STRING_ {RegionCmdLoadFn $1}
+ | STRING_ props {RegionCmdLoadFn $1}
+ | LOAD_ loadall STRING_ {RegionCmdLoadFn $3 $2}
 # backward compatibility
  | FILE_ loadall STRING_ {RegionCmdLoadFn $3 $2}
- | SAVE_ STRING_ {RegionCmdSaveFn $2}
+ | SAVE_ STRING_ {RegionCmdSave $2}
  | LIST_ list
  | EPSILON_ INT_ {PRegionCmdSet epsilon $2 MarkerEpsilon}
  | SHOW_ yesno {RegionCmdSet show $2 MarkerShow}
@@ -142,7 +145,7 @@ region : props {RegionCmdLoad}
 # backward compatibility
  | SELECTALL_ {MarkerSelectAll}
 # backward compatibility
- | SELECTNONE_ {MarkerSelectNone}
+ | SELECTNONE_ {MarkerUnSelectAll}
  | DELETE_ delete
 # backward compatibility
  | DELETEALL_ {MarkerDeleteAll}
@@ -166,8 +169,8 @@ region : props {RegionCmdLoad}
  | EXCLUDE_ {RegionCmdSet include 0 [list MarkerProp include]}
  | SOURCE_ {RegionCmdSet source 1 [list MarkerProp source]}
  | BACKGROUND_ {RegionCmdSet source 0 [list MarkerProp source]}
- | GROUPS_ group # waj
- | GROUP_ group # waj
+ | GROUPS_ group
+ | GROUP_ group
  | COPY_ {MarkerCopy}
  | CUT_ {MarkerCut}
  | PASTE_ coordsys {RegionCmdSet paste,system $2 MarkerPaste}
@@ -177,9 +180,9 @@ region : props {RegionCmdLoad}
  | UNDO_ {MarkerUndo}
  | COMPOSITE_ {CompositeCreate}
  | DISSOLVE_ {CompositeDelete}
- | TEMPLATE_ template  # waj
- | SAVETEMPLATE_ STRING_  # waj
- | COMMAND_ STRING_  # waj
+ | TEMPLATE_ template
+ | SAVETEMPLATE_ STRING_ {RegionCmdTemplateSave $2}
+ | COMMAND_ STRING_ {RegionCmdCommand $2}
  ;
 
 props : props prop
@@ -205,7 +208,7 @@ list : {RegionCmdList}
 centroid : {MarkerCentroid}
  | AUTO_ yesno {RegionCmdSet centroid,auto $2 MarkerCentroidAuto}
  | RADIUS_ numeric {RegionCmdSet centroid,radius $2 MarkerCentroidRadius}
- | INTERATION_ INT_ {RegionCmdSet centroid,iteration $2 MarkerCentroidInteration}
+ | ITERATION_ INT_ {RegionCmdSet centroid,iteration $2 MarkerCentroidIteration}
  ;
 
 move : FRONT_ {MarkerFront}
@@ -213,10 +216,10 @@ move : FRONT_ {MarkerFront}
  ;
  
 select : ALL_ {MarkerSelectAll}
- | NONE_ {MarkerSelectNone}
+ | NONE_ {MarkerUnselectAll}
  | INVERT_ {MarkerSelectInvert}
 # backward compatibility
- | GROUP_ STRING_ # waj
+ | GROUP_ STRING_ {RegionCmdGroupTag $2; RegionCmdGroup select {}}
 ;
  
 delete : ALL_ {MarkerDeleteAll}
@@ -268,25 +271,29 @@ delim : NL_ {set _ 0}
  | yesno {set _ $1}
  ;
  
-template : STRING_
- | STRING_ AT_ numeric numeric coordsys
- | STRING_ AT_ numeric numeric wcssys
- | STRING_ AT_ numeric numeric wcssys skyframe
+template : STRING_ {RegionCmdTemplate $1}
+ | STRING_ AT_ numeric numeric {RegionCmdTemplateAt $1 $3 $4 wcs fk5}
+ | STRING_ AT_ numeric numeric wcssys {RegionCmdTemplateAt $1 $3 $4 $5 fk5}
+ | STRING_ AT_ numeric numeric skyframe {RegionCmdTemplateAt $1 $3 $4 wcs $5}
+ | STRING_ AT_ numeric numeric wcssys skyframe {RegionCmdTemplateAt $1 $3 $4 $5 $6}
  ;
  
-group : NEW_
- | STRING_ NEW_
- | STRING_ UPDATE_
- | STRING_ SELECT_
- | STRING_ COLOR_ STRING_
- | STRING_ COPY_
- | STRING_ CUT_
- | STRING_ DELETE_
- | STRING_ FONT_
- | STRING_ MOVE_ INT_ INT_
- | STRING_ MOVEFRONT_
- | STRING_ MOVEBACK_
- | STRING_ PROPERTY_ property yesno
+group : NEW_ {RegionCmdGroupNew}
+ | STRING_ {RegionCmdGroupTag $1} groupTag
+ ;
+
+groupTag : NEW_ {RegionCmdGroupNew}
+ | UPDATE_ {RegionCmdGroupUpdate}
+ | DELETE_ {RegionCmdGroup delete {} {}}
+ | SELECT_ {RegionCmdGroup select {} {}}
+ | COLOR_ STRING_ {RegionCmdGroup select $2 {}}
+ | COPY_ {RegionCmdGroup copy {} {}}
+ | CUT_ {RegionCmdGroup paste {} {}}
+ | FONT_ STRING_ {RegionCmdGroup font $2 {}}
+ | MOVE_ INT_ INT_ {RegionCmdGroup move $2 $3}
+ | MOVEFRONT_ {RegionCmdGroup {move front} {} {}}
+ | MOVEBACK_ {RegionCmdGroup {move back} {} {}}
+ | PROPERTY_ property yesno {RegionCmdGroup property $2 $3}
  ; 
 
 property : SELECT_ {set _ select}

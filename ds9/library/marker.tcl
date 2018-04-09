@@ -67,6 +67,7 @@ proc MarkerDef {} {
     set marker(load,sky) $marker(sky)
     set marker(load,sock) {}
     set marker(load,fn) {}
+    set marker(tag) {}
 
     array set pmarker [array get marker]
     unset pmarker(copy)
@@ -83,6 +84,7 @@ proc MarkerDef {} {
     unset pmarker(load,sky)
     unset pmarker(load,sock)
     unset pmarker(load,fn)
+    unset pmarker(tag)
 
     set pmarker(epsilon) 3
     set pmarker(dformat) degrees
@@ -1416,6 +1418,7 @@ proc ProcessRegionsCmd {varname iname sock fn} {
 	set marker(load,format) $marker(format)
 	set marker(load,system) $marker(system)
 	set marker(load,sky) $marker(sky)
+	set marker(group,tag) {}
 	
 	region::YY_FLUSH_BUFFER
 	region::yy_scan_string [lrange $var $i end]
@@ -2013,9 +2016,10 @@ proc RegionCmdLoad {} {
     }
 }
 
-proc RegionCmdLoadFn {fn all} {
+proc RegionCmdLoadFn {fn {all {0}}} {
     global marker
     global ds9
+    global current
 
     if {$all} {
 	set frames $ds9(frames)
@@ -2026,7 +2030,7 @@ proc RegionCmdLoadFn {fn all} {
 	$marker(load,format) $marker(load,system) $marker(load,sky)
 }
 
-proc RegionCmdSaveFn {fn} {
+proc RegionCmdSave {fn} {
     global marker
     global current
 
@@ -2050,6 +2054,85 @@ proc RegionCmdList {} {
     SimpleTextDialog markertxt [msgcat::mc {Region}] 80 20 insert top \
 	[$current(frame) marker list $marker(format) $marker(system) \
 	     $marker(sky) $marker(skyformat) $marker(strip)]
+}
+
+proc RegionCmdGroup {cmd value} {
+    global current
+    global marker
+    
+    if {$current(frame) == {} || ![$current(frame) has fits]} {
+	return
+    }
+
+    $current(frame) marker $marker(tag) $cmd $value
+    UpdateGroupDialog
+}
+
+proc RegionCmdGroupTag {tag} {
+    global marker
+    
+    set marker(tag) $1
+}
+
+proc RegionCmdGroupNew {} {
+    global current
+    global marker
+    
+    if {$current(frame) == {} || ![$current(frame) has fits]} {
+	return
+    }
+
+    set tag $marker(tag)
+    if {$marker(tag) == {}} {
+	set tag [$current(frame) get marker tag default name]
+    }
+    $current(frame) marker tag $tag
+    UpdateGroupDialog
+}
+
+proc RegionCmdGroupUpdate {} {
+    global current
+    global marker
+    
+    if {$current(frame) == {} || ![$current(frame) has fits]} {
+	return
+    }
+
+    $current(frame) marker tag update $marker(tag)
+    UpdateGroupDialog
+}
+
+proc RegionCmdTemplate {fn} {
+    LoadTemplateMarker $fn
+    FileLast templatefbox $fn
+}
+
+proc RegionCmdTemplateAt {fn ra dec sys sky} {
+    LoadTemplateMarker $fn $ra $dec $sys $sky
+    FileLast templatefbox $fn
+}
+
+proc RegionCmdTemplateSave {fn} {
+    global marker
+    global current
+
+    if {$current(frame) == {} || ![$current(frame) has fits]} {
+	return
+    }
+
+    $current(frame) marker save template $fn
+    FileLast templatefbox $fn
+}
+
+proc RegionCmdCommand {cmd} {
+    global marker
+    global current
+
+    if {$current(frame) == {} || ![$current(frame) has fits]} {
+	return
+    }
+
+    $current(frame) marker command $marker(format) "\{$cmd\}"
 }
 
 proc ProcessSendRegionsCmd {proc id param sock fn} {

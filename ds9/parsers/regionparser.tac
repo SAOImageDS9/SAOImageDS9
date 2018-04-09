@@ -173,6 +173,7 @@ region : {RegionCmdLoad}
  | GROUP_ group
  | COPY_ {MarkerCopy}
  | CUT_ {MarkerCut}
+ | PASTE_ {RegionCmdSet paste,system wcs MarkerPaste}
  | PASTE_ coordsys {RegionCmdSet paste,system $2 MarkerPaste}
  | PASTE_ wcssys {RegionCmdSet paste,system $2 MarkerPaste}
 # backward compatibility
@@ -219,7 +220,7 @@ select : ALL_ {MarkerSelectAll}
  | NONE_ {MarkerUnselectAll}
  | INVERT_ {MarkerSelectInvert}
 # backward compatibility
- | GROUP_ STRING_ {RegionCmdGroupTag $2; RegionCmdGroup select {}}
+ | GROUP_ STRING_ {RegionCmdGroupTag $2; RegionCmdGroup select}
 ;
  
 delete : ALL_ {MarkerDeleteAll}
@@ -284,15 +285,15 @@ group : NEW_ {RegionCmdGroupNew}
 
 groupTag : NEW_ {RegionCmdGroupNew}
  | UPDATE_ {RegionCmdGroupUpdate}
- | DELETE_ {RegionCmdGroup delete {} {}}
- | SELECT_ {RegionCmdGroup select {} {}}
- | COLOR_ STRING_ {RegionCmdGroup select $2 {}}
- | COPY_ {RegionCmdGroup copy {} {}}
- | CUT_ {RegionCmdGroup paste {} {}}
- | FONT_ STRING_ {RegionCmdGroup font $2 {}}
+ | DELETE_ {RegionCmdGroup delete}
+ | SELECT_ {RegionCmdGroup select}
+ | COLOR_ STRING_ {RegionCmdGroup color $2}
+ | COPY_ {RegionCmdGroup copy}
+ | CUT_ {RegionCmdGroup cut}
+ | FONT_ STRING_ {RegionCmdGroupFont $2}
  | MOVE_ INT_ INT_ {RegionCmdGroup move $2 $3}
- | MOVEFRONT_ {RegionCmdGroup {move front} {} {}}
- | MOVEBACK_ {RegionCmdGroup {move back} {} {}}
+ | MOVEFRONT_ {RegionCmdGroup {move front}}
+ | MOVEBACK_ {RegionCmdGroup {move back}}
  | PROPERTY_ property yesno {RegionCmdGroup property $2 $3}
  ; 
 

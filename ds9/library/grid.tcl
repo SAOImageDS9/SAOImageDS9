@@ -1163,7 +1163,6 @@ proc ProcessGridCmd {varname iname} {
 	    set grid(view) [FromYesNo [lindex $var $i]]
 	    GridUpdateCurrent
 	}
-
 	type {
 	    incr i
 	    switch -- [string tolower [lindex $var $i]] {
@@ -1179,7 +1178,6 @@ proc ProcessGridCmd {varname iname} {
 	    }
 	    GridUpdateCurrent
 	}
-
 	system {incr i; set grid(system) [lindex $var $i]; GridUpdateCurrent}
 	sky {incr i
 	    set grid(sky) [string tolower [lindex $var $i]]
@@ -1195,7 +1193,6 @@ proc ProcessGridCmd {varname iname} {
 	    }
 	    GridUpdateCurrent
 	}
-
 	grid {
 	    incr i
 	    switch -- [string tolower [lindex $var $i]] {
@@ -1209,7 +1206,6 @@ proc ProcessGridCmd {varname iname} {
 	    }
 	    GridUpdateCurrent
 	}
-
 	axes {
 	    incr i
 	    switch -- [string tolower [lindex $var $i]] {
@@ -1222,7 +1218,6 @@ proc ProcessGridCmd {varname iname} {
 	    }
 	    GridUpdateCurrent
 	}
-
 	format1 {
 	    incr i; set grid(format1) [lindex $var $i]
 	    GridUpdateCurrent
@@ -1231,7 +1226,6 @@ proc ProcessGridCmd {varname iname} {
 	    incr i; set grid(format2) [lindex $var $i]
 	    GridUpdateCurrent
 	}
-
 	tickmark -
 	tickmarks -
 	tick {
@@ -1244,7 +1238,6 @@ proc ProcessGridCmd {varname iname} {
 	    }
 	    GridUpdateCurrent
 	}
-
 	border {
 	    incr i
 	    switch -- [string tolower [lindex $var $i]] {
@@ -1255,7 +1248,6 @@ proc ProcessGridCmd {varname iname} {
 	    }
 	    GridUpdateCurrent
 	}
-
 	numeric -
 	numerics -
 	numlab {
@@ -1292,7 +1284,6 @@ proc ProcessGridCmd {varname iname} {
 	    }
 	    GridUpdateCurrent
 	}
-
 	title {
 	    incr i
 	    switch -- [string tolower [lindex $var $i]] {
@@ -1325,7 +1316,6 @@ proc ProcessGridCmd {varname iname} {
 	    }
 	    GridUpdateCurrent
 	}
-
 	label -
 	labels -
 	textlab {
@@ -1363,7 +1353,6 @@ proc ProcessGridCmd {varname iname} {
 	    }
 	    GridUpdateCurrent
 	}
-
 	view {
 	    # backward compatable
 	    incr i
@@ -1390,20 +1379,17 @@ proc ProcessGridCmd {varname iname} {
 	    }
 	    GridUpdateCurrent
 	}
-
 	reset {GridResetDialog}
 	load {
 	    incr i
 	    set fn [lindex $var $i]
 	    FileLast gridfbox $fn
-
 	    GridLoad $fn
 	}
 	save {
 	    incr i
 	    set fn [lindex $var $i]
 	    FileLast gridfbox $fn
-
 	    GridSave $fn
 	}
 	default {

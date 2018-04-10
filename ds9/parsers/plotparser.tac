@@ -337,8 +337,8 @@ fontType : TITLE_ {set _ graph,title}
  | NUMBERS_ {set _ axis,numbers}
  # backward compatibility
  | AXESNUMBERS_ {set _ axis,numbers}
- | LEGEND_ {set _ legend,font; puts a}
- | LEGENDTITLE_ {set _ legend,title; puts b}
+ | LEGEND_ {set _ legend,font}
+ | LEGENDTITLE_ {set _ legend,title}
  ;
 
 title : STRING_ {PlotCmdUpdateGraph graph,title $1}

@@ -21,8 +21,8 @@ command : vlss
 vlss : {IMGSVRApply dvlss 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dvlss}
- | STRING_ {IMGSVRCmd dvlss name $1}
- | NAME_ STRING_ {IMGSVRCmd dvlss name $2}
+ | STRING_ {IMGSVRCmdName dvlss $1}
+ | NAME_ STRING_ {IMGSVRCmdName dvlss $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dvlss $2 $3 $4}
  | SAVE_ yesno {IMGSVRCmd dvlss save $2}
  | FRAME_ frame {IMGSVRCmd dvlss mode $2}

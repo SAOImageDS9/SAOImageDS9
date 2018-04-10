@@ -21,8 +21,8 @@ command : nvss
 nvss : {IMGSVRApply dnvss 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dnvss}
- | STRING_ {IMGSVRCmd dnvss name $1}
- | NAME_ STRING_ {IMGSVRCmd dnvss name $2}
+ | STRING_ {IMGSVRCmdName dnvss $1}
+ | NAME_ STRING_ {IMGSVRCmdName dnvss $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dnvss $2 $3 $4}
  | SAVE_ yesno {IMGSVRCmd dnvss save $2}
  | FRAME_ frame {IMGSVRCmd dnvss mode $2}

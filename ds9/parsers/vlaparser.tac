@@ -24,8 +24,8 @@ command : vla
 vla : {IMGSVRApply dvla 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dvla}
- | STRING_ {IMGSVRCmd dvla name $1}
- | NAME_ STRING_ {IMGSVRCmd dvla name $2}
+ | STRING_ {IMGSVRCmdName dvla $1}
+ | NAME_ STRING_ {IMGSVRCmdName dvla $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dvla $2 $3 $4}
  | SAVE_ yesno {IMGSVRCmd dvla save $2}
  | FRAME_ frame {IMGSVRCmd dvla mode $2}

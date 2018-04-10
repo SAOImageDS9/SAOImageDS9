@@ -26,8 +26,8 @@ command : dsseso
 dsseso : {IMGSVRApply deso 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy deso}
- | STRING_ {IMGSVRCmd deso name $1}
- | NAME_ STRING_ {IMGSVRCmd deso name $2}
+ | STRING_ {IMGSVRCmdName deso $1}
+ | NAME_ STRING_ {IMGSVRCmdName deso $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize deso $2 $3 $4}
  | SAVE_ yesno {IMGSVRCmd deso save $2}
  | FRAME_ frame {IMGSVRCmd deso mode $2}

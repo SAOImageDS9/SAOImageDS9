@@ -21,8 +21,8 @@ command : dsssao
 dsssao : {IMGSVRApply dsao 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dsao}
- | STRING_ {IMGSVRCmd dsao name $1}
- | NAME_ STRING_ {IMGSVRCmd dsao name $2}
+ | STRING_ {IMGSVRCmdName dsao $1}
+ | NAME_ STRING_ {IMGSVRCmdName dsao $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dsao $2 $3 $4}
  | SAVE_ yesno {IMGSVRCmd dsao save $2}
  | FRAME_ frame {IMGSVRCmd dsao mode $2}

@@ -31,8 +31,8 @@ command : dssstsci
 dssstsci : {IMGSVRApply dstsci 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dstsci}
- | STRING_ {IMGSVRCmd dstsci name $1}
- | NAME_ STRING_ {IMGSVRCmd dstsci name $2}
+ | STRING_ {IMGSVRCmdName dstsci $1}
+ | NAME_ STRING_ {IMGSVRCmdName dstsci $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dstsci $2 $3 $4}
  | SAVE_ yesno {IMGSVRCmd dstsci save $2}
  | FRAME_ frame {IMGSVRCmd dstsci mode $2}

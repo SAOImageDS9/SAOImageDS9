@@ -23,8 +23,8 @@ command : skyview
 skyview : {IMGSVRApply dskyview 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dskyview}
- | STRING_ {IMGSVRCmd dskyview name $1}
- | NAME_ STRING_ {IMGSVRCmd dskyview name $2}
+ | STRING_ {IMGSVRCmdName dskyview $1}
+ | NAME_ STRING_ {IMGSVRCmdName dskyview $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dskyview $2 $3 $4}
  | PIXELS_ numeric numeric {IMGSVRCmdPixels dskyview $2 $3}
  | SAVE_ yesno {IMGSVRCmd dskyview save $2}

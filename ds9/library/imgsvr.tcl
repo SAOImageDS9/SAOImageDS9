@@ -575,12 +575,12 @@ proc IMGSVRCmd {varname which value} {
     set var($which) $value
 }
 
-proc IMGSVRCmdName {varname name} {
+proc IMGSVRCmdName {varname value} {
     upvar #0 $varname var
     global $varname
 
-    set var(name) $name
-    if {$name != {}} {
+    set var(name) $value
+    if {$var(name) != {}} {
 	IMGSVRApply $varname 1
     }
 }

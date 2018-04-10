@@ -21,8 +21,8 @@ command : 2mass
 2mass : {IMGSVRApply dtwomass 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dtwomass}
- | STRING_ {IMGSVRCmd dtwomass name $1}
- | NAME_ STRING_ {IMGSVRCmd dtwomass name $2}
+ | STRING_ {IMGSVRCmdName dtwomass $1}
+ | NAME_ STRING_ {IMGSVRCmdName dtwomass $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dtwomass $2 $3 $4}
  | SAVE_ yesno {IMGSVRCmd dtwomass save $2}
  | FRAME_ frame {IMGSVRCmd dtwomass mode $2}

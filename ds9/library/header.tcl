@@ -168,14 +168,29 @@ proc ProcessHeaderCmd {varname iname} {
     if {$current(frame) != {}} {
 	switch -- $item {
 	    close {
-		CloseHeaderCmd $jj
+		set vvarname "hd[string range $current(frame) end end]-$jj"
+		upvar #0 $vvarname vvar
+		global $vvarname
+
+		if {[info exists vvar(top)]} {
+		    SimpleTextDestroy $vvarname
+		}
 		incr i -1
 	    }
 	    save {
-		SaveHeaderCmd $jj [lindex $var $i]
+		set fn [lindex $var $i]
+		if {$fn != {}} {
+		    if {[catch {set ch [open "| cat > \"$fn\"" w]}]} {
+			Error [msgcat::mc {An error has occurred while saving}]
+			return
+		    }
+		    puts -nonewline $ch [$current(frame) get fits header $jj]
+		    close $ch
+		}
 	    }
 	    default {
-		DisplayHeaderCmd $jj
+		catch {DisplayHeader $current(frame) $jj \
+			   [$current(frame) get fits file name $jj]}
 		incr i -1
 	    }
 	}

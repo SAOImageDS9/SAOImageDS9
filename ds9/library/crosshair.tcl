@@ -278,7 +278,8 @@ proc ProcessCrosshairCmd {varname iname} {
 	}
 	lock {
 	    incr i
-	    CrosshairCmdLock [lindex $var $i]
+	    set crosshair(lock) [lindex $var $i]
+	    LockCrosshairCurrent
 	}
 	default {
 	    set x [lindex $var [expr $i+0]]
@@ -291,6 +292,7 @@ proc ProcessCrosshairCmd {varname iname} {
 	    incr i [FixSpec sys sky format physical fk5 degrees]
 
 	    CrosshairTo $x $y $sys $sky
+	    UpdateCrosshairDialog
 	}
     }
 }

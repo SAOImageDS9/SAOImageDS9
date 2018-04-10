@@ -1296,7 +1296,7 @@ proc ProcessCmapCmd {varname iname} {
 	    UpdateColorDialog
 	}
     }
-    }
+}
 }
 
 proc CmapCmd {item} {

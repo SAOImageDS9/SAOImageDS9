@@ -410,7 +410,8 @@ proc ProcessCropCmd {varname iname} {
 	}
 	lock {
 	    incr i
-	    CropCmdLock [lindex $var $i]
+	    set crop(lock) [lindex $var $i]
+	    LockCropCurrent
 	}
 	open {CropDialog}
 	close {CropDestroyDialog}

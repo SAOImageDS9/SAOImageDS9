@@ -1790,6 +1790,7 @@ proc ProcessRegionsCmd {varname iname sock fn} {
 	undo {MarkerUndo}
 
 	composite {CompositeCreate}
+	desolve -
 	dissove {CompositeDelete}
 
 	template {

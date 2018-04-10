@@ -155,7 +155,7 @@ region : {RegionCmdLoad}
 # backward compatibility
  | SYSTEM_ skyframe {RegionCmdSet system wcs; RegionCmdSet sky $2}
  | SKY_ skyframe {RegionCmdSet sky $2}
- | SKYFORMAT_ skyformat {RegionCmdSet skyformate $2}
+ | SKYFORMAT_ skyformat {RegionCmdSet skyformat $2}
  | STRIP_ yesno {RegionCmdSet strip $2}
  | DELIM_ delim {RegionCmdSet strip $2}
  | SHAPE_ shape {RegionCmdSet shape $2}

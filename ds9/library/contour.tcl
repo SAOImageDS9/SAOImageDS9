@@ -1064,8 +1064,6 @@ proc ProcessContourCmd {varname iname} {
 
     global contour
     global current
-    # we need to be realized
-    ProcessRealizeDS9
     switch -- [string tolower [lindex $var $i]] {
 	open {ContourDialog}
 	close {ContourDestroyDialog}

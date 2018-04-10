@@ -24,22 +24,22 @@ command : vla
 vla : {IMGSVRApply dvla 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dvla}
- | STRING_ {IMGSVRCmdName dvla $1}
- | numeric numeric coordOpt {IMGSVRCmdCoord dvla $1 $2 degrees}
- | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dvla $1 $2 sexagesimal}
+ | STRING_ {IMGSVRCmd dvla name $1}
+ | NAME_ STRING_ {IMGSVRCmd dvla name $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dvla $2 $3 $4}
- | SAVE_ yesno {IMGSVRCmdSave dvla $2}
- | FRAME_ frame {IMGSVRCmdMode dvla $2}
- | SURVEY_ survey {IMGSVRCmdSurvey dvla $2}
+ | SAVE_ yesno {IMGSVRCmd dvla save $2}
+ | FRAME_ frame {IMGSVRCmd dvla mode $2}
+ | SURVEY_ survey {IMGSVRCmd dvla survey $2}
  | UPDATE_ update
 
+ | numeric numeric coordOpt {IMGSVRCmdCoord dvla $1 $2 degrees}
+ | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dvla $1 $2 sexagesimal}
  | COORD_ numeric numeric deg {IMGSVRCmdCoord dvla $2 $3 $4}
  | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dvla $2 $3 $4}
- | NAME_ STRING_ {IMGSVRCmdName dvla $2}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdateFrame dvla}
- | CROSSHAIR_ {IMGSVRCmdUpdateCrosshair dvla}
+update : FRAME_ {IMGSVRCmdUpdate dvla}
+ | CROSSHAIR_ {IMGSVRCmdCrosshair dvla}
  ;
 
 survey : STRIPE82_ {set _ stripe82}

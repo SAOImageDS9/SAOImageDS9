@@ -568,19 +568,11 @@ proc IMGSVRProcessCmd {varname iname vvarname} {
     }
 }
 
-proc IMGSVRProcessSendCmd {proc id param vvarname} {
-    upvar #0 $vvarname vvar
+proc IMGSVRCmd {varname which value} {
+    upvar #0 $varname var
+    global $varname
 
-    switch -- [string tolower [lindex $param 0]] {
-	save {$proc $id [ToYesNo $vvar(save)]}
-	frame {$proc $id "$vvar(mode)\n"}
-	survey {$proc $id "$vvar(survey)\n"}
-	size {$proc $id "$vvar(width) $vvar(height) $vvar(rformat)\n"}
-	pixels {$proc $id "$vvar(width,pixels) $vvar(height,pixels)\n"}
-	coord {$proc $id "$vvar(x) $vvar(y) $vvar(skyformat)\n"}
-	name -
-	default {$proc $id "$vvar(name)\n"}
-    }
+    set var($which) $value
 }
 
 proc IMGSVRCmdName {varname name} {
@@ -622,28 +614,7 @@ proc IMGSVRCmdPixels {varname ww hh} {
     set var(height,pixels) $hh
 }
 
-proc IMGSVRCmdSave {varname save} {
-    upvar #0 $varname var
-    global $varname
-
-    set var(save) $save
-}
-
-proc IMGSVRCmdMode {varname mode} {
-    upvar #0 $varname var
-    global $varname
-
-    set var(mode) $mode
-}
-
-proc IMGSVRCmdSurvey {varname survey} {
-    upvar #0 $varname var
-    global $varname
-
-    set var(survey) $survey
-}
-
-proc IMGSVRCmdUpdateFrame {varname} {
+proc IMGSVRCmdUpdate {varname} {
     upvar #0 $varname var
     global $varname
 
@@ -651,10 +622,25 @@ proc IMGSVRCmdUpdateFrame {varname} {
     IMGSVRApply $varname 1
 }
 
-proc IMGSVRCmdUpdateCrosshair {varname} {
+proc IMGSVRCmdCrosshair {varname} {
     upvar #0 $varname var
     global $varname
 
-    IMGSVRUpdate $varname
+    IMGSVRCrosshair $varname
     IMGSVRApply $varname 1
+}
+
+proc IMGSVRProcessSendCmd {proc id param vvarname} {
+    upvar #0 $vvarname vvar
+
+    switch -- [string tolower [lindex $param 0]] {
+	save {$proc $id [ToYesNo $vvar(save)]}
+	frame {$proc $id "$vvar(mode)\n"}
+	survey {$proc $id "$vvar(survey)\n"}
+	size {$proc $id "$vvar(width) $vvar(height) $vvar(rformat)\n"}
+	pixels {$proc $id "$vvar(width,pixels) $vvar(height,pixels)\n"}
+	coord {$proc $id "$vvar(x) $vvar(y) $vvar(skyformat)\n"}
+	name -
+	default {$proc $id "$vvar(name)\n"}
+    }
 }

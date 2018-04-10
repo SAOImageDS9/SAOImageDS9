@@ -21,21 +21,21 @@ command : nvss
 nvss : {IMGSVRApply dnvss 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dnvss}
- | STRING_ {IMGSVRCmdName dnvss $1}
- | numeric numeric coordOpt {IMGSVRCmdCoord dnvss $1 $2 degrees}
- | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dnvss $1 $2 sexagesimal}
+ | STRING_ {IMGSVRCmd dnvss name $1}
+ | NAME_ STRING_ {IMGSVRCmd dnvss name $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dnvss $2 $3 $4}
- | SAVE_ yesno {IMGSVRCmdSave dnvss $2}
- | FRAME_ frame {IMGSVRCmdMode dnvss $2}
+ | SAVE_ yesno {IMGSVRCmd dnvss save $2}
+ | FRAME_ frame {IMGSVRCmd dnvss mode $2}
  | UPDATE_ update
 
+ | numeric numeric coordOpt {IMGSVRCmdCoord dnvss $1 $2 degrees}
+ | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dnvss $1 $2 sexagesimal}
  | COORD_ numeric numeric deg {IMGSVRCmdCoord dnvss $2 $3 $4}
  | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dnvss $2 $3 $4}
- | NAME_ STRING_ {IMGSVRCmdName dnvss $2}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdateFrame dnvss}
- | CROSSHAIR_ {IMGSVRCmdUpdateCrosshair dnvss}
+update : FRAME_ {IMGSVRCmdUpdate dnvss}
+ | CROSSHAIR_ {IMGSVRCmdCrosshair dnvss}
  ;
 
 %%

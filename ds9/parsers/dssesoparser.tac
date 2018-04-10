@@ -26,22 +26,22 @@ command : dsseso
 dsseso : {IMGSVRApply deso 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy deso}
- | STRING_ {IMGSVRCmdName deso $1}
- | numeric numeric coordOpt {IMGSVRCmdCoord deso $1 $2 degrees}
- | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord deso $1 $2 sexagesimal}
+ | STRING_ {IMGSVRCmd deso name $1}
+ | NAME_ STRING_ {IMGSVRCmd deso name $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize deso $2 $3 $4}
- | SAVE_ yesno {IMGSVRCmdSave deso $2}
- | FRAME_ frame {IMGSVRCmdMode deso $2}
- | SURVEY_ survey {IMGSVRCmdSurvey deso $2}
+ | SAVE_ yesno {IMGSVRCmd deso save $2}
+ | FRAME_ frame {IMGSVRCmd deso mode $2}
+ | SURVEY_ survey {IMGSVRCmd deso survey $2}
  | UPDATE_ update
 
+ | numeric numeric coordOpt {IMGSVRCmdCoord deso $1 $2 degrees}
+ | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord deso $1 $2 sexagesimal}
  | COORD_ numeric numeric deg {IMGSVRCmdCoord deso $2 $3 $4}
  | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord deso $2 $3 $4}
- | NAME_ STRING_ {IMGSVRCmdName deso $2}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdateFrame deso}
- | CROSSHAIR_ {IMGSVRCmdUpdateCrosshair deso}
+update : FRAME_ {IMGSVRCmdUpdate deso}
+ | CROSSHAIR_ {IMGSVRCmdCrosshair deso}
  ;
 
 survey : DSS1_ {set _ DSS1}

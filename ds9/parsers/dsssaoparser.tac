@@ -21,21 +21,21 @@ command : dsssao
 dsssao : {IMGSVRApply dsao 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dsao}
- | STRING_ {IMGSVRCmdName dsao $1}
- | numeric numeric coordOpt {IMGSVRCmdCoord dsao $1 $2 degrees}
- | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dsao $1 $2 sexagesimal}
+ | STRING_ {IMGSVRCmd dsao name $1}
+ | NAME_ STRING_ {IMGSVRCmd dsao name $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dsao $2 $3 $4}
- | SAVE_ yesno {IMGSVRCmdSave dsao $2}
- | FRAME_ frame {IMGSVRCmdMode dsao $2}
+ | SAVE_ yesno {IMGSVRCmd dsao save $2}
+ | FRAME_ frame {IMGSVRCmd dsao mode $2}
  | UPDATE_ update
 
+ | numeric numeric coordOpt {IMGSVRCmdCoord dsao $1 $2 degrees}
+ | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dsao $1 $2 sexagesimal}
  | COORD_ numeric numeric deg {IMGSVRCmdCoord dsao $2 $3 $4}
  | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dsao $2 $3 $4}
- | NAME_ STRING_ {IMGSVRCmdName dsao $2}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdateFrame dsao}
- | CROSSHAIR_ {IMGSVRCmdUpdateCrosshair dsao}
+update : FRAME_ {IMGSVRCmdUpdate dsao}
+ | CROSSHAIR_ {IMGSVRCmdCrosshair dsao}
  ;
 
 %%

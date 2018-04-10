@@ -66,8 +66,6 @@ contour : yesno {ContourCmdSet view $1}
  | SAVE_ save
  | CONVERT_ {Contour2Polygons}
 
- | LOAD_ LEVELS_ STRING_ {ContourCmdLoadLevels $3}
- | SAVE_ LEVELS_ STRING_ {ContourCmdSaveLevels $3}
 # backward compatibility
  | LOADLEVELS_ STRING_ {ContourCmdLoadLevels $2}
  | SAVELEVELS_ STRING_ {ContourCmdSaveLevels $2}
@@ -90,19 +88,25 @@ contour : yesno {ContourCmdSet view $1}
  ;
 
 load : STRING_ {ContourCmdLoad $1}
- | STRING_ STRING_ INT_ yesno {ContourCmdLoadParam $1 $2 $3 $4}
+ | LEVELS_ STRING_ {ContourCmdLoadLevels $2}
 # backward compatibility
  | STRING_ coordsys STRING_ INT_ yesno {ContourCmdLoadOrg $1 $2 fk5 $3 $4 $5}
  | STRING_ wcssys STRING_ INT_ yesno {ContourCmdLoadOrg $1 $2 fk5 $3 $4 $5}
  | STRING_ skyframe STRING_ INT_ yesno {ContourCmdLoadOrg $1 wcs $2 $3 $4 $5}
  | STRING_ wcssys skyframe STRING_ INT_ yesno {ContourCmdLoadOrg $1 $2 $3 $4 $5 $6}
+# no longer supported
+# | STRING_ STRING_ INT_ yesno {ContourCmdLoadParam $1 $2 $3 $4}
  ;
 
 save : STRING_ {ContourCmdSave $1 physical fk5}
+ | LEVELS_ STRING_ {ContourCmdSaveLevels $2}
  | STRING_ coordsys {ContourCmdSave $1 $2 fk5}
  | STRING_ wcssys {ContourCmdSave $1 $2 fk5}
  | STRING_ skyframe {ContourCmdSave $1 wcs $2}
  | STRING_ wcssys skyframe {ContourCmdSave $1 $2 $3}
+# backward compatibility
+# no longer supported
+# | STRING_ wcssys skyframe STRING_ INT_ yesno {ContourCmdSave $1 $2 $3}
  ;
 
 paste : {ContourCmdPaste wcs fk5 green 1 no}
@@ -110,6 +114,9 @@ paste : {ContourCmdPaste wcs fk5 green 1 no}
  | wcssys STRING_ INT_ yesno {ContourCmdPaste $1 fk5 $2 $3 $4}
  | skyframe STRING_ INT_ yesno {ContourCmdPaste wcs $1 $2 $3 $4}
  | wcssys skyframe STRING_ INT_ yesno {ContourCmdPaste $1 $2 $3 $4 $5}
+# no longer supported
+# | coordsys
+# | wcssys
  ;
 
 method : BLOCK_ {set _ block}

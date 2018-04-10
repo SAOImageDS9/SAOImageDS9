@@ -21,22 +21,22 @@ command : 2mass
 2mass : {IMGSVRApply dtwomass 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dtwomass}
- | STRING_ {IMGSVRCmdName dtwomass $1}
- | numeric numeric coordOpt {IMGSVRCmdCoord dtwomass $1 $2 degrees}
- | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dtwomass $1 $2 sexagesimal}
+ | STRING_ {IMGSVRCmd dtwomass name $1}
+ | NAME_ STRING_ {IMGSVRCmd dtwomass name $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dtwomass $2 $3 $4}
- | SAVE_ yesno {IMGSVRCmdSave dtwomass $2}
- | FRAME_ frame {IMGSVRCmdMode dtwomass $2}
- | SURVEY_ survey {IMGSVRCmdSurvey dtwomass $2}
+ | SAVE_ yesno {IMGSVRCmd dtwomass save $2}
+ | FRAME_ frame {IMGSVRCmd dtwomass mode $2}
+ | SURVEY_ survey {IMGSVRCmd dtwomass survey $2}
  | UPDATE_ update
 
+ | numeric numeric coordOpt {IMGSVRCmdCoord dtwomass $1 $2 degrees}
+ | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dtwomass $1 $2 sexagesimal}
  | COORD_ numeric numeric deg {IMGSVRCmdCoord dtwomass $2 $3 $4}
  | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dtwomass $2 $3 $4}
- | NAME_ STRING_ {IMGSVRCmdName dtwomass $2}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdateFrame dtwomass}
- | CROSSHAIR_ {IMGSVRCmdUpdateCrosshair dtwomass}
+update : FRAME_ {IMGSVRCmdUpdate dtwomass}
+ | CROSSHAIR_ {IMGSVRCmdCrosshair dtwomass}
  ;
 
 survey : 'j' {set _ $1}

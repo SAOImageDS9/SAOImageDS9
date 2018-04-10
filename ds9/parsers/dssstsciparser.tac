@@ -31,22 +31,22 @@ command : dssstsci
 dssstsci : {IMGSVRApply dstsci 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dstsci}
- | STRING_ {IMGSVRCmdName dstsci $1}
- | numeric numeric coordOpt {IMGSVRCmdCoord dstsci $1 $2 degrees}
- | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dstsci $1 $2 sexagesimal}
+ | STRING_ {IMGSVRCmd dstsci name $1}
+ | NAME_ STRING_ {IMGSVRCmd dstsci name $2}
  | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dstsci $2 $3 $4}
- | SAVE_ yesno {IMGSVRCmdSave dstsci $2}
- | FRAME_ frame {IMGSVRCmdMode dstsci $2}
- | SURVEY_ survey {IMGSVRCmdSurvey dstsci $2}
+ | SAVE_ yesno {IMGSVRCmd dstsci save $2}
+ | FRAME_ frame {IMGSVRCmd dstsci mode $2}
+ | SURVEY_ survey {IMGSVRCmd dstsci survey $2}
  | UPDATE_ update
 
+ | numeric numeric coordOpt {IMGSVRCmdCoord dstsci $1 $2 degrees}
+ | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dstsci $1 $2 sexagesimal}
  | COORD_ numeric numeric deg {IMGSVRCmdCoord dstsci $2 $3 $4}
  | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dstsci $2 $3 $4}
- | NAME_ STRING_ {IMGSVRCmdName dstsci $2}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdateFrame dstsci}
- | CROSSHAIR_ {IMGSVRCmdUpdateCrosshair dstsci}
+update : FRAME_ {IMGSVRCmdUpdate dstsci}
+ | CROSSHAIR_ {IMGSVRCmdCrosshair dstsci}
  ;
 
 survey : POSS2RED_ {set _ poss2ukstu_red}

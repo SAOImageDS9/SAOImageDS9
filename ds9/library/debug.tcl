@@ -23,8 +23,8 @@ proc DebugDef {} {
     set debug(tcl,http) 0
     set debug(tcl,ftp) 0
     set debug(tcl,xpa) 0
-    set debug(tcl,image) 0
     set debug(tcl,parser) 1
+    set debug(tcl,image) 0
 
     set debug(tksao,ast) 0
     set debug(tksao,mosaic) 0
@@ -98,10 +98,10 @@ proc DebugMenu {} {
 	-variable debug(tcl,ftp)
     $ds9(mb).debug.tcl add checkbutton -label {XPA} \
 	-variable debug(tcl,xpa)
+    $ds9(mb).debug.tcl add checkbutton -label {TclParser} \
+	-variable debug(tcl,parser)
     $ds9(mb).debug.tcl add checkbutton -label {IMAGE} \
 	-variable debug(tcl,image)
-    $ds9(mb).debug.tcl add checkbutton -label {DS9Parser} \
-	-variable debug(tcl,parser)
 
     menu $ds9(mb).debug.tksao
     $ds9(mb).debug.tksao add checkbutton -label {AST} \
@@ -110,7 +110,7 @@ proc DebugMenu {} {
     $ds9(mb).debug.tksao add checkbutton -label {Mosaic} \
 	-variable debug(tksao,mosaic) \
 	-command "Debug mosaic debug(tksao,mosaic)"
-    $ds9(mb).debug.tksao add checkbutton -label {Parser} \
+    $ds9(mb).debug.tksao add checkbutton -label {TksaoParser} \
 	-variable debug(tksao,parser) \
 	-command "Debug parser debug(tksao,parser)"    
     $ds9(mb).debug.tksao add checkbutton -label {Perf} \
@@ -196,6 +196,10 @@ proc ProcessDebugTclCmd {varname iname} {
 	http {set debug(tcl,http) 1}
 	ftp {set debug(tcl,ftp) 1}
 	xpa {set debug(tcl,xpa) 1}
+	tclparser {
+	    incr i
+	    set debug(tcl,parser) [FromYesNo [lindex $var $i]]
+	}
 	image {
 	    set debug(tcl,hv) 1
 	    set debug(tcl,http) 1
@@ -220,6 +224,7 @@ proc ProcessDebugCmd {varname iname} {
 	    set debug(tksao,mosaic) 1
 	    Debug mosaic debug(tksao,mosaic)
 	}
+	tksaoparser -
 	parser {
 	    set debug(tksao,parser) 1
 	    Debug parser debug(tksao,parser)
@@ -280,9 +285,21 @@ proc ProcessDebugCmd {varname iname} {
 	xpa -
 	image {}
 
-	default {
-	    incr ${iname} -1
+	tclparser {
+	    incr i
+	    switch -- [string tolower [lindex $var $i]] {
+		yes -
+		true -
+		on -
+		1 -
+		no -
+		false -
+		off -
+		0 {}
+		default {incr i -1}
+	    }
 	}
+	default {incr i -1}
     }
 }
 

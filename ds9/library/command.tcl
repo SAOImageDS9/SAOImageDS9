@@ -27,7 +27,10 @@ proc ProcessCommandLineFirst {} {
 		puts "For more information, use --help"
 		QuitDS9
 	    }
-	    -debug {incr i; ProcessDebugTclCmd argv i}
+	    -debug {
+		incr i
+		ProcessDebugTclCmd argv i
+	    }
 	    -private {
 		# backward compatibility
 	    }
@@ -47,7 +50,10 @@ proc ProcessCommandLineFirst {} {
 		incr i
 		set pds9(language,dir) [lindex $argv $i]
 	    }
-	    -xpa {incr i; ProcessXPAFirstCmd argv i}
+	    -xpa {
+		incr i
+		ProcessXPAFirstCmd argv i
+	    }
 	}
 	incr i
     }

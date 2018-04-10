@@ -2453,6 +2453,7 @@ proc ProcessBlinkCmd {varname iname} {
 
     global current
     global blink
+
     switch -- [string tolower [lindex $var $i]] {
 	interval {
 	    incr i

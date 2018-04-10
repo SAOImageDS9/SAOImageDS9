@@ -1056,6 +1056,7 @@ proc ProcessZScaleCmd {varname iname} {
 	    ChangeZScale
 	}
 	default {
+	    # for backward compatibility
 	    set scale(mode) zscale
 	    ChangeScaleMode
 	    incr i -1

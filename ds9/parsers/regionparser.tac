@@ -221,7 +221,7 @@ select : ALL_ {MarkerSelectAll}
  | INVERT_ {MarkerSelectInvert}
 # backward compatibility
  | GROUP_ STRING_ {RegionCmdGroupTag $2; RegionCmdGroup select}
-;
+ ;
  
 delete : ALL_ {MarkerDeleteAll}
  | SELECT_ {MarkerDeleteSelect}

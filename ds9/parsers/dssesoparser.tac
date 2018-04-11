@@ -3,7 +3,6 @@
 
 #include yesno.tin
 #include coords.tin
-#include skyframe.tin
 #include imgsvr.tin
 #include numeric.tin
 #include string.tin
@@ -19,7 +18,6 @@
 
 #include yesno.trl
 #include coords.trl
-#include skyframe.trl
 #include imgsvr.trl
 #include numeric.trl
 

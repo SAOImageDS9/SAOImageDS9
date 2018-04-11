@@ -4,7 +4,6 @@
 #include yesno.tin
 #include font.tin
 #include coords.tin
-#include skyframe.tin
 #include numeric.tin
 #include string.tin
 
@@ -65,7 +64,6 @@
 #include yesno.trl
 #include font.trl
 #include coords.trl
-#include skyframe.trl
 #include numeric.trl
 
 command : grid 

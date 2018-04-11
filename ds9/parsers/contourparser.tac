@@ -3,7 +3,6 @@
 
 #include yesno.tin
 #include coords.tin
-#include skyframe.tin
 #include numeric.tin
 #include string.tin
 
@@ -51,7 +50,6 @@
 
 #include yesno.trl
 #include coords.trl
-#include skyframe.trl
 #include numeric.trl
 
 command : contour 

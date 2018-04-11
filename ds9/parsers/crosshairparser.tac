@@ -1,7 +1,6 @@
 %{
 %}
 
-#include skyframe.tin
 #include coords.tin
 #include numeric.tin
 #include string.tin
@@ -14,7 +13,6 @@
 
 %%
 
-#include skyframe.trl
 #include coords.trl
 #include numeric.trl
 

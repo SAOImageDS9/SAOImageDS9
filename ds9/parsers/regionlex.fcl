@@ -107,7 +107,6 @@ boxcircle   {return $BOXCIRCLE_}
 #include yesno.fin
 #include font.fin
 #include coords.fin
-#include skyframe.fin
 #include numeric.fin
 #include string.fin
 

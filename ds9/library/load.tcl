@@ -475,6 +475,14 @@ proc ProcessUpdateCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	update::YY_FLUSH_BUFFER
+	update::yy_scan_string [lrange $var $i end]
+	update::yyparse
+	incr i [expr $update::yycnt-1]
+    } else {
+
     global current
     global ds9
 
@@ -520,4 +528,23 @@ proc ProcessUpdateCmd {varname iname} {
 	$current(frame) update
 	incr i -1
     }
+}
+}
+
+proc UpdateCmd {{which {}} {x1 {}} {y1 {}} {x2 {}} {y2 {}}} {
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    $current(frame) update $which $x1 $y1 $x2 $y2
+}
+
+proc UpdateCmdNow {{which {}} {x1 {}} {y1 {}} {x2 {}} {y2 {}}} {
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    $current(frame) update now $which $x1 $y1 $x2 $y2
 }

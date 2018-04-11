@@ -238,6 +238,8 @@ source $ds9(root)/library/tileparser.tcl
 source $ds9(root)/library/tilelex.tcl
 source $ds9(root)/library/twomassparser.tcl
 source $ds9(root)/library/twomasslex.tcl
+source $ds9(root)/library/updateparser.tcl
+source $ds9(root)/library/updatelex.tcl
 source $ds9(root)/library/viewparser.tcl
 source $ds9(root)/library/viewlex.tcl
 source $ds9(root)/library/vlaparser.tcl

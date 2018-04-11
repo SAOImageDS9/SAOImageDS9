@@ -16,7 +16,15 @@ proc WCSDef {} {
     set wcs(sky) fk5
     set wcs(skyformat) sexagesimal
 
+    # temp
+    set wcs(load,sock) {}
+    set wcs(load,fn) {}
+    
     array set pwcs [array get wcs]
+
+    # temp
+    set wcs(load,sock) {}
+    set wcs(load,fn) {}
 }
 
 proc UpdateWCS {} {
@@ -1126,6 +1134,17 @@ proc ProcessWCSCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	set wcs(load,sock) $sock
+	set wcs(load,fn) $fn
+
+	wcs::YY_FLUSH_BUFFER
+	wcs::yy_scan_string [lrange $var $i end]
+	wcs::yyparse
+	incr i [expr $wcs::yycnt-1]
+    } else {
+
     global wcs
     global current
     global rgb
@@ -1247,13 +1266,56 @@ proc ProcessWCSCmd {varname iname sock fn} {
 	}
     }
 }
+}
 
-proc WCSResetCmd {ext} {
-    global current
+proc WCSCmdSet {which value {cmd {}}} {
+    global wcs
+
+    set wcs($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc WCSCmdReset {ext} {
     global rgb
+    global current
+    
+    if {$current(frame) == {}} {
+	return
+    }
 
     RGBEvalLock rgb(lock,wcs) $current(frame) \
 	[list $current(frame) wcs reset $ext]
+    UpdateWCS
+}
+
+proc WCSCmdLoad {cmd ext} {
+    global wcs
+    global current
+    global rgb
+
+    if {$current(frame) == {}} {
+	return
+    }
+
+    if {$wcs(load,sock) != {}} {
+	RGBEvalLock rgb(lock,wcs) $current(frame) [list $current(frame) wcs $cmd $ext $wcs(load,sock)]
+    } elseif {$wcs(load,fn) != {}} {
+	RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs $cmd $ext \{\{$wcs(load,fn)\}\}"
+	UpdateWCS
+    }
+}
+
+proc WCSCmdLoadFn {cmd ext fn} {
+    global current
+    global rgb
+
+    if {$current(frame) == {}} {
+	return
+    }
+
+    RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs $cmd $ext \{\{$fn\}\}"
     UpdateWCS
 }
 

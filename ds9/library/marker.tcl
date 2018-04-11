@@ -1998,13 +1998,15 @@ proc RegionCmdLoad {} {
     global marker
     global current
     
+    if {$current(frame) == {} || ![$current(frame) has fits]} {
+	return
+    }
+
     if {$marker(load,sock) != {}} {
 	# xpa path
 	# fits regions files not supported  
-	if {$current(frame) != {} && [$current(frame) has fits]} {
-	    $current(frame) marker load $marker(load,format) \
-		$marker(load,sock) $marker(load,system) $marker(load,sky)
-	}
+	$current(frame) marker load $marker(load,format) \
+	    $marker(load,sock) $marker(load,system) $marker(load,sky)
 	UpdateGroupDialog
     } elseif {$marker(load,fn) != {}} {
 	# samp path

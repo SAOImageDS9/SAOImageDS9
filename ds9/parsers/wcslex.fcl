@@ -1,0 +1,25 @@
+#tab wcsparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+align	    {return $ALIGN_}
+append	    {return $APPEND_}
+close	    {return $CLOSE_}
+open	    {return $OPEN_}
+replace	    {return $REPLACE_}
+reset	    {return $RESET_}
+sky	    {return $SKY_}
+skyformat   {return $SKYFORMAT_}
+system	    {return $SYSTEM_}
+
+#include yesno.fin
+#include coords.fin
+#include numeric.fin
+#include string.fin
+
+%%

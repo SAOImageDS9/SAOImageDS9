@@ -1,12 +1,3 @@
-%token SEXSTR_
-%token WCS_
-%token FK5_
-
-%token DEGREES_
-%token SEXAGESIMAL_
-%token ARCMIN_
-%token ARCSEC_
-
 %token CLOSE_
 %token COORD_
 %token CROSSHAIR_

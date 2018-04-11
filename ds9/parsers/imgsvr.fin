@@ -1,11 +1,3 @@
-wcs	    {return $WCS_}
-fk5	    {return $FK5_}
-
-degrees	    {return $DEGREES_}
-sexagesimal {return $SEXAGESIMAL_}
-arcmin	    {return $ARCMIN_}
-arcsec	    {return $ARCSEC_}
-
 close	    {return $CLOSE_}
 coord	    {return $COORD_}
 crosshair   {return $CROSSHAIR_}
@@ -18,7 +10,3 @@ save	    {return $SAVE_}
 size	    {return $SIZE_}
 survey	    {return $SURVEY_}
 update	    {return $UPDATE_}
-
-# SEXAGESIMAL
-[+-]?{D}+:{D}+:{D}+"."? |
-[+-]?{D}+:{D}+:{D}*"."{D}+ {set yylval $yytext; return $SEXSTR_}

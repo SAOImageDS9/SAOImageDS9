@@ -8,6 +8,8 @@
 %%
 
 #include yesno.fin
+#include coords.fin
+#include skyframe.fin
 #include imgsvr.fin
 #include numeric.fin
 #include string.fin

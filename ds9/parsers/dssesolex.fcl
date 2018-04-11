@@ -13,6 +13,8 @@ dss2-blue    {return $DSS2BLUE_}
 dss2-infrared {return $DSS2INFRARED_}
 
 #include yesno.fin
+#include coords.fin
+#include skyframe.fin
 #include imgsvr.fin
 #include numeric.fin
 #include string.fin

@@ -1411,11 +1411,6 @@ proc ProcessRegionsCmd {varname iname sock fn} {
     # we need to be realized
     ProcessRealizeDS9
 
-    puts "format: $marker(format)"
-    puts "system: $marker(system)"
-    puts "sky: $marker(sky)"
-    puts "skyformat: $marker(skyformat)"
-
     global debug
     if {$debug(tcl,parser)} {
 	set marker(load,sock) $sock

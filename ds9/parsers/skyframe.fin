@@ -4,3 +4,9 @@ fk5	    {return $FK5_}
 j2000	    {return $FK5_}
 galactic    {return $GALACTIC_}
 ecliptic    {return $ECLIPTIC_}
+
+degrees	    {return $DEGREES_}
+arcmin	    {return $ARCMIN_}
+arcsec	    {return $ARCSEC_}
+
+sexagesimal {return $SEXAGESIMAL_}

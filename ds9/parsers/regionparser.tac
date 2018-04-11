@@ -5,7 +5,6 @@
 #include font.tin
 #include coords.tin
 #include skyframe.tin
-#include rformat.tin
 #include numeric.tin
 #include string.tin
 
@@ -113,7 +112,6 @@
 #include font.trl
 #include coords.trl
 #include skyframe.trl
-#include rformat.trl
 #include numeric.trl
 
 command : region 

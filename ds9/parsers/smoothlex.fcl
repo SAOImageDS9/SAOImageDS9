@@ -1,0 +1,29 @@
+#tab smoothparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+angle	    {return $ANGLE_}
+boxcar	    {return $BOXCAR_}
+close	    {return $CLOSE_}
+elliptic    {return $ELLIPTIC_}
+function    {return $FUNCTION_}
+gaussian    {return $GAUSSIAN_}
+lock	    {return $LOCK_}
+match	    {return $MATCH_}
+open	    {return $OPEN_}
+radius	    {return $RADIUS_}
+radiusminor {return $RADIUSMINOR_}
+sigma	    {return $SIGMA_}
+sigmaminor  {return $SIGMAMINOR_}
+tophat	    {return $TOPHAT_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+
+%%

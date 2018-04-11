@@ -230,6 +230,8 @@ source $ds9(root)/library/scaleparser.tcl
 source $ds9(root)/library/scalelex.tcl
 source $ds9(root)/library/skyviewparser.tcl
 source $ds9(root)/library/skyviewlex.tcl
+source $ds9(root)/library/smoothparser.tcl
+source $ds9(root)/library/smoothlex.tcl
 source $ds9(root)/library/threedparser.tcl
 source $ds9(root)/library/threedlex.tcl
 source $ds9(root)/library/tileparser.tcl

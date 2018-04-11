@@ -345,6 +345,14 @@ proc ProcessSmoothCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	smooth::YY_FLUSH_BUFFER
+	smooth::yy_scan_string [lrange $var $i end]
+	smooth::yyparse
+	incr i [expr $smooth::yycnt-1]
+    } else {
+
     global smooth
 
     switch -- [string tolower [lindex $var $i]] {
@@ -408,6 +416,16 @@ proc ProcessSmoothCmd {varname iname} {
 	    SmoothUpdate
 	    incr i -1
 	}
+    }
+}
+}
+
+proc SmoothCmdSet {which value {cmd {}}} {
+    global smooth
+
+    set smooth($which) $value
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

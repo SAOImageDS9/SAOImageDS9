@@ -1,0 +1,25 @@
+#tab voparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+connect     {return $CONNECT_}
+delay	    {return $DELAY_}
+disconnect  {return $DISCONNECT_}
+internal    {return $INTERNAL_}
+method	    {return $METHOD_}
+mime	    {return $MIME_}
+open	    {return $OPEN_}
+server	    {return $SERVER_}
+xpa	    {return $XPA_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+
+%%

@@ -246,6 +246,8 @@ source $ds9(root)/library/vlaparser.tcl
 source $ds9(root)/library/vlalex.tcl
 source $ds9(root)/library/vlssparser.tcl
 source $ds9(root)/library/vlsslex.tcl
+source $ds9(root)/library/voparser.tcl
+source $ds9(root)/library/volex.tcl
 source $ds9(root)/library/wcsparser.tcl
 source $ds9(root)/library/wcslex.tcl
 source $ds9(root)/library/xpaparser.tcl

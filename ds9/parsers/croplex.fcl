@@ -15,7 +15,7 @@ none	{return $NONE_}
 open	{return $OPEN_}
 reset	{return $RESET_}
 
-#include skyformat.fin
+#include rformat.fin
 #include skyframe.fin
 #include coords.fin
 #include numeric.fin

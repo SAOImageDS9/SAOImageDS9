@@ -3,7 +3,7 @@
 
 #include yesno.tin
 #include font.tin
-#include skyformat.tin
+#include rformat.tin
 #include skyframe.tin
 #include coords.tin
 #include numeric.tin
@@ -103,7 +103,7 @@
 
 #include yesno.trl
 #include font.trl
-#include skyformat.trl
+#include rformat.trl
 #include skyframe.trl
 #include coords.trl
 #include numeric.trl

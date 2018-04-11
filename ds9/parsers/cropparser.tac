@@ -1,7 +1,7 @@
 %{
 %}
 
-#include skyformat.tin
+#include rformat.tin
 #include skyframe.tin
 #include coords.tin
 #include numeric.tin
@@ -19,7 +19,7 @@
 
 %%
 
-#include skyformat.trl
+#include rformat.trl
 #include skyframe.trl
 #include coords.trl
 #include numeric.trl

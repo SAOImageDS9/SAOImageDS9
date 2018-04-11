@@ -248,6 +248,10 @@ source $ds9(root)/library/vlssparser.tcl
 source $ds9(root)/library/vlsslex.tcl
 source $ds9(root)/library/wcsparser.tcl
 source $ds9(root)/library/wcslex.tcl
+source $ds9(root)/library/xpaparser.tcl
+source $ds9(root)/library/xpalex.tcl
+source $ds9(root)/library/xpafirstparser.tcl
+source $ds9(root)/library/xpafirstlex.tcl
 source $ds9(root)/library/zscaleparser.tcl
 source $ds9(root)/library/zscalelex.tcl
 source $ds9(root)/library/zoomparser.tcl

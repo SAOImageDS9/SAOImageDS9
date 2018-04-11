@@ -1,0 +1,25 @@
+#tab xpaparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+connect	    {return $CONNECT_}
+disconnect  {return $DISCONNECT_}
+inet	    {return $INET_}
+info	    {return $INFO_}
+local	    {return $LOCAL_}
+localhost   {return $LOCALHOST_}
+noxpans	    {return $NOXPANS_}
+tcl	    {return $TCL_}
+unix	    {return $UNIX_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+
+%%

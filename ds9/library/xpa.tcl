@@ -2205,6 +2205,14 @@ proc ProcessXPAFirstCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	xpafirst::YY_FLUSH_BUFFER
+	xpafirst::yy_scan_string [lrange $var $i end]
+	xpafirst::yyparse
+	incr i [expr $xpafirst::yycnt-1]
+    } else {
+
     global ds9
     global pds9
     global env
@@ -2226,10 +2234,19 @@ proc ProcessXPAFirstCmd {varname iname} {
 	0 {set pds9(xpa) [FromYesNo [lindex $var $i]]}
     }
 }
+}
 
 proc ProcessXPACmd {varname iname} {
     upvar $varname var
     upvar $iname i
+
+    global debug
+    if {$debug(tcl,parser)} {
+	xpa::YY_FLUSH_BUFFER
+	xpa::yy_scan_string [lrange $var $i end]
+	xpa::yyparse
+	incr i [expr $xpa::yycnt-1]
+    } else {
 
     global ds9
     global pds9
@@ -2244,6 +2261,13 @@ proc ProcessXPACmd {varname iname} {
 	disconnect {XPADisconnect}
 	info {XPAInfo}
     }
+}
+}
+
+proc XPACmdSet {varname which value} {
+    upvar #0 $varname var
+
+    set var($which) $value
 }
 
 proc ProcessSendXPACmd {proc id param} {

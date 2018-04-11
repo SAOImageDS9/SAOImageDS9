@@ -152,7 +152,7 @@ catCmd : coordinate
  | SAVE_ STRING_ {CatalogCmdSave $2 VOTWrite}
  | SERVER_ server {CatalogCmdSet server $2}
  | SHOW_ yesno {CatalogCmdGenerate show $2}
- | SIZE_ numeric numeric skyformat {CatalogCmdSize $2 $3 $4}
+ | SIZE_ numeric numeric rformat {CatalogCmdSize $2 $3 $4}
  | SKY_ skyframe {CatalogCmdSkyframe $2}
  | SKYFORMAT_ skyformat {CatalogCmdSet skyformat $2}
  | SORT_ sort
@@ -177,7 +177,7 @@ filter : LOAD_ STRING_ {CatalogCmdFilterLoad $2}
  ;
 
 match : {CatalogCmdMatch}
- | ERROR_ numeric skyformat {CatalogCmdMatchError $2 $3}
+ | ERROR_ numeric rformat {CatalogCmdMatchError $2 $3}
  | FUNCTION_ matchFunction {CatalogCmdIcat function $2}
  | UNIQUE_ yesno {CatalogCmdIcat unique $2}
  | RETURN_ matchReturn {CatalogCmdIcat return $2}

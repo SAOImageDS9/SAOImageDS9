@@ -37,19 +37,19 @@ crop : OPEN_ {CropDialog}
  | numeric numeric numeric numeric coordsys {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 degrees}
 
  | numeric numeric numeric numeric wcssys {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 degrees}
- | numeric numeric numeric numeric wcssys skyformat {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 $6}
+ | numeric numeric numeric numeric wcssys rformat {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 $6}
  | numeric numeric numeric numeric skyframe {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs degrees}
- | numeric numeric numeric numeric skyframe skyformat {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
+ | numeric numeric numeric numeric skyframe rformat {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
  | numeric numeric numeric numeric wcssys skyframe {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 degrees}
- | numeric numeric numeric numeric wcssys skyframe skyformat {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
+ | numeric numeric numeric numeric wcssys skyframe rformat {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
 
  | SEXSTR_ SEXSTR_ numeric numeric {global current; $current(frame) crop center $1 $2 wcs fk5 $3 $4 wcs degrees}
  | SEXSTR_ SEXSTR_ numeric numeric wcssys {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 degrees}
- | SEXSTR_ SEXSTR_ numeric numeric wcssys skyformat {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 $6}
+ | SEXSTR_ SEXSTR_ numeric numeric wcssys rformat {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 $6}
  | SEXSTR_ SEXSTR_ numeric numeric skyframe {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs degrees}
- | SEXSTR_ SEXSTR_ numeric numeric skyframe skyformat {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
+ | SEXSTR_ SEXSTR_ numeric numeric skyframe rformat {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
  | SEXSTR_ SEXSTR_ numeric numeric wcssys skyframe {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 degrees}
- | SEXSTR_ SEXSTR_ numeric numeric wcssys skyframe skyformat {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
+ | SEXSTR_ SEXSTR_ numeric numeric wcssys skyframe rformat {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
  ;
 
 match : coordsys {set _ $1}

@@ -1,3 +1,0 @@
-degrees	    {return $DEGREES_}
-arcmin	    {return $ARCMIN_}
-arcsec	    {return $ARCSEC_}

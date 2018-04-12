@@ -1328,7 +1328,16 @@ proc ProcessCDCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	cd::YY_FLUSH_BUFFER
+	cd::yy_scan_string [lrange $var $i end]
+	cd::yyparse
+	incr i [expr $cd::yycnt-1]
+    } else {
+
     cd [lindex $var $i]
+}
 }
 
 proc ProcessSendCDCmd {proc id param} {

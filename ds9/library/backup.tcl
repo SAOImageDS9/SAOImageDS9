@@ -783,6 +783,14 @@ proc ProcessBackupCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	backup::YY_FLUSH_BUFFER
+	backup::yy_scan_string [lrange $var $i end]
+	backup::yyparse
+	incr i [expr $backup::yycnt-1]
+    } else {
+
     set fn [lindex $var $i]
     if {$fn != {}} {
 	FileLast backupfbox $fn
@@ -790,6 +798,12 @@ proc ProcessBackupCmd {varname iname} {
     } else {
 	Error [msgcat::mc {Unable to open file}]
     }
+}
+}
+
+proc BackupCmd {fn} {
+    FileLast backupfbox $fn
+    Backup $fn
 }
 
 proc ProcessRestoreCmd {varname iname} {

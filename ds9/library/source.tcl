@@ -190,6 +190,8 @@ source $ds9(root)/library/xpa.tcl
 
 source $ds9(root)/library/alignparser.tcl
 source $ds9(root)/library/alignlex.tcl
+source $ds9(root)/library/backupparser.tcl
+source $ds9(root)/library/backuplex.tcl
 source $ds9(root)/library/binparser.tcl
 source $ds9(root)/library/binlex.tcl
 source $ds9(root)/library/blinkparser.tcl

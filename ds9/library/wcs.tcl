@@ -1338,6 +1338,14 @@ proc ProcessAlignCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	align::YY_FLUSH_BUFFER
+	align::yy_scan_string [lrange $var $i end]
+	align::yyparse
+	incr i [expr $align::yycnt-1]
+    } else {
+
     global current
     switch -- [string tolower [lindex $var $i]] {
 	yes -
@@ -1357,6 +1365,7 @@ proc ProcessAlignCmd {varname iname} {
 	    incr i -1
 	}
     }
+}
 }
 
 proc ProcessSendAlignCmd {proc id param} {

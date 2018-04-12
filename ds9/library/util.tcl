@@ -1350,6 +1350,14 @@ proc ProcessCursorCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	cursor::YY_FLUSH_BUFFER
+	cursor::yy_scan_string [lrange $var $i end]
+	cursor::yyparse
+	incr i [expr $cursor::yycnt-1]
+    } else {
+
     global current
 
     if {$current(frame) != {}} {
@@ -1374,26 +1382,29 @@ proc ProcessCursorCmd {varname iname} {
 	}
     }
 }
+}
 
 proc CursorCmd {x y} {
     global current
 
-    if {$current(frame) != {}} {
-	switch -- $current(mode) {
-	    none {$current(frame) warp $x $y}
-	    pointer -
-	    region {MarkerArrowKey $current(frame) $x $y}
-	    catalog {MarkerArrowKey $current(frame) $x $y}
-	    crosshair {CrosshairArrowKey $current(frame) $x $y}
-	    colorbar {}
-	    pan {PanCanvas $x $y}
-	    zoom -
-	    rotate -
-	    crop {}
-	    analysis {IMEArrowKey $current(frame) $x $y}
-	    examine -
-	    iexam {}
-	}
+    if {$current(frame) == {}} {
+	return
+    }
+
+    switch -- $current(mode) {
+	none {$current(frame) warp $x $y}
+	pointer -
+	region {MarkerArrowKey $current(frame) $x $y}
+	catalog {MarkerArrowKey $current(frame) $x $y}
+	crosshair {CrosshairArrowKey $current(frame) $x $y}
+	colorbar {}
+	pan {PanCanvas $x $y}
+	zoom -
+	rotate -
+	crop {}
+	analysis {IMEArrowKey $current(frame) $x $y}
+	examine -
+	iexam {}
     }
 }
 

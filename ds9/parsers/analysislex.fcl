@@ -1,0 +1,33 @@
+#tab analysisparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+clear	    {return $CLEAR_}
+entry	    {return $ENTRY_}
+load	    {return $LOAD_}
+message	    {return $MESSAGE_}
+plot	    {return $PLOT_}
+stdin	    {return $STDIN_}
+task	    {return $TASK_}
+text	    {return $TEXT_}
+
+ok	    {return $OK_}
+okcancel    {return $OKCANCEL_}
+retrycancel {return $RETRYCANCEL_}
+yesno	    {return $YESNO_}
+yesnocancel {return $YESNOCANCEL_}
+
+xy	    {return $XY}
+xyex	    {return $XYEX}
+xyey	    {return $XYEY}
+xyexey	    {return $XYEXEY}
+
+#include numeric.fin
+#include string.fin
+
+%%

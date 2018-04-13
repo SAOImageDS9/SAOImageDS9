@@ -333,6 +333,19 @@ proc ProcessSIACmd {varname iname} {
 
     global isia
 
+    global debug
+    if {$debug(tcl,parser)} {
+	set ref [lindex $isia(sias) end]
+	global cvarname
+	set cvarname $ref
+
+	sia::YY_FLUSH_BUFFER
+	sia::yy_scan_string [lrange $var $i end]
+	sia::yyparse
+	incr i [expr $sia::yycnt-1]
+    } else {
+
+
     # we need to be realized
     ProcessRealizeDS9
 
@@ -401,6 +414,7 @@ proc ProcessSIACmd {varname iname} {
 	    }
 	}
     }
+}
 }
 
 proc ProcessSIA {varname iname cvarname} {
@@ -489,6 +503,15 @@ proc ProcessSIA {varname iname cvarname} {
 		[list SIAWCSMenuUpdate $cvarname]
 	}
 	update {IMGSVRUpdate $cvarname}
+    }
+}
+
+proc SIACmdSet {which value {cmd {}}} {
+    global sia
+
+    set sia($which) $value
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

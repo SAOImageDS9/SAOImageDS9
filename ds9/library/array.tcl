@@ -76,6 +76,19 @@ proc ProcessArrayCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	global array
+	set array(load,sock) $sock
+	set array(load,fn) $fn
+	set array(load,layer) {}
+
+	array::YY_FLUSH_BUFFER
+	array::yy_scan_string [lrange $var $i end]
+	array::yyparse
+	incr i [expr $array::yycnt-1]
+    } else {
+
     if {[ProcessArrayBackwardCmd $varname $iname $sock $fn]} {
 	return
     }
@@ -113,6 +126,53 @@ proc ProcessArrayCmd {varname iname sock fn} {
 	    ImportArrayAlloc $fn $param $layer
 	} else {
 	    ImportArrayFile $param $layer
+	}
+    }
+    FinishLoad
+}
+}
+
+proc ArrayCmdSet {which value} {
+    global array
+
+    set array($which) $value
+}
+
+proc ArrayCmdLoad {param} {
+    global array
+
+    if {$array(load,sock) != {}} {
+	# xpa
+	if {![ImportArraySocket $array(load,sock) $param $array(load,layer)]} {
+	    InitError xpa
+	    ImportArrayFile $param $array(load,layer)
+	}
+    } else {
+	# comm
+	if {$array(load,fn) != {}} {
+	    ImportArrayAlloc $array(load,fn) $param $array(load,layer)
+	} else {
+	    ImportArrayFile $param $array(load,layer)
+	}
+    }
+    FinishLoad
+}
+
+proc ArrayCmdLoadRGB {param} {
+    global array
+
+    if {$array(load,sock) != {}} {
+	# xpa
+	if {![ImportRGBArraySocket $array(load,sock) $param]} {
+	    InitError xpa
+	    ImportRGBArrayFile $param
+	}
+    } else {
+	# comm
+	if {$array(load,fn) != {}} {
+	    ImportRGBArrayAlloc $array(load,fn) $param
+	} else {
+	    ImportRGBArrayFile $param
 	}
     }
     FinishLoad

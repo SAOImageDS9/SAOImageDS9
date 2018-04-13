@@ -1,0 +1,12 @@
+#tab nanparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+#include string.fin
+
+%%

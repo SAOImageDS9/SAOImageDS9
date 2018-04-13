@@ -198,6 +198,8 @@ source $ds9(root)/library/backupparser.tcl
 source $ds9(root)/library/backuplex.tcl
 source $ds9(root)/library/binparser.tcl
 source $ds9(root)/library/binlex.tcl
+source $ds9(root)/library/bgparser.tcl
+source $ds9(root)/library/bglex.tcl
 source $ds9(root)/library/blinkparser.tcl
 source $ds9(root)/library/blinklex.tcl
 source $ds9(root)/library/blockparser.tcl
@@ -230,6 +232,8 @@ source $ds9(root)/library/gridparser.tcl
 source $ds9(root)/library/gridlex.tcl
 source $ds9(root)/library/headerparser.tcl
 source $ds9(root)/library/headerlex.tcl
+source $ds9(root)/library/nanparser.tcl
+source $ds9(root)/library/nanlex.tcl
 source $ds9(root)/library/nvssparser.tcl
 source $ds9(root)/library/nvsslex.tcl
 source $ds9(root)/library/panparser.tcl

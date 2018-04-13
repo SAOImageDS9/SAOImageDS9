@@ -1,0 +1,12 @@
+#tab bgparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+#include string.fin
+
+%%

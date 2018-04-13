@@ -1175,6 +1175,15 @@ proc DS9Backup {ch which} {
 
 # Process Cmds
 
+proc Pds9CmdSet {which value {cmd {}}} {
+    global pds9
+
+    set pds9($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
 proc ProcessPrefsCmd {varname iname} {
     upvar $varname var
     upvar $iname i
@@ -1268,9 +1277,18 @@ proc ProcessBgCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	bg::YY_FLUSH_BUFFER
+	bg::yy_scan_string [lrange $var $i end]
+	bg::yyparse
+	incr i [expr $bg::yycnt-1]
+    } else {
+
     global pds9
     set pds9(bg) [lindex $var $i]
     PrefsBgColor
+}
 }
 
 proc ProcessSendBgCmd {proc id param} {
@@ -1283,9 +1301,18 @@ proc ProcessNanCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	nan::YY_FLUSH_BUFFER
+	nan::yy_scan_string [lrange $var $i end]
+	nan::yyparse
+	incr i [expr $nan::yycnt-1]
+    } else {
+
     global pds9
     set pds9(nan) [lindex $var $i]
     PrefsNanColor
+}
 }
 
 proc ProcessSendNanCmd {proc id param} {

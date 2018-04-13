@@ -140,6 +140,14 @@ proc ProcessMagnifierCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	magnifier::YY_FLUSH_BUFFER
+	magnifier::yy_scan_string [lrange $var $i end]
+	magnifier::yyparse
+	incr i [expr $magnifier::yycnt-1]
+    } else {
+
     global pmagnifier
     global view
 
@@ -170,6 +178,16 @@ proc ProcessMagnifierCmd {varname iname} {
 	    UpdateView
 	    incr i -1
 	}
+    }
+}
+}
+
+proc PmagnifierCmdSet {which value {cmd {}}} {
+    global pmagnifier
+
+    set pmagnifier($which) $value
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

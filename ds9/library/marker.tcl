@@ -1976,7 +1976,7 @@ proc ProcessRegionsCmd {varname iname sock fn} {
 }
 }
 
-proc RegionCmdSet {which value {cmd {}}} {
+proc MarkerCmdSet {which value {cmd {}}} {
     global marker
 
     set marker($which) $value
@@ -1985,7 +1985,7 @@ proc RegionCmdSet {which value {cmd {}}} {
     }
 }
 
-proc PRegionCmdSet {which value {cmd {}}} {
+proc PmarkerCmdSet {which value {cmd {}}} {
     global pmarker
 
     set pmarker($which) $value

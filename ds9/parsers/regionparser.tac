@@ -125,12 +125,12 @@ region : {RegionCmdLoad}
  | FILE_ loadall STRING_ {RegionCmdLoadFn $3 $2}
  | SAVE_ STRING_ {RegionCmdSave $2}
  | LIST_ list
- | EPSILON_ INT_ {PRegionCmdSet epsilon $2 MarkerEpsilon}
- | SHOW_ yesno {RegionCmdSet show $2 MarkerShow}
- | SHOWTEXT_ yesno {RegionCmdSet show,text $2 MarkerShowText}
+ | EPSILON_ INT_ {PmarkerCmdSet epsilon $2 MarkerEpsilon}
+ | SHOW_ yesno {MarkerCmdSet show $2 MarkerShow}
+ | SHOWTEXT_ yesno {MarkerCmdSet show,text $2 MarkerShowText}
  | CENTROID_ centroid
 # backward compatibility
- | AUTOCENTROID_ yesno {RegionCmdSet centroid,auto $2 MarkerCentroidAuto}
+ | AUTOCENTROID_ yesno {MarkerCmdSet centroid,auto $2 MarkerCentroidAuto}
  | GETINFO_ {MarkerInfo}
  | MOVE_ move
 # backward compatibility
@@ -145,35 +145,35 @@ region : {RegionCmdLoad}
  | DELETE_ delete
 # backward compatibility
  | DELETEALL_ {MarkerDeleteAll}
- | FORMAT_ format {RegionCmdSet format $2}
- | SYSTEM_ coordsys {RegionCmdSet system $2}
- | SYSTEM_ wcssys {RegionCmdSet system $2}
+ | FORMAT_ format {MarkerCmdSet format $2}
+ | SYSTEM_ coordsys {MarkerCmdSet system $2}
+ | SYSTEM_ wcssys {MarkerCmdSet system $2}
 # backward compatibility
- | SYSTEM_ skyframe {RegionCmdSet system wcs; RegionCmdSet sky $2}
- | SKY_ skyframe {RegionCmdSet sky $2}
- | SKYFORMAT_ skyformat {RegionCmdSet skyformat $2}
- | STRIP_ yesno {RegionCmdSet strip $2}
- | DELIM_ delim {RegionCmdSet strip $2}
- | SHAPE_ shape {RegionCmdSet shape $2}
- | COLOR_ STRING_ {RegionCmdSet color $2 MarkerColor}
- | WIDTH_ INT_ {RegionCmdSet width $2 MarkerWidth}
- | FIXED_ yesno {RegionCmdSet fixed $2 [list MarkerProp fixed]}
- | EDIT_ yesno {RegionCmdSet edit $2 [list MarkerProp edit]}
- | ROTATE_ yesno {RegionCmdSet rotate $2 [list MarkerProp rotate]}
- | DELETE_ yesno {RegionCmdSet delete $2 [list MarkerProp delete]}
- | INCLUDE_ {RegionCmdSet include 1 [list MarkerProp include]}
- | EXCLUDE_ {RegionCmdSet include 0 [list MarkerProp include]}
- | SOURCE_ {RegionCmdSet source 1 [list MarkerProp source]}
- | BACKGROUND_ {RegionCmdSet source 0 [list MarkerProp source]}
+ | SYSTEM_ skyframe {MarkerCmdSet system wcs; MarkerCmdSet sky $2}
+ | SKY_ skyframe {MarkerCmdSet sky $2}
+ | SKYFORMAT_ skyformat {MarkerCmdSet skyformat $2}
+ | STRIP_ yesno {MarkerCmdSet strip $2}
+ | DELIM_ delim {MarkerCmdSet strip $2}
+ | SHAPE_ shape {MarkerCmdSet shape $2}
+ | COLOR_ STRING_ {MarkerCmdSet color $2 MarkerColor}
+ | WIDTH_ INT_ {MarkerCmdSet width $2 MarkerWidth}
+ | FIXED_ yesno {MarkerCmdSet fixed $2 [list MarkerProp fixed]}
+ | EDIT_ yesno {MarkerCmdSet edit $2 [list MarkerProp edit]}
+ | ROTATE_ yesno {MarkerCmdSet rotate $2 [list MarkerProp rotate]}
+ | DELETE_ yesno {MarkerCmdSet delete $2 [list MarkerProp delete]}
+ | INCLUDE_ {MarkerCmdSet include 1 [list MarkerProp include]}
+ | EXCLUDE_ {MarkerCmdSet include 0 [list MarkerProp include]}
+ | SOURCE_ {MarkerCmdSet source 1 [list MarkerProp source]}
+ | BACKGROUND_ {MarkerCmdSet source 0 [list MarkerProp source]}
  | GROUPS_ group
  | GROUP_ group
  | COPY_ {MarkerCopy}
  | CUT_ {MarkerCut}
- | PASTE_ {RegionCmdSet paste,system wcs MarkerPaste}
- | PASTE_ coordsys {RegionCmdSet paste,system $2 MarkerPaste}
- | PASTE_ wcssys {RegionCmdSet paste,system $2 MarkerPaste}
+ | PASTE_ {MarkerCmdSet paste,system wcs MarkerPaste}
+ | PASTE_ coordsys {MarkerCmdSet paste,system $2 MarkerPaste}
+ | PASTE_ wcssys {MarkerCmdSet paste,system $2 MarkerPaste}
 # backward compatibility
- | PASTE_ skyframe {RegionCmdSet paste,system wcs MarkerPaste}
+ | PASTE_ skyframe {MarkerCmdSet paste,system wcs MarkerPaste}
  | UNDO_ {MarkerUndo}
  | COMPOSITE_ {CompositeCreate}
  | DISSOLVE_ {CompositeDelete}
@@ -186,12 +186,12 @@ props : props prop
  | prop
  ;
  
-prop : -FORMAT_ format {RegionCmdSet load,format $2}
- | -SYSTEM_ coordsys {RegionCmdSet load,system $2}
- | -SYSTEM_ wcssys {RegionCmdSet load,system $2}
+prop : -FORMAT_ format {MarkerCmdSet load,format $2}
+ | -SYSTEM_ coordsys {MarkerCmdSet load,system $2}
+ | -SYSTEM_ wcssys {MarkerCmdSet load,system $2}
 # backward compatibility
- | -SYSTEM_ skyframe {RegionCmdSet load,system wcs; RegionCmdSet load,sky $2}
- | -SKY_ skyframe {RegionCmdSet load,sky $2}
+ | -SYSTEM_ skyframe {MarkerCmdSet load,system wcs; MarkerCmdSet load,sky $2}
+ | -SKY_ skyframe {MarkerCmdSet load,sky $2}
  ;
 
 loadall : {set _ 0}
@@ -203,9 +203,9 @@ list : {RegionCmdList}
  ;
 
 centroid : {MarkerCentroid}
- | AUTO_ yesno {RegionCmdSet centroid,auto $2 MarkerCentroidAuto}
- | RADIUS_ numeric {RegionCmdSet centroid,radius $2 MarkerCentroidRadius}
- | ITERATION_ INT_ {RegionCmdSet centroid,iteration $2 MarkerCentroidIteration}
+ | AUTO_ yesno {MarkerCmdSet centroid,auto $2 MarkerCentroidAuto}
+ | RADIUS_ numeric {MarkerCmdSet centroid,radius $2 MarkerCentroidRadius}
+ | ITERATION_ INT_ {MarkerCmdSet centroid,iteration $2 MarkerCentroidIteration}
  ;
 
 move : FRONT_ {MarkerFront}

@@ -1,0 +1,17 @@
+#tab orientparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+none	    {return $NONE_}
+open	    {return $OPEN_}
+xy	    {return $XY_}
+
+#include string.fin
+
+%%

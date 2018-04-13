@@ -817,6 +817,14 @@ proc ProcessOrientCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	orient::YY_FLUSH_BUFFER
+	orient::yy_scan_string [lrange $var $i end]
+	orient::yyparse
+	incr i [expr $orient::yycnt-1]
+    } else {
+
     global current
     switch -- [string tolower [lindex $var $i]] {
 	open {PanZoomDialog}
@@ -826,6 +834,7 @@ proc ProcessOrientCmd {varname iname} {
 	    ChangeOrient
 	}
     }
+}
 }
 
 proc ProcessSendOrientCmd {proc id param} {
@@ -840,6 +849,14 @@ proc ProcessRotateCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	rotate::YY_FLUSH_BUFFER
+	rotate::yy_scan_string [lrange $var $i end]
+	rotate::yyparse
+	incr i [expr $rotate::yycnt-1]
+    } else {
+
     global current
     switch -- [string tolower [lindex $var $i]] {
 	open {PanZoomDialog}
@@ -851,6 +868,7 @@ proc ProcessRotateCmd {varname iname} {
 	}
 	default {Rotate [lindex $var $i]}
     }
+}
 }
 
 proc ProcessSendRotateCmd {proc id param} {

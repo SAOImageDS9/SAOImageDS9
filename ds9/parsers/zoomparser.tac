@@ -21,7 +21,6 @@ command : zoom
  | zoom {yyclearin; YYACCEPT} STRING_
  ;
 
-
 zoom : OPEN_ {PanZoomDialog}
  | CLOSE_ {PanZoomDestroyDialog}
  | IN_ {Zoom 2 2}

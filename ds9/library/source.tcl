@@ -240,6 +240,10 @@ source $ds9(root)/library/nanparser.tcl
 source $ds9(root)/library/nanlex.tcl
 source $ds9(root)/library/nvssparser.tcl
 source $ds9(root)/library/nvsslex.tcl
+source $ds9(root)/library/orientparser.tcl
+source $ds9(root)/library/orientlex.tcl
+source $ds9(root)/library/rotateparser.tcl
+source $ds9(root)/library/rotatelex.tcl
 source $ds9(root)/library/panparser.tcl
 source $ds9(root)/library/panlex.tcl
 source $ds9(root)/library/plotparser.tcl

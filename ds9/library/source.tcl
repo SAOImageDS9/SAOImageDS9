@@ -232,6 +232,10 @@ source $ds9(root)/library/gridparser.tcl
 source $ds9(root)/library/gridlex.tcl
 source $ds9(root)/library/headerparser.tcl
 source $ds9(root)/library/headerlex.tcl
+source $ds9(root)/library/lockparser.tcl
+source $ds9(root)/library/locklex.tcl
+source $ds9(root)/library/matchparser.tcl
+source $ds9(root)/library/matchlex.tcl
 source $ds9(root)/library/nanparser.tcl
 source $ds9(root)/library/nanlex.tcl
 source $ds9(root)/library/nvssparser.tcl

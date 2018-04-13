@@ -2526,6 +2526,14 @@ proc ProcessLockCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	lock::YY_FLUSH_BUFFER
+	lock::yy_scan_string [lrange $var $i end]
+	lock::yyparse
+	incr i [expr $lock::yycnt-1]
+    } else {
+
     switch -- [string tolower [lindex $var $i]] {
 	frame -
 	frames {
@@ -2651,6 +2659,7 @@ proc ProcessLockCmd {varname iname} {
 	}
     }
 }
+}
 
 proc ProcessSendLockCmd {proc id param} {
     global panzoom
@@ -2700,6 +2709,14 @@ proc ProcessMatchCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	match::YY_FLUSH_BUFFER
+	match::yy_scan_string [lrange $var $i end]
+	match::yyparse
+	incr i [expr $match::yycnt-1]
+    } else {
+
     switch -- [string tolower [lindex $var $i]] {
 	frame -
 	frames {
@@ -2745,4 +2762,4 @@ proc ProcessMatchCmd {varname iname} {
 	3d {Match3DCurrent}
     }
 }
-
+}

@@ -43,6 +43,14 @@ proc ProcessSaveCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	save::YY_FLUSH_BUFFER
+	save::yy_scan_string [lrange $var $i end]
+	save::yyparse
+	incr i [expr $save::yycnt-1]
+    } else {
+
     set format {}
     set fn [lindex $var $i]
     if {$fn == {}} {
@@ -120,6 +128,21 @@ proc ProcessSaveCmd {varname iname} {
     global savefitsfbox
     FileLast savefitsfbox $fn
     Save $format $fn
+}
+}
+
+proc SaveCmdLoad {format fn} {
+    FileLast savefitsfbox $fn
+    Save $format $fn
+}
+
+proc SavefitsCmdSet {which value {cmd {}}} {
+    global savefits
+
+    set savefits($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 # Support

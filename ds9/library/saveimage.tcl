@@ -273,8 +273,8 @@ proc ProcessSaveImageCmd {varname iname} {
 }
 }
 
-proc SaveImageCmdSet {which value {cmd {}}} {
-    global bin
+proc SaveimageCmdSet {which value {cmd {}}} {
+    global saveimage
 
     set saveimage($which) $value
     if {$cmd != {}} {
@@ -282,7 +282,7 @@ proc SaveImageCmdSet {which value {cmd {}}} {
     }
 }
 
-proc SaveImageCmdLoad {format fn} {
+proc SaveimageCmdLoad {format fn} {
     switch -- $format {
 	fits {FileLast fitsfbox $fn}
 	eps {FileLast epsfbox $fn}
@@ -294,8 +294,9 @@ proc SaveImageCmdLoad {format fn} {
     SaveImage $fn $format
 }
 
-proc SaveImageCmdMPEG {fn na} {
+proc SaveimageCmdMPEG {fn na} {
     global movie
+
     set movie(action) slice
     Movie $fn
 }

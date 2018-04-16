@@ -1,0 +1,27 @@
+#tab saveparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+fits	    {return $FITS_}
+rgbimage    {return $RGBIMAGE_}
+rgbcube	    {return $RGBCUBE_}
+mecube	    {return $MECUBE_}
+mosaic	    {return $MOSAIC_}
+mosaicwcs   {return $MOSAICWCS_}
+mosaicimage {return $MOSAICIMAGE_}
+mosaicimagewcs {return $MOSAICIMAGEWCS_}
+wcs	    {return $WCS_}
+
+image	    {return $IMAGE_}
+table	    {return $TABLE_}
+slice	    {return $SLICE_}
+
+#include numeric.fin
+#include string.fin
+
+%%

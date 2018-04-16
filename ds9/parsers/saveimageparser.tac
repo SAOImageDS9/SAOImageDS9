@@ -26,16 +26,16 @@ command : saveimage
  | saveimage {yyclearin; YYACCEPT} STRING_
  ;
 
-saveimage : STRING_ opts {SaveImageCmdLoad [ExtToFormat $1] $1}
- | ext STRING_ opts {SaveImageCmdLoad $1 $2}
+saveimage : STRING_ opts {SaveimageCmdLoad [ExtToFormat $1] $1}
+ | ext STRING_ opts {SaveimageCmdLoad $1 $2}
 # backward compatibilty
- | ext opts STRING_ {SaveImageCmdLoad $1 $2}
+ | ext opts STRING_ {SaveimageCmdLoad $1 $2}
 # backward compatibilty
  | MPEG_ mpeg
  ;
  
-mpeg : STRING_ {SaveImageCmdMPEG $1 1}
- | STRING_ INT_ {SaveImageCmdMPEG $1 $2}
+mpeg : STRING_ {SaveimageCmdMPEG $1 1}
+ | STRING_ INT_ {SaveimageCmdMPEG $1 $2}
  ;
 
 ext : FITS_ {set _ fits}
@@ -47,11 +47,11 @@ ext : FITS_ {set _ fits}
  ;
 
 opts :
- | NONE_ {SaveImageCmdSet tiff,compress none}
- | JPEG_ {SaveImageCmdSet tiff,compress jpeg}
- | PACKBITS_ {SaveImageCmdSet tiff,compress packbits}
- | DEFLATE_ {SaveImageCmdSet tiff,compress deflate}
- | numeric {SaveImageCmdSet jpeg,quality $1}
+ | NONE_ {SaveimageCmdSet tiff,compress none}
+ | JPEG_ {SaveimageCmdSet tiff,compress jpeg}
+ | PACKBITS_ {SaveimageCmdSet tiff,compress packbits}
+ | DEFLATE_ {SaveimageCmdSet tiff,compress deflate}
+ | numeric {SaveimageCmdSet jpeg,quality $1}
  ;
  
 %%

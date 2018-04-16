@@ -1,0 +1,25 @@
+#tab saveimageparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+fits	    {return $FITS_}
+eps	    {return $EPS_}
+gif	    {return $GIF_}
+tiff	    {return $TIFF_}
+jpeg	    {return $JPEG_}
+png	    {return $PNG_}
+mpeg	    {return $MPEG}
+
+none	    {return $NONE_}
+packbits    {return $PACKBITS_}
+deflate	    {return $DEFLATE_}
+
+#include numeric.fin
+#include string.fin
+
+%%

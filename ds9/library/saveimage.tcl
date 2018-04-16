@@ -45,6 +45,7 @@ proc SaveImageDialog {format} {
     global tifffbox
     global pngfbox
 
+    puts "a:[array get tifffbox]"
     switch -- $format {
 	fits {set fn [SaveFileDialog fitsfbox]}
 	eps {set fn [SaveFileDialog epsfbox]}
@@ -153,6 +154,14 @@ proc ProcessSaveImageCmd {varname iname} {
     UpdateDS9
     RealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	saveimage::YY_FLUSH_BUFFER
+	saveimage::yy_scan_string [lrange $var $i end]
+	saveimage::yyparse
+	incr i [expr $saveimage::yycnt-1]
+    } else {
+
     set format {}
     set param {}
     set fn [lindex $var $i]
@@ -252,12 +261,28 @@ proc ProcessSaveImageCmd {varname iname} {
 	}
     }
 
-    global fitsfbox
-    global epsfbox
-    global giffbox
-    global jpegfbox
-    global tifffbox
-    global pngfbox
+    switch -- $format {
+	fits {FileLast fitsfbox $fn}
+	eps {FileLast epsfbox $fn}
+	gif {FileLast giffbox $fn}
+	jpeg {FileLast jpegfbox $fn}
+	tiff {FileLast tifffbox $fn}
+	png {FileLast pngfbox $fn}
+    }
+    SaveImage $fn $format
+}
+}
+
+proc SaveImageCmdSet {which value {cmd {}}} {
+    global bin
+
+    set saveimage($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc SaveImageCmdLoad {format fn} {
     switch -- $format {
 	fits {FileLast fitsfbox $fn}
 	eps {FileLast epsfbox $fn}
@@ -269,3 +294,8 @@ proc ProcessSaveImageCmd {varname iname} {
     SaveImage $fn $format
 }
 
+proc SaveImageCmdMPEG {fn na} {
+    global movie
+    set movie(action) slice
+    Movie $fn
+}

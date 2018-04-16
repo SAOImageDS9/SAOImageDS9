@@ -268,6 +268,13 @@ proc InitDialogBox {} {
 				   [list {CDS} {*.cds}] \
 				  ]
 
+    global siafbox
+    set siafbox(file) {ds9.sia}
+    set siafbox(dir) {}
+    set siafbox(types) [list \
+			    [list [::msgcat::mc {Simple Image Access}] {*.sia}] \
+			   ]
+
     global analysisfbox
     set analysisfbox(file) {ds9.ans}
     set analysisfbox(dir) {}

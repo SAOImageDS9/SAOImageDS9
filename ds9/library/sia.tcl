@@ -292,7 +292,7 @@ proc SIATable {varname} {
 	puts stderr "SIATable $varname"
     }
 
-    if {![CATValidDB $var(tbldb)]} {
+    if {![SIAValidDB $var(tbldb)]} {
 	return
     }
 
@@ -325,6 +325,38 @@ proc SIATable {varname} {
     }
 }
 
+proc SIAValidDB {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[info exists var(Nrows)] && 
+	[info exists var(Ncols)] &&
+	[info exists var(HLines)] &&
+	[info exists var(Header)]} {
+	return 1
+    } else {
+	return 0
+    }
+}
+
+proc SIASaveFn {varname fn writer} {
+    upvar #0 $varname var
+    global $varname
+    global $var(tbldb)
+
+    if {$fn == {}} {
+	return
+    }
+
+    # do we have a db?
+    if {![SIAValidDB $var(tbldb)]} {
+	return
+    }
+
+    $writer $var(tbldb) $fn
+    ARDone $varname
+}
+
 # Process Cmds
 
 proc ProcessSIACmd {varname iname} {
@@ -332,6 +364,8 @@ proc ProcessSIACmd {varname iname} {
     upvar $iname i
 
     global isia
+    # we need to be realized
+    ProcessRealizeDS9
 
     global debug
     if {$debug(tcl,parser)} {
@@ -344,10 +378,6 @@ proc ProcessSIACmd {varname iname} {
 	sia::yyparse
 	incr i [expr $sia::yycnt-1]
     } else {
-
-
-    # we need to be realized
-    ProcessRealizeDS9
 
     set item [string tolower [lindex $var $i]]
     switch -- $item {
@@ -467,8 +497,8 @@ proc ProcessSIA {varname iname cvarname} {
 	    }
 
 	    set fn [lindex $var $i]
-	    CATSaveFn $cvarname $fn $writer
-	    FileLast catfbox $fn
+	    SIASaveFn $cvarname $fn $writer
+	    FileLast siafbox $fn
 	}
 	name {
 	    incr i
@@ -506,13 +536,93 @@ proc ProcessSIA {varname iname cvarname} {
     }
 }
 
-proc SIACmdSet {which value {cmd {}}} {
-    global sia
+proc SIACmdCheck {} {
+    global cvarname
+    upvar #0 $cvarname cvar
 
-    set sia($which) $value
-    if {$cmd != {}} {
-	eval $cmd
+    if {![info exists cvar(top)]} {
+	Error "[msgcat::mc {Unable to find SIAP window}] $cvarname"
+	cat::YYABORT
+	return
     }
+    if {![winfo exists $cvar(top)]} {
+	Error "[msgcat:: mc {Unable to find SIAP window}] $cvarname"
+	cat::YYABORT
+	return
+    }
+}
+
+proc SIACmdRef {ref} {
+    global isia
+    global cvarname
+
+    # look for reference in current list
+    if {[lsearch $isia(sias) sia${ref}] < 0} {
+	# see if its from our list of sias
+	foreach mm $isia(def) {
+	    set title [lindex $mm 0]
+	    set vars [lindex $mm 1]
+	    set url [lindex $mm 2]
+	    set opts [lindex $mm 3]
+	    set method [lindex $mm 4]
+
+	    if {$title != {-} && "sia${ref}" == $vars} {
+		SIADialog $vars $title $url $opts $method sync
+		set cvarname sia${ref}
+	    }
+	}
+    }
+}
+
+proc SIACmdSet {which value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+}
+
+proc SIACmdCoord {xx yy sky} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(x) $xx
+    set cvar(y) $yy
+    set cvar(sky) $sky
+}
+
+proc SIACmdSave {fn writer} {
+    global cvarname
+
+    if {$fn != {}} {
+	SIASaveFn $cvarname $fn $writer
+	FileLast siafbox $fn
+    }
+}
+
+proc SIACmdSize {width height rformat} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(width) $width
+    set cvar(height) $height
+    set cvar(rformat) $rformat
+    set cvar(rformat,msg) $rformat
+}
+
+proc SIACmdSkyframe {skyframe} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(sky) $skyframe
+    CoordMenuButtonCmd $cvarname system sky [list SIAWCSMenuUpdate $cvarname]
+}
+
+proc SIACmdSystem {sys} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(system) $sys
+    CoordMenuButtonCmd $cvarname system sky [list SIAWCSMenuUpdate $cvarname]
 }
 
 proc ProcessSendSIACmd {proc id param sock fn} {

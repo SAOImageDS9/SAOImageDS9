@@ -33,6 +33,13 @@ sdss	    {return $SDSS_}
 skyview	    {return $SKYVIEW_}
 tgssadr	    {return $TGSSADR_}
 
+xml	    {return $XML_}
+vot	    {return $VOT_}
+sb	    {return $SB_}
+starbase    {return $STARBASE_}
+csv	    {return $CSV_}
+tsv	    {return $TSV_}
+
 #include coords.fin
 #include numeric.fin
 #include string.fin

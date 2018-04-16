@@ -33,6 +33,13 @@
 %token SKYVIEW_
 %token TGSSADR_
 
+%token XML_
+%token VOT_
+%token SB_
+%token STARBASE_
+%token CSV_
+%token TSV_
+
 %%
 
 #include coords.trl
@@ -42,21 +49,51 @@ command : sia
  | sia {yyclearin; YYACCEPT} STRING_
  ;
 
-sia : CANCEL_ {global cvarname; ARCancel $cvarname}
+sia : {SIACmdCheck} siaCmd
+ | site {SIACmdRef $1}
+ | site {SIACmdRef $1} siaCmd
+ ;
+
+siaCmd : CANCEL_ {global cvarname; ARCancel $cvarname}
  | CLOSE_ {global cvarname; SIADestroy $cvarname}
  | CLEAR_ {global cvarname; SIAOff $cvarname}
- | COORDINATE_
+ | COORDINATE_ coordinate
  | CROSSHAIR_ {global cvarname; IMGSVRCrosshair $cvarname}
- | EXPORT_
- | SAVE_
- | NAME_
+ | EXPORT_ writer STRING_ {SIACmdSave $3 $2}
+ | SAVE_ STRING_ {SIACmdSave $2 VOTWrite}
+ | NAME_ STRING_ {SIACmdSet name $2}
  | PRINT_ {global cvarname; CATPrint $cvarname}
  | RETRIEVE_ {global cvarname; SIAApply $cvarname 1}
- | SIZE_
- | SKY_
- | SKYFORMAT_
- | SYSTEM_
+ | SIZE_ numeric numeric rformat {SIACmdSize $2 $3 $4}
+ | SKY_ skyframe {SIACmdSkyframe $2}
+ | SKYFORMAT_ skyformat {SIACmdSet skyformat $2}
+ | SYSTEM_ wcssys {SIACmdSystem $2}
  | UPDATE_ {global cvarname; IMGSVRUpdate $cvarname}
+ ;
+
+coordinate : numeric numeric {SIACmdCoord $1 $2 fk5}
+ | numeric numeric skyframe {SIACmdCoord $1 $2 $3}
+ | SEXSTR_ SEXSTR_ {SIACmdCoord $1 $2 fk5}
+ | SEXSTR_ SEXSTR_ skyframe {SIACmdCoord $1 $2 $3}
+ ;
+
+site : 2MASS_ {set _ 2mass}
+ | AKARI_ {set _ akari}
+ | ASTROWISE_ {set _ astrowise}
+ | CADC_ {set _ cadc}
+ | CXC_ {set _ cxc}
+ | MAST_ {set _ mast}
+ | SDSS_ {set _ sdss}
+ | SKYVIEW_ {set _ skyview}
+ | TGSSADR_ {set _ tgssadr}
+ ;
+
+writer : XML_ {set _ VOTWrite}
+ | VOT_ {set _ VOTWrite}
+ | SB_ {set _ starbase_write}
+ | STARBASE_ {set _ starbase_write}
+ | CSV_ {set _ TSVWrite}
+ | TSV_ {set _ TSVWrite}
  ;
 
 %%

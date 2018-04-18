@@ -79,17 +79,18 @@ proc LoadMultiFrameAlloc {path fn} {
 	}
 
 	# ProcessLoad will clear loadParam each time
+	# can be gz, so use allocgz
 	set loadParam(file,type) fits
 	set loadParam(file,mode) {}
+	set loadParam(load,type) allocgz
+	set loadParam(load,layer) {}
 	if {$path != {}} {
-	    set loadParam(load,type) allocgz
 	    set loadParam(file,name) "stdin\[$ext\]"
 	    set loadParam(file,fn) "$path\[$ext\]"
 	} else {
-	    set loadParam(load,type) mmapincr
 	    set loadParam(file,name) "$fn\[$ext\]"
+	    set loadParam(file,fn) "$fn\[$ext\]"
 	}
-	set loadParam(load,layer) {}
 
 	if  {![ProcessLoad 0]} {
 	    if {$ext} {

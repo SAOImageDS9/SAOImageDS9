@@ -246,6 +246,8 @@ source $ds9(root)/library/rotateparser.tcl
 source $ds9(root)/library/rotatelex.tcl
 source $ds9(root)/library/panparser.tcl
 source $ds9(root)/library/panlex.tcl
+source $ds9(root)/library/pixeltableparser.tcl
+source $ds9(root)/library/pixeltablelex.tcl
 source $ds9(root)/library/plotparser.tcl
 source $ds9(root)/library/plotlex.tcl
 source $ds9(root)/library/prefsparser.tcl

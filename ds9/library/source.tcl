@@ -250,6 +250,8 @@ source $ds9(root)/library/plotparser.tcl
 source $ds9(root)/library/plotlex.tcl
 source $ds9(root)/library/prefsparser.tcl
 source $ds9(root)/library/prefslex.tcl
+source $ds9(root)/library/precisionparser.tcl
+source $ds9(root)/library/precisionlex.tcl
 source $ds9(root)/library/psparser.tcl
 source $ds9(root)/library/pslex.tcl
 source $ds9(root)/library/regionparser.tcl

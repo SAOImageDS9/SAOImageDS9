@@ -1270,6 +1270,14 @@ proc ProcessPrecisionCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	precision::YY_FLUSH_BUFFER
+	precision::yy_scan_string [lrange $var $i end]
+	precision::yyparse
+	incr i [expr $precision::yycnt-1]
+    } else {
+
     global pds9
     set pds9(prec,linear) [lindex $var $i]
     incr i
@@ -1283,6 +1291,7 @@ proc ProcessPrecisionCmd {varname iname} {
     incr i
     set pds9(prec,arcsec) [lindex $var $i]
     PrefsPrecision
+}
 }
 
 proc ProcessSendPrecisionCmd {proc id param} {

@@ -1175,7 +1175,16 @@ proc DS9Backup {ch which} {
 
 # Process Cmds
 
-proc Pds9CmdSet {which value {cmd {}}} {
+proc ds9CmdSet {which value {cmd {}}} {
+    global ds9
+
+    set ds9($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc pds9CmdSet {which value {cmd {}}} {
     global pds9
 
     set pds9($which) $value
@@ -1187,6 +1196,14 @@ proc Pds9CmdSet {which value {cmd {}}} {
 proc ProcessPrefsCmd {varname iname} {
     upvar $varname var
     upvar $iname i
+
+    global debug
+    if {$debug(tcl,parser)} {
+	prefs::YY_FLUSH_BUFFER
+	prefs::yy_scan_string [lrange $var $i end]
+	prefs::yyparse
+	incr i [expr $prefs::yycnt-1]
+    } else {
 
     global pds9
     global ds9
@@ -1232,6 +1249,7 @@ proc ProcessPrefsCmd {varname iname} {
 	    PrefsIRAFAlign
 	}
     }
+}
 }
 
 proc ProcessSendPrefsCmd {proc id param} {

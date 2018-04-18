@@ -1,0 +1,21 @@
+#tab prefsparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+bgcolor	    {return $BGCOLOR_}
+clear	    {return $CLEAR_}
+irafalign   {return $IRAFALIGN_}
+nancolor    {return $NANCOLOR_}
+precision   {return $PRECISION_}
+threads	    {return $THREADS_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+
+%%

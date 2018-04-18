@@ -1,0 +1,27 @@
+#tab pagesetupparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+orient	    {return $ORIENT_}
+scale	    {return $SCALE_}
+size	    {return $SIZE_}
+
+portrait    {return $PORTRAIT_}
+landscape   {return $LANDSCAPE_}
+
+letter	    {return $LETTER_}
+legal	    {return $LEGAL_}
+tabloid	    {return $TABLOID_}
+poster	    {return $POSTER_}
+a4	    {return $A4_}
+
+
+#include numeric.fin
+#include string.fin
+
+%%

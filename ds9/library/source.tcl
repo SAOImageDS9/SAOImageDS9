@@ -244,6 +244,8 @@ source $ds9(root)/library/orientparser.tcl
 source $ds9(root)/library/orientlex.tcl
 source $ds9(root)/library/rotateparser.tcl
 source $ds9(root)/library/rotatelex.tcl
+source $ds9(root)/library/pagesetupparser.tcl
+source $ds9(root)/library/pagesetuplex.tcl
 source $ds9(root)/library/panparser.tcl
 source $ds9(root)/library/panlex.tcl
 source $ds9(root)/library/pixeltableparser.tcl

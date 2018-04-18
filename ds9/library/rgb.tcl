@@ -262,10 +262,18 @@ proc ProcessRGBCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    RGBDialog
+
+    global debug
+    if {$debug(tcl,parser)} {
+	rgb::YY_FLUSH_BUFFER
+	rgb::yy_scan_string [lrange $var $i end]
+	rgb::yyparse
+	incr i [expr $rgb::yycnt-1]
+    } else {
+
     global current
     global rgb
-
-    RGBDialog
 
     switch -- [string tolower [lindex $var $i]] {
 	open {}
@@ -328,6 +336,7 @@ proc ProcessRGBCmd {varname iname} {
 	    incr i -1
 	}
     }
+}
 }
 
 proc RGBCmdSet {which value {cmd {}}} {

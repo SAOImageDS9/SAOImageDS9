@@ -20,7 +20,7 @@ command : pixeltable
 pixeltable : {PixelTableDialog}
  | OPEN_ {PixelTableDialog}
  | CLOSE_ {PixelTableDestroyDialog}
- | yesno
+ | yesno {PixelTableCmd $1}
  ;
 
 %%

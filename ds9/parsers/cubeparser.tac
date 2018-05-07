@@ -17,7 +17,6 @@
 %token LOCK_
 %token MATCH_
 %token NEXT_
-%token NONE_
 %token OPEN_
 %token ORDER_
 %token PLAY_
@@ -44,7 +43,7 @@ command : cube
 cube : OPEN_
  | CLOSE_ {CubeDestroyDialog}
  | MATCH_ match {MatchCubeCurrent $2}
- | LOCK_ lock {CubeCmdSet lock $2 LockCubeCurrent}
+ | LOCK_ slicenone {CubeCmdSet lock $2 LockCubeCurrent}
  | PLAY_ {CubePlay}
  | STOP_ {CubeStop}
  | NEXT_ {CubeNext}
@@ -60,11 +59,6 @@ cube : OPEN_
 
 match : IMAGE_ {set _ image}
  | wcssys {set _ $1}
- ;
-
-lock : IMAGE_ {set _ image}
- | wcssys {set _ $1}
- | NONE_ {set _ none}
  ;
 
 order : LOCK_ yesno {CubeCmdSet lock,axes $2 LockAxesCurrent}

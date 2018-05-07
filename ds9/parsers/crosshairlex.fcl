@@ -9,7 +9,6 @@
 
 lock	    {return $LOCK_}
 match	    {return $MATCH_}
-none	    {return $NONE_}
 
 #include coords.fin
 #include numeric.fin

@@ -11,7 +11,6 @@
 %token CLOSE_
 %token LOCK_
 %token MATCH_
-%token NONE_
 %token OPEN_
 %token RESET_
 
@@ -27,7 +26,7 @@ command : crop
 crop : OPEN_ {CropDialog}
  | CLOSE_ {CropDestroyDialog}
  | MATCH_ match {MatchCropCurrent $2}
- | LOCK_ lock {CropCmdSet lock $2 LockCropCurrent}
+ | LOCK_ coordnone {CropCmdSet lock $2 LockCropCurrent}
  | RESET_ {CropReset}
  | 3D_ 3d
 
@@ -52,11 +51,6 @@ crop : OPEN_ {CropDialog}
 
 match : coordsys {set _ $1}
  | wcssys {set _ $1}
- ;
-
-lock : coordsys {set _ $1}
- | wcssys {set _ $1}
- | NONE_ {set _ none}
  ;
 
 3d : numeric numeric {global current; $current(frame) crop 3d $1 $2 image}

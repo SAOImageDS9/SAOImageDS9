@@ -2056,6 +2056,14 @@ proc ProcessFrameCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	frame::YY_FLUSH_BUFFER
+	frame::yy_scan_string [lrange $var $i end]
+	frame::yyparse
+	incr i [expr $frame::yycnt-1]
+    } else {
+
     global current
     global active
     global panzoom
@@ -2208,6 +2216,31 @@ proc ProcessFrameCmd {varname iname} {
 	    default {CreateGotoFrame [lindex $var $i] base}
 	}
     }
+}
+}
+
+proc FrameCmdHideCurrent {} {
+    global active
+    global current
+
+    set active($current(frame)) 0
+    UpdateActiveFrames
+}
+
+proc FrameCmdHide {which} {
+    global active
+
+    set ff "Frame$which"
+    set active($ff) 0
+    UpdateActiveFrames
+}
+
+proc FrameCmdShow {which} {
+    global active
+
+    set ff "Frame$which"
+    set active($ff) 1
+    UpdateActiveFrames
 }
 
 proc CurrentCmdSet {which value {cmd {}}} {

@@ -15,7 +15,6 @@ colorbar    {return $COLORBAR_}
 crop	    {return $CROP_}
 crosshair   {return $CROSSHAIR_}
 frame	    {return $FRAME_}
-none	    {return $NONE_}
 scale	    {return $SCALE_}
 scalelimits {return $SCALELIMITS_}
 slice	    {return $SLICE_}

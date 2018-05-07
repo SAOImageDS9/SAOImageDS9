@@ -1,4 +1,5 @@
 %token SEXSTR_
+%token NONE_
 
 %token IMAGE_
 %token PHYSICAL_

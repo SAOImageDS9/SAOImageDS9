@@ -9,7 +9,6 @@
 
 %token LOCK_
 %token MATCH_
-%token NONE_
 
 %%
 
@@ -21,7 +20,7 @@ command : crosshair
  ;
 
 crosshair : MATCH_ match {MatchCrosshairCurrent $2}
- | LOCK_ lock {CrosshairCmdSet lock $2 LockCrosshairCurrent}
+ | LOCK_ coordnone {CrosshairCmdSet lock $2 LockCrosshairCurrent}
  | numeric numeric {CrosshairTo $1 $2 physical fk5}
  | numeric numeric coordsys {CrosshairTo $1 $2 $3 fk5}
  | numeric numeric wcssys {CrosshairTo $1 $2 $3 fk5}
@@ -35,11 +34,6 @@ crosshair : MATCH_ match {MatchCrosshairCurrent $2}
 
 match : coordsys {set _ $1}
  | wcssys {set _ $1}
- ;
-
-lock : coordsys {set _ $1}
- | wcssys {set _ $1}
- | NONE_  {set _ none}
  ;
 
 %%

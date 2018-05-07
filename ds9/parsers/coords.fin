@@ -43,6 +43,7 @@ arcmin	    {return $ARCMIN_}
 arcsec	    {return $ARCSEC_}
 
 sexagesimal {return $SEXAGESIMAL_}
+none	    {return $NONE_}
 
 # SEXAGESIMAL
 [+-]?{D}+:{D}+:{D}+"."? |

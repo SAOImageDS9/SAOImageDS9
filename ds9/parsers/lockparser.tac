@@ -16,7 +16,6 @@
 %token CROP_
 %token CROSSHAIR_
 %token FRAME_
-%token NONE_
 %token SCALE_
 %token SCALELIMITS_
 %token SLICE_
@@ -35,7 +34,7 @@ command : lock
 lock : FRAME_ coordnone {PanZoomCmdSet lock $2 LockFrameCurrent}
  | CROSSHAIR_ coordnone {CrosshairCmdSet lock $2 LockCrosshairCurrent}
  | CROP_ coordnone {CropCmdSet lock $2 LockCropCurrent}
- | SLICE_ slice {CubeCmdSet lock $2 LockCubeCurrent}
+ | SLICE_ slicenone {CubeCmdSet lock $2 LockCubeCurrent}
  | BIN_ yesno {BinCmdSet lock $2 LockBinCurrent}
  | AXES_ yesno {CubeCmdSet lock,axes $2 LockAxesCurrent}
  | SCALE_ yesno {ScaleCmdSet lock $2 LockScaleCurrent}
@@ -44,16 +43,6 @@ lock : FRAME_ coordnone {PanZoomCmdSet lock $2 LockFrameCurrent}
  | BLOCK_ yesno {BlockCmdSet lock $2 LockBlockCurrent}
  | SMOOTH_ yesno {SmoothCmdSet lock $2 LockSmoothCurrent}
  | 3D_ yesno {ThreedCmdSet lock $2 Lock3DCurrent}
- ;
-
-coordnone : coordsys {set _ $1}
- | wcssys {set _ $1}
- | NONE_  {set _ none}
- ;
-
-slice : IMAGE_ {set _ image}
- | wcssys {set _ $1}
- | NONE_ {set _ none}
  ;
 
 %%

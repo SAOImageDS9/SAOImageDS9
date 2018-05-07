@@ -11,7 +11,6 @@
 close	{return $CLOSE_}
 lock	{return $LOCK_}
 match	{return $MATCH_}
-none	{return $NONE_}
 open	{return $OPEN_}
 reset	{return $RESET_}
 

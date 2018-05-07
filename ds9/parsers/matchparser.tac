@@ -15,7 +15,6 @@
 %token CROP_
 %token CROSSHAIR_
 %token FRAME_
-%token NONE_
 %token SCALE_
 %token SCALELIMITS_
 %token SLICE_
@@ -33,7 +32,7 @@ command : match
 match : FRAME_ coordnone {MatchFrameCurrent $2}
  | CROSSHAIR_ coordnone {MatchCrosshairCurrent $2}
  | CROP_ coordnone {MatchCropCurrent $2}
- | SLICE_ slice {MatchCubeCurrent $2}
+ | SLICE_ slicenone {MatchCubeCurrent $2}
  | BIN_ {MatchBinCurrent}
  | AXES_ {MatchAxesCurrent}
  | SCALE_ {MatchScaleCurrent}
@@ -42,16 +41,6 @@ match : FRAME_ coordnone {MatchFrameCurrent $2}
  | BLOCK_ {MatchBlockCurrent}
  | SMOOTH_ {MatchSmoothCurrent}
  | 3D_ {Match3DCurrent}
- ;
-
-coordnone : coordsys {set _ $1}
- | wcssys {set _ $1}
- | NONE_  {set _ none}
- ;
-
-slice : IMAGE_ {set _ image}
- | wcssys {set _ $1}
- | NONE_ {set _ none}
  ;
 
 %%

@@ -9,11 +9,10 @@
 
 3d	{return $3D_}
 close	{return $CLOSE_}
-lock	{return $LOCK_}
-match	{return $MATCH_}
 open	{return $OPEN_}
 reset	{return $RESET_}
 
+#include matchlock.fin
 #include coords.fin
 #include numeric.fin
 #include string.fin

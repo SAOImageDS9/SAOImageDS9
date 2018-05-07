@@ -1,6 +1,7 @@
 %{
 %}
 
+#include matchlock.tin
 #include coords.tin
 #include numeric.tin
 #include string.tin
@@ -9,13 +10,12 @@
 
 %token 3D_
 %token CLOSE_
-%token LOCK_
-%token MATCH_
 %token OPEN_
 %token RESET_
 
 %%
 
+#include matchlock.trl
 #include coords.trl
 #include numeric.trl
 
@@ -26,7 +26,7 @@ command : crop
 crop : OPEN_ {CropDialog}
  | CLOSE_ {CropDestroyDialog}
  | MATCH_ match {MatchCropCurrent $2}
- | LOCK_ coordnone {CropCmdSet lock $2 LockCropCurrent}
+ | LOCK_ lock {CropCmdSet lock $2 LockCropCurrent}
  | RESET_ {CropReset}
  | 3D_ 3d
 
@@ -47,10 +47,6 @@ crop : OPEN_ {CropDialog}
  | SEXSTR_ SEXSTR_ numeric numeric skyframe rformat {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
  | SEXSTR_ SEXSTR_ numeric numeric wcssys skyframe {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 degrees}
  | SEXSTR_ SEXSTR_ numeric numeric wcssys skyframe rformat {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
- ;
-
-match : coordsys {set _ $1}
- | wcssys {set _ $1}
  ;
 
 3d : numeric numeric {global current; $current(frame) crop 3d $1 $2 image}

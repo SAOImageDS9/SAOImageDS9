@@ -48,6 +48,7 @@
 %token MOVEFRONT_
 %token NEW_
 %token NL_
+%token NONE_
 %token PASTE_
 %token PROPERTY_
 %token RADIUS_

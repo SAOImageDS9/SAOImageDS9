@@ -1,6 +1,7 @@
 %{
 %}
 
+#include matchlock.tin
 #include coords.tin
 #include yesno.tin
 #include numeric.tin
@@ -23,6 +24,7 @@
 
 %%
 
+#include matchlock.trl
 #include coords.trl
 #include yesno.trl
 #include numeric.trl
@@ -31,10 +33,10 @@ command : lock
  | lock {yyclearin; YYACCEPT} STRING_
  ;
 
-lock : FRAME_ coordnone {PanZoomCmdSet lock $2 LockFrameCurrent}
- | CROSSHAIR_ coordnone {CrosshairCmdSet lock $2 LockCrosshairCurrent}
- | CROP_ coordnone {CropCmdSet lock $2 LockCropCurrent}
- | SLICE_ slicenone {CubeCmdSet lock $2 LockCubeCurrent}
+lock : FRAME_ lock {PanZoomCmdSet lock $2 LockFrameCurrent}
+ | CROSSHAIR_ lock {CrosshairCmdSet lock $2 LockCrosshairCurrent}
+ | CROP_ lock {CropCmdSet lock $2 LockCropCurrent}
+ | SLICE_ lockslice {CubeCmdSet lock $2 LockCubeCurrent}
  | BIN_ yesno {BinCmdSet lock $2 LockBinCurrent}
  | AXES_ yesno {CubeCmdSet lock,axes $2 LockAxesCurrent}
  | SCALE_ yesno {ScaleCmdSet lock $2 LockScaleCurrent}

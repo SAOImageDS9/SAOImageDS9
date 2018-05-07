@@ -1,6 +1,7 @@
 %{
 %}
 
+#include matchlock.tin
 #include coords.tin
 #include numeric.tin
 #include string.tin
@@ -18,8 +19,6 @@
 %token FRAMENO_
 %token HIDE_
 %token LAST_
-%token LOCK_
-%token MATCH_
 %token MOVE_
 %token NEW_
 %token NEXT_
@@ -31,6 +30,7 @@
 
 %%
 
+#include matchlock.trl
 #include coords.trl
 #include numeric.trl
 
@@ -38,8 +38,8 @@ command : frame
  | frame {yyclearin; YYACCEPT} STRING_
  ;
 
-frame : MATCH_ coordnone {MatchFrameCurrent $2}
- | LOCK_ coordnone {PanZoomCmdSet lock $2; LockFrameCurrent}
+frame : MATCH_ match {MatchFrameCurrent $2}
+ | LOCK_ lock {PanZoomCmdSet lock $2; LockFrameCurrent}
  | CENTER_ center
  | CLEAR_ clear
  | DELETE_ delete

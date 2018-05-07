@@ -43,16 +43,6 @@ wcssys : WCS_ {set _ wcs}
 #   YYABORT
 # }
 
-coordnone : coordsys {set _ $1}
- | wcssys {set _ $1}
- | NONE_  {set _ none}
- ;
-
-slicenone : IMAGE_ {set _ image}
- | wcssys {set _ $1}
- | NONE_ {set _ none}
- ;
-
 skyframe : FK4_ {set _ fk4}
  | B1950_ {set _ fk4}
  | FK5_ {set _ fk5}

@@ -20,6 +20,7 @@ scalelimits {return $SCALELIMITS_}
 slice	    {return $SLICE_}
 smooth	    {return $SMOOTH_}
 
+#include matchlock.fin
 #include coords.fin
 #include yesno.fin
 #include numeric.fin

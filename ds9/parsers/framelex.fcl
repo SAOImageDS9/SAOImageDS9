@@ -19,8 +19,6 @@ forward	    {return $FORWARD_}
 frameno	    {return $FRAMENO_}
 hide	    {return $HIDE_}
 last	    {return $LAST_}
-lock	    {return $LOCK_}
-match	    {return $MATCH_}
 move	    {return $MOVE_}
 new	    {return $NEW_}
 next	    {return $NEXT_}
@@ -30,6 +28,7 @@ reset	    {return $RESET_}
 rgb	    {return $RGB_}
 show	    {return $SHOW_}
 
+#include matchlock.fin
 #include coords.fin
 #include numeric.fin
 #include string.fin

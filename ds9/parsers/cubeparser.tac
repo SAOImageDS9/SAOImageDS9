@@ -1,6 +1,7 @@
 %{
 %}
 
+#include matchlock.tin
 #include coords.tin
 #include yesno.tin
 #include numeric.tin
@@ -14,8 +15,6 @@
 %token FIRST_
 %token INTERVAL_
 %token LAST_
-%token LOCK_
-%token MATCH_
 %token NEXT_
 %token OPEN_
 %token ORDER_
@@ -32,6 +31,7 @@
 
 %%
 
+#include matchlock.trl
 #include coords.trl
 #include yesno.trl
 #include numeric.trl
@@ -42,8 +42,8 @@ command : cube
 
 cube : OPEN_
  | CLOSE_ {CubeDestroyDialog}
- | MATCH_ match {MatchCubeCurrent $2}
- | LOCK_ slicenone {CubeCmdSet lock $2 LockCubeCurrent}
+ | MATCH_ matchslice {MatchCubeCurrent $2}
+ | LOCK_ lockslice {CubeCmdSet lock $2 LockCubeCurrent}
  | PLAY_ {CubePlay}
  | STOP_ {CubeStop}
  | NEXT_ {CubeNext}
@@ -55,10 +55,6 @@ cube : OPEN_
  | INT_ {CubeCmdCoord $1 image 2}
  | numeric wcssys {CubeCmdCoord $1 $2 2}
  | numeric wcssys INT_ {CubeCmdCoord $1 $2 [expr $3-1]}
- ;
-
-match : IMAGE_ {set _ image}
- | wcssys {set _ $1}
  ;
 
 order : LOCK_ yesno {CubeCmdSet lock,axes $2 LockAxesCurrent}

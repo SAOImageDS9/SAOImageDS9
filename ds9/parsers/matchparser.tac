@@ -1,6 +1,7 @@
 %{
 %}
 
+#include matchlock.tin
 #include coords.tin
 #include numeric.tin
 #include string.tin
@@ -22,6 +23,7 @@
 
 %%
 
+#include matchlock.trl
 #include coords.trl
 #include numeric.trl
 
@@ -29,10 +31,10 @@ command : match
  | match {yyclearin; YYACCEPT} STRING_
  ;
 
-match : FRAME_ coordnone {MatchFrameCurrent $2}
- | CROSSHAIR_ coordnone {MatchCrosshairCurrent $2}
- | CROP_ coordnone {MatchCropCurrent $2}
- | SLICE_ slicenone {MatchCubeCurrent $2}
+match : FRAME_ match {MatchFrameCurrent $2}
+ | CROSSHAIR_ match {MatchCrosshairCurrent $2}
+ | CROP_ match {MatchCropCurrent $2}
+ | SLICE_ matchslice {MatchCubeCurrent $2}
  | BIN_ {MatchBinCurrent}
  | AXES_ {MatchAxesCurrent}
  | SCALE_ {MatchScaleCurrent}

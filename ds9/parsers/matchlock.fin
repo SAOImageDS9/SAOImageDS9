@@ -1,0 +1,3 @@
+lock	{return $LOCK_}
+match	{return $MATCH_}
+none	{return $NONE_}

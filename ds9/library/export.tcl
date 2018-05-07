@@ -7,9 +7,7 @@ package provide DS9 1.0
 proc ExportDef {} {
     global export
 
-    set export(array,endian) native
-    set export(nrrd,endian) native
-    set export(envi,endian) native
+    set export(endian) native
     set export(jpeg,quality) 75
     set export(tiff,compress) none
 }
@@ -18,10 +16,10 @@ proc Export {fn format fn2} {
     global export
 
     switch $format {
-	array {ExportArrayFile $fn $export(array,endian)}
-	rgbarray {ExportRGBArrayFile $fn $export(array,endian)}
-	nrrd {ExportNRRDFile $fn $export(nrrd,endian)}
-	envi {ExportENVIFile $fn $fn2 $export(envi,endian)}
+	array {ExportArrayFile $fn $export(endian)}
+	rgbarray {ExportRGBArrayFile $fn $export(endian)}
+	nrrd {ExportNRRDFile $fn $export(endian)}
+	envi {ExportENVIFile $fn $fn2 $export(endian)}
 	gif {ExportPhotoFile $fn $format {}}
 	tiff {ExportPhotoFile $fn $format $export(tiff,compress)}
 	jpeg {ExportPhotoFile $fn $format $export(jpeg,quality)}
@@ -37,6 +35,14 @@ proc ProcessExportCmd {varname iname} {
 
     # we need to be realized
     ProcessRealizeDS9
+
+    global debug
+    if {$debug(tcl,parser)} {
+	export::YY_FLUSH_BUFFER
+	export::yy_scan_string [lrange $var $i end]
+	export::yyparse
+	incr i [expr $export::yycnt-1]
+    } else {
 
     set format {}
     set fn [lindex $var $i]
@@ -86,18 +92,7 @@ proc ProcessExportCmd {varname iname} {
     set param [string tolower [lindex $var [expr $i+1]]]
     switch $format {
 	array -
-	rgbarray {
-	    switch $param {
-		native -
-		big -
-		bigendian -
-		little -
-		littleendian {
-		    set export(array,endian) $param
-		    incr i
-		}
-	    }
-	}
+	rgbarray -
 	nrrd {
 	    switch $param {
 		native -
@@ -105,7 +100,7 @@ proc ProcessExportCmd {varname iname} {
 		bigendian -
 		little -
 		littleendian {
-		    set export(nrrd,endian) $param
+		    set export(endian) $param
 		    incr i
 		}
 	    }
@@ -119,7 +114,7 @@ proc ProcessExportCmd {varname iname} {
 		little -
 		littleendian {
 		    set fn2 "[file rootname $fn].bsq"
-		    set export(envi,endian) $param
+		    set export(endian) $param
 		    incr i
 		}
 		default {
@@ -135,7 +130,7 @@ proc ProcessExportCmd {varname iname} {
 			    bigendian -
 			    little -
 			    littleendian {
-				set export(envi,endian) $param
+				set export(endian) $param
 				incr i
 			    }
 			}
@@ -164,15 +159,33 @@ proc ProcessExportCmd {varname iname} {
 	png {}
     }
 
-    global arrayfbox
-    global rgbarrayfbox
-    global giffbox
-    global jpegfbox
-    global tifffbox
-    global pngfbox
-    global nrrdfbox
-    global envifbox
-    global envi2fbox
+    switch -- $format {
+	array {FileLast arrayfbox $fn}
+	rgbarray {FileLast rgbarrayfbox $fn}
+	nrrd {FileLast nrrdfbox $fn}
+	envi {
+	    FileLast envifbox $fn
+	    FileLast envi2fbox $fn2
+	}
+	gif {FileLast giffbox $fn}
+	jpeg {FileLast jpegfbox $fn}
+	tiff {FileLast tifffbox $fn}
+	png {FileLast pngfbox $fn}
+    }
+    Export $fn $format $fn2
+}
+}
+
+proc ExportCmdSet {which value {cmd {}}} {
+    global export
+
+    set export($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc ExportCmdSave {format fn {fn2 {}}} {
     switch -- $format {
 	array {FileLast arrayfbox $fn}
 	rgbarray {FileLast rgbarrayfbox $fn}
@@ -218,9 +231,9 @@ proc ExportDialog {format} {
     if {$fn != {}} {
 	set ok 1
 	switch -- $format {
-	    array {set ok [ArrayExportDialog export(array,endian)]}
+	    array {set ok [ArrayExportDialog export(endian)]}
 	    rgbarray {}
-	    nrrd {set ok [ArrayExportDialog export(nrrd,endian)]}
+	    nrrd {set ok [ArrayExportDialog export(endian)]}
 	    envi {
 		set fn2 "[file rootname $fn].bsq"
 		SetFileLast envi2 $fn2
@@ -229,7 +242,7 @@ proc ExportDialog {format} {
 #		    set ok 0
 #		}
 		if {$ok} {
-		    set ok [ArrayExportDialog export(envi,endian)]
+		    set ok [ArrayExportDialog export(endian)]
 		}
 	    }
 	    gif {}

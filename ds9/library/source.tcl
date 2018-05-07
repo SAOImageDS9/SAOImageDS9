@@ -226,6 +226,8 @@ source $ds9(root)/library/dsssaoparser.tcl
 source $ds9(root)/library/dsssaolex.tcl
 source $ds9(root)/library/dssstsciparser.tcl
 source $ds9(root)/library/dssstscilex.tcl
+source $ds9(root)/library/exportparser.tcl
+source $ds9(root)/library/exportlex.tcl
 source $ds9(root)/library/gridparser.tcl
 source $ds9(root)/library/gridlex.tcl
 source $ds9(root)/library/headerparser.tcl

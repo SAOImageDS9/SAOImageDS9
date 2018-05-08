@@ -1650,13 +1650,24 @@ proc ProcessSleepCmd {varname iname} {
 proc ProcessSourceCmd {varname iname} {
     upvar $varname var
     upvar $iname i
-    SourceCmd [lindex $var $i]
-}
 
-proc SourceCmd {fn} {
     # we need to be realized
     # you never know what someone will try to do
     ProcessRealizeDS9
+
+    global debug
+    if {$debug(tcl,parser)} {
+	source::YY_FLUSH_BUFFER
+	source::yy_scan_string [lrange $var $i end]
+	source::yyparse
+	incr i [expr $source::yycnt-1]
+    } else {
+
+    uplevel #0 "source [lindex $var $i]"
+}
+}
+
+proc SourceCmd {fn} {
     uplevel #0 "source $fn"
 }
 

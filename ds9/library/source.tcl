@@ -296,6 +296,8 @@ source $ds9(root)/library/smoothparser.tcl
 source $ds9(root)/library/smoothlex.tcl
 source $ds9(root)/library/sourceparser.tcl
 source $ds9(root)/library/sourcelex.tcl
+source $ds9(root)/library/threadsparser.tcl
+source $ds9(root)/library/threadslex.tcl
 source $ds9(root)/library/threedparser.tcl
 source $ds9(root)/library/threedlex.tcl
 source $ds9(root)/library/tileparser.tcl

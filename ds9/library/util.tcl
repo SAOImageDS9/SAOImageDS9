@@ -1352,9 +1352,18 @@ proc ProcessThreadsCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	threads::YY_FLUSH_BUFFER
+	threads::yy_scan_string [lrange $var $i end]
+	threads::yyparse
+	incr i [expr $threads::yycnt-1]
+    } else {
+
     global ds9
     set ds9(threads) [lindex $var $i]
     ChangeThreads
+}
 }
 
 proc ProcessSendThreadsCmd {proc id param} {

@@ -1,22 +1,25 @@
 %{
 %}
 
+#include numeric.tin
 #include string.tin
 
 %start command
 
 %%
 
-command : nan 
- | nan {yyclearin; YYACCEPT} STRING_
+#include numeric.trl
+
+command : threads 
+ | threads {yyclearin; YYACCEPT} STRING_
  ;
 
-nan : STRING_ {pds9CmdSet nan $1 PrefsNanColor}
+threads : INT_ {ds9CmdSet threads $1 ChangeThreads}
  ;
 
 %%
 
-proc nan::yyerror {msg} {
+proc threads::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer
      variable index_

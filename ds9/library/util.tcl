@@ -1582,14 +1582,22 @@ proc ProcessModeCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global current
+    global debug
+    if {$debug(tcl,parser)} {
+	mode::YY_FLUSH_BUFFER
+	mode::yy_scan_string [lrange $var $i end]
+	mode::yyparse
+	incr i [expr $mode::yycnt-1]
+    } else {
 
+    global current
     set current(mode) [string tolower [lindex $var $i]]
     # backward compatibility
     switch $current(mode) {
 	pointer {set current(mode) region}
     }
     ChangeMode
+}
 }
 
 proc ProcessQuitCmd {varname iname} {

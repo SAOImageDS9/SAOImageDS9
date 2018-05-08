@@ -248,6 +248,8 @@ source $ds9(root)/library/maskparser.tcl
 source $ds9(root)/library/masklex.tcl
 source $ds9(root)/library/matchparser.tcl
 source $ds9(root)/library/matchlex.tcl
+source $ds9(root)/library/minmaxparser.tcl
+source $ds9(root)/library/minmaxlex.tcl
 source $ds9(root)/library/nanparser.tcl
 source $ds9(root)/library/nanlex.tcl
 source $ds9(root)/library/nvssparser.tcl

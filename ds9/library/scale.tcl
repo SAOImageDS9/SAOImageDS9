@@ -976,9 +976,16 @@ proc ProcessMinMaxCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	minmax::YY_FLUSH_BUFFER
+	minmax::yy_scan_string [lrange $var $i end]
+	minmax::yyparse
+	incr i [expr $minmax::yycnt-1]
+    } else {
+
     global minmax
     global scale
-
     switch -- [string tolower [lindex $var $i]] {
 	auto {
 	    # backward compatibility
@@ -1008,6 +1015,16 @@ proc ProcessMinMaxCmd {varname iname} {
 	    ChangeScaleMode
 	    incr i -1
 	}
+    }
+}
+}
+
+proc MinmaxCmdSet {which value {cmd {}}} {
+    global minmax
+
+    set minmax($which) $value
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

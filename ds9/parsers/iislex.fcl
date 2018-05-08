@@ -1,0 +1,15 @@
+#tab iisparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+filename    {return $FILENAME_}
+
+#include numeric.fin
+#include string.fin
+
+%%

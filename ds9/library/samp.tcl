@@ -1705,15 +1705,22 @@ proc ProcessSAMPCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global samp
-    global ds9
-    global env
-
     # we need to be realized
     ProcessRealizeDS9
 
     SAMPUpdate
 
+    global debug
+    if {$debug(tcl,parser)} {
+	samp::YY_FLUSH_BUFFER
+	samp::yy_scan_string [lrange $var $i end]
+	samp::yyparse
+	incr i [expr $samp::yycnt-1]
+    } else {
+
+    global samp
+    global ds9
+    global env
     switch -- [string tolower [lindex $var $i]] {
 	send {
 	    incr i
@@ -1789,3 +1796,38 @@ proc ProcessSAMPCmd {varname iname} {
 	}
     }
 }
+}
+
+proc SAMPCmdSendImage {name} {
+    global samp
+
+    if {[info exists samp]} {
+	foreach arg $samp(apps,image) {
+	    foreach {key val} $arg {
+		if {[string tolower $val] == $name} {
+		    SAMPSendImageLoadFits $key
+		    break
+		}
+	    }
+	}
+    } else {
+	Error "SAMP: [msgcat::mc {not connected}]"
+    }
+}
+
+proc SAMPCmdSendTable {name} {
+    global samp
+
+    if {[info exists samp]} {
+	foreach arg $samp(apps,table) {
+	    foreach {key val} $arg {
+		if {[string tolower $val] == $name} {
+		    SAMPSendTableLoadFits $key
+		    break
+		}
+	    }
+	}
+    } else {
+	Error "SAMP: [msgcat::mc {not connected}]"
+    }
+}    

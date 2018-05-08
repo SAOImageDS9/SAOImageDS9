@@ -1,0 +1,20 @@
+#tab sampparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+broadcast   {return $BROADCAST_}
+connect	    {return $CONNECT_}
+disconnect  {return $DISCONNECT_}
+image	    {return $IMAGE_}
+send	    {return $SEND_}
+table	    {return $TABLE_}
+
+#include yesno.fin
+#include string.fin
+
+%%

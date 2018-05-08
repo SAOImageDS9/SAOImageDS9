@@ -22,16 +22,6 @@
 #include yesno.trl
 #include numeric.trl
 
-yes : YES_ {set _ 1}
- | ON_ {set _ 1}
- | TRUE_ {set _ 1}
- ;
-
-no : NO_ {set _ 0}
- | OFF_ {set _ 0}
- | FALSE_ {set _ 0}
- ;
-
 command : tile 
  | tile {yyclearin; YYACCEPT} STRING_
  ;

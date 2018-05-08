@@ -236,6 +236,8 @@ source $ds9(root)/library/headerparser.tcl
 source $ds9(root)/library/headerlex.tcl
 source $ds9(root)/library/heightparser.tcl
 source $ds9(root)/library/heightlex.tcl
+source $ds9(root)/library/iconifyparser.tcl
+source $ds9(root)/library/iconifylex.tcl
 source $ds9(root)/library/lockparser.tcl
 source $ds9(root)/library/locklex.tcl
 source $ds9(root)/library/magnifierparser.tcl

@@ -1523,8 +1523,15 @@ proc ProcessIconifyCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global ds9
+    global debug
+    if {$debug(tcl,parser)} {
+	iconify::YY_FLUSH_BUFFER
+	iconify::yy_scan_string [lrange $var $i end]
+	iconify::yyparse
+	incr i [expr $iconify::yycnt-1]
+    } else {
 
+    global ds9
     switch -- [string tolower [lindex $var $i]] {
 	yes -
 	true -
@@ -1540,6 +1547,17 @@ proc ProcessIconifyCmd {varname iname} {
 	    wm iconify $ds9(top)
 	    incr i -1
 	}
+    }
+}
+}
+
+proc IconifyCmd {which} {
+    global ds9
+
+    if {$which} {
+	wm iconify $ds9(top)
+    } else {
+	wm deiconify $ds9(top)
     }
 }
 

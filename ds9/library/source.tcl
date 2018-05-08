@@ -234,6 +234,8 @@ source $ds9(root)/library/gridparser.tcl
 source $ds9(root)/library/gridlex.tcl
 source $ds9(root)/library/headerparser.tcl
 source $ds9(root)/library/headerlex.tcl
+source $ds9(root)/library/heightparser.tcl
+source $ds9(root)/library/heightlex.tcl
 source $ds9(root)/library/lockparser.tcl
 source $ds9(root)/library/locklex.tcl
 source $ds9(root)/library/magnifierparser.tcl
@@ -296,6 +298,8 @@ source $ds9(root)/library/voparser.tcl
 source $ds9(root)/library/volex.tcl
 source $ds9(root)/library/wcsparser.tcl
 source $ds9(root)/library/wcslex.tcl
+source $ds9(root)/library/widthparser.tcl
+source $ds9(root)/library/widthlex.tcl
 source $ds9(root)/library/xpaparser.tcl
 source $ds9(root)/library/xpalex.tcl
 source $ds9(root)/library/xpafirstparser.tcl

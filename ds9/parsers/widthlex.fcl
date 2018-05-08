@@ -1,0 +1,13 @@
+#tab widthparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+#include numeric.fin
+#include string.fin
+
+%%

@@ -362,8 +362,15 @@ proc ProcessIISCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global current
+    global debug
+    if {$debug(tcl,parser)} {
+	iis::YY_FLUSH_BUFFER
+	iis::yy_scan_string [lrange $var $i end]
+	iis::yyparse
+	incr i [expr $iis::yycnt-1]
+    } else {
 
+    global current
     switch -- [string tolower [lindex $var $i]] {
 	filename {
 	    if {[string is integer [lindex $var [expr $i+2]]]} {
@@ -380,6 +387,13 @@ proc ProcessIISCmd {varname iname} {
 	    }
 	}
     }
+}
+}
+
+proc IISCmd {filename {which {}}} {
+    global current
+    
+    $current(frame) iis set file name $filename $which
 }
 
 proc ProcessSendIISCmd {proc id param} {

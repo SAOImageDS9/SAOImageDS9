@@ -17,6 +17,27 @@ proc MaskDef {} {
     set mask(transparency) 0
 
     array set pmask [array get mask]
+
+    # temporary
+    set mask(rr) {}
+}
+
+proc MaskMark {} {
+    global mask
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) mask mark $mask(mark)
+    }
+}
+
+proc MaskColor {} {
+    global mask
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) mask color $mask(color)
+    }
 }
 
 proc MaskTransparency {} {
@@ -243,10 +264,21 @@ proc ProcessMaskCmd {varname iname} {
     upvar $iname i
 
     global mask
-    global current
+
+    global debug
+    if {$debug(tcl,parser)} {
+	set mask(rr) {}
+
+	mask::YY_FLUSH_BUFFER
+	mask::yy_scan_string [lrange $var $i end]
+	mask::yyparse
+	incr i [expr $mask::yycnt-1]
+
+	return $mask(rr)
+    } else {
 
     set rr {}
-
+    global current
     switch -- [string tolower [lindex $var $i]] {
 	open {MaskDialog}
 	close {MaskDestroyDialog}
@@ -283,6 +315,16 @@ proc ProcessMaskCmd {varname iname} {
     }
 
     return $rr
+}
+}
+
+proc MaskCmdSet {which value {cmd {}}} {
+    global mask
+
+    set mask($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 proc ProcessSendMaskCmd {proc id param} {

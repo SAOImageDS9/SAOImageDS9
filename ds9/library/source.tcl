@@ -244,6 +244,8 @@ source $ds9(root)/library/lockparser.tcl
 source $ds9(root)/library/locklex.tcl
 source $ds9(root)/library/magnifierparser.tcl
 source $ds9(root)/library/magnifierlex.tcl
+source $ds9(root)/library/maskparser.tcl
+source $ds9(root)/library/masklex.tcl
 source $ds9(root)/library/matchparser.tcl
 source $ds9(root)/library/matchlex.tcl
 source $ds9(root)/library/nanparser.tcl

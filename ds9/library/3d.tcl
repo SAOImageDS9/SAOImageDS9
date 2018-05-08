@@ -13,8 +13,6 @@ proc 3DDef {} {
     set ithreed(mb) .threedmb
     set ithreed(status) 0
 
-    set threed(az) 0
-    set threed(el) 0
     set threed(scale) 1
     set threed(lock) 0
 
@@ -28,8 +26,9 @@ proc 3DDef {} {
     set threed(compass,color) green
 
     array set pthreed [array get threed]
-    unset pthreed(az)
-    unset pthreed(el)
+
+    set threed(az) 0
+    set threed(el) 0
 }
 
 # used by backup

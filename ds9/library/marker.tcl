@@ -49,13 +49,17 @@ proc MarkerDef {} {
     set marker(plot3d) 0
     set marker(stats) 0
 
+    set marker(format) ds9
+
+    # these are only used for save/load/list and
+    #   are set from current wcs values
+    array set pmarker [array get marker]
+
     set marker(copy) {}
     set marker(copy,system) {}
     set marker(maxdialog) 48
     set marker(load) current
 
-    set marker(format) ds9
-    # these are only used for save/load/list and are set from current wcs values
     set marker(system) physical
     set marker(sky) fk5
     set marker(skyformat) degrees
@@ -68,23 +72,6 @@ proc MarkerDef {} {
     set marker(load,sock) {}
     set marker(load,fn) {}
     set marker(tag) {}
-
-    array set pmarker [array get marker]
-    unset pmarker(copy)
-    unset pmarker(copy,system)
-    unset pmarker(maxdialog)
-    unset pmarker(load)
-    unset pmarker(system)
-    unset pmarker(sky)
-    unset pmarker(skyformat)
-    unset pmarker(strip)
-
-    unset pmarker(load,format)
-    unset pmarker(load,system)
-    unset pmarker(load,sky)
-    unset pmarker(load,sock)
-    unset pmarker(load,fn)
-    unset pmarker(tag)
 
     set pmarker(epsilon) 3
     set pmarker(dformat) degrees

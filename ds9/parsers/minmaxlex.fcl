@@ -1,0 +1,22 @@
+#tab minmaxparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+auto	    {return $AUTO_}
+datamin	    {return $DATAMIN_}
+irafmin	    {return $IRAFMIN_}
+interval    {return $INTERVAL_}
+mode	    {return $MODE_}
+sample	    {return $SAMPLE_}
+scan	    {return $SCAN_}
+
+#include numeric.fin
+#include string.fin
+
+%%

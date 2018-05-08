@@ -2219,28 +2219,13 @@ proc ProcessFrameCmd {varname iname} {
 }
 }
 
-proc FrameCmdHideCurrent {} {
-    global active
-    global current
-
-    set active($current(frame)) 0
-    UpdateActiveFrames
-}
-
-proc FrameCmdHide {which} {
+proc ActiveCmdSet {which value {cmd {}}} {
     global active
 
-    set ff "Frame$which"
-    set active($ff) 0
-    UpdateActiveFrames
-}
-
-proc FrameCmdShow {which} {
-    global active
-
-    set ff "Frame$which"
-    set active($ff) 1
-    UpdateActiveFrames
+    set active($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 proc CurrentCmdSet {which value {cmd {}}} {
@@ -2249,16 +2234,6 @@ proc CurrentCmdSet {which value {cmd {}}} {
     set current($which) $value
     if {$cmd != {}} {
 	eval $cmd
-    }
-}
-
-proc CurrentCmdDisplay {which} {
-    global current
-    
-    if {$which} {
-	set current(display) blink
-    } else {
-	set current(display) single
     }
 }
 

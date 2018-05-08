@@ -1629,6 +1629,14 @@ proc ProcessSleepCmd {varname iname} {
     UpdateDS9
     RealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	sleep::YY_FLUSH_BUFFER
+	sleep::yy_scan_string [lrange $var $i end]
+	sleep::yyparse
+	incr i [expr $sleep::yycnt-1]
+    } else {
+
     set sec 1
     if {[lindex $var $i] != {} && [string range [lindex $var $i] 0 0] != {-}} {
 	set sec [lindex $var $i]
@@ -1636,6 +1644,7 @@ proc ProcessSleepCmd {varname iname} {
 	incr i -1
     }
     after [expr int($sec*1000)]
+}
 }
 
 proc ProcessSourceCmd {varname iname} {

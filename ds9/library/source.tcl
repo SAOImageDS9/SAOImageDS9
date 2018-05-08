@@ -282,12 +282,14 @@ source $ds9(root)/library/saveparser.tcl
 source $ds9(root)/library/savelex.tcl
 source $ds9(root)/library/saveimageparser.tcl
 source $ds9(root)/library/saveimagelex.tcl
-source $ds9(root)/library/siaparser.tcl
-source $ds9(root)/library/sialex.tcl
 source $ds9(root)/library/scaleparser.tcl
 source $ds9(root)/library/scalelex.tcl
+source $ds9(root)/library/siaparser.tcl
+source $ds9(root)/library/sialex.tcl
 source $ds9(root)/library/skyviewparser.tcl
 source $ds9(root)/library/skyviewlex.tcl
+source $ds9(root)/library/sleepparser.tcl
+source $ds9(root)/library/sleeplex.tcl
 source $ds9(root)/library/smoothparser.tcl
 source $ds9(root)/library/smoothlex.tcl
 source $ds9(root)/library/threedparser.tcl

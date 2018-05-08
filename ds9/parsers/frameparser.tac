@@ -87,13 +87,13 @@ refresh : {UpdateCurrentFrame}
  | ALL_ {UpdateAllFrame}
  ;
 
-hide : {FrameCmdHideCurrent}
- | INT_ {FrameCmdHide $1}
+hide : {global current; ActiveCmdSet $current(frame) 0 UpdateActiveFrames}
+ | INT_ {ActiveCmdSet "Frame$1" 0 UpdateActiveFrames}
  | ALL_ {ActiveFrameNone}
  ;
  
 show :
- | INT_ {FrameCmdShow $1}
+ | INT_ {ActiveCmdSet "Frame$1" 1 UpdateActiveFrames}
  | ALL_ {ActiveFrameAll}
  ;
 

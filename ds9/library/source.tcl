@@ -256,6 +256,8 @@ source $ds9(root)/library/modeparser.tcl
 source $ds9(root)/library/modelex.tcl
 source $ds9(root)/library/nanparser.tcl
 source $ds9(root)/library/nanlex.tcl
+source $ds9(root)/library/nrrdparser.tcl
+source $ds9(root)/library/nrrdlex.tcl
 source $ds9(root)/library/nvssparser.tcl
 source $ds9(root)/library/nvsslex.tcl
 source $ds9(root)/library/orientparser.tcl

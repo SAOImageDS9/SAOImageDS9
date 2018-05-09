@@ -11,23 +11,23 @@
 
 %%
 
-command : photo 
- | photo {yyclearin; YYACCEPT} STRING_
+command : envi 
+ | envi {yyclearin; YYACCEPT} STRING_
  ;
 
-photo : opts {PhotoCmdLoad {}}
- | opts STRING_ {PhotoCmdLoad $2}
+envi : opts STRING_ {ImportENVIFile $2 [FindENVIDataFile $2]; FinishLoad}
+ | opts STRING_ STRING_ {ImportENVIFile $2 $3; FinishLoad}
  ;
 
 opts :
  | MASK_
  | NEW_ {CreateFrame}
- | SLICE_ {PhotoCmdSet load,mode slice}
+ | SLICE_
  ;
 
 %%
 
-proc photo::yyerror {msg} {
+proc envi::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer
      variable index_

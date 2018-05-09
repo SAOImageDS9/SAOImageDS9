@@ -226,6 +226,8 @@ source $ds9(root)/library/dsssaoparser.tcl
 source $ds9(root)/library/dsssaolex.tcl
 source $ds9(root)/library/dssstsciparser.tcl
 source $ds9(root)/library/dssstscilex.tcl
+source $ds9(root)/library/enviparser.tcl
+source $ds9(root)/library/envilex.tcl
 source $ds9(root)/library/exportparser.tcl
 source $ds9(root)/library/exportlex.tcl
 source $ds9(root)/library/frameparser.tcl

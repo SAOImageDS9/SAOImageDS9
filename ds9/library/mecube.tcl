@@ -81,6 +81,18 @@ proc ProcessMECubeCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	global mecube
+	set mecube(load,sock) $sock
+	set mecube(load,fn) $fn
+
+	mecube::YY_FLUSH_BUFFER
+	mecube::yy_scan_string [lrange $var $i end]
+	mecube::yyparse
+	incr i [expr $mecube::yycnt-1]
+    } else {
+
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -107,6 +119,27 @@ proc ProcessMECubeCmd {varname iname sock fn} {
 	# comm
 	if {$fn != {}} {
 	    LoadMECubeAlloc $fn $param
+	} else {
+	    LoadMECubeFile $param
+	}
+    }
+    FinishLoad
+}
+}
+
+proc MECubeCmdLoad {param} {
+    global mecube
+    
+    if {$mecube(load,sock) != {}} {
+	# xpa
+	if {![LoadMECubeSocket $mecube(load,sock) $param]} {
+	    InitError xpa
+	    LoadMECubeFile $param
+	}
+    } else {
+	# comm
+	if {$mecube(load,fn) != {}} {
+	    LoadMECubeAlloc $mecube(load,fn) $param
 	} else {
 	    LoadMECubeFile $param
 	}

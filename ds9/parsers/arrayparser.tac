@@ -18,8 +18,8 @@ command : array
 array : opts {ArrayCmdLoad {}}
  | opts STRING_ {ArrayCmdLoad $2}
 # backward compatibility
- | RGB_ STRING_ {ArrayCmdLoadRGB $2}
- | NEW_ RGB_ STRING_ {CreateRGBFrame; ArrayCmdLoadRGB $3}
+ | RGB_ STRING_ {RGBArrayCmdLoad $2}
+ | NEW_ RGB_ STRING_ {CreateRGBFrame; RGBArrayCmdLoad $3}
  ;
 
 opts :

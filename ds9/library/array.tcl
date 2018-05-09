@@ -158,26 +158,6 @@ proc ArrayCmdLoad {param} {
     FinishLoad
 }
 
-proc ArrayCmdLoadRGB {param} {
-    global array
-
-    if {$array(load,sock) != {}} {
-	# xpa
-	if {![ImportRGBArraySocket $array(load,sock) $param]} {
-	    InitError xpa
-	    ImportRGBArrayFile $param
-	}
-    } else {
-	# comm
-	if {$array(load,fn) != {}} {
-	    ImportRGBArrayAlloc $array(load,fn) $param
-	} else {
-	    ImportRGBArrayFile $param
-	}
-    }
-    FinishLoad
-}
-
 proc ProcessSendArrayCmd {proc id param sock fn} {
     global current
 

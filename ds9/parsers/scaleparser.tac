@@ -57,10 +57,12 @@ scale : OPEN_ {ScaleDialog}
  ;
 
 scales : LINEAR_ {set _ linear}
+ | LOG_ {set _ log}
  | POW_ {set _ pow}
  | SQRT_ {set _ sqrt}
  | SQUARED_ {set _ squared}
  | ASINH_ {set _ asinh}
+ | SINH_ {set _ sinh}
  | HISTEQU_ {set _ histequ}
  ;
  

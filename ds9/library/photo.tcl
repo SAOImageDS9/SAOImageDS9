@@ -203,11 +203,22 @@ proc ProcessPhotoCmd {varname iname ch fn} {
     upvar 2 $varname var
     upvar 2 $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	global photo
+	set photo(load,ch) $ch
+	set photo(load,fn) $fn
+	set photo(load,mode) {}
+
+	photo::YY_FLUSH_BUFFER
+	photo::yy_scan_string [lrange $var $i end]
+	photo::yyparse
+	incr i [expr $photo::yycnt-1]
+    } else {
+
     global loadParam
     global current
-
     set mode {}
-
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -247,6 +258,41 @@ proc ProcessPhotoCmd {varname iname ch fn} {
 	}
     }
     FinishLoad
+}
+}
+
+proc PhotoCmdLoad {param} {
+    global photo
+
+    if {$photo(load,ch) != {}} {
+	# xpa
+	global tcl_platform
+	switch $tcl_platform(os) {
+	    Linux -
+	    Darwin -
+	    SunOS {
+		if {![ImportPhotoSocket $photo(load,ch) $param $photo(load,mode)]} {
+		    InitError xpa
+		    ImportPhotoFile $param $photo(load,mode)
+		}
+	    }
+	    {Windows NT} {ImportPhotoFile $param $photo(load,mode)}
+	}
+    } else {
+	# comm
+	if {$photo(load,fn) != {}} {
+	    ImportPhotoAlloc $photo(load,fn) $param $photo(load,mode)
+	} else {
+	    ImportPhotoFile $param $phto(load,mode)
+	}
+    }
+    FinishLoad
+}
+
+proc PhotoCmdSet {which value} {
+    global photo
+
+    set photo($which) $value
 }
 
 proc ProcessSendGIFCmd {proc id param ch fn} {

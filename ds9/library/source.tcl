@@ -256,6 +256,8 @@ source $ds9(root)/library/minmaxparser.tcl
 source $ds9(root)/library/minmaxlex.tcl
 source $ds9(root)/library/modeparser.tcl
 source $ds9(root)/library/modelex.tcl
+source $ds9(root)/library/mosaicimageirafparser.tcl
+source $ds9(root)/library/mosaicimageiraflex.tcl
 source $ds9(root)/library/mosaicimagewcsparser.tcl
 source $ds9(root)/library/mosaicimagewcslex.tcl
 source $ds9(root)/library/multiframeparser.tcl

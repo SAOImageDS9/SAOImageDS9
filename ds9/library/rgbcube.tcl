@@ -113,9 +113,9 @@ proc ProcessRGBCubeCmd {varname iname sock fn} {
 
     global debug
     if {$debug(tcl,parser)} {
-	global rgbcube
-	set rgbcube(load,sock) $sock
-	set rgbcube(load,fn) $fn
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
 
 	rgbcube::YY_FLUSH_BUFFER
 	rgbcube::yy_scan_string [lrange $var $i end]
@@ -158,18 +158,18 @@ proc ProcessRGBCubeCmd {varname iname sock fn} {
 }
 
 proc RGBCubeCmdLoad {param} {
-    global rgbcube
+    global parse
 
-    if {$rgbcube(load,sock) != {}} {
+    if {$parse(sock) != {}} {
 	# xpa
-	if {![LoadRGBCubeSocket $rgbcube(load,sock) $param]} {
+	if {![LoadRGBCubeSocket $parse(sock) $param]} {
 	    InitError xpa
 	    LoadRGBCubeFile $param
 	}
     } else {
 	# comm
-	if {$rgbcube(load,fn) != {}} {
-	    LoadRGBCubeAlloc $rgbcube(load,fn) $param
+	if {$parse(fn) != {}} {
+	    LoadRGBCubeAlloc $parse(fn) $param
 	} else {
 	    LoadRGBCubeFile $param
 	}

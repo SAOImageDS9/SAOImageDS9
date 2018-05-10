@@ -1136,8 +1136,9 @@ proc ProcessWCSCmd {varname iname sock fn} {
 
     global debug
     if {$debug(tcl,parser)} {
-	set wcs(load,sock) $sock
-	set wcs(load,fn) $fn
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
 
 	wcs::YY_FLUSH_BUFFER
 	wcs::yy_scan_string [lrange $var $i end]
@@ -1291,18 +1292,18 @@ proc WCSCmdReset {ext} {
 }
 
 proc WCSCmdLoad {cmd ext} {
-    global wcs
     global current
     global rgb
+    global parse
 
     if {$current(frame) == {}} {
 	return
     }
 
-    if {$wcs(load,sock) != {}} {
-	RGBEvalLock rgb(lock,wcs) $current(frame) [list $current(frame) wcs $cmd $ext $wcs(load,sock)]
-    } elseif {$wcs(load,fn) != {}} {
-	RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs $cmd $ext \{\{$wcs(load,fn)\}\}"
+    if {$parse(sock) != {}} {
+	RGBEvalLock rgb(lock,wcs) $current(frame) [list $current(frame) wcs $cmd $ext $parse(sock)]
+    } elseif {$parse(fn) != {}} {
+	RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs $cmd $ext \{\{$parse(fn)\}\}"
 	UpdateWCS
     }
 }

@@ -131,9 +131,9 @@ proc ProcessRGBImageCmd {varname iname sock fn} {
 
     global debug
     if {$debug(tcl,parser)} {
-	global rgbimage
-	set rgbimage(load,sock) $sock
-	set rgbimage(load,fn) $fn
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
 
 	rgbimage::YY_FLUSH_BUFFER
 	rgbimage::yy_scan_string [lrange $var $i end]
@@ -176,18 +176,18 @@ proc ProcessRGBImageCmd {varname iname sock fn} {
 }
 
 proc RGBImageCmdLoad {param} {
-    global rgbimage
+    global parse
 
-    if {$rgbimage(load,sock) != {}} {
+    if {$parse(sock) != {}} {
 	# xpa
-	if {![LoadRGBImageSocket $rgbimage(load,sock) $param]} {
+	if {![LoadRGBImageSocket $parse(sock) $param]} {
 	    InitError xpa
 	    LoadRGBImageFile $param
 	}
     } else {
 	# comm
-	if {$rgbimage(load,fn) != {}} {
-	    LoadRGBImageAlloc $rgbimage(load,fn) $param
+	if {$parse(fn) != {}} {
+	    LoadRGBImageAlloc $parse(fn) $param
 	} else {
 	    LoadRGBImageFile $param
 	}

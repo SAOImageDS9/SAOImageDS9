@@ -77,10 +77,9 @@ proc ProcessMosaicImageWCSCmd {varname iname sock fn} {
 
     global debug
     if {$debug(tcl,parser)} {
-	global mosaicimagewcs
-	set mosaicimagewcs(load,sock) $sock
-	set mosaicimagewcs(load,fn) $fn
-	set mosaicimagewcs(load,layer) {}
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
 
 	mosaicimagewcs::YY_FLUSH_BUFFER
 	mosaicimagewcs::yy_scan_string [lrange $var $i end]
@@ -131,18 +130,18 @@ proc ProcessMosaicImageWCSCmd {varname iname sock fn} {
 }
 
 proc MosaicImageWCSCmdLoad {param layer sys} {
-    global mosaicimagewcs
+    global parse
 
-    if {$mosaicimagewcs(load,sock) != {}} {
+    if {$parse(sock) != {}} {
 	# xpa
-	if {![LoadMosaicImageWCSSocket $mosaicimagewcs(load,sock) $param $layer $sys]} {
+	if {![LoadMosaicImageWCSSocket $parse(sock) $param $layer $sys]} {
 	    InitError xpa
 	    LoadMosaicImageWCSFile $param $layer $sys
 	}
     } else {
 	# comm
-	if {$mosaicimagewcs(load,fn) != {}} {
-	    LoadMosaicImageWCSAlloc $mosaicimagewcs(load,fn) $param $layer $sys
+	if {$parse(fn) != {}} {
+	    LoadMosaicImageWCSAlloc $parse(fn) $param $layer $sys
 	} else {
 	    LoadMosaicImageWCSFile $param $layer $sys
 	}

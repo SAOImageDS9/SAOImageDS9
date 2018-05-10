@@ -83,9 +83,9 @@ proc ProcessMECubeCmd {varname iname sock fn} {
 
     global debug
     if {$debug(tcl,parser)} {
-	global mecube
-	set mecube(load,sock) $sock
-	set mecube(load,fn) $fn
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
 
 	mecube::YY_FLUSH_BUFFER
 	mecube::yy_scan_string [lrange $var $i end]
@@ -128,18 +128,18 @@ proc ProcessMECubeCmd {varname iname sock fn} {
 }
 
 proc MECubeCmdLoad {param} {
-    global mecube
+    global parse
     
-    if {$mecube(load,sock) != {}} {
+    if {$parse(sock) != {}} {
 	# xpa
-	if {![LoadMECubeSocket $mecube(load,sock) $param]} {
+	if {![LoadMECubeSocket $parse(sock) $param]} {
 	    InitError xpa
 	    LoadMECubeFile $param
 	}
     } else {
 	# comm
-	if {$mecube(load,fn) != {}} {
-	    LoadMECubeAlloc $mecube(load,fn) $param
+	if {$parse(fn) != {}} {
+	    LoadMECubeAlloc $parse(fn) $param
 	} else {
 	    LoadMECubeFile $param
 	}

@@ -129,9 +129,9 @@ proc ProcessRGBArrayCmd {varname iname sock fn} {
 
     global debug
     if {$debug(tcl,parser)} {
-	global rgbarray
-	set rgbarray(load,sock) $sock
-	set rgbarray(load,fn) $fn
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
 
 	rgbarray::YY_FLUSH_BUFFER
 	rgbarray::yy_scan_string [lrange $var $i end]
@@ -174,18 +174,18 @@ proc ProcessRGBArrayCmd {varname iname sock fn} {
 }
 
 proc RGBArrayCmdLoad {param} {
-    global rgbarray
+    global parse
 
-    if {$rgbarray(load,sock) != {}} {
+    if {$parse(sock) != {}} {
 	# xpa
-	if {![ImportRGBArraySocket $rgbarray(load,sock) $param]} {
+	if {![ImportRGBArraySocket $parse(sock) $param]} {
 	    InitError xpa
 	    ImportRGBArrayFile $param
 	}
     } else {
 	# comm
-	if {$rgbarray(load,fn) != {}} {
-	    ImportRGBArrayAlloc $rgbarray(load,fn) $param
+	if {$parse(fn) != {}} {
+	    ImportRGBArrayAlloc $parse(fn) $param
 	} else {
 	    ImportRGBArrayFile $param
 	}

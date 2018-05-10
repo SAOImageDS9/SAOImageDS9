@@ -78,13 +78,9 @@ proc ProcessArrayCmd {varname iname sock fn} {
 
     global debug
     if {$debug(tcl,parser)} {
-	global array
-	set array(load,sock) $sock
-	set array(load,fn) $fn
-
-	global rgbarray
-	set rgbarray(load,sock) $sock
-	set rgbarray(load,fn) $fn
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
 
 	array::YY_FLUSH_BUFFER
 	array::yy_scan_string [lrange $var $i end]
@@ -132,18 +128,18 @@ proc ProcessArrayCmd {varname iname sock fn} {
 }
 
 proc ArrayCmdLoad {param layer} {
-    global array
+    global parse
 
-    if {$array(load,sock) != {}} {
+    if {$parse(sock) != {}} {
 	# xpa
-	if {![ImportArraySocket $array(load,sock) $param $layer]} {
+	if {![ImportArraySocket $parse(sock) $param $layer]} {
 	    InitError xpa
 	    ImportArrayFile $param $layer
 	}
     } else {
 	# comm
-	if {$array(load,fn) != {}} {
-	    ImportArrayAlloc $array(load,fn) $param $layer
+	if {$parse(fn) != {}} {
+	    ImportArrayAlloc $parse(fn) $param $layer
 	} else {
 	    ImportArrayFile $param $layer
 	}

@@ -89,7 +89,6 @@ proc ProcessNRRDCmd {varname iname sock fn} {
 	global nrrd
 	set nrrd(load,sock) $sock
 	set nrrd(load,fn) $fn
-	set nrrd(load,layer) {}
 
 	nrrd::YY_FLUSH_BUFFER
 	nrrd::yy_scan_string [lrange $var $i end]
@@ -97,8 +96,6 @@ proc ProcessNRRDCmd {varname iname sock fn} {
 	incr i [expr $nrrd::yycnt-1]
     } else {
 
-    global loadParam
-    global current
     set layer {}
     switch -- [string tolower [lindex $var $i]] {
 	new {
@@ -134,30 +131,24 @@ proc ProcessNRRDCmd {varname iname sock fn} {
 }
 }
 
-proc NRRDCmdLoad {param} {
+proc NRRDCmdLoad {param layer} {
     global nrrd
     
     if {$nrrd(load,sock) != {}} {
 	# xpa
-	if {![ImportNRRDSocket $nrrd(load,sock) $param $nrrd(load,layer)]} {
+	if {![ImportNRRDSocket $nrrd(load,sock) $param $layer]} {
 	    InitError xpa
-	    ImportNRRDFile $param $nrrd(load,layer)
+	    ImportNRRDFile $param $layer
 	}
     } else {
 	# comm
 	if {$nrrd(load,fn) != {}} {
-	    ImportNRRDAlloc $nrrd(load,fn) $param $nrrd(load,layer)
+	    ImportNRRDAlloc $nrrd(load,fn) $param $layer
 	} else {
-	    ImportNRRDFile $param $nrrd(load,layer)
+	    ImportNRRDFile $param $layer
 	}
     }
     FinishLoad
-}
-
-proc NRRDCmdSet {which value} {
-    global nrrd
-
-    set nrrd($which) $value
 }
 
 proc ProcessSendNRRDCmd {proc id param sock fn} {

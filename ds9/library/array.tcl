@@ -81,7 +81,7 @@ proc ProcessArrayCmd {varname iname sock fn} {
 	global array
 	set array(load,sock) $sock
 	set array(load,fn) $fn
-	set array(load,layer) {}
+
 	global rgbarray
 	set rgbarray(load,sock) $sock
 	set rgbarray(load,fn) $fn
@@ -96,11 +96,7 @@ proc ProcessArrayCmd {varname iname sock fn} {
 	return
     }
 
-    global loadParam
-    global current
-
     set layer {}
-
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -135,27 +131,21 @@ proc ProcessArrayCmd {varname iname sock fn} {
 }
 }
 
-proc ArrayCmdSet {which value} {
-    global array
-
-    set array($which) $value
-}
-
-proc ArrayCmdLoad {param} {
+proc ArrayCmdLoad {param layer} {
     global array
 
     if {$array(load,sock) != {}} {
 	# xpa
-	if {![ImportArraySocket $array(load,sock) $param $array(load,layer)]} {
+	if {![ImportArraySocket $array(load,sock) $param $layer]} {
 	    InitError xpa
-	    ImportArrayFile $param $array(load,layer)
+	    ImportArrayFile $param $layer
 	}
     } else {
 	# comm
 	if {$array(load,fn) != {}} {
-	    ImportArrayAlloc $array(load,fn) $param $array(load,layer)
+	    ImportArrayAlloc $array(load,fn) $param $layer
 	} else {
-	    ImportArrayFile $param $array(load,layer)
+	    ImportArrayFile $param $layer
 	}
     }
     FinishLoad

@@ -5,7 +5,6 @@
 
 %start command
 
-%token MASK_
 %token NEW_
 
 %%
@@ -20,7 +19,6 @@ rgbarray : opts {RGBArrayCmdLoad {}}
 
 opts :
  | NEW_ {CreateRGBFrame}
- | MASK_ {RGBArrayCmdSet load,layer mask}
  ;
 
 %%

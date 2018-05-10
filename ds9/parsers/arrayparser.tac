@@ -15,16 +15,16 @@ command : array
  | array {yyclearin; YYACCEPT} STRING_
  ;
 
-array : opts {ArrayCmdLoad {}}
- | opts STRING_ {ArrayCmdLoad $2}
+array : opts {ArrayCmdLoad {} $1}
+ | opts STRING_ {ArrayCmdLoad $2 $1}
 # backward compatibility
  | RGB_ STRING_ {RGBArrayCmdLoad $2}
  | NEW_ RGB_ STRING_ {CreateRGBFrame; RGBArrayCmdLoad $3}
  ;
 
 opts :
- | NEW_ {CreateFrame}
- | MASK_ {ArrayCmdSet load,layer mask}
+ | NEW_ {CreateFrame; set _ {}}
+ | MASK_ {set _ mask}
  ;
 
 %%

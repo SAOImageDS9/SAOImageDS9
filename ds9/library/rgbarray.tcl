@@ -193,12 +193,6 @@ proc RGBArrayCmdLoad {param} {
     FinishLoad
 }
 
-proc RGBArrayCmdSet {which value} {
-    global rgbarray
-
-    set rgbarray($which) $value
-}
-
 proc ProcessSendRGBArrayCmd {proc id param sock fn} {
     global current
 

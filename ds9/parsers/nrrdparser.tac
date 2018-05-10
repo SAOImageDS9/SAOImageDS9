@@ -14,13 +14,13 @@ command : nrrd
  | nrrd {yyclearin; YYACCEPT} STRING_
  ;
 
-nrrd : opts {NRRDCmdLoad {}}
- | opts STRING_ {NRRDCmdLoad $2}
+nrrd : opts {NRRDCmdLoad {} $1}
+ | opts STRING_ {NRRDCmdLoad $2 $1}
  ;
 
 opts :
- | NEW_ {CreateFrame}
- | MASK_ {NRRDCmdSet load,layer mask}
+ | NEW_ {CreateFrame; set _ {}}
+ | MASK_ {set _ mask}
  ;
 
 %%

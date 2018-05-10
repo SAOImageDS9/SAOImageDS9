@@ -111,6 +111,18 @@ proc ProcessRGBCubeCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	global rgbcube
+	set rgbcube(load,sock) $sock
+	set rgbcube(load,fn) $fn
+
+	rgbcube::YY_FLUSH_BUFFER
+	rgbcube::yy_scan_string [lrange $var $i end]
+	rgbcube::yyparse
+	incr i [expr $rgbcube::yycnt-1]
+    } else {
+
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -137,6 +149,27 @@ proc ProcessRGBCubeCmd {varname iname sock fn} {
 	# comm
 	if {$fn != {}} {
 	    LoadRGBCubeAlloc $fn $param
+	} else {
+	    LoadRGBCubeFile $param
+	}
+    }
+    FinishLoad
+}
+}
+
+proc RGBCubeCmdLoad {param} {
+    global rgbcube
+
+    if {$rgbcube(load,sock) != {}} {
+	# xpa
+	if {![LoadRGBCubeSocket $rgbcube(load,sock) $param]} {
+	    InitError xpa
+	    LoadRGBCubeFile $param
+	}
+    } else {
+	# comm
+	if {$rgbcube(load,fn) != {}} {
+	    LoadRGBCubeAlloc $rgbcube(load,fn) $param
 	} else {
 	    LoadRGBCubeFile $param
 	}

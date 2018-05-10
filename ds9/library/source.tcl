@@ -260,6 +260,8 @@ source $ds9(root)/library/mosaicimageirafparser.tcl
 source $ds9(root)/library/mosaicimageiraflex.tcl
 source $ds9(root)/library/mosaicimagewcsparser.tcl
 source $ds9(root)/library/mosaicimagewcslex.tcl
+source $ds9(root)/library/mosaicimagewfpc2parser.tcl
+source $ds9(root)/library/mosaicimagewfpc2lex.tcl
 source $ds9(root)/library/multiframeparser.tcl
 source $ds9(root)/library/multiframelex.tcl
 source $ds9(root)/library/nanparser.tcl

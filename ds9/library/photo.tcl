@@ -205,10 +205,9 @@ proc ProcessPhotoCmd {varname iname ch fn} {
 
     global debug
     if {$debug(tcl,parser)} {
-	global photo
-	set photo(load,ch) $ch
-	set photo(load,fn) $fn
-	set photo(load,mode) {}
+	global parse
+	set parse(ch) $ch
+	set parse(fn) $fn
 
 	photo::YY_FLUSH_BUFFER
 	photo::yy_scan_string [lrange $var $i end]
@@ -216,8 +215,6 @@ proc ProcessPhotoCmd {varname iname ch fn} {
 	incr i [expr $photo::yycnt-1]
     } else {
 
-    global loadParam
-    global current
     set mode {}
     switch -- [string tolower [lindex $var $i]] {
 	new {
@@ -261,61 +258,47 @@ proc ProcessPhotoCmd {varname iname ch fn} {
 }
 }
 
-proc PhotoCmdLoad {param} {
-    global photo
+proc PhotoCmdLoad {param mode} {
+    global parse
 
-    if {$photo(load,ch) != {}} {
+    if {$parse(ch) != {}} {
 	# xpa
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
 	    Darwin -
 	    SunOS {
-		if {![ImportPhotoSocket $photo(load,ch) $param $photo(load,mode)]} {
+		if {![ImportPhotoSocket $parse(ch) $param $mode]} {
 		    InitError xpa
-		    ImportPhotoFile $param $photo(load,mode)
+		    ImportPhotoFile $param $mode
 		}
 	    }
-	    {Windows NT} {ImportPhotoFile $param $photo(load,mode)}
+	    {Windows NT} {ImportPhotoFile $param $mode}
 	}
     } else {
 	# comm
-	if {$photo(load,fn) != {}} {
-	    ImportPhotoAlloc $photo(load,fn) $param $photo(load,mode)
+	if {$parse(fn) != {}} {
+	    ImportPhotoAlloc $parse(fn) $param $mode
 	} else {
-	    ImportPhotoFile $param $phto(load,mode)
+	    ImportPhotoFile $param $mode
 	}
     }
     FinishLoad
 }
 
-proc PhotoCmdSet {which value} {
-    global photo
-
-    set photo($which) $value
-}
-
 proc ProcessSendGIFCmd {proc id param ch fn} {
-    global current
-
     ProcessSendPhotoCmd gif $proc $id $param $ch $fn
 }
 
 proc ProcessSendJPEGCmd {proc id param ch fn} {
-    global current
-
     ProcessSendPhotoCmd jpeg $proc $id $param $ch $fn
 }
 
 proc ProcessSendPNGCmd {proc id param ch fn} {
-    global current
-
     ProcessSendPhotoCmd png $proc $id $param $ch $fn
 }
 
 proc ProcessSendTIFFCmd {proc id param ch fn} {
-    global current
-
     ProcessSendPhotoCmd tiff $proc $id $param $ch $fn
 }
 

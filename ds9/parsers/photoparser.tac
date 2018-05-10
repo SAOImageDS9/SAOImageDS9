@@ -14,13 +14,13 @@ command : photo
  | photo {yyclearin; YYACCEPT} STRING_
  ;
 
-photo : opts {PhotoCmdLoad {}}
- | opts STRING_ {PhotoCmdLoad $2}
+photo : opts {PhotoCmdLoad {} $1}
+ | opts STRING_ {PhotoCmdLoad $2 $1}
  ;
 
 opts :
- | NEW_ {CreateFrame}
- | SLICE_ {PhotoCmdSet load,mode slice}
+ | NEW_ {CreateFrame; set _ {}}
+ | SLICE_ {set _ slice}
  ;
 
 %%

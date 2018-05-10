@@ -5,7 +5,6 @@
 
 %start command
 
-%token MASK_
 %token NEW_
 %token SLICE_
 
@@ -20,7 +19,6 @@ photo : opts {PhotoCmdLoad {}}
  ;
 
 opts :
- | MASK_
  | NEW_ {CreateFrame}
  | SLICE_ {PhotoCmdSet load,mode slice}
  ;

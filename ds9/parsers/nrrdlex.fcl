@@ -9,7 +9,6 @@
 
 mask	    {return $MASK_}
 new	    {return $NEW_}
-slice	    {return $SLICE_}
 
 #include string.fin
 

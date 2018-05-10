@@ -7,7 +7,6 @@
 
 %token MASK_
 %token NEW_
-%token SLICE_
 
 %%
 
@@ -22,7 +21,6 @@ nrrd : opts {NRRDCmdLoad {}}
 opts :
  | NEW_ {CreateFrame}
  | MASK_ {NRRDCmdSet load,layer mask}
- | SLICE_ 
  ;
 
 %%

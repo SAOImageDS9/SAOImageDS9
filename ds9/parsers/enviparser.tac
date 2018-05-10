@@ -5,9 +5,7 @@
 
 %start command
 
-%token MASK_
 %token NEW_
-%token SLICE_
 
 %%
 
@@ -20,9 +18,7 @@ envi : opts STRING_ {ImportENVIFile $2 [FindENVIDataFile $2]; FinishLoad}
  ;
 
 opts :
- | MASK_
  | NEW_ {CreateFrame}
- | SLICE_
  ;
 
 %%

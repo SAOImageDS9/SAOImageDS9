@@ -5,9 +5,7 @@
 
 %start command
 
-%token MASK_
 %token NEW_
-%token SLICE_
 
 %%
 
@@ -21,8 +19,6 @@ mecube : opts {MECubeCmdLoad {}}
 
 opts :
  | NEW_ {CreateFrame}
- | MASK_
- | SLICE_
  ;
 
 %%

@@ -136,6 +136,18 @@ proc ProcessMultiFrameCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	global multiframe
+	set multiframe(load,sock) $sock
+	set multiframe(load,fn) $fn
+
+	multiframe::YY_FLUSH_BUFFER
+	multiframe::yy_scan_string [lrange $var $i end]
+	multiframe::yyparse
+	incr i [expr $multiframe::yycnt-1]
+    } else {
+
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -176,4 +188,32 @@ proc ProcessMultiFrameCmd {varname iname sock fn} {
     }
     FinishLoad
 }
+}
 
+proc MultiframeCmdLoad {param} {
+    global multiframe
+
+    if {$multiframe(load,sock) != {}} {
+	# xpa
+	global tcl_platform
+	switch $tcl_platform(os) {
+	    Linux -
+	    Darwin -
+	    SunOS {
+		if {![LoadMultiFrameSocket $multiframe(load,sock) $param]} {
+		    InitError xpa
+		    LoadMultiFrameFile $param
+		}
+	    }
+	    {Windows NT} {LoadMultiFrameFile $param}
+	}
+    } else {
+	# comm
+	if {$multiframe(load,fn) != {}} {
+	    LoadMultiFrameAlloc $multiframe(load,fn) $param
+	} else {
+	    LoadMultiFrameFile $param
+	}
+    }
+    FinishLoad
+}

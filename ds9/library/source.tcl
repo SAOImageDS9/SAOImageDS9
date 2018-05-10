@@ -256,6 +256,8 @@ source $ds9(root)/library/minmaxparser.tcl
 source $ds9(root)/library/minmaxlex.tcl
 source $ds9(root)/library/modeparser.tcl
 source $ds9(root)/library/modelex.tcl
+source $ds9(root)/library/multiframeparser.tcl
+source $ds9(root)/library/multiframelex.tcl
 source $ds9(root)/library/nanparser.tcl
 source $ds9(root)/library/nanlex.tcl
 source $ds9(root)/library/nrrdparser.tcl

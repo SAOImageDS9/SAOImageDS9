@@ -127,8 +127,17 @@ proc ProcessRGBArrayCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global loadParam
-    global current
+    global debug
+    if {$debug(tcl,parser)} {
+	global rgbarray
+	set rgbarray(load,sock) $sock
+	set rgbarray(load,fn) $fn
+
+	rgbarray::YY_FLUSH_BUFFER
+	rgbarray::yy_scan_string [lrange $var $i end]
+	rgbarray::yyparse
+	incr i [expr $rgbarray::yycnt-1]
+    } else {
 
     switch -- [string tolower [lindex $var $i]] {
 	new {
@@ -162,25 +171,32 @@ proc ProcessRGBArrayCmd {varname iname sock fn} {
     }
     FinishLoad
 }
+}
 
 proc RGBArrayCmdLoad {param} {
-    global array
+    global rgbarray
 
-    if {$array(load,sock) != {}} {
+    if {$rgbarray(load,sock) != {}} {
 	# xpa
-	if {![ImportRGBArraySocket $array(load,sock) $param]} {
+	if {![ImportRGBArraySocket $rgbarray(load,sock) $param]} {
 	    InitError xpa
 	    ImportRGBArrayFile $param
 	}
     } else {
 	# comm
-	if {$array(load,fn) != {}} {
-	    ImportRGBArrayAlloc $array(load,fn) $param
+	if {$rgbarray(load,fn) != {}} {
+	    ImportRGBArrayAlloc $rgbarray(load,fn) $param
 	} else {
 	    ImportRGBArrayFile $param
 	}
     }
     FinishLoad
+}
+
+proc RGBArrayCmdSet {which value} {
+    global rgbarray
+
+    set rgbarray($which) $value
 }
 
 proc ProcessSendRGBArrayCmd {proc id param sock fn} {

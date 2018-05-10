@@ -288,8 +288,12 @@ source $ds9(root)/library/regionparser.tcl
 source $ds9(root)/library/regionlex.tcl
 source $ds9(root)/library/rgbparser.tcl
 source $ds9(root)/library/rgblex.tcl
+source $ds9(root)/library/rgbarrayparser.tcl
+source $ds9(root)/library/rgbarraylex.tcl
 source $ds9(root)/library/rgbcubeparser.tcl
 source $ds9(root)/library/rgbcubelex.tcl
+source $ds9(root)/library/rgbimageparser.tcl
+source $ds9(root)/library/rgbimagelex.tcl
 source $ds9(root)/library/sampparser.tcl
 source $ds9(root)/library/samplex.tcl
 source $ds9(root)/library/saveparser.tcl
@@ -308,6 +312,8 @@ source $ds9(root)/library/smoothparser.tcl
 source $ds9(root)/library/smoothlex.tcl
 source $ds9(root)/library/sourceparser.tcl
 source $ds9(root)/library/sourcelex.tcl
+source $ds9(root)/library/srgbcubeparser.tcl
+source $ds9(root)/library/srgbcubelex.tcl
 source $ds9(root)/library/threadsparser.tcl
 source $ds9(root)/library/threadslex.tcl
 source $ds9(root)/library/threedparser.tcl

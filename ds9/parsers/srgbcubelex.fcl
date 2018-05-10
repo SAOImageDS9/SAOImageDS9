@@ -1,4 +1,4 @@
-#tab rgbarrayparser.tab.tcl
+#tab rgbcubeparser.tab.tcl
 
 %{
 %}
@@ -7,7 +7,6 @@
 
 %%
 
-mask	    {return $MASK_}
 new	    {return $NEW_}
 
 #include string.fin

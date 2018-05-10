@@ -5,25 +5,27 @@
 
 %start command
 
+%token MASK_
 %token NEW_
 
 %%
 
-command : rgbcube 
- | rgbcube {yyclearin; YYACCEPT} STRING_
+command : rgbarray 
+ | rgbarray {yyclearin; YYACCEPT} STRING_
  ;
 
-rgbcube : opts {RGBCubeCmdLoad {}}
- | opts STRING_ {RGBCubeCmdLoad $2}
+rgbarray : opts {RGBArrayCmdLoad {}}
+ | opts STRING_ {RGBArrayCmdLoad $2}
  ;
 
 opts :
  | NEW_ {CreateRGBFrame}
+ | MASK_ {RGBArrayCmdSet load,layer mask}
  ;
 
 %%
 
-proc rgbcube::yyerror {msg} {
+proc rgbarray::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer
      variable index_

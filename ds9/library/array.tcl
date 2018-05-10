@@ -82,6 +82,9 @@ proc ProcessArrayCmd {varname iname sock fn} {
 	set array(load,sock) $sock
 	set array(load,fn) $fn
 	set array(load,layer) {}
+	global rgbarray
+	set rgbarray(load,sock) $sock
+	set rgbarray(load,fn) $fn
 
 	array::YY_FLUSH_BUFFER
 	array::yy_scan_string [lrange $var $i end]

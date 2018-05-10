@@ -33,6 +33,14 @@ proc ProcessSRGBCubeCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	srgbcube::YY_FLUSH_BUFFER
+	srgbcube::yy_scan_string [lrange $var $i end]
+	srgbcube::yyparse
+	incr i [expr $srgbcube::yycnt-1]
+    } else {
+
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -64,4 +72,5 @@ proc ProcessSRGBCubeCmd {varname iname sock fn} {
 	}
     }
     FinishLoad
+}
 }

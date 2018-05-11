@@ -9,11 +9,11 @@
 
 %%
 
-command : rgbcube 
- | rgbcube {yyclearin; YYACCEPT} STRING_
+command : srgbcube 
+ | srgbcube {yyclearin; YYACCEPT} STRING_
  ;
 
-rgbcube : opts STRING_ STRING_ {LoadSRGBCubeFile $2 $3}
+srgbcube : opts STRING_ STRING_ {LoadSRGBCubeFile $2 $3}
  ;
 
 opts :
@@ -22,7 +22,7 @@ opts :
 
 %%
 
-proc rgbcube::yyerror {msg} {
+proc srgbcube::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer
      variable index_

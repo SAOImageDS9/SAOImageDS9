@@ -21,12 +21,16 @@ proc ProcessSFitsCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global loadParam
-    global current
+    global debug
+    if {$debug(tcl,parser)} {
+	sfits::YY_FLUSH_BUFFER
+	sfits::yy_scan_string [lrange $var $i end]
+	sfits::yyparse
+	incr i [expr $sfits::yycnt-1]
+    } else {
 
     set layer {}
     set mode {}
-
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -60,4 +64,5 @@ proc ProcessSFitsCmd {varname iname sock fn} {
 	}
     }
     FinishLoad
+}
 }

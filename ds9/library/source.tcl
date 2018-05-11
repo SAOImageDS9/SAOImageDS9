@@ -324,6 +324,8 @@ source $ds9(root)/library/sleepparser.tcl
 source $ds9(root)/library/sleeplex.tcl
 source $ds9(root)/library/smoothparser.tcl
 source $ds9(root)/library/smoothlex.tcl
+source $ds9(root)/library/smosaicwcsparser.tcl
+source $ds9(root)/library/smosaicwcslex.tcl
 source $ds9(root)/library/sourceparser.tcl
 source $ds9(root)/library/sourcelex.tcl
 source $ds9(root)/library/srgbcubeparser.tcl

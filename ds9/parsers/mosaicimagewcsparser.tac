@@ -17,8 +17,8 @@ command : mosaicimagewcs
  | mosaicimagewcs {yyclearin; YYACCEPT} STRING_
  ;
 
-mosaicimagewcs : sys opts {MosaicImageWCSCmdLoad {} $2 $1}
- | sys opts STRING_ {MosaicImageWCSCmdLoad $3 $2 $1}
+mosaicimagewcs : opts sys {MosaicImageWCSCmdLoad {} $1 $2}
+ | opts sys STRING_ {MosaicImageWCSCmdLoad $3 $1 $2}
  ;
 
 sys : {set _ wcs}

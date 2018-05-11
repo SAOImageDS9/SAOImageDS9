@@ -21,11 +21,15 @@ proc ProcessSMosaicIRAFCmd {varname iname sock fn layer} {
     upvar $varname var
     upvar $iname i
 
-    global loadParam
-    global current
+    global debug
+    if {$debug(tcl,parser)} {
+	smosaiciraf::YY_FLUSH_BUFFER
+	smosaiciraf::yy_scan_string [lrange $var $i end]
+	smosaiciraf::yyparse
+	incr i [expr $smosaiciraf::yycnt-1]
+    } else {
 
     set layer {}
-
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -41,20 +45,13 @@ proc ProcessSMosaicIRAFCmd {varname iname sock fn layer} {
 	}
     }
 
-    set opt [lindex $var $i]
-    if {$opt != {}} {
-	incr i
-    } else {
-	set opt wcs
-    }
-
     if {$sock != {}} {
 	# xpa
 	if {0} {
 	    # not supported
 	} else {
 	    LoadSMosaicIRAFFile [lindex $var $i] [lindex $var [expr $i+1]] \
-		$layer $opt
+		$layer
 	}
     } else {
 	# comm
@@ -62,8 +59,9 @@ proc ProcessSMosaicIRAFCmd {varname iname sock fn layer} {
 	    # not supported
 	} else {
 	    LoadSMosaicIRAFFile [lindex $var $i] [lindex $var [expr $i+1]] \
-		$layer $opt
+		$layer
 	}
     }
     FinishLoad
+}
 }

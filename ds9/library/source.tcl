@@ -272,6 +272,8 @@ source $ds9(root)/library/multiframeparser.tcl
 source $ds9(root)/library/multiframelex.tcl
 source $ds9(root)/library/nanparser.tcl
 source $ds9(root)/library/nanlex.tcl
+source $ds9(root)/library/nresparser.tcl
+source $ds9(root)/library/nreslex.tcl
 source $ds9(root)/library/nrrdparser.tcl
 source $ds9(root)/library/nrrdlex.tcl
 source $ds9(root)/library/nvssparser.tcl

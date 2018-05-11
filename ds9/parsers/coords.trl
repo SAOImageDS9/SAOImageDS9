@@ -57,7 +57,7 @@ skyframe : FK4_ {set _ fk4}
 #   YYABORT
 # }
 
-skyformat: DEGREES_ {set _ degrees}
+skyformat : DEGREES_ {set _ degrees}
  | SEXAGESIMAL_ {set _ sexagesimal}
  ;
 

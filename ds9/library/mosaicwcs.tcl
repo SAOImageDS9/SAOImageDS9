@@ -83,11 +83,19 @@ proc ProcessMosaicWCSCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global loadParam
-    global current
+    global debug
+    if {$debug(tcl,parser)} {
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
+
+	mosaicwcs::YY_FLUSH_BUFFER
+	mosaicwcs::yy_scan_string [lrange $var $i end]
+	mosaicwcs::yyparse
+	incr i [expr $mosaicwcs::yycnt-1]
+    } else {
 
     set layer {}
-
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -123,6 +131,27 @@ proc ProcessMosaicWCSCmd {varname iname sock fn} {
 	    LoadMosaicWCSAlloc $fn $param $layer $opt
 	} else {
 	    LoadMosaicWCSFile $param $layer $opt
+	}
+    }
+    FinishLoad
+}
+}
+
+proc MosaicWCSCmdLoad {param layer sys} {
+    global parse
+
+    if {$parse(sock) != {}} {
+	# xpa
+	if {![LoadMosaicWCSSocket $parse(sock) $param $layer $sys]} {
+	    InitError xpa
+	    LoadMosaicWCSFile $param $layer $sys
+	}
+    } else {
+	# comm
+	if {$parse(fn) != {}} {
+	    LoadMosaicWCSAlloc $parse(fn) $param $layer $sys
+	} else {
+	    LoadMosaicWCSFile $param $layer $sys
 	}
     }
     FinishLoad

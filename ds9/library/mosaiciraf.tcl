@@ -47,11 +47,19 @@ proc ProcessMosaicIRAFCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global loadParam
-    global current
+    global debug
+    if {$debug(tcl,parser)} {
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
+
+	mosaiciraf::YY_FLUSH_BUFFER
+	mosaiciraf::yy_scan_string [lrange $var $i end]
+	mosaiciraf::yyparse
+	incr i [expr $mosaiciraf::yycnt-1]
+    } else {
 
     set layer {}
-
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -78,6 +86,27 @@ proc ProcessMosaicIRAFCmd {varname iname sock fn} {
 	# comm
 	if {$fn != {}} {
 	    LoadMosaicIRAFAlloc $fn $param $layer
+	} else {
+	    LoadMosaicIRAFFile $param $layer
+	}
+    }
+    FinishLoad
+}
+}
+
+proc MosaicIRAFCmdLoad {param layer} {
+    global parse
+
+    if {$parse(sock) != {}} {
+	# xpa
+	if {![LoadMosaicIRAFSocket $parse(sock) $param $layer]} {
+	    InitError xpa
+	    LoadMosaicIRAFFile $param $layer
+	}
+    } else {
+	# comm
+	if {$parse(fn) != {}} {
+	    LoadMosaicIRAFAlloc $parse(fn) $param $layer
 	} else {
 	    LoadMosaicIRAFFile $param $layer
 	}

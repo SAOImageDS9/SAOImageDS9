@@ -1,0 +1,13 @@
+#tab irafalignparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+#include yesno.fin
+#include string.fin
+
+%%

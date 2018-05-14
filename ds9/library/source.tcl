@@ -300,6 +300,8 @@ source $ds9(root)/library/psparser.tcl
 source $ds9(root)/library/pslex.tcl
 source $ds9(root)/library/regionparser.tcl
 source $ds9(root)/library/regionlex.tcl
+source $ds9(root)/library/restoreparser.tcl
+source $ds9(root)/library/restorelex.tcl
 source $ds9(root)/library/rgbparser.tcl
 source $ds9(root)/library/rgblex.tcl
 source $ds9(root)/library/rgbarrayparser.tcl

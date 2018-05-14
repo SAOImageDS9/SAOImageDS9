@@ -358,6 +358,8 @@ source $ds9(root)/library/voparser.tcl
 source $ds9(root)/library/volex.tcl
 source $ds9(root)/library/wcsparser.tcl
 source $ds9(root)/library/wcslex.tcl
+source $ds9(root)/library/webparser.tcl
+source $ds9(root)/library/weblex.tcl
 source $ds9(root)/library/widthparser.tcl
 source $ds9(root)/library/widthlex.tcl
 source $ds9(root)/library/xpaparser.tcl

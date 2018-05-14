@@ -1,0 +1,17 @@
+#tab preserveparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+pan	    {return $PAN_}
+regions	    {return $REGIONS_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+
+%%

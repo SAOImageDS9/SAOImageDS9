@@ -434,6 +434,14 @@ proc ProcessPreserveCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	preserve::YY_FLUSH_BUFFER
+	preserve::yy_scan_string [lrange $var $i end]
+	preserve::yyparse
+	incr i [expr $preserve::yycnt-1]
+    } else {
+
     global ds9
     global scale
     global panzoom
@@ -452,6 +460,7 @@ proc ProcessPreserveCmd {varname iname} {
 	    MarkerPreserve
 	}
     }
+}
 }
 
 proc ProcessSendPreserveCmd {proc id param} {

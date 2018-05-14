@@ -69,8 +69,6 @@ proc MarkerDef {} {
     set marker(load,format) $marker(format)
     set marker(load,system) $marker(system)
     set marker(load,sky) $marker(sky)
-    set marker(load,sock) {}
-    set marker(load,fn) {}
     set marker(tag) {}
 
     set pmarker(epsilon) 3
@@ -1400,8 +1398,10 @@ proc ProcessRegionsCmd {varname iname sock fn} {
 
     global debug
     if {$debug(tcl,parser)} {
-	set marker(load,sock) $sock
-	set marker(load,fn) $fn
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
+
 	set marker(load,format) $marker(format)
 	set marker(load,system) $marker(system)
 	set marker(load,sky) $marker(sky)
@@ -1984,18 +1984,19 @@ proc PmarkerCmdSet {which value {cmd {}}} {
 proc RegionCmdLoad {} {
     global marker
     global current
+    global parse
     
     if {$current(frame) == {} || ![$current(frame) has fits]} {
 	return
     }
 
-    if {$marker(load,sock) != {}} {
+    if {$parse(sock) != {}} {
 	# xpa path
 	# fits regions files not supported  
 	$current(frame) marker load $marker(load,format) \
-	    $marker(load,sock) $marker(load,system) $marker(load,sky)
+	    $parse(sock) $marker(load,system) $marker(load,sky)
 	UpdateGroupDialog
-    } elseif {$marker(load,fn) != {}} {
+    } elseif {$parse(fn) != {}} {
 	# samp path
 	MarkerLoadFrames $fn $current(frame) \
 	    $marker(load,format) $marker(load,system) $marker(load,sky)

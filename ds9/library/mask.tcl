@@ -17,9 +17,6 @@ proc MaskDef {} {
     set mask(transparency) 0
 
     array set pmask [array get mask]
-
-    # temporary
-    set mask(rr) {}
 }
 
 proc MaskMark {} {
@@ -267,14 +264,15 @@ proc ProcessMaskCmd {varname iname} {
 
     global debug
     if {$debug(tcl,parser)} {
-	set mask(rr) {}
+	global parse
+	set parse(result) {}
 
 	mask::YY_FLUSH_BUFFER
 	mask::yy_scan_string [lrange $var $i end]
 	mask::yyparse
 	incr i [expr $mask::yycnt-1]
 
-	return $mask(rr)
+	return $parse(result)
     } else {
 
     set rr {}

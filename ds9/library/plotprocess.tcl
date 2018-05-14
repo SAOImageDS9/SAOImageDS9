@@ -109,9 +109,10 @@ proc ProcessPlotCmd {xarname iname buf fn} {
 	set ref [lindex $iap(windows) end]
 	global cvarname
 	set cvarname $ref
-	set iap(name) $iap(tt)
-	set iap(buf) $buf
-	set iap(fn) $fn
+	global parse
+	set parse(buf) $buf
+	set parse(fn) $fn
+	set parse(tt) $iap(tt)
 
 	plot::YY_FLUSH_BUFFER
 	plot::yy_scan_string [lrange $xar $i end]
@@ -576,59 +577,59 @@ proc PlotCmdRef {ref} {
 }
 
 proc PlotCmdNew {name} {
-    global iap
+    global parse
 
     if {$name != {}} {
-	set iap(name) $name
+	set parse(tt) $name
     }
 
-    if {$iap(buf) != {}} {
+    if {$parse(buf) != {}} {
 	return
-    } elseif {$iap(fn) != {}} {
-	if {[file exists $iap(fn)]} {
-	    set ch [open $iap(fn) r]
-	    set iap(buf) [read $ch]
+    } elseif {$parse(fn) != {}} {
+	if {[file exists $parse(fn)]} {
+	    set ch [open $parse(fn) r]
+	    set parse(buf) [read $ch]
 	    close $ch
 	    return
 	}
     }
-    set iap(buf) {}
+    set parse(buf) {}
 }
 
 proc PlotCmdLine {title xaxis yaxis dim} {
-    global iap
-    PlotLine $iap(name) {} $title $xaxis $yaxis $dim $iap(buf)
+    global parse
+    PlotLine $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
 }
 
 proc PlotCmdBar {title xaxis yaxis dim} {
-    global iap
-    PlotBar $iap(name) {} $title $xaxis $yaxis $dim $iap(buf)
+    global parse
+    PlotBar $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
 }
 
 proc PlotCmdScatter {title xaxis yaxis dim} {
-    global iap
-    PlotScatter $iap(name) {} $title $xaxis $yaxis $dim $iap(buf)
+    global parse
+    PlotScatter $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
 }
 
 proc PlotCmdAnalysisPlotStdin {which} {
-    global iap
-    AnalysisPlotStdin $which $iap(name) {} $iap(buf)
+    global parse
+    AnalysisPlotStdin $which $parse(tt) {} $parse(buf)
 }
 
 proc PlotCmdData {dim} {
-    global iap
+    global parse
     global cvarname
     upvar #0 $cvarname cvar
 
-    if {$iap(buf) == {}} {
-	if {$iap(fn) != {}} {
-	    if {[file exists $iap(fn)]} {
-		set ch [open $iap(fn) r]
-		set iap(buf) [read $ch]
+    if {$parse(buf) == {}} {
+	if {$parse(fn) != {}} {
+	    if {[file exists $parse(fn)]} {
+		set ch [open $parse(fn) r]
+		set parse(buf) [read $ch]
 		close $ch
 	    }
 	}
-	if {$iap(buf) == {}} {
+	if {$parse(buf) == {}} {
 	    Error "[msgcat::mc {Unable to load plot data}] $fn"
 	    plot::YYABORT
 	    return
@@ -636,7 +637,7 @@ proc PlotCmdData {dim} {
     }
     
     PlotRaise $cvarname
-    PlotDataSet $cvarname $dim $iap(buf)
+    PlotDataSet $cvarname $dim $parse(buf)
     $cvar(proc,updategraph) $cvarname
     PlotStats $cvarname
     PlotList $cvarname

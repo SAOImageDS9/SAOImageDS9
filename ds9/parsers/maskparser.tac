@@ -21,7 +21,7 @@ command : mask
  | mask {yyclearin; YYACCEPT} STRING_
  ;
 
-mask : {MaskCmdSet rr mask}
+mask : {global parse; set parse(result) mask}
  | OPEN_ {MaskDialog}
  | CLOSE_ {MaskDestroyDialog}
  | CLEAR_ {MaskClear}

@@ -1372,24 +1372,6 @@ proc ProcessSendThreadsCmd {proc id param} {
     $proc $id "$ds9(threads)\n"
 }
 
-proc ProcessIRAFAlignCmd {varname iname} {
-    upvar $varname var
-    upvar $iname i
-
-    global debug
-    if {$debug(tcl,parser)} {
-	irafalign::YY_FLUSH_BUFFER
-	irafalign::yy_scan_string [lrange $var $i end]
-	irafalign::yyparse
-	incr i [expr $irafalign::yycnt-1]
-    } else {
-
-    global pds9
-    set pds9(iraf) [FromYesNo [lindex $var $i]]
-    PrefsIRAFAlign
-}
-}
-
 proc ProcessSendIRAFAlignCmd {proc id param} {
     global pds9
 

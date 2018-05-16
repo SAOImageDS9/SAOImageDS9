@@ -1148,7 +1148,6 @@
         10 and bias value from 0 to 1. </p>
       <tt> Syntax: <br>
         -cmap [&lt;colormap&gt;] <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [file]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;] <br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [invert yes|no] <br>
@@ -1156,9 +1155,7 @@
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tag [load|save]
         &lt;filename&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tag delete]</tt><br>
-      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [match]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock [yes|no]]</tt><br>
-      <tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
         &nbsp;<br>
         Example: <br>
         $ds9 -cmap Heat <br>
@@ -1169,9 +1166,7 @@
         $ds9 -cmap tag load foo.tag<br>
         $ds9 -cmap tag save foo.tag<br>
         $ds9 -cmap tag delete<br>
-      </tt><tt>$ds9 -cmap match<br>
-        $ds9 -cmap lock yes</tt><br>
-      <tt> $ds9 -cmap open<br>
+      </tt><tt>$ds9 -cmap open<br>
         $ds9 -cmap close<br>
       </tt>
       <p><b><a name="colorbar"></a>colorbar</b></p>
@@ -1181,8 +1176,6 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [yes|no]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [horizontal|vertical]<br>
-        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; [orientation
-        horizontal|vertical]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics
         yes|no]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; [space
@@ -1197,11 +1190,14 @@
         roman|italic]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; [ticks]<br>
-        &nbsp;<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          [match]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock
+          [yes|no]]</tt><br>
+        &nbsp; <tt> </tt><br>
         Example: <br>
         $ds9 -colorbar yes<br>
         $ds9 -colorbar vertical<br>
-        $ds9 -colorbar orientation vertical<br>
         $ds9 -colorbar numerics yes<br>
         $ds9 -colorbar space value<br>
         $ds9 -colorbar font times<br>
@@ -1209,8 +1205,10 @@
         $ds9 -colorbar fontweight bold<br>
         $ds9 -colorbar fontslant italic<br>
         $ds9 -colorbar size 20<br>
-        $ds9 -colorbar ticks 11<br>
-      </tt>
+        $ds9 -colorbar ticks 11</tt><br>
+      <tt>$ds9 -colorbar match<br>
+        $ds9 -colorbar lock yes</tt><br>
+      <tt> </tt>
       <p><b> <a name="console"></a>console</b></p>
       <p>Display tcl console window.</p>
       <tt> Syntax: <br>

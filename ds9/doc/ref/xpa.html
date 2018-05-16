@@ -1192,17 +1192,14 @@
         &nbsp;&nbsp;&nbsp;&nbsp; [&lt;constrast&gt; &lt;bias&gt;] <br>
         &nbsp;&nbsp;&nbsp;&nbsp; [tag [load|save] &lt;filename&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [tag delete]<br>
-      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [match]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [lock [yes|no]]</tt><br>
-      <tt> &nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
         &nbsp; <br>
         Example: <br>
         $xpaget ds9 cmap <br>
         $xpaget ds9 cmap file <br>
         $xpaget ds9 cmap invert <br>
         $xpaget ds9 cmap value <br>
-      </tt><tt>$xpaget ds9 cmap lock</tt><br>
-      <tt> $xpaset -p ds9 cmap Heat <br>
+      </tt><tt>$xpaset -p ds9 cmap Heat <br>
         $xpaset -p ds9 cmap load foo.sao <br>
       </tt><tt>$xpaset -p ds9 cmap save bar.sao <br>
       </tt><tt>$xpaset -p ds9 cmap invert yes <br>
@@ -1210,9 +1207,7 @@
         $xpaset -p ds9 cmap tag load foo.tag<br>
         $xpaset -p ds9 cmap tag save foo.tag<br>
         $xpaset -p ds9 cmap tag delete<br>
-      </tt><tt>$xpaset -p ds9 cmap match<br>
-        $xpaset -p ds9 cmap lock yes</tt><br>
-      <tt> $xpaset -p ds9 cmap open<br>
+      </tt><tt>$xpaset -p ds9 cmap open<br>
         $xpaset -p ds9 cmap close<br>
       </tt>
       <p><b> <a name="colorbar"></a>colorbar<br>
@@ -1221,10 +1216,9 @@
       <tt> Syntax: <br>
         colorbar []<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [orientation]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
         [horizontal|vertical]<br>
-        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [orientation
-        horizontal|vertical]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics
         yes|no]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [space
@@ -1238,8 +1232,11 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [fontslant
         roman|italic]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [size]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ticks]<br>
-        &nbsp;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [ticks]</tt><br>
+      <tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [match]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock
+          [yes|no]]</tt><br>
+        <tt> </tt> </tt><tt>&nbsp; <tt> </tt><br>
         Example: <br>
         $xpaget ds9 colorbar<br>
         $xpaget ds9 colorbar orientation<br>
@@ -1250,8 +1247,9 @@
         $xpaget ds9 colorbar fontweight<br>
         $xpaget ds9 colorbar fontslant<br>
         $xpaget ds9 colorbar size<br>
-        $xpaget ds9 colorbar ticks<br>
-        $xpaset -p ds9 colorbar yes<br>
+        $xpaget ds9 colorbar ticks</tt><br>
+      <tt><tt>$xpaget ds9 colorbar lock</tt><br>
+        <tt> </tt> $xpaset -p ds9 colorbar yes<br>
         $xpaset -p ds9 colorbar vertical<br>
         $xpaset -p ds9 colorbar orientation vertical<br>
         $xpaset -p ds9 colorbar numerics yes<br>
@@ -1261,7 +1259,9 @@
         $xpaset -p ds9 colorbar fontweight bold<br>
         $xpaset -p ds9 colorbar fontslant italic<br>
         $xpaset -p ds9 colorbar size 20<br>
-        $xpaset -p ds9 colorbar ticks 11<br>
+        $xpaset -p ds9 colorbar ticks 11</tt><br>
+      <tt><tt>$xpaset -p ds9 colorbar match<br>
+          $xpaset -p ds9 colorbar lock yes</tt><br>
       </tt>
       <p><b> <a name="console"></a>console</b></p>
       <p>Display tcl console window.</p>

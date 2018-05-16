@@ -25,7 +25,6 @@ command : web
 
 web : {WebCmdNew {}}
  | STRING_ {WebCmdNew $1}
- | NEW_ STRING_ {WebCmdNew $2}
  | NEW_ STRING_ STRING_ {WebCmdNew $3 $2}
 
  | {WebCmdCheck} webCmd

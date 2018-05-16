@@ -309,6 +309,7 @@
       <p>Load raw data array into current frame.<br>
       </p>
       <tt> Syntax:<br>
+        array [little|big]<br>
         array [new|mask]
 [[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],zdim=&lt;z&gt;,bitpix=&lt;b&gt;,skip=&lt;s&gt;,endian=[little|big]]<br>
         &nbsp;<br>
@@ -2569,7 +2570,8 @@
         array endian.<br>
       </p>
       <tt> Syntax: <br>
-        nrrd [&lt;filename&gt;] [little|big]<br>
+        nrrd [little|big]<br>
+        nrrd [new|mask] [&lt;filename&gt;]<br>
         &nbsp;<br>
         Example:<br>
       </tt><tt><tt>string value = ds9.get(string cmd)<br>

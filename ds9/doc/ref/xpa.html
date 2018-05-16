@@ -208,10 +208,12 @@
 
 
 
+
                       -p ds9 3d match</tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset -p ds9 3d lock
                             yes</tt><br>
                         </tt></tt></tt> </tt></tt></tt></tt></tt></tt>$xpaset
+
 
 
 
@@ -281,7 +283,6 @@
       <p>Load raw data array into current frame.<br>
       </p>
       <tt> Syntax:<br>
-        array [native|big|little]<br>
         array [new|mask]
 [[xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],zdim=&lt;z&gt;,bitpix=&lt;b&gt;,skip=&lt;s&gt;,endian=[little|big]]<br>
         &nbsp;<br>
@@ -542,6 +543,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -563,6 +565,7 @@
         </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             [&lt;ref&gt;] [match &lt;ref&gt; &lt;ref&gt;]<br>
           </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -751,6 +754,7 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
 
@@ -846,8 +850,10 @@
 
 
 
+
         [match return 1and2|1only|2only]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1089,6 +1095,7 @@
 
 
 
+
         [update]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [x
         &lt;col&gt;]</tt><br>
@@ -1182,8 +1189,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;] <br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;] <br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [invert yes|no] <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [value &lt;constrast&gt; &lt;bias&gt;]
-        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [&lt;constrast&gt; &lt;bias&gt;] <br>
         &nbsp;&nbsp;&nbsp;&nbsp; [tag [load|save] &lt;filename&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [tag delete]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [match]<br>
@@ -1200,7 +1206,7 @@
         $xpaset -p ds9 cmap load foo.sao <br>
       </tt><tt>$xpaset -p ds9 cmap save bar.sao <br>
       </tt><tt>$xpaset -p ds9 cmap invert yes <br>
-        $xpaset -p ds9 cmap value 5 .5<br>
+        $xpaset -p ds9 cmap 5 .5<br>
         $xpaset -p ds9 cmap tag load foo.tag<br>
         $xpaset -p ds9 cmap tag save foo.tag<br>
         $xpaset -p ds9 cmap tag delete<br>
@@ -1614,6 +1620,7 @@
       <tt><tt>$xpaset -p ds9 export nrrd foo.nrrd little</tt></tt><br>
       <tt><tt><tt><tt><tt><tt>$xpaset -p ds9 export envi foo.hdr little</tt></tt><br>
             </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
 
@@ -2190,6 +2197,7 @@
 
 
 
+
         </tt>quality (1-100) </p>
       <tt> Syntax:<br>
         jpeg [new|slice] [&lt;filename&gt;] [1-100]<br>
@@ -2674,6 +2682,7 @@
 
 
 
+
         # title, title xaxis, title yaxis, dimension on line 1<br>
         &nbsp;&nbsp;&nbsp; &nbsp;[new [name &lt;plotname&gt;]
         [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
@@ -2688,6 +2697,7 @@
           &lt;filename&gt;<br>
         </tt>&nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
       </tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -2821,6 +2831,7 @@
 
 
 
+
                           </tt>[&lt;plotname&gt;] stats<br>
                         </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
 
@@ -2888,8 +2899,10 @@
 
 
 
+
                     list<br>
                     &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3024,10 +3037,12 @@
 
 
 
+
                 [&lt;plotname&gt;] pagesetup orient [portrait|landscape]<br>
                 &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] pagesetup
                 size [letter|legal|tabloid|poster|a4]</tt><br>
               <tt> </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3184,6 +3199,7 @@
 
 
 
+
           legend [yes|no]<br>
           &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] legend position
           [right|left|top|bottom]</tt><br>
@@ -3200,6 +3216,7 @@
       <tt><tt>&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] title [x|y]
           &lt;string&gt;<br>
           &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3332,9 +3349,11 @@
 
 
 
+
               shape
               [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3471,7 +3490,9 @@
 
 
 
+
                                                 <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3606,7 +3627,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3741,7 +3764,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3876,7 +3901,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4010,7 +4037,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4144,7 +4173,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4279,7 +4310,9 @@
 
 
 
+
                                                           [&lt;plotname&gt;]
+
 
 
 
@@ -4414,7 +4447,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4549,7 +4584,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4744,8 +4781,10 @@
 
 
 
+
                                     ds9 plot axis x min<br>
                                   </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -4814,6 +4853,7 @@
                                       ds9 plot axis x max<br>
                                       $xpaget ds9 plot axis x format<br>
                                     </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>$xpaget
+
 
 
 
@@ -4946,8 +4986,10 @@
 
 
 
+
                     ds9 plot font numbers size<br>
                   </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5080,6 +5122,7 @@
 
 
 
+
                         ds9 plot font numbers slant<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
 
@@ -5147,8 +5190,10 @@
 
 
 
+
                                 ds9 plot title<br>
                               </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5310,6 +5355,7 @@
 
 
 
+
                     ds9 plot dash<br>
                   </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
 
@@ -5377,8 +5423,10 @@
 
 
 
+
                                       ds9 plot error<br>
                                     </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5512,9 +5560,11 @@
 
 
 
+
                                                           ds9 plot error
                                                           width<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5647,6 +5697,7 @@
 
 
 
+
         -p ds9 plot show yes<br>
         $xpaset -p ds9 plot shape circle<br>
       </tt><tt><tt>$xpaset -p ds9 plot shape fill no<br>
@@ -5685,6 +5736,7 @@
       <p>Set region and coordinate output format precision. </p>
       <tt> Syntax: <br>
         precision &lt;linear&gt; </tt><tt><tt>&lt;degree&gt;</tt> </tt><tt><tt>&lt;hms&gt;
+
         </tt></tt><tt><tt><tt>&lt;dms&gt;</tt></tt></tt><tt><tt><tt><tt>
               &lt;arcmin&gt; </tt></tt></tt></tt><tt><tt><tt><tt><tt>&lt;arcsec&gt;<br>
                 <br>
@@ -6177,6 +6229,7 @@
 
 
 
+
         method. </p>
       <tt> Syntax: <br>
         saveimage </tt><tt>[fits|eps|gif|tiff|jpeg|png] </tt><tt>&lt;filename&gt;<br>
@@ -6406,8 +6459,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -6422,8 +6477,10 @@
 
 
 
+
                       [angle &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt></tt><tt>&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -6446,6 +6503,7 @@
 
 
 
+
                         ds9 smooth sigmaminor<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt>$xpaget
         ds9 smooth lock<br>
@@ -6462,8 +6520,10 @@
 
 
 
+
                         -p ds9 smooth sigma 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
 
@@ -6478,8 +6538,10 @@
 
 
 
+
                               -p ds9 smooth angle 45<br>
                             </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>$xpaset
+
 
 
 
@@ -6521,6 +6583,7 @@
         $xpaset -p ds9 threads 8</tt><br>
       <p><b> <a name="tiff"></a>tiff</b></p>
       <p>Load TIFF image into current frame. Optional parameters: <tt>tiff
+
 
 
 

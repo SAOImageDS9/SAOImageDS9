@@ -517,6 +517,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -538,6 +539,7 @@
         </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             [&lt;ref&gt;] [match]<br>
           </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -722,6 +724,7 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
 
@@ -815,8 +818,10 @@
 
 
 
+
         [match return 1and2|1only|2only]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1057,6 +1062,7 @@
 
 
 
+
         [update]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [x
         &lt;col&gt;]</tt><br>
@@ -1146,8 +1152,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;] <br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [invert yes|no] <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [value &lt;contrast&gt;
-        &lt;bias&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;contrast&gt; &lt;bias&gt;] <br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tag [load|save]
         &lt;filename&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tag delete]</tt><br>
@@ -1160,7 +1165,7 @@
         $ds9 -cmap load foo.sao <br>
         $ds9 -cmap save bar.sao<br>
         $ds9 -cmap invert yes <br>
-        $ds9 -cmap value 5 .5<br>
+        $ds9 -cmap 5 .5<br>
         $ds9 -cmap tag load foo.tag<br>
         $ds9 -cmap tag save foo.tag<br>
         $ds9 -cmap tag delete<br>
@@ -1317,6 +1322,7 @@
         -crosshair [&lt;x&gt; &lt;h&gt; &lt;coordsys&gt;
         [&lt;skyframe&gt;]]<br>
         &nbsp;</tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2337,6 +2343,7 @@
 
 
 
+
         [pan]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -2473,8 +2480,10 @@
 
 
 
+
         [crosshair]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2848,6 +2857,7 @@
 
 
 
+
         [yes|open]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
         [no|close]<br>
@@ -2888,6 +2898,7 @@
           &lt;filename&gt;<br>
         </tt>&nbsp;&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
       </tt><tt><tt><tt><tt><tt><tt>&nbsp; &nbsp; &nbsp; </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3022,6 +3033,7 @@
 
 
 
+
                             &nbsp;&nbsp; </tt>[&lt;plotname&gt;] stats<br>
                         </tt></tt>&nbsp;&nbsp;&nbsp; &nbsp; </tt>[&lt;plotname&gt;]
 
@@ -3090,8 +3102,10 @@
 
 
 
+
                     list<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3233,6 +3247,7 @@
 
 
 
+
                 &nbsp;&nbsp; [&lt;plotname&gt;] print<br>
                 &nbsp; &nbsp; &nbsp; [&lt;plotname&gt;] print
                 destination [printer|file] <br>
@@ -3245,6 +3260,7 @@
               </tt>&nbsp; &nbsp; &nbsp; </tt>[&lt;plotname&gt;] close<br>
             <br>
           </tt></tt></tt><tt><tt><tt><tt><tt><tt><tt> -plot </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3414,9 +3430,11 @@
 
 
 
+
               shape
               [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt>&nbsp; &nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3554,7 +3572,9 @@
 
 
 
+
                                                 &nbsp; &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3690,8 +3710,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3827,7 +3849,9 @@
 
 
 
+
                                                           &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3963,6 +3987,7 @@
 
 
 
+
                                                           &nbsp;&nbsp;&nbsp;
 
 
@@ -4031,7 +4056,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4166,8 +4193,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4302,8 +4331,10 @@
 
 
 
+
                                                           &nbsp; &nbsp;
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4439,8 +4470,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4576,7 +4609,9 @@
 
 
 
+
                                                           &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4754,6 +4789,7 @@
       <p>Set region and coordinate output format precision. </p>
       <tt> Syntax: <br>
         -precision &lt;linear&gt; </tt><tt><tt>&lt;degree&gt;</tt> </tt><tt><tt>&lt;hms&gt;
+
         </tt></tt><tt><tt><tt>&lt;dms&gt;</tt></tt></tt><tt><tt><tt><tt>
               &lt;arcmin&gt; </tt></tt></tt></tt><tt><tt><tt><tt><tt>&lt;arcsec&gt;<br>
                 <br>
@@ -5153,6 +5189,7 @@
 
 
 
+
         &lt;filename&gt; [image|table|slice]</tt> <br>
       <tt> &nbsp;<br>
         Example: <br>
@@ -5396,8 +5433,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -5412,8 +5451,10 @@
 
 
 
+
                       [angle &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -5438,8 +5479,10 @@
 
 
 
+
                   -smooth sigmaminor 2.0<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+
 
 
 

@@ -354,7 +354,8 @@
         &nbsp;&nbsp;&nbsp; [factor &lt;value&gt; [&lt;vector&gt;]]<br>
         &nbsp;&nbsp;&nbsp; [depth &lt;value&gt;] <br>
         &nbsp;&nbsp;&nbsp; [filter &lt;string&gt;] <br>
-        &nbsp;&nbsp;&nbsp; [function average|sum] <br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp; [filter clear] <br>
+        </tt>&nbsp;&nbsp;&nbsp; [function average|sum] <br>
         &nbsp;&nbsp;&nbsp; [in]<br>
         &nbsp;&nbsp;&nbsp; [out]<br>
         &nbsp;&nbsp;&nbsp; [to fit] <br>
@@ -385,7 +386,7 @@
         bin factor 4 2<br>
         bin depth 10<br>
         bin filter 'pha &gt; 5'<br>
-        bin filter ''<br>
+        bin filter clear<br>
         bin function sum<br>
         bin in<br>
         bin out<br>
@@ -1610,15 +1611,15 @@
       <p>Load an ENVI header and file. Optional parameter: array endian.<br>
       </p>
       <tt> Syntax: <br>
-        envi &lt;header&gt; [&lt;filename&gt;]<br>
+        envi [new] &lt;header&gt; [&lt;filename&gt;]<br>
         &nbsp;<br>
         Example:<br>
       </tt><tt><tt>envi foo.hdr</tt></tt><br>
+      <tt><tt>envi new foo.hdr</tt></tt><br>
       <tt><tt><tt><tt><tt><tt>envi foo.hdr foo.bsq</tt></tt><br>
-              envi new foo.hdr foo.bsq</tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><br>
-                </tt></tt></tt></tt></tt></tt>
-      <p><b> <a name="exit"></a>exit<br>
-          quit<br>
+              <br>
+            </tt></tt></tt></tt><b><a name="exit"></a>exit</b><br>
+      <p><b> quit<br>
         </b></p>
       <p>Quits DS9. </p>
       <tt> Syntax: <br>

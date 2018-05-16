@@ -328,7 +328,8 @@
         &nbsp;&nbsp;&nbsp; [factor &lt;value&gt; [&lt;vector&gt;]]<br>
         &nbsp;&nbsp;&nbsp; [depth &lt;value&gt;] <br>
         &nbsp;&nbsp;&nbsp; [filter &lt;string&gt;] <br>
-        &nbsp;&nbsp;&nbsp; [function average|sum]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp; [filter clear] <br>
+        </tt>&nbsp;&nbsp;&nbsp; [function average|sum]<br>
         &nbsp;&nbsp;&nbsp; [in]<br>
         &nbsp;&nbsp;&nbsp; [out]<br>
         &nbsp;&nbsp;&nbsp; [to fit] <br>
@@ -357,7 +358,7 @@
         $xpaset -p ds9 bin factor 4 2<br>
         $xpaset -p ds9 bin depth 10<br>
         $xpaset -p ds9 bin filter 'pha &gt; 5'<br>
-        $xpaset -p ds9 bin filter ''<br>
+        $xpaset -p ds9 bin filter clear<br>
         $xpaset -p ds9 bin function sum<br>
         $xpaset -p ds9 bin in<br>
         $xpaset -p ds9 bin out<br>
@@ -1582,15 +1583,16 @@
       <p>Load an ENVI header and file. Optional parameter: array endian.<br>
       </p>
       <tt> Syntax: <br>
-        envi &lt;header&gt; [&lt;filename&gt;]<br>
+        envi [new] &lt;header&gt; [&lt;filename&gt;]<br>
         &nbsp;<br>
         Example:<br>
       </tt><tt><tt>$xpaset -p ds9 envi foo.hdr</tt></tt><br>
-      <tt><tt><tt><tt><tt><tt>$xpaset -p ds9 envi foo.hdr foo.bsq</tt></tt><br>
-              $xpaset -p ds9 envi new foo.hdr foo.bsq</tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><br>
-                </tt></tt></tt></tt></tt></tt>
-      <p><b> <a name="exit"></a>exit<br>
-          quit<br>
+      <tt><tt>$xpaset -p ds9 envi new foo.hdr<br>
+        </tt></tt><tt><tt><tt><tt><tt><tt>$xpaset -p ds9 envi foo.hdr
+                  foo.bsq</tt></tt><br>
+              <br>
+            </tt></tt></tt></tt><b><a name="exit"></a>exit</b><br>
+      <p><b> quits<br>
         </b></p>
       <p>Quits DS9. </p>
       <tt> Syntax: <br>

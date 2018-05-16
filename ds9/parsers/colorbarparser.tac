@@ -31,7 +31,6 @@ command : colorbar
  ;
 
 colorbar : yesno {ViewCmdSet colorbar $1 UpdateView}
-# backward compatibility
  | MATCH_ {MatchColorCurrent}
  | LOCK_ yesno {ColorbarCmdSet lock $2 LockColorCurrent}
 
@@ -41,6 +40,7 @@ colorbar : yesno {ViewCmdSet colorbar $1 UpdateView}
  | FONTSIZE_ INT_ {ColorbarCmdSet font,size $2 UpdateView}
  | FONTWEIGHT_ fontWeight {ColorbarCmdSet font,weight $2 UpdateView}
  | FONTSLANT_ fontSlant {ColorbarCmdSet font,slant $2 UpdateView}
+# backward compatibility
  | FONTSTYLE_ fontStyle {ColorbarCmdFontStyle $2 UpdateView}
 
  | orientation {ColorbarCmdSet orientation $1 UpdateView}

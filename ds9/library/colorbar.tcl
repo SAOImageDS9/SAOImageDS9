@@ -1357,6 +1357,7 @@ proc ProcessSendCmapCmd {proc id param} {
 	file {$proc $id "[$current(colorbar) get file name]\n"}
 	invert {$proc $id [ToYesNo $colorbar(invert)]}
 	value {$proc $id "[$current(colorbar) get contrast] [$current(colorbar) get bias]\n"}
+	# backward compatibility
 	lock {$proc $id [ToYesNo $colorbar(lock)]} 
 	{} {$proc $id "[$current(colorbar) get name]\n"}
     }
@@ -1381,11 +1382,9 @@ proc ProcessColorbarCmd {varname iname} {
 
     switch  -- $item {
 	match {
-	    # backward compatibility
 	    MatchColorCurrent
 	}
 	lock {
-	    # backward compatibility
 	    incr i
 	    if {!([string range [lindex $var $i] 0 0] == "-")} {
 		set colorbar(lock) [FromYesNo [lindex $var $i]]
@@ -1529,7 +1528,6 @@ proc ProcessSendColorbarCmd {proc id param} {
 
     switch -- [string tolower [lindex $param 0]] {
 	lock {
-	    #backward compatibility
 	    $proc $id [ToYesNo $colorbar(lock)]
 	} 
 	orientation {$proc $id "$colorbar(orientation)\n"} 

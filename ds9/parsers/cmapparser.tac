@@ -32,7 +32,9 @@ cmap : STRING_ {CmapCmd $1}
  | OPEN_ {ColormapDialog}
  | CLOSE_ {ColormapDestroyDialog}
 
+# backward compatibility
  | MATCH_ {MatchColorCurrent}
+# backward compatibility
  | LOCK_ yesno {ColorbarCmdSet lock $2 LockColorCurrent}
 
  | LOAD_ cmapLoad

@@ -534,11 +534,11 @@ proc CommandLineLoadBase {item argvname iname} {
 
 
 	rgbimage {
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    LoadRGBImageFile $item
 	}
 	rgbcube {
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    LoadRGBCubeFile $item
 	}
 
@@ -574,7 +574,7 @@ proc CommandLineLoadBase {item argvname iname} {
 	}
 	srgbcube {
 	    #backward compatibility
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    incr i
 	    LoadSRGBCubeFile $item [lindex $argv $i]
 	}
@@ -592,7 +592,7 @@ proc CommandLineLoadBase {item argvname iname} {
 	    ImportArrayFile $item $file(layer)
 	}
 	rgbarray {
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    ImportRGBArrayFile $item
 	}
 	nrrd {
@@ -713,11 +713,11 @@ proc CommandLineLoad3D {item argvname iname} {
 	}
 
 	rgbimage {
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    LoadRGBImageFile $item
 	}
 	rgbcube {
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    LoadRGBCubeFile $item
 	}
 
@@ -753,7 +753,7 @@ proc CommandLineLoad3D {item argvname iname} {
 	}
 	srgbcube {
 	    #backward compatibility
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    incr i
 	    LoadSRGBCubeFile $item [lindex $argv $i]
 	}
@@ -771,7 +771,7 @@ proc CommandLineLoad3D {item argvname iname} {
 	    ImportArrayFile $item {}
 	}
 	rgbarray {
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    ImportRGBArrayFile $item
 	}
 	nrrd {

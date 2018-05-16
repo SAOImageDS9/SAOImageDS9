@@ -1,0 +1,39 @@
+#tab shmparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+key	    {return $KEY_}
+shmid	    {return $SHMID_}
+
+array	    {return $ARRAY_}
+fits	    {return $FITS_}
+sfits	    {return $SFITS_}
+mosaic	    {return $MOSAIC_}
+mosaicwcs   {return $MOSAICWCS_}
+mosaiciraf  {return $MOSAICIRAF_}
+smosaic	    {return $SMOSAIC_}
+mosaicimage {return $MOSAICIMAGE_}
+mosaicimagewcs {return $MOSAICIMAGEWCS_}
+mosaicimageiraf {return $MOSAICIMAGEIRAF_}
+mosaicimagewfpc2 {return $MOSAICIMAGEWFPC2_}
+rgbarray    {return $RGBARRAY_}
+rgbcube	    {return $RGBCUBE_}
+srgbcube    {return $SRGBCUBE_}
+rgbimage    {return $RGBIMAGE_}
+wfpc2	    {return $WFPC2_}
+iraf	    {return $IRAF_}
+
+shm	    {return $SHM_}
+-shm	    {return $SHMCMD_}
+
+#include coords.fin
+#include numeric.fin
+#include string.fin
+
+%%

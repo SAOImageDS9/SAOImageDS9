@@ -322,6 +322,8 @@ source $ds9(root)/library/scaleparser.tcl
 source $ds9(root)/library/scalelex.tcl
 source $ds9(root)/library/sfitsparser.tcl
 source $ds9(root)/library/sfitslex.tcl
+source $ds9(root)/library/shmparser.tcl
+source $ds9(root)/library/shmlex.tcl
 source $ds9(root)/library/siaparser.tcl
 source $ds9(root)/library/sialex.tcl
 source $ds9(root)/library/skyviewparser.tcl

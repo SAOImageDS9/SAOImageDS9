@@ -427,7 +427,7 @@ proc IMGSVRParse {varname} {
     }
 
     switch -- $var(mode) {
-	new {MultiLoadBase}
+	new {MultiLoad}
 	current {}
     }
 

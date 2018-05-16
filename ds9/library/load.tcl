@@ -13,46 +13,20 @@ proc MultiLoad {{layer {}} {mode {}}} {
 	puts stderr "MultiLoad"
     }
 
-    if {$layer != {} || $mode != {}} {
-	return
-    }
-
     if {$current(frame) != {}} {
-	if {![$current(frame) has fits]} {
-	    return
-	}
 	switch -- [$current(frame) get type] {
 	    base -
-	    3d {CreateFrame}
-	    rgb {}
+	    3d {
+		if {$layer != {} || $mode != {}} {
+		    return
+		}
+		if {![$current(frame) has fits]} {
+		    return
+		}
+		CreateFrame
+	    }
+	    rgb {CreateFrame}
 	}
-    } else {
-	CreateFrame
-	return
-    }
-
-    # go into tile mode if more than one
-    set cnt [llength $ds9(frames)]
-    if {$cnt > 1 && $current(display) != "tile"} {
-	set current(display) tile
-	DisplayMode
-    }
-}
-
-proc MultiLoadBase {} {
-    global ds9
-    global current
-
-    global debug
-    if {$debug(tcl,layout)} {
-	puts stderr "MultiLoadBase"
-    }
-
-    if {$current(frame) != {}} {
-	if {![$current(frame) has fits]} {
-	    return
-	}
-	CreateFrame
     } else {
 	CreateFrame
 	return
@@ -76,10 +50,16 @@ proc MultiLoadRGB {} {
     }
 
     if {$current(frame) != {}} {
-	if {![$current(frame) has fits]} {
-	    return
+	switch -- [$current(frame) get type] {
+	    base -
+	    3d {CreateRGBFrame}
+	    rgb {
+		if {![$current(frame) has fits]} {
+		    return
+		}
+		CreateRGBFrame
+	    }
 	}
-	CreateRGBFrame
     } else {
 	CreateRGBFrame
 	return

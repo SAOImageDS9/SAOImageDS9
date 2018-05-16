@@ -1194,7 +1194,7 @@ proc HVParseImg {varname} {
     }
 
     switch -- $var(frame) {
-	new {MultiLoadBase}
+	new {MultiLoad}
 	current {}
     }
 
@@ -1231,7 +1231,7 @@ proc HVParseFITS {varname} {
     }
 
     switch -- $var(frame) {
-	new {MultiLoadBase}
+	new {MultiLoad}
 	current {}
     }
 

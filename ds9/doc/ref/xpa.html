@@ -6294,8 +6294,6 @@
         [&lt;filename&gt;]]<br>
         &nbsp;&nbsp;&nbsp; [mosaicimage [iraf|wcs|wcsa...wcsz|wfpc2]
         [key|shmid] &lt;id&gt; [&lt;filename&gt;]]<br>
-        &nbsp;&nbsp;&nbsp; [mosaicimagenext [wcs|wcsa...wcsz]
-        [key|shmid] &lt;id&gt; [&lt;filename&gt;]]<br>
         &nbsp;&nbsp;&nbsp; [mosaic [iraf|wcs|wcsa...wcsz] [key|shmid]
         &lt;id&gt; [&lt;filename&gt;]] <br>
         &nbsp;&nbsp;&nbsp; [rgbcube [key|shmid] &lt;id&gt;
@@ -6306,8 +6304,7 @@
 [xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;,zdim=3],bitpix=&lt;b&gt;,[skip=&lt;s&gt;]]<br>
         &nbsp;&nbsp;&nbsp; [array [key|shmid] &lt;id&gt;
 [xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],bitpix=&lt;b&gt;,[skip=&lt;s&gt;]]<br>
-        &nbsp;&nbsp;&nbsp; [startload|finishload]<br>
-        &nbsp;<br>
+        &nbsp; <br>
         Example: <br>
         $xpaget ds9 shm <br>
         $xpaset -p ds9 shm 102 <br>
@@ -6318,18 +6315,15 @@
         $xpaset -p ds9 shm mosaicimage wcs key 100 foo <br>
         $xpaset -p ds9 shm mosaicimage wcsa key 100 foo <br>
         $xpaset -p ds9 shm mosaicimage wfpc2 key 100 foo <br>
-        $xpaset -p ds9 shm mosaicimagenext wcs key 100 foo<br>
         $xpaset -p ds9 shm mosaic iraf key 100 foo <br>
         $xpaset -p ds9 shm mosaic wcs key 100 foo <br>
         $xpaset -p ds9 shm rgbcube key 100 foo <br>
         $xpaset -p ds9 shm rgbimage key 100 foo<br>
         $xpaset -p ds9 shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
         $xpaset -p ds9 shm array shmid 102 [dim=32,bitpix=-32]<br>
-        $xpaset -p ds9 shm startload # start a multiple load sequence
-        without updating the display<br>
-        $xpaset -p ds9 shm finishload # finish multiple load sequence</tt><br>
-      <p><b> <a name="sia"></a>sia<br>
-        </b></p>
+        <br>
+      </tt><b><a name="sia"></a>sia<br>
+      </b>
       <p>Support for VO Simple Image Access protocol. The first command
         will create a new search. All other commands operated on the
         last search created, unless indicated otherwise.</p>

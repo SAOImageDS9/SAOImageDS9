@@ -6397,8 +6397,6 @@
         [&lt;filename&gt;]]<br>
         &nbsp;&nbsp;&nbsp; [mosaicimage [iraf|wcs|wcsa...wcsz|wfpc2]
         [key|shmid] &lt;id&gt; [&lt;filename&gt;]]<br>
-        &nbsp;&nbsp;&nbsp; [mosaicimagenext [wcs|wcsa...wcsz]
-        [key|shmid] &lt;id&gt; [&lt;filename&gt;]]<br>
         &nbsp;&nbsp;&nbsp; [mosaic [iraf|wcs|wcsa...wcsz] [key|shmid]
         &lt;id&gt; [&lt;filename&gt;]] <br>
         &nbsp;&nbsp;&nbsp; [rgbcube [key|shmid] &lt;id&gt;
@@ -6409,8 +6407,7 @@
 [xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;,zdim=3],bitpix=&lt;b&gt;,[skip=&lt;s&gt;]]<br>
         &nbsp;&nbsp;&nbsp; [array [key|shmid] &lt;id&gt;
 [xdim=&lt;x&gt;,ydim=&lt;y&gt;|dim=&lt;dim&gt;],bitpix=&lt;b&gt;,[skip=&lt;s&gt;]]<br>
-        &nbsp;&nbsp;&nbsp; [startload|finishload]<br>
-        &nbsp;<br>
+        &nbsp; <br>
         Example:<br>
         string value = ds9.get(string cmd)<br>
         shm <br>
@@ -6423,18 +6420,15 @@
         shm mosaicimage wcs key 100 foo <br>
         shm mosaicimage wcsa key 100 foo <br>
         shm mosaicimage wfpc2 key 100 foo <br>
-        shm mosaicimagenext wcs key 100 foo<br>
         shm mosaic iraf key 100 foo <br>
         shm mosaic wcs key 100 foo <br>
         shm rgbcube key 100 foo <br>
         shm rgbimage key 100 foo<br>
         shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
         shm array shmid 102 [dim=32,bitpix=-32]<br>
-        shm startload # start a multiple load sequence without updating
-        the display<br>
-        shm finishload # finish multiple load sequence</tt><br>
-      <p><b> <a name="sia"></a>sia<br>
-        </b></p>
+        <br>
+      </tt><b><a name="sia"></a>sia<br>
+      </b>
       <p>Support for VO Simple Image Access protocol. The first command
         will create a new search. All other commands operated on the
         last search created, unless indicated otherwise.</p>

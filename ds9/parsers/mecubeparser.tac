@@ -9,8 +9,8 @@
 
 %%
 
+# XPA/SAMP only
 command : mecube 
- | mecube {yyclearin; YYACCEPT} STRING_
  ;
 
 mecube : opts {MECubeCmdLoad {}}

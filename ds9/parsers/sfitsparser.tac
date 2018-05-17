@@ -11,8 +11,8 @@
 
 %%
 
+# XPA/SAMP only
 command : sfits 
- | sfits {yyclearin; YYACCEPT} STRING_
  ;
 
 sfits: new STRING_ STRING_ {LoadSFitsFile $2 $3 {} {}}

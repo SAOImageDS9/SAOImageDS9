@@ -10,8 +10,8 @@
 
 %%
 
+# XPA/SAMP only
 command : photo 
- | photo {yyclearin; YYACCEPT} STRING_
  ;
 
 photo : opts {PhotoCmdLoad {} $1}

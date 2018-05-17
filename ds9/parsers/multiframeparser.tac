@@ -7,8 +7,8 @@
 
 %%
 
+# XPA/SAMP only
 command : multiframe 
- | multiframe {yyclearin; YYACCEPT} STRING_
  ;
 
 multiframe : {MultiframeCmdLoad {}}

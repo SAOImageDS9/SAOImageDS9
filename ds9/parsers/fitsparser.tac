@@ -15,12 +15,15 @@
 command : fits 
  ;
 
-fits: NEW_ {CreateFrame; FitsCmdLoad {} {} {}}
- | new STRING_ {FitsCmdLoad $2 {} {}}
- | new MASK_ STRING_ {FitsCmdLoad $3 mask {}}
- | new SLICE_ STRING_ {FitsCmdLoad $3 {} slice}
- | new MASK_ SLICE_ STRING_ {FitsCmdLoad $4 mask slice}
+fits: new filename {FitsCmdLoad $2 {} {}}
+ | new MASK_ filename {FitsCmdLoad $3 mask {}}
+ | new SLICE_ filename {FitsCmdLoad $3 {} slice}
+ | new MASK_ SLICE_ filename {FitsCmdLoad $4 mask slice}
 ;
+
+filename : {set _ {}}
+ | STRING_ {set _ $1}
+ ;
 
 new :
  | NEW_ {CreateFrame}

@@ -313,9 +313,16 @@ proc ProcessURLFitsCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	urlfits::YY_FLUSH_BUFFER
+	urlfits::yy_scan_string [lrange $var $i end]
+	urlfits::yyparse
+	incr i [expr $urlfits::yycnt-1]
+    } else {
+
     set layer {}
     set mode {}
-
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -332,5 +339,6 @@ proc ProcessURLFitsCmd {varname iname} {
     }
 
     LoadURLFits [lindex $var $i] $layer $mode
+}
 }
 

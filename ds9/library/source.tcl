@@ -230,6 +230,8 @@ source $ds9(root)/library/enviparser.tcl
 source $ds9(root)/library/envilex.tcl
 source $ds9(root)/library/exportparser.tcl
 source $ds9(root)/library/exportlex.tcl
+source $ds9(root)/library/fitsparser.tcl
+source $ds9(root)/library/fitslex.tcl
 source $ds9(root)/library/frameparser.tcl
 source $ds9(root)/library/framelex.tcl
 source $ds9(root)/library/gridparser.tcl

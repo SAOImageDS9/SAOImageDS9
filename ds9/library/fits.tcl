@@ -107,12 +107,20 @@ proc ProcessFitsCmd {varname iname sock fn} {
 	return
     }
 
-    global loadParam
-    global current
+    global debug
+    if {$debug(tcl,parser)} {
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
+
+	fits::YY_FLUSH_BUFFER
+	fits::yy_scan_string [lrange $var $i end]
+	fits::yyparse
+	incr i [expr $fits::yycnt-1]
+    } else {
 
     set layer {}
     set mode {}
-
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -139,6 +147,27 @@ proc ProcessFitsCmd {varname iname sock fn} {
 	# comm
 	if {$fn != {}} {
 	    LoadFitsAlloc $fn $param $layer $mode
+	} else {
+	    LoadFitsFile $param $layer $mode
+	}
+    }
+    FinishLoad
+}
+}
+
+proc FitsCmdLoad {param layer mode} {
+    global parse
+    
+    if {$parse(sock) != {}} {
+	# xpa
+	if {![LoadFitsSocket $parse(sock) $param $layer $mode]} {
+	    InitError xpa
+	    LoadFitsFile $param $layer $mode
+	}
+    } else {
+	# comm
+	if {$parse(fn) != {}} {
+	    LoadFitsAlloc $parse(fn) $param $layer $mode
 	} else {
 	    LoadFitsFile $param $layer $mode
 	}

@@ -1357,7 +1357,6 @@ proc ProcessSendCmapCmd {proc id param} {
 	file {$proc $id "[$current(colorbar) get file name]\n"}
 	invert {$proc $id [ToYesNo $colorbar(invert)]}
 	value {$proc $id "[$current(colorbar) get contrast] [$current(colorbar) get bias]\n"}
-	# backward compatibility
 	lock {$proc $id [ToYesNo $colorbar(lock)]} 
 	{} {$proc $id "[$current(colorbar) get name]\n"}
     }
@@ -1494,32 +1493,27 @@ proc ColorbarCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ColorbarCmdFontStyle {value} {
-    global cvarname
-    upvar #0 $cvarname cvar
-    global $cvar(symdb)
+proc ColorbarCmdFontStyle {value {cmd {}}} {
+    global colorbar
 
     switch $value {
 	normal {
-	    starbase_set $cvar(symdb) $cvar(row) \
-		[starbase_colnum $cvar(symdb) fontweigth] normal
-	    starbase_set $cvar(symdb) $cvar(row) \
-		[starbase_colnum $cvar(symdb) fontslant] roman
+	    set colorbar(font,weight) normal
+	    set colorbar(font,slant) roman
 	}
 	bold {
-	    starbase_set $cvar(symdb) $cvar(row) \
-		[starbase_colnum $cvar(symdb) fontweight] bold
-	    starbase_set $cvar(symdb) $cvar(row) \
-		[starbase_colnum $cvar(symdb) fontslant] roman
+	    set colorbar(font,weight) bold
+	    set colorbar(font,slant) roman
 	}
 	italic {
-	    starbase_set $cvar(symdb) $cvar(row) \
-		[starbase_colnum $cvar(symdb) weight] normal
-	    starbase_set $cvar(symdb) $cvar(row) \
-		[starbase_colnum $cvar(symdb) slant] italic
+	    set colorbar(font,weight) normal
+	    set colorbar(font,slant) italic
 	}
     }
-    CATGenerate $cvarname
+
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 proc ProcessSendColorbarCmd {proc id param} {

@@ -9,8 +9,8 @@
 
 %%
 
+# XPA/SAMP only
 command : rgbimage 
- | rgbimage {yyclearin; YYACCEPT} STRING_
  ;
 
 rgbimage : opts {RGBImageCmdLoad {}}

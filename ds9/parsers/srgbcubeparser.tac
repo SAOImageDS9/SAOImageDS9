@@ -9,8 +9,8 @@
 
 %%
 
+# XPA/SAMP only
 command : srgbcube 
- | srgbcube {yyclearin; YYACCEPT} STRING_
  ;
 
 srgbcube : opts STRING_ STRING_ {LoadSRGBCubeFile $2 $3}

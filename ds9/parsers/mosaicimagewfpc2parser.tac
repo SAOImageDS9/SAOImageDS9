@@ -9,8 +9,8 @@
 
 %%
 
+# XPA/SAMP only
 command : mosaicimagewfpc2 
- | mosaicimagewfpc2 {yyclearin; YYACCEPT} STRING_
  ;
 
 mosaicimagewfpc2 : opts {MosaicImageWFPC2CmdLoad {}}

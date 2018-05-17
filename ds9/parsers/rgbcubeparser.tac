@@ -9,8 +9,8 @@
 
 %%
 
+# XPA/SAMP only
 command : rgbcube 
- | rgbcube {yyclearin; YYACCEPT} STRING_
  ;
 
 rgbcube : opts {RGBCubeCmdLoad {}}

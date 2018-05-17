@@ -9,8 +9,8 @@
 
 %%
 
+# XPA/SAMP only
 command : rgbarray 
- | rgbarray {yyclearin; YYACCEPT} STRING_
  ;
 
 rgbarray : opts {RGBArrayCmdLoad {}}

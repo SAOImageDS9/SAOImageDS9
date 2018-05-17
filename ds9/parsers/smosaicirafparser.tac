@@ -10,8 +10,8 @@
 
 %%
 
+# XPA/SAMP only
 command : smosaiciraf 
- | smosaiciraf {yyclearin; YYACCEPT} STRING_
  ;
 
 smosaiciraf : opts STRING_ STRING_ {LoadSMosaicIRAFFile $2 $3 $1}

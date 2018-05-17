@@ -10,8 +10,8 @@
 
 %%
 
+# XPA/SAMP only
 command : mosaiciraf 
- | mosaiciraf {yyclearin; YYACCEPT} STRING_
  ;
 
 mosaiciraf : opts {MosaicIRAFCmdLoad {} $1}

@@ -11,8 +11,8 @@
 
 %%
 
+# XPA/SAMP only
 command : array 
- | array {yyclearin; YYACCEPT} STRING_
  ;
 
 array : opts {ArrayCmdLoad {} $1}

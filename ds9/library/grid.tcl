@@ -1410,7 +1410,9 @@ proc GridCmdSet {which value {cmd {}}} {
     }
 }
 
-proc GridCmdFontStyle {which value} {
+proc GridCmdFontStyle {which value {cmd {}}} {
+    global grid
+
     switch $value {
 	normal {
 	    set grid($which,weight) normal
@@ -1424,6 +1426,10 @@ proc GridCmdFontStyle {which value} {
 	    set grid($which,weight) normal
 	    set grid($which,slant) italic
 	}
+    }
+
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

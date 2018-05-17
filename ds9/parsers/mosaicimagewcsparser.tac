@@ -13,8 +13,8 @@
 
 #include coords.trl
 
+# XPA/SAMP only
 command : mosaicimagewcs 
- | mosaicimagewcs {yyclearin; YYACCEPT} STRING_
  ;
 
 mosaicimagewcs : opts sys {MosaicImageWCSCmdLoad {} $1 $2}

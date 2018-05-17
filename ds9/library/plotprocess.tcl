@@ -729,6 +729,7 @@ proc PlotCmdFontStyle {which value} {
 	    set cvar($which,slant) italic
 	}
     }
+
     $cvar(proc,updategraph) $cvarname
 }
 

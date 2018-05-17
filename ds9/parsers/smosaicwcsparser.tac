@@ -13,8 +13,8 @@
 
 #include coords.trl
 
+# XPA/SAMP only
 command : smosaicwcs 
- | smosaicwcs {yyclearin; YYACCEPT} STRING_
  ;
 
 smosaicwcs : opts sys STRING_ STRING_ {LoadSMosaicWCSFile $3 $4 $2 $1}

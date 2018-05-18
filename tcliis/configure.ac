@@ -84,6 +84,9 @@ TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])
 TEA_ADD_TCL_SOURCES([])
 
+# Needed to compile open_unix
+AC_CHECK_HEADERS(sys/un.h)
+
 #--------------------------------------------------------------------
 # __CHANGE__
 #

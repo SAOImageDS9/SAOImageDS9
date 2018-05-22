@@ -128,6 +128,7 @@ catCmd : coordinate
  | CANCEL_ {global cvarname; ARCancel $cvarname}
  | CLEAR_ {global cvarname; CATOff $cvarname}
  | CLOSE_ {global cvarname; CATDestroy $cvarname}
+# backward compatibilty
  | COORDINATE_ coordinate
  | CROSSHAIR_ {global cvarname; CATCrosshair $cvarname}
  | EDIT_ yesno {CatalogCmdEdit $2}

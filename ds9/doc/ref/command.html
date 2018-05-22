@@ -416,7 +416,9 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [import sb|tsv
         &lt;filename&gt;]<br>
         <br>
-      </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;] [allcols]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+          [&lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]</tt><tt><br>
+        </tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;] [allcols]<br>
       </tt><tt>&nbsp;</tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
         [&lt;ref&gt;] [allrows]<br>
         &nbsp;</tt><tt>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
@@ -424,9 +426,8 @@
       </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [clear]<br>
       </tt><tt>&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; [&lt;ref&gt;] [close]</tt><br>
-      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
-        [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]</tt><tt><br>
-      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -632,8 +633,10 @@
 
 
 
+
         [match error &lt;value&gt; degrees|arcmin|arcsec]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -820,8 +823,10 @@
 
 
 
+
         [match return 1and2|1only|2only]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1064,6 +1069,7 @@
 
 
 
+
         [update]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [x
         &lt;col&gt;]</tt><br>
@@ -1079,12 +1085,12 @@
       </tt><tt>$ds9 -catalog load foo.xml<br>
         $ds9 -catalog import tsv foo.tsv<br>
         <br>
-      </tt><tt>$ds9 -catalog allrows<br>
+      </tt><tt><tt>$ds9 -catalog 202.48 47.21 fk5<br>
+        </tt>$ds9 -catalog allrows<br>
         $ds9 -catalog allcols<br>
       </tt><tt>$ds9 -catalog cancel<br>
       </tt><tt>$ds9 -catalog clear<br>
       </tt><tt>$ds9 -catalog close<br>
-      </tt><tt>$ds9 -catalog coordinate 202.48 47.21 fk5<br>
       </tt><tt>$ds9 -catalog crosshair<br>
       </tt><tt>$ds9 -catalog dec DEC<br>
       </tt><tt>$ds9 -catalog edit yes<br>
@@ -1192,6 +1198,7 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; [ticks]<br>
       </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
           [match]<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock
           [yes|no]]</tt><br>
@@ -1321,6 +1328,7 @@
         -crosshair [&lt;x&gt; &lt;h&gt; &lt;coordsys&gt;
         [&lt;skyframe&gt;]]<br>
         &nbsp;</tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -1609,6 +1617,7 @@
         Example:<br>
       </tt><tt><tt><tt><tt>$ds9 -envi foo.hdr</tt></tt><tt><tt><tt><tt><tt><tt><br>
                     </tt></tt></tt></tt></tt></tt> <b> </b></tt></tt><tt><tt>$ds9
+
           -envi foo.hdr foo.bsq</tt></tt><tt><tt><tt><tt><tt><tt><br>
                 </tt></tt></tt></tt></tt></tt>
       <p><b> <a name="exit"></a>exit<br>
@@ -2343,6 +2352,7 @@
 
 
 
+
         [pan]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -2480,8 +2490,10 @@
 
 
 
+
         [crosshair]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2857,6 +2869,7 @@
 
 
 
+
         [yes|open]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
         [no|close]<br>
@@ -2897,6 +2910,7 @@
           &lt;filename&gt;<br>
         </tt>&nbsp;&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
       </tt><tt><tt><tt><tt><tt><tt>&nbsp; &nbsp; &nbsp; </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3033,6 +3047,7 @@
 
 
 
+
                             &nbsp;&nbsp; </tt>[&lt;plotname&gt;] stats<br>
                         </tt></tt>&nbsp;&nbsp;&nbsp; &nbsp; </tt>[&lt;plotname&gt;]
 
@@ -3102,8 +3117,10 @@
 
 
 
+
                     list<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3247,6 +3264,7 @@
 
 
 
+
                 &nbsp;&nbsp; [&lt;plotname&gt;] print<br>
                 &nbsp; &nbsp; &nbsp; [&lt;plotname&gt;] print
                 destination [printer|file] <br>
@@ -3259,6 +3277,7 @@
               </tt>&nbsp; &nbsp; &nbsp; </tt>[&lt;plotname&gt;] close<br>
             <br>
           </tt></tt></tt><tt><tt><tt><tt><tt><tt><tt> -plot </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3430,9 +3449,11 @@
 
 
 
+
               shape
               [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt>&nbsp; &nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3572,7 +3593,9 @@
 
 
 
+
                                                 &nbsp; &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3710,8 +3733,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3849,7 +3874,9 @@
 
 
 
+
                                                           &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3987,6 +4014,7 @@
 
 
 
+
                                                           &nbsp;&nbsp;&nbsp;
 
 
@@ -4056,7 +4084,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4193,8 +4223,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4331,8 +4363,10 @@
 
 
 
+
                                                           &nbsp; &nbsp;
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4470,8 +4504,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4609,7 +4645,9 @@
 
 
 
+
                                                           &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4788,6 +4826,7 @@
       <p>Set region and coordinate output format precision. </p>
       <tt> Syntax: <br>
         -precision &lt;linear&gt; </tt><tt><tt>&lt;degree&gt;</tt> </tt><tt><tt>&lt;hms&gt;
+
 
         </tt></tt><tt><tt><tt>&lt;dms&gt;</tt></tt></tt><tt><tt><tt><tt>
               &lt;arcmin&gt; </tt></tt></tt></tt><tt><tt><tt><tt><tt>&lt;arcsec&gt;<br>
@@ -5189,6 +5228,7 @@
 
 
 
+
         &lt;filename&gt; [image|table|slice]</tt> <br>
       <tt> &nbsp;<br>
         Example: <br>
@@ -5430,8 +5470,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -5448,8 +5490,10 @@
 
 
 
+
                       [angle &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -5476,8 +5520,10 @@
 
 
 
+
                   -smooth sigmaminor 2.0<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+
 
 
 

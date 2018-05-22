@@ -562,7 +562,6 @@
         &lt;filename&gt;]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [header]</tt><br>
-      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [hide]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [location
         &lt;code&gt;]</tt><br>
       <tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
@@ -983,7 +982,8 @@
         [save &lt;filename&gt;]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [server cds|adac|cadc|cambridge|sao|ukirt|iucaa|bejing|saao]</tt><br>
-      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [show]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [show
+        yes|no]</tt><br>
       <tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;] [size
         &lt;width&gt; &lt;height&gt; degrees|arcmin|arcsec]</tt><br>
       <tt> </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
@@ -999,11 +999,12 @@
       </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [symbol [#] text|size|size2|units|angle &lt;value&gt;] <br>
       </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
-        [symbol shape circle|ellipse|box|text|circle point|box
-        point|diamond point|<br>
-        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp; cross point|x point|arrow point|boxcircle
-        point]<br>
+        [symbol shape circle|ellipse|box|text|point]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </tt><tt><tt>[&lt;ref&gt;]
+
+          [symbol shape </tt></tt><tt><tt>circle point|box
+          point|diamond point|</tt>cross point|x point|arrow
+        point|boxcircle point]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol
         add| [#] remove]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol
@@ -1137,7 +1138,6 @@
       </tt><tt>$xpaset -p ds9 catalog filter '$Jmag&gt;10'<br>
         $xpaset -p ds9 catalog filter load foo.flt<br>
         $xpaset -p ds9 catalog header<br>
-      </tt><tt>$xpaset -p ds9 catalog hide<br>
       </tt><tt>$xpaset -p ds9 catalog location 500</tt><br>
       <tt>$xpaset -p ds9 catalog match error 2 arcsec<br>
         $xpaset -p ds9 catalog match function 1and2<br>
@@ -1160,7 +1160,7 @@
         $xpaset -p ds9 catalog samp send aladin<br>
         $xpaset -p ds9 catalog save foo.xml<br>
       </tt><tt>$xpaset -p ds9 catalog server sao<br>
-      </tt><tt>$xpaset -p ds9 catalog show</tt><br>
+      </tt><tt>$xpaset -p ds9 catalog show yes</tt><br>
       <tt>$xpaset -p ds9 catalog size 1 1 degrees</tt><br>
       <tt>$xpaset -p ds9 catalog symbol condition '$Jmag&gt;15'<br>
         $xpaset -p ds9 catalog symbol 2 shape "boxcircle point"<br>

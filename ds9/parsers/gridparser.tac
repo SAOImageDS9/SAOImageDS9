@@ -162,6 +162,7 @@ numerics : yesno {GridCmdSet numlab $1}
  | FONTSIZE_ INT_ {GridCmdSet numlab,size $2}
  | FONTWEIGHT_ fontWeight {GridCmdSet numlab,weight $2}
  | FONTSLANT_ fontSlant {GridCmdSet numlab,slant $2}
+# backward compatibility
  | FONTSTYLE_ fontStyle {GridCmdFontStyle numlab $2}
  | COLOR_ STRING_ {GridCmdSet numlab,color $2}
  | GAP1_ numeric {GridCmdSet numlab,gap1 $2}
@@ -179,6 +180,7 @@ title : yesno {GridCmdSet title $1}
  | FONTSIZE_ INT_ {GridCmdSet title,size $2}
  | FONTWEIGHT_ fontWeight {GridCmdSet title,weight $2}
  | FONTSLANT_ fontSlant {GridCmdSet title,slant $2}
+# backward compatibility
  | FONTSTYLE_ fontStyle {GridCmdFontStyle title $2}
  | COLOR_ STRING_ {GridCmdSet title,color $2}
  ; 
@@ -194,6 +196,7 @@ labels : yesno {GridCmdSet textlab $1}
  | FONTSIZE_ INT_ {GridCmdSet textlab,size $2}
  | FONTWEIGHT_ fontWeight {GridCmdSet textlab,weight $2}
  | FONTSLANT_ fontSlant {GridCmdSet textlab,slant $2}
+# backward compatibility
  | FONTSTYLE_ fontStyle {GridCmdFontStyle textlab $2}
  | COLOR_ STRING_ {GridCmdSet textlab,color $2}
  ; 

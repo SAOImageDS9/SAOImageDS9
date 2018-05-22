@@ -135,6 +135,7 @@ catCmd : coordinate
  | EXPORT_ writer STRING_ {CatalogCmdSave $3 $2}
  | FILTER_ filter
  | HEADER_ {global cvarname; CATHeader $cvarname}
+# backward compatibilty
  | HIDE_ {CatalogCmdGenerate show 0}
  | LOCATION_ INT_ {CatalogCmdGenerate loc $2}
  | MATCH_ match
@@ -237,6 +238,7 @@ symbol : ADD_ {CatalogCmdSymbolAdd}
  | FONTSIZE_ INT_ {CatalogCmdSymbol fontsize $2}
  | FONTWEIGHT_ fontWeight {CatalogCmdSymbol fontweight $2}
  | FONTSLANT_ fontSlant {CatalogCmdSymbol fontslant $2}
+# backward compatibility
  | FONTSTYLE_ fontStyle {CatalogCmdSymbolFontStyle $2}
  | SIZE_ numeric {CatalogCmdSymbol size $2}
  | SIZE2_ numeric {CatalogCmdSymbol size2 $2}
@@ -245,7 +247,12 @@ symbol : ADD_ {CatalogCmdSymbolAdd}
  | UNITS_ STRING_ {CatalogCmdSymbol units $2}
  ;
 
-symbolShape : POINT_ {set _ "circle point"}
+symbolShape : CIRCLE_ {set _ circle}
+ | ELLIPSE_ {set _ ellipse}
+ | BOX_ {set _ box}
+ | TEXT_ {set _ text}
+
+ | POINT_ {set _ "circle point"}
  | CIRCLE_ POINT_ {set _ "circle point"}
  | BOX_ POINT_ {set _ "box point"}
  | DIAMOND_ {set _ "diamond point"}
@@ -258,10 +265,7 @@ symbolShape : POINT_ {set _ "circle point"}
  | ARROW_ POINT_ {set _ "arrow point"}
  | BOXCIRCLE_ {set _ "boxcircle point"}
  | BOXCIRCLE_ POINT_ {set _ "boxcircle point"}
- | CIRCLE_ {set _ circle}
- | ELLIPSE_ {set _ ellipse}
- | BOX_ {set _ box}
- | TEXT_ {set _ text}
+
 # backward compatibility
  | STRING_ {set _ $1}
  ;

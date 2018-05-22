@@ -323,6 +323,7 @@ fontt : fontType FONT_ font {PlotCmdUpdateGraph "$1,family" $3}
  | fontType FONTSIZE_ INT_ {PlotCmdUpdateGraph "$1,size" $3}
  | fontType FONTWEIGHT_ fontWeight {PlotCmdUpdateGraph "$1,weight" $3}
  | fontType FONTSLANT_ fontSlant {PlotCmdUpdateGraph "$1,slant" $3}
+# backward compatibility
  | fontType FONTSTYLE_ fontStyle {PlotCmdFontStyle $1 $3}
  | fontType SIZE_ INT_ {PlotCmdUpdateGraph "$1,size" $3}
  | fontType WEIGHT_ fontWeight {PlotCmdUpdateGraph "$1,weight" $3}

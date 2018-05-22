@@ -108,8 +108,9 @@ command : catalog
  | catalog {yyclearin; YYACCEPT} STRING_
  ;
 
-catalog : {CATTool}
- | NEW_ {CATTool}
+catalog : NEW_ {CATTool}
+# backward compatibility
+ | {CATTool}
  | FILE_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | LOAD_ STRING_ {CatalogCmdLoad $2 VOTRead}
  | IMPORT_ reader STRING_ {CatalogCmdLoad $3 $2}
@@ -119,6 +120,7 @@ catalog : {CATTool}
  | STRING_ {CatalogCmdRef $1} catCmd
 # backward compatibility
  | CDS_ STRING_ {CatalogCmdRef $2}
+# backward compatibility
  | CDS_ STRING_ {CatalogCmdRef $2} catCmd
  ;
 

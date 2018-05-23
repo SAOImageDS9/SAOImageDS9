@@ -851,6 +851,7 @@ proc ProcessPlotFont  {varname xarname iname} {
 		weight {incr i; set var(graph,title,weight) [lindex $xar $i]}
 		slant {incr i; set var(graph,title,slant) [lindex $xar $i]}
 		style {
+		    # backward compatibility
 		    incr i
 		    switch [string tolower [lindex $xar $i]] {
 			normal {
@@ -879,6 +880,7 @@ proc ProcessPlotFont  {varname xarname iname} {
 		weight {incr i; set var(axis,title,weight) [lindex $xar $i]}
 		slant {incr i; set var(axis,title,slant) [lindex $xar $i]}
 		style {
+		    # backward compatibility
 		    incr i
 		    switch [string tolower [lindex $xar $i]] {
 			normal {
@@ -907,6 +909,7 @@ proc ProcessPlotFont  {varname xarname iname} {
 		weight {incr i; set var(axis,font,weight) [lindex $xar $i]}
 		slant {incr i; set var(axis,font,slant) [lindex $xar $i]}
 		style {
+		    # backward compatibility
 		    incr i
 		    switch [string tolower [lindex $xar $i]] {
 			normal {
@@ -933,6 +936,24 @@ proc ProcessPlotFont  {varname xarname iname} {
 		size {incr i; set var(legend,title,size) [lindex $xar $i]}
 		weight {incr i; set var(legend,title,weight) [lindex $xar $i]}
 		slant {incr i; set var(legend,title,slant) [lindex $xar $i]}
+		style {
+		    # backward compatibility
+		    incr i
+		    switch [string tolower [lindex $xar $i]] {
+			normal {
+			    set var(legend,title,weight) normal
+			    set var(legend,title,slant) roman
+			}
+			bold {
+			    set var(legend,title,weight) bold
+			    set var(legend,title,slant) roman
+			}
+			italic {
+			    set var(legend,title,weight) normal
+			    set var(legend,title,slant) italic
+			}
+		    }
+		}
 	    }
 	}
 	legend {
@@ -943,6 +964,24 @@ proc ProcessPlotFont  {varname xarname iname} {
 		size {incr i; set var(legend,font,size) [lindex $xar $i]}
 		weight {incr i; set var(legend,font,weight) [lindex $xar $i]}
 		slant {incr i; set var(legend,font,slant) [lindex $xar $i]}
+		style {
+		    # backward compatibility
+		    incr i
+		    switch [string tolower [lindex $xar $i]] {
+			normal {
+			    set var(legend,font,weight) normal
+			    set var(legend,font,slant) roman
+			}
+			bold {
+			    set var(legend,font,weight) bold
+			    set var(legend,font,slant) roman
+			}
+			italic {
+			    set var(legend,font,weight) normal
+			    set var(legend,font,slant) italic
+			}
+		    }
+		}
 	    }
 	}
     }
@@ -1337,6 +1376,10 @@ proc ProcessSendPlotCmd {proc id param} {
 			size {$proc $id "$var(graph,title,size)\n"}
 			weight {$proc $id "$var(graph,title,weight)\n"}
 			slant {$proc $id "$var(graph,title,slant)\n"}
+			style {
+			    # backward compatibility
+			    $proc $id "$var(graph,title,weight)\n"
+			}
 		    }
 		}
 		axestitle -
@@ -1348,6 +1391,10 @@ proc ProcessSendPlotCmd {proc id param} {
 			size {$proc $id "$var(axis,title,size)\n"}
 			weight {$proc $id "$var(axis,title,weight)\n"}
 			slant {$proc $id "$var(axis,title,slant)\n"}
+			style {
+			    # backward compatibility
+			    $proc $id "$var(axis,title,weight)\n"
+			}
 		    }
 		}
 		axesnumbers -
@@ -1359,6 +1406,10 @@ proc ProcessSendPlotCmd {proc id param} {
 			size {$proc $id "$var(axis,font,size)\n"}
 			weight {$proc $id "$var(axis,font,weight)\n"}
 			slant {$proc $id "$var(axis,font,slant)\n"}
+			style {
+			    # backward compatibility
+			    $proc $id "$var(axis,font,weight)\n"
+			}
 		    }
 		}
 		legendtitle {
@@ -1369,6 +1420,10 @@ proc ProcessSendPlotCmd {proc id param} {
 			size {$proc $id "$var(legend,title,size)\n"}
 			weight {$proc $id "$var(legend,title,weight)\n"}
 			slant {$proc $id "$var(legend,title,slant)\n"}
+			style {
+			    # backward compatibility
+			    $proc $id "$var(legend,title,weight)\n"
+			}
 		    }
 		}
 		legend {
@@ -1379,6 +1434,10 @@ proc ProcessSendPlotCmd {proc id param} {
 			size {$proc $id "$var(legend,font,size)\n"}
 			weight {$proc $id "$var(legend,font,weight)\n"}
 			slant {$proc $id "$var(legend,font,slant)\n"}
+			style {
+			    # backward compatibility
+			    $proc $id "$var(legend,font,weight)\n"
+			}
 		    }
 		}
 	    }

@@ -213,6 +213,7 @@ plotCmd : DATA_ dim {PlotCmdData $2}
  | DUP_ duplicate
  | DUPLICATE_ duplicate
  | STATS_ yesno {PlotCmdSet stats $2 PlotStats}
+ # backward compatibility
  | STATISTICS_ yesno {PlotCmdSet stats $2 PlotStats}
  | LIST_ yesno {PlotCmdSet list $2 PlotList}
  | LOADCONFIG_ STRING_ {PlotCmdLoadConfig $2}

@@ -210,10 +210,12 @@
 
 
 
+
                       -p ds9 3d match</tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset -p ds9 3d lock
                             yes</tt><br>
                         </tt></tt></tt> </tt></tt></tt></tt></tt></tt>$xpaset
+
 
 
 
@@ -549,6 +551,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -569,6 +572,7 @@
         </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             [&lt;ref&gt;] [match &lt;ref&gt; &lt;ref&gt;]<br>
           </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -761,8 +765,10 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -955,6 +961,7 @@
 
 
 
+
         [match unique yes|no]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [maxrows
         &lt;number&gt;]</tt><br>
@@ -1002,6 +1009,7 @@
         [symbol shape circle|ellipse|box|text|point]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </tt><tt><tt>[&lt;ref&gt;]
 
+
           [symbol shape </tt></tt><tt><tt>circle point|box
           point|diamond point|</tt>cross point|x point|arrow
         point|boxcircle point]<br>
@@ -1012,6 +1020,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1692,6 +1701,7 @@
 
 
 
+
                           -p ds9 export envi foo.hdr foo.bsq little</tt></tt><br>
                     </tt></tt></tt></tt>$xpaset -p ds9 export tiff
               foo.tiff jpeg</tt></tt></tt><br>
@@ -1867,13 +1877,16 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap1 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap2 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes yes|no]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap2
+          &lt;value&gt;]<br>
+        </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap3
+            &lt;value&gt;]<br>
+          </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes type interior|exterior]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes origin
         lll|llu|lul|luu|ull|ulu|uul|uuu]<br>
@@ -1882,11 +1895,11 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics font
         times|helvetica|courier]<br>
@@ -1895,8 +1908,12 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics fontslant roman|italic]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap1 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap2 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics type interior|exterior]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap2
+          &lt;value&gt;]<br>
+        </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics
+            gap3 &lt;value&gt;]<br>
+          </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics type
+        interior|exterior]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics vertical yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title text &lt;text&gt;]<br>
@@ -1909,13 +1926,15 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title fontslant roman|italic]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels yes|no]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text1 &lt;text&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def1 yes|no]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap1 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text2 &lt;text&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def2 yes|no]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap2 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels font
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def1 yes|no]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def2 yes|no]<br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text1 &lt;text&gt;]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text2
+          &lt;text&gt;]<br>
+        </tt></tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap1
+          &lt;value&gt;]<br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap2 &lt;value&gt;]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels font
         times|helvetica|courier]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels fontsize &lt;value&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels fontweight normal|bold]<br>
@@ -1935,13 +1954,14 @@
         $xpaget ds9 grid grid <br>
         $xpaget ds9 grid grid color <br>
         $xpaget ds9 grid grid width <br>
-        $xpaget ds9 grid grid style <br>
+        $xpaget ds9 grid grid dash<br>
         $xpaget ds9 grid grid gap1 <br>
-        $xpaget ds9 grid grid gap2 <br>
-        $xpaget ds9 grid axes <br>
+      </tt><tt><tt>$xpaget ds9 grid grid gap2 <br>
+        </tt></tt><tt><tt><tt>$xpaget ds9 grid grid gap3 <br>
+          </tt></tt>$xpaget ds9 grid axes <br>
         $xpaget ds9 grid axes color <br>
         $xpaget ds9 grid axes width <br>
-        $xpaget ds9 grid axes style <br>
+        $xpaget ds9 grid axes dash<br>
         $xpaget ds9 grid axes type <br>
         $xpaget ds9 grid axes origin<br>
         $xpaget ds9 grid format1<br>
@@ -1949,11 +1969,11 @@
         $xpaget ds9 grid tickmarks <br>
         $xpaget ds9 grid tickmarks color <br>
         $xpaget ds9 grid tickmarks width <br>
-        $xpaget ds9 grid tickmarks style <br>
+        $xpaget ds9 grid tickmarks dash<br>
         $xpaget ds9 grid border <br>
         $xpaget ds9 grid border color <br>
         $xpaget ds9 grid border width <br>
-        $xpaget ds9 grid border style <br>
+        $xpaget ds9 grid border dash<br>
         $xpaget ds9 grid numerics <br>
         $xpaget ds9 grid numerics font <br>
         $xpaget ds9 grid numerics fontsize <br>
@@ -1961,8 +1981,9 @@
         $xpaget ds9 grid numerics fontslant<br>
         $xpaget ds9 grid numerics color <br>
         $xpaget ds9 grid numerics gap1 <br>
-        $xpaget ds9 grid numerics gap2 <br>
-        $xpaget ds9 grid numerics type <br>
+      </tt><tt><tt>$xpaget ds9 grid numerics gap2 <br>
+        </tt></tt><tt><tt><tt>$xpaget ds9 grid numerics gap3<br>
+          </tt></tt>$xpaget ds9 grid numerics type <br>
         $xpaget ds9 grid numerics vertical <br>
         $xpaget ds9 grid title <br>
         $xpaget ds9 grid title text<br>
@@ -1994,13 +2015,14 @@
         $xpaset -p ds9 grid grid yes<br>
         $xpaset -p ds9 grid grid color red<br>
         $xpaset -p ds9 grid grid width 2<br>
-        $xpaset -p ds9 grid grid style 1<br>
+        $xpaset -p ds9 grid grid dash yes<br>
         $xpaset -p ds9 grid grid gap1 10<br>
         $xpaset -p ds9 grid grid gap2 10<br>
-        $xpaset -p ds9 grid axes yes<br>
+      </tt><tt><tt>$xpaset -p ds9 grid grid gap3 10<br>
+        </tt>$xpaset -p ds9 grid axes yes<br>
         $xpaset -p ds9 grid axes color red<br>
         $xpaset -p ds9 grid axes width 2<br>
-        $xpaset -p ds9 grid axes style 1<br>
+        $xpaset -p ds9 grid axes dash yes<br>
         $xpaset -p ds9 grid axes type exterior<br>
         $xpaset -p ds9 grid axes origin lll<br>
         $xpaset -p ds9 grid format1 d.2<br>
@@ -2008,11 +2030,11 @@
         $xpaset -p ds9 grid tickmarks yes<br>
         $xpaset -p ds9 grid tickmarks color red<br>
         $xpaset -p ds9 grid tickmarks width 2<br>
-        $xpaset -p ds9 grid tickmarks style 1<br>
+        $xpaset -p ds9 grid tickmarks dash yes<br>
         $xpaset -p ds9 grid border yes<br>
         $xpaset -p ds9 grid border color red<br>
         $xpaset -p ds9 grid border width 2<br>
-        $xpaset -p ds9 grid border style 1<br>
+        $xpaset -p ds9 grid border dash yes<br>
         $xpaset -p ds9 grid numerics yes<br>
         $xpaset -p ds9 grid numerics font courier<br>
         $xpaset -p ds9 grid numerics fontsize 12<br>
@@ -2020,8 +2042,9 @@
         $xpaset -p ds9 grid numerics fontslant italic<br>
         $xpaset -p ds9 grid numerics color red<br>
         $xpaset -p ds9 grid numerics gap1 10<br>
-        $xpaset -p ds9 grid numerics gap2 10<br>
-        $xpaset -p ds9 grid numerics type exterior<br>
+      </tt><tt><tt>$xpaset -p ds9 grid numerics gap2 10<br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 grid numerics gap3 10<br>
+          </tt></tt>$xpaset -p ds9 grid numerics type exterior<br>
         $xpaset -p ds9 grid numerics vertical yes<br>
         $xpaset -p ds9 grid title yes<br>
         $xpaset -p ds9 grid title text {Hello World}<br>
@@ -2128,6 +2151,7 @@
         $xpaset -p ds9 iis filename bar.fits 4</tt><br>
       <p><b> <a name="jpeg"></a>jpeg</b></p>
       <p>Load JPEG image into current frame. Optional parameters: <tt>jpeg
+
 
 
 
@@ -2698,6 +2722,7 @@
 
 
 
+
         # title, title xaxis, title yaxis, dimension on line 1<br>
         &nbsp;&nbsp;&nbsp; &nbsp;[new [name &lt;plotname&gt;]
         [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
@@ -2712,6 +2737,7 @@
           &lt;filename&gt;<br>
         </tt>&nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
       </tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -2849,6 +2875,7 @@
 
 
 
+
                           </tt>[&lt;plotname&gt;] stats<br>
                         </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
 
@@ -2918,8 +2945,10 @@
 
 
 
+
                     list<br>
                     &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3058,10 +3087,12 @@
 
 
 
+
                 [&lt;plotname&gt;] pagesetup orient [portrait|landscape]<br>
                 &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] pagesetup
                 size [letter|legal|tabloid|poster|a4]</tt><br>
               <tt> </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3222,6 +3253,7 @@
 
 
 
+
           legend [yes|no]<br>
           &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] legend position
           [right|left|top|bottom]</tt><br>
@@ -3238,6 +3270,7 @@
       <tt><tt>&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] title [x|y]
           &lt;string&gt;<br>
           &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3374,9 +3407,11 @@
 
 
 
+
               shape
               [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3517,7 +3552,9 @@
 
 
 
+
                                                 <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3656,7 +3693,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3795,7 +3834,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3934,7 +3975,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4072,7 +4115,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4210,7 +4255,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4349,7 +4396,9 @@
 
 
 
+
                                                           [&lt;plotname&gt;]
+
 
 
 
@@ -4488,7 +4537,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4627,7 +4678,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4826,8 +4879,10 @@
 
 
 
+
                                     ds9 plot axis x min<br>
                                   </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -4898,6 +4953,7 @@
                                       ds9 plot axis x max<br>
                                       $xpaget ds9 plot axis x format<br>
                                     </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>$xpaget
+
 
 
 
@@ -5034,8 +5090,10 @@
 
 
 
+
                     ds9 plot font numbers size<br>
                   </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5172,6 +5230,7 @@
 
 
 
+
                         ds9 plot font numbers slant<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
 
@@ -5241,8 +5300,10 @@
 
 
 
+
                                 ds9 plot title<br>
                               </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5408,6 +5469,7 @@
 
 
 
+
                     ds9 plot dash<br>
                   </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
 
@@ -5477,8 +5539,10 @@
 
 
 
+
                                       ds9 plot error<br>
                                     </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5616,9 +5680,11 @@
 
 
 
+
                                                           ds9 plot error
                                                           width<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5755,6 +5821,7 @@
 
 
 
+
         -p ds9 plot show yes<br>
         $xpaset -p ds9 plot shape circle<br>
       </tt><tt><tt>$xpaset -p ds9 plot shape fill no<br>
@@ -5793,6 +5860,7 @@
       <p>Set region and coordinate output format precision. </p>
       <tt> Syntax: <br>
         precision &lt;linear&gt; </tt><tt><tt>&lt;degree&gt;</tt> </tt><tt><tt>&lt;hms&gt;
+
 
 
         </tt></tt><tt><tt><tt>&lt;dms&gt;</tt></tt></tt><tt><tt><tt><tt>
@@ -6289,6 +6357,7 @@
 
 
 
+
         method. </p>
       <tt> Syntax: <br>
         saveimage </tt><tt>[fits|eps|gif|tiff|jpeg|png] </tt><tt>&lt;filename&gt;<br>
@@ -6514,8 +6583,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -6534,8 +6605,10 @@
 
 
 
+
                       [angle &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt></tt><tt>&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -6562,6 +6635,7 @@
 
 
 
+
                         ds9 smooth sigmaminor<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt>$xpaget
         ds9 smooth lock<br>
@@ -6580,8 +6654,10 @@
 
 
 
+
                         -p ds9 smooth sigma 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
 
@@ -6600,8 +6676,10 @@
 
 
 
+
                               -p ds9 smooth angle 45<br>
                             </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>$xpaset
+
 
 
 
@@ -6645,6 +6723,7 @@
         $xpaset -p ds9 threads 8</tt><br>
       <p><b> <a name="tiff"></a>tiff</b></p>
       <p>Load TIFF image into current frame. Optional parameters: <tt>tiff
+
 
 
 

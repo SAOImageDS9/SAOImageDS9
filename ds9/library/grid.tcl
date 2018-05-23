@@ -1198,7 +1198,11 @@ proc ProcessGridCmd {varname iname} {
 	    switch -- [string tolower [lindex $var $i]] {
 		color {incr i; set grid(grid,color) [lindex $var $i]}
 		width {incr i; set grid(grid,width) [lindex $var $i]}
-		style {incr i; set grid(grid,style) [lindex $var $i]}
+		dash {incr i; set grid(grid,style) [FromYesNo [lindex $var $i]]}
+		style {
+		    # backward compatibility
+		    incr i; set grid(grid,style) [lindex $var $i]
+		}
 		gap1 {incr i; set grid(grid,gap1) [lindex $var $i]}
 		gap2 {incr i; set grid(grid,gap2) [lindex $var $i]}
 		gap3 {incr i; set grid(grid,gap3) [lindex $var $i]}
@@ -1211,7 +1215,11 @@ proc ProcessGridCmd {varname iname} {
 	    switch -- [string tolower [lindex $var $i]] {
 		color {incr i; set grid(axes,color) [lindex $var $i]}
 		width {incr i; set grid(axes,width) [lindex $var $i]}
-		style {incr i; set grid(axes,style) [lindex $var $i]}
+		dash {incr i; set grid(axes,style) [FromYesNo [lindex $var $i]]}
+		style {
+		    # backward compatibility
+		    incr i; set grid(axes,style) [lindex $var $i]
+		}
 		type {incr i; set grid(axes,type) [lindex $var $i]}
 		origin {incr i; set grid(axes,origin) [lindex $var $i]}
 		default {set grid(axes) [FromYesNo [lindex $var $i]]}
@@ -1233,7 +1241,11 @@ proc ProcessGridCmd {varname iname} {
 	    switch -- [string tolower [lindex $var $i]] {
 		color {incr i; set grid(tick,color) [lindex $var $i]}
 		width {incr i; set grid(tick,width) [lindex $var $i]}
-		style {incr i; set grid(tick,style) [lindex $var $i]}
+		dash {incr i; set grid(tick,style) [FromYesNo [lindex $var $i]]}
+		style {
+		    # backward compatibility
+		    incr i; set grid(tick,style) [lindex $var $i]
+		}
 		default {set grid(tick) [FromYesNo [lindex $var $i]]}
 	    }
 	    GridUpdateCurrent
@@ -1243,7 +1255,11 @@ proc ProcessGridCmd {varname iname} {
 	    switch -- [string tolower [lindex $var $i]] {
 		color {incr i; set grid(border,color) [lindex $var $i]}
 		width {incr i; set grid(border,width) [lindex $var $i]}
-		style {incr i; set grid(border,style) [lindex $var $i]}
+		dash {incr i; set grid(border,style) [FromYesNo [lindex $var $i]]}
+		style {
+		    # backward compatibility
+		    incr i; set grid(border,style) [lindex $var $i]
+		}
 		default {set grid(border) [FromYesNo [lindex $var $i]]}
 	    }
 	    GridUpdateCurrent
@@ -1258,6 +1274,7 @@ proc ProcessGridCmd {varname iname} {
 		fontweight {incr i; set grid(numlab,weight) [lindex $var $i]}
 		fontslant {incr i; set grid(numlab,slant) [lindex $var $i]}
 		fontstyle {
+		    # backward compatibility
 		    incr i
 		    switch [lindex $var $i] {
 			normal {
@@ -1295,6 +1312,7 @@ proc ProcessGridCmd {varname iname} {
 		fontweight {incr i; set grid(title,weight) [lindex $var $i]}
 		fontslant {incr i; set grid(title,slant) [lindex $var $i]}
 		fontstyle {
+		    # backward compatibility
 		    incr i
 		    switch [lindex $var $i] {
 			normal {
@@ -1332,6 +1350,7 @@ proc ProcessGridCmd {varname iname} {
 		fontweight {incr i; set grid(textlab,weight) [lindex $var $i]}
 		fontslant {incr i; set grid(textlab,slant) [lindex $var $i]}
 		fontstyle {
+		    # backward compatibility
 		    incr i
 		    switch [lindex $var $i] {
 			normal {
@@ -1459,7 +1478,11 @@ proc ProcessSendGridCmd {proc id param} {
 	    switch -- [lindex $param 1] {
 		color {$proc $id "$grid(grid,color)\n"}
 		width {$proc $id "$grid(grid,width)\n"}
-		style {$proc $id "$grid(grid,style)\n"}
+		dash {$proc $id [ToYesNo $grid(grid,style)]}
+		style {
+		    # backward compatible
+		    $proc $id "$grid(grid,style)\n"
+		}
 		gap1 {$proc $id "$grid(grid,gap1)\n"}
 		gap2 {$proc $id "$grid(grid,gap2)\n"}
 		gap3 {$proc $id "$grid(grid,gap3)\n"}
@@ -1471,7 +1494,11 @@ proc ProcessSendGridCmd {proc id param} {
 	    switch -- [lindex $param 1] {
 		color {$proc $id "$grid(axes,color)\n"}
 		width {$proc $id "$grid(axes,width)\n"}
-		style {$proc $id "$grid(axes,style)\n"}
+		dash {$proc $id [ToYesNo $grid(axes,style)]}
+		style {
+		    # backward compatible
+		    $proc $id "$grid(axes,style)\n"
+		}
 		type {$proc $id "$grid(axes,type)\n"}
 		origin {$proc $id "$grid(axes,origin)\n"}
 		default {$proc $id [ToYesNo $grid(axes)]}
@@ -1487,7 +1514,11 @@ proc ProcessSendGridCmd {proc id param} {
 	    switch -- [lindex $param 1] {
 		color {$proc $id "$grid(tick,color)\n"}
 		width {$proc $id "$grid(tick,width)\n"}
-		style {$proc $id "$grid(tick,style)\n"}
+		dash {$proc $id [ToYesNo $grid(tick,style)]}
+		style {
+		    # backward compatible
+		    $proc $id "$grid(tick,style)\n"
+		}
 		default {$proc $id [ToYesNo $grid(tick)]}
 	    }
 	}
@@ -1496,7 +1527,11 @@ proc ProcessSendGridCmd {proc id param} {
 	    switch -- [lindex $param 1] {
 		color {$proc $id "$grid(border,color)\n"}
 		width {$proc $id "$grid(border,width)\n"}
-		style {$proc $id "$grid(border,style)\n"}
+		dash {$proc $id [ToYesNo $grid(border,style)]}
+		style {
+		    # backward compatible
+		    $proc $id "$grid(border,style)\n"
+		}
 		default {$proc $id [ToYesNo $grid(border)]}
 	    }
 	}
@@ -1507,9 +1542,12 @@ proc ProcessSendGridCmd {proc id param} {
 	    switch -- [lindex $param 1] {
 		font {$proc $id "$grid(numlab,font)\n"}
 		fontsize {$proc $id "$grid(numlab,size)\n"}
-		fontstyle -
 		fontweight {$proc $id "$grid(numlab,weight)\n"}
 		fontslant {$proc $id "$grid(numlab,slant)\n"}
+		fontstyle {
+		    # backward compatible
+		    $proc $id "$grid(numlab,weight)\n"
+		}
 		color {$proc $id "$grid(numlab,color)\n"}
 		gap1 {$proc $id "$grid(numlab,gap1)\n"}
 		gap2 {$proc $id "$grid(numlab,gap2)\n"}
@@ -1527,9 +1565,12 @@ proc ProcessSendGridCmd {proc id param} {
 		gap {$proc $id "$grid(title,gap)\n"}
 		font {$proc $id "$grid(title,font)\n"}
 		fontsize {$proc $id "$grid(title,size)\n"}
-		fontstyle -
 		fontweight {$proc $id "$grid(title,weight)\n"}
 		fontslant {$proc $id "$grid(title,slant)\n"}
+		fontstyle {
+		    # backward compatible
+		    $proc $id "$grid(title,weight)\n"
+		}
 		color {$proc $id "$grid(title,color)\n"}
 		default {$proc $id [ToYesNo $grid(title)]}
 	    }
@@ -1547,9 +1588,12 @@ proc ProcessSendGridCmd {proc id param} {
 		gap2 {$proc $id "$grid(textlab,gap2)\n"}
 		font {$proc $id "$grid(textlab,font)\n"}
 		fontsize {$proc $id "$grid(textlab,size)\n"}
-		fontstyle -
 		fontweight {$proc $id "$grid(textlab,weight)\n"}
 		fontslant {$proc $id "$grid(textlab,slant)\n"}
+		fontstyle {
+		    # backward compatible
+		    $proc $id "$grid(textlab,weight)\n"
+		}
 		color {$proc $id "$grid(textlab,color)\n"}
 		default {$proc $id [ToYesNo $grid(textlab)]}
 	    }

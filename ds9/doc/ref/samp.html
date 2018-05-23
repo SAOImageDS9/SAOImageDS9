@@ -572,6 +572,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -592,6 +593,7 @@
         </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             [&lt;ref&gt;] [match &lt;ref&gt; &lt;ref&gt;]<br>
           </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -776,8 +778,10 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -962,6 +966,7 @@
 
 
 
+
         [match unique yes|no]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [maxrows
         &lt;number&gt;]</tt><br>
@@ -1011,8 +1016,11 @@
           [symbol shape circle|ellipse|box|text|point]<br>
           &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </tt></tt><tt><tt><tt><tt>[&lt;ref&gt;]
 
+
               [symbol shape </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>circle
+
                   point|box point|diamond point|</tt></tt></tt></tt>cross
+
           point|x point|arrow point|boxcircle point]<br>
         </tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [symbol add| [#] remove]<br>
@@ -1021,6 +1029,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1886,13 +1895,16 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap1 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap2 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes yes|no]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap2
+          &lt;value&gt;]<br>
+        </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap3
+            &lt;value&gt;]<br>
+          </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes type interior|exterior]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes origin
         lll|llu|lul|luu|ull|ulu|uul|uuu]</tt><br>
@@ -1901,11 +1913,11 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics font
         times|helvetica|courier]<br>
@@ -1914,8 +1926,12 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics fontslant roman|italic]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap1 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap2 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics type interior|exterior]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap2
+          &lt;value&gt;]<br>
+        </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics
+            gap3 &lt;value&gt;]<br>
+          </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics type
+        interior|exterior]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics vertical yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title text &lt;text&gt;]<br>
@@ -1929,11 +1945,13 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text1 &lt;text&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def1 yes|no]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap1 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text2 &lt;text&gt;]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text2
+          &lt;text&gt;]<br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def1 yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def2 yes|no]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap2 &lt;value&gt;]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap1
+          &lt;value&gt;]<br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap2 &lt;value&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels font
         times|helvetica|courier]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels fontsize &lt;value&gt;]<br>
@@ -1955,13 +1973,14 @@
         grid grid <br>
         grid grid color <br>
         grid grid width <br>
-        grid grid style <br>
+        grid grid dash<br>
         grid grid gap1 <br>
-        grid grid gap2 <br>
-        grid axes <br>
+      </tt><tt><tt>grid grid gap2 <br>
+        </tt></tt><tt><tt><tt>grid grid gap3<br>
+          </tt></tt>grid axes <br>
         grid axes color <br>
         grid axes width <br>
-        grid axes style <br>
+        grid axes dash<br>
         grid axes type <br>
         grid axes origin<br>
         grid format1<br>
@@ -1969,11 +1988,11 @@
         grid tickmarks <br>
         grid tickmarks color <br>
         grid tickmarks width <br>
-        grid tickmarks style <br>
+        grid tickmarks dash<br>
         grid border <br>
         grid border color <br>
         grid border width <br>
-        grid border style <br>
+        grid border dash<br>
         grid numerics <br>
         grid numerics font <br>
         grid numerics fontsize <br>
@@ -1981,8 +2000,9 @@
         grid numerics fontslant<br>
         grid numerics color <br>
         grid numerics gap1 <br>
-        grid numerics gap2 <br>
-        grid numerics type <br>
+      </tt><tt><tt>grid numerics gap2 <br>
+        </tt></tt><tt><tt><tt>grid numerics gap3<br>
+          </tt></tt>grid numerics type <br>
         grid numerics vertical <br>
         grid title <br>
         grid title text<br>
@@ -1995,11 +2015,11 @@
         grid title color <br>
         grid labels <br>
         grid labels text1 <br>
-        grid labels def1 <br>
-        grid labels gap1 <br>
-        grid labels text2 <br>
+      </tt><tt><tt>grid labels text2 <br>
+        </tt>grid labels def1 <br>
         grid labels def2 <br>
-        grid labels gap2 <br>
+      </tt><tt><tt>grid labels gap1 <br>
+        </tt>grid labels gap2 <br>
         grid labels font <br>
         grid labels fontsize <br>
         grid labels fontweight<br>
@@ -2015,13 +2035,14 @@
         grid grid yes<br>
         grid grid color red<br>
         grid grid width 2<br>
-        grid grid style 1<br>
+        grid grid dash yes<br>
         grid grid gap1 10<br>
-        grid grid gap2 10<br>
-        grid axes yes<br>
+      </tt><tt><tt>grid grid gap2 10<br>
+        </tt></tt><tt><tt><tt>grid grid gap3 10<br>
+          </tt></tt>grid axes yes<br>
         grid axes color red<br>
         grid axes width 2<br>
-        grid axes style 1<br>
+        grid axes dash yes<br>
         grid axes type exterior<br>
         grid axes origin lll<br>
         grid format1 d.2<br>
@@ -2029,11 +2050,11 @@
         grid tickmarks yes<br>
         grid tickmarks color red<br>
         grid tickmarks width 2<br>
-        grid tickmarks style 1<br>
+        grid tickmarks dash yes<br>
         grid border yes<br>
         grid border color red<br>
         grid border width 2<br>
-        grid border style 1<br>
+        grid border dash yes<br>
         grid numerics yes<br>
         grid numerics font courier<br>
         grid numerics fontsize 12<br>
@@ -2041,8 +2062,9 @@
         grid numerics fontslant italic<br>
         grid numerics color red<br>
         grid numerics gap1 10<br>
-        grid numerics gap2 10<br>
-        grid numerics type exterior<br>
+      </tt><tt><tt>grid numerics gap2 10<br>
+        </tt></tt><tt><tt><tt>grid numerics gap3 10<br>
+          </tt></tt>grid numerics type exterior<br>
         grid numerics vertical yes<br>
         grid title yes<br>
         grid title text {Hello World}<br>
@@ -2055,11 +2077,11 @@
         grid title color red<br>
         grid labels yes<br>
         grid labels text1 {Hello World}<br>
-        grid labels def1 yes<br>
-        grid labels gap1 10<br>
-        grid labels text2 {Hello World}<br>
+      </tt><tt><tt>grid labels text2 {Hello World}<br>
+        </tt>grid labels def1 yes<br>
         grid labels def2 yes<br>
-        grid labels gap2 10<br>
+      </tt><tt><tt>grid labels gap1 10<br>
+        </tt>grid labels gap2 10<br>
         grid labels font courier<br>
         grid labels fontsize 12<br>
         grid labels fontweight bold<br>
@@ -2158,6 +2180,7 @@
 
 
 
+
           Macros</a> for more information.</p>
       <tt> Syntax: <br>
         iexam []<br>
@@ -2195,6 +2218,7 @@
         iis filename bar.fits 4</tt><br>
       <p><b> <a name="jpeg"></a>jpeg</b></p>
       <p>Load JPEG image into current frame. Optional parameters: <tt>jpeg
+
 
 
 
@@ -2788,6 +2812,7 @@
 
 
 
+
         # title, title xaxis, title yaxis, dimension on line 1<br>
         &nbsp;&nbsp;&nbsp; &nbsp;[new [name &lt;plotname&gt;]
         [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
@@ -2802,6 +2827,7 @@
           &lt;filename&gt;<br>
         </tt>&nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
       </tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -2937,6 +2963,7 @@
 
 
 
+
                           </tt>[&lt;plotname&gt;] stats<br>
                         </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
 
@@ -3005,8 +3032,10 @@
 
 
 
+
                     list<br>
                     &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3143,10 +3172,12 @@
 
 
 
+
                 [&lt;plotname&gt;] pagesetup orient [portrait|landscape]<br>
                 &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] pagesetup
                 size [letter|legal|tabloid|poster|a4]</tt><br>
               <tt> </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3305,6 +3336,7 @@
 
 
 
+
           legend [yes|no]<br>
           &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] legend position
           [right|left|top|bottom]</tt><br>
@@ -3392,9 +3424,11 @@
 
 
 
+
               shape
               [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3533,7 +3567,9 @@
 
 
 
+
                                                 <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3670,7 +3706,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3807,7 +3845,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3944,7 +3984,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4080,7 +4122,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4216,7 +4260,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4353,7 +4399,9 @@
 
 
 
+
                                                           [&lt;plotname&gt;]
+
 
 
 
@@ -4490,7 +4538,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4627,7 +4677,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4788,6 +4840,7 @@
 
 
 
+
                                       value = ds9.get(string cmd)<br>
                                     </tt></tt></tt></tt></tt></tt>plot
                           stats<br>
@@ -4824,6 +4877,7 @@
         </tt><tt><tt>plot axis x log<br>
           </tt></tt><tt><tt><tt>plot axis x flip</tt></tt></tt><br>
       </tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -4950,8 +5004,10 @@
 
 
 
+
                                         axis x min<br>
                                       </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -5078,8 +5134,10 @@
 
 
 
+
                                                           axis x format<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>plot
+
 
 
 
@@ -5214,8 +5272,10 @@
 
 
 
+
                       font numbers size<br>
                     </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -5350,6 +5410,7 @@
 
 
 
+
                           font numbers slant<br>
                         </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
 
@@ -5418,8 +5479,10 @@
 
 
 
+
                                   title<br>
                                 </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -5586,8 +5649,10 @@
 
 
 
+
                       dash<br>
                     </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -5722,8 +5787,10 @@
 
 
 
+
                                                         error color<br>
                                                       </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -5858,8 +5925,10 @@
 
 
 
+
                                                           name<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt>ds9.set(string
+
 
 
 
@@ -5967,6 +6036,7 @@
       <p>Set region and coordinate output format precision. </p>
       <tt> Syntax: <br>
         precision &lt;linear&gt; </tt><tt><tt>&lt;degree&gt;</tt> </tt><tt><tt>&lt;hms&gt;
+
 
 
         </tt></tt><tt><tt><tt>&lt;dms&gt;</tt></tt></tt><tt><tt><tt><tt>
@@ -6588,6 +6658,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [export sb|tsv &lt;filename&gt;]<br>
@@ -6607,6 +6678,7 @@
       </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [system &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -6812,8 +6884,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -6831,8 +6905,10 @@
 
 
 
+
                       [angle &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt></tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -6870,8 +6946,10 @@
 
 
 
+
                         sigma 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>smooth
+
 
 
 
@@ -6890,8 +6968,10 @@
 
 
 
+
                               angle 45<br>
                             </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>smooth
+
 
 
 
@@ -6938,6 +7018,7 @@
       </tt><tt>threads 8</tt><br>
       <p><b> <a name="tiff"></a>tiff</b></p>
       <p>Load TIFF image into current frame. Optional parameters: <tt>tiff
+
 
 
 

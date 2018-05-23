@@ -520,6 +520,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -540,6 +541,7 @@
         </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             [&lt;ref&gt;] [match]<br>
           </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -728,8 +730,10 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -918,6 +922,7 @@
 
 
 
+
         [match unique yes|no]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [maxrows
         &lt;number&gt;]</tt><br>
@@ -968,8 +973,11 @@
           [symbol shape circle|ellipse|box|text|point]<br>
           &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </tt></tt><tt><tt><tt><tt>[&lt;ref&gt;]
 
+
               [symbol shape </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>circle
+
                   point|box point|diamond point|</tt></tt></tt></tt>cross
+
           point|x point|arrow point|boxcircle point]<br>
         </tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [symbol add| [#] remove]<br>
@@ -978,6 +986,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1199,6 +1208,7 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; [ticks]<br>
       </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
+
           [match]<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock
           [yes|no]]</tt><br>
@@ -1328,6 +1338,7 @@
         -crosshair [&lt;x&gt; &lt;h&gt; &lt;coordsys&gt;
         [&lt;skyframe&gt;]]<br>
         &nbsp;</tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -1618,6 +1629,7 @@
       </tt><tt><tt><tt><tt>$ds9 -envi foo.hdr</tt></tt><tt><tt><tt><tt><tt><tt><br>
                     </tt></tt></tt></tt></tt></tt> <b> </b></tt></tt><tt><tt>$ds9
 
+
           -envi foo.hdr foo.bsq</tt></tt><tt><tt><tt><tt><tt><tt><br>
                 </tt></tt></tt></tt></tt></tt>
       <p><b> <a name="exit"></a>exit<br>
@@ -1776,13 +1788,16 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap1 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap2 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes yes|no]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap2
+          &lt;value&gt;]<br>
+        </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap3
+            &lt;value&gt;]<br>
+          </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes type interior|exterior]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes origin
         lll|llu|lul|luu|ull|ulu|uul|uuu]</tt><br>
@@ -1791,11 +1806,11 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics font
         times|helvetica|courier]<br>
@@ -1804,8 +1819,12 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics fontslant roman|italic]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap1 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap2 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics type interior|exterior]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap2
+          &lt;value&gt;]<br>
+        </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics
+            gap3 &lt;value&gt;]<br>
+          </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics type
+        interior|exterior]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics vertical yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title text &lt;text&gt;]<br>
@@ -1819,10 +1838,11 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text1 &lt;text&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def1 yes|no]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap1 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text2 &lt;text&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def2 yes|no]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text2
+          &lt;text&gt;]<br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def1 yes|no]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def2 yes|no]<br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap1 &lt;value&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap2 &lt;value&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels font
         times|helvetica|courier]<br>
@@ -1845,13 +1865,14 @@
         $ds9 -grid grid yes<br>
         $ds9 -grid grid color red<br>
         $ds9 -grid grid width 2<br>
-        $ds9 -grid grid style 1<br>
+        $ds9 -grid grid dash yes<br>
         $ds9 -grid grid gap1 10<br>
-        $ds9 -grid grid gap2 10<br>
-        $ds9 -grid axes yes<br>
+      </tt><tt><tt>$ds9 -grid grid gap2 10<br>
+        </tt></tt><tt><tt><tt>$ds9 -grid grid gap3 10<br>
+          </tt></tt>$ds9 -grid axes yes<br>
         $ds9 -grid axes color red<br>
         $ds9 -grid axes width 2<br>
-        $ds9 -grid axes style 1<br>
+        $ds9 -grid axes dash yes<br>
         $ds9 -grid axes type exterior<br>
         $ds9 -grid axes origin lll<br>
         $ds9 -grid format1 d.2<br>
@@ -1859,11 +1880,11 @@
         $ds9 -grid tickmarks yes<br>
         $ds9 -grid tickmarks color red<br>
         $ds9 -grid tickmarks width 2<br>
-        $ds9 -grid tickmarks style 1<br>
+        $ds9 -grid tickmarks dash yes<br>
         $ds9 -grid border yes<br>
         $ds9 -grid border color red<br>
         $ds9 -grid border width 2<br>
-        $ds9 -grid border style 1<br>
+        $ds9 -grid border dash yes<br>
         $ds9 -grid numerics yes<br>
         $ds9 -grid numerics font courier<br>
         $ds9 -grid numerics fontsize 12<br>
@@ -1871,8 +1892,9 @@
         $ds9 -grid numerics fontslant italic<br>
         $ds9 -grid numerics color red<br>
         $ds9 -grid numerics gap1 10<br>
-        $ds9 -grid numerics gap2 10<br>
-        $ds9 -grid numerics type exterior<br>
+      </tt><tt><tt>$ds9 -grid numerics gap2 10<br>
+        </tt></tt><tt><tt><tt>$ds9 -grid numerics gap3 10<br>
+          </tt></tt>$ds9 -grid numerics type exterior<br>
         $ds9 -grid numerics vertical yes<br>
         $ds9 -grid title yes<br>
         $ds9 -grid title text {Hello World}<br>
@@ -1885,11 +1907,11 @@
         $ds9 -grid title color red<br>
         $ds9 -grid labels yes<br>
         $ds9 -grid labels text1 {Hello World}<br>
-        $ds9 -grid labels def1 yes<br>
-        $ds9 -grid labels gap1 10<br>
-        $ds9 -grid labels text2 {Hello World}<br>
+      </tt><tt><tt>$ds9 -grid labels text2 {Hello World}<br>
+        </tt>$ds9 -grid labels def1 yes<br>
         $ds9 -grid labels def2 yes<br>
-        $ds9 -grid labels gap2 10<br>
+      </tt><tt><tt>$ds9 -grid labels gap1 10<br>
+        </tt>$ds9 -grid labels gap2 10<br>
         $ds9 -grid labels font courier<br>
         $ds9 -grid labels fontsize 12<br>
         $ds9 -grid labels fontweight bold<br>
@@ -2353,6 +2375,7 @@
 
 
 
+
         [pan]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -2491,8 +2514,10 @@
 
 
 
+
         [crosshair]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2870,6 +2895,7 @@
 
 
 
+
         [yes|open]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
         [no|close]<br>
@@ -2910,6 +2936,7 @@
           &lt;filename&gt;<br>
         </tt>&nbsp;&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
       </tt><tt><tt><tt><tt><tt><tt>&nbsp; &nbsp; &nbsp; </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3048,6 +3075,7 @@
 
 
 
+
                             &nbsp;&nbsp; </tt>[&lt;plotname&gt;] stats<br>
                         </tt></tt>&nbsp;&nbsp;&nbsp; &nbsp; </tt>[&lt;plotname&gt;]
 
@@ -3118,8 +3146,10 @@
 
 
 
+
                     list<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3265,6 +3295,7 @@
 
 
 
+
                 &nbsp;&nbsp; [&lt;plotname&gt;] print<br>
                 &nbsp; &nbsp; &nbsp; [&lt;plotname&gt;] print
                 destination [printer|file] <br>
@@ -3277,6 +3308,7 @@
               </tt>&nbsp; &nbsp; &nbsp; </tt>[&lt;plotname&gt;] close<br>
             <br>
           </tt></tt></tt><tt><tt><tt><tt><tt><tt><tt> -plot </tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3450,9 +3482,11 @@
 
 
 
+
               shape
               [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt>&nbsp; &nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3594,7 +3628,9 @@
 
 
 
+
                                                 &nbsp; &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3734,8 +3770,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3875,7 +3913,9 @@
 
 
 
+
                                                           &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4015,6 +4055,7 @@
 
 
 
+
                                                           &nbsp;&nbsp;&nbsp;
 
 
@@ -4085,7 +4126,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4224,8 +4267,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4364,8 +4409,10 @@
 
 
 
+
                                                           &nbsp; &nbsp;
                                                           <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4505,8 +4552,10 @@
 
 
 
+
                                                           &nbsp;&nbsp; <tt>
                                                           </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4646,7 +4695,9 @@
 
 
 
+
                                                           &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -4826,6 +4877,7 @@
       <p>Set region and coordinate output format precision. </p>
       <tt> Syntax: <br>
         -precision &lt;linear&gt; </tt><tt><tt>&lt;degree&gt;</tt> </tt><tt><tt>&lt;hms&gt;
+
 
 
         </tt></tt><tt><tt><tt>&lt;dms&gt;</tt></tt></tt><tt><tt><tt><tt>
@@ -5229,6 +5281,7 @@
 
 
 
+
         &lt;filename&gt; [image|table|slice]</tt> <br>
       <tt> &nbsp;<br>
         Example: <br>
@@ -5471,8 +5524,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -5491,8 +5546,10 @@
 
 
 
+
                       [angle &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -5521,8 +5578,10 @@
 
 
 
+
                   -smooth sigmaminor 2.0<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+
 
 
 

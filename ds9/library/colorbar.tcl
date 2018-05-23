@@ -1535,9 +1535,12 @@ proc ProcessSendColorbarCmd {proc id param} {
 	}
 	font {$proc $id "$colorbar(font)\n"} 
 	fontsize {$proc $id "$colorbar(font,size)\n"} 
-	fontstyle -
 	fontweight {$proc $id "$colorbar(font,weight)\n"} 
 	fontslant {$proc $id "$colorbar(font,slant)\n"} 
+	fontstyle {
+	    # backware compatibily
+	    $proc $id "$colorbar(font,weight)\n"
+ 	}
 	size {$proc $id "$colorbar(size)\n"}
 	ticks {$proc $id "$colorbar(ticks)\n"}
 	default {$proc $id [ToYesNo $view(colorbar)]} 

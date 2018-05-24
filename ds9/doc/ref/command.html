@@ -4561,25 +4561,33 @@
         </tt>$ds9 -plot close</tt><tt><tt><br>
           $ds9 -plot mode pointer</tt><br>
       </tt><tt><br>
-        # configure plot<br>
-      </tt><tt>$ds9 -plot axis x grid yes<br>
-        $ds9 -plot axis x log yes</tt><br>
-      <tt>$ds9 -plot axis x flip yes</tt><tt><br>
-      </tt><tt><tt>$ds9 -plot axis x auto no<br>
-          $ds9 -plot axis x min 1<br>
-          $ds9 -plot axis x max 100<br>
-        </tt><tt><tt>$ds9 -plot axis x format {%f}<br>
-          </tt></tt>$ds9 -plot legend yes # show legend<br>
-      </tt><tt>$ds9 -plot legend position left</tt><tt><tt><tt><tt><br>
-            </tt></tt>$ds9 -plot font numbers font times<br>
-          $ds9 -plot font numbers size 12<br>
-          $ds9 -plot font numbers weight bold<br>
-          $ds9 -plot font numbers slant italic<br>
-        </tt></tt><tt>$ds9 -plot title {The Title}<br>
-        $ds9 -plot title x {X Axis}<br>
-        $ds9 -plot barmode aligned<br>
-        <br>
-        # configure current dataset<br>
+      </tt><tt><tt># configure plot<br>
+        </tt><tt>$ds9 -plot axis x grid yes<br>
+          $ds9 -plot axis x log yes</tt><br>
+        <tt>$ds9 -plot axis x flip yes</tt><tt><br>
+        </tt><tt><tt>$ds9 -plot axis x auto no<br>
+            $ds9 -plot axis x min 1<br>
+            $ds9 -plot axis x max 100<br>
+            $ds9 -plot axis x format '%f'<br>
+            <br>
+          </tt></tt><tt>$ds9 -plot legend yes<br>
+        </tt><tt>$ds9 -plot legend position left</tt><tt><tt><tt><tt><br>
+                <br>
+              </tt></tt></tt></tt><tt><tt>$ds9 -plot font numbers font
+            times<br>
+            $ds9 -plot font numbers size 12<br>
+            $ds9 -plot font numbers weight bold<br>
+            $ds9 -plot font numbers slant italic<br>
+          </tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><br>
+                                      </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt>$ds9
+          -plot title 'This is a Title'<br>
+          $ds9 -plot title x 'X Axis'<br>
+          $ds9 -plot title y 'Y Axis'<br>
+          $ds9 -plot title legend 'This is the Legend'<br>
+          <br>
+        </tt><tt>$ds9 -plot barmode aligned<br>
+          <br>
+        </tt></tt><tt># configure current dataset<br>
       </tt><tt>$ds9 -plot show yes<br>
         $ds9 -plot shape circle<br>
       </tt><tt><tt>$ds9 -plot shape fill no<br>
@@ -4591,7 +4599,7 @@
         $ds9 -plot error yes<br>
         $ds9 -plot error color red</tt><br>
       <tt>$ds9 -plot error width 2</tt><br>
-      <tt>$ds9 -plot name {My Data}</tt><br>
+      <tt>$ds9 -plot name 'My Data'</tt><br>
       <tt><br>
         # select current dataset<br>
         $ds9 -plot select 2</tt>

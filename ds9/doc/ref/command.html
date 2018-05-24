@@ -2923,23 +2923,7 @@
       <tt> Syntax: <br>
         # create new empty plot window</tt><br>
       <tt>-plot [line|bar|scatter]<br>
-      </tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                </tt></tt></tt></tt></tt>[new
-                        &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
-                        label&gt; </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[new
-                        line|bar|scatter &lt;title&gt; &lt;xaxis
-                        label&gt; &lt;yaxis label&gt; </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]<br>
-                      </tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                    </tt></tt></tt></tt></tt>[new </tt><tt><tt><tt><tt><tt>name
-                    &lt;plotname&gt; </tt></tt></tt></tt>&lt;title&gt;
-            &lt;xaxis label&gt; &lt;yaxis label&gt; </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[new </tt><tt><tt><tt><tt><tt>name
-                    &lt;plotname&gt; </tt></tt></tt></tt>line|bar|scatter
-            &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis label&gt; </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]<br>
-          </tt><tt><br>
+      </tt><tt><tt><tt><br>
           </tt></tt></tt><tt><tt><tt># existing plot<br>
           </tt></tt></tt><tt>-plot </tt><tt><tt>[[&lt;plotname&gt;]
           load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
@@ -4555,33 +4539,26 @@
       </tt><tt>&nbsp; <br>
         Example: <br>
       </tt><tt><tt> </tt></tt><tt># create new empty plot window<br>
-        $ds9 -plot<br>
-        $ds9 -plot scatter<br>
-        $ds9 -plot new<br>
-        $ds9 -plot new bar<br>
-        $ds9 -plot new name foo<br>
-        $ds9 -plot new name foo scatter<br>
+        $ds9 -plot bar<br>
       </tt><tt><tt><br>
-          $ds9 -plot load foo.dat xy # load new dataset with dimension
-          xy<br>
-          $ds9 -plot save bar.dat # save current dataset<br>
-        </tt></tt><tt><tt>$ds9 -plot clear # clear all datasets<br>
-          $ds9 -plot duplicate # duplicate current dataset<br>
-          $ds9 -plot stats yes # display current dataset statistics<br>
-          $ds9 -plot list yes # list current dataset<br>
-        </tt></tt><tt><tt>$ds9 -plot loadconfig foo.plt # load plot
-          configuration <br>
-          $ds9 -plot saveconfig bar.plt # save current plot
-          configuration<br>
+        </tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt># existing plot<br>
+                      </tt></tt></tt></tt></tt></tt></tt>$ds9 -plot load
+          xy.dat<br>
+          $ds9 -plot save foo.dat<br>
+        </tt></tt><tt><tt>$ds9 -plot clear<br>
+          $ds9 -plot duplicate 1<br>
+          $ds9 -plot stats yes<br>
+          $ds9 -plot list yes<br>
+        </tt></tt><tt><tt>$ds9 -plot loadconfig foo.plt<br>
+          $ds9 -plot saveconfig foo.plt<br>
         </tt></tt><tt><tt>$ds9 -plot pagesetup orient portrait<br>
           $ds9 -plot pagesetup size letter<br>
         </tt></tt><tt><tt>$ds9 -plot print<br>
           $ds9 -plot print destination file<br>
-          $ds9 -plot print command "lp"<br>
-          $ds9 -plot print filename "foo.ps"<br>
+          $ds9 -plot print command lp<br>
+          $ds9 -plot print filename foo.ps<br>
           $ds9 -plot print color rgb<br>
-        </tt>$ds9 -plot close # close current plot<br>
-      </tt><tt><tt><br>
+        </tt>$ds9 -plot close</tt><tt><tt><br>
           $ds9 -plot mode pointer</tt><br>
       </tt><tt><br>
         # configure plot<br>
@@ -4589,7 +4566,7 @@
         $ds9 -plot axis x log yes</tt><br>
       <tt>$ds9 -plot axis x flip yes</tt><tt><br>
       </tt><tt><tt>$ds9 -plot axis x auto no<br>
-          $ds9 -plot axis x min 0<br>
+          $ds9 -plot axis x min 1<br>
           $ds9 -plot axis x max 100<br>
         </tt><tt><tt>$ds9 -plot axis x format {%f}<br>
           </tt></tt>$ds9 -plot legend yes # show legend<br>

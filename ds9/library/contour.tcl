@@ -1292,16 +1292,6 @@ proc ContourCmdLoad {fn} {
     }
 }
 
-proc ContourCmdLoadParam {fn color width dash} {
-    global current
-
-    if {$current(frame) != {} && $fn != {}} {
-	$current(frame) contour load $fn $color $width $dash
-	FileLast contourlfbox $fn
-	UpdateContourDialog
-    }
-}
-
 proc ContourCmdLoadOrg {fn sys sky color width dash} {
     global current
 

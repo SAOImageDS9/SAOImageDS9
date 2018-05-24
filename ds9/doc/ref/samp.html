@@ -1313,17 +1313,17 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [clear]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [generate]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load
-        &lt;filename&gt; [&lt;color&gt; &lt;width&gt; yes|no]]<br>
+        &lt;filename&gt;]<br>
         &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;
-        &lt;coordsys&gt; &lt;skyframe&gt;]<br>
+        [&lt;coordsys&gt; &lt;skyframe&gt;]]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [convert]<br>
-      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          [loadlevels &lt;filename&gt;]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load
+          levels &lt;filename&gt;]<br>
         </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            [savelevels &lt;filename&gt;]<br>
+            [save levels &lt;filename&gt;]<br>
           </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [copy]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [paste
-        &lt;coordsys&gt; [&lt;color&gt; &lt;width&gt; yes|no]]<br>
+        [&lt;coordsys&gt; &lt;color&gt; &lt;width&gt; yes|no]]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [width &lt;width&gt;]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [dash yes|no]<br>
@@ -1367,14 +1367,15 @@
         contour clear<br>
         contour generate<br>
         contour load ds9.ctr<br>
-        contour load ds9.ctr red 2 yes<br>
-        contour save ds9.con wcs fk5<br>
-        contour convert<br>
-      </tt><tt><tt>contour loadlevels ds9.ctr<br>
-        </tt></tt><tt><tt><tt>contour savelevels ds9.lev<br>
+      </tt><tt><tt>contour save ds9.con<br>
+        </tt></tt><tt><tt><tt>contour save ds9.con wcs fk5<br>
+          </tt></tt>contour convert<br>
+      </tt><tt><tt>contour load levels ds9.ctr<br>
+        </tt></tt><tt><tt><tt>contour save levels ds9.lev<br>
           </tt></tt>contour copy<br>
-        contour paste wcs red 2 no<br>
-        contour color yellow<br>
+      </tt><tt><tt>contour paste<br>
+        </tt></tt><tt><tt><tt>contour paste wcs red 2 no<br>
+          </tt></tt>contour color yellow<br>
         contour width 2<br>
         contour dash yes<br>
         contour smooth 5<br>

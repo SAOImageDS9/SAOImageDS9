@@ -66,6 +66,7 @@ contour : yesno {ContourCmdSet view $1}
 
 # backward compatibility
  | LOADLEVELS_ STRING_ {ContourCmdLoadLevels $2}
+# backward compatibility
  | SAVELEVELS_ STRING_ {ContourCmdSaveLevels $2}
 
  | COPY_ {ContourCCopyDialog}
@@ -93,15 +94,15 @@ load : STRING_ {ContourCmdLoad $1}
  | STRING_ skyframe STRING_ INT_ yesno {ContourCmdLoadOrg $1 wcs $2 $3 $4 $5}
  | STRING_ wcssys skyframe STRING_ INT_ yesno {ContourCmdLoadOrg $1 $2 $3 $4 $5 $6}
 # no longer supported
-# | STRING_ STRING_ INT_ yesno {ContourCmdLoadParam $1 $2 $3 $4}
+# | STRING_ STRING_ INT_ yesno
  ;
 
 save : STRING_ {ContourCmdSave $1 physical fk5}
- | LEVELS_ STRING_ {ContourCmdSaveLevels $2}
  | STRING_ coordsys {ContourCmdSave $1 $2 fk5}
  | STRING_ wcssys {ContourCmdSave $1 $2 fk5}
  | STRING_ skyframe {ContourCmdSave $1 wcs $2}
  | STRING_ wcssys skyframe {ContourCmdSave $1 $2 $3}
+ | LEVELS_ STRING_ {ContourCmdSaveLevels $2}
 # backward compatibility
 # no longer supported
 # | STRING_ wcssys skyframe STRING_ INT_ yesno {ContourCmdSave $1 $2 $3}

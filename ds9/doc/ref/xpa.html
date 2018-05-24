@@ -1301,17 +1301,17 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [clear]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [generate]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load
-        &lt;filename&gt; [&lt;color&gt; &lt;width&gt; yes|no]]<br>
-        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;
-        &lt;coordsys&gt; &lt;skyframe&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [convert]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [loadlevels
         &lt;filename&gt;]<br>
-        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [savelevels
+        &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;
+        [&lt;coordsys&gt; &lt;skyframe&gt;]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [convert]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load levels
+        &lt;filename&gt;]<br>
+        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [save levels
         &lt;filename&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [copy]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [paste
-        &lt;coordsys&gt; [&lt;color&gt; &lt;width&gt; yes|no]]<br>
+        [&lt;coordsys&gt; &lt;color&gt; &lt;width&gt; yes|no]]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [width &lt;width&gt;]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [dash yes|no]<br>
@@ -1351,14 +1351,15 @@
         $xpaset -p ds9 contour clear<br>
         $xpaset -p ds9 contour generate<br>
       </tt><tt><tt>$xpaset -p ds9 contour load ds9.ctr<br>
-        </tt></tt><tt>$xpaset -p ds9 contour load ds9.ctr red 2 yes<br>
-        $xpaset -p ds9 contour save ds9.ctr wcs fk5<br>
+        </tt></tt><tt><tt>$xpaset -p ds9 contour save ds9.ctr<br>
+        </tt>$xpaset -p ds9 contour save ds9.ctr wcs fk5<br>
         $xpaset -p ds9 contour convert<br>
-        $xpaset -p ds9 contour loadlevels ds9.ctr</tt><br>
-      <tt><tt>$xpaset -p ds9 contour savelevels ds9.lev<br>
+        $xpaset -p ds9 contour load levels ds9.ctr</tt><br>
+      <tt><tt>$xpaset -p ds9 contour save levels ds9.lev<br>
         </tt> $xpaset -p ds9 contour copy<br>
-        $xpaset -p ds9 contour paste wcs red 2 no<br>
-        $xpaset -p ds9 contour color yellow<br>
+      </tt><tt><tt>$xpaset -p ds9 contour paste<br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 contour paste wcs red 2 no<br>
+          </tt></tt>$xpaset -p ds9 contour color yellow<br>
         $xpaset -p ds9 contour width 2<br>
         $xpaset -p ds9 contour dash yes<br>
         $xpaset -p ds9 contour smooth 5<br>

@@ -1244,17 +1244,17 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [clear]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [generate]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load
-        &lt;filename&gt; [&lt;color&gt; &lt;width&gt; yes|no]]<br>
+        &lt;filename&gt;]<br>
         &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save
-        &lt;filename&gt; &lt;coordsys&gt; &lt;skyframe&gt;]<br>
+        &lt;filename&gt; [&lt;coordsys&gt; &lt;skyframe&gt;]]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [convert]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [loadlevels
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load levels
         &lt;filename&gt;]</tt><br>
-      <tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          [savelevels &lt;filename&gt;]<br>
+      <tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save
+          levels &lt;filename&gt;]<br>
         </tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [copy]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [paste
-        &lt;coordsys&gt; [&lt;color&gt; &lt;width&gt; yes|no]]<br>
+        [&lt;coordsys&gt; &lt;color&gt; &lt;width&gt; yes|no]]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [color
         &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [width
@@ -1285,14 +1285,15 @@
         $ds9 -contour generate<br>
         $ds9 -contour clear<br>
         $ds9 -contour load ds9.ctr<br>
-        $ds9 -contour load ds9.ctr red 2 yes<br>
-        $ds9 -contour save ds9.ctr wcs fk5<br>
-        $ds9 -contour convert<br>
-        $ds9 -contour loadlevels ds9.ctr<br>
-      </tt><tt><tt>$ds9 -contour savelevels ds9.lev<br>
+      </tt><tt><tt>$ds9 -contour save ds9.ctr<br>
+        </tt></tt><tt><tt><tt>$ds9 -contour save ds9.ctr wcs fk5<br>
+          </tt></tt>$ds9 -contour convert<br>
+        $ds9 -contour load levels ds9.ctr<br>
+      </tt><tt><tt>$ds9 -contour save levels ds9.lev<br>
         </tt>$ds9 -contour copy<br>
-        $ds9 -contour paste wcs red 2 no<br>
-        $ds9 -contour color yellow<br>
+      </tt><tt><tt>$ds9 -contour paste<br>
+        </tt></tt><tt><tt><tt>$ds9 -contour paste wcs red 2 no<br>
+          </tt></tt>$ds9 -contour color yellow<br>
         $ds9 -contour width 2<br>
         $ds9 -contour dash yes<br>
         $ds9 -contour smooth 5<br>

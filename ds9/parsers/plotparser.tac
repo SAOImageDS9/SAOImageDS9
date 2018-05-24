@@ -145,11 +145,12 @@ command : plot
  | plot {yyclearin; YYACCEPT} STRING_
  ;
 
- plot : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
- | LINE_ line
+ plot : LINE_ line
  | BAR_ {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
  | SCATTER_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
-
+# parse error command line
+ | {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
+ 
  | NEW_ {PlotCmdNew {}} new
  | NEW_ NAME_ STRING_ {PlotCmdNew $3} new
 
@@ -168,23 +169,29 @@ new : newLine
  | SCATTER_ newScatter
  ;
  
-newLine : {PlotCmdLine {} {} {} xy}
+newLine : STRING_ STRING_ STRING_ dim {PlotCmdLine $1 $2 $3 $4}
+# parse error command line
+ | {PlotCmdLine {} {} {} xy}
+# xpa only
  | STDIN_ {PlotCmdAnalysisPlotStdin line}
- | STRING_ STRING_ STRING_ dim {PlotCmdLine $1 $2 $3 $4}
- # backward compatibility
+# backward compatibility
  | STRING_ STRING_ STRING_ INT_ {PlotCmdLine $1 $2 $3 $4}
  ;
 
-newBar : {PlotCmdBar {} {} {} xy}
+newBar : STRING_ STRING_ STRING_ dim {PlotCmdBar $1 $2 $3 $4}
+# parse error command line
+ | {PlotCmdBar {} {} {} xy}
+# xpa only
  | STDIN_ {PlotCmdAnalysisPlotStdin bar}
- | STRING_ STRING_ STRING_ dim {PlotCmdBar $1 $2 $3 $4}
- # backward compatibility
+# backward compatibility
  | STRING_ STRING_ STRING_ INT_ {PlotCmdBar $1 $2 $3 $4}
  ;
 
-newScatter : {PlotCmdScatter {} {} {} xy}
+newScatter : STRING_ STRING_ STRING_ dim  {PlotCmdScatter $1 $2 $3 $4}
+# parse error command line
+ | {PlotCmdScatter {} {} {} xy}
+# xpa only
  | STDIN_ {PlotCmdAnalysisPlotStdin scatter}
- | STRING_ STRING_ STRING_ dim  {PlotCmdScatter $1 $2 $3 $4}
  # backward compatibility
  | STRING_ STRING_ STRING_ INT_  {PlotCmdScatter $1 $2 $3 $4}
  ;
@@ -195,6 +202,7 @@ xy : 'x' {set _ x}
  | 'Y' {set _ y}
  ;
 
+# backward compatibility
 xyaxis : XAXIS_ {set _ x}
  | YAXIS_ {set _ y}
  ;
@@ -205,13 +213,14 @@ dim : XY_ {set _ xy}
  | XYEXEY_ {set _ xyexey}
  ;
 
-plotCmd : DATA_ dim {PlotCmdData $2}
-
- | LOAD_ load
+plotCmd : LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
+ # xpa/samp only
+ | DATA_ dim {PlotCmdData $2}
  | CLEAR_ {global cvarname; PlotClearData $cvarname}
- | DUP_ duplicate
  | DUPLICATE_ duplicate
+ # backward compatibility
+ | DUP_ duplicate
  | STATS_ yesno {PlotCmdSet stats $2 PlotStats}
  # backward compatibility
  | STATISTICS_ yesno {PlotCmdSet stats $2 PlotStats}
@@ -252,6 +261,7 @@ plotCmd : DATA_ dim {PlotCmdData $2}
 
  # backward compatibility
  | GRAPH_ oldGraph
+ # backward compatibility
  | VIEW_ oldView
  ;
 

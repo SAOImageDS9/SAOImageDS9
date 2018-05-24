@@ -2736,98 +2736,41 @@
       </blockquote>
       <p>To create a new plot, use the plot new command.</p>
       <tt> Syntax: <br>
-        # create new empty plot window<br>
-        plot<br>
-        plot [bar|scatter]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [new [name &lt;plotname&gt;]
-        [line|bar|scatter]]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [new [name &lt;plotname&gt;]
-        [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
-        label&gt; </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]<br>
-        <br>
-        # create new plot with data<br>
-        plot [new [name &lt;plotname&gt;] </tt><tt>[line|bar|scatter] </tt><tt>stdin]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        # title, title xaxis, title yaxis, dimension on line 1<br>
-        &nbsp;&nbsp;&nbsp; &nbsp;[new [name &lt;plotname&gt;]
-        [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
-        label&gt; xy|xyex|xyey|xyexey]<br>
-        <br>
-        # load dataset into an existing plot<br>
-        plot [&lt;plotname&gt;] [data xy|xyex|xyey|xyexey]<br>
+        # create new empty plot window</tt><br>
+      <tt><tt>plot []<br>
+          &nbsp;&nbsp;&nbsp;&nbsp; [line|bar|scatter]<br>
+        </tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [new]<br>
+              </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; [new line|bar|scatter]<br>
+          </tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                  </tt></tt></tt></tt></tt>[new
+                          &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
+                          label&gt; </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]<br>
+                          &nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[new
+                          line|bar|scatter &lt;title&gt; &lt;xaxis
+                          label&gt; &lt;yaxis label&gt; </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]<br>
+                        </tt></tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; [new
+                    name &lt;plotname&gt;]<br>
+                  </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+                          [new name &lt;plotname&gt; line|bar|scatter]</tt></tt></tt></tt></tt></tt></tt></tt><br>
+        </tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt>[new
+            </tt><tt><tt><tt><tt><tt>name &lt;plotname&gt; </tt></tt></tt></tt>&lt;title&gt;
+              &lt;xaxis label&gt; &lt;yaxis label&gt; </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]<br>
+              &nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[new </tt><tt><tt><tt><tt><tt>name
+                      &lt;plotname&gt; </tt></tt></tt></tt>line|bar|scatter
+              &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis label&gt; </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]<br>
+            </tt><tt><br>
+            </tt></tt></tt> # </tt><tt><tt><tt>load data into existing
+            plot</tt></tt> <br>
+        plot [[&lt;plotname&gt;] data xy|xyex|xyey|xyexey]<br>
       </tt><tt><tt><br>
-          plot [&lt;plotname&gt;] load &lt;filename&gt;
-          [xy|xyex|xyey|xyexey]<br>
-          &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] save
-          &lt;filename&gt;<br>
-        </tt>&nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
-      </tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
+        </tt></tt><tt><tt><tt># existing plot<br>
+          </tt></tt></tt><tt>plot </tt><tt><tt>[[&lt;plotname&gt;] load
+          &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] save
+          &lt;filename&gt;]<br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] clear]<br>
+      </tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[[&lt;plotname&gt;]
 
 
 
@@ -2895,7 +2838,8 @@
 
 
 
-                duplicate<br>
+
+                duplicate [#]]<br>
               </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
@@ -2965,9 +2909,9 @@
 
 
 
-                          </tt>[&lt;plotname&gt;] stats [yes|no]<br>
-                        </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
 
+                          </tt>[[&lt;plotname&gt;] stats yes|no]<br>
+                        </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[[&lt;plotname&gt;]
 
 
 
@@ -3034,10 +2978,10 @@
 
 
 
-                    list [yes|no]<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
 
 
+                    list yes|no]<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
 
 
 
@@ -3103,9 +3047,12 @@
 
 
 
-                loadconfig &lt;filename&gt;<br>
-                &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] saveconfig
-                &lt;filename&gt;<br>
+
+
+
+                loadconfig &lt;filename&gt;]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] saveconfig
+                &lt;filename&gt;]<br>
               </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
@@ -3174,9 +3121,10 @@
 
 
 
-                [&lt;plotname&gt;] pagesetup orient [portrait|landscape]<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] pagesetup
-                size [letter|legal|tabloid|poster|a4]</tt><br>
+
+                [[&lt;plotname&gt;] pagesetup orient portrait|landscape]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] pagesetup
+                size letter|legal|tabloid|poster|a4]</tt><br>
               <tt> </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
@@ -3245,35 +3193,36 @@
 
 
 
-                [&lt;plotname&gt;] print<br>
-                &nbsp; &nbsp; &nbsp;[&lt;plotname&gt;] print destination
-                [printer|file] <br>
-                &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] print
-                command &lt;command&gt;<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] print
-                filename &lt;filename&gt;<br>
-                &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] print color
-                [rgb|gray]<br>
-              </tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[&lt;plotname&gt;]
-            close<br>
-          </tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><br>
-                    plot </tt>[&lt;plotname&gt;] mode [pointer|zoom]<br>
+
+                [[&lt;plotname&gt;] print]<br>
+                &nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] print
+                destination printer|file]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] print
+                command &lt;command&gt;]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] print
+                filename &lt;filename&gt;]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] print color
+                rgb|gray]<br>
+              </tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[[&lt;plotname&gt;]
+            close</tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>]<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp; </tt>[[&lt;plotname&gt;]
+                  mode pointer|zoom]<br>
                 </tt></tt></tt></tt></tt></tt><tt><br>
-        # configure graph<br>
-        plot [&lt;plotname&gt;] axis [x|y] grid [yes|no]<br>
-        &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] axis [x|y] log
-        [yes|no]<br>
-      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] axis [x|y]
-        flip [yes|no]</tt><br>
-      <tt><tt>&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] axis [x|y] auto
-          [yes|no]<br>
-          &nbsp; &nbsp; &nbsp;[&lt;plotname&gt;] axis [x|y] min
-          &lt;value&gt;<br>
-          &nbsp; &nbsp; &nbsp;[&lt;plotname&gt;] axis [x|y] max
-          &lt;value&gt;</tt><tt><br>
-        </tt><tt><tt>&nbsp; &nbsp; &nbsp;[&lt;plotname&gt;] axis [x|y]
-            format &lt;string&gt;</tt><tt><br>
-          </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt><tt>[&lt;plotname&gt;]
+      </tt><tt># configure graph<br>
+      </tt><tt>plot [[&lt;plotname&gt;] axis x|y grid yes|no]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [[[&lt;plotname&gt;] axis x|y log
+        yes|no]<br>
+      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y
+        flip yes|no]</tt><br>
+      <tt><tt>&nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y auto
+          yes|no]<br>
+          &nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y min
+          &lt;value&gt;]<br>
+          &nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y max
+          &lt;value&gt;]</tt><tt><br>
+        </tt><tt><tt>&nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y
+            format &lt;string&gt;]</tt><tt><br>
+          </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt><tt>[[&lt;plotname&gt;]
 
 
 
@@ -3338,27 +3287,94 @@
 
 
 
-          legend [yes|no]<br>
-          &nbsp;&nbsp;&nbsp; &nbsp;[&lt;plotname&gt;] legend position
-          [right|left|top|bottom]</tt><br>
-      </tt><tt><tt>&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] font
-          [title|labels|numbers] font [times|helvetica|courier]<br>
-          &nbsp; &nbsp; &nbsp;[&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>[title|labels|numbers]</tt></tt>
-          size &lt;value&gt;<br>
-          &nbsp; &nbsp; &nbsp;[&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>[title|labels|numbers]</tt></tt>
-          weight [normal|bold]<br>
-          &nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>[title|labels|numbers]</tt></tt>
-          slant [roman|italic]<br>
-        </tt></tt><tt>&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] title
-        &lt;string&gt;</tt><br>
-      <tt><tt>&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] title [x|y]
-          &lt;string&gt;<br>
-          &nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] barmode
-          [normal|stacked|aligned|overlap]<br>
-        </tt></tt><tt><tt><tt><br>
-            # configure current dataset<br>
-          </tt>plot [&lt;plotname&gt;] show [yes|no]<br>
-        </tt>&nbsp; &nbsp;&nbsp; </tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+          legend yes|no]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] legend position
+          right|left|top|bottom]</tt><br>
+      </tt><tt><tt>&nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] font
+          title|labels|numbers font times|helvetica|courier]<br>
+          &nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>title|labels|numbers</tt></tt>
+          size &lt;value&gt;]<br>
+          &nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>title|labels|numbers</tt></tt>
+          weight normal|bold]<br>
+          &nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>title|labels|numbers</tt></tt>
+          slant roman|italic]<br>
+        </tt></tt><tt>&nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] title
+        &lt;string&gt;]</tt><br>
+      <tt><tt>&nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] title x|y
+          &lt;string&gt;]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp; [</tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              barmode normal|stacked|aligned|overlap]<br>
+            </tt></tt></tt></tt><tt><tt><tt><br>
+          </tt></tt></tt><tt><tt><tt># configure current dataset<br>
+          </tt>plot [[&lt;plotname&gt;] show yes|no]<br>
+        </tt>&nbsp; &nbsp;&nbsp; </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3427,8 +3443,8 @@
 
 
               shape
-              [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
-      <tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+              circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
 
 
 
@@ -3496,10 +3512,11 @@
 
 
 
-                      shape fill [yes|no]</tt></tt></tt></tt></tt></tt></tt></tt><br>
+
+                      shape fill yes|no]</tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; <tt>
-                        </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
-                              shape color &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+                        </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+                              shape color &lt;value&gt;]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
@@ -3569,7 +3586,9 @@
 
 
 
-                                                <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+                                                <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3638,7 +3657,7 @@
 
 
                                                       smooth
-                                                      [step|linear|cubic|quadratic|catrom]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+                                                      step|linear|cubic|quadratic|catrom]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
@@ -3708,7 +3727,9 @@
 
 
 
-                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3777,7 +3798,7 @@
 
 
                                                           color
-                                                          &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+                                                          &lt;value&gt;]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
@@ -3847,7 +3868,9 @@
 
 
 
-                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3916,7 +3939,7 @@
 
 
                                                           width
-                                                          &lt;value&gt;<br>
+                                                          &lt;value&gt;]<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
@@ -3986,8 +4009,8 @@
 
 
 
-                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
 
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
 
 
 
@@ -4054,7 +4077,9 @@
 
 
 
-                                                          dash [yes|no]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+
+
+                                                          dash yes|no]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
@@ -4124,8 +4149,8 @@
 
 
 
-                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
 
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
 
 
 
@@ -4192,7 +4217,9 @@
 
 
 
-                                                          error [yes|no]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+
+
+                                                          error yes|no]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
@@ -4262,7 +4289,9 @@
 
 
 
-                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4331,7 +4360,7 @@
 
 
                                                           error color
-                                                          &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+                                                          &lt;value&gt;]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
@@ -4401,7 +4430,9 @@
 
 
 
-                                                          [&lt;plotname&gt;]
+
+                                                          [[&lt;plotname&gt;]
+
 
 
 
@@ -4470,7 +4501,7 @@
 
 
                                                           color
-                                                          &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+                                                          &lt;value&gt;]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
@@ -4540,7 +4571,9 @@
 
 
 
-                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4609,7 +4642,7 @@
 
 
                                                           error width
-                                                          &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+                                                          &lt;value&gt;]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
 
 
@@ -4679,7 +4712,9 @@
 
 
 
-                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4748,11 +4783,12 @@
 
 
                                                           name
-                                                          &lt;string&gt;<br>
+                                                          &lt;string&gt;]<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><br>
               # select current dataset<br>
-            </tt></tt></tt>plot [&lt;plotname&gt;] select &lt;value&gt;<br>
-        &nbsp; </tt><tt> <br>
+            </tt></tt></tt>plot [[&lt;plotname&gt;] select
+        &lt;value&gt;]<br>
+      </tt><tt>&nbsp; </tt><tt> <br>
         Example: <br>
         # return all plotnames<br>
         string value = ds9.get(string cmd)<br>

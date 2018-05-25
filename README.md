@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1041783.svg)](https://doi.org/10.5281/zenodo.1041783)
 # tkblt
 Introduction to the TkBLT library
 

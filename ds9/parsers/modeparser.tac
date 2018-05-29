@@ -12,6 +12,7 @@
 %token PAN_
 %token ZOOM_
 %token ROTATE_
+%token CROP_
 %token CATALOG_
 %token EXAMINE_
 %token POINTER_
@@ -32,6 +33,7 @@ item : NONE_ {set _ none}
  | PAN_ {set _ pan}
  | ZOOM_ {set _ zoom}
  | ROTATE_ {set _ rotate}
+ | CROP_ {set _ crop}
  | CATALOG_ {set _ catalog}
  | EXAMINE_ {set _ examine}
 # backward compatibilty

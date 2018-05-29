@@ -14,6 +14,7 @@ colorbar    {return $COLORBAR_}
 pan	    {return $PAN_}
 zoom	    {return $ZOOM_}
 rotate	    {return $ROTATE_}
+crop	    {return $CROP_}
 catalog	    {return $CATALOG_}
 examine	    {return $EXAMINE_}
 pointer	    {return $POINTER_}

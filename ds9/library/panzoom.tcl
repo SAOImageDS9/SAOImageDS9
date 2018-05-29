@@ -693,41 +693,10 @@ proc ProcessPanCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	pan::YY_FLUSH_BUFFER
-	pan::yy_scan_string [lrange $var $i end]
-	pan::yyparse
-	incr i [expr $pan::yycnt-1]
-    } else {
-	
-    switch -- [string tolower [lindex $var $i]] {
-	open {PanZoomDialog}
-	close {PanZoomDestroyDialog}
-	to {
-	    set x [lindex $var [expr $i+1]]
-	    set y [lindex $var [expr $i+2]]
-	    set sys [lindex $var [expr $i+3]]
-	    set sky [lindex $var [expr $i+4]]
-	    set format {}
-
-	    incr i 2
-	    incr i [FixSpec sys sky format physical fk5 degrees]
-	    PanTo $x $y $sys $sky
-	}
-	default {
-	    set x [lindex $var [expr $i+0]]
-	    set y [lindex $var [expr $i+1]]
-	    set sys [lindex $var [expr $i+2]]
-	    set sky [lindex $var [expr $i+3]]
-	    set format {}
-
-	    incr i 1
-	    incr i [FixSpec sys sky format physical fk5 degrees]
-	    Pan $x $y $sys $sky
-	}
-    }
-}
+    pan::YY_FLUSH_BUFFER
+    pan::yy_scan_string [lrange $var $i end]
+    pan::yyparse
+    incr i [expr $pan::yycnt-1]
 }
 
 proc ProcessSendPanCmd {proc id param} {
@@ -750,52 +719,10 @@ proc ProcessZoomCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	zoom::YY_FLUSH_BUFFER
-	zoom::yy_scan_string [lrange $var $i end]
-	zoom::yyparse
-	incr i [expr $zoom::yycnt-1]
-    } else {
-	
-    global current
-    switch -- [string tolower [lindex $var $i]] {
-	open {PanZoomDialog}
-	close {PanZoomDestroyDialog}
-	in {Zoom 2 2}
-	out {Zoom .5 .5}
-	to {
-	    switch -- [string tolower [lindex $var [expr $i+1]]] {
-		fit {
-		    ZoomToFit
-		    incr i
-		}
-		default {
-		    set z1 [lindex $var [expr $i+1]]
-		    set z2 [lindex $var [expr $i+2]]
-		    if {[string is double $z2] && $z2 != {}} {
-			set current(zoom) "$z1 $z2"
-			incr i 2
-		    } else {
-			set current(zoom) "$z1 $z1"
-			incr i
-		    }
-		    ChangeZoom
-		}
-	    }
-	}
-	default {
-	    set z1 [lindex $var $i]
-	    set z2 [lindex $var [expr $i+1]]
-	    if {[string is double $z2] && $z2 != {}} {
-		Zoom $z1 $z2
-		incr i
-	    } else {
-		Zoom $z1 $z1
-	    }
-	}
-    }
-}
+    zoom::YY_FLUSH_BUFFER
+    zoom::yy_scan_string [lrange $var $i end]
+    zoom::yyparse
+    incr i [expr $zoom::yycnt-1]
 }
 
 proc ProcessSendZoomCmd {proc id param} {
@@ -817,24 +744,10 @@ proc ProcessOrientCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	orient::YY_FLUSH_BUFFER
-	orient::yy_scan_string [lrange $var $i end]
-	orient::yyparse
-	incr i [expr $orient::yycnt-1]
-    } else {
-
-    global current
-    switch -- [string tolower [lindex $var $i]] {
-	open {PanZoomDialog}
-	close {PanZoomDestroyDialog}
-	default {
-	    set current(orient) [string tolower [lindex $var $i]]
-	    ChangeOrient
-	}
-    }
-}
+    orient::YY_FLUSH_BUFFER
+    orient::yy_scan_string [lrange $var $i end]
+    orient::yyparse
+    incr i [expr $orient::yycnt-1]
 }
 
 proc ProcessSendOrientCmd {proc id param} {
@@ -849,26 +762,10 @@ proc ProcessRotateCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	rotate::YY_FLUSH_BUFFER
-	rotate::yy_scan_string [lrange $var $i end]
-	rotate::yyparse
-	incr i [expr $rotate::yycnt-1]
-    } else {
-
-    global current
-    switch -- [string tolower [lindex $var $i]] {
-	open {PanZoomDialog}
-	close {PanZoomDestroyDialog}
-	to {
-	    set current(rotate) [lindex $var [expr $i+1]]
-	    ChangeRotate
-	    incr i
-	}
-	default {Rotate [lindex $var $i]}
-    }
-}
+    rotate::YY_FLUSH_BUFFER
+    rotate::yy_scan_string [lrange $var $i end]
+    rotate::yyparse
+    incr i [expr $rotate::yycnt-1]
 }
 
 proc ProcessSendRotateCmd {proc id param} {

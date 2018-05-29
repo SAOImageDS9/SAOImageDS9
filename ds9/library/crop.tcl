@@ -393,56 +393,10 @@ proc ProcessCropCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	crop::YY_FLUSH_BUFFER
-	crop::yy_scan_string [lrange $var $i end]
-	crop::yyparse
-	incr i [expr $crop::yycnt-1]
-    } else {
-
-    global crop
-    global current
-    switch -- [string tolower [lindex $var $i]] {
-	match {
-	    incr i
-	    MatchCropCurrent [lindex $var $i]
-	}
-	lock {
-	    incr i
-	    set crop(lock) [lindex $var $i]
-	    LockCropCurrent
-	}
-	open {CropDialog}
-	close {CropDestroyDialog}
-	reset {CropReset}
-	3d {
-	    incr i 1
-	    set zmin [lindex $var [expr $i+0]]
-	    set zmax [lindex $var [expr $i+1]]
-	    set sys [lindex $var [expr $i+2]]
-
-	    incr i 1
-	    incr i [FixSpecSystem sys physical]
-
-	    $current(frame) crop 3d $zmin $zmax $sys
-	}
-	default {
-	    set x [lindex $var [expr $i+0]]
-	    set y [lindex $var [expr $i+1]]
-	    set w [lindex $var [expr $i+2]]
-	    set h [lindex $var [expr $i+3]]
-	    set sys [lindex $var [expr $i+4]]
-	    set sky [lindex $var [expr $i+5]]
-	    set dformat [lindex $var [expr $i+6]]
-
-	    incr i 3
-	    incr i [FixSpec sys sky dformat physical fk5 degrees]
-
-	    $current(frame) crop center $x $y $sys $sky $w $h $sys $dformat
-	}
-    }
-}
+    crop::YY_FLUSH_BUFFER
+    crop::yy_scan_string [lrange $var $i end]
+    crop::yyparse
+    incr i [expr $crop::yycnt-1]
 }
 
 proc CropCmdSet {which value {cmd {}}} {

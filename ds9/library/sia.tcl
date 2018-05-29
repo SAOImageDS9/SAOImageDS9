@@ -367,84 +367,14 @@ proc ProcessSIACmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	set ref [lindex $isia(sias) end]
-	global cvarname
-	set cvarname $ref
+    set ref [lindex $isia(sias) end]
+    global cvarname
+    set cvarname $ref
 
-	sia::YY_FLUSH_BUFFER
-	sia::yy_scan_string [lrange $var $i end]
-	sia::yyparse
-	incr i [expr $sia::yycnt-1]
-    } else {
-
-    set item [string tolower [lindex $var $i]]
-    switch -- $item {
-	cancel -
-	clear -
-	close -
-	coordinate -
-	crosshair -
-	export -
-	name -
-	print -
-	retreive -
-	retrieve -
-	save -
-	size -
-	sky -
-	skyformat -
-	system -
-	update {ProcessSIA $varname $iname [lindex $isia(sias) end]}
-
-	default {
-	    # existing sia or load new one?
-	    set ref $item
-
-	    incr i
-	    set item [string tolower [lindex $var $i]]
-	    switch -- $item {
-		cancel -
-		clear -
-		close -
-		coordinate -
-		crosshair -
-		export -
-		name -
-		print -
-		retreive -
-		retrieve -
-		save -
-		size -
-		sky -
-		skyformat -
-		system -
-		update {ProcessSIA $varname $iname sia${ref}}
-
-		default {
-		    # ok, new sia
-		    incr i -1
-		    set item [string tolower [lindex $var $i]]
-
-		    # see if its from our list of sias
-		    foreach mm $isia(def) {
-			set title [lindex $mm 0]
-			set vars [lindex $mm 1]
-			set url [lindex $mm 2]
-			set opts [lindex $mm 3]
-			set method [lindex $mm 4]
-
-			if {$title != {-} && "sia${item}" == $vars} {
-			    SIADialog $vars $title $url $opts $method sync
-			    return
-			}
-		    }
-		}
-	    }
-	}
-    }
-}
+    sia::YY_FLUSH_BUFFER
+    sia::yy_scan_string [lrange $var $i end]
+    sia::yyparse
+    incr i [expr $sia::yycnt-1]
 }
 
 proc ProcessSIA {varname iname cvarname} {

@@ -345,79 +345,10 @@ proc ProcessSmoothCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	smooth::YY_FLUSH_BUFFER
-	smooth::yy_scan_string [lrange $var $i end]
-	smooth::yyparse
-	incr i [expr $smooth::yycnt-1]
-    } else {
-
-    global smooth
-
-    switch -- [string tolower [lindex $var $i]] {
-	open {SmoothDialog}
-	close {SmoothDestroyDialog}
-	match {MatchSmoothCurrent}
-	lock {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		set smooth(lock) [FromYesNo [lindex $var $i]]
-	    } else {
-		set smooth(lock) 1
-		incr i -1
-	    }
-	    LockSmoothCurrent
-	}
-	function {
-	    incr i
-	    set smooth(function) [lindex $var $i]
-	    SmoothUpdate
-	}
-	radius {
-	    incr i
-	    set smooth(radius) [lindex $var $i]
-	    SmoothUpdate
-	}
-	radiusminor {
-	    incr i
-	    set smooth(radius,minor) [lindex $var $i]
-	    SmoothUpdate
-	}
-	sigma {
-	    incr i
-	    set smooth(sigma) [lindex $var $i]
-	    SmoothUpdate
-	}
-	sigmaminor {
-	    incr i
-	    set smooth(sigma,minor) [lindex $var $i]
-	    SmoothUpdate
-	}
-	angle {
-	    incr i
-	    set smooth(angle) [lindex $var $i]
-	    SmoothUpdate
-	}
-	yes -
-	true -
-	on -
-	1 -
-	no -
-	false -
-	off -
-	0 {
-	    set smooth(view) [FromYesNo [lindex $var $i]]
-	    SmoothUpdate
-	}
-
-	default {
-	    set smooth(view) 1
-	    SmoothUpdate
-	    incr i -1
-	}
-    }
-}
+    smooth::YY_FLUSH_BUFFER
+    smooth::yy_scan_string [lrange $var $i end]
+    smooth::yyparse
+    incr i [expr $smooth::yycnt-1]
 }
 
 proc SmoothCmdSet {which value {cmd {}}} {

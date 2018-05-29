@@ -186,61 +186,13 @@ proc ProcessNRESCmd {varname iname} {
 
     NRESDialog
 
-    global debug
-    if {$debug(tcl,parser)} {
-	global cvarname
-	set cvarname dnres
+    global cvarname
+    set cvarname dnres
 
-	nres::YY_FLUSH_BUFFER
-	nres::yy_scan_string [lrange $var $i end]
-	nres::yyparse
-	incr i [expr $nres::yycnt-1]
-    } else {
-
-    set vvarname dnres
-    upvar #0 $vvarname vvar
-    global $vvarname
-
-    global nres
-    global pnres
-
-    switch -- [string tolower [lindex $var $i]] {
-	{} -
-	open {}
-	close {ARDestroy $vvarname}
-	server {
-	    incr i
-	    set pnres(server) [lindex $var $i]
-	}
-	pan {NRESPan $vvarname}
-	crosshair {NRESCrosshair $vvarname}
-	format -
-	skyformat {
-	    incr i
-	    switch -- [string tolower [lindex $var $i]] {
-		deg -
-		degree -
-		degrees {
-		    set vvar(skyformat) degrees
-		    set vvar(skyformat,msg) $vvar(skyformat)
-		}
-		default {
-		    set vvar(skyformat) [string tolower [lindex $var $i]]
-		    set vvar(skyformat,msg) $vvar(skyformat)
-		}
-	    }
-	}
-	name {
-	    incr i
-	    set vvar(name) [lindex $var $i]
-	    NRESApply $vvarname 1
-	}
-	default {
-	    set vvar(name) [lindex $var $i]
-	    NRESApply $vvarname 1
-	}
-    }
-}
+    nres::YY_FLUSH_BUFFER
+    nres::yy_scan_string [lrange $var $i end]
+    nres::yyparse
+    incr i [expr $nres::yycnt-1]
 }
 
 proc NRESCmdSet {which value} {

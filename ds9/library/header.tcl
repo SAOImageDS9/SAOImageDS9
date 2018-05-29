@@ -143,59 +143,10 @@ proc ProcessHeaderCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	header::YY_FLUSH_BUFFER
-	header::yy_scan_string [lrange $var $i end]
-	header::yyparse
-	incr i [expr $header::yycnt-1]
-    } else {
-	
-    set item [string tolower [lindex $var $i]]
-    switch -- $item {
-	close -
-	save {incr i}
-    }
-
-    if {[lindex $var $i] != {} && [string is integer [lindex $var $i]]} {
-	set jj [lindex $var $i]
-	incr i
-    } else {
-	set jj 1
-    }
-
-    global current
-    if {$current(frame) != {}} {
-	switch -- $item {
-	    close {
-		set vvarname "hd[string range $current(frame) end end]-$jj"
-		upvar #0 $vvarname vvar
-		global $vvarname
-
-		if {[info exists vvar(top)]} {
-		    SimpleTextDestroy $vvarname
-		}
-		incr i -1
-	    }
-	    save {
-		set fn [lindex $var $i]
-		if {$fn != {}} {
-		    if {[catch {set ch [open "| cat > \"$fn\"" w]}]} {
-			Error [msgcat::mc {An error has occurred while saving}]
-			return
-		    }
-		    puts -nonewline $ch [$current(frame) get fits header $jj]
-		    close $ch
-		}
-	    }
-	    default {
-		catch {DisplayHeader $current(frame) $jj \
-			   [$current(frame) get fits file name $jj]}
-		incr i -1
-	    }
-	}
-    }
-}
+    header::YY_FLUSH_BUFFER
+    header::yy_scan_string [lrange $var $i end]
+    header::yyparse
+    incr i [expr $header::yycnt-1]
 }
 
 proc DisplayHeaderCmd {id} {

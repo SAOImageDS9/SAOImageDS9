@@ -466,76 +466,10 @@ proc ProcessVOCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	vo::YY_FLUSH_BUFFER
-	vo::yy_scan_string [lrange $var $i end]
-	vo::yyparse
-	incr i [expr $vo::yycnt-1]
-    } else {
-
-    set vvarname voi
-    upvar #0 $vvarname vvar
-    global $vvarname
-
-    global ivo
-    global pvo
-
-    switch -- [string tolower [lindex $var $i]] {
-	open {VODialog}
-	close {VODestroy $vvarname}
-	method {
-	    incr i
-	    set pvo(method) [lindex $var $i]
-	}
-	server {
-	    incr i
-	    set pvo(server) [lindex $var $i]
-	}
-	internal {
-	    incr i
-	    set pvo(hv) [FromYesNo [lindex $var $i]]
-	}
-	delay {
-	    incr i
-	    set pvo(delay) [lindex $var $i]
-	}
-	connect {
-	    incr i
-
-	    VODialog
-
-	    # find best match
-	    set ii [lsearch $ivo(server,url) "*[lindex $var $i]*"]
-	    if {$ii>=0} {
-		set ivo(b$ii) 1
-		VOCheck $vvarname $ii
-	    }
-	}
-	disconnect {
-	    incr i
-
-	    VODialog
-
-	    # find best match
-	    set ii [lsearch $ivo(server,url) "*[lindex $var $i]*"]
-	    if {$ii>=0} {
-		set ivo(b$ii) 0
-		VOCheck $vvarname $ii
-	    }
-	}
-	default {
-	    VODialog
-
-	    # find best match
-	    set ii [lsearch $ivo(server,url) "*[lindex $var $i]*"]
-	    if {$ii>=0} {
-		set ivo(b$ii) 1
-		VOCheck $vvarname $ii
-	    }
-	}
-    }
-}
+    vo::YY_FLUSH_BUFFER
+    vo::yy_scan_string [lrange $var $i end]
+    vo::yyparse
+    incr i [expr $vo::yycnt-1]
 }
 
 proc VOCmdSet {which value} {

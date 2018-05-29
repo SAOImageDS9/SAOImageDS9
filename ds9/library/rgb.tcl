@@ -264,79 +264,10 @@ proc ProcessRGBCmd {varname iname} {
 
     RGBDialog
 
-    global debug
-    if {$debug(tcl,parser)} {
-	rgb::YY_FLUSH_BUFFER
-	rgb::yy_scan_string [lrange $var $i end]
-	rgb::yyparse
-	incr i [expr $rgb::yycnt-1]
-    } else {
-
-    global current
-    global rgb
-
-    switch -- [string tolower [lindex $var $i]] {
-	open {}
-	close {RGBDestroyDialog}
-	red -
-	green -
-	blue {
-	    set current(rgb) [string tolower [lindex $var $i]]
-	    RGBChannel
-	}
-	channel {
-	    incr i
-	    set current(rgb) [string tolower [lindex $var $i]]
-	    RGBChannel
-	}
-	lock {
-	    incr i
-	    set item [string tolower [lindex $var $i]]
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		set rr [FromYesNo [lindex $var $i]]
-	    } else {
-		set rr 1
-		incr i -1
-	    }
-	    switch -- $item {
-		wcs {set rgb(lock,wcs) $rr}
-		crop {set rgb(lock,crop) $rr}
-		slice {set rgb(lock,slice) $rr}
-		bin {set rgb(lock,bin) $rr}
-		axes -
-		order {set rgb(lock,axes) $rr}
-		scale {set rgb(lock,scale) $rr}
-		limits -
-		scalelimits {set rgb(lock,scalelimits) $rr}
-		color -
-		colormap -
-		colorbar {set rgb(lock,colorbar) $rr}
-		block {set rgb(lock,block) $rr}
-		smooth {set rgb(lock,smooth) $rr}
-	    }
-	}
-	system {
-	    incr i
-	    set rgb(system) [string tolower [lindex $var $i]]
-	    RGBSystem
-	}
-	view {
-	    set w [lindex $var [expr $i+1]]
-	    set yesno [lindex $var [expr $i+2]]
-	    switch -- [string tolower $w] {
-		red {set rgb(red) [FromYesNo $yesno]; RGBView}
-		green {set rgb(green) [FromYesNo $yesno]; RGBView}
-		blue {set rgb(blue) [FromYesNo $yesno]; RGBView}
-	    }
-	    incr i 2
-	}
-	default {
-	    CreateRGBFrame
-	    incr i -1
-	}
-    }
-}
+    rgb::YY_FLUSH_BUFFER
+    rgb::yy_scan_string [lrange $var $i end]
+    rgb::yyparse
+    incr i [expr $rgb::yycnt-1]
 }
 
 proc RGBCmdSet {which value {cmd {}}} {

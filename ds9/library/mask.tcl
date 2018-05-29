@@ -261,59 +261,15 @@ proc ProcessMaskCmd {varname iname} {
     upvar $iname i
 
     global mask
+    global parse
+    set parse(result) {}
 
-    global debug
-    if {$debug(tcl,parser)} {
-	global parse
-	set parse(result) {}
+    mask::YY_FLUSH_BUFFER
+    mask::yy_scan_string [lrange $var $i end]
+    mask::yyparse
+    incr i [expr $mask::yycnt-1]
 
-	mask::YY_FLUSH_BUFFER
-	mask::yy_scan_string [lrange $var $i end]
-	mask::yyparse
-	incr i [expr $mask::yycnt-1]
-
-	return $parse(result)
-    } else {
-
-    set rr {}
-    global current
-    switch -- [string tolower [lindex $var $i]] {
-	open {MaskDialog}
-	close {MaskDestroyDialog}
-	color {
-	    incr i
-	    set mask(color) [lindex $var $i]
-	    if {$current(frame) != {}} {
-		$current(frame) mask color $mask(color)
-	    }
-	}
-	mark {
-	    incr i
-	    set mask(mark) [lindex $var $i]
-	    if {$current(frame) != {}} {
-		$current(frame) mask mark $mask(mark)
-	    }
-	}
-	transparency {
-	    incr i
-	    set mask(transparency) [lindex $var $i]
-	    if {$current(frame) != {}} {
-		$current(frame) mask transparency $mask(transparency)
-	    }
-	    MaskTransparency
-	}
-	clear {
-	    MaskClear
-	}
-
-	default {
-	    set rr mask
-	    incr i -1
-	}
-    }
-
-    return $rr
-}
+    return $parse(result)
 }
 
 proc MaskCmdSet {which value {cmd {}}} {

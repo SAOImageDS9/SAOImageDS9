@@ -4,11 +4,6 @@ coordsys : IMAGE_ {set _ image}
  | DETECTOR_ {set _ detector}
  ;
 
-# | error {
-#   yyerror "must be: image|physical|amplifier|detector"
-#   YYABORT
-# }
-
 wcssys : WCS_ {set _ wcs}
  | WCSA_ {set _ wcsa}
  | WCSB_ {set _ wcsb}
@@ -38,11 +33,6 @@ wcssys : WCS_ {set _ wcs}
  | WCSZ_ {set _ wcsz}
  ;
 
-# | error {
-#   yyerror "must be: wcs|wcsa...wcsz"
-#   YYABORT
-# }
-
 skyframe : FK4_ {set _ fk4}
  | B1950_ {set _ fk4}
  | FK5_ {set _ fk5}
@@ -51,27 +41,12 @@ skyframe : FK4_ {set _ fk4}
  | GALACTIC_ {set _ galactic}
  | ECLIPTIC_ {set _ ecliptic}
  ;
- 
-# | error {
-#   yyerror "must be: fk4|fk5|icrs|galactic|ecliptic"
-#   YYABORT
-# }
 
 skyformat : DEGREES_ {set _ degrees}
  | SEXAGESIMAL_ {set _ sexagesimal}
  ;
-
-# | error {
-#   yyerror "must be: degrees|sexagesimal"
-#   YYABORT
-# }
-
+ 
 rformat : DEGREES_ {set _ degrees}
  | ARCMIN_ {set _ arcmin}
  | ARCSEC_ {set _ arcsec}
  ;
-
-# | error {
-#   yyerror "must be: degrees|arcmin|arcsec"
-#   YYABORT
-# }

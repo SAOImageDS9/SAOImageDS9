@@ -107,52 +107,14 @@ proc ProcessFitsCmd {varname iname sock fn} {
 	return
     }
 
-    global debug
-    if {$debug(tcl,parser)} {
-	global parse
-	set parse(sock) $sock
-	set parse(fn) $fn
+    global parse
+    set parse(sock) $sock
+    set parse(fn) $fn
 
-	fits::YY_FLUSH_BUFFER
-	fits::yy_scan_string [lrange $var $i end]
-	fits::yyparse
-	incr i [expr $fits::yycnt-1]
-    } else {
-
-    set layer {}
-    set mode {}
-    switch -- [string tolower [lindex $var $i]] {
-	new {
-	    incr i
-	    CreateFrame
-	}
-	mask {
-	    incr i
-	    set layer mask
-	}
-	slice {
-	    incr i
-	    set mode slice
-	}
-    }
-    set param [lindex $var $i]
-
-    if {$sock != {}} {
-	# xpa
-	if {![LoadFitsSocket $sock $param $layer $mode]} {
-	    InitError xpa
-	    LoadFitsFile $param $layer $mode
-	}
-    } else {
-	# comm
-	if {$fn != {}} {
-	    LoadFitsAlloc $fn $param $layer $mode
-	} else {
-	    LoadFitsFile $param $layer $mode
-	}
-    }
-    FinishLoad
-}
+    fits::YY_FLUSH_BUFFER
+    fits::yy_scan_string [lrange $var $i end]
+    fits::yyparse
+    incr i [expr $fits::yycnt-1]
 }
 
 proc FitsCmdLoad {param layer mode} {

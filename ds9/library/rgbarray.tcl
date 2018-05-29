@@ -127,50 +127,14 @@ proc ProcessRGBArrayCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	global parse
-	set parse(sock) $sock
-	set parse(fn) $fn
+    global parse
+    set parse(sock) $sock
+    set parse(fn) $fn
 
-	rgbarray::YY_FLUSH_BUFFER
-	rgbarray::yy_scan_string [lrange $var $i end]
-	rgbarray::yyparse
-	incr i [expr $rgbarray::yycnt-1]
-    } else {
-
-    switch -- [string tolower [lindex $var $i]] {
-	new {
-	    incr i
-	    CreateRGBFrame
-	}
-	mask {
-	    incr i
-	    # not supported
-	}
-	slice {
-	    incr i
-	    # not supported
-	}
-    }
-    set param [lindex $var $i]
-
-    if {$sock != {}} {
-	# xpa
-	if {![ImportRGBArraySocket $sock $param]} {
-	    InitError xpa
-	    ImportRGBArrayFile $param
-	}
-    } else {
-	# comm
-	if {$fn != {}} {
-	    ImportRGBArrayAlloc $fn $param
-	} else {
-	    ImportRGBArrayFile $param
-	}
-    }
-    FinishLoad
-}
+    rgbarray::YY_FLUSH_BUFFER
+    rgbarray::yy_scan_string [lrange $var $i end]
+    rgbarray::yyparse
+    incr i [expr $rgbarray::yycnt-1]
 }
 
 proc RGBArrayCmdLoad {param} {

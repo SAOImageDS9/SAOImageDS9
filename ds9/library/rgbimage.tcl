@@ -129,50 +129,14 @@ proc ProcessRGBImageCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	global parse
-	set parse(sock) $sock
-	set parse(fn) $fn
+    global parse
+    set parse(sock) $sock
+    set parse(fn) $fn
 
-	rgbimage::YY_FLUSH_BUFFER
-	rgbimage::yy_scan_string [lrange $var $i end]
-	rgbimage::yyparse
-	incr i [expr $rgbimage::yycnt-1]
-    } else {
-
-    switch -- [string tolower [lindex $var $i]] {
-	new {
-	    incr i
-	    CreateRGBFrame
-	}
-	mask {
-	    incr i
-	    # not supported
-	}
-	slice {
-	    incr i
-	    # not supported
-	}
-    }
-    set param [lindex $var $i]
-
-    if {$sock != {}} {
-	# xpa
-	if {![LoadRGBImageSocket $sock $param]} {
-	    InitError xpa
-	    LoadRGBImageFile $param
-	}
-    } else {
-	# comm
-	if {$fn != {}} {
-	    LoadRGBImageAlloc $fn $param
-	} else {
-	    LoadRGBImageFile $param
-	}
-    }
-    FinishLoad
-}
+    rgbimage::YY_FLUSH_BUFFER
+    rgbimage::yy_scan_string [lrange $var $i end]
+    rgbimage::yyparse
+    incr i [expr $rgbimage::yycnt-1]
 }
 
 proc RGBImageCmdLoad {param} {

@@ -47,51 +47,14 @@ proc ProcessMosaicImageIRAFCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	global parse
-	set parse(sock) $sock
-	set parse(fn) $fn
+    global parse
+    set parse(sock) $sock
+    set parse(fn) $fn
 
-	mosaicimageiraf::YY_FLUSH_BUFFER
-	mosaicimageiraf::yy_scan_string [lrange $var $i end]
-	mosaicimageiraf::yyparse
-	incr i [expr $mosaicimageiraf::yycnt-1]
-    } else {
-
-    set layer {}
-    switch -- [string tolower [lindex $var $i]] {
-	new {
-	    incr i
-	    CreateFrame
-	}
-	mask {
-	    incr i
-	    set layer mask
-	}
-	slice {
-	    incr i
-	    # not supported
-	}
-    }
-    set param [lindex $var $i]
-
-    if {$sock != {}} {
-	# xpa
-	if {![LoadMosaicImageIRAFSocket $sock $param $layer]} {
-	    InitError xpa
-	    LoadMosaicImageIRAFFile $param $layer
-	}
-    } else {
-	# comm
-	if {$fn != {}} {
-	    LoadMosaicImageIRAFAlloc $fn $param $layer
-	} else {
-	    LoadMosaicImageIRAFFile $param $layer
-	}
-    }
-    FinishLoad
-}
+    mosaicimageiraf::YY_FLUSH_BUFFER
+    mosaicimageiraf::yy_scan_string [lrange $var $i end]
+    mosaicimageiraf::yyparse
+    incr i [expr $mosaicimageiraf::yycnt-1]
 }
 
 proc MosaicImageIRAFCmdLoad {param layer} {

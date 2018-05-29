@@ -35,37 +35,10 @@ proc ProcessENVICmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
 	envi::YY_FLUSH_BUFFER
 	envi::yy_scan_string [lrange $var $i end]
 	envi::yyparse
 	incr i [expr $envi::yycnt-1]
-    } else {
-
-    switch -- [string tolower [lindex $var $i]] {
-	new {
-	    incr i
-	    CreateFrame
-	}
-	mask {
-	    incr i
-	    # not supported
-	}
-	slice {
-	    incr i
-	    # not supported
-	}
-    }
-
-    set fn [lindex $var $i]
-    set fn2 [lindex $var [expr $i+1]]
-    if {$fn2 == {}} {
-	set fn2 [FindENVIDataFile $fn]
-    }
-    ImportENVIFile $fn $fn2
-    FinishLoad
-}
 }
 
 proc FindENVIDataFile {fn} {

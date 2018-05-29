@@ -2056,167 +2056,10 @@ proc ProcessFrameCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	frame::YY_FLUSH_BUFFER
-	frame::yy_scan_string [lrange $var $i end]
-	frame::yyparse
-	incr i [expr $frame::yycnt-1]
-    } else {
-
-    global current
-    global active
-    global panzoom
-
-    catch {
-	switch -- [string tolower [lindex $var $i]] {
-	    match {
-		incr i
-		MatchFrameCurrent [lindex $var $i]
-	    }
-	    lock {
-		incr i
-		set panzoom(lock) [lindex $var $i]
-		LockFrameCurrent
-	    }
-	    center {
-		incr i
-		switch -- [lindex $var $i] {
-		    all {CenterAllFrame}
-		    {} {CenterCurrentFrame; incr i -1}
-		    default {
-			if {[string is integer [lindex $var $i]]} {
-			    set f "Frame[lindex $var $i]"
-			    CenterFrame $f
-			} else {
-			    CenterCurrentFrame; incr i -1
-			}
-		    }
-		}
-	    }
-	    clear {
-		incr i
-		switch -- [lindex $var $i] {
-		    all {ClearAllFrame}
-		    {} {ClearCurrentFrame; incr i -1}
-		    default {
-			if {[string is integer [lindex $var $i]]} {
-			    set f "Frame[lindex $var $i]"
-			    ClearFrame $f
-			} else {
-			    ClearCurrentFrame; incr i -1
-			}
-		    }
-		}
-	    }
-	    delete {
-		incr i
-		switch -- [lindex $var $i] {
-		    all {DeleteAllFrames}
-		    {} {DeleteCurrentFrame; incr i -1}
-		    default {
-			if {[string is integer [lindex $var $i]]} {
-			    set f "Frame[lindex $var $i]"
-			    DeleteSingleFrame $f
-			} else {
-			    DeleteCurrentFrame; incr i -1
-			}
-		    }
-		}
-	    }
-	    new {
-		incr i
-		switch -- [lindex $var $i] {
-		    rgb {CreateRGBFrame}
-		    3d {Create3DFrame}
-		    default {CreateFrame; incr i -1}
-		}
-	    }
-	    reset {
-		incr i
-		switch -- [lindex $var $i] {
-		    all {ResetAllFrame}
-		    {} {ResetCurrentFrame; incr i -1}
-		    default {
-			if {[string is integer [lindex $var $i]]} {
-			    set f "Frame[lindex $var $i]"
-			    ResetFrame $f
-			} else {
-			    ResetCurrentFrame; incr i -1
-			}
-		    }
-		}
-	    }
-	    refresh {
-		incr i
-		switch -- [lindex $var $i] {
-		    all {UpdateAllFrame}
-		    {} {UpdateCurrentFrame; incr i -1}
-		    default {
-			if {[string is integer [lindex $var $i]]} {
-			    set f "Frame[lindex $var $i]"
-			    UpdateFrame $f
-			} else {
-			    UpdateCurrentFrame; incr i -1
-			}
-		    }
-		}
-	    }
-	    hide {
-		incr i
-		switch -- [lindex $var $i] {
-		    all {ActiveFrameNone}
-		    {} {
-			set active($current(frame)) 0
-			UpdateActiveFrames
-			incr i -1
-		    }
-		    default {
-			if {[string is integer [lindex $var $i]]} {
-			    set f "Frame[lindex $var $i]"
-			    set active($f) 0
-			    UpdateActiveFrames
-			} else {
-			    set active($current(frame)) 0
-			    UpdateActiveFrames
-			    incr i -1
-			}
-		    }
-		}
-	    }
-	    show {
-		incr i
-		switch -- [lindex $var $i] {
-		    all {ActiveFrameAll}
-		    default {
-			if {[string is integer [lindex $var $i]]} {
-			    set f "Frame[lindex $var $i]"
-			    set active($f) 1
-			    UpdateActiveFrames
-			} else {
-			    incr i -1
-			}
-		    }
-		}
-	    }
-	    move {
-		incr i
-		switch -- [lindex $var $i] {
-		    first {MoveFirstFrame}
-		    back {MovePrevFrame}
-		    forward {MoveNextFrame}
-		    last {MoveLastFrame}
-		}
-	    }
-	    first {FirstFrame}
-	    prev {PrevFrame}
-	    next {NextFrame}
-	    last {LastFrame}
-	    frameno {incr i; CreateGotoFrame [lindex $var $i] base}
-	    default {CreateGotoFrame [lindex $var $i] base}
-	}
-    }
-}
+    frame::YY_FLUSH_BUFFER
+    frame::yy_scan_string [lrange $var $i end]
+    frame::yyparse
+    incr i [expr $frame::yycnt-1]
 }
 
 proc ActiveCmdSet {which value {cmd {}}} {
@@ -2337,81 +2180,10 @@ proc ProcessTileCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	tile::YY_FLUSH_BUFFER
-	tile::yy_scan_string [lrange $var $i end]
-	tile::yyparse
-	incr i [expr $tile::yycnt-1]
-    } else {
-	
-    global current
-    global tile
-
-    switch -- [string tolower [lindex $var $i]] {
-	mode {
-	    incr i
-	    set tile(mode) [lindex $var $i]
-	}
-	grid {
-	    incr i
-	    switch -- [string tolower [lindex $var $i]] {
-		mode {
-		    incr i
-		    set tile(grid,mode) [lindex $var $i]
-		}
-		direction {
-		    incr i
-		    set tile(grid,dir) [lindex $var $i]
-		}
-		layout {
-		    incr i
-		    set tile(grid,col) [lindex $var $i]
-		    incr i
-		    set tile(grid,row) [lindex $var $i]
-		    set tile(grid,mode) {manual}
-		}
-		gap {
-		    incr i
-		    set tile(grid,gap) [lindex $var $i]
-		}
-		default {
-		    if {[string range [lindex $var $i] 0 0] != {-}} {
-			set tile(mode) grid
-		    } else {
-			incr i -1
-		    }
-		}
-	    }
-	}
-	column {
-	    set tile(mode) column
-	}
-	row {
-	    set tile(mode) row
-	}
-
-	yes -
-	true -
-	on -
-	1 -
-	no -
-	false -
-	off -
-	0 {
-	    if {[FromYesNo [lindex $var $i]]} {
-		set current(display) tile
-	    } else {
-		set current(display) single
-	    }
-	}
-	default {
-	    set current(display) tile
-	    incr i -1
-	}
-    }
-    DisplayMode
-}
+    tile::YY_FLUSH_BUFFER
+    tile::yy_scan_string [lrange $var $i end]
+    tile::yyparse
+    incr i [expr $tile::yycnt-1]
 }
 
 proc TileCmdSet {which value {cmd {}}} {
@@ -2451,43 +2223,10 @@ proc ProcessBlinkCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	blink::YY_FLUSH_BUFFER
-	blink::yy_scan_string [lrange $var $i end]
-	blink::yyparse
-	incr i [expr $blink::yycnt-1]
-    } else {
-
-    global current
-    global blink
-
-    switch -- [string tolower [lindex $var $i]] {
-	interval {
-	    incr i
-	    set blink(interval) [expr int([lindex $var $i]*1000)]
-	}
-	yes -
-	true -
-	on -
-	1 -
-	no -
-	false -
-	off -
-	0 {
-	    if {[FromYesNo [lindex $var $i]]} {
-		set current(display) blink
-	    } else {
-		set current(display) single
-	    }
-	}
-	default {
-	    set current(display) blink
-	    incr i -1
-	}
-    }
-    DisplayMode
-}
+    blink::YY_FLUSH_BUFFER
+    blink::yy_scan_string [lrange $var $i end]
+    blink::yyparse
+    incr i [expr $blink::yycnt-1]
 }
 
 proc BlinkCmdSet {which value {cmd {}}} {
@@ -2519,154 +2258,13 @@ proc ProcessLockCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global panzoom
-    global crop
-    global crosshair
-    global cube
-    global ime
-    global bin
-    global scale
-    global colorbar
-    global block
-    global smooth
-    global threed
-
     # we need to be realized
     ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	lock::YY_FLUSH_BUFFER
-	lock::yy_scan_string [lrange $var $i end]
-	lock::yyparse
-	incr i [expr $lock::yycnt-1]
-    } else {
-
-    switch -- [string tolower [lindex $var $i]] {
-	frame -
-	frames {
-	    incr i
-	    set panzoom(lock) [lindex $var $i]
-	    LockFrameCurrent
-	}
-	crosshair -
-	crosshairs {
-	    incr i
-	    set crosshair(lock) [lindex $var $i]
-	    LockCrosshairCurrent
-	}
-	crop {
-	    incr i
-	    set crop(lock) [lindex $var $i]
-	    LockCropCurrent
-	}
-	slice -
-	cube -
-	datacube {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		switch -- [lindex $var $i] {
-		    {} -
-		    yes -
-		    1 {set cube(lock) image}
-		    no -
-		    0 {set cube(lock) none}
-		    default {set cube(lock) [lindex $var $i]}
-		}
-	    } else {
-		set cube(lock) image
-		incr i -1
-	    }
-	    LockCubeCurrent
-	}
-	bin {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		set bin(lock) [FromYesNo [lindex $var $i]]
-	    } else {
-		set bin(lock) 1
-		incr i -1
-	    }
-	    LockBinCurrent
-	}
-	axes -
-	order {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		set cube(lock,axes) [FromYesNo [lindex $var $i]]
-	    } else {
-		set cube(lock,axes) 1
-		incr i -1
-	    }
-	    LockAxesCurrent
-	}
-	scale -
-	scales {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		set scale(lock) [FromYesNo [lindex $var $i]]
-	    } else {
-		set scale(lock) 1
-		incr i -1
-	    }
-	    LockScaleCurrent
-	}
-	limits -
-	scalelimits {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		set scale(lock,limits) [FromYesNo [lindex $var $i]]
-	    } else {
-		set scale(lock,limits) 1
-		incr i -1
-	    }
-	    LockScaleLimitsCurrent
-	}
-	color -
-	colormap -
-	colorbar -
-	colorbars {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		set colorbar(lock) [FromYesNo [lindex $var $i]]
-	    } else {
-		set colorbar(lock) 1
-		incr i -1
-	    }
-	    LockColorCurrent
-	}
-	block {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		set block(lock) [FromYesNo [lindex $var $i]]
-	    } else {
-		set block(lock) 1
-		incr i -1
-	    }
-	    LockBlockCurrent
-	}
-	smooth {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		set smooth(lock) [FromYesNo [lindex $var $i]]
-	    } else {
-		set smooth(lock) 1
-		incr i -1
-	    }
-	    LockSmoothCurrent
-	}
-	3d {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		set threed(lock) [FromYesNo [lindex $var $i]]
-	    } else {
-		set threed(lock) 1
-		incr i -1
-	    }
-	    Lock3DCurrent
-	}
-    }
-}
+    lock::YY_FLUSH_BUFFER
+    lock::yy_scan_string [lrange $var $i end]
+    lock::yyparse
+    incr i [expr $lock::yycnt-1]
 }
 
 proc ProcessSendLockCmd {proc id param} {
@@ -2717,57 +2315,8 @@ proc ProcessMatchCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	match::YY_FLUSH_BUFFER
-	match::yy_scan_string [lrange $var $i end]
-	match::yyparse
-	incr i [expr $match::yycnt-1]
-    } else {
-
-    switch -- [string tolower [lindex $var $i]] {
-	frame -
-	frames {
-	    incr i
-	    MatchFrameCurrent [lindex $var $i]
-	}
-	crosshair -
-	crosshairs {
-	    incr i
-	    MatchCrosshairCurrent [lindex $var $i]
-	}
-	crop {
-	    incr i
-	    MatchCropCurrent [lindex $var $i]
-	}
-	slice -
-	cube -
-	datacube {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		switch -- [lindex $var $i] {
-		    {} {MatchCubeCurrent image}
-		    default {MatchCubeCurrent [lindex $var $i]}
-		}
-	    } else {
-		MatchCubeCurrent image
-		incr i -1
-	    }
-	}
-	bin {MatchBinCurrent}
-	axes -
-	order {MatchAxesCurrent}
-	scale -
-	scales {MatchScaleCurrent}
-	limits -
-	scalelimits {MatchScaleLimitsCurrent}
-	color -
-	colormap -
-	colorbar -
-	colorbars {MatchColorCurrent}
-	block {MatchBlockCurrent}
-	smooth {MatchSmoothCurrent}
-	3d {Match3DCurrent}
-    }
-}
+    match::YY_FLUSH_BUFFER
+    match::yy_scan_string [lrange $var $i end]
+    match::yyparse
+    incr i [expr $match::yycnt-1]
 }

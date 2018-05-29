@@ -783,22 +783,10 @@ proc ProcessBackupCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	backup::YY_FLUSH_BUFFER
-	backup::yy_scan_string [lrange $var $i end]
-	backup::yyparse
-	incr i [expr $backup::yycnt-1]
-    } else {
-
-    set fn [lindex $var $i]
-    if {$fn != {}} {
-	FileLast backupfbox $fn
-	Backup $fn
-    } else {
-	Error [msgcat::mc {Unable to open file}]
-    }
-}
+    backup::YY_FLUSH_BUFFER
+    backup::yy_scan_string [lrange $var $i end]
+    backup::yyparse
+    incr i [expr $backup::yycnt-1]
 }
 
 proc BackupCmd {fn} {
@@ -810,22 +798,10 @@ proc ProcessRestoreCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	restore::YY_FLUSH_BUFFER
-	restore::yy_scan_string [lrange $var $i end]
-	restore::yyparse
-	incr i [expr $restore::yycnt-1]
-    } else {
-
-    set fn [lindex $var $i]
-    if {$fn != {}} {
-	FileLast backupfbox $fn
-	Restore $fn
-    } else {
-	Error [msgcat::mc {Unable to open file}]
-    }
-}
+    restore::YY_FLUSH_BUFFER
+    restore::yy_scan_string [lrange $var $i end]
+    restore::yyparse
+    incr i [expr $restore::yycnt-1]
 }
 
 proc RestoreCmd {fn} {

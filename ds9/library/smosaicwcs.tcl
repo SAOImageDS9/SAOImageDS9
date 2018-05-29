@@ -21,54 +21,8 @@ proc ProcessSMosaicWCSCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	smosaicwcs::YY_FLUSH_BUFFER
-	smosaicwcs::yy_scan_string [lrange $var $i end]
-	smosaicwcs::yyparse
-	incr i [expr $smosaicwcs::yycnt-1]
-    } else {
-
-    set layer {}
-    switch -- [string tolower [lindex $var $i]] {
-	new {
-	    incr i
-	    CreateFrame
-	}
-	mask {
-	    incr i
-	    set layer mask
-	}
-	slice {
-	    incr i
-	    # not supported
-	}
-    }
-
-    set opt [lindex $var $i]
-    if {$opt != {}} {
-	incr i
-    } else {
-	set opt wcs
-    }
-
-    if {$sock != {}} {
-	# xpa
-	if {0} {
-	    # not supported
-	} else {
-	    LoadSMosaicWCSFile [lindex $var $i] [lindex $var [expr $i+1]] \
-		$layer $opt
-	}
-    } else {
-	# comm
-	if {0} {
-	    # not supported
-	} else {
-	    LoadSMosaicWCSFile [lindex $var $i] [lindex $var [expr $i+1]] \
-		$layer $opt
-	}
-    }
-    FinishLoad
-}
+    smosaicwcs::YY_FLUSH_BUFFER
+    smosaicwcs::yy_scan_string [lrange $var $i end]
+    smosaicwcs::yyparse
+    incr i [expr $smosaicwcs::yycnt-1]
 }

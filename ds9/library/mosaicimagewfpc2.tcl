@@ -53,50 +53,14 @@ proc ProcessMosaicImageWFPC2Cmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	global parse
-	set parse(sock) $sock
-	set parse(fn) $fn
+    global parse
+    set parse(sock) $sock
+    set parse(fn) $fn
 
-	mosaicimagewfpc2::YY_FLUSH_BUFFER
-	mosaicimagewfpc2::yy_scan_string [lrange $var $i end]
-	mosaicimagewfpc2::yyparse
-	incr i [expr $mosaicimagewfpc2::yycnt-1]
-    } else {
-
-    switch -- [string tolower [lindex $var $i]] {
-	new {
-	    incr i
-	    CreateFrame
-	}
-	mask {
-	    incr i
-	    # not supported
-	}
-	slice {
-	    incr i
-	    # not supported
-	}
-    }
-    set param [lindex $var $i]
-
-    if {$sock != {}} {
-	# xpa
-	if {![LoadMosaicImageWFPC2Socket $sock $param]} {
-	    InitError xpa
-	    LoadMosaicImageWFPC2File $param
-	}
-    } else {
-	# comm
-	if {$fn != {}} {
-	    LoadMosaicImageWFPC2Alloc $fn $param
-	} else {
-	    LoadMosaicImageWFPC2File $param
-	}
-    }
-    FinishLoad
-}
+    mosaicimagewfpc2::YY_FLUSH_BUFFER
+    mosaicimagewfpc2::yy_scan_string [lrange $var $i end]
+    mosaicimagewfpc2::yyparse
+    incr i [expr $mosaicimagewfpc2::yycnt-1]
 }
 
 proc MosaicImageWFPC2CmdLoad {param} {

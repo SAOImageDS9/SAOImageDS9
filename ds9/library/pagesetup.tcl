@@ -181,25 +181,10 @@ proc ProcessPSPageSetupCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	pagesetup::YY_FLUSH_BUFFER
-	pagesetup::yy_scan_string [lrange $var $i end]
-	pagesetup::yyparse
-	incr i [expr $pagesetup::yycnt-1]
-    } else {
-
-    global ps
-
-    switch -- [string tolower [lindex $var $i]] {
-	orientation -
-	orient {incr i; set ps(orient) [string tolower [lindex $var $i]]}
-	pagescale -
-	scale {incr i; set ps(scale) [lindex $var $i]}
-	pagesize -
-	size {incr i; set ps(size) [string tolower [lindex $var $i]] }
-    }
-}
+    pagesetup::YY_FLUSH_BUFFER
+    pagesetup::yy_scan_string [lrange $var $i end]
+    pagesetup::yyparse
+    incr i [expr $pagesetup::yycnt-1]
 }
 
 proc ProcessSendPSPageSetupCmd {proc id param} {

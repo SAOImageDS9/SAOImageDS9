@@ -23,7 +23,6 @@ proc DebugDef {} {
     set debug(tcl,http) 0
     set debug(tcl,ftp) 0
     set debug(tcl,xpa) 0
-    set debug(tcl,parser) 1
     set debug(tcl,image) 0
 
     set debug(tksao,ast) 0
@@ -98,8 +97,6 @@ proc DebugMenu {} {
 	-variable debug(tcl,ftp)
     $ds9(mb).debug.tcl add checkbutton -label {XPA} \
 	-variable debug(tcl,xpa)
-    $ds9(mb).debug.tcl add checkbutton -label {TclParser} \
-	-variable debug(tcl,parser)
     $ds9(mb).debug.tcl add checkbutton -label {IMAGE} \
 	-variable debug(tcl,image)
 
@@ -196,10 +193,6 @@ proc ProcessDebugTclCmd {varname iname} {
 	http {set debug(tcl,http) 1}
 	ftp {set debug(tcl,ftp) 1}
 	xpa {set debug(tcl,xpa) 1}
-	tclparser {
-	    incr i
-	    set debug(tcl,parser) [FromYesNo [lindex $var $i]]
-	}
 	image {
 	    set debug(tcl,hv) 1
 	    set debug(tcl,http) 1

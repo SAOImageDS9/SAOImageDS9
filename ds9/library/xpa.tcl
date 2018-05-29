@@ -2205,63 +2205,20 @@ proc ProcessXPAFirstCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	xpafirst::YY_FLUSH_BUFFER
-	xpafirst::yy_scan_string [lrange $var $i end]
-	xpafirst::yyparse
-	incr i [expr $xpafirst::yycnt-1]
-    } else {
-
-    global ds9
-    global pds9
-    global env
-
-    switch -- [string tolower [lindex $var $i]] {
-	unix -
-	inet -
-	local -
-	localhost {set env(XPA_METHOD) [lindex $var $i]}
-	noxpans {set env(XPA_NSREGISTER) false}
-
-	yes -
-	true -
-	on -
-	1 -
-	no -
-	false -
-	off -
-	0 {set pds9(xpa) [FromYesNo [lindex $var $i]]}
-    }
-}
+    xpafirst::YY_FLUSH_BUFFER
+    xpafirst::yy_scan_string [lrange $var $i end]
+    xpafirst::yyparse
+    incr i [expr $xpafirst::yycnt-1]
 }
 
 proc ProcessXPACmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	xpa::YY_FLUSH_BUFFER
-	xpa::yy_scan_string [lrange $var $i end]
-	xpa::yyparse
-	incr i [expr $xpa::yycnt-1]
-    } else {
-
-    global ds9
-    global pds9
-
-    switch -- [string tolower [lindex $var $i]] {
-	tcl {
-	    # backward compatibility
-	    incr i
-	}
-
-	connect {XPAConnect}
-	disconnect {XPADisconnect}
-	info {XPAInfo}
-    }
-}
+    xpa::YY_FLUSH_BUFFER
+    xpa::yy_scan_string [lrange $var $i end]
+    xpa::yyparse
+    incr i [expr $xpa::yycnt-1]
 }
 
 proc XPACmdSet {varname which value} {

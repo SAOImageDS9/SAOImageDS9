@@ -43,92 +43,10 @@ proc ProcessSaveCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	save::YY_FLUSH_BUFFER
-	save::yy_scan_string [lrange $var $i end]
-	save::yyparse
-	incr i [expr $save::yycnt-1]
-    } else {
-
-    set format {}
-    set fn [lindex $var $i]
-    if {$fn == {}} {
-	return
-    }
-
-    switch -- $fn {
-	fits -
-	sfits -
-	rgbimage -
-	rgbcube -
-	srgbcube -
-	mecube -
-	multiframe -
-	mosaicimagewcs -
-	mosaicimageiraf -
-	mosaicimagewfpc -
-	mosaicwcs -
-	mosaiciraf -
-	smosaicwcs -
-	smosaiciraf {
-	    set format $fn
-	    set fn {}
-	    incr i
-	}
-	mosaicimage -
-	mosaic {
-	    set format $fn
-	    set fn {}
-	    incr i
-
-	    # eat any wcs
-	    if {[string range [lindex $var $i] 0 2] == {wcs}} {
-		incr i
-	    }
-	}
-    }
-
-    # one last time
-    if {$fn == {}} {
-	set fn [lindex $var $i]
-	if {$fn == {}} {
-	    return
-	}
-    }
-
-    if {$format == {}} {
-	set format [ExtToFormat $fn]
-    }
-
-    global savefits
-    set param [string tolower [lindex $var [expr $i+1]]]
-    switch $format {
-	fits {
-	    switch $param {
-		slice -
-		image -
-		table {
-		    set savefits(type) $param
-		    incr i
-		}
-		default {set savefits(type) image}
-	    }
-	}
-	mosaic -
-	mosaiciraf -
-	mosaicwcs {
-	    if {[string is integer -strict $param]} {
-		set savefits(mosaic) $param
-		incr i
-	    }
-	}
-    }
-
-    global savefitsfbox
-    FileLast savefitsfbox $fn
-    Save $format $fn
-}
+    save::YY_FLUSH_BUFFER
+    save::yy_scan_string [lrange $var $i end]
+    save::yyparse
+    incr i [expr $save::yycnt-1]
 }
 
 proc SaveCmdLoad {format fn} {

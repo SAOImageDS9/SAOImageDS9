@@ -140,46 +140,10 @@ proc ProcessMagnifierCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	magnifier::YY_FLUSH_BUFFER
-	magnifier::yy_scan_string [lrange $var $i end]
-	magnifier::yyparse
-	incr i [expr $magnifier::yycnt-1]
-    } else {
-
-    global pmagnifier
-    global view
-
-    switch -- [string tolower [lindex $var $i]] {
-	color {
-	    incr i
-	    set pmagnifier(color) [lindex $var $i]
-	    MagnifierColor
-	}
-	zoom {
-	    incr i
-	    set pmagnifier(zoom) [lindex $var $i]
-	    MagnifierZoom
-	}
-	cursor {
-	    incr i
-	    set pmagnifier(cursor) [FromYesNo [lindex $var $i]]
-	    MagnifierCursor
-	}
-	region {
-	    incr i
-	    set pmagnifier(region) [FromYesNo [lindex $var $i]]
-	    MagnifierRegion
-	}
-	default {
-	    # backward compatibility
-	    set view(magnifier) 1
-	    UpdateView
-	    incr i -1
-	}
-    }
-}
+    magnifier::YY_FLUSH_BUFFER
+    magnifier::yy_scan_string [lrange $var $i end]
+    magnifier::yyparse
+    incr i [expr $magnifier::yycnt-1]
 }
 
 proc PmagnifierCmdSet {which value {cmd {}}} {

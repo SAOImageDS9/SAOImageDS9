@@ -64,22 +64,27 @@ proc DisplayHeaderMenu {} {
 	}
 
 	if {$slb(count) <= 1} {
-	    DisplayHeader $current(frame) 1 $fn
+	    DisplayHeader 1 $fn
 	} else {
 	    if {[SLBDialog slb {Select Header} 40]} {
-		DisplayHeader $current(frame) $slb(value) $slb(item)
+		DisplayHeader $slb(value) $slb(item)
 	    }
 	}
     }
 }
 
-proc DisplayHeader {frame id title} {
+proc DisplayHeader {id title} {
     global current
 
-    set varname "hd-$frame-$id"
+    set frame $current(frame)
+    set varname "hd-$current(frame)-$id"
     global $varname
-    SimpleTextDialog $varname $title 80 40 insert top \
-	[$current(frame) get fits header $id]
+
+    set hh {}
+    if {[$frame has fits]} {
+	set hh [$frame get fits header $id]
+    }
+    SimpleTextDialog $varname $title 80 40 insert top $hh
 
     # create a special text tag for keywords
     upvar #0 $varname var
@@ -152,7 +157,7 @@ proc ProcessHeaderCmd {varname iname} {
 proc DisplayHeaderCmd {id} {
     global current
 
-    DisplayHeader $current(frame) $id [$current(frame) get fits file name $id]
+    DisplayHeader $id [$current(frame) get fits file name $id]
 }
 
 proc CloseHeaderCmd {id} {

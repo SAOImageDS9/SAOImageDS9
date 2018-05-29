@@ -184,14 +184,25 @@ proc ProcessNRESCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    NRESDialog
+
+    global debug
+    if {$debug(tcl,parser)} {
+	global cvarname
+	set cvarname dnres
+
+	nres::YY_FLUSH_BUFFER
+	nres::yy_scan_string [lrange $var $i end]
+	nres::yyparse
+	incr i [expr $nres::yycnt-1]
+    } else {
+
     set vvarname dnres
     upvar #0 $vvarname vvar
     global $vvarname
 
     global nres
     global pnres
-
-    NRESDialog
 
     switch -- [string tolower [lindex $var $i]] {
 	{} -
@@ -229,6 +240,22 @@ proc ProcessNRESCmd {varname iname} {
 	    NRESApply $vvarname 1
 	}
     }
+}
+}
+
+proc NRESCmdSet {which value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+}
+
+proc NRESCmdName {value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(name) $value
+    NRESApply $cvarname 1
 }
 
 proc ProcessSendNRESCmd {proc id param} {

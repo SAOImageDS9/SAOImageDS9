@@ -13,8 +13,6 @@ proc 3DDef {} {
     set ithreed(mb) .threedmb
     set ithreed(status) 0
 
-    set threed(az) 0
-    set threed(el) 0
     set threed(scale) 1
     set threed(lock) 0
 
@@ -28,8 +26,9 @@ proc 3DDef {} {
     set threed(compass,color) green
 
     array set pthreed [array get threed]
-    unset pthreed(az)
-    unset pthreed(el)
+
+    set threed(az) 0
+    set threed(el) 0
 }
 
 # used by backup
@@ -464,10 +463,17 @@ proc Process3DCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global threed
- 
     3DDialog
 
+    global debug
+    if {$debug(tcl,parser)} {
+	threed::YY_FLUSH_BUFFER
+	threed::yy_scan_string [lrange $var $i end]
+	threed::yyparse
+	incr i [expr $threed::yycnt-1]
+    } else {
+
+    global threed
     switch -- [string tolower [lindex $var $i]] {
 	open {}
 	close {3DDestroyDialog}
@@ -558,6 +564,16 @@ proc Process3DCmd {varname iname} {
 	    Lock3DCurrent
 	}
 	default {Create3DFrame; incr i -1}
+    }
+}
+}
+
+proc ThreedCmdSet {which value {cmd {}}} {
+    global threed
+
+    set threed($which) $value
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

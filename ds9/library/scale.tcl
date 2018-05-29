@@ -393,10 +393,9 @@ proc ScaleDestroyDialog {} {
     if {[winfo exists $iscale(top)]} {
 	destroy $iscale(top)
 	destroy $iscale(mb)
+	blt::vector destroy $dscale(xdata) $dscale(ydata)
+	unset dscale
     }
-
-    blt::vector destroy $dscale(xdata) $dscale(ydata)
-    unset dscale
 }
 
 proc ScaleMotionDialog {x y varname} {
@@ -828,8 +827,15 @@ proc ProcessScaleCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global scale
+    global debug
+    if {$debug(tcl,parser)} {
+	scale::YY_FLUSH_BUFFER
+	scale::yy_scan_string [lrange $var $i end]
+	scale::yyparse
+	incr i [expr $scale::yycnt-1]
+    } else {
 
+    global scale
     switch -- [string tolower [lindex $var $i]] {
 	match {
 	    incr i
@@ -933,6 +939,16 @@ proc ProcessScaleCmd {varname iname} {
 	}
     }
 }
+}
+
+proc ScaleCmdSet {which value {cmd {}}} {
+    global scale
+
+    set scale($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
 
 proc ProcessSendScaleCmd {proc id param} {
     global current
@@ -960,9 +976,16 @@ proc ProcessMinMaxCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	minmax::YY_FLUSH_BUFFER
+	minmax::yy_scan_string [lrange $var $i end]
+	minmax::yyparse
+	incr i [expr $minmax::yycnt-1]
+    } else {
+
     global minmax
     global scale
-
     switch -- [string tolower [lindex $var $i]] {
 	auto {
 	    # backward compatibility
@@ -994,6 +1017,16 @@ proc ProcessMinMaxCmd {varname iname} {
 	}
     }
 }
+}
+
+proc MinmaxCmdSet {which value {cmd {}}} {
+    global minmax
+
+    set minmax($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
 
 proc ProcessSendMinMaxCmd {proc id param} {
     global minmax
@@ -1011,6 +1044,14 @@ proc ProcessSendMinMaxCmd {proc id param} {
 proc ProcessZScaleCmd {varname iname} {
     upvar $varname var
     upvar $iname i
+
+    global debug
+    if {$debug(tcl,parser)} {
+	zscale::YY_FLUSH_BUFFER
+	zscale::yy_scan_string [lrange $var $i end]
+	zscale::yyparse
+	incr i [expr $zscale::yycnt-1]
+    } else {
 
     global zscale
     global scale
@@ -1037,6 +1078,16 @@ proc ProcessZScaleCmd {varname iname} {
 	    ChangeScaleMode
 	    incr i -1
 	}
+    }
+}
+}
+
+proc ZscaleCmdSet {which value {cmd {}}} {
+    global zscale
+
+    set zscale($which) $value
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

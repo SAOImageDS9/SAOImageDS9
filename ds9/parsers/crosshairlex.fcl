@@ -1,0 +1,15 @@
+#tab crosshairparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+#include matchlock.fin
+#include coords.fin
+#include numeric.fin
+#include string.fin
+
+%%

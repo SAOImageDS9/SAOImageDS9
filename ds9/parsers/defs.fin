@@ -1,0 +1,10 @@
+%option noyywrap
+%option caseless
+%option nodefault
+%option nointeractive
+#%option stack
+%option yylineno
+#%option debug
+
+D   [0-9]
+E   [Ee][+-]?{D}+

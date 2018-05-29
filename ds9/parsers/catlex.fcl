@@ -1,0 +1,103 @@
+#tab catparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+1and2       {return $1AND2_}
+1not2	    {return $1NOT2_}
+1only	    {return $1ONLY_}
+2not1	    {return $2NOT1_}
+2only	    {return $2ONLY_}
+add	    {return $ADD_}
+allcols	    {return $ALLCOLS_}
+allrows	    {return $ALLROWS_}
+angle	    {return $ANGLE_}
+arrow	    {return $ARROW_}
+broadcast   {return $BROADCAST_}
+box	    {return $BOX_}
+boxcircle   {return $BOXCIRCLE_}
+cancel	    {return $CANCEL_}
+cds	    {return $CDS_}
+circle	    {return $CIRCLE_}
+clear       {return $CLEAR_}
+close	    {return $CLOSE_}
+color	    {return $COLOR_}
+condition   {return $CONDITION_}
+coordinate  {return $COORDINATE_}
+cross	    {return $CROSS_}
+crosshair   {return $CROSSHAIR_}
+csv	    {return $CSV_}
+dec	    {return $DEC_}
+decr	    {return $DECR_}
+diamond	    {return $DIAMOND_}
+edit	    {return $EDIT_}
+ellipse	    {return $ELLIPSE_}
+error	    {return $ERROR_}
+export	    {return $EXPORT_}
+file	    {return $FILE_}
+filter	    {return $FILTER_}
+function    {return $FUNCTION_}
+header	    {return $HEADER_}
+hide	    {return $HIDE_}
+import	    {return $IMPORT_}
+incr	    {return $INCR_}
+load	    {return $LOAD_}
+location    {return $LOCATION_}
+match	    {return $MATCH_}
+maxrows	    {return $MAXROWS_}
+name	    {return $NAME_}
+new	    {return $NEW_}
+panto	    {return $PANTO_}
+plot	    {return $PLOT_}
+point	    {return $POINT_}
+print	    {return $PRINT_}
+psky	    {return $PSKY_}
+psystem	    {return $PSYSTEM_}
+ra	    {return $RA_}
+regions	    {return $REGIONS_}
+remove	    {return $REMOVE_}
+retrieve    {return $RETRIEVE_}
+return	    {return $RETURN_}
+samp	    {return $SAMP_}
+save	    {return $SAVE_}
+sb	    {return $SB_}
+server	    {return $SERVER_}
+shape	    {return $SHAPE_}
+show	    {return $SHOW_}
+size	    {return $SIZE_}
+size2	    {return $SIZE2_}
+sky	    {return $SKY_}
+skyformat   {return $SKYFORMAT_}
+sort	    {return $SORT_}
+starbase    {return $STARBASE_}
+symbol	    {return $SYMBOL_}
+system	    {return $SYSTEM_} 
+text	    {return $TEXT_}
+tsv	    {return $TSV_}
+unique	    {return $UNIQUE_}
+units	    {return $UNITS_}
+update	    {return $UPDATE_}
+vot	    {return $VOT_}
+xml	    {return $XML_}
+
+cds	    {return $CDS_}
+adac	    {return $ADAC_}
+cadc	    {return $CADC_}
+cambridge   {return $CAMBRIDGE_}
+sao	    {return $SAO_}
+ukirt	    {return $UKIRT_}
+iucaa	    {return $IUCAA_}
+bejing	    {return $BEJING_}
+saao	    {return $SAAO_}
+
+#include yesno.fin
+#include font.fin
+#include coords.fin
+#include numeric.fin
+#include string.fin
+
+%%

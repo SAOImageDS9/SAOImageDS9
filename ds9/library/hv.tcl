@@ -821,14 +821,23 @@ proc HVArchChandraFTP {} {
 # Process Cmds
 
 proc ProcessWebCmd {varname iname} {
-    global ihv
-
-    set w {hvweb}
-
     upvar $varname var
     upvar $iname i
+    global ihv
 
-    # determine which web browser window
+    global debug
+    if {$debug(tcl,parser)} {
+	set ref [lindex $ihv(windows) end]
+	global cvarname
+	set cvarname $ref
+
+	web::YY_FLUSH_BUFFER
+	web::yy_scan_string [lrange $var $i end]
+	web::yyparse
+	incr i [expr $web::yycnt-1]
+    } else {
+
+    set w {hvweb}
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -906,6 +915,90 @@ proc ProcessWebCmd {varname iname} {
 		    }
 		}
 		HV $w Web $url {} 1
+	    }
+	}
+    }
+}
+}
+
+proc WebCmdCheck {} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    if {![info exists cvar(top)]} {
+	Error "[msgcat::mc {Unable to find web window}] $cvarname"
+	cat::YYABORT
+	return
+    }
+    if {![winfo exists $cvar(top)]} {
+	Error "[msgcat:: mc {Unable to find web window}] $cvarname"
+	cat::YYABORT
+	return
+    }
+}
+
+proc WebCmdRef {ref} {
+    global ihv
+    global cvarname
+
+    # look for reference in current list
+    if {[lsearch $ihv(windows) $ref] < 0} {
+	Error "[msgcat::mc {Unable to find web window}] $ref"
+	plot::YYABORT
+	return
+    }
+    set cvarname $ref
+    WebCmdCheck
+}
+
+proc WebCmdNew {url {ww {hvweb}}} {
+    global ihv
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set ii [lsearch $ihv(windows) $ww]
+    if {$ii>=0} {
+	append ww $ihv(unique)
+	incr ihv(unique)
+    }
+
+    if {[string length $url] == 0} {
+	HV $ww Web {} {} 1
+    } else {
+	ParseURL $url rr
+	switch -- $rr(scheme) {
+	    {} {
+		# append 'http://' if needed
+		if {[string range $rr(path) 0 0] == "/"} {
+		    set url "http:/$url"
+		} else {
+		    set url "http://$url"
+		}
+	    }
+	}
+	HV $ww Web $url {} 1
+    }
+}
+
+proc WebCmdClick {id} {
+    global cvarname
+    upvar #0 $cvarname cvar
+    
+    if {![info exists cvar(widget)]} {
+	return
+    }
+
+    set tokens [$cvar(widget) token list 1.0 end]
+    set cnt 0
+    for {set ii 0} {$ii<[llength $tokens]} {incr ii} {
+	set tok [lindex $tokens $ii]
+	if {[string tolower [lindex $tok 0]] == "markup" && 
+	    [string tolower [lindex $tok 2]] == "href"} {
+	    set url [lindex $tok 3]
+	    incr cnt
+	    if {$cnt == $id} {
+		HVResolveURL $cvarname [$cvar(widget) resolve $url]
+		break;
 	    }
 	}
     }

@@ -1,0 +1,18 @@
+#tab zscaleparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+contrast	{return $CONTRAST_}
+sample		{return $SAMPLE_}
+line		{return $LINE_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+
+%%

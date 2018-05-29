@@ -1,0 +1,26 @@
+#tab dssstsciparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+poss2ukstu_red	{return $POSS2RED_}
+poss2ukstu_ir	{return $POSS2INFRARED_}
+poss2ukstu_blue	{return $POSS2BLUE_}
+poss1_blue	{return $POSS1BLUE_}
+poss1_red	{return $POSS1RED_}
+all		{return $ALL_}
+quickv		{return $QUICKV_}
+phase2_gsc2	{return $GSC2_}
+phase2_gsc1	{return $GSC1_}
+
+#include yesno.fin
+#include coords.fin
+#include imgsvr.fin
+#include numeric.fin
+#include string.fin
+
+%%

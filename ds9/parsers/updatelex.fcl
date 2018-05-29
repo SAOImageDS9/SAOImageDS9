@@ -1,0 +1,16 @@
+#tab updateparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+now	    {return $NOW_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+
+%%

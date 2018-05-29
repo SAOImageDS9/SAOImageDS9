@@ -1,0 +1,16 @@
+#tab arrayparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+mask	    {return $MASK_}
+new	    {return $NEW_}
+rgb	    {return $RGB_}
+
+#include string.fin
+
+%%

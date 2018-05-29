@@ -1,0 +1,59 @@
+wcs	    {return $WCS_}
+wcsa	    {return $WCSA_}
+wcsb	    {return $WCSB_}
+wcsc	    {return $WCSC_}
+wcsd	    {return $WCSD_}
+wcse	    {return $WCSE_}
+wcsf	    {return $WCSF_}
+wcsg	    {return $WCSG_}
+wcsh	    {return $WCSH_}
+wcsi	    {return $WCSI_}
+wcsj	    {return $WCSJ_}
+wcsk	    {return $WCSK_}
+wcsl	    {return $WCSL_}
+wcsm	    {return $WCSM_}
+wcsn	    {return $WCSN_}
+wcso	    {return $WCSO_}
+wcsp	    {return $WCSP_}
+wcsq	    {return $WCSQ_}
+wcsr	    {return $WCSR_}
+wcss	    {return $WCSS_}
+wcst	    {return $WCST_}
+wcsu	    {return $WCSU_}
+wcsv	    {return $WCSV_}
+wcsw	    {return $WCSW_}
+wcsx	    {return $WCSX_}
+wcsy	    {return $WCSY_}
+wcsz	    {return $WCSZ_}
+
+image	    {return $IMAGE_}
+physical    {return $PHYSICAL_}
+amplifier   {return $AMPLIFIER_}
+detector    {return $DETECTOR_}
+
+fk4	    {return $FK4_}
+b1950	    {return $FK4_}
+fk5	    {return $FK5_}
+j2000	    {return $FK5_}
+icrs	    {return $ICRS_}
+galactic    {return $GALACTIC_}
+ecliptic    {return $ECLIPTIC_}
+
+degrees	    {return $DEGREES_}
+arcmin	    {return $ARCMIN_}
+arcsec	    {return $ARCSEC_}
+
+sexagesimal {return $SEXAGESIMAL_}
+
+# SEXAGESIMAL
+[+-]?{D}+:{D}+:{D}+"."? |
+[+-]?{D}+:{D}+:{D}*"."{D}+ {set yylval $yytext; return $SEXSTR_}
+
+# HMS
+[+-]?{D}+h{D}+m{D}+"."?s |
+[+-]?{D}+h{D}+m{D}*"."{D}+s {set yylval $yytext; return $HMSSTR_}
+
+# DMS
+[+-]?{D}+d{D}+m{D}+"."?s |
+[+-]?{D}+d{D}+m{D}*"."{D}+s {set yylval $yytext; return $SMSSTR_}
+

@@ -1,0 +1,14 @@
+#tab mecubeparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+new	    {return $NEW_}
+
+#include string.fin
+
+%%

@@ -314,7 +314,8 @@
         <br>
         &nbsp;&nbsp;&nbsp;&nbsp; [depth &lt;value&gt;] <br>
         &nbsp;&nbsp;&nbsp;&nbsp; [filter &lt;string&gt;] <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [function average|sum] <br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [filter clear] <br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp; [function average|sum] <br>
         &nbsp;&nbsp;&nbsp;&nbsp; [in]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [out]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [to fit] <br>
@@ -332,7 +333,7 @@
         $ds9 -bin factor 4 2<br>
         $ds9 -bin depth 10<br>
         $ds9 -bin filter 'pha &gt; 5'<br>
-        $ds9 -bin filter ''<br>
+        $ds9 -bin filter clear<br>
         $ds9 -bin function sum<br>
       </tt><tt><tt>$ds9 -bin in<br>
           $ds9 -bin out<br>
@@ -397,7 +398,7 @@
         new catalog search. All other commands operated on the last
         search created, unless indicated otherwise.</p>
       <tt> Syntax: <br>
-      </tt><tt>-catalog []<br>
+      </tt><tt>-catalog [new]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [ned|simbad|denis|skybot]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -415,7 +416,9 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [import sb|tsv
         &lt;filename&gt;]<br>
         <br>
-      </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;] [allcols]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
+          [&lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]</tt><tt><br>
+        </tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;] [allcols]<br>
       </tt><tt>&nbsp;</tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
         [&lt;ref&gt;] [allrows]<br>
         &nbsp;</tt><tt>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
@@ -423,9 +426,10 @@
       </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [clear]<br>
       </tt><tt>&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; [&lt;ref&gt;] [close]</tt><br>
-      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
-        [coordinate &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]</tt><tt><br>
-      </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
+
+
 
 
 
@@ -530,7 +534,6 @@
         &lt;filename&gt;]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [header]</tt><br>
-      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [hide]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [location
         &lt;code&gt;]</tt><br>
       <tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
@@ -538,6 +541,9 @@
         </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             [&lt;ref&gt;] [match]<br>
           </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
+
+
 
 
 
@@ -722,8 +728,14 @@
 
 
 
+
+
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
+
+
 
 
 
@@ -908,6 +920,9 @@
 
 
 
+
+
+
         [match unique yes|no]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [maxrows
         &lt;number&gt;]</tt><br>
@@ -938,7 +953,8 @@
         [save &lt;filename&gt;]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [server </tt><tt><tt>cds|adac|cadc|cambridge|sao|ukirt|iucaa|bejing|saao]</tt></tt><br>
-      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [show]</tt><br>
+      <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [show
+        yes|no]</tt><br>
       <tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;] [size
         &lt;width&gt; &lt;height&gt; degrees|arcmin|arcsec]</tt><br>
       <tt> </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
@@ -954,11 +970,15 @@
       </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [symbol [#] text|size|size2|units|angle &lt;value&gt;] </tt><br>
       <tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
-          [symbol shape circle|ellipse|box|text|circle point|box
-          point|diamond point|<br>
-          &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-          &nbsp;&nbsp;&nbsp; cross point|x point|arrow point|boxcircle
-          point]<br>
+          [symbol shape circle|ellipse|box|text|point]<br>
+          &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </tt></tt><tt><tt><tt><tt>[&lt;ref&gt;]
+
+
+              [symbol shape </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>circle
+
+                  point|box point|diamond point|</tt></tt></tt></tt>cross
+
+          point|x point|arrow point|boxcircle point]<br>
         </tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [symbol add| [#] remove]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol
@@ -1057,6 +1077,9 @@
 
 
 
+
+
+
         [update]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [x
         &lt;col&gt;]</tt><br>
@@ -1064,20 +1087,20 @@
         &lt;col&gt;]</tt><br>
       <tt><br>
         Example:<br>
-      </tt><tt>$ds9 -catalog<br>
-        $ds9 -catalog 2mass<br>
+      </tt><tt><tt>$ds9 -catalog new<br>
+        </tt>$ds9 -catalog 2mass<br>
         $ds9 -catalog cds 2mass<br>
         $ds9 -catalog cds "I/252"<br>
         <br>
       </tt><tt>$ds9 -catalog load foo.xml<br>
         $ds9 -catalog import tsv foo.tsv<br>
         <br>
-      </tt><tt>$ds9 -catalog allrows<br>
+      </tt><tt><tt>$ds9 -catalog 202.48 47.21 fk5<br>
+        </tt>$ds9 -catalog allrows<br>
         $ds9 -catalog allcols<br>
       </tt><tt>$ds9 -catalog cancel<br>
       </tt><tt>$ds9 -catalog clear<br>
       </tt><tt>$ds9 -catalog close<br>
-      </tt><tt>$ds9 -catalog coordinate 202.48 47.21 fk5<br>
       </tt><tt>$ds9 -catalog crosshair<br>
       </tt><tt>$ds9 -catalog dec DEC<br>
       </tt><tt>$ds9 -catalog edit yes<br>
@@ -1085,7 +1108,6 @@
       </tt><tt>$ds9 -catalog filter </tt><tt>'\$Jmag&gt;15'</tt><tt><br>
         $ds9 -catalog filter load foo.flt<br>
         $ds9 -catalog header<br>
-      </tt><tt>$ds9 -catalog hide<br>
       </tt><tt>$ds9 -catalog location 500</tt><br>
       <tt>$ds9 -catalog match error 2 arcsec<br>
         $ds9 -catalog match function 1and2<br>
@@ -1108,7 +1130,7 @@
         $ds9 -catalog samp send aladin<br>
         $ds9 -catalog save foo.xml<br>
       </tt><tt>$ds9 -catalog server sao<br>
-      </tt><tt>$ds9 -catalog show</tt><br>
+      </tt><tt>$ds9 -catalog show yes</tt><br>
       <tt> $ds9 -catalog size 1 1 degrees</tt><br>
       <tt>$ds9 -catalog symbol condition '\$Jmag&gt;15'<br>
         $ds9 -catalog symbol 2 shape "boxcircle point"<br>
@@ -1142,31 +1164,25 @@
         10 and bias value from 0 to 1. </p>
       <tt> Syntax: <br>
         -cmap [&lt;colormap&gt;] <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [file]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;] <br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [invert yes|no] <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [value &lt;contrast&gt;
-        &lt;bias&gt;] <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;contrast&gt; &lt;bias&gt;] <br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tag [load|save]
         &lt;filename&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tag delete]</tt><br>
-      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [match]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock [yes|no]]</tt><br>
-      <tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
+      <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]<br>
         &nbsp;<br>
         Example: <br>
         $ds9 -cmap Heat <br>
         $ds9 -cmap load foo.sao <br>
         $ds9 -cmap save bar.sao<br>
         $ds9 -cmap invert yes <br>
-        $ds9 -cmap value 5 .5<br>
+        $ds9 -cmap 5 .5<br>
         $ds9 -cmap tag load foo.tag<br>
         $ds9 -cmap tag save foo.tag<br>
         $ds9 -cmap tag delete<br>
-      </tt><tt>$ds9 -cmap match<br>
-        $ds9 -cmap lock yes</tt><br>
-      <tt> $ds9 -cmap open<br>
+      </tt><tt>$ds9 -cmap open<br>
         $ds9 -cmap close<br>
       </tt>
       <p><b><a name="colorbar"></a>colorbar</b></p>
@@ -1176,8 +1192,6 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [yes|no]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [horizontal|vertical]<br>
-        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; [orientation
-        horizontal|vertical]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics
         yes|no]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; [space
@@ -1192,11 +1206,16 @@
         roman|italic]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; [ticks]<br>
-        &nbsp;<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+          [match]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock
+          [yes|no]]</tt><br>
+        &nbsp; <tt> </tt><br>
         Example: <br>
         $ds9 -colorbar yes<br>
         $ds9 -colorbar vertical<br>
-        $ds9 -colorbar orientation vertical<br>
         $ds9 -colorbar numerics yes<br>
         $ds9 -colorbar space value<br>
         $ds9 -colorbar font times<br>
@@ -1204,8 +1223,10 @@
         $ds9 -colorbar fontweight bold<br>
         $ds9 -colorbar fontslant italic<br>
         $ds9 -colorbar size 20<br>
-        $ds9 -colorbar ticks 11<br>
-      </tt>
+        $ds9 -colorbar ticks 11</tt><br>
+      <tt>$ds9 -colorbar match<br>
+        $ds9 -colorbar lock yes</tt><br>
+      <tt> </tt>
       <p><b> <a name="console"></a>console</b></p>
       <p>Display tcl console window.</p>
       <tt> Syntax: <br>
@@ -1223,17 +1244,17 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [clear]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [generate]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load
-        &lt;filename&gt; [&lt;color&gt; &lt;width&gt; yes|no]]<br>
+        &lt;filename&gt;]<br>
         &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save
-        &lt;filename&gt; &lt;coordsys&gt; &lt;skyframe&gt;]<br>
+        &lt;filename&gt; [&lt;coordsys&gt; &lt;skyframe&gt;]]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [convert]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [loadlevels
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [load levels
         &lt;filename&gt;]</tt><br>
-      <tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          [savelevels &lt;filename&gt;]<br>
+      <tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save
+          levels &lt;filename&gt;]<br>
         </tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [copy]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [paste
-        &lt;coordsys&gt; [&lt;color&gt; &lt;width&gt; yes|no]]<br>
+        [&lt;coordsys&gt; &lt;color&gt; &lt;width&gt; yes|no]]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [color
         &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [width
@@ -1264,14 +1285,15 @@
         $ds9 -contour generate<br>
         $ds9 -contour clear<br>
         $ds9 -contour load ds9.ctr<br>
-        $ds9 -contour load ds9.ctr red 2 yes<br>
-        $ds9 -contour save ds9.ctr wcs fk5<br>
-        $ds9 -contour convert<br>
-        $ds9 -contour loadlevels ds9.ctr<br>
-      </tt><tt><tt>$ds9 -contour savelevels ds9.lev<br>
+      </tt><tt><tt>$ds9 -contour save ds9.ctr<br>
+        </tt></tt><tt><tt><tt>$ds9 -contour save ds9.ctr wcs fk5<br>
+          </tt></tt>$ds9 -contour convert<br>
+        $ds9 -contour load levels ds9.ctr<br>
+      </tt><tt><tt>$ds9 -contour save levels ds9.lev<br>
         </tt>$ds9 -contour copy<br>
-        $ds9 -contour paste wcs red 2 no<br>
-        $ds9 -contour color yellow<br>
+      </tt><tt><tt>$ds9 -contour paste<br>
+        </tt></tt><tt><tt><tt>$ds9 -contour paste wcs red 2 no<br>
+          </tt></tt>$ds9 -contour color yellow<br>
         $ds9 -contour width 2<br>
         $ds9 -contour dash yes<br>
         $ds9 -contour smooth 5<br>
@@ -1317,6 +1339,9 @@
         -crosshair [&lt;x&gt; &lt;h&gt; &lt;coordsys&gt;
         [&lt;skyframe&gt;]]<br>
         &nbsp;</tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
 
 
 
@@ -1603,8 +1628,10 @@
         &nbsp;<br>
         Example:<br>
       </tt><tt><tt><tt><tt>$ds9 -envi foo.hdr</tt></tt><tt><tt><tt><tt><tt><tt><br>
-                    </tt></tt></tt></tt></tt></tt> <b> </b>$ds9 -envi
-          foo.hdr foo.bsq</tt></tt><tt><tt><tt><tt><tt><tt><br>
+                    </tt></tt></tt></tt></tt></tt> <b> </b></tt></tt><tt><tt>$ds9
+
+
+          -envi foo.hdr foo.bsq</tt></tt><tt><tt><tt><tt><tt><tt><br>
                 </tt></tt></tt></tt></tt></tt>
       <p><b> <a name="exit"></a>exit<br>
           quit</b></p>
@@ -1762,13 +1789,16 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap1 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap2 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes yes|no]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap2
+          &lt;value&gt;]<br>
+        </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [grid gap3
+            &lt;value&gt;]<br>
+          </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes type interior|exterior]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [axes origin
         lll|llu|lul|luu|ull|ulu|uul|uuu]</tt><br>
@@ -1777,11 +1807,11 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [tickmarks dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border width &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border style 0|1]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [border dash yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics font
         times|helvetica|courier]<br>
@@ -1790,8 +1820,12 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics fontslant roman|italic]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap1 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap2 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics type interior|exterior]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics gap2
+          &lt;value&gt;]<br>
+        </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics
+            gap3 &lt;value&gt;]<br>
+          </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics type
+        interior|exterior]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [numerics vertical yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title text &lt;text&gt;]<br>
@@ -1805,10 +1839,11 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [title color &lt;color&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels yes|no]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text1 &lt;text&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def1 yes|no]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap1 &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text2 &lt;text&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def2 yes|no]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels text2
+          &lt;text&gt;]<br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def1 yes|no]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels def2 yes|no]<br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap1 &lt;value&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels gap2 &lt;value&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [labels font
         times|helvetica|courier]<br>
@@ -1831,13 +1866,14 @@
         $ds9 -grid grid yes<br>
         $ds9 -grid grid color red<br>
         $ds9 -grid grid width 2<br>
-        $ds9 -grid grid style 1<br>
+        $ds9 -grid grid dash yes<br>
         $ds9 -grid grid gap1 10<br>
-        $ds9 -grid grid gap2 10<br>
-        $ds9 -grid axes yes<br>
+      </tt><tt><tt>$ds9 -grid grid gap2 10<br>
+        </tt></tt><tt><tt><tt>$ds9 -grid grid gap3 10<br>
+          </tt></tt>$ds9 -grid axes yes<br>
         $ds9 -grid axes color red<br>
         $ds9 -grid axes width 2<br>
-        $ds9 -grid axes style 1<br>
+        $ds9 -grid axes dash yes<br>
         $ds9 -grid axes type exterior<br>
         $ds9 -grid axes origin lll<br>
         $ds9 -grid format1 d.2<br>
@@ -1845,11 +1881,11 @@
         $ds9 -grid tickmarks yes<br>
         $ds9 -grid tickmarks color red<br>
         $ds9 -grid tickmarks width 2<br>
-        $ds9 -grid tickmarks style 1<br>
+        $ds9 -grid tickmarks dash yes<br>
         $ds9 -grid border yes<br>
         $ds9 -grid border color red<br>
         $ds9 -grid border width 2<br>
-        $ds9 -grid border style 1<br>
+        $ds9 -grid border dash yes<br>
         $ds9 -grid numerics yes<br>
         $ds9 -grid numerics font courier<br>
         $ds9 -grid numerics fontsize 12<br>
@@ -1857,8 +1893,9 @@
         $ds9 -grid numerics fontslant italic<br>
         $ds9 -grid numerics color red<br>
         $ds9 -grid numerics gap1 10<br>
-        $ds9 -grid numerics gap2 10<br>
-        $ds9 -grid numerics type exterior<br>
+      </tt><tt><tt>$ds9 -grid numerics gap2 10<br>
+        </tt></tt><tt><tt><tt>$ds9 -grid numerics gap3 10<br>
+          </tt></tt>$ds9 -grid numerics type exterior<br>
         $ds9 -grid numerics vertical yes<br>
         $ds9 -grid title yes<br>
         $ds9 -grid title text {Hello World}<br>
@@ -1871,11 +1908,11 @@
         $ds9 -grid title color red<br>
         $ds9 -grid labels yes<br>
         $ds9 -grid labels text1 {Hello World}<br>
-        $ds9 -grid labels def1 yes<br>
-        $ds9 -grid labels gap1 10<br>
-        $ds9 -grid labels text2 {Hello World}<br>
+      </tt><tt><tt>$ds9 -grid labels text2 {Hello World}<br>
+        </tt>$ds9 -grid labels def1 yes<br>
         $ds9 -grid labels def2 yes<br>
-        $ds9 -grid labels gap2 10<br>
+      </tt><tt><tt>$ds9 -grid labels gap1 10<br>
+        </tt>$ds9 -grid labels gap2 10<br>
         $ds9 -grid labels font courier<br>
         $ds9 -grid labels fontsize 12<br>
         $ds9 -grid labels fontweight bold<br>
@@ -2198,11 +2235,14 @@
       <tt> Syntax: <br>
         -nameserver [&lt;object&gt;]<br>
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [name &lt;object&gt;]<br>
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [server
-        ned-sao|ned-eso|simbad-sao|simbad-eso] <br>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [server </tt><tt><tt>ned-sao|ned-cds|simbad-sao|simbad-cds|</tt><tt><tt>vizier-sao|vizier-cds</tt></tt>]
+        <br>
         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [skyformat
         degrees|sexagesimal]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
 
 
 
@@ -2473,8 +2513,14 @@
 
 
 
+
+
+
         [crosshair]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
 
 
 
@@ -2848,6 +2894,9 @@
 
 
 
+
+
+
         [yes|open]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
         [no|close]<br>
@@ -2859,7 +2908,6 @@
         $ds9 -pixeltable close<br>
       </tt>
       <p><b> <a name="plot"></a>plot</b></p>
-      <br>
       <p>Display and configure data plots. All plot commands take an
         optional second command, the plot name. If no plot name is
         specified, the last plot created is assumed. Plot data is
@@ -2873,21 +2921,16 @@
       </blockquote>
       <p>To create a new plot, use the plot new command.</p>
       <tt> Syntax: <br>
-        # create new empty plot window<br>
-        -plot<br>
-        -plot [bar|scatter]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [new [name &lt;plotname&gt;]
-        [line|bar|scatter]]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [new [name &lt;plotname&gt;]
-        [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
-        label&gt; </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]<br>
-        <br>
-      </tt><tt><tt>-plot [&lt;plotname&gt;] load &lt;filename&gt;
-          [xy|xyex|xyey|xyexey]<br>
-          &nbsp;&nbsp;&nbsp; &nbsp; [&lt;plotname&gt;] save
-          &lt;filename&gt;<br>
-        </tt>&nbsp;&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] clear<br>
-      </tt><tt><tt><tt><tt><tt><tt>&nbsp; &nbsp; &nbsp; </tt>[&lt;plotname&gt;]
+        # create new empty plot window</tt><br>
+      <tt>-plot [line|bar|scatter]<br>
+      </tt><tt><tt><tt><br>
+          </tt></tt></tt><tt><tt><tt># existing plot<br>
+          </tt></tt></tt><tt>-plot </tt><tt><tt>[[&lt;plotname&gt;]
+          load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
+          &nbsp;&nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] save
+          &lt;filename&gt;]<br>
+        </tt>&nbsp;&nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] clear]<br>
+      </tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; </tt>[[&lt;plotname&gt;]
 
 
 
@@ -2954,8 +2997,13 @@
 
 
 
-                duplicate<br>
+
+
+                duplicate [#]]<br>
               </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;
+                            &nbsp;&nbsp; </tt>[[&lt;plotname&gt;] stats
+                          yes|no]<br>
+                        </tt></tt>&nbsp;&nbsp; &nbsp;&nbsp; </tt>[[&lt;plotname&gt;]
 
 
 
@@ -3022,10 +3070,10 @@
 
 
 
-                            &nbsp;&nbsp; </tt>[&lt;plotname&gt;] stats<br>
-                        </tt></tt>&nbsp;&nbsp;&nbsp; &nbsp; </tt>[&lt;plotname&gt;]
 
 
+                    list yes|no]<br>
+                    &nbsp; &nbsp; &nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
 
 
 
@@ -3090,264 +3138,200 @@
 
 
 
-                    list<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[&lt;plotname&gt;]
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                loadconfig &lt;filename&gt;<br>
-                &nbsp; &nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] saveconfig
-                &lt;filename&gt;<br>
+                loadconfig &lt;filename&gt;]<br>
+                &nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] saveconfig
+                &lt;filename&gt;]<br>
               </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;
-                &nbsp;&nbsp; [&lt;plotname&gt;] pagesetup orient
-                [portrait|landscape]<br>
-                &nbsp; &nbsp; &nbsp; [&lt;plotname&gt;] pagesetup size
-                [letter|legal|tabloid|poster|a4]</tt><br>
-              <tt> </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                &nbsp;&nbsp; [&lt;plotname&gt;] print<br>
-                &nbsp; &nbsp; &nbsp; [&lt;plotname&gt;] print
-                destination [printer|file] <br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] print
-                command &lt;command&gt;<br>
-                &nbsp; &nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] print
-                filename &lt;filename&gt;<br>
-                &nbsp;&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] print color
-                [rgb|gray]<br>
-              </tt>&nbsp; &nbsp; &nbsp; </tt>[&lt;plotname&gt;] close<br>
-            <br>
-          </tt></tt></tt><tt><tt><tt><tt><tt><tt><tt> -plot </tt>[&lt;plotname&gt;]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                  mode [pointer|zoom]<br>
-                  <br>
+                &nbsp;&nbsp; [[&lt;plotname&gt;] pagesetup orient
+                portrait|landscape]<br>
+                &nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] pagesetup size
+                letter|legal|tabloid|poster|a4]</tt><br>
+              <tt> </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;
+                &nbsp; &nbsp; [[&lt;plotname&gt;] print]<br>
+                &nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] print
+                destination printer|file]<br>
+                &nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] print command
+                &lt;command&gt;]<br>
+                &nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] print filename
+                &lt;filename&gt;]<br>
+                &nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] print color
+                rgb|gray]<br>
+              </tt>&nbsp; &nbsp; &nbsp; </tt>[[&lt;plotname&gt;] close</tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>]<br>
+                    &nbsp; &nbsp; &nbsp; </tt>[[&lt;plotname&gt;] mode
+                  pointer|zoom]</tt></tt></tt></tt></tt></tt><tt><br>
+      </tt><tt><tt><tt><tt><tt><tt><br>
                 </tt></tt></tt></tt></tt></tt><tt># configure graph<br>
-        -plot [&lt;plotname&gt;] axis [x|y] grid [yes|no]<br>
-        &nbsp; &nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] axis [x|y] log
-        [yes|no]<br>
-      </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] axis [x|y]
-        flip [yes|no]</tt><br>
-      <tt><tt>&nbsp; &nbsp; &nbsp; [&lt;plotname&gt;] axis [x|y] auto
-          [yes|no]<br>
-          &nbsp; &nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] axis [x|y] min
-          &lt;value&gt;<br>
-        </tt><tt><tt>&nbsp; &nbsp; &nbsp; [&lt;plotname&gt;] axis [x|y]
-            max &lt;value&gt;</tt><tt><br>
-          </tt>&nbsp; &nbsp; &nbsp; [&lt;plotname&gt;] axis [x|y] format
-          &lt;string&gt;</tt><tt><br>
-        </tt>&nbsp; &nbsp; &nbsp; </tt><tt><tt>[&lt;plotname&gt;]
-          legend [yes|no]<br>
-          &nbsp;&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] legend position
-          [right|left|top|bottom]</tt><br>
-      </tt><tt><tt>&nbsp; &nbsp; &nbsp; [&lt;plotname&gt;] font
-          [title|labels|numbers] font [times|helvetica|courier]<br>
-          &nbsp; &nbsp; &nbsp; [&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>[title|labels|numbers]</tt></tt>
-          size &lt;value&gt;<br>
-          &nbsp;&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>[title|labels|numbers]</tt></tt>
-          weight [normal|bold]<br>
-          &nbsp;&nbsp; &nbsp;&nbsp; [&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>[title|labels|numbers]</tt></tt>
-          slant [roman|italic]<br>
-        </tt></tt><tt>&nbsp; &nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] title
-        &lt;string&gt;</tt><br>
-      <tt><tt>&nbsp; &nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] title [x|y]
-          &lt;string&gt;</tt></tt><tt><tt><tt><br>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;plotname&gt;] barmode
-            [normal|stacked|aligned|overlap]<br>
-            <br>
-            # configure current dataset<br>
-          </tt>-plot [&lt;plotname&gt;] show [yes|no]<br>
-        </tt>&nbsp; &nbsp; &nbsp; </tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+      </tt><tt>-plot [[&lt;plotname&gt;] axis x|y grid yes|no]<br>
+        &nbsp;&nbsp; &nbsp;&nbsp; [[[&lt;plotname&gt;] axis x|y log
+        yes|no]<br>
+      </tt><tt>&nbsp; &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y
+        flip yes|no]</tt><br>
+      <tt><tt>&nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] axis x|y auto
+          yes|no]<br>
+          &nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] axis x|y min
+          &lt;value&gt;]<br>
+          &nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] axis x|y max
+          &lt;value&gt;]</tt><tt><br>
+        </tt><tt><tt>&nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] axis x|y
+            format &lt;string&gt;]</tt><tt><br>
+          </tt></tt>&nbsp; &nbsp; &nbsp; </tt><tt><tt>[[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          legend yes|no]<br>
+          &nbsp;&nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] legend position
+          right|left|top|bottom]</tt><br>
+      </tt><tt><tt>&nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] font
+          title|labels|numbers font times|helvetica|courier]<br>
+          &nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>title|labels|numbers</tt></tt>
+          size &lt;value&gt;]<br>
+          &nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>title|labels|numbers</tt></tt>
+          weight normal|bold]<br>
+          &nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] font </tt></tt><tt><tt><tt><tt>title|labels|numbers</tt></tt>
+          slant roman|italic]<br>
+        </tt></tt><tt>&nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] title
+        &lt;string&gt;]</tt><br>
+      <tt><tt>&nbsp; &nbsp; &nbsp; [[&lt;plotname&gt;] title x|y
+          &lt;string&gt;]<br>
+          &nbsp;&nbsp; &nbsp;&nbsp; [</tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              barmode normal|stacked|aligned|overlap]<br>
+            </tt></tt></tt></tt><tt><tt><tt><br>
+          </tt></tt></tt><tt><tt><tt># configure current dataset<br>
+          </tt>-plot [[&lt;plotname&gt;] show yes|no]<br>
+        </tt>&nbsp; &nbsp;&nbsp;&nbsp; </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -3415,8 +3399,8 @@
 
 
               shape
-              [circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
-      <tt><tt><tt><tt><tt>&nbsp; &nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+              circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
 
 
 
@@ -3483,78 +3467,16 @@
 
 
 
-                      shape fill [yes|no]</tt></tt></tt></tt></tt></tt></tt></tt><br>
-      <tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; <tt>
-                        </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
-                              shape color &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
-      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;
 
 
+                      shape fill yes|no]</tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      </tt><tt><tt><tt><tt>[[&lt;plotname&gt;] shape
+                              color &lt;value&gt;]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                              </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                &nbsp; &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
 
 
 
@@ -3622,76 +3544,11 @@
 
 
                                                       smooth
-                                                      [step|linear|cubic|quadratic|catrom]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
-      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;
+                                                      step|linear|cubic|quadratic|catrom]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                          </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                          &nbsp;&nbsp; <tt>
-                                                          </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
 
 
 
@@ -3759,75 +3616,11 @@
 
 
                                                           color
-                                                          &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
-      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;
+                                                          &lt;value&gt;]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                          </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                          &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
 
 
 
@@ -3895,8 +3688,8 @@
 
 
                                                           width
-                                                          &lt;value&gt;<br>
-                                                          </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;
+                                                          &lt;value&gt;]<br>
+                                                          </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 
@@ -3963,9 +3756,9 @@
 
 
 
-                                                          &nbsp;&nbsp;&nbsp;
 
 
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
 
 
 
@@ -4031,10 +3824,11 @@
 
 
 
-                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
 
 
 
+                                                          dash yes|no]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 
@@ -4098,14 +3892,13 @@
 
 
 
-                                                          dash [yes|no]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
-      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;
 
 
 
 
 
 
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
 
 
 
@@ -4166,8 +3959,6 @@
 
 
 
-                                                          &nbsp;&nbsp; <tt>
-                                                          </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
 
 
 
@@ -4176,6 +3967,8 @@
 
 
 
+                                                          error yes|no]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 
@@ -4234,8 +4027,6 @@
 
 
 
-                                                          error [yes|no]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
-      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;
 
 
 
@@ -4247,63 +4038,9 @@
 
 
 
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                          &nbsp; &nbsp;
-                                                          <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
 
 
 
@@ -4371,8 +4108,8 @@
 
 
                                                           error color
-                                                          &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
-      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;
+                                                          &lt;value&gt;]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 
@@ -4439,8 +4176,153 @@
 
 
 
-                                                          &nbsp;&nbsp; <tt>
-                                                          </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+                                                          [[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          color
+                                                          &lt;value&gt;]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -4508,8 +4390,8 @@
 
 
                                                           error width
-                                                          &lt;value&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
-      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;
+                                                          &lt;value&gt;]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
+      <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 
@@ -4576,7 +4458,12 @@
 
 
 
-                                                          &nbsp; <tt> </tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
+
+
+                                                          <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -4644,60 +4531,63 @@
 
 
                                                           name
-                                                          &lt;string&gt;</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><br>
+                                                          &lt;string&gt;]<br>
+                                                          </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><br>
               # select current dataset<br>
-            </tt></tt></tt>-plot [&lt;plotname&gt;] select &lt;value&gt;<br>
-        &nbsp; <br>
+            </tt></tt></tt>-plot [[&lt;plotname&gt;] select
+        &lt;value&gt;]<br>
+      </tt><tt>&nbsp; <br>
         Example: <br>
       </tt><tt><tt> </tt></tt><tt># create new empty plot window<br>
-        $ds9 -plot<br>
-        $ds9 -plot scatter<br>
-        $ds9 -plot new<br>
-        $ds9 -plot new bar<br>
-        $ds9 -plot new name foo<br>
-        $ds9 -plot new name foo scatter<br>
+        $ds9 -plot bar<br>
       </tt><tt><tt><br>
-          $ds9 -plot load foo.dat xy # load new dataset with dimension
-          xy<br>
-          $ds9 -plot save bar.dat # save current dataset<br>
-        </tt></tt><tt><tt>$ds9 -plot clear # clear all datasets<br>
-          $ds9 -plot duplicate # duplicate current dataset<br>
-          $ds9 -plot stats # display current dataset statistics<br>
-          $ds9 -plot list # list current dataset<br>
-        </tt></tt><tt><tt>$ds9 -plot loadconfig foo.plt # load plot
-          configuration <br>
-          $ds9 -plot saveconfig bar.plt # save current plot
-          configuration<br>
+        </tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt># existing plot<br>
+                      </tt></tt></tt></tt></tt></tt></tt>$ds9 -plot load
+          xy.dat<br>
+          $ds9 -plot save foo.dat<br>
+        </tt></tt><tt><tt>$ds9 -plot clear<br>
+          $ds9 -plot duplicate 1<br>
+          $ds9 -plot stats yes<br>
+          $ds9 -plot list yes<br>
+        </tt></tt><tt><tt>$ds9 -plot loadconfig foo.plt<br>
+          $ds9 -plot saveconfig foo.plt<br>
         </tt></tt><tt><tt>$ds9 -plot pagesetup orient portrait<br>
           $ds9 -plot pagesetup size letter<br>
         </tt></tt><tt><tt>$ds9 -plot print<br>
           $ds9 -plot print destination file<br>
-          $ds9 -plot print command "lp"<br>
-          $ds9 -plot print filename "foo.ps"<br>
+          $ds9 -plot print command lp<br>
+          $ds9 -plot print filename foo.ps<br>
           $ds9 -plot print color rgb<br>
-        </tt>$ds9 -plot close # close current plot<br>
-      </tt><tt><tt><br>
+        </tt>$ds9 -plot close</tt><tt><tt><br>
           $ds9 -plot mode pointer</tt><br>
       </tt><tt><br>
-        # configure plot<br>
-      </tt><tt>$ds9 -plot axis x grid yes<br>
-        $ds9 -plot axis x log yes</tt><br>
-      <tt>$ds9 -plot axis x flip yes</tt><tt><br>
-      </tt><tt><tt>$ds9 -plot axis x auto no<br>
-          $ds9 -plot axis x min 0<br>
-          $ds9 -plot axis x max 100<br>
-        </tt><tt><tt>$ds9 -plot axis x format {%f}<br>
-          </tt></tt>$ds9 -plot legend yes # show legend<br>
-      </tt><tt>$ds9 -plot legend position left</tt><tt><tt><tt><tt><br>
-            </tt></tt>$ds9 -plot font numbers font times<br>
-          $ds9 -plot font numbers size 12<br>
-          $ds9 -plot font numbers weight bold<br>
-          $ds9 -plot font numbers slant italic<br>
-        </tt></tt><tt>$ds9 -plot title {The Title}<br>
-        $ds9 -plot title x {X Axis}<br>
-        $ds9 -plot barmode aligned<br>
-        <br>
-        # configure current dataset<br>
+      </tt><tt><tt># configure plot<br>
+        </tt><tt>$ds9 -plot axis x grid yes<br>
+          $ds9 -plot axis x log yes</tt><br>
+        <tt>$ds9 -plot axis x flip yes</tt><tt><br>
+        </tt><tt><tt>$ds9 -plot axis x auto no<br>
+            $ds9 -plot axis x min 1<br>
+            $ds9 -plot axis x max 100<br>
+            $ds9 -plot axis x format '%f'<br>
+            <br>
+          </tt></tt><tt>$ds9 -plot legend yes<br>
+        </tt><tt>$ds9 -plot legend position left</tt><tt><tt><tt><tt><br>
+                <br>
+              </tt></tt></tt></tt><tt><tt>$ds9 -plot font numbers font
+            times<br>
+            $ds9 -plot font numbers size 12<br>
+            $ds9 -plot font numbers weight bold<br>
+            $ds9 -plot font numbers slant italic<br>
+          </tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><br>
+                                      </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt>$ds9
+          -plot title 'This is a Title'<br>
+          $ds9 -plot title x 'X Axis'<br>
+          $ds9 -plot title y 'Y Axis'<br>
+          $ds9 -plot title legend 'This is the Legend'<br>
+          <br>
+        </tt><tt>$ds9 -plot barmode aligned<br>
+          <br>
+        </tt></tt><tt># configure current dataset<br>
       </tt><tt>$ds9 -plot show yes<br>
         $ds9 -plot shape circle<br>
       </tt><tt><tt>$ds9 -plot shape fill no<br>
@@ -4709,7 +4599,7 @@
         $ds9 -plot error yes<br>
         $ds9 -plot error color red</tt><br>
       <tt>$ds9 -plot error width 2</tt><br>
-      <tt>$ds9 -plot name {My Data}</tt><br>
+      <tt>$ds9 -plot name 'My Data'</tt><br>
       <tt><br>
         # select current dataset<br>
         $ds9 -plot select 2</tt>
@@ -4754,6 +4644,9 @@
       <p>Set region and coordinate output format precision. </p>
       <tt> Syntax: <br>
         -precision &lt;linear&gt; </tt><tt><tt>&lt;degree&gt;</tt> </tt><tt><tt>&lt;hms&gt;
+
+
+
         </tt></tt><tt><tt><tt>&lt;dms&gt;</tt></tt></tt><tt><tt><tt><tt>
               &lt;arcmin&gt; </tt></tt></tt></tt><tt><tt><tt><tt><tt>&lt;arcsec&gt;<br>
                 <br>
@@ -5153,6 +5046,9 @@
 
 
 
+
+
+
         &lt;filename&gt; [image|table|slice]</tt> <br>
       <tt> &nbsp;<br>
         Example: <br>
@@ -5224,9 +5120,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp; [mosaicimage
         [iraf|wcs|wcsa...wcsz|wfpc2] [key|shmid] &lt;id&gt;
         [&lt;filename&gt;]]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [mosaicimagenext [wcs|wcsa...wcsz]
-        [key|shmid] &lt;id&gt; [&lt;filename&gt;]]<br>
-        &nbsp;&nbsp;&nbsp; &nbsp;[mosaic [iraf|wcs|wcsa...wcsz]
+        &nbsp;&nbsp;&nbsp;&nbsp; [mosaic [iraf|wcs|wcsa...wcsz]
         [key|shmid] &lt;id&gt; [&lt;filename&gt;]]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [rgbcube [key|shmid] &lt;id&gt;
         [&lt;filename&gt;]]<br>
@@ -5246,7 +5140,6 @@
         $ds9 -shm mosaicimage wcs key 100 foo <br>
         $ds9 -shm mosaicimage wcsa key 100 foo <br>
         $ds9 -shm mosaicimage wfpc2 key 100 foo <br>
-        $ds9 -shm mosaicimagenext wcs key 100 foo <br>
         $ds9 -shm mosaic iraf key 100 foo<br>
         $ds9 -shm mosaic wcs key 100 foo<br>
         $ds9 -shm rgbcube key 100 foo<br>
@@ -5396,8 +5289,14 @@
 
 
 
+
+
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
 
 
 
@@ -5412,8 +5311,14 @@
 
 
 
+
+
+
                       [angle &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
 
 
 
@@ -5438,8 +5343,14 @@
 
 
 
+
+
+
                   -smooth sigmaminor 2.0<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+
+
+
 
 
 
@@ -5756,7 +5667,9 @@
       <p><b> <a name="web"></a>web</b></p>
       <p>Display specified URL in the web display. </p>
       <tt> Syntax:<br>
-        -web [new|&lt;webname&gt;] [&lt;url&gt;]<br>
+        -web []<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [&lt;url&gt;]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [new &lt;webname&gt; &lt;url&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [&lt;webname&gt;] [click
         back|forward|stop|reload|#]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [&lt;webname&gt;] [clear]<br>

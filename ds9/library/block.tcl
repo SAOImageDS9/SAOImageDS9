@@ -179,9 +179,8 @@ proc BlockDestroyDialog {} {
     if {[winfo exists $iblock(top)]} {
 	destroy $iblock(top)
 	destroy $iblock(mb)
+	unset dblock
     }
-
-    unset dblock
 }
 
 proc UpdateBlockDialog {} {
@@ -290,6 +289,14 @@ proc ProcessBlockCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	block::YY_FLUSH_BUFFER
+	block::yy_scan_string [lrange $var $i end]
+	block::yyparse
+	incr i [expr $block::yycnt-1]
+    } else {
+
     global block
     switch -- [string tolower [lindex $var $i]] {
 	open {BlockDialog}
@@ -337,6 +344,16 @@ proc ProcessBlockCmd {varname iname} {
 		Block $b1 $b1
 	    }
 	}
+    }
+}
+}
+
+proc BlockCmdSet {which value {cmd {}}} {
+    global block
+
+    set block($which) $value
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

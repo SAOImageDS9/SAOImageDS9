@@ -164,7 +164,16 @@ proc ProcessVLACmd {varname iname} {
     upvar $iname i
 
     VLADialog
-    IMGSVRProcessCmd $varname $iname dvla
+
+    global debug
+    if {$debug(tcl,parser)} {
+	vla::YY_FLUSH_BUFFER
+	vla::yy_scan_string [lrange $var $i end]
+	vla::yyparse
+	incr i [expr $vla::yycnt-1]
+    } else {
+	IMGSVRProcessCmd $varname $iname dvla
+    }
 }
 
 proc ProcessSendVLACmd {proc id param} {

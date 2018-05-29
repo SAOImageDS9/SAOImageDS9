@@ -336,9 +336,8 @@ proc ContourDestroyDialog {} {
     if {[winfo exists $icontour(top)]} {
 	destroy $icontour(top)
 	destroy $icontour(mb)
+	unset dcontour
     }
-
-    unset dcontour
 }
 
 proc ContourGenerateDialog {} {
@@ -487,8 +486,8 @@ proc ContourCPasteDialog {} {
     ttk::separator $w.sep -orient horizontal
     ttk::separator $w.sep2 -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
-#    pack $w.param1 $w.sep2 $w.param2 -side top -fill both -expand true
-    pack $w.param -side top -fill both -expand true
+    pack $w.param1 $w.sep2 $w.param -side top -fill both -expand true
+#    pack $w.param -side top -fill both -expand true
 
     DialogCenter $w 
     DialogWait $w ed(ok)
@@ -1052,12 +1051,19 @@ proc ProcessContourCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global contour
-    global current
-
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	contour::YY_FLUSH_BUFFER
+	contour::yy_scan_string [lrange $var $i end]
+	contour::yyparse
+	incr i [expr $contour::yycnt-1]
+    } else {
+
+    global contour
+    global current
     switch -- [string tolower [lindex $var $i]] {
 	open {ContourDialog}
 	close {ContourDestroyDialog}
@@ -1097,7 +1103,6 @@ proc ProcessContourCmd {varname iname} {
 		    }
 		}
 	    }
-
 	    FileLast contourlfbox $fn
 	    UpdateContourDialog
 	}
@@ -1108,7 +1113,6 @@ proc ProcessContourCmd {varname iname} {
 	    set sys [lindex $var $i]
 	    incr i
 	    set sky [lindex $var $i]
-
 	    # Backward compatibility
 	    incr i
 	    set color {}
@@ -1117,7 +1121,6 @@ proc ProcessContourCmd {varname iname} {
 	    incr i
 	    set dash {}
 	    incr i [ProcessContourFix sys sky color width dash]
-
 	    if {$fn != {}} {
 		$current(frame) contour save "\{$fn\}" $sys $sky
 	    }
@@ -1135,7 +1138,6 @@ proc ProcessContourCmd {varname iname} {
 	    incr i
 	    ContourSaveLevelsNow [lindex $var $i]
 	}
-
 	copy {ContourCCopyDialog}
 	paste {
 	    incr i
@@ -1150,38 +1152,31 @@ proc ProcessContourCmd {varname iname} {
 	    incr i
 	    set dash [lindex $var $i]
 	    incr i [ProcessContourFix sys sky color width dash]
-
 	    if {$current(frame) != {} && $contour(copy) != {}} {
 		set cc [$contour(copy) get contour $sys $sky]
 		$current(frame) contour paste cc $color $width $dash
 	    }
 	}
-
 	color {
 	    ContourDialog
-
 	    incr i
 	    set contour(color) [lindex $var $i]
 	    UpdateContour
 	}
 	width {
 	    ContourDialog
-
  	    incr i
 	    set contour(width) [lindex $var $i]
 	    UpdateContour
 	}
 	dash {
 	    ContourDialog
-
 	    incr i
 	    set contour(dash) [FromYesNo [lindex $var $i]]
 	    UpdateContour
 	}
-
 	smooth {
 	    ContourDialog
-
 	    incr i
 	    set contour(smooth) [lindex $var $i]
 	    ContourGenerateDialog
@@ -1189,16 +1184,13 @@ proc ProcessContourCmd {varname iname} {
 	}
 	method {
 	    ContourDialog
-
 	    incr i
 	    set contour(method) [lindex $var $i]
 	    ContourGenerateDialog
 	    UpdateContour
 	}
-
 	nlevels {
 	    ContourDialog
-
 	    incr i
 	    set contour(numlevel) [lindex $var $i]
 	    ContourGenerateDialog
@@ -1207,7 +1199,6 @@ proc ProcessContourCmd {varname iname} {
 	scale {
 	    set contour(init,scale) 1
 	    ContourDialog
-
 	    incr i
 	    set contour(scale) [string tolower [lindex $var $i]]
 	    ContourGenerateDialog
@@ -1216,7 +1207,6 @@ proc ProcessContourCmd {varname iname} {
 	log {
 	    set contour(init,scale) 1
 	    ContourDialog
-
 	    incr i
 	    switch -- [string tolower [lindex $var $i]] {
 		exp {
@@ -1234,7 +1224,6 @@ proc ProcessContourCmd {varname iname} {
 	mode {
 	    set contour(init,mode) 1
 	    ContourDialog
-
 	    incr i
 	    set contour(mode) [lindex $var $i]
 	    ContourModeDialog
@@ -1244,7 +1233,6 @@ proc ProcessContourCmd {varname iname} {
 	scope {
 	    set contour(init,scope) 1
 	    ContourDialog
-
 	    incr i
 	    set contour(scope) [lindex $var $i]
 	    ContourModeDialog
@@ -1254,7 +1242,6 @@ proc ProcessContourCmd {varname iname} {
 	limits {
 	    set contour(init,limits) 1
 	    ContourDialog
-
 	    incr i
 	    set contour(min) [lindex $var $i]
 	    incr i
@@ -1262,24 +1249,19 @@ proc ProcessContourCmd {varname iname} {
 	    ContourGenerateDialog
 	    UpdateContour
 	}
-
 	levels {
 	    ContourDialog
-
 	    global dcontour
 	    $dcontour(txt) delete 1.0 end
 	    incr i
 	    $dcontour(txt) insert end [lindex $var $i]
 	    UpdateContour
 	}
-
 	generate {
 	    ContourDialog
-
 	    ContourGenerateDialog
 	    UpdateContour
 	}
-
 	yes -
 	true -
 	on -
@@ -1291,13 +1273,145 @@ proc ProcessContourCmd {varname iname} {
 	    set contour(view) [FromYesNo [lindex $var $i]]
 	    UpdateContour
 	}
-
 	default {
 	    set contour(view) 1
 	    UpdateContour
 	    incr i -1
 	}
     }
+}
+}
+
+proc ContourCmdLoad {fn} {
+    global current
+
+    if {$current(frame) != {} && $fn != {}} {
+	$current(frame) contour load $fn
+	FileLast contourlfbox $fn
+	UpdateContourDialog
+    }
+}
+
+proc ContourCmdLoadOrg {fn sys sky color width dash} {
+    global current
+
+    if {$current(frame) != {} && $fn != {}} {
+	$current(frame) contour load $color $width $dash $fn $sys $sky
+	FileLast contourlfbox $fn
+	UpdateContourDialog
+    }
+}
+
+proc ContourCmdSave {fn sys sky} {
+    global current
+
+    if {$current(frame) != {} && $fn != {}} {
+	$current(frame) contour save $fn $sys $sky
+	FileLast contoursfbox $fn
+    }
+}
+
+proc ContourCmdLoadLevels {fn} {
+    global current
+
+    ContourDialog
+    if {$current(frame) != {}} {
+	ContourLoadLevelsNow $fn
+	UpdateContour
+    }
+}
+
+proc ContourCmdSaveLevels {fn} {
+    global current
+
+    ContourDialog
+    if {$current(frame) != {}} {
+	ContourSaveLevelsNow $fn
+    }
+}
+
+proc ContourCmdPaste {sys sky color width dash} {
+    global current
+    global contour
+
+    if {$current(frame) != {} && $contour(copy) != {}} {
+	set cc [$contour(copy) get contour $sys $sky]
+	$current(frame) contour paste cc $color $width $dash
+    }
+}
+
+proc ContourCmdSet {which value} {
+    global contour
+
+    set contour($which) $value
+    UpdateContour
+}
+
+proc ContourCmdDialog {which value} {
+    global contour
+
+    ContourDialog
+    set contour($which) $value
+    UpdateContour
+}
+
+proc ContourCmdGenerateDialog {which value} {
+    global contour
+
+    ContourDialog
+    set contour($which) $value
+    ContourGenerateDialog
+    UpdateContour
+}
+
+proc ContourCmdScale {which value} {
+    global contour
+
+    set contour(init,scale) 1
+    ContourDialog
+
+    set contour($which) $value
+    ContourGenerateDialog
+    UpdateContour
+}
+
+proc ContourCmdMode {which value} {
+    global contour
+
+    set contour(init,$which) 1
+    ContourDialog
+
+    set contour($which) $value
+    ContourModeDialog
+    ContourGenerateDialog
+    UpdateContour
+}
+
+proc ContourCmdLimits {min max} {
+    global contour
+
+    set contour(init,limits) 1
+    ContourDialog
+
+    set contour(min) $min
+    set contour(max) $max
+    ContourGenerateDialog
+    UpdateContour
+}
+
+proc ContourCmdLevels {str} {
+    global dcontour
+
+    ContourDialog
+    $dcontour(txt) delete 1.0 end
+    $dcontour(txt) insert end $str
+    UpdateContour
+}
+
+proc ContourCmdGenerate {} {
+    ContourDialog
+    ContourGenerateDialog
+    UpdateContour
 }
 
 proc ProcessContourFix {sysname skyname colorname widthname dashname} {

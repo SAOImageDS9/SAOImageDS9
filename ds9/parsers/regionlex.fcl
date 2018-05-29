@@ -1,0 +1,113 @@
+#tab regionparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+
+all	    {return $ALL_}
+at	    {return $AT_}
+auto	    {return $AUTO_}
+autocentroid {return $AUTOCENTROID_}
+back	    {return $BACK_}
+background  {return $BACKGROUND_}
+centroid    {return $CENTROID_}
+close	    {return $CLOSE_}
+color	    {return $COLOR_}
+command	    {return $COMMAND_}
+composite   {return $COMPOSITE_}
+coord	    {return $COORD_}
+coordformat {return $COORDFORMAT_}
+copy	    {return $COPY_}
+cut	    {return $CUT_}
+delete	    {return $DELETE_}
+deleteall   {return $DELETEALL_}
+delim	    {return $DELIM_}
+dissolve    {return $DISSOLVE_}
+edit	    {return $EDIT_}
+epsilon	    {return $EPSILON_}
+exclude	    {return $EXCLUDE_}
+file	    {return $FILE_}
+fixed	    {return $FIXED_}
+format	    {return $FORMAT_}
+front	    {return $FRONT_}
+getinfo	    {return $GETINFO_}
+group	    {return $GROUP_}
+groups	    {return $GROUPS_}
+include	    {return $INCLUDE_}
+invert	    {return $INVERT_}
+iteration   {return $ITERATION_}
+list	    {return $LIST_}
+load	    {return $LOAD_}
+move	    {return $MOVE_}
+moveback    {return $MOVEBACK_}
+movefront   {return $MOVEFRONT_}
+new	    {return $NEW_}
+nl	    {return $NL_}
+none	    {return $NONE_}
+paste	    {return $PASTE_}
+property    {return $PROPERTY_}
+radius	    {return $RADIUS_}
+rotate	    {return $ROTATE_}
+save	    {return $SAVE_}
+savetemplate {return $SAVETEMPLATE_}
+select	    {return $SELECT_}
+selectall   {return $SELECTALL_}
+selectnone  {return $SELECTNONE_}
+shape	    {return $SHAPE_}
+show	    {return $SHOW_}
+showtext    {return $SHOWTEXT_}
+sky	    {return $SKY_}
+skyformat   {return $SKYFORMAT_}
+source	    {return $SOURCE_}
+strip	    {return $STRIP_}
+system	    {return $SYSTEM_}
+tag	    {return $TAG_}
+template    {return $TEMPLATE_}
+undo	    {return $UNDO_}
+update	    {return $UPDATE_}
+width	    {return $WIDTH_}
+
+ds9	    {return $DS9_}
+xml	    {return $XML_}
+ciao	    {return $CIAO_}
+saotng	    {return $SAOTNG_}
+pros	    {return $PROS_}
+saoimage    {return $SAOIMAGE_}
+xy	    {return $XY_}
+
+circle	    {return $CIRCLE_}
+ellipse	    {return $ELLIPSE_}
+box	    {return $BOX_}
+polygon	    {return $POLYGON_}
+point	    {return $POINT_}
+line	    {return $LINE_}
+vector	    {return $VECTOR_}
+text	    {return $TEXT_}
+ruler	    {return $RULER_}
+compass	    {return $COMPASS_}
+projection  {return $PROJECTION_}
+annulus	    {return $ANNULUS_}
+panda	    {return $PANDA_}
+epanda	    {return $EPANDA_}
+bpanda	    {return $BPANDA_}
+composite   {return $COMPOSITE_}
+diamond	    {return $DIAMOND_}
+cross	    {return $CROSS_}
+arrow	    {return $ARROW_}
+boxcircle   {return $BOXCIRCLE_}
+
+-format	    {return $-FORMAT_}
+-system	    {return $-SYSTEM_}
+-sky	    {return $-SKY_}
+
+#include yesno.fin
+#include font.fin
+#include coords.fin
+#include numeric.fin
+#include string.fin
+
+%%

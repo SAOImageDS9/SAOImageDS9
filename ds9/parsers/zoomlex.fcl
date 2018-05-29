@@ -1,0 +1,20 @@
+#tab zoomparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+in	    {return $IN_}
+fit	    {return $FIT_}
+open	    {return $OPEN_}
+out	    {return $OUT_}
+to	    {return $TO_}
+
+#include numeric.fin
+#include string.fin
+
+%%

@@ -1,0 +1,36 @@
+#tab cubeparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+axis	    {return $AXIS_}
+axes	    {return $AXES_}
+close	    {return $CLOSE_}
+first	    {return $FIRST_}
+interval    {return $INTERVAL_}
+last	    {return $LAST_}
+next	    {return $NEXT_}
+open	    {return $OPEN_}
+order	    {return $ORDER_}
+play	    {return $PLAY_}
+prev	    {return $PREV_}
+stop	    {return $STOP_}
+
+123	    {return $123_}
+132	    {return $132_}
+213	    {return $213_}
+231	    {return $231_}
+312	    {return $312_}
+321	    {return $321_}
+
+#include matchlock.fin
+#include coords.fin
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+
+%%

@@ -181,9 +181,8 @@ proc CropDestroyDialog {} {
     if {[winfo exists $icrop(top)]} {
 	destroy $icrop(top)
 	destroy $icrop(mb)
+	unset dcrop
     }
-
-    unset dcrop
 }
 
 proc UpdateCropMenu {} {
@@ -394,6 +393,14 @@ proc ProcessCropCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	crop::YY_FLUSH_BUFFER
+	crop::yy_scan_string [lrange $var $i end]
+	crop::yyparse
+	incr i [expr $crop::yycnt-1]
+    } else {
+
     global crop
     global current
     switch -- [string tolower [lindex $var $i]] {
@@ -434,6 +441,16 @@ proc ProcessCropCmd {varname iname} {
 
 	    $current(frame) crop center $x $y $sys $sky $w $h $sys $dformat
 	}
+    }
+}
+}
+
+proc CropCmdSet {which value {cmd {}}} {
+    global crop
+
+    set crop($which) $value
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

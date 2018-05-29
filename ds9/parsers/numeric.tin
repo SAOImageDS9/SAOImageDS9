@@ -1,0 +1,2 @@
+%token INT_
+%token REAL_

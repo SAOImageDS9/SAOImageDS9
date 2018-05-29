@@ -429,9 +429,8 @@ proc CubeDestroyDialog {} {
     if {[winfo exists $icube(top)]} {
 	destroy $icube(top)
 	destroy $icube(mb)
+	unset dcube
     }
-
-    unset dcube
 }
 
 proc UpdateCubeMenu {} {
@@ -706,14 +705,22 @@ proc ProcessCubeCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    CubeDialog
+
+    global debug
+    if {$debug(tcl,parser)} {
+	cube::YY_FLUSH_BUFFER
+	cube::yy_scan_string [lrange $var $i end]
+	cube::yyparse
+	incr i [expr $cube::yycnt-1]
+    } else {
+
     global cube
     global dcube
 
     global blink
     global current
     global rgb
-
-    CubeDialog
 
     switch -- [string tolower [lindex $var $i]] {
 	match {
@@ -839,6 +846,29 @@ proc ProcessCubeCmd {varname iname} {
 	    }
 	    CubeApply $cube(axis)
 	}
+    }
+}
+}
+
+proc CubeCmdCoord {ss sys axis} {
+    global dcube
+    global cube
+
+    set dcube(wcs,$axis) $ss
+    set cube(system) $sys
+    set cube(axis) $axis
+    if {$cube(axis) < 2} {
+	set cube(axis) 2
+    }
+    CubeApply $cube(axis)
+}
+
+proc CubeCmdSet {which value {cmd {}}} {
+    global cube
+
+    set cube($which) $value
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

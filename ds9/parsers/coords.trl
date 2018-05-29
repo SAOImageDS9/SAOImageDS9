@@ -1,0 +1,52 @@
+coordsys : IMAGE_ {set _ image}
+ | PHYSICAL_ {set _ physical}
+ | AMPLIFIER_ {set _ amplifier}
+ | DETECTOR_ {set _ detector}
+ ;
+
+wcssys : WCS_ {set _ wcs}
+ | WCSA_ {set _ wcsa}
+ | WCSB_ {set _ wcsb}
+ | WCSC_ {set _ wcsc}
+ | WCSD_ {set _ wcsd}
+ | WCSE_ {set _ wcse}
+ | WCSF_ {set _ wcsf}
+ | WCSG_ {set _ wcsg}
+ | WCSH_ {set _ wcsh}
+ | WCSI_ {set _ wcsi}
+ | WCSJ_ {set _ wcsj}
+ | WCSK_ {set _ wcsk}
+ | WCSL_ {set _ wcsl}
+ | WCSM_ {set _ wcsm}
+ | WCSN_ {set _ wcsn}
+ | WCSO_ {set _ wcso}
+ | WCSP_ {set _ wcsp}
+ | WCSQ_ {set _ wcsq}
+ | WCSR_ {set _ wcsr}
+ | WCSS_ {set _ wcss}
+ | WCST_ {set _ wcst}
+ | WCSU_ {set _ wcsu}
+ | WCSV_ {set _ wcsv}
+ | WCSW_ {set _ wcsw}
+ | WCSX_ {set _ wcsx}
+ | WCSY_ {set _ wcsy}
+ | WCSZ_ {set _ wcsz}
+ ;
+
+skyframe : FK4_ {set _ fk4}
+ | B1950_ {set _ fk4}
+ | FK5_ {set _ fk5}
+ | J2000_ {set _ fk5}
+ | ICRS_ {set _ icrs}
+ | GALACTIC_ {set _ galactic}
+ | ECLIPTIC_ {set _ ecliptic}
+ ;
+
+skyformat : DEGREES_ {set _ degrees}
+ | SEXAGESIMAL_ {set _ sexagesimal}
+ ;
+ 
+rformat : DEGREES_ {set _ degrees}
+ | ARCMIN_ {set _ arcmin}
+ | ARCSEC_ {set _ arcsec}
+ ;

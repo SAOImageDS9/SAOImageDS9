@@ -684,6 +684,7 @@ proc CATCrosshair {varname} {
 
 proc CATDestroy {varname} {
     upvar #0 $varname var
+
     global $varname
     global $var(catdb)
     global $var(tbldb)
@@ -735,6 +736,13 @@ proc CATDestroy {varname} {
     # plot window?
     if {$var(plot)} {
 	PlotDestroy $var(plot,var)
+    }
+
+    # cat header?
+    set vvarname ${varname}hdr
+    global $vvarname
+    if {[info exists $vvarname]} {
+	SimpleTextDestroy $vvarname
     }
 
     ARDestroy $varname

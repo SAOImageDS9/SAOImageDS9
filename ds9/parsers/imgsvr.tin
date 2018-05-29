@@ -1,0 +1,12 @@
+%token CLOSE_
+%token COORD_
+%token CROSSHAIR_
+%token CURRENT_
+%token FRAME_
+%token NAME_
+%token NEW_
+%token OPEN_
+%token UPDATE_
+%token SAVE_
+%token SIZE_
+%token SURVEY_

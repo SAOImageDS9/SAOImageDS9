@@ -79,17 +79,18 @@ proc LoadMultiFrameAlloc {path fn} {
 	}
 
 	# ProcessLoad will clear loadParam each time
+	# can be gz, so use allocgz
 	set loadParam(file,type) fits
 	set loadParam(file,mode) {}
+	set loadParam(load,type) allocgz
+	set loadParam(load,layer) {}
 	if {$path != {}} {
-	    set loadParam(load,type) allocgz
 	    set loadParam(file,name) "stdin\[$ext\]"
 	    set loadParam(file,fn) "$path\[$ext\]"
 	} else {
-	    set loadParam(load,type) mmapincr
 	    set loadParam(file,name) "$fn\[$ext\]"
+	    set loadParam(file,fn) "$fn\[$ext\]"
 	}
-	set loadParam(load,layer) {}
 
 	if  {![ProcessLoad 0]} {
 	    if {$ext} {
@@ -135,6 +136,18 @@ proc ProcessMultiFrameCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
+
+	multiframe::YY_FLUSH_BUFFER
+	multiframe::yy_scan_string [lrange $var $i end]
+	multiframe::yyparse
+	incr i [expr $multiframe::yycnt-1]
+    } else {
+
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -175,4 +188,32 @@ proc ProcessMultiFrameCmd {varname iname sock fn} {
     }
     FinishLoad
 }
+}
 
+proc MultiframeCmdLoad {param} {
+    global parse
+
+    if {$parse(sock) != {}} {
+	# xpa
+	global tcl_platform
+	switch $tcl_platform(os) {
+	    Linux -
+	    Darwin -
+	    SunOS {
+		if {![LoadMultiFrameSocket $parse(sock) $param]} {
+		    InitError xpa
+		    LoadMultiFrameFile $param
+		}
+	    }
+	    {Windows NT} {LoadMultiFrameFile $param}
+	}
+    } else {
+	# comm
+	if {$parse(fn) != {}} {
+	    LoadMultiFrameAlloc $parse(fn) $param
+	} else {
+	    LoadMultiFrameFile $param
+	}
+    }
+    FinishLoad
+}

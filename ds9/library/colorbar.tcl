@@ -912,9 +912,8 @@ proc ColormapDestroyDialog {} {
     if {[winfo exists $icolorbar(top)]} {
 	destroy $icolorbar(top)
 	destroy $icolorbar(mb)
+	unset dcolorbar
     }
-
-    unset dcolorbar
 }
 
 proc ApplyColormap {} {
@@ -1186,15 +1185,23 @@ proc ProcessCmapCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    # we need to be realized
+    ProcessRealizeDS9
+
+    global debug
+    if {$debug(tcl,parser)} {
+	cmap::YY_FLUSH_BUFFER
+	cmap::yy_scan_string [lrange $var $i end]
+	cmap::yyparse
+	incr i [expr $cmap::yycnt-1]
+    } else {
+	
     global colorbar
     global current
 
     global ds9
     global current
     global rgb
-
-    # we need to be realized
-    ProcessRealizeDS9
 
     switch -- [string tolower [lindex $var $i]] {
 	open {ColormapDialog}
@@ -1290,6 +1297,7 @@ proc ProcessCmapCmd {varname iname} {
 	}
     }
 }
+}
 
 proc CmapCmd {item} {
     global current
@@ -1358,6 +1366,14 @@ proc ProcessColorbarCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	colorbar::YY_FLUSH_BUFFER
+	colorbar::yy_scan_string [lrange $var $i end]
+	colorbar::yyparse
+	incr i [expr $colorbar::yycnt-1]
+    } else {
+	
     global colorbar
     global view
 
@@ -1365,11 +1381,9 @@ proc ProcessColorbarCmd {varname iname} {
 
     switch  -- $item {
 	match {
-	    # backward compatibility
 	    MatchColorCurrent
 	}
 	lock {
-	    # backward compatibility
 	    incr i
 	    if {!([string range [lindex $var $i] 0 0] == "-")} {
 		set colorbar(lock) [FromYesNo [lindex $var $i]]
@@ -1468,6 +1482,39 @@ proc ProcessColorbarCmd {varname iname} {
 	}
     }
 }
+}
+
+proc ColorbarCmdSet {which value {cmd {}}} {
+    global colorbar
+
+    set colorbar($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc ColorbarCmdFontStyle {value {cmd {}}} {
+    global colorbar
+
+    switch $value {
+	normal {
+	    set colorbar(font,weight) normal
+	    set colorbar(font,slant) roman
+	}
+	bold {
+	    set colorbar(font,weight) bold
+	    set colorbar(font,slant) roman
+	}
+	italic {
+	    set colorbar(font,weight) normal
+	    set colorbar(font,slant) italic
+	}
+    }
+
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
 
 proc ProcessSendColorbarCmd {proc id param} {
     global colorbar
@@ -1475,7 +1522,6 @@ proc ProcessSendColorbarCmd {proc id param} {
 
     switch -- [string tolower [lindex $param 0]] {
 	lock {
-	    #backward compatibility
 	    $proc $id [ToYesNo $colorbar(lock)]
 	} 
 	orientation {$proc $id "$colorbar(orientation)\n"} 
@@ -1489,9 +1535,12 @@ proc ProcessSendColorbarCmd {proc id param} {
 	}
 	font {$proc $id "$colorbar(font)\n"} 
 	fontsize {$proc $id "$colorbar(font,size)\n"} 
-	fontstyle -
 	fontweight {$proc $id "$colorbar(font,weight)\n"} 
 	fontslant {$proc $id "$colorbar(font,slant)\n"} 
+	fontstyle {
+	    # backware compatibily
+	    $proc $id "$colorbar(font,weight)\n"
+ 	}
 	size {$proc $id "$colorbar(size)\n"}
 	ticks {$proc $id "$colorbar(ticks)\n"}
 	default {$proc $id [ToYesNo $view(colorbar)]} 

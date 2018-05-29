@@ -13,46 +13,20 @@ proc MultiLoad {{layer {}} {mode {}}} {
 	puts stderr "MultiLoad"
     }
 
-    if {$layer != {} || $mode != {}} {
-	return
-    }
-
     if {$current(frame) != {}} {
-	if {![$current(frame) has fits]} {
-	    return
-	}
 	switch -- [$current(frame) get type] {
 	    base -
-	    3d {CreateFrame}
-	    rgb {}
+	    3d {
+		if {$layer != {} || $mode != {}} {
+		    return
+		}
+		if {![$current(frame) has fits]} {
+		    return
+		}
+		CreateFrame
+	    }
+	    rgb {CreateFrame}
 	}
-    } else {
-	CreateFrame
-	return
-    }
-
-    # go into tile mode if more than one
-    set cnt [llength $ds9(frames)]
-    if {$cnt > 1 && $current(display) != "tile"} {
-	set current(display) tile
-	DisplayMode
-    }
-}
-
-proc MultiLoadBase {} {
-    global ds9
-    global current
-
-    global debug
-    if {$debug(tcl,layout)} {
-	puts stderr "MultiLoadBase"
-    }
-
-    if {$current(frame) != {}} {
-	if {![$current(frame) has fits]} {
-	    return
-	}
-	CreateFrame
     } else {
 	CreateFrame
 	return
@@ -76,10 +50,16 @@ proc MultiLoadRGB {} {
     }
 
     if {$current(frame) != {}} {
-	if {![$current(frame) has fits]} {
-	    return
+	switch -- [$current(frame) get type] {
+	    base -
+	    3d {CreateRGBFrame}
+	    rgb {
+		if {![$current(frame) has fits]} {
+		    return
+		}
+		CreateRGBFrame
+	    }
 	}
-	CreateRGBFrame
     } else {
 	CreateRGBFrame
 	return
@@ -434,6 +414,14 @@ proc ProcessPreserveCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	preserve::YY_FLUSH_BUFFER
+	preserve::yy_scan_string [lrange $var $i end]
+	preserve::yyparse
+	incr i [expr $preserve::yycnt-1]
+    } else {
+
     global ds9
     global scale
     global panzoom
@@ -452,6 +440,7 @@ proc ProcessPreserveCmd {varname iname} {
 	    MarkerPreserve
 	}
     }
+}
 }
 
 proc ProcessSendPreserveCmd {proc id param} {
@@ -474,6 +463,14 @@ proc ProcessSendPreserveCmd {proc id param} {
 proc ProcessUpdateCmd {varname iname} {
     upvar $varname var
     upvar $iname i
+
+    global debug
+    if {$debug(tcl,parser)} {
+	update::YY_FLUSH_BUFFER
+	update::yy_scan_string [lrange $var $i end]
+	update::yyparse
+	incr i [expr $update::yycnt-1]
+    } else {
 
     global current
     global ds9
@@ -520,4 +517,23 @@ proc ProcessUpdateCmd {varname iname} {
 	$current(frame) update
 	incr i -1
     }
+}
+}
+
+proc UpdateCmd {{which {}} {x1 {}} {y1 {}} {x2 {}} {y2 {}}} {
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    $current(frame) update $which $x1 $y1 $x2 $y2
+}
+
+proc UpdateCmdNow {{which {}} {x1 {}} {y1 {}} {x2 {}} {y2 {}}} {
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    $current(frame) update now $which $x1 $y1 $x2 $y2
 }

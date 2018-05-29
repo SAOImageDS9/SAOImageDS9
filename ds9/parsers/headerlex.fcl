@@ -1,0 +1,16 @@
+#tab headerparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+save	    {return $SAVE_}
+
+#include numeric.fin
+#include string.fin
+
+%%

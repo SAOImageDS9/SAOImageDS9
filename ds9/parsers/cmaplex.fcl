@@ -1,0 +1,26 @@
+#tab cmapparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close		{return $CLOSE_}
+delete		{return $DELETE_}
+file		{return $FILE_}
+invert		{return $INVERT_}
+load		{return $LOAD_}
+lock		{return $LOCK_}
+match		{return $MATCH_}
+open		{return $OPEN_}
+save		{return $SAVE_}
+tag		{return $TAG_}
+value		{return $VALUE_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+
+%%

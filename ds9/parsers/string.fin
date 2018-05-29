@@ -1,0 +1,16 @@
+# Quoted STRING
+\"[^\"]*\" {set yylval [string range $yytext 1 end-1]; return $STRING_}
+
+# Quoted STRING
+\'[^\']*\' {set yylval [string range $yytext 1 end-1]; return $STRING_}
+
+# Quoted STRING
+\{[^\}]*\} {set yylval [string range $yytext 1 end-1]; return $STRING_}
+
+# STRING
+\S+\S+ {set yylval $yytext; return $STRING_}
+
+\s        # ignore whitespace
+
+.	  {set yylval $yytext; return $yylval}
+

@@ -328,6 +328,8 @@ proc write_scanner_utils {} {
 ######
 "
     puts $::dest "namespace eval ${::p} \{
+    variable yylval
+
     variable yytext {}
     variable yyleng 0
     variable yyin stdin
@@ -612,6 +614,8 @@ proc write_scanner {} {
 # one of its actions executes a return statement.
 #   -- from the flex(1) man page
 proc ${::p}::yylex \{\} \{
+    variable yylval
+
     variable yytext
     variable yylineno
     variable yyleng
@@ -621,8 +625,9 @@ proc ${::p}::yylex \{\} \{
     variable index_
     variable done_
     variable state_table_
-
-    while \{1\} \{"
+"
+    puts $::dest $::tab
+    puts $::dest "    while \{1\} \{"
     if $::startstates {
         puts $::dest "        set yy_current_state \[yy_top_state\]"
     }
@@ -840,6 +845,7 @@ proc fickle_args {argv} {
     set ::BUFFER_SIZE 1024
     set ::p "yy"
     set ::verbose 0
+    set ::tab {}
     while {$argvp < [llength $argv]} {
         set arg [lindex $argv $argvp]
         switch -- $arg {
@@ -872,15 +878,18 @@ proc fickle_args {argv} {
     if {$argvp >= [llength $argv]} {
         # read from stdin
         set ::src stdin
+	set ::in_filename {}
+	set ::in_dir {}
         set out_filename "lex.yy.tcl"
     } else {
-        set in_filename [lindex $argv $argvp]
+        set ::in_filename [lindex $argv $argvp]
+	set ::in_dir [file dirname $::in_filename]
         if {$out_filename == ""} {
-            set out_filename [file rootname $in_filename]
+            set out_filename [file rootname $::in_filename]
             append out_filename ".tcl"
         }
-        if [catch {open $in_filename r} ::src] {
-            puts stderr "Could not open specification file '$in_filename'."
+        if [catch {open $::in_filename r} ::src] {
+            puts stderr "Could not open specification file '$::in_filename'."
             exit $::IO_ERROR
         }
     }
@@ -920,8 +929,33 @@ proc fickle_main {} {
                 fickle_error "Syntax error." $::SYNTAX_ERROR
             }
         } else {
-            if {$file_state == "definitions"} {
-                handle_defs $line
+	    if {[lindex $line 0] == "#tab"} {
+		set fn [lindex $line 1]
+		if {$fn != {}} {
+		    if [catch {open [file join $::in_dir $fn] r} ch] {
+			puts stderr "Could not open tab file '$fn'."
+			exit $::IO_ERROR
+		    }
+		    catch {set ::tab [read $ch]}
+		    catch {close $fn}
+		}
+            } elseif {$file_state == "definitions"} {
+		if {[lindex $line 0] == "#include"} {
+		    set fn [lindex $line 1]
+		    if {$fn != {}} {
+			if [catch {open [file join $::in_dir $fn] r} ch] {
+			    puts stderr "Could not open definition file '$fn'."
+			    exit $::IO_ERROR
+			}
+			while {[gets $ch line] >= 0} {
+			    incr ::line_count
+			    handle_defs $line
+			}			    
+			catch {close $fn}
+		    }
+		} else {
+		    handle_defs $line
+		}
             } elseif {$file_state == "rules"} {
                 # keep reading the rest of the file until EOF or
                 # another '%%' appears
@@ -930,6 +964,19 @@ proc fickle_main {} {
                     if {$line == "%%"} {
                         set file_state "subroutines"
                         break
+		    } elseif {[lindex $line 0] == "#include"} {
+			set fn [lindex $line 1]
+			if {$fn != {}} {
+			    if [catch {open [file join $::in_dir $fn] r} ch] {
+				puts stderr "Could not open include file '$fn'."
+				exit $::IO_ERROR
+			    }
+			    while {[gets $ch line] >= 0} {
+				incr ::line_count
+				append rules_buf "\n" [strip_only_comments $line]
+			    }			    
+			    catch {close $fn}
+			}
                     } else {
                         append rules_buf "\n" [strip_only_comments $line]
                     }

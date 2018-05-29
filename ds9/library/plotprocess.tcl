@@ -102,8 +102,24 @@ proc PrefsDialogPlot {} {
 proc ProcessPlotCmd {xarname iname buf fn} {
     upvar $xarname xar
     upvar $iname i
-
     global iap
+
+    global debug
+    if {$debug(tcl,parser)} {
+	set ref [lindex $iap(windows) end]
+	global cvarname
+	set cvarname $ref
+	global parse
+	set parse(buf) $buf
+	set parse(fn) $fn
+	set parse(tt) $iap(tt)
+
+	plot::YY_FLUSH_BUFFER
+	plot::yy_scan_string [lrange $xar $i end]
+	plot::yyparse
+	incr i [expr $plot::yycnt-1]
+    } else {
+
     set varname $iap(tt)
     set id 0
 
@@ -433,6 +449,7 @@ proc ProcessPlotCmd {xarname iname buf fn} {
     # force update
     update idletasks
 }
+}
 
 proc ProcessPlotNew {varname xarname iname buf} {
     upvar #0 $varname var
@@ -516,8 +533,8 @@ proc ProcessPlotNewOne {which varname xarname iname buf} {
 }
 
 proc ProcessPlotData {varname xarname iname buf} {
-    upvar #0 $varname var
     global $varname
+    upvar #0 $varname var
 
     upvar 2 $xarname xar
     upvar 2 $iname i
@@ -527,6 +544,201 @@ proc ProcessPlotData {varname xarname iname buf} {
     $var(proc,updategraph) $varname
     PlotStats $varname
     PlotList $varname
+}
+
+proc PlotCmdCheck {} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    if {![info exists cvar(top)]} {
+	Error "[msgcat::mc {Unable to find plot window}] $cvarname"
+	plot::YYABORT
+	return
+    }
+    if {![winfo exists $cvar(top)]} {
+	Error "[msgcat::mc {Unable to find plot window}] $cvarname"
+	plot::YYABORT
+	return
+    }
+}
+
+proc PlotCmdRef {ref} {
+    global iap
+    global cvarname
+
+    # look for reference in current list
+    if {[lsearch $iap(windows) $ref] < 0} {
+	Error "[msgcat::mc {Unable to find plot window}] $ref"
+	plot::YYABORT
+	return
+    }
+    set cvarname $ref
+    PlotCmdCheck
+}
+
+proc PlotCmdNew {name} {
+    global parse
+
+    if {$name != {}} {
+	set parse(tt) $name
+    }
+
+    if {$parse(buf) != {}} {
+	return
+    } elseif {$parse(fn) != {}} {
+	if {[file exists $parse(fn)]} {
+	    set ch [open $parse(fn) r]
+	    set parse(buf) [read $ch]
+	    close $ch
+	    return
+	}
+    }
+    set parse(buf) {}
+}
+
+proc PlotCmdLine {title xaxis yaxis dim} {
+    global parse
+    PlotLine $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
+}
+
+proc PlotCmdBar {title xaxis yaxis dim} {
+    global parse
+    PlotBar $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
+}
+
+proc PlotCmdScatter {title xaxis yaxis dim} {
+    global parse
+    PlotScatter $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
+}
+
+proc PlotCmdAnalysisPlotStdin {which} {
+    global parse
+    AnalysisPlotStdin $which $parse(tt) {} $parse(buf)
+}
+
+proc PlotCmdData {dim} {
+    global parse
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    if {$parse(buf) == {}} {
+	if {$parse(fn) != {}} {
+	    if {[file exists $parse(fn)]} {
+		set ch [open $parse(fn) r]
+		set parse(buf) [read $ch]
+		close $ch
+	    }
+	}
+	if {$parse(buf) == {}} {
+	    Error "[msgcat::mc {Unable to load plot data}] $fn"
+	    plot::YYABORT
+	    return
+	}
+    }
+    
+    PlotRaise $cvarname
+    PlotDataSet $cvarname $dim $parse(buf)
+    $cvar(proc,updategraph) $cvarname
+    PlotStats $cvarname
+    PlotList $cvarname
+}
+
+proc PlotCmdLoad {fn dim} {
+    global cvarname
+    
+    if {$fn != {}} {
+	PlotLoadDataFile $cvarname $fn $dim
+	FileLast apdatafbox $fn
+    }
+}
+
+proc PlotCmdSave {fn} {
+    global cvarname
+    
+    if {$fn != {}} {
+	PlotSaveDataFile $cvarname $fn
+	FileLast apdatafbox $fn
+    }
+}
+
+proc PlotCmdLoadConfig {fn} {
+    global cvarname
+    
+    if {$fn != {}} {
+	PlotLoadConfigFile $cvarname $fn
+	FileLast apconfigfbox $fn
+    }
+}
+
+proc PlotCmdSaveConfig {fn} {
+    global cvarname
+    
+    if {$fn != {}} {
+	PlotSaveConfigFile $cvarname $fn
+	FileLast apconfigfbox $fn
+    }
+}
+
+proc PlotCmdSet {which value {cmd {}}} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+    if {$cmd != {}} {
+	eval $cmd $cvarname
+    }
+}
+
+proc PlotCmdPrint {} {
+    global cvarname
+
+    PlotPostScript $cvarname
+}
+
+proc PlotCmdUpdateGraph {which value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+    $cvar(proc,updategraph) $cvarname
+}
+
+proc PlotCmdUpdateElement {which value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+    $cvar(proc,updateelement) $cvarname
+}
+
+proc PlotCmdFontStyle {which value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    switch $value {
+	normal {
+	    set cvar($which,weight) normal
+	    set cvar($which,slant) roman
+	}
+	bold {
+	    set cvar($which,weight) bold
+	    set cvar($which,slant) roman
+	}
+	italic {
+	    set cvar($which,weight) normal
+	    set cvar($which,slant) italic
+	}
+    }
+
+    $cvar(proc,updategraph) $cvarname
+}
+
+proc PlotCmdSelect {value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(data,current) $value
+    PlotCurrentData $cvarname
 }
 
 # File Menu
@@ -639,6 +851,7 @@ proc ProcessPlotFont  {varname xarname iname} {
 		weight {incr i; set var(graph,title,weight) [lindex $xar $i]}
 		slant {incr i; set var(graph,title,slant) [lindex $xar $i]}
 		style {
+		    # backward compatibility
 		    incr i
 		    switch [string tolower [lindex $xar $i]] {
 			normal {
@@ -667,6 +880,7 @@ proc ProcessPlotFont  {varname xarname iname} {
 		weight {incr i; set var(axis,title,weight) [lindex $xar $i]}
 		slant {incr i; set var(axis,title,slant) [lindex $xar $i]}
 		style {
+		    # backward compatibility
 		    incr i
 		    switch [string tolower [lindex $xar $i]] {
 			normal {
@@ -695,6 +909,7 @@ proc ProcessPlotFont  {varname xarname iname} {
 		weight {incr i; set var(axis,font,weight) [lindex $xar $i]}
 		slant {incr i; set var(axis,font,slant) [lindex $xar $i]}
 		style {
+		    # backward compatibility
 		    incr i
 		    switch [string tolower [lindex $xar $i]] {
 			normal {
@@ -721,6 +936,24 @@ proc ProcessPlotFont  {varname xarname iname} {
 		size {incr i; set var(legend,title,size) [lindex $xar $i]}
 		weight {incr i; set var(legend,title,weight) [lindex $xar $i]}
 		slant {incr i; set var(legend,title,slant) [lindex $xar $i]}
+		style {
+		    # backward compatibility
+		    incr i
+		    switch [string tolower [lindex $xar $i]] {
+			normal {
+			    set var(legend,title,weight) normal
+			    set var(legend,title,slant) roman
+			}
+			bold {
+			    set var(legend,title,weight) bold
+			    set var(legend,title,slant) roman
+			}
+			italic {
+			    set var(legend,title,weight) normal
+			    set var(legend,title,slant) italic
+			}
+		    }
+		}
 	    }
 	}
 	legend {
@@ -731,6 +964,24 @@ proc ProcessPlotFont  {varname xarname iname} {
 		size {incr i; set var(legend,font,size) [lindex $xar $i]}
 		weight {incr i; set var(legend,font,weight) [lindex $xar $i]}
 		slant {incr i; set var(legend,font,slant) [lindex $xar $i]}
+		style {
+		    # backward compatibility
+		    incr i
+		    switch [string tolower [lindex $xar $i]] {
+			normal {
+			    set var(legend,font,weight) normal
+			    set var(legend,font,slant) roman
+			}
+			bold {
+			    set var(legend,font,weight) bold
+			    set var(legend,font,slant) roman
+			}
+			italic {
+			    set var(legend,font,weight) normal
+			    set var(legend,font,slant) italic
+			}
+		    }
+		}
 	    }
 	}
     }
@@ -1125,6 +1376,10 @@ proc ProcessSendPlotCmd {proc id param} {
 			size {$proc $id "$var(graph,title,size)\n"}
 			weight {$proc $id "$var(graph,title,weight)\n"}
 			slant {$proc $id "$var(graph,title,slant)\n"}
+			style {
+			    # backward compatibility
+			    $proc $id "$var(graph,title,weight)\n"
+			}
 		    }
 		}
 		axestitle -
@@ -1136,6 +1391,10 @@ proc ProcessSendPlotCmd {proc id param} {
 			size {$proc $id "$var(axis,title,size)\n"}
 			weight {$proc $id "$var(axis,title,weight)\n"}
 			slant {$proc $id "$var(axis,title,slant)\n"}
+			style {
+			    # backward compatibility
+			    $proc $id "$var(axis,title,weight)\n"
+			}
 		    }
 		}
 		axesnumbers -
@@ -1147,6 +1406,10 @@ proc ProcessSendPlotCmd {proc id param} {
 			size {$proc $id "$var(axis,font,size)\n"}
 			weight {$proc $id "$var(axis,font,weight)\n"}
 			slant {$proc $id "$var(axis,font,slant)\n"}
+			style {
+			    # backward compatibility
+			    $proc $id "$var(axis,font,weight)\n"
+			}
 		    }
 		}
 		legendtitle {
@@ -1157,6 +1420,10 @@ proc ProcessSendPlotCmd {proc id param} {
 			size {$proc $id "$var(legend,title,size)\n"}
 			weight {$proc $id "$var(legend,title,weight)\n"}
 			slant {$proc $id "$var(legend,title,slant)\n"}
+			style {
+			    # backward compatibility
+			    $proc $id "$var(legend,title,weight)\n"
+			}
 		    }
 		}
 		legend {
@@ -1167,6 +1434,10 @@ proc ProcessSendPlotCmd {proc id param} {
 			size {$proc $id "$var(legend,font,size)\n"}
 			weight {$proc $id "$var(legend,font,weight)\n"}
 			slant {$proc $id "$var(legend,font,slant)\n"}
+			style {
+			    # backward compatibility
+			    $proc $id "$var(legend,font,weight)\n"
+			}
 		    }
 		}
 	    }

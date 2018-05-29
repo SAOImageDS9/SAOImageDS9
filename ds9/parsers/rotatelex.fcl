@@ -1,0 +1,17 @@
+#tab rotateparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+open	    {return $OPEN_}
+to	    {return $TO_}
+
+#include numeric.fin
+#include string.fin
+
+%%

@@ -810,6 +810,15 @@ proc ViewVertCmd {} {
 
 # Process Cmds
 
+proc CanvasCmdSet {which value {cmd {}}} {
+    global canvas
+
+    set canvas($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
 proc ProcessHeightCmd {varname iname} {
     upvar $varname var
     upvar $iname i
@@ -818,9 +827,18 @@ proc ProcessHeightCmd {varname iname} {
     # can't use ProcessRealize
     RealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	height::YY_FLUSH_BUFFER
+	height::yy_scan_string [lrange $var $i end]
+	height::yyparse
+	incr i [expr $height::yycnt-1]
+    } else {
+
     global canvas
     set canvas(height) [lindex $var $i]
     UpdateView
+}
 }
 
 proc ProcessSendHeightCmd {proc id param} {
@@ -836,9 +854,18 @@ proc ProcessWidthCmd {varname iname} {
     # can't use ProcessRealize
     RealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	width::YY_FLUSH_BUFFER
+	width::yy_scan_string [lrange $var $i end]
+	width::yyparse
+	incr i [expr $width::yycnt-1]
+    } else {
+
     global canvas
     set canvas(width) [lindex $var $i]
     UpdateView
+}
 }
 
 proc ProcessSendWidthCmd {proc id param} {
@@ -850,10 +877,16 @@ proc ProcessViewCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	view::YY_FLUSH_BUFFER
+	view::yy_scan_string [lrange $var $i end]
+	view::yyparse
+	incr i [expr $view::yycnt-1]
+    } else {
+	
     global view
     global rgb
-    global canvas
-    global icanvas
 
     set item [string tolower [lindex $var $i]]
 
@@ -1016,6 +1049,16 @@ proc ProcessViewCmd {varname iname} {
 	    }
 	    UpdateView
 	}
+    }
+}
+}
+
+proc ViewCmdSet {which value {cmd {}}} {
+    global view
+
+    set view($which) $value
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

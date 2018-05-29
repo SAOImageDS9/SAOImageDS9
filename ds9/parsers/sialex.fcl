@@ -1,0 +1,47 @@
+#tab siaparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+cancel	    {return $CANCEL_}
+clear	    {return $CLEAR_}
+close	    {return $CLOSE_}
+coordinate  {return $COORDINATE_}
+crosshair   {return $CROSSHAIR_}
+export	    {return $EXPORT_}
+name	    {return $NAME_}
+print	    {return $PRINT_}
+retrieve    {return $RETRIEVE_}
+save	    {return $SAVE_}
+size	    {return $SIZE_}
+sky	    {return $SKY_}
+skyformat   {return $SKYFORMAT_}
+system	    {return $SYSTEM_}
+update	    {return $UPDATE_}
+
+2mass	    {return $2MASS_}
+akari	    {return $AKARI_}
+astrowise   {return $ASTROWISE_}
+cadc	    {return $CADC_}
+cxc	    {return $CXC_}
+mast	    {return $MAST_}
+sdss	    {return $SDSS_}
+skyview	    {return $SKYVIEW_}
+tgssadr	    {return $TGSSADR_}
+
+xml	    {return $XML_}
+vot	    {return $VOT_}
+sb	    {return $SB_}
+starbase    {return $STARBASE_}
+csv	    {return $CSV_}
+tsv	    {return $TSV_}
+
+#include coords.fin
+#include numeric.fin
+#include string.fin
+
+%%

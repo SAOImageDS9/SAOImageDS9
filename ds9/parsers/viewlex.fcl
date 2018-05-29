@@ -1,0 +1,40 @@
+#tab viewparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+blue		{return $BLUE_}
+buttons		{return $BUTTONS_}
+colorbar	{return $COLORBAR_}
+colorbarnumerics	{return $COLORBARNUMERICS_}
+filename	{return $FILENAME_}
+frame		{return $FRAME_}
+graph		{return $GRAPH_}
+green		{return $GREEN_}
+horz		{return $HORIZONTAL_}
+horizontal	{return $HORIZONTAL_}
+horzgraph	{return $HORZGRAPH_}
+info		{return $INFO_}
+keyvalue	{return $KEYVALUE_}
+keyword		{return $KEYWORD_}
+layout		{return $LAYOUT_}
+lowhigh		{return $LOWHIGH_}
+magnifier	{return $MAGNIFIER_}
+minmax		{return $MINMAX_}
+object		{return $OBJECT_}
+panner		{return $PANNER_}
+red		{return $RED_}
+units		{return $UNITS_}
+vert		{return $VERTICAL_}
+vertical	{return $VERTICAL_}
+vertgraph	{return $VERTGRAPH_}
+
+#include yesno.fin
+#include coords.fin
+#include string.fin
+
+%%

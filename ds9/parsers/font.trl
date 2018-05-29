@@ -1,0 +1,18 @@
+font : TIMES_ {set _ times}
+ | HELVETICA_ {set _ helvetica}
+ | COURIER_ {set _ courier}
+ ;
+
+fontWeight : NORMAL_ {set _ normal}
+ | BOLD_ {set _ bold}
+ ;
+
+fontSlant : ROMAN_ {set _ roman}
+ | ITALIC_ {set _ italic}
+ ;
+
+fontStyle : NORMAL_ {set _ normal}
+ | BOLD_ {set _ bold}
+ | ITALIC_ {set _ italic}
+ ;
+

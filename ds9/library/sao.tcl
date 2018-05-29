@@ -148,7 +148,16 @@ proc ProcessSAOCmd {varname iname} {
     upvar $iname i
 
     SAODialog
-    IMGSVRProcessCmd $varname $iname dsao
+
+    global debug
+    if {$debug(tcl,parser)} {
+	dsssao::YY_FLUSH_BUFFER
+	dsssao::yy_scan_string [lrange $var $i end]
+	dsssao::yyparse
+	incr i [expr $dsssao::yycnt-1]
+    } else {
+	IMGSVRProcessCmd $varname $iname dsao
+    }
 }
 
 proc ProcessSendSAOCmd {proc id param} {

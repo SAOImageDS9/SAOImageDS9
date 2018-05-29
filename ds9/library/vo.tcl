@@ -466,6 +466,14 @@ proc ProcessVOCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	vo::YY_FLUSH_BUFFER
+	vo::yy_scan_string [lrange $var $i end]
+	vo::yyparse
+	incr i [expr $vo::yycnt-1]
+    } else {
+
     set vvarname voi
     upvar #0 $vvarname vvar
     global $vvarname
@@ -526,6 +534,41 @@ proc ProcessVOCmd {varname iname} {
 		VOCheck $vvarname $ii
 	    }
 	}
+    }
+}
+}
+
+proc VOCmdSet {which value} {
+    global pvo
+
+    set pvo($which) $value
+}
+
+proc VOCmdConnect {str} {
+    global voi
+    global ivo
+
+    VODialog
+
+    # find best match
+    set ii [lsearch $ivo(server,url) "*$str*"]
+    if {$ii>=0} {
+	set ivo(b$ii) 1
+	VOCheck voi $ii
+    }
+}
+
+proc VOCmdDisconnect {str} {
+    global voi
+    global ivo
+
+    VODialog
+
+    # find best match
+    set ii [lsearch $ivo(server,url) "*$str*"]
+    if {$ii>=0} {
+	set ivo(b$ii) 0
+	VOCheck voi $ii
     }
 }
 

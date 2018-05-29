@@ -1,0 +1,29 @@
+#tab nresparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+crosshair   {return $CROSSHAIR_}
+name	    {return $NAME_}
+open	    {return $OPEN_}
+pan	    {return $PAN_}
+server	    {return $SERVER_}
+skyformat   {return $SKYFORMAT_}
+
+ned-sao	    {return $NEDSAO_}
+ned-cds	    {return $NEDCDS_}
+simbad-sao  {return $SIMBADSAO_}
+simbad-cds  {return $SIMBADCDS_}
+vizier-sao  {return $VIZIERSAO_}
+vizier-cds  {return $VIZIERCDS_}
+
+#include coords.fin
+#include numeric.fin
+#include string.fin
+
+%%

@@ -1,0 +1,36 @@
+#tab frameparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+3d	    {return $3D_}
+close	    {return $CLOSE_}
+all	    {return $ALL_}
+back	    {return $BACK_}
+center	    {return $CENTER_}
+clear	    {return $CLEAR_}
+delete	    {return $DELETE_}
+first	    {return $FIRST_}
+forward	    {return $FORWARD_}
+frameno	    {return $FRAMENO_}
+hide	    {return $HIDE_}
+last	    {return $LAST_}
+move	    {return $MOVE_}
+new	    {return $NEW_}
+next	    {return $NEXT_}
+prev	    {return $PREV_}
+refresh	    {return $REFRESH_}
+reset	    {return $RESET_}
+rgb	    {return $RGB_}
+show	    {return $SHOW_}
+
+#include matchlock.fin
+#include coords.fin
+#include numeric.fin
+#include string.fin
+
+%%

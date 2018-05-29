@@ -1,0 +1,16 @@
+#tab vlssparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+#include yesno.fin
+#include coords.fin
+#include imgsvr.fin
+#include numeric.fin
+#include string.fin
+
+%%

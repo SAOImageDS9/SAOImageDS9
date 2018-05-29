@@ -22,8 +22,8 @@
 # libxslt 1.1.29
 # openssl 1.0.2k
 
-DS9_VERSION	= 7.6
-XPA_VERSION	= 2.1.17
+DS9_VERSION	= 8.0b1
+XPA_VERSION	= 2.1.18
 TCL_VERSION	= 8.6
 
 #-------------------------- Defs
@@ -421,7 +421,6 @@ language:
 	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl ja euc-jp; \
 	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl zh big5
 
-
 #-------------------------- scrub
 
 .PHONY	: scrub
@@ -433,7 +432,7 @@ scrub :
 #-------------------------- clean
 
 .PHONY	: clean
-.PHONY	: dirsclean ds9clean localclean
+.PHONY	: dirsclean ds9clean ds9parsersclean localclean
 .PHONY	: tcliisclean tclsignalclean 
 .PHONY	: tclxmlclean tclzvfsclean tlsclean
 .PHONY	: tkbltclean tkconclean tkhtml1clean tkimgclean
@@ -456,6 +455,11 @@ ds9clean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C ds9/$(OS) clean
+
+ds9parsersclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C ds9/$(OS) parsersclean
 
 localclean :
 	@echo ""

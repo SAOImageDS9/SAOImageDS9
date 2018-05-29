@@ -1,0 +1,36 @@
+#tab psparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+color	    {return $COLOR_}
+command	    {return $COMMAND_}
+destination {return $DESTINATION_}
+file	    {return $FILE_}
+filename    {return $FILENAME_}
+interpolate {return $INTERPOLATE_}
+level	    {return $LEVEL_}
+printer	    {return $PRINTER_}
+resolution  {return $RESOLUTION_}
+
+rgb	    {return $RGB_}
+cmyk	    {return $CMYK_} 
+gray	    {return $GRAY_}
+
+72	    {return $72_}
+screen	    {return $SCREEN_}
+96	    {return $96_}
+144	    {return $144_}
+150	    {return $150_}
+225	    {return $225_}
+300	    {return $300_}
+600	    {return $600_}
+1200	    {return $1200_}
+
+#include string.fin
+
+%%

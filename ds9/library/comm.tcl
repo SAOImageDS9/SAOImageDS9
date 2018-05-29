@@ -66,10 +66,6 @@ proc CommSet {fn paramlist {safemode 0}} {
 	iexam -
 	imexam {}
 	iis {ProcessIISCmd param i}
-	irafalign {
-	    # backward compatibility
-	    ProcessIRAFAlignCmd param i
-	}
 	jpg -
 	jpeg {ProcessJPEGCmd param i {} $fn}
 	lock {ProcessLockCmd param i}
@@ -268,10 +264,6 @@ proc CommGet {proc id paramlist fn} {
 	iexam -
 	imexam {ProcessSendIExamCmd $proc $id $param}
 	iis {ProcessSendIISCmd $proc $id $param}
-	irafalign {
-	    # backward compatibility
-	    ProcessSendIRAFAlignCmd $proc $id $param
-	}
 	jpg -
 	jpeg {ProcessSendJPEGCmd $proc $id $param {} $fn}
 	lock {ProcessSendLockCmd $proc $id $param}

@@ -1,0 +1,12 @@
+#tab restoreparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+#include string.fin
+
+%%

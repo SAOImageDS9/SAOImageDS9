@@ -76,15 +76,23 @@ proc ProcessArrayCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
+
+	array::YY_FLUSH_BUFFER
+	array::yy_scan_string [lrange $var $i end]
+	array::yyparse
+	incr i [expr $array::yycnt-1]
+    } else {
+
     if {[ProcessArrayBackwardCmd $varname $iname $sock $fn]} {
 	return
     }
 
-    global loadParam
-    global current
-
     set layer {}
-
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -111,6 +119,27 @@ proc ProcessArrayCmd {varname iname sock fn} {
 	# comm
 	if {$fn != {}} {
 	    ImportArrayAlloc $fn $param $layer
+	} else {
+	    ImportArrayFile $param $layer
+	}
+    }
+    FinishLoad
+}
+}
+
+proc ArrayCmdLoad {param layer} {
+    global parse
+
+    if {$parse(sock) != {}} {
+	# xpa
+	if {![ImportArraySocket $parse(sock) $param $layer]} {
+	    InitError xpa
+	    ImportArrayFile $param $layer
+	}
+    } else {
+	# comm
+	if {$parse(fn) != {}} {
+	    ImportArrayAlloc $parse(fn) $param $layer
 	} else {
 	    ImportArrayFile $param $layer
 	}

@@ -77,13 +77,12 @@ proc DisplayHeader {frame id title} {
     global current
 
     set varname "hd-$frame-$id"
-    upvar #0 $varname var
     global $varname
-
     SimpleTextDialog $varname $title 80 40 insert top \
 	[$current(frame) get fits header $id]
 
     # create a special text tag for keywords
+    upvar #0 $varname var
     $var(text) tag configure keyword -foreground blue
     
     # color tag keywords
@@ -104,15 +103,12 @@ proc UpdateHeaderDialog {} {
 
     for {set id 1} {$id <= $cnt} {incr id} {
 	set varname "hd-$frame-$id"
-	upvar #0 $varname var
 	global $varname
-	if {![info exists var(top)]} {
-	    continue
-	}
-	if {![winfo exists $var(top)]} {
+	if {![info exists $varname]} {
 	    continue
 	}
 
+	upvar #0 $varname var
 	$var(text) delete 1.0 end
 	$var(text) insert end [$frame get fits header $id]
 
@@ -131,15 +127,15 @@ proc DestroyHeader {frame} {
     }
 
     for {set id 1} {$id <= $cnt} {incr id} {
-	set varname "hd-$frame-$id"
-	upvar #0 $varname var
-	global $varname
+	DestroyHeaderOne $frame $id
+    }
+}
 
-	if {[info exists $varname]} {
-	    if {[winfo exists $var(top)]} {
-		SimpleTextDestroy $varname
-	    }
-	}
+proc DestroyHeaderOne {frame id} {
+    set varname "hd-$frame-$id"
+    global $varname
+    if {[info exists $varname]} {
+	SimpleTextDestroy $varname
     }
 }
 
@@ -147,6 +143,14 @@ proc ProcessHeaderCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	header::YY_FLUSH_BUFFER
+	header::yy_scan_string [lrange $var $i end]
+	header::yyparse
+	incr i [expr $header::yycnt-1]
+    } else {
+	
     set item [string tolower [lindex $var $i]]
     switch -- $item {
 	close -
@@ -192,4 +196,29 @@ proc ProcessHeaderCmd {varname iname} {
 	}
     }
 }
+}
 
+proc DisplayHeaderCmd {id} {
+    global current
+
+    DisplayHeader $current(frame) $id [$current(frame) get fits file name $id]
+}
+
+proc CloseHeaderCmd {id} {
+    global current
+
+    DestroyHeaderOne $current(frame) $id
+}
+
+proc SaveHeaderCmd {id fn} {
+    global current
+
+    if {$fn != {}} {
+	if {[catch {set ch [open "| cat > \"$fn\"" w]}]} {
+	    Error [msgcat::mc {An error has occurred while saving}]
+	    return
+	}
+	puts -nonewline $ch [$current(frame) get fits header $id]
+	close $ch
+    }
+}

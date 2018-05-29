@@ -1,0 +1,27 @@
+#tab colorbarparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+distance	{return $DISTANCE_}
+horizontal	{return $HORIZONTAL_}
+lock		{return $LOCK_}
+match		{return $MATCH_}
+numerics	{return $NUMERICS_}
+orientation	{return $ORIENTATION_}
+size		{return $SIZE_}
+space		{return $SPACE_}
+ticks		{return $TICKS_}
+value		{return $VALUE_}
+vertical	{return $VERTICAL_}
+
+#include yesno.fin
+#include font.fin
+#include numeric.fin
+#include string.fin
+
+%%

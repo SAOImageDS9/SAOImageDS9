@@ -1,0 +1,23 @@
+#tab blockparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close		{return $CLOSE_}
+fit		{return $FIT_}
+in		{return $IN_}
+lock		{return $LOCK_}
+match		{return $MATCH_}
+open		{return $OPEN_}
+out		{return $OUT_}
+to		{return $TO_}
+
+#include yesno.fin
+#include numeric.fin
+#include string.fin
+
+%%

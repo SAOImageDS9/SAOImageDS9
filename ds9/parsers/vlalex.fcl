@@ -1,0 +1,19 @@
+#tab vlaparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+stripe82    {return $STRIPE82_}
+first       {return $FIRST_}
+
+#include yesno.fin
+#include coords.fin
+#include imgsvr.fin
+#include numeric.fin
+#include string.fin
+
+%%

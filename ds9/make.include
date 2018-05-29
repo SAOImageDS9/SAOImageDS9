@@ -1,12 +1,34 @@
-#--------------------------framework
+#--------------------------parsers
 
-$(LIBDIR)/library : $(prefix)/ds9/library/*.tcl
+vpath %.tac $(prefix)/ds9/parsers
+vpath %.fcl $(prefix)/ds9/parsers
+
+# -v generate output file
+# -w generate warnings
+# -d generate lexer table
+$(prefix)/ds9/parsers/%parser.tcl : %parser.tac
+	tclsh $(prefix)/taccle/taccle.tcl -p $* -d $<
+#	tclsh $(prefix)/taccle/taccle.tcl -p $* -d -w -v $<
+
+# -d debug
+$(prefix)/ds9/parsers/%lex.tcl : %lex.fcl
+	tclsh $(prefix)/fickle/fickle.tcl -P $* $<
+#	tclsh $(prefix)/fickle/fickle.tcl -P $* -d $<
+
+#--------------------------library
+
+SRCP = $(wildcard $(prefix)/ds9/parsers/*.tac)
+SRCL = $(wildcard $(prefix)/ds9/parsers/*.fcl)
+
+$(LIBDIR)/library : $(SRCP:.tac=.tcl) $(SRCP:.tac=.tab.tcl) $(SRCL:.fcl=.tcl) $(prefix)/ds9/library/*.tcl
 	mkdir -p "$@"
-	cp -p $? "$@"
+	cp -prf $? "$@"
 # must do it this way for win
 	cd "$@"; \
 	echo "pkg_mkIndex . *.tcl; exit" | tclsh
 	touch "$@"
+
+#--------------------------support
 
 $(LIBDIR)/msgs : $(prefix)/ds9/msgs
 	cp -prf $? "$@"
@@ -65,9 +87,14 @@ $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 
 #--------------------------distclean
 
-.PHONY	: distclean
+.PHONY	: distclean parsersclean
 
 distclean: clean
 	-rm -f Makefile config.cache config.log config.status
 	-rm -rf autom4te.cache
 
+parsersclean:
+	-rm -rf $(prefix)/ds9/parsers/*# \
+	    $(prefix)/ds9/parsers/*~ \
+	    $(prefix)/ds9/parsers/*.tcl \
+	    $(prefix)/ds9/parsers/*.output

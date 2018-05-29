@@ -7,6 +7,7 @@ package provide DS9 1.0
 proc AnalysisDef {} {
     global ianalysis
     global panalysis
+    global analysis
 
     global ds9
 
@@ -18,6 +19,10 @@ proc AnalysisDef {} {
     set ianalysis(param,seq) 0
     set ianalysis(file) ".$ds9(app).ans"
     set ianalysis(alt) ".$ds9(app).analysis"
+
+    # temp
+    set analysis(load,buf) {}
+    set analysis(load,fn) {}
 
     # prefs only
     set panalysis(log) 0
@@ -1764,6 +1769,18 @@ proc ProcessAnalysisCmd {varname iname buf fn} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	global parse
+	set parse(buf) $buf
+	set parse(fn) $fn
+	
+	analysis::YY_FLUSH_BUFFER
+	analysis::yy_scan_string [lrange $var $i end]
+	analysis::yyparse
+	incr i [expr $analysis::yycnt-1]
+    } else {
+
     global ime
     global ianalysis
 
@@ -1885,6 +1902,7 @@ proc ProcessAnalysisCmd {varname iname buf fn} {
 	}
     }
 }
+}
 
 proc ProcessAnalysisPlotCmd {varname iname buf} {
     upvar 2 $varname var
@@ -1902,6 +1920,77 @@ proc ProcessAnalysisPlotCmd {varname iname buf} {
 		$buf
 	    incr i 3
 	}
+    }
+}
+
+proc AnalysisCmdTask {task} {
+    global ianalysis
+    
+    for {set ii 0} {$ii<$ianalysis(menu,count)} {incr ii} {
+	if {[string equal -nocase $ianalysis(menu,$ii,item) $task]} {
+	    AnalysisTask $ii menu
+	}
+    }
+}
+
+proc AnalysisCmdText {} {
+    global parse
+    
+    if {$parse(buf) != {}} {
+	AnalysisText apXPA Analysis $parse(buf) append
+    } elseif {$parse(fn) != {}} {
+	if {[file exists $parse(fn)]} {
+	    set ch [open $parse(fn) r]
+	    set txt [read $ch]
+	    close $ch
+	    AnalysisText apXPA Analysis $txt append
+	}
+    }
+}
+
+proc AnalysisCmdPlotStdin {} {
+    global iap
+    global parse
+    
+    if {$parse(buf) != {}} {
+	AnalysisPlotStdin line $iap(tt) {} $parse(buf)
+    } elseif {$parse(fn) != {}} {
+	if {[file exists $parse(fn)]} {
+	    set ch [open $parse(fn) r]
+	    set rr [read $ch]
+	    close $ch
+	    AnalysisPlotStdin line $iap(tt) {} $rr
+	}
+    } else {
+	AnalysisPlotStdin line $iap(tt) {} {}
+    }
+}
+
+proc AnalysisCmdPlotLine {title xaxis yaxis dim} {
+    global iap
+    global parse
+
+    if {$parse(buf) != {}} {
+	PlotLine $iap(tt) Plot $title $xaxis $yaxis $dim $parse(buf)
+    } elseif {$parse(fn) != {}} {
+	if {[file exists $parse(fn)]} {
+	    set ch [open $parse(fn) r]
+	    set rr [read $ch]
+	    close $ch
+	    PlotLine $iap(tt) Plot $title $xaxis $yaxis $dim $rr
+	}
+    } else {
+	PlotLine $iap(tt) Plot $title $xaxis $yaxis $dim {}
+    }
+}
+
+proc AnalysisCmdLoad {} {
+    global parse
+
+    if {$parse(buf) != {}} {
+	ProcessAnalysis parse(buf)
+    } elseif {$parse(fn) != {}} {
+	ProcessAnalysisFile $parse(fn)
     }
 }
 

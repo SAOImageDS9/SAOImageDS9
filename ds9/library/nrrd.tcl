@@ -84,11 +84,19 @@ proc ProcessNRRDCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global loadParam
-    global current
+    global debug
+    if {$debug(tcl,parser)} {
+	global parse
+	set parse(sock) $sock
+	set parse(fn) $fn
+
+	nrrd::YY_FLUSH_BUFFER
+	nrrd::yy_scan_string [lrange $var $i end]
+	nrrd::yyparse
+	incr i [expr $nrrd::yycnt-1]
+    } else {
 
     set layer {}
-
     switch -- [string tolower [lindex $var $i]] {
 	new {
 	    incr i
@@ -115,6 +123,27 @@ proc ProcessNRRDCmd {varname iname sock fn} {
 	# comm
 	if {$fn != {}} {
 	    ImportNRRDAlloc $fn $param $layer
+	} else {
+	    ImportNRRDFile $param $layer
+	}
+    }
+    FinishLoad
+}
+}
+
+proc NRRDCmdLoad {param layer} {
+    global parse
+    
+    if {$parse(sock) != {}} {
+	# xpa
+	if {![ImportNRRDSocket $parse(sock) $param $layer]} {
+	    InitError xpa
+	    ImportNRRDFile $param $layer
+	}
+    } else {
+	# comm
+	if {$parse(fn) != {}} {
+	    ImportNRRDAlloc $parse(fn) $param $layer
 	} else {
 	    ImportNRRDFile $param $layer
 	}

@@ -456,12 +456,19 @@ proc ProcessMovieCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global movie
-
     # we need to be realized
     # already implemented
     # ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	movie::YY_FLUSH_BUFFER
+	movie::yy_scan_string [lrange $var $i end]
+	movie::yyparse
+	incr i [expr $movie::yycnt-1]
+    } else {
+
+    global movie
     set item [string tolower [lindex $var $i]]
     switch -- $item {
 	slice -
@@ -530,5 +537,14 @@ proc ProcessMovieCmd {varname iname} {
 
     Movie $fn
 }
+}
 
+proc MovieCmdSet {which value {cmd {}}} {
+    global movie
+
+    set movie($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
 

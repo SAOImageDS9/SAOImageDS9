@@ -1,0 +1,26 @@
+#tab movieparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+3d	    {return $3D_}
+azfrom	    {return $AZFROM_}
+azto	    {return $AZTO_}
+elfrom	    {return $ELFROM_}
+elto	    {return $ELTO_}
+frame	    {return $FRAME_}
+number	    {return $NUMBER_}
+oscillate   {return $OSCILLATE_}
+repeat	    {return $REPEAT_}
+slice	    {return $SLICE_}
+slfrom	    {return $SLFROM_}
+slto	    {return $SLTO_}
+
+#include numeric.fin
+#include string.fin
+
+%%

@@ -1,0 +1,19 @@
+#tab panparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+open	    {return $OPEN_}
+to	    {return $TO_}
+
+#include coords.fin
+#include numeric.fin
+#include string.fin
+
+%%
+

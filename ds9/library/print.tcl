@@ -556,6 +556,7 @@ proc PrefsDialogPrint {} {
 proc ProcessPrintCmd {varname iname} {
     upvar $varname var
     upvar $iname i
+
     global ds9
 
     switch $ds9(wm) {
@@ -579,6 +580,14 @@ proc ProcessPSPrintCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	ps::YY_FLUSH_BUFFER
+	ps::yy_scan_string [lrange $var $i end]
+	ps::yyparse
+	incr i [expr $ps::yycnt-1]
+    } else {
+
     global ps
 
     switch -- [string tolower [lindex $var $i]] {
@@ -593,6 +602,16 @@ proc ProcessPSPrintCmd {varname iname} {
 
 	{} {PostScript}
 	default {incr i -1; PostScript}
+    }
+}
+}
+
+proc PSCmdSet {which value {cmd {}}} {
+    global ps
+
+    set ps($which) $value
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

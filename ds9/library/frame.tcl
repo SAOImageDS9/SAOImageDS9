@@ -1425,13 +1425,13 @@ proc KeyFrame {which K A xx yy} {
 	pan {
 	    switch -- $K {
 		Up -
-		k {Pan 0 1 canvas}
+		k {PanCanvas 0 1}
 		Down -
-		j {Pan 0 -1 canvas}
+		j {PanCanvas 0 -1}
 		Left -
-		h {Pan 1 0 canvas}
+		h {PanCanvas 1 0}
 		Right -
-		l {Pan -1 0 canvas}
+		l {PanCanvas -1 0}
 	    }
 	    UpdateMagnifier $which $xx $yy
 	}
@@ -2032,9 +2032,8 @@ proc TileDestroyDialog {} {
     if {[winfo exists $itile(top)]} {
 	destroy $itile(top)
 	destroy $itile(mb)
+	unset dtile
     }
-
-    unset dtile
 }
 
 proc TileApplyDialog {} {
@@ -2056,6 +2055,14 @@ proc TileApplyDialog {} {
 proc ProcessFrameCmd {varname iname} {
     upvar $varname var
     upvar $iname i
+
+    global debug
+    if {$debug(tcl,parser)} {
+	frame::YY_FLUSH_BUFFER
+	frame::yy_scan_string [lrange $var $i end]
+	frame::yyparse
+	incr i [expr $frame::yycnt-1]
+    } else {
 
     global current
     global active
@@ -2210,6 +2217,25 @@ proc ProcessFrameCmd {varname iname} {
 	}
     }
 }
+}
+
+proc ActiveCmdSet {which value {cmd {}}} {
+    global active
+
+    set active($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc CurrentCmdSet {which value {cmd {}}} {
+    global current
+
+    set current($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
 
 proc ProcessSendFrameCmd {proc id param} {
     global ds9
@@ -2311,6 +2337,14 @@ proc ProcessTileCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	tile::YY_FLUSH_BUFFER
+	tile::yy_scan_string [lrange $var $i end]
+	tile::yyparse
+	incr i [expr $tile::yycnt-1]
+    } else {
+	
     global current
     global tile
 
@@ -2378,6 +2412,16 @@ proc ProcessTileCmd {varname iname} {
     }
     DisplayMode
 }
+}
+
+proc TileCmdSet {which value {cmd {}}} {
+    global tile
+
+    set tile($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
 
 proc ProcessSendTileCmd {proc id param} {
     global current
@@ -2407,6 +2451,14 @@ proc ProcessBlinkCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global debug
+    if {$debug(tcl,parser)} {
+	blink::YY_FLUSH_BUFFER
+	blink::yy_scan_string [lrange $var $i end]
+	blink::yyparse
+	incr i [expr $blink::yycnt-1]
+    } else {
+
     global current
     global blink
 
@@ -2435,6 +2487,16 @@ proc ProcessBlinkCmd {varname iname} {
 	}
     }
     DisplayMode
+}
+}
+
+proc BlinkCmdSet {which value {cmd {}}} {
+    global blink
+
+    set blink($which) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
 }
 
 proc ProcessSendBlinkCmd {proc id param} {
@@ -2471,6 +2533,14 @@ proc ProcessLockCmd {varname iname} {
 
     # we need to be realized
     ProcessRealizeDS9
+
+    global debug
+    if {$debug(tcl,parser)} {
+	lock::YY_FLUSH_BUFFER
+	lock::yy_scan_string [lrange $var $i end]
+	lock::yyparse
+	incr i [expr $lock::yycnt-1]
+    } else {
 
     switch -- [string tolower [lindex $var $i]] {
 	frame -
@@ -2597,6 +2667,7 @@ proc ProcessLockCmd {varname iname} {
 	}
     }
 }
+}
 
 proc ProcessSendLockCmd {proc id param} {
     global panzoom
@@ -2646,6 +2717,14 @@ proc ProcessMatchCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	match::YY_FLUSH_BUFFER
+	match::yy_scan_string [lrange $var $i end]
+	match::yyparse
+	incr i [expr $match::yycnt-1]
+    } else {
+
     switch -- [string tolower [lindex $var $i]] {
 	frame -
 	frames {
@@ -2691,4 +2770,4 @@ proc ProcessMatchCmd {varname iname} {
 	3d {Match3DCurrent}
     }
 }
-
+}

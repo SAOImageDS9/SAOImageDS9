@@ -1,0 +1,22 @@
+#tab webparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+back	    {return $BACK_}
+clear	    {return $CLEAR_}
+click	    {return $CLICK_}
+close	    {return $CLOSE_}
+forward	    {return $FORWARD_}
+new	    {return $NEW_}
+reload	    {return $RELOAD_}
+stop	    {return $STOP_}
+
+#include numeric.fin
+#include string.fin
+
+%%

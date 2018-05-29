@@ -161,7 +161,16 @@ proc ProcessESOCmd {varname iname} {
     upvar $iname i
 
     ESODialog
-    IMGSVRProcessCmd $varname $iname deso
+
+    global debug
+    if {$debug(tcl,parser)} {
+	dsseso::YY_FLUSH_BUFFER
+	dsseso::yy_scan_string [lrange $var $i end]
+	dsseso::yyparse
+	incr i [expr $dsseso::yycnt-1]
+    } else {
+	IMGSVRProcessCmd $varname $iname deso
+    }
 }
 
 proc ProcessSendESOCmd {proc id param} {

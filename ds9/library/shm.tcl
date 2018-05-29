@@ -7,10 +7,18 @@ package provide DS9 1.0
 proc ProcessShmCmd {varname iname ml} {
     upvar $varname var
     upvar $iname i
-
     global loadParam
-    global current
-    global ds9
+
+    global debug
+    if {$debug(tcl,parser)} {
+	global parse
+	set parse(ml) $ml
+
+	shm::YY_FLUSH_BUFFER
+	shm::yy_scan_string [lrange $var $i end]
+	shm::yyparse
+	incr i [expr $shm::yycnt-1]
+    } else {
 
     set done 0
     while {!$done} {
@@ -161,7 +169,7 @@ proc ProcessShmCmd {varname iname ml} {
 
 	    rgbcube {
 		if {$ml} {
-		    CreateRGBFrame
+		    MultiLoadRGB
 		}
 		set loadParam(file,mode) {rgb cube}
 		set loadParam(shared,idtype) [lindex $var [expr $i+1]]
@@ -171,7 +179,7 @@ proc ProcessShmCmd {varname iname ml} {
 	    }
 	    srgbcube {
 		if {$ml} {
-		    CreateRGBFrame
+		    MultiLoadRGB
 		}
 		set loadParam(load,type) sshared
 		set loadParam(file,mode) {rgb cube}
@@ -183,7 +191,7 @@ proc ProcessShmCmd {varname iname ml} {
 	    }
 	    rgbimage {
 		if {$ml} {
-		    CreateRGBFrame
+		    MultiLoadRGB
 		}
 		set loadParam(file,mode) {rgb image}
 		set loadParam(shared,idtype) [lindex $var [expr $i+1]]
@@ -193,7 +201,7 @@ proc ProcessShmCmd {varname iname ml} {
 	    }
 	    rgbarray {
 		if {$ml} {
-		    CreateRGBFrame
+		    MultiLoadRGB
 		}
 		set loadParam(file,type) array
 		set loadParam(file,mode) {rgb cube}
@@ -238,6 +246,24 @@ proc ProcessShmCmd {varname iname ml} {
 	}
     }
     FinishLoad
+}
+}
+
+proc ShmCmdSet {loadtype filetype filemode sharedidtype sharedid filename {sharedhdr {}}} {
+
+    global loadparam
+    set loadparam(load,type) $loadtype
+    set loadparam(file,type) $filetype
+    set loadparam(file,mode) $filemode
+    set loadparam(shared,idtype) $sharedidtype
+    set loadparam(shared,id) $sharedid
+    set loadparam(file,name) $filename
+    set loadparam(shared,hdr) $sharedhdr
+    
+    # mask not supported
+    set loadParam(load,layer) {}
+
+    ProcessLoad
 }
 
 proc ProcessSendShmCmd {proc id param} {

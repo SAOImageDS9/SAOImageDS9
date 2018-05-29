@@ -631,9 +631,8 @@ proc BinDestroyDialog {} {
     if {[winfo exists $ibin(top)]} {
 	destroy $ibin(top)
 	destroy $ibin(mb)
+	unset dbin
     }
-
-    unset dbin
 }
 
 proc MatchBinCurrent {} {
@@ -724,8 +723,15 @@ proc ProcessBinCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global bin
+    global debug
+    if {$debug(tcl,parser)} {
+	bin::YY_FLUSH_BUFFER
+	bin::yy_scan_string [lrange $var $i end]
+	bin::yyparse
+	incr i [expr $bin::yycnt-1]
+    } else {
 
+    global bin
     switch -- [string tolower [lindex $var $i]] {
 	close {BinDestroyDialog}
 	open {BinDialog}
@@ -799,6 +805,16 @@ proc ProcessBinCmd {varname iname} {
 	    incr i
 	    BinToFit
 	}
+    }
+}
+}
+
+proc BinCmdSet {which value {cmd {}}} {
+    global bin
+
+    set bin($which) $value
+    if {$cmd != {}} {
+	eval $cmd
     }
 }
 

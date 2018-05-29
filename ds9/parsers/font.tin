@@ -1,0 +1,12 @@
+%token FONT_
+%token FONTSIZE_
+%token FONTSLANT_
+%token FONTSTYLE_
+%token FONTWEIGHT_
+%token TIMES_
+%token HELVETICA_
+%token COURIER_
+%token NORMAL_
+%token BOLD_
+%token ROMAN_
+%token ITALIC_

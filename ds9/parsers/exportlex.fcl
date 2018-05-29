@@ -1,0 +1,31 @@
+#tab exportparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+array	    {return $ARRAY_}
+rgbarray    {return $RGBARRAY_}
+nrrd	    {return $NRRD_}
+envi	    {return $ENVI_}
+
+gif	    {return $GIF_}
+tiff	    {return $TIFF_}
+jpeg	    {return $JPEG_}
+png	    {return $PNG_}
+
+big	    {return $BIG_}
+little	    {return $LITTLE_}
+native	    {return $NATIVE_}
+
+none	    {return $NONE_}
+packbits    {return $PACKBITS_}
+deflate	    {return $DEFLATE_}
+
+#include numeric.fin
+#include string.fin
+
+%%

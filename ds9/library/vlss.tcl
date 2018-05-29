@@ -123,7 +123,16 @@ proc ProcessVLSSCmd {varname iname} {
     upvar $iname i
 
     VLSSDialog
-    IMGSVRProcessCmd $varname $iname dvlss
+
+    global debug
+    if {$debug(tcl,parser)} {
+	vlss::YY_FLUSH_BUFFER
+	vlss::yy_scan_string [lrange $var $i end]
+	vlss::yyparse
+	incr i [expr $vlss::yycnt-1]
+    } else {
+	IMGSVRProcessCmd $varname $iname dvlss
+    }
 }
 
 proc ProcessSendVLSSCmd {proc id param} {

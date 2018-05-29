@@ -1,0 +1,6 @@
+yes	    {return $YES_}
+no	    {return $NO_}
+on	    {return $ON_}
+off	    {return $OFF_}
+true	    {return $TRUE_}
+false	    {return $FALSE_}

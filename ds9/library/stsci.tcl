@@ -30,7 +30,7 @@ proc STSCIDialog {} {
 	return
     }
 
-    set varname dstscii
+    set varname dstsci
     upvar #0 $varname var
     global $varname
 
@@ -173,10 +173,19 @@ proc ProcessSTSCICmd {varname iname} {
     upvar $iname i
 
     STSCIDialog
-    IMGSVRProcessCmd $varname $iname dstscii
+
+    global debug
+    if {$debug(tcl,parser)} {
+	dssstsci::YY_FLUSH_BUFFER
+	dssstsci::yy_scan_string [lrange $var $i end]
+	dssstsci::yyparse
+	incr i [expr $dssstsci::yycnt-1]
+    } else {
+	IMGSVRProcessCmd $varname $iname dstsci
+    }
 }
 
 proc ProcessSendSTSCICmd {proc id param} {
     STSCIDialog
-    IMGSVRProcessSendCmd $proc $id $param dstscii
+    IMGSVRProcessSendCmd $proc $id $param dstsci
 }

@@ -1,0 +1,24 @@
+#tab modeparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+none	    {return $NONE_}
+region	    {return $REGION_}
+crosshair   {return $CROSSHAIR_}
+colorbar    {return $COLORBAR_}
+pan	    {return $PAN_}
+zoom	    {return $ZOOM_}
+rotate	    {return $ROTATE_}
+crop	    {return $CROP_}
+catalog	    {return $CATALOG_}
+examine	    {return $EXAMINE_}
+pointer	    {return $POINTER_}
+
+#include string.fin
+
+%%

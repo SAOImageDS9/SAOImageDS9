@@ -27,7 +27,10 @@ proc ProcessCommandLineFirst {} {
 		puts "For more information, use --help"
 		QuitDS9
 	    }
-	    -debug {incr i; ProcessDebugTclCmd argv i}
+	    -debug {
+		incr i
+		ProcessDebugTclCmd argv i
+	    }
 	    -private {
 		# backward compatibility
 	    }
@@ -47,7 +50,10 @@ proc ProcessCommandLineFirst {} {
 		incr i
 		set pds9(language,dir) [lindex $argv $i]
 	    }
-	    -xpa {incr i; ProcessXPAFirstCmd argv i}
+	    -xpa {
+		incr i
+		ProcessXPAFirstCmd argv i
+	    }
 	}
 	incr i
     }
@@ -450,17 +456,7 @@ proc ProcessCommand {argv argc} {
 	    }
 	    -zscale {incr i; ProcessZScaleCmd argv i}
 	    -zmax {set scale(mode) zmax; ChangeScaleMode}
-	    -zoom {
-		incr i;
-		ProcessZoomCmd argv i
-
-		if {0} {
-		    zoom::YY_FLUSH_BUFFER
-		    zoom::yy_scan_string [lrange $argv $i end]
-		    zoom::yyparse
-		    incr i [expr $zoom::yycnt-1]
-		}
-	    }
+	    -zoom {incr i; ProcessZoomCmd argv i}
 
 	    default {
 		# allow abc, -, and -[foo] but not -abc
@@ -538,11 +534,11 @@ proc CommandLineLoadBase {item argvname iname} {
 
 
 	rgbimage {
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    LoadRGBImageFile $item
 	}
 	rgbcube {
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    LoadRGBCubeFile $item
 	}
 
@@ -578,7 +574,7 @@ proc CommandLineLoadBase {item argvname iname} {
 	}
 	srgbcube {
 	    #backward compatibility
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    incr i
 	    LoadSRGBCubeFile $item [lindex $argv $i]
 	}
@@ -596,7 +592,7 @@ proc CommandLineLoadBase {item argvname iname} {
 	    ImportArrayFile $item $file(layer)
 	}
 	rgbarray {
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    ImportRGBArrayFile $item
 	}
 	nrrd {
@@ -717,11 +713,11 @@ proc CommandLineLoad3D {item argvname iname} {
 	}
 
 	rgbimage {
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    LoadRGBImageFile $item
 	}
 	rgbcube {
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    LoadRGBCubeFile $item
 	}
 
@@ -757,7 +753,7 @@ proc CommandLineLoad3D {item argvname iname} {
 	}
 	srgbcube {
 	    #backward compatibility
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    incr i
 	    LoadSRGBCubeFile $item [lindex $argv $i]
 	}
@@ -775,7 +771,7 @@ proc CommandLineLoad3D {item argvname iname} {
 	    ImportArrayFile $item {}
 	}
 	rgbarray {
-	    CreateRGBFrame
+	    MultiLoadRGB
 	    ImportRGBArrayFile $item
 	}
 	nrrd {

@@ -1132,7 +1132,7 @@ proc CATBackup {ch which fdir rdir} {
 		set rfn $rdir/${varname}.cat
 
 		catch {file delete -force $fn}
-		CATSaveFn $varname "$fn" VOTWrite
+		CATSaveFn $varname $fn VOTWrite
 		puts $ch "CATLoadFn $varname \"$rfn\" VOTRead"
 	    } else {
 		# internal var
@@ -1236,114 +1236,27 @@ proc PrefsDialogCatalog {} {
 
 # Process Cmds
 
-proc CatalogInitCmd {} {
-    global icat
-
-    set ref [lindex $icat(cats) end]
-    global cvarname
-    set cvarname $ref
-}
-
-proc CatalogRefCmd {ref} {
-    global icat
-    global cvarname
-
-    # backward compatibility
-    if {$ref == "cxc"} {
-	set ref csc
-    }
-
-    # look for reference in current list
-    if {[lsearch $icat(cats) cat${ref}] < 0} {
-	# see if its from our list of cats
-	foreach mm $icat(def) {
-	    set ll [lindex $mm 0]
-	    set ww [lindex $mm 1]
-	    set ss [lindex $mm 2]
-	    set cc [lindex $mm 3]
-
-	    if {$ll != {-} && "cat${ref}" == $ww} {
-		CATDialog $ww $ss $cc $ll sync
-		set cvarname cat${ref}
-		return
-	    }
-	}
-
-	# not a default, assume other name
-	CATDialog catcds cds $ref $ref sync
-    }
-    set cvarname cat${ref}
-}
-
-proc CatalogSymbolLoadCmd {fn} {
-    global cvarname
-    global $cvarname
-
-    if {[file exists $fn]} {
-	starbase_read ${cvarname}(symdb) $fn
-	CATGenerate $cvarname
-    } else {
-	Error "[msgcat::mc {Unable to open file}] $fn"
-	return
-    }
-}
-
-proc CatalogSymbolAddCmd {} {
-    global cvarname
-    global $cvarname
-
-    set row [expr [starbase_nrows ${cvarname}(symdb)]+1]
-    starbase_rowins ${cvarname}(symdb) $row
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) shape] $pcat(sym,shape)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) color] $pcat(sym,color)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) width] $pcat(sym,width)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) font] $pcat(sym,font)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) fontsize] \
-	$pcat(sym,font,size)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) fontweight] \
-	$pcat(sym,font,weight)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) fontslant] \
-	$pcat(sym,font,slant)
-    starbase_set ${cvarname}(symdb) $row \
-	[starbase_colnum ${cvarname}(symdb) units] $pcat(sym,units)
-    CATGenerate ${cvarname}name
-}
-
-proc CatalogSAMPCmd {name} {
-    global cvarname
-    global $cvarname
-    global samp
-
-    if {[info exists samp]} {
-	foreach arg $samp(apps,votable) {
-	    foreach {key val} $arg {
-		if {[string tolower $val] == $name} {
-		    SAMPSendTableLoadVotable $key $cvarname
-		    break
-		}
-	    }
-	}
-    } else {
-	Error [msgcat::mc {SAMP: not connected}]
-    }
-}
-
 proc ProcessCatalogCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global icat
-
     # we need to be realized
     ProcessRealizeDS9
 
+    global debug
+    if {$debug(tcl,parser)} {
+	global icat
+	set ref [lindex $icat(cats) end]
+	global cvarname
+	set cvarname $ref
+
+	cat::YY_FLUSH_BUFFER
+	cat::yy_scan_string [lrange $var $i end]
+	cat::yyparse
+	incr i [expr $cat::yycnt-1]
+    } else {
+
+    global icat
     set item [string tolower [lindex $var $i]]
     switch -- $item {
 	{} {CATTool}
@@ -1501,6 +1414,7 @@ proc ProcessCatalogCmd {varname iname} {
 	    }
 	}
     }
+}
 }
 
 proc ProcessCatalog {varname iname cvarname} {
@@ -1694,7 +1608,6 @@ proc ProcessCatalog {varname iname cvarname} {
 	samp {
 	    global ds9
 	    global samp
-
 	    incr i
 	    switch -- [string tolower [lindex $var $i]] {
 		send {
@@ -1769,7 +1682,6 @@ proc ProcessCatalog {varname iname cvarname} {
 		set row [lindex $var $i]
 		incr i
 	    }
-
 	    switch -- [lindex $var $i] {
 		add {
 		    set row [expr [starbase_nrows $cvar(symdb)]+1]
@@ -1911,6 +1823,339 @@ proc ProcessCatalog {varname iname cvarname} {
 	    CATGenerate $cvarname
 	}
     }
+}
+
+proc CatalogCmdCheck {} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    if {![info exists cvar(top)]} {
+	Error "[msgcat::mc {Unable to find catalog window}] $cvarname"
+	cat::YYABORT
+	return
+    }
+    if {![winfo exists $cvar(top)]} {
+	Error "[msgcat:: mc {Unable to find catalog window}] $cvarname"
+	cat::YYABORT
+	return
+    }
+}
+
+proc CatalogCmdRef {ref} {
+    global icat
+    global cvarname
+
+    # backward compatibility
+    if {$ref == "cxc"} {
+	set ref csc
+    }
+
+    # look for reference in current list
+    if {[lsearch $icat(cats) cat${ref}] < 0} {
+	# see if its from our list of cats
+	foreach mm $icat(def) {
+	    set ll [lindex $mm 0]
+	    set ww [lindex $mm 1]
+	    set ss [lindex $mm 2]
+	    set cc [lindex $mm 3]
+
+	    if {$ll != {-} && "cat${ref}" == $ww} {
+		CATDialog $ww $ss $cc $ll sync
+		set cvarname cat${ref}
+		return
+	    }
+	}
+
+	# not a default, assume other name
+	CATDialog cat${ref} cds $ref $ref sync
+	set cvarname cat${ref}
+    }
+}
+
+proc CatalogCmdIcat {which value} {
+    global icat
+
+    set icat($which) $value
+}
+
+proc CatalogCmdSet {which value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+}
+
+proc CatalogCmdGenerate {which value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+    CATGenerate $cvarname
+}
+
+proc CatalogCmdEdit {value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(edit) $value
+    CATEdit $cvarname
+}
+
+proc CatalogCmdCoord {xx yy skyframe} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(x) $xx
+    set cvar(y) $yy
+    set cvar(sky) $skyframe
+}
+
+proc CatalogCmdFilterLoad {fn} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    if {$fn != {}} {
+	if {[catch {open $fn r} fp]} {
+	    Error "[msgcat::mc {Unable to open file}] $fn: $fp"
+	    yyerror
+	}
+	set flt [read -nonewline $fp]
+	catch {regsub {\n} $flt " " $flt}
+	set cvar(filter) [string trim $flt]
+	catch {close $fp}
+    }
+}
+
+proc CatalogCmdFilter {filter} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(filter) $filter
+    CATTable $cvarname
+}
+
+proc CatalogCmdLoad {fn reader} {
+    global icat
+
+    if {$fn != {}} {
+	CATDialog cattool {} {} {} none
+	CATLoadFn [lindex $icat(cats) end] $fn $reader
+	FileLast catfbox $fn
+    }
+}
+
+proc CatalogCmdMatch {} {
+    global icat
+
+    set icat(match1) {}
+    set icat(match2) {}
+    set ll [llength $icat(cats)]
+    if {$ll>1} {
+	CatalogCmdMatchParams [lindex $icat(cats) [expr $ll-2]] \
+	    [lindex $icat(cats) [expr $ll-1]]
+    }
+}
+
+proc CatalogCmdMatchParams {cat1 cat2} {
+    global icat
+    global current
+
+    set icat(match1) $cat1
+    set icat(match2) $cat2
+    if {$current(frame) != {}} {
+	CATMatch $current(frame) $icat(match1) $icat(match2)
+    }
+}
+
+proc CatalogCmdMatchError {error eformat} {
+    global icat
+
+    set icat(error) $error
+    set icat(eformat) $eformat
+}
+
+proc CatalogCmdPlot {xx yy xerr yerr} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(plot,x) $xx
+    set cvar(plot,y) $yy
+    set cvar(plot,xerr) $xerr
+    set cvar(plot,yerr) $yerr
+    CATPlotGenerate $cvarname
+}
+
+proc CatalogCmdSAMP {} {
+    global cvarname
+    global samp
+
+    if {[info exists samp]} {
+	SAMPSendTableLoadVotable {} $cvarname
+    } else {
+	Error [msgcat::mc {SAMP: not connected}]
+    }
+}
+
+proc CatalogCmdSAMPSend {name} {
+    global cvarname
+    global samp
+
+    if {[info exists samp]} {
+	foreach arg $samp(apps,votable) {
+	    foreach {key val} $arg {
+		if {[string tolower $val] == $name} {
+		    SAMPSendTableLoadVotable $key $cvarname
+		    break
+		}
+	    }
+	}
+    } else {
+	Error [msgcat::mc {SAMP: not connected}]
+    }
+}
+
+proc CatalogCmdSave {fn writer} {
+    global cvarname
+
+    if {$fn != {}} {
+	CATSaveFn $cvarname $fn $writer
+    	FileLast catfbox $fn
+    }
+}
+
+proc CatalogCmdSize {width height rformat} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(width) $width
+    set cvar(height) $height
+    set cvar(rformat) $rformat
+    set cvar(rformat,msg) $rformat
+}
+
+proc CatalogCmdSkyframe {skyframe} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(sky) $skyframe
+    CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]
+}
+
+proc CatalogCmdSystem {sys} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(system) $sys
+    CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]
+}
+
+proc CatalogCmdSort {col dir} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar(sort) $col
+    set cvar(sort,dir) $dir
+    CATTable $cvarname
+}
+
+proc CatalogCmdSymbol {col value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    starbase_set $cvar(symdb) $cvar(row) \
+	[starbase_colnum $cvar(symdb) $col] $value
+    CATGenerate $cvarname
+}
+
+proc CatalogCmdSymbolFontStyle {value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    switch $value {
+	normal {
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontweight] normal
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontslant] roman
+	}
+	bold {
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontweight] bold
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontslant] roman
+	}
+	italic {
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontweight] normal
+	    starbase_set $cvar(symdb) $cvar(row) \
+		[starbase_colnum $cvar(symdb) fontslant] italic
+	}
+    }
+    CATGenerate $cvarname
+}
+
+proc CatalogCmdSymbolAdd {} {
+    global cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    global pcat
+
+    set row [expr [starbase_nrows $cvar(symdb)]+1]
+    starbase_rowins $cvar(symdb) $row
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) shape] $pcat(sym,shape)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) color] $pcat(sym,color)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) width] $pcat(sym,width)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) font] $pcat(sym,font)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) fontsize] \
+	$pcat(sym,font,size)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) fontweight] \
+	$pcat(sym,font,weight)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) fontslant] \
+	$pcat(sym,font,slant)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) units] $pcat(sym,units)
+    CATGenerate $cvarname
+}
+
+proc CatalogCmdSymbolRemove {} {
+    global cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    starbase_rowdel $cvar(symdb) $cvar(row)
+    CATGenerate $cvarname
+}
+
+proc CatalogCmdSymbolLoad {fn} {
+    global cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    if {[file exists $fn]} {
+	starbase_read $cvar(symdb) $fn
+	CATGenerate $cvarname
+    } else {
+	Error "[msgcat::mc {Unable to open file}] $fn"
+	return
+    }
+}
+
+proc CatalogCmdSymbolSave {fn} {
+    global cvarname
+    upvar #0 $cvarname cvar
+    global $cvar(symdb)
+
+    starbase_write $cvar(symdb) $fn
 }
 
 proc ProcessSendCatalogCmd {proc id param sock fn} {

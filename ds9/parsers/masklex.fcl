@@ -1,0 +1,20 @@
+#tab maskparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+close	    {return $CLOSE_}
+clear	    {return $CLEAR_}
+color	    {return $COLOR_}
+mark	    {return $MARK_}
+open	    {return $OPEN_}
+transparency {return $TRANSPARENCY_}
+
+#include numeric.fin
+#include string.fin
+
+%%

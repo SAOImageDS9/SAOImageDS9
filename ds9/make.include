@@ -7,11 +7,11 @@ vpath %.fcl $(prefix)/ds9/parsers
 # -w generate warnings
 # -d generate lexer table
 $(prefix)/ds9/parsers/%parser.tcl : %parser.tac
-	tclsh $(prefix)/taccle/taccle.tcl -p $* -d -v -w $<
+	tclsh $(prefix)/taccle/taccle.tcl -p $* -d $<
 
 # -d debug
 $(prefix)/ds9/parsers/%lex.tcl : %lex.fcl
-	tclsh $(prefix)/fickle/fickle.tcl -P $* -d $<
+	tclsh $(prefix)/fickle/fickle.tcl -P $* $<
 
 #--------------------------library
 

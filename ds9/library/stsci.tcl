@@ -174,15 +174,10 @@ proc ProcessSTSCICmd {varname iname} {
 
     STSCIDialog
 
-    global debug
-    if {$debug(tcl,parser)} {
-	dssstsci::YY_FLUSH_BUFFER
-	dssstsci::yy_scan_string [lrange $var $i end]
-	dssstsci::yyparse
-	incr i [expr $dssstsci::yycnt-1]
-    } else {
-	IMGSVRProcessCmd $varname $iname dstsci
-    }
+    dssstsci::YY_FLUSH_BUFFER
+    dssstsci::yy_scan_string [lrange $var $i end]
+    dssstsci::yyparse
+    incr i [expr $dssstsci::yycnt-1]
 }
 
 proc ProcessSendSTSCICmd {proc id param} {

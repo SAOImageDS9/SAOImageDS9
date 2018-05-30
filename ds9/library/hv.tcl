@@ -841,14 +841,13 @@ proc WebCmdCheck {} {
 
     if {![info exists cvar(top)]} {
 	Error "[msgcat::mc {Unable to find web window}] $cvarname"
-	cat::YYABORT
-	return
+	return 0
     }
     if {![winfo exists $cvar(top)]} {
 	Error "[msgcat:: mc {Unable to find web window}] $cvarname"
-	cat::YYABORT
-	return
+	return 0
     }
+    return 1
 }
 
 proc WebCmdRef {ref} {
@@ -858,11 +857,11 @@ proc WebCmdRef {ref} {
     # look for reference in current list
     if {[lsearch $ihv(windows) $ref] < 0} {
 	Error "[msgcat::mc {Unable to find web window}] $ref"
-	plot::YYABORT
-	return
+	return 0
     }
+
     set cvarname $ref
-    WebCmdCheck
+    return [WebCmdCheck]
 }
 
 proc WebCmdNew {url {ww {hvweb}}} {

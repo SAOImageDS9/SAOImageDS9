@@ -124,14 +124,13 @@ proc PlotCmdCheck {} {
 
     if {![info exists cvar(top)]} {
 	Error "[msgcat::mc {Unable to find plot window}] $cvarname"
-	plot::YYABORT
-	return
+	return 0
     }
     if {![winfo exists $cvar(top)]} {
 	Error "[msgcat::mc {Unable to find plot window}] $cvarname"
-	plot::YYABORT
-	return
+	return 0
     }
+    return 1
 }
 
 proc PlotCmdRef {ref} {
@@ -141,11 +140,11 @@ proc PlotCmdRef {ref} {
     # look for reference in current list
     if {[lsearch $iap(windows) $ref] < 0} {
 	Error "[msgcat::mc {Unable to find plot window}] $ref"
-	plot::YYABORT
-	return
+	return 0
     }
+
     set cvarname $ref
-    PlotCmdCheck
+    return [PlotCmdCheck]
 }
 
 proc PlotCmdNew {name} {
@@ -203,8 +202,6 @@ proc PlotCmdData {dim} {
 	}
 	if {$parse(buf) == {}} {
 	    Error "[msgcat::mc {Unable to load plot data}] $fn"
-	    plot::YYABORT
-	    return
 	}
     }
     

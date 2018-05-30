@@ -1260,14 +1260,13 @@ proc CatalogCmdCheck {} {
 
     if {![info exists cvar(top)]} {
 	Error "[msgcat::mc {Unable to find catalog window}] $cvarname"
-	cat::YYABORT
-	return
+	return 0
     }
     if {![winfo exists $cvar(top)]} {
 	Error "[msgcat:: mc {Unable to find catalog window}] $cvarname"
-	cat::YYABORT
-	return
+	return 0
     }
+    return 1
 }
 
 proc CatalogCmdRef {ref} {

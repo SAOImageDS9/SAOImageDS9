@@ -7,7 +7,6 @@
 %start command
 
 %token CLEAR_
-%token ENTRY_
 %token LOAD_
 %token MESSAGE_
 %token PLOT_
@@ -53,7 +52,11 @@ task : INT_ {AnalysisTask $1 menu}
  ;
 
 clear : {ClearAnalysis}
- | LOAD_ STRING_ {ClearAnalysis; ProcessAnalysisFile $2}
+ | LOAD_ clearLoad
+ ;
+ 
+clearLoad : {ClearAnalysis; AnalysisCmdLoad}
+ | STRING_ {ClearAnalysis; ProcessAnalysisFile $1}
  ;
 
 message : {set _ ok}

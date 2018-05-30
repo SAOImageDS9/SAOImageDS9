@@ -1446,7 +1446,7 @@ proc RegionCmdLoad {} {
 	UpdateGroupDialog
     } elseif {$parse(fn) != {}} {
 	# samp path
-	MarkerLoadFrames $fn $current(frame) \
+	MarkerLoadFrames $parse(fn) $current(frame) \
 	    $marker(load,format) $marker(load,system) $marker(load,sky)
     }
 }

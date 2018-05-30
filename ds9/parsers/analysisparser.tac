@@ -79,6 +79,7 @@ dim : XY_ {set _ xy}
  | XYEX_ {set _ xyex}
  | XYEY_ {set _ xyey}
  | XYEXEY_ {set _ xyexey}
+ | INT_ {set _ $1}
  ;
 
 %%

@@ -1707,95 +1707,12 @@ proc ProcessSAMPCmd {varname iname} {
 
     # we need to be realized
     ProcessRealizeDS9
-
     SAMPUpdate
 
-    global debug
-    if {$debug(tcl,parser)} {
-	samp::YY_FLUSH_BUFFER
-	samp::yy_scan_string [lrange $var $i end]
-	samp::yyparse
-	incr i [expr $samp::yycnt-1]
-    } else {
-
-    global samp
-    global ds9
-    global env
-    switch -- [string tolower [lindex $var $i]] {
-	send {
-	    incr i
-	    switch -- [string tolower [lindex $var $i]] {
-		image {
-		    incr i
-		    set name [string tolower [lindex $var $i]]
-		    if {[info exists samp]} {
-			foreach arg $samp(apps,image) {
-			    foreach {key val} $arg {
-				if {[string tolower $val] == $name} {
-				    SAMPSendImageLoadFits $key
-				    break
-				}
-			    }
-			}
-		    } else {
-			Error "SAMP: [msgcat::mc {not connected}]"
-		    }
-		}
-		table {
-		    incr i
-		    set name [string tolower [lindex $var $i]]
-		    if {[info exists samp]} {
-			foreach arg $samp(apps,table) {
-			    foreach {key val} $arg {
-				if {[string tolower $val] == $name} {
-				    SAMPSendTableLoadFits $key
-				    break
-				}
-			    }
-			}
-		    } else {
-			Error "SAMP: [msgcat::mc {not connected}]"
-		    }
-		}
-		default {
-		    set name [string tolower [lindex $var $i]]
-		    if {[info exists samp]} {
-			foreach arg $samp(apps,image) {
-			    foreach {key val} $arg {
-				if {[string tolower $val] == $name} {
-				    SAMPSendImageLoadFits $key
-				    break
-				}
-			    }
-			}
-		    } else {
-			Error "SAMP: [msgcat::mc {not connected}]"
-		    }
-		}
-	    }
-	}
-	broadcast {
-	    incr i
-	    switch -- [string tolower [lindex $var $i]] {
-		image {SAMPSendImageLoadFits {}}
-		table {SAMPSendTableLoadFits {}}
-		default {
-		    incr i -1
-		    SAMPSendImageLoadFits {}
-		}
-	    }
-	}
-	connect {SAMPConnect}
-	disconnect {SAMPDisconnect}
-	default {
-	    if {[FromYesNo [lindex $var $i]]} {
-		SAMPConnect
-	    } else {
-		SAMPDisconnect
-	    }
-	}
-    }
-}
+    samp::YY_FLUSH_BUFFER
+    samp::yy_scan_string [lrange $var $i end]
+    samp::yyparse
+    incr i [expr $samp::yycnt-1]
 }
 
 proc SAMPCmdSendImage {name} {

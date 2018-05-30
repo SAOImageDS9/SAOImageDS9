@@ -33,44 +33,8 @@ proc ProcessSRGBCubeCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	srgbcube::YY_FLUSH_BUFFER
-	srgbcube::yy_scan_string [lrange $var $i end]
-	srgbcube::yyparse
-	incr i [expr $srgbcube::yycnt-1]
-    } else {
-
-    switch -- [string tolower [lindex $var $i]] {
-	new {
-	    incr i
-	    CreateRGBFrame
-	}
-	mask {
-	    incr i
-	    # not supported
-	}
-	slice {
-	    incr i
-	    # not supported
-	}
-    }
-
-    if {$sock != {}} {
-	# xpa
-	if {0} {
-	    # not supported
-	} else {
-	    LoadSRGBCubeFile [lindex $var $i] [lindex $var [expr $i+1]]
-	}
-    } else {
-	# comm
-	if {0} {
-	    # not supported
-	} else {
-	    LoadSRGBCubeFile [lindex $var $i] [lindex $var [expr $i+1]]
-	}
-    }
-    FinishLoad
-}
+    srgbcube::YY_FLUSH_BUFFER
+    srgbcube::yy_scan_string [lrange $var $i end]
+    srgbcube::yyparse
+    incr i [expr $srgbcube::yycnt-1]
 }

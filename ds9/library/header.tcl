@@ -64,22 +64,27 @@ proc DisplayHeaderMenu {} {
 	}
 
 	if {$slb(count) <= 1} {
-	    DisplayHeader $current(frame) 1 $fn
+	    DisplayHeader 1 $fn
 	} else {
 	    if {[SLBDialog slb {Select Header} 40]} {
-		DisplayHeader $current(frame) $slb(value) $slb(item)
+		DisplayHeader $slb(value) $slb(item)
 	    }
 	}
     }
 }
 
-proc DisplayHeader {frame id title} {
+proc DisplayHeader {id title} {
     global current
 
-    set varname "hd-$frame-$id"
+    set frame $current(frame)
+    set varname "hd-$current(frame)-$id"
     global $varname
-    SimpleTextDialog $varname $title 80 40 insert top \
-	[$current(frame) get fits header $id]
+
+    set hh {}
+    if {[$frame has fits]} {
+	set hh [$frame get fits header $id]
+    }
+    SimpleTextDialog $varname $title 80 40 insert top $hh
 
     # create a special text tag for keywords
     upvar #0 $varname var
@@ -143,65 +148,16 @@ proc ProcessHeaderCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	header::YY_FLUSH_BUFFER
-	header::yy_scan_string [lrange $var $i end]
-	header::yyparse
-	incr i [expr $header::yycnt-1]
-    } else {
-	
-    set item [string tolower [lindex $var $i]]
-    switch -- $item {
-	close -
-	save {incr i}
-    }
-
-    if {[lindex $var $i] != {} && [string is integer [lindex $var $i]]} {
-	set jj [lindex $var $i]
-	incr i
-    } else {
-	set jj 1
-    }
-
-    global current
-    if {$current(frame) != {}} {
-	switch -- $item {
-	    close {
-		set vvarname "hd[string range $current(frame) end end]-$jj"
-		upvar #0 $vvarname vvar
-		global $vvarname
-
-		if {[info exists vvar(top)]} {
-		    SimpleTextDestroy $vvarname
-		}
-		incr i -1
-	    }
-	    save {
-		set fn [lindex $var $i]
-		if {$fn != {}} {
-		    if {[catch {set ch [open "| cat > \"$fn\"" w]}]} {
-			Error [msgcat::mc {An error has occurred while saving}]
-			return
-		    }
-		    puts -nonewline $ch [$current(frame) get fits header $jj]
-		    close $ch
-		}
-	    }
-	    default {
-		catch {DisplayHeader $current(frame) $jj \
-			   [$current(frame) get fits file name $jj]}
-		incr i -1
-	    }
-	}
-    }
-}
+    header::YY_FLUSH_BUFFER
+    header::yy_scan_string [lrange $var $i end]
+    header::yyparse
+    incr i [expr $header::yycnt-1]
 }
 
 proc DisplayHeaderCmd {id} {
     global current
 
-    DisplayHeader $current(frame) $id [$current(frame) get fits file name $id]
+    DisplayHeader $id [$current(frame) get fits file name $id]
 }
 
 proc CloseHeaderCmd {id} {

@@ -1197,59 +1197,10 @@ proc ProcessPrefsCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	prefs::YY_FLUSH_BUFFER
-	prefs::yy_scan_string [lrange $var $i end]
-	prefs::yyparse
-	incr i [expr $prefs::yycnt-1]
-    } else {
-
-    global pds9
-    global ds9
-
-    switch -- [string tolower [lindex $var $i]] {
-	clear {ClearPrefs}
-	precision {
-	    incr i
-	    set pds9(prec,linear) [lindex $var $i]
-	    incr i
-	    set pds9(prec,deg) [lindex $var $i]
-	    incr i
-	    set pds9(prec,hms) [lindex $var $i]
-	    incr i
-	    set pds9(prec,dms) [lindex $var $i]
-	    incr i
-	    set pds9(prec,arcmin) [lindex $var $i]
-	    incr i
-	    set pds9(prec,arcsec) [lindex $var $i]
-	    PrefsPrecision
-	}
-	bgcolor {
-	    # backward compatibility
-	    incr i
-	    set pds9(bg) [lindex $var $i]
-	    PrefsBgColor
-	}
-	nancolor {
-	    # backward compatibility
-	    incr i
-	    set pds9(nan) [lindex $var $i]
-	    PrefsNanColor
-	}
-	threads {
-	    # backward compatibility
-	    incr i
-	    set ds9(threads) [lindex $var $i]
-	    ChangeThreads
-	}
-	irafalign {
-	    incr i
-	    set pds9(iraf) [FromYesNo [lindex $var $i]]
-	    PrefsIRAFAlign
-	}
-    }
-}
+    prefs::YY_FLUSH_BUFFER
+    prefs::yy_scan_string [lrange $var $i end]
+    prefs::yyparse
+    incr i [expr $prefs::yycnt-1]
 }
 
 proc ProcessSendPrefsCmd {proc id param} {
@@ -1270,28 +1221,10 @@ proc ProcessPrecisionCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	precision::YY_FLUSH_BUFFER
-	precision::yy_scan_string [lrange $var $i end]
-	precision::yyparse
-	incr i [expr $precision::yycnt-1]
-    } else {
-
-    global pds9
-    set pds9(prec,linear) [lindex $var $i]
-    incr i
-    set pds9(prec,deg) [lindex $var $i]
-    incr i
-    set pds9(prec,hms) [lindex $var $i]
-    incr i
-    set pds9(prec,dms) [lindex $var $i]
-    incr i
-    set pds9(prec,arcmin) [lindex $var $i]
-    incr i
-    set pds9(prec,arcsec) [lindex $var $i]
-    PrefsPrecision
-}
+    precision::YY_FLUSH_BUFFER
+    precision::yy_scan_string [lrange $var $i end]
+    precision::yyparse
+    incr i [expr $precision::yycnt-1]
 }
 
 proc ProcessSendPrecisionCmd {proc id param} {
@@ -1304,18 +1237,10 @@ proc ProcessBgCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	bg::YY_FLUSH_BUFFER
-	bg::yy_scan_string [lrange $var $i end]
-	bg::yyparse
-	incr i [expr $bg::yycnt-1]
-    } else {
-
-    global pds9
-    set pds9(bg) [lindex $var $i]
-    PrefsBgColor
-}
+    bg::YY_FLUSH_BUFFER
+    bg::yy_scan_string [lrange $var $i end]
+    bg::yyparse
+    incr i [expr $bg::yycnt-1]
 }
 
 proc ProcessSendBgCmd {proc id param} {
@@ -1328,18 +1253,10 @@ proc ProcessNanCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	nan::YY_FLUSH_BUFFER
-	nan::yy_scan_string [lrange $var $i end]
-	nan::yyparse
-	incr i [expr $nan::yycnt-1]
-    } else {
-
-    global pds9
-    set pds9(nan) [lindex $var $i]
-    PrefsNanColor
-}
+    nan::YY_FLUSH_BUFFER
+    nan::yy_scan_string [lrange $var $i end]
+    nan::yyparse
+    incr i [expr $nan::yycnt-1]
 }
 
 proc ProcessSendNanCmd {proc id param} {
@@ -1352,18 +1269,10 @@ proc ProcessThreadsCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	threads::YY_FLUSH_BUFFER
-	threads::yy_scan_string [lrange $var $i end]
-	threads::yyparse
-	incr i [expr $threads::yycnt-1]
-    } else {
-
-    global ds9
-    set ds9(threads) [lindex $var $i]
-    ChangeThreads
-}
+    threads::YY_FLUSH_BUFFER
+    threads::yy_scan_string [lrange $var $i end]
+    threads::yyparse
+    incr i [expr $threads::yycnt-1]
 }
 
 proc ProcessSendThreadsCmd {proc id param} {
@@ -1404,38 +1313,10 @@ proc ProcessCursorCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	cursor::YY_FLUSH_BUFFER
-	cursor::yy_scan_string [lrange $var $i end]
-	cursor::yyparse
-	incr i [expr $cursor::yycnt-1]
-    } else {
-
-    global current
-
-    if {$current(frame) != {}} {
-	set x [lindex $var $i]
-	incr i
-	set y [lindex $var $i]
-
-	switch -- $current(mode) {
-	    none {$current(frame) warp $x $y}
-	    pointer -
-	    region {MarkerArrowKey $current(frame) $x $y}
-	    catalog {MarkerArrowKey $current(frame) $x $y}
-	    crosshair {CrosshairArrowKey $current(frame) $x $y}
-	    colorbar {}
-	    pan {PanCanvas $x $y}
-	    zoom -
-	    rotate -
-	    crop {}
-	    analysis {IMEArrowKey $current(frame) $x $y}
-	    examine -
-	    iexam {}
-	}
-    }
-}
+    cursor::YY_FLUSH_BUFFER
+    cursor::yy_scan_string [lrange $var $i end]
+    cursor::yyparse
+    incr i [expr $cursor::yycnt-1]
 }
 
 proc CursorCmd {x y} {
@@ -1523,32 +1404,10 @@ proc ProcessIconifyCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	iconify::YY_FLUSH_BUFFER
-	iconify::yy_scan_string [lrange $var $i end]
-	iconify::yyparse
-	incr i [expr $iconify::yycnt-1]
-    } else {
-
-    global ds9
-    switch -- [string tolower [lindex $var $i]] {
-	yes -
-	true -
-	on -
-	1 {wm iconify $ds9(top)}
-
-	no -
-	false -
-	off -
-	0 {wm deiconify $ds9(top)}
-
-	default {
-	    wm iconify $ds9(top)
-	    incr i -1
-	}
-    }
-}
+    iconify::YY_FLUSH_BUFFER
+    iconify::yy_scan_string [lrange $var $i end]
+    iconify::yyparse
+    incr i [expr $iconify::yycnt-1]
 }
 
 proc IconifyCmd {which} {
@@ -1582,22 +1441,10 @@ proc ProcessModeCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	mode::YY_FLUSH_BUFFER
-	mode::yy_scan_string [lrange $var $i end]
-	mode::yyparse
-	incr i [expr $mode::yycnt-1]
-    } else {
-
-    global current
-    set current(mode) [string tolower [lindex $var $i]]
-    # backward compatibility
-    switch $current(mode) {
-	pointer {set current(mode) region}
-    }
-    ChangeMode
-}
+    mode::YY_FLUSH_BUFFER
+    mode::yy_scan_string [lrange $var $i end]
+    mode::yyparse
+    incr i [expr $mode::yycnt-1]
 }
 
 proc ProcessQuitCmd {varname iname} {
@@ -1629,22 +1476,10 @@ proc ProcessSleepCmd {varname iname} {
     UpdateDS9
     RealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	sleep::YY_FLUSH_BUFFER
-	sleep::yy_scan_string [lrange $var $i end]
-	sleep::yyparse
-	incr i [expr $sleep::yycnt-1]
-    } else {
-
-    set sec 1
-    if {[lindex $var $i] != {} && [string range [lindex $var $i] 0 0] != {-}} {
-	set sec [lindex $var $i]
-    } else {
-	incr i -1
-    }
-    after [expr int($sec*1000)]
-}
+    sleep::YY_FLUSH_BUFFER
+    sleep::yy_scan_string [lrange $var $i end]
+    sleep::yyparse
+    incr i [expr $sleep::yycnt-1]
 }
 
 proc ProcessSourceCmd {varname iname} {
@@ -1655,16 +1490,10 @@ proc ProcessSourceCmd {varname iname} {
     # you never know what someone will try to do
     ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	source::YY_FLUSH_BUFFER
-	source::yy_scan_string [lrange $var $i end]
-	source::yyparse
-	incr i [expr $source::yycnt-1]
-    } else {
-
-    uplevel #0 "source [lindex $var $i]"
-}
+    source::YY_FLUSH_BUFFER
+    source::yy_scan_string [lrange $var $i end]
+    source::yyparse
+    incr i [expr $source::yycnt-1]
 }
 
 proc SourceCmd {fn} {

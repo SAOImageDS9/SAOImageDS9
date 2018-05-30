@@ -460,83 +460,10 @@ proc ProcessMovieCmd {varname iname} {
     # already implemented
     # ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	movie::YY_FLUSH_BUFFER
-	movie::yy_scan_string [lrange $var $i end]
-	movie::yyparse
-	incr i [expr $movie::yycnt-1]
-    } else {
-
-    global movie
-    set item [string tolower [lindex $var $i]]
-    switch -- $item {
-	slice -
-	frame -
-	3d {
-	    set movie(action) $item
-	    incr i
-	}
-	default {
-	    # backward compatibility
-	    set movie(action) frame
-	}
-    }
-
-    set fn [lindex $var $i]
-
-    set go 1
-    while {$go} {
-	incr i
-	set item [string tolower [lindex $var $i]]
-	switch -- $item {
-	    number {
-		incr i
-		set movie(num) [lindex $var $i]
-	    }
-	    azfrom {
-		incr i
-		set movie(az,from) [lindex $var $i]
-	    }
-	    azto {
-		incr i
-		set movie(az,to) [lindex $var $i]
-	    }
-	    elfrom {
-		incr i
-		set movie(el,from) [lindex $var $i]
-	    }
-	    elto {
-		incr i
-		set movie(el,to) [lindex $var $i]
-	    }
-	    slfrom {
-		incr i
-		set movie(sl,from) [lindex $var $i]
-	    }
-	    slto {
-		incr i
-		set movie(sl,to) [lindex $var $i]
-	    }
-	    oscillate {
-		incr i
-		set movie(repeat) oscillate
-		set movie(repeat,num) [lindex $var $i]
-	    }
-	    repeat {
-		incr i
-		set movie(repeat) repeat
-		set movie(repeat,num) [lindex $var $i]
-	    }
-	    default {
-		incr i -1
-		set go 0
-	    }
-	}
-    }
-
-    Movie $fn
-}
+    movie::YY_FLUSH_BUFFER
+    movie::yy_scan_string [lrange $var $i end]
+    movie::yyparse
+    incr i [expr $movie::yycnt-1]
 }
 
 proc MovieCmdSet {which value {cmd {}}} {

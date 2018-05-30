@@ -76,55 +76,14 @@ proc ProcessArrayCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	global parse
-	set parse(sock) $sock
-	set parse(fn) $fn
+    global parse
+    set parse(sock) $sock
+    set parse(fn) $fn
 
-	array::YY_FLUSH_BUFFER
-	array::yy_scan_string [lrange $var $i end]
-	array::yyparse
-	incr i [expr $array::yycnt-1]
-    } else {
-
-    if {[ProcessArrayBackwardCmd $varname $iname $sock $fn]} {
-	return
-    }
-
-    set layer {}
-    switch -- [string tolower [lindex $var $i]] {
-	new {
-	    incr i
-	    CreateFrame
-	}
-	mask {
-	    incr i
-	    set layer mask
-	}
-	slice {
-	    incr i
-	    # not suppported
-	}
-    }
-    set param [lindex $var $i]
-
-    if {$sock != {}} {
-	# xpa
-	if {![ImportArraySocket $sock $param $layer]} {
-	    InitError xpa
-	    ImportArrayFile $param $layer
-	}
-    } else {
-	# comm
-	if {$fn != {}} {
-	    ImportArrayAlloc $fn $param $layer
-	} else {
-	    ImportArrayFile $param $layer
-	}
-    }
-    FinishLoad
-}
+    array::YY_FLUSH_BUFFER
+    array::yy_scan_string [lrange $var $i end]
+    array::yyparse
+    incr i [expr $array::yycnt-1]
 }
 
 proc ArrayCmdLoad {param layer} {
@@ -164,32 +123,3 @@ proc ProcessSendArrayCmd {proc id param sock fn} {
 	$proc $id {} $fn
     }
 }
-
-# backward compatibility
-proc ProcessArrayBackwardCmd {varname iname sock fn} {
-    upvar 2 $varname var
-    upvar 2 $iname i
-
-    set vvar $var
-    set ii $i
-
-    switch -- [string tolower [lindex $var $i]] {
-	rgb {
-	    set vvar [lreplace $var 0 0]
-	    ProcessRGBArrayCmd vvar ii $sock $fn
-	    return 1
-	}
-	new {
-	    switch -- [string tolower [lindex $var [expr $i+1]]] {
-		rgb {
-		    set vvar [lreplace $var 1 1]
-		    ProcessRGBArrayCmd vvar ii $sock $fn
-		    return 1
-		}
-	    }
-	}
-    }
-
-    return 0
-}
-

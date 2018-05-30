@@ -827,118 +827,10 @@ proc ProcessScaleCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	scale::YY_FLUSH_BUFFER
-	scale::yy_scan_string [lrange $var $i end]
-	scale::yyparse
-	incr i [expr $scale::yycnt-1]
-    } else {
-
-    global scale
-    switch -- [string tolower [lindex $var $i]] {
-	match {
-	    incr i
-	    switch -- [string tolower [lindex $var $i]] {
-		limits -
-		scalelimits {
-		    MatchScaleLimitsCurrent
-		}
-		default {
-		    incr i -1
-		    MatchScaleCurrent
-		}
-	    }
-	}
-	lock {
-	    incr i
-	    switch -- [string tolower [lindex $var $i]] {
-		limits -
-		scalelimits {
-		    incr i
-		    if {!([string range [lindex $var $i] 0 0] == "-")} {
-			set scale(lock,limits) [FromYesNo [lindex $var $i]]
-		    } else {
-			set scale(lock,limits) 1
-			incr i -1
-		    }
-		    LockScaleLimitsCurrent
-		}
-		default {
-		    if {!([string range [lindex $var $i] 0 0] == "-")} {
-			set scale(lock) [FromYesNo [lindex $var $i]]
-		    } else {
-			set scale(lock) 1
-			incr i -1
-		    }
-		    LockScaleCurrent
-		}
-	    }
-	}
-	open {ScaleDialog}
-	close {ScaleDestroyDialog}
-	linear -
-	pow -
-	sqrt -
-	squared -
-	asinh -
-	sinh -
-	histequ {
-	    set scale(type) [string tolower [lindex $var $i]]
-	    ChangeScale
-	}
-	log {
-	    incr i
-	    switch -- [string tolower [lindex $var $i]] {
-		exp {
-		    incr i
-		    set scale(log) [string tolower [lindex $var $i]]
-		    ChangeScale
-		}
-		default {
-		    incr i -1
-		    set scale(type) [string tolower [lindex $var $i]]
-		    ChangeScale
-		}
-	    }
-	}
-	datasec {
-	    incr i
-	    set scale(datasec) [FromYesNo [lindex $var $i]]
-	    ChangeDATASEC
-	}
-	limits -
-	scalelimits {
-	    incr i
-	    set scale(min) [lindex $var $i]
-	    incr i
-	    set scale(max) [lindex $var $i]
-	    ChangeScaleLimit
-	}
-	minmax -
-	zscale -
-	zmax -
-	user {
-	    set scale(mode) [string tolower [lindex $var $i]]
-	    ChangeScaleMode
-	}
-	mode {
-	    incr i
-	    set scale(mode) [string tolower [lindex $var $i]]
-	    ChangeScaleMode
-	}
-	local -
-	global {
-	    set scale(scope) [string tolower [lindex $var $i]]
-	    ChangeScaleScope
-	}
-	scope {
-	    incr i
-	    set scale(scope) [string tolower [lindex $var $i]]
-	    ChangeScaleScope
-	}
-    }
-}
+    scale::YY_FLUSH_BUFFER
+    scale::yy_scan_string [lrange $var $i end]
+    scale::yyparse
+    incr i [expr $scale::yycnt-1]
 }
 
 proc ScaleCmdSet {which value {cmd {}}} {
@@ -976,47 +868,10 @@ proc ProcessMinMaxCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	minmax::YY_FLUSH_BUFFER
-	minmax::yy_scan_string [lrange $var $i end]
-	minmax::yyparse
-	incr i [expr $minmax::yycnt-1]
-    } else {
-
-    global minmax
-    global scale
-    switch -- [string tolower [lindex $var $i]] {
-	auto {
-	    # backward compatibility
-	    set minmax(mode) scan
-	    ChangeMinMax
-	}
-	scan -
-	sample -
-	datamin -
-	irafmin {
-	    set minmax(mode) [string tolower [lindex $var $i]]
-	    ChangeMinMax
-	}
-	mode {
-	    incr i
-	    set minmax(mode) [string tolower [lindex $var $i]]
-	    ChangeMinMax
-	}
-	interval {
-	    incr i
-	    set minmax(sample) [lindex $var $i]
-	    ChangeMinMax
-	}
-	default {
-	    # for backward compatibility
-	    set scale(mode) minmax
-	    ChangeScaleMode
-	    incr i -1
-	}
-    }
-}
+    minmax::YY_FLUSH_BUFFER
+    minmax::yy_scan_string [lrange $var $i end]
+    minmax::yyparse
+    incr i [expr $minmax::yycnt-1]
 }
 
 proc MinmaxCmdSet {which value {cmd {}}} {
@@ -1045,41 +900,10 @@ proc ProcessZScaleCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	zscale::YY_FLUSH_BUFFER
-	zscale::yy_scan_string [lrange $var $i end]
-	zscale::yyparse
-	incr i [expr $zscale::yycnt-1]
-    } else {
-
-    global zscale
-    global scale
-
-    switch -- [string tolower [lindex $var $i]] {
-	contrast {
-	    incr i
-	    set zscale(contrast) [lindex $var $i]
-	    ChangeZScale
-	}
-	sample {
-	    incr i
-	    set zscale(sample) [lindex $var $i]
-	    ChangeZScale
-	}
-	line {
-	    incr i
-	    set zscale(line) [lindex $var $i]
-	    ChangeZScale
-	}
-	default {
-	    # for backward compatibility
-	    set scale(mode) zscale
-	    ChangeScaleMode
-	    incr i -1
-	}
-    }
-}
+    zscale::YY_FLUSH_BUFFER
+    zscale::yy_scan_string [lrange $var $i end]
+    zscale::yyparse
+    incr i [expr $zscale::yycnt-1]
 }
 
 proc ZscaleCmdSet {which value {cmd {}}} {

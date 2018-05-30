@@ -289,63 +289,10 @@ proc ProcessBlockCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	block::YY_FLUSH_BUFFER
-	block::yy_scan_string [lrange $var $i end]
-	block::yyparse
-	incr i [expr $block::yycnt-1]
-    } else {
-
-    global block
-    switch -- [string tolower [lindex $var $i]] {
-	open {BlockDialog}
-	close {BlockDestroyDialog}
-	match {MatchBlockCurrent}
-	lock {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		set block(lock) [FromYesNo [lindex $var $i]]
-	    } else {
-		set block(lock) 1
-		incr i -1
-	    }
-	    LockBlockCurrent
-	}
-	in {Block .5 .5}
-	out {Block 2 2}
-	to {
-	    switch -- [string tolower [lindex $var [expr $i+1]]] {
-		fit {
-		    BlockToFit
-		    incr i
-		}
-		default {
-		    set b1 [lindex $var [expr $i+1]]
-		    set b2 [lindex $var [expr $i+2]]
-		    if {[string is double $b2] && $b2 != {}} {
-			set block(factor) "$b1 $b2"
-			incr i 2
-		    } else {
-			set block(factor) "$b1 $b1"
-			incr i
-		    }
-		    ChangeBlock
-		}
-	    }
-	}
-	default {
-	    set b1 [lindex $var $i]
-	    set b2 [lindex $var [expr $i+1]]
-	    if {[string is double $b2] && $b2 != {}} {
-		Block $b1 $b2
-		incr i
-	    } else {
-		Block $b1 $b1
-	    }
-	}
-    }
-}
+    block::YY_FLUSH_BUFFER
+    block::yy_scan_string [lrange $var $i end]
+    block::yyparse
+    incr i [expr $block::yycnt-1]
 }
 
 proc BlockCmdSet {which value {cmd {}}} {

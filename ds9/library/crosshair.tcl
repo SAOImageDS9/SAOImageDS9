@@ -263,39 +263,10 @@ proc ProcessCrosshairCmd {varname iname} {
     # we need to be realized
     ProcessRealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	crosshair::YY_FLUSH_BUFFER
-	crosshair::yy_scan_string [lrange $var $i end]
-	crosshair::yyparse
-	incr i [expr $crosshair::yycnt-1]
-    } else {
-
-    switch -- [string tolower [lindex $var $i]] {
-	match {
-	    incr i
-	    MatchCrosshairCurrent [lindex $var $i]
-	}
-	lock {
-	    incr i
-	    set crosshair(lock) [lindex $var $i]
-	    LockCrosshairCurrent
-	}
-	default {
-	    set x [lindex $var [expr $i+0]]
-	    set y [lindex $var [expr $i+1]]
-	    set sys [lindex $var [expr $i+2]]
-	    set sky [lindex $var [expr $i+3]]
-	    set format {}
-
-	    incr i 1
-	    incr i [FixSpec sys sky format physical fk5 degrees]
-
-	    CrosshairTo $x $y $sys $sky
-	    UpdateCrosshairDialog
-	}
-    }
-}
+    crosshair::YY_FLUSH_BUFFER
+    crosshair::yy_scan_string [lrange $var $i end]
+    crosshair::yyparse
+    incr i [expr $crosshair::yycnt-1]
 }
 
 proc CrosshairCmdSet {which value {cmd {}}} {

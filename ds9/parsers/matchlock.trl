@@ -3,7 +3,8 @@ lock : coordsys {set _ $1}
  | NONE_  {set _ none}
  ;
 
-lockslice : IMAGE_ {set _ image}
+lockslice : {set _ image}
+ | IMAGE_ {set _ image}
  | wcssys {set _ $1}
  | NONE_ {set _ none}
  ;

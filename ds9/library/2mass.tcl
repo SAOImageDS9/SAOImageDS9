@@ -133,15 +133,10 @@ proc Process2MASSCmd {varname iname} {
 
     2MASSDialog
 
-    global debug
-    if {$debug(tcl,parser)} {
-	twomass::YY_FLUSH_BUFFER
-	twomass::yy_scan_string [lrange $var $i end]
-	twomass::yyparse
-	incr i [expr $twomass::yycnt-1]
-    } else {
-	IMGSVRProcessCmd $varname $iname dtwomass
-    }
+    twomass::YY_FLUSH_BUFFER
+    twomass::yy_scan_string [lrange $var $i end]
+    twomass::yyparse
+    incr i [expr $twomass::yycnt-1]
 }
 
 proc ProcessSend2MASSCmd {proc id param} {

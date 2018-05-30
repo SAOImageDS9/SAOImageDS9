@@ -723,90 +723,10 @@ proc ProcessBinCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	bin::YY_FLUSH_BUFFER
-	bin::yy_scan_string [lrange $var $i end]
-	bin::yyparse
-	incr i [expr $bin::yycnt-1]
-    } else {
-
-    global bin
-    switch -- [string tolower [lindex $var $i]] {
-	close {BinDestroyDialog}
-	open {BinDialog}
-	match {MatchBinCurrent}
-	lock {
-	    incr i
-	    if {!([string range [lindex $var $i] 0 0] == "-")} {
-		set bin(lock) [FromYesNo [lindex $var $i]]
-	    } else {
-		set bin(lock) 1
-		incr i -1
-	    }
-	    LockBinCurrent
-	}
-	about {
-	    incr i
-	    switch [lindex $var $i] {
-		center {
-		    BinAboutCenter
-		}
-		default {
-		    BinAbout [lindex $var [expr $i+0]] [lindex $var [expr $i+1]]
-		    incr i
-		}
-	    } 
-	}
-	buffersize {
-	    incr i
-	    set bin(buffersize) [lindex $var $i]
-	    ChangeBinBufferSize
-	}
-	cols {
-	    BinCols \"[lindex $var [expr $i+1]]\" \"[lindex $var [expr $i+2]]\" \"\"
-	    incr i 2
-	}
-	colsz {
-	    BinCols \"[lindex $var [expr $i+1]]\" \"[lindex $var [expr $i+2]]\" \"[lindex $var [expr $i+3]]\"
-	    incr i 3
-	}
-	factor {
-	    incr i
-	    set bx [lindex $var $i]
-	    set by [lindex $var [expr $i+1]]
-	    # note: the spaces are needed so that the menus are in sync
-	    if {$by != {} && [string is double $by]} {
-		set bin(factor) "$bx $by"
-		incr i
-	    } else {
-		set bin(factor) "$bx $bx"
-	    }
-	    ChangeBinFactor
-	}
-	depth {
-	    incr i
-	    set bin(depth) [lindex $var $i]
-	    ChangeBinDepth
-	}
-	filter {
-	    incr i
-	    BinFilter [lindex $var $i]
-	}
-	function {
-	    incr i
-	    set bin(function) [string tolower [lindex $var $i]]
-	    ChangeBinFunction
-	}
-	in {Bin .5 .5}
-	out {Bin 2 2}
-	to {
-	    # eat the 'fit'
-	    incr i
-	    BinToFit
-	}
-    }
-}
+    bin::YY_FLUSH_BUFFER
+    bin::yy_scan_string [lrange $var $i end]
+    bin::yyparse
+    incr i [expr $bin::yycnt-1]
 }
 
 proc BinCmdSet {which value {cmd {}}} {

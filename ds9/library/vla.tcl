@@ -165,15 +165,10 @@ proc ProcessVLACmd {varname iname} {
 
     VLADialog
 
-    global debug
-    if {$debug(tcl,parser)} {
-	vla::YY_FLUSH_BUFFER
-	vla::yy_scan_string [lrange $var $i end]
-	vla::yyparse
-	incr i [expr $vla::yycnt-1]
-    } else {
-	IMGSVRProcessCmd $varname $iname dvla
-    }
+    vla::YY_FLUSH_BUFFER
+    vla::yy_scan_string [lrange $var $i end]
+    vla::yyparse
+    incr i [expr $vla::yycnt-1]
 }
 
 proc ProcessSendVLACmd {proc id param} {

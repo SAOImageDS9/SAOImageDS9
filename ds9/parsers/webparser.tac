@@ -27,8 +27,8 @@ web : {WebCmdNew {}}
  | STRING_ {WebCmdNew $1}
  | NEW_ STRING_ STRING_ {WebCmdNew $3 $2}
 
- | {WebCmdCheck} webCmd
- | STRING_ {WebCmdRef $1} webCmd
+ | {if {![WebCmdCheck]} {web::YYABORT}} webCmd
+ | STRING_ {if {![WebCmdRef $1]} {web::YYABORT}} webCmd
  ;
 
 webCmd : CLICK_ click

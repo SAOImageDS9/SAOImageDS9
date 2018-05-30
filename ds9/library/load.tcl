@@ -414,33 +414,10 @@ proc ProcessPreserveCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	preserve::YY_FLUSH_BUFFER
-	preserve::yy_scan_string [lrange $var $i end]
-	preserve::yyparse
-	incr i [expr $preserve::yycnt-1]
-    } else {
-
-    global ds9
-    global scale
-    global panzoom
-    global marker
-
-    switch -- [string tolower [lindex $var $i]] {
-	pan {
-	    incr i
-	    set panzoom(preserve) [FromYesNo [lindex $var $i]]
-	    PreservePan
-	}
-	marker -
-	regions {
-	    incr i
-	    set marker(preserve) [FromYesNo [lindex $var $i]]
-	    MarkerPreserve
-	}
-    }
-}
+    preserve::YY_FLUSH_BUFFER
+    preserve::yy_scan_string [lrange $var $i end]
+    preserve::yyparse
+    incr i [expr $preserve::yycnt-1]
 }
 
 proc ProcessSendPreserveCmd {proc id param} {
@@ -464,60 +441,10 @@ proc ProcessUpdateCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	update::YY_FLUSH_BUFFER
-	update::yy_scan_string [lrange $var $i end]
-	update::yyparse
-	incr i [expr $update::yycnt-1]
-    } else {
-
-    global current
-    global ds9
-
-    if {$current(frame) == {}} {
-	return
-    }
-
-    if {[lindex $var $i] != {} && [string range [lindex $var $i] 0 0] != {-}} {
-	switch -- [string tolower [lindex $var $i]] {
-	    on -
-	    yes -
-	    no -
-	    off {
-		# backward compatibility
-	    }
-
-	    now {
-		if {[string is integer [lindex $var [expr $i+1]]]} {
-		    $current(frame) update now \
-			[lindex $var [expr $i+1]] \
-			[lindex $var [expr $i+2]] [lindex $var [expr $i+3]] \
-			[lindex $var [expr $i+4]] [lindex $var [expr $i+5]]
-		    
-		    incr i 5
-		} else {
-		    $current(frame) update now
-		}
-	    }
-	    {} {
-		$current(frame) update
-		incr i -1
-	    }
-
-	    default {
-		$current(frame) update \
-		    [lindex $var $i] \
-		    [lindex $var [expr $i+1]] [lindex $var [expr $i+2]] \
-		    [lindex $var [expr $i+3]] [lindex $var [expr $i+4]]
-		incr i 4
-	    }
-	}
-    } else {
-	$current(frame) update
-	incr i -1
-    }
-}
+    update::YY_FLUSH_BUFFER
+    update::yy_scan_string [lrange $var $i end]
+    update::yyparse
+    incr i [expr $update::yycnt-1]
 }
 
 proc UpdateCmd {{which {}} {x1 {}} {y1 {}} {x2 {}} {y2 {}}} {

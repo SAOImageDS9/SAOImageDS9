@@ -8,7 +8,6 @@
 %%
 
 clear	    {return $CLEAR_}
-entry	    {return $ENTRY_}
 load	    {return $LOAD_}
 message	    {return $MESSAGE_}
 plot	    {return $PLOT_}

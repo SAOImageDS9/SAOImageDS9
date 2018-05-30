@@ -21,47 +21,8 @@ proc ProcessSMosaicIRAFCmd {varname iname sock fn layer} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	smosaiciraf::YY_FLUSH_BUFFER
-	smosaiciraf::yy_scan_string [lrange $var $i end]
-	smosaiciraf::yyparse
-	incr i [expr $smosaiciraf::yycnt-1]
-    } else {
-
-    set layer {}
-    switch -- [string tolower [lindex $var $i]] {
-	new {
-	    incr i
-	    CreateFrame
-	}
-	mask {
-	    incr i
-	    set layer mask
-	}
-	slice {
-	    incr i
-	    # not supported
-	}
-    }
-
-    if {$sock != {}} {
-	# xpa
-	if {0} {
-	    # not supported
-	} else {
-	    LoadSMosaicIRAFFile [lindex $var $i] [lindex $var [expr $i+1]] \
-		$layer
-	}
-    } else {
-	# comm
-	if {0} {
-	    # not supported
-	} else {
-	    LoadSMosaicIRAFFile [lindex $var $i] [lindex $var [expr $i+1]] \
-		$layer
-	}
-    }
-    FinishLoad
-}
+    smosaiciraf::YY_FLUSH_BUFFER
+    smosaiciraf::yy_scan_string [lrange $var $i end]
+    smosaiciraf::yyparse
+    incr i [expr $smosaiciraf::yycnt-1]
 }

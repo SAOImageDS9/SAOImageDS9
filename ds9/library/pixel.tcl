@@ -266,33 +266,10 @@ proc ProcessPixelTableCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	pixeltable::YY_FLUSH_BUFFER
-	pixeltable::yy_scan_string [lrange $var $i end]
-	pixeltable::yyparse
-	incr i [expr $pixeltable::yycnt-1]
-    } else {
-
-    switch -- [string tolower [lindex $var $i]] {
-	open -
-	yes -
-	true -
-	on -
-	1 {PixelTableDialog}
-
-	close -
-	no -
-	false -
-	off -
-	0 {PixelTableDestroyDialog}
-
-	default {
-	    PixelTableDialog
-	    incr i -1
-	}
-    }
-}
+    pixeltable::YY_FLUSH_BUFFER
+    pixeltable::yy_scan_string [lrange $var $i end]
+    pixeltable::yyparse
+    incr i [expr $pixeltable::yycnt-1]
 }
 
 proc PixelTableCmd {which} {

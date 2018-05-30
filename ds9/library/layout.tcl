@@ -827,18 +827,10 @@ proc ProcessHeightCmd {varname iname} {
     # can't use ProcessRealize
     RealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	height::YY_FLUSH_BUFFER
-	height::yy_scan_string [lrange $var $i end]
-	height::yyparse
-	incr i [expr $height::yycnt-1]
-    } else {
-
-    global canvas
-    set canvas(height) [lindex $var $i]
-    UpdateView
-}
+    height::YY_FLUSH_BUFFER
+    height::yy_scan_string [lrange $var $i end]
+    height::yyparse
+    incr i [expr $height::yycnt-1]
 }
 
 proc ProcessSendHeightCmd {proc id param} {
@@ -854,18 +846,10 @@ proc ProcessWidthCmd {varname iname} {
     # can't use ProcessRealize
     RealizeDS9
 
-    global debug
-    if {$debug(tcl,parser)} {
-	width::YY_FLUSH_BUFFER
-	width::yy_scan_string [lrange $var $i end]
-	width::yyparse
-	incr i [expr $width::yycnt-1]
-    } else {
-
-    global canvas
-    set canvas(width) [lindex $var $i]
-    UpdateView
-}
+    width::YY_FLUSH_BUFFER
+    width::yy_scan_string [lrange $var $i end]
+    width::yyparse
+    incr i [expr $width::yycnt-1]
 }
 
 proc ProcessSendWidthCmd {proc id param} {
@@ -877,180 +861,10 @@ proc ProcessViewCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	view::YY_FLUSH_BUFFER
-	view::yy_scan_string [lrange $var $i end]
-	view::yyparse
-	incr i [expr $view::yycnt-1]
-    } else {
-	
-    global view
-    global rgb
-
-    set item [string tolower [lindex $var $i]]
-
-    switch  -- $item {
-	layout {
-	    incr i
-	    set item [string tolower [lindex $var $i]]
-	    switch  -- $item {
-		horz -
-		horizontal {
-		    set view(layout) horizontal
-		    ViewHorzCmd
-		}
-		vert -
-		vertical {
-		    set view(layout) verical
-		    ViewVertCmd
-		}
-	    }
-	}
-	keyvalue {
-	    incr i
-	    set view(info,keyvalue) [lindex $var $i]
-	}
-	horz -
-	horizontal {
-	    # backward compatibility
-	    set view(layout) horizontal
-	    ViewHorzCmd
-	}
-	vert -
-	vertical {
-	    # backward compatibility
-	    set view(layout) vertical
-	    ViewVertCmd
-	}
-
-	default {
-	    set yesno [lindex $var [expr $i+1]]
-	    switch -- $yesno {
-		1 -
-		0 -
-		yes -
-		no -
-		on -
-		off -
-		true -
-		false {incr i}
-		default {
-		    set yesno 1
-		}
-	    }
-
-	    switch -- $item {
-		info -
-		panner - 
-		magnifier - 
-		buttons -
-		colorbar {set view($item) [FromYesNo $yesno]}
-
-		colorbarnumerics {
-		    # backward compatibility
-		    set colorbar(numerics) [FromYesNo $yesno]
-		}
-		graph {
-		    incr i
-		    set item [string tolower [lindex $var $i]]
-		    switch -- $item {
-			horz -
-			horizontal {
-			    set yesno [lindex $var [expr $i+1]]
-			    switch -- $yesno {
-				1 -
-				0 -
-				yes -
-				no -
-				on -
-				off -
-				true -
-				false {incr i}
-				default {
-				    set yesno 1
-				}
-			    }
-			    set view(graph,horz) [FromYesNo $yesno]
-			}
-			vert -
-			vertical {
-			    set yesno [lindex $var [expr $i+1]]
-			    switch -- $yesno {
-				1 -
-				0 -
-				yes -
-				no -
-				on -
-				off -
-				true -
-				false {incr i}
-				default {
-				    set yesno 1
-				}
-			    }
-			    set view(graph,vert) [FromYesNo $yesno]
-			}
-		    }
-		}
-		horzgraph {
-		    # backward compatibility
-		    set view(graph,horz) [FromYesNo $yesno]
-		}
-		vertgraph {
-		    # backward compatibility
-		    set view(graph,vert) [FromYesNo $yesno]
-		}
-
-		filename -
-		object -
-		keyword -
-		minmax -
-		lowhigh -
-		units -
-
-		detector -
-		amplifier -
-		physical -
-		image -
-		wcs -
-		wcsa -
-		wcsb -
-		wcsc -
-		wcsd -
-		wcse -
-		wcsf -
-		wcsg -
-		wcsh -
-		wcsi -
-		wcsj -
-		wcsk -
-		wcsl -
-		wcsm -
-		wcsn -
-		wcso -
-		wcsp -
-		wcsq -
-		wcsr -
-		wcss -
-		wcst -
-		wcsu -
-		wcsv -
-		wcsw -
-		wcsx -
-		wcsy -
-		wcsz -
-
-		frame {set view(info,$item) [FromYesNo $yesno]}
-
-		red -
-		green -
-		blue {set rgb($item) [FromYesNo $yesno]; RGBView}
-	    }
-	    UpdateView
-	}
-    }
-}
+    view::YY_FLUSH_BUFFER
+    view::yy_scan_string [lrange $var $i end]
+    view::yyparse
+    incr i [expr $view::yycnt-1]
 }
 
 proc ViewCmdSet {which value {cmd {}}} {

@@ -154,8 +154,8 @@ command : plot
  | NEW_ {PlotCmdNew {}} new
  | NEW_ NAME_ STRING_ {PlotCmdNew $3} new
 
- | {PlotCmdCheck} plotCmd
- | STRING_ {PlotCmdRef $1} plotCmd
+ | {if {![PlotCmdCheck]} {plot::YYABORT}} plotCmd
+ | STRING_ {if {![PlotCmdRef $1]} {plot::YYABORT}} plotCmd
  ;
 
 line : {PlotCmdNew {}; PlotCmdLine {} {} {} xy}

@@ -203,59 +203,14 @@ proc ProcessPhotoCmd {varname iname ch fn} {
     upvar 2 $varname var
     upvar 2 $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	global parse
-	set parse(ch) $ch
-	set parse(fn) $fn
+    global parse
+    set parse(ch) $ch
+    set parse(fn) $fn
 
-	photo::YY_FLUSH_BUFFER
-	photo::yy_scan_string [lrange $var $i end]
-	photo::yyparse
-	incr i [expr $photo::yycnt-1]
-    } else {
-
-    set mode {}
-    switch -- [string tolower [lindex $var $i]] {
-	new {
-	    incr i
-	    CreateFrame
-	}
-	mask {
-	    incr i
-	    # not supported
-	}
-	slice {
-	    incr i
-	    set mode slice
-	}
-    }
-    set param [lindex $var $i]
-
-    if {$ch != {}} {
-	# xpa
-	global tcl_platform
-	switch $tcl_platform(os) {
-	    Linux -
-	    Darwin -
-	    SunOS {
-		if {![ImportPhotoSocket $ch $param $mode]} {
-		    InitError xpa
-		    ImportPhotoFile $param $mode
-		}
-	    }
-	    {Windows NT} {ImportPhotoFile $param $mode}
-	}
-    } else {
-	# comm
-	if {$fn != {}} {
-	    ImportPhotoAlloc $fn $param $mode
-	} else {
-	    ImportPhotoFile $param $mode
-	}
-    }
-    FinishLoad
-}
+    photo::YY_FLUSH_BUFFER
+    photo::yy_scan_string [lrange $var $i end]
+    photo::yyparse
+    incr i [expr $photo::yycnt-1]
 }
 
 proc PhotoCmdLoad {param mode} {

@@ -580,30 +580,10 @@ proc ProcessPSPrintCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	ps::YY_FLUSH_BUFFER
-	ps::yy_scan_string [lrange $var $i end]
-	ps::yyparse
-	incr i [expr $ps::yycnt-1]
-    } else {
-
-    global ps
-
-    switch -- [string tolower [lindex $var $i]] {
-	destination {incr i; set ps(dest) [lindex $var $i]}
-	command {incr i; set ps(cmd) [lindex $var $i]}
-	filename {incr i; set ps(filename) [lindex $var $i]}
-	palette -
-	color {incr i; set ps(color) [lindex $var $i]}
-	level {incr i; set ps(level) [lindex $var $i]}
-	interpolate {incr i}
-	resolution {incr i; set ps(resolution) [lindex $var $i]}
-
-	{} {PostScript}
-	default {incr i -1; PostScript}
-    }
-}
+    ps::YY_FLUSH_BUFFER
+    ps::yy_scan_string [lrange $var $i end]
+    ps::yyparse
+    incr i [expr $ps::yycnt-1]
 }
 
 proc PSCmdSet {which value {cmd {}}} {

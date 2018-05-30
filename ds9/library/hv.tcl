@@ -825,100 +825,14 @@ proc ProcessWebCmd {varname iname} {
     upvar $iname i
     global ihv
 
-    global debug
-    if {$debug(tcl,parser)} {
-	set ref [lindex $ihv(windows) end]
-	global cvarname
-	set cvarname $ref
+    set ref [lindex $ihv(windows) end]
+    global cvarname
+    set cvarname $ref
 
-	web::YY_FLUSH_BUFFER
-	web::yy_scan_string [lrange $var $i end]
-	web::yyparse
-	incr i [expr $web::yycnt-1]
-    } else {
-
-    set w {hvweb}
-    switch -- [string tolower [lindex $var $i]] {
-	new {
-	    incr i
-	    set ii [lsearch $ihv(windows) $w]
-	    if {$ii>=0} {
-		append w $ihv(unique)
-		incr ihv(unique)
-	    }
-	}
-	close -
-	clear -
-	click {set w [lindex $ihv(windows) end]}
-
-	default {
-	    set ii [lsearch $ihv(windows) [lindex $var $i]]
-	    if {$ii>=0} {
-		set w [lindex $var $i]
-		incr i
-	    }
-	}
-    }
-
-    switch -- [string tolower [lindex $var $i]] {
-	close {HVDestroy $w}
-	clear {HVClearCmd $w}
-	click {
-	    set vvarname $w
-	    upvar #0 $vvarname vvar
-	    global $vvarname
-
-	    incr i
-	    switch -- [string tolower [lindex $var $i]] {
-		back {HVBackCmd $vvarname}
-		forward {HVForwardCmd $vvarname}
-		stop {HVStopCmd $vvarname}
-		reload {HVReloadCmd $vvarname}
-		default {
-		    set id [lindex $var $i]
-
-		    if {![info exists vvar(widget)]} {
-			return
-		    }
-
-		    set tokens [$vvar(widget) token list 1.0 end]
-		    set cnt 0
-		    for {set ii 0} {$ii<[llength $tokens]} {incr ii} {
-			set tok [lindex $tokens $ii]
-			if {[string tolower [lindex $tok 0]] == "markup" && 
-			    [string tolower [lindex $tok 2]] == "href"} {
-			    set url [lindex $tok 3]
-			    incr cnt
-			    if {$cnt == $id} {
-				HVResolveURL $vvarname [$vvar(widget) resolve $url]
-				break;
-			    }
-			}
-		    }
-		}
-	    }
-	}
-	default {
-	    set url [lindex $var $i]
-	    if {[string length $url] == 0} {
-		HV $w Web {} {} 1
-	    } else {
-		ParseURL $url r
-		switch -- $r(scheme) {
-		    {} {
-			# append 'http://' if needed
-			if {[string range $r(path) 0 0] == "/"} {
-			    set url "http:/$url"
-			} else {
-			    set url "http://$url"
-			}
-		    }
-		}
-		HV $w Web $url {} 1
-	    }
-	}
-    }
-}
+    web::YY_FLUSH_BUFFER
+    web::yy_scan_string [lrange $var $i end]
+    web::yyparse
+    incr i [expr $web::yycnt-1]
 }
 
 proc WebCmdCheck {} {
@@ -927,14 +841,13 @@ proc WebCmdCheck {} {
 
     if {![info exists cvar(top)]} {
 	Error "[msgcat::mc {Unable to find web window}] $cvarname"
-	cat::YYABORT
-	return
+	return 0
     }
     if {![winfo exists $cvar(top)]} {
 	Error "[msgcat:: mc {Unable to find web window}] $cvarname"
-	cat::YYABORT
-	return
+	return 0
     }
+    return 1
 }
 
 proc WebCmdRef {ref} {
@@ -944,11 +857,11 @@ proc WebCmdRef {ref} {
     # look for reference in current list
     if {[lsearch $ihv(windows) $ref] < 0} {
 	Error "[msgcat::mc {Unable to find web window}] $ref"
-	plot::YYABORT
-	return
+	return 0
     }
+
     set cvarname $ref
-    WebCmdCheck
+    return [WebCmdCheck]
 }
 
 proc WebCmdNew {url {ww {hvweb}}} {

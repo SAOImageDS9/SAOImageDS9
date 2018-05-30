@@ -49,7 +49,7 @@ command : sia
  | sia {yyclearin; YYACCEPT} STRING_
  ;
 
-sia : {SIACmdCheck} siaCmd
+sia : {if {![SIACmdCheck]} {sia::YYABORT}} siaCmd
  | site {SIACmdRef $1}
  | site {SIACmdRef $1} siaCmd
  ;

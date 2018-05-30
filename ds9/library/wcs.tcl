@@ -1134,139 +1134,14 @@ proc ProcessWCSCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	global parse
-	set parse(sock) $sock
-	set parse(fn) $fn
+    global parse
+    set parse(sock) $sock
+    set parse(fn) $fn
 
-	wcs::YY_FLUSH_BUFFER
-	wcs::yy_scan_string [lrange $var $i end]
-	wcs::yyparse
-	incr i [expr $wcs::yycnt-1]
-    } else {
-
-    global wcs
-    global current
-    global rgb
-
-    set item [string tolower [lindex $var $i]]
-    switch -- $item {
-	open {WCSDialog}
-	close {WCSDestroyDialog}
-	system {
-	    incr i
-	    set wcs(system) [string tolower [lindex $var $i]]
-	    UpdateWCS
-	}
-	sky {
-	    incr i
-	    set wcs(sky) [string tolower [lindex $var $i]]
-	    UpdateWCS
-	}
-	format -
-	skyformat {
-	    incr i
-	    switch -- [string tolower [lindex $var $i]] {
-		deg -
-		degree -
-		degrees {set wcs(skyformat) degrees}
-		default {set wcs(skyformat) [string tolower [lindex $var $i]]}
-	    }
-	    UpdateWCS
-	}
-	align {
-	    incr i
-	    set current(align) [FromYesNo [lindex $var $i]]
-	    AlignWCSFrame
-	}
-	reset {
-	    set ext 1
-	    set nn [lindex $var [expr $i+1]]
-	    if {[string is integer -strict $nn]} {
-		incr i
-		set ext $nn
-	    }
-
-	    RGBEvalLock rgb(lock,wcs) $current(frame) [list $current(frame) wcs reset $ext]
-	    UpdateWCS
-	}
-	replace -
-	append {
-	    set ext 1
-	    set nn [lindex $var [expr $i+1]]
-	    if {[string is integer -strict $nn]} {
-		incr i
-		set ext $nn
-	    }
-
-	    if {$sock != {}} {
-		incr i
-		if {[lindex $var $i] == {}} {
-		    RGBEvalLock rgb(lock,wcs) $current(frame) [list $current(frame) wcs $item $ext $sock]
-		    incr i -1
-		} else {
-		    RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs $item $ext \{\{[lindex $var $i]\}\}"
-		}
-	    } elseif {$fn != {}} {
-		RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs $item $ext \{\{$fn\}\}"
-	    } else {
-		incr i
-		if {[lindex $var $i] == "file"} {
-		    incr i
-		}
-		RGBEvalLock rgb(lock,wcs) $current(frame) "$current(frame) wcs $item $ext \{\{[lindex $var $i]\}\}"
-	    }
-	    UpdateWCS
-	}
-
-	fk4 -
-	fk5 -
-	icrs -
-	galactic -
-	ecliptic {
-	    set wcs(sky) $item
-	    UpdateWCS
-	}
-
-	degrees -
-	sexagesimal {
-	    set wcs(skyformat) $item
-	    UpdateWCS
-	}
-
-	wcs -
-	wcsa -
-	wcsb -
-	wcsc -
-	wcsd -
-	wcse -
-	wcsf -
-	wcsg -
-	wcsh -
-	wcsi -
-	wcsj -
-	wcsk -
-	wcsl -
-	wcsm -
-	wcsn -
-	wcso -
-	wcsp -
-	wcsq -
-	wcsr -
-	wcss -
-	wcst -
-	wcsu -
-	wcsv -
-	wcsw -
-	wcsx -
-	wcsy -
-	wcsz {
-	    set wcs(system) $item
-	    UpdateWCS
-	}
-    }
-}
+    wcs::YY_FLUSH_BUFFER
+    wcs::yy_scan_string [lrange $var $i end]
+    wcs::yyparse
+    incr i [expr $wcs::yycnt-1]
 }
 
 proc WCSCmdSet {which value {cmd {}}} {
@@ -1339,34 +1214,10 @@ proc ProcessAlignCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
-    global debug
-    if {$debug(tcl,parser)} {
-	align::YY_FLUSH_BUFFER
-	align::yy_scan_string [lrange $var $i end]
-	align::yyparse
-	incr i [expr $align::yycnt-1]
-    } else {
-
-    global current
-    switch -- [string tolower [lindex $var $i]] {
-	yes -
-	true -
-	on -
-	1 -
-	no -
-	false -
-	off -
-	0 {
-	    set current(align) [FromYesNo [lindex $var $i]]
-	    AlignWCSFrame
-	}
-	default {
-	    set current(align) 1
-	    AlignWCSFrame
-	    incr i -1
-	}
-    }
-}
+    align::YY_FLUSH_BUFFER
+    align::yy_scan_string [lrange $var $i end]
+    align::yyparse
+    incr i [expr $align::yycnt-1]
 }
 
 proc ProcessSendAlignCmd {proc id param} {

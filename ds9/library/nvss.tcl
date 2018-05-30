@@ -154,15 +154,10 @@ proc ProcessNVSSCmd {varname iname} {
 
     NVSSDialog
 
-    global debug
-    if {$debug(tcl,parser)} {
-	nvss::YY_FLUSH_BUFFER
-	nvss::yy_scan_string [lrange $var $i end]
-	nvss::yyparse
-	incr i [expr $nvss::yycnt-1]
-    } else {
-	IMGSVRProcessCmd $varname $iname dnvss
-    }
+    nvss::YY_FLUSH_BUFFER
+    nvss::yy_scan_string [lrange $var $i end]
+    nvss::yyparse
+    incr i [expr $nvss::yycnt-1]
 }
 
 proc ProcessSendNVSSCmd {proc id param} {

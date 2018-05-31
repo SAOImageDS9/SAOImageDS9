@@ -377,95 +377,6 @@ proc ProcessSIACmd {varname iname} {
     incr i [expr $sia::yycnt-1]
 }
 
-proc ProcessSIA {varname iname cvarname} {
-    upvar 2 $varname var
-    upvar 2 $iname i
-
-    global isia
-    global psia
-    global current
-
-    # we should have a sia now
-    global $cvarname
-    upvar #0 $cvarname cvar
-
-    if {![info exists cvar(top)]} {
-	Error "[msgcat::mc {Unable to find SIAP window}] $cvarname"
-	return
-    }
-    if {![winfo exists $cvar(top)]} {
-	Error "[msgcat:: mc {Unable to find SIAP window}] $cvarname"
-	return
-    }
-
-    # now, process it
-    set item [string tolower [lindex $var $i]]
-    switch -- $item {
-	cancel {ARCancel $cvarname}
-	clear {SIAOff $cvarname}
-	close {SIADestroy $cvarname}
-	coordinate {
-	    incr i
-	    set cvar(x) [lindex $var $i]
-	    incr i
-	    set cvar(y) [lindex $var $i]
-	    incr i
-	    set cvar(sky) [lindex $var $i]
-	}
-	crosshair {IMGSVRCrosshair $cvarname}
-	export -
-	save {
-	    incr i
-	    set writer VOTWrite
-	    switch -- [lindex $var $i] {
-		xml -
-		vot {incr i; set writer VOTWrite}
-		sb -
-		starbase {incr i; set writer starbase_write}
-		csv -
-		tsv {incr i; set writer TSVWrite}
-	    }
-
-	    set fn [lindex $var $i]
-	    SIASaveFn $cvarname $fn $writer
-	    FileLast siafbox $fn
-	}
-	name {
-	    incr i
-	    set cvar(name) [lindex $var $i]
-	}
-	print {CATPrint $cvarname}
-	retrieve -
-	retreive {SIAApply $cvarname 1}
-	size {
-	    incr i
-	    set cvar(width) [lindex $var $i]
-	    incr i
-	    set cvar(height) [lindex $var $i]
-	    incr i
-	    set cvar(rformat) [lindex $var $i]
-	    set cvar(rformat,msg) $cvar(rformat)
-	}
-	sky {
-	    incr i
-	    set cvar(sky) [lindex $var $i]
-	    CoordMenuButtonCmd $cvarname system sky \
-		[list SIAWCSMenuUpdate $cvarname]
-	}
-	skyformat {
-	    incr i
-	    set cvar(skyformat) [lindex $var $i]
-	}
-	system {
-	    incr i
-	    set cvar(system) [lindex $var $i]
-	    CoordMenuButtonCmd $cvarname system sky \
-		[list SIAWCSMenuUpdate $cvarname]
-	}
-	update {IMGSVRUpdate $cvarname}
-    }
-}
-
 proc SIACmdCheck {} {
     global cvarname
     upvar #0 $cvarname cvar
@@ -501,13 +412,6 @@ proc SIACmdRef {ref} {
 	    }
 	}
     }
-}
-
-proc SIACmdSet {which value} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar($which) $value
 }
 
 proc SIACmdCoord {xx yy sky} {

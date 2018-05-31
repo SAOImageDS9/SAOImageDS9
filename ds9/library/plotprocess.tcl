@@ -248,22 +248,6 @@ proc PlotCmdSaveConfig {fn} {
     }
 }
 
-proc PlotCmdSet {which value {cmd {}}} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar($which) $value
-    if {$cmd != {}} {
-	eval $cmd $cvarname
-    }
-}
-
-proc PlotCmdPrint {} {
-    global cvarname
-
-    PlotPostScript $cvarname
-}
-
 proc PlotCmdUpdateGraph {which value} {
     global cvarname
     upvar #0 $cvarname cvar
@@ -300,14 +284,6 @@ proc PlotCmdFontStyle {which value} {
     }
 
     $cvar(proc,updategraph) $cvarname
-}
-
-proc PlotCmdSelect {value} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(data,current) $value
-    PlotCurrentData $cvarname
 }
 
 # File Menu

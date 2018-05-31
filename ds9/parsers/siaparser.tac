@@ -61,12 +61,12 @@ siaCmd : CANCEL_ {global cvarname; ARCancel $cvarname}
  | CROSSHAIR_ {global cvarname; IMGSVRCrosshair $cvarname}
  | EXPORT_ writer STRING_ {SIACmdSave $3 $2}
  | SAVE_ STRING_ {SIACmdSave $2 VOTWrite}
- | NAME_ STRING_ {SIACmdSet name $2}
+ | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PRINT_ {global cvarname; CATPrint $cvarname}
  | RETRIEVE_ {global cvarname; SIAApply $cvarname 1}
  | SIZE_ numeric numeric rformat {SIACmdSize $2 $3 $4}
  | SKY_ skyframe {SIACmdSkyframe $2}
- | SKYFORMAT_ skyformat {SIACmdSet skyformat $2}
+ | SKYFORMAT_ skyformat {ProcessCmdCVAR skyformat $2}
  | SYSTEM_ wcssys {SIACmdSystem $2}
  | UPDATE_ {global cvarname; IMGSVRUpdate $cvarname}
  ;

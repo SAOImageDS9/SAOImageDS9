@@ -221,10 +221,10 @@ plotCmd : LOAD_ load
  | DUPLICATE_ duplicate
  # backward compatibility
  | DUP_ duplicate
- | STATS_ yesno {PlotCmdSet stats $2 PlotStats}
+ | STATS_ yesno {ProcessCmdCVAR stats $2 PlotStats}
  # backward compatibility
- | STATISTICS_ yesno {PlotCmdSet stats $2 PlotStats}
- | LIST_ yesno {PlotCmdSet list $2 PlotList}
+ | STATISTICS_ yesno {ProcessCmdCVAR stats $2 PlotStats}
+ | LIST_ yesno {ProcessCmdCVAR list $2 PlotList}
  | LOADCONFIG_ STRING_ {PlotCmdLoadConfig $2}
  | SAVECONFIG_ STRING_ {PlotCmdSaveConfig $2}
  | PAGESETUP_ pagesetup
@@ -233,7 +233,7 @@ plotCmd : LOAD_ load
  | PRINT_ print
  | CLOSE_ {global cvarname; PlotDestroy $cvarname}
 
- | MODE_ mode {PlotCmdSet mode $2 PlotChangeMode}
+ | MODE_ mode {ProcessCmdCVAR mode $2 PlotChangeMode}
 
  | AXIS_ axis
  | LEGEND_ legend
@@ -255,9 +255,9 @@ plotCmd : LOAD_ load
  | WIDTH_ INT_ {PlotCmdUpdateElement width $2}
  | DASH_ yesno {PlotCmdUpdateElement dash $2}
 
- | SELECT_ INT_ {PlotCmdSelect $2}
+ | SELECT_ INT_ {ProcessCmdCVAR data,current $2 PlotCurrentData}
  # backward compatibility
- | DATASET_ INT_ {PlotCmdSelect $2}
+ | DATASET_ INT_ {ProcessCmdCVAR data,current $2 PlotCurrentData}
 
  # backward compatibility
  | GRAPH_ oldGraph
@@ -290,7 +290,7 @@ pageSize : LETTER_ {set _ letter}
  | A4_ {set _ a4}
  ;
  
-print : {PlotCmdPrint}
+print : {global cvarname; PlotPostScript $cvarname}
  | DESTINATION_ printDest {global ps; set ps(dest) $2}
  | COMMAND_ STRING_ {global ps; set ps(cmd) $2}
  | FILENAME_ STRING_ {global ps; set ps(filename) $2}

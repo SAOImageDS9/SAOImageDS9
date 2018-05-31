@@ -195,13 +195,6 @@ proc ProcessNRESCmd {varname iname} {
     incr i [expr $nres::yycnt-1]
 }
 
-proc NRESCmdSet {which value} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar($which) $value
-}
-
 proc NRESCmdName {value} {
     global cvarname
     upvar #0 $cvarname cvar

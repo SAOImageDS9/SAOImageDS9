@@ -36,7 +36,7 @@ nres : OPEN_
  | SERVER_ server {global pnres; set pnres(server) $2}
  | PAN_ {global cvarname; NRESPan $cvarname}
  | CROSSHAIR_ {global cvarname; NRESCrosshair $cvarname}
- | SKYFORMAT_ skyformat {NRESCmdSet skyformat $2; NRESCmdSet skyformat,msg $2}
+ | SKYFORMAT_ skyformat {ProcessCmdCVAR skyformat $2; ProcessCmdCVAR skyformat,msg $2}
  | NAME_ STRING_ {NRESCmdName $2}
  | STRING_ {NRESCmdName $1}
  ;

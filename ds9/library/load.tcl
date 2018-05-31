@@ -420,7 +420,7 @@ proc ProcessPreserveCmd {varname iname} {
     incr i [expr $preserve::yycnt-1]
 }
 
-proc ProcessSendPreserveCmd {proc id param} {
+proc ProcessSendPreserveCmd {proc id param {sock {}} {fn {}}} {
     global scale
     global panzoom
     global marker

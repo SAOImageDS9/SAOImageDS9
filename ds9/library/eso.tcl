@@ -168,7 +168,7 @@ proc ProcessESOCmd {varname iname} {
     incr i [expr $dsseso::yycnt-1]
 }
 
-proc ProcessSendESOCmd {proc id param} {
+proc ProcessSendESOCmd {proc id param {sock {}} {fn {}}} {
     ESODialog
     IMGSVRProcessSendCmd $proc $id $param deso
 }

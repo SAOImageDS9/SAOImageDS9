@@ -155,7 +155,7 @@ proc ProcessSAOCmd {varname iname} {
     incr i [expr $dsssao::yycnt-1]
 }
 
-proc ProcessSendSAOCmd {proc id param} {
+proc ProcessSendSAOCmd {proc id param {sock {}} {fn {}}} {
     SAODialog
     IMGSVRProcessSendCmd $proc $id $param dsao
 }

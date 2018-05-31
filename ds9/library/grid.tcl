@@ -1178,7 +1178,7 @@ proc GridCmdFontStyle {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendGridCmd {proc id param} {
+proc ProcessSendGridCmd {proc id param {sock {}} {fn {}}} {
     global grid
 
     switch -- [lindex $param 0] {

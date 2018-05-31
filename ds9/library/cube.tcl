@@ -735,7 +735,7 @@ proc CubeCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendCubeCmd {proc id param} {
+proc ProcessSendCubeCmd {proc id param {sock {}} {fn {}}} {
     global cube
     global current
     global blink

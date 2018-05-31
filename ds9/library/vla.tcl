@@ -171,7 +171,7 @@ proc ProcessVLACmd {varname iname} {
     incr i [expr $vla::yycnt-1]
 }
 
-proc ProcessSendVLACmd {proc id param} {
+proc ProcessSendVLACmd {proc id param {sock {}} {fn {}}} {
     VLADialog
     IMGSVRProcessSendCmd $proc $id $param dvla
 }

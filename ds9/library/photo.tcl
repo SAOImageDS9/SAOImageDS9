@@ -241,23 +241,23 @@ proc PhotoCmdLoad {param mode} {
     FinishLoad
 }
 
-proc ProcessSendGIFCmd {proc id param ch fn} {
-    ProcessSendPhotoCmd gif $proc $id $param $ch $fn
+proc ProcessSendGIFCmd {proc id param sock fn} {
+    ProcessSendPhotoCmd gif $proc $id $param $sock $fn
 }
 
-proc ProcessSendJPEGCmd {proc id param ch fn} {
-    ProcessSendPhotoCmd jpeg $proc $id $param $ch $fn
+proc ProcessSendJPEGCmd {proc id param sock fn} {
+    ProcessSendPhotoCmd jpeg $proc $id $param $sock $fn
 }
 
-proc ProcessSendPNGCmd {proc id param ch fn} {
-    ProcessSendPhotoCmd png $proc $id $param $ch $fn
+proc ProcessSendPNGCmd {proc id param sock fn} {
+    ProcessSendPhotoCmd png $proc $id $param $sock $fn
 }
 
-proc ProcessSendTIFFCmd {proc id param ch fn} {
-    ProcessSendPhotoCmd tiff $proc $id $param $ch $fn
+proc ProcessSendTIFFCmd {proc id param sock fn} {
+    ProcessSendPhotoCmd tiff $proc $id $param $sock $fn
 }
 
-proc ProcessSendPhotoCmd {format proc id param ch fn} {
+proc ProcessSendPhotoCmd {format proc id param sock fn} {
     global current
     global export
 
@@ -266,13 +266,13 @@ proc ProcessSendPhotoCmd {format proc id param ch fn} {
     }
 
     set opt [string tolower [lindex $param 0]]
-    if {$ch != {}} {
+    if {$sock != {}} {
 	# xpa
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
 	    Darwin -
-	    SunOS {ExportPhotoSocket $ch $format $opt}
+	    SunOS {ExportPhotoSocket $sock $format $opt}
 	    {Windows NT} {}
 	}
     } elseif {$fn != {}} {

@@ -53,7 +53,7 @@ proc IExamKey {which K xx yy} {
     }
 }
 
-proc ProcessSendIExamCmd {proc id param} {
+proc ProcessSendIExamCmd {proc id param {sock {}} {fn {}}} {
     global iexam
 
     global icursor

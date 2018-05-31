@@ -304,7 +304,7 @@ proc BlockCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendBlockCmd {proc id param} {
+proc ProcessSendBlockCmd {proc id param {sock {}} {fn {}}} {
     global block
 
     switch -- [lindex $param 0] {

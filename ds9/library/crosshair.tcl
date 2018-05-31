@@ -278,7 +278,7 @@ proc CrosshairCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendCrosshairCmd {proc id param} {
+proc ProcessSendCrosshairCmd {proc id param {sock {}} {fn {}}} {
     global crosshair
     global current
 

@@ -34,7 +34,7 @@ proc ShmCmdSet {loadtype filetype filemode sharedidtype sharedid filename {share
     ProcessLoad
 }
 
-proc ProcessSendShmCmd {proc id param} {
+proc ProcessSendShmCmd {proc id param {sock {}} {fn {}}} {
     global current
 
     if {$current(frame) != {}} {

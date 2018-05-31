@@ -160,7 +160,7 @@ proc ProcessNVSSCmd {varname iname} {
     incr i [expr $nvss::yycnt-1]
 }
 
-proc ProcessSendNVSSCmd {proc id param} {
+proc ProcessSendNVSSCmd {proc id param {sock {}} {fn {}}} {
     NVSSDialog
     IMGSVRProcessSendCmd $proc $id $param dnvss
 }

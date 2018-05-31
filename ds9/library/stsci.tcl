@@ -180,7 +180,7 @@ proc ProcessSTSCICmd {varname iname} {
     incr i [expr $dssstsci::yycnt-1]
 }
 
-proc ProcessSendSTSCICmd {proc id param} {
+proc ProcessSendSTSCICmd {proc id param {sock {}} {fn {}}} {
     STSCIDialog
     IMGSVRProcessSendCmd $proc $id $param dstsci
 }

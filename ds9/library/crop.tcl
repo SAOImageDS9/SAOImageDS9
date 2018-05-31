@@ -408,7 +408,7 @@ proc CropCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendCropCmd {proc id param} {
+proc ProcessSendCropCmd {proc id param {sock {}} {fn {}}} {
     global crop
     global current
 

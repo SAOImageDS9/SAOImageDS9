@@ -155,7 +155,7 @@ proc PmagnifierCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendMagnifierCmd {proc id param} {
+proc ProcessSendMagnifierCmd {proc id param {sock {}} {fn {}}} {
     global pmagnifier
 
     switch -- [string tolower [lindex $param 0]] {

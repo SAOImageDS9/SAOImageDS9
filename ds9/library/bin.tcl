@@ -729,16 +729,17 @@ proc ProcessBinCmd {varname iname} {
     incr i [expr $bin::yycnt-1]
 }
 
-proc BinCmdSet {which value {cmd {}}} {
-    global bin
+proc ProcessSendBinCmd {proc id param {sock {}} {fn {}}} {
+    if {1} {
+	global parse
+	set parse(proc) $proc
+	set parse(id) $id
 
-    set bin($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
+	binsend::YY_FLUSH_BUFFER
+	binsend::yy_scan_string $param
+	binsend::yyparse
+    } else {
 
-proc ProcessSendBinCmd {proc id param} {
     global bin
     global current
 
@@ -765,4 +766,4 @@ proc ProcessSendBinCmd {proc id param} {
 	function {$proc $id "$bin(function)\n"}
     }
 }
-
+}

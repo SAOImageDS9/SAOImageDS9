@@ -281,7 +281,7 @@ proc MaskCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendMaskCmd {proc id param} {
+proc ProcessSendMaskCmd {proc id param {sock {}} {fn {}}} {
     global mask
 
     switch -- [string tolower $param] {

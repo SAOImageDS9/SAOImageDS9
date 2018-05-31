@@ -167,7 +167,7 @@ proc ProcessPageSetupCmd {varname iname} {
     }
 }
 
-proc ProcessSendPageSetupCmd {proc id param} {
+proc ProcessSendPageSetupCmd {proc id param {sock {}} {fn {}}} {
     global ds9
 
     switch $ds9(wm) {
@@ -187,7 +187,7 @@ proc ProcessPSPageSetupCmd {varname iname} {
     incr i [expr $pagesetup::yycnt-1]
 }
 
-proc ProcessSendPSPageSetupCmd {proc id param} {
+proc ProcessSendPSPageSetupCmd {proc id param {sock {}} {fn {}}} {
     global ps
 
     switch -- [string tolower $param] {

@@ -360,7 +360,7 @@ proc SmoothCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendSmoothCmd {proc id param} {
+proc ProcessSendSmoothCmd {proc id param {sock {}} {fn {}}} {
     global smooth
 
     switch -- [lindex $param 0] {

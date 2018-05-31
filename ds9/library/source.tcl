@@ -198,6 +198,8 @@ source $ds9(root)/library/backupparser.tcl
 source $ds9(root)/library/backuplex.tcl
 source $ds9(root)/library/binparser.tcl
 source $ds9(root)/library/binlex.tcl
+source $ds9(root)/library/binsendparser.tcl
+source $ds9(root)/library/binsendlex.tcl
 source $ds9(root)/library/bgparser.tcl
 source $ds9(root)/library/bglex.tcl
 source $ds9(root)/library/blinkparser.tcl

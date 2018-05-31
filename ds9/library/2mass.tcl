@@ -139,7 +139,7 @@ proc Process2MASSCmd {varname iname} {
     incr i [expr $twomass::yycnt-1]
 }
 
-proc ProcessSend2MASSCmd {proc id param} {
+proc ProcessSend2MASSCmd {proc id param {sock {}} {fn {}}} {
     2MASSDialog
     IMGSVRProcessSendCmd $proc $id $param dtwomass
 }

@@ -2080,7 +2080,7 @@ proc CurrentCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendFrameCmd {proc id param} {
+proc ProcessSendFrameCmd {proc id param {sock {}} {fn {}}} {
     global ds9
     global current
     global rgb
@@ -2166,7 +2166,7 @@ proc ProcessSingleCmd {varname iname} {
     DisplayMode
 }
 
-proc ProcessSendSingleCmd {proc id param} {
+proc ProcessSendSingleCmd {proc id param {sock {}} {fn {}}} {
     global current
 
     if {$current(display) == "single"} {
@@ -2195,7 +2195,7 @@ proc TileCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendTileCmd {proc id param} {
+proc ProcessSendTileCmd {proc id param {sock {}} {fn {}}} {
     global current
     global tile
 
@@ -2238,7 +2238,7 @@ proc BlinkCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendBlinkCmd {proc id param} {
+proc ProcessSendBlinkCmd {proc id param {sock {}} {fn {}}} {
     global current
     global blink
 
@@ -2267,7 +2267,7 @@ proc ProcessLockCmd {varname iname} {
     incr i [expr $lock::yycnt-1]
 }
 
-proc ProcessSendLockCmd {proc id param} {
+proc ProcessSendLockCmd {proc id param {sock {}} {fn {}}} {
     global panzoom
     global crop
     global crosshair

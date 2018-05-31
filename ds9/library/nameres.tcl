@@ -210,7 +210,7 @@ proc NRESCmdName {value} {
     NRESApply $cvarname 1
 }
 
-proc ProcessSendNRESCmd {proc id param} {
+proc ProcessSendNRESCmd {proc id param {sock {}} {fn {}}} {
     global nres
     global pnres
     global dnres

@@ -842,7 +842,7 @@ proc ScaleCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendScaleCmd {proc id param} {
+proc ProcessSendScaleCmd {proc id param {sock {}} {fn {}}} {
     global current
     global scale
 
@@ -883,7 +883,7 @@ proc MinmaxCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendMinMaxCmd {proc id param} {
+proc ProcessSendMinMaxCmd {proc id param {sock {}} {fn {}}} {
     global minmax
 
     switch -- [string tolower $param] {
@@ -915,7 +915,7 @@ proc ZscaleCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendZScaleCmd {proc id param} {
+proc ProcessSendZScaleCmd {proc id param {sock {}} {fn {}}} {
     global zscale
 
     switch -- [string tolower $param] {

@@ -1195,7 +1195,7 @@ proc WCSCmdLoadFn {cmd ext fn} {
     UpdateWCS
 }
 
-proc ProcessSendWCSCmd {proc id param} {
+proc ProcessSendWCSCmd {proc id param {sock {}} {fn {}}} {
     global current
     global wcs
 
@@ -1220,7 +1220,7 @@ proc ProcessAlignCmd {varname iname} {
     incr i [expr $align::yycnt-1]
 }
 
-proc ProcessSendAlignCmd {proc id param} {
+proc ProcessSendAlignCmd {proc id param {sock {}} {fn {}}} {
     global current
 
     $proc $id [ToYesNo $current(align)]

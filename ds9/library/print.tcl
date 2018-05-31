@@ -566,7 +566,7 @@ proc ProcessPrintCmd {varname iname} {
     }
 }
 
-proc ProcessSendPrintCmd {proc id param} {
+proc ProcessSendPrintCmd {proc id param {sock {}} {fn {}}} {
     global ds9
 
     switch $ds9(wm) {
@@ -595,7 +595,7 @@ proc PSCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendPSPrintCmd {proc id param} {
+proc ProcessSendPSPrintCmd {proc id param {sock {}} {fn {}}} {
     global ps
 
     switch -- [string tolower $param] {

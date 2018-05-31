@@ -166,6 +166,41 @@ proc UpdateMain {} {
     }
 }
 
+proc ProcessCmdSet {varname key value {cmd {}}} {
+    upvar #0 $varname var
+    global $varname
+
+    set ${varname}($key) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc ProcessSendCmdGet {varname key} {
+    upvar #0 $varname var
+    global $varname
+
+    global parse
+    $parse(proc) $parse(id) "$var($key)\n"
+}
+
+proc ProcessSendCmdYesNo {varname key} {
+    upvar #0 $varname var
+    global $varname
+
+    global parse
+    $parse(proc) $parse(id) [ToYesNo $var($key)]
+}
+
+proc ProcessSendCmdCurrent {cmd} {
+    global parse
+    global current
+
+    if {$current(frame) != {}} {
+	$parse(proc) $parse(id) "[$current(frame) $cmd]\n"
+    }
+}
+
 proc ProcessSend {proc id sock fn ext rr} {
     if {$sock != {}} {
 	# not implemented
@@ -1203,7 +1238,7 @@ proc ProcessPrefsCmd {varname iname} {
     incr i [expr $prefs::yycnt-1]
 }
 
-proc ProcessSendPrefsCmd {proc id param} {
+proc ProcessSendPrefsCmd {proc id param {sock {}} {fn {}}} {
     global pds9
     global ds9
 
@@ -1227,7 +1262,7 @@ proc ProcessPrecisionCmd {varname iname} {
     incr i [expr $precision::yycnt-1]
 }
 
-proc ProcessSendPrecisionCmd {proc id param} {
+proc ProcessSendPrecisionCmd {proc id param {sock {}} {fn {}}} {
     global pds9
 
     $proc $id "$pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,arcmin) $pds9(prec,arcsec)\n"
@@ -1243,7 +1278,7 @@ proc ProcessBgCmd {varname iname} {
     incr i [expr $bg::yycnt-1]
 }
 
-proc ProcessSendBgCmd {proc id param} {
+proc ProcessSendBgCmd {proc id param {sock {}} {fn {}}} {
     global pds9
 
     $proc $id "$pds9(bg)\n"
@@ -1259,7 +1294,7 @@ proc ProcessNanCmd {varname iname} {
     incr i [expr $nan::yycnt-1]
 }
 
-proc ProcessSendNanCmd {proc id param} {
+proc ProcessSendNanCmd {proc id param {sock {}} {fn {}}} {
     global pds9
 
     $proc $id "$pds9(nan)\n"
@@ -1275,13 +1310,13 @@ proc ProcessThreadsCmd {varname iname} {
     incr i [expr $threads::yycnt-1]
 }
 
-proc ProcessSendThreadsCmd {proc id param} {
+proc ProcessSendThreadsCmd {proc id param {sock {}} {fn {}}} {
     global ds9
 
     $proc $id "$ds9(threads)\n"
 }
 
-proc ProcessSendIRAFAlignCmd {proc id param} {
+proc ProcessSendIRAFAlignCmd {proc id param {sock {}} {fn {}}} {
     global pds9
 
     $proc $id [ToYesNo $pds9(iraf)]
@@ -1294,7 +1329,7 @@ proc ProcessCDCmd {varname iname} {
     cd [lindex $var $i]
 }
 
-proc ProcessSendCDCmd {proc id param} {
+proc ProcessSendCDCmd {proc id param {sock {}} {fn {}}} {
     $proc $id "[pwd]\n"
 }
 
@@ -1420,7 +1455,7 @@ proc IconifyCmd {which} {
     }
 }
 
-proc ProcessSendIconifyCmd {proc id param} {
+proc ProcessSendIconifyCmd {proc id param {sock {}} {fn {}}} {
     global ds9
     if {[wm state $ds9(top)] == "normal"} {
 	$proc $id "no\n"
@@ -1454,7 +1489,7 @@ proc ProcessQuitCmd {varname iname} {
     QuitDS9
 }
 
-proc ProcessSendModeCmd {proc id param} {
+proc ProcessSendModeCmd {proc id param {sock {}} {fn {}}} {
     global current
 
     $proc $id "$current(mode)\n"
@@ -1540,12 +1575,12 @@ proc ProcessThemeCmd {varname iname} {
 }
 
 # backward compatibility
-proc ProcessSendThemeCmd {proc id param} {
+proc ProcessSendThemeCmd {proc id param {sock {}} {fn {}}} {
     global pds9
     $proc $id "native\n"
 }
 
-proc ProcessSendVersionCmd {proc id param} {
+proc ProcessSendVersionCmd {proc id param {sock {}} {fn {}}} {
     global ds9
     $proc $id "$ds9(title) [lindex $ds9(version) 0]\n"
 }

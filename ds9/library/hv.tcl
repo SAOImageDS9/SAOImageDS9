@@ -917,7 +917,7 @@ proc WebCmdClick {id} {
     }
 }
 
-proc ProcessSendWebCmd {proc id param} {
+proc ProcessSendWebCmd {proc id param {sock {}} {fn {}}} {
     global ihv
     $proc $id "$ihv(windows)\n"
 }

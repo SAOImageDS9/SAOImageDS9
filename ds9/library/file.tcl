@@ -296,7 +296,7 @@ proc ProcessFileCmd {varname iname sock ch fn} {
     }
 }
 
-proc ProcessSendFileCmd {proc id param} {
+proc ProcessSendFileCmd {proc id param {sock {}} {fn {}}} {
     global current
 
     if {$current(frame) != {}} {

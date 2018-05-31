@@ -374,7 +374,7 @@ proc IISCmd {filename {which {}}} {
     $current(frame) iis set file name $filename $which
 }
 
-proc ProcessSendIISCmd {proc id param} {
+proc ProcessSendIISCmd {proc id param {sock {}} {fn {}}} {
     global current
 
     switch -- [string tolower [lindex $param 0]] {

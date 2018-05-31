@@ -833,7 +833,7 @@ proc ProcessHeightCmd {varname iname} {
     incr i [expr $height::yycnt-1]
 }
 
-proc ProcessSendHeightCmd {proc id param} {
+proc ProcessSendHeightCmd {proc id param {sock {}} {fn {}}} {
     global canvas
     $proc $id "$canvas(height)\n"
 }
@@ -852,7 +852,7 @@ proc ProcessWidthCmd {varname iname} {
     incr i [expr $width::yycnt-1]
 }
 
-proc ProcessSendWidthCmd {proc id param} {
+proc ProcessSendWidthCmd {proc id param {sock {}} {fn {}}} {
     global canvas
     $proc $id "$canvas(width)\n"
 }
@@ -876,7 +876,7 @@ proc ViewCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendViewCmd {proc id param} {
+proc ProcessSendViewCmd {proc id param {sock {}} {fn {}}} {
     global view
 
     switch -- [string tolower [lindex $param 0]] {

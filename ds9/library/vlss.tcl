@@ -130,7 +130,7 @@ proc ProcessVLSSCmd {varname iname} {
     incr i [expr $vlss::yycnt-1]
 }
 
-proc ProcessSendVLSSCmd {proc id param} {
+proc ProcessSendVLSSCmd {proc id param {sock {}} {fn {}}} {
     VLSSDialog
     IMGSVRProcessSendCmd $proc $id $param dvlss
 }

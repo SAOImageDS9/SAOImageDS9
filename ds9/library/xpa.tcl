@@ -2227,7 +2227,7 @@ proc XPACmdSet {varname which value} {
     set var($which) $value
 }
 
-proc ProcessSendXPACmd {proc id param} {
+proc ProcessSendXPACmd {proc id param {sock {}} {fn {}}} {
     switch -- [string tolower [lindex $param 0]] {
 	info {$proc $id [XPAInfoResult]} 
     }

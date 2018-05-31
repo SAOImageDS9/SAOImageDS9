@@ -842,7 +842,7 @@ proc ProcessPlotLine  {varname xarname iname} {
     $var(proc,updateelement) $varname
 }
 
-proc ProcessSendPlotCmd {proc id param} {
+proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {
     global iap
 
     set i 0

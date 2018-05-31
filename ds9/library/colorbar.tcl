@@ -1244,7 +1244,7 @@ proc CmapValueCmd {c b} {
     UpdateColorDialog
 }
 
-proc ProcessSendCmapCmd {proc id param} {
+proc ProcessSendCmapCmd {proc id param {sock {}} {fn {}}} {
     global colorbar
     global current
 
@@ -1299,7 +1299,7 @@ proc ColorbarCmdFontStyle {value {cmd {}}} {
     }
 }
 
-proc ProcessSendColorbarCmd {proc id param} {
+proc ProcessSendColorbarCmd {proc id param {sock {}} {fn {}}} {
     global colorbar
     global view
 

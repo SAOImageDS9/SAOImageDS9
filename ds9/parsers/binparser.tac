@@ -40,15 +40,15 @@ command : bin
 bin : OPEN_ {BinDialog}
  | CLOSE_ {BinDestroyDialog}
  | MATCH_ {MatchBinCurrent}
- | LOCK_ yesno {BinCmdSet lock $2 LockBinCurrent}
+ | LOCK_ yesno {ProcessCmdSet bin lock $2 LockBinCurrent}
  | ABOUT_ about
- | BUFFERSIZE_ INT_ {BinCmdSet buffersize $2 ChangeBinBufferSize}
+ | BUFFERSIZE_ INT_ {ProcessCmdSet bin buffersize $2 ChangeBinBufferSize}
  | COLS_ cols cols {BinCols \"$2\" \"$3\" \"\"}
  | COLSZ_ cols cols cols {BinCols \"$2\" \"$3\" \"$4\"}
  | FACTOR_ factor
- | DEPTH_ INT_ {BinCmdSet depth $2 ChangeBinDepth}
+ | DEPTH_ INT_ {ProcessCmdSet bin depth $2 ChangeBinDepth}
  | FILTER_ filter {BinFilter $2}
- | FUNCTION_ function {BinCmdSet function) $2 ChangeBinFunction}
+ | FUNCTION_ function {ProcessCmdSet bin function $2 ChangeBinFunction}
  | IN_ {Bin .5 .5}
  | OUT_ {Bin 2 2}
  | TO_ to
@@ -70,8 +70,8 @@ about : numeric numeric {BinAbout $1 $2}
  | CENTER_ {BinAboutCenter}
  ;
 
-factor : numeric {BinCmdSet factor "$1 $1" ChangeBinFactor}
- | numeric numeric {BinCmdSet factor "$1 $2"; ChangeBinFactor}
+factor : numeric {ProcessCmdSet bin factor "$1 $1" ChangeBinFactor}
+ | numeric numeric {ProcessCmdSet bin factor "$1 $2" ChangeBinFactor}
  ;
 
 filter : CLEAR_ {set _ {}}

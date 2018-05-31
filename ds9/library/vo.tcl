@@ -506,7 +506,7 @@ proc VOCmdDisconnect {str} {
     }
 }
 
-proc ProcessSendVOCmd {proc id param} {
+proc ProcessSendVOCmd {proc id param {sock {}} {fn {}}} {
     global ivo
     global pvo
 

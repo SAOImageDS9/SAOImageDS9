@@ -480,7 +480,7 @@ proc ThreedCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSend3DCmd {proc id param} {
+proc ProcessSend3DCmd {proc id param {sock {}} {fn {}}} {
     global threed
 
     switch -- [string tolower [lindex $param 0]] {

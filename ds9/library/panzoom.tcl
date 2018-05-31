@@ -699,7 +699,7 @@ proc ProcessPanCmd {varname iname} {
     incr i [expr $pan::yycnt-1]
 }
 
-proc ProcessSendPanCmd {proc id param} {
+proc ProcessSendPanCmd {proc id param {sock {}} {fn {}}} {
     global current
 
     set sys [lindex $param 0]
@@ -725,7 +725,7 @@ proc ProcessZoomCmd {varname iname} {
     incr i [expr $zoom::yycnt-1]
 }
 
-proc ProcessSendZoomCmd {proc id param} {
+proc ProcessSendZoomCmd {proc id param {sock {}} {fn {}}} {
     global current
 
     set z1 [lindex $current(zoom) 0]
@@ -750,7 +750,7 @@ proc ProcessOrientCmd {varname iname} {
     incr i [expr $orient::yycnt-1]
 }
 
-proc ProcessSendOrientCmd {proc id param} {
+proc ProcessSendOrientCmd {proc id param {sock {}} {fn {}}} {
     global current
     $proc $id "$current(orient)\n"
 }
@@ -768,7 +768,7 @@ proc ProcessRotateCmd {varname iname} {
     incr i [expr $rotate::yycnt-1]
 }
 
-proc ProcessSendRotateCmd {proc id param} {
+proc ProcessSendRotateCmd {proc id param {sock {}} {fn {}}} {
     global current
     $proc $id "$current(rotate)\n"
 }

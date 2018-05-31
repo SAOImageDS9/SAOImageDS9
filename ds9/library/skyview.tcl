@@ -616,7 +616,7 @@ proc ProcessSkyViewCmd {varname iname} {
     incr i [expr $skyview::yycnt-1]
 }
 
-proc ProcessSendSkyViewCmd {proc id param} {
+proc ProcessSendSkyViewCmd {proc id param {sock {}} {fn {}}} {
     SkyViewDialog
     IMGSVRProcessSendCmd $proc $id $param dskyview
 }

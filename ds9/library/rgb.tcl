@@ -279,7 +279,7 @@ proc RGBCmdSet {which value {cmd {}}} {
     }
 }
 
-proc ProcessSendRGBCmd {proc id param} {
+proc ProcessSendRGBCmd {proc id param {sock {}} {fn {}}} {
     global current
     global rgb
 

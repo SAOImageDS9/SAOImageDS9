@@ -30,12 +30,12 @@ command : wcs
 
 wcs : OPEN_ {WCSDialog}
  | CLOSE_ {WCSDestroyDialog}
- | wcssys {WCSCmdSet system $1 UpdateWCS}
- | SYSTEM_ wcssys {WCSCmdSet system $2 UpdateWCS}
- | skyframe {WCSCmdSet sky $1 UpdateWCS}
- | SKY_ skyframe {WCSCmdSet sky $2 UpdateWCS}
- | skyformat {WCSCmdSet skyformat $1 UpdateWCS}
- | SKYFORMAT_ skyformat {WCSCmdSet skyformat $2 UpdateWCS}
+ | wcssys {ProcessCmdSet wcs system $1 UpdateWCS}
+ | SYSTEM_ wcssys {ProcessCmdSet wcs system $2 UpdateWCS}
+ | skyframe {ProcessCmdSet wcs sky $1 UpdateWCS}
+ | SKY_ skyframe {ProcessCmdSet wcs sky $2 UpdateWCS}
+ | skyformat {ProcessCmdSet wcs skyformat $1 UpdateWCS}
+ | SKYFORMAT_ skyformat {ProcessCmdSet wcs skyformat $2 UpdateWCS}
  | ALIGN_ yesno {ProcessCmdSet current align $2 AlignWCSFrame}
  | RESET_ {WCSCmdReset 1}
  | RESET_ INT_ {WCSCmdReset $2}

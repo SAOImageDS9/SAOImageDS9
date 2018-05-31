@@ -160,15 +160,6 @@ proc ProcessSaveImageCmd {varname iname} {
     incr i [expr $saveimage::yycnt-1]
 }
 
-proc SaveimageCmdSet {which value {cmd {}}} {
-    global saveimage
-
-    set saveimage($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc SaveimageCmdLoad {format fn} {
     switch -- $format {
 	fits {FileLast fitsfbox $fn}

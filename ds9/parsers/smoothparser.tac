@@ -32,17 +32,17 @@ command : smooth
  ;
 
 
-smooth : yesno {SmoothCmdSet view $1 SmoothUpdate}
+smooth : yesno {ProcessCmdSet smooth view $1 SmoothUpdate}
  | OPEN_ {SmoothDialog}
  | CLOSE_ {SmoothDestroyDialog}
  | MATCH_ {MatchSmoothCurrent}
- | LOCK_ yesno {SmoothCmdSet lock $2 LockSmoothCurrent}
- | FUNCTION_ function {SmoothCmdSet function $2 SmoothUpdate}
- | RADIUS_ INT_ {SmoothCmdSet radius $2 SmoothUpdate}
- | RADIUSMINOR_ INT_ {SmoothCmdSet radius,minor $2 SmoothUpdate}
- | SIGMA_ numeric {SmoothCmdSet sigma $2 SmoothUpdate}
- | SIGMAMINOR_ numeric {SmoothCmdSet sigma,minor $2 SmoothUpdate}
- | ANGLE_ numeric {SmoothCmdSet angle $2 SmoothUpdate}
+ | LOCK_ yesno {ProcessCmdSet smooth lock $2 LockSmoothCurrent}
+ | FUNCTION_ function {ProcessCmdSet smooth function $2 SmoothUpdate}
+ | RADIUS_ INT_ {ProcessCmdSet smooth radius $2 SmoothUpdate}
+ | RADIUSMINOR_ INT_ {ProcessCmdSet smooth radius,minor $2 SmoothUpdate}
+ | SIGMA_ numeric {ProcessCmdSet smooth sigma $2 SmoothUpdate}
+ | SIGMAMINOR_ numeric {ProcessCmdSet smooth sigma,minor $2 SmoothUpdate}
+ | ANGLE_ numeric {ProcessCmdSet smooth angle $2 SmoothUpdate}
  ;
 
 function : BOXCAR_ {set _ boxcar}

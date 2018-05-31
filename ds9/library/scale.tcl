@@ -833,15 +833,6 @@ proc ProcessScaleCmd {varname iname} {
     incr i [expr $scale::yycnt-1]
 }
 
-proc ScaleCmdSet {which value {cmd {}}} {
-    global scale
-
-    set scale($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendScaleCmd {proc id param {sock {}} {fn {}}} {
     global current
     global scale
@@ -874,15 +865,6 @@ proc ProcessMinMaxCmd {varname iname} {
     incr i [expr $minmax::yycnt-1]
 }
 
-proc MinmaxCmdSet {which value {cmd {}}} {
-    global minmax
-
-    set minmax($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendMinMaxCmd {proc id param {sock {}} {fn {}}} {
     global minmax
 
@@ -904,15 +886,6 @@ proc ProcessZScaleCmd {varname iname} {
     zscale::yy_scan_string [lrange $var $i end]
     zscale::yyparse
     incr i [expr $zscale::yycnt-1]
-}
-
-proc ZscaleCmdSet {which value {cmd {}}} {
-    global zscale
-
-    set zscale($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
 }
 
 proc ProcessSendZScaleCmd {proc id param {sock {}} {fn {}}} {

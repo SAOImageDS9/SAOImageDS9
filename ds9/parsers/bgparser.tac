@@ -11,7 +11,7 @@ command : bg
  | bg {yyclearin; YYACCEPT} STRING_
  ;
 
-bg : STRING_ {pds9CmdSet bg $1 PrefsBgColor}
+bg : STRING_ {ProcessCmdSet pds9 bg $1 PrefsBgColor}
  ;
 
 %%

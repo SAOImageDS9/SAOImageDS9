@@ -29,10 +29,10 @@ command : vo
 
 vo : OPEN_ {VODialog}
  | CLOSE_ {VODestroy voi}
- | METHOD_ method {VOCmdSet method $2}
- | SERVER_ STRING_ {VOCmdSet server $2}
- | INTERNAL_ yesno {VOCmdSet hv $2}
- | DELAY_ INT_ {VOCmdSet delay $2}
+ | METHOD_ method {ProcessCmdSet pvo method $2}
+ | SERVER_ STRING_ {ProcessCmdSet pvo server $2}
+ | INTERNAL_ yesno {ProcessCmdSet pvo hv $2}
+ | DELAY_ INT_ {ProcessCmdSet pvo delay $2}
  | CONNECT_ STRING_ {VOCmdConnect $2}
  | DISCONNECT_ STRING_ {VOCmdDisconnect $2}
  | STRING_ {VOCmdConnect $1}

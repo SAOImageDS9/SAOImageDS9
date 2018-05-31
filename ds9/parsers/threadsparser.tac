@@ -14,7 +14,7 @@ command : threads
  | threads {yyclearin; YYACCEPT} STRING_
  ;
 
-threads : INT_ {ds9CmdSet threads $1 ChangeThreads}
+threads : INT_ {ProcessCmdSet ds9 threads $1 ChangeThreads}
  ;
 
 %%

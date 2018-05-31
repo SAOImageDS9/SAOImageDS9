@@ -27,26 +27,26 @@ command : movie
  | movie {yyclearin; YYACCEPT} STRING_
  ;
 
-movie : STRING_ {MovieCmdSet action frame; Movie $1}
- | FRAME_ STRING_ {MovieCmdSet action frame; Movie $2}
- | SLICE_ STRING_ {MovieCmdSet action slice; Movie $2}
- | 3D_ STRING_ {MovieCmdSet action 3d; Movie $2}
- | 3D_ STRING_ opts {MovieCmdSet action 3d; Movie $2}
+movie : STRING_ {ProcessCmdSet movie action frame; Movie $1}
+ | FRAME_ STRING_ {ProcessCmdSet movie action frame; Movie $2}
+ | SLICE_ STRING_ {ProcessCmdSet movie action slice; Movie $2}
+ | 3D_ STRING_ {ProcessCmdSet movie action 3d; Movie $2}
+ | 3D_ STRING_ opts {ProcessCmdSet movie action 3d; Movie $2}
  ;
 
 opts : opts opt
  | opt
  ;
 
-opt : NUMBER_ INT_ {MovieCmdSet number $2}
- | AZFROM_ numeric {MovieCmdSet azfrom $2}
- | AZTO_ numeric {MovieCmdSet azto $2}
- | ELFROM_ numeric {MovieCmdSet elfrom $2}
- | ELTO_ numeric {MovieCmdSet elto $2}
- | SLFROM_ INT_ {MovieCmdSet slfrom $2}
- | SLTO_ INT_ {MovieCmdSet slto $2}
- | OSCILLATE_ INT_ {MovieCmdSet repeat oscillate; MovieCmdSet repeat,num $2}
- | REPEAT_ INT_ {MovieCmdSet repeat repeat; MovieCmdSet repeat,num $2}
+opt : NUMBER_ INT_ {ProcessCmdSet movie number $2}
+ | AZFROM_ numeric {ProcessCmdSet movie azfrom $2}
+ | AZTO_ numeric {ProcessCmdSet movie azto $2}
+ | ELFROM_ numeric {ProcessCmdSet movie elfrom $2}
+ | ELTO_ numeric {ProcessCmdSet movie elto $2}
+ | SLFROM_ INT_ {ProcessCmdSet movie slfrom $2}
+ | SLTO_ INT_ {ProcessCmdSet movie slto $2}
+ | OSCILLATE_ INT_ {ProcessCmdSet movie repeat oscillate; ProcessCmdSet movie repeat,num $2}
+ | REPEAT_ INT_ {ProcessCmdSet movie repeat repeat; ProcessCmdSet movie repeat,num $2}
  ;
 
 %%

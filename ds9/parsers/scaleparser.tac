@@ -45,15 +45,15 @@ scale : OPEN_ {ScaleDialog}
  | CLOSE_ {ScaleDestroyDialog}
  | MATCH_ match
  | LOCK_ lock
- | scales {ScaleCmdSet type $1 ChangeScale}
+ | scales {ProcessCmdSet scale type $1 ChangeScale}
  | LOG_ log
- | DATASEC_ yesno {ScaleCmdSet datasec $2 ChangeDATASEC}
- | LIMITS_ numeric numeric {ScaleCmdSet min $2 {}; ScaleCmdSet max $3 ChangeScaleLimit}
- | SCALELIMITS_ numeric numeric {ScaleCmdSet min $2 {}; ScaleCmdSet max $3 ChangeScaleLimit}
- | mode {ScaleCmdSet mode $1 ChangeScaleMode}
- | MODE_ mode {ScaleCmdSet mode $2 ChangeScaleMode}
- | scope {ScaleCmdSet scope $1 ChangeScaleScope}
- | SCOPE_ scope {ScaleCmdSet scope $2 ChangeScaleScope}
+ | DATASEC_ yesno {ProcessCmdSet scale datasec $2 ChangeDATASEC}
+ | LIMITS_ numeric numeric {ProcessCmdSet scale min $2 {}; ProcessCmdSet scale max $3 ChangeScaleLimit}
+ | SCALELIMITS_ numeric numeric {ProcessCmdSet scale min $2 {}; ProcessCmdSet scale max $3 ChangeScaleLimit}
+ | mode {ProcessCmdSet scale mode $1 ChangeScaleMode}
+ | MODE_ mode {ProcessCmdSet scale mode $2 ChangeScaleMode}
+ | scope {ProcessCmdSet scale scope $1 ChangeScaleScope}
+ | SCOPE_ scope {ProcessCmdSet scale scope $2 ChangeScaleScope}
  ;
 
 scales : LINEAR_ {set _ linear}
@@ -71,13 +71,13 @@ match : {MatchScaleCurrent}
  | SCALELIMITS_ {MatchScaleLimitsCurrent}
  ;
 
-lock : yesno {ScaleCmdSet lock $1 LockScaleCurrent}
- | LIMITS_ yesno {ScaleCmdSet lock,limits $2 LockScaleLimitsCurrent}
- | SCALELIMITS_ yesno {ScaleCmdSet lock,limits $2 LockScaleLimitsCurrent}
+lock : yesno {ProcessCmdSet scale lock $1 LockScaleCurrent}
+ | LIMITS_ yesno {ProcessCmdSet scale lock,limits $2 LockScaleLimitsCurrent}
+ | SCALELIMITS_ yesno {ProcessCmdSet scale lock,limits $2 LockScaleLimitsCurrent}
  ;
  
-log : {ScaleCmdSet type log ChangeScale}
- | EXP_ numeric {ScaleCmdSet log $2 ChangeScale}
+log : {ProcessCmdSet scale type log ChangeScale}
+ | EXP_ numeric {ProcessCmdSet scale log $2 ChangeScale}
  ;
 
 mode : numeric {set _ $1}

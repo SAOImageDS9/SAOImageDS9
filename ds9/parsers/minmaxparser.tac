@@ -22,10 +22,10 @@ command : minmax
  | minmax {yyclearin; YYACCEPT} STRING_
  ;
 
-minmax : {ScaleCmdSet mode minmax ChangeScaleMode}
- | mode {MinmaxCmdSet mode $1 ChangeMinMax}
- | MODE_ mode {MinmaxCmdSet mode $2 ChangeMinMax}
- | INTERVAL_ INT_ {MinmaxCmdSet sample $2 ChangeMinMax}
+minmax : {ProcessCmdSet scale mode minmax ChangeScaleMode}
+ | mode {ProcessCmdSet minmax mode $1 ChangeMinMax}
+ | MODE_ mode {ProcessCmdSet minmax mode $2 ChangeMinMax}
+ | INTERVAL_ INT_ {ProcessCmdSet minmax sample $2 ChangeMinMax}
  ;
 
 mode : SCAN_ {set _ scan}

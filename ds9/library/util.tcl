@@ -1210,24 +1210,6 @@ proc DS9Backup {ch which} {
 
 # Process Cmds
 
-proc ds9CmdSet {which value {cmd {}}} {
-    global ds9
-
-    set ds9($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
-proc pds9CmdSet {which value {cmd {}}} {
-    global pds9
-
-    set pds9($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessPrefsCmd {varname iname} {
     upvar $varname var
     upvar $iname i

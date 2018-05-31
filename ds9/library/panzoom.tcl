@@ -677,15 +677,6 @@ proc PanZoomBackup {ch which} {
 
 # Process Cmds
 
-proc PanZoomCmdSet {which value {cmd {}}} {
-    global panzoom
-
-    set panzoom($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessPanCmd {varname iname} {
     upvar $varname var
     upvar $iname i

@@ -36,12 +36,12 @@ command : ps
  ;
 
 ps : {PostScript}
- | DESTINATION_ dest {PSCmdSet dest $2}
- | COMMAND_ STRING_ {PSCmdSet cmd $2}
- | FILENAME_ STRING_ {PSCmdSet filename $2}
- | COLOR_ color {PSCmdSet color $2}
- | LEVEL_ level {PSCmdSet level $2}
- | RESOLUTION_ resolution {PSCmdSet resolution $2}
+ | DESTINATION_ dest {ProcessCmdSet ps dest $2}
+ | COMMAND_ STRING_ {ProcessCmdSet ps cmd $2}
+ | FILENAME_ STRING_ {ProcessCmdSet ps filename $2}
+ | COLOR_ color {ProcessCmdSet ps color $2}
+ | LEVEL_ level {ProcessCmdSet ps level $2}
+ | RESOLUTION_ resolution {ProcessCmdSet ps resolution $2}
 #backward compatibility
  | INTERPOLATE_
  ;

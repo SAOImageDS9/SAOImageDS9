@@ -54,15 +54,6 @@ proc SaveCmdLoad {format fn} {
     Save $format $fn
 }
 
-proc SavefitsCmdSet {which value {cmd {}}} {
-    global savefits
-
-    set savefits($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 # Support
 
 proc SaveDialog {format} {

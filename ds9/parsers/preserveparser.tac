@@ -19,8 +19,8 @@ command : preserve
  | preserve {yyclearin; YYACCEPT} STRING_
  ;
 
-preserve : PAN_ yesno {PanZoomCmdSet preserve $2 PreservePan}
- | REGIONS_ yesno {MarkerCmdSet preserve $2 MarkerPreserve}
+preserve : PAN_ yesno {ProcessCmdSet panzoom preserve $2 PreservePan}
+ | REGIONS_ yesno {ProcessCmdSet marker preserve $2 MarkerPreserve}
  ;
 
 %%

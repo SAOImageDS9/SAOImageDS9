@@ -39,7 +39,7 @@ command : frame
  ;
 
 frame : MATCH_ match {MatchFrameCurrent $2}
- | LOCK_ lock {PanZoomCmdSet lock $2; LockFrameCurrent}
+ | LOCK_ lock {ProcessCmdSet panzoom lock $2; LockFrameCurrent}
  | CENTER_ center
  | CLEAR_ clear
  | DELETE_ delete
@@ -87,13 +87,13 @@ refresh : {UpdateCurrentFrame}
  | ALL_ {UpdateAllFrame}
  ;
 
-hide : {global current; ActiveCmdSet $current(frame) 0 UpdateActiveFrames}
- | INT_ {ActiveCmdSet "Frame$1" 0 UpdateActiveFrames}
+hide : {global current; ProcessCmdSet active $current(frame) 0 UpdateActiveFrames}
+ | INT_ {ProcessCmdSet active "Frame$1" 0 UpdateActiveFrames}
  | ALL_ {ActiveFrameNone}
  ;
  
 show :
- | INT_ {ActiveCmdSet "Frame$1" 1 UpdateActiveFrames}
+ | INT_ {ProcessCmdSet active "Frame$1" 1 UpdateActiveFrames}
  | ALL_ {ActiveFrameAll}
  ;
 

@@ -26,9 +26,9 @@ command : xpa
  | xpa {yyclearin; YYACCEPT} STRING_
  ;
 
-xpa : yesno {XPACmdSet pds9 xpa $1}
- | method {XPACmdSet env XPA_METHOD $1}
- | NOXPANS_ {XPACmdSet env XPA_NSREGISTER false}
+xpa : yesno {ProcessCmdSet pds9 xpa $1}
+ | method {ProcessCmdSet env XPA_METHOD $1}
+ | NOXPANS_ {ProcessCmdSet env XPA_NSREGISTER false}
 
 | CONNECT_ 
  | DISCONNECT_ 

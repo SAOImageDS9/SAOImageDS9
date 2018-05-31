@@ -47,11 +47,11 @@ ext : FITS_ {set _ fits}
  ;
 
 opts :
- | NONE_ {SaveimageCmdSet tiff,compress none}
- | JPEG_ {SaveimageCmdSet tiff,compress jpeg}
- | PACKBITS_ {SaveimageCmdSet tiff,compress packbits}
- | DEFLATE_ {SaveimageCmdSet tiff,compress deflate}
- | numeric {SaveimageCmdSet jpeg,quality $1}
+ | NONE_ {ProcessCmdSet saveimage tiff,compress none}
+ | JPEG_ {ProcessCmdSet saveimage tiff,compress jpeg}
+ | PACKBITS_ {ProcessCmdSet saveimage tiff,compress packbits}
+ | DEFLATE_ {ProcessCmdSet saveimage tiff,compress deflate}
+ | numeric {ProcessCmdSet saveimage jpeg,quality $1}
  ;
  
 %%

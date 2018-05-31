@@ -14,7 +14,7 @@ command : precision
  | precision {yyclearin; YYACCEPT} STRING_
  ;
 
-precision :  INT_ INT_ INT_ INT_ INT_ INT_ {pds9CmdSet prec,linear $1; pds9CmdSet prec,deg $2; pds9CmdSet prec,hms $3;pds9CmdSet prec,dms $4; pds9CmdSet prec,arcmin $5; pds9CmdSet prec,arcsec $6 PrefsPrecision}
+precision :  INT_ INT_ INT_ INT_ INT_ INT_ {ProcessCmdSet pds9 prec,linear $1; ProcessCmdSet pds9 prec,deg $2; ProcessCmdSet pds9 prec,hms $3;ProcessCmdSet pds9 prec,dms $4; ProcessCmdSet pds9 prec,arcmin $5; ProcessCmdSet pds9 prec,arcsec $6 PrefsPrecision}
  ;
 
 %%

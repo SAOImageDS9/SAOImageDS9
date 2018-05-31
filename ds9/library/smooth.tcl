@@ -351,15 +351,6 @@ proc ProcessSmoothCmd {varname iname} {
     incr i [expr $smooth::yycnt-1]
 }
 
-proc SmoothCmdSet {which value {cmd {}}} {
-    global smooth
-
-    set smooth($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendSmoothCmd {proc id param {sock {}} {fn {}}} {
     global smooth
 

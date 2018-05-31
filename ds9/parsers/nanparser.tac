@@ -11,7 +11,7 @@ command : nan
  | nan {yyclearin; YYACCEPT} STRING_
  ;
 
-nan : STRING_ {pds9CmdSet nan $1 PrefsNanColor}
+nan : STRING_ {ProcessCmdSet pds9 nan $1 PrefsNanColor}
  ;
 
 %%

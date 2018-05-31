@@ -42,9 +42,9 @@ rgb : {CreateRGBFrame}
  | CLOSE_ {RGBDestroyDialog}
  | channel {ProcessCmdSet current rgb $1 RGBChannel}
  | CHANNEL_ channel {ProcessCmdSet current rgb $2 RGBChannel}
- | LOCK_ lock yesno {RGBCmdSet $2 $3}
- | SYSTEM_ wcssys {RGBCmdSet system $2 RGBSystem}
- | VIEW_ channel yesno {RGBCmdSet $2 $3 RGBView}
+ | LOCK_ lock yesno {ProcessCmdSet rgb $2 $3}
+ | SYSTEM_ wcssys {ProcessCmdSet rgb system $2 RGBSystem}
+ | VIEW_ channel yesno {ProcessCmdSet rgb $2 $3 RGBView}
  ;
 
 channel : RED_ {set _ red}

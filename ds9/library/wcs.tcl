@@ -1144,15 +1144,6 @@ proc ProcessWCSCmd {varname iname sock fn} {
     incr i [expr $wcs::yycnt-1]
 }
 
-proc WCSCmdSet {which value {cmd {}}} {
-    global wcs
-
-    set wcs($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc WCSCmdReset {ext} {
     global rgb
     global current

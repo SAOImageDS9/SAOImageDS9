@@ -27,9 +27,9 @@ command : pagesetup
  | pagesetup {yyclearin; YYACCEPT} STRING_
  ;
 
-pagesetup : ORIENT_ orient {PSCmdSet orient $2}
- | SCALE_ numeric {PSCmdSet scale $2}
- | SIZE_ size {PSCmdSet size $2}
+pagesetup : ORIENT_ orient {ProcessCmdSet ps orient $2}
+ | SCALE_ numeric {ProcessCmdSet ps scale $2}
+ | SIZE_ size {ProcessCmdSet ps size $2}
  ;
 
 orient : PORTRAIT_ {set _ portrait}

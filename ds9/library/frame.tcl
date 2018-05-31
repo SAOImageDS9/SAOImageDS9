@@ -2062,15 +2062,6 @@ proc ProcessFrameCmd {varname iname} {
     incr i [expr $frame::yycnt-1]
 }
 
-proc ActiveCmdSet {which value {cmd {}}} {
-    global active
-
-    set active($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendFrameCmd {proc id param {sock {}} {fn {}}} {
     global ds9
     global current

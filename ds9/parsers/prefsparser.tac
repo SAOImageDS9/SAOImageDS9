@@ -24,11 +24,11 @@ command : prefs
  ;
 
 prefs : CLEAR_ {ClearPrefs}
- | PRECISION_ INT_ INT_ INT_ INT_ INT_ INT_ {pds9CmdSet prec,linear $2; pds9CmdSet prec,deg $3; pds9CmdSet prec,hms $4;pds9CmdSet prec,dms $5; pds9CmdSet prec,arcmin $6; pds9CmdSet prec,arcsec $7 PrefsPrecision}
- | BGCOLOR_ STRING_ {pds9CmdSet bg $2 PrefsBgColor}
- | NANCOLOR_ STRING_ {pds9CmdSet nan $2 PrefsNanColor}
- | THREADS_ INT_ {ds9CmdSet threads $2 ChangeThreads}
- | IRAFALIGN_ yesno {pds9CmdSet iraf $2 PrefsIRAFAlign}
+ | PRECISION_ INT_ INT_ INT_ INT_ INT_ INT_ {ProcessCmdSet pds9 prec,linear $2; ProcessCmdSet pds9 prec,deg $3; ProcessCmdSet pds9 prec,hms $4;ProcessCmdSet pds9 prec,dms $5; ProcessCmdSet pds9 prec,arcmin $6; ProcessCmdSet pds9 prec,arcsec $7 PrefsPrecision}
+ | BGCOLOR_ STRING_ {ProcessCmdSet pds9 bg $2 PrefsBgColor}
+ | NANCOLOR_ STRING_ {ProcessCmdSet pds9 nan $2 PrefsNanColor}
+ | THREADS_ INT_ {ProcessCmdSet ds9 threads $2 ChangeThreads}
+ | IRAFALIGN_ yesno {ProcessCmdSet pds9 iraf $2 PrefsIRAFAlign}
  ;
 
 %%

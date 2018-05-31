@@ -50,11 +50,11 @@ mosaicimage : MOSAICIMAGE_ {set _ mosaicimage}
  | MOSAICIMAGEWCS_ {set _ mosaicimage}
  ;
 
-opts : {SavefitsCmdSet type image; SavefitsCmdSet mosaic 1}
- | IMAGE_ {SavefitsCmdSet type image}
- | TABLE_ {SavefitsCmdSet type table}
- | SLICE_ {SavefitsCmdSet type slice}
- | INT_ {SavefitsCmdSet mosaic $1}
+opts : {ProcessCmdSet savefits type image; ProcessCmdSet savefits mosaic 1}
+ | IMAGE_ {ProcessCmdSet savefits type image}
+ | TABLE_ {ProcessCmdSet savefits type table}
+ | SLICE_ {ProcessCmdSet savefits type slice}
+ | INT_ {ProcessCmdSet savefits mosaic $1}
  ;
 
 %%

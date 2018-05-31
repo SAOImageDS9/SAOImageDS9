@@ -272,15 +272,6 @@ proc ProcessMaskCmd {varname iname} {
     return $parse(result)
 }
 
-proc MaskCmdSet {which value {cmd {}}} {
-    global mask
-
-    set mask($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendMaskCmd {proc id param {sock {}} {fn {}}} {
     global mask
 

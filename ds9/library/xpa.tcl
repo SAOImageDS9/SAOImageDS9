@@ -2221,12 +2221,6 @@ proc ProcessXPACmd {varname iname} {
     incr i [expr $xpa::yycnt-1]
 }
 
-proc XPACmdSet {varname which value} {
-    upvar #0 $varname var
-
-    set var($which) $value
-}
-
 proc ProcessSendXPACmd {proc id param {sock {}} {fn {}}} {
     switch -- [string tolower [lindex $param 0]] {
 	info {$proc $id [XPAInfoResult]} 

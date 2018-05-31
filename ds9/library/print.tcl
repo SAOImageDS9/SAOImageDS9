@@ -586,15 +586,6 @@ proc ProcessPSPrintCmd {varname iname} {
     incr i [expr $ps::yycnt-1]
 }
 
-proc PSCmdSet {which value {cmd {}}} {
-    global ps
-
-    set ps($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendPSPrintCmd {proc id param {sock {}} {fn {}}} {
     global ps
 

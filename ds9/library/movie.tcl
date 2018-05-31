@@ -466,12 +466,3 @@ proc ProcessMovieCmd {varname iname} {
     incr i [expr $movie::yycnt-1]
 }
 
-proc MovieCmdSet {which value {cmd {}}} {
-    global movie
-
-    set movie($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-

@@ -20,10 +20,10 @@ command : zscale
  | zscale {yyclearin; YYACCEPT} STRING_
  ;
 
-zscale : yesno {ScaleCmdSet mode zscale ChangeScaleMode}
- | CONTRAST_ numeric {ZscaleCmdSet contrast $2 ChangeZScale}
- | SAMPLE_ INT_ {ZscaleCmdSet sample $2 ChangeZScale}
- | LINE_ INT_ {ZscaleCmdSet line $2 ChangeZScale}
+zscale : yesno {ProcessCmdSet scale mode zscale ChangeScaleMode}
+ | CONTRAST_ numeric {ProcessCmdSet zscale contrast $2 ChangeZScale}
+ | SAMPLE_ INT_ {ProcessCmdSet zscale sample $2 ChangeZScale}
+ | LINE_ INT_ {ProcessCmdSet zscale line $2 ChangeZScale}
  ;
 
 %%

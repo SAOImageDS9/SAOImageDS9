@@ -472,12 +472,6 @@ proc ProcessVOCmd {varname iname} {
     incr i [expr $vo::yycnt-1]
 }
 
-proc VOCmdSet {which value} {
-    global pvo
-
-    set pvo($which) $value
-}
-
 proc VOCmdConnect {str} {
     global voi
     global ivo

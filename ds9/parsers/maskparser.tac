@@ -25,9 +25,9 @@ mask : {global parse; set parse(result) mask}
  | OPEN_ {MaskDialog}
  | CLOSE_ {MaskDestroyDialog}
  | CLEAR_ {MaskClear}
- | COLOR_ STRING_ {MaskCmdSet color $2 MaskColor}
- | MARK_ INT_ {MaskCmdSet mark $2 MaskMark}
- | TRANSPARENCY_ INT_ {MaskCmdSet transparency $2 MaskTransparency}
+ | COLOR_ STRING_ {ProcessCmdSet mask color $2 MaskColor}
+ | MARK_ INT_ {ProcessCmdSet mask mark $2 MaskMark}
+ | TRANSPARENCY_ INT_ {ProcessCmdSet mask transparency $2 MaskTransparency}
  ;
 
 %%

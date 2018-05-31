@@ -33,18 +33,18 @@ command : lock
  | lock {yyclearin; YYACCEPT} STRING_
  ;
 
-lock : FRAME_ lock {PanZoomCmdSet lock $2 LockFrameCurrent}
- | CROSSHAIR_ lock {CrosshairCmdSet lock $2 LockCrosshairCurrent}
- | CROP_ lock {CropCmdSet lock $2 LockCropCurrent}
- | SLICE_ lockslice {CubeCmdSet lock $2 LockCubeCurrent}
- | BIN_ yesno {BinCmdSet lock $2 LockBinCurrent}
- | AXES_ yesno {CubeCmdSet lock,axes $2 LockAxesCurrent}
- | SCALE_ yesno {ScaleCmdSet lock $2 LockScaleCurrent}
- | SCALELIMITS_ yesno {ScaleCmdSet lock,limits $2 LockScaleLimitsCurrent}
- | COLORBAR_ yesno {ColorbarCmdSet lock $2 LockColorCurrent}
- | BLOCK_ yesno {BlockCmdSet lock $2 LockBlockCurrent}
- | SMOOTH_ yesno {SmoothCmdSet lock $2 LockSmoothCurrent}
- | 3D_ yesno {ThreedCmdSet lock $2 Lock3DCurrent}
+lock : FRAME_ lock {ProcessCmdSet panzoom lock $2 LockFrameCurrent}
+ | CROSSHAIR_ lock {ProcessCmdSet crosshair lock $2 LockCrosshairCurrent}
+ | CROP_ lock {ProcessCmdSet crop lock $2 LockCropCurrent}
+ | SLICE_ lockslice {ProcessCmdSet cube lock $2 LockCubeCurrent}
+ | BIN_ yesno {ProcessCmdSet bin lock $2 LockBinCurrent}
+ | AXES_ yesno {ProcessCmdSet cube lock,axes $2 LockAxesCurrent}
+ | SCALE_ yesno {ProcessCmdSet scale lock $2 LockScaleCurrent}
+ | SCALELIMITS_ yesno {ProcessCmdSet scale lock,limits $2 LockScaleLimitsCurrent}
+ | COLORBAR_ yesno {ProcessCmdSet colorbar lock $2 LockColorCurrent}
+ | BLOCK_ yesno {ProcessCmdSet block lock $2 LockBlockCurrent}
+ | SMOOTH_ yesno {ProessCmdSet smooth lock $2 LockSmoothCurrent}
+ | 3D_ yesno {ProcessCmdSet threed lock $2 Lock3DCurrent}
  ;
 
 %%

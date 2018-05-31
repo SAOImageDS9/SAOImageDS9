@@ -399,15 +399,6 @@ proc ProcessCropCmd {varname iname} {
     incr i [expr $crop::yycnt-1]
 }
 
-proc CropCmdSet {which value {cmd {}}} {
-    global crop
-
-    set crop($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendCropCmd {proc id param {sock {}} {fn {}}} {
     global crop
     global current

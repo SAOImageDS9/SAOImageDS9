@@ -26,7 +26,7 @@ command : crop
 crop : OPEN_ {CropDialog}
  | CLOSE_ {CropDestroyDialog}
  | MATCH_ match {MatchCropCurrent $2}
- | LOCK_ lock {CropCmdSet lock $2 LockCropCurrent}
+ | LOCK_ lock {ProcessCmdSet crop lock $2 LockCropCurrent}
  | RESET_ {CropReset}
  | 3D_ 3d
 

@@ -43,13 +43,13 @@ command : cube
 cube : OPEN_
  | CLOSE_ {CubeDestroyDialog}
  | MATCH_ matchslice {MatchCubeCurrent $2}
- | LOCK_ lockslice {CubeCmdSet lock $2 LockCubeCurrent}
+ | LOCK_ lockslice {ProcessCmdSet cube lock $2 LockCubeCurrent}
  | PLAY_ {CubePlay}
  | STOP_ {CubeStop}
  | NEXT_ {CubeNext}
  | PREV_ {CubePrev}
- | INTERVAL_ numeric {CubeCmdSet interval [expr int($2*1000)]}
- | AXIS_ INT_ {CubeCmdSet axis [expr $2-1]}
+ | INTERVAL_ numeric {ProcessCmdSet cube interval [expr int($2*1000)]}
+ | AXIS_ INT_ {ProcessCmdSet cube axis [expr $2-1]}
  | AXES_ order
  | ORDER_ order
  | INT_ {CubeCmdCoord $1 image 2}
@@ -57,8 +57,8 @@ cube : OPEN_
  | numeric wcssys INT_ {CubeCmdCoord $1 $2 [expr $3-1]}
  ;
 
-order : LOCK_ yesno {CubeCmdSet lock,axes $2 LockAxesCurrent}
- | orderAxes {CubeCmdSet axes $1}
+order : LOCK_ yesno {ProcessCmdSet cube lock,axes $2 LockAxesCurrent}
+ | orderAxes {ProcessCmdSet cube axes $1}
  ;
 
 orderAxes : 123_ {set _ 123}

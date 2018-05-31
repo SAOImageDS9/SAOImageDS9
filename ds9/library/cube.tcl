@@ -726,15 +726,6 @@ proc CubeCmdCoord {ss sys axis} {
     CubeApply $cube(axis)
 }
 
-proc CubeCmdSet {which value {cmd {}}} {
-    global cube
-
-    set cube($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendCubeCmd {proc id param {sock {}} {fn {}}} {
     global cube
     global current

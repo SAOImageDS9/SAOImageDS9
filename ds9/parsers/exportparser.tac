@@ -57,16 +57,16 @@ ext2 : ARRAY_ {set _ array}
  | ENVI_ {set _ envi}
  ;
 
-opts : NONE_ {ExportCmdSet tiff,compress none}
- | JPEG_ {ExportCmdSet tiff,compress jpeg}
- | PACKBITS_ {ExportCmdSet tiff,compress packbits}
- | DEFLATE_ {ExportCmdSet tiff,compress deflate}
- | numeric {ExportCmdSet jpeg,quality $1}
+opts : NONE_ {ProcessCmdSet export tiff,compress none}
+ | JPEG_ {ProcessCmdSet export tiff,compress jpeg}
+ | PACKBITS_ {ProcessCmdSet export tiff,compress packbits}
+ | DEFLATE_ {ProcessCmdSet export tiff,compress deflate}
+ | numeric {ProcessCmdSet export jpeg,quality $1}
  ;
  
-endian : BIG_ {ExportCmdSet endian big}
- | LITTLE_ {ExportCmdSet endian little}
- | NATIVE_ {ExportCmdSet endian native}
+endian : BIG_ {ProcessCmdSet export endian big}
+ | LITTLE_ {ProcessCmdSet export endian little}
+ | NATIVE_ {ProcessCmdSet export endian native}
  ;
 
 %%

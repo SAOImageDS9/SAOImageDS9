@@ -42,15 +42,6 @@ proc ProcessExportCmd {varname iname} {
 	incr i [expr $export::yycnt-1]
 }
 
-proc ExportCmdSet {which value {cmd {}}} {
-    global export
-
-    set export($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ExportCmdSave {format fn {fn2 {}}} {
     switch -- $format {
 	array {FileLast arrayfbox $fn}

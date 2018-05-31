@@ -269,15 +269,6 @@ proc ProcessCrosshairCmd {varname iname} {
     incr i [expr $crosshair::yycnt-1]
 }
 
-proc CrosshairCmdSet {which value {cmd {}}} {
-    global crosshair
-
-    set crosshair($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendCrosshairCmd {proc id param {sock {}} {fn {}}} {
     global crosshair
     global current

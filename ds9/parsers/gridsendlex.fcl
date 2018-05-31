@@ -1,0 +1,52 @@
+#tab gridsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+axes		{return $AXES_}
+border		{return $BORDER_}
+color		{return $COLOR_}
+dash		{return $DASH_}
+def		{return $DEF_}
+def1		{return $DEF1_}
+def2		{return $DEF2_}
+format1		{return $FORMAT1_}
+format2		{return $FORMAT2_}
+gap		{return $GAP_}
+gap1		{return $GAP1_}
+gap2		{return $GAP2_}
+gap3		{return $GAP3_}
+grid		{return $GRID_}
+label		{return $LABELS_}
+labels		{return $LABELS_}
+textlab		{return $LABELS_}
+numlab		{return $NUMERICS_}
+numbers		{return $NUMBERS_}
+numeric		{return $NUMERICS_}
+numerics	{return $NUMERICS_}
+origin		{return $ORIGIN_}
+sky		{return $SKYFRAME_}
+skyframe	{return $SKYFRAME_}
+skyformat	{return $SKYFORMAT_}
+style		{return $STYLE_}
+system		{return $SYSTEM_}
+text		{return $TEXT_}
+text1		{return $TEXT1_}
+text2		{return $TEXT2_}
+tick		{return $TICKMARKS_}
+tickmark	{return $TICKMARKS_}
+tickmarks	{return $TICKMARKS_}
+title		{return $TITLE_}
+type		{return $TYPE_}
+vertical	{return $VERTICAL_}
+view		{return $VIEW_}
+width		{return $WIDTH_}
+
+#include font.fin
+#include string.fin
+
+%%

@@ -1170,8 +1170,17 @@ proc GridCmdFontStyle {which value {cmd {}}} {
 }
 
 proc ProcessSendGridCmd {proc id param {sock {}} {fn {}}} {
-    global grid
+    if {1} {
+	global parse
+	set parse(proc) $proc
+	set parse(id) $id
 
+	gridsend::YY_FLUSH_BUFFER
+	gridsend::yy_scan_string $param
+	gridsend::yyparse
+    } else {
+
+    global grid
     switch -- [lindex $param 0] {
 	type {
 	    switch -- [lindex $param 1] {
@@ -1335,4 +1344,5 @@ proc ProcessSendGridCmd {proc id param {sock {}} {fn {}}} {
 	}
 	default {$proc $id [ToYesNo $grid(view)]}
     }
+}
 }

@@ -238,6 +238,8 @@ source $ds9(root)/library/frameparser.tcl
 source $ds9(root)/library/framelex.tcl
 source $ds9(root)/library/gridparser.tcl
 source $ds9(root)/library/gridlex.tcl
+source $ds9(root)/library/gridsendparser.tcl
+source $ds9(root)/library/gridsendlex.tcl
 source $ds9(root)/library/headerparser.tcl
 source $ds9(root)/library/headerlex.tcl
 source $ds9(root)/library/heightparser.tcl

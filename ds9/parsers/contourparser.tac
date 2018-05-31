@@ -56,7 +56,7 @@ command : contour
  | contour {yyclearin; YYACCEPT} STRING_
  ;
 
-contour : yesno {ProcessCmdSet contour view $1; UpdateContour}
+contour : yesno {ProcessCmdSet contour view $1 UpdateContour}
  | OPEN_ {ContourDialog}
  | CLOSE_ {ContourDestroyDialog}
  | CLEAR_ {ContourOffDialog}
@@ -71,9 +71,9 @@ contour : yesno {ProcessCmdSet contour view $1; UpdateContour}
 
  | COPY_ {ContourCCopyDialog}
  | PASTE_ paste
- | COLOR_ STRING_ {ContourDialog; ProcessCmdSet contour color $2; UpdateContour}
- | WIDTH_ INT_ {ContourDialog; ProcessCmdSet contour width $2; UpdateContour}
- | DASH_ yesno {ContourDialog; ProcessCmdSet contour dash $2; UpdateContour}
+ | COLOR_ STRING_ {ContourDialog; ProcessCmdSet contour color $2 UpdateContour}
+ | WIDTH_ INT_ {ContourDialog; ProcessCmdSet contour width $2 UpdateContour}
+ | DASH_ yesno {ContourDialog; ProcessCmdSet contour dash $2 UpdateContour}
  | SMOOTH_ INT_ {ContourCmdGenerateDialog smooth $2}
  | METHOD_ method {ContourCmdGenerateDialog method $2}
  | NLEVELS_ INT_ {ContourCmdGenerateDialog nlevel $2}
@@ -83,7 +83,7 @@ contour : yesno {ProcessCmdSet contour view $1; UpdateContour}
  | SCOPE_ scope {ContourCmdMode scope $2}
  | LIMITS_ numeric numeric {ContourCmdLimits $2 $3}
  | LEVELS_ STRING_ {ContourCmdLevels $2}
- | GENERATE_ {ContourCmdGenerate}
+ | GENERATE_ {ContourDialog; ContourGenerateDialog; UpdateContour}
  ;
 
 load : STRING_ {ContourCmdLoad $1}

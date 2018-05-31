@@ -125,47 +125,47 @@ catalog : NEW_ {CATTool}
  ;
 
 catCmd : coordinate
- | ALLCOLS_ yesno {CatalogCmdSet allcols $2}
- | ALLROWS_ yesno {CatalogCmdSet allrows $2}
+ | ALLCOLS_ yesno {ProcessCmdCVAR allcols $2}
+ | ALLROWS_ yesno {ProcessCmdCVAR allrows $2}
  | CANCEL_ {global cvarname; ARCancel $cvarname}
  | CLEAR_ {global cvarname; CATOff $cvarname}
  | CLOSE_ {global cvarname; CATDestroy $cvarname}
 # backward compatibilty
  | COORDINATE_ coordinate
  | CROSSHAIR_ {global cvarname; CATCrosshair $cvarname}
- | EDIT_ yesno {CatalogCmdEdit $2}
+ | EDIT_ yesno {ProcessCmdCVAR edit $2 CATEdit}
  | EXPORT_ writer STRING_ {CatalogCmdSave $3 $2}
  | FILTER_ filter
  | HEADER_ {global cvarname; CATHeader $cvarname}
 # backward compatibilty
- | HIDE_ {CatalogCmdGenerate show 0}
- | LOCATION_ INT_ {CatalogCmdGenerate loc $2}
+ | HIDE_ {ProcessCmdCVAR show 0 CATGenerate}
+ | LOCATION_ INT_ {ProcessCmdCVAR loc $2 CATGenerate}
  | MATCH_ match
- | MAXROWS_ INT_ {CatalogCmdSet max $2}
- | NAME_ STRING_ {CatalogCmdSet name $2}
- | PANTO_ yesno {CatalogCmdSet panto $2}
+ | MAXROWS_ INT_ {ProcessCmdCVAR max $2}
+ | NAME_ STRING_ {ProcessCmdCVAR name $2}
+ | PANTO_ yesno {ProcessCmdCVAR panto $2}
  | PLOT_ STRING_ STRING_ STRING_ STRING_ {CatalogCmdPlot $2 $3 $4 $5}
  | PRINT_ {global cvarname; CATPrint $cvarname}
- | PSKY_ skyframe {CatalogCmdGenerate psky $2}
- | PSYSTEM_ wcssys {CatalogCmdGenerate psystem $2}
+ | PSKY_ skyframe {ProcessCmdCVAR psky $2 CATGenerate}
+ | PSYSTEM_ wcssys {ProcessCmdCVAR psystem $2 CATGenerate}
  | REGIONS_ {global cvarname; CATGenerateRegions $cvarname}
  | RETRIEVE_ {global cvarname; CATApply $cvarname 1}
  | SAMP_ samp
  | SAVE_ STRING_ {CatalogCmdSave $2 VOTWrite}
- | SERVER_ server {CatalogCmdSet server $2}
- | SHOW_ yesno {CatalogCmdGenerate show $2}
+ | SERVER_ server {ProcessCmdCVAR server $2}
+ | SHOW_ yesno {ProcessCmdCVAR show $2 CATGenerate}
  | SIZE_ numeric numeric rformat {CatalogCmdSize $2 $3 $4}
  | SKY_ skyframe {CatalogCmdSkyframe $2}
- | SKYFORMAT_ skyformat {CatalogCmdSet skyformat $2}
+ | SKYFORMAT_ skyformat {ProcessCmdCVAR skyformat $2}
  | SORT_ sort
- | SYMBOL_ {CatalogCmdSet row 1} symbol
+ | SYMBOL_ {ProcessCmdCVAR row 1} symbol
  | SYMBOL_ INT_ {CagtalogCmdCat row $2} symbol
  | SYSTEM_ wcssys {CatalogCmdSystem $2}
  | UPDATE_ {global cvarname; CATUpdate $cvarname}
- | 'x' STRING_ {CatalogCmdGenerate colx $2}
- | RA_ STRING_ {CatalogCmdGenerate colx $2}
- | 'y' STRING_ {CatalogCmdGenerate coly $2}
- | DEC_ STRING_ {CatalogCmdGenerate coly $2}
+ | 'x' STRING_ {ProcessCmdCVAR colx $2 CATGenerate}
+ | RA_ STRING_ {ProcessCmdCVAR colx $2 CATGenerate}
+ | 'y' STRING_ {ProcessCmdCVAR coly $2 CATGenerate}
+ | DEC_ STRING_ {ProcessCmdCVAR coly $2 CATGenerate}
  ;
 
 coordinate : numeric numeric {CatalogCmdCoord $1 $2 fk5}
@@ -174,15 +174,15 @@ coordinate : numeric numeric {CatalogCmdCoord $1 $2 fk5}
  | SEXSTR_ SEXSTR_ skyframe {CatalogCmdCoord $1 $2 $3}
  ;
 
-filter : LOAD_ STRING_ {CatalogCmdFilterLoad $2}
- | STRING_ {CatalogCmdFilter $1}
+filter : LOAD_ STRING_ {ProcessCmdCVAR filter $2 CATTable}
+ | STRING_ {ProcessCmdCVAR filter $1 CATTable}
  ;
 
 match : {CatalogCmdMatch}
  | ERROR_ numeric rformat {CatalogCmdMatchError $2 $3}
- | FUNCTION_ matchFunction {CatalogCmdIcat function $2}
- | UNIQUE_ yesno {CatalogCmdIcat unique $2}
- | RETURN_ matchReturn {CatalogCmdIcat return $2}
+ | FUNCTION_ matchFunction {ProcessCmdSet icat function $2}
+ | UNIQUE_ yesno {ProcessCmdSet icat unique $2}
+ | RETURN_ matchReturn {ProcessCmdSet icat return $2}
  | STRING_ STRING_ {CatalogCmdMatchParams "cat$1" "cat$2"}
  ;
 
@@ -220,8 +220,8 @@ server : CDS_ {set _ cds}
  | SAAO_ {set _ saao}
  ;
 
-sort : STRING_ {CatalogCmdSort $1 "-increasing"}
- | STRING_ sortDir {CatalogCmdSort $1 $2}
+sort : STRING_ {ProcessCmdCVAR sort $1; ProcessCmdCVAR sort,dir "-increasing" CATTable}
+ | STRING_ sortDir {ProcessCmdCVAR sort $1; ProcessCmdCVAR sort,dir $2 CATTable}
  ;
 
 sortDir : INCR_ {set _ "-increasing"}

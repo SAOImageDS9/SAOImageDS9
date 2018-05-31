@@ -1300,35 +1300,6 @@ proc CatalogCmdRef {ref} {
     }
 }
 
-proc CatalogCmdIcat {which value} {
-    global icat
-
-    set icat($which) $value
-}
-
-proc CatalogCmdSet {which value} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar($which) $value
-}
-
-proc CatalogCmdGenerate {which value} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar($which) $value
-    CATGenerate $cvarname
-}
-
-proc CatalogCmdEdit {value} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(edit) $value
-    CATEdit $cvarname
-}
-
 proc CatalogCmdCoord {xx yy skyframe} {
     global cvarname
     upvar #0 $cvarname cvar
@@ -1352,14 +1323,6 @@ proc CatalogCmdFilterLoad {fn} {
 	set cvar(filter) [string trim $flt]
 	catch {close $fp}
     }
-}
-
-proc CatalogCmdFilter {filter} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(filter) $filter
-    CATTable $cvarname
 }
 
 proc CatalogCmdLoad {fn reader} {
@@ -1475,15 +1438,6 @@ proc CatalogCmdSystem {sys} {
 
     set cvar(system) $sys
     CoordMenuButtonCmd $cvarname system sky [list CATWCSMenuUpdate $cvarname]
-}
-
-proc CatalogCmdSort {col dir} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(sort) $col
-    set cvar(sort,dir) $dir
-    CATTable $cvarname
 }
 
 proc CatalogCmdSymbol {col value} {

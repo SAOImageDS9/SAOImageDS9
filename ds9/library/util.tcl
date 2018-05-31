@@ -167,12 +167,21 @@ proc UpdateMain {} {
 }
 
 proc ProcessCmdSet {varname key value {cmd {}}} {
-    upvar #0 $varname var
     global $varname
 
     set ${varname}($key) $value
     if {$cmd != {}} {
 	eval $cmd
+    }
+}
+
+proc ProcessCmdCVAR {which value {cmd {}}} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+    if {$cmd != {}} {
+	eval $cmd $cvarname
     }
 }
 

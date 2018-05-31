@@ -1,0 +1,20 @@
+#tab binsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+about		{return $ABOUT_}
+buffersize	{return $BUFFERSIZE_}
+cols		{return $COLS_}
+depth		{return $DEPTH_}
+factor		{return $FACTOR_}
+filter		{return $FILTER_}
+function	{return $FUNCTION_}
+lock		{return $LOCK_}
+
+#include string.fin
+%%

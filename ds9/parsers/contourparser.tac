@@ -56,7 +56,7 @@ command : contour
  | contour {yyclearin; YYACCEPT} STRING_
  ;
 
-contour : yesno {ContourCmdSet view $1}
+contour : yesno {ProcessCmdSet contour view $1; UpdateContour}
  | OPEN_ {ContourDialog}
  | CLOSE_ {ContourDestroyDialog}
  | CLEAR_ {ContourOffDialog}
@@ -71,9 +71,9 @@ contour : yesno {ContourCmdSet view $1}
 
  | COPY_ {ContourCCopyDialog}
  | PASTE_ paste
- | COLOR_ STRING_ {ContourCmdDialog color $2}
- | WIDTH_ INT_ {ContourCmdDialog width $2}
- | DASH_ yesno {ContourCmdDialog dash $2}
+ | COLOR_ STRING_ {ContourDialog; ProcessCmdSet contour color $2; UpdateContour}
+ | WIDTH_ INT_ {ContourDialog; ProcessCmdSet contour width $2; UpdateContour}
+ | DASH_ yesno {ContourDialog; ProcessCmdSet contour dash $2; UpdateContour}
  | SMOOTH_ INT_ {ContourCmdGenerateDialog smooth $2}
  | METHOD_ method {ContourCmdGenerateDialog method $2}
  | NLEVELS_ INT_ {ContourCmdGenerateDialog nlevel $2}

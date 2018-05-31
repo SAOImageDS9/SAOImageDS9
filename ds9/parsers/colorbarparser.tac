@@ -32,23 +32,23 @@ command : colorbar
 
 colorbar : yesno {ViewCmdSet colorbar $1 UpdateView}
  | MATCH_ {MatchColorCurrent}
- | LOCK_ yesno {ColorbarCmdSet lock $2 LockColorCurrent}
+ | LOCK_ yesno {ProcessCmdSet colorbar lock $2 LockColorCurrent}
 
- | NUMERICS_ yesno {ColorbarCmdSet numerics $2 UpdateView}
- | SPACE_ space {ColorbarCmdSet space $2 UpdateView}
- | FONT_ font {ColorbarCmdSet font $2 UpdateView}
- | FONTSIZE_ INT_ {ColorbarCmdSet font,size $2 UpdateView}
- | FONTWEIGHT_ fontWeight {ColorbarCmdSet font,weight $2 UpdateView}
- | FONTSLANT_ fontSlant {ColorbarCmdSet font,slant $2 UpdateView}
+ | NUMERICS_ yesno {ProcessCmdSet colorbar numerics $2 UpdateView}
+ | SPACE_ space {ProcessCmdSet colorbar space $2 UpdateView}
+ | FONT_ font {ProcessCmdSet colorbar font $2 UpdateView}
+ | FONTSIZE_ INT_ {ProcessCmdSet colorbar font,size $2 UpdateView}
+ | FONTWEIGHT_ fontWeight {ProcessCmdSet colorbar font,weight $2 UpdateView}
+ | FONTSLANT_ fontSlant {ProcessCmdSet colorbar font,slant $2 UpdateView}
 # backward compatibility
  | FONTSTYLE_ fontStyle {ColorbarCmdFontStyle $2 UpdateView}
 
- | orientation {ColorbarCmdSet orientation $1 UpdateView}
+ | orientation {ProcessCmdSet colorbar orientation $1 UpdateView}
 # backward compatibility
- | ORIENTATION_ orientation {ColorbarCmdSet orientation $2 UpdateView}
+ | ORIENTATION_ orientation {ProcessCmdSet colorbar orientation $2 UpdateView}
 
- | SIZE_ INT_ {ColorbarCmdSet size $2 UpdateView}
- | TICKS_ INT_ {ColorbarCmdSet ticks $2 UpdateView}
+ | SIZE_ INT_ {ProcessCmdSet colorbar size $2 UpdateView}
+ | TICKS_ INT_ {ProcessCmdSet colorbar ticks $2 UpdateView}
  ;
  
 space : VALUE_ {set _ 1}

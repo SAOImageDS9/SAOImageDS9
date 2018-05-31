@@ -471,15 +471,6 @@ proc Process3DCmd {varname iname} {
     incr i [expr $threed::yycnt-1]
 }
 
-proc ThreedCmdSet {which value {cmd {}}} {
-    global threed
-
-    set threed($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSend3DCmd {proc id param {sock {}} {fn {}}} {
     global threed
 

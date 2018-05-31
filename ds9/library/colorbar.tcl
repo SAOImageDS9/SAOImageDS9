@@ -1267,15 +1267,6 @@ proc ProcessColorbarCmd {varname iname} {
     incr i [expr $colorbar::yycnt-1]
 }
 
-proc ColorbarCmdSet {which value {cmd {}}} {
-    global colorbar
-
-    set colorbar($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ColorbarCmdFontStyle {value {cmd {}}} {
     global colorbar
 

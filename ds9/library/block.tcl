@@ -295,15 +295,6 @@ proc ProcessBlockCmd {varname iname} {
     incr i [expr $block::yycnt-1]
 }
 
-proc BlockCmdSet {which value {cmd {}}} {
-    global block
-
-    set block($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendBlockCmd {proc id param {sock {}} {fn {}}} {
     global block
 

@@ -1118,21 +1118,6 @@ proc ContourCmdPaste {sys sky color width dash} {
     }
 }
 
-proc ContourCmdSet {which value} {
-    global contour
-
-    set contour($which) $value
-    UpdateContour
-}
-
-proc ContourCmdDialog {which value} {
-    global contour
-
-    ContourDialog
-    set contour($which) $value
-    UpdateContour
-}
-
 proc ContourCmdGenerateDialog {which value} {
     global contour
 

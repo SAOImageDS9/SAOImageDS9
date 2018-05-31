@@ -37,17 +37,17 @@ command : 3d
 3d : {Create3DFrame}
  | OPEN_
  | CLOSE_ {3DDestroyDialog}
- | AZ_ numeric {ThreedCmdSet az $2 3DViewPoint}
- | EL_ numeric {ThreedCmdSet el $2 3DViewPoint}
- | VIEW_ numeric numeric {ThreedCmdSet az $2; ThreedCmdSet el $3 3DViewPoint}
- | SCALE_ numeric {ThreedCmdSet scale $2 3DScale}
- | METHOD_ method {ThreedCmdSet method $2 3DRenderMethod}
- | BG_ bg {ThreedCmdSet background $2 3DBackground}
+ | AZ_ numeric {ProcessCmdSet threed az $2 3DViewPoint}
+ | EL_ numeric {ProcessCmdSet threed el $2 3DViewPoint}
+ | VIEW_ numeric numeric {ProcessCmdSet threed az $2; ProcessCmdSet threed el $3 3DViewPoint}
+ | SCALE_ numeric {ProcessCmdSet threed scale $2 3DScale}
+ | METHOD_ method {ProcessCmdSet threed method $2 3DRenderMethod}
+ | BG_ bg {ProcessCmdSet threed background $2 3DBackground}
  | HIGHLITE_ highlite
  | BORDER_ border
  | COMPASS_ compass
  | MATCH_ {Match3DCurrent}
- | LOCK_ yesno {ThreedCmdSet lock $2 Lock3DCurrent}
+ | LOCK_ yesno {ProcessCmdSet threed lock $2 Lock3DCurrent}
  ;
 
 method : AIP_ {set _ aip}
@@ -59,16 +59,16 @@ bg : NONE_ {set _ none}
  | EL_ {set _ elevation}
  ;
 
-highlite : COLOR_ STRING_ {ThreedCmdSet highlite,color $2 3DHighliteColor}
- | yesno {ThreedCmdSet highlite $1 3DHighlite}
+highlite : COLOR_ STRING_ {ProcessCmdSet threed highlite,color $2 3DHighliteColor}
+ | yesno {ProcessCmdSet threed highlite $1 3DHighlite}
  ;
  
-border : COLOR_ STRING_ {ThreedCmdSet border,color $2 3DBorderColor}
- | yesno {ThreedCmdSet border $1 3DBorder}
+border : COLOR_ STRING_ {ProcessCmdSet threed border,color $2 3DBorderColor}
+ | yesno {ProcessCmdSet threed border $1 3DBorder}
  ;
  
-compass : COLOR_ STRING_ {ThreedCmdSet compass,color $2 3DCompassColor}
- | yesno {ThreedCmdSet compass $1 3DCompass}
+compass : COLOR_ STRING_ {ProcessCmdSet threed compass,color $2 3DCompassColor}
+ | yesno {ProcessCmdSet threed compass $1 3DCompass}
  ;
  
 %%

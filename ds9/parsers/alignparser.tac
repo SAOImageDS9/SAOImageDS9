@@ -15,7 +15,7 @@ command : align
  ;
 
 
-align : yesno {CurrentCmdSet align $1}
+align : yesno {ProcessCmdSet current align $1}
  ;
 
 %%

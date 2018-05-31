@@ -18,10 +18,10 @@ command : blink
  | blink {yyclearin; YYACCEPT} STRING_
  ;
 
-blink : {CurrentCmdSet display blink DisplayMode}
- | yes {CurrentCmdSet display blink DisplayMode}
- | no {CurrentCmdSet display single DisplayMode}
- | INTERVAL_ numeric {BlinkCmdSet interval [expr int($2*1000)] DisplayMode}
+blink : {ProcessCmdSet current display blink DisplayMode}
+ | yes {ProcessCmdSet current display blink DisplayMode}
+ | no {ProcessCmdSet current display single DisplayMode}
+ | INTERVAL_ numeric {ProcessCmdSet blink interval [expr int($2*1000)] DisplayMode}
  ;
 
 %%

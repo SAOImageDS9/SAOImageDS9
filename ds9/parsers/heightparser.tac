@@ -14,7 +14,7 @@ command : height
  | height {yyclearin; YYACCEPT} STRING_
  ;
 
-height : INT_ {CanvasCmdSet height $1 UpdateView}
+height : INT_ {ProcessCmdSet canvas height $1 UpdateView}
  ;
 
 %%

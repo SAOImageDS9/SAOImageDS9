@@ -30,7 +30,7 @@ command : colorbar
  | colorbar {yyclearin; YYACCEPT} STRING_
  ;
 
-colorbar : yesno {ViewCmdSet colorbar $1 UpdateView}
+colorbar : yesno {ProcessCmdSet view colorbar $1 UpdateView}
  | MATCH_ {MatchColorCurrent}
  | LOCK_ yesno {ProcessCmdSet colorbar lock $2 LockColorCurrent}
 

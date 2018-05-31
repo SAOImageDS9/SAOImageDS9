@@ -40,8 +40,8 @@ command : rgb
 rgb : {CreateRGBFrame}
  | OPEN_ {}
  | CLOSE_ {RGBDestroyDialog}
- | channel {CurrentCmdSet rgb $1 RGBChannel}
- | CHANNEL_ channel {CurrentCmdSet rgb $2 RGBChannel}
+ | channel {ProcessCmdSet current rgb $1 RGBChannel}
+ | CHANNEL_ channel {ProcessCmdSet current rgb $2 RGBChannel}
  | LOCK_ lock yesno {RGBCmdSet $2 $3}
  | SYSTEM_ wcssys {RGBCmdSet system $2 RGBSystem}
  | VIEW_ channel yesno {RGBCmdSet $2 $3 RGBView}

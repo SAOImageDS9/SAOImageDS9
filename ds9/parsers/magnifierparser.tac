@@ -21,12 +21,12 @@ command : magnifier
  | magnifier {yyclearin; YYACCEPT} STRING_
  ;
 
-magnifier : COLOR_ STRING_ {PmagnifierCmdSet color $2 MagnifierColor}
- | ZOOM_ numeric {PmagnifierCmdSet zoom $2 MagnifierZoom}
- | CURSOR_ yesno {PmagnifierCmdSet cursor $2 MagnifierCursor}
- | REGION_ yesno {PmagnifierCmdSet region $2 MagnifierRegion}
+magnifier : COLOR_ STRING_ {ProcessCmdSet pmagnifier color $2 MagnifierColor}
+ | ZOOM_ numeric {ProcessCmdSet pmagnifier zoom $2 MagnifierZoom}
+ | CURSOR_ yesno {ProcessCmdSet pmagnifier cursor $2 MagnifierCursor}
+ | REGION_ yesno {ProcessCmdSet pmagnifier region $2 MagnifierRegion}
 # backward compatibility
- | yesno {ViewCmdSet magnifier $1 UpdateView}
+ | yesno {ProcessCmdSet view magnifier $1 UpdateView}
  ;
 
 %%

@@ -16,7 +16,7 @@ command : orient
  | orient {yyclearin; YYACCEPT} STRING_
  ;
 
-orient : orientation {CurrentCmdSet orient $1 ChangeOrient}
+orient : orientation {ProcessCmdSet current orient $1 ChangeOrient}
  | OPEN_ {PanZoomDialog}
  | CLOSE_ {PanZoomDestroyDialog}
  ;

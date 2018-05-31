@@ -810,15 +810,6 @@ proc ViewVertCmd {} {
 
 # Process Cmds
 
-proc CanvasCmdSet {which value {cmd {}}} {
-    global canvas
-
-    set canvas($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessHeightCmd {varname iname} {
     upvar $varname var
     upvar $iname i
@@ -865,15 +856,6 @@ proc ProcessViewCmd {varname iname} {
     view::yy_scan_string [lrange $var $i end]
     view::yyparse
     incr i [expr $view::yycnt-1]
-}
-
-proc ViewCmdSet {which value {cmd {}}} {
-    global view
-
-    set view($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
 }
 
 proc ProcessSendViewCmd {proc id param {sock {}} {fn {}}} {

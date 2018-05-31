@@ -23,7 +23,7 @@ command : mode
  | mode {yyclearin; YYACCEPT} STRING_
  ;
 
-mode : item {CurrentCmdSet mode $1 ChangeMode}
+mode : item {ProcessCmdSet current mode $1 ChangeMode}
  ;
 
 item : NONE_ {set _ none}

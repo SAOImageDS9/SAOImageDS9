@@ -14,7 +14,7 @@ command : width
  | width {yyclearin; YYACCEPT} STRING_
  ;
 
-width : INT_ {CanvasCmdSet width $1 UpdateView}
+width : INT_ {ProcessCmdSet canvas width $1 UpdateView}
  ;
 
 %%

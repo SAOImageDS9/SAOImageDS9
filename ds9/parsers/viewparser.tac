@@ -43,38 +43,38 @@ command : view
 
 view : layout
  | LAYOUT_ layout
- | KEYVALUE_ STRING_ {ViewCmdSet info,keyvalue $2 UpdateView}
- | INFO_ yesno {ViewCmdSet info $2 UpdateView}
- | PANNER_ yesno {ViewCmdSet panner $2 UpdateView}
- | MAGNIFIER_ yesno {ViewCmdSet magnifier $2 UpdateView}
- | BUTTONS_ yesno {ViewCmdSet buttons $2 UpdateView}
- | COLORBAR_ yesno {ViewCmdSet colorbar $2 UpdateView}
+ | KEYVALUE_ STRING_ {ProcessCmdSet view info,keyvalue $2 UpdateView}
+ | INFO_ yesno {ProcessCmdSet view info $2 UpdateView}
+ | PANNER_ yesno {ProcessCmdSet view panner $2 UpdateView}
+ | MAGNIFIER_ yesno {ProcessCmdSet view magnifier $2 UpdateView}
+ | BUTTONS_ yesno {ProcessCmdSet view buttons $2 UpdateView}
+ | COLORBAR_ yesno {ProcessCmdSet view colorbar $2 UpdateView}
 
 # backward compatible
  | COLORBARNUMERICS_ yesno {ColorbarCmdSet numerics $2 UpdateView}
 
- | GRAPH_ orient yesno {ViewCmdSet graph,$1 $2 UpdateView}
+ | GRAPH_ orient yesno {ProcessCmdSet view graph,$1 $2 UpdateView}
 
 # backward compatible
- | HORZGRAPH_ yesno {ViewCmdSet graph,horz $2 UpdateView}
- | VERTGRAPH_ yesno {ViewCmdSet graph,vert $2 UpdateView}
+ | HORZGRAPH_ yesno {ProcessCmdSet view graph,horz $2 UpdateView}
+ | VERTGRAPH_ yesno {ProcessCmdSet view graph,vert $2 UpdateView}
 
- | FILENAME_ yesno {ViewCmdSet info,filename $2 UpdateView}
- | OBJECT_ yesno {ViewCmdSet info,object $2 UpdateView}
- | KEYWORD_ yesno {ViewCmdSet info,keyword $2 UpdateView}
- | MINMAX_ yesno {ViewCmdSet info,minmax $2 UpdateView}
- | LOWHIGH_ yesno {ViewCmdSet info,lowhigh $2 UpdateView}
- | UNITS_ yesno {ViewCmdSet info,units $2 UpdateView}
- | coordsys yesno {ViewCmdSet info,$1 $2 UpdateView}
- | wcssys yesno {ViewCmdSet info,$1 $2 UpdateView}
- | FRAME_ yesno {ViewCmdSet info,frame $2 UpdateView}
+ | FILENAME_ yesno {ProcessCmdSet view info,filename $2 UpdateView}
+ | OBJECT_ yesno {ProcessCmdSet view info,object $2 UpdateView}
+ | KEYWORD_ yesno {ProcessCmdSet view info,keyword $2 UpdateView}
+ | MINMAX_ yesno {ProcessCmdSet view info,minmax $2 UpdateView}
+ | LOWHIGH_ yesno {ProcessCmdSet view info,lowhigh $2 UpdateView}
+ | UNITS_ yesno {ProcessCmdSet view info,units $2 UpdateView}
+ | coordsys yesno {ProcessCmdSet view info,$1 $2 UpdateView}
+ | wcssys yesno {ProcessCmdSet view info,$1 $2 UpdateView}
+ | FRAME_ yesno {ProcessCmdSet view info,frame $2 UpdateView}
  | RED_ yesno {RGBCmdSet red $2 RGBView}
  | GREEN_ yesno {RGBCmdSet green $2 RGBView}
  | BLUE_ yesno {RGBCmdSet blue $2 RGBView}
  ;
 
-layout : HORIZONTAL_ {ViewCmdSet layout horizontal ViewHorzCmd}
- | VERTICAL_ {ViewCmdSet layout vertical ViewVertCmd}
+layout : HORIZONTAL_ {ProcessCmdSet view layout horizontal ViewHorzCmd}
+ | VERTICAL_ {ProcessCmdSet view layout vertical ViewVertCmd}
  ;
  
 orient : HORIZONTAL_ {set _ horz}

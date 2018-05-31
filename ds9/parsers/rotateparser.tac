@@ -19,7 +19,7 @@ command : rotate
  ;
 
 rotate : numeric {Rotate $1}
- | TO_ numeric {CurrentCmdSet rotate $2 ChangeRotate}
+ | TO_ numeric {ProcessCmdSet current rotate $2 ChangeRotate}
  | OPEN_ {PanZoomDialog}
  | CLOSE_ {PanZoomDestroyDialog}
  ;

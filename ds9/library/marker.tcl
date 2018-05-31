@@ -1411,24 +1411,6 @@ proc ProcessRegionsCmd {varname iname sock fn} {
     incr i [expr $region::yycnt-1]
 }
 
-proc MarkerCmdSet {which value {cmd {}}} {
-    global marker
-
-    set marker($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
-proc PmarkerCmdSet {which value {cmd {}}} {
-    global pmarker
-
-    set pmarker($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc RegionCmdLoad {} {
     global marker
     global current

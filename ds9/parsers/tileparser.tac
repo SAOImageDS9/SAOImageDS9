@@ -26,13 +26,13 @@ command : tile
  | tile {yyclearin; YYACCEPT} STRING_
  ;
 
-tile: {CurrentCmdSet display tile DisplayMode}
- | yes {CurrentCmdSet display tile DisplayMode}
- | no {CurrentCmdSet display single DisplayMode}
- | MODE_ tileMode {TileCmdSet mode $2 DisplayMode}
+tile: {ProcessCmdSet current display tile DisplayMode}
+ | yes {ProcessCmdSet current display tile DisplayMode}
+ | no {ProcessCmdSet current display single DisplayMode}
+ | MODE_ tileMode {ProcessCmdSet tile mode $2 DisplayMode}
  | GRID_ tileGrid
- | COLUMN_ {TileCmdSet mode column DisplayMode}
- | ROW_ {TileCmdSet mode row DisplayMode}
+ | COLUMN_ {ProcessCmdSet tile mode column DisplayMode}
+ | ROW_ {ProcessCmdSet tile mode row DisplayMode}
  ;
 
 tileMode : GRID_ {set _ grid}
@@ -40,11 +40,11 @@ tileMode : GRID_ {set _ grid}
  | ROW_ {set _ row}
  ;
 
-tileGrid : {TileCmdSet mode grid DisplayMode}
- | MODE_ tileGridMode {TileCmdSet grid,mode $2 DisplayMode}
- | DIRECTION_ tileGridDir {TileCmdSet grid,dir $2 DisplayMode}
- | LAYOUT_ INT_ INT_ {TileCmdSet grid,col $2; TileCmdSet grid,row $3; TileCmdSetgrid,mode manual DisplayMode}
- | GAP_ INT_ {TileCmdSet grid,gap $2 DisplayMode}
+tileGrid : {ProcessCmdSet tile mode grid DisplayMode}
+ | MODE_ tileGridMode {ProcessCmdSet tile grid,mode $2 DisplayMode}
+ | DIRECTION_ tileGridDir {ProcessCmdSet tile grid,dir $2 DisplayMode}
+ | LAYOUT_ INT_ INT_ {ProcessCmdSet tile grid,col $2; ProcessCmdSet tile grid,row $3; TileCmdSetgrid,mode manual DisplayMode}
+ | GAP_ INT_ {ProcessCmdSet tile grid,gap $2 DisplayMode}
  ;
 
 tileGridMode : AUTOMATIC_ {set _ automatic}

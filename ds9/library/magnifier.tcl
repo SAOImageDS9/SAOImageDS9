@@ -146,15 +146,6 @@ proc ProcessMagnifierCmd {varname iname} {
     incr i [expr $magnifier::yycnt-1]
 }
 
-proc PmagnifierCmdSet {which value {cmd {}}} {
-    global pmagnifier
-
-    set pmagnifier($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendMagnifierCmd {proc id param {sock {}} {fn {}}} {
     global pmagnifier
 

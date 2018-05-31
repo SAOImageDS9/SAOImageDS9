@@ -2071,15 +2071,6 @@ proc ActiveCmdSet {which value {cmd {}}} {
     }
 }
 
-proc CurrentCmdSet {which value {cmd {}}} {
-    global current
-
-    set current($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendFrameCmd {proc id param {sock {}} {fn {}}} {
     global ds9
     global current
@@ -2186,15 +2177,6 @@ proc ProcessTileCmd {varname iname} {
     incr i [expr $tile::yycnt-1]
 }
 
-proc TileCmdSet {which value {cmd {}}} {
-    global tile
-
-    set tile($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendTileCmd {proc id param {sock {}} {fn {}}} {
     global current
     global tile
@@ -2227,15 +2209,6 @@ proc ProcessBlinkCmd {varname iname} {
     blink::yy_scan_string [lrange $var $i end]
     blink::yyparse
     incr i [expr $blink::yycnt-1]
-}
-
-proc BlinkCmdSet {which value {cmd {}}} {
-    global blink
-
-    set blink($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
 }
 
 proc ProcessSendBlinkCmd {proc id param {sock {}} {fn {}}} {

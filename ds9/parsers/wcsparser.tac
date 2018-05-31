@@ -36,7 +36,7 @@ wcs : OPEN_ {WCSDialog}
  | SKY_ skyframe {WCSCmdSet sky $2 UpdateWCS}
  | skyformat {WCSCmdSet skyformat $1 UpdateWCS}
  | SKYFORMAT_ skyformat {WCSCmdSet skyformat $2 UpdateWCS}
- | ALIGN_ yesno {CurrentCmdSet align $2 AlignWCSFrame}
+ | ALIGN_ yesno {ProcessCmdSet current align $2 AlignWCSFrame}
  | RESET_ {WCSCmdReset 1}
  | RESET_ INT_ {WCSCmdReset $2}
  | REPLACE_ replace

@@ -1146,15 +1146,6 @@ proc ProcessGridCmd {varname iname} {
     incr i [expr $grid::yycnt-1]
 }
 
-proc GridCmdSet {which value {cmd {}}} {
-    global grid
-
-    set grid($which) $value
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc GridCmdFontStyle {which value {cmd {}}} {
     global grid
 

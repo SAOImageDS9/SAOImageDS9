@@ -210,6 +210,28 @@ proc ProcessSendCmdCurrent {cmd} {
     }
 }
 
+proc ProcessSendCmdSend {ext cmd} {
+    global parse
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+
+    set rr [$current(frame) $cmd]
+    if {$parse(sock) != {}} {
+	# not implemented
+    } elseif {$parse(fn) != {}} {
+	append parse(fn) $ext
+	set ch [open $parse(fn) w]
+	puts $ch $rr
+	close $ch
+	$parse(proc) $parse(id) {} $parse(fn)
+    } else {
+	$parse(proc) $parse(id) $rr
+    }
+}
+
 proc ProcessSend {proc id sock fn ext rr} {
     if {$sock != {}} {
 	# not implemented

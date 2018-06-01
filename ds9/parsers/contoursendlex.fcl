@@ -1,0 +1,27 @@
+#tab contoursendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+color		{return $COLOR_}
+dash		{return $DASH_}
+exp		{return $EXP_}
+levels		{return $LEVELS_}
+limits		{return $LIMITS_}
+log		{return $LOG_}
+method		{return $METHOD_}
+mode		{return $MODE_}
+nlevels		{return $NLEVELS_}
+scale		{return $SCALE_}
+scope		{return $SCOPE_}
+smooth		{return $SMOOTH_}
+width		{return $WIDTH_}
+
+#include coords.fin
+#include string.fin
+
+%%

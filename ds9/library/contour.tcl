@@ -1177,162 +1177,27 @@ proc ContourCmdGenerate {} {
     UpdateContour
 }
 
-proc ProcessContourFix {sysname skyname colorname widthname dashname} {
-    upvar $sysname sys
-    upvar $skyname sky
-    upvar $colorname color
-    upvar $widthname width
-    upvar $dashname dash
+proc ProcessSendContourCmd {proc id param sock fn} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    global current
-
-    set rr 0
-
-    # sys
-    switch -- $sys {
-	image -
-	physical -
-	detector -
-	amplifier -
-	wcs -
-	wcsa -
-	wcsb -
-	wcsc -
-	wcsd -
-	wcse -
-	wcsf -
-	wcsg -
-	wcsh -
-	wcsi -
-	wcsj -
-	wcsk -
-	wcsl -
-	wcsm -
-	wcsn -
-	wcso -
-	wcsp -
-	wcsq -
-	wcsr -
-	wcss -
-	wcst -
-	wcsu -
-	wcsv -
-	wcsw -
-	wcsx -
-	wcsy -
-	wcsz {}
-	default {
-	    set dash $width
-	    set width $color
-	    set color $sky
-	    set sky $sys
-	    if {[$current(frame) has wcs wcs]} {
-		set sys wcs
-	    } else {
-		set sys physical
-	    }
-	    incr rr -1
-	}
-    }
-
-    # sky
-    switch -- $sky {
-	fk4 -
-	b1950 -
-	fk5 -
-	j2000 -
-	icrs -
-	galactic -
-	ecliptic {}
-	default {
-	    set dash $width
-	    set width $color
-	    set color $sky
-	    set sky fk5
-	    incr rr -1
-	}
-    }
-
-    # color
-    if {[string range $color 0 0] == {-} || $color == {}} {
-	set color {}
-	set width {}
-	set dash {}
-	return -3
-    }
-    switch -- $color {
-	white -
-	black -
-	red -
-	green -
-	blue -
-	cyan -
-	magenta -
-	yellow {}
-	default {
-	    if {[string range $color 0 0] != "#"} {
-		set dash $width
-		set width $color
-		set color green
-		incr rr -1
-	    }
-	}
-    }
-
-    # width
-    if {![string is integer $width]} {
-	set dash $width
-	set width 1
-	incr rr -1
-    }
-
-    # dash
-    switch -- $dash {
-	yes -
-	no -
-	on -
-	off -
-	true -
-	false -
-	0 -
-	1 {set dash [FromYesNo $dash]}
-	default {
-	    set dash 0
-	    incr rr -1
-	}
-    }
-
-    return $rr
+    contoursend::YY_FLUSH_BUFFER
+    contoursend::yy_scan_string $param
+    contoursend::yyparse
 }
 
-proc ProcessSendContourCmd {proc id param sock fn} {
+proc ContourSendCmdLimits {} {
+    global parse
     global contour
 
-    switch -- [lindex $param 0] {
-	{} {$proc $id [ToYesNo $contour(view)]}
-	color {$proc $id "$contour(color)\n"}
-	width {$proc $id "$contour(width)\n"}
-	dash  {$proc $id [ToYesNo $contour(dash)]}
-	smooth {$proc $id "$contour(smooth)\n"}
-	method {$proc $id "$contour(method)\n"}
-	nlevels {$proc $id "$contour(numlevel)\n"}
-	scale {$proc $id "$contour(scale)\n"}
-	log -
-	{log exp} {$proc $id "$contour(log)\n"}
-	mode {$proc $id "$contour(mode)\n"}
-	scope {$proc $id "$contour(scope)\n"}
-	limits {$proc $id "$contour(min) $contour(max)\n"}
-	levels {
-	    global dcontour
-	    ContourDialog
-	    $proc $id "[$dcontour(txt) get 1.0 end]"
-	}
-	default {
-	    global current
-	    if {$current(frame) != {}} {
-		ProcessSend $proc $id $sock $fn {.ctr} \
-		    [$current(frame) get contour [lindex $param 0] [lindex $param 1]]
-	    }
-	}
-    }
+    $parse(proc) $parse(id) "$contour(min) $contour(max)\n"
+}
+
+proc ContourSendCmdLevels {} {
+    global parse
+    global dcontour
+
+    ContourDialog
+    $parse(proc) $parse(id) "[$dcontour(txt) get 1.0 end]"
 }

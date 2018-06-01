@@ -402,7 +402,6 @@ proc ProcessCropCmd {varname iname} {
 proc ProcessSendCropCmd {proc id param {sock {}} {fn {}}} {
     global crop
     global current
-
     switch -- [string tolower [lindex $param 0]] {
 	lock {$proc $id "$crop(lock)\n"}
 	3d {
@@ -425,4 +424,49 @@ proc ProcessSendCropCmd {proc id param {sock {}} {fn {}}} {
 	    }
 	}
     }
+}
+
+proc FixSpecSystem {sysname defsys} {
+    upvar $sysname sys
+
+    set rr 0
+
+    switch -- $sys {
+	image -
+	physical -
+	detector -
+	amplifier -
+	wcs -
+	wcsa -
+	wcsb -
+	wcsc -
+	wcsd -
+	wcse -
+	wcsf -
+	wcsg -
+	wcsh -
+	wcsi -
+	wcsj -
+	wcsk -
+	wcsl -
+	wcsm -
+	wcsn -
+	wcso -
+	wcsp -
+	wcsq -
+	wcsr -
+	wcss -
+	wcst -
+	wcsu -
+	wcsv -
+	wcsw -
+	wcsx -
+	wcsy -
+	wcsz {incr rr}
+	default {
+	    set sys $defsys
+	}
+    }
+
+    return $rr
 }

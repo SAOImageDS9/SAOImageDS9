@@ -1,0 +1,14 @@
+#tab blocksendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+lock		{return $LOCK_}
+
+#include string.fin
+
+%%

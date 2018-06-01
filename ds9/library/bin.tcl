@@ -730,40 +730,11 @@ proc ProcessBinCmd {varname iname} {
 }
 
 proc ProcessSendBinCmd {proc id param {sock {}} {fn {}}} {
-    if {1} {
-	global parse
-	set parse(proc) $proc
-	set parse(id) $id
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-	binsend::YY_FLUSH_BUFFER
-	binsend::yy_scan_string $param
-	binsend::yyparse
-    } else {
-
-    global bin
-    global current
-
-    switch -- [string tolower [lindex $param 0]] {
-	lock {$proc $id [ToYesNo $bin(lock)]} 
-	about {
-	    if {$current(frame) != {}} {
-		$proc $id "[$current(frame) get bin cursor]\n"
-	    }
-	}
-	buffersize {$proc $id "$bin(buffersize)\n"}
-	cols {
-	    if {$current(frame) != {}} {
-		$proc $id "[$current(frame) get bin cols]\n"
-	    }
-	}
-	factor {$proc $id "$bin(factor)\n"}
-	depth {$proc $id "$bin(depth)\n"}
-	filter {
-	    if {$current(frame) != {}} {
-		$proc $id "[$current(frame) get bin filter]\n"
-	    }
-	}
-	function {$proc $id "$bin(function)\n"}
-    }
-}
+    binsend::YY_FLUSH_BUFFER
+    binsend::yy_scan_string $param
+    binsend::yyparse
 }

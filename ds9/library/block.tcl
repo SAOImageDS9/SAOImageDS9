@@ -296,19 +296,24 @@ proc ProcessBlockCmd {varname iname} {
 }
 
 proc ProcessSendBlockCmd {proc id param {sock {}} {fn {}}} {
-    global block
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    switch -- [lindex $param 0] {
-	lock {$proc $id [ToYesNo $block(lock)]} 
-	default {
-	    set z1 [lindex $block(factor) 0]
-	    set z2 [lindex $block(factor) 1]
-	    if {$z1 != $z2} {
-		$proc $id "$block(factor)\n"
-	    } else {
-		$proc $id "$z1\n"
-	    }
-	}
-    }
+    blocksend::YY_FLUSH_BUFFER
+    blocksend::yy_scan_string $param
+    blocksend::yyparse
 }
 
+proc BlockSendCmd {} {
+    global parse
+    global block
+
+    set z1 [lindex $block(factor) 0]
+    set z2 [lindex $block(factor) 1]
+    if {$z1 != $z2} {
+	$parse(proc) $parse(id) "$block(factor)\n"
+    } else {
+	$parse(proc) $parse(id) "$z1\n"
+    }
+}

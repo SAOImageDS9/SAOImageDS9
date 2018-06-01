@@ -4,6 +4,8 @@
 #include font.tin
 #include string.tin
 
+%start gridsend
+
 %token AXES_
 %token BORDER_
 %token COLOR_

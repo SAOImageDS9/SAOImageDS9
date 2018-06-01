@@ -400,73 +400,11 @@ proc ProcessCropCmd {varname iname} {
 }
 
 proc ProcessSendCropCmd {proc id param {sock {}} {fn {}}} {
-    global crop
-    global current
-    switch -- [string tolower [lindex $param 0]] {
-	lock {$proc $id "$crop(lock)\n"}
-	3d {
-	    set sys [lindex $param 1]
-	    FixSpecSystem sys physical
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-	    if {$current(frame) != {}} {
-		$proc $id "[$current(frame) get crop 3d $sys]\n"
-	    }
-	}
-	default {
-	    set sys [lindex $param 0]
-	    set sky [lindex $param 1]
-	    set format [lindex $param 2]
-	    set dformat [lindex $param 3]
-	    FixSpec sys sky format physical fk5 degrees
-	    
-	    if {$current(frame) != {}} {
-		$proc $id "[$current(frame) get crop center $sys $sky $format $sys $dformat]\n"
-	    }
-	}
-    }
-}
-
-proc FixSpecSystem {sysname defsys} {
-    upvar $sysname sys
-
-    set rr 0
-
-    switch -- $sys {
-	image -
-	physical -
-	detector -
-	amplifier -
-	wcs -
-	wcsa -
-	wcsb -
-	wcsc -
-	wcsd -
-	wcse -
-	wcsf -
-	wcsg -
-	wcsh -
-	wcsi -
-	wcsj -
-	wcsk -
-	wcsl -
-	wcsm -
-	wcsn -
-	wcso -
-	wcsp -
-	wcsq -
-	wcsr -
-	wcss -
-	wcst -
-	wcsu -
-	wcsv -
-	wcsw -
-	wcsx -
-	wcsy -
-	wcsz {incr rr}
-	default {
-	    set sys $defsys
-	}
-    }
-
-    return $rr
+    cropsend::YY_FLUSH_BUFFER
+    cropsend::yy_scan_string $param
+    cropsend::yyparse
 }

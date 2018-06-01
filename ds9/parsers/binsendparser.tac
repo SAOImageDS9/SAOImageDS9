@@ -12,6 +12,8 @@
 %token FUNCTION_
 %token LOCK_
 
+%start binsend
+
 %%
 
 binsend : LOCK_ {ProcessSendCmdYesNo bin lock}

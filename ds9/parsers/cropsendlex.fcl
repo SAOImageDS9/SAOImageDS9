@@ -1,0 +1,17 @@
+#tab cropsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+3d	{return $3D_}
+
+#include matchlock.fin
+#include coords.fin
+#include string.fin
+
+%%
+

@@ -118,6 +118,10 @@ catalog : NEW_ {CATTool}
  | {if {![CatalogCmdCheck]} {cat::YYABORT}} catCmd
  | STRING_ {CatalogCmdRef $1}
  | STRING_ {CatalogCmdRef $1} catCmd
+# special case
+# backward compatibility
+ | SAO_ {CatalogCmdRef sao}
+ | SAO_ {CatalogCmdRef sao} catCmd
 # backward compatibility
  | CDS_ STRING_ {CatalogCmdRef $2}
 # backward compatibility

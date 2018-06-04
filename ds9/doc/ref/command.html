@@ -401,9 +401,10 @@
       </tt><tt>-catalog [new]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [ned|simbad|denis|skybot]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        [ascss|cmc|gsc1|gsc2|gsc3|ac|nomad|ppmx|sao|sdss5|sdss6|</tt><tt>sdss7|sdss8|</tt><tt>tycho|ua2|ub1|ucac2]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2mass|iras]<br>
+      </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          [aavso|ac|ascss|cmc|gaia|gsc1|gsc2|gsc3|nomad|ppmx|sao|sdss5|sdss6|</tt><tt>sdss7|sdss8|</tt><tt>sdss9|tycho]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [</tt><tt><tt>ua2|ub1|</tt>ucac2|ucac2sup|ucac3|ucac4|urat1]<br>
+        </tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [2mass|iras]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [csc|xmm|rosat]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [first|nvss]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -427,6 +428,7 @@
         [clear]<br>
       </tt><tt>&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; [&lt;ref&gt;] [close]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -635,8 +637,10 @@
 
 
 
+
         [match error &lt;value&gt; degrees|arcmin|arcsec]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -827,8 +831,10 @@
 
 
 
+
         [match return 1and2|1only|2only]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -974,9 +980,12 @@
           &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; </tt></tt><tt><tt><tt><tt>[&lt;ref&gt;]
 
 
+
               [symbol shape </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>circle
 
+
                   point|box point|diamond point|</tt></tt></tt></tt>cross
+
 
           point|x point|arrow point|boxcircle point]<br>
         </tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -986,6 +995,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1209,6 +1219,7 @@
       </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
+
           [match]<br>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock
           [yes|no]]</tt><br>
@@ -1339,6 +1350,7 @@
         -crosshair [&lt;x&gt; &lt;h&gt; &lt;coordsys&gt;
         [&lt;skyframe&gt;]]<br>
         &nbsp;</tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -1629,6 +1641,7 @@
         Example:<br>
       </tt><tt><tt><tt><tt>$ds9 -envi foo.hdr</tt></tt><tt><tt><tt><tt><tt><tt><br>
                     </tt></tt></tt></tt></tt></tt> <b> </b></tt></tt><tt><tt>$ds9
+
 
 
           -envi foo.hdr foo.bsq</tt></tt><tt><tt><tt><tt><tt><tt><br>
@@ -2377,6 +2390,7 @@
 
 
 
+
         [pan]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -2516,8 +2530,10 @@
 
 
 
+
         [crosshair]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2897,6 +2913,7 @@
 
 
 
+
         [yes|open]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
         [no|close]<br>
@@ -2999,8 +3016,10 @@
 
 
 
+
                 duplicate [#]]<br>
               </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;
+
                             &nbsp;&nbsp; </tt>[[&lt;plotname&gt;] stats
                           yes|no]<br>
                         </tt></tt>&nbsp;&nbsp; &nbsp;&nbsp; </tt>[[&lt;plotname&gt;]
@@ -3072,8 +3091,10 @@
 
 
 
+
                     list yes|no]<br>
                     &nbsp; &nbsp; &nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3244,6 +3265,7 @@
 
 
 
+
           legend yes|no]<br>
           &nbsp;&nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] legend position
           right|left|top|bottom]</tt><br>
@@ -3325,11 +3347,13 @@
 
 
 
+
               barmode normal|stacked|aligned|overlap]<br>
             </tt></tt></tt></tt><tt><tt><tt><br>
           </tt></tt></tt><tt><tt><tt># configure current dataset<br>
           </tt>-plot [[&lt;plotname&gt;] show yes|no]<br>
         </tt>&nbsp; &nbsp;&nbsp;&nbsp; </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3469,12 +3493,15 @@
 
 
 
+
                       shape fill yes|no]</tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       </tt><tt><tt><tt><tt>[[&lt;plotname&gt;] shape
                               color &lt;value&gt;]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
                                               </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3546,7 +3573,9 @@
                                                       smooth
                                                       step|linear|cubic|quadratic|catrom]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
                                                           </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3618,7 +3647,9 @@
                                                           color
                                                           &lt;value&gt;]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
                                                           </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3758,7 +3789,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3898,7 +3931,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4038,7 +4073,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4179,7 +4216,9 @@
 
 
 
+
                                                           [[&lt;plotname&gt;]
+
 
 
 
@@ -4320,7 +4359,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4461,7 +4502,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4580,6 +4623,7 @@
             $ds9 -plot font numbers slant italic<br>
           </tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><br>
                                       </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt>$ds9
+
           -plot title 'This is a Title'<br>
           $ds9 -plot title x 'X Axis'<br>
           $ds9 -plot title y 'Y Axis'<br>
@@ -4644,6 +4688,7 @@
       <p>Set region and coordinate output format precision. </p>
       <tt> Syntax: <br>
         -precision &lt;linear&gt; </tt><tt><tt>&lt;degree&gt;</tt> </tt><tt><tt>&lt;hms&gt;
+
 
 
 
@@ -5049,6 +5094,7 @@
 
 
 
+
         &lt;filename&gt; [image|table|slice]</tt> <br>
       <tt> &nbsp;<br>
         Example: <br>
@@ -5292,8 +5338,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -5314,8 +5362,10 @@
 
 
 
+
                       [angle &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -5346,8 +5396,10 @@
 
 
 
+
                   -smooth sigmaminor 2.0<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+
 
 
 

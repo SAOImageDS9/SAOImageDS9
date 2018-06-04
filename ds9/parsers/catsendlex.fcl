@@ -1,0 +1,13 @@
+#tab catsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+header		{return $HEADER_}
+
+#include string.fin
+%%

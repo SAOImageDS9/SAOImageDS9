@@ -218,7 +218,12 @@ proc ProcessSendCmdSend {ext cmd} {
 	return
     }
 
-    set rr [$current(frame) $cmd]
+    ProcessSendCmdResult $ext [$current(frame) $cmd]
+}
+
+proc ProcessSendCmdResult {ext rr} {
+    global parse
+
     if {$parse(sock) != {}} {
 	# not implemented
     } elseif {$parse(fn) != {}} {
@@ -232,6 +237,7 @@ proc ProcessSendCmdSend {ext cmd} {
     }
 }
 
+# old
 proc ProcessSend {proc id sock fn ext rr} {
     if {$sock != {}} {
 	# not implemented

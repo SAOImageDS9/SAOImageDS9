@@ -174,7 +174,7 @@ coordinate : numeric numeric {CatalogCmdCoord $1 $2 fk5}
  | SEXSTR_ SEXSTR_ skyframe {CatalogCmdCoord $1 $2 $3}
  ;
 
-filter : LOAD_ STRING_ {ProcessCmdCVAR filter $2 CATTable}
+filter : LOAD_ STRING_ {CatalogCmdFilterLoad $2}
  | STRING_ {ProcessCmdCVAR filter $1 CATTable}
  ;
 

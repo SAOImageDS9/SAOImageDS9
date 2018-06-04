@@ -210,6 +210,8 @@ source $ds9(root)/library/blocksendparser.tcl
 source $ds9(root)/library/blocksendlex.tcl
 source $ds9(root)/library/catparser.tcl
 source $ds9(root)/library/catlex.tcl
+source $ds9(root)/library/catsendparser.tcl
+source $ds9(root)/library/catsendlex.tcl
 source $ds9(root)/library/cmapparser.tcl
 source $ds9(root)/library/cmaplex.tcl
 source $ds9(root)/library/colorbarparser.tcl
@@ -366,6 +368,8 @@ source $ds9(root)/library/urlfitsparser.tcl
 source $ds9(root)/library/urlfitslex.tcl
 source $ds9(root)/library/viewparser.tcl
 source $ds9(root)/library/viewlex.tcl
+source $ds9(root)/library/viewsendparser.tcl
+source $ds9(root)/library/viewsendlex.tcl
 source $ds9(root)/library/vlaparser.tcl
 source $ds9(root)/library/vlalex.tcl
 source $ds9(root)/library/vlssparser.tcl

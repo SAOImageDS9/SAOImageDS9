@@ -1541,8 +1541,24 @@ proc CatalogCmdSymbolSave {fn} {
 }
 
 proc ProcessSendCatalogCmd {proc id param sock fn} {
-    global icat
+    if {1} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+    set parse(sock) $sock
+    set parse(fn) $fn
 
+    global icat
+    set ref [lindex $icat(cats) end]
+    global cvarname
+    set cvarname $ref
+
+    catsend::YY_FLUSH_BUFFER
+    catsend::yy_scan_string $param
+    catsend::yyparse
+    } else {
+
+    global icat
     set cc [lindex $icat(cats) end]
     switch -- [string tolower [lindex $param 0]] {
 	header {}
@@ -1557,3 +1573,24 @@ proc ProcessSendCatalogCmd {proc id param sock fn} {
 	header {ProcessSend $proc $id $sock $fn {.txt} "[CATGetHeader $cc]\n"}
     }
 }
+}
+
+proc CatalogSendCmdRef {ref} {
+    global icat
+    global cvarname
+
+    # backward compatibility
+    if {$ref == "catcxc"} {
+	set ref catcsc
+    }
+
+    # look for reference in current list
+    if {[lsearch $icat(cats) $ref] < 0} {
+	Error "[msgcat::mc {Unable to find catalog window}] $ref"
+	return 0
+    }
+
+    set cvarname $ref
+    return [CatalogCmdCheck]
+}
+

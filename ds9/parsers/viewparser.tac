@@ -64,7 +64,7 @@ view : layout
  | KEYWORD_ yesno {ProcessCmdSet view info,keyword $2 UpdateView}
  | MINMAX_ yesno {ProcessCmdSet view info,minmax $2 UpdateView}
  | LOWHIGH_ yesno {ProcessCmdSet view info,lowhigh $2 UpdateView}
- | UNITS_ yesno {ProcessCmdSet view info,units $2 UpdateView}
+ | UNITS_ yesno {ProcessCmdSet view info,bunit $2 UpdateView}
  | coordsys yesno {ProcessCmdSet view info,$1 $2 UpdateView}
  | wcssys yesno {ProcessCmdSet view info,$1 $2 UpdateView}
  | FRAME_ yesno {ProcessCmdSet view info,frame $2 UpdateView}

@@ -87,7 +87,6 @@ proc ViewDef {} {
     set view(info,keyvalue) {}
     set view(info,keyword) 0
     set view(info,minmax) 0
-    set view(info,minmax,xy) 0
     set view(info,lowhigh) 0
     set view(info,bunit) 0
     set view(info,wcs) 1
@@ -859,79 +858,12 @@ proc ProcessViewCmd {varname iname} {
 }
 
 proc ProcessSendViewCmd {proc id param {sock {}} {fn {}}} {
-    global view
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    switch -- [string tolower [lindex $param 0]] {
-	layout {$proc $id "$view(layout)\n"}
-	keyvalue {$proc $id "$view(info,keyvalue)\n"}
-	info {$proc $id [ToYesNo $view(info)]}
-	panner {$proc $id [ToYesNo $view(panner)]}
-	magnifier {$proc $id [ToYesNo $view(magnifier)]}
-	buttons {$proc $id [ToYesNo $view(buttons)]}
-	colorbar {$proc $id [ToYesNo $view(colorbar)]}
-	colorbarnumerics {
-	    # backward compatibility
-	    $proc $id [ToYesNo $colorbar(numerics)]
-	}
-	graph {
-	    switch -- [string tolower [lindex $param 1]] {
-		horizontal {$proc $id [ToYesNo $view(graph,horz)]}
-		vertical {$proc $id [ToYesNo $view(graph,vert)]}
-	    }
-	}
-	horzgraph {
-	    # backward compatibility
-	    $proc $id [ToYesNo $view(graph,horz)]
-	}
-	vertgraph {
-	    # backward compatibility
-	    $proc $id [ToYesNo $view(graph,vert)]
-	}
-
-	filename {$proc $id [ToYesNo $view(info,filename)]}
-	object {$proc $id [ToYesNo $view(info,object)]}
-	keyword {$proc $id [ToYesNo $view(info,keyword)]}
-	minmax {$proc $id [ToYesNo $view(info,minmax)]}
-	minmaxxy {$proc $id [ToYesNo $view(info,minmax,xy)]}
-	lowhigh {$proc $id [ToYesNo $view(info,lowhigh)]}
-	units {$proc $id [ToYesNo $view(info,bunit)]}
-
-	detector {$proc $id [ToYesNo $view(info,detector)]}
-	amplifier {$proc $id [ToYesNo $view(info,amplifier)]}
-	physical {$proc $id [ToYesNo $view(info,physical)]}
-	image {$proc $id [ToYesNo $view(info,image)]}
-	wcs {$proc $id [ToYesNo $view(info,wcs)]}
-	wcsa {$proc $id [ToYesNo $view(info,wcsa)]}
-	wcsb {$proc $id [ToYesNo $view(info,wcsb)]}
-	wcsc {$proc $id [ToYesNo $view(info,wcsc)]}
-	wcsd {$proc $id [ToYesNo $view(info,wcsd)]}
-	wcse {$proc $id [ToYesNo $view(info,wcse)]}
-	wcsf {$proc $id [ToYesNo $view(info,wcsf)]}
-	wcsg {$proc $id [ToYesNo $view(info,wcsg)]}
-	wcsh {$proc $id [ToYesNo $view(info,wcsh)]}
-	wcsi {$proc $id [ToYesNo $view(info,wcsi)]}
-	wcsj {$proc $id [ToYesNo $view(info,wcsj)]}
-	wcsk {$proc $id [ToYesNo $view(info,wcsk)]}
-	wcsl {$proc $id [ToYesNo $view(info,wcsl)]}
-	wcsm {$proc $id [ToYesNo $view(info,wcsm)]}
-	wcsn {$proc $id [ToYesNo $view(info,wcsn)]}
-	wcso {$proc $id [ToYesNo $view(info,wcso)]}
-	wcsp {$proc $id [ToYesNo $view(info,wcsp)]}
-	wcsq {$proc $id [ToYesNo $view(info,wcsq)]}
-	wcsr {$proc $id [ToYesNo $view(info,wcsr)]}
-	wcss {$proc $id [ToYesNo $view(info,wcss)]}
-	wcst {$proc $id [ToYesNo $view(info,wcst)]}
-	wcsu {$proc $id [ToYesNo $view(info,wcsu)]}
-	wcsv {$proc $id [ToYesNo $view(info,wcsv)]}
-	wcsw {$proc $id [ToYesNo $view(info,wcsw)]}
-	wcsx {$proc $id [ToYesNo $view(info,wcsx)]}
-	wcsy {$proc $id [ToYesNo $view(info,wcsy)]}
-	wcsz {$proc $id [ToYesNo $view(info,wcsz)]}
-
-	frame {$proc $id [ToYesNo $view(info,frame)]}
-	default {
-	    # backward compatibility
-	    $proc $id "$view(layout)\n"
-	}
-    }
+    viewsend::YY_FLUSH_BUFFER
+    viewsend::yy_scan_string $param
+    viewsend::yyparse
 }
+

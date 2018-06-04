@@ -1,4 +1,4 @@
-#tab viewparser.tab.tcl
+#tab viewsendparser.tab.tcl
 
 %{
 %}
@@ -33,7 +33,6 @@ vert		{return $VERTICAL_}
 vertical	{return $VERTICAL_}
 vertgraph	{return $VERTGRAPH_}
 
-#include yesno.fin
 #include coords.fin
 #include string.fin
 

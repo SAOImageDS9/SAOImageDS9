@@ -268,6 +268,8 @@ source $ds9(root)/library/mecubeparser.tcl
 source $ds9(root)/library/mecubelex.tcl
 source $ds9(root)/library/minmaxparser.tcl
 source $ds9(root)/library/minmaxlex.tcl
+source $ds9(root)/library/minmaxsendparser.tcl
+source $ds9(root)/library/minmaxsendlex.tcl
 source $ds9(root)/library/modeparser.tcl
 source $ds9(root)/library/modelex.tcl
 source $ds9(root)/library/mosaicwcsparser.tcl
@@ -338,6 +340,8 @@ source $ds9(root)/library/saveimageparser.tcl
 source $ds9(root)/library/saveimagelex.tcl
 source $ds9(root)/library/scaleparser.tcl
 source $ds9(root)/library/scalelex.tcl
+source $ds9(root)/library/scalesendparser.tcl
+source $ds9(root)/library/scalesendlex.tcl
 source $ds9(root)/library/sfitsparser.tcl
 source $ds9(root)/library/sfitslex.tcl
 source $ds9(root)/library/shmparser.tcl
@@ -392,6 +396,8 @@ source $ds9(root)/library/xpafirstparser.tcl
 source $ds9(root)/library/xpafirstlex.tcl
 source $ds9(root)/library/zscaleparser.tcl
 source $ds9(root)/library/zscalelex.tcl
+source $ds9(root)/library/zscalesendparser.tcl
+source $ds9(root)/library/zscalesendlex.tcl
 source $ds9(root)/library/zoomparser.tcl
 source $ds9(root)/library/zoomlex.tcl
 

@@ -46,9 +46,10 @@ scale : OPEN_ {ScaleDialog}
  | MATCH_ match
  | LOCK_ lock
  | scales {ProcessCmdSet scale type $1 ChangeScale}
- | LOG_ log
+ | LOG_ EXP_ numeric {ProcessCmdSet scale log $3 ChangeScale}
  | DATASEC_ yesno {ProcessCmdSet scale datasec $2 ChangeDATASEC}
  | LIMITS_ numeric numeric {ProcessCmdSet scale min $2 {}; ProcessCmdSet scale max $3 ChangeScaleLimit}
+# backward compatibility
  | SCALELIMITS_ numeric numeric {ProcessCmdSet scale min $2 {}; ProcessCmdSet scale max $3 ChangeScaleLimit}
  | mode {ProcessCmdSet scale mode $1 ChangeScaleMode}
  | MODE_ mode {ProcessCmdSet scale mode $2 ChangeScaleMode}
@@ -76,10 +77,6 @@ lock : yesno {ProcessCmdSet scale lock $1 LockScaleCurrent}
  | SCALELIMITS_ yesno {ProcessCmdSet scale lock,limits $2 LockScaleLimitsCurrent}
  ;
  
-log : {ProcessCmdSet scale type log ChangeScale}
- | EXP_ numeric {ProcessCmdSet scale log $2 ChangeScale}
- ;
-
 mode : numeric {set _ $1}
  | MINMAX_ {set _ minmax}
  | ZSCALE_ {set _ zscale}

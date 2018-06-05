@@ -834,9 +834,18 @@ proc ProcessScaleCmd {varname iname} {
 }
 
 proc ProcessSendScaleCmd {proc id param {sock {}} {fn {}}} {
+    if {1} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    scalesend::YY_FLUSH_BUFFER
+    scalesend::yy_scan_string $param
+    scalesend::yyparse
+    } else {
+	
     global current
     global scale
-
     switch -- [string tolower $param] {
 	lock {$proc $id [ToYesNo $scale(lock)]} 
 	{lock limits} {$proc $id [ToYesNo $scale(lock,limits)]} 
@@ -854,6 +863,7 @@ proc ProcessSendScaleCmd {proc id param {sock {}} {fn {}}} {
 	default {$proc $id "$scale(type)\n"}
     }
 }
+}
 
 proc ProcessMinMaxCmd {varname iname} {
     upvar $varname var
@@ -866,8 +876,17 @@ proc ProcessMinMaxCmd {varname iname} {
 }
 
 proc ProcessSendMinMaxCmd {proc id param {sock {}} {fn {}}} {
-    global minmax
+    if {1} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
+    minmaxsend::YY_FLUSH_BUFFER
+    minmaxsend::yy_scan_string $param
+    minmaxsend::yyparse
+    } else {
+
+    global minmax
     switch -- [string tolower $param] {
 	mode {$proc $id "$minmax(mode)\n"}
 	interval {$proc $id "$minmax(sample)\n"}
@@ -876,6 +895,7 @@ proc ProcessSendMinMaxCmd {proc id param {sock {}} {fn {}}} {
 	    $proc $id "$minmax(mode)\n"
 	}
     }
+}
 }
 
 proc ProcessZScaleCmd {varname iname} {
@@ -889,11 +909,21 @@ proc ProcessZScaleCmd {varname iname} {
 }
 
 proc ProcessSendZScaleCmd {proc id param {sock {}} {fn {}}} {
-    global zscale
+    if {1} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
+    zscalesend::YY_FLUSH_BUFFER
+    zscalesend::yy_scan_string $param
+    zscalesend::yyparse
+    } else {
+
+    global zscale
     switch -- [string tolower $param] {
 	contrast {$proc $id "$zscale(contrast)\n"}
 	sample {$proc $id "$zscale(sample)\n"}
 	line {$proc $id "$zscale(line)\n"}
     }
+}
 }

@@ -1,0 +1,15 @@
+#tab minmaxsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+interval    {return $INTERVAL_}
+mode	    {return $MODE_}
+
+#include string.fin
+
+%%

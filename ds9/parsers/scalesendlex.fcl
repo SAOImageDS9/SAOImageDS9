@@ -1,0 +1,21 @@
+#tab scalesendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+datasec	    {return $DATASEC_}
+exp	    {return $EXP_}
+limits	    {return $LIMITS_}
+lock	    {return $LOCK_}
+log	    {return $LOG_}
+mode	    {return $MODE_}
+scalelimits {return $SCALELIMITS_}
+scope	    {return $SCOPE_}
+
+#include string.fin
+
+%%

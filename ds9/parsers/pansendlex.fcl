@@ -1,0 +1,14 @@
+#tab pansendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+#include coords.fin
+#include string.fin
+
+%%
+

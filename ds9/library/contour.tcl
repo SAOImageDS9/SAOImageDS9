@@ -1177,7 +1177,7 @@ proc ContourCmdGenerate {} {
     UpdateContour
 }
 
-proc ProcessSendContourCmd {proc id param sock fn} {
+proc ProcessSendContourCmd {proc id param {sock {}} {fn {}}} {
     global parse
     set parse(proc) $proc
     set parse(id) $id

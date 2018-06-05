@@ -859,7 +859,7 @@ proc XPARcvdConsole {xpa cdata param buf len} {
 
 proc XPASendContour {xpa cdata param} {
     InitError xpa
-    catch {ProcessSendContourCmd xpasetbuf $xpa $param {} {}}
+    catch {ProcessSendContourCmd xpasetbuf $xpa $param}
     XPACatchError $xpa
 }
 

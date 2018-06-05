@@ -691,16 +691,13 @@ proc ProcessPanCmd {varname iname} {
 }
 
 proc ProcessSendPanCmd {proc id param {sock {}} {fn {}}} {
-    global current
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    set sys [lindex $param 0]
-    set sky [lindex $param 1]
-    set format [lindex $param 2]
-    FixSpec sys sky format physical fk5 degrees
-
-    if {$current(frame) != {}} {
-	$proc $id "[$current(frame) get cursor $sys $sky $format]\n"
-    }
+    pansend::YY_FLUSH_BUFFER
+    pansend::yy_scan_string $param
+    pansend::yyparse
 }
 
 proc ProcessZoomCmd {varname iname} {

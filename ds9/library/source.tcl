@@ -300,6 +300,8 @@ source $ds9(root)/library/pagesetupparser.tcl
 source $ds9(root)/library/pagesetuplex.tcl
 source $ds9(root)/library/panparser.tcl
 source $ds9(root)/library/panlex.tcl
+source $ds9(root)/library/pansendparser.tcl
+source $ds9(root)/library/pansendlex.tcl
 source $ds9(root)/library/photoparser.tcl
 source $ds9(root)/library/photolex.tcl
 source $ds9(root)/library/pixeltableparser.tcl

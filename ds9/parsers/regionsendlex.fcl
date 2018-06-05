@@ -1,0 +1,59 @@
+#tab regionsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+
+auto	    {return $AUTO_}
+autocentroid {return $AUTOCENTROID_}
+background  {return $BACKGROUND_}
+centroid    {return $CENTROID_}
+color	    {return $COLOR_}
+delim	    {return $DELIM_}
+epsilon	    {return $EPSILON_}
+exclude	    {return $EXCLUDE_}
+format	    {return $FORMAT_}
+group	    {return $GROUP_}
+groups	    {return $GROUPS_}
+include	    {return $INCLUDE_}
+iteration   {return $ITERATION_}
+nl	    {return $NL_}
+radius	    {return $RADIUS_}
+selected    {return $SELECTED_}
+shape	    {return $SHAPE_}
+show	    {return $SHOW_}
+showtext    {return $SHOWTEXT_}
+sky	    {return $SKY_}
+skyformat   {return $SKYFORMAT_}
+source	    {return $SOURCE_}
+strip	    {return $STRIP_}
+system	    {return $SYSTEM_}
+width	    {return $WIDTH_}
+
+ds9	    {return $DS9_}
+xml	    {return $XML_}
+ciao	    {return $CIAO_}
+saotng	    {return $SAOTNG_}
+pros	    {return $PROS_}
+saoimage    {return $SAOIMAGE_}
+xy	    {return $XY_}
+
+-format	    {return $MFORMAT_}
+-system	    {return $MSYSTEM_}
+-sky	    {return $MSKY_}
+-skyformat  {return $MSKYFORMAT_}
+-strip	    {return $MSTRIP_}
+-delim	    {return $MDELIM_}
+-prop	    {return $MPROP_}
+-group	    {return $MGROUP_}
+
+#include yesno.fin
+#include coords.fin
+#include numeric.fin
+#include string.fin
+
+%%

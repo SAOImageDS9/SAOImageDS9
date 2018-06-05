@@ -1565,10 +1565,31 @@ proc RegionCmdCommand {cmd} {
 }
 
 proc ProcessSendRegionsCmd {proc id param sock fn} {
+    if {1} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+    set parse(sock) $sock
+    set parse(fn) $fn
+
+    global marker
+    set marker(load,format) $marker(format)
+    set marker(load,system) $marker(system)
+    set marker(load,sky) $marker(sky)
+    set marker(load,skyformat) $marker(skyformat)
+    set marker(load,strip) $marker(strip)
+    set marker(load,select) {}
+    set marker(load,props) {}
+    set marker(load,tags) {}
+
+    regionsend::YY_FLUSH_BUFFER
+    regionsend::yy_scan_string $param
+    regionsend::yyparse
+    } else {
+
     global current
     global marker
     global pmarker
-
     if {$current(frame) == {}} {
 	return
     }
@@ -1692,4 +1713,24 @@ proc ProcessSendRegionsCmd {proc id param sock fn} {
 		     $sys $sky $skyformat $strip $props $tags]
 	}
     }
+}
+}
+
+proc RegionSendCmd {} {
+    global marker
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+
+    switch -- $marker(load,format) {
+	xml {set ext {.xml}}
+	default {set ext {.rgn}}
+    }
+
+    set rr [$current(frame) marker list $marker(load,select) $marker(load,format) $marker(load,system) $marker(load,sky) $marker(load,skyformat) $marker(load,strip) $marker(load,props) $marker(load,tags)]
+
+    puts $rr
+    ProcessSendCmdResult $ext $rr
 }

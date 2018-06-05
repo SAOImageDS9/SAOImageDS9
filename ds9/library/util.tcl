@@ -175,6 +175,15 @@ proc ProcessCmdSet {varname key value {cmd {}}} {
     }
 }
 
+proc ProcessCmdAppend {varname key value {cmd {}}} {
+    global $varname
+
+    append ${varname}($key) $value
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
 proc ProcessCmdCVAR {which value {cmd {}}} {
     global cvarname
     upvar #0 $cvarname cvar
@@ -225,7 +234,7 @@ proc ProcessSendCmdResult {ext rr} {
     global parse
 
     if {$parse(sock) != {}} {
-	# not implemented
+	puts $parse(sock) $rr
     } elseif {$parse(fn) != {}} {
 	append parse(fn) $ext
 	set ch [open $parse(fn) w]
@@ -240,7 +249,7 @@ proc ProcessSendCmdResult {ext rr} {
 # old
 proc ProcessSend {proc id sock fn ext rr} {
     if {$sock != {}} {
-	# not implemented
+	puts $sock $rr
     } elseif {$fn != {}} {
 	append fn $ext
 	set ch [open $fn w]

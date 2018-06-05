@@ -1541,7 +1541,6 @@ proc CatalogCmdSymbolSave {fn} {
 }
 
 proc ProcessSendCatalogCmd {proc id param sock fn} {
-    if {1} {
     global parse
     set parse(proc) $proc
     set parse(id) $id
@@ -1556,23 +1555,6 @@ proc ProcessSendCatalogCmd {proc id param sock fn} {
     catsend::YY_FLUSH_BUFFER
     catsend::yy_scan_string $param
     catsend::yyparse
-    } else {
-
-    global icat
-    set cc [lindex $icat(cats) end]
-    switch -- [string tolower [lindex $param 0]] {
-	header {}
-	default {
-	    set cc [lindex $param 0]
-	    set param [lreplace $param 0 0]
-	}
-    }
-
-    switch -- [string tolower [lindex $param 0]] {
-	{} {$proc $id "$icat(cats)\n"}
-	header {ProcessSend $proc $id $sock $fn {.txt} "[CATGetHeader $cc]\n"}
-    }
-}
 }
 
 proc CatalogSendCmdRef {ref} {

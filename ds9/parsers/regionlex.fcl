@@ -19,8 +19,6 @@ close	    {return $CLOSE_}
 color	    {return $COLOR_}
 command	    {return $COMMAND_}
 composite   {return $COMPOSITE_}
-coord	    {return $COORD_}
-coordformat {return $COORDFORMAT_}
 copy	    {return $COPY_}
 cut	    {return $CUT_}
 delete	    {return $DELETE_}
@@ -32,6 +30,7 @@ epsilon	    {return $EPSILON_}
 exclude	    {return $EXCLUDE_}
 file	    {return $FILE_}
 fixed	    {return $FIXED_}
+font	    {return $FONT_}
 format	    {return $FORMAT_}
 front	    {return $FRONT_}
 getinfo	    {return $GETINFO_}
@@ -65,7 +64,6 @@ skyformat   {return $SKYFORMAT_}
 source	    {return $SOURCE_}
 strip	    {return $STRIP_}
 system	    {return $SYSTEM_}
-tag	    {return $TAG_}
 template    {return $TEMPLATE_}
 undo	    {return $UNDO_}
 update	    {return $UPDATE_}
@@ -100,12 +98,11 @@ cross	    {return $CROSS_}
 arrow	    {return $ARROW_}
 boxcircle   {return $BOXCIRCLE_}
 
--format	    {return $-FORMAT_}
--system	    {return $-SYSTEM_}
--sky	    {return $-SKY_}
+-format	    {return $MFORMAT_}
+-system	    {return $MSYSTEM_}
+-sky	    {return $MSKY_}
 
 #include yesno.fin
-#include font.fin
 #include coords.fin
 #include numeric.fin
 #include string.fin

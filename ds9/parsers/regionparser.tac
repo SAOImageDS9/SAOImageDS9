@@ -2,7 +2,6 @@
 %}
 
 #include yesno.tin
-#include font.tin
 #include coords.tin
 #include numeric.tin
 #include string.tin
@@ -20,8 +19,6 @@
 %token COLOR_
 %token COMMAND_
 %token COMPOSITE_
-%token COORD_
-%token COORDFORMAT_
 %token COPY_
 %token CUT_
 %token DELETE_
@@ -33,6 +30,7 @@
 %token EXCLUDE_
 %token FILE_
 %token FIXED_
+%token FONT_
 %token FORMAT_
 %token FRONT_
 %token GETINFO_
@@ -66,7 +64,6 @@
 %token SOURCE_
 %token STRIP_
 %token SYSTEM_
-%token TAG_
 %token TEMPLATE_
 %token UNDO_
 %token UPDATE_
@@ -101,14 +98,13 @@
 %token ARROW_
 %token BOXCIRCLE_
 
-%token -FORMAT_
-%token -SYSTEM_
-%token -SKY_
+%token MFORMAT_
+%token MSYSTEM_
+%token MSKY_
 
 %%
 
 #include yesno.trl
-#include font.trl
 #include coords.trl
 #include numeric.trl
 
@@ -153,6 +149,7 @@ region : {RegionCmdLoad}
  | SKY_ skyframe {ProcessCmdSet marker sky $2}
  | SKYFORMAT_ skyformat {ProcessCmdSet marker skyformat $2}
  | STRIP_ yesno {ProcessCmdSet marker strip $2}
+# backward compatibility
  | DELIM_ delim {ProcessCmdSet marker strip $2}
  | SHAPE_ shape {ProcessCmdSet marker shape $2}
  | COLOR_ STRING_ {ProcessCmdSet marker color $2 MarkerColor}
@@ -186,12 +183,12 @@ props : props prop
  | prop
  ;
  
-prop : -FORMAT_ format {ProcessCmdSet marker load,format $2}
- | -SYSTEM_ coordsys {ProcessCmdSet marker load,system $2}
- | -SYSTEM_ wcssys {ProcessCmdSet marker load,system $2}
+prop : MFORMAT_ format {ProcessCmdSet marker load,format $2}
+ | MSYSTEM_ coordsys {ProcessCmdSet marker load,system $2}
+ | MSYSTEM_ wcssys {ProcessCmdSet marker load,system $2}
 # backward compatibility
- | -SYSTEM_ skyframe {ProcessCmdSet marker load,system wcs; ProcessCmdSet marker load,sky $2}
- | -SKY_ skyframe {ProcessCmdSet marker load,sky $2}
+ | MSYSTEM_ skyframe {ProcessCmdSet marker load,system wcs; ProcessCmdSet marker load,sky $2}
+ | MSKY_ skyframe {ProcessCmdSet marker load,sky $2}
  ;
 
 loadall : {set _ 0}
@@ -265,7 +262,6 @@ point :
  
 delim : NL_ {set _ 0}
  | STRING_ {set _ 1}
- | yesno {set _ $1}
  ;
  
 template : STRING_ {RegionCmdTemplate $1}

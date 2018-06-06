@@ -2,7 +2,6 @@
 %}
 
 #include yesno.tin
-#include coords.tin
 #include imgsvr.tin
 #include numeric.tin
 #include string.tin
@@ -15,7 +14,6 @@
 %%
 
 #include yesno.trl
-#include coords.trl
 #include imgsvr.trl
 #include numeric.trl
 

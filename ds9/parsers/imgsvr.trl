@@ -24,3 +24,8 @@ sizeOpt : {set _ degrees}
 frame : NEW_ {set _ new}
  | CURRENT_ {set _ current}
  ;
+
+rformat : DEGREES_ {set _ degrees}
+ | ARCMIN_ {set _ arcmin}
+ | ARCSEC_ {set _ arcsec}
+ ;

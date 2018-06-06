@@ -11,3 +11,14 @@
 %token SAVE_
 %token SIZE_
 %token SURVEY_
+
+%token WCS_
+%token FK5_
+
+%token DEGREES_
+%token ARCMIN_
+%token ARCSEC_
+
+%token SEXAGESIMAL_
+
+%token SEXSTR_

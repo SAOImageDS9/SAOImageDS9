@@ -876,7 +876,6 @@ proc ProcessMinMaxCmd {varname iname} {
 }
 
 proc ProcessSendMinMaxCmd {proc id param {sock {}} {fn {}}} {
-    if {1} {
     global parse
     set parse(proc) $proc
     set parse(id) $id
@@ -884,18 +883,6 @@ proc ProcessSendMinMaxCmd {proc id param {sock {}} {fn {}}} {
     minmaxsend::YY_FLUSH_BUFFER
     minmaxsend::yy_scan_string $param
     minmaxsend::yyparse
-    } else {
-
-    global minmax
-    switch -- [string tolower $param] {
-	mode {$proc $id "$minmax(mode)\n"}
-	interval {$proc $id "$minmax(sample)\n"}
-	default {
-	    # for backward compatibility
-	    $proc $id "$minmax(mode)\n"
-	}
-    }
-}
 }
 
 proc ProcessZScaleCmd {varname iname} {
@@ -909,7 +896,6 @@ proc ProcessZScaleCmd {varname iname} {
 }
 
 proc ProcessSendZScaleCmd {proc id param {sock {}} {fn {}}} {
-    if {1} {
     global parse
     set parse(proc) $proc
     set parse(id) $id
@@ -917,13 +903,4 @@ proc ProcessSendZScaleCmd {proc id param {sock {}} {fn {}}} {
     zscalesend::YY_FLUSH_BUFFER
     zscalesend::yy_scan_string $param
     zscalesend::yyparse
-    } else {
-
-    global zscale
-    switch -- [string tolower $param] {
-	contrast {$proc $id "$zscale(contrast)\n"}
-	sample {$proc $id "$zscale(sample)\n"}
-	line {$proc $id "$zscale(line)\n"}
-    }
-}
 }

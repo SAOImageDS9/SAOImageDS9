@@ -45,8 +45,8 @@ dsseso : {IMGSVRApply deso 1}
  | COORD_ SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 deso x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply deso 1"}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdate deso}
- | CROSSHAIR_ {IMGSVRCmdCrosshair deso}
+update : FRAME_ {IMGSVRUpdate deso; IMGSVRApply deso 1}
+ | CROSSHAIR_ {IMGSVRCrosshair deso; IMGSVRApply deso 1}
  ;
 
 survey : DSS1_ {set _ DSS1}

@@ -43,8 +43,8 @@ skyview : {IMGSVRApply dskyview 1}
  | COORD_ SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dskyview x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dskyview 1"}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdate dskyview}
- | CROSSHAIR_ {IMGSVRCmdCrosshair dskyview}
+update : FRAME_ {IMGSVRUpdate dskyview; IMGSVRApply dskyview 1}
+ | CROSSHAIR_ {IMGSVRCrosshair dskyview; IMGSVRApply dskyview 1}
  ;
 
 %%

@@ -43,8 +43,8 @@ vla : {IMGSVRApply dvla 1}
  | COORD_ SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dvla x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dvla 1"}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdate dvla}
- | CROSSHAIR_ {IMGSVRCmdCrosshair dvla}
+update : FRAME_ {IMGSVRUpdate dvla; IMGSVRApply dvla 1}
+ | CROSSHAIR_ {IMGSVRCrosshair dvla; IMGSVRApply dvla 1}
  ;
 
 survey : STRIPE82_ {set _ stripe82}

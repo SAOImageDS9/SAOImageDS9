@@ -39,8 +39,8 @@ nvss : {IMGSVRApply dnvss 1}
  | COORD_ SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dnvss x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dnvss 1"}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdate dnvss}
- | CROSSHAIR_ {IMGSVRCmdCrosshair dnvss}
+update : FRAME_ {IMGSVRUpdate dnvss; IMGSVRApply dnvss 1}
+ | CROSSHAIR_ {IMGSVRCrosshair dnvss; IMGSVRApply dnvss 1}
  ;
 
 %%

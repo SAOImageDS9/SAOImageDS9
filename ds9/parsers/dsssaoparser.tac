@@ -39,8 +39,8 @@ dsssao : {IMGSVRApply dsao 1}
  | COORD_ SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dsao x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dsao 1"}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdate dsao}
- | CROSSHAIR_ {IMGSVRCmdCrosshair dsao}
+update : FRAME_ {IMGSVRUpdate dsao; IMGSVRApply dsao 1}
+ | CROSSHAIR_ {IMGSVRCrosshair dsao; IMGSVRApply dsao 1}
  ;
 
 %%

@@ -40,8 +40,8 @@ twomass : {IMGSVRApply dtwomass 1}
  | COORD_ SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dtwomass x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dtwomass 1"}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdate dtwomass}
- | CROSSHAIR_ {IMGSVRCmdCrosshair dtwomass}
+update : FRAME_ {IMGSVRUpdate dtwomass; IMGSVRApply dtwomass 1}
+ | CROSSHAIR_ {IMGSVRCrosshair dtwomass; IMGSVRApply dtwomass 1}
  ;
 
 survey : 'j' {set _ $1}

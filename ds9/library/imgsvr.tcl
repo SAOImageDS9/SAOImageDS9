@@ -483,33 +483,6 @@ proc IMGSVRProgress {varname token totalsize currentsize} {
     }
 }
 
-proc IMGSVRCmdCoord {varname xx yy skyformat} {
-    upvar #0 $varname var
-    global $varname
-
-    set var(x) $xx
-    set var(y) $yy
-    set var(skyformat) $skyformat
-    set var(skyformat,msg) $skyformat
-    IMGSVRApply $varname 1
-}
-
-proc IMGSVRCmdUpdate {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    IMGSVRUpdate $varname
-    IMGSVRApply $varname 1
-}
-
-proc IMGSVRCmdCrosshair {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    IMGSVRCrosshair $varname
-    IMGSVRApply $varname 1
-}
-
 proc IMGSVRProcessSendCmd {proc id param vvarname} {
     upvar #0 $vvarname vvar
 

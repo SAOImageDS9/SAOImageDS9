@@ -50,8 +50,8 @@ dssstsci : {IMGSVRApply dstsci 1}
  | COORD_ SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dstsci x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dstsci 1"}
  ;
 
-update : FRAME_ {IMGSVRCmdUpdate dstsci}
- | CROSSHAIR_ {IMGSVRCmdCrosshair dstsci}
+update : FRAME_ {IMGSVRUpdate dstsci; IMGSVRApply dstsci 1}
+ | CROSSHAIR_ {IMGSVRCrosshair dstsci; IMGSVRApply dstsci 1}
  ;
 
 survey : POSS2RED_ {set _ poss2ukstu_red}

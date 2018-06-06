@@ -579,26 +579,31 @@ tcliisdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tcliis distclean
+	rm -f tcliis/tcliisConfig.sh
 
 tclsignaldistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tclsignal distclean
+	rm -f tclsignal/tclsignalConfig.sh
 
 tclxmldistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tclxml distclean
+	rm -f tclxml/tclxmlConfig.sh
 
 tclzvfsdistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tclzvfs distclean
+	rm -f tclzvfs/tclzvfsConfig.sh
 
 tlsdistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tls distclean
+	rm -f tls/tlsConfig.sh
 
 tkcondistclean:
 	@echo ""
@@ -609,11 +614,13 @@ tkbltdistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkblt distclean
+	rm -f tkblt/tkbltConfig.sh
 
 tkhtml1distclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkhtml1 distclean
+	rm -f tkhtml1/tkhtml1Config.sh
 
 tkimgdistclean: 
 	@echo ""
@@ -627,11 +634,13 @@ tkmpegdistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmpeg distclean
+	rm -f tkmpeg/tkmpegConfig.sh
 
 tksaodistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tksao distclean
+	rm -f tksao/tksaoConfig.sh
 
 astdistclean :
 	@echo ""
@@ -647,6 +656,7 @@ tktabledistclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tktable distclean
+	rm -f tktable/tktableConfig.sh
 
 xpadistclean :
 	@echo ""

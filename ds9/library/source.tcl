@@ -358,6 +358,8 @@ source $ds9(root)/library/siaparser.tcl
 source $ds9(root)/library/sialex.tcl
 source $ds9(root)/library/skyviewparser.tcl
 source $ds9(root)/library/skyviewlex.tcl
+source $ds9(root)/library/skyviewsendparser.tcl
+source $ds9(root)/library/skyviewsendlex.tcl
 source $ds9(root)/library/sleepparser.tcl
 source $ds9(root)/library/sleeplex.tcl
 source $ds9(root)/library/smoothparser.tcl

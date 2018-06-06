@@ -1,4 +1,4 @@
-#tab skyviewparser.tab.tcl
+#tab skyviewsendparser.tab.tcl
 
 %{
 %}
@@ -9,9 +9,7 @@
 
 pixels	    {return $PIXELS_}
 
-#include yesno.fin
 #include imgsvr.fin
-#include numeric.fin
 #include string.fin
 
 %%

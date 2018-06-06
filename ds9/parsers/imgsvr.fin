@@ -1,3 +1,4 @@
+clear	    {return $CLEAR_}
 close	    {return $CLOSE_}
 coord	    {return $COORD_}
 crosshair   {return $CROSSHAIR_}

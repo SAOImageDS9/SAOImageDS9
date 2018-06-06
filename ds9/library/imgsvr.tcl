@@ -483,23 +483,6 @@ proc IMGSVRProgress {varname token totalsize currentsize} {
     }
 }
 
-proc IMGSVRCmd {varname which value} {
-    upvar #0 $varname var
-    global $varname
-
-    set var($which) $value
-}
-
-proc IMGSVRCmdName {varname value} {
-    upvar #0 $varname var
-    global $varname
-
-    set var(name) $value
-    if {$var(name) != {}} {
-	IMGSVRApply $varname 1
-    }
-}
-
 proc IMGSVRCmdCoord {varname xx yy skyformat} {
     upvar #0 $varname var
     global $varname
@@ -509,24 +492,6 @@ proc IMGSVRCmdCoord {varname xx yy skyformat} {
     set var(skyformat) $skyformat
     set var(skyformat,msg) $skyformat
     IMGSVRApply $varname 1
-}
-
-proc IMGSVRCmdSize {varname ww hh rformat} {
-    upvar #0 $varname var
-    global $varname
-
-    set var(width) $ww
-    set var(height) $hh
-    set var(rformat) $rformat
-    set var(rformat,msg) $rformat
-}
-
-proc IMGSVRCmdPixels {varname ww hh} {
-    upvar #0 $varname var
-    global $varname
-
-    set var(width,pixels) $ww
-    set var(height,pixels) $hh
 }
 
 proc IMGSVRCmdUpdate {varname} {

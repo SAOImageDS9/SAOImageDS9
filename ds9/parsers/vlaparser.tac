@@ -26,18 +26,21 @@ command : vla
 vla : {IMGSVRApply dvla 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dvla}
- | STRING_ {IMGSVRCmdName dvla $1}
- | NAME_ STRING_ {IMGSVRCmdName dvla $2}
- | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dvla $2 $3 $4}
- | SAVE_ yesno {IMGSVRCmd dvla save $2}
- | FRAME_ frame {IMGSVRCmd dvla mode $2}
- | SURVEY_ survey {IMGSVRCmd dvla survey $2}
+ | STRING_ {ProcessCmdSet dvla name $1 "IMGSVRApply dvla 1"}
+ | NAME_ CLEAR_ {ProcessCmdSet dvla name {}}
+ | NAME_ STRING_ {ProcessCmdSet dvla name $2 "IMGSVRApply dvla 1"}
+ | SIZE_ numeric numeric sizeOpt
+   {ProcessCmdSet4 dvla width $2 height $3 rformat $4 rformat,msg $4}
+ | SAVE_ yesno {ProcessCmdSet dvla save $2}
+ | FRAME_ frame {ProcessCmdSet dvla mode $2}
+ | SURVEY_ survey {ProcessCmdSet dvla survey $2}
  | UPDATE_ update
 
- | numeric numeric coordOpt {IMGSVRCmdCoord dvla $1 $2 degrees}
- | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dvla $1 $2 sexagesimal}
- | COORD_ numeric numeric deg {IMGSVRCmdCoord dvla $2 $3 $4}
- | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dvla $2 $3 $4}
+ | numeric numeric deg {ProcessCmdSet4 dvla x $1 y $2 skyformat $3 skyformat,msg $3 "IMGSVRApply dvla 1"}
+ | SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dvla x $1 y $2 skyformat $3 skyformat,msg $3 "IMGSVRApply dvla 1"}
+ # backward compatibility
+ | COORD_ numeric numeric deg {ProcessCmdSet4 dvla x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dvla 1"}
+ | COORD_ SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dvla x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dvla 1"}
  ;
 
 update : FRAME_ {IMGSVRCmdUpdate dvla}

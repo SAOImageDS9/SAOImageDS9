@@ -154,9 +154,9 @@
       <tt> Syntax: <br>
         -2mass []<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt;
-        &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt; &lt;dec&gt;] #
+        in wcs fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
         &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -168,8 +168,9 @@
         Example:<br>
         $ds9 -2mass<br>
         $ds9 -2mass m31 <br>
-        $ds9 -2mass name m31 <br>
-        $ds9 -2mass coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+      </tt><tt><tt>$ds9 -2mass name m31 <br>
+        </tt></tt><tt><tt><tt>$ds9 -2mass name clear<br>
+          </tt></tt>$ds9 -2mass 00:42:44.404 +41:16:08.78<br>
         $ds9 -2mass size 60 60 arcmin<br>
         $ds9 -2mass save yes<br>
         $ds9 -2mass frame current<br>
@@ -524,6 +525,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -544,6 +546,7 @@
         </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             [&lt;ref&gt;] [match]<br>
           </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -738,8 +741,10 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -934,6 +939,7 @@
 
 
 
+
         [match unique yes|no]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [maxrows
         &lt;number&gt;]</tt><br>
@@ -987,11 +993,14 @@
 
 
 
+
               [symbol shape </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>circle
 
 
 
+
                   point|box point|diamond point|</tt></tt></tt></tt>cross
+
 
 
 
@@ -1003,6 +1012,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1226,6 +1236,7 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; [ticks]<br>
       </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -1496,6 +1507,7 @@
 
 
 
+
         [match &lt;coordsys&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [lock
         &lt;coordsys&gt;|none]</tt><br>
@@ -1553,9 +1565,10 @@
       <tt> Syntax: <br>
         -dsssao []<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt;
-        &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name
+        &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt;
+        &lt;dec&gt;] # in wcs fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
         &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -1567,8 +1580,9 @@
         Example:<br>
         $ds9 -dsssao <br>
         $ds9 -dsssao m31 <br>
-        $ds9 -dsssao name m31 <br>
-        $ds9 -dsssao coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+      </tt><tt><tt>$ds9 -dsssao name m31 <br>
+        </tt></tt><tt><tt><tt>$ds9 -dsssao name clear<br>
+          </tt></tt>$ds9 -dsssao 00:42:44.404 +41:16:08.78<br>
         $ds9 -dsssao size 60 60 arcmin<br>
         $ds9 -dsssao save yes<br>
         $ds9 -dsssao frame current<br>
@@ -1581,9 +1595,10 @@
       <tt> Syntax:<br>
         -dsseso []<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt;
-        &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name
+        &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt;
+        &lt;dec&gt;] # in wcs fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
         &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -1597,8 +1612,9 @@
         Example:<br>
         $ds9 -dsseso <br>
         $ds9 -dsseso m31 <br>
-        $ds9 -dsseso name m31 <br>
-        $ds9 -dsseso coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+      </tt><tt><tt>$ds9 -dsseso name m31 <br>
+        </tt></tt><tt><tt><tt>$ds9 -dsseso name clear<br>
+          </tt></tt>$ds9 -dsseso 00:42:44.404 +41:16:08.78<br>
         $ds9 -dsseso size 60 60 arcmin<br>
         $ds9 -dsseso save yes<br>
         $ds9 -dsseso frame current<br>
@@ -1612,9 +1628,9 @@
         -dssstsci []<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; [&lt;object&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name
-        &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord
-        &lt;ra&gt; &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        [&lt;ra&gt; &lt;dec&gt;] # in wcs fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size
         &lt;width&gt; &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save
@@ -1634,8 +1650,9 @@
         Example:<br>
         $ds9 -dssstsci <br>
         $ds9 -dssstsci m31 <br>
-        $ds9 -dssstsci name m31 <br>
-        $ds9 -dssstsci coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+      </tt><tt><tt>$ds9 -dssstsci name m31 <br>
+        </tt></tt><tt><tt><tt>$ds9 -dssstsci name clear<br>
+          </tt></tt>$ds9 -dssstsci 00:42:44.404 +41:16:08.78<br>
         $ds9 -dssstsci size 60 60 arcmin<br>
         $ds9 -dssstsci save yes<br>
         $ds9 -dssstsci frame current<br>
@@ -1652,6 +1669,7 @@
         Example:<br>
       </tt><tt><tt><tt><tt>$ds9 -envi foo.hdr</tt></tt><tt><tt><tt><tt><tt><tt><br>
                     </tt></tt></tt></tt></tt></tt> <b> </b></tt></tt><tt><tt>$ds9
+
 
 
 
@@ -2404,8 +2422,10 @@
 
 
 
+
         [pan]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2686,6 +2706,7 @@
 
 
 
+
         [open|close]<br>
         &nbsp;<br>
         Example: <br>
@@ -2720,9 +2741,9 @@
       <tt> Syntax: <br>
         -nvss []<br>
         &nbsp;&nbsp;&nbsp; &nbsp; [&lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt; &lt;dec&gt;
-        degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt; &lt;dec&gt;] # in wcs
+        fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
         &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -2733,8 +2754,9 @@
         Example:<br>
         $ds9 -nvss<br>
         $ds9 -nvss m31 <br>
-        $ds9 -nvss name m31 <br>
-        $ds9 -nvss coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+      </tt><tt><tt>$ds9 -nvss name m31 <br>
+        </tt></tt><tt><tt><tt>$ds9 -nvss name clear<br>
+          </tt></tt>$ds9 -nvss 00:42:44.404 +41:16:08.78<br>
         $ds9 -nvss size 60 60 arcmin<br>
         $ds9 -nvss save yes<br>
         $ds9 -nvss frame current<br>
@@ -2791,6 +2813,7 @@
       <tt> Syntax: <br>
         -pixeltable []<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3034,8 +3057,10 @@
 
 
 
+
                 duplicate [#]]<br>
               </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;
+
 
 
                             &nbsp;&nbsp; </tt>[[&lt;plotname&gt;] stats
@@ -3111,8 +3136,10 @@
 
 
 
+
                     list yes|no]<br>
                     &nbsp; &nbsp; &nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3287,6 +3314,7 @@
 
 
 
+
           legend yes|no]<br>
           &nbsp;&nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] legend position
           right|left|top|bottom]</tt><br>
@@ -3370,11 +3398,13 @@
 
 
 
+
               barmode normal|stacked|aligned|overlap]<br>
             </tt></tt></tt></tt><tt><tt><tt><br>
           </tt></tt></tt><tt><tt><tt># configure current dataset<br>
           </tt>-plot [[&lt;plotname&gt;] show yes|no]<br>
         </tt>&nbsp; &nbsp;&nbsp;&nbsp; </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3518,6 +3548,7 @@
 
 
 
+
                       shape fill yes|no]</tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       </tt><tt><tt><tt><tt>[[&lt;plotname&gt;] shape
@@ -3525,7 +3556,9 @@
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
+
                                               </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3601,7 +3634,9 @@
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
+
                                                           </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3677,7 +3712,9 @@
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
+
                                                           </tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3821,7 +3858,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3965,7 +4004,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4109,7 +4150,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4254,7 +4297,9 @@
 
 
 
+
                                                           [[&lt;plotname&gt;]
+
 
 
 
@@ -4399,7 +4444,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4544,7 +4591,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4667,6 +4716,7 @@
                                       </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt>$ds9
 
 
+
           -plot title 'This is a Title'<br>
           $ds9 -plot title x 'X Axis'<br>
           $ds9 -plot title y 'Y Axis'<br>
@@ -4731,6 +4781,7 @@
       <p>Set region and coordinate output format precision. </p>
       <tt> Syntax: <br>
         -precision &lt;linear&gt; </tt><tt><tt>&lt;degree&gt;</tt> </tt><tt><tt>&lt;hms&gt;
+
 
 
 
@@ -5137,6 +5188,7 @@
 
 
 
+
         &lt;filename&gt; [image|table|slice]</tt> <br>
       <tt> &nbsp;<br>
         Example: <br>
@@ -5300,9 +5352,9 @@
         -skyview []<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name
-        &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord
-        &lt;ra&gt; &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt;
+        &lt;dec&gt;] # in wcs fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size
         &lt;width&gt; &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pixels
@@ -5318,8 +5370,9 @@
         Example:<br>
         $ds9 -skyview<br>
         $ds9 -skyview m31 <br>
-        $ds9 -skyview name m31 <br>
-        $ds9 -skyview coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+      </tt><tt><tt>$ds9 -skyview name m31 <br>
+        </tt></tt><tt><tt><tt>$ds9 -skyview name clear<br>
+          </tt></tt>$ds9 -skyview 00:42:44.404 +41:16:08.78<br>
         $ds9 -skyview size 60 60 arcmin<br>
         $ds9 -skyview pixels 600 600<br>
         $ds9 -skyview save yes<br>
@@ -5382,8 +5435,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -5408,8 +5463,10 @@
 
 
 
+
                       [angle &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -5444,8 +5501,10 @@
 
 
 
+
                   -smooth sigmaminor 2.0<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+
 
 
 
@@ -5656,9 +5715,9 @@
       <tt> Syntax: <br>
         -vla []<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; [&lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt;
-        &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt; &lt;dec&gt;] #
+        in wcs fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
         &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -5670,8 +5729,9 @@
         Example:<br>
         $ds9 -vla<br>
         $ds9 -vla m31 <br>
-        $ds9 -vla name m31 <br>
-        $ds9 -vla coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+      </tt><tt><tt>$ds9 -vla name m31 <br>
+        </tt></tt><tt><tt><tt>$ds9 -vla name clear<br>
+          </tt></tt>$ds9 -vla 00:42:44.404 +41:16:08.78<br>
         $ds9 -vla size 60 60 arcmin<br>
         $ds9 -vla save yes<br>
         $ds9 -vla frame current<br>
@@ -5684,9 +5744,9 @@
       <tt> Syntax: <br>
         -vlss []<br>
         &nbsp;&nbsp;&nbsp; &nbsp; [&lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt; &lt;dec&gt;
-        degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt; &lt;dec&gt;] # in wcs
+        fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
         &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -5697,8 +5757,9 @@
         Example:<br>
         $ds9 -vlss<br>
         $ds9 -vlss m31 <br>
-        $ds9 -vlss name m31 <br>
-        $ds9 -vlss coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+      </tt><tt><tt>$ds9 -vlss name m31 <br>
+        </tt></tt><tt><tt><tt>$ds9 -vlss name clear<br>
+          </tt></tt>$ds9 -vlss 00:42:44.404 +41:16:08.78<br>
         $ds9 -vlss size 60 60 arcmin<br>
         $ds9 -vlss save yes<br>
         $ds9 -vlss frame current<br>

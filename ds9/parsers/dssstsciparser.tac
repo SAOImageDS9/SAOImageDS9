@@ -33,18 +33,21 @@ command : dssstsci
 dssstsci : {IMGSVRApply dstsci 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dstsci}
- | STRING_ {IMGSVRCmdName dstsci $1}
- | NAME_ STRING_ {IMGSVRCmdName dstsci $2}
- | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dstsci $2 $3 $4}
- | SAVE_ yesno {IMGSVRCmd dstsci save $2}
- | FRAME_ frame {IMGSVRCmd dstsci mode $2}
- | SURVEY_ survey {IMGSVRCmd dstsci survey $2}
+ | STRING_ {ProcessCmdSet dstsci name $1 "IMGSVRApply dstsci 1"}
+ | NAME_ CLEAR_ {ProcessCmdSet dstsci name {}}
+ | NAME_ STRING_ {ProcessCmdSet dstsci name $2 "IMGSVRApply dstsci 1"}
+ | SIZE_ numeric numeric sizeOpt
+   {ProcessCmdSet4 dstsci width $2 height $3 rformat $4 rformat,msg $4}
+ | SAVE_ yesno {ProcessCmdSet dstsci save $2}
+ | FRAME_ frame {ProcessCmdSet dstsci mode $2}
+ | SURVEY_ survey {ProcessCmdSet dstsci survey $2}
  | UPDATE_ update
 
- | numeric numeric coordOpt {IMGSVRCmdCoord dstsci $1 $2 degrees}
- | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dstsci $1 $2 sexagesimal}
- | COORD_ numeric numeric deg {IMGSVRCmdCoord dstsci $2 $3 $4}
- | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dstsci $2 $3 $4}
+ | numeric numeric deg {ProcessCmdSet4 dstsci x $1 y $2 skyformat $3 skyformat,msg $3 "IMGSVRApply dstsci 1"}
+ | SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dstsci x $1 y $2 skyformat $3 skyformat,msg $3 "IMGSVRApply dstsci 1"}
+ # backward compatibility
+ | COORD_ numeric numeric deg {ProcessCmdSet4 dstsci x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dstsci 1"}
+ | COORD_ SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dstsci x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dstsci 1"}
  ;
 
 update : FRAME_ {IMGSVRCmdUpdate dstsci}

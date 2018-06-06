@@ -126,9 +126,9 @@
       <tt> Syntax: <br>
         2mass []<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt; &lt;dec&gt;
-        degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt; &lt;dec&gt;] # in wcs
+        fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
         &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -146,8 +146,9 @@
         $xpaget ds9 2mass survey <br>
         $xpaset -p ds9 2mass<br>
       </tt><tt>$xpaset -p ds9 2mass m31<br>
-        $xpaset -p ds9 2mass name m31 <br>
-        $xpaset -p ds9 2mass coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+      </tt><tt><tt>$xpaset -p ds9 2mass name m31 <br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 2mass name clear<br>
+          </tt></tt>$xpaset -p ds9 2mass 00:42:44.404 +41:16:08.78<br>
         $xpaset -p ds9 2mass size 60 60 arcmin<br>
         $xpaset -p ds9 2mass save yes<br>
         $xpaset -p ds9 2mass frame current<br>
@@ -214,10 +215,12 @@
 
 
 
+
                       -p ds9 3d match</tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset -p ds9 3d lock
                             yes</tt><br>
                         </tt></tt></tt> </tt></tt></tt></tt></tt></tt>$xpaset
+
 
 
 
@@ -562,6 +565,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -582,6 +586,7 @@
         </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             [&lt;ref&gt;] [match &lt;ref&gt; &lt;ref&gt;]<br>
           </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -782,8 +787,10 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -984,6 +991,7 @@
 
 
 
+
         [match unique yes|no]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [maxrows
         &lt;number&gt;]</tt><br>
@@ -1035,6 +1043,7 @@
 
 
 
+
           [symbol shape </tt></tt><tt><tt>circle point|box
           point|diamond point|</tt>cross point|x point|arrow
         point|boxcircle point]<br>
@@ -1045,6 +1054,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1520,9 +1530,9 @@
       <tt> Syntax:<br>
         dsssao []<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt;
-        &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt; &lt;dec&gt;] #
+        in wcs fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
         &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -1538,9 +1548,9 @@
         $xpaget ds9 dsssao frame<br>
         $xpaset -p ds9 dsssao<br>
         $xpaset -p ds9 dsssao m31 <br>
-        $xpaset -p ds9 dsssao name m31 <br>
-        $xpaset -p ds9 dsssao coord 00:42:44.404 +41:16:08.78
-        sexagesimal<br>
+      </tt><tt><tt>$xpaset -p ds9 dsssao name m31 <br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 dsssao name clear<br>
+          </tt></tt>$xpaset -p ds9 dsssao 00:42:44.404 +41:16:08.78<br>
         $xpaset -p ds9 dsssao size 60 60 arcmin<br>
         $xpaset -p ds9 dsssao save yes<br>
         $xpaset -p ds9 dsssao frame current<br>
@@ -1552,9 +1562,9 @@
       <tt> Syntax:<br>
         dsseso []<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt;
-        &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt; &lt;dec&gt;] #
+        in wcs fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
         &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -1573,9 +1583,9 @@
         $xpaget ds9 dsseso survey<br>
         $xpaset -p ds9 dsseso<br>
         $xpaset -p ds9 dsseso m31 <br>
-        $xpaset -p ds9 dsseso name m31 <br>
-        $xpaset -p ds9 dsseso coord 00:42:44.404 +41:16:08.78
-        sexagesimal<br>
+      </tt><tt><tt>$xpaset -p ds9 dsseso name m31 <br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 dsseso name clear<br>
+          </tt></tt>$xpaset -p ds9 dsseso 00:42:44.404 +41:16:08.78<br>
         $xpaset -p ds9 dsseso size 60 60 arcmin<br>
         $xpaset -p ds9 dsseso save yes<br>
         $xpaset -p ds9 dsseso frame current<br>
@@ -1589,9 +1599,9 @@
         dssstsci []<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;object&gt;]<br>
-        &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord
-        &lt;ra&gt; &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; [name &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt;
+        &lt;dec&gt;] # in wcs fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size
         &lt;width&gt; &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -1616,9 +1626,9 @@
         $xpaget ds9 dssstsci survey<br>
         $xpaset -p ds9 dssstsci<br>
         $xpaset -p ds9 dssstsci m31 <br>
-        $xpaset -p ds9 dssstsci name m31 <br>
-        $xpaset -p ds9 dssstsci coord 00:42:44.404 +41:16:08.78
-        sexagesimal<br>
+      </tt><tt><tt>$xpaset -p ds9 dssstsci name m31 <br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 dssstsci name clear<br>
+          </tt></tt>$xpaset -p ds9 dssstsci 00:42:44.404 +41:16:08.78<br>
         $xpaset -p ds9 dssstsci size 60 60 arcmin<br>
         $xpaset -p ds9 dssstsci save yes<br>
         $xpaset -p ds9 dssstsci frame current<br>
@@ -1669,6 +1679,7 @@
       <tt><tt>$xpaset -p ds9 export nrrd foo.nrrd little</tt></tt><br>
       <tt><tt><tt><tt><tt><tt>$xpaset -p ds9 export envi foo.hdr little</tt></tt><br>
             </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
 
@@ -2270,6 +2281,7 @@
 
 
 
+
         </tt>quality (1-100) </p>
       <tt> Syntax:<br>
         jpeg [new|slice] [&lt;filename&gt;] [1-100]<br>
@@ -2574,9 +2586,8 @@
       <tt> Syntax: <br>
         nvss []<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt; &lt;dec&gt;
-        degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt; &lt;dec&gt;] # in wcs fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt; &lt;height&gt;
         degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -2592,8 +2603,9 @@
         $xpaget ds9 nvss frame<br>
         $xpaset -p ds9 nvss<br>
         $xpaset -p ds9 nvss m31 <br>
-        $xpaset -p ds9 nvss name m31 <br>
-        $xpaset -p ds9 nvss coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+      </tt><tt><tt>$xpaset -p ds9 nvss name m31 <br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 nvss name clear<br>
+          </tt></tt>$xpaset -p ds9 nvss 00:42:44.404 +41:16:08.78<br>
         $xpaset -p ds9 nvss size 60 60 arcmin<br>
         $xpaset -p ds9 nvss save yes<br>
         $xpaset -p ds9 nvss frame current<br>
@@ -2690,10 +2702,12 @@
 
 
 
+
                         [new name &lt;plotname&gt; line|bar|scatter]</tt></tt></tt></tt></tt></tt></tt></tt><br>
       </tt><tt><tt><tt><br>
           </tt># create new plot with data from stdin<br>
         </tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -2709,11 +2723,14 @@
 
 
 
+
                             </tt></tt></tt></tt></tt>[new </tt><tt><tt><tt><tt><tt>name
 
 
 
+
                             &lt;plotname&gt; </tt></tt></tt></tt>&lt;title&gt;
+
 
 
 
@@ -2722,7 +2739,9 @@
 
 
 
+
                             &lt;plotname&gt; </tt></tt></tt></tt>line|bar|scatter
+
 
 
 
@@ -2737,7 +2756,9 @@
 
 
 
+
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>[line|bar|scatter]
+
 
 
 
@@ -2747,10 +2768,12 @@
 
 
 
+
                       </tt><tt><tt><tt><tt>[new name &lt;plotname&gt;
                               stdin</tt><tt>]</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><br>
       </tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
                       </tt><tt><tt><tt><tt>[new name &lt;plotname&gt; </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>line|bar|scatter
+
 
 
 
@@ -2767,6 +2790,7 @@
           &lt;filename&gt;]<br>
         </tt>&nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] clear]<br>
       </tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2912,6 +2936,7 @@
 
 
 
+
                           </tt>[[&lt;plotname&gt;] stats yes|no]<br>
                         </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[[&lt;plotname&gt;]
 
@@ -2985,8 +3010,10 @@
 
 
 
+
                     list yes|no]<br>
                     &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3133,10 +3160,12 @@
 
 
 
+
                 [[&lt;plotname&gt;] pagesetup orient portrait|landscape]<br>
                 &nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] pagesetup
                 size letter|legal|tabloid|poster|a4]</tt><br>
               <tt> </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3305,6 +3334,7 @@
 
 
 
+
           legend yes|no]<br>
           &nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] legend position
           right|left|top|bottom]</tt><br>
@@ -3321,6 +3351,7 @@
       <tt><tt>&nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] title x|y
           &lt;string&gt;]<br>
           &nbsp;&nbsp;&nbsp;&nbsp; [</tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3465,9 +3496,11 @@
 
 
 
+
               shape
               circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3616,7 +3649,9 @@
 
 
 
+
                                                 <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3763,7 +3798,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3910,7 +3947,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4057,7 +4096,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4203,7 +4244,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4349,7 +4392,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4496,7 +4541,9 @@
 
 
 
+
                                                           [[&lt;plotname&gt;]
+
 
 
 
@@ -4643,7 +4690,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4790,7 +4839,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4904,6 +4955,7 @@
 
 
 
+
                 data into existing plot from stdin</tt></tt> <br>
           </tt></tt>$cat xy.dat | xpaset ds9 plot data xy<br>
         $cat xy.dat | xpaset ds9 plot foo data xy<br>
@@ -4939,6 +4991,7 @@
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
                                   ds9 plot axis x auto<br>
                                 </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5083,9 +5136,11 @@
 
 
 
+
                                       ds9 plot axis x max<br>
                                       $xpaget ds9 plot axis x format<br>
                                     </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt>$xpaset
+
 
 
 
@@ -5106,6 +5161,7 @@
             </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
                       ds9 plot font numbers font<br>
                     </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5250,8 +5306,10 @@
 
 
 
+
                           ds9 plot font numbers weight<br>
                         </tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5328,6 +5386,7 @@
 
 
 
+
           -p ds9 plot font numbers font times<br>
           $xpaset -p ds9 plot font numbers size 12<br>
           $xpaset -p ds9 plot font numbers weight bold<br>
@@ -5335,6 +5394,7 @@
         </tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><br>
                                       $xpaget ds9 plot title<br>
                                     </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5479,8 +5539,10 @@
 
 
 
+
                                           ds9 plot title yaxis</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><br>
                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>$xpaset
+
 
 
 
@@ -5505,6 +5567,7 @@
               </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>$xpaget
                   ds9 plot width<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5649,8 +5712,10 @@
 
 
 
+
                                       ds9 plot error<br>
                                     </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5796,9 +5861,11 @@
 
 
 
+
                                                           ds9 plot error
                                                           width<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
+
 
 
 
@@ -5943,6 +6010,7 @@
 
 
 
+
         -p ds9 plot show yes<br>
         $xpaset -p ds9 plot shape circle<br>
       </tt><tt><tt>$xpaset -p ds9 plot shape fill no<br>
@@ -5981,6 +6049,7 @@
       <p>Set region and coordinate output format precision. </p>
       <tt> Syntax: <br>
         precision &lt;linear&gt; </tt><tt><tt>&lt;degree&gt;</tt> </tt><tt><tt>&lt;hms&gt;
+
 
 
 
@@ -6481,6 +6550,7 @@
 
 
 
+
         method. </p>
       <tt> Syntax: <br>
         saveimage </tt><tt>[fits|eps|gif|tiff|jpeg|png] </tt><tt>&lt;filename&gt;<br>
@@ -6634,9 +6704,10 @@
       <tt> Syntax: <br>
         skyview []<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt;
-        &lt;dec&gt; degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name
+        &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt;
+        &lt;dec&gt;] # in wcs fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
         &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [pixels &lt;width&gt;
@@ -6658,9 +6729,9 @@
         $xpaget ds9 skyview survey<br>
         $xpaset -p ds9 skyview<br>
         $xpaset -p ds9 skyview m31 <br>
-        $xpaset -p ds9 skyview name m31 <br>
-        $xpaset -p ds9 skyview coord 00:42:44.404 +41:16:08.78
-        sexagesimal<br>
+      </tt><tt><tt>$xpaset -p ds9 skyview name m31 <br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 skyview name clear<br>
+          </tt></tt>$xpaset -p ds9 skyview 00:42:44.404 +41:16:08.78<br>
         $xpaset -p ds9 skyview size 60 60 arcmin<br>
         $xpaset -p ds9 skyview pixels 600 600<br>
         $xpaset -p ds9 skyview save yes<br>
@@ -6710,8 +6781,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -6738,8 +6811,10 @@
 
 
 
+
                       [angle &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt></tt><tt>&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -6774,6 +6849,7 @@
 
 
 
+
                         ds9 smooth sigmaminor<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt>$xpaget
         ds9 smooth lock<br>
@@ -6784,6 +6860,7 @@
         </tt></tt><tt><tt><tt><tt><tt><tt>$xpaset -p ds9 smooth
                   radiusminor 4<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
 
@@ -6810,6 +6887,7 @@
 
 
 
+
                         -p ds9 smooth sigmaminor 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
 
@@ -6824,8 +6902,10 @@
 
 
 
+
                               -p ds9 smooth angle 45<br>
                             </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>$xpaset
+
 
 
 
@@ -6873,6 +6953,7 @@
         $xpaset -p ds9 threads 8</tt><br>
       <p><b> <a name="tiff"></a>tiff</b></p>
       <p>Load TIFF image into current frame. Optional parameters: <tt>tiff
+
 
 
 
@@ -7111,9 +7192,9 @@
       <tt> Syntax:<br>
         vla []<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt; &lt;dec&gt;
-        degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;|clear]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt; &lt;dec&gt;] # in wcs
+        fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt;
         &lt;height&gt; degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -7131,8 +7212,9 @@
         $xpaget ds9 vla survey<br>
         $xpaset -p ds9 vla<br>
         $xpaset -p ds9 vla m31 <br>
-        $xpaset -p ds9 vla name m31 <br>
-        $xpaset -p ds9 vla coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+      </tt><tt><tt>$xpaset -p ds9 vla name m31 <br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 vla name clear<br>
+          </tt></tt>$xpaset -p ds9 vla 00:42:44.404 +41:16:08.78<br>
         $xpaset -p ds9 vla size 60 60 arcmin<br>
         $xpaset -p ds9 vla save yes<br>
         $xpaset -p ds9 vla frame current<br>
@@ -7147,8 +7229,7 @@
         vlss []<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [&lt;object&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [name &lt;object&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [coord &lt;ra&gt; &lt;dec&gt;
-        degrees|sexagesimal] # in wcs fk5<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [&lt;ra&gt; &lt;dec&gt;] # in wcs fk5<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [size &lt;width&gt; &lt;height&gt;
         degrees|arcmin|arcsec]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [save yes|no]<br>
@@ -7164,8 +7245,9 @@
         $xpaget ds9 vlss frame<br>
         $xpaset -p ds9 vlss<br>
         $xpaset -p ds9 vlss m31 <br>
-        $xpaset -p ds9 vlss name m31 <br>
-        $xpaset -p ds9 vlss coord 00:42:44.404 +41:16:08.78 sexagesimal<br>
+      </tt><tt><tt>$xpaset -p ds9 vlss name m31 <br>
+        </tt></tt><tt><tt><tt>$xpaset -p ds9 vlss name clear<br>
+          </tt></tt>$xpaset -p ds9 vlss 00:42:44.404 +41:16:08.78<br>
         $xpaset -p ds9 vlss size 60 60 arcmin<br>
         $xpaset -p ds9 vlss save yes<br>
         $xpaset -p ds9 vlss frame current<br>

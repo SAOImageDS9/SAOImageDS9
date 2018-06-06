@@ -23,17 +23,20 @@ command : nvss
 nvss : {IMGSVRApply dnvss 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dnvss}
- | STRING_ {IMGSVRCmdName dnvss $1}
- | NAME_ STRING_ {IMGSVRCmdName dnvss $2}
- | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dnvss $2 $3 $4}
- | SAVE_ yesno {IMGSVRCmd dnvss save $2}
- | FRAME_ frame {IMGSVRCmd dnvss mode $2}
+ | STRING_ {ProcessCmdSet dnvss name $1 "IMGSVRApply dnvss 1"}
+ | NAME_ CLEAR_ {ProcessCmdSet dnvss name {}}
+ | NAME_ STRING_ {ProcessCmdSet dnvss name $2 "IMGSVRApply dnvss 1"}
+ | SIZE_ numeric numeric sizeOpt
+   {ProcessCmdSet4 dnvss width $2 height $3 rformat $4 rformat,msg $4}
+ | SAVE_ yesno {ProcessCmdSet dnvss save $2}
+ | FRAME_ frame {ProcessCmdSet dnvss mode $2}
  | UPDATE_ update
 
- | numeric numeric coordOpt {IMGSVRCmdCoord dnvss $1 $2 degrees}
- | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dnvss $1 $2 sexagesimal}
- | COORD_ numeric numeric deg {IMGSVRCmdCoord dnvss $2 $3 $4}
- | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dnvss $2 $3 $4}
+ | numeric numeric deg {ProcessCmdSet4 dnvss x $1 y $2 skyformat $3 skyformat,msg $3 "IMGSVRApply dnvss 1"}
+ | SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dnvss x $1 y $2 skyformat $3 skyformat,msg $3 "IMGSVRApply dnvss 1"}
+ # backward compatibility
+ | COORD_ numeric numeric deg {ProcessCmdSet4 dnvss x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dnvss 1"}
+ | COORD_ SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dnvss x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dnvss 1"}
  ;
 
 update : FRAME_ {IMGSVRCmdUpdate dnvss}

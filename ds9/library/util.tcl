@@ -175,6 +175,39 @@ proc ProcessCmdSet {varname key value {cmd {}}} {
     }
 }
 
+proc ProcessCmdSet2 {varname key value key2 value2 {cmd {}}} {
+    global $varname
+
+    set ${varname}($key) $value
+    set ${varname}($key2) $value2
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc ProcessCmdSet3 {varname key value key2 value2 key3 value3 {cmd {}}} {
+    global $varname
+
+    set ${varname}($key) $value
+    set ${varname}($key2) $value2
+    set ${varname}($key3) $value3
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
+proc ProcessCmdSet4 {varname key value key2 value2 key3 value3 key4 value4 {cmd {}}} {
+    global $varname
+
+    set ${varname}($key) $value
+    set ${varname}($key2) $value2
+    set ${varname}($key3) $value3
+    set ${varname}($key4) $value4
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
 proc ProcessCmdAppend {varname key value {cmd {}}} {
     global $varname
 

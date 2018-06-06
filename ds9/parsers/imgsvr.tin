@@ -1,3 +1,4 @@
+%token CLEAR_
 %token CLOSE_
 %token COORD_
 %token CROSSHAIR_

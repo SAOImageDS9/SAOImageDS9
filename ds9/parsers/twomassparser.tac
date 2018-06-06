@@ -23,18 +23,21 @@ command : twomass
 twomass : {IMGSVRApply dtwomass 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dtwomass}
- | STRING_ {IMGSVRCmdName dtwomass $1}
- | NAME_ STRING_ {IMGSVRCmdName dtwomass $2}
- | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dtwomass $2 $3 $4}
- | SAVE_ yesno {IMGSVRCmd dtwomass save $2}
- | FRAME_ frame {IMGSVRCmd dtwomass mode $2}
- | SURVEY_ survey {IMGSVRCmd dtwomass survey $2}
+ | STRING_ {ProcessCmdSet dtwomass name $1 "IMGSVRApply dtwomass 1"}
+ | NAME_ CLEAR_ {ProcessCmdSet dtwomass name {}}
+ | NAME_ STRING_ {ProcessCmdSet dtwomass name $2 "IMGSVRApply dtwomass 1"}
+ | SIZE_ numeric numeric sizeOpt
+   {ProcessCmdSet4 dtwomass width $2 height $3 rformat $4 rformat,msg $4}
+ | SAVE_ yesno {ProcessCmdSet dtwomass save $2}
+ | FRAME_ frame {ProcessCmdSet dtwomass mode $2}
+ | SURVEY_ survey {ProcessCmdSet dtwomass survey $2}
  | UPDATE_ update
 
- | numeric numeric coordOpt {IMGSVRCmdCoord dtwomass $1 $2 degrees}
- | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dtwomass $1 $2 sexagesimal}
- | COORD_ numeric numeric deg {IMGSVRCmdCoord dtwomass $2 $3 $4}
- | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dtwomass $2 $3 $4}
+ | numeric numeric deg {ProcessCmdSet4 dtwomass x $1 y $2 skyformat $3 skyformat,msg $3 "IMGSVRApply dtwomass 1"}
+ | SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dtwomass x $1 y $2 skyformat $3 skyformat,msg $3 "IMGSVRApply dtwomass 1"}
+ # backward compatibility
+ | COORD_ numeric numeric deg {ProcessCmdSet4 dtwomass x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dtwomass 1"}
+ | COORD_ SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dtwomass x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dtwomass 1"}
  ;
 
 update : FRAME_ {IMGSVRCmdUpdate dtwomass}

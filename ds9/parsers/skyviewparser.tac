@@ -25,19 +25,22 @@ command : skyview
 skyview : {IMGSVRApply dskyview 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dskyview}
- | STRING_ {IMGSVRCmdName dskyview $1}
- | NAME_ STRING_ {IMGSVRCmdName dskyview $2}
- | SIZE_ numeric numeric sizeOpt {IMGSVRCmdSize dskyview $2 $3 $4}
- | PIXELS_ numeric numeric {IMGSVRCmdPixels dskyview $2 $3}
- | SAVE_ yesno {IMGSVRCmd dskyview save $2}
- | FRAME_ frame {IMGSVRCmd dskyview mode $2}
- | SURVEY_ STRING_ {IMGSVRCmd dskyview survey $2}
+ | STRING_ {ProcessCmdSet dskyview name $1 "IMGSVRApply dskyview 1"}
+ | NAME_ CLEAR_ {ProcessCmdSet dskyview name {}}
+ | NAME_ STRING_ {ProcessCmdSet dskyview name $2 "IMGSVRApply dskyview 1"}
+ | SIZE_ numeric numeric sizeOpt
+   {ProcessCmdSet4 dskyview width $2 height $3 rformat $4 rformat,msg $4}
+ | PIXELS_ numeric numeric {ProcessCmdSet2 dskyview width,pixels $2 height,pixels $3}
+ | SAVE_ yesno {ProcessCmdSet dskyview save $2}
+ | FRAME_ frame {ProcessCmdSet dskyview mode $2}
+ | SURVEY_ STRING_ {ProcessCmdSet dskyview survey $2}
  | UPDATE_ update
 
- | numeric numeric coordOpt {IMGSVRCmdCoord dskyview $1 $2 degrees}
- | SEXSTR_ SEXSTR_ coordOpt {IMGSVRCmdCoord dskyview $1 $2 sexagesimal}
- | COORD_ numeric numeric deg {IMGSVRCmdCoord dskyview $2 $3 $4}
- | COORD_ SEXSTR_ SEXSTR_ sex {IMGSVRCmdCoord dskyview $2 $3 $4}
+ | numeric numeric deg {ProcessCmdSet4 dskyview x $1 y $2 skyformat $3 skyformat,msg $3 "IMGSVRApply dskyview 1"}
+ | SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dskyview x $1 y $2 skyformat $3 skyformat,msg $3 "IMGSVRApply dskyview 1"}
+ # backward compatibility
+ | COORD_ numeric numeric deg {ProcessCmdSet4 dskyview x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dskyview 1"}
+ | COORD_ SEXSTR_ SEXSTR_ sex {ProcessCmdSet4 dskyview x $2 y $3 skyformat $4 skyformat,msg $4 "IMGSVRApply dskyview 1"}
  ;
 
 update : FRAME_ {IMGSVRCmdUpdate dskyview}

@@ -217,11 +217,47 @@ proc ProcessCmdAppend {varname key value {cmd {}}} {
     }
 }
 
-proc ProcessCmdCVAR {which value {cmd {}}} {
+proc ProcessCmdCVAR {key value {cmd {}}} {
     global cvarname
     upvar #0 $cvarname cvar
 
-    set cvar($which) $value
+    set cvar($key) $value
+    if {$cmd != {}} {
+	eval $cmd $cvarname
+    }
+}
+
+proc ProcessCmdCVAR2 {key value key2 value2 {cmd {}}} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($key) $value
+    set cvar($key2) $value2
+    if {$cmd != {}} {
+	eval $cmd $cvarname
+    }
+}
+
+proc ProcessCmdCVAR3 {key value key2 value2 key3 value3 {cmd {}}} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($key) $value
+    set cvar($key2) $value2
+    set cvar($key3) $value3
+    if {$cmd != {}} {
+	eval $cmd $cvarname
+    }
+}
+
+proc ProcessCmdCVAR4 {key value key2 value2 key3 value3 key4 value4 {cmd {}}} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($key) $value
+    set cvar($key2) $value2
+    set cvar($key3) $value3
+    set cvar($key4) $value4
     if {$cmd != {}} {
 	eval $cmd $cvarname
     }

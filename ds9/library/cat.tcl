@@ -1300,15 +1300,6 @@ proc CatalogCmdRef {ref} {
     }
 }
 
-proc CatalogCmdCoord {xx yy skyframe} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(x) $xx
-    set cvar(y) $yy
-    set cvar(sky) $skyframe
-}
-
 proc CatalogCmdFilterLoad {fn} {
     global cvarname
     upvar #0 $cvarname cvar
@@ -1358,24 +1349,6 @@ proc CatalogCmdMatchParams {cat1 cat2} {
     }
 }
 
-proc CatalogCmdMatchError {error eformat} {
-    global icat
-
-    set icat(error) $error
-    set icat(eformat) $eformat
-}
-
-proc CatalogCmdPlot {xx yy xerr yerr} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(plot,x) $xx
-    set cvar(plot,y) $yy
-    set cvar(plot,xerr) $xerr
-    set cvar(plot,yerr) $yerr
-    CATPlotGenerate $cvarname
-}
-
 proc CatalogCmdSAMP {} {
     global cvarname
     global samp
@@ -1412,16 +1385,6 @@ proc CatalogCmdSave {fn writer} {
 	CATSaveFn $cvarname $fn $writer
     	FileLast catfbox $fn
     }
-}
-
-proc CatalogCmdSize {width height rformat} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(width) $width
-    set cvar(height) $height
-    set cvar(rformat) $rformat
-    set cvar(rformat,msg) $rformat
 }
 
 proc CatalogCmdSkyframe {skyframe} {

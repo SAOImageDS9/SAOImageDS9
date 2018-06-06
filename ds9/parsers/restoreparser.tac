@@ -11,7 +11,7 @@ command : restore
  | restore {yyclearin; YYACCEPT} STRING_
  ;
 
-restore : STRING_ {RestoreCmd $1}
+restore : STRING_ {FileLast backupfbox $1; Restore $1}
  ;
 
 %%

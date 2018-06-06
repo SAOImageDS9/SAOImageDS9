@@ -148,7 +148,7 @@ catCmd : coordinate
  | MAXROWS_ INT_ {ProcessCmdCVAR max $2}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PANTO_ yesno {ProcessCmdCVAR panto $2}
- | PLOT_ STRING_ STRING_ STRING_ STRING_ {CatalogCmdPlot $2 $3 $4 $5}
+ | PLOT_ STRING_ STRING_ STRING_ STRING_ {ProcessCmdCVAR4 plot,x $2 plot,y $3 plot,xerr $4 plot,yerr $5 CATPlotGenerate}
  | PRINT_ {global cvarname; CATPrint $cvarname}
  | PSKY_ skyframe {ProcessCmdCVAR psky $2 CATGenerate}
  | PSYSTEM_ wcssys {ProcessCmdCVAR psystem $2 CATGenerate}
@@ -158,7 +158,8 @@ catCmd : coordinate
  | SAVE_ STRING_ {CatalogCmdSave $2 VOTWrite}
  | SERVER_ server {ProcessCmdCVAR server $2}
  | SHOW_ yesno {ProcessCmdCVAR show $2 CATGenerate}
- | SIZE_ numeric numeric rformat {CatalogCmdSize $2 $3 $4}
+ | SIZE_ numeric numeric rformat {ProcessCmdCVAR4 width $2 height $3 rformat $4 rformat,msg $4}
+# | SIZE_ numeric numeric rformat {CatalogCmdSize $2 $3 $4}
  | SKY_ skyframe {CatalogCmdSkyframe $2}
  | SKYFORMAT_ skyformat {ProcessCmdCVAR skyformat $2}
  | SORT_ sort
@@ -172,10 +173,10 @@ catCmd : coordinate
  | DEC_ STRING_ {ProcessCmdCVAR coly $2 CATGenerate}
  ;
 
-coordinate : numeric numeric {CatalogCmdCoord $1 $2 fk5}
- | numeric numeric skyframe {CatalogCmdCoord $1 $2 $3}
- | SEXSTR_ SEXSTR_ {CatalogCmdCoord $1 $2 fk5}
- | SEXSTR_ SEXSTR_ skyframe {CatalogCmdCoord $1 $2 $3}
+coordinate : numeric numeric {ProcessCmdCVAR3 x $1 y $2 sky fk5}
+ | numeric numeric skyframe {ProcessCmdCVAR3 x $1 y $2 sky $3}
+ | SEXSTR_ SEXSTR_ {ProcessCmdCVAR3 x $1 y $2 sky fk5}
+ | SEXSTR_ SEXSTR_ skyframe {ProcessCmdCVAR3 x $1 y $2 sky $3}
  ;
 
 filter : LOAD_ STRING_ {CatalogCmdFilterLoad $2}
@@ -183,7 +184,7 @@ filter : LOAD_ STRING_ {CatalogCmdFilterLoad $2}
  ;
 
 match : {CatalogCmdMatch}
- | ERROR_ numeric rformat {CatalogCmdMatchError $2 $3}
+ | ERROR_ numeric rformat {ProcessCmdSet2 icat error $2 eformat $3}
  | FUNCTION_ matchFunction {ProcessCmdSet icat function $2}
  | UNIQUE_ yesno {ProcessCmdSet icat unique $2}
  | RETURN_ matchReturn {ProcessCmdSet icat return $2}

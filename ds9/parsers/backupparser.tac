@@ -11,7 +11,7 @@ command : backup
  | backup {yyclearin; YYACCEPT} STRING_
  ;
 
-backup : STRING_ {BackupCmd $1}
+backup : STRING_ {FileLast backupfbox $1; Backup $1}
  ;
 
 %%

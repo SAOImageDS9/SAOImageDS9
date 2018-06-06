@@ -789,11 +789,6 @@ proc ProcessBackupCmd {varname iname} {
     incr i [expr $backup::yycnt-1]
 }
 
-proc BackupCmd {fn} {
-    FileLast backupfbox $fn
-    Backup $fn
-}
-
 proc ProcessRestoreCmd {varname iname} {
     upvar $varname var
     upvar $iname i
@@ -802,11 +797,6 @@ proc ProcessRestoreCmd {varname iname} {
     restore::yy_scan_string [lrange $var $i end]
     restore::yyparse
     incr i [expr $restore::yycnt-1]
-}
-
-proc RestoreCmd {fn} {
-    FileLast backupfbox $fn
-    Restore $fn
 }
 
     

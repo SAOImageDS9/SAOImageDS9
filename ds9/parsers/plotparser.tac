@@ -291,11 +291,11 @@ pageSize : LETTER_ {set _ letter}
  ;
  
 print : {global cvarname; PlotPostScript $cvarname}
- | DESTINATION_ printDest {global ps; set ps(dest) $2}
- | COMMAND_ STRING_ {global ps; set ps(cmd) $2}
- | FILENAME_ STRING_ {global ps; set ps(filename) $2}
- | PALETTE_ printColor {global ps; set ps(color) $2}
- | COLOR_ printColor {global ps; set ps(color) $2}
+ | DESTINATION_ printDest {ProcessCmdSet ps dest $2}
+ | COMMAND_ STRING_ {ProcessCmdSet ps cmd $2}
+ | FILENAME_ STRING_ {ProcessCmdSet ps filename $2}
+ | PALETTE_ printColor {ProcessCmdSet ps color $2}
+ | COLOR_ printColor {ProcessCmdSet ps color $2}
  ;
 
 printDest : PRINTER_ {set _ printer}

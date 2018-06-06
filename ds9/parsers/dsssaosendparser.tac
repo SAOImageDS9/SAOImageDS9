@@ -12,7 +12,6 @@ dsssaosend : {ProcessSendCmdGet dsao name}
  | NAME_ {ProcessSendCmdGet dsao name}
  | SAVE_ {ProcessSendCmdYesNo dsao save}
  | FRAME_ {ProcessSendCmdGet dsao mode}
- | SURVEY_ {ProcessSendCmdGet dsao survey}
  | SIZE_ {ProcessSendCmdGet3 dsao width height rformat}
  | COORD_ {ProcessSendCmdGet3 dsao x y skyformat}
  ;

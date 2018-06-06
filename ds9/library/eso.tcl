@@ -41,9 +41,6 @@ proc ESODialog {} {
     set var(rformat) $eso(rformat)
     set var(width) $eso(width)
     set var(height) $eso(height)
-    # not used
-    set var(width,pixels) 300
-    set var(height,pixels) 300
     set var(survey) $eso(survey)
     set var(mode) $eso(mode)
     set var(save) $eso(save)
@@ -170,5 +167,12 @@ proc ProcessESOCmd {varname iname} {
 
 proc ProcessSendESOCmd {proc id param {sock {}} {fn {}}} {
     ESODialog
-    IMGSVRProcessSendCmd $proc $id $param deso
+
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    dssesosend::YY_FLUSH_BUFFER
+    dssesosend::yy_scan_string $param
+    dssesosend::yyparse
 }

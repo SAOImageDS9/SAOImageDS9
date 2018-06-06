@@ -1,0 +1,13 @@
+#tab vlasendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+#include imgsvr.fin
+#include string.fin
+
+%%

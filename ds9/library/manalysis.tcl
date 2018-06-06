@@ -148,7 +148,7 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis.image add command \
 	-label {NVSS (NRAO)} -command NVSSDialog
     $ds9(mb).analysis.image add command \
-	-label {NLSS (NRAO)} -command VLSSDialog
+	-label {VLSS (NRAO)} -command VLSSDialog
     $ds9(mb).analysis.image add separator
     $ds9(mb).analysis.image add command \
 	-label {SkyView (NASA/HEASARC)} -command SkyViewDialog

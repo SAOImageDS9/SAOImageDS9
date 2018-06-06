@@ -40,9 +40,6 @@ proc VLSSDialog {} {
     set var(rformat) $vlss(rformat)
     set var(width) $vlss(width)
     set var(height) $vlss(height)
-    # not used
-    set var(width,pixels) 300
-    set var(height,pixels) 300
     set var(mode) $vlss(mode)
     set var(save) $vlss(save)
 
@@ -132,5 +129,12 @@ proc ProcessVLSSCmd {varname iname} {
 
 proc ProcessSendVLSSCmd {proc id param {sock {}} {fn {}}} {
     VLSSDialog
-    IMGSVRProcessSendCmd $proc $id $param dvlss
+
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    vlsssend::YY_FLUSH_BUFFER
+    vlsssend::yy_scan_string $param
+    vlsssend::yyparse
 }

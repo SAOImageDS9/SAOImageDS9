@@ -160,7 +160,5 @@ proc ProcessSendSAOCmd {proc id param {sock {}} {fn {}}} {
     dsssaosend::YY_FLUSH_BUFFER
     dsssaosend::yy_scan_string $param
     dsssaosend::yyparse
-
-#    IMGSVRProcessSendCmd $proc $id $param dsao
 }
 

@@ -41,9 +41,6 @@ proc STSCIDialog {} {
     set var(rformat) $stsci(rformat)
     set var(width) $stsci(width)
     set var(height) $stsci(height)
-    # not used
-    set var(width,pixels) 300
-    set var(height,pixels) 300
     set var(mode) $stsci(mode)
     set var(save) $stsci(save)
     set var(survey) $stsci(survey)
@@ -182,5 +179,12 @@ proc ProcessSTSCICmd {varname iname} {
 
 proc ProcessSendSTSCICmd {proc id param {sock {}} {fn {}}} {
     STSCIDialog
-    IMGSVRProcessSendCmd $proc $id $param dstsci
+
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    dssstscisend::YY_FLUSH_BUFFER
+    dssstscisend::yy_scan_string $param
+    dssstscisend::yyparse
 }

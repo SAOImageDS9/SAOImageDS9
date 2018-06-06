@@ -17,7 +17,6 @@ proc NVSSDef {} {
     set nvss(height) 15
     set nvss(mode) new
     set nvss(save) 0
-    set nvss(survey) nvss
 }
 
 proc NVSSDialog {} {
@@ -41,12 +40,8 @@ proc NVSSDialog {} {
     set var(rformat) $nvss(rformat)
     set var(width) $nvss(width)
     set var(height) $nvss(height)
-    # not used
-    set var(width,pixels) 300
-    set var(height,pixels) 300
     set var(mode) $nvss(mode)
     set var(save) $nvss(save)
-    set var(survey) $nvss(survey)
 
     set w $var(top)
     IMGSVRInit $varname "NVSS [msgcat::mc {Server}]" \
@@ -162,5 +157,12 @@ proc ProcessNVSSCmd {varname iname} {
 
 proc ProcessSendNVSSCmd {proc id param {sock {}} {fn {}}} {
     NVSSDialog
-    IMGSVRProcessSendCmd $proc $id $param dnvss
+
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    nvsssend::YY_FLUSH_BUFFER
+    nvsssend::yy_scan_string $param
+    nvsssend::yyparse
 }

@@ -41,9 +41,6 @@ proc VLADialog {} {
     set var(rformat) $vla(rformat)
     set var(width) $vla(width)
     set var(height) $vla(height)
-    # not used
-    set var(width,pixels) 300
-    set var(height,pixels) 300
     set var(mode) $vla(mode)
     set var(save) $vla(save)
     set var(survey) $vla(survey)
@@ -173,5 +170,12 @@ proc ProcessVLACmd {varname iname} {
 
 proc ProcessSendVLACmd {proc id param {sock {}} {fn {}}} {
     VLADialog
-    IMGSVRProcessSendCmd $proc $id $param dvla
+
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    vlasend::YY_FLUSH_BUFFER
+    vlasend::yy_scan_string $param
+    vlasend::yyparse
 }

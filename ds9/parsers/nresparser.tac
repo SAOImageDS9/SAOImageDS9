@@ -32,13 +32,13 @@ command : nres
  ;
 
 nres : OPEN_
- | CLOSE_ {global cvarname; ARDestroy $cvarname}
- | SERVER_ server {global pnres; set pnres(server) $2}
- | PAN_ {global cvarname; NRESPan $cvarname}
- | CROSSHAIR_ {global cvarname; NRESCrosshair $cvarname}
- | SKYFORMAT_ skyformat {ProcessCmdCVAR skyformat $2; ProcessCmdCVAR skyformat,msg $2}
- | NAME_ STRING_ {NRESCmdName $2}
- | STRING_ {NRESCmdName $1}
+ | CLOSE_ {ARDestroy dnres}
+ | SERVER_ server {ProcessCmdSet pnres server $2}
+ | PAN_ {NRESPan dnres}
+ | CROSSHAIR_ {NRESCrosshair dnres}
+ | SKYFORMAT_ skyformat {ProcessCmdSet2 dnres skyformat $2 format,msg $2}
+ | NAME_ STRING_ {ProcessCmdSet dnres name $2 "NRESApply dnres 1"}
+ | STRING_ {ProcessCmdSet dnres name $1 "NRESApply dnres 1"}
  ;
 
 server : NEDSAO_ {set _ ned-sao}

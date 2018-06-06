@@ -186,21 +186,10 @@ proc ProcessNRESCmd {varname iname} {
 
     NRESDialog
 
-    global cvarname
-    set cvarname dnres
-
     nres::YY_FLUSH_BUFFER
     nres::yy_scan_string [lrange $var $i end]
     nres::yyparse
     incr i [expr $nres::yycnt-1]
-}
-
-proc NRESCmdName {value} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(name) $value
-    NRESApply $cvarname 1
 }
 
 proc ProcessSendNRESCmd {proc id param {sock {}} {fn {}}} {

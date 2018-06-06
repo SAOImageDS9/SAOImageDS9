@@ -370,6 +370,8 @@ source $ds9(root)/library/tileparser.tcl
 source $ds9(root)/library/tilelex.tcl
 source $ds9(root)/library/twomassparser.tcl
 source $ds9(root)/library/twomasslex.tcl
+source $ds9(root)/library/twomasssendparser.tcl
+source $ds9(root)/library/twomasssendlex.tcl
 source $ds9(root)/library/updateparser.tcl
 source $ds9(root)/library/updatelex.tcl
 source $ds9(root)/library/urlfitsparser.tcl

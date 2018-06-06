@@ -16,11 +16,11 @@
 #include imgsvr.trl
 #include numeric.trl
 
-command : 2mass
- | 2mass {yyclearin; YYACCEPT} STRING_
+command : twomass
+ | twomass {yyclearin; YYACCEPT} STRING_
  ;
 
-2mass : {IMGSVRApply dtwomass 1}
+twomass : {IMGSVRApply dtwomass 1}
  | OPEN_ {}
  | CLOSE_ {ARDestroy dtwomass}
  | STRING_ {IMGSVRCmdName dtwomass $1}

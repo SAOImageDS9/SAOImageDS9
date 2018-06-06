@@ -234,6 +234,8 @@ source $ds9(root)/library/dssesoparser.tcl
 source $ds9(root)/library/dssesolex.tcl
 source $ds9(root)/library/dsssaoparser.tcl
 source $ds9(root)/library/dsssaolex.tcl
+source $ds9(root)/library/dsssaosendparser.tcl
+source $ds9(root)/library/dsssaosendlex.tcl
 source $ds9(root)/library/dssstsciparser.tcl
 source $ds9(root)/library/dssstscilex.tcl
 source $ds9(root)/library/enviparser.tcl

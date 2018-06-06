@@ -41,9 +41,6 @@ proc 2MASSDialog {} {
     set var(rformat) $twomass(rformat)
     set var(width) $twomass(width)
     set var(height) $twomass(height)
-    # not used
-    set var(width,pixels) 300
-    set var(height,pixels) 300
     set var(mode) $twomass(mode)
     set var(save) $twomass(save)
     set var(survey) $twomass(survey)

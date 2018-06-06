@@ -17,7 +17,6 @@ proc SAODef {} {
     set sao(height) 15
     set sao(mode) new
     set sao(save) 0
-    set sao(survey) dss
 }
 
 proc SAODialog {} {
@@ -41,12 +40,8 @@ proc SAODialog {} {
     set var(rformat) $sao(rformat)
     set var(width) $sao(width)
     set var(height) $sao(height)
-    # not used
-    set var(width,pixels) 300
-    set var(height,pixels) 300
     set var(mode) $sao(mode)
     set var(save) $sao(save)
-    set var(survey) $sao(survey)
 
     set w $var(top)
     IMGSVRInit $varname "SAO-DSS [msgcat::mc {Server}]" \
@@ -157,6 +152,15 @@ proc ProcessSAOCmd {varname iname} {
 
 proc ProcessSendSAOCmd {proc id param {sock {}} {fn {}}} {
     SAODialog
-    IMGSVRProcessSendCmd $proc $id $param dsao
+
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    dsssaosend::YY_FLUSH_BUFFER
+    dsssaosend::yy_scan_string $param
+    dsssaosend::yyparse
+
+#    IMGSVRProcessSendCmd $proc $id $param dsao
 }
 

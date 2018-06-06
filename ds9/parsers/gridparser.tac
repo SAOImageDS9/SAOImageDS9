@@ -163,7 +163,7 @@ numerics : yesno {ProcessCmdSet grid numlab $1}
  | FONTWEIGHT_ fontWeight {ProcessCmdSet grid numlab,weight $2}
  | FONTSLANT_ fontSlant {ProcessCmdSet grid numlab,slant $2}
 # backward compatibility
- | FONTSTYLE_ fontStyle {GridCmdFontStyle numlab $2}
+ | FONTSTYLE_ fontStyle {ProcessCmdFontStyle grid numlab $2}
  | COLOR_ STRING_ {ProcessCmdSet grid numlab,color $2}
  | GAP1_ numeric {ProcessCmdSet grid numlab,gap1 $2}
  | GAP2_ numeric {ProcessCmdSet grid numlab,gap2 $2}
@@ -181,7 +181,7 @@ title : yesno {ProcessCmdSet grid title $1}
  | FONTWEIGHT_ fontWeight {ProcessCmdSet grid title,weight $2}
  | FONTSLANT_ fontSlant {ProcessCmdSet grid title,slant $2}
 # backward compatibility
- | FONTSTYLE_ fontStyle {GridCmdFontStyle title $2}
+ | FONTSTYLE_ fontStyle {ProcessCmdFontStyle grid title $2}
  | COLOR_ STRING_ {ProcessCmdSet grid title,color $2}
  ; 
 
@@ -197,7 +197,7 @@ labels : yesno {ProcessCmdSet grid textlab $1}
  | FONTWEIGHT_ fontWeight {ProcessCmdSet grid textlab,weight $2}
  | FONTSLANT_ fontSlant {ProcessCmdSet grid textlab,slant $2}
 # backward compatibility
- | FONTSTYLE_ fontStyle {GridCmdFontStyle textlab $2}
+ | FONTSTYLE_ fontStyle {ProcessCmdFontStyle grid textlab $2}
  | COLOR_ STRING_ {ProcessCmdSet grid textlab,color $2}
  ; 
 

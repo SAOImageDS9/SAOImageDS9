@@ -41,7 +41,7 @@ colorbar : yesno {ProcessCmdSet view colorbar $1 UpdateView}
  | FONTWEIGHT_ fontWeight {ProcessCmdSet colorbar font,weight $2 UpdateView}
  | FONTSLANT_ fontSlant {ProcessCmdSet colorbar font,slant $2 UpdateView}
 # backward compatibility
- | FONTSTYLE_ fontStyle {ColorbarCmdFontStyle $2 UpdateView}
+ | FONTSTYLE_ fontStyle {ProcessCmdFontStyle colorbar font $2 UpdateView}
 
  | orientation {ProcessCmdSet colorbar orientation $1 UpdateView}
 # backward compatibility

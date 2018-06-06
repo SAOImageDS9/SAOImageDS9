@@ -1146,29 +1146,6 @@ proc ProcessGridCmd {varname iname} {
     incr i [expr $grid::yycnt-1]
 }
 
-proc GridCmdFontStyle {which value {cmd {}}} {
-    global grid
-
-    switch $value {
-	normal {
-	    set grid($which,weight) normal
-	    set grid($which,slant) roman
-	}
-	bold {
-	    set grid($which,weight) bold
-	    set grid($which,slant) roman
-	}
-	italic {
-	    set grid($which,weight) normal
-	    set grid($which,slant) italic
-	}
-    }
-
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendGridCmd {proc id param {sock {}} {fn {}}} {
     global parse
     set parse(proc) $proc

@@ -217,6 +217,29 @@ proc ProcessCmdAppend {varname key value {cmd {}}} {
     }
 }
 
+proc ProcessCmdFontStyle {varname key value {cmd {}}} {
+    global $varname
+
+    switch $value {
+	normal {
+	    set ${varname}($key,weight) normal
+	    set ${varname}($key,slant) roman
+	}
+	bold {
+	    set ${varname}($key,weight) bold
+	    set ${varname}($key,slant) roman
+	}
+	italic {
+	    set ${varname}($key,weight) normal
+	    set ${varname}($key,slant) italic
+	}
+    }
+
+    if {$cmd != {}} {
+	eval $cmd
+    }
+}
+
 proc ProcessCmdCVAR {key value {cmd {}}} {
     global cvarname
     upvar #0 $cvarname cvar

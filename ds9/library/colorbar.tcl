@@ -1267,29 +1267,6 @@ proc ProcessColorbarCmd {varname iname} {
     incr i [expr $colorbar::yycnt-1]
 }
 
-proc ColorbarCmdFontStyle {value {cmd {}}} {
-    global colorbar
-
-    switch $value {
-	normal {
-	    set colorbar(font,weight) normal
-	    set colorbar(font,slant) roman
-	}
-	bold {
-	    set colorbar(font,weight) bold
-	    set colorbar(font,slant) roman
-	}
-	italic {
-	    set colorbar(font,weight) normal
-	    set colorbar(font,slant) italic
-	}
-    }
-
-    if {$cmd != {}} {
-	eval $cmd
-    }
-}
-
 proc ProcessSendColorbarCmd {proc id param {sock {}} {fn {}}} {
     global colorbar
     global view

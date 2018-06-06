@@ -352,16 +352,11 @@ proc ProcessSmoothCmd {varname iname} {
 }
 
 proc ProcessSendSmoothCmd {proc id param {sock {}} {fn {}}} {
-    global smooth
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    switch -- [lindex $param 0] {
-	lock {$proc $id [ToYesNo $smooth(lock)]} 
-	function {$proc $id "$smooth(function)\n"}
-	radius {$proc $id "$smooth(radius)\n"}
-	radiusminor {$proc $id "$smooth(radius,minor)\n"}
-	sigma {$proc $id "$smooth(sigma)\n"}
-	sigmaminor {$proc $id "$smooth(sigma,minor)\n"}
-	angle {$proc $id "$smooth(angle)\n"}
-	default {$proc $id [ToYesNo $smooth(view)]}
-    }
+    smoothsend::YY_FLUSH_BUFFER
+    smoothsend::yy_scan_string $param
+    smoothsend::yyparse
 }

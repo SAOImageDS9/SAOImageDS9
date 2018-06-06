@@ -1,0 +1,20 @@
+#tab smoothsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+angle	    {return $ANGLE_}
+function    {return $FUNCTION_}
+lock	    {return $LOCK_}
+radius	    {return $RADIUS_}
+radiusminor {return $RADIUSMINOR_}
+sigma	    {return $SIGMA_}
+sigmaminor  {return $SIGMAMINOR_}
+
+#include string.fin
+
+%%

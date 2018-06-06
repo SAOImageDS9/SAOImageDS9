@@ -273,10 +273,10 @@ duplicate : {global cvarname; PlotDupData $cvarname 1}
  | INT_ {global cvarname; PlotDupData $cvarname $1}
  ;
 
-pagesetup : ORIENT_ pageOrient {global ps; set ps(orient) $2}
- | ORIENTATION_ pageOrient {global ps; set ps(orient) $2}
- | PAGESIZE_ pageSize {global ps; set ps(size) $2}
- | SIZE_ pageSize {global ps; set ps(size) $2}
+pagesetup : ORIENT_ pageOrient {ProcessCmdSet ps orient $2}
+ | ORIENTATION_ pageOrient {ProcessCmdSet ps orient $2}
+ | PAGESIZE_ pageSize {ProcessCmdSet ps size $2}
+ | SIZE_ pageSize {ProcessCmdSet ps size $2}
  ;
 
 pageOrient : PORTRAIT_ {set _ portrait}

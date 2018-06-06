@@ -11,12 +11,6 @@ sex : {set _ sexagesimal}
  | SEXAGESIMAL_ {set _ sexagesimal}
  ;
 
-coordOpt :
- | WCS_
- | FK5_
- | WCS_ FK5_
- ;
-
 sizeOpt : {set _ degrees}
  | rformat {set _ $1}
  ;

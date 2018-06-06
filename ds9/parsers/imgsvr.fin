@@ -12,9 +12,6 @@ size	    {return $SIZE_}
 survey	    {return $SURVEY_}
 update	    {return $UPDATE_}
 
-wcs	    {return $WCS_}
-fk5	    {return $FK5_}
-
 degrees	    {return $DEGREES_}
 arcmin	    {return $ARCMIN_}
 arcsec	    {return $ARCSEC_}

@@ -12,9 +12,6 @@
 %token SIZE_
 %token SURVEY_
 
-%token WCS_
-%token FK5_
-
 %token DEGREES_
 %token ARCMIN_
 %token ARCSEC_

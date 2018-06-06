@@ -1485,12 +1485,6 @@ proc RegionCmdGroup {cmd {val1 {}} {val2 {}}} {
     UpdateGroupDialog
 }
 
-proc RegionCmdGroupTag {tag} {
-    global marker
-    
-    set marker(tag) $tag
-}
-
 proc RegionCmdGroupNew {} {
     global current
     global marker
@@ -1601,6 +1595,5 @@ proc RegionSendCmd {} {
 
     set rr [$current(frame) marker list $marker(load,select) $marker(load,format) $marker(load,system) $marker(load,sky) $marker(load,skyformat) $marker(load,strip) $marker(load,props) $marker(load,tags)]
 
-    puts $rr
     ProcessSendCmdResult $ext $rr
 }

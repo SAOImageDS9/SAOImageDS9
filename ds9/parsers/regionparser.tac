@@ -213,7 +213,7 @@ select : ALL_ {MarkerSelectAll}
  | NONE_ {MarkerUnselectAll}
  | INVERT_ {MarkerSelectInvert}
 # backward compatibility
- | GROUP_ STRING_ {RegionCmdGroupTag $2; RegionCmdGroup select}
+ | GROUP_ STRING_ {ProcessCmdSet marker tag $2; RegionCmdGroup select}
  ;
  
 delete : ALL_ {MarkerDeleteAll}
@@ -272,7 +272,7 @@ template : STRING_ {RegionCmdTemplate $1}
  ;
  
 group : NEW_ {RegionCmdGroupNew}
- | STRING_ {RegionCmdGroupTag $1} groupTag
+ | STRING_ {ProcessCmdSet marker tag $1} groupTag
  ;
 
 groupTag : NEW_ {RegionCmdGroupNew}

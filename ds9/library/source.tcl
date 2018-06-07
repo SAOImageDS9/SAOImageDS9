@@ -234,6 +234,8 @@ source $ds9(root)/library/crosshairsendparser.tcl
 source $ds9(root)/library/crosshairsendlex.tcl
 source $ds9(root)/library/cubeparser.tcl
 source $ds9(root)/library/cubelex.tcl
+source $ds9(root)/library/cubesendparser.tcl
+source $ds9(root)/library/cubesendlex.tcl
 source $ds9(root)/library/cursorparser.tcl
 source $ds9(root)/library/cursorlex.tcl
 source $ds9(root)/library/dssesoparser.tcl

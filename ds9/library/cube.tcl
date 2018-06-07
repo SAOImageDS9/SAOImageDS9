@@ -727,27 +727,18 @@ proc CubeCmdCoord {ss sys axis} {
 }
 
 proc ProcessSendCubeCmd {proc id param {sock {}} {fn {}}} {
-    global cube
-    global current
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    cubesend::YY_FLUSH_BUFFER
+    cubesend::yy_scan_string $param
+    cubesend::yyparse
+}
+
+proc CubeSendCmdInterval {} {
+    global parse
     global blink
 
-    switch -- [string tolower [lindex $param 0]] {
-	lock {$proc $id "$cube(lock)\n"}
-	axes -
-	order {
-	    switch -- [string tolower [lindex $param 1]] {
-		lock {$proc $id [ToYesNo $cube(lock,axes)]}
-		default {$proc $id "$cube(axes)\n"}
-	    }
-	}
-	interval {$proc $id "[expr $blink(interval)/1000.]\n"}
-	axis {$proc $id "$cube(axis)\n"}
-	default {
-	    if {$current(frame) != {}} {
-		$proc $id "[$current(frame) get fits slice $cube(axis)]\n"
-	    } else {
-		$proc $id "1\n"
-	    }
-	}
-    }
+    $parse(proc) $parse(id) "[expr $blink(interval)/1000.]\n"
 }

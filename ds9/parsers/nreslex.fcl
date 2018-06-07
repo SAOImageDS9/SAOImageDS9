@@ -22,8 +22,9 @@ simbad-cds  {return $SIMBADCDS_}
 vizier-sao  {return $VIZIERSAO_}
 vizier-cds  {return $VIZIERCDS_}
 
-#include coords.fin
-#include numeric.fin
+degrees	    {return $DEGREES_}
+sexagesimal {return $SEXAGESIMAL_}
+
 #include string.fin
 
 %%

@@ -1,8 +1,6 @@
 %{
 %}
 
-#include coords.tin
-#include numeric.tin
 #include string.tin
 
 %start command
@@ -22,10 +20,10 @@
 %token VIZIERSAO_
 %token VIZIERCDS_
 
-%%
+%token DEGREES_
+%token SEXAGESIMAL_
 
-#include coords.trl
-#include numeric.trl
+%%
 
 command : nres 
  | nres {yyclearin; YYACCEPT} STRING_
@@ -39,6 +37,10 @@ nres : OPEN_
  | SKYFORMAT_ skyformat {ProcessCmdSet2 dnres skyformat $2 format,msg $2}
  | NAME_ STRING_ {ProcessCmdSet dnres name $2 "NRESApply dnres 1"}
  | STRING_ {ProcessCmdSet dnres name $1 "NRESApply dnres 1"}
+ ;
+
+skyformat : DEGREES_ {set _ degrees}
+ | SEXAGESIMAL_ {set _ sexagesimal}
  ;
 
 server : NEDSAO_ {set _ ned-sao}

@@ -217,6 +217,14 @@ proc ProcessCmdAppend {varname key value {cmd {}}} {
     }
 }
 
+proc ProcessCmdCurrent {key cmd} {
+    global current
+
+    if {$current($key) != {}} {
+	$current($key) $cmd
+    }
+}
+
 proc ProcessCmdFontStyle {varname key value {cmd {}}} {
     global $varname
 

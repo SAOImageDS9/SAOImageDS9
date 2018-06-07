@@ -30,28 +30,28 @@ crop : OPEN_ {CropDialog}
  | RESET_ {CropReset}
  | 3D_ 3d
 
- | numeric numeric numeric numeric {global current; $current(frame) crop center $1 $2 physical fk5 $3 $4 physical degrees}
- | numeric numeric numeric numeric coordsys {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 degrees}
+ | numeric numeric numeric numeric {ProcessCmdCurrent frame "crop center $1 $2 physical fk5 $3 $4 physical degrees"}
+ | numeric numeric numeric numeric coordsys {ProcessCmdCurrent frame "crop center $1 $2 $5 fk5 $3 $4 $5 degrees"}
 
- | numeric numeric numeric numeric wcssys {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 degrees}
- | numeric numeric numeric numeric wcssys rformat {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 $6}
- | numeric numeric numeric numeric skyframe {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs degrees}
- | numeric numeric numeric numeric skyframe rformat {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
- | numeric numeric numeric numeric wcssys skyframe {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 degrees}
- | numeric numeric numeric numeric wcssys skyframe rformat {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
+ | numeric numeric numeric numeric wcssys {ProcessCmdCurrent frame "crop center $1 $2 $5 fk5 $3 $4 $5 degrees"}
+ | numeric numeric numeric numeric wcssys rformat {ProcessCmdCurrent frame "crop center $1 $2 $5 fk5 $3 $4 $5 $6"}
+ | numeric numeric numeric numeric skyframe {ProcessCmdCurrent frame "crop center $1 $2 wcs $5 $3 $4 wcs degrees"}
+ | numeric numeric numeric numeric skyframe rformat {ProcessCmdCurrent frame "crop center $1 $2 wcs $5 $3 $4 wcs $6"}
+ | numeric numeric numeric numeric wcssys skyframe {ProcessCmdCurrent frame "crop center $1 $2 $5 $6 $3 $4 $5 degrees"}
+ | numeric numeric numeric numeric wcssys skyframe rformat {ProcessCmdCurrent frame "crop center $1 $2 $5 $6 $3 $4 $5 $7"}
 
- | SEXSTR_ SEXSTR_ numeric numeric {global current; $current(frame) crop center $1 $2 wcs fk5 $3 $4 wcs degrees}
- | SEXSTR_ SEXSTR_ numeric numeric wcssys {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 degrees}
- | SEXSTR_ SEXSTR_ numeric numeric wcssys rformat {global current; $current(frame) crop center $1 $2 $5 fk5 $3 $4 $5 $6}
- | SEXSTR_ SEXSTR_ numeric numeric skyframe {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs degrees}
- | SEXSTR_ SEXSTR_ numeric numeric skyframe rformat {global current; $current(frame) crop center $1 $2 wcs $5 $3 $4 wcs $6}
- | SEXSTR_ SEXSTR_ numeric numeric wcssys skyframe {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 degrees}
- | SEXSTR_ SEXSTR_ numeric numeric wcssys skyframe rformat {global current; $current(frame) crop center $1 $2 $5 $6 $3 $4 $5 $7}
+ | SEXSTR_ SEXSTR_ numeric numeric {ProcessCmdCurrent frame "crop center $1 $2 wcs fk5 $3 $4 wcs degrees"}
+ | SEXSTR_ SEXSTR_ numeric numeric wcssys {ProcessCmdCurrent frame "crop center $1 $2 $5 fk5 $3 $4 $5 degrees"}
+ | SEXSTR_ SEXSTR_ numeric numeric wcssys rformat {ProcessCmdCurrent frame "crop center $1 $2 $5 fk5 $3 $4 $5 $6"}
+ | SEXSTR_ SEXSTR_ numeric numeric skyframe {ProcessCmdCurrent frame "crop center $1 $2 wcs $5 $3 $4 wcs degrees"}
+ | SEXSTR_ SEXSTR_ numeric numeric skyframe rformat {ProcessCmdCurrent frame "crop center $1 $2 wcs $5 $3 $4 wcs $6"}
+ | SEXSTR_ SEXSTR_ numeric numeric wcssys skyframe {ProcessCmdCurrent frame "crop center $1 $2 $5 $6 $3 $4 $5 degrees"}
+ | SEXSTR_ SEXSTR_ numeric numeric wcssys skyframe rformat {ProcessCmdCurrent frame "crop center $1 $2 $5 $6 $3 $4 $5 $7"}
  ;
 
-3d : numeric numeric {global current; $current(frame) crop 3d $1 $2 image}
- | numeric numeric coordsys {global current; $current(frame) crop 3d $1 $2 $3}
- | numeric numeric wcssys {global current; $current(frame) crop 3d $1 $2 $3}
+3d : numeric numeric {ProcessCmdCurrent frame "crop 3d $1 $2 image"}
+ | numeric numeric coordsys {ProcessCmdCurrent frame "crop 3d $1 $2 $3"}
+ | numeric numeric wcssys {ProcessCmdCurrent frame "crop 3d $1 $2 $3"}
  ;
 
 %%

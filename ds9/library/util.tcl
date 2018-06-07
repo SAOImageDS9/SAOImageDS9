@@ -318,12 +318,21 @@ proc ProcessSendCmdYesNo {varname key} {
     $parse(proc) $parse(id) [ToYesNo $var($key)]
 }
 
-proc ProcessSendCmdCurrent {cmd} {
+proc ProcessSendCmdCurrent {key cmd} {
     global parse
     global current
 
-    if {$current(frame) != {}} {
-	$parse(proc) $parse(id) "[$current(frame) $cmd]\n"
+    if {$current($key) != {}} {
+	$parse(proc) $parse(id) "[$current($key) $cmd]\n"
+    }
+}
+
+proc ProcessSendCmdCurrent2 {key cmd cmd2} {
+    global parse
+    global current
+
+    if {$current($key) != {}} {
+	$parse(proc) $parse(id) "[$current($key) $cmd] [$current($key) $cmd2]\n"
     }
 }
 

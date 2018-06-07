@@ -1245,16 +1245,13 @@ proc CmapValueCmd {c b} {
 }
 
 proc ProcessSendCmapCmd {proc id param {sock {}} {fn {}}} {
-    global colorbar
-    global current
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    switch -- [string tolower $param] {
-	file {$proc $id "[$current(colorbar) get file name]\n"}
-	invert {$proc $id [ToYesNo $colorbar(invert)]}
-	value {$proc $id "[$current(colorbar) get contrast] [$current(colorbar) get bias]\n"}
-	lock {$proc $id [ToYesNo $colorbar(lock)]} 
-	{} {$proc $id "[$current(colorbar) get name]\n"}
-    }
+    cmapsend::YY_FLUSH_BUFFER
+    cmapsend::yy_scan_string $param
+    cmapsend::yyparse
 }
 
 proc ProcessColorbarCmd {varname iname} {
@@ -1268,13 +1265,19 @@ proc ProcessColorbarCmd {varname iname} {
 }
 
 proc ProcessSendColorbarCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+    colorbarsend::YY_FLUSH_BUFFER
+    colorbarsend::yy_scan_string $param
+    colorbarsend::yyparse
+
+    return
     global colorbar
     global view
 
     switch -- [string tolower [lindex $param 0]] {
-	lock {
-	    $proc $id [ToYesNo $colorbar(lock)]
-	} 
+	lock {$proc $id [ToYesNo $colorbar(lock)]} 
 	orientation {$proc $id "$colorbar(orientation)\n"} 
 	numerics {$proc $id [ToYesNo $colorbar(numerics)]} 
 	space {
@@ -1295,5 +1298,16 @@ proc ProcessSendColorbarCmd {proc id param {sock {}} {fn {}}} {
 	size {$proc $id "$colorbar(size)\n"}
 	ticks {$proc $id "$colorbar(ticks)\n"}
 	default {$proc $id [ToYesNo $view(colorbar)]} 
+    }
+}
+
+proc ColorbarSendCmdSpace {} {
+    global parse
+    global colorbar
+
+    if {$colorbar(space)} {
+	$parse(proc) $parse(id) "value\n"
+    } else {
+	$parse(proc) $parse(id) "distance\n"
     }
 }

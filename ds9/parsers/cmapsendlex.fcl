@@ -1,0 +1,17 @@
+#tab cmapsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+file		{return $FILE_}
+invert		{return $INVERT_}
+lock		{return $LOCK_}
+value		{return $VALUE_}
+
+#include string.fin
+
+%%

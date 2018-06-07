@@ -76,8 +76,8 @@ regionsend : {RegionSendCmd}
  | SHAPE_ {ProcessSendCmdGet marker shape}
  | COLOR_ {ProcessSendCmdGet marker color}
  | WIDTH_ {ProcessSendCmdGet marker width}
- | GROUP_ {ProcessSendCmdCurrent "get marker tag all"}
- | GROUPS_ {ProcessSendCmdCurrent "get marker tag all"}
+ | GROUP_ {ProcessSendCmdCurrent frame "get marker tag all"}
+ | GROUPS_ {ProcessSendCmdCurrent frame "get marker tag all"}
  ;
 
 centroid: AUTO_ {ProcessSendCmdYesNo marker centroid,auto}

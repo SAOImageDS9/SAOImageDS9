@@ -1,0 +1,21 @@
+#tab colorbarsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+lock		{return $LOCK_}
+numerics	{return $NUMERICS_}
+orientation	{return $ORIENTATION_}
+size		{return $SIZE_}
+space		{return $SPACE_}
+ticks		{return $TICKS_}
+value		{return $VALUE_}
+
+#include font.fin
+#include string.fin
+
+%%

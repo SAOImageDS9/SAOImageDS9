@@ -214,8 +214,12 @@ source $ds9(root)/library/catsendparser.tcl
 source $ds9(root)/library/catsendlex.tcl
 source $ds9(root)/library/cmapparser.tcl
 source $ds9(root)/library/cmaplex.tcl
+source $ds9(root)/library/cmapsendparser.tcl
+source $ds9(root)/library/cmapsendlex.tcl
 source $ds9(root)/library/colorbarparser.tcl
 source $ds9(root)/library/colorbarlex.tcl
+source $ds9(root)/library/colorbarsendparser.tcl
+source $ds9(root)/library/colorbarsendlex.tcl
 source $ds9(root)/library/contourparser.tcl
 source $ds9(root)/library/contourlex.tcl
 source $ds9(root)/library/contoursendparser.tcl

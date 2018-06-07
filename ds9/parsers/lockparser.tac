@@ -2,7 +2,8 @@
 %}
 
 #include matchlock.tin
-#include coords.tin
+#include coordsys.tin
+#include wcssys.tin
 #include yesno.tin
 #include string.tin
 
@@ -24,7 +25,8 @@
 %%
 
 #include matchlock.trl
-#include coords.trl
+#include coordsys.trl
+#include wcssys.trl
 #include yesno.trl
 
 command : lock 

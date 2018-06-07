@@ -2,7 +2,8 @@
 %}
 
 #include matchlock.tin
-#include coords.tin
+#include coordsys.tin
+#include wcssys.tin
 #include numeric.tin
 #include string.tin
 
@@ -31,7 +32,8 @@
 %%
 
 #include matchlock.trl
-#include coords.trl
+#include coordsys.trl
+#include wcssys.trl
 #include numeric.trl
 
 command : frame 

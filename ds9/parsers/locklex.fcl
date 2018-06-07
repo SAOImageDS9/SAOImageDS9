@@ -21,7 +21,8 @@ slice	    {return $SLICE_}
 smooth	    {return $SMOOTH_}
 
 #include matchlock.fin
-#include coords.fin
+#include coordsys.fin
+#include wcssys.fin
 #include yesno.fin
 #include string.fin
 #include ws.fin

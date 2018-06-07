@@ -1271,34 +1271,6 @@ proc ProcessSendColorbarCmd {proc id param {sock {}} {fn {}}} {
     colorbarsend::YY_FLUSH_BUFFER
     colorbarsend::yy_scan_string $param
     colorbarsend::yyparse
-
-    return
-    global colorbar
-    global view
-
-    switch -- [string tolower [lindex $param 0]] {
-	lock {$proc $id [ToYesNo $colorbar(lock)]} 
-	orientation {$proc $id "$colorbar(orientation)\n"} 
-	numerics {$proc $id [ToYesNo $colorbar(numerics)]} 
-	space {
-	    if {$colorbar(space)} {
-		$proc $id "value\n"
-	    } else {
-		$proc $id "distance\n"
-	    }
-	}
-	font {$proc $id "$colorbar(font)\n"} 
-	fontsize {$proc $id "$colorbar(font,size)\n"} 
-	fontweight {$proc $id "$colorbar(font,weight)\n"} 
-	fontslant {$proc $id "$colorbar(font,slant)\n"} 
-	fontstyle {
-	    # backware compatibily
-	    $proc $id "$colorbar(font,weight)\n"
- 	}
-	size {$proc $id "$colorbar(size)\n"}
-	ticks {$proc $id "$colorbar(ticks)\n"}
-	default {$proc $id [ToYesNo $view(colorbar)]} 
-    }
 }
 
 proc ColorbarSendCmdSpace {} {

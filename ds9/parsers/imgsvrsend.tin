@@ -1,0 +1,7 @@
+%token COORD_
+%token FRAME_
+%token NAME_
+%token SAVE_
+%token SIZE_
+%token SURVEY_
+

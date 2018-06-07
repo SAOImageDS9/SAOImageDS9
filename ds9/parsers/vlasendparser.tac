@@ -1,8 +1,7 @@
 %{
 %}
 
-#include imgsvr.tin
-#include string.tin
+#include imgsvrsend.tin
 
 %start vlasend
 

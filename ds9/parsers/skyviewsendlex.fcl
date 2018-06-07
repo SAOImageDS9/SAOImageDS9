@@ -9,7 +9,6 @@
 
 pixels	    {return $PIXELS_}
 
-#include imgsvr.fin
-#include string.fin
+#include imgsvrsend.fin
 
 %%

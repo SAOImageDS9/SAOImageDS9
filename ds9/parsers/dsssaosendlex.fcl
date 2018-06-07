@@ -7,7 +7,6 @@
 
 %%
 
-#include imgsvr.fin
-#include string.fin
+#include imgsvrsend.fin
 
 %%

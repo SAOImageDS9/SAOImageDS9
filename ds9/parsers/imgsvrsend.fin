@@ -1,0 +1,7 @@
+coord	    {return $COORD_}
+frame	    {return $FRAME_}
+name	    {return $NAME_}
+save	    {return $SAVE_}
+size	    {return $SIZE_}
+survey	    {return $SURVEY_}
+

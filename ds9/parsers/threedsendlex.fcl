@@ -23,6 +23,6 @@ scale		{return $SCALE_}
 view		{return $VIEW_}
 vp		{return $VIEW_}
 
-#include string.fin
+#include ws.fin
 
 %%

@@ -16,6 +16,6 @@ ticks		{return $TICKS_}
 value		{return $VALUE_}
 
 #include font.fin
-#include string.fin
+#include ws.fin
 
 %%

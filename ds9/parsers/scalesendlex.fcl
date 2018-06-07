@@ -16,6 +16,6 @@ mode	    {return $MODE_}
 scalelimits {return $SCALELIMITS_}
 scope	    {return $SCOPE_}
 
-#include string.fin
+#include ws.fin
 
 %%

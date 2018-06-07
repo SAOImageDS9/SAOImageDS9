@@ -1,8 +1,6 @@
 %{
 %}
 
-#include string.tin
-
 %start cmapsend
 
 %token FILE_

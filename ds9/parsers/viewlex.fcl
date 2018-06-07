@@ -36,5 +36,6 @@ vertgraph	{return $VERTGRAPH_}
 #include yesno.fin
 #include coords.fin
 #include string.fin
+#include ws.fin
 
 %%

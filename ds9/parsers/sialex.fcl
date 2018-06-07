@@ -43,5 +43,6 @@ tsv	    {return $TSV_}
 #include coords.fin
 #include numeric.fin
 #include string.fin
+#include ws.fin
 
 %%

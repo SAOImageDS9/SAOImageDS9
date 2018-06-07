@@ -1,8 +1,6 @@
 %{
 %}
 
-#include string.tin
-
 %token ABOUT_
 %token BUFFERSIZE_
 %token COLS_

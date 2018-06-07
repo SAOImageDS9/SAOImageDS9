@@ -137,5 +137,6 @@ yaxis	    {return $YAXIS_}
 #include font.fin
 #include numeric.fin
 #include string.fin
+#include ws.fin
 
 %%

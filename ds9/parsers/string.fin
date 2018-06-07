@@ -10,7 +10,3 @@
 # STRING
 \S+\S+ {set yylval $yytext; return $STRING_}
 
-\s        # ignore whitespace
-
-.	  {set yylval $yytext; return $yylval}
-

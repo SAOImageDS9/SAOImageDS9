@@ -1,8 +1,6 @@
 %{
 %}
 
-#include string.tin
-
 %start zscalesend
 
 %token CONTRAST_

@@ -32,5 +32,6 @@ screen	    {return $SCREEN_}
 1200	    {return $1200_}
 
 #include string.fin
+#include ws.fin
 
 %%

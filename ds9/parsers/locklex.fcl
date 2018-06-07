@@ -23,7 +23,7 @@ smooth	    {return $SMOOTH_}
 #include matchlock.fin
 #include coords.fin
 #include yesno.fin
-#include numeric.fin
 #include string.fin
+#include ws.fin
 
 %%

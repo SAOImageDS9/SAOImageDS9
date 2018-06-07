@@ -26,5 +26,6 @@ degrees	    {return $DEGREES_}
 sexagesimal {return $SEXAGESIMAL_}
 
 #include string.fin
+#include ws.fin
 
 %%

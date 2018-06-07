@@ -16,5 +16,6 @@ dss2-infrared {return $DSS2INFRARED_}
 #include imgsvr.fin
 #include numeric.fin
 #include string.fin
+#include ws.fin
 
 %%

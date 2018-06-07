@@ -272,6 +272,8 @@ source $ds9(root)/library/iisparser.tcl
 source $ds9(root)/library/iislex.tcl
 source $ds9(root)/library/lockparser.tcl
 source $ds9(root)/library/locklex.tcl
+source $ds9(root)/library/locksendparser.tcl
+source $ds9(root)/library/locksendlex.tcl
 source $ds9(root)/library/magnifierparser.tcl
 source $ds9(root)/library/magnifierlex.tcl
 source $ds9(root)/library/maskparser.tcl

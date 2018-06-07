@@ -12,5 +12,6 @@ new	    {return $NEW_}
 slice 	    {return $SLICE_}
 
 #include string.fin
+#include ws.fin
 
 %%

@@ -1,8 +1,6 @@
 %{
 %}
 
-#include string.tin
-
 %start smoothsend
 
 %token ANGLE_

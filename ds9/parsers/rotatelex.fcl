@@ -13,5 +13,6 @@ to	    {return $TO_}
 
 #include numeric.fin
 #include string.fin
+#include ws.fin
 
 %%

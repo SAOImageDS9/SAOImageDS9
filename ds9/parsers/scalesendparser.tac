@@ -1,8 +1,6 @@
 %{
 %}
 
-#include string.tin
-
 %start scalesend
 
 %token DATASEC_

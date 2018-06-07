@@ -23,5 +23,6 @@ vertical	{return $VERTICAL_}
 #include font.fin
 #include numeric.fin
 #include string.fin
+#include ws.fin
 
 %%

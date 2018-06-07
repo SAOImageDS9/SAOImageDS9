@@ -12,5 +12,6 @@ save	    {return $SAVE_}
 
 #include numeric.fin
 #include string.fin
+#include ws.fin
 
 %%

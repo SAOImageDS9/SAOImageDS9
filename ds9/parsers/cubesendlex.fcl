@@ -13,6 +13,6 @@ interval    {return $INTERVAL_}
 lock	    {return $LOCK_}
 order	    {return $ORDER_}
 
-#include string.fin
+#include ws.fin
 
 %%

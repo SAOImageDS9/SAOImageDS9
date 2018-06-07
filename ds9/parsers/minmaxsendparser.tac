@@ -2,7 +2,6 @@
 %}
 
 #include numeric.tin
-#include string.tin
 
 %start minmaxsend
 

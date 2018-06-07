@@ -2,7 +2,6 @@
 %}
 
 #include font.tin
-#include string.tin
 
 %start gridsend
 

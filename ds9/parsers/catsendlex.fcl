@@ -10,4 +10,6 @@
 header		{return $HEADER_}
 
 #include string.fin
+#include ws.fin
+
 %%

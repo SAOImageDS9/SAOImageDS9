@@ -10,5 +10,6 @@
 pixels	    {return $PIXELS_}
 
 #include imgsvrsend.fin
+#include ws.fin
 
 %%

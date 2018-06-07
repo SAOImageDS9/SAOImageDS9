@@ -1,8 +1,6 @@
 %{
 %}
 
-#include string.tin
-
 %start cubesend
 
 %token AXIS_

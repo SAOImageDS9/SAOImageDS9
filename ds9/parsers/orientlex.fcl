@@ -13,5 +13,6 @@ open	    {return $OPEN_}
 xy	    {return $XY_}
 
 #include string.fin
+#include ws.fin
 
 %%

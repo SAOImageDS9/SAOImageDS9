@@ -22,6 +22,6 @@ smooth		{return $SMOOTH_}
 width		{return $WIDTH_}
 
 #include coords.fin
-#include string.fin
+#include ws.fin
 
 %%

@@ -9,5 +9,6 @@
 
 #include numeric.fin
 #include string.fin
+#include ws.fin
 
 %%

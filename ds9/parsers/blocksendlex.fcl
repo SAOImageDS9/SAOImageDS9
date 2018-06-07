@@ -9,6 +9,6 @@
 
 lock		{return $LOCK_}
 
-#include string.fin
+#include ws.fin
 
 %%

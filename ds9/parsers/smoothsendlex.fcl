@@ -15,6 +15,6 @@ radiusminor {return $RADIUSMINOR_}
 sigma	    {return $SIGMA_}
 sigmaminor  {return $SIGMAMINOR_}
 
-#include string.fin
+#include ws.fin
 
 %%

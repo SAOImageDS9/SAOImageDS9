@@ -11,4 +11,6 @@ contrast	{return $CONTRAST_}
 sample		{return $SAMPLE_}
 line		{return $LINE_}
 
+#include ws.fin
+
 %%

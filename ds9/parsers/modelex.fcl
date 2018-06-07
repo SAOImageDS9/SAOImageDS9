@@ -20,5 +20,6 @@ examine	    {return $EXAMINE_}
 pointer	    {return $POINTER_}
 
 #include string.fin
+#include ws.fin
 
 %%

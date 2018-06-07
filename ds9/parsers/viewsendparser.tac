@@ -2,7 +2,6 @@
 %}
 
 #include coords.tin
-#include string.tin
 
 %start viewsend
 

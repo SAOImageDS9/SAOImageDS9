@@ -358,9 +358,7 @@ proc ProcessSendCmdSend {ext cmd} {
 proc ProcessSendCmdResult {ext rr} {
     global parse
 
-    if {$parse(sock) != {}} {
-	puts $parse(sock) $rr
-    } elseif {$parse(fn) != {}} {
+    if {$parse(fn) != {}} {
 	append parse(fn) $ext
 	set ch [open $parse(fn) w]
 	puts $ch $rr
@@ -373,9 +371,7 @@ proc ProcessSendCmdResult {ext rr} {
 
 # old
 proc ProcessSend {proc id sock fn ext rr} {
-    if {$sock != {}} {
-	puts $sock $rr
-    } elseif {$fn != {}} {
+    if {$fn != {}} {
 	append fn $ext
 	set ch [open $fn w]
 	puts $ch $rr

@@ -8,5 +8,6 @@
 %%
 
 #include imgsvrsend.fin
+#include ws.fin
 
 %%

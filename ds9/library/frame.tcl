@@ -2232,6 +2232,15 @@ proc ProcessLockCmd {varname iname} {
 }
 
 proc ProcessSendLockCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    locksend::YY_FLUSH_BUFFER
+    locksend::yy_scan_string $param
+    locksend::yyparse
+
+    return
     global panzoom
     global crop
     global crosshair

@@ -10,5 +10,6 @@
 new	    {return $NEW_}
 
 #include string.fin
+#include ws.fin
 
 %%

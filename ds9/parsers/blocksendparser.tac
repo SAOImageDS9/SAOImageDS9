@@ -1,8 +1,6 @@
 %{
 %}
 
-#include string.tin
-
 %start blocksend
 
 %token LOCK_

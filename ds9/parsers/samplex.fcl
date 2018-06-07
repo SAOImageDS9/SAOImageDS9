@@ -16,5 +16,6 @@ table	    {return $TABLE_}
 
 #include yesno.fin
 #include string.fin
+#include ws.fin
 
 %%

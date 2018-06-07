@@ -8,5 +8,6 @@
 %%
 
 #include string.fin
+#include ws.fin
 
 %%

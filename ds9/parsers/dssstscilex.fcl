@@ -21,5 +21,6 @@ phase2_gsc1	{return $GSC1_}
 #include imgsvr.fin
 #include numeric.fin
 #include string.fin
+#include ws.fin
 
 %%

@@ -1,4 +1,4 @@
-#tab matchparser.tab.tcl
+#tab locksendparser.tab.tcl
 
 %{
 %}
@@ -20,10 +20,6 @@ scalelimits {return $SCALELIMITS_}
 slice	    {return $SLICE_}
 smooth	    {return $SMOOTH_}
 
-#include matchlock.fin
-#include coords.fin
-#include numeric.fin
-#include string.fin
 #include ws.fin
 
 %%

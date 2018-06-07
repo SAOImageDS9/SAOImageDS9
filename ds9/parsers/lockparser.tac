@@ -4,7 +4,6 @@
 #include matchlock.tin
 #include coords.tin
 #include yesno.tin
-#include numeric.tin
 #include string.tin
 
 %start command
@@ -27,7 +26,6 @@
 #include matchlock.trl
 #include coords.trl
 #include yesno.trl
-#include numeric.trl
 
 command : lock 
  | lock {yyclearin; YYACCEPT} STRING_
@@ -43,7 +41,7 @@ lock : FRAME_ lock {ProcessCmdSet panzoom lock $2 LockFrameCurrent}
  | SCALELIMITS_ yesno {ProcessCmdSet scale lock,limits $2 LockScaleLimitsCurrent}
  | COLORBAR_ yesno {ProcessCmdSet colorbar lock $2 LockColorCurrent}
  | BLOCK_ yesno {ProcessCmdSet block lock $2 LockBlockCurrent}
- | SMOOTH_ yesno {ProessCmdSet smooth lock $2 LockSmoothCurrent}
+ | SMOOTH_ yesno {ProcessCmdSet smooth lock $2 LockSmoothCurrent}
  | 3D_ yesno {ProcessCmdSet threed lock $2 Lock3DCurrent}
  ;
 

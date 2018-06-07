@@ -11,6 +11,7 @@
 LOCK_	{return $LOCK_}
 
 #include coords.fin
+#include ws.fin
 
 %%
 

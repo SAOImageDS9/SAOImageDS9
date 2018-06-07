@@ -17,5 +17,6 @@ threads	    {return $THREADS_}
 #include yesno.fin
 #include numeric.fin
 #include string.fin
+#include ws.fin
 
 %%

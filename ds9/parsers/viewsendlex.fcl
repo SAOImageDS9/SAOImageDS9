@@ -34,6 +34,6 @@ vertical	{return $VERTICAL_}
 vertgraph	{return $VERTGRAPH_}
 
 #include coords.fin
-#include string.fin
+#include ws.fin
 
 %%

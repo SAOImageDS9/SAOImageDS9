@@ -12,5 +12,6 @@ open	    {return $OPEN_}
 
 #include yesno.fin
 #include string.fin
+#include ws.fin
 
 %%

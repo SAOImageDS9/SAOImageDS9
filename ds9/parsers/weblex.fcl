@@ -18,5 +18,6 @@ stop	    {return $STOP_}
 
 #include numeric.fin
 #include string.fin
+#include ws.fin
 
 %%

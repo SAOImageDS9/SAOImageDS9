@@ -47,6 +47,6 @@ view		{return $VIEW_}
 width		{return $WIDTH_}
 
 #include font.fin
-#include string.fin
+#include ws.fin
 
 %%

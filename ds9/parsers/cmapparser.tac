@@ -54,7 +54,7 @@ cmapLoad : STRING_ {LoadColormapFile $1; FileLast colormapfbox $1}
  ;
 
 cmapTag : LOAD_ STRING_ {LoadColorTag $2}
- | SAVE_ STRING_ {global current; $current(colorbar) tag save $2}
+ | SAVE_ STRING_ {ProcessCmdCurrent colorbar "tag save $2"}
  | DELETE_ {DeleteColorTag}
  ;
 

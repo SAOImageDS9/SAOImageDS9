@@ -1,7 +1,8 @@
 %{
 %}
 
-#include coords.tin
+#include coordsys.tin
+#include wcssys.tin
 
 %start viewsend
 
@@ -28,7 +29,8 @@
 
 %%
 
-#include coords.trl
+#include coordsys.trl
+#include wcssys.trl
 
 viewsend :
  | LAYOUT_ {ProcessSendCmdGet view layout}

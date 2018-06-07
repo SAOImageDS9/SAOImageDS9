@@ -2,7 +2,8 @@
 %}
 
 #include yesno.tin
-#include coords.tin
+#include coordsys.tin
+#include wcssys.tin
 #include string.tin
 
 %start command
@@ -34,12 +35,12 @@
 %%
 
 #include yesno.trl
-#include coords.trl
+#include coordsys.trl
+#include wcssys.trl
 
 command : view 
  | view {yyclearin; YYACCEPT} STRING_
  ;
-
 
 view : layout
  | LAYOUT_ layout

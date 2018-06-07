@@ -1,0 +1,4 @@
+image	    {return $IMAGE_}
+physical    {return $PHYSICAL_}
+amplifier   {return $AMPLIFIER_}
+detector    {return $DETECTOR_}

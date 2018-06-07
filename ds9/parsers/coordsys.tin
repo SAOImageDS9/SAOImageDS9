@@ -1,0 +1,4 @@
+%token IMAGE_
+%token PHYSICAL_
+%token AMPLIFIER_
+%token DETECTOR_

@@ -28,7 +28,8 @@ stop	    {return $STOP_}
 321	    {return $321_}
 
 #include matchlock.fin
-#include coords.fin
+#include coordsys.fin
+#include wcssys.fin
 #include yesno.fin
 #include numeric.fin
 #include string.fin

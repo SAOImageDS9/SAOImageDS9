@@ -1,0 +1,5 @@
+coordsys : IMAGE_ {set _ image}
+ | PHYSICAL_ {set _ physical}
+ | AMPLIFIER_ {set _ amplifier}
+ | DETECTOR_ {set _ detector}
+ ;

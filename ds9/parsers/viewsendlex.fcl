@@ -33,7 +33,8 @@ vert		{return $VERTICAL_}
 vertical	{return $VERTICAL_}
 vertgraph	{return $VERTGRAPH_}
 
-#include coords.fin
+#include coordsys.fin
+#include wcssys.fin
 #include ws.fin
 
 %%

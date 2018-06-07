@@ -1,17 +1,15 @@
 %{
 %}
 
-#include matchlock.tin
 #include coords.tin
-#include string.tin
 
 %start cropsend
 
 %token 3D_
+%token LOCK_
 
 %%
 
-#include matchlock.trl
 #include coords.trl
 
 cropsend : {ProcessSendCmdCurrent frame "get crop center physical fk5 degrees physical degrees"}

@@ -230,6 +230,8 @@ source $ds9(root)/library/cropsendparser.tcl
 source $ds9(root)/library/cropsendlex.tcl
 source $ds9(root)/library/crosshairparser.tcl
 source $ds9(root)/library/crosshairlex.tcl
+source $ds9(root)/library/crosshairsendparser.tcl
+source $ds9(root)/library/crosshairsendlex.tcl
 source $ds9(root)/library/cubeparser.tcl
 source $ds9(root)/library/cubelex.tcl
 source $ds9(root)/library/cursorparser.tcl

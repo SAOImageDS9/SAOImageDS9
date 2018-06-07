@@ -1,0 +1,16 @@
+#tab crosshairsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+lock	    {return $LOCK_}
+
+#include coords.fin
+#include string.fin
+
+%%
+

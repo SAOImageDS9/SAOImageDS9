@@ -10,7 +10,7 @@
 
 #include coords.trl
 
-pansend : {ProcessSendCmdCurrent frame "get cursor image fk5 degrees"}
+pansend : {ProcessSendCmdCurrent frame "get cursor physical fk5 degrees"}
  | coordsys {ProcessSendCmdCurrent frame "get cursor $1 fk5 degrees"}
  | wcssys {ProcessSendCmdCurrent frame "get cursor $1 fk5 degrees"}
  | skyframe {ProcessSendCmdCurrent frame "get cursor wcs $1 degrees"}

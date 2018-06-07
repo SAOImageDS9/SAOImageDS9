@@ -270,21 +270,12 @@ proc ProcessCrosshairCmd {varname iname} {
 }
 
 proc ProcessSendCrosshairCmd {proc id param {sock {}} {fn {}}} {
-    global crosshair
-    global current
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    switch -- [string tolower $param] {
-	lock {$proc $id "$crosshair(lock)\n"}
-	default {
-	    set sys [lindex $param 0]
-	    set sky [lindex $param 1]
-	    set format [lindex $param 2]
-	    FixSpec sys sky format physical fk5 degrees
-
-	    if {$current(frame) != {}} {
-		$proc $id "[$current(frame) get crosshair $sys $sky $format]\n"
-	    }
-	}
-    }
+    crosshairsend::YY_FLUSH_BUFFER
+    crosshairsend::yy_scan_string $param
+    crosshairsend::yyparse
 }
 

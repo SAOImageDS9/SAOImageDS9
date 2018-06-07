@@ -2,8 +2,8 @@
 %}
 
 #include matchlock.tin
-#include coords.tin
-#include numeric.tin
+#include coordsys.tin
+#include wcssys.tin
 #include string.tin
 
 %start command
@@ -24,8 +24,8 @@
 %%
 
 #include matchlock.trl
-#include coords.trl
-#include numeric.trl
+#include coordsys.trl
+#include wcssys.trl
 
 command : match 
  | match {yyclearin; YYACCEPT} STRING_

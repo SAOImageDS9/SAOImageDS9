@@ -32,7 +32,7 @@ iraf	    {return $IRAF_}
 shm	    {return $SHM_}
 -shm	    {return $SHMCMD_}
 
-#include coords.fin
+#include wcssys.fin
 #include numeric.fin
 #include string.fin
 #include ws.fin

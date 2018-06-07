@@ -1,9 +1,8 @@
 %{
 %}
 
-#include coords.tin
+#include wcssys.tin
 #include yesno.tin
-#include numeric.tin
 #include string.tin
 
 %start command
@@ -29,9 +28,8 @@
 
 %%
 
-#include coords.trl
+#include wcssys.trl
 #include yesno.trl
-#include numeric.trl
 
 command : rgb 
  | rgb {yyclearin; YYACCEPT} STRING_

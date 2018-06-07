@@ -1,7 +1,7 @@
 %{
 %}
 
-#include coords.tin
+#include wcssys.tin
 #include string.tin
 
 %start command
@@ -11,7 +11,7 @@
 
 %%
 
-#include coords.trl
+#include wcssys.trl
 
 # XPA/SAMP only
 command : mosaicwcs 

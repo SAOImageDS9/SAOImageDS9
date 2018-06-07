@@ -10,7 +10,7 @@
 mask	    {return $MASK_}
 new	    {return $NEW_}
 
-#include coords.fin
+#include wcssys.fin
 #include string.fin
 #include ws.fin
 

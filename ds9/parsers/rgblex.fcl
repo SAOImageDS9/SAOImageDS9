@@ -26,9 +26,8 @@ smooth	    {return $SMOOTH_}
 system	    {return $SYSTEM_}
 view	    {return $VIEW_}
 
-#include coords.fin
+#include wcssys.fin
 #include yesno.fin
-#include numeric.fin
 #include string.fin
 #include ws.fin
 

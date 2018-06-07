@@ -17,4 +17,5 @@ function	{return $FUNCTION_}
 lock		{return $LOCK_}
 
 #include string.fin
+
 %%

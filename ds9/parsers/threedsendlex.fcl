@@ -1,0 +1,28 @@
+#tab threedsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+az		{return $AZ_}
+azimuth		{return $AZ_}
+background	{return $BG_}
+bg		{return $BG_}
+border		{return $BORDER_}
+color		{return $COLOR_}
+compass		{return $COMPASS_}
+el		{return $EL_}
+elevation	{return $EL_}
+highlite	{return $HIGHLITE_}
+lock		{return $LOCK_}
+method		{return $METHOD_}
+scale		{return $SCALE_}
+view		{return $VIEW_}
+vp		{return $VIEW_}
+
+#include string.fin
+
+%%

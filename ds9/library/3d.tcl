@@ -472,34 +472,11 @@ proc Process3DCmd {varname iname} {
 }
 
 proc ProcessSend3DCmd {proc id param {sock {}} {fn {}}} {
-    global threed
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    switch -- [string tolower [lindex $param 0]] {
-	az {$proc $id "$threed(az)\n"}
-	el {$proc $id "$threed(el)\n"}
-	view -
-	vp {$proc $id "$threed(az) $threed(el)\n"}
-	scale {$proc $id "$threed(scale)\n"}
-	method {$proc $id "$threed(method)\n"}
-	background {$proc $id "$threed(background)\n"}
-	lock {$proc $id [ToYesNo $threed(lock)]}
-	highlite {
-	    switch [string tolower [lindex $param 1]] {
-		color {$proc $id "$threed(highlite,color)\n"}
-		default {$proc $id [ToYesNo $threed(highlite)]}
-	    }
-	}
-	border {
-	    switch [string tolower [lindex $param 1]] {
-		color {$proc $id "$threed(border,color)\n"}
-		default {$proc $id [ToYesNo $threed(border)]}
-	    }
-	}
-	compass {
-	    switch [string tolower [lindex $param 1]] {
-		color {$proc $id "$threed(compass,color)\n"}
-		default {$proc $id [ToYesNo $threed(compass)]}
-	    }
-	}
-    }
+    threedsend::YY_FLUSH_BUFFER
+    threedsend::yy_scan_string $param
+    threedsend::yyparse
 }

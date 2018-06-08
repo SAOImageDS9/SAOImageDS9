@@ -15,7 +15,7 @@ space		{return $SPACE_}
 ticks		{return $TICKS_}
 value		{return $VALUE_}
 
-#include fonts.fin
+#include font.fin
 #include ws.fin
 
 %%

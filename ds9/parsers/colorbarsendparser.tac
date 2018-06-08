@@ -1,7 +1,7 @@
 %{
 %}
 
-#include fonts.tin
+#include font.tin
 
 %start colorbarsend
 

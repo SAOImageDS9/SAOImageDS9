@@ -1,0 +1,8 @@
+skyframe : FK4_ {set _ fk4}
+ | B1950_ {set _ fk4}
+ | FK5_ {set _ fk5}
+ | J2000_ {set _ fk5}
+ | ICRS_ {set _ icrs}
+ | GALACTIC_ {set _ galactic}
+ | ECLIPTIC_ {set _ ecliptic}
+ ;

@@ -1,0 +1,2 @@
+degrees	    {return $DEGREES_}
+sexagesimal {return $SEXAGESIMAL_}

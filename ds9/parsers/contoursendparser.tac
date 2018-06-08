@@ -1,7 +1,9 @@
 %{
 %}
 
-#include coords.tin
+#include coordsys.tin
+#include wcssys.tin
+#include skyframe.tin
 
 %start contoursend
 
@@ -21,7 +23,9 @@
 
 %%
 
-#include coords.trl
+#include coordsys.trl
+#include wcssys.trl
+#include skyframe.trl
 
 contoursend : {ProcessSendCmdYesNo contour view}
  | COLOR_ {ProcessSendCmdGet contour color}

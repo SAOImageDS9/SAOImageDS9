@@ -1,0 +1,7 @@
+fk4	    {return $FK4_}
+b1950	    {return $FK4_}
+fk5	    {return $FK5_}
+j2000	    {return $FK5_}
+icrs	    {return $ICRS_}
+galactic    {return $GALACTIC_}
+ecliptic    {return $ECLIPTIC_}

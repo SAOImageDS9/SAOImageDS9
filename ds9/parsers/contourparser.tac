@@ -2,7 +2,9 @@
 %}
 
 #include yesno.tin
-#include coords.tin
+#include coordsys.tin
+#include wcssys.tin
+#include skyframe.tin
 #include numeric.tin
 #include string.tin
 
@@ -49,7 +51,9 @@
 %%
 
 #include yesno.trl
-#include coords.trl
+#include coordsys.trl
+#include wcssys.trl
+#include skyframe.trl
 #include numeric.trl
 
 command : contour 

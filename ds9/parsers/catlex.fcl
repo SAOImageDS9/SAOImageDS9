@@ -96,8 +96,12 @@ saao	    {return $SAAO_}
 
 #include yesno.fin
 #include font.fin
-#include coords.fin
+#include wcssys.fin
+#include skyframe.fin
+#include skyformat.fin
+#include rformat.fin
 #include numeric.fin
+#include sexstr.fin
 #include string.fin
 #include ws.fin
 

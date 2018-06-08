@@ -1,0 +1,2 @@
+%token DEGREES_
+%token SEXAGESIMAL_

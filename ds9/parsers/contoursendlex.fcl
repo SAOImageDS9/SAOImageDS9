@@ -21,7 +21,9 @@ scope		{return $SCOPE_}
 smooth		{return $SMOOTH_}
 width		{return $WIDTH_}
 
-#include coords.fin
+#include coordsys.fin
+#include wcssys.fin
+#include skyframe.fin
 #include ws.fin
 
 %%

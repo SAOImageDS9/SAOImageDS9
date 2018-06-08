@@ -1,0 +1,4 @@
+skyformat : DEGREES_ {set _ degrees}
+ | SEXAGESIMAL_ {set _ sexagesimal}
+ ;
+ 

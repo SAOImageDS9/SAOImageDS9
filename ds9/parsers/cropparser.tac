@@ -2,8 +2,12 @@
 %}
 
 #include matchlock.tin
-#include coords.tin
+#include coordsys.tin
+#include wcssys.tin
+#include skyframe.tin
+#include rformat.tin
 #include numeric.tin
+#include sexstr.tin
 #include string.tin
 
 %start command
@@ -16,7 +20,10 @@
 %%
 
 #include matchlock.trl
-#include coords.trl
+#include coordsys.trl
+#include wcssys.trl
+#include skyframe.trl
+#include rformat.trl
 #include numeric.trl
 
 command : crop

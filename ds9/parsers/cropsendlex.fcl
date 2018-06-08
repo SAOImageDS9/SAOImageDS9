@@ -8,7 +8,7 @@
 %%
 
 3d	{return $3D_}
-LOCK_	{return $LOCK_}
+lock	{return $LOCK_}
 
 #include coords.fin
 #include ws.fin

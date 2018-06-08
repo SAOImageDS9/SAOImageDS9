@@ -1,0 +1,5 @@
+rformat : DEGREES_ {set _ degrees}
+ | ARCMIN_ {set _ arcmin}
+ | ARCSEC_ {set _ arcsec}
+ ;
+ 

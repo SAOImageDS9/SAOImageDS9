@@ -1,0 +1,7 @@
+%token FK4_
+%token B1950_
+%token FK5_
+%token J2000_
+%token ICRS_
+%token GALACTIC_
+%token ECLIPTIC_

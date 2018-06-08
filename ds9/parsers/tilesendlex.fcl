@@ -1,0 +1,18 @@
+#tab tilesendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+direction	{return $DIRECTION_}
+gap		{return $GAP_}
+grid		{return $GRID_}
+layout		{return $LAYOUT_}
+mode		{return $MODE_}
+
+#include ws.fin
+
+%%

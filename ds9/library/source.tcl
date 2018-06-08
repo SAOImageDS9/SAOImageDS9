@@ -392,6 +392,8 @@ source $ds9(root)/library/threedsendparser.tcl
 source $ds9(root)/library/threedsendlex.tcl
 source $ds9(root)/library/tileparser.tcl
 source $ds9(root)/library/tilelex.tcl
+source $ds9(root)/library/tilesendparser.tcl
+source $ds9(root)/library/tilesendlex.tcl
 source $ds9(root)/library/twomassparser.tcl
 source $ds9(root)/library/twomasslex.tcl
 source $ds9(root)/library/twomasssendparser.tcl

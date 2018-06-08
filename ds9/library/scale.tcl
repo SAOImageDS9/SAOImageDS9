@@ -834,7 +834,6 @@ proc ProcessScaleCmd {varname iname} {
 }
 
 proc ProcessSendScaleCmd {proc id param {sock {}} {fn {}}} {
-    if {1} {
     global parse
     set parse(proc) $proc
     set parse(id) $id
@@ -842,27 +841,6 @@ proc ProcessSendScaleCmd {proc id param {sock {}} {fn {}}} {
     scalesend::YY_FLUSH_BUFFER
     scalesend::yy_scan_string $param
     scalesend::yyparse
-    } else {
-	
-    global current
-    global scale
-    switch -- [string tolower $param] {
-	lock {$proc $id [ToYesNo $scale(lock)]} 
-	{lock limits} {$proc $id [ToYesNo $scale(lock,limits)]} 
-	datasec {$proc $id "$scale(datasec)\n"}
-	limits {
-	    if {$current(frame) != {}} {
-		set lims [$current(frame) get clip]
-		$proc $id "[lindex $lims 0] [lindex $lims 1]\n"
-	    }
-	}
-	mode {$proc $id "$scale(mode)\n"}
-	scope {$proc $id "$scale(scope)\n"}
-	log -
-	{log exp} {$proc $id "$scale(log)\n"}
-	default {$proc $id "$scale(type)\n"}
-    }
-}
 }
 
 proc ProcessMinMaxCmd {varname iname} {

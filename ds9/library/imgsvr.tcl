@@ -482,18 +482,3 @@ proc IMGSVRProgress {varname token totalsize currentsize} {
 	ARStatus $varname "$currentsize bytes"
     }
 }
-
-proc IMGSVRProcessSendCmd {proc id param vvarname} {
-    upvar #0 $vvarname vvar
-
-    switch -- [string tolower [lindex $param 0]] {
-	save {$proc $id [ToYesNo $vvar(save)]}
-	frame {$proc $id "$vvar(mode)\n"}
-	survey {$proc $id "$vvar(survey)\n"}
-	size {$proc $id "$vvar(width) $vvar(height) $vvar(rformat)\n"}
-	pixels {$proc $id "$vvar(width,pixels) $vvar(height,pixels)\n"}
-	coord {$proc $id "$vvar(x) $vvar(y) $vvar(skyformat)\n"}
-	name -
-	default {$proc $id "$vvar(name)\n"}
-    }
-}

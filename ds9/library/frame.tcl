@@ -2169,26 +2169,23 @@ proc ProcessTileCmd {varname iname} {
 }
 
 proc ProcessSendTileCmd {proc id param {sock {}} {fn {}}} {
-    global current
-    global tile
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    switch -- [lindex $param 0] {
-	mode {$proc $id "$tile(mode)\n"}
-	grid {
-	    switch -- [lindex $param 1] {
-		mode {$proc $id "$tile(grid,mode)\n"}
-		direction {$proc $id "$tile(grid,dir)\n"}
-		layout {$proc $id "$tile(grid,col) $tile(grid,row)\n"}
-		gap {$proc $id "$tile(grid,gap)\n"}
-	    }
-	}
-	default {
-	    if {$current(display)=="tile"} {
-		$proc $id [ToYesNo 1]
-	    } else {
-		$proc $id [ToYesNo 0]
-	    }
-	}
+    tilesend::YY_FLUSH_BUFFER
+    tilesend::yy_scan_string $param
+    tilesend::yyparse
+}
+
+proc TileSendCmd {} {
+    global parse
+    global current
+    
+    if {$current(display)=="tile"} {
+	$parse(proc) $parse(id) "yes\n"
+    } else {
+	$parse(proc) $parse(id) "no\n"
     }
 }
 
@@ -2239,45 +2236,6 @@ proc ProcessSendLockCmd {proc id param {sock {}} {fn {}}} {
     locksend::YY_FLUSH_BUFFER
     locksend::yy_scan_string $param
     locksend::yyparse
-
-    return
-    global panzoom
-    global crop
-    global crosshair
-    global cube
-    global ime
-    global bin
-    global scale
-    global colorbar
-    global block
-    global smooth
-    global threed
-
-    switch -- [lindex $param 0] {
-	frame -
-	frames {$proc $id "$panzoom(lock)\n"}
-	crosshair -
-	crosshairs {$proc $id "$crosshair(lock)\n"}
-	crop {$proc $id "$crop(lock)\n"}
-	slice -
-	cube -
-	datacube {$proc $id "$cube(lock)\n"}
-	analysis {$proc $id "$ime(lock)\n"}
-	bin {$proc $id [ToYesNo $bin(lock)]}
-	axes -
-	order {$proc $id [ToYesNo $cube(lock,axes)]}
-	scale -
-	scales {$proc $id [ToYesNo $scale(lock)]}
-	limits -
-	scalelimits {$proc $id [ToYesNo $scale(lock,limits)]}
-	color -
-	colormap -
-	colorbar -
-	colorbars {$proc $id [ToYesNo $colorbar(lock)]}
-	block {$proc $id [ToYesNo $block(lock)]}
-	smooth {$proc $id [ToYesNo $smooth(lock)]}
-	3d {$proc $id [ToYesNo $threed(lock)]}
-    }
 }
 
 proc ProcessMatchCmd {varname iname} {

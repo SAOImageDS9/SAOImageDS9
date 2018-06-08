@@ -736,9 +736,3 @@ proc ProcessSendCubeCmd {proc id param {sock {}} {fn {}}} {
     cubesend::yyparse
 }
 
-proc CubeSendCmdInterval {} {
-    global parse
-    global blink
-
-    $parse(proc) $parse(id) "[expr $blink(interval)/1000.]\n"
-}

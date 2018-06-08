@@ -13,7 +13,7 @@
 
 cubesend : {global cube; ProcessSendCmdCurrent frame "get fits slice $cube(axis)"}
  | LOCK_ {ProcessSendCmdGet cube lock}
- | INTERVAL_ {CubeSendCmdInterval}
+ | INTERVAL_ {BlinkSendCmdInterval}
  | AXIS_ {ProcessSendCmdGet cube axis}
  | AXES_ order
  | ORDER_ order

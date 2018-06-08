@@ -204,6 +204,8 @@ source $ds9(root)/library/bgparser.tcl
 source $ds9(root)/library/bglex.tcl
 source $ds9(root)/library/blinkparser.tcl
 source $ds9(root)/library/blinklex.tcl
+source $ds9(root)/library/blinksendparser.tcl
+source $ds9(root)/library/blinksendlex.tcl
 source $ds9(root)/library/blockparser.tcl
 source $ds9(root)/library/blocklex.tcl
 source $ds9(root)/library/blocksendparser.tcl

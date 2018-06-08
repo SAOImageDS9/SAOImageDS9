@@ -2200,19 +2200,31 @@ proc ProcessBlinkCmd {varname iname} {
 }
 
 proc ProcessSendBlinkCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    blinksend::YY_FLUSH_BUFFER
+    blinksend::yy_scan_string $param
+    blinksend::yyparse
+}
+
+proc BlinkSendCmd {} {
+    global parse
     global current
+    
+    if {$current(display)=="blink"} {
+	$parse(proc) $parse(id) "yes\n"
+    } else {
+	$parse(proc) $parse(id) "no\n"
+    }
+}
+
+proc BlinkSendCmdInterval {} {
+    global parse
     global blink
 
-    switch -- [lindex $param 0] {
-	interval {$proc $id "[expr $blink(interval)/1000.]\n"}
-	default {
-	    if {$current(display) == {blink}} {
-		$proc $id [ToYesNo 1]
-	    } else {
-		$proc $id [ToYesNo 0]
-	    }
-	}
-    }
+    $parse(proc) $parse(id) "[expr $blink(interval)/1000.]\n"
 }
 
 proc ProcessLockCmd {varname iname} {

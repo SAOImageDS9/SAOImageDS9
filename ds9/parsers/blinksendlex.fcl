@@ -1,0 +1,12 @@
+#tab blinksendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+interval    {return $INTERVAL_}
+
+%%

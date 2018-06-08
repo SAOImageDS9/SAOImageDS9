@@ -1,0 +1,8 @@
+skyformat : DEGREES_ {set _ degrees}
+ | SEXAGESIMAL_ {set _ sexagesimal}
+ ;
+ 
+rformat : DEGREES_ {set _ degrees}
+ | ARCMIN_ {set _ arcmin}
+ | ARCSEC_ {set _ arcsec}
+ ;

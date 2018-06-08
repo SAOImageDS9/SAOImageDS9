@@ -98,8 +98,7 @@ saao	    {return $SAAO_}
 #include font.fin
 #include wcssys.fin
 #include skyframe.fin
-#include skyformat.fin
-#include rformat.fin
+#include wcsformat.fin
 #include numeric.fin
 #include sexstr.fin
 #include string.fin

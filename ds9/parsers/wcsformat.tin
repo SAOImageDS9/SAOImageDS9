@@ -1,0 +1,5 @@
+%token DEGREES_
+%token ARCMIN_
+%token ARCSEC_
+
+%token SEXAGESIMAL_

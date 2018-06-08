@@ -1,7 +1,10 @@
 %{
 %}
 
-#include coords.tin
+#include coordsys.tin
+#include wcssys.tin
+#include skyframe.tin
+#include wcsformat.tin
 
 %start cropsend
 
@@ -10,7 +13,10 @@
 
 %%
 
-#include coords.trl
+#include coordsys.trl
+#include wcssys.trl
+#include skyframe.trl
+#include wcsformat.trl
 
 cropsend : {ProcessSendCmdCurrent frame "get crop center physical fk5 degrees physical degrees"}
  | coordsys {ProcessSendCmdCurrent frame "get crop center $1 fk5 degrees $1 degrees"}

@@ -1,8 +1,11 @@
 %{
 %}
 
-#include coords.tin
+#include wcssys.tin
+#include skyframe.tin
+#include wcsformat.tin
 #include numeric.tin
+#include sexstr.tin
 #include string.tin
 
 %start command
@@ -42,7 +45,9 @@
 
 %%
 
-#include coords.trl
+#include wcssys.trl
+#include skyframe.trl
+#include wcsformat.trl
 #include numeric.trl
 
 command : sia 

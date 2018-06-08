@@ -5,8 +5,7 @@
 #include font.tin
 #include wcssys.tin
 #include skyframe.tin
-#include skyformat.tin
-#include rformat.tin
+#include wcsformat.tin
 #include numeric.tin
 #include sexstr.tin
 #include string.tin
@@ -107,8 +106,7 @@
 #include font.trl
 #include wcssys.trl
 #include skyframe.trl
-#include skyformat.trl
-#include rformat.trl
+#include wcsformat.trl
 #include numeric.trl
 
 command : catalog

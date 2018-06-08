@@ -40,8 +40,11 @@ starbase    {return $STARBASE_}
 csv	    {return $CSV_}
 tsv	    {return $TSV_}
 
-#include coords.fin
+#include wcssys.fin
+#include skyframe.fin
+#include wcsformat.fin
 #include numeric.fin
+#include sexstr.fin
 #include string.fin
 #include ws.fin
 

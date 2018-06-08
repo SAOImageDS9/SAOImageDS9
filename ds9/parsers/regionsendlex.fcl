@@ -55,7 +55,7 @@ xy	    {return $XY_}
 #include wcssys.fin
 #include skyframe.fin
 #include skyformat.fin
-#include numeric.fin
+#include int.fin
 #include string.fin
 #include ws.fin
 

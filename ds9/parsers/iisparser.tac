@@ -1,7 +1,7 @@
 %{
 %}
 
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
@@ -9,8 +9,6 @@
 %token FILENAME_
 
 %%
-
-#include numeric.trl
 
 command : iis 
  | iis {yyclearin; YYACCEPT} STRING_

@@ -1,7 +1,7 @@
 %{
 %}
 
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
@@ -14,8 +14,6 @@
 %token TRANSPARENCY_
 
 %%
-
-#include numeric.trl
 
 command : mask 
  | mask {yyclearin; YYACCEPT} STRING_

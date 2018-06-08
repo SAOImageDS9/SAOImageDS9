@@ -15,7 +15,7 @@ precision   {return $PRECISION_}
 threads	    {return $THREADS_}
 
 #include yesno.fin
-#include numeric.fin
+#include int.fin
 #include string.fin
 #include ws.fin
 

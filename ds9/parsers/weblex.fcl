@@ -16,7 +16,7 @@ new	    {return $NEW_}
 reload	    {return $RELOAD_}
 stop	    {return $STOP_}
 
-#include numeric.fin
+#include int.fin
 #include string.fin
 #include ws.fin
 

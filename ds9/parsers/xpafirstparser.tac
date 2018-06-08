@@ -2,7 +2,6 @@
 %}
 
 #include yesno.tin
-#include numeric.tin
 #include string.tin
 
 %start command
@@ -20,7 +19,6 @@
 %%
 
 #include yesno.trl
-#include numeric.trl
 
 command : xpa 
  | xpa {yyclearin; YYACCEPT} STRING_

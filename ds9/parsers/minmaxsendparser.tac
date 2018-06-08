@@ -1,16 +1,12 @@
 %{
 %}
 
-#include numeric.tin
-
 %start minmaxsend
 
 %token INTERVAL_
 %token MODE_
 
 %%
-
-#include numeric.trl
 
 minmaxsend : {ProcessSendCmdGet minmax mode}
  | MODE_ {ProcessSendCmdGet minmax mode}

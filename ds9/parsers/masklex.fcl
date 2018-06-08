@@ -14,7 +14,7 @@ mark	    {return $MARK_}
 open	    {return $OPEN_}
 transparency {return $TRANSPARENCY_}
 
-#include numeric.fin
+#include int.fin
 #include string.fin
 #include ws.fin
 

@@ -6,7 +6,7 @@
 #include wcssys.tin
 #include skyframe.tin
 #include skyformat.tin
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start regionsend
@@ -61,7 +61,6 @@
 #include wcssys.trl
 #include skyframe.trl
 #include skyformat.trl
-#include numeric.trl
 
 regionsend : {RegionSendCmd}
  | props {RegionSendCmd}

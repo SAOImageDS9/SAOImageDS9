@@ -2,7 +2,7 @@
 %}
 
 #include wcssys.tin
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
@@ -34,7 +34,6 @@
 %%
 
 #include wcssys.trl
-#include numeric.trl
 
 # only called by xpa/samp
 command : shms

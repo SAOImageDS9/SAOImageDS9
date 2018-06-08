@@ -19,7 +19,7 @@ server	    {return $SERVER_}
 xpa	    {return $XPA_}
 
 #include yesno.fin
-#include numeric.fin
+#include int.fin
 #include string.fin
 #include ws.fin
 

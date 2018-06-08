@@ -16,7 +16,7 @@ mode	    {return $MODE_}
 sample	    {return $SAMPLE_}
 scan	    {return $SCAN_}
 
-#include numeric.fin
+#include int.fin
 #include string.fin
 #include ws.fin
 

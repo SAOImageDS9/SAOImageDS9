@@ -1,7 +1,7 @@
 %{
 %}
 
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
@@ -26,8 +26,6 @@
 %token XYEXEY_
 
 %%
-
-#include numeric.trl
 
 command : analysis 
  | analysis {yyclearin; YYACCEPT} STRING_

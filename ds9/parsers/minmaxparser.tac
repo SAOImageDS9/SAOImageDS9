@@ -1,7 +1,7 @@
 %{
 %}
 
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
@@ -15,8 +15,6 @@
 %token SCAN_
 
 %%
-
-#include numeric.trl
 
 command : minmax 
  | minmax {yyclearin; YYACCEPT} STRING_

@@ -15,7 +15,7 @@
 
 %%
 
-#include yesno.trl
+#include yes-no.trl
 
 command : samp 
  | samp {yyclearin; YYACCEPT} STRING_

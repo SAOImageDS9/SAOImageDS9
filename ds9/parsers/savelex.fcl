@@ -21,7 +21,7 @@ image	    {return $IMAGE_}
 table	    {return $TABLE_}
 slice	    {return $SLICE_}
 
-#include numeric.fin
+#include int.fin
 #include string.fin
 #include ws.fin
 

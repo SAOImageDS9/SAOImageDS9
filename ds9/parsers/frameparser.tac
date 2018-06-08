@@ -4,7 +4,7 @@
 #include matchlock.tin
 #include coordsys.tin
 #include wcssys.tin
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
@@ -34,7 +34,6 @@
 #include matchlock.trl
 #include coordsys.trl
 #include wcssys.trl
-#include numeric.trl
 
 command : frame 
  | frame {yyclearin; YYACCEPT} STRING_

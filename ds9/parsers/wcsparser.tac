@@ -5,7 +5,7 @@
 #include wcssys.tin
 #include skyframe.tin
 #include skyformat.tin
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
@@ -26,7 +26,6 @@
 #include wcssys.trl
 #include skyframe.trl
 #include skyformat.trl
-#include numeric.trl
 
 command : wcs 
  | wcs {yyclearin; YYACCEPT} STRING_

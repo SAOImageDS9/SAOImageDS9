@@ -11,7 +11,7 @@
 
 %%
 
-#include yesno.trl
+#include yes-no.trl
 #include numeric.trl
 
 command : blink 

@@ -1,7 +1,7 @@
 %{
 %}
 
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
@@ -21,8 +21,6 @@
 %token SLICE_
 
 %%
-
-#include numeric.trl
 
 command : save 
  | save {yyclearin; YYACCEPT} STRING_

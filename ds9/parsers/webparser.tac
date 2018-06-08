@@ -1,7 +1,7 @@
 %{
 %}
 
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
@@ -16,8 +16,6 @@
 %token STOP_
 
 %%
-
-#include numeric.trl
 
 command : web 
  | web {yyclearin; YYACCEPT} STRING_

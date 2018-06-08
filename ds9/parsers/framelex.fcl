@@ -31,7 +31,7 @@ show	    {return $SHOW_}
 #include matchlock.fin
 #include coordsys.fin
 #include wcssys.fin
-#include numeric.fin
+#include int.fin
 #include string.fin
 #include ws.fin
 

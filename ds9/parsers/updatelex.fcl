@@ -10,7 +10,7 @@
 now	    {return $NOW_}
 
 #include yesno.fin
-#include numeric.fin
+#include int.fin
 #include string.fin
 #include ws.fin
 

@@ -2,7 +2,6 @@
 %}
 
 #include yesno.tin
-#include numeric.tin
 #include string.tin
 
 %start command
@@ -13,7 +12,6 @@
 %%
 
 #include yesno.trl
-#include numeric.trl
 
 command : preserve 
  | preserve {yyclearin; YYACCEPT} STRING_

@@ -1,7 +1,7 @@
 %{
 %}
 
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
@@ -10,8 +10,6 @@
 %token SAVE_
 
 %%
-
-#include numeric.trl
 
 command : header 
  | header {yyclearin; YYACCEPT} STRING_

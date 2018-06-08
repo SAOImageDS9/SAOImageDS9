@@ -1,14 +1,12 @@
 %{
 %}
 
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
 
 %%
-
-#include numeric.trl
 
 command : height 
  | height {yyclearin; YYACCEPT} STRING_

@@ -2,7 +2,7 @@
 %}
 
 #include yesno.tin
-#include numeric.tin
+#include int.tin
 #include string.tin
 
 %start command
@@ -19,8 +19,7 @@
 
 %%
 
-#include yesno.trl
-#include numeric.trl
+#include yes-no.trl
 
 command : tile 
  | tile {yyclearin; YYACCEPT} STRING_

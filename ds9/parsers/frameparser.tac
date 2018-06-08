@@ -1,7 +1,6 @@
 %{
 %}
 
-#include matchlock.tin
 #include coordsys.tin
 #include wcssys.tin
 #include int.tin
@@ -20,9 +19,12 @@
 %token FRAMENO_
 %token HIDE_
 %token LAST_
+%token LOCK_
+%token MATCH_
 %token MOVE_
 %token NEW_
 %token NEXT_
+%token NONE_
 %token PREV_
 %token REFRESH_
 %token RESET_
@@ -31,7 +33,6 @@
 
 %%
 
-#include matchlock.trl
 #include coordsys.trl
 #include wcssys.trl
 
@@ -102,6 +103,15 @@ move : FIRST_ {FirstFrame}
  | LAST_ {LastFrame}
  | BACK_ {PrevFrame}
  | FORWARD_ {NextFrame}
+ ;
+
+lock : coordsys {set _ $1}
+ | wcssys {set _ $1}
+ | NONE_  {set _ none}
+ ;
+
+match : coordsys {set _ $1}
+ | wcssys {set _ $1}
  ;
 
 %%

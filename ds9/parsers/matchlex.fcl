@@ -20,7 +20,6 @@ scalelimits {return $SCALELIMITS_}
 slice	    {return $SLICE_}
 smooth	    {return $SMOOTH_}
 
-#include matchlock.fin
 #include coordsys.fin
 #include wcssys.fin
 #include string.fin

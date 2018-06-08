@@ -1,7 +1,6 @@
 %{
 %}
 
-#include matchlock.tin
 #include coordsys.tin
 #include wcssys.tin
 #include yesno.tin
@@ -16,7 +15,10 @@
 %token FIRST_
 %token INTERVAL_
 %token LAST_
+%token LOCK_
+%token MATCH_
 %token NEXT_
+%token NONE_
 %token OPEN_
 %token ORDER_
 %token PLAY_
@@ -32,7 +34,6 @@
 
 %%
 
-#include matchlock.trl
 #include coordsys.trl
 #include wcssys.trl
 #include yesno.trl
@@ -69,6 +70,16 @@ orderAxes : 123_ {set _ 123}
  | 231_ {set _ 231}
  | 312_ {set _ 312}
  | 321_ {set _ 321}
+ ;
+
+lockslice : {set _ image}
+ | IMAGE_ {set _ image}
+ | wcssys {set _ $1}
+ | NONE_ {set _ none}
+ ;
+
+matchslice : IMAGE_ {set _ image}
+ | wcssys {set _ $1}
  ;
 
 %%

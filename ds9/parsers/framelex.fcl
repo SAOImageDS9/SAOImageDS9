@@ -19,16 +19,18 @@ forward	    {return $FORWARD_}
 frameno	    {return $FRAMENO_}
 hide	    {return $HIDE_}
 last	    {return $LAST_}
+lock	    {return $LOCK_}
+match	    {return $MATCH_}
 move	    {return $MOVE_}
 new	    {return $NEW_}
 next	    {return $NEXT_}
+none	    {return $NONE_}
 prev	    {return $PREV_}
 refresh	    {return $REFRESH_}
 reset	    {return $RESET_}
 rgb	    {return $RGB_}
 show	    {return $SHOW_}
 
-#include matchlock.fin
 #include coordsys.fin
 #include wcssys.fin
 #include int.fin

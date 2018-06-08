@@ -1,7 +1,6 @@
 %{
 %}
 
-#include matchlock.tin
 #include coordsys.tin
 #include wcssys.tin
 #include skyframe.tin
@@ -11,9 +10,12 @@
 
 %start command
 
+%token LOCK_
+%token MATCH_
+%token NONE_
+
 %%
 
-#include matchlock.trl
 #include coordsys.trl
 #include wcssys.trl
 #include skyframe.trl
@@ -34,6 +36,15 @@ crosshair : MATCH_ match {MatchCrosshairCurrent $2}
  | SEXSTR_ SEXSTR_ wcssys {CrosshairTo $1 $2 $3 fk5}
  | SEXSTR_ SEXSTR_ skyframe {CrosshairTo $1 $2 wcs $3}
  | SEXSTR_ SEXSTR_ wcssys skyframe {CrosshairTo $1 $2 $3 $4}
+ ;
+
+lock : coordsys {set _ $1}
+ | wcssys {set _ $1}
+ | NONE_  {set _ none}
+ ;
+
+match : coordsys {set _ $1}
+ | wcssys {set _ $1}
  ;
 
 %%

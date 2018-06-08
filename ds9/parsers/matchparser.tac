@@ -1,7 +1,6 @@
 %{
 %}
 
-#include matchlock.tin
 #include coordsys.tin
 #include wcssys.tin
 #include string.tin
@@ -23,7 +22,6 @@
 
 %%
 
-#include matchlock.trl
 #include coordsys.trl
 #include wcssys.trl
 
@@ -43,6 +41,14 @@ match : FRAME_ match {MatchFrameCurrent $2}
  | BLOCK_ {MatchBlockCurrent}
  | SMOOTH_ {MatchSmoothCurrent}
  | 3D_ {Match3DCurrent}
+ ;
+
+match : coordsys {set _ $1}
+ | wcssys {set _ $1}
+ ;
+
+matchslice : IMAGE_ {set _ image}
+ | wcssys {set _ $1}
  ;
 
 %%

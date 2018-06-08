@@ -1,3 +1,0 @@
-%token LOCK_
-%token MATCH_
-%token NONE_

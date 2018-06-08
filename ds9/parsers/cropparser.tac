@@ -1,7 +1,6 @@
 %{
 %}
 
-#include matchlock.tin
 #include coordsys.tin
 #include wcssys.tin
 #include skyframe.tin
@@ -14,12 +13,14 @@
 
 %token 3D_
 %token CLOSE_
+%token LOCK_
+%token MATCH_
+%token NONE_
 %token OPEN_
 %token RESET_
 
 %%
 
-#include matchlock.trl
 #include coordsys.trl
 #include wcssys.trl
 #include skyframe.trl
@@ -59,6 +60,15 @@ crop : OPEN_ {CropDialog}
 3d : numeric numeric {ProcessCmdCurrent frame "crop 3d $1 $2 image"}
  | numeric numeric coordsys {ProcessCmdCurrent frame "crop 3d $1 $2 $3"}
  | numeric numeric wcssys {ProcessCmdCurrent frame "crop 3d $1 $2 $3"}
+ ;
+
+lock : coordsys {set _ $1}
+ | wcssys {set _ $1}
+ | NONE_  {set _ none}
+ ;
+
+match : coordsys {set _ $1}
+ | wcssys {set _ $1}
  ;
 
 %%

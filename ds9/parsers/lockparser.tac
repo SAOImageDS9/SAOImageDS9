@@ -1,7 +1,6 @@
 %{
 %}
 
-#include matchlock.tin
 #include coordsys.tin
 #include wcssys.tin
 #include yesno.tin
@@ -22,9 +21,10 @@
 %token SLICE_
 %token SMOOTH_
 
+%token NONE_
+
 %%
 
-#include matchlock.trl
 #include coordsys.trl
 #include wcssys.trl
 #include yesno.trl
@@ -45,6 +45,17 @@ lock : FRAME_ lock {ProcessCmdSet panzoom lock $2 LockFrameCurrent}
  | BLOCK_ yesno {ProcessCmdSet block lock $2 LockBlockCurrent}
  | SMOOTH_ yesno {ProcessCmdSet smooth lock $2 LockSmoothCurrent}
  | 3D_ yesno {ProcessCmdSet threed lock $2 Lock3DCurrent}
+ ;
+
+lock : coordsys {set _ $1}
+ | wcssys {set _ $1}
+ | NONE_  {set _ none}
+ ;
+
+lockslice : {set _ image}
+ | IMAGE_ {set _ image}
+ | wcssys {set _ $1}
+ | NONE_ {set _ none}
  ;
 
 %%

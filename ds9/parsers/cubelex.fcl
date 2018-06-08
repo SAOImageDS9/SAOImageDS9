@@ -13,7 +13,10 @@ close	    {return $CLOSE_}
 first	    {return $FIRST_}
 interval    {return $INTERVAL_}
 last	    {return $LAST_}
+lock	    {return $LOCK_}
+match	    {return $MATCH_}
 next	    {return $NEXT_}
+none	    {return $NONE_}
 open	    {return $OPEN_}
 order	    {return $ORDER_}
 play	    {return $PLAY_}
@@ -27,7 +30,6 @@ stop	    {return $STOP_}
 312	    {return $312_}
 321	    {return $321_}
 
-#include matchlock.fin
 #include coordsys.fin
 #include wcssys.fin
 #include yesno.fin

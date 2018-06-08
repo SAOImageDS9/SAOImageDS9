@@ -95,7 +95,7 @@ bejing	    {return $BEJING_}
 saao	    {return $SAAO_}
 
 #include yesno.fin
-#include font.fin
+#include fonts.fin
 #include wcssys.fin
 #include skyframe.fin
 #include wcsformat.fin

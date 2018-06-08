@@ -2,7 +2,7 @@
 %}
 
 #include yesno.tin
-#include font.tin
+#include fonts.tin
 #include int.tin
 #include string.tin
 
@@ -23,7 +23,7 @@
 %%
 
 #include yesno.trl
-#include font.trl
+#include fonts.trl
 
 command : colorbar
  | colorbar {yyclearin; YYACCEPT} STRING_

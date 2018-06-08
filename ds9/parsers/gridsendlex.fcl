@@ -46,7 +46,7 @@ vertical	{return $VERTICAL_}
 view		{return $VIEW_}
 width		{return $WIDTH_}
 
-#include font.fin
+#include fonts.fin
 #include ws.fin
 
 %%

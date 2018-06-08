@@ -20,7 +20,7 @@ value		{return $VALUE_}
 vertical	{return $VERTICAL_}
 
 #include yesno.fin
-#include font.fin
+#include fonts.fin
 #include int.fin
 #include string.fin
 #include ws.fin

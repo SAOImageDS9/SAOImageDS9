@@ -2,7 +2,7 @@
 %}
 
 #include yesno.tin
-#include font.tin
+#include fonts.tin
 #include coordsys.tin
 #include wcssys.tin
 #include skyframe.tin
@@ -65,7 +65,7 @@
 %%
 
 #include yesno.trl
-#include font.trl
+#include fonts.trl
 #include coordsys.trl
 #include wcssys.trl
 #include skyframe.trl

@@ -1,7 +1,7 @@
 %{
 %}
 
-#include font.tin
+#include fonts.tin
 
 %start gridsend
 

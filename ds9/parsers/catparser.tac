@@ -2,7 +2,7 @@
 %}
 
 #include yesno.tin
-#include font.tin
+#include fonts.tin
 #include wcssys.tin
 #include skyframe.tin
 #include wcsformat.tin
@@ -103,7 +103,7 @@
 %%
 
 #include yesno.trl
-#include font.trl
+#include fonts.trl
 #include wcssys.trl
 #include skyframe.trl
 #include wcsformat.trl

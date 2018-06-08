@@ -134,7 +134,7 @@ xaxis	    {return $XAXIS_}
 yaxis	    {return $YAXIS_}
 
 #include yesno.fin
-#include font.fin
+#include fonts.fin
 #include numeric.fin
 #include string.fin
 #include ws.fin

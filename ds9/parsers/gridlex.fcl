@@ -65,7 +65,7 @@ uul		{return $UUL_}
 uuu		{return $UUU_}
 
 #include yesno.fin
-#include font.fin
+#include fonts.fin
 #include coordsys.fin
 #include wcssys.fin
 #include skyframe.fin

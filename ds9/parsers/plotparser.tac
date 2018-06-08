@@ -3,7 +3,7 @@
 %}
 
 #include yesno.tin
-#include font.tin
+#include fonts.tin
 #include numeric.tin
 #include string.tin
 
@@ -138,7 +138,7 @@
 %%
 
 #include yesno.trl
-#include font.trl
+#include fonts.trl
 #include numeric.trl
 
 command : plot

@@ -11,6 +11,7 @@ axis	    {return $AXIS_}
 axes	    {return $AXES_}
 close	    {return $CLOSE_}
 first	    {return $FIRST_}
+image	    {return $IMAGE_}
 interval    {return $INTERVAL_}
 last	    {return $LAST_}
 lock	    {return $LOCK_}
@@ -30,7 +31,6 @@ stop	    {return $STOP_}
 312	    {return $312_}
 321	    {return $321_}
 
-#include coordsys.fin
 #include wcssys.fin
 #include yesno.fin
 #include numeric.fin

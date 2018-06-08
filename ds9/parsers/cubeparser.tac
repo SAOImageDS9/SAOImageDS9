@@ -1,7 +1,6 @@
 %{
 %}
 
-#include coordsys.tin
 #include wcssys.tin
 #include yesno.tin
 #include numeric.tin
@@ -14,6 +13,7 @@
 %token CLOSE_
 %token FIRST_
 %token INTERVAL_
+%token IMAGE_
 %token LAST_
 %token LOCK_
 %token MATCH_
@@ -34,7 +34,6 @@
 
 %%
 
-#include coordsys.trl
 #include wcssys.trl
 #include yesno.trl
 #include numeric.trl
@@ -51,6 +50,8 @@ cube : OPEN_
  | STOP_ {CubeStop}
  | NEXT_ {CubeNext}
  | PREV_ {CubePrev}
+ | FIRST_ {CubeFirst}
+ | LAST_ {CubeLast}
  | INTERVAL_ numeric {ProcessCmdSet cube interval [expr int($2*1000)]}
  | AXIS_ INT_ {ProcessCmdSet cube axis [expr $2-1]}
  | AXES_ order

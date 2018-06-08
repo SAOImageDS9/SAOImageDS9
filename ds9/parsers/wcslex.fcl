@@ -18,7 +18,9 @@ skyformat   {return $SKYFORMAT_}
 system	    {return $SYSTEM_}
 
 #include yesno.fin
-#include coords.fin
+#include wcssys.fin
+#include skyframe.fin
+#include skyformat.fin
 #include numeric.fin
 #include string.fin
 #include ws.fin

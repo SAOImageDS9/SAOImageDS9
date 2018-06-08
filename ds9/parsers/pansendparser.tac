@@ -1,13 +1,19 @@
 %{
 %}
 
-#include coords.tin
+#include coordsys.tin
+#include wcssys.tin
+#include skyframe.tin
+#include skyformat.tin
 
 %start pansend
 
 %%
 
-#include coords.trl
+#include coordsys.trl
+#include wcssys.trl
+#include skyframe.trl
+#include skyformat.trl
 
 pansend : {ProcessSendCmdCurrent frame "get cursor physical fk5 degrees"}
  | coordsys {ProcessSendCmdCurrent frame "get cursor $1 fk5 degrees"}

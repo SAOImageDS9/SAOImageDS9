@@ -11,8 +11,11 @@ close	    {return $CLOSE_}
 open	    {return $OPEN_}
 to	    {return $TO_}
 
-#include coords.fin
+#include coordsys.fin
+#include wcssys.fin
+#include skyframe.fin
 #include numeric.fin
+#include sexstr.fin
 #include string.fin
 #include ws.fin
 

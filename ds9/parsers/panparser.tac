@@ -1,8 +1,11 @@
 %{
 %}
 
-#include coords.tin
+#include coordsys.tin
+#include wcssys.tin
+#include skyframe.tin
 #include numeric.tin
+#include sexstr.tin
 #include string.tin
 
 %start command
@@ -13,7 +16,9 @@
 
 %%
 
-#include coords.trl
+#include coordsys.trl
+#include wcssys.trl
+#include skyframe.trl
 #include numeric.trl
 
 command : pan

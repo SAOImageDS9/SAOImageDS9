@@ -1,7 +1,10 @@
 %{
 %}
 
-#include coords.tin
+#include coordsys.tin
+#include wcssys.tin
+#include skyframe.tin
+#include skyformat.tin
 
 %start crosshairsend
 
@@ -9,7 +12,10 @@
 
 %%
 
-#include coords.trl
+#include coordsys.trl
+#include wcssys.trl
+#include skyframe.trl
+#include skyformat.trl
 
 crosshairsend : {ProcessSendCmdCurrent frame "get crosshair physical fk5 degrees"}
  | coordsys {ProcessSendCmdCurrent frame "get crosshair $1 fk5 degrees"}

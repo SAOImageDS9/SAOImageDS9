@@ -92,7 +92,7 @@ proc 2MASSExec {varname} {
     }
 
     # now to radius
-    set rr [expr sqrt($ww*$ww+$hh*$hh)/2.]
+    set rr [expr ($ww+$hh)/4.]
     if {$rr>1024} {
 	set rr 1024
     }

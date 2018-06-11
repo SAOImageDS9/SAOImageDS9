@@ -188,15 +188,12 @@ proc ProcessPSPageSetupCmd {varname iname} {
 }
 
 proc ProcessSendPSPageSetupCmd {proc id param {sock {}} {fn {}}} {
-    global ps
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    switch -- [string tolower $param] {
-	orientation -
-	orient {$proc $id "$ps(orient)\n"}
-	pagescale -
-	scale {$proc $id "$ps(scale)\n"}
-	pagesize -
-	size {$proc $id "$ps(size)\n"}
-    }
+    pagesetupsend::YY_FLUSH_BUFFER
+    pagesetupsend::yy_scan_string $param
+    pagesetupsend::yyparse
 }
 

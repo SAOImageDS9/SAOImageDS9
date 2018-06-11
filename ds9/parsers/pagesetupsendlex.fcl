@@ -1,0 +1,16 @@
+#tab pagesetupsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+orient	    {return $ORIENT_}
+scale	    {return $SCALE_}
+size	    {return $SIZE_}
+
+#include ws.fin
+
+%%

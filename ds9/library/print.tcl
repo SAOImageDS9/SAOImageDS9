@@ -587,16 +587,11 @@ proc ProcessPSPrintCmd {varname iname} {
 }
 
 proc ProcessSendPSPrintCmd {proc id param {sock {}} {fn {}}} {
-    global ps
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    switch -- [string tolower $param] {
-	destination {$proc $id "$ps(dest)\n"}
-	command {$proc $id "$ps(cmd)\n"}
-	filename {$proc $id "$ps(filename)\n"}
-	palette -
-	color {$proc $id "$ps(color)\n"}
-	level {$proc $id "$ps(level)\n"}
-	interpolate {$proc $id "0\n"}
-	resolution {$proc $id "$ps(resolution)\n"}
-    }
+    pssend::YY_FLUSH_BUFFER
+    pssend::yy_scan_string $param
+    pssend::yyparse
 }

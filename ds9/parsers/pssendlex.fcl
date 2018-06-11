@@ -1,0 +1,20 @@
+#tab pssendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+color	    {return $COLOR_}
+command	    {return $COMMAND_}
+destination {return $DESTINATION_}
+filename    {return $FILENAME_}
+interpolate {return $INTERPOLATE_}
+level	    {return $LEVEL_}
+resolution  {return $RESOLUTION_}
+
+#include ws.fin
+
+%%

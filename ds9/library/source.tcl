@@ -340,6 +340,8 @@ source $ds9(root)/library/preserveparser.tcl
 source $ds9(root)/library/preservelex.tcl
 source $ds9(root)/library/psparser.tcl
 source $ds9(root)/library/pslex.tcl
+source $ds9(root)/library/pssendparser.tcl
+source $ds9(root)/library/pssendlex.tcl
 source $ds9(root)/library/regionparser.tcl
 source $ds9(root)/library/regionlex.tcl
 source $ds9(root)/library/regionsendparser.tcl

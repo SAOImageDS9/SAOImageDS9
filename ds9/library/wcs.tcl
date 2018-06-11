@@ -1187,9 +1187,17 @@ proc WCSCmdLoadFn {cmd ext fn} {
 }
 
 proc ProcessSendWCSCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    wcssend::YY_FLUSH_BUFFER
+    wcssend::yy_scan_string $param
+    wcssend::yyparse
+    return
+    
     global current
     global wcs
-
     switch -- [string tolower $param] {
 	align {$proc $id [ToYesNo $current(align)]}
 	system {$proc $id "$wcs(system)\n"}

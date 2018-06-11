@@ -1,0 +1,17 @@
+#tab wcssendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+align	    {return $ALIGN_}
+sky	    {return $SKY_}
+skyformat   {return $SKYFORMAT_}
+system	    {return $SYSTEM_}
+
+#include ws.fin
+
+%%

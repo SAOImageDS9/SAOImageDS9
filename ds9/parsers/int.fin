@@ -1,0 +1,3 @@
+# INT
+[+-]?{D}+ {set yylval $yytext; return $INT_}
+

@@ -318,6 +318,14 @@ proc ProcessSendCmdGet3 {varname key key2 key3} {
     $parse(proc) $parse(id) "$var($key) $var($key2) $var($key3)\n"
 }
 
+proc ProcessSendCmdGet6 {varname key key2 key3 key4 key5 key6} {
+    upvar #0 $varname var
+    global $varname
+
+    global parse
+    $parse(proc) $parse(id) "$var($key) $var($key2) $var($key3) $var($key4) $var($key5) $var($key6)\n"
+}
+
 proc ProcessSendCmdYesNo {varname key} {
     upvar #0 $varname var
     global $varname
@@ -1343,17 +1351,13 @@ proc ProcessPrefsCmd {varname iname} {
 }
 
 proc ProcessSendPrefsCmd {proc id param {sock {}} {fn {}}} {
-    global pds9
-    global ds9
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    # backward compatibility
-    switch -- [string tolower [lindex $param 0]] {
-	precision {$proc $id "$pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,arcmin) $pds9(prec,arcsec)\n"}
-	bgcolor {$proc $id "$pds9(bg)\n"}
-	nancolor {$proc $id "$pds9(nan)\n"}
-	threads {$proc $id "$ds9(threads)\n"}
-	irafalign {$proc $id [ToYesNo $pds9(iraf)]}
-    }
+    prefssend::YY_FLUSH_BUFFER
+    prefssend::yy_scan_string $param
+    prefssend::yyparse
 }
 
 proc ProcessPrecisionCmd {varname iname} {

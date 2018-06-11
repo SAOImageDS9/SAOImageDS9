@@ -1,0 +1,18 @@
+#tab prefssendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+bgcolor	    {return $BGCOLOR_}
+irafalign   {return $IRAFALIGN_}
+nancolor    {return $NANCOLOR_}
+precision   {return $PRECISION_}
+threads	    {return $THREADS_}
+
+#include ws.fin
+
+%%

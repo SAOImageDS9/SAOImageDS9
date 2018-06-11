@@ -1194,18 +1194,6 @@ proc ProcessSendWCSCmd {proc id param {sock {}} {fn {}}} {
     wcssend::YY_FLUSH_BUFFER
     wcssend::yy_scan_string $param
     wcssend::yyparse
-    return
-    
-    global current
-    global wcs
-    switch -- [string tolower $param] {
-	align {$proc $id [ToYesNo $current(align)]}
-	system {$proc $id "$wcs(system)\n"}
-	sky  {$proc $id "$wcs(sky)\n"}
-	format -
-	skyformat {$proc $id "$wcs(skyformat)\n"}
-	default {$proc $id "$wcs(system)\n"}
-    }
 }
 
 # backward compatibilty

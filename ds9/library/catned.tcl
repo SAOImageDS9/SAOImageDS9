@@ -53,7 +53,7 @@ proc CATNED {varname} {
 	    set hh [expr $var(height)/60./60.]
 	}
     }
-    set rr [expr sqrt($ww*$ww+$hh*$hh)/2.]
+    set rr [expr ($ww+$hh)/2.]
 
     if {$pcat(vot)} {
 	set out "xml_main"

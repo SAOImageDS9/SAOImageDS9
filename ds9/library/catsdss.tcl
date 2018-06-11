@@ -44,7 +44,7 @@ proc CATSDSS {varname} {
     }
 
     # now to radius
-    set rr [expr sqrt($ww*$ww+$hh*$hh)/2.]
+    set rr [expr ($ww+$hh)/2.]
 
     set query {}
     append query "ra=$xx&"

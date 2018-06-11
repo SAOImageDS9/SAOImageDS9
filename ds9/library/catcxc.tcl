@@ -62,7 +62,7 @@ proc CATCXCVOT {varname} {
     }
 
     # now to radius
-    set rr [expr sqrt($ww*$ww+$hh*$hh)/2.]
+    set rr [expr ($ww+$hh)/2.]
 
     # output
     if {$var(allcols)} {
@@ -124,7 +124,7 @@ proc CATCXCTSV {varname} {
     }
 
     # now to radius
-    set rr [expr sqrt($ww*$ww+$hh*$hh)/2.]
+    set rr [expr ($ww+$hh)/2.]
 
     # output
     if {$var(allcols)} {

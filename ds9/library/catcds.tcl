@@ -69,7 +69,7 @@ proc CATCDS {varname} {
 
     set ww $var(width)
     set hh $var(height)
-    set rr [expr sqrt($ww*$ww+$hh*$hh)/2.]
+    set rr [expr ($ww+$hh)/2.]
 
     set query [http::formatQuery -source $var(catalog) -c $xx$yy -c.eq $eq $cr $rr -oc.form dec]
 

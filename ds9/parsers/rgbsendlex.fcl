@@ -1,0 +1,30 @@
+#tab rgbsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+axes	    {return $AXES_}
+bin	    {return $BIN_}
+block	    {return $BLOCK_}
+blue	    {return $BLUE_}
+channel	    {return $CHANNEL_}
+colorbar    {return $COLORBAR_}
+crop	    {return $CROP_}
+green	    {return $GREEN_}
+lock	    {return $LOCK_}
+red	    {return $RED_}
+scale	    {return $SCALE_}
+scalelimits {return $SCALELIMITS_}
+slice	    {return $SLICE_}
+smooth	    {return $SMOOTH_}
+system	    {return $SYSTEM_}
+view	    {return $VIEW_}
+wcs	    {return $WCS_}
+
+#include ws.fin
+
+%%

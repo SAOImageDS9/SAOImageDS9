@@ -348,6 +348,8 @@ source $ds9(root)/library/restoreparser.tcl
 source $ds9(root)/library/restorelex.tcl
 source $ds9(root)/library/rgbparser.tcl
 source $ds9(root)/library/rgblex.tcl
+source $ds9(root)/library/rgbsendparser.tcl
+source $ds9(root)/library/rgbsendlex.tcl
 source $ds9(root)/library/rgbarrayparser.tcl
 source $ds9(root)/library/rgbarraylex.tcl
 source $ds9(root)/library/rgbcubeparser.tcl

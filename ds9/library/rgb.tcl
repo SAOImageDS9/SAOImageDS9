@@ -271,35 +271,12 @@ proc ProcessRGBCmd {varname iname} {
 }
 
 proc ProcessSendRGBCmd {proc id param {sock {}} {fn {}}} {
-    global current
-    global rgb
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    switch -- [lindex $param 0] {
-	channel {$proc $id "$current(rgb)\n"}
-	lock {
-	    switch -- [string tolower [lindex $param 1]] {
-		wcs {$proc $id [ToYesNo $rgb(lock,wcs)]}
-		crop {$proc $id [ToYesNo $rgb(lock,crop)]}
-		slice {$proc $id [ToYesNo $rgb(lock,slice)]}
-		bin {$proc $id [ToYesNo $rgb(lock,bin)]}
-		axes -
-		order {$proc $id [ToYesNo $rgb(lock,axes)]}
-		scale {$proc $id [ToYesNo $rgb(lock,scale)]}
-		limits -
-		scalelimits {$proc $id [ToYesNo $rgb(lock,scalelimits)]}
-		colorbar {$proc $id [ToYesNo $rgb(lock,colorbar)]}
-		block {$proc $id [ToYesNo $rgb(lock,block)]}
-		smooth {$proc $id [ToYesNo $rgb(lock,smooth)]}
-	    }
-	}
-	system {$proc $id "$rgb(system)\n"}
-	view {
-	    switch -- [lindex $param 1] {
-		red {$proc $id [ToYesNo $rgb(red)]}
-		green {$proc $id [ToYesNo $rgb(green)]}
-		blue {$proc $id [ToYesNo $rgb(blue)]}
-	    }
-	}
-    }
+    rgbsend::YY_FLUSH_BUFFER
+    rgbsend::yy_scan_string $param
+    rgbsend::yyparse
 }
 

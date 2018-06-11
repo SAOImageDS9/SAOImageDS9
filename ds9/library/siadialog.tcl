@@ -468,7 +468,7 @@ proc SIAVOT1 {varname} {
     }
 
     # now to radius
-    set rr [expr sqrt($ww*$ww+$hh*$hh)/2.]
+    set rr [expr ($ww+$hh)/2.]
 
     # query
     set var(query2) "$var(opts)[http::formatQuery POS "$xx,$yy" SIZE $rr FORMAT image/fits]"

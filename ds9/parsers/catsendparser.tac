@@ -9,8 +9,8 @@
 
 %%
 
-catsend : {if {![CatalogCmdCheck]} {cat::YYABORT}} catsendCmd
- | STRING_ {if {![CatalogSendCmdRef cat${1}]} {plot::YYABORT}} catsendCmd
+catsend : {if {![CatalogCmdCheck]} {catsend::YYABORT}} catsendCmd
+ | STRING_ {if {![CatalogSendCmdRef cat${1}]} {catsend::YYABORT}} catsendCmd
  ;
 
 catsendCmd : {ProcessSendCmdGet icat cats}

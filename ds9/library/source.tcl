@@ -432,6 +432,8 @@ source $ds9(root)/library/widthparser.tcl
 source $ds9(root)/library/widthlex.tcl
 source $ds9(root)/library/xpaparser.tcl
 source $ds9(root)/library/xpalex.tcl
+source $ds9(root)/library/xpasendparser.tcl
+source $ds9(root)/library/xpasendlex.tcl
 source $ds9(root)/library/xpafirstparser.tcl
 source $ds9(root)/library/xpafirstlex.tcl
 source $ds9(root)/library/zscaleparser.tcl

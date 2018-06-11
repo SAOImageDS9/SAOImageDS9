@@ -2222,7 +2222,11 @@ proc ProcessXPACmd {varname iname} {
 }
 
 proc ProcessSendXPACmd {proc id param {sock {}} {fn {}}} {
-    switch -- [string tolower [lindex $param 0]] {
-	info {$proc $id [XPAInfoResult]} 
-    }
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    xpasend::YY_FLUSH_BUFFER
+    xpasend::yy_scan_string $param
+    xpasend::yyparse
 }

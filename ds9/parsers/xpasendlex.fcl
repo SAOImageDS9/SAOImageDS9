@@ -1,0 +1,14 @@
+#tab xpasendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+info	    {return $INFO_}
+
+#include ws.fin
+
+%%

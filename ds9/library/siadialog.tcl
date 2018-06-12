@@ -36,7 +36,7 @@ proc SIADialog {varname title url opts method action} {
     }
 
     # AR variables
-    ARInit $varname IMGSVRServer
+    ARInit $varname SIAServer
 
     # IMG variables
     set var(proc,done) SIADone
@@ -52,8 +52,7 @@ proc SIADialog {varname title url opts method action} {
     set var(sky) $wcs(sky)
     set var(skyformat) $wcs(skyformat)
     set var(rformat) $isia(rformat)
-    set var(width) $isia(width)
-    set var(height) $isia(height)
+    set var(radius) $isia(radius)
     set var(save) $isia(save)
     set var(mode) $isia(mode)
 
@@ -92,10 +91,10 @@ proc SIADialog {varname title url opts method action} {
 	-command [list SIAOff $varname]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Update from Current Frame}] \
-	-command [list IMGSVRUpdate $varname]
+	-command [list SIAUpdate $varname]
     $mb.file add command \
 	-label [msgcat::mc {Update from Current Crosshair}] \
-	-command [list IMGSVRCrosshair $varname]
+	-command [list SIACrosshair $varname]
     $mb.file add separator
     $mb.file add command -label "[msgcat::mc {Print}]..." \
 	-command [list CATPrint $varname]
@@ -147,16 +146,14 @@ proc SIADialog {varname title url opts method action} {
 	[list SIAWCSMenuUpdate $varname]
     CoordMenuEnable $f.coord.menu $varname system 0 sky skyformat
 
-    ttk::label $f.wtitle -text [msgcat::mc {Width}]
-    ttk::entry $f.w -textvariable ${varname}(width) -width 14
-    ttk::label $f.htitle -text [msgcat::mc {Height}]
-    ttk::entry $f.h -textvariable ${varname}(height) -width 14
+    ttk::label $f.rtitle -text [msgcat::mc {Radius}]
+    ttk::entry $f.r -textvariable ${varname}(radius) -width 14
 
     ARRFormat $f.rformat $varname
 
     grid $f.nametitle $f.name - - - - -padx 2 -pady 2 -sticky w
     grid $f.xtitle $f.x $f.ytitle $f.y $f.coord -padx 2 -pady 2 -sticky w
-    grid $f.wtitle $f.w $f.htitle $f.h $f.rformat -padx 2 -pady 2 -sticky w
+    grid $f.rtitle $f.r $f.rformat -padx 2 -pady 2 -sticky w
 
     # Param
     set f [ttk::labelframe $w.param -text [msgcat::mc {Table}] -padding 2]
@@ -237,7 +234,7 @@ proc SIADialog {varname title url opts method action} {
     pack $w.tbl -side top -fill both -expand true
 
     ARCoord $varname
-    IMGSVRUpdate $varname
+    SIAUpdate $varname
     SIADialogUpdate $varname
 
     ARStatus $varname {}
@@ -273,7 +270,7 @@ proc SIAApply {varname sync} {
 
 	NSVRServer $varname
     } else {
-	IMGSVRServer $varname
+	SIAServer $varname
     }
 }
 
@@ -451,24 +448,18 @@ proc SIAVOT1 {varname} {
 	}
     }
 
-    # size (degrees)
+    # radius (degrees)
     switch $var(rformat) {
 	degrees {
-	    set ww $var(width)
-	    set hh $var(height)
+	    set rr $var(radius)
 	}
 	arcmin {
-	    set ww [expr $var(width)/60.]
-	    set hh [expr $var(height)/60.]
+	    set rr [expr $var(radius)/60.]
 	}
 	arcsec {
-	    set ww [expr $var(width)/60./60.]
-	    set hh [expr $var(height)/60./60.]
+	    set rr [expr $var(radius)/60./60.]
 	}
     }
-
-    # now to radius
-    set rr [expr ($ww+$hh)/2.]
 
     # query
     set var(query2) "$var(opts)[http::formatQuery POS "$xx,$yy" SIZE $rr FORMAT image/fits]"
@@ -487,3 +478,87 @@ proc SIAWCSMenuUpdate {varname} {
     CoordMenuButtonCmd $varname psystem psky {}
 }
 
+proc SIAUpdate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global current
+    global wcs
+
+    global debug
+    if {$debug(tcl,image)} {
+	puts stderr "SIAUpdate $varname"
+    }
+
+    if {[winfo exists $var(top)]} {
+	set var(name) {}
+	if {$current(frame) != {} } {
+	    if {[$current(frame) has wcs equatorial $wcs(system)]} {
+		set coord [$current(frame) get fits center \
+			       $wcs(system) $var(sky) $var(skyformat)]
+		set var(x) [lindex $coord 0]
+		set var(y) [lindex $coord 1]
+
+		set size [$current(frame) get fits size \
+			      $wcs(system) $var(sky) $var(rformat)]
+		set ww [lindex $size 0]
+		set hh [lindex $size 1]
+		set var(radius) [expr ($ww+$hh)/4]
+
+		return
+	    }
+	} else {
+	    set var(x) {}
+	    set var(y) {}
+	    set var(radius) {}
+	}
+    }
+}
+
+proc SIACrosshair {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global debug
+    if {$debug(tcl,image)} {
+	puts stderr "SIACrosshair $varname"
+    }
+
+    global current
+    global wcs
+
+    if {[winfo exists $var(top)]} {
+	set var(name) {}
+	if {$current(frame) != {} } {
+	    if {[$current(frame) has wcs equatorial $wcs(system)]} {
+		set coord [$current(frame) get crosshair \
+			       $wcs(system) $var(sky) $var(skyformat)]
+		set var(x) [lindex $coord 0]
+		set var(y) [lindex $coord 1]
+
+		return
+	    }
+	}
+	set var(x) {}
+	set var(y) {}
+    }
+}
+
+proc SIAServer {varname} {
+    upvar #0 $varname var
+    global $varname
+    global current
+
+    global debug
+    if {$debug(tcl,image)} {
+	puts stderr "SIAServer $varname"
+    }
+
+    if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
+
+	ARStatus $varname [msgcat::mc {Contacting Image Server}]
+	eval [list $var(proc,exec) $varname]
+    } else {
+	eval [list $var(proc,error) $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]]
+    }
+}

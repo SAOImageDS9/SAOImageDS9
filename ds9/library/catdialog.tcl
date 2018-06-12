@@ -960,7 +960,7 @@ proc CATServer {varname} {
 	    simbad {CATSIMBAD $varname}
 	}
     } else {
-	ARError $varname [msgcat::mc {Please specify width, height, and either name or (ra,dec)}]
+	ARError $varname [msgcat::mc {Please specify radius and either name or (ra,dec)}]
     }
 }
 

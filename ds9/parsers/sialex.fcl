@@ -15,6 +15,7 @@ crosshair   {return $CROSSHAIR_}
 export	    {return $EXPORT_}
 name	    {return $NAME_}
 print	    {return $PRINT_}
+radius	    {return $RADIUS_}
 retrieve    {return $RETRIEVE_}
 save	    {return $SAVE_}
 size	    {return $SIZE_}

@@ -13,8 +13,7 @@ proc SIADef {} {
     set isia(sias) {}
 
     set isia(rformat) arcmin
-    set isia(width) 15
-    set isia(height) 15
+    set isia(radius) 15
 
     set isia(minrows) 20
     set isia(mincols) 10
@@ -432,12 +431,11 @@ proc SIACmdSave {fn writer} {
     }
 }
 
-proc SIACmdSize {width height rformat} {
+proc SIACmdSize {radius rformat} {
     global cvarname
     upvar #0 $cvarname cvar
 
-    set cvar(width) $width
-    set cvar(height) $height
+    set cvar(radius) $radius
     set cvar(rformat) $rformat
     set cvar(rformat,msg) $rformat
 }

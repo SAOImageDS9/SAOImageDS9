@@ -18,6 +18,7 @@
 %token EXPORT_
 %token NAME_
 %token PRINT_
+%token RADIUS_
 %token RETRIEVE_
 %token SAVE_
 %token SIZE_
@@ -69,7 +70,9 @@ siaCmd : CANCEL_ {global cvarname; ARCancel $cvarname}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PRINT_ {global cvarname; CATPrint $cvarname}
  | RETRIEVE_ {global cvarname; SIAApply $cvarname 1}
- | SIZE_ numeric numeric rformat {SIACmdSize $2 $3 $4}
+ | RADIUS_ numeric rformat {SIACmdSize $2 $3}
+# backward compatibily
+ | SIZE_ numeric numeric rformat {SIACmdSize [expr ($2+$3)/2.] $4}
  | SKY_ skyframe {SIACmdSkyframe $2}
  | SKYFORMAT_ skyformat {ProcessCmdCVAR skyformat $2}
  | SYSTEM_ wcssys {SIACmdSystem $2}

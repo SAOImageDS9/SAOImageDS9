@@ -358,8 +358,7 @@ proc CATMatchAnd1and2 {varname1 varname2 rrname} {
     set var(name) {}
     set var(x) {}
     set var(y) {}
-    set var(width) {}
-    set var(height) {}
+    set var(radius) {}
 
     # required 
     set T(Header) $T1(Header)
@@ -480,8 +479,7 @@ proc CATMatchAnd1only {varname1 varname2 rrname} {
     set var(name) {}
     set var(x) {}
     set var(y) {}
-    set var(width) {}
-    set var(height) {}
+    set var(radius) {}
 
    # required 
     set T(Header) $T1(Header)
@@ -569,8 +567,7 @@ proc CATMatchAnd2only {varname1 varname2 rrname} {
     set var(name) {}
     set var(x) {}
     set var(y) {}
-    set var(width) {}
-    set var(height) {}
+    set var(radius) {}
 
    # required 
     set T(Header) $T2(Header)
@@ -658,8 +655,7 @@ proc CATMatchNot {varname1 varname2 rrname} {
     set var(name) {}
     set var(x) {}
     set var(y) {}
-    set var(width) {}
-    set var(height) {}
+    set var(radius) {}
 
     # required 
     set T(Header) $T1(Header)

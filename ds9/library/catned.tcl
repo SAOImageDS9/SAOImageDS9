@@ -41,19 +41,15 @@ proc CATNED {varname} {
 
     switch -- $var(rformat) {
 	degrees {
-	    set ww $var(width)
-	    set hh $var(height)
+	    set rr $var(radius)
 	}
 	arcmin {
-	    set ww [expr $var(width)/60.]
-	    set hh [expr $var(height)/60.]
+	    set rr [expr $var(radius)/60.]
 	}
 	arcsec {
-	    set ww [expr $var(width)/60./60.]
-	    set hh [expr $var(height)/60./60.]
+	    set rr [expr $var(radius)/60./60.]
 	}
     }
-    set rr [expr ($ww+$hh)/2.]
 
     if {$pcat(vot)} {
 	set out "xml_main"

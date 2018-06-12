@@ -74,9 +74,7 @@ proc CATSIMBAD {varname} {
 	append qq "$yy"
     }
 
-    set ww $var(width)
-    set hh $var(height)
-    set rr [expr ($ww+$hh)/2.]
+    set rr $var(radius)
 
     append qq " radius=$rr"
     switch -- $var(rformat) {

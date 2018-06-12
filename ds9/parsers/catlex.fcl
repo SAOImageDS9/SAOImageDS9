@@ -58,6 +58,7 @@ print	    {return $PRINT_}
 psky	    {return $PSKY_}
 psystem	    {return $PSYSTEM_}
 ra	    {return $RA_}
+radius	    {return $RADIUS_}
 regions	    {return $REGIONS_}
 remove	    {return $REMOVE_}
 retrieve    {return $RETRIEVE_}

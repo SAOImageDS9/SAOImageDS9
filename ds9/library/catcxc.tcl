@@ -14,12 +14,7 @@ proc CATCXC {varname} {
 	puts stderr "CATCXC $varname"
     }
 
-    # go for votable or tsv
-    if {$pcat(vot)} {
-	CATCXCVOT $varname
-    } else {
-	CATCXCTSV $varname
-    }
+    CATCXCVOT $varname
 }
 
 proc CATCXCVOT {varname} {
@@ -48,21 +43,15 @@ proc CATCXCVOT {varname} {
     # size (degrees)
     switch $var(rformat) {
 	degrees {
-	    set ww $var(width)
-	    set hh $var(height)
+	    set rr $var(radius)
 	}
 	arcmin {
-	    set ww [expr $var(width)/60.]
-	    set hh [expr $var(height)/60.]
+	    set rr [expr $var(radius)/60.]
 	}
 	arcsec {
-	    set ww [expr $var(width)/60./60.]
-	    set hh [expr $var(height)/60./60.]
+	    set rr [expr $var(radius)/60./60.]
 	}
     }
-
-    # now to radius
-    set rr [expr ($ww+$hh)/2.]
 
     # output
     if {$var(allcols)} {
@@ -76,74 +65,6 @@ proc CATCXCVOT {varname} {
     set var(url) "http://cda.cfa.harvard.edu/cscvo/coneSearch"
 
     CATLoad $varname
-}
-
-proc CATCXCTSV {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,cat)} {
-	puts stderr "CATCXCTSV $varname"
-    }
-
-    set var(proc,reader) CATCXCReader
-    
-    # coord (degrees)
-    switch $var(skyformat) {
-	degrees {
-	    set xx $var(x)
-	    set yy $var(y)
-	}
-	sexagesimal {
-	    switch -- $var(sky) {
-		fk4 -
-		fk5 -
-		icrs {set xx [h2d [Sex2H $var(x)]]}
-		galactic -
-		ecliptic {set xx [Sex2D $var(x)]}
-	    }
-	    set yy [Sex2D $var(y)]
-	}
-    }
-
-    # size (arcmin)
-    switch $var(rformat) {
-	degrees {
-	    set ww [expr $var(width)*60.]
-	    set hh [expr $var(height)*60.]
-	}
-	arcmin {
-	    set ww $var(width)
-	    set hh $var(height)
-	}
-	arcsec {
-	    set ww [expr $var(width)/60.]
-	    set hh [expr $var(height)/60.]
-	}
-    }
-
-    # now to radius
-    set rr [expr ($ww+$hh)/2.]
-
-    # output
-    if {$var(allcols)} {
-	set type observation
-    } else {
-	set type master
-    }
-
-    # query
-    set var(query) "ra=$xx&dec=$yy&sr=$rr&type=$type"
-
-    # rows
-    if {!$var(allrows)} {
-	append var(query) "&rows=$var(max)"
-    }
-
-    set var(url) "http://cda.cfa.harvard.edu/cscds9/coneSearch"
-
-    CATLoadIncr $varname
 }
 
 proc CATCXCReader {t sock token} {

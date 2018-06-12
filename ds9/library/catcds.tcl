@@ -67,9 +67,7 @@ proc CATCDS {varname} {
 	arcsec {set cr "-c.rs"}
     }
 
-    set ww $var(width)
-    set hh $var(height)
-    set rr [expr ($ww+$hh)/2.]
+    set rr $var(radius)
 
     set query [http::formatQuery -source $var(catalog) -c $xx$yy -c.eq $eq $cr $rr -oc.form dec]
 

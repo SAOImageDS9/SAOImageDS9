@@ -30,21 +30,15 @@ proc CATSDSS {varname} {
     # size (arcmin)
     switch $var(rformat) {
 	degrees {
-	    set ww [expr $var(width)*60.]
-	    set hh [expr $var(height)*60.]
+	    set rr [expr $var(radius)*60.]
 	}
 	arcmin {
-	    set ww $var(width)
-	    set hh $var(height)
+	    set rr $var(radius)
 	}
 	arcsec {
-	    set ww [expr $var(width)/60.]
-	    set hh [expr $var(height)/60.]
+	    set rr [expr $var(radius)/60.]
 	}
     }
-
-    # now to radius
-    set rr [expr ($ww+$hh)/2.]
 
     set query {}
     append query "ra=$xx&"

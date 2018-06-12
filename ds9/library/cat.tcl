@@ -13,8 +13,7 @@ proc CATDef {} {
     set icat(cats) {}
 
     set icat(rformat) arcmin
-    set icat(width) 15
-    set icat(height) 15
+    set icat(radius) 15
     set icat(max) 5000
     set icat(allrows) 1
     set icat(allcols) 0
@@ -390,8 +389,7 @@ proc CATLoadFn {varname fn reader} {
     set var(name) {}
     set var(x) {}
     set var(y) {}
-    set var(width) {}
-    set var(height) {}
+    set var(radius) {}
 
     if {[file exists $fn]} {
 	$reader $var(catdb) $fn

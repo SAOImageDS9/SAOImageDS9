@@ -63,6 +63,7 @@
 %token PSKY_
 %token PSYSTEM_
 %token RA_
+%token RADIUS_
 %token REGIONS_
 %token REMOVE_
 %token RETRIEVE_
@@ -163,8 +164,9 @@ catCmd : coordinate
  | SAVE_ STRING_ {CatalogCmdSave $2 VOTWrite}
  | SERVER_ server {ProcessCmdCVAR server $2}
  | SHOW_ yesno {ProcessCmdCVAR show $2 CATGenerate}
- | SIZE_ numeric numeric rformat {ProcessCmdCVAR4 width $2 height $3 rformat $4 rformat,msg $4}
-# | SIZE_ numeric numeric rformat {CatalogCmdSize $2 $3 $4}
+ | RADIUS_ numeric rformat {ProcessCmdCVAR3 radius $2 rformat $3 rformat,msg $3}
+# backward compatibility
+ | SIZE_ numeric numeric rformat {ProcessCmdCVAR3 radius [expr ($2+$3)/2.] rformat $4 rformat,msg $4}
  | SKY_ skyframe {CatalogCmdSkyframe $2}
  | SKYFORMAT_ skyformat {ProcessCmdCVAR skyformat $2}
  | SORT_ sort

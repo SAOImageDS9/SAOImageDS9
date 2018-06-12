@@ -68,8 +68,7 @@ proc CATDialog {varname format catalog title action} {
     set var(sky) $wcs(sky)
     set var(skyformat) $wcs(skyformat)
     set var(rformat) $icat(rformat)
-    set var(width) $icat(width)
-    set var(height) $icat(height)
+    set var(radius) $icat(radius)
     set var(max) $icat(max)
     set var(allrows) $icat(allrows)
     set var(allcols) $icat(allcols)
@@ -320,17 +319,15 @@ proc CATDialog {varname format catalog title action} {
     ttk::button $f.update -text [msgcat::mc {Update}] \
 	-command [list CATUpdate $varname]
 
-    ttk::label $f.wtitle -text [msgcat::mc {Width}]
-    ttk::entry $f.w -textvariable ${varname}(width) -width 14
-    ttk::label $f.htitle -text [msgcat::mc {Height}]
-    ttk::entry $f.h -textvariable ${varname}(height) -width 14
+    ttk::label $f.rtitle -text [msgcat::mc {Radius}]
+    ttk::entry $f.r -textvariable ${varname}(radius) -width 14
 
     ARRFormat $f.rformat $varname
 
     grid $f.nametitle $f.name - - - - -padx 2 -pady 2 -sticky w
     grid $f.xtitle $f.x $f.ytitle $f.y $f.coord $f.update \
 	-padx 2 -pady 2 -sticky w
-    grid $f.wtitle $f.w $f.htitle $f.h $f.rformat -padx 2 -pady 2 -sticky w
+    grid $f.rtitle $f.r $f.rformat -padx 2 -pady 2 -sticky w
 
     switch $var(format) {
 	skybot {
@@ -951,11 +948,7 @@ proc CATServer {varname} {
 	puts stderr "CATServer $varname"
     }
 
-    if {($var(x) != {}) && 
-	($var(y) != {}) && 
-	($var(width) != {}) && 
-	($var(height) != {})} {
-
+    if {($var(x) != {}) && ($var(y) != {}) && ($var(radius) != {})} {
 	ARStatus $varname "Searching [string range $var(title) 0 50]"
 
 	switch $var(format) {
@@ -996,8 +989,9 @@ proc CATUpdate {varname} {
 
 	set size [$var(frame) get fits size \
 		      $var(system) $var(sky) $var(rformat)]
-	set var(width) [lindex $size 0]
-	set var(height) [lindex $size 1]
+	set ww [lindex $size 0]
+	set hh [lindex $size 1]
+	set var(radius) [expr ($ww+$hh)/4]
 	set var(name) {}
     }
 }

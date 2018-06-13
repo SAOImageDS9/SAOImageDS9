@@ -137,16 +137,16 @@ catalog : NEW_ {CATTool}
 catCmd : coordinate
  | ALLCOLS_ yesno {ProcessCmdCVAR allcols $2}
  | ALLROWS_ yesno {ProcessCmdCVAR allrows $2}
- | CANCEL_ {global cvarname; ARCancel $cvarname}
- | CLEAR_ {global cvarname; CATOff $cvarname}
- | CLOSE_ {global cvarname; CATDestroy $cvarname}
+ | CANCEL_ {ProcessCmdCVAR0 ARCancel}
+ | CLEAR_ {ProcessCmdCVAR0 CATOff}
+ | CLOSE_ {ProcessCmdCVAR0 CATDestroy}
 # backward compatibilty
  | COORDINATE_ coordinate
- | CROSSHAIR_ {global cvarname; CATCrosshair $cvarname}
+ | CROSSHAIR_ {ProcessCmdCVAR0 CATCrosshair}
  | EDIT_ yesno {ProcessCmdCVAR edit $2 CATEdit}
  | EXPORT_ writer STRING_ {CatalogCmdSave $3 $2}
  | FILTER_ filter
- | HEADER_ {global cvarname; CATHeader $cvarname}
+ | HEADER_ {ProcessCmdCVAR0 CATHeader}
 # backward compatibilty
  | HIDE_ {ProcessCmdCVAR show 0 CATGenerate}
  | LOCATION_ INT_ {ProcessCmdCVAR loc $2 CATGenerate}
@@ -155,10 +155,10 @@ catCmd : coordinate
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PANTO_ yesno {ProcessCmdCVAR panto $2}
  | PLOT_ STRING_ STRING_ STRING_ STRING_ {ProcessCmdCVAR4 plot,x $2 plot,y $3 plot,xerr $4 plot,yerr $5 CATPlotGenerate}
- | PRINT_ {global cvarname; CATPrint $cvarname}
+ | PRINT_ {ProcessCmdCVAR0 CATPrint}
  | PSKY_ skyframe {ProcessCmdCVAR psky $2 CATGenerate}
  | PSYSTEM_ wcssys {ProcessCmdCVAR psystem $2 CATGenerate}
- | REGIONS_ {global cvarname; CATGenerateRegions $cvarname}
+ | REGIONS_ {ProcessCmdCVAR0 CATGenerateRegions}
  | RETRIEVE_ {global cvarname; CATApply $cvarname 1}
  | SAMP_ samp
  | SAVE_ STRING_ {CatalogCmdSave $2 VOTWrite}
@@ -173,7 +173,7 @@ catCmd : coordinate
  | SYMBOL_ {ProcessCmdCVAR row 1} symbol
  | SYMBOL_ INT_ {CagtalogCmdCat row $2} symbol
  | SYSTEM_ wcssys {CatalogCmdSystem $2}
- | UPDATE_ {global cvarname; CATUpdate $cvarname}
+ | UPDATE_ {ProcessCmdCVAR0 CATUpdate}
  | 'x' STRING_ {ProcessCmdCVAR colx $2 CATGenerate}
  | RA_ STRING_ {ProcessCmdCVAR colx $2 CATGenerate}
  | 'y' STRING_ {ProcessCmdCVAR coly $2 CATGenerate}

@@ -217,7 +217,7 @@ plotCmd : LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
  # xpa/samp only
  | DATA_ dim {PlotCmdData $2}
- | CLEAR_ {global cvarname; PlotClearData $cvarname}
+ | CLEAR_ {ProcessCmdCVAR0 PlotClearData}
  | DUPLICATE_ duplicate
  # backward compatibility
  | DUP_ duplicate
@@ -231,7 +231,7 @@ plotCmd : LOAD_ load
  # backward compatibility
  | PAGE_ pagesetup
  | PRINT_ print
- | CLOSE_ {global cvarname; PlotDestroy $cvarname}
+ | CLOSE_ {ProcessCmdCVAR0 PlotDestroy}
 
  | MODE_ mode {ProcessCmdCVAR mode $2 PlotChangeMode}
 
@@ -290,7 +290,7 @@ pageSize : LETTER_ {set _ letter}
  | A4_ {set _ a4}
  ;
  
-print : {global cvarname; PlotPostScript $cvarname}
+print : {ProcessCmdCVAR0 PlotPostScript}
  | DESTINATION_ printDest {ProcessCmdSet ps dest $2}
  | COMMAND_ STRING_ {ProcessCmdSet ps cmd $2}
  | FILENAME_ STRING_ {ProcessCmdSet ps filename $2}

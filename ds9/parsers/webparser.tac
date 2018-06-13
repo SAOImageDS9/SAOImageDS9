@@ -30,14 +30,14 @@ web : {WebCmdNew {}}
  ;
 
 webCmd : CLICK_ click
- | CLEAR_ {global cvarname; HVClearCmd $cvarname}
- | CLOSE_ {global cvarname; HVDestroy $cvarname}
+ | CLEAR_ {ProcessCmdCVAR0 HVClearCmd}
+ | CLOSE_ {ProcessCmdCVAR0 HVDestroy}
  ;
 
-click : BACK_ {global cvarname; HVBackCmd $cvarname}
- | FORWARD_ {global cvarname; HVForwardCmd $cvarname}
- | STOP_ {global cvarname; HVStopCmd $cvarname}
- | RELOAD_ {global cvarname; HVReloadCmd $cvarname}
+click : BACK_ {ProcessCmdCVAR0 HVBackCmd}
+ | FORWARD_ {ProcessCmdCVAR0 HVForwardCmd}
+ | STOP_ {ProcessCmdCVAR0 HVStopCmd}
+ | RELOAD_ {ProcessCmdCVAR0 HVReloadCmd}
  | INT_ {WebCmdClick $1}
  ;
  

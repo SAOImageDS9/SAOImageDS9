@@ -60,15 +60,15 @@ sia : {if {![SIACmdCheck]} {sia::YYABORT}} siaCmd
  | site {SIACmdRef $1} siaCmd
  ;
 
-siaCmd : CANCEL_ {global cvarname; ARCancel $cvarname}
- | CLOSE_ {global cvarname; SIADestroy $cvarname}
- | CLEAR_ {global cvarname; SIAOff $cvarname}
+siaCmd : CANCEL_ {ProcessCmdCVAR0 ARCancel}
+ | CLOSE_ {ProcessCmdCVAR0 SIADestroy}
+ | CLEAR_ {ProcessCmdCVAR0 SIAOff}
  | COORDINATE_ coordinate
- | CROSSHAIR_ {global cvarname; IMGSVRCrosshair $cvarname}
+ | CROSSHAIR_ {ProcessCmdCVAR0 IMGSVRCrosshair}
  | EXPORT_ writer STRING_ {SIACmdSave $3 $2}
  | SAVE_ STRING_ {SIACmdSave $2 VOTWrite}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
- | PRINT_ {global cvarname; CATPrint $cvarname}
+ | PRINT_ {ProcessCmdCVAR0 CATPrint}
  | RETRIEVE_ {global cvarname; SIAApply $cvarname 1}
  | RADIUS_ numeric rformat {SIACmdSize $2 $3}
 # backward compatibily
@@ -76,7 +76,7 @@ siaCmd : CANCEL_ {global cvarname; ARCancel $cvarname}
  | SKY_ skyframe {SIACmdSkyframe $2}
  | SKYFORMAT_ skyformat {ProcessCmdCVAR skyformat $2}
  | SYSTEM_ wcssys {SIACmdSystem $2}
- | UPDATE_ {global cvarname; IMGSVRUpdate $cvarname}
+ | UPDATE_ {ProcessCVAR0 IMGSVRUpdate}
  ;
 
 coordinate : numeric numeric {SIACmdCoord $1 $2 fk5}

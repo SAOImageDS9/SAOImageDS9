@@ -248,6 +248,11 @@ proc ProcessCmdFontStyle {varname key value {cmd {}}} {
     }
 }
 
+proc ProcessCmdCVAR0 {cmd} {
+    global cvarname
+    eval $cmd $cvarname
+}
+
 proc ProcessCmdCVAR {key value {cmd {}}} {
     global cvarname
     upvar #0 $cvarname cvar

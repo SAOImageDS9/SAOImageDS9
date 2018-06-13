@@ -15,7 +15,7 @@ command : align
  ;
 
 
-align : yesno {ProcessCmdSet current align $1}
+align : yesno {ProcessCmdSet current align $1 AlignWCSFrame}
  ;
 
 %%

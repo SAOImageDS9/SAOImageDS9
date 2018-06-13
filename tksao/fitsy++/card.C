@@ -93,7 +93,8 @@ FitsCard& FitsCard::setReal(const char* name, double value,
   memset(card_+8, ' ', FTY_CARDLEN-8);
 
   ostringstream str;
-  str << "= " << setw(20) << setprecision(prec) << value;
+  str << "= " << setw(20) << setprecision(prec)
+      << uppercase << value << nouppercase;
   if (comment)
     str << " / " << comment;
   memcpy(card_+8,str.str().c_str(),str.str().length());

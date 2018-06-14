@@ -597,6 +597,7 @@
 ::msgcat::mcset de {Play} {Abspielen}
 ::msgcat::mcset de {Please Select a Region} 
 ::msgcat::mcset de {Please change the file's permission to disable other users write access. Use anyway?} 
+::msgcat::mcset de {Please specify radius and either name or (ra,dec)} 
 ::msgcat::mcset de {Please specify width, height, and either name or (ra,dec)} [encoding convertfrom iso8859-1 {Bitte Weite, Höhe und entweder Namen oder (RA,Dec) angeben}]
 ::msgcat::mcset de {Plot 2D} 
 ::msgcat::mcset de {Plot 3D} 
@@ -714,6 +715,7 @@
 ::msgcat::mcset de {Show/Hide Frames} {Rahmen zeigen/verstecken}
 ::msgcat::mcset de {Show} 
 ::msgcat::mcset de {Simple Cross} 
+::msgcat::mcset de {Simple Image Access} 
 ::msgcat::mcset de {Simple Plus} 
 ::msgcat::mcset de {Single Frame} {Einzelner rahmen}
 ::msgcat::mcset de {Single} {Einzeln}
@@ -787,7 +789,9 @@
 ::msgcat::mcset de {Unable to find URL column} 
 ::msgcat::mcset de {Unable to find catalog window} [encoding convertfrom iso8859-1 {Nicht möglich Katalogfenster zu finden}]
 ::msgcat::mcset de {Unable to find plot window} [encoding convertfrom iso8859-1 {Nicht möglich Plotfenster zu finden}]
+::msgcat::mcset de {Unable to find web window} 
 ::msgcat::mcset de {Unable to load RGB image into a non-rgb frame} [encoding convertfrom iso8859-1 {Nicht möglich RGB-Bild in nicht-RGB-rahmen zu laden}]
+::msgcat::mcset de {Unable to load plot data} 
 ::msgcat::mcset de {Unable to load region file} 
 ::msgcat::mcset de {Unable to load} [encoding convertfrom iso8859-1 {Nicht möglich zu laden}]
 ::msgcat::mcset de {Unable to locate URL} [encoding convertfrom iso8859-1 {Nicht möglich URL zu finden}]

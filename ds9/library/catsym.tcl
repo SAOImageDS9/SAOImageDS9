@@ -77,6 +77,7 @@ proc CATSymDialog {parent} {
 
     Toplevel $w $mb 7 [msgcat::mc {Symbol Editor}] "CATSymDestroy $varname"
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
+    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
     # menu
     menu $mb.file
@@ -95,6 +96,14 @@ proc CATSymDialog {parent} {
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command "CATSymDestroy $varname"
+
+    menu $mb.edit
+    $mb.edit add command -label [msgcat::mc {Cut}] \
+	-command "EntryCut $var(top)" -accelerator "${ds9(ctrl)}X"
+    $mb.edit add command -label [msgcat::mc {Copy}] \
+	-command "EntryCopy $var(top)" -accelerator "${ds9(ctrl)}C"
+    $mb.edit add command -label [msgcat::mc {Paste}] \
+	-command "EntryPaste $var(top)" -accelerator "${ds9(ctrl)}V"
 
     # Param
     set f [ttk::frame $w.param]

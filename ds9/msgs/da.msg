@@ -597,6 +597,7 @@
 ::msgcat::mcset da {Play} {Afspil}
 ::msgcat::mcset da {Please Select a Region} 
 ::msgcat::mcset da {Please change the file's permission to disable other users write access. Use anyway?} 
+::msgcat::mcset da {Please specify radius and either name or (ra,dec)} 
 ::msgcat::mcset da {Please specify width, height, and either name or (ra,dec)} [encoding convertfrom iso8859-1 {angiv venligst bredde, højde, og enten navn eller (ra,dec)}]
 ::msgcat::mcset da {Plot 2D} 
 ::msgcat::mcset da {Plot 3D} 
@@ -714,6 +715,7 @@
 ::msgcat::mcset da {Show/Hide Frames} {Vis/skjul rammer}
 ::msgcat::mcset da {Show} {Vis}
 ::msgcat::mcset da {Simple Cross} 
+::msgcat::mcset da {Simple Image Access} 
 ::msgcat::mcset da {Simple Plus} 
 ::msgcat::mcset da {Single Frame} {Enkel ramme}
 ::msgcat::mcset da {Single} {Enkel}
@@ -787,7 +789,9 @@
 ::msgcat::mcset da {Unable to find URL column} 
 ::msgcat::mcset da {Unable to find catalog window} {Kan ikke finde katalog vinduet}
 ::msgcat::mcset da {Unable to find plot window} {kan ikke finde plotte vinduet}
+::msgcat::mcset da {Unable to find web window} 
 ::msgcat::mcset da {Unable to load RGB image into a non-rgb frame} {Kan ikke hente et RGB billede ind i en ikke-RGB ramme}
+::msgcat::mcset da {Unable to load plot data} 
 ::msgcat::mcset da {Unable to load region file} 
 ::msgcat::mcset da {Unable to load} {Kan ikke hente}
 ::msgcat::mcset da {Unable to locate URL} {Kan ikke finde URL}

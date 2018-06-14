@@ -597,6 +597,7 @@
 ::msgcat::mcset zh {Play} 
 ::msgcat::mcset zh {Please Select a Region} 
 ::msgcat::mcset zh {Please change the file's permission to disable other users write access. Use anyway?} 
+::msgcat::mcset zh {Please specify radius and either name or (ra,dec)} 
 ::msgcat::mcset zh {Please specify width, height, and either name or (ra,dec)} 
 ::msgcat::mcset zh {Plot 2D} 
 ::msgcat::mcset zh {Plot 3D} 
@@ -714,6 +715,7 @@
 ::msgcat::mcset zh {Show/Hide Frames} 
 ::msgcat::mcset zh {Show} [encoding convertfrom big5 "\xC5\xE3 \xA5\xDC"]
 ::msgcat::mcset zh {Simple Cross} 
+::msgcat::mcset zh {Simple Image Access} 
 ::msgcat::mcset zh {Simple Plus} 
 ::msgcat::mcset zh {Single Frame} [encoding convertfrom big5 "\xB3\xE6 \xA4\x40 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Single} [encoding convertfrom big5 "\xB3\xE6 \xA4\x40"]
@@ -787,7 +789,9 @@
 ::msgcat::mcset zh {Unable to find URL column} 
 ::msgcat::mcset zh {Unable to find catalog window} 
 ::msgcat::mcset zh {Unable to find plot window} 
+::msgcat::mcset zh {Unable to find web window} 
 ::msgcat::mcset zh {Unable to load RGB image into a non-rgb frame} 
+::msgcat::mcset zh {Unable to load plot data} 
 ::msgcat::mcset zh {Unable to load region file} 
 ::msgcat::mcset zh {Unable to load} 
 ::msgcat::mcset zh {Unable to locate URL} 

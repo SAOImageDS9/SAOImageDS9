@@ -597,6 +597,7 @@
 ::msgcat::mcset fr {Play} {Jouer}
 ::msgcat::mcset fr {Please Select a Region} 
 ::msgcat::mcset fr {Please change the file's permission to disable other users write access. Use anyway?} 
+::msgcat::mcset fr {Please specify radius and either name or (ra,dec)} 
 ::msgcat::mcset fr {Please specify width, height, and either name or (ra,dec)} {Specifiez largeur, longeur, et autre noms possibles ou (ra,dec)}
 ::msgcat::mcset fr {Plot 2D} 
 ::msgcat::mcset fr {Plot 3D} 
@@ -714,6 +715,7 @@
 ::msgcat::mcset fr {Show/Hide Frames} [encoding convertfrom iso8859-1 {Montrer/Cacher les fenêtres}]
 ::msgcat::mcset fr {Show} 
 ::msgcat::mcset fr {Simple Cross} 
+::msgcat::mcset fr {Simple Image Access} 
 ::msgcat::mcset fr {Simple Plus} 
 ::msgcat::mcset fr {Single Frame} 
 ::msgcat::mcset fr {Single} 
@@ -787,7 +789,9 @@
 ::msgcat::mcset fr {Unable to find URL column} 
 ::msgcat::mcset fr {Unable to find catalog window} 
 ::msgcat::mcset fr {Unable to find plot window} 
+::msgcat::mcset fr {Unable to find web window} 
 ::msgcat::mcset fr {Unable to load RGB image into a non-rgb frame} 
+::msgcat::mcset fr {Unable to load plot data} 
 ::msgcat::mcset fr {Unable to load region file} 
 ::msgcat::mcset fr {Unable to load} 
 ::msgcat::mcset fr {Unable to locate URL} 

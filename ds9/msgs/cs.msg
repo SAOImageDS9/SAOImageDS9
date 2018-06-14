@@ -597,6 +597,7 @@
 ::msgcat::mcset cs {Play} 
 ::msgcat::mcset cs {Please Select a Region} 
 ::msgcat::mcset cs {Please change the file's permission to disable other users write access. Use anyway?} 
+::msgcat::mcset cs {Please specify radius and either name or (ra,dec)} 
 ::msgcat::mcset cs {Please specify width, height, and either name or (ra,dec)} 
 ::msgcat::mcset cs {Plot 2D} 
 ::msgcat::mcset cs {Plot 3D} 
@@ -714,6 +715,7 @@
 ::msgcat::mcset cs {Show/Hide Frames} [encoding convertfrom iso8859-2 {Zobrazit/skrýt snímky}]
 ::msgcat::mcset cs {Show} 
 ::msgcat::mcset cs {Simple Cross} 
+::msgcat::mcset cs {Simple Image Access} 
 ::msgcat::mcset cs {Simple Plus} 
 ::msgcat::mcset cs {Single Frame} [encoding convertfrom iso8859-2 {Jeden snímek}]
 ::msgcat::mcset cs {Single} [encoding convertfrom iso8859-2 {jeden}]
@@ -787,7 +789,9 @@
 ::msgcat::mcset cs {Unable to find URL column} 
 ::msgcat::mcset cs {Unable to find catalog window} 
 ::msgcat::mcset cs {Unable to find plot window} 
+::msgcat::mcset cs {Unable to find web window} 
 ::msgcat::mcset cs {Unable to load RGB image into a non-rgb frame} 
+::msgcat::mcset cs {Unable to load plot data} 
 ::msgcat::mcset cs {Unable to load region file} 
 ::msgcat::mcset cs {Unable to load} 
 ::msgcat::mcset cs {Unable to locate URL} 

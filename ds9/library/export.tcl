@@ -55,6 +55,10 @@ proc ExportCmdSave {format fn {fn2 {}}} {
 	jpeg {FileLast jpegfbox $fn}
 	tiff {FileLast tifffbox $fn}
 	png {FileLast pngfbox $fn}
+	default {
+	    Error "[msgcat::mc {Not valid export format}] $format"
+	    return
+	}
     }
     Export $fn $format $fn2
 }

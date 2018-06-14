@@ -258,7 +258,7 @@ void Base::saveNRRD(OutFitsStream& str, FitsFile::ArchType endian)
   }
   hstr << "encoding: raw" << endl;
   // very important
-  hstr << endl << ends;
+  hstr << endl;
 
   str.write((char*)hstr.str().c_str(),hstr.str().length());
 

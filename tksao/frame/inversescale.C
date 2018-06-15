@@ -179,6 +179,9 @@ HistEquInverseScale::HistEquInverseScale(int ss, double low, double high,
 IISInverseScale::IISInverseScale(int ss, double low, double high, Vector& iisz) 
   : InverseScale(ss)
 {
+  low = IISMIN;
+  high = IISMAX;
+
   if (size_==1) {
     level_[0] = high;
     return;
@@ -201,4 +204,3 @@ IISInverseScale::IISInverseScale(int ss, double low, double high, Vector& iisz)
       level_[ii] = ((vv-IISMIN) * (iisz[1]-iisz[0]))/(IISMAX-IISMIN) + iisz[0];
   }
 }
-

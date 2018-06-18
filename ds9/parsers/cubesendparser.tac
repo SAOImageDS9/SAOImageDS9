@@ -11,7 +11,7 @@
 
 %%
 
-cubesend : {global cube; ProcessSendCmdCurrent frame "get fits slice $cube(axis)"}
+cubesend : {global cube; ProcessSendCmdCurrent "get fits slice $cube(axis)"}
  | LOCK_ {ProcessSendCmdGet cube lock}
  | INTERVAL_ {BlinkSendCmdInterval}
  | AXIS_ {ProcessSendCmdGet cube axis}

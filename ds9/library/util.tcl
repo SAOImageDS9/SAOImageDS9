@@ -339,30 +339,21 @@ proc ProcessSendCmdYesNo {varname key} {
     $parse(proc) $parse(id) [ToYesNo $var($key)]
 }
 
-proc ProcessSendCmdCurrent {key cmd} {
+proc ProcessSendCmdCurrent {cmd} {
     global parse
     global current
 
-    if {$current($key) != {}} {
-	$parse(proc) $parse(id) "[$current($key) $cmd]\n"
+    if {$current(frame) != {}} {
+	$parse(proc) $parse(id) "[$current(frame) $cmd]\n"
     }
 }
 
-proc ProcessSendCmdCurrent2 {key cmd cmd2} {
+proc ProcessSendCmdCurrentYesNo {cmd} {
     global parse
     global current
 
-    if {$current($key) != {}} {
-	$parse(proc) $parse(id) "[$current($key) $cmd] [$current($key) $cmd2]\n"
-    }
-}
-
-proc ProcessSendCmdCurrentYesNo {key cmd} {
-    global parse
-    global current
-
-    if {$current($key) != {}} {
-	$parse(proc) $parse(id) "[ToYesNo [$current($key) $cmd]]"
+    if {$current(frame) != {}} {
+	$parse(proc) $parse(id) "[ToYesNo [$current(frame) $cmd]]"
     }
 }
 
@@ -371,10 +362,8 @@ proc ProcessSendCmdSend {ext cmd} {
     global current
 
     if {$current(frame) == {}} {
-	return
+	ProcessSendCmdResult $ext [$current(frame) $cmd]
     }
-
-    ProcessSendCmdResult $ext [$current(frame) $cmd]
 }
 
 proc ProcessSendCmdResult {ext rr} {

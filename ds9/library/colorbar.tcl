@@ -1273,6 +1273,24 @@ proc ProcessSendColorbarCmd {proc id param {sock {}} {fn {}}} {
     colorbarsend::yyparse
 }
 
+proc ColorbarSendCmdCurrent {cmd} {
+    global parse
+    global current
+
+    if {$current(colorbar) != {}} {
+	$parse(proc) $parse(id) "[$current(colorbar) $cmd]\n"
+    }
+}
+
+proc ColorbarSendCmdContrastBias {} {
+    global parse
+    global current
+
+    if {$current(colorbar) != {}} {
+	$parse(proc) $parse(id) "[$current(colorbar) get contrast] [$current(colorbar) get bias]\n"
+    }
+}
+
 proc ColorbarSendCmdSpace {} {
     global parse
     global colorbar

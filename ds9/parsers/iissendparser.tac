@@ -9,10 +9,10 @@
 
 %%
 
-iissend : {ProcessSendCmdCurrent frame "get iis file name 1"}
- | INT_ {ProcessSendCmdCurrent frame "get iis file name $1"}
- | FILENAME_ {ProcessSendCmdCurrent frame "get iis file name 1"}
- | FILENAME_ INT_ {ProcessSendCmdCurrent frame "get iis file name $2"}
+iissend : {ProcessSendCmdCurrent "get iis file name 1"}
+ | INT_ {ProcessSendCmdCurrent "get iis file name $1"}
+ | FILENAME_ {ProcessSendCmdCurrent "get iis file name 1"}
+ | FILENAME_ INT_ {ProcessSendCmdCurrent "get iis file name $2"}
  ;
 
 %%

@@ -15,12 +15,12 @@
 %%
 
 binsend : LOCK_ {ProcessSendCmdYesNo bin lock}
- | ABOUT_ {ProcessSendCmdCurrent frame "get bin cursor"}
+ | ABOUT_ {ProcessSendCmdCurrent "get bin cursor"}
  | BUFFERSIZE_ {ProcessSendCmdGet bin buffersize}
- | COLS_ {ProcessSendCmdCurrent frame "get bin cols"}
+ | COLS_ {ProcessSendCmdCurrent "get bin cols"}
  | FACTOR_ {ProcessSendCmdGet bin factor}
  | DEPTH_ {ProcessSendCmdGet bin depth}
- | FILTER_ {ProcessSendCmdCurrent frame "get bin filter"}
+ | FILTER_ {ProcessSendCmdCurrent "get bin filter"}
  | FUNCTION_ {ProcessSendCmdGet bin function}
  ;
 

@@ -15,14 +15,14 @@
 #include skyframe.trl
 #include skyformat.trl
 
-pansend : {ProcessSendCmdCurrent frame "get cursor physical fk5 degrees"}
- | coordsys {ProcessSendCmdCurrent frame "get cursor $1 fk5 degrees"}
- | wcssys {ProcessSendCmdCurrent frame "get cursor $1 fk5 degrees"}
- | skyframe {ProcessSendCmdCurrent frame "get cursor wcs $1 degrees"}
- | wcssys skyframe {ProcessSendCmdCurrent frame "get cursor $1 $2 degrees"}
- | wcssys skyformat {ProcessSendCmdCurrent frame "get cursor $1 fk5 $2"}
- | skyframe skyformat {ProcessSendCmdCurrent frame "get cursor wcs $1 $2"}
- | wcssys skyframe skyformat {ProcessSendCmdCurrent frame "get cursor $1 $2 $3"}
+pansend : {ProcessSendCmdCurrent "get cursor physical fk5 degrees"}
+ | coordsys {ProcessSendCmdCurrent "get cursor $1 fk5 degrees"}
+ | wcssys {ProcessSendCmdCurrent "get cursor $1 fk5 degrees"}
+ | skyframe {ProcessSendCmdCurrent "get cursor wcs $1 degrees"}
+ | wcssys skyframe {ProcessSendCmdCurrent "get cursor $1 $2 degrees"}
+ | wcssys skyformat {ProcessSendCmdCurrent "get cursor $1 fk5 $2"}
+ | skyframe skyformat {ProcessSendCmdCurrent "get cursor wcs $1 $2"}
+ | wcssys skyframe skyformat {ProcessSendCmdCurrent "get cursor $1 $2 $3"}
  ;
 
 %%

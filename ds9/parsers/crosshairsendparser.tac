@@ -17,14 +17,14 @@
 #include skyframe.trl
 #include skyformat.trl
 
-crosshairsend : {ProcessSendCmdCurrent frame "get crosshair physical fk5 degrees"}
- | coordsys {ProcessSendCmdCurrent frame "get crosshair $1 fk5 degrees"}
- | wcssys {ProcessSendCmdCurrent frame "get crosshair $1 fk5 degrees"}
- | skyframe {ProcessSendCmdCurrent frame "get crosshair wcs $1 degrees"}
- | wcssys skyframe {ProcessSendCmdCurrent frame "get crosshair $1 $2 degrees"}
- | wcssys skyformat {ProcessSendCmdCurrent frame "get crosshair $1 fk5 $2"}
- | skyframe skyformat {ProcessSendCmdCurrent frame "get crosshair wcs $1 $2"}
- | wcssys skyframe skyformat {ProcessSendCmdCurrent frame "get crosshair $1 $2 $3"}
+crosshairsend : {ProcessSendCmdCurrent "get crosshair physical fk5 degrees"}
+ | coordsys {ProcessSendCmdCurrent "get crosshair $1 fk5 degrees"}
+ | wcssys {ProcessSendCmdCurrent "get crosshair $1 fk5 degrees"}
+ | skyframe {ProcessSendCmdCurrent "get crosshair wcs $1 degrees"}
+ | wcssys skyframe {ProcessSendCmdCurrent "get crosshair $1 $2 degrees"}
+ | wcssys skyformat {ProcessSendCmdCurrent "get crosshair $1 fk5 $2"}
+ | skyframe skyformat {ProcessSendCmdCurrent "get crosshair wcs $1 $2"}
+ | wcssys skyframe skyformat {ProcessSendCmdCurrent "get crosshair $1 $2 $3"}
  | LOCK_ {ProcessSendCmdGet crosshair lock}
  ;
 

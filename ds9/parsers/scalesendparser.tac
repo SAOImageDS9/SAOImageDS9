@@ -18,9 +18,9 @@ scalesend : {ProcessSendCmdGet scale type}
  | LOCK_ {ProcessSendCmdYesNo scale lock}
  | LOCK_ LIMITS_ {ProcessSendCmdYesNo scale lock,limits}
  | DATASEC_ {ProcessSendCmdGet scale datasec}
- | LIMITS_ {ProcessSendCmdCurrent frame "get clip"}
+ | LIMITS_ {ProcessSendCmdCurrent "get clip"}
 # backward compatibility
- | SCALELIMITS_ {ProcessSendCmdCurrent frame "get clip"}
+ | SCALELIMITS_ {ProcessSendCmdCurrent "get clip"}
  | MODE_ {ProcessSendCmdGet scale mode}
  | SCOPE_ {ProcessSendCmdGet scale scope}
  | LOG_ EXP_ {ProcessSendCmdGet scale log}

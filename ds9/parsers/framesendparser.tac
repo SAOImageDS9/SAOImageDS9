@@ -45,12 +45,12 @@ framesend : {FrameSendCmd}
  | HAS_ has
  ;
 
-has : coordsys {ProcessSendCmdCurrentYesNo frame "has $1"}
- | wcssys {ProcessSendCmdCurrentYesNo frame "has wcs $1"}
- | param {ProcessSendCmdCurrentYesNo frame "has $1"}
- | CONTOUR_ contour {ProcessSendCmdCurrentYesNo frame "has contour $2"}
- | FITS_ fits {ProcessSendCmdCurrentYesNo frame "has fits $2"}
- | MARKER_ marker  {ProcessSendCmdCurrentYesNo frame "has marker $2"}
+has : coordsys {ProcessSendCmdCurrentYesNo "has $1"}
+ | wcssys {ProcessSendCmdCurrentYesNo "has wcs $1"}
+ | param {ProcessSendCmdCurrentYesNo "has $1"}
+ | CONTOUR_ contour {ProcessSendCmdCurrentYesNo "has contour $2"}
+ | FITS_ fits {ProcessSendCmdCurrentYesNo "has fits $2"}
+ | MARKER_ marker  {ProcessSendCmdCurrentYesNo "has marker $2"}
  | SYSTEM_ system
  | WCS_ wcs
  ; 
@@ -79,12 +79,12 @@ marker : HIGHLITE_ {set _ highlite}
  | UNDO_ {set _ undo}
  ;
 
-system : coordsys {ProcessSendCmdCurrentYesNo frame "has $1"}
- | wcssys {ProcessSendCmdCurrentYesNo frame "has wcs $1"}
+system : coordsys {ProcessSendCmdCurrentYesNo "has $1"}
+ | wcssys {ProcessSendCmdCurrentYesNo "has wcs $1"}
  ;
  
-wcs : wcssys {ProcessSendCmdCurrentYesNo frame "has wcs $1"}
- | wcstype wcssys {ProcessSendCmdCurrentYesNo frame "has wcs $1 $2"}
+wcs : wcssys {ProcessSendCmdCurrentYesNo "has wcs $1"}
+ | wcstype wcssys {ProcessSendCmdCurrentYesNo "has wcs $1 $2"}
  ;
 
 wcstype : EQUATORIAL_ {set _ equatorial}

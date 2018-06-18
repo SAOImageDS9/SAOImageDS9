@@ -10,11 +10,11 @@
 
 %%
 
-cmapsend : {ProcessSendCmdCurrent colorbar "get name"}
- | FILE_ {ProcessSendCmdCurrent colorbar "get file name"}
+cmapsend : {ColorbarSendCmdCurrent "get name"}
+ | FILE_ {ColorbarSendCmdCurrent "get file name"}
  | INVERT_ {ProcessSendCmdYesNo colorbar invert}
 # backward compatibility
- | VALUE_ {ProcessSendCmdCurrent2 colorbar "get contrast" "get bias"}
+ | VALUE_ {ColorbarSendCmdContrastBias}
 # backward compatibility
  | LOCK_ {ProcessSendCmdYesNo colorbar lock}
  ;

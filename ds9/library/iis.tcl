@@ -375,6 +375,15 @@ proc IISCmd {filename {which {}}} {
 }
 
 proc ProcessSendIISCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    iissend::YY_FLUSH_BUFFER
+    iissend::yy_scan_string $param
+    iissend::yyparse
+    return
+    
     global current
 
     switch -- [string tolower [lindex $param 0]] {

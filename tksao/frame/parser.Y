@@ -1339,6 +1339,7 @@ has	: AMPLIFIER_ {fr->hasAmplifierCmd();}
 	| IRAFMIN_ {fr->hasIRAFMINCmd();}
 	| MARKER_ hasMarker
 	| PHYSICAL_ {fr->hasPhysicalCmd();}
+	| IMAGE_ {fr->hasImageCmd();}
 	| SMOOTH_ {fr->hasSmoothCmd();}
 	| SYSTEM_ coordSystem {fr->hasSystemCmd((Coord::CoordSystem)$2);}
 	| WCS_ hasWCS

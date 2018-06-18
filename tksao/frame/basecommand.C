@@ -2306,6 +2306,11 @@ void Base::hasPhysicalCmd()
     Tcl_AppendResult(interp, "0", NULL);
 }
 
+void Base::hasImageCmd()
+{
+  Tcl_AppendResult(interp, "1", NULL);
+}
+
 void Base::hasSmoothCmd()
 {
   if (currentContext->hasSmooth())

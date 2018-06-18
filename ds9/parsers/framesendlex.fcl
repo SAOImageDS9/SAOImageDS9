@@ -1,0 +1,40 @@
+#tab framesendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+active	    {return $ACTIVE_}
+all	    {return $ALL_}
+aux	    {return $AUX_}
+bin	    {return $BIN_}
+contour	    {return $CONTOUR_}
+cube	    {return $CUBE_}
+datamin	    {return $DATAMIN_}
+datasec	    {return $DATASEC_}
+equatorial  {return $EQUATORIAL_}
+fits	    {return $FITS_}
+frameno	    {return $FRAMENO_}
+grid	    {return $GRID_}
+has	    {return $HAS_}
+highlite    {return $HIGHLITE_}
+iis	    {return $IIS_}
+irafmin	    {return $IRAFMIN_}
+linear	    {return $LINEAR_}
+lock	    {return $LOCK_}
+marker	    {return $MARKER_}
+mosaic	    {return $MOSAIC_}
+paste	    {return $PASTE_}
+select	    {return $SELECT_}
+smooth	    {return $SMOOTH_}
+system	    {return $SYSTEM_}
+undo	    {return $UNDO_}
+
+#include coordsys.fin
+#include wcssys.fin
+#include ws.fin
+
+%%

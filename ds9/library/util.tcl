@@ -357,6 +357,15 @@ proc ProcessSendCmdCurrent2 {key cmd cmd2} {
     }
 }
 
+proc ProcessSendCmdCurrentYesNo {key cmd} {
+    global parse
+    global current
+
+    if {$current($key) != {}} {
+	$parse(proc) $parse(id) "[ToYesNo [$current($key) $cmd]]"
+    }
+}
+
 proc ProcessSendCmdSend {ext cmd} {
     global parse
     global current

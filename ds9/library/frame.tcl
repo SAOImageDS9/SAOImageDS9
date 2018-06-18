@@ -2063,6 +2063,15 @@ proc ProcessFrameCmd {varname iname} {
 }
 
 proc ProcessSendFrameCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    framesend::YY_FLUSH_BUFFER
+    framesend::yy_scan_string $param
+    framesend::yyparse
+    return
+    
     global ds9
     global current
     global rgb
@@ -2134,6 +2143,23 @@ proc ProcessSendFrameCmd {proc id param {sock {}} {fn {}}} {
 	}
 	default {$proc $id "[string range $current(frame) 5 end]\n"}
     }
+}
+
+proc FrameSendCmd {} {
+    global parse
+    global current
+    $parse(proc) $parse(id) "[string range $current(frame) 5 end]\n"
+}
+
+proc FrameSendCmdGet {which} {
+    global parse
+    global ds9
+
+    set rr {}
+    foreach ff $ds9($which) {
+	append rr "[string range $ff 5 end] "
+    }
+    $parse(proc) $parse(id) "$rr\n"
 }
 
 proc ProcessSingleCmd {varname iname} {

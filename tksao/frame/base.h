@@ -720,6 +720,7 @@ public:
   void hasAmplifierCmd();
   void hasDetectorCmd();
   void hasPhysicalCmd();
+  void hasImageCmd();
   void hasWCSAltCmd();
   void hasWCSCmd(Coord::CoordSystem);
   void hasWCSEquCmd(Coord::CoordSystem);

@@ -260,6 +260,8 @@ source $ds9(root)/library/fitsparser.tcl
 source $ds9(root)/library/fitslex.tcl
 source $ds9(root)/library/frameparser.tcl
 source $ds9(root)/library/framelex.tcl
+source $ds9(root)/library/framesendparser.tcl
+source $ds9(root)/library/framesendlex.tcl
 source $ds9(root)/library/gridparser.tcl
 source $ds9(root)/library/gridlex.tcl
 source $ds9(root)/library/gridsendparser.tcl

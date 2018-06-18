@@ -7,8 +7,8 @@
 
 %%
 
-xpasend : {global parse; $parse(proc) $parse(id) [XPAInfoResult]}
- | INFO_ {global parse; $parse(proc) $parse(id) [XPAInfoResult]}
+xpasend : {ProcessSendCmd XPAInfoResult}
+ | INFO_ {ProcessSendCmd XPAInfoResult}
  ;
 
 %%

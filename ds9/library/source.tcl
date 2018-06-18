@@ -344,6 +344,8 @@ source $ds9(root)/library/prefssendparser.tcl
 source $ds9(root)/library/prefssendlex.tcl
 source $ds9(root)/library/preserveparser.tcl
 source $ds9(root)/library/preservelex.tcl
+source $ds9(root)/library/preservesendparser.tcl
+source $ds9(root)/library/preservesendlex.tcl
 source $ds9(root)/library/psparser.tcl
 source $ds9(root)/library/pslex.tcl
 source $ds9(root)/library/pssendparser.tcl

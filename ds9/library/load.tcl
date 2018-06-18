@@ -421,6 +421,15 @@ proc ProcessPreserveCmd {varname iname} {
 }
 
 proc ProcessSendPreserveCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    preservesend::YY_FLUSH_BUFFER
+    preservesend::yy_scan_string $param
+    preservesend::yyparse
+    return
+
     global scale
     global panzoom
     global marker

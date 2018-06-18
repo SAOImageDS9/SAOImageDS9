@@ -1,0 +1,16 @@
+#tab preservesendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+pan	    {return $PAN_}
+regions	    {return $REGIONS_}
+scale	    {return $SCALE_}
+
+#include ws.fin
+
+%%

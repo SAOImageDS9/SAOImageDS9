@@ -299,6 +299,16 @@ proc ProcessCmdCVAR4 {key value key2 value2 key3 value3 key4 value4 {cmd {}}} {
     }
 }
 
+proc ProcessSendCmd {cmd} {
+    global parse
+    $parse(proc) $parse(id) "[$cmd]"
+}
+
+proc ProcessSendCmdTxt {rr} {
+    global parse
+    $parse(proc) $parse(id) "$rr\n"
+}
+
 proc ProcessSendCmdGet {varname key} {
     upvar #0 $varname var
     global $varname

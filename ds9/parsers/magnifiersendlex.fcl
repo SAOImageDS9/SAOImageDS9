@@ -1,0 +1,17 @@
+#tab magnifiersendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+color	    {return $COLOR_}
+cursor	    {return $CURSOR_}
+region	    {return $REGION_}
+zoom	    {return $ZOOM_}
+
+#include ws.fin
+
+%%

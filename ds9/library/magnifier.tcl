@@ -147,14 +147,13 @@ proc ProcessMagnifierCmd {varname iname} {
 }
 
 proc ProcessSendMagnifierCmd {proc id param {sock {}} {fn {}}} {
-    global pmagnifier
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    switch -- [string tolower [lindex $param 0]] {
-	color {$proc $id "$pmagnifier(color)\n"}
-	zoom {$proc $id "$pmagnifier(zoom)\n"}
-	cursor {$proc $id [ToYesNo $pmagnifier(cursor)]}
-	region {$proc $id [ToYesNo $pmagnifier(region)]}
-    }
+    magnifiersend::YY_FLUSH_BUFFER
+    magnifiersend::yy_scan_string $param
+    magnifiersend::yyparse
 }
 
 

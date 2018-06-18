@@ -282,6 +282,8 @@ source $ds9(root)/library/locksendparser.tcl
 source $ds9(root)/library/locksendlex.tcl
 source $ds9(root)/library/magnifierparser.tcl
 source $ds9(root)/library/magnifierlex.tcl
+source $ds9(root)/library/magnifiersendparser.tcl
+source $ds9(root)/library/magnifiersendlex.tcl
 source $ds9(root)/library/maskparser.tcl
 source $ds9(root)/library/masklex.tcl
 source $ds9(root)/library/matchparser.tcl

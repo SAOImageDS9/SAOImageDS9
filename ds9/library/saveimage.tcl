@@ -45,7 +45,6 @@ proc SaveImageDialog {format} {
     global tifffbox
     global pngfbox
 
-    puts "a:[array get tifffbox]"
     switch -- $format {
 	fits {set fn [SaveFileDialog fitsfbox]}
 	eps {set fn [SaveFileDialog epsfbox]}
@@ -160,7 +159,7 @@ proc ProcessSaveImageCmd {varname iname} {
     incr i [expr $saveimage::yycnt-1]
 }
 
-proc SaveimageCmdLoad {format fn} {
+proc SaveImageCmdLoad {format fn} {
     switch -- $format {
 	fits {FileLast fitsfbox $fn}
 	eps {FileLast epsfbox $fn}
@@ -172,7 +171,7 @@ proc SaveimageCmdLoad {format fn} {
     SaveImage $fn $format
 }
 
-proc SaveimageCmdMPEG {fn na} {
+proc SaveImageCmdMPEG {fn na} {
     global movie
 
     set movie(action) slice

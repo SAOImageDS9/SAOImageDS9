@@ -382,17 +382,5 @@ proc ProcessSendIISCmd {proc id param {sock {}} {fn {}}} {
     iissend::YY_FLUSH_BUFFER
     iissend::yy_scan_string $param
     iissend::yyparse
-    return
-    
-    global current
-
-    switch -- [string tolower [lindex $param 0]] {
-	filename {
-	    if {$current(frame) != {}} {
-		$proc $id \
-		    "[$current(frame) get iis file name [lindex $param 1]]\n"
-	    }
-	}
-    }
 }
 

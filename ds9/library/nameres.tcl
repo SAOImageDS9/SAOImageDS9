@@ -193,23 +193,22 @@ proc ProcessNRESCmd {varname iname} {
 }
 
 proc ProcessSendNRESCmd {proc id param {sock {}} {fn {}}} {
-    global nres
-    global pnres
-    global dnres
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
     NRESDialog
 
-    switch -- [string tolower [lindex $param 0]] {
-	server {$proc $id "$pnres(server)\n"}
-	format -
-	skyformat {$proc $id "$dnres(skyformat)\n"}
-	name -
-	{} {$proc $id "$dnres(name)\n"}
-	default {
-	    set dnres(name) [lindex $param 0]
-	    NRESApply dnres 1
-	    $proc $id "$dnres(x) $dnres(y)\n"
-	}
-    }
+    nressend::YY_FLUSH_BUFFER
+    nressend::yy_scan_string $param
+    nressend::yyparse
 }
 
+proc NRESSendCmd {name} {
+    global parse
+    global dnres
+    
+    set dnres(name) $name
+    NRESApply dnres 1
+    $parse(proc) $parse(id) "$dnres(x) $dnres(y)\n"
+}

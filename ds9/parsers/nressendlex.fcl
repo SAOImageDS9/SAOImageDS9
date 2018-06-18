@@ -1,0 +1,17 @@
+#tab nressendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+name	    {return $NAME_}
+server	    {return $SERVER_}
+skyformat   {return $SKYFORMAT_}
+
+#include string.fin
+#include ws.fin
+
+%%

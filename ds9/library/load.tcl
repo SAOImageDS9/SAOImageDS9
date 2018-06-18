@@ -428,20 +428,6 @@ proc ProcessSendPreserveCmd {proc id param {sock {}} {fn {}}} {
     preservesend::YY_FLUSH_BUFFER
     preservesend::yy_scan_string $param
     preservesend::yyparse
-    return
-
-    global scale
-    global panzoom
-    global marker
-
-    switch -- [string tolower $param] {
-	scale {
-	    # backward compatibility
-	    $proc $id "no\n"
-	}
-	pan {$proc $id [ToYesNo $panzoom(preserve)]}
-	regions {$proc $id [ToYesNo $marker(preserve)]}
-    }
 }
 
 # Update

@@ -9,10 +9,11 @@
 
 %%
 
-preservesend : SCALE_ {ProcessSendCmdTxt "no"}
- | PAN_ {ProcessSendCmdYesNo panzoom preserve}
+preservesend : PAN_ {ProcessSendCmdYesNo panzoom preserve}
  | REGIONS_ {ProcessSendCmdYesNo marker preserve}
- ;
+# backward compatibility
+ | SCALE_ {ProcessSendCmdTxt "no"}
+;
 
 %%
 

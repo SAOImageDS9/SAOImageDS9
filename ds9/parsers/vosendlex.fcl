@@ -1,0 +1,18 @@
+#tab vosendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+connect     {return $CONNECT_}
+delay	    {return $DELAY_}
+internal    {return $INTERNAL_}
+method	    {return $METHOD_}
+server	    {return $SERVER_}
+
+#include ws.fin
+
+%%

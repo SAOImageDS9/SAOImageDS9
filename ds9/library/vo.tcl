@@ -501,35 +501,28 @@ proc VOCmdDisconnect {str} {
 }
 
 proc ProcessSendVOCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    vosend::YY_FLUSH_BUFFER
+    vosend::yy_scan_string $param
+    vosend::yyparse
+}
+
+proc VOSendCmdConnect {{all {0}}} {
     global ivo
     global pvo
 
-    switch -- [string tolower $param] {
-	method {$proc $id "$pvo(method)\n"}
-	server {$proc $id "$pvo(server)\n"}
-	internal {$proc $id [ToYesNo $pvo(hv)]}
-	delay {$proc $id "$pvo(delay)\n"}
-	connect {
-	    # current connections
-	    set len [llength $ivo(server,button)]
-	    set rr {}
-	    for {set ii 0} {$ii<$len} {incr ii} {
-		if {$ivo(b$ii)} {
-		    append rr "[lindex $ivo(server,host) $ii] [lindex $ivo(server,title) $ii] [lindex $ivo(server,url) $ii] $ivo(b$ii)\n"
-		}
-	    }
-	    $proc $id $rr
-	}
-	default {
-	    VODialog
-	    # all possible connections
-	    set len [llength $ivo(server,button)]
-	    set rr {}
-	    for {set ii 0} {$ii<$len} {incr ii} {
-		append rr "[lindex $ivo(server,host) $ii] [lindex $ivo(server,title) $ii] [lindex $ivo(server,url) $ii] $ivo(b$ii)\n"
-	    }
-	    $proc $id $rr
+    VODialog
+
+    set len [llength $ivo(server,button)]
+    set rr {}
+    for {set ii 0} {$ii<$len} {incr ii} {
+	if {$all || $ivo(b$ii)} {
+	    append rr "[lindex $ivo(server,host) $ii] [lindex $ivo(server,title) $ii] [lindex $ivo(server,url) $ii] $ivo(b$ii)\n"
 	}
     }
-}
 
+    ProcessSendCmdTxt $rr
+}

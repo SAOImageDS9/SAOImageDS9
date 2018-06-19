@@ -436,6 +436,8 @@ source $ds9(root)/library/vlsssendparser.tcl
 source $ds9(root)/library/vlsssendlex.tcl
 source $ds9(root)/library/voparser.tcl
 source $ds9(root)/library/volex.tcl
+source $ds9(root)/library/vosendparser.tcl
+source $ds9(root)/library/vosendlex.tcl
 source $ds9(root)/library/wcsparser.tcl
 source $ds9(root)/library/wcslex.tcl
 source $ds9(root)/library/wcssendparser.tcl

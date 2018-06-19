@@ -54,6 +54,114 @@ proc IExamKey {which K xx yy} {
 }
 
 proc ProcessSendIExamCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    global iexam
+    global icursor
+    global current
+    set iexam(frame) {}
+    set iexam(x) {}
+    set iexam(y) {}
+    set iexam(event) {}
+    set iexam(mode) $current(mode)
+
+    set current(mode) iexam
+
+    set iexam(button) 1
+    set iexam(key) 0
+    set iexam(any) 0
+
+    global cvarname
+    set cvarname {iexam(button)}
+
+    # turn on blinking cursor
+    set icursor(timer) 1
+    CursorTimer
+
+    iexamsend::YY_FLUSH_BUFFER
+    iexamsend::yy_scan_string $param
+    iexamsend::yyparse
+
+    # turn off blinking cursor
+    set icursor(timer) 0
+
+    set current(mode) $iexam(mode)
+
+    set iexam(button) 0
+    set iexam(key) 0
+
+    set iexam(frame) {}
+    set iexam(x) {}
+    set iexam(y) {}
+    set iexam(event) {}
+    set iexam(mode) {}
+
+    unset cvarname
+}
+
+proc IExamSendCmdDest {which} {
+    global iexam
+    global cvarname
+
+    set iexam($which) 1
+    set cvarname "iexam($which)"
+}
+
+proc IExamSendCmdData {ww hh} {
+    global iexam
+    
+    global cvarname
+    vwait $cvarname
+    ProcessSendCmdTxt "$iexam(event) [$iexam(frame) get data canvas $iexam(x) $iexam(y) $ww $hh]"
+}
+
+proc IExamSendCmdCoord {sys sky skyformat} {
+    global iexam
+
+    global cvarname
+    vwait $cvarname
+    ProcessSendCmdTxt "$iexam(event) [$iexam(frame) get coordinates $iexam(x) $iexam(y) $sys $sky $skyformat]"
+}
+
+proc IExamSendCmdMacro {cmd} {
+    global iexam
+
+    global cvarname
+    vwait $cvarname
+
+    # $width,$height,$depth,$bitpix
+    ParseXYBitpixMacro cmd $iexam(frame)
+
+    # $filename[$regions]
+    ParseFilenameRegionMacro cmd $iexam(frame)
+
+    # $filename
+    ParseFilenameMacro cmd $iexam(frame)
+
+    # $regions
+    ParseRegionMacro cmd $iexam(frame)
+
+    # $env
+    ParseEnvMacro cmd
+
+    # $pan
+    ParsePanMacro cmd $iexam(frame)
+
+    # $value
+    ParseValueMacro cmd $iexam(frame) $iexam(x) $iexam(y)
+
+    # $x,$y
+    ParseXYMacro cmd $iexam(frame) $iexam(x) $iexam(y)
+
+    # $z
+    ParseZMacro cmd $iexam(frame)
+
+    ProcessSendCmdTxt "$iexam(event) $cmd"
+}
+
+proc ProcessSendIExamCmdOld {proc id param {sock {}} {fn {}}} {
     global iexam
 
     global icursor

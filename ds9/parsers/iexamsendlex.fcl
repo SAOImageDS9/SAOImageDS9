@@ -1,0 +1,24 @@
+#tab iexamsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+any		{return $ANY_}
+button		{return $BUTTON_}
+coordinate	{return $COORDINATE_}
+data		{return $DATA_}
+key		{return $KEY_}
+value		{return $VALUE_}
+
+#include coordsys.fin
+#include wcssys.fin
+#include skyframe.fin
+#include skyformat.fin
+#include string.fin
+#include ws.fin
+
+%%

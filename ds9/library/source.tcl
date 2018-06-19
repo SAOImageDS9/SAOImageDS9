@@ -258,6 +258,8 @@ source $ds9(root)/library/exportparser.tcl
 source $ds9(root)/library/exportlex.tcl
 source $ds9(root)/library/fitsparser.tcl
 source $ds9(root)/library/fitslex.tcl
+source $ds9(root)/library/fitssendparser.tcl
+source $ds9(root)/library/fitssendlex.tcl
 source $ds9(root)/library/frameparser.tcl
 source $ds9(root)/library/framelex.tcl
 source $ds9(root)/library/framesendparser.tcl

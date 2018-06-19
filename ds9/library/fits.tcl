@@ -138,85 +138,45 @@ proc FitsCmdLoad {param layer mode} {
 }
 
 proc ProcessSendFitsCmd {proc id param sock fn} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    fitssend::YY_FLUSH_BUFFER
+    fitssend::yy_scan_string $param
+    fitssend::yyparse
+}
+
+proc FitsSendCmd {which} {
+    global parse
+
+    if {$parse(sock) != {}} {
+	# xpa
+	SaveFitsSocket $which $parse(sock)
+    } elseif {$parse(fn) != {}} {
+	# comm
+	SaveFitsFile $which $parse(fn)
+	$parse(proc) $parse(id) {} $parse(fn)
+    }
+}
+
+proc FitsSendCmdType {} {
     global current
 
     if {$current(frame) == {}} {
 	return
     }
 
-    set which image
-
-    switch -- [string tolower [lindex $param 0]] {
-	width {
-	    $proc $id "[$current(frame) get fits width]\n"
-	    return
-	}
-	height {
-	    $proc $id "[$current(frame) get fits height]\n"
-	    return
-	}
-	depth {
-	    $proc $id "[$current(frame) get fits depth 2]\n"
-	    return
-	}
-	bitpix {
-	    $proc $id "[$current(frame) get fits bitpix]\n"
-	    return
-	}
-	size {
-	    set sys [lindex $param 1] 
-	    set sky [lindex $param 2] 
-	    set format [lindex $param 3]
-	    if {$sys == {} && $sky == {} && $format == {}} {
-		$proc $id "[$current(frame) get fits size]\n"
-	    } else {
-		FixSpec sys sky format image fk5 degrees
-		$proc $id "[$current(frame) get fits size $sys $sky $format]\n"
-	    }
-	    return
-	}
-	header {
-	    switch -- [llength $param] {
-		1 {ProcessSend $proc $id {} $fn {.txt} "[$current(frame) get fits header 1]\n"}
-		2 {ProcessSend $proc $id {} $fn {.txt} "[$current(frame) get fits header [lindex $param 1]]\n"}
-		3 {
-		    set key [lindex $param 2]
-		    set key [string trim $key \']
-		    set key [string trim $key \{]
-		    set key [string trim $key \}]
-		    $proc $id "[string trim [$current(frame) get fits header keyword \{$key\}]]\n"
-		}
-		4 {
-		    set key [lindex $param 3]
-		    set key [string trim $key \']
-		    set key [string trim $key \{]
-		    set key [string trim $key \}]
-		    $proc $id "[string trim [$current(frame) get fits header [lindex $param 1] keyword \{$key\}]]\n"
-		}
-	    }
-	    return
-	}
-	type {
-	    if {[$current(frame) has fits bin]} {
-		$proc $id "table\n"
-	    } else {
-		$proc $id "image\n"
-	    }
-	    return
-	}
-	table {set which table}
-	image {}
-	slice {set which slice}
-	resample {set which resample}
-    }
-
-    if {$sock != {}} {
-	# xpa
-	SaveFitsSocket $which $sock
-    } elseif {$fn != {}} {
-	# comm
-	SaveFitsFile $which $fn
-	$proc $id {} $fn
+    if {[$current(frame) has fits bin]} {
+	ProcessSendCmdTxt "table"
+    } elseif {[$current(frame) has fits cube]} {
+	ProcessSendCmdTxt "cube"
+    } elseif {[$current(frame) has fits mosaic]} {
+	ProcessSendCmdTxt "mosaic"
+    } elseif {[$current(frame) has fits]} {
+	ProcessSendCmdTxt "image"
+    } else {
+	return
     }
 }
 

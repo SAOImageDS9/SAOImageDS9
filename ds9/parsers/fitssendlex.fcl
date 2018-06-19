@@ -1,0 +1,31 @@
+#tab fitssendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+bitpix	    {return $BITPIX_}
+depth	    {return $DEPTH_}
+gz	    {return $GZ_}
+header	    {return $HEADER_}
+height	    {return $HEIGHT_}
+image	    {return $IMAGE_}
+keyword	    {return $KEYWORD_}
+resample    {return $RESAMPLE_}
+size	    {return $SIZE_}
+slice	    {return $SLICE_}
+table	    {return $TABLE_}
+type	    {return $TYPE_}
+width	    {return $WIDTH_}
+
+#include wcssys.fin
+#include skyframe.fin
+#include rformat.fin
+#include int.fin
+#include string.fin
+#include ws.fin
+
+%%

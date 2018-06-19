@@ -581,6 +581,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -601,6 +602,7 @@
         </tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             [&lt;ref&gt;] [match &lt;ref&gt; &lt;ref&gt;]<br>
           </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -797,8 +799,10 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -995,6 +999,7 @@
 
 
 
+
         [match unique yes|no]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [maxrows
         &lt;number&gt;]</tt><br>
@@ -1050,6 +1055,7 @@
 
 
 
+
               [symbol shape </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>circle
 
 
@@ -1057,7 +1063,9 @@
 
 
 
+
                   point|box point|diamond point|</tt></tt></tt></tt>cross
+
 
 
 
@@ -1072,6 +1080,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -1773,60 +1782,40 @@
         fits mask</tt>
       <p>Syntax: <br>
       </p>
-      <tt> fits [size|width|height|depth|bitpix]<br>
-        &nbsp; &nbsp;&nbsp; [size [wcs|wcsa...wcsz]
-        [fk4|fk5|icrs|galactic|ecliptic] [degrees|arcmin|arcsecs]]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [type]<br>
-        &nbsp;&nbsp;&nbsp; &nbsp;[header [&lt;ext&gt;] [keyword
-        &lt;string&gt;]]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [image|table|resample] [gz] <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [new|mask][&lt;options&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [new][slice &lt;options&gt;]<br>
-        &nbsp;&nbsp;&nbsp; &nbsp;[new][mecube &lt;options&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [new|mask][mosaicimage
-        [iraf|wcs|wcsa...wcsz|wfpc2] &lt;options&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [new|mask][mosaic
-        [iraf|wcs|wcsa...wcsz] &lt;options&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [new][rgbcube &lt;options&gt;]<br>
-        &nbsp; &nbsp; &nbsp;[new][rgbimage &lt;options&gt;]<br>
-        &nbsp;<br>
+      <tt> </tt><tt><tt>fits </tt><tt><tt>[new|mask|slice]
+            [&lt;filename&gt;]</tt><tt><br>
+          </tt>&nbsp;&nbsp;&nbsp;&nbsp; [width|height|depth|bitpix]<br>
+          &nbsp; &nbsp;&nbsp; [size [wcs|wcsa...wcsz]
+          [fk4|fk5|icrs|galactic|ecliptic] [degrees|arcmin|arcsecs]]<br>
+          &nbsp;&nbsp;&nbsp; &nbsp;[header [&lt;ext&gt;] [keyword
+          &lt;string&gt;]]<br>
+          &nbsp;&nbsp;&nbsp;&nbsp; [image|table|slice]</tt><tt><br>
+          &nbsp; </tt><br>
         Example:<br>
         string value = ds9.get(string cmd)<br>
-        fits size<br>
-        fits width<br>
-        fits height<br>
-        fits depth<br>
-        fits bitpix<br>
-        fits size wcs fk5 arcmin<br>
-        fits type <br>
-        fits header keyword BITPIX<br>
-        fits header 1 keyword BITPIX<br>
-        string url = ds9.get(string cmd)<br>
+      </tt><tt><tt>fits width<br>
+          fits height<br>
+          fits depth<br>
+          fits bitpix</tt><br>
+        <tt><tt>fits size<br>
+          </tt> fits size wcs fk5 arcmin<br>
+          fits header # primary<br>
+          fits header 2 # hdu 2<br>
+          fits header -2 # hdu 2 with inherit<br>
+          fits header keyword BITPIX<br>
+          fits header 1 keyword BITPIX</tt><br>
         fits<br>
         fits image<br>
-        fits image gz<br>
-        fits table<br>
-        fits table gz<br>
-        fits resample<br>
-        fits resample gz<br>
-        fits header # primary<br>
-        fits header 2 # hdu 2<br>
-        fits header -2 # hdu 2 with inherit<br>
-        ds9.set(string cmd, string url)<br>
-        fits <br>
-        fits [2] <br>
-        fits new [bin=detx,dety]<br>
-        fits slice<br>
-        fits mecube <br>
-        fits mosaicimage iraf<br>
-        fits mosaicimage wcs<br>
-        fits mosaicimage wcsa<br>
-        fits mosaicimage wfpc2<br>
-        fits mosaic iraf<br>
-        fits mosaic wcs<br>
-        fits rgbcube<br>
-        fits rgbimage </tt>
-      <p><b> <a name="frame"></a>frame</b></p>
+      </tt><tt><tt>fits table<br>
+        </tt></tt><tt><tt><tt>fits slice<br>
+          </tt></tt>ds9.set(string cmd, string url)</tt><tt><br>
+        fits foo.fits<br>
+        fits new foo.fits<br>
+        fits bar.fits[bin=detx,dety]<br>
+        fits slice foo.fits<br>
+        fits mask foo.fits<br>
+        <br>
+      </tt><b><a name="frame"></a>frame</b>
       <p>Controls frame functions. Frames may be created, deleted,
         reset, and centered. While return the current frame number. If
         you goto a frame that does not exists, it will be created. If
@@ -2238,6 +2227,7 @@
 
 
 
+
           Macros</a> for more information.</p>
       <tt> Syntax: <br>
         iexam []<br>
@@ -2275,6 +2265,7 @@
         iis filename bar.fits 4</tt><br>
       <p><b> <a name="jpeg"></a>jpeg</b></p>
       <p>Load JPEG image into current frame. Optional parameters: <tt>jpeg
+
 
 
 
@@ -2810,6 +2801,7 @@
 
 
 
+
                         [new name &lt;plotname&gt; line|bar|scatter]</tt></tt></tt></tt></tt></tt></tt></tt><br>
       </tt><tt><br>
       </tt><tt><tt># </tt><tt><tt><tt>load data into existing plot from
@@ -2823,6 +2815,7 @@
           &lt;filename&gt;]<br>
         </tt>&nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] clear]<br>
       </tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2972,6 +2965,7 @@
 
 
 
+
                           </tt>[[&lt;plotname&gt;] stats yes|no]<br>
                         </tt></tt>&nbsp;&nbsp;&nbsp;&nbsp; </tt>[[&lt;plotname&gt;]
 
@@ -3047,8 +3041,10 @@
 
 
 
+
                     list yes|no]<br>
                     &nbsp;&nbsp;&nbsp;&nbsp; </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3199,10 +3195,12 @@
 
 
 
+
                 [[&lt;plotname&gt;] pagesetup orient portrait|landscape]<br>
                 &nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] pagesetup
                 size letter|legal|tabloid|poster|a4]</tt><br>
               <tt> </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3375,6 +3373,7 @@
 
 
 
+
           legend yes|no]<br>
           &nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] legend position
           right|left|top|bottom]</tt><br>
@@ -3391,6 +3390,7 @@
       <tt><tt>&nbsp; &nbsp;&nbsp; [[&lt;plotname&gt;] title x|y
           &lt;string&gt;]<br>
           &nbsp;&nbsp;&nbsp;&nbsp; [</tt></tt><tt><tt><tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -3539,9 +3539,11 @@
 
 
 
+
               shape
               circle|square|diamond|plus|splus|scross|triangle|arrow]</tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3694,7 +3696,9 @@
 
 
 
+
                                                 <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3845,7 +3849,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3996,7 +4002,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4147,7 +4155,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4297,7 +4307,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4447,7 +4459,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4598,7 +4612,9 @@
 
 
 
+
                                                           [[&lt;plotname&gt;]
+
 
 
 
@@ -4749,7 +4765,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -4900,7 +4918,9 @@
 
 
 
+
                                                           <tt> </tt></tt><tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -5001,6 +5021,7 @@
         plot foo data xy # plot additional data<br>
       </tt><tt><tt><tt><tt><tt><tt><tt><br>
                   </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>string
+
 
 
 
@@ -5170,8 +5191,10 @@
 
 
 
+
                                       axis x auto<br>
                                     </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -5310,6 +5333,7 @@
 
 
 
+
                                           axis x max<br>
                                         </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
 
@@ -5380,8 +5404,10 @@
 
 
 
+
                                                           axis x format<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>plot
+
 
 
 
@@ -5528,8 +5554,10 @@
 
 
 
+
                       font numbers size<br>
                     </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -5676,8 +5704,10 @@
 
 
 
+
                           font numbers slant<br>
                         </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -5824,6 +5854,7 @@
 
 
 
+
                                     title x<br>
                                     plot barmode<br>
                                   </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>
@@ -5848,11 +5879,13 @@
 
 
 
+
               cmd)<br>
             </tt></tt></tt>plot legend yes<br>
       </tt><tt>plot legend position left</tt><tt><tt><tt><tt><br>
               <br>
             </tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>string
+
 
 
 
@@ -5867,8 +5900,10 @@
 
 
 
+
                         font numbers size<br>
                       </tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -5881,8 +5916,10 @@
 
 
 
+
                             font numbers slant<br>
                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt>ds9.set(string
+
 
 
 
@@ -5900,9 +5937,11 @@
 
 
 
+
                                                   value = ds9.get(string
                                                   cmd)<br>
                                                 </tt></tt></tt></tt></tt></tt>plot
+
 
 
 
@@ -5915,6 +5954,7 @@
 
 
 
+
                                         title xaxis</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><br>
                                         </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
 
@@ -5922,8 +5962,10 @@
 
 
 
+
                                           title yaxis</tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><br>
                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt>ds9.set(string
+
 
 
 
@@ -5941,6 +5983,7 @@
 
 
 
+
                                                       value =
                                                       ds9.get(string
                                                       cmd)<br>
@@ -5950,9 +5993,11 @@
 
 
 
+
                                           barmode<br>
                                         </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt>ds9.set(string
+
 
 
 
@@ -5973,6 +6018,7 @@
                 </tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>plot
                     width<br>
                   </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -6119,8 +6165,10 @@
 
 
 
+
                                         error<br>
                                       </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -6267,8 +6315,10 @@
 
 
 
+
                                                           error width<br>
                                                           </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>plot
+
 
 
 
@@ -6415,6 +6465,7 @@
 
 
 
+
             cmd)<br>
           </tt>plot show yes<br>
           plot shape circle<br>
@@ -6456,6 +6507,7 @@
       <p>Set region and coordinate output format precision. </p>
       <tt> Syntax: <br>
         precision &lt;linear&gt; </tt><tt><tt>&lt;degree&gt;</tt> </tt><tt><tt>&lt;hms&gt;
+
 
 
 
@@ -7084,6 +7136,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [export sb|tsv &lt;filename&gt;]<br>
@@ -7103,6 +7156,7 @@
       </tt><tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [system &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -7322,8 +7376,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -7353,8 +7409,10 @@
 
 
 
+
                       [angle &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt></tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -7404,8 +7462,10 @@
 
 
 
+
                         sigma 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>smooth
+
 
 
 
@@ -7436,8 +7496,10 @@
 
 
 
+
                               angle 45<br>
                             </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>smooth
+
 
 
 
@@ -7490,6 +7552,7 @@
       </tt><tt>threads 8</tt><br>
       <p><b> <a name="tiff"></a>tiff</b></p>
       <p>Load TIFF image into current frame. Optional parameters: <tt>tiff
+
 
 
 

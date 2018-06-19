@@ -1385,7 +1385,6 @@ proc ProcessPrecisionCmd {varname iname} {
 
 proc ProcessSendPrecisionCmd {proc id param {sock {}} {fn {}}} {
     global pds9
-
     $proc $id "$pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,arcmin) $pds9(prec,arcsec)\n"
 }
 
@@ -1401,7 +1400,6 @@ proc ProcessBgCmd {varname iname} {
 
 proc ProcessSendBgCmd {proc id param {sock {}} {fn {}}} {
     global pds9
-
     $proc $id "$pds9(bg)\n"
 }
 
@@ -1417,7 +1415,6 @@ proc ProcessNanCmd {varname iname} {
 
 proc ProcessSendNanCmd {proc id param {sock {}} {fn {}}} {
     global pds9
-
     $proc $id "$pds9(nan)\n"
 }
 
@@ -1433,13 +1430,11 @@ proc ProcessThreadsCmd {varname iname} {
 
 proc ProcessSendThreadsCmd {proc id param {sock {}} {fn {}}} {
     global ds9
-
     $proc $id "$ds9(threads)\n"
 }
 
 proc ProcessSendIRAFAlignCmd {proc id param {sock {}} {fn {}}} {
     global pds9
-
     $proc $id [ToYesNo $pds9(iraf)]
 }
 
@@ -1612,7 +1607,6 @@ proc ProcessQuitCmd {varname iname} {
 
 proc ProcessSendModeCmd {proc id param {sock {}} {fn {}}} {
     global current
-
     $proc $id "$current(mode)\n"
 }
 

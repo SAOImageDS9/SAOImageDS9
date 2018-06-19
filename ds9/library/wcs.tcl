@@ -1209,7 +1209,6 @@ proc ProcessAlignCmd {varname iname} {
 
 proc ProcessSendAlignCmd {proc id param {sock {}} {fn {}}} {
     global current
-
     $proc $id [ToYesNo $current(align)]
 }
 

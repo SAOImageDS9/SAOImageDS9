@@ -169,11 +169,11 @@ proc ProcessVLACmd {varname iname} {
 }
 
 proc ProcessSendVLACmd {proc id param {sock {}} {fn {}}} {
-    VLADialog
-
     global parse
     set parse(proc) $proc
     set parse(id) $id
+
+    VLADialog
 
     vlasend::YY_FLUSH_BUFFER
     vlasend::yy_scan_string $param

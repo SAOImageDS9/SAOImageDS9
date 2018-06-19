@@ -178,11 +178,11 @@ proc ProcessSTSCICmd {varname iname} {
 }
 
 proc ProcessSendSTSCICmd {proc id param {sock {}} {fn {}}} {
-    STSCIDialog
-
     global parse
     set parse(proc) $proc
     set parse(id) $id
+
+    STSCIDialog
 
     dssstscisend::YY_FLUSH_BUFFER
     dssstscisend::yy_scan_string $param

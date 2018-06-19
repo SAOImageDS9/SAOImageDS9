@@ -1268,6 +1268,7 @@ proc ProcessSendColorbarCmd {proc id param {sock {}} {fn {}}} {
     global parse
     set parse(proc) $proc
     set parse(id) $id
+
     colorbarsend::YY_FLUSH_BUFFER
     colorbarsend::yy_scan_string $param
     colorbarsend::yyparse

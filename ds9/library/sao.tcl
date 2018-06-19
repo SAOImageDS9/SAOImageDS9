@@ -151,11 +151,11 @@ proc ProcessSAOCmd {varname iname} {
 }
 
 proc ProcessSendSAOCmd {proc id param {sock {}} {fn {}}} {
-    SAODialog
-
     global parse
     set parse(proc) $proc
     set parse(id) $id
+
+    SAODialog
 
     dsssaosend::YY_FLUSH_BUFFER
     dsssaosend::yy_scan_string $param

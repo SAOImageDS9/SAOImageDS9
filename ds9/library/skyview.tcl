@@ -617,11 +617,11 @@ proc ProcessSkyViewCmd {varname iname} {
 }
 
 proc ProcessSendSkyViewCmd {proc id param {sock {}} {fn {}}} {
-    SkyViewDialog
-
     global parse
     set parse(proc) $proc
     set parse(id) $id
+
+    SkyViewDialog
 
     skyviewsend::YY_FLUSH_BUFFER
     skyviewsend::yy_scan_string $param

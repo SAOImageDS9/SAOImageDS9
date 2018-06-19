@@ -2223,7 +2223,6 @@ proc ProcessXPACmd {varname iname} {
 
 proc ProcessSendXPACmd {proc id param {sock {}} {fn {}}} {
     global parse
-    
     set parse(proc) $proc
     set parse(id) $id
 

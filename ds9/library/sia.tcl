@@ -458,6 +458,5 @@ proc SIACmdSystem {sys} {
 
 proc ProcessSendSIACmd {proc id param sock fn} {
     global isia
-
     $proc $id "$isia(sias)\n"
 }

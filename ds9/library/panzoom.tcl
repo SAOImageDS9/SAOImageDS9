@@ -740,7 +740,6 @@ proc ProcessOrientCmd {varname iname} {
 
 proc ProcessSendOrientCmd {proc id param {sock {}} {fn {}}} {
     global current
-
     $proc $id "$current(orient)\n"
 }
 
@@ -759,7 +758,6 @@ proc ProcessRotateCmd {varname iname} {
 
 proc ProcessSendRotateCmd {proc id param {sock {}} {fn {}}} {
     global current
-
     $proc $id "$current(rotate)\n"
 }
 

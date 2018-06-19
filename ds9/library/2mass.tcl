@@ -137,11 +137,11 @@ proc Process2MASSCmd {varname iname} {
 }
 
 proc ProcessSend2MASSCmd {proc id param {sock {}} {fn {}}} {
-    2MASSDialog
-
     global parse
     set parse(proc) $proc
     set parse(id) $id
+
+    2MASSDialog
 
     twomasssend::YY_FLUSH_BUFFER
     twomasssend::yy_scan_string $param

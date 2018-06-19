@@ -156,11 +156,11 @@ proc ProcessNVSSCmd {varname iname} {
 }
 
 proc ProcessSendNVSSCmd {proc id param {sock {}} {fn {}}} {
-    NVSSDialog
-
     global parse
     set parse(proc) $proc
     set parse(id) $id
+
+    NVSSDialog
 
     nvsssend::YY_FLUSH_BUFFER
     nvsssend::yy_scan_string $param

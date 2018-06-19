@@ -128,11 +128,11 @@ proc ProcessVLSSCmd {varname iname} {
 }
 
 proc ProcessSendVLSSCmd {proc id param {sock {}} {fn {}}} {
-    VLSSDialog
-
     global parse
     set parse(proc) $proc
     set parse(id) $id
+
+    VLSSDialog
 
     vlsssend::YY_FLUSH_BUFFER
     vlsssend::yy_scan_string $param

@@ -288,6 +288,8 @@ source $ds9(root)/library/magnifiersendparser.tcl
 source $ds9(root)/library/magnifiersendlex.tcl
 source $ds9(root)/library/maskparser.tcl
 source $ds9(root)/library/masklex.tcl
+source $ds9(root)/library/masksendparser.tcl
+source $ds9(root)/library/masksendlex.tcl
 source $ds9(root)/library/matchparser.tcl
 source $ds9(root)/library/matchlex.tcl
 source $ds9(root)/library/mecubeparser.tcl

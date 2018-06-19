@@ -1,0 +1,16 @@
+#tab masksendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+color	    {return $COLOR_}
+mark	    {return $MARK_}
+transparency {return $TRANSPARENCY_}
+
+#include ws.fin
+
+%%

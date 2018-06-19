@@ -273,12 +273,12 @@ proc ProcessMaskCmd {varname iname} {
 }
 
 proc ProcessSendMaskCmd {proc id param {sock {}} {fn {}}} {
-    global mask
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    switch -- [string tolower $param] {
-	color {$proc $id "$mask(color)\n"}
-	mark {$proc $id "$mask(mark)\n"}
-	transparency {$proc $id "$mask(transparency)\n"}
-    }
+    masksend::YY_FLUSH_BUFFER
+    masksend::yy_scan_string $param
+    masksend::yyparse
 }
 

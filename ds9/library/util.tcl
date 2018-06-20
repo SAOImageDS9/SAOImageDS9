@@ -372,25 +372,11 @@ proc ProcessSendCmdSend {ext cmd} {
     global current
 
     if {$current(frame) == {}} {
-	ProcessSendCmdResult $ext [$current(frame) $cmd]
+	ProcessSend $parse(proc) $parse(id) $parse(sock) $parse(fn) \
+	    $ext [$current(frame) $cmd]
     }
 }
 
-proc ProcessSendCmdResult {ext rr} {
-    global parse
-
-    if {$parse(fn) != {}} {
-	append parse(fn) $ext
-	set ch [open $parse(fn) w]
-	puts $ch $rr
-	close $ch
-	$parse(proc) $parse(id) {} $parse(fn)
-    } else {
-	$parse(proc) $parse(id) $rr
-    }
-}
-
-# old
 proc ProcessSend {proc id sock fn ext rr} {
     if {$fn != {}} {
 	append fn $ext
@@ -1507,6 +1493,7 @@ proc ProcessSendDataCmd {proc id param sock fn} {
 }
 
 proc DataSendCmd {sys sky xx yy ww hh strip} {
+    global parse
     global current
 
     if {$current(frame) == {}} {
@@ -1522,7 +1509,7 @@ proc DataSendCmd {sys sky xx yy ww hh strip} {
 	    append ss "$ii = $rr($ii)\n"
 	}
     }
-    ProcessSendCmdResult {.dat} $ss
+    ProcessSend $parse(proc) $parse(id) $parse(sock) $parse(fn) {.dat} $ss
 }
 
 proc ProcessIconifyCmd {varname iname} {

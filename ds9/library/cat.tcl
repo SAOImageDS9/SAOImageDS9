@@ -1518,6 +1518,14 @@ proc ProcessSendCatalogCmd {proc id param sock fn} {
     catsend::yyparse
 }
 
+proc CatalogSendCmdHeader {} {
+    global parse
+    global cvarname
+
+    ProcessSend $parse(proc) $parse(id) $parse(sock) $parse(fn) \
+	{.txt} [CATGetHeader $cvarname]
+}
+
 proc CatalogSendCmdRef {ref} {
     global icat
     global cvarname

@@ -1581,6 +1581,7 @@ proc ProcessSendRegionsCmd {proc id param sock fn} {
 }
 
 proc RegionSendCmd {} {
+    global parse
     global marker
     global current
 
@@ -1595,5 +1596,5 @@ proc RegionSendCmd {} {
 
     set rr [$current(frame) marker list $marker(load,select) $marker(load,format) $marker(load,system) $marker(load,sky) $marker(load,skyformat) $marker(load,strip) $marker(load,props) $marker(load,tags)]
 
-    ProcessSendCmdResult $ext $rr
+    ProcessSend $parse(proc) $parse(id) $parse(sock) $parse(fn) $ext $rr
 }

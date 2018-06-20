@@ -12,8 +12,8 @@
 
 magnifiersend : COLOR_ {ProcessSendCmdGet pmagnifier color}
  | ZOOM_ {ProcessSendCmdGet pmagnifier zoom}
- | CURSOR_ {ProcessSendCmdGet pmagnifier cursor}
- | REGION_ {ProcessSendCmdGet pmagnifier region}
+ | CURSOR_ {ProcessSendCmdYesNo pmagnifier cursor}
+ | REGION_ {ProcessSendCmdYesNo pmagnifier region}
 # backward compatibility
  | {ProcessSendCmdYesNo view magnifier}
  ;

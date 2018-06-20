@@ -14,7 +14,7 @@ catsend : {if {![CatalogCmdCheck]} {catsend::YYABORT}} catsendCmd
  ;
 
 catsendCmd : {ProcessSendCmdGet icat cats}
- | HEADER_ {global cvarname; ProcessSendCmdResult {.txt} [CATGetHeader $cvarname]}
+ | HEADER_ {CatalogSendCmdHeader}
  ; 
 
 %%

@@ -1860,56 +1860,10 @@ proc ProcessSendAnalysisCmd {proc id param sock fn} {
     analysissend::YY_FLUSH_BUFFER
     analysissend::yy_scan_string $param
     analysissend::yyparse
-    return
-    
-    global ianalysis
-    global ime
-
-    set result {}
-    switch -- [string tolower [lindex $param 0]] {
-	entry {
-	    AnalysisEntry [lrange $param 1 end] result
-	    append result "\n"
-	    $proc $id $result
-	}
-	mode {$proc $id "$ime(task)\n"}
-	task {
-	    # invoke by name
-	    for {set ii 0} {$ii<$ianalysis(menu,count)} {incr ii} {
-		append result "$ii $ianalysis(menu,$ii,item)\n"
-	    }
-	    $proc $id $result
-	}
-	lock {$proc $id "$ime(lock)\n"}
-	default {
-	    for {set i 0} {$i<$ianalysis(menu,count)} {incr i} {
-		append result "\#$i menu"
-		append result "\n$ianalysis(menu,$i,item)"
-		append result "\n$ianalysis(menu,$i,template)"
-		if {$ianalysis(menu,$i,cmd) != {web}} {
-		    append result "\nmenu"
-		    append result "\n$ianalysis(menu,$i,cmd)"
-		} else {
-		    append result "\n$ianalysis(menu,$i,cmd)"
-		    append result "\n$ianalysis(menu,$i,var)"
-		}
-		append result "\n\n"
-	    }
-	    for {set i 0} {$i<$ianalysis(bind,count)} {incr i} {
-		set key [string range $ianalysis(bind,$i,item) 1 1]
-		append result "\#$i bind"
-		append result "\nbind key $ianalysis(bind,$i,item)"
-		append result "\n$ianalysis(bind,$i,template)"
-		append result "\nbind $key"
-		append result "\n$ianalysis(bind,$i,cmd)"
-		append result "\n\n"
-	    }
-	    ProcessSend $proc $id $sock $fn {.ans} $result
-	}
-    }
 }
 
 proc AnalysisSendCmd {} {
+    global parse
     global ianalysis
 
     for {set ii 0} {$ii<$ianalysis(menu,count)} {incr ii} {
@@ -1935,7 +1889,7 @@ proc AnalysisSendCmd {} {
 	append result "\n\n"
     }
 
-    ProcessSendCmdResult {.ans} $result
+    ProcessSend $parse(proc) $parse(id) $parse(sock) $parse(fn) {.ans} $result
 }
 
 proc AnalysisSendCmdEntry {txt} {

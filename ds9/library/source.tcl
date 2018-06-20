@@ -192,6 +192,8 @@ source $ds9(root)/library/alignparser.tcl
 source $ds9(root)/library/alignlex.tcl
 source $ds9(root)/library/analysisparser.tcl
 source $ds9(root)/library/analysislex.tcl
+source $ds9(root)/library/analysissendparser.tcl
+source $ds9(root)/library/analysissendlex.tcl
 source $ds9(root)/library/arrayparser.tcl
 source $ds9(root)/library/arraylex.tcl
 source $ds9(root)/library/backupparser.tcl

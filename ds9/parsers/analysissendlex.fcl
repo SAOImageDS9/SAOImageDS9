@@ -1,0 +1,23 @@
+#tab analysissendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+entry		{return $ENTRY_}
+message		{return $MESSAGE_}
+mode		{return $MODE_}
+task		{return $TASK_}
+lock		{return $LOCK_}
+
+ok		{return $OK_}
+okcancel	{return $OKCANCEL_}
+yesno		{return $YESNO_}
+
+#include string.fin
+#include ws.fin
+
+%%

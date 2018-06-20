@@ -1743,9 +1743,9 @@ proc AnalysisMessage {type message} {
     }
 
     switch -- [tk_messageBox -message $message -type $type] {
-	ok {return 1}
+	ok -
 	yes {return 1}
-	cancel {return 0}
+	cancel -
 	default {return 0}
     }
 }
@@ -1851,6 +1851,17 @@ proc AnalysisCmdLoad {} {
 }
 
 proc ProcessSendAnalysisCmd {proc id param sock fn} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+    set parse(sock) $sock
+    set parse(fn) $fn
+
+    analysissend::YY_FLUSH_BUFFER
+    analysissend::yy_scan_string $param
+    analysissend::yyparse
+    return
+    
     global ianalysis
     global ime
 
@@ -1896,4 +1907,54 @@ proc ProcessSendAnalysisCmd {proc id param sock fn} {
 	    ProcessSend $proc $id $sock $fn {.ans} $result
 	}
     }
+}
+
+proc AnalysisSendCmd {} {
+    global ianalysis
+
+    for {set ii 0} {$ii<$ianalysis(menu,count)} {incr ii} {
+	append result "\#$ii menu"
+	append result "\n$ianalysis(menu,$ii,item)"
+	append result "\n$ianalysis(menu,$ii,template)"
+	if {$ianalysis(menu,$ii,cmd) != {web}} {
+	    append result "\nmenu"
+	    append result "\n$ianalysis(menu,$ii,cmd)"
+	} else {
+	    append result "\n$ianalysis(menu,$ii,cmd)"
+	    append result "\n$ianalysis(menu,$ii,var)"
+	}
+	append result "\n\n"
+    }
+    for {set ii 0} {$ii<$ianalysis(bind,count)} {incr ii} {
+	set key [string range $ianalysis(bind,$ii,item) 1 1]
+	append result "\#$ii bind"
+	append result "\nbind key $ianalysis(bind,$ii,item)"
+	append result "\n$ianalysis(bind,$ii,template)"
+	append result "\nbind $key"
+	append result "\n$ianalysis(bind,$ii,cmd)"
+	append result "\n\n"
+    }
+
+    ProcessSendCmdResult {.ans} $result
+}
+
+proc AnalysisSendCmdEntry {txt} {
+    set result {}
+    AnalysisEntry $txt result
+    ProcessSendCmdTxt $result
+}
+
+proc AnalysisSendCmdMessage {type txt} {
+    ProcessSendCmdTxt [AnalysisMessage $type $txt]
+}
+
+proc AnalysisSendCmdTask {} {
+    global ianalysis
+
+    # invoke by name
+    for {set ii 0} {$ii<$ianalysis(menu,count)} {incr ii} {
+	append result "$ii $ianalysis(menu,$ii,item)\n"
+    }
+
+    ProcessSendCmdTxt $result
 }

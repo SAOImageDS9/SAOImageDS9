@@ -1,0 +1,18 @@
+#tab datasendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+#include coordsys.fin
+#include wcssys.fin
+#include skyframe.fin
+#include yesno.fin
+#include numeric.fin
+#include sexstr.fin
+#include ws.fin
+
+%%

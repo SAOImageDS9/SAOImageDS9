@@ -240,6 +240,8 @@ source $ds9(root)/library/cubesendparser.tcl
 source $ds9(root)/library/cubesendlex.tcl
 source $ds9(root)/library/cursorparser.tcl
 source $ds9(root)/library/cursorlex.tcl
+source $ds9(root)/library/datasendparser.tcl
+source $ds9(root)/library/datasendlex.tcl
 source $ds9(root)/library/dssesoparser.tcl
 source $ds9(root)/library/dssesolex.tcl
 source $ds9(root)/library/dssesosendparser.tcl

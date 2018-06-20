@@ -1495,60 +1495,34 @@ proc CursorCmd {x y} {
 }
 
 proc ProcessSendDataCmd {proc id param sock fn} {
-    global cube
-    global blink
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+    set parse(sock) $sock
+    set parse(fn) $fn
+
+    datasend::YY_FLUSH_BUFFER
+    datasend::yy_scan_string $param
+    datasend::yyparse
+}
+
+proc DataSendCmd {sys sky xx yy ww hh strip} {
     global current
 
-    if {$current(frame) != {}} {
-	set sys [lindex $param 0]
-	set sky [lindex $param 1]
-	set x [lindex $param 2]
-	set y [lindex $param 3]
-	set w [lindex $param 4]
-	set h [lindex $param 5]
-	set strip [lindex $param 6]
-	switch -- $sys {
-	    image -
-	    physical -
-	    detector -
-	    amplifier {
-		set strip $h
-		set h $w
-		set w $y
-		set y $x
-		set x $sky
-		set sky fk5
-	    }
-
-	    fk4 -
-	    b1950 -
-	    fk5 -
-	    j2000 -
-	    icrs -
-	    galactic -
-	    ecliptic {
-		set strip $h
-		set h $w
-		set w $y
-		set y $x
-		set x $sky
-		set sky $sys
-		set sys wcs
-	    }
-	}
-	set strip [FromYesNo $strip]
-
-	$current(frame) get data $sys $sky $x $y $w $h rr
-	set ss {}
-	foreach ii [array names rr] {
-	    if {$strip} {
-		append ss "$rr($ii)\n"
-	    } else {
-		append ss "$ii = $rr($ii)\n"
-	    }
-	}
-	ProcessSend $proc $id $sock $fn {.dat} $ss
+    if {$current(frame) == {}} {
+	return
     }
+
+    $current(frame) get data $sys $sky $xx $yy $ww $hh rr
+    set ss {}
+    foreach ii [array names rr] {
+	if {$strip} {
+	    append ss "$rr($ii)\n"
+	} else {
+	    append ss "$ii = $rr($ii)\n"
+	}
+    }
+    ProcessSendCmdResult {.dat} $ss
 }
 
 proc ProcessIconifyCmd {varname iname} {

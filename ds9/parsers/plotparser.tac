@@ -330,6 +330,7 @@ legendPos : RIGHT_ {set _ right}
  ;
 
 fontt : fontType FONT_ font {PlotCmdUpdateGraph "$1,family" $3}
+# backward compatibility
  | fontType FAMILY_ font {PlotCmdUpdateGraph "$1,family" $3}
  | fontType FONTSIZE_ INT_ {PlotCmdUpdateGraph "$1,size" $3}
  | fontType FONTWEIGHT_ fontWeight {PlotCmdUpdateGraph "$1,weight" $3}
@@ -346,9 +347,9 @@ fontType : TITLE_ {set _ graph,title}
  | LABELS_ {set _ axis,title}
  # backward compatibility
  | AXESTITLE_ {set _ axis,title}
- | NUMBERS_ {set _ axis,numbers}
+ | NUMBERS_ {set _ axis,font}
  # backward compatibility
- | AXESNUMBERS_ {set _ axis,numbers}
+ | AXESNUMBERS_ {set _ axis,font}
  | LEGEND_ {set _ legend,font}
  | LEGENDTITLE_ {set _ legend,title}
  ;

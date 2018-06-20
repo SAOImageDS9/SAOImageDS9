@@ -102,15 +102,16 @@ proc PrefsDialogPlot {} {
 proc ProcessPlotCmd {xarname iname buf fn} {
     upvar $xarname xar
     upvar $iname i
-    global iap
 
-    set ref [lindex $iap(windows) end]
-    global cvarname
-    set cvarname $ref
+    global iap
     global parse
     set parse(buf) $buf
     set parse(fn) $fn
     set parse(tt) $iap(tt)
+
+    set ref [lindex $iap(windows) end]
+    global cvarname
+    set cvarname $ref
 
     plot::YY_FLUSH_BUFFER
     plot::yy_scan_string [lrange $xar $i end]
@@ -820,214 +821,16 @@ proc ProcessPlotLine  {varname xarname iname} {
 
 proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {
     global iap
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
 
-    set i 0
+    set ref [lindex $iap(windows) end]
+    global cvarname
+    set cvarname $ref
+    global parse
 
-    # determine which plot
-    switch -- [string tolower [lindex $param $i]] {
-	{} -
-	stats -
-	statistics -
-	list -
-	mode -
-	axis -
-	legend -
-	font -
-	title -
-	barmode -
-	show -
-	color -
-	error -
-	errorbar -
-	name -
-	shape -
-	relief -
-	smooth -
-	width -
-	dash -
-	dataset -
-	select {
-	    set varname [lindex $iap(windows) end]
-	    set idd [lsearch $iap(windows) $varname]
-	}
-
-	default {
-	    set varname [lindex $param $i]
-	    set idd [lsearch $iap(windows) $varname]
-	    incr i
-	}
-    }
-
-    # we better have a tt by now
-    if {$idd == -1} {
-	Error "[msgcat::mc {Unable to find plot window}] $varname"
-	return
-    }
-
-    upvar #0 $varname var
-    global $varname
-
-    # now, process plot command
-    switch -- [string tolower [lindex $param $i]] {
-	{} {$proc $id "$iap(windows)\n"}
-	stats -
-	statistics {$proc $id "[PlotStatsGenerate $varname]"}
-	list {$proc $id "[PlotListGenerate $varname]"}
-	mode {$proc $id "$var(mode)\n"}
-	axis {
-	    incr i
-	    switch -- [string tolower [lindex $param $i]] {
-		x {
-		    incr i
-		    switch -- [string tolower [lindex $param $i]] {
-			grid {$proc $id [ToYesNo $var(axis,x,grid)]} 
-			log {$proc $id [ToYesNo $var(axis,x,log)]} 
-			flip {$proc $id [ToYesNo $var(axis,x,flip)]} 
-			auto {$proc $id [ToYesNo $var(axis,x,auto)]} 
-			min {$proc $id "$var(axis,x,min)\n"}
-			max {$proc $id "$var(axis,x,max)\n"}
-			format {$proc $id "$var(axis,x,format)\n"}
-		    }
-		}
-		y {
-		    incr i
-		    switch -- [string tolower [lindex $param $i]] {
-			grid {$proc $id [ToYesNo $var(axis,y,grid)]} 
-			log {$proc $id [ToYesNo $var(axis,y,log)]} 
-			flip {$proc $id [ToYesNo $var(axis,y,flip)]} 
-			auto {$proc $id [ToYesNo $var(axis,y,auto)]} 
-			min {$proc $id "$var(axis,y,min)\n"}
-			max {$proc $id "$var(axis,y,max)\n"}
-			format {$proc $id "$var(axis,y,format)\n"}
-		    }
-		}
-	    }
-	}
-	legend {
-	    incr i
-	    switch -- [string tolower [lindex $param $i]] {
-		position {$proc $id "$var(legend,position)\n"}
-		default {$proc $id [ToYesNo $var(legend)]} 
-	    }
-	}
-	font {
-	    incr i
-	    switch -- [string tolower [lindex $param $i]] {
-		title {
-		    incr i
-		    switch -- [string tolower [lindex $param $i]] {
-			family -
-			font {$proc $id "$var(graph,title,family)\n"}
-			size {$proc $id "$var(graph,title,size)\n"}
-			weight {$proc $id "$var(graph,title,weight)\n"}
-			slant {$proc $id "$var(graph,title,slant)\n"}
-			style {
-			    # backward compatibility
-			    $proc $id "$var(graph,title,weight)\n"
-			}
-		    }
-		}
-		axestitle -
-		labels {
-		    incr i
-		    switch -- [string tolower [lindex $param $i]] {
-			family -
-			font {$proc $id "$var(axis,title,family)\n"}
-			size {$proc $id "$var(axis,title,size)\n"}
-			weight {$proc $id "$var(axis,title,weight)\n"}
-			slant {$proc $id "$var(axis,title,slant)\n"}
-			style {
-			    # backward compatibility
-			    $proc $id "$var(axis,title,weight)\n"
-			}
-		    }
-		}
-		axesnumbers -
-		numbers {
-		    incr i
-		    switch -- [string tolower [lindex $param $i]] {
-			family -
-			font {$proc $id "$var(axis,font,family)\n"}
-			size {$proc $id "$var(axis,font,size)\n"}
-			weight {$proc $id "$var(axis,font,weight)\n"}
-			slant {$proc $id "$var(axis,font,slant)\n"}
-			style {
-			    # backward compatibility
-			    $proc $id "$var(axis,font,weight)\n"
-			}
-		    }
-		}
-		legendtitle {
-		    incr i
-		    switch -- [string tolower [lindex $param $i]] {
-			family -
-			font {$proc $id "$var(legend,title,family)\n"}
-			size {$proc $id "$var(legend,title,size)\n"}
-			weight {$proc $id "$var(legend,title,weight)\n"}
-			slant {$proc $id "$var(legend,title,slant)\n"}
-			style {
-			    # backward compatibility
-			    $proc $id "$var(legend,title,weight)\n"
-			}
-		    }
-		}
-		legend {
-		    incr i
-		    switch -- [string tolower [lindex $param $i]] {
-			family -
-			font {$proc $id "$var(legend,font,family)\n"}
-			size {$proc $id "$var(legend,font,size)\n"}
-			weight {$proc $id "$var(legend,font,weight)\n"}
-			slant {$proc $id "$var(legend,font,slant)\n"}
-			style {
-			    # backward compatibility
-			    $proc $id "$var(legend,font,weight)\n"
-			}
-		    }
-		}
-	    }
-	}
-	title {
-	    incr i
-	    switch -- [string tolower [lindex $param $i]] {
-		x -
-		xaxis {$proc $id "$var(axis,x,title)\n"}
-		y -
-		yaxis {$proc $id "$var(axis,y,title)\n"}
-		legend {$proc $id "$var(legend,title)\n"}
-		default {$proc $id "$var(graph,title)\n"}
-	    }
-	}
-	barmode {$proc $id "$var(bar,mode)\n"}
-
-	show {$proc $id [ToYesNo $var(show)]} 
-	color {$proc $id "$var(color)\n"}
-	fill {$proc $id [ToYesNo $var(fill)]}
-	fillcolor {$proc $id "$var(fill,color)\n"}
-	error -
-	errorbar {
-	    incr i
-	    switch -- [string tolower [lindex $param $i]] {
-		cap {$proc $id [ToYesNo $var(error,cap)]} 
-		color {$proc $id "$var(error,color)\n"}
-		width {$proc $id "$var(error,width)\n"}
-		default {$proc $id [ToYesNo $var(error)]} 
-	    }
-	}
-	name {$proc $id "$var(name)\n"}
-	shape {
-	    incr i
-	    switch -- [string tolower [lindex $param $i]] {
-		fill {$proc $id [ToYesNo $var(shape,fill)]} 
-		color {$proc $id "$var(shape,color)\n"}
-		default {$proc $id "$var(shape,symbol)\n"}
-	    }
-	}
-	relief {$proc $id "$var(bar,relief)\n"}
-	smooth {$proc $id "$var(smooth)\n"}
-	width {$proc $id "$var(width)\n"}
-	dash {$proc $id [ToYesNo $var(dash)]} 
-	dataset -
-	select {$proc $id "$var(data,current)\n"}
-    }
+    plotsend::YY_FLUSH_BUFFER
+    plotsend::yy_scan_string $param
+    plotsend::yyparse
 }

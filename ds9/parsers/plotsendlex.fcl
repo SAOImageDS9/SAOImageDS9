@@ -1,0 +1,58 @@
+#tab plotsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+auto		{return $AUTO_}
+axis		{return $AXIS_}
+axesnumbers	{return $AXESNUMBERS_}
+axestitle	{return $AXESTITLE_}
+barmode		{return $BARMODE_}
+cap		{return $CAP_}
+color		{return $COLOR_}
+dash		{return $DASH_}
+dataset		{return $DATASET_}
+error		{return $ERROR_}
+errorbar	{return $ERRORBAR_}
+family		{return $FAMILY_}
+fill		{return $FILL_}
+fillcolor	{return $FILLCOLOR_}
+flip		{return $FLIP_}
+format		{return $FORMAT_}
+grid		{return $GRID_}
+labels		{return $LABELS_}
+legend		{return $LEGEND_}
+legendtitle	{return $LEGENDTITLE_}
+list		{return $LIST_}
+log		{return $LOG_}
+max		{return $MAX_}
+min		{return $MIN_}
+mode		{return $MODE_}
+numbers		{return $NUMBERS_}
+name		{return $NAME_}
+position	{return $POSITION_}
+relief		{return $RELIEF_}
+select		{return $SELECT_}
+shape		{return $SHAPE_}
+show		{return $SHOW_}
+size		{return $SIZE_}
+slant		{return $SLANT_}
+smooth		{return $SMOOTH_}
+stats		{return $STATS_}
+statistics	{return $STATISTICS_}
+style		{return $STYLE_}
+title		{return $TITLE_}
+weight		{return $WEIGHT_}
+width		{return $WIDTH_}
+xaxis		{return $XAXIS_}
+yaxis		{return $YAXIS_}
+
+#include font.fin
+#include string.fin
+#include ws.fin
+
+%%

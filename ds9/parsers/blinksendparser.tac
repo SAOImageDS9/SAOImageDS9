@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start blinksend
 
 %token INTERVAL_

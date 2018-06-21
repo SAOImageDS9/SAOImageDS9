@@ -1,6 +1,10 @@
 %{
 %}
 
+#include def.tin
+
+%start binsend
+
 %token ABOUT_
 %token BUFFERSIZE_
 %token COLS_
@@ -9,8 +13,6 @@
 %token FILTER_
 %token FUNCTION_
 %token LOCK_
-
-%start binsend
 
 %%
 

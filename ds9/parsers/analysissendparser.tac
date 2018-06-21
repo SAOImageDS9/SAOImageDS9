@@ -2,6 +2,9 @@
 %}
 
 #include string.tin
+#include def.tin
+
+%start analysissend
 
 %token ENTRY_
 %token MESSAGE_
@@ -12,8 +15,6 @@
 %token OK_
 %token OKCANCEL_
 %token YESNO_
-
-%start analysissend
 
 %%
 

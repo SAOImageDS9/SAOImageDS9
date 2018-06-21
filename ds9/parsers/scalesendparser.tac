@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start scalesend
 
 %token DATASEC_

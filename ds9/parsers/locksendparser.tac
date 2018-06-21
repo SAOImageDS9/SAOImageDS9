@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start locksend
 
 %token 3D_

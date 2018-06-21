@@ -5,6 +5,7 @@
 #include coordsys.tin
 #include wcssys.tin
 #include string.tin
+#include def.tin
 
 %start command
 

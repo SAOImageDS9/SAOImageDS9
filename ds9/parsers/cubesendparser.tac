@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start cubesend
 
 %token AXIS_

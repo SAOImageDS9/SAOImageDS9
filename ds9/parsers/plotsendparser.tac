@@ -3,6 +3,9 @@
 
 #include font.tin
 #include string.tin
+#include def.tin
+
+%start plotsend
 
 %token AUTO_
 %token AXIS_
@@ -47,8 +50,6 @@
 %token WIDTH_
 %token XAXIS_
 %token YAXIS_
-
-%start plotsend
 
 %%
 

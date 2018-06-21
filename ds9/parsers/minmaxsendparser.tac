@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start minmaxsend
 
 %token INTERVAL_

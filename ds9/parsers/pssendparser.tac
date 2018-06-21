@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start pssend
 
 %token COLOR_

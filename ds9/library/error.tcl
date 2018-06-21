@@ -59,12 +59,12 @@ proc ParserError {msg yycnt yy_current_buffer index_} {
 	xpa -
 	hv -
 	samp {
-	    Error "$msg: [lindex $yy_current_buffer [expr $yycnt-1]]"
+	    Error "$msg, found [lindex $yy_current_buffer [expr $yycnt-1]]"
 	}
 	default {
-	    puts stderr "[string range $yy_current_buffer 0 80]"
+	    puts stderr "[string range $yy_current_buffer 0 60]"
 	    puts stderr [format "%*s" $index_ ^]
-	    puts stderr "$msg:"
+	    puts stderr "$msg"
 	    QuitDS9
 	}
     }

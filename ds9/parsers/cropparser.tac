@@ -8,6 +8,7 @@
 #include numeric.tin
 #include sexstr.tin
 #include string.tin
+#include def.tin
 
 %start command
 

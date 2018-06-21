@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start masksend
 
 %token COLOR_

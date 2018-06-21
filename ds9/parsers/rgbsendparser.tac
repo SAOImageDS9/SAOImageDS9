@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start rgbsend
 
 %token AXES_

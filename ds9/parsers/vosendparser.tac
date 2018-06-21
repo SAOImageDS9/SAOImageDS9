@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start vosend
 
 %token CONNECT_

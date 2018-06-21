@@ -2,6 +2,7 @@
 %}
 
 #include string.tin
+#include def.tin
 
 %start nressend
 

@@ -3,6 +3,7 @@
 
 #include coordsys.tin
 #include wcssys.tin
+#include def.tin
 
 %start framesend
 

@@ -6,6 +6,7 @@
 #include rformat.tin
 #include int.tin
 #include string.tin
+#include def.tin
 
 %start fitssend
 

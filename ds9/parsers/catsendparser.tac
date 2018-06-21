@@ -2,10 +2,11 @@
 %}
 
 #include string.tin
-
-%token HEADER_
+#include def.tin
 
 %start catsend
+
+%token HEADER_
 
 %%
 

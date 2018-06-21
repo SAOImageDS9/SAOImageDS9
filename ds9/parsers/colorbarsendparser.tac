@@ -2,6 +2,7 @@
 %}
 
 #include font.tin
+#include def.tin
 
 %start colorbarsend
 

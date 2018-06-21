@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start zscalesend
 
 %token CONTRAST_

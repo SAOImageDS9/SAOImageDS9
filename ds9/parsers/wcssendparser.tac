@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start wcssend
 
 %token ALIGN_

@@ -4,6 +4,7 @@
 #include yesno.tin
 #include numeric.tin
 #include string.tin
+#include def.tin
 
 %start command
 

@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start preservesend
 
 %token PAN_

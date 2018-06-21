@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start prefssend
 
 %token BGCOLOR_

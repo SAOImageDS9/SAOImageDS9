@@ -5,6 +5,7 @@
 #include wcssys.tin
 #include skyframe.tin
 #include skyformat.tin
+#include def.tin
 
 %start crosshairsend
 

@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start tilesend
 
 %token DIRECTION_

@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start pagesetupsend
 
 %token ORIENT_

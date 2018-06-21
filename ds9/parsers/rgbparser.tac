@@ -4,6 +4,7 @@
 #include wcssys.tin
 #include yesno.tin
 #include string.tin
+#include def.tin
 
 %start command
 

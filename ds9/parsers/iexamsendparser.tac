@@ -7,6 +7,9 @@
 #include skyformat.tin
 #include string.tin
 #include int.tin
+#include def.tin
+
+%start iexamsend
 
 %token ANY_
 %token BUTTON_
@@ -14,8 +17,6 @@
 %token DATA_
 %token KEY_
 %token VALUE_
-
-%start iexamsend
 
 %%
 

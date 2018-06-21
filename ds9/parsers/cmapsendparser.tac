@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start cmapsend
 
 %token FILE_

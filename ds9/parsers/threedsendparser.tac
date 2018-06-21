@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start threedsend
 
 %token AZ_

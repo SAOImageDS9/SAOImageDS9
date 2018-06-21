@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start xpasend
 
 %token INFO_

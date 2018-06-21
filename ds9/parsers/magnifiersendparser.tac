@@ -1,6 +1,8 @@
 %{
 %}
 
+#include def.tin
+
 %start magnifiersend
 
 %token COLOR_

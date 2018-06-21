@@ -7,6 +7,7 @@
 #include yesno.tin
 #include numeric.tin
 #include sexstr.tin
+#include def.tin
 
 %start datasend
 

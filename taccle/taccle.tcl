@@ -9,6 +9,7 @@ set TACCLE_VERSION 1.2
 # no yyerrok
 # no YYERROR
 # no YYRECOVERING
+# add %define parse.error verbose
 
 #//#
 # Taccle is another compiler compiler written in pure Tcl.  reads a
@@ -60,6 +61,11 @@ proc handle_defs {line} {
                 }
                 set ::start_symbol $args
             }
+	    "%define" {
+		if {$args == {parse.error verbose}} {
+		    set ::parse_error 1
+		}
+	    }
             default {
                 taccle_error "Unknown declaration \"$keyword\"" $::SYNTAX_ERROR
             }
@@ -892,6 +898,10 @@ proc write_parser {} {
     write_array $::dest ${::p}::rules [array get ::rule_table *l]
     write_array $::dest ${::p}::rules [array get ::rule_table *dc]
     write_array $::dest ${::p}::rules [array get ::rule_table *e]
+    if {$::parse_error} {
+	write_array $::dest ${::p}::lr1_table [array get ::lr1_table]
+	write_array $::dest ${::p}::token_id_table [array get ::token_id_table]
+    }
     
     puts $::dest "\nproc ${::p}::yyparse {} {
     variable yylval
@@ -899,6 +909,8 @@ proc write_parser {} {
     variable rules
     variable token
     variable yycnt
+    variable lr1_table
+    variable token_id_table
 
     set yycnt 0
     set state_stack {0}
@@ -917,6 +929,7 @@ proc write_parser {} {
             }
         }
         if {!\[info exists table(\$state:\$token)\]} {
+	    set save_state \$state
             \# pop off states until error token accepted
             while {\[llength \$state_stack\] > 0 && \\
                        !\[info exists table(\$state:error)]} {
@@ -925,8 +938,30 @@ proc write_parser {} {
                                        \[expr {\[llength \$state_stack\] - 1}\]\]
                 set state \[lindex \$state_stack end\]
             }
-            if {\[llength \$state_stack\] == 0} {
-                yyerror \"parse error\"
+            if {\[llength \$state_stack\] == 0} {"
+    if {$::parse_error} {
+puts $::dest " 
+	        set rr { }
+                if {\[info exists lr1_table(\$save_state,trans)\] && \[llength \$lr1_table(\$save_state,trans)\] >= 1} {
+                    foreach trans \$lr1_table(\$save_state,trans) {
+                        foreach {tok_id nextstate} \$trans {
+			    set ss \$token_id_table(\$tok_id)
+			    set ss \[string trimright \$ss {_}\]
+			    if {\[string is upper \$ss\]} {
+			        append rr \"\$ss, \"
+                            }
+                        }
+                    }
+                }
+		set rr \[string trimleft \$rr { }\]
+		set rr \[string trimright \$rr {, }\]
+                yyerror \"parse error, expecting: \$rr\"
+"
+    } else {
+puts $::dest " 
+                yyerror \"parse error\""
+    }
+puts $::dest "
                 return 1
             }
             lappend state_stack \[set state \$table(\$state:error,target)\]
@@ -1479,6 +1514,7 @@ proc taccle_args {argv} {
     set argvp 0
     set write_defs_file 0
     set write_verbose_file 0
+    set ::parse_error 0
     set out_filename ""
     set ::p "yy"
     set ::show_warnings 0

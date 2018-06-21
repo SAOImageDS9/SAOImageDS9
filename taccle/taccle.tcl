@@ -2,7 +2,7 @@
 
 # $Id: taccle.tcl,v 1.6 2005/03/17 20:42:21 tang Exp $
 
-set TACCLE_VERSION 1.2
+set TACCLE_VERSION 1.3
 
 # no yydebug
 # no YYDEBUG

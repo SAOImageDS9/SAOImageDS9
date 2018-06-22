@@ -9,4 +9,3 @@
 
 # STRING
 \S+\S+ {set yylval $yytext; return $STRING_}
-

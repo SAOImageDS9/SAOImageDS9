@@ -19,7 +19,7 @@ file that implements an LALR(1) parser.  The program brings to the Tcl
 language what yacc and bison do for C and C++.
 
 This release of taccle implements nearly all features of yacc:
- - #include <filename>
+ - #include filename
  - %define parse.error verbose declaration
  - %token and %start declarations
  - epsilon transitions (i.e., "empty" rules)

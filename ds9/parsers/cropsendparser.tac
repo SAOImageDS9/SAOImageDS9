@@ -1,11 +1,11 @@
 %{
 %}
+#include def.tin
 
 #include coordsys.tin
 #include wcssys.tin
 #include skyframe.tin
 #include wcsformat.tin
-#include def.tin
 
 %start cropsend
 

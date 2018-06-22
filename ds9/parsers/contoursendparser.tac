@@ -1,10 +1,10 @@
 %{
 %}
+#include def.tin
 
 #include coordsys.tin
 #include wcssys.tin
 #include skyframe.tin
-#include def.tin
 
 %start contoursend
 

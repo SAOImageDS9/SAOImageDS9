@@ -1,8 +1,8 @@
 %{
 %}
+#include def.tin
 
 #include font.tin
-#include def.tin
 
 %start gridsend
 

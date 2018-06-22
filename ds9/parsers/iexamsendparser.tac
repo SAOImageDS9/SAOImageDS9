@@ -1,5 +1,6 @@
 %{
 %}
+#include def.tin
 
 #include coordsys.tin
 #include wcssys.tin
@@ -7,7 +8,6 @@
 #include skyformat.tin
 #include string.tin
 #include int.tin
-#include def.tin
 
 %start iexamsend
 

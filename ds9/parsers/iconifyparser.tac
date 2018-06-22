@@ -1,9 +1,9 @@
 %{
 %}
+#include def.tin
 
 #include yesno.tin
 #include string.tin
-#include def.tin
 
 %start command
 

@@ -1,6 +1,5 @@
 %{
 %}
-
 #include def.tin
 
 %start minmaxsend

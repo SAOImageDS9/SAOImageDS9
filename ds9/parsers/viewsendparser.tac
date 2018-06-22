@@ -1,9 +1,9 @@
 %{
 %}
+#include def.tin
 
 #include coordsys.tin
 #include wcssys.tin
-#include def.tin
 
 %start viewsend
 

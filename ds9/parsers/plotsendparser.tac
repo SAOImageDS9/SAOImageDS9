@@ -1,9 +1,9 @@
 %{
 %}
+#include def.tin
 
 #include font.tin
 #include string.tin
-#include def.tin
 
 %start plotsend
 

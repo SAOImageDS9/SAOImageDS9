@@ -1,1 +1,1 @@
-%token INT_
+%token INT_ integer

@@ -1,5 +1,6 @@
 %{
 %}
+#include def.tin
 
 #include coordsys.tin
 #include wcssys.tin
@@ -7,7 +8,6 @@
 #include yesno.tin
 #include numeric.tin
 #include sexstr.tin
-#include def.tin
 
 %start datasend
 

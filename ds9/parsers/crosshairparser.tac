@@ -1,5 +1,6 @@
 %{
 %}
+#include def.tin
 
 #include coordsys.tin
 #include wcssys.tin
@@ -7,7 +8,6 @@
 #include numeric.tin
 #include sexstr.tin
 #include string.tin
-#include def.tin
 
 %start command
 

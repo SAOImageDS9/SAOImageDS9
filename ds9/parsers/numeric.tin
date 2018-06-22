@@ -1,2 +1,2 @@
-%token INT_
-%token REAL_
+%token INT_ integer
+%token REAL_ float

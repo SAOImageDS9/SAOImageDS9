@@ -1,5 +1,6 @@
 %{
 %}
+#include def.tin
 
 #include yesno.tin
 #include coordsys.tin
@@ -7,7 +8,6 @@
 #include skyframe.tin
 #include numeric.tin
 #include string.tin
-#include def.tin
 
 %start command
 

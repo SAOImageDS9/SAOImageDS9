@@ -1,5 +1,6 @@
 %{
 %}
+#include def.tin
 
 #include yesno.tin
 #include coordsys.tin
@@ -8,7 +9,6 @@
 #include skyformat.tin
 #include int.tin
 #include string.tin
-#include def.tin
 
 %start regionsend
 

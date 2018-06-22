@@ -1,1 +1,1 @@
-%token SEXSTR_
+%token SEXSTR_ sexagesimal

@@ -1,8 +1,8 @@
 %{
 %}
+#include def.tin
 
 #include imgsvrsend.tin
-#include def.tin
 
 %start nvsssend
 

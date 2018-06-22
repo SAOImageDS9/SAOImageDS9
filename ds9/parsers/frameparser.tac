@@ -1,11 +1,11 @@
 %{
 %}
+#include def.tin
 
 #include coordsys.tin
 #include wcssys.tin
 #include int.tin
 #include string.tin
-#include def.tin
 
 %start command
 

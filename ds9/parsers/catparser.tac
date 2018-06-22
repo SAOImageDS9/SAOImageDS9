@@ -1,5 +1,6 @@
 %{
 %}
+#include def.tin
 
 #include yesno.tin
 #include fonts.tin
@@ -9,7 +10,6 @@
 #include numeric.tin
 #include sexstr.tin
 #include string.tin
-#include def.tin
 
 %start command
 

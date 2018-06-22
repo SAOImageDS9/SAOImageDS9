@@ -1,10 +1,10 @@
 %{
 %}
+#include def.tin
 
 #include yesno.tin
 #include int.tin
 #include string.tin
-#include def.tin
 
 %start command
 

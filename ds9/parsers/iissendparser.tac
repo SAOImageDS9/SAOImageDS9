@@ -1,8 +1,8 @@
 %{
 %}
+#include def.tin
 
 #include int.tin
-#include def.tin
 
 %start iissend
 

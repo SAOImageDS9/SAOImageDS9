@@ -1,1 +1,1 @@
-%token STRING_
+%token STRING_ string

@@ -42,12 +42,27 @@ proc handle_defs {line} {
         }
         switch -- $keyword {
             "%token" {
-                foreach token_name [split $args] {
-                    if {$token_name != ""} {
-                        # add the terminal token to the table
-                        add_token $token_name $::TERMINAL 0 0 nonassoc
-                    }
-                }
+		if {!$::parse_error} {
+		    foreach {token_name} [split $args] {
+			if {$token_name != ""} {
+			    # add the terminal token to the table
+			    add_token $token_name $::TERMINAL 0 0 nonassoc
+			}
+		    }
+		} else {
+		    foreach {token_name token_title} [split $args] {
+			if {$token_name != {}} {
+			    # add the terminal token to the table
+			    set tt {}
+			    if {$token_title != {}} {
+				set tt $token_title
+			    } else {
+				set tt [string trimright $token_name {_}]
+			    }
+			    add_token $token_name $::TERMINAL 0 0 nonassoc $tt
+			}
+		    }
+		}
             }
             "%left" -
             "%right" -
@@ -945,9 +960,8 @@ puts $::dest "
                 if {\[info exists lr1_table(\$save_state,trans)\] && \[llength \$lr1_table(\$save_state,trans)\] >= 1} {
                     foreach trans \$lr1_table(\$save_state,trans) {
                         foreach {tok_id nextstate} \$trans {
-			    set ss \$token_id_table(\$tok_id)
-			    set ss \[string trimright \$ss {_}\]
-			    if {\[string is upper \$ss\]} {
+			    set ss \$token_id_table(\$tok_id,title)
+			    if {\$ss != {}} {
 			        append rr \"\$ss, \"
                             }
                         }
@@ -1076,7 +1090,7 @@ proc write_header_file {} {
 # @param prec_dir direction of precedence, either <var>left</var>,
 # <var>right</var>, or <var>nonassoc</var>
 # @return id value for this token
-proc add_token {token_name type implicit prec_level prec_dir} {
+proc add_token {token_name type implicit prec_level prec_dir {token_title {}}} {
     if {$token_name == "\$"} {
         taccle_error "The token '$' is reserved and may not be used in productions." $::SYNTAX_ERROR
     }
@@ -1108,6 +1122,7 @@ proc add_token {token_name type implicit prec_level prec_dir} {
     }
     set ::token_table($token_name,t) $type
     set ::token_id_table($id) $token_name
+    set ::token_id_table($id,title) $token_title
     set ::token_id_table($id,t) $type
     set ::token_id_table($id,line) $::line_count
     lappend ::token_list $id

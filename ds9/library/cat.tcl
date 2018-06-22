@@ -58,25 +58,22 @@ proc CATDef {} {
 		       {{AC 2000.2} catac cds {I/275/ac2002}} \
 		       {{ASCC-2.5} catascss cds {I/280A/ascc01}} \
 		       {{Carlsberg Meridian 14} catcmc cds {I/304}}\
-		       {{GAIA DR1} catgaia cds {I/337}} \
-		       {{GSC 1.2} catgsc1 cds {I/254/out}} \
+		       {{GAIA DR1} catgaia1 cds {I/337}} \
+		       {{GAIA DR2} catgaia cds {I/345}} \
 		       {{GSC 2.2} catgsc2 cds {I/271/out}} \
-		       {{GSC 2.3} catgsc3 cds {I/305/out}} \
+		       {{GSC 2.3} catgsc cds {I/305/out}} \
 		       {{NOMAD} catnomad cds {I/297/out}} \
 		       {{PPMX} catppmx cds {I/312}} \
 		       {{SAO J2000} catsao cds {I/131A/sao}} \
-		       {{SDSS Release 5} catsdss5 cds {II/276}} \
-		       {{SDSS Release 6} catsdss6 cds {II/282}} \
 		       {{SDSS Release 7} catsdss7 cds {II/294}} \
-		       {{SDSS Release 8} catsdss8 cds {II/306}} \
 		       {{SDSS Release 9} catsdss9 cds {V/139}} \
+		       {{SDSS Release 12} catsdss cds {V/147}} \
 		       {{Tycho-2} cattycho cds {I/259/tyc2}} \
 		       {{USNO-A2.0} catua2 cds {I/252/out}} \
 		       {{USNO-B1.0} catub1 cds {I/284/out}} \
 		       {{USNO UCAC2} catucac2 cds {I/289/out}} \
-		       {{USNO UCAC2 Bright Star Sup} catucac2sup cds {I/294A}} \
-		       {{USNO UCAC3} catucac3 cds {I/315}} \
 		       {{USNO UCAC4} catucac4 cds {I/322A}} \
+		       {{USNO UCAC5} catucac cds {I/340}} \
 		       {{USNO URAT1} caturat1 cds {I/329}} \
 		       {- {Infrared} ir} \
 		       {{2MASS Point Sources} cat2mass cds {II/246/out}}\

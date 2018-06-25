@@ -1124,7 +1124,25 @@ proc MarkerLoadFile {filename which format sys sky} {
 	return
     }
 
+    # is it compressed?
+    set app {}
+    switch [file extension $filename] {
+	.gz {set app gunzip}
+	.bz -
+	.bz2 {set app bunzip2}
+	.Z {set app uncompress}
+    }
+    if {$app != {}} {
+	set srcfilename $filename
+	set filename [tmpnam [file ext [file rootname $filename]]]
+	if {[catch {exec $app < $srcfilename > $filename} rr]} {
+	    Error "[msgcat::mc {Unable to load compressed region file}]\n$rr"
+	    return -code error
+	}
+    }
+    
     # determine if its a fits file
+    # look for hdu ext in the filename
     # first, strip the filename
     if {![regexp -nocase {(.*)(\[.*\])} $filename foo base ext]} {
 	set base $filename
@@ -1143,15 +1161,15 @@ proc MarkerLoadFile {filename which format sys sky} {
     if {$ll == "SIMPLE  ="} {
 	# see if we need to add an extension
 	if {$ext == {}} {
-	    set filename "$base\[REGION\]"
+	    set regfilename "$base\[REGION\]"
 	}
 
 	# open it
-	if {[catch {$which marker load fits "\{$filename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
+	if {[catch {$which marker load fits "\{$regfilename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
 	    if {$ext == {}} {
 		# ok now try the first extension
-		set filename "$base\[1\]"
-		if {[catch {$which marker load fits "\{$filename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
+		set regfilename "$base\[1\]"
+		if {[catch {$which marker load fits "\{$regfilename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
 		    Error [msgcat::mc {Unable to load region file}]
 		    return -code error
 		}
@@ -1171,6 +1189,9 @@ proc MarkerLoadFile {filename which format sys sky} {
 	}
     }
 
+    if {$app != {}} {
+	file delete -force $filename
+    }
     FileLast markerfbox $filename
     UpdateGroupDialog
 }

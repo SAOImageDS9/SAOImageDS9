@@ -285,7 +285,7 @@ proc IsLocalFile {fn} {
 }
 
 proc ConvertFitsFile {} {
-    foreach t {Stdin ExternalFits GzipFile BZip2File CompressFile PackFile} {
+    foreach t {Stdin ExternalFits GzipFile BZip2File CompressFile} {
 	if {[$t]} {
 	    return
 	}
@@ -293,7 +293,7 @@ proc ConvertFitsFile {} {
 }
 
 proc ConvertArrayFile {} {
-    foreach t {Stdin GzipFile BZip2File CompressFile PackFile} {
+    foreach t {Stdin GzipFile BZip2File CompressFile} {
 	if {[$t]} {
 	    return
 	}
@@ -340,20 +340,6 @@ proc CompressFile {} {
 
     if {[regexp {(.*)\.Z($|\[)} $loadParam(file,name) matched root]} {
 	if {[catch {set ch [open "| uncompress < $root.Z " r]}]} {
-	    return 0
-	}
-	set loadParam(load,type) channel
-	set loadParam(channel,name) $ch
-	return 1
-    }
-    return 0
-}
-
-proc PackFile {} {
-    global loadParam
-
-    if {[regexp {(.*)\.z($|\[)} $loadParam(file,name) matched root]} {
-	if {[catch {set ch [open "| pcat $root.z " r]}]} {
 	    return 0
 	}
 	set loadParam(load,type) channel

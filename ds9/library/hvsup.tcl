@@ -703,10 +703,6 @@ proc HVLoadFile {varname path} {
 	    set path [file rootname $path]
 	    set var(encoding) compress
 	}
-	.z {
-	    set path [file rootname $path]
-	    set var(encoding) pack
-	}
     }
 
     switch -- [string tolower [file extension $path]] {

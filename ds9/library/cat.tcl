@@ -79,7 +79,7 @@ proc CATDef {} {
 		       {{2MASS Point Sources} cat2mass cds {II/246/out}}\
 		       {{IRAS Point Sources} catiras cds {II/125}}\
 		       {- {High Energy} hea} \
-		       {{Chandra Source} catcsc cxc {v1.1}}
+		       {{Chandra Source} catcsc cxc {Current Release}}
 		       {{2XMMi Source} catxmm cds {IX/40/xmm2is}} \
 		       {{Second ROSAT PSPC} catrosat cds {IX/30}} \
 		       {- {Radio} radio} \

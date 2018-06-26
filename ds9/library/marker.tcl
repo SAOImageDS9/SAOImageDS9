@@ -1136,7 +1136,7 @@ proc MarkerLoadFile {filename which format sys sky} {
 	set srcfilename $filename
 	set filename [tmpnam [file ext [file rootname $filename]]]
 	if {[catch {exec $app < $srcfilename > $filename} rr]} {
-	    Error "[msgcat::mc {Unable to load compressed region file}]\n$rr"
+	    Error "[msgcat::mc {Unable to load compressed region file}] $srcfilename\n$rr"
 	    return -code error
 	}
     }
@@ -1150,7 +1150,7 @@ proc MarkerLoadFile {filename which format sys sky} {
     }
 
     if {[catch {open $base} fd]} {
-	Error [msgcat::mc {Unable to load region file}]
+	Error "[msgcat::mc {Unable to load region file}] $filename"
 	return -code error
     }
 
@@ -1159,32 +1159,33 @@ proc MarkerLoadFile {filename which format sys sky} {
 
     # is it a fits file?
     if {$ll == "SIMPLE  ="} {
-	# see if we need to add an extension
-	if {$ext == {}} {
-	    set regfilename "$base\[REGION\]"
-	}
+	# ok, its fits
+	# try filename first
+	if {[catch {$which marker load fits "\{$filename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
 
-	# open it
-	if {[catch {$which marker load fits "\{$regfilename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
+	    # see if we need to add an extension
+	    # try [REGION] extension
 	    if {$ext == {}} {
-		# ok now try the first extension
-		set regfilename "$base\[1\]"
-		if {[catch {$which marker load fits "\{$regfilename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
-		    Error [msgcat::mc {Unable to load region file}]
-		    return -code error
-		}
+		set regfilename "$base\[REGION\]"
 
-		# reset errors, we don't want to hear about it
-		InitError tcl
+		if {[catch {$which marker load fits "\{$regfilename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
+
+		    # ok now try the first extension
+		    set regfilename "$base\[1\]"
+		    if {[catch {$which marker load fits "\{$regfilename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
+			Error "[msgcat::mc {Unable to load region file}] $filename"
+			return -code error
+		    }
+		}
 	    } else {
-		Error [msgcat::mc {Unable to load region file}]
+		Error "[msgcat::mc {Unable to load region file}] $filename"
 		return -code error
 	    }
 	}
     } else {
 	# no, its ascii
 	if {[catch {$which marker load $format "\{$filename\}" $sys $sky}]} {
-	    Error [msgcat::mc {Unable to load region file}]
+	    Error "[msgcat::mc {Unable to load region file}] $filename"
 	    return -code error
 	}
     }

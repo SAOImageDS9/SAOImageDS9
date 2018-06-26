@@ -29,7 +29,7 @@ command : cmap
  | cmap {yyclearin; YYACCEPT} STRING_
  ;
 
-cmap : STRING_ {CmapCmd $1}
+cmap : cmapSelect
  | OPEN_ {ColormapDialog}
  | CLOSE_ {ColormapDestroyDialog}
 
@@ -49,6 +49,11 @@ cmap : STRING_ {CmapCmd $1}
  | numeric numeric {CmapValueCmd $1 $2}
 # backward compatibility
  | VALUE_ numeric numeric {CmapValueCmd $2 $3}
+ ;
+
+cmapSelect : STRING_ {CmapCmd $1}
+ | 'a' {CmapCmd a}
+ | 'b' {CmapCmd b}
  ;
 
 cmapLoad : STRING_ {LoadColormapFile $1; FileLast colormapfbox $1}

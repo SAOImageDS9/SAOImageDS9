@@ -2,7 +2,7 @@
 %}
 #include def.tin
 
-#include int.tin
+#include numeric.tin
 #include string.tin
 
 %start command
@@ -16,6 +16,8 @@
 
 %%
 
+#include numeric.trl
+
 command : mask 
  | mask {yyclearin; YYACCEPT} STRING_
  ;
@@ -26,7 +28,7 @@ mask : {global parse; set parse(result) mask}
  | CLEAR_ {MaskClear}
  | COLOR_ STRING_ {ProcessCmdSet mask color $2 MaskColor}
  | MARK_ INT_ {ProcessCmdSet mask mark $2 MaskMark}
- | TRANSPARENCY_ INT_ {ProcessCmdSet mask transparency $2 MaskTransparency}
+ | TRANSPARENCY_ numeric {ProcessCmdSet mask transparency $2 MaskTransparency}
  ;
 
 %%

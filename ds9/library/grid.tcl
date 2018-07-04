@@ -971,7 +971,6 @@ proc UpdateGridDialog {} {
 		}
 	    }
 
-	    set grid(frame) $current(frame)
 	    if {[$current(frame) has fits]} {
 		CoordMenuEnable $igrid(mb).coord grid system 1 sky skyformat
 	    } else {

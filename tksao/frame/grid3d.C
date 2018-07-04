@@ -66,11 +66,6 @@ int Grid3d::doit(RenderMode rm)
   if (!fits)
     return 1;
 
-#ifdef NEWWCS
-  if (!fits->astInv())
-    return 1;
-#endif
-
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
@@ -113,6 +108,11 @@ int Grid3d::doit(RenderMode rm)
       ast = astFrameSet(cmpwcsbase,"");
       astAddFrame(ast, AST__CURRENT, cmpwcsmap, cmpwcscurr);
 #else
+      if (!fits->astInv()) {
+	astEnd; // now, clean up memory
+	return 1;
+      }
+
       fits->setWCSSkyFrame(system_, sky_);
       AstFrameSet* ast = fits->wcsCopy();
       

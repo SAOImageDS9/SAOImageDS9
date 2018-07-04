@@ -36,11 +36,6 @@ int Grid2d::doit(RenderMode rm)
   if (!fits)
     return 1;
 
-#ifdef NEWWCS
-  if (!fits->astInv())
-    return 1;
-#endif
-  
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
@@ -68,6 +63,11 @@ int Grid2d::doit(RenderMode rm)
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
       fits->setWCSSkyFrame(ast, sky_);
 #else
+      if (!fits->astInv()) {
+	astEnd; // now, clean up memory
+	return 1;
+      }
+
       fits->setWCSSkyFrame(system_, sky_);
       AstFrameSet* ast = fits->wcsCopy();
       

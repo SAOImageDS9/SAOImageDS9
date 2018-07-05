@@ -169,7 +169,7 @@ Vector zero360(const Vector& vv)
 
 Vector3d zero360(const Vector3d& vv)
 {
-  Vector out = vv;
+  Vector3d out = vv;
   // we want the first coord to be 0-360
   out[0] = zero360(out[0]);
   return out;

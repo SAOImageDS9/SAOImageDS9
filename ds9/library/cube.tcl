@@ -274,26 +274,62 @@ proc CubeApply {ii} {
 
     CubeStop
 
-    if {$current(frame) != {}} {
-	if {[$current(frame) has fits]} {
-	    set ss [expr int([$current(frame) get coordinates $dcube(wcs,$ii) $cube(system) image $cube(axis)])]
-	    
-	    if {$ss<1} {
-		set ss 1
-	    }
-	    set depth [$current(frame) get fits depth $ii]
-	    if {$ss>$depth} {
-		set ss $depth
-	    }
-	    set dcube(image,$ii) $ss
-	    set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $cube(axis)]
-	    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ii $ss"
-	} else {
-	    set dcube(image,$cube(axis)) 1
-	    set dcube(wcs,$cube(axis)) 1
-	}
-	UpdateCube
+    if {$current(frame) == {}} {
+	return
     }
+
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    set ss $dcube(image,$ii)
+    if {$ss<1} {
+	set ss 1
+    }
+    set depth [$current(frame) get fits depth $ii]
+    if {$ss>$depth} {
+	set ss $depth
+    }
+    
+    set dcube(image,$ii) $ss
+    set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $cube(axis)]
+    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ii $ss"
+
+    UpdateCube
+}
+
+proc CubeApplyWCS {ii} {
+    global dcube
+    global cube
+    global current
+    global rgb
+
+    CubeStop
+
+    if {$current(frame) == {}} {
+	return
+    }
+
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    # will return float
+    set ss [expr int([$current(frame) get coordinates $dcube(wcs,$ii) $cube(system) image $ii])]
+
+    if {$ss<1} {
+	set ss 1
+    }
+    set depth [$current(frame) get fits depth $ii]
+    if {$ss>$depth} {
+	set ss $depth
+    }
+    
+    set dcube(image,$ii) $ss
+    set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $ii]
+    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ii $ss"
+
+    UpdateCube
 }
 
 proc UpdateCube {} {
@@ -385,7 +421,6 @@ proc CubeDialog {} {
     set f [ttk::frame $w.param]
 
     set dcube(taxis) [ttk::label $f.taxis -text [msgcat::mc {Axis}]]
-    set dcube(tslice) [ttk::label $f.tslice -text [msgcat::mc {Slice}]]
     set dcube(twcs) [ttk::label $f.twcs -textvariable dcube(vcoord) \
 			 -anchor center]
     for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
@@ -393,11 +428,13 @@ proc CubeDialog {} {
 				-text [expr $ii+1] \
 				-variable cube(axis) \
 				-value $ii]
-	set dcube(lslice,$ii) [ttk::label $f.slice$ii \
-				  -textvariable dcube(image,$ii) \
-				  -width 5 -anchor center]
-	set dcube(sslice,$ii) [slider $f.scale$ii 0 100 {} \
-				   dcube(wcs,$ii) [list CubeApply $ii] 4 10]
+	set dcube(wcsentry,$ii) [ttk::entry $f.slice$ii \
+				 -textvariable dcube(wcs,$ii) -width 10]
+	bind $dcube(wcsentry,$ii) <Return> \
+	    [list CubeApplyWCS $ii]
+
+	set dcube(slider,$ii) [slider $f.scale$ii 0 100 {} \
+				   dcube(image,$ii) [list CubeApply $ii] 4 10]
     }
 
     # Buttons
@@ -505,28 +542,29 @@ proc UpdateCubeDialog {} {
     if {$naxes == 2} {
 	set dcube(from,2) 1
 	set dcube(to,2) 1
+	set dcube(from,wcs,2) 1
+	set dcube(to,wcs,2) 1
     } else {
 	for {set ii 2} {$ii<$naxes} {incr ii} {
-	    set dcube(from,$ii) 1
-	    set dcube(to,$ii) 1
-
 	    if {$ii==2} {
 		# get cropped version
-		set ss [$current(frame) get crop 3d $cube(system)]
+		set ss [$current(frame) get crop 3d image]
 		set dcube(from,$ii) [lindex $ss 0]
 		set dcube(to,$ii) [lindex $ss 1]
 	    } else {
-		set depth [$current(frame) get fits depth $ii]
-		set dcube(from,$ii) [$current(frame) get coordinates 1 image $cube(system) $ii]
-		set dcube(to,$ii) [$current(frame) get coordinates $depth image $cube(system) $ii]
+		set dcube(from,$ii) 1
+		set dcube(to,$ii) [$current(frame) get fits depth $ii]
 	    }
+
+	    set dcube(from,wcs,$ii) [$current(frame) get coordinates $dcube(from,$ii) image $cube(system) $ii]    
+	    set dcube(to,wcs,$ii) [$current(frame) get coordinates $dcube(to,$ii) image $cube(system) $ii]    
 	}
     }
-    
+
     # forget everything
-    grid forget $dcube(tslice) $dcube(taxis) $dcube(twcs)
+    grid forget $dcube(taxis) $dcube(twcs)
     for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
-	grid forget $dcube(chk,$ii) $dcube(sslice,$ii) $dcube(lslice,$ii)
+	grid forget $dcube(chk,$ii) $dcube(slider,$ii) $dcube(wcsentry,$ii)
     }
 
     # show it
@@ -534,31 +572,48 @@ proc UpdateCubeDialog {} {
 	# special chase, no checkbox
 	grid columnconfigure $w.param 1 -weight 1
 	grid columnconfigure $w.param 2 -weight 0
-	grid $dcube(tslice) $dcube(twcs) -padx 2 -pady 2 -sticky ew
-	grid $dcube(lslice,2) $dcube(sslice,2) -padx 2 -pady 2 -sticky ew
+	grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+	switch $cube(system) {
+	    image {
+		grid x $dcube(slider,2) \
+		    -padx 2 -pady 2 -sticky ew
+	    }
+	    default {
+		grid $dcube(wcsentry,2) $dcube(slider,2) \
+		    -padx 2 -pady 2 -sticky ew
+	    }
+	}
     } else {
 	grid columnconfigure $w.param 1 -weight 0
 	grid columnconfigure $w.param 2 -weight 1
-	grid $dcube(taxis) $dcube(tslice) $dcube(twcs) \
-	    -padx 2 -pady 2 -sticky ew
+	grid $dcube(taxis) x $dcube(twcs) -padx 2 -pady 2 -sticky ew
 	for {set ii 2} {$ii<$naxes} {incr ii} {
-	    grid $dcube(chk,$ii) $dcube(lslice,$ii) \
-		$dcube(sslice,$ii) -padx 2 -pady 2 -sticky ew
+	    switch $cube(system) {
+		image {
+		    grid $dcube(chk,$ii) x \
+			$dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
+		}
+		default {
+		    grid $dcube(chk,$ii) $dcube(wcsentry,$ii) \
+			$dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
+		}
+	    }
 	}
     }
 
     # set intervals
     if {$naxes  == 2} {
-	SliderMinMax $dcube(sslice,2) $dcube(from,2) $dcube(to,2) 4
-	set dcube(vcoord) $cube(system)
+	SliderFromTo $dcube(slider,2) $dcube(from,2) $dcube(to,2)
+	SliderMinMax $dcube(slider,2) $dcube(from,2) $dcube(to,2) 4
+	set dcube(vcoord) image
     } else {
 	for {set ii 2} {$ii<$naxes} {incr ii} {
+	    SliderFromTo $dcube(slider,$ii) $dcube(from,$ii) $dcube(to,$ii)
+	    SliderMinMax $dcube(slider,$ii) $dcube(from,wcs,$ii) $dcube(to,wcs,$ii) 4
+
 	    set dcube(vcoord) $cube(system)
 	    switch $cube(system) {
-		image {
-		    set dcube(from,$ii) [expr int($dcube(from,$ii))]
-		    set dcube(to,$ii) [expr int($dcube(to,$ii))]
-		}
+		image {}
 		default {
 		    set w [string range $cube(system) 3 3]
 		    set key "CTYPE[expr $cube(axis)+1]$w"
@@ -568,7 +623,6 @@ proc UpdateCubeDialog {} {
 		    }
 		}
 	    }
-	    SliderMinMax $dcube(sslice,$ii) $dcube(from,$ii) $dcube(to,$ii) 4
 	}
     }
 
@@ -586,9 +640,8 @@ proc UpdateCubeDialog {} {
 	set dcube(wcs,2) 1
     } else {
 	for {set ii 2} {$ii<$naxes} {incr ii} {
-	    set slice  [$current(frame) get fits slice $ii]
-	    set dcube(image,$ii) $slice
-	    set dcube(wcs,$ii) [$current(frame) get coordinates $slice image $cube(system) $ii]
+	    set dcube(image,$ii) [$current(frame) get fits slice $ii]
+	    set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $ii]
 	}
     }
 }
@@ -716,14 +769,35 @@ proc ProcessCubeCmd {varname iname} {
 proc CubeCmdCoord {ss sys axis} {
     global dcube
     global cube
+    global current
+    global rgb
 
-    set dcube(wcs,$axis) $ss
-    set cube(system) $sys
-    set cube(axis) $axis
-    if {$cube(axis) < 2} {
-	set cube(axis) 2
+    CubeStop
+
+    if {$current(frame) == {}} {
+	return
     }
-    CubeApply $cube(axis)
+
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    # will return float
+    set ss [expr int([$current(frame) get coordinates $ss $sys image $axis])]
+
+    if {$ss<1} {
+	set ss 1
+    }
+    set depth [$current(frame) get fits depth $axis]
+    if {$ss>$depth} {
+	set ss $depth
+    }
+    
+    set dcube(image,$axis) $ss
+    set dcube(wcs,$axis) [$current(frame) get coordinates $dcube(image,$axis) image $cube(system) $axis]
+    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $axis $ss"
+
+    UpdateCube
 }
 
 proc ProcessSendCubeCmd {proc id param {sock {}} {fn {}}} {

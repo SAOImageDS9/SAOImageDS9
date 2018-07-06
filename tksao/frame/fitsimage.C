@@ -4294,6 +4294,9 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
   }
 }
 
+// IsLatAxis(axis)
+// IsLonAxis(axis)
+
 Vector3d FitsImage::wcsTran(const Vector3d& in, int forward)
 {
   int naxes = astGetI(ast_,"Naxes");

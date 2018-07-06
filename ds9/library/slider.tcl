@@ -31,14 +31,17 @@ proc slider {w from to label varname cmd {num {5}} {width {7}}} {
 
     bind $w.entry <Return> $cmd
 
+    SliderFromTo $w $from $to
     SliderMinMax $w $from $to $num
 
     return $w
 }
 
-proc SliderMinMax {w from to num} {
+proc SliderFromTo {w from to} {
     $w.slider configure -from $from -to $to
+}
 
+proc SliderMinMax {w from to num} {
     if {$from == $to} {
 	for {set ii 0} {$ii<$num} {incr ii} {
 	    $w.t$ii configure -text {}

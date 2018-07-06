@@ -105,11 +105,6 @@ proc 3DDialog {} {
     slider $f.azslider -180 180 [msgcat::mc {Azimuth}] threed(az) \
 	[list 3DViewMotion]
 
-    bind $f.elslider.slider <ButtonPress-1>   {3DViewButton}
-    bind $f.elslider.slider <ButtonRelease-1> {3DViewRelease}
-    bind $f.azslider.slider <ButtonPress-1>   {3DViewButton}
-    bind $f.azslider.slider <ButtonRelease-1> {3DViewRelease}
-
     grid $f.azslider -padx 2 -pady 2 -sticky ew
     grid $f.elslider -padx 2 -pady 2 -sticky ew
     grid columnconfigure $f 0 -weight 1
@@ -235,27 +230,7 @@ proc 3DViewPoint {} {
     }
 }
 
-proc 3DViewButton {} {
-    global threed
-    global current
-
-    if {$current(frame) != {}} {
-	$current(frame) 3d view $threed(az) $threed(el)
-	Lock3DCurrent
-    }
-}
-
 proc 3DViewMotion {} {
-    global threed
-    global current
-
-    if {$current(frame) != {}} {
-	$current(frame) 3d view $threed(az) $threed(el)
-	Lock3DCurrent
-    }
-}
-
-proc 3DViewRelease {} {
     global threed
     global current
 

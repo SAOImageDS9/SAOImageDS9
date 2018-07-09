@@ -122,7 +122,7 @@ class FitsImage {
   int* wcsEqu_;
   int* wcsCel_;
   int* wcs3D_;
-  int* wcsHPX_;
+  int wcsHPX_;
 #endif
   FitsHead* wcsHeader_; // alt wcs header
   FitsHead* altHeader_; // wcs header for wfpc2
@@ -446,7 +446,6 @@ class FitsImage {
   int hasWCSEqu(Coord::CoordSystem);
   int hasWCSCel(Coord::CoordSystem);
   int hasWCS3D(Coord::CoordSystem);
-  int hasWCSHPX(Coord::CoordSystem);
 
   void updateMatrices(Matrix&, Matrix&, Matrix&, Matrix&, Matrix&);
   void updateMatrices(Matrix3d&, Matrix3d&, Matrix3d&, Matrix3d&);

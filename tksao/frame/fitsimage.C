@@ -118,7 +118,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcsEqu_ =NULL;
   wcsCel_ =NULL;
   wcs3D_ =NULL;
-  wcsHPX_ =NULL;
+  wcsHPX_ =0;
 #endif
   wcsHeader_ =NULL;
   altHeader_ =NULL;
@@ -208,8 +208,7 @@ FitsImage::~FitsImage()
       delete [] wcsCel_;
     if (wcs3D_)
       delete [] wcs3D_;
-    if (wcsHPX_)
-      delete [] wcsHPX_;
+    wcsHPX_ =0;
   }
 #endif
 
@@ -1123,9 +1122,7 @@ void FitsImage::initWCS()
     if (wcs3D_)
       delete [] wcs3D_;
     wcs3D_ = NULL;
-    if (wcsHPX_)
-      delete [] wcsHPX_;
-    wcsHPX_ = NULL;
+    wcsHPX_ = 0;
   }
 #endif
 
@@ -3082,7 +3079,7 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   
   setWCSSkyFrame(sys, sky);
 
-  if (!hasWCSHPX(sys)) {
+  if (!wcsHPX_) {
     Vector in[3];
     Vector out[3];
     in[0] = center();
@@ -3540,14 +3537,6 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
     return wcsCel_[sys-Coord::WCS];
 }
 
-int FitsImage::hasWCSHPX(Coord::CoordSystem sys)
-{
-  if (!ast_ || !wcsHPX_ || sys<Coord::WCS)
-    return 0;
-  else
-    return wcsHPX_[sys-Coord::WCS];
-}
-
 #endif
 
 // WCSX
@@ -3693,6 +3682,10 @@ void FitsImage::astInit(FitsHead* hd, FitsHead* prim)
     }
     break;
   case 3:
+    if (0) {
+      int orr[] = {2,3,1};
+      astPermAxes(ast_,orr);
+    }
   case 4:
     break;
   }
@@ -3748,9 +3741,6 @@ void FitsImage::wcsEquInit()
   astClearStatus;
   astBegin;
 
-  // for AST WCS
-  wcsEqu_[0] = astIsASkyFrame(astGetFrame(ast_, AST__CURRENT));
-
   int nn = astGetI(ast_, "Nframe");
   for (int ii=0; ii<nn; ii++) {
     AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
@@ -3758,23 +3748,13 @@ void FitsImage::wcsEquInit()
     if (id && *id) {
       int jj = (*id == ' ') ? 0 : *id-'@';
 
-      int naxes = astGetI(ff, "Naxes");
-      switch (naxes) {
-      case 2:
-	wcsEqu_[jj] = astIsASkyFrame(ff);
-	// no xLON/xLAT, xxLN/xxLT or HPX
-	if (wcsEqu_[jj]) {
-	  const char* str = astGetC(ff, "System");
-	  if (!strncmp(str,"Unknown",7))
-	    wcsEqu_[jj] = 0;
-	}
-	break;
-      case 3:
-      case 4:
-	wcsEqu_[jj] = strstr((char*)astGetC(ff, "Domain"), "SKY") ? 1 : 0;
-	break;
-      default:
-	break;
+      AstFrameSet* fs =
+	(AstFrameSet*)astFindFrame(ff, astSkyFrame(" MaxAxes=10")," ");
+      if (fs) {
+	wcsEqu_[jj] = 1;
+	const char* str = astGetC(ff, "System");
+	if (!strncmp(str,"Unknown",7))
+	  wcsEqu_[jj] = 0;
       }
     }
   }
@@ -3799,9 +3779,6 @@ void FitsImage::wcsCelInit()
   astClearStatus;
   astBegin;
 
-  // for AST WCS
-  wcsCel_[0] = astIsASkyFrame(astGetFrame(ast_, AST__CURRENT));
-
   int nn = astGetI(ast_, "Nframe");
   for (int ii=0; ii<nn; ii++) {
     AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
@@ -3809,17 +3786,13 @@ void FitsImage::wcsCelInit()
     if (id && *id) {
       int jj = (*id == ' ') ? 0 : *id-'@';
 
-      int naxes = astGetI(ff, "Naxes");
-      switch (naxes) {
-      case 2:
-	wcsCel_[jj] = astIsASkyFrame(ff);
-	break;
-      case 3:
-      case 4:
-	wcsCel_[jj] = strstr((char*)astGetC(ff, "Domain"), "SKY") ? 1 : 0;
-	break;
-      default:
-	break;
+      AstFrameSet* fs =
+	(AstFrameSet*)astFindFrame(ff, astSkyFrame(" MaxAxes=10")," ");
+      if (fs) {
+	wcsCel_[jj] = 1;
+	const char* str = astGetC(ff, "System");
+	if (!strncmp(str,"Unknown",7))
+	  wcsCel_[jj] = 0;
       }
     }
   }
@@ -3859,25 +3832,17 @@ void FitsImage::wcs3DInit()
 
 void FitsImage::wcsHPXInit()
 {
-  // init wcsHPX_ array
-  if (wcsHPX_)
-    delete [] wcsHPX_;
-  wcsHPX_ =NULL;
+  wcsHPX_ =0;
 
   if (!ast_)
     return;
 
   char key[] = "CTYPE1 ";
-  wcsHPX_ = new int[MULTWCS];
-  for (int ii=0; ii<MULTWCS; ii++) {
-    wcsHPX_[ii] =0;
-    key[6] = (ii==0 ) ? ' ' : '@'+ii;
-    if (image_) {
-      const char* str = image_->getKeyword(key);
-      if (str)
-	if (!strncmp(str+5,"HPX",3))
-	  wcsHPX_[ii] =1;
-    }
+  if (image_) {
+    const char* str = image_->getKeyword(key);
+    if (str)
+      if (!strncmp(str+5,"HPX",3))
+	wcsHPX_ =1;
   }
 }
 
@@ -4293,9 +4258,6 @@ void FitsImage::wcsTran(AstFrameSet* ast, int npoint,
     break;
   }
 }
-
-// IsLatAxis(axis)
-// IsLonAxis(axis)
 
 Vector3d FitsImage::wcsTran(const Vector3d& in, int forward)
 {

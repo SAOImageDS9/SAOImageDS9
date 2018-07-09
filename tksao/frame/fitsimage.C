@@ -1667,10 +1667,10 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   Vector* ptr1 =NULL;
   if (sky1 != sky2) {
     setWCSSkyFrame(sys1, sky1);
-    AstFrameSet* wcs1 = wcsCopy();
+    AstFrameSet* wcs1 = (AstFrameSet*)astCopy(ast_);
 
     setWCSSkyFrame(sys2, sky2);
-    AstFrameSet* wcs2 = wcsCopy();
+    AstFrameSet* wcs2 = (AstFrameSet*)astCopy(ast_);
 
     AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "SKY");
     if (cvt != AST__NULL) {

@@ -83,7 +83,7 @@ int Grid3d::doit(RenderMode rm)
 
 #ifndef NEWWCS
       foobar = fits;
-      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_[system_-Coord::WCS]);
       fits->setWCSSkyFrame(ast, sky_);
 
       AstFrame* zbase = astFrame(1,"");
@@ -114,7 +114,7 @@ int Grid3d::doit(RenderMode rm)
       }
 
       fits->setWCSSkyFrame(system_, sky_);
-      AstFrameSet* ast = fits->wcsCopy();
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_);
       
       int naxes = astGetI(ast,"Naxes");
       switch (naxes) {
@@ -190,7 +190,6 @@ int Grid3d::doit(RenderMode rm)
   renderMode_ = rm;
 
   AstPlot3D* plot = astPlot3D(frameSet, gbox, pbox, option_);
-  //  astShow(plot);
   astGrid(plot);
 
   astEnd; // now, clean up memory

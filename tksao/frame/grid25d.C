@@ -59,7 +59,7 @@ int Grid25d::doit(RenderMode rm)
     {
       // set desired skyformat
 #ifndef NEWWCS
-      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->getAST(system_));
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_[system_-Coord::WCS]);
       fits->setWCSSkyFrame(ast, sky_);
 #else
       if (!fits->astInv()) {
@@ -68,7 +68,7 @@ int Grid25d::doit(RenderMode rm)
       }
 
       fits->setWCSSkyFrame(system_, sky_);
-      AstFrameSet* ast = fits->wcsCopy();
+      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_);
 
       int naxes = astGetI(ast,"Naxes");
       switch (naxes) {

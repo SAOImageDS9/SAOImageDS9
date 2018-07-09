@@ -113,10 +113,8 @@ class FitsImage {
   int manageWCS_;
 #ifndef NEWWCS
   WorldCoor** wcs_;    // wcs list
-  AstFrameSet** ast_;  // ast frameset;
   WCSx** wcsx_;        // xth Axis WCS
 #else
-  AstFrameSet* ast_;  // ast frameset;
   int astInv_;    // can we inverse?
   int* wcs_;
   int* wcsEqu_;
@@ -128,6 +126,13 @@ class FitsImage {
   FitsHead* altHeader_; // wcs header for wfpc2
 
   Matrix wcsToRef_;          // iraf/wcs matrix
+
+ public:
+#ifndef NEWWCS
+  AstFrameSet** ast_;  // ast frameset;
+#else
+  AstFrameSet* ast_;  // ast frameset;
+#endif
 
  private:
   char* root(const char*);
@@ -414,8 +419,6 @@ class FitsImage {
   WorldCoor* getWCS(Coord::CoordSystem sys) 
   {return (wcs_ && wcs_[sys-Coord::WCS]) ? wcs_[sys-Coord::WCS] : NULL;}
   Vector getWCScdelt(Coord::CoordSystem);
-  AstFrameSet* getAST(Coord::CoordSystem sys) 
-    {return (ast_ && ast_[sys-Coord::WCS]) ? ast_[sys-Coord::WCS] : NULL;}
 
   Vector wcsTran(AstFrameSet*, const Vector&, int);
   void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
@@ -425,7 +428,6 @@ class FitsImage {
   void setWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
   void setWCSFormat(AstFrameSet*, int, const char*);
 #else
-  AstFrameSet* wcsCopy() {return (AstFrameSet*)astCopy(ast_);}
   Vector wcsTran(const Vector&, int);
   Vector3d wcsTran(const Vector3d&, int);
   void wcsTran(int num, Vector* in, int forward, Vector* out)

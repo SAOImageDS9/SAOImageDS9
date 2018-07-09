@@ -105,7 +105,6 @@ int Grid2d::doit(RenderMode rm)
       astInvert(ast);
       astAddFrame(frameSet, AST__CURRENT, astUnitMap(2,""), ast);
       astSetI(frameSet,"Current",id+nf);
-      astShow(frameSet);
     }
     break;
   }

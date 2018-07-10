@@ -646,6 +646,77 @@ proc UpdateCubeDialog {} {
     }
 }
 
+proc UpdateCubeMotionDialog {ii} {
+    global icube
+    global dcube
+    global cube
+
+    # current frame only
+    global current
+    global ds9
+
+    global debug
+    if {$debug(tcl,update)} {
+	puts stderr "UpdateCubeMotionDialog"
+    }
+
+    CubeStop
+
+    if {![winfo exists $icube(top)]} {
+	return
+    }
+
+    set w $icube(top)
+    set mb $icube(mb)
+
+    # get number of axes
+    if {$current(frame) != {}} {
+	set naxes [$current(frame) get fits naxes]
+    } else {
+	set naxes 2
+    }
+
+    # set from/to
+    set depth 1
+    if {$naxes == 2} {
+	set dcube(from,2) 1
+	set dcube(to,2) 1
+	set dcube(from,wcs,2) 1
+	set dcube(to,wcs,2) 1
+    } else {
+	if {$ii==2} {
+	    # get cropped version
+	    set ss [$current(frame) get crop 3d image]
+	    set dcube(from,$ii) [lindex $ss 0]
+	    set dcube(to,$ii) [lindex $ss 1]
+	} else {
+	    set dcube(from,$ii) 1
+	    set dcube(to,$ii) [$current(frame) get fits depth $ii]
+	}
+
+	set dcube(from,wcs,$ii) [$current(frame) get coordinates $dcube(from,$ii) image $cube(system) $ii]    
+	set dcube(to,wcs,$ii) [$current(frame) get coordinates $dcube(to,$ii) image $cube(system) $ii]    
+    }
+
+    # set intervals
+    if {$naxes  == 2} {
+	SliderFromTo $dcube(slider,2) $dcube(from,2) $dcube(to,2)
+	SliderMinMax $dcube(slider,2) $dcube(from,2) $dcube(to,2) 4
+    } else {
+	SliderFromTo $dcube(slider,$ii) $dcube(from,$ii) $dcube(to,$ii)
+	SliderMinMax $dcube(slider,$ii) $dcube(from,wcs,$ii) $dcube(to,wcs,$ii) 4
+    }
+
+    # we must do this after the scale has been configured
+    if {$naxes == 2} {
+	set dcube(image,2) 1
+	set dcube(wcs,2) 1
+    } else {
+	set dcube(image,$ii) [$current(frame) get fits slice $ii]
+	set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $ii]
+    }
+}
+
 proc CubeBackup {ch which} {
     switch [$which get type] {
 	base -

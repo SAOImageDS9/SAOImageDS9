@@ -203,8 +203,11 @@ proc PlotChangeMode {varname} {
     bind $var(graph) <1> {}
 
     switch $var(mode) {
-	pointer {bind $var(graph) <1> [list PlotButton $varname %x %y]}
+	pointer {
+	    bind $var(graph) <1> [list PlotButton $varname %x %y]
+	}
 	zoom {
+	    blt::ZoomStack::Reset $var(graph)
 	    switch $ds9(wm) {
 		x11 -
 		win32 {Blt_ZoomStack $var(graph) -mode release}

@@ -110,6 +110,7 @@ proc MarkerAnalysisPlot3dSystem {varname} {
 # hardcoded marker.C
 proc MarkerAnalysisPlot3dCB {frame id} {
     global imarker
+    global wcs
 
     set varname ${imarker(prefix,dialog)}${id}${frame}
     global $varname
@@ -124,23 +125,16 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 
     if {[info exists var(system)]} {
 	set vvar(system) $var(system)
-	set sys $var(system)
     } elseif {[info exists vvar(system)]} {
-	set sys $vvar(system)
     } else {
-	global wcs
 	set vvar(system) $wcs(system)
-	set sys $wcs(system)
     }
 
     if {[info exists var(method)]} {
 	set vvar(method) $var(method)
-	set method $var(method)
     } elseif {[info exists vvar(method)]} {
-	set method $vvar(method)
     } else {
 	set vvar(method) average
-	set method average
     }
 
     set xdata ${vvarname}x
@@ -151,9 +145,18 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 
     if {!$ping} {
 	set tt [string totitle [$frame get marker $id type]]
-	PlotLineDialog $vvarname $tt Plot3D $sys Counts
+	PlotLineDialog $vvarname $tt {} $vvar(system) Counts
 	MarkerAnalysisPlot3dXAxisTitle $vvarname
 	MarkerAnalysisPlot3dYAxisTitle $vvarname
+
+	set vvar(markerslice) [$vvar(graph) marker create line -element bar1 \
+			     -outline cyan -linewidth 2 \
+			     -bindtags [list slice]]
+	$vvar(graph) marker bind slice <B1-Motion> \
+	    [list MarkerAnalysisPlot3dMotion $vvarname %x %y]
+
+	set vvar(mode) pointer
+	PlotChangeMode $vvarname
 
 	set vvar(manage) 0
 	set vvar(dim) xy
@@ -162,7 +165,11 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	blt::vector create $xdata $ydata
     }
 
-    $frame get marker $id analysis plot3d $xdata $ydata $sys $method
+    $frame get marker $id analysis plot3d $xdata $ydata \
+	$vvar(system) $vvar(method)
+
+    set vvar(slice) [$frame get fits slice 2 $vvar(system)]
+    MarkerAnalysisPlot3dMarker $vvarname
 
     if {!$ping} {
 	PlotExternal $vvarname
@@ -172,6 +179,47 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 
     PlotStats $vvarname
     PlotList $vvarname
+}
+
+proc MarkerAnalysisPlot3dMotion {vvarname xx yy} {
+    upvar #0 $vvarname vvar
+    global $vvarname
+
+    if {$vvar(mode) != "pointer"} {
+	return
+    }
+
+    set vvar(slice) [lindex [$vvar(graph) invtransform $xx $yy] 0]
+    $vvar(frame) update fits slice $vvar(slice) $vvar(system)
+
+    MarkerAnalysisPlot3dMarker $vvarname
+
+    # current frame only
+    global current
+    if {$vvar(frame) == $current(frame)} {
+	UpdateCubeMotionDialog 2
+	UpdateScaleDialog
+	UpdateContourScale
+	UpdateContourDialog
+    }
+}
+
+proc MarkerAnalysisPlot3dMarker {vvarname} {
+    upvar #0 $vvarname vvar
+    global $vvarname
+
+    set ss [$vvar(frame) get crop 3d $vvar(system)]
+    set min [lindex $ss 0]
+    set max [lindex $ss 1]
+    set delta [expr ($max-$min)*.0001]
+    if {[::math::fuzzy::tle $vvar(slice) $min]} {
+	set vvar(slice) [expr $min+$delta]
+    }
+    if {[::math::fuzzy::tge $vvar(slice) $max]} {
+	set vvar(slice) [expr $max-$delta]
+    }
+    $vvar(graph) marker configure $vvar(markerslice) \
+	-coords "$vvar(slice) -Inf $vvar(slice) Inf"
 }
 
 # hardcoded marker.C

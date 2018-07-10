@@ -163,7 +163,7 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 
     if {!$ping} {
 	set tt [string totitle [$frame get marker $id type]]
-	PlotLineDialog $vvarname $tt Plot2D $sys Counts
+	PlotLineDialog $vvarname $tt {} $sys Counts
 	MarkerAnalysisPlot2dXAxisTitle $vvarname
 	MarkerAnalysisPlot2dYAxisTitle $vvarname
 

@@ -194,6 +194,7 @@ proc MarkerAnalysisPlot2dCB {frame id} {
     PlotList $vvarname
 }
 
+# hardcoded marker.C
 proc MarkerAnalysisPlot2dDeleteCB {frame id} {
     # this routine could be called by the region 
     # after the dialog has been deleted

@@ -58,6 +58,11 @@ proc ProjectionApply {varname} {
     upvar #0 $varname var
     global $varname
 
+    global debug
+    if {$debug(tcl,marker)} {
+	puts stderr "ProjectionApply"
+    }
+
     $var(frame) marker $var(id) projection $var(system) $var(sky) \
 	$var(x) $var(y) $var(x2) $var(y2) \
 	$var(thick) $var(tcoord) $var(tformat)

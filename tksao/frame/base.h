@@ -579,10 +579,6 @@ public:
 		double rad, Coord::CoordSystem sys, Coord::DistFormat dist,
 		const char* rr);
 
-  // IME Analysis Commands
-  void analysisMarkersResetCmd();
-  void analysisMarkersSelectCmd(const char*, const Vector&);
-
   // Axes Order
   void axesOrderCmd(int);
   void getAxesOrderCmd();

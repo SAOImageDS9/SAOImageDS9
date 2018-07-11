@@ -450,7 +450,6 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %%
 
 command : DEBUG_ debug
-        | ANALYSIS_ analysis
 	| BIN_ bin
 	| BG_ COLOR_ STRING {fr->bgColorCmd($3);}
         | BLOCK_ block
@@ -755,30 +754,6 @@ threedView : numeric numeric {fr->set3dViewCmd($1,$2);}
 	| POINT_ numeric numeric numeric numeric numeric
 	  {fr->set3dViewPointCmd(Vector3d($2,$3,$4),Vector($5,$6));}
 	;
-
-analysis : RESET_ {fr->analysisMarkersResetCmd();}
-        | SHAPE_ analysisShape
-        ;
-
-analysisShape : CIRCLE_ numeric numeric
-        {fr->analysisMarkersSelectCmd("circle", fr->mapToRef(Vector($2,$3), Coord::CANVAS));}
-        | ELLIPSE_ numeric numeric
-        {fr->analysisMarkersSelectCmd("ellipse", fr->mapToRef(Vector($2,$3), Coord::CANVAS));}
-        | BOX_ numeric numeric
-        {fr->analysisMarkersSelectCmd("box", fr->mapToRef(Vector($2,$3), Coord::CANVAS));}
-        | POLYGON_ numeric numeric
-        {fr->analysisMarkersSelectCmd("polygon", fr->mapToRef(Vector($2,$3), Coord::CANVAS));}
-        | POINT_ numeric numeric
-        {fr->analysisMarkersSelectCmd("point", fr->mapToRef(Vector($2,$3), Coord::CANVAS));}
-        | VECTOR_ numeric numeric
-        {fr->analysisMarkersSelectCmd("vector", fr->mapToRef(Vector($2,$3), Coord::CANVAS));}
-        | ANNULUS_ numeric numeric
-        {fr->analysisMarkersSelectCmd("annulus", fr->mapToRef(Vector($2,$3), Coord::CANVAS));}
-        | ELLIPSEANNULUS_ numeric numeric
-        {fr->analysisMarkersSelectCmd("ellipseannulus", fr->mapToRef(Vector($2,$3), Coord::CANVAS));}
-        | BOXANNULUS_ numeric numeric
-        {fr->analysisMarkersSelectCmd("boxannulus", fr->mapToRef(Vector($2,$3), Coord::CANVAS));}
-        ;
 
 bin	: ABOUT_ binAbout
 	| COLS_ STRING STRING STRING {fr->binColsCmd($2,$3,$4);}
@@ -2497,7 +2472,6 @@ markerLayer : /* empty */ {fr->markerLayerCmd(Base::USER);}
 	  fr->markerLayerCmd(Base::USER);
 	  }
 	| CATALOG_  {fr->markerLayerCmd(Base::CATALOG);}
-        | ANALYSIS_ {fr->markerLayerCmd(Base::ANALYSIS);}
 	;
 
 markerList : markerFormat coordSystem skyFrame skyFormat 

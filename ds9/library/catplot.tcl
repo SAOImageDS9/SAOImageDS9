@@ -77,6 +77,10 @@ proc CATPlotGenerate {varname} {
 
     if {!$ping} {
 	PlotScatterDialog $vvarname $var(title) {} {} {}
+
+	set vvar(mode) pointer
+	PlotChangeMode $vvarname
+
 	set vvar(callback) "CATSelectRows $varname plot"
 	set var(plot) 1
 	set var(plot,var) $vvarname

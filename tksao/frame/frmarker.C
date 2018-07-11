@@ -910,18 +910,6 @@ Vector Base::centroid(const Vector& vv)
     return cd * ptr->dataToRef;
 }
 
-void Base::getMarkerAnalysisHistogramCmd(char* xname, char* yname, int num)
-{
-  Marker* mm = markers->head();
-  while (mm) {
-    if (!mm->getProperty(Marker::HIDDEN)) {
-      mm->analysisHistogram(xname, yname, num);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
 void Base::getMarkerAnalysisHistogramCmd(int id, char* xname, char* yname,
 					 int num)
 {
@@ -929,22 +917,6 @@ void Base::getMarkerAnalysisHistogramCmd(int id, char* xname, char* yname,
   while (mm) {
     if (mm->getId() == id) {
       mm->analysisHistogram(xname, yname, num);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::getMarkerAnalysisPlot2dCmd(char* xname, char* yname, 
-				      char* xcname, char* ycname,
-				      Coord::CoordSystem sys, 
-				      Coord::SkyFrame sky,
-				      Marker::AnalysisMethod method)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (!mm->getProperty(Marker::HIDDEN)) {
-      mm->analysisPlot2d(xname, yname, xcname, ycname, sys, sky, method);
       return;
     }
     mm=mm->next();
@@ -967,20 +939,6 @@ void Base::getMarkerAnalysisPlot2dCmd(int id, char* xname, char* yname,
   }
 }
 
-void Base::getMarkerAnalysisPlot3dCmd(char* xname, char* yname,
-				      Coord::CoordSystem sys, 
-				      Marker::AnalysisMethod method)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (!mm->getProperty(Marker::HIDDEN)) {
-      mm->analysisPlot3d(xname, yname, sys, method);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
 void Base::getMarkerAnalysisPlot3dCmd(int id, char* xname, char* yname,
 				      Coord::CoordSystem sys, 
 				      Marker::AnalysisMethod method)
@@ -989,18 +947,6 @@ void Base::getMarkerAnalysisPlot3dCmd(int id, char* xname, char* yname,
   while (mm) {
     if (mm->getId() == id) {
       mm->analysisPlot3d(xname, yname, sys, method);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::getMarkerAnalysisPandaCmd(Coord::CoordSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (!mm->getProperty(Marker::HIDDEN)) {
-      mm->analysisPanda(sys);
       return;
     }
     mm=mm->next();
@@ -1019,19 +965,6 @@ void Base::getMarkerAnalysisPandaCmd(int id, Coord::CoordSystem sys)
   }
 }
 
-void Base::getMarkerAnalysisRadialCmd(char* xname, char* yname,
-				      char* yename, Coord::CoordSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (!mm->getProperty(Marker::HIDDEN)) {
-      mm->analysisRadial(xname, yname, yename, sys);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
 void Base::getMarkerAnalysisRadialCmd(int id, char* xname, char* yname,
 				      char* yename, Coord::CoordSystem sys)
 {
@@ -1039,19 +972,6 @@ void Base::getMarkerAnalysisRadialCmd(int id, char* xname, char* yname,
   while (mm) {
     if (mm->getId() == id) {
       mm->analysisRadial(xname, yname, yename, sys);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::getMarkerAnalysisStatsCmd(Coord::CoordSystem sys,
-				     Coord::SkyFrame sky)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (!mm->getProperty(Marker::HIDDEN)) {
-      mm->analysisStats(sys,sky);
       return;
     }
     mm=mm->next();
@@ -2583,13 +2503,6 @@ void Base::markerLayerCmd(MarkerLayer layer) {
     undoMarkers = &undoCatalogMarkers;
     pasteMarkers = &pasteCatalogMarkers;
     break;
-    /*
-  case ANALYSIS:
-    markers = &analysisMarkers;
-    undoMarkers = &undoAnalysisMarkers;
-    pasteMarkers = &pasteAnalysisMarkers;
-    break;
-    */
   default:
     // na
     break;

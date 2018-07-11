@@ -245,9 +245,6 @@ Marker::~Marker()
 void Marker::x11(Drawable drawable, Coord::InternalSystem sys, 
 		 int tt, RenderMode mode, HandleMode hh)
 {
-  if (properties & HIDDEN)
-    return;
-
   if (hh==HANDLES)
     renderXHandles(drawable);
   if (tt)
@@ -376,9 +373,6 @@ void Marker::renderXLineNoDash(GC lgc)
 
 void Marker::ps(int mode, int tt)
 {
-  if (properties & HIDDEN)
-    return;
-
   if (tt)
     renderPSText(mode);
 
@@ -503,9 +497,6 @@ void Marker::renderPSColor(int mode, XColor* clr)
 #ifdef MAC_OSX_TK
 void Marker::macosx(int tt)
 {
-  if (properties & HIDDEN)
-    return;
-
   if (tt)
     renderMACOSXText();
 
@@ -585,9 +576,6 @@ void Marker::renderMACOSXLineNoDash()
 #ifdef __WIN32
 void Marker::win32(int tt)
 {
-  if (properties & HIDDEN)
-    return;
-
   if (tt)
     renderWIN32Text();
 

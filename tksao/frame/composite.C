@@ -34,9 +34,6 @@ Composite::Composite(Base* p, const Vector& ctr,
 void Composite::x11(Drawable drawable, Coord::InternalSystem sys,
 		    int tt, RenderMode mode, HandleMode hh)
 {
-  if (properties & HIDDEN)
-    return;
-
   if (hh==HANDLES)
     renderXHandles(drawable);
   if (tt)

@@ -35,8 +35,7 @@ public:
   // Dash-- render with dashed line
   // Hide-- hidden marker
   enum Property {NONE=0, SELECT=1, HIGHLITE=2, EDIT=4, MOVE=8, ROTATE=16, 
-		 DELETE=32, FIXED=64, INCLUDE=128, SOURCE=256, DASH=512, 
-		 HIDDEN=1024};
+		 DELETE=32, FIXED=64, INCLUDE=128, SOURCE=256, DASH=512};
   enum RenderMode {SRC,XOR};
   enum HandleMode {HANDLES,NOHANDLES};
 

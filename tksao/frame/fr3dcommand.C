@@ -226,7 +226,6 @@ void Frame3dBase::crop3dEndCmd(const Vector& vv, int which)
   update(MATRIX);
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
-  //  updateMarkerCBs(&analysisMarkers);
 }
 
 void Frame3dBase::get3dBorderCmd()

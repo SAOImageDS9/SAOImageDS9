@@ -1100,7 +1100,6 @@ int Base::postscriptProc(int prepass)
 	psMarkers(&catalogMarkers, GRAY);
 	psMarkers(&userMarkers, GRAY);
       }
-      //      psMarkers(&analysisMarkers, GRAY);
 
       // needs to be after markers if marker is filled
       if (grid)
@@ -1119,7 +1118,6 @@ int Base::postscriptProc(int prepass)
 	psMarkers(&catalogMarkers, RGB);
 	psMarkers(&userMarkers, RGB);
       }
-      //      psMarkers(&analysisMarkers, RGB);
 
       // needs to be after markers if marker is filled
       if (grid)
@@ -1140,7 +1138,6 @@ int Base::postscriptProc(int prepass)
       psMarkers(&catalogMarkers, psColorSpace);
       psMarkers(&userMarkers, psColorSpace);
     }
-    //    psMarkers(&analysisMarkers, psColorSpace);
 
     // needs to be after markers if marker is filled
     if (grid)
@@ -1462,7 +1459,6 @@ void Base::reset()
   
   unselectMarkers(&userMarkers);
   unselectMarkers(&catalogMarkers);
-  //  unselectMarkers(&analysisMarkers);
 
   update(MATRIX);
 }
@@ -1487,12 +1483,10 @@ void Base::setSlice(int id, int ss)
   // real work done in derived classes
   updateMarkers(&userMarkers);
   updateMarkers(&catalogMarkers);
-  //  updateMarkers(&analysisMarkers);
 
   // execute any update callbacks
   updateCBMarkers(&userMarkers);
   updateCBMarkers(&catalogMarkers);
-  //  updateCBMarkers(&analysisMarkers);
 }
 
 void Base::unloadAllFits()
@@ -1515,10 +1509,6 @@ void Base::unloadFits()
   catalogMarkers.deleteAll();
   undoCatalogMarkers.deleteAll();
   pasteCatalogMarkers.deleteAll();
-
-  //  analysisMarkers.deleteAll();
-  //  undoAnalysisMarkers.deleteAll();
-  //  pasteAnalysisMarkers.deleteAll();
 
   if (grid)
     delete grid;
@@ -1617,7 +1607,6 @@ void Base::updateBin(const Matrix& mx)
     currentContext->updateContours(mx);
     updateMarkerCoords(&userMarkers, mx);
     updateMarkerCoords(&catalogMarkers, mx);
-    //    updateMarkerCoords(&analysisMarkers, mx);
   }
 
   alignWCS();
@@ -1629,7 +1618,6 @@ void Base::updateBin(const Matrix& mx)
   // the correct coords
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
-  //  updateMarkerCBs(&analysisMarkers);
 }
 
 void Base::updateBlock(const Vector& vv)
@@ -1642,7 +1630,6 @@ void Base::updateBlock(const Vector& vv)
     currentContext->updateContours(mx);
     updateMarkerCoords(&userMarkers, mx);
     updateMarkerCoords(&catalogMarkers, mx);
-    //    updateMarkerCoords(&analysisMarkers, mx);
   }
 
   alignWCS();
@@ -1654,7 +1641,6 @@ void Base::updateBlock(const Vector& vv)
   // the correct coords
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
-  //  updateMarkerCBs(&analysisMarkers);
 }
 
 void Base::updateGCs()
@@ -1746,7 +1732,6 @@ void Base::updateMagnifier(const Vector& vv)
 	  x11MagnifierMarkers(&userMarkers, bb);
 	  x11MagnifierMarkers(&catalogMarkers, bb);
 	}
-	//	x11MagnifierMarkers(&analysisMarkers, bb);
 
 	// render crosshair
 	if (useCrosshair)
@@ -1819,7 +1804,6 @@ void Base::updateMatrices()
     // Markers
   updateMarkers(&userMarkers);
   updateMarkers(&catalogMarkers);
-  //  updateMarkers(&analysisMarkers);
 
   pushMatrices();
 }
@@ -1985,7 +1969,6 @@ void Base::updatePM(const BBox& bbox)
     x11Markers(&catalogMarkers, bb);
     x11Markers(&userMarkers, bb);
   }
-  //  x11Markers(&analysisMarkers, bb);
 
   // grid
   // needs to be after markers if marker is filled
@@ -2167,7 +2150,6 @@ void Base::macosxPrintCmd()
     macosxMarkers(&catalogMarkers);
     macosxMarkers(&userMarkers);
   }
-  //  macosxMarkers(&analysisMarkers);
 
   // grid
   // needs to be after markers if marker is filled
@@ -2289,7 +2271,6 @@ void Base::win32PrintCmd()
     win32Markers(&userMarkers);
     win32Markers(&catalogMarkers);
   }
-  //  win32Markers(&analysisMarkers);
 
   // grid
   // needs to be after markers if marker is filled

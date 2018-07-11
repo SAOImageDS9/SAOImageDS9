@@ -2279,19 +2279,6 @@ markerGet : CENTROID_ markerGetCentroid
 	| HANDLE_ numeric numeric {fr->getMarkerHandleCmd(Vector($2,$3));}
 	| ID_ numeric numeric {fr->getMarkerIdCmd(Vector($2,$3));}
 
-	| HIDE_ ANALYSIS_ CPANDA_ coordSystem
-	{fr->getMarkerAnalysisPandaCmd((Coord::CoordSystem)$4);}
-        | HIDE_ ANALYSIS_ HISTOGRAM_ STRING STRING INT
-	{fr->getMarkerAnalysisHistogramCmd($4,$5,$6);}
-	| HIDE_ ANALYSIS_ PLOT2D_ STRING STRING STRING STRING coordSystem skyFrame analysisParam
-	{fr->getMarkerAnalysisPlot2dCmd($4,$5,$6,$7,(Coord::CoordSystem)$8, (Coord::SkyFrame)$9, (Marker::AnalysisMethod)$10);}
-	| HIDE_ ANALYSIS_ PLOT3D_ STRING STRING coordSystem analysisParam
-	{fr->getMarkerAnalysisPlot3dCmd($4,$5,(Coord::CoordSystem)$6,(Marker::AnalysisMethod)$7);}
-	| HIDE_ ANALYSIS_ RADIAL_ STRING STRING STRING coordSystem
-	{fr->getMarkerAnalysisRadialCmd($4,$5,$6,(Coord::CoordSystem)$7);}
-	| HIDE_ ANALYSIS_ STATS_ coordSystem skyFrame
-	{fr->getMarkerAnalysisStatsCmd((Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
-
 	| INT ANALYSIS_ CPANDA_ coordSystem
 	{fr->getMarkerAnalysisPandaCmd($1,(Coord::CoordSystem)$4);}
         | INT ANALYSIS_ HISTOGRAM_ STRING STRING INT

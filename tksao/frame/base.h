@@ -151,12 +151,6 @@ public:
   List<Marker> undoCatalogMarkers;  // remember marker to undo
   List<Marker> pasteCatalogMarkers; // cut/copy/paste
 
-  /*
-  List<Marker> analysisMarkers;      // background marker stack
-  List<Marker> undoAnalysisMarkers;  // remember marker to undo
-  List<Marker> pasteAnalysisMarkers; // cut/copy/paste
-  */
-
   UndoMarkerType undoMarkerType; // type
 
   Vector markerBegin;        // marker move begin in image coords
@@ -1226,25 +1220,15 @@ public:
 			 const char*);
   void createTemplateVarCmd(const Vector&, const char* var);
 
-  void getMarkerAnalysisHistogramCmd(char*, char*, int);
   void getMarkerAnalysisHistogramCmd(int, char*, char*, int);
-  void getMarkerAnalysisPlot2dCmd(char*, char*, char*, char*, 
-				  Coord::CoordSystem, Coord::SkyFrame, 
-				  Marker::AnalysisMethod);
   void getMarkerAnalysisPlot2dCmd(int, char*, char*, char*, char*, 
 				  Coord::CoordSystem, Coord::SkyFrame, 
-				  Marker::AnalysisMethod);
-  void getMarkerAnalysisPlot3dCmd(char*, char*,
-				  Coord::CoordSystem, 
 				  Marker::AnalysisMethod);
   void getMarkerAnalysisPlot3dCmd(int, char*, char*,
 				  Coord::CoordSystem, 
 				  Marker::AnalysisMethod);
-  void getMarkerAnalysisPandaCmd(Coord::CoordSystem);
   void getMarkerAnalysisPandaCmd(int, Coord::CoordSystem);
-  void getMarkerAnalysisRadialCmd(char*, char*, char*, Coord::CoordSystem);
   void getMarkerAnalysisRadialCmd(int, char*, char*, char*, Coord::CoordSystem);
-  void getMarkerAnalysisStatsCmd(Coord::CoordSystem, Coord::SkyFrame);
   void getMarkerAnalysisStatsCmd(int, Coord::CoordSystem, Coord::SkyFrame);
 
   void getMarkerAngleCmd(int);

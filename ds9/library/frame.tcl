@@ -238,8 +238,7 @@ proc CreateNameNumberFrame {which type} {
     }
 
     switch $current(mode) {
-	crosshair -
-	analysis {
+	crosshair {
 	    $ds9(next) crosshair on
 	}
     }
@@ -565,8 +564,7 @@ proc EnterFrame {which x y} {
     $ds9(canvas) focus $which
 
     switch -- $current(mode) {
-	crosshair -
-	analysis {
+	crosshair {
 	    set coord [$which get crosshair canvas]
 	    set x [lindex $coord 0]
 	    set y [lindex $coord 1]
@@ -621,8 +619,7 @@ proc LeaveFrame {which} {
     $ds9(canvas) focus {}
 
     switch -- $current(mode) {
-	crosshair -
-	analysis {} 
+	crosshair {}
 
 	none -
 	pointer -
@@ -685,8 +682,7 @@ proc DoMotion {which x y cursor1 cursor2} {
     switch -- $current(mode) {
 	pointer -
 	region -
-	catalog -
-	analysis {
+	catalog {
 	    if {$which == $current(frame)} {
 		MarkerCursor $which $x $y $cursor1 $cursor2
 	    }
@@ -797,17 +793,6 @@ proc Button1Frame {which x y} {
 	    }
 	    UpdateMagnifier $which $x $y
 	}
-	analysis {
-	    IMEButton $which $x $y
-
-	    UpdateColormapLevelMosaic $which $x $y canvas
-	    UpdateInfoBox $which $x $y canvas
-	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraphLayout $which
-	    UpdateGraphAxis $which
-	    UpdateGraphData $which $x $y canvas
-	    UpdateMagnifier $which $x $y
-	}
 	examine {ExamineButton $which $x $y}
 	iexam {IExamButton $which $x $y}
     }
@@ -847,10 +832,6 @@ proc ShiftButton1Frame {which x y} {
 	    if {$which == $current(frame)} {
 		CATShift $which $x $y
 	    }
-	    UpdateMagnifier $which $x $y
-	}
-	analysis {
-	    IMEShift $which $x $y
 	    UpdateMagnifier $which $x $y
 	}
 	examine -
@@ -896,7 +877,6 @@ proc ControlButton1Frame {which x y} {
 	    Crop3dButton $which $x $y 1
 	    UpdateMagnifier $which $x $y
 	}
-	analysis {}
 	examine -
 	iexam {}
     }
@@ -937,7 +917,6 @@ proc ControlShiftButton1Frame {which x y} {
 	zoom -
 	rotate -
 	crop -
-	analysis {}
 	examine -
 	iexam {}
     }
@@ -1022,15 +1001,6 @@ proc Motion1Frame {which x y} {
 	    UpdateGraphData $which $x $y canvas
 	    UpdateMagnifier $which $x $y
 	}
-	analysis {
-	    IMEMotion $which $x $y
-
-	    UpdateColormapLevelMosaic $which $x $y canvas
-	    UpdateInfoBox $which $x $y canvas
-	    UpdatePixelTableDialog $which $x $y canvas
-	    UpdateGraphData $which $x $y canvas
-	    UpdateMagnifier $which $x $y
-	}
 	examine -
 	iexam {}
     }
@@ -1100,10 +1070,7 @@ proc Release1Frame {which x y} {
 		CATRelease $which $x $y
 	    }
 	}
-	none {}
-	analysis {
-	    IMERelease $which $x $y
-	}
+	none -
 	examine -
 	iexam {}
     }
@@ -1141,11 +1108,7 @@ proc Double1Frame {which x y} {
 	zoom -
 	rotate -
 	crop -
-	catalog {}
-	analysis {
-	    IMEDouble $which $x $y
-	    UpdateMagnifier $which $x $y
-	}
+	catalog -
 	examine -
 	iexam {}
     }
@@ -1170,7 +1133,6 @@ proc DoubleRelease1Frame {which x y} {
 	rotate -
 	crop -
 	catalog -
-	analysis -
 	examine -
 	iexam {}
     }
@@ -1447,19 +1409,6 @@ proc KeyFrame {which K A xx yy} {
 		l {MarkerArrowKey $which 1 0}
 	    }	    
 	    CATKey $which $K
-	}
-	analysis {
-	    switch -- $K {
-		plus {CubeNext}
-		minus {CubePrev}
-
-		Up {IMEArrowKey $which 0 -1}
-		Down {IMEArrowKey $which 0 1}
-		Left {IMEArrowKey $which -1 0}
-		Right {IMEArrowKey $which 1 0}
-
-		default {IMEKey $which $K $xx $yy}
-	    }
 	}
 	iexam {IExamKey $which $K $xx $yy}
 	colorbar -

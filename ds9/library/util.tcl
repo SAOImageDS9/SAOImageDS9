@@ -90,7 +90,6 @@ proc UpdateDS9 {} {
     UpdateWCSMenu 
     UpdateAnalysisMenu
 
-    UpdateTaskMenu
     UpdateMaskMenu
     UpdateContourMenu
     UpdateGridMenu
@@ -139,8 +138,7 @@ proc UpdateMain {} {
     RefreshInfoBox $current(frame)
     UpdateColormapLevel
     switch -- $current(mode) {
-	crosshair -
-	analysis {
+	crosshair {
 	    if {$current(frame) != {}} {
 		set coord [$current(frame) get crosshair canvas]
 		set x [lindex $coord 0]
@@ -977,13 +975,6 @@ proc ChangeMode {} {
 	pan {SetCursor fleur}
 	rotate {SetCursor exchange}
 	crop {SetCursor {}}
-	analysis {
-	    foreach ff $ds9(frames) {
-		$ff crosshair on
-	    }
-	    SetCursor crosshair
-	    IMEChangeShape
-	}
 	examine {SetCursor target}
 	iexam {}
     }
@@ -1497,8 +1488,7 @@ proc CursorCmd {x y} {
 	pan {PanCanvas $x $y}
 	zoom -
 	rotate -
-	crop {}
-	analysis {IMEArrowKey $current(frame) $x $y}
+	crop -
 	examine -
 	iexam {}
     }

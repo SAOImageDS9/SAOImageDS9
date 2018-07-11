@@ -39,9 +39,6 @@ proc EditMainMenu {} {
 	-variable current(mode) -value crop -command ChangeMode
     $ds9(mb).edit add radiobutton -label [msgcat::mc {Catalog}] \
 	-variable current(mode) -value catalog -command ChangeMode
-# IME
-#    $ds9(mb).edit add radiobutton -label [msgcat::mc {Analysis}] 
-#	-variable current(mode) -value analysis -command ChangeMode
     $ds9(mb).edit add radiobutton -label [msgcat::mc {Examine}] \
 	-variable current(mode) -value examine -command ChangeMode
 
@@ -92,9 +89,6 @@ proc PrefsDialogEditMenu {w} {
 	-variable pcurrent(mode) -value crop
     $m add radiobutton -label [msgcat::mc {Catalog}] \
 	-variable pcurrent(mode) -value catalog
-# IME
-#    $m add radiobutton -label [msgcat::mc {Analysis}] 
-#	-variable pcurrent(mode) -value analysis
     $m add radiobutton -label [msgcat::mc {Examine}] \
 	-variable pcurrent(mode) -value examine
 
@@ -123,8 +117,6 @@ proc ButtonsEditDef {} {
 	edit,examine 1
 	edit,prefs 0
     }
-# IME
-#	edit,analysis 1
 }
 
 proc CreateButtonsEdit {} {
@@ -170,10 +162,6 @@ proc CreateButtonsEdit {} {
     RadioButton $ds9(buttons).edit.catalog \
 	[string tolower [msgcat::mc {Cat}]] \
 	current(mode) catalog ChangeMode
-# IME
-#    RadioButton $ds9(buttons).edit.analysis 
-#	[string tolower [msgcat::mc {Analysis}]] 
-#	current(mode) analysis ChangeMode
     RadioButton $ds9(buttons).edit.examine \
 	[string tolower [msgcat::mc {Exam}]] \
 	current(mode) examine ChangeMode
@@ -198,8 +186,6 @@ proc CreateButtonsEdit {} {
         $ds9(buttons).edit.examine pbuttons(edit,examine)
         $ds9(buttons).edit.prefs pbuttons(edit,prefs)
     "
-# IME
-#        $ds9(buttons).edit.analysis pbuttons(edit,analysis)
 }
 
 proc PrefsDialogButtonbarEdit {f} {
@@ -239,9 +225,6 @@ proc PrefsDialogButtonbarEdit {f} {
 	-variable pbuttons(edit,crop) -command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Catalog}] \
 	-variable pbuttons(edit,catalog) -command {UpdateButtons buttons(edit)}
-# IME
-#    $m add checkbutton -label [msgcat::mc {Analysis}] 
-#	-variable pbuttons(edit,analysis) -command {UpdateButtons buttons(edit)}
     $m add checkbutton -label [msgcat::mc {Examine}] \
 	-variable pbuttons(edit,examine) -command {UpdateButtons buttons(edit)}
     $m add separator
@@ -313,7 +296,6 @@ proc UpdateEditMenu {} {
 	rotate -
 	crop -
 	catalog -
-	analysis -
 	examine -
 	iexam {$ds9(mb).edit entryconfig [msgcat::mc {Undo}] -state disabled}
     }

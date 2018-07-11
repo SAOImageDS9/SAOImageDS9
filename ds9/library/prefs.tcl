@@ -282,12 +282,6 @@ proc SavePrefs {} {
 
     # Analysis
 
-    global ime
-    global pime
-    puts $ch "global pime"
-    puts $ch "array set pime \{ [array get pime] \}"
-    puts $ch {array set ime [array get pime]}
-
     global graph
     global pgraph
     puts $ch "global graph"

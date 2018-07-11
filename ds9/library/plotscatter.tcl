@@ -157,7 +157,13 @@ proc PlotDialogScatter {varname} {
 		       ]
 
     pack $var(graph) -expand yes -fill both
-    PlotChangeMode $varname
+
+    # set up zoom stack, assuming mode is zoom
+    switch $ds9(wm) {
+	x11 -
+	win32 {Blt_ZoomStack $var(graph) -mode release}
+	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
+    }
 }
 
 proc PlotScatterUpdateElement {varname} {

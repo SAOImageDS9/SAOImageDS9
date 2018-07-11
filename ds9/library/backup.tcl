@@ -658,13 +658,6 @@ proc BackupGUI {ch} {
 
     # Analysis
 
-    global ime
-    puts $ch "global ime"
-    puts $ch "array set ime \{ [array get ime] \}"
-    global pime
-    puts $ch "global pime"
-    puts $ch "array set pime \{ [array get pime] \}"
-
     global graph
     puts $ch "global graph"
     puts $ch "array set graph \{ [array get graph] \}"

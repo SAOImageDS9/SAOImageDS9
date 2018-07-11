@@ -10,10 +10,6 @@ proc AnalysisMainMenu {} {
     # WARNING: this is a variable length menu. 
     # Be sure to update ds9(menu,size,analysis)
     menu $ds9(mb).analysis
-# IME
-#    $ds9(mb).analysis add cascade -label [msgcat::mc {Task}] 
-#	-menu $ds9(mb).analysis.task
-#    $ds9(mb).analysis add separator
     $ds9(mb).analysis add command -label "[msgcat::mc {Pixel Table}]..." \
 	-command PixelTableDialog 
     $ds9(mb).analysis add command -label "[msgcat::mc {Name Resolution}]..." \
@@ -78,39 +74,6 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis add command \
 	-label [msgcat::mc {Clear Analysis Commands}] \
 	-command ClearAnalysisMenu
-
-    menu $ds9(mb).analysis.task
-    $ds9(mb).analysis.task add radiobutton -label [msgcat::mc {Statistics}] \
-	-variable ime(task) -value stats -command IMEChangeTask
-    $ds9(mb).analysis.task add radiobutton -label [msgcat::mc {Histogram}] \
-	-variable ime(task) -value hist -command IMEChangeTask
-    $ds9(mb).analysis.task add radiobutton \
-	-label [msgcat::mc {Radial Profile}] \
-	-variable ime(task) -value radial -command IMEChangeTask
-    $ds9(mb).analysis.task add radiobutton -label [msgcat::mc {Plot 2D}] \
-	-variable ime(task) -value plot2d -command IMEChangeTask
-    $ds9(mb).analysis.task add radiobutton -label [msgcat::mc {Plot 3D}] \
-	-variable ime(task) -value plot3d -command IMEChangeTask
-    $ds9(mb).analysis.task add separator
-    $ds9(mb).analysis.task add radiobutton -label [msgcat::mc {Circle}] \
-	-variable ime(shape) -value circle -command IMEChangeShape
-    $ds9(mb).analysis.task add radiobutton -label [msgcat::mc {Ellipse}] \
-	-variable ime(shape) -value ellipse -command IMEChangeShape
-    $ds9(mb).analysis.task add radiobutton -label [msgcat::mc {Box}] \
-	-variable ime(shape) -value box -command IMEChangeShape
-    $ds9(mb).analysis.task add radiobutton -label [msgcat::mc {Polygon}] \
-	-variable ime(shape) -value polygon -command IMEChangeShape
-    $ds9(mb).analysis.task add separator
-    $ds9(mb).analysis.task add radiobutton -label [msgcat::mc {Point}] \
-	-variable ime(shape) -value point -command IMEChangeShape
-    $ds9(mb).analysis.task add separator
-    $ds9(mb).analysis.task add radiobutton -label [msgcat::mc {Annulus}] \
-	-variable ime(shape) -value annulus -command IMEChangeShape
-    $ds9(mb).analysis.task add radiobutton \
-	-label [msgcat::mc {Ellipse Annulus}] \
-	-variable ime(shape) -value ellipseannulus -command IMEChangeShape
-    $ds9(mb).analysis.task add radiobutton -label [msgcat::mc {Box Annulus}] \
-	-variable ime(shape) -value boxannulus -command IMEChangeShape
 
     menu $ds9(mb).analysis.block
     $ds9(mb).analysis.block add command -label [msgcat::mc {Block In}] \
@@ -203,10 +166,6 @@ proc PrefsDialogAnalysisMenu {w} {
 
     set m $f.menu.menu
     menu $m
-# IME
-#    $m add cascade -label [msgcat::mc {Task}]
-#	-menu $m.task
-#    $m add separator
     $m add checkbutton -label [msgcat::mc {Contours}] \
 	-variable pcontour(view)
     $m add checkbutton -label [msgcat::mc {Coordinate Grid}] \
@@ -216,18 +175,6 @@ proc PrefsDialogAnalysisMenu {w} {
 	-menu $m.block
     $m add checkbutton -label [msgcat::mc {Smooth}] \
 	-variable psmooth(view)
-
-    menu $m.task
-    $m.task add radiobutton -label [msgcat::mc {Statistics}] \
-	-variable pime(task) -value stats
-    $m.task add radiobutton -label [msgcat::mc {Histogram}] \
-	-variable pime(task) -value hist
-    $m.task add radiobutton -label [msgcat::mc {Radial Profile}] \
-	-variable pime(task) -value radial
-    $m.task add radiobutton -label [msgcat::mc {Plot 2D}] \
-	-variable pime(task) -value plot2d
-    $m.task add radiobutton -label [msgcat::mc {Plot 3D}] \
-	-variable pime(task) -value plot3d
 
     menu $m.block
     $m.block add radiobutton -label "[msgcat::mc {Block}] 1" \
@@ -265,14 +212,6 @@ proc ButtonsAnalysisDef {} {
 	analysis,b16 0
 	analysis,b32 0
     }
-
-# IME
-#	analysis,none 1
-#	analysis,stats 1
-#	analysis,hist 1
-#	analysis,radial 1
-#	analysis,plot2d 1
-#	analysis,plot3d 1
 }
 
 proc CreateButtonsAnalysis {} {
@@ -280,23 +219,6 @@ proc CreateButtonsAnalysis {} {
     global ds9
 
     ttk::frame $ds9(buttons).analysis
-
-# IME
-#    RadioButton $ds9(buttons).analysis.stats 
-#	[string tolower [msgcat::mc {Stats}]]
-#	ime(task) stats IMEChangeTask
-#    RadioButton $ds9(buttons).analysis.hist
-#	[string tolower [msgcat::mc {Histogram}]]
-#	ime(task) hist IMEChangeTask
-#    RadioButton $ds9(buttons).analysis.radial
-#	[string tolower [msgcat::mc {Radial}]]
-#	ime(task) radial IMEChangeTask
-#    RadioButton $ds9(buttons).analysis.plot2d
-#	[string tolower [msgcat::mc {Plot 2D}]]
-#	ime(task) plot2d IMEChangeTask
-#    RadioButton $ds9(buttons).analysis.plot3d
-#	[string tolower [msgcat::mc {Plot 3D}]]
-#	ime(task) plot3d IMEChangeTask
 
     CheckButton $ds9(buttons).analysis.contours \
 	[string tolower [msgcat::mc {Contours}]] \
@@ -350,13 +272,6 @@ proc CreateButtonsAnalysis {} {
 
         $ds9(buttons).analysis.smooth pbuttons(analysis,smooth)
     "
-
-# IME
-#        $ds9(buttons).analysis.stats pbuttons(analysis,stats)
-#        $ds9(buttons).analysis.hist pbuttons(analysis,hist)
-#        $ds9(buttons).analysis.radial pbuttons(analysis,radial)
-#        $ds9(buttons).analysis.plot2d pbuttons(analysis,plot2d)
-#        $ds9(buttons).analysis.plot3d pbuttons(analysis,plot3d)
 }
 
 proc PrefsDialogButtonbarAnalysis {f} {
@@ -368,23 +283,6 @@ proc PrefsDialogButtonbarAnalysis {f} {
     
     set m $f.menu
     menu $m
-# IME
-#    $m add checkbutton -label [msgcat::mc {Statistics}]
-#	-variable pbuttons(analysis,stats)
-#	-command {UpdateButtons buttons(analysis)}
-#    $m add checkbutton -label [msgcat::mc {Histogram}]
-#	-variable pbuttons(analysis,hist)
-#	-command {UpdateButtons buttons(analysis)}
-#    $m add checkbutton -label [msgcat::mc {Radial Profile}]
-#	-variable pbuttons(analysis,radial)
-#	-command {UpdateButtons buttons(analysis)}
-#    $m add checkbutton -label [msgcat::mc {Plot 2D}]
-#	-variable pbuttons(analysis,plot2d)
-#	-command {UpdateButtons buttons(analysis)}
-#    $m add checkbutton -label [msgcat::mc {Plot 3D}]
-#	-variable pbuttons(analysis,plot3d)
-#	-command {UpdateButtons buttons(analysis)}
-#    $m add separator
     $m add checkbutton -label [msgcat::mc {Contours}] \
 	-variable pbuttons(analysis,contours) \
 	-command {UpdateButtons buttons(analysis)}
@@ -506,87 +404,4 @@ proc PrefsDialogAnalysis {} {
     grid $f.log -padx 2 -pady 2 -sticky w
 
     pack $w.analysis.file $w.analysis.log -side top -fill both -expand true
-}
-
-# Support
-
-proc UpdateTaskMenu {} {
-    global ds9
-    global ime
-
-    switch $ime(task) {
-	stats -
-	hist {
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Circle}] \
-		-state normal
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Ellipse}] \
-		-state normal
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Box}] \
-		-state normal
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Polygon}] \
-		-state normal
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Point}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Annulus}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Ellipse Annulus}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Box Annulus}] \
-		-state disabled
-	}
-	radial {
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Circle}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Ellipse}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Box}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Polygon}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Point}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Annulus}] \
-		-state normal
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Ellipse Annulus}] \
-		-state normal
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Box Annulus}] \
-		-state normal
-	}
-	plot2d {
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Circle}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Ellipse}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Box}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Polygon}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Point}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Annulus}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Ellipse Annulus}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Box Annulus}] \
-		-state disabled
-	}
-	plot3d {
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Circle}] \
-		-state normal
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Ellipse}] \
-		-state normal
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Box}] \
-		-state normal
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Polygon}] \
-		-state normal
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Point}] \
-		-state normal
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Annulus}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Ellipse Annulus}] \
-		-state disabled
-	    $ds9(mb).analysis.task entryconfig [msgcat::mc {Box Annulus}] \
-		-state disabled
-	}
-    }
 }

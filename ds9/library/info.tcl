@@ -488,8 +488,7 @@ proc RefreshInfoBox {which} {
 
     if {$which != {}} {
 	switch -- $current(mode) {
-	    crosshair -
-	    analysis {
+	    crosshair {
 		set coord [$which get crosshair canvas]
 		set x [lindex $coord 0]
 		set y [lindex $coord 1]

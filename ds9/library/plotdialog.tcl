@@ -199,20 +199,14 @@ proc PlotChangeMode {varname} {
 
     global ds9
 
-    blt::RemoveBindTag $var(graph) zoom-$var(graph)
-    bind $var(graph) <1> {}
-
     switch $var(mode) {
 	pointer {
+	    blt::RemoveBindTag $var(graph) zoom-$var(graph)
 	    bind $var(graph) <1> [list PlotButton $varname %x %y]
 	}
 	zoom {
-	    blt::ZoomStack::Reset $var(graph)
-	    switch $ds9(wm) {
-		x11 -
-		win32 {Blt_ZoomStack $var(graph) -mode release}
-		aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
-	    }
+	    bind $var(graph) <1> {}
+	    blt::AddBindTag $var(graph) zoom-$var(graph)
 	}
     }
 }

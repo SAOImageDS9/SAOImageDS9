@@ -110,6 +110,7 @@ proc MarkerAnalysisPlot2dSystem {varname} {
 # hardcoded marker.C
 proc MarkerAnalysisPlot2dCB {frame id} {
     global imarker
+    global wcs
 
     set varname ${imarker(prefix,dialog)}${id}${frame}
     global $varname
@@ -124,33 +125,23 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 
     if {[info exists var(system)]} {
 	set vvar(system) $var(system)
-	set sys $var(system)
     } elseif {[info exists vvar(system)]} {
-	set sys $vvar(system)
     } else {
-	global wcs
 	set vvar(system) $wcs(system)
-	set sys $wcs(system)
     }
 
     if {[info exists var(sky)]} {
 	set vvar(sky) $var(sky)
-	set sky $var(sky)
     } elseif {[info exists vvar(sky)]} {
-	set sky $vvar(sky)
     } else {
-	global wcs
-	set sky $wcs(sky)
+	set vvar(sky) $wcs(sky)
     }
 
     if {[info exists var(method)]} {
 	set vvar(method) $var(method)
-	set method $var(method)
     } elseif {[info exists vvar(method)]} {
-	set method $vvar(method)
     } else {
 	set vvar(method) average
-	set method average
     }
 
     set xdata ${vvarname}x
@@ -163,7 +154,7 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 
     if {!$ping} {
 	set tt [string totitle [$frame get marker $id type]]
-	PlotLineDialog $vvarname $tt {} $sys Counts
+	PlotLineDialog $vvarname $tt {} $vvar(system) Counts
 	MarkerAnalysisPlot2dXAxisTitle $vvarname
 	MarkerAnalysisPlot2dYAxisTitle $vvarname
 
@@ -182,7 +173,7 @@ proc MarkerAnalysisPlot2dCB {frame id} {
     }
 
     $frame get marker $id analysis plot2d $xdata $ydata $xcdata $ycdata \
-	$sys $sky $method
+	$vvar(system) $vvar(sky) $vvar(method)
 
     if {!$ping} {
 	PlotExternal $vvarname

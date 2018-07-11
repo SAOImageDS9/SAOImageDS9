@@ -815,6 +815,7 @@ clip	: SCOPE_ clipScope
 	| MODE_ clipMode
 	| MINMAX_ clipMinMax
 	| USER_ numeric numeric {fr->clipUserCmd($2,$3);}
+	| USER_ NAN_ NAN_ {fr->clipUserCmd(NAN,NAN);}
         | ZSCALE_ clipZScale
  	| PRESERVE_ yesno
         {

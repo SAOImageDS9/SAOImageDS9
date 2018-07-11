@@ -2166,7 +2166,6 @@ proc XPACatchError {xpa} {
 
     global errorInfo
     if {$errorInfo != {} || $ds9(msg) != {}} {
-	xpaerror $xpa "$errorInfo"
 	if {$ds9(msg) != {}} {
 	    xpaerror $xpa $ds9(msg)
 	} else {

@@ -1115,6 +1115,7 @@ proc MarkerLoadFrames {str frames format sys sky} {
 proc MarkerLoadFile {filename which format sys sky} {
     global current
     global marker
+    global errorInfo
 
     if {$filename == {}} {
 	return
@@ -1132,6 +1133,7 @@ proc MarkerLoadFile {filename which format sys sky} {
 	.bz2 {set app bunzip2}
 	.Z {set app uncompress}
     }
+
     if {$app != {}} {
 	set srcfilename $filename
 	set filename [tmpnam [file ext [file rootname $filename]]]
@@ -1163,12 +1165,18 @@ proc MarkerLoadFile {filename which format sys sky} {
 	# try filename first
 	if {[catch {$which marker load fits "\{$filename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
 
+	    # reset errorInfo
+	    set errorInfo {}
+	    
 	    # see if we need to add an extension
 	    # try [REGION] extension
 	    if {$ext == {}} {
 		set regfilename "$base\[REGION\]"
 
 		if {[catch {$which marker load fits "\{$regfilename\}" $marker(color) $marker(dashlist) $marker(width) "\{$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\}"}]} {
+
+		    # reset errorInfo
+		    set errorInfo {}
 
 		    # ok now try the first extension
 		    set regfilename "$base\[1\]"
@@ -1218,6 +1226,7 @@ proc MarkerSave {} {
 	    $marker(format) $marker(system) $marker(sky) \
 	    $marker(skyformat) $marker(strip)
     }
+    puts "z $errorInfo"
 }
 
 proc MarkerInfo {} {

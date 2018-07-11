@@ -75,7 +75,6 @@ source $ds9(root)/library/hvform.tcl
 source $ds9(root)/library/hvsup.tcl
 source $ds9(root)/library/iexam.tcl
 source $ds9(root)/library/iis.tcl
-source $ds9(root)/library/ime.tcl
 source $ds9(root)/library/imgsvr.tcl
 source $ds9(root)/library/import.tcl
 source $ds9(root)/library/info.tcl

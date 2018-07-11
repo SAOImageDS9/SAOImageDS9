@@ -946,7 +946,6 @@ proc ChangeMode {} {
 
     foreach ff $ds9(frames) {
 	$ff crosshair off
-	$ff analysis reset
 	$ff marker catalog unselect all
 	$ff marker catalog unhighlite all
 	$ff marker unselect all

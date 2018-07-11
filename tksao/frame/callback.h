@@ -17,14 +17,14 @@ class CallBack {
 	     DELETECB, 
 	     TEXTCB, COLORCB, LINEWIDTHCB, PROPERTYCB, FONTCB, 
 	     KEYCB,
-	     UPDATECB};
+	     UPDATECB,UPDATE3DCB};
 
  private:
   Tcl_Interp* interp_;
 
   Type type_;
-  char proc_[128];
-  char arg_[256];
+  char proc_[64];
+  char arg_[64];
 
   CallBack* previous_;
   CallBack* next_;

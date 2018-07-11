@@ -223,6 +223,18 @@ proc MarkerAnalysisPlot3dMarker {vvarname} {
 }
 
 # hardcoded marker.C
+proc MarkerAnalysisPlot3dSliceCB {frame id} {
+    global imarker
+
+    set vvarname ${imarker(prefix,plot3d)}${id}${frame}
+    upvar #0 $vvarname vvar
+    global $vvarname
+
+    set vvar(slice) [$frame get fits slice 2 $vvar(system)]
+    MarkerAnalysisPlot3dMarker $vvarname
+}
+
+# hardcoded marker.C
 proc MarkerAnalysisPlot3dDeleteCB {frame id} {
     # this routine could be called by the region 
     # after the dialog has been deleted

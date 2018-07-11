@@ -6859,6 +6859,7 @@ void Base::updateCBMarkers(List<Marker>* ml)
   Marker* mm=ml->head();
   while (mm) {
     mm->doCallBack(CallBack::UPDATECB);
+    mm->doCallBack(CallBack::UPDATE3DCB);
     mm=mm->next();
   }
 }

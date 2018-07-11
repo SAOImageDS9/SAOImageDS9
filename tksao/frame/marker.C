@@ -28,7 +28,8 @@ const char* Marker::analysisPlot2dCB_[] = {
 
 const char* Marker::analysisPlot3dCB_[] = {
   "MarkerAnalysisPlot3dCB",
-  "MarkerAnalysisPlot3dDeleteCB"
+  "MarkerAnalysisPlot3dDeleteCB",
+  "MarkerAnalysisPlot3dSliceCB"
 };
 
 const char* Marker::analysisPandaCB_[] = {

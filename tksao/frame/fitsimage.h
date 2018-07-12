@@ -132,6 +132,7 @@ class FitsImage {
   AstFrameSet** ast_;  // ast frameset;
 #else
   AstFrameSet* ast_;  // ast frameset;
+  AstFrameSet* astAlt_;  // ast frameset;
 #endif
 
  private:

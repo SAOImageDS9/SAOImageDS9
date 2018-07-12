@@ -1070,9 +1070,9 @@ void FitsImage::iisSetFileName(const char* fn)
   iisFileName = dupstr(fn);
 }
 
+#ifndef NEWWCS
 void FitsImage::initWCS()
 {
-#ifndef NEWWCS
   if (wcs_) {
     for (int ii=0; ii<MULTWCSA; ii++)
       if (manageWCS_ && wcs_[ii])
@@ -1102,29 +1102,6 @@ void FitsImage::initWCS()
   wcsx_ = new WCSx*[MULTWCS];
   for (int ii=0; ii<MULTWCS; ii++)
     wcsx_[ii] = NULL;
-#else
-  if (manageWCS_) {
-    if (ast_)
-      astAnnul(ast_);
-    ast_ = NULL;
-    if (wcs_)
-      delete [] wcs_;
-    wcs_ = NULL;
-    if (wcs_)
-      delete [] wcs_;
-    wcs_ = NULL;
-    if (wcsEqu_)
-      delete [] wcsEqu_;
-    wcsEqu_ = NULL;
-    if (wcsCel_)
-      delete [] wcsCel_;
-    wcsCel_ = NULL;
-    if (wcs3D_)
-      delete [] wcs3D_;
-    wcs3D_ = NULL;
-    wcsHPX_ = 0;
-  }
-#endif
 
   // shareWCS?
   manageWCS_ =1;
@@ -1137,26 +1114,14 @@ void FitsImage::initWCS()
       FitsImage* sptr = ptr->nextSlice();
       while (sptr) {
 	if (sptr == this) {
-#ifndef NEWWCS
 	  for (int ii=0; ii<MULTWCSA; ii++)
 	    wcs_[ii] = ptr->wcs_[ii];
 	  for (int ii=0; ii<MULTWCSA; ii++)
 	    ast_[ii] = ptr->ast_[ii];
 	  for (int ii=0; ii<MULTWCS; ii++)
 	    wcsx_[ii] = ptr->wcsx_[ii];
-#else
-	  ast_ = ptr->ast_;
-	  astInv_ = ptr->astInv_;
-	  wcs_ = ptr->wcs_;
-	  wcsEqu_ = ptr->wcsEqu_;
-	  wcsCel_ = ptr->wcsCel_;
-	  wcs3D_ = ptr->wcs3D_;
-	  wcsHPX_ = ptr->wcsHPX_;
-#endif
 
-#ifndef NEWWCS
 	  initWCSPhysical();
-#endif
 	  manageWCS_ =0;
 	  return;
 	}
@@ -1178,7 +1143,6 @@ void FitsImage::initWCS()
     prim = image_->primary() && image_->inherit() ? image_->primary() : NULL;
   }
 
-#ifndef NEWWCS
   // wcsinit is sloooowwww! so try to figure it out first
   // look first for default WCS. Let wcsinit figure it out since there can
   // be many different non-standard wcs's present
@@ -1225,19 +1189,7 @@ void FitsImage::initWCS()
 	astShow(ast_[ii]);
     }
   }
-#else
-  astInit(hd, prim);
-  wcsInit();
-  wcsEquInit();
-  wcsCelInit();
-  wcs3DInit();
-  wcsHPXInit();
-  
-  if (DebugAST && ast_)
-    astShow(ast_);
-#endif
 
-#ifndef NEWWCS
   // WCSDEP
   if (hd->find("WCSDEP")) {
     char* str = hd->getString("WCSDEP");
@@ -1319,8 +1271,84 @@ void FitsImage::initWCS()
       }
     }
   }
-#endif
 }
+
+#else
+
+void FitsImage::initWCS()
+{
+  if (manageWCS_) {
+    if (ast_)
+      astAnnul(ast_);
+    ast_ = NULL;
+    if (wcs_)
+      delete [] wcs_;
+    wcs_ = NULL;
+    if (wcs_)
+      delete [] wcs_;
+    wcs_ = NULL;
+    if (wcsEqu_)
+      delete [] wcsEqu_;
+    wcsEqu_ = NULL;
+    if (wcsCel_)
+      delete [] wcsCel_;
+    wcsCel_ = NULL;
+    if (wcs3D_)
+      delete [] wcs3D_;
+    wcs3D_ = NULL;
+    wcsHPX_ = 0;
+  }
+
+  // shareWCS?
+  manageWCS_ =1;
+  if (context_->shareWCS()) {
+    FitsImage* ptr = context_->fits;
+    while (ptr) {
+      if (ptr == this)
+	break;
+
+      FitsImage* sptr = ptr->nextSlice();
+      while (sptr) {
+	if (sptr == this) {
+	  ast_ = ptr->ast_;
+	  astInv_ = ptr->astInv_;
+	  wcs_ = ptr->wcs_;
+	  wcsEqu_ = ptr->wcsEqu_;
+	  wcsCel_ = ptr->wcsCel_;
+	  wcs3D_ = ptr->wcs3D_;
+	  wcsHPX_ = ptr->wcsHPX_;
+
+	  manageWCS_ =0;
+	  return;
+	}
+	sptr = sptr->nextSlice();
+      }
+      ptr = ptr->nextMosaic();
+    }
+  }
+
+  FitsHead* hd =NULL;
+  FitsHead* prim =NULL;
+  if (wcsHeader_)
+    hd = wcsHeader_;
+  else if (altHeader_)
+    hd = altHeader_;
+  else {
+    hd = image_->head();
+    prim = image_->primary() && image_->inherit() ? image_->primary() : NULL;
+  }
+
+  astInit(hd, prim);
+  wcsInit();
+  wcsEquInit();
+  wcsCelInit();
+  wcs3DInit();
+  wcsHPXInit();
+  
+  if (DebugAST && ast_)
+    astShow(ast_);
+}
+#endif
 
 #ifndef NEWWCS
 void FitsImage::initWCSPhysical()
@@ -1350,6 +1378,7 @@ void FitsImage::initWCSPhysical()
 }
 #endif
 
+#ifndef NEWWCS
 void FitsImage::initWCS0(const Vector& pix)
 {
   FitsHead* hd =NULL;
@@ -1363,7 +1392,6 @@ void FitsImage::initWCS0(const Vector& pix)
     prim = image_->primary() && image_->inherit() ? image_->primary() : NULL;
   }
 
-#ifndef NEWWCS
   int ii = Coord::WCS0-Coord::WCS;
   if (wcs_[ii])
     wcsfree(wcs_[ii]);
@@ -1392,8 +1420,12 @@ void FitsImage::initWCS0(const Vector& pix)
     if (DebugAST)
       astShow(ast_[ii]);
   }
-#endif
 }
+#else
+void FitsImage::initWCS0(const Vector& pix)
+{
+}
+#endif
 
 void FitsImage::load()
 {
@@ -2353,9 +2385,9 @@ void FitsImage::resetWCS()
   initWCS();
 }
 
+#ifndef NEWWCS
 void FitsImage::resetWCS0()
 {
-#ifndef NEWWCS
   int ii = Coord::WCS0-Coord::WCS;
   if (wcs_[ii])
     wcsfree(wcs_[ii]);
@@ -2364,8 +2396,12 @@ void FitsImage::resetWCS0()
   if (ast_[ii])
     astAnnul(ast_[ii]);
   ast_[ii] = NULL;
-#endif
 }
+#else
+void FitsImage::resetWCS0()
+{
+}
+#endif
 
 char* FitsImage::root(const char* fn)
 {

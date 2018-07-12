@@ -1351,34 +1351,6 @@ void FitsImage::initWCS()
 #endif
 
 #ifndef NEWWCS
-void FitsImage::initWCSPhysical()
-{
-  // now see if we have a 'physical' wcs, if so, set LTMV keywords
-  keyLTMV =0;
-  for (int ii=1; ii<MULTWCS; ii++) {
-    if (wcs_[ii] && 
-	wcs_[ii]->wcsname && 
-	!strncmp(wcs_[ii]->wcsname, "PHYSICAL", 8)) {
-      keyLTMV = 1;
-
-      double ltm11 = wcs_[ii]->cd[0] != 0 ? 1/wcs_[ii]->cd[0] : 0;
-      double ltm12 = wcs_[ii]->cd[1] != 0 ? 1/wcs_[ii]->cd[1] : 0;
-      double ltm21 = wcs_[ii]->cd[2] != 0 ? 1/wcs_[ii]->cd[2] : 0;
-      double ltm22 = wcs_[ii]->cd[3] != 0 ? 1/wcs_[ii]->cd[3] : 0;
-
-      double ltv1 = wcs_[ii]->crpix[0] -
-	wcs_[ii]->crval[0]*ltm11 - wcs_[ii]->crval[1]*ltm21;
-      double ltv2 = wcs_[ii]->crpix[1] -
-	wcs_[ii]->crval[0]*ltm12 - wcs_[ii]->crval[1]*ltm22;
-
-      physicalToImage = Matrix(ltm11, ltm12, ltm21, ltm22, ltv1, ltv2);
-      imageToPhysical = physicalToImage.invert();
-    }
-  }
-}
-#endif
-
-#ifndef NEWWCS
 void FitsImage::initWCS0(const Vector& pix)
 {
   FitsHead* hd =NULL;
@@ -1424,6 +1396,34 @@ void FitsImage::initWCS0(const Vector& pix)
 #else
 void FitsImage::initWCS0(const Vector& pix)
 {
+}
+#endif
+
+#ifndef NEWWCS
+void FitsImage::initWCSPhysical()
+{
+  // now see if we have a 'physical' wcs, if so, set LTMV keywords
+  keyLTMV =0;
+  for (int ii=1; ii<MULTWCS; ii++) {
+    if (wcs_[ii] && 
+	wcs_[ii]->wcsname && 
+	!strncmp(wcs_[ii]->wcsname, "PHYSICAL", 8)) {
+      keyLTMV = 1;
+
+      double ltm11 = wcs_[ii]->cd[0] != 0 ? 1/wcs_[ii]->cd[0] : 0;
+      double ltm12 = wcs_[ii]->cd[1] != 0 ? 1/wcs_[ii]->cd[1] : 0;
+      double ltm21 = wcs_[ii]->cd[2] != 0 ? 1/wcs_[ii]->cd[2] : 0;
+      double ltm22 = wcs_[ii]->cd[3] != 0 ? 1/wcs_[ii]->cd[3] : 0;
+
+      double ltv1 = wcs_[ii]->crpix[0] -
+	wcs_[ii]->crval[0]*ltm11 - wcs_[ii]->crval[1]*ltm21;
+      double ltv2 = wcs_[ii]->crpix[1] -
+	wcs_[ii]->crval[0]*ltm12 - wcs_[ii]->crval[1]*ltm22;
+
+      physicalToImage = Matrix(ltm11, ltm12, ltm21, ltm22, ltv1, ltv2);
+      imageToPhysical = physicalToImage.invert();
+    }
+  }
 }
 #endif
 

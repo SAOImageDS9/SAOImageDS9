@@ -819,18 +819,30 @@ void Axis::linearScale(double min, double max)
     double range = max - min;
     if (ops->reqStep > 0.0) {
       step = ops->reqStep;
-      while ((2 * step) >= range)
+      while ((2 * step) >= range && step >= (2 * DBL_EPSILON)) {
 	step *= 0.5;
-    } 
+      }
+    }
     else {
       range = niceNum(range, 0);
       step = niceNum(range / ops->reqNumMajorTicks, 1);
     }
-	
-    axisMin = tickMin = floor(min / step) * step + 0.0;
-    axisMax = tickMax = ceil(max / step) * step + 0.0;
-	
-    nTicks = (int)((tickMax-tickMin) / step) + 1;
+    if (step >= DBL_EPSILON) {
+	axisMin = tickMin = floor(min / step) * step + 0.0;
+	axisMax = tickMax = ceil(max / step) * step + 0.0;
+	nTicks = (int)((tickMax-tickMin) / step) + 1;
+    } else {
+	/*
+	 * A zero step can result from having a too small range, such that
+	 * the floating point can no longer represent fractions of it (think
+	 * subnormals).  In such a case, let's just have two steps: the
+	 * minimum and the maximum.
+	 */
+	axisMin = tickMin = min;
+	axisMax = tickMax = min + DBL_EPSILON;
+	step = DBL_EPSILON;
+	nTicks = 2;
+    }
   } 
   majorSweep_.step = step;
   majorSweep_.initial = tickMin;
@@ -870,7 +882,7 @@ void Axis::setRange(AxisRange *rangePtr, double min, double max)
   rangePtr->max = max;
   rangePtr->range = max - min;
   if (fabs(rangePtr->range) < DBL_EPSILON) {
-    rangePtr->range = 1.0;
+    rangePtr->range = DBL_EPSILON;
   }
   rangePtr->scale = 1.0 / rangePtr->range;
 }

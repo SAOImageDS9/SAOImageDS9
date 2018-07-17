@@ -932,7 +932,7 @@ void FitsImage::altWCS(istream& str)
     delete altHeader_;
 
   altHeader_ = hh;
-  initWCS();
+  initWCS(altHeader_, NULL);
 }
 
 void FitsImage::appendWCS(istream& str)
@@ -972,7 +972,7 @@ void FitsImage::appendWCS(istream& str)
     delete wcsHeader_;
 
   wcsHeader_ = new FitsHead(cards,ll,FitsHead::ALLOC);
-  initWCS();
+  initWCS(wcsHeader_, NULL);
 }
 
 char* FitsImage::display(FitsHead* hd)
@@ -1071,7 +1071,7 @@ void FitsImage::iisSetFileName(const char* fn)
 }
 
 #ifndef NEWWCS
-void FitsImage::initWCS()
+void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
 {
   if (wcs_) {
     for (int ii=0; ii<MULTWCSA; ii++)
@@ -1129,18 +1129,6 @@ void FitsImage::initWCS()
       }
       ptr = ptr->nextMosaic();
     }
-  }
-
-  // WCSx
-  FitsHead* hd =NULL;
-  FitsHead* prim =NULL;
-  if (wcsHeader_)
-    hd = wcsHeader_;
-  else if (altHeader_)
-    hd = altHeader_;
-  else {
-    hd = image_->head();
-    prim = image_->primary() && image_->inherit() ? image_->primary() : NULL;
   }
 
   // wcsinit is sloooowwww! so try to figure it out first
@@ -1275,7 +1263,7 @@ void FitsImage::initWCS()
 
 #else
 
-void FitsImage::initWCS()
+void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
 {
   if (manageWCS_) {
     if (ast_)
@@ -1325,17 +1313,6 @@ void FitsImage::initWCS()
       }
       ptr = ptr->nextMosaic();
     }
-  }
-
-  FitsHead* hd =NULL;
-  FitsHead* prim =NULL;
-  if (wcsHeader_)
-    hd = wcsHeader_;
-  else if (altHeader_)
-    hd = altHeader_;
-  else {
-    hd = image_->head();
-    prim = image_->primary() && image_->inherit() ? image_->primary() : NULL;
   }
 
   astInit(hd, prim);
@@ -2322,7 +2299,7 @@ void FitsImage::replaceWCS(istream& str)
     delete wcsHeader_;
 
   wcsHeader_ = hh;
-  initWCS();
+  initWCS(wcsHeader_, NULL);
 }
 
 void FitsImage::reset()
@@ -2382,7 +2359,8 @@ void FitsImage::resetWCS()
     delete wcsHeader_;
 
   wcsHeader_ = NULL;
-  initWCS();
+  initWCS(image_->head(),
+	  image_->primary() && image_->inherit() ? image_->primary() : NULL);
 }
 
 #ifndef NEWWCS

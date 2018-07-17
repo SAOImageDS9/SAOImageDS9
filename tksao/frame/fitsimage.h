@@ -150,7 +150,7 @@ class FitsImage {
   void initBin();
   void initHPX();
 
-  void initWCS();
+  void initWCS(FitsHead*, FitsHead*);
 #ifndef NEWWCS
   void initWCSPhysical();
   void wcsShow(WorldCoor*);

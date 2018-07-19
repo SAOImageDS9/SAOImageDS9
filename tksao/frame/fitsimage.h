@@ -160,9 +160,7 @@ class FitsImage {
   void wcs2ast(int, FitsHead*, FitsHead*, void*);
   void wcs2ast0(int, FitsHead*, FitsHead*, void*);
   void header2ast(int,FitsHead*, void*);
-  void putFitsCard(void* chan, const char* key, const char* value);
-  void putFitsCard(void* chan, const char* key, int value);
-  void putFitsCard(void* chan, const char* key, double value);
+  void astinit0(int, FitsHead*, FitsHead*);
 #else
   void astInit(FitsHead*, FitsHead*);
   void wcsInit();
@@ -171,7 +169,9 @@ class FitsImage {
   void wcs3DInit();
   void wcsHPXInit();
 #endif
-  void astinit0(int, FitsHead*, FitsHead*);
+  void putFitsCard(void* chan, const char* key, const char* value);
+  void putFitsCard(void* chan, const char* key, int value);
+  void putFitsCard(void* chan, const char* key, double value);
   int checkWCS(Vector&);
   int checkWCS(Vector3d&);
   AstFrameSet* fits2ast(FitsHead*);  

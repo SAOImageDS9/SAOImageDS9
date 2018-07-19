@@ -1373,6 +1373,124 @@ void FitsImage::initWCS0(const Vector& pix)
 #else
 void FitsImage::initWCS0(const Vector& pix)
 {
+  FitsHead* hd =NULL;
+  if (wcsHeader_)
+    hd = wcsHeader_;
+  else if (altHeader_)
+    hd = altHeader_;
+  else
+    hd = image_->head();
+
+  // read wcs struct into astChannel
+  // we may have an error, just reset
+  astClearStatus;
+
+  // new fitschan
+  AstFitsChan* chan = astFitsChan(NULL, NULL, "");
+  if (!astOK || chan == AST__NULL)
+    return NULL;
+
+  // no warning messages
+  astClear(chan,"Warnings");
+
+  char key1[8];
+  char key2[8];
+
+  // basics (needed by fitschan.c)
+  putFitsCard(chan, "NAXIS1", (int)naxis(0));
+  putFitsCard(chan, "NAXIS2", (int)naxis(1));
+
+  // CTYPE
+  strcpy(key1, "CTYPE1 ");
+  strcpy(key2, "CTYPE2 ");
+  putFitsCard(chan, key1, hd->getString(key1));
+  putFitsCard(chan, key2, hd->getString(key2));
+
+  // CRPIX
+  strcpy(key1, "CRPIX1 ");
+  strcpy(key2, "CRPIX2 ");
+  putFitsCard(chan, key1, hd->getReal(key1,0));
+  putFitsCard(chan, key2, hd->getReal(key2,0));
+
+  // CRVAL
+  strcpy(key1, "CRVAL1 ");
+  strcpy(key2, "CRVAL2 ");
+  putFitsCard(chan, key1, hd->getReal(key1,0));
+  putFitsCard(chan, key2, hd->getReal(key2,0));
+
+  // CDELT/CD/PC
+  strcpy(key1, "CDELT1 ");
+  strcpy(key2, "CDELT2 ");
+
+  char pkey1[8];
+  char pkey2[8];
+  char pkey3[8];
+  char pkey4[8];
+  strcpy(pkey1, "PC1_1 ");
+  strcpy(pkey2, "PC1_2 ");
+  strcpy(pkey3, "PC2_1 ");
+  strcpy(pkey4, "PC2_2 ");
+
+  char ckey1[8];
+  char ckey2[8];
+  char ckey3[8];
+  char ckey4[8];
+  strcpy(ckey1, "CD1_1 ");
+  strcpy(ckey2, "CD1_2 ");
+  strcpy(ckey3, "CD2_1 ");
+  strcpy(ckey4, "CD2_2 ");
+
+  // Give CD priority over CDELT
+  if (hd->find(ckey1) || 
+      hd->find(ckey2) ||
+      hd->find(ckey3) || 
+      hd->find(ckey4)) {
+    putFitsCard(chan, ckey1, hd->getReal(ckey1,1));
+    putFitsCard(chan, ckey2, hd->getReal(ckey2,0));
+    putFitsCard(chan, ckey3, hd->getReal(ckey3,0));
+    putFitsCard(chan, ckey4, hd->getReal(ckey4,1));
+  }
+  else if (hd->find(key1) || hd->find(key2)) {
+    putFitsCard(chan, key1, hd->getReal(key1,1));
+    putFitsCard(chan, key2, hd->getReal(key2,1));
+
+    if (hd->find(pkey1) || 
+	hd->find(pkey2) ||
+	hd->find(pkey3) || 
+	hd->find(pkey4)) {
+      putFitsCard(chan, pkey1, hd->getReal(pkey1,1));
+      putFitsCard(chan, pkey2, hd->getReal(pkey2,1));
+      putFitsCard(chan, pkey3, hd->getReal(pkey3,1));
+      putFitsCard(chan, pkey4, hd->getReal(pkey4,1));
+    }
+  }
+
+  strcpy(key1, "EQUINOX");
+  putFitsCard(chan, key1, hd->getString(key1));
+  strcpy(key2, "RADESYS");
+  putFitsCard(chan, key2, hd->getString(key2));
+
+  strcpy(key1, "MJD-OBS");
+  putFitsCard(chan, key1, hd->getString(key1));
+  strcpy(key2, "DATE-OBS");
+  putFitsCard(chan, key2, hd->getString(key2));
+
+  // all done
+  // rewind chan
+  astClear(chan, "Card");
+
+  // parse header
+  AstFrameSet* frameSet = (AstFrameSet*)astRead(chan);
+
+  // do we have anything?
+  if (!astOK || frameSet == AST__NULL || 
+      strncmp(astGetC(frameSet,"Class"), "FrameSet", 8))
+    return NULL;
+
+  astShow(frameSet);
+
+  // cleanup
+  astAnnul(chan);
 }
 #endif
 
@@ -5345,6 +5463,7 @@ void FitsImage::wcs2ast0(int ww, FitsHead* hd, FitsHead* prim, void* chan)
 
   putFitsCard(chan, "RADESYS", wcs_[ww]->radecsys);
 }
+#endif
 
 void FitsImage::putFitsCard(void* chan, const char* key, const char* value)
 {
@@ -5401,4 +5520,3 @@ void FitsImage::putFitsCard(void* chan, const char* key, double value)
   if (DebugAST)
     cerr << str.str().c_str() << endl;
 }
-#endif

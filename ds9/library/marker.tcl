@@ -1226,7 +1226,6 @@ proc MarkerSave {} {
 	    $marker(format) $marker(system) $marker(sky) \
 	    $marker(skyformat) $marker(strip)
     }
-    puts "z $errorInfo"
 }
 
 proc MarkerInfo {} {

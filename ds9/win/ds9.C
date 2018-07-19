@@ -22,7 +22,6 @@ extern "C" {
 
   int Tkblt_Init(Tcl_Interp*);
   int Tktable_Init(Tcl_Interp*);
-  //  int Tclcheckdns_Init(Tcl_Interp*);
   int Tksao_Init(Tcl_Interp*);
   int Tkhtml1_Init(Tcl_Interp*);
   int Tkmpeg_Init(Tcl_Interp*);

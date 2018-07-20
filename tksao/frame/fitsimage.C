@@ -107,7 +107,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   refToImage3d = dataToImage3d;
 
   manageWCS_ =1;
-#ifndef NEWWCS
+#ifdef OLDWCS
   wcs_ =NULL;
   ast_ =NULL;
   wcsx_ =NULL;
@@ -175,7 +175,7 @@ FitsImage::~FitsImage()
       delete analysisdata_;
   }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
   if (wcs_) {
     for (int ii=0; ii<MULTWCSA; ii++)
       if (manageWCS_ && wcs_[ii])
@@ -1070,7 +1070,7 @@ void FitsImage::iisSetFileName(const char* fn)
   iisFileName = dupstr(fn);
 }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
 {
   if (wcs_) {
@@ -1327,7 +1327,7 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void FitsImage::initWCS0(const Vector& pix)
 {
   FitsHead* hd =NULL;
@@ -1388,7 +1388,7 @@ void FitsImage::initWCS0(const Vector& pix)
   // new fitschan
   AstFitsChan* chan = astFitsChan(NULL, NULL, "");
   if (!astOK || chan == AST__NULL)
-    return NULL;
+    return;
 
   // no warning messages
   astClear(chan,"Warnings");
@@ -1485,7 +1485,7 @@ void FitsImage::initWCS0(const Vector& pix)
   // do we have anything?
   if (!astOK || frameSet == AST__NULL || 
       strncmp(astGetC(frameSet,"Class"), "FrameSet", 8))
-    return NULL;
+    return;
 
   astShow(frameSet);
 
@@ -1494,7 +1494,7 @@ void FitsImage::initWCS0(const Vector& pix)
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void FitsImage::initWCSPhysical()
 {
   // now see if we have a 'physical' wcs, if so, set LTMV keywords
@@ -1573,7 +1573,7 @@ void FitsImage::load()
   data_ = analysisdata_;
 }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void FitsImage::match(const char* xxname1, const char* yyname1,
 		      Coord::CoordSystem sys1, Coord::SkyFrame sky1,
 		      const char* xxname2, const char* yyname2,
@@ -2481,7 +2481,7 @@ void FitsImage::resetWCS()
 	  image_->primary() && image_->inherit() ? image_->primary() : NULL);
 }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void FitsImage::resetWCS0()
 {
   int ii = Coord::WCS0-Coord::WCS;
@@ -3050,7 +3050,7 @@ void FitsImage::updatePS(Matrix3d ps)
 
 // WCS
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
 {
   if (hasWCS(sys)) {
@@ -3080,7 +3080,7 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
 }
 #endif
 
-#ifdef NEWWCS
+#ifndef OLDWCS
 double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
 {
   if (!hasWCS(sys))
@@ -3121,7 +3121,7 @@ double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
 						Coord::SkyFrame sky)
 {
@@ -3180,7 +3180,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   if (hasWCS(sys)) {
@@ -3250,7 +3250,7 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 const char* FitsImage::getWCSName(Coord::CoordSystem sys) 
 {
   return (wcs_ && wcs_[sys-Coord::WCS]) ? 
@@ -3266,7 +3266,7 @@ const char* FitsImage::getWCSName(Coord::CoordSystem sys)
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
@@ -3301,7 +3301,7 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 			 Coord::SkyFrame sky, Coord::SkyFormat format,
 			 char* lbuf)
@@ -3430,7 +3430,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 }
 #endif
 
-#ifdef NEWWCS
+#ifndef OLDWCS
 Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {
@@ -3512,7 +3512,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
@@ -3566,7 +3566,7 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
 			     Coord::CoordSystem sys)
 {
@@ -3596,7 +3596,7 @@ double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 int FitsImage::hasWCS(Coord::CoordSystem sys)
 {
   int ss = sys-Coord::WCS;
@@ -3673,7 +3673,7 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 
 // WCSX
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 
 int FitsImage::hasWCS3D(Coord::CoordSystem sys)
 {
@@ -3714,7 +3714,7 @@ int FitsImage::hasWCS3D(Coord::CoordSystem sys)
 
 // WCS/AST support
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void FitsImage::wcsShow(WorldCoor* ww)
 {
   if (!ww)
@@ -3980,7 +3980,7 @@ void FitsImage::wcsHPXInit()
 
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void FitsImage::astinit0(int ss, FitsHead* hd, FitsHead* prim)
 {
   if (!wcs_[ss]) {
@@ -4013,7 +4013,7 @@ int FitsImage::checkWCS(Vector3d& vv)
 	  fabs(vv[2]) < FLT_MAX ) ? 1 : 0;
 }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void FitsImage::setWCSFormat(AstFrameSet* aa, int id, const char* format)
 {
   // is it already set?
@@ -4049,7 +4049,7 @@ void FitsImage::setWCSFormat(int id, const char* format)
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void FitsImage::setWCSSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 {
   // is sky frame
@@ -4194,7 +4194,7 @@ void FitsImage::setWCSSkyFrame(Coord::CoordSystem sys, Coord::SkyFrame sky)
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
 {
   astClearStatus;
@@ -4205,7 +4205,7 @@ int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 Vector FitsImage::wcsTran(AstFrameSet* ast, const Vector& in, int forward)
 {
   double xout, yout;
@@ -4433,7 +4433,7 @@ Vector3d FitsImage::wcsTran(const Vector3d& in, int forward)
 
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 double FitsImage::wcsDistance(AstFrameSet* ast, const Vector& vv1,
 			      const Vector& vv2)
 {
@@ -4484,7 +4484,7 @@ double FitsImage::wcsDistance(const Vector& vv1, const Vector& vv2)
 
 #endif
 
-#ifdef NEWWCS
+#ifndef OLDWCS
 double FitsImage::wcsAngle(const Vector& vv1, const Vector& vv2,
 			   const Vector& vv3)
 {
@@ -4580,7 +4580,7 @@ double FitsImage::wcsAxAngle(const Vector& vv1, const Vector& vv2)
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 AstFrameSet* FitsImage::fits2ast(FitsHead* hd) 
 {
   // we may have an error, just reset
@@ -4809,7 +4809,7 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 AstFrameSet* FitsImage::buildast(int ss, FitsHead* hd, FitsHead* prim) 
 {
   if (DebugAST)

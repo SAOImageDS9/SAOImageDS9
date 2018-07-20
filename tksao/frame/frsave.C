@@ -439,7 +439,7 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
   // WCS
   if (currentContext->fits->hasWCS(Coord::WCS)) {
 
-#ifndef NEWWCS
+#ifdef OLDWCS
     WorldCoor* wcs = currentContext->fits->getWCS(Coord::WCS);
 
     // abort if this is a DSS, ZPN, TNX

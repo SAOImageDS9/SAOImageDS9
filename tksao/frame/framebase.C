@@ -284,7 +284,7 @@ void FrameBase::updateBin(const Matrix& mx)
   Base::updateBin(mx);
 }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void FrameBase::updatePanner()
 {
   Base::updatePanner();

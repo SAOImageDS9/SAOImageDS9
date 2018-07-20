@@ -22,7 +22,7 @@ Grid3d::Grid3d(Widget* p, Coord::CoordSystem sys, Coord::SkyFrame sky,
 Grid3d::~Grid3d()
 {}
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 static FitsImage* foobar;
 
 void bar(AstMapping* that, int npoint, int ncoord_in, const double* ptr_in[],
@@ -81,7 +81,7 @@ int Grid3d::doit(RenderMode rm)
   default:
     {
 
-#ifndef NEWWCS
+#ifdef OLDWCS
       foobar = fits;
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_[system_-Coord::WCS]);
       fits->setWCSSkyFrame(ast, sky_);

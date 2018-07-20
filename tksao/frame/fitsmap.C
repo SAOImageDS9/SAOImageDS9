@@ -59,7 +59,7 @@ Vector FitsImage::mapToRef(const Vector& vv, Coord::CoordSystem in,
   return Vector();
 }
 
-#ifdef NEWWCS
+#ifndef OLDWCS
 Vector3d FitsImage::mapFromRef(const Vector3d& vv, Coord::CoordSystem out,
 			       Coord::SkyFrame sky)
 {
@@ -143,7 +143,7 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
 
 // Map Length
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
 				Coord::DistFormat dist)
 {
@@ -247,7 +247,7 @@ Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys, 
 			      Coord::DistFormat dist)
 {
@@ -516,7 +516,7 @@ void FitsImage::listDistFromRef(ostream& str,
 
 // 3D
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 double FitsImage::mapFromImage3d(double dd, Coord::CoordSystem sys)
 {
   if (sys >= Coord::WCS)

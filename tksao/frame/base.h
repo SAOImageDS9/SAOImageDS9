@@ -528,7 +528,7 @@ public:
   virtual FrameType frameType() =0;
   void calcAlignWCS(FitsImage*, Coord::CoordSystem, Coord::SkyFrame,
 		    Coord::Orientation*, Matrix*, double*);
-#ifndef NEWWCS
+#ifdef OLDWCS
   void calcAlignWCS(FitsImage*, FitsImage*, Coord::CoordSystem, Coord::CoordSystem, Coord::SkyFrame,
 		    Coord::Orientation*, Matrix*, double*, Vector*);
 #endif

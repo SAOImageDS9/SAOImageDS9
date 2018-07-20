@@ -90,7 +90,7 @@ void FrameRGB::alignWCS(Coord::CoordSystem sys, Coord::SkyFrame sky)
   updateRGBMatrices();
 }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void FrameRGB::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
 {
   if (!wcsAlign_ || !(keyContext->fits) || !ptr || 

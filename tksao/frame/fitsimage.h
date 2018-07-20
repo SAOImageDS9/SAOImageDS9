@@ -111,7 +111,7 @@ class FitsImage {
   int address[FTY_MAXAXES];
 
   int manageWCS_;
-#ifndef NEWWCS
+#ifdef OLDWCS
   WorldCoor** wcs_;    // wcs list
   WCSx** wcsx_;        // xth Axis WCS
 #else
@@ -128,7 +128,7 @@ class FitsImage {
   Matrix wcsToRef_;          // iraf/wcs matrix
 
  public:
-#ifndef NEWWCS
+#ifdef OLDWCS
   AstFrameSet** ast_;  // ast frameset;
 #else
   AstFrameSet* ast_;  // ast frameset;
@@ -151,7 +151,7 @@ class FitsImage {
   void initHPX();
 
   void initWCS(FitsHead*, FitsHead*);
-#ifndef NEWWCS
+#ifdef OLDWCS
   void initWCSPhysical();
   void wcsShow(WorldCoor*);
   void astinit(int, FitsHead*, FitsHead*);
@@ -385,7 +385,7 @@ class FitsImage {
 
   char* pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
 
-#ifndef NEWWCS
+#ifdef OLDWCS
   WCSx** wcsx() {return wcsx_;}
   double pix2wcsx(double, Coord::CoordSystem);
   double wcs2pixx(double, Coord::CoordSystem);
@@ -416,7 +416,7 @@ class FitsImage {
   double getWCSDist(const Vector&, const Vector&, Coord::CoordSystem);
   const char* getWCSName(Coord::CoordSystem);
 
-#ifndef NEWWCS
+#ifdef OLDWCS
   WorldCoor* getWCS(Coord::CoordSystem sys) 
   {return (wcs_ && wcs_[sys-Coord::WCS]) ? wcs_[sys-Coord::WCS] : NULL;}
   Vector getWCScdelt(Coord::CoordSystem);
@@ -470,7 +470,7 @@ class FitsImage {
   Vector mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   void mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
   Vector mapToRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
-#ifdef NEWWCS
+#ifndef OLDWCS
   Vector3d mapFromRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   Vector3d mapToRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
 #endif

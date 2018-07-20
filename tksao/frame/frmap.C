@@ -64,7 +64,7 @@ double Base::mapAngleToRef(double angle, Coord::CoordSystem sys,
   return zeroTWOPI(rr);
 }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 double Base::mapLenToRef(double d, Coord::InternalSystem sys)
 {
   Vector r = mapLenToRef(Vector(d,0),sys);

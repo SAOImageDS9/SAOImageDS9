@@ -58,7 +58,7 @@ int Grid25d::doit(RenderMode rm)
   default:
     {
       // set desired skyformat
-#ifndef NEWWCS
+#ifdef OLDWCS
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_[system_-Coord::WCS]);
       fits->setWCSSkyFrame(ast, sky_);
 #else

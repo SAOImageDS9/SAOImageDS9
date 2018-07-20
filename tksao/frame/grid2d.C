@@ -59,7 +59,7 @@ int Grid2d::doit(RenderMode rm)
     {
 
       // set desired skyformat
-#ifndef NEWWCS
+#ifdef OLDWCS
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_[system_-Coord::WCS]);
       fits->setWCSSkyFrame(ast, sky_);
 #else

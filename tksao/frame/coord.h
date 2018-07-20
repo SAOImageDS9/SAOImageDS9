@@ -19,7 +19,7 @@ class Coord {
   enum InternalSystem {WINDOW, CANVAS, WIDGET, USER, REF, 
 		       PANNER, MAGNIFIER, PS};
 
-#ifndef NEWWCS
+#ifdef OLDWCS
   enum CoordSystem {DATA, IMAGE, PHYSICAL, AMPLIFIER, DETECTOR, WCS, 
 		    WCSA, WCSB, WCSC, WCSD, WCSE, WCSF, WCSG, WCSH, WCSI,
 		    WCSJ, WCSK, WCSL, WCSM, WCSN, WCSO, WCSP, WCSQ, WCSR,

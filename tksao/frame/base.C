@@ -314,7 +314,7 @@ void Base::alignWCS(Coord::CoordSystem sys, Coord::SkyFrame sky)
 	       &wcsOrientation, &wcsOrientationMatrix, &wcsRotation);
 }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void Base::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
 {
   if (!wcsAlign_ || !ptr || !context->cfits || !hasWCS(wcsSystem_)) {
@@ -390,7 +390,7 @@ void Base::calcAlignWCS(FitsImage* fits1,
   }
 }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2, 
 			Coord::CoordSystem sys1, Coord::CoordSystem sys2, 
 			Coord::SkyFrame sky,
@@ -467,7 +467,7 @@ void Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2, 
 			  Coord::CoordSystem sys1, Coord::CoordSystem sys2, 
 			  Coord::SkyFrame sky)
@@ -1611,7 +1611,9 @@ void Base::updateBin(const Matrix& mx)
 
   alignWCS();
   updateColorScale();
-  update(MATRIX); // because we have changed zoom
+  // because we have changed zoom
+  //   now because repeated bin cmds will mult markers/contours relative
+  updateNow(MATRIX);
 
   // update markers call backs
   // wait til matrices have been updated so that any dialogs will print
@@ -1634,7 +1636,9 @@ void Base::updateBlock(const Vector& vv)
 
   alignWCS();
   updateColorScale();
-  update(MATRIX);
+  // because we have changed zoom
+  //   now because repeated bin cmds will mult markers/contours relative
+  updateNow(MATRIX);
 
   // update markers call backs
   // wait til matrices have been updated so that any dialogs will print

@@ -372,7 +372,7 @@ int Base::markerAnalysisRadial(Marker* pp, double** x, double** y, double** e,
   int unit =0;
   double xaxis =1;
   if (ptr->hasWCS(sys)) {
-#ifndef NEWWCS
+#ifdef OLDWCS
     Vector cdelt= ptr->getWCScdelt(sys);
     double ll = fabs(cdelt[0]);
 #else
@@ -389,7 +389,7 @@ int Base::markerAnalysisRadial(Marker* pp, double** x, double** y, double** e,
     }
   }
     
-#ifndef NEWWCS
+#ifdef OLDWCS
   Vector cdelt= ptr->getWCScdelt(sys);
   double aa = fabs(cdelt[0]*cdelt[1]);
 #else
@@ -495,7 +495,7 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
   int unit =0;
   double xaxis =1;
   if (ptr->hasWCS(sys)) {
-#ifndef NEWWCS
+#ifdef OLDWCS
     Vector cdelt= ptr->getWCScdelt(sys);
     double ll = fabs(cdelt[0]);
 #else
@@ -512,7 +512,7 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
     }
   }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
   Vector cdelt= ptr->getWCScdelt(sys);
   double aa = fabs(cdelt[0]*cdelt[1]);
 #else
@@ -832,7 +832,7 @@ int Base::markerAnalysisStats1(Marker* pp,FitsImage* ptr, ostream& str,
     return 0;
   default: 
     {
-#ifndef NEWWCS
+#ifdef OLDWCS
       Vector cdelt= ptr->getWCScdelt(sys);
       double ll = fabs(cdelt[0]);
 #else
@@ -878,7 +878,7 @@ void Base::markerAnalysisStats2(FitsImage* ptr, ostream& str,
   case 1:
     {
       // Cel WCS
-#ifndef NEWWCS
+#ifdef OLDWCS
       Vector cdelt= ptr->getWCScdelt(sys);
       double aa = fabs(cdelt[0]*cdelt[1]);
 #else
@@ -890,7 +890,7 @@ void Base::markerAnalysisStats2(FitsImage* ptr, ostream& str,
   case 2:
     {
       // Linear WCS
-#ifndef NEWWCS
+#ifdef OLDWCS
       Vector cdelt= ptr->getWCScdelt(sys);
       double aa = fabs(cdelt[0]*cdelt[1]);
 #else

@@ -152,7 +152,7 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
   getInfoClearValue(var);
 }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr, 
 			     FitsImage* sptr)
 {
@@ -256,7 +256,7 @@ void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr,
 }
 #endif
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void Frame3dBase::coordToTclArray(FitsImage* ptr, const Vector3d& vv, 
 				  Coord::CoordSystem out,
 				  const char* var, const char* base)
@@ -1010,7 +1010,7 @@ void Frame3dBase::updatePannerMatrices()
   Base::updatePannerMatrices();
 }
 
-#ifndef NEWWCS
+#ifdef OLDWCS
 void Frame3dBase::updatePanner()
 {
   // do this first

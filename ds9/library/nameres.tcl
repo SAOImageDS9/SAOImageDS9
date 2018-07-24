@@ -144,7 +144,7 @@ proc NRESCrosshair {varname} {
     global current
 
     if {($current(frame) != {})} {
-	if {[$current(frame) has wcs equatorial $var(system)]} {
+	if {[$current(frame) has wcs celestial $var(system)]} {
 	    if {($var(x) != {}) && ($var(y) != {})} {
 		set current(mode) crosshair
 		ChangeMode

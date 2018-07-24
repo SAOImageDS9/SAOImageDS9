@@ -140,7 +140,7 @@ proc MarkerAnalysisPandaAxisTitle {vvarname} {
 	    set ytitle "Surface Brightness (cnts/pixels**2)"
 	}
 	default {
-	    if {[$vvar(frame) has wcs equatorial $vvar(system)]} {
+	    if {[$vvar(frame) has wcs celestial $vvar(system)]} {
 		set xtitle "Avg Radius (arcsecs)"
 		set ytitle "Surface Brightness (cnts/arcsec**2)"
 	    } else {

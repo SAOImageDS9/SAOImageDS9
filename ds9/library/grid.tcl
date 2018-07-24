@@ -146,7 +146,7 @@ proc GridAdjustOptions {which} {
 	detector {}
 	default {
 	    if {$which != {}} {
-		if {[$which has wcs celestrial $grid(system)]} {
+		if {[$which has wcs celestial $grid(system)]} {
 		    set grid(grid,gapunit1) degrees
 		    set grid(grid,gapunit2) degrees
 		}
@@ -1039,7 +1039,7 @@ proc GridDefaultFormat1 {} {
 	detector -
 	amplifier {return {}}
 	default {
-	    if {[$current(frame) has wcs equatorial $grid(system)]} {
+	    if {[$current(frame) has wcs celestial $grid(system)]} {
 		switch $grid(sky) {
 		    fk4 -
 		    fk5 -
@@ -1061,7 +1061,7 @@ proc GridDefaultFormat1 {} {
 		}
 		return {}
 	    }
-	    if {[$current(frame) has wcs celestrial $grid(system)]} {
+	    if {[$current(frame) has wcs celestial $grid(system)]} {
 		switch $grid(skyformat) {
 		    degrees {return {d.3}}
 		    sexagesimal {return {dms.1}}
@@ -1083,7 +1083,7 @@ proc GridDefaultFormat2 {} {
 	detector -
 	amplifier {return {}}
 	default {
-	    if {[$current(frame) has wcs equatorial $grid(system)]} {
+	    if {[$current(frame) has wcs celestial $grid(system)]} {
 		switch $grid(sky) {
 		    fk4 -
 		    fk5 -
@@ -1105,7 +1105,7 @@ proc GridDefaultFormat2 {} {
 		}
 		return {}
 	    }
-	    if {[$current(frame) has wcs celestrial $grid(system)]} {
+	    if {[$current(frame) has wcs celestial $grid(system)]} {
 		switch $grid(skyformat) {
 		    degrees {return {d.3}}
 		    sexagesimal {return {dms.1}}

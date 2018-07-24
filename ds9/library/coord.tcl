@@ -118,7 +118,7 @@ proc DisplayCoordDialog {which x y} {
 	if {"$pcoord(wcs$l)" && [$which has wcs "wcs$l"]} {
 	    set cd "[$which get coordinates $x $y wcs$l $wcs(sky) $wcs(skyformat)]"
 
-	    if {[$which has wcs equatorial "wcs$l"]} {
+	    if {[$which has wcs celestial "wcs$l"]} {
 		append r " [lindex $cd 0] [lindex $cd 1] $wcs(sky)"
 	    } else {
 		set name [$which get wcs name "wcs$l"]

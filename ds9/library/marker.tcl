@@ -1351,12 +1351,12 @@ proc MarkerPaste {} {
 	    [$current(frame) has wcs $marker(copy,system)]} {
 
 	    # do we have an equatorial wcs?
-	    if {[$marker(copy) has wcs equatorial $marker(copy,system)] &&
-		[$current(frame) has wcs equatorial $marker(copy,system)]} {
+	    if {[$marker(copy) has wcs celestial $marker(copy,system)] &&
+		[$current(frame) has wcs celestial $marker(copy,system)]} {
 		# then use wcs
 		set cmd "[$marker(copy) marker paste $marker(copy,system)]"
 	    } else {
-		# mix of equatorial and non-equatorial wcs, use physical
+		# mix of celestial and non-celestial wcs, use physical
 		set cmd "[$marker(copy) marker paste physical]"
 	    }
 	} else {
@@ -1407,7 +1407,7 @@ proc MarkerBackup {ch which fdir rdir} {
 	set rfn $rdir/ds9.reg
 
 	catch {file delete -force $fn}
-	if {[$which has wcs equatorial wcs]} {
+	if {[$which has wcs celestial wcs]} {
 	    $which marker save \"$fn\" ds9 wcs fk5 degrees 0
 	} else {
 	    $which marker save \"$fn\" ds9 physical fk5 degrees 0

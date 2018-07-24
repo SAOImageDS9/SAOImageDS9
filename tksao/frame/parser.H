@@ -94,7 +94,7 @@
      CALLBACK_ = 310,
      CANVAS_ = 311,
      CATALOG_ = 312,
-     CELESTRIAL_ = 313,
+     CELESTIAL_ = 313,
      CENTER_ = 314,
      CENTROID_ = 315,
      CHANNEL_ = 316,
@@ -440,7 +440,7 @@
 #define CALLBACK_ 310
 #define CANVAS_ 311
 #define CATALOG_ 312
-#define CELESTRIAL_ 313
+#define CELESTIAL_ 313
 #define CENTER_ 314
 #define CENTROID_ 315
 #define CHANNEL_ 316

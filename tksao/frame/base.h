@@ -367,8 +367,8 @@ public:
   int hasDTMV();
   int hasLTMV();
   int hasWCS(Coord::CoordSystem);
-  int hasWCSEqu(Coord::CoordSystem); 
   int hasWCSCel(Coord::CoordSystem); 
+  int hasWCSLinear(Coord::CoordSystem); 
   int hasWCS3D(Coord::CoordSystem);
 
   virtual BBox imageBBox(FrScale::SecMode);
@@ -711,8 +711,8 @@ public:
   void hasImageCmd();
   void hasWCSAltCmd();
   void hasWCSCmd(Coord::CoordSystem);
-  void hasWCSEquCmd(Coord::CoordSystem);
   void hasWCSCelCmd(Coord::CoordSystem);
+  void hasWCSLinearCmd(Coord::CoordSystem);
   void hasWCS3DCmd(Coord::CoordSystem);
 
   // Crop Commands

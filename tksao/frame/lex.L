@@ -73,7 +73,7 @@ bw		{return BW_;}
 callback	{return CALLBACK_;}
 canvas		{return CANVAS_;}
 catalog		{return CATALOG_;}
-celestrial	{return CELESTRIAL_;}
+celestial	{return CELESTIAL_;}
 center		{return CENTER_;}
 centroid	{return CENTROID_;}
 channel		{return CHANNEL_;}
@@ -130,7 +130,7 @@ end		{return END_;}
 envi		{return ENVI_;}
 epanda		{return EPANDA_;}
 epsilon         {return EPSILON_;}
-equatorial	{return EQUATORIAL_;}
+equatorial      {return EQUATORIAL_;}
 erase		{return ERASE_;}
 ext		{return EXT_;}
 factor		{return FACTOR_;}

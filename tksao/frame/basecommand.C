@@ -2340,14 +2340,14 @@ void Base::hasWCSAltCmd()
   Tcl_AppendResult(interp, (currentContext->cfits && currentContext->cfits->wcsHeader() ? "1" : "0"), NULL);
 }
 
-void Base::hasWCSEquCmd(Coord::CoordSystem sys)
-{
-  Tcl_AppendResult(interp, (hasWCSEqu(sys) ? "1" : "0"), NULL);
-}
-
 void Base::hasWCSCelCmd(Coord::CoordSystem sys)
 {
   Tcl_AppendResult(interp, (hasWCSCel(sys) ? "1" : "0"), NULL);
+}
+
+void Base::hasWCSLinearCmd(Coord::CoordSystem sys)
+{
+  Tcl_AppendResult(interp, (hasWCSLinear(sys) ? "1" : "0"), NULL);
 }
 
 void Base::hasWCS3DCmd(Coord::CoordSystem sys)
@@ -2941,18 +2941,8 @@ void Base::wcsCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
 		  Coord::SkyFormat format)
 {
   wcsSystem_ = sys;
-  if (hasWCSEqu(sys)) {
-    wcsSky_ = sky;
-    wcsSkyFormat_ = format;
-  }
-  else if (hasWCSCel(sys)) {
-    wcsSky_ = Coord::GALACTIC;
-    wcsSkyFormat_ = format;
-  }
-  else {
-    wcsSky_ = sky;
-    wcsSkyFormat_ = format;
-  }
+  wcsSky_ = sky;
+  wcsSkyFormat_ = format;
 }
 
 void Base::wcsAlignCmd(int which)
@@ -2976,13 +2966,7 @@ void Base::wcsAlignCmd(int which, FitsImage* ptr, Coord::CoordSystem sys,
 		       Coord::SkyFrame sky)
 {
   wcsAlign_ = which;
-
-  if (hasWCSEqu(sys))
-    wcsSky_ = sky;
-  else if (hasWCSCel(sys))
-    wcsSky_ = Coord::GALACTIC;
-  else
-    wcsSky_ = sky;
+  wcsSky_ = sky;
 
   alignWCS(ptr, sys);
   update(MATRIX);

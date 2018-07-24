@@ -493,7 +493,7 @@ proc SIAUpdate {varname} {
     if {[winfo exists $var(top)]} {
 	set var(name) {}
 	if {$current(frame) != {} } {
-	    if {[$current(frame) has wcs equatorial $wcs(system)]} {
+	    if {[$current(frame) has wcs celestial $wcs(system)]} {
 		set coord [$current(frame) get fits center \
 			       $wcs(system) $var(sky) $var(skyformat)]
 		set var(x) [lindex $coord 0]
@@ -530,7 +530,7 @@ proc SIACrosshair {varname} {
     if {[winfo exists $var(top)]} {
 	set var(name) {}
 	if {$current(frame) != {} } {
-	    if {[$current(frame) has wcs equatorial $wcs(system)]} {
+	    if {[$current(frame) has wcs celestial $wcs(system)]} {
 		set coord [$current(frame) get crosshair \
 			       $wcs(system) $var(sky) $var(skyformat)]
 		set var(x) [lindex $coord 0]

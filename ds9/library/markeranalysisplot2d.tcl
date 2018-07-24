@@ -220,7 +220,7 @@ proc MarkerAnalysisPlot2dXAxisTitle {vvarname} {
 	amplifier -
 	detector {set xtitle "$vvar(system)"}
 	default {
-	    if {[$vvar(frame) has wcs equatorial $vvar(system)]} {
+	    if {[$vvar(frame) has wcs celestial $vvar(system)]} {
 		set xtitle "$vvar(system)"
 	    } else {
 		set xtitle "[$vvar(frame) get wcs name $vvar(system)]"

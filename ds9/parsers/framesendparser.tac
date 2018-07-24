@@ -11,6 +11,7 @@
 %token ALL_
 %token AUX_
 %token BIN_
+%token CELESTIAL_
 %token CONTOUR_
 %token CUBE_
 %token DATAMIN_
@@ -84,12 +85,15 @@ system : coordsys {ProcessSendCmdCurrentYesNo "has $1"}
  | wcssys {ProcessSendCmdCurrentYesNo "has wcs $1"}
  ;
  
-wcs : wcssys {ProcessSendCmdCurrentYesNo "has wcs $1"}
+wcs : wcstype {ProcessSendCmdCurrentYesNo "has wcs $1 wcs"}
  | wcstype wcssys {ProcessSendCmdCurrentYesNo "has wcs $1 $2"}
+ | wcssys {ProcessSendCmdCurrentYesNo "has wcs $1"}
  ;
 
-wcstype : EQUATORIAL_ {set _ equatorial}
+wcstype : CELESTIAL_ {set _ celestial}
  | LINEAR_ {set _ linear}
+ # backward compatibility
+ | EQUATORIAL_ {set _ celestial}
  ;
 
 %%

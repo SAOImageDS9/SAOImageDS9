@@ -117,7 +117,6 @@ class FitsImage {
 #else
   int astInv_;    // can we inverse?
   int* wcs_;
-  int* wcsEqu_;
   int* wcsCel_;
   int* wcs3D_;
   int wcsHPX_;
@@ -164,7 +163,6 @@ class FitsImage {
 #else
   void astInit(FitsHead*, FitsHead*);
   void wcsInit();
-  void wcsEquInit();
   void wcsCelInit();
   void wcs3DInit();
   void wcsHPXInit();
@@ -446,8 +444,8 @@ class FitsImage {
 #endif
 
   int hasWCS(Coord::CoordSystem);
-  int hasWCSEqu(Coord::CoordSystem);
   int hasWCSCel(Coord::CoordSystem);
+  int hasWCSLinear(Coord::CoordSystem);
   int hasWCS3D(Coord::CoordSystem);
 
   void updateMatrices(Matrix&, Matrix&, Matrix&, Matrix&, Matrix&);

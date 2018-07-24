@@ -116,7 +116,6 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   astSav_ =NULL;
   astInv_ =0;
   wcs_ =NULL;
-  wcsEqu_ =NULL;
   wcsCel_ =NULL;
   wcs3D_ =NULL;
   wcsHPX_ =0;
@@ -203,8 +202,6 @@ FitsImage::~FitsImage()
       astAnnul(ast_);
     if (wcs_)
       delete [] wcs_;
-    if (wcsEqu_)
-      delete [] wcsEqu_;
     if (wcsCel_)
       delete [] wcsCel_;
     if (wcs3D_)
@@ -1277,9 +1274,6 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
     if (wcs_)
       delete [] wcs_;
     wcs_ =NULL;
-    if (wcsEqu_)
-      delete [] wcsEqu_;
-    wcsEqu_ =NULL;
     if (wcsCel_)
       delete [] wcsCel_;
     wcsCel_ =NULL;
@@ -1303,7 +1297,6 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
 	  ast_ = ptr->ast_;
 	  astInv_ = ptr->astInv_;
 	  wcs_ = ptr->wcs_;
-	  wcsEqu_ = ptr->wcsEqu_;
 	  wcsCel_ = ptr->wcsCel_;
 	  wcs3D_ = ptr->wcs3D_;
 	  wcsHPX_ = ptr->wcsHPX_;
@@ -1320,7 +1313,6 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
 
   astInit(hd, prim);
   wcsInit();
-  wcsEquInit();
   wcsCelInit();
   wcs3DInit();
   wcsHPXInit();
@@ -3344,7 +3336,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	out = zero360(radToDeg(out));
 	str << setprecision(context_->parent_->precDeg_)
 	    << out[0] << ' ' << out[1] << ' '
-	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
+	    << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
 
       case Coord::SEXAGESIMAL:
@@ -3367,7 +3359,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	}
 	str << astFormat(ast_[ss],1,out[0]) << ' '
 	    << astFormat(ast_[ss],2,out[1]) << ' '
-	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
+	    << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
       }
     }
@@ -3407,7 +3399,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	out = zero360(radToDeg(out));
 	str << setprecision(context_->parent_->precDeg_)
 	    << out[0] << ' ' << out[1] << ' '
-	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
+	    << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	
 	break;
 
@@ -3431,7 +3423,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	}
 	str << astFormat(ast_,1,out[0]) << ' '
 	    << astFormat(ast_,2,out[1]) << ' '
-	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
+	    << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
       }
     }
@@ -3490,7 +3482,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 	out = zero360(radToDeg(out));
 	str << setprecision(context_->parent_->precDeg_)
 	    << out[0] << ' ' << out[1] << ' ' << out[2]
-	    << ' ' << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
+	    << ' ' << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
 
       case Coord::SEXAGESIMAL:
@@ -3513,7 +3505,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 	}
 	str << astFormat(ast_,1,out[0]) << ' '
 	    << astFormat(ast_,2,out[1]) << ' ' << out[2] << ' '
-	    << (hasWCSEqu(sys) ? coord.skyFrameStr(sky) : "") << ends;
+	    << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
       }
     }
@@ -3619,36 +3611,6 @@ int FitsImage::hasWCS(Coord::CoordSystem sys)
   return (sys>=Coord::WCS && ast_ && ast_[ss]) ? 1 : 0;
 }
 
-int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
-{
-  int ss = sys-Coord::WCS;
-  if (ss>=0 && ast_ && ast_[ss])
-    if (wcsIsASkyFrame(ast_[ss])) {
-      // special case of xLON/xLAT
-      char* bb = &(wcs_[ss]->c1type[1]);
-      if (!strncmp(bb,"LON",3) || !strncmp(bb,"LAT",3)) {
-	switch (wcs_[ss]->c1type[0]) {
-	case 'G':
-	case 'H':
-	case 'E':
-	case 'S':
-	  return 1;
-	default:
-	  return 0;
-	}
-      }
-
-      // special case of xyLN/xyLT
-      char* cc = &(wcs_[ss]->c1type[2]);
-      if (!strncmp(cc,"LN",2) || !strncmp(cc,"LT",2))
-	return 0;
-
-      return 1;
-    }
-
-  return 0;
-}
-
 int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 {
   int ss = sys-Coord::WCS;
@@ -3657,6 +3619,11 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
       return 1;
 
   return 0;
+}
+
+int FitsImage::hasWCSLinear(Coord::CoordSystem sys)
+{
+  return hasWCS(sys) && !hasWCSCel(sys);
 }
 
 #else
@@ -3669,20 +3636,20 @@ int FitsImage::hasWCS(Coord::CoordSystem sys)
     return wcs_[sys-Coord::WCS];
 }
 
-int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
-{
-  if (!ast_ || !wcsEqu_ || sys<Coord::WCS)
-    return 0;
-  else
-    return wcsEqu_[sys-Coord::WCS];
-}
-
 int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 {
   if (!ast_ || !wcsCel_ || sys<Coord::WCS)
     return 0;
   else
     return wcsCel_[sys-Coord::WCS];
+}
+
+int FitsImage::hasWCSLinear(Coord::CoordSystem sys)
+{
+  if (!ast_ || !wcsCel_ || sys<Coord::WCS)
+    return 0;
+  else
+    return wcs_[sys-Coord::WCS] && !wcsCel_[sys-Coord::WCS];
 }
 
 #endif
@@ -3872,45 +3839,6 @@ void FitsImage::wcsInit()
   astEnd;
 }
 
-void FitsImage::wcsEquInit()
-{
-  // init wcsEqu_ array
-  if (wcsEqu_)
-    delete [] wcsEqu_;
-  wcsEqu_ =NULL;
-
-  if (!ast_)
-    return;
-
-  wcsEqu_ = new int[MULTWCS];
-  for (int ii=0; ii<MULTWCS; ii++)
-    wcsEqu_[ii] =0;
-
-  astClearStatus;
-  astBegin;
-
-  int nn = astGetI(ast_, "Nframe");
-  for (int ii=0; ii<nn; ii++) {
-    AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
-    const char* id = astGetC(ff, "Ident");
-    if (id && *id) {
-      int jj = (*id == ' ') ? 0 : *id-'@';
-
-      AstFrameSet* fs =
-	(AstFrameSet*)astFindFrame(ff, astSkyFrame(" MaxAxes=10")," ");
-      if (fs) {
-	wcsEqu_[jj] = 1;
-	const char* str = astGetC(ff, "System");
-	cerr << jj << '=' << str << endl;
-	if (!strncmp(str,"Unknown",7))
-	  wcsEqu_[jj] = 0;
-      }
-    }
-  }
-
-  astEnd;
-}
-
 void FitsImage::wcsCelInit()
 {
   // init wcsCel_ array
@@ -3940,7 +3868,7 @@ void FitsImage::wcsCelInit()
       if (fs) {
 	wcsCel_[jj] = 1;
 	const char* str = astGetC(ff, "System");
-	cerr << jj << '=' << str << endl;
+	//	cerr << jj << '=' << str << endl;
 	if (!strncmp(str,"Unknown",7))
 	  wcsCel_[jj] = 0;
       }
@@ -4160,8 +4088,8 @@ void FitsImage::setWCSSkyFrame(Coord::CoordSystem sys, Coord::SkyFrame sky)
   if (!found)
     return; 
   
-  // is equatorial system?
-  if (!hasWCSEqu(sys))
+  // is celestial system?
+  if (!hasWCSCel(sys))
     return;
   
   const char* str = astGetC(ast_, "System");

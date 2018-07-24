@@ -557,7 +557,7 @@ proc UpdateInfoBox {which x y sys} {
 		set infobox(wcs$ll,sys) "WCS $ll"
 		$infobox(wcs$ll,x,nm) configure -text {}
 		$infobox(wcs$ll,y,nm) configure -text {}
-	    } elseif {[$which has wcs equatorial wcs$ll]} {
+	    } elseif {[$which has wcs celestial wcs$ll]} {
 		switch -- $infobox(wcs$ll,sys) {
 		    fk4 -
 		    fk5 -
@@ -580,7 +580,7 @@ proc UpdateInfoBox {which x y sys} {
 			    -font "$ds9(times) $fsz"
 		    }
 		}
-	    } elseif {[$which has wcs celestrial wcs$ll]} {
+	    } elseif {[$which has wcs celestial wcs$ll]} {
 		if {$infobox(wcs$ll,sys) == {}} {
 		    set infobox(wcs$ll,sys) "WCS $ll"
 		}

@@ -935,7 +935,7 @@ proc CATConfigCols {varname} {
 		set var(coly) [starbase_colname $var(catdb) 2]
 
 		return
-	    } elseif {![$var(frame) has wcs equatorial $var(psystem)]} {
+	    } elseif {![$var(frame) has wcs celestial $var(psystem)]} {
 		# linear
 		set var(colx) [starbase_colname $var(catdb) 1]
 		set var(coly) [starbase_colname $var(catdb) 2]

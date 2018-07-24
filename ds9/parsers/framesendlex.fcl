@@ -11,6 +11,7 @@ active	    {return $ACTIVE_}
 all	    {return $ALL_}
 aux	    {return $AUX_}
 bin	    {return $BIN_}
+celestial   {return $CELESTIAL_}
 contour	    {return $CONTOUR_}
 cube	    {return $CUBE_}
 datamin	    {return $DATAMIN_}

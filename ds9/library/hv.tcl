@@ -745,7 +745,7 @@ proc HVArchChandraChaser {} {
 
     set coord {}
     if {$current(frame) != {}} {
-	if {[$current(frame) has wcs equatorial wcs]} {
+	if {[$current(frame) has wcs celestial wcs]} {
 	    set coord [$current(frame) get fits center wcs fk5 degrees]
 	    set size \
 		[expr [lindex [$current(frame) get fits size wcs fk5 arcmin] 0]/2.]
@@ -768,7 +768,7 @@ proc HVArchChandraPop {} {
 
     set coord {}
     if {$current(frame) != {}} {
-	if {[$current(frame) has wcs equatorial wcs]} {
+	if {[$current(frame) has wcs celestial wcs]} {
 	    set coord [$current(frame) get fits center wcs fk5 degrees]
 	    set size \
 		[expr [lindex [$current(frame) get fits size wcs fk5 arcmin] 0]/2.]
@@ -795,7 +795,7 @@ proc HVArchChandraFTP {} {
     set wid {}
 
     if {$current(frame) != {}} {
-	if {[$current(frame) has wcs equatorial wcs]} {
+	if {[$current(frame) has wcs celestial wcs]} {
 	    set coord [$current(frame) get fits center wcs fk5 sexagesimal]
 	    set ra [lindex $coord 0]
 	    set dec [lindex $coord 1]

@@ -629,7 +629,7 @@ proc SAMPSendCoordPointAtSkyCmd {which} {
 	return
     }
 
-    if {[$which has wcs equatorial wcs]} {
+    if {[$which has wcs celestial wcs]} {
 	set coord [$which get coordinates [$which get cursor canvas] wcs fk5 degrees]
 	if {$coord != {}} {
 	    SAMPSendCoordPointAtSky {} "$coord"
@@ -1499,7 +1499,7 @@ proc SAMPRcvdCoordPointAtSky {varname} {
     }
 
     global current
-    if {$ra != {} && $dec != {} && [$current(frame) has wcs equatorial wcs]} {
+    if {$ra != {} && $dec != {} && [$current(frame) has wcs celestial wcs]} {
 	set samp(rcvd,lock) 1
 	PanTo $ra $dec wcs fk5
 	set samp(rcvd,lock) 0

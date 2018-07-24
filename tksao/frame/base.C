@@ -920,14 +920,14 @@ int Base::hasWCS(Coord::CoordSystem sys)
   return currentContext->cfits && currentContext->cfits->hasWCS(sys);
 }
 
-int Base::hasWCSEqu(Coord::CoordSystem sys)
-{ 
-  return currentContext->cfits && currentContext->cfits->hasWCSEqu(sys);
-}
-
 int Base::hasWCSCel(Coord::CoordSystem sys)
 { 
   return currentContext->cfits && currentContext->cfits->hasWCSCel(sys);
+}
+
+int Base::hasWCSLinear(Coord::CoordSystem sys)
+{ 
+  return currentContext->cfits && currentContext->cfits->hasWCSLinear(sys);
 }
 
 int Base::hasWCS3D(Coord::CoordSystem sys)

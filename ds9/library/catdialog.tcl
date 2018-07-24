@@ -670,7 +670,7 @@ proc CATCrosshair {varname} {
 	return
     }
 
-    if {[$var(frame) has wcs equatorial $var(system)]} {
+    if {[$var(frame) has wcs celestial $var(system)]} {
 	set coord [$var(frame) get crosshair \
 		       $var(system) $var(sky) $var(skyformat)]
 	set var(x) [lindex $coord 0]
@@ -981,7 +981,7 @@ proc CATUpdate {varname} {
 	return
     }
 
-    if {[$var(frame) has wcs equatorial $var(system)]} {
+    if {[$var(frame) has wcs celestial $var(system)]} {
 	set coord [$var(frame) get fits center \
 		       $var(system) $var(sky) $var(skyformat)]
 	set var(x) [lindex $coord 0]
@@ -1026,7 +1026,7 @@ proc CATColsUpdate {varname} {
 		-font [font actual TkDefaultFont]
 	}
 	default {
-	    if {[$var(frame) has wcs equatorial $var(psystem)]} {
+	    if {[$var(frame) has wcs celestial $var(psystem)]} {
 		switch $var(psky) {
 		    fk4 -
 		    fk5 -

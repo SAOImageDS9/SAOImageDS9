@@ -138,7 +138,7 @@ proc CoordMenuButtonCmd {varname system sky cmd} {
 	    default {
 		if {[info exists var(frame)]} {
 		    if {$var(frame) != {}} {
-			if {[$var(frame) has wcs equatorial $var($system)]} {
+			if {[$var(frame) has wcs celestial $var($system)]} {
 			    set ${varname}($system,msg) [msgcat::mc $var($sky)]
 			}
 		    }
@@ -193,7 +193,7 @@ proc CoordMenuEnable {w varname system other sky skyformat} {
     }
 
     if {$sky != {}} {
-	if {[$var(frame) has wcs equatorial $var($system)]} {
+	if {[$var(frame) has wcs celestial $var($system)]} {
 	    $w entryconfig [msgcat::mc {FK4}] -state normal
 	    $w entryconfig [msgcat::mc {FK5}] -state normal
 	    $w entryconfig [msgcat::mc {ICRS}] -state normal
@@ -209,7 +209,7 @@ proc CoordMenuEnable {w varname system other sky skyformat} {
     }
 
     if {$skyformat != {}} {
-	if {[$var(frame) has wcs celestrial $var($system)]} {
+	if {[$var(frame) has wcs celestial $var($system)]} {
 	    $w entryconfig [msgcat::mc {Degrees}] -state normal
 	    $w entryconfig {Sexagesimal} -state normal
 	} else {
@@ -320,7 +320,7 @@ proc DistMenuButtonCmd {varname system format cmd} {
 	    default {
 		if {[info exists var(frame)]} {
 		    if {$var(frame) != {}} {
-			if {[$var(frame) has wcs equatorial $var($system)]} {
+			if {[$var(frame) has wcs celestial $var($system)]} {
 			    set ${varname}($system,msg) [msgcat::mc $var($format)]
 			}
 		    }
@@ -370,7 +370,7 @@ proc DistMenuEnable {w varname system other format} {
     }
 
     if {$format != {}} {
-	if {[$var(frame) has wcs celestrial $var($system)]} {
+	if {[$var(frame) has wcs celestial $var($system)]} {
 	    $w entryconfig [msgcat::mc {Degrees}] -state normal
 	    $w entryconfig [msgcat::mc {ArcMin}] -state normal
 	    $w entryconfig [msgcat::mc {ArcSec}] -state normal

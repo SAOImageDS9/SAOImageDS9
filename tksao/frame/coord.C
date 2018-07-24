@@ -40,8 +40,7 @@ static const char* coordSystemStr_[] = {
     "wcsw",
     "wcsx",
     "wcsy",
-    "wcsz",
-    "wcs0"
+    "wcsz"
   };
 
 static const char* skyFrameStr_[] = { 

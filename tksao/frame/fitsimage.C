@@ -3901,7 +3901,7 @@ void FitsImage::wcsEquInit()
       if (fs) {
 	wcsEqu_[jj] = 1;
 	const char* str = astGetC(ff, "System");
-	cerr << jj << '=' << str << endl;
+	//	cerr << jj << '=' << str << endl;
 	if (!strncmp(str,"Unknown",7))
 	  wcsEqu_[jj] = 0;
       }

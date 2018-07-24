@@ -670,8 +670,8 @@ void Base::createCompositeCmd(const Vector& center, double angle,
   Composite* m = new Composite(this, center, angle, global, 
 			       color, dash, width, font, text, 
 			       prop, comment, tag, cb);
-  createMarker(m);
-  compositeMarker = m;
+  if (createMarker(m))
+    compositeMarker = m;
 }
 
 void Base::createCompositeCmd(
@@ -698,7 +698,8 @@ void Base::createCompositeCmd(
   // create composite
   Composite* mk = new Composite(this, cc, 0, 1, color, dash, width, font, 
 				text, prop, comment, tag, cb);
-  createMarker(mk);
+  if (!createMarker(mk))
+    return;
 
   // append members
   mm=markers->head();
@@ -819,13 +820,13 @@ void Base::createTemplate(const Vector& center, istream& str)
 
 // Support
 
-void Base::createMarker(Marker* m)
+Marker* Base::createMarker(Marker* m)
 {
   if (maperr) {
     Tcl_SetVar2(interp, "ds9", "msg", "Bad Coordinate mapping, unable to create some region(s).", TCL_GLOBAL_ONLY);
     Tcl_SetVar2(interp, "ds9", "msg,level", "warning", TCL_GLOBAL_ONLY);
     delete m;
-    return;
+    return NULL;
   }
 
   if (compositeMarker) {
@@ -847,6 +848,8 @@ void Base::createMarker(Marker* m)
     // and return id
     printInteger(m->getId());
   }
+
+  return m;
 }
 
 Vector Base::centroid(const Vector& vv)

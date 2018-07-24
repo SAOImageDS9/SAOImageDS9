@@ -340,7 +340,7 @@ public:
   virtual double calcZoomPanner() =0;
   virtual void cancelDetach() =0;
   virtual void centerImage();
-  void createMarker(Marker*);
+  Marker* createMarker(Marker*);
   void createTemplate(const Vector&, istream&);
   void contourCreatePolygon(List<ContourLevel>&);
 

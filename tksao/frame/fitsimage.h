@@ -132,7 +132,7 @@ class FitsImage {
   AstFrameSet** ast_;  // ast frameset;
 #else
   AstFrameSet* ast_;  // ast frameset;
-  AstFrameSet* astAlt_;  // ast frameset;
+  AstFrameSet* astSav_;  // ast frameset;
 #endif
 
  private:
@@ -151,8 +151,8 @@ class FitsImage {
   void initHPX();
 
   void initWCS(FitsHead*, FitsHead*);
-#ifdef OLDWCS
   void initWCSPhysical();
+#ifdef OLDWCS
   void wcsShow(WorldCoor*);
   void astinit(int, FitsHead*, FitsHead*);
   AstFrameSet* buildast(int, FitsHead*, FitsHead*);

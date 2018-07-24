@@ -113,6 +113,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcsx_ =NULL;
 #else
   ast_ =NULL;
+  astSav_ =NULL;
   astInv_ =0;
   wcs_ =NULL;
   wcsEqu_ =NULL;
@@ -1268,22 +1269,23 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
   if (manageWCS_) {
     if (ast_)
       astAnnul(ast_);
-    ast_ = NULL;
+    ast_ =NULL;
+    astSav_ =NULL;
     if (wcs_)
       delete [] wcs_;
-    wcs_ = NULL;
+    wcs_ =NULL;
     if (wcs_)
       delete [] wcs_;
-    wcs_ = NULL;
+    wcs_ =NULL;
     if (wcsEqu_)
       delete [] wcsEqu_;
-    wcsEqu_ = NULL;
+    wcsEqu_ =NULL;
     if (wcsCel_)
       delete [] wcsCel_;
-    wcsCel_ = NULL;
+    wcsCel_ =NULL;
     if (wcs3D_)
       delete [] wcs3D_;
-    wcs3D_ = NULL;
+    wcs3D_ =NULL;
     wcsHPX_ = 0;
   }
 
@@ -1306,6 +1308,7 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
 	  wcs3D_ = ptr->wcs3D_;
 	  wcsHPX_ = ptr->wcsHPX_;
 
+	  initWCSPhysical();
 	  manageWCS_ =0;
 	  return;
 	}
@@ -1322,6 +1325,8 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
   wcs3DInit();
   wcsHPXInit();
   
+  initWCSPhysical();
+
   if (DebugAST && ast_)
     astShow(ast_);
 }
@@ -1373,6 +1378,9 @@ void FitsImage::initWCS0(const Vector& pix)
 #else
 void FitsImage::initWCS0(const Vector& pix)
 {
+  if (!ast_)
+    return;
+
   FitsHead* hd =NULL;
   if (wcsHeader_)
     hd = wcsHeader_;
@@ -1393,87 +1401,52 @@ void FitsImage::initWCS0(const Vector& pix)
   // no warning messages
   astClear(chan,"Warnings");
 
-  char key1[8];
-  char key2[8];
-
   // basics (needed by fitschan.c)
   putFitsCard(chan, "NAXIS1", (int)naxis(0));
   putFitsCard(chan, "NAXIS2", (int)naxis(1));
 
   // CTYPE
-  strcpy(key1, "CTYPE1 ");
-  strcpy(key2, "CTYPE2 ");
-  putFitsCard(chan, key1, hd->getString(key1));
-  putFitsCard(chan, key2, hd->getString(key2));
+  putFitsCard(chan, "CTYPE1", "RA---TAN");
+  putFitsCard(chan, "CTYPE2", "DEC--TAN");
 
   // CRPIX
-  strcpy(key1, "CRPIX1 ");
-  strcpy(key2, "CRPIX2 ");
-  putFitsCard(chan, key1, hd->getReal(key1,0));
-  putFitsCard(chan, key2, hd->getReal(key2,0));
+  Vector cc = mapFromRef(pix, Coord::IMAGE, Coord::FK5);
+  putFitsCard(chan, "CRPIX1", cc[1]);
+  putFitsCard(chan, "CRPIX2", cc[0]);
 
   // CRVAL
-  strcpy(key1, "CRVAL1 ");
-  strcpy(key2, "CRVAL2 ");
-  putFitsCard(chan, key1, hd->getReal(key1,0));
-  putFitsCard(chan, key2, hd->getReal(key2,0));
+  putFitsCard(chan, "CRVAL1", 0);
+  putFitsCard(chan, "CRVAL2", 0);
 
-  // CDELT/CD/PC
-  strcpy(key1, "CDELT1 ");
-  strcpy(key2, "CDELT2 ");
+  // CD
+  float ss = getWCSPixelSize(Coord::WCS);
+  double ang = getWCSRotation(Coord::WCS,Coord::FK5);
+  Matrix flip;
+  switch (getWCSOrientation(Coord::WCS,Coord::FK5)) {
+  case Coord::NORMAL:
+  case Coord::YY:
+    flip = FlipX();
+    break;
+  case Coord::XX:
+  case Coord::XY:
+    break;
+  };
+  Matrix mx = flip*Rotate(ang)*Scale(ss);
+  putFitsCard(chan, "CD1_1", mx[0][0]);
+  putFitsCard(chan, "CD1_2", mx[0][1]);
+  putFitsCard(chan, "CD2_1", mx[1][0]);
+  putFitsCard(chan, "CD2_2", mx[1][1]);
 
-  char pkey1[8];
-  char pkey2[8];
-  char pkey3[8];
-  char pkey4[8];
-  strcpy(pkey1, "PC1_1 ");
-  strcpy(pkey2, "PC1_2 ");
-  strcpy(pkey3, "PC2_1 ");
-  strcpy(pkey4, "PC2_2 ");
-
-  char ckey1[8];
-  char ckey2[8];
-  char ckey3[8];
-  char ckey4[8];
-  strcpy(ckey1, "CD1_1 ");
-  strcpy(ckey2, "CD1_2 ");
-  strcpy(ckey3, "CD2_1 ");
-  strcpy(ckey4, "CD2_2 ");
-
-  // Give CD priority over CDELT
-  if (hd->find(ckey1) || 
-      hd->find(ckey2) ||
-      hd->find(ckey3) || 
-      hd->find(ckey4)) {
-    putFitsCard(chan, ckey1, hd->getReal(ckey1,1));
-    putFitsCard(chan, ckey2, hd->getReal(ckey2,0));
-    putFitsCard(chan, ckey3, hd->getReal(ckey3,0));
-    putFitsCard(chan, ckey4, hd->getReal(ckey4,1));
-  }
-  else if (hd->find(key1) || hd->find(key2)) {
-    putFitsCard(chan, key1, hd->getReal(key1,1));
-    putFitsCard(chan, key2, hd->getReal(key2,1));
-
-    if (hd->find(pkey1) || 
-	hd->find(pkey2) ||
-	hd->find(pkey3) || 
-	hd->find(pkey4)) {
-      putFitsCard(chan, pkey1, hd->getReal(pkey1,1));
-      putFitsCard(chan, pkey2, hd->getReal(pkey2,1));
-      putFitsCard(chan, pkey3, hd->getReal(pkey3,1));
-      putFitsCard(chan, pkey4, hd->getReal(pkey4,1));
-    }
-  }
-
-  strcpy(key1, "EQUINOX");
-  putFitsCard(chan, key1, hd->getString(key1));
-  strcpy(key2, "RADESYS");
-  putFitsCard(chan, key2, hd->getString(key2));
-
-  strcpy(key1, "MJD-OBS");
-  putFitsCard(chan, key1, hd->getString(key1));
-  strcpy(key2, "DATE-OBS");
-  putFitsCard(chan, key2, hd->getString(key2));
+  // EPOCH
+  float mjd = hd->getReal("MJD-OBS",0);
+  if (mjd)
+    putFitsCard(chan, "MJD-OBS", mjd);
+  else
+    putFitsCard(chan, "EPOCH", 2000);
+  
+  // RADESYS
+  putFitsCard(chan, "EQUINOX", 2000);
+  putFitsCard(chan, "RADESYS", "FK5");
 
   // all done
   // rewind chan
@@ -1487,7 +1460,11 @@ void FitsImage::initWCS0(const Vector& pix)
       strncmp(astGetC(frameSet,"Class"), "FrameSet", 8))
     return;
 
-  astShow(frameSet);
+  astSav_ = ast_;
+  ast_ = frameSet;
+
+  if (DebugAST)
+    astShow(frameSet);
 
   // cleanup
   astAnnul(chan);
@@ -1514,6 +1491,43 @@ void FitsImage::initWCSPhysical()
 	wcs_[ii]->crval[0]*ltm11 - wcs_[ii]->crval[1]*ltm21;
       double ltv2 = wcs_[ii]->crpix[1] -
 	wcs_[ii]->crval[0]*ltm12 - wcs_[ii]->crval[1]*ltm22;
+
+      physicalToImage = Matrix(ltm11, ltm12, ltm21, ltm22, ltv1, ltv2);
+      imageToPhysical = physicalToImage.invert();
+    }
+  }
+}
+#else
+void FitsImage::initWCSPhysical()
+{
+  // now see if we have a 'physical' in WCSP, if so, set LTMV keywords
+  keyLTMV =0;
+
+  char* wcsname = image_->getString("WCSNAMEP");
+  if (wcsname && *wcsname && !strncmp(wcsname, "PHYSICAL", 8)) {
+    if (image_->find("CD1_1P")  || image_->find("CD1_2P")  ||
+	image_->find("CD2_1P")  || image_->find("CD2_2P")  ||
+	image_->find("CRPIX1P") || image_->find("CRPIX2P") ||
+	image_->find("CRVAL1P") || image_->find("CRVAL2P")) {
+      keyLTMV = 1;
+
+      double cd11 = image_->getReal("CD1_1P", 1);
+      double cd12 = image_->getReal("CD1_2P", 0);
+      double cd21 = image_->getReal("CD2_1P", 0);
+      double cd22 = image_->getReal("CD2_2P", 1);
+
+      double crpix1 = image_->getReal("CRPIX1P", 0);
+      double crpix2 = image_->getReal("CRPIX2P", 0);
+      double crval1 = image_->getReal("CRVAL1P", 0);
+      double crval2 = image_->getReal("CRVAL2P", 0);
+
+      double ltm11 = cd11 != 0 ? 1/cd11 : 0;
+      double ltm12 = cd12 != 0 ? 1/cd12 : 0;
+      double ltm21 = cd21 != 0 ? 1/cd21 : 0;
+      double ltm22 = cd22 != 0 ? 1/cd22 : 0;
+
+      double ltv1 = crpix1 - crval1*ltm11 - crval2*ltm21;
+      double ltv2 = crpix2 - crval1*ltm12 - crval2*ltm22;
 
       physicalToImage = Matrix(ltm11, ltm12, ltm21, ltm22, ltv1, ltv2);
       imageToPhysical = physicalToImage.invert();
@@ -2496,6 +2510,8 @@ void FitsImage::resetWCS0()
 #else
 void FitsImage::resetWCS0()
 {
+  ast_ = astSav_;
+  astSav_ =NULL;
 }
 #endif
 

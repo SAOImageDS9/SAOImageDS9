@@ -379,6 +379,11 @@ proc MarkerButton {which x y} {
 	{arrow point} -
 	{boxcircle point} {MarkerCreateShape $which $x $y}
 	default {
+	    if {![$which has wcs celestial wcs]} {
+		Error "[msgcat::mc {Unable to create FOV Region, celestial WCS Required}]"
+		return
+	    }
+
 	    set fn "$ds9(root)/template/$itemplate($marker(shape))"
 	    set ch [open $fn r]
 

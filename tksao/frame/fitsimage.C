@@ -113,12 +113,18 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcsx_ =NULL;
 #else
   ast_ =NULL;
-  astSav_ =NULL;
   astInv_ =0;
   wcs_ =NULL;
   wcsCel_ =NULL;
   wcs3D_ =NULL;
   wcsHPX_ =0;
+
+  astSav_ =NULL;
+  astInvSav_ =0;
+  wcsSav_ =NULL;
+  wcsCelSav_ =NULL;
+  wcs3DSav_ =NULL;
+  wcsHPXSav_ =0;
 #endif
   wcsHeader_ =NULL;
   altHeader_ =NULL;
@@ -1367,19 +1373,25 @@ void FitsImage::initWCS0(const Vector& pix)
     }
   }
 }
+
+void FitsImage::resetWCS0()
+{
+  int ii = Coord::WCS0-Coord::WCS;
+  if (wcs_[ii])
+    wcsfree(wcs_[ii]);
+  wcs_[ii] = NULL;
+
+  if (ast_[ii])
+    astAnnul(ast_[ii]);
+  ast_[ii] = NULL;
+}
+
 #else
+
 void FitsImage::initWCS0(const Vector& pix)
 {
   if (!ast_)
     return;
-
-  FitsHead* hd =NULL;
-  if (wcsHeader_)
-    hd = wcsHeader_;
-  else if (altHeader_)
-    hd = altHeader_;
-  else
-    hd = image_->head();
 
   // read wcs struct into astChannel
   // we may have an error, just reset
@@ -1448,14 +1460,61 @@ void FitsImage::initWCS0(const Vector& pix)
       strncmp(astGetC(frameSet,"Class"), "FrameSet", 8))
     return;
 
+  // save current wcs
   astSav_ = ast_;
+  astInvSav_ = astInv_;
+  wcsSav_ = wcs_;
+  wcsCelSav_ = wcsCel_;
+  wcs3DSav_ = wcs3D_;
+  wcsHPXSav_ = wcsHPX_;
+
+  // set up temp wcs
   ast_ = frameSet;
+  astInv_ = 1;
+  wcs_ = new int[MULTWCS];
+  for (int ii=0; ii<MULTWCS; ii++)
+    wcs_[ii] =0;
+  wcs_[0] =1;
+  wcsCel_ = new int[MULTWCS];
+  for (int ii=0; ii<MULTWCS; ii++)
+    wcsCel_[ii] =0;
+  wcsCel_[0] = 1;
+  wcs3D_ = new int[MULTWCS];
+  for (int ii=0; ii<MULTWCS; ii++)
+    wcs3D_[ii] =0;
+  wcsHPX_ = 0;
 
   if (DebugWCS)
     astShow(frameSet);
 
   // cleanup
   astAnnul(chan);
+}
+
+void FitsImage::resetWCS0()
+{
+  if (wcs_)
+    delete [] wcs_;
+  if (wcsCel_)
+    delete [] wcsCel_;
+  if (wcs3D_)
+    delete [] wcs3D_;
+
+  // restore current wcs
+  ast_ = astSav_;
+  astInv_ = astInvSav_;
+  wcs_ = wcsSav_;
+  wcsCel_ = wcsCelSav_;
+  wcs3D_ = wcs3DSav_;
+  wcsHPX_ = wcsHPXSav_;
+
+  // reset temp wcs
+  astSav_ =NULL;
+  astInvSav_ =0;
+  wcsSav_ =NULL;
+  wcsCelSav_ =NULL;
+  wcs3DSav_ =NULL;
+  wcsHPXSav_ =0;
 }
 #endif
 
@@ -2482,26 +2541,6 @@ void FitsImage::resetWCS()
   initWCS(image_->head(),
 	  image_->primary() && image_->inherit() ? image_->primary() : NULL);
 }
-
-#ifdef OLDWCS
-void FitsImage::resetWCS0()
-{
-  int ii = Coord::WCS0-Coord::WCS;
-  if (wcs_[ii])
-    wcsfree(wcs_[ii]);
-  wcs_[ii] = NULL;
-
-  if (ast_[ii])
-    astAnnul(ast_[ii]);
-  ast_[ii] = NULL;
-}
-#else
-void FitsImage::resetWCS0()
-{
-  ast_ = astSav_;
-  astSav_ =NULL;
-}
-#endif
 
 char* FitsImage::root(const char* fn)
 {

@@ -120,6 +120,14 @@ class FitsImage {
   int* wcsCel_;
   int* wcs3D_;
   int wcsHPX_;
+
+  // used for templates
+  AstFrameSet* astSav_;
+  int astInvSav_;
+  int* wcsSav_;
+  int* wcsCelSav_;
+  int* wcs3DSav_;
+  int wcsHPXSav_;
 #endif
   FitsHead* wcsHeader_; // alt wcs header
   FitsHead* altHeader_; // wcs header for wfpc2
@@ -131,7 +139,6 @@ class FitsImage {
   AstFrameSet** ast_;  // ast frameset;
 #else
   AstFrameSet* ast_;  // ast frameset;
-  AstFrameSet* astSav_;  // ast frameset;
 #endif
 
  private:

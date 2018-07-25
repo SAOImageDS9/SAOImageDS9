@@ -459,18 +459,20 @@ double FitsImage::mapDistFromRef(const Vector& vv1, const Vector& vv2,
       Vector v1 = pix2wcs(vv1 * refToImage, sys, Coord::FK5);
       Vector v2 = pix2wcs(vv2 * refToImage, sys, Coord::FK5);
 
+      double rr = getWCSDist(v1,v2,sys);
       if (hasWCSCel(sys)) {
 	switch (dist) {
 	case Coord::DEGREE:
-	  return getWCSDist(v1,v2,sys);
+	  break;
 	case Coord::ARCMIN:
-	  return getWCSDist(v1,v2,sys)*60;
+	  rr *= 60;
+	  break;
 	case Coord::ARCSEC:
-	  return getWCSDist(v1,v2,sys)*60*60;
+	  rr *= 60*60;
+	  break;
 	}
       }
-      else
-	return getWCSDist(v1,v2,sys);
+      return rr;
     }
   }
 

@@ -245,7 +245,6 @@
 ::msgcat::mcset ja {Edit Group Name} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xcc\xbe\xa4\xf2\xca\xd1\xb9\xb9"]
 ::msgcat::mcset ja {Edit} [encoding convertfrom euc-jp "\xca\xd4\xbd\xb8"]
 ::msgcat::mcset ja {Elevation} [encoding convertfrom euc-jp "\xb9\xe2\xc5\xd9"]
-::msgcat::mcset ja {Ellipse Annulus} 
 ::msgcat::mcset ja {Ellipse Panda} [encoding convertfrom euc-jp "\xc9\xf4\xca\xac\xc2\xca\xb1\xdf"]
 ::msgcat::mcset ja {Ellipse} [encoding convertfrom euc-jp "\xc2\xca\xb1\xdf"]
 ::msgcat::mcset ja {Elliptical Annulus} [encoding convertfrom euc-jp "\xc3\xe6\xc8\xb4\xa4\xad\xc2\xca\xb1\xdf"]
@@ -545,13 +544,13 @@
 ::msgcat::mcset ja {No Catalog specified} [encoding convertfrom euc-jp "\xa5\xab\xa5\xbf\xa5\xed\xa5\xb0\xa4\xac\xbb\xd8\xc4\xea\xa4\xb5\xa4\xec\xa4\xc6\xa4\xa4\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {No Data Available} 
 ::msgcat::mcset ja {No Items Found} [encoding convertfrom euc-jp "\xb8\xab\xa4\xc4\xa4\xab\xa4\xea\xa4\xde\xa4\xbb\xa4\xf3\xa4\xc7\xa4\xb7\xa4\xbf\xa1\xa3"]
-::msgcat::mcset ja {No current frame} 
 ::msgcat::mcset ja {Non-zero} [encoding convertfrom euc-jp "\xc8\xf3\xce\xed\xc3\xcd"]
 ::msgcat::mcset ja {None} [encoding convertfrom euc-jp "\xa4\xca\xa4\xb7"]
 ::msgcat::mcset ja {Normal} [encoding convertfrom euc-jp "\xc9\xb8\xbd\xe0"]
 ::msgcat::mcset ja {North} [encoding convertfrom euc-jp "\xcb\xcc"]
 ::msgcat::mcset ja {Not Found} 
 ::msgcat::mcset ja {Not Supported} 
+::msgcat::mcset ja {Not valid export format} 
 ::msgcat::mcset ja {Number of Samples} [encoding convertfrom euc-jp "\xa5\xb5\xa5\xf3\xa5\xd7\xa5\xeb\xa4\xce\xbf\xf4"]
 ::msgcat::mcset ja {Number of Threads} 
 ::msgcat::mcset ja {Number of Ticks} 
@@ -637,7 +636,6 @@
 ::msgcat::mcset ja {RGB Image} 
 ::msgcat::mcset ja {RGB} [encoding convertfrom euc-jp "\x52\x47\x42\xbf\xa7"]
 ::msgcat::mcset ja {Radial Profile} 
-::msgcat::mcset ja {Radial} 
 ::msgcat::mcset ja {Radius} [encoding convertfrom euc-jp "\xc8\xbe\xb7\xc2"]
 ::msgcat::mcset ja {Raised} 
 ::msgcat::mcset ja {Range} 
@@ -745,7 +743,6 @@
 ::msgcat::mcset ja {Startup} 
 ::msgcat::mcset ja {Start} [encoding convertfrom euc-jp "\xb3\xab\xbb\xcf"]
 ::msgcat::mcset ja {Statistics} 
-::msgcat::mcset ja {Stats} 
 ::msgcat::mcset ja {Status} [encoding convertfrom euc-jp "\xbe\xf5\xc2\xd6"]
 ::msgcat::mcset ja {Step} [encoding convertfrom euc-jp "\xa5\xb9\xa5\xc6\xa5\xc3\xa5\xd7"]
 ::msgcat::mcset ja {Stop} [encoding convertfrom euc-jp "\xbd\xaa\xce\xbb"]
@@ -759,7 +756,6 @@
 ::msgcat::mcset ja {Table} 
 ::msgcat::mcset ja {Tabloid} [encoding convertfrom euc-jp "\xa5\xbf\xa5\xd6\xa5\xed\xa5\xa4\xa5\xc9"]
 ::msgcat::mcset ja {Tag Color} 
-::msgcat::mcset ja {Task} 
 ::msgcat::mcset ja {Template} [encoding convertfrom euc-jp "\xbf\xf7\xb7\xc1"]
 ::msgcat::mcset ja {Text Font} 
 ::msgcat::mcset ja {Text} [encoding convertfrom euc-jp "\xca\xb8\xbb\xfa"]
@@ -783,6 +779,7 @@
 ::msgcat::mcset ja {Type} [encoding convertfrom euc-jp "\xbc\xef\xce\xe0"]
 ::msgcat::mcset ja {URL} 
 ::msgcat::mcset ja {Unable to connect directly: using Web Proxy} 
+::msgcat::mcset ja {Unable to create FOV Region, celestial WCS Required} 
 ::msgcat::mcset ja {Unable to determine date of observation} 
 ::msgcat::mcset ja {Unable to evaluate filter} [encoding convertfrom euc-jp "\xb9\xca\xa4\xea\xb9\xfe\xa4\xdf\xbe\xf2\xb7\xef\xa4\xac\xc9\xbe\xb2\xc1\xa4\xc7\xa4\xad\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {Unable to find SIAP window} 
@@ -791,6 +788,7 @@
 ::msgcat::mcset ja {Unable to find plot window} [encoding convertfrom euc-jp "\xa5\xd7\xa5\xed\xa5\xc3\xa5\xc8\xa5\xa6\xa5\xa3\xa5\xf3\xa5\xc9\xa5\xa6\xa4\xac\xb8\xab\xa4\xc4\xa4\xab\xa4\xea\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {Unable to find web window} 
 ::msgcat::mcset ja {Unable to load RGB image into a non-rgb frame} [encoding convertfrom euc-jp "\x52\x42\x47\xa5\xa4\xa5\xe1\xa1\xbc\xa5\xb8\xa4\xf2\xc8\xf3\x52\x47\x42\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xcb\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xe1\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
+::msgcat::mcset ja {Unable to load compressed region file} 
 ::msgcat::mcset ja {Unable to load plot data} 
 ::msgcat::mcset ja {Unable to load region file} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa5\xd5\xa5\xa1\xa5\xa4\xa5\xeb\xa4\xf2\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xe1\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {Unable to load} [encoding convertfrom euc-jp "\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xe1\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]

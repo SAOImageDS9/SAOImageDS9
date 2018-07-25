@@ -245,7 +245,6 @@
 ::msgcat::mcset de {Edit Group Name} {Gruppenname bearbeiten}
 ::msgcat::mcset de {Edit} {Bearbeiten}
 ::msgcat::mcset de {Elevation} 
-::msgcat::mcset de {Ellipse Annulus} 
 ::msgcat::mcset de {Ellipse Panda} {Ellipsen Panda}
 ::msgcat::mcset de {Ellipse} 
 ::msgcat::mcset de {Elliptical Annulus} {Elliptischer Kreisring}
@@ -545,13 +544,13 @@
 ::msgcat::mcset de {No Catalog specified} {Keine Katalog spezifiziert}
 ::msgcat::mcset de {No Data Available} 
 ::msgcat::mcset de {No Items Found} {Keine Objekte gefunden}
-::msgcat::mcset de {No current frame} 
 ::msgcat::mcset de {Non-zero} 
 ::msgcat::mcset de {None} {Kein}
 ::msgcat::mcset de {Normal} 
 ::msgcat::mcset de {North} {Norden}
 ::msgcat::mcset de {Not Found} 
 ::msgcat::mcset de {Not Supported} 
+::msgcat::mcset de {Not valid export format} 
 ::msgcat::mcset de {Number of Samples} {Anzahl der Stichproben}
 ::msgcat::mcset de {Number of Threads} 
 ::msgcat::mcset de {Number of Ticks} 
@@ -637,7 +636,6 @@
 ::msgcat::mcset de {RGB Image} 
 ::msgcat::mcset de {RGB} 
 ::msgcat::mcset de {Radial Profile} 
-::msgcat::mcset de {Radial} 
 ::msgcat::mcset de {Radius} 
 ::msgcat::mcset de {Raised} 
 ::msgcat::mcset de {Range} 
@@ -745,7 +743,6 @@
 ::msgcat::mcset de {Startup} 
 ::msgcat::mcset de {Start} 
 ::msgcat::mcset de {Statistics} 
-::msgcat::mcset de {Stats} 
 ::msgcat::mcset de {Status} 
 ::msgcat::mcset de {Step} {Stufe}
 ::msgcat::mcset de {Stop} 
@@ -759,7 +756,6 @@
 ::msgcat::mcset de {Table} 
 ::msgcat::mcset de {Tabloid} 
 ::msgcat::mcset de {Tag Color} 
-::msgcat::mcset de {Task} 
 ::msgcat::mcset de {Template} 
 ::msgcat::mcset de {Text Font} 
 ::msgcat::mcset de {Text} 
@@ -783,6 +779,7 @@
 ::msgcat::mcset de {Type} {Typ}
 ::msgcat::mcset de {URL} 
 ::msgcat::mcset de {Unable to connect directly: using Web Proxy} 
+::msgcat::mcset de {Unable to create FOV Region, celestial WCS Required} 
 ::msgcat::mcset de {Unable to determine date of observation} 
 ::msgcat::mcset de {Unable to evaluate filter} [encoding convertfrom iso8859-1 {Nicht möglich Filter zu evaluieren}]
 ::msgcat::mcset de {Unable to find SIAP window} 
@@ -791,6 +788,7 @@
 ::msgcat::mcset de {Unable to find plot window} [encoding convertfrom iso8859-1 {Nicht möglich Plotfenster zu finden}]
 ::msgcat::mcset de {Unable to find web window} 
 ::msgcat::mcset de {Unable to load RGB image into a non-rgb frame} [encoding convertfrom iso8859-1 {Nicht möglich RGB-Bild in nicht-RGB-rahmen zu laden}]
+::msgcat::mcset de {Unable to load compressed region file} 
 ::msgcat::mcset de {Unable to load plot data} 
 ::msgcat::mcset de {Unable to load region file} 
 ::msgcat::mcset de {Unable to load} [encoding convertfrom iso8859-1 {Nicht möglich zu laden}]

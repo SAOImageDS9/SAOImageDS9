@@ -245,7 +245,6 @@
 ::msgcat::mcset cs {Edit Group Name} 
 ::msgcat::mcset cs {Edit} [encoding convertfrom iso8859-2 {Úpravy}]
 ::msgcat::mcset cs {Elevation} 
-::msgcat::mcset cs {Ellipse Annulus} 
 ::msgcat::mcset cs {Ellipse Panda} 
 ::msgcat::mcset cs {Ellipse} [encoding convertfrom iso8859-2 {Elipsa}]
 ::msgcat::mcset cs {Elliptical Annulus} 
@@ -545,13 +544,13 @@
 ::msgcat::mcset cs {No Catalog specified} 
 ::msgcat::mcset cs {No Data Available} 
 ::msgcat::mcset cs {No Items Found} 
-::msgcat::mcset cs {No current frame} 
 ::msgcat::mcset cs {Non-zero} 
 ::msgcat::mcset cs {None} [encoding convertfrom iso8859-2 {Nic}]
 ::msgcat::mcset cs {Normal} 
 ::msgcat::mcset cs {North} [encoding convertfrom iso8859-2 {Sever}]
 ::msgcat::mcset cs {Not Found} 
 ::msgcat::mcset cs {Not Supported} 
+::msgcat::mcset cs {Not valid export format} 
 ::msgcat::mcset cs {Number of Samples} 
 ::msgcat::mcset cs {Number of Threads} 
 ::msgcat::mcset cs {Number of Ticks} 
@@ -637,7 +636,6 @@
 ::msgcat::mcset cs {RGB Image} 
 ::msgcat::mcset cs {RGB} 
 ::msgcat::mcset cs {Radial Profile} 
-::msgcat::mcset cs {Radial} 
 ::msgcat::mcset cs {Radius} 
 ::msgcat::mcset cs {Raised} 
 ::msgcat::mcset cs {Range} 
@@ -745,7 +743,6 @@
 ::msgcat::mcset cs {Startup} 
 ::msgcat::mcset cs {Start} 
 ::msgcat::mcset cs {Statistics} 
-::msgcat::mcset cs {Stats} 
 ::msgcat::mcset cs {Status} 
 ::msgcat::mcset cs {Step} 
 ::msgcat::mcset cs {Stop} 
@@ -759,7 +756,6 @@
 ::msgcat::mcset cs {Table} 
 ::msgcat::mcset cs {Tabloid} 
 ::msgcat::mcset cs {Tag Color} 
-::msgcat::mcset cs {Task} 
 ::msgcat::mcset cs {Template} [encoding convertfrom iso8859-2 {©ablona}]
 ::msgcat::mcset cs {Text Font} 
 ::msgcat::mcset cs {Text} 
@@ -783,6 +779,7 @@
 ::msgcat::mcset cs {Type} 
 ::msgcat::mcset cs {URL} 
 ::msgcat::mcset cs {Unable to connect directly: using Web Proxy} 
+::msgcat::mcset cs {Unable to create FOV Region, celestial WCS Required} 
 ::msgcat::mcset cs {Unable to determine date of observation} 
 ::msgcat::mcset cs {Unable to evaluate filter} 
 ::msgcat::mcset cs {Unable to find SIAP window} 
@@ -791,6 +788,7 @@
 ::msgcat::mcset cs {Unable to find plot window} 
 ::msgcat::mcset cs {Unable to find web window} 
 ::msgcat::mcset cs {Unable to load RGB image into a non-rgb frame} 
+::msgcat::mcset cs {Unable to load compressed region file} 
 ::msgcat::mcset cs {Unable to load plot data} 
 ::msgcat::mcset cs {Unable to load region file} 
 ::msgcat::mcset cs {Unable to load} 

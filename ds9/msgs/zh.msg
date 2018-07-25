@@ -245,7 +245,6 @@
 ::msgcat::mcset zh {Edit Group Name} 
 ::msgcat::mcset zh {Edit} [encoding convertfrom big5 "\xBD\x73 \xBF\xE8"]
 ::msgcat::mcset zh {Elevation} 
-::msgcat::mcset zh {Ellipse Annulus} 
 ::msgcat::mcset zh {Ellipse Panda} 
 ::msgcat::mcset zh {Ellipse} [encoding convertfrom big5 "\xBE\xF2 \xB6\xEA \xA7\xCE"]
 ::msgcat::mcset zh {Elliptical Annulus} [encoding convertfrom big5 "\xBE\xF2 \xB6\xEA \xB0\xE9"]
@@ -545,13 +544,13 @@
 ::msgcat::mcset zh {No Catalog specified} 
 ::msgcat::mcset zh {No Data Available} 
 ::msgcat::mcset zh {No Items Found} 
-::msgcat::mcset zh {No current frame} 
 ::msgcat::mcset zh {Non-zero} 
 ::msgcat::mcset zh {None} 
 ::msgcat::mcset zh {Normal} 
 ::msgcat::mcset zh {North} 
 ::msgcat::mcset zh {Not Found} 
 ::msgcat::mcset zh {Not Supported} 
+::msgcat::mcset zh {Not valid export format} 
 ::msgcat::mcset zh {Number of Samples} 
 ::msgcat::mcset zh {Number of Threads} 
 ::msgcat::mcset zh {Number of Ticks} 
@@ -637,7 +636,6 @@
 ::msgcat::mcset zh {RGB Image} 
 ::msgcat::mcset zh {RGB} 
 ::msgcat::mcset zh {Radial Profile} 
-::msgcat::mcset zh {Radial} 
 ::msgcat::mcset zh {Radius} 
 ::msgcat::mcset zh {Raised} 
 ::msgcat::mcset zh {Range} 
@@ -745,7 +743,6 @@
 ::msgcat::mcset zh {Startup} 
 ::msgcat::mcset zh {Start} 
 ::msgcat::mcset zh {Statistics} 
-::msgcat::mcset zh {Stats} 
 ::msgcat::mcset zh {Status} 
 ::msgcat::mcset zh {Step} 
 ::msgcat::mcset zh {Stop} 
@@ -759,7 +756,6 @@
 ::msgcat::mcset zh {Table} 
 ::msgcat::mcset zh {Tabloid} 
 ::msgcat::mcset zh {Tag Color} 
-::msgcat::mcset zh {Task} 
 ::msgcat::mcset zh {Template} [encoding convertfrom big5 "\xBC\xCB \xA5\xBB"]
 ::msgcat::mcset zh {Text Font} 
 ::msgcat::mcset zh {Text} [encoding convertfrom big5 "\xA4\xE5 \xA6\x72"]
@@ -783,6 +779,7 @@
 ::msgcat::mcset zh {Type} 
 ::msgcat::mcset zh {URL} 
 ::msgcat::mcset zh {Unable to connect directly: using Web Proxy} 
+::msgcat::mcset zh {Unable to create FOV Region, celestial WCS Required} 
 ::msgcat::mcset zh {Unable to determine date of observation} 
 ::msgcat::mcset zh {Unable to evaluate filter} 
 ::msgcat::mcset zh {Unable to find SIAP window} 
@@ -791,6 +788,7 @@
 ::msgcat::mcset zh {Unable to find plot window} 
 ::msgcat::mcset zh {Unable to find web window} 
 ::msgcat::mcset zh {Unable to load RGB image into a non-rgb frame} 
+::msgcat::mcset zh {Unable to load compressed region file} 
 ::msgcat::mcset zh {Unable to load plot data} 
 ::msgcat::mcset zh {Unable to load region file} 
 ::msgcat::mcset zh {Unable to load} 

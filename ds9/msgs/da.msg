@@ -245,7 +245,6 @@
 ::msgcat::mcset da {Edit Group Name} {Rediger gruppe navn}
 ::msgcat::mcset da {Edit} {Rediger}
 ::msgcat::mcset da {Elevation} {Stigning}
-::msgcat::mcset da {Ellipse Annulus} 
 ::msgcat::mcset da {Ellipse Panda} {Ellipse Panda} 
 ::msgcat::mcset da {Ellipse} {Ellipse}
 ::msgcat::mcset da {Elliptical Annulus} {Elliptisk ringform}
@@ -545,13 +544,13 @@
 ::msgcat::mcset da {No Catalog specified} {Intet katalog er specificeret}
 ::msgcat::mcset da {No Data Available} 
 ::msgcat::mcset da {No Items Found} {Ingen emner er fundet}
-::msgcat::mcset da {No current frame} 
 ::msgcat::mcset da {Non-zero} {ikke-nul}
 ::msgcat::mcset da {None} [encoding convertfrom iso8859-1 {Ingen}]
 ::msgcat::mcset da {Normal} {Normal}
 ::msgcat::mcset da {North} {Nord}
 ::msgcat::mcset da {Not Found} 
 ::msgcat::mcset da {Not Supported} 
+::msgcat::mcset da {Not valid export format} 
 ::msgcat::mcset da {Number of Samples} {Antal}
 ::msgcat::mcset da {Number of Threads} 
 ::msgcat::mcset da {Number of Ticks} 
@@ -637,7 +636,6 @@
 ::msgcat::mcset da {RGB Image} 
 ::msgcat::mcset da {RGB} 
 ::msgcat::mcset da {Radial Profile} 
-::msgcat::mcset da {Radial} 
 ::msgcat::mcset da {Radius} 
 ::msgcat::mcset da {Raised} 
 ::msgcat::mcset da {Range} 
@@ -745,7 +743,6 @@
 ::msgcat::mcset da {Startup} 
 ::msgcat::mcset da {Start} 
 ::msgcat::mcset da {Statistics} 
-::msgcat::mcset da {Stats} 
 ::msgcat::mcset da {Status} 
 ::msgcat::mcset da {Step} {Trin}
 ::msgcat::mcset da {Stop} 
@@ -759,7 +756,6 @@
 ::msgcat::mcset da {Table} 
 ::msgcat::mcset da {Tabloid} 
 ::msgcat::mcset da {Tag Color} 
-::msgcat::mcset da {Task} 
 ::msgcat::mcset da {Template} 
 ::msgcat::mcset da {Text Font} 
 ::msgcat::mcset da {Text} {Tekst}
@@ -783,6 +779,7 @@
 ::msgcat::mcset da {Type} 
 ::msgcat::mcset da {URL} 
 ::msgcat::mcset da {Unable to connect directly: using Web Proxy} 
+::msgcat::mcset da {Unable to create FOV Region, celestial WCS Required} 
 ::msgcat::mcset da {Unable to determine date of observation} 
 ::msgcat::mcset da {Unable to evaluate filter} {kan ikke bestemme filter}
 ::msgcat::mcset da {Unable to find SIAP window} 
@@ -791,6 +788,7 @@
 ::msgcat::mcset da {Unable to find plot window} {kan ikke finde plotte vinduet}
 ::msgcat::mcset da {Unable to find web window} 
 ::msgcat::mcset da {Unable to load RGB image into a non-rgb frame} {Kan ikke hente et RGB billede ind i en ikke-RGB ramme}
+::msgcat::mcset da {Unable to load compressed region file} 
 ::msgcat::mcset da {Unable to load plot data} 
 ::msgcat::mcset da {Unable to load region file} 
 ::msgcat::mcset da {Unable to load} {Kan ikke hente}

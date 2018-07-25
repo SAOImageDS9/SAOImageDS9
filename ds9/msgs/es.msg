@@ -245,7 +245,6 @@
 ::msgcat::mcset es {Edit Group Name} {Editar el nombre del grupo}
 ::msgcat::mcset es {Edit} {Editar}
 ::msgcat::mcset es {Elevation}  [encoding convertfrom iso8859-1 {Elevación}]
-::msgcat::mcset es {Ellipse Annulus} 
 ::msgcat::mcset es {Ellipse Panda} {Elipse con elipse inscrita segmentada}
 ::msgcat::mcset es {Ellipse} {Elipse} 
 ::msgcat::mcset es {Elliptical Annulus} {Elipse con elipse inscrita}
@@ -545,13 +544,13 @@
 ::msgcat::mcset es {No Catalog specified} [encoding convertfrom iso8859-1 {No se ha especificado el catálogo}]
 ::msgcat::mcset es {No Data Available} 
 ::msgcat::mcset es {No Items Found} [encoding convertfrom iso8859-1 {Artículos no encontrados}]
-::msgcat::mcset es {No current frame} 
 ::msgcat::mcset es {Non-zero} {No nulo}
 ::msgcat::mcset es {None} {Nada}
 ::msgcat::mcset es {Normal} 
 ::msgcat::mcset es {North} {Norte}
 ::msgcat::mcset es {Not Found} 
 ::msgcat::mcset es {Not Supported} 
+::msgcat::mcset es {Not valid export format} 
 ::msgcat::mcset es {Number of Samples} [encoding convertfrom iso8859-1 {Número de muestreos}]
 ::msgcat::mcset es {Number of Threads} 
 ::msgcat::mcset es {Number of Ticks} 
@@ -637,7 +636,6 @@
 ::msgcat::mcset es {RGB Image} 
 ::msgcat::mcset es {RGB} 
 ::msgcat::mcset es {Radial Profile} 
-::msgcat::mcset es {Radial} 
 ::msgcat::mcset es {Radius} {Radio}
 ::msgcat::mcset es {Raised} 
 ::msgcat::mcset es {Range} 
@@ -745,7 +743,6 @@
 ::msgcat::mcset es {Startup} 
 ::msgcat::mcset es {Start} {Empezar}
 ::msgcat::mcset es {Statistics} 
-::msgcat::mcset es {Stats} 
 ::msgcat::mcset es {Status} {Estado}
 ::msgcat::mcset es {Step} {Escalonado}
 ::msgcat::mcset es {Stop} {Parar} 
@@ -759,7 +756,6 @@
 ::msgcat::mcset es {Table} 
 ::msgcat::mcset es {Tabloid} 
 ::msgcat::mcset es {Tag Color} 
-::msgcat::mcset es {Task} 
 ::msgcat::mcset es {Template} 
 ::msgcat::mcset es {Text Font} 
 ::msgcat::mcset es {Text} {Texto}
@@ -783,6 +779,7 @@
 ::msgcat::mcset es {Type} {Clase} 
 ::msgcat::mcset es {URL} 
 ::msgcat::mcset es {Unable to connect directly: using Web Proxy} 
+::msgcat::mcset es {Unable to create FOV Region, celestial WCS Required} 
 ::msgcat::mcset es {Unable to determine date of observation} 
 ::msgcat::mcset es {Unable to evaluate filter} {Incapaz de evaluar el filtro}
 ::msgcat::mcset es {Unable to find SIAP window} 
@@ -791,6 +788,7 @@
 ::msgcat::mcset es {Unable to find plot window} [encoding convertfrom iso8859-1 {Incapaz de hallar la ventana gráfica}]
 ::msgcat::mcset es {Unable to find web window} 
 ::msgcat::mcset es {Unable to load RGB image into a non-rgb frame} {Incapaz de cargar imagen RGB en un marco no RGB}
+::msgcat::mcset es {Unable to load compressed region file} 
 ::msgcat::mcset es {Unable to load plot data} 
 ::msgcat::mcset es {Unable to load region file} 
 ::msgcat::mcset es {Unable to load} {Incapaz de cargar}

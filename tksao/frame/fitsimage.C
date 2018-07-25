@@ -1166,13 +1166,12 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
   // AST
   for (int ii=0; ii<MULTWCSA; ii++) {
     if (wcs_[ii]) {
-      if (DebugWCS)
-	wcsShow(wcs_[ii]);
-
       astinit(ii, hd, prim);
 
-      if (DebugAST)
+      if (DebugWCS) {
+	wcsShow(wcs_[ii]);
 	astShow(ast_[ii]);
+      }
     }
   }
 
@@ -1319,7 +1318,7 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
   
   initWCSPhysical();
 
-  if (DebugAST && ast_)
+  if (DebugWCS && ast_)
     astShow(ast_);
 }
 #endif
@@ -1356,15 +1355,16 @@ void FitsImage::initWCS0(const Vector& pix)
 			  cc[0], cc[1], 0, 0, ww->cd, 0, 0, 0, 2000, 2000);
     wcs_[ii]->longpole = 999;
     wcs_[ii]->latpole = 999;
-    if (DebugWCS)
-      wcsShow(wcs_[ii]);
 
     if (ast_[ii])
       astAnnul(ast_[ii]);
     ast_[ii] = NULL;
     astinit0(ii, hd, prim);
-    if (DebugAST)
+
+    if (DebugWCS) {
+      wcsShow(wcs_[ii]);
       astShow(ast_[ii]);
+    }
   }
 }
 #else
@@ -1429,15 +1429,11 @@ void FitsImage::initWCS0(const Vector& pix)
   putFitsCard(chan, "CD2_1", mx[1][0]);
   putFitsCard(chan, "CD2_2", mx[1][1]);
 
-  // EPOCH
-  float mjd = hd->getReal("MJD-OBS",0);
-  if (mjd)
-    putFitsCard(chan, "MJD-OBS", mjd);
-  else
-    putFitsCard(chan, "EPOCH", 2000);
+  // EPOCH, EQUINOX
+  putFitsCard(chan, "EPOCH", 2000);
+  putFitsCard(chan, "EQUINOX", 2000);
   
   // RADESYS
-  putFitsCard(chan, "EQUINOX", 2000);
   putFitsCard(chan, "RADESYS", "FK5");
 
   // all done
@@ -1455,7 +1451,7 @@ void FitsImage::initWCS0(const Vector& pix)
   astSav_ = ast_;
   ast_ = frameSet;
 
-  if (DebugAST)
+  if (DebugWCS)
     astShow(frameSet);
 
   // cleanup
@@ -4784,7 +4780,7 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
 #ifdef OLDWCS
 AstFrameSet* FitsImage::buildast(int ss, FitsHead* hd, FitsHead* prim) 
 {
-  if (DebugAST)
+  if (DebugWCS)
     cerr << endl << "buildast("<< ss << ")" << endl;
 
   // read wcs struct into astChannel
@@ -4886,7 +4882,7 @@ AstFrameSet* FitsImage::buildast0(int ss, FitsHead* hd, FitsHead* prim)
 
 void FitsImage::header2ast(int ss, FitsHead* hd, void* chan) 
 {
-  if (DebugAST)
+  if (DebugWCS)
     cerr << endl << "header2ast(" << ss << ")" << endl;
 
   char alt = (ss==0) ? ' ' : (char)('@'+ss);
@@ -5040,7 +5036,7 @@ void FitsImage::header2ast(int ss, FitsHead* hd, void* chan)
 
 void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan) 
 {
-  if (DebugAST)
+  if (DebugWCS)
     cerr << endl << "wcs2ast(" << ww << ")" << endl;
 
   // Alt WCS
@@ -5451,7 +5447,7 @@ void FitsImage::putFitsCard(void* chan, const char* key, const char* value)
   astPutFits(chan, buf, 0);
   astClearStatus;
 
-  if (DebugAST)
+  if (DebugWCS)
     cerr << str.str().c_str() << endl;
 }
 
@@ -5469,7 +5465,7 @@ void FitsImage::putFitsCard(void* chan, const char* key, int value)
   astPutFits(chan, buf, 0);
   astClearStatus;
 
-  if (DebugAST)
+  if (DebugWCS)
     cerr << str.str().c_str() << endl;
 }
 
@@ -5489,6 +5485,6 @@ void FitsImage::putFitsCard(void* chan, const char* key, double value)
   astPutFits(chan, buf, 0);
   astClearStatus;
 
-  if (DebugAST)
+  if (DebugWCS)
     cerr << str.str().c_str() << endl;
 }

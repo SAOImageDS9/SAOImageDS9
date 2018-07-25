@@ -21,7 +21,6 @@
 #include "util.h"
 #include "point.h"
 
-extern int DebugAST;
 extern int DebugMosaic;
 extern int DebugPerf;
 extern int DebugWCS;

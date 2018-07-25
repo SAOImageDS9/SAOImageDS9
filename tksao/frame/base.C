@@ -18,7 +18,6 @@
 #include "vect.h"
 
 // Debug
-int DebugAST= 0;
 int DebugBin= 0;
 int DebugBlock= 0;
 int DebugCompress= 0;

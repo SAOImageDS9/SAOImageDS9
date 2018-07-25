@@ -24,7 +24,6 @@ proc DebugDef {} {
     set debug(tcl,xpa) 0
     set debug(tcl,image) 0
 
-    set debug(tksao,ast) 0
     set debug(tksao,mosaic) 0
     set debug(tksao,parser) 0
     set debug(tksao,perf) 0
@@ -98,9 +97,6 @@ proc DebugMenu {} {
 	-variable debug(tcl,image)
 
     menu $ds9(mb).debug.tksao
-    $ds9(mb).debug.tksao add checkbutton -label {AST} \
-	-variable debug(tksao,ast) \
-	-command "Debug ast debug(tksao,ast)"
     $ds9(mb).debug.tksao add checkbutton -label {Mosaic} \
 	-variable debug(tksao,mosaic) \
 	-command "Debug mosaic debug(tksao,mosaic)"
@@ -205,10 +201,6 @@ proc ProcessDebugCmd {varname iname} {
 
     global debug
     switch -- [string tolower [lindex $var $i]] {
-	ast {
-	    set debug(tksao,ast) 1
-	    Debug ast debug(tksao,ast)
-	}
 	mosaic {
 	    set debug(tksao,mosaic) 1
 	    Debug mosaic debug(tksao,mosaic)

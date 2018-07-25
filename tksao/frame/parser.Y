@@ -509,7 +509,6 @@ numeric	: REAL {$$=$1;}
 
 debug	: ON_ {yydebug=1;}
         | OFF_ {yydebug=0;}
-	| AST_ yesno {DebugAST=$2;}
 	| MOSAIC_ yesno {DebugMosaic=$2;}
 	| PARSER_ yesno {yydebug=$2;}
 	| PERF_ yesno {DebugPerf=$2;}

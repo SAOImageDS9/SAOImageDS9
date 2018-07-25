@@ -1312,9 +1312,9 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
   }
 
   astInit(hd, prim);
-  wcsInit();
-  wcsCelInit();
-  wcs3DInit();
+  wcsInit(hd);
+  wcsCelInit(hd);
+  wcs3DInit(hd);
   wcsHPXInit();
   
   initWCSPhysical();
@@ -3806,26 +3806,30 @@ void FitsImage::astInit(FitsHead* hd, FitsHead* prim)
   }
 }
 
-void FitsImage::wcsInit()
+void FitsImage::wcsInit(FitsHead* hd)
 {
   // init wcs_ array
   if (wcs_)
     delete [] wcs_;
   wcs_ =NULL;
 
-  if (!ast_)
-    return;
-
   wcs_ = new int[MULTWCS];
   for (int ii=0; ii<MULTWCS; ii++)
     wcs_[ii] =0;
   
-  // fill out wcs_ array
-  astClearStatus;
-  astBegin;
+  if (!ast_)
+    return;
 
   // since we have ast_
   wcs_[0] =1; 
+
+  // do we have a AST wcs?
+  if (hd->find("BEGAST_A"))
+    return;
+
+  // fill out wcs_ array
+  astClearStatus;
+  astBegin;
 
   int nn = astGetI(ast_, "Nframe");
   for (int ii=0; ii<nn; ii++) {
@@ -3839,38 +3843,52 @@ void FitsImage::wcsInit()
   astEnd;
 }
 
-void FitsImage::wcsCelInit()
+void FitsImage::wcsCelInit(FitsHead* hd)
 {
   // init wcsCel_ array
   if (wcsCel_)
     delete [] wcsCel_;
   wcsCel_ =NULL;
 
-  if (!ast_)
-    return;
-
   wcsCel_ = new int[MULTWCS];
   for (int ii=0; ii<MULTWCS; ii++)
     wcsCel_[ii] =0;
+
+  if (!ast_)
+    return;
 
   astClearStatus;
   astBegin;
 
   int nn = astGetI(ast_, "Nframe");
-  for (int ii=0; ii<nn; ii++) {
-    AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
-    const char* id = astGetC(ff, "Ident");
-    if (id && *id) {
-      int jj = (*id == ' ') ? 0 : *id-'@';
-
+  // do we have a AST wcs?
+  if (hd->find("BEGAST_A")) {
+    for (int ii=0; ii<nn; ii++) {
+      AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
       AstFrameSet* fs =
 	(AstFrameSet*)astFindFrame(ff, astSkyFrame(" MaxAxes=10")," ");
       if (fs) {
-	wcsCel_[jj] = 1;
+	wcsCel_[0] = 1;
 	const char* str = astGetC(ff, "System");
-	//	cerr << jj << '=' << str << endl;
 	if (!strncmp(str,"Unknown",7))
-	  wcsCel_[jj] = 0;
+	  wcsCel_[0] = 0;
+      }
+    }
+  }
+  else {
+    for (int ii=0; ii<nn; ii++) {
+      AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
+      const char* id = astGetC(ff, "Ident");
+      if (id && *id) {
+	int jj = (*id == ' ') ? 0 : *id-'@';
+	AstFrameSet* fs =
+	  (AstFrameSet*)astFindFrame(ff, astSkyFrame(" MaxAxes=10")," ");
+	if (fs) {
+	  wcsCel_[jj] = 1;
+	  const char* str = astGetC(ff, "System");
+	  if (!strncmp(str,"Unknown",7))
+	    wcsCel_[jj] = 0;
+	}
       }
     }
   }
@@ -3878,30 +3896,39 @@ void FitsImage::wcsCelInit()
   astEnd;
 }
 
-void FitsImage::wcs3DInit()
+void FitsImage::wcs3DInit(FitsHead* hd)
 {
   // init wcs3D_ array
   if (wcs3D_)
     delete [] wcs3D_;
   wcs3D_ =NULL;
 
-  if (!ast_)
-    return;
-
   wcs3D_ = new int[MULTWCS];
   for (int ii=0; ii<MULTWCS; ii++)
     wcs3D_[ii] =0;
   
+  if (!ast_)
+    return;
+
   astClearStatus;
   astBegin;
 
   int nn = astGetI(ast_,"nframe");
-  for (int ii=0; ii<nn; ii++) {
-    AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
-    const char* id = astGetC(ff,"Ident");
-    if (id && *id) {
-      int jj = (*id == ' ') ? 0 : *id-'@';
-      wcs3D_[jj] = (astGetI(ff, "Naxes")>2) ? 1 : 0;
+  // do we have a AST wcs?
+  if (hd->find("BEGAST_A")) {
+    for (int ii=0; ii<nn; ii++) {
+      AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
+      wcs3D_[0] = wcs3D_[0] || (astGetI(ff, "Naxes")>2) ? 1 : 0;
+    }
+  }
+  else {
+    for (int ii=0; ii<nn; ii++) {
+      AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
+      const char* id = astGetC(ff,"Ident");
+      if (id && *id) {
+	int jj = (*id == ' ') ? 0 : *id-'@';
+	wcs3D_[jj] = (astGetI(ff, "Naxes")>2) ? 1 : 0;
+      }
     }
   }
 
@@ -3923,7 +3950,6 @@ void FitsImage::wcsHPXInit()
 	wcsHPX_ =1;
   }
 }
-
 #endif
 
 #ifdef OLDWCS

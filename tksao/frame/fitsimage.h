@@ -162,9 +162,9 @@ class FitsImage {
   void astinit0(int, FitsHead*, FitsHead*);
 #else
   void astInit(FitsHead*, FitsHead*);
-  void wcsInit();
-  void wcsCelInit();
-  void wcs3DInit();
+  void wcsInit(FitsHead*);
+  void wcsCelInit(FitsHead*);
+  void wcs3DInit(FitsHead*);
   void wcsHPXInit();
 #endif
   void putFitsCard(void* chan, const char* key, const char* value);

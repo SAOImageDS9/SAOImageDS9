@@ -936,7 +936,7 @@ void FitsImage::wfpc2WCS(istream& str)
     delete wfpc2Header_;
 
   wfpc2Header_ = hh;
-  initWCS(wfpc2Header_, NULL);
+  initWCS(wfpc2Header_);
 }
 
 void FitsImage::appendWCS(istream& str)
@@ -976,7 +976,7 @@ void FitsImage::appendWCS(istream& str)
     delete wcsAltHeader_;
 
   wcsAltHeader_ = new FitsHead(cards,ll,FitsHead::ALLOC);
-  initWCS(wcsAltHeader_, NULL);
+  initWCS(wcsAltHeader_);
 }
 
 char* FitsImage::display(FitsHead* hd)
@@ -1266,13 +1266,12 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
 
 #else
 
-void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
+void FitsImage::initWCS(FitsHead* hd)
 {
   if (manageWCS_) {
     if (ast_)
       astAnnul(ast_);
     ast_ =NULL;
-    astSav_ =NULL;
     if (wcs_)
       delete [] wcs_;
     wcs_ =NULL;
@@ -1316,10 +1315,12 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
     }
   }
 
-  astInit(hd, prim);
-  wcsInit(hd);
-  wcsCelInit(hd);
-  wcs3DInit(hd);
+  int hasWCSAST = hd->find("BEGAST_A") ? 1 : 0;
+
+  astInit(hd);
+  wcsInit(hasWCSAST);
+  wcsCelInit(hasWCSAST);
+  wcs3DInit(hasWCSAST);
   wcsHPXInit();
   
   initWCSPhysical();
@@ -1341,8 +1342,12 @@ void FitsImage::resetWCS()
     delete wcsAltHeader_;
 
   wcsAltHeader_ = NULL;
+#ifdef OLDWCS
   initWCS(image_->head(),
 	  image_->primary() && image_->inherit() ? image_->primary() : NULL);
+#else
+  initWCS(image_->head());
+#endif
 }
 
 #ifdef OLDWCS
@@ -2494,7 +2499,7 @@ void FitsImage::replaceWCS(istream& str)
     delete wcsAltHeader_;
 
   wcsAltHeader_ = hh;
-  initWCS(wcsAltHeader_, NULL);
+  initWCS(wcsAltHeader_);
 }
 
 void FitsImage::reset()
@@ -3806,7 +3811,7 @@ void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
   setWCSSkyFrame(ast_[ss],Coord::FK5);
 }
 #else
-void FitsImage::astInit(FitsHead* hd, FitsHead* prim)
+void FitsImage::astInit(FitsHead* hd)
 {
   if (ast_)
     astAnnul(ast_);
@@ -3832,16 +3837,13 @@ void FitsImage::astInit(FitsHead* hd, FitsHead* prim)
     }
     break;
   case 3:
-    if (0) {
-      int orr[] = {2,3,1};
-      astPermAxes(ast_,orr);
-    }
+    break;
   case 4:
     break;
   }
 }
 
-void FitsImage::wcsInit(FitsHead* hd)
+void FitsImage::wcsInit(int hasWCSAST)
 {
   // init wcs_ array
   if (wcs_)
@@ -3859,7 +3861,7 @@ void FitsImage::wcsInit(FitsHead* hd)
   wcs_[0] =1; 
 
   // do we have a AST wcs?
-  if (hd->find("BEGAST_A"))
+  if (hasWCSAST)
     return;
 
   // fill out wcs_ array
@@ -3878,7 +3880,7 @@ void FitsImage::wcsInit(FitsHead* hd)
   astEnd;
 }
 
-void FitsImage::wcsCelInit(FitsHead* hd)
+void FitsImage::wcsCelInit(int hasWCSAST)
 {
   // init wcsCel_ array
   if (wcsCel_)
@@ -3897,7 +3899,7 @@ void FitsImage::wcsCelInit(FitsHead* hd)
 
   int nn = astGetI(ast_, "Nframe");
   // do we have a AST wcs?
-  if (hd->find("BEGAST_A")) {
+  if (hasWCSAST) {
     for (int ii=0; ii<nn; ii++) {
       AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
       AstFrameSet* fs =
@@ -3931,7 +3933,7 @@ void FitsImage::wcsCelInit(FitsHead* hd)
   astEnd;
 }
 
-void FitsImage::wcs3DInit(FitsHead* hd)
+void FitsImage::wcs3DInit(int hasWCSAST)
 {
   // init wcs3D_ array
   if (wcs3D_)
@@ -3950,7 +3952,7 @@ void FitsImage::wcs3DInit(FitsHead* hd)
 
   int nn = astGetI(ast_,"nframe");
   // do we have a AST wcs?
-  if (hd->find("BEGAST_A")) {
+  if (hasWCSAST) {
     for (int ii=0; ii<nn; ii++) {
       AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
       wcs3D_[0] = wcs3D_[0] || (astGetI(ff, "Naxes")>2) ? 1 : 0;

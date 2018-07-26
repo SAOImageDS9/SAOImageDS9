@@ -156,9 +156,9 @@ class FitsImage {
   void initBin();
   void initHPX();
 
-  void initWCS(FitsHead*, FitsHead*);
   void initWCSPhysical();
 #ifdef OLDWCS
+  void initWCS(FitsHead*, FitsHead* =NULL);
   void wcsShow(WorldCoor*);
   void astinit(int, FitsHead*, FitsHead*);
   AstFrameSet* buildast(int, FitsHead*, FitsHead*);
@@ -168,10 +168,11 @@ class FitsImage {
   void header2ast(int,FitsHead*, void*);
   void astinit0(int, FitsHead*, FitsHead*);
 #else
-  void astInit(FitsHead*, FitsHead*);
-  void wcsInit(FitsHead*);
-  void wcsCelInit(FitsHead*);
-  void wcs3DInit(FitsHead*);
+  void initWCS(FitsHead*);
+  void astInit(FitsHead*);
+  void wcsInit(int);
+  void wcsCelInit(int);
+  void wcs3DInit(int);
   void wcsHPXInit();
 #endif
   void putFitsCard(void* chan, const char* key, const char* value);

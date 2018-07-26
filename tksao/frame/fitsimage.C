@@ -118,13 +118,6 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcsCel_ =NULL;
   wcs3D_ =NULL;
   wcsHPX_ =0;
-
-  astSav_ =NULL;
-  astInvSav_ =0;
-  wcsSav_ =NULL;
-  wcsCelSav_ =NULL;
-  wcs3DSav_ =NULL;
-  wcsHPXSav_ =0;
 #endif
   wcsAltHeader_ =NULL;
   wfpc2Header_ =NULL;
@@ -1425,34 +1418,20 @@ void FitsImage::initWCS0(const Vector& pix)
   if (!ast_)
     return;
 
-  // read wcs struct into astChannel
-  // we may have an error, just reset
-  astClearStatus;
-
-  // new fitschan
-  AstFitsChan* chan = astFitsChan(NULL, NULL, "");
-  if (!astOK || chan == AST__NULL)
-    return;
-
-  // no warning messages
-  astClear(chan,"Warnings");
-
-  // basics (needed by fitschan.c)
-  putFitsCard(chan, "NAXIS1", (int)naxis(0));
-  putFitsCard(chan, "NAXIS2", (int)naxis(1));
+  FitsHead* hd = new FitsHead(naxis(0), naxis(1), 1, -32);
 
   // CTYPE
-  putFitsCard(chan, "CTYPE1", "RA---TAN");
-  putFitsCard(chan, "CTYPE2", "DEC--TAN");
+  hd->appendString("CTYPE1", "RA---TAN", NULL);
+  hd->appendString("CTYPE2", "DEC--TAN", NULL);
 
   // CRPIX
   Vector cc = mapFromRef(pix, Coord::IMAGE, Coord::FK5);
-  putFitsCard(chan, "CRPIX1", cc[1]);
-  putFitsCard(chan, "CRPIX2", cc[0]);
+  hd->appendReal("CRPIX1", cc[1], 8, NULL);
+  hd->appendReal("CRPIX2", cc[0], 8, NULL);
 
   // CRVAL
-  putFitsCard(chan, "CRVAL1", 0);
-  putFitsCard(chan, "CRVAL2", 0);
+  hd->appendReal("CRVAL1", 0, 8, NULL);
+  hd->appendReal("CRVAL2", 0, 8, NULL);
 
   // CD
   float ss = getWCSPixelSize(Coord::WCS);
@@ -1468,85 +1447,22 @@ void FitsImage::initWCS0(const Vector& pix)
     break;
   };
   Matrix mx = flip*Rotate(ang)*Scale(ss);
-  putFitsCard(chan, "CD1_1", mx[0][0]);
-  putFitsCard(chan, "CD1_2", mx[0][1]);
-  putFitsCard(chan, "CD2_1", mx[1][0]);
-  putFitsCard(chan, "CD2_2", mx[1][1]);
+  hd->appendReal("CD1_1", mx[0][0], 8, NULL);
+  hd->appendReal("CD1_2", mx[0][1], 8, NULL);
+  hd->appendReal("CD2_1", mx[1][0], 8, NULL);
+  hd->appendReal("CD2_2", mx[1][1], 8, NULL);
 
   // EPOCH, EQUINOX
-  putFitsCard(chan, "EPOCH", 2000);
-  putFitsCard(chan, "EQUINOX", 2000);
+  hd->appendReal("EPOCH", 2000, 8, NULL);
+  hd->appendReal("EQUINOX", 2000, 8, NULL);
   
   // RADESYS
-  putFitsCard(chan, "RADESYS", "FK5");
+  hd->appendString("RADESYS", "FK5", NULL);
 
-  // all done
-  // rewind chan
-  astClear(chan, "Card");
-
-  // parse header
-  AstFrameSet* frameSet = (AstFrameSet*)astRead(chan);
-
-  // do we have anything?
-  if (!astOK || frameSet == AST__NULL || 
-      strncmp(astGetC(frameSet,"Class"), "FrameSet", 8))
-    return;
-
-  // save current wcs
-  astSav_ = ast_;
-  astInvSav_ = astInv_;
-  wcsSav_ = wcs_;
-  wcsCelSav_ = wcsCel_;
-  wcs3DSav_ = wcs3D_;
-  wcsHPXSav_ = wcsHPX_;
-
-  // set up temp wcs
-  ast_ = frameSet;
-  astInv_ = 1;
-  wcs_ = new int[MULTWCS];
-  for (int ii=0; ii<MULTWCS; ii++)
-    wcs_[ii] =0;
-  wcs_[0] =1;
-  wcsCel_ = new int[MULTWCS];
-  for (int ii=0; ii<MULTWCS; ii++)
-    wcsCel_[ii] =0;
-  wcsCel_[0] = 1;
-  wcs3D_ = new int[MULTWCS];
-  for (int ii=0; ii<MULTWCS; ii++)
-    wcs3D_[ii] =0;
-  wcsHPX_ = 0;
-
-  if (DebugWCS)
-    astShow(frameSet);
-
-  // cleanup
-  astAnnul(chan);
-}
-
-void FitsImage::resetWCS0()
-{
-  if (wcs_)
-    delete [] wcs_;
-  if (wcsCel_)
-    delete [] wcsCel_;
-  if (wcs3D_)
-    delete [] wcs3D_;
-
-  // restore current wcs
-  ast_ = astSav_;
-  astInv_ = astInvSav_;
-  wcs_ = wcsSav_;
-  wcsCel_ = wcsCelSav_;
-  wcs3D_ = wcs3DSav_;
-  wcsHPX_ = wcsHPXSav_;
-
-  // reset temp wcs
-  astSav_ =NULL;
-  astInvSav_ =0;
-  wcsSav_ =NULL;
-  wcsCelSav_ =NULL;
-  wcs3DSav_ =NULL;
-  wcsHPXSav_ =0;
+  if (wcs0Header_)
+    delete wcs0Header_;
+  wcs0Header_ = hd;
+  initWCS(wcs0Header_);
 }
 #endif
 

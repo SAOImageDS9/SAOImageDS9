@@ -168,6 +168,9 @@ class FitsImage {
   void wcs2ast0(int, FitsHead*, FitsHead*, void*);
   void header2ast(int,FitsHead*, void*);
   void astinit0(int, FitsHead*, FitsHead*);
+
+  void initWCS0(const Vector&);
+  void resetWCS0();
 #else
   void initWCS(FitsHead*);
   void astInit(FitsHead*);
@@ -175,6 +178,9 @@ class FitsImage {
   void wcsCelInit(int);
   void wcs3DInit(int);
   void wcsHPXInit();
+
+  void initWCS0(const Vector&);
+  void resetWCS0() {resetWCS();}
 #endif
   void putFitsCard(void* chan, const char* key, const char* value);
   void putFitsCard(void* chan, const char* key, int value);
@@ -409,9 +415,6 @@ class FitsImage {
   void listWCS(ostream&, Coord::CoordSystem);
   void resetWCS();
   void replaceWCS(istream&);
-
-  void initWCS0(const Vector&);
-  void resetWCS0();
 
   void processKeywordsPhysical();
   void processKeywordsParams();

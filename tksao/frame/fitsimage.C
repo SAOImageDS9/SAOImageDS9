@@ -126,7 +126,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcs3DSav_ =NULL;
   wcsHPXSav_ =0;
 #endif
-  wcsHeader_ =NULL;
+  wcsAltHeader_ =NULL;
   wfpc2Header_ =NULL;
 
   iisMode_ =0;
@@ -216,8 +216,8 @@ FitsImage::~FitsImage()
   }
 #endif
 
-  if (wcsHeader_)
-    delete wcsHeader_;
+  if (wcsAltHeader_)
+    delete wcsAltHeader_;
   if (wfpc2Header_)
     delete wfpc2Header_;
 }
@@ -972,11 +972,11 @@ void FitsImage::appendWCS(istream& str)
   memcpy(cards+hd->headbytes(), hh->cards(), hh->headbytes());
 
   delete hh;
-  if (wcsHeader_)
-    delete wcsHeader_;
+  if (wcsAltHeader_)
+    delete wcsAltHeader_;
 
-  wcsHeader_ = new FitsHead(cards,ll,FitsHead::ALLOC);
-  initWCS(wcsHeader_, NULL);
+  wcsAltHeader_ = new FitsHead(cards,ll,FitsHead::ALLOC);
+  initWCS(wcsAltHeader_, NULL);
 }
 
 char* FitsImage::display(FitsHead* hd)
@@ -1015,8 +1015,8 @@ char* FitsImage::displayPrimary()
 
 char* FitsImage::displayWCS()
 {
-  if (wcsHeader_)
-    return display(wcsHeader_);
+  if (wcsAltHeader_)
+    return display(wcsAltHeader_);
   else if (wfpc2Header_)
     return display(wfpc2Header_);
   else
@@ -1337,10 +1337,10 @@ void FitsImage::resetWCS()
   objectKeyword_ = dupstr(image_->getString("OBJECT"));
 
   // Process WCS keywords
-  if (wcsHeader_)
-    delete wcsHeader_;
+  if (wcsAltHeader_)
+    delete wcsAltHeader_;
 
-  wcsHeader_ = NULL;
+  wcsAltHeader_ = NULL;
   initWCS(image_->head(),
 	  image_->primary() && image_->inherit() ? image_->primary() : NULL);
 }
@@ -1350,8 +1350,8 @@ void FitsImage::initWCS0(const Vector& pix)
 {
   FitsHead* hd =NULL;
   FitsHead* prim =NULL;
-  if (wcsHeader_)
-    hd = wcsHeader_;
+  if (wcsAltHeader_)
+    hd = wcsAltHeader_;
   else if (wfpc2Header_)
     hd = wfpc2Header_;
   else {
@@ -2490,11 +2490,11 @@ void FitsImage::replaceWCS(istream& str)
   objectKeyword_ = dupstr(hh->getString("OBJECT"));
 
   // Process WCS keywords
-  if (wcsHeader_)
-    delete wcsHeader_;
+  if (wcsAltHeader_)
+    delete wcsAltHeader_;
 
-  wcsHeader_ = hh;
-  initWCS(wcsHeader_, NULL);
+  wcsAltHeader_ = hh;
+  initWCS(wcsAltHeader_, NULL);
 }
 
 void FitsImage::reset()

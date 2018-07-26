@@ -2337,7 +2337,7 @@ void Base::hasWCSCmd(Coord::CoordSystem sys)
 
 void Base::hasWCSAltCmd()
 {
-  Tcl_AppendResult(interp, (currentContext->cfits && currentContext->cfits->wcsHeader() ? "1" : "0"), NULL);
+  Tcl_AppendResult(interp, (currentContext->cfits && currentContext->cfits->wcsAltHeader() ? "1" : "0"), NULL);
 }
 
 void Base::hasWCSCelCmd(Coord::CoordSystem sys)

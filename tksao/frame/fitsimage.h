@@ -129,7 +129,7 @@ class FitsImage {
   int* wcs3DSav_;
   int wcsHPXSav_;
 #endif
-  FitsHead* wcsHeader_; // alt wcs header
+  FitsHead* wcsAltHeader_; // alt wcs header
   FitsHead* wfpc2Header_; // wcs header for wfpc2
 
   Matrix wcsToRef_;          // iraf/wcs matrix
@@ -380,7 +380,7 @@ class FitsImage {
   int hasATMV() {return keyATMV;}
   int hasDTMV() {return keyDTMV;}
 
-  FitsHead* wcsHeader() {return wcsHeader_;}
+  FitsHead* wcsAltHeader() {return wcsAltHeader_;}
 
   int isIIS() {return iisMode_;}
   Vector& iisz() {return iisz_;}

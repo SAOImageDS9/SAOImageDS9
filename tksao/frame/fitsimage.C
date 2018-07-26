@@ -1434,7 +1434,7 @@ void FitsImage::initWCS0(const Vector& pix)
   hd->appendReal("CRVAL2", 0, 8, NULL);
 
   // CD
-  float ss = getWCSPixelSize(Coord::WCS);
+  Vector ss = getWCSSize(Coord::WCS);
   double ang = getWCSRotation(Coord::WCS,Coord::FK5);
   Matrix flip;
   switch (getWCSOrientation(Coord::WCS,Coord::FK5)) {
@@ -3056,7 +3056,7 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
 #endif
 
 #ifndef OLDWCS
-double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
+Vector FitsImage::getWCSSize(Coord::CoordSystem sys)
 {
   if (!hasWCS(sys))
     return 0;
@@ -3070,29 +3070,9 @@ double FitsImage::getWCSPixelSize(Coord::CoordSystem sys)
   in[1] = center()+Vector(1,0);
   in[2] = center()+Vector(0,1);
   wcsTran(3, in, 1, out);
-  double dd = (wcsDistance(out[0],out[1]) + wcsDistance(out[0],out[2]))/2.;
 
+  Vector dd = Vector(wcsDistance(out[0],out[1]), wcsDistance(out[0],out[2]));
   return hasWCSCel(sys) ? radToDeg(dd) : dd;
-}
-
-double FitsImage::getWCSPixelArea(Coord::CoordSystem sys)
-{
-  if (!hasWCS(sys))
-    return 0;
-
-  astClearStatus; // just to make sure
-  setWCSSkyFrame(sys, Coord::FK5);
-
-  Vector in[3];
-  Vector out[3];
-  in[0] = center();
-  in[1] = center()+Vector(1,0);
-  in[2] = center()+Vector(0,1);
-  wcsTran(3, in, 1, out);
-  double ll = wcsDistance(out[0], out[1]);
-  double mm = wcsDistance(out[0], out[2]);
-
-  return hasWCSCel(sys) ? radToDeg(ll)*radToDeg(mm) : ll*mm;
 }
 #endif
 

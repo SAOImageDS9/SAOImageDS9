@@ -451,8 +451,7 @@ class FitsImage {
   void setWCSSkyFrame(Coord::CoordSystem, Coord::SkyFrame);
   void setWCSFormat(int, const char*);
 
-  double getWCSPixelSize(Coord::CoordSystem);
-  double getWCSPixelArea(Coord::CoordSystem);
+  Vector getWCSSize(Coord::CoordSystem);
 #endif
 
   int hasWCS(Coord::CoordSystem);

@@ -130,7 +130,7 @@ class FitsImage {
   int wcsHPXSav_;
 #endif
   FitsHead* wcsHeader_; // alt wcs header
-  FitsHead* altHeader_; // wcs header for wfpc2
+  FitsHead* wfpc2Header_; // wcs header for wfpc2
 
   Matrix wcsToRef_;          // iraf/wcs matrix
 
@@ -402,7 +402,7 @@ class FitsImage {
   char* pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
 #endif
 
-  void altWCS(istream&);
+  void wfpc2WCS(istream&);
   void appendWCS(istream&);
   void listWCS(ostream&, Coord::CoordSystem);
   void resetWCS();

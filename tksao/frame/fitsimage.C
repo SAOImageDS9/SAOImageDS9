@@ -127,7 +127,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcsHPXSav_ =0;
 #endif
   wcsHeader_ =NULL;
-  altHeader_ =NULL;
+  wfpc2Header_ =NULL;
 
   iisMode_ =0;
   iiszt_ =0;
@@ -218,8 +218,8 @@ FitsImage::~FitsImage()
 
   if (wcsHeader_)
     delete wcsHeader_;
-  if (altHeader_)
-    delete altHeader_;
+  if (wfpc2Header_)
+    delete wfpc2Header_;
 }
 
 // Fits
@@ -922,7 +922,7 @@ void FitsImageIIS::iisWCS(const Matrix& mm, const Vector& z, int zt)
 
 // FitsImage
 
-void FitsImage::altWCS(istream& str)
+void FitsImage::wfpc2WCS(istream& str)
 {
   FitsHead* hh = parseWCS(str);
 
@@ -932,11 +932,11 @@ void FitsImage::altWCS(istream& str)
   objectKeyword_ = dupstr(hh->getString("OBJECT"));
 
   // Process WCS keywords
-  if (altHeader_)
-    delete altHeader_;
+  if (wfpc2Header_)
+    delete wfpc2Header_;
 
-  altHeader_ = hh;
-  initWCS(altHeader_, NULL);
+  wfpc2Header_ = hh;
+  initWCS(wfpc2Header_, NULL);
 }
 
 void FitsImage::appendWCS(istream& str)
@@ -1017,8 +1017,8 @@ char* FitsImage::displayWCS()
 {
   if (wcsHeader_)
     return display(wcsHeader_);
-  else if (altHeader_)
-    return display(altHeader_);
+  else if (wfpc2Header_)
+    return display(wfpc2Header_);
   else
     return display(image_->head());
 }
@@ -1329,6 +1329,22 @@ void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
 }
 #endif
 
+void FitsImage::resetWCS()
+{
+  // Process OBJECT keyword
+  if (objectKeyword_)
+    delete [] objectKeyword_;
+  objectKeyword_ = dupstr(image_->getString("OBJECT"));
+
+  // Process WCS keywords
+  if (wcsHeader_)
+    delete wcsHeader_;
+
+  wcsHeader_ = NULL;
+  initWCS(image_->head(),
+	  image_->primary() && image_->inherit() ? image_->primary() : NULL);
+}
+
 #ifdef OLDWCS
 void FitsImage::initWCS0(const Vector& pix)
 {
@@ -1336,8 +1352,8 @@ void FitsImage::initWCS0(const Vector& pix)
   FitsHead* prim =NULL;
   if (wcsHeader_)
     hd = wcsHeader_;
-  else if (altHeader_)
-    hd = altHeader_;
+  else if (wfpc2Header_)
+    hd = wfpc2Header_;
   else {
     hd = image_->head();
     prim = image_->primary() && image_->inherit() ? image_->primary() : NULL;
@@ -2524,22 +2540,6 @@ void FitsImage::reset()
 
   image_ =NULL;
   data_ =NULL;
-}
-
-void FitsImage::resetWCS()
-{
-  // Process OBJECT keyword
-  if (objectKeyword_)
-    delete [] objectKeyword_;
-  objectKeyword_ = dupstr(image_->getString("OBJECT"));
-
-  // Process WCS keywords
-  if (wcsHeader_)
-    delete wcsHeader_;
-
-  wcsHeader_ = NULL;
-  initWCS(image_->head(),
-	  image_->primary() && image_->inherit() ? image_->primary() : NULL);
 }
 
 char* FitsImage::root(const char* fn)

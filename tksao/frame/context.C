@@ -1562,7 +1562,7 @@ int Context::loadMosaicWFPC2(Base::MemType which, const char* fn,
 	   << ends;
 
       // fix fitsimage params
-      ptr->altWCS(istr);
+      ptr->wfpc2WCS(istr);
 
       Matrix mm = parent_->calcAlignWCS(bfits_, ptr, Coord::WCS,
 				       Coord::WCS, Coord::FK5);

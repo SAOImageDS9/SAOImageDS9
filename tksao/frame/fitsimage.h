@@ -131,6 +131,7 @@ class FitsImage {
 #endif
   FitsHead* wcsAltHeader_; // alt wcs header
   FitsHead* wfpc2Header_; // wcs header for wfpc2
+  FitsHead* wcs0Header_;
 
   Matrix wcsToRef_;          // iraf/wcs matrix
 

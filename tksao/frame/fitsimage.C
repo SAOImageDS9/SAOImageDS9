@@ -128,6 +128,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
 #endif
   wcsAltHeader_ =NULL;
   wfpc2Header_ =NULL;
+  wcs0Header_ =NULL;
 
   iisMode_ =0;
   iiszt_ =0;
@@ -220,6 +221,8 @@ FitsImage::~FitsImage()
     delete wcsAltHeader_;
   if (wfpc2Header_)
     delete wfpc2Header_;
+  if (wcs0Header_)
+    delete wcs0Header_;
 }
 
 // Fits
@@ -1019,6 +1022,8 @@ char* FitsImage::displayWCS()
     return display(wcsAltHeader_);
   else if (wfpc2Header_)
     return display(wfpc2Header_);
+  else if (wcs0Header_)
+    return display(wcs0Header_);
   else
     return display(image_->head());
 }
@@ -1337,16 +1342,22 @@ void FitsImage::resetWCS()
     delete [] objectKeyword_;
   objectKeyword_ = dupstr(image_->getString("OBJECT"));
 
-  // Process WCS keywords
   if (wcsAltHeader_)
     delete wcsAltHeader_;
+  wcsAltHeader_ =NULL;
 
-  wcsAltHeader_ = NULL;
+  if (wcs0Header_)
+    delete wcs0Header_;
+  wcs0Header_ =NULL;
+
+  if (wfpc2Header_)
+    initWCS(wfpc2Header_);
+  else
 #ifdef OLDWCS
-  initWCS(image_->head(),
-	  image_->primary() && image_->inherit() ? image_->primary() : NULL);
+    initWCS(image_->head(),
+	    image_->primary() && image_->inherit() ? image_->primary() : NULL);
 #else
-  initWCS(image_->head());
+    initWCS(image_->head());
 #endif
 }
 

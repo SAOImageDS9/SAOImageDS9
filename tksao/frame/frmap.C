@@ -64,57 +64,23 @@ double Base::mapAngleToRef(double angle, Coord::CoordSystem sys,
   return zeroTWOPI(rr);
 }
 
-#ifdef OLDWCS
-double Base::mapLenToRef(double d, Coord::InternalSystem sys)
-{
-  Vector r = mapLenToRef(Vector(d,0),sys);
-  return r[0];
-}
-
-Vector Base::mapLenToRef(const Vector& v, Coord::InternalSystem sys)
-{
-  switch (sys) {
-  case Coord::CANVAS:
-    return mapLen(v,canvasToRef);
-  case Coord::PANNER:
-    return mapLen(v,pannerToRef);
-  default:
-    return Vector();
-  }
-}
-#else
 double Base::mapLenToRef(double dd, Coord::InternalSystem sys)
 {
-  switch (sys) {
-  case Coord::CANVAS:
-    return dd*canvasToRef[1].length();
-  case Coord::PANNER:
-    return dd*pannerToRef[1].length();
-  default:
-    return 0;
-  }
+  Vector rr = mapLenToRef(Vector(0,dd),sys);
+  return rr[1];
 }
 
-Vector Base::mapLenToRef(const Vector& v, Coord::InternalSystem sys)
+Vector Base::mapLenToRef(const Vector& vv, Coord::InternalSystem sys)
 {
   switch (sys) {
   case Coord::CANVAS:
-    {
-      double rx = ((Vector)v)[0]*canvasToRef[0].length();
-      double ry = ((Vector)v)[1]*canvasToRef[1].length();
-      return Vector(rx,ry);
-    }
+    return mapLen(vv,canvasToRef);
   case Coord::PANNER:
-    {
-      double rx = ((Vector)v)[0]*pannerToRef[0].length();
-      double ry = ((Vector)v)[1]*pannerToRef[1].length();
-      return Vector(rx,ry);
-    }
+    return mapLen(vv,pannerToRef);
   default:
     return Vector();
   }
 }
-#endif
 
 Vector FrameBase::mapFromRef(const Vector& vv, Coord::InternalSystem sys)
 {

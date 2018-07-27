@@ -143,18 +143,16 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
 
 // Map Length
 
-#ifdef OLDWCS
 double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
 				Coord::DistFormat dist)
 {
-  Vector rr = mapLenFromRef(Vector(dd,0),sys,dist);
-  return rr[0];
+  Vector rr = mapLenFromRef(Vector(0,dd),sys,dist);
+  return rr[1];
 }
 
 Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
 				Coord::DistFormat dist)
 {
-  // really from image coords
   switch (sys) {
   case Coord::IMAGE:
     return mapLen(vv,refToImage);
@@ -166,10 +164,13 @@ Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
     return mapLen(vv,refToPhysical * physicalToDetector);
   default:
     if (hasWCS(sys)) {
+#ifdef OLDWCS
       Vector cd = getWCScdelt(sys);
       Vector in = mapLen(vv,refToImage);
       Vector out = Vector(in[0]*cd[0], in[1]*cd[1]).abs();
-
+#else
+      Vector out = vv*getWCSSize(sys);
+#endif
       if (hasWCSCel(sys)) {
 	switch (dist) {
 	case Coord::DEGREE:
@@ -188,64 +189,6 @@ Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
 
   return Vector();
 }
-#else
-double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
-				Coord::DistFormat dist)
-{
-  // really from image coords
-  switch (sys) {
-  case Coord::IMAGE:
-    return dd*refToImage[1].length();
-  case Coord::PHYSICAL:
-    return dd*refToPhysical[1].length();
-  case Coord::AMPLIFIER:
-    return dd*(refToPhysical * physicalToAmplifier)[1].length();
-  case Coord::DETECTOR:
-    return dd*(refToPhysical * physicalToDetector)[1].length();
-  default:
-    {
-      astClearStatus; // just to make sure
-
-      if (!hasWCS(sys))
-	return 0;
-      
-      setWCSSkyFrame(sys, Coord::FK5);
-
-      Vector in[2];
-      Vector out[2];
-      in[0] = center();
-      in[1] = center()+Vector(0,dd);
-      wcsTran(2, in, 1, out);
-      double rr = wcsDistance(out[0], out[1]);
-
-      if (hasWCSCel(sys)) {
-	rr = radToDeg(rr);
-	switch (dist) {
-	case Coord::DEGREE:
-	  break;
-	case Coord::ARCMIN:
-	  rr *= 60.;
-	  break;
-	case Coord::ARCSEC:
-	  rr *= 60.*60.;
-	  break;
-	}
-      }
-      return rr;
-    }
-  }
-
-  return 0;
-}
-
-Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys, 
-				Coord::DistFormat dist)
-{
-  double rx = mapLenFromRef(((Vector)vv)[0],sys,dist);
-  double ry = mapLenFromRef(((Vector)vv)[1],sys,dist);
-  return Vector(rx,ry);
-}
-#endif
 
 double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys, 
 			      Coord::DistFormat dist)
@@ -254,7 +197,6 @@ double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys,
   return rr[1];
 }
 
-#ifdef OLDWCS
 Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
 			      Coord::DistFormat dist)
 {
@@ -269,10 +211,13 @@ Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
     return mapLen(vv,detectorToPhysical * physicalToRef);
   default:
     if (hasWCS(sys)) {
+#ifdef OLDWCS
       Vector cd = getWCScdelt(sys);
       Vector in = mapLen(vv,refToImage);
       Vector out = Vector(in[0]/cd[0], in[1]/cd[1]).abs();
-
+#else
+      Vector out = vv/getWCSSize(sys);
+#endif      
       if (hasWCSCel(sys)) {
 	switch (dist) {
 	case Coord::DEGREE:
@@ -291,46 +236,6 @@ Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
 
   return Vector();
 }
-#else
-Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
-			      Coord::DistFormat dist)
-{
-  // this is correct
-  //   we are looking for a length, so in image coords
-  switch (sys) {
-  case Coord::IMAGE:
-    return vv;
-  case Coord::PHYSICAL:
-    return vv*physicalToImage;
-  case Coord::AMPLIFIER:
-    return vv*amplifierToPhysical*physicalToImage;
-  case Coord::DETECTOR:
-    return vv*detectorToPhysical*physicalToImage;
-  default:
-    {
-      if (!hasWCS(sys) || !astInv_)
-	return 0;
-
-      Vector svv = vv;
-      if (hasWCSCel(sys)) {
-	switch (dist) {
-	case Coord::DEGREE:
-	  break;
-	case Coord::ARCMIN:
-	  svv /= 60.;
-	  break;
-	case Coord::ARCSEC:
-	  svv /= 60.*60.;
-	  break;
-	}
-      }
-      return svv/getWCSSize(sys);
-    }
-  }
-
-  return Vector();
-}
-#endif
 
 void FitsImage::listLenFromRef(ostream& str, double dd,
 			       Coord::CoordSystem sys, Coord::DistFormat dist)

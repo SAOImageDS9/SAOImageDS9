@@ -520,7 +520,6 @@ int dCompare(const void* a, const void* b)
   return 0;
 }
 
-#ifndef NEWWCS
 Vector mapLen(const Vector& v, const Matrix& mx)
 {
   // remove translation
@@ -534,7 +533,6 @@ Vector mapLen(const Vector& v, const Matrix& mx)
   // all that is left is Scaling
   return (v*s).abs();
 }
-#endif
 
 #if defined (MAC_OSX_TK) || (_WIN32)
 

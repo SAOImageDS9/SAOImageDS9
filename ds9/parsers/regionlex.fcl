@@ -7,7 +7,6 @@
 
 %%
 
-
 all	    {return $ALL_}
 at	    {return $AT_}
 auto	    {return $AUTO_}
@@ -53,6 +52,7 @@ radius	    {return $RADIUS_}
 rotate	    {return $ROTATE_}
 save	    {return $SAVE_}
 savetemplate {return $SAVETEMPLATE_}
+segment	    {return $SEGMENT_}
 select	    {return $SELECT_}
 selectall   {return $SELECTALL_}
 selectnone  {return $SELECTNONE_}
@@ -89,6 +89,8 @@ ruler	    {return $RULER_}
 compass	    {return $COMPASS_}
 projection  {return $PROJECTION_}
 annulus	    {return $ANNULUS_}
+ellipseannulus {return $ELLIPSEANNULUS_}
+boxannulus  {return $BOXANNULUS_}
 panda	    {return $PANDA_}
 epanda	    {return $EPANDA_}
 bpanda	    {return $BPANDA_}

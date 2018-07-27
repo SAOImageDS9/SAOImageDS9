@@ -57,6 +57,7 @@
 %token ROTATE_
 %token SAVE_
 %token SAVETEMPLATE_
+%token SEGMENT_
 %token SELECT_
 %token SELECTALL_
 %token SELECTNONE_
@@ -93,6 +94,8 @@
 %token COMPASS_
 %token PROJECTION_
 %token ANNULUS_
+%token ELLIPSEANNULUS_
+%token BOXANNULUS_
 %token PANDA_
 %token EPANDA_
 %token BPANDA_
@@ -236,35 +239,36 @@ format : DS9_ {set _ ds9}
  | XY_ {set _ xy}
  ;
 
-shape : CIRCLE_
- | ELLIPSE_
- | BOX_
- | POLYGON_
- | point POINT_
- | LINE_
- | VECTOR_
- | TEXT_
- | RULER_
- | COMPASS_
- | PROJECTION_
- | ANNULUS_
- | ELLIPSE_ ANNULUS_
- | BOX_ ANNULUS_
- | PANDA_
- | EPANDA_
- | BPANDA_
- | COMPOSITE_
+shape : CIRCLE_ {set _ circle}
+ | ELLIPSE_ {set _ ellipse}
+ | BOX_ {set _ box}
+ | POLYGON_ {set _ polygon}
+ | LINE_ {set _ line}
+ | VECTOR_ {set _ vector}
+ | PROJECTION_ {set _ projection}
+ | SEGMENT_ {set _ segment}
+ | TEXT_ {set _ text}
+ | point POINT_ {set _ "$1 point"}
+ | RULER_ {set _ ruler}
+ | COMPASS_ {set _ compass}
+ | ANNULUS_ {set _ annulus}
+ | ELLIPSEANNULUS_ {set _ ellipseannulus}
+ | BOXANNULUS_ {set _ boxannulus}
+ | PANDA_ {set _ panda}
+ | EPANDA_ {set _ epanda}
+ | BPANDA_ {set _ bpanda}
+ | COMPOSITE_ {set _ composite}
  ;
 
-point :
- | CIRCLE_
- | BOX_
- | DIAMOND_
- | CROSS_
- | 'X'
- | 'x'
- | ARROW_
- | BOXCIRCLE_
+point : {set _ ""}
+ | CIRCLE_ {set _ circle}
+ | BOX_ {set _ box}
+ | DIAMOND_ {set _ diamond}
+ | CROSS_ {set _ cross}
+ | 'X' {set _ x}
+ | 'x' {set _ x}
+ | ARROW_ {set _ arrow}
+ | BOXCIRCLE_ {set _ boxcircle}
  ;
  
 delim : NL_ {set _ 0}

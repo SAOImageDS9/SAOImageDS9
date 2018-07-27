@@ -385,7 +385,10 @@ proc MarkerButton {which x y} {
 	    }
 
 	    set fn "$ds9(root)/template/$itemplate($marker(shape))"
-	    set ch [open $fn r]
+	    if {[catch {set ch [open $fn r]}]} {
+		Error "[msgcat::mc {Unable to locate FOV Region}] $marker(shape)"
+		return
+	    }
 
 	    global vardata
 	    set vardata [read $ch]

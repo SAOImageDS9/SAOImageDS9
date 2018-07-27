@@ -792,6 +792,7 @@
 ::msgcat::mcset da {Unable to load plot data} 
 ::msgcat::mcset da {Unable to load region file} 
 ::msgcat::mcset da {Unable to load} {Kan ikke hente}
+::msgcat::mcset da {Unable to locate FOV Region} 
 ::msgcat::mcset da {Unable to locate URL} {Kan ikke finde URL}
 ::msgcat::mcset da {Unable to match target with XPA Mime request} 
 ::msgcat::mcset da {Unable to open file} [encoding convertfrom iso8859-1 {Kan ikke åbne fil}]

@@ -792,6 +792,7 @@
 ::msgcat::mcset cs {Unable to load plot data} 
 ::msgcat::mcset cs {Unable to load region file} 
 ::msgcat::mcset cs {Unable to load} 
+::msgcat::mcset cs {Unable to locate FOV Region} 
 ::msgcat::mcset cs {Unable to locate URL} 
 ::msgcat::mcset cs {Unable to match target with XPA Mime request} 
 ::msgcat::mcset cs {Unable to open file} 

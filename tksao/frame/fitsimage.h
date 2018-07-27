@@ -120,6 +120,7 @@ class FitsImage {
   int* wcsCel_;
   int* wcs3D_;
   int wcsHPX_;
+  double* wcsSize_;
 
   // used for templates
   AstFrameSet* astSav_;
@@ -178,6 +179,7 @@ class FitsImage {
   void wcsCelInit(int);
   void wcs3DInit(int);
   void wcsHPXInit();
+  void wcsSizeInit();
 
   void initWCS0(const Vector&);
   void resetWCS0() {resetWCS();}
@@ -452,6 +454,7 @@ class FitsImage {
   void setWCSFormat(int, const char*);
 
   double getWCSSize(Coord::CoordSystem);
+  double calcWCSSize(Coord::CoordSystem);
 #endif
 
   int hasWCS(Coord::CoordSystem);

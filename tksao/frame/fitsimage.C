@@ -118,6 +118,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcsCel_ =NULL;
   wcs3D_ =NULL;
   wcsHPX_ =0;
+  wcsSize_ =NULL;
 #endif
   wcsAltHeader_ =NULL;
   wfpc2Header_ =NULL;
@@ -206,7 +207,8 @@ FitsImage::~FitsImage()
       delete [] wcsCel_;
     if (wcs3D_)
       delete [] wcs3D_;
-    wcsHPX_ =0;
+    if (wcsSize_)
+      delete [] wcsSize_;
   }
 #endif
 
@@ -1283,6 +1285,9 @@ void FitsImage::initWCS(FitsHead* hd)
       delete [] wcs3D_;
     wcs3D_ =NULL;
     wcsHPX_ = 0;
+    if (wcsSize_)
+      delete [] wcsSize_;
+    wcsSize_ =NULL;
   }
 
   // shareWCS?
@@ -1302,6 +1307,7 @@ void FitsImage::initWCS(FitsHead* hd)
 	  wcsCel_ = ptr->wcsCel_;
 	  wcs3D_ = ptr->wcs3D_;
 	  wcsHPX_ = ptr->wcsHPX_;
+	  wcsSize_ = ptr->wcsSize_;
 
 	  initWCSPhysical();
 	  manageWCS_ =0;
@@ -1320,6 +1326,7 @@ void FitsImage::initWCS(FitsHead* hd)
   wcsCelInit(hasWCSAST);
   wcs3DInit(hasWCSAST);
   wcsHPXInit();
+  wcsSizeInit();
   
   initWCSPhysical();
 
@@ -3058,6 +3065,14 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
 #ifndef OLDWCS
 double FitsImage::getWCSSize(Coord::CoordSystem sys)
 {
+  if (!wcsSize_ || sys<Coord::WCS)
+    return 0;
+  else
+    return wcsSize_[sys-Coord::WCS];
+}
+
+double FitsImage::calcWCSSize(Coord::CoordSystem sys)
+{
   if (!hasWCS(sys))
     return 0;
 
@@ -3130,7 +3145,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
     else
       return Coord::NORMAL;
   }
-  else 
+  else
     return Coord::NORMAL;
 }
 #endif
@@ -3577,7 +3592,7 @@ int FitsImage::hasWCSLinear(Coord::CoordSystem sys)
 
 int FitsImage::hasWCS(Coord::CoordSystem sys)
 {
-  if (!ast_ || !wcs_ || sys<Coord::WCS)
+  if (!wcs_ || sys<Coord::WCS)
     return 0;
   else
     return wcs_[sys-Coord::WCS];
@@ -3585,7 +3600,7 @@ int FitsImage::hasWCS(Coord::CoordSystem sys)
 
 int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 {
-  if (!ast_ || !wcsCel_ || sys<Coord::WCS)
+  if (!wcsCel_ || sys<Coord::WCS)
     return 0;
   else
     return wcsCel_[sys-Coord::WCS];
@@ -3593,7 +3608,7 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
 
 int FitsImage::hasWCSLinear(Coord::CoordSystem sys)
 {
-  if (!ast_ || !wcsCel_ || sys<Coord::WCS)
+  if (!wcs_ || !wcsCel_ || sys<Coord::WCS)
     return 0;
   else
     return wcs_[sys-Coord::WCS] && !wcsCel_[sys-Coord::WCS];
@@ -3635,7 +3650,7 @@ double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys)
 
 int FitsImage::hasWCS3D(Coord::CoordSystem sys)
 {
-  if (!ast_ || !wcs3D_ || sys<Coord::WCS)
+  if (!wcs3D_ || sys<Coord::WCS)
     return 0;
   else
     return wcs3D_[sys-Coord::WCS];
@@ -3894,6 +3909,19 @@ void FitsImage::wcsHPXInit()
 	wcsHPX_ =1;
   }
 }
+
+void FitsImage::wcsSizeInit()
+{
+  // init wcsSize_ array
+  if (wcsSize_)
+    delete [] wcsSize_;
+  wcsSize_ =NULL;
+
+  wcsSize_ = new double[MULTWCS];
+  for (int ii=0; ii<MULTWCS; ii++)
+    wcsSize_[ii] = calcWCSSize((Coord::CoordSystem)(ii+Coord::WCS));
+}
+
 #endif
 
 #ifdef OLDWCS

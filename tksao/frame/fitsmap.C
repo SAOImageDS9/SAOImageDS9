@@ -247,14 +247,14 @@ Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
 }
 #endif
 
-#ifdef OLDWCS
 double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys, 
 			      Coord::DistFormat dist)
 {
-  Vector rr = mapLenToRef(Vector(dd,0), sys, dist);
-  return rr[0];
+  Vector rr = mapLenToRef(Vector(0,dd), sys, dist);
+  return rr[1];
 }
 
+#ifdef OLDWCS
 Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
 			      Coord::DistFormat dist)
 {
@@ -292,63 +292,43 @@ Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
   return Vector();
 }
 #else
-double FitsImage::mapLenToRef(double dd, Coord::CoordSystem sys, 
+Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
 			      Coord::DistFormat dist)
 {
+  // this is correct
+  //   we are looking for a length, so in image coords
   switch (sys) {
   case Coord::IMAGE:
-    return dd*imageToRef[1].length();
+    return vv;
   case Coord::PHYSICAL:
-    return dd*physicalToRef[1].length();
+    return vv*physicalToImage;
   case Coord::AMPLIFIER:
-    return dd*(amplifierToPhysical * physicalToRef)[1].length();
+    return vv*amplifierToPhysical*physicalToImage;
   case Coord::DETECTOR:
-    return dd*(detectorToPhysical * physicalToRef)[1].length();
+    return vv*detectorToPhysical*physicalToImage;
   default:
     {
       if (!hasWCS(sys) || !astInv_)
 	return 0;
-      
-      astClearStatus; // just to make sure
-      setWCSSkyFrame(sys, Coord::FK5);
 
-      double rdd = dd;
+      Vector svv = vv;
       if (hasWCSCel(sys)) {
-	rdd = dd;
 	switch (dist) {
 	case Coord::DEGREE:
 	  break;
 	case Coord::ARCMIN:
-	  rdd /= 60.;
+	  svv /= 60.;
 	  break;
 	case Coord::ARCSEC:
-	  rdd /= 60.*60.;
+	  svv /= 60.*60.;
 	  break;
 	}
-	rdd = degToRad(rdd); // no zeroTWOPI since this is a length
       }
-
-      Vector cc = center();
-      Vector wcc = wcsTran(cc,1);
-      Vector wpp = wcc+Vector(0,rdd);
-      Vector pp = wcsTran(wpp,0);
-      astInvert(ast_);
-      double rr = wcsDistance(cc, pp);
-      astInvert(ast_);
-
-      return rr;
+      return svv/getWCSSize(sys);
     }
   }
 
-  return 0;
-}
-
-Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
-			      Coord::DistFormat dist)
-{
-  double rx = mapLenToRef(((Vector)vv)[0],sys,dist);
-  double ry = mapLenToRef(((Vector)vv)[1],sys,dist);
-  return Vector(rx,ry);
+  return Vector();
 }
 #endif
 

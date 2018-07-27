@@ -376,8 +376,7 @@ int Base::markerAnalysisRadial(Marker* pp, double** x, double** y, double** e,
     Vector cdelt= ptr->getWCScdelt(sys);
     double ll = fabs(cdelt[0]);
 #else
-    Vector rr = ptr->getWCSSize(sys);
-    double ll = (rr[0]+rr[1])/2.;
+    double ll = ptr->getWCSSize(sys);
 #endif
 
     if (ptr->hasWCSCel(sys)) {
@@ -394,8 +393,8 @@ int Base::markerAnalysisRadial(Marker* pp, double** x, double** y, double** e,
   Vector cdelt= ptr->getWCScdelt(sys);
   double aa = fabs(cdelt[0]*cdelt[1]);
 #else
-  Vector rr = ptr->getWCSSize(sys);
-  double aa = rr.area();
+  double rr = ptr->getWCSSize(sys);
+  double aa = rr*rr;
 #endif
 
   for (int kk=0; kk<num; kk++) {
@@ -501,8 +500,7 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
     Vector cdelt= ptr->getWCScdelt(sys);
     double ll = fabs(cdelt[0]);
 #else
-    Vector rr = ptr->getWCSSize(sys);
-    double ll = (rr[0]+rr[1])/2.;
+    double ll = ptr->getWCSSize(sys);
 #endif
 
     if (ptr->hasWCSCel(sys)) {
@@ -519,8 +517,8 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
   Vector cdelt= ptr->getWCScdelt(sys);
   double aa = fabs(cdelt[0]*cdelt[1]);
 #else
-  Vector rr = ptr->getWCSSize(sys);
-  double aa = rr.area();
+  double rr = ptr->getWCSSize(sys);
+  double aa = rr*rr;
 #endif
 
   for (int qq=0; qq<aa; qq++) {
@@ -840,8 +838,7 @@ int Base::markerAnalysisStats1(Marker* pp,FitsImage* ptr, ostream& str,
       Vector cdelt= ptr->getWCScdelt(sys);
       double ll = fabs(cdelt[0]);
 #else
-      Vector rr = ptr->getWCSSize(sys);
-      double ll = (rr[0]+rr[1])/2.;
+      double ll = ptr->getWCSSize(sys);
 #endif
       if (ptr->hasWCSCel(sys)) {
 	str << "1 pixel = "<< ll*60*60 << " arcsec";
@@ -887,8 +884,8 @@ void Base::markerAnalysisStats2(FitsImage* ptr, ostream& str,
       Vector cdelt= ptr->getWCScdelt(sys);
       double aa = fabs(cdelt[0]*cdelt[1]);
 #else
-      Vector rr = ptr->getWCSSize(sys);
-      double aa = rr.area();
+      double rr = ptr->getWCSSize(sys);
+      double aa = rr*rr;
 #endif
       area = aa*60*60*60*60*cnt;
     }
@@ -900,8 +897,8 @@ void Base::markerAnalysisStats2(FitsImage* ptr, ostream& str,
       Vector cdelt= ptr->getWCScdelt(sys);
       double aa = fabs(cdelt[0]*cdelt[1]);
 #else
-      Vector rr = ptr->getWCSSize(sys);
-      double aa = rr.area();
+      double rr = ptr->getWCSSize(sys);
+      double aa = rr*rr;
 #endif
       area = aa*cnt;
     }

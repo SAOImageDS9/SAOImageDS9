@@ -1434,7 +1434,7 @@ void FitsImage::initWCS0(const Vector& pix)
   hd->appendReal("CRVAL2", 0, 8, NULL);
 
   // CD
-  Vector ss = getWCSSize(Coord::WCS);
+  double ss = getWCSSize(Coord::WCS);
   double ang = getWCSRotation(Coord::WCS,Coord::FK5);
   Matrix flip;
   switch (getWCSOrientation(Coord::WCS,Coord::FK5)) {
@@ -3056,7 +3056,7 @@ Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
 #endif
 
 #ifndef OLDWCS
-Vector FitsImage::getWCSSize(Coord::CoordSystem sys)
+double FitsImage::getWCSSize(Coord::CoordSystem sys)
 {
   if (!hasWCS(sys))
     return 0;
@@ -3064,14 +3064,14 @@ Vector FitsImage::getWCSSize(Coord::CoordSystem sys)
   astClearStatus; // just to make sure
   setWCSSkyFrame(sys, Coord::FK5);
   
+  // only check lon axis as it will not change near poles
   Vector in[3];
   Vector out[3];
   in[0] = center();
-  in[1] = center()+Vector(1,0);
-  in[2] = center()+Vector(0,1);
-  wcsTran(3, in, 1, out);
+  in[1] = center()+Vector(0,1);
+  wcsTran(2, in, 1, out);
 
-  Vector dd = Vector(wcsDistance(out[0],out[1]), wcsDistance(out[0],out[2]));
+  double dd = wcsDistance(out[0],out[1]);
   return hasWCSCel(sys) ? radToDeg(dd) : dd;
 }
 #endif

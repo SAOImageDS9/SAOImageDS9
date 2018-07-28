@@ -2608,30 +2608,6 @@ void Base::markerAnnulusDeleteRadiusCmd(int id, int h)
 }
 
 void Base::markerAnnulusRadiusCmd(int id, double inner, double outer,
-				  int num, Coord::InternalSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	double r1 = mapLenToRef(inner,sys);
-	double r2 = mapLenToRef(outer,sys);
-	((Annulus*)mm)->setAnnuli(Vector(r1,r1),Vector(r2,r2),num);
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
-void Base::markerAnnulusRadiusCmd(int id, double inner, double outer,
 				  int num, Coord::CoordSystem sys,
 				  Coord::DistFormat dist)
 {
@@ -2757,31 +2733,6 @@ void Base::markerBoxFillCmd(int id, int ff)
 
 void Base::markerBoxAnnulusRadiusCmd(int id, const Vector& inner,
 				     const Vector& outer, int num,
-				     Coord::InternalSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	Vector s1 = mapLenToRef(inner, sys);
-	Vector s2 = mapLenToRef(outer, sys);
-	((BoxAnnulus*)(mm))->setAnnuli(s1,s2,num);
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
-void Base::markerBoxAnnulusRadiusCmd(int id, const Vector& inner,
-				     const Vector& outer, int num,
 				     Coord::CoordSystem sys,
 				     Coord::DistFormat dist)
 {
@@ -2883,28 +2834,6 @@ void Base::markerBoxAnnulusDeleteRadiusCmd(int id, int h)
     }
     mm=mm->next();
   }
-}
-
-void Base::markerBoxRadiusCmd(int id, const Vector& size, 
-			      Coord::InternalSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	((Box*)(mm))->setAnnuli(mapLenToRef(size, sys));
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
 }
 
 void Base::markerBoxRadiusCmd(int id, const Vector& size, 
@@ -3189,29 +3118,6 @@ void Base::markerCircleFillCmd(int id, int ff)
   result = TCL_ERROR;
 }
 
-void Base::markerCircleRadiusCmd(int id, double radius,
-				 Coord::InternalSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	double r = mapLenToRef(radius, sys);
-	((Circle*)mm)->setAnnuli(Vector(r,r));
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
 void Base::markerCircleRadiusCmd(int id, double radius, Coord::CoordSystem sys,
 				 Coord::DistFormat dist)
 {
@@ -3341,28 +3247,6 @@ void Base::markerCompassLabelCmd(int id, const char* n, const char* e)
 	// it may shrink
 	update(PIXMAP, mm->getAllBBox());
 	((Compass*)(mm))->setLabels(n, e);
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
-void Base::markerCompassRadiusCmd(int id, double r, Coord::InternalSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	double rr = mapLenToRef(r, sys);
-	((Compass*)mm)->setRadius(rr);
 	update(PIXMAP, mm->getAllBBox());
       }
       return;
@@ -3906,29 +3790,6 @@ void Base::markerEllipseFillCmd(int id, int ff)
 }
 
 void Base::markerEllipseRadiusCmd(int id, const Vector& radius, 
-				  Coord::InternalSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	Vector r = mapLenToRef(radius, sys);
-	((Ellipse*)mm)->setAnnuli(r);
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
-void Base::markerEllipseRadiusCmd(int id, const Vector& radius, 
 				  Coord::CoordSystem sys, Coord::DistFormat dist)
 {
   Marker* mm=markers->head();
@@ -3942,31 +3803,6 @@ void Base::markerEllipseRadiusCmd(int id, const Vector& radius,
 	FitsImage* ptr = findFits(sys,mm->getCenter());
 	Vector r = ptr->mapLenToRef(radius, sys, dist);
 	((Ellipse*)mm)->setAnnuli(r);
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
-void Base::markerEllipseAnnulusRadiusCmd(int id, const Vector& inner, 
-					 const Vector& outer, int num,
-					 Coord::InternalSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	Vector r1 = mapLenToRef(inner, sys);
-	Vector r2 = mapLenToRef(outer, sys);
-	((EllipseAnnulus*)(mm))->setAnnuli(r1,r2,num);
 	update(PIXMAP, mm->getAllBBox());
       }
       return;
@@ -5432,28 +5268,6 @@ void Base::markerPolygonDeleteVertexCmd(int id, int h)
   }
 }
 
-void Base::markerPolygonResetCmd(int id, const Vector& size,
-				 Coord::InternalSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	((Polygon*)(mm))->reset(mapLenToRef(size, sys));
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
 void Base::markerPolygonResetCmd(int id, const Vector& size, 
 				 Coord::CoordSystem sys, Coord::DistFormat dist)
 {
@@ -5477,34 +5291,12 @@ void Base::markerPolygonResetCmd(int id, const Vector& size,
   result = TCL_ERROR;
 }
 
-void Base::markerProjectionCmd(int id,const Vector& p1,const Vector& p2, 
-			       Coord::InternalSystem sys,double width)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	((Projection*)(mm))->set(mapToRef(p1,sys), mapToRef(p2,sys), 
-				mapLenToRef(width,sys));
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
 void Base::markerProjectionCmd(int id, 
 			       const Vector& p1, const Vector& p2, 
 			       Coord::CoordSystem sys, Coord::SkyFrame sky,
 			       double width, 
-			       Coord::CoordSystem wdsys, Coord::DistFormat wddist)
+			       Coord::CoordSystem wdsys,
+			       Coord::DistFormat wddist)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -5933,27 +5725,6 @@ void Base::markerSegmentDeleteVertexCmd(int id, int h)
   }
 }
 
-void Base::markerSegmentResetCmd(int id, const Vector& size, Coord::InternalSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	((Segment*)(mm))->reset(mapLenToRef(size, sys));
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
 void Base::markerSegmentResetCmd(int id, const Vector& size, 
 				 Coord::CoordSystem sys, Coord::DistFormat dist)
 {
@@ -6348,28 +6119,6 @@ void Base::markerUnselectCmd(const char* tag)
     }
     mm=mm->next();
   }
-}
-
-void Base::markerVectorCmd(int id, const Vector& p, Coord::InternalSystem sys,
-			   double mag, double ang)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	((Vect*)(mm))->setPoints(mapToRef(p,sys),mapLenToRef(mag,sys),ang);
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
 }
 
 void Base::markerVectorCmd(int id, const Vector& p,

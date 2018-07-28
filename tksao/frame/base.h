@@ -410,8 +410,6 @@ public:
   void markerAnalysisStats(Marker*, ostream&, int, int, 
 			   BBox*, Coord::CoordSystem, Coord::SkyFrame);
 
-  double mapLenToRef(double, Coord::InternalSystem);
-  Vector mapLenToRef(const Vector&, Coord::InternalSystem);
   void markerListHeader(ostream&);
   void markerListXMLHeader(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void markerListXMLFooter(ostream&);
@@ -1331,7 +1329,6 @@ public:
   void markerAngleCmd(int, double, Coord::CoordSystem, Coord::SkyFrame);
   void markerAnnulusCreateRadiusCmd(int, const Vector&);
   void markerAnnulusDeleteRadiusCmd(int, int);
-  void markerAnnulusRadiusCmd(int, double, double, int, Coord::InternalSystem);
   void markerAnnulusRadiusCmd(int, double, double, int, Coord::CoordSystem, Coord::DistFormat);
   void markerAnnulusRadiusCmd(int, const char*, Coord::CoordSystem, Coord::DistFormat);
 
@@ -1340,13 +1337,10 @@ public:
   void markerBackCmd(int);
   void markerBoxFillCmd(int, int);
   void markerBoxAnnulusRadiusCmd(int, const Vector&, const Vector&, int, 
-				 Coord::InternalSystem);
-  void markerBoxAnnulusRadiusCmd(int, const Vector&, const Vector&, int, 
 				 Coord::CoordSystem, Coord::DistFormat);
   void markerBoxAnnulusRadiusCmd(int, const char*, Coord::CoordSystem, Coord::DistFormat);
   void markerBoxAnnulusCreateRadiusCmd(int, const Vector&);
   void markerBoxAnnulusDeleteRadiusCmd(int, int);
-  void markerBoxRadiusCmd(int, const Vector&, Coord::InternalSystem);
   void markerBoxRadiusCmd(int, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void markerBpandaCreateAnglesCmd(int, const Vector&);
   void markerBpandaCreateRadiusCmd(int, const Vector&);
@@ -1368,14 +1362,12 @@ public:
   void markerCentroidRadiusCmd(float);
   void markerCentroidIterationCmd(int);
   void markerCircleFillCmd(int, int);
-  void markerCircleRadiusCmd(int, double, Coord::InternalSystem);
   void markerCircleRadiusCmd(int, double, Coord::CoordSystem, Coord::DistFormat);
   void markerColorCmd(const char*);
   void markerColorCmd(const char*, const char*);
   void markerColorCmd(int, const char*);
   void markerCompassArrowCmd(int, int, int);
   void markerCompassLabelCmd(int, const char*, const char*);
-  void markerCompassRadiusCmd(int, double, Coord::InternalSystem);
   void markerCompassRadiusCmd(int, double, Coord::CoordSystem, Coord::DistFormat);
   void markerCompassSystemCmd(int, Coord::CoordSystem, Coord::SkyFrame);
   void markerCompositeCmd(int, int);
@@ -1410,10 +1402,8 @@ public:
   void markerEditMotionCmd(const Vector&, int);
   void markerEditEndCmd();
   void markerEllipseFillCmd(int, int);
-  void markerEllipseRadiusCmd(int, const Vector&, Coord::InternalSystem);
-  void markerEllipseRadiusCmd(int, const Vector&, Coord::CoordSystem, Coord::DistFormat);
-  void markerEllipseAnnulusRadiusCmd(int, const Vector&, const Vector&, int, 
-				     Coord::InternalSystem);
+  void markerEllipseRadiusCmd(int, const Vector&,
+			      Coord::CoordSystem, Coord::DistFormat);
   void markerEllipseAnnulusRadiusCmd(int, const Vector&, const Vector&, int, 
 				     Coord::CoordSystem, Coord::DistFormat);
   void markerEllipseAnnulusRadiusCmd(int, const char*, 
@@ -1488,15 +1478,12 @@ public:
   void markerPolygonFillCmd(int, int);
   void markerPolygonCreateVertexCmd(int, int, const Vector&);
   void markerPolygonDeleteVertexCmd(int, int);
-  void markerPolygonResetCmd(int, const Vector&, Coord::InternalSystem);
   void markerPolygonResetCmd(int, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void markerPreserveCmd(int r) {preserveMarkers = r;}
   void markerPropertyCmd(unsigned short, int);
   void markerPropertyCmd(const char*, unsigned short, int);
   void markerPropertyCmd(int, unsigned short, int);
   void markerPropertyCmd(unsigned short, int, const Vector&);
-  void markerProjectionCmd(int, const Vector&, const Vector&, 
-			   Coord::InternalSystem, double);
   void markerProjectionCmd(int, const Vector&, const Vector&, 
 			   Coord::CoordSystem, Coord::SkyFrame, 
 			   double, Coord::CoordSystem, Coord::DistFormat);
@@ -1517,7 +1504,6 @@ public:
   void markerSaveTemplateCmd(const char*);
   void markerSegmentCreateVertexCmd(int, int, const Vector&);
   void markerSegmentDeleteVertexCmd(int, int);
-  void markerSegmentResetCmd(int, const Vector&, Coord::InternalSystem);
   void markerSegmentResetCmd(int, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void markerSelectAllCmd();
   void markerSelectCmd(int); // not used
@@ -1547,7 +1533,6 @@ public:
   void markerUnselectCmd(int); // not used
   void markerUnselectCmd(const char*); // not used
 
-  void markerVectorCmd(int, const Vector&, Coord::InternalSystem, double, double);
   void markerVectorCmd(int, const Vector&, Coord::CoordSystem, Coord::SkyFrame, 
 		       double, Coord::CoordSystem, Coord::DistFormat, double);
   void markerVectorArrowCmd(int, int);

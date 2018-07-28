@@ -143,6 +143,24 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
 
 // Map Length
 
+Vector FitsImage::mapLen(const Vector& vv, const Matrix& mx)
+{
+  // imageToPhysical/Amplifier/Dector have no rotation, only scale/translation
+  // just grap scale
+  return vv*Scale(mx);
+
+  // remove translation
+  //  Vector tt = Vector() * mx;
+  //  Matrix sr = mx * Translate(-tt);
+
+  // remove rotation
+  //  Vector rr = Vector(1,0) * sr;
+  //  Matrix ss = sr * Rotate(rr.angle());
+
+  // all that is left is Scaling
+  //  return (vv*ss).abs();
+}
+
 double FitsImage::mapLenFromRef(double dd, Coord::CoordSystem sys,
 				Coord::DistFormat dist)
 {

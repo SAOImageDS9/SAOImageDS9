@@ -191,6 +191,8 @@ class FitsImage {
   int checkWCS(Vector3d&);
   AstFrameSet* fits2ast(FitsHead*);  
 
+  Vector mapLen(const Vector& v, const Matrix& mx);
+
  public:
   char* fileName;
   char* rootBaseFileName;

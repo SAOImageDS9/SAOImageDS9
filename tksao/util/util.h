@@ -130,6 +130,4 @@ extern const char* psFontName(const char*, const char*, const char*);
 
 extern int fCompare(const void*, const void*);
 extern int dCompare(const void*, const void*);
-
-extern Vector mapLen(const Vector& v, const Matrix& mx);
 #endif

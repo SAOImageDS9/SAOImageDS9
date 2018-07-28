@@ -520,20 +520,6 @@ int dCompare(const void* a, const void* b)
   return 0;
 }
 
-Vector mapLen(const Vector& v, const Matrix& mx)
-{
-  // remove translation
-  Vector t = Vector() * mx;
-  Matrix sr = mx * Translate(-t);
-
-  // remove rotation
-  Vector r = Vector(1,0) * sr;
-  Matrix s = sr * Rotate(r.angle());
-
-  // all that is left is Scaling
-  return (v*s).abs();
-}
-
 #if defined (MAC_OSX_TK) || (_WIN32)
 
 int XSetClipRectangles(Display *d, GC gc, int clip_x_origin, int clip_y_origin,

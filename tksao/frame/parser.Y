@@ -1861,8 +1861,6 @@ marker	: CENTROID_ markerCentroid
 	| INT HIGHLITE_ ONLY_{fr->markerHighliteOnlyCmd($1);}
 
 	| INT LINE_ ARROW_ yesno yesno {fr->markerLineArrowCmd($1,$4,$5);}
-	| INT LINE_ POINT_ internalSystem coord coord
-	{fr->markerLineCmd($1, Vector($5), Vector($6), (Coord::InternalSystem)$4);}
 	| INT LINE_ POINT_ coordSystem skyFrame coord coord
 	{fr->markerLineCmd($1, Vector($6), Vector($7), 
 	    (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
@@ -1897,9 +1895,6 @@ marker	: CENTROID_ markerCentroid
 
 	| INT ROTATE_ BEGIN_ {fr->markerRotateBeginCmd($1);}
         | INT RULER_ FORMAT_ STRING {fr->markerRulerDistSpecCmd($1, $4);}
-	| INT RULER_ POINT_ internalSystem coord coord
-	{fr->markerRulerPointCmd($1, Vector($5), Vector($6),
-	    (Coord::InternalSystem)$4);}
 	| INT RULER_ POINT_ coordSystem skyFrame coord coord
 	{fr->markerRulerPointCmd($1, Vector($6), Vector($7),
 	    (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}

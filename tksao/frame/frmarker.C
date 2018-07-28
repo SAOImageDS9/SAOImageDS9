@@ -4323,28 +4323,6 @@ void Base::markerKeyCmd(const Vector& v)
 }
 
 void Base::markerLineCmd(int id, const Vector& p1, const Vector& p2, 
-			 Coord::InternalSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	((Line*)(mm))->setPoints(mapToRef(p1,sys),mapToRef(p2,sys));
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
-void Base::markerLineCmd(int id, const Vector& p1, const Vector& p2, 
 			 Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   Marker* mm=markers->head();
@@ -5462,28 +5440,6 @@ void Base::markerRotateEndCmd()
     rotateMarker->rotateEnd();
   rotateMarker = NULL;
   update(PIXMAP);
-}
-
-void Base::markerRulerPointCmd(int id, const Vector& p1, const Vector& p2,
-			       Coord::InternalSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit()) {
-	markerUndo(mm, EDIT);
-
-	// it may shrink
-	update(PIXMAP, mm->getAllBBox());
-	((Ruler*)(mm))->setPoints(mapToRef(p1,sys),mapToRef(p2,sys));
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
 }
 
 void Base::markerRulerPointCmd(int id, const Vector& p1, const Vector& p2,

@@ -1441,7 +1441,6 @@ public:
   void markerKeyCmd();
   void markerKeyCmd(const Vector&);
 
-  void markerLineCmd(int, const Vector&, const Vector&, Coord::InternalSystem);
   void markerLineCmd(int, const Vector&, const Vector&, Coord::CoordSystem, Coord::SkyFrame);
   void markerLineArrowCmd(int, int, int);
   void markerLineWidthCmd(int);
@@ -1495,7 +1494,6 @@ public:
   void markerRulerDistSpecCmd(int, const char*);
   void markerRulerPointCmd(int, const Vector&, const Vector&, 
 			   Coord::CoordSystem, Coord::SkyFrame);
-  void markerRulerPointCmd(int, const Vector&, const Vector&, Coord::InternalSystem);
   void markerRulerSystemCmd(int, Coord::CoordSystem, Coord::SkyFrame, 
 			    Coord::CoordSystem, Coord::DistFormat);
 

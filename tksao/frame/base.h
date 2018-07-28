@@ -1463,11 +1463,8 @@ public:
   void markerMoveMotionCmd(int, const Vector&);
   void markerMoveEndCmd();
   void markerMoveEndCmd(int);
-  void markerMoveToCmd(const Vector&, Coord::InternalSystem);
   void markerMoveToCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
-  void markerMoveToCmd(const char*, const Vector&, Coord::InternalSystem);
   void markerMoveToCmd(const char*, const Vector&, Coord::CoordSystem, Coord::SkyFrame);
-  void markerMoveToCmd(int, const Vector&, Coord::InternalSystem);
   void markerMoveToCmd(int, const Vector&, Coord::CoordSystem, Coord::SkyFrame);
 
   void markerPasteCmd();

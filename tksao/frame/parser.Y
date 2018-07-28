@@ -1869,8 +1869,6 @@ marker	: CENTROID_ markerCentroid
 	{fr->markerMoveCmd($1, Vector($3,$4));}
 	| INT MOVE_ FRONT_ {fr->markerFrontCmd($1);}
 	| INT MOVE_ BACK_ {fr->markerBackCmd($1);}
-	| INT MOVE_ TO_ internalSystem numeric numeric
-	{fr->markerMoveToCmd($1, Vector($5,$6), (Coord::InternalSystem)$4);}
 	| INT MOVE_ TO_ coordSystem skyFrame coord 
 	{fr->markerMoveToCmd($1,Vector($6),(Coord::CoordSystem)$4,(Coord::SkyFrame)$5);}
 
@@ -1952,8 +1950,6 @@ marker	: CENTROID_ markerCentroid
 	| STRING MOVE_ numeric numeric {fr->markerMoveCmd($1,Vector($3,$4));}
 	| STRING MOVE_ FRONT_ {fr->markerFrontCmd($1);}
 	| STRING MOVE_ BACK_ {fr->markerBackCmd($1);}
-	| STRING MOVE_ TO_ internalSystem coord 
-	  {fr->markerMoveToCmd($1,Vector($5),(Coord::InternalSystem)$4);}
 	| STRING MOVE_ TO_ coordSystem skyFrame coord 
 	{fr->markerMoveToCmd($1,Vector($6),(Coord::CoordSystem)$4,(Coord::SkyFrame)$5);}
 	| STRING PROPERTY_ markerProperty yesno 
@@ -2463,8 +2459,6 @@ markerMoveSelected : numeric numeric {fr->markerMoveCmd(Vector($1,$2));}
 	| BEGIN_ numeric numeric {fr->markerMoveBeginCmd(Vector($2,$3));}
 	| MOTION_ numeric numeric {fr->markerMoveMotionCmd(Vector($2,$3));}
 	| END_ {fr->markerMoveEndCmd();}
-	| TO_ internalSystem coord 
-	{fr->markerMoveToCmd(Vector($3), (Coord::InternalSystem)$2);}
 	| TO_ coordSystem skyFrame coord 
 	{fr->markerMoveToCmd(Vector($4), (Coord::CoordSystem)$2, (Coord::SkyFrame)$3);}
 	;

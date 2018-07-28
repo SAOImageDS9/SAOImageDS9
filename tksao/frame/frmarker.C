@@ -4994,23 +4994,6 @@ void Base::markerMoveEndCmd(int id)
   update(PIXMAP);
 }
 
-void Base::markerMoveToCmd(const Vector& v, Coord::InternalSystem sys)
-{
-  undoMarkers->deleteAll();
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->isSelected() && mm->canMove()) {
-      undoMarkers->append(mm->dup());
-      undoMarkerType = MOVE;
-
-      update(PIXMAP, mm->getAllBBox());
-      mm->moveTo(mapToRef(v,sys));
-      update(PIXMAP, mm->getAllBBox());
-    }
-    mm=mm->next();
-  }
-}
-
 void Base::markerMoveToCmd(const Vector& v, Coord::CoordSystem sys,
 			   Coord::SkyFrame sky)
 {
@@ -5031,24 +5014,6 @@ void Base::markerMoveToCmd(const Vector& v, Coord::CoordSystem sys,
 }
 
 void Base::markerMoveToCmd(const char* tag, const Vector& v, 
-			   Coord::InternalSystem sys)
-{
-  undoMarkers->deleteAll();
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->canMove() && mm->hasTag(tag)) {
-      undoMarkers->append(mm->dup());
-      undoMarkerType = MOVE;
-
-      update(PIXMAP, mm->getAllBBox());
-      mm->moveTo(mapToRef(v,sys));
-      update(PIXMAP, mm->getAllBBox());
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::markerMoveToCmd(const char* tag, const Vector& v, 
 			   Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   undoMarkers->deleteAll();
@@ -5062,24 +5027,6 @@ void Base::markerMoveToCmd(const char* tag, const Vector& v,
       FitsImage* ptr = findFits(sys,mm->getCenter());
       mm->moveTo(ptr->mapToRef(v,sys,sky));
       update(PIXMAP, mm->getAllBBox());
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::markerMoveToCmd(int id, const Vector& v, Coord::InternalSystem sys)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canMove()) {
-	markerUndo(mm, MOVE);
-
-	update(PIXMAP, mm->getAllBBox());
-	mm->moveTo(mapToRef(v, sys));
-	update(PIXMAP, mm->getAllBBox());
-      }
-      return;
     }
     mm=mm->next();
   }

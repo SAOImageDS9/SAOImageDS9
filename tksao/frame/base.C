@@ -635,12 +635,14 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
 
     Vector orpix2 = fits2->wcs2pix(orval2,sys2,sky) * imageToData;
 
-    return Translate(-orpix2) *
+    Matrix rr = Translate(-orpix2) *
       flip *
       Scale(zoom) *
       Rotate(rotation) *
       Translate(orpix2) *
       Translate(origin);
+
+    return rr;
   }
 }
 #else
@@ -691,13 +693,17 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   double* fit = new double[ss];
   double tol = 1;
   if (astLinearApprox(cvt, ll, ur, tol, fit) != AST__BAD)
-    rr = Matrix(fit[naxes2], fit[naxes2+naxes1],
+    rr = dataToImage *
+      Matrix(fit[naxes2], fit[naxes2+naxes1],
   		fit[naxes2+1], fit[naxes2+naxes1+1],
-  		fit[0], fit[1]);
+  		fit[0], fit[1]) *
+      imageToData;
+
   if (fit)
     delete [] fit;
 
   astEnd; // now, clean up memory
+
   return rr;
 }
 #endif

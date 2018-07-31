@@ -21,14 +21,18 @@ double Base::mapAngleFromRef(double angle, Coord::CoordSystem sys,
   case Coord::AMPLIFIER:
     break;
   default:
-    Coord::Orientation oo = keyContext->fits->getWCSOrientation(sys, sky);
-    if (oo==Coord::XX) 
-      rr = -(angle + ptr->getWCSRotation(sys,sky) + M_PI);
-    else
+    switch (keyContext->fits->getWCSOrientation(sys,sky)) {
+    case Coord::NORMAL:
       rr += ptr->getWCSRotation(sys,sky);
-    break;
+      break;
+    case Coord::XX:
+      rr = -(angle + ptr->getWCSRotation(sys,sky) + M_PI);
+      break;
+    case Coord::YY:
+    case Coord::XY:
+      break;
+    }
   }
-
   return zeroTWOPI(rr);
 }
 
@@ -47,14 +51,18 @@ double Base::mapAngleToRef(double angle, Coord::CoordSystem sys,
   case Coord::AMPLIFIER:
     break;
   default:
-    Coord::Orientation oo = keyContext->fits->getWCSOrientation(sys, sky);
-    if (oo==Coord::XX)
-      rr = -(angle + ptr->getWCSRotation(sys,sky) + M_PI);
-    else
+    switch (keyContext->fits->getWCSOrientation(sys,sky)) {
+    case Coord::NORMAL:
       rr -= ptr->getWCSRotation(sys,sky);
-    break;
+      break;
+    case Coord::XX:
+      rr = -(angle + ptr->getWCSRotation(sys,sky) + M_PI);
+      break;
+    case Coord::YY:
+    case Coord::XY:
+      break;
+    }
   }
-
   return zeroTWOPI(rr);
 }
 

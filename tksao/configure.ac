@@ -266,7 +266,7 @@ widget/widget.C
 ])
 
 TEA_ADD_HEADERS([])
-TEA_ADD_INCLUDES([-I. -I./colorbar -I./fitsy++ -I./frame -I./list -I./magnifier -I./panner -I./util -I./vector -I./wcssubs -I./widget -I${prefix}/include])
+TEA_ADD_INCLUDES([-I. -I./colorbar -I./fitsy++ -I./frame -I./list -I./magnifier -I./panner -I./util -I./vector -I./widget -I${prefix}/include])
 TEA_ADD_LIBS([-lstdc++])
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])

@@ -5881,7 +5881,7 @@ widget/widget.C
 
 
 
-    vars="-I. -I./colorbar -I./fitsy++ -I./frame -I./list -I./magnifier -I./panner -I./util -I./vector -I./wcssubs -I./widget -I${prefix}/include"
+    vars="-I. -I./colorbar -I./fitsy++ -I./frame -I./list -I./magnifier -I./panner -I./util -I./vector -I./widget -I${prefix}/include"
     for i in $vars; do
 	PKG_INCLUDES="$PKG_INCLUDES $i"
     done

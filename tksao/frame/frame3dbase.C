@@ -152,57 +152,6 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
   getInfoClearValue(var);
 }
 
-#ifdef OLDWCS
-void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr, 
-			     FitsImage* sptr)
-{
-  Vector3d img = rr * sptr->refToImage3d;
-
-  for (int ii=0; ii<MULTWCS; ii++) {
-    char buf[64];
-    char ww = !ii ? '\0' : '`'+ii;
-    Coord::CoordSystem www = (Coord::CoordSystem)(Coord::WCS+ii);
-
-    if (hasWCS(www)) {
-      char buff[128];
-      sptr->pix2wcs(Vector(img), www, wcsSky_, wcsSkyFormat_, buff);
-
-      int argc;
-      const char** argv;
-      Tcl_SplitList(interp, buff, &argc, &argv);
-
-      if (argc > 0 && argv && argv[0])
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),argv[0],0);
-      else
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
-
-      if (argc > 1 && argv && argv[1])
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),argv[1],0);
-      else
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
-
-      char* wcsname = (char*)sptr->getWCSName(www);
-      if (wcsname)
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),wcsname,0);
-      else if (argc > 2 && argv && argv[2])
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),argv[2],0);
-      else
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
-	    
-      double ss = ptr->mapFromImage3d(img[2],www);
-      doubleToTclArray(ss,var,varcat(buf,(char*)"wcs",ww,(char*)""),"z");
-
-      Tcl_Free((char*)argv);
-    }
-    else {
-      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
-      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
-      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
-      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
-    }
-  }
-}
-#else
 void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr, 
 			     FitsImage* sptr)
 {
@@ -254,21 +203,7 @@ void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr,
     }
   }
 }
-#endif
 
-#ifdef OLDWCS
-void Frame3dBase::coordToTclArray(FitsImage* ptr, const Vector3d& vv, 
-				  Coord::CoordSystem out,
-				  const char* var, const char* base)
-{
-  Vector rr = ptr->mapFromRef(vv, out);
-  doubleToTclArray(rr[0], var, base, "x");
-  doubleToTclArray(rr[1], var, base, "y");
-
-  double ss = ptr->mapFromImage3d(((Vector3d&)vv)[2]+.5,out);
-  doubleToTclArray(ss, var, base, "z");
-}
-#else
 void Frame3dBase::coordToTclArray(FitsImage* ptr, const Vector3d& vv, 
 				  Coord::CoordSystem out,
 				  const char* var, const char* base)
@@ -278,7 +213,6 @@ void Frame3dBase::coordToTclArray(FitsImage* ptr, const Vector3d& vv,
   doubleToTclArray(rr[1], var, base, "y");
   doubleToTclArray(rr[2], var, base, "z");
 }
-#endif
 
 void Frame3dBase::calcBorder(Coord::InternalSystem sys, FrScale::SecMode mode,
 			     Vector3d* vv, int* dd)
@@ -1010,82 +944,6 @@ void Frame3dBase::updatePannerMatrices()
   Base::updatePannerMatrices();
 }
 
-#ifdef OLDWCS
-void Frame3dBase::updatePanner()
-{
-  // do this first
-  Base::updatePanner();
-
-  // always render (to update panner background color)
-  if (usePanner) {
-    if (keyContext->fits) {
-      XSetForeground(display, pannerGC, getColor("black"));
-      x11Border(Coord::PANNER,FrScale::IMGSEC,pannerGC,pannerPixmap);
-    }
-
-    ostringstream str;
-    str << pannerName << " update " << (void*)pannerPixmap << ';';
-
-    // calculate bbox
-    Vector ll = Vector(0,0) * widgetToPanner3d;
-    Vector lr = Vector(options->width,0) * widgetToPanner3d;
-    Vector ur = Vector(options->width,options->height) * widgetToPanner3d;
-    Vector ul = Vector(0,options->height) * widgetToPanner3d;
-
-    str << pannerName << " update bbox " 
-	<< ll << ' ' << lr << ' ' << ur << ' ' << ul << ';';
-
-    // calculate image compass vectors
-    Matrix3d mm = 
-      Matrix3d(wcsOrientationMatrix) *
-      Matrix3d(orientationMatrix) *
-      RotateZ3d(wcsRotation) *
-      RotateZ3d(rotation) *
-      RotateY3d(az_) * 
-      RotateX3d(-el_) * 
-      FlipY3d();
-
-    Vector xx = (Vector3d(1,0,0)*mm).normalize();
-    Vector yy = (Vector3d(0,1,0)*mm).normalize();
-    Vector zz = (Vector3d(0,0,1)*mm).normalize();
-
-    str << pannerName << " update image compass " 
-	<< xx << ' ' << yy << ' ' << zz << ';';
-
-    if (keyContext->fits && keyContext->fits->hasWCS(wcsSystem_)) {
-      Vector orpix = keyContext->fits->center();
-      Vector orval=keyContext->fits->pix2wcs(orpix, wcsSystem_, wcsSky_);
-      Vector orpix2 = keyContext->fits->wcs2pix(orval, wcsSystem_,wcsSky_);
-      Vector delta = keyContext->fits->getWCScdelt(wcsSystem_).abs();
-
-      // find normalized north
-      Vector npix = keyContext->fits->wcs2pix(Vector(orval[0],orval[1]+delta[1]), wcsSystem_,wcsSky_);
-      Vector north = (Vector3d(npix-orpix2)*mm).normalize();
-
-      // find normalized east
-      Vector epix = keyContext->fits->wcs2pix(Vector(orval[0]+delta[0],orval[1]), wcsSystem_,wcsSky_);
-      Vector east = (Vector3d(epix-orpix2)*mm).normalize();
-
-      // sanity check
-      Vector diff = (north-east).abs();
-      if ((north[0]==0 && north[1]==0) ||
-	  (east[0]==0 && east[1]==0) ||
-	  (diff[0]<.01 && diff[1]<.01)) {
-	north = (Vector3d(0,1)*mm).normalize();
-	east = (Vector3d(-1,0)*mm).normalize();
-      }
-
-      // and update the panner
-      str << pannerName << " update wcs compass " 
-	  << north << ' ' << east << ends;
-    }
-    else
-      str << pannerName << " update wcs compass invalid" << ends;
-
-    Tcl_Eval(interp, str.str().c_str());
-  }
-}
-#else
 void Frame3dBase::updatePanner()
 {
   // do this first
@@ -1154,7 +1012,6 @@ void Frame3dBase::updatePanner()
     Tcl_Eval(interp, str.str().c_str());
   }
 }
-#endif
 
 void Frame3dBase::x11Graphics()
 {

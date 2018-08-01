@@ -107,11 +107,6 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   refToImage3d = dataToImage3d;
 
   manageWCS_ =1;
-#ifdef OLDWCS
-  wcs_ =NULL;
-  ast_ =NULL;
-  wcsx_ =NULL;
-#else
   ast_ =NULL;
   astInv_ =0;
   wcs_ =NULL;
@@ -119,7 +114,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcs3D_ =NULL;
   wcsHPX_ =0;
   wcsSize_ =NULL;
-#endif
+
   wcsAltHeader_ =NULL;
   wfpc2Header_ =NULL;
   wcs0Header_ =NULL;
@@ -176,28 +171,6 @@ FitsImage::~FitsImage()
       delete analysisdata_;
   }
 
-#ifdef OLDWCS
-  if (wcs_) {
-    for (int ii=0; ii<MULTWCSA; ii++)
-      if (manageWCS_ && wcs_[ii])
-	wcsfree(wcs_[ii]);
-    delete [] wcs_;
-  }  
-
-  if (ast_) {
-    for (int ii=0; ii<MULTWCSA; ii++)
-      if (manageWCS_ && ast_[ii])
- 	astAnnul(ast_[ii]);
-    delete [] ast_;
-  }
-
-  if (wcsx_) {
-    for (int ii=0; ii<MULTWCS; ii++)
-      if (manageWCS_ && wcsx_[ii])
-	delete wcsx_[ii];
-    delete [] wcsx_;
-  }  
-#else
   if (manageWCS_) {
     if (ast_)
       astAnnul(ast_);
@@ -210,7 +183,6 @@ FitsImage::~FitsImage()
     if (wcsSize_)
       delete [] wcsSize_;
   }
-#endif
 
   if (wcsAltHeader_)
     delete wcsAltHeader_;
@@ -1074,198 +1046,6 @@ void FitsImage::iisSetFileName(const char* fn)
   iisFileName = dupstr(fn);
 }
 
-#ifdef OLDWCS
-void FitsImage::initWCS(FitsHead* hd, FitsHead* prim)
-{
-  if (wcs_) {
-    for (int ii=0; ii<MULTWCSA; ii++)
-      if (manageWCS_ && wcs_[ii])
-	wcsfree(wcs_[ii]);
-    delete [] wcs_;
-  }
-  wcs_ = new WorldCoor*[MULTWCSA];
-  for (int ii=0; ii<MULTWCSA; ii++)
-    wcs_[ii] = NULL;
-
-  if (ast_) {
-    for (int ii=0; ii<MULTWCSA; ii++)
-      if (manageWCS_ && ast_[ii])
-	astAnnul(ast_[ii]);
-    delete [] ast_;
-  }
-  ast_ = new AstFrameSet*[MULTWCSA];
-  for (int ii=0; ii<MULTWCSA; ii++)
-    ast_[ii] = NULL;
-
-  if (wcsx_) {
-    for (int ii=0; ii<MULTWCS; ii++)
-      if (manageWCS_ && wcsx_[ii])
-	delete wcsx_[ii];
-    delete [] wcsx_;
-  }  
-  wcsx_ = new WCSx*[MULTWCS];
-  for (int ii=0; ii<MULTWCS; ii++)
-    wcsx_[ii] = NULL;
-
-  // shareWCS?
-  manageWCS_ =1;
-  if (context_->shareWCS()) {
-    FitsImage* ptr = context_->fits;
-    while (ptr) {
-      if (ptr == this)
-	break;
-
-      FitsImage* sptr = ptr->nextSlice();
-      while (sptr) {
-	if (sptr == this) {
-	  for (int ii=0; ii<MULTWCSA; ii++)
-	    wcs_[ii] = ptr->wcs_[ii];
-	  for (int ii=0; ii<MULTWCSA; ii++)
-	    ast_[ii] = ptr->ast_[ii];
-	  for (int ii=0; ii<MULTWCS; ii++)
-	    wcsx_[ii] = ptr->wcsx_[ii];
-
-	  initWCSPhysical();
-	  manageWCS_ =0;
-	  return;
-	}
-	sptr = sptr->nextSlice();
-      }
-      ptr = ptr->nextMosaic();
-    }
-  }
-
-  // wcsinit is sloooowwww! so try to figure it out first
-  // look first for default WCS. Let wcsinit figure it out since there can
-  // be many different non-standard wcs's present
-  wcshead = hd;
-  wcsprim = prim;
-  wcs_[0] = wcsinit(hd->cards());
-  wcshead = NULL;
-  wcsprim = NULL;
-
-  // now look for WCSA - WCSZ
-  // we can take a short cut here, since only valid FITS wcs's are available
-  for (int ii=1; ii<MULTWCS; ii++) {
-    char str[] = "CTYPE1 ";
-    str[6] = '@'+ii;
-    if (hd->find(str)) {
-      wcshead = hd;
-      wcsprim = prim;
-      wcs_[ii] = wcsinitc(hd->cards(),str+6);
-      wcshead  = NULL;
-      wcsprim = NULL;
-    }
-  }
-
-  // finally, look for AST def
-  if (!wcs_[0]) {
-    char str[] = "BEGAST_A";
-    if (hd->find(str)) {
-      wcs_[0] = wcskinit(100, 100, (char*)"AST--WCS", (char*)"AST--WCS", 
-			 0, 0, 0, 0, NULL, 1, 1, 0, 2000, 0);
-      wcs_[0]->longpole = 999;
-      wcs_[0]->latpole = 999;
-    }
-  }
-
-  // AST
-  for (int ii=0; ii<MULTWCSA; ii++) {
-    if (wcs_[ii]) {
-      astinit(ii, hd, prim);
-
-      if (DebugWCS) {
-	wcsShow(wcs_[ii]);
-	astShow(ast_[ii]);
-      }
-    }
-  }
-
-  // WCSDEP
-  if (hd->find("WCSDEP")) {
-    char* str = hd->getString("WCSDEP");
-    if (str) {
-      for (int ii=1; ii<MULTWCS; ii++) {
-	if (wcs_[ii]) {
-	  if (wcs_[ii]->wcsname) {
-	    if (!strncmp(str,wcs_[ii]->wcsname,strlen(wcs_[ii]->wcsname))) {
-	      if (ast_[0] && ast_[ii]) {
-		AstFrameSet* dep = (AstFrameSet*)astCopy(ast_[ii]);
-		astInvert(ast_[0]);
-		astAddFrame(dep,2,astUnitMap(2,""),ast_[0]);
-		astSetI(dep,"current",4);
-		astAnnul(ast_[0]);
-		ast_[0] = dep;
-	      }
-	    }
-	  }
-	}
-      }
-    }
-  }
-
-  // WCSx
-  char scrpix[] = "CRPIX  ";
-  char scrval[] = "CRVAL  ";
-  char scd[] = "CD _  ";
-  char spc[] = "PC _  ";
-  char scdelt[] = "CDELT  ";
-  for (int ii=0; ii<MULTWCS; ii++) {
-    int jj=2;
-    
-    scrpix[5] = '1'+jj;
-    scrpix[6] = !ii ? ' ' : '@'+jj;
-    scrval[5] = '1'+jj;
-    scrval[6] = !ii ? ' ' : '@'+jj;
-    scd[2] = '1'+jj;
-    scd[4] = '1'+jj;
-    scd[5] = !ii ? ' ' : '@'+jj;
-    spc[2] = '1'+jj;
-    spc[4] = '1'+jj;
-    spc[5] = !ii ? ' ' : '@'+jj;
-    scdelt[5] = '1'+jj;
-    scdelt[6] = !ii ? ' ' : '@'+jj;
-
-    if (hd->find(scrpix) && hd->find(scrval)) {
-      if (!wcsx_[ii])
-	wcsx_[ii] = new WCSx();
-      wcsx_[ii]->crpix = hd->getReal(scrpix,0);
-      wcsx_[ii]->crval = hd->getReal(scrval,0);
-
-      float cd = hd->getReal(scd,0);
-      float pc = hd->getReal(spc,0);
-      float cdelt = hd->getReal(scdelt,0);
-      if (cd)
-	wcsx_[ii]->cd = cd;
-      else if (pc && cdelt)
-	wcsx_[ii]->cd = pc * cdelt;
-      else if (cdelt)
-	wcsx_[ii]->cd = cdelt;
-      else
-	wcsx_[ii]->cd = 1;
-    }
-  }
-
-  initWCSPhysical();
-
-  if (DebugWCS) {
-    for (int ii=0; ii<MULTWCS; ii++) {
-      if (wcsx_[ii]) {
-	if (wcsx_[ii]->cd) {
-	  cerr << "wcsx" << (char)(!ii ? ' ' : '@'+ii) 
-	       << "[" << ii << "]->crpix=" << wcsx_[ii]->crpix << endl;
-	  cerr << "wcsx" << (char)(!ii ? ' ' : '@'+ii) 
-	       << "[" << ii << "]->crval=" << wcsx_[ii]->crval << endl;
-	  cerr << "wcsx" << (char)(!ii ? ' ' : '@'+ii) 
-	       << "[" << ii << "]->cd=" << wcsx_[ii]->cd << endl;
-	}
-      }
-    }
-  }
-}
-
-#else
-
 void FitsImage::initWCS(FitsHead* hd)
 {
   if (manageWCS_) {
@@ -1333,7 +1113,6 @@ void FitsImage::initWCS(FitsHead* hd)
   if (DebugWCS && ast_)
     astShow(ast_);
 }
-#endif
 
 void FitsImage::resetWCS()
 {
@@ -1353,72 +1132,8 @@ void FitsImage::resetWCS()
   if (wfpc2Header_)
     initWCS(wfpc2Header_);
   else
-#ifdef OLDWCS
-    initWCS(image_->head(),
-	    image_->primary() && image_->inherit() ? image_->primary() : NULL);
-#else
     initWCS(image_->head());
-#endif
 }
-
-#ifdef OLDWCS
-void FitsImage::initWCS0(const Vector& pix)
-{
-  FitsHead* hd =NULL;
-  FitsHead* prim =NULL;
-  if (wcsAltHeader_)
-    hd = wcsAltHeader_;
-  else if (wfpc2Header_)
-    hd = wfpc2Header_;
-  else {
-    hd = image_->head();
-    prim = image_->primary() && image_->inherit() ? image_->primary() : NULL;
-  }
-
-  int ii = Coord::WCS0-Coord::WCS;
-  if (wcs_[ii])
-    wcsfree(wcs_[ii]);
-  wcs_[ii] = NULL;
-
-  if (wcs_[0]) {
-    Vector cc = mapFromRef(pix, Coord::IMAGE, Coord::FK5);
-    WorldCoor* ww = wcs_[0];
-    if (!ww->coorflip)
-      wcs_[ii] = wcskinit(ww->nxpix, ww->nypix, 
-			  (char*)"RA---TAN", (char*)"DEC--TAN", 
-			  cc[0], cc[1], 0, 0, ww->cd, 0, 0, 0, 2000, 2000);
-    else
-      wcs_[ii] = wcskinit(ww->nxpix, ww->nypix, 
-			  (char*)"DEC--TAN", (char*)"RA---TAN", 
-			  cc[0], cc[1], 0, 0, ww->cd, 0, 0, 0, 2000, 2000);
-    wcs_[ii]->longpole = 999;
-    wcs_[ii]->latpole = 999;
-
-    if (ast_[ii])
-      astAnnul(ast_[ii]);
-    ast_[ii] = NULL;
-    astinit0(ii, hd, prim);
-
-    if (DebugWCS) {
-      wcsShow(wcs_[ii]);
-      astShow(ast_[ii]);
-    }
-  }
-}
-
-void FitsImage::resetWCS0()
-{
-  int ii = Coord::WCS0-Coord::WCS;
-  if (wcs_[ii])
-    wcsfree(wcs_[ii]);
-  wcs_[ii] = NULL;
-
-  if (ast_[ii])
-    astAnnul(ast_[ii]);
-  ast_[ii] = NULL;
-}
-
-#else
 
 void FitsImage::initWCS0(const Vector& pix)
 {
@@ -1471,35 +1186,7 @@ void FitsImage::initWCS0(const Vector& pix)
   wcs0Header_ = hd;
   initWCS(wcs0Header_);
 }
-#endif
 
-#ifdef OLDWCS
-void FitsImage::initWCSPhysical()
-{
-  // now see if we have a 'physical' wcs, if so, set LTMV keywords
-  keyLTMV =0;
-  for (int ii=1; ii<MULTWCS; ii++) {
-    if (wcs_[ii] && 
-	wcs_[ii]->wcsname && 
-	!strncmp(wcs_[ii]->wcsname, "PHYSICAL", 8)) {
-      keyLTMV = 1;
-
-      double ltm11 = wcs_[ii]->cd[0] != 0 ? 1/wcs_[ii]->cd[0] : 0;
-      double ltm12 = wcs_[ii]->cd[1] != 0 ? 1/wcs_[ii]->cd[1] : 0;
-      double ltm21 = wcs_[ii]->cd[2] != 0 ? 1/wcs_[ii]->cd[2] : 0;
-      double ltm22 = wcs_[ii]->cd[3] != 0 ? 1/wcs_[ii]->cd[3] : 0;
-
-      double ltv1 = wcs_[ii]->crpix[0] -
-	wcs_[ii]->crval[0]*ltm11 - wcs_[ii]->crval[1]*ltm21;
-      double ltv2 = wcs_[ii]->crpix[1] -
-	wcs_[ii]->crval[0]*ltm12 - wcs_[ii]->crval[1]*ltm22;
-
-      physicalToImage = Matrix(ltm11, ltm12, ltm21, ltm22, ltv1, ltv2);
-      imageToPhysical = physicalToImage.invert();
-    }
-  }
-}
-#else
 void FitsImage::initWCSPhysical()
 {
   // now see if we have a 'physical' in WCSP, if so, set LTMV keywords
@@ -1536,7 +1223,6 @@ void FitsImage::initWCSPhysical()
     }
   }
 }
-#endif
 
 void FitsImage::load()
 {
@@ -1589,142 +1275,6 @@ void FitsImage::load()
   data_ = analysisdata_;
 }
 
-#ifdef OLDWCS
-void FitsImage::match(const char* xxname1, const char* yyname1,
-		      Coord::CoordSystem sys1, Coord::SkyFrame sky1,
-		      const char* xxname2, const char* yyname2,
-		      Coord::CoordSystem sys2, Coord::SkyFrame sky2,
-		      double rad, Coord::CoordSystem sys, 
-		      Coord::DistFormat dist,
-		      const char* rrname)
-{
-  // get lists
-  Tcl_Obj* listxx1 = 
-    Tcl_GetVar2Ex(interp_, xxname1, NULL, TCL_LEAVE_ERR_MSG);
-  Tcl_Obj* listyy1 = 
-    Tcl_GetVar2Ex(interp_, yyname1, NULL, TCL_LEAVE_ERR_MSG);
-  Tcl_Obj* listxx2 = 
-    Tcl_GetVar2Ex(interp_, xxname2, NULL, TCL_LEAVE_ERR_MSG);
-  Tcl_Obj* listyy2 = 
-    Tcl_GetVar2Ex(interp_, yyname2, NULL, TCL_LEAVE_ERR_MSG);
-
-  // get objects
-  int nxx1;
-  Tcl_Obj **objxx1;
-  Tcl_ListObjGetElements(interp_, listxx1, &nxx1, &objxx1);
-  int nyy1;
-  Tcl_Obj **objyy1;
-  Tcl_ListObjGetElements(interp_, listyy1, &nyy1, &objyy1);
-  int nxx2;
-  Tcl_Obj **objxx2;
-  Tcl_ListObjGetElements(interp_, listxx2, &nxx2, &objxx2);
-  int nyy2;
-  Tcl_Obj **objyy2;
-  Tcl_ListObjGetElements(interp_, listyy2, &nyy2, &objyy2);
-
-  // sanity check
-  if (nxx1 != nyy1 || nxx2 != nyy2)
-    return;
-    
-  int ss1 = sys1-Coord::WCS;
-  if (!(ss1>=0 && ast_ && ast_[ss1]))
-    return;
-  if (!wcsIsASkyFrame(ast_[ss1]))
-    return;
-
-  int ss2 = sys2-Coord::WCS;
-  if (!(ss2>=0 && ast_ && ast_[ss2]))
-    return;
-  if (!wcsIsASkyFrame(ast_[ss2]))
-    return;
-
-  // get doubles
-  double* ixx1 = new double[nxx1];
-  for (int ii=0 ; ii<nxx1 ; ii++)
-    Tcl_GetDoubleFromObj(interp_, objxx1[ii], ixx1+ii);
-  double* iyy1 = new double[nyy1];
-  for (int ii=0 ; ii<nyy1 ; ii++)
-    Tcl_GetDoubleFromObj(interp_, objyy1[ii], iyy1+ii);
-  double* ixx2 = new double[nxx2];
-  for (int ii=0 ; ii<nxx2 ; ii++)
-    Tcl_GetDoubleFromObj(interp_, objxx2[ii], ixx2+ii);
-  double* iyy2 = new double[nyy2];
-  for (int ii=0 ; ii<nyy2 ; ii++)
-    Tcl_GetDoubleFromObj(interp_, objyy2[ii], iyy2+ii);
-
-  Vector* in1 = new Vector[nxx1];
-  Vector* out1 = new Vector[nxx1];
-  for (int ii=0; ii<nxx1; ii++)
-    in1[ii] = degToRad(Vector(ixx1[ii],iyy1[ii]));
-
-  Vector* in2 = new Vector[nxx2];
-  Vector* out2 = new Vector[nxx2];
-  for (int ii=0; ii<nxx2; ii++)
-    in2[ii] = degToRad(Vector(ixx2[ii],iyy2[ii]));
-
-  // map from image
-  setWCSSkyFrame(ast_[ss1],sky1);
-  wcsTran(ast_[ss1], nxx1, in1, 0, out1);
-
-  setWCSSkyFrame(ast_[ss2],sky2);
-  wcsTran(ast_[ss2], nxx2, in2, 0, out2);
-
-  // radius
-  Vector cd = getWCScdelt(sys);
-  switch (dist) {
-  case Coord::DEGREE:
-    break;
-  case Coord::ARCMIN:
-    rad /= 60;
-    break;
-  case Coord::ARCSEC:
-    rad /= 60*60;
-    break;
-  }
-  double rx = rad/cd[0];
-  double ry = rad/cd[1];
-  double rr = (rx*rx + ry*ry)/2;
-
-  // now compare
-  int cnt=0;
-  Tcl_Obj* objrr = Tcl_NewListObj(0,NULL);
-  for(int jj=0; jj<nxx2; jj++) {
-    for (int ii=0; ii<nxx1; ii++) {
-      double dx = out2[jj][0]-out1[ii][0];
-      double dy = out2[jj][1]-out1[ii][1];
-
-      if (dx*dx + dy*dy < rr) {
-	Tcl_Obj* obj[2];
-	obj[0] = Tcl_NewIntObj(ii+1);
-	obj[1] = Tcl_NewIntObj(jj+1);
-	Tcl_Obj* list = Tcl_NewListObj(2,obj);
-	Tcl_ListObjAppendElement(interp_, objrr, list);
-	cnt++;
-      }
-    }
-  }
-
-  Tcl_SetVar2Ex(interp_, rrname, NULL, objrr, TCL_LEAVE_ERR_MSG);
-
-  // clean up
-  if (ixx1)
-    delete [] ixx1;
-  if (iyy1)
-    delete [] iyy1;
-  if (ixx2)
-    delete [] ixx2;
-  if (iyy2)
-    delete [] iyy2;
-  if (in1)
-    delete [] in1;
-  if (out1)
-    delete [] out1;
-  if (in2)
-    delete [] in2;
-  if (out2)
-    delete [] out2;
-}
-#else
 void FitsImage::match(const char* xxname1, const char* yyname1,
 		      Coord::CoordSystem sys1, Coord::SkyFrame sky1,
 		      const char* xxname2, const char* yyname2,
@@ -1864,7 +1414,6 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   if (ptr2)
     delete [] ptr2;
 }
-#endif
 
 Matrix& FitsImage::matrixToData(Coord::InternalSystem sys)
 {
@@ -3032,37 +2581,6 @@ void FitsImage::updatePS(Matrix3d ps)
 
 // WCS
 
-#ifdef OLDWCS
-Vector FitsImage::getWCScdelt(Coord::CoordSystem sys)
-{
-  if (hasWCS(sys)) {
-    int ii = sys-Coord::WCS;
-
-    // special case
-    if (wcs_[ii]->pc[0] != 1 && wcs_[ii]->cdelt[0] == 1) {
-      double pc1 = sqrt(wcs_[ii]->pc[0]*wcs_[ii]->pc[0] +
-			wcs_[ii]->pc[2]*wcs_[ii]->pc[2]);
-      double pc2 = sqrt(wcs_[ii]->pc[1]*wcs_[ii]->pc[1] +
-			wcs_[ii]->pc[3]*wcs_[ii]->pc[3]);
-      if (!wcs_[ii]->coorflip)
-	return Vector(pc1, pc2);
-      else
-	return Vector(pc2, pc1);
-    }
-    else {
-      // The scaling factor mag is in cdelt
-      if (!wcs_[ii]->coorflip)
-	return Vector(wcs_[ii]->cdelt[0], wcs_[ii]->cdelt[1]);
-      else
-	return Vector(wcs_[ii]->cdelt[1], wcs_[ii]->cdelt[0]);
-    }
-  }
-  else
-    return Vector();
-}
-#endif
-
-#ifndef OLDWCS
 double FitsImage::getWCSSize(Coord::CoordSystem sys)
 {
   if (!wcsSize_ || sys<Coord::WCS)
@@ -3089,40 +2607,7 @@ double FitsImage::calcWCSSize(Coord::CoordSystem sys)
   double dd = wcsDistance(out[0],out[1]);
   return hasWCSCel(sys) ? radToDeg(dd) : dd;
 }
-#endif
 
-#ifdef OLDWCS
-Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
-						Coord::SkyFrame sky)
-{
-  if (hasWCS(sys)) {
-    Vector orpix = center();
-    Vector orval = pix2wcs(orpix, sys, sky);
-    Vector delta = getWCScdelt(sys).abs();
-    Vector npix = wcs2pix(Vector(orval[0],orval[1]+delta[1]), sys, sky);
-    Vector north = (npix-orpix).normalize();
-    Vector epix = wcs2pix(Vector(orval[0]+delta[0],orval[1]), sys, sky);
-    Vector east = (epix-orpix).normalize();
-
-    // sanity check
-    Vector diff = (north-east).abs();
-    if ((north[0]==0 && north[1]==0) ||
-	(east[0]==0 && east[1]==0) ||
-	(diff[0]<.01 && diff[1]<.01))
-      return Coord::NORMAL;
-
-    // take the cross product and see which way the 3rd axis is pointing
-    double w = east[0]*north[1]-east[1]*north[0];
-
-    if (!hasWCSCel(sys))
-      return w>0 ? Coord::NORMAL : Coord::XX;
-    else
-      return w<0 ? Coord::NORMAL : Coord::XX;
-  }
-
-  return Coord::NORMAL;
-}
-#else
 Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
 						Coord::SkyFrame sky)
 {
@@ -3148,32 +2633,7 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   else
     return Coord::NORMAL;
 }
-#endif
 
-#ifdef OLDWCS
-double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
-{
-  if (hasWCS(sys)) {
-    Vector orpix = center();
-    Vector orval = pix2wcs(orpix, sys, sky);
-    Vector delta = getWCScdelt(sys).abs();
-    Vector npix = wcs2pix(Vector(orval[0],orval[1]+delta[1]), sys, sky);
-    Vector north = (npix-orpix).normalize();
-    Vector epix = wcs2pix(Vector(orval[0]+delta[0],orval[1]), sys, sky);
-    Vector east = (epix-orpix).normalize();
-
-    // sanity check
-    Vector diff = (north-east).abs();
-    if ((north[0]==0 && north[1]==0) ||
-	(east[0]==0 && east[1]==0) ||
-	(diff[0]<.01 && diff[1]<.01))
-      return 0;
-
-    return -(north.angle()-M_PI_2);
-  }
-  return 0;
-}
-#else
 double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   if (!hasWCS(sys))
@@ -3218,15 +2678,7 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
       return 0;
   }
 }
-#endif
 
-#ifdef OLDWCS
-const char* FitsImage::getWCSName(Coord::CoordSystem sys) 
-{
-  return (wcs_ && wcs_[sys-Coord::WCS]) ? 
-    wcs_[sys-Coord::WCS]->wcsname : NULL;
-}
-#else
 const char* FitsImage::getWCSName(Coord::CoordSystem sys) 
 {
   if (fits_->find("WCSNAME"))
@@ -3234,25 +2686,7 @@ const char* FitsImage::getWCSName(Coord::CoordSystem sys)
   else
     return NULL;
 }
-#endif
 
-#ifdef OLDWCS
-Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
-			  Coord::SkyFrame sky)
-{
-  int ss = sys-Coord::WCS;
-  if (!(ss>=0 && ast_ && ast_[ss]))
-    return Vector();
-  
-  setWCSSkyFrame(ast_[ss],sky);
-
-  Vector out = wcsTran(ast_[ss], in, 1);
-  if (astOK && checkWCS(out))
-    return wcsIsASkyFrame(ast_[ss]) ? zero360(radToDeg(out)) : out;
-  else
-    return Vector();
-}
-#else
 Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
@@ -3269,72 +2703,7 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   else
     return Vector();
 }
-#endif
 
-#ifdef OLDWCS
-char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
-			 Coord::SkyFrame sky, Coord::SkyFormat format,
-			 char* lbuf)
-{
-  lbuf[0] = '\0';
-  
-  int ss = sys-Coord::WCS;
-  if (!(ss>=0 && ast_ && ast_[ss]))
-    return lbuf;
-  
-  setWCSSkyFrame(ast_[ss],sky);
-
-  ostringstream str;
-  Vector out = wcsTran(ast_[ss], in, 1);
-  if (astOK && checkWCS(out)) {
-    if (wcsIsASkyFrame(ast_[ss])) {
-      ostringstream hms;
-      hms << "hms." << context_->parent_->precHMS_;
-      ostringstream dms;
-      dms << "+dms." << context_->parent_->precDMS_;
-
-      switch (format) {
-      case Coord::DEGREES:
-	out = zero360(radToDeg(out));
-	str << setprecision(context_->parent_->precDeg_)
-	    << out[0] << ' ' << out[1] << ' '
-	    << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
-	break;
-
-      case Coord::SEXAGESIMAL:
-	out = zeroTWOPI(out);
-	switch (sky) {
-	case Coord::FK4:
-	case Coord::FK4_NO_E:
-	case Coord::FK5:
-	case Coord::ICRS:
-	  setWCSFormat(ast_[ss],1,hms.str().c_str());
-	  setWCSFormat(ast_[ss],2,dms.str().c_str());
-	  break;
-	case Coord::GALACTIC:
-	case Coord::SUPERGALACTIC:
-	case Coord::ECLIPTIC:
-	case Coord::HELIOECLIPTIC:
-	  setWCSFormat(ast_[ss],1,dms.str().c_str());
-	  setWCSFormat(ast_[ss],2,dms.str().c_str());
-	  break;
-	}
-	str << astFormat(ast_[ss],1,out[0]) << ' '
-	    << astFormat(ast_[ss],2,out[1]) << ' '
-	    << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
-	break;
-      }
-    }
-    else
-      str << setprecision(context_->parent_->precLinear_)
-	  << out[0] << ' ' << out[1] << ends;
-
-    strncpy(lbuf, str.str().c_str(), str.str().length());
-  }
-  
-  return lbuf;
-}
-#else
 char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 			 Coord::SkyFrame sky, Coord::SkyFormat format,
 			 char* lbuf)
@@ -3398,9 +2767,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   
   return lbuf;
 }
-#endif
 
-#ifndef OLDWCS
 Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {
@@ -3480,26 +2847,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   
   return lbuf;
 }
-#endif
 
-#ifdef OLDWCS
-Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
-			  Coord::SkyFrame sky)
-{
-  int ss = sys-Coord::WCS;
-  if (ss>=0 && ast_ && ast_[ss]) {
-    setWCSSkyFrame(ast_[ss],sky);
-
-    Vector in = wcsIsASkyFrame(ast_[ss]) ? degToRad(vv) : vv;
-    Vector out = wcsTran(ast_[ss], in, 0);
-    if (astOK && checkWCS(out))
-	return out;
-  }
-
-  maperr =1;
-  return Vector();
-}
-#else
 Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
@@ -3534,23 +2882,7 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
 
   return Vector3d();
 }
-#endif
 
-#ifdef OLDWCS
-double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
-			     Coord::CoordSystem sys)
-{
-  int ss = sys-Coord::WCS;
-  if (!(ss>=0 && ast_ && ast_[ss]))
-    return 0;
-
-  astClearStatus; // just to make sure
-
-  return wcsIsASkyFrame(ast_[ss]) ?
-    radToDeg(wcsDistance(ast_[ss], degToRad(vv1), degToRad(vv2))) :
-    wcsDistance(ast_[ss], vv1, vv2);
-}
-#else
 double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
 			     Coord::CoordSystem sys)
 {
@@ -3564,31 +2896,6 @@ double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
     radToDeg(wcsDistance(degToRad(vv1), degToRad(vv2))) :
     wcsDistance(vv1, vv2);
 }
-#endif
-
-#ifdef OLDWCS
-int FitsImage::hasWCS(Coord::CoordSystem sys)
-{
-  int ss = sys-Coord::WCS;
-  return (sys>=Coord::WCS && ast_ && ast_[ss]) ? 1 : 0;
-}
-
-int FitsImage::hasWCSCel(Coord::CoordSystem sys)
-{
-  int ss = sys-Coord::WCS;
-  if (ss>=0 && ast_ && ast_[ss])
-    if (wcsIsASkyFrame(ast_[ss]))
-      return 1;
-
-  return 0;
-}
-
-int FitsImage::hasWCSLinear(Coord::CoordSystem sys)
-{
-  return hasWCS(sys) && !hasWCSCel(sys);
-}
-
-#else
 
 int FitsImage::hasWCS(Coord::CoordSystem sys)
 {
@@ -3614,40 +2921,6 @@ int FitsImage::hasWCSLinear(Coord::CoordSystem sys)
     return wcs_[sys-Coord::WCS] && !wcsCel_[sys-Coord::WCS];
 }
 
-#endif
-
-// WCSX
-
-#ifdef OLDWCS
-
-int FitsImage::hasWCS3D(Coord::CoordSystem sys)
-{
-  int ss = sys-Coord::WCS;
-  return (sys>=Coord::WCS && wcsx_[ss]) ? 1 : 0;
-}
-
-double FitsImage::pix2wcsx(double in, Coord::CoordSystem sys)
-{
-  if (hasWCS3D(sys)) {
-    int ss = sys-Coord::WCS;
-    return (in-wcsx_[ss]->crpix)*wcsx_[ss]->cd + wcsx_[ss]->crval;
-  }
-  else
-    return in;
-}
-
-double FitsImage::wcs2pixx(double in, Coord::CoordSystem sys)
-{
-  if (hasWCS3D(sys)) {
-    int ss = sys-Coord::WCS;
-    return (in-wcsx_[ss]->crval)/wcsx_[ss]->cd + wcsx_[ss]->crpix;
-  }
-  else
-    return in;
-}
-
-#else
-
 int FitsImage::hasWCS3D(Coord::CoordSystem sys)
 {
   if (!wcs3D_ || sys<Coord::WCS)
@@ -3655,84 +2928,7 @@ int FitsImage::hasWCS3D(Coord::CoordSystem sys)
   else
     return wcs3D_[sys-Coord::WCS];
 }
-#endif
 
-// WCS/AST support
-
-#ifdef OLDWCS
-void FitsImage::wcsShow(WorldCoor* ww)
-{
-  if (!ww)
-    return;
-
-  int n = ww->naxes;
-  int nn = n*n;
-
-  cerr << "wcs->wcsname=" << (ww->wcsname ? ww->wcsname : "") << endl;
-  cerr << "wcs->naxes=" << ww->naxes << endl;
-  cerr << "wcs->naxis=" << ww->naxis << endl;
-
-  cerr << "wcs->radecsys=" << ww->radecsys << endl;
-  cerr << "wcs->equinox=" << ww->equinox << endl;
-  cerr << "wcs->epoch=" << ww->epoch << endl;
-
-  cerr << "wcs->ctype[0]=" << ww->ctype[0] << endl;
-  cerr << "wcs->ctype[1]=" << ww->ctype[1] << endl;
-  cerr << "wcs->c1type=" << ww->c1type << endl;
-  cerr << "wcs->c2type=" << ww->c2type << endl;
-  cerr << "wcs->ptype=" << ww->ptype << endl;
-
-  for (int jj=0; jj<n; jj++)
-    cerr << "wcs->crpix[" << jj << "]=" << ww->crpix[jj] << endl;
-  for (int jj=0; jj<n; jj++)
-    cerr << "wcs->crval[" << jj << "]=" << ww->crval[jj] << endl;
-  for (int jj=0; jj<n; jj++)
-    cerr << "wcs->cdelt[" << jj << "]=" << ww->cdelt[jj] << endl;
-
-  for (int jj=0; jj<4; jj++)
-    cerr << "wcs->cd[" << jj << "]=" << ww->cd[jj] << endl;
-  for (int jj=0; jj<nn; jj++)
-    cerr << "wcs->pc[" << jj << "]=" << ww->pc[jj] << endl;
-
-  cerr << "wcs->longpole=" << ww->longpole << endl;
-  cerr << "wcs->latpole=" << ww->latpole << endl;
-  cerr << "wcs->prjcode=" << ww->prjcode << endl;
-
-  cerr << "wcs->rot=" << ww->rot << endl;
-  cerr << "wcs->coorflip=" << ww->coorflip << endl;
-  cerr << "wcs->distcode=" << ww->distcode << endl;
-}
-
-void FitsImage::astinit(int ss, FitsHead* hd, FitsHead* prim)
-{
-  if (!wcs_[ss]) {
-    ast_[ss] = NULL;
-    return;
-  }
-
-  // just in case
-  if (!hd)
-    return;
-  // DSS,PLT,LIN goes straight to AST
-  // we can't send 3D directly to AST
-
-  if (wcs_[ss]->prjcode==WCS_DSS || 
-      wcs_[ss]->prjcode==WCS_PLT || 
-      (wcs_[ss]->prjcode==WCS_LIN && !strncmp(wcs_[ss]->ptype,"HPX",3)) ||
-      (wcs_[ss]->prjcode==WCS_LIN && !strncmp(wcs_[ss]->ptype,"XPH",3)) ||
-      (wcs_[ss]->prjcode==WCS_LIN && !strncmp(wcs_[ss]->ptype,"TAB",3)) ||
-      (wcs_[ss]->prjcode==WCS_LIN && !strncmp(wcs_[ss]->c1type,"AST",3)))
-    ast_[ss] = fits2ast(hd);
-  else
-    ast_[ss] = buildast(ss, hd, prim);
-
-  if (!ast_[ss])
-    return;
-
-  // set default skyframe
-  setWCSSkyFrame(ast_[ss],Coord::FK5);
-}
-#else
 void FitsImage::astInit(FitsHead* hd)
 {
   if (ast_)
@@ -3922,26 +3118,6 @@ void FitsImage::wcsSizeInit()
     wcsSize_[ii] = calcWCSSize((Coord::CoordSystem)(ii+Coord::WCS));
 }
 
-#endif
-
-#ifdef OLDWCS
-void FitsImage::astinit0(int ss, FitsHead* hd, FitsHead* prim)
-{
-  if (!wcs_[ss]) {
-    ast_[ss] = NULL;
-    return;
-  }
-
-  ast_[ss] = buildast0(ss, hd, prim);
-
-  if (!ast_[ss])
-    return;
-
-  // set default skyframe
-  setWCSSkyFrame(ast_[ss],Coord::FK5);
-}
-#endif
-
 int FitsImage::checkWCS(Vector& vv)
 {
   // check for reasonable values
@@ -3957,24 +3133,6 @@ int FitsImage::checkWCS(Vector3d& vv)
 	  fabs(vv[2]) < FLT_MAX ) ? 1 : 0;
 }
 
-#ifdef OLDWCS
-void FitsImage::setWCSFormat(AstFrameSet* aa, int id, const char* format)
-{
-  // is it already set?
-  // ast is very slow when changing params
-  {
-    ostringstream str;
-    str << "Format(" << id << ")" << ends;
-    const char* out = astGetC(aa, str.str().c_str());
-    if (!strcmp(out,format))
-      return;
-  }
-
-  ostringstream str;
-  str << "Format(" << id << ")=" << format << ends;
-  astSet(aa, str.str().c_str());
-}
-#else
 void FitsImage::setWCSFormat(int id, const char* format)
 {
   // is it already set?
@@ -3991,68 +3149,6 @@ void FitsImage::setWCSFormat(int id, const char* format)
   str << "Format(" << id << ")=" << format << ends;
   astSet(ast_, str.str().c_str());
 }
-#endif
-
-#ifdef OLDWCS
-void FitsImage::setWCSSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
-{
-  // is sky frame
-  if (!wcsIsASkyFrame(ast))
-    return;
-
-  const char* str = astGetC(ast, "System");
-
-  // TLON/XLON and HPX will do this
-  if (!strncmp(str,"Unknown",3))
-    return;
-
-  switch (sky) {
-  case Coord::FK4_NO_E:
-    if (!strncmp(str,"FK4-NO-E",8))
-      return;
-    astSet(ast, "System=FK4-NO-E, Equinox=B1950");
-    return;
-  case Coord::FK4:
-    if (!strncmp(str,"FK4",3))
-      return;
-    astSet(ast, "System=FK4, Equinox=B1950");
-    return;
-  case Coord::FK5:
-    if (!strncmp(str,"FK5",3))
-      return;
-    astSet(ast, "System=FK5, Equinox=J2000");
-    return;
-  case Coord::ICRS:
-    if (!strncmp(str,"ICRS",4))
-      return;
-    astSet(ast, "System=ICRS");
-    return;
-  case Coord::GALACTIC:
-    if (!strncmp(str,"GALACTIC",8))
-      return;
-    astSet(ast, "System=GALACTIC");
-    return;
-  case Coord::SUPERGALACTIC:
-    if (!strncmp(str,"SUPERGALACTIC",13))
-      return;
-    astSet(ast, "System=SUPERGALACTIC");
-    return;
-  case Coord::ECLIPTIC:
-    if (!strncmp(str,"ECLIPTIC",8))
-      return;
-    astSet(ast, "System=ECLIPTIC");
-    // get AST to agree with WCSSUBS
-    astSetD(ast, "EQUINOX", astGetD(ast, "EPOCH"));
-    return;
-  case Coord::HELIOECLIPTIC:
-    if (!strncmp(str,"HELIOECLIPTIC",13))
-      return;
-    astSet(ast, "System=HELIOECLIPTIC");
-    return;
-  }
-}
-
-#else
 
 void FitsImage::setWCSSkyFrame(Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
@@ -4136,54 +3232,7 @@ void FitsImage::setWCSSkyFrame(Coord::CoordSystem sys, Coord::SkyFrame sky)
     return;
   }
 }
-#endif
 
-#ifdef OLDWCS
-int FitsImage::wcsIsASkyFrame(AstFrameSet* ast)
-{
-  astClearStatus;
-  astBegin;
-  int rr = astIsASkyFrame(astGetFrame(ast,AST__CURRENT));
-  astEnd;
-  return rr;
-}
-#endif
-
-#ifdef OLDWCS
-Vector FitsImage::wcsTran(AstFrameSet* ast, const Vector& in, int forward)
-{
-  double xout, yout;
-  astTran2(ast, 1, in.v, in.v+1, forward, &xout, &yout);
-  return Vector(xout, yout);
-}
-
-void FitsImage::wcsTran(AstFrameSet* ast, int npoint, 
-			Vector* in, int forward, Vector* out)
-{
-  double* xin = new double[npoint];
-  double* yin = new double[npoint];
-  double* xout = new double[npoint];
-  double* yout = new double[npoint];
-
-  for (int ii=0; ii<npoint; ii++) {
-    xin[ii] = in[ii][0];
-    yin[ii] = in[ii][1];
-  }
-  astTran2(ast, npoint, xin, yin, forward, xout, yout);
-  for (int ii=0; ii<npoint; ii++)
-    out[ii] = Vector(xout[ii],yout[ii]);
-
-  if (xin)
-    delete [] xin;
-  if (yin)
-    delete [] yin;
-  if (xout)
-    delete [] xout;
-  if (yout)
-    delete [] yout;
-}
-
-#else
 Vector FitsImage::wcsTran(const Vector& in, int forward)
 {
   int naxes = astGetI(ast_,"Naxes");
@@ -4375,15 +3424,6 @@ Vector3d FitsImage::wcsTran(const Vector3d& in, int forward)
   return Vector3d();
 }
 
-#endif
-
-#ifdef OLDWCS
-double FitsImage::wcsDistance(AstFrameSet* ast, const Vector& vv1,
-			      const Vector& vv2)
-{
-  return astDistance(ast, vv1.v, vv2.v);
-}
-#else
 double FitsImage::wcsDistance(const Vector& vv1, const Vector& vv2)
 {
   int naxes = astGetI(ast_,"Naxes");
@@ -4426,9 +3466,6 @@ double FitsImage::wcsDistance(const Vector& vv1, const Vector& vv2)
   return 0;
 }
 
-#endif
-
-#ifndef OLDWCS
 double FitsImage::wcsAngle(const Vector& vv1, const Vector& vv2,
 			   const Vector& vv3)
 {
@@ -4522,60 +3559,7 @@ double FitsImage::wcsAxAngle(const Vector& vv1, const Vector& vv2)
 
   return 0;
 }
-#endif
 
-#ifdef OLDWCS
-AstFrameSet* FitsImage::fits2ast(FitsHead* hd) 
-{
-  // we may have an error, just reset
-  astClearStatus;
-
-  // new fitschan
-  AstFitsChan* chan = astFitsChan(NULL, NULL, "");
-  if (!astOK || chan == AST__NULL)
-    return NULL;
-
-  // no warning messages
-  astClear(chan,"Warnings");
-
-  // fill up chan
-  char* cards =NULL;
-  int ncards =0;
-
-  if (hd) {
-    cards = hd->cards();
-    ncards = hd->ncard();
-  }
-
-  if (cards == NULL || ncards == 0)
-    return NULL;
-
-  for (int i=0; i<ncards; i++) {
-    char buf[81];
-    strncpy(buf,cards+(i*80),80);
-    buf[80] = '\0';
-
-    astPutFits(chan, buf, 0);
-    // sometimes, we get a bad parse, just ignore
-    if (!astOK)
-      astClearStatus;
-  }
-
-  // we may have an error, just reset
-  astClearStatus;
-  astClear(chan, "Card");
-
-  // parse header
-  AstFrameSet* frameSet = (AstFrameSet*)astRead(chan);
-
-  // do we have anything?
-  if (!astOK || frameSet == AST__NULL || 
-      strncmp(astGetC(frameSet,"Class"), "FrameSet", 8))
-    return NULL;
-  
-  return frameSet;
-}
-#else
 static void fits2TAB(AstFitsChan* chan, const char* extname,
 		     int extver, int extlevel, int* status)
 {
@@ -4750,717 +3734,4 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
     internalError("Warning: the WCS has no defined inverse. Some functionality may not be available.");
   
   return frameSet;
-}
-#endif
-
-#ifdef OLDWCS
-AstFrameSet* FitsImage::buildast(int ss, FitsHead* hd, FitsHead* prim) 
-{
-  if (DebugWCS)
-    cerr << endl << "buildast("<< ss << ")" << endl;
-
-  // read wcs struct into astChannel
-  // we may have an error, just reset
-  astClearStatus;
-
-  // new fitschan
-  AstFitsChan* chan = astFitsChan(NULL, NULL, "");
-  if (!astOK || chan == AST__NULL)
-    return NULL;
-
-  // no warning messages
-  astClear(chan,"Warnings");
-
-  // basics (needed by fitschan.c)
-  putFitsCard(chan, "NAXIS1", (int)naxis(0));
-  putFitsCard(chan, "NAXIS2", (int)naxis(1));
-
-  // simple test to see if we have complete WCS
-  // if not (as in 3d cube reorder), wcs[] can be very unreliable
-  int fromwcs =0;
-
-  char alt = (ss==0) ? ' ' : (char)('@'+ss);
-  char ctype1[8], ctype2[8];
-  strcpy(ctype1, "CTYPE1 ");
-  strcpy(ctype2, "CTYPE2 ");
-  ctype1[6] = ctype2[6] = alt;
-
-  if (hd->find(ctype1) && hd->find(ctype2)) {
-    wcs2ast(ss,hd,prim,chan);
-    fromwcs =1;
-  }
-  else
-    header2ast(ss,hd,chan);
-
-  // rewind chan
-  astClear(chan, "Card");
-
-  // parse header
-  AstFrameSet* frameSet = (AstFrameSet*)astRead(chan);
-
-  // do we have anything?
-  if (!astOK || frameSet == AST__NULL || 
-      strncmp(astGetC(frameSet,"Class"), "FrameSet", 8))
-    return NULL;
-
-  if (fromwcs && wcs_[ss]->coorflip) {
-    int orr[] = {2,1};
-    astPermAxes(frameSet,orr);
-  }
-
-  // cleanup
-  astAnnul(chan);
-
-  return frameSet;
-}
-
-AstFrameSet* FitsImage::buildast0(int ss, FitsHead* hd, FitsHead* prim)
-{
-  // read wcs struct into astChannel
-  // we may have an error, just reset
-  astClearStatus;
-
-  // new fitschan
-  AstFitsChan* chan = astFitsChan(NULL, NULL, "");
-  if (!astOK || chan == AST__NULL)
-    return NULL;
-
-  // no warning messages
-  astClear(chan,"Warnings");
-
-  // basics (needed by fitschan.c)
-  putFitsCard(chan, "NAXIS1", (int)naxis(0));
-  putFitsCard(chan, "NAXIS2", (int)naxis(1));
-
-  wcs2ast0(ss,hd,prim,chan);
-
-  // rewind chan
-  astClear(chan, "Card");
-
-  // parse header
-  AstFrameSet* frameSet = (AstFrameSet*)astRead(chan);
-
-  // do we have anything?
-  if (!astOK || frameSet == AST__NULL || 
-      strncmp(astGetC(frameSet,"Class"), "FrameSet", 8))
-    return NULL;
-
-  if (wcs_[ss]->coorflip) {
-    int orr[] = {2,1};
-    astPermAxes(frameSet,orr);
-  }
-
-  // cleanup
-  astAnnul(chan);
-
-  return frameSet;
-}
-
-void FitsImage::header2ast(int ss, FitsHead* hd, void* chan) 
-{
-  if (DebugWCS)
-    cerr << endl << "header2ast(" << ss << ")" << endl;
-
-  char alt = (ss==0) ? ' ' : (char)('@'+ss);
-
-  char key1[8];
-  char key2[8];
-
-  // CTYPE
-  // We can't have RA/DEC without DEC/RA or GLON/GLAT without GLAT/GLON
-  const char* linear = "LINEAR";
-  strcpy(key1, "CTYPE1 ");
-  strcpy(key2, "CTYPE2 ");
-  key1[6] = key2[6] = alt;
-
-  // do we have WCSa?
-  if (!hd->find(key1) && !hd->find(key2))
-    return;
-
-  char* c1ptr = dupstr(hd->getString(key1));
-  char* c2ptr = dupstr(hd->getString(key2));
-  char* ctype1 = c1ptr;
-  char* ctype2 = c2ptr;
-
-  if (ctype1 && !strncmp(ctype1,"GLON",4)) {
-    if (!ctype2 || strncmp(ctype2,"GLAT",4)) {
-      ctype1 = (char*)linear;
-      ctype2 = (char*)linear;
-    }
-  }
-  else if (ctype2 && !strncmp(ctype2,"GLON",4)) {
-    if (!ctype1 || strncmp(ctype1,"GLAT",4)) {
-      ctype1 = (char*)linear;
-      ctype2 = (char*)linear;
-    }
-  }
-  else if (ctype1 && !strncmp(ctype1,"GLAT",4)) {
-    if (!ctype2 || strncmp(ctype2,"GLON",4)) {
-      ctype1 = (char*)linear;
-      ctype2 = (char*)linear;
-    }
-  }
-  else if (ctype2 && !strncmp(ctype2,"GLAT",4)) {
-    if (!ctype1 || strncmp(ctype1,"GLON",4)) {
-      ctype1 = (char*)linear;
-      ctype2 = (char*)linear;
-    }
-  }
-  else if (ctype1 && !strncmp(ctype1,"RA",2)) {
-    if (!ctype2 || strncmp(ctype2,"DEC",3)) {
-      ctype1 = (char*)linear;
-      ctype2 = (char*)linear;
-    }
-  }
-  else if (ctype2 && !strncmp(ctype2,"RA",2)) {
-    if (!ctype1 || strncmp(ctype1,"DEC",3)) {
-      ctype1 = (char*)linear;
-      ctype2 = (char*)linear;
-    }
-  }
-  else if (ctype1 && !strncmp(ctype1,"DEC",3)) {
-    if (!ctype2 || strncmp(ctype2,"RA",2)) {
-      ctype1 = (char*)linear;
-      ctype2 = (char*)linear;
-    }
-  }
-  else if (ctype2 && !strncmp(ctype2,"DEC",3)) {
-    if (!ctype1 || strncmp(ctype1,"RA",2)) {
-      ctype1 = (char*)linear;
-      ctype2 = (char*)linear;
-    }
-  }
-  else {
-    if (!ctype1)
-      ctype1 =(char*)linear;
-    if (!ctype2)
-      ctype2 =(char*)linear;
-  }
-
-  putFitsCard(chan, key1, ctype1);
-  putFitsCard(chan, key2, ctype2);
-
-  if (c1ptr)
-    delete [] c1ptr;
-  if (c2ptr)
-    delete [] c2ptr;
-
-  // CRPIX
-  strcpy(key1, "CRPIX1 ");
-  strcpy(key2, "CRPIX2 ");
-  key1[6] = key2[6] = alt;
-  putFitsCard(chan, key1, hd->getReal(key1,0));
-  putFitsCard(chan, key2, hd->getReal(key2,0));
-
-  // CRVAL
-  strcpy(key1, "CRVAL1 ");
-  strcpy(key2, "CRVAL2 ");
-  key1[6] = key2[6] = alt;
-  putFitsCard(chan, key1, hd->getReal(key1,0));
-  putFitsCard(chan, key2, hd->getReal(key2,0));
-
-  // CDELT/CD/PC
-  strcpy(key1, "CDELT1 ");
-  strcpy(key2, "CDELT2 ");
-  key1[6] = key2[6] = alt;
-
-  char pkey1[8];
-  char pkey2[8];
-  char pkey3[8];
-  char pkey4[8];
-  strcpy(pkey1, "PC1_1 ");
-  strcpy(pkey2, "PC1_2 ");
-  strcpy(pkey3, "PC2_1 ");
-  strcpy(pkey4, "PC2_2 ");
-  pkey1[5] = pkey2[5] = pkey3[5] = pkey4[5] = alt;
-
-  char ckey1[8];
-  char ckey2[8];
-  char ckey3[8];
-  char ckey4[8];
-  strcpy(ckey1, "CD1_1 ");
-  strcpy(ckey2, "CD1_2 ");
-  strcpy(ckey3, "CD2_1 ");
-  strcpy(ckey4, "CD2_2 ");
-  ckey1[5] = ckey2[5] = ckey3[5] = ckey4[5] = alt;
-
-  // Give CD priority over CDELT
-  if (hd->find(ckey1) || 
-      hd->find(ckey2) ||
-      hd->find(ckey3) || 
-      hd->find(ckey4)) {
-    putFitsCard(chan, ckey1, hd->getReal(ckey1,1));
-    putFitsCard(chan, ckey2, hd->getReal(ckey2,0));
-    putFitsCard(chan, ckey3, hd->getReal(ckey3,0));
-    putFitsCard(chan, ckey4, hd->getReal(ckey4,1));
-  }
-  else if (hd->find(key1) || hd->find(key2)) {
-    putFitsCard(chan, key1, hd->getReal(key1,1));
-    putFitsCard(chan, key2, hd->getReal(key2,1));
-
-    if (hd->find(pkey1) || 
-	hd->find(pkey2) ||
-	hd->find(pkey3) || 
-	hd->find(pkey4)) {
-      putFitsCard(chan, pkey1, hd->getReal(pkey1,1));
-      putFitsCard(chan, pkey2, hd->getReal(pkey2,1));
-      putFitsCard(chan, pkey3, hd->getReal(pkey3,1));
-      putFitsCard(chan, pkey4, hd->getReal(pkey4,1));
-    }
-  }
-}
-
-void FitsImage::wcs2ast(int ww, FitsHead* hd, FitsHead* prim, void* chan) 
-{
-  if (DebugWCS)
-    cerr << endl << "wcs2ast(" << ww << ")" << endl;
-
-  // Alt WCS
-  char alt = (ww==0) ? ' ' : (char)('@'+ww);
-
-  // CTYPE
-  if (
-      // special case (reorder 3D cube)
-      (!strncmp(wcs_[ww]->ctype[0],"GLON",4) && 
-       strncmp(wcs_[ww]->ctype[1],"GLAT",4)) || 
-      (strncmp(wcs_[ww]->ctype[0],"GLON",4) && 
-       !strncmp(wcs_[ww]->ctype[1],"GLAT",4)) || 
-      (!strncmp(wcs_[ww]->ctype[0],"GLAT",4) && 
-       strncmp(wcs_[ww]->ctype[1],"GLON",4)) || 
-      (strncmp(wcs_[ww]->ctype[0],"GLAT",4) && 
-       !strncmp(wcs_[ww]->ctype[1],"GLON",4)) || 
-      (!strncmp(wcs_[ww]->ctype[0],"RA",2) && 
-       strncmp(wcs_[ww]->ctype[1],"DEC",3)) ||
-      (strncmp(wcs_[ww]->ctype[0],"RA",2) && 
-       !strncmp(wcs_[ww]->ctype[1],"DEC",3)) ||
-      (!strncmp(wcs_[ww]->ctype[0],"DEC",3) && 
-       strncmp(wcs_[ww]->ctype[1],"RA",2)) ||
-      (strncmp(wcs_[ww]->ctype[0],"DEC",3) && 
-       !strncmp(wcs_[ww]->ctype[1],"RA",2)))
-    {
-      putFitsCard(chan, "CTYPE1", "LINEAR");
-      putFitsCard(chan, "CTYPE2", "LINEAR");
-    }
-  else if (wcs_[ww]->prjcode == WCS_TAN && wcs_[ww]->distcode) {
-    // SIP
-    {
-      ostringstream str;
-      str << wcs_[ww]->ctype[0] << "-SIP" << ends;
-      putFitsCard(chan, "CTYPE1", str.str().c_str());
-    }
-    {
-      ostringstream str;
-      str << wcs_[ww]->ctype[1] << "-SIP" << ends;
-      putFitsCard(chan, "CTYPE2", str.str().c_str());
-    }
-  }
-  else {
-    putFitsCard(chan, "CTYPE1", wcs_[ww]->ctype[0]);
-    putFitsCard(chan, "CTYPE2", wcs_[ww]->ctype[1]);
-  }
-
-  // CRPIX/CRVAL
-  putFitsCard(chan, "CRPIX1", wcs_[ww]->crpix[0]);
-  putFitsCard(chan, "CRPIX2", wcs_[ww]->crpix[1]);
-  putFitsCard(chan, "CRVAL1", wcs_[ww]->crval[0]);
-  putFitsCard(chan, "CRVAL2", wcs_[ww]->crval[1]);
-
-  // CD/CDELT/PC
-  // This is very complicated. AST is very, very, very picky as to which
-  // keywords it use...
-  {
-    ostringstream cd;
-    cd << "CD1_1" << alt << ends;
-    ostringstream cdelt;
-    cdelt << "CDELT1" << alt << ends;
-    ostringstream pc;
-    pc << "PC1_1" << alt << ends;
-
-    if (hd->find(cd.str().c_str()) || 
-	(prim && prim->find(cd.str().c_str()))) {
-      // simple case CD
-      // no rotation, no poles, no LIN, no inner cd values
-      if (!wcs_[ww]->cd[1] && !wcs_[ww]->cd[2] && 
-	  !wcs_[ww]->rot &&
-	  !wcs_[ww]->coorflip &&
-	  wcs_[ww]->latpole == 999 && 
-	  wcs_[ww]->longpole == 999 &&
-	  wcs_[ww]->prjcode != WCS_PIX && 
-	  wcs_[ww]->prjcode != WCS_LIN) {
-	putFitsCard(chan, "CDELT1", wcs_[ww]->cdelt[0]);
-	putFitsCard(chan, "CDELT2", wcs_[ww]->cdelt[1]);
-      }
-      else {
-	putFitsCard(chan, "CD1_1", wcs_[ww]->cd[0]);
-	putFitsCard(chan, "CD1_2", wcs_[ww]->cd[1]);
-	putFitsCard(chan, "CD2_1", wcs_[ww]->cd[2]);
-	putFitsCard(chan, "CD2_2", wcs_[ww]->cd[3]);
-      }
-    }
-    // CDELT
-    else if (hd->find(cdelt.str().c_str()) || 
-	     (prim && prim->find(cdelt.str().c_str()))) {
-      putFitsCard(chan, "CDELT1", wcs_[ww]->cdelt[0]);
-      putFitsCard(chan, "CDELT2", wcs_[ww]->cdelt[1]);
-
-      if (hd->find(pc.str().c_str()) ||
-	  (prim && prim->find(pc.str().c_str()))) {
-	putFitsCard(chan, "PC1_1", wcs_[ww]->pc[0]);
-	putFitsCard(chan, "PC1_2", wcs_[ww]->pc[1]);
-	putFitsCard(chan, "PC2_1", wcs_[ww]->pc[2]);
-	putFitsCard(chan, "PC2_2", wcs_[ww]->pc[3]);
-      }
-      else if (!ww && 
-	       (hd->find("PC001001") || (prim && prim->find("PC001001")))) {
-	putFitsCard(chan, "PC001001", wcs_[ww]->pc[0]);
-	putFitsCard(chan, "PC001002", wcs_[ww]->pc[1]);
-	putFitsCard(chan, "PC002001", wcs_[ww]->pc[2]);
-	putFitsCard(chan, "PC002002", wcs_[ww]->pc[3]);
-      }
-      else {
-	if (!ww && 
-	    (hd->find("CROTA1") || (prim && prim->find("CROTA1"))))
-	  putFitsCard(chan, "CROTA1", wcs_[ww]->rot);
-	if (!ww && 
-	    (hd->find("CROTA2") || (prim && prim->find("CROTA2"))))
-	  putFitsCard(chan, "CROTA2", wcs_[ww]->rot);
-      }
-    }
-    // sanity check
-    else if (!wcs_[ww]->cd[0] && 
-	     !wcs_[ww]->cd[1] && 
-	     !wcs_[ww]->cd[2] && 
-	     !wcs_[ww]->cd[3]) {
-      putFitsCard(chan, "CDELT1", wcs_[ww]->cdelt[0]);
-      putFitsCard(chan, "CDELT2", wcs_[ww]->cdelt[1]);
-      putFitsCard(chan, "PC1_1", wcs_[ww]->pc[0]);
-      putFitsCard(chan, "PC1_2", wcs_[ww]->pc[1]);
-      putFitsCard(chan, "PC2_1", wcs_[ww]->pc[2]);
-      putFitsCard(chan, "PC2_2", wcs_[ww]->pc[3]);
-    } 
-    // fall back
-    else {
-      putFitsCard(chan, "CD1_1", wcs_[ww]->cd[0]);
-      putFitsCard(chan, "CD1_2", wcs_[ww]->cd[1]);
-      putFitsCard(chan, "CD2_1", wcs_[ww]->cd[2]);
-      putFitsCard(chan, "CD2_2", wcs_[ww]->cd[3]);
-    }
-  }
-
-  // equatorial keywords
-  if (wcs_[ww]->prjcode>0 && wcs_[ww]->prjcode<34) {
-    // equiniox
-    putFitsCard(chan, "EQUINOX", wcs_[ww]->equinox);
-
-    // from wcssub/wcsinit.c line 800
-    // wcs[ww]->epoch = 1900.0 + (mjd - 15019.81352) / 365.242198781;
-    // only set if MJD-OBS or DATE-OBS is present
-    if (hd->find("MJD-OBS") || hd->find("DATE-OBS") || 
-	(prim && prim->find("MJD-OBS")) || (prim && prim->find("DATE-OBS")))
-      putFitsCard(chan, "MJD-OBS", 
-		  (wcs_[ww]->epoch-1900)*365.242198781+15019.81352);
-
-    ostringstream radesys;
-    radesys << "RADESYS" << alt << ends;
-    if (hd->find(radesys.str().c_str())) {
-      // if RADESYS present, use it
-      putFitsCard(chan, "RADESYS", hd->getString(radesys.str().c_str()));
-    }
-    else if (prim && prim->find(radesys.str().c_str())) {
-      // if RADESYS present, use it
-      putFitsCard(chan, "RADESYS", prim->getString(radesys.str().c_str()));
-    }
-    else if (hd->find("RADECSYS")) {
-      // look for old RADECSYS
-      putFitsCard(chan, "RADESYS", hd->getString("RADECSYS"));
-    }
-    else if (prim && prim->find("RADECSYS")) {
-      // look for old RADECSYS
-      putFitsCard(chan, "RADESYS", prim->getString("RADECSYS"));
-    }
-    else {
-      // fall back on wcssubs
-      if (!strncmp("RA",wcs_[ww]->ctype[0],2) || 
-	  !strncmp("RA",wcs_[ww]->ctype[1],2)) {
-	if (!strncmp("FK4",wcs_[ww]->radecsys,3) ||
-	    !strncmp("FK4-NO-E",wcs_[ww]->radecsys,8) ||
-	    !strncmp("FK5",wcs_[ww]->radecsys,3) ||
-	    !strncmp("ICRS",wcs_[ww]->radecsys,4))
-	  putFitsCard(chan, "RADESYS", wcs_[ww]->radecsys);
-      }
-    }
-  }
-
-  // ast is picky about latpole/longpole
-  if ((wcs_[ww]->latpole == 999 && wcs_[ww]->longpole == 999) ||
-      (wcs_[ww]->latpole == 0 && wcs_[ww]->longpole == 0))
-    ;
-  else {
-    if (wcs_[ww]->latpole != 999)
-      putFitsCard(chan, "LATPOLE", wcs_[ww]->latpole);
-    if (wcs_[ww]->longpole != 999)
-      putFitsCard(chan, "LONPOLE", wcs_[ww]->longpole);
-  }
-
-  // Projection parameters- PV, QV, WAT
-  // TAN+PV (old SCAMP-backward compatibility)
-  // TPV+PV (new SCAMP)
-  // xxx+PV (ZPN generic)
-  // xxx+QV (TAN AUTOASTROM)
-  // TNX/ZPX+WAT (IRAF)
-  // TAN/LIN-SIP (SIP)
-
-  // PVx_y (old SCAMP, SCAMP, generic)
-  // MAXPV defined in wcs.h
-  for (int ii=1; ii<=2; ii++) {
-    for (int mm=0; mm<=MAXPV; mm++) {
-      ostringstream str,str2;
-      str << "PV" << ii << '_' << mm << alt << ends;
-      str2 << "PV" << ii << '_' << mm << ends;
-      if (hd->find(str.str().c_str())) {
-	double val = hd->getReal(str.str().c_str(),0);
-	putFitsCard(chan, str2.str().c_str(), val);
-      }
-      else if (prim && prim->find(str.str().c_str())) {
-	double val = prim->getReal(str.str().c_str(),0);
-	putFitsCard(chan, str2.str().c_str(), val);
-      }
-    }
-  }
-
-  // QVx_y (Autoastrom)
-  for (int ii=1; ii<=2; ii++) {
-    for (int mm=0; mm<=MAXPV; mm++) {
-      ostringstream str,str2;
-      str << "QV" << ii << '_' << mm << alt << ends;
-      str2 << "QV" << ii << '_' << mm << ends;
-      if (hd->find(str.str().c_str())) {
-	double val = hd->getReal(str.str().c_str(),0);
-	putFitsCard(chan, str2.str().c_str(), val);
-      }
-      else if (prim && prim->find(str.str().c_str())) {
-	double val = prim->getReal(str.str().c_str(),0);
-	putFitsCard(chan, str2.str().c_str(), val);
-      }
-    }
-  }
-
-  // WATx_ (IRAF) (primary only)
-  if ((wcs_[ww]->prjcode == WCS_TNX || wcs_[ww]->prjcode == WCS_ZPX) && !ww) {
-    for (int jj=0; jj<=2; jj++) {
-      for (int ii=1; ii<=9; ii++) {
-	ostringstream str;
-	str << "WAT" << jj << "_00" << ii << ends;
-	if (hd->find(str.str().c_str())) {
-	  char* val = hd->getString(str.str().c_str());
-	  if (val) {
-	    putFitsCard(chan, str.str().c_str(), val);
-	  }
-	}
-	else if (prim && prim->find(str.str().c_str())) {
-	  char* val = prim->getString(str.str().c_str());
-	  if (val) {
-	    putFitsCard(chan, str.str().c_str(), val);
-	  }
-	}
-      }
-    }
-  }
-
-  // SIP (TAN-SIP/LIN-SIP) (primary only)
-  if ((wcs_[ww]->prjcode == WCS_TAN || wcs_[ww]->prjcode == WCS_LIN) && 
-      !ww && wcs_[ww]->distcode) {
-    if (hd->find("A_ORDER")) {
-      int val = hd->getInteger("A_ORDER",0);
-      putFitsCard(chan, "A_ORDER", val);
-    }
-    else if (prim && prim->find("A_ORDER")) {
-      int val = prim->getInteger("A_ORDER",0);
-      putFitsCard(chan, "A_ORDER", val);
-    }
-
-    if (hd->find("AP_ORDER")) {
-      int val = hd->getInteger("AP_ORDER",0);
-      putFitsCard(chan, "AP_ORDER", val);
-    }
-    else if (prim && prim->find("AP_ORDER")) {
-      int val = prim->getInteger("AP_ORDER",0);
-      putFitsCard(chan, "AP_ORDER", val);
-    }
-
-    if (hd->find("A_DMAX")) {
-      double val = hd->getReal("A_DMAX",0);
-      putFitsCard(chan, "A_DMAX", val);
-    }
-    else if (prim && prim->find("A_DMAX")) {
-      double val = prim->getReal("A_DMAX",0);
-      putFitsCard(chan, "A_DMAX", val);
-    }
-
-    if (hd->find("B_ORDER")) {
-      int val = hd->getInteger("B_ORDER",0);
-      putFitsCard(chan, "B_ORDER", val);
-    }
-    else if (prim && prim->find("B_ORDER")) {
-      int val = prim->getInteger("B_ORDER",0);
-      putFitsCard(chan, "B_ORDER", val);
-    }
-
-    if (hd->find("BP_ORDER")) {
-      int val = hd->getInteger("BP_ORDER",0);
-      putFitsCard(chan, "BP_ORDER", val);
-    }
-    else if (prim && prim->find("BP_ORDER")) {
-      int val = prim->getInteger("BP_ORDER",0);
-      putFitsCard(chan, "BP_ORDER", val);
-    }
-
-    if (hd->find("B_DMAX")) {
-      double val = hd->getReal("B_DMAX",0);
-      putFitsCard(chan, "B_DMAX", val);
-    }
-    else if (prim && prim->find("B_DMAX")) {
-      double val = prim->getReal("B_DMAX",0);
-      putFitsCard(chan, "B_DMAX", val);
-    }
-
-    for (int jj=0; jj<=9; jj++) {
-      for (int ii=0; ii<=9; ii++) {
-	{
-	  ostringstream str;
-	  str << "A_" << jj << "_" << ii << ends;
-	  if (hd->find(str.str().c_str())) {
-	    double val = hd->getReal(str.str().c_str(),0);
-	    putFitsCard(chan, str.str().c_str(), val);
-	  }
-	  else if (prim && prim->find(str.str().c_str())) {
-	    double val = prim->getReal(str.str().c_str(),0);
-	    putFitsCard(chan, str.str().c_str(), val);
-	  }
-	}
-	{
-	  ostringstream str;
-	  str << "AP_" << jj << "_" << ii << ends;
-	  if (hd->find(str.str().c_str())) {
-	    double val = hd->getReal(str.str().c_str(),0);
-	    putFitsCard(chan, str.str().c_str(), val);
-	  }
-	  else if (prim && prim->find(str.str().c_str())) {
-	    double val = prim->getReal(str.str().c_str(),0);
-	    putFitsCard(chan, str.str().c_str(), val);
-	  }
-	}
-	{
-	  ostringstream str;
-	  str << "B_" << jj << "_" << ii << ends;
-	  if (hd->find(str.str().c_str())) {
-	    double val = hd->getReal(str.str().c_str(),0);
-	    putFitsCard(chan, str.str().c_str(), val);
-	  }
-	  else if (prim && prim->find(str.str().c_str())) {
-	    double val = prim->getReal(str.str().c_str(),0);
-	    putFitsCard(chan, str.str().c_str(), val);
-	  }
-	}
-	{
-	  ostringstream str;
-	  str << "BP_" << jj << "_" << ii << ends;
-	  if (hd->find(str.str().c_str())) {
-	    double val = hd->getReal(str.str().c_str(),0);
-	    putFitsCard(chan, str.str().c_str(), val);
-	  }
-	  else if (prim && prim->find(str.str().c_str())) {
-	    double val = prim->getReal(str.str().c_str(),0);
-	    putFitsCard(chan, str.str().c_str(), val);
-	  }
-	}
-      }
-    }
-  }
-}
-
-void FitsImage::wcs2ast0(int ww, FitsHead* hd, FitsHead* prim, void* chan) 
-{
-  putFitsCard(chan, "CTYPE1", wcs_[ww]->ctype[0]);
-  putFitsCard(chan, "CTYPE2", wcs_[ww]->ctype[1]);
-
-  // CRPIX/CRVAL
-  putFitsCard(chan, "CRPIX1", wcs_[ww]->crpix[0]);
-  putFitsCard(chan, "CRPIX2", wcs_[ww]->crpix[1]);
-  putFitsCard(chan, "CRVAL1", wcs_[ww]->crval[0]);
-  putFitsCard(chan, "CRVAL2", wcs_[ww]->crval[1]);
-
-  putFitsCard(chan, "CD1_1", wcs_[ww]->cd[0]);
-  putFitsCard(chan, "CD1_2", wcs_[ww]->cd[1]);
-  putFitsCard(chan, "CD2_1", wcs_[ww]->cd[2]);
-  putFitsCard(chan, "CD2_2", wcs_[ww]->cd[3]);
-
-  putFitsCard(chan, "EQUINOX", wcs_[ww]->equinox);
-
-  // from wcssub/wcsinit.c line 800
-  // wcs[ww]->epoch = 1900.0 + (mjd - 15019.81352) / 365.242198781;
-  // only set if MJD-OBS or DATE-OBS is present
-    if (hd->find("MJD-OBS") || hd->find("DATE-OBS") || 
-	(prim && prim->find("MJD-OBS")) || (prim && prim->find("DATE-OBS")))
-      putFitsCard(chan, "MJD-OBS", 
-		  (wcs_[ww]->epoch-1900)*365.242198781+15019.81352);
-
-  putFitsCard(chan, "RADESYS", wcs_[ww]->radecsys);
-}
-#endif
-
-void FitsImage::putFitsCard(void* chan, const char* key, const char* value)
-{
-  char buf[80];
-  memset(buf,'\0', 80);
-
-  ostringstream str;
-  str.setf(ios::left,ios::adjustfield);
-  str.width(8);
-  str << key << "= '" << value << "'";
-  memcpy(buf,str.str().c_str(),str.str().length());
-
-  astPutFits(chan, buf, 0);
-  astClearStatus;
-
-  if (DebugWCS)
-    cerr << str.str().c_str() << endl;
-}
-
-void FitsImage::putFitsCard(void* chan, const char* key, int value)
-{
-  char buf[80];
-  memset(buf,'\0', 80);
-
-  ostringstream str;
-  str.setf(ios::left,ios::adjustfield);
-  str.width(8);
-  str << key << "= " << value;
-  memcpy(buf,str.str().c_str(),str.str().length());
-
-  astPutFits(chan, buf, 0);
-  astClearStatus;
-
-  if (DebugWCS)
-    cerr << str.str().c_str() << endl;
-}
-
-void FitsImage::putFitsCard(void* chan, const char* key, double value)
-{
-  char buf[80];
-  memset(buf,'\0', 80);
-
-  ostringstream str;
-  str.setf(ios::left,ios::adjustfield);
-  str.setf(ios::scientific,ios::floatfield);
-  str.width(8);
-  str.precision(16);
-  str << key << "= " << value;
-  memcpy(buf,str.str().c_str(),str.str().length());
-
-  astPutFits(chan, buf, 0);
-  astClearStatus;
-
-  if (DebugWCS)
-    cerr << str.str().c_str() << endl;
 }

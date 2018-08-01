@@ -284,70 +284,6 @@ void FrameBase::updateBin(const Matrix& mx)
   Base::updateBin(mx);
 }
 
-#ifdef OLDWCS
-void FrameBase::updatePanner()
-{
-  Base::updatePanner();
-
-  if (usePanner) {
-    ostringstream str;
-
-    str << pannerName << " update " << (void*)pannerPixmap << ';';
-
-    // calculate bbox
-    Vector ll = Vector(0,0) * widgetToPanner;
-    Vector lr = Vector(options->width,0) * widgetToPanner;
-    Vector ur = Vector(options->width,options->height) * widgetToPanner;
-    Vector ul = Vector(0,options->height) * widgetToPanner;
-
-    str << pannerName << " update bbox " 
-	<< ll << ' ' << lr << ' ' << ur << ' ' << ul << ';';
-
-    // calculate image compass vectors
-    Matrix mm = 
-      FlipY() *
-      irafMatrix_ *
-      wcsOrientationMatrix * 
-      Rotate(wcsRotation) *
-      orientationMatrix *
-      Rotate(rotation);
-
-    Vector xx = (Vector(1,0)*mm).normalize();
-    Vector yy = (Vector(0,1)*mm).normalize();
-
-    str << pannerName << " update image compass " 
-	<< xx << ' ' << yy << ';';
-
-    if (keyContext->fits && keyContext->fits->hasWCS(wcsSystem_)) {
-      Vector orpix = keyContext->fits->center();
-      Vector orval=keyContext->fits->pix2wcs(orpix, wcsSystem_, wcsSky_);
-      Vector orpix2 = keyContext->fits->wcs2pix(orval, wcsSystem_,wcsSky_);
-      Vector delta = keyContext->fits->getWCScdelt(wcsSystem_).abs();
-
-      Vector npix = keyContext->fits->wcs2pix(Vector(orval[0],orval[1]+delta[1]), wcsSystem_,wcsSky_);
-      Vector north = ((npix-orpix2)*mm).normalize();
-      Vector epix = keyContext->fits->wcs2pix(Vector(orval[0]+delta[0],orval[1]), wcsSystem_,wcsSky_);
-      Vector east = ((epix-orpix2)*mm).normalize();
-
-      // sanity check
-      Vector diff = (north-east).abs();
-      if ((north[0]==0 && north[1]==0) ||
-	  (east[0]==0 && east[1]==0) ||
-	  (diff[0]<.01 && diff[1]<.01)) {
-	north = (Vector(0,1)*mm).normalize();
-	east = (Vector(-1,0)*mm).normalize();
-      }
-
-      str << pannerName << " update wcs compass " 
-	  << north << ' ' << east << ends;
-    }
-    else
-      str << pannerName << " update wcs compass invalid" << ends;
-
-    Tcl_Eval(interp, str.str().c_str());
-  }
-}
-#else
 void FrameBase::updatePanner()
 {
   Base::updatePanner();
@@ -408,7 +344,6 @@ void FrameBase::updatePanner()
     Tcl_Eval(interp, str.str().c_str());
   }
 }
-#endif
 
 void FrameBase::x11MagnifierCursor(const Vector& vv)
 {

@@ -438,64 +438,6 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
 
   // WCS
   if (currentContext->fits->hasWCS(Coord::WCS)) {
-
-#ifdef OLDWCS
-    WorldCoor* wcs = currentContext->fits->getWCS(Coord::WCS);
-
-    // abort if this is a DSS, ZPN, TNX
-    if (!strncmp(wcs->ptype,"DSS",3) ||
-	!strncmp(wcs->ptype,"ZPN",3) ||
-	!strncmp(wcs->ptype,"TNX",3))
-      return;
-
-    dst.appendString("RADESYS", wcs->radecsys, NULL);
-    dst.appendReal("EQUINOX", wcs->equinox, 9, NULL);
-
-    dst.appendString("CTYPE1", wcs->ctype[0], NULL);
-    dst.appendString("CTYPE2", wcs->ctype[1], NULL);
-    dst.appendReal("CRVAL1", wcs->crval[0], 9, NULL);
-    dst.appendReal("CRVAL2", wcs->crval[1], 9, NULL);
-
-    char* cunit1 = src->getString("CUNIT1");
-    if (cunit1)
-      dst.appendString("CUNIT1", cunit1, NULL);
-
-    char* cunit2 = src->getString("CUNIT2");
-    if (cunit2)
-      dst.appendString("CUNIT2", cunit2, NULL);
-
-    // crpix
-    Vector crpix = Vector(wcs->crpix[0],wcs->crpix[1]) * 
-      currentContext->fits->imageToWidget *
-      Translate(-center) *
-      Translate(1,0) *
-      FlipY() *
-      Translate(center);
-
-    dst.appendReal("CRPIX1", crpix[0], 9, NULL);
-    dst.appendReal("CRPIX2", crpix[1], 9, NULL);
-
-    // cd matrix
-    Matrix cd = Matrix(wcs->cd[0],wcs->cd[1],wcs->cd[2],wcs->cd[3],0,0) *
-      currentContext->fits->imageToRef * refToUser *
-      wcsOrientationMatrix *
-      Rotate(wcsRotation) *
-      orientationMatrix *
-      Scale(zoom_.invert()) *
-      Rotate(rotation) *
-      Translate(center) *
-      Translate(-center) *
-      Translate(1,0) *
-      FlipY() * 
-      Translate(center);
-
-    dst.appendReal("CD1_1", cd.matrix(0,0), 9, NULL);
-    dst.appendReal("CD1_2", cd.matrix(0,1), 9, NULL);
-    dst.appendReal("CD2_1", cd.matrix(1,0), 9, NULL);
-    dst.appendReal("CD2_2", cd.matrix(1,1), 9, NULL);
-
-#else
-
     if (src->find("RADESYS"))
       dst.appendString("RADESYS", src->getString("RADESYS"), NULL);
     if (src->find("EQUINOX"))
@@ -612,7 +554,6 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
       dst.appendReal("CD2_1", cd.matrix(1,0), 9, NULL);
       dst.appendReal("CD2_2", cd.matrix(1,1), 9, NULL);
     }
-#endif
   }
 }
 

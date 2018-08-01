@@ -59,7 +59,6 @@ Vector FitsImage::mapToRef(const Vector& vv, Coord::CoordSystem in,
   return Vector();
 }
 
-#ifndef OLDWCS
 Vector3d FitsImage::mapFromRef(const Vector3d& vv, Coord::CoordSystem out,
 			       Coord::SkyFrame sky)
 {
@@ -93,7 +92,6 @@ Vector3d FitsImage::mapToRef(const Vector3d& vv, Coord::CoordSystem in,
 
   return Vector3d();
 }
-#endif
 
 void FitsImage::listFromRef(ostream& str, const Vector& vv,
 			    Coord::CoordSystem sys, Coord::SkyFrame sky, 
@@ -182,13 +180,7 @@ Vector FitsImage::mapLenFromRef(const Vector& vv, Coord::CoordSystem sys,
     return mapLen(vv,refToPhysical * physicalToDetector);
   default:
     if (hasWCS(sys)) {
-#ifdef OLDWCS
-      Vector cd = getWCScdelt(sys);
-      Vector in = mapLen(vv,refToImage);
-      Vector out = Vector(in[0]*cd[0], in[1]*cd[1]).abs();
-#else
       Vector out = vv*getWCSSize(sys);
-#endif
       if (hasWCSCel(sys)) {
 	switch (dist) {
 	case Coord::DEGREE:
@@ -229,13 +221,7 @@ Vector FitsImage::mapLenToRef(const Vector& vv, Coord::CoordSystem sys,
     return mapLen(vv,detectorToPhysical * physicalToRef);
   default:
     if (hasWCS(sys)) {
-#ifdef OLDWCS
-      Vector cd = getWCScdelt(sys);
-      Vector in = mapLen(vv,refToImage);
-      Vector out = Vector(in[0]/cd[0], in[1]/cd[1]).abs();
-#else
       Vector out = vv/getWCSSize(sys);
-#endif      
       if (hasWCSCel(sys)) {
 	switch (dist) {
 	case Coord::DEGREE:
@@ -421,23 +407,6 @@ void FitsImage::listDistFromRef(ostream& str,
 
 // 3D
 
-#ifdef OLDWCS
-double FitsImage::mapFromImage3d(double dd, Coord::CoordSystem sys)
-{
-  if (sys >= Coord::WCS)
-    return pix2wcsx(dd,sys);
-  else
-    return dd;
-}      
-
-double FitsImage::mapToImage3d(double dd, Coord::CoordSystem sys)
-{
-  if (sys >= Coord::WCS)
-    return wcs2pixx(dd,sys);
-  else
-    return dd;
-}      
-#else
 double FitsImage::mapFromImage3d(double dd, Coord::CoordSystem sys)
 {
   if (hasWCS(sys)) {
@@ -460,4 +429,3 @@ double FitsImage::mapToImage3d(double dd, Coord::CoordSystem sys)
   else
     return dd;
 }      
-#endif

@@ -22,27 +22,6 @@ Grid3d::Grid3d(Widget* p, Coord::CoordSystem sys, Coord::SkyFrame sky,
 Grid3d::~Grid3d()
 {}
 
-#ifdef OLDWCS
-static FitsImage* foobar;
-
-void bar(AstMapping* that, int npoint, int ncoord_in, const double* ptr_in[],
-	 int forward, int ncoord_out, double* ptr_out[])
-{
-  WCSx** wcsx = foobar->wcsx();
-
-  if (forward) {
-    for (int ii=0; ii<npoint; ii++)
-      (*ptr_out)[ii] = (.5 + (*ptr_in)[ii] - wcsx[0]->crpix) *
-	wcsx[0]->cd + wcsx[0]->crval;
-  }
-  else {
-    for (int ii=0; ii<npoint; ii++)
-      (*ptr_out)[ii] = ((*ptr_in)[ii] - wcsx[0]->crval) /
-	wcsx[0]->cd + wcsx[0]->crpix -.5;
-  }
-}
-#endif
-
 int Grid3d::doit(RenderMode rm)
 {
   Frame3dBase* pp = (Frame3dBase*)parent_;
@@ -80,34 +59,6 @@ int Grid3d::doit(RenderMode rm)
     break;
   default:
     {
-
-#ifdef OLDWCS
-      foobar = fits;
-      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_[system_-Coord::WCS]);
-      fits->setWCSSkyFrame(ast, sky_);
-
-      AstFrame* zbase = astFrame(1,"");
-      AstFrame* zcurr = astFrame(1,"");
-      AstMapping* zmap;
-      if (fits->hasWCS3D(system_)) {
-	astIntraReg("foo",1,1,bar,0,"testing","me","you");
-	if (!(zmap = (AstMapping*)astIntraMap("foo",1,1,"")))
-	  return 0;
-      }
-      else
-	zmap = (AstMapping*)astUnitMap(1,"");
-
-      AstFrame* wcsbase = (AstFrame*)astGetFrame(ast,AST__BASE);
-      AstFrame* wcscurr = (AstFrame*)astGetFrame(ast,AST__CURRENT);
-      AstMapping* wcsmap = (AstMapping*)astGetMapping(ast,AST__BASE,AST__CURRENT);
-      AstCmpFrame* cmpwcsbase = astCmpFrame(wcsbase,zbase,"");
-      AstCmpFrame* cmpwcscurr = astCmpFrame(wcscurr,zcurr,"");
-
-      AstCmpMap* cmpwcsmap = astCmpMap(wcsmap,zmap,0,"");
-
-      ast = astFrameSet(cmpwcsbase,"");
-      astAddFrame(ast, AST__CURRENT, cmpwcsmap, cmpwcscurr);
-#else
       if (!fits->astInv()) {
 	astEnd; // now, clean up memory
 	return 1;
@@ -155,7 +106,7 @@ int Grid3d::doit(RenderMode rm)
 	}
 	break;
       }
-#endif      
+
       // add wcs to frameset
       // this will link frameset to wcs with unitMap
       int id = astGetI(ast,"Current");

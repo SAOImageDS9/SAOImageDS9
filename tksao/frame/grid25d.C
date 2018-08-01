@@ -58,10 +58,6 @@ int Grid25d::doit(RenderMode rm)
   default:
     {
       // set desired skyformat
-#ifdef OLDWCS
-      AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_[system_-Coord::WCS]);
-      fits->setWCSSkyFrame(ast, sky_);
-#else
       if (!fits->astInv()) {
 	astEnd; // now, clean up memory
 	return 1;
@@ -96,7 +92,6 @@ int Grid25d::doit(RenderMode rm)
 	}
 	break;
       }
-#endif
       // add wcs to frameset
       // this will link frameset to wcs with unitMap
       int id = astGetI(ast,"Current");

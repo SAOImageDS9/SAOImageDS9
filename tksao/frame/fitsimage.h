@@ -111,10 +111,6 @@ class FitsImage {
   int address[FTY_MAXAXES];
 
   int manageWCS_;
-#ifdef OLDWCS
-  WorldCoor** wcs_;    // wcs list
-  WCSx** wcsx_;        // xth Axis WCS
-#else
   int astInv_;    // can we inverse?
   int* wcs_;
   int* wcsCel_;
@@ -129,7 +125,7 @@ class FitsImage {
   int* wcsCelSav_;
   int* wcs3DSav_;
   int wcsHPXSav_;
-#endif
+
   FitsHead* wcsAltHeader_; // alt wcs header
   FitsHead* wfpc2Header_; // wcs header for wfpc2
   FitsHead* wcs0Header_;
@@ -137,11 +133,7 @@ class FitsImage {
   Matrix wcsToRef_;          // iraf/wcs matrix
 
  public:
-#ifdef OLDWCS
-  AstFrameSet** ast_;  // ast frameset;
-#else
   AstFrameSet* ast_;  // ast frameset;
-#endif
 
  private:
   char* root(const char*);
@@ -159,20 +151,6 @@ class FitsImage {
   void initHPX();
 
   void initWCSPhysical();
-#ifdef OLDWCS
-  void initWCS(FitsHead*, FitsHead* =NULL);
-  void wcsShow(WorldCoor*);
-  void astinit(int, FitsHead*, FitsHead*);
-  AstFrameSet* buildast(int, FitsHead*, FitsHead*);
-  AstFrameSet* buildast0(int, FitsHead*, FitsHead*);
-  void wcs2ast(int, FitsHead*, FitsHead*, void*);
-  void wcs2ast0(int, FitsHead*, FitsHead*, void*);
-  void header2ast(int,FitsHead*, void*);
-  void astinit0(int, FitsHead*, FitsHead*);
-
-  void initWCS0(const Vector&);
-  void resetWCS0();
-#else
   void initWCS(FitsHead*);
   void astInit(FitsHead*);
   void wcsInit(int);
@@ -183,10 +161,7 @@ class FitsImage {
 
   void initWCS0(const Vector&);
   void resetWCS0() {resetWCS();}
-#endif
-  void putFitsCard(void* chan, const char* key, const char* value);
-  void putFitsCard(void* chan, const char* key, int value);
-  void putFitsCard(void* chan, const char* key, double value);
+
   int checkWCS(Vector&);
   int checkWCS(Vector3d&);
   AstFrameSet* fits2ast(FitsHead*);  
@@ -402,17 +377,11 @@ class FitsImage {
 
   char* pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
 
-#ifdef OLDWCS
-  WCSx** wcsx() {return wcsx_;}
-  double pix2wcsx(double, Coord::CoordSystem);
-  double wcs2pixx(double, Coord::CoordSystem);
-#else
   int astInv() {return astInv_;}
   Vector3d pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
   Vector3d wcs2pix(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
 
   char* pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
-#endif
 
   void wfpc2WCS(istream&);
   void appendWCS(istream&);
@@ -430,19 +399,6 @@ class FitsImage {
   double getWCSDist(const Vector&, const Vector&, Coord::CoordSystem);
   const char* getWCSName(Coord::CoordSystem);
 
-#ifdef OLDWCS
-  WorldCoor* getWCS(Coord::CoordSystem sys) 
-  {return (wcs_ && wcs_[sys-Coord::WCS]) ? wcs_[sys-Coord::WCS] : NULL;}
-  Vector getWCScdelt(Coord::CoordSystem);
-
-  Vector wcsTran(AstFrameSet*, const Vector&, int);
-  void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
-  double wcsDistance(AstFrameSet*, const Vector&, const Vector&);
-
-  int wcsIsASkyFrame(AstFrameSet*);
-  void setWCSSkyFrame(AstFrameSet*, Coord::SkyFrame);
-  void setWCSFormat(AstFrameSet*, int, const char*);
-#else
   Vector wcsTran(const Vector&, int);
   Vector3d wcsTran(const Vector3d&, int);
   void wcsTran(int num, Vector* in, int forward, Vector* out)
@@ -457,7 +413,6 @@ class FitsImage {
 
   double getWCSSize(Coord::CoordSystem);
   double calcWCSSize(Coord::CoordSystem);
-#endif
 
   int hasWCS(Coord::CoordSystem);
   int hasWCSCel(Coord::CoordSystem);
@@ -484,10 +439,9 @@ class FitsImage {
   Vector mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   void mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
   Vector mapToRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
-#ifndef OLDWCS
   Vector3d mapFromRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   Vector3d mapToRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
-#endif
+
   double mapFromImage3d(double, Coord::CoordSystem);
   double mapToImage3d(double, Coord::CoordSystem);
 

@@ -372,12 +372,7 @@ int Base::markerAnalysisRadial(Marker* pp, double** x, double** y, double** e,
   int unit =0;
   double xaxis =1;
   if (ptr->hasWCS(sys)) {
-#ifdef OLDWCS
-    Vector cdelt= ptr->getWCScdelt(sys);
-    double ll = fabs(cdelt[0]);
-#else
     double ll = ptr->getWCSSize(sys);
-#endif
 
     if (ptr->hasWCSCel(sys)) {
       unit =1;
@@ -389,13 +384,8 @@ int Base::markerAnalysisRadial(Marker* pp, double** x, double** y, double** e,
     }
   }
     
-#ifdef OLDWCS
-  Vector cdelt= ptr->getWCScdelt(sys);
-  double aa = fabs(cdelt[0]*cdelt[1]);
-#else
   double rr = ptr->getWCSSize(sys);
   double aa = rr*rr;
-#endif
 
   for (int kk=0; kk<num; kk++) {
     double err = sqrt(fabs(sum[kk]));
@@ -496,12 +486,7 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
   int unit =0;
   double xaxis =1;
   if (ptr->hasWCS(sys)) {
-#ifdef OLDWCS
-    Vector cdelt= ptr->getWCScdelt(sys);
-    double ll = fabs(cdelt[0]);
-#else
     double ll = ptr->getWCSSize(sys);
-#endif
 
     if (ptr->hasWCSCel(sys)) {
       unit =1;
@@ -513,13 +498,8 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
     }
   }
 
-#ifdef OLDWCS
-  Vector cdelt= ptr->getWCScdelt(sys);
-  double aa = fabs(cdelt[0]*cdelt[1]);
-#else
   double rr = ptr->getWCSSize(sys);
   double aa = rr*rr;
-#endif
 
   for (int qq=0; qq<aa; qq++) {
     for (int kk=0; kk<num; kk++) {
@@ -834,12 +814,7 @@ int Base::markerAnalysisStats1(Marker* pp,FitsImage* ptr, ostream& str,
     return 0;
   default: 
     {
-#ifdef OLDWCS
-      Vector cdelt= ptr->getWCScdelt(sys);
-      double ll = fabs(cdelt[0]);
-#else
       double ll = ptr->getWCSSize(sys);
-#endif
       if (ptr->hasWCSCel(sys)) {
 	str << "1 pixel = "<< ll*60*60 << " arcsec";
 	str << endl << endl;
@@ -880,26 +855,16 @@ void Base::markerAnalysisStats2(FitsImage* ptr, ostream& str,
   case 1:
     {
       // Cel WCS
-#ifdef OLDWCS
-      Vector cdelt= ptr->getWCScdelt(sys);
-      double aa = fabs(cdelt[0]*cdelt[1]);
-#else
       double rr = ptr->getWCSSize(sys);
       double aa = rr*rr;
-#endif
       area = aa*60*60*60*60*cnt;
     }
     break;
   case 2:
     {
       // Linear WCS
-#ifdef OLDWCS
-      Vector cdelt= ptr->getWCScdelt(sys);
-      double aa = fabs(cdelt[0]*cdelt[1]);
-#else
       double rr = ptr->getWCSSize(sys);
       double aa = rr*rr;
-#endif
       area = aa*cnt;
     }
     break;

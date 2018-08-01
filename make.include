@@ -14,7 +14,6 @@
 # tktable 2.10
 
 # ast 8.6.2
-# wcssubs 3.9.0
 # funtools 1.4.7
 # zlib 1.2.8
 # xpa 2.1.18+
@@ -379,7 +378,7 @@ funtools/Makefile : funtools/configure
 	@echo "*** $@ ***"
 	cd funtools; \
 	./configure \
-	--with-zlib=$(libdir) --with-wcslib=$(libdir) \
+	--with-zlib=$(libdir) \
 	$(CONFIGFLAGS) $(TARGET) \
 	$(PREFIX) \
 	--disable-shared

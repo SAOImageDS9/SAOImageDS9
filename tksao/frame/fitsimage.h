@@ -43,16 +43,6 @@ extern "C" {
   #include "ast.h"
 }
 
-class WCSx {
- public:
-  double crpix;
-  double crval;
-  double cd;
-
- public:
-  WCSx();
-};
-
 class FitsImage {
   friend class Base;
 

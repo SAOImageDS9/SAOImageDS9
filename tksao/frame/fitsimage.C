@@ -27,37 +27,6 @@
 #include "photo.h"
 #include "colorscale.h"
 
-// this is kluge to speed up doug minks wcssubs 'ksearch' routine
-extern "C" {
-  FitsHead* wcshead = NULL;
-  FitsHead* wcsprim = NULL;
-  char* ksearchh(char*, char*);
-
-  char* findit(char* cards, char* key)
-  {
-    char* rr = NULL;
-    if (wcshead) {
-      if ((rr = wcshead->find(key)))
-	return rr;
-
-      if (wcsprim)
-	if ((rr = wcsprim->find(key)))
-	  return rr;
-
-      return NULL;
-    }
-    else
-      return ksearchh(cards, key);
-  }
-};
-
-WCSx::WCSx()
-{
-  crpix =0;
-  crval =0;
-  cd =0;
-}
-
 FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
 {
   context_ =cx;

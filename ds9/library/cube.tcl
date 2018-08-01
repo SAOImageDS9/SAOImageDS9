@@ -14,8 +14,6 @@ proc CubeDef {} {
 
     set cube(lock) none
     set cube(lock,axes) 0
-# needs work, at high values, but cropped, causes problems
-#    set cube(format) {%.5g}
 # axes cnt starts at 0
     set cube(axis) 2
     set cube(system) wcs
@@ -430,8 +428,7 @@ proc CubeDialog {} {
 				-value $ii]
 	set dcube(wcsentry,$ii) [ttk::entry $f.slice$ii \
 				 -textvariable dcube(wcs,$ii) -width 10]
-	bind $dcube(wcsentry,$ii) <Return> \
-	    [list CubeApplyWCS $ii]
+	bind $dcube(wcsentry,$ii) <Return> [list CubeApplyWCS $ii]
 
 	set dcube(slider,$ii) [slider $f.scale$ii 0 100 {} \
 				   dcube(image,$ii) [list CubeApply $ii] 4 10]
@@ -568,48 +565,61 @@ proc UpdateCubeDialog {} {
     }
 
     # show it
-    if {$naxes <= 3} {
-	# special chase, no checkbox
-	grid columnconfigure $w.param 1 -weight 1
-	grid columnconfigure $w.param 2 -weight 0
-	grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-	switch $cube(system) {
-	    image {
-		grid x $dcube(slider,2) \
-		    -padx 2 -pady 2 -sticky ew
+    if {[$current(frame) has fits]} {
+	if {$naxes <= 3} {
+	    # special case, no checkbox
+	    grid columnconfigure $w.param 1 -weight 1
+	    grid columnconfigure $w.param 2 -weight 0
+	    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+	    switch $cube(system) {
+		image {
+		    grid x $dcube(slider,2) \
+			-padx 2 -pady 2 -sticky ew
+		}
+		default {
+		    grid $dcube(wcsentry,2) $dcube(slider,2) \
+			-padx 2 -pady 2 -sticky ew
+		}
 	    }
-	    default {
-		grid $dcube(wcsentry,2) $dcube(slider,2) \
-		    -padx 2 -pady 2 -sticky ew
+	} else {
+	    grid columnconfigure $w.param 1 -weight 0
+	    grid columnconfigure $w.param 2 -weight 1
+	    grid $dcube(taxis) x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+	    for {set ii 2} {$ii<$naxes} {incr ii} {
+		switch $cube(system) {
+		    image {
+			grid $dcube(chk,$ii) x \
+			    $dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
+		    }
+		    default {
+			grid $dcube(chk,$ii) $dcube(wcsentry,$ii) \
+			    $dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
+		    }
+		}
 	    }
 	}
     } else {
-	grid columnconfigure $w.param 1 -weight 0
-	grid columnconfigure $w.param 2 -weight 1
-	grid $dcube(taxis) x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-	for {set ii 2} {$ii<$naxes} {incr ii} {
-	    switch $cube(system) {
-		image {
-		    grid $dcube(chk,$ii) x \
-			$dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
-		}
-		default {
-		    grid $dcube(chk,$ii) $dcube(wcsentry,$ii) \
-			$dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
-		}
-	    }
-	}
+	# nothing loaded, no checkbox
+	grid columnconfigure $w.param 1 -weight 1
+	grid columnconfigure $w.param 2 -weight 0
+	grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+	grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
     }
 
     # set intervals
     if {$naxes  == 2} {
 	SliderFromTo $dcube(slider,2) $dcube(from,2) $dcube(to,2)
-	SliderMinMax $dcube(slider,2) $dcube(from,2) $dcube(to,2) 4
+	SliderMinMax $dcube(slider,2) $dcube(from,2) $dcube(to,2) 1 4
 	set dcube(vcoord) image
     } else {
 	for {set ii 2} {$ii<$naxes} {incr ii} {
+	    set diff [expr $dcube(to,$ii)-$dcube(from,$ii)+1]
+	    if {$diff>4} {
+		set diff 4
+	    }
 	    SliderFromTo $dcube(slider,$ii) $dcube(from,$ii) $dcube(to,$ii)
-	    SliderMinMax $dcube(slider,$ii) $dcube(from,wcs,$ii) $dcube(to,wcs,$ii) 4
+	    SliderMinMax $dcube(slider,$ii) $dcube(from,wcs,$ii) \
+		$dcube(to,wcs,$ii) $diff 4
 
 	    set dcube(vcoord) $cube(system)
 	    switch $cube(system) {
@@ -650,10 +660,7 @@ proc UpdateCubeMotionDialog {ii} {
     global icube
     global dcube
     global cube
-
-    # current frame only
     global current
-    global ds9
 
     global debug
     if {$debug(tcl,update)} {
@@ -665,56 +672,14 @@ proc UpdateCubeMotionDialog {ii} {
     if {![winfo exists $icube(top)]} {
 	return
     }
-
-    set w $icube(top)
-    set mb $icube(mb)
-
-    # get number of axes
-    if {$current(frame) != {}} {
-	set naxes [$current(frame) get fits naxes]
-    } else {
-	set naxes 2
-    }
-
-    # set from/to
-    set depth 1
-    if {$naxes == 2} {
-	set dcube(from,2) 1
-	set dcube(to,2) 1
-	set dcube(from,wcs,2) 1
-	set dcube(to,wcs,2) 1
-    } else {
-	if {$ii==2} {
-	    # get cropped version
-	    set ss [$current(frame) get crop 3d image]
-	    set dcube(from,$ii) [lindex $ss 0]
-	    set dcube(to,$ii) [lindex $ss 1]
-	} else {
-	    set dcube(from,$ii) 1
-	    set dcube(to,$ii) [$current(frame) get fits depth $ii]
-	}
-
-	set dcube(from,wcs,$ii) [$current(frame) get coordinates $dcube(from,$ii) image $cube(system) $ii]    
-	set dcube(to,wcs,$ii) [$current(frame) get coordinates $dcube(to,$ii) image $cube(system) $ii]    
-    }
-
-    # set intervals
-    if {$naxes  == 2} {
-	SliderFromTo $dcube(slider,2) $dcube(from,2) $dcube(to,2)
-	SliderMinMax $dcube(slider,2) $dcube(from,2) $dcube(to,2) 4
-    } else {
-	SliderFromTo $dcube(slider,$ii) $dcube(from,$ii) $dcube(to,$ii)
-	SliderMinMax $dcube(slider,$ii) $dcube(from,wcs,$ii) $dcube(to,wcs,$ii) 4
+    # current frame only
+    if {$current(frame) == {}} {
+	return
     }
 
     # we must do this after the scale has been configured
-    if {$naxes == 2} {
-	set dcube(image,2) 1
-	set dcube(wcs,2) 1
-    } else {
-	set dcube(image,$ii) [$current(frame) get fits slice $ii]
-	set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $ii]
-    }
+    set dcube(image,$ii) [$current(frame) get fits slice $ii]
+    set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $ii]
 }
 
 proc CubeBackup {ch which} {

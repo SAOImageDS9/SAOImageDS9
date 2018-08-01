@@ -15,13 +15,12 @@ proc slider {w from to label varname cmd {num {5}} {width {7}}} {
 
     ttk::label $w.label -text $label
     ttk::entry $w.entry -textvariable $varname -width $width
-    grid $w.label -sticky w -columnspan $num
-    grid $w.slider -row 1 -columnspan $num -padx 2 -pady 2 -sticky news
-    grid $w.entry -row 1 -column $num -padx 2 -pady 2
+    grid $w.label -sticky w
+    grid $w.slider -row 1 -padx 2 -pady 2 -sticky news
+    grid $w.entry -row 1 -padx 2 -pady 2
 
     for {set ii 0} {$ii<$num} {incr ii} {
 	ttk::label $w.t$ii -width $width -anchor center
-	grid $w.t$ii -row 2 -column $ii
 	grid columnconfigure $w $ii -weight 1
     }
 
@@ -32,7 +31,7 @@ proc slider {w from to label varname cmd {num {5}} {width {7}}} {
     bind $w.entry <Return> $cmd
 
     SliderFromTo $w $from $to
-    SliderMinMax $w $from $to $num
+    SliderMinMax $w $from $to $num $num
 
     return $w
 }
@@ -41,12 +40,20 @@ proc SliderFromTo {w from to} {
     $w.slider configure -from $from -to $to
 }
 
-proc SliderMinMax {w from to num} {
-    if {$from == $to} {
-	for {set ii 0} {$ii<$num} {incr ii} {
+proc SliderMinMax {w from to {num 5} {max 5}} {
+    grid $w.label -columnspan $num
+    grid $w.slider -columnspan $num
+    grid $w.entry -column $num
+
+    # forget all txt
+    for {set ii 0} {$ii<$max} {incr ii} {
+	if {[winfo exists $w.t$ii]} {
 	    $w.t$ii configure -text {}
+	    grid forget $w.t$ii
 	}
-    } else {
+    }
+
+    if {$from != $to} {
 	for {set ii 0} {$ii<$num} {incr ii} {
 	    set vv [expr ($to*1.-$from)/($num-1)*$ii + $from]
 
@@ -56,6 +63,7 @@ proc SliderMinMax {w from to num} {
 		set vv [format {%.5g} $vv]
 	    }
 	    $w.t$ii configure -text $vv
+	    grid $w.t$ii -row 2 -column $ii
 	}
     }
 }

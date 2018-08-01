@@ -230,8 +230,13 @@ proc MarkerAnalysisPlot3dSliceCB {frame id} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    set vvar(slice) [$frame get fits slice 2 $vvar(system)]
-    MarkerAnalysisPlot3dMarker $vvarname
+    # if the plot is destroyed, but marker still thinks it is good
+    # this routine will be called, so check first
+
+    if {[info exists ${vvarname}(system)]} {
+	set vvar(slice) [$frame get fits slice 2 $vvar(system)]
+	MarkerAnalysisPlot3dMarker $vvarname
+    }
 }
 
 # hardcoded marker.C

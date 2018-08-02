@@ -580,14 +580,6 @@ proc UpdateInfoBox {which x y sys} {
 			    -font "$ds9(times) $fsz"
 		    }
 		}
-	    } elseif {[$which has wcs celestial wcs$ll]} {
-		if {$infobox(wcs$ll,sys) == {}} {
-		    set infobox(wcs$ll,sys) "WCS $ll"
-		}
-		$infobox(wcs$ll,x,nm) configure -text {l} \
-		    -font "{$ds9(times)} $pds9(font,size) normal italic"
-		$infobox(wcs$ll,y,nm) configure -text {b} \
-		    -font "{$ds9(times)} $pds9(font,size) normal italic"
 	    } else {
 		if {$infobox(wcs$ll,sys) == {}} {
 		    set infobox(wcs$ll,sys) "WCS $ll"

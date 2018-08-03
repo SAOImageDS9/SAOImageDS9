@@ -503,59 +503,59 @@ proc UpdateCubeDialog {} {
 	CubeStop
     }
 
+    # is there a dialog
     if {![winfo exists $icube(top)]} {
 	return
     }
 
+    # special case, no frame
+    if {$current(frame) == {}} {
+	UpdateCubeDialogNoImage
+	return
+    }
+	
+    # special case, no image
+    if {![$current(frame) has fits]} {
+	UpdateCubeDialogNoImage
+	return
+    }
+    
     set w $icube(top)
     set mb $icube(mb)
 
-    if {$current(frame) != {}} {
-	if {[$current(frame) has fits]} {
-	    # now make sure we have the coord systems
-	    AdjustCoordSystem3d cube system
-	    CoordMenuEnable $mb.coord cube system 2 {} {}
-	} else {
-	    CoordMenuReset $mb.coord cube system 2 {} {}
-	}
-    }
+    # now make sure we have the coord systems
+    AdjustCoordSystem3d cube system
+    CoordMenuEnable $mb.coord cube system 2 {} {}
 
     # get number of axes
-    if {$current(frame) != {}} {
-	set naxes [$current(frame) get fits naxes]
-    } else {
-	set naxes 2
-    }
+    set naxes [$current(frame) get fits naxes]
     
-    # enable/disable Axes Reorder
-    if {$naxes > 2} {
-	$mb entryconfig [msgcat::mc {Axes Order}] -state normal
-    } else {
-	$mb entryconfig [msgcat::mc {Axes Order}] -state disabled
+    # special case, 2D image
+    if {$naxes == 2} {
+	UpdateCubeDialog2Axes
+	return
     }
+
+    # enable/disable Axes Reorder
+    $mb entryconfig [msgcat::mc {Axes Order}] -state normal
 
     # set from/to
     set depth 1
-    if {$naxes == 2} {
-	set dcube(from,2) 1
-	set dcube(to,2) 1
-	set dcube(from,wcs,2) 1
-	set dcube(to,wcs,2) 1
-    } else {
-	for {set ii 2} {$ii<$naxes} {incr ii} {
-	    if {$ii==2} {
-		# get cropped version
-		set ss [$current(frame) get crop 3d image]
-		set dcube(from,$ii) [lindex $ss 0]
-		set dcube(to,$ii) [lindex $ss 1]
-	    } else {
-		set dcube(from,$ii) 1
-		set dcube(to,$ii) [$current(frame) get fits depth $ii]
-	    }
-
-	    set dcube(from,wcs,$ii) [$current(frame) get coordinates $dcube(from,$ii) image $cube(system) $ii]    
-	    set dcube(to,wcs,$ii) [$current(frame) get coordinates $dcube(to,$ii) image $cube(system) $ii]    
+    for {set ii 2} {$ii<$naxes} {incr ii} {
+	if {$ii==2} {
+	    # get cropped version
+	    set ss [$current(frame) get crop 3d image]
+	    set dcube(from,$ii) [lindex $ss 0]
+	    set dcube(to,$ii) [lindex $ss 1]
+	} else {
+	    set dcube(from,$ii) 1
+	    set dcube(to,$ii) [$current(frame) get fits depth $ii]
 	}
+
+	set dcube(from,wcs,$ii) \
+	    [$current(frame) get coordinates $dcube(from,$ii) image $cube(system) $ii]    
+	set dcube(to,wcs,$ii) \
+	    [$current(frame) get coordinates $dcube(to,$ii) image $cube(system) $ii]    
     }
 
     # forget everything
@@ -565,80 +565,57 @@ proc UpdateCubeDialog {} {
     }
 
     # show it
-    if {$current(frame) != {}} {
-	if {[$current(frame) has fits]} {
-	    if {$naxes <= 3} {
-		# special case, no checkbox
-		grid columnconfigure $w.param 1 -weight 1
-		grid columnconfigure $w.param 2 -weight 0
-		grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-		switch $cube(system) {
-		    image {
-			grid x $dcube(slider,2) \
-			    -padx 2 -pady 2 -sticky ew
-		    }
-		    default {
-			grid $dcube(wcsentry,2) $dcube(slider,2) \
-			    -padx 2 -pady 2 -sticky ew
-		    }
-		}
-	    } else {
-		grid columnconfigure $w.param 1 -weight 0
-		grid columnconfigure $w.param 2 -weight 1
-		grid $dcube(taxis) x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-		for {set ii 2} {$ii<$naxes} {incr ii} {
-		    switch $cube(system) {
-			image {
-			    grid $dcube(chk,$ii) x \
-				$dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
-			}
-			default {
-			    grid $dcube(chk,$ii) $dcube(wcsentry,$ii) \
-				$dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
-			}
-		    }
-		}
+    if {$naxes == 3} {
+	# special case, no checkbox
+	grid columnconfigure $w.param 1 -weight 1
+	grid columnconfigure $w.param 2 -weight 0
+	grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+	switch $cube(system) {
+	    image {
+		grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
 	    }
-	} else {
-	    # nothing loaded, no checkbox
-	    grid columnconfigure $w.param 1 -weight 1
-	    grid columnconfigure $w.param 2 -weight 0
-	    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-	    grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
+	    default {
+		grid $dcube(wcsentry,2) $dcube(slider,2) \
+		    -padx 2 -pady 2 -sticky ew
+	    }
 	}
     } else {
-	    # no frame, no checkbox
-	    grid columnconfigure $w.param 1 -weight 1
-	    grid columnconfigure $w.param 2 -weight 0
-	    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-	    grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
+	grid columnconfigure $w.param 1 -weight 0
+	grid columnconfigure $w.param 2 -weight 1
+	grid $dcube(taxis) x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+	for {set ii 2} {$ii<$naxes} {incr ii} {
+	    switch $cube(system) {
+		image {
+		    grid $dcube(chk,$ii) x \
+			$dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
+		}
+		default {
+		    grid $dcube(chk,$ii) $dcube(wcsentry,$ii) \
+			$dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
+		}
+	    }
+	}
     }
 
     # set intervals
-    if {$naxes  == 2} {
-	SliderFromTo $dcube(slider,2) $dcube(from,2) $dcube(to,2)
-	SliderMinMax $dcube(slider,2) $dcube(from,2) $dcube(to,2) 1 4
-	set dcube(vcoord) image
-    } else {
-	for {set ii 2} {$ii<$naxes} {incr ii} {
-	    set diff [expr $dcube(to,$ii)-$dcube(from,$ii)+1]
-	    if {$diff>4} {
-		set diff 4
-	    }
-	    SliderFromTo $dcube(slider,$ii) $dcube(from,$ii) $dcube(to,$ii)
-	    SliderMinMax $dcube(slider,$ii) $dcube(from,wcs,$ii) \
-		$dcube(to,wcs,$ii) $diff 4
+    for {set ii 2} {$ii<$naxes} {incr ii} {
+	set diff [expr $dcube(to,$ii)-$dcube(from,$ii)+1]
+	if {$diff>4} {
+	    set diff 4
+	}
+	SliderFromTo $dcube(slider,$ii) $dcube(from,$ii) $dcube(to,$ii)
+	SliderMinMax $dcube(slider,$ii) $dcube(from,wcs,$ii) \
+	    $dcube(to,wcs,$ii) $diff 4
 
-	    set dcube(vcoord) $cube(system)
-	    switch $cube(system) {
-		image {}
-		default {
-		    set w [string range $cube(system) 3 3]
-		    set key "CTYPE[expr $cube(axis)+1]$w"
-		    set tt [string trim [$current(frame) get fits header keyword \{$key\}]]
-		    if {$tt != {}} {
-			set dcube(vcoord) $tt
-		    }
+	set dcube(vcoord) $cube(system)
+	switch $cube(system) {
+	    image {}
+	    default {
+		set w [string range $cube(system) 3 3]
+		set key "CTYPE[expr $cube(axis)+1]$w"
+		set tt [string trim [$current(frame) get fits header keyword \{$key\}]]
+		if {$tt != {}} {
+		    set dcube(vcoord) $tt
 		}
 	    }
 	}
@@ -653,15 +630,107 @@ proc UpdateCubeDialog {} {
     }
 
     # we must do this after the scale has been configured
-    if {$naxes == 2} {
-	set dcube(image,2) 1
-	set dcube(wcs,2) 1
-    } else {
-	for {set ii 2} {$ii<$naxes} {incr ii} {
-	    set dcube(image,$ii) [$current(frame) get fits slice $ii]
-	    set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $ii]
+    for {set ii 2} {$ii<$naxes} {incr ii} {
+	set dcube(image,$ii) [$current(frame) get fits slice $ii]
+	set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $ii]
+    }
+}
+
+proc UpdateCubeDialogNoImage {} {
+    global icube
+    global dcube
+    global cube
+    global ds9
+
+    set w $icube(top)
+    set mb $icube(mb)
+
+    # reset coord menu
+    CoordMenuReset $mb.coord cube system 2 {} {}
+
+    # disable Axes Reorder
+    $mb entryconfig [msgcat::mc {Axes Order}] -state disabled
+
+    # set from/to
+    set dcube(from,2) 1
+    set dcube(to,2) 1
+    set dcube(from,wcs,2) 1
+    set dcube(to,wcs,2) 1
+
+    # forget everything
+    grid forget $dcube(taxis) $dcube(twcs)
+    for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
+	grid forget $dcube(chk,$ii) $dcube(slider,$ii) $dcube(wcsentry,$ii)
+    }
+
+    # no frame, no checkbox
+    grid columnconfigure $w.param 1 -weight 1
+    grid columnconfigure $w.param 2 -weight 0
+    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+    grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
+
+    # set intervals
+    SliderFromTo $dcube(slider,2) $dcube(from,2) $dcube(to,2)
+    SliderMinMax $dcube(slider,2) $dcube(from,2) $dcube(to,2) 1 4
+    set dcube(vcoord) image
+
+    # reset cube(axis)
+    set cube(axis) 2
+
+    # we must do this after the scale has been configured
+    set dcube(image,2) 1
+    set dcube(wcs,2) 1
+}
+
+proc UpdateCubeDialog2Axes {} {
+    global icube
+    global dcube
+    global cube
+    global ds9
+
+    set w $icube(top)
+    set mb $icube(mb)
+
+    # enable/disable Axes Reorder
+    $mb entryconfig [msgcat::mc {Axes Order}] -state disabled
+
+    # set from/to
+    set dcube(from,2) 1
+    set dcube(to,2) 1
+    set dcube(from,wcs,2) 1
+    set dcube(to,wcs,2) 1
+
+    # forget everything
+    grid forget $dcube(taxis) $dcube(twcs)
+    for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
+	grid forget $dcube(chk,$ii) $dcube(slider,$ii) $dcube(wcsentry,$ii)
+    }
+
+    # show it
+    # special case, no checkbox
+    grid columnconfigure $w.param 1 -weight 1
+    grid columnconfigure $w.param 2 -weight 0
+    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+    switch $cube(system) {
+	image {
+	    grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
+	}
+	default {
+	    grid $dcube(wcsentry,2) $dcube(slider,2) -padx 2 -pady 2 -sticky ew
 	}
     }
+
+    # set intervals
+    SliderFromTo $dcube(slider,2) $dcube(from,2) $dcube(to,2)
+    SliderMinMax $dcube(slider,2) $dcube(from,2) $dcube(to,2) 1 4
+    set dcube(vcoord) image
+
+    # reset cube(axis) if needed
+    set cube(axis) 2
+
+    # we must do this after the scale has been configured
+    set dcube(image,2) 1
+    set dcube(wcs,2) 1
 }
 
 proc UpdateCubeMotionDialog {ii} {

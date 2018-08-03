@@ -565,45 +565,53 @@ proc UpdateCubeDialog {} {
     }
 
     # show it
-    if {[$current(frame) has fits]} {
-	if {$naxes <= 3} {
-	    # special case, no checkbox
-	    grid columnconfigure $w.param 1 -weight 1
-	    grid columnconfigure $w.param 2 -weight 0
-	    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-	    switch $cube(system) {
-		image {
-		    grid x $dcube(slider,2) \
-			-padx 2 -pady 2 -sticky ew
+    if {$current(frame) != {}} {
+	if {[$current(frame) has fits]} {
+	    if {$naxes <= 3} {
+		# special case, no checkbox
+		grid columnconfigure $w.param 1 -weight 1
+		grid columnconfigure $w.param 2 -weight 0
+		grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+		switch $cube(system) {
+		    image {
+			grid x $dcube(slider,2) \
+			    -padx 2 -pady 2 -sticky ew
+		    }
+		    default {
+			grid $dcube(wcsentry,2) $dcube(slider,2) \
+			    -padx 2 -pady 2 -sticky ew
+		    }
 		}
-		default {
-		    grid $dcube(wcsentry,2) $dcube(slider,2) \
-			-padx 2 -pady 2 -sticky ew
+	    } else {
+		grid columnconfigure $w.param 1 -weight 0
+		grid columnconfigure $w.param 2 -weight 1
+		grid $dcube(taxis) x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+		for {set ii 2} {$ii<$naxes} {incr ii} {
+		    switch $cube(system) {
+			image {
+			    grid $dcube(chk,$ii) x \
+				$dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
+			}
+			default {
+			    grid $dcube(chk,$ii) $dcube(wcsentry,$ii) \
+				$dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
+			}
+		    }
 		}
 	    }
 	} else {
-	    grid columnconfigure $w.param 1 -weight 0
-	    grid columnconfigure $w.param 2 -weight 1
-	    grid $dcube(taxis) x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-	    for {set ii 2} {$ii<$naxes} {incr ii} {
-		switch $cube(system) {
-		    image {
-			grid $dcube(chk,$ii) x \
-			    $dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
-		    }
-		    default {
-			grid $dcube(chk,$ii) $dcube(wcsentry,$ii) \
-			    $dcube(slider,$ii) -padx 2 -pady 2 -sticky ew
-		    }
-		}
-	    }
+	    # nothing loaded, no checkbox
+	    grid columnconfigure $w.param 1 -weight 1
+	    grid columnconfigure $w.param 2 -weight 0
+	    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+	    grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
 	}
     } else {
-	# nothing loaded, no checkbox
-	grid columnconfigure $w.param 1 -weight 1
-	grid columnconfigure $w.param 2 -weight 0
-	grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
-	grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
+	    # no frame, no checkbox
+	    grid columnconfigure $w.param 1 -weight 1
+	    grid columnconfigure $w.param 2 -weight 0
+	    grid x $dcube(twcs) -padx 2 -pady 2 -sticky ew
+	    grid x $dcube(slider,2) -padx 2 -pady 2 -sticky ew
     }
 
     # set intervals

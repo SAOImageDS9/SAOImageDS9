@@ -2689,11 +2689,6 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   Vector out = wcsTran(in, 1);
   if (astOK && checkWCS(out)) {
     if (hasWCSCel(sys)) {
-      ostringstream hms;
-      hms << "hms." << context_->parent_->precHMS_;
-      ostringstream dms;
-      dms << "+dms." << context_->parent_->precDMS_;
-
       switch (format) {
       case Coord::DEGREES:
 	out = zero360(radToDeg(out));
@@ -2704,26 +2699,33 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	break;
 
       case Coord::SEXAGESIMAL:
-	out = zeroTWOPI(out);
-	switch (sky) {
-	case Coord::FK4:
-	case Coord::FK4_NO_E:
-	case Coord::FK5:
-	case Coord::ICRS:
-	  setWCSFormat(1,hms.str().c_str());
-	  setWCSFormat(2,dms.str().c_str());
-	  break;
-	case Coord::GALACTIC:
-	case Coord::SUPERGALACTIC:
-	case Coord::ECLIPTIC:
-	case Coord::HELIOECLIPTIC:
-	  setWCSFormat(1,dms.str().c_str());
-	  setWCSFormat(2,dms.str().c_str());
-	  break;
+	{
+	  ostringstream hms;
+	  hms << "hms." << context_->parent_->precHMS_;
+	  ostringstream dms;
+	  dms << "+dms." << context_->parent_->precDMS_;
+
+	  out = zeroTWOPI(out);
+	  switch (sky) {
+	  case Coord::FK4:
+	  case Coord::FK4_NO_E:
+	  case Coord::FK5:
+	  case Coord::ICRS:
+	    setWCSFormat(1,hms.str().c_str());
+	    setWCSFormat(2,dms.str().c_str());
+	    break;
+	  case Coord::GALACTIC:
+	  case Coord::SUPERGALACTIC:
+	  case Coord::ECLIPTIC:
+	  case Coord::HELIOECLIPTIC:
+	    setWCSFormat(1,dms.str().c_str());
+	    setWCSFormat(2,dms.str().c_str());
+	    break;
+	  }
+	  str << astFormat(ast_,1,out[0]) << ' '
+	      << astFormat(ast_,2,out[1]) << ' '
+	      << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	}
-	str << astFormat(ast_,1,out[0]) << ' '
-	    << astFormat(ast_,2,out[1]) << ' '
-	    << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
       }
     }
@@ -2770,11 +2772,6 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   Vector3d out = wcsTran(in, 1);
   if (astOK && checkWCS(out)) {
     if (hasWCSCel(sys)) {
-      ostringstream hms;
-      hms << "hms." << context_->parent_->precHMS_;
-      ostringstream dms;
-      dms << "+dms." << context_->parent_->precDMS_;
-
       switch (format) {
       case Coord::DEGREES:
 	out = zero360(radToDeg(out));
@@ -2784,26 +2781,33 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 	break;
 
       case Coord::SEXAGESIMAL:
-	out = zeroTWOPI(out);
-	switch (sky) {
-	case Coord::FK4:
-	case Coord::FK4_NO_E:
-	case Coord::FK5:
-	case Coord::ICRS:
-	  setWCSFormat(1,hms.str().c_str());
-	  setWCSFormat(2,dms.str().c_str());
-	  break;
-	case Coord::GALACTIC:
-	case Coord::SUPERGALACTIC:
-	case Coord::ECLIPTIC:
-	case Coord::HELIOECLIPTIC:
-	  setWCSFormat(1,dms.str().c_str());
-	  setWCSFormat(2,dms.str().c_str());
-	  break;
+	{
+	  ostringstream hms;
+	  hms << "hms." << context_->parent_->precHMS_;
+	  ostringstream dms;
+	  dms << "+dms." << context_->parent_->precDMS_;
+
+	  out = zeroTWOPI(out);
+	  switch (sky) {
+	  case Coord::FK4:
+	  case Coord::FK4_NO_E:
+	  case Coord::FK5:
+	  case Coord::ICRS:
+	    setWCSFormat(1,hms.str().c_str());
+	    setWCSFormat(2,dms.str().c_str());
+	    break;
+	  case Coord::GALACTIC:
+	  case Coord::SUPERGALACTIC:
+	  case Coord::ECLIPTIC:
+	  case Coord::HELIOECLIPTIC:
+	    setWCSFormat(1,dms.str().c_str());
+	    setWCSFormat(2,dms.str().c_str());
+	    break;
+	  }
+	  str << astFormat(ast_,1,out[0]) << ' '
+	      << astFormat(ast_,2,out[1]) << ' ' << out[2] << ' '
+	      << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	}
-	str << astFormat(ast_,1,out[0]) << ' '
-	    << astFormat(ast_,2,out[1]) << ' ' << out[2] << ' '
-	    << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
 	break;
       }
     }

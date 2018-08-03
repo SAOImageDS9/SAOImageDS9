@@ -59,30 +59,27 @@
      ELLIPSE_ = 275,
      FILENAME_ = 276,
      FK4_ = 277,
-     FK4_NO_E_ = 278,
-     FK5_ = 279,
-     FORMAT_ = 280,
-     GALACTIC_ = 281,
-     GREEN_ = 282,
-     HELIOECLIPTIC_ = 283,
-     HMS_ = 284,
-     ICRS_ = 285,
-     J2000_ = 286,
-     LINE_ = 287,
-     MAGENTA_ = 288,
-     OFF_ = 289,
-     ON_ = 290,
-     PHYSICAL_ = 291,
-     PIXELS_ = 292,
-     POINT_ = 293,
-     POLYGON_ = 294,
-     RED_ = 295,
-     SOURCE_ = 296,
-     SUPERGALACTIC_ = 297,
-     TEXT_ = 298,
-     VERSION_ = 299,
-     WHITE_ = 300,
-     YELLOW_ = 301
+     FK5_ = 278,
+     FORMAT_ = 279,
+     GALACTIC_ = 280,
+     GREEN_ = 281,
+     HMS_ = 282,
+     ICRS_ = 283,
+     J2000_ = 284,
+     LINE_ = 285,
+     MAGENTA_ = 286,
+     OFF_ = 287,
+     ON_ = 288,
+     PHYSICAL_ = 289,
+     PIXELS_ = 290,
+     POINT_ = 291,
+     POLYGON_ = 292,
+     RED_ = 293,
+     SOURCE_ = 294,
+     TEXT_ = 295,
+     VERSION_ = 296,
+     WHITE_ = 297,
+     YELLOW_ = 298
    };
 #endif
 /* Tokens.  */
@@ -106,30 +103,27 @@
 #define ELLIPSE_ 275
 #define FILENAME_ 276
 #define FK4_ 277
-#define FK4_NO_E_ 278
-#define FK5_ 279
-#define FORMAT_ 280
-#define GALACTIC_ 281
-#define GREEN_ 282
-#define HELIOECLIPTIC_ 283
-#define HMS_ 284
-#define ICRS_ 285
-#define J2000_ 286
-#define LINE_ 287
-#define MAGENTA_ 288
-#define OFF_ 289
-#define ON_ 290
-#define PHYSICAL_ 291
-#define PIXELS_ 292
-#define POINT_ 293
-#define POLYGON_ 294
-#define RED_ 295
-#define SOURCE_ 296
-#define SUPERGALACTIC_ 297
-#define TEXT_ 298
-#define VERSION_ 299
-#define WHITE_ 300
-#define YELLOW_ 301
+#define FK5_ 278
+#define FORMAT_ 279
+#define GALACTIC_ 280
+#define GREEN_ 281
+#define HMS_ 282
+#define ICRS_ 283
+#define J2000_ 284
+#define LINE_ 285
+#define MAGENTA_ 286
+#define OFF_ 287
+#define ON_ 288
+#define PHYSICAL_ 289
+#define PIXELS_ 290
+#define POINT_ 291
+#define POLYGON_ 292
+#define RED_ 293
+#define SOURCE_ 294
+#define TEXT_ 295
+#define VERSION_ 296
+#define WHITE_ 297
+#define YELLOW_ 298
 
 
 
@@ -145,7 +139,7 @@ typedef union YYSTYPE
   double vector[3];
 }
 /* Line 1529 of yacc.c.  */
-#line 149 "frame/tngparser.H"
+#line 143 "frame/tngparser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

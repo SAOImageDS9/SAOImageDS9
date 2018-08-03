@@ -88,46 +88,43 @@
      DETECTOR_ = 269,
      ECLIPTIC_ = 270,
      FK4_ = 271,
-     FK4_NO_E_ = 272,
-     FK5_ = 273,
-     GALACTIC_ = 274,
-     HELIOECLIPTIC_ = 275,
-     ICRS_ = 276,
-     IMAGE_ = 277,
-     J2000_ = 278,
-     LOGICAL_ = 279,
-     OFF_ = 280,
-     ON_ = 281,
-     PHYSICAL_ = 282,
-     SUPERGALACTIC_ = 283,
-     VERSION_ = 284,
-     WCS_ = 285,
-     WCSA_ = 286,
-     WCSB_ = 287,
-     WCSC_ = 288,
-     WCSD_ = 289,
-     WCSE_ = 290,
-     WCSF_ = 291,
-     WCSG_ = 292,
-     WCSH_ = 293,
-     WCSI_ = 294,
-     WCSJ_ = 295,
-     WCSK_ = 296,
-     WCSL_ = 297,
-     WCSM_ = 298,
-     WCSN_ = 299,
-     WCSO_ = 300,
-     WCSP_ = 301,
-     WCSQ_ = 302,
-     WCSR_ = 303,
-     WCSS_ = 304,
-     WCST_ = 305,
-     WCSU_ = 306,
-     WCSV_ = 307,
-     WCSW_ = 308,
-     WCSX_ = 309,
-     WCSY_ = 310,
-     WCSZ_ = 311
+     FK5_ = 272,
+     GALACTIC_ = 273,
+     ICRS_ = 274,
+     IMAGE_ = 275,
+     J2000_ = 276,
+     LOGICAL_ = 277,
+     OFF_ = 278,
+     ON_ = 279,
+     PHYSICAL_ = 280,
+     VERSION_ = 281,
+     WCS_ = 282,
+     WCSA_ = 283,
+     WCSB_ = 284,
+     WCSC_ = 285,
+     WCSD_ = 286,
+     WCSE_ = 287,
+     WCSF_ = 288,
+     WCSG_ = 289,
+     WCSH_ = 290,
+     WCSI_ = 291,
+     WCSJ_ = 292,
+     WCSK_ = 293,
+     WCSL_ = 294,
+     WCSM_ = 295,
+     WCSN_ = 296,
+     WCSO_ = 297,
+     WCSP_ = 298,
+     WCSQ_ = 299,
+     WCSR_ = 300,
+     WCSS_ = 301,
+     WCST_ = 302,
+     WCSU_ = 303,
+     WCSV_ = 304,
+     WCSW_ = 305,
+     WCSX_ = 306,
+     WCSY_ = 307,
+     WCSZ_ = 308
    };
 #endif
 /* Tokens.  */
@@ -145,46 +142,43 @@
 #define DETECTOR_ 269
 #define ECLIPTIC_ 270
 #define FK4_ 271
-#define FK4_NO_E_ 272
-#define FK5_ 273
-#define GALACTIC_ 274
-#define HELIOECLIPTIC_ 275
-#define ICRS_ 276
-#define IMAGE_ 277
-#define J2000_ 278
-#define LOGICAL_ 279
-#define OFF_ 280
-#define ON_ 281
-#define PHYSICAL_ 282
-#define SUPERGALACTIC_ 283
-#define VERSION_ 284
-#define WCS_ 285
-#define WCSA_ 286
-#define WCSB_ 287
-#define WCSC_ 288
-#define WCSD_ 289
-#define WCSE_ 290
-#define WCSF_ 291
-#define WCSG_ 292
-#define WCSH_ 293
-#define WCSI_ 294
-#define WCSJ_ 295
-#define WCSK_ 296
-#define WCSL_ 297
-#define WCSM_ 298
-#define WCSN_ 299
-#define WCSO_ 300
-#define WCSP_ 301
-#define WCSQ_ 302
-#define WCSR_ 303
-#define WCSS_ 304
-#define WCST_ 305
-#define WCSU_ 306
-#define WCSV_ 307
-#define WCSW_ 308
-#define WCSX_ 309
-#define WCSY_ 310
-#define WCSZ_ 311
+#define FK5_ 272
+#define GALACTIC_ 273
+#define ICRS_ 274
+#define IMAGE_ 275
+#define J2000_ 276
+#define LOGICAL_ 277
+#define OFF_ 278
+#define ON_ 279
+#define PHYSICAL_ 280
+#define VERSION_ 281
+#define WCS_ 282
+#define WCSA_ 283
+#define WCSB_ 284
+#define WCSC_ 285
+#define WCSD_ 286
+#define WCSE_ 287
+#define WCSF_ 288
+#define WCSG_ 289
+#define WCSH_ 290
+#define WCSI_ 291
+#define WCSJ_ 292
+#define WCSK_ 293
+#define WCSL_ 294
+#define WCSM_ 295
+#define WCSN_ 296
+#define WCSO_ 297
+#define WCSP_ 298
+#define WCSQ_ 299
+#define WCSR_ 300
+#define WCSS_ 301
+#define WCST_ 302
+#define WCSU_ 303
+#define WCSV_ 304
+#define WCSW_ 305
+#define WCSX_ 306
+#define WCSY_ 307
+#define WCSZ_ 308
 
 
 
@@ -255,7 +249,7 @@ typedef union YYSTYPE
   double vector[3];
 }
 /* Line 193 of yacc.c.  */
-#line 259 "frame/xyparser.C"
+#line 253 "frame/xyparser.C"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -268,7 +262,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 272 "frame/xyparser.C"
+#line 266 "frame/xyparser.C"
 
 #ifdef short
 # undef short
@@ -483,20 +477,20 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  3
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   126
+#define YYLAST   118
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  60
+#define YYNTOKENS  57
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  20
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  78
+#define YYNRULES  75
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  91
+#define YYNSTATES  88
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   311
+#define YYMAXUTOK   308
 
 #define YYTRANSLATE(YYX)						\
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -505,11 +499,11 @@ union yyalloc
 static const yytype_uint8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      57,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+      54,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,    59,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    58,
+       2,     2,     2,     2,    56,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    55,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -534,8 +528,7 @@ static const yytype_uint8 yytranslate[] =
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45,    46,    47,    48,    49,    50,    51,    52,    53,    54,
-      55,    56
+      45,    46,    47,    48,    49,    50,    51,    52,    53
 };
 
 #if YYDEBUG
@@ -550,43 +543,42 @@ static const yytype_uint8 yyprhs[] =
       93,    95,    97,    99,   101,   103,   105,   107,   109,   111,
      113,   115,   117,   119,   121,   123,   125,   127,   129,   131,
      133,   135,   137,   139,   141,   143,   145,   147,   149,   151,
-     153,   155,   157,   159,   161,   163,   165,   167,   169
+     153,   155,   157,   159,   161,   163
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
-      61,     0,    -1,    -1,    62,    63,    -1,    63,    64,    69,
-      -1,    64,    69,    -1,    -1,    13,    71,    -1,    29,    -1,
-      77,    -1,    77,    78,    -1,    -1,    65,    79,    66,    -1,
-      -1,    67,    -1,    67,    68,    -1,    68,    -1,    70,    -1,
-      57,    -1,    58,    -1,     9,    -1,     4,    -1,     3,    -1,
-      26,    -1,    25,    -1,    -1,    59,    -1,     6,    -1,     7,
-      -1,     8,    -1,    73,    72,    73,    -1,    74,    72,    75,
-      -1,    75,    72,    75,    -1,    70,    72,    70,    -1,     5,
-      72,     5,    -1,    22,    -1,    24,    -1,    27,    -1,    12,
-      -1,    10,    -1,    14,    -1,    30,    -1,    31,    -1,    32,
-      -1,    33,    -1,    34,    -1,    35,    -1,    36,    -1,    37,
-      -1,    38,    -1,    39,    -1,    40,    -1,    41,    -1,    42,
-      -1,    43,    -1,    44,    -1,    45,    -1,    46,    -1,    47,
-      -1,    48,    -1,    49,    -1,    50,    -1,    51,    -1,    52,
-      -1,    53,    -1,    54,    -1,    55,    -1,    56,    -1,    16,
-      -1,    11,    -1,    17,    -1,    18,    -1,    23,    -1,    21,
-      -1,    19,    -1,    28,    -1,    15,    -1,    20,    -1,    76,
-      -1
+      58,     0,    -1,    -1,    59,    60,    -1,    60,    61,    66,
+      -1,    61,    66,    -1,    -1,    13,    68,    -1,    26,    -1,
+      74,    -1,    74,    75,    -1,    -1,    62,    76,    63,    -1,
+      -1,    64,    -1,    64,    65,    -1,    65,    -1,    67,    -1,
+      54,    -1,    55,    -1,     9,    -1,     4,    -1,     3,    -1,
+      24,    -1,    23,    -1,    -1,    56,    -1,     6,    -1,     7,
+      -1,     8,    -1,    70,    69,    70,    -1,    71,    69,    72,
+      -1,    72,    69,    72,    -1,    67,    69,    67,    -1,     5,
+      69,     5,    -1,    20,    -1,    22,    -1,    25,    -1,    12,
+      -1,    10,    -1,    14,    -1,    27,    -1,    28,    -1,    29,
+      -1,    30,    -1,    31,    -1,    32,    -1,    33,    -1,    34,
+      -1,    35,    -1,    36,    -1,    37,    -1,    38,    -1,    39,
+      -1,    40,    -1,    41,    -1,    42,    -1,    43,    -1,    44,
+      -1,    45,    -1,    46,    -1,    47,    -1,    48,    -1,    49,
+      -1,    50,    -1,    51,    -1,    52,    -1,    53,    -1,    16,
+      -1,    11,    -1,    17,    -1,    21,    -1,    19,    -1,    18,
+      -1,    15,    -1,    73,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   123,   123,   123,   129,   130,   133,   134,   135,   136,
-     137,   139,   139,   142,   143,   146,   147,   150,   153,   154,
-     155,   158,   159,   162,   163,   166,   167,   170,   173,   176,
-     179,   190,   197,   204,   211,   220,   221,   222,   223,   224,
-     225,   226,   227,   228,   229,   230,   231,   232,   233,   234,
-     235,   236,   237,   238,   239,   240,   241,   242,   243,   244,
-     245,   246,   247,   248,   249,   250,   251,   252,   255,   256,
-     257,   258,   259,   260,   261,   262,   263,   264,   267
+       0,   120,   120,   120,   126,   127,   130,   131,   132,   133,
+     134,   136,   136,   139,   140,   143,   144,   147,   150,   151,
+     152,   155,   156,   159,   160,   163,   164,   167,   170,   173,
+     176,   187,   194,   201,   208,   217,   218,   219,   220,   221,
+     222,   223,   224,   225,   226,   227,   228,   229,   230,   231,
+     232,   233,   234,   235,   236,   237,   238,   239,   240,   241,
+     242,   243,   244,   245,   246,   247,   248,   249,   252,   253,
+     254,   255,   256,   257,   258,   261
 };
 #endif
 
@@ -597,15 +589,15 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "INT", "REAL", "ANGDEGREE", "SEXSTR",
   "HMSSTR", "DMSSTR", "EOF_", "AMPLIFIER_", "B1950_", "CCD_", "DEBUG_",
-  "DETECTOR_", "ECLIPTIC_", "FK4_", "FK4_NO_E_", "FK5_", "GALACTIC_",
-  "HELIOECLIPTIC_", "ICRS_", "IMAGE_", "J2000_", "LOGICAL_", "OFF_", "ON_",
-  "PHYSICAL_", "SUPERGALACTIC_", "VERSION_", "WCS_", "WCSA_", "WCSB_",
-  "WCSC_", "WCSD_", "WCSE_", "WCSF_", "WCSG_", "WCSH_", "WCSI_", "WCSJ_",
-  "WCSK_", "WCSL_", "WCSM_", "WCSN_", "WCSO_", "WCSP_", "WCSQ_", "WCSR_",
-  "WCSS_", "WCST_", "WCSU_", "WCSV_", "WCSW_", "WCSX_", "WCSY_", "WCSZ_",
-  "'\\n'", "';'", "','", "$accept", "start", "@1", "commands", "command",
-  "@2", "comment", "junks", "junk", "terminator", "numeric", "debug", "sp",
-  "sexagesimal", "hms", "dms", "coord", "coordSystem", "skyFrame", "shape", 0
+  "DETECTOR_", "ECLIPTIC_", "FK4_", "FK5_", "GALACTIC_", "ICRS_", "IMAGE_",
+  "J2000_", "LOGICAL_", "OFF_", "ON_", "PHYSICAL_", "VERSION_", "WCS_",
+  "WCSA_", "WCSB_", "WCSC_", "WCSD_", "WCSE_", "WCSF_", "WCSG_", "WCSH_",
+  "WCSI_", "WCSJ_", "WCSK_", "WCSL_", "WCSM_", "WCSN_", "WCSO_", "WCSP_",
+  "WCSQ_", "WCSR_", "WCSS_", "WCST_", "WCSU_", "WCSV_", "WCSW_", "WCSX_",
+  "WCSY_", "WCSZ_", "'\\n'", "';'", "','", "$accept", "start", "@1",
+  "commands", "command", "@2", "comment", "junks", "junk", "terminator",
+  "numeric", "debug", "sp", "sexagesimal", "hms", "dms", "coord",
+  "coordSystem", "skyFrame", "shape", 0
 };
 #endif
 
@@ -619,21 +611,21 @@ static const yytype_uint16 yytoknum[] =
      275,   276,   277,   278,   279,   280,   281,   282,   283,   284,
      285,   286,   287,   288,   289,   290,   291,   292,   293,   294,
      295,   296,   297,   298,   299,   300,   301,   302,   303,   304,
-     305,   306,   307,   308,   309,   310,   311,    10,    59,    44
+     305,   306,   307,   308,    10,    59,    44
 };
 # endif
 
 /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    60,    62,    61,    63,    63,    64,    64,    64,    64,
-      64,    65,    64,    66,    66,    67,    67,    68,    69,    69,
-      69,    70,    70,    71,    71,    72,    72,    73,    74,    75,
-      76,    76,    76,    76,    76,    77,    77,    77,    77,    77,
-      77,    77,    77,    77,    77,    77,    77,    77,    77,    77,
-      77,    77,    77,    77,    77,    77,    77,    77,    77,    77,
-      77,    77,    77,    77,    77,    77,    77,    77,    78,    78,
-      78,    78,    78,    78,    78,    78,    78,    78,    79
+       0,    57,    59,    58,    60,    60,    61,    61,    61,    61,
+      61,    62,    61,    63,    63,    64,    64,    65,    66,    66,
+      66,    67,    67,    68,    68,    69,    69,    70,    71,    72,
+      73,    73,    73,    73,    73,    74,    74,    74,    74,    74,
+      74,    74,    74,    74,    74,    74,    74,    74,    74,    74,
+      74,    74,    74,    74,    74,    74,    74,    74,    74,    74,
+      74,    74,    74,    74,    74,    74,    74,    74,    75,    75,
+      75,    75,    75,    75,    75,    76
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -646,7 +638,7 @@ static const yytype_uint8 yyr2[] =
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1,     1,     1,     1,     1
+       1,     1,     1,     1,     1,     1
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -660,41 +652,39 @@ static const yytype_uint8 yydefact[] =
       59,    60,    61,    62,    63,    64,    65,    66,    67,    11,
        0,     0,     9,    24,    23,     7,     0,    20,    18,    19,
        5,    22,    21,    25,    27,    28,    29,    25,    25,    25,
-      25,    78,    13,    69,    76,    68,    70,    71,    74,    77,
-      73,    72,    75,    10,     4,    26,     0,     0,     0,     0,
-       0,    12,    14,    16,    17,    34,    33,    30,    31,    32,
-      15
+      25,    75,    13,    69,    74,    68,    70,    73,    72,    71,
+      10,     4,    26,     0,     0,     0,     0,     0,    12,    14,
+      16,    17,    34,    33,    30,    31,    32,    15
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     1,     2,    39,    40,    41,    81,    82,    83,    50,
-      84,    45,    76,    58,    59,    60,    61,    42,    73,    62
+      -1,     1,     2,    39,    40,    41,    78,    79,    80,    50,
+      81,    45,    73,    58,    59,    60,    61,    42,    70,    62
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -40
+#define YYPACT_NINF -59
 static const yytype_int8 yypact[] =
 {
-     -40,    11,    50,   -40,   -40,   -40,   -18,   -40,   -40,   -40,
-     -40,   -40,   -40,   -40,   -40,   -40,   -40,   -40,   -40,   -40,
-     -40,   -40,   -40,   -40,   -40,   -40,   -40,   -40,   -40,   -40,
-     -40,   -40,   -40,   -40,   -40,   -40,   -40,   -40,   -40,     0,
-       8,    -2,    98,   -40,   -40,   -40,     8,   -40,   -40,   -40,
-     -40,   -40,   -40,   -36,   -40,   -40,   -40,   -36,   -36,   -36,
-     -36,   -40,    12,   -40,   -40,   -40,   -40,   -40,   -40,   -40,
-     -40,   -40,   -40,   -40,   -40,   -40,    21,    12,    22,    61,
-      61,   -40,    12,   -40,   -40,   -40,   -40,   -40,   -40,   -40,
-     -40
+     -59,    11,    47,   -59,   -59,   -59,   -16,   -59,   -59,   -59,
+     -59,   -59,   -59,   -59,   -59,   -59,   -59,   -59,   -59,   -59,
+     -59,   -59,   -59,   -59,   -59,   -59,   -59,   -59,   -59,   -59,
+     -59,   -59,   -59,   -59,   -59,   -59,   -59,   -59,   -59,     0,
+       8,    -2,    93,   -59,   -59,   -59,     8,   -59,   -59,   -59,
+     -59,   -59,   -59,   -35,   -59,   -59,   -59,   -35,   -35,   -35,
+     -35,   -59,    12,   -59,   -59,   -59,   -59,   -59,   -59,   -59,
+     -59,   -59,   -59,    18,    12,    52,    16,    16,   -59,    12,
+     -59,   -59,   -59,   -59,   -59,   -59,   -59,   -59
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -40,   -40,   -40,   -40,    31,   -40,   -40,   -40,   -11,    27,
-     -16,   -40,   -39,    -3,   -40,   -12,   -40,   -40,   -40,   -40
+     -59,   -59,   -59,   -59,    25,   -59,   -59,   -59,   -14,    20,
+      29,   -59,    58,    -7,   -59,   -58,   -59,   -59,   -59,   -59
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -705,51 +695,48 @@ static const yytype_int8 yypgoto[] =
 static const yytype_int8 yytable[] =
 {
       -3,    51,    52,    53,    54,    55,    56,    43,    44,    -6,
-       4,     3,     5,     6,     7,    51,    52,    47,    77,    78,
-      79,    80,     8,    75,     9,    57,    85,    10,    54,    11,
-      12,    13,    14,    15,    16,    17,    18,    19,    20,    21,
-      22,    23,    24,    25,    26,    27,    28,    29,    30,    31,
-      32,    33,    34,    35,    36,    37,    38,    -6,    -6,    -6,
-       4,    86,     5,     6,     7,    48,    49,    88,    89,    56,
-      46,    90,     8,    74,     9,    87,     0,    10,     0,    11,
-      12,    13,    14,    15,    16,    17,    18,    19,    20,    21,
-      22,    23,    24,    25,    26,    27,    28,    29,    30,    31,
-      32,    33,    34,    35,    36,    37,    38,    -6,    -6,    63,
-       0,     0,     0,    64,    65,    66,    67,    68,    69,    70,
-       0,    71,     0,     0,     0,     0,    72
+       4,     3,     5,     6,     7,    51,    52,    47,    85,    86,
+       8,    72,     9,    82,    56,    10,    11,    12,    13,    14,
+      15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    36,    37,    38,    -6,    -6,    -6,     4,    54,     5,
+       6,     7,    48,    49,    46,    87,    71,     8,    84,     9,
+      57,     0,    10,    11,    12,    13,    14,    15,    16,    17,
+      18,    19,    20,    21,    22,    23,    24,    25,    26,    27,
+      28,    29,    30,    31,    32,    33,    34,    35,    36,    37,
+      38,    -6,    -6,    83,    63,     0,     0,     0,    64,    65,
+      66,    67,    68,     0,    69,    74,    75,    76,    77
 };
 
 static const yytype_int8 yycheck[] =
 {
-       0,     3,     4,     5,     6,     7,     8,    25,    26,     9,
-      10,     0,    12,    13,    14,     3,     4,     9,    57,    58,
-      59,    60,    22,    59,    24,    41,     5,    27,     6,    29,
+       0,     3,     4,     5,     6,     7,     8,    23,    24,     9,
+      10,     0,    12,    13,    14,     3,     4,     9,    76,    77,
+      20,    56,    22,     5,     8,    25,    26,    27,    28,    29,
       30,    31,    32,    33,    34,    35,    36,    37,    38,    39,
       40,    41,    42,    43,    44,    45,    46,    47,    48,    49,
-      50,    51,    52,    53,    54,    55,    56,    57,    58,     9,
-      10,    77,    12,    13,    14,    57,    58,    79,    80,     8,
-      39,    82,    22,    46,    24,    78,    -1,    27,    -1,    29,
-      30,    31,    32,    33,    34,    35,    36,    37,    38,    39,
-      40,    41,    42,    43,    44,    45,    46,    47,    48,    49,
-      50,    51,    52,    53,    54,    55,    56,    57,    58,    11,
-      -1,    -1,    -1,    15,    16,    17,    18,    19,    20,    21,
-      -1,    23,    -1,    -1,    -1,    -1,    28
+      50,    51,    52,    53,    54,    55,     9,    10,     6,    12,
+      13,    14,    54,    55,    39,    79,    46,    20,    75,    22,
+      41,    -1,    25,    26,    27,    28,    29,    30,    31,    32,
+      33,    34,    35,    36,    37,    38,    39,    40,    41,    42,
+      43,    44,    45,    46,    47,    48,    49,    50,    51,    52,
+      53,    54,    55,    74,    11,    -1,    -1,    -1,    15,    16,
+      17,    18,    19,    -1,    21,    57,    58,    59,    60
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
    symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    61,    62,     0,    10,    12,    13,    14,    22,    24,
-      27,    29,    30,    31,    32,    33,    34,    35,    36,    37,
-      38,    39,    40,    41,    42,    43,    44,    45,    46,    47,
-      48,    49,    50,    51,    52,    53,    54,    55,    56,    63,
-      64,    65,    77,    25,    26,    71,    64,     9,    57,    58,
-      69,     3,     4,     5,     6,     7,     8,    70,    73,    74,
-      75,    76,    79,    11,    15,    16,    17,    18,    19,    20,
-      21,    23,    28,    78,    69,    59,    72,    72,    72,    72,
-      72,    66,    67,    68,    70,     5,    70,    73,    75,    75,
-      68
+       0,    58,    59,     0,    10,    12,    13,    14,    20,    22,
+      25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
+      45,    46,    47,    48,    49,    50,    51,    52,    53,    60,
+      61,    62,    74,    23,    24,    68,    61,     9,    54,    55,
+      66,     3,     4,     5,     6,     7,     8,    67,    70,    71,
+      72,    73,    76,    11,    15,    16,    17,    18,    19,    21,
+      75,    66,    56,    69,    69,    69,    69,    69,    63,    64,
+      65,    67,     5,    67,    70,    72,    72,    65
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1577,7 +1564,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 123 "frame/xyparser.Y"
+#line 120 "frame/xyparser.Y"
     {
 	    globalSystem = fr->xySystem(); 
 	    globalSky = fr->xySky();
@@ -1585,72 +1572,72 @@ yyreduce:
     break;
 
   case 8:
-#line 135 "frame/xyparser.Y"
+#line 132 "frame/xyparser.Y"
     {cerr << "X Y Format 1.0" << endl;;}
     break;
 
   case 9:
-#line 136 "frame/xyparser.Y"
+#line 133 "frame/xyparser.Y"
     {globalSystem = (Coord::CoordSystem)(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 10:
-#line 138 "frame/xyparser.Y"
+#line 135 "frame/xyparser.Y"
     {globalSystem = (Coord::CoordSystem)(yyvsp[(1) - (2)].integer); globalSky = (Coord::SkyFrame)(yyvsp[(2) - (2)].integer);;}
     break;
 
   case 11:
-#line 139 "frame/xyparser.Y"
+#line 136 "frame/xyparser.Y"
     {localSystem = globalSystem; localSky = globalSky; maperr = 0;;}
     break;
 
   case 17:
-#line 150 "frame/xyparser.Y"
+#line 147 "frame/xyparser.Y"
     {;}
     break;
 
   case 20:
-#line 155 "frame/xyparser.Y"
+#line 152 "frame/xyparser.Y"
     {YYACCEPT;;}
     break;
 
   case 21:
-#line 158 "frame/xyparser.Y"
+#line 155 "frame/xyparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].real);;}
     break;
 
   case 22:
-#line 159 "frame/xyparser.Y"
+#line 156 "frame/xyparser.Y"
     {(yyval.real)=(yyvsp[(1) - (1)].integer);;}
     break;
 
   case 23:
-#line 162 "frame/xyparser.Y"
+#line 159 "frame/xyparser.Y"
     {yydebug=1;;}
     break;
 
   case 24:
-#line 163 "frame/xyparser.Y"
+#line 160 "frame/xyparser.Y"
     {yydebug=0;;}
     break;
 
   case 27:
-#line 170 "frame/xyparser.Y"
+#line 167 "frame/xyparser.Y"
     {(yyval.real) = parseSEXStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 28:
-#line 173 "frame/xyparser.Y"
+#line 170 "frame/xyparser.Y"
     {(yyval.real) = parseHMSStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 29:
-#line 176 "frame/xyparser.Y"
+#line 173 "frame/xyparser.Y"
     {(yyval.real) = parseDMSStr((yyvsp[(1) - (1)].str));;}
     break;
 
   case 30:
-#line 180 "frame/xyparser.Y"
+#line 177 "frame/xyparser.Y"
     {
 	  Vector r;
 	  if (localSky == Coord::GALACTIC || localSky == Coord::ECLIPTIC) 
@@ -1664,7 +1651,7 @@ yyreduce:
     break;
 
   case 31:
-#line 191 "frame/xyparser.Y"
+#line 188 "frame/xyparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),localSystem,localSky);
 	  (yyval.vector)[0] = r[0];
@@ -1674,7 +1661,7 @@ yyreduce:
     break;
 
   case 32:
-#line 198 "frame/xyparser.Y"
+#line 195 "frame/xyparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),localSystem,localSky);
 	  (yyval.vector)[0] = r[0];
@@ -1684,7 +1671,7 @@ yyreduce:
     break;
 
   case 33:
-#line 205 "frame/xyparser.Y"
+#line 202 "frame/xyparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),localSystem,localSky);
 	  (yyval.vector)[0] = r[0];
@@ -1694,7 +1681,7 @@ yyreduce:
     break;
 
   case 34:
-#line 212 "frame/xyparser.Y"
+#line 209 "frame/xyparser.Y"
     {
 	  Vector r = FITSPTR->mapToRef(Vector((yyvsp[(1) - (3)].real),(yyvsp[(3) - (3)].real)),localSystem,localSky);
 	  (yyval.vector)[0] = r[0];
@@ -1704,222 +1691,207 @@ yyreduce:
     break;
 
   case 35:
-#line 220 "frame/xyparser.Y"
+#line 217 "frame/xyparser.Y"
     {(yyval.integer) = Coord::IMAGE;;}
     break;
 
   case 36:
-#line 221 "frame/xyparser.Y"
+#line 218 "frame/xyparser.Y"
     {(yyval.integer) = Coord::IMAGE;;}
     break;
 
   case 37:
-#line 222 "frame/xyparser.Y"
+#line 219 "frame/xyparser.Y"
     {(yyval.integer) = Coord::PHYSICAL;;}
     break;
 
   case 38:
-#line 223 "frame/xyparser.Y"
+#line 220 "frame/xyparser.Y"
     {(yyval.integer) = Coord::PHYSICAL;;}
     break;
 
   case 39:
-#line 224 "frame/xyparser.Y"
+#line 221 "frame/xyparser.Y"
     {(yyval.integer) = Coord::AMPLIFIER;;}
     break;
 
   case 40:
-#line 225 "frame/xyparser.Y"
+#line 222 "frame/xyparser.Y"
     {(yyval.integer) = Coord::DETECTOR;;}
     break;
 
   case 41:
-#line 226 "frame/xyparser.Y"
+#line 223 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCS;;}
     break;
 
   case 42:
-#line 227 "frame/xyparser.Y"
+#line 224 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSA;;}
     break;
 
   case 43:
-#line 228 "frame/xyparser.Y"
+#line 225 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSB;;}
     break;
 
   case 44:
-#line 229 "frame/xyparser.Y"
+#line 226 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSC;;}
     break;
 
   case 45:
-#line 230 "frame/xyparser.Y"
+#line 227 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSD;;}
     break;
 
   case 46:
-#line 231 "frame/xyparser.Y"
+#line 228 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSE;;}
     break;
 
   case 47:
-#line 232 "frame/xyparser.Y"
+#line 229 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSF;;}
     break;
 
   case 48:
-#line 233 "frame/xyparser.Y"
+#line 230 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSG;;}
     break;
 
   case 49:
-#line 234 "frame/xyparser.Y"
+#line 231 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSH;;}
     break;
 
   case 50:
-#line 235 "frame/xyparser.Y"
+#line 232 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSI;;}
     break;
 
   case 51:
-#line 236 "frame/xyparser.Y"
+#line 233 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSJ;;}
     break;
 
   case 52:
-#line 237 "frame/xyparser.Y"
+#line 234 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSK;;}
     break;
 
   case 53:
-#line 238 "frame/xyparser.Y"
+#line 235 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSL;;}
     break;
 
   case 54:
-#line 239 "frame/xyparser.Y"
+#line 236 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSM;;}
     break;
 
   case 55:
-#line 240 "frame/xyparser.Y"
+#line 237 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSN;;}
     break;
 
   case 56:
-#line 241 "frame/xyparser.Y"
+#line 238 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSO;;}
     break;
 
   case 57:
-#line 242 "frame/xyparser.Y"
+#line 239 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSP;;}
     break;
 
   case 58:
-#line 243 "frame/xyparser.Y"
+#line 240 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSQ;;}
     break;
 
   case 59:
-#line 244 "frame/xyparser.Y"
+#line 241 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSR;;}
     break;
 
   case 60:
-#line 245 "frame/xyparser.Y"
+#line 242 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSS;;}
     break;
 
   case 61:
-#line 246 "frame/xyparser.Y"
+#line 243 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCST;;}
     break;
 
   case 62:
-#line 247 "frame/xyparser.Y"
+#line 244 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSU;;}
     break;
 
   case 63:
-#line 248 "frame/xyparser.Y"
+#line 245 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSV;;}
     break;
 
   case 64:
-#line 249 "frame/xyparser.Y"
+#line 246 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSW;;}
     break;
 
   case 65:
-#line 250 "frame/xyparser.Y"
+#line 247 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSX;;}
     break;
 
   case 66:
-#line 251 "frame/xyparser.Y"
+#line 248 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSY;;}
     break;
 
   case 67:
-#line 252 "frame/xyparser.Y"
+#line 249 "frame/xyparser.Y"
     {(yyval.integer) = Coord::WCSZ;;}
     break;
 
   case 68:
-#line 255 "frame/xyparser.Y"
+#line 252 "frame/xyparser.Y"
     {(yyval.integer) = Coord::FK4;;}
     break;
 
   case 69:
-#line 256 "frame/xyparser.Y"
+#line 253 "frame/xyparser.Y"
     {(yyval.integer) = Coord::FK4;;}
     break;
 
   case 70:
-#line 257 "frame/xyparser.Y"
-    {(yyval.integer) = Coord::FK4_NO_E;;}
+#line 254 "frame/xyparser.Y"
+    {(yyval.integer) = Coord::FK5;;}
     break;
 
   case 71:
-#line 258 "frame/xyparser.Y"
+#line 255 "frame/xyparser.Y"
     {(yyval.integer) = Coord::FK5;;}
     break;
 
   case 72:
-#line 259 "frame/xyparser.Y"
-    {(yyval.integer) = Coord::FK5;;}
-    break;
-
-  case 73:
-#line 260 "frame/xyparser.Y"
+#line 256 "frame/xyparser.Y"
     {(yyval.integer) = Coord::ICRS;;}
     break;
 
-  case 74:
-#line 261 "frame/xyparser.Y"
+  case 73:
+#line 257 "frame/xyparser.Y"
     {(yyval.integer) = Coord::GALACTIC;;}
     break;
 
-  case 75:
-#line 262 "frame/xyparser.Y"
-    {(yyval.integer) = Coord::SUPERGALACTIC;;}
-    break;
-
-  case 76:
-#line 263 "frame/xyparser.Y"
+  case 74:
+#line 258 "frame/xyparser.Y"
     {(yyval.integer) = Coord::ECLIPTIC;;}
     break;
 
-  case 77:
-#line 264 "frame/xyparser.Y"
-    {(yyval.integer) = Coord::HELIOECLIPTIC;;}
-    break;
-
-  case 78:
-#line 267 "frame/xyparser.Y"
+  case 75:
+#line 261 "frame/xyparser.Y"
     {fr->createPointCmd(Vector((yyvsp[(1) - (1)].vector)), Point::BOXCIRCLE, POINTSIZE, 
 	    color,dash,1,font,text,
 	    Marker::SELECT | Marker::EDIT | Marker::MOVE | Marker::ROTATE | 
@@ -1931,7 +1903,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 1935 "frame/xyparser.C"
+#line 1907 "frame/xyparser.C"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2145,6 +2117,6 @@ yyreturn:
 }
 
 
-#line 276 "frame/xyparser.Y"
+#line 270 "frame/xyparser.Y"
 
 

@@ -59,55 +59,52 @@
      ECLIPTIC_ = 275,
      FALSE_ = 276,
      FK4_ = 277,
-     FK4_NO_E_ = 278,
-     FK5_ = 279,
-     GALACTIC_ = 280,
-     GLOBAL_ = 281,
-     HELIOECLIPTIC_ = 282,
-     ICRS_ = 283,
-     IMAGE_ = 284,
-     J2000_ = 285,
-     LEVEL_ = 286,
-     LEVELS_ = 287,
-     LINEAR_ = 288,
-     N_ = 289,
-     NO_ = 290,
-     OFF_ = 291,
-     ON_ = 292,
-     PHYSICAL_ = 293,
-     SUPERGALACTIC_ = 294,
-     TRUE_ = 295,
-     VERSION_ = 296,
-     WCS_ = 297,
-     WCSA_ = 298,
-     WCSB_ = 299,
-     WCSC_ = 300,
-     WCSD_ = 301,
-     WCSE_ = 302,
-     WCSF_ = 303,
-     WCSG_ = 304,
-     WCSH_ = 305,
-     WCSI_ = 306,
-     WCSJ_ = 307,
-     WCSK_ = 308,
-     WCSL_ = 309,
-     WCSM_ = 310,
-     WCSN_ = 311,
-     WCSO_ = 312,
-     WCSP_ = 313,
-     WCSQ_ = 314,
-     WCSR_ = 315,
-     WCSS_ = 316,
-     WCST_ = 317,
-     WCSU_ = 318,
-     WCSV_ = 319,
-     WCSW_ = 320,
-     WCSX_ = 321,
-     WCSY_ = 322,
-     WCSZ_ = 323,
-     WIDTH_ = 324,
-     Y_ = 325,
-     YES_ = 326
+     FK5_ = 278,
+     GALACTIC_ = 279,
+     GLOBAL_ = 280,
+     ICRS_ = 281,
+     IMAGE_ = 282,
+     J2000_ = 283,
+     LEVEL_ = 284,
+     LEVELS_ = 285,
+     LINEAR_ = 286,
+     N_ = 287,
+     NO_ = 288,
+     OFF_ = 289,
+     ON_ = 290,
+     PHYSICAL_ = 291,
+     TRUE_ = 292,
+     VERSION_ = 293,
+     WCS_ = 294,
+     WCSA_ = 295,
+     WCSB_ = 296,
+     WCSC_ = 297,
+     WCSD_ = 298,
+     WCSE_ = 299,
+     WCSF_ = 300,
+     WCSG_ = 301,
+     WCSH_ = 302,
+     WCSI_ = 303,
+     WCSJ_ = 304,
+     WCSK_ = 305,
+     WCSL_ = 306,
+     WCSM_ = 307,
+     WCSN_ = 308,
+     WCSO_ = 309,
+     WCSP_ = 310,
+     WCSQ_ = 311,
+     WCSR_ = 312,
+     WCSS_ = 313,
+     WCST_ = 314,
+     WCSU_ = 315,
+     WCSV_ = 316,
+     WCSW_ = 317,
+     WCSX_ = 318,
+     WCSY_ = 319,
+     WCSZ_ = 320,
+     WIDTH_ = 321,
+     Y_ = 322,
+     YES_ = 323
    };
 #endif
 /* Tokens.  */
@@ -131,55 +128,52 @@
 #define ECLIPTIC_ 275
 #define FALSE_ 276
 #define FK4_ 277
-#define FK4_NO_E_ 278
-#define FK5_ 279
-#define GALACTIC_ 280
-#define GLOBAL_ 281
-#define HELIOECLIPTIC_ 282
-#define ICRS_ 283
-#define IMAGE_ 284
-#define J2000_ 285
-#define LEVEL_ 286
-#define LEVELS_ 287
-#define LINEAR_ 288
-#define N_ 289
-#define NO_ 290
-#define OFF_ 291
-#define ON_ 292
-#define PHYSICAL_ 293
-#define SUPERGALACTIC_ 294
-#define TRUE_ 295
-#define VERSION_ 296
-#define WCS_ 297
-#define WCSA_ 298
-#define WCSB_ 299
-#define WCSC_ 300
-#define WCSD_ 301
-#define WCSE_ 302
-#define WCSF_ 303
-#define WCSG_ 304
-#define WCSH_ 305
-#define WCSI_ 306
-#define WCSJ_ 307
-#define WCSK_ 308
-#define WCSL_ 309
-#define WCSM_ 310
-#define WCSN_ 311
-#define WCSO_ 312
-#define WCSP_ 313
-#define WCSQ_ 314
-#define WCSR_ 315
-#define WCSS_ 316
-#define WCST_ 317
-#define WCSU_ 318
-#define WCSV_ 319
-#define WCSW_ 320
-#define WCSX_ 321
-#define WCSY_ 322
-#define WCSZ_ 323
-#define WIDTH_ 324
-#define Y_ 325
-#define YES_ 326
+#define FK5_ 278
+#define GALACTIC_ 279
+#define GLOBAL_ 280
+#define ICRS_ 281
+#define IMAGE_ 282
+#define J2000_ 283
+#define LEVEL_ 284
+#define LEVELS_ 285
+#define LINEAR_ 286
+#define N_ 287
+#define NO_ 288
+#define OFF_ 289
+#define ON_ 290
+#define PHYSICAL_ 291
+#define TRUE_ 292
+#define VERSION_ 293
+#define WCS_ 294
+#define WCSA_ 295
+#define WCSB_ 296
+#define WCSC_ 297
+#define WCSD_ 298
+#define WCSE_ 299
+#define WCSF_ 300
+#define WCSG_ 301
+#define WCSH_ 302
+#define WCSI_ 303
+#define WCSJ_ 304
+#define WCSK_ 305
+#define WCSL_ 306
+#define WCSM_ 307
+#define WCSN_ 308
+#define WCSO_ 309
+#define WCSP_ 310
+#define WCSQ_ 311
+#define WCSR_ 312
+#define WCSS_ 313
+#define WCST_ 314
+#define WCSU_ 315
+#define WCSV_ 316
+#define WCSW_ 317
+#define WCSX_ 318
+#define WCSY_ 319
+#define WCSZ_ 320
+#define WIDTH_ 321
+#define Y_ 322
+#define YES_ 323
 
 
 
@@ -195,7 +189,7 @@ typedef union YYSTYPE
   double vector[3];
 }
 /* Line 1529 of yacc.c.  */
-#line 199 "frame/contourparser.H"
+#line 193 "frame/contourparser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

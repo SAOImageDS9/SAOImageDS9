@@ -101,12 +101,10 @@ static Coord::SkyFrame checkWCSSky();
 %token ELLIPSE_
 %token FILENAME_
 %token FK4_
-%token FK4_NO_E_
 %token FK5_
 %token FORMAT_
 %token GALACTIC_
 %token GREEN_
-%token HELIOECLIPTIC_
 %token HMS_
 %token ICRS_
 %token J2000_
@@ -120,7 +118,6 @@ static Coord::SkyFrame checkWCSSky();
 %token POLYGON_
 %token RED_
 %token SOURCE_
-%token SUPERGALACTIC_
 %token TEXT_
 %token VERSION_
 %token WHITE_
@@ -223,14 +220,11 @@ coord	: sexagesimal sp sexagesimal
 
 skyFrame : FK4_ {$$ = Coord::FK4;}
 	| B1950_ {$$ = Coord::FK4;}
-	| FK4_NO_E_ {$$ = Coord::FK4_NO_E;}
 	| FK5_ {$$ = Coord::FK5;}
 	| J2000_ {$$ = Coord::FK5;}
 	| ICRS_ {$$ = Coord::ICRS;}
 	| GALACTIC_ {$$ = Coord::GALACTIC;}
-	| SUPERGALACTIC_ {$$ = Coord::SUPERGALACTIC;}
 	| ECLIPTIC_ {$$ = Coord::ECLIPTIC;}
-	| HELIOECLIPTIC_ {$$ = Coord::HELIOECLIPTIC;}
 	;
 
 initGlobal:{

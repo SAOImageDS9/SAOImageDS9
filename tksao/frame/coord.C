@@ -45,13 +45,10 @@ static const char* coordSystemStr_[] = {
 
 static const char* skyFrameStr_[] = { 
     "fk4",
-    "fk4-no-e",
     "fk5",
     "icrs",
     "galactic",
-    "supergalactic",
     "ecliptic",
-    "helioecliptic",
     "gappt"
   };
 
@@ -109,9 +106,6 @@ void Coord::listCoordSystem(ostream& str, CoordSystem sys, SkyFrame sky,
       case FK4:
 	str << "fk4";
 	return;
-      case FK4_NO_E:
-	str << "fk4-no-e";
-	return;
       case FK5:
 	str << "fk5";
 	return;
@@ -121,14 +115,8 @@ void Coord::listCoordSystem(ostream& str, CoordSystem sys, SkyFrame sky,
       case GALACTIC:
 	str << "galactic";
 	return;
-      case SUPERGALACTIC:
-	str << "supergalactic";
-	return;
       case ECLIPTIC:
 	str << "ecliptic";
-	return;
-      case HELIOECLIPTIC:
-	str << "helioecliptic";
 	return;
       }
     }
@@ -198,9 +186,6 @@ void Coord::listDistSystem(ostream& str, CoordSystem sys, DistFormat format,
     case FK4:
       str << "b1950";
       return;
-    case FK4_NO_E:
-      str << "fk4-no-e";
-      return;
     case FK5:
       str << "j2000";
       return;
@@ -210,14 +195,8 @@ void Coord::listDistSystem(ostream& str, CoordSystem sys, DistFormat format,
     case GALACTIC:
       str << "galactic";
       return;
-    case SUPERGALACTIC:
-      str << "supergalactic";
-      return;
     case ECLIPTIC:
       str << "ecliptic";
-      return;
-    case HELIOECLIPTIC:
-      str << "helioecliptic";
       return;
     }
   }
@@ -246,10 +225,6 @@ void Coord::listDistSystem(ostream& str, CoordSystem sys, DistFormat format,
     *sys = DETECTOR;
     *sky = FK5;
   }
-  else if (STRCMP(str,"fk4-no-e",8)) {
-    *sys = wcssys;
-    *sky = FK4_NO_E;
-  }
   else if (STRCMP(str,"fk4",3)) {
     *sys = wcssys;
     *sky = FK4;
@@ -266,17 +241,9 @@ void Coord::listDistSystem(ostream& str, CoordSystem sys, DistFormat format,
     *sys = wcssys;
     *sky = GALACTIC;
   }
-  else if (STRCMP(str,"supergalactic",12)) {
-    *sys = wcssys;
-    *sky = SUPERGALACTIC;
-  }
   else if (STRCMP(str,"ecliptic",8)) {
     *sys = wcssys;
     *sky = ECLIPTIC;
-  }
-  else if (STRCMP(str,"helioecliptic",12)) {
-    *sys = wcssys;
-    *sky = HELIOECLIPTIC;
   }
   else if (STRCMP(str,"wcs",3)) {
     *sys = wcssys;

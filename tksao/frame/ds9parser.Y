@@ -219,13 +219,11 @@ static Coord::SkyFrame checkWCSSky();
 %token FILL_
 %token FIXED_
 %token FK4_
-%token FK4_NO_E_
 %token FK5_
 %token FORMAT_
 %token FONT_
 %token GALACTIC_
 %token GLOBAL_
-%token HELIOECLIPTIC_
 %token HIGHLITE_
 %token ICRS_
 %token IGNORE_
@@ -253,7 +251,6 @@ static Coord::SkyFrame checkWCSSky();
 %token SEGMENT_
 %token SELECT_
 %token SOURCE_
-%token SUPERGALACTIC_
 %token TAG_
 %token TEXT_
 %token TEXTANGLE_
@@ -561,14 +558,11 @@ wcsSystem : WCS_ {$$ = Coord::WCS;}
 
 skyFrame : FK4_ {$$ = Coord::FK4;}
 	| B1950_ {$$ = Coord::FK4;}
-	| FK4_NO_E_ {$$ = Coord::FK4_NO_E;}
 	| FK5_ {$$ = Coord::FK5;}
 	| J2000_ {$$ = Coord::FK5;}
 	| ICRS_ {$$ = Coord::ICRS;}
 	| GALACTIC_ {$$ = Coord::GALACTIC;}
-	| SUPERGALACTIC_ {$$ = Coord::SUPERGALACTIC;}
 	| ECLIPTIC_ {$$ = Coord::ECLIPTIC;}
-	| HELIOECLIPTIC_ {$$ = Coord::HELIOECLIPTIC;}
 	;
 
 skyDist : DEGREES_ {$$=Coord::DEGREE;}

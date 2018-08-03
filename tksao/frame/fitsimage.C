@@ -2708,16 +2708,13 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	  out = zeroTWOPI(out);
 	  switch (sky) {
 	  case Coord::FK4:
-	  case Coord::FK4_NO_E:
 	  case Coord::FK5:
 	  case Coord::ICRS:
 	    setWCSFormat(1,hms.str().c_str());
 	    setWCSFormat(2,dms.str().c_str());
 	    break;
 	  case Coord::GALACTIC:
-	  case Coord::SUPERGALACTIC:
 	  case Coord::ECLIPTIC:
-	  case Coord::HELIOECLIPTIC:
 	    setWCSFormat(1,dms.str().c_str());
 	    setWCSFormat(2,dms.str().c_str());
 	    break;
@@ -2790,16 +2787,13 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 	  out = zeroTWOPI(out);
 	  switch (sky) {
 	  case Coord::FK4:
-	  case Coord::FK4_NO_E:
 	  case Coord::FK5:
 	  case Coord::ICRS:
 	    setWCSFormat(1,hms.str().c_str());
 	    setWCSFormat(2,dms.str().c_str());
 	    break;
 	  case Coord::GALACTIC:
-	  case Coord::SUPERGALACTIC:
 	  case Coord::ECLIPTIC:
-	  case Coord::HELIOECLIPTIC:
 	    setWCSFormat(1,dms.str().c_str());
 	    setWCSFormat(2,dms.str().c_str());
 	    break;
@@ -2994,7 +2988,7 @@ void FitsImage::wcsCelInit(int hasWCSAST)
     for (int ii=0; ii<nn; ii++) {
       AstFrame* ff = (AstFrame*)astGetFrame(ast_,ii+1);
       AstFrameSet* fs =
-	(AstFrameSet*)astFindFrame(ff, astSkyFrame(" MaxAxes=10")," ");
+	(AstFrameSet*)astFindFrame(ff, astSkyFrame(" MaxAxes=4")," ");
       if (fs) {
 	wcsCel_[0] = 1;
 	const char* str = astGetC(ff, "System");
@@ -3010,7 +3004,7 @@ void FitsImage::wcsCelInit(int hasWCSAST)
       if (id && *id) {
 	int jj = (*id == ' ') ? 0 : *id-'@';
 	AstFrameSet* fs =
-	  (AstFrameSet*)astFindFrame(ff, astSkyFrame(" MaxAxes=10")," ");
+	  (AstFrameSet*)astFindFrame(ff, astSkyFrame(" MaxAxes=4")," ");
 	if (fs) {
 	  wcsCel_[jj] = 1;
 	  const char* str = astGetC(ff, "System");
@@ -3161,49 +3155,57 @@ void FitsImage::setWCSSkyFrame(Coord::CoordSystem sys, Coord::SkyFrame sky)
   
   const char* str = astGetC(ast_, "System");
   switch (sky) {
-  case Coord::FK4_NO_E:
-    if (!strncmp(str,"FK4-NO-E",8))
-      return;
-    astSet(ast_, "System=FK4-NO-E, Equinox=B1950");
-    return;
   case Coord::FK4:
     if (!strncmp(str,"FK4",3))
       return;
     astSet(ast_, "System=FK4, Equinox=B1950");
-    return;
+    break;
   case Coord::FK5:
     if (!strncmp(str,"FK5",3))
       return;
     astSet(ast_, "System=FK5, Equinox=J2000");
-    return;
+    break;
   case Coord::ICRS:
     if (!strncmp(str,"ICRS",4))
       return;
     astSet(ast_, "System=ICRS");
-    return;
+    break;
   case Coord::GALACTIC:
     if (!strncmp(str,"GALACTIC",8))
       return;
     astSet(ast_, "System=GALACTIC");
-    return;
-  case Coord::SUPERGALACTIC:
-    if (!strncmp(str,"SUPERGALACTIC",13))
-      return;
-    astSet(ast_, "System=SUPERGALACTIC");
-    return;
+    break;
   case Coord::ECLIPTIC:
     if (!strncmp(str,"ECLIPTIC",8))
       return;
     astSet(ast_, "System=ECLIPTIC");
     // get AST to agree with WCSSUBS
     astSetD(ast_, "EQUINOX", astGetD(ast_, "EPOCH"));
-    return;
-  case Coord::HELIOECLIPTIC:
-    if (!strncmp(str,"HELIOECLIPTIC",13))
-      return;
-    astSet(ast_, "System=HELIOECLIPTIC");
-    return;
+    break;
   }
+
+#if 0
+  for (int ii=0; ii<nn; ii++) {
+    ostringstream str3;
+    str3 << "Format(" << ii+1 << ")" << ends;
+
+    ostringstream str4;
+    str4 << "Symbol(" << ii+1 << ")" << ends;
+
+    cerr << ii << ' '
+	 << astGetC(ast_, str3.str().c_str()) << ' '
+	 << astGetC(ast_, str4.str().c_str()) << ' '
+	 << endl;
+  }
+
+  AstFrameSet* fs =
+    (AstFrameSet*)astFindFrame(ast_, astSkyFrame(" MaxAxes=4")," ");
+  if (fs) {
+    cerr << astGetC(fs, "System") << ' '
+	 << astGetI(fs, "LonAxis") << ' '
+	 << astGetI(fs, "LatAxis") << endl;
+  }
+#endif
 }
 
 Vector FitsImage::wcsTran(const Vector& in, int forward)

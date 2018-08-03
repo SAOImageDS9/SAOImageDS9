@@ -228,7 +228,6 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token FITSY_
 %token FIXED_
 %token FK4_
-%token FK4_NO_E_
 %token FK5_
 %token FONT_
 %token FORMAT_
@@ -248,7 +247,6 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token HEAD_
 %token HEADER_
 %token HEIGHT_
-%token HELIOECLIPTIC_
 %token HIDE_
 %token HIGHLITE_
 %token HISTEQU_
@@ -378,7 +376,6 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token SSHARED_
 %token STATS_
 %token STATUS_
-%token SUPERGALACTIC_
 %token SUM_
 %token SYSTEM_
 %token TABLE_
@@ -653,15 +650,12 @@ minmaxMode : AUTO_ {$$=FrScale::SCAN;}
 
 skyFrame : /* empty */ {$$ = currentSky = Coord::FK5;}
 	| FK4_ {$$ = currentSky = Coord::FK4;}
-	| FK4_NO_E_ {$$ = currentSky = Coord::FK4_NO_E;}
 	| B1950_ {$$ = currentSky = Coord::FK4;}
 	| FK5_ {$$ = currentSky = Coord::FK5;}
 	| J2000_ {$$ = currentSky = Coord::FK5;}
 	| ICRS_ {$$ = currentSky = Coord::ICRS;}
 	| GALACTIC_ {$$ = currentSky = Coord::GALACTIC;}
-	| SUPERGALACTIC_ {$$ = currentSky = Coord::SUPERGALACTIC;}
 	| ECLIPTIC_ {$$ = currentSky = Coord::ECLIPTIC;}
-	| HELIOECLIPTIC_ {$$ = currentSky = Coord::HELIOECLIPTIC;}
 	;
 
 skyFormat : /* empty */ {$$=Coord::DEGREES;}

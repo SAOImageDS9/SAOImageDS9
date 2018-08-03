@@ -6176,13 +6176,10 @@ void Base::markerListSAOtngHeader(ostream& str, Coord::CoordSystem sys,
     str << "# format: ";
     switch (sky) {
     case Coord::FK4:
-    case Coord::FK4_NO_E:
     case Coord::FK5:
     case Coord::ICRS:
     case Coord::GALACTIC:
-    case Coord::SUPERGALACTIC:
     case Coord::ECLIPTIC:
-    case Coord::HELIOECLIPTIC:
       switch (format) {
       case Coord::DEGREES:
 	str << "degrees (";
@@ -6196,9 +6193,6 @@ void Base::markerListSAOtngHeader(ostream& str, Coord::CoordSystem sys,
       case Coord::FK4:
 	str << "fk4";
 	break;
-      case Coord::FK4_NO_E:
-	str << "fk4-no-e";
-	break;
       case Coord::FK5:
 	str << "fk5";
 	break;
@@ -6208,14 +6202,8 @@ void Base::markerListSAOtngHeader(ostream& str, Coord::CoordSystem sys,
       case Coord::GALACTIC:
 	str << "galactic";
 	break;
-      case Coord::SUPERGALACTIC:
-	str << "supergalactic";
-	break;
       case Coord::ECLIPTIC:
 	str << "ecliptic";
-	break;
-      case Coord::HELIOECLIPTIC:
-	str << "helioecliptic";
 	break;
       }
 

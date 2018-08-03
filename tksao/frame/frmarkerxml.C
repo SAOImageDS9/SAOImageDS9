@@ -393,7 +393,6 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
 	    if (angsys == Coord::WCS) {
 	      switch (angsky) {
 	      case Coord::FK4:
-	      case Coord::FK4_NO_E:
 	      case Coord::FK5:
 	      case Coord::ICRS:
 		angoffset = M_PI;
@@ -408,7 +407,6 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
 	    if (angsys == Coord::WCS) {
 	      switch (angsky) {
 	      case Coord::FK4:
-	      case Coord::FK4_NO_E:
 	      case Coord::FK5:
 	      case Coord::ICRS:
 		break;
@@ -867,15 +865,12 @@ Vector Base::xmlPoint(FitsImage* ptr, const char* xstr, const char* ystr,
 
 	  switch (sky) {
 	  case Coord::FK4:
-	  case Coord::FK4_NO_E:
 	  case Coord::FK5:
 	  case Coord::ICRS:
 	    xx = xx/24.*360.;
 	    break;
 	  case Coord::GALACTIC:
-	  case Coord::SUPERGALACTIC:
 	  case Coord::ECLIPTIC:
-	  case Coord::HELIOECLIPTIC:
 	    break;
 	  }
 	  rr = ptr->mapToRef(Vector(xx,yy), sys, sky);
@@ -1041,19 +1036,16 @@ void Base::markerListXMLHeader(ostream& str, Coord::CoordSystem sys,
 	char* yucd=NULL;
 	switch (sky) {
 	case Coord::FK4:
-	case Coord::FK4_NO_E:
 	case Coord::FK5:
 	case Coord::ICRS:
 	  xucd = dupstr("pos.eq.ra;meta.main");
 	  yucd = dupstr("pos.eq.dec;meta.main");
 	  break;
 	case Coord::GALACTIC:
-	case Coord::SUPERGALACTIC:
 	  xucd = dupstr("pos.galactic.lon;meta.main");
 	  yucd = dupstr("pos.galactic.lat;meta.main");
 	  break;
 	case Coord::ECLIPTIC:
-	case Coord::HELIOECLIPTIC:
 	  xucd = dupstr("pos.ecliptic.lon;meta.main");
 	  yucd = dupstr("pos.ecliptic.lat;meta.main");
 	  break;

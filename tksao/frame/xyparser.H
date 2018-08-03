@@ -53,46 +53,43 @@
      DETECTOR_ = 269,
      ECLIPTIC_ = 270,
      FK4_ = 271,
-     FK4_NO_E_ = 272,
-     FK5_ = 273,
-     GALACTIC_ = 274,
-     HELIOECLIPTIC_ = 275,
-     ICRS_ = 276,
-     IMAGE_ = 277,
-     J2000_ = 278,
-     LOGICAL_ = 279,
-     OFF_ = 280,
-     ON_ = 281,
-     PHYSICAL_ = 282,
-     SUPERGALACTIC_ = 283,
-     VERSION_ = 284,
-     WCS_ = 285,
-     WCSA_ = 286,
-     WCSB_ = 287,
-     WCSC_ = 288,
-     WCSD_ = 289,
-     WCSE_ = 290,
-     WCSF_ = 291,
-     WCSG_ = 292,
-     WCSH_ = 293,
-     WCSI_ = 294,
-     WCSJ_ = 295,
-     WCSK_ = 296,
-     WCSL_ = 297,
-     WCSM_ = 298,
-     WCSN_ = 299,
-     WCSO_ = 300,
-     WCSP_ = 301,
-     WCSQ_ = 302,
-     WCSR_ = 303,
-     WCSS_ = 304,
-     WCST_ = 305,
-     WCSU_ = 306,
-     WCSV_ = 307,
-     WCSW_ = 308,
-     WCSX_ = 309,
-     WCSY_ = 310,
-     WCSZ_ = 311
+     FK5_ = 272,
+     GALACTIC_ = 273,
+     ICRS_ = 274,
+     IMAGE_ = 275,
+     J2000_ = 276,
+     LOGICAL_ = 277,
+     OFF_ = 278,
+     ON_ = 279,
+     PHYSICAL_ = 280,
+     VERSION_ = 281,
+     WCS_ = 282,
+     WCSA_ = 283,
+     WCSB_ = 284,
+     WCSC_ = 285,
+     WCSD_ = 286,
+     WCSE_ = 287,
+     WCSF_ = 288,
+     WCSG_ = 289,
+     WCSH_ = 290,
+     WCSI_ = 291,
+     WCSJ_ = 292,
+     WCSK_ = 293,
+     WCSL_ = 294,
+     WCSM_ = 295,
+     WCSN_ = 296,
+     WCSO_ = 297,
+     WCSP_ = 298,
+     WCSQ_ = 299,
+     WCSR_ = 300,
+     WCSS_ = 301,
+     WCST_ = 302,
+     WCSU_ = 303,
+     WCSV_ = 304,
+     WCSW_ = 305,
+     WCSX_ = 306,
+     WCSY_ = 307,
+     WCSZ_ = 308
    };
 #endif
 /* Tokens.  */
@@ -110,46 +107,43 @@
 #define DETECTOR_ 269
 #define ECLIPTIC_ 270
 #define FK4_ 271
-#define FK4_NO_E_ 272
-#define FK5_ 273
-#define GALACTIC_ 274
-#define HELIOECLIPTIC_ 275
-#define ICRS_ 276
-#define IMAGE_ 277
-#define J2000_ 278
-#define LOGICAL_ 279
-#define OFF_ 280
-#define ON_ 281
-#define PHYSICAL_ 282
-#define SUPERGALACTIC_ 283
-#define VERSION_ 284
-#define WCS_ 285
-#define WCSA_ 286
-#define WCSB_ 287
-#define WCSC_ 288
-#define WCSD_ 289
-#define WCSE_ 290
-#define WCSF_ 291
-#define WCSG_ 292
-#define WCSH_ 293
-#define WCSI_ 294
-#define WCSJ_ 295
-#define WCSK_ 296
-#define WCSL_ 297
-#define WCSM_ 298
-#define WCSN_ 299
-#define WCSO_ 300
-#define WCSP_ 301
-#define WCSQ_ 302
-#define WCSR_ 303
-#define WCSS_ 304
-#define WCST_ 305
-#define WCSU_ 306
-#define WCSV_ 307
-#define WCSW_ 308
-#define WCSX_ 309
-#define WCSY_ 310
-#define WCSZ_ 311
+#define FK5_ 272
+#define GALACTIC_ 273
+#define ICRS_ 274
+#define IMAGE_ 275
+#define J2000_ 276
+#define LOGICAL_ 277
+#define OFF_ 278
+#define ON_ 279
+#define PHYSICAL_ 280
+#define VERSION_ 281
+#define WCS_ 282
+#define WCSA_ 283
+#define WCSB_ 284
+#define WCSC_ 285
+#define WCSD_ 286
+#define WCSE_ 287
+#define WCSF_ 288
+#define WCSG_ 289
+#define WCSH_ 290
+#define WCSI_ 291
+#define WCSJ_ 292
+#define WCSK_ 293
+#define WCSL_ 294
+#define WCSM_ 295
+#define WCSN_ 296
+#define WCSO_ 297
+#define WCSP_ 298
+#define WCSQ_ 299
+#define WCSR_ 300
+#define WCSS_ 301
+#define WCST_ 302
+#define WCSU_ 303
+#define WCSV_ 304
+#define WCSW_ 305
+#define WCSX_ 306
+#define WCSY_ 307
+#define WCSZ_ 308
 
 
 
@@ -165,7 +159,7 @@ typedef union YYSTYPE
   double vector[3];
 }
 /* Line 1529 of yacc.c.  */
-#line 169 "frame/xyparser.H"
+#line 163 "frame/xyparser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

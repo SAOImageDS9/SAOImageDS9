@@ -58,12 +58,10 @@ ellipse		{return ELLIPSE_;}
 ecliptic	{return ECLIPTIC_;}
 filename	{return FILENAME_;}
 fk4		{return FK4_;}
-fk4-no-e	{return FK4_NO_E_;}
 fk5		{return FK5_;}
 format		{return FORMAT_;}
 galactic	{return GALACTIC_;}
 green		{return GREEN_;}
-helioecliptic	{return HELIOECLIPTIC_;}
 hms		{return HMS_;}
 icrs		{return ICRS_;}
 j2000		{return J2000_;}
@@ -77,7 +75,6 @@ point		{return POINT_;}
 polygon		{return POLYGON_;}
 red		{return RED_;}
 source		{return SOURCE_;}
-supergalactic	{return SUPERGALACTIC_;}
 text		{return TEXT_;}
 version		{return VERSION_;}
 white		{return WHITE_;}

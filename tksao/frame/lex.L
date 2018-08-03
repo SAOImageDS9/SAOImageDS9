@@ -143,7 +143,6 @@ fits		{return FITS_;}
 fitsy		{return FITSY_;}
 fixed		{return FIXED_;}
 fk4		{return FK4_;}
-fk4-no-e	{return FK4_NO_E_;}
 fk5		{return FK5_;}
 font		{return FONT_;}
 format          {return FORMAT_;}
@@ -163,7 +162,6 @@ has		{return HAS_;}
 head		{return HEAD_;}
 header		{return HEADER_;}
 height		{return HEIGHT_;}
-helioecliptic	{return HELIOECLIPTIC_;}
 hide		{return HIDE_;}
 highlite	{return HIGHLITE_;}
 histequ		{return HISTEQU_;}
@@ -295,7 +293,6 @@ sshared		{return SSHARED_;}
 stats		{return STATS_;}
 status		{return STATUS_;}
 sum		{return SUM_;}
-supergalactic	{return SUPERGALACTIC_;}
 system		{return SYSTEM_;}
 table		{return TABLE_;}
 tag		{return TAG_;}

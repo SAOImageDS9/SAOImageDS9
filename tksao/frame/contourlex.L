@@ -55,11 +55,9 @@ detector	{return DETECTOR_;}
 ecliptic	{return ECLIPTIC_;}
 false		{return FALSE_;}
 fk4		{return FK4_;}
-fk4-no-e	{return FK4_NO_E_;}
 fk5		{return FK5_;}
 galactic	{return GALACTIC_;}
 global		{return GLOBAL_;}
-helioecliptic	{return HELIOECLIPTIC_;}
 icrs		{return ICRS_;}
 image		{return IMAGE_;}
 j2000		{return J2000_;}
@@ -71,7 +69,6 @@ no		{return NO_;}
 off		{return OFF_;}
 on		{return ON_;}
 physical	{return PHYSICAL_;}
-supergalactic	{return SUPERGALACTIC_;}
 true		{return TRUE_;}
 version		{return VERSION_;}
 wcs		{return WCS_;}

@@ -158,32 +158,44 @@ void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr,
   Vector3d img = rr * sptr->refToImage3d;
 
   for (int ii=0; ii<MULTWCS; ii++) {
-    char buf[64];
+    char buf[128];
     char ww = !ii ? '\0' : '`'+ii;
     Coord::CoordSystem www = (Coord::CoordSystem)(Coord::WCS+ii);
 
     if (hasWCS(www)) {
       char buff[128];
-      sptr->pix2wcs(img, www, wcsSky_, wcsSkyFormat_, buff);
+      sptr->pix2wcs(img, www, wcsSkyFrame_, wcsSkyFormat_, buff);
 
       int argc;
       const char** argv;
       Tcl_SplitList(interp, buff, &argc, &argv);
 
-      if (argc > 0 && argv && argv[0])
+      if (argc > 0 && argv && argv[0]) {
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),argv[0],0);
-      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),"",0);
+      }
+      else {
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
-
-      if (argc > 1 && argv && argv[1])
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),"",0);
+      }
+      
+      if (argc > 1 && argv && argv[1]) {
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),argv[1],0);
-      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"",0);
+      }
+      else {
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"",0);
+      }
 
-      if (argc > 2 && argv && argv[2])
+      if (argc > 2 && argv && argv[2]) {
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),argv[2],0);
-      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z,sys"),"",0);
+      }
+      else {
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z,sys"),"",0);
+      }
       
       char* wcsname = (char*)sptr->getWCSName(www);
       if (wcsname)
@@ -199,6 +211,9 @@ void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr,
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z,sys"),"",0);
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
     }
   }
@@ -988,7 +1003,7 @@ void Frame3dBase::updatePanner()
     if (keyContext->fits && keyContext->fits->hasWCS(wcsSystem_)) {
       Matrix3d mx;
       Coord::Orientation oo = 
-	keyContext->fits->getWCSOrientation(wcsSystem_, wcsSky_);
+	keyContext->fits->getWCSOrientation(wcsSystem_, wcsSkyFrame_);
       if (hasWCSCel(wcsSystem_)) {
 	if (oo==Coord::XX)
 	  mx *= FlipX3d();

@@ -140,27 +140,36 @@ void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* ptr,
   Vector img = rr * sptr->refToImage;
 
   for (int ii=0; ii<MULTWCS; ii++) {
-    char buf[64];
+    char buf[128];
     char ww = !ii ? '\0' : '`'+ii;
     Coord::CoordSystem www = (Coord::CoordSystem)(Coord::WCS+ii);
 
     if (hasWCS(www)) {
       char buff[128];
-      sptr->pix2wcs(img, www, wcsSky_, wcsSkyFormat_, buff);
+      sptr->pix2wcs(img, www, wcsSkyFrame_, wcsSkyFormat_, buff);
 
       int argc;
       const char** argv;
       Tcl_SplitList(interp, buff, &argc, &argv);
 
-      if (argc > 0 && argv && argv[0])
+      if (argc > 0 && argv && argv[0]) {
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),argv[0],0);
-      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),"",0);
+      }
+      else {
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
-      if (argc > 1 && argv && argv[1])
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),"",0);
+      }
+      
+      if (argc > 1 && argv && argv[1]) {
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),argv[1],0);
-      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"",0);
+      }
+      else {
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
-
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"",0);
+      }
+      
       char* wcsname = (char*)sptr->getWCSName(www);
       if (wcsname)
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),wcsname,0);
@@ -168,13 +177,14 @@ void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* ptr,
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),argv[2],0);
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
-	    
+      
       Tcl_Free((char*)argv);
     }
     else {
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
-      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"",0);
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
     }
   }
@@ -320,7 +330,7 @@ void FrameBase::updatePanner()
     if (keyContext->fits && keyContext->fits->hasWCS(wcsSystem_)) {
       Matrix mx;
       Coord::Orientation oo = 
-	keyContext->fits->getWCSOrientation(wcsSystem_, wcsSky_);
+	keyContext->fits->getWCSOrientation(wcsSystem_, wcsSkyFrame_);
       if (hasWCSCel(wcsSystem_)) {
 	if (oo==Coord::XX)
 	  mx *= FlipX();
@@ -330,7 +340,7 @@ void FrameBase::updatePanner()
 	  mx *= FlipX();
       }
 
-      double rr = keyContext->fits->getWCSRotation(wcsSystem_, wcsSky_);
+      double rr = keyContext->fits->getWCSRotation(wcsSystem_, wcsSkyFrame_);
       mx *= Rotate(rr)*mm;
       Vector north = (Vector(0,1)*mx).normalize();
       Vector east = (Vector(-1,0)*mx).normalize();

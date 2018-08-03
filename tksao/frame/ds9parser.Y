@@ -776,7 +776,7 @@ initGlobal:{
 	  // global properties
 	  globalSystem = Coord::PHYSICAL;
 	  globalWCS = fr->wcsSystem();
-	  globalSky = fr->wcsSky();
+	  globalSky = fr->wcsSkyFrame();
 	  globalTile = 1;
 	  globalProps =
 	    Marker::SELECT | Marker::EDIT | Marker::MOVE |

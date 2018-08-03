@@ -260,7 +260,7 @@ initGlobal: {
 	  cc = NULL;
 	  globalSystem = Coord::WCS;
 	  globalWCS = fr->wcsSystem();
-	  globalSky = fr->wcsSky();
+	  globalSky = fr->wcsSkyFrame();
 	  strcpy(globalColor,"green");
 	  globalDash = 0;
 	  globalDashList[0] = 8;

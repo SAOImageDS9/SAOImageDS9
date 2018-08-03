@@ -2100,7 +2100,7 @@ void Base::getVertCutCmd(char* xx, char* yy, const Vector& vv,
 void Base::getWCSCmd()
 {
   Tcl_AppendResult(interp, coord.coordSystemStr(wcsSystem_), " ",
-		   coord.skyFrameStr(wcsSky_), " ",
+		   coord.skyFrameStr(wcsSkyFrame_), " ",
 		   coord.skyFormatStr(wcsSkyFormat_), NULL);
 }
 
@@ -2120,7 +2120,7 @@ void Base::getWCSAlignPointerCmd()
   Tcl_AppendResult(interp, (wcsAlign_ ? "1" : "0"), " ", 
 		   str.str().c_str(), " ",
 		   coord.coordSystemStr(wcsSystem_), " ",
-		   coord.skyFrameStr(wcsSky_), NULL);
+		   coord.skyFrameStr(wcsSkyFrame_), NULL);
 }
 
 void Base::getWCSNameCmd(Coord::CoordSystem sys)
@@ -2941,7 +2941,7 @@ void Base::wcsCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
 		  Coord::SkyFormat format)
 {
   wcsSystem_ = sys;
-  wcsSky_ = sky;
+  wcsSkyFrame_ = sky;
   wcsSkyFormat_ = format;
 }
 
@@ -2966,7 +2966,7 @@ void Base::wcsAlignCmd(int which, FitsImage* ptr, Coord::CoordSystem sys,
 		       Coord::SkyFrame sky)
 {
   wcsAlign_ = which;
-  wcsSky_ = sky;
+  wcsSkyFrame_ = sky;
 
   alignWCS(ptr, sys);
   update(MATRIX);

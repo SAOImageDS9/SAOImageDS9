@@ -212,7 +212,7 @@ public:
   Vector cropEnd;
 
   Coord::CoordSystem wcsSystem_;
-  Coord::SkyFrame wcsSky_;
+  Coord::SkyFrame wcsSkyFrame_;
   Coord::SkyFormat wcsSkyFormat_;
 
   int wcsAlign_; // flag to indicate wcs alignment
@@ -551,7 +551,7 @@ public:
   void resetCompositeMarker() {compositeMarker = NULL;}
 
   Coord::CoordSystem wcsSystem() {return wcsSystem_;}
-  Coord::SkyFrame wcsSky() {return wcsSky_;}
+  Coord::SkyFrame wcsSkyFrame() {return wcsSkyFrame_;}
   Coord::SkyFormat wcsSkyFormat() {return wcsSkyFormat_;}
 
   Coord::CoordSystem xySystem() {return xySystem_;}

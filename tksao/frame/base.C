@@ -105,7 +105,7 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   magnifierColorName = dupstr("white");
 
   wcsSystem_ = Coord::WCS;
-  wcsSky_ = Coord::FK5;
+  wcsSkyFrame_ = Coord::FK5;
   wcsSkyFormat_ = Coord::DEGREES;
 
   wcsAlign_ = 0;
@@ -296,7 +296,7 @@ void Base::alignWCS()
     return;
   }
 
-  calcAlignWCS(context->cfits, wcsSystem_, wcsSky_,
+  calcAlignWCS(context->cfits, wcsSystem_, wcsSkyFrame_,
 	       &wcsOrientation, &wcsOrientationMatrix, &wcsRotation);
 }
 
@@ -323,11 +323,11 @@ void Base::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
   }
 
   // This calcs the wcs
-  calcAlignWCS(context->cfits, sys, wcsSky_,
+  calcAlignWCS(context->cfits, sys, wcsSkyFrame_,
 	       &wcsOrientation, &wcsOrientationMatrix, &wcsRotation);
 
   // and this the zoom
-  Matrix mm = calcAlignWCS(ptr, context->cfits, sys, wcsSystem_, wcsSky_);
+  Matrix mm = calcAlignWCS(ptr, context->cfits, sys, wcsSystem_, wcsSkyFrame_);
   if (mm[0][0] != 0 && mm[1][1] !=0)
     zoom_ *= (Vector(mm[0][0],mm[1][0]).length() +
 	      Vector(mm[0][1],mm[1][1]).length())/2.;
@@ -618,6 +618,9 @@ void Base::getInfoClearWCS(char* var)
     Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
     Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
     Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
+    Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),"",0);
+    Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"",0);
+    Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z,sys"),"",0);
     Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
   }
 }

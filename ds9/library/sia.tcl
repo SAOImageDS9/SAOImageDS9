@@ -76,18 +76,6 @@ proc SIADef {} {
 			     post \
 			 } \
 		    }
-
-#			{{NASA/CXC Chandra} \
-#			     siacxc \
-#			     {http://cda.harvard.edu/cxcsiap/queryImages}\
-#			     {} \
-#			     post \
-#			} \
-#			{{MPE/MPG ROSAT} siarosat \
-#			     {http://gavo.mpe.mpg.de/rosat/SIAP} \
-#			     {action=queryImage&siap=siap.service.rosat&} \
-#			     get \
-#			} \
 }
 
 proc SIAAnalysisMenu {mb} {

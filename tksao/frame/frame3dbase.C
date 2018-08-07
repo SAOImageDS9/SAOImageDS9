@@ -198,12 +198,12 @@ void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr,
       }
       
       char* wcsname = (char*)sptr->getWCSName(www);
-      if (wcsname)
+      if (sptr->hasWCSCel(www))
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),coord.skyFrameStr(wcsSkyFrame_),0);
+      else if (wcsname)
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),wcsname,0);
-      else if (argc > 3 && argv && argv[3])
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),argv[3],0);
       else
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),coord.coordSystemStr(www),0);
 	    
       Tcl_Free((char*)argv);
     }

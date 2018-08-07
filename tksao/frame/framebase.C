@@ -171,12 +171,12 @@ void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* ptr,
       }
       
       char* wcsname = (char*)sptr->getWCSName(www);
-      if (wcsname)
+      if (sptr->hasWCSCel(www))
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),coord.skyFrameStr(wcsSkyFrame_),0);
+      else if (wcsname)
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),wcsname,0);
-      else if (argc > 2 && argv && argv[2])
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),argv[2],0);
       else
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),coord.coordSystemStr(www),0);
       
       Tcl_Free((char*)argv);
     }

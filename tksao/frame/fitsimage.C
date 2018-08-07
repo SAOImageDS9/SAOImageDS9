@@ -2693,8 +2693,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
       case Coord::DEGREES:
 	out = zero360(radToDeg(out));
 	str << setprecision(context_->parent_->precDeg_)
-	    << out[0] << ' ' << out[1] << ' '
-	    << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
+	    << out[0] << ' ' << out[1] << ends;
 	
 	break;
 
@@ -2719,9 +2718,8 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 	    setWCSFormat(2,dms.str().c_str());
 	    break;
 	  }
-	  str << astFormat(ast_,1,out[0]) << ' '
-	      << astFormat(ast_,2,out[1]) << ' '
-	      << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
+	  str << astFormat(ast_,1,out[0]) << ' ' << astFormat(ast_,2,out[1])
+	      << ends;
 	}
 	break;
       }
@@ -2773,8 +2771,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
       case Coord::DEGREES:
 	out = zero360(radToDeg(out));
 	str << setprecision(context_->parent_->precDeg_)
-	    << out[0] << ' ' << out[1] << ' ' << out[2]
-	    << ' ' << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
+	    << out[0] << ' ' << out[1] << ' ' << out[2] << ends;
 	break;
 
       case Coord::SEXAGESIMAL:
@@ -2798,9 +2795,8 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 	    setWCSFormat(2,dms.str().c_str());
 	    break;
 	  }
-	  str << astFormat(ast_,1,out[0]) << ' '
-	      << astFormat(ast_,2,out[1]) << ' ' << out[2] << ' '
-	      << (hasWCSCel(sys) ? coord.skyFrameStr(sky) : "") << ends;
+	  str << astFormat(ast_,1,out[0]) << ' ' << astFormat(ast_,2,out[1])
+	      << ' ' << out[2] << ends;
 	}
 	break;
       }

@@ -114,17 +114,8 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
 	  break;
 	case Coord::SEXAGESIMAL:
 	  {
-	    char buf[64];
-	    buf[0] = '\0';
+	    char buf[128];
 	    mapFromRef(vv, sys, sky, format, buf);
-
-	    // grap only the first two items
-	    char* ptr = buf;
-	    while (*ptr)
-	      ptr++;
-	    while (*ptr != ' ' && ptr >= buf)
-	      ptr--;
-	    *ptr = '\0';
 	    str << buf;
 	  }
 	  break;

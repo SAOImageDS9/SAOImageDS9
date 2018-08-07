@@ -14,7 +14,7 @@
 #include <time.h>
 #include <ctype.h>
 #ifdef HAVE_SYS_UN_H
-/*#include <sys/un.h>*/
+#include <sys/un.h>
 #endif
 
 #include "iis.h"

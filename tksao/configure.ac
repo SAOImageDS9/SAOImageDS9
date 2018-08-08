@@ -237,6 +237,7 @@ frame/text.C
 frame/tnglex.C
 frame/tngparser.C
 frame/vect.C
+frame/wcsast.C
 frame/xylex.C
 frame/xyparser.C
 list/list.C

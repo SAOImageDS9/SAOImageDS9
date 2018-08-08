@@ -775,8 +775,8 @@ globalCompass : coordSystem skyFrame
 initGlobal:{
 	  // global properties
 	  globalSystem = Coord::PHYSICAL;
-	  globalWCS = fr->wcsSystem();
-	  globalSky = fr->wcsSkyFrame();
+	  globalWCS = fr->getWCSSystem();
+	  globalSky = fr->getWCSSkyFrame();
 	  globalTile = 1;
 	  globalProps =
 	    Marker::SELECT | Marker::EDIT | Marker::MOVE |

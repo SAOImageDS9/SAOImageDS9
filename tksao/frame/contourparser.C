@@ -1879,8 +1879,8 @@ yyreduce:
           cl = NULL;
 	  cc = NULL;
 	  globalSystem = Coord::WCS;
-	  globalWCS = fr->wcsSystem();
-	  globalSky = fr->wcsSkyFrame();
+	  globalWCS = fr->getWCSSystem();
+	  globalSky = fr->getWCSSkyFrame();
 	  strcpy(globalColor,"green");
 	  globalDash = 0;
 	  globalDashList[0] = 8;

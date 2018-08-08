@@ -550,9 +550,9 @@ public:
 
   void resetCompositeMarker() {compositeMarker = NULL;}
 
-  Coord::CoordSystem wcsSystem() {return wcsSystem_;}
-  Coord::SkyFrame wcsSkyFrame() {return wcsSkyFrame_;}
-  Coord::SkyFormat wcsSkyFormat() {return wcsSkyFormat_;}
+  Coord::CoordSystem getWCSSystem() {return wcsSystem_;}
+  Coord::SkyFrame getWCSSkyFrame() {return wcsSkyFrame_;}
+  Coord::SkyFormat getWCSSkyFormat() {return wcsSkyFormat_;}
 
   Coord::CoordSystem xySystem() {return xySystem_;}
   Coord::SkyFrame xySky() {return xySky_;}

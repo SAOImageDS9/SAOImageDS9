@@ -6,10 +6,7 @@
 #include "context.h"
 #include "frame3dbase.h"
 #include "fitsimage.h"
-
-extern "C" {
-  #include "ast.h"
-}
+#include "wcsast.h"
 
 extern Grid25dBase* astGrid25dPtr;
 
@@ -64,8 +61,8 @@ int Grid25d::doit(RenderMode rm)
       }
 
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_);
-      fits->wcsSystem(ast,system_);
-      fits->wcsSkyFrame(ast,sky_);
+      wcsSystem(ast,system_);
+      wcsSkyFrame(ast,sky_);
 
       int naxes = astGetI(ast,"Naxes");
       switch (naxes) {

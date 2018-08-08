@@ -8,6 +8,7 @@
 #include "context.h"
 #include "fitsimage.h"
 #include "marker.h"
+#include "wcsast.h"
 #include "ps.h"
 
 #include "circle.h"
@@ -388,13 +389,13 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   astBegin; // start memory management
 
   AstFrameSet* wcs1 = (AstFrameSet*)astCopy(fits1->ast_);
-  fits1->wcsSystem(wcs1,sys1);
-  fits1->wcsSkyFrame(wcs1,sky);
+  wcsSystem(wcs1,sys1);
+  wcsSkyFrame(wcs1,sky);
   astInvert(wcs1);
 
   AstFrameSet* wcs2 = (AstFrameSet*)astCopy(fits2->ast_);
-  fits2->wcsSystem(wcs2,sys1);
-  fits2->wcsSkyFrame(wcs2,sky);
+  wcsSystem(wcs2,sys1);
+  wcsSkyFrame(wcs2,sky);
   astInvert(wcs2);
 
   AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs2, wcs1, "");

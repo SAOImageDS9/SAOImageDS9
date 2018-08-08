@@ -10,7 +10,6 @@
 #include "fitsdata.h"
 #include "coord.h"
 #include "file.h"
-#include "wcs.h"
 #include "head.h"
 
 // WCS ' ','A' to 'Z', WCS0
@@ -388,16 +387,6 @@ class FitsImage {
   double getWCSRotation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSDist(const Vector&, const Vector&, Coord::CoordSystem);
   const char* getWCSName(Coord::CoordSystem);
-
-  Vector wcsTran(AstFrameSet*, const Vector&, int);
-  void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);
-  Vector3d wcsTran(AstFrameSet*, const Vector3d&, int);
-  double wcsDistance(AstFrameSet*, const Vector&, const Vector&);
-  double wcsAngle(AstFrameSet*, const Vector&, const Vector&, const Vector&);
-  double wcsAxAngle(AstFrameSet*, const Vector&, const Vector&);
-
-  int wcsSystem(AstFrameSet* ast, Coord::CoordSystem sys);
-  int wcsSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky);
 
   void setWCSSkyFrame(Coord::CoordSystem, Coord::SkyFrame);
   void setWCSFormat(int, const char*);

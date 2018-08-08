@@ -103,17 +103,11 @@ class FitsImage {
   int astInv_;    // can we inverse?
   int* wcs_;
   int* wcsCel_;
+  int* wcsCelLon_;
+  int* wcsCelLat_;
   int* wcs3D_;
   int wcsHPX_;
   double* wcsSize_;
-
-  // used for templates
-  AstFrameSet* astSav_;
-  int astInvSav_;
-  int* wcsSav_;
-  int* wcsCelSav_;
-  int* wcs3DSav_;
-  int wcsHPXSav_;
 
   FitsHead* wcsAltHeader_; // alt wcs header
   FitsHead* wfpc2Header_; // wcs header for wfpc2
@@ -156,6 +150,8 @@ class FitsImage {
   AstFrameSet* fits2ast(FitsHead*);  
 
   Vector mapLen(const Vector& v, const Matrix& mx);
+
+  void setWCSFormat(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
 
  public:
   char* fileName;
@@ -387,9 +383,6 @@ class FitsImage {
   double getWCSRotation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSDist(const Vector&, const Vector&, Coord::CoordSystem);
   const char* getWCSName(Coord::CoordSystem);
-
-  void setWCSSkyFrame(Coord::CoordSystem, Coord::SkyFrame);
-  void setWCSFormat(int, const char*);
 
   double getWCSSize(Coord::CoordSystem);
   double calcWCSSize(Coord::CoordSystem);

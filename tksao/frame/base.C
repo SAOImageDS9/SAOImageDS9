@@ -394,7 +394,7 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   astInvert(wcs1);
 
   AstFrameSet* wcs2 = (AstFrameSet*)astCopy(fits2->ast_);
-  wcsSystem(wcs2,sys1);
+  wcsSystem(wcs2,sys2);
   wcsSkyFrame(wcs2,sky);
   astInvert(wcs2);
 

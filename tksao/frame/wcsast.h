@@ -10,8 +10,9 @@ extern "C" {
 #include "ast.h"
 }
 
-int wcsSystem(AstFrameSet* ast, Coord::CoordSystem sys);
-int wcsSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky);
+int wcsSystem(AstFrameSet*, Coord::CoordSystem);
+int wcsSkyFrame(AstFrameSet*, Coord::SkyFrame);
+void wcsFormat(AstFrameSet*, int id, const char* format);
 
 Vector wcsTran(AstFrameSet*, const Vector&, int);
 void wcsTran(AstFrameSet*, int, Vector*, int, Vector*);

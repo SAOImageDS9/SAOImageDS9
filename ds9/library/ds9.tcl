@@ -134,7 +134,7 @@ proc DS9Def {} {
     }
     
     set pds9(prec,linear) 8
-    set pds9(prec,deg) 10
+    set pds9(prec,deg) 8
     set pds9(prec,hms) 4
     set pds9(prec,dms) 3
     set pds9(prec,arcmin) 5

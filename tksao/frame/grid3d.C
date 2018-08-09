@@ -56,7 +56,7 @@ int Grid3d::doit(RenderMode rm)
     break;
   default:
     {
-      if (!fits->astInv()) {
+      if (!fits->wcsInv()) {
 	astEnd; // now, clean up memory
 	return 1;
       }

@@ -108,51 +108,49 @@ proc DisplayCoordDialog {which x y} {
     global pcoord
     global wcs
 
-    set r {}
+    set rr {}
 
     if {$pcoord(filename)} {
-	append r "[$which get fits file name full]"
+	append rr "[$which get fits file name full]"
     }
 
-    foreach l {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
-	if {"$pcoord(wcs$l)" && [$which has wcs "wcs$l"]} {
-	    set cd "[$which get coordinates $x $y wcs$l $wcs(sky) $wcs(skyformat)]"
-	    puts ":$cd:"
-
-	    if {[$which has wcs celestial "wcs$l"]} {
-		append r " [lindex $cd 0] [lindex $cd 1] $wcs(sky)"
+    foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
+	if {"$pcoord(wcs$ll)" && [$which has wcs "wcs$ll"]} {
+	    append rr " [$which get coordinates $x $y wcs$ll $wcs(sky) $wcs(skyformat)]"
+	    if {[$which has wcs celestial "wcs$ll"]} {
+		append rr " $wcs(sky)"
 	    } else {
-		set name [$which get wcs name "wcs$l"]
+		set name [$which get wcs name "wcs$ll"]
 		if {$name != {}} {
-		    append r " [lindex $cd 0] [lindex $cd 1] $name"
+		    append rr " $name"
 		} else {
-		    append r " [lindex $cd 0] [lindex $cd 1] [lindex $cd 3]"
+		    append rr " wcs$ll"
 		}
 	    }
 	}
     }
 
     if {$pcoord(detector) && [$which has detector]} {
-	append r " [$which get coordinates $x $y detector] detector"
+	append rr " [$which get coordinates $x $y detector] detector"
     }
 
     if {$pcoord(amplifier) && [$which has amplifier]} {
-	append r " [$which get coordinates $x $y amplifier] amplifier"
+	append rr " [$which get coordinates $x $y amplifier] amplifier"
     }
 
     if {$pcoord(physical) && [$which has physical]} {
-	append r " [$which get coordinates $x $y physical] physical"
+	append rr " [$which get coordinates $x $y physical] physical"
     }
 
     if {$pcoord(image)} {
-	append r " [$which get coordinates $x $y image]"
+	append rr " [$which get coordinates $x $y image]"
     }
 
     if {$pcoord(value)} {
-	append r " [$which get value canvas $x $y]"
+	append rr " [$which get value canvas $x $y]"
     }
 
-    append r " \n"
+    append rr " \n"
 
     SimpleTextDialog coordtxt [msgcat::mc {Coordinates}] \
 	80 20 append bottom "$r"

@@ -100,14 +100,15 @@ class FitsImage {
   int address[FTY_MAXAXES];
 
   int manageWCS_;
-  int astInv_;    // can we inverse?
   int* wcs_;
+  int* wcsNaxes_;
   int* wcsCel_;
   int* wcsCelLon_;
   int* wcsCelLat_;
-  int* wcs3D_;
-  int wcsHPX_;
   double* wcsSize_;
+
+  int wcsInv_;    // can we inverse?
+  int wcsHPX_;
 
   FitsHead* wcsAltHeader_; // alt wcs header
   FitsHead* wfpc2Header_; // wcs header for wfpc2
@@ -133,14 +134,13 @@ class FitsImage {
   void initBin();
   void initHPX();
 
-  void initWCSPhysical();
   void initWCS(FitsHead*);
-  void astInit(FitsHead*);
+
   void wcsInit(int);
   void wcsCelInit(int);
-  void wcs3DInit(int);
   void wcsHPXInit();
   void wcsSizeInit();
+  void wcsPhyInit();
 
   void initWCS0(const Vector&);
   void resetWCS0() {resetWCS();}
@@ -362,7 +362,7 @@ class FitsImage {
 
   char* pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
 
-  int astInv() {return astInv_;}
+  int wcsInv() {return wcsInv_;}
   Vector3d pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
   Vector3d wcs2pix(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
 
@@ -383,6 +383,7 @@ class FitsImage {
   double getWCSRotation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSDist(const Vector&, const Vector&, Coord::CoordSystem);
   const char* getWCSName(Coord::CoordSystem);
+  const char* getWCSAxisName(Coord::CoordSystem, int);
 
   double getWCSSize(Coord::CoordSystem);
   double calcWCSSize(Coord::CoordSystem);

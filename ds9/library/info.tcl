@@ -536,6 +536,7 @@ proc UpdateInfoBox {which x y sys} {
     global view
 
     $which get info $sys $x $y infobox
+
     set infobox(bunit) [$which get fits header keyword BUNIT]
     if {$view(info,keyvalue) != ""} {
 	set infobox(keyvalue) \
@@ -553,41 +554,37 @@ proc UpdateInfoBox {which x y sys} {
 
     foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	if {$view(info,wcs$ll)} {
-	    if {![$which has fits]} {
-		set infobox(wcs$ll,sys) "WCS $ll"
-		$infobox(wcs$ll,x,nm) configure -text {}
-		$infobox(wcs$ll,y,nm) configure -text {}
-	    } elseif {[$which has wcs celestial wcs$ll]} {
-		switch -- $infobox(wcs$ll,sys) {
-		    fk4 -
-		    fk5 -
-		    icrs {
-			$infobox(wcs$ll,x,nm) configure -text "\u03b1" \
-			    -font "$ds9(times) $fsz"
-			$infobox(wcs$ll,y,nm) configure -text "\u03b4" \
+	    foreach aa {x y z} {
+		switch $infobox(wcs$ll,$aa,sys) {
+		    RA {
+			$infobox(wcs$ll,$aa,nm) configure -text "\u03b1" \
 			    -font "$ds9(times) $fsz"
 		    }
-		    galactic {
-			$infobox(wcs$ll,x,nm) configure -text {l} \
-			    -font "{$ds9(times)} $pds9(font,size) normal italic"
-			$infobox(wcs$ll,y,nm) configure -text {b} \
-			    -font "{$ds9(times)} $pds9(font,size) normal italic"
+		    Dec {
+			$infobox(wcs$ll,$aa,nm) configure -text "\u03b4" \
+			    -font "$ds9(times) $fsz"
 		    }
-		    ecliptic {
-			$infobox(wcs$ll,x,nm) configure -text "\u03bb" \
+		    l {
+			$infobox(wcs$ll,$aa,nm) configure -text {l} -font \
+			    "{$ds9(times)} $pds9(font,size) normal italic"
+		    }
+		    b {
+			$infobox(wcs$ll,$aa,nm) configure -text {b} -font \
+			    "{$ds9(times)} $pds9(font,size) normal italic"
+		    }
+		    Lambda {
+			$infobox(wcs$ll,$aa,nm) configure -text "\u03bb" \
 			    -font "$ds9(times) $fsz"
-			$infobox(wcs$ll,y,nm) configure -text "\u03b2" \
+		    }
+		    Beta {
+			$infobox(wcs$ll,$aa,nm) configure -text "\u03b2" \
 			    -font "$ds9(times) $fsz"
+		    }
+		    default {
+			$infobox(wcs$ll,$aa,nm) configure \
+			    -text [string range $infobox(wcs$ll,$aa,sys) 0 0]
 		    }
 		}
-	    } else {
-		if {$infobox(wcs$ll,sys) == {}} {
-		    set infobox(wcs$ll,sys) "WCS $ll"
-		}
-		$infobox(wcs$ll,x,nm) configure -text {x} \
-		    -font "{$ds9(times)} $pds9(font,size) normal italic"
-		$infobox(wcs$ll,y,nm) configure -text {y} \
-		    -font "{$ds9(times)} $pds9(font,size) normal italic"
 	    }
 	}
     }

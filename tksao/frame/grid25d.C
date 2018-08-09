@@ -55,7 +55,7 @@ int Grid25d::doit(RenderMode rm)
   default:
     {
       // set desired skyformat
-      if (!fits->astInv()) {
+      if (!fits->wcsInv()) {
 	astEnd; // now, clean up memory
 	return 1;
       }

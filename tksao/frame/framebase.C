@@ -152,24 +152,27 @@ void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* ptr,
       const char** argv;
       Tcl_SplitList(interp, buff, &argc, &argv);
 
-      if (argc > 0 && argv && argv[0]) {
+      if (argc > 0 && argv && argv[0])
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),argv[0],0);
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),"",0);
-      }
-      else {
+      else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),"",0);
-      }
       
-      if (argc > 1 && argv && argv[1]) {
+      if (argc > 1 && argv && argv[1])
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),argv[1],0);
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"",0);
-      }
-      else {
+      else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"",0);
-      }
       
+      char* xname = (char*)sptr->getWCSAxisName(www,0);
+      if (xname)
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),xname,0);
+      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),"x",0);
+      char* yname = (char*)sptr->getWCSAxisName(www,1);
+      if (yname)
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),yname,0);
+      else
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"y",0);
+	
       char* wcsname = (char*)sptr->getWCSName(www);
       if (sptr->hasWCSCel(www))
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),coord.skyFrameStr(wcsSkyFrame_),0);

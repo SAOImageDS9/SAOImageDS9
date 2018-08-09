@@ -34,10 +34,10 @@ proc CreateInfoPanel {} {
     ttk::label $ds9(info).minValue -relief groove \
 	-textvariable infobox(min) -anchor center
 
-    ttk::label $ds9(info).minXLabel -text {X}
+    ttk::label $ds9(info).minXLabel -text {x}
     ttk::label $ds9(info).minXValue -relief groove \
 	-textvariable infobox(min,x) -anchor center
-    ttk::label $ds9(info).minYLabel -text {Y}
+    ttk::label $ds9(info).minYLabel -text {y}
     ttk::label $ds9(info).minYValue -relief groove \
 	-textvariable infobox(min,y) -anchor center
 
@@ -45,10 +45,10 @@ proc CreateInfoPanel {} {
     ttk::label $ds9(info).maxValue -relief groove \
 	-textvariable infobox(max) -anchor center
 
-    ttk::label $ds9(info).maxXLabel -text {X}
+    ttk::label $ds9(info).maxXLabel -text {x}
     ttk::label $ds9(info).maxXValue -relief groove \
 	-textvariable infobox(max,x) -anchor center
-    ttk::label $ds9(info).maxYLabel -text {Y}
+    ttk::label $ds9(info).maxYLabel -text {y}
     ttk::label $ds9(info).maxYValue -relief groove \
 	-textvariable infobox(max,y) -anchor center
 
@@ -93,46 +93,46 @@ proc CreateInfoPanel {} {
     }
 
     ttk::label $ds9(info).detectorTitle -text [msgcat::mc {Detector}]
-    ttk::label $ds9(info).detectorXLabel -text {X}
+    ttk::label $ds9(info).detectorXLabel -text {x}
     ttk::label $ds9(info).detectorXValue -relief groove \
 	-textvariable infobox(detector,x) -anchor center
-    ttk::label $ds9(info).detectorYLabel -text {Y}
+    ttk::label $ds9(info).detectorYLabel -text {y}
     ttk::label $ds9(info).detectorYValue -relief groove \
 	-textvariable infobox(detector,y) -anchor center
-    ttk::label $ds9(info).detectorZLabel -text {Z}
+    ttk::label $ds9(info).detectorZLabel -text {z}
     ttk::label $ds9(info).detectorZValue -relief groove \
 	-textvariable infobox(detector,z) -anchor center
 
     ttk::label $ds9(info).amplifierTitle -text [msgcat::mc {Amplifier}]
-    ttk::label $ds9(info).amplifierXLabel -text {X}
+    ttk::label $ds9(info).amplifierXLabel -text {x}
     ttk::label $ds9(info).amplifierXValue -relief groove \
 	-textvariable infobox(amplifier,x) -anchor center
-    ttk::label $ds9(info).amplifierYLabel -text {Y}
+    ttk::label $ds9(info).amplifierYLabel -text {y}
     ttk::label $ds9(info).amplifierYValue -relief groove \
 	-textvariable infobox(amplifier,y) -anchor center
-    ttk::label $ds9(info).amplifierZLabel -text {Z}
+    ttk::label $ds9(info).amplifierZLabel -text {z}
     ttk::label $ds9(info).amplifierZValue -relief groove \
 	-textvariable infobox(amplifier,z) -anchor center
 
     ttk::label $ds9(info).physicalTitle -text [msgcat::mc {Physical}]
-    ttk::label $ds9(info).physicalXLabel -text {X}
+    ttk::label $ds9(info).physicalXLabel -text {x}
     ttk::label $ds9(info).physicalXValue -relief groove \
 	-textvariable infobox(physical,x) -anchor center
-    ttk::label $ds9(info).physicalYLabel -text {Y}
+    ttk::label $ds9(info).physicalYLabel -text {y}
     ttk::label $ds9(info).physicalYValue -relief groove \
 	-textvariable infobox(physical,y) -anchor center
-    ttk::label $ds9(info).physicalZLabel -text {Z}
+    ttk::label $ds9(info).physicalZLabel -text {z}
     ttk::label $ds9(info).physicalZValue -relief groove \
 	-textvariable infobox(physical,z) -anchor center
 
     ttk::label $ds9(info).imageTitle -text [msgcat::mc {Image}]
-    ttk::label $ds9(info).imageXLabel -text {X}
+    ttk::label $ds9(info).imageXLabel -text {x}
     ttk::label $ds9(info).imageXValue -relief groove \
 	-textvariable infobox(image,x) -anchor center
-    ttk::label $ds9(info).imageYLabel -text {Y}
+    ttk::label $ds9(info).imageYLabel -text {y}
     ttk::label $ds9(info).imageYValue -relief groove \
 	-textvariable infobox(image,y) -anchor center
-    ttk::label $ds9(info).imageZLabel -text {Z}
+    ttk::label $ds9(info).imageZLabel -text {z}
     ttk::label $ds9(info).imageZValue -relief groove \
 	-textvariable infobox(image,z) -anchor center
 
@@ -554,37 +554,44 @@ proc UpdateInfoBox {which x y sys} {
 
     foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	if {$view(info,wcs$ll)} {
-	    foreach aa {x y z} {
-		switch $infobox(wcs$ll,$aa,sys) {
-		    RA {
-			$infobox(wcs$ll,$aa,nm) configure -text "\u03b1" \
-			    -font "$ds9(times) $fsz"
-		    }
-		    Dec {
-			$infobox(wcs$ll,$aa,nm) configure -text "\u03b4" \
-			    -font "$ds9(times) $fsz"
-		    }
-		    l {
-			$infobox(wcs$ll,$aa,nm) configure -text {l} -font \
-			    "{$ds9(times)} $pds9(font,size) normal italic"
-		    }
-		    b {
-			$infobox(wcs$ll,$aa,nm) configure -text {b} -font \
-			    "{$ds9(times)} $pds9(font,size) normal italic"
-		    }
-		    Lambda {
-			$infobox(wcs$ll,$aa,nm) configure -text "\u03bb" \
-			    -font "$ds9(times) $fsz"
-		    }
-		    Beta {
-			$infobox(wcs$ll,$aa,nm) configure -text "\u03b2" \
-			    -font "$ds9(times) $fsz"
-		    }
-		    default {
-			$infobox(wcs$ll,$aa,nm) configure \
-			    -text [string range $infobox(wcs$ll,$aa,sys) 0 0]
+	    if {[$which has wcs wcs$ll]} {
+		foreach aa {x y z} {
+		    switch $infobox(wcs$ll,$aa,sys) {
+			RA {
+			    $infobox(wcs$ll,$aa,nm) configure -text "\u03b1" \
+				-font "$ds9(times) $fsz"
+			}
+			Dec {
+			    $infobox(wcs$ll,$aa,nm) configure -text "\u03b4" \
+				-font "$ds9(times) $fsz"
+			}
+			l {
+			    $infobox(wcs$ll,$aa,nm) configure -text {l} -font \
+				"{$ds9(times)} $pds9(font,size) normal italic"
+			}
+			b {
+			    $infobox(wcs$ll,$aa,nm) configure -text {b} -font \
+				"{$ds9(times)} $pds9(font,size) normal italic"
+			}
+			Lambda {
+			    $infobox(wcs$ll,$aa,nm) configure -text "\u03bb" \
+				-font "$ds9(times) $fsz"
+			}
+			Beta {
+			    $infobox(wcs$ll,$aa,nm) configure -text "\u03b2" \
+				-font "$ds9(times) $fsz"
+			}
+			default {
+			    $infobox(wcs$ll,$aa,nm) configure -text $aa \
+				-font "$ds9(times) $fsz"
+			}
 		    }
 		}
+	    } else {
+		set infobox(wcs$ll,sys) "WCS $ll"
+		$infobox(wcs$ll,x,nm) configure -text {}
+		$infobox(wcs$ll,y,nm) configure -text {}
+		$infobox(wcs$ll,z,nm) configure -text {}
 	    }
 	}
     }

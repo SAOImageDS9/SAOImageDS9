@@ -153,7 +153,7 @@ proc DisplayCoordDialog {which x y} {
     append rr " \n"
 
     SimpleTextDialog coordtxt [msgcat::mc {Coordinates}] \
-	80 20 append bottom "$r"
+	80 20 append bottom "$rr"
 }
 
 proc PrefsDialogCoord {} {

@@ -2689,21 +2689,47 @@ double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
     wcsDistance(ast_,vv1,vv2);
 }
 
-const char* FitsImage::getWCSName(Coord::CoordSystem sys) 
+const char* FitsImage::getWCSDomain(Coord::CoordSystem sys) 
 {
-  if (fits_->find("WCSNAME"))
-    return fits_->getString("WCSNAME");
-  else
+  if (!hasWCS(sys))
     return NULL;
+
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
+  wcsSystem(ast_,sys);
+
+  astEnd;
+
+  const char* domain = astGetC(ast_, "Domain");
+  return domain;
 }
 
-const char* FitsImage::getWCSAxisName(Coord::CoordSystem sys, int axis) 
+const char* FitsImage::getWCSSystem(Coord::CoordSystem sys) 
 {
   if (!hasWCSCel(sys))
     return NULL;
 
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
+  AstFrameSet* fs =
+    (AstFrameSet*)astFindFrame(ast_, astSkyFrame(" MaxAxes=4")," ");
+  const char* str =NULL;
+  if (fs)
+    str = astGetC(fs, "System");
+
+  astEnd;
+  return str;
+}
+
+const char* FitsImage::getWCSAxisSymbol(Coord::CoordSystem sys, int axis) 
+{
+  if (!hasWCS(sys))
+    return NULL;
+
   int id = sys-Coord::WCS;
-  if (wcsNaxes_[id] < axis)
+  if (wcsNaxes_[id] <= axis)
     return NULL;
 
   ostringstream str;
@@ -2729,8 +2755,8 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   
   if (astOK && checkWCS(out))
     return hasWCSCel(sys) ? zero360(radToDeg(out)) : out;
-  else
-    return Vector();
+
+  return Vector();
 }
 
 char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
@@ -2765,7 +2791,7 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {
-  if (!hasWCS(sys))
+  if (!(hasWCS(sys) && hasWCS3D(sys)))
     return Vector();
 
   astClearStatus; // just to make sure
@@ -2793,7 +2819,7 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 
   lbuf[0] = '\0';
 
-  if (!hasWCS(sys))
+  if (!(hasWCS(sys) && hasWCS3D(sys)))
     return lbuf;
 
   wcsSystem(ast_,sys);
@@ -2820,19 +2846,22 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  if (hasWCS(sys) && wcsInv_) {
-    wcsSystem(ast_,sys);
-    wcsSkyFrame(ast_,sky);
-
-    Vector in = hasWCSCel(sys) ? degToRad(vv) : vv;
-    Vector out = wcsTran(ast_, in, 0);
-    astEnd;
-    
-    if (astOK && checkWCS(out))
-      return out;
+  if (!(hasWCS(sys) && wcsInv_)) {
+    maperr =1;
+    return Vector();
   }
-  
+
+  wcsSystem(ast_,sys);
+  wcsSkyFrame(ast_,sky);
+
+  Vector in = hasWCSCel(sys) ? degToRad(vv) : vv;
+  Vector out = wcsTran(ast_, in, 0);
+
   astEnd;
+    
+  if (astOK && checkWCS(out))
+    return out;
+  
   maperr =1;
   return Vector();
 }
@@ -2840,22 +2869,23 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
 Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {
+  if (!(hasWCS(sys) && hasWCS3D(sys) && wcsInv_))
+  return Vector3d();
+    
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  if (hasWCS(sys) && wcsInv_) {
-    wcsSystem(ast_,sys);
-    wcsSkyFrame(ast_,sky);
+  wcsSystem(ast_,sys);
+  wcsSkyFrame(ast_,sky);
 
-    Vector3d in = hasWCSCel(sys) ? degToRad(vv) : vv;
-    Vector3d out = wcsTran(ast_, in, 0);
-    astEnd;
-  
-  if (astOK && checkWCS(out))
-      return out;
-  }
+  Vector3d in = hasWCSCel(sys) ? degToRad(vv) : vv;
+  Vector3d out = wcsTran(ast_, in, 0);
 
   astEnd;
+  
+  if (astOK && checkWCS(out))
+    return out;
+  
   return Vector3d();
 }
 

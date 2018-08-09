@@ -185,27 +185,28 @@ void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr,
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
       
-      char* xname = (char*)sptr->getWCSAxisName(www,0);
-      if (xname)
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),xname,0);
+      char* xsym = (char*)sptr->getWCSAxisSymbol(www,0);
+      if (xsym)
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),xsym,0);
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),"x",0);
-      char* yname = (char*)sptr->getWCSAxisName(www,1);
-      if (yname)
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),yname,0);
+      char* ysym = (char*)sptr->getWCSAxisSymbol(www,1);
+      if (ysym)
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),ysym,0);
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"y",0);
-      char* zname = (char*)sptr->getWCSAxisName(www,2);
-      if (zname)
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z,sys"),zname,0);
+      char* zsym = (char*)sptr->getWCSAxisSymbol(www,2);
+      if (zsym)
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z,sys"),zsym,0);
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z,sys"),"z",0);
 
-      char* wcsname = (char*)sptr->getWCSName(www);
-      if (sptr->hasWCSCel(www))
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),coord.skyFrameStr(wcsSkyFrame_),0);
-      else if (wcsname)
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),wcsname,0);
+      char* system = (char*)sptr->getWCSSystem(www);
+      char* domain = (char*)sptr->getWCSDomain(www);
+      if (system)
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),system,0);
+      else if (domain)
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),domain,0);
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),coord.coordSystemStr(www),0);
 	    

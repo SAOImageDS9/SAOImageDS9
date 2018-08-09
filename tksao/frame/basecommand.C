@@ -2126,7 +2126,7 @@ void Base::getWCSAlignPointerCmd()
 void Base::getWCSNameCmd(Coord::CoordSystem sys)
 {
   if (currentContext->cfits && currentContext->cfits->hasWCS(sys)) {
-    char* name = (char*)currentContext->cfits->getWCSName(sys);
+    char* name = (char*)currentContext->cfits->getWCSDomain(sys);
     if (name) {
       Tcl_AppendResult(interp, name, NULL);
       return;

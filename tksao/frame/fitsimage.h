@@ -382,8 +382,9 @@ class FitsImage {
   Coord::Orientation getWCSOrientation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSRotation(Coord::CoordSystem, Coord::SkyFrame);
   double getWCSDist(const Vector&, const Vector&, Coord::CoordSystem);
-  const char* getWCSName(Coord::CoordSystem);
-  const char* getWCSAxisName(Coord::CoordSystem, int);
+  const char* getWCSDomain(Coord::CoordSystem);
+  const char* getWCSSystem(Coord::CoordSystem);
+  const char* getWCSAxisSymbol(Coord::CoordSystem, int);
 
   double getWCSSize(Coord::CoordSystem);
   double calcWCSSize(Coord::CoordSystem);

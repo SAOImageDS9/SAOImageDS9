@@ -342,26 +342,34 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     FitsImage* ptr = parent->findFits(sys,center);
     listPre(str, sys, sky, ptr, strip, 1);
 
+    double ww = ptr->mapLenFromRef(width,sys,Coord::ARCSEC);
+
     switch (sys) {
     case Coord::IMAGE:
     case Coord::PHYSICAL:
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
-      listNonCel(ptr, str, sys);
+      {
+	Vector v1 = ptr->mapFromRef(p1,sys);
+	Vector v2 = ptr->mapFromRef(p2,sys);
+	str << type_ << '(' << setprecision(parent->precLinear_)
+	    << v1 << ',' << v2 << ',' 
+	    << ww << ')';
+      }
       break;
     default:
+      str << type_ << '(';
+      listWCS(ptr,p1,sys,sky,format);
+      str << ra << ',' << dec << ',';
+      listWCS(ptr,p2,sys,sky,format);
+      str << ra << ',' << dec << ',';
+
       if (ptr->hasWCSCel(sys)) {
-	double ww = ptr->mapLenFromRef(width,sys,Coord::ARCSEC);
-	str << type_ << '(';
-	listWCS(ptr,p1,sys,sky,format);
-	str << ra << ',' << dec << ',';
-	listWCS(ptr,p2,sys,sky,format);
-	str << ra << ',' << dec << ',';
 	str << setprecision(parent->precArcsec_) << fixed << ww << '"' << ')';
 	str.unsetf(ios_base::floatfield);
       }
       else
-	listNonCel(ptr, str, sys);
+	str << setprecision(parent->precLinear_) << ww << ')';
     }
 
     if (conj)
@@ -369,17 +377,6 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 
     listProperties(str, 0);
   }
-}
-
-void Projection::listNonCel(FitsImage* ptr, ostream& str,
-			    Coord::CoordSystem sys)
-{
-  Vector v1 = ptr->mapFromRef(p1,sys);
-  Vector v2 = ptr->mapFromRef(p2,sys);
-  double ww = ptr->mapLenFromRef(width,sys);
-  str << type_ << '(' << setprecision(parent->precLinear_)
-      << v1 << ',' << v2 << ',' 
-      << ww << ')';
 }
 
 void Projection::listXML(ostream& str, Coord::CoordSystem sys,

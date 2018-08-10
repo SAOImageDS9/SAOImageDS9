@@ -210,18 +210,19 @@ void Line::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    listNonCel(ptr, str, sys);
+    {
+      Vector v1 = ptr->mapFromRef(p1,sys);
+      Vector v2 = ptr->mapFromRef(p2,sys);
+      str << type_ << '(' << setprecision(parent->precLinear_)
+	  << v1 << ',' << v2 << ')';
+    }
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
-      str << type_ << '(';
-      listWCS(ptr,p1,sys,sky,format);
-      str << ra << ',' << dec << ',';
-      listWCS(ptr,p2,sys,sky,format);
-      str << ra << ',' << dec << ')';
-    }
-    else
-      listNonCel(ptr, str, sys);
+    str << type_ << '(';
+    listWCS(ptr,p1,sys,sky,format);
+    str << ra << ',' << dec << ',';
+    listWCS(ptr,p2,sys,sky,format);
+    str << ra << ',' << dec << ')';
   }
 
   listPost(str, conj, strip);

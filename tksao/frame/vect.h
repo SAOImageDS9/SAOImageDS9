@@ -8,9 +8,6 @@
 #include "line.h"
 
 class Vect : public Line {
- protected:
-  void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
-
 public:
   Vect(Base* p, const Vector& pt,
        double mag, double ang);

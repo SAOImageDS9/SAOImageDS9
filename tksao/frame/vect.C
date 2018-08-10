@@ -59,25 +59,32 @@ void Vect::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     FitsImage* ptr = parent->findFits(sys,center);
     listPre(str, sys, sky, ptr, strip, 1);
 
+    double rr = ptr->mapLenFromRef((p2-p1).length(),sys,Coord::ARCSEC);
+    double aa = parent->mapAngleFromRef((p2-p1).angle(),sys,sky);
+
     switch (sys) {
     case Coord::IMAGE:
     case Coord::PHYSICAL:
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
-      listNonCel(ptr, str, sys);
+      {
+	Vector v1 = ptr->mapFromRef(p1,sys);
+	str << type_ << '(' << setprecision(parent->precLinear_) << v1 << ','
+	    << rr << ',' << radToDeg(aa) << ')';
+      }
       break;
     default:
+      listWCS(ptr,p1,sys,sky,format);
+      str << type_ << '(' << ra << ',' << dec << ',' ;
+
       if (ptr->hasWCSCel(sys)) {
-	listWCS(ptr,p1,sys,sky,format);
-	double rr = ptr->mapLenFromRef((p2-p1).length(),sys,Coord::ARCSEC);
-	double aa = parent->mapAngleFromRef((p2-p1).angle(),sys,sky);
-	str << type_ << '(' << ra << ',' << dec << ',' 
-	    << setprecision(parent->precArcsec_) << fixed << rr << '"' << ',';
+	str << setprecision(parent->precArcsec_) << fixed << rr << '"' << ',';
 	str.unsetf(ios_base::floatfield);
-	str << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
       }
       else
-	listNonCel(ptr, str, sys);
+	str << setprecision(parent->precLinear_) << rr << ',' ;
+
+      str << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
     }
 
     if (conj)
@@ -86,15 +93,6 @@ void Vect::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     str << " vector=" << p2Arrow;
     listProperties(str, 0);
   }
-}
-
-void Vect::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
-{
-  Vector v1 = ptr->mapFromRef(p1,sys);
-  double rr = ptr->mapLenFromRef((p2-p1).length(),sys);
-  double aa = parent->mapAngleFromRef((p2-p1).angle(),sys);
-  str << type_ << '(' << setprecision(parent->precLinear_) << v1 << ','
-      << rr << ',' << radToDeg(aa) << ')';
 }
 
 void Vect::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky, 

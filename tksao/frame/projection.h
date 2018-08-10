@@ -33,9 +33,6 @@ class Projection : public BaseLine {
   void updateHandles();
   void calcAllBBox();
 
- protected:
-  void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
-
  public:
   Projection(const Projection&);
   Projection(Base* p, const Vector& ptr1, const Vector& ptr2, 

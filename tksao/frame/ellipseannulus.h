@@ -8,9 +8,6 @@
 #include "baseellipse.h"
 
 class EllipseAnnulus : public BaseEllipse {
- protected:
-  void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
-
 public:
   EllipseAnnulus(Base* p, const Vector& ctr, 
 		 const Vector& r, 

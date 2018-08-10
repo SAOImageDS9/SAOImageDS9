@@ -233,6 +233,7 @@ void Annulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       str.unsetf(ios_base::floatfield);
     }
     else {
+      str << setprecision(parent->precLinear_);
       for (int ii=0; ii<numAnnuli_; ii++) {
 	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys);
 	str << ',' << rr;

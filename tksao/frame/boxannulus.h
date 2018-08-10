@@ -8,9 +8,6 @@
 #include "basebox.h"
 
 class BoxAnnulus : public BaseBox {
- protected:
-  void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
-
 public:
   BoxAnnulus(Base* p, const Vector& ctr,
 	     const Vector& s, 

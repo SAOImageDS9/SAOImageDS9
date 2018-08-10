@@ -277,44 +277,47 @@ void BoxAnnulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   FitsImage* ptr = parent->findFits(sys,center);
   listPre(str, sys, sky, ptr, strip, 0);
 
+  double aa = parent->mapAngleFromRef(angle,sys,sky);
+
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    listNonCel(ptr, str, sys);
+    {
+      Vector vv = ptr->mapFromRef(center,sys);
+      str << "box(" << setprecision(parent->precLinear_) << vv;
+      for (int ii=0; ii<numAnnuli_; ii++) {
+	Vector rr = ptr->mapLenFromRef(annuli_[ii],sys);
+	str << ',' << rr;
+      }
+      str << ',' << radToDeg(aa) << ')';
+    }
     break;
   default:
+    listWCS(ptr,center,sys,sky,format);
+    str << "box(" << ra << ',' << dec;
+      
     if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,sky,format);
-      double aa = parent->mapAngleFromRef(angle,sys,sky);
-      str << "box(" << ra << ',' << dec
-	  << setprecision(parent->precArcsec_) << fixed;
+      str << setprecision(parent->precArcsec_) << fixed;
       for (int ii=0; ii<numAnnuli_; ii++) {
 	Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
 	str << ',' << setunit('"') << rr;
       }
       str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLinear_) << ',' << radToDeg(aa) << ')';
     }
-    else
-      listNonCel(ptr, str, sys);
+    else {
+      str << setprecision(parent->precLinear_);
+	for (int ii=0; ii<numAnnuli_; ii++) {
+	Vector rr = ptr->mapLenFromRef(annuli_[ii],sys);
+	str << ',' << rr;
+      }
+    }
+
+    str << setprecision(parent->precLinear_) << ',' << radToDeg(aa) << ')';
   }
 
   listPost(str, conj, strip);
-}
-
-void BoxAnnulus::listNonCel(FitsImage* ptr, ostream& str,
-			    Coord::CoordSystem sys)
-{
-  Vector vv = ptr->mapFromRef(center,sys);
-  double aa = parent->mapAngleFromRef(angle,sys);
-  str << "box(" << setprecision(parent->precLinear_) << vv;
-  for (int ii=0; ii<numAnnuli_; ii++) {
-    Vector rr = ptr->mapLenFromRef(annuli_[ii],sys);
-    str << ',' << rr;
-  }
-  str << ',' << radToDeg(aa) << ')';
 }
 
 void BoxAnnulus::listXML(ostream& str, Coord::CoordSystem sys,

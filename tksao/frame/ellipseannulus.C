@@ -245,44 +245,47 @@ void EllipseAnnulus::list(ostream& str, Coord::CoordSystem sys,
   FitsImage* ptr = parent->findFits(sys,center);
   listPre(str, sys, sky, ptr, strip, 0);
 
+  double aa = parent->mapAngleFromRef(angle,sys,sky);
+
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    listNonCel(ptr, str, sys);
+    {
+      Vector vv = ptr->mapFromRef(center,sys);
+      str << "ellipse(" << setprecision(parent->precLinear_) << vv;
+      for (int ii=0; ii<numAnnuli_; ii++) {
+	Vector rr = ptr->mapLenFromRef(annuli_[ii],sys);
+	str << ',' << rr;
+      }
+      str << ',' << radToDeg(aa) << ')';
+    }
     break;
   default:
+    listWCS(ptr,center,sys,sky,format);
+    str << "ellipse(" << ra << ',' << dec;
+
     if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,sky,format);
-      double aa = parent->mapAngleFromRef(angle,sys,sky);
-      str << "ellipse(" << ra << ',' << dec
-	  << setprecision(parent->precArcsec_) << fixed;
+      str << setprecision(parent->precArcsec_) << fixed;
       for (int ii=0; ii<numAnnuli_; ii++) {
 	Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
 	str << ',' << setunit('"') << rr;
       }
       str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLinear_) << ',' << radToDeg(aa) << ')';
     }
-    else
-      listNonCel(ptr, str, sys);
+    else {
+      str << setprecision(parent->precLinear_);
+      for (int ii=0; ii<numAnnuli_; ii++) {
+	Vector rr = ptr->mapLenFromRef(annuli_[ii],sys);
+	str << ',' << rr;
+      }
+    }
+
+    str << setprecision(parent->precLinear_) << ',' << radToDeg(aa) << ')';
   }
 
   listPost(str, conj, strip);
-}
-
-void EllipseAnnulus::listNonCel(FitsImage* ptr, ostream& str, 
-				Coord::CoordSystem sys)
-{
-  Vector vv = ptr->mapFromRef(center,sys);
-  double aa = parent->mapAngleFromRef(angle,sys);
-  str << "ellipse(" << setprecision(parent->precLinear_) << vv;
-  for (int ii=0; ii<numAnnuli_; ii++) {
-    Vector rr = ptr->mapLenFromRef(annuli_[ii],sys);
-    str << ',' << rr;
-  }
-  str << ',' << radToDeg(aa) << ')';
 }
 
 void EllipseAnnulus::listXML(ostream& str, Coord::CoordSystem sys, 

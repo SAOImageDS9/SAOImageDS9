@@ -209,13 +209,22 @@ void Annulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    listNonCel(ptr, str, sys);
+    {
+      Vector vv = ptr->mapFromRef(center,sys);
+      str << type_ << '(' << setprecision(parent->precLinear_) << vv;
+      for (int ii=0; ii<numAnnuli_; ii++) {
+	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys);
+	str << ',' << rr;
+      }
+      str << ')';
+    }
     break;
   default:
+    listWCS(ptr,center,sys,sky,format);
+    str << type_ << '(' << ra << ',' << dec;
+
     if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,sky,format);
-      str << type_ << '(' << ra << ',' << dec
-	  << setprecision(parent->precArcsec_) << fixed;
+      str << setprecision(parent->precArcsec_) << fixed;
       for (int ii=0; ii<numAnnuli_; ii++) {
 	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
 	str << ',' << rr << '"';
@@ -223,22 +232,16 @@ void Annulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       str << ')';
       str.unsetf(ios_base::floatfield);
     }
-    else
-      listNonCel(ptr, str, sys);
+    else {
+      for (int ii=0; ii<numAnnuli_; ii++) {
+	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys);
+	str << ',' << rr;
+      }
+      str << ')';
+    }
   }
 
   listPost(str, conj, strip);
-}
-
-void Annulus::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
-{
-  Vector vv = ptr->mapFromRef(center,sys);
-  str << type_ << '(' << setprecision(parent->precLinear_) << vv;
-  for (int ii=0; ii<numAnnuli_; ii++) {
-    double rr = ptr->mapLenFromRef(annuli_[ii][0],sys);
-    str << ',' << rr;
-  }
-  str << ')';
 }
 
 void Annulus::listXML(ostream& str, Coord::CoordSystem sys, 

@@ -1393,8 +1393,8 @@ void Marker::setMatrices(Coord::InternalSystem sys, Matrix* fwd, Matrix* bck)
 // list
 
 void Marker::listWCS(FitsImage* ptr, 
-		       const Vector& vv, Coord::CoordSystem sys, 
-		       Coord::SkyFrame sky, Coord::SkyFormat format)
+		     const Vector& vv, Coord::CoordSystem sys,
+		     Coord::SkyFrame sky, Coord::SkyFormat format)
 {
   char buf[64];
   ptr->mapFromRef(vv,sys,sky,format,buf);
@@ -1406,9 +1406,21 @@ void Marker::listWCS(FitsImage* ptr,
   wcs >> ra >> dec;
 }
 
+void Marker::listWCSLen(ostream& str, FitsImage* ptr,
+			const Vector& vv, Coord::CoordSystem sys)
+{
+  if (ptr->hasWCSCel(sys)) {
+    str << setprecision(parent->precArcsec_) << fixed << setunit('"') << vv;
+    str.unsetf(ios_base::floatfield);
+  }
+  else
+    str << setprecision(parent->precLinear_) << vv;
+  str << ',';
+}
+
 void Marker::listWCSPros(FitsImage* ptr, 
-			   const Vector& vv, Coord::CoordSystem sys, 
-			   Coord::SkyFrame sky, Coord::SkyFormat format)
+			 const Vector& vv, Coord::CoordSystem sys,
+			 Coord::SkyFrame sky, Coord::SkyFormat format)
 {
   char buf[64];
   ptr->mapFromRef(vv,sys,sky,format,buf);

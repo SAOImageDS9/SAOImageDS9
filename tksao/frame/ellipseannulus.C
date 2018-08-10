@@ -252,15 +252,11 @@ void EllipseAnnulus::list(ostream& str, Coord::CoordSystem sys,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    {
-      Vector vv = ptr->mapFromRef(center,sys);
-      str << "ellipse(" << setprecision(parent->precLinear_) << vv;
-      for (int ii=0; ii<numAnnuli_; ii++) {
-	Vector rr = ptr->mapLenFromRef(annuli_[ii],sys);
-	str << ',' << rr;
-      }
-      str << ',' << radToDeg(aa) << ')';
-    }
+    str << "ellipse(" << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,sys);
+    for (int ii=0; ii<numAnnuli_; ii++)
+      str << ',' << ptr->mapLenFromRef(annuli_[ii],sys);
+    str << ',' << radToDeg(aa) << ')';
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
@@ -276,10 +272,8 @@ void EllipseAnnulus::list(ostream& str, Coord::CoordSystem sys,
     }
     else {
       str << setprecision(parent->precLinear_);
-      for (int ii=0; ii<numAnnuli_; ii++) {
-	Vector rr = ptr->mapLenFromRef(annuli_[ii],sys);
-	str << ',' << rr;
-      }
+      for (int ii=0; ii<numAnnuli_; ii++)
+	str << ',' << ptr->mapLenFromRef(annuli_[ii],sys);
     }
 
     str << setprecision(parent->precLinear_) << ',' << radToDeg(aa) << ')';

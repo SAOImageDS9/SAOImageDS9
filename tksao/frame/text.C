@@ -222,10 +222,8 @@ void Text::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     case Coord::PHYSICAL:
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
-      {
-	Vector vv = ptr->mapFromRef(center,sys);
-	str << type_ << '(' << setprecision(parent->precLinear_) << vv << ')';
-      }
+      str << type_ << '(' << setprecision(parent->precLinear_)
+	  << ptr->mapFromRef(center,sys) << ')';
       break;
     default:
       listWCS(ptr,center,sys,sky,format);

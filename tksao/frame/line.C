@@ -210,12 +210,9 @@ void Line::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    {
-      Vector v1 = ptr->mapFromRef(p1,sys);
-      Vector v2 = ptr->mapFromRef(p2,sys);
-      str << type_ << '(' << setprecision(parent->precLinear_)
-	  << v1 << ',' << v2 << ')';
-    }
+    str << type_ << '(' << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(p1,sys) << ','
+	<< ptr->mapFromRef(p2,sys) << ')';
     break;
   default:
     str << type_ << '(';

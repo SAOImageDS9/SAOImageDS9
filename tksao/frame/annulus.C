@@ -209,15 +209,11 @@ void Annulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    {
-      Vector vv = ptr->mapFromRef(center,sys);
-      str << type_ << '(' << setprecision(parent->precLinear_) << vv;
-      for (int ii=0; ii<numAnnuli_; ii++) {
-	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys);
-	str << ',' << rr;
-      }
-      str << ')';
-    }
+    str << type_ << '(' << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,sys);
+    for (int ii=0; ii<numAnnuli_; ii++)
+      str << ',' << ptr->mapLenFromRef(annuli_[ii][0],sys);
+    str << ')';
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
@@ -234,10 +230,8 @@ void Annulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     }
     else {
       str << setprecision(parent->precLinear_);
-      for (int ii=0; ii<numAnnuli_; ii++) {
-	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys);
-	str << ',' << rr;
-      }
+      for (int ii=0; ii<numAnnuli_; ii++)
+	str << ',' << ptr->mapLenFromRef(annuli_[ii][0],sys);
       str << ')';
     }
   }

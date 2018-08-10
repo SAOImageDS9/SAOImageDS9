@@ -270,12 +270,10 @@ void Box::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    {
-      Vector vv = ptr->mapFromRef(center,sys);
-      str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-	  << rr << ',' 
-	  << radToDeg(aa) << ')';
-    }
+    str << type_ << '(' << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,sys) << ','
+	<< rr << ',' 
+	<< radToDeg(aa) << ')';
     break;
   default:
     listWCS(ptr,center,sys,sky,format);

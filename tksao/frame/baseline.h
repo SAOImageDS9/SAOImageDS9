@@ -26,8 +26,6 @@ protected:
 
   void updateHandles() {}
 
-  virtual void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
-
 public:
   BaseLine(Base* p, const Vector& ptr1, const Vector& ptr2);
   BaseLine(Base* p, const Vector& ptr1, const Vector& ptr2,

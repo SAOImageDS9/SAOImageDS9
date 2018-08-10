@@ -106,14 +106,6 @@ void BaseLine::setPoints(const Vector& v1, const Vector& v2)
   doCallBack(CallBack::EDITCB);
 }
 
-void BaseLine::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
-{
-  Vector v1 = ptr->mapFromRef(p1,sys);
-  Vector v2 = ptr->mapFromRef(p2,sys);
-  str << type_ << '(' << setprecision(parent->precLinear_)
-      << v1 << ',' << v2 << ')';
-}
-
 // special composite funtionallity
 
 void BaseLine::setComposite(const Matrix& mx, double aa)

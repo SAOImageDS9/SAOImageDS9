@@ -517,14 +517,13 @@ void Epanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 
     if (ptr->hasWCSCel(sys)) {
       str << setprecision(parent->precArcsec_) << fixed << setunit('"')
-	  << r1 << ',' << setunit('"') << r2 << ',';
+	  << setunit('"') << r1 << ',' << setunit('"') << r2 << ',';
       str.unsetf(ios_base::floatfield);
       str << setprecision(parent->precLinear_) << numAnnuli_-1 << ',';
     }
-    else {
+    else
       str << setprecision(parent->precLinear_)
 	  << r1 << ',' << r2 << ',' << numAnnuli_-1 << ',';
-    }
 
     str << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
   }

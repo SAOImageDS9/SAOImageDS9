@@ -494,52 +494,40 @@ void Cpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   FitsImage* ptr = parent->findFits(sys,center);
   listPre(str, sys, sky, ptr, strip, 0);
 
+  double r1 = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC);
+  double r2 = ptr->mapLenFromRef(annuli_[numAnnuli_-1][0],sys,Coord::ARCSEC);
+  double a1 = radToDeg(parent->mapAngleFromRef(angles_[0],sys,sky));
+  double a2 = radToDeg(parent->mapAngleFromRef(angles_[numAngles_-1],sys,sky));
+  if (a2<=a1+FLT_EPSILON)
+    a2 += 360;
+
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    listANonCel(ptr, str, sys);
+    str << type_ << '(' << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,sys) << ','
+	<< a1 << ',' << a2 << ',' << numAngles_-1 << ','
+	<< r1 << ',' << r2 << ',' << numAnnuli_-1 << ')';
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
-      double a1 = radToDeg(parent->mapAngleFromRef(angles_[0],sys,sky));
-      double a2 = radToDeg(parent->mapAngleFromRef(angles_[numAngles_-1],sys,sky));
-      double r1 = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC);
-      double r2 = ptr->mapLenFromRef(annuli_[numAnnuli_-1][0],sys,Coord::ARCSEC);
-      if (a2<=a1+FLT_EPSILON)
-	a2 += 360;
+    listWCS(ptr,center,sys,sky,format);
+    str << type_ << '(' << ra << ',' << dec << ','
+	<< setprecision(parent->precLinear_) << a1 << ',' << a2 << ','
+	<< numAngles_-1 << ',';
 
-      listWCS(ptr,center,sys,sky,format);
-      str << type_ << '(' 
-	  << ra << ',' << dec << ','
-	  << setprecision(parent->precLinear_) << a1 << ',' << a2 << ','
-	  << numAngles_-1 << ','
-	  << setprecision(parent->precArcsec_) << fixed << r1 << '"' << ','
-	  << r2 << '"' << ',';
+    if (ptr->hasWCSCel(sys)) {
+      str << setprecision(parent->precArcsec_) << fixed
+	  << r1 << '"' << ',' << r2 << '"' << ',' << numAnnuli_-1 << ')';
       str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLinear_) << numAnnuli_-1 << ')';
     }
     else
-      listANonCel(ptr, str, sys);
+      str << setprecision(parent->precLinear_) 
+	  << r1 << ',' << r2 << ',' << numAnnuli_-1 << ')';
   }
 
   listPost(str, conj, strip);
-}
-
-void Cpanda::listANonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
-{
-  double a1 = radToDeg(parent->mapAngleFromRef(angles_[0],sys));
-  double a2 = radToDeg(parent->mapAngleFromRef(angles_[numAngles_-1],sys));
-  if (a2<=a1+FLT_EPSILON)
-    a2 += 360;
-
-  Vector vv = ptr->mapFromRef(center,sys);
-  double r1 = ptr->mapLenFromRef(annuli_[0][0],sys);
-  double r2 = ptr->mapLenFromRef(annuli_[numAnnuli_-1][0],sys);
-  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-      << a1 << ',' << a2 << ',' << numAngles_-1 << ','
-      << r1 << ',' << r2 << ',' << numAnnuli_-1 << ')';
 }
 
 void Cpanda::listB(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,

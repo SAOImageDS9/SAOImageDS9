@@ -220,43 +220,29 @@ void BasePolygon::listBase(FitsImage* ptr, ostream& str,
 			   Coord::SkyFormat format)
 {
   Matrix mm = fwdMatrix();
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    {
-      str << type_ << '(';
-      int first=1;
-      vertex.head();
-      do {
-	if (!first)
-	  str << ',';
-	first=0;
 
-	Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,sys);
-	str << setprecision(parent->precLinear_) << vv;
-      }
-      while (vertex.next());
-      str << ')';
-    }
-    break;
-  default:
-    {
-      str << type_ << '(';
-      int first=1;
-      vertex.head();
-      do {
-	if (!first)
-	  str << ',';
-	first=0;
+  str << type_ << '(';
+  int first=1;
+  vertex.head();
+  do {
+    if (!first)
+      str << ',';
+    first=0;
 
-	listWCS(ptr,vertex.current()->vector*mm,sys,sky,format);
-	str << ra << ',' << dec;
-      }
-      while (vertex.next());
-      str << ')';
+    Vector vv = vertex.current()->vector*mm;
+    switch (sys) {
+    case Coord::IMAGE:
+    case Coord::PHYSICAL:
+    case Coord::DETECTOR:
+    case Coord::AMPLIFIER:
+      str << setprecision(parent->precLinear_) << ptr->mapFromRef(vv,sys);
+      break;
+    default:
+      listWCS(ptr,vv,sys,sky,format);
+      str << ra << ',' << dec;
+      break;
     }
-  }
+  } while (vertex.next());
+  str << ')';
 }
 

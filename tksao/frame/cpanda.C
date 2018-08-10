@@ -519,8 +519,10 @@ void Cpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 
     if (ptr->hasWCSCel(sys)) {
       str << setprecision(parent->precArcsec_) << fixed
-	  << r1 << '"' << ',' << r2 << '"' << ',' << numAnnuli_-1 << ')';
+	  << r1 << '"' << ',' << r2 << '"' << ',';
       str.unsetf(ios_base::floatfield);
+      str << setprecision(parent->precLinear_) << numAnnuli_-1 << ')';
+
     }
     else
       str << setprecision(parent->precLinear_) 

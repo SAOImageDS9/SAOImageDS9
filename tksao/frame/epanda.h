@@ -25,8 +25,6 @@ class Epanda : public BaseEllipse {
   void listB(ostream&, Coord::CoordSystem, Coord::SkyFrame,
 	     Coord::SkyFormat, int, int);
 
-  void listANonCel(FitsImage*, ostream&, Coord::CoordSystem);
-
   void listBNonCel(FitsImage*, ostream&, 
 		   Coord::CoordSystem, Coord::SkyFrame,
 		   Coord::SkyFormat, int, int);

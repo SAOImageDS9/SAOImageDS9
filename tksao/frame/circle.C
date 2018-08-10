@@ -215,23 +215,29 @@ void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   FitsImage* ptr = parent->findFits(sys,center);
   listPre(str, sys, sky, ptr, strip, 0);
   
+  double rr = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC);
+
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    listNonCel(ptr, str, sys);
+    {
+      Vector vv = ptr->mapFromRef(center,sys);
+      str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
+	  << rr << ')';
+    }
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
       listWCS(ptr,center,sys,sky,format);
-      double rr = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC);
-      str << type_ << '(' << ra << ',' << dec << ',' 
-	  << setprecision(parent->precArcsec_) << fixed << rr << '"' << ')';
-      str.unsetf(ios_base::floatfield);
-    }
-    else
-      listNonCel(ptr, str, sys);
+      str << type_ << '(' << ra << ',' << dec << ',' ;
+
+      if (ptr->hasWCSCel(sys)) {
+	str << setprecision(parent->precArcsec_) << fixed << rr << '"' << ')';
+	str.unsetf(ios_base::floatfield);
+      }
+      else
+	str << setprecision(parent->precLinear_) << rr << ')';
   }
 
   listPost(str, conj, strip);
@@ -255,14 +261,6 @@ void Circle::listPost(ostream& str, int conj, int strip)
     else
       str << ';';
   }
-}
-
-void Circle::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
-{
-  Vector vv = ptr->mapFromRef(center,sys);
-  double rr = ptr->mapLenFromRef(annuli_[0][0],sys);
-  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-      << rr << ')';
 }
 
 void Circle::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky, 

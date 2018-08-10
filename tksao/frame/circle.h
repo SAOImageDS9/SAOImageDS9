@@ -25,8 +25,6 @@ class Circle : public BaseEllipse {
   void renderWIN32Draw();
 #endif
 
-  void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
-
 public:
   Circle(Base* p, const Vector& ctr, double r, int fill);
   Circle(Base* p, const Vector& ctr,

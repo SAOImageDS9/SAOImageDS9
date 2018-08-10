@@ -25,8 +25,6 @@ class Ellipse : public BaseEllipse {
   void renderWIN32Draw();
 #endif
 
-  void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
-
 public:
   Ellipse(Base* p, const Vector& ctr, const Vector& r, double ang, int fill);
   Ellipse(Base* p, const Vector& ctr,

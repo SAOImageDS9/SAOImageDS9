@@ -23,8 +23,6 @@ class Box : public BaseBox {
   void renderWIN32Draw(Vector*);
 #endif
 
-  void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
-
 public:
   Box(Base* p, const Vector& ctr, const Vector& seg, double ang, int fill);
   Box(Base* p, const Vector& ctr, 

@@ -262,26 +262,34 @@ void Box::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   FitsImage* ptr = parent->findFits(sys,center);
   listPre(str, sys, sky, ptr, strip, 0);
 
+  Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCSEC);
+  double aa = parent->mapAngleFromRef(angle,sys,sky);
+
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    listNonCel(ptr, str, sys);
+    {
+      Vector vv = ptr->mapFromRef(center,sys);
+      str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
+	  << rr << ',' 
+	  << radToDeg(aa) << ')';
+    }
     break;
   default:
+    listWCS(ptr,center,sys,sky,format);
+    str << type_ << '(' << ra << ',' << dec << ',' ;
+
     if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,sky,format);
-      Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCSEC);
-      double aa = parent->mapAngleFromRef(angle,sys,sky);
-      str << type_ << '(' << ra << ',' << dec << ',' 
-	  << setprecision(parent->precArcsec_) << fixed << setunit('"')
+      str << setprecision(parent->precArcsec_) << fixed << setunit('"')
 	  << rr << ',';
       str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
     }
     else
-      listNonCel(ptr, str, sys);
+      str << setprecision(parent->precLinear_) << rr << ',' ;
+
+    str << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
   }
 
   listPost(str, conj, strip);
@@ -305,16 +313,6 @@ void Box::listPost(ostream& str, int conj, int strip)
     else
       str << ';';
   }
-}
-
-void Box::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
-{
-  Vector vv = ptr->mapFromRef(center,sys);
-  Vector rr = ptr->mapLenFromRef(annuli_[0],sys);
-  double aa = parent->mapAngleFromRef(angle,sys);
-  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-      << rr << ',' 
-      << radToDeg(aa) << ')';
 }
 
 void Box::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky, 

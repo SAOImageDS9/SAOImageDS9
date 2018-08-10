@@ -344,30 +344,31 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 
     double ww = ptr->mapLenFromRef(width,sys,Coord::ARCSEC);
 
+    str << type_ << '(';
     switch (sys) {
     case Coord::IMAGE:
     case Coord::PHYSICAL:
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
-      str << type_ << '(' << setprecision(parent->precLinear_)
+      str << setprecision(parent->precLinear_)
 	  << ptr->mapFromRef(p1,sys) << ','
 	  << ptr->mapFromRef(p2,sys) << ',' 
-	  << ww << ')';
+	  << ww;
       break;
     default:
-      str << type_ << '(';
       listWCS(ptr,p1,sys,sky,format);
       str << ra << ',' << dec << ',';
       listWCS(ptr,p2,sys,sky,format);
       str << ra << ',' << dec << ',';
 
       if (ptr->hasWCSCel(sys)) {
-	str << setprecision(parent->precArcsec_) << fixed << ww << '"' << ')';
+	str << setprecision(parent->precArcsec_) << fixed << ww << '"';
 	str.unsetf(ios_base::floatfield);
       }
       else
-	str << setprecision(parent->precLinear_) << ww << ')';
+	str << setprecision(parent->precLinear_) << ww;
     }
+    str  << ')';
 
     if (conj)
       str << " ||";

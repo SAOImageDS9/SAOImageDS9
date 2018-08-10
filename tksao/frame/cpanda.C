@@ -501,19 +501,20 @@ void Cpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   if (a2<=a1+FLT_EPSILON)
     a2 += 360;
 
+  str << type_ << '(';
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << type_ << '(' << setprecision(parent->precLinear_)
+    str << setprecision(parent->precLinear_)
 	<< ptr->mapFromRef(center,sys) << ','
 	<< a1 << ',' << a2 << ',' << numAngles_-1 << ','
-	<< r1 << ',' << r2 << ',' << numAnnuli_-1 << ')';
+	<< r1 << ',' << r2 << ',' << numAnnuli_-1;
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
-    str << type_ << '(' << ra << ',' << dec << ','
+    str << ra << ',' << dec << ','
 	<< setprecision(parent->precLinear_) << a1 << ',' << a2 << ','
 	<< numAngles_-1 << ',';
 
@@ -521,13 +522,14 @@ void Cpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       str << setprecision(parent->precArcsec_) << fixed
 	  << r1 << '"' << ',' << r2 << '"' << ',';
       str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLinear_) << numAnnuli_-1 << ')';
+      str << setprecision(parent->precLinear_) << numAnnuli_-1;
 
     }
     else
       str << setprecision(parent->precLinear_) 
-	  << r1 << ',' << r2 << ',' << numAnnuli_-1 << ')';
+	  << r1 << ',' << r2 << ',' << numAnnuli_-1;
   }
+  str  << ')';
 
   listPost(str, conj, strip);
 }

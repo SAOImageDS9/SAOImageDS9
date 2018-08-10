@@ -279,20 +279,20 @@ void BoxAnnulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 
   double aa = parent->mapAngleFromRef(angle,sys,sky);
 
+  str << "box(";
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << "box(" << setprecision(parent->precLinear_)
+    str << setprecision(parent->precLinear_)
 	<< ptr->mapFromRef(center,sys);
     for (int ii=0; ii<numAnnuli_; ii++)
       str << ',' << ptr->mapLenFromRef(annuli_[ii],sys);
-    str << ',' << radToDeg(aa) << ')';
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
-    str << "box(" << ra << ',' << dec;
+    str << ra << ',' << dec;
       
     if (ptr->hasWCSCel(sys)) {
       str << setprecision(parent->precArcsec_) << fixed;
@@ -307,9 +307,8 @@ void BoxAnnulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	for (int ii=0; ii<numAnnuli_; ii++)
 	str << ',' << ptr->mapLenFromRef(annuli_[ii],sys);
     }
-
-    str << setprecision(parent->precLinear_) << ',' << radToDeg(aa) << ')';
   }
+  str << setprecision(parent->precLinear_) << ',' << radToDeg(aa) << ')';
 
   listPost(str, conj, strip);
 }

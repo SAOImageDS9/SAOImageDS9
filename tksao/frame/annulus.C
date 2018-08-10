@@ -204,20 +204,20 @@ void Annulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   FitsImage* ptr = parent->findFits(sys,center);
   listPre(str, sys, sky, ptr, strip, 0);
 
+  str << type_ << '(';
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << type_ << '(' << setprecision(parent->precLinear_)
+    str << setprecision(parent->precLinear_)
 	<< ptr->mapFromRef(center,sys);
     for (int ii=0; ii<numAnnuli_; ii++)
       str << ',' << ptr->mapLenFromRef(annuli_[ii][0],sys);
-    str << ')';
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
-    str << type_ << '(' << ra << ',' << dec;
+    str << ra << ',' << dec;
 
     if (ptr->hasWCSCel(sys)) {
       str << setprecision(parent->precArcsec_) << fixed;
@@ -225,16 +225,15 @@ void Annulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
 	str << ',' << rr << '"';
       }
-      str << ')';
       str.unsetf(ios_base::floatfield);
     }
     else {
       str << setprecision(parent->precLinear_);
       for (int ii=0; ii<numAnnuli_; ii++)
 	str << ',' << ptr->mapLenFromRef(annuli_[ii][0],sys);
-      str << ')';
     }
   }
+  str << ')';
 
   listPost(str, conj, strip);
 }

@@ -239,19 +239,19 @@ void Ellipse::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCSEC);
   double aa = parent->mapAngleFromRef(angle,sys,sky);
 
+  str << type_ << '(';
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << type_ << '(' << setprecision(parent->precLinear_)
+    str << setprecision(parent->precLinear_)
 	<< ptr->mapFromRef(center,sys) << ','
-	<< rr << ',' 
-	<< radToDeg(aa) << ')';
+	<< rr << ',';
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
-    str << type_ << '(' << ra << ',' << dec << ',' ;
+    str << ra << ',' << dec << ',' ;
 
     if (ptr->hasWCSCel(sys)) {
       str << setprecision(parent->precArcsec_) << fixed << setunit('"')
@@ -260,10 +260,9 @@ void Ellipse::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     }
     else
       str << setprecision(parent->precLinear_) << rr << ',' ;
-
-    str << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
   }
-
+  str << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
+  
   listPost(str, conj, strip);
 }
 

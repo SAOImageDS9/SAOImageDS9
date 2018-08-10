@@ -490,22 +490,23 @@ void Ruler::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     FitsImage* ptr = parent->findFits(sys,center);
     listPre(str, sys, sky, ptr, strip, 1);
 
+    str << type_ << '(';
     switch (sys) {
     case Coord::IMAGE:
     case Coord::PHYSICAL:
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
-      str << type_ << '(' << setprecision(parent->precLinear_)
+      str << setprecision(parent->precLinear_)
 	  << ptr->mapFromRef(p1,sys) << ','
-	  << ptr->mapFromRef(p2,sys) << ')';
+	  << ptr->mapFromRef(p2,sys);
       break;
     default:
-      str << type_ << '(';
       listWCS(ptr,p1,sys,sky,format);
       str << ra << ',' << dec << ',';
       listWCS(ptr,p2,sys,sky,format);
-      str << ra << ',' << dec << ')';
+      str << ra << ',' << dec;
     }
+    str  << ')';
 
     if (conj)
       str << " ||";

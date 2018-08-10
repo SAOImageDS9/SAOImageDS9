@@ -754,19 +754,21 @@ void Point::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   FitsImage* ptr = parent->findFits(sys,center);
   listPre(str, sys, sky, ptr, strip, 0);
 
+  str << type_ << '(';
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << type_ << '(' << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,sys) << ')';
+    str << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,sys);
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
-    str << type_ << '(' << ra << ',' << dec << ')';
+    str << ra << ',' << dec;
     break;
   }
+  str  << ')';
 
   listPost(str, conj, strip);
 }

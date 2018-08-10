@@ -62,20 +62,19 @@ void Vect::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     double rr = ptr->mapLenFromRef((p2-p1).length(),sys,Coord::ARCSEC);
     double aa = parent->mapAngleFromRef((p2-p1).angle(),sys,sky);
 
+    str << type_ << '(';
     switch (sys) {
     case Coord::IMAGE:
     case Coord::PHYSICAL:
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
-      {
-	Vector v1 = ptr->mapFromRef(p1,sys);
-	str << type_ << '(' << setprecision(parent->precLinear_) << v1 << ','
-	    << rr << ',' << radToDeg(aa) << ')';
-      }
+      str << setprecision(parent->precLinear_)
+	  << ptr->mapFromRef(p1,sys) << ','
+	  << rr << ',';
       break;
     default:
       listWCS(ptr,p1,sys,sky,format);
-      str << type_ << '(' << ra << ',' << dec << ',' ;
+      str << ra << ',' << dec << ',' ;
 
       if (ptr->hasWCSCel(sys)) {
 	str << setprecision(parent->precArcsec_) << fixed << rr << '"' << ',';
@@ -83,10 +82,9 @@ void Vect::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       }
       else
 	str << setprecision(parent->precLinear_) << rr << ',' ;
-
-      str << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
     }
-
+    str << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
+    
     if (conj)
       str << " ||";
 

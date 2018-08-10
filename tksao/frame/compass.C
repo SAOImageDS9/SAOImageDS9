@@ -563,7 +563,7 @@ void Compass::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       break;
     default:
       if (ptr->hasWCSCel(sys)) {
-	listRADEC(ptr,center,sys,sky,format);
+	listWCS(ptr,center,sys,sky,format);
 	double rr = ptr->mapLenFromRef(radius,sys,Coord::ARCSEC);
 	str << type_ << '(' << ra << ',' << dec << ',' 
 	    << setprecision(parent->precArcsec_) << fixed << rr << '"' << ')';

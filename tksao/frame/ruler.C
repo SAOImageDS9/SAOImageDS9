@@ -500,9 +500,9 @@ void Ruler::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     default:
       if (ptr->hasWCSCel(sys)) {
 	str << type_ << '(';
-	listRADEC(ptr,p1,sys,sky,format);
+	listWCS(ptr,p1,sys,sky,format);
 	str << ra << ',' << dec << ',';
-	listRADEC(ptr,p2,sys,sky,format);
+	listWCS(ptr,p2,sys,sky,format);
 	str << ra << ',' << dec << ')';
       }
       else

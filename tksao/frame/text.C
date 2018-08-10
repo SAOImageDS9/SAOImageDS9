@@ -226,7 +226,7 @@ void Text::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       break;
     default:
       if (ptr->hasWCSCel(sys)) {
-	listRADEC(ptr,center,sys,sky,format);
+	listWCS(ptr,center,sys,sky,format);
 	str << type_ << '(' << ra << ',' << dec << ')';
       }
       else
@@ -291,7 +291,7 @@ void Text::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,sky,format);
+      listWCS(ptr,center,sys,sky,format);
       str << type_ << '(' << ra << ',' << dec << ", \"" << text << "\")";
     }
   }

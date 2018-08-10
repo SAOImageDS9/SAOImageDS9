@@ -1392,7 +1392,7 @@ void Marker::setMatrices(Coord::InternalSystem sys, Matrix* fwd, Matrix* bck)
 
 // list
 
-void Marker::listRADEC(FitsImage* ptr, 
+void Marker::listWCS(FitsImage* ptr, 
 		       const Vector& vv, Coord::CoordSystem sys, 
 		       Coord::SkyFrame sky, Coord::SkyFormat format)
 {
@@ -1406,7 +1406,7 @@ void Marker::listRADEC(FitsImage* ptr,
   wcs >> ra >> dec;
 }
 
-void Marker::listRADECPros(FitsImage* ptr, 
+void Marker::listWCSPros(FitsImage* ptr, 
 			   const Vector& vv, Coord::CoordSystem sys, 
 			   Coord::SkyFrame sky, Coord::SkyFormat format)
 {
@@ -1623,7 +1623,7 @@ void Marker::listXY(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   default:
     if (ptr->hasWCS(sys)) {
       if (ptr->hasWCSCel(sys)) {
-	listRADEC(ptr,center,sys,sky,format);
+	listWCS(ptr,center,sys,sky,format);
 	str << ra << ' ' << dec;
       }
       else
@@ -1907,7 +1907,7 @@ void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys,
   default:
     if (ptr->hasWCS(sys)) {
       if (ptr->hasWCSCel(sys)) {
-	listRADEC(ptr,vv,sys,sky,format);
+	listWCS(ptr,vv,sys,sky,format);
 	XMLRow(XMLX,ra);
 	XMLRow(XMLY,dec);
       }
@@ -1947,7 +1947,7 @@ void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys,
 	char* xx[cnt];
 	char* yy[cnt];
 	for (int ii=0; ii<cnt; ii++) {
-	  listRADEC(ptr,vv[ii],sys,sky,format);
+	  listWCS(ptr,vv[ii],sys,sky,format);
 	  xx[ii] = dupstr(ra);
 	  yy[ii] = dupstr(dec);
 	}

@@ -245,7 +245,7 @@ void Ellipse::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,sky,format);
+      listWCS(ptr,center,sys,sky,format);
       Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCSEC);
       double aa = parent->mapAngleFromRef(angle,sys,sky);
       str << type_ << '(' << ra << ',' << dec << ',' 
@@ -329,7 +329,7 @@ void Ellipse::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
+      listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
       Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCMIN);
       str << type_ << '(' << ra << ',' << dec << ',' 
 	  << setprecision(parent->precArcmin_) << fixed << setunit('\'')
@@ -367,7 +367,7 @@ void Ellipse::listSAOtng(ostream& str, Coord::CoordSystem sys,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,sky,format);
+      listWCS(ptr,center,sys,sky,format);
       Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::IMAGE);
       str << type_ << '(' << ra << ',' << dec << ','
 	  << setprecision(parent->precLinear_) << rr << ','
@@ -401,7 +401,7 @@ void Ellipse::listPros(ostream& str, Coord::CoordSystem sys,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADECPros(ptr,center,sys,sky,format);
+      listWCSPros(ptr,center,sys,sky,format);
       coord.listProsCoordSystem(str,sys,sky);
       Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCSEC);
       str << "; " << type_ << ' ';

@@ -68,7 +68,7 @@ void Vect::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       break;
     default:
       if (ptr->hasWCSCel(sys)) {
-	listRADEC(ptr,p1,sys,sky,format);
+	listWCS(ptr,p1,sys,sky,format);
 	double rr = ptr->mapLenFromRef((p2-p1).length(),sys,Coord::ARCSEC);
 	double aa = parent->mapAngleFromRef((p2-p1).angle(),sys,sky);
 	str << type_ << '(' << ra << ',' << dec << ',' 

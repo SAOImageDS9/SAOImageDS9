@@ -459,7 +459,7 @@ void Polygon::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
 	  str << ',';
 	first=0;
 
-	listRADEC(ptr,vertex.current()->vector*mm,sys,
+	listWCS(ptr,vertex.current()->vector*mm,sys,
 		  Coord::FK5,Coord::SEXAGESIMAL);
 	str << ra << ',' << dec;
       }
@@ -501,7 +501,7 @@ void Polygon::listPros(ostream& str, Coord::CoordSystem sys,
       str << "; " << type_;
       vertex.head();
       do {
-	  listRADECPros(ptr,vertex.current()->vector*mm,sys,sky,format);
+	  listWCSPros(ptr,vertex.current()->vector*mm,sys,sky,format);
 	  switch (format) {
 	  case Coord::DEGREES:
 	    str << ' ' << ra << 'd' << ' ' << dec << 'd';
@@ -557,7 +557,7 @@ void Polygon::listSAOtng(ostream& str, Coord::CoordSystem sys,
 	  str << ',';
 	first=0;
 
-	listRADEC(ptr,vertex.current()->vector*mm,sys,sky,format);
+	listWCS(ptr,vertex.current()->vector*mm,sys,sky,format);
 	str << ra << ',' << dec;
       }
       while (vertex.next());

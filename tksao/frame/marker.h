@@ -159,9 +159,9 @@ protected:
 
   void initFonts(const char*);
 
-  void listRADEC(FitsImage*, const Vector&, Coord::CoordSystem, 
+  void listWCS(FitsImage*, const Vector&, Coord::CoordSystem, 
 		 Coord::SkyFrame, Coord::SkyFormat);
-  void listRADECPros(FitsImage*, const Vector&, Coord::CoordSystem, 
+  void listWCSPros(FitsImage*, const Vector&, Coord::CoordSystem, 
 		     Coord::SkyFrame, Coord::SkyFormat);
   void listPre(ostream&, Coord::CoordSystem, Coord::SkyFrame, 
 	       FitsImage*, int, int);

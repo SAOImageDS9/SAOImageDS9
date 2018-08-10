@@ -541,7 +541,7 @@ void Bpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       if (ang2<=ang1+FLT_EPSILON)
 	ang2 += 360;
 
-      listRADEC(ptr,center,sys,sky,format);
+      listWCS(ptr,center,sys,sky,format);
       str << type_ << '(' << ra << ',' << dec << ','
 	  << setprecision(parent->precLinear_) << ang1 << ',' << ang2 << ',' 
 	  << setprecision(parent->precLinear_) << numAngles_-1 << ','
@@ -590,7 +590,7 @@ void Bpanda::listB(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,sky,format);
+      listWCS(ptr,center,sys,sky,format);
       for (int jj=1; jj<numAngles_; jj++) {
 	for (int ii=1; ii<numAnnuli_; ii++) {
 	  listPre(str, sys, sky, ptr, strip, 0);

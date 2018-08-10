@@ -213,7 +213,7 @@ void Annulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,sky,format);
+      listWCS(ptr,center,sys,sky,format);
       str << type_ << '(' << ra << ',' << dec
 	  << setprecision(parent->precArcsec_) << fixed;
       for (int ii=0; ii<numAnnuli_; ii++) {
@@ -278,7 +278,7 @@ void Annulus::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
+      listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
       for (int ii=0; ii<numAnnuli_-1; ii++) {
 	listCiaoPre(str);
 	double r1 = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCMIN);
@@ -318,7 +318,7 @@ void Annulus::listPros(ostream& str, Coord::CoordSystem sys,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADECPros(ptr,center,sys,sky,format);
+      listWCSPros(ptr,center,sys,sky,format);
       coord.listProsCoordSystem(str,sys,sky);
       str << "; " << type_ << ' ';
       switch (format) {

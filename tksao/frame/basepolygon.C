@@ -237,7 +237,7 @@ void BasePolygon::listBase(FitsImage* ptr, ostream& str,
 	  str << ',';
 	first=0;
 
-	listRADEC(ptr,vertex.current()->vector*mm,sys,sky,format);
+	listWCS(ptr,vertex.current()->vector*mm,sys,sky,format);
 	str << ra << ',' << dec;
       }
       while (vertex.next());

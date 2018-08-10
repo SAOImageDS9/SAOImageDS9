@@ -254,7 +254,7 @@ void EllipseAnnulus::list(ostream& str, Coord::CoordSystem sys,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,sky,format);
+      listWCS(ptr,center,sys,sky,format);
       double aa = parent->mapAngleFromRef(angle,sys,sky);
       str << "ellipse(" << ra << ',' << dec
 	  << setprecision(parent->precArcsec_) << fixed;
@@ -337,7 +337,7 @@ void EllipseAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADECPros(ptr,center,sys,sky,format);
+      listWCSPros(ptr,center,sys,sky,format);
       for (int ii=0; ii<numAnnuli_; ii++) {
 	coord.listProsCoordSystem(str,sys,sky);
 	str << "; ";

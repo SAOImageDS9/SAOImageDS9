@@ -224,7 +224,7 @@ void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,sky,format);
+      listWCS(ptr,center,sys,sky,format);
       double rr = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC);
       str << type_ << '(' << ra << ',' << dec << ',' 
 	  << setprecision(parent->precArcsec_) << fixed << rr << '"' << ')';
@@ -301,7 +301,7 @@ void Circle::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
+      listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
       double rr = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCMIN);
       str << type_ << '(' << ra << ',' << dec << ',' 
 	  << setprecision(parent->precArcmin_) << fixed << rr << '\'' << ')';
@@ -333,7 +333,7 @@ void Circle::listSAOtng(ostream& str,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,sky,format);
+      listWCS(ptr,center,sys,sky,format);
       double rr = ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
       str << type_ << '('
 	  << ra << ',' << dec << ','
@@ -365,7 +365,7 @@ void Circle::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADECPros(ptr,center,sys,sky,format);
+      listWCSPros(ptr,center,sys,sky,format);
       coord.listProsCoordSystem(str,sys,sky);
       double rr = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC);
       str << "; " << type_ << ' ';

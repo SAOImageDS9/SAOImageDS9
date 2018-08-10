@@ -510,7 +510,7 @@ void Cpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       if (a2<=a1+FLT_EPSILON)
 	a2 += 360;
 
-      listRADEC(ptr,center,sys,sky,format);
+      listWCS(ptr,center,sys,sky,format);
       str << type_ << '(' 
 	  << ra << ',' << dec << ','
 	  << setprecision(parent->precLinear_) << a1 << ',' << a2 << ','
@@ -556,7 +556,7 @@ void Cpanda::listB(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,sky,format);
+      listWCS(ptr,center,sys,sky,format);
       for (int jj=1; jj<numAngles_; jj++) {
 	for (int ii=1; ii<numAnnuli_; ii++) {
 	  listPre(str, sys, sky, ptr, strip, 0);
@@ -720,7 +720,7 @@ void Cpanda::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
+      listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
       for (int ii=0; ii<numAnnuli_-1; ii++) {
 	double r1 = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCMIN);
 	double r2 = ptr->mapLenFromRef(annuli_[ii+1][0],sys,Coord::ARCMIN);

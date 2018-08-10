@@ -286,7 +286,7 @@ void BoxAnnulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADEC(ptr,center,sys,sky,format);
+      listWCS(ptr,center,sys,sky,format);
       double aa = parent->mapAngleFromRef(angle,sys,sky);
       str << "box(" << ra << ',' << dec
 	  << setprecision(parent->precArcsec_) << fixed;
@@ -367,7 +367,7 @@ void BoxAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
     break;
   default:
     if (ptr->hasWCSCel(sys)) {
-      listRADECPros(ptr,center,sys,sky,format);
+      listWCSPros(ptr,center,sys,sky,format);
 
       for (int ii=0; ii<numAnnuli_; ii++) {
 	coord.listProsCoordSystem(str,sys,sky);

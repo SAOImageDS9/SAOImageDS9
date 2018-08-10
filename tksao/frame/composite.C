@@ -204,7 +204,7 @@ void Composite::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       break;
     default:
       if (ptr->hasWCSCel(sys)) {
-	listRADEC(ptr,center,sys,sky,format);
+	listWCS(ptr,center,sys,sky,format);
 	str << '(' << ra << ',' << dec << ',' 
 	    << setprecision(parent->precLinear_) 
 	    << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';

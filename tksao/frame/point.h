@@ -49,8 +49,6 @@ class Point : public Marker {
 
   int isInRef(const Vector&);
 
-  void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
-
  public:
   Point(Base* p, const Vector& ctr);
   Point(Base* p, const Vector& ctr, 

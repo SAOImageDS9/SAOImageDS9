@@ -353,9 +353,9 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       if (ptr->hasWCSCel(sys)) {
 	double ww = ptr->mapLenFromRef(width,sys,Coord::ARCSEC);
 	str << type_ << '(';
-	listRADEC(ptr,p1,sys,sky,format);
+	listWCS(ptr,p1,sys,sky,format);
 	str << ra << ',' << dec << ',';
-	listRADEC(ptr,p2,sys,sky,format);
+	listWCS(ptr,p2,sys,sky,format);
 	str << ra << ',' << dec << ',';
 	str << setprecision(parent->precArcsec_) << fixed << ww << '"' << ')';
 	str.unsetf(ios_base::floatfield);

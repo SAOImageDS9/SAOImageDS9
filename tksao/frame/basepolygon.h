@@ -28,7 +28,6 @@ class BasePolygon : public Marker {
 
   void listBase(FitsImage*, ostream&, Coord::CoordSystem, 
 		Coord::SkyFrame, Coord::SkyFormat);
-  void listBaseNonCel(FitsImage*, ostream&, Matrix&, Coord::CoordSystem);
 
 public:
   BasePolygon(Base* p, const Vector& ctr,

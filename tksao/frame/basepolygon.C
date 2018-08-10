@@ -225,10 +225,24 @@ void BasePolygon::listBase(FitsImage* ptr, ostream& str,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    listBaseNonCel(ptr, str, mm, sys);
+    {
+      str << type_ << '(';
+      int first=1;
+      vertex.head();
+      do {
+	if (!first)
+	  str << ',';
+	first=0;
+
+	Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,sys);
+	str << setprecision(parent->precLinear_) << vv;
+      }
+      while (vertex.next());
+      str << ')';
+    }
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
+    {
       str << type_ << '(';
       int first=1;
       vertex.head();
@@ -243,26 +257,6 @@ void BasePolygon::listBase(FitsImage* ptr, ostream& str,
       while (vertex.next());
       str << ')';
     }
-    else
-      listBaseNonCel(ptr, str, mm, sys);
   }
-}
-
-void BasePolygon::listBaseNonCel(FitsImage* ptr, ostream& str, Matrix& mm,
-				 Coord::CoordSystem sys)
-{
-  str << type_ << '(';
-  int first=1;
-  vertex.head();
-  do {
-    if (!first)
-      str << ',';
-    first=0;
-
-    Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,sys);
-    str << setprecision(parent->precLinear_) << vv;
-  }
-  while (vertex.next());
-  str << ')';
 }
 

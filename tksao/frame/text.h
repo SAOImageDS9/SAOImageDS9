@@ -35,9 +35,6 @@ class Text : public Marker {
   void updateHandles();
   void calcAllBBox();
 
- protected:
-  void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
-
  public:
   Text(const Text&);
   Text(Base* p, const Vector& ctr,

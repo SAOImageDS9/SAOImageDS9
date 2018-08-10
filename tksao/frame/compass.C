@@ -554,23 +554,29 @@ void Compass::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     FitsImage* ptr = parent->findFits(sys,center);
     listPre(str, sys, sky, ptr, strip, 1);
 
+    double rr = ptr->mapLenFromRef(radius,sys,Coord::ARCSEC);
+
     switch (sys) {
     case Coord::IMAGE:
     case Coord::PHYSICAL:
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
-      listNonCel(ptr, str, sys);
+      {
+	Vector vv = ptr->mapFromRef(center,sys);
+	str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
+	    << rr << ')';
+      }
       break;
     default:
+      listWCS(ptr,center,sys,sky,format);
+      str << type_ << '(' << ra << ',' << dec << ',' ;
+
       if (ptr->hasWCSCel(sys)) {
-	listWCS(ptr,center,sys,sky,format);
-	double rr = ptr->mapLenFromRef(radius,sys,Coord::ARCSEC);
-	str << type_ << '(' << ra << ',' << dec << ',' 
-	    << setprecision(parent->precArcsec_) << fixed << rr << '"' << ')';
+	str << setprecision(parent->precArcsec_) << fixed << rr << '"' << ')';
 	str.unsetf(ios_base::floatfield);
       }
       else
-	listNonCel(ptr, str, sys);
+	str << setprecision(parent->precLinear_) << rr << ')';
     }
 
     if (conj)
@@ -582,14 +588,6 @@ void Compass::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 	<< northArrow << ' ' << eastArrow;
     listProperties(str, 0);
   }
-}
-
-void Compass::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
-{
-  Vector vv = ptr->mapFromRef(center,sys);
-  double rr = ptr->mapLenFromRef(radius,sys);
-  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-      << rr << ')';
 }
 
 void Compass::listXML(ostream& str, Coord::CoordSystem sys, 

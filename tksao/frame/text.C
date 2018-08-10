@@ -222,15 +222,14 @@ void Text::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     case Coord::PHYSICAL:
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
-      listNonCel(ptr, str, sys);
+      {
+	Vector vv = ptr->mapFromRef(center,sys);
+	str << type_ << '(' << setprecision(parent->precLinear_) << vv << ')';
+      }
       break;
     default:
-      if (ptr->hasWCSCel(sys)) {
-	listWCS(ptr,center,sys,sky,format);
-	str << type_ << '(' << ra << ',' << dec << ')';
-      }
-      else
-	listNonCel(ptr, str, sys);
+      listWCS(ptr,center,sys,sky,format);
+      str << type_ << '(' << ra << ',' << dec << ')';
     }
 
     if (conj)
@@ -242,12 +241,6 @@ void Text::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       str << " textrotate=" << 0;
     listProperties(str, 0);
   }
-}
-
-void Text::listNonCel(FitsImage* ptr, ostream& str, Coord::CoordSystem sys)
-{
-  Vector vv = ptr->mapFromRef(center,sys);
-  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ')';
 }
 
 void Text::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky, 

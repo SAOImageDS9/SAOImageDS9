@@ -44,10 +44,7 @@ private:
   void renderWIN32GC();
 #endif
 
-void updateHandles();
-
- protected:
- void listNonCel(FitsImage*, ostream&, Coord::CoordSystem);
+  void updateHandles();
 
 public:
   Compass(const Compass&);

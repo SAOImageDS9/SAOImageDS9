@@ -1396,14 +1396,33 @@ void Marker::listWCS(FitsImage* ptr,
 		     const Vector& vv, Coord::CoordSystem sys,
 		     Coord::SkyFrame sky, Coord::SkyFormat format)
 {
-  char buf[64];
+  char buf[128];
   ptr->mapFromRef(vv,sys,sky,format,buf);
 
-  ra[0] = '\0';
-  dec[0] = '\0';
-  string x(buf);
-  istringstream wcs(x);
-  wcs >> ra >> dec;
+  char* bptr = buf;
+  // any white space in front
+  while (!*bptr && *bptr != ' ')
+    bptr++;
+  
+  // lon
+  char* rptr = ra;
+  while (!*bptr && *bptr != ' ')
+    *rptr++ = *bptr++;
+  rptr++;
+  *rptr = '\0';
+
+  // lat
+  char* dptr = dec;
+  while (!*bptr && *bptr != ' ')
+    *dptr++ = *bptr++;
+  dptr++;
+  *dptr = '\0';
+
+//  ra[0] = '\0';
+//  dec[0] = '\0';
+//  string x(buf);
+//  istringstream wcs(x);
+//  wcs >> ra >> dec;
 }
 
 void Marker::listWCSLen(ostream& str, FitsImage* ptr,

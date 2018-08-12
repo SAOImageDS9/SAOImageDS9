@@ -23,7 +23,7 @@ protected:
   void coordToTclArray(FitsImage*, const Vector&, Coord::CoordSystem, 
 		       const char*, const char*);
 
-  void getInfoWCS(char*, Vector&, FitsImage*, FitsImage*);
+  void getInfoWCS(char*, Vector&, FitsImage*);
 
 protected:
   double calcZoomPanner();

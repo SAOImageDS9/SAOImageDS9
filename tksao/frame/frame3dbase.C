@@ -124,7 +124,7 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
       if (hasDTMV())
 	coordToTclArray(sptr,rr,Coord::DETECTOR,var,"detector");
 
-      getInfoWCS(var,rr,ptr,sptr);
+      getInfoWCS(var,rr,sptr);
       return;
     }
     else {
@@ -134,7 +134,7 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
 	  params = sptr->getDataParams(currentContext->secMode());
       }
       else {
-	getInfoWCS(var,rr,ptr,sptr);
+	getInfoWCS(var,rr,sptr);
 	goto noImage;
       }
     }
@@ -142,7 +142,7 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
   while (mosaic && sptr);
 
   // mosaic gap
-  getInfoWCS(var,rr,ptr,ptr);
+  getInfoWCS(var,rr,ptr);
 
   // else, return blanks
  noFits:
@@ -152,8 +152,7 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
   getInfoClearValue(var);
 }
 
-void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* ptr, 
-			     FitsImage* sptr)
+void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* sptr)
 {
   Vector3d img = rr * sptr->refToImage3d;
 

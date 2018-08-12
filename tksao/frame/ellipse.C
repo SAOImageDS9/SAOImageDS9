@@ -309,27 +309,24 @@ void Ellipse::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
   FitsImage* ptr = parent->findFits();
   listCiaoPre(str);
 
+  str << type_ << '(';
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    {
-      Vector vv = ptr->mapFromRef(center,Coord::PHYSICAL);
-      Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::PHYSICAL);
-      str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-	  << setprecision(parent->precLenLinear_) << rr << ',';
-    }
+    str << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,Coord::PHYSICAL) << ','
+	<< setprecision(parent->precLenLinear_)
+	<< ptr->mapLenFromRef(annuli_[0],Coord::PHYSICAL) << ',';
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
-      Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCMIN);
-      str << type_ << '(' << ra << ',' << dec << ',' 
-	  << setprecision(parent->precArcmin_) << fixed << setunit('\'');
-      str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLenLinear_) << rr << ',';
-    }
+    listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
+    str << ra << ',' << dec << ',' ;
+
+    str<< setprecision(parent->precArcmin_) << fixed << setunit('\'')
+	<< ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCMIN) << ',';
+    str.unsetf(ios_base::floatfield);
     break;
   }
   str << setprecision(parent->precAngle_) << radToDeg(angle) << ')';

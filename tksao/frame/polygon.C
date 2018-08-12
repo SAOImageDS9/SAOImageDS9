@@ -427,46 +427,29 @@ void Polygon::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
   Matrix mm = fwdMatrix();
   listCiaoPre(str);
 
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    {
-      str << type_ << '(';
-      int first=1;
-      vertex.head();
-      do {
-	if (!first)
-	  str << ',';
-	first=0;
+  str << type_ << '(';
+  int first=1;
+  vertex.head();
+  do {
+    if (!first)
+      str << ',';
+    first=0;
 
-	Vector vv = 
-	  ptr->mapFromRef(vertex.current()->vector*mm,Coord::PHYSICAL);
-	str << setprecision(parent->precLinear_) << vv;
-      }
-      while (vertex.next());
-      str << ')';
+    switch (sys) {
+    case Coord::IMAGE:
+    case Coord::PHYSICAL:
+    case Coord::DETECTOR:
+    case Coord::AMPLIFIER:
+      str << setprecision(parent->precLinear_)
+	  << ptr->mapFromRef(vertex.current()->vector*mm,Coord::PHYSICAL);
+      break;
+    default:
+      listWCS(ptr,vertex.current()->vector*mm,sys,Coord::FK5,Coord::SEXAGESIMAL);
+      str << ra << ',' << dec;
+      break;
     }
-    break;
-  default:
-    if (ptr->hasWCSCel(sys)) {
-      str << type_ << '(';
-      int first=1;
-      vertex.head();
-      do {
-	if (!first)
-	  str << ',';
-	first=0;
-
-	listWCS(ptr,vertex.current()->vector*mm,sys,
-		  Coord::FK5,Coord::SEXAGESIMAL);
-	str << ra << ',' << dec;
-      }
-      while (vertex.next());
-      str << ')';
-    }
-  }
+  } while (vertex.next());
+  str << ')';
 
   listCiaoPost(str, strip);
 }

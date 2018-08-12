@@ -225,7 +225,7 @@ void FitsImage::listLenFromRef(ostream& str, double dd,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << out;
+    str << setprecision(context_->parent_->precLenLinear_) << out;
     break;
   default:
     if (hasWCS(sys)) {
@@ -241,11 +241,11 @@ void FitsImage::listLenFromRef(ostream& str, double dd,
 	  str << setprecision(context_->parent_->precArcsec_);
 	  break;
 	}
+	str << fixed << out;
+	str.unsetf(ios_base::floatfield);
       }
       else
-	str << setprecision(context_->parent_->precLenLinear_);
-
-      str << fixed << out;
+	str << setprecision(context_->parent_->precLenLinear_) << out;
     }
     else
       str << "0";
@@ -262,7 +262,7 @@ void FitsImage::listLenFromRef(ostream& str, const Vector& vv,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << out;
+    str << setprecision(context_->parent_->precLenLinear_) << out;
     break;
   default:
     if (hasWCS(sys)) {
@@ -278,11 +278,11 @@ void FitsImage::listLenFromRef(ostream& str, const Vector& vv,
 	  str << setprecision(context_->parent_->precArcsec_);
 	  break;
 	}
+	str << fixed << out;
+	str.unsetf(ios_base::floatfield);
       }
       else
-	str << setprecision(context_->parent_->precLenLinear_);
-
-      str << fixed << out;
+	str << setprecision(context_->parent_->precLenLinear_) << out;
     }
     else
       str << "0 0";
@@ -355,7 +355,7 @@ void FitsImage::listDistFromRef(ostream& str,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << out;
+    str << setprecision(context_->parent_->precLenLinear_) << out;
     break;
   default:
     if (hasWCS(sys)) {
@@ -363,19 +363,18 @@ void FitsImage::listDistFromRef(ostream& str,
 	switch (dist) {
 	case Coord::DEGREE:
 	  str << setprecision(context_->parent_->precLenDeg_);
-	  break;
-	case Coord::ARCMIN:
+	  break;	case Coord::ARCMIN:
 	  str << setprecision(context_->parent_->precArcmin_);
 	  break;
 	case Coord::ARCSEC:
 	  str << setprecision(context_->parent_->precArcsec_);
 	  break;
 	}
+	str << fixed << out;
+	str.unsetf(ios_base::floatfield);
       }
       else
-	str << setprecision(context_->parent_->precLenLinear_);
-
-      str << fixed << out;
+	str << setprecision(context_->parent_->precLenLinear_) << out;
     }
     else
       str << "0 0";

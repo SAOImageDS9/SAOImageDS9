@@ -105,28 +105,11 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
     str << setprecision(context_->parent_->precLinear_) << mapFromRef(vv, sys);
     break;
   default:
-    if (hasWCS(sys)) {
-      if (hasWCSCel(sys)) {
-	switch (format) {
-	case Coord::DEGREES:
-	  str << setprecision(context_->parent_->precDeg_)
-	      << mapFromRef(vv, sys, sky);
-	  break;
-	case Coord::SEXAGESIMAL:
-	  {
-	    char buf[128];
-	    mapFromRef(vv, sys, sky, format, buf);
-	    str << buf;
-	  }
-	  break;
-	}
-      }
-      else
-	str << setprecision(context_->parent_->precLinear_)
-	    << mapFromRef(vv, sys);
+    {
+      char buf[128];
+      mapFromRef(vv,sys,sky,format,buf);
+      str << buf;
     }
-    else
-      str << "0 0";
   }
 }
 

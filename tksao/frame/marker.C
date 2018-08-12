@@ -1398,31 +1398,20 @@ void Marker::listWCS(FitsImage* ptr,
 {
   char buf[128];
   ptr->mapFromRef(vv,sys,sky,format,buf);
-
   char* bptr = buf;
-  // any white space in front
-  while (!*bptr && *bptr != ' ')
-    bptr++;
-  
+
   // lon
   char* rptr = ra;
-  while (!*bptr && *bptr != ' ')
+  while (*bptr && *bptr != ' ')
     *rptr++ = *bptr++;
-  rptr++;
   *rptr = '\0';
 
   // lat
   char* dptr = dec;
-  while (!*bptr && *bptr != ' ')
+  bptr++;
+  while (*bptr && *bptr != ' ')
     *dptr++ = *bptr++;
-  dptr++;
   *dptr = '\0';
-
-//  ra[0] = '\0';
-//  dec[0] = '\0';
-//  string x(buf);
-//  istringstream wcs(x);
-//  wcs >> ra >> dec;
 }
 
 void Marker::listWCSLen(ostream& str, FitsImage* ptr,
@@ -1441,19 +1430,26 @@ void Marker::listWCSPros(FitsImage* ptr,
 			 const Vector& vv, Coord::CoordSystem sys,
 			 Coord::SkyFrame sky, Coord::SkyFormat format)
 {
-  char buf[64];
+  char buf[128];
   ptr->mapFromRef(vv,sys,sky,format,buf);
+  char* bptr = buf;
 
-  char decc[32];
-  ra[0] = '\0';
-  decc[0] = '\0';
-  string x(buf);
-  istringstream wcs(x);
-  wcs >> ra >> decc;
-  if (decc[0]=='+')
-    strncpy(dec,decc+1,32);
-  else
-    strncpy(dec,decc,32);
+  // lon
+  char* rptr = ra;
+  while (*bptr && *bptr != ' ')
+    *rptr++ = *bptr++;
+  *rptr = '\0';
+
+  // lat
+  char* dptr = dec;
+
+  // skip '+' at beginning
+  bptr++;
+  if (*bptr == '+')
+      bptr++;
+  while (*bptr && *bptr != ' ')
+      *dptr++ = *bptr++;
+  *dptr = '\0';
 }
 
 void Marker::listPre(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky, 

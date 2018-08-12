@@ -509,25 +509,26 @@ void Cpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::AMPLIFIER:
     str << setprecision(parent->precLinear_)
 	<< ptr->mapFromRef(center,sys) << ','
-	<< a1 << ',' << a2 << ',' << numAngles_-1 << ','
-	<< r1 << ',' << r2 << ',' << numAnnuli_-1;
+	<< setprecision(parent->precAngle_) << a1 << ',' << a2 << ',';
+    str << numAngles_-1 << ','
+	<< setprecision(parent->precLenLinear_) << r1 << ',' << r2 << ',';
+    str << numAnnuli_-1;
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
     str << ra << ',' << dec << ','
-	<< setprecision(parent->precLinear_) << a1 << ',' << a2 << ','
-	<< numAngles_-1 << ',';
+	<< setprecision(parent->precAngle_) << a1 << ',' << a2 << ',';
+    str << numAngles_-1 << ',';
 
     if (ptr->hasWCSCel(sys)) {
       str << setprecision(parent->precArcsec_) << fixed
 	  << r1 << '"' << ',' << r2 << '"' << ',';
       str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLinear_) << numAnnuli_-1;
-
     }
     else
-      str << setprecision(parent->precLinear_) 
-	  << r1 << ',' << r2 << ',' << numAnnuli_-1;
+      str << setprecision(parent->precLenLinear_) << r1 << ',' << r2 << ',';
+
+    str << numAnnuli_-1;
   }
   str  << ')';
 

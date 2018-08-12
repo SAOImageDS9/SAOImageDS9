@@ -285,8 +285,8 @@ void BoxAnnulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,sys);
+    str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
+    str << setprecision(parent->precLenLinear_);
     for (int ii=0; ii<numAnnuli_; ii++)
       str << ',' << ptr->mapLenFromRef(annuli_[ii],sys);
     break;
@@ -303,12 +303,12 @@ void BoxAnnulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       str.unsetf(ios_base::floatfield);
     }
     else {
-      str << setprecision(parent->precLinear_);
+      str << setprecision(parent->precLenLinear_);
 	for (int ii=0; ii<numAnnuli_; ii++)
 	str << ',' << ptr->mapLenFromRef(annuli_[ii],sys);
     }
   }
-  str << setprecision(parent->precLinear_) << ',' << radToDeg(aa) << ')';
+  str << ',' << setprecision(parent->precAngle_) << radToDeg(aa) << ')';
 
   listPost(str, conj, strip);
 }

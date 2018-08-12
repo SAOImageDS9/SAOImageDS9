@@ -223,8 +223,7 @@ void Text::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     case Coord::PHYSICAL:
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
-      str << setprecision(parent->precLinear_)
-	  << ptr->mapFromRef(center,sys);
+      str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
       break;
     default:
       listWCS(ptr,center,sys,sky,format);
@@ -236,7 +235,9 @@ void Text::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       str << " ||";
 
     if (angle != 0)
-      str << " textangle=" << radToDeg(parent->mapAngleFromRef(angle,sys,sky));
+      str << " textangle=" << setprecision(parent->precAngle_)
+	  << radToDeg(parent->mapAngleFromRef(angle,sys,sky));
+
     if (!rotate)
       str << " textrotate=" << 0;
     listProperties(str, 0);

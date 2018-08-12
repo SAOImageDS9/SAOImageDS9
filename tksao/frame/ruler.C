@@ -497,8 +497,7 @@ void Ruler::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
       str << setprecision(parent->precLinear_)
-	  << ptr->mapFromRef(p1,sys) << ','
-	  << ptr->mapFromRef(p2,sys);
+	  << ptr->mapFromRef(p1,sys) << ',' << ptr->mapFromRef(p2,sys);
       break;
     default:
       listWCS(ptr,p1,sys,sky,format);

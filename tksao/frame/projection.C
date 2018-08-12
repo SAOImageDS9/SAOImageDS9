@@ -342,7 +342,7 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     FitsImage* ptr = parent->findFits(sys,center);
     listPre(str, sys, sky, ptr, strip, 1);
 
-    double ww = ptr->mapLenFromRef(width,sys,Coord::ARCSEC);
+    double rr = ptr->mapLenFromRef(width,sys,Coord::ARCSEC);
 
     str << type_ << '(';
     switch (sys) {
@@ -351,9 +351,8 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
       str << setprecision(parent->precLinear_)
-	  << ptr->mapFromRef(p1,sys) << ','
-	  << ptr->mapFromRef(p2,sys) << ',' 
-	  << ww;
+	  << ptr->mapFromRef(p1,sys) << ',' << ptr->mapFromRef(p2,sys) << ',' 
+	  << setprecision(parent->precLenLinear_) << rr;
       break;
     default:
       listWCS(ptr,p1,sys,sky,format);
@@ -362,11 +361,11 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       str << ra << ',' << dec << ',';
 
       if (ptr->hasWCSCel(sys)) {
-	str << setprecision(parent->precArcsec_) << fixed << ww << '"';
+	str << setprecision(parent->precArcsec_) << fixed << rr << '"';
 	str.unsetf(ios_base::floatfield);
       }
       else
-	str << setprecision(parent->precLinear_) << ww;
+	str << setprecision(parent->precLenLinear_) << rr;
     }
     str  << ')';
 

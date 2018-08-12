@@ -223,8 +223,8 @@ void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_)<<ptr->mapFromRef(center,sys)<< ','
-	<< setprecision(parent->precLenLinear_) << rr;
+    str << setprecision(parent->precLinear_)<<ptr->mapFromRef(center,sys)
+	<< ',' << setprecision(parent->precLenLinear_) << rr;
     break;
   default:
       listWCS(ptr,center,sys,sky,format);

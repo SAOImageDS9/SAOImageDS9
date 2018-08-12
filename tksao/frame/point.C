@@ -878,22 +878,20 @@ void Point::listSAOtng(ostream& str, Coord::CoordSystem sys,
   FitsImage* ptr = parent->findFits();
   listSAOtngPre(str, strip);
 
+  str << type_ << '(';
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    {
-      Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-      str << type_ << '(' << setprecision(parent->precLinear_) << vv << ')';
-    }
+    str << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,Coord::IMAGE);
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,sky,format);
-      str << type_ << '(' << ra << ',' << dec << ')';
-    }
+    listWCS(ptr,center,sys,sky,format);
+    str << ra << ',' << dec;
   }
+  str  << ')';
 
   listSAOtngPost(str,strip);
 }

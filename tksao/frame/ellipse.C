@@ -334,40 +334,6 @@ void Ellipse::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
   listCiaoPost(str, strip);
 }
 
-void Ellipse::listSAOtng(ostream& str, Coord::CoordSystem sys, 
-			 Coord::SkyFrame sky, Coord::SkyFormat format,
-			 int strip)
-{
-  FitsImage* ptr = parent->findFits();
-  listSAOtngPre(str, strip);
-
-  // radius is always in image coords
-
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    {
-      Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-      Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::IMAGE);
-      str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-	  << setprecision(parent->precLinear_) << rr << ',';
-    }
-    break;
-  default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,sky,format);
-      Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::IMAGE);
-      str << type_ << '(' << ra << ',' << dec << ','
-	  << setprecision(parent->precLenLinear_) << rr << ',';
-    }
-  }
-  str << setprecision(parent->precAngle_) << radToDeg(angle) << ')';
-
-  listSAOtngPost(str, strip);
-}
-
 void Ellipse::listPros(ostream& str, Coord::CoordSystem sys, 
 		       Coord::SkyFrame sky, Coord::SkyFormat format,
 		       int strip)
@@ -411,6 +377,39 @@ void Ellipse::listPros(ostream& str, Coord::CoordSystem sys,
   str << setprecision(parent->precAngle_) << radToDeg(angle);
 
   listProsPost(str, strip);
+}
+
+void Ellipse::listSAOtng(ostream& str, Coord::CoordSystem sys, 
+			 Coord::SkyFrame sky, Coord::SkyFormat format,
+			 int strip)
+{
+  FitsImage* ptr = parent->findFits();
+  listSAOtngPre(str, strip);
+
+  str << type_ << '(';
+  switch (sys) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::DETECTOR:
+  case Coord::AMPLIFIER:
+    str << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,Coord::IMAGE) << ','
+	<< setprecision(parent->precLenLinear_)
+	<< ptr->mapLenFromRef(annuli_[0],Coord::IMAGE) << ','
+	<< setprecision(parent->precAngle_)
+	<< radToDeg(angle);
+    break;
+  default:
+    listWCS(ptr,center,sys,sky,format);
+    str << ra << ',' << dec << ','
+	<< setprecision(parent->precLenLinear_)
+	<< ptr->mapLenFromRef(annuli_[0],Coord::IMAGE) << ','
+	<< setprecision(parent->precAngle_)
+	<< radToDeg(angle);
+  }
+  str << ')';
+
+  listSAOtngPost(str, strip);
 }
 
 void Ellipse::listSAOimage(ostream& str, int strip)

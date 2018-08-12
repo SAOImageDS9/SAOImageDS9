@@ -308,38 +308,6 @@ void Circle::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
   listCiaoPost(str, strip);
 }
 
-void Circle::listSAOtng(ostream& str, 
-			Coord::CoordSystem sys, Coord::SkyFrame sky,
-			Coord::SkyFormat format, int strip)
-{
-  FitsImage* ptr = parent->findFits();
-  listSAOtngPre(str, strip);
-
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    {
-      Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-      double rr = ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
-      str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-	  << setprecision(parent->precLenLinear_) << rr << ')';
-    }
-    break;
-  default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,sky,format);
-      double rr = ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
-      str << type_ << '('
-	  << ra << ',' << dec << ','
-	  << setprecision(parent->precLenLinear_) << rr << ')';
-    }
-  }
-
-  listSAOtngPost(str,strip);
-}
-
 void Circle::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 		      Coord::SkyFormat format, int strip)
 {
@@ -380,6 +348,35 @@ void Circle::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   }
 
   listProsPost(str, strip);
+}
+
+void Circle::listSAOtng(ostream& str, 
+			Coord::CoordSystem sys, Coord::SkyFrame sky,
+			Coord::SkyFormat format, int strip)
+{
+  FitsImage* ptr = parent->findFits();
+  listSAOtngPre(str, strip);
+
+  str << type_ << '(';
+  switch (sys) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::DETECTOR:
+  case Coord::AMPLIFIER:
+    str << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,Coord::IMAGE) << ','
+	<< setprecision(parent->precLenLinear_)
+	<< ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
+    break;
+  default:
+    listWCS(ptr,center,sys,sky,format);
+    str << ra << ',' << dec << ','
+	<< setprecision(parent->precLenLinear_)
+	<< ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
+  }
+  str << ')';
+
+  listSAOtngPost(str,strip);
 }
 
 void Circle::listSAOimage(ostream& str, int strip)

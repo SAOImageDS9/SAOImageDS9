@@ -272,24 +272,21 @@ void Text::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   else
     str << '-';
 
+  str << type_ << '(';
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    {
-      Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-      str << type_ << '(' << setprecision(parent->precLinear_)
-	  << vv << ", \"" << text << "\")";
-    }
+    str << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,Coord::IMAGE) << ", \"" << text << "\"";
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,sky,format);
-      str << type_ << '(' << ra << ',' << dec << ", \"" << text << "\")";
-    }
+    listWCS(ptr,center,sys,sky,format);
+    str << ra << ',' << dec << ", \"" << text << "\"";
   }
-
+  str << ')';
+  
   listSAOtngPost(str, strip);
 }
 

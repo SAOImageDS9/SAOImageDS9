@@ -359,39 +359,6 @@ void Box::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
   listCiaoPost(str, strip);
 }
 
-void Box::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
-		     Coord::SkyFormat format, int strip)
-{
-  FitsImage* ptr = parent->findFits();
-  listSAOtngPre(str, strip);
-
-  // radius is always in image coords
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    {
-      Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-      Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::IMAGE);
-      str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-	  << rr << ','
-          << radToDeg(angle) << ')';
-    }
-    break;
-  default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,sky,format);
-      Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::IMAGE);
-      str << type_ << '(' << ra << ',' << dec << ','
-	  << setprecision(parent->precLinear_) << rr << ','
-	  << setprecision(parent->precLinear_) << radToDeg(angle) << ')';
-    }
-  }
-
-  listSAOtngPost(str,strip);
-}
-
 void Box::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 		       Coord::SkyFormat format, int strip)
 {
@@ -434,6 +401,38 @@ void Box::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   }
 
   listProsPost(str, strip);
+}
+
+void Box::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
+		     Coord::SkyFormat format, int strip)
+{
+  FitsImage* ptr = parent->findFits();
+  listSAOtngPre(str, strip);
+
+  str << type_ << '(';
+  switch (sys) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::DETECTOR:
+  case Coord::AMPLIFIER:
+    str << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,Coord::IMAGE) << ','
+	<< setprecision(parent->precLenLinear_)
+	<< ptr->mapLenFromRef(annuli_[0],Coord::IMAGE) << ','
+	<< setprecision(parent->precAngle_)
+	<< radToDeg(angle);
+    break;
+  default:
+    listWCS(ptr,center,sys,sky,format);
+    str << ra << ',' << dec << ','
+	<< setprecision(parent->precLinear_)
+	<< ptr->mapLenFromRef(annuli_[0],Coord::IMAGE) << ','
+	<< setprecision(parent->precAngle_)
+	<< radToDeg(angle);
+  }
+  str  << ')';
+
+  listSAOtngPost(str,strip);
 }
 
 void Box::listSAOimage(ostream& str, int strip)

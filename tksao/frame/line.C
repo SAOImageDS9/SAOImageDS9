@@ -269,27 +269,23 @@ void Line::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   FitsImage* ptr = parent->findFits();
   listSAOtngPre(str, strip);
 
+  str << type_ << '(';
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    {
-      Vector v1 = ptr->mapFromRef(p1,Coord::IMAGE);
-      Vector v2 = ptr->mapFromRef(p2,Coord::IMAGE);
-      str << type_ << '(' << setprecision(parent->precLinear_)
-	  << v1 << ',' << v2 << ')';
-    }
+    str << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(p1,Coord::IMAGE) << ','
+	<< ptr->mapFromRef(p2,Coord::IMAGE);
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
-      str << type_ << '(';
-      listWCS(ptr,p1,sys,sky,format);
-      str << ra << ',' << dec << ',';
-      listWCS(ptr,p2,sys,sky,format);
-      str << ra << ',' << dec << ')';
-    }
+    listWCS(ptr,p1,sys,sky,format);
+    str << ra << ',' << dec << ',';
+    listWCS(ptr,p2,sys,sky,format);
+    str << ra << ',' << dec;
   }
+  str<< ')';
 
   listSAOtngPost(str, strip);
 }

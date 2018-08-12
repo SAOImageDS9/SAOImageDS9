@@ -565,12 +565,12 @@ void Polygon::listSAOimage(ostream& str, int strip)
       str << ',';
     first=0;
 
-    Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,Coord::IMAGE);
-    str << setprecision(parent->precLinear_) << vv;
+    str << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(vertex.current()->vector*mm,Coord::IMAGE);
   }
   while (vertex.next());
-
   str << ')';
+
   listSAOimagePost(str, strip);
 }
 

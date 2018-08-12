@@ -903,10 +903,9 @@ void Point::listSAOimage(ostream& str, int strip)
   FitsImage* ptr = parent->findFits();
   listSAOimagePre(str);
 
-  // all coords are in image coords
-
-  Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ')';
+  str << type_ << '('
+      << setprecision(parent->precLinear_)
+      << ptr->mapFromRef(center,Coord::IMAGE) << ')';
 
   listSAOimagePost(str, strip);
 }

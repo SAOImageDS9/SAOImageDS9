@@ -441,9 +441,12 @@ void Box::listSAOimage(ostream& str, int strip)
   FitsImage* ptr = parent->findFits();
   listSAOimagePre(str);
 
-  Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
+  str << type_ << '('
+      << setprecision(parent->precLinear_)
+      << ptr->mapFromRef(center,Coord::IMAGE) << ','
+      << setprecision(parent->precLenLinear_)
       << annuli_[0] << ','
+      << setprecision(parent->precAngle_)
       << radToDeg(angle) << ')';
 
   listSAOimagePost(str, strip);

@@ -382,13 +382,22 @@ void EllipseAnnulus::listSAOimage(ostream& str, int strip)
   listSAOimagePre(str);
 
   for (int ii=0; ii<numAnnuli_; ii++) {
-    Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-    str << "ellipse(" << setprecision(parent->precLinear_) << vv << ','
-        << annuli_[ii] << ',' << radToDeg(angle) << ')';
+    str << "ellipse("
+	<< setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,Coord::IMAGE) << ','
+	<< setprecision(parent->precLenLinear_)
+        << annuli_[ii] << ','
+	<< setprecision(parent->precAngle_)
+	<< radToDeg(angle) << ')';
 
     if (ii!=0)
-      str << " & !ellipse(" << setprecision(parent->precLinear_) << vv << ','
-          << annuli_[ii-1] << ',' << radToDeg(angle) << ')';
+      str << " & !ellipse("
+	  << setprecision(parent->precLinear_)
+	  << ptr->mapFromRef(center,Coord::IMAGE) << ','
+	  << setprecision(parent->precLenLinear_)
+          << annuli_[ii-1] << ','
+	  << setprecision(parent->precAngle_)
+	  << radToDeg(angle) << ')';
 
     listSAOimagePost(str, strip);
   }

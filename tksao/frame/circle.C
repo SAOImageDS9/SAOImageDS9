@@ -387,9 +387,11 @@ void Circle::listSAOimage(ostream& str, int strip)
   FitsImage* ptr = parent->findFits();
   listSAOimagePre(str);
 
-  Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-      << setprecision(parent->precLenLinear_) << annuli_[0][0] << ')';
+  str << type_ << '('
+      << setprecision(parent->precLinear_)
+      << ptr->mapFromRef(center,Coord::IMAGE) << ','
+      << setprecision(parent->precLenLinear_)
+      << annuli_[0][0] << ')';
 
   listSAOimagePost(str, strip);
 }

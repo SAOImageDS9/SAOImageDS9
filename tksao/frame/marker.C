@@ -1648,14 +1648,8 @@ void Marker::listXY(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
     break;
   default:
-    if (ptr->hasWCS(sys)) {
-      if (ptr->hasWCSCel(sys)) {
-	listWCS(ptr,center,sys,sky,format);
-	str << ra << ' ' << dec;
-      }
-      else
-	str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
-    }
+    listWCS(ptr,center,sys,sky,format);
+    str << ra << ' ' << dec;
     break;
   }
 

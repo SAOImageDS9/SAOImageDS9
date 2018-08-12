@@ -815,24 +815,22 @@ void Point::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
   FitsImage* ptr = parent->findFits();
   listCiaoPre(str);
 
+  str << type_ << '(';
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    {
-      Vector vv = ptr->mapFromRef(center,Coord::PHYSICAL);
-      str << type_ << '(' << setprecision(parent->precLinear_) << vv << ')';
-    }
+    str << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,Coord::PHYSICAL);
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
-      str << type_ << '(' << ra << ',' << dec << ')';
-    }
+    listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
+    str << ra << ',' << dec;
     break;
   }
-
+  str << ')';
+  
   listCiaoPost(str, strip);
 }
 

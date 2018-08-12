@@ -266,7 +266,9 @@ void Annulus::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
       Vector vv = ptr->mapFromRef(center,Coord::PHYSICAL);
       for (int ii=0; ii<numAnnuli_-1; ii++) {
 	listCiaoPre(str);
-	str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
+	str << type_ << '('
+	    << setprecision(parent->precLinear_) << vv << ','
+	    << setprecision(parent->precLinear_)
 	    << ptr->mapLenFromRef(annuli_[ii][0],Coord::PHYSICAL) << ','
 	    << ptr->mapLenFromRef(annuli_[ii+1][0],Coord::PHYSICAL) << ')';
 	listCiaoPost(str, strip);
@@ -274,19 +276,18 @@ void Annulus::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
     }
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
-      for (int ii=0; ii<numAnnuli_-1; ii++) {
-	listCiaoPre(str);
-	double r1 = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCMIN);
-	double r2 = ptr->mapLenFromRef(annuli_[ii+1][0],sys,Coord::ARCMIN);
-	str << type_ << '(' << ra << ',' << dec << ','
-	    << setprecision(parent->precArcmin_) << fixed 
-	    << r1 << '\'' << ',' << r2 << '\''
-	    << ')';
-	str.unsetf(ios_base::floatfield);
-	listCiaoPost(str, strip);
-      }
+    listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
+    for (int ii=0; ii<numAnnuli_-1; ii++) {
+      listCiaoPre(str);
+      str << type_ << '('
+	  << ra << ',' << dec << ','
+	  << setprecision(parent->precArcmin_) << fixed 
+	  << ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCMIN)
+	  << '\'' << ','
+	  << ptr->mapLenFromRef(annuli_[ii+1][0],sys,Coord::ARCMIN)
+	  << '\'' << ')';
+      str.unsetf(ios_base::floatfield);
+      listCiaoPost(str, strip);
     }
   }
 }

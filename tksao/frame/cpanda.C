@@ -703,9 +703,10 @@ void Cpanda::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
 	    a2 += 360;
 
 	  listCiaoPre(str);
-	  str << "pie(" << setprecision(parent->precLinear_) << vv << ','
-	      << r1 << ',' << r2 << ',' 
-	      << a1 << ',' << a2 << ')';
+	  str << "pie("
+	      << setprecision(parent->precLinear_) << vv << ','
+	      << setprecision(parent->precLenLinear_) << r1 << ',' << r2 << ',' 
+	      << setprecision(parent->precAngle_) << a1 << ',' << a2 << ')';
 	  listCiaoPost(str, strip);
 	}
       }
@@ -726,7 +727,9 @@ void Cpanda::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
 	  listCiaoPre(str);
 	  str << "pie(" << setprecision(parent->precLinear_)
 	      << ra << ',' << dec << ',' 
+	      << setprecision(parent->precLenLinear_)
 	      << r1 << '\'' << ',' << r2 << '\'' << ','
+	      << setprecision(parent->precAngle_)
 	      << a1 << ',' << a2 << ')';
 	  listCiaoPost(str, strip);
 	}

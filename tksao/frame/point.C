@@ -839,32 +839,25 @@ void Point::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 {
   FitsImage* ptr = parent->findFits();
 
+  coord.listProsCoordSystem(str,sys,sky);
+  str << "; " << type_ << ' ';
   switch (sys) {
   case Coord::IMAGE:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
     sys = Coord::IMAGE;
   case Coord::PHYSICAL:
-    {
-      coord.listProsCoordSystem(str,sys,sky);
-      str << "; ";
-      Vector vv = ptr->mapFromRef(center,sys);
-      str << type_ << ' ' << setprecision(parent->precLinear_) << vv;
-    }
+    str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCSPros(ptr,center,sys,sky,format);
-      coord.listProsCoordSystem(str,sys,sky);
-      str << "; " << type_ << ' ';
-      switch (format) {
-      case Coord::DEGREES:
-	str << ra << 'd' << ' ' << dec << 'd';
-	break;
-      case Coord::SEXAGESIMAL:
-	str << ra << ' ' << dec;
-	break;
-      }
+    listWCSPros(ptr,center,sys,sky,format);
+    switch (format) {
+    case Coord::DEGREES:
+      str << ra << 'd' << ' ' << dec << 'd';
+      break;
+    case Coord::SEXAGESIMAL:
+      str << ra << ' ' << dec;
+      break;
     }
   }
 

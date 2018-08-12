@@ -340,41 +340,37 @@ void Ellipse::listPros(ostream& str, Coord::CoordSystem sys,
 {
   FitsImage* ptr = parent->findFits();
 
+  coord.listProsCoordSystem(str,sys,sky);
+  str << "; " << type_ << ' ';
   switch (sys) {
   case Coord::IMAGE:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
     sys = Coord::IMAGE;
   case Coord::PHYSICAL:
-    {
-      Vector vv = ptr->mapFromRef(center,sys);
-      Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::IMAGE);
-      coord.listProsCoordSystem(str,sys,sky);
-      str << "; " << type_ << ' '
-	  << setprecision(parent->precLinear_) << vv << ' '
-	  << setprecision(parent->precLenLinear_) << rr << ' ';
-    }
+    str << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,sys) << ' '
+	<< setprecision(parent->precLenLinear_)
+	<< ptr->mapLenFromRef(annuli_[0],Coord::IMAGE) << ' '
+	<< setprecision(parent->precAngle_)
+	<< radToDeg(angle);
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCSPros(ptr,center,sys,sky,format);
-      coord.listProsCoordSystem(str,sys,sky);
-      Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCSEC);
-      str << "; " << type_ << ' ';
-      switch (format) {
-      case Coord::DEGREES:
-	str << ra << 'd' << ' ' << dec << 'd' << ' ';
-	break;
-      case Coord::SEXAGESIMAL:
-	str << ra << ' ' << dec << ' ';
-	break;
-      }
-      str << setprecision(parent->precArcsec_) << fixed << setunit('"');
-      str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLenLinear_) << rr << ' ';
+    listWCSPros(ptr,center,sys,sky,format);
+    switch (format) {
+    case Coord::DEGREES:
+      str << ra << 'd' << ' ' << dec << 'd' << ' ';
+      break;
+    case Coord::SEXAGESIMAL:
+      str << ra << ' ' << dec << ' ';
+      break;
     }
+    str << setprecision(parent->precArcsec_) << fixed << setunit('"')
+	<< ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCSEC) << ' ';
+    str.unsetf(ios_base::floatfield);
+    str << setprecision(parent->precAngle_)
+	<< radToDeg(angle);
   }
-  str << setprecision(parent->precAngle_) << radToDeg(angle);
 
   listProsPost(str, strip);
 }

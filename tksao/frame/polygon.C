@@ -461,42 +461,31 @@ void Polygon::listPros(ostream& str, Coord::CoordSystem sys,
   FitsImage* ptr = parent->findFits();
   Matrix mm = fwdMatrix();
 
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    sys = Coord::IMAGE;
-  case Coord::PHYSICAL:
-    {
-      coord.listProsCoordSystem(str,sys,sky);
-      str << "; " << type_;
-      vertex.head();
-      do {
-	Vector vv = ptr->mapFromRef(vertex.current()->vector*mm,sys);
-        str << ' ' << setprecision(parent->precLinear_) << vv;
+  coord.listProsCoordSystem(str,sys,sky);
+  str << "; " << type_;
+  vertex.head();
+  do {
+    switch (sys) {
+    case Coord::IMAGE:
+    case Coord::DETECTOR:
+    case Coord::AMPLIFIER:
+      sys = Coord::IMAGE;
+    case Coord::PHYSICAL:
+      str << ' ' << setprecision(parent->precLinear_)
+	  << ptr->mapFromRef(vertex.current()->vector*mm,sys);
+      break;
+    default:
+      listWCSPros(ptr,vertex.current()->vector*mm,sys,sky,format);
+      switch (format) {
+      case Coord::DEGREES:
+	str << ' ' << ra << 'd' << ' ' << dec << 'd';
+	break;
+      case Coord::SEXAGESIMAL:
+	str << ' ' << ra << ' ' << dec;
+	break;
       }
-      while (vertex.next());
     }
-    break;
-  default:
-    if (ptr->hasWCSCel(sys)) {
-      coord.listProsCoordSystem(str,sys,sky);
-      str << "; " << type_;
-      vertex.head();
-      do {
-	  listWCSPros(ptr,vertex.current()->vector*mm,sys,sky,format);
-	  switch (format) {
-	  case Coord::DEGREES:
-	    str << ' ' << ra << 'd' << ' ' << dec << 'd';
-	    break;
-	  case Coord::SEXAGESIMAL:
-	    str << ' ' << ra << ' ' << dec;
-	    break;
-	  }
-      }
-      while (vertex.next());
-    }
-  }
+  } while (vertex.next());
 
   listProsPost(str, strip);
 }

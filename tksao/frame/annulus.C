@@ -298,42 +298,35 @@ void Annulus::listPros(ostream& str, Coord::CoordSystem sys,
 {
   FitsImage* ptr = parent->findFits();
 
+  coord.listProsCoordSystem(str,sys,sky);
+  str << "; " << type_ << ' ';
   switch (sys) {
   case Coord::IMAGE:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
     sys = Coord::IMAGE;
   case Coord::PHYSICAL:
-    {
-      Vector vv = ptr->mapFromRef(center,sys);
-      coord.listProsCoordSystem(str,sys,sky);
-      str << "; " << type_ << ' ' << setprecision(parent->precLinear_) << vv;
-      for (int ii=0; ii<numAnnuli_; ii++) {
-	double rr = ptr->mapLenFromRef(annuli_[ii][0],Coord::IMAGE);
-	str << ' ' << rr;
-      }
-    }
+    str << setprecision(parent->precLinear_)
+	<< ptr->mapFromRef(center,sys);
+    str << setprecision(parent->precLenLinear_);
+    for (int ii=0; ii<numAnnuli_; ii++)
+	str << ' ' << ptr->mapLenFromRef(annuli_[ii][0],Coord::IMAGE);
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCSPros(ptr,center,sys,sky,format);
-      coord.listProsCoordSystem(str,sys,sky);
-      str << "; " << type_ << ' ';
-      switch (format) {
-      case Coord::DEGREES:
-	str << ra << 'd' << ' ' << dec << 'd';
-	break;
-      case Coord::SEXAGESIMAL:
-	str << ra << ' ' << dec;
-	break;
-      }
-      str << setprecision(parent->precArcsec_) << fixed;
-      for (int ii=0; ii<numAnnuli_; ii++) {
-	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
-	str << ' ' << rr << '"';
-      }
-      str.unsetf(ios_base::floatfield);
+    listWCSPros(ptr,center,sys,sky,format);
+    switch (format) {
+    case Coord::DEGREES:
+      str << ra << 'd' << ' ' << dec << 'd';
+      break;
+    case Coord::SEXAGESIMAL:
+      str << ra << ' ' << dec;
+      break;
     }
+    str << setprecision(parent->precArcsec_) << fixed;
+    for (int ii=0; ii<numAnnuli_; ii++)
+      str << ' '
+	  << ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC) << '"';
+    str.unsetf(ios_base::floatfield);
   }
 
   listProsPost(str, strip);

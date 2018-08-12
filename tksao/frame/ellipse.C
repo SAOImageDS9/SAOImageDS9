@@ -245,9 +245,8 @@ void Ellipse::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,sys) << ','
-	<< rr << ',';
+    str << setprecision(parent->precLinear_)<<ptr->mapFromRef(center,sys) << ','
+	<< setprecision(parent->precLenLinear_) << rr << ',';
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
@@ -259,9 +258,9 @@ void Ellipse::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       str.unsetf(ios_base::floatfield);
     }
     else
-      str << setprecision(parent->precLinear_) << rr << ',' ;
+      str << setprecision(parent->precLenLinear_) << rr << ',' ;
   }
-  str << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
+  str << radToDeg(aa) << ')';
   
   listPost(str, conj, strip);
 }
@@ -318,8 +317,7 @@ void Ellipse::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
       Vector vv = ptr->mapFromRef(center,Coord::PHYSICAL);
       Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::PHYSICAL);
       str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-	  << rr << ',' 
-	  << radToDeg(angle) << ')';
+	  << setprecision(parent->precLenLinear_) << rr << ',';
     }
     break;
   default:
@@ -327,13 +325,13 @@ void Ellipse::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
       listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
       Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCMIN);
       str << type_ << '(' << ra << ',' << dec << ',' 
-	  << setprecision(parent->precArcmin_) << fixed << setunit('\'')
-	  << rr << ',';
+	  << setprecision(parent->precArcmin_) << fixed << setunit('\'');
       str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLinear_) << radToDeg(angle) << ')';
+      str << setprecision(parent->precLenLinear_) << rr << ',';
     }
     break;
   }
+  str  << radToDeg(angle) << ')';
 
   listCiaoPost(str, strip);
 }
@@ -356,8 +354,7 @@ void Ellipse::listSAOtng(ostream& str, Coord::CoordSystem sys,
       Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
       Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::IMAGE);
       str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-	  << rr << ','
-          << radToDeg(angle) << ')';
+	  << setprecision(parent->precLinear_) << rr << ',';
     }
     break;
   default:
@@ -365,10 +362,10 @@ void Ellipse::listSAOtng(ostream& str, Coord::CoordSystem sys,
       listWCS(ptr,center,sys,sky,format);
       Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::IMAGE);
       str << type_ << '(' << ra << ',' << dec << ','
-	  << setprecision(parent->precLinear_) << rr << ','
-	  << setprecision(parent->precLinear_) << radToDeg(angle) << ')';
+	  << setprecision(parent->precLenLinear_) << rr << ',';
     }
   }
+  str << radToDeg(angle) << ')';
 
   listSAOtngPost(str, strip);
 }
@@ -389,9 +386,9 @@ void Ellipse::listPros(ostream& str, Coord::CoordSystem sys,
       Vector vv = ptr->mapFromRef(center,sys);
       Vector rr = ptr->mapLenFromRef(annuli_[0],Coord::IMAGE);
       coord.listProsCoordSystem(str,sys,sky);
-      str << "; " << type_ << ' ' << setprecision(parent->precLinear_)
-	  << vv << ' ' << rr << ' '
-          << radToDeg(angle);
+      str << "; " << type_ << ' '
+	  << setprecision(parent->precLinear_) << vv << ' '
+	  << setprecision(parent->precLenLinear_) << rr << ' ';
     }
     break;
   default:
@@ -408,12 +405,12 @@ void Ellipse::listPros(ostream& str, Coord::CoordSystem sys,
 	str << ra << ' ' << dec << ' ';
 	break;
       }
-      str << setprecision(parent->precArcsec_) << fixed << setunit('"')
-	  << rr << ' ';
+      str << setprecision(parent->precArcsec_) << fixed << setunit('"');
       str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLinear_) << radToDeg(angle);
+      str << setprecision(parent->precLenLinear_) << rr << ' ';
     }
   }
+  str << radToDeg(angle);
 
   listProsPost(str, strip);
 }
@@ -424,9 +421,10 @@ void Ellipse::listSAOimage(ostream& str, int strip)
   listSAOimagePre(str);
 
   Vector vv = ptr->mapFromRef(center,Coord::IMAGE);
-  str << type_ << '(' << setprecision(parent->precLinear_) << vv << ','
-      << annuli_[0] << ','
-      << radToDeg(angle) << ')';
+  str << type_ << '('
+      << setprecision(parent->precLinear_) << vv << ','
+      << setprecision(parent->precLinear_) << annuli_[0] << ',';
+  str << radToDeg(angle) << ')';
 
   listSAOimagePost(str, strip);
 }

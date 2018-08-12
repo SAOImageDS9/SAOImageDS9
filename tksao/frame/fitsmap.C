@@ -280,7 +280,7 @@ void FitsImage::listLenFromRef(ostream& str, const Vector& vv,
 	}
       }
       else
-	str << setprecision(context_->parent_->precLinear_);
+	str << setprecision(context_->parent_->precLenLinear_);
 
       str << fixed << out;
     }

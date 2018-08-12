@@ -53,6 +53,7 @@ proc PrefsDialog {{which {}}} {
     set dprefs(tabs) {}
 
     PrefsDialogGeneral
+    PrefsDialogPrecision
     PrefsDialogStartup
     PrefsDialogMenu
     PrefsDialogPanner
@@ -66,7 +67,6 @@ proc PrefsDialog {{which {}}} {
     PrefsDialogRegion
     PrefsDialogAnnulus
     PrefsDialogPanda
-    PrefsDialogWCS
     PrefsDialogAnalysis
     PrefsDialogPixelTable
     PrefsDialogContour
@@ -296,18 +296,18 @@ proc PrefsDialogGeneral {} {
 	-side top -fill both -expand true
 }
 
-proc PrefsDialogWCS {} {
+proc PrefsDialogPrecision {} {
     global dprefs
     global ds9
     global pds9
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {WCS}]
+    $dprefs(list) insert end [msgcat::mc {Precision}]
     lappend dprefs(tabs) [ttk::frame $w.precision]
 
     # Coordinates
-    set f [ttk::labelframe $w.precision.coord -text [msgcat::mc {Coordinates Precision}]]
+    set f [ttk::labelframe $w.precision.coord -text [msgcat::mc {Coordinates}]]
 
     ttk::label $f.tlinear -text [msgcat::mc {Linear}]
     ttk::entry $f.linear -textvariable pds9(prec,linear) \
@@ -328,7 +328,7 @@ proc PrefsDialogWCS {} {
     grid $f.tdms $f.dms -padx 2 -pady 2 -sticky w
 
     # Length
-    set f [ttk::labelframe $w.precision.length -text [msgcat::mc {Length Precision}]]
+    set f [ttk::labelframe $w.precision.length -text [msgcat::mc {Length}]]
 
     ttk::label $f.tlinear -text [msgcat::mc {Linear}]
     ttk::entry $f.linear -textvariable pds9(prec,len,linear) \

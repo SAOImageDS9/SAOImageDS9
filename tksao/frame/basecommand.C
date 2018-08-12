@@ -1752,7 +1752,7 @@ void Base::getFitsSizeCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
     ostringstream str;
     switch (dist) {
     case Coord::DEGREE:
-      str << setprecision(precDeg_);
+      str << setprecision(precLenDeg_);
       break;
     case Coord::ARCMIN:
       str << setprecision(precArcmin_) << fixed;
@@ -2620,12 +2620,28 @@ void Base::pannerCmd(char* n, int w, int h)
 }
 
 void Base::precCmd(int linear, int deg, int hms, int dms, 
+		   int lenlinear, int lendeg, int arcmin, int arcsec)
+{
+  precLinear_ = linear;
+  precDeg_ = deg;
+  precHMS_ = hms;
+  precDMS_ = dms;
+
+  precLenLinear_ = lenlinear;
+  precLenDeg_ = lendeg;
+  precArcmin_ = arcmin;
+  precArcsec_ = arcsec;
+}
+
+// backward compatibility
+void Base::precCmd(int linear, int deg, int hms, int dms, 
 		   int arcmin, int arcsec)
 {
   precLinear_ = linear;
   precDeg_ = deg;
   precHMS_ = hms;
   precDMS_ = dms;
+
   precArcmin_ = arcmin;
   precArcsec_ = arcsec;
 }

@@ -3151,7 +3151,7 @@ void FitsImage::setWCSFormat(Coord::CoordSystem sys, Coord::SkyFrame sky,
     case Coord::DEGREES:
       {
 	ostringstream str;
-	str << "d." << context_->parent_->precDeg_;
+	str << "d." << context_->parent_->precLenDeg_;
 
 	wcsFormat(ast_, wcsCelLon_[id], str.str().c_str());
 	wcsFormat(ast_, wcsCelLat_[id], str.str().c_str());

@@ -480,7 +480,7 @@ command : DEBUG_ debug
 	| PAN_ pan
 	| PANNER_ panner
 	| QUERY_ CURSOR_ {fr->queryCursorCmd();}
-        | PRECISION_ INT INT INT INT INT INT {fr->precCmd($2,$3,$4,$5,$6,$7);}
+        | PRECISION_ precision
 	| POSTSCRIPT_ postscript
 	| RESET_ {fr->resetCmd();}
 	| REGION_ markerLayer region
@@ -2584,8 +2584,16 @@ postscript : COLORSPACE_ pscolorspace
 	| RESOLUTION_ INT {fr->psResolutionCmd($2);}
 	| SCALE_ numeric {
 	  // backward compatibility with backup
-	  }
+	}
 	;
+
+precision : INT INT INT INT INT INT INT INT
+        {fr->precCmd($1,$2,$3,$4,$5,$6,$7,$8);}
+        | INT INT INT INT INT INT {
+	  // backward compatibility with backup
+	  fr->precCmd($1,$2,$3,$4,$5,$6);
+	}
+        ;
 
 pscolorspace : BW_ {$$ = Widget::BW;}
 	| GRAY_ {$$ = Widget::GRAY;}

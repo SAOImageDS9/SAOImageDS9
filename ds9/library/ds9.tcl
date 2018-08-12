@@ -137,8 +137,11 @@ proc DS9Def {} {
     set pds9(prec,deg) 7
     set pds9(prec,hms) 4
     set pds9(prec,dms) 3
-    set pds9(prec,arcmin) 5
-    set pds9(prec,arcsec) 3
+
+    set pds9(prec,len,linear) 8
+    set pds9(prec,len,deg) 7
+    set pds9(prec,len,arcmin) 5
+    set pds9(prec,len,arcsec) 3
 
     set pds9(bg) white
     set pds9(nan) white

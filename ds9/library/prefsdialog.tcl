@@ -53,20 +53,20 @@ proc PrefsDialog {{which {}}} {
     set dprefs(tabs) {}
 
     PrefsDialogGeneral
-    PrefsDialogPrecision
     PrefsDialogStartup
     PrefsDialogMenu
     PrefsDialogPanner
     PrefsDialogMagnifier
     PrefsDialog3d
     PrefsDialogGraph
-    PrefsDialogScale
-    PrefsDialogColor
     PrefsDialogBin
     PrefsDialogZoom
+    PrefsDialogScale
+    PrefsDialogColor
     PrefsDialogRegion
     PrefsDialogAnnulus
     PrefsDialogPanda
+    PrefsDialogWCS
     PrefsDialogAnalysis
     PrefsDialogPixelTable
     PrefsDialogContour
@@ -296,18 +296,18 @@ proc PrefsDialogGeneral {} {
 	-side top -fill both -expand true
 }
 
-proc PrefsDialogPrecision {} {
+proc PrefsDialogWCS {} {
     global dprefs
     global ds9
     global pds9
 
     set w $dprefs(tab)
 
-    $dprefs(list) insert end [msgcat::mc {Precision}]
+    $dprefs(list) insert end [msgcat::mc {WCS}]
     lappend dprefs(tabs) [ttk::frame $w.precision]
 
     # Coordinates
-    set f [ttk::labelframe $w.precision.coord -text [msgcat::mc {Coordinates}]]
+    set f [ttk::labelframe $w.precision.coord -text [msgcat::mc {Coordinates Precision}]]
 
     ttk::label $f.tlinear -text [msgcat::mc {Linear}]
     ttk::entry $f.linear -textvariable pds9(prec,linear) \
@@ -328,15 +328,23 @@ proc PrefsDialogPrecision {} {
     grid $f.tdms $f.dms -padx 2 -pady 2 -sticky w
 
     # Length
-    set f [ttk::labelframe $w.precision.length -text [msgcat::mc {Length}]]
+    set f [ttk::labelframe $w.precision.length -text [msgcat::mc {Length Precision}]]
 
+    ttk::label $f.tlinear -text [msgcat::mc {Linear}]
+    ttk::entry $f.linear -textvariable pds9(prec,len,linear) \
+	-validate focusout -validatecommand PrefsPrecision -width 8
+    ttk::label $f.tdeg -text [msgcat::mc {Degrees}]
+    ttk::entry $f.deg -textvariable pds9(prec,len,deg) \
+	-validate focusout -validatecommand PrefsPrecision -width 8
     ttk::label $f.tarcmin -text [msgcat::mc {ArcMin}]
-    ttk::entry $f.arcmin -textvariable pds9(prec,arcmin) \
+    ttk::entry $f.arcmin -textvariable pds9(prec,len,arcmin) \
 	-validate focusout -validatecommand PrefsPrecision -width 8
     ttk::label $f.tarcsec -text [msgcat::mc {ArcSec}]
-    ttk::entry $f.arcsec -textvariable pds9(prec,arcsec) \
+    ttk::entry $f.arcsec -textvariable pds9(prec,len,arcsec) \
 	-validate focusout -validatecommand PrefsPrecision -width 8
 
+    grid $f.tlinear $f.linear -padx 2 -pady 2 -sticky w
+    grid $f.tdeg $f.deg -padx 2 -pady 2 -sticky w
     grid $f.tarcmin $f.arcmin -padx 2 -pady 2 -sticky w
     grid $f.tarcsec $f.arcsec -padx 2 -pady 2 -sticky w
 

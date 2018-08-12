@@ -1087,7 +1087,8 @@ proc PrefsPrecision {} {
 	$ff precision $pds9(prec,linear) $pds9(prec,deg) \
 	    $pds9(prec,hms) $pds9(prec,dms) \
 	    $pds9(prec,len,linear) $pds9(prec,len,deg) \
-	    $pds9(prec,len,arcmin) $pds9(prec,len,arcsec)
+	    $pds9(prec,len,arcmin) $pds9(prec,len,arcsec) \
+	    $pds9(prec,angle)
     }
     # prefs validation command
     return true
@@ -1346,7 +1347,7 @@ proc FixSpec {sysname skyname formatname defsys defsky defformat} {
 proc DS9Backup {ch which} {
     global pds9
 
-    puts $ch "$which precision $pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,len,linear) $pds9(prec,len,deg) $pds9(prec,len,arcmin) $pds9(prec,len,arcsec)"
+    puts $ch "$which precision $pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,len,linear) $pds9(prec,len,deg) $pds9(prec,len,arcmin) $pds9(prec,len,arcsec) $pds9(prec,angle)"
 
     puts $ch "$which bg color $pds9(bg)"
     puts $ch "$which nan color $pds9(nan)"
@@ -1386,7 +1387,7 @@ proc ProcessPrecisionCmd {varname iname} {
 
 proc ProcessSendPrecisionCmd {proc id param {sock {}} {fn {}}} {
     global pds9
-    $proc $id "$pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,len,linear) $pds9(prec,len,deg) $pds9(prec,len,arcmin) $pds9(prec,len,arcsec)\n"
+    $proc $id "$pds9(prec,linear) $pds9(prec,deg) $pds9(prec,hms) $pds9(prec,dms) $pds9(prec,len,linear) $pds9(prec,len,deg) $pds9(prec,len,arcmin) $pds9(prec,len,arcsec) $pds9(prec,angle)\n"
 }
 
 proc ProcessBgCmd {varname iname} {

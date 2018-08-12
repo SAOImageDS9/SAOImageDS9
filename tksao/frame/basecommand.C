@@ -2620,7 +2620,8 @@ void Base::pannerCmd(char* n, int w, int h)
 }
 
 void Base::precCmd(int linear, int deg, int hms, int dms, 
-		   int lenlinear, int lendeg, int arcmin, int arcsec)
+		   int lenlinear, int lendeg, int arcmin, int arcsec,
+		   int angle)
 {
   precLinear_ = linear;
   precDeg_ = deg;
@@ -2631,6 +2632,8 @@ void Base::precCmd(int linear, int deg, int hms, int dms,
   precLenDeg_ = lendeg;
   precArcmin_ = arcmin;
   precArcsec_ = arcsec;
+
+  precAngle_ = angle;
 }
 
 // backward compatibility

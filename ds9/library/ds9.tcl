@@ -143,6 +143,8 @@ proc DS9Def {} {
     set pds9(prec,len,arcmin) 5
     set pds9(prec,len,arcsec) 3
 
+    set pds9(prec,angle) 8
+
     set pds9(bg) white
     set pds9(nan) white
 

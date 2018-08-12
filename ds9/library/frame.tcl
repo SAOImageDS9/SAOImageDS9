@@ -139,7 +139,8 @@ proc CreateNameNumberFrame {which type} {
     $ds9(next) precision $pds9(prec,linear) $pds9(prec,deg) \
 	$pds9(prec,hms) $pds9(prec,dms) \
 	$pds9(prec,len,linear) $pds9(prec,len,deg) \
-	$pds9(prec,len,arcmin) $pds9(prec,len,arcsec)
+	$pds9(prec,len,arcmin) $pds9(prec,len,arcsec) \
+	$pds9(prec,angle)
     
     $ds9(next) bg color $pds9(bg)
     $ds9(next) nan color $pds9(nan)

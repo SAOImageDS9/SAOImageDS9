@@ -246,12 +246,12 @@ public:
   int precDeg_;
   int precHMS_;
   int precDMS_;
-
   int precLenLinear_;
   int precLenDeg_;
   int precArcmin_;
   int precArcsec_;
-
+  int precAngle_;
+  
   int markerEpsilon;       // mouse tolerance for select/edit
   int showMarkers;
   int showMarkersText;
@@ -1604,7 +1604,7 @@ public:
   void getPixelTableCmd(const Vector&, Coord::InternalSystem, int, int, char*);
 
   // Precision Commands
-  void precCmd(int, int, int, int, int, int, int, int);
+  void precCmd(int, int, int, int, int, int, int, int, int);
   // backward compatibilty backup
   void precCmd(int, int, int, int, int, int);
 

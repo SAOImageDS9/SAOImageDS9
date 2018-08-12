@@ -348,7 +348,16 @@ proc PrefsDialogPrecision {} {
     grid $f.tarcmin $f.arcmin -padx 2 -pady 2 -sticky w
     grid $f.tarcsec $f.arcsec -padx 2 -pady 2 -sticky w
 
-    pack $w.precision.coord $w.precision.length \
+    # Angle
+    set f [ttk::labelframe $w.precision.angle -text [msgcat::mc {Angles}]]
+
+    ttk::label $f.tangle -text [msgcat::mc {Angle}]
+    ttk::entry $f.angle -textvariable pds9(prec,angle) \
+	-validate focusout -validatecommand PrefsPrecision -width 8
+
+    grid $f.tangle $f.angle -padx 2 -pady 2 -sticky w
+
+    pack $w.precision.coord $w.precision.length $w.precision.angle \
 	-side top -fill both -expand true
 }
 

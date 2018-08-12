@@ -137,11 +137,11 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   precDeg_ = 7;
   precHMS_ = 4;
   precDMS_ = 3;
-
   precLenLinear_ = 8;
   precLenDeg_ = 7;
   precArcmin_ = 5;
   precArcsec_ = 3;
+  precAngle_ = 8;
 
   markerEpsilon = 3;
   showMarkers = 1;

@@ -2587,8 +2587,8 @@ postscript : COLORSPACE_ pscolorspace
 	}
 	;
 
-precision : INT INT INT INT INT INT INT INT
-        {fr->precCmd($1,$2,$3,$4,$5,$6,$7,$8);}
+precision : INT INT INT INT INT INT INT INT INT
+        {fr->precCmd($1,$2,$3,$4,$5,$6,$7,$8,$9);}
         | INT INT INT INT INT INT {
 	  // backward compatibility with backup
 	  fr->precCmd($1,$2,$3,$4,$5,$6);

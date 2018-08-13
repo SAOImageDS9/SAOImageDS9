@@ -429,6 +429,7 @@ class FitsImage {
   void listFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void listLenFromRef(ostream&, double, Coord::CoordSystem, Coord::DistFormat);
   void listLenFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
+  void listLenFromRef(ostream&, ostream&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void listDistFromRef(ostream&, const Vector&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
 
   const char* getValue(const Vector& v);

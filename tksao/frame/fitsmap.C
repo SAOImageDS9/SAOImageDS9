@@ -289,6 +289,54 @@ void FitsImage::listLenFromRef(ostream& str, const Vector& vv,
   }
 }
 
+void FitsImage::listLenFromRef(ostream& str1, ostream& str2,
+			       const Vector& vv,
+			       Coord::CoordSystem sys, Coord::DistFormat dist)
+{
+  Vector out = mapLenFromRef(vv, sys, dist);
+
+  switch (sys) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::DETECTOR:
+  case Coord::AMPLIFIER:
+    str1 << setprecision(context_->parent_->precLenLinear_) << out[0];
+    str2 << setprecision(context_->parent_->precLenLinear_) << out[1];
+    break;
+  default:
+    if (hasWCS(sys)) {
+      if (hasWCSCel(sys)) {
+	switch (dist) {
+	case Coord::DEGREE:
+	  str1 << setprecision(context_->parent_->precLenDeg_);
+	  str2 << setprecision(context_->parent_->precLenDeg_);
+	  break;
+	case Coord::ARCMIN:
+	  str1 << setprecision(context_->parent_->precArcmin_);
+	  str2 << setprecision(context_->parent_->precArcmin_);
+	  break;
+	case Coord::ARCSEC:
+	  str1 << setprecision(context_->parent_->precArcsec_);
+	  str2 << setprecision(context_->parent_->precArcsec_);
+	  break;
+	}
+	str1 << fixed << out[0];
+	str2 << fixed << out[1];
+	str1.unsetf(ios_base::floatfield);
+	str2.unsetf(ios_base::floatfield);
+      }
+      else {
+	str1 << setprecision(context_->parent_->precLenLinear_) << out[0];
+	str2 << setprecision(context_->parent_->precLenLinear_) << out[1];
+      }
+    }
+    else {
+      str1 << "0";
+      str2 << "0";
+    }
+  }
+}
+
 // Map Distance
 
 double FitsImage::mapDistFromRef(const Vector& vv1, const Vector& vv2, 

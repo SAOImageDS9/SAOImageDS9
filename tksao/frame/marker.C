@@ -1914,6 +1914,33 @@ void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys,
 			 Coord::SkyFrame sky, Coord::SkyFormat format,
 			 Vector vv)
 {
+  if (0) {
+  ostringstream str;
+  ptr->listFromRef(str,vv,sys,sky,format);
+
+  char* buf = dupstr(str.str().c_str());
+  char* bptr = buf;
+  
+  // lon
+  char* lonptr = buf;
+  while (*bptr && *bptr != ' ')
+    bptr++;
+  *bptr = '\0';
+
+  // lat
+  bptr++;
+  char* latptr = bptr;
+  while (*bptr && *bptr != ' ')
+    bptr++;
+  *bptr = '\0';
+
+  XMLRow(XMLX,lonptr);
+  XMLRow(XMLY,latptr);
+  delete [] buf;
+  return;
+  }
+  else {
+
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
@@ -1929,6 +1956,7 @@ void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys,
     listWCS(ptr,vv,sys,sky,format);
     XMLRow(XMLX,ra);
     XMLRow(XMLY,dec);
+  }
   }
 }
 
@@ -1975,110 +2003,55 @@ void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys,
 
 void Marker::XMLRowRadiusX(FitsImage* ptr, Coord::CoordSystem sys, Vector vv)
 {
-  double rr = ptr->mapLenFromRef(vv[0],sys,Coord::ARCSEC);
-
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    XMLRow(XMLR,rr,8);
-    break;
-  default:
-    if (ptr->hasWCS(sys)) {
-      if (ptr->hasWCSCel(sys))
-	XMLRowARCSEC(XMLR,rr);
-      else
-	XMLRow(XMLR,rr,8);
-    }
-    break;
-  }
+  ostringstream str;
+  ptr->listLenFromRef(str,vv[0],sys,Coord::ARCSEC);
+  XMLRow(XMLR,(char*)str.str().c_str());
 }
 
 void Marker::XMLRowRadiusX(FitsImage* ptr, Coord::CoordSystem sys, 
 			   Vector* vv, int cnt)
 {
-  double rr[cnt];
-  for (int ii=0; ii<cnt; ii++)
-    rr[ii] = ptr->mapLenFromRef(vv[ii][0],sys,Coord::ARCSEC);
+  ostringstream str;
+  for (int ii=0; ii<cnt; ii++) {
+    ptr->listLenFromRef(str,vv[ii][0],sys,Coord::ARCSEC);
 
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    XMLRow(XMLRV,rr,cnt,8);
-    break;
-  default:
-    if (ptr->hasWCS(sys)) {
-      if (ptr->hasWCSCel(sys))
-	XMLRowARCSEC(XMLRV,rr,cnt);
-      else
-	XMLRow(XMLRV,rr,cnt,8);
-    }
-    break;
+    if (ii!=cnt-1)
+      str << ' ';
+    else
+      str << ends;
   }
+  XMLRow(XMLRV,(char*)str.str().c_str());
 }
 
 void Marker::XMLRowRadius(FitsImage* ptr, Coord::CoordSystem sys, Vector vv)
 {
-  Vector v = ptr->mapLenFromRef(vv,sys,Coord::ARCSEC);
-
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    XMLRow(XMLR,v[0],8);
-    XMLRow(XMLR2,v[1],8);
-    break;
-  default:
-    if (ptr->hasWCS(sys)) {
-      if (ptr->hasWCSCel(sys)) {
-	XMLRowARCSEC(XMLR,v[0]);
-	XMLRowARCSEC(XMLR2,v[1]);
-      }
-      else {
-	XMLRow(XMLR,v[0],8);
-	XMLRow(XMLR2,v[1],8);
-      }
-    }
-    break;
-  }
+  ostringstream str1;
+  ostringstream str2;
+  ptr->listLenFromRef(str1,vv[0],sys,Coord::ARCSEC);
+  ptr->listLenFromRef(str2,vv[1],sys,Coord::ARCSEC);
+  XMLRow(XMLR, (char*)str1.str().c_str());
+  XMLRow(XMLR2,(char*)str2.str().c_str());
 }
 
 void Marker::XMLRowRadius(FitsImage* ptr, Coord::CoordSystem sys, 
 			  Vector* vv, int cnt)
 {
-  double rr[cnt];
-  double rr2[cnt];
+  ostringstream str1;
+  ostringstream str2;
   for (int ii=0; ii<cnt; ii++) {
-    Vector v = ptr->mapLenFromRef(vv[ii],sys,Coord::ARCSEC);
-    rr[ii] = v[0];
-    rr2[ii] = v[1];
-  }
+    ptr->listLenFromRef(str1,str2,vv[ii],sys,Coord::ARCSEC);
 
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    XMLRow(XMLRV,rr,cnt,8);
-    XMLRow(XMLRV2,rr2,cnt,8);
-    break;
-  default:
-    if (ptr->hasWCS(sys)) {
-      if (ptr->hasWCSCel(sys)) {
-	XMLRowARCSEC(XMLRV,rr,cnt);
-	XMLRowARCSEC(XMLRV2,rr2,cnt);
-      }
-      else {
-	XMLRow(XMLRV,rr,cnt,8);
-	XMLRow(XMLRV2,rr2,cnt,8);
-      }
+    if (ii!=cnt-1) {
+      str1 << ' ';
+      str2 << ' ';
     }
-    break;
+    else {
+      str1 << ends;
+      str2 << ends;
+    }
   }
+  XMLRow(XMLRV, (char*)str1.str().c_str());
+  XMLRow(XMLRV2,(char*)str2.str().c_str());
 }
 
 void Marker::XMLRowAng(Coord::CoordSystem sys, Coord::SkyFrame sky)

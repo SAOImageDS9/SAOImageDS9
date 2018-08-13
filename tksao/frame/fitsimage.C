@@ -88,6 +88,9 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcsHPX_ =0;
   wcsInv_ =1;
 
+  wcsSystem_ = Coord::WCS;
+  wcsSkyFrame_ = Coord::FK5;
+
   wcsAltHeader_ =NULL;
   wfpc2Header_ =NULL;
   wcs0Header_ =NULL;
@@ -1085,6 +1088,9 @@ void FitsImage::initWCS(FitsHead* hd)
 	  wcsHPX_ = ptr->wcsHPX_;
 	  wcsInv_ = ptr->wcsInv_;
 
+	  wcsSystem_ = ptr->wcsSystem_;
+	  wcsSkyFrame_ = ptr->wcsSkyFrame_;
+
 	  wcsPhyInit();
 	  manageWCS_ =0;
 	  return;
@@ -1118,6 +1124,9 @@ void FitsImage::initWCS(FitsHead* hd)
   wcsHPXInit();
   wcsSizeInit();
   wcsPhyInit();
+
+  wcsSystem_ = Coord::WCS;
+  wcsSkyFrame_ = Coord::FK5;
 
   if (DebugWCS && ast_)
     astShow(ast_);
@@ -2572,7 +2581,7 @@ double FitsImage::calcWCSSize(Coord::CoordSystem sys)
     return 0;
 
   astClearStatus; // just to make sure
-  wcsSystem(ast_,sys);
+  setWCSSystem(sys);
   
   // only check lon axis as it will not change near poles
   Vector in[3];
@@ -2594,8 +2603,8 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  wcsSystem(ast_,sys);
-  wcsSkyFrame(ast_,sky);
+  setWCSSystem(sys);
+  setWCSSkyFrame(sky);
 
   Vector in[3];
   Vector out[3];
@@ -2625,8 +2634,8 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  wcsSystem(ast_,sys);
-  wcsSkyFrame(ast_,sky);
+  setWCSSystem(sys);
+  setWCSSkyFrame(sky);
 
   if (!wcsHPX_) {
     Vector in[3];
@@ -2680,7 +2689,7 @@ double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  wcsSystem(ast_,sys);
+  setWCSSystem(sys);
 
   astEnd;
   
@@ -2697,7 +2706,7 @@ const char* FitsImage::getWCSDomain(Coord::CoordSystem sys)
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  wcsSystem(ast_,sys);
+  setWCSSystem(sys);
 
   astEnd;
 
@@ -2746,8 +2755,8 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   if (!hasWCS(sys))
     return Vector();
   
-  wcsSystem(ast_,sys);
-  wcsSkyFrame(ast_,sky);
+  setWCSSystem(sys);
+  setWCSSkyFrame(sky);
 
   Vector out = wcsTran(ast_, in, 1);
 
@@ -2771,8 +2780,8 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   if (!hasWCS(sys))
     return lbuf;
 
-  wcsSystem(ast_,sys);
-  wcsSkyFrame(ast_,sky);
+  setWCSSystem(sys);
+  setWCSSkyFrame(sky);
   
   Vector out = wcsTran(ast_, in, 1);
   if (astOK && checkWCS(out)) {
@@ -2797,8 +2806,8 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  wcsSystem(ast_,sys);
-  wcsSkyFrame(ast_,sky);
+  setWCSSystem(sys);
+  setWCSSkyFrame(sky);
 
   Vector3d out = wcsTran(ast_, in, 1);
 
@@ -2822,8 +2831,8 @@ char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   if (!(hasWCS(sys) && hasWCS3D(sys)))
     return lbuf;
 
-  wcsSystem(ast_,sys);
-  wcsSkyFrame(ast_,sky);
+  setWCSSystem(sys);
+  setWCSSkyFrame(sky);
   
   Vector3d out = wcsTran(ast_, in, 1);
   if (astOK && checkWCS(out)) {
@@ -2851,8 +2860,8 @@ Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
     return Vector();
   }
 
-  wcsSystem(ast_,sys);
-  wcsSkyFrame(ast_,sky);
+  setWCSSystem(sys);
+  setWCSSkyFrame(sky);
 
   Vector in = hasWCSCel(sys) ? degToRad(vv) : vv;
   Vector out = wcsTran(ast_, in, 0);
@@ -2875,8 +2884,8 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
-  wcsSystem(ast_,sys);
-  wcsSkyFrame(ast_,sky);
+  setWCSSystem(sys);
+  setWCSSkyFrame(sky);
 
   Vector3d in = hasWCSCel(sys) ? degToRad(vv) : vv;
   Vector3d out = wcsTran(ast_, in, 0);
@@ -3138,6 +3147,22 @@ int FitsImage::checkWCS(Vector3d& vv)
   return (fabs(vv[0]) < FLT_MAX &&
 	  fabs(vv[1]) < FLT_MAX &&
 	  fabs(vv[2]) < FLT_MAX ) ? 1 : 0;
+}
+
+void FitsImage::setWCSSystem(Coord::CoordSystem sys)
+{
+  if (wcsSystem_ != sys) {
+    wcsSystem(ast_,sys);
+    wcsSystem_ = sys;
+  }
+}
+
+void FitsImage::setWCSSkyFrame(Coord::SkyFrame sky)
+{
+  if (wcsSkyFrame_ != sky) {
+    wcsSkyFrame(ast_,sky);
+    wcsSkyFrame_ = sky;
+  }
 }
 
 void FitsImage::setWCSFormat(Coord::CoordSystem sys, Coord::SkyFrame sky,

@@ -100,6 +100,7 @@ class FitsImage {
   int address[FTY_MAXAXES];
 
   int manageWCS_;
+
   int* wcs_;
   int* wcsNaxes_;
   int* wcsCel_;
@@ -109,6 +110,9 @@ class FitsImage {
 
   int wcsInv_;    // can we inverse?
   int wcsHPX_;
+
+  Coord::CoordSystem wcsSystem_; // current state of ast_
+  Coord::SkyFrame wcsSkyFrame_; // current state of ast_
 
   FitsHead* wcsAltHeader_; // alt wcs header
   FitsHead* wfpc2Header_; // wcs header for wfpc2
@@ -151,6 +155,8 @@ class FitsImage {
 
   Vector mapLen(const Vector& v, const Matrix& mx);
 
+  void setWCSSystem(Coord::CoordSystem);
+  void setWCSSkyFrame(Coord::SkyFrame);
   void setWCSFormat(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
 
  public:

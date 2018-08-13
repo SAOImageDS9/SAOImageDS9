@@ -27,8 +27,10 @@ int wcsSystem(AstFrameSet* ast, Coord::CoordSystem sys)
 
 int wcsSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 {
-  // is it already set?
-  // ast is very very very slow when System
+  // verify there is a sky frame
+  if (!astFindFrame(ast, astSkyFrame(" MaxAxes=4")," "))
+    return 0;
+
   switch (sky) {
   case Coord::FK4:
     astSet(ast, "System=FK4, Equinox=B1950");

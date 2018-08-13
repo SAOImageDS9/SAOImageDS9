@@ -27,10 +27,8 @@ int wcsSystem(AstFrameSet* ast, Coord::CoordSystem sys)
 
 int wcsSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 {
-  // verify there is a sky frame
-  if (!astFindFrame(ast, astSkyFrame(" MaxAxes=4")," "))
-    return 0;
-
+  // is it already set?
+  // ast is very very very slow when System
   switch (sky) {
   case Coord::FK4:
     astSet(ast, "System=FK4, Equinox=B1950");
@@ -57,7 +55,7 @@ int wcsSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 void wcsFormat(AstFrameSet* ast, int id, const char* format)
 {
   // is it already set?
-  // ast is very slow when changing params
+  // ast is very slow when changing Format
   {
     ostringstream str;
     str << "Format(" << id << ")" << ends;

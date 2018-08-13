@@ -1921,23 +1921,14 @@ void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys,
   case Coord::AMPLIFIER:
     {
       Vector v = ptr->mapFromRef(vv,sys);
-      XMLRow(XMLX,v[0],8);
-      XMLRow(XMLY,v[1],8);
+      XMLRow(XMLX,v[0],parent->precLinear_);
+      XMLRow(XMLY,v[1],parent->precLinear_);
     }
     break;
   default:
-    if (ptr->hasWCS(sys)) {
-      if (ptr->hasWCSCel(sys)) {
-	listWCS(ptr,vv,sys,sky,format);
-	XMLRow(XMLX,ra);
-	XMLRow(XMLY,dec);
-      }
-      else {
-	Vector v = ptr->mapFromRef(vv,sys);
-	XMLRow(XMLX,v[0],8);
-	XMLRow(XMLY,v[1],8);
-      }
-    }
+    listWCS(ptr,vv,sys,sky,format);
+    XMLRow(XMLX,ra);
+    XMLRow(XMLY,dec);
   }
 }
 
@@ -1958,38 +1949,25 @@ void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys,
 	xx[ii] = v[0];
 	yy[ii] = v[1];
       }
-      XMLRow(XMLXV,xx,cnt,8);
-      XMLRow(XMLYV,yy,cnt,8);
+      XMLRow(XMLXV,xx,cnt,parent->precLinear_);
+      XMLRow(XMLYV,yy,cnt,parent->precLinear_);
     }
     break;
   default:
-    if (ptr->hasWCS(sys)) {
-      if (ptr->hasWCSCel(sys)) {
-	char* xx[cnt];
-	char* yy[cnt];
-	for (int ii=0; ii<cnt; ii++) {
-	  listWCS(ptr,vv[ii],sys,sky,format);
-	  xx[ii] = dupstr(ra);
-	  yy[ii] = dupstr(dec);
-	}
-	XMLRow(XMLXV,xx,cnt);
-	XMLRow(XMLYV,yy,cnt);
-
-	for (int ii=0; ii<cnt; ii++) {
-	  delete [] xx[ii];
-	  delete [] yy[ii];
-	}
+    {
+      char* xx[cnt];
+      char* yy[cnt];
+      for (int ii=0; ii<cnt; ii++) {
+	listWCS(ptr,vv[ii],sys,sky,format);
+	xx[ii] = dupstr(ra);
+	yy[ii] = dupstr(dec);
       }
-      else {
-	double xx[cnt];
-	double yy[cnt];
-	for (int ii=0; ii<cnt; ii++) {
-	  Vector v = ptr->mapFromRef(vv[ii],sys);
-	  xx[ii] = v[0];
-	  yy[ii] = v[1];
-	}
-	XMLRow(XMLXV,xx,cnt,8);
-	XMLRow(XMLYV,yy,cnt,8);
+      XMLRow(XMLXV,xx,cnt);
+      XMLRow(XMLYV,yy,cnt);
+
+      for (int ii=0; ii<cnt; ii++) {
+	delete [] xx[ii];
+	delete [] yy[ii];
       }
     }
   }

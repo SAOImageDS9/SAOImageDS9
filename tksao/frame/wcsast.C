@@ -56,16 +56,6 @@ int wcsSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 
 void wcsFormat(AstFrameSet* ast, int id, const char* format)
 {
-  // is it already set?
-  // ast is very slow when changing Format
-  {
-    ostringstream str;
-    str << "Format(" << id << ")" << ends;
-    const char* out = astGetC(ast, str.str().c_str());
-    if (!strcmp(out,format))
-      return;
-  }
-
   ostringstream str;
   str << "Format(" << id << ")=" << format << ends;
   astSet(ast, str.str().c_str());

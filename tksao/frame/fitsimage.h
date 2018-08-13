@@ -113,6 +113,7 @@ class FitsImage {
 
   Coord::CoordSystem wcsSystem_; // current state of ast_
   Coord::SkyFrame wcsSkyFrame_; // current state of ast_
+  Coord::SkyFormat wcsSkyFormat_; // current state of ast_
 
   FitsHead* wcsAltHeader_; // alt wcs header
   FitsHead* wfpc2Header_; // wcs header for wfpc2
@@ -157,7 +158,8 @@ class FitsImage {
 
   void setWCSSystem(Coord::CoordSystem);
   void setWCSSkyFrame(Coord::SkyFrame);
-  void setWCSFormat(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
+  void setWCSFormat(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat,
+		    int init=0);
 
  public:
   char* fileName;

@@ -600,16 +600,14 @@ void Compass::listXML(ostream& str, Coord::CoordSystem sys,
 
   XMLRowCenter(ptr,sys,sky,format);
 
-  {
-    ostringstream str;
-    ptr->listLenFromRef(str,radius,sys,Coord::ARCSEC);
-    XMLRow(XMLR,(char*)str.str().c_str());
-  }
-  {
-    ostringstream str;
-    coord.listCoordSystem(str, coordSystem, skyFrame, ptr);
-    XMLRow(XMLPARAM,(char*)(str.str().c_str()));
-  }
+  ostringstream rstr;
+  ptr->listLenFromRef(rstr,radius,sys,Coord::ARCSEC);
+  XMLRow(XMLR,(char*)rstr.str().c_str());
+
+  ostringstream pstr;
+  coord.listCoordSystem(pstr, coordSystem, skyFrame, ptr);
+  XMLRow(XMLPARAM,(char*)(pstr.str().c_str()));
+
   XMLRow(XMLPARAM2,northText);
   XMLRow(XMLPARAM3,eastText);
   XMLRow(XMLPARAM4,northArrow);

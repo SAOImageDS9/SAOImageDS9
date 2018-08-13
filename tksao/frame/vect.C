@@ -96,29 +96,15 @@ void Vect::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 		   Coord::SkyFormat format)
 {
   FitsImage* ptr = parent->findFits(sys,center);
-  double rr = ptr->mapLenFromRef((p2-p1).length(),sys,Coord::ARCSEC);
   
   XMLRowInit();
   XMLRow(XMLSHAPE,type_);
 
   XMLRowPoint(ptr,sys,sky,format,p1);
   
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    XMLRow(XMLR,rr,8);
-    break;
-  default:
-    if (ptr->hasWCS(sys)) {
-      if (ptr->hasWCSCel(sys))
-	XMLRowARCSEC(XMLR,rr);
-      else
-	XMLRow(XMLR,rr,8);
-    }
-    break;
-  }
+  ostringstream pstr;
+  ptr->listLenFromRef(pstr,(p2-p1).length(),sys,Coord::ARCSEC);
+  XMLRow(XMLR,(char*)pstr.str().c_str());
 
   XMLRowAng(sys,sky);
   XMLRow(XMLPARAM,p2Arrow);

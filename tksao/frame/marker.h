@@ -188,7 +188,6 @@ protected:
   void XMLRow(XMLColName,double*,int, int);
   void XMLRow(XMLColName,char*);
   void XMLRow(XMLColName,char**, int);
-  void XMLRowARCSEC(XMLColName,double);
   void XMLRowProps(FitsImage*, Coord::CoordSystem);
   void XMLRowEnd(ostream&);
   void XMLRowProp(XMLColName, Property);

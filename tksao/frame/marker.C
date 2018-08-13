@@ -1685,16 +1685,6 @@ void Marker::XMLRow(XMLColName col, double val, int prec)
   XMLCol[col] = dupstr(str.str().c_str());
 }
 
-void Marker::XMLRowARCSEC(XMLColName col, double val)
-{
-  ostringstream str;
-  str << setprecision(parent->precArcsec_) << fixed << val << ends;
-
-  if (XMLCol[col])
-    delete [] XMLCol[col];
-  XMLCol[col] = dupstr(str.str().c_str());
-}
-
 void Marker::XMLRow(XMLColName col, double* val, int cnt, int prec)
 {
   ostringstream str;

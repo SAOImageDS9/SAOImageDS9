@@ -383,29 +383,15 @@ void Projection::listXML(ostream& str, Coord::CoordSystem sys,
   Vector vv[2];
   vv[0] = p1;
   vv[1] = p2;
-  double rr = ptr->mapLenFromRef(width,sys,Coord::ARCSEC);
 
   XMLRowInit();
   XMLRow(XMLSHAPE,type_);
 
   XMLRowPoint(ptr,sys,sky,format,vv,2);
 
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    XMLRow(XMLR,rr,8);
-    break;
-  default:
-    if (ptr->hasWCS(sys)) {
-      if (ptr->hasWCSCel(sys))
-	XMLRowARCSEC(XMLR,rr);
-      else
-	XMLRow(XMLR,rr,8);
-    }
-    break;
-  }
+  ostringstream rstr;
+  ptr->listLenFromRef(rstr,width,sys,Coord::ARCSEC);
+  XMLRow(XMLR,(char*)rstr.str().c_str());
 
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);

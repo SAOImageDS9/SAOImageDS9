@@ -139,7 +139,8 @@ void Contour::list(ostream& str, FitsImage* fits,
     str << '(' << endl;
     do {
       str << ' ';
-      fits->listFromRef(str, lvertex_.current()->vector, sys, sky, Coord::DEGREES);
+      fits->listFromRef(str, lvertex_.current()->vector,
+			sys, sky, Coord::DEGREES);
       str << endl;
     }
     while (lvertex_.next());

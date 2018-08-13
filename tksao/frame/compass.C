@@ -595,33 +595,21 @@ void Compass::listXML(ostream& str, Coord::CoordSystem sys,
 {
   FitsImage* ptr = parent->findFits(sys,center);
 
-  double rr = ptr->mapLenFromRef(radius,sys,Coord::ARCSEC);
-  ostringstream pstr;
-  coord.listCoordSystem(pstr, coordSystem, skyFrame, ptr);
-
   XMLRowInit();
   XMLRow(XMLSHAPE,type_);
 
   XMLRowCenter(ptr,sys,sky,format);
 
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    XMLRow(XMLR,rr,8);
-    break;
-  default:
-    if (ptr->hasWCS(sys)) {
-      if (ptr->hasWCSCel(sys))
-	XMLRowARCSEC(XMLR,rr);
-      else
-	XMLRow(XMLR,rr,8);
-    }
-    break;
+  {
+    ostringstream str;
+    ptr->listLenFromRef(str,radius,sys,Coord::ARCSEC);
+    XMLRow(XMLR,(char*)str.str().c_str());
   }
-
-  XMLRow(XMLPARAM,(char*)(pstr.str().c_str()));
+  {
+    ostringstream str;
+    coord.listCoordSystem(str, coordSystem, skyFrame, ptr);
+    XMLRow(XMLPARAM,(char*)(str.str().c_str()));
+  }
   XMLRow(XMLPARAM2,northText);
   XMLRow(XMLPARAM3,eastText);
   XMLRow(XMLPARAM4,northArrow);

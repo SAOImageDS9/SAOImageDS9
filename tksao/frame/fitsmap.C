@@ -102,13 +102,53 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << mapFromRef(vv, sys);
+    str << setprecision(context_->parent_->precLinear_) << mapFromRef(vv, sys);
     break;
   default:
     {
       char buf[128];
       mapFromRef(vv,sys,sky,format,buf);
       str << buf;
+    }
+  }
+}
+
+void FitsImage::listFromRef(ostream& str1, ostream& str2, const Vector& vv,
+			    Coord::CoordSystem sys, Coord::SkyFrame sky, 
+			    Coord::SkyFormat format)
+{
+  switch (sys) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::DETECTOR:
+  case Coord::AMPLIFIER:
+    {
+      Vector rr = mapFromRef(vv, sys);
+      str1 << setprecision(context_->parent_->precLinear_) << rr[0];
+      str2 << setprecision(context_->parent_->precLinear_) << rr[1];
+    }
+    break;
+  default:
+    {
+      char buf[128];
+      char* bptr = buf;
+      mapFromRef(vv,sys,sky,format,buf);
+
+      // lon
+      char* lonptr = buf;
+      while (*bptr && *bptr != ' ')
+	bptr++;
+      *bptr = '\0';
+
+      // lat
+      bptr++;
+      char* latptr = bptr;
+      while (*bptr && *bptr != ' ')
+	bptr++;
+      *bptr = '\0';
+
+      str1 << lonptr;
+      str2 << latptr;
     }
   }
 }

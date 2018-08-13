@@ -427,6 +427,7 @@ class FitsImage {
   double mapDistFromRef(const Vector&, const Vector&, Coord::CoordSystem,
 		       Coord::DistFormat =Coord::DEGREE);
   void listFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
+  void listFromRef(ostream&, ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void listLenFromRef(ostream&, double, Coord::CoordSystem, Coord::DistFormat);
   void listLenFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void listLenFromRef(ostream&, ostream&, const Vector&, Coord::CoordSystem, Coord::DistFormat);

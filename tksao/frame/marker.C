@@ -1914,91 +1914,33 @@ void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys,
 			 Coord::SkyFrame sky, Coord::SkyFormat format,
 			 Vector vv)
 {
-  if (0) {
-  ostringstream str;
-  ptr->listFromRef(str,vv,sys,sky,format);
-
-  char* buf = dupstr(str.str().c_str());
-  char* bptr = buf;
-  
-  // lon
-  char* lonptr = buf;
-  while (*bptr && *bptr != ' ')
-    bptr++;
-  *bptr = '\0';
-
-  // lat
-  bptr++;
-  char* latptr = bptr;
-  while (*bptr && *bptr != ' ')
-    bptr++;
-  *bptr = '\0';
-
-  XMLRow(XMLX,lonptr);
-  XMLRow(XMLY,latptr);
-  delete [] buf;
-  return;
-  }
-  else {
-
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    {
-      Vector v = ptr->mapFromRef(vv,sys);
-      XMLRow(XMLX,v[0],parent->precLinear_);
-      XMLRow(XMLY,v[1],parent->precLinear_);
-    }
-    break;
-  default:
-    listWCS(ptr,vv,sys,sky,format);
-    XMLRow(XMLX,ra);
-    XMLRow(XMLY,dec);
-  }
-  }
+  ostringstream str1;
+  ostringstream str2;
+  ptr->listFromRef(str1,str2,vv,sys,sky,format);
+  XMLRow(XMLX,(char*)str1.str().c_str());
+  XMLRow(XMLY,(char*)str2.str().c_str());
 }
 
 void Marker::XMLRowPoint(FitsImage* ptr, Coord::CoordSystem sys, 
 			 Coord::SkyFrame sky, Coord::SkyFormat format, 
 			 Vector* vv, int cnt)
 {
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    {
-      double xx[cnt];
-      double yy[cnt];
-      for (int ii=0; ii<cnt; ii++) {
-	Vector v = ptr->mapFromRef(vv[ii],sys);
-	xx[ii] = v[0];
-	yy[ii] = v[1];
-      }
-      XMLRow(XMLXV,xx,cnt,parent->precLinear_);
-      XMLRow(XMLYV,yy,cnt,parent->precLinear_);
-    }
-    break;
-  default:
-    {
-      char* xx[cnt];
-      char* yy[cnt];
-      for (int ii=0; ii<cnt; ii++) {
-	listWCS(ptr,vv[ii],sys,sky,format);
-	xx[ii] = dupstr(ra);
-	yy[ii] = dupstr(dec);
-      }
-      XMLRow(XMLXV,xx,cnt);
-      XMLRow(XMLYV,yy,cnt);
+  ostringstream str1;
+  ostringstream str2;
+  for (int ii=0; ii<cnt; ii++) {
+    ptr->listFromRef(str1,str2,vv[ii],sys,sky,format);
 
-      for (int ii=0; ii<cnt; ii++) {
-	delete [] xx[ii];
-	delete [] yy[ii];
-      }
+    if (ii!=cnt-1) {
+      str1 << ' ';
+      str2 << ' ';
+    }
+    else {
+      str1 << ends;
+      str2 << ends;
     }
   }
+  XMLRow(XMLXV,(char*)str1.str().c_str());
+  XMLRow(XMLYV,(char*)str2.str().c_str());
 }
 
 void Marker::XMLRowRadiusX(FitsImage* ptr, Coord::CoordSystem sys, Vector vv)

@@ -90,7 +90,10 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
 
   wcsSystem_ = Coord::WCS;
   wcsSkyFrame_ = Coord::FK5;
-  wcsSkyFormat_ = Coord::DEGREES;
+
+  wcsFormatSystem_ = Coord::WCS;
+  wcsFormatFrame_ = Coord::FK5;
+  wcsFormat_ = Coord::DEGREES;
 
   wcsAltHeader_ =NULL;
   wfpc2Header_ =NULL;
@@ -1091,7 +1094,10 @@ void FitsImage::initWCS(FitsHead* hd)
 
 	  wcsSystem_ = ptr->wcsSystem_;
 	  wcsSkyFrame_ = ptr->wcsSkyFrame_;
-	  wcsSkyFormat_ = ptr->wcsSkyFormat_;
+
+	  wcsFormatSystem_ = ptr->wcsFormatSystem_;
+	  wcsFormatFrame_ = ptr->wcsFormatFrame_;
+	  wcsFormat_ = ptr->wcsFormat_;
 
 	  wcsPhyInit();
 	  manageWCS_ =0;
@@ -1129,12 +1135,12 @@ void FitsImage::initWCS(FitsHead* hd)
 
   wcsSystem_ = Coord::WCS;
   wcsSkyFrame_ = Coord::FK5;
-  wcsSkyFormat_ = Coord::DEGREES;
+  wcsFormat_ = Coord::DEGREES;
 
   // init ast_ state
   wcsSystem(ast_,wcsSystem_);
   wcsSkyFrame(ast_,wcsSkyFrame_);
-  setWCSFormat(wcsSystem_,wcsSkyFrame_,wcsSkyFormat_,1);
+  setWCSFormat(wcsFormatSystem_,wcsFormatFrame_,wcsFormat_,1);
 
   if (DebugWCS && ast_)
     astShow(ast_);
@@ -3177,12 +3183,15 @@ void FitsImage::setWCSFormat(Coord::CoordSystem sys, Coord::SkyFrame sky,
 			     Coord::SkyFormat format, int init)
 {
   if (!init &&
-      wcsSystem_ == sys &&
-      wcsSkyFrame_ == sky &&
-      wcsSkyFormat_ == format)
+      wcsFormatSystem_ == sys &&
+      wcsFormatFrame_ == sky &&
+      wcsFormat_ == format)
     return;
 
-  wcsSkyFormat_ = format;
+  wcsFormatSystem_ = sys;
+  wcsFormatFrame_ = sky;
+  wcsFormat_ = format;
+
   int id = sys-Coord::WCS;
 
   // spacial axes

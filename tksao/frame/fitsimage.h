@@ -113,7 +113,10 @@ class FitsImage {
 
   Coord::CoordSystem wcsSystem_; // current state of ast_
   Coord::SkyFrame wcsSkyFrame_; // current state of ast_
-  Coord::SkyFormat wcsSkyFormat_; // current state of ast_
+
+  Coord::CoordSystem wcsFormatSystem_; // current state of ast_
+  Coord::SkyFrame wcsFormatFrame_; // current state of ast_
+  Coord::SkyFormat wcsFormat_; // current state of ast_
 
   FitsHead* wcsAltHeader_; // alt wcs header
   FitsHead* wfpc2Header_; // wcs header for wfpc2

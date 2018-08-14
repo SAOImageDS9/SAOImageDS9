@@ -215,8 +215,6 @@ void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   FitsImage* ptr = parent->findFits(sys,center);
   listPre(str, sys, sky, ptr, strip, 0);
   
-  double rr = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC);
-
   str << type_ << '(';
   switch (sys) {
   case Coord::IMAGE:
@@ -229,14 +227,11 @@ void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec << ',' ;
-
-    if (ptr->hasWCSCel(sys)) {
-      str << setprecision(parent->precArcsec_) << fixed << rr << '"';
-      str.unsetf(ios_base::floatfield);
-    }
-    else
-      str << setprecision(parent->precLenLinear_) << rr;
+    str << ra << ',' << dec;
+    str << ',';
+    ptr->listLenFromRef(str,annuli_[0][0],sys,Coord::ARCSEC);
+    if (ptr->hasWCSCel(sys))
+      str << '"';
   }
   str << ')';
 
@@ -291,17 +286,16 @@ void Circle::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,Coord::PHYSICAL) << ','
-	<< setprecision(parent->precLenLinear_)
-	<< ptr->mapLenFromRef(annuli_[0][0],Coord::PHYSICAL);
+    ptr->listFromRef(str,center,Coord::PHYSICAL);
+    str << ',';
+    ptr->listLenFromRef(str,annuli_[0][0],Coord::PHYSICAL);
     break;
   default:
     listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
-    str << ra << ',' << dec << ',' 
-	<< setprecision(parent->precArcmin_) << fixed
-	<< ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCMIN) << '\'';
-    str.unsetf(ios_base::floatfield);
+    str << ra << ',' << dec;
+    str << ',';
+    ptr->listLenFromRef(str,annuli_[0][0],sys,Coord::ARCMIN);
+    str << '\'';
   }
   str << ')';
 
@@ -321,24 +315,23 @@ void Circle::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::AMPLIFIER:
     sys = Coord::IMAGE;
   case Coord::PHYSICAL:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,sys) << ' '
-	<< setprecision(parent->precLenLinear_)
-	<< ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
+    ptr->listFromRef(str,center,sys);
+    str << ' ';
+    ptr->listLenFromRef(str,annuli_[0][0],Coord::IMAGE);
     break;
   default:
     listWCSPros(ptr,center,sys,sky,format);
     switch (format) {
     case Coord::DEGREES:
-      str << ra << 'd' << ' ' << dec << 'd' << ' ';
+      str << ra << 'd' << ' ' << dec << 'd';
       break;
     case Coord::SEXAGESIMAL:
-      str << ra << ' ' << dec << ' ';
+      str << ra << ' ' << dec;
       break;
     }
-    str << setprecision(parent->precArcsec_) << fixed
-	<< ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC) << '"';
-    str.unsetf(ios_base::floatfield);
+    str << ' ';
+    ptr->listLenFromRef(str,annuli_[0][0],sys,Coord::ARCSEC);
+    str << '"';
   }
 
   listProsPost(str, strip);
@@ -357,16 +350,15 @@ void Circle::listSAOtng(ostream& str,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,Coord::IMAGE) << ','
-	<< setprecision(parent->precLenLinear_)
-	<< ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
+    ptr->listFromRef(str,center,Coord::IMAGE);
+    str << ',';
+    ptr->listLenFromRef(str,annuli_[0][0],Coord::IMAGE);
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec << ','
-	<< setprecision(parent->precLenLinear_)
-	<< ptr->mapLenFromRef(annuli_[0][0],Coord::IMAGE);
+    str << ra << ',' << dec;
+    str << ',';
+    ptr->listLenFromRef(str,annuli_[0][0],Coord::IMAGE);
   }
   str << ')';
 

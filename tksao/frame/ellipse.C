@@ -236,9 +236,6 @@ void Ellipse::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   FitsImage* ptr = parent->findFits(sys,center);
   listPre(str, sys, sky, ptr, strip, 0);
 
-  Vector rr = ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCSEC);
-  double aa = parent->mapAngleFromRef(angle,sys,sky);
-
   str << type_ << '(';
   switch (sys) {
   case Coord::IMAGE:
@@ -253,16 +250,13 @@ void Ellipse::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec << ',' ;
-
-    if (ptr->hasWCSCel(sys)) {
-      str << setprecision(parent->precArcsec_) << fixed << setunit('"')
-	  << rr << ',';
-      str.unsetf(ios_base::floatfield);
-    }
-    else
-      str << setprecision(parent->precLenLinear_) << rr << ',' ;
-    str << setprecision(parent->precAngle_) << radToDeg(aa);
+    str << ra << ',' << dec;
+    str << ',';
+    if (ptr->hasWCSCel(sys))
+      str << setunit('"');
+    ptr->listLenFromRef(str,annuli_[0],sys,Coord::ARCSEC);
+    str << ',';
+    parent->listAngleFromRef(str,angle,sys,sky);
   }
   str << ')';
   

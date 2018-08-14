@@ -755,18 +755,7 @@ void Point::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   listPre(str, sys, sky, ptr, strip, 0);
 
   str << type_ << '(';
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    ptr->listFromRef(str,center,sys);
-    break;
-  default:
-    listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec;
-    break;
-  }
+  ptr->listFromRef(str,center,sys,sky,format);
   str  << ')';
 
   listPost(str, conj, strip);
@@ -821,12 +810,10 @@ void Point::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,Coord::PHYSICAL);
+    ptr->listFromRef(str,center,Coord::PHYSICAL);
     break;
   default:
-    listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
-    str << ra << ',' << dec;
+    ptr->listFromRef(str,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
     break;
   }
   str << ')';
@@ -847,18 +834,13 @@ void Point::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::AMPLIFIER:
     sys = Coord::IMAGE;
   case Coord::PHYSICAL:
-    str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
+    ptr->listFromRef(str,center,sys);
     break;
   default:
-    listWCSPros(ptr,center,sys,sky,format);
-    switch (format) {
-    case Coord::DEGREES:
-      str << ra << 'd' << ' ' << dec << 'd';
-      break;
-    case Coord::SEXAGESIMAL:
-      str << ra << ' ' << dec;
-      break;
-    }
+    if (format == Coord::DEGREES)
+      str << setunit('d');
+    ptr->listFromRef(str,center,sys,sky,format);
+    break;
   }
 
   listProsPost(str, strip);
@@ -877,12 +859,10 @@ void Point::listSAOtng(ostream& str, Coord::CoordSystem sys,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,Coord::IMAGE);
+    ptr->listFromRef(str,center,Coord::IMAGE);
     break;
   default:
-    listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec;
+    ptr->listFromRef(str,center,sys,sky,format);
   }
   str  << ')';
 

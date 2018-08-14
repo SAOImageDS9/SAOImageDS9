@@ -440,12 +440,10 @@ void Polygon::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
     case Coord::PHYSICAL:
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
-      str << setprecision(parent->precLinear_)
-	  << ptr->mapFromRef(vertex.current()->vector*mm,Coord::PHYSICAL);
+      ptr->listFromRef(str,vertex.current()->vector*mm,Coord::PHYSICAL);
       break;
     default:
-      listWCS(ptr,vertex.current()->vector*mm,sys,Coord::FK5,Coord::SEXAGESIMAL);
-      str << ra << ',' << dec;
+      ptr->listFromRef(str,vertex.current()->vector*mm,sys,Coord::FK5,Coord::SEXAGESIMAL);
       break;
     }
   } while (vertex.next());
@@ -471,19 +469,13 @@ void Polygon::listPros(ostream& str, Coord::CoordSystem sys,
     case Coord::AMPLIFIER:
       sys = Coord::IMAGE;
     case Coord::PHYSICAL:
-      str << ' ' << setprecision(parent->precLinear_)
-	  << ptr->mapFromRef(vertex.current()->vector*mm,sys);
+      ptr->listFromRef(str,vertex.current()->vector*mm,sys);
       break;
     default:
-      listWCSPros(ptr,vertex.current()->vector*mm,sys,sky,format);
-      switch (format) {
-      case Coord::DEGREES:
-	str << ' ' << ra << 'd' << ' ' << dec << 'd';
-	break;
-      case Coord::SEXAGESIMAL:
-	str << ' ' << ra << ' ' << dec;
-	break;
-      }
+      if (format == Coord::DEGREES)
+	str << setunit('d');
+      ptr->listFromRef(str,vertex.current()->vector*mm,sys,sky,format);
+      break;
     }
   } while (vertex.next());
 
@@ -511,12 +503,11 @@ void Polygon::listSAOtng(ostream& str, Coord::CoordSystem sys,
     case Coord::PHYSICAL:
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
-      str << setprecision(parent->precLinear_)
-	  << ptr->mapFromRef(vertex.current()->vector*mm,sys);
-    break;
+      ptr->listFromRef(str,vertex.current()->vector*mm,Coord::IMAGE);
+      break;
     default:
-      listWCS(ptr,vertex.current()->vector*mm,sys,sky,format);
-      str << ra << ',' << dec;
+      ptr->listFromRef(str,vertex.current()->vector*mm,sys,sky,format);
+      break;
     }
   } while (vertex.next());
   str << ')';

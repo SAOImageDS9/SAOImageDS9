@@ -229,19 +229,8 @@ void BasePolygon::listBase(FitsImage* ptr, ostream& str,
       str << ',';
     first=0;
 
-    Vector vv = vertex.current()->vector*mm;
-    switch (sys) {
-    case Coord::IMAGE:
-    case Coord::PHYSICAL:
-    case Coord::DETECTOR:
-    case Coord::AMPLIFIER:
-      str << setprecision(parent->precLinear_) << ptr->mapFromRef(vv,sys);
-      break;
-    default:
-      listWCS(ptr,vv,sys,sky,format);
-      str << ra << ',' << dec;
-      break;
-    }
+    ptr->listFromRef(str,vertex.current()->vector*mm,sys,sky,format);
+
   } while (vertex.next());
   str << ')';
 }

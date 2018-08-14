@@ -1639,20 +1639,7 @@ void Marker::listXY(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 		    Coord::SkyFormat format, int strip)
 {
   FitsImage* ptr = parent->findFits();
-
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
-    break;
-  default:
-    listWCS(ptr,center,sys,sky,format);
-    str << ra << ' ' << dec;
-    break;
-  }
-
+  ptr->listFromRef(str, center, sys, sky, format);
   str << (strip ? ';' : '\n');
 }
 

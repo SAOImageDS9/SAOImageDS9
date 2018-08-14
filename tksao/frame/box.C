@@ -271,9 +271,11 @@ void Box::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys)
-	<< ','
-	<< setprecision(parent->precLenLinear_) << rr << ',';
+    ptr->listFromRef(str,center,sys);
+    str << ',';
+    ptr->listLenFromRef(str,annuli_[0],sys);
+    str << ',';
+    parent->listAngleFromRef(str,angle,sys,sky);
     break;
   default:
     listWCS(ptr,center,sys,sky,format);
@@ -286,8 +288,9 @@ void Box::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     }
     else
       str << setprecision(parent->precLenLinear_) << rr << ',' ;
+    str << setprecision(parent->precAngle_) << radToDeg(aa);
   }
-  str << setprecision(parent->precAngle_) << radToDeg(aa) << ')';
+  str << ')';
 
   listPost(str, conj, strip);
 }

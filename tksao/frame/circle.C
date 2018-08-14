@@ -223,9 +223,9 @@ void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys)
-	<< ','
-	<< setprecision(parent->precLenLinear_) << rr;
+    ptr->listFromRef(str,center,sys);
+    str << ',';
+    ptr->listLenFromRef(str,annuli_[0][0],sys);
     break;
   default:
     listWCS(ptr,center,sys,sky,format);

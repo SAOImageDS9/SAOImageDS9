@@ -59,30 +59,29 @@ void Vect::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     FitsImage* ptr = parent->findFits(sys,center);
     listPre(str, sys, sky, ptr, strip, 1);
 
-    double rr = ptr->mapLenFromRef((p2-p1).length(),sys,Coord::ARCSEC);
-    double aa = parent->mapAngleFromRef((p2-p1).angle(),sys,sky);
-
     str << type_ << '(';
     switch (sys) {
     case Coord::IMAGE:
     case Coord::PHYSICAL:
     case Coord::DETECTOR:
     case Coord::AMPLIFIER:
-      str << setprecision(parent->precLinear_) << ptr->mapFromRef(p1,sys) << ','
-	  << setprecision(parent->precLenLinear_) << rr << ',';
+      ptr->listFromRef(str,p1,sys);
+      str << ',';
+      ptr->listLenFromRef(str,(p2-p1).length(),sys);
+      str << ',';
+      parent->listAngleFromRef(str,(p2-p1).angle(),sys);
       break;
     default:
-      listWCS(ptr,p1,sys,sky,format);
-      str << ra << ',' << dec << ',' ;
-
-      if (ptr->hasWCSCel(sys)) {
-	str << setprecision(parent->precArcsec_) << fixed << rr << '"' << ',';
-	str.unsetf(ios_base::floatfield);
-      }
-      else
-	str << setprecision(parent->precLenLinear_) << rr << ',' ;
+      ptr->listFromRef(str,p1,sys,sky,format);
+      str << ',';
+      ptr->listLenFromRef(str,(p2-p1).length(),sys,Coord::ARCSEC);
+      if (ptr->hasWCSCel(sys))
+	str << '"';
+      str << ',';
+      parent->listAngleFromRef(str,(p2-p1).angle(),sys,sky);
+      break;
     }
-    str << setprecision(parent->precAngle_) << radToDeg(aa) << ')';
+    str << ')';
     
     if (conj)
       str << " ||";

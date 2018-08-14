@@ -237,26 +237,13 @@ void Ellipse::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   listPre(str, sys, sky, ptr, strip, 0);
 
   str << type_ << '(';
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    ptr->listFromRef(str,center,sys);
-    str << ',';
-    ptr->listLenFromRef(str,annuli_[0],sys);
-    str << ',';
-    parent->listAngleFromRef(str,angle,sys,sky);
-    break;
-  default:
-    ptr->listFromRef(str,center,sys,sky,format);
-    str << ',';
-    if (ptr->hasWCSCel(sys))
-      str << setunit('"');
-    ptr->listLenFromRef(str,annuli_[0],sys,Coord::ARCSEC);
-    str << ',';
-    parent->listAngleFromRef(str,angle,sys,sky);
-  }
+  ptr->listFromRef(str,center,sys,sky,format);
+  str << ',';
+  if (ptr->hasWCSCel(sys))
+    str << setunit('"');
+  ptr->listLenFromRef(str,annuli_[0],sys,Coord::ARCSEC);
+  str << ',';
+  parent->listAngleFromRef(str,angle,sys,sky);
   str << ')';
   
   listPost(str, conj, strip);

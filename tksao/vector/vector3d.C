@@ -7,7 +7,6 @@
 #include "vector3d.h"
 #include "vector.h"
 #include "fuzzy.h"
-#include "util.h"
 
 // Vector3d
 

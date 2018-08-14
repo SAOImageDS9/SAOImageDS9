@@ -7,6 +7,7 @@
 
 #include "vector.h"
 #include "vector3d.h"
+#include "vectorstr.h"
 #include "fitsdata.h"
 #include "coord.h"
 #include "file.h"
@@ -379,6 +380,7 @@ class FitsImage {
   Vector wcs2pix(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
 
   char* pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
+  VectorStr pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
 
   int wcsInv() {return wcsInv_;}
   Vector3d pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
@@ -431,6 +433,7 @@ class FitsImage {
 
   Vector mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   void mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
+  VectorStr mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   Vector mapToRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   Vector3d mapFromRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   Vector3d mapToRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);

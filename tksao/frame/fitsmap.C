@@ -37,6 +37,15 @@ void FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
     strcpy(buf,"");
 }
 
+VectorStr FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
+				Coord::SkyFrame sky, Coord::SkyFormat format)
+{
+  if (hasWCS(out))
+    return pix2wcs(vv * refToImage, out, sky, format);
+  else
+    return VectorStr();
+}
+
 Vector FitsImage::mapToRef(const Vector& vv, Coord::CoordSystem in,
 			   Coord::SkyFrame sky)
 {
@@ -105,11 +114,8 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
     str << setprecision(context_->parent_->precLinear_) << mapFromRef(vv, sys);
     break;
   default:
-    {
-      char buf[128];
-      mapFromRef(vv,sys,sky,format,buf);
-      str << buf;
-    }
+    str << mapFromRef(vv,sys,sky,format);
+    break;
   }
 }
 

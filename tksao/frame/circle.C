@@ -226,8 +226,7 @@ void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     ptr->listLenFromRef(str,annuli_[0][0],sys);
     break;
   default:
-    listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec;
+    ptr->listFromRef(str,center,sys,sky,format);
     str << ',';
     ptr->listLenFromRef(str,annuli_[0][0],sys,Coord::ARCSEC);
     if (ptr->hasWCSCel(sys))
@@ -291,8 +290,7 @@ void Circle::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
     ptr->listLenFromRef(str,annuli_[0][0],Coord::PHYSICAL);
     break;
   default:
-    listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
-    str << ra << ',' << dec;
+    ptr->listFromRef(str,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
     str << ',';
     ptr->listLenFromRef(str,annuli_[0][0],sys,Coord::ARCMIN);
     str << '\'';
@@ -320,15 +318,9 @@ void Circle::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     ptr->listLenFromRef(str,annuli_[0][0],Coord::IMAGE);
     break;
   default:
-    listWCSPros(ptr,center,sys,sky,format);
-    switch (format) {
-    case Coord::DEGREES:
-      str << ra << 'd' << ' ' << dec << 'd';
-      break;
-    case Coord::SEXAGESIMAL:
-      str << ra << ' ' << dec;
-      break;
-    }
+    if (format == Coord::DEGREES)
+      str << setunit('d');
+    ptr->listFromRef(str,center,sys,sky,format);
     str << ' ';
     ptr->listLenFromRef(str,annuli_[0][0],sys,Coord::ARCSEC);
     str << '"';
@@ -355,8 +347,7 @@ void Circle::listSAOtng(ostream& str,
     ptr->listLenFromRef(str,annuli_[0][0],Coord::IMAGE);
     break;
   default:
-    listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec;
+    ptr->listFromRef(str,center,sys,sky,format);
     str << ',';
     ptr->listLenFromRef(str,annuli_[0][0],Coord::IMAGE);
   }

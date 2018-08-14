@@ -8,7 +8,7 @@
 #include "vector3d.h"
 #include "fuzzy.h"
 
-// Vector::manip
+// Vector
 
 int Vector::separator = ios_base::xalloc();
 int Vector::unit = ios_base::xalloc();

@@ -5831,6 +5831,7 @@ util/ps.C
 util/util.C
 vector/vector.C
 vector/vector3d.C
+vector/vectorstr.C
 widget/truecolor16.C
 widget/truecolor24.C
 widget/truecolor8.C

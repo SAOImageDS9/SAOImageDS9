@@ -2818,6 +2818,29 @@ char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   return lbuf;
 }
 
+VectorStr FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
+			     Coord::SkyFrame sky, Coord::SkyFormat format)
+{
+  if (!hasWCS(sys))
+    return VectorStr();
+
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
+  setWCSSystem(sys);
+  setWCSSkyFrame(sky);
+  
+  Vector out = wcsTran(ast_, in, 1);
+  if (!astOK || !checkWCS(out))
+    return VectorStr();
+
+  setWCSFormat(sys,sky,format);
+  astNorm(ast_, out.v);
+  astEnd;
+
+  return VectorStr(astFormat(ast_,1,out[0]), astFormat(ast_,2,out[1]));
+}
+
 Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {

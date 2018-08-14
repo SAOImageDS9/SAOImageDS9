@@ -249,8 +249,7 @@ void Ellipse::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     parent->listAngleFromRef(str,angle,sys,sky);
     break;
   default:
-    listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec;
+    ptr->listFromRef(str,center,sys,sky,format);
     str << ',';
     if (ptr->hasWCSCel(sys))
       str << setunit('"');
@@ -312,21 +311,23 @@ void Ellipse::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,Coord::PHYSICAL) << ','
-	<< setprecision(parent->precLenLinear_)
-	<< ptr->mapLenFromRef(annuli_[0],Coord::PHYSICAL) << ',';
+    ptr->listFromRef(str,center,Coord::PHYSICAL);
+    str << ',';
+    ptr->listLenFromRef(str,annuli_[0],Coord::PHYSICAL);
+    str << ',';
+    parent->listAngleFromRef(str,angle,Coord::PHYSICAL);
     break;
   default:
-    listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
-    str << ra << ',' << dec << ',' ;
-
-    str<< setprecision(parent->precArcmin_) << fixed << setunit('\'')
-	<< ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCMIN) << ',';
-    str.unsetf(ios_base::floatfield);
+    ptr->listFromRef(str,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
+    str << ',';
+    if (ptr->hasWCSCel(sys))
+      str << setunit('\'');
+    ptr->listLenFromRef(str,annuli_[0],sys,Coord::ARCMIN);
+    str << ',';
+    parent->listAngleFromRef(str,angle,Coord::PHYSICAL,Coord::FK5);
     break;
   }
-  str << setprecision(parent->precAngle_) << radToDeg(angle) << ')';
+  str << ')';
 
   listCiaoPost(str, strip);
 }
@@ -345,28 +346,21 @@ void Ellipse::listPros(ostream& str, Coord::CoordSystem sys,
   case Coord::AMPLIFIER:
     sys = Coord::IMAGE;
   case Coord::PHYSICAL:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,sys) << ' '
-	<< setprecision(parent->precLenLinear_)
-	<< ptr->mapLenFromRef(annuli_[0],Coord::IMAGE) << ' '
-	<< setprecision(parent->precAngle_)
-	<< radToDeg(angle);
+    ptr->listFromRef(str,center,sys);
+    str << ' ';
+    ptr->listLenFromRef(str,annuli_[0],Coord::IMAGE);
+    str << ' ';
+    parent->listAngleFromRef(str,angle,Coord::IMAGE);
     break;
   default:
-    listWCSPros(ptr,center,sys,sky,format);
-    switch (format) {
-    case Coord::DEGREES:
-      str << ra << 'd' << ' ' << dec << 'd' << ' ';
-      break;
-    case Coord::SEXAGESIMAL:
-      str << ra << ' ' << dec << ' ';
-      break;
-    }
-    str << setprecision(parent->precArcsec_) << fixed << setunit('"')
-	<< ptr->mapLenFromRef(annuli_[0],sys,Coord::ARCSEC) << ' ';
-    str.unsetf(ios_base::floatfield);
-    str << setprecision(parent->precAngle_)
-	<< radToDeg(angle);
+    if (format == Coord::DEGREES)
+      str << setunit('d');
+    ptr->listFromRef(str,center,sys,sky,format);
+    str << ' ';
+    str << setunit('"');
+    ptr->listLenFromRef(str,annuli_[0],sys,Coord::ARCSEC);
+    str << ' ';
+    parent->listAngleFromRef(str,angle,Coord::IMAGE);
   }
 
   listProsPost(str, strip);
@@ -385,20 +379,18 @@ void Ellipse::listSAOtng(ostream& str, Coord::CoordSystem sys,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,Coord::IMAGE) << ','
-	<< setprecision(parent->precLenLinear_)
-	<< ptr->mapLenFromRef(annuli_[0],Coord::IMAGE) << ','
-	<< setprecision(parent->precAngle_)
-	<< radToDeg(angle);
+    ptr->listFromRef(str,center,Coord::IMAGE);
+    str << ',';
+    ptr->listLenFromRef(str,annuli_[0],Coord::IMAGE);
+    str << ',';
+    parent->listAngleFromRef(str,angle,Coord::IMAGE);
     break;
   default:
-    listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec << ','
-	<< setprecision(parent->precLenLinear_)
-	<< ptr->mapLenFromRef(annuli_[0],Coord::IMAGE) << ','
-	<< setprecision(parent->precAngle_)
-	<< radToDeg(angle);
+    ptr->listFromRef(str,center,sys,sky,format);
+    str << ',';
+    ptr->listLenFromRef(str,annuli_[0],Coord::IMAGE);
+    str << ',';
+    parent->listAngleFromRef(str,angle,Coord::IMAGE);
   }
   str << ')';
 

@@ -42,6 +42,18 @@ extern "C" {
   #include "ast.h"
 }
 
+class WCSState {
+ public:
+  WCSState();
+
+  Coord::CoordSystem wcsSystem_; // current state of ast_
+  Coord::SkyFrame wcsSkyFrame_; // current state of ast_
+
+  Coord::CoordSystem wcsFormatSystem_; // current state of ast_
+  Coord::SkyFrame wcsFormatFrame_; // current state of ast_
+  Coord::SkyFormat wcsFormat_; // current state of ast_
+};
+
 class FitsImage {
   friend class Base;
 
@@ -108,15 +120,10 @@ class FitsImage {
   int* wcsCelLat_;
   double* wcsSize_;
 
+  WCSState* wcsState_;
+
   int wcsInv_;    // can we inverse?
   int wcsHPX_;
-
-  Coord::CoordSystem wcsSystem_; // current state of ast_
-  Coord::SkyFrame wcsSkyFrame_; // current state of ast_
-
-  Coord::CoordSystem wcsFormatSystem_; // current state of ast_
-  Coord::SkyFrame wcsFormatFrame_; // current state of ast_
-  Coord::SkyFormat wcsFormat_; // current state of ast_
 
   FitsHead* wcsAltHeader_; // alt wcs header
   FitsHead* wfpc2Header_; // wcs header for wfpc2

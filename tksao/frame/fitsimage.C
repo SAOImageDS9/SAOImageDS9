@@ -28,6 +28,16 @@
 #include "colorscale.h"
 #include "wcsast.h"
 
+WCSState::WCSState()
+{
+  wcsSystem_ = Coord::WCS;
+  wcsSkyFrame_ = Coord::FK5;
+
+  wcsFormatSystem_ = Coord::WCS;
+  wcsFormatFrame_ = Coord::FK5;
+  wcsFormat_ = Coord::DEGREES;
+};
+
 FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
 {
   context_ =cx;
@@ -88,12 +98,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcsHPX_ =0;
   wcsInv_ =1;
 
-  wcsSystem_ = Coord::WCS;
-  wcsSkyFrame_ = Coord::FK5;
-
-  wcsFormatSystem_ = Coord::WCS;
-  wcsFormatFrame_ = Coord::FK5;
-  wcsFormat_ = Coord::DEGREES;
+  wcsState_ =NULL;
 
   wcsAltHeader_ =NULL;
   wfpc2Header_ =NULL;
@@ -169,6 +174,9 @@ FitsImage::~FitsImage()
 
     if (wcsSize_)
       delete [] wcsSize_;
+
+    if (wcsState_)
+      delete wcsState_;
   }
 
   if (wcsAltHeader_)
@@ -1092,12 +1100,7 @@ void FitsImage::initWCS(FitsHead* hd)
 	  wcsHPX_ = ptr->wcsHPX_;
 	  wcsInv_ = ptr->wcsInv_;
 
-	  wcsSystem_ = ptr->wcsSystem_;
-	  wcsSkyFrame_ = ptr->wcsSkyFrame_;
-
-	  wcsFormatSystem_ = ptr->wcsFormatSystem_;
-	  wcsFormatFrame_ = ptr->wcsFormatFrame_;
-	  wcsFormat_ = ptr->wcsFormat_;
+	  wcsState_ = ptr->wcsState_;
 
 	  wcsPhyInit();
 	  manageWCS_ =0;
@@ -1130,17 +1133,21 @@ void FitsImage::initWCS(FitsHead* hd)
   wcsInit(hasWCSAST);
   wcsCelInit(hasWCSAST);
   wcsHPXInit();
+
+  // init wcsState
+  if (wcsState_)
+    delete wcsState_;
+  wcsState_ = new WCSState();
+
+  wcsSystem(ast_,wcsState_->wcsSystem_);
+  wcsSkyFrame(ast_,wcsState_->wcsSkyFrame_);
+  setWCSFormat(wcsState_->wcsFormatSystem_,
+	       wcsState_->wcsFormatFrame_,
+	       wcsState_->wcsFormat_,1);
+
+  // must wait until wcsState_ is realized
   wcsSizeInit();
   wcsPhyInit();
-
-  wcsSystem_ = Coord::WCS;
-  wcsSkyFrame_ = Coord::FK5;
-  wcsFormat_ = Coord::DEGREES;
-
-  // init ast_ state
-  wcsSystem(ast_,wcsSystem_);
-  wcsSkyFrame(ast_,wcsSkyFrame_);
-  setWCSFormat(wcsFormatSystem_,wcsFormatFrame_,wcsFormat_,1);
 
   if (DebugWCS && ast_)
     astShow(ast_);
@@ -3165,17 +3172,17 @@ int FitsImage::checkWCS(Vector3d& vv)
 
 void FitsImage::setWCSSystem(Coord::CoordSystem sys)
 {
-  if (wcsSystem_ != sys) {
+  if (wcsState_->wcsSystem_ != sys) {
     wcsSystem(ast_,sys);
-    wcsSystem_ = sys;
+    wcsState_->wcsSystem_ = sys;
   }
 }
 
 void FitsImage::setWCSSkyFrame(Coord::SkyFrame sky)
 {
-  if (wcsSkyFrame_ != sky) {
+  if (wcsState_->wcsSkyFrame_ != sky) {
     wcsSkyFrame(ast_,sky);
-    wcsSkyFrame_ = sky;
+    wcsState_->wcsSkyFrame_ = sky;
   }
 }
 
@@ -3183,14 +3190,14 @@ void FitsImage::setWCSFormat(Coord::CoordSystem sys, Coord::SkyFrame sky,
 			     Coord::SkyFormat format, int init)
 {
   if (!init &&
-      wcsFormatSystem_ == sys &&
-      wcsFormatFrame_ == sky &&
-      wcsFormat_ == format)
+      wcsState_->wcsFormatSystem_ == sys &&
+      wcsState_->wcsFormatFrame_ == sky &&
+      wcsState_->wcsFormat_ == format)
     return;
 
-  wcsFormatSystem_ = sys;
-  wcsFormatFrame_ = sky;
-  wcsFormat_ = format;
+  wcsState_->wcsFormatSystem_ = sys;
+  wcsState_->wcsFormatFrame_ = sky;
+  wcsState_->wcsFormat_ = format;
 
   int id = sys-Coord::WCS;
 

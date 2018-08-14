@@ -379,9 +379,9 @@ void Circle::listSAOimage(ostream& str, int strip)
   listSAOimagePre(str);
 
   str << type_ << '(';
-  ptr->listFromRef(str,center,Coord::IMAGE,Coord::FK5,Coord::DEGREES);
+  ptr->listFromRef(str,center,Coord::IMAGE);
   str << ',';
-  ptr->listLenFromRef(str,annuli_[0][0],Coord::IMAGE,Coord::DEGREE);
+  ptr->listLenFromRef(str,annuli_[0][0],Coord::IMAGE);
   str << ')';
   
   listSAOimagePost(str, strip);

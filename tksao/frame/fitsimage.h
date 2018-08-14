@@ -434,6 +434,8 @@ class FitsImage {
   Vector mapToRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   Vector3d mapFromRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   Vector3d mapToRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+  void listFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5, Coord::SkyFormat =Coord::DEGREES);
+  void listFromRef(ostream&, ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5, Coord::SkyFormat =Coord::DEGREES);
 
   double mapFromImage3d(double, Coord::CoordSystem);
   double mapToImage3d(double, Coord::CoordSystem);
@@ -444,12 +446,10 @@ class FitsImage {
   Vector mapLenToRef(const Vector&, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
   double mapDistFromRef(const Vector&, const Vector&, Coord::CoordSystem,
 		       Coord::DistFormat =Coord::DEGREE);
-  void listFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
-  void listFromRef(ostream&, ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
-  void listLenFromRef(ostream&, double, Coord::CoordSystem, Coord::DistFormat);
-  void listLenFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
-  void listLenFromRef(ostream&, ostream&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
-  void listDistFromRef(ostream&, const Vector&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
+  void listLenFromRef(ostream&, double, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
+  void listLenFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
+  void listLenFromRef(ostream&, ostream&, const Vector&, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
+  void listDistFromRef(ostream&, const Vector&, const Vector&, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
 
   const char* getValue(const Vector& v);
   float getValueFloat(const Vector& v) {return data_->getValueFloat(v);}

@@ -538,8 +538,7 @@ void Polygon::listSAOimage(ostream& str, int strip)
       str << ',';
     first=0;
 
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(vertex.current()->vector*mm,Coord::IMAGE);
+    ptr->listFromRef(str,vertex.current()->vector*mm,Coord::IMAGE);
   }
   while (vertex.next());
   str << ')';

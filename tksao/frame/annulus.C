@@ -337,12 +337,12 @@ void Annulus::listSAOimage(ostream& str, int strip)
   FitsImage* ptr = parent->findFits();
   listSAOimagePre(str);
 
-  str << type_ << '('
-      << setprecision(parent->precLinear_)
-      << ptr->mapFromRef(center,Coord::IMAGE);
-  str << setprecision(parent->precLenLinear_);
-  for (int ii=0; ii<numAnnuli_; ii++)
-    str << ',' << ptr->mapLenFromRef(annuli_[ii][0],Coord::IMAGE);
+  str << type_ << '(';
+  ptr->listFromRef(str,center,Coord::IMAGE);
+  for (int ii=0; ii<numAnnuli_; ii++) {
+    str << ',';
+    ptr->listLenFromRef(str,annuli_[ii][0],Coord::IMAGE);
+  }
   str << ')';
 
   listSAOimagePost(str, strip);

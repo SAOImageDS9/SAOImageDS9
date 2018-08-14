@@ -894,9 +894,9 @@ void Point::listSAOimage(ostream& str, int strip)
   FitsImage* ptr = parent->findFits();
   listSAOimagePre(str);
 
-  str << type_ << '('
-      << setprecision(parent->precLinear_)
-      << ptr->mapFromRef(center,Coord::IMAGE) << ')';
+  str << type_ << '(';
+  ptr->listFromRef(str,center,Coord::IMAGE);
+  str << ')';
 
   listSAOimagePost(str, strip);
 }

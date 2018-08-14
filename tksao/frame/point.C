@@ -760,7 +760,7 @@ void Point::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
+    ptr->listFromRef(str,center,sys);
     break;
   default:
     listWCS(ptr,center,sys,sky,format);

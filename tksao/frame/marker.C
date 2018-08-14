@@ -1662,33 +1662,6 @@ void Marker::XMLRow(XMLColName col, int val)
   XMLCol[col] = dupstr(str.str().c_str());
 }
 
-void Marker::XMLRow(XMLColName col, double val, int prec)
-{
-  ostringstream str;
-  str << setprecision(prec) << val << ends;
-
-  if (XMLCol[col])
-    delete [] XMLCol[col];
-  XMLCol[col] = dupstr(str.str().c_str());
-}
-
-void Marker::XMLRow(XMLColName col, double* val, int cnt, int prec)
-{
-  ostringstream str;
-  str << setprecision(prec);
-  for (int ii=0; ii<cnt; ii++) {
-    str << val[ii];
-    if (ii!=cnt-1)
-      str << ' ';
-    else
-      str << ends;
-  }
-
-  if (XMLCol[col])
-    delete [] XMLCol[col];
-  XMLCol[col] = dupstr(str.str().c_str());
-}
-
 void Marker::XMLRow(XMLColName col, char* val)
 {
   if (XMLCol[col])
@@ -1942,17 +1915,23 @@ void Marker::XMLRowRadius(FitsImage* ptr, Coord::CoordSystem sys,
 
 void Marker::XMLRowAng(Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
-  XMLRow(XMLANG, radToDeg(parent->mapAngleFromRef(angle,sys,sky)),8);
+  ostringstream str;
+  parent->listAngleFromRef(str,angle,sys,sky);
+  XMLRow(XMLANG,(char*)str.str().c_str());
 }
 
 void Marker::XMLRowAng(Coord::CoordSystem sys, Coord::SkyFrame sky, 
 		       double* ang, int cnt)
 {
-  double aa[cnt];
-  for (int ii=0; ii<cnt; ii++)
-    aa[ii] = radToDeg(parent->mapAngleFromRef(ang[ii],sys,sky));
-
-  XMLRow(XMLANGV,aa,cnt,8);
+  ostringstream str;
+  for (int ii=0; ii<cnt; ii++) {
+    parent->listAngleFromRef(str,ang[ii],sys,sky);
+    if (ii!=cnt-1)
+      str << ' ';
+    else
+      str << ends;
+  }
+  XMLRow(XMLANGV,(char*)str.str().c_str());
 }
 
 char* Marker::XMLQuote(char* src)

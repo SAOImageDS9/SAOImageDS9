@@ -66,6 +66,12 @@ double Base::mapAngleToRef(double angle, Coord::CoordSystem sys,
   return zeroTWOPI(rr);
 }
 
+void Base::listAngleFromRef(ostream& str, double angle,
+			    Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  str << setprecision(precAngle_) << radToDeg(mapAngleFromRef(angle,sys,sky));
+}
+
 Vector FrameBase::mapFromRef(const Vector& vv, Coord::InternalSystem sys)
 {
   switch (sys) {

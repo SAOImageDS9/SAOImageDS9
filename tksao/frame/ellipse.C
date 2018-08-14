@@ -413,13 +413,13 @@ void Ellipse::listSAOimage(ostream& str, int strip)
   FitsImage* ptr = parent->findFits();
   listSAOimagePre(str);
 
-  str << type_ << '('
-      << setprecision(parent->precLinear_)
-      << ptr->mapFromRef(center,Coord::IMAGE) << ','
-      << setprecision(parent->precLenLinear_)
-      << annuli_[0] << ','
-      << setprecision(parent->precAngle_)
-      << radToDeg(angle) << ')';
+  str << type_ << '(';
+  ptr->listFromRef(str,center,Coord::IMAGE,Coord::FK5,Coord::DEGREES);
+  str << ',';
+  ptr->listLenFromRef(str,annuli_[0],Coord::IMAGE,Coord::DEGREE);
+  str << ',';
+  parent->listAngleFromRef(str,angle,Coord::IMAGE,Coord::FK5);
+  str << ')';
 
   listSAOimagePost(str, strip);
 }

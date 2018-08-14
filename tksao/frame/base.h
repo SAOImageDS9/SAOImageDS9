@@ -421,16 +421,20 @@ public:
 
   void parseMarker(MarkerFormat,istream&);
   int postscriptProc(int prepass);
-  void printCoordSystem(Coord::CoordSystem);
-  void printDistFromRef(FitsImage*, const Vector&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
-  void printDouble(double);
-  void printFromRef(FitsImage*, const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
-  void printLenFromRef(FitsImage*, double, Coord::CoordSystem, Coord::DistFormat);
-  void printLenFromRef(FitsImage*, const Vector&, Coord::CoordSystem, Coord::DistFormat);
+
   void printInteger(int);
+  void printDouble(double);
+  void printCoordSystem(Coord::CoordSystem);
   void printSkyFrame(Coord::SkyFrame);
   void printSkyFormat(Coord::SkyFormat);
   void printDistFormat(Coord::DistFormat);
+
+  void printFromRef(FitsImage*, const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
+  void printLenFromRef(FitsImage*, double, Coord::CoordSystem, Coord::DistFormat);
+  void printLenFromRef(FitsImage*, const Vector&, Coord::CoordSystem, Coord::DistFormat);
+  void printDistFromRef(FitsImage*, const Vector&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
+  void printAngleFromRef(FitsImage*, double, Coord::CoordSystem, Coord::SkyFrame);
+
   void ps();
   void psCrosshair(PSColorSpace);
   virtual void psGraphics(PSColorSpace) {}
@@ -548,6 +552,8 @@ public:
   virtual Vector mapToRef(const Vector&, Coord::InternalSystem) =0;
   double mapAngleFromRef(double,Coord::CoordSystem,Coord::SkyFrame =Coord::FK5);
   double mapAngleToRef(double, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+  void listAngleFromRef(ostream&, double, Coord::CoordSystem,
+			Coord::SkyFrame =Coord::FK5);
 
   int parse(istringstream&);
 

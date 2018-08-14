@@ -894,9 +894,11 @@ int Base::postscriptProc(int prepass)
   return TCL_OK;
 }
 
-void Base::printCoordSystem(Coord::CoordSystem sys)
+void Base::printInteger(int i)
 {
-  Tcl_AppendResult(interp, coord.coordSystemStr(sys), NULL);
+  ostringstream str;
+  str << i << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
 void Base::printDouble(double d)
@@ -906,11 +908,9 @@ void Base::printDouble(double d)
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void Base::printInteger(int i)
+void Base::printCoordSystem(Coord::CoordSystem sys)
 {
-  ostringstream str;
-  str << i << ends;
-  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+  Tcl_AppendResult(interp, coord.coordSystemStr(sys), NULL);
 }
 
 void Base::printSkyFrame(Coord::SkyFrame sky)
@@ -962,6 +962,15 @@ void Base::printDistFromRef(FitsImage* ptr,
 {
   ostringstream str;
   ptr->listDistFromRef(str, vv1, vv2, sys, dist);
+  str << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
+void Base::printAngleFromRef(FitsImage* ptr, double aa,
+			     Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  ostringstream str;
+  listAngleFromRef(str, aa, sys, sky);
   str << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }

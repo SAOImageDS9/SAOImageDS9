@@ -460,9 +460,14 @@ void Polygon::listPros(ostream& str, Coord::CoordSystem sys,
   Matrix mm = fwdMatrix();
 
   coord.listProsCoordSystem(str,sys,sky);
-  str << "; " << type_;
+  str << "; " << type_ << ' ';
+  int first=1;
   vertex.head();
   do {
+    if (!first)
+      str << ' ';
+    first=0;
+
     switch (sys) {
     case Coord::IMAGE:
     case Coord::DETECTOR:

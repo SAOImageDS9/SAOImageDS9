@@ -554,29 +554,12 @@ void Compass::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     FitsImage* ptr = parent->findFits(sys,center);
     listPre(str, sys, sky, ptr, strip, 1);
 
-    double rr = ptr->mapLenFromRef(radius,sys,Coord::ARCSEC);
-
     str << type_ << '(';
-    switch (sys) {
-    case Coord::IMAGE:
-    case Coord::PHYSICAL:
-    case Coord::DETECTOR:
-    case Coord::AMPLIFIER:
-      str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys)
-	  << ','
-	  << setprecision(parent->precLenLinear_) << rr;
-      break;
-    default:
-      listWCS(ptr,center,sys,sky,format);
-      str << ra << ',' << dec << ',' ;
-
-      if (ptr->hasWCSCel(sys)) {
-	str << setprecision(parent->precArcsec_) << fixed << rr << '"';
-	str.unsetf(ios_base::floatfield);
-      }
-      else
-	str << setprecision(parent->precLenLinear_) << rr;
-    }
+    ptr->listFromRef(str,center,sys,sky,format);
+    str << ',';
+    ptr->listLenFromRef(str,radius,sys,Coord::ARCSEC);
+    if (ptr->hasWCSCel(sys))
+      str << '"';
     str  << ')';
 
     if (conj)

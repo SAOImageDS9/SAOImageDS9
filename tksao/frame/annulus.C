@@ -205,33 +205,12 @@ void Annulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   listPre(str, sys, sky, ptr, strip, 0);
 
   str << type_ << '(';
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
-    str << setprecision(parent->precLenLinear_);
-     for (int ii=0; ii<numAnnuli_; ii++)
-      str << ',' << ptr->mapLenFromRef(annuli_[ii][0],sys);
-    break;
-  default:
-    listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec;
-
-    if (ptr->hasWCSCel(sys)) {
-      str << setprecision(parent->precArcsec_) << fixed;
-      for (int ii=0; ii<numAnnuli_; ii++) {
-	double rr = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC);
-	str << ',' << rr << '"';
-      }
-      str.unsetf(ios_base::floatfield);
-    }
-    else {
-      str << setprecision(parent->precLenLinear_);
-      for (int ii=0; ii<numAnnuli_; ii++)
-	str << ',' << ptr->mapLenFromRef(annuli_[ii][0],sys);
-    }
+  ptr->listFromRef(str,center,sys,sky,format);
+  for (int ii=0; ii<numAnnuli_; ii++) {
+    str << ',';
+    ptr->listLenFromRef(str,annuli_[ii][0],sys,Coord::ARCSEC);
+    if (ptr->hasWCSCel(sys))
+      str << '"';
   }
   str << ')';
 
@@ -262,31 +241,30 @@ void Annulus::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    {
-      Vector vv = ptr->mapFromRef(center,Coord::PHYSICAL);
-      for (int ii=0; ii<numAnnuli_-1; ii++) {
-	listCiaoPre(str);
-	str << type_ << '('
-	    << setprecision(parent->precLinear_) << vv << ','
-	    << setprecision(parent->precLinear_)
-	    << ptr->mapLenFromRef(annuli_[ii][0],Coord::PHYSICAL) << ','
-	    << ptr->mapLenFromRef(annuli_[ii+1][0],Coord::PHYSICAL) << ')';
-	listCiaoPost(str, strip);
-      }
+    for (int ii=0; ii<numAnnuli_-1; ii++) {
+      listCiaoPre(str);
+      str << type_ << '(';
+      ptr->listFromRef(str,center,Coord::PHYSICAL);
+      str << ',';
+      ptr->listLenFromRef(str,annuli_[ii][0],Coord::PHYSICAL);
+      str << ',';
+      ptr->listLenFromRef(str,annuli_[ii+1][0],Coord::PHYSICAL);
+      str << ')';
+      listCiaoPost(str, strip);
     }
     break;
   default:
-    listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
     for (int ii=0; ii<numAnnuli_-1; ii++) {
       listCiaoPre(str);
-      str << type_ << '('
-	  << ra << ',' << dec << ','
-	  << setprecision(parent->precArcmin_) << fixed 
-	  << ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCMIN)
-	  << '\'' << ','
-	  << ptr->mapLenFromRef(annuli_[ii+1][0],sys,Coord::ARCMIN)
-	  << '\'' << ')';
-      str.unsetf(ios_base::floatfield);
+      str << type_ << '(';
+      ptr->listFromRef(str,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
+      str << ',';
+      ptr->listLenFromRef(str,annuli_[ii][0],sys,Coord::ARCMIN);
+      str << '\'';
+      str << ',';
+      ptr->listLenFromRef(str,annuli_[ii+1][0],sys,Coord::ARCMIN);
+      str << '\'';
+      str << ')';
       listCiaoPost(str, strip);
     }
   }
@@ -306,27 +284,22 @@ void Annulus::listPros(ostream& str, Coord::CoordSystem sys,
   case Coord::AMPLIFIER:
     sys = Coord::IMAGE;
   case Coord::PHYSICAL:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,sys);
-    str << setprecision(parent->precLenLinear_);
-    for (int ii=0; ii<numAnnuli_; ii++)
-	str << ' ' << ptr->mapLenFromRef(annuli_[ii][0],Coord::IMAGE);
+    ptr->listFromRef(str,center,sys);
+    for (int ii=0; ii<numAnnuli_; ii++) {
+      str << ' ';
+      ptr->listLenFromRef(str,annuli_[ii][0],Coord::IMAGE);
+    }
     break;
   default:
-    listWCSPros(ptr,center,sys,sky,format);
-    switch (format) {
-    case Coord::DEGREES:
-      str << ra << 'd' << ' ' << dec << 'd';
-      break;
-    case Coord::SEXAGESIMAL:
-      str << ra << ' ' << dec;
-      break;
+    if (format == Coord::DEGREES)
+      str << setunit('d');
+    ptr->listFromRef(str,center,sys,sky,format);
+    for (int ii=0; ii<numAnnuli_; ii++) {
+      str << ' ';
+      ptr->listLenFromRef(str,annuli_[ii][0],sys,Coord::ARCSEC);
+      str << '"';
     }
-    str << setprecision(parent->precArcsec_) << fixed;
-    for (int ii=0; ii<numAnnuli_; ii++)
-      str << ' '
-	  << ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCSEC) << '"';
-    str.unsetf(ios_base::floatfield);
+    break;
   }
 
   listProsPost(str, strip);

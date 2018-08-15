@@ -277,38 +277,17 @@ void BoxAnnulus::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   FitsImage* ptr = parent->findFits(sys,center);
   listPre(str, sys, sky, ptr, strip, 0);
 
-  double aa = parent->mapAngleFromRef(angle,sys,sky);
-
   str << "box(";
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
-    str << setprecision(parent->precLenLinear_);
-    for (int ii=0; ii<numAnnuli_; ii++)
-      str << ',' << ptr->mapLenFromRef(annuli_[ii],sys);
-    break;
-  default:
-    listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec;
-      
-    if (ptr->hasWCSCel(sys)) {
-      str << setprecision(parent->precArcsec_) << fixed;
-      for (int ii=0; ii<numAnnuli_; ii++) {
-	Vector rr = ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);
-	str << ',' << setunit('"') << rr;
-      }
-      str.unsetf(ios_base::floatfield);
-    }
-    else {
-      str << setprecision(parent->precLenLinear_);
-	for (int ii=0; ii<numAnnuli_; ii++)
-	str << ',' << ptr->mapLenFromRef(annuli_[ii],sys);
-    }
+  ptr->listFromRef(str,center,sys,sky,format);
+  for (int ii=0; ii<numAnnuli_; ii++) {
+    str << ',';
+    if (ptr->hasWCSCel(sys))
+      str << setunit('"');
+    ptr->listLenFromRef(str,annuli_[ii],sys,Coord::ARCSEC);
   }
-  str << ',' << setprecision(parent->precAngle_) << radToDeg(aa) << ')';
+  str << ',';
+  parent->listAngleFromRef(str,angle,sys,sky);
+  str << ')';
 
   listPost(str, conj, strip);
 }
@@ -343,63 +322,51 @@ void BoxAnnulus::listPros(ostream& str, Coord::CoordSystem sys,
   case Coord::PHYSICAL:
     for (int ii=0; ii<numAnnuli_; ii++) {
       coord.listProsCoordSystem(str,sys,sky);
-      str << "; box "
-	  << setprecision(parent->precLinear_)
-	  << ptr->mapFromRef(center,sys) << ' '
-	  << setprecision(parent->precLenLinear_)
-	  << ptr->mapLenFromRef(annuli_[ii],Coord::IMAGE) << ' '
-	  << setprecision(parent->precAngle_)
-	  << radToDeg(angle);
+      str << "; box ";
+      ptr->listFromRef(str,center,sys);
+      str << ' ';
+      ptr->listLenFromRef(str,annuli_[ii],Coord::IMAGE);
+      str << ' ';
+      parent->listAngleFromRef(str,angle,Coord::IMAGE);
 
       if (ii!=0) {
-	str << " & !box "
-	    << setprecision(parent->precLinear_)
-	    << ptr->mapFromRef(center,sys) << ' '
-	    << setprecision(parent->precLenLinear_)
-	    << ptr->mapLenFromRef(annuli_[ii-1],Coord::IMAGE) << ' '
-	    << setprecision(parent->precAngle_)
-	    << radToDeg(angle);
+	str << " & !box ";
+	ptr->listFromRef(str,center,sys);
+	str << ' ';
+	ptr->listLenFromRef(str,annuli_[ii-1],Coord::IMAGE);
+	str << ' ';
+	parent->listAngleFromRef(str,angle,Coord::IMAGE);
       }
       listProsPost(str, strip);
     }
     break;
   default:
-    listWCSPros(ptr,center,sys,sky,format);
     for (int ii=0; ii<numAnnuli_; ii++) {
       coord.listProsCoordSystem(str,sys,sky);
       str << "; box ";
-      switch (format) {
-      case Coord::DEGREES:
-	str << ra << 'd' << ' ' << dec << 'd' << ' ';
-	break;
-      case Coord::SEXAGESIMAL:
-	str << ra << ' ' << dec << ' ';
-	break;
-      }
-      str << setprecision(parent->precArcsec_) << setunit('"') << fixed
-	  << ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC) << ' ';
-      str.unsetf(ios_base::floatfield);
-      str << setprecision(parent->precLinear_)
-	  << radToDeg(angle);
+      if (format == Coord::DEGREES)
+	str << setunit('d');
+      ptr->listFromRef(str,center,sys,sky,format);
+      str << ' ';
+      str << setunit('"');
+      ptr->listLenFromRef(str,annuli_[ii],sys,Coord::ARCSEC);
+      str << ' ';
+      parent->listAngleFromRef(str,angle,Coord::IMAGE);
 
       if (ii!=0) {
 	str << " & !box ";
-	switch (format) {
-	case Coord::DEGREES:
-	  str << ra << 'd' << ' ' << dec << 'd' << ' ';
-	  break;
-	case Coord::SEXAGESIMAL:
-	  str << ra << ' ' << dec << ' ';
-	  break;
-	}
-	str << setprecision(parent->precArcsec_) << setunit('"') << fixed
-	    << ptr->mapLenFromRef(annuli_[ii-1],sys,Coord::ARCSEC) << ' ';
-	str.unsetf(ios_base::floatfield);
-	str << setprecision(parent->precLinear_)
-	    << radToDeg(angle);
+	if (format == Coord::DEGREES)
+	  str << setunit('d');
+	ptr->listFromRef(str,center,sys,sky,format);
+	str << ' ';
+	str << setunit('"');
+	ptr->listLenFromRef(str,annuli_[ii-1],sys,Coord::ARCSEC);
+	str << ' ';
+	parent->listAngleFromRef(str,angle,Coord::IMAGE);
       }
       listProsPost(str, strip);
     }
+    break;
   }
 }
 

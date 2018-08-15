@@ -433,7 +433,7 @@ public:
   void printLenFromRef(FitsImage*, double, Coord::CoordSystem, Coord::DistFormat);
   void printLenFromRef(FitsImage*, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void printDistFromRef(FitsImage*, const Vector&, const Vector&, Coord::CoordSystem, Coord::DistFormat);
-  void printAngleFromRef(FitsImage*, double, Coord::CoordSystem, Coord::SkyFrame);
+  void printAngleFromRef(double, Coord::CoordSystem, Coord::SkyFrame);
 
   void ps();
   void psCrosshair(PSColorSpace);
@@ -553,6 +553,8 @@ public:
   double mapAngleFromRef(double,Coord::CoordSystem,Coord::SkyFrame =Coord::FK5);
   double mapAngleToRef(double, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   void listAngleFromRef(ostream&, double, Coord::CoordSystem,
+			Coord::SkyFrame =Coord::FK5);
+  void listAngleFromRef(ostream&, double, double, Coord::CoordSystem,
 			Coord::SkyFrame =Coord::FK5);
 
   int parse(istringstream&);

@@ -311,7 +311,7 @@ void Ellipse::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
       str << setunit('\'');
     ptr->listLenFromRef(str,annuli_[0],sys,Coord::ARCMIN);
     str << ',';
-    parent->listAngleFromRef(str,angle,Coord::PHYSICAL,Coord::FK5);
+    parent->listAngleFromRef(str,angle,Coord::PHYSICAL);
     break;
   }
   str << ')';

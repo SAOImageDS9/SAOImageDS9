@@ -159,11 +159,6 @@ protected:
 
   void initFonts(const char*);
 
-  void listWCS(FitsImage*, const Vector&, Coord::CoordSystem, 
-		 Coord::SkyFrame, Coord::SkyFormat);
-  void listWCSLen(ostream&, FitsImage*,	const Vector&, Coord::CoordSystem);
-  void listWCSPros(FitsImage*, const Vector&, Coord::CoordSystem, 
-		   Coord::SkyFrame, Coord::SkyFormat);
   void listPre(ostream&, Coord::CoordSystem, Coord::SkyFrame, 
 	       FitsImage*, int, int);
   virtual void listPost(ostream&, int, int);

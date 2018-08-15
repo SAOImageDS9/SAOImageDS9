@@ -606,48 +606,48 @@ void Cpanda::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    {
-      Vector vv = ptr->mapFromRef(center,Coord::PHYSICAL);
-      for (int ii=0; ii<numAnnuli_-1; ii++) {
-	double r1 = ptr->mapLenFromRef(annuli_[ii][0],Coord::PHYSICAL);
-	double r2 = ptr->mapLenFromRef(annuli_[ii+1][0],Coord::PHYSICAL);
-	for (int jj=0; jj<numAngles_-1; jj++) {
-	  double a1 = radToDeg(angles_[jj]);
-	  double a2 = radToDeg(angles_[jj+1]);
-	  if (a2<=a1+FLT_EPSILON)
-	    a2 += 360;
+    for (int ii=0; ii<numAnnuli_-1; ii++) {
+      for (int jj=0; jj<numAngles_-1; jj++) {
+	double a1 = angles_[jj];
+	double a2 = angles_[jj+1];
 
-	  listCiaoPre(str);
-	  str << "pie("
-	      << setprecision(parent->precLinear_) << vv << ','
-	      << setprecision(parent->precLenLinear_) << r1 << ',' << r2 << ',' 
-	      << setprecision(parent->precAngle_) << a1 << ',' << a2 << ')';
-	  listCiaoPost(str, strip);
-	}
+	listCiaoPre(str);
+	str << "pie(";
+	ptr->listFromRef(str,center,Coord::PHYSICAL);
+	str << ',';
+	ptr->listLenFromRef(str,annuli_[ii][0],Coord::PHYSICAL);
+	str << ',';
+	ptr->listLenFromRef(str,annuli_[ii+1][0],Coord::PHYSICAL);
+	str << ',';
+	parent->listAngleFromRef(str,a1,Coord::PHYSICAL);
+	str << ',';
+	parent->listAngleFromRef(str,a2,a1,Coord::PHYSICAL);
+	str << ')';
+	listCiaoPost(str, strip);
       }
     }
     break;
   default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
-      for (int ii=0; ii<numAnnuli_-1; ii++) {
-	double r1 = ptr->mapLenFromRef(annuli_[ii][0],sys,Coord::ARCMIN);
-	double r2 = ptr->mapLenFromRef(annuli_[ii+1][0],sys,Coord::ARCMIN);
-	for (int jj=0; jj<numAngles_-1; jj++) {
-	  double a1 = radToDeg(angles_[jj]);
-	  double a2 = radToDeg(angles_[jj+1]);
-	  if (a2<=a1+FLT_EPSILON)
-	    a2 += 360;
+    for (int ii=0; ii<numAnnuli_-1; ii++) {
+      for (int jj=0; jj<numAngles_-1; jj++) {
+	double a1 = angles_[jj];
+	double a2 = angles_[jj+1];
 
-	  listCiaoPre(str);
-	  str << "pie(" << setprecision(parent->precLinear_)
-	      << ra << ',' << dec << ',' 
-	      << setprecision(parent->precLenLinear_)
-	      << r1 << '\'' << ',' << r2 << '\'' << ','
-	      << setprecision(parent->precAngle_)
-	      << a1 << ',' << a2 << ')';
-	  listCiaoPost(str, strip);
-	}
+	listCiaoPre(str);
+	str << "pie(";
+	ptr->listFromRef(str,center,sys,Coord::FK5,Coord::SEXAGESIMAL);
+	str << ',';
+	ptr->listLenFromRef(str,annuli_[ii][0],sys,Coord::ARCMIN);
+	str << '\'';
+	str << ',';
+	ptr->listLenFromRef(str,annuli_[ii+1][0],sys,Coord::ARCMIN);
+	str << '\'';
+	str << ',';
+	parent->listAngleFromRef(str,a1,Coord::PHYSICAL);
+	str << ',';
+	parent->listAngleFromRef(str,a2,a1,Coord::PHYSICAL);
+	str << ')';
+	listCiaoPost(str, strip);
       }
     }
   }

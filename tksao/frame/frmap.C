@@ -72,6 +72,16 @@ void Base::listAngleFromRef(ostream& str, double angle,
   str << setprecision(precAngle_) << radToDeg(mapAngleFromRef(angle,sys,sky));
 }
 
+void Base::listAngleFromRef(ostream& str, double angle, double first,
+			    Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  double fir = radToDeg(mapAngleFromRef(first,sys,sky));
+  double ang = radToDeg(mapAngleFromRef(angle,sys,sky));
+  if (ang<=fir+FLT_EPSILON)
+    ang += 360;
+  str << setprecision(precAngle_) << ang;
+}
+
 Vector FrameBase::mapFromRef(const Vector& vv, Coord::InternalSystem sys)
 {
   switch (sys) {

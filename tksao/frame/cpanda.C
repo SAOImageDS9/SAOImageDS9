@@ -494,42 +494,24 @@ void Cpanda::listA(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   FitsImage* ptr = parent->findFits(sys,center);
   listPre(str, sys, sky, ptr, strip, 0);
 
-  double r1 = ptr->mapLenFromRef(annuli_[0][0],sys,Coord::ARCSEC);
-  double r2 = ptr->mapLenFromRef(annuli_[numAnnuli_-1][0],sys,Coord::ARCSEC);
-  double a1 = radToDeg(parent->mapAngleFromRef(angles_[0],sys,sky));
-  double a2 = radToDeg(parent->mapAngleFromRef(angles_[numAngles_-1],sys,sky));
-  if (a2<=a1+FLT_EPSILON)
-    a2 += 360;
-
   str << type_ << '(';
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,sys) << ','
-	<< setprecision(parent->precAngle_) << a1 << ',' << a2 << ',';
-    str << numAngles_-1 << ','
-	<< setprecision(parent->precLenLinear_) << r1 << ',' << r2 << ',';
-    str << numAnnuli_-1;
-    break;
-  default:
-    listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec << ','
-	<< setprecision(parent->precAngle_) << a1 << ',' << a2 << ',';
-    str << numAngles_-1 << ',';
-
-    if (ptr->hasWCSCel(sys)) {
-      str << setprecision(parent->precArcsec_) << fixed
-	  << r1 << '"' << ',' << r2 << '"' << ',';
-      str.unsetf(ios_base::floatfield);
-    }
-    else
-      str << setprecision(parent->precLenLinear_) << r1 << ',' << r2 << ',';
-
-    str << numAnnuli_-1;
-  }
+  ptr->listFromRef(str,center,sys,sky,format);
+  str << ',';
+  parent->listAngleFromRef(str,angles_[0],sys,sky);
+  str << ',';
+  parent->listAngleFromRef(str,angles_[numAngles_-1],angles_[0],sys,sky);
+  str << ',';
+  str << numAngles_-1;
+  str << ',';
+  ptr->listLenFromRef(str,annuli_[0][0],sys,Coord::ARCSEC);
+  if (ptr->hasWCSCel(sys))
+    str << '"';
+  str << ',';
+  ptr->listLenFromRef(str,annuli_[numAnnuli_-1][0],sys,Coord::ARCSEC);
+  if (ptr->hasWCSCel(sys))
+    str << '"';
+  str << ',';
+  str << numAnnuli_-1;
   str  << ')';
 
   listPost(str, conj, strip);

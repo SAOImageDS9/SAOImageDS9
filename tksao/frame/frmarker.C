@@ -1013,7 +1013,7 @@ void Base::getMarkerAngleCmd(int id, Coord::CoordSystem sys, Coord::SkyFrame sky
   Marker* mm=markers->head();
   while (mm) {
     if (mm->getId() == id) {
-      printDouble(radToDeg(mapAngleFromRef(mm->getAngle(), sys, sky)));
+      printAngleFromRef(mm->getAngle(), sys, sky);
       return;
     }
     mm=mm->next();

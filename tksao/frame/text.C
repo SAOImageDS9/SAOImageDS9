@@ -224,10 +224,11 @@ void Text::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     if (conj)
       str << " ||";
 
-    if (angle != 0)
-      str << " textangle=" << setprecision(parent->precAngle_)
-	  << radToDeg(parent->mapAngleFromRef(angle,sys,sky));
-
+    if (angle != 0) {
+      str << " textangle=";
+      parent->listAngleFromRef(str,angle,sys,sky);
+    }
+  
     if (!rotate)
       str << " textrotate=" << 0;
     listProperties(str, 0);

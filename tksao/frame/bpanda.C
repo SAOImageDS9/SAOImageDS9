@@ -555,51 +555,29 @@ void Bpanda::listB(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 {
   FitsImage* ptr = parent->findFits(sys,center);
 
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    listBNonCel(ptr, str, sys, sky, format, conj, strip);
-    break;
-  default:
-    if (ptr->hasWCSCel(sys)) {
-      listWCS(ptr,center,sys,sky,format);
-      for (int jj=1; jj<numAngles_; jj++) {
-	for (int ii=1; ii<numAnnuli_; ii++) {
-	  listPre(str, sys, sky, ptr, strip, 0);
-	  str << type_ << '(' << ra << ',' << dec << ',';
-	  listBCel(ptr, ii, jj, str, sys, sky, format, conj, strip);
-	}
-      }
-    }
-    else
-      listBNonCel(ptr, str, sys, sky, format, conj, strip);
-  }
-}
-
-void Bpanda::listBNonCel(FitsImage* ptr, ostream& str, 
-			 Coord::CoordSystem sys, Coord::SkyFrame sky,
-			 Coord::SkyFormat format, int conj, int strip)
-{
-  Vector vv = ptr->mapFromRef(center,sys);
-  double aa = parent->mapAngleFromRef(angle,sys);
   for (int jj=1; jj<numAngles_; jj++) {
-    double a1 = radToDeg(parent->mapAngleFromRef(angles_[jj-1],sys));
-    double a2 = radToDeg(parent->mapAngleFromRef(angles_[jj],sys));
-    if (a2<=a1+FLT_EPSILON)
-      a2 += 360;
-
+    double a1 = angles_[jj-1];
+    double a2 = angles_[jj];
     for (int ii=1; ii<numAnnuli_; ii++) {
       listPre(str, sys, sky, ptr, strip, 0);
 
-      Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys);
-      Vector r2 =  ptr->mapLenFromRef(annuli_[ii],sys);	
-      str << type_ << '(' 
-	  << setprecision(parent->precLinear_) << vv << ','
-	  << a1 << ',' << a2 << ",1,"
-	  << r1 << ',' << r2 << ",1,"
-	  << radToDeg(aa) << ')';
+      str << type_ << '(';
+      ptr->listFromRef(str,center,sys,sky,format);
+      str << ',';
+      parent->listAngleFromRef(str,a1,sys,sky);
+      str << ',';
+      parent->listAngleFromRef(str,a2,a1,sys,sky);
+      str << ",1,";
+      if (ptr->hasWCSCel(sys))
+	str << setunit('"');
+      ptr->listLenFromRef(str,annuli_[ii-1],sys,Coord::ARCSEC);
+      str << ',';
+      if (ptr->hasWCSCel(sys))
+	str << setunit('"');
+      ptr->listLenFromRef(str,annuli_[ii],sys,Coord::ARCSEC);
+      str << ",1,";
+      parent->listAngleFromRef(str,angle,sys,sky);
+      str << ')';
 
       if (!strip) {
 	if (conj)
@@ -609,23 +587,26 @@ void Bpanda::listBNonCel(FitsImage* ptr, ostream& str,
 	if (ii==1 && jj==1 && !strip) {
 	  str << '(';
 	  for (int kk=0; kk<numAngles_; kk++) {
-	    double ar = parent->mapAngleFromRef(angles_[kk],sys);
-	    str << radToDeg(ar) << ((kk<numAngles_-1) ? ' ' : ')');
+	    parent->listAngleFromRef(str,angles_[kk],sys,sky);
+	    str << ((kk<numAngles_-1) ? ' ' : ')');
 	  }
 	  str << '(';
 	  str << setseparator(' ');
 	  for (int kk=0; kk<numAnnuli_; kk++) {
-	    Vector rr = ptr->mapLenFromRef(annuli_[kk],sys);
-	    str << rr << ((kk<numAnnuli_-1) ? ' ' : ')');
-	  }
+	    if (ptr->hasWCSCel(sys))
+	      str << setunit('"');
+	    ptr->listLenFromRef(str,annuli_[kk],sys,Coord::ARCSEC);
+	    str << ((kk<numAnnuli_-1) ? ' ' : ')');
+	  }	      
 	  str << setseparator(',');
-	  str << '(' << radToDeg(aa) << ')';
-	      
+	  str << '(';
+	  parent->listAngleFromRef(str,angle,sys,sky);
+	  str << ')';
+
 	  listProps(str);
 	}
 	else
 	  str << "ignore";
-
 	str << (strip ? ';' : '\n');
       }
       else {
@@ -635,61 +616,6 @@ void Bpanda::listBNonCel(FitsImage* ptr, ostream& str,
 	  str << ";";
       }
     }
-  }
-}
-
-void Bpanda::listBCel(FitsImage* ptr, int ii, int jj, ostream& str, 
-		      Coord::CoordSystem sys, Coord::SkyFrame sky,
-		      Coord::SkyFormat format, int conj, int strip)
-{
-  double a1 = radToDeg(parent->mapAngleFromRef(angles_[jj-1],sys,sky));
-  double a2 = radToDeg(parent->mapAngleFromRef(angles_[jj],sys,sky));
-  if (a2<=a1+FLT_EPSILON)
-    a2 += 360;
-
-  Vector r1 = ptr->mapLenFromRef(annuli_[ii-1],sys,Coord::ARCSEC);
-  Vector r2 =  ptr->mapLenFromRef(annuli_[ii],sys,Coord::ARCSEC);	
-  double aa = parent->mapAngleFromRef(angle,sys,sky);
-      
-  str << setprecision(parent->precLinear_) << a1 << ',' << a2 << ",1,"
-      << setprecision(parent->precArcsec_) << fixed << setunit('"')
-      << r1 << ',' << setunit('"') << r2 << ",1,";
-  str.unsetf(ios_base::floatfield);
-  str << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
-		
-  if (!strip) {
-    if (conj)
-      str << " ||";
-
-    str << " # bpanda=";
-    if (ii==1 && jj==1 && !strip) {
-      str << '(' << setprecision(parent->precLinear_);
-      for (int kk=0; kk<numAngles_; kk++) {
-	double ar = parent->mapAngleFromRef(angles_[kk],sys,sky);
-	str << radToDeg(ar) << ((kk<numAngles_-1) ? ' ' : ')');
-      }
-
-      str << '(';
-      str << setseparator(' ') << setprecision(parent->precArcsec_) << fixed;
-      for (int kk=0; kk<numAnnuli_; kk++) {
-	Vector rr = ptr->mapLenFromRef(annuli_[kk],sys,Coord::ARCSEC);
-	str << setunit('"') << rr << ((kk<numAnnuli_-1) ? ' ' : ')');
-      }
-      str.unsetf(ios_base::floatfield);
-      str << setseparator(',');
-      str << '(' << setprecision(parent->precLinear_) << radToDeg(aa) << ')';
-      listProps(str);
-    }
-    else
-      str << "ignore";
-
-    str << (strip ? ';' : '\n');
-  }
-  else {
-    if (conj)
-      str << "||";
-    else
-      str << ";";
   }
 }
 

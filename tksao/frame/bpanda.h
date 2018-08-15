@@ -25,14 +25,6 @@ class Bpanda : public BaseBox {
   void listB(ostream&, Coord::CoordSystem, Coord::SkyFrame,
 	     Coord::SkyFormat, int, int);
 
-  void listBNonCel(FitsImage*, ostream&, 
-		   Coord::CoordSystem, Coord::SkyFrame,
-		   Coord::SkyFormat, int, int);
-
-  void listBCel(FitsImage*, int, int, ostream&, 
-		   Coord::CoordSystem, Coord::SkyFrame,
-		   Coord::SkyFormat, int, int);
-
  public:
   Bpanda(const Bpanda&);
   Bpanda(Base* p, const Vector& ctr, 

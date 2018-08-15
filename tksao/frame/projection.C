@@ -338,42 +338,26 @@ void Projection::analysisPlot2d(char* xname, char* yname,
 void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 		      Coord::SkyFormat format, int conj, int strip)
 {
-  if (!strip) {
-    FitsImage* ptr = parent->findFits(sys,center);
-    listPre(str, sys, sky, ptr, strip, 1);
+  if (strip)
+    return;
+  
+  FitsImage* ptr = parent->findFits(sys,center);
+  listPre(str, sys, sky, ptr, strip, 1);
 
-    double rr = ptr->mapLenFromRef(width,sys,Coord::ARCSEC);
+  str << type_ << '(';
+  ptr->listFromRef(str,p1,sys,sky,format);
+  str << ',';
+  ptr->listFromRef(str,p2,sys,sky,format);
+  str << ',';
+  ptr->listLenFromRef(str,width,sys,Coord::ARCSEC);
+  if (ptr->hasWCSCel(sys))
+    str << '"';
+  str  << ')';
 
-    str << type_ << '(';
-    switch (sys) {
-    case Coord::IMAGE:
-    case Coord::PHYSICAL:
-    case Coord::DETECTOR:
-    case Coord::AMPLIFIER:
-      str << setprecision(parent->precLinear_)
-	  << ptr->mapFromRef(p1,sys) << ',' << ptr->mapFromRef(p2,sys) << ',' 
-	  << setprecision(parent->precLenLinear_) << rr;
-      break;
-    default:
-      listWCS(ptr,p1,sys,sky,format);
-      str << ra << ',' << dec << ',';
-      listWCS(ptr,p2,sys,sky,format);
-      str << ra << ',' << dec << ',';
+  if (conj)
+    str << " ||";
 
-      if (ptr->hasWCSCel(sys)) {
-	str << setprecision(parent->precArcsec_) << fixed << rr << '"';
-	str.unsetf(ios_base::floatfield);
-      }
-      else
-	str << setprecision(parent->precLenLinear_) << rr;
-    }
-    str  << ')';
-
-    if (conj)
-      str << " ||";
-
-    listProperties(str, 0);
-  }
+  listProperties(str, 0);
 }
 
 void Projection::listXML(ostream& str, Coord::CoordSystem sys,

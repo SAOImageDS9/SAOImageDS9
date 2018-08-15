@@ -491,20 +491,9 @@ void Ruler::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     listPre(str, sys, sky, ptr, strip, 1);
 
     str << type_ << '(';
-    switch (sys) {
-    case Coord::IMAGE:
-    case Coord::PHYSICAL:
-    case Coord::DETECTOR:
-    case Coord::AMPLIFIER:
-      str << setprecision(parent->precLinear_)
-	  << ptr->mapFromRef(p1,sys) << ',' << ptr->mapFromRef(p2,sys);
-      break;
-    default:
-      listWCS(ptr,p1,sys,sky,format);
-      str << ra << ',' << dec << ',';
-      listWCS(ptr,p2,sys,sky,format);
-      str << ra << ',' << dec;
-    }
+    ptr->listFromRef(str,p1,sys,sky,format);
+    str << ',';
+    ptr->listFromRef(str,p2,sys,sky,format);
     str  << ')';
 
     if (conj)

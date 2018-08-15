@@ -216,22 +216,11 @@ void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   listPre(str, sys, sky, ptr, strip, 0);
   
   str << type_ << '(';
-  switch (sys) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::DETECTOR:
-  case Coord::AMPLIFIER:
-    ptr->listFromRef(str,center,sys);
-    str << ',';
-    ptr->listLenFromRef(str,annuli_[0][0],sys);
-    break;
-  default:
-    ptr->listFromRef(str,center,sys,sky,format);
-    str << ',';
-    ptr->listLenFromRef(str,annuli_[0][0],sys,Coord::ARCSEC);
-    if (ptr->hasWCSCel(sys))
-      str << '"';
-  }
+  ptr->listFromRef(str,center,sys,sky,format);
+  str << ',';
+  ptr->listLenFromRef(str,annuli_[0][0],sys,Coord::ARCSEC);
+  if (ptr->hasWCSCel(sys))
+    str << '"';
   str << ')';
 
   listPost(str, conj, strip);
@@ -324,6 +313,7 @@ void Circle::listPros(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     str << ' ';
     ptr->listLenFromRef(str,annuli_[0][0],sys,Coord::ARCSEC);
     str << '"';
+    break;
   }
 
   listProsPost(str, strip);

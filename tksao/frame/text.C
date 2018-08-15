@@ -218,17 +218,7 @@ void Text::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     listPre(str, sys, sky, ptr, strip, 1);
 
     str << type_ << '(';
-    switch (sys) {
-    case Coord::IMAGE:
-    case Coord::PHYSICAL:
-    case Coord::DETECTOR:
-    case Coord::AMPLIFIER:
-      str << setprecision(parent->precLinear_) << ptr->mapFromRef(center,sys);
-      break;
-    default:
-      listWCS(ptr,center,sys,sky,format);
-      str << ra << ',' << dec;
-    }
+    ptr->listFromRef(str,center,sys,sky,format);
     str  << ')';
     
     if (conj)
@@ -278,13 +268,13 @@ void Text::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << setprecision(parent->precLinear_)
-	<< ptr->mapFromRef(center,Coord::IMAGE) << ", \"" << text << "\"";
+    ptr->listFromRef(str,center,Coord::IMAGE);
     break;
   default:
-    listWCS(ptr,center,sys,sky,format);
-    str << ra << ',' << dec << ", \"" << text << "\"";
+    ptr->listFromRef(str,center,sys,sky,format);
+    break;
   }
+  str << ", \"" << text << "\"";
   str << ')';
   
   listSAOtngPost(str, strip);

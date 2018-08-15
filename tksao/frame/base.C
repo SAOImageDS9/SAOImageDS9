@@ -966,8 +966,8 @@ void Base::printDistFromRef(FitsImage* ptr,
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void Base::printAngleFromRef(FitsImage* ptr, double aa,
-			     Coord::CoordSystem sys, Coord::SkyFrame sky)
+void Base::printAngleFromRef(double aa, Coord::CoordSystem sys,
+			     Coord::SkyFrame sky)
 {
   ostringstream str;
   listAngleFromRef(str, aa, sys, sky);

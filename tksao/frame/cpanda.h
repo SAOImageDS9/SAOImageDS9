@@ -25,13 +25,6 @@ class Cpanda : public BaseEllipse {
   void listB(ostream&, Coord::CoordSystem, Coord::SkyFrame,
 	     Coord::SkyFormat, int, int);
 
-  void listBCel(FitsImage*, int, int, ostream&,
-		   Coord::CoordSystem, Coord::SkyFrame,
-		   Coord::SkyFormat, int, int);
-  void listBNonCel(FitsImage*, ostream&, 
-		   Coord::CoordSystem, Coord::SkyFrame,
-		   Coord::SkyFormat, int, int);
-
   int isIn(const Vector& vv, Coord::InternalSystem sys, int nn, int aa);
 
  public:

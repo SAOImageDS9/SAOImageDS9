@@ -190,31 +190,11 @@ void Composite::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     FitsImage* ptr = parent->findFits(sys,center);
     listPre(str, sys, sky, ptr, strip, 1);
 
-    str << type_;
-    switch (sys) {
-    case Coord::IMAGE:
-    case Coord::PHYSICAL:
-    case Coord::DETECTOR:
-    case Coord::AMPLIFIER:
-      {
-	Vector vv = ptr->mapFromRef(center,sys);
-	str << '(' << setprecision(parent->precLinear_) << vv << ',' 
-	    << radToDeg(parent->mapAngleFromRef(angle,sys)) << ')';
-      }
-      break;
-    default:
-      if (ptr->hasWCSCel(sys)) {
-	listWCS(ptr,center,sys,sky,format);
-	str << '(' << ra << ',' << dec << ',' 
-	    << setprecision(parent->precLinear_) 
-	    << radToDeg(parent->mapAngleFromRef(angle,sys,sky)) << ')';
-      }
-      else {
-	Vector vv = ptr->mapFromRef(center,sys);
-	str << '(' << setprecision(parent->precLinear_) << vv << ','
-	    << radToDeg(parent->mapAngleFromRef(angle,sys)) << ')';
-      }
-    }
+    str << type_ << '(';
+    ptr->listFromRef(str,center,sys,sky,format);
+    str << ',';
+    parent->listAngleFromRef(str,angle,sys,sky);
+    str << ')';
       
     str << " ||";
     str << " composite=" << global;

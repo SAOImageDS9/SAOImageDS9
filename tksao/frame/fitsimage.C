@@ -32,10 +32,6 @@ WCSState::WCSState()
 {
   wcsSystem_ = Coord::WCS;
   wcsSkyFrame_ = Coord::FK5;
-
-  wcsFormatSystem_ = Coord::WCS;
-  wcsFormatFrame_ = Coord::FK5;
-  wcsFormat_ = Coord::DEGREES;
 };
 
 FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
@@ -1141,9 +1137,6 @@ void FitsImage::initWCS(FitsHead* hd)
 
   wcsSystem(ast_,wcsState_->wcsSystem_);
   wcsSkyFrame(ast_,wcsState_->wcsSkyFrame_);
-  setWCSFormat(wcsState_->wcsFormatSystem_,
-	       wcsState_->wcsFormatFrame_,
-	       wcsState_->wcsFormat_,1);
 
   // must wait until wcsState_ is realized
   wcsSizeInit();
@@ -3176,18 +3169,8 @@ void FitsImage::setWCSSkyFrame(Coord::SkyFrame sky)
 }
 
 void FitsImage::setWCSFormat(Coord::CoordSystem sys, Coord::SkyFrame sky,
-			     Coord::SkyFormat format, int init)
+			     Coord::SkyFormat format)
 {
-  if (!init &&
-      wcsState_->wcsFormatSystem_ == sys &&
-      wcsState_->wcsFormatFrame_ == sky &&
-      wcsState_->wcsFormat_ == format)
-    return;
-
-  wcsState_->wcsFormatSystem_ = sys;
-  wcsState_->wcsFormatFrame_ = sky;
-  wcsState_->wcsFormat_ = format;
-
   int id = sys-Coord::WCS;
 
   // spacial axes

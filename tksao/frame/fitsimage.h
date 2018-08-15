@@ -49,10 +49,6 @@ class WCSState {
 
   Coord::CoordSystem wcsSystem_; // current state of ast_
   Coord::SkyFrame wcsSkyFrame_; // current state of ast_
-
-  Coord::CoordSystem wcsFormatSystem_; // current state of ast_
-  Coord::SkyFrame wcsFormatFrame_; // current state of ast_
-  Coord::SkyFormat wcsFormat_; // current state of ast_
 };
 
 class FitsImage {
@@ -169,8 +165,7 @@ class FitsImage {
 
   void setWCSSystem(Coord::CoordSystem);
   void setWCSSkyFrame(Coord::SkyFrame);
-  void setWCSFormat(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat,
-		    int init=0);
+  void setWCSFormat(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
 
  public:
   char* fileName;

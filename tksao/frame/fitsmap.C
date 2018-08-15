@@ -36,17 +36,6 @@ VectorStr FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
     return VectorStr();
 }
 
-// waj
-void FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
-			   Coord::SkyFrame sky, Coord::SkyFormat format,
-			   char* buf)
-{
-  if (hasWCS(out))
-    pix2wcs(vv * refToImage, out, sky, format, buf);
-  else
-    strcpy(buf,"");
-}
-
 Vector3d FitsImage::mapFromRef(const Vector3d& vv, Coord::CoordSystem out,
 			       Coord::SkyFrame sky)
 {
@@ -146,25 +135,9 @@ void FitsImage::listFromRef(ostream& str1, ostream& str2, const Vector& vv,
     break;
   default:
     {
-      char buf[128];
-      char* bptr = buf;
-      mapFromRef(vv,sys,sky,format,buf);
-
-      // lon
-      char* lonptr = buf;
-      while (*bptr && *bptr != ' ')
-	bptr++;
-      *bptr = '\0';
-
-      // lat
-      bptr++;
-      char* latptr = bptr;
-      while (*bptr && *bptr != ' ')
-	bptr++;
-      *bptr = '\0';
-
-      str1 << lonptr;
-      str2 << latptr;
+      VectorStr rr = mapFromRef(vv,sys,sky,format);
+      str1 << rr[0];
+      str2 << rr[1];
     }
   }
 }

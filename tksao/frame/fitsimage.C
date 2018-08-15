@@ -2812,36 +2812,6 @@ VectorStr FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   return VectorStr(astFormat(ast_,1,out[0]), astFormat(ast_,2,out[1]));
 }
 
-// waj
-char* FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
-			 Coord::SkyFrame sky, Coord::SkyFormat format,
-			 char* lbuf)
-{
-  astClearStatus; // just to make sure
-  astBegin; // start memory management
-
-  lbuf[0] = '\0';
-
-  if (!hasWCS(sys))
-    return lbuf;
-
-  setWCSSystem(sys);
-  setWCSSkyFrame(sky);
-  
-  Vector out = wcsTran(ast_, in, 1);
-  if (astOK && checkWCS(out)) {
-    setWCSFormat(sys,sky,format);
-    astNorm(ast_, out.v);
-
-    ostringstream str;
-    str << astFormat(ast_,1,out[0]) << ' ' << astFormat(ast_,2,out[1]) << ends;
-    strncpy(lbuf, str.str().c_str(), str.str().length());
-  }
-
-  astEnd;
-  return lbuf;
-}
-
 Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {
@@ -2887,37 +2857,6 @@ VectorStr3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   return VectorStr3d(astFormat(ast_,1,out[0]),
 		   astFormat(ast_,2,out[1]),
 		   astFormat(ast_,3,out[2]));
-}
-
-// waj
-char* FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
-			 Coord::SkyFrame sky, Coord::SkyFormat format,
-			 char* lbuf)
-{
-  astClearStatus; // just to make sure
-  astBegin; // start memory management
-
-  lbuf[0] = '\0';
-
-  if (!(hasWCS(sys) && hasWCS3D(sys)))
-    return lbuf;
-
-  setWCSSystem(sys);
-  setWCSSkyFrame(sky);
-  
-  Vector3d out = wcsTran(ast_, in, 1);
-  if (astOK && checkWCS(out)) {
-    setWCSFormat(sys,sky,format);
-    astNorm(ast_, out.v);
-
-    ostringstream str;
-    str << astFormat(ast_,1,out[0]) << ' ' << astFormat(ast_,2,out[1])
-	<< ' ' << astFormat(ast_,3,out[2]) << ends;
-    strncpy(lbuf, str.str().c_str(), str.str().length());
-  }
-  
-  astEnd;
-  return lbuf;
 }
 
 Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,

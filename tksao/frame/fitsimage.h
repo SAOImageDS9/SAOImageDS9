@@ -377,16 +377,18 @@ class FitsImage {
   Vector& iisz() {return iisz_;}
 
   Vector pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
-  Vector wcs2pix(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
-
-  char* pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
   VectorStr pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
 
-  int wcsInv() {return wcsInv_;}
   Vector3d pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
-  Vector3d wcs2pix(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
+  VectorStr3d pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
 
+  //waj
+  char* pix2wcs(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
   char* pix2wcs(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
+
+  Vector wcs2pix(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
+  Vector3d wcs2pix(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
+  int wcsInv() {return wcsInv_;}
 
   void wfpc2WCS(istream&);
   void appendWCS(istream&);
@@ -432,13 +434,18 @@ class FitsImage {
   Matrix3d& matrixToData3d(Coord::InternalSystem);
 
   Vector mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
-  void mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
   VectorStr mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
-  Vector mapToRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+  // waj
+  void mapFromRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, char*);
+
   Vector3d mapFromRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
-  Vector3d mapToRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+  VectorStr3d mapFromRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
+
   void listFromRef(ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5, Coord::SkyFormat =Coord::DEGREES);
   void listFromRef(ostream&, ostream&, const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5, Coord::SkyFormat =Coord::DEGREES);
+
+  Vector mapToRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
+  Vector3d mapToRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
 
   double mapFromImage3d(double, Coord::CoordSystem);
   double mapToImage3d(double, Coord::CoordSystem);

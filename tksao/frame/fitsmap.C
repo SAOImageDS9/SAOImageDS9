@@ -27,6 +27,16 @@ Vector FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
   return Vector();
 }      
 
+VectorStr FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
+				Coord::SkyFrame sky, Coord::SkyFormat format)
+{
+  if (hasWCS(out))
+    return pix2wcs(vv * refToImage, out, sky, format);
+  else
+    return VectorStr();
+}
+
+// waj
 void FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
 			   Coord::SkyFrame sky, Coord::SkyFormat format,
 			   char* buf)
@@ -37,13 +47,30 @@ void FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
     strcpy(buf,"");
 }
 
-VectorStr FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
-				Coord::SkyFrame sky, Coord::SkyFormat format)
+Vector3d FitsImage::mapFromRef(const Vector3d& vv, Coord::CoordSystem out,
+			       Coord::SkyFrame sky)
+{
+  switch (out) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::AMPLIFIER:
+  case Coord::DETECTOR:
+    return vv * refToImage3d;
+  default:
+    if (hasWCS(out))
+      return pix2wcs(vv * refToImage3d, out, sky);
+  }
+
+  return Vector3d();
+}
+
+VectorStr3d FitsImage::mapFromRef(const Vector3d& vv, Coord::CoordSystem out,
+				  Coord::SkyFrame sky, Coord::SkyFormat format)
 {
   if (hasWCS(out))
-    return pix2wcs(vv * refToImage, out, sky, format);
+    return pix2wcs(vv * refToImage3d, out, sky, format);
   else
-    return VectorStr();
+    return VectorStr3d();
 }
 
 Vector FitsImage::mapToRef(const Vector& vv, Coord::CoordSystem in,
@@ -66,23 +93,6 @@ Vector FitsImage::mapToRef(const Vector& vv, Coord::CoordSystem in,
   // special case for parsing regions files
   maperr =1;
   return Vector();
-}
-
-Vector3d FitsImage::mapFromRef(const Vector3d& vv, Coord::CoordSystem out,
-			       Coord::SkyFrame sky)
-{
-  switch (out) {
-  case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::AMPLIFIER:
-  case Coord::DETECTOR:
-    return vv * refToImage3d;
-  default:
-    if (hasWCS(out))
-      return pix2wcs(vv * refToImage3d, out, sky);
-  }
-
-  return Vector3d();
 }
 
 Vector3d FitsImage::mapToRef(const Vector3d& vv, Coord::CoordSystem in,

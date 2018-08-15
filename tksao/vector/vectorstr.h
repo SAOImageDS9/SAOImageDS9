@@ -25,6 +25,24 @@ class VectorStr {
 
 ostream& operator<<(ostream&, const VectorStr&);
 istream& operator>>(istream&, VectorStr&);
+
+class VectorStr3d {
+ public:
+  char* c[3];
+
+ public:
+  VectorStr3d() {c[0]=NULL; c[1]=NULL; c[2]=NULL;}
+  ~VectorStr3d();
+  VectorStr3d(const char*, const char*, const char*);
+  VectorStr3d(const VectorStr3d&);
+  VectorStr3d& operator=(const VectorStr3d&);
+
+  const char* operator[](int i) const {return c[i];} // return element
+  char** cc() {return c;} // return vector
+};
+
+ostream& operator<<(ostream&, const VectorStr3d&);
+istream& operator>>(istream&, VectorStr3d&);
 #endif
 
 

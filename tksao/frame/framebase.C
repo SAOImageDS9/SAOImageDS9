@@ -144,22 +144,10 @@ void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* sptr)
     Coord::CoordSystem www = (Coord::CoordSystem)(Coord::WCS+ii);
 
     if (hasWCS(www)) {
-      char buff[128];
-      sptr->pix2wcs(img, www, wcsSkyFrame_, wcsSkyFormat_, buff);
+      VectorStr out = sptr->mapFromRef(img, www, wcsSkyFrame_, wcsSkyFormat_);
 
-      int argc;
-      const char** argv;
-      Tcl_SplitList(interp, buff, &argc, &argv);
-
-      if (argc > 0 && argv && argv[0])
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),argv[0],0);
-      else
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
-      
-      if (argc > 1 && argv && argv[1])
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),argv[1],0);
-      else
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),out[0],0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),out[1],0);
       
       char* xsym = (char*)sptr->getWCSAxisSymbol(www,0);
       if (xsym)
@@ -180,8 +168,6 @@ void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* sptr)
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),domain,0);
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),coord.coordSystemStr(www),0);
-      
-      Tcl_Free((char*)argv);
     }
     else {
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);

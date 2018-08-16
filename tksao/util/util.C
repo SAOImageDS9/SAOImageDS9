@@ -161,22 +161,6 @@ double radToDeg(double aa)
   return 180.*aa/M_PI;
 }
 
-Vector radToDeg(const Vector& vv)
-{
-  Vector out = vv;
-  out[0] *= 180./M_PI;
-  out[1] *= 180./M_PI;
-  return out;
-}
-
-Vector3d radToDeg(const Vector3d& vv)
-{
-  Vector3d out = vv;
-  out[0] *= 180./M_PI;
-  out[1] *= 180./M_PI;
-  return out;
-}
-
 double degToRad(double aa)
 {
   return  M_PI*aa/180.;

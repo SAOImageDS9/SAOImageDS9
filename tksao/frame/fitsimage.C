@@ -2778,7 +2778,16 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 
   astNorm(ast_, out.v);
   astEnd;
-  return hasWCSCel(sys) ? radToDeg(out) : out;
+
+  if (hasWCSCel(sys)) {
+    int id = sys-Coord::WCS;
+    if (wcsCelLon_[id] == 1 || wcsCelLat_[id] == 1)
+      out[0] = radToDeg(out[0]);
+    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
+      out[1] = radToDeg(out[1]);
+  }
+
+  return out;
 }
 
 VectorStr FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
@@ -2823,7 +2832,15 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   astNorm(ast_, out.v);
   astEnd;
   
-  return hasWCSCel(sys) ? radToDeg(out) : out;
+  if (hasWCSCel(sys)) {
+    int id = sys-Coord::WCS;
+    if (wcsCelLon_[id] == 1 || wcsCelLat_[id] == 1)
+      out[0] = radToDeg(out[0]);
+    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
+      out[1] = radToDeg(out[1]);
+  }
+
+  return out;
 }
 
 VectorStr3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,

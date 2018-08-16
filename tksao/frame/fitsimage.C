@@ -2820,7 +2820,6 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   Vector3d out = wcsTran(ast_, in, 1);
   if (!astOK || !checkWCS(out))
     return Vector3d();
-
   astNorm(ast_, out.v);
   astEnd;
   
@@ -2839,7 +2838,7 @@ VectorStr3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   setWCSSystem(sys);
   setWCSSkyFrame(sky);
   
-  Vector out = wcsTran(ast_, in, 1);
+  Vector3d out = wcsTran(ast_, in, 1);
   if (!astOK || !checkWCS(out))
     return VectorStr3d();
 
@@ -3223,10 +3222,10 @@ Vector FitsImage::vRadToDeg(const Vector& vv, Coord::CoordSystem sys)
   Vector out = vv;
   if (hasWCSCel(sys)) {
     int id = sys-Coord::WCS;
-    if (wcsCelLon_[id] == 1 || wcsCelLat_[id] == 1)
-      out[0] = radToDeg(out[0]);
-    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
-      out[1] = radToDeg(out[1]);
+    for (int ii=0; ii<2; ii++) {
+      if (wcsCelLon_[id] == ii+1 || wcsCelLat_[id] == ii+1)
+	out[ii] = radToDeg(out[ii]);
+    }
   }
   return out;
 }
@@ -3236,12 +3235,10 @@ Vector3d FitsImage::vRadToDeg(const Vector3d& vv, Coord::CoordSystem sys)
   Vector3d out = vv;
   if (hasWCSCel(sys)) {
     int id = sys-Coord::WCS;
-    if (wcsCelLon_[id] == 1 || wcsCelLat_[id] == 1)
-      out[0] = radToDeg(out[0]);
-    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
-      out[1] = radToDeg(out[1]);
-    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
-      out[2] = radToDeg(out[2]);
+    for (int ii=0; ii<3; ii++) {
+      if (wcsCelLon_[id] == ii+1 || wcsCelLat_[id] == ii+1)
+	out[ii] = radToDeg(out[ii]);
+    }
   }
   return out;
 }
@@ -3251,10 +3248,10 @@ Vector FitsImage::vDegToRad(const Vector& vv, Coord::CoordSystem sys)
   Vector out = vv;
   if (hasWCSCel(sys)) {
     int id = sys-Coord::WCS;
-    if (wcsCelLon_[id] == 1 || wcsCelLat_[id] == 1)
-      out[0] = degToRad(out[0]);
-    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
-      out[1] = degToRad(out[1]);
+    for (int ii=0; ii<2; ii++) {
+      if (wcsCelLon_[id] == ii+1 || wcsCelLat_[id] == ii+1)
+	out[ii] = degToRad(out[ii]);
+    }
   }
   return out;
 }
@@ -3264,12 +3261,10 @@ Vector3d FitsImage::vDegToRad(const Vector3d& vv, Coord::CoordSystem sys)
   Vector3d out = vv;
   if (hasWCSCel(sys)) {
     int id = sys-Coord::WCS;
-    if (wcsCelLon_[id] == 1 || wcsCelLat_[id] == 1)
-      out[0] = degToRad(out[0]);
-    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
-      out[1] = degToRad(out[1]);
-    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
-      out[2] = degToRad(out[2]);
+    for (int ii=0; ii<3; ii++) {
+      if (wcsCelLon_[id] == ii+1 || wcsCelLat_[id] == ii+1)
+	out[ii] = degToRad(out[ii]);
+    }
   }
   return out;
 }

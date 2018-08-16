@@ -1783,16 +1783,11 @@ void Base::getFitsSliceCmd(int id, Coord::CoordSystem sys)
 {
   if (currentContext->fits) {
     int ss = currentContext->slice(id);
-    /*
+
     FitsImage* ptr = currentContext->fits;
-    Vector cc = ptr->center();
-    Vector3d dd = Vector3d(cc,ss) * Translate3d(-.5,-.5,-.5);
-    cerr << ptr->mapFromRef(dd,sys,Coord::FK5,Coord::SEXAGESIMAL)
-	 << '='
-	 << ptr->mapFromRef(dd,sys)
-	 << '='
-	 << ptr->mapFromImage3d(ss,sys) << endl;
-    */
+    //    Vector cc = ptr->center();
+    //    Vector3d dd = Vector3d(cc,ss) * Translate3d(-.5,-.5,-.5);
+    //    cerr << ptr->mapFromRef(dd,sys,Coord::FK5,Coord::SEXAGESIMAL) << endl;
     printDouble(currentContext->fits->mapFromImage3d(ss,sys));
   }
   else

@@ -144,37 +144,6 @@ Vector3d zeroTWOPI(const Vector3d& vv)
   return out;
 }
 
-double zero360(double aa)
-{
-  if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))
-    return NAN;
-
-  double rr = aa;
-  if (rr>=0)
-    while (rr>360)
-      rr -= 360;
-  else
-    while (rr<0)
-      rr += 360;
-  return rr;
-}
-
-Vector zero360(const Vector& vv)
-{
-  Vector out = vv;
-  // we want the first coord to be 0-360
-  out[0] = zero360(out[0]);
-  return out;
-}
-
-Vector3d zero360(const Vector3d& vv)
-{
-  Vector3d out = vv;
-  // we want the first coord to be 0-360
-  out[0] = zero360(out[0]);
-  return out;
-}
-
 double m180To180(double aa)
 {
   if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))

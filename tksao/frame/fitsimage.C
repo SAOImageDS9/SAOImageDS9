@@ -2776,9 +2776,9 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   if (!astOK || !checkWCS(out))
     return Vector();
 
+  astNorm(ast_, out.v);
   astEnd;
-  
-  return hasWCSCel(sys) ? zero360(radToDeg(out)) : out;
+  return hasWCSCel(sys) ? radToDeg(out) : out;
 }
 
 VectorStr FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
@@ -2820,9 +2820,10 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   if (!astOK || !checkWCS(out))
     return Vector3d();
 
+  astNorm(ast_, out.v);
   astEnd;
   
-  return hasWCSCel(sys) ? zero360(radToDeg(out)) : out;
+  return hasWCSCel(sys) ? radToDeg(out) : out;
 }
 
 VectorStr3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,

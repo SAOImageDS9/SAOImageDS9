@@ -150,22 +150,6 @@ double degToRad(double aa)
   return  M_PI*aa/180.;
 }
 
-Vector degToRad(const Vector& vv)
-{
-  Vector out =vv;
-  out[0] *= M_PI/180.;
-  out[1] *= M_PI/180.;
-  return out;
-}
-
-Vector3d degToRad(const Vector3d& vv)
-{
-  Vector3d out =vv;
-  out[0] *= M_PI/180.;
-  out[1] *= M_PI/180.;
-  return out;
-}
-
 double dmsToDegree(int sign, int degree, int min, double sec)
 {
   // sign is needed because of -00 vs +00

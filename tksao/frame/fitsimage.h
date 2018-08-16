@@ -167,6 +167,11 @@ class FitsImage {
   void setWCSSkyFrame(Coord::SkyFrame);
   void setWCSFormat(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
 
+  Vector vRadToDeg(const Vector& vv, Coord::CoordSystem sys);
+  Vector vDegToRad(const Vector& vv, Coord::CoordSystem sys);
+  Vector3d vRadToDeg(const Vector3d& vv, Coord::CoordSystem sys);
+  Vector3d vDegToRad(const Vector3d& vv, Coord::CoordSystem sys);
+
  public:
   char* fileName;
   char* rootBaseFileName;

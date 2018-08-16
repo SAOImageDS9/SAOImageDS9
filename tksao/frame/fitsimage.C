@@ -1333,11 +1333,11 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 
   Vector* in1 = new Vector[nxx1];
   for (int ii=0; ii<nxx1; ii++)
-    in1[ii] = degToRad(Vector(ixx1[ii],iyy1[ii]));
+    in1[ii] = vDegToRad(Vector(ixx1[ii],iyy1[ii]),sys1);
 
   Vector* ptr2 = new Vector[nxx2];
   for (int ii=0; ii<nxx2; ii++)
-    ptr2[ii] = degToRad(Vector(ixx2[ii],iyy2[ii]));
+    ptr2[ii] = vDegToRad(Vector(ixx2[ii],iyy2[ii]),sys2);
 
   double rr = rad;
   switch (dist) {
@@ -2708,7 +2708,7 @@ double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
   astEnd;
   
   return hasWCSCel(sys) ?
-    radToDeg(wcsDistance(ast_,degToRad(vv1),degToRad(vv2))) :
+    radToDeg(wcsDistance(ast_,vDegToRad(vv1,sys),vDegToRad(vv2,sys))) :
     wcsDistance(ast_,vv1,vv2);
 }
 
@@ -2779,15 +2779,7 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   astNorm(ast_, out.v);
   astEnd;
 
-  if (hasWCSCel(sys)) {
-    int id = sys-Coord::WCS;
-    if (wcsCelLon_[id] == 1 || wcsCelLat_[id] == 1)
-      out[0] = radToDeg(out[0]);
-    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
-      out[1] = radToDeg(out[1]);
-  }
-
-  return out;
+  return vRadToDeg(out,sys);
 }
 
 VectorStr FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
@@ -2832,15 +2824,7 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   astNorm(ast_, out.v);
   astEnd;
   
-  if (hasWCSCel(sys)) {
-    int id = sys-Coord::WCS;
-    if (wcsCelLon_[id] == 1 || wcsCelLat_[id] == 1)
-      out[0] = radToDeg(out[0]);
-    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
-      out[1] = radToDeg(out[1]);
-  }
-
-  return out;
+  return vRadToDeg(out,sys);
 }
 
 VectorStr3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
@@ -2871,34 +2855,34 @@ VectorStr3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
 Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
-  astClearStatus; // just to make sure
-  astBegin; // start memory management
-
-  if (!(hasWCS(sys) && wcsInv_)) {
+  if (!hasWCS(sys) || !wcsInv_) {
     maperr =1;
     return Vector();
   }
 
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
   setWCSSystem(sys);
   setWCSSkyFrame(sky);
 
-  Vector in = hasWCSCel(sys) ? degToRad(vv) : vv;
+  Vector in = vDegToRad(vv,sys);
   Vector out = wcsTran(ast_, in, 0);
-
   astEnd;
-    
-  if (astOK && checkWCS(out))
-    return out;
+  if (!astOK || !checkWCS(out)) {
+    maperr =1;
+    return Vector();
+  }
   
-  maperr =1;
-  return Vector();
+  maperr =0;
+  return out;
 }
 
 Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {
-  if (!(hasWCS(sys) && hasWCS3D(sys) && wcsInv_))
-  return Vector3d();
+  if (!hasWCS(sys) || !hasWCS3D(sys) || !wcsInv_)
+    return Vector3d();
     
   astClearStatus; // just to make sure
   astBegin; // start memory management
@@ -2906,15 +2890,13 @@ Vector3d FitsImage::wcs2pix(const Vector3d& vv, Coord::CoordSystem sys,
   setWCSSystem(sys);
   setWCSSkyFrame(sky);
 
-  Vector3d in = hasWCSCel(sys) ? degToRad(vv) : vv;
+  Vector3d in = vDegToRad(vv,sys);
   Vector3d out = wcsTran(ast_, in, 0);
-
   astEnd;
+  if (!astOK || !checkWCS(out))
+    return Vector3d();
   
-  if (astOK && checkWCS(out))
-    return out;
-  
-  return Vector3d();
+  return out;
 }
 
 int FitsImage::hasWCS(Coord::CoordSystem sys)
@@ -3234,6 +3216,62 @@ void FitsImage::setWCSFormat(Coord::CoordSystem sys, Coord::SkyFrame sky,
   for (int ii=0; ii<wcsNaxes_[id]; ii++)
     if (!(wcsCelLon_[id] && wcsCelLat_[id]))
       wcsFormat(ast_, ii+1, str.str().c_str());
+}
+
+Vector FitsImage::vRadToDeg(const Vector& vv, Coord::CoordSystem sys)
+{
+  Vector out = vv;
+  if (hasWCSCel(sys)) {
+    int id = sys-Coord::WCS;
+    if (wcsCelLon_[id] == 1 || wcsCelLat_[id] == 1)
+      out[0] = radToDeg(out[0]);
+    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
+      out[1] = radToDeg(out[1]);
+  }
+  return out;
+}
+
+Vector3d FitsImage::vRadToDeg(const Vector3d& vv, Coord::CoordSystem sys)
+{
+  Vector3d out = vv;
+  if (hasWCSCel(sys)) {
+    int id = sys-Coord::WCS;
+    if (wcsCelLon_[id] == 1 || wcsCelLat_[id] == 1)
+      out[0] = radToDeg(out[0]);
+    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
+      out[1] = radToDeg(out[1]);
+    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
+      out[2] = radToDeg(out[2]);
+  }
+  return out;
+}
+
+Vector FitsImage::vDegToRad(const Vector& vv, Coord::CoordSystem sys)
+{
+  Vector out = vv;
+  if (hasWCSCel(sys)) {
+    int id = sys-Coord::WCS;
+    if (wcsCelLon_[id] == 1 || wcsCelLat_[id] == 1)
+      out[0] = degToRad(out[0]);
+    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
+      out[1] = degToRad(out[1]);
+  }
+  return out;
+}
+
+Vector3d FitsImage::vDegToRad(const Vector3d& vv, Coord::CoordSystem sys)
+{
+  Vector3d out = vv;
+  if (hasWCSCel(sys)) {
+    int id = sys-Coord::WCS;
+    if (wcsCelLon_[id] == 1 || wcsCelLat_[id] == 1)
+      out[0] = degToRad(out[0]);
+    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
+      out[1] = degToRad(out[1]);
+    if (wcsCelLon_[id] == 2 || wcsCelLat_[id] == 2)
+      out[2] = degToRad(out[2]);
+  }
+  return out;
 }
 
 static void fits2TAB(AstFitsChan* chan, const char* extname,

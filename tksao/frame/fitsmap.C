@@ -30,10 +30,21 @@ Vector FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
 VectorStr FitsImage::mapFromRef(const Vector& vv, Coord::CoordSystem out,
 				Coord::SkyFrame sky, Coord::SkyFormat format)
 {
-  if (hasWCS(out))
-    return pix2wcs(vv * refToImage, out, sky, format);
-  else
-    return VectorStr();
+  switch (out) {
+  case Coord::IMAGE:
+    return VectorStr(vv * refToImage);
+  case Coord::PHYSICAL:
+    return VectorStr(vv * refToPhysical);
+  case Coord::AMPLIFIER:
+    return VectorStr(vv * refToAmplifier);
+  case Coord::DETECTOR:
+    return VectorStr(vv * refToDetector);
+  default:
+    if (hasWCS(out))
+      return pix2wcs(vv * refToImage, out, sky, format);
+  }
+  
+  return VectorStr();
 }
 
 Vector3d FitsImage::mapFromRef(const Vector3d& vv, Coord::CoordSystem out,
@@ -56,10 +67,18 @@ Vector3d FitsImage::mapFromRef(const Vector3d& vv, Coord::CoordSystem out,
 VectorStr3d FitsImage::mapFromRef(const Vector3d& vv, Coord::CoordSystem out,
 				  Coord::SkyFrame sky, Coord::SkyFormat format)
 {
-  if (hasWCS(out))
-    return pix2wcs(vv * refToImage3d, out, sky, format);
-  else
-    return VectorStr3d();
+  switch (out) {
+  case Coord::IMAGE:
+  case Coord::PHYSICAL:
+  case Coord::AMPLIFIER:
+  case Coord::DETECTOR:
+    return VectorStr3d(vv * refToImage3d);
+  default:
+    if (hasWCS(out))
+      return pix2wcs(vv * refToImage3d, out, sky, format);
+  }
+
+  return VectorStr3d();
 }
 
 Vector FitsImage::mapToRef(const Vector& vv, Coord::CoordSystem in,

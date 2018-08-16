@@ -2763,23 +2763,22 @@ const char* FitsImage::getWCSAxisSymbol(Coord::CoordSystem sys, int axis)
 Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
 			  Coord::SkyFrame sky)
 {
-  astClearStatus; // just to make sure
-  astBegin; // start memory management
-
   if (!hasWCS(sys))
     return Vector();
   
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
+
   setWCSSystem(sys);
   setWCSSkyFrame(sky);
 
   Vector out = wcsTran(ast_, in, 1);
+  if (!astOK || !checkWCS(out))
+    return Vector();
 
   astEnd;
   
-  if (astOK && checkWCS(out))
-    return hasWCSCel(sys) ? zero360(radToDeg(out)) : out;
-
-  return Vector();
+  return hasWCSCel(sys) ? zero360(radToDeg(out)) : out;
 }
 
 VectorStr FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
@@ -2818,13 +2817,12 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   setWCSSkyFrame(sky);
 
   Vector3d out = wcsTran(ast_, in, 1);
+  if (!astOK || !checkWCS(out))
+    return Vector3d();
 
   astEnd;
   
-  if (astOK && checkWCS(out))
-    return hasWCSCel(sys) ? zero360(radToDeg(out)) : out;
-  else
-    return Vector3d();
+  return hasWCSCel(sys) ? zero360(radToDeg(out)) : out;
 }
 
 VectorStr3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,

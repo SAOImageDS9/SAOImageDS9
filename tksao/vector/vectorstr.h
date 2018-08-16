@@ -5,6 +5,8 @@
 #ifndef __vectorstr_h__
 #define __vectorstr_h__
 
+#include "vector.h"
+
 #include <iostream>
 using namespace std;
 
@@ -17,14 +19,15 @@ class VectorStr {
   ~VectorStr();
   VectorStr(const char*, const char*);
   VectorStr(const VectorStr&);
+  VectorStr(const Vector&);
   VectorStr& operator=(const VectorStr&);
+  VectorStr& operator=(const Vector&);
 
   const char* operator[](int i) const {return c[i];} // return element
   char** cc() {return c;} // return vector
 };
 
 ostream& operator<<(ostream&, const VectorStr&);
-istream& operator>>(istream&, VectorStr&);
 
 class VectorStr3d {
  public:
@@ -35,14 +38,15 @@ class VectorStr3d {
   ~VectorStr3d();
   VectorStr3d(const char*, const char*, const char*);
   VectorStr3d(const VectorStr3d&);
+  VectorStr3d(const Vector3d&);
   VectorStr3d& operator=(const VectorStr3d&);
+  VectorStr3d& operator=(const Vector3d&);
 
   const char* operator[](int i) const {return c[i];} // return element
   char** cc() {return c;} // return vector
 };
 
 ostream& operator<<(ostream&, const VectorStr3d&);
-istream& operator>>(istream&, VectorStr3d&);
 #endif
 
 

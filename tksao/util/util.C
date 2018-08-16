@@ -128,22 +128,6 @@ double zeroTWOPI(double aa)
   return rr;
 }
 
-Vector zeroTWOPI(const Vector& vv)
-{
-  Vector out = vv;
-  // we want the first coord to be 0-2Pi
-  out[0] = zeroTWOPI(out[0]);
-  return out;
-}
-
-Vector3d zeroTWOPI(const Vector3d& vv)
-{
-  Vector3d out = vv;
-  // we want the first coord to be 0-2Pi
-  out[0] = zeroTWOPI(out[0]);
-  return out;
-}
-
 double m180To180(double aa)
 {
   if (isnan(aa) || isinf(aa) || (aa == -DBL_MAX) || (aa == DBL_MAX))

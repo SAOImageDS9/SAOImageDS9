@@ -92,10 +92,7 @@ extern double m180To180(double);
 extern double degToRad(double);
 extern double radToDeg(double);
 
-extern Vector zeroTWOPI(const Vector&);
 extern Vector degToRad(const Vector&);
-
-extern Vector3d zeroTWOPI(const Vector3d&);
 extern Vector3d degToRad(const Vector3d&);
 
 extern int parseSection(char*, Vector*, Vector*);

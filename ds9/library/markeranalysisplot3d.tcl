@@ -204,7 +204,7 @@ proc MarkerAnalysisPlot3dMotion {vvarname xx yy} {
     # current frame only
     global current
     if {$vvar(frame) == $current(frame)} {
-	UpdateCubeMotionDialog 2
+	UpdateCubeMotionDialog
 	UpdateScaleDialog
 	UpdateContourScale
 	UpdateContourDialog

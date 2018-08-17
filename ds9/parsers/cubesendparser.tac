@@ -12,12 +12,13 @@
 
 %%
 
-cubesend : {global cube; ProcessSendCmdCurrent "get fits slice $cube(axis)"}
+cubesend : {ProcessSendCmdCurrent "get fits slice"}
  | LOCK_ {ProcessSendCmdGet cube lock}
  | INTERVAL_ {BlinkSendCmdInterval}
- | AXIS_ {ProcessSendCmdGet cube axis}
  | AXES_ order
  | ORDER_ order
+# backward compatibility
+ | AXIS_ {ProcessSendCmdTxt "2"}
  ;
 
 order : {ProcessSendCmdGet cube axes}

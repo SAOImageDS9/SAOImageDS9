@@ -32,7 +32,7 @@
 
 fitssend: WIDTH_ {ProcessSendCmdCurrent "get fits width"}
  | HEIGHT_ {ProcessSendCmdCurrent "get fits height"}
- | DEPTH_ {ProcessSendCmdCurrent "get fits depth 2"}
+ | DEPTH_ {ProcessSendCmdCurrent "get fits depth"}
  | BITPIX_ {ProcessSendCmdCurrent "get fits bitpix"}
 # backward compatibility
  | TYPE_ {FitsSendCmdType}

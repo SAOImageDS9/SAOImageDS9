@@ -36,10 +36,8 @@ proc ExamineButtonBase {which x y} {
 
     # find filename/slice
     set fn [$which get fits file name full canvas $x $y]
-    for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
-	set slice($ii) [$which get fits slice $ii]
-    }
-
+    set slice($ii) [$which get fits slice]
+    
     # so the new frame will have all of the parent frame when created
     set ds9(next) $which
     GotoFrame
@@ -73,9 +71,7 @@ proc ExamineButtonBase {which x y} {
     RealizeDS9
 
     # set slice
-    for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
-	$current(frame) update fits slice $ii $slice($ii)
-    }
+    $current(frame) update fits slice $slice($ii)
 
     # zoom to about
     if {[$current(frame) has fits bin]} {
@@ -119,9 +115,7 @@ proc ExamineButtonRGB {which x y} {
 	$which rgb channel $cc
 	set fn($cc) [$which get fits file name full canvas $x $y]
 
-	for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
-	    set slice($cc,$ii) [$which get fits slice $ii]
-	}
+	set slice($cc,$ii) [$which get fits slice]
     }
 
     # so the new frame will have all of the parent frame when created
@@ -165,9 +159,7 @@ proc ExamineButtonRGB {which x y} {
     # set slice
     foreach cc {red green blue} {
 	$current(frame) rgb channel $cc
-	for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
-	    $current(frame) update fits slice $ii $slice($cc,$ii)
-	}
+	$current(frame) update fits slice $slice($cc,$ii)
     }
 
     # zoom to about
@@ -212,10 +204,8 @@ proc ExamineButton3D {which x y} {
 
     # find filename/slice
     set fn [$which get fits file name full canvas $x $y]
-    for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
-	set slice($ii) [$which get fits slice $ii]
-    }
-
+    set slice($ii) [$which get fits slice]
+    
     # and 3d info
     set rr [$current(frame) get 3d view]
     set az [lindex $rr 0]
@@ -255,9 +245,7 @@ proc ExamineButton3D {which x y} {
     RealizeDS9
 
     # set slice
-    for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
-	$current(frame) update fits slice $ii $slice($ii)
-    }
+    $current(frame) update fits slice $slice($ii)
 
     # zoom to about
     if {[$current(frame) has fits bin]} {

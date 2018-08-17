@@ -163,24 +163,18 @@ proc Movie {fn} {
 proc MovieSlice {fn} {
     global current
     global movie
-    global cube
 
-    set depth [$current(frame) get fits depth $cube(axis)]
-    set slice [$current(frame) get fits slice $cube(axis)]
+    set depth [$current(frame) get fits depth]
+    set slice [$current(frame) get fits slice]
 
-    if {$cube(axis)==2} {
-	set ss [$current(frame) get crop 3d image]
-	set from [lindex $ss 0]
-	set to [lindex $ss 1]
-    } else {
-	set from 1
-	set to [$current(frame) get fits depth $cube(axis)]
-    }
+    set ss [$current(frame) get crop 3d image]
+    set from [lindex $ss 0]
+    set to [lindex $ss 1]
 
     # loop thru cube
     set movie(first) 1
     for {set ii $from} {$ii <= $to} {incr ii} {
-	$current(frame) update fits slice $cube(axis) $ii
+	$current(frame) update fits slice $ii
 	if {[MoviePhoto $fn]} {
 	    break
 	}
@@ -188,7 +182,7 @@ proc MovieSlice {fn} {
     mpeg close
 
     # reset current slice
-    $current(frame) update fits slice $cube(axis) $slice
+    $current(frame) update fits slice $slice
 }
 
 proc MovieFrame {fn} {
@@ -216,9 +210,8 @@ proc MovieFrame {fn} {
 proc Movie3d {fn} {
     global movie
     global current
-    global cube
 
-    set slice [$current(frame) get fits slice $cube(axis)]
+    set slice [$current(frame) get fits slice]
     set vp [$current(frame) get 3d view]
 
     set azincr [expr 1.*($movie(az,to)-$movie(az,from))/$movie(num)]
@@ -245,7 +238,7 @@ proc Movie3d {fn} {
 	    update idletasks
 
 	    $current(frame) 3d view $az $el
-	    $current(frame) update fits slice $cube(axis) [expr int($sl)]
+	    $current(frame) update fits slice [expr int($sl)]
 	    if {[MoviePhoto $fn]} {
 		break
 	    }
@@ -272,7 +265,7 @@ proc Movie3d {fn} {
 
     # reset
     $current(frame) 3d view $vp
-    $current(frame) update fits slice $cube(axis) $slice
+    $current(frame) update fits slice $slice
     Update3DDialog
     UpdateCubeDialog
 }
@@ -310,7 +303,6 @@ proc Movie3dDialog {} {
     global movie
     global ed2
     global current
-    global cube
 
     set w {.movie3d}
 
@@ -320,7 +312,7 @@ proc Movie3dDialog {} {
     set ed2(az,to) $movie(az,to)
     set ed2(el,from) $movie(el,from)
     set ed2(el,to) $movie(el,to)
-    set ed2(sl,from) [$current(frame) get fits slice $cube(axis)]
+    set ed2(sl,from) [$current(frame) get fits slice]
     set ed2(sl,to) $ed2(sl,from)
     set ed2(repeat) $movie(repeat)
     set ed2(repeat,num) $movie(repeat,num)

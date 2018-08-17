@@ -992,7 +992,7 @@ proc ParseXYBitpixMacro {cmdname frame} {
 	}
 
 	if {[regexp {\$depth} $cmd]} {
-	    regsub -all {\$depth} $cmd [$frame get fits depth 2] cmd
+	    regsub -all {\$depth} $cmd [$frame get fits depth] cmd
 	}
 
 	if {[regexp {\$bitpix} $cmd]} {
@@ -1557,7 +1557,7 @@ proc ParseZMacro {cmdname frame} {
     set exp1 {\$z\(([^)]*)\)}
     if {[regexp $exp1 $cmd foo pp]} {
         set sys $pp
-        set coord [$frame get coordinates $sl image $sys 2]
+        set coord [$frame get fits slice coordinates $sl $sys]
         regsub -all $exp1 $cmd "$coord" cmd
         return
     }

@@ -1752,13 +1752,13 @@ void Base::getFitsSizeCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
     Tcl_AppendResult(interp, "0 0", NULL);
 }
 
-void Base::getSliceCmd()
+void Base::getFitsSliceCmd()
 {
   printInteger(currentContext->slice(2));
 }
 
-void Base::getSliceFromImageCmd(int ss, Coord::CoordSystem sys,
-				Coord::SkyFrame sky)
+void Base::getFitsSliceFromImageCmd(int ss, Coord::CoordSystem sys,
+				    Coord::SkyFrame sky)
 {
   if (currentContext->cfits) {
     FitsImage* ptr = currentContext->fits;
@@ -1770,7 +1770,7 @@ void Base::getSliceFromImageCmd(int ss, Coord::CoordSystem sys,
     Tcl_AppendResult(interp, "1", NULL);
 }
 
-void Base::getSliceToImageCmd(double dd, Coord::CoordSystem sys,
+void Base::getFitsSliceToImageCmd(double dd, Coord::CoordSystem sys,
 			      Coord::SkyFrame sky)
 {
   if (currentContext->cfits) {
@@ -1779,7 +1779,7 @@ void Base::getSliceToImageCmd(double dd, Coord::CoordSystem sys,
     Vector3d wcc = ptr->mapFromRef(cc,sys,sky);
     Vector3d out = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,sky)
       * Translate3d(.5,.5,.5);
-    printDouble(out[2]);
+    printInteger(out[2]);
   }
   else
     Tcl_AppendResult(interp, "0", NULL);
@@ -2837,19 +2837,19 @@ void Base::saveENVIFileCmd(const char* hdr, const char* fn,
     saveENVI(str, str2, endian);
 }
 
-void Base::sliceCmd(int id, int ss)
+void Base::sliceCmd(int ss)
 {
   // IMAGE (ranges 1-n)
-  setSlice(id,ss);
+  setSlice(2,ss);
   updateMagnifier();
 }
 
-void Base::sliceCmd(int id, double vv, Coord::CoordSystem sys)
+void Base::sliceCmd(double vv, Coord::CoordSystem sys)
 {
   int ss = currentContext->fits->mapToImage3d(vv,sys);
 
   // IMAGE (ranges 1-n)
-  setSlice(id,ss);
+  setSlice(2,ss);
   updateMagnifier();
 }
 

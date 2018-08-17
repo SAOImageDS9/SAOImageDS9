@@ -349,8 +349,8 @@ protected:
   virtual void analysisPlot2d(char*, char*, char*, char*,
 			      Coord::CoordSystem, Coord::SkyFrame, 
 			      Marker::AnalysisMethod) {}
-  virtual void analysisPlot3d(char*, char*, Coord::CoordSystem, 
-			      Marker::AnalysisMethod) {}
+  virtual void analysisPlot3d(char*, char*, Coord::CoordSystem,
+			      Coord::SkyFrame, Marker::AnalysisMethod) {}
 
   // special composite funtionality
   virtual void setComposite(const Matrix&, double);

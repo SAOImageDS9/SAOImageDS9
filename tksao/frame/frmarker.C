@@ -943,13 +943,14 @@ void Base::getMarkerAnalysisPlot2dCmd(int id, char* xname, char* yname,
 }
 
 void Base::getMarkerAnalysisPlot3dCmd(int id, char* xname, char* yname,
-				      Coord::CoordSystem sys, 
+				      Coord::CoordSystem sys,
+				      Coord::SkyFrame sky,
 				      Marker::AnalysisMethod method)
 {
   Marker* mm=markers->head();
   while (mm) {
     if (mm->getId() == id) {
-      mm->analysisPlot3d(xname, yname, sys, method);
+      mm->analysisPlot3d(xname, yname, sys, sky, method);
       return;
     }
     mm=mm->next();

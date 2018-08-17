@@ -332,8 +332,8 @@ void Polygon::analysisHistogram(char* xname, char* yname, int num)
 }
 
 void Polygon::analysisPlot3d(char* xname, char* yname,
-			    Coord::CoordSystem sys, 
-			    Marker::AnalysisMethod method)
+			     Coord::CoordSystem sys, Coord::SkyFrame sky,
+			     Marker::AnalysisMethod method)
 {
   double* x;
   double* y;
@@ -345,7 +345,7 @@ void Polygon::analysisPlot3d(char* xname, char* yname,
     bb.bound(vertex.current()->vector * mm);
   while (vertex.next());
 
-  int num = parent->markerAnalysisPlot3d(this, &x, &y, bb, sys, method);
+  int num = parent->markerAnalysisPlot3d(this, &x, &y, bb, sys, sky, method);
   analysisXYResult(xname, yname, x, y, num);
 }
 

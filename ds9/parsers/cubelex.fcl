@@ -32,6 +32,7 @@ stop	    {return $STOP_}
 321	    {return $321_}
 
 #include wcssys.fin
+#include skyframe.fin
 #include yesno.fin
 #include numeric.fin
 #include string.fin

@@ -597,7 +597,7 @@ proc IMEPlot3DTask {which} {
 	blt::vector create $xdata $ydata
     }
 
-    $which get marker analysis hide analysis plot3d $xdata $ydata physical average
+    $which get marker analysis hide analysis plot3d $xdata $ydata physical fk5 average
 
     if {!$ping} {
 	PlotExternal $vvarname

@@ -1366,24 +1366,6 @@ void Base::getCoordCmd(const Vector& vv, Coord::CoordSystem out,
     Tcl_AppendResult(interp, "0 0", NULL);
 }
 
-void Base::getCoord3axisCmd(double vv, Coord::CoordSystem in, 
-			    Coord::CoordSystem out, int ss)
-{
-  if (currentContext->cfits) {
-    if (in==out)
-      printDouble(vv);
-    else {
-      // use first slice
-      if (out == Coord::IMAGE)
-	printDouble(currentContext->fits->mapToImage3d(vv,in));
-      else
-	printDouble(currentContext->fits->mapFromImage3d(vv,out));
-    }
-  }
-  else
-    Tcl_AppendResult(interp, "0", NULL);
-}
-
 // used for Backup 
 void Base::getCropCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
 		      Coord::SkyFormat format)
@@ -1770,28 +1752,37 @@ void Base::getFitsSizeCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
     Tcl_AppendResult(interp, "0 0", NULL);
 }
 
-void Base::getFitsSliceCmd(int id)
+void Base::getSliceCmd()
 {
-  int ss = currentContext->slice(id);
-  if (ss>1)
-    printInteger(ss);
+  printInteger(currentContext->slice(2));
+}
+
+void Base::getSliceFromImageCmd(int ss, Coord::CoordSystem sys,
+				Coord::SkyFrame sky)
+{
+  if (currentContext->cfits) {
+    FitsImage* ptr = currentContext->fits;
+    Vector3d dd = Vector3d(ptr->center(),ss) * Translate3d(-.5,-.5,-.5);
+    Vector3d out = ptr->mapFromRef(dd,sys,sky);
+    printDouble(out[2]);
+  }
   else
     Tcl_AppendResult(interp, "1", NULL);
 }
 
-void Base::getFitsSliceCmd(int id, Coord::CoordSystem sys)
+void Base::getSliceToImageCmd(double dd, Coord::CoordSystem sys,
+			      Coord::SkyFrame sky)
 {
-  if (currentContext->fits) {
-    int ss = currentContext->slice(id);
-
+  if (currentContext->cfits) {
     FitsImage* ptr = currentContext->fits;
-    //    Vector cc = ptr->center();
-    //    Vector3d dd = Vector3d(cc,ss) * Translate3d(-.5,-.5,-.5);
-    //    cerr << ptr->mapFromRef(dd,sys,Coord::FK5,Coord::SEXAGESIMAL) << endl;
-    printDouble(currentContext->fits->mapFromImage3d(ss,sys));
+    Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5,-.5,-.5);
+    Vector3d wcc = ptr->mapFromRef(cc,sys,sky);
+    Vector3d out = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,sky)
+      * Translate3d(.5,.5,.5);
+    printDouble(out[2]);
   }
   else
-    Tcl_AppendResult(interp, "1", NULL);
+    Tcl_AppendResult(interp, "0", NULL);
 }
 
 void Base::getFitsWidthCmd()

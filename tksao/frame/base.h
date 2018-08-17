@@ -393,7 +393,8 @@ public:
 			   Coord::CoordSystem, Coord::SkyFrame, 
 			   Marker::AnalysisMethod);
   int markerAnalysisPlot3d(Marker*, double**, double**, const BBox&,
-			   Coord::CoordSystem, Marker::AnalysisMethod);
+			   Coord::CoordSystem, Coord::SkyFrame,
+			   Marker::AnalysisMethod);
   int markerAnalysisRadial(Marker*, double**, double**, double**, 
 			   int, Vector*, BBox*, Coord::CoordSystem);
   int markerAnalysisPanda(Marker*, double**, double**, double**, 
@@ -705,7 +706,6 @@ public:
   void getWCSNameCmd(Coord::CoordSystem);
   void getWCSAlignPointerCmd();
   void getCoordCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
-  void getCoord3axisCmd(double, Coord::CoordSystem, Coord::CoordSystem, int);
   virtual void getCursorCmd(Coord::InternalSystem) =0;
   virtual void getCursorCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat) =0;
   void hasSystemCmd(Coord::CoordSystem);
@@ -772,8 +772,9 @@ public:
   void getFitsObjectNameCmd();
   void getFitsSizeCmd();
   void getFitsSizeCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::DistFormat);
-  void getFitsSliceCmd(int id);
-  void getFitsSliceCmd(int id, Coord::CoordSystem sys);
+  void getSliceCmd();
+  void getSliceFromImageCmd(int, Coord::CoordSystem, Coord::SkyFrame);
+  void getSliceToImageCmd(double, Coord::CoordSystem, Coord::SkyFrame);
   void hasFitsCmd();
   void hasFitsHPXCmd();
   void hasFitsBinCmd();
@@ -1229,7 +1230,7 @@ public:
 				  Coord::CoordSystem, Coord::SkyFrame, 
 				  Marker::AnalysisMethod);
   void getMarkerAnalysisPlot3dCmd(int, char*, char*,
-				  Coord::CoordSystem, 
+				  Coord::CoordSystem, Coord::SkyFrame,
 				  Marker::AnalysisMethod);
   void getMarkerAnalysisPandaCmd(int, Coord::CoordSystem);
   void getMarkerAnalysisRadialCmd(int, char*, char*, char*, Coord::CoordSystem);

@@ -3,6 +3,7 @@
 #include def.tin
 
 #include wcssys.tin
+#include skyframe.tin
 #include yesno.tin
 #include numeric.tin
 #include string.tin
@@ -36,6 +37,7 @@
 %%
 
 #include wcssys.trl
+#include skyframe.trl
 #include yesno.trl
 #include numeric.trl
 
@@ -54,13 +56,14 @@ cube : OPEN_
  | FIRST_ {CubeFirst}
  | LAST_ {CubeLast}
  | INTERVAL_ numeric {ProcessCmdSet cube interval [expr int($2*1000)]}
- | AXIS_ INT_ {ProcessCmdSet cube axis [expr $2-1]}
  | AXES_ order
  | ORDER_ order
- | INT_ {CubeCmdCoord $1 image 2}
- | INT_ IMAGE_ {CubeCmdCoord $1 image 2}
- | numeric wcssys {CubeCmdCoord $1 $2 2}
- | numeric wcssys INT_ {CubeCmdCoord $1 $2 [expr $3-1]}
+ | INT_ {CubeCmd $1}
+ | INT_ IMAGE_ {CubeCmd $1}
+ | numeric wcssys {CubeCmdCoord $1 $2 fk5}
+ | numeric wcssys skyframe {CubeCmdCoord $1 $2 $3}
+# backward compatible
+ | AXIS_ INT_ {}
  ;
 
 order : LOCK_ yesno {ProcessCmdSet cube lock,axes $2 LockAxesCurrent}

@@ -219,7 +219,7 @@ void Box::analysisHistogram(char* xname, char* yname, int num)
 }
 
 void Box::analysisPlot3d(char* xname, char* yname,
-			 Coord::CoordSystem sys, 
+			 Coord::CoordSystem sys, Coord::SkyFrame sky,
 			 Marker::AnalysisMethod method)
 {
   double* x;
@@ -233,7 +233,7 @@ void Box::analysisPlot3d(char* xname, char* yname,
   bb.bound(Vector( vv[0],-vv[1]) * mm);
   bb.bound(Vector(-vv[0], vv[1]) * mm);
 
-  int num = parent->markerAnalysisPlot3d(this, &x, &y, bb, sys, method);
+  int num = parent->markerAnalysisPlot3d(this, &x, &y, bb, sys, sky, method);
   analysisXYResult(xname, yname, x, y, num);
 }
 

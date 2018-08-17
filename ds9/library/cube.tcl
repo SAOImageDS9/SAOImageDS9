@@ -17,6 +17,7 @@ proc CubeDef {} {
 # axes cnt starts at 0
     set cube(axis) 2
     set cube(system) wcs
+    set cube(sky) fk5
     set cube(axes) 123
 }
 
@@ -35,7 +36,7 @@ proc MatchCube {which sys} {
 
     set naxes [$which get fits naxes]
     for {set ii 2} {$ii<$naxes} {incr ii} {
-	set slice($ii) [$which get fits slice $ii $sys]
+	set slice($ii) [$which get fits slice coordinates $ii $sys fk5]
     }
 
     foreach ff $ds9(frames) {
@@ -73,7 +74,7 @@ proc CubeSlice {slice} {
 
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $cube(axis) $slice"
     set dcube(image,$cube(axis)) $slice
-    set dcube(wcs,$cube(axis)) [$current(frame) get coordinates $slice image $cube(system) $cube(axis)]
+    set dcube(wcs,$cube(axis)) [$current(frame) get fits slice coordinates $slice $cube(system) $cube(sky)]
 
     UpdateCube
 }
@@ -106,7 +107,7 @@ proc CubeTimer {} {
 
     if {$current(frame) != {}} {
 	if {[$current(frame) has fits]} {
-	    set slice [$current(frame) get fits slice $cube(axis)]
+	    set slice [$current(frame) get fits slice]
 	    if {$cube(axis)==2} {
 		# get cropped version
 		set ss [$current(frame) get crop 3d image]
@@ -172,7 +173,7 @@ proc CubePrev {} {
 
     if {$current(frame) != {}} {
 	if {[$current(frame) has fits]} {
-	    set slice [$current(frame) get fits slice $cube(axis)]
+	    set slice [$current(frame) get fits slice]
 	    if {$cube(axis)==2} {
 		# get cropped version
 		set ss [$current(frame) get crop 3d image]
@@ -209,7 +210,7 @@ proc CubeNext {} {
 
     if {$current(frame) != {}} {
 	if {[$current(frame) has fits]} {
-	    set slice [$current(frame) get fits slice $cube(axis)]
+	    set slice [$current(frame) get fits slice]
 	    if {$cube(axis)==2} {
 		# get cropped version
 		set ss [$current(frame) get crop 3d image]
@@ -290,7 +291,7 @@ proc CubeApply {ii} {
     }
     
     set dcube(image,$ii) $ss
-    set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $cube(axis)]
+    set dcube(wcs,$ii) [$current(frame) get fits slice coordinates $dcube(image,$ii) $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ii $ss"
 
     UpdateCube
@@ -312,9 +313,7 @@ proc CubeApplyWCS {ii} {
 	return
     }
 
-    # will return float
-    set ss [expr int([$current(frame) get coordinates $dcube(wcs,$ii) $cube(system) image $ii])]
-
+    set ss [$current(frame) get fits slice $dcube(wcs,$ii) $cube(system) $cube(sky)]
     if {$ss<1} {
 	set ss 1
     }
@@ -324,7 +323,7 @@ proc CubeApplyWCS {ii} {
     }
     
     set dcube(image,$ii) $ss
-    set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $ii]
+    set dcube(wcs,$ii) [$current(frame) get fits slice coordinates $dcube(image,$ii) $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ii $ss"
 
     UpdateCube
@@ -399,7 +398,7 @@ proc CubeDialog {} {
     $mb.blink add radiobutton -label "8 [msgcat::mc {Seconds}]" \
 	-variable blink(interval) -value 8000
 
-    CoordMenu $mb.coord cube system 2 {} {} UpdateCubeDialog
+    CoordMenu $mb.coord cube system 2 sky {} UpdateCubeDialog
 
     menu $mb.axes
     $mb.axes add radiobutton -label {1 2 3} -variable cube(axes) \
@@ -553,9 +552,9 @@ proc UpdateCubeDialog {} {
 	}
 
 	set dcube(from,wcs,$ii) \
-	    [$current(frame) get coordinates $dcube(from,$ii) image $cube(system) $ii]    
+	    [$current(frame) get fits slice coordinates $dcube(from,$ii) $cube(system) $cube(sky)]    
 	set dcube(to,wcs,$ii) \
-	    [$current(frame) get coordinates $dcube(to,$ii) image $cube(system) $ii]    
+	    [$current(frame) get fits slice coordinates $dcube(to,$ii) $cube(system) $cube(sky)]    
     }
 
     # forget everything
@@ -631,8 +630,8 @@ proc UpdateCubeDialog {} {
 
     # we must do this after the scale has been configured
     for {set ii 2} {$ii<$naxes} {incr ii} {
-	set dcube(image,$ii) [$current(frame) get fits slice $ii]
-	set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $ii]
+	set dcube(image,$ii) [$current(frame) get fits slice]
+	set dcube(wcs,$ii) [$current(frame) get fits slice coordinates $dcube(image,$ii) $cube(system) $cube(sky)]
     }
 }
 
@@ -755,8 +754,8 @@ proc UpdateCubeMotionDialog {ii} {
     }
 
     # we must do this after the scale has been configured
-    set dcube(image,$ii) [$current(frame) get fits slice $ii]
-    set dcube(wcs,$ii) [$current(frame) get coordinates $dcube(image,$ii) image $cube(system) $ii]
+    set dcube(image,$ii) [$current(frame) get fits slice]
+    set dcube(wcs,$ii) [$current(frame) get fits slice coordinates $dcube(image,$ii) $cube(system) $cube(sky)]
 }
 
 proc CubeBackup {ch which} {
@@ -777,7 +776,7 @@ proc CubeBackupBase {ch which} {
 	for {set ii 2} {$ii<$ds9(FTY_MAXAXES)} {incr ii} {
 	    set depth [$which get fits depth $ii]
 	    if {$depth>1} {
-		puts $ch "$which update fits slice $ii [$which get fits slice $ii]"
+		puts $ch "$which update fits slice $ii [$which get fits slice]"
 	    } else {
 		break
 	    }
@@ -879,7 +878,7 @@ proc ProcessCubeCmd {varname iname} {
     incr i [expr $cube::yycnt-1]
 }
 
-proc CubeCmdCoord {ss sys axis} {
+proc CubeCmd {ss} {
     global dcube
     global cube
     global current
@@ -895,19 +894,36 @@ proc CubeCmdCoord {ss sys axis} {
 	return
     }
 
-    # will return float
-    set ss [expr int([$current(frame) get coordinates $ss $sys image $axis])]
+    set dcube(image,$axis) $ss
+    set dcube(wcs,$axis) [$current(frame) get fits slice coordinates $dcube(image,$axis) $cube(system) $cube(sky)]
+    RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $axis $ss"
 
+    UpdateCube
+}
+
+proc CubeCmdCoord {ss sys sky} {
+    global dcube
+    global cube
+    global current
+    global rgb
+
+    CubeStop
+
+    if {$current(frame) == {}} {
+	return
+    }
+
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    set ss [$current(frame) get fits slice $ss $sys $sky]
     if {$ss<1} {
 	set ss 1
     }
-    set depth [$current(frame) get fits depth $axis]
-    if {$ss>$depth} {
-	set ss $depth
-    }
     
     set dcube(image,$axis) $ss
-    set dcube(wcs,$axis) [$current(frame) get coordinates $dcube(image,$axis) image $cube(system) $axis]
+    set dcube(wcs,$axis) [$current(frame) get fits slice coordinates $dcube(image,$axis) $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $axis $ss"
 
     UpdateCube

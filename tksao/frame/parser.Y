@@ -1118,8 +1118,6 @@ getCoord : numeric numeric coordSystem skyFrame skyFormat
 	  fr->getCoordCmd(Vector($2,$3), (Coord::CoordSystem)$4, (Coord::SkyFrame)$5,
 	    (Coord::SkyFormat)$6);
 	}
-	| numeric coordSystem coordSystem INT 
-	  {fr->getCoord3axisCmd($1, (Coord::CoordSystem)$2, (Coord::CoordSystem)$3, $4);}
 	;
 
 getCrop	: coordSystem skyFrame skyFormat
@@ -1210,10 +1208,13 @@ getFitsFileName: fileNameType
 	{fr->getFitsFileNameCmd($2, (Base::FileNameType)$1);}
 	;
 
-getFitsSlice : /* empty */ {fr->getFitsSliceCmd(2);}
-	| INT {fr->getFitsSliceCmd($1);}
-        | coordSystem {fr->getFitsSliceCmd(2, (Coord::CoordSystem)$1);}
-        | INT coordSystem {fr->getFitsSliceCmd($1, (Coord::CoordSystem)$2);}
+getFitsSlice : /* empty */ {fr->getSliceCmd();}
+        | numeric coordSystem skyFrame
+	{fr->getSliceToImageCmd($1, (Coord::CoordSystem)$2, (Coord::SkyFrame)$3);}
+        | COORDINATES_ coordSystem skyFrame
+	{fr->getSliceFromImageCmd(2, (Coord::CoordSystem)$2, (Coord::SkyFrame)$3);}
+        | COORDINATES_ INT coordSystem skyFrame
+	{fr->getSliceFromImageCmd($2, (Coord::CoordSystem)$3, (Coord::SkyFrame)$4);}
 	;
 
 getGrid : /* empty */ {fr->getGridCmd();}
@@ -2245,8 +2246,8 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerAnalysisHistogramCmd($1,$4,$5,$6);}
 	| INT ANALYSIS_ PLOT2D_ STRING STRING STRING STRING coordSystem skyFrame analysisParam
 	{fr->getMarkerAnalysisPlot2dCmd($1,$4,$5,$6,$7,(Coord::CoordSystem)$8, (Coord::SkyFrame)$9, (Marker::AnalysisMethod)$10);}
-	| INT ANALYSIS_ PLOT3D_ STRING STRING coordSystem analysisParam
-	{fr->getMarkerAnalysisPlot3dCmd($1,$4,$5,(Coord::CoordSystem)$6,(Marker::AnalysisMethod)$7);}
+	| INT ANALYSIS_ PLOT3D_ STRING STRING coordSystem skyFrame analysisParam
+	{fr->getMarkerAnalysisPlot3dCmd($1,$4,$5,(Coord::CoordSystem)$6,(Coord::SkyFrame)$7, (Marker::AnalysisMethod)$8);}
 	| INT ANALYSIS_ RADIAL_ STRING STRING STRING coordSystem
 	{fr->getMarkerAnalysisRadialCmd($1,$4,$5,$6,(Coord::CoordSystem)$7);}
 	| INT ANALYSIS_ STATS_ coordSystem skyFrame

@@ -130,6 +130,13 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	set vvar(system) $wcs(system)
     }
 
+    if {[info exists var(sky)]} {
+	set vvar(sky) $var(sky)
+    } elseif {[info exists vvar(sky)]} {
+    } else {
+	set vvar(sky) $wcs(sky)
+    }
+
     if {[info exists var(method)]} {
 	set vvar(method) $var(method)
     } elseif {[info exists vvar(method)]} {
@@ -166,9 +173,9 @@ proc MarkerAnalysisPlot3dCB {frame id} {
     }
 
     $frame get marker $id analysis plot3d $xdata $ydata \
-	$vvar(system) $vvar(method)
+	$vvar(system) $vvar(sky) $vvar(method)
 
-    set vvar(slice) [$frame get fits slice 2 $vvar(system)]
+    set vvar(slice) [$frame get fits slice 2 $vvar(system) $vvar(sky)]
     MarkerAnalysisPlot3dMarker $vvarname
 
     if {!$ping} {
@@ -234,7 +241,7 @@ proc MarkerAnalysisPlot3dSliceCB {frame id} {
     # this routine will be called, so check first
 
     if {[info exists ${vvarname}(system)]} {
-	set vvar(slice) [$frame get fits slice 2 $vvar(system)]
+	set vvar(slice) [$frame get fits slice 2 $vvar(system) $vvar(sky)]
 	MarkerAnalysisPlot3dMarker $vvarname
     }
 }

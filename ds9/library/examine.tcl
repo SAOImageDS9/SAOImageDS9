@@ -36,7 +36,7 @@ proc ExamineButtonBase {which x y} {
 
     # find filename/slice
     set fn [$which get fits file name full canvas $x $y]
-    set slice($ii) [$which get fits slice]
+    set slice [$which get fits slice]
     
     # so the new frame will have all of the parent frame when created
     set ds9(next) $which
@@ -71,7 +71,7 @@ proc ExamineButtonBase {which x y} {
     RealizeDS9
 
     # set slice
-    $current(frame) update fits slice $slice($ii)
+    $current(frame) update fits slice $slice
 
     # zoom to about
     if {[$current(frame) has fits bin]} {
@@ -115,7 +115,7 @@ proc ExamineButtonRGB {which x y} {
 	$which rgb channel $cc
 	set fn($cc) [$which get fits file name full canvas $x $y]
 
-	set slice($cc,$ii) [$which get fits slice]
+	set slice($cc) [$which get fits slice]
     }
 
     # so the new frame will have all of the parent frame when created
@@ -159,7 +159,7 @@ proc ExamineButtonRGB {which x y} {
     # set slice
     foreach cc {red green blue} {
 	$current(frame) rgb channel $cc
-	$current(frame) update fits slice $slice($cc,$ii)
+	$current(frame) update fits slice $slice($cc)
     }
 
     # zoom to about
@@ -204,7 +204,7 @@ proc ExamineButton3D {which x y} {
 
     # find filename/slice
     set fn [$which get fits file name full canvas $x $y]
-    set slice($ii) [$which get fits slice]
+    set slice [$which get fits slice]
     
     # and 3d info
     set rr [$current(frame) get 3d view]
@@ -245,7 +245,7 @@ proc ExamineButton3D {which x y} {
     RealizeDS9
 
     # set slice
-    $current(frame) update fits slice $slice($ii)
+    $current(frame) update fits slice $slice
 
     # zoom to about
     if {[$current(frame) has fits bin]} {

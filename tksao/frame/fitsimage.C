@@ -988,6 +988,7 @@ char* FitsImage::displayWCS()
 
 FitsBound* FitsImage::getDataParams(FrScale::SecMode which)
 {
+  // params in DATA coords 0-n
   switch (which) {
   case FrScale::IMGSEC:
     return &iparams;
@@ -1771,7 +1772,7 @@ void FitsImage::processKeywordsPhysical()
 
 void FitsImage::processKeywordsParams()
 {
-  // iparams is a BBOX in DATA coords 0-n
+  // params in DATA coords 0-n
   iparams.set(0, 0, width(), height());
 
   {
@@ -2048,6 +2049,7 @@ char* FitsImage::root(const char* fn)
 
 void FitsImage::setCropParams(int datasec)
 {
+  // params in DATA coords 0-n
   if (!datasec)
     cparams = iparams;
   else
@@ -2079,13 +2081,13 @@ void FitsImage::setCropParams(const Vector& ss, const Vector& tt, int datasec)
 
 void FitsImage::setCropParams(int x0, int y0, int x1, int y1, int datasec)
 {
+  // params in DATA coords 0-n
   FitsBound* params;
   if (!datasec)
     params = &iparams;
   else
     params = &dparams;
 
-  // Coords are in DATA
   if (x0<params->xmin)
     x0=params->xmin;
   if (x0>params->xmax)

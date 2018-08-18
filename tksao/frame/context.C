@@ -235,7 +235,7 @@ void Context::binFinish()
     }
   }
 
-  // fix z params (in data coords)
+  // params in DATA coords 0-n
   iparams.set(0,naxis_[2]);
   cparams.set(0,naxis_[2]);
 
@@ -757,6 +757,7 @@ Vector Context::getClip(FrScale::ClipMode cm, FrScale::ClipScope sc, float ac)
 
 FitsZBound* Context::getDataParams(FrScale::SecMode which)
 {
+  // params in DATA coords 0-n
   switch (which) {
   case FrScale::IMGSEC:
   case FrScale::DATASEC:
@@ -796,7 +797,7 @@ int Context::load(Base::MemType which, const char* fn,
       baxis_[ii] = nn ? nn : 1;
     }
 
-    // fix z params (in data coords)
+    // params in DATA coords 0-n
     // do it here because of fits section
     iparams.set(0,baxis_[2]);
     cparams.set(0,baxis_[2]);
@@ -971,7 +972,7 @@ int Context::loadExtCube(Base::MemType which, const char* fn, FitsImage* img)
   // finish up
   img->close();
 
-  // fix z params (in data coords)
+  // params in DATA coords 0-n
   // must wait untill all loaded
   iparams.set(0,baxis_[2]);
   cparams.set(0,baxis_[2]);
@@ -993,7 +994,7 @@ void Context::loadInit(int cnt, Base::MosaicType type, Coord::CoordSystem sys)
   }
   naxis_ = baxis_;
 
-  // fix z params (in data coords)
+  // params in DATA coords 0-n
   iparams.set(0,1);
   cparams.set(0,1);
 }
@@ -1025,7 +1026,7 @@ int Context::loadMosaic(Base::MemType which, const char* fn,
 	baxis_[ii] = nn ? nn : 1;
       }
 
-      // fix z params (in data coords)
+      // params in DATA coords 0-n
       // do it here because of fits section
       iparams.set(0,baxis_[2]);
       cparams.set(0,baxis_[2]);
@@ -1156,7 +1157,7 @@ int Context::loadMosaicImage(Base::MemType which, const char* fn,
       baxis_[ii] = nn ? nn : 1;
     }
 
-    // fix z params (in data coords)
+    // params in DATA coords 0-n
     // do it here because of fits section
     iparams.set(0,baxis_[2]);
     cparams.set(0,baxis_[2]);
@@ -1686,7 +1687,7 @@ int Context::loadSlice(Base::MemType which, const char* fn,
   // finish up
   img->close();
 
-  // fix z params (in data coords)
+  // params in DATA coords 0-n
   // must wait untill all loaded
   iparams.set(0,baxis_[2]);
   cparams.set(0,baxis_[2]);
@@ -2029,7 +2030,7 @@ void Context::reorderAxes()
     }
   }
 
-  // fix z params (in data coords)
+  // params in DATA coords 0-n
   iparams.set(0,naxis_[2]);
   cparams.set(0,naxis_[2]);
 
@@ -2497,13 +2498,13 @@ Vector Context::setBlockToFactor(const Vector& b) {
 
 void Context::setCrop3dParams()
 {
-  // params is a BBOX in DATA coords 0-n
+  // params in DATA coords 0-n
   cparams = iparams;
 }
 
 void Context::setCrop3dParams(double z0, double z1)
 {
-  // params is a BBOX in DATA coords 0-n
+  // params in DATA coords 0-n
   double zmin = z0;
   double zmax = z1;
 
@@ -2517,7 +2518,7 @@ void Context::setCrop3dParams(double z0, double z1)
 
 void Context::setCrop3dParams(int z0, int z1)
 {
-  // params is a BBOX in DATA coords 0-n
+  // params in DATA coords 0-n
   if (z0<iparams.zmin) {
     z0=iparams.zmin;
     if (z0+1>z1)
@@ -2537,8 +2538,6 @@ void Context::setIIS()
 {
   frScale.setClipMode(FrScale::USERCLIP);
   frScale.setMinMaxMode(FrScale::SCAN);
-  //  frScale.setULow(IISMIN);
-  //  frScale.setUHigh(IISMAX);
   frScale.setULow(0);
   frScale.setUHigh(IISSIZE);
   frScale.setColorScaleType(FrScale::IISSCALE);

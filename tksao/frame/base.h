@@ -727,13 +727,13 @@ public:
   void cropMotionCmd(const Vector&);
   void cropEndCmd(const Vector&);
   void crop3dCmd();
-  void crop3dCmd(double, double, Coord::CoordSystem);
+  void crop3dCmd(double, double, Coord::CoordSystem, Coord::SkyFrame = Coord::FK5);
   virtual void crop3dBeginCmd(const Vector&, int) {}
   virtual void crop3dMotionCmd(const Vector&, int) {}
   virtual void crop3dEndCmd(const Vector&, int) {}
   void getCropCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void getCropCenterCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, Coord::CoordSystem, Coord::DistFormat);
-  void getCrop3dCmd(Coord::CoordSystem);
+  void getCrop3dCmd(Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   void hasCropCmd();
 
   // CrossHair Commands
@@ -773,6 +773,7 @@ public:
   void getFitsSizeCmd();
   void getFitsSizeCmd(Coord::CoordSystem, Coord::SkyFrame, Coord::DistFormat);
   void getFitsSliceCmd();
+  void getFitsSliceFromImageCmd(Coord::CoordSystem, Coord::SkyFrame);
   void getFitsSliceFromImageCmd(int, Coord::CoordSystem, Coord::SkyFrame);
   void getFitsSliceToImageCmd(double, Coord::CoordSystem, Coord::SkyFrame);
   void hasFitsCmd();
@@ -967,7 +968,7 @@ public:
   void saveENVIFileCmd(const char*, const char*, FitsFile::ArchType);
 
   void sliceCmd(int);
-  void sliceCmd(double, Coord::CoordSystem);
+  void sliceCmd(double, Coord::CoordSystem, Coord::SkyFrame);
 
   void updateFitsCmd(int);
   void updateFitsCmd(int, BBox, int);

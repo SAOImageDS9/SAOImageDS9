@@ -168,7 +168,8 @@ proc CropApplyDialog {} {
 	    $dcrop(w) $dcrop(h) $crop(dcoord) $crop(dformat)
 
 	if {[$current(frame) has fits cube]} {
-	    $current(frame) crop 3d $dcrop(zmin) $dcrop(zmax) $crop(rcoord)
+	    $current(frame) crop 3d \
+		$dcrop(zmin) $dcrop(zmax) $crop(rcoord) $crop(sky)
 	}
 	UpdateCrop $current(frame)
     }
@@ -233,7 +234,7 @@ proc UpdateCropDialog {} {
 	    set dcrop(h) [lindex $rr 3]
 
 	    if {[$current(frame) has fits cube]} {
-		set ss [$current(frame) get crop 3d $crop(rcoord)]
+		set ss [$current(frame) get crop 3d $crop(rcoord) $crop(sky)]
 		set dcrop(zmin) [lindex $ss 0]
 		set dcrop(zmax) [lindex $ss 1]
 
@@ -311,7 +312,7 @@ proc MatchCrop {which sys} {
 		    set r(y) [lindex $rr 1]
 		    set r(w) [lindex $rr 2]
 		    set r(h) [lindex $rr 3]
-		    set qq [$which get crop 3d $ss]
+		    set qq [$which get crop 3d $ss fk5]
 
 		    foreach ff $ds9(frames) {
 			if {$ff != $which} {

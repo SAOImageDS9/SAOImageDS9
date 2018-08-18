@@ -38,7 +38,7 @@ proc MatchCube {which sys} {
     
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
-	    RGBEvalLock rgb(lock,slice) $ff "$ff update fits slice $wss $sys"
+	    RGBEvalLock rgb(lock,slice) $ff "$ff update fits slice $wss $sys fk5"
 	}
     }
 }
@@ -262,7 +262,7 @@ proc CubeApply {} {
     }
     
     set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice coordinates $dcube(image) $cube(system) $cube(sky)]
+    set dcube(wcs) [$current(frame) get fits slice coordinates $ss $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
 
     UpdateCube
@@ -294,7 +294,7 @@ proc CubeApplyWCS {} {
     }
     
     set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice coordinates $dcube(image) $cube(system) $cube(sky)]
+    set dcube(wcs) [$current(frame) get fits slice coordinates $ss $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
 
     UpdateCube
@@ -799,7 +799,7 @@ proc CubeCmd {ss} {
     }
 
     set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice coordinates $dcube(image) $cube(system) $cube(sky)]
+    set dcube(wcs) [$current(frame) get fits slice coordinates $ss $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
 
     UpdateCube
@@ -827,7 +827,7 @@ proc CubeCmdCoord {ss sys sky} {
     }
     
     set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice coordinates $dcube(image) $cube(system) $cube(sky)]
+    set dcube(wcs) [$current(frame) get fits slice coordinates $ss $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
 
     UpdateCube

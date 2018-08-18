@@ -361,6 +361,7 @@ void Base::cropCmd()
 void Base::cropCmd(const Vector& aa, const Vector& bb, 
 		   Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
+  // params in DATA coords 0-n
   FitsImage* ptr = currentContext->fits;
   if (!ptr)
     return;
@@ -389,11 +390,11 @@ void Base::cropCenterCmd(const Vector& vv,
 			 const Vector& wh, 
 			 Coord::CoordSystem dsys, Coord::DistFormat dist)
 {
+  // params in DATA coords 0-n
   FitsImage* ptr = currentContext->fits;
   if (!ptr)
     return;
 
-  // params are in DATA coords
   Vector cc = ptr->mapToRef(vv,sys,sky)*ptr->refToData;
   Vector dd = ptr->mapLenToRef(wh,dsys,dist)*ptr->refToData;
   Vector ll = (cc-dd/2).round();
@@ -551,8 +552,11 @@ void Base::crop3dCmd()
   updateMarkerCBs(&catalogMarkers);
 }
 
-void Base::crop3dCmd(double z0, double z1, Coord::CoordSystem sys)
+void Base::crop3dCmd(double z0, double z1, Coord::CoordSystem sys,
+		     Coord::SkyFrame)
 {
+  // params in DATA coords 0-n
+
   // use first slice
   FitsImage* ptr = currentContext->fits;
   if (!ptr)
@@ -562,7 +566,6 @@ void Base::crop3dCmd(double z0, double z1, Coord::CoordSystem sys)
   double ff = ptr->mapToImage3d(z0,sys)-.5;
   double tt = ptr->mapToImage3d(z1,sys)-.5;
 
-  // params is a BBOX in DATA coords 0-n
   currentContext->setCrop3dParams(ff-.5,tt+.5);
   
   // set current slice if needed
@@ -1122,8 +1125,7 @@ void Base::getColorMapLevelCmd(int count, double ll, double hh,
 				    HISTEQUSIZE);
     break;
   case FrScale::IISSCALE:
-    inverseScale = new IISInverseScale(count, ll, hh,
-				       currentContext->fits->iisz());
+    inverseScale = new IISInverseScale(count, ll, hh, currentContext->fits->iisz());
     break;
   }
 
@@ -1200,8 +1202,7 @@ void Base::getColorScaleLevelCmd(int count, double ll, double hh,
 				    HISTEQUSIZE);
     break;
   case FrScale::IISSCALE:
-    scale = new IISInverseScale(count, ll, hh,
-				currentContext->fits->iisz());
+    scale = new IISInverseScale(count, ll, hh, currentContext->fits->iisz());
     break;
   }
 
@@ -1374,7 +1375,7 @@ void Base::getCropCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
   if (!ptr)
     return;
 
-  // params are in DATA coords
+  // params in DATA coords 0-n
   FitsBound* params =ptr->getDataParams(currentContext->secMode());
   Vector ll = Vector(params->xmin,params->ymin);
   Vector ur = Vector(params->xmax,params->ymax);
@@ -1392,7 +1393,7 @@ void Base::getCropCenterCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
   if (!ptr)
     return;
 
-  // params are in DATA coords
+  // params in DATA coords 0-n
   FitsBound* params = ptr->getDataParams(currentContext->secMode());
   Vector ll = Vector(params->xmin,params->ymin);
   Vector ur = Vector(params->xmax,params->ymax);
@@ -1404,17 +1405,31 @@ void Base::getCropCenterCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
   printLenFromRef(ptr, dd*ptr->dataToRef, dcoord, dist);
 }
 
-void Base::getCrop3dCmd(Coord::CoordSystem sys)
+void Base::getCrop3dCmd(Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   // use first slice
   FitsImage* ptr = currentContext->fits;
   if (!ptr)
     return;
 
+  // params in DATA coords 0-n
   FitsZBound* zparams =
     currentContext->getDataParams(currentContext->secMode());
+
+  // need to move from edge to center of pixel
+  Vector3d rmin =
+    Vector3d(ptr->center(),zparams->zmin) * Translate3d(.5,.5,.5);
+  // need to move from edge to center of pixel
+  Vector3d rmax =
+    Vector3d(ptr->center(),zparams->zmax) * Translate3d(-.5,-.5,-.5);
+  Vector3d wmin = ptr->mapFromRef(rmin,sys,sky);
+  Vector3d wmax = ptr->mapFromRef(rmax,sys,sky);
+
   double ff = ptr->mapFromImage3d(zparams->zmin+.5+.5,sys);
   double tt = ptr->mapFromImage3d(zparams->zmax-.5+.5,sys);
+
+  cerr << wmin[2] << '=' << ff << endl;
+  cerr << wmax[2] << '=' << tt << endl;
 
   ostringstream str;
   str << ff << ' ' << tt << ends;
@@ -1755,6 +1770,11 @@ void Base::getFitsSizeCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
 void Base::getFitsSliceCmd()
 {
   printInteger(currentContext->slice(2));
+}
+
+void Base::getFitsSliceFromImageCmd(Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  getFitsSliceFromImageCmd(currentContext->slice(2), sys, sky);
 }
 
 void Base::getFitsSliceFromImageCmd(int ss, Coord::CoordSystem sys,
@@ -2844,10 +2864,18 @@ void Base::sliceCmd(int ss)
   updateMagnifier();
 }
 
-void Base::sliceCmd(double vv, Coord::CoordSystem sys)
+void Base::sliceCmd(double dd, Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
-  int ss = currentContext->fits->mapToImage3d(vv,sys);
-
+  if (!currentContext->fits)
+    return;
+  
+  FitsImage* ptr = currentContext->fits;
+  Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5,-.5,-.5);
+  Vector3d wcc = ptr->mapFromRef(cc,sys,sky);
+  Vector3d out = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,sky)
+    * Translate3d(.5,.5,.5);
+  int ss = out[2];
+  
   // IMAGE (ranges 1-n)
   setSlice(2,ss);
   updateMagnifier();

@@ -1557,7 +1557,7 @@ proc ParseZMacro {cmdname frame} {
     set exp1 {\$z\(([^)]*)\)}
     if {[regexp $exp1 $cmd foo pp]} {
         set sys $pp
-        set coord [$frame get fits slice coordinates $sl $sys]
+        set coord [$frame get fits slice coordinates $sl $sys fk5]
         regsub -all $exp1 $cmd "$coord" cmd
         return
     }

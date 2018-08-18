@@ -287,7 +287,6 @@ int Base::markerAnalysisPlot3d(Marker* pp, double** x, double** y,
       Vector3d dd = Vector3d(ptr->center(),ss) * Translate3d(-.5,-.5,-.5);
       Vector3d out = ptr->mapFromRef(dd,sys,sky);
       (*x)[kk] = out[2];
-      //      (*x)[kk] = ptr->mapFromImage3d(kk+.5+.5+zparams->zmin, sys);
 
       bool* mptr=msk;
       long* iptr=idx;

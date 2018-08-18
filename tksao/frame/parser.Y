@@ -942,7 +942,8 @@ crop	: /* empty */ {fr->cropCmd();}
 	;
 
 crop3d	: /* empty */ {fr->crop3dCmd();}
-	| numeric numeric coordSystem {fr->crop3dCmd($1, $2, (Coord::CoordSystem)$3);}
+	| numeric numeric coordSystem skyFrame
+	{fr->crop3dCmd($1, $2, (Coord::CoordSystem)$3, (Coord::SkyFrame)$4);}
 	| BEGIN_ numeric numeric INT {fr->crop3dBeginCmd(Vector($2,$3),$4);}
 	| MOTION_ numeric numeric INT {fr->crop3dMotionCmd(Vector($2,$3),$4);}
 	| END_ numeric numeric INT {fr->crop3dEndCmd(Vector($2,$3),$4);}
@@ -1124,7 +1125,8 @@ getCrop	: coordSystem skyFrame skyFormat
         {fr->getCropCmd((Coord::CoordSystem)$1, (Coord::SkyFrame)$2, (Coord::SkyFormat)$3);}
 	| CENTER_ coordSystem skyFrame skyFormat coordSystem skyDist
 	{fr->getCropCenterCmd((Coord::CoordSystem)$2, (Coord::SkyFrame)$3, (Coord::SkyFormat)$4, (Coord::CoordSystem)$5, (Coord::DistFormat)$6);}
-	| THREED_ coordSystem {fr->getCrop3dCmd((Coord::CoordSystem)$2);}
+	| THREED_ coordSystem skyFrame
+	{fr->getCrop3dCmd((Coord::CoordSystem)$2, (Coord::SkyFrame)$3);}
 	;
 
 getCrosshair: internalSystem {fr->getCrosshairCmd((Coord::InternalSystem)$1);}
@@ -1211,7 +1213,7 @@ getFitsSlice : /* empty */ {fr->getFitsSliceCmd();}
         | numeric coordSystem skyFrame
 	{fr->getFitsSliceToImageCmd($1, (Coord::CoordSystem)$2, (Coord::SkyFrame)$3);}
         | COORDINATES_ coordSystem skyFrame
-	{fr->getFitsSliceFromImageCmd(2, (Coord::CoordSystem)$2, (Coord::SkyFrame)$3);}
+	{fr->getFitsSliceFromImageCmd((Coord::CoordSystem)$2, (Coord::SkyFrame)$3);}
         | COORDINATES_ INT coordSystem skyFrame
 	{fr->getFitsSliceFromImageCmd($2, (Coord::CoordSystem)$3, (Coord::SkyFrame)$4);}
 	;
@@ -2759,11 +2761,12 @@ update	: /* empty */ {fr->updateFitsCmd(0);}
 	;
 
 updateFitsSlice : INT {fr->sliceCmd($1);}
+        | numeric coordSystem skyFrame
+	{fr->sliceCmd($1, (Coord::CoordSystem)$2, (Coord::SkyFrame $3));}
         | INT INT {
 	  // backward compatibility with backup
 	  fr->sliceCmd($2);
 	}
-        | numeric coordSystem {fr->sliceCmd($1, (Coord::CoordSystem)$2);}
 	;
 
 warp	: numeric numeric {fr->warpCmd(Vector($1,$2));}

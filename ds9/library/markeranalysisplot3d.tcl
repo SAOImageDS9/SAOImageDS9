@@ -175,7 +175,7 @@ proc MarkerAnalysisPlot3dCB {frame id} {
     $frame get marker $id analysis plot3d $xdata $ydata \
 	$vvar(system) $vvar(sky) $vvar(method)
 
-    set vvar(slice) [$frame get fits slice 2 $vvar(system) $vvar(sky)]
+    set vvar(slice) [$frame get fits slice coordinates $vvar(system) $vvar(sky)]
     MarkerAnalysisPlot3dMarker $vvarname
 
     if {!$ping} {
@@ -197,7 +197,7 @@ proc MarkerAnalysisPlot3dMotion {vvarname xx yy} {
     }
 
     set vvar(slice) [lindex [$vvar(graph) invtransform $xx $yy] 0]
-    $vvar(frame) update fits slice $vvar(slice) $vvar(system)
+    $vvar(frame) update fits slice $vvar(slice) $vvar(system) $vvar(sky)
 
     MarkerAnalysisPlot3dMarker $vvarname
 
@@ -215,7 +215,7 @@ proc MarkerAnalysisPlot3dMarker {vvarname} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    set ss [$vvar(frame) get crop 3d $vvar(system)]
+    set ss [$vvar(frame) get crop 3d $vvar(system) $vvar(sky)]
     set min [lindex $ss 0]
     set max [lindex $ss 1]
     set delta [expr ($max-$min)*.0001]
@@ -241,7 +241,8 @@ proc MarkerAnalysisPlot3dSliceCB {frame id} {
     # this routine will be called, so check first
 
     if {[info exists ${vvarname}(system)]} {
-	set vvar(slice) [$frame get fits slice 2 $vvar(system) $vvar(sky)]
+	set vvar(slice) \
+	    [$frame get fits slice coordinates $vvar(system) $vvar(sky)]
 	MarkerAnalysisPlot3dMarker $vvarname
     }
 }

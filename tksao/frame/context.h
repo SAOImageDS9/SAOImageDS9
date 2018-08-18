@@ -70,6 +70,7 @@ class Context {
   double smoothSigmaMinor_;
   double smoothAngle_;
 
+  // params in DATA coords 0-n
   FitsZBound iparams; // image bbox
   FitsZBound cparams; // crop bbox
 
@@ -155,7 +156,8 @@ class Context {
 
   Vector getClip(FrScale::ClipMode, FrScale::ClipScope, float);
   Vector getClip();
-  FitsZBound* getDataParams(FrScale::SecMode);   // return bbox in IMAGE
+  // params in DATA coords 0-n
+  FitsZBound* getDataParams(FrScale::SecMode);
   Vector getMinMax();
 
   int hasContour() {return hasContour_;}
@@ -206,6 +208,7 @@ class Context {
   Vector setBlockToFactor(const Vector&);
   const Vector& blockFactor() {return blockFactor_;}
 
+  // params in DATA coords 0-n
   void setCrop3dParams();
   void setCrop3dParams(int,int);
   void setCrop3dParams(double, double);

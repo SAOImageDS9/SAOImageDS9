@@ -34,7 +34,7 @@ proc MatchCube {which sys} {
     global rgb
 
     set ss [$which get fits slice]
-    set wss [$which get fits slice coordinates $ss $sys fk5]
+    set wss [$which get fits slice from image $sys fk5]
     
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
@@ -69,7 +69,7 @@ proc CubeSlice {ss} {
 
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
     set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice coordinates $ss $cube(system) $cube(sky)]
+    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
 
     UpdateCube
 }
@@ -262,7 +262,7 @@ proc CubeApply {} {
     }
     
     set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice coordinates $ss $cube(system) $cube(sky)]
+    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
 
     UpdateCube
@@ -284,7 +284,7 @@ proc CubeApplyWCS {} {
 	return
     }
 
-    set ss [$current(frame) get fits slice $dcube(wcs) $cube(system) $cube(sky)]
+    set ss [$current(frame) get fits slice to image $dcube(wcs) $cube(system) $cube(sky)]
     if {$ss<1} {
 	set ss 1
     }
@@ -294,7 +294,7 @@ proc CubeApplyWCS {} {
     }
     
     set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice coordinates $ss $cube(system) $cube(sky)]
+    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
 
     UpdateCube
@@ -507,8 +507,8 @@ proc UpdateCubeDialog {} {
     set dcube(from) [lindex $ss 0]
     set dcube(to) [lindex $ss 1]
 
-    set dcube(from,wcs) [$current(frame) get fits slice coordinates $dcube(from) $cube(system) $cube(sky)]    
-    set dcube(to,wcs) [$current(frame) get fits slice coordinates $dcube(to) $cube(system) $cube(sky)]    
+    set dcube(from,wcs) [$current(frame) get fits slice from image $dcube(from) $cube(system) $cube(sky)]    
+    set dcube(to,wcs) [$current(frame) get fits slice from image $dcube(to) $cube(system) $cube(sky)]    
 
     # forget everything
     grid forget $dcube(taxis) $dcube(twcs)
@@ -550,7 +550,7 @@ proc UpdateCubeDialog {} {
 
     # we must do this after the scale has been configured
     set dcube(image) [$current(frame) get fits slice]
-    set dcube(wcs) [$current(frame) get fits slice coordinates $dcube(image) $cube(system) $cube(sky)]
+    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
 }
 
 proc UpdateCubeDialogNoImage {} {
@@ -662,7 +662,7 @@ proc UpdateCubeMotionDialog {} {
 
     # we must do this after the scale has been configured
     set dcube(image) [$current(frame) get fits slice]
-    set dcube(wcs) [$current(frame) get fits slice coordinates $dcube(image) $cube(system) $cube(sky)]
+    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
 }
 
 proc CubeBackup {ch which} {
@@ -799,7 +799,7 @@ proc CubeCmd {ss} {
     }
 
     set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice coordinates $ss $cube(system) $cube(sky)]
+    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
 
     UpdateCube
@@ -821,13 +821,13 @@ proc CubeCmdCoord {ss sys sky} {
 	return
     }
 
-    set ss [$current(frame) get fits slice $ss $sys $sky]
+    set ss [$current(frame) get fits slice to image $ss $sys $sky]
     if {$ss<1} {
 	set ss 1
     }
     
     set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice coordinates $ss $cube(system) $cube(sky)]
+    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
 
     UpdateCube

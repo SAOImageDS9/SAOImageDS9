@@ -175,7 +175,7 @@ proc MarkerAnalysisPlot3dCB {frame id} {
     $frame get marker $id analysis plot3d $xdata $ydata \
 	$vvar(system) $vvar(sky) $vvar(method)
 
-    set vvar(slice) [$frame get fits slice coordinates $vvar(system) $vvar(sky)]
+    set vvar(slice) [$frame get fits slice from image $vvar(system) $vvar(sky)]
     MarkerAnalysisPlot3dMarker $vvarname
 
     if {!$ping} {
@@ -196,8 +196,11 @@ proc MarkerAnalysisPlot3dMotion {vvarname xx yy} {
 	return
     }
 
+    puts "motion xform: [lindex [$vvar(graph) invtransform $xx $yy] 0] [$vvar(frame) get fits slice]"
     set vvar(slice) [lindex [$vvar(graph) invtransform $xx $yy] 0]
+    puts "motion set slice: $vvar(slice) [$vvar(frame) get fits slice]"
     $vvar(frame) update fits slice $vvar(slice) $vvar(system) $vvar(sky)
+    puts "motion get slice: [$vvar(frame) get fits slice from image $vvar(system) $vvar(sky)] [$vvar(frame) get fits slice]"
 
     MarkerAnalysisPlot3dMarker $vvarname
 
@@ -220,11 +223,12 @@ proc MarkerAnalysisPlot3dMarker {vvarname} {
     set max [lindex $ss 1]
     set delta [expr ($max-$min)*.0001]
     if {[::math::fuzzy::tle $vvar(slice) $min]} {
-	set vvar(slice) [expr $min+$delta]
+#	set vvar(slice) [expr $min+$delta]
     }
     if {[::math::fuzzy::tge $vvar(slice) $max]} {
-	set vvar(slice) [expr $max-$delta]
+#	set vvar(slice) [expr $max-$delta]
     }
+    puts "marker slice: $vvar(slice) [$vvar(frame) get fits slice]"
     $vvar(graph) marker configure $vvar(markerslice) \
 	-coords "$vvar(slice) -Inf $vvar(slice) Inf"
 }
@@ -242,7 +246,8 @@ proc MarkerAnalysisPlot3dSliceCB {frame id} {
 
     if {[info exists ${vvarname}(system)]} {
 	set vvar(slice) \
-	    [$frame get fits slice coordinates $vvar(system) $vvar(sky)]
+	    [$frame get fits slice from image $vvar(system) $vvar(sky)]
+	puts "cb slice $vvar(slice) [$vvar(frame) get fits slice]"
 	MarkerAnalysisPlot3dMarker $vvarname
     }
 }

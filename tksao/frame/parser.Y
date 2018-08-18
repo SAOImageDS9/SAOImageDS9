@@ -231,6 +231,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token FK5_
 %token FONT_
 %token FORMAT_
+%token FROM_
 %token FRONT_
 %token FULL_
 %token FUNCTION_
@@ -1210,12 +1211,12 @@ getFitsFileName: fileNameType
 	;
 
 getFitsSlice : /* empty */ {fr->getFitsSliceCmd();}
-        | numeric coordSystem skyFrame
-	{fr->getFitsSliceToImageCmd($1, (Coord::CoordSystem)$2, (Coord::SkyFrame)$3);}
-        | COORDINATES_ coordSystem skyFrame
-	{fr->getFitsSliceFromImageCmd((Coord::CoordSystem)$2, (Coord::SkyFrame)$3);}
-        | COORDINATES_ INT coordSystem skyFrame
-	{fr->getFitsSliceFromImageCmd($2, (Coord::CoordSystem)$3, (Coord::SkyFrame)$4);}
+        | FROM_ IMAGE_ coordSystem skyFrame
+	{fr->getFitsSliceFromImageCmd((Coord::CoordSystem)$3, (Coord::SkyFrame)$4);}
+        | FROM_ IMAGE_ INT coordSystem skyFrame
+	{fr->getFitsSliceFromImageCmd($3, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
+        | TO_ IMAGE_ numeric coordSystem skyFrame
+	{fr->getFitsSliceToImageCmd($3, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
 	;
 
 getGrid : /* empty */ {fr->getGridCmd();}

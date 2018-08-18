@@ -441,9 +441,6 @@ class FitsImage {
   Vector mapToRef(const Vector&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
   Vector3d mapToRef(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame =Coord::FK5);
 
-  double mapFromImage3d(double, Coord::CoordSystem);
-  double mapToImage3d(double, Coord::CoordSystem);
-
   double mapLenFromRef(double, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
   Vector mapLenFromRef(const Vector&, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);
   double mapLenToRef(double, Coord::CoordSystem, Coord::DistFormat =Coord::DEGREE);

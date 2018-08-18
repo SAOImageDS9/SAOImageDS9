@@ -553,29 +553,31 @@ void Base::crop3dCmd()
 }
 
 void Base::crop3dCmd(double z0, double z1, Coord::CoordSystem sys,
-		     Coord::SkyFrame)
+		     Coord::SkyFrame sky)
 {
   // params in DATA coords 0-n
-
   // use first slice
   FitsImage* ptr = currentContext->fits;
   if (!ptr)
     return;
 
-  // ff/tt in data coords
-  double ff = ptr->mapToImage3d(z0,sys)-.5;
-  double tt = ptr->mapToImage3d(z1,sys)-.5;
+  // center in IMAGE
+  Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5,-.5,-.5);
+  Vector3d wcc = ptr->mapFromRef(cc,sys,sky);
+  Vector3d min = ptr->mapToRef(Vector3d(wcc[0],wcc[1],z0),sys,sky);
+  Vector3d max = ptr->mapToRef(Vector3d(wcc[0],wcc[1],z1),sys,sky);
 
-  currentContext->setCrop3dParams(ff-.5,tt+.5);
+  // extend to edge from center
+  currentContext->setCrop3dParams(min[2]-.5,max[2]+.5);
   
   // set current slice if needed
   // setSlice() IMAGE (ranges 1-n)
   // context->slice() IMAGE (ranges 1-n)
   double sl = currentContext->slice(2)-.5;
-  if (sl<ff)
-    setSlice(2,ff+.5);
-  if (sl>tt)
-    setSlice(2,tt+.5);
+  if (sl<min[2])
+    setSlice(2,min[2]+.5);
+  if (sl>max[2])
+    setSlice(2,max[2]+.5);
 
   currentContext->setSecMode(FrScale::CROPSEC);
   
@@ -1422,17 +1424,11 @@ void Base::getCrop3dCmd(Coord::CoordSystem sys, Coord::SkyFrame sky)
   // need to move from edge to center of pixel
   Vector3d rmax =
     Vector3d(ptr->center(),zparams->zmax) * Translate3d(-.5,-.5,-.5);
-  Vector3d wmin = ptr->mapFromRef(rmin,sys,sky);
-  Vector3d wmax = ptr->mapFromRef(rmax,sys,sky);
-
-  double ff = ptr->mapFromImage3d(zparams->zmin+.5+.5,sys);
-  double tt = ptr->mapFromImage3d(zparams->zmax-.5+.5,sys);
-
-  cerr << wmin[2] << '=' << ff << endl;
-  cerr << wmax[2] << '=' << tt << endl;
+  Vector3d min = ptr->mapFromRef(rmin,sys,sky);
+  Vector3d max = ptr->mapFromRef(rmax,sys,sky);
 
   ostringstream str;
-  str << ff << ' ' << tt << ends;
+  str << min[2] << ' ' << max[2] << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 

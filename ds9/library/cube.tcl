@@ -686,8 +686,8 @@ proc CubeBackupBase {ch which} {
 	} else {
 	    break
 	}
+	puts $ch "CubeDialog"
     }
-    puts $ch "CubeDialog"
 }
 
 proc CubeBackupRGB {ch which} {

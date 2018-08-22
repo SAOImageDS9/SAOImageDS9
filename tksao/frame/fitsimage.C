@@ -1686,6 +1686,10 @@ void FitsImage::processKeywordsPhysical()
 
     physicalToImage = Matrix(ltm11, ltm12, ltm21, ltm22, ltv1, ltv2);
     imageToPhysical = physicalToImage.invert();
+
+    physicalToImage3d =
+      Matrix3d(ltm11, ltm12, 0, ltm21, ltm22, 0, 0, 0, 1, ltv1, ltv2, 0);
+    imageToPhysical3d = physicalToImage3d.invert();
   }
 
   // CDD to Detector (DTM/DTV keywords)
@@ -1710,6 +1714,10 @@ void FitsImage::processKeywordsPhysical()
   physicalToDetector = Matrix(dtm11, dtm12, dtm21, dtm22, dtv1, dtv2);
   detectorToPhysical = physicalToDetector.invert();
 
+  physicalToDetector3d =
+    Matrix3d(dtm11, dtm12, 0, dtm21, dtm22, 0, 0, 0, 1, dtv1, dtv2, 0);
+  detectorToPhysical3d = physicalToDetector3d.invert();
+
   // Physical to Amplifier (ATM/ATV keywords)
 
   keyATMV =0;
@@ -1731,6 +1739,10 @@ void FitsImage::processKeywordsPhysical()
 
   physicalToAmplifier = Matrix(atm11, atm12, atm21, atm22, atv1, atv2);
   amplifierToPhysical = physicalToAmplifier.invert();
+
+  physicalToAmplifier3d =
+    Matrix3d(atm11, atm12, 0, atm21, atm22, 0, 0, 0, 1, atv1, atv2, 0);
+  amplifierToPhysical3d = physicalToAmplifier3d.invert();
 
   if (DebugMosaic) {
     cerr << endl;
@@ -2525,6 +2537,15 @@ void FitsImage::updateMatrices(Matrix& rgbToRef,
 
   detectorToRef = detectorToPhysical * physicalToRef;
   refToDetector = detectorToRef.invert();
+
+  physicalToRef3d = physicalToImage3d * imageToData3d * dataToRef3d;
+  refToPhysical3d = physicalToRef3d.invert();
+
+  amplifierToRef3d = amplifierToPhysical3d * physicalToRef3d;
+  refToAmplifier3d = amplifierToRef3d.invert();
+
+  detectorToRef3d = detectorToPhysical3d * physicalToRef3d;
+  refToDetector3d = detectorToRef3d.invert();
 }
 
 void FitsImage::updateMatrices(Matrix3d& refToUser3d, 
@@ -2848,9 +2869,23 @@ VectorStr3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   astNorm(ast_, out.v);
   astEnd;
 
-  return VectorStr3d(astFormat(ast_,1,out[0]),
-		   astFormat(ast_,2,out[1]),
-		   astFormat(ast_,3,out[2]));
+  int naxes = astGetI(ast_,"Naxes");
+  switch (naxes) {
+  case 1:
+    // error
+    break;
+  case 2:
+    return VectorStr3d(astFormat(ast_,1,out[0]),
+		       astFormat(ast_,2,out[1]),
+		       "1");
+  case 3:
+  case 4:
+    return VectorStr3d(astFormat(ast_,1,out[0]),
+		       astFormat(ast_,2,out[1]),
+		       astFormat(ast_,3,out[2]));
+  }
+
+  return VectorStr3d();
 }
 
 Vector FitsImage::wcs2pix(const Vector& vv, Coord::CoordSystem sys,

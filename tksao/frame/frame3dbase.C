@@ -531,7 +531,7 @@ void Frame3dBase::centerImage()
     // imageCenter is in IMAGE coords
     Vector3d aa = imageCenter3d(keyContext->secMode());
     // always center to center of pixel, even for even sized image
-    Vector3d bb = (aa*Translate3d(.5,.5,.5)).floor();
+    Vector3d bb = (aa * Translate3d(.5, .5, .5)).floor();
     // vp_ is in REF coords
     vp_ = bb*Translate3d(-.5, -.5, -.5);
   }
@@ -552,7 +552,7 @@ Vector3d Frame3dBase::imageCenter3d(FrScale::SecMode mode)
   return Vector3d((pp->xmax - pp->xmin)/2.+pp->xmin, 
 		  (pp->ymax - pp->ymin)/2.+pp->ymin,
 		  (zz->zmax - zz->zmin)/2.+zz->zmin) *
-    Translate3d( .5,  .5, .5);
+    Translate3d(.5, .5, .5);
 }
 
 Vector3d Frame3dBase::imageSize3d(FrScale::SecMode mode )

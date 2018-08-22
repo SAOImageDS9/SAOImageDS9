@@ -1790,10 +1790,10 @@ void Base::getFitsSliceToImageCmd(double dd, Coord::CoordSystem sys,
 {
   if (currentContext->cfits) {
     FitsImage* ptr = currentContext->fits;
-    Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5,-.5,-.5);
+    Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5, -.5, -.5);
     Vector3d wcc = ptr->mapFromRef(cc,sys,sky);
     Vector3d oo = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,sky);
-    Vector3d out = oo * Translate3d(.5,.5,.5);
+    Vector3d out = oo * Translate3d(.5, .5, .5);
     printInteger(out[2]);
   }
   else
@@ -1985,7 +1985,7 @@ void Base::getPixelTableCmd(const Vector& vv, Coord::InternalSystem ref,
 
     if (ur[0]>=params->xmin && ll[0]<params->xmax && 
 	ur[1]>=params->ymin && ll[1]<params->ymax) {
-      Vector pt = ((ll+Vector(ii,jj)) * dataToImage).round();
+      Vector pt = ((ll+Vector(ii,jj)) * Translate(.5, .5)).round();
       if (pt[0]>params->xmin && pt[0]<=params->xmax) {
 	ostringstream lstr;
 	lstr << pt[0] << ends;
@@ -2005,7 +2005,7 @@ void Base::getPixelTableCmd(const Vector& vv, Coord::InternalSystem ref,
 
     if (ur[0]>=params->xmin && ll[0]<params->xmax && 
 	ur[1]>=params->ymin && ll[1]<params->ymax) {
-      Vector pt = ((ll+Vector(ii,jj)) * dataToImage).round();
+      Vector pt = ((ll+Vector(ii,jj)) * Translate(.5, .5)).round();
       if (pt[1]>params->ymin && pt[1]<=params->ymax) {
 	ostringstream lstr;
 	lstr << pt[1] << ends;
@@ -2865,10 +2865,10 @@ void Base::sliceCmd(double dd, Coord::CoordSystem sys, Coord::SkyFrame sky)
     return;
   
   FitsImage* ptr = currentContext->fits;
-  Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5,-.5,-.5);
+  Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5, -.5, -.5);
   Vector3d wcc = ptr->mapFromRef(cc,sys,sky);
   Vector3d oo = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,sky);
-  Vector3d out = oo * Translate3d(.5,.5,.5);
+  Vector3d out = oo * Translate3d(.5, .5, .5);
   
   // IMAGE (ranges 1-n)
   setSlice(2,out[2]);

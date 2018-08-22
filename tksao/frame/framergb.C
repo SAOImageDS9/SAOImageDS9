@@ -259,7 +259,7 @@ BBox FrameRGB::imageBBox(FrScale::SecMode mode)
       FitsImage* ptr = context[ii].fits;
       while (ptr) {
 	FitsBound* params = ptr->getDataParams(mode);
-	Matrix mm = ptr->wcsToRef() * rgb[ii] * dataToImage;
+	Matrix mm = ptr->wcsToRef() * rgb[ii] * Translate(.5, .5);
 
 	Vector aa = Vector(params->xmin,params->ymin) * mm;
 	if (first) {

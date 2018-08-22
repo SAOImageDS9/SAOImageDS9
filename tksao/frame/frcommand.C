@@ -32,8 +32,10 @@ void FrameBase::binToFitCmd()
     }
   }
 
-  Matrix mm = currentContext->binCursor();
-  updateBin(mm);
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->binCursor();
+    updateBin(mm);
+  }
 }
 
 void FrameBase::blockToFitCmd()

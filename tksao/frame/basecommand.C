@@ -63,8 +63,11 @@ void Base::binCmd(const Vector& b, const Vector& vv,
     currentContext->fits->setBinY(y);
     currentContext->fits->setBinFilter(filter);
   }
-  Matrix mm = currentContext->bin(vv);
-  updateBin(mm);
+
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->bin(vv);
+    updateBin(mm);
+  }
 }
 
 void Base::binCmd(const Vector& b, const char* x, const char* y, 
@@ -77,8 +80,11 @@ void Base::binCmd(const Vector& b, const char* x, const char* y,
     currentContext->fits->setBinY(y);
     currentContext->fits->setBinFilter(filter);
   }
-  Matrix mm = currentContext->binCenter();
-  updateBin(mm);
+
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->binCenter();
+    updateBin(mm);
+  }
 }
 
 void Base::binCmd(const Vector& b, int d, const Vector& lim, 
@@ -95,8 +101,11 @@ void Base::binCmd(const Vector& b, int d, const Vector& lim,
     currentContext->fits->setBinFilter(filter);
     currentContext->fits->setBinColMinMax(z,lim);
   }
-  Matrix mm = currentContext->bin(vv);
-  updateBin(mm);
+
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->bin(vv);
+    updateBin(mm);
+  }
 }
 
 void Base::binCmd(const Vector& b, int d, const Vector& lim,
@@ -112,27 +121,36 @@ void Base::binCmd(const Vector& b, int d, const Vector& lim,
     currentContext->fits->setBinFilter(filter);
     currentContext->fits->setBinColMinMax(z,lim);
   }
-  Matrix mm = currentContext->binCenter();
-  updateBin(mm);
+
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->binCenter();
+    updateBin(mm);
+  }
 }
 
 void Base::binAboutCmd()
 {
-  Matrix mm = currentContext->binCenter();
-  updateBin(mm);
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->binCenter();
+    updateBin(mm);
+  }
 }
 
 void Base::binAboutCmd(const Vector& vv)
 {
-  Matrix mm = currentContext->bin(vv);
-  updateBin(mm);
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->bin(vv);
+    updateBin(mm);
+  }
 }
 
 void Base::binBufferSizeCmd(int size)
 {
   currentContext->setBinBufferSize(size);
-  Matrix mm = currentContext->binCursor();
-  updateBin(mm);
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->binCursor();
+    updateBin(mm);
+  }
 }
 
 void Base::binColsCmd(const char* x, const char* y, const char* z)
@@ -142,58 +160,75 @@ void Base::binColsCmd(const char* x, const char* y, const char* z)
     currentContext->fits->setBinY(y);
     currentContext->fits->setBinZ(z);
   }
-  Matrix mm = currentContext->binCursor();
-  updateBin(mm);
+
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->binCursor();
+    updateBin(mm);
+  }
 }
 
 void Base::binDepthCmd(int d)
 {
   currentContext->setBinDepth(d);
-  Matrix mm = currentContext->binCursor();
-  updateBin(mm);
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->binCursor();
+    updateBin(mm);
+  }
 }
 
 void Base::binFactorCmd(const Vector& bb)
 {
   currentContext->setBinFactor(bb);
-  Matrix mm = currentContext->binCursor();
-  updateBin(mm);
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->binCursor();
+    updateBin(mm);
+  }
 }
 
 void Base::binFactorAboutCmd(const Vector& bb, const Vector& vv)
 {
   currentContext->setBinFactor(bb);
-  Matrix mm = currentContext->bin(vv);
-  updateBin(mm);
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->bin(vv);
+    updateBin(mm);
+  }
 }
 
 void Base::binFactorToCmd(const Vector& bb)
 {
   currentContext->setBinToFactor(bb);
-  Matrix mm = currentContext->binCursor();
-  updateBin(mm);
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->binCursor();
+    updateBin(mm);
+  }
 }
 
 void Base::binFactorToAboutCmd(const Vector& bb, const Vector& vv)
 {
   currentContext->setBinToFactor(bb);
-  Matrix mm = currentContext->bin(vv);
-  updateBin(mm);
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->bin(vv);
+    updateBin(mm);
+  }
 }
 
 void Base::binFunctionCmd(FitsHist::Function func)
 {
   currentContext->setBinFunction(func);
-  Matrix mm = currentContext->binCursor();
-  updateBin(mm);
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->binCursor();
+    updateBin(mm);
+  }
 }
 
 void Base::binFilterCmd(const char* filter)
 {
   if (currentContext->fits)
     currentContext->fits->setBinFilter(filter);
-  Matrix mm = currentContext->binCursor();
-  updateBin(mm);
+  if (currentContext->fits && currentContext->fits->isHist()) {
+    Matrix mm = currentContext->binCursor();
+    updateBin(mm);
+  }
 }
 
 void Base::blockCmd(const Vector& bb)

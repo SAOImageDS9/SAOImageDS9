@@ -181,6 +181,7 @@ proc UpdateBin {} {
     RealizeDS9
 
     LockBinCurrent
+    LockFrameCurrent
     UpdateBinDialog
     UpdatePanZoomDialog
     UpdateCrosshairDialog

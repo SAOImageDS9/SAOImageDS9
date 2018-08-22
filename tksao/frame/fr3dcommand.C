@@ -25,8 +25,10 @@ void Frame3dBase::binToFitCmd()
     keyContext->setBinToFactor(Vector(p,p));
   }
   
-  Matrix mm = keyContext->binCursor();
-  updateBin(mm);
+  if (keyContext->fits && keyContext->fits->isHist()) {
+    Matrix mm = keyContext->binCursor();
+    updateBin(mm);
+  }
 }
 
 void Frame3dBase::blockToFitCmd()

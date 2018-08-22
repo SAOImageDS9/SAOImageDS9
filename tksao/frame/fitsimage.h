@@ -115,7 +115,6 @@ class FitsImage {
   int* wcsCel_;
   int* wcsCelLon_;
   int* wcsCelLat_;
-  Vector* wcsCRPIX_;
   double* wcsSize_;
 
   WCSState* wcsState_;
@@ -151,7 +150,6 @@ class FitsImage {
 
   void wcsInit(int);
   void wcsCelInit(int);
-  void wcsCRPIXInit(FitsHead*);
   void wcsHPXInit();
   void wcsSizeInit();
   void wcsPhyInit();
@@ -407,8 +405,7 @@ class FitsImage {
   const char* getWCSAxisSymbol(Coord::CoordSystem, int);
 
   double getWCSSize(Coord::CoordSystem);
-  Vector getWCSCRPIX(Coord::CoordSystem);
-  double calcWCSSize(Coord::CoordSystem);
+    double calcWCSSize(Coord::CoordSystem);
 
   int hasWCS(Coord::CoordSystem);
   int hasWCSCel(Coord::CoordSystem);

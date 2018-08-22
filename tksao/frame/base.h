@@ -281,9 +281,6 @@ public:
 
   char* colorbartag;
 
-  Matrix dataToImage;
-  Matrix imageToData;
-
   Matrix refToUser;
   Matrix userToRef;
   Matrix refToWidget;

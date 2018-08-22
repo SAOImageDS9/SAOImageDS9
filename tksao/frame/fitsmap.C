@@ -52,10 +52,13 @@ Vector3d FitsImage::mapFromRef(const Vector3d& vv, Coord::CoordSystem sys,
 {
   switch (sys) {
   case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::AMPLIFIER:
-  case Coord::DETECTOR:
     return vv * refToImage3d;
+  case Coord::PHYSICAL:
+    return vv * refToPhysical3d;
+  case Coord::AMPLIFIER:
+    return vv * refToAmplifier3d;
+  case Coord::DETECTOR:
+    return vv * refToDetector3d;
   default:
     if (hasWCS(sys))
       return pix2wcs(vv * refToImage3d, sys, sky);
@@ -69,10 +72,13 @@ VectorStr3d FitsImage::mapFromRef(const Vector3d& vv, Coord::CoordSystem sys,
 {
   switch (sys) {
   case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::AMPLIFIER:
-  case Coord::DETECTOR:
     return VectorStr3d(vv * refToImage3d);
+  case Coord::PHYSICAL:
+    return VectorStr3d(vv * refToPhysical3d);
+  case Coord::AMPLIFIER:
+    return VectorStr3d(vv * refToAmplifier3d);
+  case Coord::DETECTOR:
+    return VectorStr3d(vv * refToDetector3d);
   default:
     if (hasWCS(sys))
       return pix2wcs(vv * refToImage3d, sys, sky, format);
@@ -108,10 +114,13 @@ Vector3d FitsImage::mapToRef(const Vector3d& vv, Coord::CoordSystem sys,
 {
   switch (sys) {
   case Coord::IMAGE:
-  case Coord::PHYSICAL:
-  case Coord::AMPLIFIER:
-  case Coord::DETECTOR:
     return vv * imageToRef3d;
+  case Coord::PHYSICAL:
+    return vv * imageToPhysical3d;
+  case Coord::AMPLIFIER:
+    return vv * imageToAmplifier3d;
+  case Coord::DETECTOR:
+    return vv * imageToDetector3d;
   default:
     if (hasWCS(sys))
       return wcs2pix(vv, sys, sky) * imageToRef3d;

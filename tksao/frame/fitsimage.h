@@ -183,6 +183,9 @@ class FitsImage {
   Matrix dataToImage;
   Matrix imageToData;
 
+  Matrix3d dataToImage3d;
+  Matrix3d imageToData3d;
+
   Matrix dataToRef;
   Matrix refToData;
   Matrix dataToUser;
@@ -193,6 +196,17 @@ class FitsImage {
   Matrix canvasToData;
   Matrix dataToWindow;
   Matrix windowToData;
+
+  Matrix3d dataToRef3d;
+  Matrix3d refToData3d;
+  Matrix3d dataToUser3d;
+  Matrix3d userToData3d;
+  Matrix3d dataToWidget3d;
+  Matrix3d widgetToData3d;
+  Matrix3d dataToCanvas3d;
+  Matrix3d canvasToData3d;
+  Matrix3d dataToWindow3d;
+  Matrix3d windowToData3d;
 
   Matrix canvasToRef;
   Matrix refToCanvas;
@@ -206,6 +220,15 @@ class FitsImage {
   Matrix refToAmplifier;
   Matrix amplifierToRef;
 
+  Matrix3d refToImage3d;
+  Matrix3d imageToRef3d;
+  Matrix3d refToPhysical3d;
+  Matrix3d physicalToRef3d;
+  Matrix3d refToDetector3d;
+  Matrix3d detectorToRef3d;
+  Matrix3d refToAmplifier3d;
+  Matrix3d amplifierToRef3d;
+
   Matrix imageToWidget;
   Matrix widgetToImage;
 
@@ -216,39 +239,38 @@ class FitsImage {
   Matrix imageToAmplifier;
   Matrix amplifierToImage;
 
+  Matrix3d imageToPhysical3d;
+  Matrix3d physicalToImage3d;
+  Matrix3d imageToDetector3d;
+  Matrix3d detectorToImage3d;
+  Matrix3d imageToAmplifier3d;
+  Matrix3d amplifierToImage3d;
+
   Matrix physicalToDetector;
   Matrix detectorToPhysical;
   Matrix physicalToAmplifier;
   Matrix amplifierToPhysical;
 
-  Matrix3d dataToImage3d;
-  Matrix3d imageToData3d;
-  Matrix3d refToImage3d;
-  Matrix3d imageToRef3d;
-
-  Matrix3d dataToRef3d;
-  Matrix3d refToData3d;
-  Matrix3d dataToUser3d;
-  Matrix3d userToData3d;
-  Matrix3d dataToWidget3d;
-  Matrix3d widgetToData3d;
-  Matrix3d dataToCanvas3d;
-  Matrix3d canvasToData3d;
-  Matrix3d dataToWindow3d;
-  Matrix3d windowToData3d;
+  Matrix3d physicalToDetector3d;
+  Matrix3d detectorToPhysical3d;
+  Matrix3d physicalToAmplifier3d;
+  Matrix3d amplifierToPhysical3d;
 
   Matrix magnifierToData;
   Matrix dataToMagnifier;
+
   Matrix3d magnifierToData3d;
   Matrix3d dataToMagnifier3d;
 
   Matrix pannerToData;
   Matrix dataToPanner;
+
   Matrix3d pannerToData3d;
   Matrix3d dataToPanner3d;
 
   Matrix psToData;
   Matrix dataToPS;
+
   Matrix3d psToData3d;
   Matrix3d dataToPS3d;
 

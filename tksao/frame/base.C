@@ -188,9 +188,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   compositeMarker = NULL;
 
-  imageToData = Translate(-.5, -.5);
-  dataToImage = Translate( .5,  .5);
-
   inverseScale = NULL;
 }
 
@@ -428,11 +425,11 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   double* fit = new double[ss];
   double tol = 1;
   if (astLinearApprox(cvt, ll, ur, tol, fit) != AST__BAD)
-    rr = dataToImage *
+    rr = Translate(.5, .5) *
       Matrix(fit[naxes2], fit[naxes2+naxes1],
   		fit[naxes2+1], fit[naxes2+naxes1+1],
   		fit[0], fit[1]) *
-      imageToData;
+      Translate(-.5, -.5);
 
   if (fit)
     delete [] fit;
@@ -696,7 +693,7 @@ BBox Base::imageBBox(FrScale::SecMode mode)
   FitsImage* ptr = context->fits;
   while (ptr) {
     FitsBound* params = ptr->getDataParams(mode);
-    Matrix mm = ptr->wcsToRef() * dataToImage;
+    Matrix mm = ptr->wcsToRef() * Translate(.5, .5);
 
     Vector aa =  Vector(params->xmin,params->ymin) * mm;
     if (first) {
@@ -1596,7 +1593,7 @@ void Base::updateMagnifierMatrices()
 
 void Base::updatePannerMatrices()
 {
-  Vector center = imageCenter(FrScale::IMGSEC) * imageToData;
+  Vector center = imageCenter(FrScale::IMGSEC) * Translate(-.5, -.5);
 
   // refToUser
   Matrix refToUser;

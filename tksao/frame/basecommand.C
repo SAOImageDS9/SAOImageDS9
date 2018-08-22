@@ -562,7 +562,7 @@ void Base::crop3dCmd(double z0, double z1, Coord::CoordSystem sys,
     return;
 
   // center in IMAGE
-  Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5,-.5,-.5);
+  Vector3d cc = Vector3d(ptr->getWCSCRPIX(sys),1) * Translate3d(-.5,-.5,-.5);
   Vector3d wcc = ptr->mapFromRef(cc,sys,sky);
   Vector3d min = ptr->mapToRef(Vector3d(wcc[0],wcc[1],z0),sys,sky);
   Vector3d max = ptr->mapToRef(Vector3d(wcc[0],wcc[1],z1),sys,sky);
@@ -1420,10 +1420,10 @@ void Base::getCrop3dCmd(Coord::CoordSystem sys, Coord::SkyFrame sky)
 
   // need to move from edge to center of pixel
   Vector3d rmin =
-    Vector3d(ptr->center(),zparams->zmin) * Translate3d(.5,.5,.5);
+    Vector3d(ptr->getWCSCRPIX(sys),zparams->zmin) * Translate3d(.5,.5,.5);
   // need to move from edge to center of pixel
   Vector3d rmax =
-    Vector3d(ptr->center(),zparams->zmax) * Translate3d(-.5,-.5,-.5);
+    Vector3d(ptr->getWCSCRPIX(sys),zparams->zmax) * Translate3d(-.5,-.5,-.5);
   Vector3d min = ptr->mapFromRef(rmin,sys,sky);
   Vector3d max = ptr->mapFromRef(rmax,sys,sky);
 
@@ -1778,7 +1778,7 @@ void Base::getFitsSliceFromImageCmd(int ss, Coord::CoordSystem sys,
 {
   if (currentContext->cfits) {
     FitsImage* ptr = currentContext->fits;
-    Vector3d dd = Vector3d(ptr->center(),ss) * Translate3d(-.5,-.5,-.5);
+    Vector3d dd = Vector3d(ptr->getWCSCRPIX(sys),ss) * Translate3d(-.5,-.5,-.5);
     Vector3d out = ptr->mapFromRef(dd,sys,sky);
     printDouble(out[2]);
   }
@@ -1791,10 +1791,10 @@ void Base::getFitsSliceToImageCmd(double dd, Coord::CoordSystem sys,
 {
   if (currentContext->cfits) {
     FitsImage* ptr = currentContext->fits;
-    Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5,-.5,-.5);
+    Vector3d cc = Vector3d(ptr->getWCSCRPIX(sys),1) * Translate3d(-.5,-.5,-.5);
     Vector3d wcc = ptr->mapFromRef(cc,sys,sky);
-    Vector3d out = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,sky)
-      * Translate3d(.5,.5,.5);
+    Vector3d oo = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,sky);
+    Vector3d out = oo * Translate3d(.5,.5,.5);
     printInteger(out[2]);
   }
   else
@@ -2866,14 +2866,13 @@ void Base::sliceCmd(double dd, Coord::CoordSystem sys, Coord::SkyFrame sky)
     return;
   
   FitsImage* ptr = currentContext->fits;
-  Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5,-.5,-.5);
+  Vector3d cc = Vector3d(ptr->getWCSCRPIX(sys),1) * Translate3d(-.5,-.5,-.5);
   Vector3d wcc = ptr->mapFromRef(cc,sys,sky);
-  Vector3d out = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,sky)
-    * Translate3d(.5,.5,.5);
-  int ss = out[2];
+  Vector3d oo = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,sky);
+  Vector3d out = oo * Translate3d(.5,.5,.5);
   
   // IMAGE (ranges 1-n)
-  setSlice(2,ss);
+  setSlice(2,out[2]);
   updateMagnifier();
 }
 

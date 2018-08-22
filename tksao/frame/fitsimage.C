@@ -89,6 +89,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcsCel_ =NULL;
   wcsCelLon_ =NULL;
   wcsCelLat_ =NULL;
+  wcsCRPIX_ =NULL;
   wcsSize_ =NULL;
 
   wcsHPX_ =0;
@@ -168,6 +169,8 @@ FitsImage::~FitsImage()
     if (wcsCelLat_)
       delete [] wcsCelLat_;
 
+    if (wcsCRPIX_)
+      delete [] wcsCRPIX_;
     if (wcsSize_)
       delete [] wcsSize_;
 
@@ -1065,6 +1068,9 @@ void FitsImage::initWCS(FitsHead* hd)
       delete [] wcsCelLat_;
     wcsCelLat_ =NULL;
 
+    if (wcsCRPIX_)
+      delete [] wcsCRPIX_;
+    wcsCRPIX_ =NULL;
     if (wcsSize_)
       delete [] wcsSize_;
     wcsSize_ =NULL;
@@ -1092,6 +1098,7 @@ void FitsImage::initWCS(FitsHead* hd)
 	  wcsCel_ = ptr->wcsCel_;
 	  wcsCelLon_ = ptr->wcsCelLon_;
 	  wcsCelLat_ = ptr->wcsCelLat_;
+	  wcsCRPIX_ = ptr->wcsCRPIX_;
 	  wcsSize_ = ptr->wcsSize_;
 
 	  wcsHPX_ = ptr->wcsHPX_;
@@ -1129,6 +1136,7 @@ void FitsImage::initWCS(FitsHead* hd)
 
   wcsInit(hasWCSAST);
   wcsCelInit(hasWCSAST);
+  wcsCRPIXInit(hd);
   wcsHPXInit();
 
   // init wcsState
@@ -2583,6 +2591,14 @@ void FitsImage::updatePS(Matrix3d ps)
 
 // WCS
 
+Vector FitsImage::getWCSCRPIX(Coord::CoordSystem sys)
+{
+  if (!wcsCRPIX_ || sys<Coord::WCS)
+    return Vector();
+  else
+    return wcsCRPIX_[sys-Coord::WCS];
+}
+
 double FitsImage::getWCSSize(Coord::CoordSystem sys)
 {
   if (!wcsSize_ || sys<Coord::WCS)
@@ -3084,6 +3100,24 @@ void FitsImage::wcsHPXInit()
     if (str)
       if (!strncmp(str+5,"HPX",3))
 	wcsHPX_ =1;
+  }
+}
+
+void FitsImage::wcsCRPIXInit(FitsHead* hd)
+{
+  // init wcsCel_ array
+  if (wcsCRPIX_)
+    delete [] wcsCRPIX_;
+
+  wcsCRPIX_ = new Vector[MULTWCS];
+
+  Vector cc = center();
+  char crpix1[] = "CRPIX1 ";
+  char crpix2[] = "CRPIX2 ";
+  for (int ii=0; ii<MULTWCS; ii++) {
+    crpix1[6] = !ii ? ' ' : ii+'@';
+    crpix2[6] = !ii ? ' ' : ii+'@';
+    wcsCRPIX_[ii] = Vector(hd->getReal(crpix1,cc[0]),hd->getReal(crpix2,cc[1]));
   }
 }
 

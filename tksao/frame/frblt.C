@@ -116,17 +116,10 @@ int Base::markerAnalysisPlot2d(Marker* pp, double** x, double** y,
 			       Coord::CoordSystem sys, Coord::SkyFrame sky,
 			       Marker::AnalysisMethod method)
 {
-  // does not extend across mosaic boundries
-  // uses currentContext
-  FitsImage* ptr = isInCFits(pp->getCenter(),Coord::REF,NULL);
-  if (!ptr)
-    ptr = currentContext->cfits;
-
-  FitsBound* params = ptr->getDataParams(currentContext->secMode());
-
-  Vector vv = p2-p1; 
+  Vector vv = p2-p1;
   int num = vv.length() +1;
-  Vector s = vv.normalize();
+  Vector ss = vv.normalize();
+  Vector uu = Vector(-ss[1],ss[0]);
   int cnt[num];
 
   *x = (double*)malloc(num*sizeof(double));
@@ -134,60 +127,71 @@ int Base::markerAnalysisPlot2d(Marker* pp, double** x, double** y,
   *xc = (double*)malloc(num*sizeof(double));
   *yc = (double*)malloc(num*sizeof(double));
 
+  int mosaic = isMosaic();
+  FitsImage* sptr = currentContext->cfits;
+  FitsBound* params = sptr->getDataParams(currentContext->secMode());
+
+  if (width==0)
+    width =1;
+
   // main loop
 
   SETSIGBUS
-  for (long ii=0; ii<num; ii++) {
-    Vector t = p1 + s*ii;
+  for (int ii=0; ii<num; ii++) {
+    int found=0;
 
     (*x)[ii] = ii+1;
     (*y)[ii] = 0;
+    (*xc)[ii] = ii+1;
+    (*yc)[ii] = 0;
     cnt[ii] = 0;
 
-    Vector tv = ptr->mapFromRef(t, sys, sky);
-    (*xc)[ii] = tv[0];
-    (*yc)[ii] = tv[1];
+    for (int jj=0; jj<width; jj++) {
+      Vector tt = p1 + ss*ii + uu*jj;
 
-    Vector z = t * ptr->refToData;
-
-    if (z[0]>=params->xmin && z[0]<params->xmax && 
-	z[1]>=params->ymin && z[1]<params->ymax) {
-
-      // check for nan
-      double v = ptr->getValueDouble(z);
-      if (isfinite(v)) {
-	(*y)[ii] = v;
-	cnt[ii] = 1;
+      if (mosaic) {
+	sptr = currentContext->cfits;
+	params = sptr->getDataParams(currentContext->secMode());
       }
 
-      Vector ss = Vector(-s[1],s[0]);
-
-      for (long jj=1; jj<width; jj++) {
-	Vector tt = p1 + s*ii + ss*jj;
-
-	Vector zz = tt * ptr->refToData;
-		
+      do {
+	Vector zz = tt * sptr->refToData;
 	if (zz[0]>=params->xmin && zz[0]<params->xmax && 
 	    zz[1]>=params->ymin && zz[1]<params->ymax) {
 
-	  double vvalue = ptr->getValueDouble(zz);
+	  if (!found) {
+	    Vector tv = sptr->mapFromRef(tt, sys, sky);
+	    (*xc)[ii] = tv[0];
+	    (*yc)[ii] = tv[1];
+	    found =1;
+	  }
+
 	  // check for nan
-	  if (isfinite(vvalue)) {
-	    (*y)[ii] += vvalue;
+	  double dd = sptr->getValueDouble(zz);
+	  if (isfinite(dd)) {
+	    (*y)[ii] += dd;
 	    cnt[ii]++;
+	  }
+	  break;
+	}
+	else {
+	  if (mosaic) {
+	    sptr = sptr->nextMosaic();
+	    if (sptr)
+	      params = sptr->getDataParams(currentContext->secMode());
 	  }
 	}
       }
+      while (mosaic && sptr);
     }
   }
+  CLEARSIGBUS
 
   // average if needed
   if (method == Marker::AVERAGE)
     for (long ii=0; ii<num; ii++)
       if (isfinite((*y)[ii]) && cnt[ii]!=0)
 	(*y)[ii] /= cnt[ii];
-
-  CLEARSIGBUS
 
   return num;
 }

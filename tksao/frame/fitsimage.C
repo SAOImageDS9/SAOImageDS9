@@ -1136,8 +1136,10 @@ void FitsImage::initWCS(FitsHead* hd)
     delete wcsState_;
   wcsState_ = new WCSState();
 
+  astBegin;
   wcsSystem(ast_,wcsState_->wcsSystem_);
   wcsSkyFrame(ast_,wcsState_->wcsSkyFrame_);
+  astEnd;
 
   // must wait until wcsState_ is realized
   wcsSizeInit();
@@ -3116,9 +3118,11 @@ void FitsImage::wcsHPXInit()
   char key[] = "CTYPE1 ";
   if (image_) {
     const char* str = image_->getKeyword(key);
-    if (str)
+    if (str) {
       if (!strncmp(str+5,"HPX",3))
 	wcsHPX_ =1;
+      delete [] str;
+    }
   }
 }
 
@@ -3356,7 +3360,7 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
   int rowlen = hdu->width();
 
   // create fitstable
-  AstFitsChan* header = astFitsChan(NULL, NULL, "");
+  AstFitsChan* header = astFitsChan(NULL, NULL, " ");
   char* cards = hd->cards();
   int ncards = hd->ncard();
 
@@ -3367,7 +3371,7 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
 
     astPutFits(header, buf, 0);
   }
-  AstFitsTable* table = (AstFitsTable*)astFitsTable(header,"");
+  AstFitsTable* table = (AstFitsTable*)astFitsTable(header," ");
 
   for (int ii=0; ii<cols; ii++) {
     FitsBinColumn* col = (FitsBinColumn*)hdu->find(ii);
@@ -3425,9 +3429,10 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
 {
   // we may have an error, just reset
   astClearStatus;
+  astBegin;
 
   // new fitschan
-  AstFitsChan* chan = astFitsChan(NULL, NULL, "");
+  AstFitsChan* chan = astFitsChan(NULL, NULL, " ");
   if (!astOK || chan == AST__NULL)
     return NULL;
 
@@ -3479,5 +3484,8 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
   if (!wcsInv_)
     internalError("Warning: the WCS has no defined inverse. Some functionality may not be available.");
   
+  astExport(frameSet);
+  astEnd;
+
   return frameSet;
 }

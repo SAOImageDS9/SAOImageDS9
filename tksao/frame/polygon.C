@@ -69,6 +69,9 @@ void Polygon::renderX(Drawable drawable, Coord::InternalSystem sys,
     XFillPolygon(display, drawable, lgc, pp, cnt, Complex, CoordModeOrigin);
   else
     XDrawLines(display, drawable, lgc, pp, cnt, CoordModeOrigin);
+
+  if (pp)
+    delete [] pp;
 }
 
 void Polygon::renderPS(int mode)

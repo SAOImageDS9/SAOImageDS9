@@ -26,97 +26,117 @@ void Base::xmlParse(istream& str)
 {
   xmlTextReaderPtr reader =
     xmlReaderForIO(xmlRead, xmlClose, (void*)(&str), "", NULL, 0);
-  if (reader) {
-    char** cols=NULL;
-    int colcnt=0;
 
-    int id[128];
-    char* unit[128];
-    char* ref[128];
-    char* axis[128];
-    char* dir[128];
-    for (int ii=0; ii<128; ii++) {
-      id[ii]=0;
-      unit[ii]=NULL;
-      ref[ii]=NULL;
-      dir[ii]=NULL;
-    }
-
-    int cnt=0;
-    int state=0;
-
-    int ret = xmlTextReaderRead(reader);
-    while (ret == 1) {
-      int nodeType = xmlTextReaderNodeType(reader);
-      char* key = (char*)xmlTextReaderConstName(reader);
-
-      if (!strncmp(key,"VOTABLE",7) && (nodeType==1)) {
-      } else if (!strncmp(key,"VOTABLE",7) && (nodeType==15)) {
-      } else if (!strncmp(key,"DEFINITIONS",11) && (nodeType==1)) {
-      } else if (!strncmp(key,"DEFINITIONS",11) && (nodeType==15)) {
-      } else if (!strncmp(key,"COOSYS",6) && (nodeType==1)) {
-      } else if (!strncmp(key,"COOSYS",6) && (nodeType==15)) {
-      } else if (!strncmp(key,"RESOURCE",8) && (nodeType==1)) {
-      } else if (!strncmp(key,"RESOURCE",8) && (nodeType==15)) {
-      } else if (!strncmp(key,"TABLE",5) && (nodeType==1)) {
-      } else if (!strncmp(key,"TABLE",5) && (nodeType==15)) {
-      } else if (!strncmp(key,"FIELD",5) && (nodeType==1)) {
-	xmlParseFIELD(reader,id,unit,ref,axis,dir,colcnt);
-	state = 2;
-	colcnt++;
-      } else if (!strncmp(key,"FIELD",5) && (nodeType==15)) {
-	state = 0;
-      } else if (!strncmp(key,"DATA",4) && (nodeType==1)) {
-	state = 0;
-      } else if (!strncmp(key,"DATA",4) && (nodeType==15)) {
-      } else if (!strncmp(key,"TABLEDATA",9) && (nodeType==1)) {
-	state = 0;
-      } else if (!strncmp(key,"TABLEDATA",9) && (nodeType==15)) {
-      } else if (!strncmp(key,"TR",2) && (nodeType==1)) {
-	if (cols) {
-	  for (int ii=0; ii<colcnt; ii++)
-	    if (cols[ii])
-	      delete [] cols[ii];
-	  delete [] cols;
-	}  
-
-	cols = new char*[colcnt];
-	for (int ii=0; ii<colcnt; ii++)
-	  cols[ii] = NULL;
-
-	cnt=0;
-      } else if(!strncmp(key,"TR",2) && (nodeType==15)) {
-	xmlParseTR(cols,id,unit,ref,axis,dir,colcnt);
-      } else if (!strncmp(key,"TD",2) && (nodeType==1)) {
-	state=1;
-      } else if (!strncmp(key,"TD",2) && (nodeType==15)) {
-	state=0;
-	cnt++;
-      } else if (!strncmp(key,"#text",5) && (nodeType==3)) {
-	switch (state) {
-	case 0:
-	  break;
-	case 1:
-	  // td
-	  cols[cnt] = dupstr((char*)xmlTextReaderConstValue(reader));
-	  break;
-	case 2:
-	  // field
-	  break;
-	}
-      }
-
-      ret = xmlTextReaderRead(reader);
-    }
-    xmlFreeTextReader(reader);
-    if (ret != 0)
-      cerr << "Failed to parse xml" << endl;
-
-    xmlCleanupParser();
-    xmlMemoryDump();
-  }
-  else
+  if (!reader) {
     cerr << "Unable to create xmlReader" << endl;
+    return;
+  }
+
+  char** cols=NULL;
+  int colcnt=0;
+
+  int id[128];
+  char* unit[128];
+  char* ref[128];
+  char* axis[128];
+  char* dir[128];
+  for (int ii=0; ii<128; ii++) {
+    id[ii]=0;
+    unit[ii]=NULL;
+    ref[ii]=NULL;
+    axis[ii] =NULL;
+    dir[ii]=NULL;
+  }
+
+  int cnt=0;
+  int state=0;
+
+  int ret = xmlTextReaderRead(reader);
+  while (ret == 1) {
+    int nodeType = xmlTextReaderNodeType(reader);
+    char* key = (char*)xmlTextReaderConstName(reader);
+
+    if (!strncmp(key,"VOTABLE",7) && (nodeType==1)) {
+    } else if (!strncmp(key,"VOTABLE",7) && (nodeType==15)) {
+    } else if (!strncmp(key,"DEFINITIONS",11) && (nodeType==1)) {
+    } else if (!strncmp(key,"DEFINITIONS",11) && (nodeType==15)) {
+    } else if (!strncmp(key,"COOSYS",6) && (nodeType==1)) {
+    } else if (!strncmp(key,"COOSYS",6) && (nodeType==15)) {
+    } else if (!strncmp(key,"RESOURCE",8) && (nodeType==1)) {
+    } else if (!strncmp(key,"RESOURCE",8) && (nodeType==15)) {
+    } else if (!strncmp(key,"TABLE",5) && (nodeType==1)) {
+    } else if (!strncmp(key,"TABLE",5) && (nodeType==15)) {
+    } else if (!strncmp(key,"FIELD",5) && (nodeType==1)) {
+      xmlParseFIELD(reader,id,unit,ref,axis,dir,colcnt);
+      state = 2;
+      colcnt++;
+    } else if (!strncmp(key,"FIELD",5) && (nodeType==15)) {
+      state = 0;
+    } else if (!strncmp(key,"DATA",4) && (nodeType==1)) {
+      state = 0;
+    } else if (!strncmp(key,"DATA",4) && (nodeType==15)) {
+    } else if (!strncmp(key,"TABLEDATA",9) && (nodeType==1)) {
+      state = 0;
+    } else if (!strncmp(key,"TABLEDATA",9) && (nodeType==15)) {
+    } else if (!strncmp(key,"TR",2) && (nodeType==1)) {
+      if (cols) {
+	for (int ii=0; ii<colcnt; ii++)
+	  if (cols[ii])
+	    delete [] cols[ii];
+	delete [] cols;
+      }  
+
+      cols = new char*[colcnt];
+      for (int ii=0; ii<colcnt; ii++)
+	cols[ii] = NULL;
+
+      cnt=0;
+    } else if(!strncmp(key,"TR",2) && (nodeType==15)) {
+      xmlParseTR(cols,id,unit,ref,axis,dir,colcnt);
+    } else if (!strncmp(key,"TD",2) && (nodeType==1)) {
+      state=1;
+    } else if (!strncmp(key,"TD",2) && (nodeType==15)) {
+      state=0;
+      cnt++;
+    } else if (!strncmp(key,"#text",5) && (nodeType==3)) {
+      switch (state) {
+      case 0:
+	break;
+      case 1:
+	// td
+	cols[cnt] = dupstr((char*)xmlTextReaderConstValue(reader));
+	break;
+      case 2:
+	// field
+	break;
+      }
+    }
+
+    ret = xmlTextReaderRead(reader);
+  }
+  xmlFreeTextReader(reader);
+  if (ret != 0)
+    cerr << "Failed to parse xml" << endl;
+
+  xmlCleanupParser();
+  xmlMemoryDump();
+
+  if (cols) {
+    for (int ii=0; ii<colcnt; ii++)
+      if (cols[ii])
+	delete [] cols[ii];
+    delete [] cols;
+  }
+  for (int ii=0; ii<128; ii++) {
+    if (unit[ii])
+      delete unit[ii];
+    if (ref[ii])
+      delete ref[ii];
+    if (axis[ii])
+      delete axis[ii];
+    if (dir[ii])
+      delete dir[ii];
+  }
 }
 
 void Base::xmlParseFIELD(void* rr, int* id, char** unit, 
@@ -605,6 +625,8 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
     createPolygonCmd(*list, fill,
 		     color, dash, width, font, text, props, comment, 
 		     taglist, cblist);
+    if (list)
+      delete list;
   }
   else if (STRCMP(shape, "line", 4)) {
     int arrow1 =1;
@@ -643,6 +665,8 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
     createSegmentCmd(*list,
 		     color, dash, width, font, text, props, comment, 
 		     taglist, cblist);
+    if (list)
+      delete list;
   }
   else if (STRCMP(shape, "text", 4)) {
     int rotate = 1;
@@ -730,66 +754,85 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   // Annulus Regions
   else if (STRCMP(shape, "annulus", 7)) {
     int num = xmlCount(rv);
+    double* rr = xmlDistance(ptr, rv, num, rvsys, rvdist);
     createAnnulusCmd(xmlPoint(ptr, x, y, sys, sky, format),
-		     num, xmlDistance(ptr, rv, num, rvsys, rvdist),
+		     num, rr,
 		     color, dash, width, font, text, props, comment, 
 		     taglist, cblist);
+    if (rr)
+      delete [] rr;
   }
   else if (STRCMP(shape, "ellipseannulus", 14)) {
 
     int num = xmlCount(rv);
-    createEllipseAnnulusCmd(xmlPoint(ptr, x, y, sys, sky, format),
-			    num, xmlDistance(ptr, rv, rv2, num, rvsys, rvdist),
+    Vector* rr =xmlDistance(ptr, rv, rv2, num, rvsys, rvdist);
+    createEllipseAnnulusCmd(xmlPoint(ptr, x, y, sys, sky, format), num, rr,
 			    xmlAngle(ang, angsign, angoffset, 
 				     angformat, sys, sky),
 			    color, dash, width, font, text, props, comment, 
 			    taglist, cblist);
+    if (rr)
+      delete [] rr;
   }
   else if (STRCMP(shape, "boxannulus", 10)) {
 
     int num = xmlCount(rv);
-    createBoxAnnulusCmd(xmlPoint(ptr, x, y, sys, sky, format),
-			num, xmlDistance(ptr, rv, rv2, num, rvsys, rvdist),
+    Vector* rr = xmlDistance(ptr, rv, rv2, num, rvsys, rvdist);
+    createBoxAnnulusCmd(xmlPoint(ptr, x, y, sys, sky, format), num, rr,
 			xmlAngle(ang, angsign, angoffset, angformat,
 				 sys, sky),
 			color, dash, width, font, text, props, comment, 
 			taglist, cblist);
+    if (rr)
+      delete [] rr;
   }
 
   // Panda Regions
   else if (STRCMP(shape, "panda", 5) || STRCMP(shape, "pie", 3)) {
     int anum = xmlCount(angv);
     int rnum = xmlCount(rv);
+    double* rr = xmlDistance(ptr, rv, rnum, rvsys, rvdist);
+    double* aa = xmlAngles(angv, angvsign, angvoffset, anum, angvformat, sys, sky);
     createCpandaCmd(xmlPoint(ptr, x, y, sys, sky, format),
-		    anum, xmlAngles(angv, angvsign, angvoffset, 
-				    anum, angvformat, sys, sky),
-		    rnum, xmlDistance(ptr, rv, rnum, rvsys, rvdist),
+		    anum, aa, rnum, rr,
 		    color, dash, width, font, text, props, comment, 
 		    taglist, cblist);
+    if (rr)
+      delete [] rr;
+    if (aa)
+      delete [] aa;
   }
   else if (STRCMP(shape, "epanda", 6)) {
     int anum = xmlCount(angv);
     int rnum = xmlCount(rv);
+    Vector* rr = xmlDistance(ptr, rv, rv2, rnum, rvsys, rvdist);
+    double* aa = xmlAngles(angv, angvsign, angoffset, anum, angvformat, sys, sky);
     createEpandaCmd(xmlPoint(ptr, x, y, sys, sky, format),
-		    anum, xmlAngles(angv, angvsign, angoffset, 
-				    anum, angvformat, sys, sky),
-		    rnum, xmlDistance(ptr, rv, rv2, rnum, rvsys, rvdist),
+		    anum, aa, rnum, rr,
 		    xmlAngle(ang, angsign, angoffset, angformat,
 			     sys, sky),
 		    color, dash, width, font, text, props, comment, 
 		    taglist, cblist);
+    if (rr)
+      delete [] rr;
+    if (aa)
+      delete [] aa;
   }
   else if (STRCMP(shape, "bpanda", 6)) {
     int anum = xmlCount(angv);
     int rnum = xmlCount(rv);
+    Vector* rr = xmlDistance(ptr, rv, rv2, rnum, rvsys, rvdist);
+    double* aa = xmlAngles(angv, angvsign, angvoffset, anum, angvformat, sys, sky);
     createBpandaCmd(xmlPoint(ptr, x, y, sys, sky, format),
-		    anum, xmlAngles(angv, angvsign, angvoffset,
-				    anum, angvformat, sys, sky),
-		    rnum, xmlDistance(ptr, rv, rv2, rnum, rvsys, rvdist),
+		    anum, aa, rnum, rr,
 		    xmlAngle(ang, angsign, angoffset, angformat,
 			     sys, sky),
 		    color, dash, width, font, text, props, comment, 
 		    taglist, cblist);
+    if (rr)
+      delete [] rr;
+    if (aa)
+      delete [] aa;
   }
 }
 
@@ -893,7 +936,8 @@ Vector Base::xmlPoint(FitsImage* ptr, const char* xstr, const char* ystr,
 
 List<Vertex>* Base::xmlVertex(FitsImage* ptr, 
 			      const char* x, const char* y, 
-			      Coord::CoordSystem sys, Coord::SkyFrame sky, Coord::SkyFormat format)
+			      Coord::CoordSystem sys, Coord::SkyFrame sky, 
+			      Coord::SkyFormat format)
 {
   List<Vertex>* list = new List<Vertex>;
 
@@ -928,7 +972,8 @@ double* Base::xmlDistance(FitsImage* ptr, const char* r, int cnt,
 }
 
 Vector* Base::xmlDistance(FitsImage* ptr, const char* r, const char* r2,
-			  int cnt, Coord::CoordSystem sys, Coord::DistFormat dist)
+			  int cnt, Coord::CoordSystem sys, 
+			  Coord::DistFormat dist)
 {
   Vector* vv = new Vector[cnt];
 
@@ -961,18 +1006,22 @@ Vector* Base::xmlDistance(FitsImage* ptr, const char* r, const char* r2,
 }
 
 double Base::xmlAngle(const char* angle, int sign, double offset, 
-		      Coord::AngleFormat format, Coord::CoordSystem sys, Coord::SkyFrame sky)
+		      Coord::AngleFormat format, Coord::CoordSystem sys, 
+		      Coord::SkyFrame sky)
 {
   switch (format) {
   case Coord::DEG:
     return mapAngleToRef(sign*zeroTWOPI(degToRad(atof(angle)))+offset,sys,sky);
   case Coord::RAD:
     return mapAngleToRef(sign*atof(angle)+offset, sys, sky);
+  default:
+    return 0;
   }
 }
 
 double* Base::xmlAngles(const char* angle, int sign, double offset, int cnt,
-			Coord::AngleFormat format, Coord::CoordSystem sys, Coord::SkyFrame sky)
+			Coord::AngleFormat format, Coord::CoordSystem sys, 
+			Coord::SkyFrame sky)
 {
   double* ang = new double[cnt];
 
@@ -1072,6 +1121,11 @@ void Base::markerListXMLHeader(ostream& str, Coord::CoordSystem sys,
 	str << "<FIELD ID=\"rv2\" name=\"rv2\" datatype=\"float\" precision=\"8\" arraysize=\"*\" unit=\"arcsec\" ref=\"" << coord.skyFrameStr(sky) << "\"/>" << endl;
 	str << "<FIELD ID=\"ang\" name=\"ang\" datatype=\"float\" precision=\"8\" unit=\"deg\" ref=\"" << coord.skyFrameStr(sky) << "\" axis=\"-x\" dir=\"ccw\"/>" << endl;
 	str << "<FIELD ID=\"angv\" name=\"angv\" datatype=\"float\" precision=\"8\" arraysize=\"*\" unit=\"deg\" ref=\"" << coord.skyFrameStr(sky) << "\" axis=\"-x\" dir=\"ccw\"/>" << endl;
+
+	if (xucd)
+	  delete [] xucd;
+	if (yucd)
+	  delete [] yucd;
       }
       else {
 	str << "<FIELD ID=\"x\" name=\"x\" datatype=\"float\" precision=\"8\" unit=\"pix\" ref=\"" << coord.coordSystemStr(sys) << "\"/>" << endl;
@@ -1124,4 +1178,3 @@ void Base::markerListXMLFooter(ostream& str)
       << "</RESOURCE>" << endl 
       << "</VOTABLE>" << endl;
 }
-

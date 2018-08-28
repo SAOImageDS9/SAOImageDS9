@@ -284,6 +284,7 @@ proc BackupFrame {ch which dir} {
     # must be after Pan and Block
     3DBackup $ch $which
     MarkerBackup $ch $which $fdir $rdir
+    CrosshairBackup $ch $which
     CentroidBackup $ch $which
     MaskBackup $ch $which
     SmoothBackup $ch $which

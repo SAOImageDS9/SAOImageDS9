@@ -279,3 +279,6 @@ proc ProcessSendCrosshairCmd {proc id param {sock {}} {fn {}}} {
     crosshairsend::yyparse
 }
 
+proc CrosshairBackup {ch which} {
+    puts $ch "$which crosshair physical [$which get crosshair physical]"
+}

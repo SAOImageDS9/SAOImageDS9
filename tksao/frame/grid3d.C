@@ -63,7 +63,8 @@ int Grid3d::doit(RenderMode rm)
 
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_);
       wcsSystem(ast,system_);
-      wcsSkyFrame(ast,sky_);
+      if (!fits->hasWCSHPX())
+	wcsSkyFrame(ast,sky_);
       
       int naxes = astGetI(ast,"Naxes");
       switch (naxes) {

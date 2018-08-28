@@ -1048,9 +1048,6 @@ void FitsImage::initWCS(FitsHead* hd)
     if (wcs_)
       delete [] wcs_;
     wcs_ =NULL;
-    if (wcs_)
-      delete [] wcs_;
-    wcs_ =NULL;
     if (wcsNaxes_)
       delete [] wcsNaxes_;
     wcsNaxes_ =NULL;
@@ -1109,8 +1106,6 @@ void FitsImage::initWCS(FitsHead* hd)
     }
   }
 
-  int hasWCSAST = hd->find("BEGAST_A") ? 1 : 0;
-
   if (ast_)
     astAnnul(ast_);
   ast_ =NULL;
@@ -1127,22 +1122,25 @@ void FitsImage::initWCS(FitsHead* hd)
     astPermAxes(ast_,orr);
   }
 
-  wcsInit(hasWCSAST);
-  wcsCelInit(hasWCSAST);
-  wcsHPXInit();
+  scanWCS(hd);
 
   // init wcsState
   if (wcsState_)
     delete wcsState_;
   wcsState_ = new WCSState();
 
+  // need wcsHPX_
   astBegin;
   wcsSystem(ast_,wcsState_->wcsSystem_);
-  wcsSkyFrame(ast_,wcsState_->wcsSkyFrame_);
+  if (!wcsHPX_)
+    wcsSkyFrame(ast_,wcsState_->wcsSkyFrame_);
   astEnd;
 
   // must wait until wcsState_ is realized
-  wcsSizeInit();
+  wcsSize_ = new double[MULTWCS];
+  for (int ii=0; ii<MULTWCS; ii++)
+    wcsSize_[ii] = calcWCSSize((Coord::CoordSystem)(ii+Coord::WCS));
+
   wcsPhyInit();
 
   if (DebugWCS && ast_)
@@ -1359,11 +1357,13 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   if (sky1 != sky2) {
     AstFrameSet* wcs1 = (AstFrameSet*)astCopy(ast_);
     wcsSystem(wcs1,sys1);
-    wcsSkyFrame(wcs1,sky1);
+    if (!wcsHPX_)
+      wcsSkyFrame(wcs1,sky1);
 
     AstFrameSet* wcs2 = (AstFrameSet*)astCopy(ast_);
     wcsSystem(wcs2,sys2);
-    wcsSkyFrame(wcs2,sky2);
+    if (!wcsHPX_)
+      wcsSkyFrame(wcs2,sky2);
 
     AstFrameSet* cvt = (AstFrameSet*)astConvert(wcs1, wcs2, "SKY");
     if (cvt != AST__NULL) {
@@ -1378,7 +1378,8 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
   if (ptr1 && ptr2) {
     AstFrameSet* wcs = (AstFrameSet*)astCopy(ast_);
     wcsSystem(wcs,sys2);
-    wcsSkyFrame(wcs,sky2);
+    if (!wcsHPX_)
+      wcsSkyFrame(wcs,sky2);
 
     Tcl_Obj* objrr = Tcl_NewListObj(0,NULL);
     for(int jj=0; jj<nxx2; jj++) {
@@ -2969,67 +2970,18 @@ int FitsImage::hasWCS3D(Coord::CoordSystem sys)
     return (wcsNaxes_[sys-Coord::WCS]>2) ? 1 : 0;
 }
 
-void FitsImage::wcsInit(int hasWCSAST)
+void FitsImage::scanWCS(FitsHead* hd)
 {
   // init wcs_ array
-  if (wcs_)
-    delete [] wcs_;
-  wcs_ =NULL;
-
   wcs_ = new int[MULTWCS];
   for (int ii=0; ii<MULTWCS; ii++)
     wcs_[ii] =0;
-
-  if (wcsNaxes_)
-    delete [] wcsNaxes_;
-  wcsNaxes_ =NULL;
 
   wcsNaxes_ = new int[MULTWCS];
   for (int ii=0; ii<MULTWCS; ii++)
     wcsNaxes_[ii] =0;
   
-  if (!ast_)
-    return;
-
-  // since we have ast_
-  wcs_[0] =1; 
-  wcsNaxes_[0] = astGetI(ast_,"Naxes");
-
-  // do we have a AST wcs?
-  if (hasWCSAST)
-    return;
-
-  // fill out wcs_ array
-  astClearStatus;
-  astBegin;
-
-  int nn = astGetI(ast_, "Nframe");
-  for (int ii=0; ii<nn; ii++) {
-    AstFrameSet* ff = (AstFrameSet*)astGetFrame(ast_,ii+1);
-    const char* id = astGetC(ff, "Ident");
-    if (id && *id) {
-      int jj = (*id == ' ') ? 0 : *id-'@';
-      wcs_[jj] = 1;
-      wcsNaxes_[jj] = astGetI(ff,"Naxes");
-    }
-  }
-
-  astEnd;
-}
-
-void FitsImage::wcsCelInit(int hasWCSAST)
-{
   // init wcsCel_ array
-  if (wcsCel_)
-    delete [] wcsCel_;
-  wcsCel_ =NULL;
-  if (wcsCelLon_)
-    delete [] wcsCelLon_;
-  wcsCelLon_ =NULL;
-  if (wcsCelLat_)
-    delete [] wcsCelLat_;
-  wcsCelLat_ =NULL;
-
   wcsCel_ = new int[MULTWCS];
   for (int ii=0; ii<MULTWCS; ii++)
     wcsCel_[ii] =0;
@@ -3039,16 +2991,50 @@ void FitsImage::wcsCelInit(int hasWCSAST)
   wcsCelLat_ = new int[MULTWCS];
   for (int ii=0; ii<MULTWCS; ii++)
     wcsCelLat_[ii] =0;
-  
+
   if (!ast_)
     return;
+
+  // easy one, HPX?
+  char key[] = "CTYPE1 ";
+  if (image_) {
+    const char* str = image_->getKeyword(key);
+    if (str) {
+      if (!strncmp(str+5,"HPX",3))
+	wcsHPX_ =1;
+      delete [] str;
+    }
+  }
+
+  int hasWCSAST = hd->find("BEGAST_A") ? 1 : 0;
 
   astClearStatus;
   astBegin;
 
-  int nn = astGetI(ast_, "Nframe");
-  // do we have a AST wcs?
-  if (hasWCSAST) {
+  // since we have ast_
+  wcs_[0] =1; 
+  wcsNaxes_[0] = astGetI(ast_,"Naxes");
+
+  if (!hasWCSAST && !wcsHPX_) {
+    // fill out wcs_ array
+    int nn = astGetI(ast_, "Nframe");
+    for (int ii=0; ii<nn; ii++) {
+      AstFrameSet* ff = (AstFrameSet*)astGetFrame(ast_,ii+1);
+      const char* id = astGetC(ff, "Ident");
+      if (id && *id) {
+	int jj = (*id == ' ') ? 0 : *id-'@';
+	wcs_[jj] = 1;
+	wcsNaxes_[jj] = astGetI(ff,"Naxes");
+      }
+    }
+  }
+  
+  if (wcsHPX_) {
+    wcsCel_[0] = 1;
+    wcsCelLon_[0] = 1;
+    wcsCelLat_[0] = 2;
+  }
+  else if (hasWCSAST) {
     AstFrameSet* fs =
       (AstFrameSet*)astFindFrame(ast_, astSkyFrame(" MaxAxes=4")," ");
     if (fs) {
@@ -3073,6 +3059,8 @@ void FitsImage::wcsCelInit(int hasWCSAST)
     }
   }
   else {
+    int nn = astGetI(ast_, "Nframe");
+
     for (int kk=0; kk<nn; kk++) {
       AstFrame* ff = (AstFrame*)astGetFrame(ast_,kk+1);
       const char* id = astGetC(ff, "Ident");
@@ -3106,36 +3094,6 @@ void FitsImage::wcsCelInit(int hasWCSAST)
   }
 
   astEnd;
-}
-
-void FitsImage::wcsHPXInit()
-{
-  wcsHPX_ =0;
-
-  if (!ast_)
-    return;
-
-  char key[] = "CTYPE1 ";
-  if (image_) {
-    const char* str = image_->getKeyword(key);
-    if (str) {
-      if (!strncmp(str+5,"HPX",3))
-	wcsHPX_ =1;
-      delete [] str;
-    }
-  }
-}
-
-void FitsImage::wcsSizeInit()
-{
-  // init wcsSize_ array
-  if (wcsSize_)
-    delete [] wcsSize_;
-  wcsSize_ =NULL;
-
-  wcsSize_ = new double[MULTWCS];
-  for (int ii=0; ii<MULTWCS; ii++)
-    wcsSize_[ii] = calcWCSSize((Coord::CoordSystem)(ii+Coord::WCS));
 }
 
 void FitsImage::wcsPhyInit()
@@ -3203,6 +3161,10 @@ void FitsImage::setWCSSystem(Coord::CoordSystem sys)
 
 void FitsImage::setWCSSkyFrame(Coord::SkyFrame sky)
 {
+  // not valid for HPX
+  if (wcsHPX_)
+    return;
+  
   if (wcsState_->wcsSkyFrame_ != sky) {
     wcsSkyFrame(ast_,sky);
     wcsState_->wcsSkyFrame_ = sky;

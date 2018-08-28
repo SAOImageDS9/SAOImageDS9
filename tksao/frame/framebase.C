@@ -160,8 +160,12 @@ void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* sptr)
 	
       char* system = (char*)sptr->getWCSSystem(www);
       char* domain = (char*)sptr->getWCSDomain(www);
-      if (system)
-	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),system,0);
+      if (system) {
+	if (!strncmp(system,"Unknown",7))
+	  Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"WCS",0);
+	else
+	  Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),system,0);
+      }
       else if (domain)
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),domain,0);
       else

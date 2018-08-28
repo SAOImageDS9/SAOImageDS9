@@ -147,11 +147,7 @@ class FitsImage {
   void initHPX();
 
   void initWCS(FitsHead*);
-
-  void wcsInit(int);
-  void wcsCelInit(int);
-  void wcsHPXInit();
-  void wcsSizeInit();
+  void scanWCS(FitsHead*);
   void wcsPhyInit();
 
   void initWCS0(const Vector&);
@@ -433,6 +429,7 @@ class FitsImage {
   int hasWCSCel(Coord::CoordSystem);
   int hasWCSLinear(Coord::CoordSystem);
   int hasWCS3D(Coord::CoordSystem);
+  int hasWCSHPX() {return wcsHPX_;}
 
   void updateMatrices(Matrix&, Matrix&, Matrix&, Matrix&, Matrix&);
   void updateMatrices(Matrix3d&, Matrix3d&, Matrix3d&, Matrix3d&);

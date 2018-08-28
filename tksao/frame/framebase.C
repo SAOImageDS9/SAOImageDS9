@@ -136,15 +136,13 @@ void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
 
 void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* sptr)
 {
-  Vector img = rr * sptr->refToImage;
-
   for (int ii=0; ii<MULTWCS; ii++) {
     char buf[128];
     char ww = !ii ? '\0' : '`'+ii;
     Coord::CoordSystem www = (Coord::CoordSystem)(Coord::WCS+ii);
 
     if (hasWCS(www)) {
-      VectorStr out = sptr->mapFromRef(img, www, wcsSkyFrame_, wcsSkyFormat_);
+      VectorStr out = sptr->mapFromRef(rr, www, wcsSkyFrame_, wcsSkyFormat_);
 
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),out[0],0);
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),out[1],0);

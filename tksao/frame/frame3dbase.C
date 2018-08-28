@@ -154,15 +154,13 @@ void Frame3dBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
 
 void Frame3dBase::getInfoWCS(char* var, Vector3d& rr, FitsImage* sptr)
 {
-  Vector3d img = rr * sptr->refToImage3d;
-
   for (int ii=0; ii<MULTWCS; ii++) {
     char buf[128];
     char ww = !ii ? '\0' : '`'+ii;
     Coord::CoordSystem www = (Coord::CoordSystem)(Coord::WCS+ii);
 
     if (hasWCS(www)) {
-      VectorStr3d out = sptr->mapFromRef(img, www, wcsSkyFrame_, wcsSkyFormat_);
+      VectorStr3d out = sptr->mapFromRef(rr, www, wcsSkyFrame_, wcsSkyFormat_);
 
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),out[0],0);
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),out[1],0);

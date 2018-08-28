@@ -3145,33 +3145,36 @@ void FitsImage::wcsPhyInit()
 
   char* wcsname = image_->getString("WCSNAMEP");
   if (wcsname && *wcsname && !strncmp(wcsname, "PHYSICAL", 8)) {
-    if (image_->find("CD1_1P")  || image_->find("CD1_2P")  ||
-	image_->find("CD2_1P")  || image_->find("CD2_2P")  ||
-	image_->find("CRPIX1P") || image_->find("CRPIX2P") ||
-	image_->find("CRVAL1P") || image_->find("CRVAL2P")) {
+    Vector ll2 = center() - Vector(10,10);
+    Vector ur2 = center() + Vector(10,10);
+    double ll[4];
+    ll[0] =ll2[0];
+    ll[1] =ll2[1];
+    ll[2] =1;
+    ll[3] =1;
+    double ur[4];
+    ur[0] =ur2[0];
+    ur[1] =ur2[1];
+    ur[2] =1;
+    ur[3] =1;
+
+    setWCSSystem(Coord::WCSP);
+    int naxes1 = astGetI(astGetFrame(ast_,AST__BASE),"Naxes");
+    int naxes2 = astGetI(astGetFrame(ast_,AST__CURRENT),"Naxes");
+
+    int ss = (naxes1+1)*naxes2;
+    double* fit = new double[ss];
+    double tol = 1;
+    if (astLinearApprox(ast_, ll, ur, tol, fit) != AST__BAD) {
       keyLTMV = 1;
-
-      double cd11 = image_->getReal("CD1_1P", 1);
-      double cd12 = image_->getReal("CD1_2P", 0);
-      double cd21 = image_->getReal("CD2_1P", 0);
-      double cd22 = image_->getReal("CD2_2P", 1);
-
-      double crpix1 = image_->getReal("CRPIX1P", 0);
-      double crpix2 = image_->getReal("CRPIX2P", 0);
-      double crval1 = image_->getReal("CRVAL1P", 0);
-      double crval2 = image_->getReal("CRVAL2P", 0);
-
-      double ltm11 = cd11 != 0 ? 1/cd11 : 0;
-      double ltm12 = cd12 != 0 ? 1/cd12 : 0;
-      double ltm21 = cd21 != 0 ? 1/cd21 : 0;
-      double ltm22 = cd22 != 0 ? 1/cd22 : 0;
-
-      double ltv1 = crpix1 - crval1*ltm11 - crval2*ltm21;
-      double ltv2 = crpix2 - crval1*ltm12 - crval2*ltm22;
-
-      physicalToImage = Matrix(ltm11, ltm12, ltm21, ltm22, ltv1, ltv2);
-      imageToPhysical = physicalToImage.invert();
+      imageToPhysical =  Matrix(fit[naxes2], fit[naxes2+naxes1],
+				fit[naxes2+1], fit[naxes2+naxes1+1],
+				fit[0], fit[1]);
+      physicalToImage = imageToPhysical.invert();
     }
+
+    if (fit)
+      delete [] fit;
   }
 }
 

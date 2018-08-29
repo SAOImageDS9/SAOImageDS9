@@ -27,8 +27,17 @@ int wcsSystem(AstFrameSet* ast, Coord::CoordSystem sys)
 
 int wcsSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 {
-  // verify there is a sky frame
-  if (!astFindFrame(ast, astSkyFrame(" MaxAxes=4")," "))
+  // is a skyFrame?
+  AstFrameSet* fs =
+    (AstFrameSet*)astFindFrame(ast, astSkyFrame(" MaxAxes=4")," ");
+  if (!fs)
+    return 0;
+  // equatorial? (aka have a System)
+  const char* str =astGetC(fs, "System");
+  if (!str || !*str)
+    return 0;
+  // could be general spherical (aka HPX)
+  if (!strncmp(str,"Unknown",7))
     return 0;
 
   switch (sky) {

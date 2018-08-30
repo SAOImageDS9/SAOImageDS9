@@ -2635,10 +2635,6 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   if (!hasWCS(sys))
     return Coord::NORMAL;
   
-  // special case
-  if (wcsHPX_)
-    return Coord::NORMAL;
-
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
@@ -2670,36 +2666,53 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   if (!hasWCS(sys))
     return 0;
   
-  // special case
-  if (wcsHPX_)
-    return 0;
-
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
   setWCSSystem(sys);
   setWCSSkyFrame(sky);
 
-  Vector in[3];
-  Vector out[3];
-  in[0] = center();
-  in[1] = center()+Vector(0,1);
-  in[2] = center()+Vector(1,0);
-  wcsTran(ast_, 3, in, 1, out);
-  double ang = wcsAxAngle(ast_,out[0], out[1]);
-  double ang3 = wcsAngle(ast_,out[1],out[0],out[2]);
+  if (!wcsHPX_) {
+    Vector in[3];
+    Vector out[3];
+    in[0] = center();
+    in[1] = center()+Vector(0,1);
+    in[2] = center()+Vector(1,0);
+    wcsTran(ast_, 3, in, 1, out);
+    double ang = wcsAxAngle(ast_,out[0], out[1]);
+    double ang3 = wcsAngle(ast_,out[1],out[0],out[2]);
 
-  astEnd;
+    astEnd;
     
-  if ((!(isnan(ang )||isinf(ang) ||(ang ==-DBL_MAX)||(ang ==DBL_MAX))) &&
-      (!(isnan(ang3)||isinf(ang3)||(ang3==-DBL_MAX)||(ang3==DBL_MAX)))) {
-    if ((hasWCSCel(sys) && ang3>0) || (!hasWCSCel(sys) && ang3<0))
-      return -ang;
+    if ((!(isnan(ang )||isinf(ang) ||(ang ==-DBL_MAX)||(ang ==DBL_MAX))) &&
+	(!(isnan(ang3)||isinf(ang3)||(ang3==-DBL_MAX)||(ang3==DBL_MAX)))) {
+      if ((hasWCSCel(sys) && ang3>0) || (!hasWCSCel(sys) && ang3<0))
+	return -ang;
+      else
+	return ang;
+    }
     else
-      return ang;
+      return 0;
   }
-  else
-    return 0;
+  else { // special case for HPX
+    Vector cc = center();
+    Vector wcc = wcsTran(ast_, cc, 1);
+    Vector wnorth = wcc + Vector(0,.001);
+    Vector north = wcsTran(ast_, wnorth,0);
+
+    int current = astGetI(ast_,"Current");
+    int base = astGetI(ast_,"Base");
+    astSetI(ast_,"Current",base);
+    double ang = wcsAxAngle(ast_,cc,north);
+    astSetI(ast_,"Current",current);
+
+    astEnd;
+
+    if (!(isnan(ang)||isinf(ang)||(ang == -DBL_MAX)||(ang == DBL_MAX)))
+      return ang;
+    else
+      return 0;
+  }
 }
 
 double FitsImage::getWCSDist(const Vector& vv1, const Vector& vv2,
@@ -2990,7 +3003,7 @@ void FitsImage::scanWCS(FitsHead* hd)
 
   astClearStatus;
   astBegin;
-  int naxis = astGetI(ast_, "Nframe");
+  int nframes = astGetI(ast_, "Nframe");
 
   // wcs_[]
   // since we have ast_
@@ -2998,7 +3011,7 @@ void FitsImage::scanWCS(FitsHead* hd)
   wcsNaxes_[0] = astGetI(ast_,"Naxes");
 
   // fill out wcs_ array
-  for (int kk=0; kk<naxis; kk++) {
+  for (int kk=0; kk<nframes; kk++) {
     AstFrameSet* ff = (AstFrameSet*)astGetFrame(ast_,kk+1);
     const char* id = astGetC(ff, "Ident");
     if (id && *id) {
@@ -3009,13 +3022,12 @@ void FitsImage::scanWCS(FitsHead* hd)
   }
   
   // wcsCel_[]
-  for (int kk=0; kk<naxis; kk++) {
+  for (int kk=0; kk<nframes; kk++) {
     AstFrame* ff = (AstFrame*)astGetFrame(ast_,kk+1);
     int ii=0; // current WCS
     const char* id = astGetC(ff, "Ident");
     if (id && *id)
       ii = (*id == ' ') ? 0 : *id-'@';
-
     AstFrameSet* fs =
       (AstFrameSet*)astFindFrame(ff, astSkyFrame(" MaxAxes=4")," ");
     if (fs) {

@@ -664,6 +664,11 @@ int Base::hasWCSCel(Coord::CoordSystem sys)
   return currentContext->cfits && currentContext->cfits->hasWCSCel(sys);
 }
 
+int Base::hasWCSEqu(Coord::CoordSystem sys)
+{ 
+  return currentContext->cfits && currentContext->cfits->hasWCSEqu(sys);
+}
+
 int Base::hasWCSLinear(Coord::CoordSystem sys)
 { 
   return currentContext->cfits && currentContext->cfits->hasWCSLinear(sys);

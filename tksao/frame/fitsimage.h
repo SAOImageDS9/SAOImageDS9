@@ -112,9 +112,12 @@ class FitsImage {
 
   int* wcs_;
   int* wcsNaxes_;
+
   int* wcsCel_;
+  int* wcsEqu_;
   int* wcsCelLon_;
   int* wcsCelLat_;
+
   double* wcsSize_;
 
   WCSState* wcsState_;
@@ -427,6 +430,7 @@ class FitsImage {
 
   int hasWCS(Coord::CoordSystem);
   int hasWCSCel(Coord::CoordSystem);
+  int hasWCSEqu(Coord::CoordSystem);
   int hasWCSLinear(Coord::CoordSystem);
   int hasWCS3D(Coord::CoordSystem);
   int hasWCSHPX() {return wcsHPX_;}

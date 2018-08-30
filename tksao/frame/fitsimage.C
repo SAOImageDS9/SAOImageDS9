@@ -86,9 +86,12 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   ast_ =NULL;
   wcs_ =NULL;
   wcsNaxes_ =NULL;
+
   wcsCel_ =NULL;
+  wcsEqu_ =NULL;
   wcsCelLon_ =NULL;
   wcsCelLat_ =NULL;
+
   wcsSize_ =NULL;
 
   wcsHPX_ =0;
@@ -163,6 +166,8 @@ FitsImage::~FitsImage()
 
     if (wcsCel_)
       delete [] wcsCel_;
+    if (wcsEqu_)
+      delete [] wcsEqu_;
     if (wcsCelLon_)
       delete [] wcsCelLon_;
     if (wcsCelLat_)
@@ -1055,6 +1060,9 @@ void FitsImage::initWCS(FitsHead* hd)
     if (wcsCel_)
       delete [] wcsCel_;
     wcsCel_ =NULL;
+    if (wcsEqu_)
+      delete [] wcsEqu_;
+    wcsEqu_ =NULL;
     if (wcsCelLon_)
       delete [] wcsCelLon_;
     wcsCelLon_ =NULL;
@@ -1087,8 +1095,10 @@ void FitsImage::initWCS(FitsHead* hd)
 	  wcsNaxes_ = ptr->wcsNaxes_;
 
 	  wcsCel_ = ptr->wcsCel_;
+	  wcsEqu_ = ptr->wcsEqu_;
 	  wcsCelLon_ = ptr->wcsCelLon_;
 	  wcsCelLat_ = ptr->wcsCelLat_;
+
 	  wcsSize_ = ptr->wcsSize_;
 
 	  wcsHPX_ = ptr->wcsHPX_;
@@ -2949,6 +2959,14 @@ int FitsImage::hasWCSCel(Coord::CoordSystem sys)
     return wcsCel_[sys-Coord::WCS];
 }
 
+int FitsImage::hasWCSEqu(Coord::CoordSystem sys)
+{
+  if (!wcsEqu_ || sys<Coord::WCS)
+    return 0;
+  else
+    return wcsEqu_[sys-Coord::WCS];
+}
+
 int FitsImage::hasWCSLinear(Coord::CoordSystem sys)
 {
   if (!wcs_ || !wcsCel_ || sys<Coord::WCS)
@@ -2980,6 +2998,9 @@ void FitsImage::scanWCS(FitsHead* hd)
   wcsCel_ = new int[MULTWCS];
   for (int ii=0; ii<MULTWCS; ii++)
     wcsCel_[ii] =0;
+  wcsEqu_ = new int[MULTWCS];
+  for (int ii=0; ii<MULTWCS; ii++)
+    wcsEqu_[ii] =0;
   wcsCelLon_ = new int[MULTWCS];
   for (int ii=0; ii<MULTWCS; ii++)
     wcsCelLon_[ii] =0;
@@ -3030,11 +3051,15 @@ void FitsImage::scanWCS(FitsHead* hd)
       ii = (*id == ' ') ? 0 : *id-'@';
     AstFrameSet* fs =
       (AstFrameSet*)astFindFrame(ff, astSkyFrame(" MaxAxes=4")," ");
+
     if (fs) {
       wcsCel_[ii] =1;
-      const char* str = astGetC(ff, "System");
-      if (str && *str) {
-	//	cerr << "System: " << str << endl;
+      const char* sys = astGetC(ff, "System");
+      if (sys && *sys) {
+	//	cerr << "System: " << sys << endl;
+	if (strncmp(sys,"Unknown",7))
+	  wcsEqu_[ii] =1;
+
 	for (int jj=0; jj<wcsNaxes_[ii]; jj++) {
 	  ostringstream str;
 	  str << "Symbol(" << jj+1 << ")" << ends;

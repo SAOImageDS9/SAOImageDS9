@@ -1337,8 +1337,8 @@ hasMarker : HIGHLITE_ {fr->hasMarkerHighlitedCmd();}
 	;
 
 hasWCS	: coordSystem {fr->hasWCSCmd((Coord::CoordSystem)$1);}
-	| EQUATORIAL_ coordSystem {fr->hasWCSCelCmd((Coord::CoordSystem)$2);}
 	| CELESTIAL_ coordSystem {fr->hasWCSCelCmd((Coord::CoordSystem)$2);}
+	| EQUATORIAL_ coordSystem {fr->hasWCSEquCmd((Coord::CoordSystem)$2);}
         | LINEAR_ coordSystem {fr->hasWCSLinearCmd((Coord::CoordSystem)$2);}
 	| ALT_ {fr->hasWCSAltCmd();}
 	| THREED_ coordSystem {fr->hasWCS3DCmd((Coord::CoordSystem)$2);}

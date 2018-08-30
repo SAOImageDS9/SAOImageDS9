@@ -2391,6 +2391,11 @@ void Base::hasWCSCelCmd(Coord::CoordSystem sys)
   Tcl_AppendResult(interp, (hasWCSCel(sys) ? "1" : "0"), NULL);
 }
 
+void Base::hasWCSEquCmd(Coord::CoordSystem sys)
+{
+  Tcl_AppendResult(interp, (hasWCSEqu(sys) ? "1" : "0"), NULL);
+}
+
 void Base::hasWCSLinearCmd(Coord::CoordSystem sys)
 {
   Tcl_AppendResult(interp, (hasWCSLinear(sys) ? "1" : "0"), NULL);

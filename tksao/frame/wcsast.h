@@ -11,7 +11,7 @@ extern "C" {
 }
 
 int wcsSystem(AstFrameSet*, Coord::CoordSystem);
-int wcsSkyFrame(AstFrameSet*, Coord::SkyFrame);
+void wcsSkyFrame(AstFrameSet*, Coord::SkyFrame);
 void wcsFormat(AstFrameSet*, int id, const char* format);
 
 Vector wcsTran(AstFrameSet*, const Vector&, int);

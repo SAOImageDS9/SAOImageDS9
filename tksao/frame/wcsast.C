@@ -25,21 +25,10 @@ int wcsSystem(AstFrameSet* ast, Coord::CoordSystem sys)
   return 0;
 }
 
-int wcsSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
+void wcsSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
 {
-  // is a skyFrame?
-  AstFrameSet* fs =
-    (AstFrameSet*)astFindFrame(ast, astSkyFrame(" MaxAxes=4")," ");
-  if (!fs)
-    return 0;
-  // equatorial? (aka have a System)
-  const char* str =astGetC(fs, "System");
-  if (!str || !*str)
-    return 0;
-  // could be general spherical (aka HPX)
-  if (!strncmp(str,"Unknown",7))
-    return 0;
-
+  // Asssume the current frame is an Equatoral SkyFrame
+  // must be checked else where
   switch (sky) {
   case Coord::FK4:
     astSet(ast, "System=FK4, Equinox=B1950");
@@ -59,8 +48,6 @@ int wcsSkyFrame(AstFrameSet* ast, Coord::SkyFrame sky)
     astSetD(ast, "EQUINOX", astGetD(ast, "EPOCH"));
     break;
   }
-
-  return 1;
 }
 
 void wcsFormat(AstFrameSet* ast, int id, const char* format)

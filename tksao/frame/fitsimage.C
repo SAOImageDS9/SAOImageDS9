@@ -3154,9 +3154,10 @@ void FitsImage::setWCSSysSkyFrame(Coord::CoordSystem sys, Coord::SkyFrame sky)
       wcsState_->wcsSystem_ = sys;
 
   if (wcsState_->wcsSkyFrame_ != sky)
-    if (hasWCSEqu(sys))
-      if (wcsSkyFrame(ast_,sky))
-	wcsState_->wcsSkyFrame_ = sky;
+    if (hasWCSEqu(sys)) {
+      wcsSkyFrame(ast_,sky);
+      wcsState_->wcsSkyFrame_ = sky;
+    }
 }
 
 void FitsImage::setWCSFormat(Coord::CoordSystem sys, Coord::SkyFrame sky,

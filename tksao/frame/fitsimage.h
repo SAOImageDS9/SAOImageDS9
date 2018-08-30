@@ -163,7 +163,7 @@ class FitsImage {
   Vector mapLen(const Vector& v, const Matrix& mx);
 
   void setWCSSystem(Coord::CoordSystem);
-  void setWCSSkyFrame(Coord::SkyFrame);
+  void setWCSSysSkyFrame(Coord::CoordSystem, Coord::SkyFrame);
   void setWCSFormat(Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
 
   Vector vRadToDeg(const Vector& vv, Coord::CoordSystem sys);

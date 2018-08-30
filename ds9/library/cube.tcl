@@ -334,6 +334,9 @@ proc CubeDialog {} {
 
     Toplevel $w $mb 6 [msgcat::mc {Cube}] CubeDestroyDialog
 
+    # for CoordMenuButton
+    set cube(frame) $current(frame)
+
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     $mb add cascade -label [msgcat::mc {Interval}] -menu $mb.blink
@@ -488,7 +491,7 @@ proc UpdateCubeDialog {} {
 
     # now make sure we have the coord systems
     AdjustCoordSystem3d cube system
-    CoordMenuEnable $mb.coord cube system 2 {} {}
+    CoordMenuEnable3d $mb.coord cube system sky {}
 
     # get number of axes
     set naxes [$current(frame) get fits naxes]
@@ -563,7 +566,7 @@ proc UpdateCubeDialogNoImage {} {
     set mb $icube(mb)
 
     # reset coord menu
-    CoordMenuReset $mb.coord cube system 2 {} {}
+    CoordMenuReset3d $mb.coord cube system {} {}
 
     # disable Axes Reorder
     $mb entryconfig [msgcat::mc {Axes Order}] -state disabled

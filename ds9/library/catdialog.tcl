@@ -314,7 +314,7 @@ proc CATDialog {varname format catalog title action} {
 
     CoordMenuButton $f.coord $varname system 0 sky skyformat \
 	[list CATWCSMenuUpdate $varname]
-    CoordMenuEnable $f.coord.menu $varname system 0 sky skyformat
+    CoordMenuEnable $f.coord.menu $varname system {} sky skyformat
 
     ttk::button $f.update -text [msgcat::mc {Update}] \
 	-command [list CATUpdate $varname]

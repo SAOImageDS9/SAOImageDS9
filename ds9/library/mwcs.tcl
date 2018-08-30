@@ -37,9 +37,9 @@ proc UpdateWCSMenu {} {
 
 	set wcs(frame) $current(frame)
 	if {[$current(frame) has fits]} {
-	    CoordMenuEnable $ds9(mb).wcs wcs system 0 sky skyformat
+	    CoordMenuEnable $ds9(mb).wcs wcs system {} sky skyformat
 	} else {
-	    CoordMenuReset $ds9(mb).wcs wcs system 0 sky skyformat
+	    CoordMenuReset $ds9(mb).wcs wcs system {} sky skyformat
 	}
 	LayoutWCSInfoBox $current(frame)
     } else {

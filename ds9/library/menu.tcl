@@ -180,7 +180,7 @@ proc CoordMenuEnable {w varname system image sky skyformat} {
 	}
     }
 
-    if ($image != {}} {
+    if {$image != {}} {
 	$w entryconfig [msgcat::mc {Image}] -state normal
 	$w entryconfig [msgcat::mc {Physical}] -state normal
 	$w entryconfig [msgcat::mc {Amplifier}] -state normal

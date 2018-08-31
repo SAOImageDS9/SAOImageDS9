@@ -1645,6 +1645,8 @@ public:
   void getSmoothAngleCmd();
   void hasSmoothCmd();
   void smoothCmd(int, int, int, double, double, double);
+  // backward compatibilty backup
+  void smoothCmd(int, int);
   void smoothDeleteCmd();
 
   // Threads Commands

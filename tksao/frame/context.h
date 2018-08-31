@@ -218,6 +218,8 @@ class Context {
 
   void setSmooth(int ss) {doSmooth_ =ss;}
   void setSmooth(int, SmoothFunction, int, int, double, double, double);
+  // backward compatibility backup
+  void setSmooth(int, SmoothFunction, int);
   int hasSmooth() {return doSmooth_;}
   SmoothFunction smoothFunction() {return smoothFunction_;}
   int smoothRadius() {return smoothRadius_;}

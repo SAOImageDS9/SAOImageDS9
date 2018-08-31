@@ -2929,6 +2929,16 @@ void Base::smoothCmd(int ff, int rr, int rm, double ss, double sm, double aa)
   update(MATRIX);
 }
 
+// backward compatibility backup
+void Base::smoothCmd(int ff, int rr)
+{
+  currentContext->setSmooth(1, (Context::SmoothFunction)ff, rr);
+  currentContext->analysis();
+  updateColorScale();
+  // for 3d, rebuffer
+  update(MATRIX);
+}
+
 void Base::smoothDeleteCmd()
 {
   currentContext->setSmooth(0);

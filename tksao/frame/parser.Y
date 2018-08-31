@@ -2743,6 +2743,11 @@ saveENVI : FILE_ STRING STRING endian
 
 smooth	: smoothFunction INT INT numeric numeric angle
         {fr->smoothCmd((Context::SmoothFunction)$1,$2,$3,$4,$5,$6);}
+	| smoothFunction INT
+        {
+	  // backward compatibility with backup
+	  fr->smoothCmd((Context::SmoothFunction)$1,$2);
+	}
 	| DELETE_ {fr->smoothDeleteCmd();}
 	;
 

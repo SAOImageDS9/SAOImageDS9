@@ -2561,6 +2561,14 @@ void Context::setSmooth(int dd, SmoothFunction ff, int rr, int rm,
   smoothAngle_=aa;
 }
 
+// backward compatibility backup
+void Context::setSmooth(int dd, SmoothFunction ff, int rr)
+{
+  doSmooth_=dd;
+  smoothFunction_=ff;
+  smoothRadius_=rr;
+}
+
 void Context::unload()
 {
   if (DebugPerf)

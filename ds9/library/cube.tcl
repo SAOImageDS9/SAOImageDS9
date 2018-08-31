@@ -489,6 +489,8 @@ proc UpdateCubeDialog {} {
     set w $icube(top)
     set mb $icube(mb)
 
+    set cube(frame) $current(frame)
+
     # now make sure we have the coord systems
     AdjustCoordSystem3d cube system
     CoordMenuEnable3d $mb.coord cube system sky {}

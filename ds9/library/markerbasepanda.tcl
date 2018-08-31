@@ -141,6 +141,9 @@ proc MarkerBasePandaGenerateAngles {varname} {
     upvar #0 $varname var
     global $varname
 
+    global pds9
+    set prec [expr $pds9(prec,angle)-3]
+
     $var(angtxt) delete 1.0 end
 
     set ang1 $var(ang1)
@@ -175,8 +178,8 @@ proc MarkerBasePandaGenerateAngles {varname} {
 	}
 
 	for {set i 0} {$i<=$angnum} {incr i} {
-	    set v [expr ((($ang2-$ang1)/double($angnum))*$i)+$ang1]
-	    $var(angtxt) insert end "$v\n"
+	    set vv [expr ((($ang2-$ang1)/double($angnum))*$i)+$ang1]
+	    $var(angtxt) insert end "[format %.${prec}f $vv]\n"
 	}
     }
 }

@@ -1126,25 +1126,25 @@ void Base::getMarkerBpandaAnglesCmd(int id)
   }
 }
 
-void Base::getMarkerBpandaAnglesCmd(int id, Coord::CoordSystem sys, Coord::SkyFrame sky)
+void Base::getMarkerBpandaAnglesCmd(int id, Coord::CoordSystem sys,
+				    Coord::SkyFrame sky)
 {
+  ostringstream str;
   Marker* mm=markers->head();
   while (mm) {
     if (mm->getId() == id) {
       int cnt = ((Bpanda*)mm)->numAngles();
-      double first=0;
+      double first = ((Bpanda*)mm)->angles(0);
       for (int ii=0; ii<cnt; ii++) {
-	double ang = 
-	  radToDeg(mapAngleFromRef(((Bpanda*)mm)->angles(ii),sys,sky));
+	double ang = ((Bpanda*)mm)->angles(ii);
 	if (!ii)
-	  first = ang;
-	else 
-	  if (ang<=first+FLT_EPSILON)
-	    ang += 360;
-	
-	printDouble(ang);
-	Tcl_AppendResult(interp, "\n", NULL);
+	  listAngleFromRef(str,ang,sys,sky);
+	else
+	  listAngleFromRef(str,ang,first,sys,sky);
+	str << endl;
       }
+      str << ends;
+      Tcl_AppendResult(interp, str.str().c_str(), NULL);
       return;
     }
     mm=mm->next();
@@ -1248,25 +1248,25 @@ void Base::getMarkerCpandaAnglesCmd(int id)
   Tcl_AppendResult(interp, "", NULL);
 }
 
-void Base::getMarkerCpandaAnglesCmd(int id, Coord::CoordSystem sys, Coord::SkyFrame sky)
+void Base::getMarkerCpandaAnglesCmd(int id, Coord::CoordSystem sys,
+				    Coord::SkyFrame sky)
 {
+  ostringstream str;
   Marker* mm=markers->head();
   while (mm) {
     if (mm->getId() == id) {
       int cnt = ((Cpanda*)mm)->numAngles();
-      double first=0;
+      double first = ((Cpanda*)mm)->angles(0);
       for (int ii=0; ii<cnt; ii++) {
-	double ang = 
-	  radToDeg(mapAngleFromRef(((Cpanda*)mm)->angles(ii),sys,sky));
-	if (!ii) 
-	  first = ang;
+	double ang = ((Cpanda*)mm)->angles(ii);
+	if (!ii)
+	  listAngleFromRef(str,ang,sys,sky);
 	else
-	  if (ang<=first+FLT_EPSILON)
-	    ang += 360;
-	
-	printDouble(ang);
-	Tcl_AppendResult(interp, "\n", NULL);
+	  listAngleFromRef(str,ang,first,sys,sky);
+	str << endl;
       }
+      str << ends;
+      Tcl_AppendResult(interp, str.str().c_str(), NULL);
       return;
     }
     mm=mm->next();
@@ -1511,25 +1511,25 @@ void Base::getMarkerEpandaAnglesCmd(int id)
   }
 }
 
-void Base::getMarkerEpandaAnglesCmd(int id, Coord::CoordSystem sys, Coord::SkyFrame sky)
+void Base::getMarkerEpandaAnglesCmd(int id, Coord::CoordSystem sys,
+				    Coord::SkyFrame sky)
 {
+  ostringstream str;
   Marker* mm=markers->head();
   while (mm) {
     if (mm->getId() == id) {
-      int cnt = ((Epanda*)mm)->numAngles();
-      double first=0;
+      int cnt = ((Cpanda*)mm)->numAngles();
+      double first = ((Cpanda*)mm)->angles(0);
       for (int ii=0; ii<cnt; ii++) {
-	double ang = 
-	  radToDeg(mapAngleFromRef(((Epanda*)mm)->angles(ii),sys,sky));
+	double ang = ((Cpanda*)mm)->angles(ii);
 	if (!ii)
-	  first = ang;
+	  listAngleFromRef(str,ang,sys,sky);
 	else
-	  if (ang<=first+FLT_EPSILON)
-	    ang += 360;
-
-	printDouble(ang);
-	Tcl_AppendResult(interp, "\n", NULL);
+	  listAngleFromRef(str,ang,first,sys,sky);
+	str << endl;
       }
+      str << ends;
+      Tcl_AppendResult(interp, str.str().c_str(), NULL);
       return;
     }
     mm=mm->next();

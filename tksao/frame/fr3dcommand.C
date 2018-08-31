@@ -402,7 +402,8 @@ void Frame3dBase::panToCmd(const Vector& vv, Coord::CoordSystem sys,
     return;
 
   Vector aa = keyContext->fits->mapToRef(vv, sys, sky);
-  Vector dd = Vector(options->width,options->height)/2. - mapFromRef(aa,Coord::WIDGET);
+  Vector dd = Vector(options->width,options->height)/2. -
+    mapFromRef(aa,Coord::WIDGET);
   viewCursor_ += dd*Scale(1/zoom_[0],1/zoom_[1]);
 
   update(MATRIX);
@@ -567,7 +568,8 @@ void Frame3dBase::zoomAboutCmd(const Vector& zz, const Vector& vv,
     return;
 
   Vector aa = keyContext->fits->mapToRef(vv, sys, sky);
-  Vector dd = Vector(options->width,options->height)/2. - mapFromRef(aa,Coord::WIDGET);
+  Vector dd = Vector(options->width,options->height)/2. -
+    mapFromRef(aa,Coord::WIDGET);
   viewCursor_ += dd*Scale(1/zoom_[0],1/zoom_[1]);
 
   Vector az = ((Vector&)zz).abs();
@@ -593,7 +595,8 @@ void Frame3dBase::zoomToAboutCmd(const Vector& zz, const Vector& vv,
     return;
 
   Vector aa = keyContext->fits->mapToRef(vv, sys, sky);
-  Vector dd = Vector(options->width,options->height)/2. - mapFromRef(aa,Coord::WIDGET);
+  Vector dd = Vector(options->width,options->height)/2. -
+    mapFromRef(aa,Coord::WIDGET);
   viewCursor_ += dd*Scale(1/zoom_[0],1/zoom_[1]);
   zoom_ = ((Vector&)zz).abs();
 

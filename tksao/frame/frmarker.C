@@ -1000,16 +1000,17 @@ void Base::getMarkerAngleCmd(int id)
   Marker* mm=markers->head();
   while (mm) {
     if (mm->getId() == id) {
-      printDouble(radToDeg(mm->getAngle()));
+      ostringstream str;
+      str << setprecision(precAngle_) << radToDeg(mm->getAngle()) << ends;
+      Tcl_AppendResult(interp, str.str().c_str(), NULL);
       return;
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
-void Base::getMarkerAngleCmd(int id, Coord::CoordSystem sys, Coord::SkyFrame sky)
+void Base::getMarkerAngleCmd(int id, Coord::CoordSystem sys,
+			     Coord::SkyFrame sky)
 {
   Marker* mm=markers->head();
   while (mm) {
@@ -1019,8 +1020,6 @@ void Base::getMarkerAngleCmd(int id, Coord::CoordSystem sys, Coord::SkyFrame sky
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerAnnulusRadiusCmd(int id, Coord::CoordSystem sys, 
@@ -1041,8 +1040,6 @@ void Base::getMarkerAnnulusRadiusCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerBoxFillCmd(int id)
@@ -1058,8 +1055,6 @@ void Base::getMarkerBoxFillCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerBoxAnnulusRadiusCmd(int id, Coord::CoordSystem sys, 
@@ -1080,8 +1075,6 @@ void Base::getMarkerBoxAnnulusRadiusCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerBoxRadiusCmd(int id, Coord::CoordSystem sys, 
@@ -1098,12 +1091,11 @@ void Base::getMarkerBoxRadiusCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerBpandaAnglesCmd(int id)
 {
+  ostringstream str;
   Marker* mm=markers->head();
   while (mm) {
     if (mm->getId() == id) {
@@ -1117,9 +1109,10 @@ void Base::getMarkerBpandaAnglesCmd(int id)
 	  if (ang<=first+FLT_EPSILON)
 	    ang += 360;
 	
-	printDouble(ang);
-	Tcl_AppendResult(interp, "\n", NULL);
+	str << setprecision(precAngle_) << ang << endl;
       }
+      str << ends;
+      Tcl_AppendResult(interp, str.str().c_str(), NULL);
       return;
     }
     mm=mm->next();
@@ -1169,8 +1162,6 @@ void Base::getMarkerBpandaRadiusCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerCenterCmd(int id, Coord::CoordSystem sys, 
@@ -1200,8 +1191,6 @@ void Base::getMarkerCircleFillCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerCircleRadiusCmd(int id, Coord::CoordSystem sys,
@@ -1218,12 +1207,11 @@ void Base::getMarkerCircleRadiusCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerCpandaAnglesCmd(int id)
 {
+  ostringstream str;
   Marker* mm=markers->head();
   while (mm) {
     if (mm->getId() == id) {
@@ -1237,15 +1225,14 @@ void Base::getMarkerCpandaAnglesCmd(int id)
 	  if (ang<=first+FLT_EPSILON)
 	    ang += 360;
 	
-	printDouble(ang);
-	Tcl_AppendResult(interp, "\n", NULL);
+	str << setprecision(precAngle_) << ang << endl;
       }
+      str << ends;
+      Tcl_AppendResult(interp, str.str().c_str(), NULL);
       return;
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerCpandaAnglesCmd(int id, Coord::CoordSystem sys,
@@ -1271,8 +1258,6 @@ void Base::getMarkerCpandaAnglesCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerCpandaRadiusCmd(int id, Coord::CoordSystem sys, 
@@ -1293,8 +1278,6 @@ void Base::getMarkerCpandaRadiusCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerColorCmd()
@@ -1309,8 +1292,6 @@ void Base::getMarkerColorCmd()
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerColorCmd(const char* tag)
@@ -1325,8 +1306,6 @@ void Base::getMarkerColorCmd(const char* tag)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerColorCmd(int id)
@@ -1339,8 +1318,6 @@ void Base::getMarkerColorCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerCompassArrowCmd(int id)
@@ -1362,8 +1339,6 @@ void Base::getMarkerCompassArrowCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerCompassLabelCmd(int id)
@@ -1377,8 +1352,6 @@ void Base::getMarkerCompassLabelCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerCompassRadiusCmd(int id, Coord::CoordSystem sys,
@@ -1395,8 +1368,6 @@ void Base::getMarkerCompassRadiusCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerCompassSystemCmd(int id)
@@ -1411,8 +1382,6 @@ void Base::getMarkerCompassSystemCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerCompositeCmd(int id)
@@ -1443,8 +1412,6 @@ void Base::getMarkerEllipseFillCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerEllipseRadiusCmd(int id, Coord::CoordSystem sys, 
@@ -1461,8 +1428,6 @@ void Base::getMarkerEllipseRadiusCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerEllipseAnnulusRadiusCmd(int id, Coord::CoordSystem sys, 
@@ -1483,12 +1448,11 @@ void Base::getMarkerEllipseAnnulusRadiusCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerEpandaAnglesCmd(int id)
 {
+  ostringstream str;
   Marker* mm=markers->head();
   while (mm) {
     if (mm->getId() == id) {
@@ -1502,9 +1466,10 @@ void Base::getMarkerEpandaAnglesCmd(int id)
 	  if (ang<=first+FLT_EPSILON)
 	    ang += 360;
 
-	printDouble(ang);
-	Tcl_AppendResult(interp, "\n", NULL);
+	str << setprecision(precAngle_) << ang << endl;
       }
+      str << ends;
+      Tcl_AppendResult(interp, str.str().c_str(), NULL);
       return;
     }
     mm=mm->next();
@@ -1554,8 +1519,6 @@ void Base::getMarkerEpandaRadiusCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerEpsilonCmd()
@@ -1632,8 +1595,6 @@ void Base::getMarkerIdCmd(const char* tag)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerIdCmd(const Vector& v)
@@ -1699,8 +1660,6 @@ void Base::getMarkerLineArrowCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerLineLengthCmd(int id, Coord::CoordSystem sys, 
@@ -1718,8 +1677,6 @@ void Base::getMarkerLineLengthCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerLineWidthCmd()
@@ -1735,8 +1692,6 @@ void Base::getMarkerLineWidthCmd()
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerLineWidthCmd(int id)
@@ -1751,8 +1706,6 @@ void Base::getMarkerLineWidthCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerMapLenFromRefCmd(int id, double dd,
@@ -1768,8 +1721,6 @@ void Base::getMarkerMapLenFromRefCmd(int id, double dd,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerPointShapeCmd(int id)
@@ -1782,8 +1733,6 @@ void Base::getMarkerPointShapeCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerPointSizeCmd(int id)
@@ -1796,8 +1745,6 @@ void Base::getMarkerPointSizeCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerPolygonFillCmd(int id)
@@ -1813,8 +1760,6 @@ void Base::getMarkerPolygonFillCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerPolygonSegmentCmd(const Vector& v)
@@ -1878,8 +1823,6 @@ void Base::getMarkerProjectionLengthCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerProjectionWidthCmd(int id, Coord::CoordSystem sys, 
@@ -1896,8 +1839,6 @@ void Base::getMarkerProjectionWidthCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerPropertyCmd(unsigned short which)
@@ -1979,7 +1920,6 @@ void Base::getMarkerRulerLengthCmd(int id, Coord::CoordSystem sys,
     mm=mm->next();
   }
 
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerRulerPointCmd(int id, Coord::CoordSystem sys,
@@ -2011,8 +1951,6 @@ void Base::getMarkerRulerDistSpecCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerRulerSystemCmd(int id)
@@ -2031,8 +1969,6 @@ void Base::getMarkerRulerSystemCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerSegmentSegmentCmd(const Vector& v)
@@ -2253,8 +2189,6 @@ void Base::getMarkerTagCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerTagCmd(int id, int num)
@@ -2267,8 +2201,6 @@ void Base::getMarkerTagCmd(int id, int num)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerTagDefaultNameCmd()
@@ -2371,8 +2303,6 @@ void Base::getMarkerTextRotateCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerTypeCmd(int id)
@@ -2415,8 +2345,6 @@ void Base::getMarkerVectorArrowCmd(int id)
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::getMarkerVectorLengthCmd(int id, Coord::CoordSystem sys,
@@ -2434,8 +2362,6 @@ void Base::getMarkerVectorLengthCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
-
-  Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::hasMarkerHighlitedCmd()
@@ -2488,11 +2414,8 @@ void Base::hasMarkerUndoCmd()
       Tcl_AppendResult(interp, "delete", NULL);
       return;
     default:
-      Tcl_AppendResult(interp, "", NULL);
       return;
     }
-  else
-    Tcl_AppendResult(interp, "", NULL);
 }
 
 void Base::markerLayerCmd(MarkerLayer layer) {

@@ -900,7 +900,7 @@ void Base::getBinColsDimCmd(const char* col)
 
 void Base::getBinDepthCmd()
 {
-  printDouble(currentContext->binDepth());
+  printInteger(currentContext->binDepth());
 }
 
 void Base::getBinFactorCmd()
@@ -2074,7 +2074,9 @@ void Base::getPixelTableCmd(const Vector& vv, Coord::InternalSystem ref,
 
 void Base::getRotateCmd()
 {
-  printDouble(radToDeg(rotation));
+  ostringstream str;
+  str << setprecision(precAngle_) << radToDeg(rotation) << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
 void Base::getSmoothFunctionCmd()
@@ -2117,7 +2119,10 @@ void Base::getSmoothSigmaMinorCmd()
 
 void Base::getSmoothAngleCmd()
 {
-  printDouble(radToDeg(currentContext->smoothAngle()));
+  ostringstream str;
+  str << setprecision(precAngle_) << radToDeg(currentContext->smoothAngle())
+      << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
 void Base::getThreadsCmd()

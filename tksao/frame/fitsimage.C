@@ -94,8 +94,9 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
 
   wcsSize_ =NULL;
 
-  wcsHPX_ =0;
   wcsInv_ =1;
+  wcsHPX_ =0;
+  wcsXPH_ =0;
 
   wcsState_ =NULL;
 
@@ -1074,8 +1075,9 @@ void FitsImage::initWCS(FitsHead* hd)
       delete [] wcsSize_;
     wcsSize_ =NULL;
 
-    wcsHPX_ = 0;
     wcsInv_ = 1;
+    wcsHPX_ = 0;
+    wcsXPH_ = 0;
   }
 
   // shareWCS?
@@ -1101,8 +1103,9 @@ void FitsImage::initWCS(FitsHead* hd)
 
 	  wcsSize_ = ptr->wcsSize_;
 
-	  wcsHPX_ = ptr->wcsHPX_;
 	  wcsInv_ = ptr->wcsInv_;
+	  wcsHPX_ = ptr->wcsHPX_;
+	  wcsXPH_ = ptr->wcsXPH_;
 
 	  wcsState_ = ptr->wcsState_;
 
@@ -2649,6 +2652,10 @@ Coord::Orientation FitsImage::getWCSOrientation(Coord::CoordSystem sys,
   if (!hasWCS(sys))
     return Coord::NORMAL;
   
+  // special case, makes no sense
+  if (wcsXPH_)
+    return Coord::NORMAL;
+
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
@@ -2679,6 +2686,10 @@ double FitsImage::getWCSRotation(Coord::CoordSystem sys, Coord::SkyFrame sky)
   if (!hasWCS(sys))
     return 0;
   
+  // special case, makes no sense
+  if (wcsXPH_)
+    return 0;
+
   astClearStatus; // just to make sure
   astBegin; // start memory management
 
@@ -3012,8 +3023,10 @@ void FitsImage::scanWCS(FitsHead* hd)
   if (image_) {
     const char* str = image_->getKeyword(key);
     if (str) {
-      if (!strncmp(str+5,"HPX",3) || (!strncmp(str+5,"XPH",3)))
+      if (!strncmp(str+5,"HPX",3))
 	wcsHPX_ =1;
+      if (!strncmp(str+5,"XPH",3))
+	wcsXPH_ =1;
       delete [] str;
     }
   }

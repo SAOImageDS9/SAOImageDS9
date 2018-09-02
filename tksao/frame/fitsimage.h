@@ -124,6 +124,7 @@ class FitsImage {
 
   int wcsInv_;    // can we inverse?
   int wcsHPX_;
+  int wcsXPH_;
 
   FitsHead* wcsAltHeader_; // alt wcs header
   FitsHead* wfpc2Header_; // wcs header for wfpc2
@@ -434,6 +435,7 @@ class FitsImage {
   int hasWCSLinear(Coord::CoordSystem);
   int hasWCS3D(Coord::CoordSystem);
   int hasWCSHPX() {return wcsHPX_;}
+  int hasWCSXPH() {return wcsXPH_;}
 
   void updateMatrices(Matrix&, Matrix&, Matrix&, Matrix&, Matrix&);
   void updateMatrices(Matrix3d&, Matrix3d&, Matrix3d&, Matrix3d&);

@@ -287,8 +287,8 @@ int Base::markerAnalysisPlot3d(Marker* pp, double** x, double** y,
   // main loop
   SETSIGBUS
     for (int kk=0; kk<srcd; kk++) {
-      double ss = kk+.5+.5+zparams->zmin;
-      Vector3d dd = Vector3d(ptr->center(),ss) * Translate3d(-.5,-.5,-.5);
+      double tt = kk+.5+.5+zparams->zmin;
+      Vector3d dd = Vector3d(ptr->center(),tt) * Translate3d(-.5,-.5,-.5);
       Vector3d out = ptr->mapFromRef(dd,sys,sky);
       (*x)[kk] = out[2];
 

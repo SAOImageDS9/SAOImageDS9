@@ -260,7 +260,7 @@ shape : CIRCLE_ {set _ circle}
  | COMPOSITE_ {set _ composite}
  ;
 
-point : {set _ ""}
+point : {set _ boxcircle}
  | CIRCLE_ {set _ circle}
  | BOX_ {set _ box}
  | DIAMOND_ {set _ diamond}

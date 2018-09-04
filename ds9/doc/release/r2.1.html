@@ -1,622 +1,451 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;
-      charset=windows-1252">
-    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
-      2.4.7-10 i686) [Netscape]">
-    <title>DS9 Version 2.1 Release Notes</title>
-  </head>
-  <body vlink="#551a8b" text="#000000" link="#0000ee" bgcolor="#ffffff"
-    alink="#ff0000">
-    <h3>
-      <img alt="" src="../sun.gif" width="100" height="98"
-        align="middle">SAOImageDS9 Version
-      2.1 Release
-      Notes</h3>
-    <ol>
-      <h4> <b>Version 2.1</b></h4>
-      <ol>
-        <li> <tt>04.05.2002 fixed a problem with xpa contour load.</tt></li>
-        <li> <tt>04.22.2002 ds9 version 2.1 released to the public.</tt></li>
-      </ol>
-      <h4> <b>Version 2.1b7</b></h4>
-      <ol>
-        <li> <tt>04.02.2002 upgrade to XPA 2.1.0e2. This fixes a
-            problem
-            with
-            xpa and
-            linux/linuxppc.</tt></li>
-        <li> <tt>04.03.2002 fixed a problem with AST. plot.c, line
-            19463,
-            change parameter
-            'force' from 1 to 0 in call to 'CheckLabels'. Sometimes we
-            were seeing
-            adj labels that where the same. This change makes sure that
-            the labels
-            are 'reduced' if we have this condition.</tt></li>
-        <li> <tt>04.03.2002 ds9 will now automatically open as a bin
-            table
-            fits extension
-            named EVENTS, STDEVT, and RAYEVENT.</tt></li>
-        <li> <tt>04.03.2002 when trying to find an image to open in
-            relax
-            mode
-            (ie the
-            use did not specify an extension), ds9 will not find a valid
-            image if
-            the
-            length of either axis is 0.</tt></li>
-        <li> <tt>04.03.2002 now check for Ghostscript version 6.50 or
-            higher
-            when invoking
-            Save As.</tt></li>
-        <li> <tt>04.03.2002 add help application preference. Users can
-            now
-            choose between
-            Netscape and Mozilla as the prefered help application.</tt></li>
-        <li> <tt>04.04.2002 ds9 version 2.1b7 released to the public.</tt></li>
-      </ol>
-      <h4> <b>Version 2.1b6</b></h4>
-      <ol>
-        <li> <tt>02.04.2002 upgraded to ast version 1.8.6. Modified ast
-            to
-            use
-            sscanf()
-            for all platforms except Darwin. Darwin uses astSscanf(),
-            which works
-            around
-            a problem with sscanf() on MacOSX, with format strings of
-            the following
-            format: sscanf(str, " %s %n", foo, &amp;nc).</tt></li>
-        <li> <tt>02.04.2002 changed fity++ primary_/head_ header
-            relationship.
-            primary_
-            is only set if there is a primary header is available and
-            different
-            from
-            head_.</tt></li>
-        <li> <tt>02.04.2002 wsc's are init'd with both the head_ and
-            the
-            primary_ (if
-            available) to handle the case where wcs keywords are spread
-            between hdu
-            nd primary headers in mulitiple extension files.</tt></li>
-        <li> <tt>02.06.2002 all xpa commands are now 'catch{}' to
-            invoke a
-            procedure
-            that will unwind the watch cursor stack. Hopefully, no more
-            stuck watch
-            cursors.</tt></li>
-        <li> <tt>02.07.2002 add <i>color</i> and <i>width</i>
-            parameters
-            to
-            contours
-            paste command. defaults are <i>green</i> and <i>1</i></tt></li>
-        <li> <tt>02.08.2002 fixed a problem with the FRAME menu. It was
-            cutting off
-            the last separator.</tt></li>
-        <li> <tt>02.12.2002 AST grid still does not support ICRS
-            properly.
-            When a user
-            sets the coordinate system to ICRS, the actually parameters
-            sent to the
-            AST grid code is FK5</tt></li>
-        <li> <tt>02.13.2002 for XPA points array, fits, regions, and
-            wcs
-            (fillbuf=false),
-            manually flush the buffer at the end to make sure no data is
-            left</tt></li>
-        <li> <tt>02.13.2002 ecliptic coords from wcssubs corrected by
-            new
-            version of
-            wcs/wcscon.c</tt></li>
-        <li> <tt>02.13.2002 AST grids, corrected the MDJ-OBS keyword
-            generated
-            to generate
-            the correct EPOCH.</tt></li>
-        <li> <tt>02.13.2002 adjusted the EQUINOX value for ECLIPTIC
-            coords
-            for
-            ast grids
-            to agree with wcssubs. Seems for ecliptic coords, wcssubs
-            and ast use
-            two
-            slightly different interpretations of the EQUINOX value.</tt></li>
-        <li> <tt>02.13.2002 fixed a problem with histogram equalization
-            introduced in
-            version 2.1b5.</tt></li>
-        <li> <tt>02.14.2002 fixed a problem with titles in plot(stdin).
-            We
-            now
-            take
-            the first line, and starting from the end, pick off the
-            dimension, x
-            and
-            y axis titles, and the remainder is taken as the plot title.
-            It can
-            contain
-            spaces and special characters such as '[]'</tt></li>
-        <li> <tt>02.14.2002 add 'Always create new plot' option to
-            prefs</tt></li>
-        <li> <tt>02.14.2002 add multiple analysis plots, unless prefs
-            are
-            unset</tt></li>
-        <li> <tt>02.14.2002 change default annulus and panda to 1
-            annuli</tt></li>
-        <li> <tt>02.14.2002 enable multiple array loads via blueplate
-            dialog</tt></li>
-        <li> <tt>02.14.2002 reset,append, and replace wcs now processes
-            OBJECT
-            keyword</tt></li>
-        <li> <tt>02.15.2002 fixed a problem with grid format of
-            degrees.
-            Sometimes,
-            the incorrect format would be used. This was corrected by
-            up'ng the
-            number
-            of digits displayed to d.3</tt></li>
-        <li> <tt>02.21.2002 upgraded to AST 1.8.7</tt></li>
-        <li> <tt>02.21.2002 upgraded to WCS 3.0.7</tt></li>
-        <li> <tt>02.22.2002 fixed a problem with Ascii Tables in
-            fitsy++.
-            The
-            column
-            offset is now calculated from TBCOLn if present.</tt></li>
-        <li> <tt>02.22.2002 simplied columns in fitsy++. Now all
-            columns
-            have
-            a value(char*
-            ptr, int i) and str(char* ptr, int i) procedure.</tt></li>
-        <li> <tt>02.22.2002 add support for HST WFPC2 mosaics</tt></li>
-        <li> <tt>02.25.2002 fixed a problem with 'marker command'. The
-            command
-            STRING
-            must be quoted by '\{' '\}' before being pasted to the Frame
-            parser.</tt></li>
-        <li> <tt>02.26.2002 add $ERROR/ERROR: support for analysis
-            $plot(stdin) macro.</tt></li>
-        <li> <tt>02.26.2002 analysis menus now support multiple levels
-            of
-            hierarchical
-            menus</tt></li>
-        <li> <tt>02.26.2002 multiple hierarchical menus may have the
-            same
-            label</tt></li>
-        <li> <tt>02.26.2002 hierarchical menu label may have an
-            imbedded
-            spaces</tt></li>
-        <li> <tt>02.26.2002 add endhmenu endparam to analysis file
-            parser</tt></li>
-        <li> <tt>02.26.2002 analysis file text maybe indented</tt></li>
-        <li> <tt>02.26.2002 add help support to analysis file</tt></li>
-        <li> <tt>02.27.2002 add $BEGINTEXT/$ENDTEXT to $plot(stdin)
-            macro</tt></li>
-        <li> <tt>02.27.2002 add xpa get fits [type|image|table] command</tt></li>
-        <li> <tt>02.27.2002 minor tweak with the File:Save as menu</tt></li>
-        <li> <tt>02.27.2002 clean up some minor memory leaks with
-            FitsImage::initwcs()</tt></li>
-        <li> <tt>02.27.2002 fixed a problem in dialog.tcl DialogWait
-            and
-            reseting errorInfo</tt></li>
-        <li> <tt>03.01.2002 dss non-save file now uses internal gz</tt></li>
-        <li> <tt>03.04.2002 plot windows can now support a second set
-            of y
-            and
-            error
-            values.</tt></li>
-        <li> <tt>03.05.2002 add debug iis option</tt></li>
-        <li> <tt>03.05.2002 filenames now always reflect fits extension
-            name/number
-            and filter.</tt></li>
-        <li> <tt>03.05.2002 the last step in analysis commands now
-            replaces
-            all ']['
-            with ',', building up readable filters.</tt></li>
-        <li> <tt>03.06.2002 updated nan.C and nan.h to reflect erics
-            new
-            treatment of
-            alpha</tt></li>
-        <li> <tt>03.08.2002 add support for save fits gz</tt></li>
-        <li> <tt>03.12.2002 keywords BSCALE/BZERO/BLANK are now ignored
-            for
-            FITS IEEE
-            floating point data</tt></li>
-        <li> <tt>03.12.2002 IEEE nan and inf are supported as valid
-            FITS
-            IEEE
-            floating
-            point data</tt></li>
-        <li> <tt>03.13.2002 add fits.sh test suite which tests for
-            bitpix
-            =
-            8,16,32,-32,-64
-            and BLANK,BSCALE,BZERO keywords, and IEEE floating point
-            data NaN and
-            INF.</tt></li>
-        <li> <tt>03.15.2002 add save resample support</tt></li>
-        <li> <tt>03.18.2002 add support for Mosaic Fast Render. Only
-            valid
-            for
-            IRAF
-            mosaics. Basically, you track the current fitsimage til you
-            have miss.</tt></li>
-        <li> <tt>03.19.2002 upgrade XPA 2.1.0e</tt></li>
-        <li> <tt>03.19.2002 upgrade FILTER 1.1.0e</tt></li>
-        <li> <tt>03.19.2002 upgrade FITSY 1.1.0e</tt></li>
-        <li> <tt>03.19.2002 fixed a problem when a user CUT a region
-            that
-            had
-            a dialog
-            box open. A CUT operation now calls the delete callback to
-            remove any
-            pending
-            dialog boxes.</tt></li>
-        <li> <tt>03.19.2002 fixed a problem with -print command line
-            option
-            for truecolor
-            visuals. We need to make sure that the window is realized so
-            that the
-            colormap
-            has been created.</tt></li>
-        <li> <tt>03.20.2002 ds9 version 2.1b6 released to the public</tt></li>
-      </ol>
-      <h4> <b>Version 2.1b5</b></h4>
-      <ol>
-        <li> <tt>fixed a problem with bogus wcs data and replace wcs
-            xpa
-            command</tt></li>
-        <li> <tt>add view tickmarks to grid dialog box</tt></li>
-        <li> <tt>fixed a problem with loading a custom colormap and
-            then
-            printing</tt></li>
-        <li> <tt>add command line/xpa option load colormap file</tt></li>
-        <li> <tt>fixed problems with grid dialog box and switching
-            between
-            frames</tt></li>
-        <li> <tt>add command line option pan</tt></li>
-        <li> <tt>add command line option about</tt></li>
-        <li> <tt>add command line option view</tt></li>
-        <li> <tt>gzip compression is now built-in</tt></li>
-        <li> <tt>add xpa fits [mosaic|mosaicimage]</tt></li>
-        <li> <tt>fixed a problem with loading arrays via stdin</tt></li>
-        <li> <tt>fixed a problem with the panda region and rotation</tt></li>
-        <li> <tt>improved performance in plotting of large data sets</tt></li>
-        <li> <tt>fixed a problem with xpa analysis plot stdin and ';'
-            in
-            the
-            title</tt></li>
-        <li> <tt>increased the histequ internal buffer size to 16k</tt></li>
-        <li> <tt>enhance xpa analysis load command</tt></li>
-        <li> <tt>add multiple preload analysis files</tt></li>
-        <li> <tt>add hiearch analysis menus</tt></li>
-        <li> <tt>fixed cancel support for Namesvr</tt></li>
-        <li> <tt>fixed cancel support for DSS</tt></li>
-        <li> <tt>add virtual observatory support</tt></li>
-        <li> <tt>add jpeg,tiff,pgn,ppm support, via ghostscript</tt></li>
-        <li> <tt>fix a problem with min/max and DATASEC</tt></li>
-        <li> <tt>added 'load incr' commands</tt></li>
-        <li> <tt>added 'load xxxxx incr' command</tt></li>
-        <li> <tt>fixed minor memory leaks</tt></li>
-        <li> <tt>added analysis command log</tt></li>
-        <li> <tt>add xpa grid load/save</tt></li>
-        <li> <tt>add command line option grid</tt></li>
-        <li> <tt>fixed a problem with loading fits from a stream where
-            the
-            primary hdu
-            contains an image</tt></li>
-        <li> <tt>enhance xpa/command support for dss</tt></li>
-        <li> <tt>add nameserver command line option</tt></li>
-        <li> <tt>fix a problem with panner and magnifer preferences</tt></li>
-        <li> <tt>fixed a issue when gz files are a few bytes short</tt></li>
-        <li> <tt>add support for wcs mosaics</tt></li>
-        <li> <tt>added support for wcs grids for all types of mosaics</tt></li>
-        <li> <tt>speed up printing by factor of 5</tt></li>
-        <li> <tt>add new grid type</tt></li>
-        <li> <tt>updated to wcssubs 3.0.5</tt></li>
-        <li> <tt>updated to ast 1.8.3</tt></li>
-        <li> <tt>updated to filter 1.0b9</tt></li>
-        <li> <tt>updated to fitsy 1.0b9</tt></li>
-        <li> <tt>command line options -file, -mosaic, -mosaicimage,
-            -array,
-            -url are
-            now modal</tt></li>
-        <li> <tt>add -debug [options] support</tt></li>
-        <li> <tt>fixed a problem with contours and NAN data</tt></li>
-        <li> <tt>fixed a problem with contours and DATASEC</tt></li>
-        <li> <tt>split the pros, saoimage, and saotng parsers</tt></li>
-        <li> <tt>fixed a problem with text with the saotng parser</tt></li>
-        <li> <tt>fixed a problem with saotng,saoimage, and pros regions
-            parsers and
-            \n terminators</tt></li>
-        <li> <tt>add thin width contours</tt></li>
-        <li> <tt>add thin width grids</tt></li>
-        <li> <tt>fixed a problem with iraf mosaics</tt></li>
-        <li> <tt>10.31.2001 Physical, Amplifier, and Detector
-            coordinates
-            are
-            only displayed
-            if keywords are present</tt></li>
-        <li> <tt>11.1.2001 Diplay header will display primary header if
-            requested</tt></li>
-        <li> <tt>11.1.2001 add xpa cmap value command</tt></li>
-        <li> <tt>11.2.2001 removed support for analysis with files with
-            spaces
-            cause
-            it created a problem with filename with extensions</tt></li>
-        <li> <tt>11.2.2001 fixed a problem with analysis regions files
-            and
-            special characters
-            that was causing a problem with ellipse annlus</tt></li>
-        <li> <tt>11.2.2001 add analysis $file[$region] macro</tt></li>
-        <li> <tt>11.8.2001 fixed a problem with saving pixel table data</tt></li>
-        <li> <tt>11.8.2001 add John Rolls new blueplate special stand
-            dialog
-            box</tt></li>
-        <li> <tt>11.8.2001 removed 'Open Mosaic Images', since you can
-            now
-            do
-            the same
-            from the dialog box</tt></li>
-        <li> <tt>11.8.2001 fixed a problem with printing/saving text
-            from
-            SimpleTextDialog</tt></li>
-        <li> <tt>11.9.2001 load muliple files is now much faster</tt></li>
-        <li> <tt>11.13.2001 fixed a problem with Simple List Box and
-            windows</tt></li>
-        <li> <tt>11.13.2001 default standard dialog box for windows is
-            now
-            the
-            windows
-            default</tt></li>
-        <li> <tt>12.3.2001 expand update to update [now]</tt></li>
-        <li> <tt>12.4.2001 fitsy++ now promotes all keyword finds to
-            uppercase</tt></li>
-        <li> <tt>12.4.2001 add 'get fits header # keyword &lt;str&gt;'
-            command</tt></li>
-        <li> <tt>12.4.2001 fix a problem with selecting projection
-            region
-            at
-            high zoom
-            factors</tt></li>
-        <li> <tt>12.5.2001 fixed problems with length and orientation
-            of
-            projection
-            region</tt></li>
-        <li> <tt>12.6.2001 change 'get data values' syntax to include
-            fits
-            #</tt></li>
-        <li> <tt>12.14.2001 fixed a problem with mosaics with linear
-            wcs
-            that
-            caused
-            a core</tt></li>
-        <li> <tt>12.31.2001 supported added for regions and mosaics</tt></li>
-        <li> <tt>1.2.2002 projection regions now support mosaics</tt></li>
-        <li> <tt>1.3.2002 updated xparemote with proxy support</tt></li>
-        <li> <tt>1.3.2002 add vo prefs</tt></li>
-        <li> <tt>1.4.2002 add ciao pie region support</tt></li>
-        <li> <tt>1.7.2002 fixed panda and wcs with rotation problem</tt></li>
-        <li> <tt>1.9.2002 uprade ast to version 1.8.4</tt></li>
-        <li> <tt>1.15.2002 enable Blt_ZoomStack for data plots</tt></li>
-        <li> <tt>1.17.2002 fixed a problem with iraf mosaics with
-            flipped
-            segments and
-            a round off problem</tt></li>
-        <li> <tt>1.18.2002 add support for multiple aux contours</tt></li>
-        <li> <tt>1.23.2002 fixed a problem with fits headers and the
-            END
-            keyword is
-            not 8 chars</tt></li>
-        <li> <tt>1.23.2002 fixed many problems with no fits loaded and
-            user
-            gui actions</tt></li>
-        <li> <tt>1.24.2002 fixed a problem with looking for fits region
-            extensions and
-            a filter specified</tt></li>
-        <li> <tt>1.24.2002 add regions file format and coord system to
-            prefs
-            menu</tt></li>
-        <li> <tt>1.25.2002 get data values now spans mosaics and is in
-            native
-            coords</tt></li>
-        <li> <tt>1.31.2002 ds9 version 2.1b5 released to the public</tt></li>
-      </ol>
-      <h4> <b>Version 2.1b4</b></h4>
-      <ol>
-        <li> <tt>fixed a problem very, very large images and int
-            overflow</tt></li>
-        <li> <tt>add Page Setup preferences</tt></li>
-        <li> <tt>plot data is filtered to remove all non numeric data</tt></li>
-        <li> <tt>fixed a problem with plotting x,y data on alpha</tt></li>
-        <li> <tt>add manual grid layout</tt></li>
-        <li> <tt>text regions can now be rotated</tt></li>
-        <li> <tt>regions text now appears in the magnifier</tt></li>
-        <li> <tt>added the PANDA region</tt></li>
-        <li> <tt>added analysis file macro $entry</tt></li>
-        <li> <tt>fixed a problem with multiple menu entries for
-            analysis
-            files
-            with
-            multiple file templates</tt></li>
-        <li> <tt>default values of Analysis file parameters are now
-            updated</tt></li>
-        <li> <tt>fixed a problem with clear analysis commands</tt></li>
-        <li> <tt>analysis tasks are now non-blocking</tt></li>
-        <li> <tt>add xy regions file format</tt></li>
-        <li> <tt>fixed problem with ps level 2 psuedocolor8 printing
-            and
-            inverse colormaps</tt></li>
-        <li> <tt>in regions files, the comment char '#' comments out
-            til a
-            new-line
-            char</tt></li>
-        <li> <tt>extended $regions macro to include multiple properties
-            and
-            regions
-            format</tt></li>
-        <li> <tt>fixed a problem with loading array data on a little
-            endian
-            machine
-            and the arch is not specified</tt></li>
-        <li> <tt>fixed a problem with histogram equalization</tt></li>
-        <li> <tt>fixed a major problem with all negative float or
-            double
-            data
-            and min/max
-            issues</tt></li>
-        <li> <tt>fixed a problem with $regions and no wcs</tt></li>
-        <li> <tt>fixed a problem with printing ps level 2 and fits with
-            NAN</tt></li>
-        <li> <tt>fixed a problem with running on a msb machine, and
-            displaying
-            on a
-            lsb 24bit machine</tt></li>
-        <li> <tt>unrolled all mosaic algorithms to cycle thru all
-            segments
-            for
-            each
-            pixel</tt></li>
-        <li> <tt>add DATASEC for rendering and printing</tt></li>
-        <li> <tt>upgraded to tcl/tk 8.3.3</tt></li>
-        <li> <tt>add http and ftp macro expand to analysis</tt></li>
-        <li> <tt>fixed a problem with contour log scale</tt></li>
-        <li> <tt>add button 2 bindinds for panner</tt></li>
-        <li> <tt>iraf -fifo default is now /dev/imt1</tt></li>
-        <li> <tt>commented out error messages for bad iraf -fifo,
-            -port,
-            -unix</tt></li>
-        <li> <tt>add default imtoolrc values to fb_config if no
-            imtoolrc
-            file
-            is found
-            at startup</tt></li>
-        <li> <tt>add iis support for windows port</tt></li>
-        <li> <tt>add command: get data coordsys x y dx dy var</tt></li>
-        <li> <tt>add plot limits to plot tool</tt></li>
-        <li> <tt>add PROJECTION region</tt></li>
-        <li> <tt>add GETURL analysis macro</tt></li>
-        <li> <tt>Fits bin table keywords TUNITx are now process if
-            available</tt></li>
-        <li> <tt>add $filename(root) macro</tt></li>
-        <li> <tt>update filename on load</tt></li>
-        <li> <tt>fixed a problem with Colormaps with a name with a
-            single
-            character</tt></li>
-        <li> <tt>added iraf 'non-display' imexamine support</tt></li>
-      </ol>
-      <h4> <b>Version 2.1b3</b></h4>
-      <ol>
-        <li> <tt>fixed a problem with angles of regions specified in
-            WCS</tt></li>
-        <li> <tt>add xpa point 'regions save'</tt></li>
-        <li> <tt>add xpa point 'regions load'</tt></li>
-        <li> <tt>regions file format <i>SAOIMAGE</i> now supports
-            annulus,
-            ellipse annulus,
-            and box annulus</tt></li>
-        <li> <tt>the obsolete <i>Ftools</i> regions file format
-            support
-            has
-            been removed</tt></li>
-        <li> <tt>fixed many problems with <i>IRAF</i> regions file
-            format</tt></li>
-        <li> <tt>fixed many problems with <i>CIAO</i> regions file
-            format</tt></li>
-        <li> <tt>removed all support for Rosat All Sky Survey</tt></li>
-        <li> <tt>all comments and global settings have been removed
-            from
-            regions output
-            if delimiter is set to semicolon</tt></li>
-        <li> <tt>fixed a problem with regions defined in WCS degrees
-            and
-            do
-            not lie
-            on an image</tt></li>
-        <li> <tt>fixed a problem with ellipse annulus and box annulus
-            regions
-            in regions
-            files that contain only one region</tt></li>
-        <li> <tt>check for radius of length 0 for circle, annulus,
-            ellipse,
-            and ellipse
-            annulus</tt></li>
-        <li> <tt>Added Histogram Equalization colormap scale
-            distribution</tt></li>
-        <li> <tt>removed <i>default</i> as font option</tt></li>
-        <li> <tt>default font is now <i>helvetica</i></tt></li>
-        <li> <tt>changed command line option -regionfile to -region</tt></li>
-        <li> <tt>fixed a problem with command line option -region and
-            incorrect coordinates</tt></li>
-        <li> <tt>Change the 'Scale:User Limits...' dialog into
-            non-modal
-            'Scale Parameters...'</tt></li>
-        <li> <tt>Added 'ZMax' Scale Limits algorithm</tt></li>
-        <li> <tt>fixed a problem with loading regions files with full
-            pathnames with
-            'fits' in them</tt></li>
-        <li> <tt>Updated Prefs, command line options, and xpa points to
-            reflect the
-            new way minmax and scale options are handled</tt></li>
-        <li> <tt>Removed 'Scan On Load' prefs</tt></li>
-        <li> <tt>Added 'Source/Background' region property</tt></li>
-        <li> <tt>Add support for 'Source/Background' region property to
-            SAOtng
-            region
-            parser</tt></li>
-        <li> <tt>Fixed a color problem with pseudocolor 8 frames and
-            black/white. This
-            showed up in new Sun hardware and Solaris 8 sofware</tt></li>
-        <li> <tt>Fixed a problem with Postscript printing in
-            pseudocolor 8
-            colormode</tt></li>
-        <li> <tt>The magnifier now updates during blinking</tt></li>
-        <li> <tt>Added pixel table commands to command line options and
-            xpa</tt></li>
-        <li> <tt>Add -single command line option</tt></li>
-        <li> <tt>Add default region shape to preferences</tt></li>
-        <li> <tt>New Analysis File format supported, with new macros
-            $message,
-            $text,
-            $plot</tt></li>
-        <li> <tt>Add -analysis command line option</tt></li>
-        <li> <tt>Add subcommands to xpa <i>analysis:</i>
-            load,clear,message,text,plot</tt></li>
-        <li> <tt>Add Analysis File macros $data and $image</tt></li>
-        <li> <tt>Add autoload FITS regions option</tt></li>
-        <li> <tt>Add load FITS Region file to command line options and
-            xpa
-            regions</tt></li>
-        <li> <tt>DSS servers now have limits as to size of image
-            downloaded</tt></li>
-        <li> <tt>Open Array now presents a dialog box if no specs are
-            given</tt></li>
-        <li> <tt>Now supports compression with .ftz extension</tt></li>
-        <li> <tt>All non-modal windows raise to top when re-invoked</tt></li>
-        <li> <tt>Added Line Width to all regions</tt></li>
-        <li> <tt>Comments are now retained for regions files</tt></li>
-        <li> <tt>Add Line Width to contours</tt></li>
-        <li> <tt>Changed xpa delim to strip yes/no</tt></li>
-        <li> <tt>Contour methods are 'Faster' and 'Better'</tt></li>
-        <li> <tt>Add Convert Contours to polygons</tt></li>
-        <li> <tt>Add $xpa analysis macro</tt></li>
-        <li> <tt>Add $param analysis macros</tt></li>
-        <li> <tt>Fixed a problem with crosshair and rebinning</tt></li>
-        <li> <tt>Fixed a problem with pan click and drag and fits
-            binary
-            tables</tt></li>
-        <li> <tt>Add undo regions</tt></li>
-        <li> <tt>Add cut/copy/paste regions</tt></li>
-        <li> <tt>Changed the preferences file and startup file to be
-            consistent across
-            platforms</tt></li>
-        <li> <tt>Add 'Pan then Zoom' to button 2 options</tt></li>
-        <li> <tt>Add support for FITS 3D data cubes</tt></li>
-        <li> <tt>Add Edit button row</tt></li>
-        <li> <tt>Add default mode to prefs</tt></li>
-        <li> <tt>Fixed a problem with file names starting with 'file'</tt></li>
-        <li> <tt>Add xpa regions shape/color/width</tt></li>
-      </ol>
-    </ol>
-  </body>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.18.1), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content=
+"Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<title>DS9 Version 2.1 Release Notes</title>
+</head>
+<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor=
+"#FFFFFF" alink="#FF0000">
+<h3><img alt="" src="../sun.gif" width="100" height="98" align=
+"middle">SAOImageDS9 Version 2.1 Release Notes</h3>
+<div style="margin-left: 2em">
+<h4><b>Version 2.1</b></h4>
+<ol>
+<li><tt>04.05.2002 fixed a problem with xpa contour load.</tt></li>
+<li><tt>04.22.2002 ds9 version 2.1 released to the
+public.</tt></li>
+</ol>
+<h4><b>Version 2.1b7</b></h4>
+<ol>
+<li><tt>04.02.2002 upgrade to XPA 2.1.0e2. This fixes a problem
+with xpa and linux/linuxppc.</tt></li>
+<li><tt>04.03.2002 fixed a problem with AST. plot.c, line 19463,
+change parameter 'force' from 1 to 0 in call to 'CheckLabels'.
+Sometimes we were seeing adj labels that where the same. This
+change makes sure that the labels are 'reduced' if we have this
+condition.</tt></li>
+<li><tt>04.03.2002 ds9 will now automatically open as a bin table
+fits extension named EVENTS, STDEVT, and RAYEVENT.</tt></li>
+<li><tt>04.03.2002 when trying to find an image to open in relax
+mode (ie the use did not specify an extension), ds9 will not find a
+valid image if the length of either axis is 0.</tt></li>
+<li><tt>04.03.2002 now check for Ghostscript version 6.50 or higher
+when invoking Save As.</tt></li>
+<li><tt>04.03.2002 add help application preference. Users can now
+choose between Netscape and Mozilla as the prefered help
+application.</tt></li>
+<li><tt>04.04.2002 ds9 version 2.1b7 released to the
+public.</tt></li>
+</ol>
+<h4><b>Version 2.1b6</b></h4>
+<ol>
+<li><tt>02.04.2002 upgraded to ast version 1.8.6. Modified ast to
+use sscanf() for all platforms except Darwin. Darwin uses
+astSscanf(), which works around a problem with sscanf() on MacOSX,
+with format strings of the following format: sscanf(str, " %s %n",
+foo, &amp;nc).</tt></li>
+<li><tt>02.04.2002 changed fity++ primary_/head_ header
+relationship. primary_ is only set if there is a primary header is
+available and different from head_.</tt></li>
+<li><tt>02.04.2002 wsc's are init'd with both the head_ and the
+primary_ (if available) to handle the case where wcs keywords are
+spread between hdu nd primary headers in mulitiple extension
+files.</tt></li>
+<li><tt>02.06.2002 all xpa commands are now 'catch{}' to invoke a
+procedure that will unwind the watch cursor stack. Hopefully, no
+more stuck watch cursors.</tt></li>
+<li><tt>02.07.2002 add <i>color</i> and <i>width</i> parameters to
+contours paste command. defaults are <i>green</i> and
+<i>1</i></tt></li>
+<li><tt>02.08.2002 fixed a problem with the FRAME menu. It was
+cutting off the last separator.</tt></li>
+<li><tt>02.12.2002 AST grid still does not support ICRS properly.
+When a user sets the coordinate system to ICRS, the actually
+parameters sent to the AST grid code is FK5</tt></li>
+<li><tt>02.13.2002 for XPA points array, fits, regions, and wcs
+(fillbuf=false), manually flush the buffer at the end to make sure
+no data is left</tt></li>
+<li><tt>02.13.2002 ecliptic coords from wcssubs corrected by new
+version of wcs/wcscon.c</tt></li>
+<li><tt>02.13.2002 AST grids, corrected the MDJ-OBS keyword
+generated to generate the correct EPOCH.</tt></li>
+<li><tt>02.13.2002 adjusted the EQUINOX value for ECLIPTIC coords
+for ast grids to agree with wcssubs. Seems for ecliptic coords,
+wcssubs and ast use two slightly different interpretations of the
+EQUINOX value.</tt></li>
+<li><tt>02.13.2002 fixed a problem with histogram equalization
+introduced in version 2.1b5.</tt></li>
+<li><tt>02.14.2002 fixed a problem with titles in plot(stdin). We
+now take the first line, and starting from the end, pick off the
+dimension, x and y axis titles, and the remainder is taken as the
+plot title. It can contain spaces and special characters such as
+'[]'</tt></li>
+<li><tt>02.14.2002 add 'Always create new plot' option to
+prefs</tt></li>
+<li><tt>02.14.2002 add multiple analysis plots, unless prefs are
+unset</tt></li>
+<li><tt>02.14.2002 change default annulus and panda to 1
+annuli</tt></li>
+<li><tt>02.14.2002 enable multiple array loads via blueplate
+dialog</tt></li>
+<li><tt>02.14.2002 reset,append, and replace wcs now processes
+OBJECT keyword</tt></li>
+<li><tt>02.15.2002 fixed a problem with grid format of degrees.
+Sometimes, the incorrect format would be used. This was corrected
+by up'ng the number of digits displayed to d.3</tt></li>
+<li><tt>02.21.2002 upgraded to AST 1.8.7</tt></li>
+<li><tt>02.21.2002 upgraded to WCS 3.0.7</tt></li>
+<li><tt>02.22.2002 fixed a problem with Ascii Tables in fitsy++.
+The column offset is now calculated from TBCOLn if
+present.</tt></li>
+<li><tt>02.22.2002 simplied columns in fitsy++. Now all columns
+have a value(char* ptr, int i) and str(char* ptr, int i)
+procedure.</tt></li>
+<li><tt>02.22.2002 add support for HST WFPC2 mosaics</tt></li>
+<li><tt>02.25.2002 fixed a problem with 'marker command'. The
+command STRING must be quoted by '\{' '\}' before being pasted to
+the Frame parser.</tt></li>
+<li><tt>02.26.2002 add $ERROR/ERROR: support for analysis
+$plot(stdin) macro.</tt></li>
+<li><tt>02.26.2002 analysis menus now support multiple levels of
+hierarchical menus</tt></li>
+<li><tt>02.26.2002 multiple hierarchical menus may have the same
+label</tt></li>
+<li><tt>02.26.2002 hierarchical menu label may have an imbedded
+spaces</tt></li>
+<li><tt>02.26.2002 add endhmenu endparam to analysis file
+parser</tt></li>
+<li><tt>02.26.2002 analysis file text maybe indented</tt></li>
+<li><tt>02.26.2002 add help support to analysis file</tt></li>
+<li><tt>02.27.2002 add $BEGINTEXT/$ENDTEXT to $plot(stdin)
+macro</tt></li>
+<li><tt>02.27.2002 add xpa get fits [type|image|table]
+command</tt></li>
+<li><tt>02.27.2002 minor tweak with the File:Save as menu</tt></li>
+<li><tt>02.27.2002 clean up some minor memory leaks with
+FitsImage::initwcs()</tt></li>
+<li><tt>02.27.2002 fixed a problem in dialog.tcl DialogWait and
+reseting errorInfo</tt></li>
+<li><tt>03.01.2002 dss non-save file now uses internal gz</tt></li>
+<li><tt>03.04.2002 plot windows can now support a second set of y
+and error values.</tt></li>
+<li><tt>03.05.2002 add debug iis option</tt></li>
+<li><tt>03.05.2002 filenames now always reflect fits extension
+name/number and filter.</tt></li>
+<li><tt>03.05.2002 the last step in analysis commands now replaces
+all '][' with ',', building up readable filters.</tt></li>
+<li><tt>03.06.2002 updated nan.C and nan.h to reflect erics new
+treatment of alpha</tt></li>
+<li><tt>03.08.2002 add support for save fits gz</tt></li>
+<li><tt>03.12.2002 keywords BSCALE/BZERO/BLANK are now ignored for
+FITS IEEE floating point data</tt></li>
+<li><tt>03.12.2002 IEEE nan and inf are supported as valid FITS
+IEEE floating point data</tt></li>
+<li><tt>03.13.2002 add fits.sh test suite which tests for bitpix =
+8,16,32,-32,-64 and BLANK,BSCALE,BZERO keywords, and IEEE floating
+point data NaN and INF.</tt></li>
+<li><tt>03.15.2002 add save resample support</tt></li>
+<li><tt>03.18.2002 add support for Mosaic Fast Render. Only valid
+for IRAF mosaics. Basically, you track the current fitsimage til
+you have miss.</tt></li>
+<li><tt>03.19.2002 upgrade XPA 2.1.0e</tt></li>
+<li><tt>03.19.2002 upgrade FILTER 1.1.0e</tt></li>
+<li><tt>03.19.2002 upgrade FITSY 1.1.0e</tt></li>
+<li><tt>03.19.2002 fixed a problem when a user CUT a region that
+had a dialog box open. A CUT operation now calls the delete
+callback to remove any pending dialog boxes.</tt></li>
+<li><tt>03.19.2002 fixed a problem with -print command line option
+for truecolor visuals. We need to make sure that the window is
+realized so that the colormap has been created.</tt></li>
+<li><tt>03.20.2002 ds9 version 2.1b6 released to the
+public</tt></li>
+</ol>
+<h4><b>Version 2.1b5</b></h4>
+<ol>
+<li><tt>fixed a problem with bogus wcs data and replace wcs xpa
+command</tt></li>
+<li><tt>add view tickmarks to grid dialog box</tt></li>
+<li><tt>fixed a problem with loading a custom colormap and then
+printing</tt></li>
+<li><tt>add command line/xpa option load colormap file</tt></li>
+<li><tt>fixed problems with grid dialog box and switching between
+frames</tt></li>
+<li><tt>add command line option pan</tt></li>
+<li><tt>add command line option about</tt></li>
+<li><tt>add command line option view</tt></li>
+<li><tt>gzip compression is now built-in</tt></li>
+<li><tt>add xpa fits [mosaic|mosaicimage]</tt></li>
+<li><tt>fixed a problem with loading arrays via stdin</tt></li>
+<li><tt>fixed a problem with the panda region and
+rotation</tt></li>
+<li><tt>improved performance in plotting of large data
+sets</tt></li>
+<li><tt>fixed a problem with xpa analysis plot stdin and ';' in the
+title</tt></li>
+<li><tt>increased the histequ internal buffer size to 16k</tt></li>
+<li><tt>enhance xpa analysis load command</tt></li>
+<li><tt>add multiple preload analysis files</tt></li>
+<li><tt>add hiearch analysis menus</tt></li>
+<li><tt>fixed cancel support for Namesvr</tt></li>
+<li><tt>fixed cancel support for DSS</tt></li>
+<li><tt>add virtual observatory support</tt></li>
+<li><tt>add jpeg,tiff,pgn,ppm support, via ghostscript</tt></li>
+<li><tt>fix a problem with min/max and DATASEC</tt></li>
+<li><tt>added 'load incr' commands</tt></li>
+<li><tt>added 'load xxxxx incr' command</tt></li>
+<li><tt>fixed minor memory leaks</tt></li>
+<li><tt>added analysis command log</tt></li>
+<li><tt>add xpa grid load/save</tt></li>
+<li><tt>add command line option grid</tt></li>
+<li><tt>fixed a problem with loading fits from a stream where the
+primary hdu contains an image</tt></li>
+<li><tt>enhance xpa/command support for dss</tt></li>
+<li><tt>add nameserver command line option</tt></li>
+<li><tt>fix a problem with panner and magnifer
+preferences</tt></li>
+<li><tt>fixed a issue when gz files are a few bytes short</tt></li>
+<li><tt>add support for wcs mosaics</tt></li>
+<li><tt>added support for wcs grids for all types of
+mosaics</tt></li>
+<li><tt>speed up printing by factor of 5</tt></li>
+<li><tt>add new grid type</tt></li>
+<li><tt>updated to wcssubs 3.0.5</tt></li>
+<li><tt>updated to ast 1.8.3</tt></li>
+<li><tt>updated to filter 1.0b9</tt></li>
+<li><tt>updated to fitsy 1.0b9</tt></li>
+<li><tt>command line options -file, -mosaic, -mosaicimage, -array,
+-url are now modal</tt></li>
+<li><tt>add -debug [options] support</tt></li>
+<li><tt>fixed a problem with contours and NAN data</tt></li>
+<li><tt>fixed a problem with contours and DATASEC</tt></li>
+<li><tt>split the pros, saoimage, and saotng parsers</tt></li>
+<li><tt>fixed a problem with text with the saotng parser</tt></li>
+<li><tt>fixed a problem with saotng,saoimage, and pros regions
+parsers and \n terminators</tt></li>
+<li><tt>add thin width contours</tt></li>
+<li><tt>add thin width grids</tt></li>
+<li><tt>fixed a problem with iraf mosaics</tt></li>
+<li><tt>10.31.2001 Physical, Amplifier, and Detector coordinates
+are only displayed if keywords are present</tt></li>
+<li><tt>11.1.2001 Diplay header will display primary header if
+requested</tt></li>
+<li><tt>11.1.2001 add xpa cmap value command</tt></li>
+<li><tt>11.2.2001 removed support for analysis with files with
+spaces cause it created a problem with filename with
+extensions</tt></li>
+<li><tt>11.2.2001 fixed a problem with analysis regions files and
+special characters that was causing a problem with ellipse
+annlus</tt></li>
+<li><tt>11.2.2001 add analysis $file[$region] macro</tt></li>
+<li><tt>11.8.2001 fixed a problem with saving pixel table
+data</tt></li>
+<li><tt>11.8.2001 add John Rolls new blueplate special stand dialog
+box</tt></li>
+<li><tt>11.8.2001 removed 'Open Mosaic Images', since you can now
+do the same from the dialog box</tt></li>
+<li><tt>11.8.2001 fixed a problem with printing/saving text from
+SimpleTextDialog</tt></li>
+<li><tt>11.9.2001 load muliple files is now much faster</tt></li>
+<li><tt>11.13.2001 fixed a problem with Simple List Box and
+windows</tt></li>
+<li><tt>11.13.2001 default standard dialog box for windows is now
+the windows default</tt></li>
+<li><tt>12.3.2001 expand update to update [now]</tt></li>
+<li><tt>12.4.2001 fitsy++ now promotes all keyword finds to
+uppercase</tt></li>
+<li><tt>12.4.2001 add 'get fits header # keyword &lt;str&gt;'
+command</tt></li>
+<li><tt>12.4.2001 fix a problem with selecting projection region at
+high zoom factors</tt></li>
+<li><tt>12.5.2001 fixed problems with length and orientation of
+projection region</tt></li>
+<li><tt>12.6.2001 change 'get data values' syntax to include fits
+#</tt></li>
+<li><tt>12.14.2001 fixed a problem with mosaics with linear wcs
+that caused a core</tt></li>
+<li><tt>12.31.2001 supported added for regions and
+mosaics</tt></li>
+<li><tt>1.2.2002 projection regions now support mosaics</tt></li>
+<li><tt>1.3.2002 updated xparemote with proxy support</tt></li>
+<li><tt>1.3.2002 add vo prefs</tt></li>
+<li><tt>1.4.2002 add ciao pie region support</tt></li>
+<li><tt>1.7.2002 fixed panda and wcs with rotation
+problem</tt></li>
+<li><tt>1.9.2002 uprade ast to version 1.8.4</tt></li>
+<li><tt>1.15.2002 enable Blt_ZoomStack for data plots</tt></li>
+<li><tt>1.17.2002 fixed a problem with iraf mosaics with flipped
+segments and a round off problem</tt></li>
+<li><tt>1.18.2002 add support for multiple aux contours</tt></li>
+<li><tt>1.23.2002 fixed a problem with fits headers and the END
+keyword is not 8 chars</tt></li>
+<li><tt>1.23.2002 fixed many problems with no fits loaded and user
+gui actions</tt></li>
+<li><tt>1.24.2002 fixed a problem with looking for fits region
+extensions and a filter specified</tt></li>
+<li><tt>1.24.2002 add regions file format and coord system to prefs
+menu</tt></li>
+<li><tt>1.25.2002 get data values now spans mosaics and is in
+native coords</tt></li>
+<li><tt>1.31.2002 ds9 version 2.1b5 released to the
+public</tt></li>
+</ol>
+<h4><b>Version 2.1b4</b></h4>
+<ol>
+<li><tt>fixed a problem very, very large images and int
+overflow</tt></li>
+<li><tt>add Page Setup preferences</tt></li>
+<li><tt>plot data is filtered to remove all non numeric
+data</tt></li>
+<li><tt>fixed a problem with plotting x,y data on alpha</tt></li>
+<li><tt>add manual grid layout</tt></li>
+<li><tt>text regions can now be rotated</tt></li>
+<li><tt>regions text now appears in the magnifier</tt></li>
+<li><tt>added the PANDA region</tt></li>
+<li><tt>added analysis file macro $entry</tt></li>
+<li><tt>fixed a problem with multiple menu entries for analysis
+files with multiple file templates</tt></li>
+<li><tt>default values of Analysis file parameters are now
+updated</tt></li>
+<li><tt>fixed a problem with clear analysis commands</tt></li>
+<li><tt>analysis tasks are now non-blocking</tt></li>
+<li><tt>add xy regions file format</tt></li>
+<li><tt>fixed problem with ps level 2 psuedocolor8 printing and
+inverse colormaps</tt></li>
+<li><tt>in regions files, the comment char '#' comments out til a
+new-line char</tt></li>
+<li><tt>extended $regions macro to include multiple properties and
+regions format</tt></li>
+<li><tt>fixed a problem with loading array data on a little endian
+machine and the arch is not specified</tt></li>
+<li><tt>fixed a problem with histogram equalization</tt></li>
+<li><tt>fixed a major problem with all negative float or double
+data and min/max issues</tt></li>
+<li><tt>fixed a problem with $regions and no wcs</tt></li>
+<li><tt>fixed a problem with printing ps level 2 and fits with
+NAN</tt></li>
+<li><tt>fixed a problem with running on a msb machine, and
+displaying on a lsb 24bit machine</tt></li>
+<li><tt>unrolled all mosaic algorithms to cycle thru all segments
+for each pixel</tt></li>
+<li><tt>add DATASEC for rendering and printing</tt></li>
+<li><tt>upgraded to tcl/tk 8.3.3</tt></li>
+<li><tt>add http and ftp macro expand to analysis</tt></li>
+<li><tt>fixed a problem with contour log scale</tt></li>
+<li><tt>add button 2 bindinds for panner</tt></li>
+<li><tt>iraf -fifo default is now /dev/imt1</tt></li>
+<li><tt>commented out error messages for bad iraf -fifo, -port,
+-unix</tt></li>
+<li><tt>add default imtoolrc values to fb_config if no imtoolrc
+file is found at startup</tt></li>
+<li><tt>add iis support for windows port</tt></li>
+<li><tt>add command: get data coordsys x y dx dy var</tt></li>
+<li><tt>add plot limits to plot tool</tt></li>
+<li><tt>add PROJECTION region</tt></li>
+<li><tt>add GETURL analysis macro</tt></li>
+<li><tt>Fits bin table keywords TUNITx are now process if
+available</tt></li>
+<li><tt>add $filename(root) macro</tt></li>
+<li><tt>update filename on load</tt></li>
+<li><tt>fixed a problem with Colormaps with a name with a single
+character</tt></li>
+<li><tt>added iraf 'non-display' imexamine support</tt></li>
+</ol>
+<h4><b>Version 2.1b3</b></h4>
+<ol>
+<li><tt>fixed a problem with angles of regions specified in
+WCS</tt></li>
+<li><tt>add xpa point 'regions save'</tt></li>
+<li><tt>add xpa point 'regions load'</tt></li>
+<li><tt>regions file format <i>SAOIMAGE</i> now supports annulus,
+ellipse annulus, and box annulus</tt></li>
+<li><tt>the obsolete <i>Ftools</i> regions file format support has
+been removed</tt></li>
+<li><tt>fixed many problems with <i>IRAF</i> regions file
+format</tt></li>
+<li><tt>fixed many problems with <i>CIAO</i> regions file
+format</tt></li>
+<li><tt>removed all support for Rosat All Sky Survey</tt></li>
+<li><tt>all comments and global settings have been removed from
+regions output if delimiter is set to semicolon</tt></li>
+<li><tt>fixed a problem with regions defined in WCS degrees and do
+not lie on an image</tt></li>
+<li><tt>fixed a problem with ellipse annulus and box annulus
+regions in regions files that contain only one region</tt></li>
+<li><tt>check for radius of length 0 for circle, annulus, ellipse,
+and ellipse annulus</tt></li>
+<li><tt>Added Histogram Equalization colormap scale
+distribution</tt></li>
+<li><tt>removed <i>default</i> as font option</tt></li>
+<li><tt>default font is now <i>helvetica</i></tt></li>
+<li><tt>changed command line option -regionfile to
+-region</tt></li>
+<li><tt>fixed a problem with command line option -region and
+incorrect coordinates</tt></li>
+<li><tt>Change the 'Scale:User Limits...' dialog into non-modal
+'Scale Parameters...'</tt></li>
+<li><tt>Added 'ZMax' Scale Limits algorithm</tt></li>
+<li><tt>fixed a problem with loading regions files with full
+pathnames with 'fits' in them</tt></li>
+<li><tt>Updated Prefs, command line options, and xpa points to
+reflect the new way minmax and scale options are handled</tt></li>
+<li><tt>Removed 'Scan On Load' prefs</tt></li>
+<li><tt>Added 'Source/Background' region property</tt></li>
+<li><tt>Add support for 'Source/Background' region property to
+SAOtng region parser</tt></li>
+<li><tt>Fixed a color problem with pseudocolor 8 frames and
+black/white. This showed up in new Sun hardware and Solaris 8
+sofware</tt></li>
+<li><tt>Fixed a problem with Postscript printing in pseudocolor 8
+colormode</tt></li>
+<li><tt>The magnifier now updates during blinking</tt></li>
+<li><tt>Added pixel table commands to command line options and
+xpa</tt></li>
+<li><tt>Add -single command line option</tt></li>
+<li><tt>Add default region shape to preferences</tt></li>
+<li><tt>New Analysis File format supported, with new macros
+$message, $text, $plot</tt></li>
+<li><tt>Add -analysis command line option</tt></li>
+<li><tt>Add subcommands to xpa <i>analysis:</i>
+load,clear,message,text,plot</tt></li>
+<li><tt>Add Analysis File macros $data and $image</tt></li>
+<li><tt>Add autoload FITS regions option</tt></li>
+<li><tt>Add load FITS Region file to command line options and xpa
+regions</tt></li>
+<li><tt>DSS servers now have limits as to size of image
+downloaded</tt></li>
+<li><tt>Open Array now presents a dialog box if no specs are
+given</tt></li>
+<li><tt>Now supports compression with .ftz extension</tt></li>
+<li><tt>All non-modal windows raise to top when
+re-invoked</tt></li>
+<li><tt>Added Line Width to all regions</tt></li>
+<li><tt>Comments are now retained for regions files</tt></li>
+<li><tt>Add Line Width to contours</tt></li>
+<li><tt>Changed xpa delim to strip yes/no</tt></li>
+<li><tt>Contour methods are 'Faster' and 'Better'</tt></li>
+<li><tt>Add Convert Contours to polygons</tt></li>
+<li><tt>Add $xpa analysis macro</tt></li>
+<li><tt>Add $param analysis macros</tt></li>
+<li><tt>Fixed a problem with crosshair and rebinning</tt></li>
+<li><tt>Fixed a problem with pan click and drag and fits binary
+tables</tt></li>
+<li><tt>Add undo regions</tt></li>
+<li><tt>Add cut/copy/paste regions</tt></li>
+<li><tt>Changed the preferences file and startup file to be
+consistent across platforms</tt></li>
+<li><tt>Add 'Pan then Zoom' to button 2 options</tt></li>
+<li><tt>Add support for FITS 3D data cubes</tt></li>
+<li><tt>Add Edit button row</tt></li>
+<li><tt>Add default mode to prefs</tt></li>
+<li><tt>Fixed a problem with file names starting with
+'file'</tt></li>
+<li><tt>Add xpa regions shape/color/width</tt></li>
+</ol>
+</div>
+</body>
 </html>

@@ -1,818 +1,707 @@
-<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;
-      charset=windows-1252">
-    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
-      2.4.7-10 i686) [Netscape]">
-    <title>DS9 FAQ</title>
-  </head>
-  <body vlink="#551a8b" text="#000000" link="#0000ee" bgcolor="#ffffff"
-    alink="#ff0000">
-    <h3> <img alt="" src="sun.gif" width="100" height="98"
-        align="middle"> SAOImageDS9 FAQ</h3>
-    <blockquote>
-      <p>This FAQ is a new, on going project, and it is far from being
-        complete. But as common questions on DS9 are received, the FAQ
-        will be updated. </p>
-      <p><b>Contents</b></p>
-      <blockquote><a href="#Copyright">Copyright</a><br>
-        <a href="#General">General</a><br>
-        <a href="#Fonts">Fonts</a><br>
-        <a href="faq.html#Linux">Linux</a> <br>
-        <a href="faq.html#Windows">Windows</a> <br>
-        <a href="#MacOSX">MacOSX</a><br>
-        <a href="faq.html#X11">X11</a> <br>
-        <a href="#IRAF">IRAF</a> <br>
-        <a href="#Coordinates">Coordinates</a> <br>
-        <a href="#Regions">Regions</a> <br>
-        <a href="#Printing">Printing</a> <br>
-        <a href="#XPA">XPA</a><br>
-        <a href="#VO">VO</a><br>
-      </blockquote>
-    </blockquote>
-    <blockquote>
-      <p> <b><a name="Copyright"></a>Copyright</b></p>
-      <blockquote>
-        <p>DS9 is composed of approximately 20 open source packages, all
-          of which are distributed under their own open source license
-          agreements, usually GPL, LGPL, or BSD. In addition, several
-          open source packages have been developed here at the
-          Smithsonian Astrophysical Observatory, Cambridge, MA, USA and
-          are distributed under the terms of the GNU General Public
-          License as published by the Free Software Foundation. As long
-          as you continue to adhere to the provisions of the licenses,
-          you are free to distribute DS9 along with your software.</p>
-        <p>The <a href="http://www.gnu.org/copyleft/gpl.html">GNU site</a>
-          contains an excellent FAQ on the the dos and donts of GPL.</p>
-      </blockquote>
-      <p><b><a name="General"></a>General</b></p>
-      <blockquote>
-        <p><b>The web browser, catalog tool, image server, and other
-            Analysis functions don't appear to work. Whats going on?<br>
-          </b></p>
-        <p>For a number of the Analysis functions, DS9 requires
-          temporary disk space to download and store data. By default,
-          this directory is defined by the TMP or TEMP environment
-          variable. This is usually defined as <tt>/tmp</tt> for Linux
-          and MacOSX users. For Windows users, this will vary, depending
-          on which version of Windows you have. In any case, if the temp
-          directory is not writable, or you have specified an invalid
-          directory in the preferences, these functions will fail with a
-          variety of error messages.<br>
-        </p>
-        <p><b>My system admin stripped the DS9 binary and now DS9 fails
-            to start with the following error message:</b></p>
-        <p><tt>Application initialization failed: Can't find a usable
-            tk.tcl in the following directories...</tt></p>
-        <p>DS9 is based on tcl/tk which is a scripting language which
-          requires many support files. To create a stand alone
-          application, we <i>fool</i> tcl/tk into thinking that it has
-          a valid installation. To do this, DS9 is really an
-          application, along with an zip archive attached. The first
-          thing DS9 does is to create a virtual file system in memory
-          and unpack that archive into memory. The application DS9 is
-          already stripped of debugging symbols when built. </p>
-        <p>It appears that the <tt>strip</tt> command is <i>stripping</i>
-          part of the archive, hence DS9 is unable to un-compress it. In
-          summary, don't <tt>strip</tt> the DS9 binary and everything
-          works fine. </p>
-        <p><b>When I open my FITS image, all I see is 'white'. Yet
-            everything, including the color bar seems to work?</b></p>
-        <p>New with version 2.1, is support for the DATASEC keyword.
-          This keyword specifies what portion of the image is valid
-          data, for calculating min / max and for displaying. This is
-          very important for images created from CCDs with over scan and
-          bias strips. By default, this support is enabled. However, a
-          number of fits images with this keyword, have invalid values.
-          Therefor, when DS9 opens the image, it finds no valid data to
-          display. To correct this problem, either disable DATASEC
-          support, via the Scale menu, or correct the the value of
-          DATASEC in the fits header. You can also change the default
-          behavior by disabling DATASEC from the preferences menu.<br>
-        </p>
-      </blockquote>
-      <p> <b><a name="Fonts"></a>Fonts</b></p>
-      <blockquote>
-        <p><b>Where is the Symbol Font? How do I enter special
-            characters into an entry dialog?</b> </p>
-        <p>The concept of a separate <tt>SYMBOL</tt> font is no longer
-          implemented with the latest OS font and scripting support,
-          especially with scalable anti-alias fonts such as Xft for
-          Linux. Most newer fonts (if not all) now have greek characters
-          as part of the font. The greek chars start at unicode \u0391
-          for 'A' and \u03b1 for 'a'. Each OS has a tool used to build
-          and copy a string of characters. Then use the Edit:Paste menu
-          of DS9 to insert the character string.</p>
-        <p>Linux- Gnome: <b>gucharmap<br>
-          </b>Linux- KDE: <b>kcharselect<br>
-          </b>MacOSX: <b>Character Viewer</b> (Select <tt>Edit:Special
-            Characters</tt>) Now click and drag the characters to a
-          terminal window. Then select the string and select <tt>Edit:Copy</tt>.<br>
-          Windows: <b>Character Map</b> (from <tt>Start</tt> button,
-          select <tt>All Programs</tt>, <tt>Accessories</tt>, <tt>System
-
-
-
-
-
-
-            Tools</tt> and then <tt>Character Map</tt>)<br>
-        </p>
-      </blockquote>
-      <p> <b><a name="Linux"></a>Linux</b></p>
-      <blockquote>
-        <p><b>My /tmp directory is mounted -noexec and bin table
-            filtering does not work.</b></p>
-        <p>Set the environment variable FILTER_TMPDIR to a directory
-          that is both writable and can execute.<br>
-        </p>
-        <p><b>I have Red Hat 7, and I'm running KDE. The magnifier keeps
-            going blank after a few seconds, what's going on?</b> </p>
-        <p>The problem was in KDE. If the user has decided to hide the
-          panel taskbar and&nbsp; sets a delay time for when it appears
-          if the mouse is moved to the panel&nbsp; location, then it
-          appears that KDE creates mouse events that fool DS9 into&nbsp;
-          thinking the mouse is outside and it blanks the magnifier. By
-          turning off the&nbsp; hide panel, the effect goes away. The
-          alternative is to update to KDE2.1Beta&nbsp; where this method
-          of dealing with the hidden panel is not used and all is&nbsp;
-          well, as it was for KDE </p>
-        <p><b>I have FreeBSD. When I run ds9, I get the following error:</b>
-          <tt>&nbsp; <b>ELF binary type "0" not known</b> </tt><b>Whats
-
-
-
-
-
-
-
-            going on?</b></p>
-        <p>The solution was to use the <b><tt>brandelf</tt></b> utility
-          on the file to ensure that the machine understood that it
-          &nbsp;was a Linux program.</p>
-        <p><tt>% brandelf -t Linux (file name)<br>
-          </tt></p>
-        <blockquote> </blockquote>
-      </blockquote>
-      <p> <b><a name="Windows"></a>Windows</b></p>
-      <blockquote>
-        <p><b>When I do Save Image, I get the same result (and this is
-            true for either .gif, .jpeg, .tiff, .png and .ppm) : it
-            saves only a stripe at the top of my image.<br>
-          </b></p>
-        <p>This problem seems to be caused by running DS9 in Windows XP
-          compatibility mode. Please un-check the compatibility option
-          in the properties dialog.<br>
-        </p>
-        <p><b>How can I open a FITS file with an extension name?</b></p>
-        <p><b> </b>By default, the windows port of DS9 uses the Windows
-          standard dialog box to open and save files. This can be a
-          problem in that the native Windows dialog will not allow
-          extensions to the file name, such as <tt>foo.fits[2]</tt>.
-          You must use the Unix like standard dialogs to be able to
-          specify an extension. Select <tt>Edit-&gt;Preferences-&gt;General:Dialogbox</tt>
-          to change the default standard dialog.</p>
-        <p><b>Every time I create an auxiliary window in ds9, such as a
-            Pixel Table, or Analysis Plot, it will retreat behind the
-            main ds9 window. Then, when I bring the auxiliary window to
-            the front and move the mouse out of it, it automatically
-            goes behind the main ds9 window again. What can I do to fix
-            things so that the auxiliary window stays on top of the ds9
-            window?</b> </p>
-        <p>To fix things so that the auxiliary window stays on top of
-          the ds9 window, do the following: </p>
-        <blockquote>
-          <p><tt>Go to the icon task bar at the bottom of the screen.</tt><tt>
-              Bring the auxiliary window to the front by clicking on its
-              icon in the icon task bar.</tt><tt> While the mouse still
-              is on the aux window icon, press the mouse button, and
-              keeping it pressed, move the mouse off the task bar.</tt><tt>
-              Release the mouse while off the task bar.</tt><tt> The
-              auxiliary window will now stay on top of the main ds9
-              window.</tt></p>
-          <blockquote> </blockquote>
-        </blockquote>
-      </blockquote>
-      <p><b><a name="MacOSX"></a>MacOSX</b><br>
-      </p>
-      <blockquote>
-        <p><b>I can't invoke the 'Save Image' function from the MacOSX
-            X11 version. I get an error message "An error has occurred
-            while creating the image. Please make sure entire image is
-            visible on screen."<br>
-          </b></p>
-        Up until MacOSX 10.8 (Mountain Lion), Apple provided their own
-        version of a X11 server. At first, it was based on XFree86
-        (X11R6.6) and available with versions up to MacOSX 10.4. Later
-        with MacOSX versions 10.5 to 10.7, the Apple's X11 server was
-        based upon X.org (X11R7.2). <br>
-        <br>
-        The Apple version of X11 server for MacOSX 10.5 to 10.7 contains
-        a bug which fails if you invoke certain X11 calls on a window if
-        its location is not at 0,0 on the screen. Hence, within DS9, if
-        you 'Save Image' and your window is not exactly in the upper
-        left corner, it will fail.<br>
-        <br>
-        Again, this only affects users of MacOSX 10.5 to 10.7.<br>
-        <br>
-        Starting with MacOSX 10.8, Apple no longer provides a X11 window
-        server. The user must go to the XQuartz site and
-        download/install directly. The current version is 2.7.3.<br>
-        <p><b>When I invoke DS9 MacOSX Aqua from the command line, I get
-            weird errors such as<tt>:</tt></b></p>
-        <blockquote>
-          <p><tt>The document "foo.fits" could not be opened. SAOImage
-              DS9 cannot open files in the "Flexible Image Transport
-              System" format.</tt></p>
-        </blockquote>
-        <p><b><tt> </tt></b>When opening MacOSX Aqua from the command
-          line, it is better to use the <tt>OPEN</tt> application as
-          opposed to specifying the binary directly. The <tt>OPEN</tt>
-          application sets up the environment just as it is when a user
-          double clicks.</p>
-        <tt> # good</tt><br>
-        <tt>% open /Applications/SAOImage\ DS9.app foo.fits<br>
-          <br>
-          # bad<br>
-          % /Applications/SAOImage\ DS9.app/Contents/MacOS/ds9 bar.fits</tt><br>
-        <p><b>How can I open a FITS file with an extension name?</b></p>
-        <p><b> </b>By default, DS9 MacOSX Aqua uses the MacOSX standard
-          dialog box to open and save files. This can be a problem in
-          that the native MacOSX dialog will not allow extensions to the
-          file name, such as <tt>foo.fits[2]</tt>. You must use the
-          Unix like standard dialogs to be able to specify an extension.
-          Select <tt>Edit-&gt;Preferences-&gt;General</tt> to change
-          the default standard dialog.</p>
-        <p><b>How do I set my PATH environment variable under MacOSX for
-            use with external analysis programs, such as funtools?<br>
-          </b></p>
-        <p>When you double click on a MacOSX application, it does not
-          parse any shell startup files, such as ~/.profile. Instead,
-          the environment is defined using a special environment file, <tt>.MacOSX/environment.plist</tt>.
-          This file can be created with the MacOSX utility <tt>/Developer/Applications/PropertyListEditor.app.
-
-
-
-
-
-
-          </tt>For further information, please click <a
-            href="http://developer.apple.com/qa/qa2001/qa1067.html">here</a>.<br>
-        </p>
-        <blockquote> </blockquote>
-      </blockquote>
-      <p> <b><a name="X11"></a>X11</b><br>
-      </p>
-      <blockquote>
-        <p><b>Is it possible to work in batch mode without a physical
-            display?<br>
-          </b></p>
-        <p>DS9 is written as an interactive, window client program, and
-          as a result, does require a window server to be available for
-          rendering (X11, Windows, or MacOSX).<br>
-          <br>
-          Therefore, using DS9 as a batch process can be cumbersome. We
-          recommend using <tt>xvfb</tt> under X11. Just set up a
-          virtual display buffer, reset your DISPLAY variable, then
-          invoke DS9 with a number of command line options or use xpa
-          from a shell script as a batch processor. Example:<br>
-        </p>
-        <p><tt>% export DISPLAY=:1</tt><tt><br>
-          </tt><tt>% Xvfb :1 -screen 0 1024x768x16 &amp;</tt><tt><br>
-          </tt><tt>% ds9 -file cmap.fits -zoom to fit -cmap b -grid
-            skyformat degrees -grid yes -regions ../EMS-names.reg
-            -saveimage png mytest.png -exit</tt><br>
-        </p>
-        <p><b>When I start DS9, I get the following error message:</b></p>
-        <tt>_X11TransSocketINETConnect: Can't get address for
-          foo.bar.edu </tt><br>
-        <tt>couldn't connect to display "foo.bar.edu:0.0"</tt> &nbsp; <br>
-        <p>DS9 is unable to determine a valid X11 Display server,
-          because of a number of reasons. Most often this is seen when
-          you have a laptop configured for a network, but is not
-          physically connected. You need to set the DISPLAY environment
-          variable to :0.0 </p>
-        <blockquote><tt>$ xhost + </tt><br>
-          <tt>$ set DISPLAY=:0.0 </tt><br>
-          <tt>$ export DISPLAY </tt><br>
-        </blockquote>
-        <p><b>Under Solaris, when I start DS9, my twm window manager
-            crashes!</b></p>
-        <p>TWM distributed with X11R5 had a major bug, that was
-          corrected around 1996. DS9 will trigger this bug, and will
-          cause TWM to crash. If you are running Solaris, and have X11R5
-          installed, be sure that /usr/openwin/bin is in your path
-          before X11R5/bin. This will insure that you are running the
-          correct version of TWM . </p>
-        <p><b>When I run ds9 with the tvtwm window manager, sometimes
-            the open file dialog box does not appear?</b> </p>
-        <p>If you are running tvtwm, and you are currently viewing a
-          virtual screen other than the first, when you open a file, the
-          dialog box will appear in the first virtual screen, not your
-          current. This is a bug with tvtwm and not ds9.</p>
-      </blockquote>
-      <blockquote>
-        <p> </p>
-      </blockquote>
-    </blockquote>
-    <blockquote>
-      <p><b><a name="IRAF"></a>IRAF</b></p>
-    </blockquote>
-    <blockquote>
-      <blockquote>
-        <blockquote>
-          <blockquote> </blockquote>
-        </blockquote>
-        <p><b>I can't use more than 9 frames with the IMEXAMINE task?</b><br>
-        </p>
-        <p>The task <tt>IMEXAMINE</tt> can not be used with frame
-          numbers greater than 9.</p>
-        <p><b>Can I display from IRAF to DS9 running under Windows or
-            MacOSX?</b> </p>
-        <p>Yes, DS9 for Windows and MacOSX is also a fully functional
-          IRAF display server. To direct image output from IRAF to DS9
-          running under Windows or MacOSX, use the IMTDEV environment
-          variable. For example, if the machine is named 'foo.bar.edu',
-          define IMTDEV to the follow value before entering IRAF. </p>
-        <blockquote><tt>$ setenv IMTDEV inet:5137:foo.bar.edu </tt><br>
-          <tt>$ cl </tt><br>
-          <tt>cl&gt; display dev$pix</tt><br>
-        </blockquote>
-        <blockquote>
-          <blockquote> </blockquote>
-        </blockquote>
-        <p><b>I'm having problems with </b><b>mscred task </b><b>msczero?</b></p>
-        DS9 now supports IRAF's new IIS image display protocol. However,
-        there is one minor problem with the <b>mscred</b> task <b>msczero.</b>
-        Before using <b>msczero</b>, issue the following command in the
-        cl:<br>
-        <br>
-        <tt>cl&gt; set disable_wcs_maps=""<br>
-          cl&gt; flpr</tt><br>
-        <p><b>I find that there is a frustrating delay in performing
-            operations on images displayed from IRAF - there's a wait of
-            a second or two before an image is (re)displayed, whereas <i>saoimage</i>
-            reacts virtually instantly for the same type of operation.
-            This makes running imexamine on a batch of images a pain,
-            and using the mouse to change color gamma/bias to desired
-            values basically impossible.</b> </p>
-        <p>DS9 and <i>saoimage</i> are similar in speed when working
-          with IRAF. In fact, DS9 uses&nbsp; the same code to interface
-          with IRAF as saoimage and ximtool. The only&nbsp; difference
-          is that DS9 is double buffered, whereas, <i>saoimage</i> and
-          <i>ximtool</i> only&nbsp; use a single buffer. So with <i>saoimage</i>
-          and <i>ximtool</i>, you see incremental progress,&nbsp; where
-          DS9 will render the image all at one time. However, the
-          overall time to&nbsp; finish rendering should almost be the
-          same. </p>
-        <p>DS9 runs in both 8 bit and 24 bit environments, but <i>saoimage</i>
-          is restricted to 8 bit. If you are running DS9 and <i>saoimage</i>
-          at the same time, then you must be in 8 bit mode. You should
-          not see any&nbsp; delay in changing the color bias/contrast
-          between the two. </p>
-        <p>However, if you are running DS9 in 24 bit mode, then you will
-          see slower&nbsp; performance in changing the bias/contrast, as
-          compared to 8 bit mode. Instead of&nbsp; changing a color look
-          up table, as in 8 bit mode, DS9 has to update every
-          pixel&nbsp; on the screen. If your cpu speed is slow, you can
-          select the&nbsp; Edit:Preferences:True Colorbar to tell DS9
-          not to update the entire screen,&nbsp; only a part of the
-          screen. This should only be needed if your machine is
-          slower&nbsp; than 200 MHz. Again <i>saoimage</i> does not
-          even run in 24 bit mode, so there are no&nbsp; comparisons. </p>
-        <p><b>I try to display an image from IRAF and I get the
-            following error message:</b></p>
-        <p><tt>Cannot open device (node!imtool,,512,512)</tt></p>
-        <p> </p>
-        <p>DS9 works the same way as <tt>ximtool,</tt> <tt>saoimage,</tt>
-          and <tt>saotng.</tt> No special scripts&nbsp; should be
-          needed. If you have one of the above currently working, DS9
-          should&nbsp; work <i>out of the box</i>. </p>
-        <p>IRAF can use one of three methods to communicate with DS9:
-          fifo, socket, and unix&nbsp; domain name. The DS9 defaults
-          are:</p>
-        <blockquote><tt>fifo /dev/imt1</tt> <br>
-          <tt>port 5137</tt> <br>
-          <tt>unix /tmp/.IMT%d</tt> </blockquote>
-        <p>If your IRAF configuration is set up different (i.e., a
-          different port number, or&nbsp; via a fifo), you need to tell
-          DS9 how to communicate with iraf. DS9 uses the same&nbsp;
-          command line options as XIMTOOL: </p>
-        <blockquote><tt>-fifo </tt> <br>
-          <tt> -fifo_only </tt><br>
-          <tt> -inet_only </tt> <br>
-          <tt> -port </tt> <br>
-          <tt> -port_only </tt> <br>
-          <tt> -unix </tt> <br>
-          <tt> -unix_only </tt> </blockquote>
-      </blockquote>
-    </blockquote>
-    <blockquote> </blockquote>
-    <blockquote>
-      <blockquote>
-        <p><b>I try to display an image, I see something, but it's
-            corrupted and I get multiple error messages from DS9...</b></p>
-        <p><b> </b>An IRAF image server (<i>ximtool</i>, <i>saoimage</i>,
-          DS9, etc...) uses a configuration file&nbsp; to specify the
-          number of available buffers and their sizes. What actually
-          passes&nbsp; from IRAF is not the buffer size, but an index
-          number into this file. </p>
-        <p>So when an image server starts (DS9), it will attempt to
-          locate this file as&nbsp; $HOME/.imtoolrc and
-          /usr/local/lib/imtoolrc. If not found, it will look for
-          shell&nbsp; environment variables IMTOOLRC and imtoolrc, that
-          contains the name of the configuration file. </p>
-        <p>If no configuration file is found, DS9 will assume the
-          following default configuration: </p>
-        <blockquote><tt>&nbsp;1&nbsp; 2&nbsp; 512&nbsp; 512&nbsp; #
-            imt1|imt512 </tt><br>
-          <tt>&nbsp;2&nbsp; 2&nbsp; 800&nbsp; 800&nbsp; # imt2|imt800 </tt><br>
-          <tt>&nbsp;3&nbsp; 2 1024 1024&nbsp; # imt3|imt1024 </tt><br>
-          <tt>&nbsp;4&nbsp; 1 1600 1600&nbsp; # imt4|imt1600 </tt><br>
-          <tt>&nbsp;5&nbsp; 1 2048 2048&nbsp; # imt5|imt2048 </tt><br>
-          <tt>&nbsp;6&nbsp; 1 4096 4096&nbsp; # imt6|imt4096 </tt><br>
-          <tt>&nbsp;7&nbsp; 1 8192 8192&nbsp; # imt7|imt8192 </tt><br>
-          <tt>&nbsp;8&nbsp; 1 1024 4096&nbsp; # imt8|imt1x4 </tt><br>
-          <tt>&nbsp;9&nbsp; 2 1144&nbsp; 880&nbsp; # imt9|imtfs full
-            screen (1152x900 minus frame) </tt><br>
-          <tt>10&nbsp; 2 1144&nbsp; 764&nbsp; # imt10|imtfs35 full
-            screen at 35mm film aspect ratio </tt><br>
-          <tt>11&nbsp; 2&nbsp; 128&nbsp; 128&nbsp; # imt11|imt128 </tt><br>
-          <tt>12&nbsp; 2&nbsp; 256&nbsp; 256&nbsp; # imt12|imt256 </tt><br>
-          <tt>13&nbsp; 2&nbsp; 128 1056&nbsp; # imt13|imttall128 tall
-            &amp; narrow for spectro. </tt><br>
-          <tt>14&nbsp; 2&nbsp; 256 1056&nbsp; # imt14|imttall256 tall
-            &amp; wider for spectro. </tt><br>
-          <tt>15&nbsp; 2 1056&nbsp; 128&nbsp; # imt15|imtwide128 wide
-            &amp; thin for spectro. </tt><br>
-          <tt>16&nbsp; 2 1056&nbsp; 256&nbsp; # imt16|imtwide256 wide
-            &amp; fatter for spectro. </tt><br>
-          <tt>17&nbsp; 2 1008&nbsp; 648&nbsp; # imt17|imtssy Solitaire
-            fmt w/ imtool border </tt><br>
-          <tt>18&nbsp; 2 1024&nbsp; 680&nbsp; # imt18|imtssn Solitaire
-            fmt w/out imtool border </tt><br>
-          <tt>19&nbsp; 1 4096 1024&nbsp; # imt19|imt4x1</tt><br>
-        </blockquote>
-        <p>If on the other hand, IRAF assumes a different buffer size,
-          the image will appear corrupted and DS9 may issue a number of
-          error messages. </p>
-        <p>Another problem is that this file must be in sync with
-          dev$graphcap. If your&nbsp; system administrator has made
-          changes to graphcap, they must also be implemented in
-          imtoolrc. </p>
-        <p>Here is a note from NOAO: </p>
-        <blockquote>
-          <p><tt>The messages means that there is no
-              /usr/local/lib/imtoolrc file </tt><tt>on the machine.
-              This is created as a symlink to dev$imtoolrc by the </tt><tt>iraf
-
-
-
-
-
-
-              install script but only if the /usr/local/lib dir already
-              exists on the </tt><tt>machine. The fix is the create the
-              dir and rerun the install script or </tt><tt>else make
-              the link by hand.&nbsp; Users can also just copy
-              dev$imtoolrc </tt><tt>to $HOME/.imtoolrc and restart the
-              server to also workaround it. Note </tt><tt>that an
-              existing .imtoolrc might define old frame buffer configs
-              which </tt><tt>might confuse things, so if the system
-              file exists check for a private </tt><tt>copy screwing
-              things up. </tt></p>
-        </blockquote>
-      </blockquote>
-    </blockquote>
-    <blockquote>
-      <blockquote>
-        <p><b>Where do I find this .imtoolrc file?</b> </p>
-        <p>Again, here a note from NOAO concerning this issue: </p>
-        <blockquote>
-          <p><tt>In a smooth installation the imtoolrc file is installed
-              as a </tt><tt>/usr/local/lib/imtoolrc symlink pointing to
-              the dev$imtoolrc file in the </tt><tt>iraf system.&nbsp;
-              This is normally what's used but XImtool (and DS9?) also </tt><tt>allow
-
-
-
-
-
-
-              a $HOME/.imtoolrc and IMTOOLRC environment variable
-              defining the </tt><tt>path as fallbacks.&nbsp; There are
-              several practical problems with&nbsp; this:&nbsp; for </tt><tt>some
-
-
-
-
-
-
-              reason (I'm trying to fix) the imtoolrc link won't be
-              created if </tt><tt>the /usr/local/lib directory doesn't
-              exist when the install script is </tt><tt>run on the
-              machine, even though it's run as root and the file can be
-            </tt><tt>directory easily.&nbsp; On PC-IRAF systems there is
-              also a typo in the install </tt><tt>script (extra logical
-              or at line 515) which causes it to exit before </tt><tt>the
-
-
-
-
-
-
-              display setup is run (i.e. no /dev fifos or imtoolrc). If
-              users don't </tt><tt>catch this or see it in the README
-              file they'll think everything went </tt><tt>fine. Lastly,
-              the local iraf admin might not have run the install script
-            </tt><tt>on the local iraf NFS client machine at all.</tt></p>
-        </blockquote>
-      </blockquote>
-    </blockquote>
-    <blockquote>
-      <blockquote>
-        <p><b>When I display an image from IRAF, the SCALE menu option
-            is not active, Why?</b> </p>
-        <p>When you display an image from IRAF into DS9, IRAF actually
-          does the color scale&nbsp; distribution. In Display, use the
-          ztrans and z1,z2 parameters to set the upper/lower bounds and
-          distribution. You can also use the zscale parameter to auto
-          determine z1,z2.Here are the DISPLAY parameters in question: </p>
-        <blockquote><tt>ztrans=[linear|log|none|user] </tt><br>
-          <tt>z1=min </tt><br>
-          <tt>z2=max </tt><br>
-          <tt>zscale=[yes|no]</tt></blockquote>
-        <p>What actually is sent from IRAF to DS9 is one byte per pixel,
-          values 0-200,&nbsp; which already has applied both the upper
-          and lower clipping bounds and the distribution. So this is
-          why, the SCALE menu is disabled in DS9 when it receives a
-          image from IRAF.</p>
-      </blockquote>
-    </blockquote>
-    <blockquote>
-      <p> <b><a name="Coordinates"></a>Coordinates</b></p>
-    </blockquote>
-    <blockquote>
-      <blockquote>
-        <p><b>Why don't I see PHYSICAL/WCS/WCSA...WCSZ coordinates
-            displayed when I load my image?</b></p>
-        <p>DS9 supports the following coordinate systems: </p>
-        <blockquote><tt>WCS Sky coords (fk4,fk5,icrs,galactic,ecliptic)
-            <br>
-          </tt><tt>WCS Linear coords <br>
-          </tt><tt>Image (also known as Logical) <br>
-          </tt><tt>Physical (also known as CCD)<br>
-            Detector<br>
-            Amplifier &nbsp; </tt><br>
-        </blockquote>
-        <p>DS9 uses the following FITS keywords in the header to define
-          a coordinate system: &nbsp;</p>
-      </blockquote>
-      <center>
-        <table nosave="" width="75%" cellpadding="4" border="1">
-          <tbody>
-            <tr>
-              <td><b>Coordinate System</b></td>
-              <td><b>Keyword Values</b></td>
-            </tr>
-            <tr nosave="">
-              <td nosave=""><tt>WCS / WCSA...WCSZ</tt></td>
-              <td><tt>CRVAL,CRPIX,CRDELT,CD... (for images) <br>
-                  TCRVL,TCRPX,TCDLT,... (for tables)</tt></td>
-            </tr>
-            <tr>
-              <td><tt>Image</tt></td>
-              <td><tt>none required</tt></td>
-            </tr>
-            <tr>
-              <td><tt>Physical</tt></td>
-              <td><tt>WCSNAMEP='PHYSICAL' or LTMx_x/LTVx</tt></td>
-            </tr>
-            <tr>
-              <td valign="top"><tt>Detector</tt><br>
-              </td>
-              <td valign="top"><tt>DTMx_x/DTVx</tt><br>
-              </td>
-            </tr>
-            <tr>
-              <td valign="top"><tt>Amplifier</tt><br>
-              </td>
-              <td valign="top"><tt>ATMx_x/ATVx</tt><br>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </center>
-      <blockquote>
-        <p>If the required keywords are not present, values for those
-          coordinates are not displayed. </p>
-        <p>Note: For PHYSICAL, DS9 will first look for an alternative
-          WCS with WCSNAMEx='PHYSICAL'. If not found, DS9 will then look
-          for the LTMx_x LTVx keywords.</p>
-      </blockquote>
-    </blockquote>
-    <blockquote>
-      <p> <b><a name="Regions"></a>Regions</b></p>
-      <blockquote>
-        <p><b>How do I indicate distance on my printed images?</b>&nbsp;
-        </p>
-        <p>You have two choices, the RULER region and the LINE region.
-          The ruler region is mainly used for interactive measurements.
-          For printed output, use the LINE region to create a distance
-          indicator. In the line region dialog, there is a read-only
-          entry that indicates the length in pixels, degrees, arcmin, or
-          arcsec. Edit to the desired distance and enter the desired
-          label, including ' or ", in the region text labile entry. You
-          have the option of arrows at each end of the line. </p>
-      </blockquote>
-    </blockquote>
-    <blockquote>
-      <p> <b><a name="Printing"></a>Printing</b></p>
-      <blockquote>
-        <p><b>I can make some wonderful color images in DS9 and save
-            them as postscript files that look great, but often when I
-            print them they appear washed out or very different than
-            they do on the screen. My question then is what, if
-            anything, can I do about this?</b> </p>
-        <p>The problem is that you create an image on a display, which
-          is the product of&nbsp; RGB colors (red, green, and blue) and
-          print the image on a printer, which is the&nbsp; product of
-          CMYK colors (cyan, yellow, magenta, and black). Furthermore,
-          every&nbsp; monitor is different in how it will display a
-          certain color, and every printing&nbsp; technology is
-          different in how well it will reproduce that color. And
-          finally,&nbsp; the translation between RGB and CMYK is not
-          symmetric, i.e. its not possible to&nbsp; translate some
-          colors back and forth. </p>
-        <p>It's possible to calibrate your monitor and your printer, to
-          create a&nbsp; translation matrix, to correct for problems
-          outlined above (in the Macintosh&nbsp; world, this is what
-          ColorSync does). The idea is to <i>apply</i> a gamma
-          correction to the output of DS9, so&nbsp; that it will print
-          much more in line with what you expect. To do this you'd
-          need&nbsp; special software and hardware, and its only valid
-          for your monitor and your&nbsp; printer. </p>
-        <p>In summary, its not worth it. Especially in the case of
-          publication, such as ApJ,&nbsp; where you have no idea on what
-          printing technology will be used to reproduce&nbsp; your
-          image. So the only control you have is to calibrate your
-          monitor and to&nbsp; hope for the best. </p>
-        <p>However, there are some <i>rules of thumb </i>that might
-          help. First, printers have a very hard time with <i>blues</i>
-          and <i>purples</i>, as they tend to be washed out. Either
-          avoid these colors, or over compensate these colors.&nbsp;</p>
-        <p>ApJ has a good idea in that you send in both an electronic
-          version and a hard copy of your color image. That way, they
-          can manually adjust the printers to&nbsp; try to match your
-          output.</p>
-        <p><i>NOTE: Even though ApJ requests images in CMYK, we
-            recommend RGB. From personal experience, if you send RGB,
-            the printed results will be closer to the original.</i></p>
-        <p><b>We used DS9 to generate 300 dpi CMYK eps figures, as per
-            the ApJ specifications, but the color scheme on&nbsp; our
-            proofs is wrong.&nbsp; In the proofs, the violet is washed
-            out and looks similar to the black, and the blue is not
-            nearly as intense.</b></p>
-        <p><b> </b>There are two issues here: first,&nbsp; color
-          printers are notorious for failure to reproduce blues and
-          purples correctly. Second,&nbsp; not all colors in RGB space
-          can be reproduced correctly in CMYK space, blues being the
-          prime example. Below is an excerpt from an industry pamphlet:</p>
-        <blockquote>
-          <p><tt>Be aware that it is possible to see colors in RGB that
-              you can't make with CMYK. They are said to be "out of the
-              CMYK color gamut". What happens is that the RGB-to-CMYK
-              translator just gets as close as possible to the
-              appearance of the original and that's as good as it can
-              be. It's something that everyone in the industry puts up
-              with. So it's best to select any colors you use for fonts
-              or other design elements in your layout using CMYK
-              definitions instead of RGB. That way, you will have a
-              better idea of how they will appear in your printed piece.
-              Here's a common example: many programs translate the 100%
-              Blue in RGB into a somewhat purple-looking color in CMYK.
-              We recommend a CMYK value of 100-65-0-0 to get a nice
-              clean blue.<font size="-1"><br>
-              </font></tt></p>
-        </blockquote>
-        <p>For this reason, you may wish to use the RGB color space or
-          colormaps without deep blues and purples, such as <tt>BB</tt>
-          or <tt>Heat.</tt></p>
-      </blockquote>
-    </blockquote>
-    <blockquote>
-      <p> <b><a name="XPA"></a>XPA</b></p>
-      <blockquote>
-        <p><b>How can I use XPA to display from a client machine to DS9
-            on a server machine?<br>
-          </b></p>
-        <p>Assuming you have direct IP reachability between the machines
-          (i.e. one host can successfully connect() to the other), XPA
-          does allow you to have an XPA-enabled server like DS9 on one
-          machine and a client on another. To make this work, you need
-          to do two things (let's assume DS9 is running on a machine
-          called "server_host" and you want to send xpa commands from
-          "client_host"):<br>
-        </p>
-        <ol>
-          <li>The XPA server program (i.e. DS9) must allow the client
-            host to send XPA commands. Access can be permitted in one of
-            two ways:<br>
-            <ol style="list-style-type: lower-alpha;">
-              <li>Send the XPA server an acl request by running xpaset
-                on the same host on which the server is running (i.e. on
-                the server_host):<br>
-                <br>
-                <span style="font-family: monospace;">% xpaset -p ds9
-                  -acl client_host +<br>
-                  <br>
-                </span></li>
-              <li>For more permanent access, add permissions in
-                ~acls.xpa:<br>
-                <br>
-                <span style="font-family: monospace;">% cat &gt;
-                  ~/acls.xpa</span><br style="font-family: monospace;">
-                <span style="font-family: monospace;">DS9:ds9
-                  client_host +<br>
-                </span><br>
-                You can check the acls for an XPA server using xpaget: <br>
-                <br>
-                <span style="font-family: monospace;">% xpaget ds9 -acl<br>
-                </span><br>
-              </li>
-            </ol>
-          </li>
-          <li>On the client side, the client needs to communicate with
-            the xpansname server program on the server machine to find
-            the XPA server communication info. This also can be done in
-            two ways:<br>
-            <ol style="list-style-type: lower-alpha;">
-              <li>use the -i [host] switch to override <span
-                  style="font-family: monospace;">XPA_NSINET</span> for
-                this execution (The default port is 14285):<br>
-                <span style="font-family: monospace;"><br>
-                  % xpaget -i 'server_host:14285<span
-                    style="font-family: monospace;">' ds9</span></span><br>
-                <br>
-              </li>
-              <li>Set the <span style="font-family: monospace;">XPA_NSINET</span>
-                variable for more permanent selection of xpans on the
-                server host:<br>
-                <br>
-                <span style="font-family: monospace;">% setenv
-                  XPA_NSINET 'server_host:14285'</span><br>
-              </li>
-            </ol>
-          </li>
-        </ol>
-        <p>Once these two setup steps are performed, you should be able
-          to send commands to DS9 and receive data from DS9. You can
-          look at the <a
-            href="http://hea-www.harvard.edu/saord/xpa/acl.html">xpaacl
-            man page</a> for more information.</p>
-        <p><b>I have a laptop, that most of the time, is connected to a
-            network. DS9 runs fine. However, when I'm not connected to a
-            network and I start DS9, it hangs. What's going on?</b></p>
-        <p>&nbsp;DS9 uses XPA for interprocess communication. When DS9
-          starts, XPA initializes itself. XPA uses either IP sockets or
-          UNIX sockets, based if your machine is configured to connect
-          to the internet. In the case where your machine is configured
-          for the internet, but you are not currently connected, XPA
-          gets very confused. So, you can define a shell variable,
-          XPA_METHOD, that tells XPA which method to use. </p>
-        <p>The following is from the XPA documentation: </p>
-        <blockquote>
-          <p><tt>Determines the socket connection method used by this
-              session of XPA. The choices are: inet (to use INET or
-              Internet-based sockets) and local (unix) (to use UNIX
-              sockets). The default is INET. Using the inet method will
-              allow access from other machines (subject to access
-              controls) but using local will not. Local is most useful
-              for private access and when the machine in question is not
-              connected to the Internet</tt></p>
-        </blockquote>
-        <p>More information is available on XPA shell variables at: <a
-            href="http://hea-www.harvard.edu/RD/xpa/env.html">The XPA
-            Environment</a><br>
-        </p>
-      </blockquote>
-    </blockquote>
-    <blockquote>
-      <blockquote>
-        <p> </p>
-      </blockquote>
-    </blockquote>
-    <blockquote>
-      <p><b><a name="VO"></a>VO</b></p>
-      <blockquote>
-        <p><b>I can't connect to any of the virtual observatories. What
-            do I do now?</b></p>
-        <p>The DS9 help facility now contains a tutorial on how to
-          configure DS9 to by pass network firewalls. See <a
-            href="ref/vo.html">Virtual Observatory Reference</a> for
-          more information.</p>
-      </blockquote>
-    </blockquote>
-  </body>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.18.1), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content=
+"Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<title>DS9 FAQ</title>
+</head>
+<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor=
+"#FFFFFF" alink="#FF0000">
+<h3><img alt="" src="sun.gif" width="100" height="98" align=
+"middle"> SAOImageDS9 FAQ</h3>
+<blockquote>
+<p>This FAQ is a new, on going project, and it is far from being
+complete. But as common questions on DS9 are received, the FAQ will
+be updated.</p>
+<p><b>Contents</b></p>
+<blockquote><a href="#Copyright">Copyright</a><br>
+<a href="#General">General</a><br>
+<a href="#Fonts">Fonts</a><br>
+<a href="faq.html#Linux">Linux</a><br>
+<a href="faq.html#Windows">Windows</a><br>
+<a href="#MacOSX">MacOSX</a><br>
+<a href="faq.html#X11">X11</a><br>
+<a href="#IRAF">IRAF</a><br>
+<a href="#Coordinates">Coordinates</a><br>
+<a href="#Regions">Regions</a><br>
+<a href="#Printing">Printing</a><br>
+<a href="#XPA">XPA</a><br>
+<a href="#VO">VO</a><br></blockquote>
+</blockquote>
+<blockquote>
+<p><b><a name="Copyright" id="Copyright"></a>Copyright</b></p>
+<blockquote>
+<p>DS9 is composed of approximately 20 open source packages, all of
+which are distributed under their own open source license
+agreements, usually GPL, LGPL, or BSD. In addition, several open
+source packages have been developed here at the Smithsonian
+Astrophysical Observatory, Cambridge, MA, USA and are distributed
+under the terms of the GNU General Public License as published by
+the Free Software Foundation. As long as you continue to adhere to
+the provisions of the licenses, you are free to distribute DS9
+along with your software.</p>
+<p>The <a href="http://www.gnu.org/copyleft/gpl.html">GNU site</a>
+contains an excellent FAQ on the the dos and donts of GPL.</p>
+</blockquote>
+<p><b><a name="General" id="General"></a>General</b></p>
+<blockquote>
+<p><b>The web browser, catalog tool, image server, and other
+Analysis functions don't appear to work. Whats going
+on?<br></b></p>
+<p>For a number of the Analysis functions, DS9 requires temporary
+disk space to download and store data. By default, this directory
+is defined by the TMP or TEMP environment variable. This is usually
+defined as <tt>/tmp</tt> for Linux and MacOSX users. For Windows
+users, this will vary, depending on which version of Windows you
+have. In any case, if the temp directory is not writable, or you
+have specified an invalid directory in the preferences, these
+functions will fail with a variety of error messages.<br></p>
+<p><b>My system admin stripped the DS9 binary and now DS9 fails to
+start with the following error message:</b></p>
+<p><tt>Application initialization failed: Can't find a usable
+tk.tcl in the following directories...</tt></p>
+<p>DS9 is based on tcl/tk which is a scripting language which
+requires many support files. To create a stand alone application,
+we <i>fool</i> tcl/tk into thinking that it has a valid
+installation. To do this, DS9 is really an application, along with
+an zip archive attached. The first thing DS9 does is to create a
+virtual file system in memory and unpack that archive into memory.
+The application DS9 is already stripped of debugging symbols when
+built.</p>
+<p>It appears that the <tt>strip</tt> command is <i>stripping</i>
+part of the archive, hence DS9 is unable to un-compress it. In
+summary, don't <tt>strip</tt> the DS9 binary and everything works
+fine.</p>
+<p><b>When I open my FITS image, all I see is 'white'. Yet
+everything, including the color bar seems to work?</b></p>
+<p>New with version 2.1, is support for the DATASEC keyword. This
+keyword specifies what portion of the image is valid data, for
+calculating min / max and for displaying. This is very important
+for images created from CCDs with over scan and bias strips. By
+default, this support is enabled. However, a number of fits images
+with this keyword, have invalid values. Therefor, when DS9 opens
+the image, it finds no valid data to display. To correct this
+problem, either disable DATASEC support, via the Scale menu, or
+correct the the value of DATASEC in the fits header. You can also
+change the default behavior by disabling DATASEC from the
+preferences menu.<br></p>
+</blockquote>
+<p><b><a name="Fonts" id="Fonts"></a>Fonts</b></p>
+<blockquote>
+<p><b>Where is the Symbol Font? How do I enter special characters
+into an entry dialog?</b></p>
+<p>The concept of a separate <tt>SYMBOL</tt> font is no longer
+implemented with the latest OS font and scripting support,
+especially with scalable anti-alias fonts such as Xft for Linux.
+Most newer fonts (if not all) now have greek characters as part of
+the font. The greek chars start at unicode \u0391 for 'A' and
+\u03b1 for 'a'. Each OS has a tool used to build and copy a string
+of characters. Then use the Edit:Paste menu of DS9 to insert the
+character string.</p>
+<p>Linux- Gnome: <b>gucharmap<br></b> Linux- KDE:
+<b>kcharselect<br></b> MacOSX: <b>Character Viewer</b> (Select
+<tt>Edit:Special Characters</tt>) Now click and drag the characters
+to a terminal window. Then select the string and select
+<tt>Edit:Copy</tt>.<br>
+Windows: <b>Character Map</b> (from <tt>Start</tt> button, select
+<tt>All Programs</tt>, <tt>Accessories</tt>, <tt>System Tools</tt>
+and then <tt>Character Map</tt>)<br></p>
+</blockquote>
+<p><b><a name="Linux" id="Linux"></a>Linux</b></p>
+<blockquote>
+<p><b>My /tmp directory is mounted -noexec and bin table filtering
+does not work.</b></p>
+<p>Set the environment variable FILTER_TMPDIR to a directory that
+is both writable and can execute.<br></p>
+<p><b>I have Red Hat 7, and I'm running KDE. The magnifier keeps
+going blank after a few seconds, what's going on?</b></p>
+<p>The problem was in KDE. If the user has decided to hide the
+panel taskbar and&nbsp; sets a delay time for when it appears if
+the mouse is moved to the panel&nbsp; location, then it appears
+that KDE creates mouse events that fool DS9 into&nbsp; thinking the
+mouse is outside and it blanks the magnifier. By turning off
+the&nbsp; hide panel, the effect goes away. The alternative is to
+update to KDE2.1Beta&nbsp; where this method of dealing with the
+hidden panel is not used and all is&nbsp; well, as it was for
+KDE</p>
+<p><b>I have FreeBSD. When I run ds9, I get the following
+error:</b> <tt>&nbsp; <b>ELF binary type "0" not known</b></tt>
+<b>Whats going on?</b></p>
+<p>The solution was to use the <b><tt>brandelf</tt></b> utility on
+the file to ensure that the machine understood that it &nbsp;was a
+Linux program.</p>
+<p><tt>% brandelf -t Linux (file name)<br></tt></p>
+</blockquote>
+<p><b><a name="Windows" id="Windows"></a>Windows</b></p>
+<blockquote>
+<p><b>When I do Save Image, I get the same result (and this is true
+for either .gif, .jpeg, .tiff, .png and .ppm) : it saves only a
+stripe at the top of my image.<br></b></p>
+<p>This problem seems to be caused by running DS9 in Windows XP
+compatibility mode. Please un-check the compatibility option in the
+properties dialog.<br></p>
+<p><b>How can I open a FITS file with an extension name?</b></p>
+<p>By default, the windows port of DS9 uses the Windows standard
+dialog box to open and save files. This can be a problem in that
+the native Windows dialog will not allow extensions to the file
+name, such as <tt>foo.fits[2]</tt>. You must use the Unix like
+standard dialogs to be able to specify an extension. Select
+<tt>Edit-&gt;Preferences-&gt;General:Dialogbox</tt> to change the
+default standard dialog.</p>
+<p><b>Every time I create an auxiliary window in ds9, such as a
+Pixel Table, or Analysis Plot, it will retreat behind the main ds9
+window. Then, when I bring the auxiliary window to the front and
+move the mouse out of it, it automatically goes behind the main ds9
+window again. What can I do to fix things so that the auxiliary
+window stays on top of the ds9 window?</b></p>
+<p>To fix things so that the auxiliary window stays on top of the
+ds9 window, do the following:</p>
+<blockquote>
+<p><tt>Go to the icon task bar at the bottom of the screen.</tt>
+<tt>Bring the auxiliary window to the front by clicking on its icon
+in the icon task bar.</tt> <tt>While the mouse still is on the aux
+window icon, press the mouse button, and keeping it pressed, move
+the mouse off the task bar.</tt> <tt>Release the mouse while off
+the task bar.</tt> <tt>The auxiliary window will now stay on top of
+the main ds9 window.</tt></p>
+</blockquote>
+</blockquote>
+<p><b><a name="MacOSX" id="MacOSX"></a>MacOSX</b><br></p>
+<blockquote>
+<p><b>I can't invoke the 'Save Image' function from the MacOSX X11
+version. I get an error message "An error has occurred while
+creating the image. Please make sure entire image is visible on
+screen."<br></b></p>
+Up until MacOSX 10.8 (Mountain Lion), Apple provided their own
+version of a X11 server. At first, it was based on XFree86
+(X11R6.6) and available with versions up to MacOSX 10.4. Later with
+MacOSX versions 10.5 to 10.7, the Apple's X11 server was based upon
+X.org (X11R7.2).<br>
+<br>
+The Apple version of X11 server for MacOSX 10.5 to 10.7 contains a
+bug which fails if you invoke certain X11 calls on a window if its
+location is not at 0,0 on the screen. Hence, within DS9, if you
+'Save Image' and your window is not exactly in the upper left
+corner, it will fail.<br>
+<br>
+Again, this only affects users of MacOSX 10.5 to 10.7.<br>
+<br>
+Starting with MacOSX 10.8, Apple no longer provides a X11 window
+server. The user must go to the XQuartz site and download/install
+directly. The current version is 2.7.3.<br>
+<p><b>When I invoke DS9 MacOSX Aqua from the command line, I get
+weird errors such as<tt>:</tt></b></p>
+<blockquote>
+<p><tt>The document "foo.fits" could not be opened. SAOImage DS9
+cannot open files in the "Flexible Image Transport System"
+format.</tt></p>
+</blockquote>
+<p>When opening MacOSX Aqua from the command line, it is better to
+use the <tt>OPEN</tt> application as opposed to specifying the
+binary directly. The <tt>OPEN</tt> application sets up the
+environment just as it is when a user double clicks.</p>
+<tt># good</tt><br>
+<tt>% open /Applications/SAOImage\ DS9.app foo.fits<br>
+<br>
+# bad<br>
+% /Applications/SAOImage\ DS9.app/Contents/MacOS/ds9
+bar.fits</tt><br>
+<p><b>How can I open a FITS file with an extension name?</b></p>
+<p>By default, DS9 MacOSX Aqua uses the MacOSX standard dialog box
+to open and save files. This can be a problem in that the native
+MacOSX dialog will not allow extensions to the file name, such as
+<tt>foo.fits[2]</tt>. You must use the Unix like standard dialogs
+to be able to specify an extension. Select
+<tt>Edit-&gt;Preferences-&gt;General</tt> to change the default
+standard dialog.</p>
+<p><b>How do I set my PATH environment variable under MacOSX for
+use with external analysis programs, such as funtools?<br></b></p>
+<p>When you double click on a MacOSX application, it does not parse
+any shell startup files, such as ~/.profile. Instead, the
+environment is defined using a special environment file,
+<tt>.MacOSX/environment.plist</tt>. This file can be created with
+the MacOSX utility
+<tt>/Developer/Applications/PropertyListEditor.app.</tt> For
+further information, please click <a href=
+"http://developer.apple.com/qa/qa2001/qa1067.html">here</a>.<br></p>
+</blockquote>
+<p><b><a name="X11" id="X11"></a>X11</b><br></p>
+<blockquote>
+<p><b>Is it possible to work in batch mode without a physical
+display?<br></b></p>
+<p>DS9 is written as an interactive, window client program, and as
+a result, does require a window server to be available for
+rendering (X11, Windows, or MacOSX).<br>
+<br>
+Therefore, using DS9 as a batch process can be cumbersome. We
+recommend using <tt>xvfb</tt> under X11. Just set up a virtual
+display buffer, reset your DISPLAY variable, then invoke DS9 with a
+number of command line options or use xpa from a shell script as a
+batch processor. Example:<br></p>
+<p><tt>% export DISPLAY=:1</tt><tt><br></tt> <tt>% Xvfb :1 -screen
+0 1024x768x16 &amp;</tt><tt><br></tt> <tt>% ds9 -file cmap.fits
+-zoom to fit -cmap b -grid skyformat degrees -grid yes -regions
+../EMS-names.reg -saveimage png mytest.png -exit</tt><br></p>
+<p><b>When I start DS9, I get the following error message:</b></p>
+<tt>_X11TransSocketINETConnect: Can't get address for
+foo.bar.edu</tt><br>
+<tt>couldn't connect to display "foo.bar.edu:0.0"</tt> &nbsp;<br>
+<p>DS9 is unable to determine a valid X11 Display server, because
+of a number of reasons. Most often this is seen when you have a
+laptop configured for a network, but is not physically connected.
+You need to set the DISPLAY environment variable to :0.0</p>
+<blockquote><tt>$ xhost +</tt><br>
+<tt>$ set DISPLAY=:0.0</tt><br>
+<tt>$ export DISPLAY</tt><br></blockquote>
+<p><b>Under Solaris, when I start DS9, my twm window manager
+crashes!</b></p>
+<p>TWM distributed with X11R5 had a major bug, that was corrected
+around 1996. DS9 will trigger this bug, and will cause TWM to
+crash. If you are running Solaris, and have X11R5 installed, be
+sure that /usr/openwin/bin is in your path before X11R5/bin. This
+will insure that you are running the correct version of TWM .</p>
+<p><b>When I run ds9 with the tvtwm window manager, sometimes the
+open file dialog box does not appear?</b></p>
+<p>If you are running tvtwm, and you are currently viewing a
+virtual screen other than the first, when you open a file, the
+dialog box will appear in the first virtual screen, not your
+current. This is a bug with tvtwm and not ds9.</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><b><a name="IRAF" id="IRAF"></a>IRAF</b></p>
+</blockquote>
+<blockquote>
+<blockquote>
+<p><b>I can't use more than 9 frames with the IMEXAMINE
+task?</b><br></p>
+<p>The task <tt>IMEXAMINE</tt> can not be used with frame numbers
+greater than 9.</p>
+<p><b>Can I display from IRAF to DS9 running under Windows or
+MacOSX?</b></p>
+<p>Yes, DS9 for Windows and MacOSX is also a fully functional IRAF
+display server. To direct image output from IRAF to DS9 running
+under Windows or MacOSX, use the IMTDEV environment variable. For
+example, if the machine is named 'foo.bar.edu', define IMTDEV to
+the follow value before entering IRAF.</p>
+<blockquote><tt>$ setenv IMTDEV inet:5137:foo.bar.edu</tt><br>
+<tt>$ cl</tt><br>
+<tt>cl&gt; display dev$pix</tt><br></blockquote>
+<p><b>I'm having problems with</b> <b>mscred task</b>
+<b>msczero?</b></p>
+DS9 now supports IRAF's new IIS image display protocol. However,
+there is one minor problem with the <b>mscred</b> task
+<b>msczero.</b> Before using <b>msczero</b>, issue the following
+command in the cl:<br>
+<br>
+<tt>cl&gt; set disable_wcs_maps=""<br>
+cl&gt; flpr</tt><br>
+<p><b>I find that there is a frustrating delay in performing
+operations on images displayed from IRAF - there's a wait of a
+second or two before an image is (re)displayed, whereas
+<i>saoimage</i> reacts virtually instantly for the same type of
+operation. This makes running imexamine on a batch of images a
+pain, and using the mouse to change color gamma/bias to desired
+values basically impossible.</b></p>
+<p>DS9 and <i>saoimage</i> are similar in speed when working with
+IRAF. In fact, DS9 uses&nbsp; the same code to interface with IRAF
+as saoimage and ximtool. The only&nbsp; difference is that DS9 is
+double buffered, whereas, <i>saoimage</i> and <i>ximtool</i>
+only&nbsp; use a single buffer. So with <i>saoimage</i> and
+<i>ximtool</i>, you see incremental progress,&nbsp; where DS9 will
+render the image all at one time. However, the overall time
+to&nbsp; finish rendering should almost be the same.</p>
+<p>DS9 runs in both 8 bit and 24 bit environments, but
+<i>saoimage</i> is restricted to 8 bit. If you are running DS9 and
+<i>saoimage</i> at the same time, then you must be in 8 bit mode.
+You should not see any&nbsp; delay in changing the color
+bias/contrast between the two.</p>
+<p>However, if you are running DS9 in 24 bit mode, then you will
+see slower&nbsp; performance in changing the bias/contrast, as
+compared to 8 bit mode. Instead of&nbsp; changing a color look up
+table, as in 8 bit mode, DS9 has to update every pixel&nbsp; on the
+screen. If your cpu speed is slow, you can select the&nbsp;
+Edit:Preferences:True Colorbar to tell DS9 not to update the entire
+screen,&nbsp; only a part of the screen. This should only be needed
+if your machine is slower&nbsp; than 200 MHz. Again <i>saoimage</i>
+does not even run in 24 bit mode, so there are no&nbsp;
+comparisons.</p>
+<p><b>I try to display an image from IRAF and I get the following
+error message:</b></p>
+<p><tt>Cannot open device (node!imtool,,512,512)</tt></p>
+<p>DS9 works the same way as <tt>ximtool,</tt> <tt>saoimage,</tt>
+and <tt>saotng.</tt> No special scripts&nbsp; should be needed. If
+you have one of the above currently working, DS9 should&nbsp; work
+<i>out of the box</i>.</p>
+<p>IRAF can use one of three methods to communicate with DS9: fifo,
+socket, and unix&nbsp; domain name. The DS9 defaults are:</p>
+<blockquote><tt>fifo /dev/imt1</tt><br>
+<tt>port 5137</tt><br>
+<tt>unix /tmp/.IMT%d</tt></blockquote>
+<p>If your IRAF configuration is set up different (i.e., a
+different port number, or&nbsp; via a fifo), you need to tell DS9
+how to communicate with iraf. DS9 uses the same&nbsp; command line
+options as XIMTOOL:</p>
+<blockquote><tt>-fifo</tt><br>
+<tt>-fifo_only</tt><br>
+<tt>-inet_only</tt><br>
+<tt>-port</tt><br>
+<tt>-port_only</tt><br>
+<tt>-unix</tt><br>
+<tt>-unix_only</tt></blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p><b>I try to display an image, I see something, but it's
+corrupted and I get multiple error messages from DS9...</b></p>
+<p>An IRAF image server (<i>ximtool</i>, <i>saoimage</i>, DS9,
+etc...) uses a configuration file&nbsp; to specify the number of
+available buffers and their sizes. What actually passes&nbsp; from
+IRAF is not the buffer size, but an index number into this
+file.</p>
+<p>So when an image server starts (DS9), it will attempt to locate
+this file as&nbsp; $HOME/.imtoolrc and /usr/local/lib/imtoolrc. If
+not found, it will look for shell&nbsp; environment variables
+IMTOOLRC and imtoolrc, that contains the name of the configuration
+file.</p>
+<p>If no configuration file is found, DS9 will assume the following
+default configuration:</p>
+<blockquote><tt>&nbsp;1&nbsp; 2&nbsp; 512&nbsp; 512&nbsp; #
+imt1|imt512</tt><br>
+<tt>&nbsp;2&nbsp; 2&nbsp; 800&nbsp; 800&nbsp; #
+imt2|imt800</tt><br>
+<tt>&nbsp;3&nbsp; 2 1024 1024&nbsp; # imt3|imt1024</tt><br>
+<tt>&nbsp;4&nbsp; 1 1600 1600&nbsp; # imt4|imt1600</tt><br>
+<tt>&nbsp;5&nbsp; 1 2048 2048&nbsp; # imt5|imt2048</tt><br>
+<tt>&nbsp;6&nbsp; 1 4096 4096&nbsp; # imt6|imt4096</tt><br>
+<tt>&nbsp;7&nbsp; 1 8192 8192&nbsp; # imt7|imt8192</tt><br>
+<tt>&nbsp;8&nbsp; 1 1024 4096&nbsp; # imt8|imt1x4</tt><br>
+<tt>&nbsp;9&nbsp; 2 1144&nbsp; 880&nbsp; # imt9|imtfs full screen
+(1152x900 minus frame)</tt><br>
+<tt>10&nbsp; 2 1144&nbsp; 764&nbsp; # imt10|imtfs35 full screen at
+35mm film aspect ratio</tt><br>
+<tt>11&nbsp; 2&nbsp; 128&nbsp; 128&nbsp; # imt11|imt128</tt><br>
+<tt>12&nbsp; 2&nbsp; 256&nbsp; 256&nbsp; # imt12|imt256</tt><br>
+<tt>13&nbsp; 2&nbsp; 128 1056&nbsp; # imt13|imttall128 tall &amp;
+narrow for spectro.</tt><br>
+<tt>14&nbsp; 2&nbsp; 256 1056&nbsp; # imt14|imttall256 tall &amp;
+wider for spectro.</tt><br>
+<tt>15&nbsp; 2 1056&nbsp; 128&nbsp; # imt15|imtwide128 wide &amp;
+thin for spectro.</tt><br>
+<tt>16&nbsp; 2 1056&nbsp; 256&nbsp; # imt16|imtwide256 wide &amp;
+fatter for spectro.</tt><br>
+<tt>17&nbsp; 2 1008&nbsp; 648&nbsp; # imt17|imtssy Solitaire fmt w/
+imtool border</tt><br>
+<tt>18&nbsp; 2 1024&nbsp; 680&nbsp; # imt18|imtssn Solitaire fmt
+w/out imtool border</tt><br>
+<tt>19&nbsp; 1 4096 1024&nbsp; # imt19|imt4x1</tt><br></blockquote>
+<p>If on the other hand, IRAF assumes a different buffer size, the
+image will appear corrupted and DS9 may issue a number of error
+messages.</p>
+<p>Another problem is that this file must be in sync with
+dev$graphcap. If your&nbsp; system administrator has made changes
+to graphcap, they must also be implemented in imtoolrc.</p>
+<p>Here is a note from NOAO:</p>
+<blockquote>
+<p><tt>The messages means that there is no /usr/local/lib/imtoolrc
+file</tt> <tt>on the machine. This is created as a symlink to
+dev$imtoolrc by the</tt> <tt>iraf install script but only if the
+/usr/local/lib dir already exists on the</tt> <tt>machine. The fix
+is the create the dir and rerun the install script or</tt> <tt>else
+make the link by hand.&nbsp; Users can also just copy
+dev$imtoolrc</tt> <tt>to $HOME/.imtoolrc and restart the server to
+also workaround it. Note</tt> <tt>that an existing .imtoolrc might
+define old frame buffer configs which</tt> <tt>might confuse
+things, so if the system file exists check for a private</tt>
+<tt>copy screwing things up.</tt></p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p><b>Where do I find this .imtoolrc file?</b></p>
+<p>Again, here a note from NOAO concerning this issue:</p>
+<blockquote>
+<p><tt>In a smooth installation the imtoolrc file is installed as
+a</tt> <tt>/usr/local/lib/imtoolrc symlink pointing to the
+dev$imtoolrc file in the</tt> <tt>iraf system.&nbsp; This is
+normally what's used but XImtool (and DS9?) also</tt> <tt>allow a
+$HOME/.imtoolrc and IMTOOLRC environment variable defining the</tt>
+<tt>path as fallbacks.&nbsp; There are several practical problems
+with&nbsp; this:&nbsp; for</tt> <tt>some reason (I'm trying to fix)
+the imtoolrc link won't be created if</tt> <tt>the /usr/local/lib
+directory doesn't exist when the install script is</tt> <tt>run on
+the machine, even though it's run as root and the file can be</tt>
+<tt>directory easily.&nbsp; On PC-IRAF systems there is also a typo
+in the install</tt> <tt>script (extra logical or at line 515) which
+causes it to exit before</tt> <tt>the display setup is run (i.e. no
+/dev fifos or imtoolrc). If users don't</tt> <tt>catch this or see
+it in the README file they'll think everything went</tt> <tt>fine.
+Lastly, the local iraf admin might not have run the install
+script</tt> <tt>on the local iraf NFS client machine at
+all.</tt></p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p><b>When I display an image from IRAF, the SCALE menu option is
+not active, Why?</b></p>
+<p>When you display an image from IRAF into DS9, IRAF actually does
+the color scale&nbsp; distribution. In Display, use the ztrans and
+z1,z2 parameters to set the upper/lower bounds and distribution.
+You can also use the zscale parameter to auto determine z1,z2.Here
+are the DISPLAY parameters in question:</p>
+<blockquote><tt>ztrans=[linear|log|none|user]</tt><br>
+<tt>z1=min</tt><br>
+<tt>z2=max</tt><br>
+<tt>zscale=[yes|no]</tt></blockquote>
+<p>What actually is sent from IRAF to DS9 is one byte per pixel,
+values 0-200,&nbsp; which already has applied both the upper and
+lower clipping bounds and the distribution. So this is why, the
+SCALE menu is disabled in DS9 when it receives a image from
+IRAF.</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><b><a name="Coordinates" id=
+"Coordinates"></a>Coordinates</b></p>
+</blockquote>
+<blockquote>
+<blockquote>
+<p><b>Why don't I see PHYSICAL/WCS/WCSA...WCSZ coordinates
+displayed when I load my image?</b></p>
+<p>DS9 supports the following coordinate systems:</p>
+<blockquote><tt>WCS Sky coords
+(fk4,fk5,icrs,galactic,ecliptic)<br></tt> <tt>WCS Linear
+coords<br></tt> <tt>Image (also known as Logical)<br></tt>
+<tt>Physical (also known as CCD)<br>
+Detector<br>
+Amplifier &nbsp;</tt><br></blockquote>
+<p>DS9 uses the following FITS keywords in the header to define a
+coordinate system: &nbsp;</p>
+</blockquote>
+<center>
+<table nosave="" width="75%" cellpadding="4" border="1">
+<tbody>
+<tr>
+<td><b>Coordinate System</b></td>
+<td><b>Keyword Values</b></td>
+</tr>
+<tr nosave="">
+<td nosave=""><tt>WCS / WCSA...WCSZ</tt></td>
+<td><tt>CRVAL,CRPIX,CRDELT,CD... (for images)<br>
+TCRVL,TCRPX,TCDLT,... (for tables)</tt></td>
+</tr>
+<tr>
+<td><tt>Image</tt></td>
+<td><tt>none required</tt></td>
+</tr>
+<tr>
+<td><tt>Physical</tt></td>
+<td><tt>WCSNAMEP='PHYSICAL' or LTMx_x/LTVx</tt></td>
+</tr>
+<tr>
+<td valign="top"><tt>Detector</tt><br></td>
+<td valign="top"><tt>DTMx_x/DTVx</tt><br></td>
+</tr>
+<tr>
+<td valign="top"><tt>Amplifier</tt><br></td>
+<td valign="top"><tt>ATMx_x/ATVx</tt><br></td>
+</tr>
+</tbody>
+</table>
+</center>
+<blockquote>
+<p>If the required keywords are not present, values for those
+coordinates are not displayed.</p>
+<p>Note: For PHYSICAL, DS9 will first look for an alternative WCS
+with WCSNAMEx='PHYSICAL'. If not found, DS9 will then look for the
+LTMx_x LTVx keywords.</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><b><a name="Regions" id="Regions"></a>Regions</b></p>
+<blockquote>
+<p><b>How do I indicate distance on my printed
+images?</b>&nbsp;</p>
+<p>You have two choices, the RULER region and the LINE region. The
+ruler region is mainly used for interactive measurements. For
+printed output, use the LINE region to create a distance indicator.
+In the line region dialog, there is a read-only entry that
+indicates the length in pixels, degrees, arcmin, or arcsec. Edit to
+the desired distance and enter the desired label, including ' or ",
+in the region text labile entry. You have the option of arrows at
+each end of the line.</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><b><a name="Printing" id="Printing"></a>Printing</b></p>
+<blockquote>
+<p><b>I can make some wonderful color images in DS9 and save them
+as postscript files that look great, but often when I print them
+they appear washed out or very different than they do on the
+screen. My question then is what, if anything, can I do about
+this?</b></p>
+<p>The problem is that you create an image on a display, which is
+the product of&nbsp; RGB colors (red, green, and blue) and print
+the image on a printer, which is the&nbsp; product of CMYK colors
+(cyan, yellow, magenta, and black). Furthermore, every&nbsp;
+monitor is different in how it will display a certain color, and
+every printing&nbsp; technology is different in how well it will
+reproduce that color. And finally,&nbsp; the translation between
+RGB and CMYK is not symmetric, i.e. its not possible to&nbsp;
+translate some colors back and forth.</p>
+<p>It's possible to calibrate your monitor and your printer, to
+create a&nbsp; translation matrix, to correct for problems outlined
+above (in the Macintosh&nbsp; world, this is what ColorSync does).
+The idea is to <i>apply</i> a gamma correction to the output of
+DS9, so&nbsp; that it will print much more in line with what you
+expect. To do this you'd need&nbsp; special software and hardware,
+and its only valid for your monitor and your&nbsp; printer.</p>
+<p>In summary, its not worth it. Especially in the case of
+publication, such as ApJ,&nbsp; where you have no idea on what
+printing technology will be used to reproduce&nbsp; your image. So
+the only control you have is to calibrate your monitor and to&nbsp;
+hope for the best.</p>
+<p>However, there are some <i>rules of thumb</i> that might help.
+First, printers have a very hard time with <i>blues</i> and
+<i>purples</i>, as they tend to be washed out. Either avoid these
+colors, or over compensate these colors.&nbsp;</p>
+<p>ApJ has a good idea in that you send in both an electronic
+version and a hard copy of your color image. That way, they can
+manually adjust the printers to&nbsp; try to match your output.</p>
+<p><i>NOTE: Even though ApJ requests images in CMYK, we recommend
+RGB. From personal experience, if you send RGB, the printed results
+will be closer to the original.</i></p>
+<p><b>We used DS9 to generate 300 dpi CMYK eps figures, as per the
+ApJ specifications, but the color scheme on&nbsp; our proofs is
+wrong.&nbsp; In the proofs, the violet is washed out and looks
+similar to the black, and the blue is not nearly as
+intense.</b></p>
+<p>There are two issues here: first,&nbsp; color printers are
+notorious for failure to reproduce blues and purples correctly.
+Second,&nbsp; not all colors in RGB space can be reproduced
+correctly in CMYK space, blues being the prime example. Below is an
+excerpt from an industry pamphlet:</p>
+<blockquote>
+<p><tt>Be aware that it is possible to see colors in RGB that you
+can't make with CMYK. They are said to be "out of the CMYK color
+gamut". What happens is that the RGB-to-CMYK translator just gets
+as close as possible to the appearance of the original and that's
+as good as it can be. It's something that everyone in the industry
+puts up with. So it's best to select any colors you use for fonts
+or other design elements in your layout using CMYK definitions
+instead of RGB. That way, you will have a better idea of how they
+will appear in your printed piece. Here's a common example: many
+programs translate the 100% Blue in RGB into a somewhat
+purple-looking color in CMYK. We recommend a CMYK value of
+100-65-0-0 to get a nice clean blue.<font size=
+"-1"><br></font></tt></p>
+</blockquote>
+<p>For this reason, you may wish to use the RGB color space or
+colormaps without deep blues and purples, such as <tt>BB</tt> or
+<tt>Heat.</tt></p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><b><a name="XPA" id="XPA"></a>XPA</b></p>
+<blockquote>
+<p><b>How can I use XPA to display from a client machine to DS9 on
+a server machine?<br></b></p>
+<p>Assuming you have direct IP reachability between the machines
+(i.e. one host can successfully connect() to the other), XPA does
+allow you to have an XPA-enabled server like DS9 on one machine and
+a client on another. To make this work, you need to do two things
+(let's assume DS9 is running on a machine called "server_host" and
+you want to send xpa commands from "client_host"):<br></p>
+<ol>
+<li>The XPA server program (i.e. DS9) must allow the client host to
+send XPA commands. Access can be permitted in one of two ways:<br>
+<ol style="list-style-type: lower-alpha;">
+<li>Send the XPA server an acl request by running xpaset on the
+same host on which the server is running (i.e. on the
+server_host):<br>
+<br>
+<span style="font-family: monospace;">% xpaset -p ds9 -acl
+client_host +<br>
+<br></span></li>
+<li>For more permanent access, add permissions in ~acls.xpa:<br>
+<br>
+<span style="font-family: monospace;">% cat &gt;
+~/acls.xpa</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">DS9:ds9 client_host
++<br></span><br>
+You can check the acls for an XPA server using xpaget:<br>
+<br>
+<span style="font-family: monospace;">% xpaget ds9
+-acl<br></span><br></li>
+</ol>
+</li>
+<li>On the client side, the client needs to communicate with the
+xpansname server program on the server machine to find the XPA
+server communication info. This also can be done in two ways:<br>
+<ol style="list-style-type: lower-alpha;">
+<li>use the -i [host] switch to override <span style=
+"font-family: monospace;">XPA_NSINET</span> for this execution (The
+default port is 14285):<br>
+<span style="font-family: monospace;"><br>
+% xpaget -i 'server_host:14285<span style=
+"font-family: monospace;">' ds9</span></span><br>
+<br></li>
+<li>Set the <span style="font-family: monospace;">XPA_NSINET</span>
+variable for more permanent selection of xpans on the server
+host:<br>
+<br>
+<span style="font-family: monospace;">% setenv XPA_NSINET
+'server_host:14285'</span><br></li>
+</ol>
+</li>
+</ol>
+<p>Once these two setup steps are performed, you should be able to
+send commands to DS9 and receive data from DS9. You can look at the
+<a href="http://hea-www.harvard.edu/saord/xpa/acl.html">xpaacl man
+page</a> for more information.</p>
+<p><b>I have a laptop, that most of the time, is connected to a
+network. DS9 runs fine. However, when I'm not connected to a
+network and I start DS9, it hangs. What's going on?</b></p>
+<p>&nbsp;DS9 uses XPA for interprocess communication. When DS9
+starts, XPA initializes itself. XPA uses either IP sockets or UNIX
+sockets, based if your machine is configured to connect to the
+internet. In the case where your machine is configured for the
+internet, but you are not currently connected, XPA gets very
+confused. So, you can define a shell variable, XPA_METHOD, that
+tells XPA which method to use.</p>
+<p>The following is from the XPA documentation:</p>
+<blockquote>
+<p><tt>Determines the socket connection method used by this session
+of XPA. The choices are: inet (to use INET or Internet-based
+sockets) and local (unix) (to use UNIX sockets). The default is
+INET. Using the inet method will allow access from other machines
+(subject to access controls) but using local will not. Local is
+most useful for private access and when the machine in question is
+not connected to the Internet</tt></p>
+</blockquote>
+<p>More information is available on XPA shell variables at:
+<a href="http://hea-www.harvard.edu/RD/xpa/env.html">The XPA
+Environment</a><br></p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p><b><a name="VO" id="VO"></a>VO</b></p>
+<blockquote>
+<p><b>I can't connect to any of the virtual observatories. What do
+I do now?</b></p>
+<p>The DS9 help facility now contains a tutorial on how to
+configure DS9 to by pass network firewalls. See <a href=
+"ref/vo.html">Virtual Observatory Reference</a> for more
+information.</p>
+</blockquote>
+</blockquote>
+</body>
 </html>

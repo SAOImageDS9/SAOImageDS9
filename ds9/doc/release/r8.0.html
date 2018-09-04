@@ -1,47 +1,80 @@
-<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;
-      charset=windows-1252">
-    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
-      2.4.7-10 i686) [Netscape]">
-    <title>DS9 Version 8.0 Release Notes</title>
-  </head>
-  <body vlink="#551a8b" text="#000000" link="#0000ee" bgcolor="#ffffff"
-    alink="#ff0000">
-    <h3> <img alt="" src="../sun.gif" width="100" height="98"
-        align="middle"> SAOImageDS9 Version 8.0 Release Notes</h3>
-    <ol>
-      <ol>
-        <li><tt>04.18.2018 GUI: fixed an issue with loading gzipped multiple extension fits files with the -multiframe option.</tt></li>
-        <li><tt>05.25.2018 MMT: updated Binospec template. </tt></li>
-        <li><tt>06.12.2018 CATALOG: GUI now uses a conesearch radius for query.</tt></li>
-        <li><tt>06.12.2018 SIA: GUI now uses a conesearch radius for query.</tt></li>
-        <li><tt>06.13.2018 FITSY++: be sure to output REAL header keywords with scientific notation with capital 'E', per FITS standard.</tt></li>
-        <li><tt>06.14.2018 CATALOG: add Edit menu to Symbol dialog.</tt></li>
-        <li><tt>06.14.2018 NRRD: fixed a problem exporting, an extra byte was being written.</tt></li>
-        <li><tt>06.15.2018 IIS: fixed a problem introduced in version 7.6 with the colormap.</tt></li>
-        <li><tt>06.15.2018 IIS: fixed a problem the values displayed on the colorbar.</tt></li>
-        <li><tt>06.22.2018 API: All new parser/lexer for each command, backward compatible API. Parser will detect syntax errors, and suggest options.</tt></li>
-        <li><tt>06.22.2018 CATALOG: updated catalog menu items for GAIA, UCAC, and SDSS.</tt></li>
-        <li><tt>06.25.2018 REGIONS: added support for compressed regions files.</tt></li>
-        <li><tt>07.06.2018 CUBE: fixed cube slice dialog slider.</tt></li>
-        <li><tt>07.10.2018 ANALYSIS: added current slice control to maker analysis plot 3d.</tt></li>
-        <li><tt>07.11.2018 BACKUP: fixed an issue when data range is NAN.</tt></li>
-        <li><tt>07.20.2018 BIN: fixed an issue introduced in version 7.6 where repeat bin calls incorrectly scaled markers and contours.</tt></li>
-        <li><tt>07.31.2018 REGION: fixed an problem introduced in version 7.6 with angles with a wcs which is flipped in X.</tt></li>
-        <li><tt>08.06.2018 GUI: fixed an problem introduced in version 7.6 with bracket filename options in standard dialog boxes.</tt></li>
-        <li><tt>08.22.2018 WCS: implemented all new wcs support based on AST. DS9 is fully compliant with FITS WCS Papers I, II, III.</tt></li>
-        <li><tt>08.22.2018 CUBE: plot3d current slice is coordinated with cube dialog box.</tt></li>
-        <li><tt>08.22.2018 BIN: fixed a problem in the case of a RGB image has a binned layer, changing bin parameters in other layers caused cursor movement.</tt></li>
-        <li><tt>08.22.2018 REGION: plot2d now extends across mosaic boundries.</tt></li>
-        <li><tt>08.28.2018 BACKUP: restore crosshair cursor.</tt></li>
-        <li><tt>08.31.2018 SMOOTH: fixed an issue with old backups.</tt></li>
-        <li><tt><b>09.03.2018 RELEASE version 8.0rc</b></tt></li>
-        <li><tt>09.04.2018 REGIONS: accept 'point' as a region shape, defaulting to 'boxcircle'.</tt></li>
-        <li><tt>09.04.2018 REGIONS: fixed a problem with plot3d, incorrectly calculating an index into the data cube.</tt></li>
-        <li><tt><b>09.04.2018 RELEASE version 8.0rc2</b></tt></li>
-      </ol>
-    </ol>
-  </body>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.18.1), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content=
+"Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<title>DS9 Version 8.0 Release Notes</title>
+</head>
+<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor=
+"#FFFFFF" alink="#FF0000">
+<h3><img alt="" src="../sun.gif" width="100" height="98" align=
+"middle"> SAOImageDS9 Version 8.0 Release Notes</h3>
+<div style="margin-left: 2em">
+<ol>
+<li><tt>04.18.2018 GUI: fixed an issue with loading gzipped
+multiple extension fits files with the -multiframe
+option.</tt></li>
+<li><tt>05.25.2018 MMT: updated Binospec template.</tt></li>
+<li><tt>06.12.2018 CATALOG: GUI now uses a conesearch radius for
+query.</tt></li>
+<li><tt>06.12.2018 SIA: GUI now uses a conesearch radius for
+query.</tt></li>
+<li><tt>06.13.2018 FITSY++: be sure to output REAL header keywords
+with scientific notation with capital 'E', per FITS
+standard.</tt></li>
+<li><tt>06.14.2018 CATALOG: add Edit menu to Symbol
+dialog.</tt></li>
+<li><tt>06.14.2018 NRRD: fixed a problem exporting, an extra byte
+was being written.</tt></li>
+<li><tt>06.15.2018 IIS: fixed a problem introduced in version 7.6
+with the colormap.</tt></li>
+<li><tt>06.15.2018 IIS: fixed a problem the values displayed on the
+colorbar.</tt></li>
+<li><tt>06.22.2018 API: All new parser/lexer for each command,
+backward compatible API. Parser will detect syntax errors, and
+suggest options.</tt></li>
+<li><tt>06.22.2018 CATALOG: updated catalog menu items for GAIA,
+UCAC, and SDSS.</tt></li>
+<li><tt>06.25.2018 REGIONS: added support for compressed regions
+files.</tt></li>
+<li><tt>07.06.2018 CUBE: fixed cube slice dialog slider.</tt></li>
+<li><tt>07.10.2018 ANALYSIS: added current slice control to maker
+analysis plot 3d.</tt></li>
+<li><tt>07.11.2018 BACKUP: fixed an issue when data range is
+NAN.</tt></li>
+<li><tt>07.20.2018 BIN: fixed an issue introduced in version 7.6
+where repeat bin calls incorrectly scaled markers and
+contours.</tt></li>
+<li><tt>07.31.2018 REGION: fixed an problem introduced in version
+7.6 with angles with a wcs which is flipped in X.</tt></li>
+<li><tt>08.06.2018 GUI: fixed an problem introduced in version 7.6
+with bracket filename options in standard dialog boxes.</tt></li>
+<li><tt>08.22.2018 WCS: implemented all new wcs support based on
+AST. DS9 is fully compliant with FITS WCS Papers I, II,
+III.</tt></li>
+<li><tt>08.22.2018 CUBE: plot3d current slice is coordinated with
+cube dialog box.</tt></li>
+<li><tt>08.22.2018 BIN: fixed a problem in the case of a RGB image
+has a binned layer, changing bin parameters in other layers caused
+cursor movement.</tt></li>
+<li><tt>08.22.2018 REGION: plot2d now extends across mosaic
+boundries.</tt></li>
+<li><tt>08.28.2018 BACKUP: restore crosshair cursor.</tt></li>
+<li><tt>08.31.2018 SMOOTH: fixed an issue with old
+backups.</tt></li>
+<li><tt><b>09.03.2018 RELEASE version 8.0rc</b></tt></li>
+<li><tt>09.04.2018 REGIONS: accept 'point' as a region shape,
+defaulting to 'boxcircle'.</tt></li>
+<li><tt>09.04.2018 REGIONS: fixed a problem with plot3d,
+incorrectly calculating an index into the data cube.</tt></li>
+<li><tt>09.04.2018 GUI: removed old keyboard doc button.</tt></li>
+<li><tt>09.04.2018 DOC: cleaned up html documentation.</tt></li>
+<li><tt><b>09.04.2018 RELEASE version 8.0rc2</b></tt></li>
+</ol>
+</div>
+</body>
 </html>

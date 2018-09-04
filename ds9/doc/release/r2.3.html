@@ -1,92 +1,82 @@
-<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;
-      charset=windows-1252">
-    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
-      2.4.7-10 i686) [Netscape]">
-    <title>DS9 Version 2.3 Release Notes</title>
-  </head>
-  <body vlink="#551a8b" text="#000000" link="#0000ee" bgcolor="#ffffff"
-    alink="#ff0000">
-    <div align="right">
-      <div align="left"> </div>
-      <h3 align="left"> <font size="-1"></font><img alt=""
-          src="../sun.gif" width="100" height="98" align="middle">
-        SAOImageDS9 Version 2.3 Release Notes</h3>
-    </div>
-    <ol>
-      <ol>
-      </ol>
-      <h4> <b>Version 2.3b1</b></h4>
-      <ol>
-        <li> <tt>11.04.2002 add multi-language support structure.</tt></li>
-        <li> <tt>12.02.2002 configure http user agent to 'ds9'. This
-            fixes
-            a problem with www.google.com</tt></li>
-        <li> <tt>12.02.2002 add Help DS9 Home Page menu Item.</tt></li>
-        <li> <tt>12.03.2002 Web Display: implemented 'Content-Encoding'
-            and modified 'Mime-Type' to use new proposed FITS Mime-Type
-            RFC.</tt></li>
-        <li> <tt>12.03.2002 Web Display: when the mime-type is set
-            to 'application/octet-stream', try to parse the url, looking
-            for a
-            valid fits or fits.gz image. If so, load as a fits. If not,
-            save to
-            disk.</tt></li>
-        <li> <tt>12.03.2002 Web Display: reduced the size of fonts
-            by -2 to more closely match netscape and internet explorer.</tt></li>
-        <li> <tt>12.03.2002 Web Display: updated Archive menus to use
-            new
-            IRAS web interface.</tt></li>
-        <li> <tt>12.03.2002 Web Display: add font size argument to
-            HV. Now, web sites can have different default font sizes,
-            based on what
-            looks the best.</tt></li>
-        <li> <tt>12.10.2002 Fixed a problem with calculating LTMV
-            keywords
-            from alt WCS keywords in the case of WCSNAME='PHYSICAL'</tt></li>
-        <li> <tt>12.10.2002 Add support for TDMIN and TDMAX FITS bin
-            table
-            keywords.</tt></li>
-        <li> <tt>12.10.2002 Add 'Delete All Frames' support.</tt></li>
-        <li> <tt>12.10.2002 only use fits keyword inheritence if
-            INHERIT
-            keyword is present in the header.</tt></li>
-        <li> <tt>12.11.2002 Fixed a problem with WCS headers and
-            INHERIT,
-            which resulted in duplicate keywords. This made wcssubs very
-            confused.</tt></li>
-        <li> <tt>12.11.2002 Add 'Delete Selected Regions' to Regions
-            menu.</tt></li>
-        <li> <tt>12.11.2002 Add confirmation dialog to 'Delete All
-            Regions'.</tt></li>
-        <li> <tt>12.12.2002 Display Header List dialog is now 40 chars
-            wide.</tt></li>
-        <li> <tt>12.12.2002 Web Display: add initial coordinates to ADS
-            archive sites</tt></li>
-        <li> <tt>12.16.2002 Add *.fit and *.fts to fits dialog box
-            templates.</tt></li>
-        <li> <tt>12.16.2002 Add support for GUI Groups, based on region
-            tags.</tt></li>
-        <li> <tt>12.17.2002 Add HSV colormap.</tt></li>
-        <li> <tt>12.18.2002 Fixed a problem with the PANDA Region at
-            zooms
-            other than 1.</tt></li>
-        <li> <tt>12.19.2002 DS9 version 2.3b1 released to the public.</tt></li>
-      </ol>
-    </ol>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-  </body>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.18.1), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content=
+"Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<title>DS9 Version 2.3 Release Notes</title>
+</head>
+<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor=
+"#FFFFFF" alink="#FF0000">
+<div align="right">
+<div align="left"></div>
+<h3 align="left"><img alt="" src="../sun.gif" width="100" height=
+"98" align="middle"> SAOImageDS9 Version 2.3 Release Notes</h3>
+</div>
+<div style="margin-left: 2em">
+<h4><b>Version 2.3b1</b></h4>
+<ol>
+<li><tt>11.04.2002 add multi-language support structure.</tt></li>
+<li><tt>12.02.2002 configure http user agent to 'ds9'. This fixes a
+problem with www.google.com</tt></li>
+<li><tt>12.02.2002 add Help DS9 Home Page menu Item.</tt></li>
+<li><tt>12.03.2002 Web Display: implemented 'Content-Encoding' and
+modified 'Mime-Type' to use new proposed FITS Mime-Type
+RFC.</tt></li>
+<li><tt>12.03.2002 Web Display: when the mime-type is set to
+'application/octet-stream', try to parse the url, looking for a
+valid fits or fits.gz image. If so, load as a fits. If not, save to
+disk.</tt></li>
+<li><tt>12.03.2002 Web Display: reduced the size of fonts by -2 to
+more closely match netscape and internet explorer.</tt></li>
+<li><tt>12.03.2002 Web Display: updated Archive menus to use new
+IRAS web interface.</tt></li>
+<li><tt>12.03.2002 Web Display: add font size argument to HV. Now,
+web sites can have different default font sizes, based on what
+looks the best.</tt></li>
+<li><tt>12.10.2002 Fixed a problem with calculating LTMV keywords
+from alt WCS keywords in the case of WCSNAME='PHYSICAL'</tt></li>
+<li><tt>12.10.2002 Add support for TDMIN and TDMAX FITS bin table
+keywords.</tt></li>
+<li><tt>12.10.2002 Add 'Delete All Frames' support.</tt></li>
+<li><tt>12.10.2002 only use fits keyword inheritence if INHERIT
+keyword is present in the header.</tt></li>
+<li><tt>12.11.2002 Fixed a problem with WCS headers and INHERIT,
+which resulted in duplicate keywords. This made wcssubs very
+confused.</tt></li>
+<li><tt>12.11.2002 Add 'Delete Selected Regions' to Regions
+menu.</tt></li>
+<li><tt>12.11.2002 Add confirmation dialog to 'Delete All
+Regions'.</tt></li>
+<li><tt>12.12.2002 Display Header List dialog is now 40 chars
+wide.</tt></li>
+<li><tt>12.12.2002 Web Display: add initial coordinates to ADS
+archive sites</tt></li>
+<li><tt>12.16.2002 Add *.fit and *.fts to fits dialog box
+templates.</tt></li>
+<li><tt>12.16.2002 Add support for GUI Groups, based on region
+tags.</tt></li>
+<li><tt>12.17.2002 Add HSV colormap.</tt></li>
+<li><tt>12.18.2002 Fixed a problem with the PANDA Region at zooms
+other than 1.</tt></li>
+<li><tt>12.19.2002 DS9 version 2.3b1 released to the
+public.</tt></li>
+</ol>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</body>
 </html>

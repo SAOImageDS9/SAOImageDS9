@@ -1,80 +1,77 @@
-<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;
-      charset=windows-1252">
-    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
-      2.4.7-10 i686) [Netscape]">
-    <title>3D</title>
-  </head>
-  <body vlink="#551a8b" text="#000000" link="#0000ee" bgcolor="#ffffff"
-    alink="#ff0000">
-    <h3><img alt="" src="../sun.gif" width="100" height="98"
-        align="middle"> 3-D Frames<br>
-    </h3>
-    <blockquote>
-      <p>Previous versions of DS9 would allow users to load 3-D data
-        into the traditional 2-D frames, and would allow users to step
-        through successive z-dimension pixel slices of the data cube. To
-        visualize the 3-D data in DS9 v. 7.0, a new module, encompassed
-        by the new <tt>Frame 3D</tt> option, allows users to load and
-        view data cubes in multiple dimensions.<br>
-      </p>
-      <p>The new module implements a simple ray-trace algorithm. For
-        each pixel on the screen, a ray is projected back into the view
-        volume, based on the current viewing parameters, returning a
-        data value if the ray intersects the FITS data cube. To
-        determine the value returned, there are 2 methods available,
-        Maximum Intensity Projection (MIP) and Average Intensity
-        Projection (AIP). MIP returns the maximum value encountered, AIP
-        returns an average of all values encountered. At this point,
-        normal DS9 operations are applied, such as scaling, clipping and
-        applying a color map.<br>
-      </p>
-      <p>Rendering time is independent upon the actual data cube size.
-        Instead, the time it takes to render is based on how many rays
-        are needed to project the data cube upon the screen in the view
-        volume and the current zoom factor. The new module requires no
-        special hardware or graphical processor unit (GPU) and the
-        rendering time is adequate for interactive GUI manipulation on
-        most computers. The rendering engine is developed using the
-        POSIX thread library, allowing multiple light weight processes
-        to be spawned to complete an image in parallel. The number of
-        threads actually generated is a user specified parameter. Since
-        all modern hardware contain multiple CPU cores, the default
-        value is 8 threads. For larger work stations, this number can be
-        increase. For every doubling in the number of CPU cores
-        available, rendering times decrease approximately 75%.<br>
-      </p>
-      <blockquote><tt>Example:</tt><br>
-        <tt># create 3d frame, load fits file</tt><br>
-        <tt> # set view angle to az 45 el 30 deg</tt><br>
-        <tt> # set rendering method to Average Intensity Projection</tt><br>
-        <br>
-        <tt>% ds9 -3d mycube.fits </tt><tt>-3d vp 45 30 </tt><tt>-3d
-          method aip</tt><br>
-        <br>
-        <tt>% xpaset -p ds9 3d</tt><br>
-        <tt> % xpaset -p ds9 file mycube.fits</tt><br>
-        <tt> % xpaset -p ds9 3d vp 45 30</tt><br>
-        <tt> % xpaset -p ds9 3d method aip</tt></blockquote>
-      <blockquote> </blockquote>
-      All 2-D graphics, regions, cross hairs, contours, and coordinate
-      grids, are applied to the current slice, which is selected by the
-      user. When the user wishes to match or lock a 2-D image and to a
-      3-D data cube, the current slice is used to determine the
-      rendering solution. The user can crop the data cube for all 3 axes
-      via the command line or the GUI. The new module also supports FITS
-      event files binned into a data cube.<br>
-      <br>
-      All printing support has been extended to the new 3-D module. The
-      user may generate 3-D images in Postscript, JPEG, TIFF, and other
-      formats, just as in the 2-D case. Furthermore, native printing is
-      supported for the Windows version.<br>
-      <br>
-      DS9 analysis macros have been enhanced to fully support the new
-      3-D module, allowing the user to invoke external analysis tasks
-      based on the current view parameters and to return results back
-      into DS9 in the form of text, plot, 2-D image, or 3-D image. </blockquote>
-  </body>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.18.1), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content=
+"Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<title>3D</title>
+</head>
+<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor=
+"#FFFFFF" alink="#FF0000">
+<h3><img alt="" src="../sun.gif" width="100" height="98" align=
+"middle"> 3-D Frames<br></h3>
+<blockquote>
+<p>Previous versions of DS9 would allow users to load 3-D data into
+the traditional 2-D frames, and would allow users to step through
+successive z-dimension pixel slices of the data cube. To visualize
+the 3-D data in DS9 v. 7.0, a new module, encompassed by the new
+<tt>Frame 3D</tt> option, allows users to load and view data cubes
+in multiple dimensions.<br></p>
+<p>The new module implements a simple ray-trace algorithm. For each
+pixel on the screen, a ray is projected back into the view volume,
+based on the current viewing parameters, returning a data value if
+the ray intersects the FITS data cube. To determine the value
+returned, there are 2 methods available, Maximum Intensity
+Projection (MIP) and Average Intensity Projection (AIP). MIP
+returns the maximum value encountered, AIP returns an average of
+all values encountered. At this point, normal DS9 operations are
+applied, such as scaling, clipping and applying a color
+map.<br></p>
+<p>Rendering time is independent upon the actual data cube size.
+Instead, the time it takes to render is based on how many rays are
+needed to project the data cube upon the screen in the view volume
+and the current zoom factor. The new module requires no special
+hardware or graphical processor unit (GPU) and the rendering time
+is adequate for interactive GUI manipulation on most computers. The
+rendering engine is developed using the POSIX thread library,
+allowing multiple light weight processes to be spawned to complete
+an image in parallel. The number of threads actually generated is a
+user specified parameter. Since all modern hardware contain
+multiple CPU cores, the default value is 8 threads. For larger work
+stations, this number can be increase. For every doubling in the
+number of CPU cores available, rendering times decrease
+approximately 75%.<br></p>
+<blockquote><tt>Example:</tt><br>
+<tt># create 3d frame, load fits file</tt><br>
+<tt># set view angle to az 45 el 30 deg</tt><br>
+<tt># set rendering method to Average Intensity Projection</tt><br>
+<br>
+<tt>% ds9 -3d mycube.fits</tt> <tt>-3d vp 45 30</tt> <tt>-3d method
+aip</tt><br>
+<br>
+<tt>% xpaset -p ds9 3d</tt><br>
+<tt>% xpaset -p ds9 file mycube.fits</tt><br>
+<tt>% xpaset -p ds9 3d vp 45 30</tt><br>
+<tt>% xpaset -p ds9 3d method aip</tt></blockquote>
+All 2-D graphics, regions, cross hairs, contours, and coordinate
+grids, are applied to the current slice, which is selected by the
+user. When the user wishes to match or lock a 2-D image and to a
+3-D data cube, the current slice is used to determine the rendering
+solution. The user can crop the data cube for all 3 axes via the
+command line or the GUI. The new module also supports FITS event
+files binned into a data cube.<br>
+<br>
+All printing support has been extended to the new 3-D module. The
+user may generate 3-D images in Postscript, JPEG, TIFF, and other
+formats, just as in the 2-D case. Furthermore, native printing is
+supported for the Windows version.<br>
+<br>
+DS9 analysis macros have been enhanced to fully support the new 3-D
+module, allowing the user to invoke external analysis tasks based
+on the current view parameters and to return results back into DS9
+in the form of text, plot, 2-D image, or 3-D image.</blockquote>
+</body>
 </html>

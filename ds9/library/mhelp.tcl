@@ -75,8 +75,7 @@ proc ButtonsHelpDef {} {
     array set pbuttons {
 	help,ref 1
 	help,user 1
-	help,keyboard 1
-	help,faq 0
+	help,faq 1
 	help,new 0
 	help,release 1
 	help,desk 1
@@ -96,8 +95,6 @@ proc CreateButtonsHelp {} {
 	[string tolower [msgcat::mc {Reference}]] HelpRef
     ButtonButton $ds9(buttons).help.user \
 	[string tolower [msgcat::mc {User}]] HelpUser
-    ButtonButton $ds9(buttons).help.keyboard \
-	[string tolower [msgcat::mc {Keyboard}]] HelpKeyboard
     ButtonButton $ds9(buttons).help.faq \
 	[string tolower [msgcat::mc {FAQ}]] HelpFAQ
     ButtonButton $ds9(buttons).help.new \
@@ -116,7 +113,6 @@ proc CreateButtonsHelp {} {
     set buttons(help) "
         $ds9(buttons).help.ref pbuttons(help,ref)
         $ds9(buttons).help.user pbuttons(help,user)
-        $ds9(buttons).help.keyboard pbuttons(help,keyboard)
         $ds9(buttons).help.faq pbuttons(help,faq)
         $ds9(buttons).help.new pbuttons(help,new)
         $ds9(buttons).help.release pbuttons(help,release)

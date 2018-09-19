@@ -146,6 +146,7 @@ void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* sptr)
 
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),out[0],0);
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),out[1],0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
       
       char* xsym = (char*)sptr->getWCSAxisSymbol(www,0);
       if (xsym)
@@ -157,7 +158,8 @@ void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* sptr)
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),ysym,0);
       else
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"y",0);
-	
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z,sys"),"",0);
+
       char* system = (char*)sptr->getWCSSystem(www);
       char* domain = (char*)sptr->getWCSDomain(www);
       if (system) {
@@ -174,8 +176,10 @@ void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* sptr)
     else {
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),"",0);
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),"",0);
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y,sys"),"",0);
+      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z,sys"),"",0);
       Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",sys"),"",0);
     }
   }

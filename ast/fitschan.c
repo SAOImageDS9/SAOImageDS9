@@ -19814,8 +19814,8 @@ static AstMapping *LogWcs( FitsStore *store, int i, char s,
 
 /* Local Variables: */
    AstMapping *ret;
-   char forexp[ 12 + AST__DBL_DIG*2 ];
-   char invexp[ 12 + AST__DBL_DIG*2 ];
+   char forexp[ 12 + 2*(AST__DBL_DIG+6) ];
+   char invexp[ 12 + 2*(AST__DBL_DIG+6) ];
    const char *fexps[ 1 ];
    const char *iexps[ 1 ];
    double crv;

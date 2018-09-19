@@ -36,13 +36,20 @@ proc LoadPrefs {} {
 	    }
 	    -1 {
 		# look for prev version
-		set major [lindex [split $prefs(version) {.}] 0]
-		set minor [lindex [split $prefs(version) {.}] 1]
-		if {$minor>0} {
-		    set minor [expr $minor-1]
+		if {$prefs(version) == "8.0"} {
+		    # special case for version 8.0
+		    set major 7
+		    set minor 6
 		} else {
-		    set major [expr $minor-1]
-		    set minor 9
+		    # everybody else
+		    set major [lindex [split $prefs(version) {.}] 0]
+		    set minor [lindex [split $prefs(version) {.}] 1]
+		    if {$minor>0} {
+			set minor [expr $minor-1]
+		    } else {
+			set major [expr $minor-1]
+			set minor 9
+		    }
 		}
 		set fn [file join $prefs(dir) "$ds9(app).${major}.${minor}$prefs(ext)"]
 		if {[SourceInitFile $fn] == 1} {

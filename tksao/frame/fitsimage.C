@@ -3073,19 +3073,20 @@ void FitsImage::scanWCS(FitsHead* hd)
 	  ostringstream str;
 	  str << "Symbol(" << jj+1 << ")" << ends;
 	  const char* ss = astGetC(ff, str.str().c_str());
+	  size_t lss = strlen(ss);
 	  //	  cerr << "Symbol: " << ss << endl;
 	  if (ss) {
 	    if (!strcmp(ss,"RA") ||
 		!strcmp(ss,"l") ||
 		!strcmp(ss,"Lambda") ||
-		!strcmp(ss+1,"LON") ||
-		!strcmp(ss+2,"LN"))
+		(lss>1 && !strcmp(ss+1,"LON")) ||
+		(lss>2 && !strcmp(ss+2,"LN")))
 	      wcsCelLon_[ii] = jj+1;
 	    else if (!strcmp(ss,"Dec") ||
 		     !strcmp(ss,"b") ||
 		     !strcmp(ss,"Beta") ||
-		     !strcmp(ss+1,"LAT") ||
-		     !strcmp(ss+2,"LT"))
+		     (lss>1 && !strcmp(ss+1,"LAT")) ||
+		     (lss>2 && !strcmp(ss+2,"LT")))
 	      wcsCelLat_[ii] = jj+1;
 	  }
 	}

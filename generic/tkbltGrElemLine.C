@@ -1728,7 +1728,7 @@ void LineElement::mapErrorBars(LineStyle **styleMap)
       if ((isfinite(x)) && (isfinite(y))) {
 	double high;
 	double low;
-	if (ops->xError->nValues() > 0) {
+	if (ops->xError && ops->xError->nValues() > 0) {
 	  high = x + ops->xError->values_[ii];
 	  low = x - ops->xError->values_[ii];
 	} 
@@ -1795,7 +1795,7 @@ void LineElement::mapErrorBars(LineStyle **styleMap)
       if ((isfinite(x)) && (isfinite(y))) {
 	double high;
 	double low;
- 	if (ops->yError->nValues() > 0) {
+	if (ops->yError && ops->yError->nValues() > 0) {
  	  high = y + ops->yError->values_[ii];
  	  low = y - ops->yError->values_[ii];
  	} 
@@ -1898,8 +1898,8 @@ void LineElement::closestPoint(ClosestSearch *searchPtr)
   int count =0;
   for (Point2d *pp = symbolPts_.points; count < symbolPts_.length;
        count++, pp++) {
-    double dx = (double)(searchPtr->x - pp->x);
-    double dy = (double)(searchPtr->y - pp->y);
+    double dx = (double)abs(searchPtr->x - pp->x);
+    double dy = (double)abs(searchPtr->y - pp->y);
     double d;
     if (searchPtr->along == SEARCH_BOTH)
       d = hypot(dx, dy);

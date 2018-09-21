@@ -143,7 +143,7 @@ proc CreateInfoPanel {} {
     ttk::label $ds9(info).zoomValue -relief groove \
 	-textvariable infobox(zoom) -anchor center
 
-    ttk::label $ds9(info).angleTitle -text {°}
+    ttk::label $ds9(info).angleTitle -text "\u00b0"
     ttk::label $ds9(info).angleValue -relief groove \
 	-textvariable infobox(angle) -anchor center
 }

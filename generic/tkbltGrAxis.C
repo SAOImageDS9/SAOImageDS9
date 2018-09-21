@@ -1049,6 +1049,10 @@ TickLabel* Axis::makeLabel(double value)
 
   char string[TICK_LABEL_SIZE + 1];
 
+  // zero out any extremely small numbers
+  if (value<DBL_EPSILON && value>-DBL_EPSILON)
+    value =0;
+
   if (ops->tickFormat && *ops->tickFormat) {
     snprintf(string, TICK_LABEL_SIZE, ops->tickFormat, value);
   } else if (ops->logScale) {

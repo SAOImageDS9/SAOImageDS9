@@ -5,6 +5,7 @@
 #include coordsys.tin
 #include wcssys.tin
 #include skyframe.tin
+#include skyformat.tin
 #include numeric.tin
 #include sexstr.tin
 #include string.tin
@@ -38,6 +39,14 @@ pan : OPEN_ {PanZoomDialog}
  | SEXSTR_ SEXSTR_ wcssys {Pan $1 $2 $3 fk5}
  | SEXSTR_ SEXSTR_ skyframe {Pan $1 $2 wcs $3}
  | SEXSTR_ SEXSTR_ wcssys skyframe {Pan $1 $2 $3 $4}
+# backward compatibility
+ | numeric numeric wcssys DEGREES_ {Pan $1 $2 $3 fk5}
+ | numeric numeric skyframe DEGREES_ {Pan $1 $2 wcs $3}
+ | numeric numeric wcssys skyframe DEGREES_ {Pan $1 $2 $3 $4}
+ | SEXSTR_ SEXSTR_ SEXAGESIMAL_ {Pan $1 $2 wcs fk5}
+ | SEXSTR_ SEXSTR_ wcssys SEXAGESIMAL_ {Pan $1 $2 $3 fk5}
+ | SEXSTR_ SEXSTR_ skyframe SEXAGESIMAL_ {Pan $1 $2 wcs $3}
+ | SEXSTR_ SEXSTR_ wcssys skyframe SEXAGESIMAL_ {Pan $1 $2 $3 $4}
  ;
 
 panto : numeric numeric {PanTo $1 $2 physical fk5}
@@ -49,6 +58,14 @@ panto : numeric numeric {PanTo $1 $2 physical fk5}
  | SEXSTR_ SEXSTR_ wcssys {PanTo $1 $2 $3 fk5}
  | SEXSTR_ SEXSTR_ skyframe {PanTo $1 $2 wcs $3}
  | SEXSTR_ SEXSTR_ wcssys skyframe {PanTo $1 $2 $3 $4}
+# backward compatibility
+ | numeric numeric wcssys DEGREES_ {PanTo $1 $2 $3 fk5}
+ | numeric numeric skyframe DEGREES_ {PanTo $1 $2 wcs $3}
+ | numeric numeric wcssys skyframe DEGREES_ {PanTo $1 $2 $3 $4}
+ | SEXSTR_ SEXSTR_ SEXAGESIMAL_ {PanTo $1 $2 wcs fk5}
+ | SEXSTR_ SEXSTR_ wcssys SEXAGESIMAL_ {PanTo $1 $2 $3 fk5}
+ | SEXSTR_ SEXSTR_ skyframe SEXAGESIMAL_ {PanTo $1 $2 wcs $3}
+ | SEXSTR_ SEXSTR_ wcssys skyframe SEXAGESIMAL_ {PanTo $1 $2 $3 $4}
  ;
 
 %%

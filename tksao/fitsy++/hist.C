@@ -633,6 +633,69 @@ void FitsHist::initWCS(FitsFile* fits, Matrix& mm, Vector block)
     if (!head_->find("RADESYS"))
       mapWCSString(srcHead, w, "RADESYS", "RADE");
   }
+
+  // and finally, check for old Einstein type WCS
+  char key[8];
+
+  // CTYPEx
+  strcpy(key,"CTYPE1");
+  if (srcHead->find(key)) {
+    char* str = srcHead->getString(key);
+    head_->appendString(key, str, NULL);
+  }
+  strcpy(key,"CTYPE2");
+  if (srcHead->find(key)) {
+    char* str = srcHead->getString(key);
+    head_->appendString(key, str, NULL);
+  }
+
+  // CRVALx
+  strcpy(key,"CRVAL1");
+  if (srcHead->find(key)) {
+    float cc = srcHead->getReal(key, 0);
+    head_->appendReal(key, cc, 10, NULL);
+  }
+  strcpy(key,key);
+  if (srcHead->find(key)) {
+    float cc = srcHead->getReal(key, 0);
+    head_->appendReal(key, cc, 10, NULL);
+  }
+
+  //CRPIXx
+  strcpy(key,"CRPIX1");
+  if (srcHead->find(key)) {
+    float cc = srcHead->getReal(key, 0);
+    head_->appendReal(key, cc, 10, NULL);
+  }
+  strcpy(key,"CRPIX2");
+  if (srcHead->find(key)) {
+    float cc = srcHead->getReal(key, 0);
+    head_->appendReal(key, cc, 10, NULL);
+  }
+
+  // CDELTx
+  strcpy(key,"CDELT1");
+  if (srcHead->find(key)) {
+    float cc = srcHead->getReal(key, 0);
+    head_->appendReal(key, cc, 10, NULL);
+  }
+  strcpy(key,"CDELT2");
+  if (srcHead->find(key)) {
+    float cc = srcHead->getReal(key, 0);
+    head_->appendReal(key, cc, 10, NULL);
+  }
+
+  // CROTAx
+  strcpy(key,"CROTA1");
+  if (srcHead->find(key)) {
+    float cc = srcHead->getReal(key, 0);
+    head_->appendReal(key, cc, 10, NULL);
+  }
+  strcpy(key,"CROTA2");
+  if (srcHead->find(key)) {
+    float cc = srcHead->getReal(key, 0);
+    head_->appendReal(key, cc, 10, NULL);
+  }
 }
 
 FitsHistNext::FitsHistNext(FitsFile* prev)

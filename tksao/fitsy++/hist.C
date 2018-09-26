@@ -655,7 +655,7 @@ void FitsHist::initWCS(FitsFile* fits, Matrix& mm, Vector block)
     float cc = srcHead->getReal(key, 0);
     head_->appendReal(key, cc, 10, NULL);
   }
-  strcpy(key,key);
+  strcpy(key,"CRVAL2");
   if (srcHead->find(key)) {
     float cc = srcHead->getReal(key, 0);
     head_->appendReal(key, cc, 10, NULL);

@@ -13,7 +13,7 @@ proc DS9Def {} {
     }
 
     # for beta version, MUST have space
-    set ds9(version) {8.0 rc3}
+    set ds9(version) {8.0 rc4}
 
     set ds9(top) .
     set ds9(mb) .mb

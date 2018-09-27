@@ -74,7 +74,11 @@ proc MarkerAnalysisHistogramCB {frame id} {
 
     if {!$ping} {
 	set tt [string totitle [$frame get marker $id type]]
-	PlotLineDialog $vvarname $tt Histogram Values Counts
+	set bunit [string trim [$frame get fits header keyword BUNIT]]
+	if {$bunit=={}} {
+	    set bunit {Values}
+	}
+	PlotLineDialog $vvarname $tt Histogram $bunit Counts
 
 	set vvar(manage) 0
 	set vvar(dim) xy

@@ -152,7 +152,11 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 
     if {!$ping} {
 	set tt [string totitle [$frame get marker $id type]]
-	PlotLineDialog $vvarname $tt {} $vvar(system) Counts
+	set vvar(bunit) [string trim [$frame get fits header keyword BUNIT]]
+	if {$vvar(bunit)=={}} {
+	    set vvar(bunit) {Counts}
+	}
+	PlotLineDialog $vvarname $tt {} $vvar(system) $vvar(bunit)
 	MarkerAnalysisPlot3dXAxisTitle $vvarname
 	MarkerAnalysisPlot3dYAxisTitle $vvarname
 
@@ -297,7 +301,7 @@ proc MarkerAnalysisPlot3dYAxisTitle {vvarname} {
     global $vvarname
 
     # set for plot code
-    set vvar(axis,y,title) "Counts [string totitle $vvar(method)]"
+    set vvar(axis,y,title) "$vvar(bunit) [string totitle $vvar(method)]"
 
     # update now (may not make it into plot code)
     $vvar(graph) yaxis configure -title $vvar(axis,y,title)

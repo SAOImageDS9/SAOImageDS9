@@ -36,11 +36,11 @@ static const char* reservedKeywords[] = {
   "GCOUNT","ZGCOUNT",
   "CHECKSUM","ZHECKSUM",
   "DATASUM","ZDATASUM",
-  /* "OBJECT",*/
+  /* "OBJECT", */
   "INHERIT",
   "BSCALE",
   "BZERO","TZERO.",
-  "BUNIT","TUNIT.",
+  /* "BUNIT", */ "TUNIT.",
   "BLANK",
   "DATAMAX","TDMAX.","TLMAX.",
   "DATAMIN","TDMIN.","TLMIN.",
@@ -62,14 +62,14 @@ static const char* reservedKeywords[] = {
   "PTYPE.","PSCAL.","PZERO.",
 
   "WCSAXES.","WCSAX.?",
-  "CTYPE.?",".CTYP.",".CTY.?","TCTYP.","TCTY.?",
-  "CUNIT.?",".CUNI.",".CUN.?","TCUNI.","TCUN.?",
-  "CRVAL.?",".CRVL.",".CRV.?","TCRVL.","TCRV.?",
-  "CDELT.?",".CDLT.",".CDE.?","TCDLT.","TCDE.?",
-  "CRPIX.?",".CRPX.",".CRP.?","TCRPX.","TCRP.?",
-  "CROTA.",".CROT.","TCROT.",
-  "PC._.?","..PC.?","TPC._.?","TP._.?",
-  "CD._.?","..CD.?","TCD._.?","TC._.?",
+  /* "CTYPE.?", */ ".CTYP.",".CTY.?","TCTYP.","TCTY.?",
+  /* "CUNIT.?", */ ".CUNI.",".CUN.?","TCUNI.","TCUN.?",
+  /* "CRVAL.?", */ ".CRVL.",".CRV.?","TCRVL.","TCRV.?",
+  /* "CDELT.?", */ ".CDLT.",".CDE.?","TCDLT.","TCDE.?",
+  /* "CRPIX.?", */ ".CRPX.",".CRP.?","TCRPX.","TCRP.?",
+  /* "CROTA.", */ ".CROT.","TCROT.",
+  /* "PC._.?", */ "..PC.?","TPC._.?","TP._.?",
+  /* "CD._.?", */ "..CD.?","TCD._.?","TC._.?",
   "PV._.?",".PV._.?",".V._.?","TPV._.?","TV._.?",
   ".V._X?",
   "PS._.?",".PS._.?",".S._.?","TPS._.?","TS._.?",
@@ -632,69 +632,9 @@ void FitsHist::initWCS(FitsFile* fits, Matrix& mm, Vector block)
       mapWCSReal(srcHead, "MJD-OBS", "MJDOB");
     if (!head_->find("RADESYS"))
       mapWCSString(srcHead, w, "RADESYS", "RADE");
-  }
 
-  // and finally, check for old Einstein type WCS
-  char key[8];
-
-  // CTYPEx
-  strcpy(key,"CTYPE1");
-  if (srcHead->find(key)) {
-    char* str = srcHead->getString(key);
-    head_->appendString(key, str, NULL);
-  }
-  strcpy(key,"CTYPE2");
-  if (srcHead->find(key)) {
-    char* str = srcHead->getString(key);
-    head_->appendString(key, str, NULL);
-  }
-
-  // CRVALx
-  strcpy(key,"CRVAL1");
-  if (srcHead->find(key)) {
-    float cc = srcHead->getReal(key, 0);
-    head_->appendReal(key, cc, 10, NULL);
-  }
-  strcpy(key,"CRVAL2");
-  if (srcHead->find(key)) {
-    float cc = srcHead->getReal(key, 0);
-    head_->appendReal(key, cc, 10, NULL);
-  }
-
-  //CRPIXx
-  strcpy(key,"CRPIX1");
-  if (srcHead->find(key)) {
-    float cc = srcHead->getReal(key, 0);
-    head_->appendReal(key, cc, 10, NULL);
-  }
-  strcpy(key,"CRPIX2");
-  if (srcHead->find(key)) {
-    float cc = srcHead->getReal(key, 0);
-    head_->appendReal(key, cc, 10, NULL);
-  }
-
-  // CDELTx
-  strcpy(key,"CDELT1");
-  if (srcHead->find(key)) {
-    float cc = srcHead->getReal(key, 0);
-    head_->appendReal(key, cc, 10, NULL);
-  }
-  strcpy(key,"CDELT2");
-  if (srcHead->find(key)) {
-    float cc = srcHead->getReal(key, 0);
-    head_->appendReal(key, cc, 10, NULL);
-  }
-
-  // CROTAx
-  strcpy(key,"CROTA1");
-  if (srcHead->find(key)) {
-    float cc = srcHead->getReal(key, 0);
-    head_->appendReal(key, cc, 10, NULL);
-  }
-  strcpy(key,"CROTA2");
-  if (srcHead->find(key)) {
-    float cc = srcHead->getReal(key, 0);
-    head_->appendReal(key, cc, 10, NULL);
+    // general
+    mapWCSString(srcHead, w, "BUNIT", "TUNIT");
   }
 }
 

@@ -81,7 +81,7 @@ contour : yesno {ProcessCmdSet contour view $1 UpdateContour}
  | DASH_ yesno {ContourDialog; ProcessCmdSet contour dash $2 UpdateContour}
  | SMOOTH_ INT_ {ContourCmdGenerateDialog smooth $2}
  | METHOD_ method {ContourCmdGenerateDialog method $2}
- | NLEVELS_ INT_ {ContourCmdGenerateDialog nlevel $2}
+ | NLEVELS_ INT_ {ContourCmdGenerateDialog numlevel $2}
  | SCALE_ scale {ContourCmdScale scale $2}
  | LOG_ log
  | MODE_ modes

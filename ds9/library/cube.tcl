@@ -491,10 +491,6 @@ proc UpdateCubeDialog {} {
 
     set cube(frame) $current(frame)
 
-    # now make sure we have the coord systems
-    AdjustCoordSystem3d cube system
-    CoordMenuEnable3d $mb.coord cube system sky {}
-
     # get number of axes
     set naxes [$current(frame) get fits naxes]
     
@@ -503,6 +499,10 @@ proc UpdateCubeDialog {} {
 	UpdateCubeDialog2Axes
 	return
     }
+
+    # now make sure we have the coord systems
+    AdjustCoordSystem3d cube system
+    CoordMenuEnable3d $mb.coord cube system sky {}
 
     # enable/disable Axes Reorder
     $mb entryconfig [msgcat::mc {Axes Order}] -state normal

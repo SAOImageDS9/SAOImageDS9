@@ -82,7 +82,13 @@ proc LoadRGBImageSocket {sock fn} {
 proc SaveRGBImageFile {fn} {
     global current
 
-    if {$fn == {} || $current(frame) == {}} {
+    if {$fn == {}} {
+	return
+    }
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
 	return
     }
 
@@ -93,10 +99,6 @@ proc SaveRGBImageFile {fn} {
 	    return
 	}
 	rgb {}
-    }
-
-    if {![$current(frame) has fits]} {
-	return
     }
 
     $current(frame) save fits rgb image file "\{$fn\}"
@@ -108,6 +110,9 @@ proc SaveRGBImageSocket {sock} {
     if {$current(frame) == {}} {
 	return
     }
+    if {![$current(frame) has fits]} {
+	return
+    }
 
     switch -- [$current(frame) get type] {
 	base -
@@ -116,10 +121,6 @@ proc SaveRGBImageSocket {sock} {
 	    return
 	}
 	rgb {}
-    }
-
-    if {![$current(frame) has fits]} {
-	return
     }
 
     $current(frame) save fits rgb image socket $sock

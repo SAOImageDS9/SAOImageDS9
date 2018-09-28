@@ -55,10 +55,12 @@ proc ImportNRRDSocket {sock fn layer} {
 proc ExportNRRDFile {fn opt} {
     global current
 
-    if {$fn == {} || $current(frame) == {}} {
+    if {$fn == {}} {
 	return
     }
-
+    if {$current(frame) == {}} {
+	return
+    }
     if {![$current(frame) has fits]} {
 	return
     }
@@ -72,7 +74,6 @@ proc ExportNRRDSocket {sock opt} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }

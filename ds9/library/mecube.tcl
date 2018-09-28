@@ -55,7 +55,6 @@ proc SaveMECubeFile {fn} {
     if {$fn == {} || $current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }
@@ -69,7 +68,6 @@ proc SaveMECubeSocket {sock} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }

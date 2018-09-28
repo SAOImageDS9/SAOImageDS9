@@ -49,7 +49,6 @@ proc SaveMosaicWCSFile {fn opt} {
     if {$fn == {} || $current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }
@@ -67,7 +66,6 @@ proc SaveMosaicWCSSocket {sock opt} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }

@@ -98,10 +98,12 @@ proc ImportRGBArraySocket {sock fn} {
 proc ExportRGBArrayFile {fn opt} {
     global current
 
-    if {$fn == {} || $current(frame) == {}} {
+    if {$fn == {}} {
 	return
     }
-
+    if {$current(frame) == {}} {
+	return
+    }
     if {![$current(frame) has fits]} {
 	return
     }
@@ -115,7 +117,6 @@ proc ExportRGBArraySocket {sock opt} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }

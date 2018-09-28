@@ -47,10 +47,12 @@ proc ImportArraySocket {sock fn layer} {
 proc ExportArrayFile {fn opt} {
     global current
 
-    if {$fn == {} || $current(frame) == {}} {
+    if {$fn == {}} {
 	return
     }
-
+    if {$current(frame) == {}} {
+	return
+    }
     if {![$current(frame) has fits]} {
 	return
     }
@@ -64,7 +66,6 @@ proc ExportArraySocket {sock opt} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }

@@ -1076,7 +1076,6 @@ proc MarkerLoad {} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }
@@ -1454,7 +1453,10 @@ proc RegionCmdLoad {} {
     global current
     global parse
     
-    if {$current(frame) == {} || ![$current(frame) has fits]} {
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
 	return
     }
 
@@ -1489,7 +1491,10 @@ proc RegionCmdSave {fn} {
     global marker
     global current
 
-    if {$current(frame) == {} || ![$current(frame) has fits]} {
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
 	return
     }
 
@@ -1502,7 +1507,10 @@ proc RegionCmdList {} {
     global marker
     global current
 
-    if {$current(frame) == {} || ![$current(frame) has fits]} {
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
 	return
     }
 
@@ -1515,7 +1523,10 @@ proc RegionCmdGroup {cmd {val1 {}} {val2 {}}} {
     global current
     global marker
     
-    if {$current(frame) == {} || ![$current(frame) has fits]} {
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
 	return
     }
 
@@ -1527,7 +1538,10 @@ proc RegionCmdGroupNew {} {
     global current
     global marker
     
-    if {$current(frame) == {} || ![$current(frame) has fits]} {
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
 	return
     }
 
@@ -1543,7 +1557,10 @@ proc RegionCmdGroupUpdate {} {
     global current
     global marker
     
-    if {$current(frame) == {} || ![$current(frame) has fits]} {
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
 	return
     }
 
@@ -1555,7 +1572,10 @@ proc RegionCmdGroupFont {value} {
     global current
     global marker
     
-    if {$current(frame) == {} || ![$current(frame) has fits]} {
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
 	return
     }
 
@@ -1577,7 +1597,10 @@ proc RegionCmdTemplateSave {fn} {
     global marker
     global current
 
-    if {$current(frame) == {} || ![$current(frame) has fits]} {
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
 	return
     }
 
@@ -1589,7 +1612,10 @@ proc RegionCmdCommand {cmd} {
     global marker
     global current
 
-    if {$current(frame) == {} || ![$current(frame) has fits]} {
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
 	return
     }
 

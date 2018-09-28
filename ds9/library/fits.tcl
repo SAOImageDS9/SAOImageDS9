@@ -77,7 +77,6 @@ proc SaveFitsFile {which fn} {
     if {$fn == {} || $current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }
@@ -91,7 +90,6 @@ proc SaveFitsSocket {which sock} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }

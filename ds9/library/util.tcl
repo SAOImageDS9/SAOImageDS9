@@ -393,7 +393,7 @@ proc ProcessSendCmdSend {ext cmd} {
     global parse
     global current
 
-    if {$current(frame) == {}} {
+    if {$current(frame) != {}} {
 	ProcessSend $parse(proc) $parse(id) $parse(sock) $parse(fn) \
 	    $ext [$current(frame) $cmd]
     }

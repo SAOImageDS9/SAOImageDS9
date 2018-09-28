@@ -61,7 +61,6 @@ proc UpdateContour {} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }
@@ -850,10 +849,9 @@ proc UpdateContourMenu {} {
 	puts stderr "UpdateContourMenu"
     }
 
-    if {($current(frame) == {})} {
+    if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }
@@ -885,7 +883,6 @@ proc UpdateContourScale {} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }
@@ -935,7 +932,6 @@ proc UpdateContourDialog {} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }

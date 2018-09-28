@@ -82,10 +82,12 @@ proc LoadRGBCubeSocket {sock fn} {
 proc SaveRGBCubeFile {fn} {
     global current
 
-    if {$fn == {} || $current(frame) == {}} {
+    if {$fn == {}} {
 	return
     }
-
+    if {$current(frame) == {}} {
+	return
+    }
     if {![$current(frame) has fits]} {
 	return
     }
@@ -99,7 +101,6 @@ proc SaveRGBCubeSocket {sock} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }

@@ -20,10 +20,12 @@ proc ImportENVIFile {hdr fn} {
 proc ExportENVIFile {hdr fn opt} {
     global current
 
-    if {$fn == {} || $current(frame) == {}} {
+    if {$fn == {}} {
 	return
     }
-
+    if {$current(frame) == {}} {
+	return
+    }
     if {![$current(frame) has fits]} {
 	return
     }

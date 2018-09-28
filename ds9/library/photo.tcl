@@ -89,10 +89,12 @@ proc ExportPhotoFile {fn format opt} {
     global export
     global current
 
-    if {$fn == {} || $current(frame) == {}} {
+    if {$fn == {}} {
 	return
     }
-
+    if {$current(frame) == {}} {
+	return
+    }
     if {![$current(frame) has fits]} {
 	return
     }
@@ -132,7 +134,6 @@ proc ExportPhotoSocket {ch format opt} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }

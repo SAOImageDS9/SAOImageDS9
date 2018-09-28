@@ -247,7 +247,6 @@ proc CubeApply {} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }
@@ -279,7 +278,6 @@ proc CubeApplyWCS {} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }
@@ -798,7 +796,6 @@ proc CubeCmd {ss} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }
@@ -821,7 +818,6 @@ proc CubeCmdCoord {ss sys sky} {
     if {$current(frame) == {}} {
 	return
     }
-
     if {![$current(frame) has fits]} {
 	return
     }

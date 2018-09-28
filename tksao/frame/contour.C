@@ -32,7 +32,7 @@ ContourLevel::~ContourLevel()
 }
 
 void ContourLevel::list(ostream& str, FitsImage* fits, 
-		   Coord::CoordSystem sys, Coord::SkyFrame sky)
+			Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   if (lcontour_.head()) {
     str << "level=" << level_ << ' ';

@@ -3281,40 +3281,39 @@ Vector3d FitsImage::vDegToRad(const Vector3d& vv, Coord::CoordSystem sys)
 static void fits2TAB(AstFitsChan* chan, const char* extname,
 		     int extver, int extlevel, int* status)
 {
-  FitsFile* ptr = ((FitsImage*)astChannelData)->fitsFile();
-  FitsFile* ext =NULL;
-  bool first=true;
-  bool found=false;
-  while (!found) {
-    ext = new FitsMosaicNextMMapIncr(ptr);
-    if (!first)
-      delete ptr;
-    first =false;
-    
+  FitsFile* ext = ((FitsImage*)astChannelData)->fitsFile();
+  // just in case
+  if (!ext) {
+    *status = 0;
+    return;
+  }
+
+  // skip the current HDU
+  ext = new FitsMosaicNextMMapIncr(ext);
+
+  while (1) {
     // EOF?
     if (!ext || !ext->isValid()) {
       if (ext)
 	delete ext;
-      
       *status = 0;
       return;
     }
 
-    if (!ext->isBinTable())
-      break;
+    // is it a bin table?
+    if (ext->isBinTable()) {
+      // check its extname
+      const char* name = ext->extname();
+      int ver = ext->extver();
+      int level = ext->extlevel();
 
-    const char* name = ext->extname();
-    int ver = ext->extver();
-    int level = ext->extlevel();
-    
-    if (name) {
-      if (!strncmp(extname,name,7) && extver==ver && extlevel==level) {
-	found =true;
+      if (name && !strcmp(extname,name) && extver==ver && extlevel==level)
 	break;
-      }
     }
 
-    ptr = ext;
+    FitsFile* ptr = ext;
+    ext = new FitsMosaicNextMMapIncr(ptr);
+    delete ptr;
   }  
 
   // ok, found it

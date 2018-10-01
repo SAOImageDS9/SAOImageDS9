@@ -892,7 +892,7 @@ proc UpdateContourScale {} {
 	set contour(mode) [$current(frame) get contour clip mode]
 	set contour(scope) [$current(frame) get contour clip scope]
 	set contour(log) [$current(frame) get contour colorscale log]
-	set limits [$current(frame) get clip $contour(mode) $contour(scope)]
+	set limits [$current(frame) get contour clip]
 	set contour(min) [lindex $limits 0]
 	set contour(max) [lindex $limits 1]
     } else {
@@ -1154,6 +1154,7 @@ proc ContourCmdLimits {min max} {
 
     set contour(min) $min
     set contour(max) $max
+    set contour(mode) user
     ContourGenerateDialog
     UpdateContour
 }

@@ -24,7 +24,7 @@
 %%
 
 command : save 
- | save {yyclearin; YYACCEPT} STRING_
+ | save {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 save : STRING_ opts {SaveCmdLoad [ExtToFormat $1] $1}

@@ -18,7 +18,7 @@
 %%
 
 command : minmax 
- | minmax {yyclearin; YYACCEPT} STRING_
+ | minmax {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 minmax : {ProcessCmdSet scale mode minmax ChangeScaleMode}

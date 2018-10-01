@@ -19,7 +19,7 @@
 #include numeric.trl
 
 command : magnifier 
- | magnifier {yyclearin; YYACCEPT} STRING_
+ | magnifier {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 magnifier : COLOR_ STRING_ {ProcessCmdSet pmagnifier color $2 MagnifierColor}

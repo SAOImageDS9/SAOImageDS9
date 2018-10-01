@@ -26,7 +26,7 @@
 #include numeric.trl
 
 command : cmap
- | cmap {yyclearin; YYACCEPT} STRING_
+ | cmap {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 cmap : cmapSelect

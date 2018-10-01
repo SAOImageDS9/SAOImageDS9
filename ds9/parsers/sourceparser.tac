@@ -9,7 +9,7 @@
 %%
 
 command : source 
- | source {yyclearin; YYACCEPT} STRING_
+ | source {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 source : STRING_ {SourceCmd $1}

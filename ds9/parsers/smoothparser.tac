@@ -29,7 +29,7 @@
 #include numeric.trl
 
 command : smooth 
- | smooth {yyclearin; YYACCEPT} STRING_
+ | smooth {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 

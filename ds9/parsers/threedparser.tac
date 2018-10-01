@@ -32,7 +32,7 @@
 #include numeric.trl
 
 command : 3d
- | 3d {yyclearin; YYACCEPT} STRING_
+ | 3d {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 3d : {Create3DFrame}

@@ -19,7 +19,7 @@
 %%
 
 command : web 
- | web {yyclearin; YYACCEPT} STRING_
+ | web {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 web : {WebCmdNew {}}

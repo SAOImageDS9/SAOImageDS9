@@ -13,7 +13,7 @@
 %%
 
 command : header 
- | header {yyclearin; YYACCEPT} STRING_
+ | header {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 

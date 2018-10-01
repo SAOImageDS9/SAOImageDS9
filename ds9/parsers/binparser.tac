@@ -35,7 +35,7 @@
 #include numeric.trl
 
 command : bin
- | bin {yyclearin; YYACCEPT} STRING_
+ | bin {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 bin : OPEN_ {BinDialog}

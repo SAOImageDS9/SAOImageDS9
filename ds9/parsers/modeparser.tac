@@ -21,7 +21,7 @@
 %%
 
 command : mode 
- | mode {yyclearin; YYACCEPT} STRING_
+ | mode {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 mode : item {ProcessCmdSet current mode $1 ChangeMode}

@@ -15,7 +15,7 @@
 #include yesno.trl
 
 command : pixeltable 
- | pixeltable {yyclearin; YYACCEPT} STRING_
+ | pixeltable {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 pixeltable : {PixelTableDialog}

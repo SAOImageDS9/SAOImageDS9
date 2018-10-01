@@ -25,7 +25,7 @@
 #include numeric.trl
 
 command : movie 
- | movie {yyclearin; YYACCEPT} STRING_
+ | movie {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 movie : STRING_ {ProcessCmdSet movie action frame; Movie $1}

@@ -24,7 +24,7 @@
 #include numeric.trl
 
 command : saveimage 
- | saveimage {yyclearin; YYACCEPT} STRING_
+ | saveimage {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 saveimage : STRING_ opts {SaveImageCmdLoad [ExtToFormat $1] $1}

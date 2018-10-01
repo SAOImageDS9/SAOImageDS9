@@ -15,7 +15,7 @@
 #include yesno.trl
 
 command : preserve 
- | preserve {yyclearin; YYACCEPT} STRING_
+ | preserve {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 preserve : PAN_ yesno {ProcessCmdSet panzoom preserve $2 PreservePan}

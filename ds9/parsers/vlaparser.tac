@@ -19,7 +19,7 @@
 #include numeric.trl
 
 command : vla
- | vla {yyclearin; YYACCEPT} STRING_
+ | vla {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 vla : {IMGSVRApply dvla 1}

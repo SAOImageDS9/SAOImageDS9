@@ -33,7 +33,7 @@
 %%
 
 command : ps 
- | ps {yyclearin; YYACCEPT} STRING_
+ | ps {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 ps : {PostScript}

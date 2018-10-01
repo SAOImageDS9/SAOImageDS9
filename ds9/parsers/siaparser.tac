@@ -53,7 +53,7 @@
 #include numeric.trl
 
 command : sia 
- | sia {yyclearin; YYACCEPT} STRING_
+ | sia {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 sia : {if {![SIACmdCheck]} {sia::YYABORT}} siaCmd

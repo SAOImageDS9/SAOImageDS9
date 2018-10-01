@@ -20,7 +20,7 @@
 #include yesno.trl
 
 command : prefs 
- | prefs {yyclearin; YYACCEPT} STRING_
+ | prefs {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 prefs : CLEAR_ {ClearPrefs}

@@ -16,7 +16,7 @@
 #include numeric.trl
 
 command : dsssao
- | dsssao {yyclearin; YYACCEPT} STRING_
+ | dsssao {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 dsssao : {IMGSVRApply dsao 1}

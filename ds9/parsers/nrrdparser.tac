@@ -12,7 +12,7 @@
 %%
 
 command : nrrd 
- | nrrd {yyclearin; YYACCEPT} STRING_
+ | nrrd {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 nrrd : opts {NRRDCmdLoad {} $1}

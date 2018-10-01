@@ -38,7 +38,7 @@
 #include wcssys.trl
 
 command : frame 
- | frame {yyclearin; YYACCEPT} STRING_
+ | frame {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 frame : MATCH_ match {MatchFrameCurrent $2}

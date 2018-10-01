@@ -12,7 +12,7 @@
 #include yesno.trl
 
 command : align 
- | align {yyclearin; YYACCEPT} STRING_
+ | align {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 

@@ -12,7 +12,7 @@
 %%
 
 command : iis 
- | iis {yyclearin; YYACCEPT} STRING_
+ | iis {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 iis : FILENAME_ STRING_ {IISCmd $2}

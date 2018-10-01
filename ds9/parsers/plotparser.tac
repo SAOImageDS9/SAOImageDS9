@@ -143,7 +143,7 @@
 #include numeric.trl
 
 command : plot
- | plot {yyclearin; YYACCEPT} STRING_
+ | plot {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
  plot : LINE_ line

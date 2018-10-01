@@ -10,7 +10,7 @@
 %%
 
 command : threads 
- | threads {yyclearin; YYACCEPT} STRING_
+ | threads {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 threads : INT_ {ProcessCmdSet ds9 threads $1 ChangeThreads}

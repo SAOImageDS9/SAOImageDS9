@@ -14,7 +14,7 @@
 %%
 
 command : orient 
- | orient {yyclearin; YYACCEPT} STRING_
+ | orient {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 orient : orientation {ProcessCmdSet current orient $1 ChangeOrient}

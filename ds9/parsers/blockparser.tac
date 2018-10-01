@@ -23,7 +23,7 @@
 #include numeric.trl
 
 command : block
- | block {yyclearin; YYACCEPT} STRING_
+ | block {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 block : OPEN_ {BlockDialog}

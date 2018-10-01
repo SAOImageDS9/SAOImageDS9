@@ -27,7 +27,7 @@
 #include fonts.trl
 
 command : colorbar
- | colorbar {yyclearin; YYACCEPT} STRING_
+ | colorbar {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 colorbar : yesno {ProcessCmdSet view colorbar $1 UpdateView}

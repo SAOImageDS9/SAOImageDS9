@@ -112,7 +112,7 @@
 #include numeric.trl
 
 command : catalog
- | catalog {yyclearin; YYACCEPT} STRING_
+ | catalog {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 catalog : NEW_ {CATTool}

@@ -10,7 +10,7 @@
 %%
 
 command : cursor 
- | cursor {yyclearin; YYACCEPT} STRING_
+ | cursor {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 cursor : INT_ INT_ {CursorCmd $1 $2}

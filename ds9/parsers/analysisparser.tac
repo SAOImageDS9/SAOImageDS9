@@ -29,7 +29,7 @@
 %%
 
 command : analysis 
- | analysis {yyclearin; YYACCEPT} STRING_
+ | analysis {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 analysis : INT_ {AnalysisTask $1 menu}

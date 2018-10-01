@@ -11,7 +11,7 @@
 %%
 
 command : envi 
- | envi {yyclearin; YYACCEPT} STRING_
+ | envi {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 envi : opts STRING_ {ImportENVIFile $2 [FindENVIDataFile $2]; FinishLoad}

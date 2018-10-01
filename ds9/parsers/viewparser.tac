@@ -40,7 +40,7 @@
 #include wcssys.trl
 
 command : view 
- | view {yyclearin; YYACCEPT} STRING_
+ | view {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 view : layout

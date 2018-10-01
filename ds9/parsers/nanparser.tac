@@ -9,7 +9,7 @@
 %%
 
 command : nan 
- | nan {yyclearin; YYACCEPT} STRING_
+ | nan {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 nan : STRING_ {ProcessCmdSet pds9 nan $1 PrefsNanColor}

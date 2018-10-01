@@ -10,7 +10,7 @@
 %%
 
 command : height 
- | height {yyclearin; YYACCEPT} STRING_
+ | height {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 height : INT_ {ProcessCmdSet canvas height $1 UpdateView}

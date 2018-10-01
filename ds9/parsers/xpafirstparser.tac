@@ -22,7 +22,7 @@
 #include yesno.trl
 
 command : xpa 
- | xpa {yyclearin; YYACCEPT} STRING_
+ | xpa {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 xpa : yesno {ProcessCmdSet pds9 xpa $1}

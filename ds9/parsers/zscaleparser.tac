@@ -18,10 +18,10 @@
 #include numeric.trl
 
 command : zscale
- | zscale {yyclearin; YYACCEPT} STRING_
+ | zscale {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-zscale : yesno {ProcessCmdSet scale mode zscale ChangeScaleMode}
+zscale : {ProcessCmdSet scale mode zscale ChangeScaleMode}
  | CONTRAST_ numeric {ProcessCmdSet zscale contrast $2 ChangeZScale}
  | SAMPLE_ INT_ {ProcessCmdSet zscale sample $2 ChangeZScale}
  | LINE_ INT_ {ProcessCmdSet zscale line $2 ChangeZScale}

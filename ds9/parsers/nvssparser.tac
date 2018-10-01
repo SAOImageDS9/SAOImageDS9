@@ -16,7 +16,7 @@
 #include numeric.trl
 
 command : nvss
- | nvss {yyclearin; YYACCEPT} STRING_
+ | nvss {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 nvss : {IMGSVRApply dnvss 1}

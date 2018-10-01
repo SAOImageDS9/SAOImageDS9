@@ -31,7 +31,7 @@
 #include yesno.trl
 
 command : lock 
- | lock {yyclearin; YYACCEPT} STRING_
+ | lock {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 lock : FRAME_ lock {ProcessCmdSet panzoom lock $2 LockFrameCurrent}

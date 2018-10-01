@@ -29,7 +29,7 @@
 #include numeric.trl
 
 command : crop
-| crop {yyclearin; YYACCEPT} STRING_
+| crop {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
 ;
 
 crop : OPEN_ {CropDialog}

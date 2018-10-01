@@ -30,7 +30,7 @@
 #include numeric.trl
 
 command : export 
- | export {yyclearin; YYACCEPT} STRING_
+ | export {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 export : STRING_ {ExportCmdSave [ExtToFormat $1] $1}

@@ -9,7 +9,7 @@
 %%
 
 command : backup 
- | backup {yyclearin; YYACCEPT} STRING_
+ | backup {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 backup : STRING_ {FileLast backupfbox $1; Backup $1}

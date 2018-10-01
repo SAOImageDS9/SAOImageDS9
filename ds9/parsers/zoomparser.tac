@@ -19,7 +19,7 @@
 #include numeric.trl
 
 command : zoom 
- | zoom {yyclearin; YYACCEPT} STRING_
+ | zoom {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 zoom : OPEN_ {PanZoomDialog}

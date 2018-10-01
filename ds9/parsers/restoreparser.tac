@@ -9,7 +9,7 @@
 %%
 
 command : restore 
- | restore {yyclearin; YYACCEPT} STRING_
+ | restore {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 restore : STRING_ {FileLast backupfbox $1; Restore $1}

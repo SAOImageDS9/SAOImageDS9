@@ -12,7 +12,7 @@
 #include yesno.trl
 
 command : iconify 
- | iconify {yyclearin; YYACCEPT} STRING_
+ | iconify {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 iconify : yesno {IconifyCmd $1}

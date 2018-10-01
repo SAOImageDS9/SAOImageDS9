@@ -23,7 +23,7 @@
 #include yes-no.trl
 
 command : tile 
- | tile {yyclearin; YYACCEPT} STRING_
+ | tile {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 tile: {ProcessCmdSet current display tile DisplayMode}

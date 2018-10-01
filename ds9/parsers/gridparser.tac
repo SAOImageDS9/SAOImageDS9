@@ -74,7 +74,7 @@
 #include numeric.trl
 
 command : grid 
- | grid {yyclearin; YYACCEPT} STRING_
+ | grid {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 typegrid : ANALYSIS_ {set _ analysis}

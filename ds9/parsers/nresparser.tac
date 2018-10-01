@@ -27,7 +27,7 @@
 %%
 
 command : nres 
- | nres {yyclearin; YYACCEPT} STRING_
+ | nres {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 nres : OPEN_

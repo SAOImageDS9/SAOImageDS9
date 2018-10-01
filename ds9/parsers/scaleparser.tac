@@ -39,7 +39,7 @@
 #include numeric.trl
 
 command : scale 
- | scale {yyclearin; YYACCEPT} STRING_
+ | scale {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 scale : OPEN_ {ScaleDialog}

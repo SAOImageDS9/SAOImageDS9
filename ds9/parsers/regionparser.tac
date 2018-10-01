@@ -119,7 +119,7 @@
 #include numeric.trl
 
 command : region 
- | region {yyclearin; YYACCEPT} STRING_
+ | region {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 region : {RegionCmdLoad}

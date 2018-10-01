@@ -24,7 +24,7 @@
 #include yesno.trl
 
 command : vo 
- | vo {yyclearin; YYACCEPT} STRING_
+ | vo {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 vo : OPEN_ {VODialog}

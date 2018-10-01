@@ -29,7 +29,7 @@
 #include skyformat.trl
 
 command : wcs 
- | wcs {yyclearin; YYACCEPT} STRING_
+ | wcs {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 wcs : OPEN_ {WCSDialog}

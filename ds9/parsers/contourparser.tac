@@ -58,7 +58,7 @@
 #include numeric.trl
 
 command : contour 
- | contour {yyclearin; YYACCEPT} STRING_
+ | contour {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 contour : yesno {ProcessCmdSet contour view $1 UpdateContour}

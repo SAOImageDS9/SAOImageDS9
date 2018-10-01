@@ -9,7 +9,7 @@
 %%
 
 command : bg 
- | bg {yyclearin; YYACCEPT} STRING_
+ | bg {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 bg : STRING_ {ProcessCmdSet pds9 bg $1 PrefsBgColor}

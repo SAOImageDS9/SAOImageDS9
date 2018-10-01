@@ -26,7 +26,7 @@
 #include numeric.trl
 
 command : dssstsci
- | dssstsci {yyclearin; YYACCEPT} STRING_
+ | dssstsci {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 dssstsci : {IMGSVRApply dstsci 1}

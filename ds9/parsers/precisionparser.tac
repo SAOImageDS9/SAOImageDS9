@@ -10,7 +10,7 @@
 %%
 
 command : precision 
- | precision {yyclearin; YYACCEPT} STRING_
+ | precision {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 precision :  INT_ INT_ INT_ INT_ INT_ INT_ {ProcessCmdSet pds9 prec,linear $1; ProcessCmdSet pds9 prec,deg $2; ProcessCmdSet pds9 prec,hms $3;ProcessCmdSet pds9 prec,dms $4; ProcessCmdSet pds9 prec,arcmin $5; ProcessCmdSet pds9 prec,arcsec $6 PrefsPrecision}

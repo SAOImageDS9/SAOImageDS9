@@ -25,7 +25,7 @@
 #include numeric.trl
 
 command : pagesetup 
- | pagesetup {yyclearin; YYACCEPT} STRING_
+ | pagesetup {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 pagesetup : ORIENT_ orient {ProcessCmdSet ps orient $2}

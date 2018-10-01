@@ -16,7 +16,7 @@
 #include numeric.trl
 
 command : rotate 
- | rotate {yyclearin; YYACCEPT} STRING_
+ | rotate {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 rotate : numeric {Rotate $1}

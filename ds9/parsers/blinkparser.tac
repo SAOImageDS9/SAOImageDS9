@@ -16,7 +16,7 @@
 #include numeric.trl
 
 command : blink 
- | blink {yyclearin; YYACCEPT} STRING_
+ | blink {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 blink : {ProcessCmdSet current display blink DisplayMode}

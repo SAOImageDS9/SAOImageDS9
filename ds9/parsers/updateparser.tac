@@ -15,7 +15,7 @@
 #include yesno.trl
 
 command : update 
- | update {yyclearin; YYACCEPT} STRING_
+ | update {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 update : {UpdateCmd}

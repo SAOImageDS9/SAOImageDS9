@@ -18,7 +18,7 @@
 #include numeric.trl
 
 command : skyview
- | skyview {yyclearin; YYACCEPT} STRING_
+ | skyview {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 skyview : {IMGSVRApply dskyview 1}

@@ -33,7 +33,7 @@
 #include yesno.trl
 
 command : rgb 
- | rgb {yyclearin; YYACCEPT} STRING_
+ | rgb {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 rgb : {CreateRGBFrame}

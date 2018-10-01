@@ -23,7 +23,7 @@
 #include numeric.trl
 
 command : crosshair 
- | crosshair {yyclearin; YYACCEPT} STRING_
+ | crosshair {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 crosshair : MATCH_ match {MatchCrosshairCurrent $2}

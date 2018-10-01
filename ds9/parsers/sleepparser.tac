@@ -12,7 +12,7 @@
 #include numeric.trl
 
 command : sleep 
- | sleep {yyclearin; YYACCEPT} STRING_
+ | sleep {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 sleep : {after 1000}

@@ -16,7 +16,7 @@
 #include numeric.trl
 
 command : twomass
- | twomass {yyclearin; YYACCEPT} STRING_
+ | twomass {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 twomass : {IMGSVRApply dtwomass 1}

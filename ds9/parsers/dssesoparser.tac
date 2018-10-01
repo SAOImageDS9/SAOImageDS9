@@ -21,7 +21,7 @@
 #include numeric.trl
 
 command : dsseso
- | dsseso {yyclearin; YYACCEPT} STRING_
+ | dsseso {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 dsseso : {IMGSVRApply deso 1}

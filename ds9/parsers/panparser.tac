@@ -24,7 +24,7 @@
 #include numeric.trl
 
 command : pan
-| pan {yyclearin; YYACCEPT} STRING_
+| pan {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
 ;
 
 pan : OPEN_ {PanZoomDialog}

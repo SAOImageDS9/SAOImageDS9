@@ -19,7 +19,7 @@
 #include numeric.trl
 
 command : mask 
- | mask {yyclearin; YYACCEPT} STRING_
+ | mask {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 mask : {global parse; set parse(result) mask}

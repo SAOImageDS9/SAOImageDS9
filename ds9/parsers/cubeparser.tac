@@ -42,7 +42,7 @@
 #include numeric.trl
 
 command : cube 
- | cube {yyclearin; YYACCEPT} STRING_
+ | cube {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
 cube : OPEN_

@@ -7,7 +7,6 @@ set TACCLE_VERSION 1.3
 # no yydebug
 # no YYDEBUG
 # no yyerrok
-# no YYERROR
 # no YYRECOVERING
 # add %define parse.error verbose
 
@@ -865,6 +864,8 @@ namespace eval ${::p} \{
     variable rules
     variable token {}
     variable yycnt 0
+    variable yyerr 0
+    variable save_state 0
 
     namespace export yylex
 \}
@@ -875,6 +876,11 @@ proc ${::p}::YYABORT \{\} \{
 
 proc ${::p}::YYACCEPT \{\} \{
     return -code return 0
+\}
+
+proc ${::p}::YYERROR \{\} \{
+    variable yyerr
+    set yyerr 1
 \}
 
 proc ${::p}::yyclearin \{\} \{
@@ -926,12 +932,16 @@ proc write_parser {} {
     variable yycnt
     variable lr1_table
     variable token_id_table
+    variable yyerr
+    variable save_state
 
     set yycnt 0
     set state_stack {0}
     set value_stack {{}}
     set token \"\"
     set accepted 0
+    set yyerr 0
+    set save_state 0
 
     while {\$accepted == 0} {
         set state \[lindex \$state_stack end\]
@@ -943,8 +953,10 @@ proc write_parser {} {
 	        incr yycnt
             }
         }
-        if {!\[info exists table(\$state:\$token)\]} {
-	    set save_state \$state
+        if {!\[info exists table(\$state:\$token)\] || \$yyerr} {
+	    if {!\$yyerr} {
+	        set save_state \$state
+	    }
             \# pop off states until error token accepted
             while {\[llength \$state_stack\] > 0 && \\
                        !\[info exists table(\$state:error)]} {

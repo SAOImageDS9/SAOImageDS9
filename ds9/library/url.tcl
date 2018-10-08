@@ -264,8 +264,8 @@ proc LoadURLFitsHTTP {url layer mode} {
 	"image/x-zfits" -
 	"binary/x-zfits" {set encoding pack}
 
+	"text/plain" {}
 	"text/html" -
-	"text/plain" -
 	default {
 	    Error "[msgcat::mc {File not Found or Unable to load FITS data MIME type}] $mime"
 	    return

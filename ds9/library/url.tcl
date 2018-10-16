@@ -44,12 +44,13 @@ proc GetFileHTTP {url fn} {
     if {[catch {http::geturl $url \
 		    -channel $ch \
 		    -binary 1 \
+		    -keepalive 1 \
+    		    -timeout $ihttp(timeout) \
 		    -headers "[ProxyHTTP]"} token]} {
 	close $ch
 	return
     }
 
-    #		    -timeout $ihttp(timeout) \
 
     # reset errorInfo (may be set in http::geturl)
     global errorInfo
@@ -141,9 +142,10 @@ proc LoadURLFitsHTTP {url layer mode} {
     set token [http::geturl $url \
 		   -channel $ch \
 		   -binary 1 \
+		   -keepalive 1 \
+    		   -timeout $ihttp(timeout) \
 		   -headers "[ProxyHTTP]"]
 
-    #		   -timeout $ihttp(timeout) \
 
     # reset errorInfo (may be set in http::geturl)
     global errorInfo

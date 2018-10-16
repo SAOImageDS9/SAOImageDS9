@@ -6,7 +6,7 @@ package provide DS9 1.0
 
 # used to access ProcessSend*Cmd via tcl
 proc CommReturn {id rr} {
-    return "$id $rr"
+    return -level 3 "$id $rr"
 }
 
 proc CommSet {fn paramlist {safemode 0}} {

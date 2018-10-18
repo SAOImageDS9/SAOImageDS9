@@ -146,7 +146,6 @@ proc LoadURLFitsHTTP {url layer mode} {
     		   -timeout $ihttp(timeout) \
 		   -headers "[ProxyHTTP]"]
 
-
     # reset errorInfo (may be set in http::geturl)
     global errorInfo
     set errorInfo {}
@@ -215,6 +214,7 @@ proc LoadURLFitsHTTP {url layer mode} {
 
 	default {
 	    Error "HTTP [msgcat::mc {Error}] $code"
+	    http::reset $token
 	    return
 	}
     }

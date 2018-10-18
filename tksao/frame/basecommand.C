@@ -2916,7 +2916,8 @@ void Base::sliceCmd(double dd, Coord::CoordSystem sys, Coord::SkyFrame sky)
   Vector3d out = oo * Translate3d(.5, .5, .5);
   
   // IMAGE (ranges 1-n)
-  setSlice(2,out[2]);
+  // be sure to round properly
+  setSlice(2,int(out[2]+.5));
   updateMagnifier();
 }
 

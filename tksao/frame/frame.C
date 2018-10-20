@@ -281,6 +281,58 @@ int Frame::isIIS()
   return context->cfits && context->cfits->isIIS();
 }
 
+// waj
+void Frame::pushMatrices()
+{
+  // alway identity
+  Matrix rgbToRef; 
+  Base::pushMatrices(keyContext->fits, rgbToRef);
+
+  // now any masks
+  FitsMask* msk = mask.tail();
+  while (msk) {
+    Base::pushMatrices(msk->context()->fits, rgbToRef);
+    msk = msk->previous();
+  }
+}
+
+void Frame::pushMagnifierMatrices()
+{
+  Base::pushMagnifierMatrices(keyContext->fits);
+
+  // now any masks
+  FitsMask* msk = mask.tail();
+  while (msk) {
+    Base::pushMagnifierMatrices(msk->context()->fits);
+    msk = msk->previous();
+  }
+}
+
+void Frame::pushPannerMatrices()
+{
+  Base::pushPannerMatrices(keyContext->fits);
+
+  // now any masks
+  FitsMask* msk = mask.tail();
+  while (msk) {
+    Base::pushPannerMatrices(msk->context()->fits);
+    msk = msk->previous();
+  }
+}
+
+void Frame::pushPSMatrices(float scale, int width, int height)
+{
+  Base::pushPSMatrices(keyContext->fits, scale, width, height);
+
+  // now any masks
+  FitsMask* msk = mask.tail();
+  while (msk) {
+    Base::pushPSMatrices(msk->context()->fits, scale, width, height);
+    msk = msk->previous();
+  }
+}
+
+/*
 void Frame::pushMatrices()
 {
   Base::pushMatrices();
@@ -288,8 +340,6 @@ void Frame::pushMatrices()
   // alway identity
   Matrix rgbToRef; 
 
-  // waj
-  /*
   // now any masks
   FitsMask* msk = currentContext->mask.tail();
   while (msk) {
@@ -306,15 +356,12 @@ void Frame::pushMatrices()
 
     msk = msk->previous();
   }
-  */
 }
 
 void Frame::pushMagnifierMatrices()
 {
   Base::pushMagnifierMatrices();
 
-  // waj
-  /*
   FitsMask* msk = context->mask.tail();
   while (msk) {
     FitsImage* mskimg = msk->mask();
@@ -328,15 +375,12 @@ void Frame::pushMagnifierMatrices()
     }
     msk = msk->previous();
   }
-  */
 }
 
 void Frame::pushPannerMatrices()
 {
   Base::pushPannerMatrices();
 
-  // waj
-  /*
   FitsMask* msk = context->mask.tail();
   while (msk) {
     FitsImage* mskimg = msk->mask();
@@ -350,15 +394,12 @@ void Frame::pushPannerMatrices()
     }
     msk = msk->previous();
   }
-  */
 }
 
 void Frame::pushPSMatrices(float scale, int width, int height)
 {
   Base::pushPSMatrices(scale, width, height);
 
-  // waj
-  /*
   Matrix mx = psMatrix(scale, width, height);
   FitsMask* msk = context->mask.tail();
   while (msk) {
@@ -369,8 +410,8 @@ void Frame::pushPSMatrices(float scale, int width, int height)
     }
     msk = msk->previous();
   }
-  */
 }
+*/
 
 void Frame::reset()
 {

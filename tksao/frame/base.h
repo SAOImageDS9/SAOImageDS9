@@ -440,11 +440,22 @@ public:
   void psImage(ostream&, Filter&, int, int, float);
   void psMarkers(List<Marker>*, int);
   Matrix psMatrix(float scale, int width, int height);
+  void pushMatrices(FitsImage*, Matrix&);
+  void pushMagnifierMatrices(FitsImage*);
+  void pushPannerMatrices(FitsImage*);
+  void pushPSMatrices(FitsImage*, float, int, int);
+  // waj
+  virtual void pushMatrices() =0;
+  virtual void pushMagnifierMatrices() =0;
+  virtual void pushPannerMatrices() =0;
+  virtual void pushPSMatrices(float, int, int) =0;
+  /*
   virtual void pushMatrices();
   virtual void pushMagnifierMatrices();
   virtual void pushPannerMatrices();
   virtual void pushPSMatrices(float, int, int);
-
+  */
+  
   virtual void reset();
   void resetSecMode();
 

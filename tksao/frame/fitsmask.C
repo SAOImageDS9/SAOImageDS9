@@ -8,11 +8,9 @@
 #include "base.h"
 #include "fitsimage.h"
 
-FitsMask::FitsMask(Base* p, FitsImage* fits, char* clr, int mrk) 
-  : parent_(p), mask_(fits)
+FitsMask::FitsMask(Base* pp, Context* cc, char* clr, int mrk) 
+  : parent_(pp), context_(cc)
 {
-  current_ = mask_;
-  mptr_ = current_;
   colorName_ = dupstr(clr);
   color_ = parent_->getXColor(colorName_);
   parent_->encodeTrueColor(color_, trueColor_);
@@ -26,25 +24,5 @@ FitsMask::~FitsMask()
 {
   if (colorName_)
     delete [] colorName_;
-
-  FitsImage* ptr = mask_;
-  while (ptr) {
-    // better not have more that one slice
-    FitsImage* sptr = ptr->nextSlice();
-    while (sptr) {
-      FitsImage* stmp = sptr->nextSlice();
-      delete sptr;
-      sptr = stmp;
-    }
-
-    FitsImage* tmp = ptr->nextMosaic();
-    delete ptr;
-    ptr = tmp;
-  }
-}
-
-void FitsMask::nextMosaic() {
-  if (mptr_) 
-    mptr_ = mptr_->nextMosaic();
 }
 

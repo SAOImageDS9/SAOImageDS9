@@ -8,15 +8,12 @@
 #include "util.h"
 
 class Base;
-class FitsImage;
+class Context;
 
 class FitsMask {
  private:
   Base* parent_;
-
-  FitsImage* mask_;
-  FitsImage* current_;
-  FitsImage* mptr_;
+  Context* context_;
 
   char* colorName_;
   XColor* color_;
@@ -29,19 +26,13 @@ class FitsMask {
   FitsMask* next_;
 
  public:
-  FitsMask(Base*, FitsImage*, char*, int);
+  FitsMask(Base*, Context*, char*, int);
   virtual ~FitsMask();
 
-  FitsImage* mask() {return mask_;}
-  FitsImage* current() {return current_;}
-  FitsImage* mptr() {return mptr_;}
+  Context* context() {return context_;}
   XColor* color() {return color_;}
   char* trueColor() {return trueColor_;}
   int mark() {return mark_;}
-
-  void initMosaic() {mptr_ = current_;}
-  void nextMosaic();
-  void nextSlice();
 
   FitsMask* previous() {return previous_;}
   void setPrevious(FitsMask* m) {previous_ = m;}

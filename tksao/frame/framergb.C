@@ -659,6 +659,31 @@ void FrameRGB::loadRGBFinish()
   update(MATRIX);
 }
 
+// waj
+void FrameRGB::pushMatrices()
+{
+  for (int ii=0; ii<3; ii++)
+    Base::pushMatrices(context[ii].fits, rgb[ii]);
+}
+
+void FrameRGB::pushMagnifierMatrices()
+{
+  for (int ii=0; ii<3; ii++)
+    Base::pushMagnifierMatrices(context[ii].fits);
+}
+
+void FrameRGB::pushPannerMatrices()
+{
+  for (int ii=0; ii<3; ii++)
+    Base::pushPannerMatrices(context[ii].fits);
+}
+
+void FrameRGB::pushPSMatrices(float scale, int width, int height)
+{
+  for (int ii=0; ii<3; ii++)
+    Base::pushPSMatrices(context[ii].fits, scale, width, height);
+}
+/*
 void FrameRGB::pushMatrices()
 {
   for (int ii=0; ii<3; ii++) {
@@ -717,6 +742,7 @@ void FrameRGB::pushPSMatrices(float scale, int width, int height)
       }
     }
 }
+*/
 
 void FrameRGB::reset()
 {

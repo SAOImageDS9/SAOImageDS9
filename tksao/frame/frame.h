@@ -6,6 +6,7 @@
 #define __frame_h__
 
 #include "context.h"
+#include "fitsmask.h"
 #include "framebase.h"
 #include "colorscale.h"
 
@@ -23,7 +24,7 @@ class Frame : public FrameBase {
   ColorScale* colorScale;    // current color scale
   unsigned char* colorCells; // current color values
 
-  //  List <FitsMask> mask;
+  List <FitsMask> mask;
 
  private:
   unsigned char* blend(unsigned char*, unsigned char*, int, int);

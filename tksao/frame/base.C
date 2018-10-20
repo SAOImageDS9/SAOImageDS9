@@ -1136,6 +1136,64 @@ Matrix Base::psMatrix(float scale, int width, int height)
    return refToUser * userToPS;
 }
 
+// waj
+
+void Base::pushMatrices(FitsImage* fits, Matrix& rgbToRef)
+{
+  FitsImage* ptr = fits;
+  while (ptr) {
+    FitsImage* sptr = ptr;
+    while (sptr) {
+      sptr->updateMatrices(rgbToRef, refToUser, userToWidget,
+			   widgetToCanvas, canvasToWindow);
+      sptr = sptr->nextSlice();
+    }
+    ptr = ptr->nextMosaic();
+  }
+}
+
+void Base::pushMagnifierMatrices(FitsImage* fits)
+{
+  FitsImage* ptr = fits;
+  while (ptr) {
+    FitsImage* sptr = ptr;
+    while (sptr) {
+      sptr->updateMagnifierMatrices(refToMagnifier);
+      sptr = sptr->nextSlice();
+    }
+    ptr = ptr->nextMosaic();
+  }
+}
+
+void Base::pushPannerMatrices(FitsImage* fits)
+{
+  FitsImage* ptr = fits;
+  while (ptr) {
+    FitsImage* sptr = ptr;
+    while (sptr) {
+      sptr->updatePannerMatrices(refToPanner);
+      sptr = sptr->nextSlice();
+    }
+    ptr = ptr->nextMosaic();
+  }
+}
+
+void Base::pushPSMatrices(FitsImage* fits, float scale, int width, int height)
+{
+  Matrix mx = psMatrix(scale, width, height);
+
+  FitsImage* ptr = fits;
+  while (ptr) {
+    FitsImage* sptr = ptr;
+    while (sptr) {
+      sptr->updatePS(mx);
+      sptr = sptr->nextSlice();
+    }
+    ptr = ptr->nextMosaic();
+  }
+}
+
+/*
 void Base::pushMatrices()
 {
   Matrix rgbToRef; 
@@ -1192,6 +1250,7 @@ void Base::pushPSMatrices(float scale, int width, int height)
     ptr = ptr->nextMosaic();
   }
 }
+*/
 
 void Base::reset()
 {

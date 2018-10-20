@@ -987,13 +987,18 @@ void Frame3d::updateColorCells(unsigned char* cells, int cnt)
 
 void Frame3d::pushMatrices()
 {
-  Base::pushMatrices();
+  // waj
+  // alway identity
+  Matrix rgbToRef; 
+  Base::pushMatrices(keyContext->fits, rgbToRef);
+  //  Base::pushMatrices();
 
   FitsImage* ptr = keyContext->fits;
   while (ptr) {
     FitsImage* sptr = ptr;
     while (sptr) {
-      sptr->updateMatrices(refToUser3d, userToWidget3d, widgetToCanvas3d, canvasToWindow3d);
+      sptr->updateMatrices(refToUser3d, userToWidget3d, widgetToCanvas3d,
+			   canvasToWindow3d);
       sptr = sptr->nextSlice();
     }
     ptr = ptr->nextMosaic();
@@ -1002,7 +1007,9 @@ void Frame3d::pushMatrices()
 
 void Frame3d::pushPannerMatrices()
 {
-  Base::pushPannerMatrices();
+  // waj
+  Base::pushPannerMatrices(keyContext->fits);
+  //  Base::pushPannerMatrices();
 
   FitsImage* ptr = keyContext->fits;
   while (ptr) {
@@ -1017,7 +1024,9 @@ void Frame3d::pushPannerMatrices()
 
 void Frame3d::pushMagnifierMatrices()
 {
-  Base::pushMagnifierMatrices();
+  // waj
+  Base::pushMagnifierMatrices(keyContext->fits);
+  //  Base::pushMagnifierMatrices();
 
   FitsImage* ptr = keyContext->fits;
   while (ptr) {
@@ -1032,7 +1041,9 @@ void Frame3d::pushMagnifierMatrices()
 
 void Frame3d::pushPSMatrices(float scale, int width, int height)
 {
-  Base::pushPSMatrices(scale, width, height);
+  // waj
+  Base::pushPSMatrices(keyContext->fits, scale, width, height);
+  //  Base::pushPSMatrices(scale, width, height);
 
   Matrix3d mx = psMatrix(scale, width, height);
   FitsImage* ptr = keyContext->fits;

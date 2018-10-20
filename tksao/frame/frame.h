@@ -23,6 +23,8 @@ class Frame : public FrameBase {
   ColorScale* colorScale;    // current color scale
   unsigned char* colorCells; // current color values
 
+  //  List <FitsMask> mask;
+
  private:
   unsigned char* blend(unsigned char*, unsigned char*, int, int);
   int isIIS();

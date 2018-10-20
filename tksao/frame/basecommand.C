@@ -2525,7 +2525,8 @@ void Base::matchCmd(const char* xxname1, const char* yyname1,
 
 void Base::maskClearCmd()
 {
-  currentContext->mask.deleteAll();
+  // waj
+  //  currentContext->mask.deleteAll();
   update(BASE);
 }
 

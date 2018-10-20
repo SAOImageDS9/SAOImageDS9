@@ -183,6 +183,8 @@ unsigned char* Frame::fillImage(int width, int height,
   CLEARSIGBUS
 
   if (img) {
+    // waj
+    /*
     if (context->mask.head()) {
       FitsMask* mptr = context->mask.tail();
       while (mptr) {
@@ -192,6 +194,7 @@ unsigned char* Frame::fillImage(int width, int height,
 	mptr = mptr->previous();
       }
     }
+    */
   }
 
   return img;
@@ -200,13 +203,14 @@ unsigned char* Frame::fillImage(int width, int height,
 unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 			       Coord::InternalSystem sys)
 {
-  FitsImage* currentMsk = msk->current();
-  XColor* maskColor = msk->color();
-  int mark = msk->mark();
-
   // img
   unsigned char* img = new unsigned char[width*height*4];
   memset(img,0,width*height*4);
+
+  /*
+  FitsImage* currentMsk = msk->current();
+  XColor* maskColor = msk->color();
+  int mark = msk->mark();
 
   if (!currentMsk)
     return img;
@@ -268,7 +272,7 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
     }
   }
   CLEARSIGBUS
-
+  */
   return img;
 }
 
@@ -284,6 +288,8 @@ void Frame::pushMatrices()
   // alway identity
   Matrix rgbToRef; 
 
+  // waj
+  /*
   // now any masks
   FitsMask* msk = currentContext->mask.tail();
   while (msk) {
@@ -300,12 +306,15 @@ void Frame::pushMatrices()
 
     msk = msk->previous();
   }
+  */
 }
 
 void Frame::pushMagnifierMatrices()
 {
   Base::pushMagnifierMatrices();
 
+  // waj
+  /*
   FitsMask* msk = context->mask.tail();
   while (msk) {
     FitsImage* mskimg = msk->mask();
@@ -319,12 +328,15 @@ void Frame::pushMagnifierMatrices()
     }
     msk = msk->previous();
   }
+  */
 }
 
 void Frame::pushPannerMatrices()
 {
   Base::pushPannerMatrices();
 
+  // waj
+  /*
   FitsMask* msk = context->mask.tail();
   while (msk) {
     FitsImage* mskimg = msk->mask();
@@ -338,12 +350,15 @@ void Frame::pushPannerMatrices()
     }
     msk = msk->previous();
   }
+  */
 }
 
 void Frame::pushPSMatrices(float scale, int width, int height)
 {
   Base::pushPSMatrices(scale, width, height);
 
+  // waj
+  /*
   Matrix mx = psMatrix(scale, width, height);
   FitsMask* msk = context->mask.tail();
   while (msk) {
@@ -354,6 +369,7 @@ void Frame::pushPSMatrices(float scale, int width, int height)
     }
     msk = msk->previous();
   }
+  */
 }
 
 void Frame::reset()

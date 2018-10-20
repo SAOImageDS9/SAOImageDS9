@@ -12,7 +12,6 @@
 #include "coord.h"
 #include "frscale.h"
 #include "list.h"
-#include "fitsmask.h"
 #include "fitsimage.h"
 #include "head.h"
 
@@ -81,11 +80,12 @@ class Context {
 
  protected:
   void binFinish();
-  int blockMask();
+  // waj
+  //  int blockMask();
+  //  void loadFinishMask();
+  //  int loadFinishMosaicMask();
   int nhdu();
-  void loadFinishMask();
   void loadFinishMosaic(FitsImage*);
-  int loadFinishMosaicMask();
   int processMosaicKeywords(FitsImage*);
   void updateClip(FrScale*);
   void updateClipGlobal(FrScale*);
@@ -103,8 +103,6 @@ class Context {
   FitsImage* bfits_;
   FitsImage* fits;
   FitsImage* cfits;
-
-  List <FitsMask> mask;
 
  public:
   Context();

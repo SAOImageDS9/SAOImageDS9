@@ -304,9 +304,13 @@ int Context::block()
     break;
   }
 
-  return rr & blockMask();
+  // waj
+  //  return rr & blockMask();
+  return rr;
 }
 
+// waj
+/*
 int Context::blockMask()
 {
   int doBlock = (blockFactor_[0] != 1 && blockFactor_[1] != 1) ? 1 : 0;
@@ -383,6 +387,7 @@ int Context::blockMask()
 
   return rr;
 }
+*/
 
 void Context::bltHist(char* xname, char* yname, int num)
 {
@@ -804,7 +809,8 @@ int Context::load(Base::MemType which, const char* fn,
     break;
 
   case Base::MASK:
-    mask.append(new FitsMask(parent_, img, parent_->maskColorName, parent_->maskMark));
+    // waj
+    //    mask.append(new FitsMask(parent_, img, parent_->maskColorName, parent_->maskMark));
     break;
   }
 
@@ -882,7 +888,8 @@ int Context::load(Base::MemType which, const char* fn,
     loadFinish();
     break;
   case Base::MASK:
-    loadFinishMask();
+    // waj
+    //    loadFinishMask();
     break;
   }
 
@@ -1034,6 +1041,8 @@ int Context::loadMosaic(Base::MemType which, const char* fn,
     break;
 
   case Base::MASK:
+    // waj
+    /*
     FitsMask* msk = mask.tail();
     if (msk) {
       FitsImage* mskimg = msk->mask();
@@ -1043,6 +1052,7 @@ int Context::loadMosaic(Base::MemType which, const char* fn,
     }
     else
       mask.append(new FitsMask(parent_, img, parent_->maskColorName, parent_->maskMark));
+    */
     break;
   }
 
@@ -1123,7 +1133,8 @@ int Context::loadMosaic(Base::MemType which, const char* fn,
     }
     break;
   case Base::MASK:
-    if (!loadFinishMosaicMask())
+    // waj
+    //    if (!loadFinishMosaicMask())
       return 0;
     break;
   }
@@ -1165,7 +1176,8 @@ int Context::loadMosaicImage(Base::MemType which, const char* fn,
     break;
 
   case Base::MASK:
-    mask.append(new FitsMask(parent_, img, parent_->maskColorName, parent_->maskMark));
+    // waj
+    //    mask.append(new FitsMask(parent_, img, parent_->maskColorName, parent_->maskMark));
     break;
   }
 
@@ -1373,7 +1385,8 @@ int Context::loadMosaicImage(Base::MemType which, const char* fn,
     }
     break;
   case Base::MASK:
-    if (!loadFinishMosaicMask())
+    // waj
+    //    if (!loadFinishMosaicMask())
       return 0;
     break;
   }
@@ -1625,6 +1638,8 @@ int Context::loadFinish()
   return 1;
 }
 
+// waj
+/*
 void Context::loadFinishMask()
 {
   FitsMask* msk = mask.tail();
@@ -1633,6 +1648,7 @@ void Context::loadFinishMask()
     mskimg->block();
   }
 }
+*/
 
 void Context::loadFinishMosaic(FitsImage* ptr)
 {
@@ -1654,6 +1670,7 @@ void Context::loadFinishMosaic(FitsImage* ptr)
   }
 }
 
+/*
 int Context::loadFinishMosaicMask()
 {
   FitsMask* msk = mask.tail();
@@ -1662,6 +1679,7 @@ int Context::loadFinishMosaicMask()
 
   return blockMask();
 }
+*/
 
 int Context::loadSlice(Base::MemType which, const char* fn,
 		       FitsImage* img)
@@ -2588,7 +2606,8 @@ void Context::unload()
 
   loadInit(0, Base::NOMOSAIC, Coord::WCS);
 
-  mask.deleteAll();
+  // waj
+  //  mask.deleteAll();
 
   fvcontour_.lcontourlevel().deleteAll();
   auxcontours_.deleteAll();

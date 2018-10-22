@@ -183,18 +183,13 @@ unsigned char* Frame::fillImage(int width, int height,
   CLEARSIGBUS
 
   if (img) {
-    // waj
-    /*
-    if (context->mask.head()) {
-      FitsMask* mptr = context->mask.tail();
-      while (mptr) {
-	unsigned char* msk = fillMask(mptr, width, height, sys);
-	blend(img,msk,width,height);
-	delete [] msk;
-	mptr = mptr->previous();
-      }
+    FitsMask* mptr = mask.tail();
+    while (mptr) {
+      unsigned char* msk = fillMask(mptr, width, height, sys);
+      blend(img,msk,width,height);
+      delete [] msk;
+      mptr = mptr->previous();
     }
-    */
   }
 
   return img;
@@ -207,8 +202,7 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
   unsigned char* img = new unsigned char[width*height*4];
   memset(img,0,width*height*4);
 
-  /*
-  FitsImage* currentMsk = msk->current();
+  FitsImage* currentMsk = msk->context()->fits;
   XColor* maskColor = msk->color();
   int mark = msk->mark();
 
@@ -272,7 +266,7 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
     }
   }
   CLEARSIGBUS
-  */
+
   return img;
 }
 

@@ -659,6 +659,20 @@ void FrameRGB::loadRGBFinish()
   update(MATRIX);
 }
 
+void FrameRGB::loadDone(int rr, LayerType ll)
+{
+  if (rr) {
+    if (ll == IMG) {
+      if (!keyContextSet) {
+	keyContext = currentContext;
+	keyContextSet =1;
+      }
+    }
+
+    Base::loadDone(rr, ll);
+  }
+}
+
 // waj
 void FrameRGB::pushMatrices()
 {

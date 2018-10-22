@@ -70,7 +70,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   currentContext = NULL;
   keyContext = NULL;
-  keyContextSet =0;
 
   orientation = Coord::NORMAL;
   zoom_ = Vector(1,1);

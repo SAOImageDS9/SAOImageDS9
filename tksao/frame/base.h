@@ -170,7 +170,6 @@ public:
 
   Context* currentContext;
   Context* keyContext;
-  int keyContextSet;
 
   Coord::Orientation orientation;   // current image orientation
   Matrix orientationMatrix;  // current image orientation matrix
@@ -383,7 +382,7 @@ public:
   virtual int isFrame3d() {return 0;}
   virtual int isFrameRGB() {return 0;}
 
-  void loadDone(int, LayerType);
+  virtual void loadDone(int, LayerType);
 
   void markerAnalysisHistogram(Marker*, double**, double**, const BBox&, int);
   int markerAnalysisPlot2d(Marker*, double**, double**, double**, double**,

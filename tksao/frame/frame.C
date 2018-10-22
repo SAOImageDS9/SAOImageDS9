@@ -20,7 +20,6 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   currentContext = context;
   keyContext = context;
-  keyContextSet =1;
   
   colormapData =NULL;
 

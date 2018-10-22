@@ -673,7 +673,6 @@ void FrameRGB::loadDone(int rr, LayerType ll)
   }
 }
 
-// waj
 void FrameRGB::pushMatrices()
 {
   for (int ii=0; ii<3; ii++)
@@ -697,66 +696,6 @@ void FrameRGB::pushPSMatrices(float scale, int width, int height)
   for (int ii=0; ii<3; ii++)
     Base::pushPSMatrices(context[ii].fits, scale, width, height);
 }
-/*
-void FrameRGB::pushMatrices()
-{
-  for (int ii=0; ii<3; ii++) {
-    FitsImage* ptr = context[ii].fits;
-    while (ptr) {
-      FitsImage* sptr = ptr;
-      while (sptr) {
-	sptr->updateMatrices(rgb[ii], refToUser, userToWidget, 
-			     widgetToCanvas, canvasToWindow);
-	sptr = sptr->nextSlice();
-      }
-      ptr = ptr->nextMosaic();
-    }
-  }
-}
-
-void FrameRGB::pushMagnifierMatrices()
-{
-  for (int ii=0; ii<3; ii++) {
-    FitsImage* ptr = context[ii].fits;
-    while (ptr) {
-      FitsImage* sptr = ptr;
-      while (sptr) {
-	sptr->updateMagnifierMatrices(refToMagnifier);
-	sptr = sptr->nextSlice();
-      }
-      ptr = ptr->nextMosaic();
-    }
-  }
-}
-
-void FrameRGB::pushPannerMatrices()
-{
-  for (int ii=0; ii<3; ii++) {
-    FitsImage* ptr = context[ii].fits;
-    while (ptr) {
-      FitsImage* sptr = ptr;
-      while (sptr) {
-	sptr->updatePannerMatrices(refToPanner);
-	sptr = sptr->nextSlice();
-      }
-      ptr = ptr->nextMosaic();
-    }
-  }
-}
-
-void FrameRGB::pushPSMatrices(float scale, int width, int height)
-{
-  Matrix mx = psMatrix(scale, width, height);
-  for (int kk=0; kk<3; kk++)
-    if (context[kk].fits) {
-      FitsImage* ptr = context[kk].cfits;
-      while (ptr) {
-	ptr->updatePS(mx);
-	ptr = ptr->nextMosaic();
-      }
-    }
-}
-*/
 
 void FrameRGB::reset()
 {
@@ -773,7 +712,8 @@ void FrameRGB::reset()
 void FrameRGB::rgbAlignWCS(int ii)
 {
   if (keyContext->fits  && keyContext->fits->hasWCS(rgbSystem))
-    rgb[ii] = calcAlignWCS(keyContext->fits, context[ii].fits, rgbSystem, rgbSystem, Coord::FK5);
+    rgb[ii] = calcAlignWCS(keyContext->fits, context[ii].fits, rgbSystem,
+			   rgbSystem, Coord::FK5);
 
   if (DebugRGB)
     cerr << "rgbAlignWCS " << rgb[ii] << endl;

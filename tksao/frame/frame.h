@@ -49,6 +49,8 @@ class Frame : public FrameBase {
   Frame(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~Frame();
 
+  void maskClearCmd();
+
   void colormapCmd(int, float, float, int, unsigned char*, int);
   void colormapBeginCmd();
   void colormapMotionCmd(int, float, float, int, unsigned char*, int);
@@ -67,6 +69,8 @@ class Frame : public FrameBase {
   void iisWCSCmd(const Matrix&, const Vector&, int);
 
   void savePhotoCmd(const char*);
+
+  void loadFitsMMapIncrCmd(const char*, LayerType);
 };
 
 #endif

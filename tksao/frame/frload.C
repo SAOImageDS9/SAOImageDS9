@@ -66,10 +66,8 @@ void Base::loadFitsSMMapCmd(const char* hdr, const char* fn, LayerType ll)
 
 void Base::loadFitsMMapIncrCmd(const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
-  FitsImage* img = new FitsImageFitsMMapIncr(currentContext, interp, 
-					     fn, 1);
+  unloadFits();
+  FitsImage* img = new FitsImageFitsMMapIncr(currentContext, interp, fn, 1);
   loadDone(currentContext->load(MMAPINCR, fn, img), ll);
 }
 
@@ -712,6 +710,11 @@ void Base::loadMosaicImageWFPC2VarCmd(const char* ch, const char* fn)
 // ***
 
 void Base::loadDone(int rr, LayerType ll)
+{
+  loadDone(rr);
+}
+
+void Base::loadDone(int rr)
 {
   if (rr) {
     alignWCS();

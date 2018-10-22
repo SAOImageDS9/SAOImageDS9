@@ -274,7 +274,6 @@ int Frame::isIIS()
   return context->cfits && context->cfits->isIIS();
 }
 
-// waj
 void Frame::pushMatrices()
 {
   // alway identity
@@ -325,87 +324,6 @@ void Frame::pushPSMatrices(float scale, int width, int height)
   }
 }
 
-/*
-void Frame::pushMatrices()
-{
-  Base::pushMatrices();
-
-  // alway identity
-  Matrix rgbToRef; 
-
-  // now any masks
-  FitsMask* msk = currentContext->mask.tail();
-  while (msk) {
-    FitsImage* mskimg = msk->mask();
-    while (mskimg) {
-      FitsImage* sptr = mskimg;
-      while (sptr) {
-	sptr->updateMatrices(rgbToRef, refToUser, userToWidget, 
-			     widgetToCanvas, canvasToWindow);
-	sptr = sptr->nextSlice();
-      }
-      mskimg = mskimg->nextMosaic();
-    }
-
-    msk = msk->previous();
-  }
-}
-
-void Frame::pushMagnifierMatrices()
-{
-  Base::pushMagnifierMatrices();
-
-  FitsMask* msk = context->mask.tail();
-  while (msk) {
-    FitsImage* mskimg = msk->mask();
-    while (mskimg) {
-      FitsImage* sptr = mskimg;
-      while (sptr) {
-	sptr->updateMagnifierMatrices(refToMagnifier);
-	sptr = sptr->nextSlice();
-      }
-      mskimg = mskimg->nextMosaic();
-    }
-    msk = msk->previous();
-  }
-}
-
-void Frame::pushPannerMatrices()
-{
-  Base::pushPannerMatrices();
-
-  FitsMask* msk = context->mask.tail();
-  while (msk) {
-    FitsImage* mskimg = msk->mask();
-    while (mskimg) {
-      FitsImage* sptr = mskimg;
-      while (sptr) {
-	sptr->updatePannerMatrices(refToPanner);
-	sptr = sptr->nextSlice();
-      }
-      mskimg = mskimg->nextMosaic();
-    }
-    msk = msk->previous();
-  }
-}
-
-void Frame::pushPSMatrices(float scale, int width, int height)
-{
-  Base::pushPSMatrices(scale, width, height);
-
-  Matrix mx = psMatrix(scale, width, height);
-  FitsMask* msk = context->mask.tail();
-  while (msk) {
-    FitsImage* ptr = msk->current();
-    while (ptr) {
-      ptr->updatePS(mx);
-      ptr = ptr->nextMosaic();
-    }
-    msk = msk->previous();
-  }
-}
-*/
-
 void Frame::reset()
 {
   cmapID = 1;
@@ -445,6 +363,12 @@ void Frame::unloadFits()
 }
 
 // Commands
+
+void Frame::maskClearCmd()
+{
+  mask.deleteAll();
+  update(BASE);
+}
 
 void Frame::colormapCmd(int id, float b, float c, int i, 
 				 unsigned char* cells, int cnt)
@@ -829,5 +753,16 @@ void Frame::savePhotoCmd(const char* ph)
   }
 }
 
+// load
 
-
+void Frame::loadFitsMMapIncrCmd(const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadFitsMMapIncrCmd(fn,ll);
+    break;
+  case MASK:
+    
+    break;
+  }
+}

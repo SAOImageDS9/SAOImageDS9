@@ -383,6 +383,7 @@ public:
   virtual int isFrameRGB() {return 0;}
 
   virtual void loadDone(int, LayerType);
+  void loadDone(int);
 
   void markerAnalysisHistogram(Marker*, double**, double**, const BBox&, int);
   int markerAnalysisPlot2d(Marker*, double**, double**, double**, double**,
@@ -443,17 +444,11 @@ public:
   void pushMagnifierMatrices(FitsImage*);
   void pushPannerMatrices(FitsImage*);
   void pushPSMatrices(FitsImage*, float, int, int);
-  // waj
+
   virtual void pushMatrices() =0;
   virtual void pushMagnifierMatrices() =0;
   virtual void pushPannerMatrices() =0;
   virtual void pushPSMatrices(float, int, int) =0;
-  /*
-  virtual void pushMatrices();
-  virtual void pushMagnifierMatrices();
-  virtual void pushPannerMatrices();
-  virtual void pushPSMatrices(float, int, int);
-  */
   
   virtual void reset();
   void resetSecMode();
@@ -796,7 +791,7 @@ public:
   void loadFitsChannelCmd(const char*, const char*, LayerType);
   void loadFitsMMapCmd(const char*, LayerType);
   void loadFitsSMMapCmd(const char*, const char*, LayerType);
-  void loadFitsMMapIncrCmd(const char*, LayerType);
+  virtual void loadFitsMMapIncrCmd(const char*, LayerType);
   void loadFitsShareCmd(ShmType, int, const char*, LayerType);
   void loadFitsSShareCmd(ShmType, int, int, const char*, LayerType);
   void loadFitsSocketCmd(int, const char*, LayerType);
@@ -1565,7 +1560,7 @@ public:
   void getMaskTransparencyCmd();
 
   void maskColorCmd(const char*);
-  void maskClearCmd();
+  virtual void maskClearCmd() {};
   void maskMarkCmd(int m) {maskMark=m;}
   void maskTransparencyCmd(float);
 

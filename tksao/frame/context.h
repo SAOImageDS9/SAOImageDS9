@@ -80,10 +80,6 @@ class Context {
 
  protected:
   void binFinish();
-  // waj
-  //  int blockMask();
-  //  void loadFinishMask();
-  //  int loadFinishMosaicMask();
   int nhdu();
   void loadFinishMosaic(FitsImage*);
   int processMosaicKeywords(FitsImage*);

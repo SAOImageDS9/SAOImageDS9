@@ -2523,13 +2523,6 @@ void Base::matchCmd(const char* xxname1, const char* yyname1,
 			    rrname);
 }
 
-void Base::maskClearCmd()
-{
-  // waj
-  //  currentContext->mask.deleteAll();
-  update(BASE);
-}
-
 void Base::maskColorCmd(const char* color)
 {
   if (maskColorName)

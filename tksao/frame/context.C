@@ -304,90 +304,8 @@ int Context::block()
     break;
   }
 
-  // waj
-  //  return rr & blockMask();
   return rr;
 }
-
-// waj
-/*
-int Context::blockMask()
-{
-  int doBlock = (blockFactor_[0] != 1 && blockFactor_[1] != 1) ? 1 : 0;
-  int rr =1;
-
-  if (thread_)
-    delete [] thread_;
-  thread_ = new pthread_t[parent_->nthreads_];
-  {
-    int cnt =0;
-
-    FitsMask* msk = mask.head();
-    if (msk) {
-      FitsImage* ptr = msk->mask();
-      while (ptr) {
-	FitsImage* sptr = ptr;
-	while (sptr) {
-	  sptr->block(&thread_[cnt]);
-	  cnt++;
-	  if (cnt == parent_->nthreads_) {
-	    if (doBlock) {
-	      for (int ii=0; ii<cnt; ii++) {
-		int tt = pthread_join(thread_[ii], NULL);
-		if (tt) {
-		  internalError("Unable to Join Thread");
-		  rr =0;
-		}
-	      }
-	    }
-	    cnt =0;
-	  }
-	  sptr = sptr->nextSlice();
-	}
-	ptr = ptr->nextMosaic();
-      }
-      msk = msk->next();
-    }
-
-    if (doBlock) {
-      for (int ii=0; ii<cnt; ii++) {
-	int tt = pthread_join(thread_[ii], NULL);
-	if (tt) {
-	  internalError("Unable to Join Thread");
-	  rr =0;
-	}
-      }
-    }
-  }
-  delete [] thread_;
-  thread_ =NULL;
-
-  {
-    FitsMask* msk = mask.head();
-    if (msk) {
-      FitsImage* ptr = msk->mask();
-      while (ptr) {
-	FitsImage* sptr = ptr;
-	while (sptr) {
-	  switch (mosaicType) {
-	  case Base::IRAF:
-	  case Base::WCSMOSAIC:
-	    rr &= processMosaicKeywords(ptr);
-	    break;
-	  default:
-	    break;
-	  }
-	  sptr = sptr->nextSlice();
-	}
-	ptr = ptr->nextMosaic();
-      }
-      msk = msk->next();
-    }
-  }
-
-  return rr;
-}
-*/
 
 void Context::bltHist(char* xname, char* yname, int num)
 {
@@ -784,35 +702,21 @@ int Context::load(Base::MemType which, const char* fn,
     if (img)
       delete img;
     
-    switch (ll) {
-    case Base::IMG:
-      unload();
-      return 0;
-    case Base::MASK:
-      return 0;
-    }
+    unload();
+    return 0;
   }
 
-  switch (ll) {
-  case Base::IMG:
-    bfits_ = img;
-    loadInit(1, Base::NOMOSAIC,Coord::WCS);
-    for (int ii=2; ii<FTY_MAXAXES; ii++) {
-      int nn = img->naxis(ii);
-      baxis_[ii] = nn ? nn : 1;
-    }
-
-    // params in DATA coords 0-n
-    // do it here because of fits section
-    iparams.set(0,baxis_[2]);
-    cparams.set(0,baxis_[2]);
-    break;
-
-  case Base::MASK:
-    // waj
-    //    mask.append(new FitsMask(parent_, img, parent_->maskColorName, parent_->maskMark));
-    break;
+  bfits_ = img;
+  loadInit(1, Base::NOMOSAIC,Coord::WCS);
+  for (int ii=2; ii<FTY_MAXAXES; ii++) {
+    int nn = img->naxis(ii);
+    baxis_[ii] = nn ? nn : 1;
   }
+
+  // params in DATA coords 0-n
+  // do it here because of fits section
+  iparams.set(0,baxis_[2]);
+  cparams.set(0,baxis_[2]);
 
   if (img->isHist())
     which = Base::HIST;
@@ -882,16 +786,7 @@ int Context::load(Base::MemType which, const char* fn,
 
   // finish up
   img->close();
-
-  switch (ll) {
-  case Base::IMG:
-    loadFinish();
-    break;
-  case Base::MASK:
-    // waj
-    //    loadFinishMask();
-    break;
-  }
+  loadFinish();
 
   return 1;
 }
@@ -1016,44 +911,25 @@ int Context::loadMosaic(Base::MemType which, const char* fn,
     return 0;
   }
 
-  switch (ll) {
-  case Base::IMG:
-    if (bfits_) {
-      FitsImage* ptr = bfits_;
-      while (ptr && ptr->nextMosaic())
-	ptr = ptr->nextMosaic();
-      ptr->setNextMosaic(img);
-      mosaicCount_++;
+  if (bfits_) {
+    FitsImage* ptr = bfits_;
+    while (ptr && ptr->nextMosaic())
+      ptr = ptr->nextMosaic();
+    ptr->setNextMosaic(img);
+    mosaicCount_++;
+  }
+  else {
+    bfits_ = img;
+    loadInit(1, type,sys);
+    for (int ii=2; ii<FTY_MAXAXES; ii++) {
+      int nn = img->naxis(ii);
+      baxis_[ii] = nn ? nn : 1;
     }
-    else {
-      bfits_ = img;
-      loadInit(1, type,sys);
-      for (int ii=2; ii<FTY_MAXAXES; ii++) {
-	int nn = img->naxis(ii);
-	baxis_[ii] = nn ? nn : 1;
-      }
 
-      // params in DATA coords 0-n
-      // do it here because of fits section
-      iparams.set(0,baxis_[2]);
-      cparams.set(0,baxis_[2]);
-    }
-    break;
-
-  case Base::MASK:
-    // waj
-    /*
-    FitsMask* msk = mask.tail();
-    if (msk) {
-      FitsImage* mskimg = msk->mask();
-      while (mskimg && mskimg->nextMosaic())
-	mskimg = mskimg->nextMosaic();
-      mskimg->setNextMosaic(img);
-    }
-    else
-      mask.append(new FitsMask(parent_, img, parent_->maskColorName, parent_->maskMark));
-    */
-    break;
+    // params in DATA coords 0-n
+    // do it here because of fits section
+    iparams.set(0,baxis_[2]);
+    cparams.set(0,baxis_[2]);
   }
 
   if (img->isPost())
@@ -1124,19 +1000,10 @@ int Context::loadMosaic(Base::MemType which, const char* fn,
   // finish up
   img->close();
 
-  switch (ll) {
-  case Base::IMG:
-    loadFinishMosaic(fits);
-    if (!loadFinish()) {
-      unload();
-      return 0;
-    }
-    break;
-  case Base::MASK:
-    // waj
-    //    if (!loadFinishMosaicMask())
-      return 0;
-    break;
+  loadFinishMosaic(fits);
+  if (!loadFinish()) {
+    unload();
+    return 0;
   }
 
   return 1;
@@ -1150,36 +1017,21 @@ int Context::loadMosaicImage(Base::MemType which, const char* fn,
     if (img)
       delete img;
 
-    switch (ll) {
-    case Base::IMG:
       unload();
       return 0;
-    case Base::MASK:
-      return 0;
-    }
   }
 
-  switch (ll) {
-  case Base::IMG:
-    bfits_ = img;
-    loadInit(1, type,sys);
-    for (int ii=2; ii<FTY_MAXAXES; ii++) {
-      int nn = img->naxis(ii);
-      baxis_[ii] = nn ? nn : 1;
-    }
-
-    // params in DATA coords 0-n
-    // do it here because of fits section
-    iparams.set(0,baxis_[2]);
-    cparams.set(0,baxis_[2]);
-
-    break;
-
-  case Base::MASK:
-    // waj
-    //    mask.append(new FitsMask(parent_, img, parent_->maskColorName, parent_->maskMark));
-    break;
+  bfits_ = img;
+  loadInit(1, type,sys);
+  for (int ii=2; ii<FTY_MAXAXES; ii++) {
+    int nn = img->naxis(ii);
+    baxis_[ii] = nn ? nn : 1;
   }
+
+  // params in DATA coords 0-n
+  // do it here because of fits section
+  iparams.set(0,baxis_[2]);
+  cparams.set(0,baxis_[2]);
 
   Base::MemType sav = which;
 
@@ -1310,8 +1162,7 @@ int Context::loadMosaicImage(Base::MemType which, const char* fn,
       ptr->setNextMosaic(next);
       ptr = next;
 
-      if (ll == Base::IMG)
-	mosaicCount_++;
+      mosaicCount_++;
 
       if (img->isPost())
 	which = Base::POST;
@@ -1376,19 +1227,10 @@ int Context::loadMosaicImage(Base::MemType which, const char* fn,
   // finish up
   img->close();
 
-  switch (ll) {
-  case Base::IMG:
-    loadFinishMosaic(fits);
-    if (!loadFinish()) {
-      unload();
-      return 0;
-    }
-    break;
-  case Base::MASK:
-    // waj
-    //    if (!loadFinishMosaicMask())
-      return 0;
-    break;
+  loadFinishMosaic(fits);
+  if (!loadFinish()) {
+    unload();
+    return 0;
   }
 
   return 1;
@@ -1638,18 +1480,6 @@ int Context::loadFinish()
   return 1;
 }
 
-// waj
-/*
-void Context::loadFinishMask()
-{
-  FitsMask* msk = mask.tail();
-  if (msk) {
-    FitsImage* mskimg = msk->mask();
-    mskimg->block();
-  }
-}
-*/
-
 void Context::loadFinishMosaic(FitsImage* ptr)
 {
   while (ptr && ptr->nextMosaic()) {
@@ -1669,17 +1499,6 @@ void Context::loadFinishMosaic(FitsImage* ptr)
     ptr = ptr->nextMosaic();
   }
 }
-
-/*
-int Context::loadFinishMosaicMask()
-{
-  FitsMask* msk = mask.tail();
-  if (msk)
-    loadFinishMosaic(msk->mask());
-
-  return blockMask();
-}
-*/
 
 int Context::loadSlice(Base::MemType which, const char* fn,
 		       FitsImage* img)
@@ -2605,9 +2424,6 @@ void Context::unload()
   cfits =NULL;
 
   loadInit(0, Base::NOMOSAIC, Coord::WCS);
-
-  // waj
-  //  mask.deleteAll();
 
   fvcontour_.lcontourlevel().deleteAll();
   auxcontours_.deleteAll();

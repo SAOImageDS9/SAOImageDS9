@@ -403,9 +403,9 @@ void Frame::maskColorCmd(const char* color)
   maskColorName = dupstr(color);
 }
 
-void Frame::maskTransparencyCmd(float t)
+void Frame::maskTransparencyCmd(float tt)
 {
-  maskAlpha = 1-(t/100.);
+  maskAlpha = 1-(tt/100.);
   update(BASE);
 }
 

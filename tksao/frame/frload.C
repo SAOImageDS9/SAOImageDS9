@@ -451,7 +451,7 @@ void Base::loadMosaicImageAllocCmd(MosaicType type, Coord::CoordSystem sys,
     unloadFits();
   FitsImage* img = new FitsImageMosaicAlloc(currentContext, interp,
 					    ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicImage(ALLOC, fn, img, ll,type,sys), ll);
+  loadDone(currentContext->loadMosaicImage(ALLOC, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicImageAllocGZCmd(MosaicType type, Coord::CoordSystem sys, 
@@ -462,7 +462,7 @@ void Base::loadMosaicImageAllocGZCmd(MosaicType type, Coord::CoordSystem sys,
     unloadFits();
   FitsImage* img = new FitsImageMosaicAllocGZ(currentContext, interp,
 					      ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicImage(ALLOCGZ, fn, img, ll,type,sys), ll);
+  loadDone(currentContext->loadMosaicImage(ALLOCGZ, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicImageChannelCmd(MosaicType type, Coord::CoordSystem sys,
@@ -474,7 +474,7 @@ void Base::loadMosaicImageChannelCmd(MosaicType type, Coord::CoordSystem sys,
   FitsImage* img = new FitsImageMosaicChannel(currentContext, interp,
 					      ch, fn, 
 					      FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicImage(CHANNEL, fn, img, ll,type,sys),ll);
+  loadDone(currentContext->loadMosaicImage(CHANNEL, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicImageMMapCmd(MosaicType type, Coord::CoordSystem sys,
@@ -484,7 +484,7 @@ void Base::loadMosaicImageMMapCmd(MosaicType type, Coord::CoordSystem sys,
     unloadFits();
   FitsImage* img = new FitsImageMosaicMMap(currentContext, interp,
 					   fn, 1);
-  loadDone(currentContext->loadMosaicImage(MMAP, fn, img, ll,type,sys),ll);
+  loadDone(currentContext->loadMosaicImage(MMAP, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicImageMMapIncrCmd(MosaicType type, Coord::CoordSystem sys, 
@@ -494,7 +494,7 @@ void Base::loadMosaicImageMMapIncrCmd(MosaicType type, Coord::CoordSystem sys,
     unloadFits();
   FitsImage* img = new FitsImageMosaicMMapIncr(currentContext, interp,
 					       fn, 1);
-  loadDone(currentContext->loadMosaicImage(MMAPINCR, fn, img, ll,type,sys),ll);
+  loadDone(currentContext->loadMosaicImage(MMAPINCR, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicImageShareCmd(MosaicType type, Coord::CoordSystem sys,
@@ -505,7 +505,7 @@ void Base::loadMosaicImageShareCmd(MosaicType type, Coord::CoordSystem sys,
     unloadFits();
   FitsImage* img = new FitsImageMosaicShare(currentContext, interp,
 					    stype, id, fn, 1);
-  loadDone(currentContext->loadMosaicImage(SHARE, fn, img, ll,type,sys),ll);
+  loadDone(currentContext->loadMosaicImage(SHARE, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicImageSocketCmd(MosaicType type, Coord::CoordSystem sys,
@@ -515,7 +515,7 @@ void Base::loadMosaicImageSocketCmd(MosaicType type, Coord::CoordSystem sys,
     unloadFits();
   FitsImage* img = new FitsImageMosaicSocket(currentContext, interp,
 					     s, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicImage(SOCKET, fn, img, ll,type,sys),ll);
+  loadDone(currentContext->loadMosaicImage(SOCKET, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicImageSocketGZCmd(MosaicType type, 
@@ -526,7 +526,7 @@ void Base::loadMosaicImageSocketGZCmd(MosaicType type,
     unloadFits();
   FitsImage* img = new FitsImageMosaicSocketGZ(currentContext, interp,
 					       s, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicImage(SOCKETGZ, fn, img, ll,type,sys),ll);
+  loadDone(currentContext->loadMosaicImage(SOCKETGZ, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicImageVarCmd(MosaicType type, Coord::CoordSystem sys,
@@ -536,7 +536,7 @@ void Base::loadMosaicImageVarCmd(MosaicType type, Coord::CoordSystem sys,
     unloadFits();
   FitsImage* img = new FitsImageMosaicVar(currentContext, interp,
 					  ch, fn, 1);
-  loadDone(currentContext->loadMosaicImage(VAR, fn, img, ll,type,sys),ll);
+  loadDone(currentContext->loadMosaicImage(VAR, fn, img, type, sys), ll);
 }
 
 // *** Mosaic ***
@@ -546,7 +546,7 @@ void Base::loadMosaicAllocCmd(MosaicType type, Coord::CoordSystem sys,
 {
   FitsImage* img = new FitsImageFitsAlloc(currentContext, interp,
 					  ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaic(ALLOC, fn, img, type,sys),ll);
+  loadDone(currentContext->loadMosaic(ALLOC, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicAllocGZCmd(MosaicType type, Coord::CoordSystem sys, 
@@ -554,7 +554,7 @@ void Base::loadMosaicAllocGZCmd(MosaicType type, Coord::CoordSystem sys,
 {
   FitsImage* img = new FitsImageFitsAllocGZ(currentContext, interp,
 					    ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaic(ALLOCGZ, fn, img, type,sys),ll);
+  loadDone(currentContext->loadMosaic(ALLOCGZ, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicChannelCmd(MosaicType type, Coord::CoordSystem sys,
@@ -563,7 +563,7 @@ void Base::loadMosaicChannelCmd(MosaicType type, Coord::CoordSystem sys,
   FitsImage* img = new FitsImageFitsChannel(currentContext, interp,
 					    ch, fn,
 					    FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaic(CHANNEL, fn, img, type,sys),ll);
+  loadDone(currentContext->loadMosaic(CHANNEL, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicMMapCmd(MosaicType type, Coord::CoordSystem sys,
@@ -571,7 +571,7 @@ void Base::loadMosaicMMapCmd(MosaicType type, Coord::CoordSystem sys,
 {
   FitsImage* img = new FitsImageFitsMMap(currentContext, interp,
 					 fn, 1);
-  loadDone(currentContext->loadMosaic(MMAP, fn, img, type,sys),ll);
+  loadDone(currentContext->loadMosaic(MMAP, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicSMMapCmd(MosaicType type, Coord::CoordSystem sys,
@@ -580,7 +580,7 @@ void Base::loadMosaicSMMapCmd(MosaicType type, Coord::CoordSystem sys,
 {
   FitsImage* img = new FitsImageFitsSMMap(currentContext, interp,
 					  hdr, fn, 1);
-  loadDone(currentContext->loadMosaic(MMAP, fn, img, type,sys),ll);
+  loadDone(currentContext->loadMosaic(MMAP, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicMMapIncrCmd(MosaicType type, Coord::CoordSystem sys,
@@ -588,7 +588,7 @@ void Base::loadMosaicMMapIncrCmd(MosaicType type, Coord::CoordSystem sys,
 {
   FitsImage* img = new FitsImageFitsMMapIncr(currentContext, interp,
 					     fn, 1);
-  loadDone(currentContext->loadMosaic(MMAPINCR, fn, img, type,sys),ll);
+  loadDone(currentContext->loadMosaic(MMAPINCR, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicShareCmd(MosaicType type, Coord::CoordSystem sys,
@@ -597,7 +597,7 @@ void Base::loadMosaicShareCmd(MosaicType type, Coord::CoordSystem sys,
 {
   FitsImage* img = new FitsImageFitsShare(currentContext, interp,
 					  stype, id, fn, 1);
-  loadDone(currentContext->loadMosaic(SHARE, fn, img, type,sys),ll);
+  loadDone(currentContext->loadMosaic(SHARE, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicSShareCmd(MosaicType type, Coord::CoordSystem sys,
@@ -606,7 +606,7 @@ void Base::loadMosaicSShareCmd(MosaicType type, Coord::CoordSystem sys,
 {
   FitsImage* img = new FitsImageFitsSShare(currentContext, interp,
 					   stype, hdr, id, fn, 1);
-  loadDone(currentContext->loadMosaic(SSHARE, fn, img, type,sys),ll);
+  loadDone(currentContext->loadMosaic(SSHARE, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicSocketCmd(MosaicType type, Coord::CoordSystem sys,
@@ -614,7 +614,7 @@ void Base::loadMosaicSocketCmd(MosaicType type, Coord::CoordSystem sys,
 {
   FitsImage* img = new FitsImageFitsSocket(currentContext, interp,
 					   s, fn, FitsFile::FLUSH, 1);
-  loadDone(currentContext->loadMosaic(SOCKET, fn, img, type,sys),ll);
+  loadDone(currentContext->loadMosaic(SOCKET, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicSocketGZCmd(MosaicType type, Coord::CoordSystem sys,
@@ -622,7 +622,7 @@ void Base::loadMosaicSocketGZCmd(MosaicType type, Coord::CoordSystem sys,
 {
   FitsImage* img = new FitsImageFitsSocketGZ(currentContext, interp,
 					     s, fn, FitsFile::FLUSH, 1);
-  loadDone(currentContext->loadMosaic(SOCKETGZ, fn, img, type,sys),ll);
+  loadDone(currentContext->loadMosaic(SOCKETGZ, fn, img, type, sys), ll);
 }
 
 void Base::loadMosaicVarCmd(MosaicType type, Coord::CoordSystem sys,
@@ -631,7 +631,7 @@ void Base::loadMosaicVarCmd(MosaicType type, Coord::CoordSystem sys,
 {
   FitsImage* img = new FitsImageFitsVar(currentContext, interp,
 					ch, fn, 1);
-  loadDone(currentContext->loadMosaic(VAR, fn, img, type,sys),ll);
+  loadDone(currentContext->loadMosaic(VAR, fn, img, type, sys), ll);
 }
 
 // *** Mosaic Image WFPC2 ***

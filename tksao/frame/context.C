@@ -1010,8 +1010,8 @@ int Context::loadMosaic(Base::MemType which, const char* fn,
 }
 
 int Context::loadMosaicImage(Base::MemType which, const char* fn,
-			     FitsImage* img, Base::LayerType ll,
-			     Base::MosaicType type, Coord::CoordSystem sys)
+			     FitsImage* img, Base::MosaicType type,
+			     Coord::CoordSystem sys)
 {
   if (!img || !img->isValid()) {
     if (img)

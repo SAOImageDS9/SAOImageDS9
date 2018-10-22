@@ -173,7 +173,7 @@ class Context {
   int loadMosaic(Base::MemType, const char*, FitsImage*, 
 		 Base::MosaicType, Coord::CoordSystem);
   int loadMosaicImage(Base::MemType, const char*, FitsImage*, 
-		      Base::LayerType, Base::MosaicType, Coord::CoordSystem);
+		      Base::MosaicType, Coord::CoordSystem);
   int loadMosaicWFPC2(Base::MemType, const char*, FitsImage*);
   void loadInit(int, Base::MosaicType, Coord::CoordSystem);
   int loadFinish();

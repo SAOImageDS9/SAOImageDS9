@@ -227,10 +227,6 @@ public:
   Coord::Orientation irafOrientation_; // orientation of first iraf segment
   Matrix irafMatrix_; // orientation matrix for iraf mosaic
 
-  char* maskColorName;
-  float maskAlpha;
-  int maskMark;
-
   int invert;
 
   int useHighlite;
@@ -1555,14 +1551,14 @@ public:
   void regionSelectShiftEndCmd();
 
   // Mask Commands
-  void getMaskColorCmd();
-  void getMaskMarkCmd();
-  void getMaskTransparencyCmd();
+  virtual void getMaskColorCmd();
+  virtual void getMaskMarkCmd();
+  virtual void getMaskTransparencyCmd();
 
-  void maskColorCmd(const char*);
   virtual void maskClearCmd() {};
-  void maskMarkCmd(int m) {maskMark=m;}
-  void maskTransparencyCmd(float);
+  virtual void maskColorCmd(const char*) {};
+  virtual void maskTransparencyCmd(float) {};
+  virtual void maskMarkCmd(int) {};
 
   // NaN Commands
   void getNANColorCmd();

@@ -26,6 +26,10 @@ class Frame : public FrameBase {
 
   List <FitsMask> mask;
 
+  char* maskColorName;
+  float maskAlpha;
+  int maskMark;
+
  private:
   unsigned char* blend(unsigned char*, unsigned char*, int, int);
   int isIIS();
@@ -49,7 +53,14 @@ class Frame : public FrameBase {
   Frame(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~Frame();
 
+  void getMaskColorCmd();
+  void getMaskMarkCmd();
+  void getMaskTransparencyCmd();
+
   void maskClearCmd();
+  void maskColorCmd(const char*);
+  void maskTransparencyCmd(float);
+  void maskMarkCmd(int mm) {maskMark=mm;}
 
   void colormapCmd(int, float, float, int, unsigned char*, int);
   void colormapBeginCmd();

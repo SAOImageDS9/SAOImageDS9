@@ -119,10 +119,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   irafAlign_ =1;
   irafOrientation_ = (Coord::Orientation)-1;
 
-  maskColorName = dupstr("red");
-  maskAlpha = 1;
-  maskMark = 1;
-
   invert = 0;
 
   useHighlite = 0;
@@ -224,9 +220,6 @@ Base::~Base()
 
   if (highliteGC)
     XFreeGC(display, highliteGC);
-
-  if (maskColorName)
-    delete [] maskColorName;
 
   if (markerGC_)
     XFreeGC(display, markerGC_);

@@ -30,6 +30,10 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   colorCount = 0;
   colorScale = NULL;
   colorCells = NULL;
+
+  maskColorName = dupstr("red");
+  maskAlpha = 1;
+  maskMark = 1;
 }
 
 Frame::~Frame()
@@ -45,6 +49,9 @@ Frame::~Frame()
 
   if (colormapData)
     delete [] colormapData;
+
+  if (maskColorName)
+    delete [] maskColorName;
 }
 
 unsigned char* Frame::blend(unsigned char* src, unsigned char* msk,
@@ -364,9 +371,41 @@ void Frame::unloadFits()
 
 // Commands
 
+void Frame::getMaskColorCmd()
+{
+  Tcl_AppendResult(interp, maskColorName, NULL);
+}
+
+void Frame::getMaskMarkCmd()
+{
+  if (maskMark)
+    Tcl_AppendResult(interp, "1", NULL);
+  else
+    Tcl_AppendResult(interp, "0", NULL);
+}
+
+void Frame::getMaskTransparencyCmd()
+{
+  printDouble((1-maskAlpha)*100.);
+}
+
 void Frame::maskClearCmd()
 {
   mask.deleteAll();
+  update(BASE);
+}
+
+void Frame::maskColorCmd(const char* color)
+{
+  if (maskColorName)
+    delete [] maskColorName;
+
+  maskColorName = dupstr(color);
+}
+
+void Frame::maskTransparencyCmd(float t)
+{
+  maskAlpha = 1-(t/100.);
   update(BASE);
 }
 

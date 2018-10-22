@@ -1934,20 +1934,17 @@ void Base::getIRAFAlignCmd()
 
 void Base::getMaskColorCmd()
 {
-  Tcl_AppendResult(interp, maskColorName, NULL);
+  Tcl_AppendResult(interp, "red", NULL);
 }
 
 void Base::getMaskMarkCmd()
 {
-  if (maskMark)
-    Tcl_AppendResult(interp, "1", NULL);
-  else
-    Tcl_AppendResult(interp, "0", NULL);
+  Tcl_AppendResult(interp, "1", NULL);
 }
 
 void Base::getMaskTransparencyCmd()
 {
-  printDouble((1-maskAlpha)*100.);
+  printDouble(0);
 }
 
 void Base::getMinMaxCmd()
@@ -2521,20 +2518,6 @@ void Base::matchCmd(const char* xxname1, const char* yyname1,
 			    xxname2, yyname2, sys2, sky2, 
 			    rad, sys, dist, 
 			    rrname);
-}
-
-void Base::maskColorCmd(const char* color)
-{
-  if (maskColorName)
-    delete [] maskColorName;
-
-  maskColorName = dupstr(color);
-}
-
-void Base::maskTransparencyCmd(float t)
-{
-  maskAlpha = 1-(t/100.);
-  update(BASE);
 }
 
 void Base::nanColorCmd(const char* color)

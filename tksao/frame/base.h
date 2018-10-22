@@ -782,17 +782,17 @@ public:
   void hasFitsCubeCmd();
   void hasFitsMosaicCmd();
 
-  void loadFitsAllocCmd(const char*, const char*, LayerType);
-  void loadFitsAllocGZCmd(const char*, const char*, LayerType);
-  void loadFitsChannelCmd(const char*, const char*, LayerType);
-  void loadFitsMMapCmd(const char*, LayerType);
-  void loadFitsSMMapCmd(const char*, const char*, LayerType);
+  virtual void loadFitsAllocCmd(const char*, const char*, LayerType);
+  virtual void loadFitsAllocGZCmd(const char*, const char*, LayerType);
+  virtual void loadFitsChannelCmd(const char*, const char*, LayerType);
+  virtual void loadFitsMMapCmd(const char*, LayerType);
+  virtual void loadFitsSMMapCmd(const char*, const char*, LayerType);
   virtual void loadFitsMMapIncrCmd(const char*, LayerType);
-  void loadFitsShareCmd(ShmType, int, const char*, LayerType);
-  void loadFitsSShareCmd(ShmType, int, int, const char*, LayerType);
-  void loadFitsSocketCmd(int, const char*, LayerType);
-  void loadFitsSocketGZCmd(int, const char*, LayerType);
-  void loadFitsVarCmd(const char*, const char*, LayerType);
+  virtual void loadFitsShareCmd(ShmType, int, const char*, LayerType);
+  virtual void loadFitsSShareCmd(ShmType, int, int, const char*, LayerType);
+  virtual void loadFitsSocketCmd(int, const char*, LayerType);
+  virtual void loadFitsSocketGZCmd(int, const char*, LayerType);
+  virtual void loadFitsVarCmd(const char*, const char*, LayerType);
 
   void loadArrAllocCmd(const char*, const char*, LayerType);
   void loadArrAllocGZCmd(const char*, const char*, LayerType);

@@ -20,101 +20,87 @@
 
 void Base::loadFitsAllocCmd(const char* ch, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageFitsAlloc(currentContext, interp, 
 					  ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->load(ALLOC, fn, img), ll);
+  loadDone(currentContext->load(ALLOC, fn, img));
 }
 
 void Base::loadFitsAllocGZCmd(const char* ch, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageFitsAllocGZ(currentContext, interp, 
 					    ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->load(ALLOCGZ, fn, img), ll);
+  loadDone(currentContext->load(ALLOCGZ, fn, img));
 }
 
-void Base::loadFitsChannelCmd(const char* ch, const char* fn,LayerType ll)
+void Base::loadFitsChannelCmd(const char* ch, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageFitsChannel(currentContext, interp, 
-					    ch, fn, 
-					    FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->load(CHANNEL, fn, img), ll);
+					    ch, fn, FitsFile::NOFLUSH, 1);
+  loadDone(currentContext->load(CHANNEL, fn, img));
 }
 
 void Base::loadFitsMMapCmd(const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
-  FitsImage* img = new FitsImageFitsMMap(currentContext, interp, 
-					 fn, 1);
-  loadDone(currentContext->load(MMAP, fn, img), ll);
+  unloadFits();
+  FitsImage* img = new FitsImageFitsMMap(currentContext, interp, fn, 1);
+  loadDone(currentContext->load(MMAP, fn, img));
 }
 
 void Base::loadFitsSMMapCmd(const char* hdr, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
-  FitsImage* img = new FitsImageFitsSMMap(currentContext, interp, 
-					  hdr, fn, 1);
-  loadDone(currentContext->load(SMMAP, fn, img), ll);
+  unloadFits();
+  FitsImage* img = new FitsImageFitsSMMap(currentContext, interp, hdr, fn, 1);
+  loadDone(currentContext->load(SMMAP, fn, img));
 }
 
 void Base::loadFitsMMapIncrCmd(const char* fn, LayerType ll)
 {
   unloadFits();
   FitsImage* img = new FitsImageFitsMMapIncr(currentContext, interp, fn, 1);
-  loadDone(currentContext->load(MMAPINCR, fn, img), ll);
+  loadDone(currentContext->load(MMAPINCR, fn, img));
 }
 
 void Base::loadFitsShareCmd(ShmType stype, int id, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
-  FitsImage* img = new FitsImageFitsShare(currentContext, interp, 
+  unloadFits();
+  FitsImage* img = new FitsImageFitsShare(currentContext, interp,
 					  stype, id, fn, 1);
-  loadDone(currentContext->load(SHARE, fn, img), ll);
+  loadDone(currentContext->load(SHARE, fn, img));
 }
 
 void Base::loadFitsSShareCmd(ShmType stype, int hdr, int id, 
 			     const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageFitsSShare(currentContext, interp, 
 					   stype, hdr, id, fn, 1);
-  loadDone(currentContext->load(SSHARE, fn, img), ll);
+  loadDone(currentContext->load(SSHARE, fn, img));
 }
 
 void Base::loadFitsSocketCmd(int s, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageFitsSocket(currentContext, interp, 
 					   s, fn, FitsFile::FLUSH, 1);
-  loadDone(currentContext->load(SOCKET, fn, img), ll);
+  loadDone(currentContext->load(SOCKET, fn, img));
 }
 
 void Base::loadFitsSocketGZCmd(int s, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageFitsSocketGZ(currentContext, interp, 
 					     s, fn, FitsFile::FLUSH, 1);
-  loadDone(currentContext->load(SOCKETGZ, fn, img), ll);
+  loadDone(currentContext->load(SOCKETGZ, fn, img));
 }
 
 void Base::loadFitsVarCmd(const char* ch, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
-  FitsImage* img = new FitsImageFitsVar(currentContext, interp, 
-					ch, fn, 1);
-  loadDone(currentContext->load(VAR, fn, img), ll);
+  unloadFits();
+  FitsImage* img = new FitsImageFitsVar(currentContext, interp, ch, fn, 1);
+  loadDone(currentContext->load(VAR, fn, img));
 }
 
 // *** Array ***
@@ -208,7 +194,7 @@ void Base::loadENVISMMapCmd(const char* hdr, const char* fn)
 {
   unloadFits();
   FitsImage* img = new FitsImageENVISMMap(currentContext, interp, hdr, fn, 1);
-  loadDone(currentContext->load(SMMAP, fn, img), IMG);
+  loadDone(currentContext->load(SMMAP, fn, img));
 }
 
 // *** NRRD ***
@@ -275,14 +261,14 @@ void Base::loadPhotoCmd(const char* ph, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImagePhoto(currentContext, interp, 
 				      ph, fn, 1);
-  loadDone(currentContext->load(PHOTO, fn, img), IMG);
+  loadDone(currentContext->load(PHOTO, fn, img));
 }
 
 void Base::loadSlicePhotoCmd(const char* ph, const char* fn)
 {
   FitsImage* img = new FitsImagePhoto(currentContext, interp,
 				      ph, fn, 1);
-  loadDone(currentContext->loadSlice(PHOTO, fn, img), IMG);
+  loadDone(currentContext->loadSlice(PHOTO, fn, img));
 }
 
 // *** Data Cube ***
@@ -292,7 +278,7 @@ void Base::loadExtCubeAllocCmd(const char* ch, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsAlloc(currentContext, interp, 
 					  ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadExtCube(ALLOC, fn, img), IMG);
+  loadDone(currentContext->loadExtCube(ALLOC, fn, img));
 }
 
 void Base::loadExtCubeAllocGZCmd(const char* ch, const char* fn)
@@ -300,7 +286,7 @@ void Base::loadExtCubeAllocGZCmd(const char* ch, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsAllocGZ(currentContext, interp, 
 					    ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadExtCube(ALLOCGZ, fn, img), IMG);
+  loadDone(currentContext->loadExtCube(ALLOCGZ, fn, img));
 }
 
 void Base::loadExtCubeChannelCmd(const char* ch, const char* fn)
@@ -309,7 +295,7 @@ void Base::loadExtCubeChannelCmd(const char* ch, const char* fn)
   FitsImage* img = new FitsImageFitsChannel(currentContext, interp,
 					    ch, fn, 
 					    FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadExtCube(CHANNEL, fn, img), IMG);
+  loadDone(currentContext->loadExtCube(CHANNEL, fn, img));
 }
 
 void Base::loadExtCubeMMapCmd(const char* fn)
@@ -317,7 +303,7 @@ void Base::loadExtCubeMMapCmd(const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsMMap(currentContext, interp,
 					 fn, 1);
-  loadDone(currentContext->loadExtCube(MMAP, fn, img), IMG);
+  loadDone(currentContext->loadExtCube(MMAP, fn, img));
 }
 
 void Base::loadExtCubeMMapIncrCmd(const char* fn)
@@ -325,7 +311,7 @@ void Base::loadExtCubeMMapIncrCmd(const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsMMapIncr(currentContext, interp,
 					     fn, 1);
-  loadDone(currentContext->loadExtCube(MMAPINCR, fn, img), IMG);
+  loadDone(currentContext->loadExtCube(MMAPINCR, fn, img));
 }
 
 void Base::loadExtCubeShareCmd(ShmType stype, int id, const char* fn)
@@ -333,7 +319,7 @@ void Base::loadExtCubeShareCmd(ShmType stype, int id, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsShare(currentContext, interp,
 					  stype, id, fn, 1);
-  loadDone(currentContext->loadExtCube(SHARE, fn, img), IMG);
+  loadDone(currentContext->loadExtCube(SHARE, fn, img));
 }
 
 void Base::loadExtCubeSocketCmd(int s, const char* fn)
@@ -341,7 +327,7 @@ void Base::loadExtCubeSocketCmd(int s, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsSocket(currentContext, interp,
 					   s, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadExtCube(SOCKET, fn, img), IMG);
+  loadDone(currentContext->loadExtCube(SOCKET, fn, img));
 }
 
 void Base::loadExtCubeSocketGZCmd(int s, const char* fn)
@@ -349,7 +335,7 @@ void Base::loadExtCubeSocketGZCmd(int s, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsSocketGZ(currentContext, interp,
 					     s, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadExtCube(SOCKETGZ, fn, img), IMG);
+  loadDone(currentContext->loadExtCube(SOCKETGZ, fn, img));
 }
 
 void Base::loadExtCubeVarCmd(const char* ch, const char* fn)
@@ -357,7 +343,7 @@ void Base::loadExtCubeVarCmd(const char* ch, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsVar(currentContext, interp,
 					ch, fn, 1);
-  loadDone(currentContext->loadExtCube(VAR, fn, img), IMG);
+  loadDone(currentContext->loadExtCube(VAR, fn, img));
 }
 
 // *** Slice ***
@@ -366,14 +352,14 @@ void Base::loadSliceAllocCmd(const char* ch, const char* fn)
 {
   FitsImage* img = new FitsImageFitsAlloc(currentContext, interp,
 					  ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadSlice(ALLOC, fn, img), IMG);
+  loadDone(currentContext->loadSlice(ALLOC, fn, img));
 }
 
 void Base::loadSliceAllocGZCmd(const char* ch, const char* fn)
 {
   FitsImage* img = new FitsImageFitsAllocGZ(currentContext, interp,
 					    ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadSlice(ALLOCGZ, fn, img), IMG);
+  loadDone(currentContext->loadSlice(ALLOCGZ, fn, img));
 }
 
 void Base::loadSliceChannelCmd(const char* ch, const char* fn)
@@ -381,63 +367,63 @@ void Base::loadSliceChannelCmd(const char* ch, const char* fn)
   FitsImage* img = new FitsImageFitsChannel(currentContext, interp,
 					    ch, fn,
 					    FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadSlice(CHANNEL, fn, img), IMG);
+  loadDone(currentContext->loadSlice(CHANNEL, fn, img));
 }
 
 void Base::loadSliceMMapCmd(const char* fn)
 {
   FitsImage* img = new FitsImageFitsMMap(currentContext, interp,
 					 fn, 1);
-  loadDone(currentContext->loadSlice(MMAP, fn, img), IMG);
+  loadDone(currentContext->loadSlice(MMAP, fn, img));
 }
 
 void Base::loadSliceSMMapCmd(const char* hdr, const char* fn)
 {
   FitsImage* img = new FitsImageFitsSMMap(currentContext, interp,
 					  hdr, fn, 1);
-  loadDone(currentContext->loadSlice(MMAP, fn, img), IMG);
+  loadDone(currentContext->loadSlice(MMAP, fn, img));
 }
 
 void Base::loadSliceMMapIncrCmd(const char* fn)
 {
   FitsImage* img = new FitsImageFitsMMapIncr(currentContext, interp,
 					     fn, 1);
-  loadDone(currentContext->loadSlice(MMAPINCR, fn, img), IMG);
+  loadDone(currentContext->loadSlice(MMAPINCR, fn, img));
 }
 
 void Base::loadSliceShareCmd(ShmType stype, int id, const char* fn)
 {
   FitsImage* img = new FitsImageFitsShare(currentContext, interp,
 					  stype, id, fn, 1);
-  loadDone(currentContext->loadSlice(SHARE, fn, img), IMG);
+  loadDone(currentContext->loadSlice(SHARE, fn, img));
 }
 
 void Base::loadSliceSShareCmd(ShmType stype, int hdr, int id, const char* fn)
 {
   FitsImage* img = new FitsImageFitsSShare(currentContext, interp,
 					   stype, hdr, id, fn, 1);
-  loadDone(currentContext->loadSlice(SSHARE, fn, img), IMG);
+  loadDone(currentContext->loadSlice(SSHARE, fn, img));
 }
 
 void Base::loadSliceSocketCmd(int s, const char* fn)
 {
   FitsImage* img = new FitsImageFitsSocket(currentContext, interp,
 					   s, fn, FitsFile::FLUSH, 1);
-  loadDone(currentContext->loadSlice(SOCKET, fn, img), IMG);
+  loadDone(currentContext->loadSlice(SOCKET, fn, img));
 }
 
 void Base::loadSliceSocketGZCmd(int s, const char* fn)
 {
   FitsImage* img = new FitsImageFitsSocketGZ(currentContext, interp,
 					     s, fn, FitsFile::FLUSH, 1);
-  loadDone(currentContext->loadSlice(SOCKETGZ, fn, img), IMG);
+  loadDone(currentContext->loadSlice(SOCKETGZ, fn, img));
 }
 
 void Base::loadSliceVarCmd(const char* ch, const char* fn)
 {
   FitsImage* img = new FitsImageFitsVar(currentContext, interp,
 					ch, fn, 1);
-  loadDone(currentContext->loadSlice(VAR, fn, img), IMG);
+  loadDone(currentContext->loadSlice(VAR, fn, img));
 }
 
 // *** Mosaic Image ***
@@ -639,7 +625,7 @@ void Base::loadMosaicImageWFPC2AllocCmd(const char* ch, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsAlloc(currentContext, interp,
 	 ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicWFPC2(ALLOC, fn, img), IMG);
+  loadDone(currentContext->loadMosaicWFPC2(ALLOC, fn, img));
 }
 
 void Base::loadMosaicImageWFPC2AllocGZCmd(const char* ch, const char* fn)
@@ -647,7 +633,7 @@ void Base::loadMosaicImageWFPC2AllocGZCmd(const char* ch, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsAllocGZ(currentContext, interp,
 	 ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicWFPC2(ALLOCGZ, fn, img), IMG);
+  loadDone(currentContext->loadMosaicWFPC2(ALLOCGZ, fn, img));
 }
 
 void Base::loadMosaicImageWFPC2ChannelCmd(const char* ch, const char* fn)
@@ -656,7 +642,7 @@ void Base::loadMosaicImageWFPC2ChannelCmd(const char* ch, const char* fn)
   FitsImage* img = new FitsImageFitsChannel(currentContext, interp,
 					    ch, fn, 
 					    FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicWFPC2(CHANNEL, fn, img), IMG);
+  loadDone(currentContext->loadMosaicWFPC2(CHANNEL, fn, img));
 }
 
 void Base::loadMosaicImageWFPC2MMapCmd(const char* fn)
@@ -664,7 +650,7 @@ void Base::loadMosaicImageWFPC2MMapCmd(const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsMMap(currentContext, interp,
 	 fn, 1);
-  loadDone(currentContext->loadMosaicWFPC2(MMAP, fn, img), IMG);
+  loadDone(currentContext->loadMosaicWFPC2(MMAP, fn, img));
 }
 
 void Base::loadMosaicImageWFPC2MMapIncrCmd(const char* fn)
@@ -672,7 +658,7 @@ void Base::loadMosaicImageWFPC2MMapIncrCmd(const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsMMapIncr(currentContext, interp,
 	 fn, 1);
-  loadDone(currentContext->loadMosaicWFPC2(MMAPINCR, fn, img), IMG);
+  loadDone(currentContext->loadMosaicWFPC2(MMAPINCR, fn, img));
 }
 
 void Base::loadMosaicImageWFPC2ShareCmd(ShmType stype, int id, const char* fn)
@@ -680,7 +666,7 @@ void Base::loadMosaicImageWFPC2ShareCmd(ShmType stype, int id, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsShare(currentContext, interp,
 	 stype, id, fn, 1);
-  loadDone(currentContext->loadMosaicWFPC2(SHARE, fn, img), IMG);
+  loadDone(currentContext->loadMosaicWFPC2(SHARE, fn, img));
 }
 
 void Base::loadMosaicImageWFPC2SocketCmd(int s, const char* fn)
@@ -688,7 +674,7 @@ void Base::loadMosaicImageWFPC2SocketCmd(int s, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsSocket(currentContext, interp,
 	 s, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicWFPC2(SOCKET, fn, img), IMG);
+  loadDone(currentContext->loadMosaicWFPC2(SOCKET, fn, img));
 }
 
 void Base::loadMosaicImageWFPC2SocketGZCmd(int s, const char* fn)
@@ -696,7 +682,7 @@ void Base::loadMosaicImageWFPC2SocketGZCmd(int s, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsSocketGZ(currentContext, interp,
 					     s, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicWFPC2(SOCKETGZ, fn, img), IMG);
+  loadDone(currentContext->loadMosaicWFPC2(SOCKETGZ, fn, img));
 }
 
 void Base::loadMosaicImageWFPC2VarCmd(const char* ch, const char* fn)
@@ -704,7 +690,7 @@ void Base::loadMosaicImageWFPC2VarCmd(const char* ch, const char* fn)
   unloadFits();
   FitsImage* img = new FitsImageFitsVar(currentContext, interp,
 					ch, fn, 1);
-  loadDone(currentContext->loadMosaicWFPC2(VAR, fn, img), IMG);
+  loadDone(currentContext->loadMosaicWFPC2(VAR, fn, img));
 }
 
 // ***

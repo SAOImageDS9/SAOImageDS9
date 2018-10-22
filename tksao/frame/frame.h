@@ -81,7 +81,17 @@ class Frame : public FrameBase {
 
   void savePhotoCmd(const char*);
 
+  void loadFitsAllocCmd(const char*, const char*, LayerType);
+  void loadFitsAllocGZCmd(const char*, const char*, LayerType);
+  void loadFitsChannelCmd(const char*, const char*, LayerType);
+  void loadFitsMMapCmd(const char*, LayerType);
+  void loadFitsSMMapCmd(const char*, const char*, LayerType);
   void loadFitsMMapIncrCmd(const char*, LayerType);
+  void loadFitsShareCmd(ShmType, int, const char*, LayerType);
+  void loadFitsSShareCmd(ShmType, int, int, const char*, LayerType);
+  void loadFitsSocketCmd(int, const char*, LayerType);
+  void loadFitsSocketGZCmd(int, const char*, LayerType);
+  void loadFitsVarCmd(const char*, const char*, LayerType);
 };
 
 #endif

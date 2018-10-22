@@ -696,7 +696,7 @@ Vector Context::getMinMax()
 }
 
 int Context::load(Base::MemType which, const char* fn, 
-		  FitsImage* img, Base::LayerType ll)
+		  FitsImage* img)
 {
   if (!img || !img->isValid()) {
     if (img)
@@ -902,8 +902,8 @@ void Context::loadInit(int cnt, Base::MosaicType type, Coord::CoordSystem sys)
 }
 
 int Context::loadMosaic(Base::MemType which, const char* fn, 
-			FitsImage* img, Base::LayerType ll, 
-			Base::MosaicType type, Coord::CoordSystem sys)
+			FitsImage* img, Base::MosaicType type,
+			Coord::CoordSystem sys)
 {
   if (!img || !img->isValid()) {
     if (img)

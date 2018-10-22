@@ -710,7 +710,7 @@ void Frame::iisCmd(int width, int height)
 
   FitsImage* img = new FitsImageIIS(currentContext, interp, width, height);
 
-  loadDone(currentContext->load(ALLOC, "", img, IMG),IMG);
+  loadDone(currentContext->load(ALLOC, "", img), IMG);
 }
 
 void Frame::iisEraseCmd()

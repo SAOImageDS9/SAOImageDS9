@@ -167,11 +167,11 @@ class Context {
   int isMosaic() {return mosaicCount_>1 ? 1 : 0;}
   int isCube() {return nhdu()>1 ? 1 : 0;}
 
-  int load(Base::MemType, const char*, FitsImage*, Base::LayerType);
+  int load(Base::MemType, const char*, FitsImage*);
   int loadExtCube(Base::MemType, const char*, FitsImage*);
   int loadSlice(Base::MemType, const char*, FitsImage*);
   int loadMosaic(Base::MemType, const char*, FitsImage*, 
-		 Base::LayerType, Base::MosaicType, Coord::CoordSystem);
+		 Base::MosaicType, Coord::CoordSystem);
   int loadMosaicImage(Base::MemType, const char*, FitsImage*, 
 		      Base::LayerType, Base::MosaicType, Coord::CoordSystem);
   int loadMosaicWFPC2(Base::MemType, const char*, FitsImage*);

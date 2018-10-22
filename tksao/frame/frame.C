@@ -366,6 +366,9 @@ void Frame::unloadFits()
 
   context->unload();
 
+  // delete any masks
+  mask.deleteAll();
+
   FrameBase::unloadFits();
 }
 
@@ -798,10 +801,13 @@ void Frame::loadFitsMMapIncrCmd(const char* fn, LayerType ll)
 {
   switch (ll) {
   case IMG:
-    Base::loadFitsMMapIncrCmd(fn,ll);
+    Base::loadFitsMMapIncrCmd(fn, ll);
     break;
   case MASK:
-    
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    FitsImage* img = new FitsImageFitsMMapIncr(msk->context(), interp, fn, 1);
+    loadDone(msk->context()->load(MMAPINCR, fn, img));
     break;
   }
 }

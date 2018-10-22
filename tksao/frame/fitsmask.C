@@ -6,14 +6,16 @@
 
 #include "fitsmask.h"
 #include "base.h"
-#include "fitsimage.h"
+#include "context.h"
 
-FitsMask::FitsMask(Base* pp, Context* cc, char* clr, int mrk) 
-  : parent_(pp), context_(cc)
+FitsMask::FitsMask(Base* pp, char* clr, int mrk)
 {
+  context_ = new Context();
+  context_->parent(pp);
+
   colorName_ = dupstr(clr);
-  color_ = parent_->getXColor(colorName_);
-  parent_->encodeTrueColor(color_, trueColor_);
+  color_ = pp->getXColor(colorName_);
+  pp->encodeTrueColor(color_, trueColor_);
   mark_ = mrk;
 
   next_ = NULL;
@@ -24,5 +26,10 @@ FitsMask::~FitsMask()
 {
   if (colorName_)
     delete [] colorName_;
+
+  if (context_) {
+    context_->unload();
+    delete context_;
+  }
 }
 

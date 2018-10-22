@@ -695,7 +695,7 @@ void Base::loadMosaicImageWFPC2SocketGZCmd(int s, const char* fn)
 {
   unloadFits();
   FitsImage* img = new FitsImageFitsSocketGZ(currentContext, interp,
-	 s, fn, FitsFile::NOFLUSH, 1);
+					     s, fn, FitsFile::NOFLUSH, 1);
   loadDone(currentContext->loadMosaicWFPC2(SOCKETGZ, fn, img), IMG);
 }
 

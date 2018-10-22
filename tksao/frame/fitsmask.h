@@ -12,7 +12,6 @@ class Context;
 
 class FitsMask {
  private:
-  Base* parent_;
   Context* context_;
 
   char* colorName_;
@@ -26,7 +25,7 @@ class FitsMask {
   FitsMask* next_;
 
  public:
-  FitsMask(Base*, Context*, char*, int);
+  FitsMask(Base*, char*, int);
   virtual ~FitsMask();
 
   Context* context() {return context_;}

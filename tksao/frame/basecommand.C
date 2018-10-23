@@ -1942,6 +1942,11 @@ void Base::getMaskMarkCmd()
   Tcl_AppendResult(interp, "1", NULL);
 }
 
+void Base::getMaskSystemCmd()
+{
+  Tcl_AppendResult(interp, "physical", NULL);
+}
+
 void Base::getMaskTransparencyCmd()
 {
   printDouble(0);

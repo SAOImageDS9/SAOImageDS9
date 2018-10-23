@@ -1226,7 +1226,8 @@ getGrid : /* empty */ {fr->getGridCmd();}
 
 getMask	: COLOR_ {fr->getMaskColorCmd();}
 	| MARK_ {fr->getMaskMarkCmd();}
-	| TRANSPARENCY_{fr->getMaskTransparencyCmd();}
+        | SYSTEM_ {fr->getMaskSystemCmd();}
+	| TRANSPARENCY_ {fr->getMaskTransparencyCmd();}
 	;
 
 getPan : PRESERVE_ {fr->getPanPreserveCmd();}
@@ -2531,6 +2532,7 @@ callback : CALLBACK_ '=' markerCallBack STRING STRING {cblist.append(
 mask	: CLEAR_ {fr->maskClearCmd();}
 	| COLOR_ STRING {fr->maskColorCmd($2);}
 	| MARK_ INT {fr->maskMarkCmd($2);}
+        | SYSTEM_ coordSystem {fr->maskSystemCmd((Coord::CoordSystem)$2);}
 	| TRANSPARENCY_ numeric {fr->maskTransparencyCmd($2);}
 	;
 

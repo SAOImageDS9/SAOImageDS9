@@ -29,6 +29,7 @@ class Frame : public FrameBase {
   char* maskColorName;
   float maskAlpha;
   int maskMark;
+  Coord::CoordSystem maskSystem;
 
  private:
   unsigned char* blend(unsigned char*, unsigned char*, int, int);
@@ -53,14 +54,17 @@ class Frame : public FrameBase {
   Frame(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~Frame();
 
+  void maskClearCmd();
+
   void getMaskColorCmd();
   void getMaskMarkCmd();
+  void getMaskSystemCmd();
   void getMaskTransparencyCmd();
 
-  void maskClearCmd();
   void maskColorCmd(const char*);
-  void maskTransparencyCmd(float);
   void maskMarkCmd(int mm) {maskMark=mm;}
+  void maskSystemCmd(Coord::CoordSystem);
+  void maskTransparencyCmd(float);
 
   void colormapCmd(int, float, float, int, unsigned char*, int);
   void colormapBeginCmd();

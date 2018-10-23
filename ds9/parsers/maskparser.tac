@@ -2,6 +2,8 @@
 %}
 #include def.tin
 
+#include coordsys.tin
+#include wcssys.tin
 #include numeric.tin
 #include string.tin
 
@@ -12,10 +14,13 @@
 %token COLOR_
 %token MARK_
 %token OPEN_
+%token SYSTEM_
 %token TRANSPARENCY_
 
 %%
 
+#include coordsys.trl
+#include wcssys.trl
 #include numeric.trl
 
 command : mask 
@@ -28,7 +33,12 @@ mask : {global parse; set parse(result) mask}
  | CLEAR_ {MaskClear}
  | COLOR_ STRING_ {ProcessCmdSet mask color $2 MaskColor}
  | MARK_ INT_ {ProcessCmdSet mask mark $2 MaskMark}
+ | SYSTEM_ system
  | TRANSPARENCY_ numeric {ProcessCmdSet mask transparency $2 MaskTransparency}
+ ;
+
+system : coordsys {ProcessCmdSet mask system $1 MaskSystem}
+ | wcssys {ProcessCmdSet mask system $1 MaskSystem}
  ;
 
 %%

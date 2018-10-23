@@ -34,6 +34,7 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   maskColorName = dupstr("red");
   maskAlpha = 1;
   maskMark = 1;
+  maskSystem = Coord::PHYSICAL;
 }
 
 Frame::~Frame()
@@ -387,6 +388,11 @@ void Frame::getMaskMarkCmd()
     Tcl_AppendResult(interp, "0", NULL);
 }
 
+void Frame::getMaskSystemCmd()
+{
+  printCoordSystem(maskSystem);
+}
+
 void Frame::getMaskTransparencyCmd()
 {
   printDouble((1-maskAlpha)*100.);
@@ -404,6 +410,11 @@ void Frame::maskColorCmd(const char* color)
     delete [] maskColorName;
 
   maskColorName = dupstr(color);
+}
+
+void Frame::maskSystemCmd(Coord::CoordSystem sys)
+{
+  maskSystem = sys;
 }
 
 void Frame::maskTransparencyCmd(float tt)

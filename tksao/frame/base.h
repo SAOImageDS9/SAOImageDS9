@@ -1553,10 +1553,12 @@ public:
   // Mask Commands
   virtual void getMaskColorCmd();
   virtual void getMaskMarkCmd();
+  virtual void getMaskSystemCmd();
   virtual void getMaskTransparencyCmd();
 
   virtual void maskClearCmd() {};
   virtual void maskColorCmd(const char*) {};
+  virtual void maskSystemCmd(Coord::CoordSystem) {};
   virtual void maskTransparencyCmd(float) {};
   virtual void maskMarkCmd(int) {};
 

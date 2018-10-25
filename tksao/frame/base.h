@@ -838,15 +838,15 @@ public:
   void loadSliceSocketGZCmd(int, const char*);
   void loadSliceVarCmd(const char*, const char*);
 
-  void loadMosaicImageAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicImageAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicImageChannelCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicImageMMapCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
-  void loadMosaicImageMMapIncrCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
-  void loadMosaicImageShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, const char*, LayerType);
-  void loadMosaicImageSocketCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
-  void loadMosaicImageSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
-  void loadMosaicImageVarCmd(MosaicType, Coord::CoordSystem, const char*,const char*, LayerType);
+  virtual void loadMosaicImageAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicImageAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicImageChannelCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicImageMMapCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
+  virtual void loadMosaicImageMMapIncrCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
+  virtual void loadMosaicImageShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, const char*, LayerType);
+  virtual void loadMosaicImageSocketCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
+  virtual void loadMosaicImageSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
+  virtual void loadMosaicImageVarCmd(MosaicType, Coord::CoordSystem, const char*,const char*, LayerType);
 
   void loadMosaicAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
   void loadMosaicAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);

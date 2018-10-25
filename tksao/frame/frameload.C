@@ -611,7 +611,6 @@ void Frame::loadMosaicImageVarCmd(MosaicType type, Coord::CoordSystem sys,
     loadDone(cc->loadMosaicImage(VAR, fn, img, type, sys));
     break;
   }
-
 }
 
 // Support

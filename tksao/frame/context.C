@@ -1421,7 +1421,7 @@ int Context::loadMosaicWFPC2(Base::MemType which, const char* fn,
       ptr->wfpc2WCS(istr);
 
       Matrix mm = parent_->calcAlignWCS(bfits_, ptr, Coord::WCS,
-				       Coord::WCS, Coord::FK5);
+					Coord::WCS, Coord::FK5);
       ptr->setwcsToRef(mm);
 
       ptr = ptr->nextMosaic();

@@ -379,7 +379,7 @@ public:
   virtual int isFrameRGB() {return 0;}
 
   virtual void loadDone(int, LayerType);
-  void loadDone(int);
+  virtual void loadDone(int);
 
   void markerAnalysisHistogram(Marker*, double**, double**, const BBox&, int);
   int markerAnalysisPlot2d(Marker*, double**, double**, double**, double**,

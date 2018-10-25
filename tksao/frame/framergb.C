@@ -709,16 +709,6 @@ void FrameRGB::reset()
   Base::reset();
 }
 
-void FrameRGB::rgbAlignWCS(int ii)
-{
-  if (keyContext->fits  && keyContext->fits->hasWCS(rgbSystem))
-    rgb[ii] = calcAlignWCS(keyContext->fits, context[ii].fits, rgbSystem,
-			   rgbSystem, Coord::FK5);
-
-  if (DebugRGB)
-    cerr << "rgbAlignWCS " << rgb[ii] << endl;
-}
-
 void FrameRGB::setBinCursor()
 {
   for (int ii=0; ii<3; ii++)
@@ -839,7 +829,8 @@ void FrameRGB::updateRGBMatrices()
 	    keyContext->fits->detectorToImage;
 	break;
       default:
-	rgbAlignWCS(ii);
+	if (keyContext->fits->hasWCS(rgbSystem))
+	  rgb[ii] = calcAlignWCS(keyContext->fits, context[ii].fits, rgbSystem, rgbSystem, Coord::FK5);
 	break;
       }
     }

@@ -13,6 +13,7 @@ class Context;
 class FitsMask {
  private:
   Context* context_;
+  Matrix mm_;
 
   char* colorName_;
   XColor* color_;
@@ -29,6 +30,7 @@ class FitsMask {
   virtual ~FitsMask();
 
   Context* context() {return context_;}
+  Matrix& mm() {return mm_;}
   XColor* color() {return color_;}
   char* trueColor() {return trueColor_;}
   int mark() {return mark_;}

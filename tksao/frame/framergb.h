@@ -43,7 +43,6 @@ class FrameRGB : public FrameBase {
   void loadRGBFinish();
 
   void reset();
-  void rgbAlignWCS(int);
 
   void setBinCursor();
   void setKeyFits();

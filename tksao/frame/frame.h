@@ -49,6 +49,8 @@ class Frame : public FrameBase {
   unsigned char* fillMask(FitsMask*, int, int,  Coord::InternalSystem);
   int validColorScale() {return colorScale ? 1 : 0;}
   void updateColorCells(unsigned char*, int);
+  void updateMaskMatrices();
+  void loadDone(int);
 
  public:
   Frame(Tcl_Interp*, Tk_Canvas, Tk_Item*);

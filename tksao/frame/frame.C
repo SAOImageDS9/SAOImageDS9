@@ -291,7 +291,7 @@ void Frame::pushMatrices()
   // now any masks
   FitsMask* msk = mask.tail();
   while (msk) {
-    Base::pushMatrices(msk->context()->fits, rgbToRef);
+    Base::pushMatrices(msk->context()->fits, msk->mm());
     msk = msk->previous();
   }
 }
@@ -354,6 +354,51 @@ void Frame::updateColorCells(unsigned char* cells, int cnt)
     return;
   }
   memcpy(colorCells, cells, cnt*3);
+}
+
+void Frame::updateMaskMatrices()
+{
+  // image,pysical,amplifier,detector are ok, check for wcs
+  if (maskSystem >= Coord::WCS) {
+    FitsMask* mptr = mask.head();
+    while (mptr) {
+      if (mptr->context()->fits && !mptr->context()->fits->hasWCS(maskSystem)) {
+	maskSystem = Coord::IMAGE;
+	break;
+      }
+      mptr = mptr->next();
+    }
+  }
+
+  // mask align
+  FitsMask* mptr = mask.head();
+  while (mptr) {
+    mptr->mm().identity();
+    if (mptr->context()->fits) {
+      switch (maskSystem) {
+      case Coord::IMAGE:
+	// nothing to do here
+	break;
+      case Coord::PHYSICAL:
+	mptr->mm() = mptr->context()->fits->imageToPhysical *
+	  keyContext->fits->physicalToImage;
+	break;
+      case Coord::AMPLIFIER:
+	mptr->mm() = mptr->context()->fits->imageToAmplifier *
+	  keyContext->fits->amplifierToImage;
+	break;
+      case Coord::DETECTOR:
+	mptr->mm() = mptr->context()->fits->imageToDetector *
+	  keyContext->fits->detectorToImage;
+	break;
+      default:
+	mptr->mm() =
+	  calcAlignWCS(keyContext->fits, mptr->context()->fits, maskSystem, maskSystem, Coord::FK5);
+	break;
+      }
+    }
+    mptr = mptr->next();
+  }
 }
 
 void Frame::unloadFits()
@@ -681,12 +726,10 @@ void Frame::getTypeCmd()
 void Frame::iisCmd(int width, int height)
 {
   unloadAllFits();
-
   context->setIIS();
 
   FitsImage* img = new FitsImageIIS(currentContext, interp, width, height);
-
-  loadDone(currentContext->load(ALLOC, "", img), IMG);
+  loadDone(currentContext->load(ALLOC, "", img));
 }
 
 void Frame::iisEraseCmd()
@@ -991,4 +1034,11 @@ void Frame::loadFitsVarCmd(const char* ch, const char* fn, LayerType ll)
     loadDone(cc->load(VAR, fn, img));
     break;
   }
+}
+
+void Frame::loadDone(int rr)
+{
+  if (rr)
+    updateMaskMatrices();
+  Base::loadDone(rr);
 }

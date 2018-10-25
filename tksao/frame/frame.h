@@ -99,6 +99,16 @@ class Frame : public FrameBase {
   void loadFitsSocketCmd(int, const char*, LayerType);
   void loadFitsSocketGZCmd(int, const char*, LayerType);
   void loadFitsVarCmd(const char*, const char*, LayerType);
+
+  void loadArrAllocCmd(const char*, const char*, LayerType);
+  void loadArrAllocGZCmd(const char*, const char*, LayerType);
+  void loadArrChannelCmd(const char*, const char*, LayerType);
+  void loadArrMMapCmd(const char*, LayerType);
+  void loadArrMMapIncrCmd(const char*, LayerType);
+  void loadArrShareCmd(ShmType, int, const char*, LayerType);
+  void loadArrSocketCmd(int, const char*, LayerType);
+  void loadArrSocketGZCmd(int, const char*, LayerType);
+  void loadArrVarCmd(const char*, const char*, LayerType);
 };
 
 #endif

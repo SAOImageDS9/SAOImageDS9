@@ -854,7 +854,7 @@ void Frame::savePhotoCmd(const char* ph)
   }
 }
 
-// load
+// *** Fits ***
 
 void Frame::loadFitsAllocCmd(const char* ch, const char* fn, LayerType ll)
 {
@@ -1041,9 +1041,162 @@ void Frame::loadFitsVarCmd(const char* ch, const char* fn, LayerType ll)
   }
 }
 
+// *** Array ***
+
+void Frame::loadArrAllocCmd(const char* ch, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadArrAllocCmd(ch, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageArrAlloc(cc, interp,
+					   ch, fn, FitsFile::NOFLUSH, 1);
+    loadDone(cc->load(ALLOC, fn, img));
+    break;
+  }
+}
+
+void Frame::loadArrAllocGZCmd(const char* ch, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadArrAllocGZCmd(ch, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageArrAllocGZ(cc, interp,
+					   ch, fn, FitsFile::NOFLUSH, 1);
+    loadDone(cc->load(ALLOCGZ, fn, img));
+    break;
+  }
+}
+
+void Frame::loadArrChannelCmd(const char* ch, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadArrChannelCmd(ch, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageArrChannel(cc, interp,
+					     ch, fn, FitsFile::NOFLUSH, 1);
+    loadDone(cc->load(CHANNEL, fn, img));
+    break;
+  }
+}
+
+void Frame::loadArrMMapCmd(const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadArrMMapCmd(fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageArrMMap(cc, interp, fn, 1);
+    loadDone(cc->load(MMAP, fn, img));
+    break;
+  }
+}
+
+void Frame::loadArrMMapIncrCmd(const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadArrMMapIncrCmd(fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageArrMMapIncr(cc, interp, fn, 1);
+    loadDone(cc->load(MMAPINCR, fn, img));
+    break;
+  }
+}
+
+void Frame::loadArrShareCmd(ShmType stype, int id, const char* fn, 
+			   LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadArrShareCmd(stype, id, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageArrShare(cc, interp, stype, id, fn, 1);
+    loadDone(cc->load(SHARE, fn, img));
+    break;
+  }
+}
+
+void Frame::loadArrSocketCmd(int s, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadArrSocketCmd(s, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageArrSocket(cc, interp,
+					    s, fn, FitsFile::FLUSH, 1);
+    loadDone(cc->load(SOCKET, fn, img));
+    break;
+  }
+}
+
+void Frame::loadArrSocketGZCmd(int s, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadArrSocketGZCmd(s, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageArrSocketGZ(cc, interp,
+					      s, fn, FitsFile::FLUSH, 1);
+    loadDone(cc->load(SOCKETGZ, fn, img));
+    break;
+  }
+}
+
+void Frame::loadArrVarCmd(const char* ch, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadArrVarCmd(ch, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageArrVar(cc, interp, ch, fn, 1);
+    loadDone(cc->load(VAR, fn, img));
+    break;
+  }
+}
+
 void Frame::loadDone(int rr)
 {
   if (rr)
     updateMaskMatrices();
   Base::loadDone(rr);
 }
+

@@ -107,85 +107,76 @@ void Base::loadFitsVarCmd(const char* ch, const char* fn, LayerType ll)
 
 void Base::loadArrAllocCmd(const char* ch, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageArrAlloc(currentContext, interp,
 					 ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->load(ALLOC, fn, img), ll);
+  loadDone(currentContext->load(ALLOC, fn, img));
 }
 
 void Base::loadArrAllocGZCmd(const char* ch, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageArrAllocGZ(currentContext, interp,
 					   ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->load(ALLOCGZ, fn, img), ll);
+  loadDone(currentContext->load(ALLOCGZ, fn, img));
 }
 
 void Base::loadArrChannelCmd(const char* ch, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageArrChannel(currentContext, interp,
 					   ch, fn, 
 					   FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->load(CHANNEL, fn, img), ll);
+  loadDone(currentContext->load(CHANNEL, fn, img));
 }
 
 void Base::loadArrMMapCmd(const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageArrMMap(currentContext, interp,
 					fn, 1);
-  loadDone(currentContext->load(MMAP, fn, img), ll);
+  loadDone(currentContext->load(MMAP, fn, img));
 }
 
 void Base::loadArrMMapIncrCmd(const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageArrMMapIncr(currentContext, interp,
 					    fn, 1);
-  loadDone(currentContext->load(MMAPINCR, fn, img), ll);
+  loadDone(currentContext->load(MMAPINCR, fn, img));
 }
 
 void Base::loadArrShareCmd(ShmType stype, int id, const char* fn, 
 			   LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageArrShare(currentContext, interp,
 					 stype, id, fn, 1);
-  loadDone(currentContext->load(SHARE, fn, img), ll);
+  loadDone(currentContext->load(SHARE, fn, img));
 }
 
 void Base::loadArrSocketCmd(int s, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageArrSocket(currentContext, interp,
 					  s, fn, FitsFile::FLUSH, 1);
-  loadDone(currentContext->load(SOCKET, fn, img), ll);
+  loadDone(currentContext->load(SOCKET, fn, img));
 }
 
 void Base::loadArrSocketGZCmd(int s, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageArrSocketGZ(currentContext, interp,
 					    s, fn, FitsFile::FLUSH, 1);
-  loadDone(currentContext->load(SOCKETGZ, fn, img), ll);
+  loadDone(currentContext->load(SOCKETGZ, fn, img));
 }
 
 void Base::loadArrVarCmd(const char* ch, const char* fn, LayerType ll)
 {
-  if (ll == IMG)
-    unloadFits();
+  unloadFits();
   FitsImage* img = new FitsImageArrVar(currentContext, interp,
 				       ch, fn, 1);
-  loadDone(currentContext->load(VAR, fn, img), ll);
+  loadDone(currentContext->load(VAR, fn, img));
 }
 
 // *** ENVI ***

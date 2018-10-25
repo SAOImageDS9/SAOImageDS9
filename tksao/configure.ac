@@ -191,6 +191,7 @@ frame/fitsnrrd.C
 frame/fr3dcommand.C
 frame/fr3dmap.C
 frame/frame.C
+frame/frameload.C
 frame/frame3d.C
 frame/frame3dbase.C
 frame/frame3dtruecolor16.C

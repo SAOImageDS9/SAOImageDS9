@@ -343,6 +343,109 @@ void Frame::loadArrVarCmd(const char* ch, const char* fn, LayerType ll)
   }
 }
 
+// *** NRRD ***
+
+void Frame::loadNRRDAllocCmd(const char* ch, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadNRRDAllocCmd(ch, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageNRRDAlloc(cc, interp, 
+					    ch, fn, FitsFile::NOFLUSH, 1);
+    loadDone(cc->load(ALLOC, fn, img));
+    break;
+  }
+}
+
+void Frame::loadNRRDChannelCmd(const char* ch, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadNRRDChannelCmd(ch, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageNRRDChannel(cc, interp, 
+					      ch, fn, FitsFile::NOFLUSH, 1);
+    loadDone(cc->load(CHANNEL, fn, img));
+    break;
+  }
+}
+
+void Frame::loadNRRDMMapCmd(const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadNRRDMMapCmd(fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageNRRDMMap(cc, interp, fn, 1);
+    loadDone(cc->load(MMAP, fn, img));
+    break;
+  }
+}
+
+void Frame::loadNRRDShareCmd(ShmType stype, int id, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadNRRDShareCmd(stype, id, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageNRRDShare(cc, interp, stype, id, fn, 1);
+    loadDone(cc->load(SHARE, fn, img));
+    break;
+  }
+}
+
+void Frame::loadNRRDSocketCmd(int s, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadNRRDSocketCmd(s, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageNRRDSocket(cc, interp, 
+					     s, fn, FitsFile::FLUSH, 1);
+    loadDone(cc->load(SOCKET, fn, img));
+    break;
+  }
+}
+
+void Frame::loadNRRDVarCmd(const char* ch, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadNRRDVarCmd(ch, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageNRRDVar(cc, interp, ch, fn, 1);
+    loadDone(cc->load(VAR, fn, img));
+    break;
+  }
+}
+
+// Support
+
 void Frame::loadDone(int rr)
 {
   if (rr)

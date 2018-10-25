@@ -109,6 +109,13 @@ class Frame : public FrameBase {
   void loadArrSocketCmd(int, const char*, LayerType);
   void loadArrSocketGZCmd(int, const char*, LayerType);
   void loadArrVarCmd(const char*, const char*, LayerType);
+
+  void loadNRRDAllocCmd(const char*, const char*, LayerType);
+  void loadNRRDChannelCmd(const char*, const char*, LayerType);
+  void loadNRRDMMapCmd(const char*, LayerType);
+  void loadNRRDShareCmd(ShmType, int, const char*, LayerType);
+  void loadNRRDSocketCmd(int, const char*, LayerType);
+  void loadNRRDVarCmd(const char*, const char*, LayerType);
 };
 
 #endif

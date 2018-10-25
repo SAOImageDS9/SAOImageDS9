@@ -806,12 +806,12 @@ public:
 
   void loadENVISMMapCmd(const char*, const char*);
 
-  void loadNRRDAllocCmd(const char*, const char*, LayerType);
-  void loadNRRDChannelCmd(const char*, const char*, LayerType);
-  void loadNRRDMMapCmd(const char*, LayerType);
-  void loadNRRDShareCmd(ShmType, int, const char*, LayerType);
-  void loadNRRDSocketCmd(int, const char*, LayerType);
-  void loadNRRDVarCmd(const char*, const char*, LayerType);
+  virtual void loadNRRDAllocCmd(const char*, const char*, LayerType);
+  virtual void loadNRRDChannelCmd(const char*, const char*, LayerType);
+  virtual void loadNRRDMMapCmd(const char*, LayerType);
+  virtual void loadNRRDShareCmd(ShmType, int, const char*, LayerType);
+  virtual void loadNRRDSocketCmd(int, const char*, LayerType);
+  virtual void loadNRRDVarCmd(const char*, const char*, LayerType);
 
   virtual void loadPhotoCmd(const char*, const char*);
   virtual void loadSlicePhotoCmd(const char*, const char*);

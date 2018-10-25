@@ -794,15 +794,15 @@ public:
   virtual void loadFitsSocketGZCmd(int, const char*, LayerType);
   virtual void loadFitsVarCmd(const char*, const char*, LayerType);
 
-  void loadArrAllocCmd(const char*, const char*, LayerType);
-  void loadArrAllocGZCmd(const char*, const char*, LayerType);
-  void loadArrChannelCmd(const char*, const char*, LayerType);
-  void loadArrMMapCmd(const char*, LayerType);
-  void loadArrMMapIncrCmd(const char*, LayerType);
-  void loadArrShareCmd(ShmType, int, const char*, LayerType);
-  void loadArrSocketCmd(int, const char*, LayerType);
-  void loadArrSocketGZCmd(int, const char*, LayerType);
-  void loadArrVarCmd(const char*, const char*, LayerType);
+  virtual void loadArrAllocCmd(const char*, const char*, LayerType);
+  virtual void loadArrAllocGZCmd(const char*, const char*, LayerType);
+  virtual void loadArrChannelCmd(const char*, const char*, LayerType);
+  virtual void loadArrMMapCmd(const char*, LayerType);
+  virtual void loadArrMMapIncrCmd(const char*, LayerType);
+  virtual void loadArrShareCmd(ShmType, int, const char*, LayerType);
+  virtual void loadArrSocketCmd(int, const char*, LayerType);
+  virtual void loadArrSocketGZCmd(int, const char*, LayerType);
+  virtual void loadArrVarCmd(const char*, const char*, LayerType);
 
   void loadENVISMMapCmd(const char*, const char*);
 

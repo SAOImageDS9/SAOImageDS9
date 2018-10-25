@@ -5,9 +5,9 @@
 #ifndef __frame_h__
 #define __frame_h__
 
+#include "framebase.h"
 #include "context.h"
 #include "fitsmask.h"
-#include "framebase.h"
 #include "colorscale.h"
 
 // Frame

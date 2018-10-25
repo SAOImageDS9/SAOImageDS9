@@ -2,19 +2,8 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "base.h"
 #include "context.h"
-#include "fitsimage.h"
-
-#include "alloc.h"
-#include "allocgz.h"
-#include "channel.h"
-#include "mmap.h"
-#include "mmapincr.h"
-#include "share.h"
-#include "sshare.h"
-#include "socket.h"
-#include "socketgz.h"
-#include "var.h"
 
 // *** Fits ***
 

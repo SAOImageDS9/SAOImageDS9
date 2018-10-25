@@ -12,8 +12,11 @@ clear	    {return $CLEAR_}
 color	    {return $COLOR_}
 mark	    {return $MARK_}
 open	    {return $OPEN_}
+system	    {return $SYSTEM_}
 transparency {return $TRANSPARENCY_}
 
+#include coordsys.fin
+#include wcssys.fin
 #include numeric.fin
 #include string.fin
 #include ws.fin

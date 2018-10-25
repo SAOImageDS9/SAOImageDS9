@@ -43,6 +43,7 @@ class Frame : public FrameBase {
   void unloadFits();
 
  protected:
+  void alignWCS();
   int isFrame() {return 1;}
 
   unsigned char* fillImage(int width, int height, Coord::InternalSystem);

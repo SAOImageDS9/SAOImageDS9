@@ -20,12 +20,39 @@ proc MaskDef {} {
     array set pmask [array get mask]
 }
 
+proc MaskMark {} {
+    global mask
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) mask mark $mask(mark)
+    }
+}
+
+proc MaskColor {} {
+    global mask
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) mask color $mask(color)
+    }
+}
+
 proc MaskTransparency {} {
     global mask
     global current
 
     if {$current(frame) != {}} {
 	$current(frame) mask transparency $mask(transparency)
+    }
+}
+
+proc MaskSystem {} {
+    global mask
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) mask system $mask(system)
     }
 }
 

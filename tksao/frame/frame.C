@@ -55,6 +55,11 @@ Frame::~Frame()
     delete [] maskColorName;
 }
 
+void Frame::alignWCS() {
+  Base::alignWCS();
+  updateMaskMatrices();
+}
+
 unsigned char* Frame::blend(unsigned char* src, unsigned char* msk,
 			    int width, int height)
 {

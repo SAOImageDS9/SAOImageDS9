@@ -848,17 +848,17 @@ public:
   virtual void loadMosaicImageSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
   virtual void loadMosaicImageVarCmd(MosaicType, Coord::CoordSystem, const char*,const char*, LayerType);
 
-  void loadMosaicAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicChannelCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicMMapCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
-  void loadMosaicSMMapCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicMMapIncrCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
-  void loadMosaicShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, const char*, LayerType);
-  void loadMosaicSShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, int, const char*, LayerType);
-  void loadMosaicSocketCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
-  void loadMosaicSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
-  void loadMosaicVarCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicChannelCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicMMapCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
+  virtual void loadMosaicSMMapCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicMMapIncrCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
+  virtual void loadMosaicShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, const char*, LayerType);
+  virtual void loadMosaicSShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, int, const char*, LayerType);
+  virtual void loadMosaicSocketCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
+  virtual void loadMosaicSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
+  virtual void loadMosaicVarCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
 
   void loadMosaicImageWFPC2AllocCmd(const char*, const char*);
   void loadMosaicImageWFPC2AllocGZCmd(const char*, const char*);

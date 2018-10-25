@@ -378,7 +378,6 @@ public:
   virtual int isFrame3d() {return 0;}
   virtual int isFrameRGB() {return 0;}
 
-  virtual void loadDone(int, LayerType);
   virtual void loadDone(int);
 
   void markerAnalysisHistogram(Marker*, double**, double**, const BBox&, int);

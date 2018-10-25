@@ -654,11 +654,6 @@ void Base::loadMosaicImageWFPC2VarCmd(const char* ch, const char* fn)
 
 // ***
 
-void Base::loadDone(int rr, LayerType ll)
-{
-  loadDone(rr);
-}
-
 void Base::loadDone(int rr)
 {
   if (rr) {

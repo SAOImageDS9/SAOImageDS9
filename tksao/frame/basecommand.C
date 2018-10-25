@@ -40,7 +40,7 @@ void Base::axesOrderCmd(int order)
     //      delete grid;
     //    grid = NULL;
 
-    loadDone(1,IMG);
+    loadDone(1);
   }
 }
 

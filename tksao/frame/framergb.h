@@ -59,7 +59,7 @@ class FrameRGB : public FrameBase {
  protected:
   int isFrameRGB() {return 1;}
 
-  void loadDone(int, LayerType);
+  void loadDone(int);
 
   unsigned char* fillImage(int, int, Coord::InternalSystem);
   void updateColorCells(unsigned char*, int);

@@ -395,7 +395,8 @@ void Frame::loadNRRDMMapCmd(const char* fn, LayerType ll)
   }
 }
 
-void Frame::loadNRRDShareCmd(ShmType stype, int id, const char* fn, LayerType ll)
+void Frame::loadNRRDShareCmd(ShmType stype, int id, const char* fn,
+			     LayerType ll)
 {
   switch (ll) {
   case IMG:
@@ -442,6 +443,175 @@ void Frame::loadNRRDVarCmd(const char* ch, const char* fn, LayerType ll)
     loadDone(cc->load(VAR, fn, img));
     break;
   }
+}
+
+// *** Mosaic Image ***
+
+void Frame::loadMosaicImageAllocCmd(MosaicType type, Coord::CoordSystem sys,
+				    const char* ch, const char* fn,
+				    LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadMosaicImageAllocCmd(type, sys, ch, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageMosaicAlloc(cc, interp,
+					      ch, fn, FitsFile::NOFLUSH, 1);
+    loadDone(cc->loadMosaicImage(ALLOC, fn, img, type, sys));
+    break;
+  }
+
+}
+
+void Frame::loadMosaicImageAllocGZCmd(MosaicType type, Coord::CoordSystem sys,
+				      const char* ch, const char* fn,
+				      LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadMosaicImageAllocGZCmd(type, sys, ch, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageMosaicAllocGZ(cc, interp,
+						ch, fn, FitsFile::NOFLUSH, 1);
+    loadDone(cc->loadMosaicImage(ALLOCGZ, fn, img, type, sys));
+    break;
+  }
+
+}
+
+void Frame::loadMosaicImageChannelCmd(MosaicType type, Coord::CoordSystem sys,
+				      const char* ch, const char* fn,
+				      LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadMosaicImageChannelCmd(type, sys, ch, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageMosaicChannel(cc, interp,
+					      ch, fn, FitsFile::NOFLUSH, 1);
+    loadDone(cc->loadMosaicImage(CHANNEL, fn, img, type, sys));
+    break;
+  }
+}
+
+void Frame::loadMosaicImageMMapCmd(MosaicType type, Coord::CoordSystem sys,
+				   const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadMosaicImageMMapCmd(type, sys, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageMosaicMMap(cc, interp, fn, 1);
+    loadDone(cc->loadMosaicImage(MMAP, fn, img, type, sys));
+    break;
+  }
+}
+
+void Frame::loadMosaicImageMMapIncrCmd(MosaicType type, Coord::CoordSystem sys,
+				       const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadMosaicImageMMapIncrCmd(type, sys, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageMosaicMMapIncr(cc, interp, fn, 1);
+    loadDone(cc->loadMosaicImage(MMAPINCR, fn, img, type, sys));
+    break;
+  }
+
+}
+
+void Frame::loadMosaicImageShareCmd(MosaicType type, Coord::CoordSystem sys,
+				    ShmType stype, int id, const char* fn,
+				    LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadMosaicImageShareCmd(type, sys, stype, id, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageMosaicShare(cc, interp, stype, id, fn, 1);
+    loadDone(cc->loadMosaicImage(SHARE, fn, img, type, sys));
+    break;
+  }
+
+}
+
+void Frame::loadMosaicImageSocketCmd(MosaicType type, Coord::CoordSystem sys,
+				     int s, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadMosaicImageSocketCmd(type, sys, s, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageMosaicSocket(cc, interp,
+					       s, fn, FitsFile::NOFLUSH, 1);
+    loadDone(cc->loadMosaicImage(SOCKET, fn, img, type, sys));
+    break;
+  }
+}
+
+void Frame::loadMosaicImageSocketGZCmd(MosaicType type, Coord::CoordSystem sys,
+				       int s, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadMosaicImageSocketGZCmd(type, sys, s, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageMosaicSocketGZ(cc, interp,
+						 s, fn, FitsFile::NOFLUSH, 1);
+    loadDone(cc->loadMosaicImage(SOCKETGZ, fn, img, type, sys));
+    break;
+  }
+}
+
+void Frame::loadMosaicImageVarCmd(MosaicType type, Coord::CoordSystem sys,
+				  const char* ch, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadMosaicImageVarCmd(type, sys, ch, fn, ll);
+    break;
+  case MASK:
+    FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+    mask.append(msk);
+    Context* cc = msk->context();
+    FitsImage* img = new FitsImageMosaicVar(cc, interp, ch, fn, 1);
+    loadDone(cc->loadMosaicImage(VAR, fn, img, type, sys));
+    break;
+  }
+
 }
 
 // Support

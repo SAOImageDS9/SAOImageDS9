@@ -116,6 +116,17 @@ class Frame : public FrameBase {
   void loadNRRDShareCmd(ShmType, int, const char*, LayerType);
   void loadNRRDSocketCmd(int, const char*, LayerType);
   void loadNRRDVarCmd(const char*, const char*, LayerType);
+
+  void loadMosaicImageAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  void loadMosaicImageAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  void loadMosaicImageChannelCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  void loadMosaicImageMMapCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
+  void loadMosaicImageMMapIncrCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
+  void loadMosaicImageShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, const char*, LayerType);
+  void loadMosaicImageSocketCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
+  void loadMosaicImageSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
+  void loadMosaicImageVarCmd(MosaicType, Coord::CoordSystem, const char*,const char*, LayerType);
+
 };
 
 #endif

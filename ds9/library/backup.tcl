@@ -397,7 +397,7 @@ proc BackupFrameLoadMMap {varname fdir rdir} {
 	# look for sym links
 	switch [file type $fn] {
 	    file {}
-	    link {set fn [file readlink $fn]}
+	    link {set fn [file join [file dirname $fn] [file readlink $fn]]}
 	    default {
 		return 0
 	    }

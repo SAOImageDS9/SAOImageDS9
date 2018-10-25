@@ -5771,6 +5771,7 @@ frame/frame3dtruecolor8.C
 frame/framebase.C
 frame/frameload.C
 frame/framergb.C
+frame/framergbload.C
 frame/framergbtruecolor16.C
 frame/framergbtruecolor24.C
 frame/framergbtruecolor8.C

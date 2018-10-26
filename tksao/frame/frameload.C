@@ -832,4 +832,3 @@ void Frame::loadDone(int rr)
     updateMaskMatrices();
   Base::loadDone(rr);
 }
-

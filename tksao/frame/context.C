@@ -1249,7 +1249,7 @@ int Context::loadMosaicWFPC2(Base::MemType which, const char* fn,
 
   // Its legal, save it
   bfits_ = img;
-  loadInit(1, Base::WFPC2, Coord::WCS);
+  loadInit(1, Base::WCSMOSAIC, Coord::WCS);
 
   // remember in case of compress
   Base::MemType sav = which;

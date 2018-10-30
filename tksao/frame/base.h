@@ -124,7 +124,7 @@ public:
 
   enum MemType {ALLOC, ALLOCGZ, CHANNEL, MMAP, SMMAP, MMAPINCR, 
 		SHARE, SSHARE, SOCKET, SOCKETGZ, VAR, HIST, POST, PHOTO};
-  enum MosaicType {NOMOSAIC, IRAF, WCSMOSAIC, WFPC2};
+  enum MosaicType {NOMOSAIC, IRAF, WCSMOSAIC};
   enum LayerType {IMG, MASK};
   enum CutMethod {SUM,AVERAGE};
 

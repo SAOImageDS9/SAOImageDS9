@@ -889,9 +889,21 @@ void FitsImageIIS::iisWCS(const Matrix& mm, const Vector& z, int zt)
 
 // FitsImage
 
-void FitsImage::wfpc2WCS(istream& str)
+void FitsImage::wfpc2WCS(FitsHead* pp, istream& str)
 {
   FitsHead* hh = parseWCS(str);
+
+  // EQUINOX
+  if (pp->find("EQUINOX")) {
+    char* equ = pp->getString("EQUINOX");
+    hh->appendString("EQUINOX", equ, NULL);
+  }
+
+  // DATE-OBS
+  if (pp->find("DATE-OBS")) {
+    char* equ = pp->getString("DATE-OBS");
+    hh->appendString("DATE-OBS", equ, NULL);
+  }
 
   // Process OBJECT keyword
   if (objectKeyword_)
@@ -1178,6 +1190,24 @@ void FitsImage::resetWCS()
     initWCS(wfpc2Header_);
   else
     initWCS(image_->head());
+
+
+  // apply block factor
+  if (ast_) {
+    Vector block = context_->blockFactor();
+    if (block[0] != 1 && block[1] != 1) {
+      astClearStatus; // just to make sure
+      astBegin; // start memory management
+
+      Vector ll(.5,.5);
+      Vector ur(1.5,1.5);
+      Vector rr = ur*Translate(-.5,-.5)*Scale(block)*Translate(.5,.5);
+      AstWinMap* winmap = astWinMap(2, ll.vv(), rr.vv(), ll.vv(), ur.vv(), "");
+      astRemapFrame(ast_, AST__BASE, winmap);
+
+      astEnd;
+    }
+  }
 }
 
 void FitsImage::initWCS0(const Vector& pix)

@@ -408,7 +408,7 @@ class FitsImage {
   Vector3d wcs2pix(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
   int wcsInv() {return wcsInv_;}
 
-  void wfpc2WCS(istream&);
+  void wfpc2WCS(FitsHead*, istream&);
   void appendWCS(istream&);
   void listWCS(ostream&, Coord::CoordSystem);
   void resetWCS();

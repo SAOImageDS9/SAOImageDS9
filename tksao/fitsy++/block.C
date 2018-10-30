@@ -81,8 +81,7 @@ void FitsBlock::initHeader(FitsFile* fits, Vector& block)
   initKeySEC("DATASEC",block);
   initKeySEC("TRIMSEC",block);
 
-  // WCS
-  initWCS(block);
+  // WCS blocking done later in FitsImage::resetWCS()
 
   // clear cards
   if (head_->find("BZERO"))
@@ -193,77 +192,3 @@ void FitsBlock::initLTMV(Vector& block)
   else
     head_->appendReal("LTM2_2", ltm22/block[1], 8, "");
 }
-
-void FitsBlock::initWCS(Vector& block)
-{
-  // check for WCS
-  if (!head_->find("CRPIX1") && !head_->find("CRPIX2"))
-    return;
-
-  double crpix1 = head_->getReal("CRPIX1", 0);
-  double crpix2 = head_->getReal("CRPIX2", 0);
-  Matrix pp = Matrix(1,0,0,1,crpix1,crpix2) *
-    Translate(-.5,-.5) *
-    Scale(1/block[0],1/block[1]) *
-    Translate(.5,.5);
-
-  if (head_->find("CRPIX1"))
-    head_->setReal("CRPIX1", pp.matrix(2,0), 8, "");
-  else
-    head_->appendReal("CRPIX1", pp.matrix(2,0), 8, "");
-
-  if (head_->find("CRPIX2"))
-    head_->setReal("CRPIX2", pp.matrix(2,1), 8, "");
-  else
-    head_->appendReal("CRPIX2", pp.matrix(2,1), 8, "");
-
-  // CD
-  if (head_->find("CD1_1") || head_->find("CD1_2") ||
-      head_->find("CD2_1") || head_->find("CD2_2")) {
-    double cd11 = head_->getReal("CD1_1", 1);
-    double cd12 = head_->getReal("CD1_2", 0);
-    double cd21 = head_->getReal("CD2_1", 0);
-    double cd22 = head_->getReal("CD2_2", 1);
-    Matrix mm = Matrix(cd11,cd12,cd21,cd22,0,0) *
-      Scale(block[0],block[1]);
-
-    if (head_->find("CD1_1"))
-      head_->setReal("CD1_1", mm.matrix(0,0), 8, "");
-    else
-      head_->appendReal("CD1_1", mm.matrix(0,0), 8, "");
-
-    if (head_->find("CD1_2"))
-      head_->setReal("CD1_2", mm.matrix(0,1), 8, "");
-    else
-      head_->appendReal("CD1_2", mm.matrix(0,1), 8, "");
-
-    if (head_->find("CD2_1"))
-      head_->setReal("CD2_1", mm.matrix(1,0), 8, "");
-    else
-      head_->appendReal("CD2_1", mm.matrix(1,0), 8, "");
-
-    if (head_->find("CD2_2"))
-      head_->setReal("CD2_2", mm.matrix(1,1), 8, "");
-    else
-      head_->appendReal("CD2_2", mm.matrix(1,1), 8, "");
-
-  }
-  // CDELT
-  else if (head_->find("CDELT1") || head_->find("CDELT2")) {
-    double cdelt1 = head_->getReal("CDELT1", 1);
-    double cdelt2 = head_->getReal("CDELT2", 0);
-    Matrix mm = Matrix(cdelt1,0,0,cdelt2,0,0) *
-      Scale(block[0],block[1]);
-
-    if (head_->find("CDELT1"))
-      head_->setReal("CDELT1", mm.matrix(0,0), 8, "");
-    else
-      head_->appendReal("CDELT1", mm.matrix(0,0), 8, "");
-
-    if (head_->find("CDELT2"))
-      head_->setReal("CDELT2", mm.matrix(1,1), 8, "");
-    else
-      head_->appendReal("CDELT2", mm.matrix(1,1), 8, "");
-  }
-}
-

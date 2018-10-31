@@ -228,8 +228,7 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 
   // variable
   double* mm = sptr->matrixToData(sys).mm();
-  // waj
-  FitsBound* params = sptr->getDataParams(context->secMode());
+  FitsBound* params = sptr->getDataParams(cc->secMode());
   int srcw = sptr->width();
 
   // main loop
@@ -243,8 +242,7 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 	sptr = currentMsk;
 
 	mm = sptr->matrixToData(sys).mm();
-	// waj
-	params = sptr->getDataParams(context->secMode());
+	params = sptr->getDataParams(cc->secMode());
 	srcw = sptr->width();
       }
 
@@ -271,8 +269,7 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 
 	    if (sptr) {
 	      mm = sptr->matrixToData(sys).mm();
-	      // waj
-	      params = sptr->getDataParams(context->secMode());
+	      params = sptr->getDataParams(cc->secMode());
 	      srcw = sptr->width();
 	    }
 	  }

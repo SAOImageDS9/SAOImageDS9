@@ -214,7 +214,8 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
   unsigned char* img = new unsigned char[width*height*4];
   memset(img,0,width*height*4);
 
-  FitsImage* currentMsk = msk->context()->fits;
+  Context* cc = msk->context();
+  FitsImage* currentMsk = cc->fits;
   XColor* maskColor = msk->color();
   int mark = msk->mark();
 
@@ -223,10 +224,11 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 
   // basics
   FitsImage* sptr = currentMsk;
-  int mosaic = isMosaic();
+  int mosaic = cc->isMosaic();
 
   // variable
   double* mm = sptr->matrixToData(sys).mm();
+  // waj
   FitsBound* params = sptr->getDataParams(context->secMode());
   int srcw = sptr->width();
 
@@ -241,6 +243,7 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 	sptr = currentMsk;
 
 	mm = sptr->matrixToData(sys).mm();
+	// waj
 	params = sptr->getDataParams(context->secMode());
 	srcw = sptr->width();
       }
@@ -268,6 +271,7 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 
 	    if (sptr) {
 	      mm = sptr->matrixToData(sys).mm();
+	      // waj
 	      params = sptr->getDataParams(context->secMode());
 	      srcw = sptr->width();
 	    }

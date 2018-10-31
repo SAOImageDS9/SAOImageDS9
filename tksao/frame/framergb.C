@@ -770,7 +770,8 @@ void FrameRGB::getColorbarCmd()
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void FrameRGB::getInfoCmd(const Vector& vv, Coord::InternalSystem ref, char* var)
+void FrameRGB::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
+			  char* var)
 {
   FrameBase::getInfoCmd(vv, ref, var);
   if (!currentContext->cfits)

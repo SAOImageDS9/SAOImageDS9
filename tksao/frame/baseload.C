@@ -482,6 +482,86 @@ void Base::loadMosaicImageVarCmd(MosaicType type, Coord::CoordSystem sys,
   loadDone(currentContext->loadMosaicImage(VAR, fn, img, type, sys));
 }
 
+// *** Mosaic Image WFPC2 ***
+
+void Base::loadMosaicImageWFPC2AllocCmd(const char* ch, const char* fn,
+					LayerType ll)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageFitsAlloc(currentContext, interp,
+	 ch, fn, FitsFile::NOFLUSH, 1);
+  loadDone(currentContext->loadMosaicWFPC2(ALLOC, fn, img));
+}
+
+void Base::loadMosaicImageWFPC2AllocGZCmd(const char* ch, const char* fn,
+					  LayerType ll)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageFitsAllocGZ(currentContext, interp,
+	 ch, fn, FitsFile::NOFLUSH, 1);
+  loadDone(currentContext->loadMosaicWFPC2(ALLOCGZ, fn, img));
+}
+
+void Base::loadMosaicImageWFPC2ChannelCmd(const char* ch, const char* fn,
+					  LayerType ll)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageFitsChannel(currentContext, interp,
+					    ch, fn, 
+					    FitsFile::NOFLUSH, 1);
+  loadDone(currentContext->loadMosaicWFPC2(CHANNEL, fn, img));
+}
+
+void Base::loadMosaicImageWFPC2MMapCmd(const char* fn, LayerType ll)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageFitsMMap(currentContext, interp,
+	 fn, 1);
+  loadDone(currentContext->loadMosaicWFPC2(MMAP, fn, img));
+}
+
+void Base::loadMosaicImageWFPC2MMapIncrCmd(const char* fn, LayerType ll)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageFitsMMapIncr(currentContext, interp,
+	 fn, 1);
+  loadDone(currentContext->loadMosaicWFPC2(MMAPINCR, fn, img));
+}
+
+void Base::loadMosaicImageWFPC2ShareCmd(ShmType stype, int id, const char* fn,
+					LayerType ll)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageFitsShare(currentContext, interp,
+	 stype, id, fn, 1);
+  loadDone(currentContext->loadMosaicWFPC2(SHARE, fn, img));
+}
+
+void Base::loadMosaicImageWFPC2SocketCmd(int s, const char* fn, LayerType ll)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageFitsSocket(currentContext, interp,
+	 s, fn, FitsFile::NOFLUSH, 1);
+  loadDone(currentContext->loadMosaicWFPC2(SOCKET, fn, img));
+}
+
+void Base::loadMosaicImageWFPC2SocketGZCmd(int s, const char* fn, LayerType ll)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageFitsSocketGZ(currentContext, interp,
+					     s, fn, FitsFile::NOFLUSH, 1);
+  loadDone(currentContext->loadMosaicWFPC2(SOCKETGZ, fn, img));
+}
+
+void Base::loadMosaicImageWFPC2VarCmd(const char* ch, const char* fn,
+				      LayerType ll)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageFitsVar(currentContext, interp,
+					ch, fn, 1);
+  loadDone(currentContext->loadMosaicWFPC2(VAR, fn, img));
+}
+
 // *** Mosaic ***
 
 void Base::loadMosaicAllocCmd(MosaicType type, Coord::CoordSystem sys, 
@@ -577,81 +657,6 @@ void Base::loadMosaicVarCmd(MosaicType type, Coord::CoordSystem sys,
   loadDone(currentContext->loadMosaic(VAR, fn, img, type, sys));
 }
 
-// *** Mosaic Image WFPC2 ***
-
-void Base::loadMosaicImageWFPC2AllocCmd(const char* ch, const char* fn)
-{
-  unloadFits();
-  FitsImage* img = new FitsImageFitsAlloc(currentContext, interp,
-	 ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicWFPC2(ALLOC, fn, img));
-}
-
-void Base::loadMosaicImageWFPC2AllocGZCmd(const char* ch, const char* fn)
-{
-  unloadFits();
-  FitsImage* img = new FitsImageFitsAllocGZ(currentContext, interp,
-	 ch, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicWFPC2(ALLOCGZ, fn, img));
-}
-
-void Base::loadMosaicImageWFPC2ChannelCmd(const char* ch, const char* fn)
-{
-  unloadFits();
-  FitsImage* img = new FitsImageFitsChannel(currentContext, interp,
-					    ch, fn, 
-					    FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicWFPC2(CHANNEL, fn, img));
-}
-
-void Base::loadMosaicImageWFPC2MMapCmd(const char* fn)
-{
-  unloadFits();
-  FitsImage* img = new FitsImageFitsMMap(currentContext, interp,
-	 fn, 1);
-  loadDone(currentContext->loadMosaicWFPC2(MMAP, fn, img));
-}
-
-void Base::loadMosaicImageWFPC2MMapIncrCmd(const char* fn)
-{
-  unloadFits();
-  FitsImage* img = new FitsImageFitsMMapIncr(currentContext, interp,
-	 fn, 1);
-  loadDone(currentContext->loadMosaicWFPC2(MMAPINCR, fn, img));
-}
-
-void Base::loadMosaicImageWFPC2ShareCmd(ShmType stype, int id, const char* fn)
-{
-  unloadFits();
-  FitsImage* img = new FitsImageFitsShare(currentContext, interp,
-	 stype, id, fn, 1);
-  loadDone(currentContext->loadMosaicWFPC2(SHARE, fn, img));
-}
-
-void Base::loadMosaicImageWFPC2SocketCmd(int s, const char* fn)
-{
-  unloadFits();
-  FitsImage* img = new FitsImageFitsSocket(currentContext, interp,
-	 s, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicWFPC2(SOCKET, fn, img));
-}
-
-void Base::loadMosaicImageWFPC2SocketGZCmd(int s, const char* fn)
-{
-  unloadFits();
-  FitsImage* img = new FitsImageFitsSocketGZ(currentContext, interp,
-					     s, fn, FitsFile::NOFLUSH, 1);
-  loadDone(currentContext->loadMosaicWFPC2(SOCKETGZ, fn, img));
-}
-
-void Base::loadMosaicImageWFPC2VarCmd(const char* ch, const char* fn)
-{
-  unloadFits();
-  FitsImage* img = new FitsImageFitsVar(currentContext, interp,
-					ch, fn, 1);
-  loadDone(currentContext->loadMosaicWFPC2(VAR, fn, img));
-}
-
 // ***
 
 void Base::loadDone(int rr)
@@ -665,7 +670,6 @@ void Base::loadDone(int rr)
   }
   else {
     reset();
-    Tcl_AppendResult(interp, "Unable to load file", NULL);
     result = TCL_ERROR;
   }
 
@@ -690,4 +694,3 @@ void Base::loadDone(int rr)
   updateColorScale();
   update(MATRIX);
 }
-

@@ -847,6 +847,16 @@ public:
   virtual void loadMosaicImageSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
   virtual void loadMosaicImageVarCmd(MosaicType, Coord::CoordSystem, const char*,const char*, LayerType);
 
+  virtual void loadMosaicImageWFPC2AllocCmd(const char*, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2AllocGZCmd(const char*, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2ChannelCmd(const char*, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2MMapCmd(const char*, LayerType);
+  virtual void loadMosaicImageWFPC2MMapIncrCmd(const char*, LayerType);
+  virtual void loadMosaicImageWFPC2ShareCmd(ShmType, int, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2SocketCmd(int, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2SocketGZCmd(int, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2VarCmd(const char*, const char*, LayerType);
+
   virtual void loadMosaicAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
   virtual void loadMosaicAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
   virtual void loadMosaicChannelCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
@@ -858,16 +868,6 @@ public:
   virtual void loadMosaicSocketCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
   virtual void loadMosaicSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
   virtual void loadMosaicVarCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-
-  void loadMosaicImageWFPC2AllocCmd(const char*, const char*);
-  void loadMosaicImageWFPC2AllocGZCmd(const char*, const char*);
-  void loadMosaicImageWFPC2ChannelCmd(const char*, const char*);
-  void loadMosaicImageWFPC2MMapCmd(const char*);
-  void loadMosaicImageWFPC2MMapIncrCmd(const char*);
-  void loadMosaicImageWFPC2ShareCmd(ShmType, int, const char*);
-  void loadMosaicImageWFPC2SocketCmd(int, const char*);
-  void loadMosaicImageWFPC2SocketGZCmd(int, const char*);
-  void loadMosaicImageWFPC2VarCmd(const char*, const char*);
 
   // Fits RGB
   virtual void loadRGBCubeAllocCmd(const char*, const char*) {}

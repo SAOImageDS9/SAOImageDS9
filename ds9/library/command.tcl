@@ -555,7 +555,7 @@ proc CommandLineLoadBase {item argvname iname} {
 	    MultiLoad $file(layer)
 	    switch -- $file(mosaic) {
 		iraf {LoadMosaicImageIRAFFile $item $file(layer)}
-		wfpc2 {LoadMosaicImageWFPC2File $item}
+		wfpc2 {LoadMosaicImageWFPC2File $item $file(layer)}
 		default {LoadMosaicImageWCSFile $item $file(layer) $file(mosaic)}
 	    }
 	}
@@ -647,7 +647,7 @@ proc CommandLineLoadRGB {item argvname iname} {
 	mosaicimage {
 	    switch -- $file(mosaic) {
 		iraf {LoadMosaicImageIRAFFile $item {}}
-		wfpc2 {LoadMosaicImageWFPC2File $item}
+		wfpc2 {LoadMosaicImageWFPC2File $item {}}
 		default {LoadMosaicImageWCSFile $item {} $file(mosaic)}
 	    }
 	}
@@ -734,7 +734,7 @@ proc CommandLineLoad3D {item argvname iname} {
 	    MultiLoad
 	    switch -- $file(mosaic) {
 		iraf {LoadMosaicImageIRAFFile $item {}}
-		wfpc2 {LoadMosaicImageWFPC2File $item}
+		wfpc2 {LoadMosaicImageWFPC2File $item {}}
 		default {LoadMosaicImageWCSFile $item {} $file(mosaic)}
 	    }
 	}

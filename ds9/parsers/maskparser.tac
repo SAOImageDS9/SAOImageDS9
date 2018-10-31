@@ -28,7 +28,7 @@ command : mask
  ;
 
 mask : {global parse; set parse(result) mask}
- | OPEN_ {MaskDialog}
+ | OPEN_
  | CLOSE_ {MaskDestroyDialog}
  | CLEAR_ {MaskClear}
  | COLOR_ STRING_ {ProcessCmdSet mask color $2 MaskColor}

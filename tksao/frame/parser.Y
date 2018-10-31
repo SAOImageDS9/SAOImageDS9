@@ -1569,6 +1569,29 @@ loadFitsMosaicImageWCS : wcsSystem STRING ALLOC_ STRING layerType
 	    $4, $2, (Base::LayerType)$6);}
 	;
 
+loadFitsMosaicImageWFPC2 : STRING ALLOC_ STRING layerType
+        {fr->loadMosaicImageWFPC2AllocCmd($3, $1, (Base::LayerType)$4);}
+        | STRING ALLOCGZ_ STRING layerType
+	{fr->loadMosaicImageWFPC2AllocGZCmd($3, $1, (Base::LayerType)$4);}
+	| STRING CHANNEL_ STRING layerType
+	{fr->loadMosaicImageWFPC2ChannelCmd($3, $1, (Base::LayerType)$4);}
+	| STRING MMAP_ incrLoad layerType
+	{fr->loadMosaicImageWFPC2MMapCmd($1, (Base::LayerType)$4);}
+	| STRING MMAPINCR_ incrLoad layerType
+	{fr->loadMosaicImageWFPC2MMapIncrCmd($1, (Base::LayerType)$4);}
+	| STRING SHARED_ shmType INT incrLoad layerType
+	{
+	  fr->loadMosaicImageWFPC2ShareCmd((Base::ShmType)$3, $4, $1,
+					   (Base::LayerType)$6);
+        }
+	| STRING SOCKET_ INT layerType
+	{fr->loadMosaicImageWFPC2SocketCmd($3, $1, (Base::LayerType)$4);}
+	| STRING SOCKETGZ_ INT layerType
+	{fr->loadMosaicImageWFPC2SocketGZCmd($3, $1, (Base::LayerType)$4);}
+	| STRING VAR_ STRING incrLoad layerType
+	{fr->loadMosaicImageWFPC2VarCmd($3, $1, (Base::LayerType)$5);}
+	;
+
 loadFitsMosaicWCS : wcsSystem STRING ALLOC_ STRING layerType
 	{fr->loadMosaicAllocCmd((Base::WCSMOSAIC), (Coord::CoordSystem)$1,
 	    $4, $2, (Base::LayerType)$5);}
@@ -1604,18 +1627,6 @@ loadFitsMosaicWCS : wcsSystem STRING ALLOC_ STRING layerType
 	    $4, $2, (Base::LayerType)$6);}
 	;
 
-loadFitsMosaicImageWFPC2 : STRING ALLOC_ STRING
-	{fr->loadMosaicImageWFPC2AllocCmd($3, $1);}
-	| STRING ALLOCGZ_ STRING {fr->loadMosaicImageWFPC2AllocGZCmd($3, $1);}
-	| STRING CHANNEL_ STRING {fr->loadMosaicImageWFPC2ChannelCmd($3, $1);}
-	| STRING MMAP_ incrLoad {fr->loadMosaicImageWFPC2MMapCmd($1);}
-	| STRING MMAPINCR_ incrLoad {fr->loadMosaicImageWFPC2MMapIncrCmd($1);}
-	| STRING SHARED_ shmType INT incrLoad
-	{fr->loadMosaicImageWFPC2ShareCmd((Base::ShmType)$3, $4, $1);}
-	| STRING SOCKET_ INT {fr->loadMosaicImageWFPC2SocketCmd($3, $1);}
-	| STRING SOCKETGZ_ INT {fr->loadMosaicImageWFPC2SocketGZCmd($3, $1);}
-	| STRING VAR_ STRING incrLoad {fr->loadMosaicImageWFPC2VarCmd($3, $1);}
-	;
 loadFitsRGBCube: STRING ALLOC_ STRING {fr->loadRGBCubeAllocCmd($3, $1);}
 	| STRING ALLOCGZ_ STRING {fr->loadRGBCubeAllocGZCmd($3, $1);}
 	| STRING CHANNEL_ STRING {fr->loadRGBCubeChannelCmd($3, $1);}

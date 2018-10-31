@@ -281,6 +281,8 @@ proc ProcessMaskCmd {varname iname} {
     global parse
     set parse(result) {}
 
+    MaskDialog
+
     mask::YY_FLUSH_BUFFER
     mask::yy_scan_string [lrange $var $i end]
     mask::yyparse

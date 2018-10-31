@@ -4,22 +4,20 @@
 
 package provide DS9 1.0
 
-proc LoadMosaicImageWFPC2File {fn} {
+proc LoadMosaicImageWFPC2File {fn layer} {
     global loadParam
 
     set loadParam(file,type) fits
     set loadParam(file,mode) {mosaic image wfpc2}
     set loadParam(load,type) mmapincr
     set loadParam(file,name) $fn
-
-    # mask not supported
-    set loadParam(load,layer) {}
+    set loadParam(load,layer) $layer
 
     ConvertFitsFile
     ProcessLoad
 }
 
-proc LoadMosaicImageWFPC2Alloc {path fn} {
+proc LoadMosaicImageWFPC2Alloc {path fn layer} {
     global loadParam
 
     set loadParam(file,type) fits
@@ -27,14 +25,12 @@ proc LoadMosaicImageWFPC2Alloc {path fn} {
     set loadParam(load,type) allocgz
     set loadParam(file,name) $fn
     set loadParam(file,fn) $path
-
-    # mask not supported
-    set loadParam(load,layer) {}
+    set loadParam(load,layer) $layer
 
     ProcessLoad
 }
 
-proc LoadMosaicImageWFPC2Socket {sock fn} {
+proc LoadMosaicImageWFPC2Socket {sock fn layer} {
     global loadParam
 
     set loadParam(file,type) fits
@@ -42,9 +38,7 @@ proc LoadMosaicImageWFPC2Socket {sock fn} {
     set loadParam(load,type) socketgz
     set loadParam(file,name) $fn
     set loadParam(socket,id) $sock
-
-    # mask not supported
-    set loadParam(load,layer) {}
+    set loadParam(load,layer) $layer
 
     return [ProcessLoad 0]
 }
@@ -63,21 +57,21 @@ proc ProcessMosaicImageWFPC2Cmd {varname iname sock fn} {
     incr i [expr $mosaicimagewfpc2::yycnt-1]
 }
 
-proc MosaicImageWFPC2CmdLoad {param} {
+proc MosaicImageWFPC2CmdLoad {param layer} {
     global parse
 
     if {$parse(sock) != {}} {
 	# xpa
-	if {![LoadMosaicImageWFPC2Socket $parse(sock) $param]} {
+	if {![LoadMosaicImageWFPC2Socket $parse(sock) $param $layer]} {
 	    InitError xpa
-	    LoadMosaicImageWFPC2File $param
+	    LoadMosaicImageWFPC2File $param $layer
 	}
     } else {
 	# comm
 	if {$parse(fn) != {}} {
-	    LoadMosaicImageWFPC2Alloc $parse(fn) $param
+	    LoadMosaicImageWFPC2Alloc $parse(fn) $param $layer
 	} else {
-	    LoadMosaicImageWFPC2File $param
+	    LoadMosaicImageWFPC2File $param $layer
 	}
     }
     FinishLoad

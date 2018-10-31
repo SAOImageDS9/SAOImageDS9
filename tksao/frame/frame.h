@@ -41,6 +41,7 @@ class Frame : public FrameBase {
   void reset();
   void setKeyFits() {}
   void unloadFits();
+  Context* loadMask();
 
  protected:
   void alignWCS();
@@ -126,6 +127,16 @@ class Frame : public FrameBase {
   void loadMosaicImageSocketCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
   void loadMosaicImageSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
   void loadMosaicImageVarCmd(MosaicType, Coord::CoordSystem, const char*,const char*, LayerType);
+
+  void loadMosaicImageWFPC2AllocCmd(const char*, const char*, LayerType);
+  void loadMosaicImageWFPC2AllocGZCmd(const char*, const char*, LayerType);
+  void loadMosaicImageWFPC2ChannelCmd(const char*, const char*, LayerType);
+  void loadMosaicImageWFPC2MMapCmd(const char*, LayerType);
+  void loadMosaicImageWFPC2MMapIncrCmd(const char*, LayerType);
+  void loadMosaicImageWFPC2ShareCmd(ShmType, int, const char*, LayerType);
+  void loadMosaicImageWFPC2SocketCmd(int, const char*, LayerType);
+  void loadMosaicImageWFPC2SocketGZCmd(int, const char*, LayerType);
+  void loadMosaicImageWFPC2VarCmd(const char*, const char*, LayerType);
 
   void loadMosaicAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
   void loadMosaicAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);

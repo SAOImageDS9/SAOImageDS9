@@ -379,7 +379,7 @@ void Frame::updateMaskMatrices()
   FitsMask* mptr = mask.head();
   while (mptr) {
     mptr->mm().identity();
-    if (mptr->context()->fits) {
+    if (mptr->context()->fits && keyContext->fits) {
       switch (maskSystem) {
       case Coord::IMAGE:
 	// nothing to do here
@@ -397,8 +397,8 @@ void Frame::updateMaskMatrices()
 	  keyContext->fits->detectorToImage;
 	break;
       default:
-	mptr->mm() =
-	  calcAlignWCS(keyContext->fits, mptr->context()->fits, maskSystem, maskSystem, Coord::FK5);
+	mptr->mm() = calcAlignWCS(keyContext->fits, mptr->context()->fits,
+				  maskSystem, maskSystem, Coord::FK5);
 	break;
       }
     }
@@ -420,7 +420,7 @@ void Frame::unloadFits()
   // delete any masks
   mask.deleteAll();
 
-  FrameBase::unloadFits();
+  Base::unloadFits();
 }
 
 // Commands

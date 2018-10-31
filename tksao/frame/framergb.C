@@ -466,7 +466,7 @@ void FrameRGB::unloadAllFits()
   keyContext = &context[channel];
   keyContextSet =0;
 
-  FrameBase::unloadFits();
+  Base::unloadFits();
 }
 
 void FrameRGB::unloadFits()

@@ -134,6 +134,7 @@ class FitsImage {
 
  public:
   AstFrameSet* ast_;  // ast frameset;
+  const char* encoding_; // ast encoding of original header
 
  private:
   char* root(const char*);

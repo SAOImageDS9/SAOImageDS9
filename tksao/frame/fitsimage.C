@@ -84,6 +84,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
 
   manageWCS_ =1;
   ast_ =NULL;
+  encoding_ =NULL;
   wcs_ =NULL;
   wcsNaxes_ =NULL;
 
@@ -159,6 +160,8 @@ FitsImage::~FitsImage()
   if (manageWCS_) {
     if (ast_)
       astAnnul(ast_);
+    if (encoding_)
+      delete [] encoding_;
 
     if (wcs_)
       delete [] wcs_;
@@ -1062,6 +1065,9 @@ void FitsImage::initWCS(FitsHead* hd)
     if (ast_)
       astAnnul(ast_);
     ast_ =NULL;
+    if (encoding_)
+      delete [] encoding_;
+    encoding_ =NULL;
 
     if (wcs_)
       delete [] wcs_;
@@ -1104,6 +1110,7 @@ void FitsImage::initWCS(FitsHead* hd)
       while (sptr) {
 	if (sptr == this) {
 	  ast_ = ptr->ast_;
+	  encoding_ = ptr->encoding_;
 
 	  wcs_ = ptr->wcs_;
 	  wcsNaxes_ = ptr->wcsNaxes_;
@@ -1134,6 +1141,9 @@ void FitsImage::initWCS(FitsHead* hd)
   if (ast_)
     astAnnul(ast_);
   ast_ =NULL;
+  if (encoding_)
+    delete [] encoding_;
+  encoding_ =NULL;
   
   ast_ = fits2ast(hd);
   if (!ast_)
@@ -3463,6 +3473,12 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
     if (!astOK)
       astClearStatus;
   }
+
+  // encoding
+  // must come after astPutsFits and before astRead
+  const char* encode = astGetC(chan, "Encoding");
+  if (encode)
+    encoding_ = dupstr(encode);
 
   // we may have an error, just reset
   astClearStatus;

@@ -1939,17 +1939,22 @@ void Base::getMaskColorCmd()
 
 void Base::getMaskMarkCmd()
 {
-  Tcl_AppendResult(interp, "1", NULL);
+  Tcl_AppendResult(interp, "nonzero", NULL);
 }
 
-void Base::getMaskSystemCmd()
+void Base::getMaskRangeCmd()
 {
-  Tcl_AppendResult(interp, "physical", NULL);
+  Tcl_AppendResult(interp, "0 0", NULL);
 }
 
 void Base::getMaskTransparencyCmd()
 {
   printDouble(0);
+}
+
+void Base::getMaskSystemCmd()
+{
+  Tcl_AppendResult(interp, "physical", NULL);
 }
 
 void Base::getMinMaxCmd()

@@ -8,7 +8,8 @@
 #include "base.h"
 #include "context.h"
 
-FitsMask::FitsMask(Base* pp, char* clr, int mrk)
+FitsMask::FitsMask(Base* pp, char* clr, MaskType mm, double ll, double hh)
+  : mark_(mm), low_(ll), high_(hh)
 {
   context_ = new Context();
   context_->parent(pp);
@@ -16,7 +17,6 @@ FitsMask::FitsMask(Base* pp, char* clr, int mrk)
   colorName_ = dupstr(clr);
   color_ = pp->getXColor(colorName_);
   pp->encodeTrueColor(color_, trueColor_);
-  mark_ = mrk;
 
   next_ = NULL;
   previous_ = NULL;

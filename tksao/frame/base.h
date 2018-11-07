@@ -20,6 +20,7 @@
 #include "tag.h"
 #include "util.h"
 #include "point.h"
+#include "fitsmask.h"
 
 extern int DebugMosaic;
 extern int DebugPerf;
@@ -1552,14 +1553,16 @@ public:
   // Mask Commands
   virtual void getMaskColorCmd();
   virtual void getMaskMarkCmd();
+  virtual void getMaskRangeCmd();
   virtual void getMaskSystemCmd();
   virtual void getMaskTransparencyCmd();
 
   virtual void maskClearCmd() {};
   virtual void maskColorCmd(const char*) {};
-  virtual void maskSystemCmd(Coord::CoordSystem) {};
+  virtual void maskMarkCmd(FitsMask::MaskType) {};
+  virtual void maskRangeCmd(double,double) {};
   virtual void maskTransparencyCmd(float) {};
-  virtual void maskMarkCmd(int) {};
+  virtual void maskSystemCmd(Coord::CoordSystem) {};
 
   // NaN Commands
   void getNANColorCmd();

@@ -13,9 +13,12 @@
 %token CLOSE_
 %token COLOR_
 %token MARK_
+%token NONZERO_
 %token OPEN_
+%token RANGE_
 %token SYSTEM_
 %token TRANSPARENCY_
+%token ZERO_
 
 %%
 
@@ -33,8 +36,14 @@ mask : {global parse; set parse(result) mask}
  | CLEAR_ {MaskClear}
  | COLOR_ STRING_ {ProcessCmdSet mask color $2 MaskColor}
  | MARK_ INT_ {ProcessCmdSet mask mark $2 MaskMark}
+ | MARK_ mark {ProcessCmdSet mask mark $2 MaskMark}
  | SYSTEM_ system
  | TRANSPARENCY_ numeric {ProcessCmdSet mask transparency $2 MaskTransparency}
+ ;
+
+mark : ZERO_ {set _ zero}
+ | NONZERO_ {set _ nonzero}
+ | RANGE_ {set _ range}
  ;
 
 system : coordsys {ProcessCmdSet mask system $1 MaskSystem}

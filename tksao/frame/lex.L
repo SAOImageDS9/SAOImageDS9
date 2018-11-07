@@ -218,6 +218,7 @@ new		{return NEW_;}
 next		{return NEXT_;}
 no		{return NO_;}
 none		{return NONE_;}
+nonzero		{return NONZERO_;}
 now		{return NOW_;}
 nrrd            {return NRRD_;}
 number		{return NUMBER_;}
@@ -253,6 +254,7 @@ publication	{return PUBLICATION_;}
 query           {return QUERY_;}
 radial		{return RADIAL_;}
 radius		{return RADIUS_;}
+range           {return RANGE_;}
 region		{return REGION_;}
 replace		{return REPLACE_;}
 resample	{return RESAMPLE_;}
@@ -357,6 +359,7 @@ win32		{return WIN32_;}
 xml		{return XML_;}
 xy		{return XY_;}
 yes		{return YES_;}
+zero		{return ZERO_;}
 zmax		{return ZMAX_;}
 zscale		{return ZSCALE_;}
 zoom		{return ZOOM_;}

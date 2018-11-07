@@ -976,7 +976,8 @@ Context* Frame::loadMask()
     result = TCL_ERROR;
     return NULL;
   }
-  FitsMask* msk = new FitsMask(this, maskColorName, maskMark);
+  FitsMask* msk =
+    new FitsMask(this, maskColorName, maskMark, maskLow, maskHigh);
   mask.append(msk);
   return msk->context();
 }

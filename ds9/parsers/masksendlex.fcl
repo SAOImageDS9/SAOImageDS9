@@ -9,6 +9,7 @@
 
 color	    {return $COLOR_}
 mark	    {return $MARK_}
+range	    {return $RANGE_}
 system	    {return $SYSTEM_}
 transparency {return $TRANSPARENCY_}
 

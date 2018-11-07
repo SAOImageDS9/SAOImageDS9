@@ -11,6 +11,9 @@ class Base;
 class Context;
 
 class FitsMask {
+ public:
+  enum MaskType {ZERO, NONZERO, RANGE};
+
  private:
   Context* context_;
   Matrix mm_;
@@ -19,21 +22,25 @@ class FitsMask {
   XColor* color_;
   char trueColor_[4];
 
-  int mark_;
+  MaskType mark_;
+  double low_;
+  double high_;
 
  protected:
   FitsMask* previous_;
   FitsMask* next_;
 
  public:
-  FitsMask(Base*, char*, int);
+  FitsMask(Base*, char*, MaskType, double, double);
   virtual ~FitsMask();
 
   Context* context() {return context_;}
   Matrix& mm() {return mm_;}
   XColor* color() {return color_;}
   char* trueColor() {return trueColor_;}
-  int mark() {return mark_;}
+  MaskType mark() {return mark_;}
+  double low() {return low_;}
+  double high() {return high_;}
 
   FitsMask* previous() {return previous_;}
   void setPrevious(FitsMask* m) {previous_ = m;}

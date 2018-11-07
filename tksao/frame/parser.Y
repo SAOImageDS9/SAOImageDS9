@@ -17,6 +17,7 @@
 #include "base.h"
 #include "frame3d.h"
 #include "fitsimage.h"
+#include "fitsmask.h"
 #include "marker.h"
 
 #undef yyFlexLexer
@@ -80,6 +81,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %type <integer> markerFormat
 %type <integer> markerLayer
 %type <dash> markerDash
+%type <integer> maskType
 %type <integer> pscolorspace
 %type <integer> scaleType
 %type <integer> minmaxMode
@@ -303,6 +305,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token NEXT_
 %token NO_
 %token NONE_
+%token NONZERO_
 %token NOW_
 %token NRRD_
 %token NUMBER_
@@ -337,6 +340,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token QUERY_
 %token RADIAL_
 %token RADIUS_
+%token RANGE_
 %token REGION_
 %token REPLACE_
 %token RESAMPLE_
@@ -441,6 +445,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token XML_
 %token XY_
 %token YES_
+%token ZERO_
 %token ZMAX_
 %token ZSCALE_
 %token ZOOM_
@@ -630,6 +635,12 @@ wcsSystem : WCS_ {$$ = currentCoord = Coord::WCS;}
 
 internalSystem : CANVAS_ {$$ = Coord::CANVAS;}
 	| PANNER_ {$$ = Coord::PANNER;}
+	;
+
+maskType : /* empty */ {$$ = FitsMask::NONZERO;}
+	| ZERO_ {$$ = FitsMask::ZERO;}
+	| NONZERO_ {$$ = FitsMask::NONZERO;}
+	| RANGE_ {$$ = FitsMask::RANGE;}
 	;
 
 scaleType: LINEAR_ {$$ = FrScale::LINEARSCALE;}
@@ -1226,6 +1237,7 @@ getGrid : /* empty */ {fr->getGridCmd();}
 
 getMask	: COLOR_ {fr->getMaskColorCmd();}
 	| MARK_ {fr->getMaskMarkCmd();}
+	| RANGE_ {fr->getMaskRangeCmd();}
         | SYSTEM_ {fr->getMaskSystemCmd();}
 	| TRANSPARENCY_ {fr->getMaskTransparencyCmd();}
 	;
@@ -2542,7 +2554,8 @@ callback : CALLBACK_ '=' markerCallBack STRING STRING {cblist.append(
 
 mask	: CLEAR_ {fr->maskClearCmd();}
 	| COLOR_ STRING {fr->maskColorCmd($2);}
-	| MARK_ INT {fr->maskMarkCmd($2);}
+        | MARK_ maskType {fr->maskMarkCmd((FitsMask::MaskType)$2);}
+	| RANGE_ numeric numeric {fr->maskRangeCmd($2,$3);}
         | SYSTEM_ coordSystem {fr->maskSystemCmd((Coord::CoordSystem)$2);}
 	| TRANSPARENCY_ numeric {fr->maskTransparencyCmd($2);}
 	;

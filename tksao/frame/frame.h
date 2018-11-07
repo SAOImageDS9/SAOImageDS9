@@ -28,7 +28,9 @@ class Frame : public FrameBase {
 
   char* maskColorName;
   float maskAlpha;
-  int maskMark;
+  FitsMask::MaskType maskMark;
+  double maskLow;
+  double maskHigh;
   Coord::CoordSystem maskSystem;
 
  private:
@@ -62,11 +64,13 @@ class Frame : public FrameBase {
 
   void getMaskColorCmd();
   void getMaskMarkCmd();
+  void getMaskRangeCmd();
   void getMaskSystemCmd();
   void getMaskTransparencyCmd();
 
   void maskColorCmd(const char*);
-  void maskMarkCmd(int mm) {maskMark=mm;}
+  void maskMarkCmd(FitsMask::MaskType mm) {maskMark=mm;}
+  void maskRangeCmd(double ll, double hh) {maskLow=ll; maskHigh=hh;}
   void maskSystemCmd(Coord::CoordSystem);
   void maskTransparencyCmd(float);
 

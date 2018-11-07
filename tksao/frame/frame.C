@@ -33,7 +33,9 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   maskColorName = dupstr("red");
   maskAlpha = 1;
-  maskMark = 1;
+  maskMark = FitsMask::NONZERO;
+  maskLow = 0;
+  maskHigh = 0;
   maskSystem = Coord::PHYSICAL;
 }
 
@@ -217,7 +219,9 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
   Context* cc = msk->context();
   FitsImage* currentMsk = cc->fits;
   XColor* maskColor = msk->color();
-  int mark = msk->mark();
+  FitsMask::MaskType mark = msk->mark();
+  double low = msk->low();
+  double high = msk->high();
 
   if (!currentMsk)
     return img;
@@ -252,13 +256,33 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 
 	if (xx>=params->xmin && xx<params->xmax && 
 	    yy>=params->ymin && yy<params->ymax) {
-	  int value = sptr->getValueMask(long(yy)*srcw + long(xx));
-       
-	  if ((mark && value) || (!mark && !value)) {
-	    *dest = ((unsigned char)maskColor->red)*maskAlpha;
-	    *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
-	    *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
-	    *(dest+3) = 1;
+	  double value = sptr->getValueDouble(long(yy)*srcw + long(xx));
+
+	  switch (mark) {
+	  case FitsMask::ZERO:
+	    if (value==0) {
+	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
+	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
+	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *(dest+3) = 1;
+	    }
+	    break;
+	  case FitsMask::NONZERO:
+	    if (value!=0) {
+	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
+	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
+	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *(dest+3) = 1;
+	    }
+	    break;
+	  case FitsMask::RANGE:
+	    if (value>=low && value<=high) {
+	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
+	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
+	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *(dest+3) = 1;
+	    }
+	    break;
 	  }
 
 	  break;
@@ -433,10 +457,24 @@ void Frame::getMaskColorCmd()
 
 void Frame::getMaskMarkCmd()
 {
-  if (maskMark)
-    Tcl_AppendResult(interp, "1", NULL);
-  else
-    Tcl_AppendResult(interp, "0", NULL);
+  switch (maskMark) {
+  case FitsMask::ZERO:
+    Tcl_AppendResult(interp, "zero", NULL);
+    break;
+  case FitsMask::NONZERO:
+    Tcl_AppendResult(interp, "nonzero", NULL);
+    break;
+  case FitsMask::RANGE:
+    Tcl_AppendResult(interp, "range", NULL);
+    break;
+  }
+}
+
+void Frame::getMaskRangeCmd()
+{
+  ostringstream str;
+  str << maskLow << ' ' << maskHigh << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
 void Frame::getMaskSystemCmd()

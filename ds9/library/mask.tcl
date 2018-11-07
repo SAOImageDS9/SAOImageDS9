@@ -14,7 +14,9 @@ proc MaskDef {} {
 
     set mask(system) physical
     set mask(color) red
-    set mask(mark) 1
+    set mask(mark) nonzero
+    set mask(low) 0
+    set mask(high) 0
     set mask(transparency) 0
 
     array set pmask [array get mask]
@@ -26,6 +28,15 @@ proc MaskMark {} {
 
     if {$current(frame) != {}} {
 	$current(frame) mask mark $mask(mark)
+    }
+}
+
+proc MaskRange {} {
+    global mask
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) mask range $mask(low) $mask(high)
     }
 }
 
@@ -176,6 +187,9 @@ proc UpdateMaskMenu {} {
 
     set mask(color) [$current(frame) get mask color]
     set mask(mark) [$current(frame) get mask mark]
+    set range [$current(frame) get mask range]
+    set mask(low) [lindex $range 0]
+    set mask(high) [lindex $range 1]
     set mask(system) [$current(frame) get mask system]
     set mask(transparency) [$current(frame) get mask transparency]
 
@@ -201,6 +215,7 @@ proc MaskLoad {} {
 	if {$rr} {
 	    $current(frame) mask color $mask(color)
 	    $current(frame) mask mark $mask(mark)
+	    $current(frame) mask range $mask(low) $mask(high)
 	    $current(frame) mask system $mask(system)
 	}
     }
@@ -216,6 +231,8 @@ proc MaskParamsDialog {} {
     set ed(ok) 0
     set ed(color) $mask(color)
     set ed(mark) $mask(mark)
+    set ed(low) $mask(low)
+    set ed(high) $mask(high)
 
     DialogCreate $w [msgcat::mc {Mask Parameters}] ed(ok)
 
@@ -229,15 +246,20 @@ proc MaskParamsDialog {} {
     ColorMenuButton $f.colorbutton ed color {}
 
     ttk::label $f.marktitle -text [msgcat::mc {Block}]
-    ttk::radiobutton $f.markz -text [msgcat::mc {Zero}] \
-	-variable ed(mark) -value 0 
-    ttk::radiobutton $f.marknz -text [msgcat::mc {Non-zero}] \
-	-variable ed(mark) -value 1
-    ttk::label $f.marktitle2 -text [msgcat::mc {Value}]
+    ttk::radiobutton $f.zero -text [msgcat::mc {Zero}] \
+	-variable ed(mark) -value zero
+    ttk::radiobutton $f.nonzero -text [msgcat::mc {Non-zero}] \
+	-variable ed(mark) -value nonzero
+    ttk::radiobutton $f.range -text [msgcat::mc {Range}] \
+	-variable ed(mark) -value range
+    ttk::label $f.rangetitle -text [msgcat::mc {Range}]
+    ttk::entry $f.low -textvariable ed(low) -width 13
+    ttk::entry $f.high -textvariable ed(high) -width 13
 
-    grid $f.coordtitle $f.coordbutton - -padx 2 -pady 2 -sticky w
-    grid $f.colortitle $f.colorbutton - -padx 2 -pady 2 -sticky w
-    grid $f.marktitle $f.markz $f.marknz $f.marktitle2 -padx 2 -pady 2 -sticky w
+    grid $f.coordtitle $f.coordbutton - - - -padx 2 -pady 2 -sticky w
+    grid $f.colortitle $f.colorbutton - - - -padx 2 -pady 2 -sticky w
+    grid $f.marktitle $f.zero $f.nonzero $f.range -padx 2 -pady 2 -sticky w
+    grid $f.rangetitle $f.low - $f.high -padx 2 -pady 2 -sticky w
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -260,6 +282,8 @@ proc MaskParamsDialog {} {
     if {$ed(ok)} {
 	set mask(color) [string tolower $ed(color)]
 	set mask(mark) $ed(mark)
+	set mask(low) $ed(low)
+	set mask(high) $ed(high)
     }
 
     set rr $ed(ok)
@@ -270,6 +294,7 @@ proc MaskParamsDialog {} {
 proc MaskBackup {ch which} {
     puts $ch "$which mask color [$which get mask color]"
     puts $ch "$which mask mark [$which get mask mark]"
+    puts $ch "$which mask range [$which get mask range]"
     puts $ch "$which mask transparency [$which get mask transparency]"
 }
 

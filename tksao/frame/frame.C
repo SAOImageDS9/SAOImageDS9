@@ -256,7 +256,7 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 
 	if (xx>=params->xmin && xx<params->xmax && 
 	    yy>=params->ymin && yy<params->ymax) {
-	  double value = sptr->getValueDouble(long(yy)*srcw + long(xx));
+	  float value = sptr->getValueFloat(long(yy)*srcw + long(xx));
 
 	  switch (mark) {
 	  case FitsMask::ZERO:

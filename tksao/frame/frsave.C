@@ -10,6 +10,7 @@
 #include "outchannel.h"
 #include "outsocket.h"
 #include "sigbus.h"
+#include "wcsast.h"
 
 void Base::saveFits(OutFitsStream& str)
 {
@@ -435,17 +436,10 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
 
   // ast
   AstFrameSet* ast = (AstFrameSet*)astCopy(currentContext->fits->ast_);
-
   Matrix mx = currentContext->fits->imageToRef * refToWidget * cc;
-  double ss[] = {mx.matrix(0,0),mx.matrix(1,0),
-		 mx.matrix(0,1),mx.matrix(1,1)};
-  double tt[] = {mx.matrix(2,0),mx.matrix(2,1)};
-    
-  AstMatrixMap* mm = astMatrixMap(2, 2, 0, ss, "");
-  AstShiftMap* sm = astShiftMap(2, tt, "");
-  AstCmpMap* cmp = astCmpMap(mm, sm, 1, "");
-
-  astRemapFrame(ast, AST__BASE, cmp);
+  AstCmpMap* cmp = wcsMatrixMap(ast, mx);
+  if (cmp)
+    astRemapFrame(ast, AST__BASE, cmp);
 
   // write to channel
   if (!astWrite(chan, ast)) {

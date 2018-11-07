@@ -23,3 +23,4 @@ double wcsAngle(AstFrameSet*, const Vector&, const Vector&, const Vector&);
 double wcsAxAngle(AstFrameSet*, const Vector&, const Vector&);
 
 AstWinMap* wcsWinMap(AstFrameSet*, Vector&, Vector&, Vector&);
+AstCmpMap* wcsMatrixMap(AstFrameSet* ast, Matrix&);

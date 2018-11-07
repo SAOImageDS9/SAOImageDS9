@@ -438,4 +438,54 @@ AstWinMap* wcsWinMap(AstFrameSet* ast, Vector& ll, Vector& ur, Vector& rr)
     }
     break;
   }
+
+  return NULL;
+}
+
+AstCmpMap* wcsMatrixMap(AstFrameSet* ast, Matrix& mx)
+{
+  AstMatrixMap* mm =NULL;
+  AstShiftMap* sm =NULL;
+
+  int naxes = astGetI(ast,"Naxes");
+  switch (naxes) {
+  case 1:
+    // error
+    return NULL;
+  case 2:
+    {
+      double ss[] = {mx.matrix(0,0),mx.matrix(1,0),
+		     mx.matrix(0,1),mx.matrix(1,1)};
+      double tt[] = {mx.matrix(2,0),mx.matrix(2,1)};
+      mm = astMatrixMap(2, 2, 0, ss, "");
+      sm = astShiftMap(2, tt, "");
+    }
+    break;
+  case 3:
+    {
+      double ss[] = {mx.matrix(0,0),mx.matrix(1,0),0,
+		     mx.matrix(0,1),mx.matrix(1,1),0,
+		     0,0,1};
+      double tt[] = {mx.matrix(2,0),mx.matrix(2,1),0};
+      mm = astMatrixMap(3, 3, 0, ss, "");
+      sm = astShiftMap(3, tt, "");
+    }
+    break;
+  case 4:
+    {
+      double ss[] = {mx.matrix(0,0),mx.matrix(1,0),0,0,
+		     mx.matrix(0,1),mx.matrix(1,1),0,0,
+		     0,0,1,0,
+		     0,0,0,1};
+      double tt[] = {mx.matrix(2,0),mx.matrix(2,1),0,0};
+      mm = astMatrixMap(4, 4, 0, ss, "");
+      sm = astShiftMap(4, tt, "");
+    }
+    break;
+  }
+
+  if (mm && sm)
+    return astCmpMap(mm, sm, 1, "");
+  else
+    return NULL;
 }

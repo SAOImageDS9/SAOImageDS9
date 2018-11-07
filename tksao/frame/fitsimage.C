@@ -1201,19 +1201,19 @@ void FitsImage::resetWCS()
   else
     initWCS(image_->head());
 
-
   // apply block factor
   if (ast_) {
     Vector block = context_->blockFactor();
-    if (block[0] != 1 && block[1] != 1) {
+    if (block[0] != 1 || block[1] != 1) {
       astClearStatus; // just to make sure
       astBegin; // start memory management
 
       Vector ll(.5,.5);
       Vector ur(1.5,1.5);
       Vector rr = ur*Translate(-.5,-.5)*Scale(block)*Translate(.5,.5);
-      AstWinMap* winmap = astWinMap(2, ll.vv(), rr.vv(), ll.vv(), ur.vv(), "");
-      astRemapFrame(ast_, AST__BASE, winmap);
+      AstWinMap* winmap = wcsWinMap(ast_, ll, ur, rr);
+      if (winmap)
+	astRemapFrame(ast_, AST__BASE, winmap);
 
       astEnd;
     }

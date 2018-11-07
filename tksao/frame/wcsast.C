@@ -392,3 +392,50 @@ double wcsAxAngle(AstFrameSet* ast, const Vector& vv1, const Vector& vv2)
   return 0;
 }
 
+AstWinMap* wcsWinMap(AstFrameSet* ast, Vector& ll, Vector& ur, Vector& rr)
+{
+  int naxes = astGetI(ast,"Naxes");
+  switch (naxes) {
+  case 1:
+    // error
+    return NULL;
+  case 2:
+    return astWinMap(2, ll.vv(), rr.vv(), ll.vv(), ur.vv(), "");
+  case 3:
+    {
+      double vll[3];
+      vll[0] = ll[0];
+      vll[1] = ll[0];
+      vll[2] = .5;
+      double vur[3];
+      vur[0] = ur[0];
+      vur[1] = ur[0];
+      vur[2] = .5;
+      double vrr[3];
+      vrr[0] = rr[0];
+      vrr[1] = rr[1];
+      vrr[2] = 1.5;
+      return astWinMap(3, vll, vrr, vll, vur, "");
+    }
+  case 4:
+    {
+      double vll[4];
+      vll[0] = ll[0];
+      vll[1] = ll[0];
+      vll[2] = .5;
+      vll[3] = .5;
+      double vur[4];
+      vur[0] = ur[0];
+      vur[1] = ur[0];
+      vur[2] = .5;
+      vur[3] = .5;
+      double vrr[4];
+      vrr[0] = rr[0];
+      vrr[1] = rr[1];
+      vrr[2] = 1.5;
+      vrr[3] = 1.5;
+      return astWinMap(4, vll, vrr, vll, vur, "");
+    }
+    break;
+  }
+}

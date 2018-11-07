@@ -21,3 +21,5 @@ Vector3d wcsTran(AstFrameSet*, const Vector3d&, int);
 double wcsDistance(AstFrameSet*, const Vector&, const Vector&);
 double wcsAngle(AstFrameSet*, const Vector&, const Vector&, const Vector&);
 double wcsAxAngle(AstFrameSet*, const Vector&, const Vector&);
+
+AstWinMap* wcsWinMap(AstFrameSet*, Vector&, Vector&, Vector&);

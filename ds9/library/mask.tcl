@@ -28,6 +28,8 @@ proc MaskMark {} {
 
     if {$current(frame) != {}} {
 	$current(frame) mask mark $mask(mark)
+	# for backward compatibility
+	set mask(mark) [$current(frame) get mask mark]
     }
 }
 

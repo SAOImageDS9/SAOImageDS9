@@ -2559,6 +2559,10 @@ mask	: CLEAR_ {fr->maskClearCmd();}
 	| RANGE_ numeric numeric {fr->maskRangeCmd($2,$3);}
         | SYSTEM_ coordSystem {fr->maskSystemCmd((Coord::CoordSystem)$2);}
 	| TRANSPARENCY_ numeric {fr->maskTransparencyCmd($2);}
+        | MARK_ INT {
+	  // backward compatibility
+	  fr->maskMarkCmd((FitsMask::MaskType)$2);
+	}
 	;
 
 orient	: 'X' {fr->orientCmd(Coord::XX);}

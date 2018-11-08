@@ -35,10 +35,12 @@ mask : {global parse; set parse(result) mask}
  | CLOSE_ {MaskDestroyDialog}
  | CLEAR_ {MaskClear}
  | COLOR_ STRING_ {ProcessCmdSet mask color $2 MaskColor}
- | MARK_ INT_ {ProcessCmdSet mask mark $2 MaskMark}
  | MARK_ mark {ProcessCmdSet mask mark $2 MaskMark}
+ | RANGE_ numeric numeric {ProcessCmdSet2 mask low $2 high $3 MaskRange}
  | SYSTEM_ system
  | TRANSPARENCY_ numeric {ProcessCmdSet mask transparency $2 MaskTransparency}
+# backward compatibility
+ | MARK_ INT_ {ProcessCmdSet mask mark $2 MaskMark}
  ;
 
 mark : ZERO_ {set _ zero}

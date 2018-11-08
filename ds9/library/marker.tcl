@@ -1235,6 +1235,26 @@ proc MarkerSave {} {
     }
 }
 
+proc Marker2Mask {} {
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    set filename [SaveFileDialog maskfbox]
+    if {$filename == {}} {
+	return
+    }
+
+    $current(frame) marker create mask $filename
+
+    MarkerDeleteAll
+}
+
 proc MarkerInfo {} {
     global current
     global marker

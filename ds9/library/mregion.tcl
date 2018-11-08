@@ -62,6 +62,8 @@ proc RegionMainMenu {} {
 	-command MarkerLoad
     $ds9(mb).region add command -label "[msgcat::mc {Save Regions}]..." \
 	-command MarkerSave
+    $ds9(mb).region add command -label [msgcat::mc {Convert to Mask}] \
+	-command Marker2Mask
     $ds9(mb).region add separator
     $ds9(mb).region add cascade -label [msgcat::mc {Region Parameters}] \
 	-menu $ds9(mb).region.params

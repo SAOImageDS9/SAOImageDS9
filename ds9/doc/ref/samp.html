@@ -463,6 +463,7 @@
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [</tt><tt>ua2|ub1|</tt><tt>ucac2|ucac2sup|ucac3|ucac4|urat1]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
+
         [2mass|iras]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [csc|xmm|rosat]</tt><tt><br>
@@ -502,6 +503,7 @@
         [&lt;ref&gt;] [export sb|tsv &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
+
         [&lt;ref&gt;] [filter &lt;string&gt;]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [filter load &lt;filename&gt;]</tt><tt><br>
@@ -514,10 +516,11 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
+
         [&lt;ref&gt;] [match &lt;ref&gt; &lt;ref&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt>
-      </tt><tt>[&lt;ref&gt;]
-        [match error &lt;value&gt; degrees|arcmin|arcsec]</tt><tt><br>
+      </tt><tt>[&lt;ref&gt;] [match error &lt;value&gt;
+        degrees|arcmin|arcsec]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt>
       </tt><tt>[&lt;ref&gt;] [match function 1and2|1not2|2not1]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt>
@@ -529,6 +532,7 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;]
         [name &lt;object&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
         [&lt;ref&gt;] [panto yes|no]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -554,6 +558,7 @@
         [samp send &lt;application&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
+
         [&lt;ref&gt;] [save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [server</tt><tt> </tt><tt>cds|adac|cadc|cambridge|sao|ukirt|iucaa|bejing|saao]</tt><tt><br>
@@ -578,6 +583,7 @@
         &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol shape
         circle|ellipse|box|text|point]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[&lt;ref&gt;]
+
 
         [symbol shape</tt><tt> </tt><tt>circle point|box point|diamond
         point|</tt><tt>cross point|x point|arrow point|boxcircle point]</tt><tt><br>
@@ -633,6 +639,7 @@
       </tt><tt> </tt><tt> </tt><tt>catalog name m51</tt><tt><br>
       </tt><tt> catalog panto no</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>catalog plot</tt><tt> </tt><tt>{$Jmag}
+
         {$Hmag} {$e_Jmag} {$e_Hmag}</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>catalog print</tt><tt><br>
       </tt><tt> </tt><tt>catalog psky fk5</tt><tt><br>
@@ -648,6 +655,7 @@
       </tt><tt> </tt><tt>catalog radius 1 degrees</tt><tt><br>
       </tt><tt> </tt><tt>catalog symbol condition</tt><tt> </tt><tt>{$Jmag&gt;15}</tt><tt><br>
       </tt><tt> </tt><tt>catalog symbol 2 shape</tt><tt> </tt><tt>{boxcircle
+
         point}</tt><tt><br>
       </tt><tt> </tt><tt>catalog symbol color red</tt><tt><br>
       </tt><tt> catalog symbol font times</tt><tt><br>
@@ -789,6 +797,7 @@
           levels &lt;filename&gt;]<br>
         </tt></tt> <tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
+
             [save levels &lt;filename&gt;]<br>
           </tt></tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [copy]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [paste
@@ -870,6 +879,7 @@
         &lt;coordsys&gt;|none]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [reset]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3d</tt><tt> </tt><tt>zmin
+
         zmax &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]</tt><tt><br>
       </tt><tt> &nbsp;</tt><tt><br>
@@ -1604,6 +1614,7 @@
           href="file:///Users/joye/saods9/doc/ref/analysis.html#macros">Analysis
 
 
+
           Macros</a> for more information.</p>
       <tt>Syntax:<br>
         iexam []<br>
@@ -1743,7 +1754,8 @@
       <p>Controls mask parameters.</p>
       <tt>Syntax:<br>
         mask [color &lt;color&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [mark 1|0]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [mark zero|nonzero|range]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [range &lt;low&gt; &lt;high&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [transparency &lt;value&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [clear]<br>
@@ -1753,11 +1765,13 @@
         string value = ds9.get(string cmd)<br>
         mask color<br>
         mask mark<br>
+        mask range<br>
         mask system<br>
         mask transparency<br>
         ds9.set(string cmd)<br>
         mask color red<br>
-        mask mark 0<br>
+        mask mark zero<br>
+        mask range 10 100<br>
         mask transparency 50<br>
         mask system wcs<br>
         mask clear<br>
@@ -2106,6 +2120,7 @@
       </tt><tt> </tt><tt> </tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt># existing plot</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>plot</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
         load &lt;filename&gt; xy|xyex|xyey|xyexey]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] save &lt;filename&gt;]</tt><tt><br>
@@ -2113,14 +2128,18 @@
         [[&lt;plotname&gt;] clear]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
+
         duplicate [#]]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
         stats yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
+
         list yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
         loadconfig &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2142,8 +2161,10 @@
         [[&lt;plotname&gt;] print color rgb|gray]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
+
         close</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
         mode pointer|zoom]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt><br>
@@ -2163,6 +2184,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp;&nbsp;
         [[&lt;plotname&gt;] axis x|y format &lt;string&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
         legend yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2185,43 +2207,55 @@
         [[&lt;plotname&gt;] title x|y &lt;string&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [</tt><tt>[&lt;plotname&gt;]
 
+
         barmode normal|stacked|aligned|overlap]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt># configure current dataset</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>plot [[&lt;plotname&gt;] show
         yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
         shape circle|square|diamond|plus|splus|scross|triangle|arrow]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
         shape fill yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
+
         shape color &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
         smooth step|linear|cubic|quadratic|catrom]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
+
         color &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
         width &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
+
         dash yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
+
         error yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
         error color &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] color &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
+
         error width &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
         name &lt;string&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt><br>
@@ -2923,6 +2957,7 @@
         [&lt;ref&gt;] [retrieve]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
+
         [&lt;ref&gt;] [save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;]
         [radius &lt;value&gt; degrees|arcmin|arcsec]</tt><tt><br>
@@ -3042,8 +3077,10 @@
             </tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
                   [sigmaminor &lt;value&gt;]<br>
@@ -3051,8 +3088,10 @@
 [angle
 
 
+
                       &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt></tt> <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
         [match]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; [lock [yes|no]]</tt><br>
@@ -3076,11 +3115,14 @@
         </tt></tt> <tt><tt><tt><tt><tt><tt>smooth radiusminor 4<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt>smooth
 
+
                         sigma 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt>smooth
 
+
                         sigmaminor 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>smooth
+
 
                               angle 45<br>
                             </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>

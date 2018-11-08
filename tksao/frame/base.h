@@ -1385,7 +1385,7 @@ public:
   void markerCommandVarCmd(MarkerFormat, const char*);
   void markerCopyCmd();
   void markerCopyCmd(const char*);
-  void markerCreateMaskCmd(const char*);
+  virtual void markerCreateMaskCmd(const char*) {};
   void markerCpandaCreateAnglesCmd(int, const Vector&);
   void markerCpandaCreateRadiusCmd(int, const Vector&);
   void markerCpandaDeleteCmd(int, int);

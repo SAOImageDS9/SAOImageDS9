@@ -62,6 +62,7 @@ proc RegionMainMenu {} {
 	-command MarkerLoad
     $ds9(mb).region add command -label "[msgcat::mc {Save Regions}]..." \
 	-command MarkerSave
+    $ds9(mb).region add separator
     $ds9(mb).region add command -label [msgcat::mc {Convert to Mask}] \
 	-command Marker2Mask
     $ds9(mb).region add separator
@@ -1097,6 +1098,18 @@ proc UpdateRegionMenu {} {
 		    set marker(font,weight) $pmarker(font,weight) 
 		    set marker(font,slant) $pmarker(font,slant) 
 		}
+	    }
+	}
+
+	switch [$current(frame) get type] {
+	    base {
+		$ds9(mb).region entryconfig [msgcat::mc {Convert to Mask}] \
+		    -state normal
+	    }
+	    rgb -
+	    3d {
+		$ds9(mb).region entryconfig [msgcat::mc {Convert to Mask}] \
+		    -state disabled
 	    }
 	}
     } else {

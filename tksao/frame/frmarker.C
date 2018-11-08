@@ -3285,10 +3285,6 @@ void Base::markerCopyCmd(const char* tag)
   }
 }
 
-void Base::markerCreateMaskCmd(const char* fn)
-{
-}
-
 void Base::markerCpandaCreateAnglesCmd(int id, const Vector& vv)
 {
   Marker* mm=markers->head();

@@ -512,6 +512,13 @@ void Frame::maskTransparencyCmd(float tt)
   update(BASE);
 }
 
+void Frame::markerCreateMaskCmd(const char* fn)
+{
+  // create image
+  // save it
+  // load as mask
+}
+
 void Frame::colormapCmd(int id, float b, float c, int i, 
 				 unsigned char* cells, int cnt)
 {

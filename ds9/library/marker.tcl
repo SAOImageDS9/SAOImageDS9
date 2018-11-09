@@ -1014,6 +1014,18 @@ proc MarkerDeleteAll {} {
     UpdateEditMenu
 }
 
+proc MarkerDeleteLoad {} {
+    global pds9
+
+    if {$pds9(confirm)} {
+	if {[tk_messageBox -type okcancel -icon question -message [msgcat::mc {Delete All Regions?}]] != {ok}} {
+	    return
+	}
+    }
+    MarkerDeleteAll
+    MarkerLoad
+}
+
 proc MarkerColor {} {
     global current
     global marker
@@ -1235,7 +1247,7 @@ proc MarkerSave {} {
     }
 }
 
-proc Marker2Mask {} {
+proc MarkerMask {} {
     global current
 
     if {$current(frame) == {}} {
@@ -1245,14 +1257,7 @@ proc Marker2Mask {} {
 	return
     }
 
-    set filename [SaveFileDialog maskfbox]
-    if {$filename == {}} {
-	return
-    }
-
-    $current(frame) marker create mask $filename
-
-    MarkerDeleteAll
+    $current(frame) marker create mask
 }
 
 proc MarkerInfo {} {

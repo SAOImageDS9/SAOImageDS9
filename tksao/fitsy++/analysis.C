@@ -4,7 +4,7 @@
 
 #include "analysis.h"
 
-FitsAnalysis::FitsAnalysis(FitsFile* src)
+FitsAnalysis::FitsAnalysis(FitsFile* src, int bitpix)
 {
   primary_ = src->primary();
   managePrimary_ = 0;
@@ -15,8 +15,58 @@ FitsAnalysis::FitsAnalysis(FitsFile* src)
   ext_ = src->ext();
   inherit_ = src->inherit();
 
-  // change bitpix to double
-  head_->setInteger("BITPIX", -64, "");
+  int width = head_->naxis(0);
+  int height = head_->naxis(1);
+  size_t size = (size_t)width*height;
+
+  switch (bitpix) {
+  case 8:
+    head_->setInteger("BITPIX", 8, "");
+    data_ = new unsigned char[size];
+    if (data_)
+      memset(data_, 0, size*sizeof(unsigned char));
+    break;
+  case 16:
+    head_->setInteger("BITPIX", 16, "");
+    data_ = new short[size];
+    if (data_)
+      memset(data_, 0, size*sizeof(short));
+    break;
+  case -16:
+    head_->setInteger("BITPIX", -16, "");
+    data_ = new unsigned short[size];
+    if (data_)
+      memset(data_, 0, size*sizeof(unsigned short));
+    break;
+  case 32:
+    head_->setInteger("BITPIX", 32, "");
+    data_ = new int[size];
+    if (data_)
+      memset(data_, 0, size*sizeof(int));
+    break;
+  case 64:
+    head_->setInteger("BITPIX", 64, "");
+    data_ = new long long[size];
+    if (data_)
+      memset(data_, 0, size*sizeof(long long));
+    break;
+  case -32:
+    head_->setInteger("BITPIX", -32, "");
+    data_ = new float[size];
+    if (data_)
+      memset(data_, 0, size*sizeof(float));
+    break;
+  case -64:
+    head_->setInteger("BITPIX", -64, "");
+    data_ = new double[size];
+    if (data_)
+      memset(data_, 0, size*sizeof(double));
+    break;
+  }
+
+  // alloc memory
+  if (!data_)
+    return;
 
   // unset BZERO/BSCALE if present
   if (head_->find("BZERO"))
@@ -27,22 +77,9 @@ FitsAnalysis::FitsAnalysis(FitsFile* src)
 
   head_->updateHDU();
 
-  int width = head_->naxis(0);
-  int height = head_->naxis(1);
-
-  // alloc memory
-  size_t size = (size_t)width*height;
-  data_ = new double[size];
-  if (!data_)
-    return;
-
+  // made it this far, must be valid
   dataSize_ = size;
   dataSkip_ = 0;
-
-  // clear memory
-  memset(data_, 0, size*sizeof(double));
-
-  // made it this far, must be valid
   byteswap_ = 0;
   endian_ = lsb() ? LITTLE : BIG;
   valid_ = 1;

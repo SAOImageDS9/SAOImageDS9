@@ -166,6 +166,7 @@
 ::msgcat::mcset ja {Contours} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2"]
 ::msgcat::mcset ja {Contour} 
 ::msgcat::mcset ja {Contrast} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xe9\xa5\xb9\xa5\xc8"]
+::msgcat::mcset ja {Convert to Mask} 
 ::msgcat::mcset ja {Convert to Polygons} [encoding convertfrom euc-jp "\xc2\xbf\xb3\xd1\xb7\xc1\xa4\xcb\xca\xd1\xb4\xb9"]
 ::msgcat::mcset ja {Coordinate Grid Parameters} [encoding convertfrom euc-jp "\xba\xc2\xc9\xb8\xa5\xb0\xa5\xea\xa5\xc3\xa5\xc9\xa4\xce\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Coordinate Grid} [encoding convertfrom euc-jp "\xba\xc2\xc9\xb8\xa5\xb0\xa5\xea\xa5\xc3\xa5\xc9"]
@@ -222,6 +223,7 @@
 ::msgcat::mcset ja {Delete Frame} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete Group} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete Selected Regions} [encoding convertfrom euc-jp "\xc1\xaa\xc2\xf2\xa4\xb7\xa4\xbf\xce\xce\xb0\xe8\xa4\xf2\xba\xef\xbd\xfc"]
+::msgcat::mcset ja {Delete and Load Regions} 
 ::msgcat::mcset ja {Delete} [encoding convertfrom euc-jp "\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Depth} [encoding convertfrom euc-jp "\xbf\xbc\xa4\xb5"]
 ::msgcat::mcset ja {Detector} [encoding convertfrom euc-jp "\xb8\xa1\xbd\xd0\xb4\xef\xba\xc2\xc9\xb8"]
@@ -374,7 +376,6 @@
 ::msgcat::mcset ja {Iteration} [encoding convertfrom euc-jp "\xb7\xab\xa4\xea\xca\xd6\xa4\xb7"]
 ::msgcat::mcset ja {JPEG Quality Factor} [encoding convertfrom euc-jp "\x4a\x50\x45\x47\xa4\xce\xc9\xca\xbc\xc1"]
 ::msgcat::mcset ja {Keep-Alive} 
-::msgcat::mcset ja {Keyboard} [encoding convertfrom euc-jp "\xa5\xad\xa1\xbc\xa5\xdc\xa1\xbc\xa5\xc9"]
 ::msgcat::mcset ja {Keyword} 
 ::msgcat::mcset ja {Labels} [encoding convertfrom euc-jp "\xa5\xe9\xa5\xd9\xa5\xeb"]
 ::msgcat::mcset ja {Label} [encoding convertfrom euc-jp "\xa5\xe9\xa5\xd9\xa5\xeb"]

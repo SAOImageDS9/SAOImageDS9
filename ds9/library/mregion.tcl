@@ -39,6 +39,11 @@ proc RegionMainMenu {} {
     $ds9(mb).region add command -label [msgcat::mc {Move to Back}] \
 	-command MarkerBack
     $ds9(mb).region add separator
+    $ds9(mb).region add command -label [msgcat::mc {New Group}] \
+	-command GroupCreate
+    $ds9(mb).region add command -label "[msgcat::mc {Groups}]..." \
+	-command GroupDialog
+    $ds9(mb).region add separator
     $ds9(mb).region add command -label [msgcat::mc {Select All}] \
 	-command MarkerSelectAll -accelerator "${ds9(ctrl)}A"
     $ds9(mb).region add command -label [msgcat::mc {Select None}] \
@@ -51,20 +56,19 @@ proc RegionMainMenu {} {
     $ds9(mb).region add command -label [msgcat::mc {Delete All Regions}] \
 	-command MarkerDeleteAllMenu
     $ds9(mb).region add separator
-    $ds9(mb).region add command -label [msgcat::mc {New Group}] \
-	-command GroupCreate
-    $ds9(mb).region add command -label "[msgcat::mc {Groups}]..." \
-	-command GroupDialog
-    $ds9(mb).region add separator
     $ds9(mb).region add command -label "[msgcat::mc {List Regions}]..." \
 	-command MarkerList
     $ds9(mb).region add command -label "[msgcat::mc {Load Regions}]..." \
 	-command MarkerLoad
+    $ds9(mb).region add command \
+	-label "[msgcat::mc {Delete and Load Regions}]..." \
+	-command MarkerDeleteLoad
+    $ds9(mb).region add separator
     $ds9(mb).region add command -label "[msgcat::mc {Save Regions}]..." \
 	-command MarkerSave
     $ds9(mb).region add separator
     $ds9(mb).region add command -label [msgcat::mc {Convert to Mask}] \
-	-command Marker2Mask
+	-command MarkerMask
     $ds9(mb).region add separator
     $ds9(mb).region add cascade -label [msgcat::mc {Region Parameters}] \
 	-menu $ds9(mb).region.params
@@ -715,7 +719,9 @@ proc ButtonsRegionDef {} {
 	region,group 0
 	region,list 1
 	region,load 1
+	region,deleteload 0
 	region,save 1
+	region,mask 0
 	region,show 0
 	region,showtext 0
 	region,autocentroid 0
@@ -823,9 +829,15 @@ proc CreateButtonsRegion {} {
 	[string tolower [msgcat::mc {List}]] MarkerList
     ButtonButton $ds9(buttons).region.load \
 	[string tolower [msgcat::mc {Load}]] MarkerLoad
+    ButtonButton $ds9(buttons).region.deleteload \
+	[string tolower [msgcat::mc {Delete Load}]] MarkerDeleteLoad
+
     ButtonButton $ds9(buttons).region.save \
 	[string tolower [msgcat::mc {Save}]] MarkerSave
     
+    ButtonButton $ds9(buttons).region.mask \
+	[string tolower [msgcat::mc {Mask}]] MarkerMask
+
     CheckButton $ds9(buttons).region.show \
 	[string tolower [msgcat::mc {Show}]] \
 	marker(show) MarkerShow
@@ -872,7 +884,9 @@ proc CreateButtonsRegion {} {
         $ds9(buttons).region.group pbuttons(region,group)
         $ds9(buttons).region.list pbuttons(region,list)
         $ds9(buttons).region.load pbuttons(region,load)
+        $ds9(buttons).region.deleteload pbuttons(region,deleteload)
         $ds9(buttons).region.save pbuttons(region,save)
+        $ds9(buttons).region.mask pbuttons(region,mask)
         $ds9(buttons).region.show pbuttons(region,show)
         $ds9(buttons).region.showtext pbuttons(region,showtext)
         $ds9(buttons).region.autocentroid pbuttons(region,autocentroid)
@@ -935,8 +949,16 @@ proc PrefsDialogButtonbarRegion {f} {
     $m add checkbutton -label "[msgcat::mc {Load Regions}]..." \
 	-variable pbuttons(region,load) \
 	-command {UpdateButtons buttons(region)}
+    $m add checkbutton -label "[msgcat::mc {Delete and Load Regions}]..." \
+	-variable pbuttons(region,deleteload) \
+	-command {UpdateButtons buttons(region)}
+    $m add separator
     $m add checkbutton -label "[msgcat::mc {Save Regions}]..." \
 	-variable pbuttons(region,save) \
+	-command {UpdateButtons buttons(region)}
+    $m add separator
+    $m add checkbutton -label [msgcat::mc {Convert to Mask}] \
+	-variable pbuttons(region,mask) \
 	-command {UpdateButtons buttons(region)}
     $m add separator
     $m add cascade -label [msgcat::mc {Region Parameters}] -menu $m.params
@@ -1038,6 +1060,9 @@ proc UpdateRegionMenu {} {
     global pmarker
     global ds9
 
+    set mm $ds9(mb).region
+    set bb $ds9(buttons).region
+
     if {$current(frame) != {}} {
 	$ds9(mb) entryconfig [msgcat::mc {Region}] -state normal
 
@@ -1103,13 +1128,13 @@ proc UpdateRegionMenu {} {
 
 	switch [$current(frame) get type] {
 	    base {
-		$ds9(mb).region entryconfig [msgcat::mc {Convert to Mask}] \
-		    -state normal
+		$mm entryconfig [msgcat::mc {Convert to Mask}] -state normal
+		$bb.mask configure -state normal
 	    }
 	    rgb -
 	    3d {
-		$ds9(mb).region entryconfig [msgcat::mc {Convert to Mask}] \
-		    -state disabled
+		$mm entryconfig [msgcat::mc {Convert to Mask}] -state disabled
+		$bb.mask configure -state disabled
 	    }
 	}
     } else {

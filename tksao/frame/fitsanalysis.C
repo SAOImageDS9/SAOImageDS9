@@ -37,7 +37,7 @@ void FitsImage::analysis(int which, pthread_t* thread, t_smooth_arg* targ)
   analysisdata_ = blockdata_;
 
   if (which) {
-    analysis_ = new FitsAnalysis(block_);
+    analysis_ = new FitsAnalysis(block_, -64);
     if (analysis_->isValid()) {
       analysisdata_ = new FitsDatam<double>(analysis_, interp_);
 

@@ -166,6 +166,7 @@
 ::msgcat::mcset da {Contours} {Konturer}
 ::msgcat::mcset da {Contour} {Konturer}
 ::msgcat::mcset da {Contrast} {Kontrast}
+::msgcat::mcset da {Convert to Mask} 
 ::msgcat::mcset da {Convert to Polygons} {Omdan til poygoner}
 ::msgcat::mcset da {Coordinate Grid Parameters} {Koordinatnetparametre}
 ::msgcat::mcset da {Coordinate Grid} {Koordinatnet}
@@ -222,6 +223,7 @@
 ::msgcat::mcset da {Delete Frame} {Slet denne ramme}
 ::msgcat::mcset da {Delete Group} {Slet gruppe}
 ::msgcat::mcset da {Delete Selected Regions} [encoding convertfrom iso8859-1 {Slet valgte områder}]
+::msgcat::mcset da {Delete and Load Regions} 
 ::msgcat::mcset da {Delete} {Slet} 
 ::msgcat::mcset da {Depth} {Dybde}
 ::msgcat::mcset da {Detector} {Detektor}
@@ -374,7 +376,6 @@
 ::msgcat::mcset da {Iteration} 
 ::msgcat::mcset da {JPEG Quality Factor} {JPEG kvalitetsfaktor}
 ::msgcat::mcset da {Keep-Alive} 
-::msgcat::mcset da {Keyboard} {Tastatur}
 ::msgcat::mcset da {Keyword} 
 ::msgcat::mcset da {Labels} {Etiketter}
 ::msgcat::mcset da {Label} {Etikette}

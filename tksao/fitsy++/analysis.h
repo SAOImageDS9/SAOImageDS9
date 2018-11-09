@@ -9,7 +9,7 @@
 
 class FitsAnalysis : public FitsFile {
 public:
-  FitsAnalysis(FitsFile*);
+  FitsAnalysis(FitsFile*, int);
   ~FitsAnalysis();
 };
 

@@ -166,6 +166,7 @@
 ::msgcat::mcset zh {Contours} [encoding convertfrom big5 "\xB5\xA5 \xAD\xC8 \xBD\x75"]
 ::msgcat::mcset zh {Contour} 
 ::msgcat::mcset zh {Contrast} 
+::msgcat::mcset zh {Convert to Mask} 
 ::msgcat::mcset zh {Convert to Polygons} 
 ::msgcat::mcset zh {Coordinate Grid Parameters} [encoding convertfrom big5 "\xAE\x79 \xBC\xD0 \xAE\xE6 \xBD\x75 \xB0\xD1 \xBC\xC6"]
 ::msgcat::mcset zh {Coordinate Grid} [encoding convertfrom big5 "\xAE\x79 \xBC\xD0 \xAE\xE6 \xBD\x75"]
@@ -222,6 +223,7 @@
 ::msgcat::mcset zh {Delete Frame} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Delete Group} 
 ::msgcat::mcset zh {Delete Selected Regions} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xBF\xEF \xA8\xFA \xB0\xCF \xB0\xEC"]
+::msgcat::mcset zh {Delete and Load Regions} 
 ::msgcat::mcset zh {Delete} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3"]
 ::msgcat::mcset zh {Depth} 
 ::msgcat::mcset zh {Detector} 
@@ -374,7 +376,6 @@
 ::msgcat::mcset zh {Iteration} 
 ::msgcat::mcset zh {JPEG Quality Factor} 
 ::msgcat::mcset zh {Keep-Alive} 
-::msgcat::mcset zh {Keyboard} 
 ::msgcat::mcset zh {Keyword} 
 ::msgcat::mcset zh {Labels} 
 ::msgcat::mcset zh {Label} 

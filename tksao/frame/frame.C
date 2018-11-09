@@ -276,6 +276,22 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 	      *(dest+3) = 1;
 	    }
 	    break;
+	  case FitsMask::NaN:
+	    if (isnan(value) || isinf(value)) {
+	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
+	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
+	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *(dest+3) = 1;
+	    }
+	    break;
+	  case FitsMask::NONNaN:
+	    if (!isnan(value) && !isinf(value)) {
+	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
+	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
+	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *(dest+3) = 1;
+	    }
+	    break;
 	  case FitsMask::RANGE:
 	    if (value>=low && value<=high) {
 	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
@@ -464,6 +480,12 @@ void Frame::getMaskMarkCmd()
     break;
   case FitsMask::NONZERO:
     Tcl_AppendResult(interp, "nonzero", NULL);
+    break;
+  case FitsMask::NaN:
+    Tcl_AppendResult(interp, "nan", NULL);
+    break;
+  case FitsMask::NONNaN:
+    Tcl_AppendResult(interp, "nonnan", NULL);
     break;
   case FitsMask::RANGE:
     Tcl_AppendResult(interp, "range", NULL);

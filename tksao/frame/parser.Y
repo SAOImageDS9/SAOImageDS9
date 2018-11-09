@@ -305,6 +305,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token NEXT_
 %token NO_
 %token NONE_
+%token NONNAN_
 %token NONZERO_
 %token NOW_
 %token NRRD_
@@ -640,6 +641,8 @@ internalSystem : CANVAS_ {$$ = Coord::CANVAS;}
 maskType : /* empty */ {$$ = FitsMask::NONZERO;}
 	| ZERO_ {$$ = FitsMask::ZERO;}
 	| NONZERO_ {$$ = FitsMask::NONZERO;}
+	| NAN_ {$$ = FitsMask::NaN;}
+	| NONNAN_ {$$ = FitsMask::NONNaN;}
 	| RANGE_ {$$ = FitsMask::RANGE;}
 	;
 

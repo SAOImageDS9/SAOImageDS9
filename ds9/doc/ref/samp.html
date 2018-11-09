@@ -464,6 +464,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
+
         [2mass|iras]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [csc|xmm|rosat]</tt><tt><br>
@@ -504,6 +505,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
+
         [&lt;ref&gt;] [filter &lt;string&gt;]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [filter load &lt;filename&gt;]</tt><tt><br>
@@ -514,6 +516,7 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [match]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -532,6 +535,7 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;]
         [name &lt;object&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
         [&lt;ref&gt;] [panto yes|no]</tt><tt><br>
@@ -559,6 +563,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
+
         [&lt;ref&gt;] [save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [server</tt><tt> </tt><tt>cds|adac|cadc|cambridge|sao|ukirt|iucaa|bejing|saao]</tt><tt><br>
@@ -583,6 +588,7 @@
         &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol shape
         circle|ellipse|box|text|point]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[&lt;ref&gt;]
+
 
 
         [symbol shape</tt><tt> </tt><tt>circle point|box point|diamond
@@ -640,6 +646,7 @@
       </tt><tt> catalog panto no</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>catalog plot</tt><tt> </tt><tt>{$Jmag}
 
+
         {$Hmag} {$e_Jmag} {$e_Hmag}</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>catalog print</tt><tt><br>
       </tt><tt> </tt><tt>catalog psky fk5</tt><tt><br>
@@ -655,6 +662,7 @@
       </tt><tt> </tt><tt>catalog radius 1 degrees</tt><tt><br>
       </tt><tt> </tt><tt>catalog symbol condition</tt><tt> </tt><tt>{$Jmag&gt;15}</tt><tt><br>
       </tt><tt> </tt><tt>catalog symbol 2 shape</tt><tt> </tt><tt>{boxcircle
+
 
         point}</tt><tt><br>
       </tt><tt> </tt><tt>catalog symbol color red</tt><tt><br>
@@ -798,6 +806,7 @@
         </tt></tt> <tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
+
             [save levels &lt;filename&gt;]<br>
           </tt></tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [copy]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [paste
@@ -879,6 +888,7 @@
         &lt;coordsys&gt;|none]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [reset]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3d</tt><tt> </tt><tt>zmin
+
 
         zmax &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [open|close]</tt><tt><br>
@@ -1615,6 +1625,7 @@
 
 
 
+
           Macros</a> for more information.</p>
       <tt>Syntax:<br>
         iexam []<br>
@@ -1754,7 +1765,7 @@
       <p>Controls mask parameters.</p>
       <tt>Syntax:<br>
         mask [color &lt;color&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [mark zero|nonzero|range]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [mark zero|nonzero|nan|nonnan|range]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [range &lt;low&gt; &lt;high&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [transparency &lt;value&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
@@ -2121,6 +2132,7 @@
       </tt><tt> </tt><tt> </tt><tt># existing plot</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>plot</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
+
         load &lt;filename&gt; xy|xyex|xyey|xyexey]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] save &lt;filename&gt;]</tt><tt><br>
@@ -2129,16 +2141,20 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         duplicate [#]]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         stats yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         list yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         loadconfig &lt;filename&gt;]</tt><tt><br>
@@ -2162,8 +2178,10 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         close</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         mode pointer|zoom]</tt><tt><br>
@@ -2184,6 +2202,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp;&nbsp;
         [[&lt;plotname&gt;] axis x|y format &lt;string&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         legend yes|no]</tt><tt><br>
@@ -2208,6 +2227,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [</tt><tt>[&lt;plotname&gt;]
 
 
+
         barmode normal|stacked|aligned|overlap]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt># configure current dataset</tt><tt><br>
@@ -2215,36 +2235,45 @@
         yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
+
         shape circle|square|diamond|plus|splus|scross|triangle|arrow]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         shape fill yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         shape color &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         smooth step|linear|cubic|quadratic|catrom]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         color &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         width &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         dash yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         error yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         error color &lt;value&gt;]</tt><tt><br>
@@ -2253,8 +2282,10 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         error width &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         name &lt;string&gt;]</tt><tt><br>
@@ -2958,6 +2989,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
+
         [&lt;ref&gt;] [save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;]
         [radius &lt;value&gt; degrees|arcmin|arcsec]</tt><tt><br>
@@ -3078,8 +3110,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3089,8 +3123,10 @@
 
 
 
+
                       &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt></tt> <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
         [match]<br>
@@ -3116,12 +3152,15 @@
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt>smooth
 
 
+
                         sigma 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt>smooth
 
 
+
                         sigmaminor 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>smooth
+
 
 
                               angle 45<br>

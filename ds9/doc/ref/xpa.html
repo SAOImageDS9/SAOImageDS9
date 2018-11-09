@@ -209,6 +209,7 @@
               </tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
 
 
+
                       -p ds9 3d match</tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset -p ds9 3d lock
                             yes</tt><br>
@@ -449,6 +450,7 @@
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -470,9 +472,11 @@
 
 
 
+
             [&lt;ref&gt;] [match &lt;ref&gt; &lt;ref&gt;]<br>
           </tt></tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
 [match
+
 
 
 
@@ -480,12 +484,15 @@
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt> <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
 
 
+
         [match return 1and2|1only|2only]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
+
 
 
         [match unique yes|no]</tt><br>
@@ -538,7 +545,9 @@
 
 
 
+
           shape</tt></tt> <tt><tt>circle point|box point|diamond point|</tt>cross
+
 
 
         point|x point|arrow point|boxcircle point]<br>
@@ -549,6 +558,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt> <tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
+
 
 
         [update]</tt><br>
@@ -1077,6 +1087,7 @@
       <tt><tt>$xpaset -p ds9 export nrrd foo.nrrd little</tt></tt><br>
       <tt><tt><tt><tt><tt><tt>$xpaset -p ds9 export envi foo.hdr little</tt></tt><br>
             </tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
                           -p ds9 export envi foo.hdr foo.bsq little</tt></tt><br>
@@ -1621,7 +1632,7 @@
       <p>Controls mask parameters.</p>
       <tt>Syntax:<br>
         mask [color &lt;color&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [mark zero|nonzero|range]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [mark zero|nonzero|nan|nonnan|range]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [range &lt;low&gt; &lt;high&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [transparency &lt;value&gt;]<br>
       </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
@@ -1966,6 +1977,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[new
 
 
+
         [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
         label&gt;</tt><tt> </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[new</tt><tt>
@@ -1982,8 +1994,10 @@
       </tt><tt>[line|bar|scatter]</tt><tt> </tt><tt>stdin</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[new
 
+
         name &lt;plotname&gt; stdin</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[new
+
 
         name &lt;plotname&gt;</tt><tt> </tt><tt>line|bar|scatter</tt><tt>
       </tt><tt>stdin</tt><tt>]</tt><tt><br>
@@ -1996,6 +2010,7 @@
       </tt><tt> </tt><tt> </tt><tt># existing plot</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>plot</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
+
         load &lt;filename&gt; xy|xyex|xyey|xyexey]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] save &lt;filename&gt;]</tt><tt><br>
@@ -2004,16 +2019,20 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         duplicate [#]]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         stats yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         list yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         loadconfig &lt;filename&gt;]</tt><tt><br>
@@ -2037,8 +2056,10 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         close</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         mode pointer|zoom]</tt><tt><br>
@@ -2059,6 +2080,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp;&nbsp;
         [[&lt;plotname&gt;] axis x|y format &lt;string&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         legend yes|no]</tt><tt><br>
@@ -2083,6 +2105,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [</tt><tt>[&lt;plotname&gt;]
 
 
+
         barmode normal|stacked|aligned|overlap]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt># configure current dataset</tt><tt><br>
@@ -2090,36 +2113,45 @@
         yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
+
         shape circle|square|diamond|plus|splus|scross|triangle|arrow]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         shape fill yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         shape color &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         smooth step|linear|cubic|quadratic|catrom]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         color &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         width &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         dash yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         error yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         error color &lt;value&gt;]</tt><tt><br>
@@ -2128,8 +2160,10 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         error width &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         name &lt;string&gt;]</tt><tt><br>
@@ -2815,6 +2849,7 @@
         &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[&lt;ref&gt;]
 
+
         [crosshair]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [export
         sb|tsv &lt;filename&gt;]</tt><tt><br>
@@ -2834,6 +2869,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [system &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[&lt;ref&gt;]
+
 
         [update]</tt><br>
       &nbsp; <tt><br>
@@ -2939,8 +2975,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2950,8 +2988,10 @@
 
 
 
+
                       &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt></tt> <tt>&nbsp;&nbsp;&nbsp;
+
 
 
         &nbsp;&nbsp; [match]<br>
@@ -2967,6 +3007,7 @@
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaget
 
 
+
                         ds9 smooth sigmaminor<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt> $xpaget
         ds9 smooth lock<br>
@@ -2979,12 +3020,15 @@
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
 
 
+
                         -p ds9 smooth sigma 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
 
 
+
                         -p ds9 smooth sigmaminor 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
                               -p ds9 smooth angle 45<br>

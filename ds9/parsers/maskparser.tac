@@ -13,6 +13,8 @@
 %token CLOSE_
 %token COLOR_
 %token MARK_
+%token NAN_
+%token NONNAN_
 %token NONZERO_
 %token OPEN_
 %token RANGE_
@@ -45,6 +47,8 @@ mask : {global parse; set parse(result) mask}
 
 mark : ZERO_ {set _ zero}
  | NONZERO_ {set _ nonzero}
+ | NAN_ {set _ nan}
+ | NONNAN_ {set _ nonnan}
  | RANGE_ {set _ range}
  ;
 

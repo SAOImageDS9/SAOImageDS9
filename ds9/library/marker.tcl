@@ -51,6 +51,8 @@ proc MarkerDef {} {
 
     set marker(format) ds9
 
+    set marker(mask) nonzero
+
     # these are only used for save/load/list and
     #   are set from current wcs values
     array set pmarker [array get marker]
@@ -1257,7 +1259,58 @@ proc MarkerMask {} {
 	return
     }
 
-    $current(frame) marker create mask
+    if {[MarkerMaskParamsDialog]} {
+#	$current(frame) marker create mask $marker(mask)
+    }
+}
+
+proc MarkerMaskParamsDialog {} {
+    global marker
+    global ed
+
+    set w {.markermskd}
+
+    set ed(ok) 0
+    set ed(mask) $marker(mask)
+
+    DialogCreate $w [msgcat::mc {Mask Parameters}] ed(ok)
+
+    # Param
+    set f [ttk::frame $w.param]
+
+    ttk::label $f.marktitle -text [msgcat::mc {Block}]
+    ttk::radiobutton $f.zero -text [msgcat::mc {Zero}] \
+	-variable marker(mask) -value zero
+    ttk::radiobutton $f.nonzero -text [msgcat::mc {Non-zero}] \
+	-variable marker(mask) -value nonzero
+
+    grid $f.marktitle $f.zero $f.nonzero -padx 2 -pady 2 -sticky w
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+	-default active 
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
+
+    DialogCenter $w 
+    DialogWait $w ed(ok)
+    DialogDismiss $w
+
+    if {$ed(ok)} {
+	set marker(mask) $ed(mask)
+    }
+
+    set rr $ed(ok)
+    unset ed
+    return $rr
 }
 
 proc MarkerInfo {} {

@@ -218,6 +218,7 @@ new		{return NEW_;}
 next		{return NEXT_;}
 no		{return NO_;}
 none		{return NONE_;}
+nonnan		{return NONNAN_;}
 nonzero		{return NONZERO_;}
 now		{return NOW_;}
 nrrd            {return NRRD_;}

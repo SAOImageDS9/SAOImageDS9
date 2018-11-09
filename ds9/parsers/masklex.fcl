@@ -11,6 +11,8 @@ close	    {return $CLOSE_}
 clear	    {return $CLEAR_}
 color	    {return $COLOR_}
 mark	    {return $MARK_}
+nan	    {return $NAN_}
+nonnan	    {return $NONNAN_}
 nonzero	    {return $NONZERO_}
 open	    {return $OPEN_}
 range	    {return $RANGE_}

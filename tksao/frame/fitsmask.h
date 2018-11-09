@@ -12,7 +12,7 @@ class Context;
 
 class FitsMask {
  public:
-  enum MaskType {ZERO, NONZERO, RANGE};
+  enum MaskType {ZERO, NONZERO, NaN, NONNaN, RANGE};
 
  private:
   Context* context_;

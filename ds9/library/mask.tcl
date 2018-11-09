@@ -247,21 +247,29 @@ proc MaskParamsDialog {} {
     ttk::label $f.colortitle -text [msgcat::mc {Color}]
     ColorMenuButton $f.colorbutton ed color {}
 
-    ttk::label $f.marktitle -text [msgcat::mc {Block}]
-    ttk::radiobutton $f.zero -text [msgcat::mc {Zero}] \
+    ttk::label $f.marktitle -text [msgcat::mc {Block Pixel}]
+    set mb $f.markbutton.menu
+    ttk::menubutton $f.markbutton -textvariable ed(mark) -menu $mb
+    menu $mb
+    $mb add radiobutton -label [msgcat::mc {Zero}] \
 	-variable ed(mark) -value zero
-    ttk::radiobutton $f.nonzero -text [msgcat::mc {Non-zero}] \
+    $mb add radiobutton -label [msgcat::mc {Non-Zero}] \
 	-variable ed(mark) -value nonzero
-    ttk::radiobutton $f.range -text [msgcat::mc {Range}] \
+    $mb add radiobutton -label [msgcat::mc {NAN}] \
+	-variable ed(mark) -value nan
+    $mb add radiobutton -label [msgcat::mc {Non-NAN}] \
+	-variable ed(mark) -value nonnan
+    $mb add radiobutton -label [msgcat::mc {Range}] \
 	-variable ed(mark) -value range
+
     ttk::label $f.rangetitle -text [msgcat::mc {Range}]
     ttk::entry $f.low -textvariable ed(low) -width 13
     ttk::entry $f.high -textvariable ed(high) -width 13
 
-    grid $f.coordtitle $f.coordbutton - - - -padx 2 -pady 2 -sticky w
-    grid $f.colortitle $f.colorbutton - - - -padx 2 -pady 2 -sticky w
-    grid $f.marktitle $f.zero $f.nonzero $f.range -padx 2 -pady 2 -sticky w
-    grid $f.rangetitle $f.low - $f.high -padx 2 -pady 2 -sticky w
+    grid $f.coordtitle $f.coordbutton -padx 2 -pady 2 -sticky w
+    grid $f.colortitle $f.colorbutton -padx 2 -pady 2 -sticky w
+    grid $f.marktitle $f.markbutton -padx 2 -pady 2 -sticky w
+    grid $f.rangetitle $f.low $f.high -padx 2 -pady 2 -sticky w
 
     # Buttons
     set f [ttk::frame $w.buttons]

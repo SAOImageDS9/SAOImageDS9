@@ -29,6 +29,7 @@ proc UpdateWCSMenu {} {
 
     if {$current(frame) != {}} {
 	$ds9(mb) entryconfig [msgcat::mc {WCS}] -state normal
+	ConfigureButtons wcs normal
 
 	set ww [$current(frame) get wcs]
 	set wcs(system) [lindex $ww 0]
@@ -44,6 +45,7 @@ proc UpdateWCSMenu {} {
 	LayoutWCSInfoBox $current(frame)
     } else {
 	$ds9(mb) entryconfig [msgcat::mc {WCS}] -state disabled
+	ConfigureButtons wcs disabled
     }
 }
 

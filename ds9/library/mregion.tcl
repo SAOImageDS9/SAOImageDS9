@@ -67,9 +67,6 @@ proc RegionMainMenu {} {
     $ds9(mb).region add command -label "[msgcat::mc {Save Regions}]..." \
 	-command MarkerSave
     $ds9(mb).region add separator
-    $ds9(mb).region add command -label [msgcat::mc {Convert to Mask}] \
-	-command MarkerMask
-    $ds9(mb).region add separator
     $ds9(mb).region add cascade -label [msgcat::mc {Region Parameters}] \
 	-menu $ds9(mb).region.params
 
@@ -957,10 +954,6 @@ proc PrefsDialogButtonbarRegion {f} {
 	-variable pbuttons(region,save) \
 	-command {UpdateButtons buttons(region)}
     $m add separator
-    $m add checkbutton -label [msgcat::mc {Convert to Mask}] \
-	-variable pbuttons(region,mask) \
-	-command {UpdateButtons buttons(region)}
-    $m add separator
     $m add cascade -label [msgcat::mc {Region Parameters}] -menu $m.params
 
     menu $m.shape
@@ -1065,6 +1058,7 @@ proc UpdateRegionMenu {} {
 
     if {$current(frame) != {}} {
 	$ds9(mb) entryconfig [msgcat::mc {Region}] -state normal
+	ConfigureButtons region normal
 
 	set marker(show) [$current(frame) get marker show]
 	set marker(show,text) [$current(frame) get marker show text]
@@ -1126,18 +1120,113 @@ proc UpdateRegionMenu {} {
 	    }
 	}
 
-	switch [$current(frame) get type] {
-	    base {
-		$mm entryconfig [msgcat::mc {Convert to Mask}] -state normal
-		$bb.mask configure -state normal
-	    }
-	    rgb -
-	    3d {
-		$mm entryconfig [msgcat::mc {Convert to Mask}] -state disabled
-		$bb.mask configure -state disabled
-	    }
+	if {[$current(frame) has fits]} {
+	    $mm entryconfig "[msgcat::mc {Get Information}]..." -state normal
+
+	    $mm entryconfig [msgcat::mc {Composite Region}] -state normal
+	    $mm entryconfig [msgcat::mc {Instrument FOV}] -state normal
+	    $mm entryconfig [msgcat::mc {Template}] -state normal
+
+	    $mm entryconfig [msgcat::mc {Centroid}] -state normal
+	    $mm entryconfig [msgcat::mc {Move to Front}] -state normal
+	    $mm entryconfig [msgcat::mc {Move to Back}] -state normal
+
+	    $mm entryconfig [msgcat::mc {New Group}] -state normal
+	    $mm entryconfig "[msgcat::mc {Groups}]..." -state normal
+
+	    $mm entryconfig [msgcat::mc {Select All}] -state normal
+	    $mm entryconfig [msgcat::mc {Select None}] -state normal
+	    $mm entryconfig [msgcat::mc {Invert Selection}] -state normal
+
+	    $mm entryconfig [msgcat::mc {Delete Selected Regions}] -state normal
+	    $mm entryconfig [msgcat::mc {Delete All Regions}] -state normal
+
+	    $mm entryconfig "[msgcat::mc {List Regions}]..." -state normal
+	    $mm entryconfig "[msgcat::mc {Load Regions}]..." -state normal
+	    $mm entryconfig "[msgcat::mc {Delete and Load Regions}]..." -state normal
+	    $mm entryconfig "[msgcat::mc {Save Regions}]..." -state normal
+
+	    $bb.info configure -state normal
+
+	    $bb.create configure -state normal
+	    $bb.dissolve configure -state normal
+
+	    $bb.loadtemplate configure -state normal
+	    $bb.savetemplate configure -state normal
+
+	    $bb.centroid configure -state normal
+	    $bb.front configure -state normal
+	    $bb.back configure -state normal
+
+	    $bb.newgroup configure -state normal
+	    $bb.group configure -state normal
+
+	    $bb.all configure -state normal
+	    $bb.none configure -state normal
+	    $bb.invert configure -state normal
+
+	    $bb.delete configure -state normal
+	    $bb.deleteall configure -state normal
+
+	    $bb.list configure -state normal
+	    $bb.load configure -state normal
+	    $bb.deleteload configure -state normal
+	    $bb.save configure -state normal
+	} else {
+	    $mm entryconfig "[msgcat::mc {Get Information}]..." -state disabled
+
+	    $mm entryconfig [msgcat::mc {Composite Region}] -state disabled
+	    $mm entryconfig [msgcat::mc {Instrument FOV}] -state disabled
+	    $mm entryconfig [msgcat::mc {Template}] -state disabled
+
+	    $mm entryconfig [msgcat::mc {Centroid}] -state disabled
+	    $mm entryconfig [msgcat::mc {Move to Front}] -state disabled
+	    $mm entryconfig [msgcat::mc {Move to Back}] -state disabled
+
+	    $mm entryconfig [msgcat::mc {New Group}] -state disabled
+	    $mm entryconfig "[msgcat::mc {Groups}]..." -state disabled
+
+	    $mm entryconfig [msgcat::mc {Select All}] -state disabled
+	    $mm entryconfig [msgcat::mc {Select None}] -state disabled
+	    $mm entryconfig [msgcat::mc {Invert Selection}] -state disabled
+
+	    $mm entryconfig [msgcat::mc {Delete Selected Regions}] -state disabled
+	    $mm entryconfig [msgcat::mc {Delete All Regions}] -state disabled
+
+	    $mm entryconfig "[msgcat::mc {List Regions}]..." -state disabled
+	    $mm entryconfig "[msgcat::mc {Load Regions}]..." -state disabled
+	    $mm entryconfig "[msgcat::mc {Delete and Load Regions}]..." -state disabled
+	    $mm entryconfig "[msgcat::mc {Save Regions}]..." -state disabled
+
+	    $bb.info configure -state disabled
+
+	    $bb.create configure -state disabled
+	    $bb.dissolve configure -state disabled
+
+	    $bb.loadtemplate configure -state disabled
+	    $bb.savetemplate configure -state disabled
+
+	    $bb.centroid configure -state disabled
+	    $bb.front configure -state disabled
+	    $bb.back configure -state disabled
+
+	    $bb.newgroup configure -state disabled
+	    $bb.group configure -state disabled
+
+	    $bb.all configure -state disabled
+	    $bb.none configure -state disabled
+	    $bb.invert configure -state disabled
+
+	    $bb.delete configure -state disabled
+	    $bb.deleteall configure -state disabled
+
+	    $bb.list configure -state disabled
+	    $bb.load configure -state disabled
+	    $bb.deleteload configure -state disabled
+	    $bb.save configure -state disabled
 	}
     } else {
 	$ds9(mb) entryconfig [msgcat::mc {Region}] -state disabled
+	ConfigureButtons region disabled
     }
 }

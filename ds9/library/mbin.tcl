@@ -323,11 +323,14 @@ proc UpdateBinMenu {} {
 	if {[$current(frame) has fits]} {
 	    if {[$current(frame) has fits bin]} {
 		$ds9(mb) entryconfig [msgcat::mc {Bin}] -state normal
+		ConfigureButtons bin normal
 	    } else {
 		$ds9(mb) entryconfig [msgcat::mc {Bin}] -state disabled
+		ConfigureButtons bin disabled
 	    }
 	} else {
 	    $ds9(mb) entryconfig [msgcat::mc {Bin}] -state normal
+	    ConfigureButtons bin normal
 	}
 
 	set bin(function) [$current(frame) get bin function]
@@ -336,6 +339,7 @@ proc UpdateBinMenu {} {
 	set bin(buffersize) [$current(frame) get bin buffer size]
     } else {
 	$ds9(mb) entryconfig [msgcat::mc {Bin}] -state disabled
+	ConfigureButtons bin disabled
     }
 }
 

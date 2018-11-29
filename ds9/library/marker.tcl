@@ -1247,26 +1247,6 @@ proc MarkerSave {} {
     }
 }
 
-proc MarkerMask {} {
-    global current
-
-    if {$current(frame) == {}} {
-	return
-    }
-    if {![$current(frame) has fits]} {
-	return
-    }
-
-    if {[MaskParamsDialog]} {
-	$current(frame) mask color $mask(color)
-	$current(frame) mask mark $mask(mark)
-	$current(frame) mask range $mask(low) $mask(high)
-	$current(frame) mask system $mask(system)
-
-	$current(frame) marker create mask
-    }
-}
-
 proc MarkerInfo {} {
     global current
     global marker

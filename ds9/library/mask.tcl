@@ -125,6 +125,9 @@ proc MaskDialog {} {
     $mb.file.open add command \
 	-label "[msgcat::mc {Mosaic IRAF Segment}]..." \
 	-command [list OpenDialog mosaiciraf mask]
+    $mb.file.open add command \
+	-label "[msgcat::mc {Mosaic WFPC2}]..." \
+	-command [list OpenDialog mosaicimagewfpc2 mask]
 
     menu $mb.file.import
     $mb.file.import add command \

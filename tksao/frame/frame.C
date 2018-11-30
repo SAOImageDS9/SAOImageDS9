@@ -535,25 +535,6 @@ void Frame::maskTransparencyCmd(float tt)
   update(BASE);
 }
 
-void Frame::markerCreateMaskCmd()
-{
-  FitsImage* img = currentContext->fits;
-  if (!img)
-    return;
-
-  FitsFile* src = img->imageFile();
-  if (!src)
-    return;
-
-  FitsFile* dst = new FitsAnalysis(src, -32);
-  if (!dst)
-    return;
-
-  // load it
-  Context* cc = loadMask();
-  //  loadFitsMMapIncrCmd(fn, Base::MASK);
-}
-
 void Frame::colormapCmd(int id, float b, float c, int i, 
 				 unsigned char* cells, int cnt)
 {

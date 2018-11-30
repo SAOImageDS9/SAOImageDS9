@@ -2227,7 +2227,6 @@ markerCreate :
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 
-        | MASK_ {fr->markerCreateMaskCmd();}
 	| TEMPLATE_ markerCreateTemplate
 	;
 

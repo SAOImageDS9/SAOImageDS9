@@ -113,28 +113,21 @@ proc MaskDialog {} {
     $mb.file add command -label [msgcat::mc {Close}] -command MaskDestroyDialog
 
     menu $mb.file.open
-    $mb.file.open add command \
-	-label "[msgcat::mc {Mosaic WCS}]..." \
+    $mb.file.open add command -label "[msgcat::mc {Mosaic WCS}]..." \
 	-command [list OpenDialog mosaicimagewcs mask]
-    $mb.file.open add command \
-	-label "[msgcat::mc {Mosaic WCS Segment}]..." \
+    $mb.file.open add command -label "[msgcat::mc {Mosaic WCS Segment}]..." \
 	-command [list OpenDialog mosaicwcs mask]
-    $mb.file.open add command \
-	-label "[msgcat::mc {Mosaic IRAF}]..." \
+    $mb.file.open add command -label "[msgcat::mc {Mosaic IRAF}]..." \
 	-command [list OpenDialog mosaicimageiraf mask]
-    $mb.file.open add command \
-	-label "[msgcat::mc {Mosaic IRAF Segment}]..." \
+    $mb.file.open add command -label "[msgcat::mc {Mosaic IRAF Segment}]..." \
 	-command [list OpenDialog mosaiciraf mask]
-    $mb.file.open add command \
-	-label "[msgcat::mc {Mosaic WFPC2}]..." \
+    $mb.file.open add command -label "[msgcat::mc {Mosaic WFPC2}]..." \
 	-command [list OpenDialog mosaicimagewfpc2 mask]
 
     menu $mb.file.import
-    $mb.file.import add command \
-	-label "[msgcat::mc {Array}]..." \
+    $mb.file.import add command -label "[msgcat::mc {Array}]..." \
 	-command [list ImportDialog array mask]
-    $mb.file.import add command \
-	-label "[msgcat::mc {NRRD}]..." \
+    $mb.file.import add command -label {NRRD} \
 	-command [list ImportDialog nrrd mask]
 
     EditMenu $mb imask

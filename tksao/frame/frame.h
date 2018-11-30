@@ -73,7 +73,6 @@ class Frame : public FrameBase {
   void maskRangeCmd(double ll, double hh) {maskLow=ll; maskHigh=hh;}
   void maskSystemCmd(Coord::CoordSystem);
   void maskTransparencyCmd(float);
-  void markerCreateMaskCmd();
 
   void colormapCmd(int, float, float, int, unsigned char*, int);
   void colormapBeginCmd();

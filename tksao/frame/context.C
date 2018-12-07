@@ -498,6 +498,9 @@ void Context::contourLoadAux(istream& str,
 			     Coord::CoordSystem sys, Coord::SkyFrame sky,
 			     const char* color, int width, int dash)
 {
+  contourLoadAux(str);
+  return;
+
   if (!cfits)
     return;
 

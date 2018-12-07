@@ -83,6 +83,7 @@ static Coord::SkyFrame checkWCSSky();
 %token <str> DMSSTR
 
 %token EOF_
+
 %token AMPLIFIER_
 %token B1950_
 %token COLOR_
@@ -142,14 +143,20 @@ static Coord::SkyFrame checkWCSSky();
 
 %%
 
-start	: initGlobal commands
+start	: initGlobal initLocal commands
 	;
 
 commands: commands command terminator
 	| command terminator
 	;
 
-command : /* empty */
+command : /* blank line */
+	{
+	  if (cc && cl) {
+	    cl->lcontour().append(cc);
+	    cc =NULL;
+	  }
+	}
         | DEBUG_ debug
 	| VERSION_ {cerr << "DS9 Contour File 7.5" << endl;}
 
@@ -178,8 +185,10 @@ command : /* empty */
 	| nodes
 	| ')' comment
 	{
-	  if (cc && cl)
+	  if (cc && cl) {
 	    cl->lcontour().append(cc);
+	    cc =NULL;
+	  }
 	}
 	| '#' {DISCARD_(1);} STRING
 	;
@@ -204,6 +213,13 @@ node    : coord comment
         {
 	  if (cc)
 	    cc->lvertex().append(new Vertex($1));
+	  else {
+	    if (!cl)
+	      cl = new ContourLevel(fr, localLevel, localColor, localWidth, localDash, localDashList);
+	    if (!cc)
+	      cc = new Contour(cl);
+	    cc->lvertex().append(new Vertex($1));
+	  }
         }
 	;
 
@@ -215,8 +231,10 @@ terminator: '\n'
 	| ';'
 	| EOF_ 
         {
-	  if (cl)
+	  if (cl) {
 	    fr->contourAppendCmd(cl);
+	    cl =NULL;
+	  }
 	  YYACCEPT;
 	}
 	;

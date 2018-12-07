@@ -670,7 +670,6 @@ public:
   void getColorbarTagCmd();
 
   // Contour Commands
-  void contourAppendCmd(ContourLevel*);
   void contourCreateCmd(const char*, int, int, FVContour::Method, int, int, FrScale::ColorScaleType, float, FrScale::ClipMode, float, FrScale::ClipScope, double, double, const char*);
   void contourCreatePolygonCmd();
   void contourDeleteCmd();

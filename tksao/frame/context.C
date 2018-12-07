@@ -31,7 +31,7 @@ extern "C" {
 
 void* ctlval;
 ctFlexLexer* ctlexx;
-extern int ctparse(Base*, ctFlexLexer*);
+extern int ctparse(Context*, ctFlexLexer*);
 
 int ctlex(void* vval, ctFlexLexer* ll)
 {
@@ -40,13 +40,14 @@ int ctlex(void* vval, ctFlexLexer* ll)
   return ll ? ll->yylex() : 0;
 }
 
-void cterror(Base* ct, ctFlexLexer* ll, const char* m)
+void cterror(Context* ct, ctFlexLexer* ll, const char* mm)
 {
-  ct->error(m);
+  Base* fr = ct->parent_;
+  fr->error(mm);
   const char* cmd = ll ? ll->YYText() : (const char*)NULL;
   if (cmd && cmd[0] != '\n') {
-    ct->error(": ");
-    ct->error(cmd);
+    fr->error(": ");
+    fr->error(cmd);
   }
 }
 
@@ -97,6 +98,9 @@ Context::Context()
   smoothAngle_ =0;
 
   thread_ =NULL;
+
+  contourWCSSystem_ = Coord::WCS;
+  contourWCSSkyFrame_ = Coord::FK5;
 }
 
 Context::~Context()
@@ -462,8 +466,11 @@ void Context::contourLoadAux(istream& str)
   if (!cfits)
     return;
 
+  contourWCSSystem_ = parent_->getWCSSystem();
+  contourWCSSkyFrame_ = parent_->getWCSSkyFrame();
+
   ctFlexLexer* ll = new ctFlexLexer(&str);
-  ctparse(parent_, ll);
+  ctparse(this, ll);
   delete ll;
 }
 
@@ -476,8 +483,11 @@ void Context::contourLoadAux(istream& str, const char* color,
   // remember where we are
   int cnt = auxcontours_.count();
 
+  contourWCSSystem_ = parent_->getWCSSystem();
+  contourWCSSkyFrame_ = parent_->getWCSSkyFrame();
+
   ctFlexLexer* ll = new ctFlexLexer(&str);
-  ctparse(parent_, ll);
+  ctparse(this, ll);
   delete ll;
 
   // override line attributes
@@ -494,41 +504,33 @@ void Context::contourLoadAux(istream& str, const char* color,
   }
 }
 
+// backward compatibility
 void Context::contourLoadAux(istream& str, 
 			     Coord::CoordSystem sys, Coord::SkyFrame sky,
 			     const char* color, int width, int dash)
 {
-  contourLoadAux(str);
-  return;
+  // remember where we are
+  int cnt = auxcontours_.count();
 
-  if (!cfits)
-    return;
+  contourWCSSystem_ = sys;
+  contourWCSSkyFrame_ = sky;
 
-  int dl[2];
-  dl[0] =8;
-  dl[1] =3;
-  ContourLevel* cl = new ContourLevel(parent_, 0, color, width, dash, dl);
+  ctFlexLexer* ll = new ctFlexLexer(&str);
+  ctparse(this, ll);
+  delete ll;
 
-  Contour* cc = new Contour(cl);
-  while (!str.eof()) {
-    char buf[64];
-    str.getline(buf,64,'\n');
-    if (strlen(buf) > 0) {
-      Vector vv;
-      string x(buf);
-      istringstream sstr(x);
+  // override line attributes
+  if (auxcontours_.head()) {
+    for (int ii=0; ii<cnt; ii++)
+      auxcontours_.next();
 
-      sstr >> vv[0] >> vv[1];
-      cc->lvertex().append(new Vertex(fits->mapToRef(vv, sys, sky)));
+    do {
+      auxcontours_.current()->setColor(color);
+      auxcontours_.current()->setLineWidth(width);
+      auxcontours_.current()->setDash(dash);
     }
-    else {
-      cl->lcontour().append(cc);
-      cc = new Contour(cl);
-    }
+    while (auxcontours_.next());
   }
-
-  auxcontours_.append(cl);
-  hasAuxContour_ =1;
 }
 
 void Context::contourPS(Widget::PSColorSpace cs)

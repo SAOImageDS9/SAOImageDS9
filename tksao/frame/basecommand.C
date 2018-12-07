@@ -675,12 +675,6 @@ void Base::colorScaleLogCmd(double exp)
   }
 }
 
-void Base::contourAppendCmd(ContourLevel* cl)
-{
-  currentContext->contourAppendAux(cl);
-  update(PIXMAP);
-}
-
 void Base::contourCreateCmd(const char* color, int width, int dash,
 			    FVContour::Method method, int numlevel, 
 			    int smooth, 

@@ -36,9 +36,9 @@ class Context {
  public:
   enum SmoothFunction {BOXCAR, TOPHAT, GAUSSIAN, ELLIPTIC};
 
- protected:
   Base* parent_;
 
+ protected:
   FrScale frScale;
 
   int shareWCS_;
@@ -77,6 +77,9 @@ class Context {
   List<ContourLevel> auxcontours_;
   int hasContour_;
   int hasAuxContour_;
+
+  Coord::CoordSystem contourWCSSystem_;
+  Coord::SkyFrame contourWCSSkyFrame_;
 
  protected:
   void binFinish();
@@ -118,6 +121,10 @@ class Context {
   void bltHist(char*, char*, int);
 
   int calcSlice();
+
+  Coord::CoordSystem contourWCSSystem() {return contourWCSSystem_;}
+  Coord::SkyFrame contourWCSSkyFrame() {return contourWCSSkyFrame_;}
+
   void contourAppendAux(ContourLevel*);
   void contourCreateFV(const char* color, int width, int dash,
 		       FVContour::Method method, int numlevel, 

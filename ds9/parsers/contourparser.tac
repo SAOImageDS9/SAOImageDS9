@@ -87,9 +87,12 @@ contour : yesno {ProcessCmdSet contour view $1 UpdateContour}
  | MODE_ modes
  | SCOPE_ scope {ContourCmdMode scope $2}
  | LIMITS_ numeric numeric {ContourCmdLimits $2 $3}
- | LEVELS_ STRING_ {ContourCmdLevels $2}
- | LEVELS_ numeric {ContourCmdLevels $2}
+ | LEVELS_ levels
  | GENERATE_ {ContourDialog; ContourGenerateDialog; UpdateContour}
+ ;
+
+levels : STRING_ {ContourCmdLevels $1}
+ | numeric {ContourCmdLevels $1}
  ;
 
 load : STRING_ {ContourCmdLoad $1}

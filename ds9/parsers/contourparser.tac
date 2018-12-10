@@ -91,8 +91,13 @@ contour : yesno {ProcessCmdSet contour view $1 UpdateContour}
  | GENERATE_ {ContourDialog; ContourGenerateDialog; UpdateContour}
  ;
 
-levels : STRING_ {ContourCmdLevels $1}
- | numeric {ContourCmdLevels $1}
+levels : numerics {ContourCmdLevels $1}
+# backward compatible
+ | STRING_ {ContourCmdLevels $1}
+ ;
+
+numerics : numerics numeric {append _ " $2"}
+ | numeric
  ;
 
 load : STRING_ {ContourCmdLoad $1}

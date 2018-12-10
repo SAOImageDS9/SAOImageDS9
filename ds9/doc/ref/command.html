@@ -9,9 +9,9 @@
       2.4.7-10 i686) [Netscape]">
     <title>Command Line Options</title>
   </head>
-  <body vlink="#551A8B" link="#0000FF" alink="#FF0000">
-    <h3><img alt="" src="../sun.gif" width="100" height="98"
-        align="middle"> Command Line Options</h3>
+  <body alink="#FF0000" link="#0000FF" vlink="#551A8B">
+    <h3><img alt="" src="../sun.gif" align="middle" height="98"
+        width="100"> Command Line Options</h3>
     <blockquote>
       <p>DS9 will process each command line option, one at a time, as
         the last step in the initialization process. Therefore, it is
@@ -450,6 +450,7 @@
 
 
 
+
         [&lt;ref&gt;] [filter &lt;string&gt;]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [filter load &lt;filename&gt;]</tt><tt><br>
@@ -460,6 +461,7 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [match &lt;ref&gt; &lt;ref&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -479,6 +481,7 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;]
         [name &lt;object&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -508,6 +511,7 @@
 
 
 
+
         [&lt;ref&gt;] [save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [server</tt><tt> </tt><tt>cds|adac|cadc|cambridge|sao|ukirt|iucaa|bejing|saao]</tt><tt><br>
@@ -534,9 +538,11 @@
 
 
 
+
         [symbol shape</tt><tt> </tt><tt>circle point|box point|diamond
         point|</tt><tt>cross point|x point|arrow point|boxcircle point]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -586,6 +592,7 @@
       </tt><tt> </tt><tt> </tt><tt>$ds9 -catalog name m51</tt><tt><br>
       </tt><tt> $ds9 -catalog panto no</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>$ds9 -catalog plot</tt><tt> </tt><tt>'\$Jmag'
+
 
 
         '\$Hmag' '\$e_Jmag' '\$e_Hmag'</tt><tt><br>
@@ -678,6 +685,7 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; [ticks]<br>
       </tt> <tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -776,7 +784,7 @@
         $ds9 -contour mode zscale<br>
         $ds9 -contour scope local<br>
         $ds9 -contour limits 1 100<br>
-        $ds9 -contour levels "1 10 100 1000"<br>
+        $ds9 -contour levels 1 10 100 1000<br>
         $ds9 -contour open<br>
         $ds9 -contour close<br>
       </tt>
@@ -811,6 +819,7 @@
         [&lt;skyframe&gt;]]<br>
         &nbsp;</tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [match
+
 
 
 
@@ -977,6 +986,7 @@
 
 
 
+
           -envi foo.hdr foo.bsq</tt></tt><tt><tt><tt><tt><tt><tt><br>
                 </tt></tt></tt></tt></tt></tt>
       <p><b><a name="exit" id="exit"></a>exit<br>
@@ -1009,8 +1019,10 @@
       </tt><tt> </tt><tt> </tt><tt>-export &lt;filename&gt;</tt><tt>.jpeg
 
 
+
         [1-100]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>-export &lt;filename&gt;</tt><tt>.tiff
+
 
 
 
@@ -1449,7 +1461,8 @@
       <p>Controls mask parameters.</p>
       <tt>Syntax:<br>
         -mask [color &lt;color&gt;]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [mark zero|nonzero|nan|nonnan|range]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [mark
+        zero|nonzero|nan|nonnan|range]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [range &lt;low&gt; &lt;high&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [transparency &lt;value&gt;]<br>
       </tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [system
@@ -1478,8 +1491,10 @@
 
 
 
+
         &lt;coordsys&gt;]</tt><tt> </tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
         [crop &lt;coordsys&gt;]</tt><tt><br>
@@ -1493,6 +1508,7 @@
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [block]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [smooth]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
         [3d]</tt><tt><br>
@@ -1614,14 +1630,17 @@
 
 
 
+
         [pan]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 
 
+
         [crosshair]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -1736,6 +1755,7 @@
 
 
 
+
         [yes|open]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
         [no|close]<br>
@@ -1767,6 +1787,7 @@
       </tt><tt> </tt><tt> </tt><tt>-plot</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
 
+
         load &lt;filename&gt; xy|xyex|xyey|xyexey]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp;
         [[&lt;plotname&gt;] save &lt;filename&gt;]</tt><tt><br>
@@ -1779,6 +1800,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp;</tt><tt>
       </tt><tt>[[&lt;plotname&gt;] list yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp; &nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -1804,8 +1826,10 @@
 
 
 
+
         close</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp; &nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
         mode pointer|zoom]</tt><tt><br>
@@ -1829,6 +1853,7 @@
 
 
 
+
         legend yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp;
         [[&lt;plotname&gt;] legend position right|left|top|bottom]</tt><tt><br>
@@ -1849,6 +1874,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp; &nbsp;
         [[&lt;plotname&gt;] title x|y &lt;string&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; [</tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -2033,6 +2059,7 @@
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [filename
         &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
         [color rgb|cmyk|gray]</tt><tt><br>
@@ -2317,6 +2344,7 @@
 
 
 
+
         [image|table|slice]</tt><br>
       <tt>&nbsp;<br>
         Example:<br>
@@ -2435,6 +2463,7 @@
 
 
 
+
         [crosshair]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [export
         sb|tsv &lt;filename&gt;]</tt><tt><br>
@@ -2455,6 +2484,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [system &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -2568,8 +2598,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2577,6 +2609,7 @@
                   [sigmaminor &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [angle
+
 
 
 
@@ -2601,8 +2634,10 @@
 
 
 
+
                   sigmaminor 2.0<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+
 
 
 

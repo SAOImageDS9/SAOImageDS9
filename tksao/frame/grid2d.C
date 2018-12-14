@@ -19,7 +19,7 @@ Grid2d::Grid2d(Widget* p, Coord::CoordSystem sys, Coord::SkyFrame sky,
 Grid2d::~Grid2d()
 {}
 
-int Grid2d::doit(RenderMode rm)
+void Grid2d::doit(RenderMode rm)
 {
   FrameBase* pp = (FrameBase*)parent_;
   astGrid2dPtr =NULL;
@@ -32,7 +32,7 @@ int Grid2d::doit(RenderMode rm)
   Context* context = pp->keyContext;
   FitsImage* fits = context->fits;
   if (!fits)
-    return 1;
+    return;
 
   astClearStatus; // just to make sure
   astBegin; // start memory management
@@ -58,13 +58,13 @@ int Grid2d::doit(RenderMode rm)
       // ast_ maybe NULL
       if (!fits->ast_) {
 	astEnd; // now, clean up memory
-	return 1;
+	return;
       }
 
       // set desired skyformat
       if (!fits->wcsInv()) {
 	astEnd; // now, clean up memory
-	return 1;
+	return;
       }
 
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_);
@@ -77,7 +77,7 @@ int Grid2d::doit(RenderMode rm)
       case 1:
 	// error
 	astEnd; // now, clean up memory
-	return 0;
+	return;
       case 2:
 	break;
       case 3:
@@ -154,7 +154,6 @@ int Grid2d::doit(RenderMode rm)
 
   astEnd; // now, clean up memory
   astGrid2dPtr =NULL;
-  return 1;
 }
 
 void Grid2d::matrixMap(void* frameSet, Matrix& mx, const char* str)

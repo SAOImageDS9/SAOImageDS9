@@ -12,7 +12,7 @@
 class Grid25d : public Grid, public Grid25dBase {
  private:
   void matrixMap(void*, Matrix&, const char*);
-  int doit(RenderMode);
+  void doit(RenderMode);
 
  public:
   Grid25d(Widget*, Coord::CoordSystem, Coord::SkyFrame, 

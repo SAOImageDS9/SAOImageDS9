@@ -476,10 +476,11 @@ void FitsHist::mapWCSString(FitsHead* head, char* w,
   ostr1 << out << "1" << w << ends;
   ostr2 << out << "2" << w << ends;
 
-  if (head->find(istr1.str().c_str()) || 
-      head->find(istr2.str().c_str())) {
+  if (head->find(istr1.str().c_str())) {
     char* cc1 = head->getString(istr1.str().c_str());
     head_->appendString(ostr1.str().c_str(), cc1, NULL);
+  }
+  if (head->find(istr2.str().c_str())) {
     char* cc2 = head->getString(istr2.str().c_str());
     head_->appendString(ostr2.str().c_str(), cc2, NULL);
   }

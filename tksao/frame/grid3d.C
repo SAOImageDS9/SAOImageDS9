@@ -22,6 +22,7 @@ Grid3d::~Grid3d()
 int Grid3d::doit(RenderMode rm)
 {
   Frame3dBase* pp = (Frame3dBase*)parent_;
+  astGrid3dPtr =NULL;
 
   mx_ = pp->refToWidget3d;
   rx_ =
@@ -56,6 +57,12 @@ int Grid3d::doit(RenderMode rm)
     break;
   default:
     {
+      // ast_ maybe NULL
+      if (!fits->ast_) {
+	astEnd; // now, clean up memory
+	return 1;
+      }
+
       if (!fits->wcsInv()) {
 	astEnd; // now, clean up memory
 	return 1;

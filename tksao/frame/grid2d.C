@@ -22,6 +22,7 @@ Grid2d::~Grid2d()
 int Grid2d::doit(RenderMode rm)
 {
   FrameBase* pp = (FrameBase*)parent_;
+  astGrid2dPtr =NULL;
 
   matrix_ = pp->widgetToCanvas;
   pixmap_ = pp->pixmap;
@@ -54,6 +55,11 @@ int Grid2d::doit(RenderMode rm)
     break;
   default:
     {
+      // ast_ maybe NULL
+      if (!fits->ast_) {
+	astEnd; // now, clean up memory
+	return 1;
+      }
 
       // set desired skyformat
       if (!fits->wcsInv()) {
@@ -71,7 +77,6 @@ int Grid2d::doit(RenderMode rm)
       case 1:
 	// error
 	astEnd; // now, clean up memory
-	astGrid2dPtr =NULL;
 	return 0;
       case 2:
 	break;

@@ -22,6 +22,7 @@ Grid25d::~Grid25d()
 int Grid25d::doit(RenderMode rm)
 {
   Frame3dBase* pp = (Frame3dBase*)parent_;
+  astGrid25dPtr =NULL;
 
   matrix_ = pp->widgetToCanvas;
   pixmap_ = pp->pixmap;
@@ -54,6 +55,12 @@ int Grid25d::doit(RenderMode rm)
     break;
   default:
     {
+      // ast_ maybe NULL
+      if (!fits->ast_) {
+	astEnd; // now, clean up memory
+	return 1;
+      }
+
       // set desired skyformat
       if (!fits->wcsInv()) {
 	astEnd; // now, clean up memory
@@ -70,7 +77,6 @@ int Grid25d::doit(RenderMode rm)
       case 1:
 	// error
 	astEnd; // now, clean up memory
-	astGrid25dPtr =NULL;
 	return 0;
       case 2:
 	break;

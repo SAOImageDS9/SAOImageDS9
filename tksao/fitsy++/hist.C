@@ -463,18 +463,24 @@ void FitsHist::mapWCSString(FitsHead* head, char* w,
 void FitsHist::mapWCSString(FitsHead* head, char* w, 
 			    const char* out, const char* prim, const char* alt)
 {
-  ostringstream istr1, istr2;
+  ostringstream istr1, istr2, istr3;
   if (!w[0]) {
     istr1 << prim << xcol_->index() << w << ends;
     istr2 << prim << ycol_->index() << w << ends;
+    if (zcol_)
+      istr3 << prim << zcol_->index() << w << ends;
   }
   else {
     istr1 << alt << xcol_->index() << w << ends;
     istr2 << alt << ycol_->index() << w << ends;
+    if (zcol_)
+      istr3 << alt << zcol_->index() << w << ends;
   }
-  ostringstream ostr1, ostr2;
+  ostringstream ostr1, ostr2, ostr3;
   ostr1 << out << "1" << w << ends;
   ostr2 << out << "2" << w << ends;
+  if (zcol_)
+    ostr3 << out << "3" << w << ends;
 
   if (head->find(istr1.str().c_str())) {
     char* cc1 = head->getString(istr1.str().c_str());
@@ -483,6 +489,12 @@ void FitsHist::mapWCSString(FitsHead* head, char* w,
   if (head->find(istr2.str().c_str())) {
     char* cc2 = head->getString(istr2.str().c_str());
     head_->appendString(ostr2.str().c_str(), cc2, NULL);
+  }
+  if (zcol_) {
+    if (head->find(istr3.str().c_str())) {
+      char* cc3 = head->getString(istr3.str().c_str());
+      head_->appendString(ostr3.str().c_str(), cc3, NULL);
+    }
   }
 }
 
@@ -497,7 +509,7 @@ void FitsHist::mapWCSReal(FitsHead* head, const char* out, const char* in)
   }
 }
 
-void FitsHist::mapWCSReal(FitsHead* head, char* w, 
+void FitsHist::mapWCSReal(FitsHead* head, char* w,
 			  const char* out, const char* in)
 {
   ostringstream istr;
@@ -513,27 +525,39 @@ void FitsHist::mapWCSReal(FitsHead* head, char* w,
 			  const char* out, const char* prim, const char* alt, 
 			  Matrix mm)
 {
-  ostringstream istr1, istr2;
+  ostringstream istr1, istr2, istr3;
   if (!w[0]) {
     istr1 << prim << xcol_->index() << w << ends;
     istr2 << prim << ycol_->index() << w << ends;
+    if (zcol_)
+      istr3 << prim << zcol_->index() << w << ends;
   }
   else {
     istr1 << alt << xcol_->index() << w << ends;
     istr2 << alt << ycol_->index() << w << ends;
+    if (zcol_)
+      istr3 << alt << zcol_->index() << w << ends;
   }
-  ostringstream ostr1, ostr2;
+  ostringstream ostr1, ostr2, ostr3;
   ostr1 << out << "1" << w << ends;
   ostr2 << out << "2" << w << ends;
+  if (zcol_)
+    ostr3 << out << "3" << w << ends;
 
-  if (head->find(istr1.str().c_str()) || 
-      head->find(istr2.str().c_str())) {
+  if (head->find(istr1.str().c_str()) || head->find(istr2.str().c_str())) {
     float cc1 = head->getReal(istr1.str().c_str(),0);
     float cc2 = head->getReal(istr2.str().c_str(),0);
     Vector cc = Vector(cc1,cc2) * mm;
 
     head_->appendReal(ostr1.str().c_str(), cc[0], 10, NULL);
     head_->appendReal(ostr2.str().c_str(), cc[1], 10, NULL);
+  }
+
+  if (zcol_) {
+    if (head->find(istr3.str().c_str())) {
+      float cc3 = head->getReal(istr3.str().c_str(),0);
+      head_->appendReal(ostr3.str().c_str(), cc3, 10, NULL);
+    }
   }
 }
 

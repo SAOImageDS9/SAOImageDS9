@@ -12,6 +12,10 @@
 #include "tclInt.h"
 #include "tommath.h"
 
+#ifdef __CYGWIN__
+#   include <wchar.h>
+#endif
+
 #ifdef __GNUC__
 #pragma GCC dependency "tcl.decls"
 #pragma GCC dependency "tclInt.decls"
@@ -106,8 +110,6 @@ static unsigned short TclWinNToHS(unsigned short ns) {
 #   define TclWinFlushDirtyChannels doNothing
 #   define TclWinResetInterfaces doNothing
 
-static Tcl_Encoding winTCharEncoding;
-
 static int
 TclpIsAtty(int fd)
 {
@@ -127,7 +129,7 @@ void *TclWinGetTclInstance()
 {
     void *hInstance = NULL;
     GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS,
-	    (const char *)&winTCharEncoding, &hInstance);
+	    (const char *)&TclpIsAtty, &hInstance);
     return hInstance;
 }
 
@@ -186,11 +188,11 @@ Tcl_WinUtfToTChar(
     int len,
     Tcl_DString *dsPtr)
 {
-    if (!winTCharEncoding) {
-	winTCharEncoding = Tcl_GetEncoding(0, "unicode");
+    Tcl_DStringInit(dsPtr);
+    if (!string) {
+	return NULL;
     }
-    return Tcl_UtfToExternalDString(winTCharEncoding,
-	    string, len, dsPtr);
+    return (char *)Tcl_UtfToUniCharDString(string, len, dsPtr);
 }
 
 char *
@@ -199,11 +201,16 @@ Tcl_WinTCharToUtf(
     int len,
     Tcl_DString *dsPtr)
 {
-    if (!winTCharEncoding) {
-	winTCharEncoding = Tcl_GetEncoding(0, "unicode");
+    Tcl_DStringInit(dsPtr);
+    if (!string) {
+	return NULL;
     }
-    return Tcl_ExternalToUtfDString(winTCharEncoding,
-	    string, len, dsPtr);
+    if (len < 0) {
+	len = wcslen((wchar_t *)string);
+    } else {
+	len /= 2;
+    }
+    return Tcl_UniCharToUtfDString((Tcl_UniChar *)string, len, dsPtr);
 }
 
 #if defined(TCL_WIDE_INT_IS_LONG)

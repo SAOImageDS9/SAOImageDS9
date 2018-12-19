@@ -12,7 +12,7 @@
 class Grid3d : public Grid, public Grid3dBase {
  private:
   void matrixMap(void*, Matrix3d&, const char*);
-  int doit(RenderMode);
+  void doit(RenderMode);
 
  public:
   Grid3d(Widget*, Coord::CoordSystem, Coord::SkyFrame, 

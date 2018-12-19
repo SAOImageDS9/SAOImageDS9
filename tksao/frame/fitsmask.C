@@ -6,17 +6,17 @@
 
 #include "fitsmask.h"
 #include "base.h"
-#include "fitsimage.h"
+#include "context.h"
 
-FitsMask::FitsMask(Base* p, FitsImage* fits, char* clr, int mrk) 
-  : parent_(p), mask_(fits)
+FitsMask::FitsMask(Base* pp, char* clr, MaskType mm, double ll, double hh)
+  : mark_(mm), low_(ll), high_(hh)
 {
-  current_ = mask_;
-  mptr_ = current_;
+  context_ = new Context();
+  context_->parent(pp);
+
   colorName_ = dupstr(clr);
-  color_ = parent_->getXColor(colorName_);
-  parent_->encodeTrueColor(color_, trueColor_);
-  mark_ = mrk;
+  color_ = pp->getXColor(colorName_);
+  pp->encodeTrueColor(color_, trueColor_);
 
   next_ = NULL;
   previous_ = NULL;
@@ -27,24 +27,9 @@ FitsMask::~FitsMask()
   if (colorName_)
     delete [] colorName_;
 
-  FitsImage* ptr = mask_;
-  while (ptr) {
-    // better not have more that one slice
-    FitsImage* sptr = ptr->nextSlice();
-    while (sptr) {
-      FitsImage* stmp = sptr->nextSlice();
-      delete sptr;
-      sptr = stmp;
-    }
-
-    FitsImage* tmp = ptr->nextMosaic();
-    delete ptr;
-    ptr = tmp;
+  if (context_) {
+    context_->unload();
+    delete context_;
   }
-}
-
-void FitsMask::nextMosaic() {
-  if (mptr_) 
-    mptr_ = mptr_->nextMosaic();
 }
 

@@ -87,8 +87,17 @@ contour : yesno {ProcessCmdSet contour view $1 UpdateContour}
  | MODE_ modes
  | SCOPE_ scope {ContourCmdMode scope $2}
  | LIMITS_ numeric numeric {ContourCmdLimits $2 $3}
- | LEVELS_ STRING_ {ContourCmdLevels $2}
+ | LEVELS_ levels
  | GENERATE_ {ContourDialog; ContourGenerateDialog; UpdateContour}
+ ;
+
+levels : numerics {ContourCmdLevels $1}
+# backward compatible
+ | STRING_ {ContourCmdLevels $1}
+ ;
+
+numerics : numerics numeric {append _ " $2"}
+ | numeric
  ;
 
 load : STRING_ {ContourCmdLoad $1}

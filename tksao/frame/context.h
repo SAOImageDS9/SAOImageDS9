@@ -12,7 +12,6 @@
 #include "coord.h"
 #include "frscale.h"
 #include "list.h"
-#include "fitsmask.h"
 #include "fitsimage.h"
 #include "head.h"
 
@@ -37,9 +36,9 @@ class Context {
  public:
   enum SmoothFunction {BOXCAR, TOPHAT, GAUSSIAN, ELLIPTIC};
 
- protected:
   Base* parent_;
 
+ protected:
   FrScale frScale;
 
   int shareWCS_;
@@ -79,13 +78,13 @@ class Context {
   int hasContour_;
   int hasAuxContour_;
 
+  Coord::CoordSystem contourWCSSystem_;
+  Coord::SkyFrame contourWCSSkyFrame_;
+
  protected:
   void binFinish();
-  int blockMask();
   int nhdu();
-  void loadFinishMask();
   void loadFinishMosaic(FitsImage*);
-  int loadFinishMosaicMask();
   int processMosaicKeywords(FitsImage*);
   void updateClip(FrScale*);
   void updateClipGlobal(FrScale*);
@@ -103,8 +102,6 @@ class Context {
   FitsImage* bfits_;
   FitsImage* fits;
   FitsImage* cfits;
-
-  List <FitsMask> mask;
 
  public:
   Context();
@@ -124,6 +121,10 @@ class Context {
   void bltHist(char*, char*, int);
 
   int calcSlice();
+
+  Coord::CoordSystem contourWCSSystem() {return contourWCSSystem_;}
+  Coord::SkyFrame contourWCSSkyFrame() {return contourWCSSkyFrame_;}
+
   void contourAppendAux(ContourLevel*);
   void contourCreateFV(const char* color, int width, int dash,
 		       FVContour::Method method, int numlevel, 
@@ -169,13 +170,13 @@ class Context {
   int isMosaic() {return mosaicCount_>1 ? 1 : 0;}
   int isCube() {return nhdu()>1 ? 1 : 0;}
 
-  int load(Base::MemType, const char*, FitsImage*, Base::LayerType);
+  int load(Base::MemType, const char*, FitsImage*);
   int loadExtCube(Base::MemType, const char*, FitsImage*);
   int loadSlice(Base::MemType, const char*, FitsImage*);
   int loadMosaic(Base::MemType, const char*, FitsImage*, 
-		 Base::LayerType, Base::MosaicType, Coord::CoordSystem);
+		 Base::MosaicType, Coord::CoordSystem);
   int loadMosaicImage(Base::MemType, const char*, FitsImage*, 
-		      Base::LayerType, Base::MosaicType, Coord::CoordSystem);
+		      Base::MosaicType, Coord::CoordSystem);
   int loadMosaicWFPC2(Base::MemType, const char*, FitsImage*);
   void loadInit(int, Base::MosaicType, Coord::CoordSystem);
   int loadFinish();

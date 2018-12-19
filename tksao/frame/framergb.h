@@ -27,6 +27,8 @@ class FrameRGB : public FrameBase {
   int colorCount;               // number of dynamic colors
   unsigned char* colorCells;    // current color values
 
+  int keyContextSet;
+
  private:
   void alignWCS();
   void alignWCS(Coord::CoordSystem, Coord::SkyFrame);
@@ -41,7 +43,6 @@ class FrameRGB : public FrameBase {
   void loadRGBFinish();
 
   void reset();
-  void rgbAlignWCS(int);
 
   void setBinCursor();
   void setKeyFits();
@@ -57,6 +58,8 @@ class FrameRGB : public FrameBase {
 
  protected:
   int isFrameRGB() {return 1;}
+
+  void loadDone(int);
 
   unsigned char* fillImage(int, int, Coord::InternalSystem);
   void updateColorCells(unsigned char*, int);

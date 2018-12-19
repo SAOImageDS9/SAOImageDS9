@@ -149,6 +149,7 @@ frame/basebox.C
 frame/basecommand.C
 frame/baseellipse.C
 frame/baseline.C
+frame/baseload.C
 frame/basemarker.C
 frame/basepolygon.C
 frame/box.C
@@ -197,7 +198,9 @@ frame/frame3dtruecolor16.C
 frame/frame3dtruecolor24.C
 frame/frame3dtruecolor8.C
 frame/framebase.C
+frame/frameload.C
 frame/framergb.C
+frame/framergbload.C
 frame/framergbtruecolor16.C
 frame/framergbtruecolor24.C
 frame/framergbtruecolor8.C
@@ -206,7 +209,6 @@ frame/frametruecolor24.C
 frame/frametruecolor8.C
 frame/frblt.C
 frame/frcommand.C
-frame/frload.C
 frame/frmap.C
 frame/frmarker.C
 frame/frmarkerxml.C

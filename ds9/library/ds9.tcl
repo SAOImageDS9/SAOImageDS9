@@ -13,7 +13,7 @@ proc DS9Def {} {
     }
 
     # for beta version, MUST have space
-    set ds9(version) {8.0}
+    set ds9(version) {8.1 b1}
 
     set ds9(top) .
     set ds9(mb) .mb
@@ -205,7 +205,7 @@ switch $ds9(wm) {
 	    source $ds9(root)/tcl8/8.5/msgcat-1.5.2.tm
 	}
 	if {![namespace exists http]} {
-	    source $ds9(root)/tcl8/8.6/http-2.8.12.tm
+	    source $ds9(root)/tcl8/8.6/http-2.9.0.tm
 	    source $ds9(root)/library/htp.tcl
 	}
 

@@ -335,8 +335,10 @@ proc UpdateAnalysisMenu {} {
 
     if {$ds9(active,num) > 0} {
 	$ds9(mb) entryconfig [msgcat::mc {Analysis}] -state normal
+	ConfigureButtons analysis normal
     } else {
 	$ds9(mb) entryconfig [msgcat::mc {Analysis}] -state disabled
+	ConfigureButtons analysis disabled
     }
 
     if {$current(frame) != {}} {

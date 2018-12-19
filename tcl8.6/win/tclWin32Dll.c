@@ -33,8 +33,6 @@ static int platformId;		/* Running under NT, or 95/98? */
 #define cpuid	__asm __emit 0fh __asm __emit 0a2h
 #endif
 
-static Tcl_Encoding winTCharEncoding = NULL;
-
 /*
  * The following declaration is for the VC++ DLL entry point.
  */
@@ -49,7 +47,7 @@ BOOL APIENTRY		DllMain(HINSTANCE hInst, DWORD reason,
  */
 
 typedef struct MountPointMap {
-    const TCHAR *volumeName;	/* Native wide string volume name. */
+    TCHAR *volumeName;		/* Native wide string volume name. */
     TCHAR driveLetter;		/* Drive letter corresponding to the volume
 				 * name. */
     struct MountPointMap *nextPtr;
@@ -199,8 +197,6 @@ TclWinInit(
     if (platformId == VER_PLATFORM_WIN32_WINDOWS) {
 	Tcl_Panic("Windows 9x is not a supported platform");
     }
-
-    TclWinResetInterfaces();
 }
 
 /*
@@ -266,7 +262,7 @@ TclWinNoBackslash(
  *
  * TclpSetInterfaces --
  *
- *	A helper proc that initializes winTCharEncoding.
+ *	A helper proc.
  *
  * Results:
  *	None.
@@ -280,8 +276,6 @@ TclWinNoBackslash(
 void
 TclpSetInterfaces(void)
 {
-    TclWinResetInterfaces();
-    winTCharEncoding = Tcl_GetEncoding(NULL, "unicode");
 }
 
 /*
@@ -308,8 +302,6 @@ void
 TclWinEncodingsCleanup(void)
 {
     MountPointMap *dlIter, *dlIter2;
-
-    TclWinResetInterfaces();
 
     /*
      * Clean up the mount point map.
@@ -344,10 +336,6 @@ TclWinEncodingsCleanup(void)
 void
 TclWinResetInterfaces(void)
 {
-    if (winTCharEncoding != NULL) {
-	Tcl_FreeEncoding(winTCharEncoding);
-	winTCharEncoding = NULL;
-    }
 }
 
 /*
@@ -513,39 +501,32 @@ TclWinDriveLetterForVolMountPoint(
  *
  * Tcl_WinUtfToTChar, Tcl_WinTCharToUtf --
  *
- *	Convert between UTF-8 and Unicode when running Windows NT or the
- *	current ANSI code page when running Windows 95.
+ *	Convert between UTF-8 and Unicode when running Windows.
  *
- *	On Mac, Unix, and Windows 95, all strings exchanged between Tcl and
- *	the OS are "char" oriented. We need only one Tcl_Encoding to convert
- *	between UTF-8 and the system's native encoding. We use NULL to
- *	represent that encoding.
+ *	On Mac and Unix, all strings exchanged between Tcl and the OS are
+ *	"char" oriented. We need only one Tcl_Encoding to convert between
+ *	UTF-8 and the system's native encoding. We use NULL to represent
+ *	that encoding.
  *
- *	On NT, some strings exchanged between Tcl and the OS are "char"
+ *	On Windows, some strings exchanged between Tcl and the OS are "char"
  *	oriented, while others are in Unicode. We need two Tcl_Encoding APIs
  *	depending on whether we are targeting a "char" or Unicode interface.
  *
- *	Calling Tcl_UtfToExternal() or Tcl_ExternalToUtf() with an encoding of
- *	NULL should always used to convert between UTF-8 and the system's
+ *	Calling Tcl_UtfToExternal() or Tcl_ExternalToUtf() with an encoding
+ *	of NULL should always used to convert between UTF-8 and the system's
  *	"char" oriented encoding. The following two functions are used in
- *	Windows-specific code to convert between UTF-8 and Unicode strings
- *	(NT) or "char" strings(95). This saves you the trouble of writing the
+ *	Windows-specific code to convert between UTF-8 and Unicode strings.
+ *	This saves you the trouble of writing the
  *	following type of fragment over and over:
  *
- *		if (running NT) {
- *		    encoding <- Tcl_GetEncoding("unicode");
- *		    nativeBuffer <- UtfToExternal(encoding, utfBuffer);
- *		    Tcl_FreeEncoding(encoding);
- *		} else {
- *		    nativeBuffer <- UtfToExternal(NULL, utfBuffer);
- *		}
+ *		encoding <- Tcl_GetEncoding("unicode");
+ *		nativeBuffer <- UtfToExternal(encoding, utfBuffer);
+ *		Tcl_FreeEncoding(encoding);
  *
- *	By convention, in Windows a TCHAR is a character in the ANSI code page
- *	on Windows 95, a Unicode character on Windows NT. If you plan on
- *	targeting a Unicode interfaces when running on NT and a "char"
- *	oriented interface while running on 95, these functions should be
- *	used. If you plan on targetting the same "char" oriented function on
- *	both 95 and NT, use Tcl_UtfToExternal() with an encoding of NULL.
+ *	By convention, in Windows a TCHAR is a Unicode character. If you plan
+ *	on targeting a Unicode interface when running on Windows, these
+ *	functions should be used. If you plan on targetting a "char" oriented
+ *	function on Windows, use Tcl_UtfToExternal() with an encoding of NULL.
  *
  * Results:
  *	The result is a pointer to the string in the desired target encoding.
@@ -561,26 +542,36 @@ TclWinDriveLetterForVolMountPoint(
 TCHAR *
 Tcl_WinUtfToTChar(
     const char *string,		/* Source string in UTF-8. */
-    int len,			/* Source string length in bytes, or < 0 for
+    int len,			/* Source string length in bytes, or -1 for
 				 * strlen(). */
     Tcl_DString *dsPtr)		/* Uninitialized or free DString in which the
 				 * converted string is stored. */
 {
-    return (TCHAR *) Tcl_UtfToExternalDString(winTCharEncoding,
-	    string, len, dsPtr);
+    Tcl_DStringInit(dsPtr);
+    if (!string) {
+	return NULL;
+    }
+    return Tcl_UtfToUniCharDString(string, len, dsPtr);
 }
 
 char *
 Tcl_WinTCharToUtf(
-    const TCHAR *string,	/* Source string in Unicode when running NT,
-				 * ANSI when running 95. */
-    int len,			/* Source string length in bytes, or < 0 for
+    const TCHAR *string,	/* Source string in Unicode. */
+    int len,			/* Source string length in bytes, or -1 for
 				 * platform-specific string length. */
     Tcl_DString *dsPtr)		/* Uninitialized or free DString in which the
 				 * converted string is stored. */
 {
-    return Tcl_ExternalToUtfDString(winTCharEncoding,
-	    (const char *) string, len, dsPtr);
+    Tcl_DStringInit(dsPtr);
+    if (!string) {
+	return NULL;
+    }
+    if (len < 0) {
+	len = wcslen(string);
+    } else {
+	len /= 2;
+    }
+    return Tcl_UniCharToUtfDString(string, len, dsPtr);
 }
 
 /*
@@ -610,7 +601,7 @@ TclWinCPUID(
 
 #if defined(HAVE_INTRIN_H) && defined(_WIN64)
 
-    __cpuid(regsPtr, index);
+    __cpuid((int *)regsPtr, index);
     status = TCL_OK;
 
 #elif defined(__GNUC__)

@@ -10,6 +10,7 @@
 #include "outchannel.h"
 #include "outsocket.h"
 #include "sigbus.h"
+#include "wcsast.h"
 
 void Base::saveFits(OutFitsStream& str)
 {
@@ -376,57 +377,42 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
   FitsHead* src = currentContext->fits->head();
   Vector center = Vector(options->width, options->height)/2.;
 
+  // center mx
+  Matrix cc =
+    Translate(-center) *
+    Translate(1,0) *
+    FlipY() *
+    Translate(center);
+
   // OBJECT
   char* object = src->getString("OBJECT");
   if (object)
     dst.appendString("OBJECT", object, NULL);
 
-  // DATE-OBS
-  char* date = src->getString("DATE");
-  if (date)
-    dst.appendString("DATE", date, NULL);
-
-  char* dateobs = src->getString("DATE-OBS");
-  if (dateobs)
-    dst.appendString("DATE-OBS", dateobs, NULL);
-
-  char* timeobs = src->getString("TIME-OBS");
-  if (timeobs)
-    dst.appendString("TIME-OBS", timeobs, NULL);
-
-  char* dateend = src->getString("DATE-END");
-  if (dateend)
-    dst.appendString("DATE-END", dateend, NULL);
-
-  char* timeend = src->getString("TIME-END");
-  if (timeend)
-    dst.appendString("TIME-END", timeend, NULL);
-
-  // LTMV,DTMV
-  if (!isMosaic()) {
-    if (currentContext->fits->hasLTMV()) {
-      Matrix ltmv = currentContext->fits->physicalToRef * refToWidget *
-	Translate(-center) *
-	Translate(1,0) *
-	FlipY() *
-	Translate(center);
-
-      dst.appendReal("LTM1_1", ltmv[0][0], 9, NULL);
-      dst.appendReal("LTM1_2", ltmv[0][1], 9, NULL);
-      dst.appendReal("LTM2_1", ltmv[1][0], 9, NULL);
-      dst.appendReal("LTM2_2", ltmv[1][1], 9, NULL);
-      dst.appendReal("LTV1",   ltmv[2][0], 9, NULL);
-      dst.appendReal("LTV2",   ltmv[2][1], 9, NULL);
-    }
+  // LTMV
+  if (currentContext->fits->hasLTMV()) {
+    Matrix ltmv = currentContext->fits->physicalToRef * refToWidget * cc;
+    dst.appendReal("LTM1_1", ltmv[0][0], 9, NULL);
+    dst.appendReal("LTM1_2", ltmv[0][1], 9, NULL);
+    dst.appendReal("LTM2_1", ltmv[1][0], 9, NULL);
+    dst.appendReal("LTM2_2", ltmv[1][1], 9, NULL);
+    dst.appendReal("LTV1",   ltmv[2][0], 9, NULL);
+    dst.appendReal("LTV2",   ltmv[2][1], 9, NULL);
   }
-  else {
-    if (currentContext->fits->hasDTMV()) {
-      Matrix dtmv = currentContext->fits->detectorToRef * refToWidget *
-	Translate(-center) *
-	Translate(1,0) *
-	FlipY() *
-	Translate(center);
 
+  if (!isMosaic()) {
+    if (currentContext->fits->hasATMV()) {
+      Matrix dtmv = currentContext->fits->amplifierToRef * refToWidget * cc;
+      dst.appendReal("ATM1_1", dtmv[0][0], 9, NULL);
+      dst.appendReal("ATM1_2", dtmv[0][1], 9, NULL);
+      dst.appendReal("ATM2_1", dtmv[1][0], 9, NULL);
+      dst.appendReal("ATM2_2", dtmv[1][1], 9, NULL);
+      dst.appendReal("ATV1",   dtmv[2][0], 9, NULL);
+      dst.appendReal("ATV2",   dtmv[2][1], 9, NULL);
+    }
+
+    if (currentContext->fits->hasDTMV()) {
+      Matrix dtmv = currentContext->fits->detectorToRef * refToWidget * cc;
       dst.appendReal("DTM1_1", dtmv[0][0], 9, NULL);
       dst.appendReal("DTM1_2", dtmv[0][1], 9, NULL);
       dst.appendReal("DTM2_1", dtmv[1][0], 9, NULL);
@@ -437,124 +423,39 @@ void FrameBase::saveFitsResampleKeyword(OutFitsStream& str, FitsHead& dst)
   }
 
   // WCS
-  if (currentContext->fits->hasWCS(Coord::WCS)) {
-    if (src->find("RADESYS"))
-      dst.appendString("RADESYS", src->getString("RADESYS"), NULL);
-    if (src->find("EQUINOX"))
-      dst.appendReal("EQUINOX", src->getReal("EQUINOX",2000), 9, NULL);
-    if (src->find("EPOCH"))
-      dst.appendReal("EPOCH", src->getReal("EPOCH",2000), 9, NULL);
-    if (src->find("MJD-OBS"))
-      dst.appendReal("MJD-OBS", src->getReal("MJD-OBS",51544), 9, NULL);
-    if (src->find("CTYPE1"))
-      dst.appendString("CTYPE1", src->getString("CTYPE1"), NULL);
-    if (src->find("CTYPE2"))
-      dst.appendString("CTYPE2", src->getString("CTYPE2"), NULL);
-    if (src->find("CRVAL1"))
-      dst.appendReal("CRVAL1", src->getReal("CRVAL1",0), 9, NULL);
-    if (src->find("CRVAL2"))
-      dst.appendReal("CRVAL2", src->getReal("CRVAL2",0), 9, NULL);
-    if (src->find("CUNIT1"))
-      dst.appendString("CUNIT1", src->getString("CUNIT1"), NULL);
-    if (src->find("CUNIT2"))
-      dst.appendString("CUNIT2", src->getString("CUNIT2"), NULL);
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
 
-    // crpix
-    if (src->find("CRPIX1") || src->find("CRPIX2")) {
-      double crpix1 = src->getReal("CRPIX1",0);
-      double crpix2 = src->getReal("CRPIX2",0);
+  // create channel and set encoding
+  AstFitsChan* chan = astFitsChan(NULL, NULL, "");
+  const char* fitswcs = "FITS-WCS";
+  const char* encode = currentContext->fits->encoding_;
+  if (!encode || !*encode)
+    encode = fitswcs;
+  astSet (chan, "Card=1, Encoding=%s", encode);
 
-      Vector crpix = Vector(crpix1,crpix2) * 
-	currentContext->fits->imageToWidget *
-	Translate(-center) *
-	Translate(1,0) *
-	FlipY() *
-	Translate(center);
+  // ast
+  AstFrameSet* ast = (AstFrameSet*)astCopy(currentContext->fits->ast_);
+  Matrix mx = currentContext->fits->imageToRef * refToWidget * cc;
+  AstCmpMap* cmp = wcsMatrixMap(ast, mx);
+  if (cmp)
+    astRemapFrame(ast, AST__BASE, cmp);
 
-      dst.appendReal("CRPIX1", crpix[0], 9, NULL);
-      dst.appendReal("CRPIX2", crpix[1], 9, NULL);
-    }
-
-    // cd 
-    if (src->find("CD1_1") || src->find("CD1_2") || 
-	src->find("CD2_1") || src->find("CD2_2")) {
-      // cd keywords
-      double cd11 = src->getReal("CD1_1",0);
-      double cd12 = src->getReal("CD1_2",0);
-      double cd21 = src->getReal("CD2_1",0);
-      double cd22 = src->getReal("CD2_2",0);
-
-      Matrix cd = Matrix(cd11, cd12, cd21, cd22,0,0) *
-	currentContext->fits->imageToRef * refToUser *
-	wcsOrientationMatrix *
-	Rotate(wcsRotation) *
-	orientationMatrix *
-	Scale(zoom_.invert()) *
-	Rotate(rotation) *
-	Translate(center) *
-	Translate(-center) *
-	Translate(1,0) *
-	FlipY() * 
-	Translate(center);
-
-      dst.appendReal("CD1_1", cd.matrix(0,0), 9, NULL);
-      dst.appendReal("CD1_2", cd.matrix(0,1), 9, NULL);
-      dst.appendReal("CD2_1", cd.matrix(1,0), 9, NULL);
-      dst.appendReal("CD2_2", cd.matrix(1,1), 9, NULL);
-    }
-    else if (src->find("PC1_1") || src->find("PC1_2") || 
-	     src->find("PC2_1") || src->find("PC2_2")) {
-      // pc keywords
-      double pc11 = src->getReal("PC1_1",1);
-      double pc12 = src->getReal("PC1_2",0);
-      double pc21 = src->getReal("PC2_1",0);
-      double pc22 = src->getReal("PC2_2",1);
-      double cdelt1 = src->getReal("CDELT1",1);
-      double cdelt2 = src->getReal("CDELT2",1);
-
-      Matrix cd = Scale(cdelt1,cdelt2) * Matrix(pc11,pc12,pc21,pc22,0,0) *
-	currentContext->fits->imageToRef * refToUser *
-	wcsOrientationMatrix *
-	Rotate(wcsRotation) *
-	orientationMatrix *
-	Scale(zoom_.invert()) *
-	Rotate(rotation) *
-	Translate(center) *
-	Translate(-center) *
-	Translate(1,0) *
-	FlipY() * 
-	Translate(center);
-
-      dst.appendReal("CD1_1", cd.matrix(0,0), 9, NULL);
-      dst.appendReal("CD1_2", cd.matrix(0,1), 9, NULL);
-      dst.appendReal("CD2_1", cd.matrix(1,0), 9, NULL);
-      dst.appendReal("CD2_2", cd.matrix(1,1), 9, NULL);
-    }
-    else if (src->find("CDELT1") || src->find("CDELT2")) {
-      // crota2
-      double cdelt1 = src->getReal("CDELT1",1);
-      double cdelt2 = src->getReal("CDELT2",1);
-      double crot2 = src->getReal("CROT2",0);
-
-      Matrix cd = Scale(cdelt1,cdelt2) * Rotate(crot2) *
-	currentContext->fits->imageToRef * refToUser *
-	wcsOrientationMatrix *
-	Rotate(wcsRotation) *
-	orientationMatrix *
-	Scale(zoom_.invert()) *
-	Rotate(rotation) *
-	Translate(center) *
-	Translate(-center) *
-	Translate(1,0) *
-	FlipY() * 
-	Translate(center);
-
-      dst.appendReal("CD1_1", cd.matrix(0,0), 9, NULL);
-      dst.appendReal("CD1_2", cd.matrix(0,1), 9, NULL);
-      dst.appendReal("CD2_1", cd.matrix(1,0), 9, NULL);
-      dst.appendReal("CD2_2", cd.matrix(1,1), 9, NULL);
-    }
+  // write to channel
+  if (!astWrite(chan, ast)) {
+    // try again
+    encode = fitswcs;
+    astSet (chan, "Card=1, Encoding=%s", encode);
+    astWrite(chan, ast);
   }
+    
+  // dump cards from channel
+  astClear(chan, "Card");
+  char card[81];
+  while (astFindFits(chan, "%f", card, 1))
+    dst.cardins(card,NULL);
+
+  astEnd; // now, clean up memory
 }
 
 void FrameBase::saveFitsResampleFits(OutFitsStream& str)

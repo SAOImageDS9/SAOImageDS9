@@ -395,6 +395,7 @@ proc UpdateScaleMenu {} {
     if {$current(frame) != {}} {
 	if {![$current(frame) has iis]} {
 	    $ds9(mb) entryconfig [msgcat::mc {Scale}] -state normal
+	    ConfigureButtons scale normal
 
 	    set scale(type) [$current(frame) get colorscale]
 	    set scale(log) [$current(frame) get colorscale log]
@@ -433,9 +434,11 @@ proc UpdateScaleMenu {} {
 	    
 	} else {
 	    $ds9(mb) entryconfig [msgcat::mc {Scale}] -state disabled
+	    ConfigureButtons scale disabled
 	}
     } else {
 	$ds9(mb) entryconfig [msgcat::mc {Scale}] -state disabled
+	ConfigureButtons scale disabled
     }
 }
 

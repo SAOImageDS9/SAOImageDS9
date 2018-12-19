@@ -31,7 +31,7 @@ proc NSVRServer {varname} {
 	vizier {append ${varname}(url) {/V}}
     }
 
-    set var(query) [http::formatQuery $var(name)]
+    set var(query) [http::mapReply $var(name)]
 
     NSVRGetURL $varname $var(url)
 }

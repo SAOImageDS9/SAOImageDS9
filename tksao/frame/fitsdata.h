@@ -106,12 +106,9 @@ public:
   virtual const char* getValue(const Vector&) =0;
   virtual float getValueFloat(const Vector&) =0;
   virtual double getValueDouble(const Vector&) =0;
-  virtual int getValueMask(const Vector&) =0;
-  virtual int getValueMask(double,double) =0;
 
   virtual float getValueFloat(long) =0;
   virtual double getValueDouble(long) =0;
-  virtual int getValueMask(long) =0;
 
   double min();
   const Vector& minXY() {return minXY_;}
@@ -159,12 +156,9 @@ class FitsDatam : public FitsData {
 
   float getValueFloat(const Vector&);
   double getValueDouble(const Vector&);
-  int getValueMask(const Vector&);
-  int getValueMask(double, double);
 
   float getValueFloat(long i);
   double getValueDouble(long i);
-  int getValueMask(long i);
 
   void updateClip(FrScale*, FitsBound*);
   void hist(double*, int, double, double, FitsBound*);

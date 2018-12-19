@@ -8,40 +8,39 @@
 #include "util.h"
 
 class Base;
-class FitsImage;
+class Context;
 
 class FitsMask {
- private:
-  Base* parent_;
+ public:
+  enum MaskType {ZERO, NONZERO, NaN, NONNaN, RANGE};
 
-  FitsImage* mask_;
-  FitsImage* current_;
-  FitsImage* mptr_;
+ private:
+  Context* context_;
+  Matrix mm_;
 
   char* colorName_;
   XColor* color_;
   char trueColor_[4];
 
-  int mark_;
+  MaskType mark_;
+  double low_;
+  double high_;
 
  protected:
   FitsMask* previous_;
   FitsMask* next_;
 
  public:
-  FitsMask(Base*, FitsImage*, char*, int);
+  FitsMask(Base*, char*, MaskType, double, double);
   virtual ~FitsMask();
 
-  FitsImage* mask() {return mask_;}
-  FitsImage* current() {return current_;}
-  FitsImage* mptr() {return mptr_;}
+  Context* context() {return context_;}
+  Matrix& mm() {return mm_;}
   XColor* color() {return color_;}
   char* trueColor() {return trueColor_;}
-  int mark() {return mark_;}
-
-  void initMosaic() {mptr_ = current_;}
-  void nextMosaic();
-  void nextSlice();
+  MaskType mark() {return mark_;}
+  double low() {return low_;}
+  double high() {return high_;}
 
   FitsMask* previous() {return previous_;}
   void setPrevious(FitsMask* m) {previous_ = m;}

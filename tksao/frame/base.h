@@ -20,6 +20,7 @@
 #include "tag.h"
 #include "util.h"
 #include "point.h"
+#include "fitsmask.h"
 
 extern int DebugMosaic;
 extern int DebugPerf;
@@ -124,7 +125,7 @@ public:
 
   enum MemType {ALLOC, ALLOCGZ, CHANNEL, MMAP, SMMAP, MMAPINCR, 
 		SHARE, SSHARE, SOCKET, SOCKETGZ, VAR, HIST, POST, PHOTO};
-  enum MosaicType {NOMOSAIC, IRAF, WCSMOSAIC, WFPC2};
+  enum MosaicType {NOMOSAIC, IRAF, WCSMOSAIC};
   enum LayerType {IMG, MASK};
   enum CutMethod {SUM,AVERAGE};
 
@@ -170,7 +171,6 @@ public:
 
   Context* currentContext;
   Context* keyContext;
-  int keyContextSet;
 
   Coord::Orientation orientation;   // current image orientation
   Matrix orientationMatrix;  // current image orientation matrix
@@ -227,10 +227,6 @@ public:
   int irafAlign_;
   Coord::Orientation irafOrientation_; // orientation of first iraf segment
   Matrix irafMatrix_; // orientation matrix for iraf mosaic
-
-  char* maskColorName;
-  float maskAlpha;
-  int maskMark;
 
   int invert;
 
@@ -383,7 +379,7 @@ public:
   virtual int isFrame3d() {return 0;}
   virtual int isFrameRGB() {return 0;}
 
-  void loadDone(int, LayerType);
+  virtual void loadDone(int);
 
   void markerAnalysisHistogram(Marker*, double**, double**, const BBox&, int);
   int markerAnalysisPlot2d(Marker*, double**, double**, double**, double**,
@@ -440,11 +436,16 @@ public:
   void psImage(ostream&, Filter&, int, int, float);
   void psMarkers(List<Marker>*, int);
   Matrix psMatrix(float scale, int width, int height);
-  virtual void pushMatrices();
-  virtual void pushMagnifierMatrices();
-  virtual void pushPannerMatrices();
-  virtual void pushPSMatrices(float, int, int);
+  void pushMatrices(FitsImage*, Matrix&);
+  void pushMagnifierMatrices(FitsImage*);
+  void pushPannerMatrices(FitsImage*);
+  void pushPSMatrices(FitsImage*, float, int, int);
 
+  virtual void pushMatrices() =0;
+  virtual void pushMagnifierMatrices() =0;
+  virtual void pushPannerMatrices() =0;
+  virtual void pushPSMatrices(float, int, int) =0;
+  
   virtual void reset();
   void resetSecMode();
 
@@ -669,7 +670,6 @@ public:
   void getColorbarTagCmd();
 
   // Contour Commands
-  void contourAppendCmd(ContourLevel*);
   void contourCreateCmd(const char*, int, int, FVContour::Method, int, int, FrScale::ColorScaleType, float, FrScale::ClipMode, float, FrScale::ClipScope, double, double, const char*);
   void contourCreatePolygonCmd();
   void contourDeleteCmd();
@@ -781,36 +781,36 @@ public:
   void hasFitsCubeCmd();
   void hasFitsMosaicCmd();
 
-  void loadFitsAllocCmd(const char*, const char*, LayerType);
-  void loadFitsAllocGZCmd(const char*, const char*, LayerType);
-  void loadFitsChannelCmd(const char*, const char*, LayerType);
-  void loadFitsMMapCmd(const char*, LayerType);
-  void loadFitsSMMapCmd(const char*, const char*, LayerType);
-  void loadFitsMMapIncrCmd(const char*, LayerType);
-  void loadFitsShareCmd(ShmType, int, const char*, LayerType);
-  void loadFitsSShareCmd(ShmType, int, int, const char*, LayerType);
-  void loadFitsSocketCmd(int, const char*, LayerType);
-  void loadFitsSocketGZCmd(int, const char*, LayerType);
-  void loadFitsVarCmd(const char*, const char*, LayerType);
+  virtual void loadFitsAllocCmd(const char*, const char*, LayerType);
+  virtual void loadFitsAllocGZCmd(const char*, const char*, LayerType);
+  virtual void loadFitsChannelCmd(const char*, const char*, LayerType);
+  virtual void loadFitsMMapCmd(const char*, LayerType);
+  virtual void loadFitsSMMapCmd(const char*, const char*, LayerType);
+  virtual void loadFitsMMapIncrCmd(const char*, LayerType);
+  virtual void loadFitsShareCmd(ShmType, int, const char*, LayerType);
+  virtual void loadFitsSShareCmd(ShmType, int, int, const char*, LayerType);
+  virtual void loadFitsSocketCmd(int, const char*, LayerType);
+  virtual void loadFitsSocketGZCmd(int, const char*, LayerType);
+  virtual void loadFitsVarCmd(const char*, const char*, LayerType);
 
-  void loadArrAllocCmd(const char*, const char*, LayerType);
-  void loadArrAllocGZCmd(const char*, const char*, LayerType);
-  void loadArrChannelCmd(const char*, const char*, LayerType);
-  void loadArrMMapCmd(const char*, LayerType);
-  void loadArrMMapIncrCmd(const char*, LayerType);
-  void loadArrShareCmd(ShmType, int, const char*, LayerType);
-  void loadArrSocketCmd(int, const char*, LayerType);
-  void loadArrSocketGZCmd(int, const char*, LayerType);
-  void loadArrVarCmd(const char*, const char*, LayerType);
+  virtual void loadArrAllocCmd(const char*, const char*, LayerType);
+  virtual void loadArrAllocGZCmd(const char*, const char*, LayerType);
+  virtual void loadArrChannelCmd(const char*, const char*, LayerType);
+  virtual void loadArrMMapCmd(const char*, LayerType);
+  virtual void loadArrMMapIncrCmd(const char*, LayerType);
+  virtual void loadArrShareCmd(ShmType, int, const char*, LayerType);
+  virtual void loadArrSocketCmd(int, const char*, LayerType);
+  virtual void loadArrSocketGZCmd(int, const char*, LayerType);
+  virtual void loadArrVarCmd(const char*, const char*, LayerType);
 
   void loadENVISMMapCmd(const char*, const char*);
 
-  void loadNRRDAllocCmd(const char*, const char*, LayerType);
-  void loadNRRDChannelCmd(const char*, const char*, LayerType);
-  void loadNRRDMMapCmd(const char*, LayerType);
-  void loadNRRDShareCmd(ShmType, int, const char*, LayerType);
-  void loadNRRDSocketCmd(int, const char*, LayerType);
-  void loadNRRDVarCmd(const char*, const char*, LayerType);
+  virtual void loadNRRDAllocCmd(const char*, const char*, LayerType);
+  virtual void loadNRRDChannelCmd(const char*, const char*, LayerType);
+  virtual void loadNRRDMMapCmd(const char*, LayerType);
+  virtual void loadNRRDShareCmd(ShmType, int, const char*, LayerType);
+  virtual void loadNRRDSocketCmd(int, const char*, LayerType);
+  virtual void loadNRRDVarCmd(const char*, const char*, LayerType);
 
   virtual void loadPhotoCmd(const char*, const char*);
   virtual void loadSlicePhotoCmd(const char*, const char*);
@@ -837,37 +837,37 @@ public:
   void loadSliceSocketGZCmd(int, const char*);
   void loadSliceVarCmd(const char*, const char*);
 
-  void loadMosaicImageAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicImageAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicImageChannelCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicImageMMapCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
-  void loadMosaicImageMMapIncrCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
-  void loadMosaicImageShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, const char*, LayerType);
-  void loadMosaicImageSocketCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
-  void loadMosaicImageSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
-  void loadMosaicImageVarCmd(MosaicType, Coord::CoordSystem, const char*,const char*, LayerType);
+  virtual void loadMosaicImageAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicImageAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicImageChannelCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicImageMMapCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
+  virtual void loadMosaicImageMMapIncrCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
+  virtual void loadMosaicImageShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, const char*, LayerType);
+  virtual void loadMosaicImageSocketCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
+  virtual void loadMosaicImageSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
+  virtual void loadMosaicImageVarCmd(MosaicType, Coord::CoordSystem, const char*,const char*, LayerType);
 
-  void loadMosaicAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicChannelCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicMMapCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
-  void loadMosaicSMMapCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
-  void loadMosaicMMapIncrCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
-  void loadMosaicShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, const char*, LayerType);
-  void loadMosaicSShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, int, const char*, LayerType);
-  void loadMosaicSocketCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
-  void loadMosaicSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
-  void loadMosaicVarCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2AllocCmd(const char*, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2AllocGZCmd(const char*, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2ChannelCmd(const char*, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2MMapCmd(const char*, LayerType);
+  virtual void loadMosaicImageWFPC2MMapIncrCmd(const char*, LayerType);
+  virtual void loadMosaicImageWFPC2ShareCmd(ShmType, int, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2SocketCmd(int, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2SocketGZCmd(int, const char*, LayerType);
+  virtual void loadMosaicImageWFPC2VarCmd(const char*, const char*, LayerType);
 
-  void loadMosaicImageWFPC2AllocCmd(const char*, const char*);
-  void loadMosaicImageWFPC2AllocGZCmd(const char*, const char*);
-  void loadMosaicImageWFPC2ChannelCmd(const char*, const char*);
-  void loadMosaicImageWFPC2MMapCmd(const char*);
-  void loadMosaicImageWFPC2MMapIncrCmd(const char*);
-  void loadMosaicImageWFPC2ShareCmd(ShmType, int, const char*);
-  void loadMosaicImageWFPC2SocketCmd(int, const char*);
-  void loadMosaicImageWFPC2SocketGZCmd(int, const char*);
-  void loadMosaicImageWFPC2VarCmd(const char*, const char*);
+  virtual void loadMosaicAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicChannelCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicMMapCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
+  virtual void loadMosaicSMMapCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
+  virtual void loadMosaicMMapIncrCmd(MosaicType, Coord::CoordSystem, const char*, LayerType);
+  virtual void loadMosaicShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, const char*, LayerType);
+  virtual void loadMosaicSShareCmd(MosaicType, Coord::CoordSystem, ShmType, int, int, const char*, LayerType);
+  virtual void loadMosaicSocketCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
+  virtual void loadMosaicSocketGZCmd(MosaicType, Coord::CoordSystem, int, const char*, LayerType);
+  virtual void loadMosaicVarCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
 
   // Fits RGB
   virtual void loadRGBCubeAllocCmd(const char*, const char*) {}
@@ -1550,14 +1550,18 @@ public:
   void regionSelectShiftEndCmd();
 
   // Mask Commands
-  void getMaskColorCmd();
-  void getMaskMarkCmd();
-  void getMaskTransparencyCmd();
+  virtual void getMaskColorCmd();
+  virtual void getMaskMarkCmd();
+  virtual void getMaskRangeCmd();
+  virtual void getMaskSystemCmd();
+  virtual void getMaskTransparencyCmd();
 
-  void maskColorCmd(const char*);
-  void maskClearCmd();
-  void maskMarkCmd(int m) {maskMark=m;}
-  void maskTransparencyCmd(float);
+  virtual void maskClearCmd() {};
+  virtual void maskColorCmd(const char*) {};
+  virtual void maskMarkCmd(FitsMask::MaskType) {};
+  virtual void maskRangeCmd(double,double) {};
+  virtual void maskTransparencyCmd(float) {};
+  virtual void maskSystemCmd(Coord::CoordSystem) {};
 
   // NaN Commands
   void getNANColorCmd();

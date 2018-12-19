@@ -832,7 +832,6 @@ proc ContourLoadNewDialog {fn} {
 
 proc Contour2Polygons {} {
     global current
-    global contour
 
     if {$current(frame) != {}} {
 	$current(frame) contour create polygon

@@ -20,7 +20,6 @@ class FitsBlock : public FitsFile {
   void initCCDSUM(Vector&);
   void initKeySEC(const char*, Vector&);
   void initLTMV(Vector&);
-  void initWCS(Vector&);
 
  public:
   FitsBlock(FitsFile*, Vector&);

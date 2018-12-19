@@ -384,8 +384,10 @@ proc UpdateZoomMenu {} {
 
     if {$ds9(active,num) > 0} {
 	$ds9(mb) entryconfig [msgcat::mc {Zoom}] -state normal
+	ConfigureButtons zoom normal
     } else {
 	$ds9(mb) entryconfig [msgcat::mc {Zoom}] -state disabled
+	ConfigureButtons zoom disabled
     }
 
     if {$current(frame) == {}} {

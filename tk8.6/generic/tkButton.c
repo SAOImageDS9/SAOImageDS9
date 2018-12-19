@@ -879,7 +879,13 @@ ButtonWidgetObjCmd(
 
 		Tcl_CancelIdleCall(TkpDisplayButton, butPtr);
 		XFlush(butPtr->display);
+		#ifndef MAC_OSX_TK
+		/*
+		 * On the mac you can not sleep in a display proc, and the
+		 * flash command doesn't do anything anyway.
+		 */
 		Tcl_Sleep(50);
+		#endif
 	    }
 	}
 	break;
@@ -1611,6 +1617,19 @@ ButtonVarProc(
     Tcl_Obj *valuePtr;
 
     /*
+     * See ticket [5d991b82].
+     */
+
+    if (butPtr->selVarNamePtr == NULL) {
+	if (!(flags & TCL_INTERP_DESTROYED)) {
+	    Tcl_UntraceVar2(interp, name1, name2,
+		    TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
+		    ButtonVarProc, clientData);
+	}
+	return NULL;
+    }
+
+    /*
      * If the variable is being unset, then just re-establish the trace unless
      * the whole interpreter is going away.
      */
@@ -1692,8 +1711,8 @@ static char *
 ButtonTextVarProc(
     ClientData clientData,	/* Information about button. */
     Tcl_Interp *interp,		/* Interpreter containing variable. */
-    const char *name1,		/* Not used. */
-    const char *name2,		/* Not used. */
+    const char *name1,		/* Name of variable. */
+    const char *name2,		/* Second part of variable name. */
     int flags)			/* Information about what happened. */
 {
     TkButton *butPtr = clientData;
@@ -1702,6 +1721,19 @@ ButtonTextVarProc(
     if (butPtr->flags & BUTTON_DELETED) {
 	return NULL;
     }
+
+    /*
+     * See ticket [5d991b82].
+     */
+
+    if (butPtr->textVarNamePtr == NULL) {
+	if (!(flags & TCL_INTERP_DESTROYED)) {
+	    Tcl_UntraceVar2(interp, name1, name2,
+		    TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
+		    ButtonTextVarProc, clientData);
+	}
+ 	return NULL;
+     }
 
     /*
      * If the variable is unset, then immediately recreate it unless the whole

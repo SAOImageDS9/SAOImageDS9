@@ -12,8 +12,11 @@ proc MaskDef {} {
     set imask(top) .msk
     set imask(mb) .mskmb
 
+    set mask(system) physical
     set mask(color) red
-    set mask(mark) 1
+    set mask(mark) nonzero
+    set mask(low) 0
+    set mask(high) 0
     set mask(transparency) 0
 
     array set pmask [array get mask]
@@ -25,6 +28,17 @@ proc MaskMark {} {
 
     if {$current(frame) != {}} {
 	$current(frame) mask mark $mask(mark)
+	# for backward compatibility
+	set mask(mark) [$current(frame) get mask mark]
+    }
+}
+
+proc MaskRange {} {
+    global mask
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) mask range $mask(low) $mask(high)
     }
 }
 
@@ -43,6 +57,15 @@ proc MaskTransparency {} {
 
     if {$current(frame) != {}} {
 	$current(frame) mask transparency $mask(transparency)
+    }
+}
+
+proc MaskSystem {} {
+    global mask
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) mask system $mask(system)
     }
 }
 
@@ -90,25 +113,21 @@ proc MaskDialog {} {
     $mb.file add command -label [msgcat::mc {Close}] -command MaskDestroyDialog
 
     menu $mb.file.open
-    $mb.file.open add command \
-	-label "[msgcat::mc {Mosaic WCS}]..." \
+    $mb.file.open add command -label "[msgcat::mc {Mosaic WCS}]..." \
 	-command [list OpenDialog mosaicimagewcs mask]
-    $mb.file.open add command \
-	-label "[msgcat::mc {Mosaic WCS Segment}]..." \
+    $mb.file.open add command -label "[msgcat::mc {Mosaic WCS Segment}]..." \
 	-command [list OpenDialog mosaicwcs mask]
-    $mb.file.open add command \
-	-label "[msgcat::mc {Mosaic IRAF}]..." \
+    $mb.file.open add command -label "[msgcat::mc {Mosaic IRAF}]..." \
 	-command [list OpenDialog mosaicimageiraf mask]
-    $mb.file.open add command \
-	-label "[msgcat::mc {Mosaic IRAF Segment}]..." \
+    $mb.file.open add command -label "[msgcat::mc {Mosaic IRAF Segment}]..." \
 	-command [list OpenDialog mosaiciraf mask]
+    $mb.file.open add command -label "[msgcat::mc {Mosaic WFPC2}]..." \
+	-command [list OpenDialog mosaicimagewfpc2 mask]
 
     menu $mb.file.import
-    $mb.file.import add command \
-	-label "[msgcat::mc {Array}]..." \
+    $mb.file.import add command -label "[msgcat::mc {Array}]..." \
 	-command [list ImportDialog array mask]
-    $mb.file.import add command \
-	-label "[msgcat::mc {NRRD}]..." \
+    $mb.file.import add command -label {NRRD} \
 	-command [list ImportDialog nrrd mask]
 
     EditMenu $mb imask
@@ -166,6 +185,10 @@ proc UpdateMaskMenu {} {
 
     set mask(color) [$current(frame) get mask color]
     set mask(mark) [$current(frame) get mask mark]
+    set range [$current(frame) get mask range]
+    set mask(low) [lindex $range 0]
+    set mask(high) [lindex $range 1]
+    set mask(system) [$current(frame) get mask system]
     set mask(transparency) [$current(frame) get mask transparency]
 
     switch -- [$current(frame) get type] {
@@ -190,6 +213,8 @@ proc MaskLoad {} {
 	if {$rr} {
 	    $current(frame) mask color $mask(color)
 	    $current(frame) mask mark $mask(mark)
+	    $current(frame) mask range $mask(low) $mask(high)
+	    $current(frame) mask system $mask(system)
 	}
     }
     return $rr
@@ -204,23 +229,43 @@ proc MaskParamsDialog {} {
     set ed(ok) 0
     set ed(color) $mask(color)
     set ed(mark) $mask(mark)
+    set ed(low) $mask(low)
+    set ed(high) $mask(high)
 
     DialogCreate $w [msgcat::mc {Mask Parameters}] ed(ok)
 
     # Param
     set f [ttk::frame $w.param]
 
+    ttk::label $f.coordtitle -text [msgcat::mc {Coordinate System}]
+    CoordMenuButton $f.coordbutton mask system 1 {} {} {}
+
     ttk::label $f.colortitle -text [msgcat::mc {Color}]
     ColorMenuButton $f.colorbutton ed color {}
-    ttk::label $f.marktitle -text [msgcat::mc {Block}]
-    ttk::radiobutton $f.markz -text [msgcat::mc {Zero}] \
-	-variable ed(mark) -value 0 
-    ttk::radiobutton $f.marknz -text [msgcat::mc {Non-zero}] \
-	-variable ed(mark) -value 1
-    ttk::label $f.marktitle2 -text [msgcat::mc {Value}]
 
-    grid $f.colortitle $f.colorbutton - -padx 2 -pady 2 -sticky w
-    grid $f.marktitle $f.markz $f.marknz $f.marktitle2 -padx 2 -pady 2 -sticky w
+    ttk::label $f.marktitle -text [msgcat::mc {Block Pixel}]
+    set mb $f.markbutton.menu
+    ttk::menubutton $f.markbutton -textvariable ed(mark) -menu $mb
+    menu $mb
+    $mb add radiobutton -label [msgcat::mc {Zero}] \
+	-variable ed(mark) -value zero
+    $mb add radiobutton -label [msgcat::mc {Non-Zero}] \
+	-variable ed(mark) -value nonzero
+    $mb add radiobutton -label [msgcat::mc {NAN}] \
+	-variable ed(mark) -value nan
+    $mb add radiobutton -label [msgcat::mc {Non-NAN}] \
+	-variable ed(mark) -value nonnan
+    $mb add radiobutton -label [msgcat::mc {Range}] \
+	-variable ed(mark) -value range
+
+    ttk::label $f.rangetitle -text [msgcat::mc {Range}]
+    ttk::entry $f.low -textvariable ed(low) -width 13
+    ttk::entry $f.high -textvariable ed(high) -width 13
+
+    grid $f.coordtitle $f.coordbutton -padx 2 -pady 2 -sticky w
+    grid $f.colortitle $f.colorbutton -padx 2 -pady 2 -sticky w
+    grid $f.marktitle $f.markbutton -padx 2 -pady 2 -sticky w
+    grid $f.rangetitle $f.low $f.high -padx 2 -pady 2 -sticky w
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -243,6 +288,8 @@ proc MaskParamsDialog {} {
     if {$ed(ok)} {
 	set mask(color) [string tolower $ed(color)]
 	set mask(mark) $ed(mark)
+	set mask(low) $ed(low)
+	set mask(high) $ed(high)
     }
 
     set rr $ed(ok)
@@ -253,6 +300,7 @@ proc MaskParamsDialog {} {
 proc MaskBackup {ch which} {
     puts $ch "$which mask color [$which get mask color]"
     puts $ch "$which mask mark [$which get mask mark]"
+    puts $ch "$which mask range [$which get mask range]"
     puts $ch "$which mask transparency [$which get mask transparency]"
 }
 
@@ -263,6 +311,8 @@ proc ProcessMaskCmd {varname iname} {
     global mask
     global parse
     set parse(result) {}
+
+    MaskDialog
 
     mask::YY_FLUSH_BUFFER
     mask::yy_scan_string [lrange $var $i end]

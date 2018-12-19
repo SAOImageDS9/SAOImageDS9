@@ -1651,36 +1651,6 @@ template <> double FitsDatam<double>::getValueDouble(const Vector& v)
     return NAN;
 }
 
-// getValueMask
-
-template <class T> int FitsDatam<T>::getValueMask(const Vector& v)
-{
-  Vector r = v;
-  long x = (long)r[0];
-  long y = (long)r[1];
-
-  if (x >= 0 && x < width_ && y >= 0 && y < height_)
-    return data_[y*width_ + x] ? 1 : 0;
-  else 
-    return 0;
-}
-
-template <class T> int FitsDatam<T>::getValueMask(double xx, double yy)
-{
-  long x = (long)xx;
-  long y = (long)yy;
-
-  if (x >= 0 && x < width_ && y >= 0 && y < height_)
-    return data_[y*width_ + x] ? 1 : 0;
-  else 
-    return 0;
-}
-
-template<class T> int FitsDatam<T>::getValueMask(long i)
-{
-  return data_[i] ? 1 : 0;
-}
-
 // bin
 
 template<class T> void FitsDatam<T>::hist(double* arr, int length, double mn, 

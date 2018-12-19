@@ -5,6 +5,7 @@
 #include "fitsimage.h"
 #include "block.h"
 #include "context.h"
+#include "wcsast.h"
 
 void* blockproc(void* tt);
 
@@ -187,4 +188,3 @@ void* blockproc(void* tt)
 
   return NULL;
 }
-

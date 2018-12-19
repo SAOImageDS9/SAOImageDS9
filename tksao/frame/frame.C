@@ -7,6 +7,7 @@
 #include "frame.h"
 #include "fitsimage.h"
 #include "ps.h"
+#include "analysis.h"
 
 #include "sigbus.h"
 
@@ -20,7 +21,6 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   currentContext = context;
   keyContext = context;
-  keyContextSet =1;
   
   colormapData =NULL;
 
@@ -31,6 +31,13 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   colorCount = 0;
   colorScale = NULL;
   colorCells = NULL;
+
+  maskColorName = dupstr("red");
+  maskAlpha = 1;
+  maskMark = FitsMask::NONZERO;
+  maskLow = 0;
+  maskHigh = 0;
+  maskSystem = Coord::PHYSICAL;
 }
 
 Frame::~Frame()
@@ -46,6 +53,14 @@ Frame::~Frame()
 
   if (colormapData)
     delete [] colormapData;
+
+  if (maskColorName)
+    delete [] maskColorName;
+}
+
+void Frame::alignWCS() {
+  Base::alignWCS();
+  updateMaskMatrices();
 }
 
 unsigned char* Frame::blend(unsigned char* src, unsigned char* msk,
@@ -183,14 +198,12 @@ unsigned char* Frame::fillImage(int width, int height,
   CLEARSIGBUS
 
   if (img) {
-    if (context->mask.head()) {
-      FitsMask* mptr = context->mask.tail();
-      while (mptr) {
-	unsigned char* msk = fillMask(mptr, width, height, sys);
-	blend(img,msk,width,height);
-	delete [] msk;
-	mptr = mptr->previous();
-      }
+    FitsMask* mptr = mask.tail();
+    while (mptr) {
+      unsigned char* msk = fillMask(mptr, width, height, sys);
+      blend(img,msk,width,height);
+      delete [] msk;
+      mptr = mptr->previous();
     }
   }
 
@@ -200,24 +213,27 @@ unsigned char* Frame::fillImage(int width, int height,
 unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 			       Coord::InternalSystem sys)
 {
-  FitsImage* currentMsk = msk->current();
-  XColor* maskColor = msk->color();
-  int mark = msk->mark();
-
   // img
   unsigned char* img = new unsigned char[width*height*4];
   memset(img,0,width*height*4);
+
+  Context* cc = msk->context();
+  FitsImage* currentMsk = cc->fits;
+  XColor* maskColor = msk->color();
+  FitsMask::MaskType mark = msk->mark();
+  double low = msk->low();
+  double high = msk->high();
 
   if (!currentMsk)
     return img;
 
   // basics
   FitsImage* sptr = currentMsk;
-  int mosaic = isMosaic();
+  int mosaic = cc->isMosaic();
 
   // variable
   double* mm = sptr->matrixToData(sys).mm();
-  FitsBound* params = sptr->getDataParams(context->secMode());
+  FitsBound* params = sptr->getDataParams(cc->secMode());
   int srcw = sptr->width();
 
   // main loop
@@ -231,7 +247,7 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 	sptr = currentMsk;
 
 	mm = sptr->matrixToData(sys).mm();
-	params = sptr->getDataParams(context->secMode());
+	params = sptr->getDataParams(cc->secMode());
 	srcw = sptr->width();
       }
 
@@ -241,13 +257,49 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 
 	if (xx>=params->xmin && xx<params->xmax && 
 	    yy>=params->ymin && yy<params->ymax) {
-	  int value = sptr->getValueMask(long(yy)*srcw + long(xx));
-       
-	  if ((mark && value) || (!mark && !value)) {
-	    *dest = ((unsigned char)maskColor->red)*maskAlpha;
-	    *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
-	    *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
-	    *(dest+3) = 1;
+	  float value = sptr->getValueFloat(long(yy)*srcw + long(xx));
+
+	  switch (mark) {
+	  case FitsMask::ZERO:
+	    if (value==0) {
+	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
+	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
+	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *(dest+3) = 1;
+	    }
+	    break;
+	  case FitsMask::NONZERO:
+	    if (value!=0) {
+	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
+	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
+	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *(dest+3) = 1;
+	    }
+	    break;
+	  case FitsMask::NaN:
+	    if (isnan(value) || isinf(value)) {
+	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
+	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
+	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *(dest+3) = 1;
+	    }
+	    break;
+	  case FitsMask::NONNaN:
+	    if (!isnan(value) && !isinf(value)) {
+	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
+	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
+	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *(dest+3) = 1;
+	    }
+	    break;
+	  case FitsMask::RANGE:
+	    if (value>=low && value<=high) {
+	      *dest = ((unsigned char)maskColor->red)*maskAlpha;
+	      *(dest+1) = ((unsigned char)maskColor->green)*maskAlpha;
+	      *(dest+2) = ((unsigned char)maskColor->blue)*maskAlpha;
+	      *(dest+3) = 1;
+	    }
+	    break;
 	  }
 
 	  break;
@@ -258,7 +310,7 @@ unsigned char* Frame::fillMask(FitsMask* msk, int width, int height,
 
 	    if (sptr) {
 	      mm = sptr->matrixToData(sys).mm();
-	      params = sptr->getDataParams(context->secMode());
+	      params = sptr->getDataParams(cc->secMode());
 	      srcw = sptr->width();
 	    }
 	  }
@@ -279,79 +331,50 @@ int Frame::isIIS()
 
 void Frame::pushMatrices()
 {
-  Base::pushMatrices();
-
   // alway identity
   Matrix rgbToRef; 
+  Base::pushMatrices(keyContext->fits, rgbToRef);
 
   // now any masks
-  FitsMask* msk = currentContext->mask.tail();
+  FitsMask* msk = mask.tail();
   while (msk) {
-    FitsImage* mskimg = msk->mask();
-    while (mskimg) {
-      FitsImage* sptr = mskimg;
-      while (sptr) {
-	sptr->updateMatrices(rgbToRef, refToUser, userToWidget, 
-			     widgetToCanvas, canvasToWindow);
-	sptr = sptr->nextSlice();
-      }
-      mskimg = mskimg->nextMosaic();
-    }
-
+    Base::pushMatrices(msk->context()->fits, msk->mm());
     msk = msk->previous();
   }
 }
 
 void Frame::pushMagnifierMatrices()
 {
-  Base::pushMagnifierMatrices();
+  Base::pushMagnifierMatrices(keyContext->fits);
 
-  FitsMask* msk = context->mask.tail();
+  // now any masks
+  FitsMask* msk = mask.tail();
   while (msk) {
-    FitsImage* mskimg = msk->mask();
-    while (mskimg) {
-      FitsImage* sptr = mskimg;
-      while (sptr) {
-	sptr->updateMagnifierMatrices(refToMagnifier);
-	sptr = sptr->nextSlice();
-      }
-      mskimg = mskimg->nextMosaic();
-    }
+    Base::pushMagnifierMatrices(msk->context()->fits);
     msk = msk->previous();
   }
 }
 
 void Frame::pushPannerMatrices()
 {
-  Base::pushPannerMatrices();
+  Base::pushPannerMatrices(keyContext->fits);
 
-  FitsMask* msk = context->mask.tail();
+  // now any masks
+  FitsMask* msk = mask.tail();
   while (msk) {
-    FitsImage* mskimg = msk->mask();
-    while (mskimg) {
-      FitsImage* sptr = mskimg;
-      while (sptr) {
-	sptr->updatePannerMatrices(refToPanner);
-	sptr = sptr->nextSlice();
-      }
-      mskimg = mskimg->nextMosaic();
-    }
+    Base::pushPannerMatrices(msk->context()->fits);
     msk = msk->previous();
   }
 }
 
 void Frame::pushPSMatrices(float scale, int width, int height)
 {
-  Base::pushPSMatrices(scale, width, height);
+  Base::pushPSMatrices(keyContext->fits, scale, width, height);
 
-  Matrix mx = psMatrix(scale, width, height);
-  FitsMask* msk = context->mask.tail();
+  // now any masks
+  FitsMask* msk = mask.tail();
   while (msk) {
-    FitsImage* ptr = msk->current();
-    while (ptr) {
-      ptr->updatePS(mx);
-      ptr = ptr->nextMosaic();
-    }
+    Base::pushPSMatrices(msk->context()->fits, scale, width, height);
     msk = msk->previous();
   }
 }
@@ -380,6 +403,51 @@ void Frame::updateColorCells(unsigned char* cells, int cnt)
   memcpy(colorCells, cells, cnt*3);
 }
 
+void Frame::updateMaskMatrices()
+{
+  // image,pysical,amplifier,detector are ok, check for wcs
+  if (maskSystem >= Coord::WCS) {
+    FitsMask* mptr = mask.head();
+    while (mptr) {
+      if (mptr->context()->fits && !mptr->context()->fits->hasWCS(maskSystem)) {
+	maskSystem = Coord::IMAGE;
+	break;
+      }
+      mptr = mptr->next();
+    }
+  }
+
+  // mask align
+  FitsMask* mptr = mask.head();
+  while (mptr) {
+    mptr->mm().identity();
+    if (mptr->context()->fits && keyContext->fits) {
+      switch (maskSystem) {
+      case Coord::IMAGE:
+	// nothing to do here
+	break;
+      case Coord::PHYSICAL:
+	mptr->mm() = mptr->context()->fits->imageToPhysical *
+	  keyContext->fits->physicalToImage;
+	break;
+      case Coord::AMPLIFIER:
+	mptr->mm() = mptr->context()->fits->imageToAmplifier *
+	  keyContext->fits->amplifierToImage;
+	break;
+      case Coord::DETECTOR:
+	mptr->mm() = mptr->context()->fits->imageToDetector *
+	  keyContext->fits->detectorToImage;
+	break;
+      default:
+	mptr->mm() = calcAlignWCS(keyContext->fits, mptr->context()->fits,
+				  maskSystem, maskSystem, Coord::FK5);
+	break;
+      }
+    }
+    mptr = mptr->next();
+  }
+}
+
 void Frame::unloadFits()
 {
   if (DebugPerf)
@@ -391,10 +459,81 @@ void Frame::unloadFits()
 
   context->unload();
 
-  FrameBase::unloadFits();
+  // delete any masks
+  mask.deleteAll();
+
+  Base::unloadFits();
 }
 
 // Commands
+
+void Frame::getMaskColorCmd()
+{
+  Tcl_AppendResult(interp, maskColorName, NULL);
+}
+
+void Frame::getMaskMarkCmd()
+{
+  switch (maskMark) {
+  case FitsMask::ZERO:
+    Tcl_AppendResult(interp, "zero", NULL);
+    break;
+  case FitsMask::NONZERO:
+    Tcl_AppendResult(interp, "nonzero", NULL);
+    break;
+  case FitsMask::NaN:
+    Tcl_AppendResult(interp, "nan", NULL);
+    break;
+  case FitsMask::NONNaN:
+    Tcl_AppendResult(interp, "nonnan", NULL);
+    break;
+  case FitsMask::RANGE:
+    Tcl_AppendResult(interp, "range", NULL);
+    break;
+  }
+}
+
+void Frame::getMaskRangeCmd()
+{
+  ostringstream str;
+  str << maskLow << ' ' << maskHigh << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
+void Frame::getMaskSystemCmd()
+{
+  printCoordSystem(maskSystem);
+}
+
+void Frame::getMaskTransparencyCmd()
+{
+  printDouble((1-maskAlpha)*100.);
+}
+
+void Frame::maskClearCmd()
+{
+  mask.deleteAll();
+  update(BASE);
+}
+
+void Frame::maskColorCmd(const char* color)
+{
+  if (maskColorName)
+    delete [] maskColorName;
+
+  maskColorName = dupstr(color);
+}
+
+void Frame::maskSystemCmd(Coord::CoordSystem sys)
+{
+  maskSystem = sys;
+}
+
+void Frame::maskTransparencyCmd(float tt)
+{
+  maskAlpha = 1-(tt/100.);
+  update(BASE);
+}
 
 void Frame::colormapCmd(int id, float b, float c, int i, 
 				 unsigned char* cells, int cnt)
@@ -654,12 +793,10 @@ void Frame::getTypeCmd()
 void Frame::iisCmd(int width, int height)
 {
   unloadAllFits();
-
   context->setIIS();
 
   FitsImage* img = new FitsImageIIS(currentContext, interp, width, height);
-
-  loadDone(currentContext->load(ALLOC, "", img, IMG),IMG);
+  loadDone(currentContext->load(ALLOC, "", img));
 }
 
 void Frame::iisEraseCmd()
@@ -778,6 +915,3 @@ void Frame::savePhotoCmd(const char* ph)
     return;
   }
 }
-
-
-

@@ -19,9 +19,10 @@ Grid3d::Grid3d(Widget* p, Coord::CoordSystem sys, Coord::SkyFrame sky,
 Grid3d::~Grid3d()
 {}
 
-int Grid3d::doit(RenderMode rm)
+void Grid3d::doit(RenderMode rm)
 {
   Frame3dBase* pp = (Frame3dBase*)parent_;
+  astGrid3dPtr =NULL;
 
   mx_ = pp->refToWidget3d;
   rx_ =
@@ -40,7 +41,7 @@ int Grid3d::doit(RenderMode rm)
   Context* context = pp->keyContext;
   FitsImage* fits = context->fits;
   if (!fits)
-    return 1;
+    return;
 
   astClearStatus; // just to make sure
   astBegin; // start memory management
@@ -56,9 +57,15 @@ int Grid3d::doit(RenderMode rm)
     break;
   default:
     {
+      // ast_ maybe NULL
+      if (!fits->ast_) {
+	astEnd; // now, clean up memory
+	return;
+      }
+
       if (!fits->wcsInv()) {
 	astEnd; // now, clean up memory
-	return 1;
+	return;
       }
 
       AstFrameSet* ast = (AstFrameSet*)astCopy(fits->ast_);
@@ -144,7 +151,6 @@ int Grid3d::doit(RenderMode rm)
 
   astEnd; // now, clean up memory
   astGrid3dPtr =NULL;
-  return 1;
 }
 
 void Grid3d::matrixMap(void* frameSet, Matrix3d& mx, const char* str)

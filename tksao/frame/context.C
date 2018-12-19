@@ -31,7 +31,7 @@ extern "C" {
 
 void* ctlval;
 ctFlexLexer* ctlexx;
-extern int ctparse(Base*, ctFlexLexer*);
+extern int ctparse(Context*, ctFlexLexer*);
 
 int ctlex(void* vval, ctFlexLexer* ll)
 {
@@ -40,13 +40,14 @@ int ctlex(void* vval, ctFlexLexer* ll)
   return ll ? ll->yylex() : 0;
 }
 
-void cterror(Base* ct, ctFlexLexer* ll, const char* m)
+void cterror(Context* ct, ctFlexLexer* ll, const char* mm)
 {
-  ct->error(m);
+  Base* fr = ct->parent_;
+  fr->error(mm);
   const char* cmd = ll ? ll->YYText() : (const char*)NULL;
   if (cmd && cmd[0] != '\n') {
-    ct->error(": ");
-    ct->error(cmd);
+    fr->error(": ");
+    fr->error(cmd);
   }
 }
 
@@ -97,6 +98,9 @@ Context::Context()
   smoothAngle_ =0;
 
   thread_ =NULL;
+
+  contourWCSSystem_ = Coord::WCS;
+  contourWCSSkyFrame_ = Coord::FK5;
 }
 
 Context::~Context()
@@ -304,83 +308,6 @@ int Context::block()
     break;
   }
 
-  return rr & blockMask();
-}
-
-int Context::blockMask()
-{
-  int doBlock = (blockFactor_[0] != 1 && blockFactor_[1] != 1) ? 1 : 0;
-  int rr =1;
-
-  if (thread_)
-    delete [] thread_;
-  thread_ = new pthread_t[parent_->nthreads_];
-  {
-    int cnt =0;
-
-    FitsMask* msk = mask.head();
-    if (msk) {
-      FitsImage* ptr = msk->mask();
-      while (ptr) {
-	FitsImage* sptr = ptr;
-	while (sptr) {
-	  sptr->block(&thread_[cnt]);
-	  cnt++;
-	  if (cnt == parent_->nthreads_) {
-	    if (doBlock) {
-	      for (int ii=0; ii<cnt; ii++) {
-		int tt = pthread_join(thread_[ii], NULL);
-		if (tt) {
-		  internalError("Unable to Join Thread");
-		  rr =0;
-		}
-	      }
-	    }
-	    cnt =0;
-	  }
-	  sptr = sptr->nextSlice();
-	}
-	ptr = ptr->nextMosaic();
-      }
-      msk = msk->next();
-    }
-
-    if (doBlock) {
-      for (int ii=0; ii<cnt; ii++) {
-	int tt = pthread_join(thread_[ii], NULL);
-	if (tt) {
-	  internalError("Unable to Join Thread");
-	  rr =0;
-	}
-      }
-    }
-  }
-  delete [] thread_;
-  thread_ =NULL;
-
-  {
-    FitsMask* msk = mask.head();
-    if (msk) {
-      FitsImage* ptr = msk->mask();
-      while (ptr) {
-	FitsImage* sptr = ptr;
-	while (sptr) {
-	  switch (mosaicType) {
-	  case Base::IRAF:
-	  case Base::WCSMOSAIC:
-	    rr &= processMosaicKeywords(ptr);
-	    break;
-	  default:
-	    break;
-	  }
-	  sptr = sptr->nextSlice();
-	}
-	ptr = ptr->nextMosaic();
-      }
-      msk = msk->next();
-    }
-  }
-
   return rr;
 }
 
@@ -539,8 +466,11 @@ void Context::contourLoadAux(istream& str)
   if (!cfits)
     return;
 
+  contourWCSSystem_ = parent_->getWCSSystem();
+  contourWCSSkyFrame_ = parent_->getWCSSkyFrame();
+
   ctFlexLexer* ll = new ctFlexLexer(&str);
-  ctparse(parent_, ll);
+  ctparse(this, ll);
   delete ll;
 }
 
@@ -553,8 +483,11 @@ void Context::contourLoadAux(istream& str, const char* color,
   // remember where we are
   int cnt = auxcontours_.count();
 
+  contourWCSSystem_ = parent_->getWCSSystem();
+  contourWCSSkyFrame_ = parent_->getWCSSkyFrame();
+
   ctFlexLexer* ll = new ctFlexLexer(&str);
-  ctparse(parent_, ll);
+  ctparse(this, ll);
   delete ll;
 
   // override line attributes
@@ -571,38 +504,33 @@ void Context::contourLoadAux(istream& str, const char* color,
   }
 }
 
+// backward compatibility
 void Context::contourLoadAux(istream& str, 
 			     Coord::CoordSystem sys, Coord::SkyFrame sky,
 			     const char* color, int width, int dash)
 {
-  if (!cfits)
-    return;
+  // remember where we are
+  int cnt = auxcontours_.count();
 
-  int dl[2];
-  dl[0] =8;
-  dl[1] =3;
-  ContourLevel* cl = new ContourLevel(parent_, 0, color, width, dash, dl);
+  contourWCSSystem_ = sys;
+  contourWCSSkyFrame_ = sky;
 
-  Contour* cc = new Contour(cl);
-  while (!str.eof()) {
-    char buf[64];
-    str.getline(buf,64,'\n');
-    if (strlen(buf) > 0) {
-      Vector vv;
-      string x(buf);
-      istringstream sstr(x);
+  ctFlexLexer* ll = new ctFlexLexer(&str);
+  ctparse(this, ll);
+  delete ll;
 
-      sstr >> vv[0] >> vv[1];
-      cc->lvertex().append(new Vertex(fits->mapToRef(vv, sys, sky)));
+  // override line attributes
+  if (auxcontours_.head()) {
+    for (int ii=0; ii<cnt; ii++)
+      auxcontours_.next();
+
+    do {
+      auxcontours_.current()->setColor(color);
+      auxcontours_.current()->setLineWidth(width);
+      auxcontours_.current()->setDash(dash);
     }
-    else {
-      cl->lcontour().append(cc);
-      cc = new Contour(cl);
-    }
+    while (auxcontours_.next());
   }
-
-  auxcontours_.append(cl);
-  hasAuxContour_ =1;
 }
 
 void Context::contourPS(Widget::PSColorSpace cs)
@@ -773,40 +701,27 @@ Vector Context::getMinMax()
 }
 
 int Context::load(Base::MemType which, const char* fn, 
-		  FitsImage* img, Base::LayerType ll)
+		  FitsImage* img)
 {
   if (!img || !img->isValid()) {
     if (img)
       delete img;
     
-    switch (ll) {
-    case Base::IMG:
-      unload();
-      return 0;
-    case Base::MASK:
-      return 0;
-    }
+    unload();
+    return 0;
   }
 
-  switch (ll) {
-  case Base::IMG:
-    bfits_ = img;
-    loadInit(1, Base::NOMOSAIC,Coord::WCS);
-    for (int ii=2; ii<FTY_MAXAXES; ii++) {
-      int nn = img->naxis(ii);
-      baxis_[ii] = nn ? nn : 1;
-    }
-
-    // params in DATA coords 0-n
-    // do it here because of fits section
-    iparams.set(0,baxis_[2]);
-    cparams.set(0,baxis_[2]);
-    break;
-
-  case Base::MASK:
-    mask.append(new FitsMask(parent_, img, parent_->maskColorName, parent_->maskMark));
-    break;
+  bfits_ = img;
+  loadInit(1, Base::NOMOSAIC,Coord::WCS);
+  for (int ii=2; ii<FTY_MAXAXES; ii++) {
+    int nn = img->naxis(ii);
+    baxis_[ii] = nn ? nn : 1;
   }
+
+  // params in DATA coords 0-n
+  // do it here because of fits section
+  iparams.set(0,baxis_[2]);
+  cparams.set(0,baxis_[2]);
 
   if (img->isHist())
     which = Base::HIST;
@@ -876,15 +791,7 @@ int Context::load(Base::MemType which, const char* fn,
 
   // finish up
   img->close();
-
-  switch (ll) {
-  case Base::IMG:
-    loadFinish();
-    break;
-  case Base::MASK:
-    loadFinishMask();
-    break;
-  }
+  loadFinish();
 
   return 1;
 }
@@ -1000,8 +907,8 @@ void Context::loadInit(int cnt, Base::MosaicType type, Coord::CoordSystem sys)
 }
 
 int Context::loadMosaic(Base::MemType which, const char* fn, 
-			FitsImage* img, Base::LayerType ll, 
-			Base::MosaicType type, Coord::CoordSystem sys)
+			FitsImage* img, Base::MosaicType type,
+			Coord::CoordSystem sys)
 {
   if (!img || !img->isValid()) {
     if (img)
@@ -1009,41 +916,25 @@ int Context::loadMosaic(Base::MemType which, const char* fn,
     return 0;
   }
 
-  switch (ll) {
-  case Base::IMG:
-    if (bfits_) {
-      FitsImage* ptr = bfits_;
-      while (ptr && ptr->nextMosaic())
-	ptr = ptr->nextMosaic();
-      ptr->setNextMosaic(img);
-      mosaicCount_++;
+  if (bfits_) {
+    FitsImage* ptr = bfits_;
+    while (ptr && ptr->nextMosaic())
+      ptr = ptr->nextMosaic();
+    ptr->setNextMosaic(img);
+    mosaicCount_++;
+  }
+  else {
+    bfits_ = img;
+    loadInit(1, type,sys);
+    for (int ii=2; ii<FTY_MAXAXES; ii++) {
+      int nn = img->naxis(ii);
+      baxis_[ii] = nn ? nn : 1;
     }
-    else {
-      bfits_ = img;
-      loadInit(1, type,sys);
-      for (int ii=2; ii<FTY_MAXAXES; ii++) {
-	int nn = img->naxis(ii);
-	baxis_[ii] = nn ? nn : 1;
-      }
 
-      // params in DATA coords 0-n
-      // do it here because of fits section
-      iparams.set(0,baxis_[2]);
-      cparams.set(0,baxis_[2]);
-    }
-    break;
-
-  case Base::MASK:
-    FitsMask* msk = mask.tail();
-    if (msk) {
-      FitsImage* mskimg = msk->mask();
-      while (mskimg && mskimg->nextMosaic())
-	mskimg = mskimg->nextMosaic();
-      mskimg->setNextMosaic(img);
-    }
-    else
-      mask.append(new FitsMask(parent_, img, parent_->maskColorName, parent_->maskMark));
-    break;
+    // params in DATA coords 0-n
+    // do it here because of fits section
+    iparams.set(0,baxis_[2]);
+    cparams.set(0,baxis_[2]);
   }
 
   if (img->isPost())
@@ -1114,60 +1005,38 @@ int Context::loadMosaic(Base::MemType which, const char* fn,
   // finish up
   img->close();
 
-  switch (ll) {
-  case Base::IMG:
-    loadFinishMosaic(fits);
-    if (!loadFinish()) {
-      unload();
-      return 0;
-    }
-    break;
-  case Base::MASK:
-    if (!loadFinishMosaicMask())
-      return 0;
-    break;
+  loadFinishMosaic(fits);
+  if (!loadFinish()) {
+    unload();
+    return 0;
   }
 
   return 1;
 }
 
 int Context::loadMosaicImage(Base::MemType which, const char* fn,
-			     FitsImage* img, Base::LayerType ll,
-			     Base::MosaicType type, Coord::CoordSystem sys)
+			     FitsImage* img, Base::MosaicType type,
+			     Coord::CoordSystem sys)
 {
   if (!img || !img->isValid()) {
     if (img)
       delete img;
 
-    switch (ll) {
-    case Base::IMG:
       unload();
       return 0;
-    case Base::MASK:
-      return 0;
-    }
   }
 
-  switch (ll) {
-  case Base::IMG:
-    bfits_ = img;
-    loadInit(1, type,sys);
-    for (int ii=2; ii<FTY_MAXAXES; ii++) {
-      int nn = img->naxis(ii);
-      baxis_[ii] = nn ? nn : 1;
-    }
-
-    // params in DATA coords 0-n
-    // do it here because of fits section
-    iparams.set(0,baxis_[2]);
-    cparams.set(0,baxis_[2]);
-
-    break;
-
-  case Base::MASK:
-    mask.append(new FitsMask(parent_, img, parent_->maskColorName, parent_->maskMark));
-    break;
+  bfits_ = img;
+  loadInit(1, type,sys);
+  for (int ii=2; ii<FTY_MAXAXES; ii++) {
+    int nn = img->naxis(ii);
+    baxis_[ii] = nn ? nn : 1;
   }
+
+  // params in DATA coords 0-n
+  // do it here because of fits section
+  iparams.set(0,baxis_[2]);
+  cparams.set(0,baxis_[2]);
 
   Base::MemType sav = which;
 
@@ -1298,8 +1167,7 @@ int Context::loadMosaicImage(Base::MemType which, const char* fn,
       ptr->setNextMosaic(next);
       ptr = next;
 
-      if (ll == Base::IMG)
-	mosaicCount_++;
+      mosaicCount_++;
 
       if (img->isPost())
 	which = Base::POST;
@@ -1364,18 +1232,10 @@ int Context::loadMosaicImage(Base::MemType which, const char* fn,
   // finish up
   img->close();
 
-  switch (ll) {
-  case Base::IMG:
-    loadFinishMosaic(fits);
-    if (!loadFinish()) {
-      unload();
-      return 0;
-    }
-    break;
-  case Base::MASK:
-    if (!loadFinishMosaicMask())
-      return 0;
-    break;
+  loadFinishMosaic(fits);
+  if (!loadFinish()) {
+    unload();
+    return 0;
   }
 
   return 1;
@@ -1394,7 +1254,7 @@ int Context::loadMosaicWFPC2(Base::MemType which, const char* fn,
 
   // Its legal, save it
   bfits_ = img;
-  loadInit(1, Base::WFPC2,Coord::WCS);
+  loadInit(1, Base::WCSMOSAIC, Coord::WCS);
 
   // remember in case of compress
   Base::MemType sav = which;
@@ -1563,10 +1423,10 @@ int Context::loadMosaicWFPC2(Base::MemType which, const char* fn,
 	   << ends;
 
       // fix fitsimage params
-      ptr->wfpc2WCS(istr);
+      ptr->wfpc2WCS(bfits_->head(), istr);
 
       Matrix mm = parent_->calcAlignWCS(bfits_, ptr, Coord::WCS,
-				       Coord::WCS, Coord::FK5);
+					Coord::WCS, Coord::FK5);
       ptr->setwcsToRef(mm);
 
       ptr = ptr->nextMosaic();
@@ -1625,15 +1485,6 @@ int Context::loadFinish()
   return 1;
 }
 
-void Context::loadFinishMask()
-{
-  FitsMask* msk = mask.tail();
-  if (msk) {
-    FitsImage* mskimg = msk->mask();
-    mskimg->block();
-  }
-}
-
 void Context::loadFinishMosaic(FitsImage* ptr)
 {
   while (ptr && ptr->nextMosaic()) {
@@ -1652,15 +1503,6 @@ void Context::loadFinishMosaic(FitsImage* ptr)
     }
     ptr = ptr->nextMosaic();
   }
-}
-
-int Context::loadFinishMosaicMask()
-{
-  FitsMask* msk = mask.tail();
-  if (msk)
-    loadFinishMosaic(msk->mask());
-
-  return blockMask();
 }
 
 int Context::loadSlice(Base::MemType which, const char* fn,
@@ -2587,8 +2429,6 @@ void Context::unload()
   cfits =NULL;
 
   loadInit(0, Base::NOMOSAIC, Coord::WCS);
-
-  mask.deleteAll();
 
   fvcontour_.lcontourlevel().deleteAll();
   auxcontours_.deleteAll();

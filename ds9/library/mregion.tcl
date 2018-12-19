@@ -39,6 +39,11 @@ proc RegionMainMenu {} {
     $ds9(mb).region add command -label [msgcat::mc {Move to Back}] \
 	-command MarkerBack
     $ds9(mb).region add separator
+    $ds9(mb).region add command -label [msgcat::mc {New Group}] \
+	-command GroupCreate
+    $ds9(mb).region add command -label "[msgcat::mc {Groups}]..." \
+	-command GroupDialog
+    $ds9(mb).region add separator
     $ds9(mb).region add command -label [msgcat::mc {Select All}] \
 	-command MarkerSelectAll -accelerator "${ds9(ctrl)}A"
     $ds9(mb).region add command -label [msgcat::mc {Select None}] \
@@ -51,15 +56,14 @@ proc RegionMainMenu {} {
     $ds9(mb).region add command -label [msgcat::mc {Delete All Regions}] \
 	-command MarkerDeleteAllMenu
     $ds9(mb).region add separator
-    $ds9(mb).region add command -label [msgcat::mc {New Group}] \
-	-command GroupCreate
-    $ds9(mb).region add command -label "[msgcat::mc {Groups}]..." \
-	-command GroupDialog
-    $ds9(mb).region add separator
     $ds9(mb).region add command -label "[msgcat::mc {List Regions}]..." \
 	-command MarkerList
     $ds9(mb).region add command -label "[msgcat::mc {Load Regions}]..." \
 	-command MarkerLoad
+    $ds9(mb).region add command \
+	-label "[msgcat::mc {Delete and Load Regions}]..." \
+	-command MarkerDeleteLoad
+    $ds9(mb).region add separator
     $ds9(mb).region add command -label "[msgcat::mc {Save Regions}]..." \
 	-command MarkerSave
     $ds9(mb).region add separator
@@ -712,7 +716,9 @@ proc ButtonsRegionDef {} {
 	region,group 0
 	region,list 1
 	region,load 1
+	region,deleteload 0
 	region,save 1
+	region,mask 0
 	region,show 0
 	region,showtext 0
 	region,autocentroid 0
@@ -820,9 +826,15 @@ proc CreateButtonsRegion {} {
 	[string tolower [msgcat::mc {List}]] MarkerList
     ButtonButton $ds9(buttons).region.load \
 	[string tolower [msgcat::mc {Load}]] MarkerLoad
+    ButtonButton $ds9(buttons).region.deleteload \
+	[string tolower [msgcat::mc {Delete Load}]] MarkerDeleteLoad
+
     ButtonButton $ds9(buttons).region.save \
 	[string tolower [msgcat::mc {Save}]] MarkerSave
     
+    ButtonButton $ds9(buttons).region.mask \
+	[string tolower [msgcat::mc {Mask}]] MarkerMask
+
     CheckButton $ds9(buttons).region.show \
 	[string tolower [msgcat::mc {Show}]] \
 	marker(show) MarkerShow
@@ -869,7 +881,9 @@ proc CreateButtonsRegion {} {
         $ds9(buttons).region.group pbuttons(region,group)
         $ds9(buttons).region.list pbuttons(region,list)
         $ds9(buttons).region.load pbuttons(region,load)
+        $ds9(buttons).region.deleteload pbuttons(region,deleteload)
         $ds9(buttons).region.save pbuttons(region,save)
+        $ds9(buttons).region.mask pbuttons(region,mask)
         $ds9(buttons).region.show pbuttons(region,show)
         $ds9(buttons).region.showtext pbuttons(region,showtext)
         $ds9(buttons).region.autocentroid pbuttons(region,autocentroid)
@@ -932,6 +946,10 @@ proc PrefsDialogButtonbarRegion {f} {
     $m add checkbutton -label "[msgcat::mc {Load Regions}]..." \
 	-variable pbuttons(region,load) \
 	-command {UpdateButtons buttons(region)}
+    $m add checkbutton -label "[msgcat::mc {Delete and Load Regions}]..." \
+	-variable pbuttons(region,deleteload) \
+	-command {UpdateButtons buttons(region)}
+    $m add separator
     $m add checkbutton -label "[msgcat::mc {Save Regions}]..." \
 	-variable pbuttons(region,save) \
 	-command {UpdateButtons buttons(region)}
@@ -1035,8 +1053,12 @@ proc UpdateRegionMenu {} {
     global pmarker
     global ds9
 
+    set mm $ds9(mb).region
+    set bb $ds9(buttons).region
+
     if {$current(frame) != {}} {
 	$ds9(mb) entryconfig [msgcat::mc {Region}] -state normal
+	ConfigureButtons region normal
 
 	set marker(show) [$current(frame) get marker show]
 	set marker(show,text) [$current(frame) get marker show text]
@@ -1097,7 +1119,114 @@ proc UpdateRegionMenu {} {
 		}
 	    }
 	}
+
+	if {[$current(frame) has fits]} {
+	    $mm entryconfig "[msgcat::mc {Get Information}]..." -state normal
+
+	    $mm entryconfig [msgcat::mc {Composite Region}] -state normal
+	    $mm entryconfig [msgcat::mc {Instrument FOV}] -state normal
+	    $mm entryconfig [msgcat::mc {Template}] -state normal
+
+	    $mm entryconfig [msgcat::mc {Centroid}] -state normal
+	    $mm entryconfig [msgcat::mc {Move to Front}] -state normal
+	    $mm entryconfig [msgcat::mc {Move to Back}] -state normal
+
+	    $mm entryconfig [msgcat::mc {New Group}] -state normal
+	    $mm entryconfig "[msgcat::mc {Groups}]..." -state normal
+
+	    $mm entryconfig [msgcat::mc {Select All}] -state normal
+	    $mm entryconfig [msgcat::mc {Select None}] -state normal
+	    $mm entryconfig [msgcat::mc {Invert Selection}] -state normal
+
+	    $mm entryconfig [msgcat::mc {Delete Selected Regions}] -state normal
+	    $mm entryconfig [msgcat::mc {Delete All Regions}] -state normal
+
+	    $mm entryconfig "[msgcat::mc {List Regions}]..." -state normal
+	    $mm entryconfig "[msgcat::mc {Load Regions}]..." -state normal
+	    $mm entryconfig "[msgcat::mc {Delete and Load Regions}]..." -state normal
+	    $mm entryconfig "[msgcat::mc {Save Regions}]..." -state normal
+
+	    $bb.info configure -state normal
+
+	    $bb.create configure -state normal
+	    $bb.dissolve configure -state normal
+
+	    $bb.loadtemplate configure -state normal
+	    $bb.savetemplate configure -state normal
+
+	    $bb.centroid configure -state normal
+	    $bb.front configure -state normal
+	    $bb.back configure -state normal
+
+	    $bb.newgroup configure -state normal
+	    $bb.group configure -state normal
+
+	    $bb.all configure -state normal
+	    $bb.none configure -state normal
+	    $bb.invert configure -state normal
+
+	    $bb.delete configure -state normal
+	    $bb.deleteall configure -state normal
+
+	    $bb.list configure -state normal
+	    $bb.load configure -state normal
+	    $bb.deleteload configure -state normal
+	    $bb.save configure -state normal
+	} else {
+	    $mm entryconfig "[msgcat::mc {Get Information}]..." -state disabled
+
+	    $mm entryconfig [msgcat::mc {Composite Region}] -state disabled
+	    $mm entryconfig [msgcat::mc {Instrument FOV}] -state disabled
+	    $mm entryconfig [msgcat::mc {Template}] -state disabled
+
+	    $mm entryconfig [msgcat::mc {Centroid}] -state disabled
+	    $mm entryconfig [msgcat::mc {Move to Front}] -state disabled
+	    $mm entryconfig [msgcat::mc {Move to Back}] -state disabled
+
+	    $mm entryconfig [msgcat::mc {New Group}] -state disabled
+	    $mm entryconfig "[msgcat::mc {Groups}]..." -state disabled
+
+	    $mm entryconfig [msgcat::mc {Select All}] -state disabled
+	    $mm entryconfig [msgcat::mc {Select None}] -state disabled
+	    $mm entryconfig [msgcat::mc {Invert Selection}] -state disabled
+
+	    $mm entryconfig [msgcat::mc {Delete Selected Regions}] -state disabled
+	    $mm entryconfig [msgcat::mc {Delete All Regions}] -state disabled
+
+	    $mm entryconfig "[msgcat::mc {List Regions}]..." -state disabled
+	    $mm entryconfig "[msgcat::mc {Load Regions}]..." -state disabled
+	    $mm entryconfig "[msgcat::mc {Delete and Load Regions}]..." -state disabled
+	    $mm entryconfig "[msgcat::mc {Save Regions}]..." -state disabled
+
+	    $bb.info configure -state disabled
+
+	    $bb.create configure -state disabled
+	    $bb.dissolve configure -state disabled
+
+	    $bb.loadtemplate configure -state disabled
+	    $bb.savetemplate configure -state disabled
+
+	    $bb.centroid configure -state disabled
+	    $bb.front configure -state disabled
+	    $bb.back configure -state disabled
+
+	    $bb.newgroup configure -state disabled
+	    $bb.group configure -state disabled
+
+	    $bb.all configure -state disabled
+	    $bb.none configure -state disabled
+	    $bb.invert configure -state disabled
+
+	    $bb.delete configure -state disabled
+	    $bb.deleteall configure -state disabled
+
+	    $bb.list configure -state disabled
+	    $bb.load configure -state disabled
+	    $bb.deleteload configure -state disabled
+	    $bb.save configure -state disabled
+	}
     } else {
 	$ds9(mb) entryconfig [msgcat::mc {Region}] -state disabled
+	ConfigureButtons region disabled
     }
 }

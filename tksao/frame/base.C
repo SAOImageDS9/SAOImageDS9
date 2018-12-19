@@ -70,7 +70,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   currentContext = NULL;
   keyContext = NULL;
-  keyContextSet =0;
 
   orientation = Coord::NORMAL;
   zoom_ = Vector(1,1);
@@ -119,10 +118,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   irafAlign_ =1;
   irafOrientation_ = (Coord::Orientation)-1;
-
-  maskColorName = dupstr("red");
-  maskAlpha = 1;
-  maskMark = 1;
 
   invert = 0;
 
@@ -225,9 +220,6 @@ Base::~Base()
 
   if (highliteGC)
     XFreeGC(display, highliteGC);
-
-  if (maskColorName)
-    delete [] maskColorName;
 
   if (markerGC_)
     XFreeGC(display, markerGC_);
@@ -1136,11 +1128,9 @@ Matrix Base::psMatrix(float scale, int width, int height)
    return refToUser * userToPS;
 }
 
-void Base::pushMatrices()
+void Base::pushMatrices(FitsImage* fits, Matrix& rgbToRef)
 {
-  Matrix rgbToRef; 
-
-  FitsImage* ptr = context->fits;
+  FitsImage* ptr = fits;
   while (ptr) {
     FitsImage* sptr = ptr;
     while (sptr) {
@@ -1152,9 +1142,9 @@ void Base::pushMatrices()
   }
 }
 
-void Base::pushMagnifierMatrices()
+void Base::pushMagnifierMatrices(FitsImage* fits)
 {
-  FitsImage* ptr = context->fits;
+  FitsImage* ptr = fits;
   while (ptr) {
     FitsImage* sptr = ptr;
     while (sptr) {
@@ -1165,9 +1155,9 @@ void Base::pushMagnifierMatrices()
   }
 }
 
-void Base::pushPannerMatrices()
+void Base::pushPannerMatrices(FitsImage* fits)
 {
-  FitsImage* ptr = context->fits;
+  FitsImage* ptr = fits;
   while (ptr) {
     FitsImage* sptr = ptr;
     while (sptr) {
@@ -1178,11 +1168,11 @@ void Base::pushPannerMatrices()
   }
 }
 
-void Base::pushPSMatrices(float scale, int width, int height)
+void Base::pushPSMatrices(FitsImage* fits, float scale, int width, int height)
 {
   Matrix mx = psMatrix(scale, width, height);
 
-  FitsImage* ptr = context->fits;
+  FitsImage* ptr = fits;
   while (ptr) {
     FitsImage* sptr = ptr;
     while (sptr) {

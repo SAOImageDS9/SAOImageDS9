@@ -144,6 +144,11 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	set vvar(method) average
     }
 
+    # sanity check
+    if {![$frame has wcs 3d $vvar(system)]} {
+	set vvar(system) image
+    }
+
     set xdata ${vvarname}x
     set ydata ${vvarname}y
     global $xdata $ydata

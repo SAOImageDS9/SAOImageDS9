@@ -6,6 +6,7 @@
 
 %start command
 
+%token MASK_
 %token NEW_
 
 %%
@@ -14,12 +15,13 @@
 command : mosaicimagewfpc2 
  ;
 
-mosaicimagewfpc2 : opts {MosaicImageWFPC2CmdLoad {}}
- | opts STRING_ {MosaicImageWFPC2CmdLoad $2}
+mosaicimagewfpc2 : opts {MosaicImageWFPC2CmdLoad {} $1}
+ | opts STRING_ {MosaicImageWFPC2CmdLoad $2 $1}
  ;
 
 opts :
- | NEW_ {CreateFrame}
+ | NEW_ {CreateFrame; set _ {}}
+ | MASK_ {set _ mask}
  ;
 
 %%

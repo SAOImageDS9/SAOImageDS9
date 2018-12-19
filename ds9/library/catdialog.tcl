@@ -525,7 +525,7 @@ proc CATDialogUpdate {varname} {
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state disabled
 	$var(mb).file entryconfig "[msgcat::mc {Display Header}]..." \
 	    -state disabled
-	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -stat disabled
+	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state disabled
 	$var(mb).file entryconfig "[msgcat::mc {Print}]..." -state disabled
 
 	$var(top).buttons.filter configure -state disabled

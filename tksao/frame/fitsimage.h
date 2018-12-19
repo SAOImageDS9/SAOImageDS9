@@ -134,6 +134,7 @@ class FitsImage {
 
  public:
   AstFrameSet* ast_;  // ast frameset;
+  const char* encoding_; // ast encoding of original header
 
  private:
   char* root(const char*);
@@ -408,7 +409,7 @@ class FitsImage {
   Vector3d wcs2pix(const Vector3d&, Coord::CoordSystem, Coord::SkyFrame);
   int wcsInv() {return wcsInv_;}
 
-  void wfpc2WCS(istream&);
+  void wfpc2WCS(FitsHead*, istream&);
   void appendWCS(istream&);
   void listWCS(ostream&, Coord::CoordSystem);
   void resetWCS();
@@ -480,12 +481,9 @@ class FitsImage {
   const char* getValue(const Vector& v);
   float getValueFloat(const Vector& v) {return data_->getValueFloat(v);}
   double getValueDouble(const Vector& v) {return data_->getValueDouble(v);}
-  int getValueMask(const Vector& v) {return data_->getValueMask(v);}
-  int getValueMask(double x, double y) {return data_->getValueMask(x,y);}
 
   float getValueFloat(long i) {return data_->getValueFloat(i);}
   double getValueDouble(long i) {return data_->getValueDouble(i);}
-  int getValueMask(long i) {return data_->getValueMask(i);}
 
   void setClip(double l, double h) {data_->setClip(l,h);}
 

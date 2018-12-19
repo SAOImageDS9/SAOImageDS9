@@ -50,6 +50,19 @@ proc InitDialogBox {} {
 				 [list {FITS} {*.fits.z}] \
 				]
 
+    global maskfbox
+    set maskfbox(file) {mask.fits}
+    set maskfbox(dir) {}
+    set maskfbox(types) [list \
+				 [list {FITS} {*.fits}] \
+				 [list {FITS} {*.fit}] \
+				 [list {FITS} {*.fts}] \
+				 [list {FITS} {*.fits.gz}] \
+				 [list {FITS} {*.fits.bz2}] \
+				 [list {FITS} {*.fits.Z}] \
+				 [list {FITS} {*.fits.z}] \
+				]
+
     global epsfbox
     set epsfbox(file) {ds9.eps}
     set epsfbox(dir) {}

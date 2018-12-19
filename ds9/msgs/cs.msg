@@ -166,6 +166,7 @@
 ::msgcat::mcset cs {Contours} [encoding convertfrom iso8859-2 {Obrysy}]
 ::msgcat::mcset cs {Contour} [encoding convertfrom iso8859-2 {Obrys}]
 ::msgcat::mcset cs {Contrast} [encoding convertfrom iso8859-2 {Kontrast}]
+::msgcat::mcset cs {Convert to Mask} 
 ::msgcat::mcset cs {Convert to Polygons} [encoding convertfrom iso8859-2 {Zmìnit na obdélníky}]
 ::msgcat::mcset cs {Coordinate Grid Parameters} [encoding convertfrom iso8859-2 {Nastavení møí¾ky}]
 ::msgcat::mcset cs {Coordinate Grid} [encoding convertfrom iso8859-2 {Møí¾ka}]
@@ -222,6 +223,7 @@
 ::msgcat::mcset cs {Delete Frame} [encoding convertfrom iso8859-2 {Smazat snímek}]
 ::msgcat::mcset cs {Delete Group} [encoding convertfrom iso8859-2 {Smazat skupiny}]
 ::msgcat::mcset cs {Delete Selected Regions} [encoding convertfrom iso8859-2 {Smazat vybrané oblasti}]
+::msgcat::mcset cs {Delete and Load Regions} 
 ::msgcat::mcset cs {Delete} [encoding convertfrom iso8859-2 {Smazat}]
 ::msgcat::mcset cs {Depth} [encoding convertfrom iso8859-2 {Hloubka}]
 ::msgcat::mcset cs {Detector} [encoding convertfrom iso8859-2 {Detektor}]
@@ -374,7 +376,6 @@
 ::msgcat::mcset cs {Iteration} 
 ::msgcat::mcset cs {JPEG Quality Factor} [encoding convertfrom iso8859-2 {Kvalita JPEGu}]
 ::msgcat::mcset cs {Keep-Alive} 
-::msgcat::mcset cs {Keyboard} [encoding convertfrom iso8859-2 {Klávesnice}]
 ::msgcat::mcset cs {Keyword} 
 ::msgcat::mcset cs {Labels} [encoding convertfrom iso8859-2 {Oznaèení}]
 ::msgcat::mcset cs {Label} [encoding convertfrom iso8859-2 {Oznaèení}]

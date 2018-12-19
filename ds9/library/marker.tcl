@@ -1014,6 +1014,18 @@ proc MarkerDeleteAll {} {
     UpdateEditMenu
 }
 
+proc MarkerDeleteLoad {} {
+    global pds9
+
+    if {$pds9(confirm)} {
+	if {[tk_messageBox -type okcancel -icon question -message [msgcat::mc {Delete All Regions?}]] != {ok}} {
+	    return
+	}
+    }
+    MarkerDeleteAll
+    MarkerLoad
+}
+
 proc MarkerColor {} {
     global current
     global marker

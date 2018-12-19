@@ -17,6 +17,7 @@
 #include "base.h"
 #include "frame3d.h"
 #include "fitsimage.h"
+#include "fitsmask.h"
 #include "marker.h"
 
 #undef yyFlexLexer
@@ -80,6 +81,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %type <integer> markerFormat
 %type <integer> markerLayer
 %type <dash> markerDash
+%type <integer> maskType
 %type <integer> pscolorspace
 %type <integer> scaleType
 %type <integer> minmaxMode
@@ -303,6 +305,8 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token NEXT_
 %token NO_
 %token NONE_
+%token NONNAN_
+%token NONZERO_
 %token NOW_
 %token NRRD_
 %token NUMBER_
@@ -337,6 +341,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token QUERY_
 %token RADIAL_
 %token RADIUS_
+%token RANGE_
 %token REGION_
 %token REPLACE_
 %token RESAMPLE_
@@ -441,6 +446,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token XML_
 %token XY_
 %token YES_
+%token ZERO_
 %token ZMAX_
 %token ZSCALE_
 %token ZOOM_
@@ -630,6 +636,14 @@ wcsSystem : WCS_ {$$ = currentCoord = Coord::WCS;}
 
 internalSystem : CANVAS_ {$$ = Coord::CANVAS;}
 	| PANNER_ {$$ = Coord::PANNER;}
+	;
+
+maskType : /* empty */ {$$ = FitsMask::NONZERO;}
+	| ZERO_ {$$ = FitsMask::ZERO;}
+	| NONZERO_ {$$ = FitsMask::NONZERO;}
+	| NAN_ {$$ = FitsMask::NaN;}
+	| NONNAN_ {$$ = FitsMask::NONNaN;}
+	| RANGE_ {$$ = FitsMask::RANGE;}
 	;
 
 scaleType: LINEAR_ {$$ = FrScale::LINEARSCALE;}
@@ -1226,7 +1240,9 @@ getGrid : /* empty */ {fr->getGridCmd();}
 
 getMask	: COLOR_ {fr->getMaskColorCmd();}
 	| MARK_ {fr->getMaskMarkCmd();}
-	| TRANSPARENCY_{fr->getMaskTransparencyCmd();}
+	| RANGE_ {fr->getMaskRangeCmd();}
+        | SYSTEM_ {fr->getMaskSystemCmd();}
+	| TRANSPARENCY_ {fr->getMaskTransparencyCmd();}
 	;
 
 getPan : PRESERVE_ {fr->getPanPreserveCmd();}
@@ -1568,6 +1584,29 @@ loadFitsMosaicImageWCS : wcsSystem STRING ALLOC_ STRING layerType
 	    $4, $2, (Base::LayerType)$6);}
 	;
 
+loadFitsMosaicImageWFPC2 : STRING ALLOC_ STRING layerType
+        {fr->loadMosaicImageWFPC2AllocCmd($3, $1, (Base::LayerType)$4);}
+        | STRING ALLOCGZ_ STRING layerType
+	{fr->loadMosaicImageWFPC2AllocGZCmd($3, $1, (Base::LayerType)$4);}
+	| STRING CHANNEL_ STRING layerType
+	{fr->loadMosaicImageWFPC2ChannelCmd($3, $1, (Base::LayerType)$4);}
+	| STRING MMAP_ incrLoad layerType
+	{fr->loadMosaicImageWFPC2MMapCmd($1, (Base::LayerType)$4);}
+	| STRING MMAPINCR_ incrLoad layerType
+	{fr->loadMosaicImageWFPC2MMapIncrCmd($1, (Base::LayerType)$4);}
+	| STRING SHARED_ shmType INT incrLoad layerType
+	{
+	  fr->loadMosaicImageWFPC2ShareCmd((Base::ShmType)$3, $4, $1,
+					   (Base::LayerType)$6);
+        }
+	| STRING SOCKET_ INT layerType
+	{fr->loadMosaicImageWFPC2SocketCmd($3, $1, (Base::LayerType)$4);}
+	| STRING SOCKETGZ_ INT layerType
+	{fr->loadMosaicImageWFPC2SocketGZCmd($3, $1, (Base::LayerType)$4);}
+	| STRING VAR_ STRING incrLoad layerType
+	{fr->loadMosaicImageWFPC2VarCmd($3, $1, (Base::LayerType)$5);}
+	;
+
 loadFitsMosaicWCS : wcsSystem STRING ALLOC_ STRING layerType
 	{fr->loadMosaicAllocCmd((Base::WCSMOSAIC), (Coord::CoordSystem)$1,
 	    $4, $2, (Base::LayerType)$5);}
@@ -1603,18 +1642,6 @@ loadFitsMosaicWCS : wcsSystem STRING ALLOC_ STRING layerType
 	    $4, $2, (Base::LayerType)$6);}
 	;
 
-loadFitsMosaicImageWFPC2 : STRING ALLOC_ STRING
-	{fr->loadMosaicImageWFPC2AllocCmd($3, $1);}
-	| STRING ALLOCGZ_ STRING {fr->loadMosaicImageWFPC2AllocGZCmd($3, $1);}
-	| STRING CHANNEL_ STRING {fr->loadMosaicImageWFPC2ChannelCmd($3, $1);}
-	| STRING MMAP_ incrLoad {fr->loadMosaicImageWFPC2MMapCmd($1);}
-	| STRING MMAPINCR_ incrLoad {fr->loadMosaicImageWFPC2MMapIncrCmd($1);}
-	| STRING SHARED_ shmType INT incrLoad
-	{fr->loadMosaicImageWFPC2ShareCmd((Base::ShmType)$3, $4, $1);}
-	| STRING SOCKET_ INT {fr->loadMosaicImageWFPC2SocketCmd($3, $1);}
-	| STRING SOCKETGZ_ INT {fr->loadMosaicImageWFPC2SocketGZCmd($3, $1);}
-	| STRING VAR_ STRING incrLoad {fr->loadMosaicImageWFPC2VarCmd($3, $1);}
-	;
 loadFitsRGBCube: STRING ALLOC_ STRING {fr->loadRGBCubeAllocCmd($3, $1);}
 	| STRING ALLOCGZ_ STRING {fr->loadRGBCubeAllocGZCmd($3, $1);}
 	| STRING CHANNEL_ STRING {fr->loadRGBCubeChannelCmd($3, $1);}
@@ -2530,8 +2557,14 @@ callback : CALLBACK_ '=' markerCallBack STRING STRING {cblist.append(
 
 mask	: CLEAR_ {fr->maskClearCmd();}
 	| COLOR_ STRING {fr->maskColorCmd($2);}
-	| MARK_ INT {fr->maskMarkCmd($2);}
+        | MARK_ maskType {fr->maskMarkCmd((FitsMask::MaskType)$2);}
+	| RANGE_ numeric numeric {fr->maskRangeCmd($2,$3);}
+        | SYSTEM_ coordSystem {fr->maskSystemCmd((Coord::CoordSystem)$2);}
 	| TRANSPARENCY_ numeric {fr->maskTransparencyCmd($2);}
+        | MARK_ INT {
+	  // backward compatibility
+	  fr->maskMarkCmd((FitsMask::MaskType)$2);
+	}
 	;
 
 orient	: 'X' {fr->orientCmd(Coord::XX);}

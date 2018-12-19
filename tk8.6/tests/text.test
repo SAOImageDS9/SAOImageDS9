@@ -1587,6 +1587,15 @@ test text-8.27 {TextWidgetCmd procedure, "replace" option crash} -setup {
 } -cleanup {
     destroy .tt
 } -result {}
+test text-8.28 {TextWidgetCmd procedure, "replace" option crash} -setup {
+    text .tt
+} -body {
+    .tt insert end "foo\n"
+    .tt tag add sel 1.0 end
+    .tt replace sel.first sel.last "bar"
+} -cleanup {
+    destroy .tt
+} -result {}
 
 
 test text-9.1 {TextWidgetCmd procedure, "get" option} -setup {
@@ -5548,9 +5557,7 @@ test text-22.198 {TextSearchCmd, regexp search multi-line} -body {
 } -cleanup {
     destroy .t
 } -result {2.0 19}
-test text-22.199 {TextSearchCmd, regexp search multi-line} -constraints {
-    knownBug
-} -body {
+test text-22.199 {TextSearchCmd, regexp search multi-line} -body {
     pack [text .t]
     .t insert 1.0 "aaaa\nbbbb\ncccc\nbbbb\naaaa\n"
     set foo {}
@@ -5559,9 +5566,7 @@ test text-22.199 {TextSearchCmd, regexp search multi-line} -constraints {
 } -cleanup {
     destroy .t
 } -result {2.0 19}
-test text-22.200 {TextSearchCmd, regexp search multi-line} -constraints {
-    knownBug
-} -body {
+test text-22.200 {TextSearchCmd, regexp search multi-line} -body {
     pack [text .t]
     .t insert 1.0 "aaaa\nbbbb\ncccc\nbbbb\naaaa\n"
     set foo {}
@@ -5579,23 +5584,18 @@ test text-22.201 {TextSearchCmd, regexp search multi-line} -body {
 } -cleanup {
     destroy .t
 } -result {1.0 24}
-test text-22.202 {TextSearchCmd, regexp search multi-line} -constraints {
-    knownBug
-} -body {
+test text-22.202 {TextSearchCmd, regexp search multi-line} -body {
     pack [text .t]
     .t insert 1.0 "aaaa\nbbbb\nbbbb\nbbbb\nbbbb\n"
     list [.t search -regexp -backward -all -count foo \
-      -- {b+\n|a+\n(b+\n)+} end] $foo
+      -- {(b+\n|a+\n)(b+\n)+} end] $foo
 } -cleanup {
     destroy .t
 } -result {1.0 25}
-test text-22.203 {TextSearchCmd, regexp search multi-line} -constraints {
-    knownBug
-} -body {
+test text-22.203 {TextSearchCmd, regexp search multi-line} -body {
     pack [text .t]
     .t insert 1.0 "aaaa\nbbbb\nbbbb\nbbbb\nbbbb\n"
-    .t search -regexp -backward -- {b+\n|a+\n(b+\n)+} end
-# Should match at 1.0 for a true greedy match
+    .t search -regexp -backward -- {(b+\n|a+\n)(b+\n)+} end
 } -cleanup {
     destroy .t
 } -result {1.0}
@@ -5864,7 +5864,219 @@ test text-22.225 {TextSearchCmd, strict limits} -body {
 } -cleanup {
     destroy .t
 } -result {}
-
+test text-22.226 {TextSearchCmd, exact search for the empty string} -body {
+    text .t
+    set res [.t search -count C "" 1.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {1.0 0}
+test text-22.227 {TextSearchCmd, exact search for the empty string} -body {
+    text .t
+    .t insert end "Searching for the\nempty string!"
+    set res [.t search -count C "" 2.5]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {2.5 0}
+test text-22.228 {TextSearchCmd, exact search all empty strings} -body {
+    text .t
+    set res [.t search -count C -all "" 1.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {1.0 0}
+test text-22.229 {TextSearchCmd, exact search all empty strings} -body {
+    text .t
+    .t insert end "Searching for the\nempty string!"
+    set res [.t search -count C -all "" 2.5 2.8]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {2.5 2.6 2.7 {0 0 0}}
+test text-22.230 {TextSearchCmd, exact search all empty strings, with overlap} -body {
+    text .t
+    set res [.t search -count C -all -overlap "" 1.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {1.0 0}
+test text-22.231 {TextSearchCmd, exact search all empty strings, with overlap} -body {
+    text .t
+    .t insert end "Searching for the\nempty string!"
+    set res [.t search -count C -all -overlap "" 2.5 2.8]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {2.5 2.6 2.7 {0 0 0}}
+test text-22.232 {TextSearchCmd, regexp search for the empty string} -body {
+    text .t
+    set res [.t search -count C -regexp "" 1.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {1.0 0}
+test text-22.233 {TextSearchCmd, regexp search for the empty string} -body {
+    text .t
+    .t insert end "Searching for the\nempty string!"
+    set res [.t search -count C -regexp "" 2.5]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {2.5 0}
+test text-22.234 {TextSearchCmd, regexp search all empty strings} -body {
+    text .t
+    set res [.t search -count C -all -regexp "" 1.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {1.0 0}
+test text-22.235 {TextSearchCmd, regexp search all empty strings} -body {
+    text .t
+    .t insert end "Searching for the\nempty string!"
+    set res [.t search -count C -all -regexp "" 2.5 2.8]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {2.5 2.6 2.7 {0 0 0}}
+test text-22.236 {TextSearchCmd, regexp search all empty strings, with overlap} -body {
+    text .t
+    set res [.t search -count C -all -regexp -overlap "" 1.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {1.0 0}
+test text-22.237 {TextSearchCmd, regexp search all empty strings, with overlap} -body {
+    text .t
+    .t insert end "Searching for the\nempty string!"
+    set res [.t search -count C -all -regexp -overlap "" 2.5 2.8]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {2.5 2.6 2.7 {0 0 0}}
+test text-22.238 {TextSearchCmd, exact backwards search for the empty string} -body {
+    text .t
+    set res [.t search -count C -backwards "" 1.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {1.0 0}
+test text-22.239 {TextSearchCmd, exact backwards search for the empty string} -body {
+    text .t
+    .t insert end "Searching for the\nempty string!"
+    set res [.t search -count C -backwards "" 2.5]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {2.4 0}
+test text-22.240 {TextSearchCmd, exact backwards search all empty strings} -body {
+    text .t
+    set res [.t search -count C -backwards -all "" 1.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {1.0 0}
+test text-22.241 {TextSearchCmd, exact backwards search all empty strings} -body {
+    text .t
+    .t insert end "Searching for the\nempty string!"
+    set res [.t search -count C -backwards -all "" 2.5 2.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {2.4 2.3 2.2 2.1 2.0 {0 0 0 0 0}}
+test text-22.242 {TextSearchCmd, exact backwards search all empty strings, with overlap} -body {
+    text .t
+    set res [.t search -count C -backwards -all -overlap "" 1.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {1.0 0}
+test text-22.243 {TextSearchCmd, exact backwards search all empty strings, with overlap} -body {
+    text .t
+    .t insert end "Searching for the\nempty string!"
+    set res [.t search -count C -backwards -all -overlap "" 2.5 2.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {2.4 2.3 2.2 2.1 2.0 {0 0 0 0 0}}
+test text-22.244 {TextSearchCmd, regexp backwards search for the empty string} -body {
+    text .t
+    set res [.t search -count C -backwards -regexp "" 1.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {1.0 0}
+test text-22.245 {TextSearchCmd, regexpbackwards search for the empty string} -body {
+    text .t
+    .t insert end "Searching for the\nempty string!"
+    set res [.t search -count C -backwards -regexp "" 2.5]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {2.4 0}
+test text-22.246 {TextSearchCmd, regexp backwards search all empty strings} -body {
+    text .t
+    set res [.t search -count C -backwards -all -regexp "" 1.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {1.0 0}
+test text-22.247 {TextSearchCmd, regexp backwards search all empty strings} -body {
+    text .t
+    .t insert end "Searching for the\nempty string!"
+    set res [.t search -count C -backwards -all -regexp "" 2.5 2.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {2.4 2.3 2.2 2.1 2.0 {0 0 0 0 0}}
+test text-22.248 {TextSearchCmd, regexp backwards search all empty strings, with overlap} -body {
+    text .t
+    set res [.t search -count C -backwards -all -regexp -overlap "" 1.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {1.0 0}
+test text-22.249 {TextSearchCmd, regexp backwards search all empty strings, with overlap} -body {
+    text .t
+    .t insert end "Searching for the\nempty string!"
+    set res [.t search -count C -backwards -all -regexp -overlap "" 2.5 2.0]
+    lappend res $C
+} -cleanup {
+    destroy .t
+    unset -nocomplain res C
+} -result {2.4 2.3 2.2 2.1 2.0 {0 0 0 0 0}}
+test text-22.250 {TextSearchCmd, backwards search all matching at start of line} -body {
+    text .t
+    .t insert end "abc"
+    set res [.t search -backwards -all b end]      ; # works
+    lappend res [.t search -backwards a end]       ; # works
+    lappend res [.t search -backwards -all a end]  ; # used to hang
+} -cleanup {
+    destroy .t
+} -result {1.1 1.0 1.0}
 
 test text-23.1 {TkTextGetTabs procedure} -setup {
     text .t -highlightthickness 0 -bd 0 -relief flat -padx 0 -width 100
@@ -6395,9 +6607,9 @@ test text-27.14a {<<Modified>> virtual event - propagation to peers} -body {
 } -cleanup {
     destroy .t .tt
 } -result {4}
-test text-27.15 {<<Selection>> virtual event} -body {
+test text-27.15 {<<Selection>> virtual event on sel tagging} -body {
     set ::retval no_selection
-    pack [text .t -undo 1]
+    pack [text .t]
     bind .t <<Selection>> "set ::retval selection_changed"
     update idletasks
     .t insert end "nothing special\n"
@@ -6407,6 +6619,110 @@ test text-27.15 {<<Selection>> virtual event} -body {
 } -cleanup {
     destroy .t
 } -result {selection_changed}
+test text-27.15a {<<Selection>> virtual event on sel removal} -body {
+    set ::retval no_selection
+    pack [text .t]
+    .t insert end "nothing special\n"
+    .t tag add sel 1.0 1.1
+    bind .t <<Selection>> "set ::retval selection_changed"
+    update idletasks
+    .t tag remove 1.0 end
+    update
+    set ::retval
+} -cleanup {
+    destroy .t
+} -result {selection_changed}
+test text-27.15b {<<Selection>> virtual event on <<PasteSelection>> inside widget selection} -body {
+    pack [text .t]
+    .t insert end "There is a selection in this text widget,\n"
+    .t insert end "and it will be impacted by the <<PasteSelection>> event received.\n"
+    .t insert end "Therefore a <<Selection>> event must fire back."
+    .t tag add sel 1.0 1.28
+    bind .t <<Selection>> "set ::retval <<Selection>>_fired"
+    update
+    set ::retval no_<<Selection>>_event_fired
+    event generate .t <<PasteSelection>> -x 15 -y 3
+    update
+    set ::retval
+} -cleanup {
+    destroy .t
+} -result {<<Selection>>_fired}
+test text-27.15c {No <<Selection>> virtual event on <<PasteSelection>> outside widget selection} -body {
+    pack [text .t]
+    .t insert end "There is a selection in this text widget,\n"
+    .t insert end "but it will not be impacted by the <<PasteSelection>> event received."
+    .t tag add sel 1.0 1.28
+    bind .t <<Selection>> "set ::retval <<Selection>>_fired"
+    update
+    set ::retval no_<<Selection>>_event_fired
+    event generate .t <<PasteSelection>> -x 15 -y 80
+    update
+    set ::retval
+} -cleanup {
+    destroy .t
+} -result {no_<<Selection>>_event_fired}
+test text-27.15d {<<Selection>> virtual event on <Delete> with cursor inside selection} -body {
+    pack [text .t]
+    .t insert end "There is a selection in this text widget,\n"
+    .t insert end "and it will be impacted by the <Delete> event received.\n"
+    .t insert end "Therefore a <<Selection>> event must fire back."
+    .t tag add sel 1.0 1.28
+    bind .t <<Selection>> "set ::retval <<Selection>>_fired"
+    update
+    set ::retval no_<<Selection>>_event_fired
+    .t mark set insert 1.15
+    focus .t
+    event generate .t <Delete>
+    update
+    set ::retval
+} -cleanup {
+    destroy .t
+} -result {<<Selection>>_fired}
+test text-27.15e {No <<Selection>> virtual event on <Delete> with cursor outside selection} -body {
+    pack [text .t]
+    .t insert end "There is a selection in this text widget,\n"
+    .t insert end "but it will not be impacted by the <Delete> event received."
+    .t tag add sel 1.0 1.28
+    bind .t <<Selection>> "set ::retval <<Selection>>_fired"
+    update
+    set ::retval no_<<Selection>>_event_fired
+    .t mark set insert 2.15
+    focus .t
+    event generate .t <Delete>
+    update
+    set ::retval
+} -cleanup {
+    destroy .t
+} -result {no_<<Selection>>_event_fired}
+test text-27.15f {<<Selection>> virtual event on <<Cut>> with a widget selection} -body {
+    pack [text .t]
+    .t insert end "There is a selection in this text widget,\n"
+    .t insert end "and it will be impacted by the <<Cut>> event received.\n"
+    .t insert end "Therefore a <<Selection>> event must fire back."
+    .t tag add sel 1.0 1.28
+    bind .t <<Selection>> "set ::retval <<Selection>>_fired"
+    update
+    set ::retval no_<<Selection>>_event_fired
+    event generate .t <<Cut>>
+    update
+    set ::retval
+} -cleanup {
+    destroy .t
+} -result {<<Selection>>_fired}
+test text-27.15g {No <<Selection>> virtual event on <<Cut>> without widget selection} -body {
+    pack [text .t]
+    .t insert end "There is a selection in this text widget,\n"
+    .t insert end "and it will be impacted by the <<Cut>> event received.\n"
+    .t insert end "Therefore a <<Selection>> event must fire back."
+    bind .t <<Selection>> "set ::retval <<Selection>>_fired"
+    update
+    set ::retval no_<<Selection>>_event_fired
+    event generate .t <<Cut>>
+    update
+    set ::retval
+} -cleanup {
+    destroy .t
+} -result {no_<<Selection>>_event_fired}
 test text-27.16 {-maxundo configuration option} -body {
     text .t -undo 1  -autoseparators 1 -maxundo 2
     pack .t

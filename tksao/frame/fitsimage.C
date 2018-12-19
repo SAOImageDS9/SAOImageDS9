@@ -84,6 +84,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
 
   manageWCS_ =1;
   ast_ =NULL;
+  encoding_ =NULL;
   wcs_ =NULL;
   wcsNaxes_ =NULL;
 
@@ -159,6 +160,8 @@ FitsImage::~FitsImage()
   if (manageWCS_) {
     if (ast_)
       astAnnul(ast_);
+    if (encoding_)
+      delete [] encoding_;
 
     if (wcs_)
       delete [] wcs_;
@@ -889,9 +892,21 @@ void FitsImageIIS::iisWCS(const Matrix& mm, const Vector& z, int zt)
 
 // FitsImage
 
-void FitsImage::wfpc2WCS(istream& str)
+void FitsImage::wfpc2WCS(FitsHead* pp, istream& str)
 {
   FitsHead* hh = parseWCS(str);
+
+  // EQUINOX
+  if (pp->find("EQUINOX")) {
+    char* equ = pp->getString("EQUINOX");
+    hh->appendString("EQUINOX", equ, NULL);
+  }
+
+  // DATE-OBS
+  if (pp->find("DATE-OBS")) {
+    char* equ = pp->getString("DATE-OBS");
+    hh->appendString("DATE-OBS", equ, NULL);
+  }
 
   // Process OBJECT keyword
   if (objectKeyword_)
@@ -1050,6 +1065,9 @@ void FitsImage::initWCS(FitsHead* hd)
     if (ast_)
       astAnnul(ast_);
     ast_ =NULL;
+    if (encoding_)
+      delete [] encoding_;
+    encoding_ =NULL;
 
     if (wcs_)
       delete [] wcs_;
@@ -1092,6 +1110,7 @@ void FitsImage::initWCS(FitsHead* hd)
       while (sptr) {
 	if (sptr == this) {
 	  ast_ = ptr->ast_;
+	  encoding_ = ptr->encoding_;
 
 	  wcs_ = ptr->wcs_;
 	  wcsNaxes_ = ptr->wcsNaxes_;
@@ -1122,6 +1141,9 @@ void FitsImage::initWCS(FitsHead* hd)
   if (ast_)
     astAnnul(ast_);
   ast_ =NULL;
+  if (encoding_)
+    delete [] encoding_;
+  encoding_ =NULL;
   
   ast_ = fits2ast(hd);
   if (!ast_)
@@ -1178,6 +1200,24 @@ void FitsImage::resetWCS()
     initWCS(wfpc2Header_);
   else
     initWCS(image_->head());
+
+  // apply block factor
+  if (ast_) {
+    Vector block = context_->blockFactor();
+    if (block[0] != 1 || block[1] != 1) {
+      astClearStatus; // just to make sure
+      astBegin; // start memory management
+
+      Vector ll(.5,.5);
+      Vector ur(1.5,1.5);
+      Vector rr = ur*Translate(-.5,-.5)*Scale(block)*Translate(.5,.5);
+      AstWinMap* winmap = wcsWinMap(ast_, ll, ur, rr);
+      if (winmap)
+	astRemapFrame(ast_, AST__BASE, winmap);
+
+      astEnd;
+    }
+  }
 }
 
 void FitsImage::initWCS0(const Vector& pix)
@@ -3433,6 +3473,12 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
     if (!astOK)
       astClearStatus;
   }
+
+  // encoding
+  // must come after astPutsFits and before astRead
+  const char* encode = astGetC(chan, "Encoding");
+  if (encode)
+    encoding_ = dupstr(encode);
 
   // we may have an error, just reset
   astClearStatus;

@@ -166,6 +166,7 @@
 ::msgcat::mcset pt {Contours} {Contornos}
 ::msgcat::mcset pt {Contour} 
 ::msgcat::mcset pt {Contrast} {Contraste}
+::msgcat::mcset pt {Convert to Mask} 
 ::msgcat::mcset pt {Convert to Polygons} [encoding convertfrom iso8859-1 {Converter para polígonos}]
 ::msgcat::mcset pt {Coordinate Grid Parameters} [encoding convertfrom iso8859-1 {Parâmetros do Grid de Coordenadas}]
 ::msgcat::mcset pt {Coordinate Grid} {Grid de Coordenadas}
@@ -222,6 +223,7 @@
 ::msgcat::mcset pt {Delete Frame} {Apague o Frame}
 ::msgcat::mcset pt {Delete Group} {Apague o Grupo}
 ::msgcat::mcset pt {Delete Selected Regions} [encoding convertfrom iso8859-1 {Apagar Regiões Selecionadas}]
+::msgcat::mcset pt {Delete and Load Regions} 
 ::msgcat::mcset pt {Delete} {Apagar}
 ::msgcat::mcset pt {Depth} {Profundidade}
 ::msgcat::mcset pt {Detector} 
@@ -374,7 +376,6 @@
 ::msgcat::mcset pt {Iteration} 
 ::msgcat::mcset pt {JPEG Quality Factor} {Fator de qualidade JPEG}
 ::msgcat::mcset pt {Keep-Alive} 
-::msgcat::mcset pt {Keyboard} {Teclado}
 ::msgcat::mcset pt {Keyword} 
 ::msgcat::mcset pt {Labels} {Legendas}
 ::msgcat::mcset pt {Label} {Legenda}

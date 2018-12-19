@@ -2287,7 +2287,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 TK_VERSION=8.6
 TK_MAJOR_VERSION=8
 TK_MINOR_VERSION=6
-TK_PATCH_LEVEL=".8"
+TK_PATCH_LEVEL=".9"
 VERSION=${TK_VERSION}
 LOCALES="cs da de el en en_gb eo es fr hu it nl pl pt ru sv"
 
@@ -2376,11 +2376,13 @@ $as_echo "$as_me: WARNING: --with-tcl argument should refer to directory contain
 		for i in `ls -d ${libdir} 2>/dev/null` \
 			`ls -d ${exec_prefix}/lib 2>/dev/null` \
 			`ls -d ${prefix}/lib 2>/dev/null` \
-			`ls -d /usr/contrib/lib 2>/dev/null` \
 			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
 			`ls -d /usr/pkg/lib 2>/dev/null` \
 			`ls -d /usr/lib 2>/dev/null` \
 			`ls -d /usr/lib64 2>/dev/null` \
+			`ls -d /usr/local/lib/tcl8.6 2>/dev/null` \
+			`ls -d /usr/local/lib/tcl/tcl8.6 2>/dev/null` \
 			; do
 		    if test -f "$i/tclConfig.sh" ; then
 			ac_cv_c_tclconfig="`(cd $i; pwd)`"
@@ -4944,7 +4946,7 @@ $as_echo "$ac_cv_cygwin" >&6; }
 	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
 	    SHLIB_CFLAGS="-fPIC"
 	    SHLIB_SUFFIX=".so"
-	    SHLIB_LD='${CC} -shared ${CFLAGS} ${LDFLAGS}'
+	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS} -shared'
 	    DL_OBJS="tclLoadDl.o"
 	    DL_LIBS="-lroot"
 	    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for inet_ntoa in -lnetwork" >&5
@@ -5266,7 +5268,7 @@ fi
 	    # get rid of the warnings.
 	    #CFLAGS_OPTIMIZE="${CFLAGS_OPTIMIZE} -D__NO_STRING_INLINES -D__NO_MATH_INLINES"
 
-	    SHLIB_LD='${CC} -shared ${CFLAGS} ${LDFLAGS}'
+	    SHLIB_LD='${CC} ${CFLAGS} ${LDFLAGS} -shared'
 	    DL_OBJS="tclLoadDl.o"
 	    DL_LIBS="-ldl"
 	    LDFLAGS="$LDFLAGS -Wl,--export-dynamic"
@@ -5374,7 +5376,7 @@ fi
 		SHLIB_CFLAGS="-fpic"
 		;;
 	    esac
-	    SHLIB_LD='${CC} -shared ${SHLIB_CFLAGS}'
+	    SHLIB_LD='${CC} ${SHLIB_CFLAGS} -shared'
 	    SHLIB_SUFFIX=".so"
 	    DL_OBJS="tclLoadDl.o"
 	    DL_LIBS=""
@@ -5401,7 +5403,7 @@ fi
 	NetBSD-*)
 	    # NetBSD has ELF and can use 'cc -shared' to build shared libs
 	    SHLIB_CFLAGS="-fPIC"
-	    SHLIB_LD='${CC} -shared ${SHLIB_CFLAGS}'
+	    SHLIB_LD='${CC} ${SHLIB_CFLAGS} -shared'
 	    SHLIB_SUFFIX=".so"
 	    DL_OBJS="tclLoadDl.o"
 	    DL_LIBS=""
@@ -5420,7 +5422,7 @@ fi
 
 fi
 	    ;;
-	FreeBSD-*)
+	DragonFly-*|FreeBSD-*)
 	    # This configuration from FreeBSD Ports.
 	    SHLIB_CFLAGS="-fPIC"
 	    SHLIB_LD="${CC} -shared"
@@ -6236,7 +6238,7 @@ fi
 	    BSD/OS*) ;;
 	    CYGWIN_*|MINGW32_*) ;;
 	    IRIX*) ;;
-	    NetBSD-*|FreeBSD-*|OpenBSD-*) ;;
+	    NetBSD-*|DragonFly-*|FreeBSD-*|OpenBSD-*) ;;
 	    Darwin-*) ;;
 	    SCO_SV-3.2*) ;;
 	    *) SHLIB_CFLAGS="-fPIC" ;;
@@ -6702,6 +6704,40 @@ $as_echo "#define HAVE_STRUCT_DIRENT64 1" >>confdefs.h
 
 	fi
 
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for DIR64" >&5
+$as_echo_n "checking for DIR64... " >&6; }
+if ${tcl_cv_DIR64+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+	    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <sys/types.h>
+#include <dirent.h>
+int
+main ()
+{
+struct dirent64 *p; DIR64 d = opendir64(".");
+            p = readdir64(d); rewinddir64(d); closedir64(d);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  tcl_cv_DIR64=yes
+else
+  tcl_cv_DIR64=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $tcl_cv_DIR64" >&5
+$as_echo "$tcl_cv_DIR64" >&6; }
+	if test "x${tcl_cv_DIR64}" = "xyes" ; then
+
+$as_echo "#define HAVE_DIR64 1" >>confdefs.h
+
+	fi
+
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for struct stat64" >&5
 $as_echo_n "checking for struct stat64... " >&6; }
 if ${tcl_cv_struct_stat64+:} false; then :
@@ -7160,81 +7196,6 @@ if test $ac_cv_header_time = yes; then
 $as_echo "#define TIME_WITH_SYS_TIME 1" >>confdefs.h
 
 fi
-
-
-#--------------------------------------------------------------------
-#	Under Solaris 2.4, strtod returns the wrong value for the
-#	terminating character under some conditions.  Check for this
-#	and if the problem exists use a substitute procedure
-#	"fixstrtod" (provided by Tcl) that corrects the error.
-#--------------------------------------------------------------------
-
-
-    ac_fn_c_check_func "$LINENO" "strtod" "ac_cv_func_strtod"
-if test "x$ac_cv_func_strtod" = xyes; then :
-  tcl_strtod=1
-else
-  tcl_strtod=0
-fi
-
-    if test "$tcl_strtod" = 1; then
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for Solaris2.4/Tru64 strtod bugs" >&5
-$as_echo_n "checking for Solaris2.4/Tru64 strtod bugs... " >&6; }
-if ${tcl_cv_strtod_buggy+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-	    if test "$cross_compiling" = yes; then :
-  tcl_cv_strtod_buggy=buggy
-else
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-		extern double strtod();
-		int main() {
-		    char *infString="Inf", *nanString="NaN", *spaceString=" ";
-		    char *term;
-		    double value;
-		    value = strtod(infString, &term);
-		    if ((term != infString) && (term[-1] == 0)) {
-			exit(1);
-		    }
-		    value = strtod(nanString, &term);
-		    if ((term != nanString) && (term[-1] == 0)) {
-			exit(1);
-		    }
-		    value = strtod(spaceString, &term);
-		    if (term == (spaceString+1)) {
-			exit(1);
-		    }
-		    exit(0);
-		}
-_ACEOF
-if ac_fn_c_try_run "$LINENO"; then :
-  tcl_cv_strtod_buggy=ok
-else
-  tcl_cv_strtod_buggy=buggy
-fi
-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
-  conftest.$ac_objext conftest.beam conftest.$ac_ext
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $tcl_cv_strtod_buggy" >&5
-$as_echo "$tcl_cv_strtod_buggy" >&6; }
-	if test "$tcl_cv_strtod_buggy" = buggy; then
-	    case " $LIBOBJS " in
-  *" fixstrtod.$ac_objext "* ) ;;
-  *) LIBOBJS="$LIBOBJS fixstrtod.$ac_objext"
- ;;
-esac
-
-	    USE_COMPAT=1
-
-$as_echo "#define strtod fixstrtod" >>confdefs.h
-
-	fi
-    fi
 
 
 #--------------------------------------------------------------------

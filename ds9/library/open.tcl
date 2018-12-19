@@ -13,7 +13,7 @@ proc Open {fn format layer mode sys} {
 	fits {LoadFitsFile $fn $layer $mode}
 	mosaicimagewcs {LoadMosaicImageWCSFile $fn $layer $sys}
 	mosaicimageiraf {LoadMosaicImageIRAFFile $fn $layer}
-	mosaicimagewfpc2 {LoadMosaicImageWFPC2File $fn}
+	mosaicimagewfpc2 {LoadMosaicImageWFPC2File $fn $layer}
 	mosaicwcs {LoadMosaicWCSFile $fn $layer $sys}
 	mosaiciraf {LoadMosaicIRAFFile $fn $layer}
 	mecube {LoadMECubeFile $fn}

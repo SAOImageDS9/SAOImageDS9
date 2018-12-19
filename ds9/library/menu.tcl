@@ -658,3 +658,12 @@ proc PrefsDialogMenu {} {
     PrefsDialogHelpMenu $w.menu
 }
 
+proc ConfigureButtons {menu state} {
+    global ds9
+    global pbuttons
+
+    foreach aa [array names pbuttons "$menu,*"] {
+	set bb [lindex [split $aa {,}] 1]
+	$ds9(buttons).$menu.$bb configure -state $state
+    }
+}

@@ -3,14 +3,14 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 %pure-parser
-%parse-param {Base* fr}
+%parse-param {Context* ct}
 %lex-param {ctFlexLexer* ll}
 %parse-param {ctFlexLexer* ll}
 
 %{
 #define YYDEBUG 1
 
-#define FITSPTR (fr->findFits())
+#define FITSPTR (ct->parent_->findFits())
 #define DISCARD_(x) {yyclearin; ctDiscard(x);}
 
 #include <math.h>
@@ -18,6 +18,7 @@
 #include <iostream>
 
 #include "base.h"
+#include "context.h"
 #include "fitsimage.h"
 #include "contour.h"
 
@@ -26,7 +27,7 @@
 #include <FlexLexer.h>
 
 extern int ctlex(void*, ctFlexLexer*);
-extern void cterror(Base*, ctFlexLexer*, const char*);
+extern void cterror(Context*, ctFlexLexer*, const char*);
 extern void ctDiscard(int);
 
 static Coord::CoordSystem globalWCS;
@@ -83,6 +84,7 @@ static Coord::SkyFrame checkWCSSky();
 %token <str> DMSSTR
 
 %token EOF_
+
 %token AMPLIFIER_
 %token B1950_
 %token COLOR_
@@ -142,14 +144,20 @@ static Coord::SkyFrame checkWCSSky();
 
 %%
 
-start	: initGlobal commands
+start	: initGlobal initLocal commands
 	;
 
 commands: commands command terminator
 	| command terminator
 	;
 
-command : /* empty */
+command : /* blank line */
+	{
+	  if (cc && cl) {
+	    cl->lcontour().append(cc);
+	    cc =NULL;
+	  }
+	}
         | DEBUG_ debug
 	| VERSION_ {cerr << "DS9 Contour File 7.5" << endl;}
 
@@ -165,7 +173,8 @@ command : /* empty */
 	}
 	| LINEAR_ comment
 	{
-	  globalSystem=globalWCS; globalSky=Coord::FK5;
+	  globalSystem=globalWCS;
+	  globalSky=Coord::FK5;
 	} 
         | LEVELS_ '=' '(' levels ')'
         | LEVEL_ '=' numeric {localLevel = $3} initLocal comment newcl
@@ -178,8 +187,10 @@ command : /* empty */
 	| nodes
 	| ')' comment
 	{
-	  if (cc && cl)
+	  if (cc && cl) {
 	    cl->lcontour().append(cc);
+	    cc =NULL;
+	  }
 	}
 	| '#' {DISCARD_(1);} STRING
 	;
@@ -191,8 +202,8 @@ levels  : levels sp numeric
 newcl   :
         {
 	  if (cl)
-	    fr->contourAppendCmd(cl);
-	  cl = new ContourLevel(fr, localLevel, localColor, localWidth, localDash, localDashList);
+	    ct->contourAppendAux(cl);
+	  cl = new ContourLevel(ct->parent_, localLevel, localColor, localWidth, localDash, localDashList);
         }
         ;
 
@@ -204,6 +215,13 @@ node    : coord comment
         {
 	  if (cc)
 	    cc->lvertex().append(new Vertex($1));
+	  else {
+	    if (!cl)
+	      cl = new ContourLevel(ct->parent_, localLevel, localColor, localWidth, localDash, localDashList);
+	    if (!cc)
+	      cc = new Contour(cl);
+	    cc->lvertex().append(new Vertex($1));
+	  }
         }
 	;
 
@@ -215,8 +233,10 @@ terminator: '\n'
 	| ';'
 	| EOF_ 
         {
-	  if (cl)
-	    fr->contourAppendCmd(cl);
+	  if (cl) {
+	    ct->contourAppendAux(cl);
+	    cl =NULL;
+	  }
 	  YYACCEPT;
 	}
 	;
@@ -259,8 +279,8 @@ initGlobal: {
           cl = NULL;
 	  cc = NULL;
 	  globalSystem = Coord::WCS;
-	  globalWCS = fr->getWCSSystem();
-	  globalSky = fr->getWCSSkyFrame();
+	  globalWCS = ct->contourWCSSystem();
+	  globalSky = ct->contourWCSSkyFrame();
 	  strcpy(globalColor,"green");
 	  globalDash = 0;
 	  globalDashList[0] = 8;

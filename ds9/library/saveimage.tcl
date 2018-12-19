@@ -31,8 +31,8 @@ proc SaveImageDef {} {
 		default {set saveimage(error) $aa}
 	    }
 	}
-	aqua -
-	win32 {set saveimage(error) $cc}
+	aqua {set saveimage(error) $cc}
+	win32 {set saveimage(error) $aa}
     }
 }
 
@@ -117,11 +117,11 @@ proc SaveImagePhoto {fn format} {
 
     switch $ds9(wm) {
 	x11 {}
-	aqua -
-	win32 {
+	aqua {
 	    Error $saveimage(error)
 	    return
 	}
+	win32 {}
     }
 
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]

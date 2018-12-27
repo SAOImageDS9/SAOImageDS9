@@ -19,7 +19,7 @@ dnl	to configure the system for the local environment.
 # so that we create the export library with the dll.
 #-----------------------------------------------------------------------
 
-AC_INIT([sample], [0.5])
+AC_INIT([tcliis], [1.0])
 
 #--------------------------------------------------------------------
 # Call TEA_INIT as the first TEA_ macro to set up initial vars.
@@ -71,10 +71,15 @@ TEA_SETUP_COMPILER
 # and PKG_TCL_SOURCES.
 #-----------------------------------------------------------------------
 
-TEA_ADD_SOURCES([sample.c tclsample.c])
+TEA_ADD_SOURCES([
+	iistcl.C
+	xim.C
+	iis.c
+	util.c
+	])
 TEA_ADD_HEADERS([])
 TEA_ADD_INCLUDES([])
-TEA_ADD_LIBS([])
+TEA_ADD_LIBS([-lstdc++])
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])
 TEA_ADD_TCL_SOURCES([])
@@ -171,7 +176,7 @@ TEA_PROG_TCLSH
 # Setup a *Config.sh.in configuration file.
 #--------------------------------------------------------------------
 
-#TEA_EXPORT_CONFIG([sample])
+TEA_EXPORT_CONFIG([tcliis])
 #AC_SUBST(SAMPLE_VAR)
 
 #--------------------------------------------------------------------
@@ -181,7 +186,7 @@ TEA_PROG_TCLSH
 #--------------------------------------------------------------------
 
 AC_CONFIG_FILES([Makefile pkgIndex.tcl])
-#AC_CONFIG_FILES([sampleConfig.sh])
+AC_CONFIG_FILES([tcliisConfig.sh])
 
 #--------------------------------------------------------------------
 # Finally, substitute all of the various values into the files

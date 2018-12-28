@@ -1,4 +1,4 @@
-These files comprise the basic building blocks for a Tcl Extension
+These files comprise the basic building blocks for a Tcl Extension 
 Architecture (TEA) extension.  For more information on TEA see:
 
 	http://www.tcl.tk/doc/tea/

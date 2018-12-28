@@ -1,4 +1,4 @@
-# Makefile.in --
+# Makefile.in -- 
 #
 #	This file is a Makefile for Sample TEA Extension.  If it has the name
 #	"Makefile.in" then it is a template for a Makefile;  to generate the

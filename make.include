@@ -306,6 +306,7 @@ tksao/Makefile :
 	$(WITHTK) \
 	$(PREFIX) \
 	$(STD) \
+	$(HOST) \
 	$(CACHE)
 
 #-------------------------- ast

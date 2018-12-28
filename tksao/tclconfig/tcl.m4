@@ -1,4 +1,4 @@
-# tcl.m4 -- 
+# tcl.m4 --
 #
 #	This file provides a set of autoconf macros to help TEA-enable
 #	a Tcl extension.

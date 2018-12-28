@@ -1,4 +1,4 @@
-d#!/bin/bash -norc
+#!/bin/bash -norc
 dnl	This file is an input file used by the GNU "autoconf" program to
 dnl	generate the file "configure", which is run during Tcl installation
 dnl	to configure the system for the local environment.
@@ -27,7 +27,7 @@ AC_INIT([tksao], [1.0])
 # as well as PKG_LIB_FILE and PKG_STUB_LIB_FILE.
 #--------------------------------------------------------------------
 
-TEA_INIT([3.10])
+TEA_INIT()
 
 AC_CONFIG_AUX_DIR(tclconfig)
 
@@ -276,10 +276,10 @@ TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])
 TEA_ADD_TCL_SOURCES([])
 
-TEA_CONFIG_SYSTEM
+#TEA_CONFIG_SYSTEM
 case $system in
     windows*)
-	AC_DEFINE(HAVE_MINGW32)
+#	AC_DEFINE(HAVE_MINGW32)
 	;;
     *)
 	AC_CHECK_HEADERS(sys/shm.h)
@@ -377,15 +377,24 @@ TEA_PROG_TCLSH
 TEA_PROG_WISH
 
 #--------------------------------------------------------------------
-# These are for tksaoConfig.sh
+# Setup a *Config.sh.in configuration file.
 #--------------------------------------------------------------------
 
 TEA_EXPORT_CONFIG([tksao])
+#AC_SUBST(SAMPLE_VAR)
 
 #--------------------------------------------------------------------
-# Finally, substitute all of the various values into the Makefile.
-# You may alternatively have a special pkgIndex.tcl.in or other files
-# which require substituting th AC variables in.  Include these here.
+# Specify files to substitute AC variables in. You may alternatively
+# have a special pkgIndex.tcl.in or other files which require
+# substituting the AC variables in. Include these here.
 #--------------------------------------------------------------------
 
-AC_OUTPUT([Makefile pkgIndex.tcl tksaoConfig.sh])
+AC_CONFIG_FILES([Makefile pkgIndex.tcl])
+AC_CONFIG_FILES([tksaoConfig.sh])
+
+#--------------------------------------------------------------------
+# Finally, substitute all of the various values into the files
+# specified with AC_CONFIG_FILES.
+#--------------------------------------------------------------------
+
+AC_OUTPUT()

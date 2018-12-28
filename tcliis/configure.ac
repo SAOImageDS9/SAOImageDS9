@@ -84,6 +84,11 @@ TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])
 TEA_ADD_TCL_SOURCES([])
 
+# Needed to compile open_unix
+if test "${TEA_PLATFORM}" != "windows" ; then
+AC_CHECK_HEADERS(sys/un.h)
+fi
+
 #--------------------------------------------------------------------
 # __CHANGE__
 #

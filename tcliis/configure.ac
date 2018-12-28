@@ -1,4 +1,4 @@
-#!/bin/bash -norc
+#!/bin/bash -norc 
 dnl	This file is an input file used by the GNU "autoconf" program to
 dnl	generate the file "configure", which is run during Tcl installation
 dnl	to configure the system for the local environment.

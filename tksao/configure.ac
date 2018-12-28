@@ -279,7 +279,7 @@ TEA_ADD_TCL_SOURCES([])
 #TEA_CONFIG_SYSTEM
 case $system in
     windows*)
-#	AC_DEFINE(HAVE_MINGW32)
+	AC_DEFINE(HAVE_MINGW32)
 	;;
     *)
 	AC_CHECK_HEADERS(sys/shm.h)

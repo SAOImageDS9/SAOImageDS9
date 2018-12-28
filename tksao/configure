@@ -5471,7 +5471,8 @@ widget/widget.C
 #TEA_CONFIG_SYSTEM
 case $system in
     windows*)
-#	AC_DEFINE(HAVE_MINGW32)
+	$as_echo "#define HAVE_MINGW32 1" >>confdefs.h
+
 	;;
     *)
 	for ac_header in sys/shm.h

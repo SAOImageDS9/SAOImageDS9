@@ -19,7 +19,7 @@ dnl	to configure the system for the local environment.
 # so that we create the export library with the dll.
 #-----------------------------------------------------------------------
 
-AC_INIT([saods9], [8.0])
+AC_INIT([saods9], [8.1])
 
 #--------------------------------------------------------------------
 # Call TEA_INIT as the first TEA_ macro to set up initial vars.
@@ -27,7 +27,7 @@ AC_INIT([saods9], [8.0])
 # as well as PKG_LIB_FILE and PKG_STUB_LIB_FILE.
 #--------------------------------------------------------------------
 
-TEA_INIT([3.10])
+TEA_INIT()
 
 AC_CONFIG_AUX_DIR(../tclconfig)
 
@@ -60,5 +60,18 @@ exec_prefix=$ac_pwd
 CORES=`grep -c ^processor /proc/cpuinfo`
 AC_SUBST(CORES)
 
-AC_OUTPUT([Makefile])
+#--------------------------------------------------------------------
+# Specify files to substitute AC variables in. You may alternatively
+# have a special pkgIndex.tcl.in or other files which require
+# substituting the AC variables in. Include these here.
+#--------------------------------------------------------------------
+
+AC_CONFIG_FILES([Makefile])
+
+#--------------------------------------------------------------------
+# Finally, substitute all of the various values into the files
+# specified with AC_CONFIG_FILES.
+#--------------------------------------------------------------------
+
+AC_OUTPUT()
 

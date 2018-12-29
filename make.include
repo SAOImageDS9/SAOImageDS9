@@ -83,7 +83,10 @@ ds9/$(OS)/Makefile :
 	./configure \
 	$(WITHTK) \
 	$(PREFIX) \
-	$(STD)
+	$(STD) \
+	$(CACHE) \
+	$(HOST) \
+	$(WINCACHE)
 
 #-------------------------- tcliis
 

@@ -100,8 +100,9 @@ tcliis/Makefile :
 	$(WITHTCL) \
 	$(PREFIX) \
 	$(STD) \
+	$(CACHE) \
 	$(HOST) \
-	$(CACHE)
+	$(WINCACHE)
 
 #-------------------------- tclsignal
 
@@ -306,8 +307,9 @@ tksao/Makefile :
 	$(WITHTK) \
 	$(PREFIX) \
 	$(STD) \
+	$(CACHE) \
 	$(HOST) \
-	$(CACHE)
+	$(WINCACHE)
 
 #-------------------------- ast
 

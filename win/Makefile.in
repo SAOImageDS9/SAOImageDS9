@@ -28,7 +28,7 @@ include ./make.include
 WITHTCL		= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/win $(ENABLE64BIT)
 WITHTK		= --with-tk=$(prefix)/tk$(TCL_VERSION)/win $(WITHTCL)
 HOST		= --host=$(TARGET)
-#CACHE		= --config-cache --cache-file=$(prefix)/config.cache
+WINCACHE	= --config-cache --cache-file=$(prefix)/config.cache
 
 #--------------------------defines
 
@@ -63,7 +63,7 @@ tcl$(TCL_VERSION)/win/Makefile :
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared \
 	$(HOST) \
-	--config-cache --cache-file=$(prefix)/config.cache
+	$(WINCACHE)
 
 tk	: tk$(TCL_VERSION)/win/Makefile
 	@echo ""
@@ -78,7 +78,9 @@ tk$(TCL_VERSION)/win/Makefile :
 	$(WITHTCL) \
 	$(TKFLAGS) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
-	--disable-shared --enable-symbols
+	--disable-shared --enable-symbols \
+	$(HOST) \
+	$(WINCACHE)
 
 tkwin: tkwin/Makefile
 	@echo ""
@@ -94,7 +96,7 @@ tkwin/Makefile :
 	--prefix $(prefix) --exec-prefix $(exec_prefix) \
 	--disable-shared --enable-symbols \
 	$(HOST) \
-	--config-cache --cache-file=$(prefix)/config.cache
+	$(WINCACHE)
 
 libxml2 : libxml2/win32/config.mingw
 	@echo ""

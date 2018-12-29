@@ -44,7 +44,7 @@ tcl$(TCL_VERSION)/unix/Makefile :
 	./configure \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
-	--config-cache --cache-file=$(prefix)/config.cache
+	$(CACHE)
 
 tk	: tk$(TCL_VERSION)/unix/Makefile
 	@echo ""
@@ -59,7 +59,7 @@ tk$(TCL_VERSION)/unix/Makefile :
 	$(TKFLAGS) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
-	--config-cache --cache-file=$(prefix)/config.cache
+	$(CACHE)
 
 #--------------------------clean
 

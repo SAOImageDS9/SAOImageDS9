@@ -73,7 +73,7 @@ tcl$(TCL_VERSION)/macosx/Makefile :
 	./configure \
 	--enable-64bit \
 	--enable-symbols \
-	--config-cache --cache-file=$(prefix)/config.cache
+	$(CACHE)
 
 tk	: tk$(TCL_VERSION)/macosx/Makefile
 	@echo ""
@@ -102,7 +102,7 @@ tk$(TCL_VERSION)/macosx/Makefile :
 	$(WITHTCL) \
 	--enable-64bit \
 	--enable-symbols \
-	--config-cache --cache-file=$(prefix)/config.cache
+	$(CACHE)
 
 tkmacosx: tkmacosx/Makefile
 	@echo ""
@@ -117,7 +117,7 @@ tkmacosx/Makefile :
 	$(WITHTK) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
-	--config-cache --cache-file=$(prefix)/config.cache
+	$(CACHE)
 
 #--------------------------clean
 

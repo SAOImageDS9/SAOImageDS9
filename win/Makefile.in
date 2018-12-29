@@ -27,7 +27,8 @@ include ./make.include
 
 WITHTCL		= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/win $(ENABLE64BIT)
 WITHTK		= --with-tk=$(prefix)/tk$(TCL_VERSION)/win $(WITHTCL)
-HOST		= --host=$(TARGET)
+#HOST		= --host=$(TARGET)
+HOST		= --target=$(TARGET)
 WINCACHE	= --config-cache --cache-file=$(prefix)/config.cache
 
 #--------------------------defines

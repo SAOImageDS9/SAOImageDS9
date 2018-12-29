@@ -241,8 +241,8 @@ int SAOAppInit(Tcl_Interp *interp)
   // Tkwin32
   if (Tkwin32_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
-    Tcl_StaticPackage (interp, "tkwin32", Tkwin32_Init,
-		       (Tcl_PackageInitProc*)NULL);
+  Tcl_StaticPackage (interp, "tkwin32", Tkwin32_Init,
+		     (Tcl_PackageInitProc*)NULL);
 
   return TCL_OK;
 }

@@ -25,11 +25,9 @@ TCLXMLFLAGS 	= --with-xml-static=yes
 TLSFLAGS	="CFLAGS=-DNO_IDEA=1 -DNO_RC5=1" --with-ssl-dir=$(prefix)/openssl
 include ./make.include
 
-WITHTCL		= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/win $(ENABLE64BIT)
+WITHTCL		= TEA_PLATFORM=windows --with-tcl=$(prefix)/tcl$(TCL_VERSION)/win $(ENABLE64BIT)
 WITHTK		= --with-tk=$(prefix)/tk$(TCL_VERSION)/win $(WITHTCL)
-#HOST		= --host=$(TARGET)
-HOST		= --target=$(TARGET)
-WINCACHE	= --config-cache --cache-file=$(prefix)/config.cache
+CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 #--------------------------defines
 
@@ -63,8 +61,7 @@ tcl$(TCL_VERSION)/win/Makefile :
 	$(ENABLE64BIT) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared \
-	$(HOST) \
-	$(WINCACHE)
+	$(CACHE)
 
 tk	: tk$(TCL_VERSION)/win/Makefile
 	@echo ""
@@ -80,8 +77,7 @@ tk$(TCL_VERSION)/win/Makefile :
 	$(TKFLAGS) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
-	$(HOST) \
-	$(WINCACHE)
+	$(CACHE)
 
 tkwin: tkwin/Makefile
 	@echo ""
@@ -96,8 +92,7 @@ tkwin/Makefile :
 	$(WITHTK) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) \
 	--disable-shared --enable-symbols \
-	$(HOST) \
-	$(WINCACHE)
+	$(CACHE)
 
 libxml2 : libxml2/win32/config.mingw
 	@echo ""

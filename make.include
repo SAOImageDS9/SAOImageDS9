@@ -84,9 +84,7 @@ ds9/$(OS)/Makefile :
 	$(WITHTK) \
 	$(PREFIX) \
 	$(STD) \
-	$(CACHE) \
-	$(HOST) \
-	$(WINCACHE)
+	$(CACHE)
 
 #-------------------------- tcliis
 
@@ -103,9 +101,7 @@ tcliis/Makefile :
 	$(WITHTCL) \
 	$(PREFIX) \
 	$(STD) \
-	$(CACHE) \
-	$(HOST) \
-	$(WINCACHE)
+	$(CACHE)
 
 #-------------------------- tclsignal
 
@@ -310,9 +306,7 @@ tksao/Makefile :
 	$(WITHTK) \
 	$(PREFIX) \
 	$(STD) \
-	$(CACHE) \
-	$(HOST) \
-	$(WINCACHE)
+	$(CACHE)
 
 #-------------------------- ast
 

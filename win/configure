@@ -1696,6 +1696,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 # as well as PKG_LIB_FILE and PKG_STUB_LIB_FILE.
 #--------------------------------------------------------------------
 
+TEA_PLATFORM=windows
 
     TEA_VERSION="3.13"
 

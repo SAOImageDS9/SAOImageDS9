@@ -27,6 +27,7 @@ AC_INIT([saods9], [8.1])
 # as well as PKG_LIB_FILE and PKG_STUB_LIB_FILE.
 #--------------------------------------------------------------------
 
+TEA_PLATFORM=windows
 TEA_INIT()
 
 AC_CONFIG_AUX_DIR(../tclconfig)

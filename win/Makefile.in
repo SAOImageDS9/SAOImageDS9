@@ -44,7 +44,7 @@ saods9	: dirs tcl tk \
 	tkmpeg tkhtml1 tkcon \
 	tkwin \
 	tksao ds9
-# posix- tclcheckdns tclsignal
+# posix- tclsignal
 
 # no symbols
 tcl	: tcl$(TCL_VERSION)/win/Makefile
@@ -61,7 +61,8 @@ tcl$(TCL_VERSION)/win/Makefile :
 	$(ENABLE64BIT) \
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared \
-	$(CACHE)
+	$(CACHE) \
+	TEA_PLATFORM=windows
 
 tk	: tk$(TCL_VERSION)/win/Makefile
 	@echo ""

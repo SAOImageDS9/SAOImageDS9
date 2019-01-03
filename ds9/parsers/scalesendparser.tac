@@ -31,7 +31,7 @@ scalesend : {ProcessSendCmdGet scale type}
 
 %%
 
-proc scale::yyerror {msg} {
+proc scalesend::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer
      variable index_

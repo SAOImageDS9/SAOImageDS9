@@ -55,7 +55,7 @@ view : layout
 # backward compatible
  | COLORBARNUMERICS_ yesno {ColorbarCmdSet numerics $2 UpdateView}
 
- | GRAPH_ orient yesno {ProcessCmdSet view graph,$1 $2 UpdateView}
+ | GRAPH_ orient yesno {ProcessCmdSet view graph,$2 $3 UpdateView}
 
 # backward compatible
  | HORZGRAPH_ yesno {ProcessCmdSet view graph,horz $2 UpdateView}

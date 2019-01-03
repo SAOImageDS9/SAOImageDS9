@@ -31,6 +31,9 @@ screen	    {return $SCREEN_}
 600	    {return $600_}
 1200	    {return $1200_}
 
+53	    {return $53_}
+75	    {return $75_}
+
 #include string.fin
 #include ws.fin
 

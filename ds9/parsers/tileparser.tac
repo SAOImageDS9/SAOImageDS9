@@ -43,7 +43,7 @@ tileMode : GRID_ {set _ grid}
 tileGrid : {ProcessCmdSet tile mode grid DisplayMode}
  | MODE_ tileGridMode {ProcessCmdSet tile grid,mode $2 DisplayMode}
  | DIRECTION_ tileGridDir {ProcessCmdSet tile grid,dir $2 DisplayMode}
- | LAYOUT_ INT_ INT_ {ProcessCmdSet tile grid,col $2; ProcessCmdSet tile grid,row $3; TileCmdSetgrid,mode manual DisplayMode}
+ | LAYOUT_ INT_ INT_ {ProcessCmdSet tile grid,col $2; ProcessCmdSet tile grid,row $3; ProcessCmdSet tile grid,mode manual DisplayMode}
  | GAP_ INT_ {ProcessCmdSet tile grid,gap $2 DisplayMode}
  ;
 

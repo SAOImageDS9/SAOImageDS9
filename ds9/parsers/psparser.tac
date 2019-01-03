@@ -30,6 +30,9 @@
 %token 600_
 %token 1200_
 
+%token 53_
+%token 75_
+
 %%
 
 command : ps 
@@ -70,6 +73,9 @@ resolution : 72_ {set _ 72}
  | 300_ {set _ 300}
  | 600_ {set _ 600}
  | 1200_ {set _ 1200}
+#backward compatibility
+ | 53_ {set _ 53}
+ | 75_ {set _ 75}
  ;
 
 %%

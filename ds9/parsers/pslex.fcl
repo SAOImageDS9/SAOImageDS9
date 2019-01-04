@@ -14,7 +14,7 @@ file	    {return $FILE_}
 filename    {return $FILENAME_}
 interpolate {return $INTERPOLATE_}
 level	    {return $LEVEL_}
-palette	    {return $PALETTE}
+palette	    {return $PALETTE_}
 printer	    {return $PRINTER_}
 resolution  {return $RESOLUTION_}
 

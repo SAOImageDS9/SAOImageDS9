@@ -13,6 +13,7 @@
 %token FILENAME_
 %token INTERPOLATE_
 %token LEVEL_
+%token PALETTE_
 %token PRINTER_
 %token RESOLUTION_
 
@@ -48,6 +49,7 @@ ps : {PostScript}
  | RESOLUTION_ resolution {ProcessCmdSet ps resolution $2}
 #backward compatibility
  | INTERPOLATE_
+ | PALETTE_ color {ProcessCmdSet ps color $2}
  ;
 
 dest : PRINTER_ {set _ printer}

@@ -47,7 +47,7 @@ proc LoadPrefs {} {
 		    if {$minor>0} {
 			set minor [expr $minor-1]
 		    } else {
-			set major [expr $minor-1]
+			set major [expr $major-1]
 			set minor 9
 		    }
 		}

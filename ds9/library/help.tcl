@@ -19,7 +19,7 @@ proc HelpDef {} {
     set help(vo) "$ds9(root)/doc/ref/vo.html"
 
     set help(authors) "William Joye (Smithsonian Astrophysical Observatory)\nEric Mandel (Smithsonian Astrophysical Observatory)\nSteve Murray (Smithsonian Astrophysical Observatory)\n"
-    set help(about) "SAOImageDS9\nVersion $ds9(version)\n\nAuthors\n$help(authors)\nSAOImage DS9 development has been made possible by funding from NASA's Applied Information Systems Research Program, Chandra X-ray Science Center (CXC), and the High Energy Astrophysics Science Archive Center (HEASARC). Additional funding was provided by the JWST Mission office at Space Telescope Science Institute to improve capabilities for 3D data visualization.\n\nColormaps\nh5utils: Steven Johnson (MIT)\nViridis: Eric Firing (UW)\nCubehelix: Dave Green (Cavendish)\nGist: David Munro (LLNL)\nTopographic: Tom Patterson (US National Park Service) "
+    set help(about) "SAOImageDS9\nVersion $ds9(version,display)\n\nAuthors\n$help(authors)\nSAOImage DS9 development has been made possible by funding from NASA's Applied Information Systems Research Program, Chandra X-ray Science Center (CXC), and the High Energy Astrophysics Science Archive Center (HEASARC). Additional funding was provided by the JWST Mission office at Space Telescope Science Institute to improve capabilities for 3D data visualization.\n\nColormaps\nh5utils: Steven Johnson (MIT)\nViridis: Eric Firing (UW)\nCubehelix: Dave Green (Cavendish)\nGist: David Munro (LLNL)\nTopographic: Tom Patterson (US National Park Service) "
 }
 
 proc HelpRef {} {

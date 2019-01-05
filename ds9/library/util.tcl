@@ -1673,7 +1673,7 @@ proc ProcessSendThemeCmd {proc id param {sock {}} {fn {}}} {
 
 proc ProcessSendVersionCmd {proc id param {sock {}} {fn {}}} {
     global ds9
-    $proc $id "$ds9(title) [lindex $ds9(version) 0]\n"
+    $proc $id "$ds9(title) $ds9(version,display)\n"
 }
 
 proc XMLQuote {val} {

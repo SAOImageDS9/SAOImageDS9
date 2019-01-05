@@ -12,8 +12,10 @@ proc DS9Def {} {
 	win32 {set ds9(title) [file rootname $ds9(app)]}
     }
 
-    # for beta version, MUST have space
-    set ds9(version) {8.0.1}
+    # Must be major,minor
+    set ds9(version) {8.0}
+    # For display purposes only
+    set ds9(version,display) {8.0.1}
 
     set ds9(top) .
     set ds9(mb) .mb

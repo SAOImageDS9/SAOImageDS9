@@ -988,7 +988,7 @@ proc samp.client.receiveCall {args} {
 	    SAMPReplySimple $msgid "http://ds9.si.edu"
 	}
 	x-samp.releasenotes.url {
-	    SAMPReplySimple $msgid OK "http://ds9.si.edu/doc/release/r7.0.html"
+	    SAMPReplySimple $msgid OK "http://ds9.si.edu/doc/release/r8.0.html"
 	}
 	x-samp.faq.url {
 	    SAMPReplySimple $msgid OK "http://ds9.si.edu/doc/faq.html"
@@ -998,7 +998,7 @@ proc samp.client.receiveCall {args} {
 	    SAMPReplySimple $msgid OK "$help(authors)"
 	}
 	x-samp.release.version {
-	    SAMPReplySimple $msgid OK "$ds9(version)"
+	    SAMPReplySimple $msgid OK "$ds9(version,display)"
 	}
 	ds9.get {
 	    SAMPRcvdDS9Get $msgid params

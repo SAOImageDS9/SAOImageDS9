@@ -1,8 +1,0 @@
-# Run all tests
-#
-cd [file dirname $argv0]
-set me [file tail $argv0]
-foreach file [lsort -dictionary [glob *.test]] {
-  if {$file==$me} continue
-  source $file
-}

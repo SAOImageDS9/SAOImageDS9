@@ -233,7 +233,7 @@ tkcon/Makefile :
 tkhtml1	: tkhtml1/Makefile
 	@echo ""
 	@echo "*** $@ ***"
-	touch tkhtml1/src/htmltokens.c
+	touch tkhtml1/generic/htmltokens.c
 	$(MAKE) -C tkhtml1 install
 
 tkhtml1/Makefile :

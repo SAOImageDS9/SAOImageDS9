@@ -2,7 +2,8 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tkInt.h>
+#include <tcl.h>
+//#include <tkInt.h>
 
 #include "util.h"
 
@@ -10,6 +11,7 @@
 int maperr= 0;
 
 static char tobuf[1024];
+Tcl_Interp *global_interp;
 
 int sexSign;     // used by parser and lex to indicate sign of dms or hms
 
@@ -39,6 +41,12 @@ void swap8(char* src, char* dest) {
 int lsb()
 {
   return (*(short *)"\001\000" & 0x0001);
+}
+
+void internalError(const char* msg)
+{
+  Tcl_SetVar2(global_interp, "ds9", "msg", msg, TCL_GLOBAL_ONLY);
+  Tcl_SetVar2(global_interp, "ds9", "msg,level", "error", TCL_GLOBAL_ONLY);
 }
 
 char* dupstr(const char* str)

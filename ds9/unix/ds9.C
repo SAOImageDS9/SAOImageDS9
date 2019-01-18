@@ -48,14 +48,6 @@ extern "C" {
   int Signal_ext_Init(Tcl_Interp*);
 }
 
-Tcl_Interp *global_interp;
-
-void internalError(const char* msg)
-{
-  Tcl_SetVar2(global_interp, "ds9", "msg", msg, TCL_GLOBAL_ONLY);
-  Tcl_SetVar2(global_interp, "ds9", "msg,level", "error", TCL_GLOBAL_ONLY);
-}
-
 // currently use relative path
 // using full path with spaces causes problems 
 // with htmwidget and tcl/tk
@@ -80,6 +72,7 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
   return TCL_OK;
 }
 
+extern Tcl_Interp *global_interp;
 int SAOAppInit(Tcl_Interp *interp)
 {
   // save interp for cputs function

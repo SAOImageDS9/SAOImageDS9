@@ -160,7 +160,6 @@ ds9Base.exe: $(OBJS) $(LLIBS)
 	-L $(prefix)/openssl -lssl -lcrypto \
 	-lgdi32 \
 	-mwindows
-#-static
 
 winMain.o : winMain.c
 	$(COMPILE) \

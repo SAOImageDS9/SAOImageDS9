@@ -42,7 +42,7 @@ TKFILES = \
 
 saods9	: dirs tcl tk \
 	tcliis tclsignal \
-	tclzvfs tls tclxml xpa \
+	tls tclxml xpa \
 	tkblt tktable tkimg \
 	tkmpeg tkhtml1 tkcon \
 	tkmacosx \

@@ -139,23 +139,6 @@ tclxml/Makefile :
 	$(STD) \
 	$(CACHE)
 
-#-------------------------- tclzipfs
-
-tclzipfs: tclzipfs/Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tclzipfs install
-
-tclzipfs/Makefile :
-	@echo ""
-	@echo "*** $@ ***"
-	cd tclzipfs; \
-	./configure \
-	$(WITHTCL) \
-	$(PREFIX) \
-	$(STD) \
-	$(CACHE)
-
 #-------------------------- tls
 
 # no cache (win)
@@ -434,13 +417,13 @@ scrub :
 .PHONY	: clean
 .PHONY	: dirsclean ds9clean ds9parsersclean localclean
 .PHONY	: tcliisclean tclsignalclean 
-.PHONY	: tclxmlclean tclzipfsclean tlsclean
+.PHONY	: tclxmlclean tlsclean
 .PHONY	: tkbltclean tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksaoclean astclean funtoolsclean tktableclean xpaclean
 
 clean	: tclclean tkclean \
 	tcliisclean tclsignalclean \
-	tclzipfsclean tlsclean tclxmlclean xpaclean \
+	tlsclean tclxmlclean xpaclean \
 	tkbltclean tkconclean tktableclean tkimgclean \
 	tkmpegclean tkhtml1clean \
 	tksaoclean astclean funtoolsclean ds9clean \
@@ -480,11 +463,6 @@ tclxmlclean:
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tclxml clean
-
-tclzipfsclean:
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tclzipfs clean
 
 tlsclean:
 	@echo ""
@@ -545,7 +523,7 @@ xpaclean :
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
 .PHONY	: tcliisdistclean tclsignaldistclean 
-.PHONY	: tclxmldistclean tclzipfsdistclean tlsdistclean
+.PHONY	: tclxmldistclean tlsdistclean
 .PHONY	: tkbltdistclean tkcondistclean tkhtml1distclean 
 .PHONY	: tkimgdistclean tkmpegdistclean 
 .PHONY	: tksaodistclean astdistclean funtoolsdistclean
@@ -553,7 +531,7 @@ xpaclean :
 
 distclean : tcldistclean tkdistclean \
 	tcliisdistclean tclsignaldistclean \
-	tclzipfsdistclean tlsdistclean tclxmldistclean xpadistclean \
+	tlsdistclean tclxmldistclean xpadistclean \
 	tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
 	tkmpegdistclean tkhtml1distclean \
 	tksaodistclean astdistclean funtoolsdistclean ds9distclean \
@@ -592,12 +570,6 @@ tclxmldistclean:
 	@echo "*** $@ ***"
 	$(MAKE) -C tclxml distclean
 	rm -f tclxml/tclxmlConfig.sh
-
-tclzipfsdistclean:
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tclzipfs distclean
-	rm -f tclzipfs/tclzipfsConfig.sh
 
 tlsdistclean:
 	@echo ""

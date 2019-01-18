@@ -61,9 +61,26 @@ tk$(TCL_VERSION)/unix/Makefile :
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
+#-------------------------- tclzipfs
+
+tclzipfs: tclzipfs/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclzipfs install
+
+tclzipfs/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd tclzipfs; \
+	./configure \
+	$(WITHTCL) \
+	$(PREFIX) \
+	$(STD) \
+	$(CACHE)
+
 #--------------------------clean
 
-.PHONY	: tclclean tkclean tkosclean
+.PHONY	: tclclean tkclean tkosclean tclzipfsclean
 
 tclclean :
 	@echo ""
@@ -75,13 +92,18 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/unix clean
 
-tkosclean :
+tkosclean : tclzipfsclean
 	@echo ""
 	@echo "*** $@ ***"
 
+tclzipfsclean:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclzipfs clean
+
 #--------------------------distclean
 
-.PHONY	: tcldistclean tkdistclean tkosdistclean
+.PHONY	: tcldistclean tkdistclean tkosdistclean tclzipfsdistclean 
 
 tcldistclean :
 	@echo ""
@@ -93,9 +115,15 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/unix distclean
 
-tkosdistclean :
+tkosdistclean : tclzipfsdistclean 
 	@echo ""
 	@echo "*** $@ ***"
+
+tclzipfsdistclean:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclzipfs distclean
+	rm -f tclzipfs/tclzipfsConfig.sh
 
 #--------------------------distribution
 

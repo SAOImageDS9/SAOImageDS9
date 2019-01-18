@@ -212,6 +212,7 @@ switch $ds9(wm) {
     win32 {
 	set ds9(root) [file dirname [file dirname $argv0]]
 	set auto_path [list $ds9(root) $ds9(root)/tcl8.6 $ds9(root)/tk8.6 $ds9(root)/tk8.6/ttk]
+    }
 }
 
 package require msgcat

@@ -97,7 +97,7 @@ tclsignal/Makefile :
 
 #--------------------------clean
 
-.PHONY	: tclclean tkclean tkosclean tclzipfsclean tclsignalclean 
+.PHONY	: tclclean tkclean osclean tclzipfsclean tclsignalclean 
 
 tclclean :
 	@echo ""
@@ -109,9 +109,7 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/unix clean
 
-tkosclean : tclzipfsclean tclsignalclean
-	@echo ""
-	@echo "*** $@ ***"
+osclean : tclzipfsclean tclsignalclean
 
 tclzipfsclean:
 	@echo ""
@@ -125,7 +123,8 @@ tclsignalclean :
 
 #--------------------------distclean
 
-.PHONY	: tcldistclean tkdistclean tkosdistclean tclzipfsdistclean tclsignaldistclean 
+.PHONY	: tcldistclean tkdistclean
+.PHONY	: osdistclean tclzipfsdistclean tclsignaldistclean 
 
 tcldistclean :
 	@echo ""
@@ -137,9 +136,7 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/unix distclean
 
-tkosdistclean : tclzipfsdistclean tclsignaldistclean
-	@echo ""
-	@echo "*** $@ ***"
+osdistclean : tclzipfsdistclean tclsignaldistclean
 
 tclzipfsdistclean:
 	@echo ""

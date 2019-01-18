@@ -410,7 +410,7 @@ clean	: tclclean tkclean \
 	tkbltclean tkconclean tktableclean tkimgclean \
 	tkmpegclean tkhtml1clean \
 	tksaoclean astclean funtoolsclean ds9clean \
-	tkosclean dirsclean localclean scrub
+	osclean dirsclean localclean scrub
 
 dirsclean :
 	@echo ""
@@ -513,7 +513,7 @@ distclean : tcldistclean tkdistclean \
 	tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
 	tkmpegdistclean tkhtml1distclean \
 	tksaodistclean astdistclean funtoolsdistclean ds9distclean \
-	tkosdistclean dirsdistclean localdistclean scrub
+	osdistclean dirsdistclean localdistclean scrub
 
 dirsdistclean:
 	@echo ""

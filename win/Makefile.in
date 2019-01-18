@@ -123,7 +123,7 @@ openssl/Makefile:
 
 #--------------------------clean
 
-.PHONY	: tclclean tkclean tkosclean libxml2clean opensslclean
+.PHONY	: tclclean tkclean osclean libxml2clean opensslclean tkwinclean
 
 tclclean :
 	@echo ""
@@ -135,10 +135,7 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/win clean
 
-tkosclean : libxml2clean opensslclean
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tkwin clean
+osclean : libxml2clean opensslclean tkwinclean
 
 libxml2clean :
 	@echo ""
@@ -150,10 +147,15 @@ opensslclean:
 	@echo "*** $@ ***"
 	$(MAKE) -C openssl clean
 
+tkosclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tkwin clean
+
 #--------------------------distclean
 
-.PHONY	: tcldistclean tkdistclean tkosdistclean 
-.PHONY	: libxml2distclean openssldistclean
+.PHONY	: tcldistclean tkdistclean 
+.PHONY	: osdistclean libxml2distclean openssldistclean tkwindistclean
 
 tcldistclean :
 	@echo ""
@@ -165,10 +167,7 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/win distclean
 
-tkosdistclean : libxml2distclean openssldistclean
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tkwin distclean
+osdistclean : libxml2distclean openssldistclean tkwindistclean
 
 libxml2distclean :
 	@echo ""
@@ -180,6 +179,11 @@ openssldistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C openssl clean
 	rm -f openssl/Makefile
+
+tkwindistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tkwin distclean
 
 #--------------------------distribution
 

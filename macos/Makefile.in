@@ -140,7 +140,7 @@ tkmacosx/Makefile :
 
 #--------------------------clean
 
-.PHONY	: tclclean tkclean tkosclean tclsignalclean 
+.PHONY	: tclclean tkclean osclean tclsignalclean tkmacosxclean
 
 tclclean :
 	@echo ""
@@ -152,19 +152,22 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx clean
 
-tkosclean : tclsignalclean
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tkmacosx clean
+osclean : tclsignalclean tkmacosx
 
 tclsignalclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tclsignal clean
 
+tkmacosxclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tkmacosx clean
+
 #--------------------------distclean
 
-.PHONY	: tcldistclean tkdistclean tkosdistclean tclsignaldistclean 
+.PHONY	: tcldistclean tkdistclean
+.PHONY	: osdistclean tclsignaldistclean tkmacosxdistclean 
 
 tcldistclean :
 	@echo ""
@@ -176,16 +179,18 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx distclean
 
-tkosdistclean : tclsignaldistclean
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tkmacosx distclean
+osdistclean : tclsignaldistclean tkmacosxclean 
 
 tclsignaldistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tclsignal distclean
 	rm -f tclsignal/tclsignalConfig.sh
+
+tkmacosxdistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tkmacosx distclean
 
 #--------------------------distribution
 

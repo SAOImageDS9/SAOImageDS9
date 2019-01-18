@@ -70,13 +70,10 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
 
   // so that tcl and tk know where to find their libs
   // we do it here before InitLibraryPath is called
-  //  putenv((char*)"TCL_LIBRARY=./zipfsmntpt/tcl8.6");
-  //  putenv((char*)"TK_LIBRARY=./zipfsmntpt/tk8.6");
-  putenv((char*)"TCL_LIBRARY=./tcl8.6");
-  putenv((char*)"TK_LIBRARY=./tk8.6");
+  putenv((char*)"TCL_LIBRARY=zipfs:/zipfsmntpt/tcl8.6");
+  putenv((char*)"TK_LIBRARY=zipfs:/zipfsmntpt/tk8.6");
 
   // startup script
-  //  Tcl_Obj *path = Tcl_NewStringObj("./zipfsmntpt/library/ds9.tcl",-1);
   Tcl_Obj *path = Tcl_NewStringObj("zipfs:/zipfsmntpt/library/ds9.tcl",-1);
   Tcl_SetStartupScript(path, NULL);
 
@@ -98,27 +95,18 @@ int SAOAppInit(Tcl_Interp *interp)
 
   // find current working directory, and set as mount point
   {
-    //    Tcl_DString pwd;
-    //    Tcl_DStringInit(&pwd);
-    //    Tcl_GetCwd(interp, &pwd);
-
 #ifdef ZIPFILE
     ostringstream str;
     str << (char *)Tcl_GetNameOfExecutable() 
 	<< ".zip" 
 	<<  ends;
-    //    if(TclZipfs_Mount(interp, (const char*)str.str().c_str(), Tcl_DStringValue(&pwd), NULL) != TCL_OK ){
     if(TclZipfs_Mount(interp, "", (const char*)str.str().c_str(), NULL) != TCL_OK ){
-      char str[] = "ERROR: Unable to open the auxiliary ds9 file 'ds9.zip'. If you moved the ds9 program from its original location, please also move the zip file to the same place.";
-
-      cerr << str << endl;
+      cerr << "ERROR: Unable to open the auxiliary ds9 file 'ds9.zip'. If you moved the ds9 program from its original location, please also move the zip file to the same place." << endl;
       exit(1);
     }
 #else
-    //    TclZipfs_Mount(interp, (const char *)Tcl_GetNameOfExecutable(), Tcl_DStringValue(&pwd), NULL);
     TclZipfs_Mount(interp, "", (const char *)Tcl_GetNameOfExecutable(), NULL);
 #endif
-    //    Tcl_DStringFree(&pwd);
   }
 
   // Tcl

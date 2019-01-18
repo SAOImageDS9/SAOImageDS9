@@ -104,6 +104,25 @@ tk$(TCL_VERSION)/macosx/Makefile :
 	--enable-symbols \
 	$(CACHE)
 
+#-------------------------- tclsignal
+
+tclsignal: tclsignal/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclsignal install
+
+tclsignal/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd tclsignal; \
+	./configure \
+	$(WITHTCL) \
+	$(PREFIX) \
+	$(STD) \
+	$(CACHE)
+
+#-------------------------- tkmacosx
+
 tkmacosx: tkmacosx/Makefile
 	@echo ""
 	@echo "*** $@ ***"
@@ -121,7 +140,7 @@ tkmacosx/Makefile :
 
 #--------------------------clean
 
-.PHONY	: tclclean tkclean tkosclean
+.PHONY	: tclclean tkclean tkosclean tclsignalclean 
 
 tclclean :
 	@echo ""
@@ -133,14 +152,19 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx clean
 
-tkosclean :
+tkosclean : tclsignalclean
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmacosx clean
 
+tclsignalclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclsignal clean
+
 #--------------------------distclean
 
-.PHONY	: tcldistclean tkdistclean tkosdistclean
+.PHONY	: tcldistclean tkdistclean tkosdistclean tclsignaldistclean 
 
 tcldistclean :
 	@echo ""
@@ -152,10 +176,16 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx distclean
 
-tkosdistclean :
+tkosdistclean : tclsignaldistclean
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmacosx distclean
+
+tclsignaldistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclsignal distclean
+	rm -f tclsignal/tclsignalConfig.sh
 
 #--------------------------distribution
 

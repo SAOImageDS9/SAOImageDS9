@@ -199,7 +199,7 @@ switch $ds9(wm) {
 
 switch $ds9(wm) {
     x11 {
-	set ds9(root) "[::tcl::zipfs::root]zipfsmntpt"
+	set ds9(root) "[::tcl::zipfs::root]mntpt"
 	set auto_path $ds9(root)
 	
 	package require msgcat

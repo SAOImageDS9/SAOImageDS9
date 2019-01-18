@@ -70,7 +70,7 @@ system		= @system@
 
 #--------------------------defines
 
-APPDIR	= zipfsmntpt
+APPDIR	= mntpt
 LIBDIR= $(APPDIR)
 
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | head -n 1| xargs echo)

@@ -62,11 +62,11 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
 
   // so that tcl and tk know where to find their libs
   // we do it here before InitLibraryPath is called
-  putenv((char*)"TCL_LIBRARY=zipfs:/zipfsmntpt/tcl8.6");
-  putenv((char*)"TK_LIBRARY=zipfs:/zipfsmntpt/tk8.6");
+  putenv((char*)"TCL_LIBRARY=zipfs:/mntpt/tcl8.6");
+  putenv((char*)"TK_LIBRARY=zipfs:/mntpt/tk8.6");
 
   // startup script
-  Tcl_Obj *path = Tcl_NewStringObj("zipfs:/zipfsmntpt/library/ds9.tcl",-1);
+  Tcl_Obj *path = Tcl_NewStringObj("zipfs:/mntpt/library/ds9.tcl",-1);
   Tcl_SetStartupScript(path, NULL);
 
   return TCL_OK;

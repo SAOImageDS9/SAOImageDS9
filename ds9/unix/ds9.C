@@ -18,8 +18,8 @@ extern "C" {
 
   void TclSetStartupScriptFileName(const char*);
 
-  int Zvfs_Init(Tcl_Interp*);
-  int Zvfs_Mount(Tcl_Interp*, char*, char *);
+  int TclZipfs_Init(Tcl_Interp*);
+  int TclZipfs_Mount(Tcl_Interp*, const char*, const char *, const char*);
 
   int Tkblt_Init(Tcl_Interp*);
   int Tktable_Init(Tcl_Interp*);
@@ -70,11 +70,14 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
 
   // so that tcl and tk know where to find their libs
   // we do it here before InitLibraryPath is called
-  putenv((char*)"TCL_LIBRARY=./zvfsmntpt/tcl8.6");
-  putenv((char*)"TK_LIBRARY=./zvfsmntpt/tk8.6");
+  //  putenv((char*)"TCL_LIBRARY=./zipfsmntpt/tcl8.6");
+  //  putenv((char*)"TK_LIBRARY=./zipfsmntpt/tk8.6");
+  putenv((char*)"TCL_LIBRARY=./tcl8.6");
+  putenv((char*)"TK_LIBRARY=./tk8.6");
 
   // startup script
-  Tcl_Obj *path = Tcl_NewStringObj("./zvfsmntpt/library/ds9.tcl",-1);
+  //  Tcl_Obj *path = Tcl_NewStringObj("./zipfsmntpt/library/ds9.tcl",-1);
+  Tcl_Obj *path = Tcl_NewStringObj("zipfs:/zipfsmntpt/library/ds9.tcl",-1);
   Tcl_SetStartupScript(path, NULL);
 
   return TCL_OK;
@@ -88,32 +91,34 @@ int SAOAppInit(Tcl_Interp *interp)
   // We have to initialize the virtual filesystem before calling
   // Tcl_Init().  Otherwise, Tcl_Init() will not be able to find
   // its startup script files.
-  if (Zvfs_Init(interp) == TCL_ERROR)
+  if (TclZipfs_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
-  Tcl_StaticPackage (interp, "zvfs", Zvfs_Init, (Tcl_PackageInitProc*)NULL);
+  Tcl_StaticPackage (interp, "zipfs", TclZipfs_Init,
+		     (Tcl_PackageInitProc*)NULL);
 
   // find current working directory, and set as mount point
   {
-    Tcl_DString pwd;
-    Tcl_DStringInit(&pwd);
-    Tcl_GetCwd(interp, &pwd);
+    //    Tcl_DString pwd;
+    //    Tcl_DStringInit(&pwd);
+    //    Tcl_GetCwd(interp, &pwd);
 
 #ifdef ZIPFILE
     ostringstream str;
     str << (char *)Tcl_GetNameOfExecutable() 
 	<< ".zip" 
 	<<  ends;
-    if( Zvfs_Mount(interp, (char*)str.str().c_str(), Tcl_DStringValue(&pwd)) != TCL_OK ){
+    //    if(TclZipfs_Mount(interp, (const char*)str.str().c_str(), Tcl_DStringValue(&pwd), NULL) != TCL_OK ){
+    if(TclZipfs_Mount(interp, "", (const char*)str.str().c_str(), NULL) != TCL_OK ){
       char str[] = "ERROR: Unable to open the auxiliary ds9 file 'ds9.zip'. If you moved the ds9 program from its original location, please also move the zip file to the same place.";
 
       cerr << str << endl;
       exit(1);
     }
 #else
-    Zvfs_Mount(interp, (char *)Tcl_GetNameOfExecutable(), 
-	       Tcl_DStringValue(&pwd));
+    //    TclZipfs_Mount(interp, (const char *)Tcl_GetNameOfExecutable(), Tcl_DStringValue(&pwd), NULL);
+    TclZipfs_Mount(interp, "", (const char *)Tcl_GetNameOfExecutable(), NULL);
 #endif
-    Tcl_DStringFree(&pwd);
+    //    Tcl_DStringFree(&pwd);
   }
 
   // Tcl

@@ -4,7 +4,7 @@
 # tcllib 1.18
 # tclsignal 1.4
 # tclxml 3.2
-# tclzvfs 1.0
+# tclzipfs 1.0
 # tls 1.6.7
 # tkblt 3.2
 # tkcon 2.7
@@ -51,7 +51,7 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tcliis tclsignal tclxml tclzvfs tls xpa
+.PHONY	: all dirs ds9 tcliis tclsignal tclxml tclzipfs tls xpa
 .PHONY	: tkblt tkcon tkhtml1 tkimg tkmpeg tksao tktable
 .PHONY	: ast funtools
 
@@ -139,17 +139,17 @@ tclxml/Makefile :
 	$(STD) \
 	$(CACHE)
 
-#-------------------------- tclzvfs
+#-------------------------- tclzipfs
 
-tclzvfs	: tclzvfs/Makefile
+tclzipfs: tclzipfs/Makefile
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C tclzvfs install
+	$(MAKE) -C tclzipfs install
 
-tclzvfs/Makefile :
+tclzipfs/Makefile :
 	@echo ""
 	@echo "*** $@ ***"
-	cd tclzvfs; \
+	cd tclzipfs; \
 	./configure \
 	$(WITHTCL) \
 	$(PREFIX) \
@@ -434,13 +434,13 @@ scrub :
 .PHONY	: clean
 .PHONY	: dirsclean ds9clean ds9parsersclean localclean
 .PHONY	: tcliisclean tclsignalclean 
-.PHONY	: tclxmlclean tclzvfsclean tlsclean
+.PHONY	: tclxmlclean tclzipfsclean tlsclean
 .PHONY	: tkbltclean tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksaoclean astclean funtoolsclean tktableclean xpaclean
 
 clean	: tclclean tkclean \
 	tcliisclean tclsignalclean \
-	tclzvfsclean tlsclean tclxmlclean xpaclean \
+	tclzipfsclean tlsclean tclxmlclean xpaclean \
 	tkbltclean tkconclean tktableclean tkimgclean \
 	tkmpegclean tkhtml1clean \
 	tksaoclean astclean funtoolsclean ds9clean \
@@ -481,10 +481,10 @@ tclxmlclean:
 	@echo "*** $@ ***"
 	$(MAKE) -C tclxml clean
 
-tclzvfsclean:
+tclzipfsclean:
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C tclzvfs clean
+	$(MAKE) -C tclzipfs clean
 
 tlsclean:
 	@echo ""
@@ -545,7 +545,7 @@ xpaclean :
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
 .PHONY	: tcliisdistclean tclsignaldistclean 
-.PHONY	: tclxmldistclean tclzvfsdistclean tlsdistclean
+.PHONY	: tclxmldistclean tclzipfsdistclean tlsdistclean
 .PHONY	: tkbltdistclean tkcondistclean tkhtml1distclean 
 .PHONY	: tkimgdistclean tkmpegdistclean 
 .PHONY	: tksaodistclean astdistclean funtoolsdistclean
@@ -553,7 +553,7 @@ xpaclean :
 
 distclean : tcldistclean tkdistclean \
 	tcliisdistclean tclsignaldistclean \
-	tclzvfsdistclean tlsdistclean tclxmldistclean xpadistclean \
+	tclzipfsdistclean tlsdistclean tclxmldistclean xpadistclean \
 	tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
 	tkmpegdistclean tkhtml1distclean \
 	tksaodistclean astdistclean funtoolsdistclean ds9distclean \
@@ -593,11 +593,11 @@ tclxmldistclean:
 	$(MAKE) -C tclxml distclean
 	rm -f tclxml/tclxmlConfig.sh
 
-tclzvfsdistclean:
+tclzipfsdistclean:
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C tclzvfs distclean
-	rm -f tclzvfs/tclzvfsConfig.sh
+	$(MAKE) -C tclzipfs distclean
+	rm -f tclzipfs/tclzipfsConfig.sh
 
 tlsdistclean:
 	@echo ""

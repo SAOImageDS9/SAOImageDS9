@@ -33,7 +33,7 @@ tkimgwindow_LIB_SPEC= @tkimgwindow_LIB_SPEC@
 tcliis_LIB_SPEC	= @tcliis_LIB_SPEC@
 tclsignal_LIB_SPEC= @tclsignal_LIB_SPEC@
 tclxml_LIB_SPEC	= @tclxml_LIB_SPEC@
-tclzvfs_LIB_SPEC= @tclzvfs_LIB_SPEC@
+tclzipfs_LIB_SPEC= @tclzipfs_LIB_SPEC@
 tls_LIB_SPEC	=@tls_LIB_SPEC@
 
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
@@ -70,7 +70,7 @@ system		= @system@
 
 #--------------------------defines
 
-APPDIR	= zvfsmntpt
+APPDIR	= zipfsmntpt
 LIBDIR= $(APPDIR)
 
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | head -n 1| xargs echo)
@@ -88,7 +88,7 @@ SPECS	= \
 	$(tcliis_LIB_SPEC) \
 	$(tclsignal_LIB_SPEC) \
 	$(tclxml_LIB_SPEC) \
-	$(tclzvfs_LIB_SPEC) \
+	$(tclzipfs_LIB_SPEC) \
 	$(tls_LIB_SPEC) \
 	$(tkblt_LIB_SPEC) \
 	$(tkhtml1_LIB_SPEC) \

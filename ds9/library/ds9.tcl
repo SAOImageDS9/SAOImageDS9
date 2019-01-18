@@ -199,46 +199,27 @@ switch $ds9(wm) {
 
 switch $ds9(wm) {
     x11 {
-	# set to absolute path so that if -cd command is used,
-	# so we can still find our files
-	set ds9(root) [file normalize [file join [pwd] zvfsmntpt]]
+	set ds9(root) "[::tcl::zipfs::root]zipfsmntpt"
+	set auto_path $ds9(root)
+	
+	package require msgcat
+	package require http
+	source $ds9(root)/library/htp.tcl
 
-	if {![namespace exists msgcat]} {
-	    source $ds9(root)/tcl8/8.5/msgcat-1.5.2.tm
-	}
-	if {![namespace exists http]} {
-	    source $ds9(root)/tcl8/8.6/http-2.9.0.tm
-	    source $ds9(root)/library/htp.tcl
-	}
+	package require base64
+	package require log
+	package require ftp
+	package require textutil
+	package require math
 
-	source $ds9(root)/tk8.6/tearoff.tcl
-	source $ds9(root)/tk8.6/comdlg.tcl
-	source $ds9(root)/tk8.6/focus.tcl
-	source $ds9(root)/tk8.6/mkpsenc.tcl
-	source $ds9(root)/tk8.6/msgbox.tcl
-	source $ds9(root)/tk8.6/optMenu.tcl
-	source $ds9(root)/tk8.6/unsupported.tcl
+	package require tkcon
+	package require Tkblt
+	package require Tls
+	package require xmlrpc
+	package require DS9
 
-	source $ds9(root)/base64/base64.tcl
-	source $ds9(root)/log/log.tcl
-	source $ds9(root)/ftp/ftp.tcl
-	source $ds9(root)/textutil/repeat.tcl
-	source $ds9(root)/textutil/tabify.tcl
-	source $ds9(root)/math/fuzzy.tcl
-
-	source $ds9(root)/tkcon/tkcon.tcl
-	source $ds9(root)/tkblt/graph.tcl
-	source $ds9(root)/tls/tls.tcl
-
-	source $ds9(root)/library/source.tcl
-
-	# fix ::tk and msgcat
-	rename ::tk::msgcat::mc {}
-	rename ::tk::msgcat::mcmax {}
-
-	namespace import ::msgcat::mc
-	namespace import ::msgcat::mcmax
-	::msgcat::mcload [file join $::tk_library msgs]
+	source $ds9(root)/library/xmfbox.tcl
+	source $ds9(root)/library/tkfbox.tcl
 
 	# fix ::tk::dialog::file
 	set ::tk::dialog::file::showHiddenVar 0
@@ -261,12 +242,9 @@ switch $ds9(wm) {
 	package require math
 
 	package require tkcon
-	# these are scripts only
 	package require Tkblt
 	package require Tls
-
 	package require xmlrpc
-
 	package require DS9
 
 	source $ds9(root)/library/xmfbox.tcl
@@ -326,12 +304,9 @@ switch $ds9(wm) {
 	package require math
 
 	package require tkcon
-	# these are scripts only
 	package require Tkblt
 	package require Tls
-
 	package require xmlrpc
-
 	package require DS9
 
 	source $ds9(root)/library/xmfbox.tcl

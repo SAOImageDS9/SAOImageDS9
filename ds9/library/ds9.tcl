@@ -200,11 +200,10 @@ switch $ds9(wm) {
 switch $ds9(wm) {
     x11 {
 	set ds9(root) "[::tcl::zipfs::root]mntpt"
-	set auto_path $ds9(root)
+	set auto_path [list $ds9(root) $ds9(root)/tcl8.6 $ds9(root)/tk8.6 $ds9(root)/tk8.6/ttk]
 	
 	package require msgcat
 	package require http
-	source $ds9(root)/library/htp.tcl
 
 	package require base64
 	package require log
@@ -218,6 +217,7 @@ switch $ds9(wm) {
 	package require xmlrpc
 	package require DS9
 
+	source $ds9(root)/library/htp.tcl
 	source $ds9(root)/library/xmfbox.tcl
 	source $ds9(root)/library/tkfbox.tcl
 
@@ -233,7 +233,6 @@ switch $ds9(wm) {
 
 	package require msgcat
 	package require http
-	source $ds9(root)/library/htp.tcl
 
 	package require base64
 	package require log
@@ -247,6 +246,7 @@ switch $ds9(wm) {
 	package require xmlrpc
 	package require DS9
 
+	source $ds9(root)/library/htp.tcl
 	source $ds9(root)/library/xmfbox.tcl
 	source $ds9(root)/library/tkfbox.tcl
 
@@ -295,7 +295,6 @@ switch $ds9(wm) {
 
 	package require msgcat
 	package require http
-	source $ds9(root)/library/htp.tcl
 
 	package require base64
 	package require log
@@ -309,6 +308,7 @@ switch $ds9(wm) {
 	package require xmlrpc
 	package require DS9
 
+	source $ds9(root)/library/htp.tcl
 	source $ds9(root)/library/xmfbox.tcl
 	source $ds9(root)/library/tkfbox.tcl
     }

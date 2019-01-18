@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include <tcl.h>
-//#include <tkInt.h>
 
 #include "util.h"
 
@@ -450,6 +449,7 @@ int dCompare(const void* a, const void* b)
 }
 
 #if defined (MAC_OSX_TK) || (_WIN32)
+#include <tkInt.h>
 
 int XSetClipRectangles(Display *d, GC gc, int clip_x_origin, int clip_y_origin,
 		       XRectangle* rectangles, int n, int ordering)

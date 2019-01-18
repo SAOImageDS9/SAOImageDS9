@@ -35,10 +35,10 @@ DS9APP	=SAOImageDS9\ $(DS9_VERSION)
 
 #--------------------------build
 
-.PHONY	: saods9 tcl tk tkwin libxml2 zlib openssl
+.PHONY	: saods9 tcl tk tkwin libxml2 openssl
 
 saods9	: dirs tcl tk \
-	libxml2 zlib openssl \
+	libxml2 openssl \
 	tcliis tls tclxml xpa \
 	tkblt tktable tkimg \
 	tkmpeg tkhtml1 tkcon \
@@ -109,20 +109,6 @@ libxml2/win32/config.mingw :
 	cd libxml2/win32; \
 	cscript configure.js trio=no threads=no ftp=yes http=yes html=yes c14n=yes catalog=yes docb=yes xpath=yes xptr=yes xinclude=yes iconv=no icu=no iso8859x=no zlib=no lzma=no xml_debug=yes mem_debug=yes run_debug=no regexps=yes modules=no tree=yes reader=yes writer=yes walker=yes pattern=yes push=yes valid=yes sax1=yes legacy=yes output=yes schemas=yes schematron=yes python=no compiler=mingw static=yes prefix="..\.." bindir="..\..\bin" incdir="..\..\include" libdir="..\..\lib"
 
-# must force Makefile
-zlib	: zlib_Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C zlib -j $(JOBS) install
-
-zlib_Makefile :
-	@echo ""
-	@echo "*** $@ ***"
-	cd zlib; \
-	$(CONFIGFLAGS) CFLAGS=-DSTATIC_BUILD=1 ./configure \
-	--prefix $(prefix) -eprefix $(exec_prefix) --libdir $(libdir) \
-	--static
-
 openssl	: openssl/Makefile
 	@echo ""
 	@echo "*** $@ ***"
@@ -137,7 +123,7 @@ openssl/Makefile:
 
 #--------------------------clean
 
-.PHONY	: tclclean tkclean tkosclean libxml2clean zlibclean opensslclean
+.PHONY	: tclclean tkclean tkosclean libxml2clean opensslclean
 
 tclclean :
 	@echo ""
@@ -149,7 +135,7 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/win clean
 
-tkosclean : libxml2clean zlibclean opensslclean
+tkosclean : libxml2clean opensslclean
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkwin clean
@@ -159,11 +145,6 @@ libxml2clean :
 	@echo "*** $@ ***"
 	$(MAKE) -C libxml2/win32 -f Makefile.mingw clean
 
-zlibclean :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C zlib clean
-
 opensslclean:
 	@echo ""
 	@echo "*** $@ ***"
@@ -172,7 +153,7 @@ opensslclean:
 #--------------------------distclean
 
 .PHONY	: tcldistclean tkdistclean tkosdistclean 
-.PHONY	: libxml2distclean zlibdistclean openssldistclean
+.PHONY	: libxml2distclean openssldistclean
 
 tcldistclean :
 	@echo ""
@@ -184,7 +165,7 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/win distclean
 
-tkosdistclean : libxml2distclean zlibdistclean openssldistclean
+tkosdistclean : libxml2distclean openssldistclean
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkwin distclean
@@ -193,12 +174,6 @@ libxml2distclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C libxml2/win32 -f Makefile.mingw distclean
-
-zlibdistclean :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C zlib distclean
-	rm -f zlib/Makefile
 
 openssldistclean :
 	@echo ""

@@ -110,7 +110,6 @@ LLIBS	= \
 	$(libdir)/libast_pal.a \
 	$(libdir)/libxpa.a \
 	$(libdir)/libxml2.a \
-	$(libdir)/libz.a \
 	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS))))
 
 PREQS	= \

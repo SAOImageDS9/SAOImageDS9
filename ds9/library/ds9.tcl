@@ -197,59 +197,50 @@ switch $ds9(wm) {
     win32 {ttk::style theme use xpnative}
 }
 
+# pre package load
 switch $ds9(wm) {
     x11 {
 	set ds9(root) "[::tcl::zipfs::root]mntpt"
 	set auto_path [list $ds9(root) $ds9(root)/tcl8.6 $ds9(root)/tk8.6 $ds9(root)/tk8.6/ttk]
-	
-	package require msgcat
-	package require http
-
-	package require base64
-	package require log
-	package require ftp
-	package require textutil
-	package require math
-
-	package require tkcon
-	package require Tkblt
-	package require Tls
-	package require xmlrpc
-	package require DS9
-
-	source $ds9(root)/library/htp.tcl
-	source $ds9(root)/library/xmfbox.tcl
-	source $ds9(root)/library/tkfbox.tcl
-
-	# fix ::tk::dialog::file
-	set ::tk::dialog::file::showHiddenVar 0
-	set ::tk::dialog::file::showHiddenBtn 1
     }
     aqua {
 	# set to absolute path
 	set ds9(root) [file normalize [file dirname [file dirname $argv0]]]
 	set bb [file dirname [file dirname $ds9(root)]]
 	set auto_path [list $ds9(root) $bb/Tcl.framework/Resources $bb/Tcl.framework/Resources/Scripts $bb/Tk.framework/Resources $bb/Tk.framework/Resources/Scripts $bb/Tk.framework/Resources/Scripts/ttk]
+    }
+    win32 {
+	set ds9(root) [file dirname [file dirname $argv0]]
+	set auto_path [list $ds9(root) $ds9(root)/tcl8.6 $ds9(root)/tk8.6 $ds9(root)/tk8.6/ttk]
+}
 
-	package require msgcat
-	package require http
+package require msgcat
+package require http
 
-	package require base64
-	package require log
-	package require ftp
-	package require textutil
-	package require math
+package require base64
+package require log
+package require ftp
+package require textutil
+package require math
 
-	package require tkcon
-	package require Tkblt
-	package require Tls
-	package require xmlrpc
-	package require DS9
+package require tkcon
+package require Tkblt
+package require Tls
+package require xmlrpc
+package require DS9
 
-	source $ds9(root)/library/htp.tcl
-	source $ds9(root)/library/xmfbox.tcl
-	source $ds9(root)/library/tkfbox.tcl
+source $ds9(root)/library/htp.tcl
+source $ds9(root)/library/xmfbox.tcl
+source $ds9(root)/library/tkfbox.tcl
 
+# post package load
+switch $ds9(wm) {
+    x11 {
+	# fix ::tk::dialog::file
+	set ::tk::dialog::file::showHiddenVar 0
+	set ::tk::dialog::file::showHiddenBtn 1
+    }
+    aqua {
 	proc ::tk::mac::ShowPreferences {} {
 	    PrefsDialog
 	}
@@ -289,29 +280,7 @@ switch $ds9(wm) {
 	    HelpRef
 	}
     }
-    win32 {
-	set ds9(root) [file dirname [file dirname $argv0]]
-	set auto_path [list $ds9(root) $ds9(root)/tcl8.6 $ds9(root)/tk8.6 $ds9(root)/tk8.6/ttk]
-
-	package require msgcat
-	package require http
-
-	package require base64
-	package require log
-	package require ftp
-	package require textutil
-	package require math
-
-	package require tkcon
-	package require Tkblt
-	package require Tls
-	package require xmlrpc
-	package require DS9
-
-	source $ds9(root)/library/htp.tcl
-	source $ds9(root)/library/xmfbox.tcl
-	source $ds9(root)/library/tkfbox.tcl
-    }
+    win32 {}
 }
 
 # Define Variables

@@ -152,7 +152,7 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx clean
 
-osclean : tclsignalclean tkmacosx
+osclean : tclsignalclean tkmacosxclean
 
 tclsignalclean :
 	@echo ""
@@ -179,7 +179,7 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx distclean
 
-osdistclean : tclsignaldistclean tkmacosxclean 
+osdistclean : tclsignaldistclean tkmacosxdistclean 
 
 tclsignaldistclean :
 	@echo ""

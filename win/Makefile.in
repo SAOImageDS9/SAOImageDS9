@@ -147,7 +147,7 @@ opensslclean:
 	@echo "*** $@ ***"
 	$(MAKE) -C openssl clean
 
-tkosclean :
+tkwinclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkwin clean

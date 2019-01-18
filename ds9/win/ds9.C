@@ -44,8 +44,6 @@ extern "C" {
   int Tclxml_Init(Tcl_Interp*);
   int Tclxml_libxml2_Init(Tcl_Interp*);
 
-  //  int Signal_ext_Init(Tcl_Interp*);
-
   int Tkwin32_Init(Tcl_Interp*);
 }
 
@@ -224,12 +222,6 @@ int SAOAppInit(Tcl_Interp *interp)
     return TCL_ERROR;
   Tcl_StaticPackage (interp, "window", Tkimgwindow_Init,
 		     (Tcl_PackageInitProc*)NULL);
-
-  // Signal_Ext
-  //  if (Signal_ext_Init(interp) == TCL_ERROR)
-  //    return TCL_ERROR;
-  //  Tcl_StaticPackage (interp, "signal", Signal_ext_Init, 
-  //		     (Tcl_PackageInitProc*)NULL);
 
   // Tkwin32
   if (Tkwin32_Init(interp) == TCL_ERROR)

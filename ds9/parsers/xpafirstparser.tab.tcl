@@ -1,0 +1,16 @@
+set YES_ 257
+set NO_ 258
+set ON_ 259
+set OFF_ 260
+set TRUE_ 261
+set FALSE_ 262
+set STRING_ 263
+set CONNECT_ 264
+set DISCONNECT_ 265
+set INET_ 266
+set INFO_ 267
+set LOCAL_ 268
+set LOCALHOST_ 269
+set NOXPANS_ 270
+set TCL_ 271
+set UNIX_ 272

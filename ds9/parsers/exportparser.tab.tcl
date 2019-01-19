@@ -1,0 +1,17 @@
+set INT_ 257
+set REAL_ 258
+set STRING_ 259
+set ARRAY_ 260
+set RGBARRAY_ 261
+set NRRD_ 262
+set ENVI_ 263
+set GIF_ 264
+set TIFF_ 265
+set JPEG_ 266
+set PNG_ 267
+set BIG_ 268
+set LITTLE_ 269
+set NATIVE_ 270
+set NONE_ 271
+set PACKBITS_ 272
+set DEFLATE_ 273

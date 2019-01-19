@@ -1,0 +1,6 @@
+set COORD_ 257
+set FRAME_ 258
+set NAME_ 259
+set SAVE_ 260
+set SIZE_ 261
+set SURVEY_ 262

@@ -1,0 +1,9 @@
+set STRING_ 257
+set ENTRY_ 258
+set MESSAGE_ 259
+set MODE_ 260
+set TASK_ 261
+set LOCK_ 262
+set OK_ 263
+set OKCANCEL_ 264
+set YESNO_ 265

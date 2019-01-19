@@ -1,0 +1,4 @@
+set STRING_ 257
+set NAME_ 258
+set SERVER_ 259
+set SKYFORMAT_ 260

@@ -1,0 +1,12 @@
+set 3D_ 257
+set AXES_ 258
+set BIN_ 259
+set BLOCK_ 260
+set COLORBAR_ 261
+set CROP_ 262
+set CROSSHAIR_ 263
+set FRAME_ 264
+set SCALE_ 265
+set SCALELIMITS_ 266
+set SLICE_ 267
+set SMOOTH_ 268

@@ -1,0 +1,13 @@
+set INT_ 257
+set REAL_ 258
+set STRING_ 259
+set ORIENT_ 260
+set SCALE_ 261
+set SIZE_ 262
+set PORTRAIT_ 263
+set LANDSCAPE_ 264
+set LETTER_ 265
+set LEGAL_ 266
+set TABLOID_ 267
+set POSTER_ 268
+set A4_ 269

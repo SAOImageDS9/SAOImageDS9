@@ -1,0 +1,2 @@
+set STRING_ 257
+set NEW_ 258

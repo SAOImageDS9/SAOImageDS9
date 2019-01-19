@@ -1,0 +1,13 @@
+set YES_ 257
+set NO_ 258
+set ON_ 259
+set OFF_ 260
+set TRUE_ 261
+set FALSE_ 262
+set STRING_ 263
+set BROADCAST_ 264
+set CONNECT_ 265
+set DISCONNECT_ 266
+set IMAGE_ 267
+set SEND_ 268
+set TABLE_ 269

@@ -1,0 +1,2 @@
+set INT_ 257
+set STRING_ 258

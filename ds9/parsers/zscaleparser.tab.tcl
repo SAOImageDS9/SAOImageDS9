@@ -1,0 +1,12 @@
+set YES_ 257
+set NO_ 258
+set ON_ 259
+set OFF_ 260
+set TRUE_ 261
+set FALSE_ 262
+set INT_ 263
+set REAL_ 264
+set STRING_ 265
+set CONTRAST_ 266
+set SAMPLE_ 267
+set LINE_ 268

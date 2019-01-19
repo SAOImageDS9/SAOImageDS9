@@ -1,0 +1,15 @@
+set INT_ 257
+set REAL_ 258
+set STRING_ 259
+set 3D_ 260
+set AZFROM_ 261
+set AZTO_ 262
+set ELFROM_ 263
+set ELTO_ 264
+set FRAME_ 265
+set NUMBER_ 266
+set OSCILLATE_ 267
+set REPEAT_ 268
+set SLICE_ 269
+set SLFROM_ 270
+set SLTO_ 271

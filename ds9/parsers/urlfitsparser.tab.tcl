@@ -1,0 +1,4 @@
+set STRING_ 257
+set MASK_ 258
+set NEW_ 259
+set SLICE_ 260

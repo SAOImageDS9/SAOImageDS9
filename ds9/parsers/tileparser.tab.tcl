@@ -1,0 +1,17 @@
+set YES_ 257
+set NO_ 258
+set ON_ 259
+set OFF_ 260
+set TRUE_ 261
+set FALSE_ 262
+set INT_ 263
+set STRING_ 264
+set AUTOMATIC_ 265
+set COLUMN_ 266
+set DIRECTION_ 267
+set GAP_ 268
+set GRID_ 269
+set LAYOUT_ 270
+set MANUAL_ 271
+set MODE_ 272
+set ROW_ 273

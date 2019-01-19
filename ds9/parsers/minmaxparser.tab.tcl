@@ -1,0 +1,9 @@
+set INT_ 257
+set STRING_ 258
+set AUTO_ 259
+set DATAMIN_ 260
+set IRAFMIN_ 261
+set INTERVAL_ 262
+set MODE_ 263
+set SAMPLE_ 264
+set SCAN_ 265

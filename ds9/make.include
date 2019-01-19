@@ -89,7 +89,7 @@ $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 
 #--------------------------distclean
 
-.PHONY	: distclean parsersclean
+.PHONY	: distclean parsersclean parsersdistclean
 
 distclean: clean
 	-rm -f Makefile config.cache config.log config.status
@@ -98,5 +98,7 @@ distclean: clean
 parsersclean:
 	-rm -rf $(prefix)/ds9/parsers/*# \
 	    $(prefix)/ds9/parsers/*~ \
-	    $(prefix)/ds9/parsers/*.tcl \
 	    $(prefix)/ds9/parsers/*.output
+
+parsersdistclean: parsersclean
+	-rm -rf $(prefix)/ds9/parsers/*.tcl

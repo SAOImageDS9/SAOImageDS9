@@ -1793,16 +1793,7 @@ proc HVImageURL {varname url width height} {
 	{} -
 	file {
 	    if {[file exists $r(path)]} {
-		# can't use -file for zvfs
-		# catch {image create photo -file $r(path)} img
-		set ch [open $r(path) r]
-		fconfigure $ch -translation binary -encoding binary
-		set dd [read $ch]
-		close $ch
-		unset ch
-
-		catch {image create photo -data "$dd"} img
-		unset dd
+		catch {image create photo -file $r(path)} img
 	    }
 	}
 	ftp {

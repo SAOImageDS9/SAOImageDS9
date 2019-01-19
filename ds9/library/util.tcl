@@ -840,17 +840,8 @@ proc AboutBox {} {
     canvas $f.c -background white -height 450 -width 500
     pack $f.c -fill both -expand true
     
-    # can't use -file for zvfs
-    # set ed(sun) [image create photo -format gif -file $ds9(root)/doc/sun.gif]
-    set ch [open $ds9(root)/doc/sun.gif r]
-    fconfigure $ch -translation binary -encoding binary
-    set dd [read $ch]
-    close $ch
-    unset ch
-
-    set ed(sun) [image create photo -format gif -data "$dd"]
-    unset dd
-
+    set ed(sun) [image create photo -format gif -file $ds9(root)/doc/sun.gif]
+    
     $f.c create image 0 0 -image $ed(sun) -anchor nw
     $f.c create text 120 22 -text $help(about) -anchor nw -width 350
 

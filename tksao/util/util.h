@@ -77,7 +77,6 @@ extern void swap2(char* src, char* dest);
 extern void swap4(char* src, char* dest);
 extern void swap8(char* src, char* dest);
 
-// defined in ds9.C
 extern void internalError(const char*);
 
 extern char* dupstr(const char*);

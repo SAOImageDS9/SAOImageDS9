@@ -2,7 +2,7 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include <tkInt.h>
+#include <tcl.h>
 
 #include "util.h"
 
@@ -10,6 +10,7 @@
 int maperr= 0;
 
 static char tobuf[1024];
+Tcl_Interp *global_interp;
 
 int sexSign;     // used by parser and lex to indicate sign of dms or hms
 
@@ -39,6 +40,12 @@ void swap8(char* src, char* dest) {
 int lsb()
 {
   return (*(short *)"\001\000" & 0x0001);
+}
+
+void internalError(const char* msg)
+{
+  Tcl_SetVar2(global_interp, "ds9", "msg", msg, TCL_GLOBAL_ONLY);
+  Tcl_SetVar2(global_interp, "ds9", "msg,level", "error", TCL_GLOBAL_ONLY);
 }
 
 char* dupstr(const char* str)
@@ -442,6 +449,7 @@ int dCompare(const void* a, const void* b)
 }
 
 #if defined (MAC_OSX_TK) || (_WIN32)
+#include <tkInt.h>
 
 int XSetClipRectangles(Display *d, GC gc, int clip_x_origin, int clip_y_origin,
 		       XRectangle* rectangles, int n, int ordering)

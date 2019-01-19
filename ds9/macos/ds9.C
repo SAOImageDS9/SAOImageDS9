@@ -48,16 +48,6 @@ extern "C" {
   int Tkmacosx_Init(Tcl_Interp*);
 }
 
-Tcl_Interp *global_interp;
-
-void internalError(const char* msg)
-{
-  Tcl_SetVar2(global_interp, "ds9", "msg", msg, TCL_GLOBAL_ONLY);
-  Tcl_SetVar2(global_interp, "ds9", "msg,level", "error", TCL_GLOBAL_ONLY);
-}
-
-extern char* dupstr(const char* str);
-
 #define PATHSIZE 2048
 int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
 {
@@ -90,6 +80,7 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
   return TCL_OK;
 }
 
+extern Tcl_Interp *global_interp;
 int SAOAppInit(Tcl_Interp *interp)
 {
   // save interp for cputs function

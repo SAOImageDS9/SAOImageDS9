@@ -197,81 +197,51 @@ switch $ds9(wm) {
     win32 {ttk::style theme use xpnative}
 }
 
+# pre package load
 switch $ds9(wm) {
     x11 {
-	# set to absolute path so that if -cd command is used,
-	# so we can still find our files
-	set ds9(root) [file normalize [file join [pwd] zvfsmntpt]]
-
-	if {![namespace exists msgcat]} {
-	    source $ds9(root)/tcl8/8.5/msgcat-1.5.2.tm
-	}
-	if {![namespace exists http]} {
-	    source $ds9(root)/tcl8/8.6/http-2.9.0.tm
-	    source $ds9(root)/library/htp.tcl
-	}
-
-	source $ds9(root)/tk8.6/tearoff.tcl
-	source $ds9(root)/tk8.6/comdlg.tcl
-	source $ds9(root)/tk8.6/focus.tcl
-	source $ds9(root)/tk8.6/mkpsenc.tcl
-	source $ds9(root)/tk8.6/msgbox.tcl
-	source $ds9(root)/tk8.6/optMenu.tcl
-	source $ds9(root)/tk8.6/unsupported.tcl
-
-	source $ds9(root)/base64/base64.tcl
-	source $ds9(root)/log/log.tcl
-	source $ds9(root)/ftp/ftp.tcl
-	source $ds9(root)/textutil/repeat.tcl
-	source $ds9(root)/textutil/tabify.tcl
-	source $ds9(root)/math/fuzzy.tcl
-
-	source $ds9(root)/tkcon/tkcon.tcl
-	source $ds9(root)/tkblt/graph.tcl
-	source $ds9(root)/tls/tls.tcl
-
-	source $ds9(root)/library/source.tcl
-
-	# fix ::tk and msgcat
-	rename ::tk::msgcat::mc {}
-	rename ::tk::msgcat::mcmax {}
-
-	namespace import ::msgcat::mc
-	namespace import ::msgcat::mcmax
-	::msgcat::mcload [file join $::tk_library msgs]
-
-	# fix ::tk::dialog::file
-	set ::tk::dialog::file::showHiddenVar 0
-	set ::tk::dialog::file::showHiddenBtn 1
+	set ds9(root) "[::tcl::zipfs::root]mntpt"
+	set auto_path [list $ds9(root) $ds9(root)/tcl8.6 $ds9(root)/tk8.6 $ds9(root)/tk8.6/ttk]
     }
     aqua {
 	# set to absolute path
 	set ds9(root) [file normalize [file dirname [file dirname $argv0]]]
 	set bb [file dirname [file dirname $ds9(root)]]
 	set auto_path [list $ds9(root) $bb/Tcl.framework/Resources $bb/Tcl.framework/Resources/Scripts $bb/Tk.framework/Resources $bb/Tk.framework/Resources/Scripts $bb/Tk.framework/Resources/Scripts/ttk]
+    }
+    win32 {
+	set ds9(root) [file dirname [file dirname $argv0]]
+	set auto_path [list $ds9(root) $ds9(root)/tcl8.6 $ds9(root)/tk8.6 $ds9(root)/tk8.6/ttk]
+    }
+}
 
-	package require msgcat
-	package require http
-	source $ds9(root)/library/htp.tcl
+package require msgcat
+package require http
 
-	package require base64
-	package require log
-	package require ftp
-	package require textutil
-	package require math
+package require base64
+package require log
+package require ftp
+package require textutil
+package require math
 
-	package require tkcon
-	# these are scripts only
-	package require Tkblt
-	package require Tls
+package require tkcon
+package require Tkblt
+package require Tls
+package require xmlrpc
+package require DS9
 
-	package require xmlrpc
+source $ds9(root)/library/htp.tcl
+source $ds9(root)/library/xmfbox.tcl
+source $ds9(root)/library/tkfbox.tcl
 
-	package require DS9
-
-	source $ds9(root)/library/xmfbox.tcl
-	source $ds9(root)/library/tkfbox.tcl
-
+# post package load
+switch $ds9(wm) {
+    x11 {
+	# fix ::tk::dialog::file
+	set ::tk::dialog::file::showHiddenVar 0
+	set ::tk::dialog::file::showHiddenBtn 1
+    }
+    aqua {
 	proc ::tk::mac::ShowPreferences {} {
 	    PrefsDialog
 	}
@@ -311,32 +281,7 @@ switch $ds9(wm) {
 	    HelpRef
 	}
     }
-    win32 {
-	set ds9(root) [file dirname [file dirname $argv0]]
-	set auto_path [list $ds9(root) $ds9(root)/tcl8.6 $ds9(root)/tk8.6 $ds9(root)/tk8.6/ttk]
-
-	package require msgcat
-	package require http
-	source $ds9(root)/library/htp.tcl
-
-	package require base64
-	package require log
-	package require ftp
-	package require textutil
-	package require math
-
-	package require tkcon
-	# these are scripts only
-	package require Tkblt
-	package require Tls
-
-	package require xmlrpc
-
-	package require DS9
-
-	source $ds9(root)/library/xmfbox.tcl
-	source $ds9(root)/library/tkfbox.tcl
-    }
+    win32 {}
 }
 
 # Define Variables

@@ -16,6 +16,9 @@
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #
 
+package provide DS9 1.0
+namespace eval ::tk::msgcat {}
+
 namespace eval ::tk::dialog {}
 namespace eval ::tk::dialog::file {
     namespace import -force ::tk::msgcat::*

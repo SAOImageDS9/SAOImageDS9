@@ -230,10 +230,6 @@ package require Tls
 package require xmlrpc
 package require DS9
 
-source $ds9(root)/library/htp.tcl
-source $ds9(root)/library/xmfbox.tcl
-source $ds9(root)/library/tkfbox.tcl
-
 # post package load
 switch $ds9(wm) {
     x11 {

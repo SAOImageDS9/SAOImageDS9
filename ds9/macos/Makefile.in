@@ -72,10 +72,8 @@ APPDIR	= $(bindir)/SAOImageDS9.app
 MACDIR	= $(APPDIR)/Contents/MacOS
 LIBDIR	= $(APPDIR)/Contents/Frameworks/Tksao.framework/Resources
 TCLSRC	= $(prefix)/build/tcl/Tcl.framework/Versions/$(TCL_VERSION)
-#TCLSRCD	= $(prefix)/build/tcl/Development
 TCLDIR	= $(APPDIR)/Contents/Frameworks/Tcl.framework
 TKSRC	= $(prefix)/build/tk/Tk.framework/Versions/$(TCL_VERSION)
-#TKSRCD	= $(prefix)/build/tk/Development
 TKDIR	= $(APPDIR)/Contents/Frameworks/Tk.framework
 
 ID	= $(shell finger $(shell whoami) | egrep -o 'Name: [a-zA-Z0-9 ]{1,}' | cut -d ':' -f 2 | head -n 1 | xargs echo)
@@ -191,12 +189,14 @@ $(APPDIR):
 	cp -rf SAOImageDS9.app $(bindir)
 
 $(TCLDIR)/Tcl : $(TCLSRC)/Tcl
+#$(TCLDIR)/Tcl : $(TCLSRC)/Tcl_debug
 	cp -p $? "$@"
 
 $(TCLDIR)/Resources : $(TCLSRC)/Resources
 	cp -prf $? "$@"
 
 $(TKDIR)/Tk : $(TKSRC)/Tk
+#$(TKDIR)/Tk : $(TKSRC)/Tk_debug
 	cp -p $? "$@"
 
 $(TKDIR)/Resources : $(TKSRC)/Resources

@@ -354,6 +354,7 @@ void FrameBase::panEndCmd(const Vector& vv)
   update(MATRIX);
 }
 
+#ifndef MAC_OSX_TK
 void FrameBase::rotateBeginCmd()
 {
   // save the current rotation
@@ -404,6 +405,21 @@ void FrameBase::rotateEndCmd()
 
   update(MATRIX);
 }
+#else
+void FrameBase::rotateBeginCmd()
+{
+  // save the current rotation
+  rotateRotation = rotation;
+}
+
+void FrameBase::rotateMotionCmd(double angle)
+{
+  rotation = rotateRotation + angle;
+  update(MATRIX);
+}
+
+void FrameBase::rotateEndCmd() {}
+#endif
 
 void FrameBase::saveFitsResampleFileCmd(const char* fn)
 {

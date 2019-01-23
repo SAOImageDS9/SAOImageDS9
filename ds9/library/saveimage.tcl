@@ -31,7 +31,7 @@ proc SaveImageDef {} {
 		default {set saveimage(error) $aa}
 	    }
 	}
-	aqua {set saveimage(error) $cc}
+	aqua {set saveimage(error) $aa}
 	win32 {set saveimage(error) $aa}
     }
 }
@@ -117,7 +117,7 @@ proc SaveImagePhoto {fn format} {
 
     switch $ds9(wm) {
 	x11 {}
-	aqua {
+	aquaa {
 	    Error $saveimage(error)
 	    return
 	}

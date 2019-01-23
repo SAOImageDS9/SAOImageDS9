@@ -548,6 +548,7 @@ void Frame::colormapCmd(int id, float b, float c, int i,
   update(BASE);
 }
 
+#ifndef MAC_OSX_TK
 void Frame::colormapBeginCmd()
 {
   // we need a colorScale before we can render
@@ -762,6 +763,35 @@ void Frame::colormapEndCmd()
 
   update(BASE); // always update
 }
+#else
+void Frame::colormapBeginCmd() {}
+
+void Frame::colormapMotionCmd(int id, float b, float c, int i, 
+				       unsigned char* cells, int cnt)
+{
+  // we need a colorScale before we can render
+  if (!validColorScale())
+    return;
+
+  // first check for change
+  if (cmapID == id && bias == b && contrast == c && invert == i && colorCells)
+    return;
+
+  // we got a change
+  cmapID = id;
+  bias = b;
+  contrast = c;
+  invert = i;
+
+  updateColorCells(cells, cnt);
+  updateColorScale();
+
+  update(BASE);
+  updatePanner();
+}
+
+void Frame::colormapEndCmd() {}
+#endif
 
 void Frame::getColorbarCmd()
 {

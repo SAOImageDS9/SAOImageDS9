@@ -227,19 +227,8 @@ void FrameBase::rotateMotion()
       double y = i*mm[1] + j*mm[4] + mm[7];
 
       if (x >= 0 && x < width && y >= 0 && y < height) {
-#if MAC_OSX_TK
-	// I really don't understand this
-	char* sptr = src + ((int)y)*rotateDestXM->bytes_per_line+
-	  ((int)x)*bytesPerPixel;
-
-	*(dest+0) = *(sptr+3);
-	*(dest+1) = *(sptr+0);
-	*(dest+2) = *(sptr+1);
-	*(dest+3) = *(sptr+2);
-#else
 	memcpy(dest, src + ((int)y)*rotateDestXM->bytes_per_line +
 	  ((int)x)*bytesPerPixel, bytesPerPixel);
-#endif
       }
       else
 	memcpy(dest, bgTrueColor_, bytesPerPixel);
@@ -255,6 +244,7 @@ void FrameBase::rotateMotion()
   XCopyArea(display, rotatePM, Tk_WindowId(tkwin), rotateGCXOR, 0, 0, 
 	    options->width, options->height, dd[0], dd[1]);
 }
+
 void FrameBase::setBinCursor()
 {
   if (context->cfits)

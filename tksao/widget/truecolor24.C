@@ -14,23 +14,11 @@ TrueColor24::TrueColor24(Visual* visual)
   bx_ = visual->blue_mask;
 #endif
 #if MAC_OSX_TK
-  // major change in 8.6.9: in macos/tkMacOSXImage.c
-  if (TCL_MAJOR_VERSION == 8 &&
-      TCL_MINOR_VERSION == 6 &&
-      TCL_RELEASE_SERIAL < 9) {
-    // bitmapInfo = (image->byte_order == MSBFirst ? kCGBitmapByteOrder32Big : kCGBitmapByteOrder32Little);
-    ax_ = 0xFF000000;
-    rx_ = 0x00FF0000;
-    gx_ = 0x0000FF00;
-    bx_ = 0x000000FF;
-  }
-  else {
-    // bitmapInfo = (image->byte_order == MSBFirst ? kCGBitmapByteOrder32Little : kCGBitmapByteOrder32Big);
-    ax_ = 0xFF000000;
-    rx_ = 0x000000FF;
-    gx_ = 0x0000FF00;
-    bx_ = 0x00FF0000;
-  }
+  // macos masks are plain wrong
+  ax_ = 0xFF000000;
+  rx_ = 0x000000FF;
+  gx_ = 0x0000FF00;
+  bx_ = 0x00FF0000;
 #endif
 #if _WIN32
   // windows masks are plain wrong

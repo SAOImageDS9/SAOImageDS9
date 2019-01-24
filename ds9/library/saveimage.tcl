@@ -10,30 +10,7 @@ proc SaveImageDef {} {
     set saveimage(jpeg,quality) 75
     set saveimage(tiff,compress) none
 
-    set aa [msgcat::mc {An error has occurred while creating the image. Please be sure that the entire image window is visible on the screen.}]
-    set bb [msgcat::mc {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.}]
-    set cc [msgcat::mc {This function is not currently supported for this port.}]
-
-    global ds9
-    switch $ds9(wm) {
-	x11 {
-	    global tcl_platform
-	    switch $tcl_platform(os) {
-		Darwin {
-		    switch [lindex [split $tcl_platform(osVersion) {.}] 0] {
-			10 -
-			11 {set saveimage(error) $bb}
-			8 -
-			9 -
-			default {set saveimage(error) $aa}
-		    }
-		}
-		default {set saveimage(error) $aa}
-	    }
-	}
-	aqua {set saveimage(error) $cc}
-	win32 {set saveimage(error) $aa}
-    }
+    set saveimage(error) [msgcat::mc {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.}]
 }
 
 proc SaveImageDialog {format} {
@@ -114,15 +91,6 @@ proc SaveImage {fn format} {
 proc SaveImagePhoto {fn format} {
     global ds9
     global saveimage
-
-    switch $ds9(wm) {
-	x11 {}
-	aqua {
-	    Error $saveimage(error)
-	    return
-	}
-	win32 {}
-    }
 
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
     if {$rr != 0} {

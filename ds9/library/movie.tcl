@@ -29,20 +29,7 @@ proc MovieDef {} {
     set movie(status) 0
     set movie(abort) 0
 
-    set aa [msgcat::mc {An error has occurred while creating the image. Please be sure that the entire image window is visible on the screen.}]
-    set bb [msgcat::mc {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.}]
-    switch $tcl_platform(os) {
-	Darwin {
-	    switch [lindex [split $tcl_platform(osVersion) {.}] 0] {
-		10 -
-		11 {set movie(error) $bb}
-		8 -
-		9 -
-		default {set movie(error) $aa}
-	    }
-	}
-	default {set movie(error) $aa}
-    }
+    set movie(error) [msgcat::mc {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.}]
 }
 
 proc MovieDialog {} {
@@ -127,15 +114,6 @@ proc Movie {fn} {
 
     if {$fn == {} || ![$current(frame) has fits]} {
 	return
-    }
-
-    switch $ds9(wm) {
-	x11 {}
-	aqua -
-	win32 {
-	    Error $saveimage(error)
-	    return
-	}
     }
 
     # besure we are on top

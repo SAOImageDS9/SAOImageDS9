@@ -418,7 +418,10 @@ void FrameBase::rotateMotionCmd(double angle)
   update(MATRIX);
 }
 
-void FrameBase::rotateEndCmd() {}
+void FrameBase::rotateEndCmd()
+{
+  update(MATRIX);
+}
 #endif
 
 void FrameBase::saveFitsResampleFileCmd(const char* fn)

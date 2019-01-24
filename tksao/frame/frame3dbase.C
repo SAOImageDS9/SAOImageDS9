@@ -1217,21 +1217,9 @@ void Frame3dBase::ximageToPixmapMagnifier()
     for (int ii=0; ii<ww; ii++, dest+=bytesPerPixel) {
       Vector vv = Vector(ii,jj)*mm;
 
-      if (vv[0] >= 0 && vv[0] < zz[0] && vv[1] >= 0 && vv[1] < zz[1]) {
-	// I really don't understand this
-#if MAC_OSX_TK
-	char* sptr = src + ((int)vv[1])*srcBytesPerLine + 
-	  ((int)vv[0])*bytesPerPixel;
-
-	*(dest+0) = *(sptr+3);
-	*(dest+1) = *(sptr+0);
-	*(dest+2) = *(sptr+1);
-	*(dest+3) = *(sptr+2);
-#else
+      if (vv[0] >= 0 && vv[0] < zz[0] && vv[1] >= 0 && vv[1] < zz[1])
 	memcpy(dest, src + ((int)vv[1])*srcBytesPerLine + 
 	       ((int)vv[0])*bytesPerPixel, bytesPerPixel);
-#endif
-      }
       else
 	memcpy(dest, bgTrueColor_, bytesPerPixel);
     }

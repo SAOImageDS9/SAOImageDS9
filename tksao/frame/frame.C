@@ -790,7 +790,10 @@ void Frame::colormapMotionCmd(int id, float b, float c, int i,
   updatePanner();
 }
 
-void Frame::colormapEndCmd() {}
+void Frame::colormapEndCmd()
+{
+  update(BASE);
+}
 #endif
 
 void Frame::getColorbarCmd()

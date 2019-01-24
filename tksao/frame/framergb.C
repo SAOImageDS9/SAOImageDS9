@@ -500,6 +500,7 @@ void FrameRGB::colormapCmd(float rb, float gb, float bb,
   update(BASE);
 }
 
+#ifndef MAC_OSX_TK
 void FrameRGB::colormapBeginCmd()
 {
   // we need a colorScale before we can render
@@ -629,32 +630,6 @@ void FrameRGB::colormapBeginCmd()
   CLEARSIGBUS
 }
 
-void FrameRGB::colormapEndCmd()
-{
-  if (colormapXM) {
-    XDestroyImage(colormapXM);
-    colormapXM = NULL;
-  }
-
-  if (colormapPM) {
-    Tk_FreePixmap(display, colormapPM);
-    colormapPM = 0;
-  }
-
-  if (colormapGCXOR) {
-    XFreeGC(display, colormapGCXOR);
-    colormapGCXOR = 0;
-  }
-
-  for (int kk=0; kk<3; kk++)
-    if (colormapData[kk]) {
-      delete [] colormapData[kk];
-      colormapData[kk] = NULL;
-    }
-
-  update(BASE); // always update
-}
-
 void FrameRGB::colormapMotionCmd(float rb, float gb, float bb, 
 				 float rc, float gc, float bc, int i,
 				 unsigned char* cells, int cnt)
@@ -755,6 +730,70 @@ void FrameRGB::colormapMotionCmd(float rb, float gb, float bb,
   // update panner
   updatePanner();
 }
+
+void FrameRGB::colormapEndCmd()
+{
+  if (colormapXM) {
+    XDestroyImage(colormapXM);
+    colormapXM = NULL;
+  }
+
+  if (colormapPM) {
+    Tk_FreePixmap(display, colormapPM);
+    colormapPM = 0;
+  }
+
+  if (colormapGCXOR) {
+    XFreeGC(display, colormapGCXOR);
+    colormapGCXOR = 0;
+  }
+
+  for (int kk=0; kk<3; kk++)
+    if (colormapData[kk]) {
+      delete [] colormapData[kk];
+      colormapData[kk] = NULL;
+    }
+
+  update(BASE); // always update
+}
+#else
+void FrameRGB::colormapBeginCmd() {}
+
+void FrameRGB::colormapMotionCmd(float rb, float gb, float bb, 
+				 float rc, float gc, float bc, int i,
+				 unsigned char* cells, int cnt)
+{
+  // we need a colorScale before we can render
+  if (!validColorScale())
+    return;
+
+  // first check for change
+  if (bias[0] == rb && bias[1] == gb && bias[2] == bb && 
+      contrast[0] == rc && contrast[1] == gc && contrast[2] == bc &&
+      invert == i && colorCells)
+    return;
+
+  // we got a change
+  bias[0] = rb;
+  bias[1] = gb;
+  bias[2] = bb;
+  contrast[0] = rc;
+  contrast[1] = gc;
+  contrast[2] = bc;
+  invert = i;
+
+  updateColorCells(cells, cnt);
+  updateColorScale();
+
+  update(BASE);
+  updatePanner();
+}
+
+void FrameRGB::colormapEndCmd()
+{
+  update(BASE);
+}
+#endif
 
 void FrameRGB::getColorbarCmd()
 {

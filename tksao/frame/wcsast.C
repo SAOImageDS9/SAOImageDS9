@@ -71,12 +71,19 @@ Vector wcsTran(AstFrameSet* ast, const Vector& in, int forward)
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
   case 1:
-    // error
-    break;
+    {
+      double pin[1];
+      double pout[1];
+      pin[0] = in[0];
+      astTran1(ast, 1, pin, forward, pout);
+      return Vector(pout[0],forward ? 1 : 0);
+    }
   case 2:
-    double xout, yout;
-    astTran2(ast, 1, in.v, in.v+1, forward, &xout, &yout);
-    return Vector(xout, yout);
+    {
+      double xout, yout;
+      astTran2(ast, 1, in.v, in.v+1, forward, &xout, &yout);
+      return Vector(xout, yout);
+    }
   case 3:
     {
       double pin[3];
@@ -87,7 +94,6 @@ Vector wcsTran(AstFrameSet* ast, const Vector& in, int forward)
       astTranN(ast, 1, 3, 1, pin, forward, 3, 1, pout);
       return Vector(pout[0],pout[1]);
     }
-    break;
   case 4:
     {
       double pin[4];
@@ -99,7 +105,6 @@ Vector wcsTran(AstFrameSet* ast, const Vector& in, int forward)
       astTranN(ast, 1, 4, 1, pin, forward, 4, 1, pout);
       return Vector(pout[0],pout[1]);
     }
-    break;
   }
   return Vector();
 }
@@ -109,7 +114,21 @@ void wcsTran(AstFrameSet* ast, int npoint, Vector* in, int forward, Vector* out)
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
   case 1:
-    // error
+    {
+      double* xin = new double[npoint];
+      double* xout = new double[npoint];
+
+      for (int ii=0; ii<npoint; ii++)
+	xin[ii] = in[ii][0];
+      astTran1(ast, npoint, xin, forward, xout);
+      for (int ii=0; ii<npoint; ii++)
+	out[ii] = Vector(xout[ii],forward ? 1 : 0);
+
+      if (xin)
+	delete [] xin;
+      if (xout)
+	delete [] xout;
+    }
     break;
   case 2:
     {
@@ -221,14 +240,22 @@ Vector3d wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
   case 1:
+    {
+      double pin[1];
+      double pout[1];
+      pin[0] = in[0];
+      astTran1(ast, 1, pin, forward, pout);
+      return Vector3d(pout[0],forward ? 1 : 0,forward ? 1 : 0);
+    }
   case 2:
+    {
       double pin[2];
       double pout[2];
       pin[0] = in[0];
       pin[1] = in[1];
       astTranN(ast, 1, 2, 1, pin, forward, 2, 1, pout);
       return Vector3d(pout[0],pout[1],forward ? 1 : 0);
-    break;
+    }
   case 3:
     {
       double pin[3];
@@ -239,7 +266,6 @@ Vector3d wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
       astTranN(ast, 1, 3, 1, pin, forward, 3, 1, pout);
       return Vector3d(pout[0],pout[1],pout[2]);
     }
-    break;
   case 4:
     {
       double pin[4];
@@ -251,7 +277,6 @@ Vector3d wcsTran(AstFrameSet* ast, const Vector3d& in, int forward)
       astTranN(ast, 1, 4, 1, pin, forward, 4, 1, pout);
       return Vector3d(pout[0],pout[1],pout[2]);
     }
-    break;
   }
   return Vector3d();
 }
@@ -261,8 +286,14 @@ double wcsDistance(AstFrameSet* ast, const Vector& vv1, const Vector& vv2)
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
   case 1:
-    // error
-    break;
+    {
+      double ptr1[1];
+      ptr1[0] = vv1[0];
+      double ptr2[1];
+      ptr2[0] = vv2[0];
+
+      return astDistance(ast, ptr1, ptr2);
+    }
   case 2:
     return astDistance(ast, vv1.v, vv2.v);
   case 3:
@@ -304,10 +335,18 @@ double wcsAngle(AstFrameSet* ast, const Vector& vv1, const Vector& vv2,
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
   case 1:
-    // error
-    break;
+    {
+      double ptr1[1];
+      ptr1[0] = vv1[0];
+      double ptr2[1];
+      ptr2[0] = vv2[0];
+      double ptr3[1];
+      ptr3[0] = vv3[0];
+      
+      return astAngle(ast, ptr1, ptr2, ptr3);
+    }
   case 2:
-    return astAngle(ast,vv1.v,vv2.v,vv3.v);
+    return astAngle(ast, vv1.v, vv2.v, vv3.v);
   case 3:
     {
       double ptr1[3];
@@ -322,7 +361,7 @@ double wcsAngle(AstFrameSet* ast, const Vector& vv1, const Vector& vv2,
       ptr3[0] = vv3[0];
       ptr3[1] = vv3[1];
       ptr3[2] = 0;
-
+      
       return astAngle(ast, ptr1, ptr2, ptr3);
     }
   case 4:
@@ -355,8 +394,14 @@ double wcsAxAngle(AstFrameSet* ast, const Vector& vv1, const Vector& vv2)
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
   case 1:
-    // error
-    break;
+    {
+      double ptr1[1];
+      ptr1[0] = vv1[0];
+      double ptr2[1];
+      ptr2[0] = vv2[0];
+
+      return astAxAngle(ast, ptr1, ptr2, 1);
+    }
   case 2:
     return astAxAngle(ast, vv1.v, vv2.v, 2);
   case 3:
@@ -397,8 +442,18 @@ AstWinMap* wcsWinMap(AstFrameSet* ast, Vector& ll, Vector& ur, Vector& rr)
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
   case 1:
-    // error
-    return NULL;
+    {
+      double vll[2];
+      vll[0] = ll[0];
+      vll[1] = .5;
+      double vur[2];
+      vur[0] = ur[0];
+      vur[1] = .5;
+      double vrr[2];
+      vrr[0] = rr[0];
+      vrr[1] = 1.5;
+      return astWinMap(2, vll, vrr, vll, vur, "");
+    }
   case 2:
     return astWinMap(2, ll.vv(), rr.vv(), ll.vv(), ur.vv(), "");
   case 3:
@@ -436,7 +491,6 @@ AstWinMap* wcsWinMap(AstFrameSet* ast, Vector& ll, Vector& ur, Vector& rr)
       vrr[3] = 1.5;
       return astWinMap(4, vll, vrr, vll, vur, "");
     }
-    break;
   }
 
   return NULL;
@@ -450,8 +504,14 @@ AstCmpMap* wcsMatrixMap(AstFrameSet* ast, Matrix& mx)
   int naxes = astGetI(ast,"Naxes");
   switch (naxes) {
   case 1:
-    // error
-    return NULL;
+    {
+      double ss[] = {mx.matrix(0,0),0,0,
+		     0,mx.matrix(1,1),0,
+		     0,0,1};
+      double tt[] = {mx.matrix(2,0),0,0};
+      mm = astMatrixMap(2, 2, 0, ss, "");
+      sm = astShiftMap(2, tt, "");
+    }
   case 2:
     {
       double ss[] = {mx.matrix(0,0),mx.matrix(1,0),

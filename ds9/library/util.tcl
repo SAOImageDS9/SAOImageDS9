@@ -1127,6 +1127,11 @@ proc ParseURL {url varname} {
     switch $tcl_platform(platform) {
 	unix {
 	    switch -- $r(scheme) {
+		zipfs {
+		    # special case for zipfs
+		    set r(path) "$r(scheme):$r(path)"
+		    set r(scheme) {}
+		}
 		ftp {
 		    # strip any username/passwd
 		    set id [string first {@} $r(authority)]

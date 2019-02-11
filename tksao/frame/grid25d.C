@@ -75,9 +75,23 @@ void Grid25d::doit(RenderMode rm)
       int naxes = astGetI(ast,"Naxes");
       switch (naxes) {
       case 1:
-	// error
-	astEnd; // now, clean up memory
-	return;
+	{
+	  AstFrame* zbase = astFrame(1,"");
+	  AstFrame* zcurr = astFrame(1,"");
+	  AstMapping* zmap = (AstMapping*)astUnitMap(1,"");
+
+	  AstFrame* wcsbase = (AstFrame*)astGetFrame(ast,AST__BASE);
+	  AstFrame* wcscurr = (AstFrame*)astGetFrame(ast,AST__CURRENT);
+	  AstMapping* wcsmap = (AstMapping*)astGetMapping(ast,AST__BASE,AST__CURRENT);
+
+	  AstCmpFrame* cmpwcsbase = astCmpFrame(wcsbase,zbase,"");
+	  AstCmpFrame* cmpwcscurr = astCmpFrame(wcscurr,zcurr,"");
+	  AstCmpMap* cmpwcsmap = astCmpMap(wcsmap,zmap,0,"");
+
+	  ast = astFrameSet(cmpwcsbase,"");
+	  astAddFrame(ast, AST__CURRENT, cmpwcsmap, cmpwcscurr);
+	}
+	break;
       case 2:
 	break;
       case 3:

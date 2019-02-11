@@ -2884,7 +2884,21 @@ VectorStr FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   astNorm(ast_, out.v);
   astEnd;
 
-  return VectorStr(astFormat(ast_,1,out[0]), astFormat(ast_,2,out[1]));
+  int naxes = astGetI(ast_,"Naxes");
+  switch (naxes) {
+  case 1:
+    {
+      ostringstream str;
+      str << setprecision(context_->parent_->precLinear_) << in[1] << ends;
+      return VectorStr(astFormat(ast_,1,out[0]), str.str().c_str());
+    }
+  case 2:
+  case 3:
+  case 4:
+    return VectorStr(astFormat(ast_,1,out[0]), astFormat(ast_,2,out[1]));
+  }
+
+  return VectorStr();
 }
 
 Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
@@ -2929,12 +2943,24 @@ VectorStr3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   int naxes = astGetI(ast_,"Naxes");
   switch (naxes) {
   case 1:
-    // error
-    break;
+    {
+      ostringstream str1;
+      str1 << setprecision(context_->parent_->precLinear_) << in[1] << ends;
+      ostringstream str2;
+      str2 << setprecision(context_->parent_->precLinear_) << in[2] << ends;
+      return VectorStr3d(astFormat(ast_,1,out[0]),
+			 str1.str().c_str(),
+			 str2.str().c_str());
+    }
   case 2:
-    return VectorStr3d(astFormat(ast_,1,out[0]),
-		       astFormat(ast_,2,out[1]),
-		       "1");
+    {
+      ostringstream str;
+      str << setprecision(context_->parent_->precLinear_) << in[1] << ends;
+      return VectorStr3d(astFormat(ast_,1,out[0]),
+			 astFormat(ast_,2,out[1]),
+			 str.str().c_str());
+
+    }
   case 3:
   case 4:
     return VectorStr3d(astFormat(ast_,1,out[0]),

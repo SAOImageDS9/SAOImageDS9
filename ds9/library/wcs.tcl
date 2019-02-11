@@ -243,7 +243,7 @@ proc WCSDialog {} {
 	ttk::entry $base.lonpole${aa} \
 	    -textvariable dwcs(lonpole${aa}) -width 14
 
-	for {set ii 1} {$ii<=3} {incr ii} {
+	for {set ii 1} {$ii<=4} {incr ii} {
 	    ttk::label $base.tctype${ii}${aa} -text "CTYPE${ii}${bb}"
 	    ttk::entry $base.ctype${ii}${aa} \
 		-textvariable dwcs(ctype${ii}${aa}) -width 14
@@ -265,19 +265,21 @@ proc WCSDialog {} {
 		-textvariable dwcs(cdelt${ii}${aa}) -width 14
 	}
 
-	for {set ii 1} {$ii<=2} {incr ii} {
-	    for {set jj 1} {$jj<=2} {incr jj} {
-		ttk::label $base.tcd${ii}_${jj}${aa} -text "CD${ii}_${jj}${bb}"
+	for {set ii 1} {$ii<=4} {incr ii} {
+	    for {set jj 1} {$jj<=4} {incr jj} {
+		ttk::label $base.tcd${ii}_${jj}${aa} \
+		    -text "CD${ii}_${jj}${bb}"
 		ttk::entry $base.cd${ii}_${jj}${aa} \
 		    -textvariable dwcs(cd${ii}_${jj}${aa}) -width 14
-	    }
-	    for {set jj 1} {$jj<=2} {incr jj} {
+
 		ttk::label $base.tpc${ii}_${jj}${aa} \
 		    -text "PC${ii}_${jj}${bb}"
 		ttk::entry $base.pc${ii}_${jj}${aa} \
 		    -textvariable dwcs(pc${ii}_${jj}${aa}) -width 14
 	    }
+	}
 
+	for {set ii 1} {$ii<=4} {incr ii} {
 	    for {set mm 0} {$mm<12} {incr mm} {
 		ttk::label $pv00.tpv${ii}_${mm}${aa} \
 		    -text "PV${ii}_${mm}${bb}"
@@ -297,11 +299,6 @@ proc WCSDialog {} {
 		    -textvariable dwcs(pv${ii}_${mm}${aa}) -width 14
 	    }
 	}
-
-	ttk::label $base.tcd3_3${aa} -text "CD3_3${bb}"
-	ttk::entry $base.cd3_3${aa} -textvariable dwcs(cd3_3${aa}) -width 14
-	ttk::label $base.tpc3_3${aa} -text "PC3_3${bb}"
-	ttk::entry $base.pc3_3${aa} -textvariable dwcs(pc3_3${aa}) -width 14
     }
 
     # only in primary
@@ -565,7 +562,7 @@ proc ConfigWCSDialog {{force {0}}} {
     grid forget $base.tlatpole${aa} $base.latpole${aa}
     grid forget $base.tlonpole${aa} $base.lonpole${aa}
 
-    for {set ii 1} {$ii<=3} {incr ii} {
+    for {set ii 1} {$ii<=4} {incr ii} {
 	grid forget $base.tctype${ii}${aa} $base.ctype${ii}${aa}
 	grid forget $base.tcunit${ii}${aa} $base.cunit${ii}${aa}
 	grid forget $base.tcrpix${ii}${aa} $base.crpix${ii}${aa}
@@ -573,12 +570,14 @@ proc ConfigWCSDialog {{force {0}}} {
 	grid forget $base.tcdelt${ii}${aa} $base.cdelt${ii}${aa}
     }
 
-    for {set ii 1} {$ii<=2} {incr ii} {
-	for {set jj 1} {$jj<=2} {incr jj} {
+    for {set ii 1} {$ii<=4} {incr ii} {
+	for {set jj 1} {$jj<=4} {incr jj} {
 	    grid forget $base.tcd${ii}_${jj}${aa} $base.cd${ii}_${jj}${aa}
 	    grid forget $base.tpc${ii}_${jj}${aa} $base.pc${ii}_${jj}${aa}
 	}
+    }
 
+    for {set ii 1} {$ii<=4} {incr ii} {
 	for {set mm 0} {$mm<12} {incr mm} {
 	    grid forget $pv00.tpv${ii}_${mm}${aa} $pv00.pv${ii}_${mm}${aa}
 	}
@@ -589,9 +588,6 @@ proc ConfigWCSDialog {{force {0}}} {
 	    grid forget $pv24.tpv${ii}_${mm}${aa} $pv24.pv${ii}_${mm}${aa}
 	}
     }
-
-    grid forget $base.tcd3_3${aa} $base.cd3_3${aa}
-    grid forget $base.tpc3_3${aa} $base.pc3_3${aa}
 
     # only in primary
     grid forget $ab0.ta $ab0.a
@@ -679,38 +675,69 @@ proc ConfigWCSDialog {{force {0}}} {
     grid $base.tctype1${aa} $base.ctype1${aa} \
 	$base.tctype2${aa} $base.ctype2${aa} \
 	$base.tctype3${aa} $base.ctype3${aa} \
+	$base.tctype4${aa} $base.ctype4${aa} \
 	-padx 2 -pady 2 -sticky w
     grid $base.tcrpix1${aa} $base.crpix1${aa} \
 	$base.tcrpix2${aa} $base.crpix2${aa} \
 	$base.tcrpix3${aa} $base.crpix3${aa} \
+	$base.tcrpix4${aa} $base.crpix4${aa} \
 	-padx 2 -pady 2 -sticky w
     grid $base.tcrval1${aa} $base.crval1${aa} \
 	$base.tcrval2${aa} $base.crval2${aa} \
 	$base.tcrval3${aa} $base.crval3${aa} \
+	$base.tcrval4${aa} $base.crval4${aa} \
 	-padx 2 -pady 2 -sticky w
     grid $base.tcunit1${aa} $base.cunit1${aa} \
 	$base.tcunit2${aa} $base.cunit2${aa} \
 	$base.tcunit3${aa} $base.cunit3${aa} \
+	$base.tcunit4${aa} $base.cunit4${aa} \
 	-padx 2 -pady 2 -sticky w
     grid $base.tcdelt1${aa} $base.cdelt1${aa} \
 	$base.tcdelt2${aa} $base.cdelt2${aa} \
 	$base.tcdelt3${aa} $base.cdelt3${aa} \
+	$base.tcdelt4${aa} $base.cdelt4${aa} \
 	-padx 2 -pady 2 -sticky w
 
     grid $base.tcd1_1${aa} $base.cd1_1${aa} \
 	$base.tcd2_1${aa} $base.cd2_1${aa} \
+	$base.tcd3_1${aa} $base.cd3_1${aa} \
+	$base.tcd4_1${aa} $base.cd4_1${aa} \
 	-padx 2 -pady 2 -sticky w
     grid $base.tcd1_2${aa} $base.cd1_2${aa} \
 	$base.tcd2_2${aa} $base.cd2_2${aa} \
+	$base.tcd3_2${aa} $base.cd3_2${aa} \
+	$base.tcd4_2${aa} $base.cd4_2${aa} \
+	-padx 2 -pady 2 -sticky w
+    grid $base.tcd1_3${aa} $base.cd1_3${aa} \
+	$base.tcd2_3${aa} $base.cd2_3${aa} \
 	$base.tcd3_3${aa} $base.cd3_3${aa} \
+	$base.tcd4_3${aa} $base.cd4_3${aa} \
+	-padx 2 -pady 2 -sticky w
+    grid $base.tcd1_4${aa} $base.cd1_4${aa} \
+	$base.tcd2_4${aa} $base.cd2_4${aa} \
+	$base.tcd3_4${aa} $base.cd3_4${aa} \
+	$base.tcd4_4${aa} $base.cd4_4${aa} \
 	-padx 2 -pady 2 -sticky w
 
     grid $base.tpc1_1${aa} $base.pc1_1${aa} \
 	$base.tpc2_1${aa} $base.pc2_1${aa} \
+	$base.tpc3_1${aa} $base.pc3_1${aa} \
+	$base.tpc4_1${aa} $base.pc4_1${aa} \
 	-padx 2 -pady 2 -sticky w
     grid $base.tpc1_2${aa} $base.pc1_2${aa} \
 	$base.tpc2_2${aa} $base.pc2_2${aa} \
+	$base.tpc3_2${aa} $base.pc3_2${aa} \
+	$base.tpc4_2${aa} $base.pc4_2${aa} \
+	-padx 2 -pady 2 -sticky w
+    grid $base.tpc1_3${aa} $base.pc1_3${aa} \
+	$base.tpc2_3${aa} $base.pc2_3${aa} \
 	$base.tpc3_3${aa} $base.pc3_3${aa} \
+	$base.tpc4_3${aa} $base.pc4_3${aa} \
+	-padx 2 -pady 2 -sticky w
+    grid $base.tpc1_4${aa} $base.pc1_4${aa} \
+	$base.tpc2_4${aa} $base.pc2_4${aa} \
+	$base.tpc3_4${aa} $base.pc3_4${aa} \
+	$base.tpc4_4${aa} $base.pc4_4${aa} \
 	-padx 2 -pady 2 -sticky w
 
     grid $base.tlatpole${aa} $base.latpole${aa} \
@@ -719,16 +746,22 @@ proc ConfigWCSDialog {{force {0}}} {
     for {set mm 0} {$mm<12} {incr mm} {
 	grid $pv00.tpv1_${mm}${aa} $pv00.pv1_${mm}${aa} \
 	    $pv00.tpv2_${mm}${aa} $pv00.pv2_${mm}${aa} \
+	    $pv00.tpv3_${mm}${aa} $pv00.pv3_${mm}${aa} \
+	    $pv00.tpv4_${mm}${aa} $pv00.pv4_${mm}${aa} \
 	    -padx 2 -pady 2 -sticky w
     }
     for {set mm 12} {$mm<24} {incr mm} {
 	grid $pv12.tpv1_${mm}${aa} $pv12.pv1_${mm}${aa} \
 	    $pv12.tpv2_${mm}${aa} $pv12.pv2_${mm}${aa} \
+	    $pv12.tpv3_${mm}${aa} $pv12.pv3_${mm}${aa} \
+	    $pv12.tpv4_${mm}${aa} $pv12.pv4_${mm}${aa} \
 	    -padx 2 -pady 2 -sticky w
     }
     for {set mm 24} {$mm<36} {incr mm} {
 	grid $pv24.tpv1_${mm}${aa} $pv24.pv1_${mm}${aa} \
 	    $pv24.tpv2_${mm}${aa} $pv24.pv2_${mm}${aa} \
+	    $pv24.tpv3_${mm}${aa} $pv24.pv3_${mm}${aa} \
+	    $pv24.tpv4_${mm}${aa} $pv24.pv4_${mm}${aa} \
 	    -padx 2 -pady 2 -sticky w
     }
 
@@ -834,7 +867,7 @@ proc WCSToVar {txt} {
 	set dwcs(latpole${aa}) {}
 	set dwcs(lonpole${aa}) {}
 
-	for {set ii 1} {$ii<=3} {incr ii} {
+	for {set ii 1} {$ii<=4} {incr ii} {
 	    set dwcs(ctype${ii}${aa}) {}
 	    set dwcs(cunit${ii}${aa}) {}
 	    set dwcs(crpix${ii}${aa}) {}
@@ -842,19 +875,18 @@ proc WCSToVar {txt} {
 	    set dwcs(cdelt${ii}${aa}) {}
 	}
 
-	for {set ii 1} {$ii<=2} {incr ii} {
-	    for {set jj 1} {$jj<=2} {incr jj} {
+	for {set ii 1} {$ii<=4} {incr ii} {
+	    for {set jj 1} {$jj<=4} {incr jj} {
 		set dwcs(cd${ii}_${jj}${aa}) {}
 		set dwcs(pc${ii}_${jj}${aa}) {}
 	    }
+	}
 
+	for {set ii 1} {$ii<=4} {incr ii} {
 	    for {set mm 0} {$mm<36} {incr mm} {
 		set dwcs(pv${ii}_${mm}${aa}) {}
 	    }
 	}
-
-	set dwcs(cd3_3${aa}) {}
-	set dwcs(pc3_3${aa}) {}
     }
     
     # primary only
@@ -945,23 +977,6 @@ proc WCSToVar {txt} {
 	    equino -
 	    latpol -
 	    lonpol -
-	    ctype1 -
-	    ctype2 -
-	    ctype3 -
-	    cunit1 -
-	    cunit2 -
-	    cunit3 -
-	    crpix1 -
-	    crpix2 -
-	    crpix3 -
-	    crval1 -
-	    crval2 -
-	    crval3 -
-	    cdelt1 -
-	    cdelt2 -
-	    cdelt3 -
-	    cd3_3 -
-	    pc3_3 -
 	    a_orde -
 	    b_orde -
 	    ap_ord -
@@ -969,19 +984,30 @@ proc WCSToVar {txt} {
 		set dwcs($key) $val
 	    }
 	}
+	switch [string range $key 0 4] {
+	    ctype -
+	    cunit -
+	    crpix -
+	    crval -
+	    cdelt {
+		set dwcs($key) $val
+	    }
+	}
 	switch [string range $key 0 3] {
 	    epoc -
 	    date -
 	    cd1_ -
-	    cd1_ -
 	    cd2_ -
-	    cd2_ -
-	    pc1_ -
+	    cd3_ -
+	    cd4_ -
 	    pc1_ -
 	    pc2_ -
-	    pc2_ -
+	    pc3_ -
+	    pc4_ -
 	    pv1_ -
-	    pv2_ {
+	    pv2_ -
+	    pv3_ -
+	    pv4_ {
 		set dwcs($key) $val
 	    }
 	}
@@ -1040,7 +1066,7 @@ proc WCSFromVar {} {
 	    append rr "LONPOLE${bb} = $dwcs(lonpole${aa})\n"
 	}
 
-	for {set ii 1} {$ii<=3} {incr ii} {
+	for {set ii 1} {$ii<=4} {incr ii} {
 	    if {$dwcs(ctype${ii}${aa}) != {}} {
 		append rr "CTYPE${ii}${bb} = '$dwcs(ctype${ii}${aa})'\n"
 	    }
@@ -1058,8 +1084,8 @@ proc WCSFromVar {} {
 	    }
 	}
 
-	for {set ii 1} {$ii<=2} {incr ii} {
-	    for {set jj 1} {$jj<=2} {incr jj} {
+	for {set ii 1} {$ii<=4} {incr ii} {
+	    for {set jj 1} {$jj<=4} {incr jj} {
 		if {$dwcs(cd${ii}_${jj}${aa}) != {}} {
 		    append rr "CD${ii}_${jj}${bb} = $dwcs(cd${ii}_${jj}${aa})\n"
 		}
@@ -1067,19 +1093,14 @@ proc WCSFromVar {} {
 		    append rr "PC${ii}_${jj}${bb} = $dwcs(pc${ii}_${jj}${aa})\n"
 		}
 	    }
+	}
 
+	for {set ii 1} {$ii<=4} {incr ii} {
 	    for {set mm 0} {$mm<36} {incr mm} {
 		if {$dwcs(pv${ii}_${mm}${aa}) != {}} {
 		    append rr "PV${ii}_${mm}${bb} = $dwcs(pv${ii}_${mm}${aa})\n"
 		}
 	    }
-	}
-
-	if {$dwcs(cd3_3${aa}) != {}} {
-	    append rr "CD3_3${bb} = $dwcs(cd3_3${aa})\n"
-	}
-	if {$dwcs(pc3_3${aa}) != {}} {
-	    append rr "PC3_3${bb} = $dwcs(pc3_3${aa})\n"
 	}
     }
 

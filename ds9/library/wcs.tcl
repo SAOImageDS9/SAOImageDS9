@@ -189,18 +189,16 @@ proc WCSDialog {} {
     set base [ttk::frame $tt.base]
     set pv00 [ttk::frame $tt.pv00]
     set pv18 [ttk::frame $tt.pv18]
-    set ab0 [ttk::frame $tt.ab0]
-    set ab2 [ttk::frame $tt.ab2]
-    set ab4 [ttk::frame $tt.ab4]
+    set aa0 [ttk::frame $tt.aa0]
+    set bb0 [ttk::frame $tt.bb0]
     set apbp0 [ttk::frame $tt.apbp0]
     set apbp2 [ttk::frame $tt.apbp2]
     set apbp4 [ttk::frame $tt.apbp4]
     $tt add $base -text {Keyword}
     $tt add $pv00 -text {PVi_00}
     $tt add $pv18 -text {PVi_18}
-    $tt add $ab0 -text {A_0}
-    $tt add $ab2 -text {A_2}
-    $tt add $ab4 -text {A_4}
+    $tt add $aa0 -text {A_i}
+    $tt add $bb0 -text {B_i}
     $tt add $apbp0 -text {AP_0}
     $tt add $apbp2 -text {AP_2}
     $tt add $apbp4 -text {AP_4}
@@ -294,50 +292,24 @@ proc WCSDialog {} {
     }
 
     # only in primary
-    ttk::label $ab0.ta -text "A_ORDER"
-    ttk::entry $ab0.a -textvariable dwcs(a_order) -width 14
-    for {set mm 0} {$mm<2} {incr mm} {
+    ttk::label $aa0.ta -text "A_ORDER"
+    ttk::entry $aa0.a -textvariable dwcs(a_order) -width 14
+
+    for {set mm 0} {$mm<6} {incr mm} {
 	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $ab0.ta_${mm}_${nn} -text "A_${mm}_${nn}"
-	    ttk::entry $ab0.a_${mm}_${nn} \
-		-textvariable dwcs(a_${mm}_${nn}) -width 14
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $ab2.ta_${mm}_${nn} -text "A_${mm}_${nn}"
-	    ttk::entry $ab2.a_${mm}_${nn} \
-		-textvariable dwcs(a_${mm}_${nn}) -width 14
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $ab4.ta_${mm}_${nn} -text "A_${mm}_${nn}"
-	    ttk::entry $ab4.a_${mm}_${nn} \
+	    ttk::label $aa0.ta_${mm}_${nn} -text "A_${mm}_${nn}"
+	    ttk::entry $aa0.a_${mm}_${nn} \
 		-textvariable dwcs(a_${mm}_${nn}) -width 14
 	}
     }
 
-    ttk::label $ab0.tb -text "B_ORDER"
-    ttk::entry $ab0.b -textvariable dwcs(b_order) -width 14
-    for {set mm 0} {$mm<2} {incr mm} {
+    ttk::label $bb0.tb -text "B_ORDER"
+    ttk::entry $bb0.b -textvariable dwcs(b_order) -width 14
+
+    for {set mm 0} {$mm<6} {incr mm} {
 	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $ab0.tb_${mm}_${nn} -text "B_${mm}_${nn}"
-	    ttk::entry $ab0.b_${mm}_${nn} \
-		-textvariable dwcs(b_${mm}_${nn}) -width 14
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $ab2.tb_${mm}_${nn} -text "B_${mm}_${nn}"
-	    ttk::entry $ab2.b_${mm}_${nn} \
-		-textvariable dwcs(b_${mm}_${nn}) -width 14
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $ab4.tb_${mm}_${nn} -text "B_${mm}_${nn}"
-	    ttk::entry $ab4.b_${mm}_${nn} \
+	    ttk::label $bb0.tb_${mm}_${nn} -text "B_${mm}_${nn}"
+	    ttk::entry $bb0.b_${mm}_${nn} \
 		-textvariable dwcs(b_${mm}_${nn}) -width 14
 	}
     }
@@ -532,9 +504,8 @@ proc ConfigWCSDialog {{force {0}}} {
     set base $tt.base
     set pv00 $tt.pv00
     set pv18 $tt.pv18
-    set ab0 $tt.ab0
-    set ab2 $tt.ab2
-    set ab4 $tt.ab4
+    set aa0 $tt.aa0
+    set bb0 $tt.bb0
     set apbp0 $tt.apbp0
     set apbp2 $tt.apbp2
     set apbp4 $tt.apbp4
@@ -578,37 +549,17 @@ proc ConfigWCSDialog {{force {0}}} {
     }
 
     # only in primary
-    grid forget $ab0.ta $ab0.a
-    for {set mm 0} {$mm<2} {incr mm} {
+    grid forget $aa0.ta $aa0.a
+    for {set mm 0} {$mm<6} {incr mm} {
 	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $ab0.ta_${mm}_${nn} $ab0.a_${mm}_${nn}
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $ab2.ta_${mm}_${nn} $ab2.a_${mm}_${nn}
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $ab4.ta_${mm}_${nn} $ab4.a_${mm}_${nn}
+	    grid forget $aa0.ta_${mm}_${nn} $aa0.a_${mm}_${nn}
 	}
     }
 
-    grid forget $ab0.tb $ab0.b
-    for {set mm 0} {$mm<2} {incr mm} {
+    grid forget $bb0.tb $bb0.b
+    for {set mm 0} {$mm<6} {incr mm} {
 	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $ab0.tb_${mm}_${nn} $ab0.b_${mm}_${nn}
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $ab2.tb_${mm}_${nn} $ab2.b_${mm}_${nn}
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $ab4.tb_${mm}_${nn} $ab4.b_${mm}_${nn}
+	    grid forget $bb0.tb_${mm}_${nn} $bb0.b_${mm}_${nn}
 	}
     }
 
@@ -747,27 +698,28 @@ proc ConfigWCSDialog {{force {0}}} {
     }
 
     # only in primary
-    grid $ab0.ta $ab0.a $ab0.tb $ab0.b -padx 2 -pady 2 -sticky w
-    for {set mm 0} {$mm<2} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid $ab0.ta_${mm}_${nn} $ab0.a_${mm}_${nn} \
-		$ab0.tb_${mm}_${nn} $ab0.b_${mm}_${nn} \
+    grid $aa0.ta $aa0.a -padx 2 -pady 2 -sticky w
+    for {set mm 0} {$mm<6} {incr mm} {
+	grid $aa0.ta_${mm}_0 $aa0.a_${mm}_0 \
+	    $aa0.ta_${mm}_1 $aa0.a_${mm}_1 \
+	    $aa0.ta_${mm}_2 $aa0.a_${mm}_2 \
+	    $aa0.ta_${mm}_3 $aa0.a_${mm}_3 \
+	    -padx 2 -pady 2 -sticky w
+	grid $aa0.ta_${mm}_4 $aa0.a_${mm}_4 \
+	    $aa0.ta_${mm}_5 $aa0.a_${mm}_5 \
 		-padx 2 -pady 2 -sticky w
-	}
     }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid $ab2.ta_${mm}_${nn} $ab2.a_${mm}_${nn} \
-		$ab2.tb_${mm}_${nn} $ab2.b_${mm}_${nn} \
+
+    grid $bb0.tb $bb0.b -padx 2 -pady 2 -sticky w
+    for {set mm 0} {$mm<6} {incr mm} {
+	grid $bb0.tb_${mm}_0 $bb0.b_${mm}_0 \
+	    $bb0.tb_${mm}_1 $bb0.b_${mm}_1 \
+	    $bb0.tb_${mm}_2 $bb0.b_${mm}_2 \
+	    $bb0.tb_${mm}_3 $bb0.b_${mm}_3 \
+	    -padx 2 -pady 2 -sticky w
+	grid $bb0.tb_${mm}_4 $bb0.b_${mm}_4 \
+	    $bb0.tb_${mm}_5 $bb0.b_${mm}_5 \
 		-padx 2 -pady 2 -sticky w
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid $ab4.ta_${mm}_${nn} $ab4.a_${mm}_${nn} \
-		$ab4.tb_${mm}_${nn} $ab4.b_${mm}_${nn} \
-		-padx 2 -pady 2 -sticky w
-	}
     }
 
     grid $apbp0.tap $apbp0.ap $apbp0.tbp $apbp0.bp -padx 2 -pady 2 -sticky w
@@ -1105,6 +1057,7 @@ proc WCSFromVar {} {
 	    }
 	}
     }
+
     if {$dwcs(b_order) != {}} {
 	append rr "B_ORDER = $dwcs(b_order)\n"
     }

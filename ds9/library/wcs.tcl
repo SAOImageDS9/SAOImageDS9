@@ -188,8 +188,7 @@ proc WCSDialog {} {
     set tt [ttk::notebook $w.param]
     set base [ttk::frame $tt.base]
     set pv00 [ttk::frame $tt.pv00]
-    set pv12 [ttk::frame $tt.pv12]
-    set pv24 [ttk::frame $tt.pv24]
+    set pv18 [ttk::frame $tt.pv18]
     set ab0 [ttk::frame $tt.ab0]
     set ab2 [ttk::frame $tt.ab2]
     set ab4 [ttk::frame $tt.ab4]
@@ -198,8 +197,7 @@ proc WCSDialog {} {
     set apbp4 [ttk::frame $tt.apbp4]
     $tt add $base -text {Keyword}
     $tt add $pv00 -text {PVi_00}
-    $tt add $pv12 -text {PVi_12}
-    $tt add $pv24 -text {PVi_24}
+    $tt add $pv18 -text {PVi_18}
     $tt add $ab0 -text {A_0}
     $tt add $ab2 -text {A_2}
     $tt add $ab4 -text {A_4}
@@ -280,22 +278,16 @@ proc WCSDialog {} {
 	}
 
 	for {set ii 1} {$ii<=4} {incr ii} {
-	    for {set mm 0} {$mm<12} {incr mm} {
+	    for {set mm 0} {$mm<18} {incr mm} {
 		ttk::label $pv00.tpv${ii}_${mm}${aa} \
 		    -text "PV${ii}_${mm}${bb}"
 		ttk::entry $pv00.pv${ii}_${mm}${aa} \
 		    -textvariable dwcs(pv${ii}_${mm}${aa}) -width 14
 	    }
-	    for {set mm 12} {$mm<24} {incr mm} {
-		ttk::label $pv12.tpv${ii}_${mm}${aa} \
+	    for {set mm 18} {$mm<36} {incr mm} {
+		ttk::label $pv18.tpv${ii}_${mm}${aa} \
 		    -text "PV${ii}_${mm}${bb}"
-		ttk::entry $pv12.pv${ii}_${mm}${aa} \
-		    -textvariable dwcs(pv${ii}_${mm}${aa}) -width 14
-	    }
-	    for {set mm 24} {$mm<36} {incr mm} {
-		ttk::label $pv24.tpv${ii}_${mm}${aa} \
-		    -text "PV${ii}_${mm}${bb}"
-		ttk::entry $pv24.pv${ii}_${mm}${aa} \
+		ttk::entry $pv18.pv${ii}_${mm}${aa} \
 		    -textvariable dwcs(pv${ii}_${mm}${aa}) -width 14
 	    }
 	}
@@ -539,8 +531,7 @@ proc ConfigWCSDialog {{force {0}}} {
     set tt $iwcs(top).param
     set base $tt.base
     set pv00 $tt.pv00
-    set pv12 $tt.pv12
-    set pv24 $tt.pv24
+    set pv18 $tt.pv18
     set ab0 $tt.ab0
     set ab2 $tt.ab2
     set ab4 $tt.ab4
@@ -578,14 +569,11 @@ proc ConfigWCSDialog {{force {0}}} {
     }
 
     for {set ii 1} {$ii<=4} {incr ii} {
-	for {set mm 0} {$mm<12} {incr mm} {
+	for {set mm 0} {$mm<18} {incr mm} {
 	    grid forget $pv00.tpv${ii}_${mm}${aa} $pv00.pv${ii}_${mm}${aa}
 	}
-	for {set mm 12} {$mm<24} {incr mm} {
-	    grid forget $pv12.tpv${ii}_${mm}${aa} $pv12.pv${ii}_${mm}${aa}
-	}
-	for {set mm 24} {$mm<36} {incr mm} {
-	    grid forget $pv24.tpv${ii}_${mm}${aa} $pv24.pv${ii}_${mm}${aa}
+	for {set mm 18} {$mm<36} {incr mm} {
+	    grid forget $pv18.tpv${ii}_${mm}${aa} $pv18.pv${ii}_${mm}${aa}
 	}
     }
 
@@ -743,25 +731,18 @@ proc ConfigWCSDialog {{force {0}}} {
     grid $base.tlatpole${aa} $base.latpole${aa} \
 	$base.tlonpole${aa} $base.lonpole${aa} -padx 2 -pady 2 -sticky w
 
-    for {set mm 0} {$mm<12} {incr mm} {
+    for {set mm 0} {$mm<18} {incr mm} {
 	grid $pv00.tpv1_${mm}${aa} $pv00.pv1_${mm}${aa} \
 	    $pv00.tpv2_${mm}${aa} $pv00.pv2_${mm}${aa} \
 	    $pv00.tpv3_${mm}${aa} $pv00.pv3_${mm}${aa} \
 	    $pv00.tpv4_${mm}${aa} $pv00.pv4_${mm}${aa} \
 	    -padx 2 -pady 2 -sticky w
     }
-    for {set mm 12} {$mm<24} {incr mm} {
-	grid $pv12.tpv1_${mm}${aa} $pv12.pv1_${mm}${aa} \
-	    $pv12.tpv2_${mm}${aa} $pv12.pv2_${mm}${aa} \
-	    $pv12.tpv3_${mm}${aa} $pv12.pv3_${mm}${aa} \
-	    $pv12.tpv4_${mm}${aa} $pv12.pv4_${mm}${aa} \
-	    -padx 2 -pady 2 -sticky w
-    }
-    for {set mm 24} {$mm<36} {incr mm} {
-	grid $pv24.tpv1_${mm}${aa} $pv24.pv1_${mm}${aa} \
-	    $pv24.tpv2_${mm}${aa} $pv24.pv2_${mm}${aa} \
-	    $pv24.tpv3_${mm}${aa} $pv24.pv3_${mm}${aa} \
-	    $pv24.tpv4_${mm}${aa} $pv24.pv4_${mm}${aa} \
+    for {set mm 18} {$mm<36} {incr mm} {
+	grid $pv18.tpv1_${mm}${aa} $pv18.pv1_${mm}${aa} \
+	    $pv18.tpv2_${mm}${aa} $pv18.pv2_${mm}${aa} \
+	    $pv18.tpv3_${mm}${aa} $pv18.pv3_${mm}${aa} \
+	    $pv18.tpv4_${mm}${aa} $pv18.pv4_${mm}${aa} \
 	    -padx 2 -pady 2 -sticky w
     }
 
@@ -963,6 +944,16 @@ proc WCSToVar {txt} {
 	}
 	if {$key == {radecsys}} {
 	    set key radesys
+	}
+	
+	# fix for PC00_00
+	if {[regexp {pc0([1-9])_0([1-9])} $key dummy aa bb]} {
+	    set key pc${aa}_${bb}
+	}
+
+	# fix for PV00_00
+	if {[regexp {pv0([1-9])_0([1-9])} $key dummy aa bb]} {
+	    set key pv${aa}_${bb}
 	}
 
 	switch [string range $key 0 6] {

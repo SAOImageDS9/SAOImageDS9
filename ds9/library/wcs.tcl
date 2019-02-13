@@ -300,7 +300,7 @@ proc WCSDialog {} {
 	    if {[expr ($nn+$mm) <= 9]} {
 		ttk::label $aa0.ta_${mm}_${nn} -text "A_${mm}_${nn}"
 		ttk::entry $aa0.a_${mm}_${nn} \
-		    -textvariable dwcs(a_${mm}_${nn}) -width 10
+		    -textvariable dwcs(a_${mm}_${nn}) -width 14
 	    }
 	}
     }
@@ -310,8 +310,8 @@ proc WCSDialog {} {
     ttk::label $bb0.tx -text "B_DMAX"
     ttk::entry $bb0.x -textvariable dwcs(b_dmax) -width 14
 
-    for {set mm 0} {$mm<8} {incr mm} {
-	for {set nn 0} {$nn<8} {incr nn} {
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
 	    ttk::label $bb0.tb_${mm}_${nn} -text "B_${mm}_${nn}"
 	    ttk::entry $bb0.b_${mm}_${nn} \
 		-textvariable dwcs(b_${mm}_${nn}) -width 14
@@ -321,8 +321,8 @@ proc WCSDialog {} {
     ttk::label $ap0.ta -text "AP_ORDER"
     ttk::entry $ap0.a -textvariable dwcs(a_order) -width 14
 
-    for {set mm 0} {$mm<8} {incr mm} {
-	for {set nn 0} {$nn<8} {incr nn} {
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
 	    ttk::label $ap0.ta_${mm}_${nn} -text "AP_${mm}_${nn}"
 	    ttk::entry $ap0.a_${mm}_${nn} \
 		-textvariable dwcs(a_${mm}_${nn}) -width 14
@@ -332,8 +332,8 @@ proc WCSDialog {} {
     ttk::label $bp0.tb -text "BP_ORDER"
     ttk::entry $bp0.b -textvariable dwcs(b_order) -width 14
 
-    for {set mm 0} {$mm<8} {incr mm} {
-	for {set nn 0} {$nn<8} {incr nn} {
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
 	    ttk::label $bp0.tb_${mm}_${nn} -text "BP_${mm}_${nn}"
 	    ttk::entry $bp0.b_${mm}_${nn} \
 		-textvariable dwcs(b_${mm}_${nn}) -width 14
@@ -538,22 +538,22 @@ proc ConfigWCSDialog {{force {0}}} {
 
     grid forget $bb0.tb $bb0.b
     grid forget $bb0.tx $bb0.x
-    for {set mm 0} {$mm<8} {incr mm} {
-	for {set nn 0} {$nn<8} {incr nn} {
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
 	    grid forget $bb0.tb_${mm}_${nn} $bb0.b_${mm}_${nn}
 	}
     }
 
     grid forget $ap0.ta $ap0.a
-    for {set mm 0} {$mm<8} {incr mm} {
-	for {set nn 0} {$nn<8} {incr nn} {
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
 	    grid forget $ap0.ta_${mm}_${nn} $ap0.a_${mm}_${nn}
 	}
     }
 
     grid forget $bp0.tb $bp0.b
-    for {set mm 0} {$mm<8} {incr mm} {
-	for {set nn 0} {$nn<8} {incr nn} {
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
 	    grid forget $bp0.tb_${mm}_${nn} $bp0.b_${mm}_${nn}
 	}
     }
@@ -659,75 +659,104 @@ proc ConfigWCSDialog {{force {0}}} {
     }
 
     # only in primary
-    grid $aa0.ta $aa0.a $aa0.tx $aa0.x 	-padx 2 -pady 2 -sticky w
+    grid $aa0.ta $aa0.a $aa0.tx $aa0.x -padx 2 -pady 2 -sticky w
     for {set mm 0} {$mm<=9} {incr mm} {
 	for {set nn 0} {$nn<=9} {incr nn} {
-	    if {[expr ($nn+$mm) <= 9]} {
+	    if {[expr (($nn+$mm) <= 9) && !($nn == 0 && $mm == 0)]} {
+		set rr [expr $mm*3 + 2]
+		set cc [expr $nn*2]
+		if {[expr $nn >= 4]} {
+		    incr rr
+		    incr cc -8
+		}
+		if {[expr $nn >= 8]} {
+		    incr rr
+		    incr cc -8
+		}
 		grid configure \
 		    $aa0.ta_${mm}_${nn} \
-		    -column [expr ${nn}] -row [expr ${mm}*2+1] \
-		    -padx 2 -pady 2 -sticky w
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+		incr cc
 		grid configure \
 		    $aa0.a_${mm}_${nn} \
-		    -column [expr ${nn}] -row [expr ${mm}*2+2] \
-		    -padx 2 -pady 2 -sticky w
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
 	    }
-	}
-	
-	if {0} {
-	grid $aa0.ta_${mm}_0 $aa0.a_${mm}_0 \
-	    $aa0.ta_${mm}_1 $aa0.a_${mm}_1 \
-	    $aa0.ta_${mm}_2 $aa0.a_${mm}_2 \
-	    $aa0.ta_${mm}_3 $aa0.a_${mm}_3 \
-	    -padx 2 -pady 2 -sticky w
-	grid $aa0.ta_${mm}_4 $aa0.a_${mm}_4 \
-	    $aa0.ta_${mm}_5 $aa0.a_${mm}_5 \
-	    $aa0.ta_${mm}_6 $aa0.a_${mm}_6 \
-	    $aa0.ta_${mm}_7 $aa0.a_${mm}_7 \
-		-padx 2 -pady 2 -sticky w
 	}
     }
 
     grid $bb0.tb $bb0.b $bb0.tx $bb0.x -padx 2 -pady 2 -sticky w
-    for {set mm 0} {$mm<8} {incr mm} {
-	grid $bb0.tb_${mm}_0 $bb0.b_${mm}_0 \
-	    $bb0.tb_${mm}_1 $bb0.b_${mm}_1 \
-	    $bb0.tb_${mm}_2 $bb0.b_${mm}_2 \
-	    $bb0.tb_${mm}_3 $bb0.b_${mm}_3 \
-	    -padx 2 -pady 2 -sticky w
-	grid $bb0.tb_${mm}_4 $bb0.b_${mm}_4 \
-	    $bb0.tb_${mm}_5 $bb0.b_${mm}_5 \
-	    $bb0.tb_${mm}_6 $bb0.b_${mm}_6 \
-	    $bb0.tb_${mm}_7 $bb0.b_${mm}_7 \
-		-padx 2 -pady 2 -sticky w
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    if {[expr (($nn+$mm) <= 9) && !($nn == 0 && $mm == 0)]} {
+		set rr [expr $mm*3 + 2]
+		set cc [expr $nn*2]
+		if {[expr $nn >= 4]} {
+		    incr rr
+		    incr cc -8
+		}
+		if {[expr $nn >= 8]} {
+		    incr rr
+		    incr cc -8
+		}
+		grid configure \
+		    $bb0.tb_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+		incr cc
+		grid configure \
+		    $bb0.b_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+	    }
+	}
     }
 
     grid $ap0.ta $ap0.a -padx 2 -pady 2 -sticky w
-    for {set mm 0} {$mm<8} {incr mm} {
-	grid $ap0.ta_${mm}_0 $ap0.a_${mm}_0 \
-	    $ap0.ta_${mm}_1 $ap0.a_${mm}_1 \
-	    $ap0.ta_${mm}_2 $ap0.a_${mm}_2 \
-	    $ap0.ta_${mm}_3 $ap0.a_${mm}_3 \
-	    -padx 2 -pady 2 -sticky w
-	grid $ap0.ta_${mm}_4 $ap0.a_${mm}_4 \
-	    $ap0.ta_${mm}_5 $ap0.a_${mm}_5 \
-	    $ap0.ta_${mm}_6 $ap0.a_${mm}_6 \
-	    $ap0.ta_${mm}_7 $ap0.a_${mm}_7 \
-		-padx 2 -pady 2 -sticky w
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    if {[expr (($nn+$mm) <= 9) && !($nn == 0 && $mm == 0)]} {
+		set rr [expr $mm*3 + 2]
+		set cc [expr $nn*2]
+		if {[expr $nn >= 4]} {
+		    incr rr
+		    incr cc -8
+		}
+		if {[expr $nn >= 8]} {
+		    incr rr
+		    incr cc -8
+		}
+		grid configure \
+		    $ap0.ta_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+		incr cc
+		grid configure \
+		    $ap0.a_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+	    }
+	}
     }
 
     grid $bp0.tb $bp0.b -padx 2 -pady 2 -sticky w
-    for {set mm 0} {$mm<8} {incr mm} {
-	grid $bp0.tb_${mm}_0 $bp0.b_${mm}_0 \
-	    $bp0.tb_${mm}_1 $bp0.b_${mm}_1 \
-	    $bp0.tb_${mm}_2 $bp0.b_${mm}_2 \
-	    $bp0.tb_${mm}_3 $bp0.b_${mm}_3 \
-	    -padx 2 -pady 2 -sticky w
-	grid $bp0.tb_${mm}_4 $bp0.b_${mm}_4 \
-	    $bp0.tb_${mm}_5 $bp0.b_${mm}_5 \
-	    $bp0.tb_${mm}_6 $bp0.b_${mm}_6 \
-	    $bp0.tb_${mm}_7 $bp0.b_${mm}_7 \
-		-padx 2 -pady 2 -sticky w
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    if {[expr (($nn+$mm) <= 9) && !($nn == 0 && $mm == 0)]} {
+		set rr [expr $mm*3 + 2]
+		set cc [expr $nn*2]
+		if {[expr $nn >= 4]} {
+		    incr rr
+		    incr cc -8
+		}
+		if {[expr $nn >= 8]} {
+		    incr rr
+		    incr cc -8
+		}
+		grid configure \
+		    $bp0.tb_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+		incr cc
+		grid configure \
+		    $bp0.b_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+	    }
+	}
     }
 }
 

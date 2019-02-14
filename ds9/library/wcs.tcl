@@ -188,24 +188,18 @@ proc WCSDialog {} {
     set tt [ttk::notebook $w.param]
     set base [ttk::frame $tt.base]
     set pv00 [ttk::frame $tt.pv00]
-    set pv12 [ttk::frame $tt.pv12]
-    set pv24 [ttk::frame $tt.pv24]
-    set ab0 [ttk::frame $tt.ab0]
-    set ab2 [ttk::frame $tt.ab2]
-    set ab4 [ttk::frame $tt.ab4]
-    set apbp0 [ttk::frame $tt.apbp0]
-    set apbp2 [ttk::frame $tt.apbp2]
-    set apbp4 [ttk::frame $tt.apbp4]
+    set pv18 [ttk::frame $tt.pv18]
+    set aa0 [ttk::frame $tt.aa0]
+    set bb0 [ttk::frame $tt.bb0]
+    set ap0 [ttk::frame $tt.ap0]
+    set bp0 [ttk::frame $tt.bp0]
     $tt add $base -text {Keyword}
     $tt add $pv00 -text {PVi_00}
-    $tt add $pv12 -text {PVi_12}
-    $tt add $pv24 -text {PVi_24}
-    $tt add $ab0 -text {A_0}
-    $tt add $ab2 -text {A_2}
-    $tt add $ab4 -text {A_4}
-    $tt add $apbp0 -text {AP_0}
-    $tt add $apbp2 -text {AP_2}
-    $tt add $apbp4 -text {AP_4}
+    $tt add $pv18 -text {PVi_18}
+    $tt add $aa0 -text {A_p_q}
+    $tt add $bb0 -text {B_p_q}
+    $tt add $ap0 -text {AP_p_q}
+    $tt add $bp0 -text {BP_p_q}
     $tt select $base
 
     ttk::label $base.tmjdobs -text "MJD-OBS"
@@ -243,7 +237,7 @@ proc WCSDialog {} {
 	ttk::entry $base.lonpole${aa} \
 	    -textvariable dwcs(lonpole${aa}) -width 14
 
-	for {set ii 1} {$ii<=3} {incr ii} {
+	for {set ii 1} {$ii<=4} {incr ii} {
 	    ttk::label $base.tctype${ii}${aa} -text "CTYPE${ii}${bb}"
 	    ttk::entry $base.ctype${ii}${aa} \
 		-textvariable dwcs(ctype${ii}${aa}) -width 14
@@ -265,139 +259,84 @@ proc WCSDialog {} {
 		-textvariable dwcs(cdelt${ii}${aa}) -width 14
 	}
 
-	for {set ii 1} {$ii<=2} {incr ii} {
-	    for {set jj 1} {$jj<=2} {incr jj} {
-		ttk::label $base.tcd${ii}_${jj}${aa} -text "CD${ii}_${jj}${bb}"
+	for {set ii 1} {$ii<=4} {incr ii} {
+	    for {set jj 1} {$jj<=4} {incr jj} {
+		ttk::label $base.tcd${ii}_${jj}${aa} \
+		    -text "CD${ii}_${jj}${bb}"
 		ttk::entry $base.cd${ii}_${jj}${aa} \
 		    -textvariable dwcs(cd${ii}_${jj}${aa}) -width 14
-	    }
-	    for {set jj 1} {$jj<=2} {incr jj} {
+
 		ttk::label $base.tpc${ii}_${jj}${aa} \
 		    -text "PC${ii}_${jj}${bb}"
 		ttk::entry $base.pc${ii}_${jj}${aa} \
 		    -textvariable dwcs(pc${ii}_${jj}${aa}) -width 14
 	    }
+	}
 
-	    for {set mm 0} {$mm<12} {incr mm} {
+	for {set ii 1} {$ii<=4} {incr ii} {
+	    for {set mm 0} {$mm<18} {incr mm} {
 		ttk::label $pv00.tpv${ii}_${mm}${aa} \
 		    -text "PV${ii}_${mm}${bb}"
 		ttk::entry $pv00.pv${ii}_${mm}${aa} \
 		    -textvariable dwcs(pv${ii}_${mm}${aa}) -width 14
 	    }
-	    for {set mm 12} {$mm<24} {incr mm} {
-		ttk::label $pv12.tpv${ii}_${mm}${aa} \
+	    for {set mm 18} {$mm<36} {incr mm} {
+		ttk::label $pv18.tpv${ii}_${mm}${aa} \
 		    -text "PV${ii}_${mm}${bb}"
-		ttk::entry $pv12.pv${ii}_${mm}${aa} \
-		    -textvariable dwcs(pv${ii}_${mm}${aa}) -width 14
-	    }
-	    for {set mm 24} {$mm<36} {incr mm} {
-		ttk::label $pv24.tpv${ii}_${mm}${aa} \
-		    -text "PV${ii}_${mm}${bb}"
-		ttk::entry $pv24.pv${ii}_${mm}${aa} \
+		ttk::entry $pv18.pv${ii}_${mm}${aa} \
 		    -textvariable dwcs(pv${ii}_${mm}${aa}) -width 14
 	    }
 	}
-
-	ttk::label $base.tcd3_3${aa} -text "CD3_3${bb}"
-	ttk::entry $base.cd3_3${aa} -textvariable dwcs(cd3_3${aa}) -width 14
-	ttk::label $base.tpc3_3${aa} -text "PC3_3${bb}"
-	ttk::entry $base.pc3_3${aa} -textvariable dwcs(pc3_3${aa}) -width 14
     }
 
     # only in primary
-    ttk::label $ab0.ta -text "A_ORDER"
-    ttk::entry $ab0.a -textvariable dwcs(a_order) -width 14
-    for {set mm 0} {$mm<2} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $ab0.ta_${mm}_${nn} -text "A_${mm}_${nn}"
-	    ttk::entry $ab0.a_${mm}_${nn} \
-		-textvariable dwcs(a_${mm}_${nn}) -width 14
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $ab2.ta_${mm}_${nn} -text "A_${mm}_${nn}"
-	    ttk::entry $ab2.a_${mm}_${nn} \
-		-textvariable dwcs(a_${mm}_${nn}) -width 14
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $ab4.ta_${mm}_${nn} -text "A_${mm}_${nn}"
-	    ttk::entry $ab4.a_${mm}_${nn} \
-		-textvariable dwcs(a_${mm}_${nn}) -width 14
+    ttk::label $aa0.ta -text "A_ORDER"
+    ttk::entry $aa0.a -textvariable dwcs(a_order) -width 14
+    ttk::label $aa0.tx -text "A_DMAX"
+    ttk::entry $aa0.x -textvariable dwcs(a_dmax) -width 14
+
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    if {[expr ($nn+$mm) <= 9]} {
+		ttk::label $aa0.ta_${mm}_${nn} -text "A_${mm}_${nn}"
+		ttk::entry $aa0.a_${mm}_${nn} \
+		    -textvariable dwcs(a_${mm}_${nn}) -width 14
+	    }
 	}
     }
 
-    ttk::label $ab0.tb -text "B_ORDER"
-    ttk::entry $ab0.b -textvariable dwcs(b_order) -width 14
-    for {set mm 0} {$mm<2} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $ab0.tb_${mm}_${nn} -text "B_${mm}_${nn}"
-	    ttk::entry $ab0.b_${mm}_${nn} \
-		-textvariable dwcs(b_${mm}_${nn}) -width 14
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $ab2.tb_${mm}_${nn} -text "B_${mm}_${nn}"
-	    ttk::entry $ab2.b_${mm}_${nn} \
-		-textvariable dwcs(b_${mm}_${nn}) -width 14
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $ab4.tb_${mm}_${nn} -text "B_${mm}_${nn}"
-	    ttk::entry $ab4.b_${mm}_${nn} \
+    ttk::label $bb0.tb -text "B_ORDER"
+    ttk::entry $bb0.b -textvariable dwcs(b_order) -width 14
+    ttk::label $bb0.tx -text "B_DMAX"
+    ttk::entry $bb0.x -textvariable dwcs(b_dmax) -width 14
+
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    ttk::label $bb0.tb_${mm}_${nn} -text "B_${mm}_${nn}"
+	    ttk::entry $bb0.b_${mm}_${nn} \
 		-textvariable dwcs(b_${mm}_${nn}) -width 14
 	}
     }
 
-    ttk::label $apbp0.tap -text "AP_ORDER"
-    ttk::entry $apbp0.ap -textvariable dwcs(ap_order) -width 14
-    for {set mm 0} {$mm<2} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $apbp0.tap_${mm}_${nn} -text "AP_${mm}_${nn}"
-	    ttk::entry $apbp0.ap_${mm}_${nn} \
-		-textvariable dwcs(ap_${mm}_${nn}) -width 14
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $apbp2.tap_${mm}_${nn} -text "AP_${mm}_${nn}"
-	    ttk::entry $apbp2.ap_${mm}_${nn} \
-		-textvariable dwcs(ap_${mm}_${nn}) -width 14
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $apbp4.tap_${mm}_${nn} -text "AP_${mm}_${nn}"
-	    ttk::entry $apbp4.ap_${mm}_${nn} \
-		-textvariable dwcs(ap_${mm}_${nn}) -width 14
+    ttk::label $ap0.ta -text "AP_ORDER"
+    ttk::entry $ap0.a -textvariable dwcs(a_order) -width 14
+
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    ttk::label $ap0.ta_${mm}_${nn} -text "AP_${mm}_${nn}"
+	    ttk::entry $ap0.a_${mm}_${nn} \
+		-textvariable dwcs(a_${mm}_${nn}) -width 14
 	}
     }
 
-    ttk::label $apbp0.tbp -text "BP_ORDER"
-    ttk::entry $apbp0.bp -textvariable dwcs(bp_order) -width 14
-    for {set mm 0} {$mm<2} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $apbp0.tbp_${mm}_${nn} -text "BP_${mm}_${nn}"
-	    ttk::entry $apbp0.bp_${mm}_${nn} \
-		-textvariable dwcs(bp_${mm}_${nn}) -width 14
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $apbp2.tbp_${mm}_${nn} -text "BP_${mm}_${nn}"
-	    ttk::entry $apbp2.bp_${mm}_${nn} \
-		-textvariable dwcs(bp_${mm}_${nn}) -width 14
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    ttk::label $apbp4.tbp_${mm}_${nn} -text "BP_${mm}_${nn}"
-	    ttk::entry $apbp4.bp_${mm}_${nn} \
-		-textvariable dwcs(bp_${mm}_${nn}) -width 14
+    ttk::label $bp0.tb -text "BP_ORDER"
+    ttk::entry $bp0.b -textvariable dwcs(b_order) -width 14
+
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    ttk::label $bp0.tb_${mm}_${nn} -text "BP_${mm}_${nn}"
+	    ttk::entry $bp0.b_${mm}_${nn} \
+		-textvariable dwcs(b_${mm}_${nn}) -width 14
 	}
     }
 
@@ -542,14 +481,11 @@ proc ConfigWCSDialog {{force {0}}} {
     set tt $iwcs(top).param
     set base $tt.base
     set pv00 $tt.pv00
-    set pv12 $tt.pv12
-    set pv24 $tt.pv24
-    set ab0 $tt.ab0
-    set ab2 $tt.ab2
-    set ab4 $tt.ab4
-    set apbp0 $tt.apbp0
-    set apbp2 $tt.apbp2
-    set apbp4 $tt.apbp4
+    set pv18 $tt.pv18
+    set aa0 $tt.aa0
+    set bb0 $tt.bb0
+    set ap0 $tt.ap0
+    set bp0 $tt.bp0
 
     grid forget $base.tmjdobs $base.mjdobs
     grid forget $base.tdateobs $base.dateobs
@@ -565,7 +501,7 @@ proc ConfigWCSDialog {{force {0}}} {
     grid forget $base.tlatpole${aa} $base.latpole${aa}
     grid forget $base.tlonpole${aa} $base.lonpole${aa}
 
-    for {set ii 1} {$ii<=3} {incr ii} {
+    for {set ii 1} {$ii<=4} {incr ii} {
 	grid forget $base.tctype${ii}${aa} $base.ctype${ii}${aa}
 	grid forget $base.tcunit${ii}${aa} $base.cunit${ii}${aa}
 	grid forget $base.tcrpix${ii}${aa} $base.crpix${ii}${aa}
@@ -573,92 +509,52 @@ proc ConfigWCSDialog {{force {0}}} {
 	grid forget $base.tcdelt${ii}${aa} $base.cdelt${ii}${aa}
     }
 
-    for {set ii 1} {$ii<=2} {incr ii} {
-	for {set jj 1} {$jj<=2} {incr jj} {
+    for {set ii 1} {$ii<=4} {incr ii} {
+	for {set jj 1} {$jj<=4} {incr jj} {
 	    grid forget $base.tcd${ii}_${jj}${aa} $base.cd${ii}_${jj}${aa}
 	    grid forget $base.tpc${ii}_${jj}${aa} $base.pc${ii}_${jj}${aa}
 	}
+    }
 
-	for {set mm 0} {$mm<12} {incr mm} {
+    for {set ii 1} {$ii<=4} {incr ii} {
+	for {set mm 0} {$mm<18} {incr mm} {
 	    grid forget $pv00.tpv${ii}_${mm}${aa} $pv00.pv${ii}_${mm}${aa}
 	}
-	for {set mm 12} {$mm<24} {incr mm} {
-	    grid forget $pv12.tpv${ii}_${mm}${aa} $pv12.pv${ii}_${mm}${aa}
-	}
-	for {set mm 24} {$mm<36} {incr mm} {
-	    grid forget $pv24.tpv${ii}_${mm}${aa} $pv24.pv${ii}_${mm}${aa}
+	for {set mm 18} {$mm<36} {incr mm} {
+	    grid forget $pv18.tpv${ii}_${mm}${aa} $pv18.pv${ii}_${mm}${aa}
 	}
     }
-
-    grid forget $base.tcd3_3${aa} $base.cd3_3${aa}
-    grid forget $base.tpc3_3${aa} $base.pc3_3${aa}
 
     # only in primary
-    grid forget $ab0.ta $ab0.a
-    for {set mm 0} {$mm<2} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $ab0.ta_${mm}_${nn} $ab0.a_${mm}_${nn}
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $ab2.ta_${mm}_${nn} $ab2.a_${mm}_${nn}
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $ab4.ta_${mm}_${nn} $ab4.a_${mm}_${nn}
+    grid forget $aa0.ta $aa0.a
+    grid forget $aa0.tx $aa0.x
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    if {[expr ($nn+$mm) <= 9]} {
+		grid forget $aa0.ta_${mm}_${nn} $aa0.a_${mm}_${nn}
+	    }
 	}
     }
 
-    grid forget $ab0.tb $ab0.b
-    for {set mm 0} {$mm<2} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $ab0.tb_${mm}_${nn} $ab0.b_${mm}_${nn}
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $ab2.tb_${mm}_${nn} $ab2.b_${mm}_${nn}
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $ab4.tb_${mm}_${nn} $ab4.b_${mm}_${nn}
+    grid forget $bb0.tb $bb0.b
+    grid forget $bb0.tx $bb0.x
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    grid forget $bb0.tb_${mm}_${nn} $bb0.b_${mm}_${nn}
 	}
     }
 
-    grid forget $apbp0.tap $apbp0.ap
-    for {set mm 0} {$mm<2} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $apbp0.tap_${mm}_${nn} $apbp0.ap_${mm}_${nn}
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $apbp2.tap_${mm}_${nn} $apbp2.ap_${mm}_${nn}
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $apbp4.tap_${mm}_${nn} $apbp4.ap_${mm}_${nn}
+    grid forget $ap0.ta $ap0.a
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    grid forget $ap0.ta_${mm}_${nn} $ap0.a_${mm}_${nn}
 	}
     }
 
-    grid forget $apbp0.tbp $apbp0.bp
-    for {set mm 0} {$mm<2} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $apbp0.tbp_${mm}_${nn} $apbp0.bp_${mm}_${nn}
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $apbp2.tbp_${mm}_${nn} $apbp2.bp_${mm}_${nn}
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid forget $apbp4.tbp_${mm}_${nn} $apbp4.bp_${mm}_${nn}
+    grid forget $bp0.tb $bp0.b
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    grid forget $bp0.tb_${mm}_${nn} $bp0.b_${mm}_${nn}
 	}
     }
 
@@ -679,103 +575,187 @@ proc ConfigWCSDialog {{force {0}}} {
     grid $base.tctype1${aa} $base.ctype1${aa} \
 	$base.tctype2${aa} $base.ctype2${aa} \
 	$base.tctype3${aa} $base.ctype3${aa} \
+	$base.tctype4${aa} $base.ctype4${aa} \
 	-padx 2 -pady 2 -sticky w
     grid $base.tcrpix1${aa} $base.crpix1${aa} \
 	$base.tcrpix2${aa} $base.crpix2${aa} \
 	$base.tcrpix3${aa} $base.crpix3${aa} \
+	$base.tcrpix4${aa} $base.crpix4${aa} \
 	-padx 2 -pady 2 -sticky w
     grid $base.tcrval1${aa} $base.crval1${aa} \
 	$base.tcrval2${aa} $base.crval2${aa} \
 	$base.tcrval3${aa} $base.crval3${aa} \
+	$base.tcrval4${aa} $base.crval4${aa} \
 	-padx 2 -pady 2 -sticky w
     grid $base.tcunit1${aa} $base.cunit1${aa} \
 	$base.tcunit2${aa} $base.cunit2${aa} \
 	$base.tcunit3${aa} $base.cunit3${aa} \
+	$base.tcunit4${aa} $base.cunit4${aa} \
 	-padx 2 -pady 2 -sticky w
     grid $base.tcdelt1${aa} $base.cdelt1${aa} \
 	$base.tcdelt2${aa} $base.cdelt2${aa} \
 	$base.tcdelt3${aa} $base.cdelt3${aa} \
+	$base.tcdelt4${aa} $base.cdelt4${aa} \
 	-padx 2 -pady 2 -sticky w
 
     grid $base.tcd1_1${aa} $base.cd1_1${aa} \
 	$base.tcd2_1${aa} $base.cd2_1${aa} \
+	$base.tcd3_1${aa} $base.cd3_1${aa} \
+	$base.tcd4_1${aa} $base.cd4_1${aa} \
 	-padx 2 -pady 2 -sticky w
     grid $base.tcd1_2${aa} $base.cd1_2${aa} \
 	$base.tcd2_2${aa} $base.cd2_2${aa} \
+	$base.tcd3_2${aa} $base.cd3_2${aa} \
+	$base.tcd4_2${aa} $base.cd4_2${aa} \
+	-padx 2 -pady 2 -sticky w
+    grid $base.tcd1_3${aa} $base.cd1_3${aa} \
+	$base.tcd2_3${aa} $base.cd2_3${aa} \
 	$base.tcd3_3${aa} $base.cd3_3${aa} \
+	$base.tcd4_3${aa} $base.cd4_3${aa} \
+	-padx 2 -pady 2 -sticky w
+    grid $base.tcd1_4${aa} $base.cd1_4${aa} \
+	$base.tcd2_4${aa} $base.cd2_4${aa} \
+	$base.tcd3_4${aa} $base.cd3_4${aa} \
+	$base.tcd4_4${aa} $base.cd4_4${aa} \
 	-padx 2 -pady 2 -sticky w
 
     grid $base.tpc1_1${aa} $base.pc1_1${aa} \
 	$base.tpc2_1${aa} $base.pc2_1${aa} \
+	$base.tpc3_1${aa} $base.pc3_1${aa} \
+	$base.tpc4_1${aa} $base.pc4_1${aa} \
 	-padx 2 -pady 2 -sticky w
     grid $base.tpc1_2${aa} $base.pc1_2${aa} \
 	$base.tpc2_2${aa} $base.pc2_2${aa} \
+	$base.tpc3_2${aa} $base.pc3_2${aa} \
+	$base.tpc4_2${aa} $base.pc4_2${aa} \
+	-padx 2 -pady 2 -sticky w
+    grid $base.tpc1_3${aa} $base.pc1_3${aa} \
+	$base.tpc2_3${aa} $base.pc2_3${aa} \
 	$base.tpc3_3${aa} $base.pc3_3${aa} \
+	$base.tpc4_3${aa} $base.pc4_3${aa} \
+	-padx 2 -pady 2 -sticky w
+    grid $base.tpc1_4${aa} $base.pc1_4${aa} \
+	$base.tpc2_4${aa} $base.pc2_4${aa} \
+	$base.tpc3_4${aa} $base.pc3_4${aa} \
+	$base.tpc4_4${aa} $base.pc4_4${aa} \
 	-padx 2 -pady 2 -sticky w
 
     grid $base.tlatpole${aa} $base.latpole${aa} \
 	$base.tlonpole${aa} $base.lonpole${aa} -padx 2 -pady 2 -sticky w
 
-    for {set mm 0} {$mm<12} {incr mm} {
+    for {set mm 0} {$mm<18} {incr mm} {
 	grid $pv00.tpv1_${mm}${aa} $pv00.pv1_${mm}${aa} \
 	    $pv00.tpv2_${mm}${aa} $pv00.pv2_${mm}${aa} \
+	    $pv00.tpv3_${mm}${aa} $pv00.pv3_${mm}${aa} \
+	    $pv00.tpv4_${mm}${aa} $pv00.pv4_${mm}${aa} \
 	    -padx 2 -pady 2 -sticky w
     }
-    for {set mm 12} {$mm<24} {incr mm} {
-	grid $pv12.tpv1_${mm}${aa} $pv12.pv1_${mm}${aa} \
-	    $pv12.tpv2_${mm}${aa} $pv12.pv2_${mm}${aa} \
-	    -padx 2 -pady 2 -sticky w
-    }
-    for {set mm 24} {$mm<36} {incr mm} {
-	grid $pv24.tpv1_${mm}${aa} $pv24.pv1_${mm}${aa} \
-	    $pv24.tpv2_${mm}${aa} $pv24.pv2_${mm}${aa} \
+    for {set mm 18} {$mm<36} {incr mm} {
+	grid $pv18.tpv1_${mm}${aa} $pv18.pv1_${mm}${aa} \
+	    $pv18.tpv2_${mm}${aa} $pv18.pv2_${mm}${aa} \
+	    $pv18.tpv3_${mm}${aa} $pv18.pv3_${mm}${aa} \
+	    $pv18.tpv4_${mm}${aa} $pv18.pv4_${mm}${aa} \
 	    -padx 2 -pady 2 -sticky w
     }
 
     # only in primary
-    grid $ab0.ta $ab0.a $ab0.tb $ab0.b -padx 2 -pady 2 -sticky w
-    for {set mm 0} {$mm<2} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid $ab0.ta_${mm}_${nn} $ab0.a_${mm}_${nn} \
-		$ab0.tb_${mm}_${nn} $ab0.b_${mm}_${nn} \
-		-padx 2 -pady 2 -sticky w
-	}
-    }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid $ab2.ta_${mm}_${nn} $ab2.a_${mm}_${nn} \
-		$ab2.tb_${mm}_${nn} $ab2.b_${mm}_${nn} \
-		-padx 2 -pady 2 -sticky w
-	}
-    }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid $ab4.ta_${mm}_${nn} $ab4.a_${mm}_${nn} \
-		$ab4.tb_${mm}_${nn} $ab4.b_${mm}_${nn} \
-		-padx 2 -pady 2 -sticky w
+    grid $aa0.ta $aa0.a $aa0.tx $aa0.x -padx 2 -pady 2 -sticky w
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    if {[expr (($nn+$mm) <= 9) && !($nn == 0 && $mm == 0)]} {
+		set rr [expr $mm*3 + 2]
+		set cc [expr $nn*2]
+		if {[expr $nn >= 4]} {
+		    incr rr
+		    incr cc -8
+		}
+		if {[expr $nn >= 8]} {
+		    incr rr
+		    incr cc -8
+		}
+		grid configure \
+		    $aa0.ta_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+		incr cc
+		grid configure \
+		    $aa0.a_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+	    }
 	}
     }
 
-    grid $apbp0.tap $apbp0.ap $apbp0.tbp $apbp0.bp -padx 2 -pady 2 -sticky w
-    for {set mm 0} {$mm<2} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid $apbp0.tap_${mm}_${nn} $apbp0.ap_${mm}_${nn} \
-		$apbp0.tbp_${mm}_${nn} $apbp0.bp_${mm}_${nn} \
-		-padx 2 -pady 2 -sticky w
+    grid $bb0.tb $bb0.b $bb0.tx $bb0.x -padx 2 -pady 2 -sticky w
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    if {[expr (($nn+$mm) <= 9) && !($nn == 0 && $mm == 0)]} {
+		set rr [expr $mm*3 + 2]
+		set cc [expr $nn*2]
+		if {[expr $nn >= 4]} {
+		    incr rr
+		    incr cc -8
+		}
+		if {[expr $nn >= 8]} {
+		    incr rr
+		    incr cc -8
+		}
+		grid configure \
+		    $bb0.tb_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+		incr cc
+		grid configure \
+		    $bb0.b_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+	    }
 	}
     }
-    for {set mm 2} {$mm<4} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid $apbp2.tap_${mm}_${nn} $apbp2.ap_${mm}_${nn} \
-		$apbp2.tbp_${mm}_${nn} $apbp2.bp_${mm}_${nn} \
-		-padx 2 -pady 2 -sticky w
+
+    grid $ap0.ta $ap0.a -padx 2 -pady 2 -sticky w
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    if {[expr (($nn+$mm) <= 9) && !($nn == 0 && $mm == 0)]} {
+		set rr [expr $mm*3 + 2]
+		set cc [expr $nn*2]
+		if {[expr $nn >= 4]} {
+		    incr rr
+		    incr cc -8
+		}
+		if {[expr $nn >= 8]} {
+		    incr rr
+		    incr cc -8
+		}
+		grid configure \
+		    $ap0.ta_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+		incr cc
+		grid configure \
+		    $ap0.a_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+	    }
 	}
     }
-    for {set mm 4} {$mm<6} {incr mm} {
-	for {set nn 0} {$nn<6} {incr nn} {
-	    grid $apbp4.tap_${mm}_${nn} $apbp4.ap_${mm}_${nn} \
-		$apbp4.tbp_${mm}_${nn} $apbp4.bp_${mm}_${nn} \
-		-padx 2 -pady 2 -sticky w
+
+    grid $bp0.tb $bp0.b -padx 2 -pady 2 -sticky w
+    for {set mm 0} {$mm<=9} {incr mm} {
+	for {set nn 0} {$nn<=9} {incr nn} {
+	    if {[expr (($nn+$mm) <= 9) && !($nn == 0 && $mm == 0)]} {
+		set rr [expr $mm*3 + 2]
+		set cc [expr $nn*2]
+		if {[expr $nn >= 4]} {
+		    incr rr
+		    incr cc -8
+		}
+		if {[expr $nn >= 8]} {
+		    incr rr
+		    incr cc -8
+		}
+		grid configure \
+		    $bp0.tb_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+		incr cc
+		grid configure \
+		    $bp0.b_${mm}_${nn} \
+		    -row $rr -column $cc -padx 2 -pady 2 -sticky w
+	    }
 	}
     }
 }
@@ -834,7 +814,7 @@ proc WCSToVar {txt} {
 	set dwcs(latpole${aa}) {}
 	set dwcs(lonpole${aa}) {}
 
-	for {set ii 1} {$ii<=3} {incr ii} {
+	for {set ii 1} {$ii<=4} {incr ii} {
 	    set dwcs(ctype${ii}${aa}) {}
 	    set dwcs(cunit${ii}${aa}) {}
 	    set dwcs(crpix${ii}${aa}) {}
@@ -842,29 +822,30 @@ proc WCSToVar {txt} {
 	    set dwcs(cdelt${ii}${aa}) {}
 	}
 
-	for {set ii 1} {$ii<=2} {incr ii} {
-	    for {set jj 1} {$jj<=2} {incr jj} {
+	for {set ii 1} {$ii<=4} {incr ii} {
+	    for {set jj 1} {$jj<=4} {incr jj} {
 		set dwcs(cd${ii}_${jj}${aa}) {}
 		set dwcs(pc${ii}_${jj}${aa}) {}
 	    }
+	}
 
+	for {set ii 1} {$ii<=4} {incr ii} {
 	    for {set mm 0} {$mm<36} {incr mm} {
 		set dwcs(pv${ii}_${mm}${aa}) {}
 	    }
 	}
-
-	set dwcs(cd3_3${aa}) {}
-	set dwcs(pc3_3${aa}) {}
     }
     
     # primary only
     set dwcs(a_order) {}
+    set dwcs(a_dmax) {}
     for {set mm 0} {$mm<6} {incr mm} {
 	for {set nn 0} {$nn<6} {incr nn} {
 	    set dwcs(a_${mm}_${nn}) {}
 	}
     }
     set dwcs(b_order) {}
+    set dwcs(b_dmax) {}
     for {set mm 0} {$mm<6} {incr mm} {
 	for {set nn 0} {$nn<6} {incr nn} {
 	    set dwcs(b_${mm}_${nn}) {}
@@ -932,6 +913,11 @@ proc WCSToVar {txt} {
 	if {$key == {radecsys}} {
 	    set key radesys
 	}
+	
+	# fix for PC00_00
+	if {[regexp {pc0([1-9])_0([1-9])} $key dummy aa bb]} {
+	    set key pc${aa}_${bb}
+	}
 
 	switch [string range $key 0 6] {
 	    mjd-obs -
@@ -945,27 +931,21 @@ proc WCSToVar {txt} {
 	    equino -
 	    latpol -
 	    lonpol -
-	    ctype1 -
-	    ctype2 -
-	    ctype3 -
-	    cunit1 -
-	    cunit2 -
-	    cunit3 -
-	    crpix1 -
-	    crpix2 -
-	    crpix3 -
-	    crval1 -
-	    crval2 -
-	    crval3 -
-	    cdelt1 -
-	    cdelt2 -
-	    cdelt3 -
-	    cd3_3 -
-	    pc3_3 -
 	    a_orde -
+	    a_dmax -
 	    b_orde -
+	    b_dmax -
 	    ap_ord -
 	    bp_ord {
+		set dwcs($key) $val
+	    }
+	}
+	switch [string range $key 0 4] {
+	    ctype -
+	    cunit -
+	    crpix -
+	    crval -
+	    cdelt {
 		set dwcs($key) $val
 	    }
 	}
@@ -973,15 +953,17 @@ proc WCSToVar {txt} {
 	    epoc -
 	    date -
 	    cd1_ -
-	    cd1_ -
 	    cd2_ -
-	    cd2_ -
-	    pc1_ -
+	    cd3_ -
+	    cd4_ -
 	    pc1_ -
 	    pc2_ -
-	    pc2_ -
+	    pc3_ -
+	    pc4_ -
 	    pv1_ -
-	    pv2_ {
+	    pv2_ -
+	    pv3_ -
+	    pv4_ {
 		set dwcs($key) $val
 	    }
 	}
@@ -1040,7 +1022,7 @@ proc WCSFromVar {} {
 	    append rr "LONPOLE${bb} = $dwcs(lonpole${aa})\n"
 	}
 
-	for {set ii 1} {$ii<=3} {incr ii} {
+	for {set ii 1} {$ii<=4} {incr ii} {
 	    if {$dwcs(ctype${ii}${aa}) != {}} {
 		append rr "CTYPE${ii}${bb} = '$dwcs(ctype${ii}${aa})'\n"
 	    }
@@ -1058,8 +1040,8 @@ proc WCSFromVar {} {
 	    }
 	}
 
-	for {set ii 1} {$ii<=2} {incr ii} {
-	    for {set jj 1} {$jj<=2} {incr jj} {
+	for {set ii 1} {$ii<=4} {incr ii} {
+	    for {set jj 1} {$jj<=4} {incr jj} {
 		if {$dwcs(cd${ii}_${jj}${aa}) != {}} {
 		    append rr "CD${ii}_${jj}${bb} = $dwcs(cd${ii}_${jj}${aa})\n"
 		}
@@ -1067,24 +1049,22 @@ proc WCSFromVar {} {
 		    append rr "PC${ii}_${jj}${bb} = $dwcs(pc${ii}_${jj}${aa})\n"
 		}
 	    }
+	}
 
+	for {set ii 1} {$ii<=4} {incr ii} {
 	    for {set mm 0} {$mm<36} {incr mm} {
 		if {$dwcs(pv${ii}_${mm}${aa}) != {}} {
 		    append rr "PV${ii}_${mm}${bb} = $dwcs(pv${ii}_${mm}${aa})\n"
 		}
 	    }
 	}
-
-	if {$dwcs(cd3_3${aa}) != {}} {
-	    append rr "CD3_3${bb} = $dwcs(cd3_3${aa})\n"
-	}
-	if {$dwcs(pc3_3${aa}) != {}} {
-	    append rr "PC3_3${bb} = $dwcs(pc3_3${aa})\n"
-	}
     }
 
     if {$dwcs(a_order) != {}} {
 	append rr "A_ORDER = $dwcs(a_order)\n"
+    }
+    if {$dwcs(a_dmax) != {}} {
+	append rr "A_DMAX = $dwcs(a_dmax)\n"
     }
     for {set mm 0} {$mm<6} {incr mm} {
 	for {set nn 0} {$nn<6} {incr nn} {
@@ -1093,8 +1073,12 @@ proc WCSFromVar {} {
 	    }
 	}
     }
+
     if {$dwcs(b_order) != {}} {
 	append rr "B_ORDER = $dwcs(b_order)\n"
+    }
+    if {$dwcs(b_dmax) != {}} {
+	append rr "B_DMAX = $dwcs(b_dmax)\n"
     }
     for {set mm 0} {$mm<6} {incr mm} {
 	for {set nn 0} {$nn<6} {incr nn} {

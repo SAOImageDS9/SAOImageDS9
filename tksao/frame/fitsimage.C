@@ -1065,7 +1065,8 @@ void FitsImage::initWCS(FitsHead* hd)
     if (ast_)
       astAnnul(ast_);
     ast_ =NULL;
-    if (encoding_)
+
+   if (encoding_)
       delete [] encoding_;
     encoding_ =NULL;
 
@@ -1146,9 +1147,12 @@ void FitsImage::initWCS(FitsHead* hd)
   encoding_ =NULL;
   
   ast_ = fits2ast(hd);
-  if (!ast_)
+  if (!ast_) {
+    // reset to process LTMV keywords
+    keyLTMV =0;
     return;
-
+  }
+  
   // special case
   if (astGetI(ast_,"Naxes") == 2 &&
       astIsASkyFrame(astGetFrame(ast_,AST__CURRENT)) &&

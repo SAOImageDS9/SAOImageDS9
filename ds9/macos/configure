@@ -670,6 +670,14 @@ tksao_LIB_FILE
 tksao_SRC_DIR
 tksao_BIN_DIR
 tksao_VERSION
+tkagif_STUB_LIB_PATH
+tkagif_STUB_LIB_SPEC
+tkagif_STUB_LIB_FILE
+tkagif_LIB_SPEC
+tkagif_LIB_FILE
+tkagif_SRC_DIR
+tkagif_BIN_DIR
+tkagif_VERSION
 tkmpeg_STUB_LIB_PATH
 tkmpeg_STUB_LIB_SPEC
 tkmpeg_STUB_LIB_FILE
@@ -925,6 +933,7 @@ with_tkimgtiff
 with_tkimgwindow
 with_tkmacosx
 with_tkmpeg
+with_tkagif
 with_tksao
 with_tktable
 with_tclinclude
@@ -1597,6 +1606,7 @@ Optional Packages:
   --with-tkimgwindow              directory containing tkimgwindow configuration (tkimgwindowConfig.sh)
   --with-tkmacosx              directory containing tkmacosx configuration (tkmacosxConfig.sh)
   --with-tkmpeg              directory containing tkmpeg configuration (tkmpegConfig.sh)
+  --with-tkagif              directory containing tkagif configuration (tkagifConfig.sh)
   --with-tksao              directory containing tksao configuration (tksaoConfig.sh)
   --with-tktable              directory containing tktable configuration (tktableConfig.sh)
   --with-tclinclude       directory containing the public Tcl header files
@@ -8339,6 +8349,255 @@ $as_echo "using tkmpeg_STUB_LIB_PATH ${tkmpeg_STUB_LIB_PATH}" >&6; }
 
 	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkmpeg_STUB_LIB_SPEC ${tkmpeg_STUB_LIB_SPEC}" >&5
 $as_echo "using tkmpeg_STUB_LIB_SPEC ${tkmpeg_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+fi
+
+fi
+
+
+
+    #
+    # Ok, lets find the tkagif configuration
+    # First, look for one uninstalled.
+    # the alternative search directory is invoked by --with-tkagif
+    #
+
+    if test x"${no_tkagif}" = x ; then
+	# we reset no_tkagif in case something fails here
+	no_tkagif=true
+
+# Check whether --with-tkagif was given.
+if test "${with_tkagif+set}" = set; then :
+  withval=$with_tkagif; with_tkagifconfig=${withval}
+fi
+
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for tkagif configuration" >&5
+$as_echo_n "checking for tkagif configuration... " >&6; }
+	if ${ac_cv_c_tkagifconfig+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+	    # First check to see if --with-tkagif was specified.
+	    if test x"${with_tkagifconfig}" != x ; then
+		case ${with_tkagifconfig} in
+		    */tkagifConfig.sh )
+			if test -f ${with_tkagifconfig}; then
+			    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: --with-tkagif argument should refer to directory containing tkagifConfig.sh, not to tkagifConfig.sh itself" >&5
+$as_echo "$as_me: WARNING: --with-tkagif argument should refer to directory containing tkagifConfig.sh, not to tkagifConfig.sh itself" >&2;}
+			    with_tkagifconfig=`echo ${with_tkagifconfig} | sed 's!/tkagifConfig\.sh$!!'`
+			fi;;
+		esac
+		if test -f "${with_tkagifconfig}/tkagifConfig.sh" ; then
+		    ac_cv_c_tkagifconfig=`(cd ${with_tkagifconfig}; pwd)`
+		else
+		    as_fn_error $? "${with_tkagifconfig} directory doesn't contain tkagifConfig.sh" "$LINENO" 5
+		fi
+	    fi
+
+	    # then check for a private tkagif installation
+	    if test x"${ac_cv_c_tkagifconfig}" = x ; then
+		for i in \
+			../tkagif \
+			`ls -dr ../tkagif*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../tkagif*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../tkagif*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../tkagif*[0-9].[0-9]* 2>/dev/null` \
+			../../tkagif \
+			`ls -dr ../../tkagif*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../tkagif*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../tkagif*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../tkagif*[0-9].[0-9]* 2>/dev/null` \
+			../../../tkagif \
+			`ls -dr ../../../tkagif*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ../../../tkagif*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ../../../tkagif*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ../../../tkagif*[0-9].[0-9]* 2>/dev/null` \
+			${srcdir}/../tkagif \
+			`ls -dr ${srcdir}/../tkagif*[0-9].[0-9]*.[0-9]* 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkagif*[0-9].[0-9][0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkagif*[0-9].[0-9] 2>/dev/null` \
+			`ls -dr ${srcdir}/../tkagif*[0-9].[0-9]* 2>/dev/null` \
+			; do
+		    if test -f "$i/tkagifConfig.sh" ; then
+			ac_cv_c_tkagifconfig=`(cd $i; pwd)`
+			break
+		    fi
+		    if test -f "$i/unix/tkagifConfig.sh" ; then
+			ac_cv_c_tkagifconfig=`(cd $i/unix; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+	    # check in a few common install locations
+	    if test x"${ac_cv_c_tkagifconfig}" = x ; then
+		for i in `ls -d ${libdir} 2>/dev/null` \
+			`ls -d ${exec_prefix}/lib 2>/dev/null` \
+			`ls -d ${prefix}/lib 2>/dev/null` \
+			`ls -d /usr/local/lib 2>/dev/null` \
+			`ls -d /usr/contrib/lib 2>/dev/null` \
+			`ls -d /usr/pkg/lib 2>/dev/null` \
+			`ls -d /usr/lib 2>/dev/null` \
+			`ls -d /usr/lib64 2>/dev/null` \
+			; do
+		    if test -f "$i/tkagifConfig.sh" ; then
+			ac_cv_c_tkagifconfig=`(cd $i; pwd)`
+			break
+		    fi
+		done
+	    fi
+
+fi
+
+
+	if test x"${ac_cv_c_tkagifconfig}" = x ; then
+	    tkagif_BIN_DIR="# no tkagif configs found"
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Cannot find tkagif configuration definitions" >&5
+$as_echo "$as_me: WARNING: Cannot find tkagif configuration definitions" >&2;}
+	    exit 0
+	else
+	    no_tkagif=
+	    tkagif_BIN_DIR=${ac_cv_c_tkagifconfig}
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: found $tkagif_BIN_DIR/tkagifConfig.sh" >&5
+$as_echo "found $tkagif_BIN_DIR/tkagifConfig.sh" >&6; }
+	fi
+    fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for existence of ${tkagif_BIN_DIR}/tkagifConfig.sh" >&5
+$as_echo_n "checking for existence of ${tkagif_BIN_DIR}/tkagifConfig.sh... " >&6; }
+
+    if test -f "${tkagif_BIN_DIR}/tkagifConfig.sh" ; then
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: loading" >&5
+$as_echo "loading" >&6; }
+	. "${tkagif_BIN_DIR}/tkagifConfig.sh"
+    else
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+    #
+    # If the tkagif_BIN_DIR is the build directory (not the install directory),
+    # then set the common variable name to the value of the build variables.
+    # For example, the variable tkagif_LIB_SPEC will be set to the value
+    # of tkagif_BUILD_LIB_SPEC. An extension should make use of tkagif_LIB_SPEC
+    # instead of tkagif_BUILD_LIB_SPEC since it will work with both an
+    # installed and uninstalled version of Tcl.
+    #
+
+    if test -f "${tkagif_BIN_DIR}/Makefile" ; then
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Found Makefile - using build library specs for tkagif" >&5
+$as_echo "$as_me: WARNING: Found Makefile - using build library specs for tkagif" >&2;}
+        tkagif_LIB_SPEC=${tkagif_BUILD_LIB_SPEC}
+        tkagif_STUB_LIB_SPEC=${tkagif_BUILD_STUB_LIB_SPEC}
+        tkagif_STUB_LIB_PATH=${tkagif_BUILD_STUB_LIB_PATH}
+        tkagif_INCLUDE_SPEC=${tkagif_BUILD_INCLUDE_SPEC}
+        tkagif_LIBRARY_PATH=${tkagif_LIBRARY_PATH}
+    fi
+
+
+
+
+
+
+
+
+
+
+
+
+    # Allow the caller to prevent this auto-check by specifying any 2nd arg
+    if test "x" = x; then :
+
+	# Check both upper and lower-case variants
+	# If a dev wanted non-stubs libs, this function could take an option
+	# to not use _STUB in the paths below
+	if test "x${tkagif_STUB_LIB_SPEC}" = x; then :
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For TKAGIF_STUB library for LIBS" >&5
+$as_echo_n "checking For TKAGIF_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${TKAGIF_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${TKAGIF_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKAGIF_STUB_LIB_PATH ${TKAGIF_STUB_LIB_PATH}" >&5
+$as_echo "using TKAGIF_STUB_LIB_PATH ${TKAGIF_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${TKAGIF_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using TKAGIF_STUB_LIB_SPEC ${TKAGIF_STUB_LIB_SPEC}" >&5
+$as_echo "using TKAGIF_STUB_LIB_SPEC ${TKAGIF_STUB_LIB_SPEC}" >&6; }
+	fi
+    else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5
+$as_echo "file not found" >&6; }
+    fi
+
+else
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking For tkagif_STUB library for LIBS" >&5
+$as_echo_n "checking For tkagif_STUB library for LIBS... " >&6; }
+    # This simplifies the use of stub libraries by automatically adding
+    # the stub lib to your path.  Normally this would add to SHLIB_LD_LIBS,
+    # but this is called before CONFIG_CFLAGS.  More importantly, this adds
+    # to PKG_LIBS, which becomes LIBS, and that is only used by SHLIB_LD.
+    if test "x${tkagif_STUB_LIB_SPEC}" != "x" ; then
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" != "yes" ; then
+
+    vars="\"`${CYGPATH} ${tkagif_STUB_LIB_PATH}`\""
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkagif_STUB_LIB_PATH ${tkagif_STUB_LIB_PATH}" >&5
+$as_echo "using tkagif_STUB_LIB_PATH ${tkagif_STUB_LIB_PATH}" >&6; }
+	else
+
+    vars="${tkagif_STUB_LIB_SPEC}"
+    for i in $vars; do
+	if test "${TEA_PLATFORM}" = "windows" -a "$GCC" = "yes" ; then
+	    # Convert foo.lib to -lfoo for GCC.  No-op if not *.lib
+	    i=`echo "$i" | sed -e 's/^\([^-].*\)\.lib$/-l\1/i'`
+	fi
+	PKG_LIBS="$PKG_LIBS $i"
+    done
+
+
+	    { $as_echo "$as_me:${as_lineno-$LINENO}: result: using tkagif_STUB_LIB_SPEC ${tkagif_STUB_LIB_SPEC}" >&5
+$as_echo "using tkagif_STUB_LIB_SPEC ${tkagif_STUB_LIB_SPEC}" >&6; }
 	fi
     else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: file not found" >&5

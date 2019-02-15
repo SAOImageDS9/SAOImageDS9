@@ -11,6 +11,7 @@
 # tkhtml1 1.0
 # tkimg 1.4.7
 # tkmpeg 1.0
+# tkagif 1.0
 # tktable 2.10
 
 # ast 8.6.2
@@ -52,7 +53,7 @@ TKIMGTMPFILES = \
 
 .NOTPARALLEL :
 .PHONY	: all dirs ds9 tcliis tclxml tclzipfs tls xpa
-.PHONY	: tkblt tkcon tkhtml1 tkimg tkmpeg tksao tktable
+.PHONY	: tkblt tkcon tkhtml1 tkimg tkmpeg tkagif tksao tktable
 .PHONY	: ast funtools
 
 all	: saods9
@@ -257,6 +258,23 @@ tkmpeg/Makefile :
 	$(STD) \
 	$(CACHE)
 
+#-------------------------- tkagif
+
+tkagif	: tkagif/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tkagif -j $(JOBS) install
+
+tkagif/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd tkagif; \
+	./configure \
+	$(WITHTK) \
+	$(PREFIX) \
+	$(STD) \
+	$(CACHE)
+
 #-------------------------- tksao
 
 tksao	: ast funtools tksao/Makefile
@@ -402,13 +420,14 @@ scrub :
 .PHONY	: tcliisclean
 .PHONY	: tclxmlclean tlsclean
 .PHONY	: tkbltclean tkconclean tkhtml1clean tkimgclean
-.PHONY	: tkmpegclean tksaoclean astclean funtoolsclean tktableclean xpaclean
+.PHONY	: tkmpegclean tkagifclean
+.PHONY	: tksaoclean astclean funtoolsclean tktableclean xpaclean
 
 clean	: tclclean tkclean \
 	tcliisclean \
 	tlsclean tclxmlclean xpaclean \
 	tkbltclean tkconclean tktableclean tkimgclean \
-	tkmpegclean tkhtml1clean \
+	tkmpegclean tkagifclean tkhtml1clean \
 	tksaoclean astclean funtoolsclean ds9clean \
 	osclean dirsclean localclean scrub
 
@@ -472,6 +491,11 @@ tkmpegclean:
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmpeg clean
 
+tkagifclean:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tkagif clean
+
 tksaoclean :
 	@echo ""
 	@echo "*** $@ ***"
@@ -503,7 +527,7 @@ xpaclean :
 .PHONY	: tcliisdistclean
 .PHONY	: tclxmldistclean tlsdistclean
 .PHONY	: tkbltdistclean tkcondistclean tkhtml1distclean 
-.PHONY	: tkimgdistclean tkmpegdistclean 
+.PHONY	: tkimgdistclean tkmpegdistclean tkagifdistclean 
 .PHONY	: tksaodistclean astdistclean funtoolsdistclean
 .PHONY	: tktabledistclean xpadistclean
 
@@ -511,7 +535,7 @@ distclean : tcldistclean tkdistclean \
 	tcliisdistclean tclsignaldistclean \
 	tlsdistclean tclxmldistclean xpadistclean \
 	tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
-	tkmpegdistclean tkhtml1distclean \
+	tkmpegdistclean tkagifdistclean tkhtml1distclean \
 	tksaodistclean astdistclean funtoolsdistclean ds9distclean \
 	osdistclean dirsdistclean localdistclean scrub
 
@@ -579,6 +603,12 @@ tkmpegdistclean:
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmpeg distclean
 	rm -f tkmpeg/tkmpegConfig.sh
+
+tkagifdistclean:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tkagif distclean
+	rm -f tkagif/tkagifConfig.sh
 
 tksaodistclean :
 	@echo ""

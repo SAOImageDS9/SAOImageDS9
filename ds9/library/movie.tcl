@@ -347,13 +347,20 @@ proc MoviePhotoGIF {} {
 proc MoviePhotoGIFClose {} {
     global movie
     
-    set ch [open $movie(fn) w]
-    fconfigure $ch -encoding binary -translation binary
-
-    close $ch
+    set ph [lindex $movie(gif) 0]
+    set ww [image width $ph]
+    set hh [image height $ph]
+    agif create "$movie(fn)" $ww $hh
     foreach ph $movie(gif) {
+	agif color $ph
+    }
+
+    foreach ph $movie(gif) {
+	agif add $ph
 	image delete $ph
     }
+
+    agif close
 }
 
 proc Movie3dDialog {} {

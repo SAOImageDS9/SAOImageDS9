@@ -13,6 +13,8 @@
 %token ELFROM_
 %token ELTO_
 %token FRAME_
+%token GIF_
+%token MPEG_
 %token NUMBER_
 %token OSCILLATE_
 %token REPEAT_
@@ -28,11 +30,23 @@ command : movie
  | movie {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-movie : STRING_ {ProcessCmdSet movie action frame; Movie $1}
- | FRAME_ STRING_ {ProcessCmdSet movie action frame; Movie $2}
- | SLICE_ STRING_ {ProcessCmdSet movie action slice; Movie $2}
- | 3D_ STRING_ {ProcessCmdSet movie action 3d; Movie $2}
- | 3D_ STRING_ opts {ProcessCmdSet movie action 3d; Movie $2}
+movie : STRING_ {ProcessCmdSet2 movie action slice type mpeg; MovieCreate $1}
+ | action STRING_ {ProcessCmdSet2 movie action $1 type mpeg; MovieCreate $2}
+ | type STRING_ {ProcessCmdSet2 movie action slice type $1; MovieCreate $2}
+ | action type STRING_ {ProcessCmdSet2 movie action $1 type $2; MovieCreate $3}
+
+ | 3D_ STRING_ {ProcessCmdSet2 movie action 3d type mpeg; MovieCreate $2}
+ | 3D_ type STRING_ {ProcessCmdSet2 movie action 3d type $2; MovieCreate $3}
+ | 3D_ STRING_ opts {ProcessCmdSet2 movie action 3d type mpeg; MovieCreate $2}
+ | 3D_ type STRING_ opts {ProcessCmdSet2 movie action 3d type $1; MovieCreate $2}
+ ;
+
+action : FRAME_ {set _ frame}
+ | SLICE_ {set _ slice}
+ ;
+
+type : MPEG_ {set _ mpeg}
+ | GIF_ {set _ gif}
  ;
 
 opts : opts opt

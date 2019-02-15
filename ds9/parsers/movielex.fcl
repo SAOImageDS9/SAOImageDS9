@@ -13,6 +13,8 @@ azto	    {return $AZTO_}
 elfrom	    {return $ELFROM_}
 elto	    {return $ELTO_}
 frame	    {return $FRAME_}
+gif	    {return $GIF_}
+mpeg	    {return $MPEG_}
 number	    {return $NUMBER_}
 oscillate   {return $OSCILLATE_}
 repeat	    {return $REPEAT_}

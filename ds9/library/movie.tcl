@@ -13,9 +13,8 @@ proc MovieDef {} {
     set imovie(top) .moviestatus
     set imovie(mb) .moviestatusmb
 
+    set movie(type) mpeg
     set movie(action) slice
-    # must be >=5, or sometimes will generate bad data
-    set movie(quality) 5
     set movie(num) 24
     set movie(az,from) 45
     set movie(az,to) -45
@@ -35,6 +34,7 @@ proc MovieDef {} {
 proc MovieDialog {} {
     global movie
     global mpegfbox
+    global giffbox
     global ed
     global current
 
@@ -42,16 +42,30 @@ proc MovieDialog {} {
 
     set ed(ok) 0
     set ed(action) $movie(action)
+    set ed(type) $movie(type)
 
     DialogCreate $w [msgcat::mc {Create Movie}] ed(ok)
 
+    # Type of Movie
+    set f [ttk::labelframe $w.type -text [msgcat::mc {Type}]]
+
+    ttk::label $f.title -text [msgcat::mc {Type}]
+    ttk::radiobutton $f.mpeg -text {MPEG} \
+	-variable ed(type) -value mpeg
+    ttk::radiobutton $f.gif -text {Animated Gif} \
+	-variable ed(type) -value gif
+
+    grid $f.mpeg -padx 2 -pady 2 -sticky w
+    grid $f.gif -padx 2 -pady 2 -sticky w
+
     # Param
-    set f [ttk::frame $w.param]
+    set f [ttk::labelframe $w.param -text [msgcat::mc {Format}]]
+
     ttk::label $f.title -text [msgcat::mc {Format}]
-    ttk::radiobutton $f.slice -text {Slice Movie} \
-	-variable ed(action) -value slice
     ttk::radiobutton $f.frame -text {Frames Movie} \
 	-variable ed(action) -value frame
+    ttk::radiobutton $f.slice -text {Slice Movie} \
+	-variable ed(action) -value slice
     ttk::radiobutton $f.3d -text {3D Movie} \
 	-variable ed(action) -value 3d
 
@@ -75,9 +89,12 @@ proc MovieDialog {} {
     bind $w <Return> {set ed(ok) 1}
 
     # Fini
-    ttk::separator $w.sep -orient horizontal
-    pack $w.buttons $w.sep -side bottom -fill x
-    pack $w.param -side top -fill both -expand true
+    grid $w.type -sticky news
+    grid $w.param -sticky news
+    grid $w.buttons -sticky ew
+    grid rowconfigure $w 0 -weight 1
+    grid rowconfigure $w 1 -weight 1
+    grid columnconfigure $w 0 -weight 1
 
     DialogCenter $w 
     DialogWait $w ed(ok)
@@ -85,7 +102,12 @@ proc MovieDialog {} {
 
     if {$ed(ok)} {
 	set movie(action) $ed(action)
- 	set fn [SaveFileDialog mpegfbox]
+	set movie(type) $ed(type)
+
+	switch $movie(type) {
+	    mpeg {set fn [SaveFileDialog mpegfbox]}
+	    gif {set fn [SaveFileDialog giffbox]}
+	}
 
 	if {$fn != {}} {
 	    set ok 1
@@ -96,7 +118,7 @@ proc MovieDialog {} {
 	    }
 
 	    if {$ok} {
-		Movie $fn
+		MovieCreate $fn
 	    }
 	}
     }
@@ -106,7 +128,7 @@ proc MovieDialog {} {
     return $rr
 }
 
-proc Movie {fn} {
+proc MovieCreate {fn} {
     global ds9
     global movie
     global current
@@ -126,10 +148,11 @@ proc Movie {fn} {
 	DisplayMode
     }
 
+    set movie(fn) $fn
     switch $movie(action) {
-	slice {MovieSlice $fn}
-	frame {MovieFrame $fn}
-	3d {Movie3d $fn}
+	frame {MovieFrame}
+	slice {MovieSlice}
+	3d {Movie3d}
     }
 
     if {[info exists modesav]} {
@@ -138,7 +161,29 @@ proc Movie {fn} {
     }
 }
 
-proc MovieSlice {fn} {
+proc MovieFrame {} {
+    global ds9
+    global current
+    global movie
+
+    # loop thru all active frames
+    set movie(first) 1
+    set framesav $current(frame)
+
+    foreach ff $ds9(active) {
+	set ds9(next) $ff
+	GotoFrame
+	if {[MoviePhoto]} {
+	    break
+	}
+    }
+    MovieClose
+
+    set ds9(next) $framesav
+    GotoFrame
+}
+
+proc MovieSlice {} {
     global current
     global movie
 
@@ -153,39 +198,17 @@ proc MovieSlice {fn} {
     set movie(first) 1
     for {set ii $from} {$ii <= $to} {incr ii} {
 	$current(frame) update fits slice $ii
-	if {[MoviePhoto $fn]} {
+	if {[MoviePhoto]} {
 	    break
 	}
     }
-    mpeg close
+    MovieClose
 
     # reset current slice
     $current(frame) update fits slice $slice
 }
 
-proc MovieFrame {fn} {
-    global ds9
-    global current
-    global movie
-
-    # loop thru all active frames
-    set movie(first) 1
-    set framesav $current(frame)
-
-    foreach ff $ds9(active) {
-	set ds9(next) $ff
-	GotoFrame
-	if {[MoviePhoto $fn]} {
-	    break
-	}
-    }
-    mpeg close
-
-    set ds9(next) $framesav
-    GotoFrame
-}
-
-proc Movie3d {fn} {
+proc Movie3d {} {
     global movie
     global current
 
@@ -217,7 +240,7 @@ proc Movie3d {fn} {
 
 	    $current(frame) 3d view $az $el
 	    $current(frame) update fits slice [expr int($sl)]
-	    if {[MoviePhoto $fn]} {
+	    if {[MoviePhoto]} {
 		break
 	    }
 	    set az [expr $az+$azincr]
@@ -237,7 +260,7 @@ proc Movie3d {fn} {
 	    }
 	}
     }
-    mpeg close
+    MovieClose
 
     MovieStatusDestroyDialog
 
@@ -250,7 +273,26 @@ proc Movie3d {fn} {
 
 # Support
 
-proc MoviePhoto {fn} {
+proc MoviePhoto {} {
+    global movie
+
+    switch $movie(type) {
+	mpeg {return [MoviePhotoMPEG]}
+	gif {return [MoviePhotoGIF]}
+    }
+    return 1
+}
+
+proc MovieClose {} {
+    global movie
+
+    switch $movie(type) {
+	mpeg {mpeg close}
+	gif {MoviePhotoGIFClose}
+    }
+}
+
+proc MoviePhotoMPEG {} {
     global ds9
     global movie
     global current
@@ -268,13 +310,50 @@ proc MoviePhoto {fn} {
     if {$movie(first)} {
 	set w [image width $ph]
 	set h [image height $ph]
-	mpeg create "$fn" $w $h 25 1 $movie(quality)
+	# quality must be >=5, or sometimes will generate bad data
+	mpeg create "$movie(fn)" $w $h 25 1 5
 	set movie(first) 0
     }
     mpeg add $ph
 
     image delete $ph
     return 0
+}
+
+proc MoviePhotoGIF {} {
+    global ds9
+    global movie
+    global current
+
+    # yes, we need this
+    UpdateDS9
+    RealizeDS9 1
+
+    set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
+    if {$rr} {
+	Error $movie(error)
+	return $rr
+    }
+
+    if {$movie(first)} {
+	set movie(gif) {}
+	set movie(first) 0
+    }
+
+    lappend movie(gif) $ph
+    return 0
+}
+
+proc MoviePhotoGIFClose {} {
+    global movie
+    
+    set ch [open $movie(fn) w]
+    fconfigure $ch -encoding binary -translation binary
+
+    close $ch
+    foreach ph $movie(gif) {
+	image delete $ph
+    }
 }
 
 proc Movie3dDialog {} {

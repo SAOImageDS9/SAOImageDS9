@@ -9,9 +9,9 @@
       2.4.7-10 i686) [Netscape]">
     <title>SAMP</title>
   </head>
-  <body vlink="#551A8B" link="#0000FF" alink="#FF0000">
-    <h3><img alt="" src="../sun.gif" width="100" height="98"
-        align="middle"> SAMP</h3>
+  <body link="#0000FF" alink="#FF0000" vlink="#551A8B">
+    <h3><img alt="" src="../sun.gif" height="98" align="middle"
+        width="100"> SAMP</h3>
     <blockquote>
       <p>SAMP is a messaging protocol that enables astronomy software
         tools to interoperate and communicate. Broadly speaking, SAMP is
@@ -467,6 +467,8 @@
 
 
 
+
+
         [2mass|iras]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [csc|xmm|rosat]</tt><tt><br>
@@ -510,6 +512,8 @@
 
 
 
+
+
         [&lt;ref&gt;] [filter &lt;string&gt;]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [filter load &lt;filename&gt;]</tt><tt><br>
@@ -520,6 +524,8 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [match]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 
 
 
@@ -541,6 +547,8 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;]
         [name &lt;object&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 
 
 
@@ -574,6 +582,8 @@
 
 
 
+
+
         [&lt;ref&gt;] [save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [server</tt><tt> </tt><tt>cds|adac|cadc|cambridge|sao|ukirt|iucaa|bejing|saao]</tt><tt><br>
@@ -598,6 +608,8 @@
         &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol shape
         circle|ellipse|box|text|point]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[&lt;ref&gt;]
+
+
 
 
 
@@ -661,6 +673,8 @@
 
 
 
+
+
         {$Hmag} {$e_Jmag} {$e_Hmag}</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>catalog print</tt><tt><br>
       </tt><tt> </tt><tt>catalog psky fk5</tt><tt><br>
@@ -676,6 +690,8 @@
       </tt><tt> </tt><tt>catalog radius 1 degrees</tt><tt><br>
       </tt><tt> </tt><tt>catalog symbol condition</tt><tt> </tt><tt>{$Jmag&gt;15}</tt><tt><br>
       </tt><tt> </tt><tt>catalog symbol 2 shape</tt><tt> </tt><tt>{boxcircle
+
+
 
 
 
@@ -825,6 +841,8 @@
 
 
 
+
+
             [save levels &lt;filename&gt;]<br>
           </tt></tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [copy]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [paste
@@ -906,6 +924,8 @@
         &lt;coordsys&gt;|none]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [reset]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3d</tt><tt> </tt><tt>zmin
+
+
 
 
 
@@ -1648,6 +1668,8 @@
 
 
 
+
+
           Macros</a> for more information.</p>
       <tt>Syntax:<br>
         iexam []<br>
@@ -1923,24 +1945,27 @@
           mosaicimage wcs new</tt><tt><br>
         </tt> mosaicimage wcs mask</tt>
       <p><b><a name="movie" id="movie"></a>movie</b></p>
-      <p>Create mpeg1 movie from snap shots of the DS9 window. A <tt>slice</tt>
+      <p>Create a movie from snap shots of the DS9 window. A <tt>slice</tt>
         movie cycles though all slices of a cube. A <tt>frame</tt>
         movie cycles through all active frames. A <tt>3d</tt> movie
-        cycles through specified viewing angles. The default is <tt>frame</tt>.
-        Optional parameters for <tt>3d</tt>: number of frames, azimuth
-        from/to, elevation from/to, slice from/to, oscillate/repeat
-        times.</p>
+        cycles through specified viewing angles. The default action is <tt>slice</tt>.
+        Movie types are either <tt>MPEG</tt> or <tt>Animated GIF</tt>,
+        with default <tt>MPEG</tt>. Optional parameters for <tt>3d</tt>:
+        number of frames, azimuth from/to, elevation from/to, slice
+        from/to, oscillate/repeat times.</p>
       <tt>Syntax:<br>
-        movie</tt> <tt>[slice|frame|3d]</tt> <tt>&lt;filename&gt;<br>
-      </tt> <tt>movie 3d &lt;filename&gt;
+        movie</tt> <tt>[slice|frame|3d]</tt> <tt>[mpeg|gif]
+        &lt;filename&gt;<br>
+      </tt> <tt>movie 3d [mpeg|gif] &lt;filename&gt;
         [number|azfrom|azto|elfrom|elto|slfrom|slto|oscillate|repeat
         &lt;#&gt;]</tt><br>
       <tt>&nbsp;<br>
         Example:<br>
         ds9.set(string cmd)<br>
-        movie slice ds9.mpg<br>
-      </tt> <tt>movie 3d ds9.mpg number 10 azfrom -60 azto 60 oscillate
-        1</tt><br>
+      </tt><tt><tt><tt>movie slice mpeg ds9.mpg<br>
+          </tt> movie frame gif ds9.gif<br>
+        </tt></tt><tt>movie 3d mpeg ds9.mpg number 10 azfrom -60 azto 60
+        oscillate 1</tt><br>
       <p><b><a name="multiframe" id="multiframe"></a>multiframe</b></p>
       <p>Load FITS multiple extension file as multiple images.<br>
       </p>
@@ -2157,12 +2182,16 @@
 
 
 
+
+
         load &lt;filename&gt; xy|xyex|xyey|xyexey]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] clear]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -2175,6 +2204,8 @@
 
 
 
+
+
         stats yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
@@ -2182,8 +2213,12 @@
 
 
 
+
+
         list yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -2213,8 +2248,12 @@
 
 
 
+
+
         close</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -2238,6 +2277,8 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp;&nbsp;
         [[&lt;plotname&gt;] axis x|y format &lt;string&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -2268,6 +2309,8 @@
 
 
 
+
+
         barmode normal|stacked|aligned|overlap]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt># configure current dataset</tt><tt><br>
@@ -2278,8 +2321,12 @@
 
 
 
+
+
         shape circle|square|diamond|plus|splus|scross|triangle|arrow]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -2292,8 +2339,12 @@
 
 
 
+
+
         shape color &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -2306,8 +2357,12 @@
 
 
 
+
+
         color &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -2320,6 +2375,8 @@
 
 
 
+
+
         dash yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
@@ -2327,8 +2384,12 @@
 
 
 
+
+
         error yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -2343,8 +2404,12 @@
 
 
 
+
+
         error width &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -3054,6 +3119,8 @@
 
 
 
+
+
         [&lt;ref&gt;] [save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;]
         [radius &lt;value&gt; degrees|arcmin|arcsec]</tt><tt><br>
@@ -3177,8 +3244,12 @@
 
 
 
+
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 
 
 
@@ -3194,8 +3265,12 @@
 
 
 
+
+
                       &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt></tt> <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 
 
 
@@ -3227,6 +3302,8 @@
 
 
 
+
+
                         sigma 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt>smooth
 
@@ -3234,8 +3311,12 @@
 
 
 
+
+
                         sigmaminor 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>smooth
+
+
 
 
 

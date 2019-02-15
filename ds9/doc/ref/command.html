@@ -9,9 +9,9 @@
       2.4.7-10 i686) [Netscape]">
     <title>Command Line Options</title>
   </head>
-  <body vlink="#551A8B" link="#0000FF" alink="#FF0000">
-    <h3><img alt="" src="../sun.gif" width="100" height="98"
-        align="middle"> Command Line Options</h3>
+  <body link="#0000FF" alink="#FF0000" vlink="#551A8B">
+    <h3><img alt="" src="../sun.gif" height="98" align="middle"
+        width="100"> Command Line Options</h3>
     <blockquote>
       <p>DS9 will process each command line option, one at a time, as
         the last step in the initialization process. Therefore, it is
@@ -452,6 +452,8 @@
 
 
 
+
+
         [&lt;ref&gt;] [filter &lt;string&gt;]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [filter load &lt;filename&gt;]</tt><tt><br>
@@ -462,6 +464,8 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [match &lt;ref&gt; &lt;ref&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 
 
 
@@ -483,6 +487,8 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;]
         [name &lt;object&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 
 
 
@@ -516,6 +522,8 @@
 
 
 
+
+
         [&lt;ref&gt;] [save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [server</tt><tt> </tt><tt>cds|adac|cadc|cambridge|sao|ukirt|iucaa|bejing|saao]</tt><tt><br>
@@ -544,9 +552,13 @@
 
 
 
+
+
         [symbol shape</tt><tt> </tt><tt>circle point|box point|diamond
         point|</tt><tt>cross point|x point|arrow point|boxcircle point]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 
 
 
@@ -598,6 +610,8 @@
       </tt><tt> </tt><tt> </tt><tt>$ds9 -catalog name m51</tt><tt><br>
       </tt><tt> $ds9 -catalog panto no</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>$ds9 -catalog plot</tt><tt> </tt><tt>'\$Jmag'
+
+
 
 
 
@@ -692,6 +706,8 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; [ticks]<br>
       </tt> <tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 
 
 
@@ -827,6 +843,8 @@
         [&lt;skyframe&gt;]]<br>
         &nbsp;</tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [match
+
+
 
 
 
@@ -997,6 +1015,8 @@
 
 
 
+
+
           -envi foo.hdr foo.bsq</tt></tt><tt><tt><tt><tt><tt><tt><br>
                 </tt></tt></tt></tt></tt></tt>
       <p><b><a name="exit" id="exit"></a>exit<br>
@@ -1031,8 +1051,12 @@
 
 
 
+
+
         [1-100]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>-export &lt;filename&gt;</tt><tt>.tiff
+
+
 
 
 
@@ -1505,8 +1529,12 @@
 
 
 
+
+
         &lt;coordsys&gt;]</tt><tt> </tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 
 
 
@@ -1522,6 +1550,8 @@
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [block]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [smooth]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 
 
 
@@ -1596,25 +1626,26 @@
       <tt><tt>$cat foo.fits | ds9 -mosaiimage wcs</tt></tt><tt><br>
       </tt>
       <p><b><a name="movie" id="movie"></a>movie<br>
-          savempeg<br>
         </b></p>
-      <p>Create mpeg1 movie from snap shots of the DS9 window. A <tt>slice</tt>
+      <p>Create a movie from snap shots of the DS9 window. A <tt>slice</tt>
         movie cycles though all slices of a cube. A <tt>frame</tt>
         movie cycles through all active frames. A <tt>3d</tt> movie
-        cycles through specified viewing angles. The default is <tt>frame</tt>.
-        Optional parameters for <tt>3d</tt>: number of frames, azimuth
-        from/to, elevation from/to, slice from/to, oscillate/repeat
-        times.<br>
-      </p>
+        cycles through specified viewing angles. The default action is <tt>slice</tt>.
+        Movie types are either <tt>MPEG</tt> or <tt>Animated GIF</tt>,
+        with default <tt>MPEG</tt>. Optional parameters for <tt>3d</tt>:
+        number of frames, azimuth from/to, elevation from/to, slice
+        from/to, oscillate/repeat times. </p>
       <tt>Syntax:<br>
-        -movie [slice|frame|3d] &lt;filename&gt;<br>
-        -movie 3d &lt;filename&gt;
+        -movie [slice|frame|3d] [mpeg|gif] &lt;filename&gt;<br>
+        -movie 3d [mpeg|gif] &lt;filename&gt;
         [number|azfrom|azto|elfrom|elto|slfrom|slto|oscillate|repeat
         &lt;#&gt;]<br>
         &nbsp;<br>
         Example:<br>
-        $ds9 -movie slice ds9.mpg<br>
-        $ds9 -movie 3d ds9.mpg number 10 azfrom -60 azto 60 oscillate 1</tt><br>
+      </tt><tt><tt>$ds9 -movie slice mpeg ds9.mpg<br>
+        </tt> $ds9 -movie frame gif ds9.gif<br>
+      </tt><tt>$ds9 -movie 3d mpeg ds9.mpg number 10 azfrom -60 azto 60
+        oscillate 1</tt><br>
       <p><b><a name="msg" id="msg"></a>msg</b></p>
       <p>Specify a directory of translation tables to be loaded.</p>
       <tt>Syntax:<br>
@@ -1647,6 +1678,8 @@
 
 
 
+
+
         [pan]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -1655,8 +1688,12 @@
 
 
 
+
+
         [crosshair]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 
 
 
@@ -1775,6 +1812,8 @@
 
 
 
+
+
         [yes|open]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
         [no|close]<br>
@@ -1808,6 +1847,8 @@
 
 
 
+
+
         load &lt;filename&gt; xy|xyex|xyey|xyexey]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp;
         [[&lt;plotname&gt;] save &lt;filename&gt;]</tt><tt><br>
@@ -1820,6 +1861,8 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp;</tt><tt>
       </tt><tt>[[&lt;plotname&gt;] list yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp; &nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -1849,8 +1892,12 @@
 
 
 
+
+
         close</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp; &nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
 
 
 
@@ -1878,6 +1925,8 @@
 
 
 
+
+
         legend yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp;
         [[&lt;plotname&gt;] legend position right|left|top|bottom]</tt><tt><br>
@@ -1898,6 +1947,8 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp; &nbsp;
         [[&lt;plotname&gt;] title x|y &lt;string&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; [</tt><tt>[&lt;plotname&gt;]
+
+
 
 
 
@@ -2088,10 +2139,11 @@
 
 
 
+
+
         [color rgb|cmyk|gray]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [level 1|2|3]</tt><tt><br>
-      </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [resolution
-      </tt><tt><tt>72|screen|96|144|150|225|300|600|1200]</tt></tt><tt><br>
+      </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [resolution </tt><tt><tt>72|screen|96|144|150|225|300|600|1200]</tt></tt><tt><br>
       </tt><tt> &nbsp;</tt><tt><br>
       </tt><tt> Example:</tt><tt><br>
       </tt><tt> $ds9 -print</tt><tt><br>
@@ -2372,6 +2424,8 @@
 
 
 
+
+
         [image|table|slice]</tt><br>
       <tt>&nbsp;<br>
         Example:<br>
@@ -2492,6 +2546,8 @@
 
 
 
+
+
         [crosshair]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [export
         sb|tsv &lt;filename&gt;]</tt><tt><br>
@@ -2512,6 +2568,8 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [system &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[&lt;ref&gt;]
+
+
 
 
 
@@ -2629,8 +2687,12 @@
 
 
 
+
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
 
 
 
@@ -2640,6 +2702,8 @@
                   [sigmaminor &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [angle
+
+
 
 
 
@@ -2668,8 +2732,12 @@
 
 
 
+
+
                   sigmaminor 2.0<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+
+
 
 
 

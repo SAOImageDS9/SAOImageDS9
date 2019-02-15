@@ -143,5 +143,5 @@ proc SaveImageCmdMPEG {fn na} {
     global movie
 
     set movie(action) slice
-    Movie $fn
+    MovieCreate $fn
 }

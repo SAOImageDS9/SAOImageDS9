@@ -13,7 +13,7 @@
 
 package require Tcl 8.2
 package require cmdline
-package provide fileutil 1.15
+package provide fileutil 1.16
 
 namespace eval ::fileutil {
     namespace export \
@@ -1420,25 +1420,24 @@ proc ::fileutil::foreachLine {var filename cmd} {
     catch {
 	set code 0
 	set result {}
+	set return 0
 	while {[gets $fp line] >= 0} {
-	    set code [catch {uplevel 1 $cmd} result]
-	    if {($code != 0) && ($code != 4)} {break}
+	    set code [catch {uplevel 1 $cmd} result options]
+	    if {$code == 2} {
+		set return 1
+		set code [dict get $options -code]
+		break
+	    } elseif {$code != 0 && $code != 4} {
+		break
+	    }
 	}
     }
     close $fp
 
-    if {($code == 0) || ($code == 3) || ($code == 4)} {
-        return $result
+    if {$return || $code == 1 || $code > 4} {
+	return -options $options $result
     }
-    if {$code == 1} {
-        global errorCode errorInfo
-        return \
-		-code      $code      \
-		-errorcode $errorCode \
-		-errorinfo $errorInfo \
-		$result
-    }
-    return -code $code $result
+    return $result
 }
 
 # ::fileutil::touch --
@@ -1629,6 +1628,23 @@ proc ::fileutil::fileType {filename} {
                 lappend type executable dos
             }
         }
+    } elseif { $binary && [string match "SQLite format 3\x00*" $test] } {
+	lappend type sqlite3
+
+	# Check for various sqlite-based application file formats.
+	set appid [string range $test 68 71]
+	if {$appid eq "\x0f\x05\x51\x12"} {
+	    lappend type fossil-checkout
+	} elseif {$appid eq "\x0f\x05\x51\x13"} {
+	    lappend type fossil-global-config
+	} elseif {$appid eq "\x0f\x05\x51\x11"} {
+	    lappend type fossil-repository
+	} else {
+	    # encode the appid as hex and append that.
+	    binary scan $appid H8 aid
+	    lappend type A$aid
+	}
+	
     } elseif { $binary && [string match "BZh91AY\&SY*" $test] } {
         lappend type compressed bzip
     } elseif { $binary && [string match "\x1f\x8b*" $test] } {

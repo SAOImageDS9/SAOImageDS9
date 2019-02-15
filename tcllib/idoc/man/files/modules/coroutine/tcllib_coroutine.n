@@ -2,7 +2,7 @@
 '\" Generated from file 'tcllib_coroutine\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2010-2015 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
 '\"
-.TH "coroutine" n 1\&.1\&.3 tcllib "Coroutine utilities"
+.TH "coroutine" n 1\&.2 tcllib "Coroutine utilities"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -276,7 +276,7 @@ coroutine \- Coroutine based event and IO handling
 .SH SYNOPSIS
 package require \fBTcl  8\&.6\fR
 .sp
-package require \fBcoroutine  1\&.1\&.3\fR
+package require \fBcoroutine  1\&.2\fR
 .sp
 \fBcoroutine::util after\fR \fIdelay\fR
 .sp
@@ -287,6 +287,8 @@ package require \fBcoroutine  1\&.1\&.3\fR
 \fBcoroutine::util exit\fR ?\fIstatus\fR?
 .sp
 \fBcoroutine::util gets\fR \fIchan\fR ?\fIvarname\fR?
+.sp
+\fBcoroutine::util gets_safety\fR \fIchan\fR \fIlimit\fR \fIvarname\fR
 .sp
 \fBcoroutine::util global\fR \fIvarname\fR\&.\&.\&.
 .sp
@@ -343,6 +345,12 @@ This command reads a line from the channel \fIchan\fR and returns it
 either as its result, or, if a \fIvarname\fR was specified, writes it
 to the named variable and returns the number of characters read\&.
 .TP
+\fBcoroutine::util gets_safety\fR \fIchan\fR \fIlimit\fR \fIvarname\fR
+This command reads a line from the channel \fIchan\fR up to size \fIlimit\fR
+and stores the result in \fIvarname\fR\&. Of \fIlimit\fR is reached before the
+set first newline, an error is thrown\&. The command returns the number of
+characters read\&.
+.TP
 \fBcoroutine::util global\fR \fIvarname\fR\&.\&.\&.
 This command imports the named global variables of the coroutine into
 the current scope\&. From the technical point of view these variables
@@ -370,6 +378,14 @@ Please report such in the category \fIcoroutine\fR of the
 \fITcllib Trackers\fR [http://core\&.tcl\&.tk/tcllib/reportlist]\&.
 Please also report any ideas for enhancements you may have for either
 package and/or documentation\&.
+.PP
+When proposing code changes, please provide \fIunified diffs\fR,
+i\&.e the output of \fBdiff -u\fR\&.
+.PP
+Note further that \fIattachments\fR are strongly preferred over
+inlined patches\&. Attachments can be made by going to the \fBEdit\fR
+form of the ticket immediately after its creation, and then using the
+left-most button in the secondary navigation bar\&.
 .SH KEYWORDS
 after, channel, coroutine, events, exit, gets, global, green threads, read, threads, update, vwait
 .SH CATEGORY

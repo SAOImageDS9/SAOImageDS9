@@ -1,5 +1,6 @@
+[vset VERSION 2.0]
 [comment {-*- tcl -*- doctools manpage}]
-[manpage_begin fileutil::magic::filetype n 1.0.2]
+[manpage_begin fileutil::magic::filetype n [vset VERSION]]
 [see_also file(1)]
 [see_also fileutil]
 [see_also magic(5)]
@@ -10,8 +11,8 @@
 [moddesc   {file utilities}]
 [titledesc {Procedures implementing file-type recognition}]
 [category  {Programming tools}]
-[require Tcl 8.4]
-[require fileutil::magic::filetype [opt 1.0.2]]
+[require Tcl 8.6]
+[require fileutil::magic::filetype [opt [vset VERSION]]]
 [description]
 [para]
 
@@ -26,7 +27,7 @@ file-types.
 
 [para]
 
-[emph Beware!] This recognizer is large, about 276 Kilobyte of
+[emph Beware!] This recognizer is large, about 752 Kilobyte of
 generated Tcl code.
 
 [list_begin definitions]
@@ -37,12 +38,10 @@ This command is similar to the command [cmd fileutil::fileType].
 
 [para]
 
-The output of the command for the specified file is a string
-describing the type of the file.
+Returns a list containing a list of descriptions, a list of mimetype
+components, and a list file extensions.  Returns an empty string if the file
+content is not recognized.
 
-[para]
-
-This list will be empty if the type of the file is not recognized.
 
 [list_end]
 

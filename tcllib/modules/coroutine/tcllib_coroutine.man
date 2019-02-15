@@ -1,5 +1,5 @@
 [comment {-*- tcl -*- doctools manpage}]
-[vset CORO_VERSION 1.1.3]
+[vset CORO_VERSION 1.2]
 [manpage_begin coroutine n [vset CORO_VERSION]]
 [keywords after]
 [keywords channel]
@@ -78,6 +78,13 @@ returned.
 This command reads a line from the channel [arg chan] and returns it
 either as its result, or, if a [arg varname] was specified, writes it
 to the named variable and returns the number of characters read.
+
+[call [cmd {coroutine::util gets_safety}] [arg chan] [arg limit] [arg varname]]
+
+This command reads a line from the channel [arg chan] up to size [arg limit]
+and stores the result in [arg varname]. Of [arg limit] is reached before the
+set first newline, an error is thrown. The command returns the number of
+characters read.
 
 [call [cmd {coroutine::util global}] [arg varname]...]
 

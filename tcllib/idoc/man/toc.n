@@ -384,6 +384,9 @@ tcllib
 \fBdebug::timestamp\fR
 \fIfiles/modules/debug/debug_timestamp\&.n\fR: debug narrative - timestamping
 .TP
+\fBdefer\fR
+\fIfiles/modules/defer/defer\&.n\fR: Defered execution
+.TP
 \fBdeleg_method\fR
 \fIfiles/modules/interp/deleg_method\&.n\fR: Creation of comm delegates (snit methods)
 .TP
@@ -612,9 +615,6 @@ tcllib
 \fBfileutil::magic::filetype\fR
 \fIfiles/modules/fumagic/filetypes\&.n\fR: Procedures implementing file-type recognition
 .TP
-\fBfileutil::magic::mimetype\fR
-\fIfiles/modules/fumagic/mimetypes\&.n\fR: Procedures implementing mime-type recognition
-.TP
 \fBfileutil::magic::rt\fR
 \fIfiles/modules/fumagic/rtcore\&.n\fR: Runtime core for file type recognition engines written in pure Tcl
 .TP
@@ -762,6 +762,9 @@ tcllib
 \fBmapproj\fR
 \fIfiles/modules/mapproj/mapproj\&.n\fR: Map projection routines
 .TP
+\fBmarkdown\fR
+\fIfiles/modules/markdown/markdown\&.n\fR: Converts Markdown text to HTML
+.TP
 \fBmath\fR
 \fIfiles/modules/math/math\&.n\fR: Tcl Math Library
 .TP
@@ -815,6 +818,9 @@ tcllib
 .TP
 \fBmath::optimize\fR
 \fIfiles/modules/math/optimize\&.n\fR: Optimisation routines
+.TP
+\fBmath::PCA\fR
+\fIfiles/modules/math/pca\&.n\fR: Package for Principal Component Analysis
 .TP
 \fBmath::polynomials\fR
 \fIfiles/modules/math/polynomials\&.n\fR: Polynomial functions
@@ -903,6 +909,9 @@ tcllib
 \fBoo::util\fR
 \fIfiles/modules/ooutil/ooutil\&.n\fR: Utility commands for TclOO
 .TP
+\fBoometa\fR
+\fIfiles/modules/oometa/oometa\&.n\fR: oo::meta A data registry for classess
+.TP
 \fBotp\fR
 \fIfiles/modules/otp/otp\&.n\fR: One-Time Passwords
 .TP
@@ -953,6 +962,9 @@ tcllib
 .TP
 \fBpop3d::udb\fR
 \fIfiles/modules/pop3d/pop3d_udb\&.n\fR: Simple user database for pop3d
+.TP
+\fBpractcl\fR
+\fIfiles/modules/practcl/practcl\&.n\fR: The Practcl Module
 .TP
 \fBprocessman\fR
 \fIfiles/modules/processman/processman\&.n\fR: Tool for automating the period callback of commands
@@ -1058,6 +1070,9 @@ tcllib
 .TP
 \fBpt::rde\fR
 \fIfiles/modules/pt/pt_rdengine\&.n\fR: Parsing Runtime Support, PARAM based
+.TP
+\fBpt::tclparam::configuration::nx\fR
+\fIfiles/modules/pt/pt_tclparam_config_nx\&.n\fR: Tcl/PARAM, Canned configuration, NX
 .TP
 \fBpt::tclparam::configuration::snit\fR
 \fIfiles/modules/pt/pt_tclparam_config_snit\&.n\fR: Tcl/PARAM, Canned configuration, Snit
@@ -1311,11 +1326,11 @@ tcllib
 \fBtcl::transform::zlib\fR
 \fIfiles/modules/virtchannel_transform/tcllib_zlib\&.n\fR: zlib (de)compression
 .TP
-\fBtcldes\fR
-\fIfiles/modules/des/tcldesjr\&.n\fR: Implementation of the DES and triple-DES ciphers
-.TP
-\fBtcldes\fR
+\fBtclDES\fR
 \fIfiles/modules/des/tcldes\&.n\fR: Implementation of the DES and triple-DES ciphers
+.TP
+\fBtclDESjr\fR
+\fIfiles/modules/des/tcldesjr\&.n\fR: Implementation of the DES and triple-DES ciphers
 .TP
 \fBtcldocstrip\fR
 \fIfiles/apps/tcldocstrip\&.n\fR: Tcl-based Docstrip Processor
@@ -1398,6 +1413,9 @@ tcllib
 \fBtextutil::trim\fR
 \fIfiles/modules/textutil/trim\&.n\fR: Procedures to trim strings
 .TP
+\fBthrow\fR
+\fIfiles/modules/try/tcllib_throw\&.n\fR: throw - Throw an error exception with a message
+.TP
 \fBtie\fR
 \fIfiles/modules/tie/tie\&.n\fR: Array persistence
 .TP
@@ -1408,7 +1426,13 @@ tcllib
 \fIfiles/modules/tiff/tiff\&.n\fR: TIFF reading, writing, and querying and manipulation of meta data
 .TP
 \fBtool\fR
-\fIfiles/modules/tool/tool\&.n\fR: Dictionary Tools
+\fIfiles/modules/tool/tool\&.n\fR: TclOO Library (TOOL) Framework
+.TP
+\fBtool\fR
+\fIfiles/modules/httpd/httpd\&.n\fR: A TclOO and coroutine based web server
+.TP
+\fBtool-ui\fR
+\fIfiles/modules/tool-ui/tool-ui\&.n\fR: Abstractions to allow Tao to express Native Tk, HTML5, and Tao-Layout interfaces
 .TP
 \fBtool::dict_ensemble\fR
 \fIfiles/modules/tool/tool_dict_ensemble\&.n\fR: Dictionary Tools
@@ -1440,8 +1464,8 @@ tcllib
 \fBtry\fR
 \fIfiles/modules/try/tcllib_try\&.n\fR: try - Trap and process errors and exceptions
 .TP
-\fBtry\fR
-\fIfiles/modules/try/tcllib_throw\&.n\fR: throw - Throw an error exception with a message
+\fBudpcluster\fR
+\fIfiles/modules/udpcluster/udpcluster\&.n\fR: UDP Peer-to-Peer cluster
 .TP
 \fBuevent\fR
 \fIfiles/modules/uev/uevent\&.n\fR: User events

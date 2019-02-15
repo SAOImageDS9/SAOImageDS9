@@ -266,7 +266,14 @@ proc ppackages {args} {
 
 	    sakdebug {puts stderr __$f\ _________$line}
 
-	    foreach {n v} $line break
+            #foreach {n v} $line break
+            if {[catch {
+	      set n [lindex $line 0]
+              set v [lindex $line 1]
+            } err]} {
+              sakdebug {puts stderr "Line: $line of file $f threw $err"}
+              continue
+            }
 
 	    # HACK ...
 	    # Module 'page', package 'page::gen::peg::cpkg'.
@@ -435,6 +442,12 @@ proc gd-gen-archives {} {
         if {$bzip != {}} {
             puts "    Bzipped tarball (${package_nv}.tar.bz2)..."
             exec tar cf - ${package_nv} | bzip2 > ${package_nv}.tar.bz2
+        }
+
+	set xz [auto_execok xz]
+        if {$xz != {}} {
+            puts "    Xzipped tarball (${package_nv}.tar.xz)..."
+            exec tar cf - ${package_nv} | xz > ${package_nv}.tar.xz
         }
     }
 

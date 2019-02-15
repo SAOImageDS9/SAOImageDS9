@@ -1,8 +1,8 @@
 '\"
 '\" Generated from file 'doctools\&.man' by tcllib/doctools with format 'nroff'
-'\" Copyright (c) 2003-2014 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
+'\" Copyright (c) 2003-2017 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
 '\"
-.TH "doctools" n 1\&.4\&.19 tcllib "Documentation tools"
+.TH "doctools" n 1\&.4\&.21 tcllib "Documentation tools"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -276,7 +276,7 @@ doctools \- doctools - Processing documents
 .SH SYNOPSIS
 package require \fBTcl  8\&.2\fR
 .sp
-package require \fBdoctools  ?1\&.4\&.19?\fR
+package require \fBdoctools  ?1\&.4\&.21?\fR
 .sp
 \fB::doctools::new\fR \fIobjectName\fR ?\fIoption value\fR\&.\&.\&.?
 .sp
@@ -610,7 +610,7 @@ The value for this parameter has to be a list of triples specifying
 cross-reference information\&. This information is used by the engine to
 create more hyperlinks\&. Each triple is a list containing a pattern,
 symbolic filename and fragment reference, in this order\&. If a pattern
-is specified multiple times the last occurence of the pattern will be
+is specified multiple times the last occurrence of the pattern will be
 used\&.
 .sp
 The engine will consult the xref database when encountering specific
@@ -693,6 +693,14 @@ Please report such in the category \fIdoctools\fR of the
 \fITcllib Trackers\fR [http://core\&.tcl\&.tk/tcllib/reportlist]\&.
 Please also report any ideas for enhancements you may have for either
 package and/or documentation\&.
+.PP
+When proposing code changes, please provide \fIunified diffs\fR,
+i\&.e the output of \fBdiff -u\fR\&.
+.PP
+Note further that \fIattachments\fR are strongly preferred over
+inlined patches\&. Attachments can be made by going to the \fBEdit\fR
+form of the ticket immediately after its creation, and then using the
+left-most button in the secondary navigation bar\&.
 .SH "SEE ALSO"
 doctools_intro, doctools_lang_cmdref, doctools_lang_intro, doctools_lang_syntax, doctools_plugin_apiref
 .SH KEYWORDS
@@ -701,6 +709,6 @@ HTML, TMML, conversion, documentation, manpage, markup, nroff
 Documentation tools
 .SH COPYRIGHT
 .nf
-Copyright (c) 2003-2014 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
+Copyright (c) 2003-2017 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
 
 .fi

@@ -2,7 +2,7 @@
 '\" Generated from file 'oauth\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 2014 Javi P\&. <hxm@eggdrop\&.es>
 '\"
-.TH "oauth" n 1\&.0 tcllib "oauth"
+.TH "oauth" n 1\&.0\&.1 tcllib "oauth"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -276,7 +276,7 @@ oauth \- oauth API base signature
 .SH SYNOPSIS
 package require \fBTcl  8\&.5\fR
 .sp
-package require \fBoauth  ?1\&.0?\fR
+package require \fBoauth  ?1\&.0\&.1?\fR
 .sp
 \fB::oauth::config\fR
 .sp
@@ -481,6 +481,14 @@ Please report such in the category \fIoauth\fR of the
 \fITcllib Trackers\fR [http://core\&.tcl\&.tk/tcllib/reportlist]\&.
 Please also report any ideas for enhancements you may have for either
 package and/or documentation\&.
+.PP
+When proposing code changes, please provide \fIunified diffs\fR,
+i\&.e the output of \fBdiff -u\fR\&.
+.PP
+Note further that \fIattachments\fR are strongly preferred over
+inlined patches\&. Attachments can be made by going to the \fBEdit\fR
+form of the ticket immediately after its creation, and then using the
+left-most button in the secondary navigation bar\&.
 .SH KEYWORDS
 RFC 2718, RFC 5849, oauth, twitter
 .SH CATEGORY

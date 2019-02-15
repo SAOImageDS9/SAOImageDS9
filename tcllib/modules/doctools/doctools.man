@@ -1,5 +1,5 @@
 [comment {-*- tcl -*- doctools manpage}]
-[vset PACKAGE_VERSION 1.4.19]
+[vset PACKAGE_VERSION 1.4.21]
 [manpage_begin doctools n [vset PACKAGE_VERSION]]
 [see_also doctools_intro]
 [see_also doctools_lang_cmdref]
@@ -13,7 +13,7 @@
 [keywords markup]
 [keywords nroff]
 [keywords TMML]
-[copyright {2003-2014 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[copyright {2003-2017 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
 [moddesc   {Documentation tools}]
 [titledesc {doctools - Processing documents}]
 [category  {Documentation tools}]
@@ -442,7 +442,7 @@ The value for this parameter has to be a list of triples specifying
 cross-reference information. This information is used by the engine to
 create more hyperlinks. Each triple is a list containing a pattern,
 symbolic filename and fragment reference, in this order. If a pattern
-is specified multiple times the last occurence of the pattern will be
+is specified multiple times the last occurrence of the pattern will be
 used.
 
 [para]

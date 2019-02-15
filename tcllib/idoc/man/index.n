@@ -323,11 +323,11 @@ tcl::chan::zero
 \fBfiles/modules/des/des\&.n\fR
 des
 .TP
-\fBfiles/modules/des/tcldesjr\&.n\fR
-tcldes
-.TP
 \fBfiles/modules/des/tcldes\&.n\fR
-tcldes
+tclDES
+.TP
+\fBfiles/modules/des/tcldesjr\&.n\fR
+tclDESjr
 .RE
 abstract syntax tree
 .RS
@@ -860,11 +860,11 @@ blowfish
 \fBfiles/modules/des/des\&.n\fR
 des
 .TP
-\fBfiles/modules/des/tcldesjr\&.n\fR
-tcldes
-.TP
 \fBfiles/modules/des/tcldes\&.n\fR
-tcldes
+tclDES
+.TP
+\fBfiles/modules/des/tcldesjr\&.n\fR
+tclDESjr
 .RE
 blocking flow
 .RS
@@ -1340,6 +1340,9 @@ oo::util
 cleanup
 .RS
 .TP
+\fBfiles/modules/defer/defer\&.n\fR
+defer
+.TP
 \fBfiles/modules/try/tcllib_try\&.n\fR
 try
 .RE
@@ -1666,6 +1669,9 @@ pt::pgen
 .TP
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
+.TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
 .TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
@@ -2099,11 +2105,11 @@ rc4
 \fBfiles/modules/crc/sum\&.n\fR
 sum
 .TP
-\fBfiles/modules/des/tcldesjr\&.n\fR
-tcldes
-.TP
 \fBfiles/modules/des/tcldes\&.n\fR
-tcldes
+tclDES
+.TP
+\fBfiles/modules/des/tcldesjr\&.n\fR
+tclDESjr
 .RE
 data source
 .RS
@@ -2252,11 +2258,11 @@ DES
 \fBfiles/modules/des/des\&.n\fR
 des
 .TP
-\fBfiles/modules/des/tcldesjr\&.n\fR
-tcldes
-.TP
 \fBfiles/modules/des/tcldes\&.n\fR
-tcldes
+tclDES
+.TP
+\fBfiles/modules/des/tcldesjr\&.n\fR
+tclDESjr
 .RE
 deserialization
 .RS
@@ -2981,6 +2987,9 @@ pt::pgen
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
 .TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
+.TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
 .TP
@@ -3107,11 +3116,11 @@ tcl::transform::otp
 \fBfiles/modules/virtchannel_transform/rot\&.n\fR
 tcl::transform::rot
 .TP
-\fBfiles/modules/des/tcldesjr\&.n\fR
-tcldes
-.TP
 \fBfiles/modules/des/tcldes\&.n\fR
-tcldes
+tclDES
+.TP
+\fBfiles/modules/des/tcldesjr\&.n\fR
+tclDESjr
 .RE
 entry mask
 .RS
@@ -3140,10 +3149,10 @@ struct::disjointset
 error
 .RS
 .TP
-\fBfiles/modules/try/tcllib_try\&.n\fR
-try
-.TP
 \fBfiles/modules/try/tcllib_throw\&.n\fR
+throw
+.TP
+\fBfiles/modules/try/tcllib_try\&.n\fR
 try
 .RE
 error function
@@ -3419,6 +3428,9 @@ pt::pgen
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
 .TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
+.TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
 .TP
@@ -3512,9 +3524,6 @@ fileutil::magic::cgen
 \fBfiles/modules/fumagic/filetypes\&.n\fR
 fileutil::magic::filetype
 .TP
-\fBfiles/modules/fumagic/mimetypes\&.n\fR
-fileutil::magic::mimetype
-.TP
 \fBfiles/modules/fumagic/rtcore\&.n\fR
 fileutil::magic::rt
 .RE
@@ -3529,9 +3538,6 @@ fileutil::magic::cgen
 .TP
 \fBfiles/modules/fumagic/filetypes\&.n\fR
 fileutil::magic::filetype
-.TP
-\fBfiles/modules/fumagic/mimetypes\&.n\fR
-fileutil::magic::mimetype
 .TP
 \fBfiles/modules/fumagic/rtcore\&.n\fR
 fileutil::magic::rt
@@ -3550,9 +3556,6 @@ fileutil::magic::cgen
 .TP
 \fBfiles/modules/fumagic/filetypes\&.n\fR
 fileutil::magic::filetype
-.TP
-\fBfiles/modules/fumagic/mimetypes\&.n\fR
-fileutil::magic::mimetype
 .TP
 \fBfiles/modules/fumagic/rtcore\&.n\fR
 fileutil::magic::rt
@@ -3818,6 +3821,12 @@ frame
 \fBfiles/modules/term/ansi_cmacros\&.n\fR
 term::ansi::code::macros
 .RE
+framework
+.RS
+.TP
+\fBfiles/modules/tool/tool\&.n\fR
+tool
+.RE
 ftp
 .RS
 .TP
@@ -3928,6 +3937,12 @@ coroutine
 .TP
 \fBfiles/modules/coroutine/coro_auto\&.n\fR
 coroutine::auto
+.RE
+golang
+.RS
+.TP
+\fBfiles/modules/defer/defer\&.n\fR
+defer
 .RE
 gopher
 .RS
@@ -4090,6 +4105,9 @@ pt::pgen
 .TP
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
+.TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
 .TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
@@ -4313,11 +4331,32 @@ map::geocode::nominatim
 \fBfiles/modules/map/map_slippy_fetcher\&.n\fR
 map::slippy::fetcher
 .TP
+\fBfiles/modules/httpd/httpd\&.n\fR
+tool
+.TP
 \fBfiles/modules/uri/uri\&.n\fR
 uri
 .TP
 \fBfiles/modules/websocket/websocket\&.n\fR
 websocket
+.RE
+httpd
+.RS
+.TP
+\fBfiles/modules/httpd/httpd\&.n\fR
+tool
+.RE
+https
+.RS
+.TP
+\fBfiles/modules/uri/uri\&.n\fR
+uri
+.RE
+httpserver
+.RS
+.TP
+\fBfiles/modules/httpd/httpd\&.n\fR
+tool
 .RE
 huddle
 .RS
@@ -5279,6 +5318,9 @@ pt::pgen
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
 .TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
+.TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
 .TP
@@ -5750,6 +5792,9 @@ pt::pgen
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
 .TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
+.TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
 .TP
@@ -5818,6 +5863,9 @@ math::linearalgebra
 .TP
 \fBfiles/modules/math/optimize\&.n\fR
 math::optimize
+.TP
+\fBfiles/modules/math/pca\&.n\fR
+math::PCA
 .TP
 \fBfiles/modules/math/polynomials\&.n\fR
 math::polynomials
@@ -6113,9 +6161,6 @@ fileutil::magic::cfront
 \fBfiles/modules/fumagic/cgen\&.n\fR
 fileutil::magic::cgen
 .TP
-\fBfiles/modules/fumagic/mimetypes\&.n\fR
-fileutil::magic::mimetype
-.TP
 \fBfiles/modules/fumagic/rtcore\&.n\fR
 fileutil::magic::rt
 .TP
@@ -6244,6 +6289,9 @@ nnsd
 .TP
 \fBfiles/apps/nnslog\&.n\fR
 nnslog
+.TP
+\fBfiles/modules/udpcluster/udpcluster\&.n\fR
+udpcluster
 .RE
 namespace unknown
 .RS
@@ -6749,6 +6797,9 @@ pt::pgen
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
 .TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
+.TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
 .TP
@@ -6992,6 +7043,9 @@ pt::pgen
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
 .TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
+.TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
 .TP
@@ -7133,6 +7187,9 @@ pt::pgen
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
 .TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
+.TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
 .TP
@@ -7201,6 +7258,12 @@ patching
 .TP
 \fBfiles/modules/rcs/rcs\&.n\fR
 rcs
+.RE
+PCA
+.RS
+.TP
+\fBfiles/modules/math/pca\&.n\fR
+math::PCA
 .RE
 PEG
 .RS
@@ -7312,6 +7375,9 @@ pt::pgen
 .TP
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
+.TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
 .TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
@@ -7528,6 +7594,12 @@ post-order
 .TP
 \fBfiles/modules/struct/struct_tree\&.n\fR
 struct::tree
+.RE
+practcl
+.RS
+.TP
+\fBfiles/modules/practcl/practcl\&.n\fR
+practcl
 .RE
 pre-order
 .RS
@@ -7771,6 +7843,9 @@ pt::pgen
 .TP
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
+.TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
 .TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
@@ -8038,6 +8113,9 @@ pt::pgen
 .TP
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
+.TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
 .TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
@@ -8331,7 +8409,7 @@ return
 .RS
 .TP
 \fBfiles/modules/try/tcllib_throw\&.n\fR
-try
+throw
 .RE
 reverse
 .RS
@@ -8440,6 +8518,12 @@ rfc 1413
 .TP
 \fBfiles/modules/ident/ident\&.n\fR
 ident
+.RE
+rfc 1630
+.RS
+.TP
+\fBfiles/modules/uri/uri\&.n\fR
+uri
 .RE
 rfc 1886
 .RS
@@ -8573,6 +8657,12 @@ rfc 3513
 \fBfiles/modules/dns/tcllib_ip\&.n\fR
 tcllib_ip
 .RE
+rfc 3986
+.RS
+.TP
+\fBfiles/modules/uri/uri\&.n\fR
+uri
+.RE
 rfc 4511
 .RS
 .TP
@@ -8590,6 +8680,12 @@ rfc 6455
 .TP
 \fBfiles/modules/websocket/websocket\&.n\fR
 websocket
+.RE
+rfc 7858
+.RS
+.TP
+\fBfiles/modules/dns/tcllib_dns\&.n\fR
+dns
 .RE
 rfc3501
 .RS
@@ -8792,11 +8888,11 @@ sha256
 \fBfiles/modules/crc/sum\&.n\fR
 sum
 .TP
-\fBfiles/modules/des/tcldesjr\&.n\fR
-tcldes
-.TP
 \fBfiles/modules/des/tcldes\&.n\fR
-tcldes
+tclDES
+.TP
+\fBfiles/modules/des/tcldesjr\&.n\fR
+tclDESjr
 .RE
 seed
 .RS
@@ -8992,6 +9088,9 @@ nns_intro
 .TP
 \fBfiles/apps/nnsd\&.n\fR
 nnsd
+.TP
+\fBfiles/modules/udpcluster/udpcluster\&.n\fR
+udpcluster
 .RE
 service
 .RS
@@ -9007,6 +9106,9 @@ ftpd
 .TP
 \fBfiles/modules/smtpd/smtpd\&.n\fR
 smtpd
+.TP
+\fBfiles/modules/httpd/httpd\&.n\fR
+tool
 .RE
 set
 .RS
@@ -9362,6 +9464,9 @@ pt::pgen
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
 .TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
+.TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
 .TP
@@ -9409,6 +9514,9 @@ counter
 .TP
 \fBfiles/modules/math/math\&.n\fR
 math
+.TP
+\fBfiles/modules/math/pca\&.n\fR
+math::PCA
 .TP
 \fBfiles/modules/math/statistics\&.n\fR
 math::statistics
@@ -9700,6 +9808,9 @@ math::bignum
 .TP
 \fBfiles/modules/math/decimal\&.n\fR
 math::decimal
+.TP
+\fBfiles/modules/math/pca\&.n\fR
+math::PCA
 .RE
 Tcl module
 .RS
@@ -9743,8 +9854,17 @@ oo::util
 \fBfiles/modules/ooutil/ooutil\&.n\fR
 oo::util
 .TP
+\fBfiles/modules/oometa/oometa\&.n\fR
+oometa
+.TP
 \fBfiles/modules/tool/tool\&.n\fR
 tool
+.TP
+\fBfiles/modules/httpd/httpd\&.n\fR
+tool
+.TP
+\fBfiles/modules/tool-ui/tool-ui\&.n\fR
+tool-ui
 .TP
 \fBfiles/modules/tool/tool_dict_ensemble\&.n\fR
 tool::dict_ensemble
@@ -9862,6 +9982,9 @@ pt::pgen
 .TP
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
+.TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
 .TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
@@ -10137,7 +10260,7 @@ throw
 .RS
 .TP
 \fBfiles/modules/try/tcllib_throw\&.n\fR
-try
+throw
 .RE
 thumbnail
 .RS
@@ -10415,6 +10538,9 @@ string::token::shell
 TOOL
 .RS
 .TP
+\fBfiles/modules/oometa/oometa\&.n\fR
+oometa
+.TP
 \fBfiles/modules/tool/tool\&.n\fR
 tool
 .TP
@@ -10531,6 +10657,9 @@ pt::pgen
 .TP
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
+.TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
 .TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
@@ -10717,6 +10846,9 @@ pt::pgen
 .TP
 \fBfiles/modules/pt/pt_rdengine\&.n\fR
 pt::rde
+.TP
+\fBfiles/modules/pt/pt_tclparam_config_nx\&.n\fR
+pt::tclparam::configuration::nx
 .TP
 \fBfiles/modules/pt/pt_tclparam_config_snit\&.n\fR
 pt::tclparam::configuration::snit
@@ -10909,9 +11041,6 @@ fileutil::magic::cgen
 .TP
 \fBfiles/modules/fumagic/filetypes\&.n\fR
 fileutil::magic::filetype
-.TP
-\fBfiles/modules/fumagic/mimetypes\&.n\fR
-fileutil::magic::mimetype
 .TP
 \fBfiles/modules/fumagic/rtcore\&.n\fR
 fileutil::magic::rt
@@ -11416,6 +11545,12 @@ doctools::tcl::parse
 .TP
 \fBfiles/modules/wip/wip\&.n\fR
 wip
+.RE
+WWW
+.RS
+.TP
+\fBfiles/modules/httpd/httpd\&.n\fR
+tool
 .RE
 www
 .RS

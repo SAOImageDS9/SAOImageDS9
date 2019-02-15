@@ -5,11 +5,9 @@
 # Copyright (c) 2000 Zveno Pty Ltd
 # Copyright (c) 2006 Pierre DAVID <Pierre.David@crc.u-strasbg.fr>
 # Copyright (c) 2006 Andreas Kupries <andreas_kupries@users.sourceforge.net>
+# Copyright (c) 2017 Keith Nash <kjnash@users.sourceforge.net>
 # Steve Ball, http://www.zveno.com/
 # Derived from urls.tcl by Andreas Kupries
-#
-# TODO:
-#	Handle www-url-encoding details
 #
 # CVS: $Id: uri.tcl,v 1.36 2011/03/23 04:39:54 andreas_kupries Exp $
 
@@ -22,10 +20,22 @@ namespace eval ::uri {
     namespace export geturl
     namespace export canonicalize
     namespace export register
+    namespace export setQuirkOption
 
     variable file:counter 0
 
-    # extend these variable in the coming namespaces
+    variable Quirks
+    set Quirks(NoInitialSlash)      1
+    set Quirks(NoExtraKeys)         0
+    set Quirks(HostAsDriveLetter)   0
+    set Quirks(RemoveDoubleSlashes) 1
+    # Defaults for v1.2.7: {1 0 0 1}
+
+    # --------------------------------------------------------------------------
+    # These variables are used by uri::register and are a repository of
+    # scheme-related pattern information that may be accessed by external code.
+    # None is used by the other commands of this package.
+    # --------------------------------------------------------------------------
     variable schemes       {}
     variable schemePattern ""
     variable url           ""
@@ -36,35 +46,18 @@ namespace eval ::uri {
     # basic regular expressions used in URL syntax.
 
     namespace eval basic {
-	variable	loAlpha		{[a-z]}
-	variable	hiAlpha		{[A-Z]}
+	# ----------------------------------------------------------------------
+	# These variables are used to construct the variables used by commands.
+	# ----------------------------------------------------------------------
 	variable	digit		{[0-9]}
-	variable	alpha		{[a-zA-Z]}
-	variable	safe		{[$_.+-]}
-	variable	extra		{[!*'(,)]}
-	# danger in next pattern, order important for []
-	variable	national	{[][|\}\{\^~`]}
-	variable	punctuation	{[<>#%"]}	;#" fake emacs hilit
-	variable	reserved	{[;/?:@&=]}
 	variable	hex		{[0-9A-Fa-f]}
 	variable	alphaDigit	{[A-Za-z0-9]}
 	variable	alphaDigitMinus	{[A-Za-z0-9-]}
-
-	# next is <national | punctuation>
-	variable	unsafe		{[][<>"#%\{\}|\\^~`]} ;#" emacs hilit
 	variable	escape		"%${hex}${hex}"
-
-	#	unreserved	= alpha | digit | safe | extra
-	#	xchar		= unreserved | reserved | escape
-
-	variable	unreserved	{[a-zA-Z0-9$_.+!*'(,)-]}
-	variable	uChar		"(${unreserved}|${escape})"
-	variable	xCharN		{[a-zA-Z0-9$_.+!*'(,);/?:@&=-]}
-	variable	xChar		"(${xCharN}|${escape})"
 	variable	digits		"${digit}+"
 
 	variable	toplabel	\
-		"(${alpha}${alphaDigitMinus}*${alphaDigit}|${alpha})"
+		"(${alphaDigit}${alphaDigitMinus}*${alphaDigit}\\.?|${alphaDigit}\\.?)"
 	variable	domainlabel	\
 		"(${alphaDigit}${alphaDigitMinus}*${alphaDigit}|${alphaDigit})"
 
@@ -73,22 +66,108 @@ namespace eval ::uri {
 	variable	hostnumber4	\
 		"(?:${digits}\\.${digits}\\.${digits}\\.${digits})"
 	variable	hostnumber6	{(?:\[[^]]*\])}
- 	variable	hostnumber	"(${hostnumber4}|${hostnumber6})"
-
-	variable	host		"(${hostname}|${hostnumber})"
-
-	variable	port		$digits
-	variable	hostOrPort	"${host}(:${port})?"
+	variable	hostnumber	"(${hostnumber4}|${hostnumber6})"
 
 	variable	usrCharN	{[a-zA-Z0-9$_.+!*'(,);?&=-]}
 	variable	usrChar		"(${usrCharN}|${escape})"
+
+	# ----------------------------------------------------------------------
+	# >>> THESE VARIABLES ARE THE ONLY ONES USED BY COMMANDS <<<
+	# ----------------------------------------------------------------------
+
+	variable	hostspec	"${hostname}|${hostnumber}"
+	variable	port		"${digit}*"
 	variable	user		"${usrChar}*"
 	variable	password	$user
+
+	# ----------------------------------------------------------------------
+	# This variable (and escape, hostname, hostnumber, port, user, password
+	# from above) are used to construct the variables in the block below.
+	# ----------------------------------------------------------------------
+
+	variable	xCharN		{[a-zA-Z0-9$_.+!*'(,);/?:@&=-]}
+
+	# ----------------------------------------------------------------------
+	# These variables (and "escape") are used in the patterns defined in the
+	# calls to uri::register at the end of the file.  They are not used by
+	# any commands.
+	# ----------------------------------------------------------------------
+
+	variable	xChar		"(${xCharN}|${escape})"
+	variable	host		"(${hostname}|${hostnumber})"
+	variable	hostOrPort	"${host}(:${port})?"
 	variable	login		"(${user}(:${password})?@)?${hostOrPort}"
+	variable	alpha		{[a-zA-Z]}
+
+	# ----------------------------------------------------------------------
+	# These variables are not used by anything in this file.
+	# ----------------------------------------------------------------------
+
+	variable	loAlpha		{[a-z]}
+	variable	hiAlpha		{[A-Z]}
+	variable	safe		{[$_.+-]}
+	variable	extra		{[!*'(,)]}
+	# danger in next pattern, order important for []
+	variable	national	{[][|\}\{\^~`]}
+	variable	punctuation	{[<>#%"]}	;#" fake emacs hilit
+	variable	reserved	{[;/?:@&=]}
+
+	# next is <national | punctuation>
+	variable	unsafe		{[][<>"#%\{\}|\\^~`]} ;#" emacs hilit
+
+	#	unreserved	= alpha | digit | safe | extra
+	#	xchar		= unreserved | reserved | escape
+
+	variable	unreserved	{[a-zA-Z0-9$_.+!*'(,)-]}
+	variable	uChar		"(${unreserved}|${escape})"
+
     } ;# basic {}
 }
-
 
+# ::uri::setQuirkOption
+#
+#	Accessor command for quirk options; uses "set" semantics.
+#
+#	Quirk options allow deviations from RFC 3986, and are fully documented
+#	in the man page uri(n).
+#
+#	Currently defined quirk options are:
+#	    NoInitialSlash
+#	    NoExtraKeys
+#	    RemoveDoubleSlashes
+#	    HostAsDriveLetter
+#
+# Arguments:
+#	key	name of a quirk option
+#       value	(optional, boolean) new value
+#
+# Results:
+#	The value of the quirk option.
+
+proc ::uri::setQuirkOption {key args} {
+    variable Quirks
+
+    if {![info exists Quirks($key)]} {
+	return -code error {unknown key}
+    }
+
+    set lenny [llength $args]
+    if {$lenny == 0} {
+	return $Quirks($key)
+    } elseif {$lenny == 1} {
+	set value [lindex $args 0]
+	if {![string is boolean -strict $value]} {
+	    return -code error {boolean value required}
+	}
+	set Quirks($key) [expr {$value && $value}]
+	return $value
+    } else {
+        return -code error {wrong # args: should be "::uri::setQuirkOption\
+		key ?newBooleanValue?"}
+    }
+}
+
+
 # ::uri::register --
 #
 #	Register a scheme (and aliases) in the package. The command
@@ -100,6 +179,11 @@ namespace eval ::uri {
 #	The script has to declare at least the variable "schemepart",
 #	the pattern for an url of the registered scheme after the
 #	scheme declaration. Not declaring this variable is an error.
+#
+#	Registration provides a number of pattern variables for use by external
+#	code.  It is unconnected to the commands provided by the uri package.
+#	See the warnings near the end of this file where uri::register is
+#	called.
 #
 # Arguments:
 #	schemeList	Name of the scheme to register, plus aliases
@@ -151,7 +235,7 @@ proc ::uri::register {schemeList script} {
     set url [string trimright $url |]
     return
 }
-
+
 # ::uri::split --
 #
 #	Splits the given <a url> into its constituents.
@@ -167,15 +251,21 @@ proc ::uri::split {url {defaultscheme http}} {
     set url [string trim $url]
     set scheme {}
 
-    # RFC 1738:	scheme = 1*[ lowalpha | digit | "+" | "-" | "." ]
-    regexp -- {^([A-Za-z0-9+.-][A-Za-z0-9+.-]*):} $url dummy scheme
+    # RFC 3986 Sec 3.1: scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+    regexp -- {^([A-Za-z][A-Za-z0-9+.-]*):} $url dummy scheme
 
     if {$scheme == {}} {
 	set scheme $defaultscheme
 	switch -- $scheme {
 	    http - https - ftp {
-		# Force an empty host part
-		set url //$url
+		# x/y     -> //x/y    PREPEND //
+		# /x/y    -> ///x/y   PREPEND //
+		# //x/y   -> //x/y
+		# ///x/y  -> ///x/y
+		# ////x/y -> ////x/y
+		if {[string range $url 0 1] != "//"} {
+		    set url //$url
+		}
 	    }
 	}
     }
@@ -189,10 +279,11 @@ proc ::uri::split {url {defaultscheme http}} {
 
     regsub -- "^${scheme}:" $url {} url
 
+    # Pass url without scheme: to the per-scheme handler.
     set       parts(scheme) [string tolower $scheme]
     array set parts [Split[string totitle $scheme] $url]
 
-    # should decode all encoded characters!
+    # Does not decode encoded characters.
 
     return [array get parts]
 }
@@ -215,7 +306,7 @@ proc ::uri::SplitFtp {url} {
 
     upvar \#0 [namespace current]::ftp::typepart ftptype
 
-    array set parts {user {} pwd {} host {} port {} path {} type {}}
+    array set parts {user {} pwd {} host {} port {} path {} type {} scheme ftp}
 
     # slash off possible type specification
 
@@ -236,43 +327,58 @@ proc ::uri::SplitFtp {url} {
 	set url [string range $url 2 end]
 
 	array set parts [GetUPHP url]
+	# (also removes UPHP from url)
     }
 
-    set parts(path) [string trimleft $url /]
+    set parts(path) $url
+    AddQuirk3986 parts
 
     return [array get parts]
 }
 
 proc ::uri::JoinFtp args {
+    set uphp [eval [linsert $args 0 ComposeUPHP {}]]
+
     array set components {
-	user {} pwd {} host {} port {}
-	path {} type {}
+	pbare 0 path {} type {}
     }
     array set components $args
-
-    set userPwd {}
-    if {[string length $components(user)] || [string length $components(pwd)]} {
-	set userPwd $components(user)[expr {[string length $components(pwd)] ? ":$components(pwd)" : {}}]@
-    }
-
-    set port {}
-    if {[string length $components(port)]} {
-	set port :$components(port)
-    }
 
     set type {}
     if {[string length $components(type)]} {
 	set type \;type=$components(type)
     }
 
-    return ftp://${userPwd}$components(host)${port}/[string trimleft $components(path) /]$type
+    RemoveQuirk3986 components
+
+    # Botches to accept certain invalid arguments instead of raising an error.
+
+    set PathFirst [string index $components(path) 0]
+    if {($PathFirst != {}) && ($PathFirst != {/})} {
+	# The path is invalid: if it is not empty it must begin with "/".
+	# This botch allows the command nevertheless to return a valid URI.
+	set components(path) "/$components(path)"
+    }
+
+    if {($components(path) == {}) && ($components(type) != "")} {
+	set components(path) "/"
+	# FTP requires a non-empty path if $type is non-empty.
+	# RFC 1738 Sec. 5, 
+	# This botch enforces that.
+    }
+
+    return ftp://${uphp}$components(path)$type
 }
 
 proc ::uri::SplitHttps {url} {
-    return [SplitHttp $url]
+    return [SplitHttpInner https $url]
+}
+
+proc ::uri::SplitHttp {url} {
+    return [SplitHttpInner http $url]
 }
 
-proc ::uri::SplitHttp {url} {
+proc ::uri::SplitHttpInner {scheme url} {
     # @c Splits the given http-<a url> into its constituents.
     # @a url: The url to split, without! scheme specification.
     # @r List containing the constituents, suitable for 'array set'.
@@ -293,13 +399,10 @@ proc ::uri::SplitHttp {url} {
     #
     # path == <cwd1> "/" ..."/" <cwdN> "/" <name> ["#" <fragment>]
 
-    upvar #0 [namespace current]::http::search  search
-    upvar #0 [namespace current]::http::segment segment
-
     array set parts {host {} port {} path {} query {} fragment {}}
+    array set parts [list scheme $scheme]
 
-    set searchPattern   "\\?(${search})\$"
-    set fragmentPattern "#(${segment})\$"
+    set fragmentPattern "#(.*)\$"
 
     # slash off possible fragment.
 
@@ -333,9 +436,11 @@ proc ::uri::SplitHttp {url} {
 	set url [string range $url 2 end]
 
 	array set parts [GetUPHP url]
+	# (also removes UPHP from url)
     }
 
-    set parts(path) [string trimleft $url /]
+    set parts(path) $url
+    AddQuirk3986 parts
 
     return [array get parts]
 }
@@ -349,21 +454,15 @@ proc ::uri::JoinHttps {args} {
 }
 
 proc ::uri::JoinHttpInner {scheme defport args} {
-    array set components {host {} path {} query {} fragment {}}
-    set       components(port) $defport
-    array set components $args
+    set uphp [eval [linsert $args 0 ComposeUPHP $defport]]
 
-    set port {}
-    if {[string length $components(port)] && $components(port) != $defport} {
-	set port :$components(port)
-    }
+    array set components {pbare 0 path {} query {} fragment {}}
+    array set components $args
 
     set query {}
     if {[string length $components(query)]} {
 	set query ?$components(query)
     }
-
-    regsub -- {^/} $components(path) {} components(path)
 
     if { $components(fragment) != "" } {
 	set components(fragment) "#$components(fragment)"
@@ -371,29 +470,40 @@ proc ::uri::JoinHttpInner {scheme defport args} {
 	set components(fragment) ""
     }
 
-    return $scheme://$components(host)$port/$components(path)$query$components(fragment)
+    RemoveQuirk3986 components
+
+    # Botch to accept certain invalid arguments instead of raising an error.
+
+    set PathFirst [string index $components(path) 0]
+    if {($PathFirst != {}) && ($PathFirst != {/})} {
+	# The path is invalid: if it is not empty it must begin with "/".
+	# This botch allows the command nevertheless to return a valid URI.
+	set components(path) "/$components(path)"
+    }
+
+    return $scheme://$uphp$components(path)$query$components(fragment)
 }
 
 proc ::uri::SplitFile {url} {
     # @c Splits the given file-<a url> into its constituents.
     # @a url: The url to split, without! scheme specification.
     # @r List containing the constituents, suitable for 'array set'.
+    variable Quirks
 
-    upvar #0 [namespace current]::basic::hostname	hostname
-    upvar #0 [namespace current]::basic::hostnumber	hostnumber
+    upvar #0 [namespace current]::basic::hostspec	hostspec
 
     if {[string match "//*" $url]} {
 	set url [string range $url 2 end]
 
-	set hostPattern "^($hostname|$hostnumber)"
-	switch -exact -- $::tcl_platform(platform) {
-	    windows {
-		# Catch drive letter
-		append hostPattern :?
-	    }
-	    default {
-		# Proceed as usual
-	    }
+	set hostPattern "^($hostspec)"
+
+	if {    $Quirks(HostAsDriveLetter)
+	     && ($::tcl_platform(platform) == "windows")
+	} {
+	    # Catch drive letter
+	    append hostPattern :?
+	} else {
+	    # Proceed as usual
 	}
 
 	if {[regexp -indices -- $hostPattern $url match host]} {
@@ -409,28 +519,39 @@ proc ::uri::SplitFile {url} {
 	}
     }
 
+    # This always begins with "/" if $url is a valid absolute file:// URL.
     set parts(path) $url
 
     return [array get parts]
 }
 
 proc ::uri::JoinFile args {
+    variable Quirks
     array set components {
 	host {} port {} path {}
     }
     array set components $args
 
-    switch -exact -- $::tcl_platform(platform) {
-	windows {
-	    if {[string length $components(host)]} {
-		return file://$components(host):$components(path)
-	    } else {
-		return file://$components(path)
-	    }
+    if {    $Quirks(HostAsDriveLetter)
+	 && ($::tcl_platform(platform) == "windows")
+    } {
+	# This misfeature is kept for compatibility with legacy code.
+	if {[string length $components(host)]} {
+	    return file://$components(host):$components(path)
+	} else {
+	    return file://$components(path)
 	}
-	default {
-	    return file://$components(host)$components(path)
+    } else {
+        # Botch to accept certain invalid arguments instead of raising an error.
+	if {[string index $components(path) 0] != "/"} {
+	    # The path argument is invalid: it must begin with "/" (an empty
+	    # path is not allowed for the scheme "file", RFC 1738 Sec. 5).
+	    # This botch allows the command nevertheless to return a valid URI.
+	    set components(path) "/$components(path)"
+	} else {
 	}
+
+	return file://$components(host)$components(path)
     }
 }
 
@@ -548,6 +669,28 @@ proc ::uri::JoinLdapInner {scheme defport args} {
     return $url
 }
 
+proc ::uri::ComposeUPHP {defport args} {
+    # user:pwd@host:port
+
+    array set components {
+	user {} pwd {} host {} port {}
+    }
+    set       components(port) $defport
+    array set components $args
+
+    set userPwd {}
+    if {[string length $components(user)] || [string length $components(pwd)]} {
+	set userPwd $components(user)[expr {[string length $components(pwd)] ? ":$components(pwd)" : {}}]@
+    }
+
+    set port {}
+    if {[string length $components(port)] && $components(port) != $defport} {
+	set port :$components(port)
+    }
+
+    return ${userPwd}$components(host)${port}
+}
+
 proc ::uri::GetUPHP {urlvar} {
     # @c Parse user, password host and port out of the url stored in
     # @c variable <a urlvar>.
@@ -558,11 +701,11 @@ proc ::uri::GetUPHP {urlvar} {
 
     upvar \#0 [namespace current]::basic::user		user
     upvar \#0 [namespace current]::basic::password	password
-    upvar \#0 [namespace current]::basic::hostname	hostname
-    upvar \#0 [namespace current]::basic::hostnumber	hostnumber
+    upvar \#0 [namespace current]::basic::hostspec	hostspec
     upvar \#0 [namespace current]::basic::port		port
 
     upvar $urlvar url
+    set url_save $url
 
     array set parts {user {} pwd {} host {} port {}}
 
@@ -588,7 +731,7 @@ proc ::uri::GetUPHP {urlvar} {
 	set url	[string range $url $matchEnd end]
     }
 
-    set hpPattern "^($hostname|$hostnumber)(:($port))?"
+    set hpPattern "^($hostspec)(:($port))?"
 
     if {[regexp -indices -- $hpPattern $url match theHost c d e f g h thePort]} {
 	set fh	[lindex $theHost 0]
@@ -605,39 +748,9 @@ proc ::uri::GetUPHP {urlvar} {
 
 	set url	[string range $url $matchEnd end]
     }
-
-    return [array get parts]
-}
-
-proc ::uri::GetHostPort {urlvar} {
-    # @c Parse host and port out of the url stored in variable <a urlvar>.
-    # @d Side effect: The extracted information is removed from the given url.
-    # @r List containing the extracted information in a format suitable for
-    # @r 'array set'.
-    # @a urlvar: Name of the variable containing the url to parse.
-
-    upvar #0 [namespace current]::basic::hostname	hostname
-    upvar #0 [namespace current]::basic::hostnumber	hostnumber
-    upvar #0 [namespace current]::basic::port		port
-
-    upvar $urlvar url
-
-    set pattern "^(${hostname}|${hostnumber})(:(${port}))?"
-
-    if {[regexp -indices -- $pattern $url match host c d e f g h thePort]} {
-	set fromHost	[lindex $host 0]
-	set toHost	[lindex $host 1]
-
-	set fromPort	[lindex $thePort 0]
-	set toPort	[lindex $thePort 1]
-
-	set parts(host)	[string range $url $fromHost $toHost]
-	set parts(port)	[string range $url $fromPort $toPort]
-
-	set  matchEnd   [lindex $match 1]
-	incr matchEnd
-
-	set url [string range $url $matchEnd end]
+    
+    if {(![string match /* $url]) && ($url ne {})} {
+	error [list {invalid url} $url $url_save]
     }
 
     return [array get parts]
@@ -647,6 +760,15 @@ proc ::uri::GetHostPort {urlvar} {
 #
 #	Resolve an arbitrary URL, given a base URL
 #
+# This code depends on the ability of uri::split to process relative URIs.
+# N.B. http(s): and ftp: path does not begin with "/" and may be empty.
+# The file: path (unix or win) always begins "/", even if a host is specified.
+#
+# RFC 3986 Sec. 5.2 defines how URI relative resolution should proceed.
+# This command is a "strict parser" in the sense of Sec. 5.2.2: it does not
+# allow a relative URI such as "http:foo/bar.html".  See also the last example
+# in Sec. 5.4.2 and uri-rfc2396.test test uri-rfc2396-11.19.
+#
 # Arguments:
 #	base	base URL (absolute)
 #	url	arbitrary URL
@@ -655,45 +777,113 @@ proc ::uri::GetHostPort {urlvar} {
 #	Returns a URL
 
 proc ::uri::resolve {base url} {
-    if {[string length $url]} {
-	if {[isrelative $url]} {
-	    array set baseparts [split $base]
+    if {[isrelative $url]} {
+	set canon 1
+	array set baseparts [split $base]
 
-	    switch -- $baseparts(scheme) {
-		http -
-		https -
-		ftp -
-		file {
-		    array set relparts [split $baseparts(scheme):$url]
-		    if { [string match /* $url] } {
-			catch { set baseparts(path) $relparts(path) }
-			# RFC 3986 section 4.2 - no scheme, but authority (host), keep authority
-			catch {
-			    if {$relparts(host) != ""} {
-				set baseparts(host) $relparts(host)
-			    }
-			}
-		    } elseif { [string match */ $baseparts(path)] } {
-			set baseparts(path) "$baseparts(path)$relparts(path)"
-		    } else {
-			if { [string length $relparts(path)] > 0 } {
-			    set path [lreplace [::split $baseparts(path) /] end end]
-			    set baseparts(path) "[::join $path /]/$relparts(path)"
+	switch -- $baseparts(scheme) {
+	    http -
+	    https -
+	    ftp -
+	    file {
+		set changed 0
+		array set relparts [split $baseparts(scheme):$url]
+		if {[array names relparts path] != {path}} {
+		    set relparts(path) {}
+		}
+		if { [string match /* $url] } {
+		    set baseparts(path)  $relparts(path)
+		    if {    [info exists baseparts(pbare)]
+		         && [info exists relparts(pbare)]
+		    } {
+			# This test and action are sufficient to make
+			# uri::resolve work for all schemes and quirk options.
+			set baseparts(pbare) $relparts(pbare)
+		    }
+		    catch {
+			if {$relparts(host) != ""} {
+			    # RFC 3986 section 4.2 and 5.2.2.
+			    # url has no scheme, but has authority
+			    # ("UPHP" or User,Password,Host,Port). Use that
+			    # authority. Do not transfer credentials or port
+			    # number from the base authority.
+			    set baseparts(host) $relparts(host)
+			    set baseparts(user) {}
+			    set baseparts(pwd)  {}
+			    set baseparts(port) {}
+			    set baseparts(user) $relparts(user)
+			    set baseparts(pwd)  $relparts(pwd)
+			    set baseparts(port) $relparts(port)
 			}
 		    }
-		    catch { set baseparts(query) $relparts(query) }
-		    catch { set baseparts(fragment) $relparts(fragment) }
-		    return [eval [linsert [array get baseparts] 0 join]]
-		}
-		default {
-		    return -code error "unable to resolve relative URL \"$url\""
+		    set changed 1
+		} elseif {    [string match */ $baseparts(path)]
+			   && ([string length $relparts(path)] > 0)
+		} {
+		    set baseparts(path) "$baseparts(path)$relparts(path)"
+		    set changed 1
+		} elseif { [string length $relparts(path)] > 0 } {
+		    set path [lreplace [::split $baseparts(path) /] end end]
+		    set baseparts(path) "[::join $path /]/$relparts(path)"
+		    set changed 1
+		} else {
+		    # Do not overwrite baseparts(path).  In this case,
+		    # RFC 3986 Sec. 5.2.2 does not demand canonicalization.
+		    # FIXME check whether the RFC assumes the base URI is
+		    # already canonical.
+		    set canon 0
 		}
 	    }
-	} else {
-	    return $url
+	    default {
+		return -code error "unable to resolve relative URL \"$url\""
+	    }
 	}
+
+	# query and fragment are defined for http, https; not for file, ftp
+	# Fragment is useful in HTML documents that are accessed by file or ftp,
+	# but this is not supported by the RFCs.
+	switch -- $baseparts(scheme) {
+	    http -
+	    https {
+		if {[array names relparts query] != {query}} {
+		    set relparts(query) {}
+		}
+		if {[array names relparts fragment] != {fragment}} {
+		    set relparts(fragment) {}
+		}
+
+		if {$changed || ($relparts(query) != {})} {
+		    set baseparts(query) $relparts(query)
+		    set changed 1
+		} else {
+		    # Keep base query.
+		    # FIXME error if url has empty query "?".
+		    # FIXME (in split/join) empty query "?".
+		}
+
+		# RFC 3986 section 5.2.2 requires that the base fragment
+		# is always discarded.
+		set baseparts(fragment) $relparts(fragment)
+		# FIXME error if url has empty fragment "#".
+		# FIXME (in split/join) empty fragment "#".
+	    }
+	    ftp -
+	    file -
+	    default {
+	    }
+	}
+
+	set url [eval [linsert [array get baseparts] 0 join]]
+	if {$canon} {
+	    # RFC 3986 section 5.2.2 requires us to canonicalize the path.
+	    set url [canonicalize $url]
+	} else {
+	}
+	return $url
     } else {
-	return $base
+	# RFC 3986 section 5.2.2 requires us to canonicalize the path.
+	set url [canonicalize $url]
+	return $url
     }
 }
 
@@ -708,7 +898,7 @@ proc ::uri::resolve {base url} {
 #	Returns 1 if the URL is relative, 0 otherwise
 
 proc ::uri::isrelative url {
-    return [expr {![regexp -- {^[a-z0-9+-.][a-z0-9+-.]*:} $url]}]
+    return [expr {![regexp -- {^[A-Za-z][A-Za-z0-9+.-]*:} $url]}]
 }
 
 # ::uri::geturl --
@@ -730,7 +920,7 @@ proc ::uri::geturl {url args} {
 
     switch -- $urlparts(scheme) {
 	file {
-        return [eval [linsert $args 0 file_geturl $url]]
+	    return [eval [linsert $args 0 file_geturl $url]]
 	}
 	default {
 	    # Load a geturl package for the scheme first and only if
@@ -739,7 +929,7 @@ proc ::uri::geturl {url args} {
 	    if {[catch {package require $urlparts(scheme)::geturl}]} {
 		package require $urlparts(scheme)
 	    }
-        return [eval [linsert $args 0 $urlparts(scheme)::geturl $url]]
+	    return [eval [linsert $args 0 $urlparts(scheme)::geturl $url]]
 	}
     }
 }
@@ -793,22 +983,24 @@ proc ::uri::join args {
 
     return [eval [linsert $args 0 Join[string totitle $components(scheme)]]]
 }
-
+
 # ::uri::canonicalize --
 #
 #	Canonicalize a URL
 #
 # Acknowledgements:
 #	Andreas Kupries <andreas_kupries@users.sourceforge.net>
+#	Keith Nash <kjnash@users.sourceforge.net>
 #
 # Arguments:
 #	uri	URI (which contains a path component)
 #
 # Results:
-#	The canonical form of the URI
+#	The URI with the filename path in its canonical form.
+#	This is not full URI "normalization" which may require further
+#	processing.
 
 proc ::uri::canonicalize uri {
-
     # Make uri canonical with respect to dots (path changing commands)
     #
     # Remove single dots (.)  => pwd not changing
@@ -833,26 +1025,196 @@ proc ::uri::canonicalize uri {
 	return $uri
     }
 
-    set uri $u(path)
+    # RemoveDotSegments works perfectly well on paths without a leading "/", but
+    # removing and re-adding the quirks ensures RFC 3986 conformance in a few
+    # corner cases.
+    RemoveQuirk3986 u
+    set u(path) [RemoveDotSegments $u(path)]
+    AddQuirk3986 u
 
-    # Remove leading "./" "../" "/.." (and "/../")
-    regsub -all -- {^(\./)+}    $uri {}  uri
-    regsub -all -- {^/(\.\./)+} $uri {/} uri
-    regsub -all -- {^(\.\./)+}  $uri {}  uri
-
-    # Remove inner /./ and /../
-    while {[regsub -all -- {/\./}         $uri {/} uri]} {}
-    while {[regsub -all -- {/[^/]+/\.\./} $uri {/} uri]} {}
-    while {[regsub -all -- {^[^/]+/\.\./} $uri {}  uri]} {}
-    # Munge trailing /..
-    while {[regsub -all -- {/[^/]+/\.\.} $uri {/} uri]} {}
-    if { $uri == ".." } { set uri "/" }
-
-    set u(path) $uri
     set uri [eval [linsert [array get u] 0 ::uri::join]]
 
     return $uri
 }
+
+
+# ::uri::RemoveDotSegments --
+#
+#	Remove any segments "." and ".." from a URI path.
+#	Optionally remove empty segments {}.
+#
+#	Intended to implement the "remove_dot_segments" routine
+#	defined in RFC 3986 Sec. 5.2.4.
+#
+# Acknowledgements:
+#	Andreas Kupries <andreas_kupries@users.sourceforge.net>
+#	Keith Nash <kjnash@users.sourceforge.net>
+#
+# Arguments:
+#	path	path component of a URI
+#
+# Results:
+#	The URI path in its canonical form.
+
+proc ::uri::RemoveDotSegments path {
+    variable Quirks
+
+    set oldList [::split $path /]
+
+    if {[lindex $oldList 0] == {}} {
+	set lead 1
+    } else {
+	set lead 0
+    }
+
+    set end [llength $oldList]
+    incr end -1
+
+    # i - index of element seg in oldList
+    # j - index of last element written to newList
+    set i 0
+    set j -1
+    set newList {}
+    foreach seg $oldList {
+	if {    $Quirks(RemoveDoubleSlashes)
+	     && ($seg == {}) && ($i != 0) && ($i != $end)
+	} {
+	    # Throw away this empty segment.
+	    # This merges adjacent "/".
+	    # If the first or last segment is empty, it is handled at "else".
+	    # Other empty segments are also handled at "else" if this quirk has
+	    # not been requested.
+	} elseif {($seg == {.}) && ($i == $end)} {
+	    # Replace "." with {} to keep a trailing "/" in path.
+	    lappend newList {}
+	    incr j
+	} elseif {$seg == {.}} {
+	    # Throw away this "." segment.
+	} elseif {($seg == {..}) && ($j > $lead - 1) && ($i == $end)} {
+	    # Remove the element previously added to newList, and
+	    # replace it with {} to keep a trailing "/" in path.
+	    set newList [lreplace $newList $j $j {}]
+	} elseif {($seg == {..}) && ($j > $lead - 1)} {
+	    # Remove the element previously added to newList.
+	    set newList [lreplace $newList $j $j]
+	    incr j -1
+	} elseif {($seg == {..}) && ($i == $end)} {
+	    # Can't go any deeper in newList, but this path needs a
+	    # leading "/".
+	    lappend newList {}
+	    incr j
+	} elseif {$seg == {..}} {
+	    # Can't go any deeper in newList.
+	} else {
+	    # A "normal" path segment!
+	    lappend newList $seg
+	    incr j
+	}
+
+	incr i
+    }
+
+    return [::join $newList /]
+}
+
+
+# ::uri::RemoveQuirk3986
+#
+#	Work on an array produced by uri::split. Read the path and pbare
+#	elements, and convert the path element to RFC 3986 compliance from
+#	NoInitialSlash and NoExtraKeys quirks modes IF the caller has requested
+#	these quirks AND they are used by the array's scheme.
+#
+#	Full RFC 3986 compliance is not possible if the caller has set both the
+#	quirks NoInitialSlash and NoExtraKeys.  This mode is offered for
+#	backward compatibility.  See documentation uri(n).
+#
+# Arguments:
+#	arrName	    Name of array in the caller's stack frame that holds the
+#		    results of uri::split.
+# Results:
+#	No return value.  The array is modified as a side effect.
+
+proc ::uri::RemoveQuirk3986 {arrName} {
+    variable Quirks
+    upvar 1 $arrName u
+
+    if {    $Quirks(NoInitialSlash)
+	 && ([lsearch {http https ftp} $u(scheme)] != -1)
+    } {
+        if {$Quirks(NoExtraKeys)} {
+	    array set u {pbare 0}
+	} else {
+	    # Keep existing value of u(pbare).
+	}
+
+	set PathFirst [string index $u(path) 0]
+	if {($PathFirst != {}) && ($PathFirst != {/})} {
+	    # If the quirk is set and used, then the leading "/" of the path has
+	    # been stripped.  Put it back.
+	    set u(path) "/$u(path)"
+	} elseif {($PathFirst != {}) && ($PathFirst == {/})} {
+	    # In principle we should prepend "/" to u(path) here too, but this
+	    # leads to perverse results, e.g. uri::join with path "/" becomes
+	    # path "//".
+	} elseif {($PathFirst == {}) && (!$u(pbare))} {
+	    # This is how {} and / are distinguished for the value of the
+	    # 3986-defined path, when the quirk is set and used, i.e. when the
+	    # leading "/" of the path has been stripped.
+	    set u(path) "/"
+	} else {
+	    # Leave u(path) unchanged.
+	}
+    }
+
+    if {$Quirks(NoInitialSlash) && (!$Quirks(NoExtraKeys))} {
+	# pbare is required
+    } else {
+	array unset u pbare
+    }
+
+    return
+}
+
+# ::uri::AddQuirk3986
+#
+#	Work on an array produced by uri::split. Read the path element, and
+#	convert the path and pbare elements from RFC 3986 compliance to
+#	NoInitialSlash and NoExtraKeys quirks modes IF the caller has requested
+#	these quirks AND they are used by the array's scheme.
+#
+# Arguments:
+#	arrName	    Name of array in the caller's stack frame that holds the
+#		    results of uri::split.
+# Results:
+#	No return value.  The array is modified as a side effect.
+
+proc ::uri::AddQuirk3986 arrName {
+    variable Quirks
+    upvar 1 $arrName u
+
+    array unset u pbare
+
+    if {    $Quirks(NoInitialSlash)
+	 && ([lsearch {http https ftp} $u(scheme)] != -1)
+    } {
+	if {$Quirks(NoExtraKeys)} {
+	    # u(pbare) is refused
+	} elseif {($u(path) == {})} {
+	    set u(pbare) 1
+	} else {
+	    set u(pbare) 0
+	}
+	# In principle we should remove only the first "/", not all
+	# of them, but it in this quirk regime it is cleaner to keep the
+	# rule that the path never begins with "/".
+	set u(path) [string trimleft $u(path) /]
+    } else {
+    }
+
+    return
+}
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # regular expressions covering various url schemes
@@ -864,8 +1226,9 @@ proc ::uri::canonicalize uri {
 # scheme	basic syntax of scheme specific part
 # ------------------------------------------------
 # ftp		//<user>:<password>@<host>:<port>/<cwd1>/.../<cwdN>/<name>;type=<typecode>
+#    		//<user>:<password>@<host>:<port>/fpath;type=<typecode>
 #
-# http		//<host>:<port>/<path>?<searchpart>
+# http		//<host>:<port>/<hpath>?<searchpart>
 #
 # gopher	//<host>:<port>/<gophertype><selector>
 #				<gophertype><selector>%09<search>
@@ -879,7 +1242,7 @@ proc ::uri::canonicalize uri {
 # wais		//<host>:<port>/<database>
 #		//<host>:<port>/<database>?<search>
 #		//<host>:<port>/<database>/<wtype>/<wpath>
-# file		//<host>/<path>
+# file		//<host>/<fpath>
 # prospero	//<host>:<port>/<hsoname>;<field>=<value>
 # ------------------------------------------------
 #
@@ -899,8 +1262,29 @@ proc ::uri::canonicalize uri {
 # ldap		//<host>:<port>/<dn>?<attrs>?<scope>?<filter>?<extensions>
 # ------------------------------------------------
 
+
+# ------------------------------------------------------------------------------
+#     IMPORTANT WARNINGS
+# ------------------------------------------------------------------------------
+# (1) THE PATTERNS DEFINED BELOW (with one exception) ARE NOT USED FOR PARSING
+#     URLs BY ANY OF THIS PACKAGE'S COMMANDS.
+# (2) THAT EXCEPTION IS THE VARIABLE ::uri::ftp::typepart
+# (3) AS LONG AS THAT VARIABLE IS ASSIGNED THE CORRECT VALUE, ALL THE
+#     uri::register CALLS CAN BE DELETED WITHOUT AFFECTING THE uri::* COMMANDS.
+# (2) REGISTRATION OF A SCHEME DOES NOT IMPLEMENT COMMANDS FOR THAT SCHEME.
+# (3) REGISTRATION OF A SCHEME IS NOT NECESSARY TO IMPLEMENT COMMANDS FOR THAT
+#     SCHEME.
+#     Instead:
+# (4) THE PATTERNS ARE FOR REFERENCE, AND CAN BE ACCESSED VIA THESE NAMESPACE
+#     VARIABLES, OR IN SOME CASES VIA VARIABLES MAINTAINED BY uri::register.
+# (5) THE VARIABLES schemepart AND url ARE MENTIONED IN THE DOCUMENTATION.
+# (6) UNDOCUMENTED VARIABLES MIGHT BE ACCESSED BY THIRD-PARTY CODE.
+# (7) THEREFORE EVERYTHING IS RETAINED FOR BACKWARD COMPATIBILITY.
+# ------------------------------------------------------------------------------
+
 # FTP
 uri::register ftp {
+    # Please read the warnings above.
     variable escape [set [namespace parent [namespace current]]::basic::escape]
     variable login  [set [namespace parent [namespace current]]::basic::login]
 
@@ -911,6 +1295,8 @@ uri::register ftp {
 
     variable	type		{[AaDdIi]}
     variable	typepart	";type=(${type})"
+    # Used elsewhere: typepart
+
     variable	schemepart	\
 		    "//${login}(/${path}(${typepart})?)?"
 
@@ -919,6 +1305,7 @@ uri::register ftp {
 
 # FILE
 uri::register file {
+    # Please read the warnings above.
     variable	host [set [namespace parent [namespace current]]::basic::host]
     variable	path [set [namespace parent [namespace current]]::ftp::path]
 
@@ -927,7 +1314,8 @@ uri::register file {
 }
 
 # HTTP
-uri::register http {
+uri::register {http https} {
+    # Please read the warnings above.
     variable	escape \
         [set [namespace parent [namespace current]]::basic::escape]
     variable	hostOrPort	\
@@ -947,6 +1335,7 @@ uri::register http {
 
 # GOPHER
 uri::register gopher {
+    # Please read the warnings above.
     variable	xChar \
         [set [namespace parent [namespace current]]::basic::xChar]
     variable	hostOrPort \
@@ -964,6 +1353,7 @@ uri::register gopher {
 
 # MAILTO
 uri::register mailto {
+    # Please read the warnings above.
     variable xChar [set [namespace parent [namespace current]]::basic::xChar]
     variable host  [set [namespace parent [namespace current]]::basic::host]
 
@@ -973,6 +1363,7 @@ uri::register mailto {
 
 # NEWS
 uri::register news {
+    # Please read the warnings above.
     variable escape [set [namespace parent [namespace current]]::basic::escape]
     variable alpha  [set [namespace parent [namespace current]]::basic::alpha]
     variable host   [set [namespace parent [namespace current]]::basic::host]
@@ -988,6 +1379,7 @@ uri::register news {
 
 # WAIS
 uri::register wais {
+    # Please read the warnings above.
     variable	uChar \
         [set [namespace parent [namespace current]]::basic::xChar]
     variable	hostOrPort \
@@ -1013,6 +1405,7 @@ uri::register wais {
 
 # PROSPERO
 uri::register prospero {
+    # Please read the warnings above.
     variable	escape \
         [set [namespace parent [namespace current]]::basic::escape]
     variable	hostOrPort \
@@ -1032,7 +1425,8 @@ uri::register prospero {
 }
 
 # LDAP
-uri::register ldap {
+uri::register {ldap ldaps} {
+    # Please read the warnings above.
     variable	hostOrPort \
         [set [namespace parent [namespace current]]::basic::hostOrPort]
 
@@ -1047,4 +1441,4 @@ uri::register ldap {
     variable	url		"ldap:$schemepart"
 }
 
-package provide uri 1.2.6
+package provide uri 1.2.7

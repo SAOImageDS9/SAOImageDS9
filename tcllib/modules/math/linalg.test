@@ -21,7 +21,7 @@ if {$regular==1} then {
                 [file dirname [file dirname [file join [pwd] [info script]]]] \
                 devtools testutilities.tcl]
 
-    testsNeedTcl     8.4
+    testsNeedTcl     8.5
     testsNeedTcltest 2.1
 
     support {
@@ -47,6 +47,7 @@ namespace import -force ::math::linearalgebra::*
 
 set prec $::tcl_precision
 if {![package vsatisfies [package provide Tcl] 8.5]} {
+    # 8.4 or less - Remove, 8.5+ required already
     set ::tcl_precision 17
 } else {
     set ::tcl_precision 0
@@ -499,6 +500,26 @@ test solve-1.5 "solveGauss - Hilbert matrix" -match numbers -body {
     set result [expr {$norm<1.e-3}]
 } -result {1}
 
+test solve-1.6 "solveGauss - permuted matrix" -match numbers -body {
+    set matrix {{1000    1    1   10}
+                 {   1 1000   10  100}
+                 {  10   10  100    1}
+                 { 100  100 1000 1000}}
+    set b      {1003.3 133 31.3 610}
+
+    set xvec1 [solveGauss $matrix $b]
+
+    set matrix {{ 100  100 1000 1000}
+                {1000    1    1   10}
+                {   1 1000   10  100}
+                {  10   10  100    1}}
+    set b      {610 1003.3 133 31.3}
+
+    set xvec2 [solveGauss $matrix $b]
+
+    set closeValues [areClose $xvec1 $xvec2 1.0e-8]
+} -result 1
+
 test solvepgauss-1.6 "solveGauss - 2x2 difficult matrix with necessary permutations" -match numbers -body {
     set M {{1.e-8 1} {1 1}}
     set b [list [expr {1.+1.e-8}] 2.]
@@ -841,6 +862,67 @@ test largesteigen-3 "power method" -body {
       } errmsg
     set errmsg
 } -result {Cannot continue power method : matrix is singular}
+
+# Conforming - ticket 776a75f14f53b5c9a06fe3f3892485a6efe1dc20
+test conforming-1 "Conforming shapes" -body {
+    set m1 {{1 2}
+            {3 4}}
+    set m2 {{1 3}
+            {3 4}}
+    conforming shape $m1 $m2
+} -result 1
+test conforming-2 "Non-conforming shapes" -body {
+    set m1 {{1 2}
+            {3 4}}
+    set m2 {{1 3 4}
+            {3 4 5}}
+    conforming shape $m1 $m2
+} -result 0
+test conforming-3 "Conforming matmul - two matrices" -body {
+    set m1 {{1 2}
+            {3 4}
+            {5 6}}
+    set m2 {{1 3 4}
+            {3 4 5}}
+    conforming matmul $m1 $m2
+} -result 1
+test conforming-4 "Conforming matmul - two matrices, reversed" -body {
+    set m1 {{1 2}
+            {3 4}
+            {5 6}}
+    set m2 {{1 3 4}
+            {3 4 5}}
+    conforming matmul $m2 $m1
+} -result 1
+test conforming-5 "Conforming matmul - vector-matrix" -body {
+    set mat {{1 2}
+             {3 4}
+             {5 6}}
+    set vec {1 3 4}
+    conforming matmul $vec $mat
+} -result 1
+test conforming-6 "Conforming matmul - vector-matrix" -body {
+    set mat {{1 2}
+             {3 4}
+             {5 6}}
+    set vec {1 3}
+    conforming matmul $mat $vec
+} -result 1
+test conforming-7 "Non-conforming matmul - vector-matrix" -body {
+    set mat {{1 2}
+             {3 4}
+             {5 6}}
+    set vec {1 3}
+    conforming matmul $vec $mat
+} -result 0
+test conforming-7 "Non-conforming matmul - vector-matrix" -body {
+    set mat {{1 2}
+             {3 4}
+             {5 6}}
+    set vec {1 2 3}
+    conforming matmul $mat $vec
+} -result 0
+
 
 # Additional tests: procedures by Federico Ferri
 #source ferri/ferri.test

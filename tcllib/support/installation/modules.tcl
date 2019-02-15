@@ -55,6 +55,7 @@ Module  crc         _tcl  _man  _null
 Module  cron        _tcl  _man  _null
 Module  csv         _tcl  _man _exa
 Module  debug       _tcl _null  _null
+Module  defer       _tcl  _man  _null
 Module  des         _tcl  _man  _null
 Module  dicttool    _tcl  _man  _null
 Module  dns          _msg _man _exa
@@ -119,6 +120,7 @@ Module  pluginmgr   _tcl  _man  _null
 Module  png         _tcl  _man  _null
 Module  pop3        _tcl  _man  _null
 Module  pop3d       _tcl  _man  _null
+Module  practcl     _tcl  _man  _exa
 Module  processman  _tcl  _man  _null
 Module  profiler    _tcl  _man  _null
 Module  pt           _rde _man  _null
@@ -144,10 +146,12 @@ Module  textutil     _tex _man  _null
 Module  tie         _tcl  _man  _exa
 Module  tiff        _tcl  _man  _null
 Module  tool        _tcl  _man  _null
+Module  tool-ui     _tcl  _man  _null
 Module  tool_datatype        _tcl  _man  _null
 Module  transfer    _tcl  _man  _null
 Module  treeql      _tcl  _man  _null
 Module  try         _tcl  _man  _null
+Module  udpcluster  _tcl  _man  _null
 Module  uev         _tcl  _man  _null
 Module  units       _tcl  _man  _null
 Module  uri         _tcl  _man  _null

@@ -99,7 +99,7 @@
 | <a href="../../../../toc2.html">Applications</a>
  ] <hr>
 <div class="doctools">
-<h1 class="doctools_title">fileutil::magic::filetype(n) 1.0.2 tcllib &quot;file utilities&quot;</h1>
+<h1 class="doctools_title">fileutil::magic::filetype(n) 2.0 tcllib &quot;file utilities&quot;</h1>
 <div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
 <p>fileutil::magic::filetype - Procedures implementing file-type recognition</p>
 </div>
@@ -118,8 +118,8 @@
 <div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
 <div class="doctools_synopsis">
 <ul class="doctools_requirements">
-<li>package require <b class="pkgname">Tcl 8.4</b></li>
-<li>package require <b class="pkgname">fileutil::magic::filetype <span class="opt">?1.0.2?</span></b></li>
+<li>package require <b class="pkgname">Tcl 8.6</b></li>
+<li>package require <b class="pkgname">fileutil::magic::filetype <span class="opt">?2.0?</span></b></li>
 </ul>
 <ul class="doctools_syntax">
 <li><a href="#1"><b class="cmd">::fileutil::magic::filetype</b> <i class="arg">filename</i></a></li>
@@ -132,14 +132,14 @@ pure Tcl.</p>
 <p>The core part of the recognizer was generated from a &quot;magic(5)&quot; file
 containing the checks to perform to recognize files, and associated
 file-types.</p>
-<p><em>Beware!</em> This recognizer is large, about 276 Kilobyte of
+<p><em>Beware!</em> This recognizer is large, about 752 Kilobyte of
 generated Tcl code.</p>
 <dl class="doctools_definitions">
 <dt><a name="1"><b class="cmd">::fileutil::magic::filetype</b> <i class="arg">filename</i></a></dt>
 <dd><p>This command is similar to the command <b class="cmd">fileutil::fileType</b>.</p>
-<p>The output of the command for the specified file is a string
-describing the type of the file.</p>
-<p>This list will be empty if the type of the file is not recognized.</p></dd>
+<p>Returns a list containing a list of descriptions, a list of mimetype
+components, and a list file extensions.  Returns an empty string if the file
+content is not recognized.</p></dd>
 </dl>
 </div>
 <div id="section2" class="doctools_section"><h2><a name="section2">REFERENCES</a></h2>
@@ -157,6 +157,12 @@ Please report such in the category <em>fileutil :: magic</em> of the
 <a href="http://core.tcl.tk/tcllib/reportlist">Tcllib Trackers</a>.
 Please also report any ideas for enhancements you may have for either
 package and/or documentation.</p>
+<p>When proposing code changes, please provide <em>unified diffs</em>,
+i.e the output of <b class="const">diff -u</b>.</p>
+<p>Note further that <em>attachments</em> are strongly preferred over
+inlined patches. Attachments can be made by going to the <b class="const">Edit</b>
+form of the ticket immediately after its creation, and then using the
+left-most button in the secondary navigation bar.</p>
 </div>
 <div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
 <p>file(1), <a href="../fileutil/fileutil.html">fileutil</a>, magic(5)</p>

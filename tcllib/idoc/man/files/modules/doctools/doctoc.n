@@ -1,8 +1,8 @@
 '\"
 '\" Generated from file 'doctoc\&.man' by tcllib/doctools with format 'nroff'
-'\" Copyright (c) 2003-2014 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
+'\" Copyright (c) 2003-2017 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
 '\"
-.TH "doctools::toc" n 1\&.1\&.4 tcllib "Documentation tools"
+.TH "doctools::toc" n 1\&.1\&.6 tcllib "Documentation tools"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -276,7 +276,7 @@ doctools::toc \- doctoc - Processing tables of contents
 .SH SYNOPSIS
 package require \fBTcl  8\&.2\fR
 .sp
-package require \fBdoctools::toc  ?1\&.1\&.4?\fR
+package require \fBdoctools::toc  ?1\&.1\&.6?\fR
 .sp
 \fB::doctools::toc::new\fR \fIobjectName\fR ?\fB-option\fR \fIvalue\fR \&.\&.\&.?
 .sp
@@ -585,6 +585,14 @@ Please report such in the category \fIdoctools\fR of the
 \fITcllib Trackers\fR [http://core\&.tcl\&.tk/tcllib/reportlist]\&.
 Please also report any ideas for enhancements you may have for either
 package and/or documentation\&.
+.PP
+When proposing code changes, please provide \fIunified diffs\fR,
+i\&.e the output of \fBdiff -u\fR\&.
+.PP
+Note further that \fIattachments\fR are strongly preferred over
+inlined patches\&. Attachments can be made by going to the \fBEdit\fR
+form of the ticket immediately after its creation, and then using the
+left-most button in the secondary navigation bar\&.
 .SH "SEE ALSO"
 doctoc_intro, doctoc_lang_cmdref, doctoc_lang_intro, doctoc_lang_syntax, doctoc_plugin_apiref
 .SH KEYWORDS
@@ -593,6 +601,6 @@ HTML, TMML, conversion, doctoc, documentation, latex, manpage, markup, nroff, ta
 Documentation tools
 .SH COPYRIGHT
 .nf
-Copyright (c) 2003-2014 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
+Copyright (c) 2003-2017 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
 
 .fi

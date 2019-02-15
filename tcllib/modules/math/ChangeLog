@@ -1,3 +1,76 @@
+2018-07-01  Arjen Markus <arjenmarkus@users.sourceforge.net>
+	* pca.tcl: New package PCA, principal components analysis
+	* pca.man: DoOcumentation for the PCA package
+	* pca.test: Tests for the PCA package
+	* pkgIndex.tcl: Add the package require command for the PCA package
+2017-10-06  Arjen Markus <arjenmarkus@users.sourceforge.net>
+	* mvlinreg.tcl: Special case for zero variation - then the correlation coefficient should be 1.0
+	* statistics.test: Test that mv-ols is well behaved if the variation in the dependent variable is zero (ticket 51c03aac1a45161ab6cc59afb69d1768175e054c)
+	* statistics.tcl: Bumped the version to 1.1.1
+	* pkgIndex.tcl: Bumped the version of math::statistics to 1.1.1
+
+2017-08-10  Arjen Markus <arjenmarkus@users.sourceforge.net>
+	* geometry.test: Add tests for areaPolygon
+	* geometry.tcl: Correct implementation of areaPolygon (ticket cb043ecc70e0e90bff93535d1d371a78b94f5d44)
+2017-05-29  Arjen Markus <arjenmarkus@users.sourceforge.net>
+	* geometry.test: Require at least Tcl 8.5
+	* numtheory.man: Add description of Jacobi symbol
+	* primes.tcl: Add Jacobi symbol
+	* primes.test: Add tests for Jacobi symbol
+
+2017-05-28  Arjen Markus <arjenmarkus@users.sourceforge.net>
+	* numtheory.tcl: Source primes.tcl at the end, version now 1.1
+	* primes.tcl: Additonal procedures for the number theory package, includes estimates of number of primes
+	              and factors (tickets 1be9ea99c9b76c8ffeff3edfb73671309bf657e8 and 734dd2ae5c89319a3b8579e48d581f9d0a3da4f4)
+	* numtheory.man: Document additional procedures
+	* primes.test: Tests for additional procedures
+	* linalg.tcl: Correction of [conforming] procedure (ticket 776a75f14f53b5c9a06fe3f3892485a6efe1dc20)
+	* linalg.test: Added tests for the [conforming] procedure
+	* pkgIndex.tcl: Bumped version of numtheory to 1.1, linearalgebra to 1.1.6
+
+2017-01-17  Arjen Markus <arjenmarkus@users.sourceforge.net>
+	* statistics.test: Add tests for test-Tukey-range and test-Dunnett
+	* statistics.tcl: Add two procedures, test-Tukey-range and test-Dunnett, and auxiliary code
+	* statistics.man: Describe the two new procedures
+	* pkgIndex.tcl: Bumped version of the statistics module to 1.1.0
+
+2017-01-10  Arjen Markus <arjenmarkus@users.sourceforge.net>
+	* statistics.test: Correct the tests for the test-anova-F procedure
+	* statistics.tcl: Correct the namespace for the test-anova-F procedure and the comment
+	* statistics.man: Correct the description of the test-anova-F procedure
+	* linalg.test: Correct test solve-1.6 regarding permuted matrices
+	* geometry.test: Add a simple definition of lmap for older versions of Tcl (notably 8.5)
+	* interpolate.test: Correct test Interpolate-1.3 - missing keyword -result and use of existing table name
+
+2016-08-16  Arjen Markus <arjenmarkus@users.sourceforge.net>
+	* pdf_stat.tcl: Correct the use of the argument for standard deviation, affects pdf-lognormal and cdf-lognormal
+	                (ticket 002b9e8e07777425)
+	* statistics.test: Correct the tests for both procedures
+	* statistics.tcl: Bumped the version to 1.0.1
+	* pkgIndex.tcl: Load version 1.0.1 of the statistics module
+
+2016-08-04  Arjen Markus <arjenmarkus@users.sourceforge.net>
+	* interpolate.tcl: Correct the calculation of the weight for interpolation - cast to double
+	* interpolate.test: Added test for this change
+	* statistics.test: Correct the ANOVA tests (use -result)
+	* linalg.test: Added test to show that permuted linear systems give the same result
+
+2016-04-12  Arjen Markus <arjenmarkus@users.sourceforge.net>
+	* geometry.tcl: Replace the algorithm in pointInsidePolygon (ticket dc49af96c2), also add an alternative
+	                method based on the winding number
+	* geometry.test: Add the new test case for this ticket and adjust the outcome for an edge case (hour glass).
+	                Further tests added for the alternative method and for some edge cases
+
+2015-11-14  Arjen Markus <arjenmarkus@users.sourceforge.net>
+	* statistics.tcl: Add test-anova-F
+	* pdf_stat.tcl: Add cdf-F
+	* statistics.test: Add tests for test-anova-F and cdf-F
+	* statistics.man: Describe test-anova-F and cdf-F
+	* geometry.tcl: Implement translation, rotation, reflection and conversion to/from radians and degrees
+	* geometry.test: Add tests for translation, rotation and reflection and conversion radians/degrees
+	* math_geometry.tcl: Describe the new procedures
+	* special.man: Correct description of Beta and Gamma functions
+
 2015-04-29  Arjen Markus <arjenmarkus@users.sourceforge.net>
 	* statistics.tcl: Add test-Duckworth
 	* pdf_stat.tcl: Add empirical-distribution

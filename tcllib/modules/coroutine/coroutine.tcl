@@ -2,7 +2,7 @@
 # # ## ### ##### ######## #############
 
 # @@ Meta Begin
-# Package coroutine 1.1.1
+# Package coroutine 1.2
 # Meta platform        tcl
 # Meta require         {Tcl 8.6}
 # Meta license         BSD
@@ -90,7 +90,7 @@ proc ::coroutine::util::global {args} {
 
     set cmd [list upvar "#1"]
     foreach var $args {
-	lappend cmd $var $var 
+	lappend cmd $var $var
     }
     tailcall {*}$cmd
 }
@@ -152,7 +152,7 @@ proc ::coroutine::util::update {{what {}}} {
     }
     yield
     return
-} 
+}
 
 # - -- --- ----- -------- -------------
 
@@ -176,10 +176,9 @@ proc ::coroutine::util::gets {args} {
     }
 
     # Loop until we have a complete line. Yield to the event loop
-    # where necessary. During 
-
+    # where necessary. During
+    set blocking [::chan configure $chan -blocking]
     while {1} {
-        set blocking [::chan configure $chan -blocking]
         ::chan configure $chan -blocking 0
 
 	try {
@@ -204,6 +203,48 @@ proc ::coroutine::util::gets {args} {
         }
     }
 }
+
+
+proc ::coroutine::util::gets_safety {chan limit varname {timeout 120000}} {
+    # Process arguments.
+    # Acceptable syntax:
+    # * gets CHAN ?VARNAME?
+
+    # Loop until we have a complete line. Yield to the event loop
+    # where necessary. During
+    set blocking [::chan configure $chan -blocking]
+    upvar 1 $varname line
+    try {
+	while {1} {
+	    ::chan configure $chan -blocking 0
+	    if {[::chan pending input $chan]>= $limit} {
+		error {Too many notes, Mozart. Too many notes}
+	    }
+	    try {
+		set result [::chan gets $chan line]
+	    } on error {result opts} {
+		return -code $result -options $opts
+	    }
+
+	    if {[::chan blocked $chan]} {
+	  set timeoutevent [::after $timeout [list [info coroutine] timeout]]
+		::chan event $chan readable [list [info coroutine] readable]
+		set event [yield]
+		if {$event eq "timeout"} {
+		  error "Connection Timed Out"
+		}
+		::after cancel $timeoutevent
+		::chan event $chan readable {}
+	    } else {
+		return $result
+	    }
+	}
+    } finally {
+        ::chan configure $chan -blocking $blocking
+    }
+}
+
+
 
 # - -- --- ----- -------- -------------
 
@@ -245,62 +286,57 @@ proc ::coroutine::util::read {args} {
     if {$total eq "Inf"} {
 	# Loop until eof.
 
-	while {1} {
+	while 1 {
 	    set blocking [::chan configure $chan -blocking]
 	    ::chan configure $chan -blocking 0
+	    if {[::chan eof $chan]} {
+		break
+	    } elseif {[::chan blocked $chan]} {
+		::chan event $chan readable [list [info coroutine]]
+		yield
+		::chan event $chan readable {}
+	    }
 
 	    try {
 		set result [::chan read $chan]
 	    } on error {result opts} {
 		::chan configure $chan -blocking $blocking
 		return -code $result -options $opts
-	    }
-
-	    if {[::chan blocked $chan]} {
-		::chan event $chan readable [list [info coroutine]]
-		yield
-		::chan event $chan readable {}
-	    } else {
+	    } finally {
 		::chan configure $chan -blocking $blocking
-		append buf $result
-
-		if {[::chan eof $chan]} {
-		    ::chan close $chan
-		    break
-		}
 	    }
+	    append buf $result
 	}
     } else {
 	# Loop until total characters have been read, or eof found,
 	# whichever is first.
 
 	set left $total
-	while {1} {
+	while 1 {
 	    set blocking [::chan configure $chan -blocking]
 	    ::chan configure $chan -blocking 0
+
+	    if {[::chan eof $chan]} {
+		break
+	    } elseif {[::chan blocked $chan]} {
+		::chan event $chan readable [list [info coroutine]]
+		yield
+		::chan event $chan readable {}
+	    }
 
 	    try {
 		set result [::chan read $chan $left]
 	    } on error {result opts} {
 		::chan configure $chan -blocking $blocking
 		return -code $result -options $opts
+	    } finally {
+		::chan configure $chan -blocking $blocking
 	    }
 
-	    if {[::chan blocked $chan]} {
-		::chan event $chan readable [list [info coroutine]]
-		yield
-		::chan event $chan readable {}
-	    } else {
-		::chan configure $chan -blocking $blocking
-		append buf $result
-		incr   left -[string length $result]
-
-		if {[::chan eof $chan]} {
-		    ::chan close $chan
-		    break
-		} elseif {!$left} {
-		    break
-		}
+	    append buf $result
+	    incr left -[string length $result]
+	    if {!$left} {
+		break
 	    }
 	}
     }
@@ -332,7 +368,7 @@ proc ::coroutine::util::await args {
     set choice [yield]
 
     foreach varName $args {
-	#checker exclude warnShadowVar 
+	#checker exclude warnShadowVar
         upvar 1 $varName var
         trace remove variable var write $callback
     }
@@ -355,7 +391,7 @@ proc ::coroutine::util::AWaitSignal {coroutine var index op} {
     set fullvar $var
     if {$index ne ""} { append fullvar ($index) }
     $coroutine $fullvar
-} 
+}
 
 # # ## ### ##### ######## #############
 ## Internal (package specific) commands
@@ -375,5 +411,5 @@ namespace eval ::coroutine::util {
 
 # # ## ### ##### ######## #############
 ## Ready
-package provide coroutine 1.1.3
+package provide coroutine 1.2
 return

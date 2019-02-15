@@ -1,5 +1,5 @@
 
-<html><head>
+<!DOCTYPE html><html><head>
 <title>ALL - ..THE_MODULE..</title>
 <style type="text/css"><!--
     HTML {
@@ -92,11 +92,11 @@
     }
 --></style>
 </head>
-<! -- Generated from file '.FILE.' by tcllib/doctools with format 'html'
+<!-- Generated from file '.FILE.' by tcllib/doctools with format 'html'
    -->
-<! -- Copyright &copy; **Copyright**
+<!-- Copyright &amp;copy; **Copyright**
    -->
-<! -- ALL.a
+<!-- ALL.a
    -->
 <body><div class="doctools">
 <h1 class="doctools_title">ALL(a) 5 .MODULE. &quot;..THE_MODULE..&quot;</h1>

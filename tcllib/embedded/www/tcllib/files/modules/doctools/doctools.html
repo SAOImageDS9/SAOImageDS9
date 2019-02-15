@@ -99,7 +99,7 @@
 | <a href="../../../../toc2.html">Applications</a>
  ] <hr>
 <div class="doctools">
-<h1 class="doctools_title">doctools(n) 1.4.19 tcllib &quot;Documentation tools&quot;</h1>
+<h1 class="doctools_title">doctools(n) 1.4.21 tcllib &quot;Documentation tools&quot;</h1>
 <div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
 <p>doctools - doctools - Processing documents</p>
 </div>
@@ -129,7 +129,7 @@
 <div class="doctools_synopsis">
 <ul class="doctools_requirements">
 <li>package require <b class="pkgname">Tcl 8.2</b></li>
-<li>package require <b class="pkgname">doctools <span class="opt">?1.4.19?</span></b></li>
+<li>package require <b class="pkgname">doctools <span class="opt">?1.4.21?</span></b></li>
 </ul>
 <ul class="doctools_syntax">
 <li><a href="#1"><b class="cmd">::doctools::new</b> <i class="arg">objectName</i> <span class="opt">?<i class="arg">option value</i>...?</span></a></li>
@@ -154,7 +154,7 @@
 <p>This package provides a class for the creation of objects able to
 process and convert text written in the <i class="term"><a href="../../../../index.html#key179">doctools</a></i> markup
 language into any output format X for which a
-<i class="term"><a href="../../../../index.html#key657">formatting engine</a></i> is available.</p>
+<i class="term"><a href="../../../../index.html#key666">formatting engine</a></i> is available.</p>
 <p>A reader interested in the markup language itself should start with
 the <i class="term"><a href="doctools_lang_intro.html">doctools language introduction</a></i> and proceed from there to
 the formal specifications, i.e. the <i class="term"><a href="doctools_lang_syntax.html">doctools language syntax</a></i>
@@ -295,7 +295,7 @@ are actually very different. The value of <b class="option">-file</b> is used by
 some engines for the generation of proper relative references between
 output documents (HTML). As such this is a <i class="term">destination</i>
 path. The <b class="option">-ibase</b> on the other hand is used to resolve
-relative include paths, and as such deals with <i class="term"><a href="../../../../index.html#key435">source</a></i> paths.</p>
+relative include paths, and as such deals with <i class="term"><a href="../../../../index.html#key437">source</a></i> paths.</p>
 <p>The default value of this option is the empty string.</p></dd>
 <dt><b class="option">-module</b> <i class="arg">text</i></dt>
 <dd><p>The argument of this option is stored in the object and made available
@@ -410,7 +410,7 @@ keywords, etc.</p></dd>
 cross-reference information. This information is used by the engine to
 create more hyperlinks. Each triple is a list containing a pattern,
 symbolic filename and fragment reference, in this order. If a pattern
-is specified multiple times the last occurence of the pattern will be
+is specified multiple times the last occurrence of the pattern will be
 used.</p>
 <p>The engine will consult the xref database when encountering specific
 commands and will create a link if the relevant text matches one of
@@ -443,7 +443,7 @@ it will convert <i class="arg">word</i> to all lowercase and try again.</p></dd>
 <i class="arg">word</i>, in this order, for each <i class="arg">word</i> given to the
 command. If this fails if it will convert <i class="arg">word</i> to all lowercase
 and try again.</p></dd>
-<dt><b class="cmd"><a href="../../../../index.html#key778">keywords</a></b> <i class="arg">word</i>...</dt>
+<dt><b class="cmd"><a href="../../../../index.html#key789">keywords</a></b> <i class="arg">word</i>...</dt>
 <dd><p>The command will look for the patterns <b class="const">kw,</b><i class="arg">word</i>, and
 <i class="arg">word</i>, in this order, for each <i class="arg">word</i> given to the
 command. If this fails if it will convert <i class="arg">word</i> to all lowercase
@@ -479,6 +479,12 @@ Please report such in the category <em>doctools</em> of the
 <a href="http://core.tcl.tk/tcllib/reportlist">Tcllib Trackers</a>.
 Please also report any ideas for enhancements you may have for either
 package and/or documentation.</p>
+<p>When proposing code changes, please provide <em>unified diffs</em>,
+i.e the output of <b class="const">diff -u</b>.</p>
+<p>Note further that <em>attachments</em> are strongly preferred over
+inlined patches. Attachments can be made by going to the <b class="const">Edit</b>
+form of the ticket immediately after its creation, and then using the
+left-most button in the secondary navigation bar.</p>
 </div>
 <div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
 <p><a href="doctools_intro.html">doctools_intro</a>, <a href="doctools_lang_cmdref.html">doctools_lang_cmdref</a>, <a href="doctools_lang_intro.html">doctools_lang_intro</a>, <a href="doctools_lang_syntax.html">doctools_lang_syntax</a>, <a href="doctools_plugin_apiref.html">doctools_plugin_apiref</a></p>
@@ -490,6 +496,6 @@ package and/or documentation.</p>
 <p>Documentation tools</p>
 </div>
 <div id="copyright" class="doctools_section"><h2><a name="copyright">Copyright</a></h2>
-<p>Copyright &copy; 2003-2014 Andreas Kupries &lt;andreas_kupries@users.sourceforge.net&gt;</p>
+<p>Copyright &copy; 2003-2017 Andreas Kupries &lt;andreas_kupries@users.sourceforge.net&gt;</p>
 </div>
 </div>

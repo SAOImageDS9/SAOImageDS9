@@ -6,14 +6,18 @@
 #  scientific and engineering shorthand notations into floating point
 #  numbers.
 #
+#  Sean Woods
+#  November 4, 2016
+#  Test and Evaluation Solutions, LLC
+#
 #  Robert W. Techentin
 #  November 1, 2000
 #  Copyright (C) Mayo Foundation.  All Rights Reserved.
 #
 #-----------------------------------------------------------------
-package provide units 2.1.1
+package provide units 2.2.1
 
-package require Tcl 8.1
+package require Tcl 8.5
 
 namespace eval ::units {
 
@@ -21,7 +25,7 @@ namespace eval ::units {
     namespace export convert
     namespace export reduce
 
-    variable UnitTable
+    variable UnitList
     variable PrefixTable
 }
 
@@ -36,30 +40,16 @@ namespace eval ::units {
 #  Otherwise, it must reduce to units already defined.
 #
 #-----------------------------------------------------------------
-proc ::units::new { args } {
-
-    variable UnitTable
+proc ::units::new {name baseUnits} {
     variable UnitList
 
-    #  Check number of arguments
-    switch [llength $args] {
-	2 {
-	    set name [lindex $args 0]
-	    set baseUnits [lindex $args 1]
-	}
-	default {
-	    #  issue same error as C extension
-	    error "Wrong # args. units::new name baseUnits "
-	}
-    }
-
     # check for duplicates
-    if { [info exists UnitTable($name)] } {
+    if { [dict exists $UnitList $name] } {
 	error "unit '$name' is already defined"
     }
 
     # check for valid characters
-    if { [regexp {[^a-zA-Z]} $name] } {
+    if { [regexp {[^a-zA-Z_]} $name] } {
 	error "non-alphabetic characters in unit name '$name'"
     }
 
@@ -69,8 +59,7 @@ proc ::units::new { args } {
     }
 
     # add the unit, but don't return a value
-    set UnitTable($name) $reducedUnits
-    lappend UnitList $name $reducedUnits
+    dict set UnitList $name $reducedUnits
     return
 }
 
@@ -94,25 +83,31 @@ proc ::units::new { args } {
 #
 #-----------------------------------------------------------------
 
-proc ::units::convert { args } {
-
-    #  Check number of arguments
-    switch [llength $args] {
-	2 {
-	    set value [lindex $args 0]
-	    set targetUnits [lindex $args 1]
-	}
-	default {
-	    #  issue same error as C extension
-	    error "Wrong # args. units::convert value targetUnits "
-	}
-    }
-
+proc ::units::convert {value targetUnits} {
     #  Reduce each of value and target
     #  to primitive units
     set reducedValue [::units::reduce $value]
     set reducedTarget [::units::reduce $targetUnits]
-
+    
+    set operation {}
+    if {[llength $reducedValue]==4 && [lindex $reducedValue 1] in {+ -}} {
+	if {[lindex $reducedValue 1] eq "+"} {
+	    lappend operation ( [lindex $reducedValue 0] - [lindex $reducedValue 2] )
+	} else {
+	    lappend operation ( [lindex $reducedValue 0] + [lindex $reducedValue 2] )
+	}
+	set reducedValue [reduce [lindex $reducedValue 3]]
+	lappend operation * [lindex $reducedValue 0] /
+    } else {
+	lappend operation [lindex $reducedValue 0] /
+    }
+    if {[llength $reducedTarget]==4 && [lindex $reducedTarget 1] in {+ -}} {
+	set postop [lrange $reducedTarget 0 2]
+	set reducedTarget  [reduce [lindex $reducedTarget 3]]
+	lappend operation  [lindex $reducedTarget 0] * {*}$postop
+    } else {
+	lappend operation [lindex $reducedTarget 0]
+    }
     #  If the value has units, it must be compatible with
     #  the target.  (If it is unitless, then compatibility
     #  is not required.)
@@ -121,9 +116,8 @@ proc ::units::convert { args } {
 	    error "'$value' and '$targetUnits' have incompatible units"
 	}
     }
-
-    #  Compute and return scaled value
-    expr {[lindex $reducedValue 0] / [lindex $reducedTarget 0]}
+    #  Compute and return scaled and transformed value
+    return [expr $operation]
 }
 
 
@@ -177,22 +171,18 @@ proc ::units::convert { args } {
 #-----------------------------------------------------------------
 #
 
-proc ::units::reduce { args } {
-
+proc ::units::reduce unitString {
     #  Check number of arguments
-    switch [llength $args] {
-	1 {
-	    set unitString [lindex $args 0]
-	}
-	default {
-	    #  issue same error as C extension
-	    error "Wrong # args. units::reduce unitString "
-	}
-    }
 
     # check for primitive unit - may already be reduced
     #  This gets excercised by new units
     if { "$unitString" == "-primitive" } {
+	return $unitString
+    }
+    if { [string range $unitString 0 1] == "+ " } {
+	return $unitString
+    }
+    if { [string range $unitString 0 1] == "- " } {
 	return $unitString
     }
 
@@ -242,7 +232,8 @@ proc ::units::reduce { args } {
     #  may be necessary to process it recursively, without
     #  performing the string syntax checks again.  But check
     #  for errors.
-    if { [catch {ReduceList $scaleFactor $subunits} result] } {
+    if { [catch {ReduceList $scaleFactor $subunits} result errdat] } {
+	#puts [dict get $errdat -errorinfo]
 	error "$result in '$unitString'"
     }
 
@@ -252,6 +243,39 @@ proc ::units::reduce { args } {
 }
 
 
+# Utility Function - Reduce factor/numerator/denominator
+proc ::units::_ReduceList_term {factor numerator denominator} {
+
+    #  Sort both numerator and denominator
+    set numerator [lsort $numerator]
+    set denominator [lsort $denominator]
+
+    #  Cancel any duplicate units.
+    #  Foreach and for loops don't work well for this.
+    #  (We keep changing list length).
+    set i 0
+    while {$i < [llength $numerator]} {
+	set u [lindex $numerator $i]
+	set index [lsearch $denominator $u]
+	if { $index >= 0 } {
+	    set numerator [lreplace $numerator $i $i]
+	    set denominator [lreplace $denominator $index $index]
+	} else {
+	    incr i
+	}
+    }
+
+    #  Now we've got numerator, denominator, and factors.
+    #  Assemble the result into a single list.
+    if { [llength $denominator] > 0 } {
+	set result [eval ::list $factor $numerator "/" $denominator]
+    } else {
+	set result [eval ::list $factor $numerator]
+    }
+
+    #  Now return the result
+    return $result
+}
 #-----------------------------------------------------------------
 #
 # ::units::ReduceList --
@@ -276,230 +300,216 @@ proc ::units::reduce { args } {
 #-----------------------------------------------------------------
 #
 proc ::units::ReduceList { factor unitString } {
+  variable UnitList
+  variable PrefixTable
 
-    variable UnitList
-    variable UnitTable
-    variable PrefixTable
-
-    # process each subunit in turn, starting in the numerator
-    #
-    #  Note that we're going to use a boolean flag to switch
-    #  between numerator and denominator if we encounter a "/".
-    #  This same style is used for processing recursively
-    #  reduced subunits
-    set numerflag 1
-    set numerator [list]
-    set denominator [list]
-    foreach subunit $unitString {
-
-	#  Check for "/"
-	if { "$subunit" == "/" } {
-	    set numerflag [expr {$numerflag?0:1}]
-	    continue
-	}
-
-	#  Constant factor
-	if { [string is double -strict $subunit] } {
-	    if { $subunit == 0.0 } {
-		error "illegal zero factor"
-	    } else {
-		if { $numerflag } {
-		    set factor [expr {$factor * $subunit}]
-		} else {
-		    set factor [expr {$factor / $subunit}]
-		}
-		continue
-	    }
-	}
-
-	#  Check for power string (e.g. "s^2")
-	#  We could use regexp to match and split in one operation,
-	#  like {([^\^]*)\^(.*)} but that seems to be pretty durn
-	#  slow, so we'll just using [string] operations.
-	if { [set index [string first "^" $subunit]] >= 0 } {
-	    set subunitname [string range $subunit 0 [expr {$index-1}]]
-	    set exponent [string range $subunit [expr {$index+1}] end]
-	    if { ! [string is integer -strict $exponent] } {
-		error "invalid integer exponent"
-	    }
-	    #  This is a good test and error message, but it won't
-	    #  happen, because the negative sign (hypen) has already
-	    #  been interpreted as a unit separator.  Negative
-	    #  exponents will trigger the 'invalid integer' message,
-	    #  because there is no exponent. :-)
-	    if { $exponent < 1 } {
-		error "invalid non-positive exponent"
-	    }
-	} else {
-	    set subunitname $subunit
-	    set exponent 1
-	}
-
-	# Check subunit name syntax
-	if { ! [string is alpha -strict $subunitname] } {
-	    error "invalid non-alphabetic unit name"
-	}
-
-	#  Try looking up the subunitname.  
-	#
-	#  Start with the unit name.  But if the unit ends in "s"
-	#  or "es", then we want to try shortened (singular)
-	#  versions of the subunit as well.
-	set unitValue ""
-
-	set subunitmatchlist [list $subunitname]
-	if { [string range $subunitname end end] == "s" } {
-	    lappend subunitmatchlist [string range $subunitname 0 end-1]
-	}
-	if { [string range $subunitname end-1 end] == "es" } {
-	    lappend subunitmatchlist [string range $subunitname 0 end-2]
-	}
-
-	foreach singularunit $subunitmatchlist {
-
-	    set len [string length $singularunit]
-
-	    #  Search the unit list in order, because we 
-	    #  wouldn't want to accidentally match the "m" 
-	    #  at the end of "gram" and conclude that we 
-	    #  have "meter".  
-	    foreach {name value} $UnitList {
-
-		#  Try to match the string starting at the
-		#  at the end, just in case there is a prefix.
-		#  We only have a match if both the prefix and
-		#  unit name are exact matches.
-		set pos [expr {$len - [string length $name]}]
-		#set pos [expr {$len-1}]
-		if { [string range $singularunit $pos end] == $name } {
-
-		    set prefix [string range $singularunit 0 [expr {$pos-1}]]
-		    set matchsubunit $name
-
-		    #  If we have no prefix or a valid prefix, 
-		    #  then we've got an actual match.
-		    if { ("$prefix" == "") || \
-			    [info exists PrefixTable($prefix)] } {
-			#  Set the unit value string
-			set unitValue $value
-			# done searching UnitList
-			break
-		    }
-		}
-		# check for done 
-		if { $unitValue != "" } {
-		    break
-		}
-	    }
-	}
-
-	# Check for not-found
-	if { "$unitValue" == "" } {
-	    error "invalid unit name '$subunitname'"
-	}
-
-	#  Multiply the factor by the prefix value
-	if { "$prefix" != "" } { 
-	    #  Look up prefix value recursively, so abbreviations
-	    #  like "k" for "kilo" will work.  Note that we
-	    #  don't need error checking here (as we do for
-	    #  unit lookup) because we have total control over
-	    #  the prefix table.
-	    while { ! [string is double -strict $prefix] } {
-		set prefix $PrefixTable($prefix)
-	    }
-	    # Save prefix multiple in factor
-	    set multiple [expr {pow($prefix,$exponent)}]
-	    if { $numerflag } {
-		set factor [expr {$factor * $multiple}]
-	    } else {
-		set factor [expr {$factor / $multiple}]
-	    }
-	}
-
-
-	# Is this a primitive subunit?
-	if { "$unitValue" == "-primitive" } {
-	    # just append the matching subunit to the result
-	    # (this doesn't have prefix or trailing "s")
-	    for {set i 0} {$i<$exponent} {incr i} {
-		if { $numerflag } {
-		    lappend numerator $matchsubunit
-		} else {
-		    lappend denominator $matchsubunit
-		}
-	    }
-	} else {
-	    #  Recursively reduce, unless it is in the cache
-	    if { [info exists ::units::cache($unitValue)] } {
-		set reducedUnit $::units::cache($unitValue)
-	    } else {
-		set reducedUnit [::units::reduce $unitValue]
-		set ::units::cache($unitValue) $reducedUnit
-	    }
-
-	    #  Include multiple factor from reduced unit
-	    set multiple [expr {pow([lindex $reducedUnit 0],$exponent)}]
-	    if { $numerflag } {
-		set factor [expr {$factor * $multiple}]
-	    } else {
-		set factor [expr {$factor / $multiple}]
-	    }
-
-	    #  Add primitive subunits to numerator/denominator
-	    #
-	    #  Note that we're use a nested boolean flag to switch
-	    #  between numerator and denominator.  Subunits in
-	    #  the numerator of the unitString are processed
-	    #  normally, but subunits in the denominator of
-	    #  unitString must be inverted.
-	    set numerflag2 $numerflag
-	    foreach u [lrange $reducedUnit 1 end] {
-		if { "$u" == "/" } {
-		    set numerflag2 [expr {$numerflag2?0:1}]
-		    continue
-		}
-		#  Append the reduced units "exponent" times
-		for {set i 0} {$i<$exponent} {incr i} {
-		    if { $numerflag2 } {
-			lappend numerator $u
-		    } else {
-			lappend denominator $u
-		    }
-		}
-	    }
-	}
+  # process each subunit in turn, starting in the numerator
+  #
+  #  Note that we're going to use a boolean flag to switch
+  #  between numerator and denominator if we encounter a "/".
+  #  This same style is used for processing recursively
+  #  reduced subunits
+  set numerflag 1
+  set numerator [::list]
+  set denominator [::list]
+  
+  set operations {}
+  
+  foreach subunit $unitString {
+    #  Check for "/"
+    if { "$subunit" == "/" } {
+      set numerflag [expr {$numerflag?0:1}]
+      continue
     }
 
-    #  Sort both numerator and denominator
-    set numerator [lsort $numerator]
-    set denominator [lsort $denominator]
-
-    #  Cancel any duplicate units.
-    #  Foreach and for loops don't work well for this.
-    #  (We keep changing list length).
-    set i 0
-    while {$i < [llength $numerator]} {
-	set u [lindex $numerator $i]
-	set index [lsearch $denominator $u]
-	if { $index >= 0 } {
-	    set numerator [lreplace $numerator $i $i]
-	    set denominator [lreplace $denominator $index $index]
-	} else {
-	    incr i
-	}
+    #  Constant factor
+    if { [string is double -strict $subunit] } {
+      if { $subunit == 0.0 } {
+        error "illegal zero factor"
+      } else {
+        if { $numerflag } {
+          set factor [expr {$factor * $subunit}]
+        } else {
+          set factor [expr {$factor / $subunit}]
+        }
+        continue
+      }
     }
-
-    #  Now we've got numerator, denominator, and factors.
-    #  Assemble the result into a single list.
-    if { [llength $denominator] > 0 } {
-	set result [eval list $factor $numerator "/" $denominator]
+  
+    #  Check for power string (e.g. "s^2")
+    #  We could use regexp to match and split in one operation,
+    #  like {([^\^]*)\^(.*)} but that seems to be pretty durn
+    #  slow, so we'll just using [string] operations.
+    if { [set index [string first "^" $subunit]] >= 0 } {
+      set subunitname [string range $subunit 0 [expr {$index-1}]]
+      set exponent [string range $subunit [expr {$index+1}] end]
+      if { ! [string is integer -strict $exponent] } {
+        error "invalid integer exponent"
+      }
+      #  This is a good test and error message, but it won't
+      #  happen, because the negative sign (hypen) has already
+      #  been interpreted as a unit separator.  Negative
+      #  exponents will trigger the 'invalid integer' message,
+      #  because there is no exponent. :-)
+      if { $exponent < 1 } {
+        error "invalid non-positive exponent"
+      }
     } else {
-	set result [eval list $factor $numerator]
+        set subunitname $subunit
+        set exponent 1
     }
 
-    #  Now return the result
-    return $result
+    # Check subunit name syntax
+    if { ! [string is alpha -strict $subunitname] } {
+        error "invalid non-alphabetic unit name"
+    }
+
+    #  Try looking up the subunitname.  
+    #
+    #  Start with the unit name.  But if the unit ends in "s"
+    #  or "es", then we want to try shortened (singular)
+    #  versions of the subunit as well.
+    set unitValue ""
+
+    set subunitmatchlist [::list $subunitname]
+    if { [string range $subunitname end end] == "s" } {
+        lappend subunitmatchlist [string range $subunitname 0 end-1]
+    }
+    if { [string range $subunitname end-1 end] == "es" } {
+        lappend subunitmatchlist [string range $subunitname 0 end-2]
+    }
+
+    foreach singularunit $subunitmatchlist {
+
+      set len [string length $singularunit]
+
+      #  Search the unit list in order, because we 
+      #  wouldn't want to accidentally match the "m" 
+      #  at the end of "gram" and conclude that we 
+      #  have "meter".  
+      foreach {name value} $UnitList {
+    
+        #  Try to match the string starting at the
+        #  at the end, just in case there is a prefix.
+        #  We only have a match if both the prefix and
+        #  unit name are exact matches.
+        set pos [expr {$len - [string length $name]}]
+        #set pos [expr {$len-1}]
+        if { [string range $singularunit $pos end] == $name } {
+
+          set prefix [string range $singularunit 0 [expr {$pos-1}]]
+          set matchsubunit $name
+  
+          #  If we have no prefix or a valid prefix, 
+          #  then we've got an actual match.
+          if { ("$prefix" == "") || \
+            [info exists PrefixTable($prefix)] } {
+            #  Set the unit value string
+            set unitValue $value
+            # done searching UnitList
+            break
+          }
+        }
+        # check for done 
+        if { $unitValue != "" } {
+            break
+        }
+      }
+    }
+
+    # Check for not-found
+    if { "$unitValue" == "" } {
+      error "invalid unit name '$subunitname'"
+    }
+  
+    #  Multiply the factor by the prefix value
+    if { "$prefix" != "" } { 
+      #  Look up prefix value recursively, so abbreviations
+      #  like "k" for "kilo" will work.  Note that we
+      #  don't need error checking here (as we do for
+      #  unit lookup) because we have total control over
+      #  the prefix table.
+      while { ! [string is double -strict $prefix] } {
+        set prefix $PrefixTable($prefix)
+      }
+      # Save prefix multiple in factor
+      set multiple [expr {pow($prefix,$exponent)}]
+      if { $numerflag } {
+        set factor [expr {$factor * $multiple}]
+      } else {
+        set factor [expr {$factor / $multiple}]
+      }
+    }
+
+  
+    # Is this a primitive subunit?
+    if { "$unitValue" == "-primitive" } {
+        # just append the matching subunit to the result
+        # (this doesn't have prefix or trailing "s")
+        for {set i 0} {$i<$exponent} {incr i} {
+          if { $numerflag } {
+            lappend numerator $matchsubunit
+          } else {
+            lappend denominator $matchsubunit
+          }
+        }
+    } else {
+      #  Recursively reduce, unless it is in the cache
+      if { [info exists ::units::cache($unitValue)] } {
+        set reducedUnit $::units::cache($unitValue)
+      } else {
+        set reducedUnit [::units::reduce $unitValue]
+        set ::units::cache($unitValue) $reducedUnit
+      }
+      set opcode [lindex $reducedUnit 0]
+      if {$opcode in {+ -}} {
+        lappend operations {*}[_ReduceList_term $factor $numerator $denominator]
+        if {$opcode eq "+"} {
+          lappend operations -
+        } else {
+          lappend operations +  
+        }
+        set numerflag 1
+        set numerator [::list]
+        set denominator [::list]
+        set factor 1.0
+        set reducedUnit [lrange $reducedUnit 1 end]
+      }     
+      #  Include multiple factor from reduced unit
+      set multiple [expr {pow([lindex $reducedUnit 0],$exponent)}]
+      if { $numerflag } {
+        set factor [expr {$factor * $multiple}]
+      } else {
+        set factor [expr {$factor / $multiple}]
+      }
+
+      #  Add primitive subunits to numerator/denominator
+      #
+      #  Note that we're use a nested boolean flag to switch
+      #  between numerator and denominator.  Subunits in
+      #  the numerator of the unitString are processed
+      #  normally, but subunits in the denominator of
+      #  unitString must be inverted.
+      set numerflag2 $numerflag
+      foreach u [lrange $reducedUnit 1 end] {
+        if { "$u" == "/" } {
+          set numerflag2 [expr {$numerflag2?0:1}]
+          continue
+        }
+        #  Append the reduced units "exponent" times
+        for {set i 0} {$i<$exponent} {incr i} {
+          if { $numerflag2 } {
+            lappend numerator $u
+          } else {
+            lappend denominator $u
+          }
+        }
+      }
+      
+    }
+  }
+  lappend operations {*}[_ReduceList_term $factor $numerator $denominator]
+  return $operations
 }
 
 
@@ -555,7 +565,6 @@ namespace eval ::units {
     }
 
     array set PrefixTable $PrefixList
-
 
     set SIunits {
 	meter        -primitive
@@ -671,20 +680,15 @@ namespace eval ::units {
     }
 
     foreach {name value} $SIunits {
-	lappend UnitList $name $value
-	set UnitTable($name) $value
+	dict set UnitList $name $value
     }
     foreach {name value} $nonSIunits {
-	lappend UnitList $name $value
-	set UnitTable($name) $value
+	dict set UnitList $name $value
     }
     foreach {name value} $SIabbrevs {
-	lappend UnitList $name $value
-	set UnitTable($name) $value
+	dict set UnitList $name $value
     }
     foreach {name value} $nonSIabbrevs {
-	lappend UnitList $name $value
-	set UnitTable($name) $value
+	dict set UnitList $name $value
     }
-
 }

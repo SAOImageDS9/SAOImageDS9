@@ -1,8 +1,8 @@
 '\"
 '\" Generated from file 'toc_export\&.man' by tcllib/doctools with format 'nroff'
-'\" Copyright (c) 2009 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
+'\" Copyright (c) 2009-2018 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
 '\"
-.TH "doctools::toc::export" n 0\&.1 tcllib "Documentation tools"
+.TH "doctools::toc::export" n 0\&.2 tcllib "Documentation tools"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -274,7 +274,7 @@ Database Class:	\\fB\\$3\\fR
 .SH NAME
 doctools::toc::export \- Exporting tables of contents
 .SH SYNOPSIS
-package require \fBdoctools::toc::export  ?0\&.1?\fR
+package require \fBdoctools::toc::export  ?0\&.2?\fR
 .sp
 package require \fBTcl  8\&.4\fR
 .sp
@@ -481,7 +481,7 @@ changing it\&.
 .sp
 Note that while the user can set the predefined configuration
 variables \fBuser\fR and \fBformat\fR doing so will have no
-effect, these values will be internally overriden when invoking an
+effect, these values will be internally overridden when invoking an
 import plugin\&.
 .TP
 \fIobjectName\fR \fBconfig unset\fR \fIpattern\fR\&.\&.\&.
@@ -677,12 +677,20 @@ Please report such in the category \fIdoctools\fR of the
 \fITcllib Trackers\fR [http://core\&.tcl\&.tk/tcllib/reportlist]\&.
 Please also report any ideas for enhancements you may have for either
 package and/or documentation\&.
+.PP
+When proposing code changes, please provide \fIunified diffs\fR,
+i\&.e the output of \fBdiff -u\fR\&.
+.PP
+Note further that \fIattachments\fR are strongly preferred over
+inlined patches\&. Attachments can be made by going to the \fBEdit\fR
+form of the ticket immediately after its creation, and then using the
+left-most button in the secondary navigation bar\&.
 .SH KEYWORDS
 HTML, conversion, doctoc, documentation, export, formatting, generation, json, manpage, markup, nroff, plugin, reference, table, table of contents, tcler's wiki, text, url, wiki
 .SH CATEGORY
 Documentation tools
 .SH COPYRIGHT
 .nf
-Copyright (c) 2009 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
+Copyright (c) 2009-2018 Andreas Kupries <andreas_kupries@users\&.sourceforge\&.net>
 
 .fi

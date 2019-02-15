@@ -46,6 +46,7 @@ modules/debug/debug.man
 modules/debug/debug_caller.man
 modules/debug/debug_heartbeat.man
 modules/debug/debug_timestamp.man
+modules/defer/defer.man
 modules/des/des.man
 modules/des/tcldes.man
 modules/des/tcldesjr.man
@@ -119,7 +120,6 @@ modules/doctools2toc/toc_msgcat_fr.man
 modules/doctools2toc/toc_parse.man
 modules/doctools2toc/toc_structure.man
 modules/dtplite/pkg_dtplite.man
-modules/exif/exif.man
 modules/fileutil/fileutil.man
 modules/fileutil/multi.man
 modules/fileutil/multiop.man
@@ -130,7 +130,6 @@ modules/ftpd/ftpd.man
 modules/fumagic/cfront.man
 modules/fumagic/cgen.man
 modules/fumagic/filetypes.man
-modules/fumagic/mimetypes.man
 modules/fumagic/rtcore.man
 modules/generator/generator.man
 modules/gpx/gpx.man
@@ -153,6 +152,7 @@ modules/hook/hook.man
 modules/html/html.man
 modules/htmlparse/htmlparse.man
 modules/http/autoproxy.man
+modules/httpd/httpd.man
 modules/ident/ident.man
 modules/imap4/imap4.man
 modules/inifile/ini.man
@@ -177,6 +177,7 @@ modules/map/map_slippy.man
 modules/map/map_slippy_cache.man
 modules/map/map_slippy_fetcher.man
 modules/mapproj/mapproj.man
+modules/markdown/markdown.man
 modules/math/bigfloat.man
 modules/math/bignum.man
 modules/math/calculus.man
@@ -193,6 +194,7 @@ modules/math/math.man
 modules/math/math_geometry.man
 modules/math/numtheory.man
 modules/math/optimize.man
+modules/math/pca.man
 modules/math/polynomials.man
 modules/math/qcomplex.man
 modules/math/rational_funcs.man
@@ -220,6 +222,7 @@ modules/nns/nns_server.man
 modules/nntp/nntp.man
 modules/ntp/ntp_time.man
 modules/oauth/oauth.man
+modules/oometa/oometa.man
 modules/ooutil/ooutil.man
 modules/otp/otp.man
 modules/page/page_intro.man
@@ -236,6 +239,7 @@ modules/pop3/pop3.man
 modules/pop3d/pop3d.man
 modules/pop3d/pop3d_dbox.man
 modules/pop3d/pop3d_udb.man
+modules/practcl/practcl.man
 modules/processman/processman.man
 modules/profiler/profiler.man
 modules/pt/pt_astree.man
@@ -275,6 +279,7 @@ modules/pt/pt_pexpr_op.man
 modules/pt/pt_pexpression.man
 modules/pt/pt_pgen.man
 modules/pt/pt_rdengine.man
+modules/pt/pt_tclparam_config_nx.man
 modules/pt/pt_tclparam_config_snit.man
 modules/pt/pt_tclparam_config_tcloo.man
 modules/pt/pt_to_api.man
@@ -350,6 +355,7 @@ modules/textutil/trim.man
 modules/tie/tie.man
 modules/tie/tie_std.man
 modules/tiff/tiff.man
+modules/tool-ui/tool-ui.man
 modules/tool/meta.man
 modules/tool/tool.man
 modules/tool/tool_dict_ensemble.man
@@ -363,6 +369,7 @@ modules/transfer/transmitter.man
 modules/treeql/treeql.man
 modules/try/tcllib_throw.man
 modules/try/tcllib_try.man
+modules/udpcluster/udpcluster.man
 modules/uev/uevent.man
 modules/uev/uevent_onidle.man
 modules/units/units.man

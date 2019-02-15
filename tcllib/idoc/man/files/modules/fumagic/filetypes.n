@@ -1,7 +1,7 @@
 '\"
 '\" Generated from file 'filetypes\&.man' by tcllib/doctools with format 'nroff'
 '\"
-.TH "fileutil::magic::filetype" n 1\&.0\&.2 tcllib "file utilities"
+.TH "fileutil::magic::filetype" n 2\&.0 tcllib "file utilities"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -273,9 +273,9 @@ Database Class:	\\fB\\$3\\fR
 .SH NAME
 fileutil::magic::filetype \- Procedures implementing file-type recognition
 .SH SYNOPSIS
-package require \fBTcl  8\&.4\fR
+package require \fBTcl  8\&.6\fR
 .sp
-package require \fBfileutil::magic::filetype  ?1\&.0\&.2?\fR
+package require \fBfileutil::magic::filetype  ?2\&.0?\fR
 .sp
 \fB::fileutil::magic::filetype\fR \fIfilename\fR
 .sp
@@ -289,16 +289,15 @@ The core part of the recognizer was generated from a "magic(5)" file
 containing the checks to perform to recognize files, and associated
 file-types\&.
 .PP
-\fIBeware!\fR This recognizer is large, about 276 Kilobyte of
+\fIBeware!\fR This recognizer is large, about 752 Kilobyte of
 generated Tcl code\&.
 .TP
 \fB::fileutil::magic::filetype\fR \fIfilename\fR
 This command is similar to the command \fBfileutil::fileType\fR\&.
 .sp
-The output of the command for the specified file is a string
-describing the type of the file\&.
-.sp
-This list will be empty if the type of the file is not recognized\&.
+Returns a list containing a list of descriptions, a list of mimetype
+components, and a list file extensions\&.  Returns an empty string if the file
+content is not recognized\&.
 .PP
 .SH REFERENCES
 .IP [1]
@@ -314,6 +313,14 @@ Please report such in the category \fIfileutil :: magic\fR of the
 \fITcllib Trackers\fR [http://core\&.tcl\&.tk/tcllib/reportlist]\&.
 Please also report any ideas for enhancements you may have for either
 package and/or documentation\&.
+.PP
+When proposing code changes, please provide \fIunified diffs\fR,
+i\&.e the output of \fBdiff -u\fR\&.
+.PP
+Note further that \fIattachments\fR are strongly preferred over
+inlined patches\&. Attachments can be made by going to the \fBEdit\fR
+form of the ticket immediately after its creation, and then using the
+left-most button in the secondary navigation bar\&.
 .SH "SEE ALSO"
 file(1), fileutil, magic(5)
 .SH KEYWORDS

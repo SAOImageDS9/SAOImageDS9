@@ -99,7 +99,7 @@
 | <a href="../../../../toc2.html">Applications</a>
  ] <hr>
 <div class="doctools">
-<h1 class="doctools_title">ldapx(n) 0.2.5 tcllib &quot;LDAP extended object interface&quot;</h1>
+<h1 class="doctools_title">ldapx(n) 1.1 tcllib &quot;LDAP extended object interface&quot;</h1>
 <div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
 <p>ldapx - LDAP extended object interface</p>
 </div>
@@ -146,7 +146,7 @@
 <div class="doctools_synopsis">
 <ul class="doctools_requirements">
 <li>package require <b class="pkgname">Tcl 8.4</b></li>
-<li>package require <b class="pkgname">ldapx <span class="opt">?1.0?</span></b></li>
+<li>package require <b class="pkgname">ldapx <span class="opt">?1.1?</span></b></li>
 </ul>
 <ul class="doctools_syntax">
 <li><a href="#1"><i class="arg">e</i> <b class="method">reset</b></a></li>
@@ -601,6 +601,8 @@ in the directory:</p>
 	}
 	$e destroy
     }
+    c destroy
+    
     l disconnect
     l destroy
 </pre>
@@ -732,14 +734,20 @@ Please report such in the category <em>ldap</em> of the
 <a href="http://core.tcl.tk/tcllib/reportlist">Tcllib Trackers</a>.
 Please also report any ideas for enhancements you may have for either
 package and/or documentation.</p>
+<p>When proposing code changes, please provide <em>unified diffs</em>,
+i.e the output of <b class="const">diff -u</b>.</p>
+<p>Note further that <em>attachments</em> are strongly preferred over
+inlined patches. Attachments can be made by going to the <b class="const">Edit</b>
+form of the ticket immediately after its creation, and then using the
+left-most button in the secondary navigation bar.</p>
 </div>
 <div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
-<p><a href="../../../../index.html#key135">directory access</a>, <a href="../../../../index.html#key131">internet</a>, <a href="../../../../index.html#key130">ldap</a>, <a href="../../../../index.html#key128">ldap client</a>, <a href="../../../../index.html#key502">ldif</a>, <a href="../../../../index.html#key133">protocol</a>, <a href="../../../../index.html#key129">rfc 2251</a>, <a href="../../../../index.html#key501">rfc 2849</a></p>
+<p><a href="../../../../index.html#key135">directory access</a>, <a href="../../../../index.html#key131">internet</a>, <a href="../../../../index.html#key130">ldap</a>, <a href="../../../../index.html#key128">ldap client</a>, <a href="../../../../index.html#key504">ldif</a>, <a href="../../../../index.html#key133">protocol</a>, <a href="../../../../index.html#key129">rfc 2251</a>, <a href="../../../../index.html#key503">rfc 2849</a></p>
 </div>
 <div id="category" class="doctools_section"><h2><a name="category">Category</a></h2>
 <p>Networking</p>
 </div>
 <div id="copyright" class="doctools_section"><h2><a name="copyright">Copyright</a></h2>
-<p>Copyright &copy; 2006 Pierre David &lt;pdav@users.sourceforge.net&gt;</p>
+<p>Copyright &copy; 2006-2018 Pierre David &lt;pdav@users.sourceforge.net&gt;</p>
 </div>
 </div>

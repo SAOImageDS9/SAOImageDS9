@@ -313,6 +313,12 @@ package require \fBmath::statistics  1\fR
 .sp
 \fB::math::statistics::test-Duckworth\fR \fIlist1\fR \fIlist2\fR \fIsignificance\fR
 .sp
+\fB::math::statistics::test-anova-F\fR \fIalpha\fR \fIargs\fR
+.sp
+\fB::math::statistics::test-Tukey-range\fR \fIalpha\fR \fIargs\fR
+.sp
+\fB::math::statistics::test-Dunnett\fR \fIalpha\fR \fIcontrol\fR \fIargs\fR
+.sp
 \fB::math::statistics::quantiles\fR \fIdata\fR \fIconfidence\fR
 .sp
 \fB::math::statistics::quantiles\fR \fIlimits\fR \fIcounts\fR \fIconfidence\fR
@@ -413,6 +419,8 @@ package require \fBmath::statistics  1\fR
 .sp
 \fB::math::statistics::cdf-cauchy\fR \fIlocation\fR \fIscale\fR \fIvalue\fR
 .sp
+\fB::math::statistics::cdf-F\fR \fInf1\fR \fInf2\fR \fIvalue\fR
+.sp
 \fB::math::statistics::empirical-distribution\fR \fIvalues\fR
 .sp
 \fB::math::statistics::random-normal\fR \fImean\fR \fIstdev\fR \fInumber\fR
@@ -499,6 +507,10 @@ select or transform data and simple plotting procedures (these require
 Tk)\&.
 \fINote:\fR The data that need to be analyzed are always contained in a
 simple list\&. Missing values are represented as empty list elements\&.
+\fINote:\fR With version 1\&.0\&.1 a mistake in the procs \fIpdf-lognormal\fR,
+\fIcdf-lognormal\fR and \fIrandom-lognormal\fR has been corrected\&. In
+previous versions the argument for the standard deviation was actually
+used as if it was the variance\&.
 .SH "GENERAL PROCEDURES"
 The general statistical procedures are:
 .TP
@@ -707,6 +719,7 @@ reasons the values "1-significance", 0\&.80, 0\&.85, 0\&.90, 0\&.95 or 0\&.99 ar
 .sp
 Compatibility issue: the original implementation and documentation used the term "confidence" and used a value
 1-significance (see ticket 2812473fff)\&. This has been corrected as of version 0\&.9\&.3\&.
+.sp
 .TP
 \fB::math::statistics::lillieforsFit\fR \fIdata\fR
 Returns the goodness of fit to a normal distribution according to
@@ -746,6 +759,79 @@ list \fIlist2\fR
 .TP
 float \fIsignificance\fR
 - Significance level (either 0\&.05, 0\&.01 or 0\&.001)
+.RE
+.sp
+.TP
+\fB::math::statistics::test-anova-F\fR \fIalpha\fR \fIargs\fR
+Determine if two or more groups with normally distributed data have the same means\&.
+The procedure returns 0 if the means are likely unequal, 1 if they are\&. This is
+a one-way ANOVA test\&. The groups may also be stored in a nested list:
+The procedure returns a list of the comparison results for each pair of groups\&. Each
+element of this list contains: the index of the first group and that of the second group,
+whether the means are likely to be different (1) or not (0) and the confidence interval
+the conclusion is based on\&. The groups may also be stored in a nested list:
+.CS
+
+
+    test-anova-F 0\&.05 $A $B $C
+    #
+    # Or equivalently:
+    #
+    test-anova-F 0\&.05 [list $A $B $C]
+
+.CE
+.RS
+.TP
+float \fIalpha\fR
+- Significance level
+.TP
+list \fIargs\fR
+- Two or more groups of data to be checked
+.RE
+.sp
+.TP
+\fB::math::statistics::test-Tukey-range\fR \fIalpha\fR \fIargs\fR
+Determine if two or more groups with normally distributed data have the same means,
+using Tukey's range test\&. It is complementary to the ANOVA test\&.
+The procedure returns a list of the comparison results for each pair of groups\&. Each
+element of this list contains: the index of the first group and that of the second group,
+whether the means are likely to be different (1) or not (0) and the confidence interval
+the conclusion is based on\&. The groups may also be stored in a nested list, just as with
+the ANOVA test\&.
+.RS
+.TP
+float \fIalpha\fR
+- Significance level - either 0\&.05 or 0\&.01
+.TP
+list \fIargs\fR
+- Two or more groups of data to be checked
+.RE
+.sp
+.TP
+\fB::math::statistics::test-Dunnett\fR \fIalpha\fR \fIcontrol\fR \fIargs\fR
+Determine if one or more groups with normally distributed data have the same means as
+the group of control data, using Dunnett's test\&. It is complementary to the ANOVA test\&.
+The procedure returns a list of the comparison results for each group with the control group\&. Each
+element of this list contains: whether the means are likely to be different (1) or not (0)
+and the confidence interval the conclusion is based on\&. The groups may also be stored in a
+nested list, just as with the ANOVA test\&.
+.sp
+Note: some care is required if there is only one group to compare the control with:
+.CS
+
+
+    test-Dunnett-F 0\&.05 $control [list $A]
+
+.CE
+.IP
+Otherwise the group A is split up into groups of one element - this is due to an ambiguity\&.
+.RS
+.TP
+float \fIalpha\fR
+- Significance level - either 0\&.05 or 0\&.01
+.TP
+list \fIargs\fR
+- One or more groups of data to be checked
 .RE
 .sp
 .TP
@@ -1294,7 +1380,9 @@ The Weibull distribution
 .IP \(bu
 The Cauchy distribution
 .IP \(bu
-PM - binomial,F\&.
+The F distribution (only the cumulative density function)
+.IP \(bu
+PM - binomial\&.
 .PP
 In principle for each distribution one has procedures for:
 .IP \(bu
@@ -1702,6 +1790,22 @@ float \fIlocation\fR
 .TP
 float \fIscale\fR
 - Scale parameter
+.TP
+float \fIvalue\fR
+- Value for which the probability is required
+.RE
+.sp
+.TP
+\fB::math::statistics::cdf-F\fR \fInf1\fR \fInf2\fR \fIvalue\fR
+Return the cumulative probability of a given value for an F
+distribution with nf1 and nf2 degrees of freedom\&.
+.RS
+.TP
+float \fInf1\fR
+- Degrees of freedom for the numerator
+.TP
+float \fInf2\fR
+- Degrees of freedom for the denominator
 .TP
 float \fIvalue\fR
 - Value for which the probability is required
@@ -2323,6 +2427,14 @@ Please report such in the category \fImath :: statistics\fR of the
 \fITcllib Trackers\fR [http://core\&.tcl\&.tk/tcllib/reportlist]\&.
 Please also report any ideas for enhancements you may have for either
 package and/or documentation\&.
+.PP
+When proposing code changes, please provide \fIunified diffs\fR,
+i\&.e the output of \fBdiff -u\fR\&.
+.PP
+Note further that \fIattachments\fR are strongly preferred over
+inlined patches\&. Attachments can be made by going to the \fBEdit\fR
+form of the ticket immediately after its creation, and then using the
+left-most button in the secondary navigation bar\&.
 .SH KEYWORDS
 data analysis, mathematics, statistics
 .SH CATEGORY

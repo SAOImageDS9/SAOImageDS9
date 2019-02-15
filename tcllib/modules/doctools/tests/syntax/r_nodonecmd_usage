@@ -1,3 +1,0 @@
-Doctools Error in macro at line 4, column 0:
-[usage .c.]
---> (FmtError) Manpage error (nodonecmd), "usage .c." : Command not allowed after [manpage_end].

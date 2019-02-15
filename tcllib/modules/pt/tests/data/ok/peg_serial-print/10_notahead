@@ -1,8 +1,0 @@
-pt::grammar::peg
-    start := (TEST)
-    rules
-        TEST :: <value> :=
-            x
-                !
-                    'a'
-                (IDENTIFIER)

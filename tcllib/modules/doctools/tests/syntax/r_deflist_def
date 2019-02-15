@@ -1,3 +1,0 @@
-Doctools Error in macro at line 5, column 0:
-[def]
---> (FmtError) Manpage error (deflist), "def" : Command restricted to usage in definition lists.

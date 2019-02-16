@@ -288,7 +288,7 @@ proc MovieClose {} {
 
     switch $movie(type) {
 	mpeg {mpeg close}
-	gif {MoviePhotoGIFClose}
+	gif {agif close}
     }
 }
 
@@ -324,6 +324,7 @@ proc MoviePhotoGIF {} {
     global ds9
     global movie
     global current
+    global colorbar
 
     # yes, we need this
     UpdateDS9
@@ -336,31 +337,25 @@ proc MoviePhotoGIF {} {
     }
 
     if {$movie(first)} {
-	set movie(gif) {}
+	agif create $movie(fn)
+	switch -- $current(colorbar) {
+	    colorbar {
+		switch -- $colorbar(map) {
+		    grey -
+		    red -
+		    green -
+		    blue {agif colortable $colorbar(map)}
+		    default {agif colortable pseudo}
+		}
+	    }
+	    colorbarrgb {agif colortable rgb}
+	}
 	set movie(first) 0
     }
-
-    lappend movie(gif) $ph
-    return 0
-}
-
-proc MoviePhotoGIFClose {} {
-    global movie
+    agif add $ph
     
-    set ph [lindex $movie(gif) 0]
-    set ww [image width $ph]
-    set hh [image height $ph]
-    agif create "$movie(fn)" $ww $hh
-    foreach ph $movie(gif) {
-	agif color $ph
-    }
-
-    foreach ph $movie(gif) {
-	agif add $ph
-	image delete $ph
-    }
-
-    agif close
+    image delete $ph
+    return 0
 }
 
 proc Movie3dDialog {} {

@@ -8,16 +8,13 @@
 class TkAGIF {
  private:
   Tcl_Interp* interp_;
-  int width_;
-  int height_;
+  ofstream* outstr;
 
-  Tcl_HashTable* color_;
-  
  public:
   TkAGIF(Tcl_Interp*);
 
   int create(int, const char*[]);
-  int color(int, const char*[]);
+  int colortable(int, const char*[]);
   int add(int, const char*[]);
   int close(int, const char*[]);
 };

@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <fstream>
 using namespace std;
 
 #include <string.h>
@@ -46,8 +47,8 @@ int TkagifCmd(ClientData data,Tcl_Interp *interp,int argc,const char* argv[])
   if (argc>=2) {
     if (!strncmp(argv[1], "create", 3))
       return tkagif->create(argc, argv);
-    else if (!strncmp(argv[1], "color", 3))
-      return tkagif->add(argc, argv);
+    else if (!strncmp(argv[1], "colortable", 3))
+      return tkagif->colortable(argc, argv);
     else if (!strncmp(argv[1], "add", 3))
       return tkagif->add(argc, argv);
     else if (!strncmp(argv[1], "close", 3))
@@ -58,7 +59,7 @@ int TkagifCmd(ClientData data,Tcl_Interp *interp,int argc,const char* argv[])
     }
   }
   else {
-    Tcl_AppendResult(interp, "usage: tkagif ?create?color?add?close?", NULL);
+    Tcl_AppendResult(interp, "usage: tkagif ?create?colortable?add?close?",  NULL);
     return TCL_ERROR;
   }
 }
@@ -66,101 +67,81 @@ int TkagifCmd(ClientData data,Tcl_Interp *interp,int argc,const char* argv[])
 TkAGIF::TkAGIF(Tcl_Interp* interp)
 {
   interp_ = interp;
-
-  width_ = 512;
-  height_ = 512;
-
-  color_ =NULL;
+  outstr =NULL;
 }
 
 int TkAGIF::create(int argc, const char* argv[])
 {
-  if (argc == 5) {
+  if (argc == 3) {
     if (*argv[2] == '\0') {
 	Tcl_AppendResult(interp_, "bad filename", NULL);
 	return TCL_ERROR;
     }
-
-    {
-      string s(argv[3]);
-      istringstream str(s);
-      str >> width_;
-    }
-    {
-      string s(argv[4]);
-      istringstream str(s);
-      str >> height_;
-    }
-
   }
   else {
-    Tcl_AppendResult(interp_,
-		     "usage: tkagif create <filename> <width> <height>", NULL);
+    Tcl_AppendResult(interp_, "usage: tkagif create <filename>", NULL);
     return TCL_ERROR;
   }
 
-  if (color_)
-    Tcl_DeleteHashTable(color_);
-  Tcl_InitHashTable(color_, TCL_ONE_WORD_KEYS);
+  // open fn
+  outstr = new ofstream(argv[2]);
+  if (!outstr) {
+    Tcl_AppendResult(interp_, "Error: unable to open filename ", NULL);
+    if (*argv[2])
+      Tcl_AppendResult(interp_, argv[2], NULL);
+    return TCL_ERROR;
+  }
+
+  // header
+
+  // size
 
   return TCL_OK;
 }
 
-int TkAGIF::color(int argc, const char* argv[])
+int TkAGIF::colortable(int argc, const char* argv[])
 {
-  if (*argv[2] == '\0') {
-    Tcl_AppendResult(interp_, "bad image name", NULL);
-    return TCL_ERROR;
-  }
-  Tk_PhotoHandle photo = Tk_FindPhoto(interp_, argv[2]);
-  if (!photo) {
-    Tcl_AppendResult(interp_, "bad image handle", NULL);
-    return TCL_ERROR;
-  }
-  Tk_PhotoImageBlock block;
-  if (!Tk_PhotoGetImage(photo,&block)) {
-    Tcl_AppendResult(interp_, "bad image block", NULL);
-    return TCL_ERROR;
-  }
-
-  int ww,hh;
-  Tk_PhotoGetSize(photo,&ww,&hh);
-
-  unsigned char* src = block.pixelPtr;
-  for (int jj=0; jj<hh; jj++) {
-    for (int ii=0; ii<ww; ii++) {
-      union {
-	unsigned char cc[8];
-	unsigned long ss;
-      } uu;
-
-      uu.ss = 0;
-      uu.cc[0] = src[(jj*ww+ii)*block.pixelSize+block.offset[0]];
-      uu.cc[1] = src[(jj*ww+ii)*block.pixelSize+block.offset[1]];
-      uu.cc[2] = src[(jj*ww+ii)*block.pixelSize+block.offset[2]];
-
-      int newptr =0;
-      Tcl_HashEntry* ptr =
-	Tcl_CreateHashEntry(color_, (const void*)uu.ss, &newptr);
-      if (ptr) {
-	long vv = (long)Tcl_GetHashValue(ptr);
-	Tcl_SetHashValue(ptr, vv+1);
-      }
+  if (argc == 3) {
+    if (!strncmp(argv[2],"grey",3)) {
+    }
+    else if (!strncmp(argv[2],"red",3)) {
+    }
+    else if (!strncmp(argv[2],"green",3)) {
+    }
+    else if (!strncmp(argv[2],"blue",3)) {
+    }
+    else if (!strncmp(argv[2],"pseudo",3)) {
+    }
+    else if (!strncmp(argv[2],"rgb",3)) {
+    }
+    else {
+	Tcl_AppendResult(interp_, "bad colortable option", NULL);
+	return TCL_ERROR;
     }
   }
-  char* str = Tcl_HashStats(color_);
-  cerr << str << endl;
-  ckfree(str);
+  else {
+    Tcl_AppendResult(interp_, "usage: tkagif colortable grey|red|green|blue|pseudo}rgb", NULL);
+    return TCL_ERROR;
+  }
+
+  // colortable
 
   return TCL_OK;
 }
 
 int TkAGIF::add(int argc, const char* argv[])
 {
-  if (*argv[2] == '\0') {
-    Tcl_AppendResult(interp_, "bad image name", NULL);
+  if (argc == 3) {
+    if (*argv[2] == '\0') {
+	Tcl_AppendResult(interp_, "bad filename", NULL);
+	return TCL_ERROR;
+    }
+  }
+  else {
+    Tcl_AppendResult(interp_, "usage: tkagif add <image>", NULL);
     return TCL_ERROR;
   }
+
   Tk_PhotoHandle photo = Tk_FindPhoto(interp_, argv[2]);
   if (!photo) {
     Tcl_AppendResult(interp_, "bad image handle", NULL);
@@ -172,33 +153,24 @@ int TkAGIF::add(int argc, const char* argv[])
     return TCL_ERROR;
   }
 
-  /*
-  unsigned char* src = block.pixelPtr;
-  unsigned char* dst = pict;
+  // Graphic Control Extension
 
-  for (int jj=0; jj<hh; jj++)
-    for (int ii=0; ii<ww; ii++) {
-      if (jj<height && ii<width) {
-	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[0]];
-	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[1]];
-	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[2]];
-      }
-      else {
-	*dst++ = 255;
-	*dst++ = 255;
-	*dst++ = 255;
-      }
-    }
-  */
+  // Image Descriptor
+
+  // Image
+  
   return TCL_OK;
 }
 
 int TkAGIF::close(int argc, const char* argv[])
 {
-  if (color_)
-    Tcl_DeleteHashTable(color_);
-  color_ =NULL;
+  // GIF file terminator
+  if (outstr) {
+    outstr->close();
 
+    delete outstr;
+  }
+  
   return TCL_OK;
 }
 

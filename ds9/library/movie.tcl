@@ -308,10 +308,10 @@ proc MoviePhotoMPEG {} {
     }
 
     if {$movie(first)} {
-	set w [image width $ph]
-	set h [image height $ph]
+	set ww [image width $ph]
+	set hh [image height $ph]
 	# quality must be >=5, or sometimes will generate bad data
-	mpeg create "$movie(fn)" $w $h 25 1 5
+	mpeg create "$movie(fn)" $ww $hh 25 1 5
 	set movie(first) 0
     }
     mpeg add $ph
@@ -337,7 +337,9 @@ proc MoviePhotoGIF {} {
     }
 
     if {$movie(first)} {
-	agif create $movie(fn)
+	set ww [image width $ph]
+	set hh [image height $ph]
+	agif create $movie(fn) $ww $hh
 	switch -- $current(colorbar) {
 	    colorbar {
 		switch -- $colorbar(map) {

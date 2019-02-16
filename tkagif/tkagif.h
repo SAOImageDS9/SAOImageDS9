@@ -6,10 +6,17 @@
 #define __tkagif_h__
 
 class TkAGIF {
+  enum ColorTableType {GREY, RED, GREEN, BLUE, PSEUDO, RGB};
+
  private:
   Tcl_Interp* interp_;
-  ofstream* outstr;
+  
+  ofstream* out_;
+  int width_;
+  int height_;
 
+  ColorTableType colorTableType_;
+  
  public:
   TkAGIF(Tcl_Interp*);
 

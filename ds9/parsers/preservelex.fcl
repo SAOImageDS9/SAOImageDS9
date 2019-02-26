@@ -9,6 +9,7 @@
 
 pan	    {return $PAN_}
 regions	    {return $REGIONS_}
+scale	    {return $SCALE_}
 
 #include yesno.fin
 #include string.fin

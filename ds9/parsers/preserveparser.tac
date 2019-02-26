@@ -9,6 +9,7 @@
 
 %token PAN_
 %token REGIONS_
+%token SCALE_
 
 %%
 
@@ -20,6 +21,8 @@ command : preserve
 
 preserve : PAN_ yesno {ProcessCmdSet panzoom preserve $2 PreservePan}
  | REGIONS_ yesno {ProcessCmdSet marker preserve $2 MarkerPreserve}
+# backward compatibility
+ | SCALE_ yesno
  ;
 
 %%

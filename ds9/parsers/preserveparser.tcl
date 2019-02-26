@@ -61,110 +61,135 @@ proc preserve::unsetupvalues {numsyms} {
 }
 
 array set preserve::table {
-  13:263 shift
-  11:263,target 11
-  5:0,target 2
+  13:263 reduce
+  11:263,target 7
+  5:0,target 8
   2:257 shift
+  15:263 shift
   9:0 reduce
+  0:266,target 3
   2:258 shift
   11:0 reduce
   2:259 shift
   2:260 shift
   2:261 shift
+  3:257,target 6
   0:264 shift
-  1:259,target 7
-  1:260,target 8
+  1:259,target 8
+  1:260,target 9
   2:262 shift
-  7:263,target 3
+  7:263,target 5
+  3:267,target 14
   0:265 shift
   2:263 reduce
-  4:263 reduce
-  0:267 goto
+  0:266 shift
   0:265,target 2
-  2:266 goto
+  0:268 goto
   2:263,target 1
   6:263 reduce
-  6:0,target 5
-  0:269 goto
+  6:0,target 2
+  0:270 goto
+  2:267 goto
+  16:0,target 10
   2:0 reduce
+  14:263,target 13
   8:263 reduce
-  1:258,target 6
-  4:268 goto
+  1:258,target 7
   6:0 reduce
   0:264,target 1
-  2:262,target 10
-  7:0,target 3
-  1:257,target 5
+  2:262,target 11
+  7:0,target 5
+  1:257,target 6
   12:0 reduce
-  5:263,target 2
-  10:0,target 7
-  2:261,target 9
-  4:268,target 13
-  12:263,target 12
-  1:266,target 11
-  8:0,target 6
-  3:0 accept
+  5:263,target 9
+  1:267,target 12
+  10:0,target 4
+  2:261,target 10
+  16:0 reduce
+  12:263,target 11
+  8:0,target 3
+  3:0 reduce
   10:263 reduce
   1:0,target 1
-  11:0,target 11
-  2:259,target 7
-  2:260,target 8
+  11:0,target 7
+  2:259,target 8
+  2:260,target 9
   12:263 reduce
-  8:263,target 6
+  8:263,target 3
   7:0 reduce
   1:257 shift
+  14:263 reduce
   1:258 shift
+  3:257 shift
+  3:263,target 1
   1:259 shift
   1:260 shift
+  3:258 shift
   1:261 shift
+  3:260 shift
+  3:259 shift
   1:262 shift
-  9:0,target 4
+  15:263,target 16
+  13:0 reduce
+  9:0,target 6
+  3:261 shift
   1:263 reduce
-  2:258,target 6
+  2:258,target 7
+  3:262 shift
   2:0,target 1
-  12:0,target 12
-  10:263,target 7
-  1:266 goto
+  12:0,target 11
+  3:263 reduce
+  10:263,target 4
   5:263 reduce
+  3:262,target 11
+  1:267 goto
+  5:269,target 15
   7:263 reduce
-  2:257,target 5
+  3:267 goto
+  2:257,target 6
   9:263 reduce
-  6:263,target 5
-  0:269,target 4
-  4:0 reduce
-  3:0,target 0
+  6:263,target 2
+  4:0 accept
+  0:270,target 5
+  2:267,target 13
+  5:269 goto
+  3:0,target 1
+  13:0,target 12
+  3:261,target 10
   1:263,target 1
   8:0 reduce
   10:0 reduce
-  13:263,target 14
-  2:266,target 12
+  13:263,target 12
+  0:268,target 4
   14:0 reduce
-  1:262,target 10
-  9:263,target 4
-  4:0,target 8
-  14:0,target 10
+  3:260,target 9
+  3:259,target 8
+  1:262,target 11
+  9:263,target 6
+  4:0,target 0
+  14:0,target 13
   1:0 reduce
-  4:263,target 9
-  0:267,target 3
   11:263 reduce
   5:0 reduce
-  1:261,target 9
+  3:258,target 7
+  1:261,target 10
 }
 
 array set preserve::rules {
-  9,l 268
-  11,l 269
-  2,l 266
-  6,l 266
-  12,l 269
-  3,l 266
-  7,l 266
-  0,l 270
-  4,l 266
-  8,l 267
-  10,l 267
-  1,l 266
-  5,l 266
+  9,l 269
+  11,l 270
+  2,l 267
+  6,l 267
+  12,l 270
+  3,l 267
+  7,l 267
+  13,l 270
+  0,l 271
+  4,l 267
+  8,l 268
+  10,l 268
+  1,l 267
+  5,l 267
 }
 
 array set preserve::rules {
@@ -176,6 +201,7 @@ array set preserve::rules {
   10,dc 3
   6,dc 1
   1,dc 0
+  13,dc 2
   9,dc 0
   4,dc 1
   11,dc 2
@@ -184,51 +210,56 @@ array set preserve::rules {
 }
 
 array set preserve::rules {
-  7,line 38
-  10,line 42
-  4,line 35
-  1,line 32
-  9,line 41
-  12,line 46
-  6,line 37
-  3,line 34
-  8,line 41
-  11,line 45
-  5,line 36
-  2,line 33
+  13,line 49
+  7,line 39
+  10,line 43
+  4,line 36
+  1,line 33
+  9,line 42
+  12,line 48
+  6,line 38
+  3,line 35
+  8,line 42
+  11,line 46
+  5,line 37
+  2,line 34
   9,e 1
 }
 
 array set preserve::lr1_table {
-  13,trans {{263 14}}
-  0 {{0 0 0} {8 0 0} {10 0 0} {11 {0 263} 0} {12 {0 263} 0}}
+  13,trans {}
+  0 {{0 0 0} {8 0 0} {10 0 0} {11 {0 263} 0} {12 {0 263} 0} {13 {0 263} 0}}
   14,trans {}
   1 {{11 {0 263} 1} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
+  15,trans {{263 16}}
   2 {{12 {0 263} 1} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
-  3 {{0 0 1}}
-  4 {{8 0 1} {10 0 1} {9 263 0}}
-  0,trans {{264 1} {265 2} {267 3} {269 4}}
-  1,trans {{257 5} {258 6} {259 7} {260 8} {261 9} {262 10} {266 11}}
-  5 {{2 {0 263} 1}}
-  2,trans {{257 5} {258 6} {259 7} {260 8} {261 9} {262 10} {266 12}}
-  6 {{5 {0 263} 1}}
-  3,trans {}
-  7 {{3 {0 263} 1}}
-  4,trans {{268 13}}
-  8 {{6 {0 263} 1}}
-  5,trans {}
-  9 {{4 {0 263} 1}}
-  10 {{7 {0 263} 1}}
+  16,trans {}
+  3 {{13 {0 263} 1} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
+  4 {{0 0 1}}
+  0,trans {{264 1} {265 2} {266 3} {268 4} {270 5}}
+  1,trans {{257 6} {258 7} {259 8} {260 9} {261 10} {262 11} {267 12}}
+  5 {{8 0 1} {10 0 1} {9 263 0}}
+  2,trans {{257 6} {258 7} {259 8} {260 9} {261 10} {262 11} {267 13}}
+  6 {{2 {0 263} 1}}
+  3,trans {{257 6} {258 7} {259 8} {260 9} {261 10} {262 11} {267 14}}
+  7 {{5 {0 263} 1}}
+  4,trans {}
+  8 {{3 {0 263} 1}}
+  5,trans {{269 15}}
+  9 {{6 {0 263} 1}}
+  10 {{4 {0 263} 1}}
   6,trans {}
-  11 {{11 {0 263} 2}}
+  11 {{7 {0 263} 1}}
   7,trans {}
-  12 {{12 {0 263} 2}}
+  12 {{11 {0 263} 2}}
   8,trans {}
-  13 {{10 0 2}}
-  14 {{10 0 3}}
+  13 {{12 {0 263} 2}}
   10,trans {}
   9,trans {}
+  14 {{13 {0 263} 2}}
   11,trans {}
+  15 {{10 0 2}}
+  16 {{10 0 3}}
   12,trans {}
 }
 
@@ -243,16 +274,17 @@ array set preserve::token_id_table {
   269,title {}
   257,line 7
   262,t 0
-  270,line 47
-  269,line 44
+  270,line 45
+  269,line 42
   259,title ON
   260,title OFF
-  266,t 1
+  266,t 0
+  271,t 1
   264,title PAN
+  266,line 20
   error error
-  266,line 31
   268,title {}
-  error,line 30
+  error,line 31
   258,t 0
   263,line 14
   error,title {}
@@ -279,20 +311,23 @@ array set preserve::token_id_table {
   264,t 0
   265 REGIONS_
   262,line 12
-  266 yesno
-  267 command
+  266 SCALE_
+  267 yesno
   268,t 1
-  268 @PSEUDO1
+  268 command
   262,title FALSE
   0 {$}
   0,t 0
-  270 start'
-  269 preserve
+  270 preserve
+  269 @PSEUDO1
+  271 start'
   error,t 0
   258,line 8
-  266,title {}
+  266,title SCALE
+  271,line 50
+  271,title {}
   261,t 0
-  267,line 40
+  267,line 32
   265,t 0
   261,title TRUE
 }

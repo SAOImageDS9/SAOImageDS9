@@ -7,3 +7,4 @@ set FALSE_ 262
 set STRING_ 263
 set PAN_ 264
 set REGIONS_ 265
+set SCALE_ 266

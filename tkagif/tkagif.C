@@ -293,7 +293,7 @@ int TkAGIF::add(int argc, const char* argv[])
       char clear = 0x80;
       out_->write(&clear,1);
       for (unsigned char kk=0; kk<ll; kk++) {
-	char pix = rand() % 128;
+	char pix = rand() % 250;
 	out_->write(&pix,1);
 	ii++;
       }

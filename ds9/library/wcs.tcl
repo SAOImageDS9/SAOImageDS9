@@ -208,9 +208,6 @@ proc WCSDialog {} {
     ttk::label $base.tdateobs -text "DATE-OBS"
     ttk::entry $base.dateobs -textvariable dwcs(date-obs) -width 14
 
-    ttk::label $base.tdate -text "DATE"
-    ttk::entry $base.date -textvariable dwcs(date) -width 14
-
     ttk::label $base.tepoch -text "EPOCH"
     ttk::entry $base.epoch -textvariable dwcs(epoch) -width 14
 
@@ -489,7 +486,6 @@ proc ConfigWCSDialog {{force {0}}} {
 
     grid forget $base.tmjdobs $base.mjdobs
     grid forget $base.tdateobs $base.dateobs
-    grid forget $base.tdate $base.date
     grid forget $base.tepoch $base.epoch
 
     # forget current sys vars
@@ -569,7 +565,6 @@ proc ConfigWCSDialog {{force {0}}} {
 	$base.tepoch $base.epoch -padx 2 -pady 2 -sticky w
     grid $base.tmjdobs $base.mjdobs \
 	$base.tdateobs $base.dateobs \
-	$base.tdate $base.date \
 	-padx 2 -pady 2 -sticky w
 
     grid $base.tctype1${aa} $base.ctype1${aa} \
@@ -804,7 +799,6 @@ proc WCSToVar {txt} {
     # clear all
     set dwcs(mjd-obs) {}
     set dwcs(date-obs) {}
-    set dwcs(date) {}
     set dwcs(epoch) {}
 
     foreach aa {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
@@ -918,6 +912,10 @@ proc WCSToVar {txt} {
 	if {[regexp {pc0([1-9])_0([1-9])} $key dummy aa bb]} {
 	    set key pc${aa}_${bb}
 	}
+	# fix for PC00x00x
+	if {[regexp {pc00([1-9])00([1-9])} $key dummy aa bb]} {
+	    set key pc${aa}_${bb}
+	}
 
 	switch [string range $key 0 6] {
 	    mjd-obs -
@@ -995,9 +993,6 @@ proc WCSFromVar {} {
     }
     if {$dwcs(date-obs) != {}} {
 	append rr "DATE-OBS = '$dwcs(date-obs)'\n"
-    }
-    if {$dwcs(date) != {}} {
-	append rr "DATE = '$dwcs(date)'\n"
     }
     if {$dwcs(epoch) != {}} {
 	append rr "EPOCH = $dwcs(epoch)\n"

@@ -3509,6 +3509,7 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
   const char* encode = astGetC(chan, "Encoding");
   if (encode)
     encoding_ = dupstr(encode);
+  //  astSet (chan, "Encoding=FITS-WCS");
 
   // we may have an error, just reset
   astClearStatus;

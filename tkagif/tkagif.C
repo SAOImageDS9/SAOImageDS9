@@ -339,7 +339,7 @@ int TkAGIF::add(int argc, const char* argv[])
   // *** Image Data ***
   {
     // LZW Min Code Size
-    char lzw = 0x07;
+    char lzw = 0x08;
     out_->write(&lzw,1);
 
     int max = 126;

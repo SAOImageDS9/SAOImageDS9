@@ -125,7 +125,8 @@ int TkAGIF::create(int argc, const char* argv[])
     // color resolution (3): number bits-1
     // sort flag (1): 0 not ordered, 1 ordered decreasing importance
     // size of global color table (3): size 2^(x+1)
-    char pkg=0xF7;
+    //    char pkg=0xF7;
+    char pkg=0xF6;
     out_->write(&pkg,1);
 
     // BG Color
@@ -165,52 +166,53 @@ int TkAGIF::colortable(int argc, const char* argv[])
     return TCL_ERROR;
   }
 
+  int sz = 128;
   // colortable
-  unsigned char red[256];
-  unsigned char green[256];
-  unsigned char blue[256];
-  memset(red,0,256);
-  memset(green,0,256);
-  memset(blue,0,256);
+  unsigned char red[sz];
+  unsigned char green[sz];
+  unsigned char blue[sz];
+  memset(red,0,sz);
+  memset(green,0,sz);
+  memset(blue,0,sz);
   
   switch (colorTableType_) {
   case GREY:
-    for(int ii=0; ii<256; ii++)
-      red[ii] = green[ii] = blue[ii] = ii;
+    for(int ii=0; ii<sz; ii++)
+      red[ii] = green[ii] = blue[ii] = ii*2;
     break;
   case RED:
-    for(int ii=0; ii<256; ii++)
-      red[ii] = ii;
+    for(int ii=0; ii<sz; ii++)
+      red[ii] = ii*2;
     break;
   case GREEN:
-    for(int ii=0; ii<256; ii++)
-      green[ii] = ii;
+    for(int ii=0; ii<sz; ii++)
+      green[ii] = ii*2;
     break;
   case BLUE:
-    for(int ii=0; ii<256; ii++)
-      blue[ii] = ii;
+    for(int ii=0; ii<sz; ii++)
+      blue[ii] = ii*2;
     break;
   case PSEUDO:
     break;
   case RGB:
-    for (int rr=0, ii=0; rr<8; rr++) {
-      for (int gg=0; gg<8; gg++) {
-	for (int bb=0; bb<8; bb++) {
-	  red[ii] = rr*32;
-	  green[ii] = gg*32;
-	  blue[ii] = bb*32;
+    for (int rr=0, ii=0; rr<4; rr++) {
+      for (int gg=0; gg<4; gg++) {
+	for (int bb=0; bb<4; bb++) {
+	  red[ii] = rr*32*2;
+	  green[ii] = gg*32*2;
+	  blue[ii] = bb*32*2;
 	  ii++;
 	}
       }
     }
-    red[255] = 0xFF;
-    green[255] = 0xFF;
-    blue[255] = 0xFF;
+    red[127] = 0xFF;
+    green[127] = 0xFF;
+    blue[127] = 0xFF;
     break;
   }
       
   // *** Global Color Table ***
-  for (int ii=0; ii<256; ii++) {
+  for (int ii=0; ii<sz; ii++) {
     out_->write((char*)red+ii,1);
     out_->write((char*)green+ii,1);
     out_->write((char*)blue+ii,1);
@@ -285,7 +287,7 @@ int TkAGIF::add(int argc, const char* argv[])
 
     for (int jj=0; jj<height_; jj++)
       for (int ii=0; ii<width_; ii++) {
-	*dst++ = src[(jj*width_+ii)*block.pixelSize+block.offset[0]];
+	*dst++ = src[(jj*width_+ii)*block.pixelSize+block.offset[0]]/2;
 	//	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[1]];
 	//	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[2]];
       }
@@ -378,9 +380,8 @@ int TkAGIF::add(int argc, const char* argv[])
 	out_->write((char*)&ss,1);
 	out_->write((char*)&clear,1);
 	for (unsigned char kk=0; kk<ll; kk++) {
-	  unsigned char pix = rand() % 129;
-	  // unsigned char pix = pict[jj*width_+ii];
-	  // cerr << (unsigned short)pix << endl;
+	  //	  unsigned char pix = rand() % 128;
+	  unsigned char pix = pict[jj*width_+ii];
 	  out_->write((char*)&pix,1);
 	  ii++;
 	}

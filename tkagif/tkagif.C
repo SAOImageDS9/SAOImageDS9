@@ -104,6 +104,7 @@ int TkAGIF::create(int argc, const char* argv[])
     istringstream str(s);
     str >> height_;
   }
+  width_ = height_ = 46;
 
   // *** Header ***
   {
@@ -125,7 +126,7 @@ int TkAGIF::create(int argc, const char* argv[])
     // color resolution (3): number bits-1
     // sort flag (1): 0 not ordered, 1 ordered decreasing importance
     // size of global color table (3): size 2^(x+1)
-    char pkg=0xF7;
+    char pkg=0xF6;
     out_->write(&pkg,1);
 
     // BG Color
@@ -210,14 +211,14 @@ int TkAGIF::colortable(int argc, const char* argv[])
   }
       
   // *** Global Color Table ***
-  for (int ii=0; ii<256; ii++) {
+  for (int ii=0; ii<128; ii++) {
     out_->write((char*)red+ii,1);
     out_->write((char*)green+ii,1);
     out_->write((char*)blue+ii,1);
   }
 
   // *** Application Extension Block ***
-  {
+  if (0) {
     // Extention Introducer
     char ext = 0x21;
     out_->write(&ext,1);
@@ -272,7 +273,7 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // *** Graphic Control Extension ***
-  {
+  if (0) {
     // Extention Introducer
     char ext = 0x21;
     out_->write(&ext,1);
@@ -338,22 +339,23 @@ int TkAGIF::add(int argc, const char* argv[])
   // *** Image Data ***
   {
     // LZW Min Code Size
-    char lzw = 0x08;
+    char lzw = 0x07;
     out_->write(&lzw,1);
 
     // Data
     for (int jj=0; jj<height_; jj++) {
       int ii =0;
       while (ii<width_) {
-	char clear = 0x80;
-	out_->write(&clear,1);
 	int ww = width_-ii;
 	int ll = ww < 0x2E ? ww : 0x2E;
-	char ss= ll+1;
-	out_->write(&ss,1);
+	unsigned char ss= ll+1;
+	out_->write((char*)&ss,1);
+	char clear = 0x80;
+	out_->write(&clear,1);
 	for (unsigned char kk=0; kk<ll; kk++) {
-	  char pix = rand() % 200;
-	  out_->write(&pix,1);
+	  //	  unsigned char pix = 0x7B;
+	  unsigned char pix = rand() % 128;
+	  out_->write((char*)&pix,1);
 	  ii++;
 	}
       }

@@ -161,10 +161,10 @@ void PSOutput::computeBBox(int width, int height)
     vSize + vBorder;
 
   // Scale the plot size if it's bigger than the paper
-  double hScale = (hSize+hBorder) > paperWidth ? 1.0 :
-    paperWidth - hBorder / hSize;
-  double vScale = (vSize + vBorder) > paperHeight ? 1.0 :
-    paperHeight - vBorder / vSize;
+  double hScale = (hSize+hBorder)>paperWidth ? (paperWidth-hBorder)/hSize
+    : 1.0;
+  double vScale = (vSize+vBorder)>paperHeight ? (paperHeight-vBorder)/vSize
+    : 1.0;
 
   double scale = MIN(hScale, vScale);
   if (scale != 1.0) {

@@ -104,7 +104,6 @@ int TkAGIF::create(int argc, const char* argv[])
     istringstream str(s);
     str >> height_;
   }
-  width_ = height_ = 46;
 
   // *** Header ***
   {
@@ -343,19 +342,20 @@ int TkAGIF::add(int argc, const char* argv[])
     char lzw = 0x07;
     out_->write(&lzw,1);
 
+    int max = 126;
     // Data
     for (int jj=0; jj<height_; jj++) {
       int ii =0;
       while (ii<width_) {
 	int ww = width_-ii;
 	//	int ll = ww < 0x2E ? ww : 0x2E;
-	int ll = ww < 0x0F ? ww : 0x0F;
+	int ll = ww < max ? ww : max;
 	unsigned char ss= ll+1;
 	out_->write((char*)&ss,1);
 	char clear = 0x80;
 	out_->write(&clear,1);
 	for (unsigned char kk=0; kk<ll; kk++) {
-	  unsigned char pix = rand() % 256;
+	  unsigned char pix = rand() % 128;
 	  out_->write((char*)&pix,1);
 	  ii++;
 	}

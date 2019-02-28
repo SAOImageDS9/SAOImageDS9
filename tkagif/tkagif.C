@@ -342,7 +342,7 @@ int TkAGIF::add(int argc, const char* argv[])
     char lzw = 0x08;
     out_->write(&lzw,1);
 
-    int max = 126;
+    int max = 128;
     // Data
     for (int jj=0; jj<height_; jj++) {
       int ii =0;

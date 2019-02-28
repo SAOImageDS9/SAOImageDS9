@@ -361,6 +361,7 @@ int TkAGIF::add(int argc, const char* argv[])
     char lzw = 0x07;
     out_->write(&lzw,1);
 
+    unsigned char clear = 0x80;
     int max = 126;
     // Data
     for (int jj=0; jj<height_; jj++) {
@@ -370,8 +371,7 @@ int TkAGIF::add(int argc, const char* argv[])
 	int ll = ww < max ? ww : max;
 	unsigned char ss= ll+1;
 	out_->write((char*)&ss,1);
-	char clear = 0x80;
-	out_->write(&clear,1);
+	out_->write((char*)&clear,1);
 	for (unsigned char kk=0; kk<ll; kk++) {
 	  unsigned char pix = rand() % 129;
 	  //	  unsigned char pix = pict[jj*width_+ii];

@@ -361,28 +361,35 @@ int TkAGIF::add(int argc, const char* argv[])
     char lzw = 0x07;
     out_->write(&lzw,1);
 
+    // clear code: 2^n
     unsigned char clear = 0x80;
-    int max = 126;
+    // stop code: 2^n + 1
+    unsigned char stop = 0x81;
+    // send clear code every 2^n - 2
+    int reset = 126;
+
     // Data
     for (int jj=0; jj<height_; jj++) {
       int ii =0;
       while (ii<width_) {
 	int ww = width_-ii;
-	int ll = ww < max ? ww : max;
+	int ll = ww < reset ? ww : reset;
 	unsigned char ss= ll+1;
 	out_->write((char*)&ss,1);
 	out_->write((char*)&clear,1);
 	for (unsigned char kk=0; kk<ll; kk++) {
 	  unsigned char pix = rand() % 129;
-	  //	  unsigned char pix = pict[jj*width_+ii];
-	  cerr << (unsigned short)pix << endl;
+	  // unsigned char pix = pict[jj*width_+ii];
+	  // cerr << (unsigned short)pix << endl;
 	  out_->write((char*)&pix,1);
 	  ii++;
 	}
       }
     }
-    char stop[] = {0x01,0x81};
-    out_->write(stop,2);
+    char ss = 0x01;
+    out_->write(&ss,1);
+    out_->write((char*)&stop,1);
+
     char end= 0x00;
     out_->write(&end,1);
   }

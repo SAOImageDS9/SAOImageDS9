@@ -348,13 +348,14 @@ int TkAGIF::add(int argc, const char* argv[])
       int ii =0;
       while (ii<width_) {
 	int ww = width_-ii;
-	int ll = ww < 0x2E ? ww : 0x2E;
+	//	int ll = ww < 0x2E ? ww : 0x2E;
+	int ll = ww < 0x0F ? ww : 0x0F;
 	unsigned char ss= ll+1;
 	out_->write((char*)&ss,1);
 	char clear = 0x80;
 	out_->write(&clear,1);
 	for (unsigned char kk=0; kk<ll; kk++) {
-	  unsigned char pix = rand() % 128;
+	  unsigned char pix = rand() % 256;
 	  out_->write((char*)&pix,1);
 	  ii++;
 	}

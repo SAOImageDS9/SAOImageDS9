@@ -126,7 +126,7 @@ int TkAGIF::create(int argc, const char* argv[])
     // color resolution (3): number bits-1
     // sort flag (1): 0 not ordered, 1 ordered decreasing importance
     // size of global color table (3): size 2^(x+1)
-    char pkg=0xF6;
+    char pkg=0xF7;
     out_->write(&pkg,1);
 
     // BG Color
@@ -177,7 +177,8 @@ int TkAGIF::colortable(int argc, const char* argv[])
   switch (colorTableType_) {
   case GREY:
     for(int ii=0; ii<256; ii++)
-      red[ii] = green[ii] = blue[ii] = ii;
+      //      red[ii] = green[ii] = blue[ii] = ii;
+      red[ii] = ii;
     break;
   case RED:
     for(int ii=0; ii<256; ii++)
@@ -211,14 +212,14 @@ int TkAGIF::colortable(int argc, const char* argv[])
   }
       
   // *** Global Color Table ***
-  for (int ii=0; ii<128; ii++) {
+  for (int ii=0; ii<256; ii++) {
     out_->write((char*)red+ii,1);
     out_->write((char*)green+ii,1);
     out_->write((char*)blue+ii,1);
   }
 
   // *** Application Extension Block ***
-  if (0) {
+  {
     // Extention Introducer
     char ext = 0x21;
     out_->write(&ext,1);
@@ -273,7 +274,7 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // *** Graphic Control Extension ***
-  if (0) {
+  {
     // Extention Introducer
     char ext = 0x21;
     out_->write(&ext,1);
@@ -353,7 +354,6 @@ int TkAGIF::add(int argc, const char* argv[])
 	char clear = 0x80;
 	out_->write(&clear,1);
 	for (unsigned char kk=0; kk<ll; kk++) {
-	  //	  unsigned char pix = 0x7B;
 	  unsigned char pix = rand() % 128;
 	  out_->write((char*)&pix,1);
 	  ii++;

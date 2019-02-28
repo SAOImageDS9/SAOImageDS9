@@ -105,13 +105,37 @@ int TkAGIF::create(int argc, const char* argv[])
     str >> height_;
   }
 
-  // header
-  char header[] = "GIF89a";
-  out_->write(header,6);
-  unsigned short ww = width_;
-  unsigned short hh = height_;
-  out_->write((char*)&ww,2);
-  out_->write((char*)&hh,2);
+  // *** Header ***
+  {
+    char header[] = "GIF89a";
+    out_->write(header,6);
+  }
+  
+  // *** Logical Screen Descriptor ***
+  {
+    // width
+    unsigned short ww = width_;
+    out_->write((char*)&ww,2);
+    // height
+    unsigned short hh = height_;
+    out_->write((char*)&hh,2);
+
+    // Packed Field: msb to lsb
+    // global color table flag (1): 0 no gct, 1: gct
+    // color resolution (3): number bits-1
+    // sort flag (1): 0 not ordered, 1 ordered decreasing importance
+    // size of global color table (3): size 2^(x+1)
+    char pkg=0xF7;
+    out_->write(&pkg,1);
+
+    // BG Color
+    char bg=0x00;
+    out_->write(&bg,1);
+
+    // Pixel Aspect Ratio
+    char ar=0x00;
+    out_->write(&ar,1);
+  }
   
   return TCL_OK;
 }
@@ -185,41 +209,41 @@ int TkAGIF::colortable(int argc, const char* argv[])
     break;
   }
       
-  // Logical Screen Descriptor
-  // bits per pixel-1 (3), sort flag (1), color resolution-1 (3),
-  // global flag (1)
-  char gct=0xF7;
-  out_->write(&gct,1);
-
-  // bg color
-  char bg=0x00;
-  out_->write(&bg,1);
-
-  // default pixel aspect ratio
-  char rr=0x00;
-  out_->write(&rr,1);
-
-  // color table
+  // *** Global Color Table ***
   for (int ii=0; ii<256; ii++) {
     out_->write((char*)red+ii,1);
     out_->write((char*)green+ii,1);
     out_->write((char*)blue+ii,1);
   }
 
-  // Application Extension Block
-  char aeb[2] = {0x21,0xFF};
-  out_->write(aeb,2);
-  char ss= 0x0B;
-  out_->write(&ss,1);
-  char nn[] = "NETSCAPE2.0";
-  out_->write(nn,11);
-  char dd=0x03;
-  out_->write(&dd,1);
-  char rep[] = {0x01,0xFF,0xFF};
-  out_->write(rep,3);
-  char end=0x00;
-  out_->write(&end,1);
-
+  // *** Application Extension Block ***
+  {
+    // Extention Introducer
+    char ext = 0x21;
+    out_->write(&ext,1);
+    // Extention Lable
+    char lable = 0xFF;
+    out_->write(&lable,1);
+    // Block Size
+    char ss= 0x0B;
+    out_->write(&ss,1);
+    // Applcation Identifier
+    char id[] = "NETSCAPE";
+    out_->write(id,8);
+    // Authentication Code
+    char code[] = "2.0";
+    out_->write(code,3);
+    // Application Data Size
+    char dd=0x03;
+    out_->write(&dd,1);
+    // Application Data
+    char rep[] = {0x01,0x00,0x00};
+    out_->write(rep,3);
+    // Block Terminator
+    char end=0x00;
+    out_->write(&end,1);
+  }
+  
   return TCL_OK;
 }
 
@@ -247,69 +271,105 @@ int TkAGIF::add(int argc, const char* argv[])
     return TCL_ERROR;
   }
 
-  // Graphic Control Extension
-  char gce[] = {0x21,0xF9};
-  out_->write(gce,2);
-  char ss= 0x04;
-  out_->write(&ss,1);
-  // Graphics disposal
-  // Transparent color flag (1), User input flag (1), disposal method (3),
-  // reserved (3)
-  char bf= 0x08;
-  out_->write(&bf,1);
-  char delay[] = {0xFF,0x00};
-  out_->write(delay,2);
-  char notrans= 0x00;
-  out_->write(&notrans,1);
-  char gcend= 0x00;
-  out_->write(&gcend,1);
+  // *** Graphic Control Extension ***
+  {
+    // Extention Introducer
+    char ext = 0x21;
+    out_->write(&ext,1);
+    // Extention Lable
+    char lable = 0xF9;
+    out_->write(&lable,1);
+    // Block Size
+    char ss= 0x04;
+    out_->write(&ss,1);
+    // Packed Field msb to lsb
+    // Reserved (3)
+    // Displosal Method (3): 0 none, 1 do not dispose, 2 restore bg, 3 restore
+    // User Input Flag (1): 0 none, 1 expected
+    // Transparent Color Flag (1): 0 not given, 1 color index
+    char pkg= 0x00;
+    out_->write(&pkg,1);
+    // Delay Time
+    unsigned short delay = 0x00;
+    out_->write((char*)&delay,2);
+    // Transparent Color Index
+    char trans= 0x00;
+    out_->write(&trans,1);
+    // Block Terminator
+    char end= 0x00;
+    out_->write(&end,1);
+  }
   
-  // Local Image Descriptor
-  char img= 0x2C;
-  out_->write(&img,1);
-  unsigned short zz = 0;
-  out_->write((char*)&zz,2);
-  out_->write((char*)&zz,2);
-  unsigned short ww = width_;
-  out_->write((char*)&ww,2);
-  unsigned short hh = height_;
-  out_->write((char*)&hh,2);
-  // local table flag (1), interlace flag (1), sort flag (1),
-  // reserved (2), size local table (3)
-  char nolut= 0x00;
-  out_->write(&nolut,1);
-  
-  // Image Data
-  char lzw = 0x08;
-  out_->write(&lzw,1);
+  // *** Local Image Descriptor ***
+  {
+    // Image Separator
+    char img= 0x2C;
+    out_->write(&img,1);
 
-  for (int jj=0; jj<height_; jj++) {
-    int ii =0;
-    while (ii<width_) {
-      int ww = width_-ii;
-      int ll = ww < 0xF0 ? ww : 0xF0;
-      char ss= ll+1;
-      out_->write(&ss,1);
-      char clear = 0x80;
-      out_->write(&clear,1);
-      for (unsigned char kk=0; kk<ll; kk++) {
-	char pix = rand() % 250;
-	out_->write(&pix,1);
-	ii++;
+    // Image Left Position
+    unsigned short left = 0;
+    out_->write((char*)&left,2);
+
+    // Image Top Position
+    unsigned short top = 0;
+    out_->write((char*)&top,2);
+
+    // Image Width
+    unsigned short ww = width_;
+    out_->write((char*)&ww,2);
+
+    // Image Heght
+    unsigned short hh = height_;
+    out_->write((char*)&hh,2);
+
+    // Packed Field msb to lsb
+    // Local Table Flag (1): 1 local table, 0 no
+    // Interlace Flag (1): 1 interlaced, 0 no
+    // Sort Flag (1): 1 sorted, 0 no
+    // Reserved (2):
+    // Size of Local Table (3)
+    char pkg= 0x00;
+    out_->write(&pkg,1);
+  }
+  
+  // *** Local Color Table ***
+  // not present
+
+  // *** Image Data ***
+  {
+    // LZW Min Code Size
+    char lzw = 0x08;
+    out_->write(&lzw,1);
+
+    // Data
+    for (int jj=0; jj<height_; jj++) {
+      int ii =0;
+      while (ii<width_) {
+	char clear = 0x80;
+	out_->write(&clear,1);
+	int ww = width_-ii;
+	int ll = ww < 0x2E ? ww : 0x2E;
+	char ss= ll+1;
+	out_->write(&ss,1);
+	for (unsigned char kk=0; kk<ll; kk++) {
+	  char pix = rand() % 200;
+	  out_->write(&pix,1);
+	  ii++;
+	}
       }
     }
+    char stop[] = {0x01,0x81};
+    out_->write(stop,2);
+    char end= 0x00;
+    out_->write(&end,1);
   }
-  char stop[] = {0x01,0x81};
-  out_->write(stop,2);
-  char end= 0x00;
-  out_->write(&end,1);
   
   return TCL_OK;
 }
 
 int TkAGIF::close(int argc, const char* argv[])
 {
-  // GIF file terminator
+  // *** Trailer ***
   char end = 0x3B;
   out_->write(&end,1);
 

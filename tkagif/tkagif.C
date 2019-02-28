@@ -176,8 +176,7 @@ int TkAGIF::colortable(int argc, const char* argv[])
   switch (colorTableType_) {
   case GREY:
     for(int ii=0; ii<256; ii++)
-      //      red[ii] = green[ii] = blue[ii] = ii;
-      red[ii] = ii;
+      red[ii] = green[ii] = blue[ii] = ii;
     break;
   case RED:
     for(int ii=0; ii<256; ii++)
@@ -261,17 +260,37 @@ int TkAGIF::add(int argc, const char* argv[])
     return TCL_ERROR;
   }
 
-  Tk_PhotoHandle photo = Tk_FindPhoto(interp_, argv[2]);
-  if (!photo) {
-    Tcl_AppendResult(interp_, "bad image handle", NULL);
+  // map RGB to Color index
+  unsigned char* pict = new unsigned char[width_*height_];
+  if (!pict) {
+    Tcl_AppendResult(interp_, "unable to alloc memory", NULL);
     return TCL_ERROR;
   }
-  Tk_PhotoImageBlock block;
-  if (!Tk_PhotoGetImage(photo,&block)) {
-    Tcl_AppendResult(interp_, "bad image block", NULL);
-    return TCL_ERROR;
-  }
+  {
+    Tk_PhotoHandle photo = Tk_FindPhoto(interp_, argv[2]);
+    if (!photo) {
+      Tcl_AppendResult(interp_, "bad image handle", NULL);
+      return TCL_ERROR;
+    }
+    Tk_PhotoImageBlock block;
+    if (!Tk_PhotoGetImage(photo,&block)) {
+      Tcl_AppendResult(interp_, "bad image block", NULL);
+      return TCL_ERROR;
+    }
 
+    memset(pict,0,width_*height_);
+  
+    unsigned char* src = block.pixelPtr;
+    unsigned char* dst = pict;
+
+    for (int jj=0; jj<height_; jj++)
+      for (int ii=0; ii<width_; ii++) {
+	*dst++ = src[(jj*width_+ii)*block.pixelSize+block.offset[0]];
+	//	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[1]];
+	//	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[2]];
+      }
+  }
+  
   // *** Graphic Control Extension ***
   {
     // Extention Introducer
@@ -339,23 +358,24 @@ int TkAGIF::add(int argc, const char* argv[])
   // *** Image Data ***
   {
     // LZW Min Code Size
-    char lzw = 0x08;
+    char lzw = 0x07;
     out_->write(&lzw,1);
 
-    int max = 128;
+    int max = 126;
     // Data
     for (int jj=0; jj<height_; jj++) {
       int ii =0;
       while (ii<width_) {
 	int ww = width_-ii;
-	//	int ll = ww < 0x2E ? ww : 0x2E;
 	int ll = ww < max ? ww : max;
 	unsigned char ss= ll+1;
 	out_->write((char*)&ss,1);
 	char clear = 0x80;
 	out_->write(&clear,1);
 	for (unsigned char kk=0; kk<ll; kk++) {
-	  unsigned char pix = rand() % 128;
+	  unsigned char pix = rand() % 129;
+	  //	  unsigned char pix = pict[jj*width_+ii];
+	  cerr << (unsigned short)pix << endl;
 	  out_->write((char*)&pix,1);
 	  ii++;
 	}

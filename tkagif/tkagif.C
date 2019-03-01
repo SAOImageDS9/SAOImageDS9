@@ -218,6 +218,9 @@ int TkAGIF::colortable(int argc, const char* argv[])
     out_->write((char*)blue+ii,1);
   }
 
+  // *** Comment Extension
+  // no present
+
   // *** Application Extension Block ***
   {
     // Extention Introducer
@@ -243,6 +246,35 @@ int TkAGIF::colortable(int argc, const char* argv[])
     out_->write(rep,3);
     // Block Terminator
     char end=0x00;
+    out_->write(&end,1);
+  }
+  
+  // *** Graphic Control Extension ***
+  {
+    // Extention Introducer
+    char ext = 0x21;
+    out_->write(&ext,1);
+    // Extention Lable
+    char lable = 0xF9;
+    out_->write(&lable,1);
+    // Block Size
+    char ss= 0x04;
+    out_->write(&ss,1);
+    // Packed Field msb to lsb
+    // Reserved (3)
+    // Displosal Method (3): 0 none, 1 do not dispose, 2 restore bg, 3 restore
+    // User Input Flag (1): 0 none, 1 expected
+    // Transparent Color Flag (1): 0 not given, 1 color index
+    char pkg= 0x00;
+    out_->write(&pkg,1);
+    // Delay Time
+    unsigned short delay = 0x00;
+    out_->write((char*)&delay,2);
+    // Transparent Color Index
+    char trans= 0x00;
+    out_->write(&trans,1);
+    // Block Terminator
+    char end= 0x00;
     out_->write(&end,1);
   }
   
@@ -291,35 +323,6 @@ int TkAGIF::add(int argc, const char* argv[])
 	//	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[1]];
 	//	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[2]];
       }
-  }
-  
-  // *** Graphic Control Extension ***
-  {
-    // Extention Introducer
-    char ext = 0x21;
-    out_->write(&ext,1);
-    // Extention Lable
-    char lable = 0xF9;
-    out_->write(&lable,1);
-    // Block Size
-    char ss= 0x04;
-    out_->write(&ss,1);
-    // Packed Field msb to lsb
-    // Reserved (3)
-    // Displosal Method (3): 0 none, 1 do not dispose, 2 restore bg, 3 restore
-    // User Input Flag (1): 0 none, 1 expected
-    // Transparent Color Flag (1): 0 not given, 1 color index
-    char pkg= 0x00;
-    out_->write(&pkg,1);
-    // Delay Time
-    unsigned short delay = 0x00;
-    out_->write((char*)&delay,2);
-    // Transparent Color Index
-    char trans= 0x00;
-    out_->write(&trans,1);
-    // Block Terminator
-    char end= 0x00;
-    out_->write(&end,1);
   }
   
   // *** Local Image Descriptor ***
@@ -380,7 +383,6 @@ int TkAGIF::add(int argc, const char* argv[])
 	out_->write((char*)&ss,1);
 	out_->write((char*)&clear,1);
 	for (unsigned char kk=0; kk<ll; kk++) {
-	  //	  unsigned char pix = rand() % 128;
 	  unsigned char pix = pict[jj*width_+ii];
 	  out_->write((char*)&pix,1);
 	  ii++;

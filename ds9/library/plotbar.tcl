@@ -64,8 +64,6 @@ proc PlotDialogBar {varname} {
 
     global ds9
 
-    set var(seq) 1
-
     # Graph
     $var(mb).graph add separator
     $var(mb).graph add cascade -label "[msgcat::mc {Mode}]..." \

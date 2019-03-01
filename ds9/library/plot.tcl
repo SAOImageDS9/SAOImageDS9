@@ -268,19 +268,8 @@ proc PlotDataSetOne {varname dim data} {
 		set var(yedata) {}
 
 		for {} {$ii<$ll} {incr ii 2} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+1]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-		    }
+		    lappend x [lindex $data $ii]
+		    lappend y [lindex $data [expr $ii+1]]
 		}
 		$var(xdata) set $x
 		$var(ydata) set $y
@@ -295,21 +284,9 @@ proc PlotDataSetOne {varname dim data} {
 		blt::vector create $var(xedata)
 
 		for {} {$ii<$ll} {incr ii 3} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+1]]
-			    lappend xe [lindex $data [expr $ii+2]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend xe [lindex $data [expr $ii+2]]
-		    }
+		    lappend x [lindex $data $ii]
+		    lappend y [lindex $data [expr $ii+1]]
+		    lappend xe [lindex $data [expr $ii+2]]
 		}
 		$var(xdata) set $x
 		$var(ydata) set $y
@@ -326,21 +303,9 @@ proc PlotDataSetOne {varname dim data} {
 		blt::vector create $var(yedata)
 
 		for {} {$ii<$ll} {incr ii 3} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+1]]
-			    lappend ye [lindex $data [expr $ii+2]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend ye [lindex $data [expr $ii+2]]
-		    }
+		    lappend x [lindex $data $ii]
+		    lappend y [lindex $data [expr $ii+1]]
+		    lappend ye [lindex $data [expr $ii+2]]
 		}
 		$var(xdata) set $x
 		$var(ydata) set $y
@@ -356,23 +321,10 @@ proc PlotDataSetOne {varname dim data} {
 		blt::vector create $var(xedata) $var(yedata)
 
 		for {} {$ii<$ll} {incr ii 4} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+1]]
-			    lappend xe [lindex $data [expr $ii+2]]
-			    lappend ye [lindex $data [expr $ii+3]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend xe [lindex $data [expr $ii+2]]
-			lappend ye [lindex $data [expr $ii+3]]
-		    }
+		    lappend x [lindex $data $ii]
+		    lappend y [lindex $data [expr $ii+1]]
+		    lappend xe [lindex $data [expr $ii+2]]
+		    lappend ye [lindex $data [expr $ii+3]]
 		}
 		$var(xdata) set $x
 		$var(ydata) set $y
@@ -389,21 +341,9 @@ proc PlotDataSetOne {varname dim data} {
 		blt::vector create $var(yedata)
 
 		for {} {$ii<$ll} {incr ii 4} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+1]]
-			    lappend ye [lindex $data [expr $ii+2]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend ye [lindex $data [expr $ii+2]]
-		    }
+		    lappend x [lindex $data $ii]
+		    lappend y [lindex $data [expr $ii+1]]
+		    lappend ye [lindex $data [expr $ii+2]]
 		}
 		$var(xdata) set $x
 		$var(ydata) set $y
@@ -416,19 +356,8 @@ proc PlotDataSetOne {varname dim data} {
 		set var(yedata) {}
 
 		for {} {$ii<$ll} {incr ii 4} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+3]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+3]]
-		    }
+		    lappend x [lindex $data $ii]
+		    lappend y [lindex $data [expr $ii+3]]
 		}
 		$var(xdata) set $x
 		$var(ydata) set $y
@@ -443,21 +372,9 @@ proc PlotDataSetOne {varname dim data} {
 		blt::vector create $var(yedata)
 
 		for {} {$ii<$ll} {incr ii 5} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+1]]
-			    lappend ye [lindex $data [expr $ii+2]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend ye [lindex $data [expr $ii+2]]
-		    }
+		    lappend x [lindex $data $ii]
+		    lappend y [lindex $data [expr $ii+1]]
+		    lappend ye [lindex $data [expr $ii+2]]
 		}
 		$var(xdata) set $x
 		$var(ydata) set $y
@@ -473,21 +390,9 @@ proc PlotDataSetOne {varname dim data} {
 		blt::vector create $var(yedata)
 
 		for {} {$ii<$ll} {incr ii 5} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+3]]
-			    lappend ye [lindex $data [expr $ii+4]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+3]]
-			lappend ye [lindex $data [expr $ii+4]]
-		    }
+		    lappend x [lindex $data $ii]
+		    lappend y [lindex $data [expr $ii+3]]
+		    lappend ye [lindex $data [expr $ii+4]]
 		}
 		$var(xdata) set $x
 		$var(ydata) set $y

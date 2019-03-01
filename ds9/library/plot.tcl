@@ -228,291 +228,192 @@ proc PlotDataSetOne {varname dim data} {
 
     # total length
     set ll [llength $data]
-    set ii 0
 
-    while {$ii<$ll} {
-	# incr count
-	incr ${varname}(data,total) 
-	set nn $var(data,total)
-	set var(data,current) $nn
+    # incr count
+    incr ${varname}(data,total) 
+    set nn $var(data,total)
+    set var(data,current) $nn
 
-	# new vector names
-	set xdata ap${varname}xx${nn}
-	set ydata ap${varname}yy${nn}
-	set xedata ap${varname}xe${nn}
-	set yedata ap${varname}ye${nn}
+    # new vector names
+    set xdata ap${varname}xx${nn}
+    set ydata ap${varname}yy${nn}
+    set xedata ap${varname}xe${nn}
+    set yedata ap${varname}ye${nn}
 
-	# basics xy
-	set var(manage) 1
-	set var(name) "Dataset $nn"
-	set var(xdata) $xdata
-	set var(ydata) $ydata
-	global $var(xdata) $var(ydata)
-	blt::vector create $var(xdata) $var(ydata)
+    # basics xy
+    set var(manage) 1
+    set var(name) "Dataset $nn"
+    set var(xdata) $xdata
+    set var(ydata) $ydata
+    global $var(xdata) $var(ydata)
+    blt::vector create $var(xdata) $var(ydata)
 
-	# substitute all separtors
-	regsub -all {[\n\r\t, ]+} $data { } data
-	# remove all non-numeric data
-	regsub -all {[^0-9.e\- ]+} $data {} data
+    # substitute all separtors
+    regsub -all {[\n\r\t, ]+} $data { } data
+    # remove all non-numeric data
+    regsub -all {[^0-9.e\- ]+} $data {} data
 
-	set ox [lindex $data $ii]
-	set x {}
-	set y {}
-	set xe {}
-	set ye {}
-	switch -- $dim {
-	    2 -
-	    xy {
-		set var(dim) xy
-		set var(xedata) {}
-		set var(yedata) {}
+    set x {}
+    set y {}
+    set xe {}
+    set ye {}
+    switch -- $dim {
+	2 -
+	xy {
+	    set var(dim) xy
+	    set var(xedata) {}
+	    set var(yedata) {}
 
-		for {} {$ii<$ll} {incr ii 2} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+1]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-		    }
-		}
-		$var(xdata) set $x
-		$var(ydata) set $y
+	    for {set ii 0} {$ii<$ll} {incr ii 2} {
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+1]]
 	    }
-
-	    xyex {
-		set var(dim) xyex
-		set var(xedata) $xedata
-		set var(yedata) {}
-
-		global $var(xedata)
-		blt::vector create $var(xedata)
-
-		for {} {$ii<$ll} {incr ii 3} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+1]]
-			    lappend xe [lindex $data [expr $ii+2]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend xe [lindex $data [expr $ii+2]]
-		    }
-		}
-		$var(xdata) set $x
-		$var(ydata) set $y
-		$var(xedata) set $xe
-	    }
-
-	    3 -
-	    xyey {
-		set var(dim) xyey
-		set var(xedata) {}
-		set var(yedata) $yedata
-
-		global $var(yedata)
-		blt::vector create $var(yedata)
-
-		for {} {$ii<$ll} {incr ii 3} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+1]]
-			    lappend ye [lindex $data [expr $ii+2]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend ye [lindex $data [expr $ii+2]]
-		    }
-		}
-		$var(xdata) set $x
-		$var(ydata) set $y
-		$var(yedata) set $ye
-	    }
-
-	    xyexey {
-		set var(dim) xyexey
-		set var(xedata) $xedata
-		set var(yedata) $yedata
-
-		global $var(xedata) $var(yedata)
-		blt::vector create $var(xedata) $var(yedata)
-
-		for {} {$ii<$ll} {incr ii 4} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+1]]
-			    lappend xe [lindex $data [expr $ii+2]]
-			    lappend ye [lindex $data [expr $ii+3]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend xe [lindex $data [expr $ii+2]]
-			lappend ye [lindex $data [expr $ii+3]]
-		    }
-		}
-		$var(xdata) set $x
-		$var(ydata) set $y
-		$var(xedata) set $xe
-		$var(yedata) set $ye
-	    }
-
-	    4.1 {
-		set var(dim) xyey
-		set var(xedata) {}
-		set var(yedata) $yedata
-
-		global $var(yedata)
-		blt::vector create $var(yedata)
-
-		for {} {$ii<$ll} {incr ii 4} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+1]]
-			    lappend ye [lindex $data [expr $ii+2]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend ye [lindex $data [expr $ii+2]]
-		    }
-		}
-		$var(xdata) set $x
-		$var(ydata) set $y
-		$var(yedata) set $ye
-	    }
-
-	    4.2 {
-		set var(dim) xy
-		set var(xedata) {}
-		set var(yedata) {}
-
-		for {} {$ii<$ll} {incr ii 4} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+3]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+3]]
-		    }
-		}
-		$var(xdata) set $x
-		$var(ydata) set $y
-	    }
-
-	    5.1 {
-		set var(dim) xyey
-		set var(xedata) {}
-		set var(yedata) $yedata
-
-		global $var(yedata)
-		blt::vector create $var(yedata)
-
-		for {} {$ii<$ll} {incr ii 5} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+1]]
-			    lappend ye [lindex $data [expr $ii+2]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend ye [lindex $data [expr $ii+2]]
-		    }
-		}
-		$var(xdata) set $x
-		$var(ydata) set $y
-		$var(yedata) set $ye
-	    }
-
-	    5.2 {
-		set var(dim) xyey
-		set var(xedata) {}
-		set var(yedata) $yedata
-
-		global $var(yedata)
-		blt::vector create $var(yedata)
-
-		for {} {$ii<$ll} {incr ii 5} {
-		    set tx [lindex $data $ii]
-		    if {$var(seq)} {
-			if {$ox<=$tx} {
-			    set ox $tx
-			    lappend x $tx
-			    lappend y [lindex $data [expr $ii+3]]
-			    lappend ye [lindex $data [expr $ii+4]]
-			} else {
-			    break
-			}
-		    } else {
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+3]]
-			lappend ye [lindex $data [expr $ii+4]]
-		    }
-		}
-		$var(xdata) set $x
-		$var(ydata) set $y
-		$var(yedata) set $ye
-	    }
+	    $var(xdata) set $x
+	    $var(ydata) set $y
 	}
 
-	set var($nn,manage) 1
-	set var($nn,dim) $var(dim)
+	xyex {
+	    set var(dim) xyex
+	    set var(xedata) $xedata
+	    set var(yedata) {}
 
-	set var($nn,xdata) $var(xdata) 
-	set var($nn,ydata) $var(ydata) 
-	set var($nn,xedata) $var(xedata) 
-	set var($nn,yedata) $var(yedata) 
+	    global $var(xedata)
+	    blt::vector create $var(xedata)
 
-	PlotGetVar $varname $nn
+	    for {set ii 0} {$ii<$ll} {incr ii 3} {
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+1]]
+		lappend xe [lindex $data [expr $ii+2]]
+	    }
+	    $var(xdata) set $x
+	    $var(ydata) set $y
+	    $var(xedata) set $xe
+	}
 
-	# update data set menu
-	$var(mb).select add radiobutton -label "$var(name)" \
-	    -variable ${varname}(data,current) -value $nn \
-	    -command [list PlotCurrentData $varname]
+	3 -
+	xyey {
+	    set var(dim) xyey
+	    set var(xedata) {}
+	    set var(yedata) $yedata
 
-	PlotCreateElement $varname
-	$var(proc,updateelement) $varname
+	    global $var(yedata)
+	    blt::vector create $var(yedata)
+
+	    for {set ii 0} {$ii<$ll} {incr ii 3} {
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+1]]
+		lappend ye [lindex $data [expr $ii+2]]
+	    }
+	    $var(xdata) set $x
+	    $var(ydata) set $y
+	    $var(yedata) set $ye
+	}
+
+	xyexey {
+	    set var(dim) xyexey
+	    set var(xedata) $xedata
+	    set var(yedata) $yedata
+
+	    global $var(xedata) $var(yedata)
+	    blt::vector create $var(xedata) $var(yedata)
+
+	    for {set ii 0} {$ii<$ll} {incr ii 4} {
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+1]]
+		lappend xe [lindex $data [expr $ii+2]]
+		lappend ye [lindex $data [expr $ii+3]]
+	    }
+	    $var(xdata) set $x
+	    $var(ydata) set $y
+	    $var(xedata) set $xe
+	    $var(yedata) set $ye
+	}
+
+	4.1 {
+	    set var(dim) xyey
+	    set var(xedata) {}
+	    set var(yedata) $yedata
+
+	    global $var(yedata)
+	    blt::vector create $var(yedata)
+
+	    for {set ii 0} {$ii<$ll} {incr ii 4} {
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+1]]
+		lappend ye [lindex $data [expr $ii+2]]
+	    }
+	    $var(xdata) set $x
+	    $var(ydata) set $y
+	    $var(yedata) set $ye
+	}
+
+	4.2 {
+	    set var(dim) xy
+	    set var(xedata) {}
+	    set var(yedata) {}
+
+	    for {set ii 0} {$ii<$ll} {incr ii 4} {
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+3]]
+	    }
+	    $var(xdata) set $x
+	    $var(ydata) set $y
+	}
+
+	5.1 {
+	    set var(dim) xyey
+	    set var(xedata) {}
+	    set var(yedata) $yedata
+
+	    global $var(yedata)
+	    blt::vector create $var(yedata)
+
+	    for {set ii 0} {$ii<$ll} {incr ii 5} {
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+1]]
+		lappend ye [lindex $data [expr $ii+2]]
+	    }
+	    $var(xdata) set $x
+	    $var(ydata) set $y
+	    $var(yedata) set $ye
+	}
+
+	5.2 {
+	    set var(dim) xyey
+	    set var(xedata) {}
+	    set var(yedata) $yedata
+
+	    global $var(yedata)
+	    blt::vector create $var(yedata)
+
+	    for {set ii 0} {$ii<$ll} {incr ii 5} {
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+3]]
+		lappend ye [lindex $data [expr $ii+4]]
+	    }
+	    $var(xdata) set $x
+	    $var(ydata) set $y
+	    $var(yedata) set $ye
+	}
     }
+
+    set var($nn,manage) 1
+    set var($nn,dim) $var(dim)
+
+    set var($nn,xdata) $var(xdata) 
+    set var($nn,ydata) $var(ydata) 
+    set var($nn,xedata) $var(xedata) 
+    set var($nn,yedata) $var(yedata) 
+
+    PlotGetVar $varname $nn
+
+    # update data set menu
+    $var(mb).select add radiobutton -label "$var(name)" \
+	-variable ${varname}(data,current) -value $nn \
+	-command [list PlotCurrentData $varname]
+
+    PlotCreateElement $varname
+    $var(proc,updateelement) $varname
 }
 
 proc PlotDupData {varname mm} {

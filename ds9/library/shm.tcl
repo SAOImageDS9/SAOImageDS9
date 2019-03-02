@@ -19,14 +19,14 @@ proc ProcessShmCmd {varname iname ml} {
 
 proc ShmCmdSet {loadtype filetype filemode sharedidtype sharedid filename {sharedhdr {}}} {
 
-    global loadparam
-    set loadparam(load,type) $loadtype
-    set loadparam(file,type) $filetype
-    set loadparam(file,mode) $filemode
-    set loadparam(shared,idtype) $sharedidtype
-    set loadparam(shared,id) $sharedid
-    set loadparam(file,name) $filename
-    set loadparam(shared,hdr) $sharedhdr
+    global loadParam
+    set loadParam(load,type) $loadtype
+    set loadParam(file,type) $filetype
+    set loadParam(file,mode) $filemode
+    set loadParam(shared,idtype) $sharedidtype
+    set loadParam(shared,id) $sharedid
+    set loadParam(file,name) $filename
+    set loadParam(shared,hdr) $sharedhdr
     
     # mask not supported
     set loadParam(load,layer) {}

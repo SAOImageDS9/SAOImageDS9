@@ -246,7 +246,7 @@ symbol : ADD_ {CatalogCmdSymbolAdd}
  | LOAD_ STRING_ {CatalogCmdSymbolLoad $2}
  | SAVE_ STRING_ {CatalogCmdSymbolSave $2}
 
- | ANGLE_ numeric {CatalogCmdSymbol angle $2}
+ | ANGLE_ symbolCol {CatalogCmdSymbol angle $2}
  | COLOR_ STRING_ {CatalogCmdSymbol color $2}
  | CONDITION_ STRING_ {CatalogCmdSymbol condition $2}
  | FONT_ font {CatalogCmdSymbol font $2}
@@ -255,8 +255,8 @@ symbol : ADD_ {CatalogCmdSymbolAdd}
  | FONTSLANT_ fontSlant {CatalogCmdSymbol fontslant $2}
 # backward compatibility
  | FONTSTYLE_ fontStyle {CatalogCmdSymbolFontStyle $2}
- | SIZE_ numeric {CatalogCmdSymbol size $2}
- | SIZE2_ numeric {CatalogCmdSymbol size2 $2}
+ | SIZE_ symbolCol {CatalogCmdSymbol size $2}
+ | SIZE2_ symbolCol {CatalogCmdSymbol size2 $2}
  | SHAPE_ symbolShape {CatalogCmdSymbol shape $2}
  | TEXT_ STRING_ {CatalogCmdSymbol text $2}
  | UNITS_ STRING_ {CatalogCmdSymbol units $2}
@@ -282,6 +282,10 @@ symbolShape : CIRCLE_ {set _ circle}
  | BOXCIRCLE_ POINT_ {set _ "boxcircle point"}
 
 # backward compatibility
+ | STRING_ {set _ $1}
+ ;
+ 
+symbolCol : numeric {set _ $1}
  | STRING_ {set _ $1}
  ;
 

@@ -186,6 +186,14 @@ void ColorbarRGB::reset()
 
 void ColorbarRGB::updateColorCells()
 {
+  int clrs = (((ColorbarBaseOptions*)options)->colors);
+  if (clrs != colorCount) {
+    colorCount = clrs;
+    if (colorCells)
+      delete [] colorCells;
+    colorCells = new unsigned char[colorCount*3];
+  }
+
   // fill rgb table
   // note: its filled bgr to match XImage
   //  for(int i=0; i<colorCount; i++) {

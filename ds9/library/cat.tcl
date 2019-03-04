@@ -1403,8 +1403,6 @@ proc CatalogCmdSymbol {col value} {
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 
-    puts "starbase_set $cvar(symdb) $cvar(row) [starbase_colnum $cvar(symdb) $col] $value"
-
     starbase_set $cvar(symdb) $cvar(row) \
 	[starbase_colnum $cvar(symdb) $col] $value
     CATGenerate $cvarname

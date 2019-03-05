@@ -2,6 +2,9 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include <math.h>
+#include <float.h>
+
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -233,6 +236,31 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // colortable
+  int sz =128;
+  int cnt =8;
+  int tt =0;
+  unsigned char red[sz];
+  unsigned char green[sz];
+  unsigned char blue[sz];
+  memset(red,0,sz);
+  memset(green,0,sz);
+  memset(blue,0,sz);
+  // 0: black
+  // 1: white
+  red[1] = green[1] = blue[1] = 255;
+  // 2: red
+  red[2] = 255;
+  // 3: green
+  green[3] = 255;
+  // 4: blue
+  blue[4] = 255;
+  // 5: cyan
+  green[5] = blue[5] = 255;
+  // 6: magenta
+  red[6] = blue[6] = 255;
+  // 7: yellow
+  red[7] = green[7] = 255;
+  
   // map RGB to Color index
   unsigned char* pict = new unsigned char[width_*height_];
   memset(pict,0,width_*height_);
@@ -252,9 +280,54 @@ int TkAGIF::add(int argc, const char* argv[])
     unsigned char* src = block.pixelPtr;
     unsigned char* dst = pict;
 
-    for (int jj=0; jj<height_; jj++)
-      for (int ii=0; ii<width_; ii++)
-	*dst++ = src[(jj*width_+ii)*block.pixelSize+block.offset[0]]/2;
+    for (int jj=0; jj<height_; jj++) {
+      for (int ii=0; ii<width_; ii++) {
+	unsigned char rr =
+	  src[(jj*width_+ii)*block.pixelSize+block.offset[0]];
+	unsigned char gg =
+	  src[(jj*width_+ii)*block.pixelSize+block.offset[1]];
+	unsigned char bb =
+	  src[(jj*width_+ii)*block.pixelSize+block.offset[2]];
+
+	int done =0;
+	// first try all known colors
+	for (int kk=0; kk<cnt; kk++) {
+	  if (rr==red[kk] && gg==green[kk] && bb==blue[kk]) {
+	    *dst++ = (unsigned char)kk;
+	    done =1;
+	    break;
+	  }
+	}
+
+	// add color
+	if (!done) {
+	  tt++;
+	  if (cnt<sz) {
+	    red[cnt] = rr;
+	    green[cnt] = gg;
+	    blue[cnt] = bb;
+	    *dst++ = cnt;
+	    cnt++;
+	  }
+	  else {
+	    // out of room in colortable, find closest
+	    int id =0;
+	    double dd =FLT_MAX;
+	    for (int kk=0; kk<cnt; kk++) {
+	      double vv = pow((rr-red[kk])*.3,2) +
+		pow((gg-green[kk])*.59,2) + 
+		pow((bb-blue[kk])*.11,2);
+	      if (vv<dd) {
+		id = kk;
+		dd = vv;
+	      }
+	    }
+	    *dst++ = id;
+	  }
+	}
+      }
+    }
+    cerr << "Colors: " << tt << endl;
   }
   
   // *** Local Image Descriptor ***
@@ -292,17 +365,6 @@ int TkAGIF::add(int argc, const char* argv[])
   
   // *** Local Color Table ***
   {
-    int sz = 128;
-    unsigned char red[sz];
-    unsigned char green[sz];
-    unsigned char blue[sz];
-    memset(red,0,sz);
-    memset(green,0,sz);
-    memset(blue,0,sz);
-  
-    for(int ii=0; ii<sz; ii++)
-      red[ii] = green[ii] = blue[ii] = ii*2;
-
     for (int ii=0; ii<sz; ii++) {
       out_->write((char*)red+ii,1);
       out_->write((char*)green+ii,1);

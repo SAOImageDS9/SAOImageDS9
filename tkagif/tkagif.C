@@ -47,8 +47,6 @@ int TkagifCmd(ClientData data,Tcl_Interp *interp,int argc,const char* argv[])
   if (argc>=2) {
     if (!strncmp(argv[1], "create", 3))
       return tkagif->create(argc, argv);
-    else if (!strncmp(argv[1], "colortable", 3))
-      return tkagif->colortable(argc, argv);
     else if (!strncmp(argv[1], "add", 3))
       return tkagif->add(argc, argv);
     else if (!strncmp(argv[1], "close", 3))
@@ -59,7 +57,7 @@ int TkagifCmd(ClientData data,Tcl_Interp *interp,int argc,const char* argv[])
     }
   }
   else {
-    Tcl_AppendResult(interp, "usage: tkagif ?create?colortable?add?close?",  NULL);
+    Tcl_AppendResult(interp, "usage: tkagif ?create?add?close?",  NULL);
     return TCL_ERROR;
   }
 }
@@ -69,7 +67,6 @@ TkAGIF::TkAGIF(Tcl_Interp* interp)
   interp_ = interp;
   out_ =NULL;
   width_ = height_ = 512;
-  colorTableType_ = GREY;
 }
 
 int TkAGIF::create(int argc, const char* argv[])
@@ -125,8 +122,8 @@ int TkAGIF::create(int argc, const char* argv[])
     // color resolution (3): number bits-1
     // sort flag (1): 0 not ordered, 1 ordered decreasing importance
     // size of global color table (3): size 2^(x+1)
-    //    char pkg=0xF7;
-    char pkg=0xF6;
+    //    char pkg=0xF6;
+    char pkg=0x00;
     out_->write(&pkg,1);
 
     // BG Color
@@ -138,84 +135,25 @@ int TkAGIF::create(int argc, const char* argv[])
     out_->write(&ar,1);
   }
   
-  return TCL_OK;
-}
+  // *** Global Color Table ***
+  if (0) {
+    int sz = 128;
+    // colortable
+    unsigned char red[sz];
+    unsigned char green[sz];
+    unsigned char blue[sz];
+    memset(red,0,sz);
+    memset(green,0,sz);
+    memset(blue,0,sz);
 
-int TkAGIF::colortable(int argc, const char* argv[])
-{
-  if (argc == 3) {
-    if (!strncmp(argv[2],"grey",3))
-      colorTableType_ = GREY;
-    else if (!strncmp(argv[2],"red",3))
-      colorTableType_ = RED;
-    else if (!strncmp(argv[2],"green",3))
-      colorTableType_ = GREEN;
-    else if (!strncmp(argv[2],"blue",3))
-      colorTableType_ = BLUE;
-    else if (!strncmp(argv[2],"pseudo",3))
-      colorTableType_ = PSEUDO;
-    else if (!strncmp(argv[2],"rgb",3))
-      colorTableType_ = RGB;
-    else {
-      Tcl_AppendResult(interp_, "bad colortable option", NULL);
-      return TCL_ERROR;
-    }
-  }
-  else {
-    Tcl_AppendResult(interp_, "usage: tkagif colortable grey|red|green|blue|pseudo}rgb", NULL);
-    return TCL_ERROR;
-  }
-
-  int sz = 128;
-  // colortable
-  unsigned char red[sz];
-  unsigned char green[sz];
-  unsigned char blue[sz];
-  memset(red,0,sz);
-  memset(green,0,sz);
-  memset(blue,0,sz);
-  
-  switch (colorTableType_) {
-  case GREY:
     for(int ii=0; ii<sz; ii++)
       red[ii] = green[ii] = blue[ii] = ii*2;
-    break;
-  case RED:
-    for(int ii=0; ii<sz; ii++)
-      red[ii] = ii*2;
-    break;
-  case GREEN:
-    for(int ii=0; ii<sz; ii++)
-      green[ii] = ii*2;
-    break;
-  case BLUE:
-    for(int ii=0; ii<sz; ii++)
-      blue[ii] = ii*2;
-    break;
-  case PSEUDO:
-    break;
-  case RGB:
-    for (int rr=0, ii=0; rr<4; rr++) {
-      for (int gg=0; gg<4; gg++) {
-	for (int bb=0; bb<4; bb++) {
-	  red[ii] = rr*32*2;
-	  green[ii] = gg*32*2;
-	  blue[ii] = bb*32*2;
-	  ii++;
-	}
-      }
-    }
-    red[127] = 0xFF;
-    green[127] = 0xFF;
-    blue[127] = 0xFF;
-    break;
-  }
       
-  // *** Global Color Table ***
-  for (int ii=0; ii<sz; ii++) {
-    out_->write((char*)red+ii,1);
-    out_->write((char*)green+ii,1);
-    out_->write((char*)blue+ii,1);
+    for (int ii=0; ii<sz; ii++) {
+      out_->write((char*)red+ii,1);
+      out_->write((char*)green+ii,1);
+      out_->write((char*)blue+ii,1);
+    }
   }
 
   // *** Comment Extension
@@ -294,12 +232,11 @@ int TkAGIF::add(int argc, const char* argv[])
     return TCL_ERROR;
   }
 
+  // colortable
   // map RGB to Color index
   unsigned char* pict = new unsigned char[width_*height_];
-  if (!pict) {
-    Tcl_AppendResult(interp_, "unable to alloc memory", NULL);
-    return TCL_ERROR;
-  }
+  memset(pict,0,width_*height_);
+
   {
     Tk_PhotoHandle photo = Tk_FindPhoto(interp_, argv[2]);
     if (!photo) {
@@ -312,17 +249,12 @@ int TkAGIF::add(int argc, const char* argv[])
       return TCL_ERROR;
     }
 
-    memset(pict,0,width_*height_);
-  
     unsigned char* src = block.pixelPtr;
     unsigned char* dst = pict;
 
     for (int jj=0; jj<height_; jj++)
-      for (int ii=0; ii<width_; ii++) {
+      for (int ii=0; ii<width_; ii++)
 	*dst++ = src[(jj*width_+ii)*block.pixelSize+block.offset[0]]/2;
-	//	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[1]];
-	//	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[2]];
-      }
   }
   
   // *** Local Image Descriptor ***
@@ -352,13 +284,31 @@ int TkAGIF::add(int argc, const char* argv[])
     // Interlace Flag (1): 1 interlaced, 0 no
     // Sort Flag (1): 1 sorted, 0 no
     // Reserved (2):
-    // Size of Local Table (3)
-    char pkg= 0x00;
+    // Size of Local Table (3): size 2^(x+1)
+    //    char pkg= 0x00;
+    char pkg= 0x86;
     out_->write(&pkg,1);
   }
   
   // *** Local Color Table ***
-  // not present
+  {
+    int sz = 128;
+    unsigned char red[sz];
+    unsigned char green[sz];
+    unsigned char blue[sz];
+    memset(red,0,sz);
+    memset(green,0,sz);
+    memset(blue,0,sz);
+  
+    for(int ii=0; ii<sz; ii++)
+      red[ii] = green[ii] = blue[ii] = ii*2;
+
+    for (int ii=0; ii<sz; ii++) {
+      out_->write((char*)red+ii,1);
+      out_->write((char*)green+ii,1);
+      out_->write((char*)blue+ii,1);
+    }
+  }
 
   // *** Image Data ***
   {

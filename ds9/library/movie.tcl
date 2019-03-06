@@ -148,6 +148,17 @@ proc MovieCreate {fn} {
 	DisplayMode
     }
 
+    # reduce colors if needed
+    switch $movie(type) {
+	gif {
+	    $current(colorbar) configure -colors 64
+	    update
+	    $current(frame) colormap [$current(colorbar) get colormap]
+	    update
+	}
+	default {}
+    }
+    
     set movie(fn) $fn
     switch $movie(action) {
 	frame {MovieFrame}
@@ -155,6 +166,17 @@ proc MovieCreate {fn} {
 	3d {Movie3d}
     }
 
+    # reset colors if needed
+    switch $movie(type) {
+	gif {
+	    $current(colorbar) configure -colors 2048
+	    update
+	    $current(frame) colormap [$current(colorbar) get colormap]
+	    update
+	}
+	default {}
+    }
+    
     if {[info exists modesav]} {
 	set current(display) $modesav
 	DisplayMode
@@ -337,26 +359,12 @@ proc MoviePhotoGIF {} {
     }
 
     if {$movie(first)} {
-	set ww [image width $ph]
-	set hh [image height $ph]
-	agif create $movie(fn) $ww $hh
-	switch -- $current(colorbar) {
-	    colorbar {
-		switch -- $colorbar(map) {
-		    grey -
-		    red -
-		    green -
-		    blue {agif colortable $colorbar(map)}
-		    default {agif colortable pseudo}
-		}
-	    }
-	    colorbarrgb {agif colortable rgb}
-	}
+	agif create $movie(fn) [image width $ph] [image height $ph]
 	set movie(first) 0
     }
     agif add $ph
-    
     image delete $ph
+
     return 0
 }
 

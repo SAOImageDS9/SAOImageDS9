@@ -145,6 +145,8 @@ proc PlotDialogBar {varname} {
 			-width 600 \
 			-height 500 \
 			-highlightthickness 0 \
+			-bg $ds9(bg) \
+			-plotbackground $ds9(bg) \
 		       ]
 
     $var(graph) xaxis configure -grid no -stepsize 0

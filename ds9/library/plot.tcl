@@ -12,6 +12,7 @@ proc PlotDef {} {
     set iap(windows) {}
     set iap(unique) 0
 
+    set pap(graph,bg) white
     set pap(graph,title) {}
     set pap(graph,title,family) helvetica
     set pap(graph,title,size) 12
@@ -837,6 +838,8 @@ proc PlotSaveConfigFile {varname filename} {
 
     set ch [open $filename w]
 
+    set analysisplot(graph,bg) $var(graph,bg)
+
     set analysisplot(graph,title) $var(graph,title) 
     set analysisplot(graph,title,family) $var(graph,title,family) 
     set analysisplot(graph,title,size) $var(graph,title,size) 
@@ -1094,7 +1097,8 @@ proc PlotUpdateGraph {varname} {
     # Graph
     $var(graph) configure -plotpadx 0 -plotpady 0 \
 	-title $var(graph,title) \
-	-font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
+	-font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)" \
+	-bg $var(graph,bg) -plotbackground $var(graph,bg)
 
     $var(graph) xaxis configure \
 	-grid $var(axis,x,grid) -logscale $var(axis,x,log) \

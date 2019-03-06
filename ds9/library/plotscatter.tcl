@@ -152,8 +152,6 @@ proc PlotDialogScatter {varname} {
 			-width 600 \
 			-height 500 \
 			-highlightthickness 0 \
-			-bg $ds9(bg) \
-			-plotbackground $ds9(bg) \
 		       ]
 
     pack $var(graph) -expand yes -fill both

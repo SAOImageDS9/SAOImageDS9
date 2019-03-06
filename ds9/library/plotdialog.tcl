@@ -122,6 +122,8 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 	-menu $var(mb).graph.legend
     $var(mb).graph add cascade -label [msgcat::mc {Font}] \
 	-menu $var(mb).graph.font
+    $var(mb).graph add cascade -label [msgcat::mc {Background}] \
+	-menu $var(mb).graph.bg
     $var(mb).graph add separator
     $var(mb).graph add command -label "[msgcat::mc {Title}]..." \
 	-command [list PlotTitleDialog $varname]
@@ -185,6 +187,8 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     FontMenu $var(mb).graph.font.numlab $varname axis,font,family axis,font,size axis,font,weight axis,font,slant [list $var(proc,updategraph) $varname]
     FontMenu $var(mb).graph.font.legendtitle $varname legend,title,family legend,title,size legend,title,weight legend,title,slant [list $var(proc,updategraph) $varname]
     FontMenu $var(mb).graph.font.legend $varname legend,font,family legend,font,size legend,font,weight legend,font,slant [list $var(proc,updategraph) $varname]
+
+    PlotColorMenu $var(mb).graph.bg $varname graph,bg [list $var(proc,updategraph) $varname]
 
     # dataset
     menu $var(mb).dataset

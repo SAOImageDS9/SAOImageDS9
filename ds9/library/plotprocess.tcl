@@ -12,6 +12,13 @@ proc PrefsDialogPlot {} {
     $dprefs(list) insert end [msgcat::mc {Plot}]
     lappend dprefs(tabs) [ttk::frame $w.plot]
 
+    # Graph
+    set f [ttk::labelframe $w.plot.graph -text [msgcat::mc {Graph}]]
+    ttk::label $f.tbg -text [msgcat::mc {Background}]
+    ColorMenuButton $f.bg pap graph,bg {}
+
+    grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
+
     # Grid
     set f [ttk::labelframe $w.plot.grid -text [msgcat::mc {Grid}]]
     ttk::label $f.ttitle -text [msgcat::mc {Title}]
@@ -95,7 +102,7 @@ proc PrefsDialogPlot {} {
     grid $f.errortitle $f.error $f.errorcap $f.errorcolor $f.errorwidth \
 	-padx 2 -pady 2 -sticky w
 
-    pack $w.plot.grid $w.plot.axis $w.plot.dataset \
+    pack $w.plot.graph $w.plot.grid $w.plot.axis $w.plot.dataset \
 	-side top -fill both -expand true
 }
 

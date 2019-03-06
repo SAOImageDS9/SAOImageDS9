@@ -14,6 +14,7 @@ auto	    {return $AUTO_}
 axesnumbers {return $AXESNUMBERS_}
 axestitle   {return $AXESTITLE_}
 axis	    {return $AXIS_}
+background  {return $BACKGROUND_}
 bar	    {return $BAR_}
 barmode	    {return $BARMODE_}
 bottom	    {return $BOTTOM_}

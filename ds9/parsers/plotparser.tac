@@ -17,6 +17,7 @@
 %token AXESNUMBERS_
 %token AXESTITLE_
 %token AXIS_
+%token BACKGROUND_
 %token BAR_
 %token BARMODE_
 %token BOTTOM_
@@ -238,6 +239,7 @@ plotCmd : LOAD_ load
  | MODE_ mode {ProcessCmdCVAR mode $2 PlotChangeMode}
 
  | AXIS_ axis
+ | BACKGROUND_ STRING_ {PlotCmdUpdateGraph graph,bg $2}
  | LEGEND_ legend
  | FONT_ fontt
  | TITLE_ title

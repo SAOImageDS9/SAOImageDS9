@@ -11,6 +11,7 @@
 %token AXIS_
 %token AXESNUMBERS_
 %token AXESTITLE_
+%token BACKGROUND_
 %token BARMODE_
 %token CAP_
 %token COLOR_
@@ -75,6 +76,7 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | LIST_ {ProcessSendCmdCVAR PlotListGenerate}
  | MODE_ {ProcessSendCmdCVARGet mode}
  | AXIS_ axis
+ | BACKGROUND_ {ProcessSendCmdCVARGet graph,bg}
  | LEGEND_ legend
  | FONT_ fontt
  | TITLE_ title

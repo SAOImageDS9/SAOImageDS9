@@ -166,9 +166,26 @@ proc PlotDialogLine {varname} {
 	[list PlotLineUpdateElement $varname]
 
     # Width
-    WidthDashMenu $var(mb).dataset.width $varname width dash \
-	[list PlotLineUpdateElement $varname] \
-	[list PlotLineUpdateElement $varname]
+    menu $var(mb).dataset.width
+    $var(mb).dataset.width add radiobutton \
+	-label {0} -variable ${varname}(width) \
+	-value 0 -command [list PlotLineUpdateElement $varname]
+    $var(mb).dataset.width add radiobutton \
+	-label {1} -variable ${varname}(width) \
+	-value 1 -command [list PlotLineUpdateElement $varname]
+    $var(mb).dataset.width add radiobutton \
+	-label {2} -variable ${varname}(width) \
+	-value 2 -command [list PlotLineUpdateElement $varname]
+    $var(mb).dataset.width add radiobutton \
+	-label {3} -variable ${varname}(width) \
+	-value 3 -command [list PlotLineUpdateElement $varname]
+    $var(mb).dataset.width add radiobutton \
+	-label {4} -variable ${varname}(width) \
+	-value 4 -command [list PlotLineUpdateElement $varname]
+    $var(mb).dataset.width add separator
+    $var(mb).dataset.width add checkbutton \
+	-label [msgcat::mc {Dash}] -variable ${varname}(dash) \
+	-command [list PlotLineUpdateElement $varname]
 
     # Fill
     menu $var(mb).dataset.fill

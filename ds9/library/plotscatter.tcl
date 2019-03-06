@@ -152,6 +152,8 @@ proc PlotDialogScatter {varname} {
 			-width 600 \
 			-height 500 \
 			-highlightthickness 0 \
+			-bg $ds9(bg) \
+			-plotbackground $ds9(bg) \
 		       ]
 
     pack $var(graph) -expand yes -fill both
@@ -199,10 +201,10 @@ proc PlotScatterUpdateElement {varname} {
     }
 
     $var(graph) element configure "d-${nn}" \
-	-label "$var(name)" -hide [expr !$var(show)] \
-	-symbol $var(shape,symbol) \
-	-fill $clr -outline $var(shape,color) \
-	-linewidth 0 -pixels 5 -scalesymbols no \
+	-label $var(name) -hide [expr !$var(show)] \
+	-symbol $var(shape,symbol) -fill $clr -scalesymbols no \
+	-outline $var(shape,color) \
+	-linewidth 0 -pixels 5 \
 	-showerrorbars $show -errorbarcolor $var(error,color) \
 	-errorbarwidth $var(error,width) -errorbarcap $cap
 

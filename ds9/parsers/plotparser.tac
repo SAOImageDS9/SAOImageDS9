@@ -70,6 +70,7 @@
 %token MODE_
 %token NAME_
 %token NEW_
+%token NONE_
 %token NORMAL_
 %token NUMBERS_
 %token ORIENT_
@@ -392,7 +393,8 @@ shape : shapes {PlotCmdUpdateElement shape,symbol $1}
  | COLOR_ STRING_ {PlotCmdUpdateElement shape,color $2}
  ;
 
-shapes : CIRCLE_ {set _ circle}
+shapes : NONE_ {set _ none}
+ | CIRCLE_ {set _ circle}
  | SQUARE_ {set _ square}
  | DIAMOND_ {set _ diamond}
  | PLUS_ {set _ plus}

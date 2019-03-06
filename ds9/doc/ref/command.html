@@ -456,6 +456,7 @@
 
 
 
+
         [&lt;ref&gt;] [filter &lt;string&gt;]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [filter load &lt;filename&gt;]</tt><tt><br>
@@ -466,6 +467,7 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [match &lt;ref&gt; &lt;ref&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -491,6 +493,7 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;]
         [name &lt;object&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -532,6 +535,7 @@
 
 
 
+
         [&lt;ref&gt;] [save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [server</tt><tt> </tt><tt>cds|adac|cadc|cambridge|sao|ukirt|iucaa|bejing|saao]</tt><tt><br>
@@ -564,9 +568,11 @@
 
 
 
+
         [symbol shape</tt><tt> </tt><tt>circle point|box point|diamond
         point|</tt><tt>cross point|x point|arrow point|boxcircle point]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -622,6 +628,7 @@
       </tt><tt> </tt><tt> </tt><tt>$ds9 -catalog name m51</tt><tt><br>
       </tt><tt> $ds9 -catalog panto no</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>$ds9 -catalog plot</tt><tt> </tt><tt>'\$Jmag'
+
 
 
 
@@ -720,6 +727,7 @@
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [size]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; [ticks]<br>
       </tt> <tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -859,6 +867,7 @@
         [&lt;skyframe&gt;]]<br>
         &nbsp;</tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [match
+
 
 
 
@@ -1037,6 +1046,7 @@
 
 
 
+
           -envi foo.hdr foo.bsq</tt></tt><tt><tt><tt><tt><tt><tt><br>
                 </tt></tt></tt></tt></tt></tt>
       <p><b><a name="exit" id="exit"></a>exit<br>
@@ -1075,8 +1085,10 @@
 
 
 
+
         [1-100]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>-export &lt;filename&gt;</tt><tt>.tiff
+
 
 
 
@@ -1557,8 +1569,10 @@
 
 
 
+
         &lt;coordsys&gt;]</tt><tt> </tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -1578,6 +1592,7 @@
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [block]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [smooth]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -1712,6 +1727,7 @@
 
 
 
+
         [pan]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -1724,8 +1740,10 @@
 
 
 
+
         [crosshair]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -1852,6 +1870,7 @@
 
 
 
+
         [yes|open]<br>
         &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
         [no|close]<br>
@@ -1889,6 +1908,7 @@
 
 
 
+
         load &lt;filename&gt; xy|xyex|xyey|xyexey]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp;
         [[&lt;plotname&gt;] save &lt;filename&gt;]</tt><tt><br>
@@ -1901,6 +1921,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp;</tt><tt>
       </tt><tt>[[&lt;plotname&gt;] list yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp; &nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -1938,6 +1959,7 @@
 
 
 
+
         close</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp; &nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
@@ -1948,13 +1970,49 @@
 
 
 
+
         mode pointer|zoom]</tt><tt><br>
-      </tt><tt> </tt><tt> </tt><tt><br>
-      </tt><tt> </tt><tt> </tt><tt># configure graph</tt><tt><br>
+      </tt><tt> </tt><tt> </tt><br>
+      <tt><tt><tt><tt># export image</tt><tt><br>
+            </tt><tt> </tt><tt> </tt>plot</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+          </tt>export</tt><tt> </tt><tt>[gif|tiff|jpeg|png]</tt><tt> </tt><tt>&lt;filename&gt;</tt><tt><br>
+          &nbsp;&nbsp;</tt></tt><tt><tt>&nbsp;&nbsp; [<tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+          </tt>export jpeg &lt;filename&gt;</tt><tt> </tt><tt>[1-100]</tt><tt><br>
+          &nbsp;&nbsp;&nbsp;&nbsp; </tt><tt> </tt><tt> </tt></tt><tt><tt><tt>[[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+          </tt>export tiff &lt;filename</tt><tt>&gt;</tt><tt> </tt><tt>[none|jpeg|packbits|deflate]</tt><tt><br>
+        </tt><tt> &nbsp;<br>
+        </tt></tt><tt> </tt><tt> </tt><tt># configure graph</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>-plot [[&lt;plotname&gt;] axis x|y
         grid yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp;
-        [[[&lt;plotname&gt;] axis x|y log yes|no]</tt><tt><br>
+        [[&lt;plotname&gt;] axis x|y log yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] axis x|y flip yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp; &nbsp;
@@ -1968,6 +2026,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] background
         &lt;value&gt;]<br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp; &nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -1997,6 +2056,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp; &nbsp;
         [[&lt;plotname&gt;] title x|y &lt;string&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; [</tt><tt>[&lt;plotname&gt;]
+
 
 
 
@@ -2065,8 +2125,14 @@
       </tt><tt> </tt><tt> </tt><tt>$ds9 -plot print color rgb</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>$ds9 -plot close</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>$ds9 -plot mode pointer</tt><tt><br>
-      </tt><tt> </tt><tt> </tt><tt><br>
-      </tt><tt> </tt><tt> </tt><tt># configure plot</tt><tt><br>
+      </tt><tt> </tt><tt> </tt><br>
+      <tt><tt><tt><tt><tt># export plot</tt><tt><br>
+              </tt></tt></tt><tt><tt><tt><tt>$ds9 -plot export tiff
+                  foo.tiff jpeg</tt></tt></tt><br>
+            $ds9 -plot export jpeg foo.jpeg 75<br>
+            $ds9 -plot export png foo.png<br>
+            <br>
+          </tt></tt></tt><tt></tt><tt># configure plot</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>$ds9 -plot axis x grid yes</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>$ds9 -plot axis x log yes</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>$ds9 -plot axis x flip yes</tt><tt><br>
@@ -2190,6 +2256,7 @@
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [filename
         &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2485,6 +2552,7 @@
 
 
 
+
         [image|table|slice]</tt><br>
       <tt>&nbsp;<br>
         Example:<br>
@@ -2609,6 +2677,7 @@
 
 
 
+
         [crosshair]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [export
         sb|tsv &lt;filename&gt;]</tt><tt><br>
@@ -2629,6 +2698,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [system &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -2754,8 +2824,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2769,6 +2841,7 @@
                   [sigmaminor &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 [angle
+
 
 
 
@@ -2805,8 +2878,10 @@
 
 
 
+
                   sigmaminor 2.0<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+
 
 
 

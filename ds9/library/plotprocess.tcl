@@ -294,6 +294,23 @@ proc PlotCmdFontStyle {which value} {
     $cvar(proc,updategraph) $cvarname
 }
 
+proc PlotCmdExport {format fn} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    switch -- $format {
+	gif {FileLast giffbox $fn}
+	jpeg {FileLast jpegfbox $fn}
+	tiff {FileLast tifffbox $fn}
+	png {FileLast pngfbox $fn}
+	default {
+	    Error "[msgcat::mc {Not valid export format}] $format"
+	    return
+	}
+    }
+    PlotExport $cvarname $fn $format
+}
+
 proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {
     global iap
     global parse

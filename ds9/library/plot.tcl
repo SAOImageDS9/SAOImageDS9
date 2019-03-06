@@ -12,6 +12,10 @@ proc PlotDef {} {
     set iap(windows) {}
     set iap(unique) 0
 
+    set iap(jpeg,quality) 75
+    set iap(tiff,compress) none
+    set iap(error) [msgcat::mc {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.}]
+
     set pap(graph,bg) white
     set pap(graph,title) {}
     set pap(graph,title,family) helvetica

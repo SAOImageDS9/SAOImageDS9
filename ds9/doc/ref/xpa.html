@@ -216,6 +216,7 @@
 
 
 
+
                       -p ds9 3d match</tt></tt></tt></tt></tt></tt></tt></tt><br>
       <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset -p ds9 3d lock
                             yes</tt><br>
@@ -463,6 +464,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -491,9 +493,11 @@
 
 
 
+
             [&lt;ref&gt;] [match &lt;ref&gt; &lt;ref&gt;]<br>
           </tt></tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
 [match
+
 
 
 
@@ -515,6 +519,7 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt> <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
 
@@ -526,8 +531,10 @@
 
 
 
+
         [match return 1and2|1only|2only]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
+
 
 
 
@@ -594,7 +601,9 @@
 
 
 
+
           shape</tt></tt> <tt><tt>circle point|box point|diamond point|</tt>cross
+
 
 
 
@@ -612,6 +621,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt> <tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
+
 
 
 
@@ -1147,6 +1157,7 @@
       <tt><tt>$xpaset -p ds9 export nrrd foo.nrrd little</tt></tt><br>
       <tt><tt><tt><tt><tt><tt>$xpaset -p ds9 export envi foo.hdr little</tt></tt><br>
             </tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
 
@@ -2052,6 +2063,7 @@
 
 
 
+
         [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
         label&gt;</tt><tt> </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[new</tt><tt>
@@ -2075,8 +2087,10 @@
 
 
 
+
         name &lt;plotname&gt; stdin</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[new
+
 
 
 
@@ -2103,12 +2117,14 @@
 
 
 
+
         load &lt;filename&gt; xy|xyex|xyey|xyexey]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] clear]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2129,6 +2145,7 @@
 
 
 
+
         stats yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
@@ -2140,8 +2157,10 @@
 
 
 
+
         list yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2179,6 +2198,7 @@
 
 
 
+
         close</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
@@ -2190,9 +2210,45 @@
 
 
 
+
         mode pointer|zoom]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt><br>
-      </tt><tt> </tt><tt> </tt><tt># configure graph</tt><tt><br>
+      </tt><tt> </tt><tt> </tt><tt><tt><tt><tt># export image</tt><tt><br>
+            </tt><tt> </tt><tt> </tt>plot</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+          </tt>export</tt><tt> </tt><tt>[gif|tiff|jpeg|png]</tt><tt> </tt><tt>&lt;filename&gt;</tt><tt><br>
+          &nbsp;&nbsp;</tt><tt></tt></tt><tt><tt>&nbsp;&nbsp; [<tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+          </tt>export jpeg &lt;filename&gt;</tt><tt> </tt><tt>[1-100]</tt><tt><br>
+          &nbsp;&nbsp;&nbsp;&nbsp; </tt><tt> </tt><tt> </tt></tt><tt><tt><tt>[[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+          </tt>export tiff &lt;filename</tt><tt>&gt;</tt><tt> </tt><tt>[none|jpeg|packbits|deflate]</tt><tt><br>
+        </tt><tt> &nbsp;<br>
+        </tt># configure graph</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>plot [[&lt;plotname&gt;] axis x|y
         grid yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2210,6 +2266,7 @@
       </tt><tt> </tt><tt> </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt>
         </tt><tt>[[&lt;plotname&gt;] background &lt;value&gt;]</tt><tt><br>
         </tt><tt> </tt><tt> </tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2248,12 +2305,14 @@
 
 
 
+
         barmode normal|stacked|aligned|overlap]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt># configure current dataset</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>plot [[&lt;plotname&gt;] show
         yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2274,8 +2333,10 @@
 
 
 
+
         shape fill yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2296,8 +2357,10 @@
 
 
 
+
         smooth step|linear|cubic|quadratic|catrom]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2318,8 +2381,10 @@
 
 
 
+
         width &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2340,8 +2405,10 @@
 
 
 
+
         error yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2362,6 +2429,7 @@
 
 
 
+
         error cap yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
@@ -2373,8 +2441,10 @@
 
 
 
+
         error width &lt;value&gt;]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2461,7 +2531,13 @@
       </tt><tt> </tt><tt> </tt><tt>$xpaget ds9 plot mode</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>$xpaset -p ds9 plot mode pointer</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt><br>
-      </tt><tt> </tt><tt> </tt><tt># configure plot</tt><tt><br>
+      </tt><tt> </tt><tt> </tt><tt><tt><tt><tt><tt># export plot</tt><tt><br>
+              </tt></tt></tt><tt><tt><tt><tt>$xpaset -p ds9 plot export
+                  tiff foo.tiff jpeg</tt></tt></tt><br>
+            $xpaset -p ds9 plot export jpeg foo.jpeg 75<br>
+            $xpaset -p ds9 plot export png foo.png</tt><br>
+          <br>
+        </tt># configure plot</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>$xpaget ds9 plot axis x grid</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>$xpaget ds9 plot axis x log</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>$xpaget ds9 plot axis x flip</tt><tt><br>
@@ -3081,6 +3157,7 @@
 
 
 
+
         [crosshair]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [export
         sb|tsv &lt;filename&gt;]</tt><tt><br>
@@ -3100,6 +3177,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [system &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -3219,8 +3297,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3244,8 +3324,10 @@
 
 
 
+
                       &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt></tt> <tt>&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3275,6 +3357,7 @@
 
 
 
+
                         ds9 smooth sigmaminor<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt> $xpaget
         ds9 smooth lock<br>
@@ -3285,6 +3368,7 @@
         </tt></tt> <tt><tt><tt><tt><tt><tt>$xpaset -p ds9 smooth
                   radiusminor 4<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
 
@@ -3305,8 +3389,10 @@
 
 
 
+
                         -p ds9 smooth sigmaminor 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
 

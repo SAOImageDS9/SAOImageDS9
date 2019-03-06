@@ -61,9 +61,11 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 	-command [list PlotSaveData $varname]
     $var(mb).file add command -label [msgcat::mc {Clear Data}] \
 	-command [list PlotClearData $varname]
-    $var(mb).file add separator
     $var(mb).file add command -label [msgcat::mc {Duplicate Data}] \
 	-command [list PlotDupData $varname 1]
+    $var(mb).file add separator
+    $var(mb).file add cascade -label [msgcat::mc {Export}] \
+	-menu $var(mb).file.export
     $var(mb).file add separator
     $var(mb).file add command -label [msgcat::mc {Statistics}] \
 	-command "set ${varname}(stats) 1; PlotStats $varname"
@@ -96,6 +98,17 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     $var(mb).file add separator
     $var(mb).file add command -label [msgcat::mc {Close}] \
 	-command [list PlotDestroy $varname]
+
+    # Export Menu
+    menu $var(mb).file.export
+    $var(mb).file.export add command -label {GIF...} \
+	-command [list PlotExportDialog $varname gif]
+    $var(mb).file.export add command -label {TIFF...} \
+	-command [list PlotExportDialog $varname tiff]
+    $var(mb).file.export add command -label {JPEG...} \
+	-command [list PlotExportDialog $varname jpeg]
+    $var(mb).file.export add command -label {PNG...} \
+	-command [list PlotExportDialog $varname png]
 
     menu $var(mb).edit
     $var(mb).edit add command -label [msgcat::mc {Cut}] \
@@ -508,4 +521,64 @@ proc PlotLineSmoothMenu {which var} {
 	-variable $var -value quadratic
     $which add radiobutton -label [msgcat::mc {Catrom}] \
 	-variable $var -value catrom
+}
+
+proc PlotExportDialog {varname format} {
+    global giffbox
+    global jpegfbox
+    global tifffbox
+    global pngfbox
+    global iap
+
+    switch -- $format {
+	gif {set fn [SaveFileDialog giffbox]}
+	jpeg {set fn [SaveFileDialog jpegfbox]}
+	tiff {set fn [SaveFileDialog tifffbox]}
+	png {set fn [SaveFileDialog pngfbox]}
+    }
+
+    if {$fn != {}} {
+	set ok 1
+	switch -- $format {
+	    gif {}
+	    jpeg {set ok [JPEGExportDialog iap(jpeg,quality)]}
+	    tiff {set ok [TIFFExportDialog iap(tiff,compress)]}
+	    png {}
+	}
+
+	if {$ok} {
+	    PlotExport $varname $fn $format
+	}
+    }
+}
+
+proc PlotExport {varname fn format} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+    global iap
+
+    if {$fn == {}} {
+	return
+    }
+
+    # besure we are on top
+    raise $var(top)
+
+    set rr [catch {image create photo -format window -data $var(graph)} ph]
+    if {$rr != 0} {
+	Error $iap(error)
+    }
+
+    switch -- $format {
+	gif -
+	png {$ph write $fn -format $format}
+	jpeg {$ph write $fn \
+		  -format [list $format -quality $iap(jpeg,quality)]}
+	tiff {$ph write $fn \
+		  -format [list $format -compression $iap(tiff,compress)]}
+    }
+
+    image delete $ph
 }

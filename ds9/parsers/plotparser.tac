@@ -40,6 +40,7 @@
 %token DUPLICATE_
 %token ERROR_
 %token ERRORBAR_
+%token EXPORT_
 %token FAMILY_
 %token FILE_
 %token FILENAME_
@@ -138,6 +139,15 @@
 %token XAXIS_
 %token YAXIS_
 
+%token GIF_
+%token TIFF_
+%token JPEG_
+%token PNG_
+
+%token NONE_
+%token PACKBITS_
+%token DEFLATE_
+
 %%
 
 #include yesno.trl
@@ -221,6 +231,7 @@ plotCmd : LOAD_ load
  # xpa/samp only
  | DATA_ dim {PlotCmdData $2}
  | CLEAR_ {ProcessCmdCVAR0 PlotClearData}
+ | EXPORT_ export
  | DUPLICATE_ duplicate
  # backward compatibility
  | DUP_ duplicate
@@ -267,6 +278,25 @@ plotCmd : LOAD_ load
  | GRAPH_ oldGraph
  # backward compatibility
  | VIEW_ oldView
+ ;
+
+export : STRING_ {PlotCmdExport [ExtToFormat $1] $1}
+ | STRING_ exportOps {PlotCmdExport [ExtToFormat $1] $1}
+ | exportExt STRING_ {PlotCmdExport $1 $2}
+ | exportExt STRING_ exportOps {PlotCmdExport $1 $2}
+ ;
+
+exportExt : GIF_ {set _ gif}
+ | TIFF_ {set _ tiff}
+ | JPEG_ {set _ jpeg}
+ | PNG_ {set _ png}
+ ;
+
+exportOps : NONE_ {ProcessCmdSet iap tiff,compress none}
+ | JPEG_ {ProcessCmdSet iap tiff,compress jpeg}
+ | PACKBITS_ {ProcessCmdSet iap tiff,compress packbits}
+ | DEFLATE_ {ProcessCmdSet iap tiff,compress deflate}
+ | numeric {ProcessCmdSet iap jpeg,quality $1}
  ;
 
 load : STRING_ {PlotCmdLoad $1 xy}

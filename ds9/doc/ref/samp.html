@@ -471,6 +471,7 @@
 
 
 
+
         [2mass|iras]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [csc|xmm|rosat]</tt><tt><br>
@@ -518,6 +519,7 @@
 
 
 
+
         [&lt;ref&gt;] [filter &lt;string&gt;]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [filter load &lt;filename&gt;]</tt><tt><br>
@@ -528,6 +530,7 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [match]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -553,6 +556,7 @@
       </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;]
         [name &lt;object&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -594,6 +598,7 @@
 
 
 
+
         [&lt;ref&gt;] [save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         [&lt;ref&gt;] [server</tt><tt> </tt><tt>cds|adac|cadc|cambridge|sao|ukirt|iucaa|bejing|saao]</tt><tt><br>
@@ -618,6 +623,7 @@
         &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [symbol shape
         circle|ellipse|box|text|point]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -689,6 +695,7 @@
 
 
 
+
         {$Hmag} {$e_Jmag} {$e_Hmag}</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>catalog print</tt><tt><br>
       </tt><tt> </tt><tt>catalog psky fk5</tt><tt><br>
@@ -704,6 +711,7 @@
       </tt><tt> </tt><tt>catalog radius 1 degrees</tt><tt><br>
       </tt><tt> </tt><tt>catalog symbol condition</tt><tt> </tt><tt>{$Jmag&gt;15}</tt><tt><br>
       </tt><tt> </tt><tt>catalog symbol 2 shape</tt><tt> </tt><tt>{boxcircle
+
 
 
 
@@ -861,6 +869,7 @@
 
 
 
+
             [save levels &lt;filename&gt;]<br>
           </tt></tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [copy]<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [paste
@@ -942,6 +951,7 @@
         &lt;coordsys&gt;|none]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [reset]</tt><tt><br>
       </tt><tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [3d</tt><tt> </tt><tt>zmin
+
 
 
 
@@ -1692,6 +1702,7 @@
 
 
 
+
           Macros</a> for more information.</p>
       <tt>Syntax:<br>
         iexam []<br>
@@ -2208,12 +2219,14 @@
 
 
 
+
         load &lt;filename&gt; xy|xyex|xyey|xyexey]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] clear]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2234,6 +2247,7 @@
 
 
 
+
         stats yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
@@ -2245,8 +2259,10 @@
 
 
 
+
         list yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2284,6 +2300,7 @@
 
 
 
+
         close</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
@@ -2295,9 +2312,46 @@
 
 
 
+
         mode pointer|zoom]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt><br>
-      </tt><tt> </tt><tt> </tt><tt># configure graph</tt><tt><br>
+      </tt><tt> </tt><tt> </tt><tt><tt><tt><tt><tt># export image</tt><tt><br>
+              </tt><tt> </tt><tt> </tt>plot</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+            </tt>export</tt><tt> </tt><tt>[gif|tiff|jpeg|png]</tt><tt>
+          </tt><tt>&lt;filename&gt;</tt><tt><br>
+            &nbsp;&nbsp;</tt></tt><tt><tt>&nbsp;&nbsp; [<tt>[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+            </tt>export jpeg &lt;filename&gt;</tt><tt> </tt><tt>[1-100]</tt><tt><br>
+            &nbsp;&nbsp;&nbsp;&nbsp; </tt><tt> </tt><tt> </tt></tt><tt><tt><tt>[[&lt;plotname&gt;]
+
+
+
+
+
+
+
+
+
+            </tt>export tiff &lt;filename</tt><tt>&gt;</tt><tt> </tt><tt>[none|jpeg|packbits|deflate]</tt><tt><br>
+          </tt><tt> &nbsp;<br>
+          </tt></tt># configure graph</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>plot [[&lt;plotname&gt;] axis x|y
         grid yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2313,8 +2367,10 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp;&nbsp;
         [[&lt;plotname&gt;] axis x|y format &lt;string&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
         background &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2353,12 +2409,14 @@
 
 
 
+
         barmode normal|stacked|aligned|overlap]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt># configure current dataset</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>plot [[&lt;plotname&gt;] show
         yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2379,8 +2437,10 @@
 
 
 
+
         shape fill yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2401,8 +2461,10 @@
 
 
 
+
         smooth step|linear|cubic|quadratic|catrom]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2423,8 +2485,10 @@
 
 
 
+
         width &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2445,8 +2509,10 @@
 
 
 
+
         error yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2469,8 +2535,10 @@
 
 
 
+
         error width &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2532,8 +2600,16 @@
       </tt><tt> </tt><tt> </tt><tt>plot mode</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>ds9.set(string cmd)</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>plot mode pointer</tt><tt><br>
-      </tt><tt> </tt><tt> </tt><tt><br>
-      </tt><tt> </tt><tt> </tt><tt># configure plot</tt><tt><br>
+      </tt><tt> </tt><tt> </tt><tt><tt><br>
+        </tt><tt> </tt><tt> </tt><tt><tt><tt><tt><tt># export plot</tt><tt><br>
+                </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt>ds9.set(string
+                      cmd)</tt><tt><br>
+                    </tt><tt> </tt><tt> </tt>plot export tiff foo.tiff
+                    jpeg</tt></tt></tt><br>
+              plot export jpeg foo.jpeg 75<br>
+              plot export png foo.png</tt><br>
+            <br>
+          </tt></tt># configure plot</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>string value = ds9.get(string cmd)</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>plot axis x grid</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>plot axis x log</tt><tt><br>
@@ -3197,6 +3273,7 @@
 
 
 
+
         [&lt;ref&gt;] [save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; [&lt;ref&gt;]
         [radius &lt;value&gt; degrees|arcmin|arcsec]</tt><tt><br>
@@ -3324,8 +3401,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3349,8 +3428,10 @@
 
 
 
+
                       &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt></tt> <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3390,6 +3471,7 @@
 
 
 
+
                         sigma 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt>smooth
 
@@ -3401,8 +3483,10 @@
 
 
 
+
                         sigmaminor 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>smooth
+
 
 
 

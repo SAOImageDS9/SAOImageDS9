@@ -37,6 +37,7 @@ dup	    {return $DUP_}
 duplicate   {return $DUPLICATE_}
 error	    {return $ERROR_}
 errorbar    {return $ERRORBAR_}
+export	    {return $EXPORT_}
 family	    {return $FAMILY_}
 file	    {return $FILE_}
 filename    {return $FILENAME_}
@@ -134,6 +135,15 @@ loglog      {return $LOGLOG_}
 
 xaxis	    {return $XAXIS_}
 yaxis	    {return $YAXIS_}
+
+gif	    {return $GIF_}
+tiff	    {return $TIFF_}
+jpeg	    {return $JPEG_}
+png	    {return $PNG_}
+
+none	    {return $NONE_}
+packbits    {return $PACKBITS_}
+deflate	    {return $DEFLATE_}
 
 #include yesno.fin
 #include fonts.fin

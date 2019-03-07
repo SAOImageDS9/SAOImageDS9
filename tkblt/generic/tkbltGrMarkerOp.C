@@ -275,7 +275,7 @@ static int DeleteOp(ClientData clientData, Tcl_Interp* interp,
 	Tcl_AppendResult(interp, "can't find markers in \"",
 			 Tk_PathName(graphPtr->tkwin_), "\":", NULL);
       }
-      Tcl_AppendResult(interp, " ", Tcl_GetString(objv[ii]));
+      Tcl_AppendResult(interp, " ", Tcl_GetString(objv[ii]), NULL);
       res = TCL_ERROR;
     } else {
       markerPtr = (Marker*)Tcl_GetHashValue(hPtr);

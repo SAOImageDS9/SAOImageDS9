@@ -2,10 +2,11 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "fvcontour.h"
 #include "context.h"
 #include "base.h"
 #include "fitsimage.h"
-#include "fvcontour.h"
+#include "convolve.h"
 
 #include "sigbus.h"
 
@@ -225,22 +226,33 @@ void FVContour::nobin(FitsImage* fits)
   for (long ii=0; ii<size; ii++)
     img[ii] = FLT_MIN;
 
-  // generate kernal
+  // generate kernel
   int r = smooth_-1;
-  double* kernal = gaussian(r);
+  double* kernel = NULL;
+
+  if (0)
+    kernel = gaussian(r);
+  else {
+    int rr = 2*r+1;
+    double sigma = r/2.;
+    int ksz = rr*rr;
+    kernel = new double[ksz];
+    memset(kernel, 0, ksz*sizeof(double));
+    ::gaussian(kernel, r, sigma);
+  }
 
   // convolve
-  convolve(fits,kernal,img,r);
+  convolve(fits,kernel,img,r);
   
   // now, do contours
   build(width, height, img, fits->dataToRef);
 
   // cleanup
-  delete kernal;
+  delete kernel;
   delete [] img;
 }
 
-void FVContour::convolve(FitsImage* fits, double* kernal, double* dest, int r)
+void FVContour::convolve(FitsImage* fits, double* kernel, double* dest, int r)
 {
   FitsBound* params = 
     fits->getDataParams(((Base*)parent_)->currentContext->secMode());
@@ -261,7 +273,7 @@ void FVContour::convolve(FitsImage* fits, double* kernal, double* dest, int r)
 	    if (m>=params->xmin && m<params->xmax) {
 	      double vv = fits->getValueDouble(n*width+m);
 	      if (isfinite(vv)) {
-		double kk = kernal[nn*rr+mm];
+		double kk = kernel[nn*rr+mm];
 		double* ptr = dest+(jj*width+ii);
 		if (*ptr == FLT_MIN)
 		  *ptr  = vv*kk;
@@ -281,24 +293,24 @@ double* FVContour::tophat(int r)
 {
   int rr = 2*r+1;
   int ksz = rr*rr;
-  double* kernal = new double[ksz];
-  memset(kernal, 0, ksz*sizeof(double));
+  double* kernel = new double[ksz];
+  memset(kernel, 0, ksz*sizeof(double));
   
   double kt = 0;
   for (int yy=-r; yy<=r; yy++) {
     for (int xx=-r; xx<=r; xx++) { 
       if ((xx*xx + yy*yy) <= r*r) {
-	kernal[(yy+r)*rr+(xx+r)] = 1;
+	kernel[(yy+r)*rr+(xx+r)] = 1;
 	kt++;
       }
     }
   }
 
-  // normalize kernal
+  // normalize kernel
   for (int aa=0; aa<ksz; aa++)
-    kernal[aa] /= kt;
+    kernel[aa] /= kt;
 
-  return kernal;
+  return kernel;
 }
 
 double* FVContour::gaussian(int r)
@@ -306,8 +318,8 @@ double* FVContour::gaussian(int r)
   int rr = 2*r+1;
   int ksz = rr*rr;
   double sigma = r/2.;
-  double* kernal = new double[ksz];
-  memset(kernal, 0, ksz*sizeof(double));
+  double* kernel = new double[ksz];
+  memset(kernel, 0, ksz*sizeof(double));
   
   double kt = 0;
   double aa = 1./(sigma*sigma);
@@ -316,17 +328,17 @@ double* FVContour::gaussian(int r)
     for (int xx=-r; xx<=r; xx++) { 
       if ((xx*xx + yy*yy) <= r*r) {
 	double vv = exp(-.5*(aa*xx*xx + cc*yy*yy));
-	kernal[(yy+r)*rr+(xx+r)] = vv;
+	kernel[(yy+r)*rr+(xx+r)] = vv;
 	kt += vv;
       }
     }
   }
 
-  // normalize kernal
+  // normalize kernel
   for (int aa=0; aa<ksz; aa++)
-    kernal[aa] /= kt;
+    kernel[aa] /= kt;
 
-  return kernal;
+  return kernel;
 }
 
 void FVContour::bin(FitsImage* fits)

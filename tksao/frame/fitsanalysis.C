@@ -17,9 +17,12 @@ void FitsImage::analysis(int which, pthread_t* thread, t_smooth_arg* targ)
   targ->kernel =NULL;
   targ->src =NULL;
   targ->dest =NULL;
+  targ->xmin =0;
+  targ->xmax =0;
+  targ->ymin =0;
+  targ->ymax =0;
   targ->width =0;
-  targ->height =0;
-  targ->k =0;
+  targ->r =0;
 
   if (manageAnalysis_) {
     if (analysis_)
@@ -52,8 +55,8 @@ void FitsImage::analysis(int which, pthread_t* thread, t_smooth_arg* targ)
 void* convolveThread(void* vv)
 {
   t_smooth_arg* tt = (t_smooth_arg*)vv;
-  convolve(tt->kernel, tt->src, tt->dest, 0, 0, tt->width, tt->height,
-	   tt->width, tt->k);
+  convolve(tt->kernel, tt->src, tt->dest,
+ 	   tt->xmin, tt->ymin, tt->xmax, tt->ymax, tt->width, tt->r);
   return NULL;
 }
 
@@ -67,6 +70,7 @@ void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
 
   int width = analysis_->head()->naxis(0);
   int height = analysis_->head()->naxis(1);
+  FitsBound* params = getDataParams(context_->secMode());
 
   // src
   double* src = new double[width*height];
@@ -103,9 +107,12 @@ void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
   targ->kernel = kernel;
   targ->src = src;
   targ->dest = dest;
+  targ->xmin = params->xmin;
+  targ->xmax = params->xmax;
+  targ->ymin = params->ymin;
+  targ->ymax = params->ymax;
   targ->width = width;
-  targ->height = height;
-  targ->k = r;
+  targ->r = r;
 
   int result = pthread_create(thread, NULL, convolveThread, targ);
   if (result)

@@ -21,9 +21,12 @@ typedef struct {
   double* kernel;
   double* src;
   double* dest;
+  int xmin;
+  int ymin;
+  int xmax;
+  int ymax;
   int width;
-  int height;
-  int k;
+  int r;
 } t_smooth_arg;
 
 typedef struct {

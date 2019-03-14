@@ -117,11 +117,13 @@ void dumpKernel(double* kernel, int k)
 }
 
 void* convolve(double* kernel, double* src, double* dest,
-	       int width, int height, int k)
+	       int xmin, int ymin, int xmax, int ymax, int width, int k)
 {
   int kk = 2*k+1;
 
+  if (0) {
   double* dptr = dest;
+  int height = ymax;
   for (int jj=0; jj<height; jj++) {
     for (int ii=0; ii<width; ii++, dptr++) {
 
@@ -136,6 +138,24 @@ void* convolve(double* kernel, double* src, double* dest,
 	}
       }
     }
+  }
+  }
+  else {
+  for (int jj=ymin; jj<ymax; jj++) {
+    for (int ii=xmin; ii<xmax; ii++) {
+      register int dd = jj*width+ii;
+      for (int nn=jj-k, qq=0; nn<=jj+k; nn++, qq++) {
+	if (nn>=ymin && nn<ymax) {
+	  register int nd = nn*width;
+	  register int qd = qq*kk;
+	  for (int mm=ii-k, pp=0; mm<=ii+k; mm++, pp++) {
+	    if (mm>=xmin && mm<xmax)
+	      dest[dd] += src[nd+mm]*kernel[qd+pp];
+	  }
+	}
+      }
+    }
+  }
   }
 
   return NULL;

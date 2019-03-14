@@ -242,7 +242,36 @@ void FVContour::nobin(FitsImage* fits)
   }
 
   // convolve
-  convolve(fits,kernel,img,r);
+  if (0)
+    convolve(fits,kernel,img,r);
+  else {
+    double* src = new double[size];
+    if (!img) {
+      internalError("FVContour could not allocate enough memory");
+      return;
+    }
+    for (long ii=0; ii<size; ii++)
+      src[ii] = FLT_MIN;
+
+    FitsBound* params = 
+      fits->getDataParams(((Base*)parent_)->currentContext->secMode());
+
+    SETSIGBUS
+    for(long jj=params->ymin; jj<params->ymax; jj++) {
+      for(long ii=params->xmin; ii<params->xmax; ii++) {
+	long kk = jj*width + ii;
+	double vv = fits->getValueDouble(kk);
+	if (isfinite(vv))
+	  src[kk] = vv;
+      }
+    }
+    CLEARSIGBUS
+
+    ::convolve(kernel, src, img,
+	       params->xmin, params->ymin, params->xmax, params->ymax,
+	       width, r);
+    delete [] src;
+  }
   
   // now, do contours
   build(width, height, img, fits->dataToRef);
@@ -287,30 +316,6 @@ void FVContour::convolve(FitsImage* fits, double* kernel, double* dest, int r)
     }
   }
   CLEARSIGBUS
-}
-
-double* FVContour::tophat(int r)
-{
-  int rr = 2*r+1;
-  int ksz = rr*rr;
-  double* kernel = new double[ksz];
-  memset(kernel, 0, ksz*sizeof(double));
-  
-  double kt = 0;
-  for (int yy=-r; yy<=r; yy++) {
-    for (int xx=-r; xx<=r; xx++) { 
-      if ((xx*xx + yy*yy) <= r*r) {
-	kernel[(yy+r)*rr+(xx+r)] = 1;
-	kt++;
-      }
-    }
-  }
-
-  // normalize kernel
-  for (int aa=0; aa<ksz; aa++)
-    kernel[aa] /= kt;
-
-  return kernel;
 }
 
 double* FVContour::gaussian(int r)

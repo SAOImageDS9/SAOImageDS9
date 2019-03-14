@@ -52,7 +52,8 @@ void FitsImage::analysis(int which, pthread_t* thread, t_smooth_arg* targ)
 void* convolveThread(void* vv)
 {
   t_smooth_arg* tt = (t_smooth_arg*)vv;
-  convolve(tt->kernel, tt->src, tt->dest, tt->width, tt->height, tt->k);
+  convolve(tt->kernel, tt->src, tt->dest, 0, 0, tt->width, tt->height,
+	   tt->width, tt->k);
   return NULL;
 }
 

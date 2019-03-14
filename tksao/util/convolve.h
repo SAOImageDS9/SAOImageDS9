@@ -11,6 +11,6 @@ void gaussian(double* kernel, int r, double sigma);
 void elliptic(double* kernel, int r, int m, double ss, double sm, double aa);
 
 void* convolve(double* kernel, double* src, double* dest,
-	       int width, int height, int k);
+	       int xmin, int ymin, int xmax, int ymax, int width, int k);
 
 #endif

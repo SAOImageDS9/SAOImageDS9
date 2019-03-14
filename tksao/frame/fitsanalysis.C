@@ -9,8 +9,6 @@
 #include "context.h"
 #include "convolve.h"
 
-static void* convolve(void* tt);
-
 void FitsImage::analysis(int which, pthread_t* thread, t_smooth_arg* targ)
 {
   if (DebugPerf)
@@ -49,6 +47,13 @@ void FitsImage::analysis(int which, pthread_t* thread, t_smooth_arg* targ)
 
   image_ = analysis_;
   data_ = analysisdata_;
+}
+
+void* convolveThread(void* vv)
+{
+  t_smooth_arg* tt = (t_smooth_arg*)vv;
+  convolve(tt->kernel, tt->src, tt->dest, tt->width, tt->height, tt->k);
+  return NULL;
 }
 
 void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
@@ -101,40 +106,8 @@ void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
   targ->height = hh;
   targ->k = rr;
 
-  int result = pthread_create(thread, NULL, convolve, targ);
+  int result = pthread_create(thread, NULL, convolveThread, targ);
   if (result)
     internalError("Unable to Create Thread");
-}
-
-void* convolve(void* tt)
-{
-  t_smooth_arg* targ = (t_smooth_arg*)tt;
-  double* kernel = targ->kernel;
-  double* src = targ->src;
-  double* dest = targ->dest;
-  int width = targ->width;
-  int height = targ->height;
-  int k = targ->k;
-
-  int kk = 2*k+1;
-
-  double* dptr = dest;
-  for (int jj=0; jj<height; jj++) {
-    for (int ii=0; ii<width; ii++, dptr++) {
-
-      for (int nn=jj-k, qq=0; nn<=jj+k; nn++, qq++) {
-	if (nn>=0 && nn<height) {
-	  register int nd = nn*width;
-	  register int qd = qq*kk;
-	  for (int mm=ii-k, pp=0; mm<=ii+k; mm++, pp++) {
-	    if (mm>=0 && mm<width)
-	      *dptr += src[nd+mm]*kernel[qd+pp];
-	  }
-	}
-      }
-    }
-  }
-
-  return NULL;
 }
 

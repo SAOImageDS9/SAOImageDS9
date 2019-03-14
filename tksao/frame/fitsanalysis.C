@@ -59,43 +59,43 @@ void* convolveThread(void* vv)
 
 void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
 {
-  int rr = context_->smoothRadius();
+  int r = context_->smoothRadius();
   int mm = context_->smoothRadiusMinor();
   double ss = context_->smoothSigma();
   double sm = context_->smoothSigmaMinor();
   double aa = context_->smoothAngle();
 
-  int ww = analysis_->head()->naxis(0);
-  int hh = analysis_->head()->naxis(1);
+  int width = analysis_->head()->naxis(0);
+  int height = analysis_->head()->naxis(1);
 
   // src
-  double* src = new double[ww*hh];
+  double* src = new double[width*height];
   double* ptr = src;
-  for (long jj=0; jj<hh; jj++)
-    for (long ii=0; ii<ww; ii++, ptr++)
-      *ptr = blockdata_->getValueDouble(jj*ww+ii);
+  for (long jj=0; jj<height; jj++)
+    for (long ii=0; ii<width; ii++, ptr++)
+      *ptr = blockdata_->getValueDouble(jj*width+ii);
 
   // dest
   double* dest = (double*)analysis_->data();
 
   // kernel
   // create kernel
-  int kk = 2*rr+1;
-  double* kernel = new double[kk*kk];
-  memset(kernel, 0, kk*kk*sizeof(double));
+  int rr = 2*r+1;
+  double* kernel = new double[rr*rr];
+  memset(kernel, 0, rr*rr*sizeof(double));
 
   switch (context_->smoothFunction()) {
   case Context::BOXCAR:
-    boxcar(kernel,rr);
+    boxcar(kernel,r);
     break;
   case Context::TOPHAT:
-    tophat(kernel,rr);
+    tophat(kernel,r);
     break;
   case Context::GAUSSIAN:
-    gaussian(kernel,rr,ss);
+    gaussian(kernel,r,ss);
     break;
   case Context::ELLIPTIC:
-    elliptic(kernel,rr,mm,ss,sm,aa);
+    elliptic(kernel,r,mm,ss,sm,aa);
     break;
   }
 
@@ -103,9 +103,9 @@ void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
   targ->kernel = kernel;
   targ->src = src;
   targ->dest = dest;
-  targ->width = ww;
-  targ->height = hh;
-  targ->k = rr;
+  targ->width = width;
+  targ->height = height;
+  targ->k = r;
 
   int result = pthread_create(thread, NULL, convolveThread, targ);
   if (result)

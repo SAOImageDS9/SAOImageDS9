@@ -62,12 +62,6 @@ void* convolveThread(void* vv)
 
 void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
 {
-  int r = context_->smoothRadius();
-  int mm = context_->smoothRadiusMinor();
-  double ss = context_->smoothSigma();
-  double sm = context_->smoothSigmaMinor();
-  double aa = context_->smoothAngle();
-
   int width = analysis_->head()->naxis(0);
   int height = analysis_->head()->naxis(1);
   FitsBound* params = getDataParams(context_->secMode());
@@ -86,16 +80,18 @@ void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
   double* kernel =NULL;
   switch (context_->smoothFunction()) {
   case Context::BOXCAR:
-    kernel = boxcar(r);
+    kernel = boxcar(context_->smoothRadius());
     break;
   case Context::TOPHAT:
-    kernel = tophat(r);
+    kernel = tophat(context_->smoothRadius());
     break;
   case Context::GAUSSIAN:
-    kernel = gaussian(r,ss);
+    kernel = gaussian(context_->smoothRadius(), context_->smoothSigma());
     break;
   case Context::ELLIPTIC:
-    kernel = elliptic(r,mm,ss,sm,aa);
+    kernel = elliptic(context_->smoothRadius(), context_->smoothRadiusMinor(),
+		      context_->smoothSigma(), context_->smoothSigmaMinor(),
+		      context_->smoothAngle());
     break;
   }
 
@@ -108,7 +104,7 @@ void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
   targ->ymin = params->ymin;
   targ->ymax = params->ymax;
   targ->width = width;
-  targ->r = r;
+  targ->r = context_->smoothRadius();
 
   int result = pthread_create(thread, NULL, convolveThread, targ);
   if (result)

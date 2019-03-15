@@ -38,8 +38,6 @@ class FVContour {
   void unity(FitsImage*);
   void bin(FitsImage*);
   void nobin(FitsImage*);
-  void convolve(FitsImage*, double*, double*, int);
-  double* gaussian(int);
   void build(long xdim, long ydim, double *image, Matrix&);
   void trace(long xdim, long ydim, double cntr,
 	     long xCell, long yCell, int side,

@@ -83,23 +83,19 @@ void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
   double* dest = (double*)analysis_->data();
 
   // kernel
-  // create kernel
-  int rr = 2*r+1;
-  double* kernel = new double[rr*rr];
-  memset(kernel, 0, rr*rr*sizeof(double));
-
+  double* kernel =NULL;
   switch (context_->smoothFunction()) {
   case Context::BOXCAR:
-    boxcar(kernel,r);
+    kernel = boxcar(r);
     break;
   case Context::TOPHAT:
-    tophat(kernel,r);
+    kernel = tophat(r);
     break;
   case Context::GAUSSIAN:
-    gaussian(kernel,r,ss);
+    kernel = gaussian(r,ss);
     break;
   case Context::ELLIPTIC:
-    elliptic(kernel,r,mm,ss,sm,aa);
+    kernel = elliptic(r,mm,ss,sm,aa);
     break;
   }
 

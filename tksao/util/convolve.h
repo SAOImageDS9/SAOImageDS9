@@ -5,10 +5,10 @@
 #ifndef __convolve_h__
 #define __convolve_h__
 
-void boxcar(double* kernel, int r);
-void tophat(double* kernel, int r);
-void gaussian(double* kernel, int r, double sigma);
-void elliptic(double* kernel, int r, int m, double ss, double sm, double aa);
+double* boxcar(int r);
+double* tophat(int r);
+double* gaussian(int r, double sigma);
+double* elliptic(int r, int m, double ss, double sm, double aa);
 
 void* convolve(double* kernel, double* src, double* dest,
 	       int xmin, int ymin, int xmax, int ymax, int width, int k);

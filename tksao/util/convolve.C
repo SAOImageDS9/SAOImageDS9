@@ -11,10 +11,13 @@ using namespace std;
 
 #include "convolve.h"
 
-void boxcar(double* kernel, int k)
+double* boxcar(int k)
 {
   int kk = 2*k+1;
   int kk2 = kk*kk;
+
+  double* kernel = new double[kk*kk];
+  memset(kernel, 0, kk*kk*sizeof(double));
 
   for (int yy=-k; yy<=k; yy++)
     for (int xx=-k; xx<=k; xx++)
@@ -24,14 +27,17 @@ void boxcar(double* kernel, int k)
   for (int ii=0; ii<kk2; ii++)
     kernel[ii] /= kk2;
 
-  //  dumpKernel(kernel, k);
+  return kernel;
 }
 
-void tophat(double* kernel, int k)
+double* tophat(int k)
 {
-  int k2 = k*k;
   int kk = 2*k+1;
+  int k2 = k*k;
   int kk2 = kk*kk;
+
+  double* kernel = new double[kk*kk];
+  memset(kernel, 0, kk*kk*sizeof(double));
 
   int cnt =0;
   for (int yy=-k; yy<=k; yy++)
@@ -46,15 +52,18 @@ void tophat(double* kernel, int k)
     for (int ii=0; ii<kk2; ii++)
       kernel[ii] /= cnt;
 
-  //  dumpKernel(kernel, k);
+  return kernel;
 }
 
-void gaussian(double* kernel, int k, double ss)
+double* gaussian(int k, double ss)
 {
   int kk = 2*k+1;
   int k2 = k*k;
   int kk2 = kk*kk;
   double s2 = ss*ss;
+
+  double* kernel = new double[kk*kk];
+  memset(kernel, 0, kk*kk*sizeof(double));
 
   double tt =0;
   for (int yy=-k; yy<=k; yy++)
@@ -71,15 +80,18 @@ void gaussian(double* kernel, int k, double ss)
     for (int ii=0; ii<kk2; ii++)
       kernel[ii] /= tt;
 
-  // dumpKernel(kernel, k);
+  return kernel;
 }
 
-void elliptic(double* kernel, int k, int rm, double ss, double sm, double aa)
+double* elliptic(int k, int rm, double ss, double sm, double aa)
 {
   int kk = 2*k+1;
   int kk2 = kk*kk;
   double s2 = ss*ss;
   double sm2 = sm*sm;
+
+  double* kernel = new double[kk*kk];
+  memset(kernel, 0, kk*kk*sizeof(double));
 
   double a = cos(aa)*cos(aa)/(2*s2) + sin(aa)*sin(aa)/(2*sm2);
   double b = -sin(2*aa)/(4*s2) + sin(2*aa)/(4*sm2);
@@ -103,7 +115,7 @@ void elliptic(double* kernel, int k, int rm, double ss, double sm, double aa)
     for (int ii=0; ii<kk2; ii++)
       kernel[ii] /= tt;
 
-  // dumpKernel(kernel, k);
+  return kernel;
 }
 
 void dumpKernel(double* kernel, int k)
@@ -121,26 +133,6 @@ void* convolve(double* kernel, double* src, double* dest,
 {
   int kk = 2*k+1;
 
-  if (0) {
-  double* dptr = dest;
-  int height = ymax;
-  for (int jj=0; jj<height; jj++) {
-    for (int ii=0; ii<width; ii++, dptr++) {
-
-      for (int nn=jj-k, qq=0; nn<=jj+k; nn++, qq++) {
-	if (nn>=0 && nn<height) {
-	  register int nd = nn*width;
-	  register int qd = qq*kk;
-	  for (int mm=ii-k, pp=0; mm<=ii+k; mm++, pp++) {
-	    if (mm>=0 && mm<width)
-	      *dptr += src[nd+mm]*kernel[qd+pp];
-	  }
-	}
-      }
-    }
-  }
-  }
-  else {
   for (int jj=ymin; jj<ymax; jj++) {
     for (int ii=xmin; ii<xmax; ii++) {
       register int dd = jj*width+ii;
@@ -155,7 +147,6 @@ void* convolve(double* kernel, double* src, double* dest,
 	}
       }
     }
-  }
   }
 
   return NULL;

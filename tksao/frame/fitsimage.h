@@ -18,18 +18,6 @@
 #define MULTWCSA 28
 
 typedef struct {
-  double* kernel;
-  double* src;
-  double* dest;
-  int xmin;
-  int ymin;
-  int xmax;
-  int ymax;
-  int width;
-  int r;
-} t_smooth_arg;
-
-typedef struct {
   FitsFile* base;
   FitsData* basedata;
   FitsFile* block;
@@ -146,7 +134,7 @@ class FitsImage {
  protected:
   void reset();
   Vector getHistCenter();
-  void smooth(pthread_t*, t_smooth_arg*);
+  void smooth(pthread_t*, void*);
   void process(const char*, int);
   void initCompress();
   void initNRRD();
@@ -289,7 +277,7 @@ class FitsImage {
   void setContext(Context* cx) {context_ = cx;}
 
   void load();
-  void analysis(int, pthread_t*, t_smooth_arg*);
+  void analysis(int, pthread_t*, void*);
   void block();
   void block(pthread_t*);
 

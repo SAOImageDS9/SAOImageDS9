@@ -17,6 +17,7 @@
 #include "socket.h"
 #include "socketgz.h"
 #include "var.h"
+#include "convolve.h"
 
 #include "head.h"
 
@@ -115,7 +116,7 @@ void Context::analysis()
   if (thread_)
     delete [] thread_;
   thread_ = new pthread_t[parent_->nthreads_];
-  t_smooth_arg* targ = new t_smooth_arg[parent_->nthreads_];
+  t_convolve_arg* targ = new t_convolve_arg[parent_->nthreads_];
 
   int cnt =0;
   FitsImage* ptr = fits;

@@ -62,9 +62,9 @@ void* convolveThread(void* vv)
 
 void FitsImage::smooth(pthread_t* thread, t_smooth_arg* targ)
 {
+  FitsBound* params = getDataParams(context_->secMode());
   int width = analysis_->head()->naxis(0);
   int height = analysis_->head()->naxis(1);
-  FitsBound* params = getDataParams(context_->secMode());
 
   // src
   double* src = new double[width*height];

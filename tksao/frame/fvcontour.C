@@ -204,15 +204,15 @@ void FVContour::unity(FitsImage* fits)
   }
   CLEARSIGBUS
 
-  // do contours
+  // contours
   build(width, height, img, fits->dataToRef);
-
-  // clean up
   delete [] img;
 }
 
 void FVContour::nobin(FitsImage* fits)
 {
+  FitsBound* params =
+    fits->getDataParams(((Base*)parent_)->currentContext->secMode());
   long width = fits->width();
   long height = fits->height();
 
@@ -239,9 +239,6 @@ void FVContour::nobin(FitsImage* fits)
   for (long ii=0; ii<size; ii++)
     src[ii] = FLT_MIN;
 
-  FitsBound* params = 
-    fits->getDataParams(((Base*)parent_)->currentContext->secMode());
-
   SETSIGBUS
     for(long jj=params->ymin; jj<params->ymax; jj++) {
       for(long ii=params->xmin; ii<params->xmax; ii++) {
@@ -257,12 +254,10 @@ void FVContour::nobin(FitsImage* fits)
 	     params->xmin, params->ymin, params->xmax, params->ymax,
 	     width, r);
   delete [] src;
+  delete [] kernel;
   
-  // now, do contours
+  // contours
   build(width, height, img, fits->dataToRef);
-
-  // cleanup
-  delete kernel;
   delete [] img;
 }
 
@@ -319,14 +314,13 @@ void FVContour::bin(FitsImage* fits)
   for (long kk=0; kk<w2*h2; kk++)
     if (count[kk])
       img[kk] /= count[kk];
-
   CLEARSIGBUS
 
   delete [] count;
 
+  // contours
   Matrix w = n * fits->dataToRef;
   build(w2, h2, img, w);
-
   delete [] img;
 }
 

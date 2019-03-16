@@ -194,7 +194,6 @@ void FVContour::unity(FitsImage* fits, pthread_t* thread, void* targ)
   long height = fits->height();
   Matrix mm = fits->dataToRef;
 
-  // blank img
   long size = width*height;
   double* dest = new double[size];
   if (!dest) {
@@ -204,12 +203,10 @@ void FVContour::unity(FitsImage* fits, pthread_t* thread, void* targ)
   for (long ii=0; ii<size; ii++)
     dest[ii] = FLT_MIN;
 
-  // fill img
   SETSIGBUS
   for(long jj=params->ymin; jj<params->ymax; jj++) {
     for(long ii=params->xmin; ii<params->xmax; ii++) {
       long kk = jj*width + ii;
-
       double vv = fits->getValueDouble(kk);
       if (isfinite(vv))
 	dest[kk] = vv;
@@ -255,16 +252,7 @@ void FVContour::smooth(FitsImage* fits, pthread_t* thread, void* targ)
   long height = fits->height();
   Matrix mm = fits->dataToRef;
 
-  // blank img
   long size = width*height;
-  double* dest = new double[size];
-  if (!dest) {
-    internalError("FVContour could not allocate enough memory");
-    return;
-  }
-  for (long ii=0; ii<size; ii++)
-    dest[ii] = FLT_MIN;
-
   double* src = new double[size];
   if (!src) {
     internalError("FVContour could not allocate enough memory");
@@ -273,15 +261,23 @@ void FVContour::smooth(FitsImage* fits, pthread_t* thread, void* targ)
   for (long ii=0; ii<size; ii++)
     src[ii] = FLT_MIN;
 
+  double* dest = new double[size];
+  if (!dest) {
+    internalError("FVContour could not allocate enough memory");
+    return;
+  }
+  for (long ii=0; ii<size; ii++)
+    dest[ii] = FLT_MIN;
+
   SETSIGBUS
-    for(long jj=params->ymin; jj<params->ymax; jj++) {
-      for(long ii=params->xmin; ii<params->xmax; ii++) {
-	long kk = jj*width + ii;
-	double vv = fits->getValueDouble(kk);
-	if (isfinite(vv))
-	  src[kk] = vv;
-      }
+  for(long jj=params->ymin; jj<params->ymax; jj++) {
+    for(long ii=params->xmin; ii<params->xmax; ii++) {
+      long kk = jj*width + ii;
+      double vv = fits->getValueDouble(kk);
+      if (isfinite(vv))
+	src[kk] = vv;
     }
+  }
   CLEARSIGBUS
 
   // generate kernel
@@ -322,33 +318,37 @@ void FVContour::block(FitsImage* fits, pthread_t* thread, void* targ)
   long width = fits->width();
   long height = fits->height();
 
-  int rr = smooth_;
-
-  long w2 = (long)(width/rr);
-  long h2 = (long)(height/rr);
+  long w2 = (long)(width/smooth_);
+  long h2 = (long)(height/smooth_);
 
   Matrix m = 
     Translate((Vector(-width,-height)/2).floor()) * 
-    Scale(1./rr) * 
+    Scale(1./smooth_) * 
     Translate((Vector(w2,h2)/2).floor());
   Matrix n = m.invert();
-  double* mm = m.mm();
+  double* mx = m.mm();
 
-  double* dest = new double[w2 * h2];
-  {
-    for (long jj=0; jj<h2; jj++)
-      for (long ii=0; ii<w2; ii++)
-	dest[jj*w2 + ii] = FLT_MIN;
+  long size = w2*h2;
+  double* dest = new double[size];
+  if (!dest) {
+    internalError("FVContour could not allocate enough memory");
+    return;
   }
+  for (long ii=0; ii<size; ii++)
+    dest[size] = FLT_MIN;
 
-  short* count = new short[w2 * h2];
-  memset(count, 0, w2*h2*sizeof(short));
+  short* count = new short[size];
+  if (!count) {
+    internalError("FVContour could not allocate enough memory");
+    return;
+  }
+  memset(count, 0, size*sizeof(short));
 
   SETSIGBUS
   for (long jj=params->ymin; jj<params->ymax; jj++) {
     for (long ii=params->xmin; ii<params->xmax; ii++) {
-      double xx = ii*mm[0] + jj*mm[3] + mm[6];
-      double yy = ii*mm[1] + jj*mm[4] + mm[7];
+      double xx = ii*mx[0] + jj*mx[3] + mx[6];
+      double yy = ii*mx[1] + jj*mx[4] + mx[7];
 
       if (xx >= 0 && xx < w2 && yy >= 0 && yy < h2) {
 	long kk = (long(yy)*w2 + long(xx));
@@ -364,16 +364,15 @@ void FVContour::block(FitsImage* fits, pthread_t* thread, void* targ)
       }
     }
   }
-
-  for (long kk=0; kk<w2*h2; kk++)
-    if (count[kk])
-      dest[kk] /= count[kk];
   CLEARSIGBUS
 
+  for (long kk=0; kk<size; kk++)
+    if (count[kk])
+      dest[kk] /= count[kk];
   delete [] count;
 
   // contours
-  Matrix w = n * fits->dataToRef;
+  Matrix mm = n * fits->dataToRef;
   t_fvcontour_arg* tt = (t_fvcontour_arg*)targ;
   tt->kernel = NULL;
   tt->src = NULL;
@@ -385,7 +384,7 @@ void FVContour::block(FitsImage* fits, pthread_t* thread, void* targ)
   tt->width = w2;
   tt->height = h2;
   tt->r = 0;
-  tt->mm = &w;
+  tt->mm = &mm;
   tt->fv = this;
 
   int result = pthread_create(thread, NULL, fvBlockThread, targ);

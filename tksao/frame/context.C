@@ -398,8 +398,7 @@ void Context::contourCreateFV(const char* color, int width, int dash,
     fvcontour_.append(ptr, &thread_[cnt], &targ[cnt]);
 
     cnt++;
-    //    if (cnt == parent_->nthreads_) {
-    if (cnt == 1) {
+    if (cnt == parent_->nthreads_) {
       for (int ii=0; ii<cnt; ii++) {
 	int rr = pthread_join(thread_[ii], NULL);
 	if (rr)

@@ -10,13 +10,23 @@
 #include "frscale.h"
 #include "inversescale.h"
 
+typedef struct {
+  double* kernel;
+  double* src;
+  double* dest;
+  int xmin;
+  int ymin;
+  int xmax;
+  int ymax;
+  int width;
+  int r;
+} t_fvcontour_arg;
+
 class FVContour {
  public:
   enum Method {SMOOTH, BLOCK};
 
  private:
-  enum {top, right, bottom, left, none};
-
   Base* parent_;
   List<ContourLevel> lcontourlevel_;
 
@@ -37,11 +47,13 @@ class FVContour {
   void buildScale(FitsImage* fits);
   void unity(FitsImage*);
   void bin(FitsImage*);
-  void nobin(FitsImage*);
+  void nobin(FitsImage*, pthread_t* thread, void* targ);
+  /*
   void build(long xdim, long ydim, double *image, Matrix&);
   void trace(long xdim, long ydim, double cntr,
 	     long xCell, long yCell, int side,
 	     double** rows, char* useGrid, Matrix&, ContourLevel*);
+  */
 
 public:
   FVContour();
@@ -56,7 +68,7 @@ public:
   void update(FitsImage*);
   void update(FitsImage*, FrScale*);
 
-  void append(FitsImage*);
+  void append(FitsImage*, pthread_t* thread, void* targ);
 
   int isEmpty() {return lcontourlevel_.isEmpty();}
 

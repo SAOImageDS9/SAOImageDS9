@@ -20,6 +20,17 @@ static const char* methodName_[] = {
     "block"
   };
 
+enum Edge {TOP, RIGHT, BOTTOM, LEFT, NONE};
+
+static void build(long xdim, long ydim, double *image, Matrix& mx,
+		  Base* parent, List<ContourLevel>* lcontourlevel,
+		  InverseScale* scale, 
+		  char* colorName, int lineWidth, int dash, int* dlist);
+static void trace(long xdim, long ydim, double cntr,
+		  long xCell, long yCell, int side, 
+		  double** rows, char* usedGrid, 
+		  Matrix& mx, ContourLevel* cl);
+
 // It is a modified version of contour code found in Fv 2.4
 // Fv may be obtained from the HEASARC (High Energy Astrophysics Science
 // Archive Research Center) FTOOLS Web site at:
@@ -91,8 +102,6 @@ void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
   }
   else
     buildScale(fits);
-
-  append(fits);
 }
 
 void FVContour::buildScale(FitsImage* fits)
@@ -151,7 +160,7 @@ void FVContour::update(FitsImage* fits)
     break;
   }
 
-  append(fits);
+  //  append(fits);
 }
 
 const char* FVContour::methodName()
@@ -159,14 +168,14 @@ const char* FVContour::methodName()
   return methodName_[method_];
 }
 
-void FVContour::append(FitsImage* fits)
+void FVContour::append(FitsImage* fits, pthread_t* thread, void* targ)
 {
   if (smooth_ == 1)
     unity(fits);
   else
     switch (method_) {
     case SMOOTH:
-      nobin(fits);
+      nobin(fits, thread, targ);
       break;
     case BLOCK:
       bin(fits);
@@ -205,11 +214,12 @@ void FVContour::unity(FitsImage* fits)
   CLEARSIGBUS
 
   // contours
-  build(width, height, img, fits->dataToRef);
+    build(width, height, img, fits->dataToRef, parent_, &lcontourlevel_, scale_,
+	colorName_, lineWidth_, dash_, dlist_);
   delete [] img;
 }
 
-void FVContour::nobin(FitsImage* fits)
+void FVContour::nobin(FitsImage* fits, pthread_t* thread, void* targ)
 {
   FitsBound* params =
     fits->getDataParams(((Base*)parent_)->currentContext->secMode());
@@ -250,17 +260,42 @@ void FVContour::nobin(FitsImage* fits)
     }
   CLEARSIGBUS
 
-  ::convolve(kernel, src, img,
-	     params->xmin, params->ymin, params->xmax, params->ymax,
-	     width, r);
+  // convolve
+  t_fvcontour_arg* tt = (t_fvcontour_arg*)targ;
+  tt->kernel = kernel;
+  tt->src = src;
+  tt->dest = img;
+  tt->xmin = params->xmin;
+  tt->xmax = params->xmax;
+  tt->ymin = params->ymin;
+  tt->ymax = params->ymax;
+  tt->width = width;
+  tt->r = r;
+
+  //  int result = pthread_create(thread, NULL, FVContourThread, targ);
+  //  if (result)
+  //    internalError("Unable to Create Thread");
+
+  convolve(tt->kernel, tt->src, tt->dest,
+	   tt->xmin, tt->ymin, tt->xmax, tt->ymax,
+	   tt->width, tt->r);
+  build(width, height, img, fits->dataToRef, parent_, &lcontourlevel_, scale_,
+	colorName_, lineWidth_, dash_, dlist_);
+
   delete [] src;
-  delete [] kernel;
-  
-  // contours
-  build(width, height, img, fits->dataToRef);
   delete [] img;
+  delete [] kernel;
 }
 
+/*
+void* fvcontourThread(void*vv)
+{
+  t_fvcontour_arg* tt = (t_fvcontour_arg*)vv;
+  convolve(tt->kernel, tt->src, tt->dest,
+   	   tt->xmin, tt->ymin, tt->xmax, tt->ymax, tt->width, tt->r);
+  return NULL;
+}
+*/
 void FVContour::bin(FitsImage* fits)
 {
   FitsBound* params = 
@@ -320,11 +355,16 @@ void FVContour::bin(FitsImage* fits)
 
   // contours
   Matrix w = n * fits->dataToRef;
-  build(w2, h2, img, w);
+  build(w2, h2, img, w,
+	parent_, &lcontourlevel_, scale_,
+	colorName_, lineWidth_, dash_, dlist_);
   delete [] img;
 }
 
-void FVContour::build(long xdim, long ydim, double *image, Matrix& mx)
+void build(long xdim, long ydim, double *image, Matrix& mx,
+	   Base* parent, List<ContourLevel>* lcontourlevel,
+	   InverseScale* scale, 
+	   char* colorName, int lineWidth, int dash, int* dlist)
 {
   long nelem = xdim*ydim;
   char* usedGrid = new char[nelem];
@@ -333,11 +373,11 @@ void FVContour::build(long xdim, long ydim, double *image, Matrix& mx)
   for (long jj=0; jj<ydim; jj++)
     rows[jj] = image + jj*xdim;
 
-  for (long c=0; c<scale_->size(); c++) {
-    double cntour = scale_->level(c);
+  for (long c=0; c<scale->size(); c++) {
+    double cntour = scale->level(c);
 
-    ContourLevel* cl =new ContourLevel(parent_, cntour, colorName_, lineWidth_, 
-				       dash_, dlist_);
+    ContourLevel* cl =new ContourLevel(parent, cntour, colorName, lineWidth, 
+				       dash, dlist);
     memset(usedGrid,0,nelem);
 
     //  Search outer edge
@@ -346,22 +386,22 @@ void FVContour::build(long xdim, long ydim, double *image, Matrix& mx)
     //  Search top
     for (jj=0, ii=0; ii<xdim-1; ii++)
       if (rows[jj][ii]<cntour && cntour<=rows[jj][ii+1])
-	trace(xdim, ydim, cntour, ii, jj, top, rows, usedGrid, mx, cl);
+	trace(xdim, ydim, cntour, ii, jj, TOP, rows, usedGrid, mx, cl);
 
     //  Search right
     for (jj=0; jj<ydim-1; jj++)
       if (rows[jj][ii]<cntour && cntour<=rows[jj+1][ii])
-	trace(xdim, ydim, cntour, ii-1, jj, right, rows, usedGrid, mx, cl);
+	trace(xdim, ydim, cntour, ii-1, jj, RIGHT, rows, usedGrid, mx, cl);
 
     //  Search Bottom
     for (ii--; ii>=0; ii--)
       if (rows[jj][ii+1]<cntour && cntour<=rows[jj][ii])
-	trace(xdim, ydim, cntour, ii, jj-1, bottom, rows, usedGrid, mx, cl);
+	trace(xdim, ydim, cntour, ii, jj-1, BOTTOM, rows, usedGrid, mx, cl);
 
     //  Search Left
     for (ii=0, jj--; jj>=0; jj--)
       if (rows[jj+1][ii]<cntour && cntour<=rows[jj][ii])
-	trace(xdim, ydim, cntour, ii, jj, left, rows, usedGrid, mx, cl);
+	trace(xdim, ydim, cntour, ii, jj, LEFT, rows, usedGrid, mx, cl);
 
     //  Search each row of the image
     for (jj=1; jj<ydim-1; jj++)
@@ -369,20 +409,20 @@ void FVContour::build(long xdim, long ydim, double *image, Matrix& mx)
 	if (!usedGrid[jj*xdim + ii] && 
 	    rows[jj][ii]<cntour && 
 	    cntour<=rows[jj][ii+1])
-	  trace(xdim, ydim, cntour, ii, jj, top, rows, usedGrid, mx, cl);
+	  trace(xdim, ydim, cntour, ii, jj, TOP, rows, usedGrid, mx, cl);
 
     if (!cl->lcontour().isEmpty())
-      lcontourlevel_.append(cl);
+      lcontourlevel->append(cl);
   }
 
   delete [] usedGrid;
   delete [] rows;
 }
 
-void FVContour::trace(long xdim, long ydim, double cntr,
-		      long xCell, long yCell, int side, 
-		      double** rows, char* usedGrid, 
-		      Matrix& mx, ContourLevel* cl)
+void trace(long xdim, long ydim, double cntr,
+	   long xCell, long yCell, int side, 
+	   double** rows, char* usedGrid, 
+	   Matrix& mx, ContourLevel* cl)
 {
   long ii = xCell;
   long jj = yCell;
@@ -404,19 +444,19 @@ void FVContour::trace(long xdim, long ydim, double cntr,
     if (init) {
       init = 0;
       switch (side) {
-      case top:
+      case TOP:
 	X = (cntr-a) / (b-a) + ii;
 	Y = jj;
 	break;
-      case right:
+      case RIGHT:
 	X = ii+1;
 	Y = (cntr-b) / (c-b) + jj;
 	break;
-      case bottom:
+      case BOTTOM:
 	X = (cntr-c) / (d-c) + ii;
 	Y = jj+1;
 	break;
-      case left:
+      case LEFT:
 	X = ii;
 	Y = (cntr-a) / (d-a) + jj;
 	break;
@@ -424,15 +464,15 @@ void FVContour::trace(long xdim, long ydim, double cntr,
 
     }
     else {
-      if (side==top)
+      if (side==TOP)
 	usedGrid[jj*xdim + ii] = 1;
 
       do {
-	if (++side == none)
-	  side = top;
+	if (++side == NONE)
+	  side = TOP;
 
 	switch (side) {
-	case top:
+	case TOP:
 	  if (a>=cntr && cntr>b) {
 	    flag = 1;
 	    X = (cntr-a) / (b-a) + ii;
@@ -440,7 +480,7 @@ void FVContour::trace(long xdim, long ydim, double cntr,
 	    jj--;
 	  }
 	  break;
-	case right:
+	case RIGHT:
 	  if( b>=cntr && cntr>c ) {
 	    flag = 1;
 	    X = ii+1;
@@ -448,7 +488,7 @@ void FVContour::trace(long xdim, long ydim, double cntr,
 	    ii++;
 	  }
 	  break;
-	case bottom:
+	case BOTTOM:
 	  if( c>=cntr && cntr>d ) {
 	    flag = 1;
 	    X = (cntr-d) / (c-d) + ii;
@@ -456,7 +496,7 @@ void FVContour::trace(long xdim, long ydim, double cntr,
 	    jj++;
 	  }
 	  break;
-	case left:
+	case LEFT:
 	  if( d>=cntr && cntr>a ) {
 	    flag = 1;
 	    X = ii;
@@ -467,10 +507,10 @@ void FVContour::trace(long xdim, long ydim, double cntr,
 	}
       } while (!flag);
 
-      if (++side == none)
-	side = top;
-      if (++side == none)
-	side = top;
+      if (++side == NONE)
+	side = TOP;
+      if (++side == NONE)
+	side = TOP;
       if (ii==xCell && jj==yCell && side==origSide)
 	done = 1;
       if (ii<0 || ii>=xdim-1 || jj<0 || jj>=ydim-1)
@@ -485,4 +525,3 @@ void FVContour::trace(long xdim, long ydim, double cntr,
   else
     delete cc;
 }
-

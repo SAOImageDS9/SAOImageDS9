@@ -116,7 +116,7 @@ void Context::analysis()
   if (thread_)
     delete [] thread_;
   thread_ = new pthread_t[parent_->nthreads_];
-  t_convolve_arg* targ = new t_convolve_arg[parent_->nthreads_];
+  t_smooth_arg* targ = new t_smooth_arg[parent_->nthreads_];
 
   int cnt =0;
   FitsImage* ptr = fits;
@@ -382,21 +382,59 @@ void Context::contourCreateFV(const char* color, int width, int dash,
   fr.setLow(low);
   fr.setHigh(high);
 
-  if (!isMosaic()) {
-    if (cfits)
-      fvcontour_.create(parent_, cfits, &fr, color, width, dash, method, numlevel, smooth, level);
-  }
-  else {
-    if (fits) {
-      fvcontour_.create(parent_, fits, &fr, color, width, dash, method, numlevel, smooth, level);
+  FitsImage* ptr = isMosaic() ? fits : cfits;
+  if (!ptr)
+    return;
+  
+  if (thread_)
+    delete [] thread_;
+  thread_ = new pthread_t[parent_->nthreads_];
+  t_fvcontour_arg* targ = new t_fvcontour_arg[parent_->nthreads_];
 
-      FitsImage* ptr = fits->nextMosaic();
-      while (ptr) {
-	fvcontour_.append(ptr);
-	ptr = ptr->nextMosaic();
+  fvcontour_.create(parent_, ptr, &fr,
+		    color, width, dash, method, numlevel, smooth, level);
+  int cnt =0;
+  while (ptr) {
+    fvcontour_.append(ptr, &thread_[cnt], &targ[cnt]);
+    /*
+    cnt++;
+    if (cnt == parent_->nthreads_) {
+      for (int ii=0; ii<cnt; ii++) {
+	int rr = pthread_join(thread_[ii], NULL);
+	if (rr)
+	  internalError("Unable to Join Thread");
+
+	if (targ[ii].kernel)
+	  delete [] targ[ii].kernel;
+	if (targ[ii].src)
+	  delete [] targ[ii].src;
+	if (targ[ii].dest)
+	  delete [] targ[ii].dest;
       }
+      cnt =0;
     }
+    */
+    ptr = ptr->nextMosaic();
   }
+
+  /*
+  for (int ii=0; ii<cnt; ii++) {
+    int rr = pthread_join(thread_[ii], NULL);
+    if (rr)
+      internalError("Unable to Join Thread");
+
+    if (targ[ii].kernel)
+      delete [] targ[ii].kernel;
+    if (targ[ii].src)
+      delete [] targ[ii].src;
+    if (targ[ii].dest)
+      delete [] targ[ii].dest;
+  }
+  */
+  
+  delete [] targ;
+  delete [] thread_;
+  thread_ =NULL;
 
   hasContour_ =1;
 }

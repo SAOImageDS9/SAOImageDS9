@@ -42,6 +42,14 @@ void FitsImage::analysis(int which, pthread_t* thread, void* targ)
   data_ = analysisdata_;
 }
 
+static void* smoothThread(void* vv)
+{
+  t_smooth_arg* tt = (t_smooth_arg*)vv;
+  convolve(tt->kernel, tt->src, tt->dest,
+ 	   tt->xmin, tt->ymin, tt->xmax, tt->ymax, tt->width, tt->r);
+  return NULL;
+}
+
 void FitsImage::smooth(pthread_t* thread, void* targ)
 {
   FitsBound* params = getDataParams(context_->secMode());
@@ -78,7 +86,7 @@ void FitsImage::smooth(pthread_t* thread, void* targ)
   }
 
   // convolve
-  t_convolve_arg* tt = (t_convolve_arg*)targ;
+  t_smooth_arg* tt = (t_smooth_arg*)targ;
   tt->kernel = kernel;
   tt->src = src;
   tt->dest = dest;
@@ -89,7 +97,7 @@ void FitsImage::smooth(pthread_t* thread, void* targ)
   tt->width = width;
   tt->r = context_->smoothRadius();
 
-  int result = pthread_create(thread, NULL, convolveThread, targ);
+  int result = pthread_create(thread, NULL, smoothThread, targ);
   if (result)
     internalError("Unable to Create Thread");
 }

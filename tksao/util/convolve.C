@@ -83,14 +83,6 @@ double* gaussian(int k, double ss)
   return kernel;
 }
 
-void* convolveThread(void* vv)
-{
-  t_convolve_arg* tt = (t_convolve_arg*)vv;
-  convolve(tt->kernel, tt->src, tt->dest,
- 	   tt->xmin, tt->ymin, tt->xmax, tt->ymax, tt->width, tt->r);
-  return NULL;
-}
-
 double* elliptic(int k, int rm, double ss, double sm, double aa)
 {
   int kk = 2*k+1;

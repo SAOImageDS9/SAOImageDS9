@@ -18,6 +18,18 @@
 #define MULTWCSA 28
 
 typedef struct {
+  double* kernel;
+  double* src;
+  double* dest;
+  int xmin;
+  int ymin;
+  int xmax;
+  int ymax;
+  int width;
+  int r;
+} t_smooth_arg;
+
+typedef struct {
   FitsFile* base;
   FitsData* basedata;
   FitsFile* block;

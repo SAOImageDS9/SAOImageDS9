@@ -50,15 +50,9 @@ class FVContour {
   InverseScale* scale_;
 
   void buildScale(FitsImage* fits);
-  void unity(FitsImage*);
-  void bin(FitsImage*);
-  void nobin(FitsImage*, pthread_t* thread, void* targ);
-  /*
-  void build(long xdim, long ydim, double *image, Matrix&);
-  void trace(long xdim, long ydim, double cntr,
-	     long xCell, long yCell, int side,
-	     double** rows, char* useGrid, Matrix&, ContourLevel*);
-  */
+  void unity(FitsImage*, pthread_t* thread, void* targ);
+  void smooth(FitsImage*, pthread_t* thread, void* targ);
+  void block(FitsImage*, pthread_t* thread, void* targ);
 
 public:
   FVContour();

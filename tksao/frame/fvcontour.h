@@ -10,6 +10,8 @@
 #include "frscale.h"
 #include "inversescale.h"
 
+class FVContour;
+
 typedef struct {
   double* kernel;
   double* src;
@@ -19,7 +21,10 @@ typedef struct {
   int xmax;
   int ymax;
   int width;
+  int height;
   int r;
+  Matrix* mm;
+  FVContour* fv;
 } t_fvcontour_arg;
 
 class FVContour {
@@ -59,7 +64,6 @@ public:
   FVContour();
   ~FVContour();
 
-  List<ContourLevel>& lcontourlevel() {return lcontourlevel_;}
 
   void create(Base*, FitsImage*, FrScale*, 
 	      const char*, int, int, 
@@ -72,16 +76,22 @@ public:
 
   int isEmpty() {return lcontourlevel_.isEmpty();}
 
+  Base* parent() {return parent_;}
+  List<ContourLevel>& lcontourlevel() {return lcontourlevel_;}
+
+  const char* colorName() {return colorName_;}
+  int lineWidth() {return lineWidth_;}
+  int dash() {return dash_;}
+  int* dlist() {return dlist_;}
+
   const char* methodName();
-  char* level() {return level_;}
   int numLevel() {return numLevel_;}
   int smooth() {return smooth_;}
 
   FrScale* frScale() {return &frScale_;}
 
-  const char* getColorName() {return colorName_;}
-  int getDash() {return dash_;}
-  int getLineWidth() {return lineWidth_;}
+  InverseScale* scale() {return scale_;}
+  char* level() {return level_;}
 };
 
 #endif

@@ -49,6 +49,7 @@ class FVContour {
 
   char* level_;
   InverseScale* scale_;
+  double* kernel_;
 
   void buildScale(FitsImage* fits);
   void unity(FitsImage*, pthread_t* thread, void* targ);
@@ -58,7 +59,6 @@ class FVContour {
 public:
   FVContour();
   ~FVContour();
-
 
   void create(Base*, FitsImage*, FrScale*, 
 	      const char*, int, int, 

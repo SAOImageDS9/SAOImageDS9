@@ -52,6 +52,7 @@ FVContour::FVContour()
 
   level_ =NULL;
   scale_ =NULL;
+  kernel_ =NULL;
 }
 
 FVContour::~FVContour()
@@ -64,6 +65,9 @@ FVContour::~FVContour()
 
   if (scale_)
     delete scale_;
+
+  if (kernel_)
+    delete [] kernel_;
 }
 
 void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
@@ -82,7 +86,6 @@ void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
   method_ = mm;
   smooth_ = rr;
   numLevel_ = nn;
-
   frScale_ = *fr;
 
   level_ = dupstr(ll);
@@ -100,6 +103,11 @@ void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
   }
   else
     buildScale(fits);
+
+  // generate kernel
+  if (kernel_)
+    delete [] kernel_;
+  kernel_ = gaussian(smooth_-1, (smooth_-1)/2.);
 }
 
 void FVContour::buildScale(FitsImage* fits)
@@ -289,13 +297,9 @@ void FVContour::smooth(FitsImage* fits, pthread_t* thread, void* targ)
   }
   CLEARSIGBUS
 
-  // generate kernel
-  int r = smooth_-1;
-  double* kernel = ::gaussian(r, r/2.);
-
   // convolve
   t_fvcontour_arg* tt = (t_fvcontour_arg*)targ;
-  tt->kernel = kernel;
+  tt->kernel = kernel_;
   tt->src = src;
   tt->dest = dest;
   tt->xmin = params->xmin;
@@ -304,7 +308,7 @@ void FVContour::smooth(FitsImage* fits, pthread_t* thread, void* targ)
   tt->ymax = params->ymax;
   tt->width = width;
   tt->height = height;
-  tt->r = r;
+  tt->r = smooth_-1;
   tt->mm = mm;
   tt->fv = this;
   tt->lcl = new List<ContourLevel>;

@@ -408,8 +408,6 @@ void Context::contourCreateFV(const char* color, int width, int dash,
 
 	if (targ[ii].lcl)
 	  delete targ[ii].lcl;
-	if (targ[ii].kernel)
-	  delete [] targ[ii].kernel;
 	if (targ[ii].src)
 	  delete [] targ[ii].src;
 	if (targ[ii].dest)
@@ -431,8 +429,6 @@ void Context::contourCreateFV(const char* color, int width, int dash,
 
     if (targ[ii].lcl)
       delete targ[ii].lcl;
-    if (targ[ii].kernel)
-      delete [] targ[ii].kernel;
     if (targ[ii].src)
       delete [] targ[ii].src;
     if (targ[ii].dest)
@@ -2703,8 +2699,6 @@ void Context::updateContours()
 
   if (targ[0].lcl)
     delete targ[0].lcl;
-  if (targ[0].kernel)
-    delete [] targ[0].kernel;
   if (targ[0].src)
     delete [] targ[0].src;
   if (targ[0].dest)

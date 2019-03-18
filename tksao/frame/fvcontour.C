@@ -22,12 +22,12 @@ static const char* methodName_[] = {
 
 enum Edge {TOP, RIGHT, BOTTOM, LEFT, NONE};
 
-static void build(long xdim, long ydim, double *image, Matrix* mx,
-		  FVContour* fv);
+static void build(long xdim, long ydim, double *image, Matrix& mx,
+		  FVContour* fv, List<ContourLevel>* lcl);
 static void trace(long xdim, long ydim, double cntr,
 		  long xCell, long yCell, int side, 
 		  double** rows, char* usedGrid, 
-		  Matrix* mx, ContourLevel* cl);
+		  Matrix& mx, ContourLevel* cl);
 
 // It is a modified version of contour code found in Fv 2.4
 // Fv may be obtained from the HEASARC (High Energy Astrophysics Science
@@ -164,6 +164,14 @@ const char* FVContour::methodName()
   return methodName_[method_];
 }
 
+void FVContour::append(List<ContourLevel> *lcl)
+{
+  while (lcl->head()) {
+    ContourLevel* ncl = lcl->extract();
+    lcontourlevel_.append(ncl);
+  }
+}
+
 void FVContour::append(FitsImage* fits, pthread_t* thread, void* targ)
 {
   if (smooth_ == 1)
@@ -182,7 +190,7 @@ void FVContour::append(FitsImage* fits, pthread_t* thread, void* targ)
 static void* fvUnityThread(void*vv)
 {
   t_fvcontour_arg* tt = (t_fvcontour_arg*)vv;
-  build(tt->width, tt->height, tt->dest, tt->mm, tt->fv);
+  build(tt->width, tt->height, tt->dest, tt->mm, tt->fv, tt->lcl);
   return NULL;
 }
 
@@ -219,15 +227,16 @@ void FVContour::unity(FitsImage* fits, pthread_t* thread, void* targ)
   tt->kernel = NULL;
   tt->src = NULL;
   tt->dest = dest;
-  tt->xmin = params->xmin;
-  tt->xmax = params->xmax;
-  tt->ymin = params->ymin;
-  tt->ymax = params->ymax;
+  tt->xmin = 0;
+  tt->xmax = 0;
+  tt->ymin = 0;
+  tt->ymax = 0;
   tt->width = width;
   tt->height = height;
   tt->r = 0;
-  tt->mm = &mm;
+  tt->mm = mm;
   tt->fv = this;
+  tt->lcl = new List<ContourLevel>;
 
   int result = pthread_create(thread, NULL, fvUnityThread, targ);
   if (result)
@@ -240,7 +249,7 @@ static void* fvSmoothThread(void*vv)
   convolve(tt->kernel, tt->src, tt->dest,
 	   tt->xmin, tt->ymin, tt->xmax, tt->ymax,
 	   tt->width, tt->r);
-  build(tt->width, tt->height, tt->dest, tt->mm, tt->fv);
+  build(tt->width, tt->height, tt->dest, tt->mm, tt->fv, tt->lcl);
   return NULL;
 }
 
@@ -296,8 +305,9 @@ void FVContour::smooth(FitsImage* fits, pthread_t* thread, void* targ)
   tt->width = width;
   tt->height = height;
   tt->r = r;
-  tt->mm = &mm;
+  tt->mm = mm;
   tt->fv = this;
+  tt->lcl = new List<ContourLevel>;
 
   int result = pthread_create(thread, NULL, fvSmoothThread, targ);
   if (result)
@@ -307,7 +317,7 @@ void FVContour::smooth(FitsImage* fits, pthread_t* thread, void* targ)
 static void* fvBlockThread(void*vv)
 {
   t_fvcontour_arg* tt = (t_fvcontour_arg*)vv;
-  build(tt->width, tt->height, tt->dest, tt->mm, tt->fv);
+  build(tt->width, tt->height, tt->dest, tt->mm, tt->fv, tt->lcl);
   return NULL;
 }
 
@@ -377,22 +387,24 @@ void FVContour::block(FitsImage* fits, pthread_t* thread, void* targ)
   tt->kernel = NULL;
   tt->src = NULL;
   tt->dest = dest;
-  tt->xmin = params->xmin;
-  tt->xmax = params->xmax;
-  tt->ymin = params->ymin;
-  tt->ymax = params->ymax;
+  tt->xmin = 0;
+  tt->xmax = 0;
+  tt->ymin = 0;
+  tt->ymax = 0;
   tt->width = w2;
   tt->height = h2;
   tt->r = 0;
-  tt->mm = &mm;
+  tt->mm = mm;
   tt->fv = this;
+  tt->lcl = new List<ContourLevel>;
 
   int result = pthread_create(thread, NULL, fvBlockThread, targ);
   if (result)
     internalError("Unable to Create Thread");
 }
 
-void build(long xdim, long ydim, double *image, Matrix* mx, FVContour* fv)
+void build(long xdim, long ydim, double *image, Matrix& mx,
+	   FVContour* fv, List<ContourLevel>* lcl)
 {
   long nelem = xdim*ydim;
   char* usedGrid = new char[nelem];
@@ -441,7 +453,8 @@ void build(long xdim, long ydim, double *image, Matrix* mx, FVContour* fv)
 	  trace(xdim, ydim, cntour, ii, jj, TOP, rows, usedGrid, mx, cl);
 
     if (!cl->lcontour().isEmpty())
-      fv->lcontourlevel().append(cl);
+      lcl->append(cl);
+      //      fv->lcontourlevel().append(cl);
   }
 
   delete [] usedGrid;
@@ -451,7 +464,7 @@ void build(long xdim, long ydim, double *image, Matrix* mx, FVContour* fv)
 void trace(long xdim, long ydim, double cntr,
 	   long xCell, long yCell, int side, 
 	   double** rows, char* usedGrid, 
-	   Matrix* mx, ContourLevel* cl)
+	   Matrix& mx, ContourLevel* cl)
 {
   long ii = xCell;
   long jj = yCell;
@@ -546,7 +559,7 @@ void trace(long xdim, long ydim, double cntr,
 	done = 1;
     }
 
-    cc->lvertex().append(new Vertex(Vector(X+.5,Y+.5) * (*mx)));
+    cc->lvertex().append(new Vertex(Vector(X+.5,Y+.5) * mx));
   }
 
   if (!cc->lvertex().isEmpty())

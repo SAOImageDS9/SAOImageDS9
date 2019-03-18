@@ -404,6 +404,10 @@ void Context::contourCreateFV(const char* color, int width, int dash,
 	if (rr)
 	  internalError("Unable to Join Thread");
 
+	fvcontour_.append(targ[ii].lcl);
+
+	if (targ[ii].lcl)
+	  delete targ[ii].lcl;
 	if (targ[ii].kernel)
 	  delete [] targ[ii].kernel;
 	if (targ[ii].src)
@@ -423,6 +427,10 @@ void Context::contourCreateFV(const char* color, int width, int dash,
     if (rr)
       internalError("Unable to Join Thread");
 
+    fvcontour_.append(targ[ii].lcl);
+
+    if (targ[ii].lcl)
+      delete targ[ii].lcl;
     if (targ[ii].kernel)
       delete [] targ[ii].kernel;
     if (targ[ii].src)
@@ -2691,6 +2699,10 @@ void Context::updateContours()
   if (rr)
     internalError("Unable to Join Thread");
 
+  fvcontour_.append(targ[0].lcl);
+
+  if (targ[0].lcl)
+    delete targ[0].lcl;
   if (targ[0].kernel)
     delete [] targ[0].kernel;
   if (targ[0].src)

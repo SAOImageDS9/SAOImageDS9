@@ -23,8 +23,9 @@ typedef struct {
   int width;
   int height;
   int r;
-  Matrix* mm;
+  Matrix mm;
   FVContour* fv;
+  List<ContourLevel>* lcl;
 } t_fvcontour_arg;
 
 class FVContour {
@@ -66,6 +67,7 @@ public:
   void update(FitsImage*);
   void update(FitsImage*, FrScale*);
 
+  void append(List<ContourLevel>*);
   void append(FitsImage*, pthread_t* thread, void* targ);
 
   int isEmpty() {return lcontourlevel_.isEmpty();}

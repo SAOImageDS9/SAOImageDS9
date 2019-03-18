@@ -17,6 +17,7 @@
 #include "socket.h"
 #include "socketgz.h"
 #include "var.h"
+#include "convolve.h"
 
 #include "head.h"
 
@@ -381,21 +382,62 @@ void Context::contourCreateFV(const char* color, int width, int dash,
   fr.setLow(low);
   fr.setHigh(high);
 
-  if (!isMosaic()) {
-    if (cfits)
-      fvcontour_.create(parent_, cfits, &fr, color, width, dash, method, numlevel, smooth, level);
-  }
-  else {
-    if (fits) {
-      fvcontour_.create(parent_, fits, &fr, color, width, dash, method, numlevel, smooth, level);
+  FitsImage* ptr = isMosaic() ? fits : cfits;
+  if (!ptr)
+    return;
+  
+  if (thread_)
+    delete [] thread_;
+  thread_ = new pthread_t[parent_->nthreads_];
+  t_fvcontour_arg* targ = new t_fvcontour_arg[parent_->nthreads_];
 
-      FitsImage* ptr = fits->nextMosaic();
-      while (ptr) {
-	fvcontour_.append(ptr);
-	ptr = ptr->nextMosaic();
+  fvcontour_.create(parent_, ptr, &fr,
+		    color, width, dash, method, numlevel, smooth, level);
+  int cnt =0;
+  while (ptr) {
+    fvcontour_.append(ptr, &thread_[cnt], &targ[cnt]);
+
+    cnt++;
+    if (cnt == parent_->nthreads_) {
+      for (int ii=0; ii<cnt; ii++) {
+	int rr = pthread_join(thread_[ii], NULL);
+	if (rr)
+	  internalError("Unable to Join Thread");
+
+	fvcontour_.append(targ[ii].lcl);
+
+	if (targ[ii].lcl)
+	  delete targ[ii].lcl;
+	if (targ[ii].src)
+	  delete [] targ[ii].src;
+	if (targ[ii].dest)
+	  delete [] targ[ii].dest;
       }
+      cnt =0;
     }
+
+    ptr = ptr->nextMosaic();
   }
+
+
+  for (int ii=0; ii<cnt; ii++) {
+    int rr = pthread_join(thread_[ii], NULL);
+    if (rr)
+      internalError("Unable to Join Thread");
+
+    fvcontour_.append(targ[ii].lcl);
+
+    if (targ[ii].lcl)
+      delete targ[ii].lcl;
+    if (targ[ii].src)
+      delete [] targ[ii].src;
+    if (targ[ii].dest)
+      delete [] targ[ii].dest;
+  }
+  
+  delete [] targ;
+  delete [] thread_;
+  thread_ =NULL;
 
   hasContour_ =1;
 }
@@ -2642,6 +2684,29 @@ void Context::updateContours()
   }
 
   fvcontour_.update(cfits);
+  if (thread_)
+    delete [] thread_;
+  thread_ = new pthread_t[1];
+  t_fvcontour_arg* targ = new t_fvcontour_arg[1];
+
+  fvcontour_.append(cfits, &thread_[0], &targ[0]);
+
+  int rr = pthread_join(thread_[0], NULL);
+  if (rr)
+    internalError("Unable to Join Thread");
+
+  fvcontour_.append(targ[0].lcl);
+
+  if (targ[0].lcl)
+    delete targ[0].lcl;
+  if (targ[0].src)
+    delete [] targ[0].src;
+  if (targ[0].dest)
+    delete [] targ[0].dest;
+  
+  delete [] targ;
+  delete [] thread_;
+  thread_ =NULL;
 }
 
 void Context::updateContours(const Matrix& mx)

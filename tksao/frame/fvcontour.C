@@ -2,10 +2,11 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include "fvcontour.h"
 #include "context.h"
 #include "base.h"
 #include "fitsimage.h"
-#include "fvcontour.h"
+#include "convolve.h"
 
 #include "sigbus.h"
 
@@ -18,6 +19,15 @@ static const char* methodName_[] = {
     "smooth",
     "block"
   };
+
+enum Edge {TOP, RIGHT, BOTTOM, LEFT, NONE};
+
+static void build(long xdim, long ydim, double *image, Matrix& mx,
+		  FVContour* fv, List<ContourLevel>* lcl);
+static void trace(long xdim, long ydim, double cntr,
+		  long xCell, long yCell, int side, 
+		  double** rows, char* usedGrid, 
+		  Matrix& mx, ContourLevel* cl);
 
 // It is a modified version of contour code found in Fv 2.4
 // Fv may be obtained from the HEASARC (High Energy Astrophysics Science
@@ -42,6 +52,7 @@ FVContour::FVContour()
 
   level_ =NULL;
   scale_ =NULL;
+  kernel_ =NULL;
 }
 
 FVContour::~FVContour()
@@ -54,6 +65,9 @@ FVContour::~FVContour()
 
   if (scale_)
     delete scale_;
+
+  if (kernel_)
+    delete [] kernel_;
 }
 
 void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
@@ -72,7 +86,6 @@ void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
   method_ = mm;
   smooth_ = rr;
   numLevel_ = nn;
-
   frScale_ = *fr;
 
   level_ = dupstr(ll);
@@ -91,7 +104,10 @@ void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
   else
     buildScale(fits);
 
-  append(fits);
+  // generate kernel
+  if (kernel_)
+    delete [] kernel_;
+  kernel_ = gaussian(smooth_-1, (smooth_-1)/2.);
 }
 
 void FVContour::buildScale(FitsImage* fits)
@@ -149,8 +165,6 @@ void FVContour::update(FitsImage* fits)
     }
     break;
   }
-
-  append(fits);
 }
 
 const char* FVContour::methodName()
@@ -158,242 +172,243 @@ const char* FVContour::methodName()
   return methodName_[method_];
 }
 
-void FVContour::append(FitsImage* fits)
+void FVContour::append(List<ContourLevel> *lcl)
+{
+  while (lcl->head()) {
+    ContourLevel* ncl = lcl->extract();
+    lcontourlevel_.append(ncl);
+  }
+}
+
+void FVContour::append(FitsImage* fits, pthread_t* thread, void* targ)
 {
   if (smooth_ == 1)
-    unity(fits);
+    unity(fits, thread, targ);
   else
     switch (method_) {
     case SMOOTH:
-      nobin(fits);
+      smooth(fits, thread, targ);
       break;
     case BLOCK:
-      bin(fits);
+      block(fits, thread, targ);
       break;
     }
 }
 
-void FVContour::unity(FitsImage* fits)
+static void* fvUnityThread(void*vv)
+{
+  t_fvcontour_arg* tt = (t_fvcontour_arg*)vv;
+  build(tt->width, tt->height, tt->dest, tt->mm, tt->fv, tt->lcl);
+  return NULL;
+}
+
+void FVContour::unity(FitsImage* fits, pthread_t* thread, void* targ)
 {
   FitsBound* params = 
     fits->getDataParams(((Base*)parent_)->currentContext->secMode());
   long width = fits->width();
   long height = fits->height();
+  Matrix mm = fits->dataToRef;
 
-  // blank img
   long size = width*height;
-  double* img = new double[size];
-  if (!img) {
+  double* dest = new double[size];
+  if (!dest) {
     internalError("FVContour could not allocate enough memory");
     return;
   }
   for (long ii=0; ii<size; ii++)
-    img[ii] = FLT_MIN;
+    dest[ii] = FLT_MIN;
 
-  // fill img
   SETSIGBUS
   for(long jj=params->ymin; jj<params->ymax; jj++) {
     for(long ii=params->xmin; ii<params->xmax; ii++) {
       long kk = jj*width + ii;
-
       double vv = fits->getValueDouble(kk);
       if (isfinite(vv))
-	img[kk] = vv;
+	dest[kk] = vv;
     }
   }
   CLEARSIGBUS
 
-  // do contours
-  build(width, height, img, fits->dataToRef);
+  // contours
+  t_fvcontour_arg* tt = (t_fvcontour_arg*)targ;
+  tt->kernel = NULL;
+  tt->src = NULL;
+  tt->dest = dest;
+  tt->xmin = 0;
+  tt->xmax = 0;
+  tt->ymin = 0;
+  tt->ymax = 0;
+  tt->width = width;
+  tt->height = height;
+  tt->r = 0;
+  tt->mm = mm;
+  tt->fv = this;
+  tt->lcl = new List<ContourLevel>;
 
-  // clean up
-  delete [] img;
+  int result = pthread_create(thread, NULL, fvUnityThread, targ);
+  if (result)
+    internalError("Unable to Create Thread");
 }
 
-void FVContour::nobin(FitsImage* fits)
+static void* fvSmoothThread(void*vv)
 {
+  t_fvcontour_arg* tt = (t_fvcontour_arg*)vv;
+  convolve(tt->kernel, tt->src, tt->dest,
+	   tt->xmin, tt->ymin, tt->xmax, tt->ymax,
+	   tt->width, tt->r);
+  build(tt->width, tt->height, tt->dest, tt->mm, tt->fv, tt->lcl);
+  return NULL;
+}
+
+void FVContour::smooth(FitsImage* fits, pthread_t* thread, void* targ)
+{
+  FitsBound* params =
+    fits->getDataParams(((Base*)parent_)->currentContext->secMode());
   long width = fits->width();
   long height = fits->height();
+  Matrix mm = fits->dataToRef;
 
-  // blank img
   long size = width*height;
-  double* img = new double[size];
-  if (!img) {
+  double* src = new double[size];
+  if (!src) {
     internalError("FVContour could not allocate enough memory");
     return;
   }
   for (long ii=0; ii<size; ii++)
-    img[ii] = FLT_MIN;
+    src[ii] = FLT_MIN;
 
-  // generate kernal
-  int r = smooth_-1;
-  double* kernal = gaussian(r);
-
-  // convolve
-  convolve(fits,kernal,img,r);
-  
-  // now, do contours
-  build(width, height, img, fits->dataToRef);
-
-  // cleanup
-  delete kernal;
-  delete [] img;
-}
-
-void FVContour::convolve(FitsImage* fits, double* kernal, double* dest, int r)
-{
-  FitsBound* params = 
-    fits->getDataParams(((Base*)parent_)->currentContext->secMode());
-  long width = fits->width();
-  int rr = 2*r+1;
+  double* dest = new double[size];
+  if (!dest) {
+    internalError("FVContour could not allocate enough memory");
+    return;
+  }
+  for (long ii=0; ii<size; ii++)
+    dest[ii] = FLT_MIN;
 
   SETSIGBUS
-  for (long jj=params->ymin; jj<params->ymax; jj++) {
-    for (long ii=params->xmin; ii<params->xmax; ii++) {
-      long ir  = ii-r;
-      long irr = ii+r;
-      long jr = jj-r;
-      long jrr = jj+r;
-
-      for (long n=jr, nn=0; n<=jrr; n++, nn++) {
-	if (n>=params->ymin && n<params->ymax) {
-	  for (long m=ir, mm=0; m<=irr; m++, mm++) {
-	    if (m>=params->xmin && m<params->xmax) {
-	      double vv = fits->getValueDouble(n*width+m);
-	      if (isfinite(vv)) {
-		double kk = kernal[nn*rr+mm];
-		double* ptr = dest+(jj*width+ii);
-		if (*ptr == FLT_MIN)
-		  *ptr  = vv*kk;
-		else
-		  *ptr += vv*kk;
-	      }
-	    }
-	  }
-	}
-      }
+  for(long jj=params->ymin; jj<params->ymax; jj++) {
+    for(long ii=params->xmin; ii<params->xmax; ii++) {
+      long kk = jj*width + ii;
+      double vv = fits->getValueDouble(kk);
+      if (isfinite(vv))
+	src[kk] = vv;
     }
   }
   CLEARSIGBUS
+
+  // convolve
+  t_fvcontour_arg* tt = (t_fvcontour_arg*)targ;
+  tt->kernel = kernel_;
+  tt->src = src;
+  tt->dest = dest;
+  tt->xmin = params->xmin;
+  tt->xmax = params->xmax;
+  tt->ymin = params->ymin;
+  tt->ymax = params->ymax;
+  tt->width = width;
+  tt->height = height;
+  tt->r = smooth_-1;
+  tt->mm = mm;
+  tt->fv = this;
+  tt->lcl = new List<ContourLevel>;
+
+  int result = pthread_create(thread, NULL, fvSmoothThread, targ);
+  if (result)
+    internalError("Unable to Create Thread");
 }
 
-double* FVContour::tophat(int r)
+static void* fvBlockThread(void*vv)
 {
-  int rr = 2*r+1;
-  int ksz = rr*rr;
-  double* kernal = new double[ksz];
-  memset(kernal, 0, ksz*sizeof(double));
-  
-  double kt = 0;
-  for (int yy=-r; yy<=r; yy++) {
-    for (int xx=-r; xx<=r; xx++) { 
-      if ((xx*xx + yy*yy) <= r*r) {
-	kernal[(yy+r)*rr+(xx+r)] = 1;
-	kt++;
-      }
-    }
-  }
-
-  // normalize kernal
-  for (int aa=0; aa<ksz; aa++)
-    kernal[aa] /= kt;
-
-  return kernal;
+  t_fvcontour_arg* tt = (t_fvcontour_arg*)vv;
+  build(tt->width, tt->height, tt->dest, tt->mm, tt->fv, tt->lcl);
+  return NULL;
 }
 
-double* FVContour::gaussian(int r)
-{
-  int rr = 2*r+1;
-  int ksz = rr*rr;
-  double sigma = r/2.;
-  double* kernal = new double[ksz];
-  memset(kernal, 0, ksz*sizeof(double));
-  
-  double kt = 0;
-  double aa = 1./(sigma*sigma);
-  double cc = 1./(sigma*sigma);
-  for (int yy=-r; yy<=r; yy++) {
-    for (int xx=-r; xx<=r; xx++) { 
-      if ((xx*xx + yy*yy) <= r*r) {
-	double vv = exp(-.5*(aa*xx*xx + cc*yy*yy));
-	kernal[(yy+r)*rr+(xx+r)] = vv;
-	kt += vv;
-      }
-    }
-  }
-
-  // normalize kernal
-  for (int aa=0; aa<ksz; aa++)
-    kernal[aa] /= kt;
-
-  return kernal;
-}
-
-void FVContour::bin(FitsImage* fits)
+void FVContour::block(FitsImage* fits, pthread_t* thread, void* targ)
 {
   FitsBound* params = 
     fits->getDataParams(((Base*)parent_)->currentContext->secMode());
   long width = fits->width();
   long height = fits->height();
 
-  int rr = smooth_;
-
-  long w2 = (long)(width/rr);
-  long h2 = (long)(height/rr);
+  long w2 = (long)(width/smooth_);
+  long h2 = (long)(height/smooth_);
 
   Matrix m = 
     Translate((Vector(-width,-height)/2).floor()) * 
-    Scale(1./rr) * 
+    Scale(1./smooth_) * 
     Translate((Vector(w2,h2)/2).floor());
   Matrix n = m.invert();
-  double* mm = m.mm();
+  double* mx = m.mm();
 
-  double* img = new double[w2 * h2];
-  {
-    for (long jj=0; jj<h2; jj++)
-      for (long ii=0; ii<w2; ii++)
-	img[jj*w2 + ii] = FLT_MIN;
+  long size = w2*h2;
+  double* dest = new double[size];
+  if (!dest) {
+    internalError("FVContour could not allocate enough memory");
+    return;
   }
+  for (long ii=0; ii<size; ii++)
+    dest[ii] = FLT_MIN;
 
-  short* count = new short[w2 * h2];
-  memset(count, 0, w2*h2*sizeof(short));
+  short* count = new short[size];
+  if (!count) {
+    internalError("FVContour could not allocate enough memory");
+    return;
+  }
+  memset(count, 0, size*sizeof(short));
 
   SETSIGBUS
   for (long jj=params->ymin; jj<params->ymax; jj++) {
     for (long ii=params->xmin; ii<params->xmax; ii++) {
-      double xx = ii*mm[0] + jj*mm[3] + mm[6];
-      double yy = ii*mm[1] + jj*mm[4] + mm[7];
+      double xx = ii*mx[0] + jj*mx[3] + mx[6];
+      double yy = ii*mx[1] + jj*mx[4] + mx[7];
 
       if (xx >= 0 && xx < w2 && yy >= 0 && yy < h2) {
 	long kk = (long(yy)*w2 + long(xx));
 	double v = fits->getValueDouble(jj*width + ii);
 	if (isfinite(v)) {
 	  if (count[kk])
-	    img[kk] += v;
+	    dest[kk] += v;
 	  else
-	    img[kk] = v;
+	    dest[kk] = v;
 
 	  count[kk]++;
 	}
       }
     }
   }
-
-  for (long kk=0; kk<w2*h2; kk++)
-    if (count[kk])
-      img[kk] /= count[kk];
-
   CLEARSIGBUS
 
+  for (long kk=0; kk<size; kk++)
+    if (count[kk])
+      dest[kk] /= count[kk];
   delete [] count;
 
-  Matrix w = n * fits->dataToRef;
-  build(w2, h2, img, w);
+  // contours
+  Matrix mm = n * fits->dataToRef;
+  t_fvcontour_arg* tt = (t_fvcontour_arg*)targ;
+  tt->kernel = NULL;
+  tt->src = NULL;
+  tt->dest = dest;
+  tt->xmin = 0;
+  tt->xmax = 0;
+  tt->ymin = 0;
+  tt->ymax = 0;
+  tt->width = w2;
+  tt->height = h2;
+  tt->r = 0;
+  tt->mm = mm;
+  tt->fv = this;
+  tt->lcl = new List<ContourLevel>;
 
-  delete [] img;
+  int result = pthread_create(thread, NULL, fvBlockThread, targ);
+  if (result)
+    internalError("Unable to Create Thread");
 }
 
-void FVContour::build(long xdim, long ydim, double *image, Matrix& mx)
+void build(long xdim, long ydim, double *image, Matrix& mx,
+	   FVContour* fv, List<ContourLevel>* lcl)
 {
   long nelem = xdim*ydim;
   char* usedGrid = new char[nelem];
@@ -402,11 +417,12 @@ void FVContour::build(long xdim, long ydim, double *image, Matrix& mx)
   for (long jj=0; jj<ydim; jj++)
     rows[jj] = image + jj*xdim;
 
-  for (long c=0; c<scale_->size(); c++) {
-    double cntour = scale_->level(c);
+  for (long c=0; c<fv->scale()->size(); c++) {
+    double cntour = fv->scale()->level(c);
 
-    ContourLevel* cl =new ContourLevel(parent_, cntour, colorName_, lineWidth_, 
-				       dash_, dlist_);
+    ContourLevel* cl =new ContourLevel(fv->parent(), cntour,
+				       fv->colorName(), fv->lineWidth(), 
+				       fv->dash(), fv->dlist());
     memset(usedGrid,0,nelem);
 
     //  Search outer edge
@@ -415,22 +431,22 @@ void FVContour::build(long xdim, long ydim, double *image, Matrix& mx)
     //  Search top
     for (jj=0, ii=0; ii<xdim-1; ii++)
       if (rows[jj][ii]<cntour && cntour<=rows[jj][ii+1])
-	trace(xdim, ydim, cntour, ii, jj, top, rows, usedGrid, mx, cl);
+	trace(xdim, ydim, cntour, ii, jj, TOP, rows, usedGrid, mx, cl);
 
     //  Search right
     for (jj=0; jj<ydim-1; jj++)
       if (rows[jj][ii]<cntour && cntour<=rows[jj+1][ii])
-	trace(xdim, ydim, cntour, ii-1, jj, right, rows, usedGrid, mx, cl);
+	trace(xdim, ydim, cntour, ii-1, jj, RIGHT, rows, usedGrid, mx, cl);
 
     //  Search Bottom
     for (ii--; ii>=0; ii--)
       if (rows[jj][ii+1]<cntour && cntour<=rows[jj][ii])
-	trace(xdim, ydim, cntour, ii, jj-1, bottom, rows, usedGrid, mx, cl);
+	trace(xdim, ydim, cntour, ii, jj-1, BOTTOM, rows, usedGrid, mx, cl);
 
     //  Search Left
     for (ii=0, jj--; jj>=0; jj--)
       if (rows[jj+1][ii]<cntour && cntour<=rows[jj][ii])
-	trace(xdim, ydim, cntour, ii, jj, left, rows, usedGrid, mx, cl);
+	trace(xdim, ydim, cntour, ii, jj, LEFT, rows, usedGrid, mx, cl);
 
     //  Search each row of the image
     for (jj=1; jj<ydim-1; jj++)
@@ -438,20 +454,21 @@ void FVContour::build(long xdim, long ydim, double *image, Matrix& mx)
 	if (!usedGrid[jj*xdim + ii] && 
 	    rows[jj][ii]<cntour && 
 	    cntour<=rows[jj][ii+1])
-	  trace(xdim, ydim, cntour, ii, jj, top, rows, usedGrid, mx, cl);
+	  trace(xdim, ydim, cntour, ii, jj, TOP, rows, usedGrid, mx, cl);
 
     if (!cl->lcontour().isEmpty())
-      lcontourlevel_.append(cl);
+      lcl->append(cl);
+      //      fv->lcontourlevel().append(cl);
   }
 
   delete [] usedGrid;
   delete [] rows;
 }
 
-void FVContour::trace(long xdim, long ydim, double cntr,
-		      long xCell, long yCell, int side, 
-		      double** rows, char* usedGrid, 
-		      Matrix& mx, ContourLevel* cl)
+void trace(long xdim, long ydim, double cntr,
+	   long xCell, long yCell, int side, 
+	   double** rows, char* usedGrid, 
+	   Matrix& mx, ContourLevel* cl)
 {
   long ii = xCell;
   long jj = yCell;
@@ -473,19 +490,19 @@ void FVContour::trace(long xdim, long ydim, double cntr,
     if (init) {
       init = 0;
       switch (side) {
-      case top:
+      case TOP:
 	X = (cntr-a) / (b-a) + ii;
 	Y = jj;
 	break;
-      case right:
+      case RIGHT:
 	X = ii+1;
 	Y = (cntr-b) / (c-b) + jj;
 	break;
-      case bottom:
+      case BOTTOM:
 	X = (cntr-c) / (d-c) + ii;
 	Y = jj+1;
 	break;
-      case left:
+      case LEFT:
 	X = ii;
 	Y = (cntr-a) / (d-a) + jj;
 	break;
@@ -493,15 +510,15 @@ void FVContour::trace(long xdim, long ydim, double cntr,
 
     }
     else {
-      if (side==top)
+      if (side==TOP)
 	usedGrid[jj*xdim + ii] = 1;
 
       do {
-	if (++side == none)
-	  side = top;
+	if (++side == NONE)
+	  side = TOP;
 
 	switch (side) {
-	case top:
+	case TOP:
 	  if (a>=cntr && cntr>b) {
 	    flag = 1;
 	    X = (cntr-a) / (b-a) + ii;
@@ -509,7 +526,7 @@ void FVContour::trace(long xdim, long ydim, double cntr,
 	    jj--;
 	  }
 	  break;
-	case right:
+	case RIGHT:
 	  if( b>=cntr && cntr>c ) {
 	    flag = 1;
 	    X = ii+1;
@@ -517,7 +534,7 @@ void FVContour::trace(long xdim, long ydim, double cntr,
 	    ii++;
 	  }
 	  break;
-	case bottom:
+	case BOTTOM:
 	  if( c>=cntr && cntr>d ) {
 	    flag = 1;
 	    X = (cntr-d) / (c-d) + ii;
@@ -525,7 +542,7 @@ void FVContour::trace(long xdim, long ydim, double cntr,
 	    jj++;
 	  }
 	  break;
-	case left:
+	case LEFT:
 	  if( d>=cntr && cntr>a ) {
 	    flag = 1;
 	    X = ii;
@@ -536,17 +553,17 @@ void FVContour::trace(long xdim, long ydim, double cntr,
 	}
       } while (!flag);
 
-      if (++side == none)
-	side = top;
-      if (++side == none)
-	side = top;
+      if (++side == NONE)
+	side = TOP;
+      if (++side == NONE)
+	side = TOP;
       if (ii==xCell && jj==yCell && side==origSide)
 	done = 1;
       if (ii<0 || ii>=xdim-1 || jj<0 || jj>=ydim-1)
 	done = 1;
     }
 
-    cc->lvertex().append(new Vertex(Vector(X+.5,Y+.5)*mx));
+    cc->lvertex().append(new Vertex(Vector(X+.5,Y+.5) * mx));
   }
 
   if (!cc->lvertex().isEmpty())
@@ -554,4 +571,3 @@ void FVContour::trace(long xdim, long ydim, double cntr,
   else
     delete cc;
 }
-

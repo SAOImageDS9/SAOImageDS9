@@ -10,13 +10,29 @@
 #include "frscale.h"
 #include "inversescale.h"
 
+class FVContour;
+
+typedef struct {
+  double* kernel;
+  double* src;
+  double* dest;
+  int xmin;
+  int ymin;
+  int xmax;
+  int ymax;
+  int width;
+  int height;
+  int r;
+  Matrix mm;
+  FVContour* fv;
+  List<ContourLevel>* lcl;
+} t_fvcontour_arg;
+
 class FVContour {
  public:
   enum Method {SMOOTH, BLOCK};
 
  private:
-  enum {top, right, bottom, left, none};
-
   Base* parent_;
   List<ContourLevel> lcontourlevel_;
 
@@ -33,24 +49,16 @@ class FVContour {
 
   char* level_;
   InverseScale* scale_;
+  double* kernel_;
 
   void buildScale(FitsImage* fits);
-  void unity(FitsImage*);
-  void bin(FitsImage*);
-  void nobin(FitsImage*);
-  void convolve(FitsImage*, double*, double*, int);
-  double* tophat(int);
-  double* gaussian(int);
-  void build(long xdim, long ydim, double *image, Matrix&);
-  void trace(long xdim, long ydim, double cntr,
-	     long xCell, long yCell, int side,
-	     double** rows, char* useGrid, Matrix&, ContourLevel*);
+  void unity(FitsImage*, pthread_t* thread, void* targ);
+  void smooth(FitsImage*, pthread_t* thread, void* targ);
+  void block(FitsImage*, pthread_t* thread, void* targ);
 
 public:
   FVContour();
   ~FVContour();
-
-  List<ContourLevel>& lcontourlevel() {return lcontourlevel_;}
 
   void create(Base*, FitsImage*, FrScale*, 
 	      const char*, int, int, 
@@ -59,20 +67,27 @@ public:
   void update(FitsImage*);
   void update(FitsImage*, FrScale*);
 
-  void append(FitsImage*);
+  void append(List<ContourLevel>*);
+  void append(FitsImage*, pthread_t* thread, void* targ);
 
   int isEmpty() {return lcontourlevel_.isEmpty();}
 
+  Base* parent() {return parent_;}
+  List<ContourLevel>& lcontourlevel() {return lcontourlevel_;}
+
+  const char* colorName() {return colorName_;}
+  int lineWidth() {return lineWidth_;}
+  int dash() {return dash_;}
+  int* dlist() {return dlist_;}
+
   const char* methodName();
-  char* level() {return level_;}
   int numLevel() {return numLevel_;}
   int smooth() {return smooth_;}
 
   FrScale* frScale() {return &frScale_;}
 
-  const char* getColorName() {return colorName_;}
-  int getDash() {return dash_;}
-  int getLineWidth() {return lineWidth_;}
+  InverseScale* scale() {return scale_;}
+  char* level() {return level_;}
 };
 
 #endif

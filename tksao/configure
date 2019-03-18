@@ -5349,6 +5349,7 @@ panner/panner.C
 panner/pannertrue.C
 panner/parser.C
 util/attribute.C
+util/convolve.C
 util/grf.C
 util/grf3d.C
 util/grid25dbase.C

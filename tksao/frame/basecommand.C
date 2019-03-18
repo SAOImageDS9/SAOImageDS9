@@ -1310,12 +1310,12 @@ void Base::getContourClipScopeCmd()
 
 void Base::getContourColorNameCmd()
 {
-  Tcl_AppendResult(interp, currentContext->fvcontour().getColorName(), NULL);
+  Tcl_AppendResult(interp, currentContext->fvcontour().colorName(), NULL);
 }
 
 void Base::getContourDashCmd()
 {
-  if (currentContext->fvcontour().getDash())
+  if (currentContext->fvcontour().dash())
     Tcl_AppendResult(interp, "1", NULL);
   else
     Tcl_AppendResult(interp, "0", NULL);
@@ -1329,7 +1329,7 @@ void Base::getContourLevelCmd()
 void Base::getContourLineWidthCmd()
 {
   ostringstream str;
-  str << currentContext->fvcontour().getLineWidth() << ends;
+  str << currentContext->fvcontour().lineWidth() << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 

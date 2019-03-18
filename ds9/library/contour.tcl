@@ -19,7 +19,7 @@ proc ContourDef {} {
     set contour(width) 1
     set contour(dash) 0
 
-    set contour(method) block
+    set contour(method) smooth
     set contour(smooth) 4
     set contour(numlevel) 5
 

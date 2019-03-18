@@ -345,7 +345,7 @@ void FVContour::block(FitsImage* fits, pthread_t* thread, void* targ)
     return;
   }
   for (long ii=0; ii<size; ii++)
-    dest[size] = FLT_MIN;
+    dest[ii] = FLT_MIN;
 
   short* count = new short[size];
   if (!count) {

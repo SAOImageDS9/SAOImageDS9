@@ -90,6 +90,7 @@ class Context {
   void updateClipGlobal(FrScale*);
   void updateClipLocal(FrScale*);
 
+  void contourThreadFV(FitsImage*);
   void contourList(ostream&, Coord::CoordSystem, Coord::SkyFrame, 
 		   List<ContourLevel>&);
 
@@ -134,6 +135,7 @@ class Context {
 		       FrScale::ClipMode clipMode, float,
 		       FrScale::ClipScope clipScope, 
 		       double low, double high, const char* level);
+  void contourUpdateFV();
   void contourDeleteFV();
   void contourDeleteAux();
   void contourListFV(ostream&, Coord::CoordSystem, Coord::SkyFrame);
@@ -235,7 +237,6 @@ class Context {
   void updateBinFileNames();
   void clearHist();
   void updateClip();
-  void updateContours();
   void updateContours(const Matrix&);
   void updateSlice(int, int);
 

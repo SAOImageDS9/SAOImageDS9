@@ -265,7 +265,7 @@ void FrameBase::setSlice(int id, int ss)
     break;
   }
 
-  currentContext->updateContours();
+  currentContext->contourUpdateFV();
   updateColorScale();
   update(MATRIX);
 

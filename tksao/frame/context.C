@@ -386,13 +386,43 @@ void Context::contourCreateFV(const char* color, int width, int dash,
   if (!ptr)
     return;
   
+  fvcontour_.create(parent_, ptr, &fr,
+		    color, width, dash, method, numlevel, smooth, level);
+  contourThreadFV(ptr);
+  hasContour_ =1;
+}
+
+void Context::contourUpdateFV()
+{
+  if (!cfits)
+    return;
+
+  if (!hasContour_)
+    return;
+
+  switch (fvcontour_.frScale()->clipScope()) {
+  case FrScale::GLOBAL:
+    break;
+  case FrScale::LOCAL:
+    updateClip(fvcontour_.frScale());
+    break;
+  }
+
+  FitsImage* ptr = isMosaic() ? fits : cfits;
+  if (!ptr)
+    return;
+
+  fvcontour_.update(ptr);
+  contourThreadFV(ptr);
+}
+
+void Context::contourThreadFV(FitsImage* ptr)
+{
   if (thread_)
     delete [] thread_;
   thread_ = new pthread_t[parent_->nthreads_];
   t_fvcontour_arg* targ = new t_fvcontour_arg[parent_->nthreads_];
 
-  fvcontour_.create(parent_, ptr, &fr,
-		    color, width, dash, method, numlevel, smooth, level);
   int cnt =0;
   while (ptr) {
     fvcontour_.append(ptr, &thread_[cnt], &targ[cnt]);
@@ -438,8 +468,6 @@ void Context::contourCreateFV(const char* color, int width, int dash,
   delete [] targ;
   delete [] thread_;
   thread_ =NULL;
-
-  hasContour_ =1;
 }
 
 void Context::contourDeleteFV()
@@ -2665,48 +2693,6 @@ void Context::updateClipLocal(FrScale* fr)
     fr->setLow(NAN);
     fr->setHigh(NAN);
   }
-}
-
-void Context::updateContours()
-{
-  if (!cfits)
-    return;
-
-  if (!hasContour_)
-    return;
-
-  switch (fvcontour_.frScale()->clipScope()) {
-  case FrScale::GLOBAL:
-    break;
-  case FrScale::LOCAL:
-    updateClip(fvcontour_.frScale());
-    break;
-  }
-
-  fvcontour_.update(cfits);
-  if (thread_)
-    delete [] thread_;
-  thread_ = new pthread_t[1];
-  t_fvcontour_arg* targ = new t_fvcontour_arg[1];
-
-  fvcontour_.append(cfits, &thread_[0], &targ[0]);
-
-  int rr = pthread_join(thread_[0], NULL);
-  if (rr)
-    internalError("Unable to Join Thread");
-
-  fvcontour_.append(targ[0].lcl);
-
-  if (targ[0].lcl)
-    delete targ[0].lcl;
-  if (targ[0].src)
-    delete [] targ[0].src;
-  if (targ[0].dest)
-    delete [] targ[0].dest;
-  
-  delete [] targ;
-  delete [] thread_;
-  thread_ =NULL;
 }
 
 void Context::updateContours(const Matrix& mx)

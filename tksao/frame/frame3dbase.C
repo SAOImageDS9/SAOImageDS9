@@ -725,7 +725,7 @@ void Frame3dBase::setSlice(int id, int ss)
   currentContext->updateSlice(id, ss);
 
   if (id==2) {
-    currentContext->updateContours();
+    currentContext->contourUpdateFV();
     update(PIXMAP);
   }
   else {
@@ -733,7 +733,7 @@ void Frame3dBase::setSlice(int id, int ss)
     currentContext->clearHist();
     currentContext->updateClip();
 
-    currentContext->updateContours();
+    currentContext->contourUpdateFV();
     updateColorScale();
     update(MATRIX);
   }

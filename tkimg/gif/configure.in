@@ -187,7 +187,8 @@ fi
 
 TEA_PROG_TCLSH
 TEA_PROG_WISH
-TEA_EXPORT_CONFIG(tkimggif)
+
+TEA_EXPORT_CONFIG([tkimggif])
 
 #--------------------------------------------------------------------
 # Finally, substitute all of the various values into the Makefile.

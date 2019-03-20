@@ -1,3 +1,0 @@
-Add tests with minimal image size ( 1 x 1 )
-Add tests with extreme aspect ratios ( 100 x 1, 1 x 100 )
-Add tests with 4-channel images (RGBA)

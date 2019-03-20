@@ -327,7 +327,6 @@ int TkAGIF::add(int argc, const char* argv[])
 	}
       }
     }
-    cerr << "Colors: " << tt << endl;
   }
   
   // *** Local Image Descriptor ***

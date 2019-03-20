@@ -187,6 +187,7 @@ fi
 
 TEA_PROG_TCLSH
 TEA_PROG_WISH
+TEA_EXPORT_CONFIG(tkimggif)
 
 #--------------------------------------------------------------------
 # Finally, substitute all of the various values into the Makefile.
@@ -194,6 +195,6 @@ TEA_PROG_WISH
 # which require substituting th AC variables in.  Include these here.
 #--------------------------------------------------------------------
 
-AC_OUTPUT([Makefile])
+AC_OUTPUT([Makefile tkimggifConfig.sh])
 
 #--------------------------------------------------------------------

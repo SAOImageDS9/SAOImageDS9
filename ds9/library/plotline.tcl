@@ -63,6 +63,7 @@ proc PlotDialogLine {varname} {
     global $varname
 
     global ds9
+    set var(seq) 0
 
     # Dataset
     $var(mb).dataset add checkbutton -label [msgcat::mc {Show}] \

@@ -82,8 +82,10 @@ static int ObjMatch(
     Tcl_Interp *interp
 ) {
     ParseInfo parseInfo;
+    size_t length;
 
-    parseInfo.handle.data = (char *)tkimg_GetStringFromObj(data, &parseInfo.handle.length);
+    parseInfo.handle.data = (char *)tkimg_GetStringFromObj2(data, &length);
+    parseInfo.handle.length = length;
     parseInfo.handle.state = IMG_STRING;
 
     return ReadXBMFileHeader(&parseInfo, widthPtr, heightPtr);
@@ -302,7 +304,10 @@ ObjRead(interp, data, format, imageHandle, destX, destY,
 				 * in image being read. */
 {
     ParseInfo parseInfo;
-    parseInfo.handle.data = (char *)tkimg_GetStringFromObj(data, &parseInfo.handle.length);
+    size_t length;
+
+    parseInfo.handle.data = (char *)tkimg_GetStringFromObj2(data, &length);
+    parseInfo.handle.length = length;
     parseInfo.handle.state = IMG_STRING;
 
     return CommonRead(interp, &parseInfo, format, imageHandle,
@@ -362,14 +367,14 @@ NextBitmapWord(parseInfoPtr)
     parseInfoPtr->wordLength = 0;
     dst = parseInfoPtr->word;
 
-    for (num=tkimg_Read(&parseInfoPtr->handle,&buf,1); isspace(UCHAR(buf)) || (buf == ',');
-	    num=tkimg_Read(&parseInfoPtr->handle,&buf,1)) {
+    for (num=tkimg_Read2(&parseInfoPtr->handle,&buf,1); isspace(UCHAR(buf)) || (buf == ',');
+	    num=tkimg_Read2(&parseInfoPtr->handle,&buf,1)) {
 	if (num == 0) {
 	    return TCL_ERROR;
 	}
     }
     for ( ; !isspace(UCHAR(buf)) && (buf != ',') && (num != 0);
-	    num=tkimg_Read(&parseInfoPtr->handle,&buf,1)) {
+	    num=tkimg_Read2(&parseInfoPtr->handle,&buf,1)) {
 	*dst = buf;
 	dst++;
 	parseInfoPtr->wordLength++;
@@ -592,7 +597,7 @@ static char %s_bits[] = {\n";
 
     /* open the output file (if needed) */
     if (!dataPtr) {
-      chan = Tcl_OpenFileChannel(interp, (CONST84 char *) fileName, "w", 0644);
+      chan = Tcl_OpenFileChannel(interp, fileName, "w", 0644);
       if (!chan) {
 	return TCL_ERROR;
       }

@@ -7,7 +7,7 @@ dnl
 # TEA compliant.
 #--------------------------------------------------------------------
 
-AC_INIT([tkimgjpeg],[1.4.7])
+AC_INIT([tkimgjpeg],[1.4.9])
 
 TEA_INIT([3.9])
 
@@ -16,6 +16,7 @@ AC_CONFIG_AUX_DIR(../tclconfig)
 PHIMGTYPE="jpeg"
 CPACKAGE="Tkimgjpeg"
 PACKAGE_TCLNAME="img::jpeg"
+AC_SUBST(PHIMGTYPE)
 AC_SUBST(PACKAGE_TCLNAME)
 
 #--------------------------------------------------------------------
@@ -195,7 +196,8 @@ fi
 
 TEA_PROG_TCLSH
 TEA_PROG_WISH
-TEA_EXPORT_CONFIG(tkimgjpeg)
+
+TEA_EXPORT_CONFIG([tkimgjpeg])
 
 #--------------------------------------------------------------------
 # Finally, substitute all of the various values into the Makefile.

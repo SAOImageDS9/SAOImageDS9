@@ -1,8 +1,7 @@
 /* pngfix.c
  *
- * Copyright (c) 2014-2016 John Cunningham Bowler
- *
- * Last changed in libpng 1.6.26 [October 20, 2016]
+ * Last changed in libpng 1.6.31 [July 27, 2017]
+ * Copyright (c) 2014-2017 John Cunningham Bowler
  *
  * This code is released under the libpng license.
  * For conditions of distribution and use, see the disclaimer
@@ -2364,7 +2363,7 @@ zlib_advance(struct zlib *zlib, png_uint_32 nbytes)
       flush = Z_NO_FLUSH;
       out_bytes = 0;
 
-      /* NOTE: expression 3 is only evaluted on 'continue', because of the
+      /* NOTE: expression 3 is only evaluated on 'continue', because of the
        * 'break' at the end of this loop below.
        */
       for (;endrc == ZLIB_OK;
@@ -2416,7 +2415,7 @@ zlib_advance(struct zlib *zlib, png_uint_32 nbytes)
                   endrc = ZLIB_TOO_FAR_BACK;
                   break;
                }
-               /* FALL THROUGH */
+               /* FALLTHROUGH */
 
             default:
                zlib_message(zlib, 0/*stream error*/);
@@ -2570,7 +2569,7 @@ zlib_run(struct zlib *zlib)
                   list->lengths[i] -= zlib->extra_bytes;
                   list->count = i+1;
                   zlib->idat->idat_list_tail = list;
-                  /* FALL THROUGH */
+                  /* FALLTHROUGH */
 
                default:
                   return rc;
@@ -2665,7 +2664,7 @@ zlib_check(struct file *file, png_uint_32 offset)
              * this case, so do the optimization anyway.
              */
             if (zlib.cksum)
-               chunk_message(zlib.chunk, "zlib checkum");
+               chunk_message(zlib.chunk, "zlib checksum");
             break;
 
 
@@ -2673,7 +2672,7 @@ zlib_check(struct file *file, png_uint_32 offset)
             /* Truncated stream; unrecoverable, gets converted to ZLIB_FATAL */
             zlib.z.msg = PNGZ_MSG_CAST("[truncated]");
             zlib_message(&zlib, 0/*expected*/);
-            /* FALL THROUGH */
+            /* FALLTHROUGH */
 
          default:
             /* Unrecoverable error; skip the chunk; a zlib_message has already
@@ -3341,7 +3340,7 @@ read_callback(png_structp png_ptr, png_bytep buffer, size_t count)
                if (file->state != STATE_IDAT && length > 0)
                   setpos(chunk);
             }
-            /* FALL THROUGH */
+            /* FALLTHROUGH */
 
          default:
             assert(chunk != NULL);
@@ -3679,7 +3678,7 @@ usage(const char *prog)
    size_t i;
    static const char *usage_string[] = {
 "  Tests, optimizes and optionally fixes the zlib header in PNG files.",
-"  Optionally, when fixing, strips ancilliary chunks from the file.",
+"  Optionally, when fixing, strips ancillary chunks from the file.",
 0,
 "OPTIONS",
 "  OPERATION",

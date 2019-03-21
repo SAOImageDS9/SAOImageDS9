@@ -7,7 +7,7 @@ dnl
 # TEA compliant.
 #--------------------------------------------------------------------
 
-AC_INIT([tkimg],[1.4.7])
+AC_INIT([tkimg],[1.4.9])
 
 TEA_INIT([3.9])
 
@@ -52,7 +52,7 @@ TEA_SETUP_COMPILER
 # and PKG_TCL_SOURCES.
 #-----------------------------------------------------------------------
 
-TEA_ADD_SOURCES([tkimg.c tkimgIO.c tkimgPPB.c tkimgUtils.c tkimgStubInit.c])
+TEA_ADD_SOURCES([tkimg.c tkimgIO.c tkimgPPB.c tkimgUtils.c tkimgMap.c tkimgStubInit.c])
 TEA_ADD_HEADERS([tkimg.h tkimgDecls.h])
 TEA_ADD_INCLUDES([])
 TEA_ADD_LIBS([])

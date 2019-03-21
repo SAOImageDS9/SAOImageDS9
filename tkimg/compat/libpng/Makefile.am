@@ -60,6 +60,7 @@ pngcp_LDADD = libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@.la
 # set of parameters:
 TESTS =\
    tests/pngtest\
+   tests/pngtest-badpngs\
    tests/pngvalid-gamma-16-to-8 tests/pngvalid-gamma-alpha-mode\
    tests/pngvalid-gamma-background tests/pngvalid-gamma-expand16-alpha-mode\
    tests/pngvalid-gamma-expand16-background\
@@ -100,6 +101,16 @@ endif
 if PNG_MIPS_MSA
 libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@_la_SOURCES += mips/mips_init.c\
 	mips/filter_msa_intrinsics.c
+endif
+
+if PNG_INTEL_SSE
+libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@_la_SOURCES += intel/intel_init.c\
+	intel/filter_sse2_intrinsics.c
+endif
+
+if PNG_POWERPC_VSX
+libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@_la_SOURCES += powerpc/powerpc_init.c\
+        powerpc/filter_vsx_intrinsics.c
 endif
 
 nodist_libpng@PNGLIB_MAJOR@@PNGLIB_MINOR@_la_SOURCES = pnglibconf.h

@@ -4,9 +4,9 @@
  *
  * Author :     Paul Obermeier (paul@poSoft.de)
  *
- * Date :       Mon Jan 22 21:32:48 CET 2001
+ * Date :       2001 / 01 / 22
  *
- * Copyright :  (C) 2001-2009 Paul Obermeier
+ * Copyright :  (C) 2001-2019 Paul Obermeier
  *
  * Description :
  *
@@ -37,7 +37,7 @@
  *
  * Read  image: "ppm -verbose <bool> -gamma <float>
  *                   -min <float> -max <float> -scanorder <string>"
- * Write image: "ppm -verbose <bool> -ascii <bool>"
+ * Write image: "ppm -ascii <bool>"
  *
  * -verbose <bool>:     If set to true, additional information about the file
  *                      format is printed to stdout. Default is false.
@@ -51,8 +51,8 @@
  *                      the input data to 8-bit image values.
  *                      Default is the maximum value found in the image data.
  * -scanorder <string>: Specify the scanline order of the input image. Convention 
- *			is storing scan lines from top to bottom.
- *			Possible values: "TopDown" or "BottomUp".
+ *                      is storing scan lines from top to bottom.
+ *                      Possible values: "TopDown" or "BottomUp".
  * -ascii <bool>:       If set to true, file is written in PPM ASCII format (P3).
  *                      Default is false, i.e. write in binary format (P6).
  *
@@ -102,8 +102,6 @@
 /* Some general defines and typedefs. */
 #define TRUE  1
 #define FALSE 0
-#define MIN(a,b) ((a)<(b)? (a): (b))
-#define MAX(a,b) ((a)>(b)? (a): (b))
 #define BOTTOM_UP   0
 #define TOP_DOWN    1
 
@@ -147,90 +145,6 @@ typedef struct {
     UByte  *ubyteBuf;
 } PPMFILE;
 
-#define MAXCHANS  4
-
-#define MINGAMMA 0.01
-#define MAXGAMMA 100.0
-#define GTABSIZE 257
-
-/* Given a pixel value in Float format, "valIn", and a gamma-correction
- * lookup table, "tab", macro "gcorrectFloat" returns the gamma-corrected
- * pixel value in "valOut".
- */
- 
-#define gcorrectFloat(valIn,tab,valOut)                                 \
-    {                                                                   \
-        Int     gc_i;                                                   \
-        Float   gc_t;                                                   \
-        gc_t = (valIn) * (Float)(GTABSIZE - 2);                         \
-        gc_i = (Int)gc_t;                                               \
-        gc_t -= (Int)gc_i;                                              \
-        (valOut) = (Float)((tab)[gc_i] * (1.0-gc_t) + (tab)[gc_i+1] * gc_t);\
-    }
-
-static Boln gtableFloat (Float gamma, Float table[])
-{
-    Int i;
- 
-    if (gamma < MINGAMMA || gamma > MAXGAMMA) {
-        printf ("Invalid gamma value %f\n", gamma);
-        return FALSE;
-    }
-    for (i = 0; i < GTABSIZE - 1; ++i) {
-        table[i] = (Float)pow((Float)i / (Float)(GTABSIZE - 2), 1.0 / gamma);
-    }
-    table[GTABSIZE - 1] = 1.0;
-    return TRUE;
-}
-
-/* If no gamma correction is needed (i.e. gamma == 1.0), specify NULL for 
- * parameter gtable.
- */
-static void UShortGammaUByte (Int n, const UShort shortIn[],
-                              const Float gtable[], UByte ubOut[])
-{
-    const UShort *src, *stop;
-    Float        ftmp;
-    Int          itmp;
-    UByte        *ubdest;
- 
-    src = shortIn;
-    stop = shortIn + n;
-    ubdest = ubOut;
-
-    /* Handle a gamma value of 1.0 (gtable == NULL) as a special case.
-       Quite nice speed improvement for the maybe most used case. */
-    if (gtable) {
-        while (src < stop) {
-            ftmp = (Float)(*src / 65535.0);
-            ftmp = MAX((Float)0.0, MIN(ftmp, (Float)1.0));
-            gcorrectFloat(ftmp, gtable, ftmp);
-            itmp = (Int)(ftmp * 255.0 + 0.5);
-            *ubdest = MAX (0, MIN (itmp, 255));
-            ++ubdest;
-            ++src;
-        }
-    } else {
-        while (src < stop) {
-            itmp = (Int)(*src / 256);
-            *ubdest = MAX (0, MIN (itmp, 255));
-            ++ubdest;
-            ++src;
-        }
-    }
-    return;
-}
-
-/* This function determines at runtime, whether we are on an Intel system. */
-    
-static int isIntel (void)
-{
-    unsigned long val = 513;
-    /* On Intel (little-endian) systems this value is equal to "\01\02\00\00".
-       On big-endian systems this value equals "\00\00\02\01" */
-    return memcmp(&val, "\01\02", 2) == 0;
-} 
-
 #define OUT Tcl_WriteChars (outChan, str, -1)
 static void printImgInfo (int width, int height, int maxVal, int isAscii, int nChans, 
                           FMTOPT *opts, const char *filename, const char *msg)
@@ -252,7 +166,7 @@ static void printImgInfo (int width, int height, int maxVal, int isAscii, int nC
     sprintf (str, "\tVertical encoding: %s\n", opts->scanOrder == TOP_DOWN?
                                                strTopDown: strBottomUp);            OUT;
     sprintf (str, "\tAscii format     : %s\n", isAscii?  "Yes": "No");              OUT;
-    sprintf (str, "\tHost byte order  : %s\n", isIntel ()?  strIntel: strMotorola); OUT;
+    sprintf (str, "\tHost byte order  : %s\n", tkimg_IsIntel ()?  strIntel: strMotorola); OUT;
     Tcl_Flush (outChan);
 }
 #undef OUT
@@ -273,7 +187,7 @@ static int getNextVal (Tcl_Interp *interp, tkimg_MFile *handle, UInt *val)
     UInt i;
 
     /* First skip leading whitespaces. */
-    while (tkimg_Read (handle, &c, 1) == 1) {
+    while (tkimg_Read2(handle, &c, 1) == 1) {
         if (!isspace(UCHAR(c))) {
             break;
         }
@@ -281,7 +195,7 @@ static int getNextVal (Tcl_Interp *interp, tkimg_MFile *handle, UInt *val)
 
     buf[0] = c;
     i = 1;
-    while (tkimg_Read (handle, &c, 1) == 1 && i < TCL_INTEGER_SPACE) {
+    while (tkimg_Read2(handle, &c, 1) == 1 && i < TCL_INTEGER_SPACE) {
         if (isspace(UCHAR(c))) {
             buf[i] = '\0';
             sscanf (buf, "%u", val);
@@ -313,8 +227,9 @@ static Boln readUShortRow (Tcl_Interp *interp, tkimg_MFile *handle, UShort *pixe
         return TRUE;
     }
 
-    if (2 * nShorts != tkimg_Read (handle, buf, 2 * nShorts))
+    if (2 * nShorts != tkimg_Read2(handle, buf, 2 * nShorts)) {
         return FALSE;
+    }
              
     if (swapBytes) {
         for (i=0; i<nShorts; i++) {
@@ -354,8 +269,9 @@ static Boln readUByteRow (Tcl_Interp *interp, tkimg_MFile *handle, UByte *pixels
         return TRUE;
     }
 
-    if (nBytes != tkimg_Read (handle, buf, nBytes))
+    if (nBytes != tkimg_Read2(handle, buf, nBytes)) {
         return FALSE;
+    }
              
     for (i=0; i<nBytes; i++) {
         ((char *)mPtr)[0] = bufPtr[0];
@@ -384,8 +300,9 @@ static Boln readUShortFile (Tcl_Interp *interp, tkimg_MFile *handle, UShort *buf
     line = ckalloc (sizeof (UShort) * nchan * width);
 
     for (y=0; y<height; y++) {
-        if (!readUShortRow (interp, handle, bufPtr, nchan * width, line, swapBytes, isAscii))
+        if (!readUShortRow (interp, handle, bufPtr, nchan * width, line, swapBytes, isAscii)) {
             return FALSE;
+        }
         for (x=0; x<width; x++) {
             for (c=0; c<nchan; c++) {
                 if (*bufPtr > maxVals[c]) maxVals[c] = *bufPtr;
@@ -430,8 +347,9 @@ static Boln readUByteFile (Tcl_Interp *interp, tkimg_MFile *handle, UByte *buf, 
     line = ckalloc (sizeof (UByte) * nchan * width);
 
     for (y=0; y<height; y++) {
-        if (!readUByteRow (interp, handle, bufPtr, nchan * width, line, swapBytes, isAscii))
+        if (!readUByteRow (interp, handle, bufPtr, nchan * width, line, swapBytes, isAscii)) {
             return FALSE;
+        }
         for (x=0; x<width; x++) {
             for (c=0; c<nchan; c++) {
                 if (*bufPtr > maxVals[c]) maxVals[c] = *bufPtr;
@@ -457,28 +375,6 @@ static Boln readUByteFile (Tcl_Interp *interp, tkimg_MFile *handle, UByte *buf, 
     return TRUE;
 }
 
-static Boln remapUShortValues (UShort *buf, Int width, Int height, Int nchan,
-                               Float minVals[], Float maxVals[])
-{
-    Int x, y, c;
-    UShort *bufPtr = buf;
-    Float m[MAXCHANS], t[MAXCHANS];
-
-    for (c=0; c<nchan; c++) {
-        m[c] = (Float)((65535.0 - 0.0) / (maxVals[c] - minVals[c]));
-        t[c] = (Float)(0.0 - m[c] * minVals[c]);
-    }
-    for (y=0; y<height; y++) {
-        for (x=0; x<width; x++) {
-            for (c=0; c<nchan; c++) {
-                *bufPtr = (UShort)(*bufPtr * m[c] + t[c]);
-                bufPtr++;
-            }
-        }
-    }
-    return TRUE;
-}
-
 static int ParseFormatOpts (interp, format, opts)
     Tcl_Interp *interp;
     Tcl_Obj *format;
@@ -487,23 +383,27 @@ static int ParseFormatOpts (interp, format, opts)
     static const char *const ppmOptions[] = {
          "-verbose", "-min", "-max", "-gamma", "-scanorder", "-ascii", NULL
     };
-    int objc, length, i, index;
+    int objc, i, index;
+    char *optionStr;
     Tcl_Obj **objv;
-    const char *verboseStr, *minStr, *maxStr, *gammaStr, *scanorderStr, *asciiStr;
+    int boolVal;
+    int intVal;
+    double doubleVal;
 
-    /* Initialize format options with default values. */
-    verboseStr   = "0";
-    minStr       = "0.0";
-    maxStr       = "0.0";
-    gammaStr     = "1.0";
-    scanorderStr = strTopDown;
-    asciiStr     = "0";
+    /* Initialize options with default values. */
+    opts->verbose    = 0;
+    opts->minVal     = 0.0;
+    opts->maxVal     = 0.0;
+    opts->gamma      = 1.0;
+    opts->scanOrder  = TOP_DOWN;
+    opts->writeAscii = 0;
 
-    if (tkimg_ListObjGetElements (interp, format, &objc, &objv) != TCL_OK)
+    if (tkimg_ListObjGetElements (interp, format, &objc, &objv) != TCL_OK) {
         return TCL_ERROR;
+    }
     if (objc) {
         for (i=1; i<objc; i++) {
-            if (Tcl_GetIndexFromObj(interp, objv[i], (CONST84 char *CONST86 *)ppmOptions,
+            if (Tcl_GetIndexFromObj(interp, objv[i], (const char *CONST86 *)ppmOptions,
                     "format option", 0, &index) != TCL_OK) {
                 return TCL_ERROR;
             }
@@ -513,77 +413,71 @@ static int ParseFormatOpts (interp, format, opts)
                         "\"", (char *) NULL);
                 return TCL_ERROR;
             }
+            optionStr = Tcl_GetStringFromObj(objv[i], (int *) NULL);
             switch(index) {
                 case 0:
-                    verboseStr = Tcl_GetStringFromObj(objv[i], (int *) NULL); 
+                    if (Tcl_GetBoolean(interp, optionStr, &boolVal) == TCL_ERROR) {
+                        Tcl_AppendResult (interp, "Invalid verbose mode \"", optionStr,
+                                          "\": should be 1 or 0, on or off, true or false",
+                                          (char *) NULL);
+                        return TCL_ERROR;
+                    }
+                    opts->verbose = boolVal; 
                     break;
                 case 1:
-                    minStr = Tcl_GetStringFromObj(objv[i], (int *) NULL); 
+                    if (Tcl_GetDouble(interp, optionStr, &doubleVal) == TCL_ERROR) {
+                        Tcl_AppendResult (interp, "Invalid minimum map value \"", optionStr,
+                                          "\": Must be greater than or equal to zero.", (char *) NULL);
+                        return TCL_ERROR;
+                    }
+                    if (doubleVal >= 0.0) {
+                        opts->minVal = doubleVal;
+                    }
                     break;
                 case 2:
-                    maxStr = Tcl_GetStringFromObj(objv[i], (int *) NULL); 
+                    if (Tcl_GetDouble(interp, optionStr, &doubleVal) == TCL_ERROR) {
+                        Tcl_AppendResult (interp, "Invalid maximum map value \"", optionStr,
+                                          "\": Must be greater than or equal to zero.", (char *) NULL);
+                        return TCL_ERROR;
+                    }
+                    if (doubleVal >= 0.0) {
+                        opts->maxVal = doubleVal;
+                    }
                     break;
                 case 3:
-                    gammaStr = Tcl_GetStringFromObj(objv[i], (int *) NULL); 
+                    if (Tcl_GetDouble(interp, optionStr, &doubleVal) == TCL_ERROR) {
+                        Tcl_AppendResult (interp, "Invalid gamma value \"", optionStr,
+                                          "\": Must be greater than or equal to zero.", (char *) NULL);
+                        return TCL_ERROR;
+                    }
+                    if (doubleVal >= 0.0) {
+                        opts->gamma = doubleVal;
+                    }
                     break;
                 case 4:
-		    scanorderStr = Tcl_GetStringFromObj(objv[i], (int *) NULL);
-		    break;
+                    if (!strncmp (optionStr, strTopDown, strlen (strTopDown))) {
+                        opts->scanOrder = TOP_DOWN;
+                    } else if (!strncmp (optionStr, strBottomUp, strlen (strBottomUp))) {
+                        opts->scanOrder = BOTTOM_UP;
+                    } else {
+                        Tcl_AppendResult (interp, "invalid scanline order \"", optionStr,
+                                          "\": should be TopDown or BottomUp",
+                                          (char *) NULL);
+                        return TCL_ERROR;
+                    }
+                    break;
                 case 5:
-                    asciiStr = Tcl_GetStringFromObj(objv[i], (int *) NULL); 
+                    if (Tcl_GetBoolean(interp, optionStr, &boolVal) == TCL_ERROR) {
+                        Tcl_AppendResult (interp, "Invalid ascii mode \"", optionStr,
+                                          "\": should be 1 or 0, on or off, true or false",
+                                          (char *) NULL);
+                        return TCL_ERROR;
+                    }
+                    opts->writeAscii = boolVal;
                     break;
             }
         }
     }
-
-    opts->minVal = (Float)atof(minStr);
-    opts->maxVal = (Float)atof(maxStr);
-    opts->gamma  = (Float)atof(gammaStr);
-
-    length = strlen (verboseStr);
-    if (!strncmp (verboseStr, "1", length) || \
-        !strncmp (verboseStr, "true", length) || \
-        !strncmp (verboseStr, "on", length)) {
-        opts->verbose = 1;
-    } else if (!strncmp (verboseStr, "0", length) || \
-        !strncmp (verboseStr, "false", length) || \
-        !strncmp (verboseStr, "off", length)) {
-        opts->verbose = 0;
-    } else {
-        Tcl_AppendResult (interp, "invalid verbose mode \"", verboseStr, 
-                          "\": should be 1 or 0, on or off, true or false",
-                          (char *) NULL);
-        return TCL_ERROR;
-    }
-
-    length = strlen (scanorderStr);
-    if (!strncmp (scanorderStr, strTopDown, length)) {
-	opts->scanOrder = TOP_DOWN;
-    } else if (!strncmp (scanorderStr, strBottomUp, length)) {
-	opts->scanOrder = BOTTOM_UP;
-    } else {
-	Tcl_AppendResult (interp, "invalid scanline order \"", scanorderStr,
-			  "\": should be TopDown or BottomUp",
-			  (char *) NULL);
-	return TCL_ERROR;
-    }
-
-    length = strlen (asciiStr);
-    if (!strncmp (asciiStr, "1", length) || \
-        !strncmp (asciiStr, "true", length) || \
-        !strncmp (asciiStr, "on", length)) {
-        opts->writeAscii = 1;
-    } else if (!strncmp (asciiStr, "0", length) || \
-        !strncmp (asciiStr, "false", length) || \
-        !strncmp (asciiStr, "off", length)) {
-        opts->writeAscii = 0;
-    } else {
-        Tcl_AppendResult (interp, "invalid ascii mode \"", asciiStr, 
-                          "\": should be 1 or 0, on or off, true or false",
-                          (char *) NULL);
-        return TCL_ERROR;
-    }
-
     return TCL_OK;
 }
 
@@ -748,15 +642,15 @@ static int CommonRead (interp, handle, filename, format, imageHandle,
     Boln swapBytes, isAscii;
     int stopY, outY;
     int bytesPerPixel;
-    Float minVals[MAXCHANS], maxVals[MAXCHANS];
+    Float minVals[IMG_MAX_CHANNELS], maxVals[IMG_MAX_CHANNELS];
     UByte  *pixbufPtr;
     UShort *ushortBufPtr;
     UByte  *ubyteBufPtr;
-    Float  gtable[GTABSIZE];
+    Float  gtable[IMG_GAMMA_TABLE_SIZE];
 
     memset (&tf, 0, sizeof (PPMFILE));
 
-    swapBytes = isIntel ();
+    swapBytes = tkimg_IsIntel ();
 
     if (ParseFormatOpts (interp, format, &opts) != TCL_OK) {
         return TCL_ERROR;
@@ -786,11 +680,12 @@ static int CommonRead (interp, handle, filename, format, imageHandle,
 
     bytesPerPixel = maxIntensity >= 256? 2: 1;
 
-    gtableFloat (opts.gamma, gtable);
+    tkimg_CreateGammaTable (opts.gamma, gtable);
 
-    if (opts.verbose)
+    if (opts.verbose) {
         printImgInfo (fileWidth, fileHeight, maxIntensity, isAscii, type==PGM? 1: 3,
                       &opts, filename, "Reading image:");
+    }
 
     if ((srcX + width) > fileWidth) {
         width = fileWidth - srcX;
@@ -807,8 +702,7 @@ static int CommonRead (interp, handle, filename, format, imageHandle,
         block.pixelSize = 1;
         block.offset[1] = 0;
         block.offset[2] = 0;
-    }
-    else {
+    } else {
         block.pixelSize = 3;
         block.offset[1] = 1;
         block.offset[2] = 2;
@@ -833,7 +727,7 @@ static int CommonRead (interp, handle, filename, format, imageHandle,
         case 1: {
             tf.ubyteBuf = (UByte *)ckalloc (fileWidth*fileHeight*block.pixelSize*sizeof (UByte));
             if (!readUByteFile (interp, handle, tf.ubyteBuf, fileWidth, fileHeight, block.pixelSize,
-            		swapBytes, isAscii, opts.verbose, minVals, maxVals)) {
+                        swapBytes, isAscii, opts.verbose, minVals, maxVals)) {
                 ppmClose (&tf);
                 return TCL_ERROR;
             }
@@ -849,15 +743,17 @@ static int CommonRead (interp, handle, filename, format, imageHandle,
     }
     switch (bytesPerPixel) {
         case 2: {
-            remapUShortValues (tf.ushortBuf, fileWidth, fileHeight, block.pixelSize,
-                               minVals, maxVals);
+            tkimg_RemapUShortValues (
+                tf.ushortBuf, fileWidth, fileHeight,
+                block.pixelSize, minVals, maxVals
+            );
             break;
         }
     }
 
     if (tkimg_PhotoExpand(interp, imageHandle, destX + width, destY + height) == TCL_ERROR) {
         ppmClose (&tf);
-	return TCL_ERROR;
+        return TCL_ERROR;
     }
 
     stopY = srcY + height;
@@ -867,20 +763,20 @@ static int CommonRead (interp, handle, filename, format, imageHandle,
         pixbufPtr = tf.pixbuf;
         switch (bytesPerPixel) {
             case 2: {
-		if (opts.scanOrder == BOTTOM_UP) {
-		    ushortBufPtr = tf.ushortBuf + (fileHeight -1 - y) * fileWidth * block.pixelSize;
-		} else {
+                if (opts.scanOrder == BOTTOM_UP) {
+                    ushortBufPtr = tf.ushortBuf + (fileHeight -1 - y) * fileWidth * block.pixelSize;
+                } else {
                     ushortBufPtr = tf.ushortBuf + y * fileWidth * block.pixelSize;
                 }
-                UShortGammaUByte (fileWidth * block.pixelSize, ushortBufPtr, 
-                                  opts.gamma != 1.0? gtable: NULL, pixbufPtr);
+                tkimg_UShortToUByte (fileWidth * block.pixelSize, ushortBufPtr, 
+                                     opts.gamma != 1.0? gtable: NULL, pixbufPtr);
                 ushortBufPtr += fileWidth * block.pixelSize;
                 break;
             }
             case 1: {
-		if (opts.scanOrder == BOTTOM_UP) {
-		    ubyteBufPtr = tf.ubyteBuf + (fileHeight -1 - y) * fileWidth * block.pixelSize;
-		} else {
+                if (opts.scanOrder == BOTTOM_UP) {
+                    ubyteBufPtr = tf.ubyteBuf + (fileHeight -1 - y) * fileWidth * block.pixelSize;
+                } else {
                     ubyteBufPtr = tf.ubyteBuf + y * fileWidth * block.pixelSize;
                 }
                 for (x=0; x<fileWidth * block.pixelSize; x++) {
@@ -965,9 +861,9 @@ static int StringWrite(
     tkimg_Putc(IMG_DONE, &handle);
 
     if (result == TCL_OK) {
-	Tcl_DStringResult(interp, &data);
+        Tcl_DStringResult(interp, &data);
     } else {
-	Tcl_DStringFree(&data);
+        Tcl_DStringFree(&data);
     }
     return result;
 }
@@ -979,7 +875,7 @@ static int writeAsciiRow (tkimg_MFile *handle, const unsigned char *scanline, in
 
     for (i=0; i<nBytes; i++) {
         sprintf (buf, "%d\n", scanline[i]);
-        if (tkimg_Write(handle, buf, strlen(buf)) != (int)strlen(buf)) {
+        if (tkimg_Write2(handle, buf, strlen(buf)) != strlen(buf)) {
             return i;
         }
     }
@@ -1001,12 +897,12 @@ static int CommonWrite (interp, filename, format, handle, blockPtr)
     FMTOPT opts;
 
     if (ParseFormatOpts (interp, format, &opts) != TCL_OK) {
-	return TCL_ERROR;
+        return TCL_ERROR;
     }
 
     sprintf(header, "P%d\n%d %d\n255\n", opts.writeAscii? 3: 6,
                      blockPtr->width, blockPtr->height);
-    if (tkimg_Write(handle, header, strlen(header)) != (int)strlen(header)) {
+    if (tkimg_Write2(handle, header, strlen(header)) != strlen(header)) {
         goto writeerror;
     }
 
@@ -1027,11 +923,11 @@ static int CommonWrite (interp, filename, format, handle, blockPtr)
             pixelPtr += blockPtr->pixelSize;
         }
         if (opts.writeAscii) {
-            if (writeAsciiRow (handle, scanline, nBytes) != nBytes) {
+            if (writeAsciiRow(handle, scanline, nBytes) != nBytes) {
                 goto writeerror;
             }
         } else {
-            if (tkimg_Write(handle, (char *) scanline, nBytes) != nBytes) {
+            if (tkimg_Write2(handle, (char *) scanline, nBytes) != nBytes) {
                 goto writeerror;
             }
         }
@@ -1089,7 +985,7 @@ ReadPPMFileHeader (handle, widthPtr, heightPtr, maxIntensityPtr, isAsciiPtr)
      * comments (any line that starts with "#").
      */
 
-    if (tkimg_Read(handle, &c, 1) != 1) {
+    if (tkimg_Read2(handle, &c, 1) != 1) {
         return 0;
     }
     i = 0;
@@ -1100,7 +996,7 @@ ReadPPMFileHeader (handle, widthPtr, heightPtr, maxIntensityPtr, isAsciiPtr)
 
         while (1) {
             while (isspace(UCHAR(c))) {
-                if (tkimg_Read(handle, &c, 1) != 1) {
+                if (tkimg_Read2(handle, &c, 1) != 1) {
                     return 0;
                 }
             }
@@ -1108,7 +1004,7 @@ ReadPPMFileHeader (handle, widthPtr, heightPtr, maxIntensityPtr, isAsciiPtr)
                 break;
             }
             do {
-                if (tkimg_Read(handle, &c, 1) != 1) {
+                if (tkimg_Read2(handle, &c, 1) != 1) {
                     return 0;
                 }
             } while (c != '\n');
@@ -1123,7 +1019,7 @@ ReadPPMFileHeader (handle, widthPtr, heightPtr, maxIntensityPtr, isAsciiPtr)
                 buffer[i] = c;
                 i++;
             }
-            if (tkimg_Read(handle, &c, 1) != 1) {
+            if (tkimg_Read2(handle, &c, 1) != 1) {
                 goto done;
             }
         }

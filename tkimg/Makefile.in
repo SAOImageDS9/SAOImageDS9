@@ -107,7 +107,6 @@ all:
 test:	all
 	for sub in $(SUBDIRS) ; \
 	do	\
-		test -d $(srcdir)/$$sub/tests || continue ; \
 		here=`pwd` && \
 		cd $$sub && \
 		$(MAKE) top_builddir=$$here test || exit $$? && \

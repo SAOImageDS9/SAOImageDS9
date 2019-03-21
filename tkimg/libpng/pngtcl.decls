@@ -27,8 +27,8 @@ declare 1 {
     void png_set_sig_bytes(png_structrp png_ptr, int num_bytes)
 }
 declare 2 {
-    int png_sig_cmp(png_const_bytep sig, png_size_t start,
-    png_size_t num_to_check)
+    int png_sig_cmp(png_const_bytep sig, size_t start,
+    size_t num_to_check)
 }
 declare 4 {
     png_structp png_create_read_struct(png_const_charp user_png_ver,
@@ -39,10 +39,10 @@ declare 5 {
     	png_voidp error_ptr, png_error_ptr error_fn, png_error_ptr warn_fn)
 }
 declare 6 {
-    png_size_t png_get_compression_buffer_size(png_const_structrp png_ptr)
+    size_t png_get_compression_buffer_size(png_const_structrp png_ptr)
 }
 declare 7 {
-    void png_set_compression_buffer_size(png_structrp png_ptr, png_size_t size)
+    void png_set_compression_buffer_size(png_structrp png_ptr, size_t size)
 }
 declare 9 generic {!PNG_USER_MEM_SUPPORTED} {
     png_structp png_create_read_struct_2(png_const_charp user_png_ver,
@@ -56,7 +56,7 @@ declare 10 generic {!PNG_USER_MEM_SUPPORTED} {
 }
 declare 11 {
     void png_write_chunk(png_structrp png_ptr, png_const_bytep
-    chunk_name, png_const_bytep data, png_size_t length)
+    chunk_name, png_const_bytep data, size_t length)
 }
 declare 12 {
     void png_write_chunk_start(png_structrp png_ptr,
@@ -64,7 +64,7 @@ declare 12 {
 }
 declare 13 {
     void png_write_chunk_data(png_structrp png_ptr,
-    png_const_bytep data, png_size_t length)
+    png_const_bytep data, size_t length)
 }
 declare 14 {
     void png_write_chunk_end(png_structrp png_ptr)
@@ -307,7 +307,7 @@ declare 91 generic {!PNG_PROGRESSIVE_READ_SUPPORTED} {
 }
 declare 92 generic {!PNG_PROGRESSIVE_READ_SUPPORTED} {
     void png_process_data(png_structrp png_ptr,
-    png_inforp info_ptr, png_bytep buffer, png_size_t buffer_size)
+    png_inforp info_ptr, png_bytep buffer, size_t buffer_size)
 }
 declare 93 generic {!PNG_PROGRESSIVE_READ_SUPPORTED} {
     void png_progressive_combine_row(png_const_structrp png_ptr,
@@ -342,7 +342,7 @@ declare 107 {
     png_uint_32 png_get_valid(png_const_structrp png_ptr, png_const_inforp info_ptr, png_uint_32 flag)
 }
 declare 108 {
-    png_size_t png_get_rowbytes(png_const_structrp png_ptr, png_const_inforp info_ptr)
+    size_t png_get_rowbytes(png_const_structrp png_ptr, png_const_inforp info_ptr)
 }
 declare 109 generic {!PNG_INFO_IMAGE_SUPPORTED} {
     png_bytepp png_get_rows(png_const_structrp png_ptr, png_const_inforp info_ptr)
@@ -580,7 +580,7 @@ declare 184 generic {!PNG_INTERNAL} {
     void png_read_init(png_structp png_ptr)
 }
 declare 185 generic {!PNG_INTERNAL} {
-    void png_read_init_2(png_structp png_ptr, png_const_charp user_png_ver, png_size_t png_struct_size, png_size_t png_info_size)
+    void png_read_init_2(png_structp png_ptr, png_const_charp user_png_ver, size_t png_struct_size, size_t png_info_size)
 }
 declare 188 generic {!PNG_INTERNAL} {
     png_voidp png_create_struct(int type)
@@ -601,16 +601,16 @@ declare 195 generic {!PNG_INTERNAL} {
     void png_reset_crc(png_structp png_ptr)
 }
 declare 196 generic {!PNG_INTERNAL} {
-    void png_write_data(png_structp png_ptr, png_bytep data, png_size_t length)
+    void png_write_data(png_structp png_ptr, png_bytep data, size_t length)
 }
 declare 197 generic {!PNG_INTERNAL} {
-    void png_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
+    void png_read_data(png_structp png_ptr, png_bytep data, size_t length)
 }
 declare 198 generic {!PNG_INTERNAL} {
-    void png_crc_read(png_structp png_ptr, png_bytep buf, png_size_t length)
+    void png_crc_read(png_structp png_ptr, png_bytep buf, size_t length)
 }
 declare 199 generic {!PNG_INTERNAL {!PNG_READ_zTXt_SUPPORTED !PNG_READ_iTXt_SUPPORTED !PNG_READ_iCCP_SUPPORTED !PNG_READ_sPLT_SUPPORTED}} {
-    png_charp png_decompress_chunk(png_structp png_ptr, int comp_type, png_charp chunkdata, png_size_t chunklength, png_size_t prefix_length, png_size_t *data_length)
+    png_charp png_decompress_chunk(png_structp png_ptr, int comp_type, png_charp chunkdata, size_t chunklength, size_t prefix_length, size_t *data_length)
 }
 declare 200 generic {!PNG_INTERNAL} {
     int png_crc_finish(png_structp png_ptr, png_uint_32 skip)
@@ -619,7 +619,7 @@ declare 201 generic {!PNG_INTERNAL} {
     int png_crc_error(png_structp png_ptr)
 }
 declare 202 generic {!PNG_INTERNAL} {
-    void png_calculate_crc(png_structp png_ptr, png_bytep ptr, png_size_t length)
+    void png_calculate_crc(png_structp png_ptr, png_bytep ptr, size_t length)
 }
 declare 203 generic {!PNG_INTERNAL !PNG_WRITE_FLUSH_SUPPORTED} {
     void png_flush(png_structp png_ptr)
@@ -643,7 +643,7 @@ declare 209 generic {!PNG_INTERNAL} {
     void png_write_PLTE(png_structp png_ptr, png_colorp palette, png_uint_32 num_pal)
 }
 declare 210 generic {!PNG_INTERNAL} {
-    void png_write_IDAT(png_structp png_ptr, png_bytep data, png_size_t length)
+    void png_write_IDAT(png_structp png_ptr, png_bytep data, size_t length)
 }
 declare 211 generic {!PNG_INTERNAL} {
     void png_write_IEND(png_structp png_ptr)
@@ -682,13 +682,13 @@ declare 222 generic {!PNG_INTERNAL !PNG_WRITE_hIST_SUPPORTED} {
     void png_write_hIST(png_structp png_ptr, png_uint_16p hist, int num_hist)
 }
 declare 223 generic {!PNG_INTERNAL {!PNG_WRITE_TEXT_SUPPORTED !PNG_WRITE_pCAL_SUPPORTED !PNG_WRITE_iCCP_SUPPORTED !PNG_WRITE_sPLT_SUPPORTED}} {
-    png_size_t png_check_keyword(png_structp png_ptr, png_charp key, png_charpp new_key)
+    size_t png_check_keyword(png_structp png_ptr, png_charp key, png_charpp new_key)
 }
 declare 224 generic {!PNG_INTERNAL !PNG_WRITE_tEXt_SUPPORTED} {
-    void png_write_tEXt(png_structp png_ptr, png_charp key, png_charp text, png_size_t text_len)
+    void png_write_tEXt(png_structp png_ptr, png_charp key, png_charp text, size_t text_len)
 }
 declare 225 generic {!PNG_INTERNAL !PNG_WRITE_zTXt_SUPPORTED} {
-    void png_write_zTXt(png_structp png_ptr, png_charp key, png_size_t text_len, int compression)
+    void png_write_zTXt(png_structp png_ptr, png_charp key, size_t text_len, int compression)
 }
 declare 226 generic {!PNG_INTERNAL !PNG_iTXt_SUPPORTED} {
     void png_write_iTXt(png_structp png_ptr, int compression, png_charp key, png_charp lang, png_charp lang_key, png_charp text)
@@ -910,19 +910,19 @@ declare 298 generic {!PNG_INTERNAL !PNG_PROGRESSIVE_READ_SUPPORTED} {
     void png_push_crc_finish(png_structp png_ptr)
 }
 declare 299 generic {!PNG_INTERNAL !PNG_PROGRESSIVE_READ_SUPPORTED} {
-    void png_push_fill_buffer(png_structp png_ptr, png_bytep buffer, png_size_t length)
+    void png_push_fill_buffer(png_structp png_ptr, png_bytep buffer, size_t length)
 }
 declare 300 generic {!PNG_INTERNAL !PNG_PROGRESSIVE_READ_SUPPORTED} {
     void png_push_save_buffer(png_structp png_ptr)
 }
 declare 301 generic {!PNG_INTERNAL !PNG_PROGRESSIVE_READ_SUPPORTED} {
-    void png_push_restore_buffer(png_structp png_ptr, png_bytep buffer, png_size_t buffer_length)
+    void png_push_restore_buffer(png_structp png_ptr, png_bytep buffer, size_t buffer_length)
 }
 declare 302 generic {!PNG_INTERNAL !PNG_PROGRESSIVE_READ_SUPPORTED} {
     void png_push_read_IDAT(png_structp png_ptr)
 }
 declare 303 generic {!PNG_INTERNAL !PNG_PROGRESSIVE_READ_SUPPORTED} {
-    void png_process_IDAT_data(png_structp png_ptr, png_bytep buffer, png_size_t buffer_length)
+    void png_process_IDAT_data(png_structp png_ptr, png_bytep buffer, size_t buffer_length)
 }
 declare 304 generic {!PNG_INTERNAL !PNG_PROGRESSIVE_READ_SUPPORTED} {
     void png_push_process_row(png_structp png_ptr)

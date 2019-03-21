@@ -7,7 +7,7 @@ dnl
 # TEA compliant.
 #--------------------------------------------------------------------
 
-AC_INIT([tkimgpixmap],[1.4.7])
+AC_INIT([tkimgpixmap],[1.4.9])
 
 TEA_INIT([3.9])
 
@@ -16,6 +16,7 @@ AC_CONFIG_AUX_DIR(../tclconfig)
 PHIMGTYPE="pixmap"
 CPACKAGE="Tkimgpixmap"
 PACKAGE_TCLNAME="img::pixmap"
+AC_SUBST(PHIMGTYPE)
 AC_SUBST(PACKAGE_TCLNAME)
 
 #--------------------------------------------------------------------

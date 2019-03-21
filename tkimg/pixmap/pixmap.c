@@ -45,19 +45,19 @@ static void TkimgXpmFree(ClientData clientData,
 	Display *display);
 static void TkimgXpmDelete(ClientData clientData);
 static int TkimgXpmCmd(ClientData clientData,
-	Tcl_Interp *interp, int argc, CONST84 char **argv);
+	Tcl_Interp *interp, int argc, const char **argv);
 static void TkimgXpmCmdDeletedProc(
 	ClientData clientData);
 static void TkimgXpmConfigureInstance(
 	PixmapInstance *instancePtr);
 static int TkimgXpmConfigureMaster(
-	PixmapMaster *masterPtr, int argc, CONST84 char **argv,
+	PixmapMaster *masterPtr, int argc, const char **argv,
 	int flags);
 static int TkimgXpmGetData(Tcl_Interp *interp,
 	PixmapMaster *masterPtr);
-static CONST84 char **TkimgXpmGetDataFromFile(Tcl_Interp *interp,
+static const char **TkimgXpmGetDataFromFile(Tcl_Interp *interp,
 	char *string, int *numLines_return);
-static CONST84 char **TkimgXpmGetDataFromString(Tcl_Interp *interp,
+static const char **TkimgXpmGetDataFromString(Tcl_Interp *interp,
 	char *string, int *numLines_return);
 static void TkimgXpmGetPixmapFromData(
 	Tcl_Interp *interp,
@@ -128,16 +128,16 @@ TkimgXpmCreate(interp, name, argc, objv, typePtr, master, clientDataPtr)
     PixmapMaster *masterPtr;
     int i;
     char *argvbuf[10];
-    CONST84 char **args = (CONST84 char **) argvbuf;
+    const char **args = (const char **) argvbuf;
 
     /*
      * Convert the objc/objv arguments into string equivalent.
      */
     if (argc > 10) {
-	args = (CONST84 char **) ckalloc(argc * sizeof(char *));
+	args = (const char **) ckalloc(argc * sizeof(char *));
     }
     for (i = 0; i < argc; i++) {
-	args[i] = tkimg_GetStringFromObj(objv[i], NULL);
+	args[i] = tkimg_GetStringFromObj2(objv[i], NULL);
     }
 
     masterPtr = (PixmapMaster *) ckalloc(sizeof(PixmapMaster));
@@ -154,13 +154,13 @@ TkimgXpmCreate(interp, name, argc, objv, typePtr, master, clientDataPtr)
 
     if (TkimgXpmConfigureMaster(masterPtr, argc, args, 0) != TCL_OK) {
 	TkimgXpmDelete((ClientData) masterPtr);
-	if (args != ((CONST84 char **) argvbuf)) {
+	if (args != ((const char **) argvbuf)) {
 	    ckfree((char *) args);
 	}
 	return TCL_ERROR;
     }
     *clientDataPtr = (ClientData) masterPtr;
-    if (args != ((CONST84 char **) argvbuf)) {
+    if (args != ((const char **) argvbuf)) {
 	ckfree((char *) args);
     }
     return TCL_OK;
@@ -194,7 +194,7 @@ TkimgXpmConfigureMaster(masterPtr, argc, argv, flags)
     PixmapMaster *masterPtr;	/* Pointer to data structure describing
 				 * overall pixmap image to (reconfigure). */
     int argc;			/* Number of entries in argv. */
-    CONST84 char **argv;	/* Pairs of configuration options for image. */
+    const char **argv;	/* Pairs of configuration options for image. */
     int flags;			/* Flags to pass to Tk_ConfigureWidget,
 				 * such as TK_CONFIG_ARGV_ONLY. */
 {
@@ -278,10 +278,10 @@ TkimgXpmGetData(interp, masterPtr)
     Tcl_Interp *interp;			/* For reporting errors. */
     PixmapMaster *masterPtr;
 {
-    CONST84 char ** data = NULL;
+    const char ** data = NULL;
     int  isAllocated = 0;		/* do we need to free "data"? */
     int listArgc;
-    CONST84 char ** listArgv = NULL;
+    const char ** listArgv = NULL;
     int numLines;
     int size[2];
     int cpp;
@@ -369,7 +369,7 @@ TkimgXpmGetData(interp, masterPtr)
     return code;
 }
 
-static CONST84 char **
+static const char **
 TkimgXpmGetDataFromString(interp, string, numLines_return)
     Tcl_Interp * interp;
     char * string;
@@ -378,7 +378,7 @@ TkimgXpmGetDataFromString(interp, string, numLines_return)
     int quoted;
     char * p, * list;
     int numLines;
-    CONST84 char ** data;
+    const char ** data;
 
     /* skip the leading blanks (leading blanks are not defined in the
      * the XPM definition, but skipping them shouldn't hurt. Also, the ability
@@ -496,10 +496,10 @@ TkimgXpmGetDataFromString(interp, string, numLines_return)
 
   error:
     Tcl_AppendResult(interp, "File format error", NULL);
-    return (CONST84 char**) NULL;
+    return (const char**) NULL;
 }
 
-static CONST84 char **
+static const char **
 TkimgXpmGetDataFromFile(interp, fileName, numLines_return)
     Tcl_Interp * interp;
     char * fileName;
@@ -507,12 +507,12 @@ TkimgXpmGetDataFromFile(interp, fileName, numLines_return)
 {
     Tcl_Channel chan;
     int size;
-    CONST84 char ** data = (CONST84 char **) NULL;
+    const char ** data = (const char **) NULL;
     char *cmdBuffer = NULL;
 
     chan = tkimg_OpenFileChannel(interp, fileName, 0);
     if (!chan) {
-	return (CONST84 char **) NULL;
+	return (const char **) NULL;
     }
 
     size = Tcl_Seek(chan, 0, SEEK_END);
@@ -908,7 +908,7 @@ TkimgXpmCmd(clientData, interp, argc, argv)
     ClientData clientData;	/* Information about button widget. */
     Tcl_Interp *interp;		/* Current interpreter. */
     int argc;			/* Number of arguments. */
-    CONST84 char **argv;	/* Argument strings. */
+    const char **argv;	/* Argument strings. */
 {
     PixmapMaster *masterPtr = (PixmapMaster *) clientData;
     int c, code;

@@ -46,7 +46,7 @@ Tkimg_InitStubs(
 	const char *result;
 	void *data;
 
-	result = Tcl_PkgRequireEx(interp, PACKAGE_TCLNAME, (CONST84 char *) version, exact, &data);
+	result = Tcl_PkgRequireEx(interp, PACKAGE_TCLNAME, version, exact, &data);
 	if (!result || !data) {
 		return NULL;
 	}

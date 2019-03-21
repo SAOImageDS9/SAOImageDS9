@@ -7,7 +7,7 @@ dnl
 # TEA compliant.
 #--------------------------------------------------------------------
 
-AC_INIT([tkimgsgi],[1.4.7])
+AC_INIT([tkimgsgi],[1.4.9])
 
 TEA_INIT([3.9])
 
@@ -16,6 +16,7 @@ AC_CONFIG_AUX_DIR(../tclconfig)
 PHIMGTYPE="sgi"
 CPACKAGE="Tkimgsgi"
 PACKAGE_TCLNAME="img::sgi"
+AC_SUBST(PHIMGTYPE)
 AC_SUBST(PACKAGE_TCLNAME)
 
 #--------------------------------------------------------------------

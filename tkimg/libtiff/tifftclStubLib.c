@@ -46,7 +46,7 @@ Tifftcl_InitStubs(interp, version, exact)
     const char *result;
     ClientData data;
 
-    result = Tcl_PkgRequireEx(interp, "tifftcl", (CONST84 char *) version, exact, &data);
+    result = Tcl_PkgRequireEx(interp, "tifftcl", (const char *) version, exact, &data);
     if (!result || !data) {
         return NULL;
     }

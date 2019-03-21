@@ -152,7 +152,7 @@ int tkimg_Read(
 	return count;
       case IMG_CHAN:
 	if (!useReadBuf) {
-	    return Tcl_Read((Tcl_Channel) handle->data, dst, count);
+	    return (int) Tcl_Read((Tcl_Channel) handle->data, dst, count);
 	}
 	dstPtr = dst;
 	bytesToRead = count;
@@ -203,6 +203,94 @@ int tkimg_Read(
     return i;
 }
 
+/*
+ *--------------------------------------------------------------------------
+ * tkimg_Read2 --
+ *
+ *  This procedure returns a buffer from the stream input. This stream
+ *  could be anything from a base-64 encoded string to a Channel.
+ *
+ * Results:
+ *  The number of characters successfully read from the input
+ *
+ * Side effects:
+ *  The tkimg_MFile state could change.
+ *--------------------------------------------------------------------------
+ */
+
+size_t tkimg_Read2(
+	tkimg_MFile *handle /* mmdecode "file" handle */,
+	char *dst /* where to put the result */,
+	size_t count /* number of bytes */
+) {
+    register int i, c;
+    size_t bytesRead, bytesToRead;
+    char *dstPtr;
+
+    switch (handle->state) {
+      case IMG_STRING:
+	if (count > handle->length) {
+	    count = handle->length;
+	}
+	if (count) {
+	    memcpy(dst, handle->data, count);
+	    handle->length -= count;
+	    handle->data += count;
+	}
+	return count;
+      case IMG_CHAN:
+	if (!useReadBuf) {
+	    return (size_t) Tcl_Read((Tcl_Channel) handle->data, dst, count);
+	}
+	dstPtr = dst;
+	bytesToRead = count;
+	bytesRead = 0;
+	while (bytesToRead > 0) {
+#ifdef DEBUG_LOCAL
+		printf ("bytesToRead=%d bytesRead=%d (bufStart=%d bufEnd=%d)\n",
+			 bytesToRead, bytesRead, bufStart, bufEnd);
+#endif
+	    if (bufStart < 0) {
+		bufEnd = Tcl_Read((Tcl_Channel)handle->data, readBuf, BUFLEN)-1;
+#ifdef DEBUG_LOCAL
+		    printf ("Reading new %d bytes into buffer "
+                            "(bufStart=%d bufEnd=%d)\n",
+                            BUFLEN, bufStart, bufEnd);
+#endif
+		bufStart = 0;
+	   	if (bufEnd < 0)
+		    return bufEnd;
+	    }
+	    if (bufStart + bytesToRead <= bufEnd +1) {
+#ifdef DEBUG_LOCAL
+		    printf("All in buffer: memcpy %d bytes\n", bytesToRead);
+#endif
+		/* All bytes already in the buffer. Just copy them to dst. */
+		memcpy(dstPtr, readBuf + bufStart, bytesToRead);
+		bufStart += bytesToRead;
+		if (bufStart > BUFLEN)
+		    bufStart = -1;
+		return bytesRead + bytesToRead;
+	    } else {
+#ifdef DEBUG_LOCAL
+		    printf("Copy rest of buffer: memcpy %d bytes\n",
+                            bufEnd+1-bufStart);
+#endif
+		memcpy (dstPtr, readBuf + bufStart, bufEnd+1 - bufStart);
+		bytesRead += (bufEnd +1 - bufStart);
+		bytesToRead -= (bufEnd+1 - bufStart);
+		bufStart = -1;
+		dstPtr += bytesRead;
+	    }
+	}
+    }
+
+    for(i = 0; i < count && (c = tkimg_Getc(handle)) != IMG_DONE; i++) {
+	*dst++ = c;
+    }
+    return i;
+}
+
 /*
  *--------------------------------------------------------------------------
  *
@@ -316,6 +404,47 @@ int tkimg_Write(
 
 /*
  *-----------------------------------------------------------------------
+ * tkimg_Write2 --
+ *
+ *  This procedure is invoked to put imaged data into a stream
+ *  using tkimg_Putc.
+ *
+ * Results:
+ *  The return value is the number of characters "written"
+ *
+ * Side effects:
+ *  The base64 handle will change state.
+ *
+ *-----------------------------------------------------------------------
+ */
+
+size_t tkimg_Write2(
+    tkimg_MFile *handle /* mmencode "file" handle */,
+    const char *src /* where to get the data */,
+    size_t count /* number of bytes */
+) {
+    size_t i, curcount, bufcount;
+
+    if (handle->state == IMG_CHAN) {
+	return Tcl_Write((Tcl_Channel) handle->data, (char *) src, count);
+    }
+    curcount = handle->data - Tcl_DStringValue(handle->buffer);
+    bufcount = curcount + count + count/3 + count/52 + 1024;
+
+    /* make sure that the DString contains enough space */
+    if (bufcount >= (handle->buffer->spaceAvl)) {
+	Tcl_DStringSetLength(handle->buffer, bufcount + 4096);
+	handle->data = Tcl_DStringValue(handle->buffer) + curcount;
+    }
+    /* write the data */
+    for (i=0; (i<count) && (tkimg_Putc(*src++, handle) != IMG_DONE); i++) {
+	/* empty loop body */
+    }
+    return i;
+}
+
+/*
+ *-----------------------------------------------------------------------
  *
  * tkimg_Putc --
  *
@@ -379,7 +508,7 @@ int tkimg_Putc(
 
     if (handle->state == IMG_CHAN) {
 	char ch = (char) c;
-	return (Tcl_Write((Tcl_Channel) handle->data, &ch, 1)>0) ? c : IMG_DONE;
+	return (Tcl_Write((Tcl_Channel) handle->data, &ch, 1)+1>1) ? c : IMG_DONE;
     }
 
     c &= 0xff;
@@ -447,7 +576,9 @@ int tkimg_ReadInit(
 	int c,
 	tkimg_MFile *handle /* mmdecode "file" handle */
 ) {
-    handle->data = (char *) tkimg_GetByteArrayFromObj(data, &handle->length);
+    size_t length;
+    handle->data = (char *) tkimg_GetByteArrayFromObj2(data, &length);
+    handle->length = length;
     if (*handle->data == c) {
 	handle->state = IMG_STRING;
 	return 1;
@@ -490,7 +621,7 @@ Tcl_Channel tkimg_OpenFileChannel(
 	const char *fileName,
 	int permissions
 ) {
-    Tcl_Channel chan = Tcl_OpenFileChannel(interp, (CONST84 char *) fileName,
+    Tcl_Channel chan = Tcl_OpenFileChannel(interp, fileName,
 	    permissions?"w":"r", permissions);
     if (!chan) {
 	return NULL;

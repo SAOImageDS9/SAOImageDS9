@@ -20,6 +20,7 @@ set fmtListStandard {
 
 set fmtListExtra {
     "dted"
+    "flir"
     "raw"
 }
 
@@ -29,14 +30,14 @@ puts "Using Tcl version  : [info patchlevel] (${bits}-bit)"
 
 puts "Standard formats (provided by package require Img)"
 foreach fmt $fmtListStandard {
-   set testFile "$fmt.test"
+    set testFile "$fmt.test"
     puts $testFile
     source $testFile
 }
 
 puts "Extra formats (provided by package require img::fmt)"
 foreach fmt $fmtListExtra {
-   set testFile "$fmt.test"
+    set testFile "$fmt.test"
     puts $testFile
     source $testFile
 }

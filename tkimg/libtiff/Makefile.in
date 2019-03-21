@@ -131,7 +131,7 @@ EXTRA_PATH	= $(top_builddir):$(TCL_BIN_DIR)
 TCLSH_ENV	= TCL_LIBRARY=`@CYGPATH@ $(TCL_SRC_DIR)/library` \
 		  @LD_LIBRARY_PATH_VAR@="$(EXTRA_PATH):$(@LD_LIBRARY_PATH_VAR@)" \
 		  PATH="$(EXTRA_PATH):$(PATH)" \
-		  TCLLIBPATH="$(top_builddir)"
+		  TCLLIBPATH="$(libdir)"
 TCLSH_PROG	= @TCLSH_PROG@
 TCLSH		= $(TCLSH_ENV) $(TCLSH_PROG)
 SHARED_BUILD	= @SHARED_BUILD@
@@ -222,8 +222,7 @@ install-doc: doc
 #	    $(INSTALL_DATA) $$i $(DESTDIR)$(mandir)/mann ; \
 #	done
 
-test: binaries libraries
-	$(TCLSH) `@CYGPATH@ $(srcdir)/tests/all.tcl` $(TESTFLAGS)
+test:
 
 shell: binaries libraries
 	@$(TCLSH) $(SCRIPT)

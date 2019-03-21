@@ -50,7 +50,7 @@ Pngtcl_InitStubs(interp, version, exact)
     const char *result;
     ClientData data;
 
-    result = Tcl_PkgRequireEx(interp, PACKAGE_NAME, (CONST84 char *) version, exact, &data);
+    result = Tcl_PkgRequireEx(interp, PACKAGE_NAME, (const char *) version, exact, &data);
     if (!result || !data) {
         return NULL;
     }

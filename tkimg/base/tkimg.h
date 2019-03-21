@@ -59,13 +59,6 @@ typedef int boolean;
  */
 #ifndef RC_INVOKED
 
-/* TIP 27 update. If CONST84 is not defined we are compiling against a
- * core before 8.4 and have to disable some CONST'ness.
- */
-
-#ifndef CONST84
-#   define CONST84
-#endif
 #ifndef CONST86
 #   define CONST86
 #endif
@@ -117,6 +110,24 @@ MODULE_SCOPE int tkimg_initialized;
 #define IMG_PERL (1<<11)
 #define IMG_COMPOSITE (1<<14)
 #define IMG_NOPANIC (1<<15)
+
+/* Maximum number of channels storable in a photo image. */
+#define IMG_MAX_CHANNELS     4
+
+/* Definitions for mapping short or float images into unsigned char 
+ * photo images. See tkimgMap.c for corresponding functions.
+ */
+
+/* Size of gamma correction table. */
+#define IMG_GAMMA_TABLE_SIZE 257
+
+/* Mapping modes. */
+#define IMG_MAP_NONE   0
+#define IMG_MAP_MINMAX 1
+#define IMG_MAP_AGC    2
+#define IMG_MAP_NONE_STR   "none"
+#define IMG_MAP_MINMAX_STR "minmax"
+#define IMG_MAP_AGC_STR    "agc"
 
 MODULE_SCOPE int TkimgInitUtilities(Tcl_Interp* interp);
 

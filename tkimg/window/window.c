@@ -166,7 +166,7 @@ static int ObjMatch(
     Tk_Window tkwin;
     const char *name;
 
-    name = tkimg_GetStringFromObj(data, NULL);
+    name = tkimg_GetStringFromObj2(data, NULL);
 
     if (interp && name && (name[0] == '.') &&
         ((name[1] == 0) || islower(UCHAR(name[1])))) {
@@ -279,7 +279,7 @@ static int ObjRead(interp, data, format, imageHandle,
     int green, blue;
     int result = TCL_OK;
 
-    name = tkimg_GetStringFromObj(data, NULL);
+    name = tkimg_GetStringFromObj2(data, NULL);
 
     tkwin = Tk_NameToWindow(interp, name, Tk_MainWindow(interp));
 

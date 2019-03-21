@@ -35,14 +35,6 @@
  */
 #ifndef RC_INVOKED
 
-/* TIP 27 update. If CONST84 is not defined we are compiling against a
- * core before 8.4 and have to disable some CONST'ness.
- */
-
-#ifndef CONST84
-#   define CONST84
-#endif
-
 /*
  *----------------------------------------------------------------------------
  * C API for Tifftcl generic layer

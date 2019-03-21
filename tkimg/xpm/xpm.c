@@ -99,7 +99,7 @@ Gets(handle, buffer, size)
 
     /* read data from tkimg_MFile */
     p = buffer;
-    while ((tkimg_Read(handle, p, 1) == 1)) {
+    while ((tkimg_Read2(handle, p, 1) == 1)) {
 	if (--size <= 0) {
 	    *p = 0; return buffer;
 	}
@@ -140,8 +140,10 @@ static int ObjMatch(
 ) {
     int numColors, byteSize;
     tkimg_MFile handle;
+    size_t length;
 
-    handle.data = (char *)tkimg_GetStringFromObj(data, &handle.length);
+    handle.data = (char *)tkimg_GetStringFromObj2(data, &length);
+    handle.length = length;
     handle.state = IMG_STRING;
 
     return ReadXPMFileHeader(&handle, widthPtr, heightPtr, &numColors, &byteSize);
@@ -552,8 +554,10 @@ ObjRead(interp, data, format, imageHandle, destX, destY,
 				 * in image being read. */
 {
     tkimg_MFile handle;
+    size_t length;
 
-    handle.data = (char *)tkimg_GetStringFromObj(data, &handle.length);
+    handle.data = (char *)tkimg_GetStringFromObj2(data, &length);
+    handle.length = length;
     handle.state = IMG_STRING;
 
     return CommonRead(interp, &handle, format, imageHandle,
@@ -893,7 +897,7 @@ CommonWrite(interp, fileName, dataPtr, format, blockPtr)
 
     /* open the output file (if needed) */
     if (!dataPtr) {
-      chan = Tcl_OpenFileChannel(interp, (CONST84 char *) fileName, "w", 0644);
+      chan = Tcl_OpenFileChannel(interp, fileName, "w", 0644);
       if (!chan) {
 	return TCL_ERROR;
       }

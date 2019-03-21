@@ -7,7 +7,7 @@ dnl
 # TEA compliant.
 #--------------------------------------------------------------------
 
-AC_INIT([tkimgps],[1.4.7])
+AC_INIT([tkimgps],[1.4.9])
 
 TEA_INIT([3.9])
 
@@ -17,6 +17,7 @@ PHIMGTYPE="ps"
 PHIMGTYPE_BETA="pdf"
 CPACKAGE="Tkimgps"
 PACKAGE_TCLNAME="img::ps"
+AC_SUBST(PHIMGTYPE)
 AC_SUBST(PACKAGE_TCLNAME)
 
 #--------------------------------------------------------------------

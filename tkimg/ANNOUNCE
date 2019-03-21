@@ -1,10 +1,20 @@
-We are happy to announce version 1.4.7 of the "tkImg" package
+We are happy to announce version 1.4.9 of the "tkImg" package
 (formerly known as "Img").
 
 This package enhances Tk, adding support for many image formats.
 
+Changes compared to version 1.4.8:
+  - Added new format "flir" for reading FLIR infrared images.
+  - Code cleanup for image formats supporting 16-bit or 32-bit channels.
+
+Changes compared to version 1.4.7:
+  - Upgrade to libpng 1.6.35.
+  - Bug fix for reading animated GIF's.
+  - Bug fix for RAW format handler regarding AutomaticGainControl.
+
 Changes compared to version 1.4.6:
   - Upgrade to libpng 1.2.28, zlib 1.2.11.
+  - Added nmake files according to TIP 477: nmake build system reform
   - Unified test scripts.
   - Bug fix for SGI format handler.
   - Enhanced RAW format handler with AutomaticGainControl algorithmn.

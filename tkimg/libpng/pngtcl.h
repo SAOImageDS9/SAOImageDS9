@@ -26,22 +26,14 @@
 #define PNGTCL_RELEASE_LEVEL	TCL_RELEASE
 #define PNGTCL_RELEASE_SERIAL	28
 
-#define PNGTCL_VERSION		"1.6.28"
-#define PNGTCL_PATCH_LEVEL	"1.6.28"
+#define PNGTCL_VERSION		"1.6.35"
+#define PNGTCL_PATCH_LEVEL	"1.6.35"
 
 /*
  * Used to block the rest of this header file from resource compilers so
  * we can just get the version info.
  */
 #ifndef RC_INVOKED
-
-/* TIP 27 update. If CONST84 is not defined we are compiling against a
- * core before 8.4 and have to disable some CONST'ness.
- */
-
-#ifndef CONST84
-#   define CONST84
-#endif
 
 /*
  *----------------------------------------------------------------------------

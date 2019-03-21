@@ -7,7 +7,7 @@ dnl
 # TEA compliant.
 #--------------------------------------------------------------------
 
-AC_INIT([tkimgxpm],[1.4.7])
+AC_INIT([tkimgxpm],[1.4.9])
 
 TEA_INIT([3.9])
 
@@ -16,6 +16,7 @@ AC_CONFIG_AUX_DIR(../tclconfig)
 PHIMGTYPE="xpm"
 CPACKAGE="Tkimgxpm"
 PACKAGE_TCLNAME="img::xpm"
+AC_SUBST(PHIMGTYPE)
 AC_SUBST(PACKAGE_TCLNAME)
 
 #--------------------------------------------------------------------

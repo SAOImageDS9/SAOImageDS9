@@ -236,7 +236,7 @@ readMFile(fd, data, size)
     tdata_t data;
     tsize_t size;
 {
-    return (tsize_t) tkimg_Read((tkimg_MFile *) fd, (char *) data, (int) size) ;
+    return (tsize_t) tkimg_Read2((tkimg_MFile *) fd, (char *) data, size) ;
 }
 
 static toff_t
@@ -245,7 +245,7 @@ seekMFile(fd, off, whence)
     toff_t off;
     int whence;
 {
-    return Tcl_Seek((Tcl_Channel) ((tkimg_MFile *) fd)->data, (int) off, whence);
+    return Tcl_Seek((Tcl_Channel) ((tkimg_MFile *) fd)->data, off, whence);
 }
 
 static toff_t
@@ -254,7 +254,7 @@ sizeMFile(fd)
 {
     int fsize;
     return (fsize = Tcl_Seek((Tcl_Channel) ((tkimg_MFile *) fd)->data,
-	    (int) 0, SEEK_END)) < 0 ? 0 : (toff_t) fsize;
+	    0, SEEK_END)) < 0 ? 0 : (toff_t) fsize;
 }
 
 /*
@@ -398,7 +398,7 @@ CommonMatch(handle, widthPtr, heightPtr)
     unsigned char buf[4096];
     int i, j, order, w = 0, h = 0;
 
-    i = tkimg_Read(handle, (char *) buf, 8);
+    i = tkimg_Read2(handle, (char *) buf, 8);
     order = (buf[0] == '\111');
     if ((i != 8) || (buf[0] != buf[1])
 	    || ((buf[0] != '\111') && (buf[0] != '\115'))
@@ -409,15 +409,15 @@ CommonMatch(handle, widthPtr, heightPtr)
 
     while (i > 4104) {
 	i -= 4096;
-	tkimg_Read(handle, (char *) buf, 4096);
+	tkimg_Read2(handle, (char *) buf, 4096);
     }
     if (i>8) {
-        tkimg_Read(handle, (char *) buf, i-8);
+        tkimg_Read2(handle, (char *) buf, i-8);
     }
-    tkimg_Read(handle, (char *) buf, 2);
+    tkimg_Read2(handle, (char *) buf, 2);
     i = getint(buf,TIFF_SHORT,order);
     while (i--) {
-	tkimg_Read(handle, (char *) buf, 12);
+	tkimg_Read2(handle, (char *) buf, 12);
 	if (buf[order]!=1) continue;
 	j = getint(buf+2,TIFF_SHORT,order);
 	j = getint(buf+8, (TIFFDataType) j, order);
@@ -451,7 +451,8 @@ ObjRead(interp, data, format, imageHandle,
 {
     TIFF *tif;
     char *tempFileName = NULL, tempFileNameBuffer[256];
-    int count, result;
+    size_t count;
+    int result;
     tkimg_MFile handle;
     char buffer[1024];
     char *dataPtr = NULL;
@@ -463,7 +464,7 @@ ObjRead(interp, data, format, imageHandle,
     if (TIFFClientOpen) {
 	if (handle.state != IMG_STRING) {
 	    dataPtr = ckalloc((handle.length*3)/4 + 2);
-	    handle.length = tkimg_Read(&handle, dataPtr, handle.length);
+	    handle.length = tkimg_Read2(&handle, dataPtr, handle.length);
 	    handle.data = dataPtr;
 	}
 	handle.state = 0;
@@ -478,12 +479,12 @@ ObjRead(interp, data, format, imageHandle,
 	    return TCL_ERROR;
 	}
 
-	count = tkimg_Read(&handle, buffer, 1024);
+	count = (size_t)tkimg_Read2(&handle, buffer, 1024);
 	while (count == 1024) {
 	    Tcl_Write(outchan, buffer, count);
-	    count = tkimg_Read(&handle, buffer, 1024);
+	    count = (size_t)tkimg_Read2(&handle, buffer, 1024);
 	}
-	if (count>0){
+	if (count + 1 > 1){
 	    Tcl_Write(outchan, buffer, count);
 	}
 	if (Tcl_Close(interp, outchan) == TCL_ERROR) {
@@ -526,7 +527,8 @@ ChnRead(interp, chan, fileName, format, imageHandle,
 {
     TIFF *tif;
     char *tempFileName = NULL, tempFileNameBuffer[256];
-    int count, result;
+    size_t count;
+    int result;
     char buffer[1024];
 
     if (TIFFClientOpen) {
@@ -544,12 +546,12 @@ ChnRead(interp, chan, fileName, format, imageHandle,
 	    return TCL_ERROR;
 	}
 
-	count = Tcl_Read(chan, buffer, 1024);
+	count = (size_t)Tcl_Read(chan, buffer, 1024);
 	while (count == 1024) {
 	    Tcl_Write(outchan, buffer, count);
-	    count = Tcl_Read(chan, buffer, 1024);
+	    count = (size_t)Tcl_Read(chan, buffer, 1024);
 	}
-	if (count>0){
+	if (count + 1 > 1){
 	    Tcl_Write(outchan, buffer, count);
 	}
 	if (Tcl_Close(interp, outchan) == TCL_ERROR) {
@@ -603,7 +605,7 @@ CommonRead(interp, tif, format, imageHandle,
 	if ((objc > 3) || ((objc == 3) && ((c[0] != '-') ||
 		(c[1] != 'i') || strncmp(c, "-index", strlen(c))))) {
 	    Tcl_AppendResult(interp, "invalid format: \"",
-		    tkimg_GetStringFromObj(format, NULL), "\"", (char *) NULL);
+		    tkimg_GetStringFromObj2(format, NULL), "\"", (char *) NULL);
 	    return TCL_ERROR;
 	}
 	if (Tcl_GetIntFromObj(interp, objv[objc-1], &index) != TCL_OK) {
@@ -720,18 +722,18 @@ static int StringWrite(
 
 	result = Tcl_Read(inchan, buffer, 1024);
 	while ((result == TCL_OK) && !Tcl_Eof(inchan)) {
-	    tkimg_Write(&handle, buffer, result);
+	    tkimg_Write2(&handle, buffer, result);
 	    result = Tcl_Read(inchan, buffer, 1024);
 	}
 	if (result == TCL_OK) {
-	    tkimg_Write(&handle, buffer, result);
+	    tkimg_Write2(&handle, buffer, result);
 	    result = Tcl_Close(interp, inchan);
 	}
 	unlink(tempFileName);
     } else {
 	int length = handle.length;
 	tkimg_WriteInit(&data, &handle);
-	tkimg_Write(&handle, Tcl_DStringValue(&dstring), length);
+	tkimg_Write2(&handle, Tcl_DStringValue(&dstring), length);
 	Tcl_DStringFree(&dstring);
     }
     tkimg_Putc(IMG_DONE, &handle);
@@ -802,7 +804,7 @@ ParseWriteFormat(interp, format, comp, mode)
 	compression = "none";
 	byteorder = "";
 	for (i=1; i<objc; i++) {
-	    if (Tcl_GetIndexFromObj(interp, objv[i], (CONST84 char *CONST86 *)tiffWriteOptions,
+	    if (Tcl_GetIndexFromObj(interp, objv[i], (const char *CONST86 *)tiffWriteOptions,
 		    "format option", 0, &index) !=TCL_OK) {
 		return TCL_ERROR;
 	    }

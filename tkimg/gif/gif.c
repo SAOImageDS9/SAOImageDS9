@@ -106,7 +106,7 @@ static int CommonWrite(Tcl_Interp *interp,
 #define MAX_LWZ_BITS        12
 #define LM_to_uint(a,b)     (((b)<<8)|(a))
 
-#define ReadOK(handle,buf,len)  (tkimg_Read(handle, (char *)(buf), len) == len)
+#define ReadOK(handle,buf,len)  (tkimg_Read2(handle, (char *)(buf), len) == len)
 
 /*
  * Prototypes for local procedures defined in this file:
@@ -266,7 +266,7 @@ CommonRead(interp, gifConfPtr, fileName, format, imageHandle, destX, destY,
         if ((objc > 3) || ((objc == 3) && ((c[0] != '-') ||
             (c[1] != 'i') || strncmp(c, "-index", strlen(c))))) {
             Tcl_AppendResult(interp, "invalid format: \"",
-                tkimg_GetStringFromObj(format, NULL), "\"", (char *) NULL);
+                tkimg_GetStringFromObj2(format, NULL), "\"", (char *) NULL);
             return TCL_ERROR;
         }
         if (Tcl_GetIntFromObj(interp, objv[objc-1], &index) != TCL_OK) {
@@ -284,7 +284,7 @@ CommonRead(interp, gifConfPtr, fileName, format, imageHandle, destX, destY,
         return TCL_ERROR;
     }
 
-    if (tkimg_Read(&gifConfPtr->handle, (char *)buf, 3) != 3) {
+    if (tkimg_Read2(&gifConfPtr->handle, (char *)buf, 3) != 3) {
         return TCL_OK;
     }
 
@@ -319,7 +319,7 @@ CommonRead(interp, gifConfPtr, fileName, format, imageHandle, destX, destY,
     block.pixelPtr = NULL;
 
     while (1) {
-        if (tkimg_Read(&gifConfPtr->handle, (char *)buf, 1) != 1) {
+        if (tkimg_Read2(&gifConfPtr->handle, (char *)buf, 1) != 1) {
             /*
              * Premature end of image.  We should really notify
              * the user, but for now just show garbage.
@@ -340,7 +340,7 @@ CommonRead(interp, gifConfPtr, fileName, format, imageHandle, destX, destY,
              * This is a GIF extension.
              */
 
-            if (tkimg_Read(&gifConfPtr->handle, (char *)buf, 1) != 1) {
+            if (tkimg_Read2(&gifConfPtr->handle, (char *)buf, 1) != 1) {
                 Tcl_AppendResult(interp,
                     "error reading extension function code in GIF image",
                     (char *) NULL);
@@ -360,7 +360,7 @@ CommonRead(interp, gifConfPtr, fileName, format, imageHandle, destX, destY,
             continue;
         }
 
-        if (tkimg_Read(&gifConfPtr->handle, (char *)buf, 9) != 9) {
+        if (tkimg_Read2(&gifConfPtr->handle, (char *)buf, 9) != 9) {
             Tcl_AppendResult(interp,
                 "couldn't read left/top/width/height in GIF image",
                 (char *) NULL);
@@ -588,13 +588,13 @@ ReadGIFHeader(gifConfPtr, widthPtr, heightPtr)
 {
     unsigned char buf[7];
 
-    if ((tkimg_Read(&gifConfPtr->handle, (char *)buf, 6) != 6)
+    if ((tkimg_Read2(&gifConfPtr->handle, (char *)buf, 6) != 6)
                     || ((strncmp(GIF87a, (char *) buf, 6) != 0)
                     && (strncmp(GIF89a, (char *) buf, 6) != 0))) {
         return 0;
     }
 
-    if (tkimg_Read(&gifConfPtr->handle, (char *)buf, 4) != 4) {
+    if (tkimg_Read2(&gifConfPtr->handle, (char *)buf, 4) != 4) {
         return 0;
     }
 
@@ -827,7 +827,7 @@ ReadImage(interp, imagePtr, gifConfPtr, len, rows, cmap,
                      * Last pass reset the decoder, so the first code we
                      * see must be a singleton.  Seed the stack with it,
                      * and set up the old/first code pointers for
-                     * insertion into the string table.  We can't just
+                     * insertion into the codes table.  We can't just
                      * roll this into the clearCode test above, because
                      * at that point we have not yet read the next code.
                      */
@@ -839,11 +839,11 @@ ReadImage(interp, imagePtr, gifConfPtr, len, rows, cmap,
 
                 inCode = code;
 
-                if (code == maxCode) {
+                if ((code == maxCode) && (maxCode < (1 << MAX_LWZ_BITS))) {
                     /*
                      * maxCode is always one bigger than our highest assigned
                      * code.  If the code we see is equal to maxCode, then
-                     * we are about to add a new string to the table. ???
+                     * we are about to add a new entry to the codes table.
                      */
                     *top++ = firstCode;
                     code = oldCode;
@@ -851,29 +851,28 @@ ReadImage(interp, imagePtr, gifConfPtr, len, rows, cmap,
 
                 while (code > clearCode) {
                     /*
-                     * Populate the stack by tracing the string in the
-                     * string table from its tail to its head
+                     * Populate the stack by tracing the code in the
+                     * codes table from its tail to its head
                      */
                     *top++ = append[code];
                     code = prefix[code];
                 }
                 firstCode = append[code];
 
-                /*
-                 * If there's no more room in our string table, quit.
-                 * Otherwise, add a new string to the table
-                 */
-                if (maxCode >= (1 << MAX_LWZ_BITS)) {
-                    return TCL_OK;
-                }
-
-                /* Push the head of the string onto the stack */
+                /* Push the head of the code onto the stack */
                 *top++ = firstCode;
 
-                /* Add a new string to the string table */
-                prefix[maxCode] = oldCode;
-                append[maxCode] = firstCode;
-                maxCode++;
+                if (maxCode < (1 << MAX_LWZ_BITS)) {
+		    /*
+		     * If there's still room in our codes table, add a new entry.
+		     * Otherwise don't, and keep using the current table.
+                     * See DEFERRED CLEAR CODE IN LZW COMPRESSION in the GIF89a
+                     * specification.
+		     */
+                    prefix[maxCode] = oldCode;
+                    append[maxCode] = firstCode;
+                    maxCode++;
+                }
 
                 /* maxCode tells us the maximum code value we can accept.
                  * If we see that we need more bits to represent it than
@@ -1173,7 +1172,7 @@ CommonWrite(interp, handle, format, blockPtr)
         state.alphaOffset = 0;
     }
 
-    tkimg_Write(handle, (const char *) (state.alphaOffset ? GIF89a: GIF87a), 6);
+    tkimg_Write2(handle, (const char *) (state.alphaOffset ? GIF89a: GIF87a), 6);
 
     for (x=0; x<MAXCOLORMAPSIZE; x++) {
         state.mapa[x][CM_RED]   = 255;
@@ -1232,7 +1231,7 @@ CommonWrite(interp, handle, format, blockPtr)
     if (state.alphaOffset) {
         c = GIF_EXTENSION;
         tkimg_Putc(c, handle);
-        tkimg_Write(handle, "\371\4\1\0\0\0", 7);
+        tkimg_Write2(handle, "\371\4\1\0\0\0", 7);
     }
 
     c = GIF_START;
@@ -1744,8 +1743,8 @@ flush_char(statePtr)
 
     if (statePtr->a_count > 0) {
         c = statePtr->a_count;
-        tkimg_Write(statePtr->g_outfile, (const char *) &c, 1);
-        tkimg_Write(statePtr->g_outfile, (const char *) statePtr->accum, statePtr->a_count);
+        tkimg_Write2(statePtr->g_outfile, (const char *) &c, 1);
+        tkimg_Write2(statePtr->g_outfile, (const char *) statePtr->accum, statePtr->a_count);
         statePtr->a_count = 0;
     }
 }

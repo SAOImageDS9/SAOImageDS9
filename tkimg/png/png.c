@@ -68,6 +68,13 @@ typedef struct cleanup_info {
     jmp_buf jmpbuf;
 } cleanup_info;
 
+typedef struct {
+    int  verbose;
+    int  matte;
+    float alpha;
+    float gamma;
+} FMTOPT;
+
 /*
  * Prototypes for local procedures defined in this file:
  */
@@ -122,37 +129,31 @@ static void PrintReadInfo (int width, int height, int nchans, int bits,
 }
 #undef OUT
 
-static int ParseFormatOpts (interp, format, matte, alpha, gamma, verbose)
+static int ParseFormatOpts (interp, format, opts)
     Tcl_Interp *interp;
     Tcl_Obj *format;
-    int *matte;
-    double *alpha;
-    double *gamma;
-    int *verbose;
+    FMTOPT *opts;
 {
-    static const char *const pngOptions[] = 
-        {"-matte", "-alpha", "-gamma", "-verbose", NULL};
-    int objc, length, i, index;
+    static const char *const pngOptions[] = {
+        "-matte", "-alpha", "-gamma", "-verbose", NULL
+    };
+    int objc, i, index;
+    char *optionStr;
     Tcl_Obj **objv;
-    const char *matteStr;
-    const char *alphaStr;
-    const char *gammaStr;
-    const char *verboseStr;
+    int boolVal;
+    double doubleVal;
 
-    *matte   =  1;
-    *alpha   = -1.0;
-    *gamma   = -1.0;
-    *verbose =  0;
+    opts->matte   = 1;
+    opts->alpha   = -1.0;
+    opts->gamma   = 1.0;
+    opts->verbose = 0;
 
-    if (tkimg_ListObjGetElements(interp, format, &objc, &objv) != TCL_OK)
+    if (tkimg_ListObjGetElements(interp, format, &objc, &objv) != TCL_OK) {
         return TCL_ERROR;
+    }
     if (objc) {
-        matteStr   = "1";
-        alphaStr   = "-1.0";
-        gammaStr   = "-1.0";
-        verboseStr = "0";
         for (i=1; i<objc; i++) {
-            if (Tcl_GetIndexFromObj(interp, objv[i], (CONST84 char *CONST86 *)pngOptions,
+            if (Tcl_GetIndexFromObj(interp, objv[i], (const char *CONST86 *)pngOptions,
                     "format option", 0, &index) != TCL_OK) {
                 return TCL_ERROR;
             }
@@ -162,62 +163,47 @@ static int ParseFormatOpts (interp, format, matte, alpha, gamma, verbose)
                         "\"", (char *) NULL);
                 return TCL_ERROR;
             }
+            optionStr = Tcl_GetStringFromObj(objv[i], (int *) NULL);
             switch(index) {
                 case 0:
-                    matteStr = Tcl_GetStringFromObj(objv[i], (int *) NULL);
+                    if (Tcl_GetBoolean(interp, optionStr, &boolVal) == TCL_ERROR) {
+                        Tcl_AppendResult (interp, "Invalid matte mode \"", optionStr,
+                                          "\": should be 1 or 0, on or off, true or false",
+                                          (char *) NULL);
+                        return TCL_ERROR;
+                    }
+                    opts->matte = boolVal;
                     break;
                 case 1:
-                    alphaStr = Tcl_GetStringFromObj(objv[i], (int *) NULL);
+                    if (Tcl_GetDouble(interp, optionStr, &doubleVal) == TCL_ERROR) {
+                        Tcl_AppendResult (interp, "Invalid alpha value \"", optionStr,
+                                          "\": Must be greater than or equal to zero.", (char *) NULL);
+                        return TCL_ERROR;
+                    }
+                    opts->alpha = doubleVal;
+                    if (opts->alpha < 0.0 ) opts->alpha = 0.0;
+                    if (opts->alpha > 1.0 ) opts->alpha = 1.0;
                     break;
                 case 2:
-                    gammaStr = Tcl_GetStringFromObj(objv[i], (int *) NULL);
+                    if (Tcl_GetDouble(interp, optionStr, &doubleVal) == TCL_ERROR) {
+                        Tcl_AppendResult (interp, "Invalid gamma value \"", optionStr,
+                                          "\": Must be greater than or equal to zero.", (char *) NULL);
+                        return TCL_ERROR;
+                    }
+                    if (doubleVal >= 0.0) {
+                        opts->gamma = doubleVal;
+                    }
                     break;
                 case 3:
-                    verboseStr = Tcl_GetStringFromObj(objv[i], (int *) NULL);
+                    if (Tcl_GetBoolean(interp, optionStr, &boolVal) == TCL_ERROR) {
+                        Tcl_AppendResult (interp, "Invalid verbose mode \"", optionStr,
+                                          "\": should be 1 or 0, on or off, true or false",
+                                          (char *) NULL);
+                        return TCL_ERROR;
+                    }
+                    opts->verbose = boolVal;
                     break;
             }
-        }
-
-        length = strlen (matteStr);
-        if (!strncmp (matteStr, "1", length) || \
-            !strncmp (matteStr, "true", length) || \
-            !strncmp (matteStr, "on", length)) {
-            *matte = 1;
-        } else if (!strncmp (matteStr, "0", length) || \
-            !strncmp (matteStr, "false", length) || \
-            !strncmp (matteStr, "off", length)) {
-            *matte = 0;
-        } else {
-            Tcl_AppendResult(interp, "invalid alpha (matte) mode \"", matteStr,
-                              "\": should be 1 or 0, on or off, true or false",
-                              (char *) NULL);
-            return TCL_ERROR;
-        }
-
-        if (strcmp (alphaStr, "-1.0")) {
-            *alpha = atof (alphaStr);
-            if (*alpha < 0.0 ) *alpha = 0.0;
-            if (*alpha > 1.0 ) *alpha = 1.0;
-        }
-
-        if (strcmp (gammaStr, "-1.0")) {
-            *gamma = atof (gammaStr);
-        }
-
-        length = strlen (verboseStr);
-        if (!strncmp (verboseStr, "1", length) || \
-            !strncmp (verboseStr, "true", length) || \
-            !strncmp (verboseStr, "on", length)) {
-            *verbose = 1;
-        } else if (!strncmp (verboseStr, "0", length) || \
-            !strncmp (verboseStr, "false", length) || \
-            !strncmp (verboseStr, "off", length)) {
-            *verbose = 0;
-        } else {
-            Tcl_AppendResult(interp, "invalid verbose mode \"", verboseStr,
-                              "\": should be 1 or 0, on or off, true or false",
-                              (char *) NULL);
-            return TCL_ERROR;
         }
     }
     return TCL_OK;
@@ -261,7 +247,7 @@ tk_png_read(png_ptr, data, length)
     png_bytep data;
     png_size_t length;
 {
-    if (tkimg_Read((tkimg_MFile *) png_get_progressive_ptr(png_ptr),
+    if (tkimg_Read2((tkimg_MFile *) png_get_progressive_ptr(png_ptr),
             (char *) data, (size_t) length) != (int) length) {
         png_error(png_ptr, "Read Error");
     }
@@ -273,7 +259,7 @@ tk_png_write(png_ptr, data, length)
     png_bytep data;
     png_size_t length;
 {
-    if (tkimg_Write((tkimg_MFile *) png_get_progressive_ptr(png_ptr),
+    if (tkimg_Write2((tkimg_MFile *) png_get_progressive_ptr(png_ptr),
             (char *) data, (size_t) length) != (int) length) {
         png_error(png_ptr, "Write Error");
     }
@@ -324,11 +310,11 @@ CommonMatchPNG(handle, widthPtr, heightPtr)
 {
     unsigned char buf[8];
 
-    if ((tkimg_Read(handle, (char *) buf, 8) != 8)
+    if ((tkimg_Read2(handle, (char *) buf, 8) != 8)
             || (strncmp("\211\120\116\107\15\12\32\12", (char *) buf, 8) != 0)
-            || (tkimg_Read(handle, (char *) buf, 8) != 8)
+            || (tkimg_Read2(handle, (char *) buf, 8) != 8)
             || (strncmp("\111\110\104\122", (char *) buf+4, 4) != 0)
-            || (tkimg_Read(handle, (char *) buf, 8) != 8)) {
+            || (tkimg_Read2(handle, (char *) buf, 8) != 8)) {
         return 0;
     }
     *widthPtr = (buf[0]<<24) + (buf[1]<<16) + (buf[2]<<8) + buf[3];
@@ -420,13 +406,9 @@ CommonReadPNG(png_ptr, interp, fileName, format, imageHandle, destX, destY,
     double fileGamma = -1.0;
     int useAlpha = 0;
     int addAlpha = 0;
-    /* Format options */
-    int matte;
-    double alpha;
-    double gamma;
-    int verbose;
+    FMTOPT opts;
 
-    if (ParseFormatOpts(interp, format, &matte, &alpha, &gamma, &verbose) != TCL_OK) {
+    if (ParseFormatOpts(interp, format, &opts) != TCL_OK) {
         return TCL_ERROR;
     }
 
@@ -482,7 +464,7 @@ CommonReadPNG(png_ptr, interp, fileName, format, imageHandle, destX, destY,
     if (png_get_sRGB(png_ptr, info_ptr, &intent)) {
         png_set_sRGB(png_ptr, info_ptr, intent);
     } else {
-        if (gamma < 0.0) {
+        if (opts.gamma < 0.0) {
             /* No gamma specified on the command line.
              * Check, if a gamma value is specified in the file.
              */
@@ -490,7 +472,7 @@ CommonReadPNG(png_ptr, interp, fileName, format, imageHandle, destX, destY,
                 png_set_gamma(png_ptr, 1.0, fileGamma);
             }
         } else {
-            png_set_gamma(png_ptr, 1.0, gamma);
+            png_set_gamma(png_ptr, 1.0, opts.gamma);
         }
     }
 
@@ -498,19 +480,19 @@ CommonReadPNG(png_ptr, interp, fileName, format, imageHandle, destX, destY,
         || png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) {
         /* Image has an alpha channel.
            Check, if we don't want to use the alpha channel (matte == false) */
-        if (!matte) {
+        if (!opts.matte) {
             png_set_strip_alpha (png_ptr);
         }
     } else {
         /* Image has no alpha channel.
            If a valid alpha multiply has been specified, add an alpha channel to the image.
            The matte flag is ignored. */
-        if (alpha >= 0.0) {
-            png_set_add_alpha(png_ptr, (unsigned int)(alpha*255), PNG_FILLER_AFTER);
+        if (opts.alpha >= 0.0) {
+            png_set_add_alpha(png_ptr, (unsigned int)(opts.alpha*255), PNG_FILLER_AFTER);
         }
     }
 
-    if (verbose) {
+    if (opts.verbose) {
         PrintReadInfo (info_width, info_height, png_get_channels(png_ptr, info_ptr),
                        bit_depth, fileGamma, fileName, "Reading image:");
     }
@@ -533,11 +515,11 @@ CommonReadPNG(png_ptr, interp, fileName, format, imageHandle, destX, destY,
         || png_get_valid(png_ptr, info_ptr, PNG_INFO_tRNS)) {
         /* Image has an alpha channel.
            Check, if we don't want to use the alpha channel (matte == false) */
-        if (!matte) {
+        if (!opts.matte) {
             block.offset[3] = 0;
         } else {
             block.offset[3] = block.pixelSize - 1;
-            if ( alpha >= 0.0) {
+            if ( opts.alpha >= 0.0) {
                 useAlpha = 1;
             }
         }
@@ -545,7 +527,7 @@ CommonReadPNG(png_ptr, interp, fileName, format, imageHandle, destX, destY,
         /* Image has no alpha channel.
            If a valid alpha multiply has been specified, add an alpha channel to the image.
            The matte flag is ignored. */
-        if ( alpha >= 0.0) {
+        if ( opts.alpha >= 0.0) {
             addAlpha = 1;
         } else {
             block.offset[3] = 0;
@@ -569,7 +551,7 @@ CommonReadPNG(png_ptr, interp, fileName, format, imageHandle, destX, destY,
     if (useAlpha) {
         unsigned char * alphaPtr = block.pixelPtr + block.offset[3];
         for(i=0; i<(unsigned int)(height*width); i++) {
-            *alphaPtr = alpha * *alphaPtr;
+            *alphaPtr = opts.alpha * *alphaPtr;
             alphaPtr += block.offset[3] + 1 ;
         }
     }

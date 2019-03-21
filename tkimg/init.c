@@ -45,7 +45,7 @@ static int ChnWrite(Tcl_Interp *interp, const char *filename,
 static int StringWrite(Tcl_Interp *interp, Tcl_Obj *format,
 	Tk_PhotoImageBlock *blockPtr);
 
-static Tk_PhotoImageFormat format = {
+static Tk_PhotoImageFormat sImageFormat = {
 	(char *) "%PHIMGTYPE%", /* name */
 	ChnMatch, /* fileMatchProc */
 	ObjMatch, /* stringMatchProc */
@@ -95,7 +95,7 @@ static int StringWriteBeta(Tcl_Interp *interp, Tcl_Obj *format,
 	Tk_PhotoImageBlock *blockPtr);
 #endif
 
-static Tk_PhotoImageFormat format_beta = {
+static Tk_PhotoImageFormat sImageFormatBeta = {
 	(char *) "%PHIMGTYPE_BETA%", /* name */
 	SECOND_CHNMATCH, /* fileMatchProc */
 	SECOND_OBJMATCH, /* stringMatchProc */
@@ -144,9 +144,9 @@ int
 	 * Register the new photo image type.
 	 */
 
-	Tk_CreatePhotoImageFormat(&format);
+	Tk_CreatePhotoImageFormat(&sImageFormat);
 #ifdef SECOND_FORMAT
-	Tk_CreatePhotoImageFormat(&format_beta);
+	Tk_CreatePhotoImageFormat(&sImageFormatBeta);
 #endif /* SECOND_FORMAT */
 
 	/*

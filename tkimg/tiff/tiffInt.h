@@ -16,9 +16,6 @@ MODULE_SCOPE void TkimgTIFFfree(tdata_t data);
 MODULE_SCOPE tdata_t TkimgTIFFmalloc(tsize_t size);
 MODULE_SCOPE tdata_t TkimgTIFFrealloc(tdata_t data, tsize_t size);
 
-#ifndef CONST84
-#   define CONST84
-#endif
 #ifndef CONST86
 #   define CONST86
 #endif

@@ -7,7 +7,7 @@ dnl
 # TEA compliant.
 #--------------------------------------------------------------------
 
-AC_INIT([tkimggif],[1.4.7])
+AC_INIT([tkimggif],[1.4.9])
 
 TEA_INIT([3.9])
 
@@ -16,6 +16,7 @@ AC_CONFIG_AUX_DIR(../tclconfig)
 PHIMGTYPE="gif"
 CPACKAGE="Tkimggif"
 PACKAGE_TCLNAME="img::gif"
+AC_SUBST(PHIMGTYPE)
 AC_SUBST(PACKAGE_TCLNAME)
 
 #--------------------------------------------------------------------
@@ -186,7 +187,8 @@ fi
 
 TEA_PROG_TCLSH
 TEA_PROG_WISH
-TEA_EXPORT_CONFIG(tkimggif)
+
+TEA_EXPORT_CONFIG([tkimggif])
 
 #--------------------------------------------------------------------
 # Finally, substitute all of the various values into the Makefile.

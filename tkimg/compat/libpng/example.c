@@ -2,13 +2,14 @@
 #if 0 /* in case someone actually tries to compile this */
 
 /* example.c - an example of using libpng
- * Last changed in libpng 1.6.24 [August 4, 2016]
+ * Last changed in libpng 1.6.35 [July 15, 2018]
+ * Maintained 2018 Cosmin Truta
  * Maintained 1998-2016 Glenn Randers-Pehrson
  * Maintained 1996, 1997 Andreas Dilger)
  * Written 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
  * To the extent possible under law, the authors have waived
  * all copyright and related or neighboring rights to this file.
- * This work is published from: United States.
+ * This work is published from: United States, Canada.
  */
 
 /* This is an example of how to use libpng to read and write PNG files.
@@ -114,13 +115,13 @@ int main(int argc, const char **argv)
 
          else
          {
-            /* Calling png_free_image is optional unless the simplified API was
+            /* Calling png_image_free is optional unless the simplified API was
              * not run to completion.  In this case if there wasn't enough
              * memory for 'buffer' we didn't complete the read, so we must free
              * the image:
              */
             if (buffer == NULL)
-               png_free_image(&image);
+               png_image_free(&image);
 
             else
                free(buffer);
@@ -257,7 +258,7 @@ int check_if_png(char *file_name, FILE **fp)
    /* Compare the first PNG_BYTES_TO_CHECK bytes of the signature.
       Return nonzero (true) if they match */
 
-   return(!png_sig_cmp(buf, (png_size_t)0, PNG_BYTES_TO_CHECK));
+   return(!png_sig_cmp(buf, 0, PNG_BYTES_TO_CHECK));
 }
 
 /* Read a PNG file.  You may want to return an error code if the read
@@ -983,6 +984,11 @@ void write_png(char *file_name /* , ... other image information ... */)
    png_uint_32 k, height, width;
 
    /* In this example, "image" is a one-dimensional array of bytes */
+
+   /* Guard against integer overflow */
+   if (height > PNG_SIZE_MAX/(width*bytes_per_pixel)) {
+      png_error(png_ptr, "Image_data buffer would be too large");
+   }
    png_byte image[height*width*bytes_per_pixel];
 
    png_bytep row_pointers[height];

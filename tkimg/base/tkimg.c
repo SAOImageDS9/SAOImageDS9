@@ -121,7 +121,7 @@ int tob64(
 	tkimg_MFile handle;
 	Tcl_Channel chan;
 	char buffer[1024];
-	int len;
+	size_t len;
 
 	if (argc != 2) {
 		Tcl_WrongNumArgs(interp, 1, objv, "filename");
@@ -139,7 +139,7 @@ int tob64(
 	while ((len = Tcl_Read(chan, buffer, 1024)) == 1024) {
 		tkimg_Write(&handle, buffer, 1024);
 	}
-	if (len > 0) {
+	if (len + 1 > 1) {
 		tkimg_Write(&handle, buffer, len);
 	}
 	if ((Tcl_Close(interp, chan) == TCL_ERROR) || (len < 0)) {
@@ -178,7 +178,7 @@ int fromb64(
 	tkimg_MFile handle;
 	Tcl_Channel chan;
 	char buffer[1024];
-	int len;
+	size_t len;
 
 	if (argc != 3) {
 		Tcl_WrongNumArgs(interp, 1, objv, "filename data");
@@ -198,8 +198,8 @@ int fromb64(
 			goto writeerror;
 		}
 	}
-	if (len > 0) {
-		if (Tcl_Write(chan, buffer, len) != len) {
+	if (len + 1 > 1) {
+		if ((size_t)Tcl_Write(chan, buffer, len) != len) {
 			goto writeerror;
 		}
 	}

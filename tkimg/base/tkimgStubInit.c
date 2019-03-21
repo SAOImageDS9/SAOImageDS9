@@ -25,8 +25,8 @@ const TkimgStubs tkimgStubs = {
     tkimg_Putc, /* 5 */
     tkimg_Write, /* 6 */
     tkimg_ReadBuffer, /* 7 */
-    0, /* 8 */
-    0, /* 9 */
+    tkimg_Read2, /* 8 */
+    tkimg_Write2, /* 9 */
     tkimg_PhotoPutBlock, /* 10 */
     tkimg_PhotoExpand, /* 11 */
     tkimg_PhotoSetSize, /* 12 */
@@ -37,9 +37,9 @@ const TkimgStubs tkimgStubs = {
     0, /* 17 */
     0, /* 18 */
     0, /* 19 */
-    tkimg_FixChanMatchProc, /* 20 */
-    tkimg_FixObjMatchProc, /* 21 */
-    tkimg_FixStringWriteProc, /* 22 */
+    0, /* 20 */
+    0, /* 21 */
+    0, /* 22 */
     0, /* 23 */
     0, /* 24 */
     0, /* 25 */
@@ -50,6 +50,38 @@ const TkimgStubs tkimgStubs = {
     tkimg_GetStringFromObj, /* 30 */
     tkimg_GetByteArrayFromObj, /* 31 */
     tkimg_ListObjGetElements, /* 32 */
+    tkimg_GetStringFromObj2, /* 33 */
+    tkimg_GetByteArrayFromObj2, /* 34 */
+    0, /* 35 */
+    0, /* 36 */
+    0, /* 37 */
+    0, /* 38 */
+    0, /* 39 */
+    0, /* 40 */
+    0, /* 41 */
+    0, /* 42 */
+    0, /* 43 */
+    0, /* 44 */
+    0, /* 45 */
+    0, /* 46 */
+    0, /* 47 */
+    0, /* 48 */
+    0, /* 49 */
+    tkimg_IsIntel, /* 50 */
+    tkimg_CreateGammaTable, /* 51 */
+    tkimg_LookupGammaTable, /* 52 */
+    tkimg_UShortToUByte, /* 53 */
+    tkimg_ShortToUByte, /* 54 */
+    tkimg_FloatToUByte, /* 55 */
+    tkimg_ReadUByteRow, /* 56 */
+    tkimg_ReadUShortRow, /* 57 */
+    tkimg_ReadShortRow, /* 58 */
+    tkimg_ReadFloatRow, /* 59 */
+    tkimg_ReadUByteFile, /* 60 */
+    tkimg_ReadUShortFile, /* 61 */
+    tkimg_ReadFloatFile, /* 62 */
+    tkimg_RemapUShortValues, /* 63 */
+    tkimg_RemapFloatValues, /* 64 */
 };
 
 /* !END!: Do not edit above this line. */

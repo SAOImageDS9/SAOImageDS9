@@ -1,6 +1,6 @@
 
         Tcl/Tk Image formats (TkImg)
-        (Version 1.4.7 / December 2017)
+        (Version 1.4.9 / MArch 2019)
 
         Jan Nijtmans, Andreas Kupries, Paul Obermeier
 
@@ -10,7 +10,7 @@ combination with Tcl/Tk 8.3 or later but 8.6 or newer are highly
 recommended.
 
 Included in this distribution are the most recent versions (as of
-December 2017) of the libz, libpng, libjpeg, and libtiff libraries.
+March 2019) of the libz, libpng, libjpeg, and libtiff libraries.
 These are not required, unless you need support for the PNG, JPEG,
 or TIFF format. Note that you have to build these libraries to
 support the named formats, even if your system already has shared
@@ -35,8 +35,8 @@ All packages save for the supporting ones (see below) have names
 starting with 'img'. For compatibility with older scripts the
 package index file of the utility package 'img::base' declares
 pseudo-packages 'img' and 'Img' which load all packages provided
-by this extension with the exception of formats raw and dted. See
-below for details on these packages.
+by this extension with the exception of formats raw, flir and dted.
+See below for details on these packages.
 
 BUILDING - The convenient way
 
@@ -142,15 +142,20 @@ supporting packages, as noted below. Their names and directories are
     img::xpm    tkimg/xpm
 
     img::dted   tkimg/dted
+    img::flir   tkimg/flir
     img::raw    tkimg/raw
     -------------------------------------------------
 
-The packages img::dted and img::raw are special, because they are not included
-when doing a "package require Img". 
+The packages img::dted, img::flir and img::raw are special, because they are
+not included when doing a "package require Img". These must be explicitely
+loaded via a "package require img::FMT".
 img::dted reads Digital Terrain Elevation Data and transforms the elevation
-data into photo images. img::raw can transform any form of binary matrix data
+data into photo images.
+img::flir reads FLIR files and transforms the temperature information 
+into photo images.
+img::raw can transform any form of binary matrix data
 (8-bit and 16-bit integer, 32-bit float) into a photo image.
-As these formats do not have a magic key or other identifier at the beginning
+As DTED and RAW files do not have a magic key or other identifier at the beginning
 of the file, it is not possible to automatically detect the format by reading
 some file header.
  
@@ -206,7 +211,7 @@ The line
     package require Img
 
 is still legal and will load all format handlers provided by this
-extension except dted and raw.
+extension except dted, flir and raw.
 
 As an example, have a look at the file "demo.tcl"
 

@@ -321,7 +321,7 @@ CommonMatch(handle, widthPtr, heightPtr)
     char buf[256];
     int i;
 
-    i = tkimg_Read(handle, buf, 3);
+    i = tkimg_Read2(handle, buf, 3);
     if ((i != 3)||strncmp(buf,"\377\330\377", 3)) {
 	return 0;
     }
@@ -331,7 +331,7 @@ CommonMatch(handle, widthPtr, heightPtr)
     for (;;) {
 	/* get marker type byte, skipping any padding FFs */
 	while (buf[0] == (char) 0xff) {
-	    if (tkimg_Read(handle, buf,1) != 1) {
+	    if (tkimg_Read2(handle, buf,1) != 1) {
 		return 0;
 	    }
 	}
@@ -342,27 +342,27 @@ CommonMatch(handle, widthPtr, heightPtr)
 		|| buf[0] == (char) 0xc2)
 	    break;
 	/* nope, skip the marker parameters */
-	if (tkimg_Read(handle, buf, 2) != 2) {
+	if (tkimg_Read2(handle, buf, 2) != 2) {
 	    return 0;
 	}
 	i = ((buf[0] & 0x0ff)<<8) + (buf[1] & 0x0ff) - 1;
 	while (i>256) {
-	    tkimg_Read(handle, buf, 256);
+	    tkimg_Read2(handle, buf, 256);
 	    i -= 256;
 	}
-	if ((i<1) || (tkimg_Read(handle, buf, i)) != i) {
+	if ((i<1) || (tkimg_Read2(handle, buf, i)) != i) {
 	    return 0;
 	}
 	buf[0] = buf[i-1];
 	/* skip any inter-marker junk (there shouldn't be any, really) */
 	while (buf[0] != (char) 0xff) {
-	    if (tkimg_Read(handle, buf,1) != 1) {
+	    if (tkimg_Read2(handle, buf,1) != 1) {
 		return 0;
 	    }
 	}
     }
     /* Found the SOFn marker, get image dimensions */
-    if (tkimg_Read(handle, buf, 7) != 7) {
+    if (tkimg_Read2(handle, buf, 7) != 7) {
 	return 0;
     }
     *heightPtr = ((buf[3] & 0x0ff)<<8) + (buf[4] & 0x0ff);
@@ -555,7 +555,7 @@ CommonRead(interp, cinfo, format, imageHandle, destX, destY,
     }
     if (objc) {
 	for (i=1; i<objc; i++) {
-	    if (Tcl_GetIndexFromObj(interp, objv[i], (CONST84 char *CONST86 *)jpegReadOptions,
+	    if (Tcl_GetIndexFromObj(interp, objv[i], (const char *CONST86 *)jpegReadOptions,
 		    "format option", 0, &index)!=TCL_OK) {
 		return TCL_ERROR;
 	    }
@@ -845,7 +845,7 @@ CommonWrite(interp, cinfo, format, blockPtr)
     }
     if (objc) {
 	for (i=1; i<objc; i++) {
-	    if (Tcl_GetIndexFromObj(interp, objv[i], (CONST84 char *CONST86 *)jpegWriteOptions,
+	    if (Tcl_GetIndexFromObj(interp, objv[i], (const char *CONST86 *)jpegWriteOptions,
 		    "format option", 0, &index)!=TCL_OK) {
 		return TCL_ERROR;
 	    }
@@ -983,7 +983,7 @@ fill_input_buffer(cinfo)
   src_ptr src = (src_ptr) cinfo->src;
   int nbytes;
 
-  nbytes = tkimg_Read(&src->handle, (char *) src->buffer, STRING_BUF_SIZE);
+  nbytes = tkimg_Read2(&src->handle, (char *) src->buffer, STRING_BUF_SIZE);
 
   if (nbytes <= 0) {
     /* Insert a fake EOI marker */
@@ -1115,7 +1115,7 @@ my_empty_output_buffer (cinfo)
     j_compress_ptr cinfo;
 {
   dest_ptr dest = (dest_ptr) cinfo->dest;
-  if (tkimg_Write(&dest->handle, (char *) dest->buffer, STRING_BUF_SIZE)
+  if (tkimg_Write2(&dest->handle, (char *) dest->buffer, STRING_BUF_SIZE)
   	!= STRING_BUF_SIZE)
     ERREXIT(cinfo, JERR_FILE_WRITE);
 
@@ -1134,7 +1134,7 @@ my_term_destination (cinfo)
 
   /* Write any data remaining in the buffer */
   if (datacount > 0) {
-    if (tkimg_Write(&dest->handle, (char *) dest->buffer, datacount)
+    if (tkimg_Write2(&dest->handle, (char *) dest->buffer, datacount)
 	!= datacount)
       ERREXIT(cinfo, JERR_FILE_WRITE);
   }

@@ -258,6 +258,7 @@ proc PlotDataSetOne {varname dim data} {
     # remove all non-numeric data
     regsub -all {[^0-9.e\- ]+} $data {} data
 
+    set ox [lindex $data 0]
     set x {}
     set y {}
     set xe {}

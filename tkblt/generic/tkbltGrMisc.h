@@ -104,26 +104,6 @@ namespace Blt {
     int offset;
   } Dashes;
 
-  typedef enum {
-    CLIP_OUTSIDE = 0,
-    CLIP_INSIDE  = 1 << 0,
-    CLIP_P       = 1 << 1,
-    CLIP_Q       = 1 << 2
-  } LineRectClipResult;
-
-  inline LineRectClipResult operator|(LineRectClipResult a, LineRectClipResult b) {
-    return static_cast<LineRectClipResult>(static_cast<int>(a) | static_cast<int>(b));
-  }
-
-  inline LineRectClipResult operator&(LineRectClipResult a, LineRectClipResult b) {
-    return static_cast<LineRectClipResult>(static_cast<int>(a) & static_cast<int>(b));
-  }
-
-  inline LineRectClipResult & operator|=(LineRectClipResult & rhs, LineRectClipResult v) {
-    rhs = rhs | v;
-    return rhs;
-  }
-
   extern char* dupstr(const char*);
   extern Graph* getGraphFromWindowData(Tk_Window tkwin);
 
@@ -131,7 +111,7 @@ namespace Blt {
 			    int nScreenPts);
   extern int polyRectClip(Region2d *extsPtr, Point2d *inputPts,
 			  int nInputPts, Point2d *outputPts);
-  extern LineRectClipResult lineRectClip(Region2d *regionPtr, Point2d *p, Point2d *q);
+  extern int lineRectClip(Region2d *regionPtr, Point2d *p, Point2d *q);
   extern Point2d getProjection (int x, int y, Point2d *p, Point2d *q);
 };
 

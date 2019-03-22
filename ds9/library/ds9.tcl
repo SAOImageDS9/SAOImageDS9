@@ -173,27 +173,34 @@ if {[catch {tk windowingsystem} ds9(wm)]} {
 set ds9(app) [file tail [info nameofexecutable]]
 
 # Themes are now hardcoded
+# can't be defined in ds9def()
+set ds9(background) #d9d9d9
+#set ds9(background) white
+
 switch $ds9(wm) {
     x11 {
-	# set bg for non ttk widgets
-	set bg [ttk::style lookup "." -background]
-
 	# standard widgets
- 	option add {*Text.Background} $bg
- 	option add {*Listbox.Background} $bg
-	option add {*PlotBackground} $bg
+ 	option add {*background} $ds9(background)
 
 	# ttk widgets
-	ttk::style configure TLabel -borderwidth 2 -padding 1 
-	ttk::style configure TEntry -fieldbackground $bg -padding 1
-    }
-    aqua {
-	# set bg for non ttk widgets
-	set bg [ttk::style lookup "." -background]
+	ttk::style configure TFrame -background $ds9(background)
+	ttk::style configure TLabelframe -background $ds9(background)
+	ttk::style configure TLabelframe.Label -background $ds9(background)
+	ttk::style configure TLabel -background $ds9(background)
+	ttk::style configure TEntry -fieldbackground $ds9(background)
+	ttk::style configure TButton -background $ds9(background)
+	ttk::style configure TCheckbutton -background $ds9(background)
+	ttk::style configure TRadiobutton -background $ds9(background)
+	ttk::style configure TMenubutton -background $ds9(background)
+	ttk::style configure TScale -background $ds9(background)
+	ttk::style configure TScrollbar -background $ds9(background) \
+	    -troughcolor $ds9(background)
+	ttk::style configure TProgressbar -troughcolor $ds9(background)
 
-	# standard widgets
-	option add {*PlotBackground} $bg
+	ttk::style configure TEntry -padding 1
+	ttk::style configure TLabel -borderwidth 2 -padding 1
     }
+    aqua {}
     win32 {ttk::style theme use xpnative}
 }
 

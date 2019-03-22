@@ -1129,7 +1129,7 @@ double Axis::invVMap(double y)
 double Axis::hMap(double x)
 {
   AxisOptions* ops = (AxisOptions*)ops_;
-  if (ops->logScale) {
+  if ((ops->logScale) && (x != 0.0)) {
     x = log10(fabs(x));
   }
   /* Map graph coordinate to normalized coordinates [0..1] */
@@ -1143,7 +1143,7 @@ double Axis::hMap(double x)
 double Axis::vMap(double y)
 {
   AxisOptions* ops = (AxisOptions*)ops_;
-  if (ops->logScale) {
+  if ((ops->logScale) && (y != 0.0)) {
     y = log10(fabs(y));
   }
   /* Map graph coordinate to normalized coordinates [0..1] */

@@ -258,7 +258,6 @@ proc PlotDataSetOne {varname dim data} {
     # remove all non-numeric data
     regsub -all {[^0-9.e\- ]+} $data {} data
 
-    set ox [lindex $data 0]
     set x {}
     set y {}
     set xe {}
@@ -271,19 +270,8 @@ proc PlotDataSetOne {varname dim data} {
 	    set var(yedata) {}
 
 	    for {set ii 0} {$ii<$ll} {incr ii 2} {
-		set tx [lindex $data $ii]
-		if {$var(seq)} {
-		    if {$ox<=$tx} {
-			set ox $tx
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-		    } else {
-			break
-		    }
-		} else {
-		    lappend x $tx
-		    lappend y [lindex $data [expr $ii+1]]
-		}
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+1]]
 	    }
 	    $var(xdata) set $x
 	    $var(ydata) set $y
@@ -298,21 +286,9 @@ proc PlotDataSetOne {varname dim data} {
 	    blt::vector create $var(xedata)
 
 	    for {set ii 0} {$ii<$ll} {incr ii 3} {
-		set tx [lindex $data $ii]
-		if {$var(seq)} {
-		    if {$ox<=$tx} {
-			set ox $tx
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend xe [lindex $data [expr $ii+2]]
-		    } else {
-			break
-		    }
-		} else {
-		    lappend x $tx
-		    lappend y [lindex $data [expr $ii+1]]
-		    lappend xe [lindex $data [expr $ii+2]]
-		}
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+1]]
+		lappend xe [lindex $data [expr $ii+2]]
 	    }
 	    $var(xdata) set $x
 	    $var(ydata) set $y
@@ -329,21 +305,9 @@ proc PlotDataSetOne {varname dim data} {
 	    blt::vector create $var(yedata)
 
 	    for {set ii 0} {$ii<$ll} {incr ii 3} {
-		set tx [lindex $data $ii]
-		if {$var(seq)} {
-		    if {$ox<=$tx} {
-			set ox $tx
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend ye [lindex $data [expr $ii+2]]
-		    } else {
-			break
-		    }
-		} else {
-		    lappend x $tx
-		    lappend y [lindex $data [expr $ii+1]]
-		    lappend ye [lindex $data [expr $ii+2]]
-		}
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+1]]
+		lappend ye [lindex $data [expr $ii+2]]
 	    }
 	    $var(xdata) set $x
 	    $var(ydata) set $y
@@ -359,23 +323,10 @@ proc PlotDataSetOne {varname dim data} {
 	    blt::vector create $var(xedata) $var(yedata)
 
 	    for {set ii 0} {$ii<$ll} {incr ii 4} {
-		set tx [lindex $data $ii]
-		if {$var(seq)} {
-		    if {$ox<=$tx} {
-			set ox $tx
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend xe [lindex $data [expr $ii+2]]
-			lappend ye [lindex $data [expr $ii+3]]
-		    } else {
-			break
-		    }
-		} else {
-		    lappend x $tx
-		    lappend y [lindex $data [expr $ii+1]]
-		    lappend xe [lindex $data [expr $ii+2]]
-		    lappend ye [lindex $data [expr $ii+3]]
-		}
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+1]]
+		lappend xe [lindex $data [expr $ii+2]]
+		lappend ye [lindex $data [expr $ii+3]]
 	    }
 	    $var(xdata) set $x
 	    $var(ydata) set $y
@@ -392,21 +343,9 @@ proc PlotDataSetOne {varname dim data} {
 	    blt::vector create $var(yedata)
 
 	    for {set ii 0} {$ii<$ll} {incr ii 4} {
-		set tx [lindex $data $ii]
-		if {$var(seq)} {
-		    if {$ox<=$tx} {
-			set ox $tx
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend ye [lindex $data [expr $ii+2]]
-		    } else {
-			break
-		    }
-		} else {
-		    lappend x $tx
-		    lappend y [lindex $data [expr $ii+1]]
-		    lappend ye [lindex $data [expr $ii+2]]
-		}
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+1]]
+		lappend ye [lindex $data [expr $ii+2]]
 	    }
 	    $var(xdata) set $x
 	    $var(ydata) set $y
@@ -419,19 +358,8 @@ proc PlotDataSetOne {varname dim data} {
 	    set var(yedata) {}
 
 	    for {set ii 0} {$ii<$ll} {incr ii 4} {
-		set tx [lindex $data $ii]
-		if {$var(seq)} {
-		    if {$ox<=$tx} {
-			set ox $tx
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+3]]
-		    } else {
-			break
-		    }
-		} else {
-		    lappend x $tx
-		    lappend y [lindex $data [expr $ii+3]]
-		}
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+3]]
 	    }
 	    $var(xdata) set $x
 	    $var(ydata) set $y
@@ -446,21 +374,9 @@ proc PlotDataSetOne {varname dim data} {
 	    blt::vector create $var(yedata)
 
 	    for {set ii 0} {$ii<$ll} {incr ii 5} {
-		set tx [lindex $data $ii]
-		if {$var(seq)} {
-		    if {$ox<=$tx} {
-			set ox $tx
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+1]]
-			lappend ye [lindex $data [expr $ii+2]]
-		    } else {
-			break
-		    }
-		} else {
-		    lappend x $tx
-		    lappend y [lindex $data [expr $ii+1]]
-		    lappend ye [lindex $data [expr $ii+2]]
-		}
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+1]]
+		lappend ye [lindex $data [expr $ii+2]]
 	    }
 	    $var(xdata) set $x
 	    $var(ydata) set $y
@@ -476,21 +392,9 @@ proc PlotDataSetOne {varname dim data} {
 	    blt::vector create $var(yedata)
 
 	    for {set ii 0} {$ii<$ll} {incr ii 5} {
-		set tx [lindex $data $ii]
-		if {$var(seq)} {
-		    if {$ox<=$tx} {
-			set ox $tx
-			lappend x $tx
-			lappend y [lindex $data [expr $ii+3]]
-			lappend ye [lindex $data [expr $ii+4]]
-		    } else {
-			break
-		    }
-		} else {
-		    lappend x $tx
-		    lappend y [lindex $data [expr $ii+3]]
-		    lappend ye [lindex $data [expr $ii+4]]
-		}
+		lappend x [lindex $data $ii]
+		lappend y [lindex $data [expr $ii+3]]
+		lappend ye [lindex $data [expr $ii+4]]
 	    }
 	    $var(xdata) set $x
 	    $var(ydata) set $y
@@ -1201,17 +1105,21 @@ proc PlotUpdateGraph {varname} {
 	-bg $var(graph,bg) -plotbackground $var(graph,bg)
 
     $var(graph) xaxis configure \
+	-bg $var(graph,bg) \
 	-grid $var(axis,x,grid) -logscale $var(axis,x,log) \
 	-title $var(axis,x,title) \
 	-tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
+
     $var(graph) yaxis configure \
+	-bg $var(graph,bg) \
 	-grid $var(axis,y,grid) -logscale $var(axis,y,log) \
 	-title $var(axis,y,title) \
 	-tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
     $var(graph) legend configure -hide [expr !$var(legend)] \
+	-bg $var(graph,bg) \
 	-position $var(legend,position) -title $var(legend,title) \
 	-font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	-titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"

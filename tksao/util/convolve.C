@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <iomanip>
+#include <cstring>
 using namespace std;
 
 #include "convolve.h"

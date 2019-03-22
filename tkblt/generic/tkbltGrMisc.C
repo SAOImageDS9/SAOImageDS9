@@ -39,7 +39,6 @@
 
 #include "tkbltGraph.h"
 #include "tkbltGrMisc.h"
-#include "tkbltInt.h"
 
 using namespace Blt;
 
@@ -71,63 +70,6 @@ int Blt::pointInPolygon(Point2d *s, Point2d *points, int nPoints)
   return (count & 0x01);
 }
 
-/*
- *---------------------------------------------------------------------------
- *      Clips a rectangle in one direction where some of the coordinates are
- *      infinite.
- *---------------------------------------------------------------------------
- */
-static LineRectClipResult ClipInfinity (double *pa, double *pb, double *qa, double *qb, double region_min, double region_max)
-{
-  int finitepa = isfinite(*pa);
-  int finiteqa = isfinite(*qa);
-
-  if (!finitepa) {
-    if (finiteqa) {
-      if (*pa > 0) {		// +Inf
-	*pa = region_max;
-      } else if (*pa < 0) {	// -Inf
-	*pa = region_min;
-      } else {			// NaN
-	return CLIP_OUTSIDE;
-      }
-      // *qa is finite, simplify to zero slope at *pb.
-      *pb = *qb;
-      return CLIP_P;
-    } else {			// Both infinite.
-      int positivepa = *pa > 0;
-      int positiveqa = *qa > 0;
-
-      if (positivepa < positiveqa) { // (p,q) ~ (-Inf,Inf)
-	*pa = region_min;
-	*qa = region_max;
-      } else if (positivepa > positiveqa) { // (p,q) ~ (Inf,-Inf)
-	*pa = region_max;
-	*qa = region_min;
-      } else {			// (Inf,Inf), (-Inf,-Inf) or NaN.
-	return CLIP_OUTSIDE;
-      }
-      // At opposite infinities; simplify to zero slope in the middle.
-      *pb = *qb = (*pb + *qb) / 2.0;
-      return CLIP_P | CLIP_Q;
-    }
-  } else if (!finiteqa) {
-    // *pa is finite.
-    if (*qa > 0) {		// +Inf
-      *qa = region_max;
-    } else if (*qa < 0) {	// -Inf
-      *qa = region_min;
-    } else {			// NaN
-      return CLIP_OUTSIDE;
-    }
-    // *pa is finite, simplify to zero slope at *qb.
-    *qb = *pb;
-    return CLIP_Q;
-  }
-  return CLIP_OUTSIDE;
-}
-
-
 static int ClipTest (double ds, double dr, double *t1, double *t2)
 {
   double t;
@@ -135,7 +77,7 @@ static int ClipTest (double ds, double dr, double *t1, double *t2)
   if (ds < 0.0) {
     t = dr / ds;
     if (t > *t2) {
-      return 0;			/* Line is outside clipping edge */
+      return 0;
     } 
     if (t > *t1) {
       *t1 = t;
@@ -143,7 +85,7 @@ static int ClipTest (double ds, double dr, double *t1, double *t2)
   } else if (ds > 0.0) {
     t = dr / ds;
     if (t < *t1) {
-      return 0;			/* Line is outside clipping edge */
+      return 0;
     } 
     if (t < *t2) {
       *t2 = t;
@@ -163,47 +105,35 @@ static int ClipTest (double ds, double dr, double *t1, double *t2)
  *	of the clipped line segment are returned.  The original coordinates
  *	are overwritten.
  *
- *      The return value indicates whether the line was completely outside of
- *      the region, returning CLIP_OUTSIDE; or at least partly inside, returning
- *      CLIP_INSIDE.  In the latter case, the result might be or'ed with CLIP_P
- *      if p coordinates were clipped, or CLIP_Q if q coordinates were.
- *
  *	Reference: 
  *	  Liang, Y-D., and B. Barsky, A new concept and method for
  *	  Line Clipping, ACM, TOG,3(1), 1984, pp.1-22.
  *---------------------------------------------------------------------------
  */
-LineRectClipResult Blt::lineRectClip(Region2d* regionPtr, Point2d *p, Point2d *q)
+int Blt::lineRectClip(Region2d* regionPtr, Point2d *p, Point2d *q)
 {
   double t1, t2;
   double dx, dy;
-  LineRectClipResult res = CLIP_OUTSIDE;
-
-  res |= ClipInfinity(&p->x, &p->y, &q->x, &q->y, regionPtr->bottom, regionPtr->top);
 
   t1 = 0.0, t2 = 1.0;
   dx = q->x - p->x;
   if ((ClipTest (-dx, p->x - regionPtr->left, &t1, &t2)) &&
       (ClipTest (dx, regionPtr->right - p->x, &t1, &t2))) {
-    res |= ClipInfinity(&p->y, &p->x, &q->y, &q->x, regionPtr->top, regionPtr->bottom);
-
     dy = q->y - p->y;
     if ((ClipTest (-dy, p->y - regionPtr->top, &t1, &t2)) && 
 	(ClipTest (dy, regionPtr->bottom - p->y, &t1, &t2))) {
       if (t2 < 1.0) {
 	q->x = p->x + t2 * dx;
 	q->y = p->y + t2 * dy;
-	res |= CLIP_Q;
       }
       if (t1 > 0.0) {
 	p->x += t1 * dx;
 	p->y += t1 * dy;
-	res |= CLIP_P;
       }
-      return res | CLIP_INSIDE;
+      return 1;
     }
   }
-  return CLIP_OUTSIDE;
+  return 0;
 }
 
 /*

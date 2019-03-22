@@ -55,11 +55,11 @@ proc CreateGraphs {} {
 			     -width $canvas(width) -height $igraph(size) \
 			     -takefocus 0 \
      			     -background $ds9(bg) \
+			     -plotbackground $ds9(bg) \
 			     -highlightthickness 0 \
 			     -borderwidth 0 \
 			     -plotborderwidth 1 \
 			     -plotrelief solid \
-			     -plotbackground $ds9(bg) \
 			     -font [font actual TkDefaultFont] \
 			     -rm $igraph(gap,x) \
 			     -plotpadx -2 \
@@ -97,11 +97,11 @@ proc CreateGraphs {} {
 			     -width $igraph(size) -height $canvas(height) \
 			     -takefocus 0 \
      			     -background $ds9(bg) \
+			     -plotbackground $ds9(bg) \
 			     -highlightthickness 0 \
 			     -borderwidth 0 \
 			     -plotborderwidth 1 \
 			     -plotrelief solid \
-			     -plotbackground $ds9(bg) \
 			     -font [font actual TkDefaultFont] \
 			     -bm $igraph(gap,y) \
 			     -plotpady -2 \

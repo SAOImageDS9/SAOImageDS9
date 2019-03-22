@@ -1105,17 +1105,21 @@ proc PlotUpdateGraph {varname} {
 	-bg $var(graph,bg) -plotbackground $var(graph,bg)
 
     $var(graph) xaxis configure \
+	-bg $var(graph,bg) \
 	-grid $var(axis,x,grid) -logscale $var(axis,x,log) \
 	-title $var(axis,x,title) \
 	-tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
+
     $var(graph) yaxis configure \
+	-bg $var(graph,bg) \
 	-grid $var(axis,y,grid) -logscale $var(axis,y,log) \
 	-title $var(axis,y,title) \
 	-tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
     $var(graph) legend configure -hide [expr !$var(legend)] \
+	-bg $var(graph,bg) \
 	-position $var(legend,position) -title $var(legend,title) \
 	-font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	-titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"

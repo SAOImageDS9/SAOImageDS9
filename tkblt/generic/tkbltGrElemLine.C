@@ -1427,6 +1427,71 @@ void LineElement::mergePens(LineStyle **styleMap)
   }
 }
 
+#define CLIP_TOP	(1<<0)
+#define CLIP_BOTTOM	(1<<1)
+#define CLIP_RIGHT	(1<<2)
+#define CLIP_LEFT	(1<<3)
+
+int LineElement::outCode(Region2d *extsPtr, Point2d *p)
+{
+  int code =0;
+  if (p->x > extsPtr->right)
+    code |= CLIP_RIGHT;
+  else if (p->x < extsPtr->left)
+    code |= CLIP_LEFT;
+
+  if (p->y > extsPtr->bottom)
+    code |= CLIP_BOTTOM;
+  else if (p->y < extsPtr->top)
+    code |= CLIP_TOP;
+
+  return code;
+}
+
+int LineElement::clipSegment(Region2d *extsPtr, int code1, int code2,
+			     Point2d *p, Point2d *q)
+{
+  int inside = ((code1 | code2) == 0);
+  int outside = ((code1 & code2) != 0);
+
+  /*
+   * In the worst case, we'll clip the line segment against each of the four
+   * sides of the bounding rectangle.
+   */
+  while ((!outside) && (!inside)) {
+    if (code1 == 0) {
+      Point2d *tmp;
+      int code;
+
+      /* Swap pointers and out codes */
+      tmp = p, p = q, q = tmp;
+      code = code1, code1 = code2, code2 = code;
+    }
+    if (code1 & CLIP_LEFT) {
+      p->y += (q->y - p->y) *
+	(extsPtr->left - p->x) / (q->x - p->x);
+      p->x = extsPtr->left;
+    } else if (code1 & CLIP_RIGHT) {
+      p->y += (q->y - p->y) *
+	(extsPtr->right - p->x) / (q->x - p->x);
+      p->x = extsPtr->right;
+    } else if (code1 & CLIP_BOTTOM) {
+      p->x += (q->x - p->x) *
+	(extsPtr->bottom - p->y) / (q->y - p->y);
+      p->y = extsPtr->bottom;
+    } else if (code1 & CLIP_TOP) {
+      p->x += (q->x - p->x) *
+	(extsPtr->top - p->y) / (q->y - p->y);
+      p->y = extsPtr->top;
+    }
+    code1 = outCode(extsPtr, p);
+
+    inside = ((code1 | code2) == 0);
+    outside = ((code1 & code2) != 0);
+  }
+  return (!inside);
+}
+
 void LineElement::saveTrace(int start, int length, MapInfo* mapPtr)
 {
   bltTrace* tracePtr  = new bltTrace;
@@ -1479,18 +1544,24 @@ void LineElement::mapTraces(MapInfo *mapPtr)
   graphPtr_->extents(&exts);
 
   int count = 1;
+  int code1 = outCode(&exts, mapPtr->screenPts);
   Point2d* p = mapPtr->screenPts;
   Point2d* q = p + 1;
 
   int start;
   int ii;
   for (ii=1; ii<mapPtr->nScreenPts; ii++, p++, q++) {
-    // Save the coordinates of the last point before clipping.
-    Point2d originalq = *q;
-    int broken = BROKEN_TRACE(ops->penDir, p->x, q->x);
-    LineRectClipResult clipresult = lineRectClip(&exts, p, q);
+    Point2d s;
+    s.x = 0;
+    s.y = 0;
+    int code2 = outCode(&exts, q);
+    // Save the coordinates of the last point, before clipping
+    if (code2 != 0)
+      s = *q;
 
-    if (broken || clipresult == CLIP_OUTSIDE) {
+    int broken = BROKEN_TRACE(ops->penDir, p->x, q->x);
+    int offscreen = clipSegment(&exts, code1, code2, p, q);
+    if (broken || offscreen) {
       // The last line segment is either totally clipped by the plotting
       // area or the x-direction is wrong, breaking the trace.  Either
       // way, save information about the last trace (if one exists),
@@ -1508,13 +1579,14 @@ void LineElement::mapTraces(MapInfo *mapPtr)
       // If the last point is clipped, this means that the trace is
       // broken after this point.  Restore the original coordinate
       // (before clipping) after saving the trace.
-      if (clipresult & CLIP_Q) {
+      if (code2 != 0) {
 	start = ii - (count - 1);
 	saveTrace(start, count, mapPtr);
-	mapPtr->screenPts[ii] = originalq;
+	mapPtr->screenPts[ii] = s;
 	count = 1;
       }
     }
+    code1 = code2;
   }
   if (count > 1) {
     start = ii - count;

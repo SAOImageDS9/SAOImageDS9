@@ -588,6 +588,8 @@ int AxisTypeOp(Axis* axisPtr, Tcl_Interp* interp,
     case CID_AXIS_Y:
       typeName = "y";
       break;
+    default:
+      return TCL_OK;
     }
   }
 

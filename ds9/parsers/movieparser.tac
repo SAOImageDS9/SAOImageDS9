@@ -30,15 +30,20 @@ command : movie
  | movie {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
-movie : STRING_ {ProcessCmdSet2 movie action slice type mpeg; MovieCreate $1}
- | action STRING_ {ProcessCmdSet2 movie action $1 type mpeg; MovieCreate $2}
+movie : STRING_
+   {ProcessCmdSet2 movie action slice type [ExtToFormat $1]; MovieCreate $1}
+ | action STRING_
+   {ProcessCmdSet2 movie action $1 type [ExtToFormat $2]; MovieCreate $2}
  | type STRING_ {ProcessCmdSet2 movie action slice type $1; MovieCreate $2}
  | action type STRING_ {ProcessCmdSet2 movie action $1 type $2; MovieCreate $3}
 
- | 3D_ STRING_ {ProcessCmdSet2 movie action 3d type mpeg; MovieCreate $2}
+ | 3D_ STRING_
+   {ProcessCmdSet2 movie action 3d type [ExtToFormat $2]; MovieCreate $2}
  | 3D_ type STRING_ {ProcessCmdSet2 movie action 3d type $2; MovieCreate $3}
- | 3D_ STRING_ opts {ProcessCmdSet2 movie action 3d type mpeg; MovieCreate $2}
- | 3D_ type STRING_ opts {ProcessCmdSet2 movie action 3d type $1; MovieCreate $2}
+ | 3D_ STRING_ opts
+   {ProcessCmdSet2 movie action 3d type [ExtToFormat $2]; MovieCreate $2}
+ | 3D_ type STRING_ opts
+   {ProcessCmdSet2 movie action 3d type $1; MovieCreate $2}
  ;
 
 action : FRAME_ {set _ frame}
@@ -60,8 +65,10 @@ opt : NUMBER_ INT_ {ProcessCmdSet movie number $2}
  | ELTO_ numeric {ProcessCmdSet movie elto $2}
  | SLFROM_ INT_ {ProcessCmdSet movie slfrom $2}
  | SLTO_ INT_ {ProcessCmdSet movie slto $2}
- | OSCILLATE_ INT_ {ProcessCmdSet movie repeat oscillate; ProcessCmdSet movie repeat,num $2}
- | REPEAT_ INT_ {ProcessCmdSet movie repeat repeat; ProcessCmdSet movie repeat,num $2}
+ | OSCILLATE_ INT_
+   {ProcessCmdSet movie repeat oscillate; ProcessCmdSet movie repeat,num $2}
+ | REPEAT_ INT_
+   {ProcessCmdSet movie repeat repeat; ProcessCmdSet movie repeat,num $2}
  ;
 
 %%

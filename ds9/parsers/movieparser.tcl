@@ -634,35 +634,35 @@ array set movie::rules {
 }
 
 array set movie::rules {
-  13,line 51
-  25,line 71
-  7,line 44
-  10,line 48
-  22,line 68
+  13,line 56
+  25,line 76
+  7,line 46
+  10,line 51
+  22,line 73
   4,line 39
-  18,line 62
+  18,line 67
   1,line 35
-  15,line 55
-  27,line 73
-  9,line 47
-  12,line 50
-  24,line 70
-  6,line 43
-  21,line 67
+  15,line 60
+  27,line 79
+  9,line 49
+  12,line 54
+  24,line 75
+  6,line 44
+  21,line 72
   3,line 39
-  17,line 59
+  17,line 64
   4,e 1
-  14,line 54
-  26,line 72
-  8,line 45
-  11,line 49
-  23,line 69
+  14,line 59
+  26,line 77
+  8,line 47
+  11,line 52
+  23,line 74
   5,line 40
-  20,line 66
-  19,line 63
+  20,line 71
+  19,line 68
   2,line 36
-  16,line 58
-  28,line 74
+  16,line 63
+  28,line 81
 }
 
 array set movie::lr1_table {
@@ -780,12 +780,12 @@ array set movie::token_id_table {
   260,title 3D
   266,t 0
   278,title {}
-  282,line 75
+  282,line 82
   error error
   271,t 0
   264,title ELTO
   266,line 20
-  278,line 53
+  278,line 58
   275,t 1
   error,line 33
   268,title NUMBER
@@ -809,7 +809,7 @@ array set movie::token_id_table {
   268,line 22
   267,title MPEG
   257 INT_
-  281,line 65
+  281,line 70
   276,t 1
   258 REAL_
   259,t 0
@@ -864,8 +864,8 @@ array set movie::token_id_table {
   282 start'
   275,title {}
   265,t 0
-  280,line 61
-  279,line 57
+  280,line 66
+  279,line 62
   261,title AZFROM
 }
 
@@ -966,13 +966,13 @@ proc movie::yyparse {} {
                     1 { set _ $1 }
                     2 { set _ $1 }
                     4 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    6 { ProcessCmdSet2 movie action slice type mpeg; MovieCreate $1 }
-                    7 { ProcessCmdSet2 movie action $1 type mpeg; MovieCreate $2 }
+                    6 { ProcessCmdSet2 movie action slice type [ExtToFormat $1]; MovieCreate $1 }
+                    7 { ProcessCmdSet2 movie action $1 type [ExtToFormat $2]; MovieCreate $2 }
                     8 { ProcessCmdSet2 movie action slice type $1; MovieCreate $2 }
                     9 { ProcessCmdSet2 movie action $1 type $2; MovieCreate $3 }
-                    10 { ProcessCmdSet2 movie action 3d type mpeg; MovieCreate $2 }
+                    10 { ProcessCmdSet2 movie action 3d type [ExtToFormat $2]; MovieCreate $2 }
                     11 { ProcessCmdSet2 movie action 3d type $2; MovieCreate $3 }
-                    12 { ProcessCmdSet2 movie action 3d type mpeg; MovieCreate $2 }
+                    12 { ProcessCmdSet2 movie action 3d type [ExtToFormat $2]; MovieCreate $2 }
                     13 { ProcessCmdSet2 movie action 3d type $1; MovieCreate $2 }
                     14 { set _ frame }
                     15 { set _ slice }

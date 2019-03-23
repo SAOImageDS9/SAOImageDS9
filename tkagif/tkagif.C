@@ -21,6 +21,19 @@ extern "C" {
 	       const char* argv[]);
 }
 
+typedef struct {
+  int count;
+  unsigned char red;
+  unsigned char green;
+  unsigned char blue;
+} Color;
+
+typedef struct {
+  unsigned char red;
+  unsigned char green;
+  unsigned char blue;
+} Pixel;
+
 TkAGIF* tkagif=NULL;
 
 int Tkagif_Init(Tcl_Interp* interp) {
@@ -147,7 +160,6 @@ int TkAGIF::create(int argc, const char* argv[])
     //    pkg.tt.size = nbitsPerPixel_-1;
     pkg.tt.size = 0;
 
-    //    cerr << hex << (unsigned short)pkg.cc << endl;
     out_->write((char*)&pkg.cc,1);
 
     // BG Color
@@ -160,24 +172,6 @@ int TkAGIF::create(int argc, const char* argv[])
   }
   
   // *** Global Color Table ***
-  if (0) {
-    // colortable
-    unsigned char red[colorTableSize_];
-    unsigned char green[colorTableSize_];
-    unsigned char blue[colorTableSize_];
-    memset(red,0,colorTableSize_);
-    memset(green,0,colorTableSize_);
-    memset(blue,0,colorTableSize_);
-
-    for(int ii=0; ii<colorTableSize_; ii++)
-      red[ii] = green[ii] = blue[ii] = ii*2;
-      
-    for (int ii=0; ii<colorTableSize_; ii++) {
-      out_->write((char*)red+ii,1);
-      out_->write((char*)green+ii,1);
-      out_->write((char*)blue+ii,1);
-    }
-  }
 
   // *** Comment Extension
   // no present
@@ -242,6 +236,17 @@ int TkAGIF::create(int argc, const char* argv[])
   return TCL_OK;
 }
 
+static int cmpColor(const void* a, const void* b)
+{
+  Color* aa = (Color*)a;
+  Color* bb = (Color*)b;
+
+  int diff = aa->count - bb->count;
+  if (diff > 0) return -1;
+  if (diff == 0) return 0;
+  return 1;
+}
+
 int TkAGIF::add(int argc, const char* argv[])
 {
   if (argc == 3) {
@@ -256,33 +261,37 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // colortable
+  int maxColors = 2048;
   int cnt =8;
-  int tt =0;
-  unsigned char red[colorTableSize_];
-  unsigned char green[colorTableSize_];
-  unsigned char blue[colorTableSize_];
-  memset(red,0,colorTableSize_);
-  memset(green,0,colorTableSize_);
-  memset(blue,0,colorTableSize_);
+  Color cc[maxColors];
+  memset(cc,0,sizeof(Color)*maxColors);
+  
   // 0: black
   // 1: white
-  red[1] = green[1] = blue[1] = 255;
+  cc[1].red = cc[1].green = cc[1].blue = 255;
+  cc[1].count++;
   // 2: red
-  red[2] = 255;
+  cc[2].red = 255;
+  cc[2].count++;
   // 3: green
-  green[3] = 255;
+  cc[3].green = 255;
+  cc[3].count++;
   // 4: blue
-  blue[4] = 255;
+  cc[4].blue = 255;
+  cc[4].count++;
   // 5: cyan
-  green[5] = blue[5] = 255;
+  cc[5].green = cc[5].blue = 255;
+  cc[5].count++;
   // 6: magenta
-  red[6] = blue[6] = 255;
+  cc[6].red = cc[6].blue = 255;
+  cc[6].count++;
   // 7: yellow
-  red[7] = green[7] = 255;
-  
-  // map RGB to Color index
-  unsigned char* pict = new unsigned char[width_*height_];
-  memset(pict,0,width_*height_);
+  cc[7].red = cc[7].green = 255;
+  cc[7].count++;
+
+  // RGB img
+  Pixel* pixels = new Pixel[width_*height_];
+  memset(pixels,0,sizeof(Pixel)*width_*height_);
 
   {
     Tk_PhotoHandle photo = Tk_FindPhoto(interp_, argv[2]);
@@ -297,22 +306,28 @@ int TkAGIF::add(int argc, const char* argv[])
     }
 
     unsigned char* src = block.pixelPtr;
-    unsigned char* dst = pict;
-
+    Pixel* dst = pixels;
     for (int jj=0; jj<height_; jj++) {
-      for (int ii=0; ii<width_; ii++) {
-	unsigned char rr =
-	  src[(jj*width_+ii)*block.pixelSize+block.offset[0]];
-	unsigned char gg =
-	  src[(jj*width_+ii)*block.pixelSize+block.offset[1]];
-	unsigned char bb =
-	  src[(jj*width_+ii)*block.pixelSize+block.offset[2]];
-
-	int done =0;
+      for (int ii=0; ii<width_; ii++, dst++) {
+	dst->red = src[(jj*width_+ii)*block.pixelSize+block.offset[0]];
+	dst->green = src[(jj*width_+ii)*block.pixelSize+block.offset[1]];
+	dst->blue = src[(jj*width_+ii)*block.pixelSize+block.offset[2]];
+      }
+    }
+  }
+  
+  // Scan and sort all colors
+  {
+    Pixel* dst = pixels;
+    for (int jj=0; jj<height_; jj++) {
+      for (int ii=0; ii<width_; ii++, dst++) {
 	// first try all known colors
+	int done =0;
 	for (int kk=0; kk<cnt; kk++) {
-	  if (rr==red[kk] && gg==green[kk] && bb==blue[kk]) {
-	    *dst++ = (unsigned char)kk;
+	  if (dst->red==cc[kk].red &&
+	      dst->green==cc[kk].green &&
+	      dst->blue==cc[kk].blue) {
+	    cc[kk].count++;
 	    done =1;
 	    break;
 	  }
@@ -320,29 +335,78 @@ int TkAGIF::add(int argc, const char* argv[])
 
 	// add color
 	if (!done) {
-	  tt++;
-	  if (cnt<colorTableSize_) {
-	    red[cnt] = rr;
-	    green[cnt] = gg;
-	    blue[cnt] = bb;
-	    *dst++ = cnt;
+	  if (cnt<maxColors) {
+	    cc[cnt].red = dst->red;
+	    cc[cnt].green = dst->green;
+	    cc[cnt].blue = dst->blue;
+	    cc[cnt].count++;
 	    cnt++;
 	  }
-	  else {
-	    // out of room in colortable, find closest
-	    int id =0;
-	    double dd =FLT_MAX;
-	    for (int kk=0; kk<cnt; kk++) {
-	      double vv = pow((rr-red[kk])*.3,2) +
-		pow((gg-green[kk])*.59,2) + 
-		pow((bb-blue[kk])*.11,2);
-	      if (vv<dd) {
-		id = kk;
-		dd = vv;
-	      }
-	    }
-	    *dst++ = id;
+	}
+      }
+    }
+    //cerr << "Total Colors: " << cnt << endl;
+  
+    // now sort color array
+    // leave first 8 alone
+    qsort(&cc[8], cnt-8, sizeof(Color), cmpColor);
+  }
+
+  // build colortable
+  Color ct[colorTableSize_];
+  memset(ct,0,sizeof(Color)*colorTableSize_);
+
+  for (int ii=0; ii<colorTableSize_; ii++) {
+    ct[ii].count = cc[ii].count;
+    ct[ii].red = cc[ii].red;
+    ct[ii].green = cc[ii].green;
+    ct[ii].blue = cc[ii].blue;
+
+    if (0) {
+    cerr << (unsigned short)(cc[ii].count) << ' '
+	 << (unsigned short)(cc[ii].red) << ' '
+	 << (unsigned short)cc[ii].green << ' '
+	 << (unsigned short)cc[ii].blue << endl;
+    }
+  }
+
+  // now indexed image
+  unsigned char* pict = new unsigned char[width_*height_];
+  memset(pict,0,width_*height_);
+
+  {
+    Pixel* src = pixels;
+    unsigned char* dst = pict;
+    for (int jj=0; jj<height_; jj++) {
+      for (int ii=0; ii<width_; ii++, src++, dst++) {
+	
+	// first try all known colors
+	int done =0;
+	for (int kk=0; kk<colorTableSize_; kk++) {
+	  if (src->red==ct[kk].red &&
+	      src->green==ct[kk].green &&
+	      src->blue==ct[kk].blue) {
+	    *dst = (unsigned char)kk;
+	    done =1;
+	    break;
 	  }
+	}
+
+	// ok, find closest
+	if (!done) {
+	  int id =0;
+	  double dd =FLT_MAX;
+	  for (int kk=0; kk<colorTableSize_; kk++) {
+	    double vv =
+	      pow((src->red   - ct[kk].red)   *.3,2) +
+	      pow((src->green - ct[kk].green) *.59,2) + 
+	      pow((src->blue  - ct[kk].blue)  *.11,2);
+	    if (vv<dd) {
+	      id = kk;
+	      dd = vv;
+	    }
+	  }
+	  *dst = id;
 	}
       }
     }
@@ -396,16 +460,15 @@ int TkAGIF::add(int argc, const char* argv[])
     pkg.tt.reserve = 0;
     pkg.tt.size = nbitsPerPixel_-1;
 
-    //    cerr << hex << (unsigned short)pkg.cc << endl;
     out_->write((char*)&pkg.cc,1);
   }
   
   // *** Local Color Table ***
   {
     for (int ii=0; ii<colorTableSize_; ii++) {
-      out_->write((char*)red+ii,1);
-      out_->write((char*)green+ii,1);
-      out_->write((char*)blue+ii,1);
+      out_->write((char*)&ct[ii].red,1);
+      out_->write((char*)&ct[ii].green,1);
+      out_->write((char*)&ct[ii].blue,1);
     }
   }
 

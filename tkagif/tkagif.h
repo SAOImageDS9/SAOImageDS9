@@ -12,7 +12,12 @@ private:
   ofstream* out_;
   int width_;
   int height_;
+  int nbitsPerPixel_;
+  int colorTableSize_;
   
+private:
+  void noCompress(unsigned char*);
+
  public:
   TkAGIF(Tcl_Interp*);
 

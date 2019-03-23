@@ -70,6 +70,8 @@ TkAGIF::TkAGIF(Tcl_Interp* interp)
   interp_ = interp;
   out_ =NULL;
   width_ = height_ = 512;
+  nbitsPerPixel_ = 7;
+  colorTableSize_ = 128;
 }
 
 int TkAGIF::create(int argc, const char* argv[])
@@ -126,8 +128,27 @@ int TkAGIF::create(int argc, const char* argv[])
     // sort flag (1): 0 not ordered, 1 ordered decreasing importance
     // size of global color table (3): size 2^(x+1)
     //    char pkg=0xF6;
-    char pkg=0x00;
-    out_->write(&pkg,1);
+    //    char pkg=0x00;
+
+    union qq {
+      struct pp {
+	unsigned int size: 3;
+	unsigned int sort: 1;
+	unsigned int resolution: 3;
+	unsigned int gt: 1;
+      } tt;
+      unsigned char cc;
+    };
+    union qq pkg;
+
+    pkg.tt.gt = 0;
+    pkg.tt.resolution = nbitsPerPixel_;
+    pkg.tt.sort = 0;
+    //    pkg.tt.size = nbitsPerPixel_-1;
+    pkg.tt.size = 0;
+
+    //    cerr << hex << (unsigned short)pkg.cc << endl;
+    out_->write((char*)&pkg.cc,1);
 
     // BG Color
     char bg=0x00;
@@ -140,19 +161,18 @@ int TkAGIF::create(int argc, const char* argv[])
   
   // *** Global Color Table ***
   if (0) {
-    int sz = 128;
     // colortable
-    unsigned char red[sz];
-    unsigned char green[sz];
-    unsigned char blue[sz];
-    memset(red,0,sz);
-    memset(green,0,sz);
-    memset(blue,0,sz);
+    unsigned char red[colorTableSize_];
+    unsigned char green[colorTableSize_];
+    unsigned char blue[colorTableSize_];
+    memset(red,0,colorTableSize_);
+    memset(green,0,colorTableSize_);
+    memset(blue,0,colorTableSize_);
 
-    for(int ii=0; ii<sz; ii++)
+    for(int ii=0; ii<colorTableSize_; ii++)
       red[ii] = green[ii] = blue[ii] = ii*2;
       
-    for (int ii=0; ii<sz; ii++) {
+    for (int ii=0; ii<colorTableSize_; ii++) {
       out_->write((char*)red+ii,1);
       out_->write((char*)green+ii,1);
       out_->write((char*)blue+ii,1);
@@ -236,15 +256,14 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // colortable
-  int sz =128;
   int cnt =8;
   int tt =0;
-  unsigned char red[sz];
-  unsigned char green[sz];
-  unsigned char blue[sz];
-  memset(red,0,sz);
-  memset(green,0,sz);
-  memset(blue,0,sz);
+  unsigned char red[colorTableSize_];
+  unsigned char green[colorTableSize_];
+  unsigned char blue[colorTableSize_];
+  memset(red,0,colorTableSize_);
+  memset(green,0,colorTableSize_);
+  memset(blue,0,colorTableSize_);
   // 0: black
   // 1: white
   red[1] = green[1] = blue[1] = 255;
@@ -302,7 +321,7 @@ int TkAGIF::add(int argc, const char* argv[])
 	// add color
 	if (!done) {
 	  tt++;
-	  if (cnt<sz) {
+	  if (cnt<colorTableSize_) {
 	    red[cnt] = rr;
 	    green[cnt] = gg;
 	    blue[cnt] = bb;
@@ -357,14 +376,33 @@ int TkAGIF::add(int argc, const char* argv[])
     // Sort Flag (1): 1 sorted, 0 no
     // Reserved (2):
     // Size of Local Table (3): size 2^(x+1)
-    //    char pkg= 0x00;
-    char pkg= 0x86;
-    out_->write(&pkg,1);
+    //    char pkg= 0x86;
+
+    union qq {
+      struct pp {
+	unsigned int size: 3;
+	unsigned int reserve: 2;
+	unsigned int sort: 1;
+	unsigned int interlace: 1;
+	unsigned int ct: 1;
+      } tt;
+      unsigned char cc;
+    };
+    union qq pkg;
+
+    pkg.tt.ct = 1;
+    pkg.tt.interlace =0;
+    pkg.tt.sort = 0;
+    pkg.tt.reserve = 0;
+    pkg.tt.size = nbitsPerPixel_-1;
+
+    //    cerr << hex << (unsigned short)pkg.cc << endl;
+    out_->write((char*)&pkg.cc,1);
   }
   
   // *** Local Color Table ***
   {
-    for (int ii=0; ii<sz; ii++) {
+    for (int ii=0; ii<colorTableSize_; ii++) {
       out_->write((char*)red+ii,1);
       out_->write((char*)green+ii,1);
       out_->write((char*)blue+ii,1);
@@ -372,41 +410,7 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // *** Image Data ***
-  {
-    // LZW Min Code Size
-    char lzw = 0x07;
-    out_->write(&lzw,1);
-
-    // clear code: 2^n
-    unsigned char clear = 0x80;
-    // stop code: 2^n + 1
-    unsigned char stop = 0x81;
-    // send clear code every 2^n - 2
-    int reset = 126;
-
-    // Data
-    for (int jj=0; jj<height_; jj++) {
-      int ii =0;
-      while (ii<width_) {
-	int ww = width_-ii;
-	int ll = ww < reset ? ww : reset;
-	unsigned char ss= ll+1;
-	out_->write((char*)&ss,1);
-	out_->write((char*)&clear,1);
-	for (unsigned char kk=0; kk<ll; kk++) {
-	  unsigned char pix = pict[jj*width_+ii];
-	  out_->write((char*)&pix,1);
-	  ii++;
-	}
-      }
-    }
-    char ss = 0x01;
-    out_->write(&ss,1);
-    out_->write((char*)&stop,1);
-
-    char end= 0x00;
-    out_->write(&end,1);
-  }
+  noCompress(pict);
   
   return TCL_OK;
 }
@@ -421,5 +425,42 @@ int TkAGIF::close(int argc, const char* argv[])
   delete out_;
   
   return TCL_OK;
+}
+
+void TkAGIF::noCompress(unsigned char* pict)
+{
+  // LZW Min Code Size
+  char lzw = 0x07;
+  out_->write(&lzw,1);
+
+  // clear code: 2^n
+  unsigned char clear = 0x80;
+  // stop code: 2^n + 1
+  unsigned char stop = 0x81;
+  // send clear code every 2^n - 2
+  int reset = 126;
+
+  // Data
+  for (int jj=0; jj<height_; jj++) {
+    int ii =0;
+    while (ii<width_) {
+      int ww = width_-ii;
+      int ll = ww < reset ? ww : reset;
+      unsigned char ss= ll+1;
+      out_->write((char*)&ss,1);
+      out_->write((char*)&clear,1);
+      for (unsigned char kk=0; kk<ll; kk++) {
+	unsigned char pix = pict[jj*width_+ii];
+	out_->write((char*)&pix,1);
+	ii++;
+      }
+    }
+  }
+  char ss = 0x01;
+  out_->write(&ss,1);
+  out_->write((char*)&stop,1);
+
+  char end= 0x00;
+  out_->write(&end,1);
 }
 

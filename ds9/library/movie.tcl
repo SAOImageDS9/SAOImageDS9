@@ -151,7 +151,7 @@ proc MovieCreate {fn} {
     # reduce colors if needed
     switch $movie(type) {
 	gif {
-	    $current(colorbar) configure -colors 96
+	    $current(colorbar) configure -colors 64
 	    update
 	    $current(frame) colormap [$current(colorbar) get colormap]
 	    update

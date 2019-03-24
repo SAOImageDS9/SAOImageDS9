@@ -85,6 +85,8 @@ TkAGIF::TkAGIF(Tcl_Interp* interp)
   width_ = height_ = 512;
   nbitsPerPixel_ = 7;
   colorTableSize_ = 128;
+  //  nbitsPerPixel_ = 8;
+  //  colorTableSize_ = 256;
 }
 
 int TkAGIF::create(int argc, const char* argv[])
@@ -140,9 +142,6 @@ int TkAGIF::create(int argc, const char* argv[])
     // color resolution (3): number bits-1
     // sort flag (1): 0 not ordered, 1 ordered decreasing importance
     // size of global color table (3): size 2^(x+1)
-    //    char pkg=0xF6;
-    //    char pkg=0x00;
-
     union qq {
       struct pp {
 	unsigned int size: 3;
@@ -155,7 +154,7 @@ int TkAGIF::create(int argc, const char* argv[])
     union qq pkg;
 
     pkg.tt.gt = 0;
-    pkg.tt.resolution = nbitsPerPixel_;
+    pkg.tt.resolution = nbitsPerPixel_-1;
     pkg.tt.sort = 0;
     //    pkg.tt.size = nbitsPerPixel_-1;
     pkg.tt.size = 0;
@@ -163,12 +162,12 @@ int TkAGIF::create(int argc, const char* argv[])
     out_->write((char*)&pkg.cc,1);
 
     // BG Color
-    char bg=0x00;
-    out_->write(&bg,1);
+    unsigned char bg=0x00;
+    out_->write((char*)&bg,1);
 
     // Pixel Aspect Ratio
-    char ar=0x00;
-    out_->write(&ar,1);
+    unsigned char ar=0x00;
+    out_->write((char*)&ar,1);
   }
   
   // *** Global Color Table ***
@@ -179,49 +178,48 @@ int TkAGIF::create(int argc, const char* argv[])
   // *** Application Extension Block ***
   {
     // Extention Introducer
-    char ext = 0x21;
-    out_->write(&ext,1);
+    unsigned char ext = 0x21;
+    out_->write((char*)&ext,1);
     // Extention Lable
-    char lable = 0xFF;
-    out_->write(&lable,1);
+    unsigned char lable = 0xFF;
+    out_->write((char*)&lable,1);
     // Block Size
-    char ss= 0x0B;
-    out_->write(&ss,1);
+    unsigned char ss= 0x0B;
+    out_->write((char*)&ss,1);
     // Applcation Identifier
-    char id[] = "NETSCAPE";
-    out_->write(id,8);
+    unsigned char id[] = "NETSCAPE";
+    out_->write((char*)id,8);
     // Authentication Code
-    char code[] = "2.0";
-    out_->write(code,3);
+    unsigned char code[] = "2.0";
+    out_->write((char*)code,3);
     // Application Data Size
-    char dd=0x03;
-    out_->write(&dd,1);
+    unsigned char dd=0x03;
+    out_->write((char*)&dd,1);
     // Application Data
-    char rep[] = {0x01,0x00,0x00};
-    out_->write(rep,3);
+    unsigned char rep[] = {0x01,0x00,0x00};
+    out_->write((char*)rep,3);
     // Block Terminator
-    char end=0x00;
-    out_->write(&end,1);
+    unsigned char end=0x00;
+    out_->write((char*)&end,1);
   }
   
   // *** Graphic Control Extension ***
   {
     // Extention Introducer
-    char ext = 0x21;
-    out_->write(&ext,1);
+    unsigned char ext = 0x21;
+    out_->write((char*)&ext,1);
     // Extention Lable
-    char lable = 0xF9;
-    out_->write(&lable,1);
+    unsigned char lable = 0xF9;
+    out_->write((char*)&lable,1);
     // Block Size
-    char ss= 0x04;
-    out_->write(&ss,1);
+    unsigned char ss= 0x04;
+    out_->write((char*)&ss,1);
 
     // Packed Field msb to lsb
     // Reserved (3)
     // Displosal Method (3): 0 none, 1 do not dispose, 2 restore bg, 3 restore
     // User Input Flag (1): 0 none, 1 expected
     // Transparent Color Flag (1): 0 not given, 1 color index
-    //    char pkg= 0x00;
     union qq {
       struct pp {
 	unsigned int transparent: 1;
@@ -243,11 +241,11 @@ int TkAGIF::create(int argc, const char* argv[])
     unsigned short delay = 0x00;
     out_->write((char*)&delay,2);
     // Transparent Color Index
-    char trans= 0x00;
-    out_->write(&trans,1);
+    unsigned char trans= 0x00;
+    out_->write((char*)&trans,1);
     // Block Terminator
-    char end= 0x00;
-    out_->write(&end,1);
+    unsigned char end= 0x00;
+    out_->write((char*)&end,1);
   }
   
   return TCL_OK;
@@ -278,7 +276,7 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // colortable
-  int maxColors = 2048;
+  int maxColors = 1024;
   int cnt =8;
   Color cc[maxColors];
   memset(cc,0,sizeof(Color)*maxColors);
@@ -362,8 +360,18 @@ int TkAGIF::add(int argc, const char* argv[])
 	}
       }
     }
-    cerr << "Total Colors: " << cnt << endl;
-  
+
+    if (0) {
+      cerr << "Total Colors: " << cnt << endl;
+      for (int ii=0; ii<maxColors; ii++) {
+	cerr << ii << ' '
+	     << cc[ii].count << ' '
+	     << (unsigned short)(cc[ii].red) << ' '
+	     << (unsigned short)cc[ii].green << ' '
+	     << (unsigned short)cc[ii].blue << endl;
+      }
+    }
+
     // now sort color array
     // leave first 8 alone
     qsort(&cc[8], cnt-8, sizeof(Color), cmpColor);
@@ -378,15 +386,8 @@ int TkAGIF::add(int argc, const char* argv[])
     ct[ii].red = cc[ii].red;
     ct[ii].green = cc[ii].green;
     ct[ii].blue = cc[ii].blue;
-
-    if (0) {
-    cerr << (unsigned short)(cc[ii].count) << ' '
-	 << (unsigned short)(cc[ii].red) << ' '
-	 << (unsigned short)cc[ii].green << ' '
-	 << (unsigned short)cc[ii].blue << endl;
-    }
   }
-
+  
   // now indexed image
   unsigned char* pict = new unsigned char[width_*height_];
   memset(pict,0,width_*height_);
@@ -432,8 +433,8 @@ int TkAGIF::add(int argc, const char* argv[])
   // *** Local Image Descriptor ***
   {
     // Image Separator
-    char img= 0x2C;
-    out_->write(&img,1);
+    unsigned char img= 0x2C;
+    out_->write((char*)&img,1);
 
     // Image Left Position
     unsigned short left = 0;
@@ -457,8 +458,6 @@ int TkAGIF::add(int argc, const char* argv[])
     // Sort Flag (1): 1 sorted, 0 no
     // Reserved (2):
     // Size of Local Table (3): size 2^(x+1)
-    //    char pkg= 0x86;
-
     union qq {
       struct pp {
 	unsigned int size: 3;
@@ -498,8 +497,8 @@ int TkAGIF::add(int argc, const char* argv[])
 int TkAGIF::close(int argc, const char* argv[])
 {
   // *** Trailer ***
-  char end = 0x3B;
-  out_->write(&end,1);
+  unsigned char end = 0x3B;
+  out_->write((char*)&end,1);
 
   out_->close();
   delete out_;
@@ -510,8 +509,8 @@ int TkAGIF::close(int argc, const char* argv[])
 void TkAGIF::noCompress(unsigned char* pict)
 {
   // LZW Min Code Size
-  char lzw = 0x07;
-  out_->write(&lzw,1);
+  unsigned char lzw = 0x07;
+  out_->write((char*)&lzw,1);
 
   // clear code: 2^n
   unsigned char clear = 0x80;
@@ -536,11 +535,11 @@ void TkAGIF::noCompress(unsigned char* pict)
       }
     }
   }
-  char ss = 0x01;
-  out_->write(&ss,1);
+  unsigned char ss = 0x01;
+  out_->write((char*)&ss,1);
   out_->write((char*)&stop,1);
 
-  char end= 0x00;
-  out_->write(&end,1);
+  unsigned char end= 0x00;
+  out_->write((char*)&end,1);
 }
 

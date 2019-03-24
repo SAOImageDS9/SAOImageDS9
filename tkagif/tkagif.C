@@ -489,7 +489,10 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // *** Image Data ***
-  noCompress(pict);
+  {
+    //noCompress(pict);
+    compress(pict);
+  }
   
   return TCL_OK;
 }
@@ -508,6 +511,7 @@ int TkAGIF::close(int argc, const char* argv[])
 
 void TkAGIF::noCompress(unsigned char* pict)
 {
+  // can only process up to 128 colors
   // LZW Min Code Size
   unsigned char lzw = 0x07;
   out_->write((char*)&lzw,1);
@@ -543,3 +547,240 @@ void TkAGIF::noCompress(unsigned char* pict)
   out_->write((char*)&end,1);
 }
 
+#define GIFBITS	12
+#define MAXCODE(numBits) (((long) 1 << (numBits)) - 1)
+#ifdef SIGNED_COMPARE_SLOW
+#define U(x)	((unsigned) (x))
+#else
+#define U(x)	(x)
+#endif
+
+void TkAGIF::compress(unsigned char* pict)
+{
+  memset(&state_, 0, sizeof(state_));
+
+  {
+    int resolution = 0;
+    while (128 >> resolution) {
+	resolution++;
+    }
+    unsigned char cc = 111 + resolution * 17;
+    cerr << resolution << ' ' << hex << (unsigned short)cc << endl;
+    out_->write((char*)&cc,1);
+
+    //unsigned char lzw = 0x07;
+    //  out_->write((char*)&lzw,1);
+
+  }
+  
+  state_.pict = pict;
+  state_.pictCount =0;
+  state_.initialBits = 8;
+
+  state_.offset = 0;
+  state_.hSize = HSIZE;
+  state_.outCount = 0;
+  state_.clearFlag = 0;
+  state_.inCount = 1;
+  state_.maxCode = MAXCODE(state_.numBits = state_.initialBits);
+  state_.clearCode = 1 << (state_.initialBits - 1);
+  state_.eofCode = state_.clearCode + 1;
+  state_.freeEntry = state_.clearCode + 2;
+
+  charInit();
+  long ent = input();
+
+  int hshift =0;
+  long fcode =0;
+  for (fcode = (long)state_.hSize;  fcode < 65536L;  fcode *= 2L)
+    hshift++;
+
+  // Set hash code range bound
+  hshift = 8 - hshift;  
+
+  long hSize = state_.hSize;
+  clearHashTable((int)hSize);
+
+  output((long)state_.clearCode);
+
+  long disp =0;
+  long i =0;
+  int c =0;
+  while (U(c = input()) != U(EOF)) {
+    state_.inCount++;
+
+    fcode = (long) (((long) c << GIFBITS) + ent);
+    // XOR hashing
+    i = ((long)c << hshift) ^ ent;
+
+    if (state_.hashTable[i] == fcode) {
+      ent = state_.codeTable[i];
+      continue;
+    }
+    else if ((long) state_.hashTable[i] < 0) {
+      // Empty slot
+      goto nomatch;
+    }
+
+    // Secondary hash (after G. Knott)
+    disp = hSize - i;
+    if (i == 0)
+      disp = 1;
+
+  probe:
+    if ((i -= disp) < 0)
+      i += hSize;
+
+    if (state_.hashTable[i] == fcode) {
+      ent = state_.codeTable[i];
+      continue;
+    }
+    if ((long) state_.hashTable[i] > 0)
+      goto probe;
+
+  nomatch:
+    output((long)ent);
+    state_.outCount++;
+    ent = c;
+    if (U(state_.freeEntry) < U((long)1 << GIFBITS)) {
+      // code -> hashtable
+      state_.codeTable[i] = state_.freeEntry++;
+      state_.hashTable[i] = fcode;
+    }
+    else
+      clearForBlock();
+  }
+
+  // Put out the final code.
+  output((long)ent);
+  state_.outCount++;
+  output((long)state_.eofCode);
+}
+
+int TkAGIF::input()
+{
+  if (state_.pictCount < width_*height_) {
+    int rr = state_.pict[state_.pictCount];
+    state_.pictCount++;
+    return rr;
+  }  
+  else
+    return EOF;
+}
+
+void TkAGIF::output(long code)
+{
+  static const unsigned long masks[] = {
+					0x0000,
+					0x0001, 0x0003, 0x0007, 0x000F,
+					0x001F, 0x003F, 0x007F, 0x00FF,
+					0x01FF, 0x03FF, 0x07FF, 0x0FFF,
+					0x1FFF, 0x3FFF, 0x7FFF, 0xFFFF
+  };
+
+  state_.currentAccumulated &= masks[state_.currentBits];
+  if (state_.currentBits > 0) {
+    state_.currentAccumulated |= ((long) code << state_.currentBits);
+  } else {
+    state_.currentAccumulated = code;
+  }
+  state_.currentBits += state_.numBits;
+
+  while (state_.currentBits >= 8) {
+    charOut((unsigned)(state_.currentAccumulated & 0xff));
+    state_.currentAccumulated >>= 8;
+    state_.currentBits -= 8;
+  }
+
+  // If the next entry is going to be too big for the code size, then
+  // increase it, if possible.
+
+  if ((state_.freeEntry > state_.maxCode) || state_.clearFlag) {
+    if (state_.clearFlag) {
+      state_.maxCode = MAXCODE(state_.numBits = state_.initialBits);
+      state_.clearFlag = 0;
+    }
+    else {
+      state_.numBits++;
+      if (state_.numBits == GIFBITS)
+	state_.maxCode = (long)1 << GIFBITS;
+      else
+	state_.maxCode = MAXCODE(state_.numBits);
+    }
+  }
+
+  if (code == state_.eofCode) {
+    // At EOF, write the rest of the buffer.
+    while (state_.currentBits > 0) {
+      charOut((unsigned)(state_.currentAccumulated & 0xff));
+      state_.currentAccumulated >>= 8;
+      state_.currentBits -= 8;
+    }
+    flushChar();
+  }
+}
+
+void TkAGIF::clearForBlock()
+{
+    clearHashTable((int)state_.hSize);
+    state_.freeEntry = state_.clearCode + 2;
+    state_.clearFlag = 1;
+
+    output((long)state_.clearCode);
+}
+
+void TkAGIF::clearHashTable(int hSize)
+{
+    register int *hashTablePtr = state_.hashTable + hSize;
+    register long i;
+    register long m1 = -1;
+
+    i = hSize - 16;
+    do {			/* might use Sys V memset(3) here */
+	*(hashTablePtr-16) = m1;
+	*(hashTablePtr-15) = m1;
+	*(hashTablePtr-14) = m1;
+	*(hashTablePtr-13) = m1;
+	*(hashTablePtr-12) = m1;
+	*(hashTablePtr-11) = m1;
+	*(hashTablePtr-10) = m1;
+	*(hashTablePtr-9) = m1;
+	*(hashTablePtr-8) = m1;
+	*(hashTablePtr-7) = m1;
+	*(hashTablePtr-6) = m1;
+	*(hashTablePtr-5) = m1;
+	*(hashTablePtr-4) = m1;
+	*(hashTablePtr-3) = m1;
+	*(hashTablePtr-2) = m1;
+	*(hashTablePtr-1) = m1;
+	hashTablePtr -= 16;
+    } while ((i -= 16) >= 0);
+
+    for (i += 16; i > 0; i--) {
+	*--hashTablePtr = m1;
+    }
+}
+
+void TkAGIF::charInit()
+{
+  state_.accumulatedByteCount = 0;
+  state_.currentAccumulated = 0;
+  state_.currentBits = 0;
+}
+
+void TkAGIF::charOut(int cc)
+{
+  state_.packetAccumulator[state_.accumulatedByteCount++] = cc;
+  if (state_.accumulatedByteCount >= 254)
+    flushChar();
+}
+
+void TkAGIF::flushChar()
+{
+  if (state_.accumulatedByteCount > 0) {
+    unsigned char cc = state_.accumulatedByteCount;
+    out_->write((char*)&cc,1);
+    out_->write((char*)state_.packetAccumulator, state_.accumulatedByteCount);
+    state_.accumulatedByteCount = 0;
+  }
+}

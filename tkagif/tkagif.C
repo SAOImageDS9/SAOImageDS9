@@ -215,13 +215,30 @@ int TkAGIF::create(int argc, const char* argv[])
     // Block Size
     char ss= 0x04;
     out_->write(&ss,1);
+
     // Packed Field msb to lsb
     // Reserved (3)
     // Displosal Method (3): 0 none, 1 do not dispose, 2 restore bg, 3 restore
     // User Input Flag (1): 0 none, 1 expected
     // Transparent Color Flag (1): 0 not given, 1 color index
-    char pkg= 0x00;
-    out_->write(&pkg,1);
+    //    char pkg= 0x00;
+    union qq {
+      struct pp {
+	unsigned int transparent: 1;
+	unsigned int input: 1;
+	unsigned int dispose: 3;
+	unsigned int reserve: 3;
+      } tt;
+      unsigned char cc;
+    };
+    union qq pkg;
+
+    pkg.tt.reserve =0;
+    pkg.tt.dispose =0;
+    pkg.tt.input =0;
+    pkg.tt.transparent =0;
+    out_->write((char*)&pkg.cc,1);
+
     // Delay Time
     unsigned short delay = 0x00;
     out_->write((char*)&delay,2);
@@ -345,7 +362,7 @@ int TkAGIF::add(int argc, const char* argv[])
 	}
       }
     }
-    //cerr << "Total Colors: " << cnt << endl;
+    cerr << "Total Colors: " << cnt << endl;
   
     // now sort color array
     // leave first 8 alone

@@ -58,13 +58,13 @@ opts : opts opt
  | opt
  ;
 
-opt : NUMBER_ INT_ {ProcessCmdSet movie number $2}
- | AZFROM_ numeric {ProcessCmdSet movie azfrom $2}
- | AZTO_ numeric {ProcessCmdSet movie azto $2}
- | ELFROM_ numeric {ProcessCmdSet movie elfrom $2}
- | ELTO_ numeric {ProcessCmdSet movie elto $2}
- | SLFROM_ INT_ {ProcessCmdSet movie slfrom $2}
- | SLTO_ INT_ {ProcessCmdSet movie slto $2}
+opt : NUMBER_ INT_ {ProcessCmdSet movie num $2}
+ | AZFROM_ numeric {ProcessCmdSet movie az,from $2}
+ | AZTO_ numeric {ProcessCmdSet movie az,to $2}
+ | ELFROM_ numeric {ProcessCmdSet movie el,from $2}
+ | ELTO_ numeric {ProcessCmdSet movie el,to $2}
+ | SLFROM_ INT_ {ProcessCmdSet movie sl,from $2}
+ | SLTO_ INT_ {ProcessCmdSet movie sl,to $2}
  | OSCILLATE_ INT_
    {ProcessCmdSet movie repeat oscillate; ProcessCmdSet movie repeat,num $2}
  | REPEAT_ INT_

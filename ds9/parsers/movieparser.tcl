@@ -978,13 +978,13 @@ proc movie::yyparse {} {
                     15 { set _ slice }
                     16 { set _ mpeg }
                     17 { set _ gif }
-                    20 { ProcessCmdSet movie number $2 }
-                    21 { ProcessCmdSet movie azfrom $2 }
-                    22 { ProcessCmdSet movie azto $2 }
-                    23 { ProcessCmdSet movie elfrom $2 }
-                    24 { ProcessCmdSet movie elto $2 }
-                    25 { ProcessCmdSet movie slfrom $2 }
-                    26 { ProcessCmdSet movie slto $2 }
+                    20 { ProcessCmdSet movie num $2 }
+                    21 { ProcessCmdSet movie az,from $2 }
+                    22 { ProcessCmdSet movie az,to $2 }
+                    23 { ProcessCmdSet movie el,from $2 }
+                    24 { ProcessCmdSet movie el,to $2 }
+                    25 { ProcessCmdSet movie sl,from $2 }
+                    26 { ProcessCmdSet movie sl,to $2 }
                     27 { ProcessCmdSet movie repeat oscillate; ProcessCmdSet movie repeat,num $2 }
                     28 { ProcessCmdSet movie repeat repeat; ProcessCmdSet movie repeat,num $2 }
                 }

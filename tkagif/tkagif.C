@@ -597,8 +597,6 @@ void TkAGIF::compress(unsigned char* pict)
   state_.pictCount =0;
   state_.initialBits = resolution_+1;
 
-  state_.offset = 0;
-  state_.hSize = HSIZE;
   state_.outCount = 0;
   state_.clearFlag = 0;
   state_.inCount = 1;
@@ -612,14 +610,14 @@ void TkAGIF::compress(unsigned char* pict)
 
   int hshift =0;
   long fcode =0;
-  for (fcode = (long)state_.hSize;  fcode < 65536L;  fcode *= 2L)
+  for (fcode = (long)HSIZE;  fcode < 65536L;  fcode *= 2L)
     hshift++;
 
   // Set hash code range bound
   hshift = 8 - hshift;  
 
-  long hSize = state_.hSize;
-  clearHashTable((int)hSize);
+  long hSize = HSIZE;
+  clearHashTable(hSize);
 
   output((long)state_.clearCode);
 
@@ -742,7 +740,7 @@ void TkAGIF::output(long code)
 
 void TkAGIF::clearForBlock()
 {
-    clearHashTable((int)state_.hSize);
+    clearHashTable(HSIZE);
     state_.freeEntry = state_.clearCode + 2;
     state_.clearFlag = 1;
 

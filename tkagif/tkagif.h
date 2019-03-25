@@ -27,7 +27,6 @@ typedef struct {
   long maxCode;		/* Maximum code, given numBits. */
   int hashTable[HSIZE];
   unsigned int codeTable[HSIZE];
-  long hSize;			/* For dynamic table sizing. */
 
   /*
    * To save much memory, we overlay the table used by compress() with those
@@ -40,7 +39,6 @@ typedef struct {
 
   int freeEntry;		/* First unused entry. */
   int clearFlag;
-  int offset;
   unsigned int inCount;	/* Length of input */
   unsigned int outCount;	/* # of codes output (for debugging) */
   int initialBits;

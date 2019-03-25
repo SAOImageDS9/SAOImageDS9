@@ -283,7 +283,7 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // colortable
-  int maxColors = 1024;
+  int maxColors = 4096;
   int totalColors =11;
   Color cc[maxColors];
   memset(cc,0,sizeof(Color)*maxColors);
@@ -328,7 +328,6 @@ int TkAGIF::add(int argc, const char* argv[])
   // RGB img
   Pixel* pixels = new Pixel[width_*height_];
   memset(pixels,0,sizeof(Pixel)*width_*height_);
-
   {
     Tk_PhotoHandle photo = Tk_FindPhoto(interp_, argv[2]);
     if (!photo) {
@@ -383,39 +382,30 @@ int TkAGIF::add(int argc, const char* argv[])
     }
 
     // now sort color array
-    // leave first 8 alone
+    // leave first 11 alone
     qsort(&cc[11], totalColors-11, sizeof(Color), cmpColor);
-
+  }
+  
+  resolution_ =0;
+  while (totalColors >> resolution_)
+    resolution_++;
+  if (resolution_>8)
+      resolution_ =8;
+  colorTableSize_ = 1 << resolution_;
+  
+  if (0) {
+    cerr << "Resolution: " << resolution_ << endl;
+    cerr << "ColorTableSize: " << colorTableSize_ << endl;
     cerr << "Total Colors: " << totalColors << endl;
-    if (0) {
-      for (int ii=0; ii<totalColors; ii++) {
-	cerr << ii << ' '
-	     << cc[ii].count << ' '
-	     << (unsigned short)(cc[ii].red) << ' '
-	     << (unsigned short)cc[ii].green << ' '
-	     << (unsigned short)cc[ii].blue << endl;
-      }
+    for (int ii=0; ii<totalColors; ii++) {
+      cerr << ii << ' '
+	   << cc[ii].count << ' '
+	   << (unsigned short)(cc[ii].red) << ' '
+	   << (unsigned short)cc[ii].green << ' '
+	   << (unsigned short)cc[ii].blue << endl;
     }
   }
 
-  // resolution_ =6;
-  // colorTableSize_ = 64;
-  // resolution_ =7;
-  // colorTableSize_ = 128;
-  resolution_ =8;
-  colorTableSize_ = 256;
-
-  if (0) {
-    int size =0;
-    int resolution =0;
-    while (totalColors >> resolution)
-      resolution++;
-    if (resolution>8)
-      resolution =8;
-    size = 1 << resolution;
-    cerr << resolution << ' ' << size << endl;
-  }
-  
   // build colortable
   Color ct[colorTableSize_];
   memset(ct,0,sizeof(Color)*colorTableSize_);
@@ -459,7 +449,7 @@ int TkAGIF::add(int argc, const char* argv[])
 	  }
 	}
 
-	// ok, find closest
+	// nope, find closest
 	if (!done) {
 	  int id =0;
 	  double dd =FLT_MAX;

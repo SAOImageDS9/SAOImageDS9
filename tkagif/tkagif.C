@@ -93,15 +93,20 @@ TkAGIF::TkAGIF(Tcl_Interp* interp)
   pict_ =NULL;
   pictCount_ =0;
 
+  // Compress
+  initialBits_ =0;
+  numBits_ =0;
+  currentBits_ =0;
+
   maxCode_ =0;
   clearCode_ =0;
   eofCode_ =0;
 
-  initialBits_ =0;
-  numBits_ =0;
-
   clearFlag_ =0;
   freeEntry_ =0;
+
+  accumulatedByteCount_ =0;
+  currentAccumulated_ =0;
 }
 
 int TkAGIF::create(int argc, const char* argv[])
@@ -613,36 +618,40 @@ void TkAGIF::noCompress()
 
 void TkAGIF::compress()
 {
-  unsigned int codeTable[HSIZE];
-
   // LZW minium code size
   out_->write((char*)&resolution_,1);
 
-  memset(&state_, 0, sizeof(state_));
-
-  initialBits_ = resolution_+1;
-
+  unsigned int codeTable[HSIZE];
   int outCount = 0;
   int inCount = 1;
-  clearFlag_ = 0;
-  maxCode_ = MAXCODE(numBits_ = initialBits_);
+
+  // init
+  initialBits_ = resolution_+1;
+  numBits_ = initialBits_;
+  currentBits_ = 0;
+
+  maxCode_ = MAXCODE(numBits_);
   clearCode_ = 1 << (initialBits_ - 1);
   eofCode_ = clearCode_ + 1;
+
+  clearFlag_ = 0;
   freeEntry_ = clearCode_ + 2;
 
-  charInit();
+  accumulatedByteCount_ = 0;
+  currentAccumulated_ = 0;
+
   long ent = input();
 
   int hshift =0;
   long fcode =0;
-  for (fcode = (long)HSIZE;  fcode < 65536L;  fcode *= 2L)
+  for (fcode = (long)HSIZE; fcode < 65536L; fcode *= 2L)
     hshift++;
 
   // Set hash code range bound
   hshift = 8 - hshift;  
 
   long hSize = HSIZE;
-  clearHashTable(hSize);
+  clearHashTable();
 
   output((long)clearCode_);
 
@@ -721,18 +730,18 @@ void TkAGIF::output(long code)
 					0x1FFF, 0x3FFF, 0x7FFF, 0xFFFF
   };
 
-  state_.currentAccumulated &= masks[state_.currentBits];
-  if (state_.currentBits > 0) {
-    state_.currentAccumulated |= ((long) code << state_.currentBits);
+  currentAccumulated_ &= masks[currentBits_];
+  if (currentBits_ > 0) {
+    currentAccumulated_ |= ((long) code << currentBits_);
   } else {
-    state_.currentAccumulated = code;
+    currentAccumulated_ = code;
   }
-  state_.currentBits += numBits_;
+  currentBits_ += numBits_;
 
-  while (state_.currentBits >= 8) {
-    charOut((unsigned)(state_.currentAccumulated & 0xff));
-    state_.currentAccumulated >>= 8;
-    state_.currentBits -= 8;
+  while (currentBits_ >= 8) {
+    charOut((unsigned)(currentAccumulated_ & 0xff));
+    currentAccumulated_ >>= 8;
+    currentBits_ -= 8;
   }
 
   // If the next entry is going to be too big for the code size, then
@@ -754,10 +763,10 @@ void TkAGIF::output(long code)
 
   if (code == eofCode_) {
     // At EOF, write the rest of the buffer.
-    while (state_.currentBits > 0) {
-      charOut((unsigned)(state_.currentAccumulated & 0xff));
-      state_.currentAccumulated >>= 8;
-      state_.currentBits -= 8;
+    while (currentBits_ > 0) {
+      charOut((unsigned)(currentAccumulated_ & 0xff));
+      currentAccumulated_ >>= 8;
+      currentBits_ -= 8;
     }
     flushChar();
   }
@@ -765,65 +774,56 @@ void TkAGIF::output(long code)
 
 void TkAGIF::clearForBlock()
 {
-    clearHashTable(HSIZE);
-    freeEntry_ = clearCode_ + 2;
-    clearFlag_ = 1;
+  clearHashTable();
+  freeEntry_ = clearCode_ + 2;
+  clearFlag_ = 1;
 
-    output((long)clearCode_);
+  output((long)clearCode_);
 }
 
-void TkAGIF::clearHashTable(int hSize)
+void TkAGIF::clearHashTable()
 {
-    register int *hashTablePtr = hashTable_ + hSize;
-    register long i;
-    register long m1 = -1;
+  int *hashTablePtr = hashTable_ + HSIZE;
+  long m1 = -1;
+  long ii = HSIZE - 16;
 
-    i = hSize - 16;
-    do {			/* might use Sys V memset(3) here */
-	*(hashTablePtr-16) = m1;
-	*(hashTablePtr-15) = m1;
-	*(hashTablePtr-14) = m1;
-	*(hashTablePtr-13) = m1;
-	*(hashTablePtr-12) = m1;
-	*(hashTablePtr-11) = m1;
-	*(hashTablePtr-10) = m1;
-	*(hashTablePtr-9) = m1;
-	*(hashTablePtr-8) = m1;
-	*(hashTablePtr-7) = m1;
-	*(hashTablePtr-6) = m1;
-	*(hashTablePtr-5) = m1;
-	*(hashTablePtr-4) = m1;
-	*(hashTablePtr-3) = m1;
-	*(hashTablePtr-2) = m1;
-	*(hashTablePtr-1) = m1;
-	hashTablePtr -= 16;
-    } while ((i -= 16) >= 0);
+  do {
+    *(hashTablePtr-16) = m1;
+    *(hashTablePtr-15) = m1;
+    *(hashTablePtr-14) = m1;
+    *(hashTablePtr-13) = m1;
+    *(hashTablePtr-12) = m1;
+    *(hashTablePtr-11) = m1;
+    *(hashTablePtr-10) = m1;
+    *(hashTablePtr-9) = m1;
+    *(hashTablePtr-8) = m1;
+    *(hashTablePtr-7) = m1;
+    *(hashTablePtr-6) = m1;
+    *(hashTablePtr-5) = m1;
+    *(hashTablePtr-4) = m1;
+    *(hashTablePtr-3) = m1;
+    *(hashTablePtr-2) = m1;
+    *(hashTablePtr-1) = m1;
+    hashTablePtr -= 16;
+  } while ((ii -= 16) >= 0);
 
-    for (i += 16; i > 0; i--) {
-	*--hashTablePtr = m1;
-    }
-}
-
-void TkAGIF::charInit()
-{
-  state_.accumulatedByteCount = 0;
-  state_.currentAccumulated = 0;
-  state_.currentBits = 0;
+  for (ii += 16; ii > 0; ii--)
+    *--hashTablePtr = m1;
 }
 
 void TkAGIF::charOut(int cc)
 {
-  state_.packetAccumulator[state_.accumulatedByteCount++] = cc;
-  if (state_.accumulatedByteCount >= 254)
+  packetAccumulator_[accumulatedByteCount_++] = cc;
+  if (accumulatedByteCount_ >= 254)
     flushChar();
 }
 
 void TkAGIF::flushChar()
 {
-  if (state_.accumulatedByteCount > 0) {
-    unsigned char cc = state_.accumulatedByteCount;
+  if (accumulatedByteCount_ > 0) {
+    unsigned char cc = accumulatedByteCount_;
     out_->write((char*)&cc,1);
-    out_->write((char*)state_.packetAccumulator, state_.accumulatedByteCount);
-    state_.accumulatedByteCount = 0;
+    out_->write((char*)packetAccumulator_, accumulatedByteCount_);
+    accumulatedByteCount_ = 0;
   }
 }

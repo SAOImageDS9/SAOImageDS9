@@ -288,7 +288,7 @@ proc MovieClose {} {
 
     switch $movie(type) {
 	mpeg {mpeg close}
-	gif {MoviePhotoGIFClose}
+	gif {agif close}
     }
 }
 
@@ -308,10 +308,10 @@ proc MoviePhotoMPEG {} {
     }
 
     if {$movie(first)} {
-	set w [image width $ph]
-	set h [image height $ph]
+	set ww [image width $ph]
+	set hh [image height $ph]
 	# quality must be >=5, or sometimes will generate bad data
-	mpeg create "$movie(fn)" $w $h 25 1 5
+	mpeg create "$movie(fn)" $ww $hh 25 1 5
 	set movie(first) 0
     }
     mpeg add $ph
@@ -324,6 +324,7 @@ proc MoviePhotoGIF {} {
     global ds9
     global movie
     global current
+    global colorbar
 
     # yes, we need this
     UpdateDS9
@@ -336,24 +337,20 @@ proc MoviePhotoGIF {} {
     }
 
     if {$movie(first)} {
-	set movie(gif) {}
+	switch [$current(frame) get type] {
+	    rgb {
+		agif create $movie(fn) [image width $ph] [image height $ph] 16
+	    }
+	    default {
+		agif create $movie(fn) [image width $ph] [image height $ph] 4
+	    }
+	}
 	set movie(first) 0
     }
+    agif add $ph
+    image delete $ph
 
-    lappend movie(gif) $ph
     return 0
-}
-
-proc MoviePhotoGIFClose {} {
-    global movie
-    
-    set ch [open $movie(fn) w]
-    fconfigure $ch -encoding binary -translation binary
-
-    close $ch
-    foreach ph $movie(gif) {
-	image delete $ph
-    }
 }
 
 proc Movie3dDialog {} {

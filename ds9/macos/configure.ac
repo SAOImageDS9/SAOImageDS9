@@ -103,6 +103,9 @@ TEA_LOAD_CONFIG(tkmacosx)
 TEA_PATH_CONFIG(tkmpeg)
 TEA_LOAD_CONFIG(tkmpeg)
 
+TEA_PATH_CONFIG(tkagif)
+TEA_LOAD_CONFIG(tkagif)
+
 TEA_PATH_CONFIG(tksao)
 TEA_LOAD_CONFIG(tksao)
 

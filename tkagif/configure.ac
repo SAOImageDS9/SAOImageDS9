@@ -19,7 +19,7 @@ dnl	to configure the system for the local environment.
 # so that we create the export library with the dll.
 #-----------------------------------------------------------------------
 
-AC_INIT([ds9], [8.1])
+AC_INIT([tkagif], [1.0])
 
 #--------------------------------------------------------------------
 # Call TEA_INIT as the first TEA_ macro to set up initial vars.
@@ -29,7 +29,7 @@ AC_INIT([ds9], [8.1])
 
 TEA_INIT()
 
-AC_CONFIG_AUX_DIR(../tclconfig)
+AC_CONFIG_AUX_DIR(tclconfig)
 
 #--------------------------------------------------------------------
 # Load the tclConfig.sh file
@@ -44,70 +44,6 @@ TEA_LOAD_TCLCONFIG
 
 TEA_PATH_TKCONFIG
 TEA_LOAD_TKCONFIG
-
-#--------------------------------------------------------------------
-# Load the *.sh file if necessary
-#--------------------------------------------------------------------
-
-TEA_PATH_CONFIG(tifftcl)
-TEA_LOAD_CONFIG(tifftcl)
-
-TEA_PATH_CONFIG(pngtcl)
-TEA_LOAD_CONFIG(pngtcl)
-
-TEA_PATH_CONFIG(jpegtcl)
-TEA_LOAD_CONFIG(jpegtcl)
-
-TEA_PATH_CONFIG(zlibtcl)
-TEA_LOAD_CONFIG(zlibtcl)
-
-TEA_PATH_CONFIG(tcliis)
-TEA_LOAD_CONFIG(tcliis)
-
-TEA_PATH_CONFIG(tclxml)
-TEA_LOAD_CONFIG(tclxml)
-
-TEA_PATH_CONFIG(tls)
-TEA_LOAD_CONFIG(tls)
-
-TEA_PATH_CONFIG(tkblt)
-TEA_LOAD_CONFIG(tkblt)
-
-TEA_PATH_CONFIG(tkhtml1)
-TEA_LOAD_CONFIG(tkhtml1)
-
-TEA_PATH_CONFIG(tkimg)
-TEA_LOAD_CONFIG(tkimg)
-
-TEA_PATH_CONFIG(tkimggif)
-TEA_LOAD_CONFIG(tkimggif)
-
-TEA_PATH_CONFIG(tkimgjpeg)
-TEA_LOAD_CONFIG(tkimgjpeg)
-
-TEA_PATH_CONFIG(tkimgpng)
-TEA_LOAD_CONFIG(tkimgpng)
-
-TEA_PATH_CONFIG(tkimgtiff)
-TEA_LOAD_CONFIG(tkimgtiff)
-
-TEA_PATH_CONFIG(tkimgwindow)
-TEA_LOAD_CONFIG(tkimgwindow)
-
-TEA_PATH_CONFIG(tkmpeg)
-TEA_LOAD_CONFIG(tkmpeg)
-
-TEA_PATH_CONFIG(tkagif)
-TEA_LOAD_CONFIG(tkagif)
-
-TEA_PATH_CONFIG(tksao)
-TEA_LOAD_CONFIG(tksao)
-
-TEA_PATH_CONFIG(tktable)
-TEA_LOAD_CONFIG(tktable)
-
-TEA_PATH_CONFIG(tkwin)
-TEA_LOAD_CONFIG(tkwin)
 
 #-----------------------------------------------------------------------
 # Handle the --prefix=... option by defaulting to what Tcl gave.
@@ -135,13 +71,15 @@ TEA_SETUP_COMPILER
 # and PKG_TCL_SOURCES.
 #-----------------------------------------------------------------------
 
-#TEA_ADD_SOURCES([sample.c tclsample.c])
-#TEA_ADD_HEADERS([])
-#TEA_ADD_INCLUDES([])
+TEA_ADD_SOURCES([
+	tkagif.C
+	])
+TEA_ADD_HEADERS([])
+TEA_ADD_INCLUDES([])
 TEA_ADD_LIBS([-lstdc++])
-#TEA_ADD_CFLAGS([])
-#TEA_ADD_STUB_SOURCES([])
-#TEA_ADD_TCL_SOURCES([])
+TEA_ADD_CFLAGS([])
+TEA_ADD_STUB_SOURCES([])
+TEA_ADD_TCL_SOURCES([])
 
 #--------------------------------------------------------------------
 # __CHANGE__
@@ -229,13 +167,13 @@ TEA_MAKE_LIB
 #--------------------------------------------------------------------
 
 TEA_PROG_TCLSH
-#TEA_PROG_WISH
+TEA_PROG_WISH
 
 #--------------------------------------------------------------------
 # Setup a *Config.sh.in configuration file.
 #--------------------------------------------------------------------
 
-#TEA_EXPORT_CONFIG([sample])
+TEA_EXPORT_CONFIG([tkagif])
 #AC_SUBST(SAMPLE_VAR)
 
 #--------------------------------------------------------------------
@@ -244,8 +182,8 @@ TEA_PROG_TCLSH
 # substituting the AC variables in. Include these here.
 #--------------------------------------------------------------------
 
-AC_CONFIG_FILES([Makefile])
-#AC_CONFIG_FILES([sampleConfig.sh])
+AC_CONFIG_FILES([Makefile pkgIndex.tcl])
+AC_CONFIG_FILES([tkagifConfig.sh])
 
 #--------------------------------------------------------------------
 # Finally, substitute all of the various values into the files

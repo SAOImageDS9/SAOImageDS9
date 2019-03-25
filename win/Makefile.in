@@ -41,7 +41,7 @@ saods9	: dirs tcl tk \
 	libxml2 openssl \
 	tcliis tls tclxml xpa \
 	tkblt tktable tkimg \
-	tkmpeg tkhtml1 tkcon \
+	tkmpeg tkagif tkhtml1 tkcon \
 	tkwin \
 	tksao ds9
 # posix- tclsignal

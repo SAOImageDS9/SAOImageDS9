@@ -118,7 +118,7 @@ int TkAGIF::create(int argc, const char* argv[])
     }
   }
   else {
-    Tcl_AppendResult(interp_, "usage: tkagif create <filename>", NULL);
+    Tcl_AppendResult(interp_, "usage: tkagif create <filename> <width> <height> <color resolution> ", NULL);
     return TCL_ERROR;
   }
 
@@ -195,9 +195,10 @@ int TkAGIF::create(int argc, const char* argv[])
   }
   
   // *** Global Color Table ***
+  // not present
 
   // *** Comment Extension
-  // no present
+  // not present
 
   // *** Application Extension Block ***
   {
@@ -308,7 +309,6 @@ int TkAGIF::add(int argc, const char* argv[])
   memset(cc,0,sizeof(Color)*maxColors);
   
   // Base Colors
-  
   // 0: black
   // 1: white
   cc[1].red = cc[1].green = cc[1].blue = 255;
@@ -333,7 +333,6 @@ int TkAGIF::add(int argc, const char* argv[])
   cc[7].count++;
   
   // some Greys for numerics
-
   // 8: 1/4 grey
   cc[8].red = cc[8].green = cc[8].blue = 64;
   cc[8].count++;
@@ -746,7 +745,6 @@ void TkAGIF::output(long code)
 
   // If the next entry is going to be too big for the code size, then
   // increase it, if possible.
-
   if ((freeEntry_ > maxCode_) || clearFlag_) {
     if (clearFlag_) {
       maxCode_ = MAXCODE(numBits_ = initialBits_);

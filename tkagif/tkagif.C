@@ -283,10 +283,12 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // colortable
-  int maxColors = 4096;
+  int maxColors = 1024;
   int totalColors =11;
   Color cc[maxColors];
   memset(cc,0,sizeof(Color)*maxColors);
+  
+  // Base Colors
   
   // 0: black
   // 1: white
@@ -310,6 +312,9 @@ int TkAGIF::add(int argc, const char* argv[])
   // 7: yellow
   cc[7].red = cc[7].green = 255;
   cc[7].count++;
+  
+  // some Greys for numerics
+
   // 8: 1/4 grey
   cc[8].red = cc[8].green = cc[8].blue = 64;
   cc[8].count++;

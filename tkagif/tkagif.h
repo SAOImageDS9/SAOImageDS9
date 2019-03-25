@@ -7,9 +7,22 @@
 
 #define HSIZE		5003	/* 80% occupancy */
 typedef struct {
+  /*
+   * Algorithm: use open addressing double hashing (no chaining) on the
+   * prefix code / next character combination. We do a variant of Knuth's
+   * algorithm D (vol. 3, sec. 6.4) along with G. Knott's relatively-prime
+   * secondary probe. Here, the modular division first probe is gives way to
+   * a faster exclusive-or manipulation. Also do block compression with an
+   * adaptive reset, whereby the code table is cleared when the compression
+   * ratio decreases, but after the table fills. The variable-length output
+   * codes are re-sized at this point, and a special CLEAR code is generated
+   * for the decompressor. Late addition: construct the table according to
+   * file size for noticeable speed improvement on small files. Please
+   * direct questions about this implementation to ames!jaw.
+   */
+
   unsigned char* pict;
   long pictCount;
-  
   int numBits;		/* Number of bits/code. */
   long maxCode;		/* Maximum code, given numBits. */
   int hashTable[HSIZE];
@@ -26,50 +39,16 @@ typedef struct {
    */
 
   int freeEntry;		/* First unused entry. */
-
-  /*
-   * Block compression parameters.  After all codes are used up, and
-   * compression rate changes, start over.
-   */
-
   int clearFlag;
-
   int offset;
   unsigned int inCount;	/* Length of input */
   unsigned int outCount;	/* # of codes output (for debugging) */
-
-  /*
-   * Algorithm: use open addressing double hashing (no chaining) on the
-   * prefix code / next character combination. We do a variant of Knuth's
-   * algorithm D (vol. 3, sec. 6.4) along with G. Knott's relatively-prime
-   * secondary probe. Here, the modular division first probe is gives way to
-   * a faster exclusive-or manipulation. Also do block compression with an
-   * adaptive reset, whereby the code table is cleared when the compression
-   * ratio decreases, but after the table fills. The variable-length output
-   * codes are re-sized at this point, and a special CLEAR code is generated
-   * for the decompressor. Late addition: construct the table according to
-   * file size for noticeable speed improvement on small files. Please
-   * direct questions about this implementation to ames!jaw.
-   */
-
   int initialBits;
-
   int clearCode;
   int eofCode;
-
   unsigned long currentAccumulated;
   int currentBits;
-
-  /*
-   * Number of characters so far in this 'packet'
-   */
-
   int accumulatedByteCount;
-
-  /*
-   * Define the storage for the packet accumulator
-   */
-
   unsigned char packetAccumulator[256];
 } GIFState_t;
 
@@ -80,9 +59,8 @@ private:
   ofstream* out_;
   int width_;
   int height_;
-  int nbitsPerPixel_;
+
   int colorTableSize_;
-  
   int resolution_;
   GIFState_t state_;
 

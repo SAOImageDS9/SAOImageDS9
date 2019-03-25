@@ -148,17 +148,6 @@ proc MovieCreate {fn} {
 	DisplayMode
     }
 
-    # reduce colors if needed
-    switch $movie(type) {
-	gif {
-	    $current(colorbar) configure -colors 64
-	    update
-	    $current(frame) colormap [$current(colorbar) get colormap]
-	    update
-	}
-	default {}
-    }
-    
     set movie(fn) $fn
     switch $movie(action) {
 	frame {MovieFrame}
@@ -166,17 +155,6 @@ proc MovieCreate {fn} {
 	3d {Movie3d}
     }
 
-    # reset colors if needed
-    switch $movie(type) {
-	gif {
-	    $current(colorbar) configure -colors 2048
-	    update
-	    $current(frame) colormap [$current(colorbar) get colormap]
-	    update
-	}
-	default {}
-    }
-    
     if {[info exists modesav]} {
 	set current(display) $modesav
 	DisplayMode

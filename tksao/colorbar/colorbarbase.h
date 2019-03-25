@@ -18,6 +18,7 @@
 #define CONFIGNUMERICS 12
 #define CONFIGSPACE 13
 #define CONFIGTICKS 14
+#define CONFIGCOLORS 15
 
 // ColorbarBase
 

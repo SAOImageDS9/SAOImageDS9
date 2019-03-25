@@ -83,10 +83,10 @@ TkAGIF::TkAGIF(Tcl_Interp* interp)
   interp_ = interp;
   out_ =NULL;
   width_ = height_ = 512;
-  nbitsPerPixel_ = 7;
-  colorTableSize_ = 128;
-  //  nbitsPerPixel_ = 8;
-  //  colorTableSize_ = 256;
+
+  nbitsPerPixel_ =0;
+  colorTableSize_ =0;
+  resolution_ =0;
 }
 
 int TkAGIF::create(int argc, const char* argv[])
@@ -154,9 +154,8 @@ int TkAGIF::create(int argc, const char* argv[])
     union qq pkg;
 
     pkg.tt.gt = 0;
-    pkg.tt.resolution = nbitsPerPixel_-1;
+    pkg.tt.resolution = 0;
     pkg.tt.sort = 0;
-    //    pkg.tt.size = nbitsPerPixel_-1;
     pkg.tt.size = 0;
 
     out_->write((char*)&pkg.cc,1);
@@ -377,6 +376,13 @@ int TkAGIF::add(int argc, const char* argv[])
     qsort(&cc[8], cnt-8, sizeof(Color), cmpColor);
   }
 
+  nbitsPerPixel_ =7;
+  colorTableSize_ = 128;
+  resolution_ =0;
+  while (128 >> resolution_)
+    resolution_++;
+  cerr << resolution_ << ' ' << endl;
+
   // build colortable
   Color ct[colorTableSize_];
   memset(ct,0,sizeof(Color)*colorTableSize_);
@@ -480,20 +486,20 @@ int TkAGIF::add(int argc, const char* argv[])
   }
   
   // *** Local Color Table ***
-  {
-    for (int ii=0; ii<colorTableSize_; ii++) {
-      out_->write((char*)&ct[ii].red,1);
-      out_->write((char*)&ct[ii].green,1);
-      out_->write((char*)&ct[ii].blue,1);
-    }
+  for (int ii=0; ii<colorTableSize_; ii++) {
+    out_->write((char*)&ct[ii].red,1);
+    out_->write((char*)&ct[ii].green,1);
+    out_->write((char*)&ct[ii].blue,1);
   }
 
   // *** Image Data ***
-  {
-    //noCompress(pict);
-    compress(pict);
-  }
+  //    noCompress(pict);
+  compress(pict);
   
+  // end of Image Data
+  unsigned char end= 0x00;
+  out_->write((char*)&end,1);
+
   return TCL_OK;
 }
 
@@ -511,8 +517,7 @@ int TkAGIF::close(int argc, const char* argv[])
 
 void TkAGIF::noCompress(unsigned char* pict)
 {
-  // can only process up to 128 colors
-  // LZW Min Code Size
+  // LZW minium code size
   unsigned char lzw = 0x07;
   out_->write((char*)&lzw,1);
 
@@ -542,9 +547,6 @@ void TkAGIF::noCompress(unsigned char* pict)
   unsigned char ss = 0x01;
   out_->write((char*)&ss,1);
   out_->write((char*)&stop,1);
-
-  unsigned char end= 0x00;
-  out_->write((char*)&end,1);
 }
 
 #define GIFBITS	12
@@ -557,25 +559,14 @@ void TkAGIF::noCompress(unsigned char* pict)
 
 void TkAGIF::compress(unsigned char* pict)
 {
+  // LZW minium code size
+  out_->write((char*)&resolution_,1);
+
   memset(&state_, 0, sizeof(state_));
 
-  {
-    int resolution = 0;
-    while (128 >> resolution) {
-	resolution++;
-    }
-    unsigned char cc = 111 + resolution * 17;
-    cerr << resolution << ' ' << hex << (unsigned short)cc << endl;
-    out_->write((char*)&cc,1);
-
-    //unsigned char lzw = 0x07;
-    //  out_->write((char*)&lzw,1);
-
-  }
-  
   state_.pict = pict;
   state_.pictCount =0;
-  state_.initialBits = 8;
+  state_.initialBits = resolution_+1;
 
   state_.offset = 0;
   state_.hSize = HSIZE;

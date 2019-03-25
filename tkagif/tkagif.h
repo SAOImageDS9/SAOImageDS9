@@ -83,6 +83,7 @@ private:
   int nbitsPerPixel_;
   int colorTableSize_;
   
+  int resolution_;
   GIFState_t state_;
 
 private:

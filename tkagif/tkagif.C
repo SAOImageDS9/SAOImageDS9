@@ -550,6 +550,7 @@ int TkAGIF::close(int argc, const char* argv[])
 
 void TkAGIF::noCompress(unsigned char* pict)
 {
+  // only works for color table size 128 (i.e. whole bytes)
   // LZW minium code size
   unsigned char lzw = 0x07;
   out_->write((char*)&lzw,1);
@@ -584,11 +585,6 @@ void TkAGIF::noCompress(unsigned char* pict)
 
 #define GIFBITS	12
 #define MAXCODE(numBits) (((long) 1 << (numBits)) - 1)
-#ifdef SIGNED_COMPARE_SLOW
-#define U(x)	((unsigned) (x))
-#else
-#define U(x)	(x)
-#endif
 
 void TkAGIF::compress(unsigned char* pict)
 {
@@ -630,7 +626,7 @@ void TkAGIF::compress(unsigned char* pict)
   long disp =0;
   long i =0;
   int c =0;
-  while (U(c = input()) != U(EOF)) {
+  while ((c = input()) != EOF) {
     state_.inCount++;
 
     fcode = (long) (((long) c << GIFBITS) + ent);
@@ -666,7 +662,7 @@ void TkAGIF::compress(unsigned char* pict)
     output((long)ent);
     state_.outCount++;
     ent = c;
-    if (U(state_.freeEntry) < U((long)1 << GIFBITS)) {
+    if (state_.freeEntry < (long)1 << GIFBITS) {
       // code -> hashtable
       state_.codeTable[i] = state_.freeEntry++;
       state_.hashTable[i] = fcode;

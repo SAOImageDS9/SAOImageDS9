@@ -83,6 +83,8 @@ TkAGIF::TkAGIF(Tcl_Interp* interp)
   interp_ = interp;
   out_ =NULL;
   width_ = height_ = 512;
+  colorRes_ = 4; // pseudocolor
+  //colorRes_ = 16; // rgb
 
   colorTableSize_ =0;
   resolution_ =0;
@@ -90,7 +92,7 @@ TkAGIF::TkAGIF(Tcl_Interp* interp)
 
 int TkAGIF::create(int argc, const char* argv[])
 {
-  if (argc == 5) {
+  if (argc == 6) {
     if (*argv[2] == '\0') {
       Tcl_AppendResult(interp_, "bad filename", NULL);
       return TCL_ERROR;
@@ -119,6 +121,11 @@ int TkAGIF::create(int argc, const char* argv[])
     string s(argv[4]);
     istringstream str(s);
     str >> height_;
+  }
+  {
+    string s(argv[5]);
+    istringstream str(s);
+    str >> colorRes_;
   }
 
   // *** Header ***
@@ -260,10 +267,7 @@ static int cmpColor(const void* a, const void* b)
   return 1;
 }
 
-static int almost(int aa, int bb)
-{
-  return abs(aa-bb) <= 4 ? 1 : 0;
-}
+#define ALMOST(aa,bb)  (abs(aa-bb) <= colorRes_ ? 1 : 0)
 
 int TkAGIF::add(int argc, const char* argv[])
 {
@@ -279,7 +283,7 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // colortable
-  int maxColors = 1024;
+  int maxColors = 4096;
   int totalColors =11;
   Color cc[maxColors];
   memset(cc,0,sizeof(Color)*maxColors);
@@ -351,9 +355,9 @@ int TkAGIF::add(int argc, const char* argv[])
 	// first try all known colors
 	int done =0;
 	for (int kk=0; kk<totalColors; kk++) {
-	  if (almost(dst->red, cc[kk].red) &&
-	      almost(dst->green, cc[kk].green) &&
-	      almost(dst->blue, cc[kk].blue)) {
+	  if (ALMOST(dst->red, cc[kk].red) &&
+	      ALMOST(dst->green, cc[kk].green) &&
+	      ALMOST(dst->blue, cc[kk].blue)) {
 	    cc[kk].count++;
 	    done =1;
 	    break;
@@ -441,9 +445,9 @@ int TkAGIF::add(int argc, const char* argv[])
 	// first try all known colors
 	int done =0;
 	for (int kk=0; kk<colorTableSize_; kk++) {
-	  if (almost(src->red, ct[kk].red) &&
-	      almost(src->green, ct[kk].green) &&
-	      almost(src->blue, ct[kk].blue)) {
+	  if (ALMOST(src->red, ct[kk].red) &&
+	      ALMOST(src->green, ct[kk].green) &&
+	      ALMOST(src->blue, ct[kk].blue)) {
 	    *dst = (unsigned char)kk;
 	    done =1;
 	    break;

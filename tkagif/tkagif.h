@@ -60,6 +60,7 @@ private:
   int width_;
   int height_;
 
+  int colorRes_;
   int colorTableSize_;
   int resolution_;
   GIFState_t state_;

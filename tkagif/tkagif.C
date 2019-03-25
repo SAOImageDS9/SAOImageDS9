@@ -82,12 +82,26 @@ TkAGIF::TkAGIF(Tcl_Interp* interp)
 {
   interp_ = interp;
   out_ =NULL;
-  width_ = height_ = 512;
+  width_ = 512;
+  height_ = 512;
   colorRes_ = 4; // pseudocolor
   //colorRes_ = 16; // rgb
 
+  // state vars
   colorTableSize_ =0;
   resolution_ =0;
+  pict_ =NULL;
+  pictCount_ =0;
+
+  maxCode_ =0;
+  clearCode_ =0;
+  eofCode_ =0;
+
+  initialBits_ =0;
+  numBits_ =0;
+
+  clearFlag_ =0;
+  freeEntry_ =0;
 }
 
 int TkAGIF::create(int argc, const char* argv[])
@@ -429,11 +443,16 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // now indexed image
-  unsigned char* pict = new unsigned char[width_*height_];
-  memset(pict,0,width_*height_);
+  if (pict_)
+    delete [] pict_;
+  pict_ =NULL;
+  pictCount_ =0;
+
+  pict_ = new unsigned char[width_*height_];
+  memset(pict_,0,width_*height_);
   {
     Pixel* src = pixels;
-    unsigned char* dst = pict;
+    unsigned char* dst = pict_;
     for (int jj=0; jj<height_; jj++) {
       for (int ii=0; ii<width_; ii++, src++, dst++) {
 	
@@ -526,12 +545,18 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // *** Image Data ***
-  //    noCompress(pict);
-  compress(pict);
+  //    noCompress();
+  compress();
   
   // end of Image Data
   unsigned char end= 0x00;
   out_->write((char*)&end,1);
+
+  // cleanup
+  if (pict_)
+    delete [] pict_;
+  pict_ =NULL;
+  pictCount_ =0;
 
   return TCL_OK;
 }
@@ -548,7 +573,7 @@ int TkAGIF::close(int argc, const char* argv[])
   return TCL_OK;
 }
 
-void TkAGIF::noCompress(unsigned char* pict)
+void TkAGIF::noCompress()
 {
   // only works for color table size 128 (i.e. whole bytes)
   // LZW minium code size
@@ -572,7 +597,7 @@ void TkAGIF::noCompress(unsigned char* pict)
       out_->write((char*)&ss,1);
       out_->write((char*)&clear,1);
       for (unsigned char kk=0; kk<ll; kk++) {
-	unsigned char pix = pict[jj*width_+ii];
+	unsigned char pix = pict_[jj*width_+ii];
 	out_->write((char*)&pix,1);
 	ii++;
       }
@@ -586,24 +611,24 @@ void TkAGIF::noCompress(unsigned char* pict)
 #define GIFBITS	12
 #define MAXCODE(numBits) (((long) 1 << (numBits)) - 1)
 
-void TkAGIF::compress(unsigned char* pict)
+void TkAGIF::compress()
 {
+  unsigned int codeTable[HSIZE];
+
   // LZW minium code size
   out_->write((char*)&resolution_,1);
 
   memset(&state_, 0, sizeof(state_));
 
-  state_.pict = pict;
-  state_.pictCount =0;
-  state_.initialBits = resolution_+1;
+  initialBits_ = resolution_+1;
 
-  state_.outCount = 0;
-  state_.clearFlag = 0;
-  state_.inCount = 1;
-  state_.maxCode = MAXCODE(state_.numBits = state_.initialBits);
-  state_.clearCode = 1 << (state_.initialBits - 1);
-  state_.eofCode = state_.clearCode + 1;
-  state_.freeEntry = state_.clearCode + 2;
+  int outCount = 0;
+  int inCount = 1;
+  clearFlag_ = 0;
+  maxCode_ = MAXCODE(numBits_ = initialBits_);
+  clearCode_ = 1 << (initialBits_ - 1);
+  eofCode_ = clearCode_ + 1;
+  freeEntry_ = clearCode_ + 2;
 
   charInit();
   long ent = input();
@@ -619,23 +644,23 @@ void TkAGIF::compress(unsigned char* pict)
   long hSize = HSIZE;
   clearHashTable(hSize);
 
-  output((long)state_.clearCode);
+  output((long)clearCode_);
 
   long disp =0;
   long i =0;
   int c =0;
   while ((c = input()) != EOF) {
-    state_.inCount++;
+    inCount++;
 
     fcode = (long) (((long) c << GIFBITS) + ent);
     // XOR hashing
     i = ((long)c << hshift) ^ ent;
 
-    if (state_.hashTable[i] == fcode) {
-      ent = state_.codeTable[i];
+    if (hashTable_[i] == fcode) {
+      ent = codeTable[i];
       continue;
     }
-    else if ((long) state_.hashTable[i] < 0) {
+    else if ((long) hashTable_[i] < 0) {
       // Empty slot
       goto nomatch;
     }
@@ -649,21 +674,21 @@ void TkAGIF::compress(unsigned char* pict)
     if ((i -= disp) < 0)
       i += hSize;
 
-    if (state_.hashTable[i] == fcode) {
-      ent = state_.codeTable[i];
+    if (hashTable_[i] == fcode) {
+      ent = codeTable[i];
       continue;
     }
-    if ((long) state_.hashTable[i] > 0)
+    if ((long) hashTable_[i] > 0)
       goto probe;
 
   nomatch:
     output((long)ent);
-    state_.outCount++;
+    outCount++;
     ent = c;
-    if (state_.freeEntry < (long)1 << GIFBITS) {
+    if (freeEntry_ < (long)1 << GIFBITS) {
       // code -> hashtable
-      state_.codeTable[i] = state_.freeEntry++;
-      state_.hashTable[i] = fcode;
+      codeTable[i] = freeEntry_++;
+      hashTable_[i] = fcode;
     }
     else
       clearForBlock();
@@ -671,15 +696,15 @@ void TkAGIF::compress(unsigned char* pict)
 
   // Put out the final code.
   output((long)ent);
-  state_.outCount++;
-  output((long)state_.eofCode);
+  outCount++;
+  output((long)eofCode_);
 }
 
 int TkAGIF::input()
 {
-  if (state_.pictCount < width_*height_) {
-    int rr = state_.pict[state_.pictCount];
-    state_.pictCount++;
+  if (pictCount_ < width_*height_) {
+    int rr = pict_[pictCount_];
+    pictCount_++;
     return rr;
   }  
   else
@@ -702,7 +727,7 @@ void TkAGIF::output(long code)
   } else {
     state_.currentAccumulated = code;
   }
-  state_.currentBits += state_.numBits;
+  state_.currentBits += numBits_;
 
   while (state_.currentBits >= 8) {
     charOut((unsigned)(state_.currentAccumulated & 0xff));
@@ -713,21 +738,21 @@ void TkAGIF::output(long code)
   // If the next entry is going to be too big for the code size, then
   // increase it, if possible.
 
-  if ((state_.freeEntry > state_.maxCode) || state_.clearFlag) {
-    if (state_.clearFlag) {
-      state_.maxCode = MAXCODE(state_.numBits = state_.initialBits);
-      state_.clearFlag = 0;
+  if ((freeEntry_ > maxCode_) || clearFlag_) {
+    if (clearFlag_) {
+      maxCode_ = MAXCODE(numBits_ = initialBits_);
+      clearFlag_ = 0;
     }
     else {
-      state_.numBits++;
-      if (state_.numBits == GIFBITS)
-	state_.maxCode = (long)1 << GIFBITS;
+      numBits_++;
+      if (numBits_ == GIFBITS)
+	maxCode_ = (long)1 << GIFBITS;
       else
-	state_.maxCode = MAXCODE(state_.numBits);
+	maxCode_ = MAXCODE(numBits_);
     }
   }
 
-  if (code == state_.eofCode) {
+  if (code == eofCode_) {
     // At EOF, write the rest of the buffer.
     while (state_.currentBits > 0) {
       charOut((unsigned)(state_.currentAccumulated & 0xff));
@@ -741,15 +766,15 @@ void TkAGIF::output(long code)
 void TkAGIF::clearForBlock()
 {
     clearHashTable(HSIZE);
-    state_.freeEntry = state_.clearCode + 2;
-    state_.clearFlag = 1;
+    freeEntry_ = clearCode_ + 2;
+    clearFlag_ = 1;
 
-    output((long)state_.clearCode);
+    output((long)clearCode_);
 }
 
 void TkAGIF::clearHashTable(int hSize)
 {
-    register int *hashTablePtr = state_.hashTable + hSize;
+    register int *hashTablePtr = hashTable_ + hSize;
     register long i;
     register long m1 = -1;
 

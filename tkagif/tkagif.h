@@ -21,12 +21,6 @@ typedef struct {
    * direct questions about this implementation to ames!jaw.
    */
 
-  unsigned char* pict;
-  long pictCount;
-  int numBits;		/* Number of bits/code. */
-  long maxCode;		/* Maximum code, given numBits. */
-  int hashTable[HSIZE];
-  unsigned int codeTable[HSIZE];
 
   /*
    * To save much memory, we overlay the table used by compress() with those
@@ -37,13 +31,6 @@ typedef struct {
    * possible stack (stack used to be 8000 characters).
    */
 
-  int freeEntry;		/* First unused entry. */
-  int clearFlag;
-  unsigned int inCount;	/* Length of input */
-  unsigned int outCount;	/* # of codes output (for debugging) */
-  int initialBits;
-  int clearCode;
-  int eofCode;
   unsigned long currentAccumulated;
   int currentBits;
   int accumulatedByteCount;
@@ -61,12 +48,28 @@ private:
   int colorRes_;
   int colorTableSize_;
   int resolution_;
+
   GIFState_t state_;
 
-private:
-  void noCompress(unsigned char*);
+  unsigned char* pict_;
+  long pictCount_;
 
-  void compress(unsigned char*);
+  long maxCode_; // Maximum code, given numBits
+  int clearCode_;
+  int eofCode_;
+
+  int initialBits_;
+  int numBits_;
+
+  int clearFlag_;
+  int freeEntry_; // First unused entry
+
+  int hashTable_[HSIZE];
+
+private:
+  void noCompress();
+  void compress();
+
   int input();
   void output(long);
   void clearForBlock();

@@ -447,35 +447,25 @@ void TkAGIF::initColorTable(Color* ct)
   ct[10].count++;
 }
 
-#define ALMOSTRED(aa,bb) (abs(aa-bb) <= resRed ? 1 : 0)
-#define ALMOSTGREEN(aa,bb) (abs(aa-bb) <= resGreen ? 1 : 0)
-#define ALMOSTBLUE(aa,bb) (abs(aa-bb) <= resBlue ? 1 : 0)
+#define ALMOST2(aa,bb) (abs(aa-bb) <= iter)
 
 void TkAGIF::alg2(Pixel* pixels)
 {
   int maxColors = 256;
 
   int finished =0;
-  int res = 1;
+  int iter = 1;
   int totalColors =11;
+
+  if (colorTable_)
+    delete [] colorTable_;
+  colorTable_ = new Color[maxColors];
+
+  initColorTable(colorTable_);
+
   do {
-    int resRed = res;
-    int resGreen = res;
-    int resBlue = res;
-    //    int resRed = int(res*.59/.3+.5);
-    //    int resGreen = res;
-    //    int resBlue = int(res*.59/.11+.5);
-    //    int resRed = int(res*.7154/.2125+.5);
-    //    int resGreen = res;
-    //    int resBlue = int(res*.7154/.072+.5);
-    if (colorTable_)
-      delete [] colorTable_;
-    colorTable_ =NULL;
-    colorTable_ = new Color[maxColors];
-    memset(colorTable_,0,sizeof(Color)*maxColors);
-  
     totalColors =11;
-    initColorTable(colorTable_);
+    memset(&colorTable_[totalColors],0,sizeof(Color)*(maxColors-totalColors));
 
     Pixel* src = pixels;
     unsigned char* dst = pict_;
@@ -484,9 +474,9 @@ void TkAGIF::alg2(Pixel* pixels)
 	// first try all known colors
 	int done =0;
 	for (int kk=0; kk<totalColors; kk++) {
-	  if (ALMOSTRED(src->red, colorTable_[kk].red) &&
-	      ALMOSTGREEN(src->green, colorTable_[kk].green) &&
-	      ALMOSTBLUE(src->blue, colorTable_[kk].blue)) {
+	  if (ALMOST2(src->red, colorTable_[kk].red) &&
+	      ALMOST2(src->green, colorTable_[kk].green) &&
+	      ALMOST2(src->blue, colorTable_[kk].blue)) {
 	    colorTable_[kk].count++;
 	    *dst = kk;
 	    done =1;
@@ -506,22 +496,16 @@ void TkAGIF::alg2(Pixel* pixels)
 	  }
 	  else {
 	    // abort, try again
-	    res ++;
+	    iter ++;
 	    goto end;
 	  }
 	}
       }
     }
     finished =1;
-    cerr << "Res : " << res << ' '
-	 << resRed << ' '
-	 << resGreen << ' '
-	 << resBlue << endl;
-    cerr << " Count: " << totalColors << endl;
 
   end:
     ;
-    // nothing
   } while (!finished);
   
   resolution_ =0;
@@ -532,9 +516,10 @@ void TkAGIF::alg2(Pixel* pixels)
   colorTableSize_ = 1 << resolution_;
 
   if (0) {
+    cerr << "Iteration: " << iter << endl;
+    cerr << "Total Colors: " << totalColors << endl;
     cerr << "Resolution: " << resolution_ << endl;
     cerr << "ColorTableSize: " << colorTableSize_ << endl;
-    cerr << "Total Colors: " << totalColors << endl;
     for (int ii=0; ii<totalColors; ii++) {
       cerr << ii << ' '
 	   << colorTable_[ii].count << ' '

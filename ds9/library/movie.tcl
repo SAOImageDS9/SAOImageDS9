@@ -337,14 +337,7 @@ proc MoviePhotoGIF {} {
     }
 
     if {$movie(first)} {
-	switch [$current(frame) get type] {
-	    rgb {
-		agif create $movie(fn) [image width $ph] [image height $ph]
-	    }
-	    default {
-		agif create $movie(fn) [image width $ph] [image height $ph]
-	    }
-	}
+	agif create $movie(fn) [image width $ph] [image height $ph]
 	set movie(first) 0
     }
     agif add $ph

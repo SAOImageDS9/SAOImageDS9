@@ -28,6 +28,19 @@
 
 #define HSIZE		5003	/* 80% occupancy */
 
+typedef struct {
+  int count;
+  unsigned char red;
+  unsigned char green;
+  unsigned char blue;
+} Color;
+
+typedef struct {
+  unsigned char red;
+  unsigned char green;
+  unsigned char blue;
+} Pixel;
+
 class TkAGIF {
 private:
   Tcl_Interp* interp_;
@@ -35,13 +48,13 @@ private:
   ofstream* out_;
   int width_;
   int height_;
-
-  int colorRes_;
-  int colorTableSize_;
   int resolution_;
 
   unsigned char* pict_;
   long pictCount_;
+  
+  Color* colorTable_;
+  int colorTableSize_;
 
   long maxCode_; // Maximum code, given numBits
   int clearCode_;
@@ -60,6 +73,9 @@ private:
   unsigned long currentAccumulated_;
 
 private:
+  void initColorTable(Color*);
+  void alg1(Pixel*);
+  void alg2(Pixel*);
   void noCompress();
   void compress();
 

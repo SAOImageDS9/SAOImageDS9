@@ -461,11 +461,10 @@ void TkAGIF::alg2(Pixel* pixels)
     delete [] colorTable_;
   colorTable_ = new Color[maxColors];
 
-  initColorTable(colorTable_);
-
   do {
     totalColors =11;
-    memset(&colorTable_[totalColors],0,sizeof(Color)*(maxColors-totalColors));
+    memset(colorTable_,0,sizeof(Color)*maxColors);
+    initColorTable(colorTable_);
 
     Pixel* src = pixels;
     unsigned char* dst = pict_;
@@ -515,7 +514,7 @@ void TkAGIF::alg2(Pixel* pixels)
       resolution_ =8;
   colorTableSize_ = 1 << resolution_;
 
-  if (0) {
+  if (1) {
     cerr << "Iteration: " << iter << endl;
     cerr << "Total Colors: " << totalColors << endl;
     cerr << "Resolution: " << resolution_ << endl;

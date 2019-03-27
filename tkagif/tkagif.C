@@ -15,6 +15,8 @@ using namespace std;
 
 #include "tkagif.h"
 
+#define MAXCOLORS 256
+
 extern "C" {
   int Tkagif_Init(Tcl_Interp* interp);
   int TkagifCmd(ClientData data, Tcl_Interp *interp, int argc, 
@@ -73,14 +75,15 @@ TkAGIF::TkAGIF(Tcl_Interp* interp)
   height_ = 512;
   resolution_ =0;
 
-  // state vars
   pict_ =NULL;
-  pictCount_ =0;
-
   colorTable_ =NULL;
+
+  // Actual size of colortable to be saved
   colorTableSize_ =0;
 
   // Compress
+  pictCount_ =0;
+
   initialBits_ =0;
   numBits_ =0;
   currentBits_ =0;
@@ -258,17 +261,6 @@ int TkAGIF::create(int argc, const char* argv[])
   return TCL_OK;
 }
 
-static int cmpColor(const void* a, const void* b)
-{
-  Color* aa = (Color*)a;
-  Color* bb = (Color*)b;
-
-  int diff = aa->count - bb->count;
-  if (diff > 0) return -1;
-  if (diff == 0) return 0;
-  return 1;
-}
-
 int TkAGIF::add(int argc, const char* argv[])
 {
   if (argc == 3) {
@@ -311,14 +303,14 @@ int TkAGIF::add(int argc, const char* argv[])
   // Indexed img
   if (pict_)
     delete [] pict_;
-  pict_ =NULL;
-  pictCount_ =0;
-
   pict_ = new unsigned char[width_*height_];
   memset(pict_,0,width_*height_);
 
-  //alg1(pixels);
-  alg2(pixels);
+  if (colorTable_)
+    delete [] colorTable_;
+  colorTable_ = new Color[MAXCOLORS];
+
+  scanImage(pixels);
   
   // *** Local Image Descriptor ***
   {
@@ -377,7 +369,6 @@ int TkAGIF::add(int argc, const char* argv[])
   }
 
   // *** Image Data ***
-  //    noCompress();
   compress();
   
   // end of Image Data
@@ -388,7 +379,6 @@ int TkAGIF::add(int argc, const char* argv[])
   if (pict_)
     delete [] pict_;
   pict_ =NULL;
-  pictCount_ =0;
 
   if (colorTable_)
     delete [] colorTable_;
@@ -409,62 +399,57 @@ int TkAGIF::close(int argc, const char* argv[])
   return TCL_OK;
 }
 
-void TkAGIF::initColorTable(Color* ct)
+void TkAGIF::initColorTable()
 {
+  memset(colorTable_,0,sizeof(Color)*MAXCOLORS);
+
   // Base Colors
   // 0: black
   // 1: white
-  ct[1].red = ct[1].green = ct[1].blue = 255;
-  ct[1].count++;
+  colorTable_[1].red = colorTable_[1].green = colorTable_[1].blue = 255;
+  colorTable_[1].count++;
   // 2: red
-  ct[2].red = 255;
-  ct[2].count++;
+  colorTable_[2].red = 255;
+  colorTable_[2].count++;
   // 3: green
-  ct[3].green = 255;
-  ct[3].count++;
+  colorTable_[3].green = 255;
+  colorTable_[3].count++;
   // 4: blue
-  ct[4].blue = 255;
-  ct[4].count++;
+  colorTable_[4].blue = 255;
+  colorTable_[4].count++;
   // 5: cyan
-  ct[5].green = ct[5].blue = 255;
-  ct[5].count++;
+  colorTable_[5].green = colorTable_[5].blue = 255;
+  colorTable_[5].count++;
   // 6: magenta
-  ct[6].red = ct[6].blue = 255;
-  ct[6].count++;
+  colorTable_[6].red = colorTable_[6].blue = 255;
+  colorTable_[6].count++;
   // 7: yellow
-  ct[7].red = ct[7].green = 255;
-  ct[7].count++;
+  colorTable_[7].red = colorTable_[7].green = 255;
+  colorTable_[7].count++;
   
   // some Greys for numerics
   // 8: 1/4 grey
-  ct[8].red = ct[8].green = ct[8].blue = 64;
-  ct[8].count++;
+  colorTable_[8].red = colorTable_[8].green = colorTable_[8].blue = 64;
+  colorTable_[8].count++;
   // 9: 1/2 grey
-  ct[9].red = ct[9].green = ct[9].blue = 128;
-  ct[9].count++;
+  colorTable_[9].red = colorTable_[9].green = colorTable_[9].blue = 128;
+  colorTable_[9].count++;
   // 10: 3/4 grey
-  ct[10].red = ct[10].green = ct[10].blue = 192;
-  ct[10].count++;
+  colorTable_[10].red = colorTable_[10].green = colorTable_[10].blue = 192;
+  colorTable_[10].count++;
 }
 
 #define ALMOST2(aa,bb) (abs(aa-bb) <= iter)
 
-void TkAGIF::alg2(Pixel* pixels)
+void TkAGIF::scanImage(Pixel* pixels)
 {
-  int maxColors = 256;
-
   int finished =0;
   int iter = 1;
   int totalColors =11;
 
-  if (colorTable_)
-    delete [] colorTable_;
-  colorTable_ = new Color[maxColors];
-
   do {
+    initColorTable();
     totalColors =11;
-    memset(colorTable_,0,sizeof(Color)*maxColors);
-    initColorTable(colorTable_);
 
     Pixel* src = pixels;
     unsigned char* dst = pict_;
@@ -485,7 +470,7 @@ void TkAGIF::alg2(Pixel* pixels)
 
 	// add color
 	if (!done) {
-	  if (totalColors<maxColors) {
+	  if (totalColors<MAXCOLORS) {
 	    colorTable_[totalColors].red = src->red;
 	    colorTable_[totalColors].green = src->green;
 	    colorTable_[totalColors].blue = src->blue;
@@ -529,173 +514,6 @@ void TkAGIF::alg2(Pixel* pixels)
   }
 }
 
-void TkAGIF::alg1(Pixel* pixels)
-{
-  int totalColors =11;
-  int maxColors = 4096;
-  Color cc[maxColors];
-  memset(cc,0,sizeof(Color)*maxColors);
-
-  initColorTable(cc);
-
-  // Scan and sort all colors
-  {
-    Pixel* dst = pixels;
-    for (int jj=0; jj<height_; jj++) {
-      for (int ii=0; ii<width_; ii++, dst++) {
-	// first try all known colors
-	int done =0;
-	for (int kk=0; kk<totalColors; kk++) {
-	  if (dst->red == cc[kk].red &&
-	      dst->green == cc[kk].green &&
-	      dst->blue == cc[kk].blue) {
-	    cc[kk].count++;
-	    done =1;
-	    break;
-	  }
-	}
-
-	// add color
-	if (!done) {
-	  if (totalColors<maxColors) {
-	    cc[totalColors].red = dst->red;
-	    cc[totalColors].green = dst->green;
-	    cc[totalColors].blue = dst->blue;
-	    cc[totalColors].count++;
-	    totalColors++;
-	  }
-	}
-      }
-    }
-
-    // now sort color array
-    // leave first 11 alone
-    qsort(&cc[11], totalColors-11, sizeof(Color), cmpColor);
-  }
-  
-  resolution_ =0;
-  while (totalColors >> resolution_)
-    resolution_++;
-  if (resolution_>8)
-      resolution_ =8;
-  colorTableSize_ = 1 << resolution_;
-  
-  cerr << "Resolution: " << resolution_ << endl;
-  cerr << "ColorTableSize: " << colorTableSize_ << endl;
-  cerr << "Total Colors: " << totalColors << endl;
-  if (0) {
-    cerr << "Resolution: " << resolution_ << endl;
-    cerr << "ColorTableSize: " << colorTableSize_ << endl;
-    cerr << "Total Colors: " << totalColors << endl;
-    for (int ii=0; ii<totalColors; ii++) {
-      cerr << ii << ' '
-	   << cc[ii].count << ' '
-	   << (unsigned short)(cc[ii].red) << ' '
-	   << (unsigned short)cc[ii].green << ' '
-	   << (unsigned short)cc[ii].blue << endl;
-    }
-  }
-
-  // build colortable
-  colorTable_ = new Color[colorTableSize_];
-  memset(colorTable_,0,sizeof(Color)*colorTableSize_);
-
-  for (int ii=0; ii<colorTableSize_; ii++) {
-    colorTable_[ii].count = cc[ii].count;
-    colorTable_[ii].red = cc[ii].red;
-    colorTable_[ii].green = cc[ii].green;
-    colorTable_[ii].blue = cc[ii].blue;
-  }
-  
-  if (0) {
-    cerr << "ColorTable Size: " << colorTableSize_ << endl;
-    for (int ii=0; ii<colorTableSize_; ii++) {
-      cerr << ii << ' '
-	   << colorTable_[ii].count << ' '
-	   << (unsigned short)(colorTable_[ii].red) << ' '
-	   << (unsigned short)colorTable_[ii].green << ' '
-	   << (unsigned short)colorTable_[ii].blue << endl;
-    }
-  }
-
-  // now indexed image
-  {
-    Pixel* src = pixels;
-    unsigned char* dst = pict_;
-    for (int jj=0; jj<height_; jj++) {
-      for (int ii=0; ii<width_; ii++, src++, dst++) {
-	
-	// first try all known colors
-	int done =0;
-	for (int kk=0; kk<colorTableSize_; kk++) {
-	  if (src->red == colorTable_[kk].red &&
-	      src->green == colorTable_[kk].green &&
-	      src->blue == colorTable_[kk].blue) {
-	    *dst = (unsigned char)kk;
-	    done =1;
-	    break;
-	  }
-	}
-
-	// nope, find closest
-	if (!done) {
-	  int id =0;
-	  double dd =FLT_MAX;
-	  for (int kk=0; kk<colorTableSize_; kk++) {
-	    double rr = (src->red   - colorTable_[kk].red);
-	    double gg = (src->green - colorTable_[kk].green);
-	    double bb = (src->blue  - colorTable_[kk].blue);
-	    //	    double rr = (src->red   - colorTable_[kk].red)*.3;
-	    //	    double gg = (src->green - colorTable_[kk].green)*.59;
-	    //	    double bb = (src->blue  - colorTable_[kk].blue)*.11;
-	    double vv = sqrt(rr*rr+gg*gg+bb*bb);
-	    if (vv<dd) {
-	      id = kk;
-	      dd = vv;
-	    }
-	  }
-	  *dst = id;
-	}
-      }
-    }
-  }
-}
-
-void TkAGIF::noCompress()
-{
-  // only works for color table size 128 (i.e. whole bytes)
-  // LZW minium code size
-  unsigned char lzw = 0x07;
-  out_->write((char*)&lzw,1);
-
-  // clear code: 2^n
-  unsigned char clear = 0x80;
-  // stop code: 2^n + 1
-  unsigned char stop = 0x81;
-  // send clear code every 2^n - 2
-  int reset = 126;
-
-  // Data
-  for (int jj=0; jj<height_; jj++) {
-    int ii =0;
-    while (ii<width_) {
-      int ww = width_-ii;
-      int ll = ww < reset ? ww : reset;
-      unsigned char ss= ll+1;
-      out_->write((char*)&ss,1);
-      out_->write((char*)&clear,1);
-      for (unsigned char kk=0; kk<ll; kk++) {
-	unsigned char pix = pict_[jj*width_+ii];
-	out_->write((char*)&pix,1);
-	ii++;
-      }
-    }
-  }
-  unsigned char ss = 0x01;
-  out_->write((char*)&ss,1);
-  out_->write((char*)&stop,1);
-}
-
 #define GIFBITS	12
 #define MAXCODE(numBits) (((long)1 << (numBits))-1)
 #define U(x) ((unsigned)(x))
@@ -710,6 +528,8 @@ void TkAGIF::compress()
   unsigned int inCount = 1;
 
   // init
+  pictCount_ =0;
+
   initialBits_ = resolution_+1;
   numBits_ = initialBits_;
   currentBits_ = 0;

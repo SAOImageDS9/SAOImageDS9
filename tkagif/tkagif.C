@@ -698,7 +698,8 @@ void TkAGIF::noCompress()
 }
 
 #define GIFBITS	12
-#define MAXCODE(numBits) (((long) 1 << (numBits)) - 1)
+#define MAXCODE(numBits) (((long)1 << (numBits))-1)
+#define U(x) ((unsigned)(x))
 
 void TkAGIF::compress()
 {
@@ -706,8 +707,8 @@ void TkAGIF::compress()
   out_->write((char*)&resolution_,1);
 
   unsigned int codeTable[HSIZE];
-  int outCount = 0;
-  int inCount = 1;
+  unsigned int outCount = 0;
+  unsigned int inCount = 1;
 
   // init
   initialBits_ = resolution_+1;
@@ -742,21 +743,18 @@ void TkAGIF::compress()
   long disp =0;
   long i =0;
   int c =0;
-  while ((c = input()) != EOF) {
+  while (U(c = input()) != U(EOF)) {
     inCount++;
 
-    fcode = (long) (((long) c << GIFBITS) + ent);
-    // XOR hashing
-    i = ((long)c << hshift) ^ ent;
+    fcode = (long)(((long) c << GIFBITS) + ent);
+    i = ((long)c << hshift) ^ ent; // XOR hashing
 
     if (hashTable_[i] == fcode) {
       ent = codeTable[i];
       continue;
     }
-    else if ((long) hashTable_[i] < 0) {
-      // Empty slot
-      goto nomatch;
-    }
+    else if ((long) hashTable_[i] < 0)
+      goto nomatch; // Empty slot
 
     // Secondary hash (after G. Knott)
     disp = hSize - i;
@@ -771,14 +769,14 @@ void TkAGIF::compress()
       ent = codeTable[i];
       continue;
     }
-    if ((long) hashTable_[i] > 0)
+    if ((long)hashTable_[i] > 0)
       goto probe;
 
   nomatch:
     output((long)ent);
     outCount++;
     ent = c;
-    if (freeEntry_ < (long)1 << GIFBITS) {
+    if (U(freeEntry_) < U((long)1 << GIFBITS)) {
       // code -> hashtable
       codeTable[i] = freeEntry_++;
       hashTable_[i] = fcode;
@@ -866,7 +864,7 @@ void TkAGIF::clearForBlock()
 
 void TkAGIF::clearHashTable()
 {
-  int *hashTablePtr = hashTable_ + HSIZE;
+  int *hashTablePtr = hashTable_ + int(HSIZE);
   long m1 = -1;
   long ii = HSIZE - 16;
 

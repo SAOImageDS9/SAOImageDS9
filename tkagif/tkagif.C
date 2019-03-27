@@ -514,7 +514,7 @@ void TkAGIF::alg2(Pixel* pixels)
       resolution_ =8;
   colorTableSize_ = 1 << resolution_;
 
-  if (1) {
+  if (0) {
     cerr << "Iteration: " << iter << endl;
     cerr << "Total Colors: " << totalColors << endl;
     cerr << "Resolution: " << resolution_ << endl;

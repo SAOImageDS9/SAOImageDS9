@@ -110,7 +110,7 @@ int TkAGIF::create(int argc, const char* argv[])
   }
 
   // open fn
-  out_ = new ofstream(argv[2]);
+  out_ = new ofstream(argv[2], std::ios::binary);
   if (!out_) {
     Tcl_AppendResult(interp_, "Error: unable to open filename ", NULL);
     if (*argv[2])

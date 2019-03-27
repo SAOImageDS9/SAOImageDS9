@@ -73,10 +73,8 @@ private:
   unsigned long currentAccumulated_;
 
 private:
-  void initColorTable(Color*);
-  void alg1(Pixel*);
-  void alg2(Pixel*);
-  void noCompress();
+  void initColorTable();
+  void scanImage(Pixel*);
   void compress();
 
   int input();

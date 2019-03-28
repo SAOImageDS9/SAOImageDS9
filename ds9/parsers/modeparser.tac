@@ -7,6 +7,7 @@
 %start command
 
 %token NONE_
+%token POINTER_
 %token REGION_
 %token CROSSHAIR_
 %token COLORBAR_
@@ -16,7 +17,7 @@
 %token CROP_
 %token CATALOG_
 %token EXAMINE_
-%token POINTER_
+%token 3D_
 
 %%
 
@@ -37,6 +38,7 @@ item : NONE_ {set _ none}
  | CROP_ {set _ crop}
  | CATALOG_ {set _ catalog}
  | EXAMINE_ {set _ examine}
+ | 3D_ {set _ 3d}
 # backward compatibilty
  | POINTER_ {set _ region}
  ;

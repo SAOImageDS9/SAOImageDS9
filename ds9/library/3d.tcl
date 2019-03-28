@@ -367,6 +367,61 @@ proc Lock3DView {which} {
     }
 }
 
+proc 3DMotion {which x y} {
+    global canvas
+    global threed
+
+    set threed(az) [expr -(double($x)/$canvas(width)  - .5) *2*90]
+    set threed(el) [expr  (double($y)/$canvas(height) - .5) *2*90]
+    if {$threed(az) < -90} {
+	set threed(az) -90
+    }
+    if {$threed(az) > 90} {
+	set threed(az) 90
+    }
+    if {$threed(el) < -90} {
+	set threed(el) -90
+    }
+    if {$threed(el) > 90} {
+	set threed(el) 90
+    }
+
+    $which 3d view $threed(az) $threed(el)
+    Lock3DView $which
+}
+
+proc 3DDouble {which} {
+    global threed
+
+    set threed(az) 0
+    set threed(el) 0
+
+    $which 3d view $threed(az) $threed(el)
+    Lock3DView $which
+}
+
+proc 3DArrowKey {which az el} {
+    global threed
+
+    set threed(az) [expr $threed(az) + $az]
+    set threed(el) [expr $threed(el) + $el]
+    if {$threed(az) < -180} {
+	set threed(az) -180
+    }
+    if {$threed(az) > 180} {
+	set threed(az) 180
+    }
+    if {$threed(el) < -90} {
+	set threed(el) -90
+    }
+    if {$threed(el) > 90} {
+	set threed(el) 90
+    }
+
+    $which 3d view $threed(az) $threed(el)
+    Lock3DView $which
+}
+
 # Prefs
 
 proc PrefsDialog3d {} {

@@ -505,7 +505,8 @@ proc RefreshInfoBox {which} {
 	    crop -
 	    catalog -
 	    examine -
-	    iexam {
+	    iexam -
+	    3d {
 		EnterInfoBox $which
 		UpdateInfoBoxFrame $which
 	    }

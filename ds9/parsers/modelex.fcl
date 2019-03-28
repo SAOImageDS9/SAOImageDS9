@@ -8,6 +8,7 @@
 %%
 
 none	    {return $NONE_}
+pointer	    {return $POINTER_}
 region	    {return $REGION_}
 crosshair   {return $CROSSHAIR_}
 colorbar    {return $COLORBAR_}
@@ -17,7 +18,7 @@ rotate	    {return $ROTATE_}
 crop	    {return $CROP_}
 catalog	    {return $CATALOG_}
 examine	    {return $EXAMINE_}
-pointer	    {return $POINTER_}
+3d	    {return $3D_}
 
 #include string.fin
 #include ws.fin

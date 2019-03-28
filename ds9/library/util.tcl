@@ -160,7 +160,8 @@ proc UpdateMain {} {
 	rotate -
 	crop -
 	examine -
-	iexam {}
+	iexam -
+	3d {}
     }
 }
 
@@ -967,6 +968,7 @@ proc ChangeMode {} {
 	crop {SetCursor {}}
 	examine {SetCursor target}
 	iexam {}
+	3d {SetCursor {}}
     }
 }
 
@@ -1487,7 +1489,8 @@ proc CursorCmd {x y} {
 	rotate -
 	crop -
 	examine -
-	iexam {}
+	iexam -
+	3d {}
     }
 }
 

@@ -1,4 +1,4 @@
-// Copyright (C) 1999-2015
+// Copyright (C) 2019
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 

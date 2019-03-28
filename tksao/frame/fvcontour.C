@@ -229,6 +229,11 @@ void FVContour::unity(FitsImage* fits, pthread_t* thread, void* targ)
   }
   CLEARSIGBUS
 
+  int numcontour = scale()->size();
+  double* contour = new double[numcontour];
+  for (long ii=0; ii<numcontour; ii++)
+    contour[ii] = scale()->level(ii);
+
   // contours
   t_fvcontour_arg* tt = (t_fvcontour_arg*)targ;
   tt->kernel = NULL;
@@ -242,8 +247,9 @@ void FVContour::unity(FitsImage* fits, pthread_t* thread, void* targ)
   tt->height = height;
   tt->r = 0;
   tt->mm = mm;
-  tt->fv = this;
   tt->parent = parent_;
+  tt->numcontour = numcontour;
+  tt->contour = contour;
   tt->colorName = colorName_;
   tt->color = parent_->getColor(colorName_);
   tt->lineWidth = lineWidth_;
@@ -302,6 +308,11 @@ void FVContour::smooth(FitsImage* fits, pthread_t* thread, void* targ)
   }
   CLEARSIGBUS
 
+  int numcontour = scale()->size();
+  double* contour = new double[numcontour];
+  for (long ii=0; ii<numcontour; ii++)
+    contour[ii] = scale()->level(ii);
+
   // convolve
   t_fvcontour_arg* tt = (t_fvcontour_arg*)targ;
   tt->kernel = kernel_;
@@ -315,8 +326,9 @@ void FVContour::smooth(FitsImage* fits, pthread_t* thread, void* targ)
   tt->height = height;
   tt->r = smooth_-1;
   tt->mm = mm;
-  tt->fv = this;
   tt->parent = parent_;
+  tt->numcontour = numcontour;
+  tt->contour = contour;
   tt->colorName = colorName_;
   tt->color = parent_->getColor(colorName_);
   tt->lineWidth = lineWidth_;
@@ -396,6 +408,11 @@ void FVContour::block(FitsImage* fits, pthread_t* thread, void* targ)
       dest[kk] /= count[kk];
   delete [] count;
 
+  int numcontour = scale()->size();
+  double* contour = new double[numcontour];
+  for (long ii=0; ii<numcontour; ii++)
+    contour[ii] = scale()->level(ii);
+
   // contours
   Matrix mm = n * fits->dataToRef;
   t_fvcontour_arg* tt = (t_fvcontour_arg*)targ;
@@ -410,8 +427,9 @@ void FVContour::block(FitsImage* fits, pthread_t* thread, void* targ)
   tt->height = h2;
   tt->r = 0;
   tt->mm = mm;
-  tt->fv = this;
   tt->parent = parent_;
+  tt->numcontour = numcontour;
+  tt->contour = contour;
   tt->colorName = colorName_;
   tt->color = parent_->getColor(colorName_);
   tt->lineWidth = lineWidth_;
@@ -430,8 +448,9 @@ void build(t_fvcontour_arg* tt)
   long ydim = tt->height;
   double* image = tt->dest;
   Matrix& mx = tt->mm;
-  FVContour* fv = tt->fv;
   Base* parent = tt->parent;
+  int numcontour = tt->numcontour;
+  double* contour = tt->contour;
   char* colorName = tt->colorName;
   unsigned long color = tt->color;
   int lineWidth = tt->lineWidth;
@@ -446,10 +465,10 @@ void build(t_fvcontour_arg* tt)
   for (long jj=0; jj<ydim; jj++)
     rows[jj] = image + jj*xdim;
 
-  for (long c=0; c<fv->scale()->size(); c++) {
-    double cntour = fv->scale()->level(c);
+  for (int kk=0; kk<numcontour; kk++) {
+    double ct = contour[kk];
 
-    ContourLevel* cl =new ContourLevel(parent, cntour, colorName, color,
+    ContourLevel* cl =new ContourLevel(parent, ct, colorName, color,
 				       lineWidth, dash, dlist);
     memset(usedGrid,0,nelem);
 
@@ -458,31 +477,31 @@ void build(t_fvcontour_arg* tt)
 
     //  Search top
     for (jj=0, ii=0; ii<xdim-1; ii++)
-      if (rows[jj][ii]<cntour && cntour<=rows[jj][ii+1])
-	trace(xdim, ydim, cntour, ii, jj, TOP, rows, usedGrid, mx, cl);
+      if (rows[jj][ii]<ct && ct<=rows[jj][ii+1])
+	trace(xdim, ydim, ct, ii, jj, TOP, rows, usedGrid, mx, cl);
 
     //  Search right
     for (jj=0; jj<ydim-1; jj++)
-      if (rows[jj][ii]<cntour && cntour<=rows[jj+1][ii])
-	trace(xdim, ydim, cntour, ii-1, jj, RIGHT, rows, usedGrid, mx, cl);
+      if (rows[jj][ii]<ct && ct<=rows[jj+1][ii])
+	trace(xdim, ydim, ct, ii-1, jj, RIGHT, rows, usedGrid, mx, cl);
 
     //  Search Bottom
     for (ii--; ii>=0; ii--)
-      if (rows[jj][ii+1]<cntour && cntour<=rows[jj][ii])
-	trace(xdim, ydim, cntour, ii, jj-1, BOTTOM, rows, usedGrid, mx, cl);
+      if (rows[jj][ii+1]<ct && ct<=rows[jj][ii])
+	trace(xdim, ydim, ct, ii, jj-1, BOTTOM, rows, usedGrid, mx, cl);
 
     //  Search Left
     for (ii=0, jj--; jj>=0; jj--)
-      if (rows[jj+1][ii]<cntour && cntour<=rows[jj][ii])
-	trace(xdim, ydim, cntour, ii, jj, LEFT, rows, usedGrid, mx, cl);
+      if (rows[jj+1][ii]<ct && ct<=rows[jj][ii])
+	trace(xdim, ydim, ct, ii, jj, LEFT, rows, usedGrid, mx, cl);
 
     //  Search each row of the image
     for (jj=1; jj<ydim-1; jj++)
       for (ii=0; ii<xdim-1; ii++)
 	if (!usedGrid[jj*xdim + ii] && 
-	    rows[jj][ii]<cntour && 
-	    cntour<=rows[jj][ii+1])
-	  trace(xdim, ydim, cntour, ii, jj, TOP, rows, usedGrid, mx, cl);
+	    rows[jj][ii]<ct && 
+	    ct<=rows[jj][ii+1])
+	  trace(xdim, ydim, ct, ii, jj, TOP, rows, usedGrid, mx, cl);
 
     if (!cl->lcontour().isEmpty())
       lcl->append(cl);

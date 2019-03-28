@@ -7,15 +7,37 @@
 #include "context.h"
 
 // ContourLevel
-ContourLevel::ContourLevel(Base* pp, double lev, const char* cc, int ww, 
-			   int dd, int* dl) 
+ContourLevel::ContourLevel(Base* pp, double lev,
+			   const char* cn,
+			   int ww, int dd, int* dl) 
 {
   parent_ = pp;
   gc_ = parent_->contourGC_;
 
   level_ = lev;
-  colorName_ = dupstr(cc);
+  colorName_ = dupstr(cn);
   color_ = parent_->getColor(colorName_);
+  lineWidth_ = ww;
+  dash_ = dd;
+  dlist_[0] = dl[0];
+  dlist_[1] = dl[1];
+
+  previous_ = NULL;
+  next_ = NULL;
+}
+
+// used in threads, so need to resolve color/colorName before
+ContourLevel::ContourLevel(Base* pp, double lev,
+			   const char* cn, unsigned long cc,
+			   int ww, int dd, int* dl) 
+{
+  parent_ = pp;
+  gc_ = parent_->contourGC_;
+
+  level_ = lev;
+  colorName_ = dupstr(cn);
+  //  color_ = parent_->getColor(colorName_);
+  color_ = cc;
   lineWidth_ = ww;
   dash_ = dd;
   dlist_[0] = dl[0];

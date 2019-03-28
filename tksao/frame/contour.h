@@ -35,6 +35,7 @@ class ContourLevel {
 
  public:
   ContourLevel(Base*, double, const char*, int, int, int*);
+  ContourLevel(Base*, double, const char*, unsigned long, int, int, int*);
   virtual ~ContourLevel();
 
   List<Contour>& lcontour() {return lcontour_;}

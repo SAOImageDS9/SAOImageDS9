@@ -436,6 +436,8 @@ void Context::contourThreadFV(FitsImage* ptr)
 
 	fvcontour_.append(targ[ii].lcl);
 
+	if (targ[ii].contour)
+	  delete [] targ[ii].contour;
 	if (targ[ii].lcl)
 	  delete targ[ii].lcl;
 	if (targ[ii].src)
@@ -457,6 +459,8 @@ void Context::contourThreadFV(FitsImage* ptr)
 
     fvcontour_.append(targ[ii].lcl);
 
+    if (targ[ii].contour)
+      delete [] targ[ii].contour;
     if (targ[ii].lcl)
       delete targ[ii].lcl;
     if (targ[ii].src)

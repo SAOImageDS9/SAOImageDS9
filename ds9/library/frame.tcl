@@ -240,9 +240,7 @@ proc CreateNameNumberFrame {which type} {
     }
 
     switch $current(mode) {
-	crosshair {
-	    $ds9(next) crosshair on
-	}
+	crosshair {$ds9(next) crosshair on}
     }
 
     UpdateFrameMenuItems
@@ -566,14 +564,14 @@ proc EnterFrame {which x y} {
     $ds9(canvas) focus $which
 
     switch -- $current(mode) {
+	none -
+	pointer -
+	region {}
 	crosshair {
 	    set coord [$which get crosshair canvas]
 	    set x [lindex $coord 0]
 	    set y [lindex $coord 1]
 	}
-	none -
-	pointer -
-	region -
 	catalog -
 	pan -
 	zoom -
@@ -581,7 +579,8 @@ proc EnterFrame {which x y} {
 	crop -
 	colorbar -
 	examine -
-	iexam {}
+	iexam -
+	3d {}
     }
 
     EnterInfoBox $which
@@ -621,8 +620,6 @@ proc LeaveFrame {which} {
     $ds9(canvas) focus {}
 
     switch -- $current(mode) {
-	crosshair {}
-
 	none -
 	pointer -
 	region -
@@ -633,11 +630,13 @@ proc LeaveFrame {which} {
 	crop -
 	catalog -
 	examine -
-	iexam {
+	iexam -
+	3d {
 	    LeaveInfoBox
 	    PixelTableClearDialog
 	    ClearGraphData
 	}
+	crosshair {}
     }
 
     $which magnifier off
@@ -700,7 +699,8 @@ proc DoMotion {which x y cursor1 cursor2} {
 	rotate -
 	crop -
 	examine -
-	iexam {
+	iexam -
+	3d {
 	    UpdateColormapLevelMosaic $which $x $y canvas
 	    UpdateInfoBox $which $x $y canvas
 	    UpdatePixelTableDialog $which $x $y canvas
@@ -765,9 +765,7 @@ proc Button1Frame {which x y} {
 	    UpdateGraphData $which $x $y canvas
 	    UpdateMagnifier $which $x $y
 	}
-	colorbar {
-	    ColorbarButton3 $x $y
-	}
+	colorbar {ColorbarButton3 $x $y}
 	pan {
 	    PanButton $which $x $y
 	    UpdateMagnifier $which $x $y
@@ -797,6 +795,7 @@ proc Button1Frame {which x y} {
 	}
 	examine {ExamineButton $which $x $y}
 	iexam {IExamButton $which $x $y}
+	3d {}
     }
 }
 
@@ -836,8 +835,9 @@ proc ShiftButton1Frame {which x y} {
 	    }
 	    UpdateMagnifier $which $x $y
 	}
-	examine -
+	examine {}
 	iexam {}
+	3d {}
     }
 }
 
@@ -879,8 +879,9 @@ proc ControlButton1Frame {which x y} {
 	    Crop3dButton $which $x $y 1
 	    UpdateMagnifier $which $x $y
 	}
-	examine -
+	examine {}
 	iexam {}
+	3d {}
     }
 }
 
@@ -920,7 +921,8 @@ proc ControlShiftButton1Frame {which x y} {
 	rotate -
 	crop -
 	examine -
-	iexam {}
+	iexam -
+	3d {}
     }
 }
 
@@ -1003,8 +1005,13 @@ proc Motion1Frame {which x y} {
 	    UpdateGraphData $which $x $y canvas
 	    UpdateMagnifier $which $x $y
 	}
-	examine -
+	examine {}
 	iexam {}
+	3d {
+	    if {$ds9(b1)} {
+		3DMotion $which $x $y
+	    }
+	}
     }
 }
 
@@ -1024,6 +1031,7 @@ proc Release1Frame {which x y} {
     }
 
     switch -- $current(mode) {
+	none {}
 	pointer -
 	region {
 	    if {$which == $current(frame)} {
@@ -1072,9 +1080,9 @@ proc Release1Frame {which x y} {
 		CATRelease $which $x $y
 	    }
 	}
-	none -
-	examine -
+	examine {}
 	iexam {}
+	3d {}
     }
 
     # let others know that the mouse is up
@@ -1113,6 +1121,8 @@ proc Double1Frame {which x y} {
 	catalog -
 	examine -
 	iexam {}
+	3d {3DDouble $which}
+	    
     }
 }
 
@@ -1136,7 +1146,8 @@ proc DoubleRelease1Frame {which x y} {
 	crop -
 	catalog -
 	examine -
-	iexam {}
+	iexam -
+	3d {}
     }
 
     UpdateEditMenu
@@ -1418,6 +1429,18 @@ proc KeyFrame {which K A xx yy} {
 	rotate -
 	crop -
 	examine {}
+	3d {
+	    switch -- $K {
+		Up -
+		k {3DArrowKey $which 0 1}
+		Down -
+		j {3DArrowKey $which 0 -1}
+		Left -
+		h {3DArrowKey $which -1 0}
+		Right -
+		l {3DArrowKey $which 1 0}
+	    }
+	}
     }
 
     UpdateEditMenu

@@ -10,6 +10,7 @@
 #include <fstream>
 using namespace std;
 
+#include <stdlib.h>
 #include <string.h>
 #include <tk.h>
 

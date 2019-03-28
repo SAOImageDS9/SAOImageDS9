@@ -344,7 +344,7 @@ void* FitsBinColumnArray::get(const char* heap, const char* ptr, int* cnt)
   size_t pp = swap(ptr,1);
 
   if (abuf_) {
-    memset(abuf_,pmax_,0);
+    memset(abuf_,0,pmax_);
     memcpy(abuf_,heap+pp,(*cnt)*psize_);
   }
 

@@ -25,6 +25,14 @@ typedef struct {
   int r;
   Matrix mm;
   FVContour* fv;
+
+  Base* parent;
+  unsigned long color;
+  char* colorName;
+  int lineWidth;
+  int dash;
+  int* dlist;
+  
   List<ContourLevel>* lcl;
 } t_fvcontour_arg;
 

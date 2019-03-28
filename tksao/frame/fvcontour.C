@@ -22,8 +22,7 @@ static const char* methodName_[] = {
 
 enum Edge {TOP, RIGHT, BOTTOM, LEFT, NONE};
 
-static void build(long xdim, long ydim, double *image, Matrix& mx,
-		  FVContour* fv, List<ContourLevel>* lcl);
+static void build(t_fvcontour_arg* tt);
 static void trace(long xdim, long ydim, double cntr,
 		  long xCell, long yCell, int side, 
 		  double** rows, char* usedGrid, 
@@ -198,7 +197,7 @@ void FVContour::append(FitsImage* fits, pthread_t* thread, void* targ)
 static void* fvUnityThread(void*vv)
 {
   t_fvcontour_arg* tt = (t_fvcontour_arg*)vv;
-  build(tt->width, tt->height, tt->dest, tt->mm, tt->fv, tt->lcl);
+  build(tt);
   return NULL;
 }
 
@@ -244,6 +243,12 @@ void FVContour::unity(FitsImage* fits, pthread_t* thread, void* targ)
   tt->r = 0;
   tt->mm = mm;
   tt->fv = this;
+  tt->parent = parent_;
+  tt->colorName = colorName_;
+  tt->color = parent_->getColor(colorName_);
+  tt->lineWidth = lineWidth_;
+  tt->dash = dash_;
+  tt->dlist = dlist_;
   tt->lcl = new List<ContourLevel>;
 
   int result = pthread_create(thread, NULL, fvUnityThread, targ);
@@ -257,7 +262,7 @@ static void* fvSmoothThread(void*vv)
   convolve(tt->kernel, tt->src, tt->dest,
 	   tt->xmin, tt->ymin, tt->xmax, tt->ymax,
 	   tt->width, tt->r);
-  build(tt->width, tt->height, tt->dest, tt->mm, tt->fv, tt->lcl);
+  build(tt);
   return NULL;
 }
 
@@ -311,6 +316,12 @@ void FVContour::smooth(FitsImage* fits, pthread_t* thread, void* targ)
   tt->r = smooth_-1;
   tt->mm = mm;
   tt->fv = this;
+  tt->parent = parent_;
+  tt->colorName = colorName_;
+  tt->color = parent_->getColor(colorName_);
+  tt->lineWidth = lineWidth_;
+  tt->dash = dash_;
+  tt->dlist = dlist_;
   tt->lcl = new List<ContourLevel>;
 
   int result = pthread_create(thread, NULL, fvSmoothThread, targ);
@@ -321,7 +332,7 @@ void FVContour::smooth(FitsImage* fits, pthread_t* thread, void* targ)
 static void* fvBlockThread(void*vv)
 {
   t_fvcontour_arg* tt = (t_fvcontour_arg*)vv;
-  build(tt->width, tt->height, tt->dest, tt->mm, tt->fv, tt->lcl);
+  build(tt);
   return NULL;
 }
 
@@ -400,6 +411,12 @@ void FVContour::block(FitsImage* fits, pthread_t* thread, void* targ)
   tt->r = 0;
   tt->mm = mm;
   tt->fv = this;
+  tt->parent = parent_;
+  tt->colorName = colorName_;
+  tt->color = parent_->getColor(colorName_);
+  tt->lineWidth = lineWidth_;
+  tt->dash = dash_;
+  tt->dlist = dlist_;
   tt->lcl = new List<ContourLevel>;
 
   int result = pthread_create(thread, NULL, fvBlockThread, targ);
@@ -407,9 +424,21 @@ void FVContour::block(FitsImage* fits, pthread_t* thread, void* targ)
     internalError("Unable to Create Thread");
 }
 
-void build(long xdim, long ydim, double *image, Matrix& mx,
-	   FVContour* fv, List<ContourLevel>* lcl)
+void build(t_fvcontour_arg* tt)
 {
+  long xdim = tt->width;
+  long ydim = tt->height;
+  double* image = tt->dest;
+  Matrix& mx = tt->mm;
+  FVContour* fv = tt->fv;
+  Base* parent = tt->parent;
+  char* colorName = tt->colorName;
+  unsigned long color = tt->color;
+  int lineWidth = tt->lineWidth;
+  int dash = tt->dash;
+  int* dlist = tt->dlist;
+  List<ContourLevel>* lcl = tt->lcl;
+
   long nelem = xdim*ydim;
   char* usedGrid = new char[nelem];
   double** rows = new double*[ydim];
@@ -420,9 +449,8 @@ void build(long xdim, long ydim, double *image, Matrix& mx,
   for (long c=0; c<fv->scale()->size(); c++) {
     double cntour = fv->scale()->level(c);
 
-    ContourLevel* cl =new ContourLevel(fv->parent(), cntour,
-				       fv->colorName(), fv->lineWidth(), 
-				       fv->dash(), fv->dlist());
+    ContourLevel* cl =new ContourLevel(parent, cntour, colorName, color,
+				       lineWidth, dash, dlist);
     memset(usedGrid,0,nelem);
 
     //  Search outer edge

@@ -224,11 +224,12 @@ tkimg	: tkimg/Makefile
 	$(MAKE) -C tkimg/libtiff -j $(JOBS) install
 	$(MAKE) -C tkimg/jpeg -j $(JOBS) install
 	$(MAKE) -C tkimg/libjpeg -j $(JOBS) install
-	$(MAKE) -C tkimg/png -j $(JOBS) install
-	$(MAKE) -C tkimg/libpng -j $(JOBS) install
-	$(MAKE) -C tkimg/gif -j $(JOBS) install
 	$(MAKE) -C tkimg/window -j $(JOBS) install
 	$(MAKE) -C tkimg/zlib -j $(JOBS) install
+
+#	$(MAKE) -C tkimg/png -j $(JOBS) install
+#	$(MAKE) -C tkimg/libpng -j $(JOBS) install
+#	$(MAKE) -C tkimg/gif -j $(JOBS) install
 
 # no config.cache
 tkimg/Makefile :
@@ -236,10 +237,11 @@ tkimg/Makefile :
 	@echo "*** $@ ***"
 	cd tkimg; \
 	./configure \
-	CFLAGS='-DPNG_NO_WRITE_gAMA' \
 	$(WITHTK) \
 	$(PREFIX) \
 	$(STD)
+
+#	CFLAGS='-DPNG_NO_WRITE_gAMA' \
 
 #-------------------------- tkmpeg
 

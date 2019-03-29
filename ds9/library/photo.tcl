@@ -165,7 +165,16 @@ proc ExportPhotoSocket {ch format opt} {
 	Error [msgcat::mc {An error has occurred while writing image.}]
 	return
     }
-    puts -nonewline $ch [base64::decode $data]
+
+    switch -- $format {
+	jpeg -
+	tiff {
+	    puts -nonewline $ch [base64::decode $data]
+	}
+	default {
+	    puts -nonewline $ch $data
+	}
+    }
 
     image delete $ph
 }

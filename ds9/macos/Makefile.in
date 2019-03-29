@@ -19,14 +19,11 @@ TK_LIB_SPEC	= @TK_LIB_SPEC@
 TK_STUB_LIB_SPEC= @TK_STUB_LIB_SPEC@
 
 tifftcl_LIB_SPEC= @tifftcl_LIB_SPEC@
-pngtcl_LIB_SPEC	= @pngtcl_LIB_SPEC@
 jpegtcl_LIB_SPEC= @jpegtcl_LIB_SPEC@
 zlibtcl_LIB_SPEC= @zlibtcl_LIB_SPEC@
 
 tkimg_LIB_SPEC	= @tkimg_LIB_SPEC@
-tkimggif_LIB_SPEC= @tkimggif_LIB_SPEC@
 tkimgjpeg_LIB_SPEC= @tkimgjpeg_LIB_SPEC@
-tkimgpng_LIB_SPEC= @tkimgpng_LIB_SPEC@
 tkimgtiff_LIB_SPEC= @tkimgtiff_LIB_SPEC@
 tkimgwindow_LIB_SPEC= @tkimgwindow_LIB_SPEC@
 
@@ -86,7 +83,6 @@ space:=$(empty) $(empty)
 
 SPECS	= \
 	$(jpegtcl_LIB_SPEC) \
-	$(pngtcl_LIB_SPEC) \
 	$(tifftcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \
 	$(tcliis_LIB_SPEC) \
@@ -96,9 +92,7 @@ SPECS	= \
 	$(tkblt_LIB_SPEC) \
 	$(tkhtml1_LIB_SPEC) \
 	$(tkimg_LIB_SPEC) \
-	$(tkimggif_LIB_SPEC) \
 	$(tkimgjpeg_LIB_SPEC) \
-	$(tkimgpng_LIB_SPEC) \
 	$(tkimgtiff_LIB_SPEC) \
 	$(tkimgwindow_LIB_SPEC) \
 	$(tkmpeg_LIB_SPEC) \

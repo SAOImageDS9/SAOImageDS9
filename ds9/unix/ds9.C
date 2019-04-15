@@ -34,9 +34,6 @@ extern "C" {
   int Tkimgjpeg_Init(Tcl_Interp*);
   int Tifftcl_Init(Tcl_Interp*);
   int Tkimgtiff_Init(Tcl_Interp*);
-  int Pngtcl_Init(Tcl_Interp*);
-  int Tkimgpng_Init(Tcl_Interp*);
-  int Tkimggif_Init(Tcl_Interp*);
   int Tkimgwindow_Init(Tcl_Interp*);
 
   int Tclxpa_Init(Tcl_Interp*);
@@ -204,24 +201,6 @@ int SAOAppInit(Tcl_Interp *interp)
   if (Tkimgtiff_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
   Tcl_StaticPackage (interp, "tiff", Tkimgtiff_Init,
-		     (Tcl_PackageInitProc*)NULL);
-
-  // Pngtcl
-  if (Pngtcl_Init(interp) == TCL_ERROR)
-    return TCL_ERROR;
-  Tcl_StaticPackage (interp, "pngtcl", Pngtcl_Init,
-  		     (Tcl_PackageInitProc*)NULL);
-
-  // Tkimgpng
-  if (Tkimgpng_Init(interp) == TCL_ERROR)
-    return TCL_ERROR;
-  Tcl_StaticPackage (interp, "png", Tkimgpng_Init,
-  		     (Tcl_PackageInitProc*)NULL);
-
-  // Tkimggif
-  if (Tkimggif_Init(interp) == TCL_ERROR)
-    return TCL_ERROR;
-  Tcl_StaticPackage (interp, "gif", Tkimggif_Init,
 		     (Tcl_PackageInitProc*)NULL);
 
   // Tkimgwindow

@@ -52,9 +52,6 @@ TEA_LOAD_TKCONFIG
 TEA_PATH_CONFIG(tifftcl)
 TEA_LOAD_CONFIG(tifftcl)
 
-TEA_PATH_CONFIG(pngtcl)
-TEA_LOAD_CONFIG(pngtcl)
-
 TEA_PATH_CONFIG(jpegtcl)
 TEA_LOAD_CONFIG(jpegtcl)
 
@@ -82,14 +79,8 @@ TEA_LOAD_CONFIG(tkhtml1)
 TEA_PATH_CONFIG(tkimg)
 TEA_LOAD_CONFIG(tkimg)
 
-TEA_PATH_CONFIG(tkimggif)
-TEA_LOAD_CONFIG(tkimggif)
-
 TEA_PATH_CONFIG(tkimgjpeg)
 TEA_LOAD_CONFIG(tkimgjpeg)
-
-TEA_PATH_CONFIG(tkimgpng)
-TEA_LOAD_CONFIG(tkimgpng)
 
 TEA_PATH_CONFIG(tkimgtiff)
 TEA_LOAD_CONFIG(tkimgtiff)

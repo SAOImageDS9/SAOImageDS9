@@ -226,10 +226,8 @@ package require msgcat
 package require http
 
 package require base64
-package require log
 package require ftp
-package require textutil
-package require math
+package require math::fuzzy
 
 package require tkcon
 package require Tkblt

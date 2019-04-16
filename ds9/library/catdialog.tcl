@@ -907,7 +907,6 @@ proc CATPrint {varname} {
 	x11 -
 	aqua -
 	win32 {CATPSPrint $varname}
-	wwin32 {win32 pm print text [::textutil::tabify::untabify2 [starbase_write_ $var(tbldb)] 12]}
     }	
 }
 

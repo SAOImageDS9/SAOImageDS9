@@ -285,7 +285,7 @@ proc InitDialogBox {} {
     set siafbox(file) {ds9.sia}
     set siafbox(dir) {}
     set siafbox(types) [list \
-			    [list [::msgcat::mc {Simple Image Access}] {*.sia}] \
+			    [list [::msgcat::mc {Simple Image Access}] {*.sia}]\
 			   ]
 
     global analysisfbox
@@ -299,7 +299,9 @@ proc InitDialogBox {} {
     global analysisparamfbox
     set analysisparamfbox(file) {}
     set analysisparamfbox(dir) {}
+    # MacOS needs a default file type
     set analysisparamfbox(types) [list \
+				      [list [::msgcat::mc {Analysis}] {*.dat}]\
 				     ]
 
     global apsavfbox

@@ -355,7 +355,8 @@ void FrameBase::panEndCmd(const Vector& vv)
 }
 
 // *** waj ***
-#ifndef MAC_OSX_TK
+//#ifndef MAC_OSX_TK
+#if 0
 void FrameBase::rotateBeginCmd()
 {
   // save the current rotation

@@ -549,7 +549,8 @@ void Frame::colormapCmd(int id, float b, float c, int i,
 }
 
 // *** waj ***
-#ifndef MAC_OSX_TK
+//#ifndef MAC_OSX_TK
+#if 0
 void Frame::colormapBeginCmd()
 {
   // we need a colorScale before we can render

@@ -548,6 +548,7 @@ void Frame::colormapCmd(int id, float b, float c, int i,
   update(BASE);
 }
 
+// *** waj ***
 #ifndef MAC_OSX_TK
 void Frame::colormapBeginCmd()
 {

@@ -501,7 +501,8 @@ void FrameRGB::colormapCmd(float rb, float gb, float bb,
 }
 
 // *** waj ***
-#ifndef MAC_OSX_TK
+//#ifndef MAC_OSX_TK
+#if 0
 void FrameRGB::colormapBeginCmd()
 {
   // we need a colorScale before we can render

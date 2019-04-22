@@ -2868,18 +2868,17 @@ GridStructureProc(
 	    }
 	}
     } else if (eventPtr->type == DestroyNotify) {
-	register Gridder *slavePtr, *nextPtr;
+	register Gridder *gridPtr2, *nextPtr;
 
 	if (gridPtr->masterPtr != NULL) {
 	    Unlink(gridPtr);
 	}
-	for (slavePtr = gridPtr->slavePtr; slavePtr != NULL;
-		slavePtr = nextPtr) {
-	    Tk_ManageGeometry(slavePtr->tkwin, NULL, NULL);
-	    Tk_UnmapWindow(slavePtr->tkwin);
-	    slavePtr->masterPtr = NULL;
-	    nextPtr = slavePtr->nextPtr;
-	    slavePtr->nextPtr = NULL;
+	for (gridPtr2 = gridPtr->slavePtr; gridPtr2 != NULL;
+		gridPtr2 = nextPtr) {
+	    Tk_UnmapWindow(gridPtr2->tkwin);
+	    gridPtr2->masterPtr = NULL;
+	    nextPtr = gridPtr2->nextPtr;
+	    gridPtr2->nextPtr = NULL;
 	}
 	Tcl_DeleteHashEntry(Tcl_FindHashEntry(&dispPtr->gridHashTable,
 		(char *) gridPtr->tkwin));
@@ -2895,11 +2894,11 @@ GridStructureProc(
 	    Tcl_DoWhenIdle(ArrangeGrid, gridPtr);
 	}
     } else if (eventPtr->type == UnmapNotify) {
-	register Gridder *slavePtr;
+	register Gridder *gridPtr2;
 
-	for (slavePtr = gridPtr->slavePtr; slavePtr != NULL;
-		slavePtr = slavePtr->nextPtr) {
-	    Tk_UnmapWindow(slavePtr->tkwin);
+	for (gridPtr2 = gridPtr->slavePtr; gridPtr2 != NULL;
+		gridPtr2 = gridPtr2->nextPtr) {
+	    Tk_UnmapWindow(gridPtr2->tkwin);
 	}
     }
 }

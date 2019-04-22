@@ -134,7 +134,7 @@ UpdateStringOfTextIndex(
     Tcl_Obj *objPtr)
 {
     char buffer[TK_POS_CHARS];
-    size_t len;
+    register int len;
     const TkTextIndex *indexPtr = GET_TEXTINDEX(objPtr);
 
     len = TkTextPrintIndex(indexPtr->textPtr, indexPtr, buffer);
@@ -387,7 +387,7 @@ TkTextMakeByteIndex(
     TkTextSegment *segPtr;
     int index;
     const char *p, *start;
-    int ch;
+    Tcl_UniChar ch;
 
     indexPtr->tree = tree;
     if (lineIndex < 0) {
@@ -437,7 +437,7 @@ TkTextMakeByteIndex(
 
 		start = segPtr->body.chars + (byteIndex - index);
 		p = Tcl_UtfPrev(start, segPtr->body.chars);
-		p += TkUtfToUniChar(p, &ch);
+		p += Tcl_UtfToUniChar(p, &ch);
 		indexPtr->byteIndex += p - start;
 	    }
 	    break;
@@ -480,7 +480,7 @@ TkTextMakeCharIndex(
     register TkTextSegment *segPtr;
     char *p, *start, *end;
     int index, offset;
-    int ch;
+    Tcl_UniChar ch;
 
     indexPtr->tree = tree;
     if (lineIndex < 0) {
@@ -527,7 +527,7 @@ TkTextMakeCharIndex(
 		    return indexPtr;
 		}
 		charIndex--;
-		offset = TkUtfToUniChar(p, &ch);
+		offset = Tcl_UtfToUniChar(p, &ch);
 		index += offset;
 	    }
 	} else {
@@ -1475,7 +1475,7 @@ TkTextIndexForwChars(
     TkTextElideInfo *infoPtr = NULL;
     int byteOffset;
     char *start, *end, *p;
-    int ch;
+    Tcl_UniChar ch;
     int elide = 0;
     int checkElided = (type & COUNT_DISPLAY);
 
@@ -1574,7 +1574,7 @@ TkTextIndexForwChars(
 		if (segPtr->typePtr == &tkTextCharType) {
 		    start = segPtr->body.chars + byteOffset;
 		    end = segPtr->body.chars + segPtr->size;
-		    for (p = start; p < end; p += TkUtfToUniChar(p, &ch)) {
+		    for (p = start; p < end; p += Tcl_UtfToUniChar(p, &ch)) {
 			if (charCount == 0) {
 			    dstPtr->byteIndex += (p - start);
 			    goto forwardCharDone;

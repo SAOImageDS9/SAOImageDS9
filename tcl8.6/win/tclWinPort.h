@@ -568,7 +568,4 @@ typedef DWORD_PTR * PDWORD_PTR;
 #   define LABEL_SECURITY_INFORMATION (0x00000010L)
 #endif
 
-#define Tcl_DirEntry void
-#define TclDIR void
-
 #endif /* _TCLWINPORT */

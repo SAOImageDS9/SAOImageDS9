@@ -354,59 +354,6 @@ void FrameBase::panEndCmd(const Vector& vv)
   update(MATRIX);
 }
 
-// *** waj ***
-#ifndef MAC_OSX_TK
-void FrameBase::rotateBeginCmd()
-{
-  // save the current rotation
-  rotateRotation = rotation;
-
-  // Create src XImage
-  if (!(rotateSrcXM = XGetImage(display, pixmap, 0, 0,
-				options->width, options->height, 
-				AllPlanes, ZPixmap))) {
-    internalError("Unable to Create Rotate XImage");
-    return;
-  }
-
-  // Create dest XImage
-  if (!(rotateDestXM = XGetImage(display, pixmap, 0, 0,
-				 options->width, options->height, 
-				 AllPlanes, ZPixmap))) {
-    internalError("Unable to Create Rotate XImage");
-    return;
-  }
-
-  // Create dest Pixmap
-  rotatePM = Tk_GetPixmap(display, Tk_WindowId(tkwin), 
-			  options->width, options->height, depth);
-  if (!rotatePM) {
-    internalError("Unable to Create Rotate Motion Pixmap");
-    return;
-  }
-}
-
-void FrameBase::rotateMotionCmd(double angle)
-{
-  rotation = rotateRotation + angle;
-  rotateMotion();
-}
-
-void FrameBase::rotateEndCmd()
-{
-  // Clean up
-  if (rotateSrcXM)
-    XDestroyImage(rotateSrcXM);
- 
-  if (rotateDestXM)
-    XDestroyImage(rotateDestXM);
-
-  if (rotatePM)
-    Tk_FreePixmap(display, rotatePM);
-
-  update(MATRIX);
-}
-#else
 void FrameBase::rotateBeginCmd()
 {
   // save the current rotation
@@ -423,7 +370,6 @@ void FrameBase::rotateEndCmd()
 {
   update(MATRIX);
 }
-#endif
 
 void FrameBase::saveFitsResampleFileCmd(const char* fn)
 {

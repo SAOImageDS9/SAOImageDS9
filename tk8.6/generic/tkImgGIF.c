@@ -1141,9 +1141,9 @@ ReadImage(
 		     * Last pass reset the decoder, so the first code we see
 		     * must be a singleton. Seed the stack with it, and set up
 		     * the old/first code pointers for insertion into the
-		     * codes table. We can't just roll this into the clearCode
-		     * test above, because at that point we have not yet read
-		     * the next code.
+		     * string table. We can't just roll this into the
+		     * clearCode test above, because at that point we have not
+		     * yet read the next code.
 		     */
 
 		    *top++ = append[code];
@@ -1154,11 +1154,11 @@ ReadImage(
 
 		inCode = code;
 
-		if ((code == maxCode) && (maxCode < (1 << MAX_LWZ_BITS))) {
+		if (code == maxCode) {
 		    /*
 		     * maxCode is always one bigger than our highest assigned
 		     * code. If the code we see is equal to maxCode, then we
-		     * are about to add a new entry to the codes table.
+		     * are about to add a new string to the table. ???
 		     */
 
 		    *top++ = firstCode;
@@ -1167,7 +1167,7 @@ ReadImage(
 
 		while (code > clearCode) {
 		    /*
-		     * Populate the stack by tracing the code in the codes
+		     * Populate the stack by tracing the string in the string
 		     * table from its tail to its head
 		     */
 
@@ -1176,24 +1176,28 @@ ReadImage(
 		}
 		firstCode = append[code];
 
-	        /*
-	         * Push the head of the code onto the stack.
-	         */
+		/*
+		 * If there's no more room in our string table, quit.
+		 * Otherwise, add a new string to the table
+		 */
 
-	        *top++ = firstCode;
+		if (maxCode >= (1 << MAX_LWZ_BITS)) {
+		    return TCL_OK;
+		}
 
-                if (maxCode < (1 << MAX_LWZ_BITS)) {
-		    /*
-		     * If there's still room in our codes table, add a new entry.
-		     * Otherwise don't, and keep using the current table.
-                     * See DEFERRED CLEAR CODE IN LZW COMPRESSION in the GIF89a
-                     * specification.
-		     */
+		/*
+		 * Push the head of the string onto the stack.
+		 */
 
-		    prefix[maxCode] = oldCode;
-		    append[maxCode] = firstCode;
-		    maxCode++;
-                }
+		*top++ = firstCode;
+
+		/*
+		 * Add a new string to the string table
+		 */
+
+		prefix[maxCode] = oldCode;
+		append[maxCode] = firstCode;
+		maxCode++;
 
 		/*
 		 * maxCode tells us the maximum code value we can accept. If

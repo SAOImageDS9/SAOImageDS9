@@ -272,7 +272,6 @@ static const unsigned char groupMap\[\] = {"
  *				 100 = subtract delta for title/upper
  *				 101 = sub delta for upper, sub 1 for title
  *				 110 = sub delta for upper, add delta for lower
- *				 111 = subtract delta for upper
  *
  * Bits 8-31	Case delta: delta for case conversions.  This should be the
  *			    highest field so we can easily sign extend.
@@ -310,14 +309,10 @@ static const int groups\[\] = {"
 		}
 	    }
 	} elseif {$toupper} {
+	    # subtract delta for upper, add delta for lower
+	    set case 6
 	    set delta $toupper
-	    if {$tolower == $toupper} {
-		# subtract delta for upper, add delta for lower
-		set case 6
-	    } elseif {!$tolower} {
-		# subtract delta for upper
-		set case 7
-	    } else {
+	    if {$tolower != $toupper} {
 		error "New case conversion type needed: $toupper $tolower $totitle"
 	    }
 	} elseif {$tolower} {

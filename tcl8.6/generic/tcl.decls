@@ -2370,10 +2370,6 @@ export {
     void Tcl_Main(int argc, char **argv, Tcl_AppInitProc *appInitProc)
 }
 export {
-    void Tcl_MainEx(int argc, char **argv, Tcl_AppInitProc *appInitProc,
-    Tcl_Interp *interp)
-}
-export {
     const char *Tcl_InitStubs(Tcl_Interp *interp, const char *version,
 	int exact)
 }

@@ -16,7 +16,6 @@ ColorScaleTrueColor32::ColorScaleTrueColor32(int s, Visual* visual, int msb)
       unsigned int g = psColors_[i*3+1];
       unsigned int b = psColors_[i*3];
       unsigned int a = 0;
-      // *** waj ***
 #ifdef MAC_OSX_TK
       a |= 0xff << 24;
 #endif
@@ -32,7 +31,6 @@ ColorScaleTrueColor32::ColorScaleTrueColor32(int s, Visual* visual, int msb)
       unsigned int g = psColors_[i*3+1];
       unsigned int b = psColors_[i*3];
       unsigned int a = 0;
-      // *** waj ***
 #ifdef MAC_OSX_TK
       a |= 0xff << 24;
 #endif

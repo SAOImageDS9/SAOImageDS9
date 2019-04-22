@@ -2248,24 +2248,23 @@ GetListIndexOperand(
     Tcl_Token* tokenPtr = *tokenPtrPtr;
 				/* INOUT: Pointer to the next token in the
 				 * source code */
-    Tcl_Obj *value;
-    int status;
+    Tcl_Obj* intObj;		/* Integer from the source code */
+    int status;			/* Tcl status return */
 
-    /* General operand validity check */
-    if (GetNextOperand(assemEnvPtr, tokenPtrPtr, &value) != TCL_OK) {
+    /*
+     * Extract the next token as a string.
+     */
+
+    if (GetNextOperand(assemEnvPtr, tokenPtrPtr, &intObj) != TCL_OK) {
 	return TCL_ERROR;
     }
-     
-    /* Convert to an integer, advance to the next token and return. */
-    /*
-     * NOTE: Indexing a list with an index before it yields the
-     * same result as indexing after it, and might be more easily portable
-     * when list size limits grow.
-     */
-    status = TclIndexEncode(interp, value,
-	    TCL_INDEX_BEFORE,TCL_INDEX_BEFORE, result);
 
-    Tcl_DecrRefCount(value);
+    /*
+     * Convert to an integer, advance to the next token and return.
+     */
+
+    status = TclGetIntForIndex(interp, intObj, -2, result);
+    Tcl_DecrRefCount(intObj);
     *tokenPtrPtr = TokenAfter(tokenPtr);
     return status;
 }

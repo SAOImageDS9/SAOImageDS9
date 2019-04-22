@@ -338,9 +338,7 @@ This is sent to a text widget when the selection in the widget is
 changed.
 .TP
 \fB<<ThemeChanged>>\fR
-This is sent to all widgets when the ttk theme changed. The ttk
-widgets listen to this event and redisplay themselves when it fires.
-The legacy widgets ignore this event.
+This is sent to a text widget when the ttk (Tile) theme changed.
 .TP
 \fB<<TraverseIn>>\fR
 This is sent to a widget when the focus enters the widget because of a

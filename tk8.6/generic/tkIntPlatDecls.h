@@ -224,7 +224,8 @@ EXTERN void		TkMacOSXWindowOffset(void *wRef, int *xOffset,
 EXTERN int		TkSetMacColor(unsigned long pixel, void *macColor);
 /* 39 */
 EXTERN void		TkSetWMName(TkWindow *winPtr, Tk_Uid titleUid);
-/* Slot 40 is reserved */
+/* 40 */
+EXTERN void		TkSuspendClipboard(void);
 /* 41 */
 EXTERN int		TkMacOSXZoomToplevel(void *whichWindow,
 				short zoomPart);
@@ -383,7 +384,7 @@ typedef struct TkIntPlatStubs {
     void (*tkMacOSXWindowOffset) (void *wRef, int *xOffset, int *yOffset); /* 37 */
     int (*tkSetMacColor) (unsigned long pixel, void *macColor); /* 38 */
     void (*tkSetWMName) (TkWindow *winPtr, Tk_Uid titleUid); /* 39 */
-    void (*reserved40)(void);
+    void (*tkSuspendClipboard) (void); /* 40 */
     int (*tkMacOSXZoomToplevel) (void *whichWindow, short zoomPart); /* 41 */
     Tk_Window (*tk_TopCoordsToWindow) (Tk_Window tkwin, int rootX, int rootY, int *newX, int *newY); /* 42 */
     MacDrawable * (*tkMacOSXContainerId) (TkWindow *winPtr); /* 43 */
@@ -598,7 +599,8 @@ extern const TkIntPlatStubs *tkIntPlatStubsPtr;
 	(tkIntPlatStubsPtr->tkSetMacColor) /* 38 */
 #define TkSetWMName \
 	(tkIntPlatStubsPtr->tkSetWMName) /* 39 */
-/* Slot 40 is reserved */
+#define TkSuspendClipboard \
+	(tkIntPlatStubsPtr->tkSuspendClipboard) /* 40 */
 #define TkMacOSXZoomToplevel \
 	(tkIntPlatStubsPtr->tkMacOSXZoomToplevel) /* 41 */
 #define Tk_TopCoordsToWindow \

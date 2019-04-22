@@ -153,19 +153,8 @@ GetTypeCache(void)
 	    Tcl_GetThreadData(&dataKey, sizeof(ThreadSpecificData));
 
     if (tsdPtr->doubleTypePtr == NULL) {
-	/* Smart initialization of doubleTypePtr/intTypePtr without
-	 * hash-table lookup or creating complete Tcl_Obj's */
-	Tcl_Obj obj;
-	obj.length = 3;
-	obj.bytes = (char *)"0.0";
-	obj.typePtr = NULL;
-	Tcl_GetDoubleFromObj(NULL, &obj, &obj.internalRep.doubleValue);
-	tsdPtr->doubleTypePtr = obj.typePtr;
-	obj.bytes += 2;
-	obj.length = 1;
-	obj.typePtr = NULL;
-	Tcl_GetLongFromObj(NULL, &obj, &obj.internalRep.longValue);
-	tsdPtr->intTypePtr = obj.typePtr;
+	tsdPtr->doubleTypePtr = Tcl_GetObjType("double");
+	tsdPtr->intTypePtr = Tcl_GetObjType("int");
     }
     return tsdPtr;
 }
@@ -668,7 +657,7 @@ UpdateStringOfMM(
 {
     MMRep *mmPtr;
     char buffer[TCL_DOUBLE_SPACE];
-    size_t len;
+    register int len;
 
     mmPtr = objPtr->internalRep.twoPtrValue.ptr1;
     /* assert( mmPtr->units == -1 && objPtr->bytes == NULL ); */
@@ -677,7 +666,7 @@ UpdateStringOfMM(
     }
 
     Tcl_PrintDouble(NULL, mmPtr->value, buffer);
-    len = strlen(buffer);
+    len = (int)strlen(buffer);
 
     objPtr->bytes = ckalloc(len + 1);
     strcpy(objPtr->bytes, buffer);
@@ -892,7 +881,7 @@ SetWindowFromAny(
      * Free the old internalRep before setting the new one.
      */
 
-    Tcl_GetString(objPtr);
+    (void)Tcl_GetString(objPtr);
     typePtr = objPtr->typePtr;
     if ((typePtr != NULL) && (typePtr->freeIntRepProc != NULL)) {
 	typePtr->freeIntRepProc(objPtr);

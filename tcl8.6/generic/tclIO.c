@@ -711,18 +711,17 @@ Tcl_SetStdChannel(
 {
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
-    int init = channel ? 1 : -1;
     switch (type) {
     case TCL_STDIN:
-	tsdPtr->stdinInitialized = init;
+	tsdPtr->stdinInitialized = 1;
 	tsdPtr->stdinChannel = channel;
 	break;
     case TCL_STDOUT:
-	tsdPtr->stdoutInitialized = init;
+	tsdPtr->stdoutInitialized = 1;
 	tsdPtr->stdoutChannel = channel;
 	break;
     case TCL_STDERR:
-	tsdPtr->stderrInitialized = init;
+	tsdPtr->stderrInitialized = 1;
 	tsdPtr->stderrChannel = channel;
 	break;
     }
@@ -759,8 +758,8 @@ Tcl_GetStdChannel(
     switch (type) {
     case TCL_STDIN:
 	if (!tsdPtr->stdinInitialized) {
-	    tsdPtr->stdinInitialized = -1;
 	    tsdPtr->stdinChannel = TclpGetDefaultStdChannel(TCL_STDIN);
+	    tsdPtr->stdinInitialized = 1;
 
 	    /*
 	     * Artificially bump the refcount to ensure that the channel is
@@ -772,7 +771,6 @@ Tcl_GetStdChannel(
 	     */
 
 	    if (tsdPtr->stdinChannel != NULL) {
-		tsdPtr->stdinInitialized = 1;
 		Tcl_RegisterChannel(NULL, tsdPtr->stdinChannel);
 	    }
 	}
@@ -780,10 +778,9 @@ Tcl_GetStdChannel(
 	break;
     case TCL_STDOUT:
 	if (!tsdPtr->stdoutInitialized) {
-	    tsdPtr->stdoutInitialized = -1;
 	    tsdPtr->stdoutChannel = TclpGetDefaultStdChannel(TCL_STDOUT);
+	    tsdPtr->stdoutInitialized = 1;
 	    if (tsdPtr->stdoutChannel != NULL) {
-		tsdPtr->stdoutInitialized = 1;
 		Tcl_RegisterChannel(NULL, tsdPtr->stdoutChannel);
 	    }
 	}
@@ -791,10 +788,9 @@ Tcl_GetStdChannel(
 	break;
     case TCL_STDERR:
 	if (!tsdPtr->stderrInitialized) {
-	    tsdPtr->stderrInitialized = -1;
 	    tsdPtr->stderrChannel = TclpGetDefaultStdChannel(TCL_STDERR);
+	    tsdPtr->stderrInitialized = 1;
 	    if (tsdPtr->stderrChannel != NULL) {
-		tsdPtr->stderrInitialized = 1;
 		Tcl_RegisterChannel(NULL, tsdPtr->stderrChannel);
 	    }
 	}
@@ -1062,7 +1058,7 @@ CheckForStdChannelsBeingClosed(
     ChannelState *statePtr = ((Channel *) chan)->state;
     ThreadSpecificData *tsdPtr = TCL_TSD_INIT(&dataKey);
 
-    if (tsdPtr->stdinInitialized == 1
+    if (tsdPtr->stdinInitialized
 	    && tsdPtr->stdinChannel != NULL
 	    && statePtr == ((Channel *)tsdPtr->stdinChannel)->state) {
 	if (statePtr->refCount < 2) {
@@ -1070,7 +1066,7 @@ CheckForStdChannelsBeingClosed(
 	    tsdPtr->stdinChannel = NULL;
 	    return;
 	}
-    } else if (tsdPtr->stdoutInitialized == 1
+    } else if (tsdPtr->stdoutInitialized
 	    && tsdPtr->stdoutChannel != NULL
 	    && statePtr == ((Channel *)tsdPtr->stdoutChannel)->state) {
 	if (statePtr->refCount < 2) {
@@ -1078,7 +1074,7 @@ CheckForStdChannelsBeingClosed(
 	    tsdPtr->stdoutChannel = NULL;
 	    return;
 	}
-    } else if (tsdPtr->stderrInitialized == 1
+    } else if (tsdPtr->stderrInitialized
 	    && tsdPtr->stderrChannel != NULL
 	    && statePtr == ((Channel *)tsdPtr->stderrChannel)->state) {
 	if (statePtr->refCount < 2) {

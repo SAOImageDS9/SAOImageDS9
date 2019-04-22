@@ -41,8 +41,6 @@ static int caret_x = 0, caret_y = 0, caret_height = 0;
 static void setupXEvent(XEvent *xEvent, NSWindow *w, unsigned int state);
 static unsigned isFunctionKey(unsigned int code);
 
-unsigned short releaseCode;
-
 
 #pragma mark TKApplication(TKKeyEvent)
 
@@ -68,22 +66,14 @@ unsigned short releaseCode;
         processingCompose = NO;
       }
 
-    w = [theEvent window];
-    TkWindow *winPtr = TkMacOSXGetTkWindow(w);
-    Tk_Window tkwin = (Tk_Window) winPtr;
-    XEvent xEvent;
-
-    if (!winPtr) {
-	return theEvent;
-    }
-
     switch (type) {
     case NSKeyUp:
-	/*Fix for bug #1ba71a86bb: key release firing on key press.*/
-	setupXEvent(&xEvent, w, 0);
-	xEvent.xany.type = KeyRelease;
-	xEvent.xkey.keycode = releaseCode;
-	xEvent.xany.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
+      if (finishedCompose)
+        {
+          // if we were composing, swallow the last release since we already sent
+          finishedCompose = NO;
+          return theEvent;
+        }
     case NSKeyDown:
 	repeat = [theEvent isARepeat];
 	characters = [theEvent characters];
@@ -92,9 +82,10 @@ unsigned short releaseCode;
     case NSFlagsChanged:
 	modifiers = [theEvent modifierFlags];
 	keyCode = [theEvent keyCode];
-
+	//	w = [self windowWithWindowNumber:[theEvent windowNumber]];
+	w = [theEvent window];
 #if defined(TK_MAC_DEBUG_EVENTS) || NS_KEYLOG == 1
-	TKLog(@"-[%@(%p) %s] r=%d mods=%u '%@' '%@' code=%u c=%d %@ %d", [self class], self, _cmd, repeat, modifiers, characters, charactersIgnoringModifiers, keyCode,([charactersIgnoringModifiers length] == 0) ? 0 : [charactersIgnoringModifiers characterAtIndex: 0], w, type);
+	NSLog(@"-[%@(%p) %s] r=%d mods=%u '%@' '%@' code=%u c=%d %@ %d", [self class], self, _cmd, repeat, modifiers, characters, charactersIgnoringModifiers, keyCode,([charactersIgnoringModifiers length] == 0) ? 0 : [charactersIgnoringModifiers characterAtIndex: 0], w, type);
 #endif
 	break;
 
@@ -180,7 +171,7 @@ unsigned short releaseCode;
               xEvent.xkey.keycode = (modifiers ^ savedModifiers);
             } else {
               if (type == NSKeyUp || repeat) {
-		  xEvent.xany.type = KeyRelease;
+                xEvent.xany.type = KeyRelease;
               } else {
                 xEvent.xany.type = KeyPress;
               }
@@ -247,9 +238,11 @@ unsigned short releaseCode;
 {
   int i, len = [(NSString *)aString length];
   XEvent xEvent;
+  TkWindow *winPtr = TkMacOSXGetTkWindow([self window]);
+  Tk_Window tkwin = (Tk_Window) winPtr;
 
   if (NS_KEYLOG)
-    TKLog (@"insertText '%@'\tlen = %d", aString, len);
+    NSLog (@"insertText '%@'\tlen = %d", aString, len);
   processingCompose = NO;
   finishedCompose = YES;
 
@@ -262,17 +255,20 @@ unsigned short releaseCode;
   xEvent.xany.type = KeyPress;
 
   for (i =0; i<len; i++)
-      {
-	  xEvent.xkey.keycode = (UInt16) [aString characterAtIndex: i];
-	  [[aString substringWithRange: NSMakeRange(i,1)]
-	      getCString: xEvent.xkey.trans_chars
-	       maxLength: XMaxTransChars encoding: NSUTF8StringEncoding];
-	  xEvent.xkey.nbytes = strlen(xEvent.xkey.trans_chars);
-	  xEvent.xany.type = KeyPress;
-	  releaseCode =  (UInt16) [aString characterAtIndex: 0];
-	  Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
-      }
-  releaseCode =  (UInt16) [aString characterAtIndex: 0];
+    {
+      xEvent.xkey.keycode = (UInt16) [aString characterAtIndex: i];
+      [[aString substringWithRange: NSMakeRange(i,1)]
+        getCString: xEvent.xkey.trans_chars
+         maxLength: XMaxTransChars encoding: NSUTF8StringEncoding];
+      xEvent.xkey.nbytes = strlen(xEvent.xkey.trans_chars);
+      xEvent.xany.type = KeyPress;
+      Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
+
+      xEvent.xany.type = KeyRelease;
+      xEvent.xany.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
+      Tk_QueueWindowEvent(&xEvent, TCL_QUEUE_TAIL);
+      xEvent.xany.serial = LastKnownRequestProcessed(Tk_Display(tkwin));
+    }
 }
 
 
@@ -282,7 +278,7 @@ unsigned short releaseCode;
   NSString *str = [aString respondsToSelector: @selector (string)] ?
     [aString string] : aString;
   if (NS_KEYLOG)
-    TKLog (@"setMarkedText '%@' len =%lu range %lu from %lu", str,
+    NSLog (@"setMarkedText '%@' len =%lu range %lu from %lu", str,
 	   (unsigned long) [str length], (unsigned long) selRange.length,
 	   (unsigned long) selRange.location);
 
@@ -309,7 +305,7 @@ unsigned short releaseCode;
   NSRange rng = privateWorkingText != nil
     ? NSMakeRange (0, [privateWorkingText length]) : NSMakeRange (NSNotFound, 0);
   if (NS_KEYLOG)
-    TKLog (@"markedRange request");
+    NSLog (@"markedRange request");
   return rng;
 }
 
@@ -317,7 +313,7 @@ unsigned short releaseCode;
 - (void)unmarkText
 {
   if (NS_KEYLOG)
-    TKLog (@"unmark (accept) text");
+    NSLog (@"unmark (accept) text");
   [self deleteWorkingText];
   processingCompose = NO;
 }
@@ -333,7 +329,7 @@ unsigned short releaseCode;
   pt.y = caret_y;
 
   pt = [self convertPoint: pt toView: nil];
-  pt = [[self window] tkConvertPointToScreen: pt];
+  pt = [[self window] convertPointToScreen: pt];
   pt.y -= caret_height;
 
   rect.origin = pt;
@@ -352,7 +348,7 @@ unsigned short releaseCode;
 - (void)doCommandBySelector: (SEL)aSelector
 {
   if (NS_KEYLOG)
-    TKLog (@"doCommandBySelector: %@", NSStringFromSelector (aSelector));
+    NSLog (@"doCommandBySelector: %@", NSStringFromSelector (aSelector));
   processingCompose = NO;
   if (aSelector == @selector (deleteBackward:))
     {
@@ -382,7 +378,7 @@ unsigned short releaseCode;
 - (NSRange)selectedRange
 {
   if (NS_KEYLOG)
-    TKLog (@"selectedRange request");
+    NSLog (@"selectedRange request");
   return NSMakeRange (NSNotFound, 0);
 }
 
@@ -390,7 +386,7 @@ unsigned short releaseCode;
 - (NSUInteger)characterIndexForPoint: (NSPoint)thePoint
 {
   if (NS_KEYLOG)
-    TKLog (@"characterIndexForPoint request");
+    NSLog (@"characterIndexForPoint request");
   return 0;
 }
 
@@ -400,7 +396,7 @@ unsigned short releaseCode;
   static NSAttributedString *str = nil;
   if (str == nil) str = [NSAttributedString new];
   if (NS_KEYLOG)
-    TKLog (@"attributedSubstringFromRange request");
+    NSLog (@"attributedSubstringFromRange request");
   return str;
 }
 /* End <NSTextInput> impl. */
@@ -414,7 +410,7 @@ unsigned short releaseCode;
   if (privateWorkingText == nil)
     return;
   if (NS_KEYLOG)
-    TKLog(@"deleteWorkingText len = %lu\n",
+    NSLog(@"deleteWorkingText len = %lu\n",
 	    (unsigned long)[privateWorkingText length]);
   [privateWorkingText release];
   privateWorkingText = nil;
@@ -434,9 +430,6 @@ setupXEvent(XEvent *xEvent, NSWindow *w, unsigned int state)
 {
     TkWindow *winPtr = TkMacOSXGetTkWindow(w);
     Tk_Window tkwin = (Tk_Window) winPtr;
-    if (!winPtr) {
-	return;
-    }
 
     memset(xEvent, 0, sizeof(XEvent));
     xEvent->xany.serial = LastKnownRequestProcessed(Tk_Display(tkwin));

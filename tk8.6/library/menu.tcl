@@ -609,9 +609,7 @@ proc ::tk::MenuButtonDown menu {
         return
     }
     if {[$menu index active] eq "none"} {
-        if {[$menu cget -type] ne "menubar" } {
-            set Priv(window) {}
-        }
+        set Priv(window) {}
         return
     }
     $menu postcascade active

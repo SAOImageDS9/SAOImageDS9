@@ -1026,8 +1026,7 @@ DoRemoveJustDirectory(
 
     if (nativePath == NULL || nativePath[0] == '\0') {
 	Tcl_SetErrno(ENOENT);
-	Tcl_DStringInit(errorPtr);
-	return TCL_ERROR;
+	goto end;
     }
 
     attr = GetFileAttributes(nativePath);
@@ -1109,7 +1108,9 @@ DoRemoveJustDirectory(
 
   end:
     if (errorPtr != NULL) {
-	char *p = Tcl_WinTCharToUtf(nativePath, -1, errorPtr);
+	char *p;
+	Tcl_WinTCharToUtf(nativePath, -1, errorPtr);
+	p = Tcl_DStringValue(errorPtr);
 	for (; *p; ++p) {
 	    if (*p == '\\') *p = '/';
 	}

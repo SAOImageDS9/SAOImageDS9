@@ -84,14 +84,12 @@ test bitmap-3.1 {Tk_FreeBitmapFromObj - reference counts} -constraints {
 
 test bitmap-4.1 {FreeBitmapObjProc} -constraints {
     testbitmap
-} -setup {
-    proc copy {s} {return [string index $s 0][string range $s 1 end]}
 } -body {
-    set x [copy questhead]
+    set x [join questhead]
     button .b -bitmap $x
-    set y [copy questhead]
+    set y [join questhead]
     .b configure -bitmap $y
-    set z [copy questhead]
+    set z [join questhead]
     .b configure -bitmap $z
     set result {}
     lappend result [testbitmap questhead]
@@ -104,7 +102,6 @@ test bitmap-4.1 {FreeBitmapObjProc} -constraints {
     set y bogus
     return $result
 } -cleanup {
-    rename copy {}
     destroy .b
 } -result {{{1 3}} {{1 2}} {{1 1}} {}}
 

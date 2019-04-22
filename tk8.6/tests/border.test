@@ -131,13 +131,12 @@ test border-3.1 {FreeBorderObjProc} -constraints {
     testborder 
 } -setup {
     set result {}
-    proc copy {s} {return [string index $s 0][string range $s 1 end]}
 } -body {
-    set x [copy purple]
+    set x [join purple]
     button .b -bg $x -text .b1
-    set y [copy purple]
+    set y [join purple]
     .b configure -bg $y
-    set z [copy purple]
+    set z [join purple]
     .b configure -bg $z
     lappend result [testborder purple]
     set x red
@@ -149,7 +148,6 @@ test border-3.1 {FreeBorderObjProc} -constraints {
     set y bogus
     return $result
 } -cleanup {
-    rename copy {}
     destroy .b
 } -result {{{1 3}} {{1 2}} {{1 1}} {}}
 

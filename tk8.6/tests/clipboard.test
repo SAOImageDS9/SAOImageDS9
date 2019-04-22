@@ -161,7 +161,8 @@ test clipboard-4.3 {ClipboardLostSel procedure} -setup {
     clipboard append "Test"
     clipboard append -t TEST "Test2"
     selection clear -s CLIPBOARD
-    clipboard get -t TEST
+    catch {clipboard get}
+	clipboard get -t TEST
 } -cleanup {
     clipboard clear
 }  -returnCodes error -result {CLIPBOARD selection doesn't exist or form "TEST" not defined}
@@ -183,7 +184,8 @@ test clipboard-4.5 {ClipboardLostSel procedure} -setup {
     clipboard append -t TEST "Test2"
     clipboard append "Test3"
     selection clear -s CLIPBOARD
-    clipboard get -t TEST
+    catch {clipboard get}
+	clipboard get -t TEST
 } -cleanup {
     clipboard clear
 }  -returnCodes error -result {CLIPBOARD selection doesn't exist or form "TEST" not defined}
@@ -228,7 +230,7 @@ test clipboard-6.1 {Tk_ClipboardAppend procedure} -setup {
 } -cleanup {
     clipboard clear
 }  -returnCodes ok -result {first chunk second chunk}
-test clipboard-6.2 {Tk_ClipboardAppend procedure} -constraints x11 -setup {
+test clipboard-6.2 {Tk_ClipboardAppend procedure} -constraints unix -setup {
     clipboard clear
 } -body {
     setupbg

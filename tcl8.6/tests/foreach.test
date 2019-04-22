@@ -212,16 +212,14 @@ test foreach-6.4 {break tests} {
     set msg
 } {wrong # args: should be "break"}
 # Check for bug #406709
-test foreach-6.5 {break tests} -body {
+test foreach-6.5 {break tests} {
     proc a {} {
 	set a 1
 	foreach b b {list [concat a; break]; incr a}
 	incr a
     }
     a
-} -cleanup {
-    rename a {}
-} -result {2}
+} {2}
 
 # Test for incorrect "double evaluation" semantics
 test foreach-7.1 {delayed substitution of body} {

@@ -13,28 +13,13 @@
 
 // Public
 
-FrameBase::FrameBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 
-  : Base(i, c, item)
+FrameBase::FrameBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
+: Base(i, c, item)
 {
-  rotateSrcXM = NULL;
-  rotateDestXM = NULL;
-  rotatePM = 0;
-
-  colormapXM = NULL;
-  colormapPM = 0;
-  colormapGCXOR = 0;
 }
 
 FrameBase::~FrameBase()
 {
-  if (colormapXM)
-    XDestroyImage(colormapXM);
-
-  if (colormapPM)
-    Tk_FreePixmap(display, colormapPM);
-
-  if (colormapGCXOR)
-    XFreeGC(display, colormapGCXOR);
 }
 
 void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
@@ -201,48 +186,6 @@ double FrameBase::calcZoomPanner()
 
   Vector src = imageSize(keyContext->datasec() ? FrScale::DATASEC : FrScale::IMGSEC);
   return calcZoom(src, Vector(pannerWidth,pannerHeight));
-}
-
-void FrameBase::rotateMotion()
-{
-  // Rotate from src to dest
-  Vector cc = Vector(options->width,options->height)/2;
-  Matrix m = (Translate(-cc) * Rotate(rotation-rotateRotation) * 
-	      Translate(cc)).invert();
-  double* mm = m.mm();
-
-  int& width = options->width;
-  int& height = options->height;
-  char* src = rotateSrcXM->data;
-
-  int bytesPerPixel = rotateDestXM->bits_per_pixel/8;
-
-  for (int j=0; j<height; j++) {
-    // the line may be padded at the end
-    char* dest = rotateDestXM->data + j*rotateDestXM->bytes_per_line;
-    memset(dest,0,rotateDestXM->bytes_per_line);
-
-    for (int i=0; i<width; i++, dest+=bytesPerPixel) {
-      double x = i*mm[0] + j*mm[3] + mm[6];
-      double y = i*mm[1] + j*mm[4] + mm[7];
-
-      if (x >= 0 && x < width && y >= 0 && y < height) {
-	memcpy(dest, src + ((int)y)*rotateDestXM->bytes_per_line +
-	  ((int)x)*bytesPerPixel, bytesPerPixel);
-      }
-      else
-	memcpy(dest, bgTrueColor_, bytesPerPixel);
-    }
-  }
-
-  // XImage to Pixmap
-  TkPutImage(NULL, 0, display, rotatePM, widgetGC, rotateDestXM,
-	    0, 0, 0, 0, options->width, options->height);
-
-  // Display Pixmap
-  Vector dd = Vector() * widgetToWindow;
-  XCopyArea(display, rotatePM, Tk_WindowId(tkwin), rotateGCXOR, 0, 0, 
-	    options->width, options->height, dd[0], dd[1]);
 }
 
 void FrameBase::setBinCursor()

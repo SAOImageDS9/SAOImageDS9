@@ -277,17 +277,13 @@ test color-3.4 {Tk_FreeColorFromObj - unlinking from list} colorsFree {
     lappend result [testcolor purple]
 } {{{4 1} {3 0} {2 0} {1 0}} {{4 1} {2 0} {1 0}} {{4 1} {2 0}} {{2 0}} {}}
 
-test color-4.1 {FreeColorObjProc} -constraints {
-    colorsFree
-} -setup {
-    proc copy {s} {return [string index $s 0][string range $s 1 end]}
-} -body {
+test color-4.1 {FreeColorObjProc} colorsFree {
     destroy .b
-    set x [copy purple]
+    set x [format purple]
     button .b -foreground $x -text .b1
-    set y [copy purple]
+    set y [format purple]
     .b configure -foreground $y
-    set z [copy purple]
+    set z [format purple]
     .b configure -foreground $z
     set result {}
     lappend result [testcolor purple]
@@ -299,9 +295,7 @@ test color-4.1 {FreeColorObjProc} -constraints {
     lappend result [testcolor purple]
     set y bogus
     set result
-} -cleanup {
-    rename copy {}
-} -result {{{1 3}} {{1 2}} {{1 1}} {}}
+} {{{1 3}} {{1 2}} {{1 1}} {}}
 
 destroy .t
 

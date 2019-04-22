@@ -1565,7 +1565,7 @@ ConfigureListbox(
     Tcl_Obj *errorResult = NULL;
     int oldExport, error;
 
-    oldExport = (listPtr->exportSelection) && (!Tcl_IsSafe(listPtr->interp));
+    oldExport = listPtr->exportSelection;
     if (listPtr->listVarName != NULL) {
 	Tcl_UntraceVar2(interp, listPtr->listVarName, NULL,
 		TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
@@ -1607,11 +1607,10 @@ ConfigureListbox(
 
 	/*
 	 * Claim the selection if we've suddenly started exporting it and
-	 * there is a selection to export and this interp is unsafe.
+	 * there is a selection to export.
 	 */
 
-	if (listPtr->exportSelection && (!oldExport)
-		&& (!Tcl_IsSafe(listPtr->interp))
+	if (listPtr->exportSelection && !oldExport
 		&& (listPtr->numSelected != 0)) {
 	    Tk_OwnSelection(listPtr->tkwin, XA_PRIMARY,
 		    ListboxLostSelection, listPtr);
@@ -3080,8 +3079,7 @@ ListboxSelect(
 	EventuallyRedrawRange(listPtr, first, last);
     }
     if ((oldCount == 0) && (listPtr->numSelected > 0)
-	    && (listPtr->exportSelection)
-	    && (!Tcl_IsSafe(listPtr->interp))) {
+	    && listPtr->exportSelection) {
 	Tk_OwnSelection(listPtr->tkwin, XA_PRIMARY,
 		ListboxLostSelection, listPtr);
     }
@@ -3127,7 +3125,7 @@ ListboxFetchSelection(
     const char *stringRep;
     Tcl_HashEntry *entry;
 
-    if ((!listPtr->exportSelection) || Tcl_IsSafe(listPtr->interp)) {
+    if (!listPtr->exportSelection) {
 	return -1;
     }
 
@@ -3198,8 +3196,7 @@ ListboxLostSelection(
 {
     register Listbox *listPtr = clientData;
 
-    if ((listPtr->exportSelection) && (!Tcl_IsSafe(listPtr->interp))
-	    && (listPtr->nElements > 0)) {
+    if ((listPtr->exportSelection) && (listPtr->nElements > 0)) {
 	ListboxSelect(listPtr, 0, listPtr->nElements-1, 0);
         GenerateListboxSelectEvent(listPtr);
     }
@@ -3431,27 +3428,14 @@ static char *
 ListboxListVarProc(
     ClientData clientData,	/* Information about button. */
     Tcl_Interp *interp,		/* Interpreter containing variable. */
-    const char *name1,		/* Name of variable. */
-    const char *name2,		/* Second part of variable name. */
+    const char *name1,		/* Not used. */
+    const char *name2,		/* Not used. */
     int flags)			/* Information about what happened. */
 {
     Listbox *listPtr = clientData;
     Tcl_Obj *oldListObj, *varListObj;
     int oldLength, i;
     Tcl_HashEntry *entry;
-
-    /*
-     * See ticket [5d991b82].
-     */
-
-    if (listPtr->listVarName == NULL) {
-	if (!(flags & TCL_INTERP_DESTROYED)) {
-	    Tcl_UntraceVar2(interp, name1, name2,
-		    TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
-		    ListboxListVarProc, clientData);
-	}
-	return NULL;
-    }
 
     /*
      * Bwah hahahaha! Puny mortal, you can't unset a -listvar'd variable!

@@ -887,8 +887,7 @@ EntryWidgetObjCmd(
 		entryPtr->selectLast = index2;
 	    }
 	    if (!(entryPtr->flags & GOT_SELECTION)
-		    && (entryPtr->exportSelection)
-		    && (!Tcl_IsSafe(entryPtr->interp))) {
+		    && (entryPtr->exportSelection)) {
 		Tk_OwnSelection(entryPtr->tkwin, XA_PRIMARY,
 			EntryLostSelection, entryPtr);
 		entryPtr->flags |= GOT_SELECTION;
@@ -1123,7 +1122,7 @@ ConfigureEntry(
      * value.
      */
 
-    oldExport = (entryPtr->exportSelection) && (!Tcl_IsSafe(entryPtr->interp));
+    oldExport = entryPtr->exportSelection;
     if (entryPtr->type == TK_SPINBOX) {
 	oldValues = sbPtr->valueStr;
 	oldFormat = sbPtr->reqFormat;
@@ -1277,7 +1276,6 @@ ConfigureEntry(
 	 */
 
 	if (entryPtr->exportSelection && (!oldExport)
-		&& (!Tcl_IsSafe(entryPtr->interp))
 		&& (entryPtr->selectFirst != -1)
 		&& !(entryPtr->flags & GOT_SELECTION)) {
 	    Tk_OwnSelection(entryPtr->tkwin, XA_PRIMARY, EntryLostSelection,
@@ -2747,8 +2745,7 @@ EntrySelectTo(
      * Grab the selection if we don't own it already.
      */
 
-    if (!(entryPtr->flags & GOT_SELECTION) && (entryPtr->exportSelection)
-	    && (!Tcl_IsSafe(entryPtr->interp))) {
+    if (!(entryPtr->flags & GOT_SELECTION) && (entryPtr->exportSelection)) {
 	Tk_OwnSelection(entryPtr->tkwin, XA_PRIMARY, EntryLostSelection,
 		entryPtr);
 	entryPtr->flags |= GOT_SELECTION;
@@ -2815,8 +2812,7 @@ EntryFetchSelection(
     const char *string;
     const char *selStart, *selEnd;
 
-    if ((entryPtr->selectFirst < 0) || (!entryPtr->exportSelection)
-	    || Tcl_IsSafe(entryPtr->interp)) {
+    if ((entryPtr->selectFirst < 0) || !(entryPtr->exportSelection)) {
 	return -1;
     }
     string = entryPtr->displayString;
@@ -2869,8 +2865,7 @@ EntryLostSelection(
      */
 
     if (TkpAlwaysShowSelection(entryPtr->tkwin)
-	    && (entryPtr->selectFirst >= 0) && entryPtr->exportSelection
-	    && (!Tcl_IsSafe(entryPtr->interp))) {
+	    && (entryPtr->selectFirst >= 0) && entryPtr->exportSelection) {
 	entryPtr->selectFirst = -1;
 	entryPtr->selectLast = -1;
 	EventuallyRedraw(entryPtr);
@@ -3135,8 +3130,8 @@ static char *
 EntryTextVarProc(
     ClientData clientData,	/* Information about button. */
     Tcl_Interp *interp,		/* Interpreter containing variable. */
-    const char *name1,		/* Name of variable. */
-    const char *name2,		/* Second part of variable name. */
+    const char *name1,		/* Not used. */
+    const char *name2,		/* Not used. */
     int flags)			/* Information about what happened. */
 {
     Entry *entryPtr = clientData;
@@ -3148,19 +3143,6 @@ EntryTextVarProc(
 	 */
 	return NULL;
     }
-
-    /*
-     * See ticket [5d991b82].
-     */
-
-    if (entryPtr->textVarName == NULL) {
-	if (!(flags & TCL_INTERP_DESTROYED)) {
-	    Tcl_UntraceVar2(interp, name1, name2,
-		    TCL_GLOBAL_ONLY|TCL_TRACE_WRITES|TCL_TRACE_UNSETS,
-		    EntryTextVarProc, clientData);
-	}
- 	return NULL;
-     }
 
     /*
      * If the variable is unset, then immediately recreate it unless the whole
@@ -4052,8 +4034,7 @@ SpinboxWidgetObjCmd(
 		entryPtr->selectLast = index2;
 	    }
 	    if (!(entryPtr->flags & GOT_SELECTION)
-		    && entryPtr->exportSelection
-		    && (!Tcl_IsSafe(entryPtr->interp))) {
+		    && entryPtr->exportSelection) {
 		Tk_OwnSelection(entryPtr->tkwin, XA_PRIMARY,
 			EntryLostSelection, entryPtr);
 		entryPtr->flags |= GOT_SELECTION;

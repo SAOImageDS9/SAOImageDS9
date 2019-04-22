@@ -500,6 +500,7 @@ void FrameRGB::colormapCmd(float rb, float gb, float bb,
   update(BASE);
 }
 
+// *** waj ***
 #ifndef MAC_OSX_TK
 void FrameRGB::colormapBeginCmd()
 {

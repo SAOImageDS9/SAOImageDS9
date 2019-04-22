@@ -354,6 +354,7 @@ void FrameBase::panEndCmd(const Vector& vv)
   update(MATRIX);
 }
 
+// *** waj ***
 #ifndef MAC_OSX_TK
 void FrameBase::rotateBeginCmd()
 {

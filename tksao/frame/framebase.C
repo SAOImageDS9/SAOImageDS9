@@ -13,9 +13,11 @@
 
 // Public
 
-FrameBase::FrameBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 
-  : Base(i, c, item)
+FrameBase::FrameBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
+: Base(i, c, item)
 {
+  // *** waj ***
+#if 0
   rotateSrcXM = NULL;
   rotateDestXM = NULL;
   rotatePM = 0;
@@ -23,10 +25,13 @@ FrameBase::FrameBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   colormapXM = NULL;
   colormapPM = 0;
   colormapGCXOR = 0;
+#endif
 }
 
 FrameBase::~FrameBase()
 {
+  // *** waj ***
+#if 0
   if (colormapXM)
     XDestroyImage(colormapXM);
 
@@ -35,6 +40,7 @@ FrameBase::~FrameBase()
 
   if (colormapGCXOR)
     XFreeGC(display, colormapGCXOR);
+#endif
 }
 
 void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
@@ -203,6 +209,8 @@ double FrameBase::calcZoomPanner()
   return calcZoom(src, Vector(pannerWidth,pannerHeight));
 }
 
+// *** waj ***
+#if 0
 void FrameBase::rotateMotion()
 {
   // Rotate from src to dest
@@ -244,6 +252,7 @@ void FrameBase::rotateMotion()
   XCopyArea(display, rotatePM, Tk_WindowId(tkwin), rotateGCXOR, 0, 0, 
 	    options->width, options->height, dd[0], dd[1]);
 }
+#endif
 
 void FrameBase::setBinCursor()
 {

@@ -99,9 +99,6 @@ proc CreateInfoPanel {} {
     ttk::label $ds9(info).detectorYLabel -text {y}
     ttk::label $ds9(info).detectorYValue -relief groove \
 	-textvariable infobox(detector,y) -anchor center
-    ttk::label $ds9(info).detectorZLabel -text {z}
-    ttk::label $ds9(info).detectorZValue -relief groove \
-	-textvariable infobox(detector,z) -anchor center
 
     ttk::label $ds9(info).amplifierTitle -text [msgcat::mc {Amplifier}]
     ttk::label $ds9(info).amplifierXLabel -text {x}
@@ -110,9 +107,6 @@ proc CreateInfoPanel {} {
     ttk::label $ds9(info).amplifierYLabel -text {y}
     ttk::label $ds9(info).amplifierYValue -relief groove \
 	-textvariable infobox(amplifier,y) -anchor center
-    ttk::label $ds9(info).amplifierZLabel -text {z}
-    ttk::label $ds9(info).amplifierZValue -relief groove \
-	-textvariable infobox(amplifier,z) -anchor center
 
     ttk::label $ds9(info).physicalTitle -text [msgcat::mc {Physical}]
     ttk::label $ds9(info).physicalXLabel -text {x}
@@ -180,8 +174,6 @@ proc LayoutFrameInfoBox {which} {
 		grid forget $ds9(info).wcsZLabel$ll
 		grid forget $ds9(info).wcsZValue$ll
 	    }
-	    grid forget $ds9(info).detectorZLabel $ds9(info).detectorZValue
-	    grid forget $ds9(info).amplifierZLabel $ds9(info).amplifierZValue
 	    grid forget $ds9(info).physicalZLabel $ds9(info).physicalZValue
 	    grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
 	}
@@ -232,8 +224,6 @@ proc LayoutFrameInfoBox {which} {
 		grid forget $ds9(info).wcsZLabel$ll
 		grid forget $ds9(info).wcsZValue$ll
 	    }
-	    grid forget $ds9(info).detectorZLabel $ds9(info).detectorZValue
-	    grid forget $ds9(info).amplifierZLabel $ds9(info).amplifierZValue
 	    grid forget $ds9(info).physicalZLabel $ds9(info).physicalZValue
 	    grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
 	}
@@ -263,28 +253,6 @@ proc LayoutFrameInfoBox {which} {
 			}
 		    }
 
-		    if {$view(info,detector)} {
-			grid $ds9(info).detectorZLabel \
-			    -row $ds9(info,row,detector) \
-			    -column 0 -sticky w
-			grid $ds9(info).detectorZValue \
-			    -row $ds9(info,row,detector) \
-			    -column 1 -padx 2
-		    } else {
-			grid forget $ds9(info).detectorZLabel \
-			    $ds9(info).detectorZValue
-		    }
-		    if {$view(info,amplifier)} {
-			grid $ds9(info).amplifierZLabel \
-			    -row $ds9(info,row,amplifier) \
-			    -column 0 -sticky w
-			grid $ds9(info).amplifierZValue \
-			    -row $ds9(info,row,amplifier) \
-			    -column 1 -padx 2
-		    } else {
-			grid forget $ds9(info).amplifierZLabel \
-			    $ds9(info).amplifierZValue
-		    }
 		    if {$view(info,physical)} {
 			grid $ds9(info).physicalZLabel \
 			    -row $ds9(info,row,physical) \
@@ -328,28 +296,6 @@ proc LayoutFrameInfoBox {which} {
 			}
 		    }
 
-		    if {$view(info,detector)} {
-			grid $ds9(info).detectorZLabel \
-			    -row $ds9(info,row,detector) \
-			    -column 5 -sticky w
-			grid $ds9(info).detectorZValue \
-			    -row $ds9(info,row,detector) \
-			    -column 6 -padx 2
-		    } else {
-			grid forget $ds9(info).detectorZLabel \
-			    $ds9(info).detectorZValue
-		    }
-		    if {$view(info,amplifier)} {
-			grid $ds9(info).amplifierZLabel \
-			    -row $ds9(info,row,amplifier) \
-			    -column 5 -sticky w
-			grid $ds9(info).amplifierZValue \
-			    -row $ds9(info,row,amplifier) \
-			    -column 6 -padx 2
-		    } else {
-			grid forget $ds9(info).amplifierZLabel \
-			    $ds9(info).amplifierZValue
-		    }
 		    if {$view(info,physical)} {
 			grid $ds9(info).physicalZLabel \
 			    -row $ds9(info,row,physical) \
@@ -781,7 +727,6 @@ proc LayoutInfoPanelHorz {} {
     if {$view(info,detector)} {
 	$ds9(info).detectorXValue configure -width $ww
 	$ds9(info).detectorYValue configure -width $ww
-	$ds9(info).detectorZValue configure -width $ww
 
 	grid $ds9(info).detectorTitle  -row $row -column 0 -sticky w
 	grid $ds9(info).detectorXLabel -row $row -column 1 -sticky w
@@ -802,7 +747,6 @@ proc LayoutInfoPanelHorz {} {
     if {$view(info,amplifier)} {
 	$ds9(info).amplifierXValue configure -width $ww
 	$ds9(info).amplifierYValue configure -width $ww
-	$ds9(info).amplifierZValue configure -width $ww
 
 	grid $ds9(info).amplifierTitle  -row $row -column 0 -sticky w
 	grid $ds9(info).amplifierXLabel -row $row -column 1 -sticky w
@@ -1052,7 +996,6 @@ proc LayoutInfoPanelVert {} {
     if {$view(info,detector)} {
 	$ds9(info).detectorXValue configure -width $ww
 	$ds9(info).detectorYValue configure -width $ww
-	$ds9(info).detectorZValue configure -width $ww
 
 	grid $ds9(info).detectorTitle  -row $row -column 1 -sticky ew
 	incr row
@@ -1076,7 +1019,6 @@ proc LayoutInfoPanelVert {} {
     if {$view(info,amplifier)} {
 	$ds9(info).amplifierXValue configure -width $ww
 	$ds9(info).amplifierYValue configure -width $ww
-	$ds9(info).amplifierZValue configure -width $ww
 
 	grid $ds9(info).amplifierTitle  -row $row -column 1 -sticky ew
 	incr row

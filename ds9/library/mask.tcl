@@ -97,11 +97,12 @@ proc MaskDialog {} {
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    $mb add cascade -label [msgcat::mc {Align}] -menu $mb.align
 
     menu $mb.file
-    $mb.file add command -label "[msgcat::mc {Open}]..." \
+    $mb.file add command -label "[msgcat::mc {Load}]..." \
 	-command [list OpenDialog fits mask]
-    $mb.file add cascade -label [msgcat::mc {Open as}] \
+    $mb.file add cascade -label [msgcat::mc {Load as}] \
 	-menu $mb.file.open
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Import}] \
@@ -131,6 +132,8 @@ proc MaskDialog {} {
 	-command [list ImportDialog nrrd mask]
 
     EditMenu $mb imask
+
+    CoordMenu $mb.align mask system 1 {} {} MaskSystem
 
     # Param
     set f [ttk::frame $w.param]
@@ -237,9 +240,6 @@ proc MaskParamsDialog {} {
     # Param
     set f [ttk::frame $w.param]
 
-    ttk::label $f.coordtitle -text [msgcat::mc {Coordinate System}]
-    CoordMenuButton $f.coordbutton mask system 1 {} {} {}
-
     ttk::label $f.colortitle -text [msgcat::mc {Color}]
     ColorMenuButton $f.colorbutton ed color {}
 
@@ -262,7 +262,6 @@ proc MaskParamsDialog {} {
     ttk::entry $f.low -textvariable ed(low) -width 13
     ttk::entry $f.high -textvariable ed(high) -width 13
 
-    grid $f.coordtitle $f.coordbutton -padx 2 -pady 2 -sticky w
     grid $f.colortitle $f.colorbutton -padx 2 -pady 2 -sticky w
     grid $f.marktitle $f.markbutton -padx 2 -pady 2 -sticky w
     grid $f.rangetitle $f.low $f.high -padx 2 -pady 2 -sticky w
@@ -301,6 +300,7 @@ proc MaskBackup {ch which} {
     puts $ch "$which mask color [$which get mask color]"
     puts $ch "$which mask mark [$which get mask mark]"
     puts $ch "$which mask range [$which get mask range]"
+    puts $ch "$which mask system [$which get mask system]"
     puts $ch "$which mask transparency [$which get mask transparency]"
 }
 

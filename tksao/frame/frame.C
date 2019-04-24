@@ -37,7 +37,7 @@ Frame::Frame(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   maskMark = FitsMask::NONZERO;
   maskLow = 0;
   maskHigh = 0;
-  maskSystem = Coord::PHYSICAL;
+  maskSystem = Coord::WCS;
 }
 
 Frame::~Frame()
@@ -527,6 +527,8 @@ void Frame::maskColorCmd(const char* color)
 void Frame::maskSystemCmd(Coord::CoordSystem sys)
 {
   maskSystem = sys;
+  updateMaskMatrices();
+  update(MATRIX);
 }
 
 void Frame::maskTransparencyCmd(float tt)

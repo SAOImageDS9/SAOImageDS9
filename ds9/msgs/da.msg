@@ -21,7 +21,7 @@
 ::msgcat::mcset da {An error has occurred invoking the Analysis task} [encoding convertfrom iso8859-1 {Fejl opstået ved kald til analyse program}]
 ::msgcat::mcset da {An error has occurred while creating image.} 
 ::msgcat::mcset da {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} 
-::msgcat::mcset da {An error has occurred while creating the image. Please be sure that the entire image window is visible on the screen.} 
+::msgcat::mcset da {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
 ::msgcat::mcset da {An error has occurred while printing} [encoding convertfrom iso8859-1 {Fejl opstået under udskrivning}]
 ::msgcat::mcset da {An error has occurred while reading image.} 
 ::msgcat::mcset da {An error has occurred while saving} [encoding convertfrom iso8859-1 {Fejl opstået under gemning}]
@@ -90,6 +90,7 @@
 ::msgcat::mcset da {Block In} {Bin ind}
 ::msgcat::mcset da {Block Out} {Bin ud}
 ::msgcat::mcset da {Block Parameters} 
+::msgcat::mcset da {Block Pixel} 
 ::msgcat::mcset da {Block} {Bin}
 ::msgcat::mcset da {Blue} [encoding convertfrom iso8859-1 {Blå}]
 ::msgcat::mcset da {Bold} {Fed}
@@ -166,7 +167,6 @@
 ::msgcat::mcset da {Contours} {Konturer}
 ::msgcat::mcset da {Contour} {Konturer}
 ::msgcat::mcset da {Contrast} {Kontrast}
-::msgcat::mcset da {Convert to Mask} 
 ::msgcat::mcset da {Convert to Polygons} {Omdan til poygoner}
 ::msgcat::mcset da {Coordinate Grid Parameters} {Koordinatnetparametre}
 ::msgcat::mcset da {Coordinate Grid} {Koordinatnet}
@@ -222,6 +222,7 @@
 ::msgcat::mcset da {Delete Color Tags} 
 ::msgcat::mcset da {Delete Frame} {Slet denne ramme}
 ::msgcat::mcset da {Delete Group} {Slet gruppe}
+::msgcat::mcset da {Delete Load} 
 ::msgcat::mcset da {Delete Selected Regions} [encoding convertfrom iso8859-1 {Slet valgte områder}]
 ::msgcat::mcset da {Delete and Load Regions} 
 ::msgcat::mcset da {Delete} {Slet} 
@@ -412,6 +413,7 @@
 ::msgcat::mcset da {Load Mosaic} [encoding convertfrom iso8859-1 {Indlæs mosaik}]
 ::msgcat::mcset da {Load Regions} [encoding convertfrom iso8859-1 {Indlæs områder}]
 ::msgcat::mcset da {Load Template} [encoding convertfrom iso8859-1 {Indlæs skabelon}]
+::msgcat::mcset da {Load as} 
 ::msgcat::mcset da {Load into All Frames} 
 ::msgcat::mcset da {Load into Current Frame} 
 ::msgcat::mcset da {Loading Catalog} 
@@ -463,6 +465,7 @@
 ::msgcat::mcset da {Major} 
 ::msgcat::mcset da {Manual} 
 ::msgcat::mcset da {Mask Parameters} {Maske parametre}
+::msgcat::mcset da {Mask} 
 ::msgcat::mcset da {Match Axes} 
 ::msgcat::mcset da {Match Bin} 
 ::msgcat::mcset da {Match Catalog requires at least 1 row per catalog} 
@@ -527,7 +530,7 @@
 ::msgcat::mcset da {Multiple Extension Cube} 
 ::msgcat::mcset da {Multiple Extension Frames} 
 ::msgcat::mcset da {Multiple WCS} {Multipel WCS}
-::msgcat::mcset da {NRRD} 
+::msgcat::mcset da {NAN} 
 ::msgcat::mcset da {Name Resolution} [encoding convertfrom iso8859-1 {Navnesøgning}]
 ::msgcat::mcset da {Name Server} {Navneserver}
 ::msgcat::mcset da {Name or Designation} {navn eller beskrivelse}
@@ -545,7 +548,8 @@
 ::msgcat::mcset da {No Catalog specified} {Intet katalog er specificeret}
 ::msgcat::mcset da {No Data Available} 
 ::msgcat::mcset da {No Items Found} {Ingen emner er fundet}
-::msgcat::mcset da {Non-zero} {ikke-nul}
+::msgcat::mcset da {Non-NAN} 
+::msgcat::mcset da {Non-Zero} 
 ::msgcat::mcset da {None} [encoding convertfrom iso8859-1 {Ingen}]
 ::msgcat::mcset da {Normal} {Normal}
 ::msgcat::mcset da {North} {Nord}
@@ -882,4 +886,3 @@
 ::msgcat::mcset da {standard} 
 ::msgcat::mcset da {unable to locate HUB} 
 ::msgcat::mcset da {x} 
-::msgcat::mcset da {} 

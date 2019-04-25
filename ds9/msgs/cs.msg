@@ -21,7 +21,7 @@
 ::msgcat::mcset cs {An error has occurred invoking the Analysis task} [encoding convertfrom iso8859-2 {Chyba pøi spou¹tìní Analýzy}]
 ::msgcat::mcset cs {An error has occurred while creating image.} [encoding convertfrom iso8859-2 {Chyba pøi vytváøení obrázku.}]
 ::msgcat::mcset cs {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} [encoding convertfrom iso8859-2 {Chyba pøi vytváøení obrázku. Prosím ujistìte se ¾e okno s DS9tkou je ve vrchním levém rohu výchozí obrazovky a ¾e je celé viditelné.}]
-::msgcat::mcset cs {An error has occurred while creating the image. Please be sure that the entire image window is visible on the screen.} [encoding convertfrom iso8859-2 {Chyba pøi vytváøení obrázku. Prosím ujistìte se na obrazovce je zobrazené celé okno s obrázkem}]
+::msgcat::mcset cs {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
 ::msgcat::mcset cs {An error has occurred while printing} [encoding convertfrom iso8859-2 {Pøi tisku se vyskytla chyba}]
 ::msgcat::mcset cs {An error has occurred while reading image.} [encoding convertfrom iso8859-2 {Chyba pøi ètení obrázku.}]
 ::msgcat::mcset cs {An error has occurred while saving} [encoding convertfrom iso8859-2 {Chyba pøi ukládání souboru}]
@@ -90,6 +90,7 @@
 ::msgcat::mcset cs {Block In} [encoding convertfrom iso8859-2 {Zmen¹it}]
 ::msgcat::mcset cs {Block Out} [encoding convertfrom iso8859-2 {Zvìt¹it}]
 ::msgcat::mcset cs {Block Parameters} 
+::msgcat::mcset cs {Block Pixel} 
 ::msgcat::mcset cs {Block} 
 ::msgcat::mcset cs {Blue} [encoding convertfrom iso8859-2 {Modrá}]
 ::msgcat::mcset cs {Bold} [encoding convertfrom iso8859-2 {Tuènì}]
@@ -166,7 +167,6 @@
 ::msgcat::mcset cs {Contours} [encoding convertfrom iso8859-2 {Obrysy}]
 ::msgcat::mcset cs {Contour} [encoding convertfrom iso8859-2 {Obrys}]
 ::msgcat::mcset cs {Contrast} [encoding convertfrom iso8859-2 {Kontrast}]
-::msgcat::mcset cs {Convert to Mask} 
 ::msgcat::mcset cs {Convert to Polygons} [encoding convertfrom iso8859-2 {Zmìnit na obdélníky}]
 ::msgcat::mcset cs {Coordinate Grid Parameters} [encoding convertfrom iso8859-2 {Nastavení møí¾ky}]
 ::msgcat::mcset cs {Coordinate Grid} [encoding convertfrom iso8859-2 {Møí¾ka}]
@@ -222,6 +222,7 @@
 ::msgcat::mcset cs {Delete Color Tags} 
 ::msgcat::mcset cs {Delete Frame} [encoding convertfrom iso8859-2 {Smazat snímek}]
 ::msgcat::mcset cs {Delete Group} [encoding convertfrom iso8859-2 {Smazat skupiny}]
+::msgcat::mcset cs {Delete Load} 
 ::msgcat::mcset cs {Delete Selected Regions} [encoding convertfrom iso8859-2 {Smazat vybrané oblasti}]
 ::msgcat::mcset cs {Delete and Load Regions} 
 ::msgcat::mcset cs {Delete} [encoding convertfrom iso8859-2 {Smazat}]
@@ -412,6 +413,7 @@
 ::msgcat::mcset cs {Load Mosaic} 
 ::msgcat::mcset cs {Load Regions} [encoding convertfrom iso8859-2 {Nahrát oblasti}]
 ::msgcat::mcset cs {Load Template} 
+::msgcat::mcset cs {Load as} 
 ::msgcat::mcset cs {Load into All Frames} 
 ::msgcat::mcset cs {Load into Current Frame} 
 ::msgcat::mcset cs {Loading Catalog} 
@@ -463,6 +465,7 @@
 ::msgcat::mcset cs {Major} 
 ::msgcat::mcset cs {Manual} 
 ::msgcat::mcset cs {Mask Parameters} [encoding convertfrom iso8859-2 {Nastavení masky}]
+::msgcat::mcset cs {Mask} 
 ::msgcat::mcset cs {Match Axes} 
 ::msgcat::mcset cs {Match Bin} [encoding convertfrom iso8859-2 {Zarovnat bin}]
 ::msgcat::mcset cs {Match Catalog requires at least 1 row per catalog} 
@@ -527,7 +530,7 @@
 ::msgcat::mcset cs {Multiple Extension Cube} 
 ::msgcat::mcset cs {Multiple Extension Frames} 
 ::msgcat::mcset cs {Multiple WCS} [encoding convertfrom iso8859-2 {Multi WCS}]
-::msgcat::mcset cs {NRRD} 
+::msgcat::mcset cs {NAN} 
 ::msgcat::mcset cs {Name Resolution} [encoding convertfrom iso8859-2 {Vyhledání objektu}]
 ::msgcat::mcset cs {Name Server} 
 ::msgcat::mcset cs {Name or Designation} 
@@ -545,7 +548,8 @@
 ::msgcat::mcset cs {No Catalog specified} 
 ::msgcat::mcset cs {No Data Available} 
 ::msgcat::mcset cs {No Items Found} 
-::msgcat::mcset cs {Non-zero} 
+::msgcat::mcset cs {Non-NAN} 
+::msgcat::mcset cs {Non-Zero} 
 ::msgcat::mcset cs {None} [encoding convertfrom iso8859-2 {Nic}]
 ::msgcat::mcset cs {Normal} 
 ::msgcat::mcset cs {North} [encoding convertfrom iso8859-2 {Sever}]
@@ -882,4 +886,3 @@
 ::msgcat::mcset cs {standard} 
 ::msgcat::mcset cs {unable to locate HUB} 
 ::msgcat::mcset cs {x} 
-::msgcat::mcset cs {} 

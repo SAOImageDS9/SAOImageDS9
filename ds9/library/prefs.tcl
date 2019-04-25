@@ -677,6 +677,8 @@ proc FixPrefs6.2to7.0 {} {
     FixVar pbuttons(frame,match,scale) pbuttons(frame,matchscale)
     FixVar pbuttons(frame,match,color) pbuttons(frame,matchcolor)
 
+    FixVarRm pbuttons(region,circle3d)
+
     FixVar ppanner(compass) ppanner(compass,image)
     FixVarRm ppanner(compass,wcs,system)
     FixVarRm ppanner(compass,wcs,sky)

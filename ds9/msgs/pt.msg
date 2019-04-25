@@ -21,7 +21,7 @@
 ::msgcat::mcset pt {An error has occurred invoking the Analysis task}  [encoding convertfrom iso8859-1 {Um erro ocorreu ao chamar a tarefa de Análise}]
 ::msgcat::mcset pt {An error has occurred while creating image.} 
 ::msgcat::mcset pt {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} 
-::msgcat::mcset pt {An error has occurred while creating the image. Please be sure that the entire image window is visible on the screen.} 
+::msgcat::mcset pt {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
 ::msgcat::mcset pt {An error has occurred while printing} {Um erro ocorreu ao imprimir}
 ::msgcat::mcset pt {An error has occurred while reading image.} 
 ::msgcat::mcset pt {An error has occurred while saving} {Um erro ocorreu ao salvar}
@@ -90,6 +90,7 @@
 ::msgcat::mcset pt {Block In} {Bin em}
 ::msgcat::mcset pt {Block Out} {Bin partir}
 ::msgcat::mcset pt {Block Parameters} 
+::msgcat::mcset pt {Block Pixel} 
 ::msgcat::mcset pt {Block} {Bin}
 ::msgcat::mcset pt {Blue} {Azul}
 ::msgcat::mcset pt {Bold} {Negrito}
@@ -166,7 +167,6 @@
 ::msgcat::mcset pt {Contours} {Contornos}
 ::msgcat::mcset pt {Contour} 
 ::msgcat::mcset pt {Contrast} {Contraste}
-::msgcat::mcset pt {Convert to Mask} 
 ::msgcat::mcset pt {Convert to Polygons} [encoding convertfrom iso8859-1 {Converter para polígonos}]
 ::msgcat::mcset pt {Coordinate Grid Parameters} [encoding convertfrom iso8859-1 {Parâmetros do Grid de Coordenadas}]
 ::msgcat::mcset pt {Coordinate Grid} {Grid de Coordenadas}
@@ -222,6 +222,7 @@
 ::msgcat::mcset pt {Delete Color Tags} 
 ::msgcat::mcset pt {Delete Frame} {Apague o Frame}
 ::msgcat::mcset pt {Delete Group} {Apague o Grupo}
+::msgcat::mcset pt {Delete Load} 
 ::msgcat::mcset pt {Delete Selected Regions} [encoding convertfrom iso8859-1 {Apagar Regiões Selecionadas}]
 ::msgcat::mcset pt {Delete and Load Regions} 
 ::msgcat::mcset pt {Delete} {Apagar}
@@ -412,6 +413,7 @@
 ::msgcat::mcset pt {Load Mosaic} {Carregar Mosaico}
 ::msgcat::mcset pt {Load Regions} [encoding convertfrom iso8859-1 {Carregar Regiões}]
 ::msgcat::mcset pt {Load Template} {Carregar Template}
+::msgcat::mcset pt {Load as} 
 ::msgcat::mcset pt {Load into All Frames} 
 ::msgcat::mcset pt {Load into Current Frame} 
 ::msgcat::mcset pt {Loading Catalog} 
@@ -463,6 +465,7 @@
 ::msgcat::mcset pt {Major} 
 ::msgcat::mcset pt {Manual} 
 ::msgcat::mcset pt {Mask Parameters} [encoding convertfrom iso8859-1 {Parâmetros da máscara}]
+::msgcat::mcset pt {Mask} 
 ::msgcat::mcset pt {Match Axes} 
 ::msgcat::mcset pt {Match Bin} 
 ::msgcat::mcset pt {Match Catalog requires at least 1 row per catalog} 
@@ -527,7 +530,7 @@
 ::msgcat::mcset pt {Multiple Extension Cube} 
 ::msgcat::mcset pt {Multiple Extension Frames} 
 ::msgcat::mcset pt {Multiple WCS} {Multiplos WCS}
-::msgcat::mcset pt {NRRD} 
+::msgcat::mcset pt {NAN} 
 ::msgcat::mcset pt {Name Resolution} {Resolver o Nome}
 ::msgcat::mcset pt {Name Server} {Servidor de Nomes}
 ::msgcat::mcset pt {Name or Designation} [encoding convertfrom iso8859-1 {Nome ou designação}]
@@ -545,7 +548,8 @@
 ::msgcat::mcset pt {No Catalog specified} [encoding convertfrom iso8859-1 {Nenhum catálogo especificado}]
 ::msgcat::mcset pt {No Data Available} 
 ::msgcat::mcset pt {No Items Found} [encoding convertfrom iso8859-1 {Nenhum ítem encontrado}]
-::msgcat::mcset pt {Non-zero} 
+::msgcat::mcset pt {Non-NAN} 
+::msgcat::mcset pt {Non-Zero} 
 ::msgcat::mcset pt {None} {Nenhum}
 ::msgcat::mcset pt {Normal} 
 ::msgcat::mcset pt {North} {Norte}
@@ -882,4 +886,3 @@
 ::msgcat::mcset pt {standard} 
 ::msgcat::mcset pt {unable to locate HUB} 
 ::msgcat::mcset pt {x} 
-::msgcat::mcset pt {} 

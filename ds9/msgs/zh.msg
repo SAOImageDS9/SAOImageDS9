@@ -21,7 +21,7 @@
 ::msgcat::mcset zh {An error has occurred invoking the Analysis task} 
 ::msgcat::mcset zh {An error has occurred while creating image.} 
 ::msgcat::mcset zh {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} 
-::msgcat::mcset zh {An error has occurred while creating the image. Please be sure that the entire image window is visible on the screen.} 
+::msgcat::mcset zh {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
 ::msgcat::mcset zh {An error has occurred while printing} 
 ::msgcat::mcset zh {An error has occurred while reading image.} 
 ::msgcat::mcset zh {An error has occurred while saving} 
@@ -90,6 +90,7 @@
 ::msgcat::mcset zh {Block In} 
 ::msgcat::mcset zh {Block Out} 
 ::msgcat::mcset zh {Block Parameters} 
+::msgcat::mcset zh {Block Pixel} 
 ::msgcat::mcset zh {Block} 
 ::msgcat::mcset zh {Blue} 
 ::msgcat::mcset zh {Bold} 
@@ -166,7 +167,6 @@
 ::msgcat::mcset zh {Contours} [encoding convertfrom big5 "\xB5\xA5 \xAD\xC8 \xBD\x75"]
 ::msgcat::mcset zh {Contour} 
 ::msgcat::mcset zh {Contrast} 
-::msgcat::mcset zh {Convert to Mask} 
 ::msgcat::mcset zh {Convert to Polygons} 
 ::msgcat::mcset zh {Coordinate Grid Parameters} [encoding convertfrom big5 "\xAE\x79 \xBC\xD0 \xAE\xE6 \xBD\x75 \xB0\xD1 \xBC\xC6"]
 ::msgcat::mcset zh {Coordinate Grid} [encoding convertfrom big5 "\xAE\x79 \xBC\xD0 \xAE\xE6 \xBD\x75"]
@@ -222,6 +222,7 @@
 ::msgcat::mcset zh {Delete Color Tags} 
 ::msgcat::mcset zh {Delete Frame} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
 ::msgcat::mcset zh {Delete Group} 
+::msgcat::mcset zh {Delete Load} 
 ::msgcat::mcset zh {Delete Selected Regions} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xBF\xEF \xA8\xFA \xB0\xCF \xB0\xEC"]
 ::msgcat::mcset zh {Delete and Load Regions} 
 ::msgcat::mcset zh {Delete} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3"]
@@ -412,6 +413,7 @@
 ::msgcat::mcset zh {Load Mosaic} 
 ::msgcat::mcset zh {Load Regions} [encoding convertfrom big5 "\xB8\xFC \xA4\x4A \xB0\xCF \xB0\xEC"]
 ::msgcat::mcset zh {Load Template} 
+::msgcat::mcset zh {Load as} 
 ::msgcat::mcset zh {Load into All Frames} 
 ::msgcat::mcset zh {Load into Current Frame} 
 ::msgcat::mcset zh {Loading Catalog} 
@@ -463,6 +465,7 @@
 ::msgcat::mcset zh {Major} 
 ::msgcat::mcset zh {Manual} 
 ::msgcat::mcset zh {Mask Parameters} 
+::msgcat::mcset zh {Mask} 
 ::msgcat::mcset zh {Match Axes} 
 ::msgcat::mcset zh {Match Bin} 
 ::msgcat::mcset zh {Match Catalog requires at least 1 row per catalog} 
@@ -527,7 +530,7 @@
 ::msgcat::mcset zh {Multiple Extension Cube} 
 ::msgcat::mcset zh {Multiple Extension Frames} 
 ::msgcat::mcset zh {Multiple WCS} 
-::msgcat::mcset zh {NRRD} 
+::msgcat::mcset zh {NAN} 
 ::msgcat::mcset zh {Name Resolution} 
 ::msgcat::mcset zh {Name Server} 
 ::msgcat::mcset zh {Name or Designation} 
@@ -545,7 +548,8 @@
 ::msgcat::mcset zh {No Catalog specified} 
 ::msgcat::mcset zh {No Data Available} 
 ::msgcat::mcset zh {No Items Found} 
-::msgcat::mcset zh {Non-zero} 
+::msgcat::mcset zh {Non-NAN} 
+::msgcat::mcset zh {Non-Zero} 
 ::msgcat::mcset zh {None} 
 ::msgcat::mcset zh {Normal} 
 ::msgcat::mcset zh {North} 
@@ -882,4 +886,3 @@
 ::msgcat::mcset zh {standard} 
 ::msgcat::mcset zh {unable to locate HUB} 
 ::msgcat::mcset zh {x} 
-::msgcat::mcset zh {}  

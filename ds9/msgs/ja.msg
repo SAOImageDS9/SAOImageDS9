@@ -21,7 +21,7 @@
 ::msgcat::mcset ja {An error has occurred invoking the Analysis task} [encoding convertfrom euc-jp "\xb2\xf2\xc0\xcf\xa5\xbf\xa5\xb9\xa5\xaf\xa4\xce\xb5\xaf\xc6\xb0\xa4\xcb\xbc\xba\xc7\xd4\xa4\xb7\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
 ::msgcat::mcset ja {An error has occurred while creating image.} 
 ::msgcat::mcset ja {An error has occurred while creating the image. Please be sure that the ds9 window is in the upper left corner of the default screen and the entire window is visible.} 
-::msgcat::mcset ja {An error has occurred while creating the image. Please be sure that the entire image window is visible on the screen.} 
+::msgcat::mcset ja {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.} 
 ::msgcat::mcset ja {An error has occurred while printing} [encoding convertfrom euc-jp "\xb0\xf5\xba\xfe\xa4\xcb\xbc\xba\xc7\xd4\xa4\xb7\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
 ::msgcat::mcset ja {An error has occurred while reading image.} 
 ::msgcat::mcset ja {An error has occurred while saving} [encoding convertfrom euc-jp "\xca\xdd\xc2\xb8\xa4\xcb\xbc\xba\xc7\xd4\xa4\xb7\xa4\xde\xa4\xb7\xa4\xbf\xa1\xa3"]
@@ -90,6 +90,7 @@
 ::msgcat::mcset ja {Block In} [encoding convertfrom euc-jp "\xa5\xd6\xa5\xed\xa5\xc3\xa5\xaf\xa4\xf2\xba\xd9\xa4\xab\xa4\xaf"]
 ::msgcat::mcset ja {Block Out} [encoding convertfrom euc-jp "\xa5\xd6\xa5\xed\xa5\xc3\xa5\xaf\xa4\xf2\xb9\xd3\xa4\xaf"]
 ::msgcat::mcset ja {Block Parameters} 
+::msgcat::mcset ja {Block Pixel} 
 ::msgcat::mcset ja {Block} [encoding convertfrom euc-jp "\xa5\xd6\xa5\xed\xa5\xc3\xa5\xaf"]
 ::msgcat::mcset ja {Blue} [encoding convertfrom euc-jp "\xc0\xc4\xbf\xa7"]
 ::msgcat::mcset ja {Bold} [encoding convertfrom euc-jp "\xc2\xc0\xbb\xfa"]
@@ -166,7 +167,6 @@
 ::msgcat::mcset ja {Contours} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xa2"]
 ::msgcat::mcset ja {Contour} 
 ::msgcat::mcset ja {Contrast} [encoding convertfrom euc-jp "\xa5\xb3\xa5\xf3\xa5\xc8\xa5\xe9\xa5\xb9\xa5\xc8"]
-::msgcat::mcset ja {Convert to Mask} 
 ::msgcat::mcset ja {Convert to Polygons} [encoding convertfrom euc-jp "\xc2\xbf\xb3\xd1\xb7\xc1\xa4\xcb\xca\xd1\xb4\xb9"]
 ::msgcat::mcset ja {Coordinate Grid Parameters} [encoding convertfrom euc-jp "\xba\xc2\xc9\xb8\xa5\xb0\xa5\xea\xa5\xc3\xa5\xc9\xa4\xce\xc0\xdf\xc4\xea"]
 ::msgcat::mcset ja {Coordinate Grid} [encoding convertfrom euc-jp "\xba\xc2\xc9\xb8\xa5\xb0\xa5\xea\xa5\xc3\xa5\xc9"]
@@ -222,6 +222,7 @@
 ::msgcat::mcset ja {Delete Color Tags} 
 ::msgcat::mcset ja {Delete Frame} [encoding convertfrom euc-jp "\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xf2\xbe\xc3\xb5\xee"]
 ::msgcat::mcset ja {Delete Group} [encoding convertfrom euc-jp "\xa5\xb0\xa5\xeb\xa1\xbc\xa5\xd7\xa4\xf2\xbe\xc3\xb5\xee"]
+::msgcat::mcset ja {Delete Load} 
 ::msgcat::mcset ja {Delete Selected Regions} [encoding convertfrom euc-jp "\xc1\xaa\xc2\xf2\xa4\xb7\xa4\xbf\xce\xce\xb0\xe8\xa4\xf2\xba\xef\xbd\xfc"]
 ::msgcat::mcset ja {Delete and Load Regions} 
 ::msgcat::mcset ja {Delete} [encoding convertfrom euc-jp "\xbe\xc3\xb5\xee"]
@@ -412,6 +413,7 @@
 ::msgcat::mcset ja {Load Mosaic} [encoding convertfrom euc-jp "\xa5\xe2\xa5\xb6\xa5\xa4\xa5\xaf\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Regions} [encoding convertfrom euc-jp "\xce\xce\xb0\xe8\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load Template} [encoding convertfrom euc-jp "\xbf\xf7\xb7\xc1\xa4\xce\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
+::msgcat::mcset ja {Load as} 
 ::msgcat::mcset ja {Load into All Frames} [encoding convertfrom euc-jp "\xc1\xb4\xa4\xc6\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xcb\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Load into Current Frame} [encoding convertfrom euc-jp "\xc1\xaa\xc2\xf2\xc3\xe6\xa4\xce\xa5\xd5\xa5\xec\xa1\xbc\xa5\xe0\xa4\xcb\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf"]
 ::msgcat::mcset ja {Loading Catalog} [encoding convertfrom euc-jp "\xa5\xab\xa5\xbf\xa5\xed\xa5\xb0\xa4\xf2\xc6\xc9\xa4\xdf\xb9\xfe\xa4\xdf\xc3\xe6"]
@@ -463,6 +465,7 @@
 ::msgcat::mcset ja {Major} [encoding convertfrom euc-jp "\xc4\xb9\xbc\xb4"]
 ::msgcat::mcset ja {Manual} [encoding convertfrom euc-jp "\xbc\xea\xc6\xb0"]
 ::msgcat::mcset ja {Mask Parameters} [encoding convertfrom euc-jp "\xa5\xde\xa5\xb9\xa5\xaf\xa4\xce\xc0\xdf\xc4\xea"]
+::msgcat::mcset ja {Mask} 
 ::msgcat::mcset ja {Match Axes} 
 ::msgcat::mcset ja {Match Bin} 
 ::msgcat::mcset ja {Match Catalog requires at least 1 row per catalog} 
@@ -527,7 +530,7 @@
 ::msgcat::mcset ja {Multiple Extension Cube} 
 ::msgcat::mcset ja {Multiple Extension Frames} 
 ::msgcat::mcset ja {Multiple WCS} [encoding convertfrom euc-jp "\xca\xa3\xbf\xf4\x57\x43\x53"]
-::msgcat::mcset ja {NRRD} 
+::msgcat::mcset ja {NAN} 
 ::msgcat::mcset ja {Name Resolution} [encoding convertfrom euc-jp "\xcc\xbe\xc1\xb0\xa4\xc7\xb8\xa1\xba\xf7"]
 ::msgcat::mcset ja {Name Server} [encoding convertfrom euc-jp "\xc5\xb7\xc2\xce\xcc\xbe\xb8\xa1\xba\xf7\xa5\xb5\xa1\xbc\xa5\xd0\xa1\xbc"]
 ::msgcat::mcset ja {Name or Designation} [encoding convertfrom euc-jp "\xc5\xb7\xc2\xce\xcc\xbe"]
@@ -545,7 +548,8 @@
 ::msgcat::mcset ja {No Catalog specified} [encoding convertfrom euc-jp "\xa5\xab\xa5\xbf\xa5\xed\xa5\xb0\xa4\xac\xbb\xd8\xc4\xea\xa4\xb5\xa4\xec\xa4\xc6\xa4\xa4\xa4\xde\xa4\xbb\xa4\xf3\xa1\xa3"]
 ::msgcat::mcset ja {No Data Available} 
 ::msgcat::mcset ja {No Items Found} [encoding convertfrom euc-jp "\xb8\xab\xa4\xc4\xa4\xab\xa4\xea\xa4\xde\xa4\xbb\xa4\xf3\xa4\xc7\xa4\xb7\xa4\xbf\xa1\xa3"]
-::msgcat::mcset ja {Non-zero} [encoding convertfrom euc-jp "\xc8\xf3\xce\xed\xc3\xcd"]
+::msgcat::mcset ja {Non-NAN} 
+::msgcat::mcset ja {Non-Zero} 
 ::msgcat::mcset ja {None} [encoding convertfrom euc-jp "\xa4\xca\xa4\xb7"]
 ::msgcat::mcset ja {Normal} [encoding convertfrom euc-jp "\xc9\xb8\xbd\xe0"]
 ::msgcat::mcset ja {North} [encoding convertfrom euc-jp "\xcb\xcc"]
@@ -882,4 +886,3 @@
 ::msgcat::mcset ja {standard} 
 ::msgcat::mcset ja {unable to locate HUB} 
 ::msgcat::mcset ja {x} 
-::msgcat::mcset ja {} 

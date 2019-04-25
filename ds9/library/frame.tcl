@@ -1834,10 +1834,6 @@ proc ClearFrame {which} {
 	return
     }
 
-    DestroyHeader $which
-    $which clear
-
-    # delete saved loadParams
     foreach cc {{} red green blue} {
 	set varname $which$cc
 	global $varname
@@ -1845,6 +1841,31 @@ proc ClearFrame {which} {
 	    unset $varname
 	}
     }
+
+    set cnt [$which get fits count]
+    for {set ii 2} {$ii<=$cnt} {incr ii} {
+	set varname $which.$ii
+	global $varname
+	if {[info exists $varname]} {
+	    unset $varname
+	} else {
+	    break
+	}
+    }
+
+    set cnt [$which get mask count]
+    for {set ii 1} {$ii<=$cnt} {incr ii} {
+	set varname $which.m${ii}
+	global $varname
+	if {[info exists $varname]} {
+	    unset $varname
+	} else {
+	    break
+	}
+    }
+
+    DestroyHeader $which
+    $which clear
 }
 
 # Private Procedures

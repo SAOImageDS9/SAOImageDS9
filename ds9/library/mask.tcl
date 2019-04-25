@@ -12,12 +12,13 @@ proc MaskDef {} {
     set imask(top) .msk
     set imask(mb) .mskmb
 
+    set mask(transparency) 0
     set mask(system) physical
+
     set mask(color) red
     set mask(mark) nonzero
     set mask(low) 0
     set mask(high) 0
-    set mask(transparency) 0
 
     array set pmask [array get mask]
 }
@@ -77,6 +78,7 @@ proc MaskClear {} {
     }
 }
 
+# used in Backup
 proc MaskDialog {} {
     global mask
     global imask
@@ -97,11 +99,12 @@ proc MaskDialog {} {
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    $mb add cascade -label [msgcat::mc {Align}] -menu $mb.align
 
     menu $mb.file
-    $mb.file add command -label "[msgcat::mc {Open}]..." \
+    $mb.file add command -label "[msgcat::mc {Load}]..." \
 	-command [list OpenDialog fits mask]
-    $mb.file add cascade -label [msgcat::mc {Open as}] \
+    $mb.file add cascade -label [msgcat::mc {Load as}] \
 	-menu $mb.file.open
     $mb.file add separator
     $mb.file add cascade -label [msgcat::mc {Import}] \
@@ -131,6 +134,8 @@ proc MaskDialog {} {
 	-command [list ImportDialog nrrd mask]
 
     EditMenu $mb imask
+
+    CoordMenu $mb.align mask system 1 {} {} MaskSystem
 
     # Param
     set f [ttk::frame $w.param]
@@ -183,13 +188,14 @@ proc UpdateMaskMenu {} {
 	return
     }
 
+    set mask(transparency) [$current(frame) get mask transparency]
+    set mask(system) [$current(frame) get mask system]
+
     set mask(color) [$current(frame) get mask color]
     set mask(mark) [$current(frame) get mask mark]
     set range [$current(frame) get mask range]
     set mask(low) [lindex $range 0]
     set mask(high) [lindex $range 1]
-    set mask(system) [$current(frame) get mask system]
-    set mask(transparency) [$current(frame) get mask transparency]
 
     switch -- [$current(frame) get type] {
 	base {
@@ -214,7 +220,6 @@ proc MaskLoad {} {
 	    $current(frame) mask color $mask(color)
 	    $current(frame) mask mark $mask(mark)
 	    $current(frame) mask range $mask(low) $mask(high)
-	    $current(frame) mask system $mask(system)
 	}
     }
     return $rr
@@ -236,9 +241,6 @@ proc MaskParamsDialog {} {
 
     # Param
     set f [ttk::frame $w.param]
-
-    ttk::label $f.coordtitle -text [msgcat::mc {Coordinate System}]
-    CoordMenuButton $f.coordbutton mask system 1 {} {} {}
 
     ttk::label $f.colortitle -text [msgcat::mc {Color}]
     ColorMenuButton $f.colorbutton ed color {}
@@ -262,7 +264,6 @@ proc MaskParamsDialog {} {
     ttk::entry $f.low -textvariable ed(low) -width 13
     ttk::entry $f.high -textvariable ed(high) -width 13
 
-    grid $f.coordtitle $f.coordbutton -padx 2 -pady 2 -sticky w
     grid $f.colortitle $f.colorbutton -padx 2 -pady 2 -sticky w
     grid $f.marktitle $f.markbutton -padx 2 -pady 2 -sticky w
     grid $f.rangetitle $f.low $f.high -padx 2 -pady 2 -sticky w
@@ -298,10 +299,12 @@ proc MaskParamsDialog {} {
 }
 
 proc MaskBackup {ch which} {
+    puts $ch "$which mask transparency [$which get mask transparency]"
+    puts $ch "$which mask system [$which get mask system]"
+
     puts $ch "$which mask color [$which get mask color]"
     puts $ch "$which mask mark [$which get mask mark]"
     puts $ch "$which mask range [$which get mask range]"
-    puts $ch "$which mask transparency [$which get mask transparency]"
 }
 
 proc ProcessMaskCmd {varname iname} {
@@ -331,4 +334,3 @@ proc ProcessSendMaskCmd {proc id param {sock {}} {fn {}}} {
     masksend::yy_scan_string $param
     masksend::yyparse
 }
-

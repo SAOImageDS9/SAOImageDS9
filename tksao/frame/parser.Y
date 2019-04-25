@@ -1243,6 +1243,7 @@ getMask	: COLOR_ {fr->getMaskColorCmd();}
 	| RANGE_ {fr->getMaskRangeCmd();}
         | SYSTEM_ {fr->getMaskSystemCmd();}
 	| TRANSPARENCY_ {fr->getMaskTransparencyCmd();}
+	| COUNT_ {fr->getMaskCountCmd();}
 	;
 
 getPan : PRESERVE_ {fr->getPanPreserveCmd();}

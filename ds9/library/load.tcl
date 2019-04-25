@@ -204,21 +204,20 @@ proc ProcessLoadSaveParams {varname} {
     global loadParam
     global current
 
-    switch $loadParam(load,layer) {
-	mask {
-	    global $varname
-	    if {[info exists $varname]} {
-		set varname "$varname.m[$current(frame) get mask count]"
-	    }
+    if {$loadParam(load,layer) == {mask}} {
+	global $varname
+	if {[info exists $varname]} {
+	    set varname "$varname.m[$current(frame) get mask count]"
 	}
-    }
-    switch $loadParam(file,mode) {
-	slice -
-	{mosaic wcs} -
-	{mosaic iraf} {
-	    global $varname
-	    if {[info exists $varname]} {
-		set varname "$varname.[$current(frame) get fits count]"
+    } else {
+	switch $loadParam(file,mode) {
+	    slice -
+	    {mosaic wcs} -
+	    {mosaic iraf} {
+		global $varname
+		if {[info exists $varname]} {
+		    set varname "$varname.[$current(frame) get fits count]"
+		}
 	    }
 	}
     }

@@ -1834,7 +1834,6 @@ proc ClearFrame {which} {
 	return
     }
 
-    # delete saved regular loadParams
     foreach cc {{} red green blue} {
 	set varname $which$cc
 	global $varname
@@ -1843,7 +1842,6 @@ proc ClearFrame {which} {
 	}
     }
 
-    # delete saved file,mode loadParams
     set cnt [$which get fits count]
     for {set ii 2} {$ii<=$cnt} {incr ii} {
 	set varname $which.$ii
@@ -1855,7 +1853,6 @@ proc ClearFrame {which} {
 	}
     }
 
-    # delete saved mask loadParams
     set cnt [$which get mask count]
     for {set ii 1} {$ii<=$cnt} {incr ii} {
 	set varname $which.m${ii}

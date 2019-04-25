@@ -296,12 +296,10 @@ proc BackupFrame {ch which dir} {
 proc BackupFrameLoad {ch which fdir rdir channel} {
     set base $which$channel
     
-    # regular loadParams
     set varname $base
     global $varname
     BackupFrameLoadParam $varname $ch $which $fdir $rdir $channel
 
-    # file,mode loadParams
     set cnt [$which get fits count]
     for {set ii 2} {$ii<=$cnt} {incr ii} {
 	set varname "$base.$ii"
@@ -312,8 +310,6 @@ proc BackupFrameLoad {ch which fdir rdir channel} {
 	    break
 	}
     }
-
-    # mask loadParams
     set cnt [$which get mask count]
     for {set ii 1} {$ii<=$cnt} {incr ii} {
 	set varname "$base.m${ii}"

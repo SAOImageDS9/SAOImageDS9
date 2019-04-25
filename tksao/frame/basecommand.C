@@ -1926,6 +1926,11 @@ void Base::getIRAFAlignCmd()
   Tcl_AppendResult(interp, (irafAlign_ ? "1" : "0"), NULL);
 }
 
+void Base::getMaskCountCmd()
+{
+  Tcl_AppendResult(interp, "0", NULL);
+}
+
 void Base::getMaskColorCmd()
 {
   Tcl_AppendResult(interp, "red", NULL);

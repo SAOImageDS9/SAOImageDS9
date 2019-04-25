@@ -12,12 +12,13 @@ proc MaskDef {} {
     set imask(top) .msk
     set imask(mb) .mskmb
 
+    set mask(transparency) 0
     set mask(system) physical
+
     set mask(color) red
     set mask(mark) nonzero
     set mask(low) 0
     set mask(high) 0
-    set mask(transparency) 0
 
     array set pmask [array get mask]
 }
@@ -77,6 +78,7 @@ proc MaskClear {} {
     }
 }
 
+# used in Backup
 proc MaskDialog {} {
     global mask
     global imask
@@ -186,13 +188,14 @@ proc UpdateMaskMenu {} {
 	return
     }
 
+    set mask(transparency) [$current(frame) get mask transparency]
+    set mask(system) [$current(frame) get mask system]
+
     set mask(color) [$current(frame) get mask color]
     set mask(mark) [$current(frame) get mask mark]
     set range [$current(frame) get mask range]
     set mask(low) [lindex $range 0]
     set mask(high) [lindex $range 1]
-    set mask(system) [$current(frame) get mask system]
-    set mask(transparency) [$current(frame) get mask transparency]
 
     switch -- [$current(frame) get type] {
 	base {
@@ -217,7 +220,6 @@ proc MaskLoad {} {
 	    $current(frame) mask color $mask(color)
 	    $current(frame) mask mark $mask(mark)
 	    $current(frame) mask range $mask(low) $mask(high)
-	    $current(frame) mask system $mask(system)
 	}
     }
     return $rr
@@ -297,11 +299,12 @@ proc MaskParamsDialog {} {
 }
 
 proc MaskBackup {ch which} {
+    puts $ch "$which mask transparency [$which get mask transparency]"
+    puts $ch "$which mask system [$which get mask system]"
+
     puts $ch "$which mask color [$which get mask color]"
     puts $ch "$which mask mark [$which get mask mark]"
     puts $ch "$which mask range [$which get mask range]"
-    puts $ch "$which mask system [$which get mask system]"
-    puts $ch "$which mask transparency [$which get mask transparency]"
 }
 
 proc ProcessMaskCmd {varname iname} {
@@ -331,4 +334,3 @@ proc ProcessSendMaskCmd {proc id param {sock {}} {fn {}}} {
     masksend::yy_scan_string $param
     masksend::yyparse
 }
-

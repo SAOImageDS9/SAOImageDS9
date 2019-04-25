@@ -1550,6 +1550,8 @@ public:
   void regionSelectShiftEndCmd();
 
   // Mask Commands
+  virtual void getMaskCountCmd();
+
   virtual void getMaskColorCmd();
   virtual void getMaskMarkCmd();
   virtual void getMaskRangeCmd();

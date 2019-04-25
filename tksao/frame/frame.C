@@ -516,6 +516,11 @@ void Frame::maskClearCmd()
   update(BASE);
 }
 
+void Frame::getMaskCountCmd()
+{
+  printInteger(mask.count());
+}
+
 void Frame::maskColorCmd(const char* color)
 {
   if (maskColorName)

@@ -62,6 +62,8 @@ class Frame : public FrameBase {
 
   void maskClearCmd();
 
+  void getMaskCountCmd();
+
   void getMaskColorCmd();
   void getMaskMarkCmd();
   void getMaskRangeCmd();

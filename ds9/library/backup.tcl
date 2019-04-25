@@ -295,78 +295,109 @@ proc BackupFrame {ch which dir} {
 
 proc BackupFrameLoad {ch which fdir rdir channel} {
     set base $which$channel
-    set seq 1
-
+    
+    # regular loadParams
     set varname $base
     global $varname
-    if {![info exists $varname]} {
-	# special case
-	set varname "$base.$seq"
+    BackupFrameLoadParam $varname $ch $which $fdir $rdir $channel
+
+    # file,mode loadParams
+    set cnt [$which get fits count]
+    for {set ii 2} {$ii<=$cnt} {incr ii} {
+	set varname "$base.$ii"
 	global $varname
+	if {[info exists $varname]} {
+	    BackupFrameLoadParam $varname $ch $which $fdir $rdir $channel
+	} else {
+	    break
+	}
     }
 
-    while {[info exists $varname]} {
-	if {$channel != {}} {
-	    puts $ch "$which rgb channel $channel"
-	}
-
-	array set param [array get $varname]
-	switch $param(load,type) {
-	    mmap -
-	    mmapincr -
-	    smmap -
-	    shared -
-	    sshared {
-		if {![BackupFrameLoadMMap param $fdir $rdir]} {
-		    Error [msgcat::mc {An error has occurred during backup}]
-		    return
-		}
-	    }
-	    alloc -
-	    allocgz {
-		if {![BackupFrameLoadMMap param $fdir $rdir]} {
-		    BackupFrameLoadAlloc $which param $fdir $rdir
-		}
-	    }
-	    channel -
-	    socket -
-	    socketgz -
-	    var {BackupFrameLoadAlloc $which param $fdir $rdir}
-	    photo {
-		if {[BackupFrameLoadMMap param $fdir $rdir]} {
-		    puts $ch "global bcktmp"
-		    puts $ch "if {\[catch {image create photo -file $param(file,name)} bcktmp\]} {"
-		    puts $ch "Error \[msgcat::mc {An error has occurred during restore}\]"
-		    puts $ch "return"
-		    puts $ch "}"
-		} else {
-		    BackupFrameLoadAlloc $which param $fdir $rdir
-		}
-	    }
-	}
-
-	puts $ch "global loadParam"
-	puts $ch "array set loadParam \[list [array get param]\]"
-
-	switch $param(load,type) {
-	    photo {
-		puts $ch "set loadParam(var,name) \$bcktmp"
-	    }
-	}
-
-	puts $ch "if \[BackupFindFile loadParam\] {"
-	puts $ch "  ProcessLoad"
-	puts $ch "}"
-
-	switch $param(load,type) {
-	    photo {
-		puts $ch "image delete \$bcktmp"
-	    }
-	}
-
-	incr seq
-	set varname "$base.$seq"
+    # mask loadParams
+    set cnt [$which get mask count]
+    for {set ii 1} {$ii<=$cnt} {incr ii} {
+	set varname "$base.m${ii}"
 	global $varname
+	if {[info exists $varname]} {
+	    BackupFrameLoadParam $varname $ch $which $fdir $rdir {}
+	} else {
+	    break
+	}
+    }
+}
+
+proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
+    global $varname
+
+    if {![info exists $varname]} {
+	return
+    }
+    
+    if {$channel != {}} {
+	puts $ch "$which rgb channel $channel"
+    }
+
+    array set param [array get $varname]
+    switch $param(load,type) {
+	mmap -
+	mmapincr -
+	smmap -
+	shared -
+	sshared {
+	    if {![BackupFrameLoadMMap param $fdir $rdir]} {
+		Error [msgcat::mc {An error has occurred during backup}]
+		return
+	    }
+	}
+	alloc -
+	allocgz {
+	    if {![BackupFrameLoadMMap param $fdir $rdir]} {
+		BackupFrameLoadAlloc $which param $fdir $rdir
+	    }
+	}
+	channel -
+	socket -
+	socketgz -
+	var {BackupFrameLoadAlloc $which param $fdir $rdir}
+	photo {
+	    if {[BackupFrameLoadMMap param $fdir $rdir]} {
+		puts $ch "global bcktmp"
+		puts $ch "if {\[catch {image create photo -file $param(file,name)} bcktmp\]} {"
+		puts $ch "Error \[msgcat::mc {An error has occurred during restore}\]"
+		puts $ch "return"
+		puts $ch "}"
+	    } else {
+		BackupFrameLoadAlloc $which param $fdir $rdir
+	    }
+	}
+    }
+
+    puts $ch "global loadParam"
+    puts $ch "array set loadParam \[list [array get param]\]"
+
+    switch $param(load,layer) {
+	mask {
+	    puts $ch "MaskDialog"
+	    puts $ch "$which mask color $param(mask,color)"
+	    puts $ch "$which mask mark $param(mask,mark)"
+	    puts $ch "$which mask range $param(mask,low) $param(mask,high)"
+	}
+    }
+    
+    switch $param(load,type) {
+	photo {
+	    puts $ch "set loadParam(var,name) \$bcktmp"
+	}
+    }
+
+    puts $ch "if \[BackupFindFile loadParam\] {"
+    puts $ch "  ProcessLoad"
+    puts $ch "}"
+
+    switch $param(load,type) {
+	photo {
+	    puts $ch "image delete \$bcktmp"
+	}
     }
 }
 

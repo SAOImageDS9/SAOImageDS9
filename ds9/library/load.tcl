@@ -181,18 +181,16 @@ proc ProcessLoad {{err 1}} {
     }
 
     # save loadParam
-    if {$loadParam(load,layer) == {}} {
-	switch -- [$current(frame) get type] {
-	    base -
-	    3d {ProcessLoadSaveParams $current(frame)}
-	    rgb {
-		switch -- $loadParam(file,mode) {
-		    {rgb image} -
-		    {rgb cube} {ProcessLoadSaveParams $current(frame)}
-		    default {
-			ProcessLoadSaveParams \
-			    "$current(frame)[$current(frame) get rgb channel]"
-		    }
+    switch -- [$current(frame) get type] {
+	base -
+	3d {ProcessLoadSaveParams $current(frame)}
+	rgb {
+	    switch -- $loadParam(file,mode) {
+		{rgb image} -
+		{rgb cube} {ProcessLoadSaveParams $current(frame)}
+		default {
+		    ProcessLoadSaveParams \
+			"$current(frame)[$current(frame) get rgb channel]"
 		}
 	    }
 	}
@@ -206,11 +204,18 @@ proc ProcessLoadSaveParams {varname} {
     global loadParam
     global current
 
+    switch $loadParam(load,layer) {
+	mask {
+	    global $varname
+	    if {[info exists $varname]} {
+		set varname "$varname.m[$current(frame) get mask count]"
+	    }
+	}
+    }
     switch $loadParam(file,mode) {
 	slice -
 	{mosaic wcs} -
 	{mosaic iraf} {
-	    # special case
 	    global $varname
 	    if {[info exists $varname]} {
 		set varname "$varname.[$current(frame) get fits count]"
@@ -224,6 +229,15 @@ proc ProcessLoadSaveParams {varname} {
     }
 
     array set $varname [array get loadParam]
+    switch $loadParam(load,layer) {
+	mask {
+	    global mask
+	    set ${varname}(mask,color) $mask(color)
+	    set ${varname}(mask,mark) $mask(mark)
+	    set ${varname}(mask,low) $mask(low)
+	    set ${varname}(mask,high) $mask(high)
+	}
+    }
 
     # always save absolute path
     upvar #0 $varname var

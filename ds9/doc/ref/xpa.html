@@ -9,9 +9,9 @@
       2.4.7-10 i686) [Netscape]">
     <title>XPA Access Points</title>
   </head>
-  <body link="#0000FF" alink="#FF0000" vlink="#551A8B">
-    <h3><img alt="" src="../sun.gif" height="98" align="middle"
-        width="100"> XPA Access Points</h3>
+  <body vlink="#551A8B" alink="#FF0000" link="#0000FF">
+    <h3><img alt="" src="../sun.gif" width="100" align="middle"
+        height="98"> XPA Access Points</h3>
     <blockquote>
       <p>The <a href="http://hea-www.harvard.edu/RD/xpa/index.html">XPA</a>
         messaging system provides seamless communication between DS9 and
@@ -207,6 +207,7 @@
           </tt></tt></tt> <tt><tt><tt><tt><tt><tt>$xpaset -p ds9 3d
                   compass color red</tt><br>
               </tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
 
@@ -467,6 +468,7 @@
 
 
 
+
         [crosshair]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [dec
         &lt;col&gt;]</tt><br>
@@ -497,9 +499,11 @@
 
 
 
+
             [&lt;ref&gt;] [match &lt;ref&gt; &lt;ref&gt;]<br>
           </tt></tt> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
 [match
+
 
 
 
@@ -525,6 +529,7 @@
 
 
 
+
         [match function 1and2|1not2|2not1]<br>
       </tt> <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
 
@@ -538,8 +543,10 @@
 
 
 
+
         [match return 1and2|1only|2only]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
+
 
 
 
@@ -610,7 +617,9 @@
 
 
 
+
           shape</tt></tt> <tt><tt>circle point|box point|diamond point|</tt>cross
+
 
 
 
@@ -630,6 +639,7 @@
       <tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [system
         &lt;coordsys&gt;]</tt><tt><br>
       </tt> <tt>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;</tt> <tt>[&lt;ref&gt;]
+
 
 
 
@@ -955,8 +965,7 @@
       <tt>Syntax:<br>
         cube []<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [play|stop|next|prev|first|last]<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; [&lt;slice&gt;
-        [&lt;coordsys&gt;][&lt;axis&gt;]]<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; [&lt;slice&gt; [&lt;coordsys&gt;]]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [interval &lt;numeric&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [match &lt;coordsys&gt;]<br>
         &nbsp;&nbsp;&nbsp;&nbsp; [lock &lt;coordsys&gt;|none]<br>
@@ -966,6 +975,7 @@
         &nbsp;<br>
         Example:<br>
         $xpaget ds9 cube<br>
+        $xpaget ds9 cube wcs<br>
         $xpaget ds9 cube interval<br>
         $xpaget ds9 cube lock<br>
         $xpaget ds9 cube order<br>
@@ -974,7 +984,7 @@
         $xpaset -p ds9 cube play<br>
         $xpaset -p ds9 cube last<br>
         $xpaset -p ds9 cube 3<br>
-        $xpaset -p ds9 cube 4.4 wcs 3<br>
+        $xpaset -p ds9 cube 4.4 wcs<br>
         $xpaset -p ds9 cube interval 2<br>
         $xpaset -p ds9 cube match wcs<br>
         $xpaset -p ds9 cube lock wcs<br>
@@ -1167,6 +1177,7 @@
       <tt><tt>$xpaset -p ds9 export nrrd foo.nrrd little</tt></tt><br>
       <tt><tt><tt><tt><tt><tt>$xpaset -p ds9 export envi foo.hdr little</tt></tt><br>
             </tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
 
@@ -2076,6 +2087,7 @@
 
 
 
+
         [line|bar|scatter] &lt;title&gt; &lt;xaxis label&gt; &lt;yaxis
         label&gt;</tt><tt> </tt><tt>xy|xyex|xyey|xyexey</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[new</tt><tt>
@@ -2101,8 +2113,10 @@
 
 
 
+
         name &lt;plotname&gt; stdin</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[new
+
 
 
 
@@ -2133,12 +2147,14 @@
 
 
 
+
         load &lt;filename&gt; xy|xyex|xyey|xyexey]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] save &lt;filename&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;
         [[&lt;plotname&gt;] clear]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2163,6 +2179,7 @@
 
 
 
+
         stats yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
@@ -2176,8 +2193,10 @@
 
 
 
+
         list yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2219,8 +2238,10 @@
 
 
 
+
         close</tt><tt>]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2246,6 +2267,7 @@
 
 
 
+
           </tt>export</tt><tt> </tt><tt>[gif|tiff|jpeg|png]</tt><tt> </tt><tt>&lt;filename&gt;</tt><tt><br>
           &nbsp;&nbsp;</tt><tt></tt></tt><tt><tt>&nbsp;&nbsp; [<tt>[&lt;plotname&gt;]
 
@@ -2258,8 +2280,10 @@
 
 
 
+
           </tt>export jpeg &lt;filename&gt;</tt><tt> </tt><tt>[1-100]</tt><tt><br>
           &nbsp;&nbsp;&nbsp;&nbsp; </tt><tt> </tt><tt> </tt></tt><tt><tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2290,6 +2314,7 @@
       </tt><tt> </tt><tt> </tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt>
         </tt><tt>[[&lt;plotname&gt;] background &lt;value&gt;]</tt><tt><br>
         </tt><tt> </tt><tt> </tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2332,12 +2357,14 @@
 
 
 
+
         barmode normal|stacked|aligned|overlap]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt># configure current dataset</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>plot [[&lt;plotname&gt;] show
         yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp; &nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2362,8 +2389,10 @@
 
 
 
+
         shape fill yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2388,8 +2417,10 @@
 
 
 
+
         smooth step|linear|cubic|quadratic|catrom]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2414,8 +2445,10 @@
 
 
 
+
         width &lt;value&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2440,8 +2473,10 @@
 
 
 
+
         error yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -2466,6 +2501,7 @@
 
 
 
+
         error cap yes|no]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
 
@@ -2479,8 +2515,10 @@
 
 
 
+
         error width &lt;value&gt;]</tt><br>
       <tt>&nbsp;&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[[&lt;plotname&gt;]
+
 
 
 
@@ -3197,6 +3235,7 @@
 
 
 
+
         [crosshair]</tt><tt><br>
       </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;] [export
         sb|tsv &lt;filename&gt;]</tt><tt><br>
@@ -3216,6 +3255,7 @@
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp; [&lt;ref&gt;]
         [system &lt;coordsys&gt;]</tt><tt><br>
       </tt><tt> </tt><tt> </tt><tt>&nbsp;&nbsp;&nbsp;</tt><tt> </tt><tt>[&lt;ref&gt;]
+
 
 
 
@@ -3339,8 +3379,10 @@
 
 
 
+
                   [sigma &lt;value&gt;]<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3368,8 +3410,10 @@
 
 
 
+
                       &lt;value&gt;]<br>
                     </tt></tt></tt></tt></tt></tt></tt></tt> <tt>&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -3403,6 +3447,7 @@
 
 
 
+
                         ds9 smooth sigmaminor<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt> $xpaget
         ds9 smooth lock<br>
@@ -3413,6 +3458,7 @@
         </tt></tt> <tt><tt><tt><tt><tt><tt>$xpaset -p ds9 smooth
                   radiusminor 4<br>
                 </tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
 
@@ -3437,8 +3483,10 @@
 
 
 
+
                         -p ds9 smooth sigmaminor 2.0<br>
                       </tt></tt></tt></tt></tt></tt></tt></tt></tt> <tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$xpaset
+
 
 
 

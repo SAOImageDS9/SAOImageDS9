@@ -61,145 +61,1004 @@ proc cubesend::unsetupvalues {numsyms} {
 }
 
 array set cubesend::table {
-  6:0 accept
+  21:290 reduce
+  21:289 reduce
+  9:284 reduce
+  23:286,target 23
+  9:285 reduce
+  3:288,target 3
+  29:300,target 37
+  27:0 reduce
+  9:286 reduce
+  9:287 reduce
+  9:288 reduce
+  2:284,target 2
+  9:290 reduce
+  9:289 reduce
+  8:287,target 8
+  0:296,target 33
+  29:300 goto
+  12:286,target 12
+  18:290,target 18
+  18:289,target 18
+  34:284,target 39
+  0:275,target 19
+  6:0,target 6
+  17:285,target 17
+  2:0 reduce
+  29:295 shift
+  24:288,target 24
+  24:0 reduce
+  23:284,target 23
+  3:286,target 3
+  9:290,target 9
+  9:289,target 9
+  41:0,target 30
+  45:0 reduce
+  33:0,target 44
+  13:288,target 13
+  25:0,target 25
+  0:294,target 31
+  8:285,target 8
+  17:0,target 17
+  12:284,target 12
+  10:0,target 10
+  18:287,target 18
+  17:284 reduce
+  17:285 reduce
+  0:273,target 17
+  17:286 reduce
+  24:286,target 24
+  17:287 reduce
+  4:288,target 4
+  17:288 reduce
+  21:0 reduce
+  17:290 reduce
+  17:289 reduce
+  3:284,target 3
+  6:284 reduce
+  9:287,target 9
+  6:285 reduce
+  42:0 reduce
+  26:284 reduce
+  6:286 reduce
+  26:285 reduce
+  13:286,target 13
+  6:287 reduce
+  26:286 reduce
+  20:290,target 20
+  20:289,target 20
+  19:290,target 19
+  19:289,target 19
+  0:292,target 29
+  6:288 reduce
+  26:287 reduce
+  6:289 reduce
+  6:290 reduce
+  26:288 reduce
+  26:290 reduce
+  26:289 reduce
+  18:285,target 18
+  25:288,target 25
+  0:271,target 15
+  24:284,target 24
+  4:286,target 4
+  17:0 reduce
+  14:288,target 14
+  38:0 reduce
+  9:285,target 9
+  34:298,target 46
+  13:284,target 13
+  20:287,target 20
+  19:287,target 19
   3:0,target 3
+  25:286,target 25
+  5:288,target 5
+  14:284 reduce
+  0:268,target 12
+  45:0,target 34
+  14:285 reduce
+  37:0,target 41
+  14:286 reduce
+  14:0 reduce
+  4:284,target 4
+  30:0,target 40
+  29:0,target 44
+  14:287 reduce
+  22:0,target 22
+  14:288 reduce
+  35:0 accept
+  14:290 reduce
+  14:289 reduce
+  14:286,target 14
+  14:0,target 14
+  21:290,target 21
+  21:289,target 21
+  3:284 reduce
+  3:285 reduce
+  23:284 reduce
+  3:286 reduce
+  23:285 reduce
+  20:285,target 20
+  19:285,target 19
+  3:287 reduce
+  26:288,target 26
+  23:286 reduce
+  3:288 reduce
+  23:287 reduce
   0:257 shift
-  7:0 reduce
+  3:289 reduce
+  3:290 reduce
+  23:288 reduce
+  10:290,target 10
+  10:289,target 10
   0:258 shift
-  8:0 reduce
-  5:0,target 7
+  25:284,target 25
+  23:290 reduce
+  23:289 reduce
   0:260 shift
   0:259 shift
+  5:286,target 5
   9:0 reduce
+  0:266,target 10
   0:261 shift
-  7:0,target 8
-  2:260 shift
-  0:262 goto
-  0:258,target 2
-  5:263,target 9
-  0:0,target 1
-  9:0,target 5
-  0:261,target 5
-  5:260 shift
-  2:0,target 7
-  2:263 goto
-  4:0,target 2
-  5:260,target 7
-  5:263 goto
-  2:263,target 8
-  0:0 reduce
-  6:0,target 0
-  1:0 reduce
-  0:257,target 1
-  2:0 reduce
-  8:0,target 4
+  11:0 reduce
+  0:262 shift
+  15:288,target 15
+  0:263 shift
+  0:264 shift
+  32:0 reduce
+  0:265 shift
+  14:284,target 14
+  0:266 shift
+  21:287,target 21
+  0:267 shift
+  1:289,target 1
+  1:290,target 1
+  0:268 shift
+  0:270 shift
+  0:269 shift
+  0:271 shift
+  26:286,target 26
+  0:272 shift
+  6:288,target 6
+  33:300,target 38
+  0:273 shift
+  10:287,target 10
+  0:274 shift
+  0:275 shift
+  5:284,target 5
+  6:0 reduce
+  0:264,target 8
+  0:276 shift
+  11:284 reduce
+  0:277 shift
+  15:286,target 15
+  11:285 reduce
+  0:278 shift
+  28:0 reduce
+  22:290,target 22
+  22:289,target 22
+  11:286 reduce
+  0:279 shift
+  0:280 shift
+  7:0,target 7
+  11:287 reduce
+  0:0,target 35
+  0:281 shift
+  11:288 reduce
+  0:282 shift
+  21:285,target 21
+  11:290 reduce
+  11:289 reduce
+  0:283 shift
+  1:287,target 1
+  27:288,target 27
+  20:284 reduce
+  19:284 reduce
+  11:290,target 11
+  11:289,target 11
+  0:283,target 27
+  42:0,target 31
+  26:284,target 26
+  20:285 reduce
+  19:285 reduce
+  6:286,target 6
+  34:0,target 37
+  20:286 reduce
+  19:286 reduce
+  26:0,target 26
+  20:287 reduce
+  19:287 reduce
+  10:285,target 10
   3:0 reduce
+  20:288 reduce
+  19:288 reduce
+  18:0,target 18
+  16:288,target 16
+  0:291 shift
+  20:290 reduce
+  20:289 reduce
+  19:290 reduce
+  19:289 reduce
+  11:0,target 11
+  0:262,target 6
+  0:292 shift
+  29:295,target 36
+  0:293 shift
+  8:284 reduce
+  25:0 reduce
+  15:284,target 15
+  0:294 shift
+  8:285 reduce
+  22:287,target 22
+  0:295 shift
+  2:289,target 2
+  2:290,target 2
+  8:286 reduce
+  8:287 reduce
+  0:296 shift
+  46:0 reduce
+  8:288 reduce
+  0:297 goto
+  8:290 reduce
+  8:289 reduce
+  1:285,target 1
+  27:286,target 27
+  0:299 goto
+  7:288,target 7
+  34:290,target 45
+  34:289,target 44
+  11:287,target 11
+  0:281,target 25
+  6:284,target 6
+  0:0 reduce
+  16:286,target 16
+  23:290,target 23
+  23:289,target 23
   0:260,target 4
   0:259,target 3
+  22:0 reduce
+  22:285,target 22
+  2:287,target 2
+  43:0 reduce
+  0:299,target 35
+  12:290,target 12
+  12:289,target 12
+  27:284,target 27
+  7:286,target 7
+  34:287,target 42
+  11:285,target 11
+  0:278,target 22
+  17:288,target 17
+  16:284 reduce
+  16:285 reduce
+  16:286 reduce
+  4:0,target 4
+  16:287 reduce
+  16:284,target 16
+  23:287,target 23
+  18:0 reduce
+  16:288 reduce
+  0:257,target 1
+  3:289,target 3
+  3:290,target 3
+  16:290 reduce
+  16:289 reduce
+  5:284 reduce
+  40:0 reduce
+  39:0 reduce
+  2:285,target 2
+  5:285 reduce
+  46:0,target 38
+  25:284 reduce
+  8:288,target 8
+  0:297,target 34
+  5:286 reduce
+  38:0,target 42
+  25:285 reduce
+  5:287 reduce
+  31:0,target 36
+  25:286 reduce
+  12:287,target 12
+  5:288 reduce
+  25:287 reduce
+  23:0,target 23
+  5:289 reduce
+  5:290 reduce
+  7:284,target 7
+  34:285,target 40
+  25:288 reduce
+  15:0,target 15
+  25:290 reduce
+  25:289 reduce
+  0:276,target 20
+  17:286,target 17
+  24:290,target 24
+  24:289,target 24
+  34:284 shift
+  34:285 shift
+  15:0 reduce
+  34:286 shift
+  23:285,target 23
+  3:287,target 3
+  34:287 shift
+  36:0 reduce
+  34:288 shift
+  34:290 shift
+  34:289 shift
+  13:290,target 13
+  13:289,target 13
+  8:286,target 8
+  0:295,target 32
+  12:285,target 12
+  18:288,target 18
+  0:274,target 18
+  17:284,target 17
+  34:298 goto
+  24:287,target 24
+  13:284 reduce
+  4:289,target 4
+  4:290,target 4
+  13:285 reduce
+  12:0 reduce
+  13:286 reduce
+  13:287 reduce
+  3:285,target 3
+  33:0 reduce
+  13:288 reduce
+  9:288,target 9
+  13:290 reduce
+  13:289 reduce
+  13:287,target 13
+  2:284 reduce
+  0:293,target 30
+  2:285 reduce
+  8:284,target 8
+  22:284 reduce
+  2:286 reduce
+  22:285 reduce
+  2:287 reduce
+  8:0,target 8
+  22:286 reduce
+  18:286,target 18
+  1:0,target 1
+  2:288 reduce
+  25:290,target 25
+  25:289,target 25
+  22:287 reduce
+  2:289 reduce
+  2:290 reduce
+  22:288 reduce
+  0:272,target 16
+  22:290 reduce
+  22:289 reduce
+  7:0 reduce
+  24:285,target 24
+  4:287,target 4
+  43:0,target 32
+  35:0,target 0
+  30:0 reduce
+  29:0 reduce
+  14:290,target 14
+  14:289,target 14
+  27:0,target 27
+  9:286,target 9
+  20:0,target 20
+  19:0,target 19
+  13:285,target 13
+  12:0,target 12
+  20:288,target 20
+  19:288,target 19
+  0:291,target 28
+  33:295,target 36
+  18:284,target 18
+  25:287,target 25
+  5:289,target 5
+  5:290,target 5
+  0:270,target 14
+  0:269,target 13
   4:0 reduce
-  1:0,target 6
+  4:285,target 4
+  10:284 reduce
+  26:0 reduce
+  10:285 reduce
+  14:287,target 14
+  10:286 reduce
+  10:287 reduce
+  9:284,target 9
+  10:288 reduce
+  10:290 reduce
+  10:289 reduce
+  20:286,target 20
+  19:286,target 19
+  26:290,target 26
+  26:289,target 26
+  18:284 reduce
+  18:285 reduce
+  25:285,target 25
+  18:286 reduce
+  1:0 reduce
+  5:287,target 5
+  18:287 reduce
+  0:267,target 11
+  18:288 reduce
+  18:290 reduce
+  18:289 reduce
+  15:290,target 15
+  15:289,target 15
+  23:0 reduce
+  7:284 reduce
+  7:285 reduce
+  27:284 reduce
+  14:285,target 14
+  7:286 reduce
+  44:0 reduce
+  27:285 reduce
+  21:288,target 21
+  5:0,target 5
+  7:287 reduce
+  27:286 reduce
+  7:288 reduce
+  27:287 reduce
+  7:289 reduce
+  7:290 reduce
+  27:288 reduce
+  20:284,target 20
+  19:284,target 19
+  27:290 reduce
+  27:289 reduce
+  26:287,target 26
+  6:289,target 6
+  6:290,target 6
+  10:288,target 10
+  40:0,target 29
+  39:0,target 28
+  5:285,target 5
+  32:0,target 39
+  0:265,target 9
+  24:0,target 24
+  20:0 reduce
+  19:0 reduce
+  16:0,target 16
+  15:287,target 15
+  41:0 reduce
+  21:286,target 21
+  1:288,target 1
+  27:290,target 27
+  27:289,target 27
+  26:285,target 26
+  6:287,target 6
+  15:284 reduce
+  10:286,target 10
+  16:290,target 16
+  16:289,target 16
+  15:285 reduce
+  15:286 reduce
+  0:263,target 7
+  16:0 reduce
+  15:287 reduce
+  15:288 reduce
+  15:285,target 15
+  22:288,target 22
+  15:290 reduce
+  15:289 reduce
+  37:0 reduce
+  4:284 reduce
+  4:285 reduce
+  24:284 reduce
+  21:284,target 21
+  1:286,target 1
+  4:286 reduce
+  27:287,target 27
+  24:285 reduce
+  4:287 reduce
+  7:289,target 7
+  7:290,target 7
+  24:286 reduce
+  4:288 reduce
+  24:287 reduce
+  11:288,target 11
+  0:282,target 26
+  4:289 reduce
+  4:290 reduce
+  24:288 reduce
+  6:285,target 6
+  24:290 reduce
+  24:289 reduce
+  10:284,target 10
+  16:287,target 16
+  13:0 reduce
+  9:0,target 9
+  0:261,target 5
+  2:0,target 2
+  34:0 reduce
+  22:286,target 22
+  2:288,target 2
+  33:300 goto
+  1:284,target 1
+  44:0,target 33
+  27:285,target 27
+  7:287,target 7
+  36:0,target 45
+  34:288,target 43
+  28:0,target 43
+  11:286,target 11
+  0:279,target 23
+  0:280,target 24
+  33:295 shift
+  21:0,target 21
+  17:290,target 17
+  17:289,target 17
+  13:0,target 13
+  8:0 reduce
+  16:285,target 16
+  12:284 reduce
+  10:0 reduce
+  23:288,target 23
+  12:285 reduce
+  0:258,target 2
+  12:286 reduce
+  31:0 reduce
+  12:287 reduce
+  22:284,target 22
+  12:288 reduce
+  2:286,target 2
+  12:290 reduce
+  12:289 reduce
+  8:290,target 8
+  8:289,target 8
+  1:284 reduce
+  12:288,target 12
+  1:285 reduce
+  21:284 reduce
+  1:286 reduce
+  7:285,target 7
+  34:286,target 41
+  21:285 reduce
+  1:287 reduce
+  21:286 reduce
+  11:284,target 11
+  0:277,target 21
+  1:288 reduce
+  21:287 reduce
+  17:287,target 17
+  1:289 reduce
+  1:290 reduce
+  21:288 reduce
   5:0 reduce
-  2:260,target 7
-  0:262,target 6
 }
 
 array set cubesend::rules {
-  2,l 262
-  6,l 262
-  3,l 262
-  7,l 263
-  0,l 264
-  4,l 262
-  8,l 263
-  1,l 262
-  5,l 262
+  9,l 297
+  11,l 297
+  32,l 298
+  6,l 297
+  28,l 298
+  3,l 297
+  25,l 297
+  0,l 301
+  22,l 297
+  43,l 299
+  18,l 297
+  40,l 299
+  39,l 299
+  15,l 297
+  36,l 299
+  12,l 297
+  33,l 298
+  7,l 297
+  29,l 298
+  30,l 298
+  4,l 297
+  26,l 297
+  1,l 297
+  23,l 297
+  44,l 300
+  19,l 297
+  20,l 297
+  41,l 299
+  16,l 297
+  37,l 299
+  13,l 297
+  34,l 298
+  8,l 297
+  10,l 297
+  31,l 298
+  5,l 297
+  27,l 297
+  2,l 297
+  24,l 297
+  45,l 300
+  21,l 297
+  42,l 299
+  17,l 297
+  38,l 299
+  14,l 297
+  35,l 299
 }
 
 array set cubesend::rules {
-  5,dc 2
-  0,dc 1
-  8,dc 1
+  12,dc 1
+  26,dc 1
   3,dc 1
-  6,dc 1
-  1,dc 0
-  4,dc 2
-  7,dc 0
+  41,dc 2
+  18,dc 1
+  33,dc 1
+  9,dc 1
+  11,dc 1
+  25,dc 1
   2,dc 1
+  40,dc 1
+  39,dc 1
+  17,dc 1
+  32,dc 1
+  8,dc 1
+  10,dc 1
+  24,dc 1
+  1,dc 1
+  38,dc 2
+  16,dc 1
+  31,dc 1
+  7,dc 1
+  45,dc 1
+  23,dc 1
+  0,dc 1
+  37,dc 1
+  15,dc 1
+  29,dc 1
+  30,dc 1
+  6,dc 1
+  44,dc 0
+  22,dc 1
+  36,dc 1
+  14,dc 1
+  28,dc 1
+  5,dc 1
+  43,dc 1
+  21,dc 1
+  35,dc 0
+  13,dc 1
+  27,dc 1
+  4,dc 1
+  42,dc 2
+  19,dc 1
+  20,dc 1
+  34,dc 1
 }
 
 array set cubesend::rules {
-  7,line 26
-  4,line 20
-  1,line 17
-  6,line 23
-  3,line 19
-  8,line 27
-  5,line 22
-  2,line 18
+  41,line 134
+  7,line 97
+  37,line 130
+  4,line 94
+  34,line 125
+  1,line 91
+  31,line 122
+  27,line 117
+  24,line 114
+  21,line 111
+  17,line 107
+  14,line 104
+  11,line 101
+  43,line 137
+  9,line 99
+  40,line 133
+  39,line 132
+  6,line 96
+  36,line 129
+  3,line 93
+  33,line 124
+  29,line 120
+  30,line 121
+  26,line 116
+  23,line 113
+  19,line 109
+  20,line 110
+  16,line 106
+  13,line 103
+  10,line 100
+  45,line 141
+  42,line 136
+  8,line 98
+  38,line 131
+  5,line 95
+  35,line 128
+  2,line 92
+  32,line 123
+  28,line 119
+  25,line 115
+  22,line 112
+  18,line 108
+  15,line 105
+  12,line 102
+  44,line 140
 }
 
 array set cubesend::lr1_table {
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0}}
-  1 {{6 0 1}}
-  2 {{4 0 1} {7 0 0} {8 0 0}}
-  3 {{3 0 1}}
-  4 {{2 0 1}}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6}}
-  5 {{5 0 1} {7 0 0} {8 0 0}}
+  35 {{0 0 1}}
+  36 {{45 0 1}}
+  14,trans {}
+  33,trans {{295 36} {300 38}}
+  37 {{41 0 2}}
+  38 {{42 0 2}}
+  40 {{29 0 1}}
+  39 {{28 0 1}}
+  41 {{30 0 1}}
+  18,trans {}
   1,trans {}
-  6 {{0 0 1}}
-  2,trans {{260 7} {263 8}}
-  3,trans {}
-  7 {{8 0 1}}
-  4,trans {}
-  8 {{4 0 2}}
-  5,trans {{260 7} {263 9}}
-  9 {{5 0 2}}
-  6,trans {}
-  7,trans {}
-  8,trans {}
+  37,trans {}
+  42 {{31 0 1}}
+  43 {{32 0 1}}
+  44 {{33 0 1}}
+  45 {{34 0 1}}
+  23,trans {}
+  5,trans {}
+  42,trans {}
+  46 {{38 0 2}}
+  27,trans {}
   9,trans {}
+  46,trans {}
+  13,trans {}
+  32,trans {}
+  17,trans {}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7} {264 8} {265 9} {266 10} {267 11} {268 12} {269 13} {270 14} {271 15} {272 16} {273 17} {274 18} {275 19} {276 20} {277 21} {278 22} {279 23} {280 24} {281 25} {282 26} {283 27} {291 28} {292 29} {293 30} {294 31} {295 32} {296 33} {297 34} {299 35}}
+  36,trans {}
+  22,trans {}
+  4,trans {}
+  41,trans {}
+  26,trans {}
+  8,trans {}
+  45,trans {}
+  12,trans {}
+  31,trans {}
+  16,trans {}
+  35,trans {}
+  21,trans {}
+  3,trans {}
+  40,trans {}
+  39,trans {}
+  10 {{10 {0 284 285 286 287 288 289 290} 1}}
+  11 {{11 {0 284 285 286 287 288 289 290} 1}}
+  25,trans {}
+  12 {{12 {0 284 285 286 287 288 289 290} 1}}
+  7,trans {}
+  44,trans {}
+  13 {{13 {0 284 285 286 287 288 289 290} 1}}
+  14 {{14 {0 284 285 286 287 288 289 290} 1}}
+  15 {{15 {0 284 285 286 287 288 289 290} 1}}
+  11,trans {}
+  30,trans {}
+  29,trans {{295 36} {300 37}}
+  16 {{16 {0 284 285 286 287 288 289 290} 1}}
+  0 {{0 0 0} {35 0 0} {36 0 0} {37 0 0} {38 0 0} {39 0 0} {40 0 0} {41 0 0} {42 0 0} {43 0 0} {1 {0 284 285 286 287 288 289 290} 0} {2 {0 284 285 286 287 288 289 290} 0} {3 {0 284 285 286 287 288 289 290} 0} {4 {0 284 285 286 287 288 289 290} 0} {5 {0 284 285 286 287 288 289 290} 0} {6 {0 284 285 286 287 288 289 290} 0} {7 {0 284 285 286 287 288 289 290} 0} {8 {0 284 285 286 287 288 289 290} 0} {9 {0 284 285 286 287 288 289 290} 0} {10 {0 284 285 286 287 288 289 290} 0} {11 {0 284 285 286 287 288 289 290} 0} {12 {0 284 285 286 287 288 289 290} 0} {13 {0 284 285 286 287 288 289 290} 0} {14 {0 284 285 286 287 288 289 290} 0} {15 {0 284 285 286 287 288 289 290} 0} {16 {0 284 285 286 287 288 289 290} 0} {17 {0 284 285 286 287 288 289 290} 0} {18 {0 284 285 286 287 288 289 290} 0} {19 {0 284 285 286 287 288 289 290} 0} {20 {0 284 285 286 287 288 289 290} 0} {21 {0 284 285 286 287 288 289 290} 0} {22 {0 284 285 286 287 288 289 290} 0} {23 {0 284 285 286 287 288 289 290} 0} {24 {0 284 285 286 287 288 289 290} 0} {25 {0 284 285 286 287 288 289 290} 0} {26 {0 284 285 286 287 288 289 290} 0} {27 {0 284 285 286 287 288 289 290} 0}}
+  17 {{17 {0 284 285 286 287 288 289 290} 1}}
+  1 {{1 {0 284 285 286 287 288 289 290} 1}}
+  18 {{18 {0 284 285 286 287 288 289 290} 1}}
+  15,trans {}
+  2 {{2 {0 284 285 286 287 288 289 290} 1}}
+  19 {{19 {0 284 285 286 287 288 289 290} 1}}
+  20 {{20 {0 284 285 286 287 288 289 290} 1}}
+  34,trans {{284 39} {285 40} {286 41} {287 42} {288 43} {289 44} {290 45} {298 46}}
+  3 {{3 {0 284 285 286 287 288 289 290} 1}}
+  21 {{21 {0 284 285 286 287 288 289 290} 1}}
+  4 {{4 {0 284 285 286 287 288 289 290} 1}}
+  22 {{22 {0 284 285 286 287 288 289 290} 1}}
+  5 {{5 {0 284 285 286 287 288 289 290} 1}}
+  23 {{23 {0 284 285 286 287 288 289 290} 1}}
+  20,trans {}
+  19,trans {}
+  6 {{6 {0 284 285 286 287 288 289 290} 1}}
+  24 {{24 {0 284 285 286 287 288 289 290} 1}}
+  2,trans {}
+  38,trans {}
+  7 {{7 {0 284 285 286 287 288 289 290} 1}}
+  25 {{25 {0 284 285 286 287 288 289 290} 1}}
+  8 {{8 {0 284 285 286 287 288 289 290} 1}}
+  26 {{26 {0 284 285 286 287 288 289 290} 1}}
+  9 {{9 {0 284 285 286 287 288 289 290} 1}}
+  27 {{27 {0 284 285 286 287 288 289 290} 1}}
+  24,trans {}
+  28 {{43 0 1}}
+  6,trans {}
+  43,trans {}
+  29 {{41 0 1} {44 0 0} {45 0 0}}
+  30 {{40 0 1}}
+  31 {{36 0 1}}
+  32 {{39 0 1}}
+  10,trans {}
+  28,trans {}
+  33 {{42 0 1} {44 0 0} {45 0 0}}
+  34 {{37 0 1} {38 0 1} {28 0 0} {29 0 0} {30 0 0} {31 0 0} {32 0 0} {33 0 0} {34 0 0}}
 }
 
 array set cubesend::token_id_table {
-  264,line 28
-  262,title {}
+  286,t 0
+  286 FK5_
+  280,title WCSW
+  279,title WCSV
+  264,line 14
+  298,title {}
+  292,line 46
+  287 J2000_
+  270,t 0
+  269,t 0
+  288 ICRS_
+  300 order
+  290 ECLIPTIC_
+  289 GALACTIC_
+  276,line 26
+  265,title WCSH
+  301,t 1
+  301 start'
+  291,t 0
+  291 AXIS_
+  284,title FK4
+  292 AXES_
+  274,t 0
+  261,line 11
+  293 INTERVAL_
+  288,line 39
+  257,t 0
+  294 IMAGE_
+  270,title WCSM
+  269,title WCSL
+  295,t 0
+  295 LOCK_
+  288,title ICRS
+  273,line 23
+  296 ORDER_
+  278,t 0
+  297 wcssys
+  257,line 7
+  262,t 0
+  298 skyframe
+  285,line 36
+  274,title WCSQ
+  299,t 1
+  299 cubesend
+  293,title INTERVAL
+  283,t 0
+  270,line 20
+  269,line 19
+  297,line 90
+  259,title WCSB
+  260,title WCSC
+  266,t 0
+  278,title WCSU
+  297,title {}
+  282,line 32
+  287,t 0
+  error error
+  271,t 0
+  264,title WCSG
+  266,line 16
+  294,line 48
+  283,title WCSZ
+  292,t 0
+  278,line 28
+  error,line 89
+  275,t 0
+  268,title WCSK
+  287,title J2000
+  258,t 0
+  263,line 13
+  301,line 142
+  error,title {}
+  291,line 45
+  296,t 0
+  280,t 0
+  279,t 0
+  275,line 25
+  273,title WCSP
+  292,title AXES
+  263,t 0
+  259,line 9
+  260,line 10
+  287,line 38
+  258,title WCSA
+  284,t 0
+  277,title WCST
+  296,title ORDER
+  272,line 22
+  267,t 0
+  299,line 127
+  263,title WCSF
+  288,t 0
+  284,line 35
+  282,title WCSY
+  272,t 0
+  268,line 18
+  296,line 50
+  267,title WCSJ
+  293,t 0
+  286,title FK5
+  257 WCS_
+  281,line 31
+  276,t 0
+  258 WCSA_
+  259,t 0
+  259 WCSB_
+  260 WCSC_
+  260,t 0
+  272,title WCSO
+  261 WCSD_
+  265,line 15
+  301,title {}
+  297,t 1
+  293,line 47
+  291,title AXIS
+  262 WCSE_
+  281,t 0
+  263 WCSF_
+  277,line 27
+  257,title WCS
+  264 WCSG_
+  264,t 0
+  276,title WCSS
+  265 WCSH_
+  295,title LOCK
+  262,line 12
+  266 WCSI_
+  300,line 139
+  290,line 41
+  289,line 40
+  285,t 0
+  267 WCSJ_
   0,t 0
   0 {$}
-  263,title {}
-  264,title {}
+  262,title WCSE
+  268 WCSK_
+  268,t 0
+  281,title WCSX
+  274,line 24
+  270 WCSM_
+  269 WCSL_
+  299,title {}
   error,t 0
-  error error
-  258,line 9
-  261,line 12
-  error,line 15
-  257 AXIS_
-  257,t 0
-  263,line 25
-  258 AXES_
-  258,t 0
-  error,title {}
-  260,t 0
-  260 LOCK_
-  259 INTERVAL_
-  259,t 0
+  271 WCSN_
+  300,t 1
+  290,t 0
+  289,t 0
+  272 WCSO_
+  258,line 8
+  286,line 37
+  273,t 0
+  273 WCSP_
+  266,title WCSI
+  285,title B1950
+  274 WCSQ_
+  275 WCSR_
+  271,line 21
+  298,line 118
+  294,t 0
+  276 WCSS_
+  277,t 0
+  277 WCST_
+  271,title WCSN
+  300,title {}
+  290,title ECLIPTIC
+  289,title GALACTIC
+  283,line 33
+  278 WCSU_
   261,t 0
-  261 ORDER_
-  262,t 1
-  262 cubesend
-  257,line 8
-  263,t 1
-  263 order
-  264,t 1
-  264 start'
-  260,line 11
-  257,title AXIS
-  259,line 10
-  258,title AXES
-  262,line 16
-  260,title LOCK
-  259,title INTERVAL
-  261,title ORDER
+  280 WCSW_
+  279 WCSV_
+  298,t 1
+  281 WCSX_
+  267,line 17
+  295,line 49
+  282,t 0
+  282 WCSY_
+  275,title WCSR
+  294,title IMAGE
+  283 WCSZ_
+  265,t 0
+  284 FK4_
+  280,line 30
+  279,line 29
+  285 B1950_
+  261,title WCSD
 }
 
 proc cubesend::yyparse {} {
@@ -296,12 +1155,49 @@ proc cubesend::yyparse {} {
                 set _ $1
                 set yylval [lindex $value_stack end]
                 switch -- $rule {
-                    1 { ProcessSendCmdCurrent "get fits slice" }
-                    2 { ProcessSendCmdGet cube lock }
-                    3 { BlinkSendCmdInterval }
-                    6 { ProcessSendCmdTxt "2" }
-                    7 { ProcessSendCmdGet cube axes }
-                    8 { ProcessSendCmdYesNo cube lock,axes }
+                    1 { set _ wcs }
+                    2 { set _ wcsa }
+                    3 { set _ wcsb }
+                    4 { set _ wcsc }
+                    5 { set _ wcsd }
+                    6 { set _ wcse }
+                    7 { set _ wcsf }
+                    8 { set _ wcsg }
+                    9 { set _ wcsh }
+                    10 { set _ wcsi }
+                    11 { set _ wcsj }
+                    12 { set _ wcsk }
+                    13 { set _ wcsl }
+                    14 { set _ wcsm }
+                    15 { set _ wcsn }
+                    16 { set _ wcso }
+                    17 { set _ wcsp }
+                    18 { set _ wcsq }
+                    19 { set _ wcsr }
+                    20 { set _ wcss }
+                    21 { set _ wcst }
+                    22 { set _ wcsu }
+                    23 { set _ wcsv }
+                    24 { set _ wcsw }
+                    25 { set _ wcsx }
+                    26 { set _ wcsy }
+                    27 { set _ wcsz }
+                    28 { set _ fk4 }
+                    29 { set _ fk4 }
+                    30 { set _ fk5 }
+                    31 { set _ fk5 }
+                    32 { set _ icrs }
+                    33 { set _ galactic }
+                    34 { set _ ecliptic }
+                    35 { ProcessSendCmdCurrent "get fits slice" }
+                    36 { ProcessSendCmdCurrent "get fits slice" }
+                    37 { ProcessSendCmdCurrent "get fits slice from image $1 FK5" }
+                    38 { ProcessSendCmdCurrent "get fits slice from image $1 $2" }
+                    39 { ProcessSendCmdGet cube lock }
+                    40 { BlinkSendCmdInterval }
+                    43 { ProcessSendCmdTxt "2" }
+                    44 { ProcessSendCmdGet cube axes }
+                    45 { ProcessSendCmdYesNo cube lock,axes }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

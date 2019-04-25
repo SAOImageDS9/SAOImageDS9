@@ -10,9 +10,12 @@
 axis	    {return $AXIS_}
 axes	    {return $AXES_}
 interval    {return $INTERVAL_}
+image	    {return $IMAGE_}
 lock	    {return $LOCK_}
 order	    {return $ORDER_}
 
+#include wcssys.fin
+#include skyframe.fin
 #include ws.fin
 
 %%

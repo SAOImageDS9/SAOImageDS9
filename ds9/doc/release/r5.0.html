@@ -1,643 +1,604 @@
-<!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;
-      charset=windows-1252">
-    <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux
-      2.4.7-10 i686) [Netscape]">
-    <title>DS9 Version 5 Release Notes</title>
-  </head>
-  <body vlink="#551a8b" text="#000000" link="#0000ee" bgcolor="#ffffff"
-    alink="#ff0000">
-    <h3> <img alt="" src="../sun.gif" width="100" height="98"
-        align="middle">
-      SAOImageDS9 Version 5 Release Notes</h3>
-    <ol>
-      <ol>
-        <li><tt>07.16.2007 FITSY++: fix a problem with rice compressed
-            images and multiple tiles.</tt></li>
-        <li><tt>07.17.2007 MOSAIC: fix a problem with bin table
-            extensions
-            at the end of a mosaic image wcs.</tt></li>
-        <li><tt>07.20.2007 COLORMAP: fixed a problem with loading
-            external
-            colormaps.</tt></li>
-        <li><tt>07.20.2007 COLORMAP: fixed a problem colormap menus.</tt></li>
-        <li><tt>07.23.2007 ARCHIVES: new url for skyview.</tt></li>
-        <li><tt>07.23.2007 I18N: add language support for Japanese.
-            (many thanks to Masahiro Tsujimoto!).</tt></li>
-        <li><tt>07.23.2007 PIXEL TABLE: xpaget will now return the pixel
-            table values.</tt></li>
-        <li><tt>07.31.2007 SOLARISx86: now supporting solarisx86.</tt></li>
-        <li><tt>08.15.2007 PIXELTABLE: fixed a minor problem with xpaget
-            pixeltable.</tt></li>
-        <li><tt>08.15.2007 FUNTOOLS: update to version 1.4.0</tt></li>
-        <li><tt>08.15.2007 IIS: fixed a problem with frame number
-            greater
-            than 10.</tt></li>
-        <li><tt>08.15.2007 EXAMINE: changed frame name to 'Frame'.</tt></li>
-        <li><tt>09.02.2007 CATALOGS: updated urls and menu titles.</tt></li>
-        <li><tt>09.20.2007 PREFS: new prefs dialog box.</tt></li>
-        <li><tt>09.24.2007 CATALOGS: fixed a problem with the CDS query.</tt></li>
-        <li><tt>09.24.2007 CATALOGS: add SDSS DR6.</tt></li>
-        <li><tt>09.24.2007 SKYVIEW: fixed default image size and updated
-            url.</tt></li>
-        <li><tt>09.24.2007 PROJECTION: install callbacks only after
-            Button
-            Release.</tt></li>
-        <li><tt>09.25.2007 REGIONS: add xpa/command SHOW and SHOWTEXT
-            support.</tt></li>
-        <li><tt>09.25.2007 CONTOURS: fixed a problem with load contours
-            from the command line.</tt></li>
-        <li><tt>10.03.2007 MACOSX: MacOSX Aqua support is now fully
-            implemented!</tt></li>
-        <li><tt>10.03.2007 COLORMAP: pass colormap names thru
-            translation
-            tables</tt></li>
-        <li><tt>10.03.2007 XPA: update to version 2.1.8</tt></li>
-        <li><tt>10.05.2007 COMPOSITE: add global properties switch.</tt></li>
-        <li><tt>10.05.2007 LINE: fixed a problem with initial displayed
-            arrow checkboxes in dialog.</tt></li>
-        <li><tt>10.05.2007 FOV: moved FOV menu to more visible level</tt></li>
-        <li><tt>10.10.2007 I18N: add language support for French.</tt></li>
-        <li><tt>10.11.2007 CATALOGS: fixed a problem with the symbol
-            editor
-            dialog.</tt></li>
-        <li><tt><b>10.15.2007 RELEASE version 5.0</b></tt></li>
-        <li><tt>10.16.2007 PROJECTION: fixed a problem with the
-            coordinates
-            of the projection plot.</tt></li>
-        <li><tt>10.17.2007 RICE: fixed a problem with float and double
-            RICE
-            compression.</tt></li>
-        <li><tt>10.24.2007 RICE: fixed several problems with mosaics,
-            cubes
-            and RICE compression.</tt></li>
-        <li><tt>10.24.2007 GUI: added support for ds9 beta versions.</tt></li>
-        <li><tt>10.24.2007 PREFS: added OK and Cancel buttons to all
-            tabs.</tt></li>
-        <li><tt>10.29.2007 CATALOGS: implemented support for new CDS
-            catalogs search format.</tt></li>
-        <li><tt>10.30.2007 SAOTK: implemented reentrant parsers.</tt></li>
-        <li><tt>11.01.2007 SAOTK: now support any color for markers,
-            contours, etc.</tt></li>
-        <li><tt>11.02.2007 MACOSX/WINDOWS: fixed a problem with native
-            open
-            file dialog. If bad file name had been used, (or an
-            extention), an
-            error would occur.</tt></li>
-        <li><tt>11.07.2007 TCL/TK: update to version 8.4.16.</tt></li>
-        <li><tt>11.08.2007 PLOT: fixed a problem with xpa/command line
-            linear/line tokens to match documentation.</tt></li>
-        <li><tt>11.09.2007 PREFERENCES: fixed a problem with slower
-            ppcs.
-            use 'update idletasks' instead of 'update' to avoid possible
-            race
-            condition.</tt></li>
-        <li><tt>11.21.2007 XPA: update to version 2.1.9</tt></li>
-        <li><tt>11.21.2007 FUNTOOLS: update to version 1.4.1</tt></li>
-        <li><tt>11.21.2007 WCSSUBS: update to version 3.7.0</tt></li>
-        <li><tt>11.21.2007 TCLLIBS: update to version 1.10</tt></li>
-        <li><tt>11.28.2007 TCL/TK: update to version 8.4.17 beta.</tt></li>
-        <li><tt>11.28.2007 ANALYSIS: fix a problem with spaces in tmp
-            file
-            names.</tt></li>
-        <li><tt>12.05.2007 FLEXLEXER.Y: updated version.</tt></li>
-        <li><tt>12.06.2007 GUI: change key binding 'c' to 'r'. It
-            conflicts
-            with 'copy' on MacOSX and Windows platforms.</tt></li>
-        <li><tt>12.06.2007 REGIONS: fixed a problem with pasteing
-            regions
-            into an empty frame.</tt></li>
-        <li><tt>12.18.2007 ZIP: fixed a problem with the unix Makefile.</tt></li>
-        <li><tt>12.18.2007 FUNTOOLS: update to version 1.4.2.</tt></li>
-        <li><tt>12.18.2007 2MASS: limit size to 1024 arcsec.</tt></li>
-        <li><tt>12.21.2007 FITSY++: add support for HCOMPRESS compressed
-            FITS.</tt></li>
-        <li><tt>12.28.2007 FITSY++: add support for GZIP compressed
-            FITS.</tt></li>
-        <li><tt>01.03.2008 FITSY++: add support for PLIO compressed
-            FITS.</tt></li>
-        <li><tt>01.04.2008 GUI: fixed a problem with X11 servers that
-            return truecolor 32 bit when in fact the visual is truecolor
-            24bit.</tt></li>
-        <li><tt><b>01.15.2008 RELEASE version 5.1</b></tt></li>
-        <li><tt>01.17.2008 ANALYSIS: add the directory of any loaded
-            analysis file to the PATH.</tt></li>
-        <li><tt>01.22.2008 REGIONS: fixed a problem introduced with
-            reentrant parsers. Sexagesimal values between -00 and +00
-            were
-            incorrectly parsed as +00.</tt></li>
-        <li><tt>01.23.2008 REGIONS: fixed a problem with parsing HMS/DMS
-            coordinates.</tt></li>
-        <li><tt>01.24.2008 GUI: fixed a problem shift rotate mode.</tt></li>
-        <li><tt>01.24.2008 GUI: info panel 'Frame' width set to +4.</tt></li>
-        <li><tt>01.24.2008 GUI: add new goto frame menu.</tt></li>
-        <li><tt>01.24.2008 GUI: add support for move frames.</tt></li>
-        <li><tt>01.24.2008 ANALYSIS: for MacOSX tiger, wrap cmds with
-            shell
-            and PATH.</tt></li>
-        <li><tt>01.25.2008 CATALOGS: make sure xpa and command line
-            retrieves are syncronous.</tt></li>
-        <li><tt>01.28.2008 CONTOUR: fixed a problem with loading contour
-            levels into multiple frames.</tt></li>
-        <li><tt>01.31.2008 WINDOWS: changed how windows come into focus.</tt></li>
-        <li><tt>01.31.2008 TCL/TK: update to version 8.4.17.</tt></li>
-        <li><tt>02.07.2008 GUI: change default directory for standard
-            dialog to $HOME.</tt></li>
-        <li><tt>02.07.2008 ANALYSIS: add /sw/bin to default path for
-            MacOSX.</tt></li>
-        <li><tt>02.20.2008 CATALOGS: add support for editing a catalog
-            table and regions.</tt></li>
-        <li><tt>02.20.2008 TEXT: add enable rotation switch for text
-            regions.</tt></li>
-        <li><tt>02.20.2008 GUI: ds9 will now start in the users home
-            directory for MacOSX Aqua users when invoked from a double
-            click and
-            the default dialog box is Motif or Windows.</tt></li>
-        <li><tt>02.20.2008 TCL/TK: update to version 8.4.18.</tt></li>
-        <li><tt>02.26.2008 IIS: disable most keystroke and mouse events
-            for
-            iis frames.</tt></li>
-        <li><tt>02.28.2008 FITSY++: fixed a problem with save fits and
-            smoothed images.</tt></li>
-        <li><tt>02.29.2008 WCS: fixed a problem with calculating the
-            size
-            and center of complex fits images in WCS.</tt></li>
-        <li><tt>03.05.2008 GUI: backed out change key binding 'c' to
-            'r'.
-            It causes untold grief with IRAF.</tt></li>
-        <li><tt>03.10.2008 MACOSX: fixed a problem with printing non
-            standard colors.</tt></li>
-        <li><tt>03.10.2008 CATALOGS: catalog dialogs are now tied to the
-            frame. This allows multiple copies of the same catalog, one
-            per frame.</tt></li>
-        <li><tt>03.12.2008 GRID: added support for PC001001 formated WCS
-            keywords.</tt></li>
-        <li><tt>03.13.2008 IIS: make sure socket is closed on exec.</tt></li>
-        <li><tt>03.13.2008 WINDOWS: add support for native printing.</tt></li>
-        <li><tt>03.18.2008 CROSSHAIR: fix a problem with the line width
-            for
-            postscript.</tt></li>
-        <li><tt>03.18.2008 MACOSX: restore postscript printing.</tt></li>
-        <li><tt>03.18.2008 WINDOWS: restore postscript printing.</tt></li>
-        <li><tt>03.19.2008 GUI: enhancements with Find/FindNext in text
-            dialog windows.</tt></li>
-        <li><tt>03.19.2008 GUI: add console support.</tt></li>
-        <li><tt>03.24.2008 REGIONS: apply WCS to fits regions if
-            present.</tt></li>
-        <li><tt>03.25.2008 PREFS: fixed a problem with Zoom menu
-            preferences.</tt></li>
-        <li><tt>03.31.2008 GUI: add support for user configured button
-            bar.</tt></li>
-        <li><tt>04.03.2008 CATALOGS: add support for simbad.</tt></li>
-        <li><tt>04.04.2008 MASKS: fixed a problem with mask color
-            preference.</tt></li>
-        <li><tt>04.07.2008 IMEXAMINE: added support for key stroke
-            events.</tt></li>
-        <li><tt><b>04.15.2008 RELEASE version 5.2</b></tt></li>
-        <li><tt>04.18.2008 REGIONS: added support for centroid.</tt></li>
-        <li><tt>04.21.2008 GUI: fixed a problem with 'c' and control-c.</tt></li>
-        <li><tt>04.21.2008 IIS: fixed a problem key events. Now all key
-            events are active until IIS is in cursor mode. At this point
-            all key
-            events are passed to IRAF except for 'TAB'.</tt></li>
-        <li><tt>04.23.2008 MACOSX: split the binary and archive into two
-            files, and codesign the binary, so that it will play well
-            with
-            leopard's new firewall.</tt></li>
-        <li><tt>04.25.2008 FITSY++: fixed a proble with mapincr. If
-            seek_
-            is at end of file, mmap will not return an error.</tt></li>
-        <li><tt>04.28.2008 GUI: delete all frames resets the frame
-            counter
-            (broken in 5.2).</tt></li>
-        <li><tt>06.02.2008 GCC: remove all references to <iostream.h>
-              and
-              use <iostream> instead.</iostream></iostream.h></tt></li>
-        <li><tt>06.02.2008 GCC: support for gcc 4.2.</tt></li>
-        <li><tt>06.02.2008 GUI: fix typo in bin.tcl menus.</tt></li>
-        <li><tt>06.03.2008 FITSY++: changes to processing the header
-            where
-            ds9 will now work with illegal fits files that contains
-            NULLs instead
-            of SPACEs.</tt></li>
-        <li><tt>06.03.2008 RICE: implemented compatibility with cfitsio
-            3.08.</tt></li>
-        <li><tt>06.04.2008 GZIP: implemented compatibility with cfitsio
-            3.08.</tt></li>
-        <li><tt>06.04.2008 HCOMPRESS: implemented compatibility with
-            cfitsio 3.08.</tt></li>
-        <li><tt>06.05.2008 IIS: disable scale menu with iis frame (fixed
-            from version 5.2).</tt></li>
-        <li><tt>06.05.2008 REGIONS: fixed FITS regions polygon support.
-            Now
-            determine how many points based on the repeat value of the
-            column, but
-            check for .</tt></li>
-        <li><tt>06.06.2008 FITS: for saveimage fits, if non-linear WCS,
-            don't attempt to save WCS.</tt></li>
-        <li><tt>06.06.2008 BLINK: add xpa/command line option -blink
-            interval.</tt></li>
-        <li><tt>06.06.2008 REGIONS: add for DASH property.</tt></li>
-        <li><tt>07.11.2008 REGIONS: fixed a problem with the 'delete
-            all'
-            button.</tt></li>
-        <li><tt>07.16.2008 XPA: if CHECKDNS fails, set XPA_METHOD to
-            local
-            and initialize.</tt></li>
-        <li><tt>07.21.2008 PROJECTION: minor change to ensure that we
-            step
-            over the grid in 1 pixel values.</tt></li>
-        <li><tt>07.24.2008 IIS: add support for all 16 IIS colors.</tt></li>
-        <li><tt>07.25.2008 BINNING: fixed a problem with smooth and 3d
-            binning.</tt></li>
-        <li><tt>08.04.2008 FITSY++: fixed a problem with BSCALE/BZERO
-            and
-            float/double data types.</tt></li>
-        <li><tt>08.11.2008 CATALOGS: fixed a problem with catalogs
-            retrieved
-            via a cds search. The id returned would fail during
-            evaluation in
-            creating a valid header.</tt></li>
-        <li><tt>08.11.2008 CATALOGS: add CMC to catalog menu.</tt></li>
-        <li><tt>08.11.2008 GUI: fixed a problem with the initial
-            directory
-            for the standard dialog when loading from the command line.</tt></li>
-        <li><tt>08.14.2008 VECTOR: vast improvements in optimization.</tt></li>
-        <li><tt>08.19.2008 GUI: catch a failure to initialize window
-            system
-            (a problem with X11) and exit nice.</tt></li>
-        <li><tt>08.19.2008 MACOSX: fixed the window tab problem for Aqua
-            port.</tt></li>
-        <li><tt>08.19.2008 MACOSX: fixed canvas background issues.</tt></li>
-        <li><tt>08.20.2008 GUI: Add buttons to vertical layout.</tt></li>
-        <li><tt>09.10.2008 XPA: fixed a problem with blink interval &lt;
-            1.</tt></li>
-        <li><tt>09.12.2008 PREFS: add 'Preserve During Load' for scale,
-            pan, and regions.</tt></li>
-        <li><tt>09.12.2008 CONTOUR: add dash line option.</tt></li>
-        <li><tt>09.17.2008 PANNER: check to see if we are at pole.</tt></li>
-        <li><tt>09.17.2008 CATALOGS: add copy from row(s).</tt></li>
-        <li><tt>09.17.2008 REGIONS: look for new FITS POLYGON
-            termination
-            conditions</tt></li>
-        <li><tt>09.22.2008 COLORBAR: removed truecolor colorbar options.
-            Always paint the entire image.</tt></li>
-        <li><tt>09.25.2008 BINNING: automatically look for x,y then
-            ra,dec,
-            before settling for columns 1 and 2.</tt></li>
-        <li><tt>09.25.2008 IMEXAM: added 'any' event (returns with a
-            mouse
-            event or key event).</tt></li>
-        <li><tt>10.02.2008 CATALOGS: fixed a problem with size format
-            for
-            SIMBAD and NED. Degrees and ArcSecs were incorrectly
-            calculated.</tt></li>
-        <li><tt>10.03.2008 CATALOGS: Add support for CXC catalog.</tt></li>
-        <li><tt>10.08.2008 MACOSX: add MacOSX X11 10.5 firewall port.</tt></li>
-        <li><tt>10.10.2008 FOV: add sao/binospec.</tt></li>
-        <li><tt><b>10.15.2008 RELEASE version 5.3</b></tt></li>
-        <li><tt>10.17.2008 CATALOGS: removed support for Chandra Source
-            Catalog at request of Ian Evans of CXC.</tt></li>
-        <li><tt>10.22.2008 MASKS: add support for mask transparency.</tt></li>
-        <li><tt>10.24.2008 MASKS: add new mask properties.</tt></li>
-        <li><tt>10.28.2008 GRID: add grid title support.</tt></li>
-        <li><tt><b>10.31.2008 RELEASE version 5.4</b></tt></li>
-        <li><tt>10.31.2008 GRID: full grid support for command line and
-            xpa.</tt></li>
-        <li><tt>11.04.2008 FITSY: fixed a problem with header keywords
-            that
-            start with 'END'.</tt></li>
-        <li><tt>11.13.2008 FITSY: fixed a problem when there was a
-            failure
-            to correctly parse iraf or wcs keywords.</tt></li>
-        <li><tt>12.02.2008 FITS: for saveimage fits, fixed a problem
-            with
-            LTMV,DTMV, and WCS coordinates. They were off by 1 pixel in
-            x.</tt></li>
-        <li><tt>12.02.2008 GUI: fixed a problem with panning via click
-            and
-            drag.</tt></li>
-        <li><tt>12.04.2008 MPEG: changed makefiles to compile tkmpeg
-            code
-            without optiminzation. -O created invalid code for MacOSX
-            (and possible
-            others)</tt></li>
-        <li><tt>12.04.2008 REGIONS: fixed a problem when creating a
-            default
-            panda region via a mouse click.</tt></li>
-        <li><tt>12.05.2008 POSTSCRIPT: fixed a problem with printing
-            frames
-            that have no image loaded.</tt></li>
-        <li><tt>12.05.2008 CATALOGS: fixed a problem with using the
-            arrow
-            keys in catalog dialogs.</tt></li>
-        <li><tt>12.10.2008 REGIONS: fixed a problem elongated rotated
-            ellipses.</tt></li>
-        <li><tt>12.10.2008 MACOSX: fixed several problems with
-            processing
-            AppleEvents OpenDocument and PrintDocument. DS9 now supports
-            opendoc
-            and printdoc while currently running.</tt></li>
-        <li><tt>12.12.2008 IIS: re-enabled mouse events while in cursor
-            mode.</tt></li>
-        <li><tt>12.12.2008 IIS: trap arrow keys while in cursor mode, do
-            not pass to IRAF, instead warp cursor.</tt></li>
-        <li><tt>12.15.2008 SMOOTH: ignore NAN in smoothing convolution.</tt></li>
-        <li><tt>12.16.2008 GUI: fixed a problem with 'get fits size' to
-            make it behave in the regions of poles.</tt></li>
-        <li><tt>12.29.2008 IIS: try to decode OBJECT from iisMessageCmd.</tt></li>
-        <li><tt>12.29.2008 IIS: if frame is in cursor mode (via the
-            imexam
-            task), RESET FRAME, will attempt to clean up.</tt></li>
-        <li><tt>01.05.2009 FUNTOOLS: update to version 1.4.2.2</tt></li>
-        <li><tt>01.05.2009 WCSSUBS: update to version 3.7.6</tt></li>
-        <li><tt>01.05.2009 GUI: add support for loading FITS multiple
-            extension as multiple frames.</tt></li>
-        <li><tt>01.05.2009 EXAMINE: fixed many problems. Will work not
-            work
-            with data loaded via stdin or xpa fits.</tt></li>
-        <li><tt>01.15.2009 SMOOOTH: fixed a problem with BZERO and
-            BSCALE.
-            These keywords are reset to default values if present in the
-            smoothed
-            image, since the scaling has already been applied.</tt></li>
-        <li><tt>01.15.2009 FILTER: fixed an issue when unable to build a
-            valid filter. Previously, it would exit() the program. Now,
-            it will
-            issue an error message and continue.</tt></li>
-        <li><tt>01.16.2009 MACOSX: if using the X11 port of MacOSX,
-            increase the size of the window to make room for the size
-            tab, similar
-            for Aqua.</tt></li>
-        <li><tt>01.16.2009 SAVEAS: PNG now saves without GAMMA.</tt></li>
-        <li><tt>01.20.2009 GUI: Rearrange Frame menu and Region menu.
-            They
-            had grown too long and some window managers were having
-            difficulties.</tt></li>
-        <li><tt>01.21.2009 REGIONS: fixed a problem rendering Bezier
-            curves.</tt></li>
-        <li><tt><b>01.23.2009 RELEASE version 5.5</b></tt></li>
-        <li><tt><b>01.28.2009 RELEASE version 5.5.1</b></tt></li>
-        <li><tt>01.28.2009 GUI: fixed a problem in that the last file
-            name
-            loaded is incorrectly set if there are command line options
-            that follow
-            the file name.</tt></li>
-        <li><tt>02.02.2009 CATALOGS: updated urls for cds mirrors.</tt></li>
-        <li><tt>02.03.2009 CATALOGS: cleaned up tsv code. Will read
-            comma
-            and tab separted values, and will write tab separated
-            values. Assumes
-            first row is cols header unless first and second cols are
-            numbers, then
-            assumes ra, dec, in fk5 degrees.</tt></li>
-        <li><tt>02.04.2009 PSEUDOCOLOR: fixed a problem with the frame
-            not
-            remembering its current colormap bias and contrast setting
-            when
-            toggling between frames.</tt></li>
-        <li><tt>02.10.2009 BLT: fixed a problem zoombox under Aqua. XOR
-            draws are now disabled.</tt></li>
-        <li><tt>02.11.2009 CIAO: The ciao regions parser will now accept
-            compound region descriptions.</tt></li>
-        <li><tt>02.12.2009 CONTOURS: fixed a problem with command
-            line/xpa
-            dashed line parameter. Processing the -contour command is
-            now a lot more robust in determining missing parameters.</tt></li>
-        <li><tt>02.16.2009 HISTOGRAM EQU: fixed a problem with clipping
-            low = clipping high (usually as a result of ZSCALE).</tt></li>
-        <li><tt>02.19.2009 FITSY++: fixed a problem specifying an
-            extension number of 0 with a multiple extension file with no
-            primary image. It now properly fails to load.</tt></li>
-        <li><tt>02.19.2009 GUI: FITS multiple extension multiple frame
-            will now load a primary image if present.</tt></li>
-        <li><tt>02.19.2009 GUI: compressed FITS multiple extension
-            multiple frame will now load properly.</tt></li>
-        <li><tt>02.19.2009 GUI: FITS multiple extension multiple frame
-            will ignore any bin table extensions.</tt></li>
-        <li><tt>02.19.2009 BLT: add support for MacOSX native printing.</tt></li>
-        <li><tt>02.19.2009 PLOT: native printing now fully supported for
-            MacOSX and Windows.</tt></li>
-        <li><tt>02.24.2009 SAMP: add support for VO Simple Application
-            Messaging Protocol (SAMP). Will process image.load.fits and
-            table.load.votable events.</tt></li>
-        <li><tt>02.25.2009 FITSY++: fixed a problem with saving a slice
-            of a cube. The header had invalid keywords.</tt></li>
-        <li><tt>02.27.2009 CATALOGS: support VOTable format.</tt></li>
-        <li><tt>03.02.2009 MacOSX: support for the MacOSX X11 Leopard
-            10.5 non-firewall version has been discontinued.</tt></li>
-        <li><tt>03.02.2009 MacOSX: fixed a problem with plot y axis
-            titles offset.</tt></li>
-        <li><tt>03.02.2009 MacOSX: fixed a problem fork/exec and version
-            10.5 New version of tclMacNotify.c now used.</tt></li>
-        <li><tt>03.09.2009 FUNTOOLS: updated to version 1.4.3.</tt></li>
-        <li><tt>03.10.2009 REGIONS: fixed a problem with listing
-            irregular panda, ellipse panda, and box panda in
-            ds9/funtools format. The conjunction has been removed.</tt></li>
-        <li><tt>03.12.2009 GUI: If in tile mode, with only one frame,
-            and tile mode is set to manual, tile anyway (don't drop into
-            single mode).</tt></li>
-        <li><tt>03.12.2009 CATALOGS: speed up rendering of catalogs for
-            simple symbol filters.</tt></li>
-        <li><tt>03.12.2009 REGIONS: support wildcards in filename.</tt></li>
-        <li><tt>03.12.2009 REGIONS: add support for load into all
-            frames.</tt></li>
-        <li><tt>03.17.2009 GUI: Name server support now utilizies CDS
-            Sesame.</tt></li>
-        <li><tt>03.17.2009 SKYVIEW: fixed a problem processing the
-            survey query.</tt></li>
-        <li><tt>03.18.2009 HV: add support for cookies.</tt></li>
-        <li><tt>03.18.2009 ARCHIVES: add support for NVO Montage.</tt></li>
-        <li><tt>03.18.2009 REGIONS: fixed a problem calculating the WCS
-            angle of a flipped WCS.</tt></li>
-        <li><tt>03.18.2009 HV: add support for mime-type text/xml for
-            votable.</tt></li>
-        <li><tt>03.19.2009 CATALOGS: CDS now uses VOTABLE.</tt></li>
-        <li><tt>03.24.2009 CATALOGS: SIMBAD now uses VOTABLE.</tt></li>
-        <li><tt>03.24.2009 CATALOGS: NED now uses VOTABLE.</tt></li>
-        <li><tt>03.24.2009 CATALOGS: add preferences to download in
-            VOTABLE if available.</tt></li>
-        <li><tt>04.01.2009 GUI: when you delete a frame, the current
-            frame is reset to the previous frame, not the first frame.</tt></li>
-        <li><tt>04.06.2009 RULER: use preferences default distance
-            system.</tt></li>
-        <li><tt>04.06.2009 GUI: fixed a problem with open other url.</tt></li>
-        <li><tt>04.09.2009 PROJECTION: properly calculate width when
-            rebinning.</tt></li>
-        <li><tt><b>04.15.2009 RELEASE version 5.6</b></tt></li>
-        <li><tt>04.16.2009 REGIONS: fixed a rather nasty bug which
-            caused a segv when switching between modes after copy a
-            region from a frame.</tt></li>
-        <li><tt><b>04.16.2009 RELEASE version 5.6.1</b></tt></li>
-        <li><tt>04.17.2009 SAMP: use xmlrpc url method in POST header.</tt></li>
-        <li><tt>04.17.2009 CATALOGS: fixed a typo in the default SDSSR5
-            query.</tt></li>
-        <li><tt>04.20.2009 HV: fixed a problem with parsing query linked
-            to a button.</tt></li>
-        <li><tt><b>04.20.2009 RELEASE version 5.6.2</b></tt></li>
-        <li><tt>04.22.2009 PREFS: updated the default name server menu.</tt></li>
-        <li><tt>04.24.2009 FIRST: removed a debug statement which was
-            left in.</tt></li>
-        <li><tt>04.27.2009 REGIONS: fixed a problem loading a fits file
-            with specified extension.</tt></li>
-        <li><tt>04.28.2009 HV: fixed again a problem with parsing url
-            within a link with a query which contains a '?'.</tt></li>
-        <li><tt><b>04.30.2009 RELEASE version 5.6.3</b></tt></li>
-        <li><tt>05.01.2009 REGIONS: fixed a problem creating a text
-            region with arcsec or arcmin char.</tt></li>
-        <li><tt>05.01.2009 NAMESRVR: fixed a problem with simbad cfa
-            sexagesimal.</tt></li>
-        <li><tt>05.01.2009 CATALOGS: fixed a problem with quoting a
-            VOTABLE FIELD DESCRIPTION string.</tt></li>
-        <li><tt>05.01.2009 CATALOGS: add column parameters in header
-            output.</tt></li>
-        <li><tt>05.04.2009 SAMP: fixed a problem with select row list.</tt></li>
-        <li><tt>05.04.2009 REGIONS: add list to xpa and command line
-            regions option.</tt></li>
-        <li><tt>05.21.2009 NVSS: add NVSS Image server back.</tt></li>
-        <li><tt>05.26.2009 NAMESRVR: set default name server to cds.</tt></li>
-        <li><tt>05.26.2009 CATALOGS: set default catalog erver to cds.</tt></li>
-        <li><tt>05.26.2009 SAMP: fixed a proble with quoting filenames
-            and urls for xml.</tt></li>
-        <li><tt>05.26.2009 CATALOGS: will now try to determine the RA
-            and DEC cols via the UCD if available.</tt></li>
-        <li><tt>05.26.2009 GUI: fixed a problem with standard dialog
-            boxes and MacOSX Aqua and Windows. The dialogbox would
-            sometimes fail to rise to top.</tt></li>
-        <li><tt>05.27.2009 GUI: WCS menu correctly updates print
-            coordinate parameters.</tt></li>
-        <li><tt>05.27.2009 REGIONS: autocentroid now works for move,
-            edit, and rotate.</tt></li>
-        <li><tt>05.27.2009 CATALOGS: CDS Search now retrieves search
-            options from cds.</tt></li>
-        <li><tt>05.27.2009 CATALOGS: fixed a problem with FILTER and
-            VOTable. The votable cols params were not being properly
-            transfered to the new filtered table.</tt></li>
-        <li><tt>06.10.2009 REGIONS: DS9 regions syntax now supported in
-            VOTable format.</tt></li>
-        <li><tt>06.11.2009 CATALOGS: "No Items Found" is now displayed
-            on status line and not as a model dialog.</tt></li>
-        <li><tt>06.11.2009 REGIONS: fixed problem with dashed lines with
-            rotated ellipses.</tt></li>
-        <li><tt>06.11.2009 GUI: fixed problem with standard file dialog
-            boxes. Now, command line options and xpa command DOES NOT
-            CHANGE the current directory. Only the use of the dialog box
-            will reset the current directory.</tt></li>
-        <li><tt>06.11.2009 SAMP: don't send empty catalogs.</tt></li>
-        <li><tt>06.11.2009 CATALOGS: don't write empty catalogs.</tt></li>
-        <li><tt>06.11.2009 FILTER: fixed a problem with parsing filters
-            on the command line that contain quotes.</tt></li>
-        <li><tt>06.16.2009 SAMP: the samp port number is now
-            automatically determined at connection time.</tt></li>
-        <li><tt>06.17.2009 CATALOGS: for VOTables, change id to ID.</tt></li>
-        <li><tt>06.17.2009 CATALOGS: Add ID param to CXC catalog.</tt></li>
-        <li><tt>06.17.2009 SAMP: send unique catalog table-id for each
-            catalog so tha multiple copies of ds9 with the same catalog
-            loaded don't walk all over each other when connected to a
-            hub.</tt></li>
-        <li><tt>06.18.2009 REGIONS: Update info box, graphs, and pixel
-            table when draging in pointer and catalog mode.</tt></li>
-        <li><tt>06.18.2009 GUI: clean up code which enables/disables WCS
-            menus based on current frame.</tt></li>
-        <li><tt>06.19.2009 HV: add support for arrow keys and mouse
-            wheel.</tt></li>
-        <li><tt>06.19.2009 HV: add support for copy key shortcut.</tt></li>
-        <li><tt>06.19.2009 HV: add support for Return key shortcut for
-            Submit.</tt></li>
-        <li><tt>06.25.2009 GUI: update crosshair, infobox, pixeltable
-            when changing current slice in crosshair mode.</tt></li>
-        <li><tt>06.25.2009 REGIONS: fixed a problem with
-            create/load/save regions with mosaic. The WCS of the first
-            mosaic segment loaded is used for all regions.</tt></li>
-        <li><tt>06.30.2009 REGIONS: removed listwcs option for ds9
-            format.</tt></li>
-        <li><tt>06.30.2009 IIS: disabled annoying 'port/addr already in
-            use' error message.</tt></li>
-        <li><tt>07.06.2009 BINNING: add update button to bin dialog.</tt></li>
-        <li><tt>07.06.2009 HV: add enhancements to allow complete
-            control over a web browser window.</tt></li>
-        <li><tt>07.06.2009 VO: add enhancements to allow complete
-            control over the vo dialog.</tt></li>
-        <li><tt>07.09.2009 XPA: 'page setup' has been renamed pagesetup.</tt></li>
-        <li><tt>07.15.2009 HV: support for sync http added.</tt></li>
-        <li><tt>07.15.2009 VO: support for sync http added.</tt></li>
-        <li><tt>07.15.2009 ANALYSIS: support for sync http added.</tt></li>
-        <li><tt>07.15.2009 ANALYSIS: analysis tasks invoked via xpa or
-            command line are now run in blocking (sync) mode.</tt></li>
-        <li><tt>07.16.2009 XPA: added optional param to xpaget array to
-            specify the endianness.</tt></li>
-        <li><tt>08.05.2009 XPA: add sleep command.</tt></li>
-        <li><tt>08.05.2009 GUI: add sleep command line option.</tt></li>
-        <li><tt>08.10.2009 GUI: fixed command line option commands.</tt></li>
-        <li><tt>08.10.2009 CATALOGS: for CDS catalogs, ignore the UCD at
-            first and look for _RAJ2000 and _DEJ2000, then the UCD, then
-            a list of common names.</tt></li>
-        <li><tt>08.11.2009 GUI: update Magnifier in Pan mode and key
-            arrows.</tt></li>
-        <li><tt>08.12.2009 WINDOWS: Add support for wildcard filename
-            expansion if invoked from DOS shell.</tt></li>
-        <li><tt>08.12.2009 REGIONS: Add support for load template at ra
-            dec skyframe.</tt></li>
-        <li><tt>08.20.2009 MOSAIC: default for loading mosaics is now
-            WCS not IRAF.</tt></li>
-        <li><tt>08.25.2009 SAMP: implemented full XPA capabilities via
-            SAMP.</tt></li>
-        <li><tt>08.25.2009 I18N: make changes to fitsy++ lexer to allow
-            non-single byte chars in filenames and paths.</tt></li>
-        <li><tt>08.26.2009 SAMP: fixed a problem with parsing the
-            hub.xmlrup.url.</tt></li>
-        <li><tt>08.26.2009 XPA: update to version 2.1.10.</tt></li>
-        <li><tt>08.27.2009 FUNTOOLS: update to version 1.4.4.</tt></li>
-        <li><tt>09.01.2009 SAMP: fixed a problem with extra key value
-            pairs in message.</tt></li>
-        <li><tt>09.01.2009 CATALOGS: add default samp command.</tt></li>
-        <li><tt>09.01.2009 CATALOGS: removed modal dialog info box
-            calls. Messages are now updated in the status windows.</tt></li>
-        <li><tt>09.01.2009 GUI: added new level of menu updates that are
-            only executed when a frame is create or deleted and not
-            everytime there is a change of state.</tt></li>
-        <li><tt>09.03.2009 WINDOWS: disable menu updates during blinking
-            because windows redraws the menu window each time the
-            configuration is changed.</tt></li>
-        <li><tt>09.03.2009 SOLARIS: removed support for Solaris&lt;9.0.
-            DS9 now requires libxml2 be supported by the OS.</tt></li>
-        <li><tt>09.03.2009 GUI: added signal handling for non-windows.
-            We now trap SIGINT and clean up before exiting.</tt></li>
-        <li><tt>09.08.2009 I18N: fixed a problem with spaces in
-            filename.</tt></li>
-        <li><tt>09.08.2009 SAMP: fixed a problem using a hub that uses
-            the Apache xmlrpc library.</tt></li>
-        <li><tt>09.10.2009 SAMP: fixed a problem with invalid ds9.get
-            commands.</tt></li>
-        <li><tt>09.10.2009 GUI: cmap xpa, samp, and command line option
-            is now much more tolerant to capitalization and spellings.</tt></li>
-        <li><tt>09.10.2009 WINDOWS: tcc is now used for the bin filter
-            compiler. cygwin is no longer required.</tt></li>
-        <li><tt>09.21.2009 MACOSX: ports to Tiger (10.4), Leopard
-            (10.5), and Snow Leopard (10.6) are now built under 10.6</tt></li>
-        <li><tt>09.22.2009 MACOSX: fixed a problem with snowleopard. For
-            32bit visuals, the alpha channel is set to 0xff, not 0.</tt></li>
-        <li><tt>09.28.2009 XPA: add XPA connect/disconnect menu options.</tt></li>
-        <li><tt>09.29.2009 RGB: fixed a problem with displaying images
-            with NAN.</tt></li>
-        <li><tt>10.02.2009 MACOSX: pcc is now used for the bin filter
-            compiler of i386 platforms if XCode is not installed./tt&gt;</tt></li>
-        <tt>
-          <li><tt>10.09.2009 ANALYSIS: fixed a problem with analysis
-              plot command to maintain backward compatibility./tt&gt;</tt></li>
-          <tt>
-            <li><tt>10.12.2009 SMOOTH: fixed a problem that smooth is
-                reset when no image is loaded. /tt&gt;</tt></li>
-            <tt>
-              <li><tt><b>10.15.2009 RELEASE version 5.7</b></tt></li>
-            </tt></tt></tt>
-      </ol>
-      <tt><tt>
-        </tt></tt>
-    </ol>
-    <tt><tt>
-      </tt></tt>
-  </body>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
+<meta http-equiv="Content-Type" content=
+"text/html; charset=us-ascii">
+<meta name="GENERATOR" content=
+"Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<title>DS9 Version 5 Release Notes</title>
+</head>
+<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor=
+"#FFFFFF" alink="#FF0000">
+<h3><img alt="" src="../sun.gif" width="100" height="98" align=
+"middle"> SAOImageDS9 Version 5 Release Notes</h3>
+<div style="margin-left: 2em">
+<ol>
+<li><tt>07.16.2007 FITSY++: fix a problem with rice compressed
+images and multiple tiles.</tt></li>
+<li><tt>07.17.2007 MOSAIC: fix a problem with bin table extensions
+at the end of a mosaic image wcs.</tt></li>
+<li><tt>07.20.2007 COLORMAP: fixed a problem with loading external
+colormaps.</tt></li>
+<li><tt>07.20.2007 COLORMAP: fixed a problem colormap
+menus.</tt></li>
+<li><tt>07.23.2007 ARCHIVES: new url for skyview.</tt></li>
+<li><tt>07.23.2007 I18N: add language support for Japanese. (many
+thanks to Masahiro Tsujimoto!).</tt></li>
+<li><tt>07.23.2007 PIXEL TABLE: xpaget will now return the pixel
+table values.</tt></li>
+<li><tt>07.31.2007 SOLARISx86: now supporting solarisx86.</tt></li>
+<li><tt>08.15.2007 PIXELTABLE: fixed a minor problem with xpaget
+pixeltable.</tt></li>
+<li><tt>08.15.2007 FUNTOOLS: update to version 1.4.0</tt></li>
+<li><tt>08.15.2007 IIS: fixed a problem with frame number greater
+than 10.</tt></li>
+<li><tt>08.15.2007 EXAMINE: changed frame name to
+'Frame'.</tt></li>
+<li><tt>09.02.2007 CATALOGS: updated urls and menu
+titles.</tt></li>
+<li><tt>09.20.2007 PREFS: new prefs dialog box.</tt></li>
+<li><tt>09.24.2007 CATALOGS: fixed a problem with the CDS
+query.</tt></li>
+<li><tt>09.24.2007 CATALOGS: add SDSS DR6.</tt></li>
+<li><tt>09.24.2007 SKYVIEW: fixed default image size and updated
+url.</tt></li>
+<li><tt>09.24.2007 PROJECTION: install callbacks only after Button
+Release.</tt></li>
+<li><tt>09.25.2007 REGIONS: add xpa/command SHOW and SHOWTEXT
+support.</tt></li>
+<li><tt>09.25.2007 CONTOURS: fixed a problem with load contours
+from the command line.</tt></li>
+<li><tt>10.03.2007 MACOSX: MacOSX Aqua support is now fully
+implemented!</tt></li>
+<li><tt>10.03.2007 COLORMAP: pass colormap names thru translation
+tables</tt></li>
+<li><tt>10.03.2007 XPA: update to version 2.1.8</tt></li>
+<li><tt>10.05.2007 COMPOSITE: add global properties
+switch.</tt></li>
+<li><tt>10.05.2007 LINE: fixed a problem with initial displayed
+arrow checkboxes in dialog.</tt></li>
+<li><tt>10.05.2007 FOV: moved FOV menu to more visible
+level</tt></li>
+<li><tt>10.10.2007 I18N: add language support for French.</tt></li>
+<li><tt>10.11.2007 CATALOGS: fixed a problem with the symbol editor
+dialog.</tt></li>
+<li><tt><b>10.15.2007 RELEASE version 5.0</b></tt></li>
+<li><tt>10.16.2007 PROJECTION: fixed a problem with the coordinates
+of the projection plot.</tt></li>
+<li><tt>10.17.2007 RICE: fixed a problem with float and double RICE
+compression.</tt></li>
+<li><tt>10.24.2007 RICE: fixed several problems with mosaics, cubes
+and RICE compression.</tt></li>
+<li><tt>10.24.2007 GUI: added support for ds9 beta
+versions.</tt></li>
+<li><tt>10.24.2007 PREFS: added OK and Cancel buttons to all
+tabs.</tt></li>
+<li><tt>10.29.2007 CATALOGS: implemented support for new CDS
+catalogs search format.</tt></li>
+<li><tt>10.30.2007 SAOTK: implemented reentrant parsers.</tt></li>
+<li><tt>11.01.2007 SAOTK: now support any color for markers,
+contours, etc.</tt></li>
+<li><tt>11.02.2007 MACOSX/WINDOWS: fixed a problem with native open
+file dialog. If bad file name had been used, (or an extention), an
+error would occur.</tt></li>
+<li><tt>11.07.2007 TCL/TK: update to version 8.4.16.</tt></li>
+<li><tt>11.08.2007 PLOT: fixed a problem with xpa/command line
+linear/line tokens to match documentation.</tt></li>
+<li><tt>11.09.2007 PREFERENCES: fixed a problem with slower ppcs.
+use 'update idletasks' instead of 'update' to avoid possible race
+condition.</tt></li>
+<li><tt>11.21.2007 XPA: update to version 2.1.9</tt></li>
+<li><tt>11.21.2007 FUNTOOLS: update to version 1.4.1</tt></li>
+<li><tt>11.21.2007 WCSSUBS: update to version 3.7.0</tt></li>
+<li><tt>11.21.2007 TCLLIBS: update to version 1.10</tt></li>
+<li><tt>11.28.2007 TCL/TK: update to version 8.4.17 beta.</tt></li>
+<li><tt>11.28.2007 ANALYSIS: fix a problem with spaces in tmp file
+names.</tt></li>
+<li><tt>12.05.2007 FLEXLEXER.Y: updated version.</tt></li>
+<li><tt>12.06.2007 GUI: change key binding 'c' to 'r'. It conflicts
+with 'copy' on MacOSX and Windows platforms.</tt></li>
+<li><tt>12.06.2007 REGIONS: fixed a problem with pasteing regions
+into an empty frame.</tt></li>
+<li><tt>12.18.2007 ZIP: fixed a problem with the unix
+Makefile.</tt></li>
+<li><tt>12.18.2007 FUNTOOLS: update to version 1.4.2.</tt></li>
+<li><tt>12.18.2007 2MASS: limit size to 1024 arcsec.</tt></li>
+<li><tt>12.21.2007 FITSY++: add support for HCOMPRESS compressed
+FITS.</tt></li>
+<li><tt>12.28.2007 FITSY++: add support for GZIP compressed
+FITS.</tt></li>
+<li><tt>01.03.2008 FITSY++: add support for PLIO compressed
+FITS.</tt></li>
+<li><tt>01.04.2008 GUI: fixed a problem with X11 servers that
+return truecolor 32 bit when in fact the visual is truecolor
+24bit.</tt></li>
+<li><tt><b>01.15.2008 RELEASE version 5.1</b></tt></li>
+<li><tt>01.17.2008 ANALYSIS: add the directory of any loaded
+analysis file to the PATH.</tt></li>
+<li><tt>01.22.2008 REGIONS: fixed a problem introduced with
+reentrant parsers. Sexagesimal values between -00 and +00 were
+incorrectly parsed as +00.</tt></li>
+<li><tt>01.23.2008 REGIONS: fixed a problem with parsing HMS/DMS
+coordinates.</tt></li>
+<li><tt>01.24.2008 GUI: fixed a problem shift rotate
+mode.</tt></li>
+<li><tt>01.24.2008 GUI: info panel 'Frame' width set to
++4.</tt></li>
+<li><tt>01.24.2008 GUI: add new goto frame menu.</tt></li>
+<li><tt>01.24.2008 GUI: add support for move frames.</tt></li>
+<li><tt>01.24.2008 ANALYSIS: for MacOSX tiger, wrap cmds with shell
+and PATH.</tt></li>
+<li><tt>01.25.2008 CATALOGS: make sure xpa and command line
+retrieves are syncronous.</tt></li>
+<li><tt>01.28.2008 CONTOUR: fixed a problem with loading contour
+levels into multiple frames.</tt></li>
+<li><tt>01.31.2008 WINDOWS: changed how windows come into
+focus.</tt></li>
+<li><tt>01.31.2008 TCL/TK: update to version 8.4.17.</tt></li>
+<li><tt>02.07.2008 GUI: change default directory for standard
+dialog to $HOME.</tt></li>
+<li><tt>02.07.2008 ANALYSIS: add /sw/bin to default path for
+MacOSX.</tt></li>
+<li><tt>02.20.2008 CATALOGS: add support for editing a catalog
+table and regions.</tt></li>
+<li><tt>02.20.2008 TEXT: add enable rotation switch for text
+regions.</tt></li>
+<li><tt>02.20.2008 GUI: ds9 will now start in the users home
+directory for MacOSX Aqua users when invoked from a double click
+and the default dialog box is Motif or Windows.</tt></li>
+<li><tt>02.20.2008 TCL/TK: update to version 8.4.18.</tt></li>
+<li><tt>02.26.2008 IIS: disable most keystroke and mouse events for
+iis frames.</tt></li>
+<li><tt>02.28.2008 FITSY++: fixed a problem with save fits and
+smoothed images.</tt></li>
+<li><tt>02.29.2008 WCS: fixed a problem with calculating the size
+and center of complex fits images in WCS.</tt></li>
+<li><tt>03.05.2008 GUI: backed out change key binding 'c' to 'r'.
+It causes untold grief with IRAF.</tt></li>
+<li><tt>03.10.2008 MACOSX: fixed a problem with printing non
+standard colors.</tt></li>
+<li><tt>03.10.2008 CATALOGS: catalog dialogs are now tied to the
+frame. This allows multiple copies of the same catalog, one per
+frame.</tt></li>
+<li><tt>03.12.2008 GRID: added support for PC001001 formated WCS
+keywords.</tt></li>
+<li><tt>03.13.2008 IIS: make sure socket is closed on
+exec.</tt></li>
+<li><tt>03.13.2008 WINDOWS: add support for native
+printing.</tt></li>
+<li><tt>03.18.2008 CROSSHAIR: fix a problem with the line width for
+postscript.</tt></li>
+<li><tt>03.18.2008 MACOSX: restore postscript printing.</tt></li>
+<li><tt>03.18.2008 WINDOWS: restore postscript printing.</tt></li>
+<li><tt>03.19.2008 GUI: enhancements with Find/FindNext in text
+dialog windows.</tt></li>
+<li><tt>03.19.2008 GUI: add console support.</tt></li>
+<li><tt>03.24.2008 REGIONS: apply WCS to fits regions if
+present.</tt></li>
+<li><tt>03.25.2008 PREFS: fixed a problem with Zoom menu
+preferences.</tt></li>
+<li><tt>03.31.2008 GUI: add support for user configured button
+bar.</tt></li>
+<li><tt>04.03.2008 CATALOGS: add support for simbad.</tt></li>
+<li><tt>04.04.2008 MASKS: fixed a problem with mask color
+preference.</tt></li>
+<li><tt>04.07.2008 IMEXAMINE: added support for key stroke
+events.</tt></li>
+<li><tt><b>04.15.2008 RELEASE version 5.2</b></tt></li>
+<li><tt>04.18.2008 REGIONS: added support for centroid.</tt></li>
+<li><tt>04.21.2008 GUI: fixed a problem with 'c' and
+control-c.</tt></li>
+<li><tt>04.21.2008 IIS: fixed a problem key events. Now all key
+events are active until IIS is in cursor mode. At this point all
+key events are passed to IRAF except for 'TAB'.</tt></li>
+<li><tt>04.23.2008 MACOSX: split the binary and archive into two
+files, and codesign the binary, so that it will play well with
+leopard's new firewall.</tt></li>
+<li><tt>04.25.2008 FITSY++: fixed a proble with mapincr. If seek_
+is at end of file, mmap will not return an error.</tt></li>
+<li><tt>04.28.2008 GUI: delete all frames resets the frame counter
+(broken in 5.2).</tt></li>
+<li><tt>06.02.2008 GCC: remove all references to "iostream.h" and
+use "iostream" instead.</tt></li>
+<li><tt>06.02.2008 GCC: support for gcc 4.2.</tt></li>
+<li><tt>06.02.2008 GUI: fix typo in bin.tcl menus.</tt></li>
+<li><tt>06.03.2008 FITSY++: changes to processing the header where
+ds9 will now work with illegal fits files that contains NULLs
+instead of SPACEs.</tt></li>
+<li><tt>06.03.2008 RICE: implemented compatibility with cfitsio
+3.08.</tt></li>
+<li><tt>06.04.2008 GZIP: implemented compatibility with cfitsio
+3.08.</tt></li>
+<li><tt>06.04.2008 HCOMPRESS: implemented compatibility with
+cfitsio 3.08.</tt></li>
+<li><tt>06.05.2008 IIS: disable scale menu with iis frame (fixed
+from version 5.2).</tt></li>
+<li><tt>06.05.2008 REGIONS: fixed FITS regions polygon support. Now
+determine how many points based on the repeat value of the column,
+but check for .</tt></li>
+<li><tt>06.06.2008 FITS: for saveimage fits, if non-linear WCS,
+don't attempt to save WCS.</tt></li>
+<li><tt>06.06.2008 BLINK: add xpa/command line option -blink
+interval.</tt></li>
+<li><tt>06.06.2008 REGIONS: add for DASH property.</tt></li>
+<li><tt>07.11.2008 REGIONS: fixed a problem with the 'delete all'
+button.</tt></li>
+<li><tt>07.16.2008 XPA: if CHECKDNS fails, set XPA_METHOD to local
+and initialize.</tt></li>
+<li><tt>07.21.2008 PROJECTION: minor change to ensure that we step
+over the grid in 1 pixel values.</tt></li>
+<li><tt>07.24.2008 IIS: add support for all 16 IIS
+colors.</tt></li>
+<li><tt>07.25.2008 BINNING: fixed a problem with smooth and 3d
+binning.</tt></li>
+<li><tt>08.04.2008 FITSY++: fixed a problem with BSCALE/BZERO and
+float/double data types.</tt></li>
+<li><tt>08.11.2008 CATALOGS: fixed a problem with catalogs
+retrieved via a cds search. The id returned would fail during
+evaluation in creating a valid header.</tt></li>
+<li><tt>08.11.2008 CATALOGS: add CMC to catalog menu.</tt></li>
+<li><tt>08.11.2008 GUI: fixed a problem with the initial directory
+for the standard dialog when loading from the command
+line.</tt></li>
+<li><tt>08.14.2008 VECTOR: vast improvements in
+optimization.</tt></li>
+<li><tt>08.19.2008 GUI: catch a failure to initialize window system
+(a problem with X11) and exit nice.</tt></li>
+<li><tt>08.19.2008 MACOSX: fixed the window tab problem for Aqua
+port.</tt></li>
+<li><tt>08.19.2008 MACOSX: fixed canvas background
+issues.</tt></li>
+<li><tt>08.20.2008 GUI: Add buttons to vertical layout.</tt></li>
+<li><tt>09.10.2008 XPA: fixed a problem with blink interval &lt;
+1.</tt></li>
+<li><tt>09.12.2008 PREFS: add 'Preserve During Load' for scale,
+pan, and regions.</tt></li>
+<li><tt>09.12.2008 CONTOUR: add dash line option.</tt></li>
+<li><tt>09.17.2008 PANNER: check to see if we are at
+pole.</tt></li>
+<li><tt>09.17.2008 CATALOGS: add copy from row(s).</tt></li>
+<li><tt>09.17.2008 REGIONS: look for new FITS POLYGON termination
+conditions</tt></li>
+<li><tt>09.22.2008 COLORBAR: removed truecolor colorbar options.
+Always paint the entire image.</tt></li>
+<li><tt>09.25.2008 BINNING: automatically look for x,y then ra,dec,
+before settling for columns 1 and 2.</tt></li>
+<li><tt>09.25.2008 IMEXAM: added 'any' event (returns with a mouse
+event or key event).</tt></li>
+<li><tt>10.02.2008 CATALOGS: fixed a problem with size format for
+SIMBAD and NED. Degrees and ArcSecs were incorrectly
+calculated.</tt></li>
+<li><tt>10.03.2008 CATALOGS: Add support for CXC catalog.</tt></li>
+<li><tt>10.08.2008 MACOSX: add MacOSX X11 10.5 firewall
+port.</tt></li>
+<li><tt>10.10.2008 FOV: add sao/binospec.</tt></li>
+<li><tt><b>10.15.2008 RELEASE version 5.3</b></tt></li>
+<li><tt>10.17.2008 CATALOGS: removed support for Chandra Source
+Catalog at request of Ian Evans of CXC.</tt></li>
+<li><tt>10.22.2008 MASKS: add support for mask
+transparency.</tt></li>
+<li><tt>10.24.2008 MASKS: add new mask properties.</tt></li>
+<li><tt>10.28.2008 GRID: add grid title support.</tt></li>
+<li><tt><b>10.31.2008 RELEASE version 5.4</b></tt></li>
+<li><tt>10.31.2008 GRID: full grid support for command line and
+xpa.</tt></li>
+<li><tt>11.04.2008 FITSY: fixed a problem with header keywords that
+start with 'END'.</tt></li>
+<li><tt>11.13.2008 FITSY: fixed a problem when there was a failure
+to correctly parse iraf or wcs keywords.</tt></li>
+<li><tt>12.02.2008 FITS: for saveimage fits, fixed a problem with
+LTMV,DTMV, and WCS coordinates. They were off by 1 pixel in
+x.</tt></li>
+<li><tt>12.02.2008 GUI: fixed a problem with panning via click and
+drag.</tt></li>
+<li><tt>12.04.2008 MPEG: changed makefiles to compile tkmpeg code
+without optiminzation. -O created invalid code for MacOSX (and
+possible others)</tt></li>
+<li><tt>12.04.2008 REGIONS: fixed a problem when creating a default
+panda region via a mouse click.</tt></li>
+<li><tt>12.05.2008 POSTSCRIPT: fixed a problem with printing frames
+that have no image loaded.</tt></li>
+<li><tt>12.05.2008 CATALOGS: fixed a problem with using the arrow
+keys in catalog dialogs.</tt></li>
+<li><tt>12.10.2008 REGIONS: fixed a problem elongated rotated
+ellipses.</tt></li>
+<li><tt>12.10.2008 MACOSX: fixed several problems with processing
+AppleEvents OpenDocument and PrintDocument. DS9 now supports
+opendoc and printdoc while currently running.</tt></li>
+<li><tt>12.12.2008 IIS: re-enabled mouse events while in cursor
+mode.</tt></li>
+<li><tt>12.12.2008 IIS: trap arrow keys while in cursor mode, do
+not pass to IRAF, instead warp cursor.</tt></li>
+<li><tt>12.15.2008 SMOOTH: ignore NAN in smoothing
+convolution.</tt></li>
+<li><tt>12.16.2008 GUI: fixed a problem with 'get fits size' to
+make it behave in the regions of poles.</tt></li>
+<li><tt>12.29.2008 IIS: try to decode OBJECT from
+iisMessageCmd.</tt></li>
+<li><tt>12.29.2008 IIS: if frame is in cursor mode (via the imexam
+task), RESET FRAME, will attempt to clean up.</tt></li>
+<li><tt>01.05.2009 FUNTOOLS: update to version 1.4.2.2</tt></li>
+<li><tt>01.05.2009 WCSSUBS: update to version 3.7.6</tt></li>
+<li><tt>01.05.2009 GUI: add support for loading FITS multiple
+extension as multiple frames.</tt></li>
+<li><tt>01.05.2009 EXAMINE: fixed many problems. Will work not work
+with data loaded via stdin or xpa fits.</tt></li>
+<li><tt>01.15.2009 SMOOOTH: fixed a problem with BZERO and BSCALE.
+These keywords are reset to default values if present in the
+smoothed image, since the scaling has already been
+applied.</tt></li>
+<li><tt>01.15.2009 FILTER: fixed an issue when unable to build a
+valid filter. Previously, it would exit() the program. Now, it will
+issue an error message and continue.</tt></li>
+<li><tt>01.16.2009 MACOSX: if using the X11 port of MacOSX,
+increase the size of the window to make room for the size tab,
+similar for Aqua.</tt></li>
+<li><tt>01.16.2009 SAVEAS: PNG now saves without GAMMA.</tt></li>
+<li><tt>01.20.2009 GUI: Rearrange Frame menu and Region menu. They
+had grown too long and some window managers were having
+difficulties.</tt></li>
+<li><tt>01.21.2009 REGIONS: fixed a problem rendering Bezier
+curves.</tt></li>
+<li><tt><b>01.23.2009 RELEASE version 5.5</b></tt></li>
+<li><tt><b>01.28.2009 RELEASE version 5.5.1</b></tt></li>
+<li><tt>01.28.2009 GUI: fixed a problem in that the last file name
+loaded is incorrectly set if there are command line options that
+follow the file name.</tt></li>
+<li><tt>02.02.2009 CATALOGS: updated urls for cds
+mirrors.</tt></li>
+<li><tt>02.03.2009 CATALOGS: cleaned up tsv code. Will read comma
+and tab separted values, and will write tab separated values.
+Assumes first row is cols header unless first and second cols are
+numbers, then assumes ra, dec, in fk5 degrees.</tt></li>
+<li><tt>02.04.2009 PSEUDOCOLOR: fixed a problem with the frame not
+remembering its current colormap bias and contrast setting when
+toggling between frames.</tt></li>
+<li><tt>02.10.2009 BLT: fixed a problem zoombox under Aqua. XOR
+draws are now disabled.</tt></li>
+<li><tt>02.11.2009 CIAO: The ciao regions parser will now accept
+compound region descriptions.</tt></li>
+<li><tt>02.12.2009 CONTOURS: fixed a problem with command line/xpa
+dashed line parameter. Processing the -contour command is now a lot
+more robust in determining missing parameters.</tt></li>
+<li><tt>02.16.2009 HISTOGRAM EQU: fixed a problem with clipping low
+= clipping high (usually as a result of ZSCALE).</tt></li>
+<li><tt>02.19.2009 FITSY++: fixed a problem specifying an extension
+number of 0 with a multiple extension file with no primary image.
+It now properly fails to load.</tt></li>
+<li><tt>02.19.2009 GUI: FITS multiple extension multiple frame will
+now load a primary image if present.</tt></li>
+<li><tt>02.19.2009 GUI: compressed FITS multiple extension multiple
+frame will now load properly.</tt></li>
+<li><tt>02.19.2009 GUI: FITS multiple extension multiple frame will
+ignore any bin table extensions.</tt></li>
+<li><tt>02.19.2009 BLT: add support for MacOSX native
+printing.</tt></li>
+<li><tt>02.19.2009 PLOT: native printing now fully supported for
+MacOSX and Windows.</tt></li>
+<li><tt>02.24.2009 SAMP: add support for VO Simple Application
+Messaging Protocol (SAMP). Will process image.load.fits and
+table.load.votable events.</tt></li>
+<li><tt>02.25.2009 FITSY++: fixed a problem with saving a slice of
+a cube. The header had invalid keywords.</tt></li>
+<li><tt>02.27.2009 CATALOGS: support VOTable format.</tt></li>
+<li><tt>03.02.2009 MacOSX: support for the MacOSX X11 Leopard 10.5
+non-firewall version has been discontinued.</tt></li>
+<li><tt>03.02.2009 MacOSX: fixed a problem with plot y axis titles
+offset.</tt></li>
+<li><tt>03.02.2009 MacOSX: fixed a problem fork/exec and version
+10.5 New version of tclMacNotify.c now used.</tt></li>
+<li><tt>03.09.2009 FUNTOOLS: updated to version 1.4.3.</tt></li>
+<li><tt>03.10.2009 REGIONS: fixed a problem with listing irregular
+panda, ellipse panda, and box panda in ds9/funtools format. The
+conjunction has been removed.</tt></li>
+<li><tt>03.12.2009 GUI: If in tile mode, with only one frame, and
+tile mode is set to manual, tile anyway (don't drop into single
+mode).</tt></li>
+<li><tt>03.12.2009 CATALOGS: speed up rendering of catalogs for
+simple symbol filters.</tt></li>
+<li><tt>03.12.2009 REGIONS: support wildcards in
+filename.</tt></li>
+<li><tt>03.12.2009 REGIONS: add support for load into all
+frames.</tt></li>
+<li><tt>03.17.2009 GUI: Name server support now utilizies CDS
+Sesame.</tt></li>
+<li><tt>03.17.2009 SKYVIEW: fixed a problem processing the survey
+query.</tt></li>
+<li><tt>03.18.2009 HV: add support for cookies.</tt></li>
+<li><tt>03.18.2009 ARCHIVES: add support for NVO Montage.</tt></li>
+<li><tt>03.18.2009 REGIONS: fixed a problem calculating the WCS
+angle of a flipped WCS.</tt></li>
+<li><tt>03.18.2009 HV: add support for mime-type text/xml for
+votable.</tt></li>
+<li><tt>03.19.2009 CATALOGS: CDS now uses VOTABLE.</tt></li>
+<li><tt>03.24.2009 CATALOGS: SIMBAD now uses VOTABLE.</tt></li>
+<li><tt>03.24.2009 CATALOGS: NED now uses VOTABLE.</tt></li>
+<li><tt>03.24.2009 CATALOGS: add preferences to download in VOTABLE
+if available.</tt></li>
+<li><tt>04.01.2009 GUI: when you delete a frame, the current frame
+is reset to the previous frame, not the first frame.</tt></li>
+<li><tt>04.06.2009 RULER: use preferences default distance
+system.</tt></li>
+<li><tt>04.06.2009 GUI: fixed a problem with open other
+url.</tt></li>
+<li><tt>04.09.2009 PROJECTION: properly calculate width when
+rebinning.</tt></li>
+<li><tt><b>04.15.2009 RELEASE version 5.6</b></tt></li>
+<li><tt>04.16.2009 REGIONS: fixed a rather nasty bug which caused a
+segv when switching between modes after copy a region from a
+frame.</tt></li>
+<li><tt><b>04.16.2009 RELEASE version 5.6.1</b></tt></li>
+<li><tt>04.17.2009 SAMP: use xmlrpc url method in POST
+header.</tt></li>
+<li><tt>04.17.2009 CATALOGS: fixed a typo in the default SDSSR5
+query.</tt></li>
+<li><tt>04.20.2009 HV: fixed a problem with parsing query linked to
+a button.</tt></li>
+<li><tt><b>04.20.2009 RELEASE version 5.6.2</b></tt></li>
+<li><tt>04.22.2009 PREFS: updated the default name server
+menu.</tt></li>
+<li><tt>04.24.2009 FIRST: removed a debug statement which was left
+in.</tt></li>
+<li><tt>04.27.2009 REGIONS: fixed a problem loading a fits file
+with specified extension.</tt></li>
+<li><tt>04.28.2009 HV: fixed again a problem with parsing url
+within a link with a query which contains a '?'.</tt></li>
+<li><tt><b>04.30.2009 RELEASE version 5.6.3</b></tt></li>
+<li><tt>05.01.2009 REGIONS: fixed a problem creating a text region
+with arcsec or arcmin char.</tt></li>
+<li><tt>05.01.2009 NAMESRVR: fixed a problem with simbad cfa
+sexagesimal.</tt></li>
+<li><tt>05.01.2009 CATALOGS: fixed a problem with quoting a VOTABLE
+FIELD DESCRIPTION string.</tt></li>
+<li><tt>05.01.2009 CATALOGS: add column parameters in header
+output.</tt></li>
+<li><tt>05.04.2009 SAMP: fixed a problem with select row
+list.</tt></li>
+<li><tt>05.04.2009 REGIONS: add list to xpa and command line
+regions option.</tt></li>
+<li><tt>05.21.2009 NVSS: add NVSS Image server back.</tt></li>
+<li><tt>05.26.2009 NAMESRVR: set default name server to
+cds.</tt></li>
+<li><tt>05.26.2009 CATALOGS: set default catalog erver to
+cds.</tt></li>
+<li><tt>05.26.2009 SAMP: fixed a proble with quoting filenames and
+urls for xml.</tt></li>
+<li><tt>05.26.2009 CATALOGS: will now try to determine the RA and
+DEC cols via the UCD if available.</tt></li>
+<li><tt>05.26.2009 GUI: fixed a problem with standard dialog boxes
+and MacOSX Aqua and Windows. The dialogbox would sometimes fail to
+rise to top.</tt></li>
+<li><tt>05.27.2009 GUI: WCS menu correctly updates print coordinate
+parameters.</tt></li>
+<li><tt>05.27.2009 REGIONS: autocentroid now works for move, edit,
+and rotate.</tt></li>
+<li><tt>05.27.2009 CATALOGS: CDS Search now retrieves search
+options from cds.</tt></li>
+<li><tt>05.27.2009 CATALOGS: fixed a problem with FILTER and
+VOTable. The votable cols params were not being properly transfered
+to the new filtered table.</tt></li>
+<li><tt>06.10.2009 REGIONS: DS9 regions syntax now supported in
+VOTable format.</tt></li>
+<li><tt>06.11.2009 CATALOGS: "No Items Found" is now displayed on
+status line and not as a model dialog.</tt></li>
+<li><tt>06.11.2009 REGIONS: fixed problem with dashed lines with
+rotated ellipses.</tt></li>
+<li><tt>06.11.2009 GUI: fixed problem with standard file dialog
+boxes. Now, command line options and xpa command DOES NOT CHANGE
+the current directory. Only the use of the dialog box will reset
+the current directory.</tt></li>
+<li><tt>06.11.2009 SAMP: don't send empty catalogs.</tt></li>
+<li><tt>06.11.2009 CATALOGS: don't write empty catalogs.</tt></li>
+<li><tt>06.11.2009 FILTER: fixed a problem with parsing filters on
+the command line that contain quotes.</tt></li>
+<li><tt>06.16.2009 SAMP: the samp port number is now automatically
+determined at connection time.</tt></li>
+<li><tt>06.17.2009 CATALOGS: for VOTables, change id to
+ID.</tt></li>
+<li><tt>06.17.2009 CATALOGS: Add ID param to CXC catalog.</tt></li>
+<li><tt>06.17.2009 SAMP: send unique catalog table-id for each
+catalog so tha multiple copies of ds9 with the same catalog loaded
+don't walk all over each other when connected to a hub.</tt></li>
+<li><tt>06.18.2009 REGIONS: Update info box, graphs, and pixel
+table when draging in pointer and catalog mode.</tt></li>
+<li><tt>06.18.2009 GUI: clean up code which enables/disables WCS
+menus based on current frame.</tt></li>
+<li><tt>06.19.2009 HV: add support for arrow keys and mouse
+wheel.</tt></li>
+<li><tt>06.19.2009 HV: add support for copy key shortcut.</tt></li>
+<li><tt>06.19.2009 HV: add support for Return key shortcut for
+Submit.</tt></li>
+<li><tt>06.25.2009 GUI: update crosshair, infobox, pixeltable when
+changing current slice in crosshair mode.</tt></li>
+<li><tt>06.25.2009 REGIONS: fixed a problem with create/load/save
+regions with mosaic. The WCS of the first mosaic segment loaded is
+used for all regions.</tt></li>
+<li><tt>06.30.2009 REGIONS: removed listwcs option for ds9
+format.</tt></li>
+<li><tt>06.30.2009 IIS: disabled annoying 'port/addr already in
+use' error message.</tt></li>
+<li><tt>07.06.2009 BINNING: add update button to bin
+dialog.</tt></li>
+<li><tt>07.06.2009 HV: add enhancements to allow complete control
+over a web browser window.</tt></li>
+<li><tt>07.06.2009 VO: add enhancements to allow complete control
+over the vo dialog.</tt></li>
+<li><tt>07.09.2009 XPA: 'page setup' has been renamed
+pagesetup.</tt></li>
+<li><tt>07.15.2009 HV: support for sync http added.</tt></li>
+<li><tt>07.15.2009 VO: support for sync http added.</tt></li>
+<li><tt>07.15.2009 ANALYSIS: support for sync http added.</tt></li>
+<li><tt>07.15.2009 ANALYSIS: analysis tasks invoked via xpa or
+command line are now run in blocking (sync) mode.</tt></li>
+<li><tt>07.16.2009 XPA: added optional param to xpaget array to
+specify the endianness.</tt></li>
+<li><tt>08.05.2009 XPA: add sleep command.</tt></li>
+<li><tt>08.05.2009 GUI: add sleep command line option.</tt></li>
+<li><tt>08.10.2009 GUI: fixed command line option
+commands.</tt></li>
+<li><tt>08.10.2009 CATALOGS: for CDS catalogs, ignore the UCD at
+first and look for _RAJ2000 and _DEJ2000, then the UCD, then a list
+of common names.</tt></li>
+<li><tt>08.11.2009 GUI: update Magnifier in Pan mode and key
+arrows.</tt></li>
+<li><tt>08.12.2009 WINDOWS: Add support for wildcard filename
+expansion if invoked from DOS shell.</tt></li>
+<li><tt>08.12.2009 REGIONS: Add support for load template at ra dec
+skyframe.</tt></li>
+<li><tt>08.20.2009 MOSAIC: default for loading mosaics is now WCS
+not IRAF.</tt></li>
+<li><tt>08.25.2009 SAMP: implemented full XPA capabilities via
+SAMP.</tt></li>
+<li><tt>08.25.2009 I18N: make changes to fitsy++ lexer to allow
+non-single byte chars in filenames and paths.</tt></li>
+<li><tt>08.26.2009 SAMP: fixed a problem with parsing the
+hub.xmlrup.url.</tt></li>
+<li><tt>08.26.2009 XPA: update to version 2.1.10.</tt></li>
+<li><tt>08.27.2009 FUNTOOLS: update to version 1.4.4.</tt></li>
+<li><tt>09.01.2009 SAMP: fixed a problem with extra key value pairs
+in message.</tt></li>
+<li><tt>09.01.2009 CATALOGS: add default samp command.</tt></li>
+<li><tt>09.01.2009 CATALOGS: removed modal dialog info box calls.
+Messages are now updated in the status windows.</tt></li>
+<li><tt>09.01.2009 GUI: added new level of menu updates that are
+only executed when a frame is create or deleted and not everytime
+there is a change of state.</tt></li>
+<li><tt>09.03.2009 WINDOWS: disable menu updates during blinking
+because windows redraws the menu window each time the configuration
+is changed.</tt></li>
+<li><tt>09.03.2009 SOLARIS: removed support for Solaris&lt;9.0. DS9
+now requires libxml2 be supported by the OS.</tt></li>
+<li><tt>09.03.2009 GUI: added signal handling for non-windows. We
+now trap SIGINT and clean up before exiting.</tt></li>
+<li><tt>09.08.2009 I18N: fixed a problem with spaces in
+filename.</tt></li>
+<li><tt>09.08.2009 SAMP: fixed a problem using a hub that uses the
+Apache xmlrpc library.</tt></li>
+<li><tt>09.10.2009 SAMP: fixed a problem with invalid ds9.get
+commands.</tt></li>
+<li><tt>09.10.2009 GUI: cmap xpa, samp, and command line option is
+now much more tolerant to capitalization and spellings.</tt></li>
+<li><tt>09.10.2009 WINDOWS: tcc is now used for the bin filter
+compiler. cygwin is no longer required.</tt></li>
+<li><tt>09.21.2009 MACOSX: ports to Tiger (10.4), Leopard (10.5),
+and Snow Leopard (10.6) are now built under 10.6</tt></li>
+<li><tt>09.22.2009 MACOSX: fixed a problem with snowleopard. For
+32bit visuals, the alpha channel is set to 0xff, not 0.</tt></li>
+<li><tt>09.28.2009 XPA: add XPA connect/disconnect menu
+options.</tt></li>
+<li><tt>09.29.2009 RGB: fixed a problem with displaying images with
+NAN.</tt></li>
+<li><tt>10.02.2009 MACOSX: pcc is now used for the bin filter
+compiler of i386 platforms if XCode is not
+installed./tt&gt;</tt></li>
+<li><tt>10.09.2009 ANALYSIS: fixed a problem with analysis plot
+command to maintain backward compatibility./tt&gt;</tt></li>
+<li><tt>10.12.2009 SMOOTH: fixed a problem that smooth is reset
+when no image is loaded. /tt&gt;</tt></li>
+<li><tt><b>10.15.2009 RELEASE version 5.7</b></tt></li>
+</ol>
+</div>
+</body>
 </html>

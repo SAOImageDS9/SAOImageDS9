@@ -1,18 +1,13 @@
 <!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-<meta name="generator" content=
-"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
-<meta http-equiv="Content-Type" content=
-"text/html; charset=us-ascii">
-<meta name="GENERATOR" content=
-"Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
 <title>DS9 Version 4 Release Notes</title>
 </head>
-<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor=
-"#FFFFFF" alink="#FF0000">
-<h3><img alt="" src="../sun.gif" width="100" height="98" align=
-"middle"> SAOImageDS9 Version 4.0 Release Notes</h3>
+<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor="#FFFFFF" alink="#FF0000">
+<h3><img alt="" src="../sun.gif" width="100" height="98" align="middle"> SAOImageDS9 Version 4.0 Release Notes</h3>
 <div style="margin-left: 2em">
 <h4><b>Version 4</b></h4>
 <ol>
@@ -21,499 +16,268 @@
 <li><tt>09.14.2004 WCSSUBS: update to version 3.5.6</tt></li>
 <li><tt>09.14.2004 TCLLIB: update to version 1.6.1</tt></li>
 <li><tt>09.15.2004 TKTABLE: installed 2.9</tt></li>
-<li><tt>09.20.2004 SAOTK: fixed a problem with calculating a
-regions rotational angle with a galactic or ecliptic wcs.</tt></li>
-<li><tt>09.21.2004 SAVEFITS: fixed a problem with the savefits xpa
-and command line options.</tt></li>
-<li><tt>09.21.2004 REGIONS: fixed a problem with updating region
-dialog boxes after a change in event file bin factor.</tt></li>
-<li><tt>09.23.2004 DSS: if user selects dss2red or dss2blue survey,
-force server to eso.</tt></li>
+<li><tt>09.20.2004 SAOTK: fixed a problem with calculating a regions rotational angle with a galactic or ecliptic wcs.</tt></li>
+<li><tt>09.21.2004 SAVEFITS: fixed a problem with the savefits xpa and command line options.</tt></li>
+<li><tt>09.21.2004 REGIONS: fixed a problem with updating region dialog boxes after a change in event file bin factor.</tt></li>
+<li><tt>09.23.2004 DSS: if user selects dss2red or dss2blue survey, force server to eso.</tt></li>
 <li><tt>09.23.2004 2MASS: add image server.</tt></li>
-<li><tt>10.01.2004 DSS: fixed a problem with 'Update from current
-Frame'.</tt></li>
-<li><tt>10.12.2004 MAKEFILE: add export-dynamic for linux so that
-external shared libs can be loaded.</tt></li>
-<li><tt>10.21.2004 GUI: fixed a problem if while blinking the user
-changes the colorbar via mouse.</tt></li>
-<li><tt>11.17.2004 IMAGESERVER: fixed incompatibilities between DSS
-and 2MASS.</tt></li>
+<li><tt>10.01.2004 DSS: fixed a problem with 'Update from current Frame'.</tt></li>
+<li><tt>10.12.2004 MAKEFILE: add export-dynamic for linux so that external shared libs can be loaded.</tt></li>
+<li><tt>10.21.2004 GUI: fixed a problem if while blinking the user changes the colorbar via mouse.</tt></li>
+<li><tt>11.17.2004 IMAGESERVER: fixed incompatibilities between DSS and 2MASS.</tt></li>
 <li><tt>11.19.2004 AST: update to version 3.5</tt></li>
 <li><tt>11.29.2004 FUNTOOLS: update to version 1.2.4</tt></li>
-<li><tt>11.30.2004 SAOTK: use NaN.h from Funtools. This corrects
-problems with new architectures.</tt></li>
+<li><tt>11.30.2004 SAOTK: use NaN.h from Funtools. This corrects problems with new architectures.</tt></li>
 <li><tt>12.03.2004 MAKEFILE: now support gcc 3.4.x</tt></li>
-<li><tt>12.15.2004 XPA: fixed a problem with preserve regions
-command.</tt></li>
-<li><tt>12.15.2004 HTML: fixed several problems with color matching
-within htmlwidget.</tt></li>
-<li><tt>12.16.2004 GUI: fixed a problem with saving text from
-SimpleTextDialog.</tt></li>
-<li><tt>12.16.2004 WCS: main wcs menu item now sets default marker
-coordinate system and skyframe.</tt></li>
-<li><tt>12.16.2004 COMPASS: create compass now uses current marker
-dialog system and skyframe.</tt></li>
-<li><tt>12.20.2004 POLYGON: fixed a problem with the exclude strip
-and rotation.</tt></li>
-<li><tt>12.20.2004 COMPOSITE: add support for composite
-region.</tt></li>
-<li><tt>12.22.2004 TEXT REGION: fixed a problem in which the text
-angle did not reflect the native coordinate system.</tt></li>
-<li><tt>12.29.2004 IMAGESERVER: xpa and command line options are
-now synchronous. The GUI is still asynchronous.</tt></li>
-<li><tt>12.30.2004 NAMESERVER: fixed a problem with sexigesmal from
-SIMBAD near the equator.</tt></li>
-<li><tt>12.30.2004 NAMESERVER: xpa and command line options are now
-synchronous. The GUI is still asynchronous.</tt></li>
-<li><tt>01.31.2005 VECTOR: add support for new VECTOR
-region.</tt></li>
-<li><tt>02.08.2005 REGIONS: fix varies errors with definition of
-angles. Position angles are now defined as from first positive
-coordinate axis to second positive coordinate axis except in the
-case of equatorial wcs, in this case it is defined as from second
-positive coordinate axis to first positive coordinate
-axis.</tt></li>
-<li><tt>02.16.2005 SCALE: added User menu options to clarify
-current scaling mode.</tt></li>
-<li><tt>02.17.2005 LINUX64: fixed a problem with generating
-postscript.</tt></li>
-<li><tt>02.28.2005 MOSAIC: add support for mosaic data
-cubes.</tt></li>
-<li><tt>03.01.2005 STD Dialog: fixed several problems with ds9 not
-remembering the current working directory.</tt></li>
-<li><tt>03.02.2005 WINDOWS: fixed a problem with a memory leak when
-rendering regions on the windows platform. We no longer try to clip
-against a clip region.</tt></li>
-<li><tt>03.02.2005 WINDOWS: fixed a problem with command line
-options that require the ds9 window to be visible. We have to
-process all events with 'update' before the windows version of ds9
-is visible.</tt></li>
-<li><tt>03.03.2005 REGIONS: add support to all regions parsers for
-ms windows line terminators</tt></li>
-<li><tt>03.03.2005 ANALYSIS: removed extra ';' at the end of all
-regions substitutions.</tt></li>
-<li><tt>03.16.2005 FITS: increased fits file name size to 1024
-chars.</tt></li>
+<li><tt>12.15.2004 XPA: fixed a problem with preserve regions command.</tt></li>
+<li><tt>12.15.2004 HTML: fixed several problems with color matching within htmlwidget.</tt></li>
+<li><tt>12.16.2004 GUI: fixed a problem with saving text from SimpleTextDialog.</tt></li>
+<li><tt>12.16.2004 WCS: main wcs menu item now sets default marker coordinate system and skyframe.</tt></li>
+<li><tt>12.16.2004 COMPASS: create compass now uses current marker dialog system and skyframe.</tt></li>
+<li><tt>12.20.2004 POLYGON: fixed a problem with the exclude strip and rotation.</tt></li>
+<li><tt>12.20.2004 COMPOSITE: add support for composite region.</tt></li>
+<li><tt>12.22.2004 TEXT REGION: fixed a problem in which the text angle did not reflect the native coordinate system.</tt></li>
+<li><tt>12.29.2004 IMAGESERVER: xpa and command line options are now synchronous. The GUI is still asynchronous.</tt></li>
+<li><tt>12.30.2004 NAMESERVER: fixed a problem with sexigesmal from SIMBAD near the equator.</tt></li>
+<li><tt>12.30.2004 NAMESERVER: xpa and command line options are now synchronous. The GUI is still asynchronous.</tt></li>
+<li><tt>01.31.2005 VECTOR: add support for new VECTOR region.</tt></li>
+<li><tt>02.08.2005 REGIONS: fix varies errors with definition of angles. Position angles are now defined as from first positive coordinate axis to second positive coordinate axis except in the case of equatorial wcs, in this case it is defined as from second positive coordinate axis to first positive coordinate axis.</tt></li>
+<li><tt>02.16.2005 SCALE: added User menu options to clarify current scaling mode.</tt></li>
+<li><tt>02.17.2005 LINUX64: fixed a problem with generating postscript.</tt></li>
+<li><tt>02.28.2005 MOSAIC: add support for mosaic data cubes.</tt></li>
+<li><tt>03.01.2005 STD Dialog: fixed several problems with ds9 not remembering the current working directory.</tt></li>
+<li><tt>03.02.2005 WINDOWS: fixed a problem with a memory leak when rendering regions on the windows platform. We no longer try to clip against a clip region.</tt></li>
+<li><tt>03.02.2005 WINDOWS: fixed a problem with command line options that require the ds9 window to be visible. We have to process all events with 'update' before the windows version of ds9 is visible.</tt></li>
+<li><tt>03.03.2005 REGIONS: add support to all regions parsers for ms windows line terminators</tt></li>
+<li><tt>03.03.2005 ANALYSIS: removed extra ';' at the end of all regions substitutions.</tt></li>
+<li><tt>03.16.2005 FITS: increased fits file name size to 1024 chars.</tt></li>
 <li><tt>03.17.2005 CATALOGS: are finally implemented!</tt></li>
-<li><tt>03.24.2005 WINDOWS: implemented non-windows native standard
-dialogs. This allows uses to specify a file extension.</tt></li>
-<li><tt>03.29.2005 FITY++: fixed a problem with filtering large bin
-tables while in mmapincr mode. We now insure that enough data is
-mmap'd for filter to build its good array.</tt></li>
-<li><tt>03.29.2005 PRESERVE: fixed syntax errors with preserve
-regions and pan.</tt></li>
-<li><tt>03.30.2005 REGIONS: fixed regions parsers to accept a
-regions file without terminator as the last character.</tt></li>
-<li><tt>03.30.2005 ZOOM: all zooms are now specified in terms of x
-and y internally</tt></li>
-<li><tt>04.01.2005 GRID: fixed a problem with grid
-options</tt></li>
-<li><tt>04.28.2005 REGIONS: reimplemented
-basemarker,baseellipse,basebox classes.</tt></li>
-<li><tt>04.28.2005 ZOOM: implemented support for different x and y
-zoom.</tt></li>
+<li><tt>03.24.2005 WINDOWS: implemented non-windows native standard dialogs. This allows uses to specify a file extension.</tt></li>
+<li><tt>03.29.2005 FITY++: fixed a problem with filtering large bin tables while in mmapincr mode. We now insure that enough data is mmap'd for filter to build its good array.</tt></li>
+<li><tt>03.29.2005 PRESERVE: fixed syntax errors with preserve regions and pan.</tt></li>
+<li><tt>03.30.2005 REGIONS: fixed regions parsers to accept a regions file without terminator as the last character.</tt></li>
+<li><tt>03.30.2005 ZOOM: all zooms are now specified in terms of x and y internally</tt></li>
+<li><tt>04.01.2005 GRID: fixed a problem with grid options</tt></li>
+<li><tt>04.28.2005 REGIONS: reimplemented basemarker,baseellipse,basebox classes.</tt></li>
+<li><tt>04.28.2005 ZOOM: implemented support for different x and y zoom.</tt></li>
 <li><tt>04.29.2005 XPA: update to version 2.1.6</tt></li>
 <li><tt>04.29.2005 FUNTOOLS: update to version 1.3.0b3</tt></li>
 <li><tt>04.29.2005 TCL/TK: update to version 8.4.9</tt></li>
 <li><tt>05.25.2005 REGIONS: update all regions code</tt></li>
 <li><tt>05.25.2005 REGIONS: add EPANDA</tt></li>
 <li><tt>06.07.2005 FUNTOOLS: update to version 1.3.0b6</tt></li>
-<li><tt>06.13.2005 SCALE: new LOG algorithm
-log10(i/s*1000+1)/log10(1001) where 0&lt;i&lt;s</tt></li>
+<li><tt>06.13.2005 SCALE: new LOG algorithm log10(i/s*1000+1)/log10(1001) where 0&lt;i&lt;s</tt></li>
 <li><tt>06.13.2005 MAKEFILE: add support for FreeBSD</tt></li>
-<li><tt>06.19.2005 FTP: all ftp opens now are in passive
-mode</tt></li>
+<li><tt>06.19.2005 FTP: all ftp opens now are in passive mode</tt></li>
 <li><tt>06.28.2005 BIN: fixed a problem with -bin factor</tt></li>
-<li><tt>06.28.2005 PAGESETUP: pagesetup command line options are no
-longer case sensitive</tt></li>
+<li><tt>06.28.2005 PAGESETUP: pagesetup command line options are no longer case sensitive</tt></li>
 <li><tt>07.12.2005 FUNTOOLS: update to version 1.3.0.b7</tt></li>
 <li><tt>07.13.2005 REGIONS: new DS9 regions 4.0 format</tt></li>
-<li><tt>07.13.2005 REGIONS: add copy,cut,paste,undo xpa and command
-line options.</tt></li>
-<li><tt>08.01.2005 GCC: add support for gcc 4.0. Remove backward
-support for gcc 2.96 or earlier.</tt></li>
-<li><tt>08.03.2005 REGIONS: panda,epanda,bpanda, only render
-start/stop angles in red/blue when selected.</tt></li>
-<li><tt>08.04.2005 SMOOTH: add smoothing algorithms
-boxcar,tophat,gaussian</tt></li>
-<li><tt>08.15.2005 COLORBAR: add support for printing the
-colorbar</tt></li>
+<li><tt>07.13.2005 REGIONS: add copy,cut,paste,undo xpa and command line options.</tt></li>
+<li><tt>08.01.2005 GCC: add support for gcc 4.0. Remove backward support for gcc 2.96 or earlier.</tt></li>
+<li><tt>08.03.2005 REGIONS: panda,epanda,bpanda, only render start/stop angles in red/blue when selected.</tt></li>
+<li><tt>08.04.2005 SMOOTH: add smoothing algorithms boxcar,tophat,gaussian</tt></li>
+<li><tt>08.15.2005 COLORBAR: add support for printing the colorbar</tt></li>
 <li><tt>08.15.2005 FUNTOOLS: update to version 1.3.0b9</tt></li>
 <li><tt>08.15.2005 ZLIB: update to version 1.2.3</tt></li>
 <li><tt>08.17.2005 GUI: add View menu and prefs.</tt></li>
-<li><tt>08.24.2005 REGIONS: fixed a problem with ciao pie
-regions.</tt></li>
+<li><tt>08.24.2005 REGIONS: fixed a problem with ciao pie regions.</tt></li>
 <li><tt>08.24.2005 REGIONS: add invert selection.</tt></li>
 <li><tt>08.25.2005 GUI: add display image window size.</tt></li>
 <li><tt><b>08.30.2005 RELEASE version 4.0b6</b></tt></li>
-<li><tt>09.12.2005 IIS: fixed a problem with iis and
-cursors.</tt></li>
+<li><tt>09.12.2005 IIS: fixed a problem with iis and cursors.</tt></li>
 <li><tt><b>09.12.2005 RELEASE version 4.0b7</b></tt></li>
-<li><tt>09.15.2005 ARRAY: fixed a problem with loading array cubes
-from a file and determining the correct endian.</tt></li>
-<li><tt>10.24.2005 BIN: if unable to find suitable cols to bin,
-chose the first and second column. This way, if you have table, it
-will always load, even if you don't know the column
-names.</tt></li>
-<li><tt>10.25.2005 BIN: binning dialog box. if number of columns is
-too large to display, wrap the menu.</tt></li>
-<li><tt>10.27.2005 CONTOUR: complete support for command line/xpa
-control of contour features.</tt></li>
-<li><tt>10.27.2005 CONTOUR: fixed a problem with convert and
-contours of zero length.</tt></li>
-<li><tt>11.01.2005 FITS: fixed a problem loading very small arrays
-mmapincr</tt></li>
-<li><tt>11.01.2005 VECTOR: small change to correct issue with gcc
-4.0.1</tt></li>
-<li><tt>11.01.2005 WCS: fixed a problem with wcs
-append/replace.</tt></li>
-<li><tt>11.02.2005 GRID: fixed a problem with alternative linear
-wcs.</tt></li>
-<li><tt>11.02.2005 WCS: fixed a problem with alternative wcs names.
-All wcs names are now lower case.</tt></li>
-<li><tt>11.03.2005 CONTOUR: fixed a problem with contour convert
-after a catalog command.</tt></li>
-<li><tt>11.03.2005 HELP: altered tk to pass -help to us. For -help,
-we now display a brief message and exit and for --help, we display
-the reference manual command line options.</tt></li>
-<li><tt>11.09.2005 CATALOG: fixed a problem with starbase to trim
-column names of white spaces.</tt></li>
-<li><tt>11.09.2005 CATALOG: add user specified RA/DEC column
-option.</tt></li>
+<li><tt>09.15.2005 ARRAY: fixed a problem with loading array cubes from a file and determining the correct endian.</tt></li>
+<li><tt>10.24.2005 BIN: if unable to find suitable cols to bin, chose the first and second column. This way, if you have table, it will always load, even if you don't know the column names.</tt></li>
+<li><tt>10.25.2005 BIN: binning dialog box. if number of columns is too large to display, wrap the menu.</tt></li>
+<li><tt>10.27.2005 CONTOUR: complete support for command line/xpa control of contour features.</tt></li>
+<li><tt>10.27.2005 CONTOUR: fixed a problem with convert and contours of zero length.</tt></li>
+<li><tt>11.01.2005 FITS: fixed a problem loading very small arrays mmapincr</tt></li>
+<li><tt>11.01.2005 VECTOR: small change to correct issue with gcc 4.0.1</tt></li>
+<li><tt>11.01.2005 WCS: fixed a problem with wcs append/replace.</tt></li>
+<li><tt>11.02.2005 GRID: fixed a problem with alternative linear wcs.</tt></li>
+<li><tt>11.02.2005 WCS: fixed a problem with alternative wcs names. All wcs names are now lower case.</tt></li>
+<li><tt>11.03.2005 CONTOUR: fixed a problem with contour convert after a catalog command.</tt></li>
+<li><tt>11.03.2005 HELP: altered tk to pass -help to us. For -help, we now display a brief message and exit and for --help, we display the reference manual command line options.</tt></li>
+<li><tt>11.09.2005 CATALOG: fixed a problem with starbase to trim column names of white spaces.</tt></li>
+<li><tt>11.09.2005 CATALOG: add user specified RA/DEC column option.</tt></li>
 <li><tt>11.10.2005 CATALOG: speed up catreg for large dbs</tt></li>
-<li><tt>11.14.2005 GUI: the meus Cut,Copy,Paste,Clear now works for
-all dialog boxes on all platforms.</tt></li>
-<li><tt>11.16.2005 REGIONS: fixed a problem with rendering arrows
-for line,vector,ruler, and compass with width&gt;1.</tt></li>
-<li><tt>11.16.2005 GUI: Modified standard dialog boxes to remember
-file types.</tt></li>
+<li><tt>11.14.2005 GUI: the meus Cut,Copy,Paste,Clear now works for all dialog boxes on all platforms.</tt></li>
+<li><tt>11.16.2005 REGIONS: fixed a problem with rendering arrows for line,vector,ruler, and compass with width&gt;1.</tt></li>
+<li><tt>11.16.2005 GUI: Modified standard dialog boxes to remember file types.</tt></li>
 <li><tt>11.17.2005 GUI: remove 'Use Cursors' Misc Option.</tt></li>
-<li><tt>11.17.2005 GUI: Modified standard dialog boxes to remember
-filters.</tt></li>
-<li><tt>11.18.2005 COMPOSITE: fixed a problem with loading
-composite regions with properties.</tt></li>
-<li><tt>12.05.2005 RGB: Fixed a problem with wcs matching rgb
-frames .</tt></li>
-<li><tt>12.08.2005 REGIONS: Fixed a problem general comment such as
-## and #.</tt></li>
-<li><tt>12.08.2005 HELP: reset previous behavior for -help. fv uses
-ds9 -help to probe for ds9. Until fv is changed, we need to support
-the prior behavior.</tt></li>
-<li><tt>12.15.2005 X11: Insure that all X11 rendering is calculated
-in double precision until the very last, at which, the results are
-rounded to the nearest integer. This includes markers, contours,
-grids.</tt></li>
-<li><tt>12.17.2005 PS: set default resolution to 150, from
-72.</tt></li>
-<li><tt>12.19.2005 GUI: add .ftz and .FTZ to default fits name
-filter.</tt></li>
+<li><tt>11.17.2005 GUI: Modified standard dialog boxes to remember filters.</tt></li>
+<li><tt>11.18.2005 COMPOSITE: fixed a problem with loading composite regions with properties.</tt></li>
+<li><tt>12.05.2005 RGB: Fixed a problem with wcs matching rgb frames .</tt></li>
+<li><tt>12.08.2005 REGIONS: Fixed a problem general comment such as ## and #.</tt></li>
+<li><tt>12.08.2005 HELP: reset previous behavior for -help. fv uses ds9 -help to probe for ds9. Until fv is changed, we need to support the prior behavior.</tt></li>
+<li><tt>12.15.2005 X11: Insure that all X11 rendering is calculated in double precision until the very last, at which, the results are rounded to the nearest integer. This includes markers, contours, grids.</tt></li>
+<li><tt>12.17.2005 PS: set default resolution to 150, from 72.</tt></li>
+<li><tt>12.19.2005 GUI: add .ftz and .FTZ to default fits name filter.</tt></li>
 <li><tt>12.19.2005 FREEBSD: added support for freebsd.</tt></li>
-<li><tt>01.03.2006 FITSY++: fixed an overflow problem with mmap
-very large array files.</tt></li>
-<li><tt>01.04.2006 GUI: reinstated DETECTOR and AMPLIFIER
-coordinate system menu items in menus and removed the
-preferences.</tt></li>
-<li><tt>01.04.2006 GUI: reinstated ZMAX menu items in
-menus.</tt></li>
-<li><tt>01.05.2006 CATALOGS: fixed a problem with rotated or
-flipped images and determining image size in ra and dec</tt></li>
-<li><tt>01.05.2006 PROJECTION: fixed a problem move and
-moveto.</tt></li>
+<li><tt>01.03.2006 FITSY++: fixed an overflow problem with mmap very large array files.</tt></li>
+<li><tt>01.04.2006 GUI: reinstated DETECTOR and AMPLIFIER coordinate system menu items in menus and removed the preferences.</tt></li>
+<li><tt>01.04.2006 GUI: reinstated ZMAX menu items in menus.</tt></li>
+<li><tt>01.05.2006 CATALOGS: fixed a problem with rotated or flipped images and determining image size in ra and dec</tt></li>
+<li><tt>01.05.2006 PROJECTION: fixed a problem move and moveto.</tt></li>
 <li><tt>01.12.2006 COLORBAR: added numerics to colorbar.</tt></li>
-<li><tt>01.18.2006 GUI: separte controls for min/max and
-low/high.</tt></li>
-<li><tt>01.24.2006 HISTOGRAM EQU: is now based on low/high, not
-min/max.</tt></li>
-<li><tt>01.27.2006 GUI: fixed a problem with updating the current
-colormap.</tt></li>
-<li><tt>01.30.2006 PANNER: under truecolor visuals, the panner is
-now updated with the colorbar.</tt></li>
-<li><tt>02.01.2006 TEMPLATE: tweak xmm templates for correct
-boresite.</tt></li>
+<li><tt>01.18.2006 GUI: separte controls for min/max and low/high.</tt></li>
+<li><tt>01.24.2006 HISTOGRAM EQU: is now based on low/high, not min/max.</tt></li>
+<li><tt>01.27.2006 GUI: fixed a problem with updating the current colormap.</tt></li>
+<li><tt>01.30.2006 PANNER: under truecolor visuals, the panner is now updated with the colorbar.</tt></li>
+<li><tt>02.01.2006 TEMPLATE: tweak xmm templates for correct boresite.</tt></li>
 <li><tt>02.03.2006 GUI: fixed Shift-Tab under linux.</tt></li>
-<li><tt>02.03.2006 GUI: fixed a problem with loading multiple
-files, with -single command line option, followed by Match Frame.
-The frames where not realized so the coordinate systems where not
-valid.</tt></li>
-<li><tt>02.03.2006 MARKERS: added the ability to toggle marker
-text.</tt></li>
+<li><tt>02.03.2006 GUI: fixed a problem with loading multiple files, with -single command line option, followed by Match Frame. The frames where not realized so the coordinate systems where not valid.</tt></li>
+<li><tt>02.03.2006 MARKERS: added the ability to toggle marker text.</tt></li>
 <li><tt><b>02.08.2006 RELEASE version 4.0b8</b></tt></li>
 <li><tt>02.07.2006 TCL/TK: update to version 8.4.12</tt></li>
-<li><tt>02.08.2006 CROSSHAIR: fix a typo that caused the crosshair
-command-line option to fail.</tt></li>
-<li><tt>02.27.2006 CATALOG: fixed a problem with finding which
-columns contain RA and DEC.</tt></li>
-<li><tt>02.27.2006 XPA: fixed a problem with xpaget ds9
-width.</tt></li>
+<li><tt>02.08.2006 CROSSHAIR: fix a typo that caused the crosshair command-line option to fail.</tt></li>
+<li><tt>02.27.2006 CATALOG: fixed a problem with finding which columns contain RA and DEC.</tt></li>
+<li><tt>02.27.2006 XPA: fixed a problem with xpaget ds9 width.</tt></li>
 <li><tt>03.20.2006 DSS: add new survey options for STSCI.</tt></li>
-<li><tt>03.24.2006 i18n: finished implemenation of
-internationalization and localization code.</tt></li>
-<li><tt>03.29.2006 SCALE: fixed a problem with RGB frames and
-log/pow scales. Incorrect low/high values were being used to
-calculate the scale.</tt></li>
-<li><tt>03.29.2006 PREFS: the default prefs file is now ds9.prf.
-The following directories are now searched in order: ./ ~
-/usr/local/lib /opt/local/lib</tt></li>
-<li><tt>03.29.2006 INITALIZATION: the default initalization file is
-now ds9.ini. The following directories are now searched in order:
-./ ~ /usr/local/lib /opt/local/lib</tt></li>
-<li><tt>03.31.2006 GUI: fixed a problem with several dialog boxes
-with the Paste menu option. If the clipboard was empty, an error
-was generated.</tt></li>
-<li><tt>04.3.2006 FITS HEADER: fixed a problem displaying datacube
-headers.</tt></li>
-<li><tt>04.3.2006 PROJECTION REGION: Projection region plots can
-now be accessed via XPA PLOT</tt></li>
-<li><tt>04.5.2006 MACOSX: fix a problem with the macosx startup
-scripts to allow path names with a space.</tt></li>
-<li><tt>04.7.2006 WCS: fix a problem WCS menu and images without a
-wcs.</tt></li>
-<li><tt>04.10.2006 GRID: fixed a problem with GLACTIC wcs, AST,
-WCSSUBS, and defined LATPOLE/LONPOLE keywords.</tt></li>
+<li><tt>03.24.2006 i18n: finished implemenation of internationalization and localization code.</tt></li>
+<li><tt>03.29.2006 SCALE: fixed a problem with RGB frames and log/pow scales. Incorrect low/high values were being used to calculate the scale.</tt></li>
+<li><tt>03.29.2006 PREFS: the default prefs file is now ds9.prf. The following directories are now searched in order: ./ ~ /usr/local/lib /opt/local/lib</tt></li>
+<li><tt>03.29.2006 INITALIZATION: the default initalization file is now ds9.ini. The following directories are now searched in order: ./ ~ /usr/local/lib /opt/local/lib</tt></li>
+<li><tt>03.31.2006 GUI: fixed a problem with several dialog boxes with the Paste menu option. If the clipboard was empty, an error was generated.</tt></li>
+<li><tt>04.3.2006 FITS HEADER: fixed a problem displaying datacube headers.</tt></li>
+<li><tt>04.3.2006 PROJECTION REGION: Projection region plots can now be accessed via XPA PLOT</tt></li>
+<li><tt>04.5.2006 MACOSX: fix a problem with the macosx startup scripts to allow path names with a space.</tt></li>
+<li><tt>04.7.2006 WCS: fix a problem WCS menu and images without a wcs.</tt></li>
+<li><tt>04.10.2006 GRID: fixed a problem with GLACTIC wcs, AST, WCSSUBS, and defined LATPOLE/LONPOLE keywords.</tt></li>
 <li><tt><b>04.15.2006 RELEASE version 4.0b9</b></tt></li>
-<li><tt>04.18.2006 CATALOGS: fixed a problem with filter editor
-menu.</tt></li>
-<li><tt>04.18.2006 CATALOGS: fixed a problem with searching for
-other catalogs</tt></li>
-<li><tt>04.24.2006 TEMP: DS9 will now look for environment vars
-TEMP and TMP first for location of temp directory.</tt></li>
-<li><tt>04.28.2006 PREFS: Fixed a problem with writing invalid
-preferences.</tt></li>
-<li><tt>04.28.2006 PS: Fixed a problem with printing Grayscale and
-pure white values. They were being rounded off to 254, not
-255.</tt></li>
-<li><tt>04.28.2006 PREFS: prefs are now written to a users home
-directory if available (including windows) and hidden.</tt></li>
-<li><tt>05.02.2006 GCC: now compiles properly under gcc
-4.1</tt></li>
-<li><tt>05.08.2006 SCALE: more checks for illegal low/high values
-for log/pow scales</tt></li>
-<li><tt>05.10.2006 BIN: fix an issue with calculated width/height.
-No matter the bin factor, or the dimensions of the data, always
-have at least an 1x1 image.</tt></li>
-<li><tt>05.11.2006 DARWIN: compile under 10.4.x with no
-OSSPINLOCKLOCK, which is not available under 10.3.x</tt></li>
-<li><tt>05.16.2006 CROSSHAIR: fixed a problem with xpa/cmd option
-crosshair.</tt></li>
-<li><tt>05.16.2006 ANALYSIS: fixed a problem with loading analysis
-files with bindings at startup with one frame.</tt></li>
+<li><tt>04.18.2006 CATALOGS: fixed a problem with filter editor menu.</tt></li>
+<li><tt>04.18.2006 CATALOGS: fixed a problem with searching for other catalogs</tt></li>
+<li><tt>04.24.2006 TEMP: DS9 will now look for environment vars TEMP and TMP first for location of temp directory.</tt></li>
+<li><tt>04.28.2006 PREFS: Fixed a problem with writing invalid preferences.</tt></li>
+<li><tt>04.28.2006 PS: Fixed a problem with printing Grayscale and pure white values. They were being rounded off to 254, not 255.</tt></li>
+<li><tt>04.28.2006 PREFS: prefs are now written to a users home directory if available (including windows) and hidden.</tt></li>
+<li><tt>05.02.2006 GCC: now compiles properly under gcc 4.1</tt></li>
+<li><tt>05.08.2006 SCALE: more checks for illegal low/high values for log/pow scales</tt></li>
+<li><tt>05.10.2006 BIN: fix an issue with calculated width/height. No matter the bin factor, or the dimensions of the data, always have at least an 1x1 image.</tt></li>
+<li><tt>05.11.2006 DARWIN: compile under 10.4.x with no OSSPINLOCKLOCK, which is not available under 10.3.x</tt></li>
+<li><tt>05.16.2006 CROSSHAIR: fixed a problem with xpa/cmd option crosshair.</tt></li>
+<li><tt>05.16.2006 ANALYSIS: fixed a problem with loading analysis files with bindings at startup with one frame.</tt></li>
 <li><tt>05.22.2006 WCSSUBS: Update to version 3.6.4</tt></li>
 <li><tt>05.25.2006 ANALYSIS: add $xcen and $ycen macros.</tt></li>
 <li><tt>05.25.2006 ANALYSIS: add $vo_method macro.</tt></li>
-<li><tt>06.05.2006 FITSY++: fixed a problem with incorrectly
-detecting the beginning sequence of gz stream.</tt></li>
-<li><tt>06.12.2006 HV/XPA: Implemented 'xpaset' mime
-support.</tt></li>
-<li><tt>06.14.2006 FITS: Fixed a problem with displaying the header
-of a file in which there was an extention name in the primary
-header.</tt></li>
-<li><tt>06.21.2006 GUI: Fixed a problem -single and -blink command
-line optons.</tt></li>
-<li><tt>06.21.2006 REGIONS: Check for valid image loaded before
-processing load regions commands.</tt></li>
-<li><tt>06.21.2006 MOSAIC: fixed a problem with mosaicimage wfpc2
-and display header.</tt></li>
+<li><tt>06.05.2006 FITSY++: fixed a problem with incorrectly detecting the beginning sequence of gz stream.</tt></li>
+<li><tt>06.12.2006 HV/XPA: Implemented 'xpaset' mime support.</tt></li>
+<li><tt>06.14.2006 FITS: Fixed a problem with displaying the header of a file in which there was an extention name in the primary header.</tt></li>
+<li><tt>06.21.2006 GUI: Fixed a problem -single and -blink command line optons.</tt></li>
+<li><tt>06.21.2006 REGIONS: Check for valid image loaded before processing load regions commands.</tt></li>
+<li><tt>06.21.2006 MOSAIC: fixed a problem with mosaicimage wfpc2 and display header.</tt></li>
 <li><tt>06.23.2006 HV: Implemented file caching.</tt></li>
 <li><tt>06.23.2006 HV: Implemented image caching.</tt></li>
-<li><tt>06.26.2006 HV: Implemented multiple mime
-processing.</tt></li>
+<li><tt>06.26.2006 HV: Implemented multiple mime processing.</tt></li>
 <li><tt>06.29.2006 TCLLIB: update to version 1.8</tt></li>
 <li><tt>07.11.2006 WCSSUBS: update to version 3.6.5</tt></li>
 <li><tt>07.11.2006 WCSSUBS: fix a problem with naxis&gt;2</tt></li>
-<li><tt>07.12.2006 NAME SERVER: support for HTTP
-redirection</tt></li>
-<li><tt>07.12.2006 IMAGE SERVER: support for HTTP
-redirection</tt></li>
+<li><tt>07.12.2006 NAME SERVER: support for HTTP redirection</tt></li>
+<li><tt>07.12.2006 IMAGE SERVER: support for HTTP redirection</tt></li>
 <li><tt>07.13.2006 CATALOGS: support for HTTP redirection</tt></li>
-<li><tt>07.13.2006 REGIONS: fixed a problem with cut/copy/paste
-regions dialog.</tt></li>
-<li><tt>07.25.2006 PREFS: preferences are automatically
-saved.</tt></li>
-<li><tt>07.25.2006 FITSY++: fixed a problem with large RGB arrays
-and streams.</tt></li>
-<li><tt>07.31.2006 RGB: add support for invert RGB
-colormap.</tt></li>
-<li><tt>07.31.2006 FIRST: add support for VLA FIRST image
-server.</tt></li>
-<li><tt>08.01.2006 HTTP: add timeout options to all geturl
-calls.</tt></li>
+<li><tt>07.13.2006 REGIONS: fixed a problem with cut/copy/paste regions dialog.</tt></li>
+<li><tt>07.25.2006 PREFS: preferences are automatically saved.</tt></li>
+<li><tt>07.25.2006 FITSY++: fixed a problem with large RGB arrays and streams.</tt></li>
+<li><tt>07.31.2006 RGB: add support for invert RGB colormap.</tt></li>
+<li><tt>07.31.2006 FIRST: add support for VLA FIRST image server.</tt></li>
+<li><tt>08.01.2006 HTTP: add timeout options to all geturl calls.</tt></li>
 <li><tt>08.02.2006 CATALOGS: add suppport for SDSS.</tt></li>
-<li><tt>08.07.2006 ANALYSIS: fixed a problem with cancel geturl
-tasks.</tt></li>
-<li><tt>08.14.2006 TKTABLE: fixed configure files for darwin
-intel.</tt></li>
-<li><tt>08.14.2006 TKIMG: fixed configure files for darwin
-intel.</tt></li>
-<li><tt>08.14.2006 AST: apply patch to plot.c at line
-23207</tt></li>
-<li><tt>08.17.2006 BIN: fixed a problem with binning 3D and integer
-cols.</tt></li>
-<li><tt>08.17.2006 BIN: fixed a problem with binning 3D and
-updating the bin dialog box.</tt></li>
-<li><tt>08.17.2006 SCALE: changed AUTO to sample only for
-mosaics.</tt></li>
-<li><tt>08.30.2006 CATALOG: fixed a problem with filtering and
-column names to leading or trailing spaces.</tt></li>
-<li><tt>08.31.2006 CATALOG: add support for CSV catalog files
-with/wo header.</tt></li>
-<li><tt>09.06.2006 EPANDA: Fixed problems with rendering start and
-stop angles.</tt></li>
-<li><tt>09.08.2006 BPANDA: Fixed problems with rendering start and
-stop angles.</tt></li>
-<li><tt>09.11.2006 TEMPLATES: When creating templates, they were
-placed in the upper right corner of the frame. This has been
-changed to the center of the frame.</tt></li>
-<li><tt>09.11.2006 TEMPLATES: When templates where created via the
-gui, the screen was not refreshed properly. This has been
-corrected.</tt></li>
-<li><tt>09.12.2006 FITSY++: Fixed a problem with hist() and column
-values of 0, which was used as the default value.</tt></li>
+<li><tt>08.07.2006 ANALYSIS: fixed a problem with cancel geturl tasks.</tt></li>
+<li><tt>08.14.2006 TKTABLE: fixed configure files for darwin intel.</tt></li>
+<li><tt>08.14.2006 TKIMG: fixed configure files for darwin intel.</tt></li>
+<li><tt>08.14.2006 AST: apply patch to plot.c at line 23207</tt></li>
+<li><tt>08.17.2006 BIN: fixed a problem with binning 3D and integer cols.</tt></li>
+<li><tt>08.17.2006 BIN: fixed a problem with binning 3D and updating the bin dialog box.</tt></li>
+<li><tt>08.17.2006 SCALE: changed AUTO to sample only for mosaics.</tt></li>
+<li><tt>08.30.2006 CATALOG: fixed a problem with filtering and column names to leading or trailing spaces.</tt></li>
+<li><tt>08.31.2006 CATALOG: add support for CSV catalog files with/wo header.</tt></li>
+<li><tt>09.06.2006 EPANDA: Fixed problems with rendering start and stop angles.</tt></li>
+<li><tt>09.08.2006 BPANDA: Fixed problems with rendering start and stop angles.</tt></li>
+<li><tt>09.11.2006 TEMPLATES: When creating templates, they were placed in the upper right corner of the frame. This has been changed to the center of the frame.</tt></li>
+<li><tt>09.11.2006 TEMPLATES: When templates where created via the gui, the screen was not refreshed properly. This has been corrected.</tt></li>
+<li><tt>09.12.2006 FITSY++: Fixed a problem with hist() and column values of 0, which was used as the default value.</tt></li>
 <li><tt>09.13.2006 COMPOSITE: Add complement angle.</tt></li>
-<li><tt>09.15.2006 CPANDA,EPANDA,BPANDA: fixed a conflict with
-funtools. Stop/start angles will alway increase in value.</tt></li>
+<li><tt>09.15.2006 CPANDA,EPANDA,BPANDA: fixed a conflict with funtools. Stop/start angles will alway increase in value.</tt></li>
 <li><tt>09.18.2006 MOSAIC IMAGE NEXT: removed support.</tt></li>
 <li><tt><b>10.01.2006 RELEASE version 4.0b10</b></tt></li>
 <li><tt>10.01.2006 I18N: Add Portuguese support.</tt></li>
 <li><tt><b>10.01.2006 RELEASE version 4.0b10.1</b></tt></li>
 <li><tt>10.01.2006 FITS: external support for bzip2.</tt></li>
-<li><tt>10.01.2006 REGIONS: fixed a problem with clipping regions
-in tile mode.</tt></li>
-<li><tt>10.03.2006 HV: add support for HTTP-EQUIV HTML Meta
-keyword.</tt></li>
-<li><tt>10.03.2006 PANDA: fixed a problem with zero length radius
-and printing.</tt></li>
+<li><tt>10.01.2006 REGIONS: fixed a problem with clipping regions in tile mode.</tt></li>
+<li><tt>10.03.2006 HV: add support for HTTP-EQUIV HTML Meta keyword.</tt></li>
+<li><tt>10.03.2006 PANDA: fixed a problem with zero length radius and printing.</tt></li>
 <li><tt>10.10.2006 WCSSUBS: update to version 3.6.6</tt></li>
 <li><tt>10.13.2006 TCL/TK: update to version 8.4.13</tt></li>
 <li><tt>10.13.2006 FUNTOOLS: update to version 1.3.0b22</tt></li>
 <li><tt>10.13.2006 TCLLIB: update to version 1.9</tt></li>
-<li><tt>10.23.2006 LANGUAGE: add support for following languages
-fr,es,de,it,pt,ru,da.</tt></li>
+<li><tt>10.23.2006 LANGUAGE: add support for following languages fr,es,de,it,pt,ru,da.</tt></li>
 <li><tt>10.23.2006 HTTP: increase timeout to 3 minutes.</tt></li>
-<li><tt>10.24.2006 GUI: add view colorbar numerics
-support.<br></tt></li>
-<li><tt>10.31.2006 CATALOGS: add full symbol support via
-xpa/command line.<br></tt></li>
-<li><tt>10.31.2006 CATALOGS: fixed a problem with the optional
-catalog name as a parameter.<br></tt></li>
-<li><tt>10.31.2006 GUI: multi column frame and active frame
-menu.<br></tt></li>
-<li><tt>10.31.2006 GUI: multi column catalog col name
-menus.<br></tt></li>
+<li><tt>10.24.2006 GUI: add view colorbar numerics support.<br></tt></li>
+<li><tt>10.31.2006 CATALOGS: add full symbol support via xpa/command line.<br></tt></li>
+<li><tt>10.31.2006 CATALOGS: fixed a problem with the optional catalog name as a parameter.<br></tt></li>
+<li><tt>10.31.2006 GUI: multi column frame and active frame menu.<br></tt></li>
+<li><tt>10.31.2006 GUI: multi column catalog col name menus.<br></tt></li>
 <li><tt>11.02.2006 XPA: add xpaget ds9 fits bitpix.<br></tt></li>
-<li><tt>11.06.2006 GUI: add confirmation option
-preference.<br></tt></li>
-<li><tt>11.28.2006 REGIONS: add xpa/command line option get
-info.<br></tt></li>
-<li><tt>11.28.2006 REGIONS: fits regions file: first look for
-extension [REGIONS], then attempt to load the first
-extension.<br></tt></li>
-<li><tt>11.29.2006 FITS: fixed a overflow problem with very very
-large fits images &gt; 8Gb in size.<br></tt></li>
-<li><tt>12.06.2006 RGB: fixed a problem with aligning very large
-images.<br></tt></li>
-<li><tt>12.07.2006 MOSAIC: fixed a problem with wcs mosaicsa and
-very large images.<br></tt></li>
-<li><tt>12.09.2006 FITS: removed a kludge for defining the wcs
-tangent point that only affected AIR and AZP
-projections.<br></tt></li>
-<li><tt>12.12.2006 GUI: fixed a problem with default vertical
-layout. The default size is now consistent with other
-options.<br></tt></li>
-<li><tt>12.13.2006 SAVEAS: fixed a problem with PHYSICAL and WCS
-coordinates. They were 1 pixel off.<br></tt></li>
-<li><tt>12.13.2006 CPANDA/EPANDA: fixed a problem with render and
-printing with an image flipped.<br></tt></li>
-<li><tt>12.20.2006 RGB: NaN are now ignored when building an RGB
-image.<br></tt></li>
-<li><tt>12.22.2006 GUI: Increased default X size so that buttons do
-not cause automatic resizing.<br></tt></li>
-<li><tt>01.08.2007 PREFS: fixed a problem with frame parser and
-LoadPrefs so that a preferences file from version b9 will correctly
-parse.<br></tt></li>
-<li><tt>01.23.2007 FITS: Added additional checks for valid format
-and values for DATASEC, DETSEC, and DETSIZE keywords.<br></tt></li>
-<li><tt>01.24.2007 CATALOGS: fixed a problem with
-redirect.<br></tt></li>
-<li><tt>01.24.2007 REGIONS: fixed a problem measuring WCS lengths
-across wcs mosacis and RGB images.<br></tt></li>
-<li><tt>01.25.2007 REGIONS: fixed a problem with rotated text
-regions.<br></tt></li>
-<li><tt>01.30.2007 DSS: Split DSS server into three
-servers.<br></tt></li>
-<li><tt>01.31.2007 GUI: add binning buffersize 8192 and binfactor
-256.<br></tt></li>
+<li><tt>11.06.2006 GUI: add confirmation option preference.<br></tt></li>
+<li><tt>11.28.2006 REGIONS: add xpa/command line option get info.<br></tt></li>
+<li><tt>11.28.2006 REGIONS: fits regions file: first look for extension [REGIONS], then attempt to load the first extension.<br></tt></li>
+<li><tt>11.29.2006 FITS: fixed a overflow problem with very very large fits images &gt; 8Gb in size.<br></tt></li>
+<li><tt>12.06.2006 RGB: fixed a problem with aligning very large images.<br></tt></li>
+<li><tt>12.07.2006 MOSAIC: fixed a problem with wcs mosaicsa and very large images.<br></tt></li>
+<li><tt>12.09.2006 FITS: removed a kludge for defining the wcs tangent point that only affected AIR and AZP projections.<br></tt></li>
+<li><tt>12.12.2006 GUI: fixed a problem with default vertical layout. The default size is now consistent with other options.<br></tt></li>
+<li><tt>12.13.2006 SAVEAS: fixed a problem with PHYSICAL and WCS coordinates. They were 1 pixel off.<br></tt></li>
+<li><tt>12.13.2006 CPANDA/EPANDA: fixed a problem with render and printing with an image flipped.<br></tt></li>
+<li><tt>12.20.2006 RGB: NaN are now ignored when building an RGB image.<br></tt></li>
+<li><tt>12.22.2006 GUI: Increased default X size so that buttons do not cause automatic resizing.<br></tt></li>
+<li><tt>01.08.2007 PREFS: fixed a problem with frame parser and LoadPrefs so that a preferences file from version b9 will correctly parse.<br></tt></li>
+<li><tt>01.23.2007 FITS: Added additional checks for valid format and values for DATASEC, DETSEC, and DETSIZE keywords.<br></tt></li>
+<li><tt>01.24.2007 CATALOGS: fixed a problem with redirect.<br></tt></li>
+<li><tt>01.24.2007 REGIONS: fixed a problem measuring WCS lengths across wcs mosacis and RGB images.<br></tt></li>
+<li><tt>01.25.2007 REGIONS: fixed a problem with rotated text regions.<br></tt></li>
+<li><tt>01.30.2007 DSS: Split DSS server into three servers.<br></tt></li>
+<li><tt>01.31.2007 GUI: add binning buffersize 8192 and binfactor 256.<br></tt></li>
 <li><tt><b>02.01.2007 RELEASE version 4.0b11</b></tt></li>
 <li><tt>02.02.2007 CATALOGS: add cols.<br></tt></li>
-<li><tt>02.02.2007 VO: default url is now
-http://cxc.harvard.edu/chandraed/list.txt.<br></tt></li>
-<li><tt>02.07.2007 PREFERENCES: if ds9 detects a newer prefs file,
-it will not be processed.<br></tt></li>
-<li><tt>02.09.2007 SKYVIEW: added support for HEASARC's skyview
-image cutout service.<br></tt></li>
-<li><tt>02.09.2007 GUI: dropped the 'b' for beta, afterall, ds9 is
-always beta!<br></tt></li>
-<li><tt>02.13.2007 CATALOGS: new non-modal search catalogs
-support.<br></tt></li>
+<li><tt>02.02.2007 VO: default url is now http://cxc.harvard.edu/chandraed/list.txt.<br></tt></li>
+<li><tt>02.07.2007 PREFERENCES: if ds9 detects a newer prefs file, it will not be processed.<br></tt></li>
+<li><tt>02.09.2007 SKYVIEW: added support for HEASARC's skyview image cutout service.<br></tt></li>
+<li><tt>02.09.2007 GUI: dropped the 'b' for beta, afterall, ds9 is always beta!<br></tt></li>
+<li><tt>02.13.2007 CATALOGS: new non-modal search catalogs support.<br></tt></li>
 <li><tt>02.13.2007 CATALOGS: add show/hide support.<br></tt></li>
-<li><tt>02.15.2007 FIRST: fixed a problem with xpa
-first.<br></tt></li>
-<li><tt>02.15.2007 2MASS: fixed a problem with xpa
-2mass.<br></tt></li>
+<li><tt>02.15.2007 FIRST: fixed a problem with xpa first.<br></tt></li>
+<li><tt>02.15.2007 2MASS: fixed a problem with xpa 2mass.<br></tt></li>
 <li><tt>03.06.2007 MASK: add support for fits masks.<br></tt></li>
-<li><tt>03.06.2007 MOSAIC: remove support for 'fast mosaic'
-mode.<br></tt></li>
-<li><tt>03.06.2007 SCALE: added support for zscale parameter
-prefs.<br></tt></li>
-<li><tt>03.20.2007 FITSY++: add support for compressed
-FITS.</tt></li>
-<li><tt>03.27.2007 WCS: fixed support for alt wcs for bin
-tables.<br></tt></li>
-<li><tt>03.29.2007 REGIONS: add support for user specified point
-sizes<br></tt></li>
-<li><tt>04.02.2007 GRID: fixed a problem with TNX
-projection.<br></tt></li>
-<li><tt>04.03.2007 FITSY++: split code supporting FITS ASCII tables
-and FITS Binary Tables.<br></tt></li>
-<li><tt>04.03.2007 FITSY++: removed code supporting FITS Binary
-Tables substring arrays.<br></tt></li>
+<li><tt>03.06.2007 MOSAIC: remove support for 'fast mosaic' mode.<br></tt></li>
+<li><tt>03.06.2007 SCALE: added support for zscale parameter prefs.<br></tt></li>
+<li><tt>03.20.2007 FITSY++: add support for compressed FITS.</tt></li>
+<li><tt>03.27.2007 WCS: fixed support for alt wcs for bin tables.<br></tt></li>
+<li><tt>03.29.2007 REGIONS: add support for user specified point sizes<br></tt></li>
+<li><tt>04.02.2007 GRID: fixed a problem with TNX projection.<br></tt></li>
+<li><tt>04.03.2007 FITSY++: split code supporting FITS ASCII tables and FITS Binary Tables.<br></tt></li>
+<li><tt>04.03.2007 FITSY++: removed code supporting FITS Binary Tables substring arrays.<br></tt></li>
 <li><tt>04.03.2007 WCSSUBS: update to version 3.6.8</tt></li>
 <li><tt>04.03.2007 FUNTOOLS: update to version 1.3.0b30</tt></li>
 <li><tt>04.03.2007 XPA: update to version 2.1.7b2</tt></li>
-<li><tt>04.06.2007 FITSY++: add support for RICE compressed
-FITS.</tt></li>
-<li><tt>04.06.2007 SMOOTH: now implemented on a per channel basis
-for RGB.</tt></li>
-<li><tt>04.10.2007 WCSSUBS: backed out of wcscon.c to version 3.6.6
-due to a bug in prec.</tt></li>
-<li><tt>04.12.2007 WINDOWS: fixed a problem with iis and
-iraf.</tt></li>
+<li><tt>04.06.2007 FITSY++: add support for RICE compressed FITS.</tt></li>
+<li><tt>04.06.2007 SMOOTH: now implemented on a per channel basis for RGB.</tt></li>
+<li><tt>04.10.2007 WCSSUBS: backed out of wcscon.c to version 3.6.6 due to a bug in prec.</tt></li>
+<li><tt>04.12.2007 WINDOWS: fixed a problem with iis and iraf.</tt></li>
 <li><tt><b>04.15.2007 RELEASE version 4.12</b></tt></li>
-<li><tt>04.16.2007 FITSIMAGE: fixed an bug with setting file names
-after a reset.</tt></li>
+<li><tt>04.16.2007 FITSIMAGE: fixed an bug with setting file names after a reset.</tt></li>
 <li><tt>04.26.2007 ESO-DSS: support new survey names.</tt></li>
-<li><tt>05.10.2007 NSVR: fixed a problem with xpa/command line name
-lookup.</tt></li>
+<li><tt>05.10.2007 NSVR: fixed a problem with xpa/command line name lookup.</tt></li>
 <li><tt>05.10.2007 NSVR: fixed a problem redirection.</tt></li>
-<li><tt>05.11.2007 TCL: realize ds9 before executing any external
-tcl source.</tt></li>
-<li><tt>05.11.2007 CATALOGS: for csv files, ignore any comment
-lines.</tt></li>
-<li><tt>05.21.2007 MOSAICS: fixed several problems with
-constructing mosaics from both IRAF and WCS keywords.</tt></li>
-<li><tt>05.21.2007 IRAF MOSAICS: the image size is now defined by
-the actual data (just as with WCS) and not the DETSIZE
-keyword.</tt></li>
-<li><tt>05.30.2007 GRID: fixed a problem with plain font style that
-resulted in always using system and not the selected
-font.</tt></li>
-<li><tt>05.31.2007 ELLIPSE PANDA: fixed a problem incorrect
-postscript code.</tt></li>
-<li><tt>06.08.2007 GUI: fixed a problem with the Display Fits
-Header button.</tt></li>
-<li><tt>06.13.2007 FITS: add fits header command and xpa
-point.</tt></li>
-<li><tt>06.30.2007 RULER: fixed a problem with displaying the
-length text.</tt></li>
+<li><tt>05.11.2007 TCL: realize ds9 before executing any external tcl source.</tt></li>
+<li><tt>05.11.2007 CATALOGS: for csv files, ignore any comment lines.</tt></li>
+<li><tt>05.21.2007 MOSAICS: fixed several problems with constructing mosaics from both IRAF and WCS keywords.</tt></li>
+<li><tt>05.21.2007 IRAF MOSAICS: the image size is now defined by the actual data (just as with WCS) and not the DETSIZE keyword.</tt></li>
+<li><tt>05.30.2007 GRID: fixed a problem with plain font style that resulted in always using system and not the selected font.</tt></li>
+<li><tt>05.31.2007 ELLIPSE PANDA: fixed a problem incorrect postscript code.</tt></li>
+<li><tt>06.08.2007 GUI: fixed a problem with the Display Fits Header button.</tt></li>
+<li><tt>06.13.2007 FITS: add fits header command and xpa point.</tt></li>
+<li><tt>06.30.2007 RULER: fixed a problem with displaying the length text.</tt></li>
 <li><tt><b>07.15.2007 RELEASE version 4.13</b></tt></li>
 </ol>
 </div>

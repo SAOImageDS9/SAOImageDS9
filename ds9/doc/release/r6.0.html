@@ -1,347 +1,168 @@
 <!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-<meta name="generator" content=
-"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
-<meta http-equiv="Content-Type" content=
-"text/html; charset=us-ascii">
-<meta name="GENERATOR" content=
-"Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
 <title>DS9 Version 6 Release Notes</title>
 </head>
-<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor=
-"#FFFFFF" alink="#FF0000">
-<h3><img alt="" src="../sun.gif" width="100" height="98" align=
-"middle"> SAOImageDS9 Version 6 Release Notes</h3>
+<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor="#FFFFFF" alink="#FF0000">
+<h3><img alt="" src="../sun.gif" width="100" height="98" align="middle"> SAOImageDS9 Version 6 Release Notes</h3>
 <div style="margin-left: 2em">
 <ol>
-<li><tt>10.20.2009 XPA: moved processing xpa command line options
-to first pass, and init xpa earlier in startup, so that vo and web
-click can be processed along with regular command line
-options.</tt></li>
-<li><tt>10.24.2009 UPDATE: fixed a problem with trying to provide
-support for backward compatibility.</tt></li>
-<li><tt>10.24.2009 IMGSVR: fixed a problem with trying to provide
-support for backward compatibility</tt></li>
+<li><tt>10.20.2009 XPA: moved processing xpa command line options to first pass, and init xpa earlier in startup, so that vo and web click can be processed along with regular command line options.</tt></li>
+<li><tt>10.24.2009 UPDATE: fixed a problem with trying to provide support for backward compatibility.</tt></li>
+<li><tt>10.24.2009 IMGSVR: fixed a problem with trying to provide support for backward compatibility</tt></li>
 <li><tt>10.24.2009 GUI: sleep command arg is now optional</tt></li>
-<li><tt>10.24.2009 MOSAIC: IRAF mosaics are now layed out based on
-the first segment load, like WCS mosaics</tt></li>
-<li><tt>10.27.2009 GUI: fixed a problem if you delete all frames,
-some of the load commands (such as -rgbcube) are not executed until
-there is a new frame. Now, if there are no frames, the load command
-will create a new frame if needed</tt></li>
-<li><tt>10.28.2009 REGION: Corrected a problem with creating
-templates from a VAR. Uncommented old syntax which has been
-superceeded</tt></li>
-<li><tt>11.02.2009 GRID: fixed a problem with 'grid numlab
-gap2'</tt></li>
+<li><tt>10.24.2009 MOSAIC: IRAF mosaics are now layed out based on the first segment load, like WCS mosaics</tt></li>
+<li><tt>10.27.2009 GUI: fixed a problem if you delete all frames, some of the load commands (such as -rgbcube) are not executed until there is a new frame. Now, if there are no frames, the load command will create a new frame if needed</tt></li>
+<li><tt>10.28.2009 REGION: Corrected a problem with creating templates from a VAR. Uncommented old syntax which has been superceeded</tt></li>
+<li><tt>11.02.2009 GRID: fixed a problem with 'grid numlab gap2'</tt></li>
 <li><tt>11.02.2009 AST: updated to version 5.3-1</tt></li>
-<li><tt>11.05.2009 TILE: corrected documentation for '-tile grid
-layout', should be column #, row #</tt></li>
-<li><tt>11.05.2009 DATACUBE: fixed a problem with '-wcs
-replace|reset|append'. The result WCS is now applied to all
-slices</tt></li>
-<li><tt>11.05.2009 XPA: fixed a problem with 'xpaset wcs replace
-foo.wcs'</tt></li>
+<li><tt>11.05.2009 TILE: corrected documentation for '-tile grid layout', should be column #, row #</tt></li>
+<li><tt>11.05.2009 DATACUBE: fixed a problem with '-wcs replace|reset|append'. The result WCS is now applied to all slices</tt></li>
+<li><tt>11.05.2009 XPA: fixed a problem with 'xpaset wcs replace foo.wcs'</tt></li>
 <li><tt>11.13.2009 RICE: updated to cfitsio 3210/tt&gt;</tt></li>
-<li><tt>11.16.2009 COMPRESS: fixed a problem with compression that
-extends over a page boundry of 1Gb</tt></li>
-<li><tt>11.30.2009 GRID: fixed a problem with exterior numerics and
-zoomed images</tt></li>
+<li><tt>11.16.2009 COMPRESS: fixed a problem with compression that extends over a page boundry of 1Gb</tt></li>
+<li><tt>11.30.2009 GRID: fixed a problem with exterior numerics and zoomed images</tt></li>
 <li><tt>11.30.2009 HELP: combine FAQ and ISSUES pages</tt></li>
-<li><tt>12.04.2009 RGB: aux contour overlays are now displayed on a
-per channel basis</tt></li>
-<li><tt>12.07.2009 RGB: rgb images with data cubes can now set the
-current slice on a per channel basis</tt></li>
-<li><tt>12.07.2009 VO: fixed a problem with xpa
-keep-alive</tt></li>
-<li><tt>12.10.2009 TK: fixed a problem MacOSX X11 standard file
-dialog boxes. Borrowed code from tk8.5 to correct the problem when
-events are added to X11</tt></li>
-<li><tt>12.10.2009 GUI: fixed a problem with modal dialogs when the
-user closed the window via the window manager and not the OK/CANCEL
-button</tt></li>
+<li><tt>12.04.2009 RGB: aux contour overlays are now displayed on a per channel basis</tt></li>
+<li><tt>12.07.2009 RGB: rgb images with data cubes can now set the current slice on a per channel basis</tt></li>
+<li><tt>12.07.2009 VO: fixed a problem with xpa keep-alive</tt></li>
+<li><tt>12.10.2009 TK: fixed a problem MacOSX X11 standard file dialog boxes. Borrowed code from tk8.5 to correct the problem when events are added to X11</tt></li>
+<li><tt>12.10.2009 GUI: fixed a problem with modal dialogs when the user closed the window via the window manager and not the OK/CANCEL button</tt></li>
 <li><tt>12.10.2009 XPA: update to version 2.1.11</tt></li>
-<li><tt>12.14.2009 RGB: fixed a problem with a incorrect WCS
-compass in the panner image</tt></li>
-<li><tt>12.15.2009 WCS: Documented the old ALIGN command and
-updated for XPA and SAMP</tt></li>
-<li><tt>12.15.2009 GUI: Values accepted for SKYFORMAT expanded to
-'deg', 'degree', and 'degrees' for command line options, XPA, and
-SAMP</tt></li>
-<li><tt>12.17.2009 WCS: added code to test for bad WCS alignment
-issues (mainly from CAR projection, or pole problems)</tt></li>
-<li><tt>12.17.2009 WCS: added code for WCS alignment for CAR. If
-CAR, getWCScrpix() is taken from center of image, and not from
-CRPIX keywords</tt></li>
-<li><tt>12.18.2009 CATALOG: added USNO UCAC3 to the Optical
-list</tt></li>
-<li><tt>12.24.2009 DATACUBE: DS9 now supports FITS images up to 10
-dimensions. Happy Holidays!</tt></li>
-<li><tt>12.28.2009 ANALYSIS: fixed problems with $data and $url and
-spaces in the tmp directory path name</tt></li>
-<li><tt>12.28.2009 COMM: fixed problems with spaces in file names
-received as argumetns via SAMP and http</tt></li>
-<li><tt>12.29.2009 REGION: fixed problems with XPA/SAMP and
--format/-system/-sky options</tt></li>
-<li><tt>12.29.2009 GUI: fixed a problem with hiding the current
-frame</tt></li>
-<li><tt>12.30.2009 HV: at EXIT, close all opened HV windows so that
-tmp files may be deleted</tt></li>
-<li><tt>12.30.2009 HV: fixed a problem for MIME type
-'multipart/mixed', a tmp file was not deleted</tt></li>
-<li><tt>12.30.2009 HV: fixed a problem for MIME type 'text/plain',
-a tmp file was not deleted</tt></li>
-<li><tt>12.30.2009 ANALYSIS: add $filedialog(open) and
-$filedialog(save) macros</tt></li>
-<li><tt>12.30.2009 GUI: allow filenames starting with a
-'-'</tt></li>
-<li><tt>01.07.2009 I18N: for X11 port, look for LC_MESSAGES,
-LC_ALL, LANG env vars to set langage in that order</tt></li>
-<li><tt>01.07.2009 I18N: update Japanese language
-translation</tt></li>
-<li><tt>01.07.2009 CONTOUR: fix muliple problems with command line
-contour options. Each frame will now remember contour params
-between frames</tt></li>
-<li><tt>01.08.2009 ANALYSIS: minor changes in output of get
-analysis commands. Now include parameters for web and bind
-commands</tt></li>
-<li><tt>01.11.2009 COLORBAR: fixed a problem with the orientation
-of the numerics for vertical colorbar. This problem was introduced
-with AST-5.3</tt></li>
-<li><tt>01.11.2009 RGB: fixed a memory leak for RGB
-frames</tt></li>
-<li><tt>01.11.2009 I18N: update Japanese language
-translation</tt></li>
-<li><tt>01.11.2009 MACOSX: fixed a problem with non-native standard
-file dialog boxes and error messages</tt></li>
-<li><tt>01.12.2009 AST: fixed a memory leak with colorbar
-grid.</tt></li>
-<li><tt>01.13.2009 PLOT: fixed a rare problem when the user closes
-a plot while in the middle of a zoom.</tt></li>
-<li><tt>01.13.2009 IRAF: fixed a problem for mosaic iraf images are
-loaded and the bounding box is incorrectly calculated.</tt></li>
+<li><tt>12.14.2009 RGB: fixed a problem with a incorrect WCS compass in the panner image</tt></li>
+<li><tt>12.15.2009 WCS: Documented the old ALIGN command and updated for XPA and SAMP</tt></li>
+<li><tt>12.15.2009 GUI: Values accepted for SKYFORMAT expanded to 'deg', 'degree', and 'degrees' for command line options, XPA, and SAMP</tt></li>
+<li><tt>12.17.2009 WCS: added code to test for bad WCS alignment issues (mainly from CAR projection, or pole problems)</tt></li>
+<li><tt>12.17.2009 WCS: added code for WCS alignment for CAR. If CAR, getWCScrpix() is taken from center of image, and not from CRPIX keywords</tt></li>
+<li><tt>12.18.2009 CATALOG: added USNO UCAC3 to the Optical list</tt></li>
+<li><tt>12.24.2009 DATACUBE: DS9 now supports FITS images up to 10 dimensions. Happy Holidays!</tt></li>
+<li><tt>12.28.2009 ANALYSIS: fixed problems with $data and $url and spaces in the tmp directory path name</tt></li>
+<li><tt>12.28.2009 COMM: fixed problems with spaces in file names received as argumetns via SAMP and http</tt></li>
+<li><tt>12.29.2009 REGION: fixed problems with XPA/SAMP and -format/-system/-sky options</tt></li>
+<li><tt>12.29.2009 GUI: fixed a problem with hiding the current frame</tt></li>
+<li><tt>12.30.2009 HV: at EXIT, close all opened HV windows so that tmp files may be deleted</tt></li>
+<li><tt>12.30.2009 HV: fixed a problem for MIME type 'multipart/mixed', a tmp file was not deleted</tt></li>
+<li><tt>12.30.2009 HV: fixed a problem for MIME type 'text/plain', a tmp file was not deleted</tt></li>
+<li><tt>12.30.2009 ANALYSIS: add $filedialog(open) and $filedialog(save) macros</tt></li>
+<li><tt>12.30.2009 GUI: allow filenames starting with a '-'</tt></li>
+<li><tt>01.07.2009 I18N: for X11 port, look for LC_MESSAGES, LC_ALL, LANG env vars to set langage in that order</tt></li>
+<li><tt>01.07.2009 I18N: update Japanese language translation</tt></li>
+<li><tt>01.07.2009 CONTOUR: fix muliple problems with command line contour options. Each frame will now remember contour params between frames</tt></li>
+<li><tt>01.08.2009 ANALYSIS: minor changes in output of get analysis commands. Now include parameters for web and bind commands</tt></li>
+<li><tt>01.11.2009 COLORBAR: fixed a problem with the orientation of the numerics for vertical colorbar. This problem was introduced with AST-5.3</tt></li>
+<li><tt>01.11.2009 RGB: fixed a memory leak for RGB frames</tt></li>
+<li><tt>01.11.2009 I18N: update Japanese language translation</tt></li>
+<li><tt>01.11.2009 MACOSX: fixed a problem with non-native standard file dialog boxes and error messages</tt></li>
+<li><tt>01.12.2009 AST: fixed a memory leak with colorbar grid.</tt></li>
+<li><tt>01.13.2009 PLOT: fixed a rare problem when the user closes a plot while in the middle of a zoom.</tt></li>
+<li><tt>01.13.2009 IRAF: fixed a problem for mosaic iraf images are loaded and the bounding box is incorrectly calculated.</tt></li>
 <li><tt><b>01.15.2010 RELEASE version 6.0</b></tt></li>
-<li><tt>01.27.2010 XPA: fixed a problem with reporting errors
-during an XPA operation. The correct error message is now passed to
-XPA.</tt></li>
-<li><tt>01.27.2010 SAMP: fixed a problem with reporting errors
-during an SAMP operation. The correct error message is now passed
-to SAMP.</tt></li>
-<li><tt>01.27.2010 REGION: fixed a problem with catch and XPA/SAMP.
-Errors are now reset when needed so as not to invoke an XPA/SAMP
-ERROR message.</tt></li>
+<li><tt>01.27.2010 XPA: fixed a problem with reporting errors during an XPA operation. The correct error message is now passed to XPA.</tt></li>
+<li><tt>01.27.2010 SAMP: fixed a problem with reporting errors during an SAMP operation. The correct error message is now passed to SAMP.</tt></li>
+<li><tt>01.27.2010 REGION: fixed a problem with catch and XPA/SAMP. Errors are now reset when needed so as not to invoke an XPA/SAMP ERROR message.</tt></li>
 <li><tt>01.27.2010 XPA: update to version 2.1.12</tt></li>
-<li><tt>02.02.2010 CONTOURS: fixed a problem with manually entered
-contours values.</tt></li>
-<li><tt>02.12.2010 COLORBAR: add numerics equal distance
-option.</tt></li>
+<li><tt>02.02.2010 CONTOURS: fixed a problem with manually entered contours values.</tt></li>
+<li><tt>02.12.2010 COLORBAR: add numerics equal distance option.</tt></li>
 <li><tt>02.12.2010 COLORBAR: add colorbar size option.</tt></li>
-<li><tt>02.12.2010 COLORBAR: move colorbar parameters from view
-menu to colorbar menu.</tt></li>
-<li><tt>02.18.2010 MACOSX: fixed a problem where pcc was always
-being installed. Now, first look for FILTER_CC (valid for X11 users
-only). Next, see if /usr/bin/gcc exists. Finally, install pcc if
-needed, and set to use it.</tt></li>
-<li><tt>02.25.2010 SCALE: fixed numerous problems with LOG and POW
-scales. Previously, the exp value of the log ratio was based on the
-dynamic range of the data. It is now specified by the user. This
-solves a number of issues with data which contains negative values.
-(see new documenation on scale equations).</tt></li>
-<li><tt>02.25.2010 CATALOG: CSC is now loaded as a VOTABLE by
-default.</tt></li>
-<li><tt>03.02.2010 CATALOG: add support for SkyBot catalog
-server.</tt></li>
-<li><tt>03.03.2010 MACOSX: printing, reduce image by 5% so colorbar
-end tick numerics are not cutoff.</tt></li>
-<li><tt>03.03.2010 WINDOWS: printing, reduce image by 5% so
-colorbar end tick numerics are not cutoff.</tt></li>
-<li><tt>03.03.2010 HV: fixed a problem with MouseWheel scrolling
-under X11.</tt></li>
-<li><tt>03.04.2010 ZOOM: added support for mouse wheel
-zoom.</tt></li>
-<li><tt>03.04.2010 HV: added support for Find and
-FindNext.</tt></li>
-<li><tt>03.10.2010 POSTSCRIPT: if colorbar and colorbar numerics
-are visible, reduce image by 5% so colorbar end tick numerics are
-not cutoff.</tt></li>
-<li><tt>03.10.2010 PRINT: add psprint xpa/command/samp command for
-postscript printing on MacOSX and Windows.</tt></li>
-<li><tt>03.10.2010 GRID: add support for custom numeric
-formats.</tt></li>
+<li><tt>02.12.2010 COLORBAR: move colorbar parameters from view menu to colorbar menu.</tt></li>
+<li><tt>02.18.2010 MACOSX: fixed a problem where pcc was always being installed. Now, first look for FILTER_CC (valid for X11 users only). Next, see if /usr/bin/gcc exists. Finally, install pcc if needed, and set to use it.</tt></li>
+<li><tt>02.25.2010 SCALE: fixed numerous problems with LOG and POW scales. Previously, the exp value of the log ratio was based on the dynamic range of the data. It is now specified by the user. This solves a number of issues with data which contains negative values. (see new documenation on scale equations).</tt></li>
+<li><tt>02.25.2010 CATALOG: CSC is now loaded as a VOTABLE by default.</tt></li>
+<li><tt>03.02.2010 CATALOG: add support for SkyBot catalog server.</tt></li>
+<li><tt>03.03.2010 MACOSX: printing, reduce image by 5% so colorbar end tick numerics are not cutoff.</tt></li>
+<li><tt>03.03.2010 WINDOWS: printing, reduce image by 5% so colorbar end tick numerics are not cutoff.</tt></li>
+<li><tt>03.03.2010 HV: fixed a problem with MouseWheel scrolling under X11.</tt></li>
+<li><tt>03.04.2010 ZOOM: added support for mouse wheel zoom.</tt></li>
+<li><tt>03.04.2010 HV: added support for Find and FindNext.</tt></li>
+<li><tt>03.10.2010 POSTSCRIPT: if colorbar and colorbar numerics are visible, reduce image by 5% so colorbar end tick numerics are not cutoff.</tt></li>
+<li><tt>03.10.2010 PRINT: add psprint xpa/command/samp command for postscript printing on MacOSX and Windows.</tt></li>
+<li><tt>03.10.2010 GRID: add support for custom numeric formats.</tt></li>
 <li><tt>03.17.2010 BIN: add support for Match Bin.</tt></li>
-<li><tt>03.23.2010 FITS: add a check tor binary tables with no rows
-or cols.</tt></li>
-<li><tt>03.24.2010 WINDOWS: fixed a problem with native printing
-and bitmaps that were not aligned upon a word boundary.</tt></li>
-<li><tt>03.24.2010 WINDOWS: fixed a problem with rendering circle
-point and box circle point.</tt></li>
-<li><tt>03.26.2010 HV: fixed a rather nasty bug. If a HV window is
-open when prefs are saved, the next time ds9 is started, upon exist
-it tried to close an non-existent window, and went into a
-loop.</tt></li>
-<li><tt>03.29.2010 SAMP: add support for table.load.fits
-events.</tt></li>
-<li><tt>04.13.2010 BACKUP: add support for backup and
-restore.</tt></li>
-<li><tt>04.14.2010 GUI: ensure all temp files in /tmp have unique
-names which will not conflict with other programs.</tt></li>
-<li><tt>04.14.2010 RGB: corrected inconsistant behavior. The
-creation of a RGB frame will not alter the single/tile
-setting.</tt></li>
-<li><tt>04.16.2010 TK: fixed a problem with some tk lib scripts not
-sourced at startup and if -cd is executed, ds9 is unable to locate
-the scripts.</tt></li>
-<li><tt>04.16.2010 CIAO: removed any conjuction operators (which
-are not supported).</tt></li>
-<li><tt>04.16.2010 COLORBAR: fixed a rather nasty memory bug which
-was invoked when the colorbar was re-configured.</tt></li>
-<li><tt>04.23.2010 BACKUP: backup save sets can be saved into on a
-repeat basis.</tt></li>
-<li><tt>04.26.2010 SCALE: fixed a problem with segv and Scale
-Dialog box.</tt></li>
-<li><tt>04.26.2010 GUI: fixed a problem matching frames while in
-single mode.</tt></li>
+<li><tt>03.23.2010 FITS: add a check tor binary tables with no rows or cols.</tt></li>
+<li><tt>03.24.2010 WINDOWS: fixed a problem with native printing and bitmaps that were not aligned upon a word boundary.</tt></li>
+<li><tt>03.24.2010 WINDOWS: fixed a problem with rendering circle point and box circle point.</tt></li>
+<li><tt>03.26.2010 HV: fixed a rather nasty bug. If a HV window is open when prefs are saved, the next time ds9 is started, upon exist it tried to close an non-existent window, and went into a loop.</tt></li>
+<li><tt>03.29.2010 SAMP: add support for table.load.fits events.</tt></li>
+<li><tt>04.13.2010 BACKUP: add support for backup and restore.</tt></li>
+<li><tt>04.14.2010 GUI: ensure all temp files in /tmp have unique names which will not conflict with other programs.</tt></li>
+<li><tt>04.14.2010 RGB: corrected inconsistant behavior. The creation of a RGB frame will not alter the single/tile setting.</tt></li>
+<li><tt>04.16.2010 TK: fixed a problem with some tk lib scripts not sourced at startup and if -cd is executed, ds9 is unable to locate the scripts.</tt></li>
+<li><tt>04.16.2010 CIAO: removed any conjuction operators (which are not supported).</tt></li>
+<li><tt>04.16.2010 COLORBAR: fixed a rather nasty memory bug which was invoked when the colorbar was re-configured.</tt></li>
+<li><tt>04.23.2010 BACKUP: backup save sets can be saved into on a repeat basis.</tt></li>
+<li><tt>04.26.2010 SCALE: fixed a problem with segv and Scale Dialog box.</tt></li>
+<li><tt>04.26.2010 GUI: fixed a problem matching frames while in single mode.</tt></li>
 <li><tt>04.29.2010 GUI: add cycle windows key shortcut.</tt></li>
-<li><tt>05.04.2010 WINDOWS: new windows installation
-procedure.</tt></li>
-<li><tt>05.06.2010 CATALOG: add IAU location code in preferences
-(for Skybot).</tt></li>
-<li><tt>05.10.2010 REGION: fixed a problem with projection region
-when one or both end points are off the image. All gaps (mosaic) or
-off image (non-mosaic) have a value of 0 and NaNs are
-ignored.</tt></li>
-<li><tt>05.12.2010 VOTable: add support for FIEDref and PARAMref
-elements.</tt></li>
+<li><tt>05.04.2010 WINDOWS: new windows installation procedure.</tt></li>
+<li><tt>05.06.2010 CATALOG: add IAU location code in preferences (for Skybot).</tt></li>
+<li><tt>05.10.2010 REGION: fixed a problem with projection region when one or both end points are off the image. All gaps (mosaic) or off image (non-mosaic) have a value of 0 and NaNs are ignored.</tt></li>
+<li><tt>05.12.2010 VOTable: add support for FIEDref and PARAMref elements.</tt></li>
 <li><tt><b>05.15.2010 RELEASE version 6.1</b></tt></li>
-<li><tt>05.18.2010 WINDOWS: change windows installation procedure
-back to allow user to specify destination directory.</tt></li>
-<li><tt>05.18.2010 SAMP: fixed an issue with DS9 being confused as
-to if it is currently connected and the need to shutdown SAMP at
-exit.</tt></li>
+<li><tt>05.18.2010 WINDOWS: change windows installation procedure back to allow user to specify destination directory.</tt></li>
+<li><tt>05.18.2010 SAMP: fixed an issue with DS9 being confused as to if it is currently connected and the need to shutdown SAMP at exit.</tt></li>
 <li><tt><b>05.18.2010 RELEASE version 6.1.1</b></tt></li>
 <li><tt>05.19.2010 BACKUP: fixed several major problems.</tt></li>
 <li><tt>05.19.2010 PSEUDOCOLOR: fixed a typo.</tt></li>
 <li><tt><b>05.19.2010 RELEASE version 6.1.2</b></tt></li>
-<li><tt>05.20.2010 MACOSX: always install pcc if gcc not available.
-We don't want old versions of pcc around after upgrades of the
-OS.</tt></li>
-<li><tt>05.28.2010 PLOT: added statistics window for
-plots.</tt></li>
-<li><tt>05.28.2010 PLOT: fixed some problems with menus and clear
-data.</tt></li>
-<li><tt>05.28.2010 NAMESERVER: add get option to return coords
-directly to calling proc.</tt></li>
-<li><tt>06.17.2010 CHECKDNS: update chechdns to add support for
-actually connect.</tt></li>
-<li><tt>06.17.2010 VO: use checkdns to look for active server. If
-none found, used hard coded list.</tt></li>
-<li><tt>06.21.2010 ZOOM TO FIT: center image exactly, do not round
-to nearest whole pixel.</tt></li>
-<li><tt>06.21.2010 BACKUP: don't save prefs(version) var. We want
-the current preference file version, not the save set
-version.</tt></li>
-<li><tt>06.21.2010 GUI: ds9 will now look for its auxiliary file
-using the current name of the executable.</tt></li>
+<li><tt>05.20.2010 MACOSX: always install pcc if gcc not available. We don't want old versions of pcc around after upgrades of the OS.</tt></li>
+<li><tt>05.28.2010 PLOT: added statistics window for plots.</tt></li>
+<li><tt>05.28.2010 PLOT: fixed some problems with menus and clear data.</tt></li>
+<li><tt>05.28.2010 NAMESERVER: add get option to return coords directly to calling proc.</tt></li>
+<li><tt>06.17.2010 CHECKDNS: update chechdns to add support for actually connect.</tt></li>
+<li><tt>06.17.2010 VO: use checkdns to look for active server. If none found, used hard coded list.</tt></li>
+<li><tt>06.21.2010 ZOOM TO FIT: center image exactly, do not round to nearest whole pixel.</tt></li>
+<li><tt>06.21.2010 BACKUP: don't save prefs(version) var. We want the current preference file version, not the save set version.</tt></li>
+<li><tt>06.21.2010 GUI: ds9 will now look for its auxiliary file using the current name of the executable.</tt></li>
 <li><tt>06.30.2010 WCS: add WCS Edit dialog.</tt></li>
 <li><tt>07.01.2010 XPA: add frame has command.</tt></li>
 <li><tt>07.01.2010 SAMP: add frame has command.</tt></li>
-<li><tt>07.09.2010 SAMP: fixed a problem with updating the connect
-meun item after a manual disconnect.</tt></li>
-<li><tt>07.09.2010 SAMP: added support for SAMP_HUB env
-var.</tt></li>
-<li><tt>07.13.2010 COLORBAR: fixed a problem with a bad default
--size param. This problem only showed up with a pseudocolor8
-visual.</tt></li>
-<li><tt>07.15.2010 GUI: implemented support for internal error
-message facility. Any fatal internal error event will trigger an
-GUI error message, hopefully leaving the user the option to save
-data and to exit gracefully.</tt></li>
-<li><tt>07.15.2010 GUI: implemented support for trapping the SIGBUS
-signal and routing it to the internal error message facilty. This
-usually occurs when a data file has been overwritten or a shared
-memory segment is no longer available.</tt></li>
-<li><tt>07.27.2010 PLOT: save font info when save
-configuration.</tt></li>
-<li><tt>08.04.2010 REGION: fixed a problem with the close button on
-EPANDA and BPANDA dialog boxes.</tt></li>
-<li><tt>08.05.2010 COLORBAR: fixed a problem when the image is all
-one value.</tt></li>
-<li><tt>08.10.2010 GUI: add Frame Match Image, Physical, Detector,
-Amplifier buttons.</tt></li>
-<li><tt>08.12.2010 MAGNIFIER: add magnifier prefs for XPA, SAMP,
-and the command line.</tt></li>
+<li><tt>07.09.2010 SAMP: fixed a problem with updating the connect meun item after a manual disconnect.</tt></li>
+<li><tt>07.09.2010 SAMP: added support for SAMP_HUB env var.</tt></li>
+<li><tt>07.13.2010 COLORBAR: fixed a problem with a bad default -size param. This problem only showed up with a pseudocolor8 visual.</tt></li>
+<li><tt>07.15.2010 GUI: implemented support for internal error message facility. Any fatal internal error event will trigger an GUI error message, hopefully leaving the user the option to save data and to exit gracefully.</tt></li>
+<li><tt>07.15.2010 GUI: implemented support for trapping the SIGBUS signal and routing it to the internal error message facilty. This usually occurs when a data file has been overwritten or a shared memory segment is no longer available.</tt></li>
+<li><tt>07.27.2010 PLOT: save font info when save configuration.</tt></li>
+<li><tt>08.04.2010 REGION: fixed a problem with the close button on EPANDA and BPANDA dialog boxes.</tt></li>
+<li><tt>08.05.2010 COLORBAR: fixed a problem when the image is all one value.</tt></li>
+<li><tt>08.10.2010 GUI: add Frame Match Image, Physical, Detector, Amplifier buttons.</tt></li>
+<li><tt>08.12.2010 MAGNIFIER: add magnifier prefs for XPA, SAMP, and the command line.</tt></li>
 <li><tt>08.12.2010 MAGNIFIER: add magnifier color option.</tt></li>
-<li><tt>08.17.2010 GRID: fixed a problem with init
-colors.</tt></li>
-<li><tt>08.17.2010 GRID: now supports colors in form
-#ffffff.</tt></li>
-<li><tt>08.18.2010 CONTOURS: fixed an issue when loading aux
-contours which do not end with a linefeed.</tt></li>
-<li><tt>08.23.2010 COLORBAR: fixed an issue when printing colorbar
-from the command line. The numerics are now updated before
-printing.</tt></li>
-<li><tt>08.23.2010 COLORBAR: fixed an issue when rendering
-numerics. Numerics are now properly positioned, regardless of
-colorbar orientation or font.</tt></li>
-<li><tt>08.25.2010 GRID: fixed a number of issues when rendering
-grid numerics. Numerics are now properly positioned, regardless of
-orientation or font.</tt></li>
-<li><tt>08.27.2010 POSTSCRIPT: fixed a rather nastsy prolblem with
-the level 2 postscript driver (Ascii85 filter) in which, sometimes,
-the last line of the image would not be written.</tt></li>
-<li><tt>08.30.2010 POSTSCRIPT: add new postscript level 3 driver,
-which uses Flate and Ascii85 filters.</tt></li>
-<li><tt>08.31.2010 COLORBAR: add support for user specified number
-of tickmarks to be displayed.</tt></li>
-<li><tt>08.31.2010 CATALOG: The user can now invoke a blank catalog
-tool via the command line, xpa, or samp.</tt></li>
+<li><tt>08.17.2010 GRID: fixed a problem with init colors.</tt></li>
+<li><tt>08.17.2010 GRID: now supports colors in form #ffffff.</tt></li>
+<li><tt>08.18.2010 CONTOURS: fixed an issue when loading aux contours which do not end with a linefeed.</tt></li>
+<li><tt>08.23.2010 COLORBAR: fixed an issue when printing colorbar from the command line. The numerics are now updated before printing.</tt></li>
+<li><tt>08.23.2010 COLORBAR: fixed an issue when rendering numerics. Numerics are now properly positioned, regardless of colorbar orientation or font.</tt></li>
+<li><tt>08.25.2010 GRID: fixed a number of issues when rendering grid numerics. Numerics are now properly positioned, regardless of orientation or font.</tt></li>
+<li><tt>08.27.2010 POSTSCRIPT: fixed a rather nastsy prolblem with the level 2 postscript driver (Ascii85 filter) in which, sometimes, the last line of the image would not be written.</tt></li>
+<li><tt>08.30.2010 POSTSCRIPT: add new postscript level 3 driver, which uses Flate and Ascii85 filters.</tt></li>
+<li><tt>08.31.2010 COLORBAR: add support for user specified number of tickmarks to be displayed.</tt></li>
+<li><tt>08.31.2010 CATALOG: The user can now invoke a blank catalog tool via the command line, xpa, or samp.</tt></li>
 <li><tt>09.01.2010 TCL/TK: upate to version 8.5.8.</tt></li>
-<li><tt>09.01.2010 CATALOG: add font properties to display symbol
-database.</tt></li>
-<li><tt>09.07.2010 CATALOG: now supports image/physical coordinate
-systems.</tt></li>
-<li><tt>09.21.2010 CONTOUR: copy/paste contours no longer requires
-equatorial sky param.</tt></li>
-<li><tt>09.21.2010 REGION: copy/paste contours no longer requires
-equatorial sky param.</tt></li>
-<li><tt>09.21.2010 SAVEAS: add optional params for jpeg, mpeg and
-tiff command line options.</tt></li>
+<li><tt>09.01.2010 CATALOG: add font properties to display symbol database.</tt></li>
+<li><tt>09.07.2010 CATALOG: now supports image/physical coordinate systems.</tt></li>
+<li><tt>09.21.2010 CONTOUR: copy/paste contours no longer requires equatorial sky param.</tt></li>
+<li><tt>09.21.2010 REGION: copy/paste contours no longer requires equatorial sky param.</tt></li>
+<li><tt>09.21.2010 SAVEAS: add optional params for jpeg, mpeg and tiff command line options.</tt></li>
 <li><tt>09.22.2010 FOV: update Chandra Templates.</tt></li>
-<li><tt>09.22.2010 GUI: add open and close support for XPA, SAMP,
-and command line, for all dialogs.</tt></li>
-<li><tt>09.28.2010 COLORBAR: fixed a problem with generating
-colorbar values when no frame is available.</tt></li>
-<li><tt>09.30.2010 HV: fixed a problem with multiple cookies, which
-created a bad header.</tt></li>
-<li><tt>09.30.2010 VO: fixed a problem with 'xpaget ds9 vo
-connect'. Now returns only the current connections, not all
-possible connections.</tt></li>
-<li><tt>09.30.2010 REGION: added check for no frame and no image
-loaded for xpaset regions via stdin.</tt></li>
+<li><tt>09.22.2010 GUI: add open and close support for XPA, SAMP, and command line, for all dialogs.</tt></li>
+<li><tt>09.28.2010 COLORBAR: fixed a problem with generating colorbar values when no frame is available.</tt></li>
+<li><tt>09.30.2010 HV: fixed a problem with multiple cookies, which created a bad header.</tt></li>
+<li><tt>09.30.2010 VO: fixed a problem with 'xpaget ds9 vo connect'. Now returns only the current connections, not all possible connections.</tt></li>
+<li><tt>09.30.2010 REGION: added check for no frame and no image loaded for xpaset regions via stdin.</tt></li>
 <li><tt>09.30.2010 ANALYSIS: add 'task #|name' command.</tt></li>
-<li><tt>10.01.2010 ANALYSIS: fixed a problem when an analysis file
-was loaded after an image had been loaded. Them menu was not
-properly updated to reflect the template for each menu
-item.</tt></li>
-<li><tt>10.05.2010 CUBE: fixed a problem in which sometimes
-changing the current slice whould hang.</tt></li>
-<li><tt>10.05.2010 CUBE: add support for WCS in cube
-dialog.</tt></li>
-<li><tt>10.07.2010 CENTROID: add support centroid params
-xpa/command line.</tt></li>
-<li><tt>10.07.2010 CENTROID: fix some problems with an offset of .5
-pixels.</tt></li>
-<li><tt>10.07.2010 SMOOTH: new frames inherit current smooth
-params.</tt></li>
-<li><tt>10.07.2010 RGB: fixed a problem when the first image load
-has a flipped wcs.</tt></li>
+<li><tt>10.01.2010 ANALYSIS: fixed a problem when an analysis file was loaded after an image had been loaded. Them menu was not properly updated to reflect the template for each menu item.</tt></li>
+<li><tt>10.05.2010 CUBE: fixed a problem in which sometimes changing the current slice whould hang.</tt></li>
+<li><tt>10.05.2010 CUBE: add support for WCS in cube dialog.</tt></li>
+<li><tt>10.07.2010 CENTROID: add support centroid params xpa/command line.</tt></li>
+<li><tt>10.07.2010 CENTROID: fix some problems with an offset of .5 pixels.</tt></li>
+<li><tt>10.07.2010 SMOOTH: new frames inherit current smooth params.</tt></li>
+<li><tt>10.07.2010 RGB: fixed a problem when the first image load has a flipped wcs.</tt></li>
 <li><tt>10.08.2010 REGION: add CIRCLE3D region.</tt></li>
-<li><tt>10.11.2010 BACKUP: fixed a problem with smoothed images and
-contours.</tt></li>
-<li><tt>10.14.2010 HELP: fixed a problem with finding the help
-files if the CD command has changed the default
-directory.</tt></li>
+<li><tt>10.11.2010 BACKUP: fixed a problem with smoothed images and contours.</tt></li>
+<li><tt>10.14.2010 HELP: fixed a problem with finding the help files if the CD command has changed the default directory.</tt></li>
 <li><tt>10.14.2010 XPA: update to version 2.1.13</tt></li>
 <li><tt><b>10.15.2010 RELEASE version 6.2</b></tt></li>
 </ol>

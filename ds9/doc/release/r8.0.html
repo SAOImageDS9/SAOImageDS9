@@ -1,130 +1,74 @@
 <!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-<meta name="generator" content=
-"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
-<meta http-equiv="Content-Type" content=
-"text/html; charset=us-ascii">
-<meta name="GENERATOR" content=
-"Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
 <title>DS9 Version 8.0 Release Notes</title>
 </head>
-<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor=
-"#FFFFFF" alink="#FF0000">
-<h3><img alt="" src="../sun.gif" width="100" height="98" align=
-"middle"> SAOImageDS9 Version 8.0 Release Notes</h3>
+<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor="#FFFFFF" alink="#FF0000">
+<h3><img alt="" src="../sun.gif" width="100" height="98" align="middle"> SAOImageDS9 Version 8.0 Release Notes</h3>
 <div style="margin-left: 2em">
 <ol>
-<li><tt>04.18.2018 GUI: fixed an issue with loading gzipped
-multiple extension fits files with the -multiframe
-option.</tt></li>
+<li><tt>04.18.2018 GUI: fixed an issue with loading gzipped multiple extension fits files with the -multiframe option.</tt></li>
 <li><tt>05.25.2018 MMT: updated Binospec template.</tt></li>
-<li><tt>06.12.2018 CATALOG: GUI now uses a conesearch radius for
-query.</tt></li>
-<li><tt>06.12.2018 SIA: GUI now uses a conesearch radius for
-query.</tt></li>
-<li><tt>06.13.2018 FITSY++: be sure to output REAL header keywords
-with scientific notation with capital 'E', per FITS
-standard.</tt></li>
-<li><tt>06.14.2018 CATALOG: add Edit menu to Symbol
-dialog.</tt></li>
-<li><tt>06.14.2018 NRRD: fixed a problem exporting, an extra byte
-was being written.</tt></li>
-<li><tt>06.15.2018 IIS: fixed a problem introduced in version 7.6
-with the colormap.</tt></li>
-<li><tt>06.15.2018 IIS: fixed a problem the values displayed on the
-colorbar.</tt></li>
-<li><tt>06.22.2018 API: All new parser/lexer for each command,
-backward compatible API. Parser will detect syntax errors, and
-suggest options.</tt></li>
-<li><tt>06.22.2018 CATALOG: updated catalog menu items for GAIA,
-UCAC, and SDSS.</tt></li>
-<li><tt>06.25.2018 REGIONS: added support for compressed regions
-files.</tt></li>
+<li><tt>06.12.2018 CATALOG: GUI now uses a conesearch radius for query.</tt></li>
+<li><tt>06.12.2018 SIA: GUI now uses a conesearch radius for query.</tt></li>
+<li><tt>06.13.2018 FITSY++: be sure to output REAL header keywords with scientific notation with capital 'E', per FITS standard.</tt></li>
+<li><tt>06.14.2018 CATALOG: add Edit menu to Symbol dialog.</tt></li>
+<li><tt>06.14.2018 NRRD: fixed a problem exporting, an extra byte was being written.</tt></li>
+<li><tt>06.15.2018 IIS: fixed a problem introduced in version 7.6 with the colormap.</tt></li>
+<li><tt>06.15.2018 IIS: fixed a problem the values displayed on the colorbar.</tt></li>
+<li><tt>06.22.2018 API: All new parser/lexer for each command, backward compatible API. Parser will detect syntax errors, and suggest options.</tt></li>
+<li><tt>06.22.2018 CATALOG: updated catalog menu items for GAIA, UCAC, and SDSS.</tt></li>
+<li><tt>06.25.2018 REGIONS: added support for compressed regions files.</tt></li>
 <li><tt>07.06.2018 CUBE: fixed cube slice dialog slider.</tt></li>
-<li><tt>07.10.2018 ANALYSIS: added current slice control to maker
-analysis plot 3d.</tt></li>
-<li><tt>07.11.2018 BACKUP: fixed an issue when data range is
-NAN.</tt></li>
-<li><tt>07.20.2018 BIN: fixed an issue introduced in version 7.6
-where repeat bin calls incorrectly scaled markers and
-contours.</tt></li>
-<li><tt>07.31.2018 REGION: fixed an problem introduced in version
-7.6 with angles with a wcs which is flipped in X.</tt></li>
-<li><tt>08.06.2018 GUI: fixed an problem introduced in version 7.6
-with bracket filename options in standard dialog boxes.</tt></li>
-<li><tt>08.22.2018 WCS: implemented all new wcs support based on
-AST. DS9 is fully compliant with FITS WCS Papers I, II,
-III.</tt></li>
-<li><tt>08.22.2018 CUBE: plot3d current slice is coordinated with
-cube dialog box.</tt></li>
-<li><tt>08.22.2018 BIN: fixed a problem in the case of a RGB image
-has a binned layer, changing bin parameters in other layers caused
-cursor movement.</tt></li>
-<li><tt>08.22.2018 REGION: plot2d now extends across mosaic
-boundries.</tt></li>
+<li><tt>07.10.2018 ANALYSIS: added current slice control to maker analysis plot 3d.</tt></li>
+<li><tt>07.11.2018 BACKUP: fixed an issue when data range is NAN.</tt></li>
+<li><tt>07.20.2018 BIN: fixed an issue introduced in version 7.6 where repeat bin calls incorrectly scaled markers and contours.</tt></li>
+<li><tt>07.31.2018 REGION: fixed an problem introduced in version 7.6 with angles with a wcs which is flipped in X.</tt></li>
+<li><tt>08.06.2018 GUI: fixed an problem introduced in version 7.6 with bracket filename options in standard dialog boxes.</tt></li>
+<li><tt>08.22.2018 WCS: implemented all new wcs support based on AST. DS9 is fully compliant with FITS WCS Papers I, II, III.</tt></li>
+<li><tt>08.22.2018 CUBE: plot3d current slice is coordinated with cube dialog box.</tt></li>
+<li><tt>08.22.2018 BIN: fixed a problem in the case of a RGB image has a binned layer, changing bin parameters in other layers caused cursor movement.</tt></li>
+<li><tt>08.22.2018 REGION: plot2d now extends across mosaic boundries.</tt></li>
 <li><tt>08.28.2018 BACKUP: restore crosshair cursor.</tt></li>
-<li><tt>08.31.2018 SMOOTH: fixed an issue with old
-backups.</tt></li>
+<li><tt>08.31.2018 SMOOTH: fixed an issue with old backups.</tt></li>
 <li><tt><b>09.03.2018 RELEASE version 8.0rc</b></tt></li>
-<li><tt>09.04.2018 REGION: accept 'point' as a region shape,
-defaulting to 'boxcircle'.</tt></li>
-<li><tt>09.04.2018 REGION: fixed a problem with plot3d, incorrectly
-calculating an index into the data cube.</tt></li>
+<li><tt>09.04.2018 REGION: accept 'point' as a region shape, defaulting to 'boxcircle'.</tt></li>
+<li><tt>09.04.2018 REGION: fixed a problem with plot3d, incorrectly calculating an index into the data cube.</tt></li>
 <li><tt>09.04.2018 GUI: removed old keyboard doc button.</tt></li>
 <li><tt>09.04.2018 DOC: cleaned up html documentation.</tt></li>
 <li><tt><b>09.04.2018 RELEASE version 8.0rc2</b></tt></li>
-<li><tt>09.19.2018 WCS: fix a memory ref with short axes symbols
-(aka 'b')</tt></li>
-<li><tt>09.19.2018 WCS: fix a problem starting in crosshair mode
-set in prefs and infobox update with 2D frame.</tt></li>
-<li><tt>09.19.2018 PREFS: fix a problem updating from 7.6 to
-8.0.</tt></li>
-<li><tt>09.21.2018 GUI: use unicode for deg symbol in infobox,
-previous char caused conflicts with Chinese Language.</tt></li>
+<li><tt>09.19.2018 WCS: fix a memory ref with short axes symbols (aka 'b')</tt></li>
+<li><tt>09.19.2018 WCS: fix a problem starting in crosshair mode set in prefs and infobox update with 2D frame.</tt></li>
+<li><tt>09.19.2018 PREFS: fix a problem updating from 7.6 to 8.0.</tt></li>
+<li><tt>09.21.2018 GUI: use unicode for deg symbol in infobox, previous char caused conflicts with Chinese Language.</tt></li>
 <li><tt>09.21.2018 AST: updated to version 8.6.3.</tt></li>
 <li><tt>09.21.2018 TKBLT: updated to version 3.2.11.</tt></li>
-<li><tt>09.24.2018 BIN: use old style Einstein WCS keywords if
-present.</tt></li>
-<li><tt>09.24.2018 PAN: tweak pan parser for backward
-compatibility.</tt></li>
+<li><tt>09.24.2018 BIN: use old style Einstein WCS keywords if present.</tt></li>
+<li><tt>09.24.2018 PAN: tweak pan parser for backward compatibility.</tt></li>
 <li><tt><b>09.25.2018 RELEASE version 8.0rc3</b></tt></li>
-<li><tt>09.26.2018 BIN: fixed old style Einstein WCS keyword
-CRVAL2.</tt></li>
+<li><tt>09.26.2018 BIN: fixed old style Einstein WCS keyword CRVAL2.</tt></li>
 <li><tt><b>09.26.2018 RELEASE version 8.0rc4</b></tt></li>
-<li><tt>09.27.2018 REGION: Plot2d,Plot3d,Histogram- use BUNIT
-keyword if available.</tt></li>
-<li><tt>09.27.2018 WCS: Tweaked -TAB code to find WCS HDU extension
-easier.</tt></li>
-<li><tt>09.30.2018 CONTOURS: fixed contour parser nlevels problem,
-again.</tt></li>
-<li><tt>09.30.2018 CONTOURS: changed contour limits behavior. Now
-set mode to USER when limits are set and update dialog
-accordingly.</tt></li>
-<li><tt>10.01.2018 API: Tweaked parsers to fix issue with XPA/SAMP
-error messages.</tt></li>
+<li><tt>09.27.2018 REGION: Plot2d,Plot3d,Histogram- use BUNIT keyword if available.</tt></li>
+<li><tt>09.27.2018 WCS: Tweaked -TAB code to find WCS HDU extension easier.</tt></li>
+<li><tt>09.30.2018 CONTOURS: fixed contour parser nlevels problem, again.</tt></li>
+<li><tt>09.30.2018 CONTOURS: changed contour limits behavior. Now set mode to USER when limits are set and update dialog accordingly.</tt></li>
+<li><tt>10.01.2018 API: Tweaked parsers to fix issue with XPA/SAMP error messages.</tt></li>
 <li><tt><b>10.02.2018 RELEASE version 8.0rc5</b></tt></li>
-<li><tt>10.08.2018 FITS: command -url: accept mime type 'text' as
-'fits'.</tt></li>
-<li><tt>10.16.2018 API: fixed an issue with CommReturn, so that it
-returns at the top level.</tt></li>
-<li><tt>10.16.2018 SAMP: added -keepalive to http::geturl calls in
-cases of retreiveing large files from servers that use
-Transport-encoding: chunked.</tt></li>
-<li><tt>10.17.2018 SAMP: reset http token in case of
-error.</tt></li>
-<li><tt>10.17.2018 CUBE: fixed an issue with properly rounding
-slice number.</tt></li>
+<li><tt>10.08.2018 FITS: command -url: accept mime type 'text' as 'fits'.</tt></li>
+<li><tt>10.16.2018 API: fixed an issue with CommReturn, so that it returns at the top level.</tt></li>
+<li><tt>10.16.2018 SAMP: added -keepalive to http::geturl calls in cases of retreiveing large files from servers that use Transport-encoding: chunked.</tt></li>
+<li><tt>10.17.2018 SAMP: reset http token in case of error.</tt></li>
+<li><tt>10.17.2018 CUBE: fixed an issue with properly rounding slice number.</tt></li>
 <li><tt><b>10.18.2018 RELEASE version 8.0rc6</b></tt></li>
-<li><tt>11.03.2018 BACKUP: fixed an issue with soft
-links.</tt></li>
+<li><tt>11.03.2018 BACKUP: fixed an issue with soft links.</tt></li>
 <li><tt><b>12.15.2018 RELEASE version 8.0</b></tt></li>
 <li><tt>12.26.2018 VIEW: fixed view graph command.</tt></li>
-<li><tt>01.03.2019 DS9: fixed a problem with MacOS Aqua and Windows
-unable to locate ds9 parser scripts at startup.</tt></li>
+<li><tt>01.03.2019 DS9: fixed a problem with MacOS Aqua and Windows unable to locate ds9 parser scripts at startup.</tt></li>
 <li><tt>01.03.2019 SCALE: fixed scale command.</tt></li>
-<li><tt>01.03.2019 PRINT: add backward compatible options for
-resolution to command.</tt></li>
+<li><tt>01.03.2019 PRINT: add backward compatible options for resolution to command.</tt></li>
 <li><tt>01.03.2019 TILE: fix tile grid layout command.</tt></li>
 <li><tt><b>01.07.2019 RELEASE version 8.0.1</b></tt></li>
 </ol>

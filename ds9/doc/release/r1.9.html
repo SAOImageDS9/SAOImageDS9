@@ -1,71 +1,48 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-<meta name="generator" content=
-"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
-<meta http-equiv="Content-Type" content=
-"text/html; charset=us-ascii">
-<meta name="GENERATOR" content=
-"Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
 <title>DS9 Version 1.9 Release Notes</title>
 </head>
-<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor=
-"#FFFFFF" alink="#FF0000">
-<h3><img alt="" src="../sun.gif" width="100" height="98" align=
-"middle">SAOImageDS9 Version 1.9 Release Notes</h3>
+<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor="#FFFFFF" alink="#FF0000">
+<h3><img alt="" src="../sun.gif" width="100" height="98" align="middle">SAOImageDS9 Version 1.9 Release Notes</h3>
 <div style="margin-left: 2em">
 <h4><b>Version 1.9.8</b></h4>
 <ol>
-<li><tt>fixed a problem with listing regions that are very long.
-the size limit has been increased from 1024 to 8192</tt></li>
+<li><tt>fixed a problem with listing regions that are very long. the size limit has been increased from 1024 to 8192</tt></li>
 <li><tt>completed MS Windows port</tt></li>
-<li><tt>fixed a problem with large polygons in FITS Regions bin
-table format</tt></li>
-<li><tt>ds9 will now correctly load a FITS Extension image without
-a primary header</tt></li>
+<li><tt>fixed a problem with large polygons in FITS Regions bin table format</tt></li>
+<li><tt>ds9 will now correctly load a FITS Extension image without a primary header</tt></li>
 <li><tt>xpa wcs [reset|replace|append] function added</tt></li>
 <li><tt>the default nameserver is now 'simbad-sao'</tt></li>
 </ol>
 <h4><b>Version 1.9.7.2</b></h4>
 <ol>
-<li><tt>fixed a problem with reading arrays via xpa and extra data
-an the end of the image</tt></li>
-<li><tt>fixed a problem with region callbacks and actions on
-regions within the callback</tt></li>
-<li><tt>fixed a memory leak with deleteing polygon
-vertices</tt></li>
-<li><tt>double click on region with select=0 no longers opens a
-dialog</tt></li>
-<li><tt>added select property to ds9 region properties
-list</tt></li>
-<li><tt>for default annulus, ellipse annulus, box annulus, the
-number of annuli is now used when the user click and
-drags</tt></li>
-<li><tt>fixed a problem with ellipse annulus and box annulus and
-zero inner radius</tt></li>
-<li><tt>fixed a problem with box and boxannuls and updating the
-region dialog coords</tt></li>
+<li><tt>fixed a problem with reading arrays via xpa and extra data an the end of the image</tt></li>
+<li><tt>fixed a problem with region callbacks and actions on regions within the callback</tt></li>
+<li><tt>fixed a memory leak with deleteing polygon vertices</tt></li>
+<li><tt>double click on region with select=0 no longers opens a dialog</tt></li>
+<li><tt>added select property to ds9 region properties list</tt></li>
+<li><tt>for default annulus, ellipse annulus, box annulus, the number of annuli is now used when the user click and drags</tt></li>
+<li><tt>fixed a problem with ellipse annulus and box annulus and zero inner radius</tt></li>
+<li><tt>fixed a problem with box and boxannuls and updating the region dialog coords</tt></li>
 <li><tt>fixed a problem with turning off/on active frames</tt></li>
-<li><tt>fixed a problem with saving fits images created from a fits
-image extension</tt></li>
-<li><tt>added new 'new' option to xpa points 'FITS' and 'ARRAY' to
-create a new frame before loading the new image</tt></li>
+<li><tt>fixed a problem with saving fits images created from a fits image extension</tt></li>
+<li><tt>added new 'new' option to xpa points 'FITS' and 'ARRAY' to create a new frame before loading the new image</tt></li>
 <li><tt>completed port HP-UX</tt></li>
 </ol>
 <h4><b>Version 1.9.7.1</b></h4>
 <ol>
-<li><tt>fixed a problem with prefs and sourcing external tcl
-files</tt></li>
+<li><tt>fixed a problem with prefs and sourcing external tcl files</tt></li>
 </ol>
 <h4><b>Version 1.9.7</b></h4>
 <ol>
-<li><tt>mktclapp is now used to build the application from
-tcl</tt></li>
+<li><tt>mktclapp is now used to build the application from tcl</tt></li>
 <li><tt>fixed a problem with HMS and hour=0</tt></li>
-<li><tt>fixed a problem with parseing old ds9 region files and
-'global'</tt></li>
-<li><tt>support for SAOtng Regions file format has been
-restored</tt></li>
+<li><tt>fixed a problem with parseing old ds9 region files and 'global'</tt></li>
+<li><tt>support for SAOtng Regions file format has been restored</tt></li>
 <li><tt>upgraded to tcl/tk 8.3.2</tt></li>
 <li><tt>upgraded to blt2.4u</tt></li>
 <li><tt>minor changes made to ciao regions file format</tt></li>
@@ -74,152 +51,100 @@ restored</tt></li>
 <h4><b>Version 1.9.6</b></h4>
 <ol>
 <li><tt>Added Truecolor Colorbar preference</tt></li>
-<li><tt>Fitsy++ now supports fixed and free format keyword strings
-correctly</tt></li>
-<li><tt>While in 'Pan' mode, the arrow keys may be used to pan the
-image</tt></li>
+<li><tt>Fitsy++ now supports fixed and free format keyword strings correctly</tt></li>
+<li><tt>While in 'Pan' mode, the arrow keys may be used to pan the image</tt></li>
 <li><tt>Custom Page Setup in mm is now supported</tt></li>
 <li><tt>Region Text string can now contain both a ' and "</tt></li>
-<li><tt>Region File format for text now supports the following text
-strings:</tt></li>
+<li><tt>Region File format for text now supports the following text strings:</tt></li>
 <li style="list-style: none">
 <div style="margin-left: 2em"><tt>text="This is a test"</tt><br>
 <tt>text="This is a test of '"</tt><br>
 <tt>text='This is a test of "'</tt><br>
 <tt>text={This is a test of ' and "}</tt></div>
 </li>
-<li><tt>DS9 will now correctly parse a regions spec with a delim of
-';'</tt></li>
-<li><tt>XPA tcl command now runs in the same context frame as
-source and ds9</tt></li>
-<li><tt>Fixed a problem with the Colorbar contrat/bias dialog and
-truecolor</tt></li>
+<li><tt>DS9 will now correctly parse a regions spec with a delim of ';'</tt></li>
+<li><tt>XPA tcl command now runs in the same context frame as source and ds9</tt></li>
+<li><tt>Fixed a problem with the Colorbar contrat/bias dialog and truecolor</tt></li>
 <li><tt>Fixed a problem with BOX list/save format</tt></li>
-<li><tt>Fixed a problem with contours in that one extra level was
-generated when using the low/high and number of contours
-controls</tt></li>
-<li><tt>Updated to Doug Mink's wcssub version 2.8.1, which fixes a
-problem with keywords without an '='</tt></li>
-<li><tt>Fixed a problem with printing Region Text with '(', ')', or
-'\' in it.</tt></li>
-<li><tt>Region file format is now valid for both reading and
-writing Region files</tt></li>
+<li><tt>Fixed a problem with contours in that one extra level was generated when using the low/high and number of contours controls</tt></li>
+<li><tt>Updated to Doug Mink's wcssub version 2.8.1, which fixes a problem with keywords without an '='</tt></li>
+<li><tt>Fixed a problem with printing Region Text with '(', ')', or '\' in it.</tt></li>
+<li><tt>Region file format is now valid for both reading and writing Region files</tt></li>
 <li><tt>Implemented new Regions file format, version 3</tt></li>
-<li><tt>Fixed a problem with IRAF and the 'f' and 'c'
-keys</tt></li>
-<li><tt>Images with odd length will center on pixel
-boundaries</tt></li>
-<li><tt>The number of bins if determined from TLMIN/TLMAX will now
-vary, based on column type (integer or real). The bin space for
-integer is TLMIN-.5 to TLMAX +.5 and for real TLMIN to
-TLMAX.</tt></li>
+<li><tt>Fixed a problem with IRAF and the 'f' and 'c' keys</tt></li>
+<li><tt>Images with odd length will center on pixel boundaries</tt></li>
+<li><tt>The number of bins if determined from TLMIN/TLMAX will now vary, based on column type (integer or real). The bin space for integer is TLMIN-.5 to TLMAX +.5 and for real TLMIN to TLMAX.</tt></li>
 <li><tt>Binning Dialog box is now non-modal</tt></li>
-<li><tt>Made improvements in the resolution of
-coordinates</tt></li>
+<li><tt>Made improvements in the resolution of coordinates</tt></li>
 <li><tt>Added the -version command line option</tt></li>
-<li><tt>Fixed a problem with bad name resolution and
-NED-SAO</tt></li>
-<li><tt>Fixed a problem with -grid and -contour command line
-options</tt></li>
-<li><tt>Add -format, -coord, -coordformat, and -delim to xpaget
-regions</tt></li>
+<li><tt>Fixed a problem with bad name resolution and NED-SAO</tt></li>
+<li><tt>Fixed a problem with -grid and -contour command line options</tt></li>
+<li><tt>Add -format, -coord, -coordformat, and -delim to xpaget regions</tt></li>
 <li><tt>Added FITS bin table filtering</tt></li>
 <li><tt>Changed XPA BLOCK to BIN</tt></li>
-<li><tt>bin factors of less than 1 but greater that 0 are now
-allowed</tt></li>
-<li><tt>fixed a problem with ecliptic coords and FITS BIN TABLES
-with wcs</tt></li>
-<li><tt>Fixed a problem with contours and high resolution
-values</tt></li>
+<li><tt>bin factors of less than 1 but greater that 0 are now allowed</tt></li>
+<li><tt>fixed a problem with ecliptic coords and FITS BIN TABLES with wcs</tt></li>
+<li><tt>Fixed a problem with contours and high resolution values</tt></li>
 <li><tt>Added algorithm method to contours</tt></li>
-<li><tt>Fixed a problem with contours and re-binning a FITS bin
-table</tt></li>
-<li><tt>Changes to BIN commandline options to mirror BIN xpa
-options</tt></li>
+<li><tt>Fixed a problem with contours and re-binning a FITS bin table</tt></li>
+<li><tt>Changes to BIN commandline options to mirror BIN xpa options</tt></li>
 <li><tt>Added raise/lower command line options</tt></li>
 <li><tt>Added raise/lower xpa options</tt></li>
-<li><tt>Cut/Paste to/from the primary selection is now
-provided</tt></li>
-<li><tt>Added new type of grid, Exterior Axis with interior
-numerics</tt></li>
-<li><tt>Fixed problems with grid numerics and rotation of
-non-zero</tt></li>
+<li><tt>Cut/Paste to/from the primary selection is now provided</tt></li>
+<li><tt>Added new type of grid, Exterior Axis with interior numerics</tt></li>
+<li><tt>Fixed problems with grid numerics and rotation of non-zero</tt></li>
 <li><tt>Fixed a problem with graphs and no FITS loaded</tt></li>
 <li><tt>Added Regions Delimiter menu</tt></li>
-<li><tt>Added ANNULUS, ELLIPSE ANNULUS, and BOX ANNULUS
-regions</tt></li>
+<li><tt>Added ANNULUS, ELLIPSE ANNULUS, and BOX ANNULUS regions</tt></li>
 </ol>
 <h4><b>Version 1.9.5</b></h4>
 <ol>
-<li><tt>Fixed a problem with Saving FITS images on byte swaped
-platforms</tt></li>
-<li><tt>FITS Bin table support now uses TLMIN/TLMAX to determine
-binning buffersize up to the user specified limit</tt></li>
-<li><tt>Fixed the XPA Regions format,coord, and coordformat
-calls</tt></li>
-<li><tt>Changed the behavior of $xpaget ds9 regions
-[format|coord|coordformat]</tt></li>
+<li><tt>Fixed a problem with Saving FITS images on byte swaped platforms</tt></li>
+<li><tt>FITS Bin table support now uses TLMIN/TLMAX to determine binning buffersize up to the user specified limit</tt></li>
+<li><tt>Fixed the XPA Regions format,coord, and coordformat calls</tt></li>
+<li><tt>Changed the behavior of $xpaget ds9 regions [format|coord|coordformat]</tt></li>
 </ol>
 <h4><b>Version 1.9.4</b></h4>
 <ol>
-<li><tt>Added ability to save a FITS bin table as a FITS
-image</tt></li>
+<li><tt>Added ability to save a FITS bin table as a FITS image</tt></li>
 <li><tt>Added xpa point to support the above</tt></li>
 <li><tt>Fixed a problem with loading arrays</tt></li>
 <li><tt>Added support for the Rosat All Sky Survey</tt></li>
 <li><tt>Added command line support for DSS and RASS</tt></li>
 <li><tt>Fixed a problem with displaying LINEAR WCS</tt></li>
-<li><tt>DS9 is now much more tolarent of FITS files in which the
-data segment is short in size, ie, is not a multiple of FITBLOCK
-(2880 bytes)</tt></li>
-<li><tt>Fixed a problem with FITS files with headers with 100's or
-1000's of comments or history keywords</tt></li>
+<li><tt>DS9 is now much more tolarent of FITS files in which the data segment is short in size, ie, is not a multiple of FITBLOCK (2880 bytes)</tt></li>
+<li><tt>Fixed a problem with FITS files with headers with 100's or 1000's of comments or history keywords</tt></li>
 <li><tt>Enhanced Preferences support</tt></li>
-<li><tt>The information panel is now updated during
-blinking</tt></li>
+<li><tt>The information panel is now updated during blinking</tt></li>
 <li><tt>Fixed a problem with long frame names</tt></li>
 <li><tt>Added new fuctionality to the 'Frame' xpa point</tt></li>
-<li><tt>Fixed a memory problem that caused problems with the Alpha
-port</tt></li>
-<li><tt>Fixed a problem with regions in sexagesimal format and
-NATIVE WCS</tt></li>
-<li><tt>DS9 is now much mor tolerant of sexagesimal format regions
-that do not map directly on top of a image</tt></li>
+<li><tt>Fixed a memory problem that caused problems with the Alpha port</tt></li>
+<li><tt>Fixed a problem with regions in sexagesimal format and NATIVE WCS</tt></li>
+<li><tt>DS9 is now much mor tolerant of sexagesimal format regions that do not map directly on top of a image</tt></li>
 <li><tt>Implemented the new default region format</tt></li>
-<li><tt>Fixed a problem with Polygon regions and creating/moving
-vertices</tt></li>
+<li><tt>Fixed a problem with Polygon regions and creating/moving vertices</tt></li>
 <li><tt>Added Colormap Contrast and Bias Dialog</tt></li>
-<li><tt>Fixed a problem with Box regions and negative width and
-height</tt></li>
-<li><tt>Angle has been added to the Ruler Region dialog
-box</tt></li>
-<li><tt>Length has been added to the Line Region dialog
-box</tt></li>
-<li><tt>Fixed a problem with Region Text and the '"'
-character</tt></li>
+<li><tt>Fixed a problem with Box regions and negative width and height</tt></li>
+<li><tt>Angle has been added to the Ruler Region dialog box</tt></li>
+<li><tt>Length has been added to the Line Region dialog box</tt></li>
+<li><tt>Fixed a problem with Region Text and the '"' character</tt></li>
 <li><tt>Added XPA point for DSS</tt></li>
 <li><tt>Added XPA point for RASS</tt></li>
 <li><tt>Added XPA point for Name Servers</tt></li>
-<li><tt>Fixed a problem with rotated Regions and IRAF
-images</tt></li>
+<li><tt>Fixed a problem with rotated Regions and IRAF images</tt></li>
 <li><tt>Added XPA point xpaget fits</tt></li>
 <li><tt>Added XPA point xpaset file save &lt;filename&gt;</tt></li>
-<li><tt>xpa regions may now be delimited by nl or
-semicolon</tt></li>
+<li><tt>xpa regions may now be delimited by nl or semicolon</tt></li>
 </ol>
 <h4><b>Version 1.9.3</b></h4>
 <ol>
-<li><tt>Fixed a problem with preferences. The prefs file was not
-parsed.</tt></li>
-<li><tt>Fixed a problem with xpaset ds9 fits and multiple ext fits
-files</tt></li>
-<li><tt>Fixed some minor problems with xpa and
-blink,frame</tt></li>
+<li><tt>Fixed a problem with preferences. The prefs file was not parsed.</tt></li>
+<li><tt>Fixed a problem with xpaset ds9 fits and multiple ext fits files</tt></li>
+<li><tt>Fixed some minor problems with xpa and blink,frame</tt></li>
 <li><tt>Added xpaset ds9 frame [first|next|prev|last]</tt></li>
 <li><tt>Added printing of pixel tables</tt></li>
 <li><tt>Added Copy/Paste support for pixel tables</tt></li>
-<li><tt>Fixed a problem with changing the size of pixel
-tables</tt></li>
+<li><tt>Fixed a problem with changing the size of pixel tables</tt></li>
 <li><tt>'F' toggles Info Pannel 'freeze' mode.</tt></li>
 <li><tt>Full shared memory support has been added</tt></li>
 <li style="list-style: none"><br>
@@ -229,57 +154,42 @@ tables</tt></li>
 <tt>$xpaset -p ds9 shm mosaicimage key 100 10240 foo</tt><br>
 <tt>$xpaset -p ds9 shm mosaic key 100 10240 foo[3]</tt><br>
 <tt>$xpaset -p ds9 shm array shmid 102 8640 [dim=32,bitpix=16]</tt>
-<p><tt>$xpaset -p ds9 update 1 100 100 200 200 # update HDU1 in
-image coords</tt><br>
-<tt>$xpaset -p ds9 update 3 400 400 500 500 # update HDU3 in image
-coords</tt></p>
+<p><tt>$xpaset -p ds9 update 1 100 100 200 200 # update HDU1 in image coords</tt><br>
+<tt>$xpaset -p ds9 update 3 400 400 500 500 # update HDU3 in image coords</tt></p>
 </li>
 </ol>
 <h4><b>Version 1.9.2</b></h4>
 <ol>
 <li><tt>Fixed yet another problem with contours</tt></li>
-<li><tt>Fixed a problem with loading arrays with bitpix of
--64</tt></li>
+<li><tt>Fixed a problem with loading arrays with bitpix of -64</tt></li>
 </ol>
 <h4><b>Version 1.9.1</b></h4>
 <ol>
 <li><tt>Fixed the 'Analysis' menu item 'DSS'</tt></li>
-<li><tt>provided for more backward compatibility with old
-preference files</tt></li>
-<li><tt>Fixed a problem with IRAF support and changing buffer
-sizes</tt></li>
-<li><tt>Fixed a problem with contours and reading incorrectly
-levels</tt></li>
-<li><tt>Fixed a problem with printing and
-pan/rotation/zoom</tt></li>
-<li><tt>Fixed a problem with Grid Rotated numbers and MSB/LSB
-cross-platform</tt></li>
+<li><tt>provided for more backward compatibility with old preference files</tt></li>
+<li><tt>Fixed a problem with IRAF support and changing buffer sizes</tt></li>
+<li><tt>Fixed a problem with contours and reading incorrectly levels</tt></li>
+<li><tt>Fixed a problem with printing and pan/rotation/zoom</tt></li>
+<li><tt>Fixed a problem with Grid Rotated numbers and MSB/LSB cross-platform</tt></li>
 </ol>
 <h4><b>Version 1.9</b></h4>
 <ol>
 <li><tt>DS9 now supports IRAF!</tt></li>
 </ol>
 <ol>
-<li><tt>point regions now have the include/exclude
-property</tt></li>
+<li><tt>point regions now have the include/exclude property</tt></li>
 <li><tt>crosshairs will now print</tt></li>
-<li><tt>fixed a problem with contours and the contour dialog is
-visible</tt></li>
-<li><tt>fixed a problem with the wcs of FITS files with very long
-headers</tt></li>
+<li><tt>fixed a problem with contours and the contour dialog is visible</tt></li>
+<li><tt>fixed a problem with the wcs of FITS files with very long headers</tt></li>
 <li><tt>added Pixel Table feature</tt></li>
-<li><tt>contours now appear in the magnifier with graphics
-enabled</tt></li>
+<li><tt>contours now appear in the magnifier with graphics enabled</tt></li>
 <li><tt>John Roll's Tcl Ast package has been added</tt></li>
-<li><tt>DS9 is now more tolerant of 'SIMPLE = F' type FITS
-files</tt></li>
-<li><tt>fixed a problem with render speed in single frame mode and
-multiple frames loaded</tt></li>
+<li><tt>DS9 is now more tolerant of 'SIMPLE = F' type FITS files</tt></li>
+<li><tt>fixed a problem with render speed in single frame mode and multiple frames loaded</tt></li>
 <li><tt>The Pan Zoom Rotate Dialog Box is now Non-Modal</tt></li>
 <li><tt>Name Resolution support has been added</tt></li>
 <li><tt>DSS support has been added</tt></li>
-<li><tt>A problem with contours has been corrected. if contours
-levels = n, then n+1 contours are actually rendered</tt></li>
+<li><tt>A problem with contours has been corrected. if contours levels = n, then n+1 contours are actually rendered</tt></li>
 <li><tt>DEC Alphas are now supported</tt></li>
 <li><tt>SGI is now supported</tt></li>
 <li><tt>LINEAR WCS is now fully supported</tt></li>

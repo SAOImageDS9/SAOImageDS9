@@ -724,10 +724,10 @@ $xpaset -p ds9 crop +104:51:06.915 +68:33:40.761&nbsp; 28.144405
 22.000204 wcs galactic arcsec<br>
 $xpaset -p ds9 crop match wcs<br>
 $xpaset -p ds9 crop lock wcs<br>
-$xpaset -p ds9 crop reset<br></tt> $xpaset -p ds9 crop 3d .25 .50
-wcs<br>
-<tt>$xpaset -p ds9 crop open</tt><br>
-<tt>$xpaset -p ds9 crop close</tt>
+$xpaset -p ds9 crop reset<br>
+$xpaset -p ds9 crop 3d .25 .50 wcs<br>
+$xpaset -p ds9 crop open<br>
+$xpaset -p ds9 crop close</tt>
 <p><b><a name="crosshair" id="crosshair"></a>crosshair</b></p>
 <p>Controls the current position of the crosshair in the current
 frame. DS9 is placed in crosshair mode when the crosshair is
@@ -1343,10 +1343,8 @@ for more information.<br></p>
 iexam []<br>
 &nbsp;&nbsp;&nbsp; [[]|button|key|any] coordinate &lt;coordsys&gt;
 [&lt;skyframe&gt;] [&lt;skyformat&gt;]<br>
-&nbsp;&nbsp;&nbsp;&nbsp; [[]|button|key|any] data
-[width][height]<br>
-&nbsp;&nbsp;&nbsp;&nbsp; [[]|button|key|any] &lt;macro
-string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[]|button|key|any] data [width][height]<br>
+&nbsp;&nbsp;&nbsp; [[]|button|key|any] &lt;macro string&gt;]<br>
 &nbsp;<br>
 Example:<br>
 $xpaget ds9 iexam # image coordinates<br>
@@ -1862,9 +1860,8 @@ none|circle|square|diamond|plus|splus|scross|triangle|arrow]<br>
 &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] smooth
 step|linear|cubic|quadratic|catrom]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] color
-&lt;value&gt;]<br></tt> <tt>&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;]
-width &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] color &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] width &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] dash yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] error yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] error color
@@ -2116,8 +2113,8 @@ regions&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [delete select]<br>
 &nbsp;&nbsp;&nbsp; [format
 ds9|xml|ciao|saotng|saoimage|pros|xy]<br>
-&nbsp;&nbsp;&nbsp; [system image|physical|wcs|wcsa...wcsz]<br></tt>
-<tt>&nbsp;&nbsp;&nbsp; [sky fk4|fk5|icrs|galactic|ecliptic]<br>
+&nbsp;&nbsp;&nbsp; [system image|physical|wcs|wcsa...wcsz]<br>
+&nbsp;&nbsp;&nbsp; [sky fk4|fk5|icrs|galactic|ecliptic]<br>
 &nbsp;&nbsp;&nbsp; [skyformat degrees|sexagesimal]<br>
 &nbsp;&nbsp;&nbsp; [strip yes|no]<br>
 &nbsp;&nbsp;&nbsp; [shape &lt;shape&gt;]<br>
@@ -2279,7 +2276,7 @@ $xpaset -p ds9 restore ds9.bck</tt><br>
 <p><b><a name="rgb" id="rgb"></a>rgb</b></p>
 <p>Create RGB frame and control RGB frame parameters.</p>
 <tt>Syntax:<br>
-rgb&nbsp; []<br>
+rgb []<br>
 &nbsp;&nbsp;&nbsp; [red|green|blue]<br>
 &nbsp;&nbsp;&nbsp; [channel [red|green|blue]]<br>
 &nbsp;&nbsp;&nbsp; [view [red|green|blue] [yes|no]]<br>

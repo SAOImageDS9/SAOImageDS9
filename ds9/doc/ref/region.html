@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="generator" content=
-"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.18.1), see www.w3.org">
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
 <meta http-equiv="Content-Type" content=
 "text/html; charset=us-ascii">
 <meta name="GENERATOR" content=
@@ -34,12 +34,11 @@ via the GUI and XPA.</p>
 <p><tt>Circle<br>
 Usage: circle x y radius # fill=[0|1]<br></tt></p>
 <p><tt>Ellipse<br>
-Usage: ellipse x y radius radius angle</tt> <tt>#
-fill=[0|1]</tt></p>
+Usage: ellipse x y radius radius angle# fill=[0|1]</tt></p>
 <p><tt>Box<br>
-Usage: box x y width height angle</tt> <tt># fill=[0|1]</tt></p>
+Usage: box x y width height angle# fill=[0|1]</tt></p>
 <p><tt>Polygon<br>
-Usage: polygon x1 y1 x2 y2 x3 y3 ...</tt> <tt># fill=[0|1]</tt></p>
+Usage: polygon x1 y1 x2 y2 x3 y3 ...# fill=[0|1]</tt></p>
 <p><tt>Point<br>
 Usage: point x y #
 point=[circle|box|diamond|cross|x|arrow|boxcircle] [size]<br>
@@ -66,9 +65,9 @@ Usage: annulus x y inner outer n=#<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; annulus x y r1 r2
 r3...</tt></p>
 <p><tt>Ellipse Annulus<br>
-Usage: ellipse x y r11 r12 r21 r22 n=# [angle]<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ellipse x y r11 r12 r21 r22
-r31 r32 ... [angle]</tt></p>
+Usage: ellipse x y r11 r12 r21 r22 n=# [angle]<br></tt>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ellipse x y r11 r12 r21
+r22 r31 r32 ... [angle]</tt></p>
 <p><tt>Box Annulus<br>
 Usage: box x y w1 h1 w2 h2 [angle]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; box x y w1 h1 w2 h2 w3 h3 ...
@@ -94,7 +93,6 @@ Include/Exclude property. It is set via '+' or '-' preceding the
 region. In addition, the Line, Point, and Ruler regions have unique
 properties, not shared by others. Not all properties are available
 via the GUI or are applicable for all regions.</p>
-<blockquote>
 <p><b>Text</b></p>
 <p>All regions may have text associated with them. Use the text
 property to set the text. Strings may be quoted with " or ' or {}.
@@ -107,9 +105,9 @@ and ' in it} textangle=30</tt>
 rendered. DS9 recognizes many symbolic color names (i.e. "red",
 "green", "blue", "pink", etc) along with 3, 6, and 9 digit RGB hex
 values (#fff, #ffffff, #fffffffff)<br></p>
-<tt>Example:<br>
-circle(100,100,20) # color=green<br></tt> <tt>circle(100,100,20) #
-color=#48f</tt>
+<tt>Example:</tt><br>
+<tt>circle(100,100,20) # color=green</tt><br>
+<tt>circle(100,100,20) # color=#48f</tt>
 <p><b>Dash List</b></p>
 <p>Sets dashed line parameters. This does not render the region in
 dashed lines.</p>
@@ -160,13 +158,13 @@ the region via the GUI.</p>
 <p>The Include/Exclude properties flags the region with a boolean
 <tt>NOT</tt> for later analysis. Use '+' for include (default), '-'
 for exclude.</p>
-<tt>Example: -circle(100,100,20)<br></tt>
+<tt>Example: -circle(100,100,20)</tt><br>
 <p><b>Source/Background</b></p>
 <p>The Source/Background properties flag the region for use with
 other analysis applications. The default is <tt>source</tt></p>
-<tt>Example: circle(100,100,20) # source<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;circle(200,200,10) #
-background</tt><br>
+<tt>Example: circle(100,100,20) # source</tt><br>
+<tt>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;circle(200,200,10)
+# background</tt><br>
 <p><b>Tag</b></p>
 <p>All regions may have zero or more tags associated with it, which
 may be used for grouping and searching.</p>
@@ -193,7 +191,7 @@ property to set the point type.</p>
 <tt>Example: point(100,100) # point=diamond 31</tt>
 <p><b>Default Properties</b></p>
 <p>The default properties are:</p>
-<blockquote><tt>text={}</tt><br>
+<tt>text={}</tt><br>
 <tt>color=green</tt><br>
 <tt>font="helvetica 10 normal roman"</tt><br>
 <tt>select=1</tt><br>
@@ -202,73 +200,56 @@ property to set the point type.</p>
 <tt>delete=1</tt><br>
 <tt>highlite=1</tt><br>
 <tt>include=1</tt><br>
-<tt>fixed=0</tt></blockquote>
-</blockquote>
+<tt>fixed=0</tt><br>
 <p><b><a name="RegionFileFormat" id="RegionFileFormat"></a>Region
 File Format</b></p>
-<blockquote>
 <p><b>Syntax</b></p>
 <p>Region arguments may be separated with either a comma or space.
 Optional parentheses may be used a the beginning and end of a
 description.</p>
-<blockquote><tt>circle 100 100 10</tt><br>
+<tt>circle 100 100 10</tt><br>
 <tt>circle(100 100 10)</tt><br>
-<tt>circle(100,100,10)</tt></blockquote>
+<tt>circle(100,100,10)</tt><br>
 <p><b>Comments</b></p>
 <p>All lines that begin with <tt>#</tt> are comments and will be
 ignored.</p>
-<blockquote><tt># This is a comment</tt></blockquote>
+<tt># This is a comment</tt><br>
 <p><b>Delimiter</b></p>
 <p>All lines may be delimited with either a new-line or
 semi-colon.</p>
-<blockquote><tt>circle 100 100 10</tt><br>
-<tt>ellipse 200 200 20 40 ; box 300 300 20 40</tt></blockquote>
+<tt>circle 100 100 10</tt><br>
+<tt>ellipse 200 200 20 40 ; box 300 300 20 40</tt><br>
 <p><b>Header</b></p>
 <p>A DS9 region file may start with the following optional
 header:</p>
-<blockquote><tt># Region file format: DS9 version
-4.0</tt></blockquote>
+<tt># Region file format: DS9 version 4.0</tt><br>
 <p><b>Global Properties</b></p>
 <p>Global properties affect all regions unless a local property is
 specified. The <tt>global</tt> keyword is first, followed by a list
 of keyword = value pairs. Multiple global property lines may be
 used within a region file.</p>
-<blockquote><tt>global color=green font="helvetica 10 normal roman"
-edit=1 move=1 delete=1 highlite=1 include=1
-wcs=wcs</tt></blockquote>
+<tt>global color=green font="helvetica 10 normal roman" edit=1
+move=1 delete=1 highlite=1 include=1 wcs=wcs</tt><br>
 <p><b>Local Properties</b></p>
 <p>Local properties start with a # after a region description and
 only affect the region it is specified with.</p>
-<blockquote><tt>physical;circle(504,513,20) # color=red text={This
-is a Circle}</tt></blockquote>
+<tt>physical;circle(504,513,20) # color=red text={This is a
+Circle}</tt><br>
 <p><b>Coordinate Systems</b></p>
 <p>For each region, it is important to specify the coordinate
 system used to interpret the region, i.e., to set the context in
 which the position and size values are interpreted. For this
 purpose, the following keywords are recognized:</p>
-<blockquote>
-<blockquote>
-<tt>PHYSICAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# pixel coords of original file using LTM/LTV</tt><br>
-<tt>IMAGE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# pixel coords of current file</tt><br>
-<tt><tt><tt>FK4,B1950&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp; # sky coordinate systems</tt><br>
-FK5,J2000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# sky coordinate systems</tt><br></tt>
-<tt><tt><tt>ICRS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# sky coordinate systems</tt><br></tt>
-GALACTIC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# sky coordinate systems</tt><br>
-<tt>ECLIPTIC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# sky coordinate systems</tt><br>
-<tt>WCS&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; # primary WCS<br></tt>
-<tt>WCSA &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; # secondary WCS<br></tt>
-<tt>LINEAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# linear primary WCS</tt> <tt><br></tt></blockquote>
-</blockquote>
+<tt>PHYSICAL<br>
+IMAGE<br>
+FK4,B1950<br>
+FK5,J2000<br>
+ICRS<br>
+GALACTIC<br>
+ECLIPTIC<br>
+WCS<br>
+WCSA<br>
+LINEAR</tt><br>
 <p><b>Mosaic Images</b></p>
 <p>While some coordinate systems are unique across mosaic images,
 others coordinate systems, such as <tt>image</tt>, or
@@ -280,13 +261,13 @@ conversions. The default is the first header, or <tt>tile
 <p><b>Multiple WCS</b></p>
 <p>If an image has multiple wcs's defined, use <tt>wcs#</tt> to
 specify which wcs to use for all wcs references. Valid values are
-<tt>wcs, wcsa, wcsb, wcsc... wcsz.</tt><br>
-<tt>Example: wcsa;linear;point(100,100) # point=diamond</tt></p>
+<tt>wcs, wcsa, wcsb, wcsc... wcsz.<br>
+<br>
+Example: wcsa;linear;point(100,100) # point=diamond</tt></p>
 <p><b>Specifying Positions and Sizes</b></p>
 <p>The arguments to region shapes can be floats or integers
 describing positions and sizes. They can be specified as pure
 numbers or using explicit formatting directives:</p>
-<blockquote>
 <p><b>position arguments</b></p>
 <tt>[num]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 # context-dependent (see below)</tt><br>
@@ -320,7 +301,7 @@ dms</tt>
 <tt>[num]p&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 # physical pixels</tt><br>
 <tt>[num]i&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# image pixels</tt></blockquote>
+# image pixels</tt><br>
 <p>When a "pure number" (i.e. one without a format directive such
 as 'd' for 'degrees') is specified, its interpretation depends on
 the context defined by the 'coordsys' keyword. In general, the rule
@@ -335,56 +316,41 @@ numbers are degrees. For <tt>LINEAR</tt> systems, pure numbers are
 in the units of the linear system. This rule covers both positions
 and sizes. The input values to each shape can be specified in
 several coordinate systems including:</p>
-<blockquote>
-<tt>IMAGE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# pixel coords of current file</tt><br>
-<br>
-<tt>LINEAR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# linear wcs as defined in file</tt>
-<p><tt>FK4,
-B1950&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# sky coordinate systems</tt><br>
-<tt>FK5, J2000</tt><br>
-<tt>GALACTIC</tt><br>
-<tt>ECLIPTIC</tt><br>
-<tt>ICRS</tt><br>
-<tt>PHYSICAL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# pixel coords of original file using LTM/LTV</tt><br>
-<tt>AMPLIFIER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# mosaic coords of original file using ATM/ATV</tt><br>
-<tt>DETECTOR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-# mosaic coords of original file using DTM/DTV</tt><br>
-<br>
-<tt>WCS,WCSA-WCSZ&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
-# specify which WCS system to be used for<br>
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; # linear
-and sky coordinate systems<br></tt></p>
-</blockquote>
+<tt>IMAGE<br>
+LINEAR<br>
+FK4, B1950<br>
+FK5, J2000<br>
+GALACTIC<br>
+ECLIPTIC<br>
+ICRS<br>
+PHYSICAL<br>
+AMPLIFIER<br>
+DETECTOR<br>
+WCS,WCSA-WCSZ<br></tt>
 <p>If no coordinate system is specified, <tt>PHYSICAL</tt> is
 assumed. <tt>PHYSICAL</tt> or a World Coordinate System such as
 <tt>J2000</tt> is preferred and most general. The coordinate system
 specifier should appear at the beginning of the region description,
 on a separate line (in a file), or followed by a new-line or
 semicolon; e.g.,</p>
-<blockquote><tt>image; circle 100 100 10</tt><br>
+<tt>image; circle 100 100 10</tt><br>
 <tt>physical; ellipse 200 200 10 20</tt><br>
 <tt>fk5; point 30 50</tt><br>
 <tt>wcsa; fk4; point 202 47</tt><br>
-<tt>wcsp; linear; point 100 100</tt><br></blockquote>
+<tt>wcsp; linear; point 100 100</tt><br>
 <p>The use of celestial input units automatically implies WORLD
 coordinates of the reference image. Thus, if the world coordinate
 system of the reference image is <tt>J2000</tt>, then</p>
-<blockquote><tt>circle 10:10:0 20:22:0 3'</tt></blockquote>
+<tt>circle 10:10:0 20:22:0 3'</tt><br>
 <p>is equivalent to:<br></p>
-<blockquote><tt>j2000; circle 10:10:0 20:22:0 3'</tt></blockquote>
+<tt>j2000; circle 10:10:0 20:22:0 3'</tt><br>
 <p>Note that by using units as described above, you may mix
 coordinate systems within a region specifier; e.g.,</p>
-<blockquote><tt>physical; circle 6500 9320 3'<br></tt></blockquote>
+<tt>physical; circle 6500 9320 3'</tt><br>
 <p>Note that, for regions which accept a rotation angle such
 as:</p>
-<blockquote><tt>ellipse (x, y, r1, r2, angle)<br>
-box(x, y, w, h, angle)</tt></blockquote>
+<tt>ellipse (x, y, r1, r2, angle)</tt><br>
+<tt>box(x, y, w, h, angle)</tt><br>
 <p>the angle is relative to the specified coordinate system. In
 particular, if the region is specified in WCS coordinates, the
 angle is related to the WCS system, not x/y image coordinate axis.
@@ -393,15 +359,12 @@ However, some images do define an implicit rotation (e.g., by using
 a non-zero CROTA value in the WCS parameters) and for these images,
 the angle will be relative to the WCS axes. In such case, a region
 specification such as:</p>
-<blockquote><tt>fk4;ellipse(22:59:43.985, +58:45:26.92,320", 160",
-30)</tt></blockquote>
+<tt>fk4;ellipse(22:59:43.985, +58:45:26.92,320", 160", 30)</tt><br>
 <p>will not, in general, be the same region specified as:</p>
-<blockquote><tt>physical;ellipse(465, 578, 40, 20,
-30)</tt></blockquote>
+<tt>physical;ellipse(465, 578, 40, 20, 30)</tt><br>
 <p>even when positions and sizes match. The angle is relative to
 WCS axes in the first case, and relative to physical x,y axes in
 the second.</p>
-</blockquote>
 <p><b><a name="CompositeRegion" id="CompositeRegion"></a>Composite
 Region</b></p>
 <p>A Composite Region is a region which is a collection of other
@@ -436,91 +399,100 @@ regions point is used specify the output coordinate system and
 format. On input, the menu or xpa point is used only for the <tt>X
 Y</tt> format. For all other formats, the input coordinate system
 is specified in the regions file itself.</p>
-<blockquote>
 <p><b><a name="FUNTools" id="FUNTools"></a><a href=
 "http://hea-www.harvard.edu/RD/funtools/regions.html">Funtools</a></b><br>
 </p>
-<blockquote><tt>When using DS9 regions file in FUNTOOLS:<br>
-LINE is ignored<br></tt> <tt>VECTOR is ignored</tt><br>
-<tt>PROJECTION is ignored<br>
+<tt>When using DS9 regions file in FUNTOOLS:<br>
+LINE is ignored<br>
+VECTOR is ignored<br>
+PROJECTION is ignored<br>
 SEGMENT is ignored<br>
-TEXT is ignored<br></tt> <tt>RULER is ignored</tt><br>
-<tt>COMPASS is ignored</tt><br></blockquote>
-<a name="Ciao" id="Ciao"></a>CIAO
-<blockquote><tt><tt>When importing from CIAO into DS9:<br>
-POINT is translated into BOX CIRCLE POINT</tt><br></tt> <tt>ROTBOX
-is translated into BOX<br>
-RECTANGLE is translated into BOX<br></tt> <tt>PANDA is translated
-as PIE<br>
+TEXT is ignored<br>
+RULER is ignored<br>
+COMPASS is ignored<br>
+<br></tt> <a name="Ciao" id="Ciao"></a>CIAO<br>
+<br>
+<tt>When importing from CIAO into DS9:<br>
+POINT is translated into BOX CIRCLE POINT<br>
+ROTBOX is translated into BOX<br>
+RECTANGLE is translated into BOX<br>
+PANDA is translated as PIE<br>
 SECTOR is ignored<br>
-FIELD is ignored</tt><br>
-<tt><tt>REGION is ignored<br></tt><br>
-When exporting from DS9 into CIAO:<br></tt> <tt>PANDA is translated
-into PIE<br>
-LINE is ignored</tt><br>
-<tt>VECTOR is ignored</tt><br>
-<tt><tt>PROJECTION is ignored</tt><br></tt> <tt><tt>SEGMENT is
-ignored<br></tt></tt> <tt><tt>TEXT is ignored</tt><br>
-RULER is ignored</tt><br>
-<tt>COMPASS is ignored</tt><br>
-<tt>ELLIPSE ANNULUS is ignored</tt><br>
-<tt>BOX ANNULUS is ignored</tt><br>
-<tt>EPANDA is ignored</tt><br>
-<tt>BPANDA is ignored</tt><br></blockquote>
-<a name="SAOimage" id="SAOimage"></a><a href=
-"http://tdc-www.harvard.edu/software/saoimage/saoimage.region.html">SAOimage</a>
-<blockquote><tt><tt><tt>When importing from SAOIMAGE into DS9:<br>
-POINT is translated into BOX CIRCLE POINT</tt></tt></tt><br>
-<tt><tt><tt><tt>ROTBOX is translated into
-BOX<br></tt></tt></tt></tt> <tt><br></tt> <tt><tt>When exporting
-from DS9 into SAOIMAGE:<br></tt></tt> <tt><tt><tt>LINE is
-ignored</tt><br>
-<tt>VECTOR is ignored</tt><br>
-<tt><tt>PROJECTION is ignored</tt><br></tt> <tt><tt>SEGMENT is
-ignored<br></tt></tt> <tt><tt>TEXT is ignored</tt><br>
-RULER is ignored</tt><br>
-<tt>COMPASS is ignored</tt><br></tt></tt> <tt><tt>ELLIPSE ANNULUS
-is ignored</tt><br>
-<tt>BOX ANNULUS is ignored</tt><br>
-PANDA is ignored</tt><br>
-<tt>EPANDA is ignored</tt><br>
-<tt>BPANDA is ignored</tt><br></blockquote>
-<a name="IRAFPROS" id="IRAFPROS"></a>IRAF PROS
-<blockquote><tt><tt><tt><tt>When importing from PROS into DS9:<br>
-POINT is translated into BOX CIRCLE POINT</tt></tt></tt><br></tt>
-<tt><tt><tt><tt>ROTBOX is translated into
-BOX<br></tt></tt></tt></tt> <tt><br></tt> <tt><tt><tt>When
-exporting from DS9 into SAOIMAGE:<br></tt></tt> <tt><tt><tt>LINE is
-ignored</tt><br>
-<tt>VECTOR is ignored</tt><br>
-<tt><tt>PROJECTION is ignored</tt><br></tt> <tt><tt>SEGMENT is
-ignored<br></tt></tt> <tt><tt>TEXT is ignored</tt><br>
-RULER is ignored</tt><br>
-<tt>COMPASS is ignored</tt><br></tt></tt> <tt><tt>ELLIPSE ANNULUS
-is ignored</tt><br>
-<tt>BOX ANNULUS is ignored</tt><br>
-PANDA is ignored</tt><br>
-<tt>EPANDA is ignored</tt><br>
-<tt>BPANDA is ignored</tt></tt><br></blockquote>
+FIELD is ignored<br>
+REGION is ignored<br>
+<br>
+When exporting from DS9 into CIAO:<br>
+PANDA is translated into PIE<br>
+LINE is ignored<br>
+VECTOR is ignored<br>
+PROJECTION is ignored<br>
+SEGMENT is ignored<br>
+TEXT is ignored<br>
+RULER is ignored<br>
+COMPASS is ignored<br>
+ELLIPSE ANNULUS is ignored<br>
+BOX ANNULUS is ignored<br>
+EPANDA is ignored<br>
+BPANDA is ignored<br>
+<br></tt> <a name="SAOimage" id="SAOimage"></a><a href=
+"http://tdc-www.harvard.edu/software/saoimage/saoimage.region.html">SAOimage</a><br>
+
+&nbsp;<br>
+<tt>When importing from SAOIMAGE into DS9:<br>
+POINT is translated into BOX CIRCLE POINT<br>
+ROTBOX is translated into BOX<br>
+<br>
+When exporting from DS9 into SAOIMAGE:<br>
+LINE is ignored<br>
+VECTOR is ignored<br>
+PROJECTION is ignored<br>
+SEGMENT is ignored<br>
+TEXT is ignored<br>
+RULER is ignored<br>
+COMPASS is ignored<br>
+ELLIPSE ANNULUS is ignored<br>
+BOX ANNULUS is ignored<br>
+PANDA is ignored<br>
+EPANDA is ignored<br>
+BPANDA is ignored<br>
+<br></tt> <a name="IRAFPROS" id="IRAFPROS"></a>IRAF PROS<br>
+<br>
+<tt>When importing from PROS into DS9:<br>
+POINT is translated into BOX CIRCLE POINT<br>
+ROTBOX is translated into BOX<br>
+<br>
+When exporting from DS9 into SAOIMAGE:<br>
+LINE is ignored<br>
+VECTOR is ignored<br>
+PROJECTION is ignored<br>
+SEGMENT is ignored<br>
+TEXT is ignored<br>
+RULER is ignored<br>
+COMPASS is ignored<br>
+ELLIPSE ANNULUS is ignored<br>
+BOX ANNULUS is ignored<br>
+PANDA is ignored<br>
+EPANDA is ignored<br>
+BPANDA is ignored<br></tt><br>
 <a name="FITSREGIONBinaryTable" id="FITSREGIONBinaryTable"></a>FITS
-REGION Binary Table
-<blockquote><tt><tt><tt><tt><tt>When importing from FITS REGION
-into DS9:<br>
-POINT is translated into BOX CIRCLE POINT</tt></tt></tt><br></tt>
-<tt><tt><tt><tt>ROTBOX is translated into
-BOX</tt></tt></tt></tt></tt><br>
-<tt><tt><tt><tt><tt><tt>RECTANGLE is translated into BOX</tt><br>
-<tt>ROTRECTANGLE is translated into a BOX</tt><br>
-<tt>PIE is translated into PANDA<br>
+REGION Binary Table<br>
+<br>
+<tt>When importing from FITS REGION into DS9:<br>
+POINT is translated into BOX CIRCLE POINT<br>
+ROTBOX is translated into BOX<br>
+RECTANGLE is translated into BOX<br>
+ROTRECTANGLE is translated into a BOX<br>
+PIE is translated into PANDA<br>
 ELLIPTANNULUS is translated into EPANDA<br>
-SECTOR is ignored<br></tt></tt></tt></tt></tt></tt>
-<tt><tt><tt><tt><tt><tt><tt>FIELD is ignored</tt><br></tt>
-<tt>DIAMOND</tt> <tt><tt>is ignored<br></tt> RHOMBUS</tt>
-<tt><tt>is ignored<br></tt> ROTDIAMOND</tt> <tt><tt>is
-ignored<br></tt> ROTRHOMBUS</tt> <tt>is ignored<br></tt>
-&nbsp;</tt></tt></tt></tt><tt><br></tt> DS9 currently can not
-export into this format.</tt><br></blockquote>
-<a name="XY" id="XY"></a>X Y<br>
+SECTOR is ignored<br>
+FIELD is ignored<br>
+DIAMONDis ignored<br>
+RHOMBUSis ignored<br>
+ROTDIAMONDis ignored<br>
+ROTRHOMBUSis ignored<br>
+&nbsp;<br>
+DS9 currently can not export into this format.<br>
+<br></tt> <a name="XY" id="XY"></a>X Y<br>
 <p>This format consists of a number of coordinate pairs, one per
 line. The coordinate format for both input and output is specified
 via the Save Regions Parameters menu or <a href=
@@ -529,12 +501,10 @@ are read, the rest of the line is ignored. The comment character
 '#' may be used at the beginning of line and the line is ignored.
 This format is very useful for reading in coordinates from other
 external analysis programs, such as IRAF.</p>
-<blockquote><tt>Example:</tt> <tt># this is a comment</tt><br>
-<tt>physical # this overrides the specified coordinate
-system</tt><br>
-<tt>300 300</tt><br>
-<tt>400 400 # this is a comment</tt><br></blockquote>
-</blockquote>
-</blockquote>
+<tt>Example:# this is a comment<br>
+physical # this overrides the specified coordinate system<br>
+300 300<br>
+400 400 # this is a comment</tt><br>
+<br></blockquote>
 </body>
 </html>

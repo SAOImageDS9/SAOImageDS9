@@ -26,6 +26,18 @@ DS9_VERSION	= 8.1b1
 XPA_VERSION	= 2.1.18
 TCL_VERSION	= 8.6
 
+Tidy = \
+	cd $(1); \
+	for ff in *.html; \
+	do echo ""; echo $$ff; \
+	tidy -q -m -w 0 $$ff; \
+	done;
+
+TidyFile = \
+	cd $(1); \
+	echo ""; echo $(2); \
+	tidy -q -m -w 0 $(2);
+
 #-------------------------- Defs
 
 DIRS   = $(bindir) $(libdir) $(includedir) $(datadir) man build dist
@@ -400,6 +412,15 @@ language:
 	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl cs iso8859-2; \
 	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl ja euc-jp; \
 	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl zh big5
+
+#-------------------------- tidy
+
+.PHONY	: tidy
+
+tidy	:
+	$(call Tidy,ds9/doc)
+	$(call Tidy,ds9/doc/release)
+	$(call Tidy,ds9/doc/ref)
 
 #-------------------------- scrub
 

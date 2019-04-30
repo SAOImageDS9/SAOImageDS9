@@ -1,660 +1,337 @@
 <!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-<meta name="generator" content=
-"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 15.18.1), see www.w3.org">
-<meta http-equiv="Content-Type" content=
-"text/html; charset=us-ascii">
-<meta name="GENERATOR" content=
-"Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
 <title>DS9 Version 3.0 Release Notes</title>
 </head>
-<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor=
-"#FFFFFF" alink="#FF0000">
-<h3><img alt="" src="../sun.gif" width="100" height="98" align=
-"middle"> SAOImageDS9 Version 3.0 Release Notes</h3>
+<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor="#FFFFFF" alink="#FF0000">
+<h3><img alt="" src="../sun.gif" width="100" height="98" align="middle"> SAOImageDS9 Version 3.0 Release Notes</h3>
 <div style="margin-left: 2em">
 <h4><b>Version 3.0</b></h4>
 <ol>
 <li><tt>12.24.2002 TCL/TK: update to 8.4.1</tt></li>
 <li><tt>12.24.2002 BLT: update to 2.4z</tt></li>
 <li><tt>12.24.2002 TKIMG: update to 1.3rc</tt></li>
-<li><tt>01.03.2003 XPA: fixed a problem with 'xpaget ds9 regions
-selected'</tt></li>
-<li><tt>01.28.2003 SAVEAS: now saves all slices of a data cube, if
-the display mode is single.</tt></li>
-<li><tt>01.28.2003 GUI: Add 'wm protocol . WM_DELETE_WINDOW
-QuitDS9' for main window so that tcl/tk 8.4 does not segv when a
-user double clicks on a close window icon.</tt></li>
+<li><tt>01.03.2003 XPA: fixed a problem with 'xpaget ds9 regions selected'</tt></li>
+<li><tt>01.28.2003 SAVEAS: now saves all slices of a data cube, if the display mode is single.</tt></li>
+<li><tt>01.28.2003 GUI: Add 'wm protocol . WM_DELETE_WINDOW QuitDS9' for main window so that tcl/tk 8.4 does not segv when a user double clicks on a close window icon.</tt></li>
 <li><tt>01.29.2003 GCC: add support for gcc 3.0/3.2</tt></li>
-<li><tt>01.29.2002 GCC: updated saotk/FlexLexer.h from flex 2.5.27,
-available at http://lex.sourceforge.net/<br></tt></li>
-<li><tt>02.04.2003 WINDOWS: modify configuration files for tkimg1.3
-and tkhtml to support windows.<br></tt></li>
+<li><tt>01.29.2002 GCC: updated saotk/FlexLexer.h from flex 2.5.27, available at http://lex.sourceforge.net/<br></tt></li>
+<li><tt>02.04.2003 WINDOWS: modify configuration files for tkimg1.3 and tkhtml to support windows.<br></tt></li>
 <li><tt>02.05.2003 WCS: upgrade to 3.3.0</tt></li>
-<li><tt>02.06.2003 ARCHIVE: the default ADS max search size is now
-a radius of .1 arcmin.</tt></li>
-<li><tt>02.06.2003 XPA: add '-xpa tcl' command line option. By
-default, disable xpa tcl access since it is a major security
-risk.</tt></li>
-<li><tt>02.07.03 FITS: fixed a problem with loading fits files via
-the url menu or command line.<br></tt></li>
-<li><tt>02.07.03 HTTP: loading images via url http processes the
-image based on the http header mime type and encoding, not the file
-name. images loaded via url ftp are still processed based on file
-name.</tt></li>
-<li><tt>02.07.03 PLOT: fixed a problem with global vars and the
-plot widget.</tt></li>
-<li><tt>02.11.03 BINNING: fixed a bug with the bin table smoothing
-support. If the bin factor is large enough to bin the entire image
-in the bin buffer, ds9 would segv by trying to read out of
-bounds.</tt></li>
-<li><tt>02.25.03 XPA: fixed a bug with loading an image from xpa
-stdin without a filename.</tt></li>
-<li><tt>02.25.03 XPA: add 'fillbuf=false' to all xpa receive
-commands that do not use $buf. This will speed up processing
-because the data socket is not opened.</tt></li>
-<li><tt>02.25.03 XPA: fixed a problem with appending an wcs via
-xpa. The appended wcs is now positioned at the end, not the
-beginning. also, a problem occurred when the 'END' card was not the
-last card of the header. This has been fixed.</tt></li>
-<li><tt>02.25.03 XPA: changes to xpa regions syntax.
-'moveback'/'movefront' are now 'move back'/'move front',
-'selectall'/'selectnone' are now 'select all'/'select none', and
-'deleteall' is 'delete all'. Backward compatibility has bee
-maintained</tt></li>
-<li><tt>02.25.03 XPA: add 'select group &lt;groupname&gt;' and
-'delete select' to xpa regions access point.</tt></li>
-<li><tt>02.26.03 HV: add support for gif,png,ppm,xbm,xpm file
-formats</tt></li>
-<li><tt>02.27.03</tt> <tt>HV:</tt> <tt>fixed some problems with
-tkhtml uri resolver. This cleans up a lot of tcl code.</tt></li>
-<li><tt>03.04.03 HV: images are now scaled if the width/height args
-are provided in the html src.</tt></li>
+<li><tt>02.06.2003 ARCHIVE: the default ADS max search size is now a radius of .1 arcmin.</tt></li>
+<li><tt>02.06.2003 XPA: add '-xpa tcl' command line option. By default, disable xpa tcl access since it is a major security risk.</tt></li>
+<li><tt>02.07.03 FITS: fixed a problem with loading fits files via the url menu or command line.<br></tt></li>
+<li><tt>02.07.03 HTTP: loading images via url http processes the image based on the http header mime type and encoding, not the file name. images loaded via url ftp are still processed based on file name.</tt></li>
+<li><tt>02.07.03 PLOT: fixed a problem with global vars and the plot widget.</tt></li>
+<li><tt>02.11.03 BINNING: fixed a bug with the bin table smoothing support. If the bin factor is large enough to bin the entire image in the bin buffer, ds9 would segv by trying to read out of bounds.</tt></li>
+<li><tt>02.25.03 XPA: fixed a bug with loading an image from xpa stdin without a filename.</tt></li>
+<li><tt>02.25.03 XPA: add 'fillbuf=false' to all xpa receive commands that do not use $buf. This will speed up processing because the data socket is not opened.</tt></li>
+<li><tt>02.25.03 XPA: fixed a problem with appending an wcs via xpa. The appended wcs is now positioned at the end, not the beginning. also, a problem occurred when the 'END' card was not the last card of the header. This has been fixed.</tt></li>
+<li><tt>02.25.03 XPA: changes to xpa regions syntax. 'moveback'/'movefront' are now 'move back'/'move front', 'selectall'/'selectnone' are now 'select all'/'select none', and 'deleteall' is 'delete all'. Backward compatibility has bee maintained</tt></li>
+<li><tt>02.25.03 XPA: add 'select group &lt;groupname&gt;' and 'delete select' to xpa regions access point.</tt></li>
+<li><tt>02.26.03 HV: add support for gif,png,ppm,xbm,xpm file formats</tt></li>
+<li><tt>02.27.03</tt> <tt>HV:</tt> <tt>fixed some problems with tkhtml uri resolver. This cleans up a lot of tcl code.</tt></li>
+<li><tt>03.04.03 HV: images are now scaled if the width/height args are provided in the html src.</tt></li>
 <li><tt>03.04.03 ARCHIVE: add chandra archive web chaser.</tt></li>
-<li><tt>03.12.03 COLORMAP: Fixed a problem with InitColorbar and a
-colormap of A or B.</tt></li>
-<li><tt>03.12.03 ANALYSIS: all comments after # are
-ignored.</tt></li>
-<li><tt>03.12.03 ANALYSIS: non macros can be escaped by using
-$$.</tt></li>
+<li><tt>03.12.03 COLORMAP: Fixed a problem with InitColorbar and a colormap of A or B.</tt></li>
+<li><tt>03.12.03 ANALYSIS: all comments after # are ignored.</tt></li>
+<li><tt>03.12.03 ANALYSIS: non macros can be escaped by using $$.</tt></li>
 <li><tt>03.31.03 COMMAND: Add -frame command line option.</tt></li>
-<li><tt>04.08.03 GUI: Remove Magnifier Mode option, along with
-Magnifier Replicate code.</tt></li>
-<li><tt>04.23.03 HST WFPC: Mosaic images must be loaded directly.
-this fixes a problem in that it was not possible to autodect a
-WFPC2 image in an incoming data stream, such as stdin.</tt></li>
-<li><tt>05.12.03 API: *** CHANGE *** Frame load syntax has changed
-to make it consistent across all modes and file formats. In
-particular, the general syntax is: &lt;frame&gt; load fits|array
-&lt;filename&gt; mmap|alloc|alloc gz|channel|shared|socket|var
-&lt;options&gt;</tt></li>
-<li><tt>05.12.03 API: *** CHANGE *** shared memory loads no longer
-require the size of the memory segment.</tt></li>
+<li><tt>04.08.03 GUI: Remove Magnifier Mode option, along with Magnifier Replicate code.</tt></li>
+<li><tt>04.23.03 HST WFPC: Mosaic images must be loaded directly. this fixes a problem in that it was not possible to autodect a WFPC2 image in an incoming data stream, such as stdin.</tt></li>
+<li><tt>05.12.03 API: *** CHANGE *** Frame load syntax has changed to make it consistent across all modes and file formats. In particular, the general syntax is: &lt;frame&gt; load fits|array &lt;filename&gt; mmap|alloc|alloc gz|channel|shared|socket|var &lt;options&gt;</tt></li>
+<li><tt>05.12.03 API: *** CHANGE *** shared memory loads no longer require the size of the memory segment.</tt></li>
 <li><tt>05.20.03 WCS: update to 3.3.4</tt></li>
 <li><tt>05.20.03 AST: update to 2.0</tt></li>
-<li><tt>05.22.03 GRID: fix a problem with grid.C interface to AST.
-The text bounding box code was returning the coordinates in a
-clockwise manner. It needs to be returned in an anti-clockwise
-manner.</tt></li>
-<li><tt>05.22.03 GRID: Add support for user specified Grid Axes
-Numerics gap.</tt></li>
-<li><tt>05.27.03 GRID: Fixed a problem with the bounding box of a
-publication grid. it was .5 pixels off.</tt></li>
-<li><tt>05.28.03 GUI: Fixed a problem with 'get cursor'. Sometimes,
-as with loading dss images, the matrices were not updated in time,
-and 'get cursor' returned bogus values. Now all calls to 'get
-cursor' force an update.</tt></li>
-<li><tt>06.02.03 GUI: fixed several problems with examine
-mode</tt></li>
-<li><tt>06.02.03 ARCHIVE: add NOAO 4MASS and SIRTF and NOAO NSA to
-archive menu</tt></li>
-<li><tt>06.09.03 RGB: support is FINISHED! now, lets see how its
-works!</tt></li>
-<li><tt>06.11.03 RGB: Add Lock Channels to lock most Scale and Bin
-parameters between channels.</tt></li>
-<li><tt>06.16.03 GRID: Add numerics spacing to save/load grid
-configuration</tt></li>
+<li><tt>05.22.03 GRID: fix a problem with grid.C interface to AST. The text bounding box code was returning the coordinates in a clockwise manner. It needs to be returned in an anti-clockwise manner.</tt></li>
+<li><tt>05.22.03 GRID: Add support for user specified Grid Axes Numerics gap.</tt></li>
+<li><tt>05.27.03 GRID: Fixed a problem with the bounding box of a publication grid. it was .5 pixels off.</tt></li>
+<li><tt>05.28.03 GUI: Fixed a problem with 'get cursor'. Sometimes, as with loading dss images, the matrices were not updated in time, and 'get cursor' returned bogus values. Now all calls to 'get cursor' force an update.</tt></li>
+<li><tt>06.02.03 GUI: fixed several problems with examine mode</tt></li>
+<li><tt>06.02.03 ARCHIVE: add NOAO 4MASS and SIRTF and NOAO NSA to archive menu</tt></li>
+<li><tt>06.09.03 RGB: support is FINISHED! now, lets see how its works!</tt></li>
+<li><tt>06.11.03 RGB: Add Lock Channels to lock most Scale and Bin parameters between channels.</tt></li>
+<li><tt>06.16.03 GRID: Add numerics spacing to save/load grid configuration</tt></li>
 <li><tt>06.16.03 FITS: Add 3D array data cube</tt></li>
-<li><tt>06.17.03 FITS: Fixed a problem with an incorrect data cube
-dialog and wfpc2 mosaics and rgb data cubes. Basically, these two
-cases are not really data cubes.</tt></li>
+<li><tt>06.17.03 FITS: Fixed a problem with an incorrect data cube dialog and wfpc2 mosaics and rgb data cubes. Basically, these two cases are not really data cubes.</tt></li>
 <li><tt>06.17.03 RGB: Replace RGB menu with RGB dialog.</tt></li>
-<li><tt>06.17.03 XPA: Fixed a problem with xpaget ds9 regions
-[include|exclude|source|background].</tt></li>
-<li><tt>06.18.03 REGION: fix a problem with non-linear physical
-coordinates and save/load regions.</tt></li>
-<li><tt>06.18.03 WCS: fix a problem with determining the rotation
-of a wcs coordinate system. previously, CRPIX was used as the start
-point. This does not work in cases where the tangent point is very
-far off the image. Instead, (1,1) is used.</tt></li>
-<li><tt>06.18.03 WCS: Remove preference Panner WCS origin. This is
-stupid and breaks with the previous change. Just remove it instead
-of trying to fix it.</tt></li>
+<li><tt>06.17.03 XPA: Fixed a problem with xpaget ds9 regions [include|exclude|source|background].</tt></li>
+<li><tt>06.18.03 REGION: fix a problem with non-linear physical coordinates and save/load regions.</tt></li>
+<li><tt>06.18.03 WCS: fix a problem with determining the rotation of a wcs coordinate system. previously, CRPIX was used as the start point. This does not work in cases where the tangent point is very far off the image. Instead, (1,1) is used.</tt></li>
+<li><tt>06.18.03 WCS: Remove preference Panner WCS origin. This is stupid and breaks with the previous change. Just remove it instead of trying to fix it.</tt></li>
 <li><tt>06.26.03 FITS: Add support 3D array data cubes.</tt></li>
-<li><tt>06.30.03 RGB: Add support for RGB array data
-cube.</tt></li>
-<li><tt>07.01.03 DSS: Fixed namesrv.tcl and dss.tcl to promote more
-robust error handling. In particular, http error codes are now
-checked, and the results are verified before proceeding</tt></li>
-<li><tt>07.01.03 XPA: fixed a problem with $ds9 -xpa tcl. The next
-argument was being ignored.</tt></li>
-<li><tt>07.02.03 DSS: fixed another problem with namesrv.tcl.
-SAONED and SAOSIMBAD were returning incorrect values for southern
-hemisphere.</tt></li>
-<li><tt>07.02.03 HTTP: remove http log from preferences and added
-http log and ftp log to debug menu</tt></li>
-<li><tt>07.03.03 GUI: fixed a problem with open file dialog box. if
-the user clicked 'cancel', an error message would result. this has
-been corrected.</tt></li>
-<li><tt>07.09.03 FITS: add Large File Support for Linux. Linux is
-still restricted to ~2.5Gb.</tt></li>
-<li><tt>07.10.03 FITS: add FLUSH parameter for fitsy++
-array.</tt></li>
-<li><tt>07.10.03 FITS: Major change in behavior of fitsy++ streams
-and FLUSH. Only socket and socketgz will flush, all others will not
-flush the buffer after an error, or after successfull loading a
-fits image.</tt></li>
+<li><tt>06.30.03 RGB: Add support for RGB array data cube.</tt></li>
+<li><tt>07.01.03 DSS: Fixed namesrv.tcl and dss.tcl to promote more robust error handling. In particular, http error codes are now checked, and the results are verified before proceeding</tt></li>
+<li><tt>07.01.03 XPA: fixed a problem with $ds9 -xpa tcl. The next argument was being ignored.</tt></li>
+<li><tt>07.02.03 DSS: fixed another problem with namesrv.tcl. SAONED and SAOSIMBAD were returning incorrect values for southern hemisphere.</tt></li>
+<li><tt>07.02.03 HTTP: remove http log from preferences and added http log and ftp log to debug menu</tt></li>
+<li><tt>07.03.03 GUI: fixed a problem with open file dialog box. if the user clicked 'cancel', an error message would result. this has been corrected.</tt></li>
+<li><tt>07.09.03 FITS: add Large File Support for Linux. Linux is still restricted to ~2.5Gb.</tt></li>
+<li><tt>07.10.03 FITS: add FLUSH parameter for fitsy++ array.</tt></li>
+<li><tt>07.10.03 FITS: Major change in behavior of fitsy++ streams and FLUSH. Only socket and socketgz will flush, all others will not flush the buffer after an error, or after successfull loading a fits image.</tt></li>
 <li><tt>07.11.03 XPA: add DATACUBE support.</tt></li>
-<li><tt>07.14.03 WCS: Fixed a problem with WCS XLON-TAN (NPOLE) and
-AST. NPOLE is a special wcs equ coord system, and has to be handed
-by wcs2ast().</tt></li>
-<li><tt>07.15.03 XPA: add xpa iis access port for control of some
-iis functionality.</tt></li>
+<li><tt>07.14.03 WCS: Fixed a problem with WCS XLON-TAN (NPOLE) and AST. NPOLE is a special wcs equ coord system, and has to be handed by wcs2ast().</tt></li>
+<li><tt>07.15.03 XPA: add xpa iis access port for control of some iis functionality.</tt></li>
 <li>
 <p><b><tt>07.17.03 RELEASE version 3.0b4</tt></b></p>
 </li>
-<li><tt>07.25.03 FITS: add MMAPINCR memory access mode. This only
-mmaps the data needed, not the entire file. This allows a user to
-view many small segements of a very large file.</tt></li>
+<li><tt>07.25.03 FITS: add MMAPINCR memory access mode. This only mmaps the data needed, not the entire file. This allows a user to view many small segements of a very large file.</tt></li>
 <li><tt>07.28.03 TCL/TK: upgrade to 8.4.4</tt></li>
 <li><tt>07.30.03 XPA: add regions fg/bg support.</tt></li>
-<li><tt>08.05.03 PLOT: reimplement analaysis plot widget to support
-unlimited number of data sets.</tt></li>
+<li><tt>08.05.03 PLOT: reimplement analaysis plot widget to support unlimited number of data sets.</tt></li>
 <li><tt>08.07.03 ARCHIVE: add Rosat All-Sky survey</tt></li>
-<li><tt>08.08.03 XPA: add PLOT, which allows full control over all
-plot widgets via xpa.</tt></li>
-<li><tt>08.13.03 COLORMAP: fixed a problem with loading lut
-colormaps under linux. ifstream behaves differently between solaris
-and linux.</tt></li>
-<li><tt>08.14.03 XPA: changed xpaget array. Now returns the array
-data in the current frame.</tt></li>
+<li><tt>08.08.03 XPA: add PLOT, which allows full control over all plot widgets via xpa.</tt></li>
+<li><tt>08.13.03 COLORMAP: fixed a problem with loading lut colormaps under linux. ifstream behaves differently between solaris and linux.</tt></li>
+<li><tt>08.14.03 XPA: changed xpaget array. Now returns the array data in the current frame.</tt></li>
 <li>
 <p><tt><b>08.15.03 RELEASE version 3.0b5</b></tt></p>
 </li>
-<li><tt>08.18.03 FITS: add Large file support for darwin and
-linuxppc</tt></li>
-<li><tt>08.18.03 LINUXPPC: fixed a problem with linking linuxppc.
-The copy of libX11.a that comes with Yellow Dog 3.0 is bad. So we
-can't links static.</tt></li>
-<li><tt>08.19.03 XPA: add options to xpa update so that 'update
-idletasks' is not run at the end of file loads. This allows the
-user to do several incremental loads without updating the
-screen.</tt></li>
-<li><tt>08.19.03 API: only update idletasks for horz/vert graph if
-graphs are on</tt></li>
+<li><tt>08.18.03 FITS: add Large file support for darwin and linuxppc</tt></li>
+<li><tt>08.18.03 LINUXPPC: fixed a problem with linking linuxppc. The copy of libX11.a that comes with Yellow Dog 3.0 is bad. So we can't links static.</tt></li>
+<li><tt>08.19.03 XPA: add options to xpa update so that 'update idletasks' is not run at the end of file loads. This allows the user to do several incremental loads without updating the screen.</tt></li>
+<li><tt>08.19.03 API: only update idletasks for horz/vert graph if graphs are on</tt></li>
 <li><tt>08.19.03 API: add debug idletasks support.</tt></li>
-<li><tt>08.29.03 GCC: gcc 3.3 is now supported. For all code, if
-GNUC &gt;=3, new &lt;sstream&gt; are used. For all code, GNUC
-&lt;3, &lt;strstream&gt; is used.</tt></li>
-<li><tt>08.29.03 PLOT: fixed a problem with saving plot data in
-x,y,ye format</tt></li>
+<li><tt>08.29.03 GCC: gcc 3.3 is now supported. For all code, if GNUC &gt;=3, new &lt;sstream&gt; are used. For all code, GNUC &lt;3, &lt;strstream&gt; is used.</tt></li>
+<li><tt>08.29.03 PLOT: fixed a problem with saving plot data in x,y,ye format</tt></li>
 <li><tt>08.29.03 FITS: add LFS for solaris.</tt></li>
-<li><tt>08.29.03 COMMAND: add -analysismenu command line option at
-the request of CXC.</tt></li>
-<li><tt>08.29.03 COMMAND: fixed a problem with -pan and -pan to and
-other comman line options that follow.</tt></li>
+<li><tt>08.29.03 COMMAND: add -analysismenu command line option at the request of CXC.</tt></li>
+<li><tt>08.29.03 COMMAND: fixed a problem with -pan and -pan to and other comman line options that follow.</tt></li>
 <li><tt>09.02.03 FITS: add LFS for alpha.</tt></li>
-<li><tt>09.04.03 SOLARIS: add new solaris64 port. Requires gcc 3.3
-or greater.</tt></li>
+<li><tt>09.04.03 SOLARIS: add new solaris64 port. Requires gcc 3.3 or greater.</tt></li>
 <li><tt>09.04.03 XPA: upgrade to 2.1.4</tt></li>
 <li><tt>09.04.03 FILTER: upgrade to 1.2.3b1</tt></li>
 <li><tt>09.04.03 FITSY: upgrade to 1.2.3b1<br></tt></li>
-<li><tt>09.06.03 SOLARIS: fixed a problem with 64bit machines and
-truecolor displays.</tt></li>
-<li><tt>09.06.03 FITS: add support for multiple extension fits data
-cubes.</tt></li>
-<li><tt>09.08.03 REGION: fixed a problem with projection regions
-and an undefined variable.</tt></li>
-<li><tt>09.08.03 BINNING: fixed a problem with fits bin tables
-without TLMIN/TLMAX or TDMIN/TDMAX. the center was incorrectly
-being calculated.</tt></li>
-<li><tt>09.08.03 ARCHIVE: fixed a problem with the NOAO archive web
-display with no images loaded. The variables 'ra' and 'dec' were
-not defined.</tt></li>
-<li><tt>09.08.03 PLOT: ixed a problem with the plot widget and the
-preferences unique plot parameter.</tt></li>
-<li><tt>09.09.03 PLOT: project plot xaxis are now in coordinate
-system specified via the marker dialog box.</tt></li>
-<li><tt>09.11.03 PLOT: fixed a problem with the line, ruler, and
-projection regions and properly displaying wcs linear
-coordinates</tt></li>
-<li><tt>09.11.03 WCS: cleaned up a lot of code for
-setting/adjusting coordinate menus</tt></li>
-<li><tt>09.11.03 RGB: loading a new channel in a rgb image will no
-longer delete regions, grids, or aux contours.</tt></li>
-<li><tt>09.15.03 FITS: removed BITPIX32 define. using &lt;int&gt;
-instead since it is defined as a consistent 4 bytes across all
-platforms.</tt></li>
-<li><tt>09.18.03 RGB: split lock rgb into lock scale and lock
-bin.</tt></li>
-<li><tt>09.21.03 BINNING: frames now have 'memory' of certain bin
-paramenters. It is now possiable to set bin parameters before
-loading a bin table.</tt></li>
-<li><tt>09.22.03 RGB: InfoBox now displays all values for RGB
-images, not just the current channel value.</tt></li>
-<li><tt>09.22.03 API: change names of various tcl marker
-variables</tt></li>
-<li><tt>09.22.03 REGION: add prefs for regions color, width,
-properties, font</tt></li>
-<li><tt>09.22.03 GUI: add HJKL key bindings as substitute for arrow
-keys</tt></li>
+<li><tt>09.06.03 SOLARIS: fixed a problem with 64bit machines and truecolor displays.</tt></li>
+<li><tt>09.06.03 FITS: add support for multiple extension fits data cubes.</tt></li>
+<li><tt>09.08.03 REGION: fixed a problem with projection regions and an undefined variable.</tt></li>
+<li><tt>09.08.03 BINNING: fixed a problem with fits bin tables without TLMIN/TLMAX or TDMIN/TDMAX. the center was incorrectly being calculated.</tt></li>
+<li><tt>09.08.03 ARCHIVE: fixed a problem with the NOAO archive web display with no images loaded. The variables 'ra' and 'dec' were not defined.</tt></li>
+<li><tt>09.08.03 PLOT: ixed a problem with the plot widget and the preferences unique plot parameter.</tt></li>
+<li><tt>09.09.03 PLOT: project plot xaxis are now in coordinate system specified via the marker dialog box.</tt></li>
+<li><tt>09.11.03 PLOT: fixed a problem with the line, ruler, and projection regions and properly displaying wcs linear coordinates</tt></li>
+<li><tt>09.11.03 WCS: cleaned up a lot of code for setting/adjusting coordinate menus</tt></li>
+<li><tt>09.11.03 RGB: loading a new channel in a rgb image will no longer delete regions, grids, or aux contours.</tt></li>
+<li><tt>09.15.03 FITS: removed BITPIX32 define. using &lt;int&gt; instead since it is defined as a consistent 4 bytes across all platforms.</tt></li>
+<li><tt>09.18.03 RGB: split lock rgb into lock scale and lock bin.</tt></li>
+<li><tt>09.21.03 BINNING: frames now have 'memory' of certain bin paramenters. It is now possiable to set bin parameters before loading a bin table.</tt></li>
+<li><tt>09.22.03 RGB: InfoBox now displays all values for RGB images, not just the current channel value.</tt></li>
+<li><tt>09.22.03 API: change names of various tcl marker variables</tt></li>
+<li><tt>09.22.03 REGION: add prefs for regions color, width, properties, font</tt></li>
+<li><tt>09.22.03 GUI: add HJKL key bindings as substitute for arrow keys</tt></li>
 <li>
 <p><tt><b>09.24.03 RELEASE version 3.0b6</b></tt></p>
 </li>
-<li><tt>09.29.03 WCS: changes to getWCSRotation, getWCSOrientation
-to better reflect the actual rotation</tt></li>
-<li><tt>09.30.03 XPA: add xpa/command line options for
-configuration of info panel</tt></li>
-<li><tt>09.30.03 API: change variable 'mosaic(fast)' to
-'ds9(mosaic,fast)'</tt></li>
-<li><tt>09.30.03 FITS: add new support for blank/Inf/NaN background
-color</tt></li>
-<li><tt>10.01.03 FITS: add support for image background
-color.</tt></li>
+<li><tt>09.29.03 WCS: changes to getWCSRotation, getWCSOrientation to better reflect the actual rotation</tt></li>
+<li><tt>09.30.03 XPA: add xpa/command line options for configuration of info panel</tt></li>
+<li><tt>09.30.03 API: change variable 'mosaic(fast)' to 'ds9(mosaic,fast)'</tt></li>
+<li><tt>09.30.03 FITS: add new support for blank/Inf/NaN background color</tt></li>
+<li><tt>10.01.03 FITS: add support for image background color.</tt></li>
 <li><tt>10.01.03 RGB: add support for RGB lock colorbar</tt></li>
 <li><tt>10.23.03 HV: add support for VO DIS</tt></li>
-<li><tt>10.23.03 HV: fixed a problem with forms and encrypting
-field names, allow with the returned value</tt></li>
-<li><tt>10.23.03 GUI: Change mode 'Default' to 'None'. We can't use
-the term 'default' because with problems with tcl switchs and the
-default keyword</tt></li>
-<li><tt>10.24.03 WCS: add support for WCS AIPS projections via the
-preferences menu.</tt></li>
+<li><tt>10.23.03 HV: fixed a problem with forms and encrypting field names, allow with the returned value</tt></li>
+<li><tt>10.23.03 GUI: Change mode 'Default' to 'None'. We can't use the term 'default' because with problems with tcl switchs and the default keyword</tt></li>
+<li><tt>10.24.03 WCS: add support for WCS AIPS projections via the preferences menu.</tt></li>
 <li><tt>10.24.03 API: add acknowledgment</tt></li>
-<li><tt>11.03.03 COMMAND: fixed a problem with command line options
--mosaicimage, -mosaicimagewfpc2, -medatacube</tt></li>
-<li><tt>11.03.03 FITS: fixed a problem with multiple extension data
-cube with all memory models except MMAPINCR.</tt></li>
-<li><tt>11.03.03 COMMAND: fixed a problem with command line options
--mosaicimagewcs, -mosaicimageiraf, -mosaicimagewfpc2, -medatacube
-and RGB frames</tt></li>
-<li><tt>11.05.03 WCS: remove internal wcsZoom matrix. All wcsZoom
-actions are now applied to the current &nbsp;zoom matrix. This
-fixes a number of problems with 'Match Frames to WCS'</tt></li>
-<li><tt>11.05.03 WCS: fixed a problem with rotated images and
-examine mode.</tt></li>
-<li><tt>11.07.03</tt> <tt>REGION: f</tt><tt>fixed a problem with
-regular panda regions. The code incorrectly determined a regulier
-panda was irregulier and output it as such.</tt></li>
-<li><tt>11.07.03 REGION: fixed a problem with region angles in
-general, where there there was a rotation in the wcs.</tt></li>
+<li><tt>11.03.03 COMMAND: fixed a problem with command line options -mosaicimage, -mosaicimagewfpc2, -medatacube</tt></li>
+<li><tt>11.03.03 FITS: fixed a problem with multiple extension data cube with all memory models except MMAPINCR.</tt></li>
+<li><tt>11.03.03 COMMAND: fixed a problem with command line options -mosaicimagewcs, -mosaicimageiraf, -mosaicimagewfpc2, -medatacube and RGB frames</tt></li>
+<li><tt>11.05.03 WCS: remove internal wcsZoom matrix. All wcsZoom actions are now applied to the current &nbsp;zoom matrix. This fixes a number of problems with 'Match Frames to WCS'</tt></li>
+<li><tt>11.05.03 WCS: fixed a problem with rotated images and examine mode.</tt></li>
+<li><tt>11.07.03</tt> <tt>REGION: f</tt><tt>fixed a problem with regular panda regions. The code incorrectly determined a regulier panda was irregulier and output it as such.</tt></li>
+<li><tt>11.07.03 REGION: fixed a problem with region angles in general, where there there was a rotation in the wcs.</tt></li>
 <li><tt>11.07.03 HV: add Server Apache Refresh support.</tt></li>
-<li><tt>11.07.03 XPA: add xpaget ds9 fits size &lt;coordsys&gt;
-&lt;skyformat&gt;</tt></li>
+<li><tt>11.07.03 XPA: add xpaget ds9 fits size &lt;coordsys&gt; &lt;skyformat&gt;</tt></li>
 <li><tt>11.11.03 XPA: add regions group support.</tt></li>
 <li><tt>12.01.03 WCS: update to 3.5.0</tt></li>
-<li><tt>12.01.03 XPA: add get contour &lt;coordinate system&gt;
-&lt;skyframe&gt; support.</tt></li>
+<li><tt>12.01.03 XPA: add get contour &lt;coordinate system&gt; &lt;skyframe&gt; support.</tt></li>
 <li><tt>12.05.03 WCS: update to 3.5.1</tt></li>
 <li><tt>12.05.03 XPA: upgrade to 2.1.5</tt></li>
 <li><tt>12.05.03 FILTER: upgrade to 1.2.3</tt></li>
 <li><tt>12.05.03 FITSY: upgrade to 1.2.3</tt></li>
 <li><tt>12.05.03 AST: upgrade to 3.0</tt></li>
 <li><tt>12.05.03 IIS: upgrade to 1.0</tt></li>
-<li><tt>12.10.03 REGION: casted all XPoint to short. There is a
-problem with rendering line segments at very high zoom. X11
-overflows and the lines become random. We should check that screen
-coordinates never exceed SHRT_MAX</tt></li>
-<li><tt>12.10.03 ANALYSIS: geturl() macro is formated before
-execution.</tt></li>
+<li><tt>12.10.03 REGION: casted all XPoint to short. There is a problem with rendering line segments at very high zoom. X11 overflows and the lines become random. We should check that screen coordinates never exceed SHRT_MAX</tt></li>
+<li><tt>12.10.03 ANALYSIS: geturl() macro is formated before execution.</tt></li>
 <li><tt>12.11.03 FITs: add mosaic image next wcs support.</tt></li>
-<li><tt>12.15.03 RGB: fixed a problem with wcs matching when one of
-the wcs is flipped in XX</tt></li>
-<li><tt>12.15.03 WCS:</tt> <tt>fixed a problem with wcs matching
-when one of the wcs is flipped in XX</tt></li>
-<li><tt>12.15.03 REGION: load fits regions now utilitize the
-current region color, width, and font</tt></li>
-<li><tt>12.24.03 WCS: back out change #50. We have to use the
-projection tan point to correctly build mosaics and RGB
-images.</tt></li>
+<li><tt>12.15.03 RGB: fixed a problem with wcs matching when one of the wcs is flipped in XX</tt></li>
+<li><tt>12.15.03 WCS:</tt> <tt>fixed a problem with wcs matching when one of the wcs is flipped in XX</tt></li>
+<li><tt>12.15.03 REGION: load fits regions now utilitize the current region color, width, and font</tt></li>
+<li><tt>12.24.03 WCS: back out change #50. We have to use the projection tan point to correctly build mosaics and RGB images.</tt></li>
 <li><tt>01.09.04 AST: upgrade to 3.1.1</tt></li>
-<li><tt>01.09.04 GRID: pass PV,PROJP,PS keywords to
-AST<br></tt></li>
-<li><tt>01.12.04 TCLLIB: add tcllib 1.4. This package contains a
-number of useful tcl packages<br></tt></li>
+<li><tt>01.09.04 GRID: pass PV,PROJP,PS keywords to AST<br></tt></li>
+<li><tt>01.12.04 TCLLIB: add tcllib 1.4. This package contains a number of useful tcl packages<br></tt></li>
 <li><tt>01.12.04 FTP: upgrade to 2.4</tt></li>
 <li><tt>01.13.04 TCL: upgrade to 8.4.5</tt></li>
 <li><tt>01.13.04 TK: upgrade to 8.4.5</tt></li>
-<li><tt>01.13.04 HTTP: add support for proxy
-authentication.</tt></li>
-<li><tt>01.14.04 COMMAND: fixed a problem with printing from the
-command line. The canvas widget was not fully realized before
-printing, resulting in no image.</tt></li>
-<li><tt>01.15.04 MKTCLAPP: made two changes to the default init
-script of mktclapp. The first sees that the the virtual file system
-is init'd before the first call to Tcl. This allows Tcl to 'see'
-encoding files. The second, for windows only, makes sure that the
-Tcl windows file system is init'd before the first call to
-Tcl.</tt></li>
-<li><tt>01.15.04 MKTCLAPP: add default encoding files to ds9.mta,
-now that we can use them.</tt></li>
-<li><tt>01.22.04 GUI: Add preference for default temporary file
-directory.</tt></li>
+<li><tt>01.13.04 HTTP: add support for proxy authentication.</tt></li>
+<li><tt>01.14.04 COMMAND: fixed a problem with printing from the command line. The canvas widget was not fully realized before printing, resulting in no image.</tt></li>
+<li><tt>01.15.04 MKTCLAPP: made two changes to the default init script of mktclapp. The first sees that the the virtual file system is init'd before the first call to Tcl. This allows Tcl to 'see' encoding files. The second, for windows only, makes sure that the Tcl windows file system is init'd before the first call to Tcl.</tt></li>
+<li><tt>01.15.04 MKTCLAPP: add default encoding files to ds9.mta, now that we can use them.</tt></li>
+<li><tt>01.22.04 GUI: Add preference for default temporary file directory.</tt></li>
 <li><tt>01.23.04 XPA: add xpa imexam.</tt></li>
 <li><tt>01.25.04 XPA: add xpa fits header.</tt></li>
 <li><tt>01.25.04 XPA: add xpa fits depth.</tt></li>
 <li><tt>01.25.04 XPA: modified xpa fits size.</tt></li>
-<li><tt>01.25.04 GUI: add language support for info and error
-messages.</tt></li>
-<li><tt>02.01.04 WCS: more on #50 and #141. If wcs projection is
-Zenithal, use CRPIX as reference point to determine wcs rotation
-and oriention. Otherwise, use image center point.</tt></li>
-<li><tt>02.04.04 CONTOUR: modified smooth algorithm. We now SMOOTH
-the entire image with a gaussian kernal. Previously, we would block
-by 2 before smoothing with a boxcar kernal. Finally, the default
-method is BLOCK.</tt></li>
-<li><tt>02.04.04 CONTOUR:&nbsp;</tt><tt>A .5 error has been removed
-from the BLOCK algorithm.</tt></li>
-<li><tt>02.04.04 CONTOUR:</tt> <tt>the number of contour levels has
-been inconsistant in the pass. this has been fixed.</tt> <tt>If the
-number of levels is 1, the high cut value is used.</tt></li>
-<li><tt>02.04.04 CONTOUR: fixed log scale bug. it was incorrectly
-calculating the levels.</tt></li>
-<li><tt>02.05.04 SAVEAS: jpeg,tiff,png,ppm support is now internal
-and available to all ports. gs is no longer needed.</tt></li>
-<li><tt>02.10.04 REGION: add show/hide support for fg and bg
-regions.</tt></li>
-<li><tt>02.10.04 COLORMAP: fixed a problem with the -cmap value x y
-command. On truecolor visuals, we need to be realized before we
-start to manipulate the colormap.</tt></li>
-<li><tt>02.10.04 FITS: cleaned up smooth convolve code. same speed,
-easier to understand.</tt></li>
+<li><tt>01.25.04 GUI: add language support for info and error messages.</tt></li>
+<li><tt>02.01.04 WCS: more on #50 and #141. If wcs projection is Zenithal, use CRPIX as reference point to determine wcs rotation and oriention. Otherwise, use image center point.</tt></li>
+<li><tt>02.04.04 CONTOUR: modified smooth algorithm. We now SMOOTH the entire image with a gaussian kernal. Previously, we would block by 2 before smoothing with a boxcar kernal. Finally, the default method is BLOCK.</tt></li>
+<li><tt>02.04.04 CONTOUR:&nbsp;</tt><tt>A .5 error has been removed from the BLOCK algorithm.</tt></li>
+<li><tt>02.04.04 CONTOUR:</tt> <tt>the number of contour levels has been inconsistant in the pass. this has been fixed.</tt> <tt>If the number of levels is 1, the high cut value is used.</tt></li>
+<li><tt>02.04.04 CONTOUR: fixed log scale bug. it was incorrectly calculating the levels.</tt></li>
+<li><tt>02.05.04 SAVEAS: jpeg,tiff,png,ppm support is now internal and available to all ports. gs is no longer needed.</tt></li>
+<li><tt>02.10.04 REGION: add show/hide support for fg and bg regions.</tt></li>
+<li><tt>02.10.04 COLORMAP: fixed a problem with the -cmap value x y command. On truecolor visuals, we need to be realized before we start to manipulate the colormap.</tt></li>
+<li><tt>02.10.04 FITS: cleaned up smooth convolve code. same speed, easier to understand.</tt></li>
 <li><tt>02.11.04 GUI: Add Colorbar Parameter dialog.</tt></li>
-<li><tt>02.11.04 COLORBAR: add support for load/save
-contrast/bias.</tt></li>
-<li><tt>02.12.04 EXPORT: split EXPORT from SAVEAS. Currently only
-FITS is supported.</tt></li>
-<li><tt>02.17.04 CONTOUR: when update data cube slice,
-automatically regenerate contours.</tt></li>
-<li><tt>02.18.04 REGION: the marker menu is now enabled if no frame
-or an empty frame is available.</tt></li>
-<li><tt>02.20.04 SCALE: add Auto MinMax. by default, use SCAN for
-single and SAMPLE for Mosaic and DataCube files</tt></li>
-<li><tt>02.20.04 SCALE: fixed a problem with scobe being reset to
-LOCAL.</tt></li>
-<li><tt>02.23.04 CONTOUR: fixed a problem with incorrect contours
-for mosaics and rgb images at startup.</tt></li>
+<li><tt>02.11.04 COLORBAR: add support for load/save contrast/bias.</tt></li>
+<li><tt>02.12.04 EXPORT: split EXPORT from SAVEAS. Currently only FITS is supported.</tt></li>
+<li><tt>02.17.04 CONTOUR: when update data cube slice, automatically regenerate contours.</tt></li>
+<li><tt>02.18.04 REGION: the marker menu is now enabled if no frame or an empty frame is available.</tt></li>
+<li><tt>02.20.04 SCALE: add Auto MinMax. by default, use SCAN for single and SAMPLE for Mosaic and DataCube files</tt></li>
+<li><tt>02.20.04 SCALE: fixed a problem with scobe being reset to LOCAL.</tt></li>
+<li><tt>02.23.04 CONTOUR: fixed a problem with incorrect contours for mosaics and rgb images at startup.</tt></li>
 <li><tt>02.23.04 XPA: add cd (current directory) command</tt></li>
 <li><tt>02.24.04 AST: upgrade 3.2.4</tt></li>
-<li><tt>02.24.04 DOC: added support for generating postscript and
-pdf versions of the reference manual.</tt></li>
-<li><tt>02.25.04 CONTOUR: convert contours to polygons will now
-also convert any aux contours.</tt></li>
+<li><tt>02.24.04 DOC: added support for generating postscript and pdf versions of the reference manual.</tt></li>
+<li><tt>02.25.04 CONTOUR: convert contours to polygons will now also convert any aux contours.</tt></li>
 <li><tt>02.27.04 PANDA: fixed probems with GUI add angle.</tt></li>
 <li><tt>02.27.04 CIRCLE: new GUI edit algorithm.</tt></li>
-<li><tt>02.27.04 ANNULUS: new GUI edit and add annulus
-algorithms.</tt></li>
+<li><tt>02.27.04 ANNULUS: new GUI edit and add annulus algorithms.</tt></li>
 <li><tt>02.27.04 ELLIPSE: new GU edit algorithm.</tt></li>
-<li><tt>02.27.04 ELLIPSE ANNULUS: new GUI edit and add annulus
-algorithm. This fixed a problem with 0 radius annuli. Also fixed a
-problem with GUI rotate after close dialog box.</tt></li>
-<li><tt>3.1.04 BOXANNULUS: new GUI edit and add size algorithms.
-This fixed a problem with 0 size annuli.</tt></li>
-<li><tt>03.01.04 PANDA: new GUI edit and add annulus
-algorithms.</tt></li>
-<li><tt>03.01.04 PANDA: fixed a problem with a full PANDA from 0 to
-360 degrees. Previously, it was displayed as 0 to 0
-degrees.</tt></li>
-<li><tt>03.02.04 PANDA: fixed a problem with postscript and radial
-lines. The zoom was incorrectly being calculated..</tt></li>
-<li><tt>03.02.04 PANDA: fixed a problem with render in magnifier.
-The wrong zoom factor was being used.</tt></li>
-<li><tt>03.09.04 GUI: add Tab/Shift-Tab bindings to
-panner.</tt></li>
-<li><tt>03.10.04 GRID: fixed a problem with single publication
-bounding box. It now takes into account DATASEC.</tt></li>
+<li><tt>02.27.04 ELLIPSE ANNULUS: new GUI edit and add annulus algorithm. This fixed a problem with 0 radius annuli. Also fixed a problem with GUI rotate after close dialog box.</tt></li>
+<li><tt>3.1.04 BOXANNULUS: new GUI edit and add size algorithms. This fixed a problem with 0 size annuli.</tt></li>
+<li><tt>03.01.04 PANDA: new GUI edit and add annulus algorithms.</tt></li>
+<li><tt>03.01.04 PANDA: fixed a problem with a full PANDA from 0 to 360 degrees. Previously, it was displayed as 0 to 0 degrees.</tt></li>
+<li><tt>03.02.04 PANDA: fixed a problem with postscript and radial lines. The zoom was incorrectly being calculated..</tt></li>
+<li><tt>03.02.04 PANDA: fixed a problem with render in magnifier. The wrong zoom factor was being used.</tt></li>
+<li><tt>03.09.04 GUI: add Tab/Shift-Tab bindings to panner.</tt></li>
+<li><tt>03.10.04 GRID: fixed a problem with single publication bounding box. It now takes into account DATASEC.</tt></li>
 <li><tt>03.10.04 AST: upgrade to 3.2.6</tt></li>
-<li><tt>03.12.04 GRAPH: graphs are now active for single,tile,and
-blink modes.</tt></li>
-<li><tt>03.16.04 WCS LINEAR: fixed many problems with alignment of
-WCS LINEAR MOSAICS</tt></li>
-<li><tt>03.16.04 RGB: fixed many problems with alignment of RGB WCS
-images</tt></li>
-<li><tt>03.18.04 FITS: fixed a problem with random numbers beening
-displayed for BLANK/NaN</tt></li>
+<li><tt>03.12.04 GRAPH: graphs are now active for single,tile,and blink modes.</tt></li>
+<li><tt>03.16.04 WCS LINEAR: fixed many problems with alignment of WCS LINEAR MOSAICS</tt></li>
+<li><tt>03.16.04 RGB: fixed many problems with alignment of RGB WCS images</tt></li>
+<li><tt>03.18.04 FITS: fixed a problem with random numbers beening displayed for BLANK/NaN</tt></li>
 <li>
 <p><tt><b>03.18.04</b> <b>RELEASE version 3.0b7</b></tt></p>
 </li>
-<li><tt>03.22.04 PIXELTABLE: fixed a problem with 'unset
-pixelValues'.</tt></li>
-<li><tt>03.22.04 SAVEAS: fixed a problem with
-'processSaveAs'.</tt></li>
-<li><tt>03.22.04 RGB: fixed a problem with turning off all loaded
-channels within a frame.</tt></li>
-<li><tt>03.31.04 IIS: fixed a problem with a old variable in
-DisplayCoordDialog.</tt></li>
-<li><tt>03.31.04 BINNING: fixed a problem with dimensions of
-DBL_MIN,DBL_MAX.</tt></li>
-<li><tt>03.31.04 IIS: turn off blinking cursor while changing
-colormap so we do not see a color flash due to the updating of the
-frame when the cursor form is changed.</tt></li>
-<li><tt>04.01.04 WEB DISPLAY: add options on how to load downloaded
-fits.</tt></li>
-<li><tt>04.01.04 WEB DISPLAY: fixed a problem when the image
-width/height contains garbage.</tt></li>
+<li><tt>03.22.04 PIXELTABLE: fixed a problem with 'unset pixelValues'.</tt></li>
+<li><tt>03.22.04 SAVEAS: fixed a problem with 'processSaveAs'.</tt></li>
+<li><tt>03.22.04 RGB: fixed a problem with turning off all loaded channels within a frame.</tt></li>
+<li><tt>03.31.04 IIS: fixed a problem with a old variable in DisplayCoordDialog.</tt></li>
+<li><tt>03.31.04 BINNING: fixed a problem with dimensions of DBL_MIN,DBL_MAX.</tt></li>
+<li><tt>03.31.04 IIS: turn off blinking cursor while changing colormap so we do not see a color flash due to the updating of the frame when the cursor form is changed.</tt></li>
+<li><tt>04.01.04 WEB DISPLAY: add options on how to load downloaded fits.</tt></li>
+<li><tt>04.01.04 WEB DISPLAY: fixed a problem when the image width/height contains garbage.</tt></li>
 <li><tt>04.02.04 TCL/TK: update to 8.4.6</tt></li>
-<li><tt>04.05.04 PAN: fixed yet another problem with -pan.
-Hopefully this time, I've got it right.</tt></li>
-<li><tt>04.06.04 GRID: fixed a problem with psLine and gcc
-2.96.</tt></li>
+<li><tt>04.05.04 PAN: fixed yet another problem with -pan. Hopefully this time, I've got it right.</tt></li>
+<li><tt>04.06.04 GRID: fixed a problem with psLine and gcc 2.96.</tt></li>
 <li><tt>04.06.04 MAKEFILE: fixed a typo with ./configure.</tt></li>
 <li>
 <p><tt><b>04.06.04</b> <b>RELEASE version 3.0b8</b></tt></p>
 </li>
-<li><tt>04.12.04 SAVEAS: add SaveAs MPEG-1 support using tkmpeg and
-exmpeg.</tt></li>
-<li><tt>04.14.04 BINNING: 60% improvement in speed for little
-endian arch.</tt></li>
+<li><tt>04.12.04 SAVEAS: add SaveAs MPEG-1 support using tkmpeg and exmpeg.</tt></li>
+<li><tt>04.14.04 BINNING: 60% improvement in speed for little endian arch.</tt></li>
 <li><tt>04.23.04 ZLIB: upgrade to version 1.2.1<br></tt></li>
-<li><tt>04.26.04 ALPHA: minor changes to make.alpha and
-ds9/Makefile for alpha support.</tt></li>
-<li><tt>04.26.04 FITS: fixed problems with trying to open regions
-extensions in cases where the mode was not mmap.<br></tt></li>
-<li><tt>04.27.04 EXTERNAL FITS: fixed major problems with pattern
-matching.</tt></li>
-<li><tt>04.27.04 FITSY++: skip over unknow binary column types. We
-used to force an exit.</tt></li>
-<li><tt>04.28.04 FITSY++: fixed a problem with SocketGZ where if
-too little data had arrived, ds9 would incorrectly see this as an
-error.</tt></li>
-<li><tt>04.29.04 GUI: fixed a race condition in which ds9 'thinks'
-the windows have been realized, and XPA has been init'd and the
-user starts to delete windows that don't exists. Now XPA is not
-realized until the canvas window has been realized.</tt></li>
-<li><tt>04.29.04 LINUX: return to a full static link. Seems like
-the best option to support current and future versions of
-linux.</tt></li>
+<li><tt>04.26.04 ALPHA: minor changes to make.alpha and ds9/Makefile for alpha support.</tt></li>
+<li><tt>04.26.04 FITS: fixed problems with trying to open regions extensions in cases where the mode was not mmap.<br></tt></li>
+<li><tt>04.27.04 EXTERNAL FITS: fixed major problems with pattern matching.</tt></li>
+<li><tt>04.27.04 FITSY++: skip over unknow binary column types. We used to force an exit.</tt></li>
+<li><tt>04.28.04 FITSY++: fixed a problem with SocketGZ where if too little data had arrived, ds9 would incorrectly see this as an error.</tt></li>
+<li><tt>04.29.04 GUI: fixed a race condition in which ds9 'thinks' the windows have been realized, and XPA has been init'd and the user starts to delete windows that don't exists. Now XPA is not realized until the canvas window has been realized.</tt></li>
+<li><tt>04.29.04 LINUX: return to a full static link. Seems like the best option to support current and future versions of linux.</tt></li>
 <li><tt>04.29.04 PRINT: add print prefs.</tt></li>
 <li>
 <p><tt><b>05.03.04</b> <b>RELEASE version 3.0b9</b></tt></p>
 </li>
-<li><tt>05.04.04 BINNING: fixed a problem with column size double
-and buffer overflow on little endian machines.<br></tt></li>
-<li><tt>05.04.04 PANDA: fixed a problem with postscript and gcc
-2.95 compilers. This problem had already been fixed for gcc 3.x
-compilers.</tt></li>
-<li><tt>05.06.04 BINNING: add support for variable binning in x and
-y.</tt></li>
-<li><tt>05.07.04 IIS: fixed a problem with buffer overflow and
-determining imtool.rc file location.</tt></li>
-<li><tt>05.07.04 FRAMEBASE: fixed some minor memory
-leaks.</tt></li>
-<li><tt>05.10.04 BINNING: for FITS REGIONS files, when loading
-against a binned image, compare X and Y bin columns to regions X
-and Y bin columns for a match. Do not load unless they
-match.</tt></li>
-<li><tt>05.10.04 GUI: add 'option' command to control GUI
-appearance. Removed many -bd 2 options to clean up the
-interface.</tt></li>
-<li><tt>05.12.04 BINNING: fixed a major problem with 3D binning.
-Once it was turned on and then turned off, important internal
-parameters where not being update, resulting in segvs.</tt></li>
-<li><tt>05.15.04 RGB: fixed memory leak in loading RGB
-images.</tt></li>
-<li><tt>05.17.04 LINUX: ok, back to two versions: one dynamic, one
-static. The static version is buggy under Fedora, but is required
-for old versions of RH. So the default version will be dynamic
-linked, with an static version available for older
-machines.</tt></li>
-<li><tt>05.21.04 XPA: fixed a problem with WCS REPLACE FILE and WCS
-APPEND FILE.</tt></li>
-<li><tt>05.25.04 PANDA: fixed CIAO output so that the start angle
-is always less than the end angle.</tt></li>
-<li><tt>05.26.04 FITSY++: clean up code for strm.C, map.C,
-mapincr.C</tt></li>
-<li><tt>05.31.04 FITSY++: introduce new 'internal paging' mapince.C
-for binning files larger than 1Gb. Only 1Gb segments are mmap at
-one time, to allow binning &gt;2Gb/&gt;4Gb bin tables under a 32bit
-OS.</tt></li>
-<li><tt>05.31.04 FITSDATA: optimized swap(), getValueFloat(),
-getValueDouble(), and scan() in hopes of speeding up display times,
-especially for linux.</tt></li>
+<li><tt>05.04.04 BINNING: fixed a problem with column size double and buffer overflow on little endian machines.<br></tt></li>
+<li><tt>05.04.04 PANDA: fixed a problem with postscript and gcc 2.95 compilers. This problem had already been fixed for gcc 3.x compilers.</tt></li>
+<li><tt>05.06.04 BINNING: add support for variable binning in x and y.</tt></li>
+<li><tt>05.07.04 IIS: fixed a problem with buffer overflow and determining imtool.rc file location.</tt></li>
+<li><tt>05.07.04 FRAMEBASE: fixed some minor memory leaks.</tt></li>
+<li><tt>05.10.04 BINNING: for FITS REGIONS files, when loading against a binned image, compare X and Y bin columns to regions X and Y bin columns for a match. Do not load unless they match.</tt></li>
+<li><tt>05.10.04 GUI: add 'option' command to control GUI appearance. Removed many -bd 2 options to clean up the interface.</tt></li>
+<li><tt>05.12.04 BINNING: fixed a major problem with 3D binning. Once it was turned on and then turned off, important internal parameters where not being update, resulting in segvs.</tt></li>
+<li><tt>05.15.04 RGB: fixed memory leak in loading RGB images.</tt></li>
+<li><tt>05.17.04 LINUX: ok, back to two versions: one dynamic, one static. The static version is buggy under Fedora, but is required for old versions of RH. So the default version will be dynamic linked, with an static version available for older machines.</tt></li>
+<li><tt>05.21.04 XPA: fixed a problem with WCS REPLACE FILE and WCS APPEND FILE.</tt></li>
+<li><tt>05.25.04 PANDA: fixed CIAO output so that the start angle is always less than the end angle.</tt></li>
+<li><tt>05.26.04 FITSY++: clean up code for strm.C, map.C, mapincr.C</tt></li>
+<li><tt>05.31.04 FITSY++: introduce new 'internal paging' mapince.C for binning files larger than 1Gb. Only 1Gb segments are mmap at one time, to allow binning &gt;2Gb/&gt;4Gb bin tables under a 32bit OS.</tt></li>
+<li><tt>05.31.04 FITSDATA: optimized swap(), getValueFloat(), getValueDouble(), and scan() in hopes of speeding up display times, especially for linux.</tt></li>
 <li><tt>06.13.04 WCS: upgrade to version 3.5.3</tt></li>
-<li><tt>06.16.04 WEB DISPLAY: increased default font by one
-size.</tt></li>
-<li><tt>06.16.04 GUI: fixed a problem with display header. Under
-Fedora Core 2, the default font size was too small.</tt></li>
+<li><tt>06.16.04 WEB DISPLAY: increased default font by one size.</tt></li>
+<li><tt>06.16.04 GUI: fixed a problem with display header. Under Fedora Core 2, the default font size was too small.</tt></li>
 <li><tt>06.17.04 XPA: add fits header keyword support.</tt></li>
-<li><tt>06.17.04 PLOT: add option plot names to xpa, plot name in
-window title, plot data command</tt></li>
-<li><tt>06.17.04 PLOT: fixed a problem with closing xpa plots via
-xpa.</tt></li>
-<li><tt>06.18.04 PLOT: remove prefs 'Unique Plot'. This never
-worked correctly and is now obsolete.</tt></li>
-<li><tt>06.21.04 PANDA: radii now extend from inner annuli to outer
-annuli and not from the center.</tt></li>
-<li><tt>06.21.04 RGB: fixed a problem with 'fit to zoom' for rgb
-frames.</tt></li>
+<li><tt>06.17.04 PLOT: add option plot names to xpa, plot name in window title, plot data command</tt></li>
+<li><tt>06.17.04 PLOT: fixed a problem with closing xpa plots via xpa.</tt></li>
+<li><tt>06.18.04 PLOT: remove prefs 'Unique Plot'. This never worked correctly and is now obsolete.</tt></li>
+<li><tt>06.21.04 PANDA: radii now extend from inner annuli to outer annuli and not from the center.</tt></li>
+<li><tt>06.21.04 RGB: fixed a problem with 'fit to zoom' for rgb frames.</tt></li>
 <li><tt>06.22.04 AST: update to version 3.3-1.</tt></li>
 <li><tt>06.23.04 GRIDS: fixed justification (yet again!)</tt></li>
-<li><tt>06.24.04 REGIONS: the default GUI size is now constant,
-reguardless of current zoom.</tt></li>
-<li><tt>06.24.04 REGIONS: add support for cut/copy/paste regions
-across frames.</tt></li>
-<li><tt>06.25.04 REGIONS: add unselect, begin rotate, end rotate,
-begin move, end move, begin edit, end edit callback
-support.</tt></li>
-<li><tt>06.25.04 GUI: add support for multiple FITS headers for
-multiple extension FITS files.</tt></li>
-<li><tt>06.28.04 REGIONS: add support for listing WCS keywords and
-values as comments in region files.</tt></li>
-<li><tt>06.28.04 REGIONS: fixed a problem with the TEXT region
-handles with zooms not equal to 1.</tt></li>
-<li><tt>06.28.04 XPA: fixed a problem with xpaset regions color and
-xpaset regions width.</tt></li>
-<li><tt>06.29.04 FITS: add support for reload option. if reload
-option is set, markers and aux contours are preserved across
-loads.</tt></li>
-<li><tt>07.01.04 FITSY++: fixed a problem with binning if the image
-header contained more than 36 cards.</tt></li>
-<li><tt>07.01.04 FITSY++: added TV and TS keyword support for FITS
-bin tables.</tt></li>
-<li><tt>07.01.04 FITSY++: add TP keyword support for FITS bin
-tables.</tt></li>
-<li><tt>07.02.04 GRID: fixed a problem with a wcs with PC
-keywords.</tt></li>
-<li><tt>07.05.04 WCS: removed WCS projection option. Its no longer
-needed.</tt></li>
-<li><tt>07.05.04 GRID: fixed several problems with converting from
-wcs to AST. AST is very very picky as to which keywords to use and
-in what order. These include CDELT's, CD's, PC's,
-CROTA's.</tt></li>
+<li><tt>06.24.04 REGIONS: the default GUI size is now constant, reguardless of current zoom.</tt></li>
+<li><tt>06.24.04 REGIONS: add support for cut/copy/paste regions across frames.</tt></li>
+<li><tt>06.25.04 REGIONS: add unselect, begin rotate, end rotate, begin move, end move, begin edit, end edit callback support.</tt></li>
+<li><tt>06.25.04 GUI: add support for multiple FITS headers for multiple extension FITS files.</tt></li>
+<li><tt>06.28.04 REGIONS: add support for listing WCS keywords and values as comments in region files.</tt></li>
+<li><tt>06.28.04 REGIONS: fixed a problem with the TEXT region handles with zooms not equal to 1.</tt></li>
+<li><tt>06.28.04 XPA: fixed a problem with xpaset regions color and xpaset regions width.</tt></li>
+<li><tt>06.29.04 FITS: add support for reload option. if reload option is set, markers and aux contours are preserved across loads.</tt></li>
+<li><tt>07.01.04 FITSY++: fixed a problem with binning if the image header contained more than 36 cards.</tt></li>
+<li><tt>07.01.04 FITSY++: added TV and TS keyword support for FITS bin tables.</tt></li>
+<li><tt>07.01.04 FITSY++: add TP keyword support for FITS bin tables.</tt></li>
+<li><tt>07.02.04 GRID: fixed a problem with a wcs with PC keywords.</tt></li>
+<li><tt>07.05.04 WCS: removed WCS projection option. Its no longer needed.</tt></li>
+<li><tt>07.05.04 GRID: fixed several problems with converting from wcs to AST. AST is very very picky as to which keywords to use and in what order. These include CDELT's, CD's, PC's, CROTA's.</tt></li>
 <li><tt>07.08.04 SAVEAS: reorganize save as menus.</tt></li>
-<li><tt>07.08.04 SAVEAS: add support for saving multiple frames as
-MPEG movie.</tt></li>
-<li><tt>07.13.04 MOSAIC: fixed a problem with mosaic image wcs with
-orientations of xx.</tt></li>
+<li><tt>07.08.04 SAVEAS: add support for saving multiple frames as MPEG movie.</tt></li>
+<li><tt>07.13.04 MOSAIC: fixed a problem with mosaic image wcs with orientations of xx.</tt></li>
 <li><tt>07.14.04 WCS: upgrade to version 3.5.5.</tt></li>
-<li><tt>07.14.04 FITSY++: add support for real number format
-'D'.</tt></li>
-<li><tt>07.14.04 FITSY: add changes to support real number format
-'D'.</tt></li>
-<li><tt>07.15.04 ANALYSIS: stderr can now be redirected to stdout
-for $text with the |&amp; macro.</tt></li>
-<li><tt>07.15.04 ANALYSIS: shell environment vars will be expanded
-within the command with the env() macro.</tt></li>
-<li><tt>07.15.04 ANALYSIS: add support for the WEB menu
-item.</tt></li>
+<li><tt>07.14.04 FITSY++: add support for real number format 'D'.</tt></li>
+<li><tt>07.14.04 FITSY: add changes to support real number format 'D'.</tt></li>
+<li><tt>07.15.04 ANALYSIS: stderr can now be redirected to stdout for $text with the |&amp; macro.</tt></li>
+<li><tt>07.15.04 ANALYSIS: shell environment vars will be expanded within the command with the env() macro.</tt></li>
+<li><tt>07.15.04 ANALYSIS: add support for the WEB menu item.</tt></li>
 <li>
 <p><tt><b>07.26.04</b> <b>RELEASE version 3.0<br></b></tt></p>
 </li>
-<li><tt>07.28.04 IIS: fixed a problem with iraf iis support that
-would sometimes result in a blank screen.</tt></li>
+<li><tt>07.28.04 IIS: fixed a problem with iraf iis support that would sometimes result in a blank screen.</tt></li>
 <li>
 <p><tt><b>07.28.04</b> <b>RELEASE version 3.0.1<br></b></tt></p>
 </li>
-<li><tt>08.02.2004 VECTOR: fixed a problem with matrix inversion
-with numbers smaller than DBL_EPSILON.</tt></li>
+<li><tt>08.02.2004 VECTOR: fixed a problem with matrix inversion with numbers smaller than DBL_EPSILON.</tt></li>
 <li><tt>08.02.2004 FRAME: check for negative zoom.</tt></li>
-<li><tt>08.06.2004 FITSIMAGE: fixed a problem with determining the
-length of a vector in the case of a non-wcs rotated coordinate
-system.</tt></li>
-<li><tt>08.09.2004 GRID: fixed a problem with a rotation in
-physical and wcs linear grids.</tt></li>
-<li><tt>08.10.2004 MAKEFILE: add support for emacs tags in
-saods9/saotk</tt></li>
-<li><tt>08.12.2004 PROJECTION: fixed a problem with paste
-projection and setup callback procs.</tt></li>
-<li><tt>08.12.2004 REGIONS: fixed a problem where regions
-properties where lost if cut/paste across frames.</tt></li>
-<li><tt>08.13.2004 DIALOGS: fixed an issues with some windows
-managers who needed a hint to bring all dialogs to the
-front.</tt></li>
-<li><tt>08.13.2004 POLYGON: change default create method to be
-simular to box.</tt></li>
-<li><tt>08.13.2004 POLYGON: add prefs default polygon
-size.</tt></li>
-<li><tt>08.13.2004 POLYGON: fixed a problem with the control
-handles at high zoom.</tt></li>
-<li><tt>08.16.2004 REGIONS: fixed a problem with updating
-coordinates/angles/distances when rebinning a FITS bin
-table.</tt></li>
-<li><tt>08.16.2004 REGIONS: add default system, sky, skyformat,
-dist system, and dist format for regions dialog to
-preferences.</tt></li>
-<li><tt>08.16.2004 FITSY++: fixed a problem with &lt;unsigned
-char&gt; columns. They where incorrectly cased as a
-&lt;char&gt;.</tt></li>
-<li><tt>08.18.2004 SCALE: nolonger reset scale mode from USERCLIP
-on load FITS.</tt></li>
+<li><tt>08.06.2004 FITSIMAGE: fixed a problem with determining the length of a vector in the case of a non-wcs rotated coordinate system.</tt></li>
+<li><tt>08.09.2004 GRID: fixed a problem with a rotation in physical and wcs linear grids.</tt></li>
+<li><tt>08.10.2004 MAKEFILE: add support for emacs tags in saods9/saotk</tt></li>
+<li><tt>08.12.2004 PROJECTION: fixed a problem with paste projection and setup callback procs.</tt></li>
+<li><tt>08.12.2004 REGIONS: fixed a problem where regions properties where lost if cut/paste across frames.</tt></li>
+<li><tt>08.13.2004 DIALOGS: fixed an issues with some windows managers who needed a hint to bring all dialogs to the front.</tt></li>
+<li><tt>08.13.2004 POLYGON: change default create method to be simular to box.</tt></li>
+<li><tt>08.13.2004 POLYGON: add prefs default polygon size.</tt></li>
+<li><tt>08.13.2004 POLYGON: fixed a problem with the control handles at high zoom.</tt></li>
+<li><tt>08.16.2004 REGIONS: fixed a problem with updating coordinates/angles/distances when rebinning a FITS bin table.</tt></li>
+<li><tt>08.16.2004 REGIONS: add default system, sky, skyformat, dist system, and dist format for regions dialog to preferences.</tt></li>
+<li><tt>08.16.2004 FITSY++: fixed a problem with &lt;unsigned char&gt; columns. They where incorrectly cased as a &lt;char&gt;.</tt></li>
+<li><tt>08.18.2004 SCALE: nolonger reset scale mode from USERCLIP on load FITS.</tt></li>
 <li><tt>08.18.2004 AST: upgrade to version 3.4</tt></li>
-<li><tt>08.18.2004 GRID: minor tweaks with the default axes
-numerics gaps.</tt></li>
-<li><tt>08.18.2004 REGIONS: for RGB frames, always use the keyFits
-channel in mapping regions to/from reference coordinate
-system.</tt></li>
+<li><tt>08.18.2004 GRID: minor tweaks with the default axes numerics gaps.</tt></li>
+<li><tt>08.18.2004 REGIONS: for RGB frames, always use the keyFits channel in mapping regions to/from reference coordinate system.</tt></li>
 <li><tt>08.19.2004 LINUX64: add support for Linux 64.</tt></li>
 <li><tt>08.24.2004 XPA: add get data support.</tt></li>
-<li><tt>08.25.2004 AST: fixed a bug with using free'd memory in
-plot.c</tt></li>
-<li><tt>08.25.2004 GUI: fixed two problems with the getDataValues
-routine. With non-symetric binning or equatorial sky coordinates,
-an incorrect number of values where returned.</tt></li>
+<li><tt>08.25.2004 AST: fixed a bug with using free'd memory in plot.c</tt></li>
+<li><tt>08.25.2004 GUI: fixed two problems with the getDataValues routine. With non-symetric binning or equatorial sky coordinates, an incorrect number of values where returned.</tt></li>
 <li>
 <p><tt><b>08.27.2004</b> <b>RELEASE version 3.0.2<br></b></tt></p>
 </li>
-<li><tt>09.01.2004 FTTYS++: add a check for mmapincr and mmap to
-ensure that there is at least 2880 bytes before trying to parse a
-header.</tt></li>
-<li><tt>09.02.2004 FITSY++: add new memory mode, SMMAP which allows
-for split fits mmap files.</tt></li>
-<li><tt>09.02.2004 XPA: add new support for split mmap and shared
-FITS files.</tt></li>
-<li><tt>09.03.2004 FITSY++: add new memory mode, SSHARE which
-allows for split fits shared memory files.</tt></li>
-<li><tt>09.06.2004 COMMAND: add support for split mmap and shared
-FITS files.</tt></li>
+<li><tt>09.01.2004 FTTYS++: add a check for mmapincr and mmap to ensure that there is at least 2880 bytes before trying to parse a header.</tt></li>
+<li><tt>09.02.2004 FITSY++: add new memory mode, SMMAP which allows for split fits mmap files.</tt></li>
+<li><tt>09.02.2004 XPA: add new support for split mmap and shared FITS files.</tt></li>
+<li><tt>09.03.2004 FITSY++: add new memory mode, SSHARE which allows for split fits shared memory files.</tt></li>
+<li><tt>09.06.2004 COMMAND: add support for split mmap and shared FITS files.</tt></li>
 <li><tt>09.07.2004 XPA: update to 2.1.6</tt></li>
 <li>
 <p><tt><b>09.10.2004</b> <b>RELEASE version 3.0.3<br></b></tt></p>

@@ -73,93 +73,124 @@ file:/home/joye/index.html<br></tt></blockquote>
 $height<br>
 $depth</b></p>
 <p>Substitute the width, height, or depth of the data file in the command line.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $width</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $width</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $height</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; echo "$width $height $depth" | $text</tt><br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo "$width $height $depth" | $text</tt><br>
 <p><b>$bitpix</b></p>
 <p>Substitute the bitpix of the data file in the command line.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $bitpix</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $bitpix</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; echo "$bitpix" | $text</tt>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo "$bitpix" | $text</tt>
 <p><b>$data</b></p>
 <p>Data from the current frame becomes the input data to the command string. This data is in the form of a FITS image. This macro can only used at the beginning of the command string.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $data</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $data</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; $data | dosomething | $text</tt>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; $data | dosomething | $text</tt>
 <p><b>$entry</b></p>
 <p>Display an entry modal dialog. The returned string is substituted. If <tt>cancel</tt> is selected, the command line is not executed.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $entry(&lt;message&gt;)</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $entry(&lt;message&gt;)</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; echo "$entry(Enter something here)" | $text</tt>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo "$entry(Enter something here)" | $text</tt>
 <p><b>$env</b></p>
 <p>Substitute the value of a shell environment variable.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $env(&lt;shell variable&gt;)</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $env(&lt;shell variable&gt;)</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; echo "$env(PATH)" | $text</tt>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo "$env(PATH)" | $text</tt>
 <p><b>$filedialog</b></p>
 <p>Display the standard file dialog. Substitutes the returned pathname. Argument specifies if an open file or save file dialog is invoked.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $filedialog([open|save])</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $filedialog([open|save])</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; echo "$filedialog(open)" | $text</tt><br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo "$filedialog(open)" | $text</tt><br>
 <p><b>$filename</b></p>
 <p>Substitute the filename of the data file in the command line. A full filename includes any absolute or relative path. A root filename contains no path. A (2D) subsection defines a subimage from <tt>xmin,ymin</tt> to <tt>xmax,ymax</tt>. For Frame3D, a 2D subsection will also include the current slice (PLANE=) parameter if not 1. A 3D subsection defines a subimage from <tt>xmin,ymin,zmin</tt> to <tt>xmax,ymax,zmax</tt> and no PLANE parameter.<br></p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $filename # filename with extname, (2d) subsections, filters</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $filename # filename with extname, (2d) subsections, filters</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $filename(root|root,base) # root filename withwith extname,no subsections, no filters)</tt><br>
 <tt>&nbsp; &nbsp; $filename(full|full,base) # full filenamewith extname,no subsections, no filters)</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; dosomething $filename | $text</tt><br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; dosomething $filename | $text</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; dosomething $filename(root) | $text<br></tt><br>
 <b>$filename[$regions]</b>
 <p>Combination of <tt>$filename</tt> and <tt>$regions</tt> macros. Generates a series of filenames, each with a region.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $filename[$regions]</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $filename[$regions]</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $filename[$regions(&lt;options&gt;)]</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; dosomething $filename[$regions] | $text</tt>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; dosomething $filename[$regions] | $text</tt>
 <p><b>$geturl</b></p>
 <p>This macro differs from all other macros, including $<tt>url</tt>, in that no subprocess pipe is created. Only HTTP is supported. The contents of the url are retrieved and sent to $<tt>text</tt>, $<tt>plot</tt>, or $<tt>image.</tt> No other processing is allowed. The primary purpose of this macro is to support external analysis for the Windows platform, which has no subprocess support.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $geturl(http://&lt;hostname&gt;:&lt;port&gt;/&lt;query&gt;)</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $geturl(http://&lt;hostname&gt;:&lt;port&gt;/&lt;query&gt;)</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; $geturl(http://foo.bar.edu/foo.html) | $text</tt><br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; $geturl(http://foo.bar.edu/foo.html) | $text</tt><br>
 <p><b>$image</b></p>
 <p>The resulting image data is display in a DS9 frame. This macro should be the last macro of a command line. Optional parameter indicates if a new frame and what type of frame is created for the new data. The macro is removed from the command line before execution.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $image</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $image</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $image([new|rgb|3d|current])</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; doit | $image(new)</tt>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; doit | $image(new)</tt>
 <p><b>$message</b></p>
 <p>Display a message dialog box, with option buttons.&nbsp; After displaying the message, the macro is removed from the command line before execution. If <tt>cancel</tt> or <tt>no</tt> is selected, the command line is not executed.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $message(&lt;message&gt;)</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $message(&lt;message&gt;)</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $message([ok|okcancel|yesno],&lt;message&gt;)</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; $message(okcancel,This is a Message)| doit | $text</tt>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; $message(okcancel,This is a Message)| doit | $text</tt>
 <p><b>$null</b></p>
 <p>Expect no output or results from analysis task. Note: no error message will be returned if the analysis task fails to execute correctly.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $null</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $null</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; echo "Hello, world" &gt; foo | $null</tt>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo "Hello, world" &gt; foo | $null</tt>
 <p><b>$pan</b></p>
 <p>Substitute current pan location of the particular data file are returned. The default coordinate system is <tt>physical</tt>.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $pan<br>&nbsp;&nbsp;&nbsp; $pan(&lt;coordinate system&gt;,&lt;format&gt;)</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $pan<br>
+&nbsp;&nbsp;&nbsp; $pan(&lt;coordinate system&gt;,&lt;format&gt;)</tt><br>
 <p>where:</p>
 <tt>&nbsp;&nbsp;&nbsp; coordinate system = [image|physical|detector|amplifier|wcs|wcsa...wcsz]</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; sky frame&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = [fk4|fk5|icrs|galactic|ecliptic]</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; sky format&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = [hms|sexagesimal|degrees]</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; echo $pan(fk5,sexagesimal) | $text</tt><br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo $pan(fk5,sexagesimal) | $text</tt><br>
 <p><b>$plot</b></p>
 <p>Display data in plot window. This macro should be the last macro of a command line. The data is read via <tt>STDIN</tt> and consist of a pair of coordinates, with option error values. (<tt>xy, xyex, xyey, xyexe</tt>y) Default dimension is <tt>xy.</tt> The macro is removed from the command line before execution.</p>
 <p>For <tt>$plot(stdin)</tt> only:</p>
 <p>The title, x axis label, and y axis label are assumed to be on the first line of input, delimited with a new-line. However, if the data starts with $<tt>BEGINTEXT</tt>, all text between $<tt>BEGINTEXT</tt> and $<tt>ENDTEXT</tt> will be removed from the data and displayed in a separate text dialog window, with the remaining data, including the title, x axis label, and y axis label, will be displayed in a plot window. Furthermore, if the data contains the string $<tt>ERROR,</tt> an error is assumed to have occurred and a text dialog window is displayed only.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $plot</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $plot</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $plot(,,,)</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $plot(&lt;title&gt;,&lt;x axis label&gt;,&lt;y axis label&gt;,[xy|xyex|xyey|xyexey])</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $plot(stdin)</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; doit | $plot(This is aTitle,X Axis,Y Axis)<br>&nbsp;&nbsp;&nbsp; doit | $plot(stdin)</tt>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; doit | $plot(This is aTitle,X Axis,Y Axis)<br>
+&nbsp;&nbsp;&nbsp; doit | $plot(stdin)</tt>
 <p><b>$regions</b></p>
 <p>Substitute region definition in specified region format, coordinate system, and coordinate format. The default coordinate system is <tt>physical</tt>, default coordinate format <tt>degrees</tt>, and default region format <tt>DS9</tt>. Arguments may appear in any order, as long as they are separated by ',' and no spaces. If one or&nbsp; more properties are specified, only regions with all of the specified properties will be substituted.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $regions</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $regions</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $regions(&lt;options&gt;)</tt>
 <p>where options are one of the following:</p>
 <tt>&nbsp;&nbsp;&nbsp; regions format&nbsp;&nbsp;&nbsp; = [ds9|ciao|saotng|saoimage|pros|xy]</tt><br>
@@ -179,31 +210,39 @@ $depth</b></p>
 <tt>&nbsp;&nbsp;&nbsp; $exclude_regions_pixels</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $exclude_regions_degrees</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $exclude_regions_hms<br></tt><br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; dosomething $regions | $text</tt><br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; dosomething $regions | $text</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; dosomething $regions(pros) | $text</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; dosomething $regions(source,wcs,fk5) | $text</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; dosomething $regions(saotng,background,exclude,ecliptic,sexagesimal) | $text</tt>
 <p><b>$text</b></p>
 <p>Display text in a text dialog window. This macro should be the last macro of a command line. To display text from only STDOUT use '|' as the pipe command. To display text from both STDOUT and STDERR, use '|&amp;' as the pipe command. No parameters are required. The macro is removed from the command line before execution.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $text</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $text</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; doit | $text # stdout<br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; doit | $text # stdout<br>
 &nbsp;&nbsp;&nbsp; doit |&amp; $text # stdout and stderr<br></tt>
 <p><b>$url</b></p>
 <p>URLs are processed and stored in a temporary file. Only HTTP and anonymous FTP are supported.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $url(http://&lt;hostname&gt;:&lt;port&gt;/&lt;query&gt;)</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $url(http://&lt;hostname&gt;:&lt;port&gt;/&lt;query&gt;)</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $url(ftp://&lt;hostname&gt;/&lt;filename&gt;)</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; $url(http://legacy.gsfc.nasa.gov/rosat/data/p000s26b.img.Z) | uncompress | $image</tt><br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; $url(http://legacy.gsfc.nasa.gov/rosat/data/p000s26b.img.Z) | uncompress | $image</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $url(ftp://legacy.gsfc.nasa.gov/rosat/data/hri/images/rh100193_img.fits) | $image<br></tt>
 <p><b>$vo_method</b></p>
 <p>Returns the vo method.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $vo_method</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $vo_method</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; echo '$vo_method' | $text</tt><br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo '$vo_method' | $text</tt><br>
 <p><b>$value<br></b></p>
 <p>Substitute the value at the location of the cursor of an bind event.<br></p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $value<br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $value<br>
 <br>
 Example:<br>
 &nbsp;&nbsp;&nbsp; echo "$value" | $text</tt><br>
@@ -211,7 +250,8 @@ Example:<br>
 $y<br>
 $z<br></b></p>
 <p>Substitute coordinates of an bind event. When a bind event is triggered, the <i>x,y</i> coordinates of the mouse of the particular data file are returned. The default coordinate system is <tt>physical</tt>. This macro is only available for bind commands. For datacubes, the z coordinate is returned based on the current slice selected.<br></p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $x</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $x</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $x(&lt;coordinate system&gt;,&lt;format&gt;)</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $y</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $y(&lt;coordinate system&gt;,&lt;format&gt;)<br>
@@ -222,19 +262,25 @@ $z<br></b></p>
 <tt>&nbsp;&nbsp;&nbsp; sky frame&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = [fk4|fk5|icrs|galactic|ecliptic]</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; sky format&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = [hms|sexagesimal|degrees]</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; echo "$x $y" | $text<br>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo "$x $y" | $text<br>
 &nbsp;&nbsp;&nbsp; echo "$x $y $z" | $text<br>
-&nbsp;&nbsp;&nbsp; echo "$x(fk5,sexagesimal) $y(fk5,sexagesimal)" | $text<br>&nbsp;&nbsp;&nbsp; echo "$x(wcs) $y(wcs) $z(wcs)" | $text</tt><br>
+&nbsp;&nbsp;&nbsp; echo "$x(fk5,sexagesimal) $y(fk5,sexagesimal)" | $text<br>
+&nbsp;&nbsp;&nbsp; echo "$x(wcs) $y(wcs) $z(wcs)" | $text</tt><br>
 <p><b>$xpa</b></p>
 <p>Returns the xpa access point name.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $xpa</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $xpa</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; echo '$xpa' | $text</tt>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo '$xpa' | $text</tt>
 <p><b>$xpa_method</b></p>
 <p>Returns the xpa method.</p>
-<tt>Syntax:<br>&nbsp;&nbsp;&nbsp; $xpa_method</tt><br>
+<tt>Syntax:<br>
+&nbsp;&nbsp;&nbsp; $xpa_method</tt><br>
 <br>
-<tt>Example:<br>&nbsp;&nbsp;&nbsp; echo '$xpa_method' | $text</tt>
+<tt>Example:<br>
+&nbsp;&nbsp;&nbsp; echo '$xpa_method' | $text</tt>
 <p><b><a name="Help" id="Help"></a>Help</b></p>
 <p>The user may define his own <tt>HELP</tt> message. This message will be available to the user as a menu item. An optional label maybe specified. The default label is <tt>Help</tt>. When invoked, an text dialog window will appear, containing the message. Multiple <tt>HELP</tt> items maybe defined within a menu or across hierarchical menus.</p>
 <tt>Example:</tt>
@@ -364,12 +410,14 @@ hmenu Test Basics<br>
 &nbsp;&nbsp;&nbsp; Test $xpa_method<br>
 &nbsp;&nbsp;&nbsp; *<br>
 &nbsp;&nbsp;&nbsp; menu<br>
-&nbsp;&nbsp;&nbsp; echo $xpa_method | $text<br><br>
+&nbsp;&nbsp;&nbsp; echo $xpa_method | $text<br>
+<br>
 &nbsp;&nbsp;&nbsp; Test $vo_method<br>
 &nbsp;&nbsp;&nbsp; *<br>
 &nbsp;&nbsp;&nbsp; menu<br>
 &nbsp;&nbsp;&nbsp; echo $vo_method | $text<br>
-<br>&nbsp;&nbsp;&nbsp; Test $filename<br>
+<br>
+&nbsp;&nbsp;&nbsp; Test $filename<br>
 &nbsp;&nbsp;&nbsp; *.fits<br>
 &nbsp;&nbsp;&nbsp; menu<br>
 &nbsp;&nbsp;&nbsp; echo $filename | $text<br>
@@ -383,11 +431,13 @@ hmenu Test Basics<br>
 &nbsp;&nbsp;&nbsp; *.fits<br>
 &nbsp;&nbsp;&nbsp; menu<br>
 &nbsp;&nbsp;&nbsp; echo "$xdim $ydim $bitpix" | $text<br>
-<br>&nbsp;&nbsp;&nbsp; Test $xcen $ycen<br>
+<br>
+&nbsp;&nbsp;&nbsp; Test $xcen $ycen<br>
 &nbsp;&nbsp;&nbsp; *.fits<br>
 &nbsp;&nbsp;&nbsp; menu<br>
 &nbsp;&nbsp;&nbsp; echo "$xcen $ycen" | $text<br>
-<br>&nbsp;&nbsp;&nbsp; Test $env<br>
+<br>
+&nbsp;&nbsp;&nbsp; Test $env<br>
 &nbsp;&nbsp;&nbsp; *<br>
 &nbsp;&nbsp;&nbsp; menu<br>
 &nbsp;&nbsp;&nbsp; echo $env(PATH) | $text<br>

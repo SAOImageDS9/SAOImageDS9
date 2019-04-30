@@ -1,18 +1,13 @@
 <!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-<meta name="generator" content=
-"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
-<meta http-equiv="Content-Type" content=
-"text/html; charset=us-ascii">
-<meta name="GENERATOR" content=
-"Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
 <title>How</title>
 </head>
-<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor=
-"#FFFFFF" alink="#FF0000">
-<h3><img alt="" src="../sun.gif" width="100" height="98" align=
-"middle"> How it Works</h3>
+<body vlink="#551A8B" text="#000000" link="#0000EE" bgcolor="#FFFFFF" alink="#FF0000">
+<h3><img alt="" src="../sun.gif" width="100" height="98" align="middle"> How it Works</h3>
 <blockquote>
 <p><b>Table of Contents</b></p>
 <a href="#How">How DS9 Renders an Image</a><br>
@@ -21,136 +16,66 @@
 <a href="#Contours">Contours</a><br>
 <a href="#LargeFiles">Large Files</a><br>
 <p><b><a name="How" id="How"></a>How DS9 renders an image</b></p>
-<p>Here is a short description on how DS9 decides to paint a pixel
-a color on the the screen, give an data value... you need a color
-scale, a contrast/bias pair for the colorscale, clip values for the
-data, a scale distribution, and finally, the value of the pixel in
-question.</p>
+<p>Here is a short description on how DS9 decides to paint a pixel a color on the the screen, give an data value... you need a color scale, a contrast/bias pair for the colorscale, clip values for the data, a scale distribution, and finally, the value of the pixel in question.</p>
 <blockquote>
-<p>Step 1. Select a color scale. A color scale is defined as a
-number of colors (RGB triplets). The number of RGB triplets can
-vary from just a few to over 200. DS9 contains a number of
-predefined color scales (Gray, A, B, I8, ...) or the user may load
-his own color scale.</p>
-<p>Step 2. Apply a contrast/bias pair. This step takes the result
-of step 1 and creates a new array with the contrast/bias applied.
-The length of the new array will between 200 (for pseudocolor) and
-4096 (for truecolor).</p>
-<p>Step 3. Calculate the data clip values (low/high data values).
-The min/max data values may be used or an algorithm may be used to
-determine the clip data values.</p>
-<p>Step 4. Apply the scale distribution. This involves taking the
-result of step 2, and creating yet another array, this time of size
-16384, redistributing the colors, based on the scale algorithm
-selected (see <a href="Scales">Scales</a>).</p>
-<p>Step 5. Based on your data clip values, and the value of the
-pixel you have, index into the result of step 4, and you have an
-index into lookup table (for pseudocolor) and an RGB pair (for
-truecolor and postscript).</p>
+<p>Step 1. Select a color scale. A color scale is defined as a number of colors (RGB triplets). The number of RGB triplets can vary from just a few to over 200. DS9 contains a number of predefined color scales (Gray, A, B, I8, ...) or the user may load his own color scale.</p>
+<p>Step 2. Apply a contrast/bias pair. This step takes the result of step 1 and creates a new array with the contrast/bias applied. The length of the new array will between 200 (for pseudocolor) and 4096 (for truecolor).</p>
+<p>Step 3. Calculate the data clip values (low/high data values). The min/max data values may be used or an algorithm may be used to determine the clip data values.</p>
+<p>Step 4. Apply the scale distribution. This involves taking the result of step 2, and creating yet another array, this time of size 16384, redistributing the colors, based on the scale algorithm selected (see <a href="Scales">Scales</a>).</p>
+<p>Step 5. Based on your data clip values, and the value of the pixel you have, index into the result of step 4, and you have an index into lookup table (for pseudocolor) and an RGB pair (for truecolor and postscript).</p>
 </blockquote>
 <p><b><a name="Scales" id="Scales"></a>Scales</b></p>
 <p>The <tt>log</tt> function is defined as the following:</p>
 <blockquote>
-<p><b><img src="img/log.png" alt="log equation" width="78" height=
-"32"></b></p>
+<p><b><img src="img/log.png" alt="log equation" width="78" height="32"></b></p>
 </blockquote>
-<p>as <i>x</i> goes from 0 to 1. The user may specify an exponent
-<i>a</i> to change the distribution of colors within the colorbar.
-The default value of <i>a</i> is 1000. Typically, optical images
-respond well at 1000, IR images as low as 100, and high energy bin
-tables up to 10000. A value of 10000 closely matches the
-<b><tt>log</tt></b> function of SAOImage as defined as the
-following:</p>
+<p>as <i>x</i> goes from 0 to 1. The user may specify an exponent <i>a</i> to change the distribution of colors within the colorbar. The default value of <i>a</i> is 1000. Typically, optical images respond well at 1000, IR images as low as 100, and high energy bin tables up to 10000. A value of 10000 closely matches the <b><tt>log</tt></b> function of SAOImage as defined as the following:</p>
 <blockquote>
-<p><b><img src="img/saolog.png" alt="SAOImage log equation" width=
-"65" height="34"></b></p>
+<p><b><img src="img/saolog.png" alt="SAOImage log equation" width="65" height="34"></b></p>
 </blockquote>
 <p>The <tt>pow</tt> function is defined as the following:</p>
 <blockquote>
-<p><b><img src="img/pow.png" alt="pow equation" width="51" height=
-"30"></b></p>
+<p><b><img src="img/pow.png" alt="pow equation" width="51" height="30"></b></p>
 </blockquote>
-<p>as <i>x</i> goes from 0 to 1. The user may specify an exponent
-<i>a</i> to change the distribution of colors within the colorbar.
-The default value of <i>a</i> is 1000.</p>
-<p>The <tt>sqrt</tt> scale function is defined as the
-following:</p>
-<blockquote><img src="img/sqrt.png" alt="sqrt equation" width="42"
-height="21"><br></blockquote>
+<p>as <i>x</i> goes from 0 to 1. The user may specify an exponent <i>a</i> to change the distribution of colors within the colorbar. The default value of <i>a</i> is 1000.</p>
+<p>The <tt>sqrt</tt> scale function is defined as the following:</p>
+<blockquote><img src="img/sqrt.png" alt="sqrt equation" width="42" height="21"><br></blockquote>
 <p>as <i>x</i> goes from 0 to 1.</p>
-<p>The <tt>square</tt> scale function is defined as the
-following:</p>
-<blockquote><img src="img/square.png" alt="square equation" width=
-"35" height="21"><br></blockquote>
+<p>The <tt>square</tt> scale function is defined as the following:</p>
+<blockquote><img src="img/square.png" alt="square equation" width="35" height="21"><br></blockquote>
 <p>as <i>x</i> goes from 0 to 1.<br></p>
-<p>The <tt>asinh</tt> scale function is defined as the
-following:</p>
-<blockquote><img alt="asinh" src="img/asinh.png" width="80" height=
-"29"><br></blockquote>
+<p>The <tt>asinh</tt> scale function is defined as the following:</p>
+<blockquote><img alt="asinh" src="img/asinh.png" width="80" height="29"><br></blockquote>
 <p>as <i>x</i> goes from 0 to 1.</p>
-<p>The <tt>sinh</tt> scale function is defined as the
-following:</p>
-<blockquote><img alt="sinh" src="img/sinh.png" width="69" height=
-"29"><br></blockquote>
+<p>The <tt>sinh</tt> scale function is defined as the following:</p>
+<blockquote><img alt="sinh" src="img/sinh.png" width="69" height="29"><br></blockquote>
 <p>as <i>x</i> goes from 0 to 1.</p>
-<p>The <tt>histogram equalization</tt> scale function distributes
-colors based on the frequency of each data value.</p>
+<p>The <tt>histogram equalization</tt> scale function distributes colors based on the frequency of each data value.</p>
 <p><b><a name="Smoothing" id="Smoothing"></a>Smoothing</b></p>
-<p>The user may select one of three types of smoothing kernels. Two
-parameters, <i>r</i><i>&nbsp; (radius)</i> and <i><tt>k</tt></i>
-<i>(kernel size</i><i>)</i>, are defined as the following:</p>
-<blockquote>Kernel width/height = <i>2k+1</i> with <i>r</i>
-<i>&lt;=</i> <i><tt>k</tt></i><br>
+<p>The user may select one of three types of smoothing kernels. Two parameters, <i>r</i><i>&nbsp; (radius)</i> and <i><tt>k</tt></i> <i>(kernel size</i><i>)</i>, are defined as the following:</p>
+<blockquote>Kernel width/height = <i>2k+1</i> with <i>r</i> <i>&lt;=</i> <i><tt>k</tt></i><br>
 Boxcar function, width = <i>2</i><i>r</i><i>+1</i><br>
 Tophat function, where the diameter = <i>2r</i><i>+1</i><br>
 Gaussian function, defined as:
-<blockquote><img src="img/gauss.png" alt="Gaussian Equation" width=
-"173" height="38"><br></blockquote>
+<blockquote><img src="img/gauss.png" alt="Gaussian Equation" width="173" height="38"><br></blockquote>
 where the mean = 0 and sigma = <i>r/2</i><br></blockquote>
 <p><b><a name="Contours" id="Contours"></a>Contours</b></p>
-<p>The contour algorithm is from an unknown author and originally
-came from FV. The difference between the two modes
-are:<tt><br></tt></p>
-<blockquote><tt>block</tt> : the image is blocked down before the
-contour is generated<br>
-<tt>smooth</tt> : the image is smoothed via a Gaussian kernel
-before the contour is generated.</blockquote>
-<p><tt>block</tt> mode is faster as the smoothing parameter
-increases. Inversely, <tt>smooth</tt> mode is much slower as the
-smoothing parameter increases.</p>
+<p>The contour algorithm is from an unknown author and originally came from FV. The difference between the two modes are:<tt><br></tt></p>
+<blockquote><tt>block</tt> : the image is blocked down before the contour is generated<br>
+<tt>smooth</tt> : the image is smoothed via a Gaussian kernel before the contour is generated.</blockquote>
+<p><tt>block</tt> mode is faster as the smoothing parameter increases. Inversely, <tt>smooth</tt> mode is much slower as the smoothing parameter increases.</p>
 <p><b><a name="LargeFiles" id="LargeFiles"></a>Large Files</b></p>
-There are several factors that determine if DS9 will be able to
-load a large file.<br>
-<p>32 bit OS vs 64 bit OS : to address very large files, you may
-need to use an 64 bit OS with a 64bit version of DS9. 32bit apps
-can address up to 4Gb of address space. However, depending on the
-OS, this limit may be less. Linux for example, the limit appears to
-be ~3GB (the OS and shared libs eat up a lot of address space).
-Under 64bit Solaris, 32bit ds9 has a full 4Gb of space. MacOSX
-appears to have a limit ~3Gb. Under windows, ~2Gb.</p>
-<p>Large File Support: is the ability to sequence thru files larger
-than 4Gb. DS9 is compiled with LFS.</p>
-<p>File system: the OS file system must be able to support files
-larger than 4Gb. Most recent file systems fully support
-4GB&gt;.</p>
-<p>Memory Management: There are a number of memory management
-techniques supported in DS9 that will greatly affect the ability
-and speed of loading large files:</p>
+There are several factors that determine if DS9 will be able to load a large file.<br>
+<p>32 bit OS vs 64 bit OS : to address very large files, you may need to use an 64 bit OS with a 64bit version of DS9. 32bit apps can address up to 4Gb of address space. However, depending on the OS, this limit may be less. Linux for example, the limit appears to be ~3GB (the OS and shared libs eat up a lot of address space). Under 64bit Solaris, 32bit ds9 has a full 4Gb of space. MacOSX appears to have a limit ~3Gb. Under windows, ~2Gb.</p>
+<p>Large File Support: is the ability to sequence thru files larger than 4Gb. DS9 is compiled with LFS.</p>
+<p>File system: the OS file system must be able to support files larger than 4Gb. Most recent file systems fully support 4GB&gt;.</p>
+<p>Memory Management: There are a number of memory management techniques supported in DS9 that will greatly affect the ability and speed of loading large files:</p>
 <blockquote><tt>$ ds9 foo.fits # uses mmap</tt><br>
 <tt>$ cat foo.fits | ds9 - # allocates memory</tt><br>
 <tt>$ xpaset -p ds9 file foo.fits # uses mmap</tt><br>
-<tt>$ xpaset -p ds9 fits foo.fits # allocates
-memory</tt><br></blockquote>
-<p>Memory Map (<tt>mmap</tt>) is very fast, limit is memory address
-space (see above). Allocate is very slow, limit is amount of
-physical memory + swap partition.</p>
-<p>Scanning Data: DS9 needs to determine the min and max data
-values to correctly display your image. For large files, such as
-Mosaics and Data Cubes,&nbsp; this can take time. You have the
-option of using using the FITS keywords DATAMIN/MAX or IRAFMIN/MAX
-- great if present, bad because they are always wrong. Another
-option is to specify the low and high clip values via the command
-line or Scale dialogbox.<br></p>
+<tt>$ xpaset -p ds9 fits foo.fits # allocates memory</tt><br></blockquote>
+<p>Memory Map (<tt>mmap</tt>) is very fast, limit is memory address space (see above). Allocate is very slow, limit is amount of physical memory + swap partition.</p>
+<p>Scanning Data: DS9 needs to determine the min and max data values to correctly display your image. For large files, such as Mosaics and Data Cubes,&nbsp; this can take time. You have the option of using using the FITS keywords DATAMIN/MAX or IRAFMIN/MAX - great if present, bad because they are always wrong. Another option is to specify the low and high clip values via the command line or Scale dialogbox.<br></p>
 <blockquote><br></blockquote>
 </blockquote>
 </body>

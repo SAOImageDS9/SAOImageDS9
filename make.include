@@ -420,7 +420,7 @@ language:
 tidy	:
 	$(call Tidy,ds9/doc)
 	$(call Tidy,ds9/doc/release)
-	$(call Tidy,ds9/doc/ref)
+#	$(call Tidy,ds9/doc/ref)
 
 #-------------------------- scrub
 

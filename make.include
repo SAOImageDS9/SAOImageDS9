@@ -420,27 +420,7 @@ language:
 tidy	:
 	$(call Tidy,ds9/doc)
 	$(call Tidy,ds9/doc/release)
-	$(call TidyFile,ds9/doc/ref,3d.html)
-	$(call TidyFile,ds9/doc/ref,analysis.html)
-	$(call TidyFile,ds9/doc/ref,backup.html)
-	$(call TidyFile,ds9/doc/ref,bin.html)
-	$(call TidyFile,ds9/doc/ref,catalog.html)
-	$(call TidyFile,ds9/doc/ref,colorbar.html)
-	$(call TidyFile,ds9/doc/ref,command.html)
-	$(call TidyFile,ds9/doc/ref,contour.html)
-	$(call TidyFile,ds9/doc/ref,grid.html)
-	$(call TidyFile,ds9/doc/ref,how.html)
-	$(call TidyFile,ds9/doc/ref,index.html)
-	$(call TidyFile,ds9/doc/ref,iraf.html)
-	$(call TidyFile,ds9/doc/ref,prefs.html)
-	$(call TidyFile,ds9/doc/ref,print.html)
-	$(call TidyFile,ds9/doc/ref,region.html)
-	$(call TidyFile,ds9/doc/ref,samp.html)
-	$(call TidyFile,ds9/doc/ref,vo.html)
-	$(call TidyFile,ds9/doc/ref,xpa.html)
-
-#	$(call TidyFile,ds9/doc/ref,file.html)
-#	$(call TidyFile,ds9/doc/ref,keyboard.html)
+	$(call Tidy,ds9/doc/ref)
 
 #-------------------------- scrub
 

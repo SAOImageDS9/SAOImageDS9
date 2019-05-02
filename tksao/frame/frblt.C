@@ -82,6 +82,10 @@ void Base::markerAnalysisHistogram(Marker* pp, double** x, double** y,
   double* xx = *x;
   double* yy = *y;
 
+  // check if we have any data
+  if (!isfinite(diff))
+    goto end;
+
   if (diff>0) {
     for (int ii=0; ii<nn; ii++)
       xx[ii] = (double)ii/last*diff + min;
@@ -104,6 +108,7 @@ void Base::markerAnalysisHistogram(Marker* pp, double** x, double** y,
   }
 
 
+ end:
   if (marr)
     delete [] marr;
   if (mask)

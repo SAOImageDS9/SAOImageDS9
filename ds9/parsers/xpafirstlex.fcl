@@ -1,4 +1,4 @@
-#tab xpaparser.tab.tcl
+#tab xpafirstparser.tab.tcl
 
 %{
 %}

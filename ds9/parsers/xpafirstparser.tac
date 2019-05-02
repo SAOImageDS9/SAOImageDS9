@@ -29,7 +29,7 @@ xpa : yesno {ProcessCmdSet pds9 xpa $1}
  | method {ProcessCmdSet env XPA_METHOD $1}
  | NOXPANS_ {ProcessCmdSet env XPA_NSREGISTER false}
 
-| CONNECT_ 
+ | CONNECT_ 
  | DISCONNECT_ 
  | INFO_ 
 # backward compatibility
@@ -44,7 +44,7 @@ method : UNIX_ {set _ unix}
 
 %%
 
-proc xpa::yyerror {msg} {
+proc xpafirst::yyerror {msg} {
      variable yycnt
      variable yy_current_buffer
      variable index_

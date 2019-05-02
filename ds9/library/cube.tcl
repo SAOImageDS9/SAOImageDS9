@@ -68,8 +68,10 @@ proc CubeSlice {ss} {
     global rgb
 
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
+
     set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
+    set dcube(wcs) \
+	[$current(frame) get fits slice from image $cube(system) $cube(sky)]
 
     UpdateCube
 }
@@ -260,9 +262,11 @@ proc CubeApply {} {
 	set ss $depth
     }
     
-    set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
+
+    set dcube(image) $ss
+    set dcube(wcs) \
+	[$current(frame) get fits slice from image $cube(system) $cube(sky)]
 
     UpdateCube
 }
@@ -291,9 +295,11 @@ proc CubeApplyWCS {} {
 	set ss $depth
     }
     
-    set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
+
+    set dcube(image) $ss
+    set dcube(wcs) \
+	[$current(frame) get fits slice from image $cube(system) $cube(sky)]
 
     UpdateCube
 }
@@ -800,9 +806,11 @@ proc CubeCmd {ss} {
 	return
     }
 
-    set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
+
+    set dcube(image) $ss
+    set dcube(wcs) \
+	[$current(frame) get fits slice from image $cube(system) $cube(sky)]
 
     UpdateCube
 }
@@ -827,9 +835,11 @@ proc CubeCmdCoord {ss sys sky} {
 	set ss 1
     }
     
-    set dcube(image) $ss
-    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
     RGBEvalLockCurrent rgb(lock,slice) "$current(frame) update fits slice $ss"
+
+    set dcube(image) $ss
+    set dcube(wcs) \
+	[$current(frame) get fits slice from image $cube(system) $cube(sky)]
 
     UpdateCube
 }

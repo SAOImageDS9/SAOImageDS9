@@ -96,6 +96,11 @@ proc LayoutWCSInfoBox {which} {
     global wcs
     global view
 
+    global debug
+    if {$debug(tcl,events)} {
+	puts stderr "LayoutWCSInfoBox $which"
+    }
+
     # if one wcs coord system is visible, change it
     set cnt 0
     set vv {}
@@ -105,6 +110,7 @@ proc LayoutWCSInfoBox {which} {
 	    set vv wcs$ll
 	}
     }
+
     if {$cnt == 1} {
 	set ww [lindex [$which get wcs] 0]
 	if {$view(info,$vv) != $view(info,$ww)} {

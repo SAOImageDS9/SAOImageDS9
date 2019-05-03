@@ -82,6 +82,10 @@ void Base::markerAnalysisHistogram(Marker* pp, double** x, double** y,
   double* xx = *x;
   double* yy = *y;
 
+  // check if we have any data
+  if (!isfinite(diff))
+    goto end;
+
   if (diff>0) {
     for (int ii=0; ii<nn; ii++)
       xx[ii] = (double)ii/last*diff + min;
@@ -104,6 +108,7 @@ void Base::markerAnalysisHistogram(Marker* pp, double** x, double** y,
   }
 
 
+ end:
   if (marr)
     delete [] marr;
   if (mask)
@@ -612,9 +617,11 @@ void Base::markerAnalysisStats(Marker* pp, ostream& str, const BBox& bb,
     delete [] marr;
 
   int unit = markerAnalysisStats1(pp,ptr,str,sys,sky);
-  markerAnalysisStats2(ptr,str,sys,0,cnt,sum,unit);
+  if (cnt)
+    markerAnalysisStats2(ptr,str,sys,0,cnt,sum,unit);
   markerAnalysisStats3(str);
-  markerAnalysisStats4(str,0,cnt,sum,sum2,median,min,max);
+  if (cnt)
+    markerAnalysisStats4(str,0,cnt,sum,sum2,median,min,max);
 }
 
 // for annulus regions
@@ -694,12 +701,15 @@ void Base::markerAnalysisStats(Marker* pp, ostream& str,
 
   int unit = markerAnalysisStats1(pp,ptr,str,sys,sky);
   for (int kk=0; kk<num; kk++) 
-    markerAnalysisStats2(ptr,str,sys,kk,cnt[kk],sum[kk],unit);
+    if (cnt[kk])
+      markerAnalysisStats2(ptr,str,sys,kk,cnt[kk],sum[kk],unit);
 
   markerAnalysisStats3(str);
+
   for (int kk=0; kk<num; kk++)
-    markerAnalysisStats4(str,kk,cnt[kk],sum[kk],sum2[kk],
-			 median[kk],min[kk],max[kk]);
+    if (cnt[kk])
+      markerAnalysisStats4(str,kk,cnt[kk],sum[kk],sum2[kk],
+			   median[kk],min[kk],max[kk]);
 }
 
 // for panda regions
@@ -787,15 +797,19 @@ void Base::markerAnalysisStats(Marker* pp, ostream& str,
   }
 
   int unit = markerAnalysisStats1(pp,ptr,str,sys,sky);
+
   for (int kk=0; kk<num; kk++) 
     for (int qq=0; qq<aa; qq++)
-      markerAnalysisStats2(ptr,str,sys,kk*aa+qq,cnt[kk][qq],sum[kk][qq],unit);
+      if (cnt[kk][qq])
+	markerAnalysisStats2(ptr,str,sys,kk*aa+qq,cnt[kk][qq],sum[kk][qq],unit);
 
   markerAnalysisStats3(str);
+
   for (int kk=0; kk<num; kk++)
     for (int qq=0; qq<aa; qq++)
-      markerAnalysisStats4(str,kk*aa+qq,cnt[kk][qq],sum[kk][qq],sum2[kk][qq],
-			   median[kk][qq],min[kk][qq],max[kk][qq]);
+      if (cnt[kk][qq])
+	markerAnalysisStats4(str,kk*aa+qq,cnt[kk][qq],sum[kk][qq],sum2[kk][qq],
+			     median[kk][qq],min[kk][qq],max[kk][qq]);
 }
 
 int Base::markerAnalysisStats1(Marker* pp,FitsImage* ptr, ostream& str, 

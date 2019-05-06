@@ -84,7 +84,13 @@ void FrameBase::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
       Tcl_SetVar2(interp,var,"value",(char*)sptr->getValue(img),0);
       CLEARSIGBUS
 
-      coordToTclArray(sptr,rr,Coord::IMAGE,var,"image");
+      if (isCube()) {
+	int ss = currentContext->slice(2);
+	coordToTclArray(sptr,Vector3d(rr,ss-.5),Coord::IMAGE,var,"image");
+      }
+      else
+	coordToTclArray(sptr,rr,Coord::IMAGE,var,"image");
+
       coordToTclArray(sptr,rr,Coord::PHYSICAL,var,"physical");
       if (hasATMV())
 	coordToTclArray(sptr,rr,Coord::AMPLIFIER,var,"amplifier");
@@ -127,12 +133,27 @@ void FrameBase::getInfoWCS(char* var, Vector& rr, FitsImage* sptr)
     Coord::CoordSystem www = (Coord::CoordSystem)(Coord::WCS+ii);
 
     if (hasWCS(www)) {
-      VectorStr out = sptr->mapFromRef(rr, www, wcsSkyFrame_, wcsSkyFormat_);
-
-      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),out[0],0);
-      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),out[1],0);
-      Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
+      if (hasWCS3D(www)) {
+	int ss = currentContext->slice(2);
+	VectorStr3d out = sptr->mapFromRef(Vector3d(rr, ss-.5),
+					   www, wcsSkyFrame_,wcsSkyFormat_);
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),
+		    out[0],0);
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),
+		    out[1],0);
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),
+		    out[2],0);
+      }
+      else {
+	VectorStr out = sptr->mapFromRef(rr, www, wcsSkyFrame_, wcsSkyFormat_);
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x"),
+		    out[0],0);
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",y"),
+		    out[1],0);
+	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",z"),"",0);
+      }
       
+
       char* xsym = (char*)sptr->getWCSAxisSymbol(www,0);
       if (xsym)
 	Tcl_SetVar2(interp,var,varcat(buf,(char*)"wcs",ww,(char*)",x,sys"),xsym,0);
@@ -177,6 +198,16 @@ void FrameBase::coordToTclArray(FitsImage* ptr, const Vector& vv,
   Vector rr = ptr->mapFromRef(vv, out);
   doubleToTclArray(rr[0], var, base, "x");
   doubleToTclArray(rr[1], var, base, "y");
+}
+
+void FrameBase::coordToTclArray(FitsImage* ptr, const Vector3d& vv, 
+				Coord::CoordSystem out,
+				const char* var, const char* base)
+{
+  Vector3d rr = ptr->mapFromRef(vv, out);
+  doubleToTclArray(rr[0], var, base, "x");
+  doubleToTclArray(rr[1], var, base, "y");
+  doubleToTclArray(rr[2], var, base, "z");
 }
 
 double FrameBase::calcZoomPanner()

@@ -4,9 +4,8 @@
 
 package provide DS9 1.0
 
-# get generic file via url
+# get file via url
 # used by Analysis and SAMP
-
 proc GetFileURL {url fname} {
     upvar $fname fn
 
@@ -40,11 +39,19 @@ proc GetFileFTP {host path fn} {
 proc GetFileHTTP {url fn} {
     global ihttp
 
+    # this is such a freaking kludge
+    ParseURL $url foo
+    if {$foo(authority) == {cda.harvard.edu}} {
+	set ka 1
+    } else {
+	set ka 0
+    }
+
     set ch [open $fn w]
     if {[catch {http::geturl $url \
 		    -channel $ch \
+		    -keepalive $ka \
 		    -binary 1 \
-		    -keepalive 1 \
     		    -timeout $ihttp(timeout) \
 		    -headers "[ProxyHTTP]"} token]} {
 	close $ch
@@ -58,27 +65,19 @@ proc GetFileHTTP {url fn} {
 
     close $ch
     if {[info exists token]} {
+	if {$foo(authority) == {cda.harvard.edu}} {
+	    upvar 0 $token state
+	    http::CloseSocket $state(sock) $token
+	}
+
 	HTTPLog $token
 	http::cleanup $token
     }
 }
 
-# Load fits via url
+# gets file via url and loads
 # sync with redirection
 # used by command line, SAMP, SIA
-
-proc OpenURLFits {{layer {}} {mode {}}} {
-    global fitsurl
-
-    set url $fitsurl
-    if {[EntryDialog [msgcat::mc {URL}] [msgcat::mc {Enter URL}] 80 url]} {
-	LoadURLFits $url $layer $mode
-	FinishLoad
-
-	set fitsurl $url
-    }
-}
-
 proc LoadURLFits {url layer mode} {
     if {[string length $url] == 0} {
 	return
@@ -142,7 +141,6 @@ proc LoadURLFitsHTTP {url layer mode} {
     set token [http::geturl $url \
 		   -channel $ch \
 		   -binary 1 \
-		   -keepalive 1 \
     		   -timeout $ihttp(timeout) \
 		   -headers "[ProxyHTTP]"]
 
@@ -308,6 +306,18 @@ proc LoadURLFitsHTTP {url layer mode} {
 
     if {[file exists $fn]} {
 	catch {file delete -force $fn}
+    }
+}
+
+proc OpenURLFits {{layer {}} {mode {}}} {
+    global fitsurl
+
+    set url $fitsurl
+    if {[EntryDialog [msgcat::mc {URL}] [msgcat::mc {Enter URL}] 80 url]} {
+	LoadURLFits $url $layer $mode
+	FinishLoad
+
+	set fitsurl $url
     }
 }
 

@@ -22,6 +22,8 @@ protected:
  private:
   void coordToTclArray(FitsImage*, const Vector&, Coord::CoordSystem, 
 		       const char*, const char*);
+  void coordToTclArray(FitsImage*, const Vector3d&, Coord::CoordSystem, 
+		       const char*, const char*);
 
   void getInfoWCS(char*, Vector&, FitsImage*);
 

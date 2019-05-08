@@ -148,142 +148,76 @@ proc LayoutFrameInfoBox {which type} {
 	puts stderr "LayoutFrameInfoBox $which $type"
     }
 
+    switch -- $view(layout) {
+	horizontal {LayoutFrameInfoBoxHorz $which $type}
+	vertical {LayoutFrameInfoBoxVert $which $type}
+    }
+}
+
+proc LayoutFrameInfoBoxHorz {which type} {
+    global ds9
+    global view
+
+    global debug
+    if {$debug(tcl,events)} {
+	puts stderr "LayoutFrameInfoBoxHorz $which $type"
+    }
+
     switch -- $type {
 	base {
 	    grid forget $ds9(info).valueRTitle $ds9(info).valueR \
 		$ds9(info).valueGTitle $ds9(info).valueG \
 		$ds9(info).valueBTitle $ds9(info).valueB
 
-	    switch -- $view(layout) {
-		vertical {
-		    grid $ds9(info).value \
-			-row $ds9(info,row,value) \
-			-column 1 -padx 2 -sticky w
+	    grid $ds9(info).value -row $ds9(info,row,value) \
+		-column 2 -padx 2 -sticky w
 
-		    foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
-			if {$which != {} && $view(info,wcs$ll)} {
-			    if {[$which has wcs 3d wcs$ll]} {
-				grid $ds9(info).wcsZLabel$ll \
-				    -row $ds9(info,row,wcs$ll) \
-				    -column 0 -sticky w
-				grid $ds9(info).wcsZValue$ll \
-				    -row $ds9(info,row,wcs$ll) \
-				    -column 1 -padx 2
-				incr row
-			    } else {
-				grid forget $ds9(info).wcsZLabel$ll
-				grid forget $ds9(info).wcsZValue$ll
-			    }
-			} else {
-			    grid forget $ds9(info).wcsZLabel$ll
-			    grid forget $ds9(info).wcsZValue$ll
-			}
-		    }
-
-		    if {$which != {} && $view(info,image)} {
-			if {[$which has fits cube]} {
-			    grid $ds9(info).imageZLabel \
-				-row $ds9(info,row,image) \
-				-column 0 -sticky w
-			    grid $ds9(info).imageZValue \
-				-row $ds9(info,row,image) \
-				-column 1 -padx 2
-			} else {
-			    grid forget $ds9(info).imageZLabel \
-				$ds9(info).imageZValue
-			}
+	    foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
+		if {$which != {} && $view(info,wcs$ll)} {
+		    if {[$which has wcs 3d wcs$ll]} {
+			grid $ds9(info).wcsZLabel$ll -row $ds9(info,row,wcs$ll)\
+			    -column 5 -sticky w
+			grid $ds9(info).wcsZValue$ll -row $ds9(info,row,wcs$ll)\
+			    -column 6 -padx 2
+			incr row
 		    } else {
-			grid forget $ds9(info).imageZLabel \
-			    $ds9(info).imageZValue
+			grid forget $ds9(info).wcsZLabel$ll
+			grid forget $ds9(info).wcsZValue$ll
 		    }
+		} else {
+		    grid forget $ds9(info).wcsZLabel$ll
+		    grid forget $ds9(info).wcsZValue$ll
 		}
-		horizontal {
-		    grid $ds9(info).value \
-			-row $ds9(info,row,value) \
-			-column 2 -padx 2 -sticky w
+	    }
 
-		    foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
-			if {$which != {} && $view(info,wcs$ll)} {
-			    if {[$which has wcs 3d wcs$ll]} {
-				grid $ds9(info).wcsZLabel$ll \
-				    -row $ds9(info,row,wcs$ll) \
-				    -column 5 -sticky w
-				grid $ds9(info).wcsZValue$ll \
-				    -row $ds9(info,row,wcs$ll) \
-				    -column 6 -padx 2
-				incr row
-			    } else {
-				grid forget $ds9(info).wcsZLabel$ll
-				grid forget $ds9(info).wcsZValue$ll
-			    }
-			} else {
-			    grid forget $ds9(info).wcsZLabel$ll
-			    grid forget $ds9(info).wcsZValue$ll
-			}
-		    }
-
-		    if {$which != {} && $view(info,image)} {
-			if {[$which has fits cube]} {
-			    grid $ds9(info).imageZLabel \
-				-row $ds9(info,row,image) \
-				-column 5 -sticky w
-			    grid $ds9(info).imageZValue \
-				-row $ds9(info,row,image) \
-				-column 6 -padx 2
-			} else {
-			    grid forget $ds9(info).imageZLabel \
-				$ds9(info).imageZValue
-			}
-		    } else {
-			grid forget $ds9(info).imageZLabel \
-			    $ds9(info).imageZValue
-		    }
+	    if {$which != {} && $view(info,image)} {
+		if {[$which has fits cube]} {
+		    grid $ds9(info).imageZLabel \
+			-row $ds9(info,row,image) -column 5 -sticky w
+		    grid $ds9(info).imageZValue \
+			-row $ds9(info,row,image) -column 6 -padx 2
+		} else {
+		    grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
 		}
+	    } else {
+		grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
 	    }
 	}
 	rgb {
 	    grid forget $ds9(info).value
-	    switch $view(layout) {
-		vertical {
-		    grid $ds9(info).valueRTitle \
-			-row $ds9(info,row,value,red) \
-			-column 0 -sticky w
-		    grid $ds9(info).valueR -row $ds9(info,row,value,red) \
-			-column 1 -padx 2 -sticky w
-		    grid $ds9(info).valueGTitle \
-			-row $ds9(info,row,value,green) \
-			-column 0 -sticky w
-		    grid $ds9(info).valueG \
-			-row $ds9(info,row,value,green) \
-			-column 1 -padx 2 -sticky w
-		    grid $ds9(info).valueBTitle \
-			-row $ds9(info,row,value,blue) \
-			-column 0 -sticky w
-		    grid $ds9(info).valueB \
-			-row $ds9(info,row,value,blue) \
-			-column 1 -padx 2 -sticky w
-		}
-		horizontal {
-		    grid $ds9(info).valueRTitle \
-			-row $ds9(info,row,value,red) \
-			-column 1 -sticky w
-		    grid $ds9(info).valueR \
-			-row $ds9(info,row,value,red) \
-			-column 2 -padx 2 -sticky w
-		    grid $ds9(info).valueGTitle \
-			-row $ds9(info,row,value,green) \
-			-column 3 -sticky w
-		    grid $ds9(info).valueG \
-			-row $ds9(info,row,value,green) \
-			-column 4 -padx 2 -sticky w
-		    grid $ds9(info).valueBTitle \
-			-row $ds9(info,row,value,blue) \
-			-column 5 -sticky w
-		    grid $ds9(info).valueB \
-			-row $ds9(info,row,value,blue) \
-			-column 6 -padx 2 -sticky w
-		}
-	    }
+	    grid $ds9(info).valueRTitle -row $ds9(info,row,value,red) \
+		-column 1 -sticky w
+	    grid $ds9(info).valueR -row $ds9(info,row,value,red) \
+		-column 2 -padx 2 -sticky w
+	    grid $ds9(info).valueGTitle -row $ds9(info,row,value,green) \
+		-column 3 -sticky w
+	    grid $ds9(info).valueG -row $ds9(info,row,value,green) \
+		-column 4 -padx 2 -sticky w
+	    grid $ds9(info).valueBTitle -row $ds9(info,row,value,blue) \
+		-column 5 -sticky w
+	    grid $ds9(info).valueB -row $ds9(info,row,value,blue) \
+		-column 6 -padx 2 -sticky w
+
 	    foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 		grid forget $ds9(info).wcsZLabel$ll
 		grid forget $ds9(info).wcsZValue$ll
@@ -295,71 +229,134 @@ proc LayoutFrameInfoBox {which type} {
 		$ds9(info).valueGTitle $ds9(info).valueG \
 		$ds9(info).valueBTitle $ds9(info).valueB
 
-	    switch -- $view(layout) {
-		vertical {
-		    grid $ds9(info).value -row $ds9(info,row,value) \
-			-column 1 -padx 2 -sticky w
+	    grid $ds9(info).value -row $ds9(info,row,value) \
+		-column 2 -padx 2 -sticky w
 
-		    foreach ll {{} a b c d e f g h i j 
-			k l m n o p q r s t u v w x y z} {
-			if {$view(info,wcs$ll)} {
-			    grid $ds9(info).wcsZLabel$ll \
-				-row $ds9(info,row,wcs$ll) \
-				-column 0 -sticky w
-			    grid $ds9(info).wcsZValue$ll \
-				-row $ds9(info,row,wcs$ll) \
-				-column 1 -padx 2
-			    incr row
-			} else {
-			    grid forget $ds9(info).wcsZLabel$ll
-			    grid forget $ds9(info).wcsZValue$ll
-			}
-		    }
+	    foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
+		if {$view(info,wcs$ll)} {
+		    grid $ds9(info).wcsZLabel$ll -row $ds9(info,row,wcs$ll) \
+			-column 5 -sticky w
+		    grid $ds9(info).wcsZValue$ll -row $ds9(info,row,wcs$ll) \
+			-column 6 -padx 2
+		    incr row
+		} else {
+		    grid forget $ds9(info).wcsZLabel$ll
+		    grid forget $ds9(info).wcsZValue$ll
+		}
+	    }
 
-		    if {$view(info,image)} {
-			grid $ds9(info).imageZLabel \
-			    -row $ds9(info,row,image) \
+	    if {$view(info,image)} {
+		grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
+		    -column 5 -sticky w
+		grid $ds9(info).imageZValue -row $ds9(info,row,image) \
+		    -column 6 -padx 2
+	    } else {
+		grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
+	    }
+	}
+    }
+}
+
+proc LayoutFrameInfoBoxVert {which type} {
+    global ds9
+    global view
+
+    global debug
+    if {$debug(tcl,events)} {
+	puts stderr "LayoutFrameInfoBoxVert $which $type"
+    }
+
+    switch -- $type {
+	base {
+	    grid forget $ds9(info).valueRTitle $ds9(info).valueR \
+		$ds9(info).valueGTitle $ds9(info).valueG \
+		$ds9(info).valueBTitle $ds9(info).valueB
+
+	    grid $ds9(info).value -row $ds9(info,row,value) \
+		-column 1 -padx 2 -sticky w
+
+	    foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
+		if {$which != {} && $view(info,wcs$ll)} {
+		    if {[$which has wcs 3d wcs$ll]} {
+			grid $ds9(info).wcsZLabel$ll -row $ds9(info,row,wcs$ll)\
 			    -column 0 -sticky w
-			grid $ds9(info).imageZValue \
-			    -row $ds9(info,row,image) \
+			grid $ds9(info).wcsZValue$ll -row $ds9(info,row,wcs$ll)\
 			    -column 1 -padx 2
+			incr row
 		    } else {
-			grid forget $ds9(info).imageZLabel \
-			    $ds9(info).imageZValue
+			grid forget $ds9(info).wcsZLabel$ll
+			grid forget $ds9(info).wcsZValue$ll
 		    }
+		} else {
+		    grid forget $ds9(info).wcsZLabel$ll
+		    grid forget $ds9(info).wcsZValue$ll
 		}
-		horizontal {
-		    grid $ds9(info).value -row $ds9(info,row,value) \
-			-column 2 -padx 2 -sticky w
+	    }
 
-		    foreach ll {{} a b c d e f g h i j 
-			k l m n o p q r s t u v w x y z} {
-			if {$view(info,wcs$ll)} {
-			    grid $ds9(info).wcsZLabel$ll \
-				-row $ds9(info,row,wcs$ll) \
-				-column 5 -sticky w
-			    grid $ds9(info).wcsZValue$ll \
-				-row $ds9(info,row,wcs$ll) \
-				-column 6 -padx 2
-			    incr row
-			} else {
-			    grid forget $ds9(info).wcsZLabel$ll
-			    grid forget $ds9(info).wcsZValue$ll
-			}
-		    }
-
-		    if {$view(info,image)} {
-			grid $ds9(info).imageZLabel \
-			    -row $ds9(info,row,image) \
-			    -column 5 -sticky w
-			grid $ds9(info).imageZValue \
-			    -row $ds9(info,row,image) \
-			    -column 6 -padx 2
-		    } else {
-			grid forget $ds9(info).imageZLabel \
-			    $ds9(info).imageZValue
-		    }
+	    if {$which != {} && $view(info,image)} {
+		if {[$which has fits cube]} {
+		    grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
+			-column 0 -sticky w
+		    grid $ds9(info).imageZValue -row $ds9(info,row,image) \
+			-column 1 -padx 2
+		} else {
+		    grid forget $ds9(info).imageZLabel \
+			$ds9(info).imageZValue
 		}
+	    } else {
+		grid forget $ds9(info).imageZLabel \
+		    $ds9(info).imageZValue
+	    }
+	}
+	rgb {
+	    grid forget $ds9(info).value
+	    grid $ds9(info).valueRTitle -row $ds9(info,row,value,red) \
+		-column 0 -sticky w
+	    grid $ds9(info).valueR -row $ds9(info,row,value,red) \
+		-column 1 -padx 2 -sticky w
+	    grid $ds9(info).valueGTitle -row $ds9(info,row,value,green) \
+		-column 0 -sticky w
+	    grid $ds9(info).valueG -row $ds9(info,row,value,green) \
+		-column 1 -padx 2 -sticky w
+	    grid $ds9(info).valueBTitle -row $ds9(info,row,value,blue) \
+		-column 0 -sticky w
+	    grid $ds9(info).valueB -row $ds9(info,row,value,blue) \
+		-column 1 -padx 2 -sticky w
+	    foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
+		grid forget $ds9(info).wcsZLabel$ll
+		grid forget $ds9(info).wcsZValue$ll
+	    }
+	    grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
+	}
+	3d {
+	    grid forget $ds9(info).valueRTitle $ds9(info).valueR \
+		$ds9(info).valueGTitle $ds9(info).valueG \
+		$ds9(info).valueBTitle $ds9(info).valueB
+
+	    grid $ds9(info).value -row $ds9(info,row,value) \
+		-column 1 -padx 2 -sticky w
+
+	    foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
+		if {$view(info,wcs$ll)} {
+		    grid $ds9(info).wcsZLabel$ll -row $ds9(info,row,wcs$ll) \
+			-column 0 -sticky w
+		    grid $ds9(info).wcsZValue$ll -row $ds9(info,row,wcs$ll) \
+			-column 1 -padx 2
+		    incr row
+		} else {
+		    grid forget $ds9(info).wcsZLabel$ll
+		    grid forget $ds9(info).wcsZValue$ll
+		}
+	    }
+
+	    if {$view(info,image)} {
+		grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
+		    -column 0 -sticky w
+		grid $ds9(info).imageZValue -row $ds9(info,row,image) \
+		    -column 1 -padx 2
+	    } else {
+		grid forget $ds9(info).imageZLabel \
+		    $ds9(info).imageZValue
 	    }
 	}
     }

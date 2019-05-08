@@ -301,8 +301,12 @@ proc MoviePhotoMPEG {} {
     UpdateDS9
     RealizeDS9 1
 
+    # for darwin only
+    set geom [DarwinPhotoFix]
+
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
     if {$rr} {
+	DarwinPhotoRestore $geom
 	Error $movie(error)
 	return $rr
     }
@@ -315,8 +319,10 @@ proc MoviePhotoMPEG {} {
 	set movie(first) 0
     }
     mpeg add $ph
-
     image delete $ph
+
+    # reset if needed
+    DarwinPhotoRestore $geom
     return 0
 }
 
@@ -330,8 +336,12 @@ proc MoviePhotoGIF {} {
     UpdateDS9
     RealizeDS9 1
 
+    # for darwin only
+    set geom [DarwinPhotoFix]
+
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
     if {$rr} {
+	DarwinPhotoRestore $geom
 	Error $movie(error)
 	return $rr
     }
@@ -343,6 +353,8 @@ proc MoviePhotoGIF {} {
     agif add $ph
     image delete $ph
 
+    # reset if needed
+    DarwinPhotoRestore $geom
     return 0
 }
 

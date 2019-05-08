@@ -90,11 +90,17 @@ proc SaveImage {fn format} {
 
 proc SaveImagePhoto {fn format} {
     global ds9
+    global tcl_platform
     global saveimage
 
+    # for darwin only
+    set geom [DarwinPhotoFix]
+
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
-    if {$rr != 0} {
+    if {$rr} {
+	DarwinPhotoRestore $geom
 	Error $saveimage(error)
+	return
     }
 
     switch -- $format {
@@ -107,6 +113,9 @@ proc SaveImagePhoto {fn format} {
     }
 
     image delete $ph
+
+    # reset if needed
+    DarwinPhotoRestore $geom
 }
 
 # Process Cmds

@@ -148,6 +148,9 @@ proc MovieCreate {fn} {
 	DisplayMode
     }
 
+    # for darwin only
+    set geom [DarwinPhotoFix]
+
     set movie(fn) $fn
     switch $movie(action) {
 	frame {MovieFrame}
@@ -155,10 +158,19 @@ proc MovieCreate {fn} {
 	3d {Movie3d}
     }
 
+    # close
+    switch $movie(type) {
+	mpeg {mpeg close}
+	gif {agif close}
+    }
+
     if {[info exists modesav]} {
 	set current(display) $modesav
 	DisplayMode
     }
+
+    # reset if needed
+    DarwinPhotoRestore $geom
 }
 
 proc MovieFrame {} {
@@ -177,7 +189,6 @@ proc MovieFrame {} {
 	    break
 	}
     }
-    MovieClose
 
     set ds9(next) $framesav
     GotoFrame
@@ -202,7 +213,6 @@ proc MovieSlice {} {
 	    break
 	}
     }
-    MovieClose
 
     # reset current slice
     $current(frame) update fits slice $slice
@@ -260,7 +270,6 @@ proc Movie3d {} {
 	    }
 	}
     }
-    MovieClose
 
     MovieStatusDestroyDialog
 
@@ -283,15 +292,6 @@ proc MoviePhoto {} {
     return 1
 }
 
-proc MovieClose {} {
-    global movie
-
-    switch $movie(type) {
-	mpeg {mpeg close}
-	gif {agif close}
-    }
-}
-
 proc MoviePhotoMPEG {} {
     global ds9
     global movie
@@ -301,12 +301,8 @@ proc MoviePhotoMPEG {} {
     UpdateDS9
     RealizeDS9 1
 
-    # for darwin only
-    set geom [DarwinPhotoFix]
-
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
     if {$rr} {
-	DarwinPhotoRestore $geom
 	Error $movie(error)
 	return $rr
     }
@@ -321,8 +317,6 @@ proc MoviePhotoMPEG {} {
     mpeg add $ph
     image delete $ph
 
-    # reset if needed
-    DarwinPhotoRestore $geom
     return 0
 }
 
@@ -336,12 +330,8 @@ proc MoviePhotoGIF {} {
     UpdateDS9
     RealizeDS9 1
 
-    # for darwin only
-    set geom [DarwinPhotoFix]
-
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
     if {$rr} {
-	DarwinPhotoRestore $geom
 	Error $movie(error)
 	return $rr
     }
@@ -353,8 +343,6 @@ proc MoviePhotoGIF {} {
     agif add $ph
     image delete $ph
 
-    # reset if needed
-    DarwinPhotoRestore $geom
     return 0
 }
 

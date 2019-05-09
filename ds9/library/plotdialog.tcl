@@ -566,12 +566,8 @@ proc PlotExport {varname fn format} {
     # besure we are on top
     raise $var(top)
 
-    # for darwin only
-    set geom [DarwinPhotoFix]
-
     set rr [catch {image create photo -format window -data $var(graph)} ph]
     if {$rr} {
-	DarwinPhotoRestore $geom
 	Error $iap(error)
 	return
     }
@@ -586,7 +582,4 @@ proc PlotExport {varname fn format} {
     }
 
     image delete $ph
-
-    # reset if needed
-    DarwinPhotoRestore $geom
 }

@@ -1359,7 +1359,9 @@ proc DarwinPhotoRestore {geom} {
     global ds9
     global tcl_platform
 
-    if {$ds9(wm) == {x11} && $tcl_platform(os) == {Darwin}} {
+    if {$geom != {} &&
+	$ds9(wm) == {x11} &&
+	$tcl_platform(os) == {Darwin}} {
 	wm geometry $ds9(top) $geom
     }
 }

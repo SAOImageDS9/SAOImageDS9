@@ -3105,19 +3105,21 @@ void FitsImage::scanWCS(FitsHead* hd)
   astBegin;
   int nframes = astGetI(ast_, "Nframe");
 
-  // wcs_[]
-  // since we have ast_
-  wcs_[0] =1; 
-  wcsNaxes_[0] = astGetI(ast_,"Naxes");
-
-  // fill out wcs_ array
-  for (int kk=0; kk<nframes; kk++) {
-    AstFrameSet* ff = (AstFrameSet*)astGetFrame(ast_,kk+1);
-    const char* id = astGetC(ff, "Ident");
-    if (id && *id) {
-      int jj = (*id == ' ') ? 0 : *id-'@';
-      wcs_[jj] = 1;
-      wcsNaxes_[jj] = astGetI(ff,"Naxes");
+  // special case for AST native encoding
+  if (findKeyword("BEGAST_A")) {
+    wcs_[0] =1; 
+    wcsNaxes_[0] = astGetI(ast_,"Naxes");
+  }
+  else {
+    // fill out wcs_ array
+    for (int kk=0; kk<nframes; kk++) {
+      AstFrameSet* ff = (AstFrameSet*)astGetFrame(ast_,kk+1);
+      const char* id = astGetC(ff, "Ident");
+      if (id && *id) {
+	int jj = (*id == ' ') ? 0 : *id-'@';
+	wcs_[jj] = 1;
+	wcsNaxes_[jj] = astGetI(ff,"Naxes");
+      }
     }
   }
   

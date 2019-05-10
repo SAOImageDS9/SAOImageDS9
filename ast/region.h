@@ -40,12 +40,12 @@
 *     License as published by the Free Software Foundation, either
 *     version 3 of the License, or (at your option) any later
 *     version.
-*     
+*
 *     This program is distributed in the hope that it will be useful,
 *     but WITHOUT ANY WARRANTY; without even the implied warranty of
 *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *     GNU Lesser General Public License for more details.
-*     
+*
 *     You should have received a copy of the GNU Lesser General
 *     License along with this program.  If not, see
 *     <http://www.gnu.org/licenses/>.
@@ -133,6 +133,7 @@ typedef struct AstRegionVtab {
    void (* RegSetAttrib)( AstRegion *, const char *, char **, int * );
    void (* RegClearAttrib)( AstRegion *, const char *, char **, int * );
    void (* GetRegionBounds)( AstRegion *, double *, double *, int * );
+   void (* GetRegionDisc)( AstRegion *, double[2], double *, int * );
    void (* ShowMesh)( AstRegion *, int, const char *, int * );
    void (* GetRegionBounds2)( AstRegion *, double *, double *, int * );
    void (* ClearUnc)( AstRegion *, int * );
@@ -272,6 +273,7 @@ void astSetUnc_( AstRegion *, AstRegion *, int * );
 AstRegion *astGetNegation_( AstRegion *, int * );
 AstRegion *astGetUnc_( AstRegion *, int, int * );
 void astGetRegionBounds_( AstRegion *, double *, double *, int * );
+void astGetRegionDisc_( AstRegion *, double[2], double *, int * );
 void astShowMesh_( AstRegion *, int, const char *, int * );
 void astGetRegionMesh_( AstRegion *, int, int, int, int *, double *, int * );
 void astGetRegionPoints_( AstRegion *, int, int, int *, double *, int * );
@@ -420,6 +422,7 @@ astINVOKE(V,astMaskUS_(astCheckRegion(this),(map?astCheckMapping(map):NULL),insi
 #define astSetUnc(this,unc) astINVOKE(V,astSetUnc_(astCheckRegion(this),unc?astCheckRegion(unc):NULL,STATUS_PTR))
 #define astGetUnc(this,def) astINVOKE(O,astGetUnc_(astCheckRegion(this),def,STATUS_PTR))
 #define astGetRegionBounds(this,lbnd,ubnd) astINVOKE(V,astGetRegionBounds_(astCheckRegion(this),lbnd,ubnd,STATUS_PTR))
+#define astGetRegionDisc(this,centre,radius) astINVOKE(V,astGetRegionDisc_(astCheckRegion(this),centre,radius,STATUS_PTR))
 #define astShowMesh(this,format,ttl) astINVOKE(V,astShowMesh_(astCheckRegion(this),format,ttl,STATUS_PTR))
 #define astGetRegionMesh(this,surface,maxpoint,maxcoord,npoint,points) \
 astINVOKE(V,astGetRegionMesh_(astCheckRegion(this),surface,maxpoint,maxcoord,npoint,points,STATUS_PTR))

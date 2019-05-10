@@ -95,12 +95,12 @@ f     The SwitchMap class does not define any new routines beyond those
 *     License as published by the Free Software Foundation, either
 *     version 3 of the License, or (at your option) any later
 *     version.
-*     
+*
 *     This program is distributed in the hope that it will be useful,
 *     but WITHOUT ANY WARRANTY; without even the implied warranty of
 *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *     GNU Lesser General Public License for more details.
-*     
+*
 *     You should have received a copy of the GNU Lesser General
 *     License along with this program.  If not, see
 *     <http://www.gnu.org/licenses/>.
@@ -2437,8 +2437,8 @@ f     function is invoked with STATUS set to an error value, or if it
 
 /* Obtain and validate pointers to the Mapping structures provided. */
    if( astOK ) {
-      fsmap = fsmap_void ? astCheckMapping( astMakePointer(fsmap_void) ) : NULL;
-      ismap = ismap_void ? astCheckMapping( astMakePointer(ismap_void) ) : NULL;
+      fsmap = fsmap_void ? astVerifyMapping( astMakePointer(fsmap_void) ) : NULL;
+      ismap = ismap_void ? astVerifyMapping( astMakePointer(ismap_void) ) : NULL;
       for( i = 0; i < nroute; i++ ) {
          routemaps[ i ] = astVerifyMapping( astMakePointer(routemaps_void[ i ]) );
       }

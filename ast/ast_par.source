@@ -540,6 +540,16 @@ c      PARAMETER ( AST__UKERNN = 2 )
       INTEGER AST_ELLIPSE
       LOGICAL AST_ISAELLIPSE
 
+*  Moc class.
+      INTEGER AST_MOC
+      LOGICAL AST_ISAMOC
+      LOGICAL AST_TESTCELL
+      INTEGER AST_GETMOCHEADER
+
+*  MocChan class.
+      INTEGER AST_MOCCHAN
+      LOGICAL AST_ISAMOCCHAN
+
 *  NullRegion class.
       INTEGER AST_NULLREGION
       LOGICAL AST_ISANULLREGION
@@ -646,8 +656,53 @@ c      PARAMETER ( AST__UKERNN = 2 )
       LOGICAL AST_ISATIMEFRAME
       DOUBLE PRECISION AST_CURRENTTIME
 
+      INTEGER AST__MJD
+      PARAMETER( AST__MJD    = 1  )
+
+      INTEGER AST__JD
+      PARAMETER( AST__JD     = 2  )
+
+      INTEGER AST__JEPOCH
+      PARAMETER( AST__JEPOCH = 3  )
+
+      INTEGER AST__BEPOCH
+      PARAMETER( AST__BEPOCH = 4  )
+
+      INTEGER AST__BADTS
+      PARAMETER( AST__BADTS  = 0  )
+
+      INTEGER AST__TAI
+      PARAMETER( AST__TAI    = 1  )
+
+      INTEGER AST__UTC
+      PARAMETER( AST__UTC    = 2  )
+
+      INTEGER AST__UT1
+      PARAMETER( AST__UT1    = 3  )
+
+      INTEGER AST__GMST
+      PARAMETER( AST__GMST   = 4  )
+
+      INTEGER AST__LAST
+      PARAMETER( AST__LAST   = 5  )
+
+      INTEGER AST__LMST
+      PARAMETER( AST__LMST   = 6  )
+
+      INTEGER AST__TT
+      PARAMETER( AST__TT     = 7  )
+
+      INTEGER AST__TDB
+      PARAMETER( AST__TDB    = 8  )
+
+      INTEGER AST__TCB
+      PARAMETER( AST__TCB    = 9  )
+
+      INTEGER AST__TCG
+      PARAMETER( AST__TCG    = 10 )
+
       INTEGER AST__LT
-      PARAMETER( AST__LT = 11 )
+      PARAMETER( AST__LT     = 11 )
 
 *  TimeMap class.
       INTEGER AST_TIMEMAP

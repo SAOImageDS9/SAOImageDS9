@@ -6127,7 +6127,7 @@ c     (for instance, using astFree).
    int i;                  /* Loop count */
    int mxlen;              /* Max length of any string in the vector */
    int nval;               /* No. of elements in vector */
-   int result;             /* Returned flag */
+   int result = 0;         /* Returned flag */
    int nc;                 /* Current length of total string */
 
 /* Check the global error status. */
@@ -10969,4 +10969,3 @@ void astSetKeyCase_( AstKeyMap *this, int keycase, int *status ){
    if( !astOK ) return;
    (**astMEMBER(this,KeyMap,SetKeyCase))(this,keycase,status);
 }
-

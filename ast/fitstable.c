@@ -64,12 +64,12 @@ f     - AST_PUTTABLEHEADER: Store FITS headers within a FitsTable
 *     License as published by the Free Software Foundation, either
 *     version 3 of the License, or (at your option) any later
 *     version.
-*     
+*
 *     This program is distributed in the hope that it will be useful,
 *     but WITHOUT ANY WARRANTY; without even the implied warranty of
 *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *     GNU Lesser General Public License for more details.
-*     
+*
 *     You should have received a copy of the GNU Lesser General
 *     License along with this program.  If not, see
 *     <http://www.gnu.org/licenses/>.
@@ -2682,7 +2682,7 @@ AstFitsTable *astFitsTableId_( void *header_void, const char *options, ... ) {
 
 /* Obtain a FitsChan pointer from any ID supplied and validate the
    pointer to ensure it identifies a valid FitsChan. */
-   header = header_void ? astCheckFitsChan( astMakePointer( header_void ) ) : NULL;
+   header = header_void ? astVerifyFitsChan( astMakePointer( header_void ) ) : NULL;
 
 /* Initialise the FitsTable, allocating memory and initialising the
    virtual function table as well if necessary. */

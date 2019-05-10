@@ -2837,7 +2837,7 @@ static int RegPins( AstRegion *this_region, AstPointSet *pset, AstRegion *unc,
 /* If an error has occurred, return zero. */
    if( !astOK ) {
       result = 0;
-      if( mask ) *mask = astAnnul( *mask );
+      if( mask ) *mask = astFree( *mask );
    }
 
 /* Return the result. */

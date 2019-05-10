@@ -219,6 +219,8 @@ f     The WcsMap class does not define any new routines beyond those
 *        Added XPH projection.
 *     30-DEC-2017 (DSB):
 *        Improve merging of WcsMaps and PermMaps.
+*     9-NOV=2018 (DSB):
+*        Add protected LonCheck attribute.
 *class--
 */
 
@@ -772,6 +774,11 @@ static int GetTPNTan( AstWcsMap *, int * );
 static int TestTPNTan( AstWcsMap *, int * );
 static void ClearTPNTan( AstWcsMap *, int * );
 static void SetTPNTan( AstWcsMap *, int, int * );
+
+static int GetLonCheck( AstWcsMap *, int * );
+static int TestLonCheck( AstWcsMap *, int * );
+static void ClearLonCheck( AstWcsMap *, int * );
+static void SetLonCheck( AstWcsMap *, int, int * );
 
 static AstPointSet *Transform( AstMapping *, AstPointSet *, int, AstPointSet *, int * );
 static const PrjData *FindPrjData( int, int * );
@@ -2447,6 +2454,11 @@ void astInitWcsMapVtab_(  AstWcsMapVtab *vtab, const char *name, int *status ) {
    vtab->GetTPNTan = GetTPNTan;
    vtab->SetTPNTan = SetTPNTan;
 
+   vtab->ClearLonCheck = ClearLonCheck;
+   vtab->TestLonCheck = TestLonCheck;
+   vtab->GetLonCheck = GetLonCheck;
+   vtab->SetLonCheck = SetLonCheck;
+
 /* Save the inherited pointers to methods that will be extended, and
    replace them with pointers to the new member functions. */
    object = (AstObjectVtab *) vtab;
@@ -2742,6 +2754,7 @@ static int Map( AstWcsMap *this, int forward, int npoint, double *in0,
    double x;                     /* X Cartesian coordinate in degrees */
    double y;                     /* Y Cartesian coordinate in degrees */
    int cyclic;                   /* Is sky->xy transformation cyclic? */
+   int docheck;                  /* Set out-of-bounds longitude values bad? */
    int i;                        /* Loop count */
    int plen;                     /* Length of proj par array */
    int point;                    /* Loop counter for points */
@@ -2775,8 +2788,11 @@ static int Map( AstWcsMap *this, int forward, int npoint, double *in0,
       if( ( params->p)[ i ] == AST__BAD ) return 400+i;
    }
 
-/* If we are doing a reverse mapping, get the acceptable range of longitude
-   values. */
+/* See if longitude range checking is required. */
+   docheck = astGetLonCheck( this );
+
+/* If we are doing a reverse mapping, get the acceptable range of
+   longitude values and see if the projection is cyclic. */
    cyclic = forward ? 0 : LongRange( prjdata, params, &longhi, &longlo,
                                      status );
 
@@ -2855,8 +2871,8 @@ static int Map( AstWcsMap *this, int forward, int npoint, double *in0,
    latitude ranges. This avoids (x,y) points outside the physical domain
    of the mapping being assigned valid (long,lat) values. */
             if( wcs_status == 0 ){
-               if( ( cyclic || ( longitude < longhi &&
-                                 longitude >= longlo ) ) &&
+               if( ( !docheck || cyclic || ( longitude < longhi &&
+                                             longitude >= longlo ) ) &&
                    fabs( latitude ) <= 90.0 ){
 
                   out0[ point ] = (AST__DD2R/factor)*longitude;
@@ -4760,6 +4776,45 @@ astMAKE_GET(WcsMap,TPNTan,int,1,( ( this->tpn_tan != -INT_MAX ) ?
                                        this->tpn_tan : 1 ))
 astMAKE_TEST(WcsMap,TPNTan,( this->tpn_tan != -INT_MAX ))
 
+/*
+*att+
+*  Name:
+*     LonCheck
+
+*  Purpose:
+*     Should returned out-of-bounds longitude values be set bad?
+
+*  Type:
+*     Protected attribute.
+
+*  Synopsis:
+*     Integer (boolean).
+
+*  Description:
+*     This attribute controls how the inverse transformation of a
+*     WcsMap handles returned longitude values that are outside the
+*     primary longitude range for the projection. If the LonCheck values
+*     is non-zero (the default), such longitude values are set bad
+*     before being returned. Otherwise, they are returned unchanged.
+*
+*     This attribute has no effect if the projection is cyclic (i.e.
+*     [long,lat]=[0,0] gets mapped to the same place as [long,lat]=[360,0]).
+*     The longitude values returned by such projections are always
+*     returned unchanged. However, for non-cyclic projections (ARC, AIT,
+*     ZPN, HPX, etc), it will be used to determine how to handle returned
+*     positions outside the projection's primary longitude range.
+
+*  Applicability:
+*     WcsMap
+*        All Frames have this attribute.
+*att-
+*/
+astMAKE_CLEAR(WcsMap,LonCheck,loncheck,-INT_MAX)
+astMAKE_GET(WcsMap,LonCheck,int,1,( ( this->loncheck != -INT_MAX ) ?
+                                       this->loncheck : 1 ))
+astMAKE_SET(WcsMap,LonCheck,int,loncheck,( value != 0 ))
+astMAKE_TEST(WcsMap,LonCheck,( this->loncheck != -INT_MAX ))
+
 /* ProjP. */
 /* ------ */
 /*
@@ -5274,6 +5329,14 @@ static void Dump( AstObject *this_object, AstChannel *channel, int *status ) {
                 ival ? "Defines the FITS-WCS projection" :
                        "Does not define the FITS-WCS projection" );
 
+/* LonCheck */
+/* -------- */
+   set = TestLonCheck( this, status );
+   ival = set ? GetLonCheck( this, status ) : astGetLonCheck( this );
+   astWriteInt( channel, "LonChk", set, 0, ival,
+                ival ? "Check returned lon values" :
+                       "Do not check returned lon values" );
+
 /* TPNTan */
 /* ------ */
    set = TestTPNTan( this, status );
@@ -5775,6 +5838,9 @@ AstWcsMap *astInitWcsMap_( void *mem, size_t size, int init,
 /* Store the "use as FITS-WCS projection" flag. */
          new->fits_proj = -INT_MAX;
 
+/* Store the "check returned longitude values" flag. */
+         new->loncheck = -INT_MAX;
+
 /* Store the "include TAN component in TPN Mapping" flag. */
          new->tpn_tan = -INT_MAX;
 
@@ -5946,6 +6012,13 @@ AstWcsMap *astLoadWcsMap_( void *mem, size_t size,
       new->fits_proj = astReadInt( channel, "fitsprj", -INT_MAX );
       if ( TestFITSProj( new, status ) ) {
          SetFITSProj( new, new->fits_proj, status );
+      }
+
+/* LonCheck */
+/* -------- */
+      new->loncheck = astReadInt( channel, "lonchk", -INT_MAX );
+      if ( TestLonCheck( new, status ) ) {
+         SetLonCheck( new, new->loncheck, status );
       }
 
 /* TPNTan */

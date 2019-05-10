@@ -154,24 +154,25 @@ am__libast_la_SOURCES_DIST = axis.c box.c channel.c chebymap.c \
 	dssmap.c ellipse.c error.c fitschan.c fitstable.c fluxframe.c \
 	frame.c frameset.c globals.c grismmap.c interval.c intramap.c \
 	keymap.c loader.c lutmap.c mapping.c mathmap.c matrixmap.c \
-	memory.c normmap.c nullregion.c object.c pcdmap.c permmap.c \
-	plot.c plot3d.c pointlist.c pointset.c polygon.c polymap.c \
-	prism.c ratemap.c region.c selectormap.c shiftmap.c skyaxis.c \
-	skyframe.c slamap.c specfluxframe.c specframe.c specmap.c \
-	sphmap.c stc.c stccatalogentrylocation.c stcobsdatalocation.c \
-	stcresourceprofile.c stcschan.c stcsearchlocation.c \
-	switchmap.c table.c timeframe.c timemap.c tranmap.c unit.c \
-	unitmap.c unitnormmap.c wcsmap.c winmap.c xml.c xmlchan.c \
-	zoommap.c c2f77.c fbox.c fchannel.c fchebymap.c fcircle.c \
-	fcmpframe.c fcmpmap.c fcmpregion.c fdsbspecframe.c fdssmap.c \
-	fellipse.c ferror.c ffitschan.c ffitstable.c ffluxframe.c \
-	fframe.c fframeset.c fgrismmap.c finterval.c fintramap.c \
-	fkeymap.c flutmap.c fmapping.c fmathmap.c fmatrixmap.c \
-	fnormmap.c fnullregion.c fobject.c fpcdmap.c fpermmap.c \
-	fplot.c fplot3d.c fpointlist.c fpolygon.c fpolymap.c fprism.c \
-	fratemap.c fregion.c fselectormap.c fshiftmap.c fskyframe.c \
-	fslamap.c fspecfluxframe.c fspecframe.c fspecmap.c fsphmap.c \
-	fstc.c fstccatalogentrylocation.c fstcobsdatalocation.c \
+	memory.c moc.c mocchan.c normmap.c nullregion.c object.c \
+	pcdmap.c permmap.c plot.c plot3d.c pointlist.c pointset.c \
+	polygon.c polymap.c prism.c ratemap.c region.c selectormap.c \
+	shiftmap.c skyaxis.c skyframe.c slamap.c specfluxframe.c \
+	specframe.c specmap.c sphmap.c stc.c stccatalogentrylocation.c \
+	stcobsdatalocation.c stcresourceprofile.c stcschan.c \
+	stcsearchlocation.c switchmap.c table.c timeframe.c timemap.c \
+	tranmap.c unit.c unitmap.c unitnormmap.c wcsmap.c winmap.c \
+	xml.c xmlchan.c xphmap.c zoommap.c c2f77.c fbox.c fchannel.c \
+	fchebymap.c fcircle.c fcmpframe.c fcmpmap.c fcmpregion.c \
+	fdsbspecframe.c fdssmap.c fellipse.c ferror.c ffitschan.c \
+	ffitstable.c ffluxframe.c fframe.c fframeset.c fgrismmap.c \
+	finterval.c fintramap.c fkeymap.c flutmap.c fmapping.c \
+	fmathmap.c fmatrixmap.c fmoc.c fmocchan.c fnormmap.c \
+	fnullregion.c fobject.c fpcdmap.c fpermmap.c fplot.c fplot3d.c \
+	fpointlist.c fpolygon.c fpolymap.c fprism.c fratemap.c \
+	fregion.c fselectormap.c fshiftmap.c fskyframe.c fslamap.c \
+	fspecfluxframe.c fspecframe.c fspecmap.c fsphmap.c fstc.c \
+	fstccatalogentrylocation.c fstcobsdatalocation.c \
 	fstcresourceprofile.c fstcschan.c fstcsearchlocation.c \
 	fswitchmap.c ftable.c ftimeframe.c ftimemap.c ftranmap.c \
 	funitmap.c funitnormmap.c fwcsmap.c fwinmap.c fxmlchan.c \
@@ -182,18 +183,19 @@ am__libast_la_SOURCES_DIST = axis.c box.c channel.c chebymap.c \
 	pcdmap.h permmap.h polymap.h chebymap.h ratemap.h normmap.h \
 	shiftmap.h slamap.h specmap.h sphmap.h timemap.h selectormap.h \
 	switchmap.h tranmap.h unitmap.h unitnormmap.h wcsmap.h \
-	winmap.h zoommap.h frame.h cmpframe.h specfluxframe.h \
+	winmap.h xphmap.h zoommap.h frame.h cmpframe.h specfluxframe.h \
 	fluxframe.h frameset.h plot.h plot3d.h skyframe.h specframe.h \
 	dsbspecframe.h region.h box.h circle.h cmpregion.h ellipse.h \
-	interval.h nullregion.h pointlist.h polygon.h prism.h stc.h \
-	stcresourceprofile.h stcsearchlocation.h \
+	interval.h moc.h nullregion.h pointlist.h polygon.h prism.h \
+	stc.h stcresourceprofile.h stcsearchlocation.h \
 	stccatalogentrylocation.h stcobsdatalocation.h timeframe.h \
-	channel.h fitschan.h stcschan.h xmlchan.h ems.h err.h Ers.h \
-	f77.h grf.h grf3d.h pg3d.h loader.h pal2ast.h erfa2ast.h \
-	wcsmath.h c2f77.h GRF_PAR AST_ERR cminpack/cminpack.h \
-	cminpack/cminpackP.h cminpack/lmder1.c cminpack/lmder.c \
-	cminpack/dpmpar.c cminpack/enorm.c cminpack/qrfac.c \
-	cminpack/lmpar.c cminpack/qrsolv.c proj.c tpn.c wcstrig.c
+	channel.h fitschan.h mocchan.h stcschan.h xmlchan.h ems.h \
+	err.h Ers.h f77.h grf.h grf3d.h pg3d.h loader.h pal2ast.h \
+	erfa2ast.h wcsmath.h c2f77.h GRF_PAR AST_ERR \
+	cminpack/cminpack.h cminpack/cminpackP.h cminpack/lmder1.c \
+	cminpack/lmder.c cminpack/dpmpar.c cminpack/enorm.c \
+	cminpack/qrfac.c cminpack/lmpar.c cminpack/qrsolv.c proj.c \
+	tpn.c wcstrig.c
 am__objects_1 = libast_la-axis.lo libast_la-box.lo \
 	libast_la-channel.lo libast_la-chebymap.lo libast_la-circle.lo \
 	libast_la-cmpframe.lo libast_la-cmpmap.lo \
@@ -205,10 +207,11 @@ am__objects_1 = libast_la-axis.lo libast_la-box.lo \
 	libast_la-grismmap.lo libast_la-interval.lo \
 	libast_la-intramap.lo libast_la-keymap.lo libast_la-loader.lo \
 	libast_la-lutmap.lo libast_la-mapping.lo libast_la-mathmap.lo \
-	libast_la-matrixmap.lo libast_la-memory.lo \
-	libast_la-normmap.lo libast_la-nullregion.lo \
-	libast_la-object.lo libast_la-pcdmap.lo libast_la-permmap.lo \
-	libast_la-plot.lo libast_la-plot3d.lo libast_la-pointlist.lo \
+	libast_la-matrixmap.lo libast_la-memory.lo libast_la-moc.lo \
+	libast_la-mocchan.lo libast_la-normmap.lo \
+	libast_la-nullregion.lo libast_la-object.lo \
+	libast_la-pcdmap.lo libast_la-permmap.lo libast_la-plot.lo \
+	libast_la-plot3d.lo libast_la-pointlist.lo \
 	libast_la-pointset.lo libast_la-polygon.lo \
 	libast_la-polymap.lo libast_la-prism.lo libast_la-ratemap.lo \
 	libast_la-region.lo libast_la-selectormap.lo \
@@ -224,7 +227,7 @@ am__objects_1 = libast_la-axis.lo libast_la-box.lo \
 	libast_la-tranmap.lo libast_la-unit.lo libast_la-unitmap.lo \
 	libast_la-unitnormmap.lo libast_la-wcsmap.lo \
 	libast_la-winmap.lo libast_la-xml.lo libast_la-xmlchan.lo \
-	libast_la-zoommap.lo
+	libast_la-xphmap.lo libast_la-zoommap.lo
 @NOFORTRAN_FALSE@am__objects_2 = libast_la-c2f77.lo libast_la-fbox.lo \
 @NOFORTRAN_FALSE@	libast_la-fchannel.lo libast_la-fchebymap.lo \
 @NOFORTRAN_FALSE@	libast_la-fcircle.lo libast_la-fcmpframe.lo \
@@ -238,7 +241,8 @@ am__objects_1 = libast_la-axis.lo libast_la-box.lo \
 @NOFORTRAN_FALSE@	libast_la-finterval.lo libast_la-fintramap.lo \
 @NOFORTRAN_FALSE@	libast_la-fkeymap.lo libast_la-flutmap.lo \
 @NOFORTRAN_FALSE@	libast_la-fmapping.lo libast_la-fmathmap.lo \
-@NOFORTRAN_FALSE@	libast_la-fmatrixmap.lo libast_la-fnormmap.lo \
+@NOFORTRAN_FALSE@	libast_la-fmatrixmap.lo libast_la-fmoc.lo \
+@NOFORTRAN_FALSE@	libast_la-fmocchan.lo libast_la-fnormmap.lo \
 @NOFORTRAN_FALSE@	libast_la-fnullregion.lo libast_la-fobject.lo \
 @NOFORTRAN_FALSE@	libast_la-fpcdmap.lo libast_la-fpermmap.lo \
 @NOFORTRAN_FALSE@	libast_la-fplot.lo libast_la-fplot3d.lo \
@@ -859,6 +863,8 @@ GRP_C_ROUTINES = \
     mathmap.c \
     matrixmap.c \
     memory.c \
+    moc.c \
+    mocchan.c \
     normmap.c \
     nullregion.c \
     object.c \
@@ -900,6 +906,7 @@ GRP_C_ROUTINES = \
     winmap.c \
     xml.c \
     xmlchan.c \
+    xphmap.c \
     zoommap.c
 
 
@@ -930,6 +937,8 @@ GRP_C_ROUTINES = \
 @NOFORTRAN_FALSE@    fmapping.c \
 @NOFORTRAN_FALSE@    fmathmap.c \
 @NOFORTRAN_FALSE@    fmatrixmap.c \
+@NOFORTRAN_FALSE@    fmoc.c \
+@NOFORTRAN_FALSE@    fmocchan.c \
 @NOFORTRAN_FALSE@    fnormmap.c \
 @NOFORTRAN_FALSE@    fnullregion.c \
 @NOFORTRAN_FALSE@    fobject.c \
@@ -1016,6 +1025,7 @@ AST_H_FILES = \
           unitnormmap.h \
           wcsmap.h \
           winmap.h \
+          xphmap.h \
           zoommap.h \
           frame.h \
              cmpframe.h \
@@ -1033,6 +1043,7 @@ AST_H_FILES = \
                 cmpregion.h \
                 ellipse.h \
                 interval.h \
+                moc.h \
                 nullregion.h \
                 pointlist.h \
                 polygon.h \
@@ -1045,6 +1056,7 @@ AST_H_FILES = \
              timeframe.h \
        channel.h \
           fitschan.h \
+          mocchan.h \
           stcschan.h \
           xmlchan.h
 
@@ -1870,6 +1882,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-fmapping.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-fmathmap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-fmatrixmap.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-fmoc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-fmocchan.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-fnormmap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-fnullregion.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-fobject.Plo@am__quote@
@@ -1921,6 +1935,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-mathmap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-matrixmap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-memory.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-moc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-mocchan.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-normmap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-nullregion.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-object.Plo@am__quote@
@@ -1965,6 +1981,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-winmap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-xml.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-xmlchan.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-xphmap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_la-zoommap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_pal_la-palwrap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libast_pgplot3d_la-grf3d.Plo@am__quote@
@@ -2198,6 +2215,20 @@ libast_la-memory.lo: memory.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='memory.c' object='libast_la-memory.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -c -o libast_la-memory.lo `test -f 'memory.c' || echo '$(srcdir)/'`memory.c
+
+libast_la-moc.lo: moc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -MT libast_la-moc.lo -MD -MP -MF $(DEPDIR)/libast_la-moc.Tpo -c -o libast_la-moc.lo `test -f 'moc.c' || echo '$(srcdir)/'`moc.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libast_la-moc.Tpo $(DEPDIR)/libast_la-moc.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='moc.c' object='libast_la-moc.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -c -o libast_la-moc.lo `test -f 'moc.c' || echo '$(srcdir)/'`moc.c
+
+libast_la-mocchan.lo: mocchan.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -MT libast_la-mocchan.lo -MD -MP -MF $(DEPDIR)/libast_la-mocchan.Tpo -c -o libast_la-mocchan.lo `test -f 'mocchan.c' || echo '$(srcdir)/'`mocchan.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libast_la-mocchan.Tpo $(DEPDIR)/libast_la-mocchan.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mocchan.c' object='libast_la-mocchan.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -c -o libast_la-mocchan.lo `test -f 'mocchan.c' || echo '$(srcdir)/'`mocchan.c
 
 libast_la-normmap.lo: normmap.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -MT libast_la-normmap.lo -MD -MP -MF $(DEPDIR)/libast_la-normmap.Tpo -c -o libast_la-normmap.lo `test -f 'normmap.c' || echo '$(srcdir)/'`normmap.c
@@ -2486,6 +2517,13 @@ libast_la-xmlchan.lo: xmlchan.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -c -o libast_la-xmlchan.lo `test -f 'xmlchan.c' || echo '$(srcdir)/'`xmlchan.c
 
+libast_la-xphmap.lo: xphmap.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -MT libast_la-xphmap.lo -MD -MP -MF $(DEPDIR)/libast_la-xphmap.Tpo -c -o libast_la-xphmap.lo `test -f 'xphmap.c' || echo '$(srcdir)/'`xphmap.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libast_la-xphmap.Tpo $(DEPDIR)/libast_la-xphmap.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='xphmap.c' object='libast_la-xphmap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -c -o libast_la-xphmap.lo `test -f 'xphmap.c' || echo '$(srcdir)/'`xphmap.c
+
 libast_la-zoommap.lo: zoommap.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -MT libast_la-zoommap.lo -MD -MP -MF $(DEPDIR)/libast_la-zoommap.Tpo -c -o libast_la-zoommap.lo `test -f 'zoommap.c' || echo '$(srcdir)/'`zoommap.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libast_la-zoommap.Tpo $(DEPDIR)/libast_la-zoommap.Plo
@@ -2667,6 +2705,20 @@ libast_la-fmatrixmap.lo: fmatrixmap.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='fmatrixmap.c' object='libast_la-fmatrixmap.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -c -o libast_la-fmatrixmap.lo `test -f 'fmatrixmap.c' || echo '$(srcdir)/'`fmatrixmap.c
+
+libast_la-fmoc.lo: fmoc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -MT libast_la-fmoc.lo -MD -MP -MF $(DEPDIR)/libast_la-fmoc.Tpo -c -o libast_la-fmoc.lo `test -f 'fmoc.c' || echo '$(srcdir)/'`fmoc.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libast_la-fmoc.Tpo $(DEPDIR)/libast_la-fmoc.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='fmoc.c' object='libast_la-fmoc.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -c -o libast_la-fmoc.lo `test -f 'fmoc.c' || echo '$(srcdir)/'`fmoc.c
+
+libast_la-fmocchan.lo: fmocchan.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -MT libast_la-fmocchan.lo -MD -MP -MF $(DEPDIR)/libast_la-fmocchan.Tpo -c -o libast_la-fmocchan.lo `test -f 'fmocchan.c' || echo '$(srcdir)/'`fmocchan.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libast_la-fmocchan.Tpo $(DEPDIR)/libast_la-fmocchan.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='fmocchan.c' object='libast_la-fmocchan.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -c -o libast_la-fmocchan.lo `test -f 'fmocchan.c' || echo '$(srcdir)/'`fmocchan.c
 
 libast_la-fnormmap.lo: fnormmap.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(STAR_CPPFLAGS) $(AM_CPPFLAGS) $(CPPFLAGS) $(libast_la_CFLAGS) $(CFLAGS) -MT libast_la-fnormmap.lo -MD -MP -MF $(DEPDIR)/libast_la-fnormmap.Tpo -c -o libast_la-fnormmap.lo `test -f 'fnormmap.c' || echo '$(srcdir)/'`fnormmap.c

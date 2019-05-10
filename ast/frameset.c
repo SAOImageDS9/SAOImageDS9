@@ -52,9 +52,9 @@ f     Mapping, a FrameSet may also be inverted (see AST_INVERT), which
 *     hence of reversing the Mapping between them.
 *
 *     Regions may be added into a FrameSet (since a Region is a type of
-*     Frame), either explicitly or as components within CmpFrames. In this
-*     case the Mapping between a pair of Frames within a FrameSet will
-*     include the effects of the clipping produced by any Regions included
+*     Frame), either explicitly or as components within CmpFrames. In
+*     this case the Mapping between a pair of Frames within a FrameSet
+*     will include the masking effects produced by any Regions included
 *     in the path between the Frames.
 
 *  Inheritance:
@@ -5152,8 +5152,8 @@ f     AST_GETMAPPING = INTEGER
 
 *  Notes:
 *     - The returned Mapping will include the clipping effect of any
-*     Regions which occur on the path between the two supplied Frames
-*     (this includes the two supplied Frames themselves).
+*     Regions which occur on the path between the two supplied
+*     Frames (this includes the two supplied Frames themselves).
 c     - The values given for the "iframe1" and "iframe2" parameters
 f     - The values given for the IFRAME1 and IFRAME2 arguments
 *     should lie in the range from 1 to the number of Frames in the
@@ -5238,12 +5238,12 @@ f     function is invoked with STATUS set to an error value, or if it
 
 /* If the conversion path is of zero length (i.e. the two Frames are
    the same) then we will return a Mapping which is equivalent to the
-   Frame. Most classes of Frame are equivalent to a UnitMap. However, we do
-   not hard-wire this equivalence since some classes of Frame (e.g. Regions
-   or CmpFrames containing Regions) do not correspond to a UnitMap. Instead
-   we use the astIsUnitFrame method on the Frame to determine if the
-   Frame is equivalent to a UnitMap.Is os, create a suitable UnitMap. If
-   not, return the Frame itself (a form of Mapping). */
+   Frame. Most classes of Frame are equivalent to a UnitMap. However,
+   we do not hard-wire this equivalence since some classes of Frame (e.g.
+   Regions, and CmpFrames containing Regions) do not correspond to a
+   UnitMap. Instead we use the astIsUnitFrame method on the Frame to determine
+   if the Frame is equivalent to a UnitMap. If so, create a suitable UnitMap.
+   If not, return the Frame itself (a form of Mapping). */
       } else if ( npath == 0 ) {
          fr = astGetFrame( this, iframe1 );
          if( astIsUnitFrame( fr ) ){
@@ -10036,15 +10036,15 @@ static int Span( AstFrameSet *this, AstFrame **frames, int inode1, int inode2,
 *     possible to find a path between the two nodes.
 
 *  Notes:
-*     - If a node has an associated Frame, the Frame usually represents a
-*     UnitMap and so can be ignored. The exception is if the Frame is
-*     actually a Region (or a CmpFrame containing a Region), in which case
-*     it represents a Mapping which returns bad values if the input position
-*     is outside the region. This form of Mapping should not be ignored, and
-*     so the returned list of Mappings includes the effect of any Frames
-*     along the path which are not equivalent to a UnitMap. This
-*     equivalence is determined by invoking the astSimplify method on the
-*     Frame.
+*     - If a node has an associated Frame, the Frame usually represents
+*     a UnitMap and so can be ignored. The exception is if the Frame is
+*     actually a Region (or a CmpFrame containing a Region), in which
+*     case it represents a Mapping which returns bad values if the
+*     input position is outside the Region. This form of Mapping should
+*     not be ignored, and so the returned list of Mappings includes the
+*     effect of any Frames along the path which are not equivalent to a
+*     UnitMap. This equivalence is determined by invoking the astSimplify
+*     method on the Frame.
 *     - A value of zero will be returned if this function is invoked
 *     with the global status set, or if it should fail for any reason.
 *     - On the assumption that the FrameSet has been consistently
@@ -10073,9 +10073,9 @@ static int Span( AstFrameSet *this, AstFrame **frames, int inode1, int inode2,
 
 /* If so, we need to consider the Mapping represented by any Frame
    associated with the node. Most classes of Frames are equivalent to a
-   UnitMap and so can be ignored. But some (e.g. the Region class) are not
-   equivalent to a UnitMap and so needs to be included in the returned
-   Mapping list. */
+   UnitMap and so can be ignored. But some (e.g. the Region class)
+   are not equivalent to a UnitMap and so needs to be included in the
+   returned Mapping list. */
    if( result ) {
       result = 1;
 

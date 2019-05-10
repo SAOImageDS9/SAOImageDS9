@@ -1,6 +1,6 @@
 AST Library
 -----------
-   A new release (V8.6.3) of the Starlink AST (astrometry) library is
+   A new release (V8.7.1) of the Starlink AST (astrometry) library is
 now available.
 
    AST provides a comprehensive range of facilities for attaching
@@ -17,6 +17,34 @@ environment-independent.
 
 Main Changes in this Version
 ----------------------------
+
+- The Moc class now supports version 1.1 of the the MOC recommendation.
+This includes new support for string and JSON encoded MOCs. See methods
+astGetMocString and astAddMocString in the Moc class, and also the new
+MocChan class.
+
+- The FitsChan class will now read FITS-WCS headers that have
+alternate axis descriptions but no primary axis descriptions.
+
+Main Changes in V8.7.0
+----------------------
+
+-  A new subclass of Region called "Moc" has been added. A Moc
+describes an arbitrary region of the sky in the form of a set of HEALPix
+cells using the IVOA Multi-Order Coverage scheme..
+
+-  The Region class has a new method called astGetRegionDisc, which
+returns the centre and radius of a disc that just encloses a
+2-dimensional Region.
+
+- The Bounded attribute defined by the Region class is now always
+non-zero for Regions defined within a SkyFrame, regardless of whether the
+Region has been negated. Previously, it was non-zero only if the Region
+had not been negated. Note, this change only affects Regions defined
+within SkyFrames.
+
+Main Changes in V8.6.3
+----------------------
 
 - Small memory leaks in Region  and FitsChan classes have been fixed.
 

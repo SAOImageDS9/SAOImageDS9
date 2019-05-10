@@ -2298,7 +2298,6 @@ static void ShowPoints( AstPointSet *this, int *status ) {
 
 /* Local Variables: */
    double **ptr;
-   double *p;
    int ic;
    int ip;
    int nc;
@@ -2324,7 +2323,7 @@ static void ShowPoints( AstPointSet *this, int *status ) {
       printf("\n");
 
 /* Display each row. */
-      for( ip = 0; ip < np; ip++,p++ ) {
+      for( ip = 0; ip < np; ip++ ) {
          for( ic = 0; ic < nc; ic++ ) {
             if( ptr[ic][ip] != AST__BAD ) {
                printf("%.*g ", AST__DBL_DIG, ptr[ic][ip] );

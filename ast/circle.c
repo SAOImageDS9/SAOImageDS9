@@ -378,7 +378,9 @@ static void Cache( AstCircle *this, int *status ){
 
 /* Free resources */
       frm = astAnnul( frm );
-      if( centre ) centre = astFree( centre );
+      centre = astFree( centre );
+      lb = astFree( lb );
+      ub = astFree( ub );
 
 /* Indicate cached information is up to date. */
       this->stale = 0;
@@ -1532,7 +1534,7 @@ static int RegPins( AstRegion *this_region, AstPointSet *pset, AstRegion *unc,
 /* If an error has occurred, return zero. */
    if( !astOK ) {
       result = 0;
-      if( mask ) *mask = astAnnul( *mask );
+      if( mask ) *mask = astFree( *mask );
    }
 
 /* Return the result. */
@@ -2432,7 +2434,7 @@ f     function is invoked with STATUS set to an error value, or if it
 /* Initialise the Circle, allocating memory and initialising the
    virtual function table as well if necessary. */
    new = astInitCircle( NULL, sizeof( AstCircle ), !class_init, &class_vtab,
-                     "Circle", frame, form, centre, point, unc );
+                        "Circle", frame, form, centre, point, unc );
 
 /* If successful, note that the virtual function table has been
    initialised. */
@@ -2519,7 +2521,7 @@ AstCircle *astCircleId_( void *frame_void, int form, const double centre[],
 
 /* Obtain a Region pointer from the supplied "unc" ID and validate the
    pointer to ensure it identifies a valid Region . */
-   unc = unc_void ? astCheckRegion( astMakePointer( unc_void ) ) : NULL;
+   unc = unc_void ? astVerifyRegion( astMakePointer( unc_void ) ) : NULL;
 
 /* Initialise the Circle, allocating memory and initialising the
    virtual function table as well if necessary. */

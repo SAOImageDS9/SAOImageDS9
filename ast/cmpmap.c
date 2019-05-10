@@ -152,6 +152,13 @@ f     The CmpMap class does not define any new routines beyond those
 *     23-APR-2015 (DSB):
 *        In Simplify, prevent mappings that are known to cause infinite
 *        loops from being nominated for simplification.
+*     5-DEC-2018 (DSB):
+*        In Simplify, ensure that the Mapping pointers in the list passed to 
+*        the subclass MapMerge methods are all independent of each other by 
+*        taking deep copies if necessary. This is needed because some subclasses
+*        (e.g. MatrixMap) make temporary modifications to the Mappings in the 
+*        list causing unpredictable behaviour since changing one Mapping may 
+*        cause other Mappings to change. 
 *class--
 */
 
@@ -269,6 +276,7 @@ static void Copy( const AstObject *, AstObject *, int * );
 static void Decompose( AstMapping *, AstMapping **, AstMapping **, int *, int *, int *, int * );
 static void Delete( AstObject *, int * );
 static void Dump( AstObject *, AstChannel *, int * );
+static void SeparateMappings( AstMapping **, int, int * );
 static int GetObjSize( AstObject *, int * );
 
 #if defined(THREAD_SAFE)
@@ -347,7 +355,7 @@ static int Equal( AstObject *this_object, AstObject *that_object, int *status ) 
    if( astIsACmpMap( that ) ) {
 
 /* Check they are both either parallel or series. */
-      if( that->series == that->series ) {
+      if( this->series == that->series ) {
 
 /* Decompose the first CmpMap into a sequence of Mappings to be applied in
    series or parallel, as appropriate, and an associated list of
@@ -992,7 +1000,7 @@ static int ManageLock( AstObject *this_object, int mode, int extra,
 #endif
 
 static int MapList( AstMapping *this_mapping, int series, int invert,
-                     int *nmap, AstMapping ***map_list, int **invert_list, int *status ) {
+                    int *nmap, AstMapping ***map_list, int **invert_list, int *status ) {
 /*
 *  Name:
 *     MapList
@@ -1627,6 +1635,12 @@ static int MapMerge( AstMapping *this, int where, int series, int *nmap,
                                      &nmap1, &map_list1, &invert_list1 );
                   (void) astMapList( (AstMapping *) cmpmap2, 0, invert2,
                                      &nmap2, &map_list2, &invert_list2 );
+
+/* Ensure that the mappings in these list are independent of each other, so
+   that modifying one does not modify any of the others. This is needed
+   because some Mapping classes make temporary changes to the Mappings. */
+                  SeparateMappings( map_list1, nmap1, status );
+                  SeparateMappings( map_list2, nmap2, status );
 
 /* We want to divide each of these lists into N sub-lists so that the
    outputs of the Mappings in the i'th sub-list from cmpmap1 can feed
@@ -3299,6 +3313,70 @@ static AstMapping *RemoveRegions( AstMapping *this_mapping, int *status ) {
    return result;
 }
 
+static void SeparateMappings( AstMapping **map_list, int nmap, int *status ) {
+/*
+*  Name:
+*     MapMerge
+
+*  Purpose:
+*     Ensure all supplied Mappings are indepenent of each other.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "mapping.h"
+*     void SeparateMappings( AstMapping **map_list, int nmap, int *status )
+
+*  Class Membership:
+*     CmpMap member function.
+
+*  Description:
+*     This function checks the supplied array of Mapping pointers,
+*     looking for pointers to the same Mapping. If any are found, the
+*     second and subsequent occurrences of the Mapping pointer are replaced by
+*     deep copies of hte Mapping.
+
+*  Parameters:
+*     map_list
+*        A pointer to a dynamically allocated array of Mapping pointers.
+*     nmap
+*        The number of Mapping pointers supplied in the "map_list" array.
+*     status
+*        Inherited status pointer.
+
+*/
+
+/* Local Variables: */
+   AstMapping **p1;
+   AstMapping **p2;
+   int i;
+   int j;
+
+/* Check the inherited status. */
+   if ( !astOK ) return;
+
+/* p1 pointers to the reference Mapping. Loop round each Mapping in the
+   list using it as the reference Mapping. */
+   p1 = map_list;
+   for( i = 0; i < nmap; i++,p1++ ) {
+
+/* p2 pointers to the comparison Mapping. Loop round each remaining Mapping
+   in the list using it as the comparison Mapping. */
+      p2 = p1 + 1;
+      for( j = i + 1; j < nmap; j++,p2++ ) {
+
+/* If the reference and comparison Mappings are one and the same, replace
+   the comparison pointer with a pointer to a deep copy, annulling the
+   original pointer first. */
+         if( *p2 == *p1 ) {
+            *p2 = astAnnul( *p2 );
+            *p2 = astCopy( *p1 );
+         }
+      }
+   }
+}
+
 static AstMapping *Simplify( AstMapping *this_mapping, int *status ) {
 /*
 *  Name:
@@ -3419,6 +3497,11 @@ static AstMapping *Simplify( AstMapping *this_mapping, int *status ) {
    inverting the components. Set "simpler" to indicate this. */
    simpler = astMapList( this_mapping, this->series, astGetInvert( this ), &nmap,
                          &map_list, &invert_list );
+
+/* Ensure that the mappings in the list are independent of each other, so
+   that modifying one does not modify any of the others. This is needed
+   because some Mapping classes make temporary changes to the Mappings. */
+   SeparateMappings( map_list, nmap, status );
 
 /* Each Mapping has a flag that indicates if the mapping is frozen (i.e. cannot
    be nominated for simplification). Mappings become frozen if nominating them

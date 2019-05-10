@@ -29,12 +29,12 @@
 *     License as published by the Free Software Foundation, either
 *     version 3 of the License, or (at your option) any later
 *     version.
-*     
+*
 *     This program is distributed in the hope that it will be useful,
 *     but WITHOUT ANY WARRANTY; without even the implied warranty of
 *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *     GNU Lesser General Public License for more details.
-*     
+*
 *     You should have received a copy of the GNU Lesser General
 *     License along with this program.  If not, see
 *     <http://www.gnu.org/licenses/>.
@@ -69,8 +69,6 @@
 #  define  __attribute__(x)  /*NOTHING*/
 #endif
 
-#if defined(astCLASS)            /* Protected */
-
 /* Values used to represent different System attribute values. */
 #define AST__MJD    1
 #define AST__JD     2
@@ -90,6 +88,8 @@
 #define AST__TCB          9
 #define AST__TCG         10
 #define AST__LT          11
+
+#if defined(astCLASS)            /* Protected */
 
 /* Define constants used to size global arrays in this module. */
 #define AST__TIMEFRAME_FORMAT_BUFF_LEN 200

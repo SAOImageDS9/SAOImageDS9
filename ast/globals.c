@@ -192,6 +192,8 @@ AstGlobals *astGlobalsInit_( void ) {
       INIT( Ellipse );
       INIT( Interval );
       INIT( MatrixMap );
+      INIT( Moc );
+      INIT( MocChan );
       INIT( NormMap );
       INIT( NullRegion );
       INIT( PermMap );
@@ -217,6 +219,7 @@ AstGlobals *astGlobalsInit_( void ) {
       INIT( StcResourceProfile );
       INIT( StcSearchLocation );
       INIT( StcsChan );
+      INIT( XphMap );
 #undef INIT
 
 /* Save the pointer as the value of the starlink_ast_globals_key

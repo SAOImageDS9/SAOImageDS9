@@ -60,14 +60,14 @@
 *-
 */
 
-/* The current version of AST is 8.6.3 */
+/* The current version of AST is 8.7.1 */
 #define AST__VMAJOR    8
-#define AST__VMINOR    6
-#define AST__RELEASE   3
+#define AST__VMINOR    7
+#define AST__RELEASE   1
 
 /* Deprecated macros */
 #define AST_MAJOR_VERS 8
-#define AST_MINOR_VERS 6
-#define AST_RELEASE    3
+#define AST_MINOR_VERS 7
+#define AST_RELEASE    1
 
 #endif /* #if ! defined(VERSION_INCLUDED) */

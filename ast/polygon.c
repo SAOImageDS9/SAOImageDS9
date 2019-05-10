@@ -4640,7 +4640,7 @@ static int RegPins( AstRegion *this_region, AstPointSet *pset, AstRegion *unc,
 /* If an error has occurred, return zero. */
    if( !astOK ) {
       result = 0;
-      if( mask ) *mask = astAnnul( *mask );
+      if( mask ) *mask = astFree( *mask );
    }
 
 /* Return the result. */
@@ -6698,7 +6698,7 @@ AstPolygon *astPolygonId_( void *frame_void, int npnt, int dim,
 
 /* Obtain a Region pointer from the supplied "unc" ID and validate the
    pointer to ensure it identifies a valid Region . */
-   unc = unc_void ? astCheckRegion( astMakePointer( unc_void ) ) : NULL;
+   unc = unc_void ? astVerifyRegion( astMakePointer( unc_void ) ) : NULL;
 
 /* Initialise the Polygon, allocating memory and initialising the
    virtual function table as well if necessary. */

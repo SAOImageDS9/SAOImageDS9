@@ -641,3 +641,35 @@
       INTEGER AST__NOBOX
       PARAMETER ( AST__NOBOX = 233934426 )
 
+*     Supplied Frame has no sky coordinate axes
+      INTEGER AST__NOSKY
+      PARAMETER ( AST__NOSKY = 233934434 )
+
+*     Sky axes cannot be separated from other axes
+      INTEGER AST__BDSKY
+      PARAMETER ( AST__BDSKY = 233934442 )
+
+*     Wrong class of object supplied
+      INTEGER AST__BDCLS
+      PARAMETER ( AST__BDCLS = 233934450 )
+
+*     Class does not implement the invoked method
+      INTEGER AST__NOIMP
+      PARAMETER ( AST__NOIMP = 233934458 )
+
+*     Normalised MOC is too big
+      INTEGER AST__BGMOC
+      PARAMETER ( AST__BGMOC = 233934466 )
+
+*     Invalid argument value supplied to an AST method
+      INTEGER AST__INVAR
+      PARAMETER ( AST__INVAR = 233934474 )
+
+*     Invalid string-encoded MOC
+      INTEGER AST__INMOC
+      PARAMETER ( AST__INMOC = 233934482 )
+
+*     Supplied buffer too small
+      INTEGER AST__SMBUF
+      PARAMETER ( AST__SMBUF = 233934490 )
+

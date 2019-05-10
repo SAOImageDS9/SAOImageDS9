@@ -34,6 +34,8 @@
 #include "mathmap.h"
 #include "matrixmap.h"
 #include "memory.h"
+#include "moc.h"
+#include "mocchan.h"
 #include "normmap.h"
 #include "nullregion.h"
 #include "object.h"
@@ -74,6 +76,7 @@
 #include "winmap.h"
 #include "xml.h"
 #include "xmlchan.h"
+#include "xphmap.h"
 #include "zoommap.h"
 
 
@@ -178,6 +181,7 @@ typedef struct AstGlobals {
    AstRegionGlobals Region;
    AstBoxGlobals Box;
    AstXmlGlobals Xml;
+   AstXphMapGlobals XphMap;
    AstXmlChanGlobals XmlChan;
    AstCircleGlobals Circle;
    AstCmpRegionGlobals CmpRegion;
@@ -185,6 +189,8 @@ typedef struct AstGlobals {
    AstEllipseGlobals Ellipse;
    AstIntervalGlobals Interval;
    AstMatrixMapGlobals MatrixMap;
+   AstMocGlobals Moc;
+   AstMocChanGlobals MocChan;
    AstNormMapGlobals NormMap;
    AstNullRegionGlobals NullRegion;
    AstPermMapGlobals PermMap;

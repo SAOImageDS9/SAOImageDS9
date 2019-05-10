@@ -35,12 +35,12 @@
 *     License as published by the Free Software Foundation, either
 *     version 3 of the License, or (at your option) any later
 *     version.
-*     
+*
 *     This program is distributed in the hope that it will be useful,
 *     but WITHOUT ANY WARRANTY; without even the implied warranty of
 *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *     GNU Lesser General Public License for more details.
-*     
+*
 *     You should have received a copy of the GNU Lesser General
 *     License along with this program.  If not, see
 *     <http://www.gnu.org/licenses/>.
@@ -227,12 +227,26 @@ F77_SUBROUTINE(ast_getregionbounds)( INTEGER(THIS),
                                      DOUBLE(UBND),
                                      INTEGER(STATUS) ) {
    GENPTR_INTEGER(THIS)
-   GENPTR_DOUBLE(XOUT)
-   GENPTR_DOUBLE(YOUT)
+   GENPTR_DOUBLE(LBND)
+   GENPTR_DOUBLE(UBND)
 
    astAt( "AST_GETREGIONBOUNDS", NULL, 0 );
    astWatchSTATUS(
       astGetRegionBounds( astI2P( *THIS ), LBND, UBND );
+   )
+}
+
+F77_SUBROUTINE(ast_getregiondisc)( INTEGER(THIS),
+                                   DOUBLE_ARRAY(CENTRE),
+                                   DOUBLE(RADIUS),
+                                   INTEGER(STATUS) ) {
+   GENPTR_INTEGER(THIS)
+   GENPTR_DOUBLE_ARRAY(CENTRE)
+   GENPTR_DOUBLE(RADIUS)
+
+   astAt( "AST_GETREGIONDISC", NULL, 0 );
+   astWatchSTATUS(
+      astGetRegionDisc( astI2P( *THIS ), CENTRE, RADIUS );
    )
 }
 

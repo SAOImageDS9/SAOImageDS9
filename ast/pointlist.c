@@ -41,12 +41,12 @@ f     The PointList class does not define any new routines beyond those
 *     License as published by the Free Software Foundation, either
 *     version 3 of the License, or (at your option) any later
 *     version.
-*     
+*
 *     This program is distributed in the hope that it will be useful,
 *     but WITHOUT ANY WARRANTY; without even the implied warranty of
 *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *     GNU Lesser General Public License for more details.
-*     
+*
 *     You should have received a copy of the GNU Lesser General
 *     License along with this program.  If not, see
 *     <http://www.gnu.org/licenses/>.
@@ -2066,7 +2066,7 @@ static int RegPins( AstRegion *this_region, AstPointSet *pset, AstRegion *unc,
 /* If an error has occurred, return zero. */
    if( !astOK ) {
       result = 0;
-      if( mask ) *mask = astAnnul( *mask );
+      if( mask ) *mask = astFree( *mask );
    }
 
 /* Return the result. */
@@ -3089,7 +3089,7 @@ f     function is invoked with STATUS set to an error value, or if it
 
 /* Obtain a Region pointer from the supplied "unc" ID and validate the
    pointer to ensure it identifies a valid Region . */
-   unc = unc_void ? astCheckRegion( astMakePointer( unc_void ) ) : NULL;
+   unc = unc_void ? astVerifyRegion( astMakePointer( unc_void ) ) : NULL;
 
 /* Initialise the PointList, allocating memory and initialising the
    virtual function table as well if necessary. */

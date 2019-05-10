@@ -41,12 +41,12 @@ f     The NullRegion class does not define any new routines beyond those
 *     License as published by the Free Software Foundation, either
 *     version 3 of the License, or (at your option) any later
 *     version.
-*     
+*
 *     This program is distributed in the hope that it will be useful,
 *     but WITHOUT ANY WARRANTY; without even the implied warranty of
 *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *     GNU Lesser General Public License for more details.
-*     
+*
 *     You should have received a copy of the GNU Lesser General
 *     License along with this program.  If not, see
 *     <http://www.gnu.org/licenses/>.
@@ -1808,7 +1808,7 @@ AstNullRegion *astNullRegionId_( void *frame_void, void *unc_void,
 
 /* Obtain a Region pointer from the supplied "unc" ID and validate the
    pointer to ensure it identifies a valid Region . */
-   unc = unc_void ? astCheckRegion( astMakePointer( unc_void ) ) : NULL;
+   unc = unc_void ? astVerifyRegion( astMakePointer( unc_void ) ) : NULL;
 
 /* Initialise the NullRegion, allocating memory and initialising the
    virtual function table as well if necessary. */

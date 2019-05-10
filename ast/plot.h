@@ -299,6 +299,7 @@ typedef struct AstPlot {
    int mintick[ 3 ];
    int numlab[ 3 ];
    int style[ AST__NPID ];
+   int textgaptype;
    int textlab[ 3 ];
    int tickall;
    int forceexterior;
@@ -469,6 +470,11 @@ typedef struct AstPlotVtab {
    int (* TestLabelling)( AstPlot *, int * );
    void (* SetLabelling)( AstPlot *, int, int * );
    void (* ClearLabelling)( AstPlot *, int * );
+
+   int (* GetTextGapType)( AstPlot *, int * );
+   int (* TestTextGapType)( AstPlot *, int * );
+   void (* SetTextGapType)( AstPlot *, int, int * );
+   void (* ClearTextGapType)( AstPlot *, int * );
 
    double (* GetMajTickLen)( AstPlot *, int, int * );
    int (* TestMajTickLen)( AstPlot *, int, int * );
@@ -857,6 +863,11 @@ void astInitPlotGlobals_( AstPlotGlobals * );
    int astTestLabelling_( AstPlot *, int * );
    void astSetLabelling_( AstPlot *, int, int * );
    void astClearLabelling_( AstPlot *, int * );
+
+   int astGetTextGapType_( AstPlot *, int * );
+   int astTestTextGapType_( AstPlot *, int * );
+   void astSetTextGapType_( AstPlot *, int, int * );
+   void astClearTextGapType_( AstPlot *, int * );
 
    double astGetMajTickLen_( AstPlot *, int, int * );
    int astTestMajTickLen_( AstPlot *, int, int * );
@@ -1282,6 +1293,15 @@ astINVOKE(V,astGetLabelling_(astCheckPlot(this),STATUS_PTR))
 astINVOKE(V,astSetLabelling_(astCheckPlot(this),labelling,STATUS_PTR))
 #define astTestLabelling(this) \
 astINVOKE(V,astTestLabelling_(astCheckPlot(this),STATUS_PTR))
+
+#define astClearTextGapType(this) \
+astINVOKE(V,astClearTextGapType_(astCheckPlot(this),STATUS_PTR))
+#define astGetTextGapType(this) \
+astINVOKE(V,astGetTextGapType_(astCheckPlot(this),STATUS_PTR))
+#define astSetTextGapType(this,textgaptype) \
+astINVOKE(V,astSetTextGapType_(astCheckPlot(this),textgaptype,STATUS_PTR))
+#define astTestTextGapType(this) \
+astINVOKE(V,astTestTextGapType_(astCheckPlot(this),STATUS_PTR))
 
 #define astClearEdge(this,axis) \
 astINVOKE(V,astClearEdge_(astCheckPlot(this),axis,STATUS_PTR))

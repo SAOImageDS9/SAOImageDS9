@@ -13,13 +13,13 @@
 % Variable part - replace [xxx] as appropriate.
 \stardocnumber      {211.28}
 \stardocauthors     {R.F. Warren-Smith \& D.S. Berry}
-\stardocdate        {17th October 2017}
+\stardocdate        {6th December 2018}
 \stardoctitle     {AST\linebreak%
                                 A Library for Handling\linebreak%
                                 World Coordinate Systems\linebreak%
                                 in Astronomy}
 \stardoccopyright   {Copyright (C) 2017 East Asian Observatory}
-\stardocversion     {V8.6}
+\stardocversion     {V8.7}
 \stardocmanual      {Programmer's Guide\\(C Version)}
 \startitlepic{
    \includegraphics[width=0.25\textwidth]{sun211_figures/fronta}~~~~~\hfill
@@ -10951,6 +10951,7 @@ Object             - Base class for all AST Objects
             CmpRegion  - A combination of two regions within a single Frame
             Ellipse    - An elliptical region within a 2-dimensional Frame
             Interval   - Intervals on one or more axes of a Frame.
+            Moc        - An arbitrary region within a SkyFrame
             NullRegion - A boundless region within a Frame
             PointList  - A collection of points in a Frame
             Polygon    - A polygonal region within a 2-dimensional Frame
@@ -11182,6 +11183,65 @@ Object             - Base class for all AST Objects
    }
 }
 \sstroutine{
+   astAddCell
+}{
+   Adds a single HEALPix cell into an existing Moc
+}{
+   \sstdescription{
+      This function modifies a \htmlref{Moc}{Moc} by combining it with a single
+      specified HEALPix cell. The way in which they are combined is
+      determined by the
+      \texttt{"} cmode\texttt{"}  parameter.
+   }
+   \sstsynopsis{
+      void astAddCell( AstMoc $*$this, int cmode, int order, int64\_t npix )
+   }
+   \sstparameters{
+      \sstsubsection{
+         this
+      }{
+         Pointer to the Moc to be modified.
+      }
+      \sstsubsection{
+         cmode
+      }{
+         Indicates how the Moc and specified cell are to be combined. Any
+         of the following values may be supplied:
+         \sstitemlist{
+
+            \sstitem
+             AST\_\_AND: If the specified cell is included in the Moc, it is
+            removed. Otherwise the Moc is left unchanged.
+
+            \sstitem
+             AST\_\_OR: If the specified cell is not included in the Moc, it is
+            added. Otherwise the Moc is left unchanged.
+
+            \sstitem
+             AST\_\_XOR: The specified cell is toggled - it is removed from
+            the Moc if originally present, and it is added to the Moc if not
+            originally present.
+         }
+      }
+      \sstsubsection{
+         order
+      }{
+         The HEALPix order of the cell. An error is reported if this is
+         higher than the maximum order allowed in the Moc (as given by its
+         \htmlref{MaxOrder}{MaxOrder} attribute). If no value has been set for the MaxOrder
+         attribute, calling this method causes it to be set to the supplied
+         order value. So the highest order cells should usually be added
+         first.
+      }
+      \sstsubsection{
+         npix
+      }{
+         The \texttt{"} npix\texttt{"}  value identifying the required cell (see the MOC
+         recommendation for more details).
+      }
+   }
+}
+\sstroutine{
    astAddColumn
 }{
    Add a new column definition to a table
@@ -11394,6 +11454,216 @@ Object             - Base class for all AST Objects
    }
 }
 \sstroutine{
+   astAddMocData
+}{
+   Adds a FITS binary table into an existing Moc
+}{
+   \sstdescription{
+      This function modifies a \htmlref{Moc}{Moc} by combining it with a binary data array
+      describing a MOC read from a FITS binary table. The way in which they
+      are combined is determined by the
+      \texttt{"} cmode\texttt{"}  parameter.
+   }
+   \sstsynopsis{
+      void astAddMocData( AstMoc $*$this, int cmode, int negate, int maxorder,
+                          int len, int nbyte, const void $*$data );
+   }
+   \sstparameters{
+      \sstsubsection{
+         this
+      }{
+         Pointer to the Moc to be modified.
+      }
+      \sstsubsection{
+         cmode
+      }{
+         Indicates how the Moc and data are to be combined. Any of the
+         following values may be supplied:
+         \sstitemlist{
+
+            \sstitem
+             AST\_\_AND: The modified Moc is the intersection of the original
+            Moc and the data.
+
+            \sstitem
+             AST\_\_OR: The modified Moc is the union of the original Moc and
+            the data.
+
+            \sstitem
+             AST\_\_XOR: The modified Moc is the exclusive disjunction of the
+            original Moc and the data.
+         }
+      }
+      \sstsubsection{
+         negate
+      }{
+         If
+         non-zero,
+         the cells added to the Moc will be those included in the
+         supplied data array.
+         If
+         zero,
+         the cells added to the Moc will be those not included in the
+         supplied data array.
+      }
+      \sstsubsection{
+         maxorder
+      }{
+         The maximum HEALPix order to use. If a negative value is supplied,
+         the maximum order will be determined by searching the data array
+         (this will take extra time). In either case, if a value has already
+         been set for the \htmlref{MaxOrder}{MaxOrder} attribute in the Moc, then the attribute
+         value is used in preference to the value supplied for this parameter.
+         Any HEALPix cells in the data array that refer to an order greater
+         than
+         \texttt{"} maxorder\texttt{"}
+         are ignored.
+      }
+      \sstsubsection{
+         len
+      }{
+         The length of the supplied array (i.e. the number of 4 or 8 byte
+         integer values it contains). Note, this class only supports binary
+         MOCs with lengths that can be represented in a 4 byte signed
+         integer.
+      }
+      \sstsubsection{
+         nbyte
+      }{
+         The number of bytes in each integer value stored in the supplied
+         array. Must be 4 or 8.
+      }
+      \sstsubsection{
+         data
+      }{
+         Pointer to the
+         data array holding a description of a MOC in the form used by
+         FITS binary tables. See the IVOA MOC recommendation for details.
+         The values in this array are signed integers, each with the
+         number of bytes specified by parameter
+         \texttt{"} nbyte\texttt{"} .
+         The number of bytes in this array should be at least
+         \texttt{"} len$*$nbyte\texttt{"} .
+      }
+   }
+   \sstnotes{
+      \sstitemlist{
+
+         \sstitem
+          If no value has yet been set for attribute MaxOrder, then this
+         function will automatically set it to the value supplied for
+         \texttt{"} Maxorder\texttt{"} ,
+         or to the largest order present in the supplied binary MOC if
+         \texttt{"} Maxorder\texttt{"}  is negative.
+      }
+   }
+}
+\sstroutine{
+   astAddMocString
+}{
+   Adds a JSON or string-encoded MOC into an existing Moc
+}{
+   \sstdescription{
+      This function modifies a \htmlref{Moc}{Moc} by combining it with the MOC described
+      by the supplied string - assumed to be encoded using either the string
+      or JSON serialisation described in the MOC recommendation. The way in
+      which they are combined is determined by the
+      \texttt{"} cmode\texttt{"}  parameter.
+   }
+   \sstsynopsis{
+      int astAddMocString( AstMoc $*$this, int cmode, int negate, int maxorder,
+                           size\_t len, const char$*$string, int $*$json );
+   }
+   \sstparameters{
+      \sstsubsection{
+         this
+      }{
+         Pointer to the Moc to be modified.
+      }
+      \sstsubsection{
+         cmode
+      }{
+         Indicates how the supplied MOC is to be combined with the
+         existing Moc. Any of the following values may be supplied:
+         \sstitemlist{
+
+            \sstitem
+             AST\_\_AND: The modified Moc is the intersection of the original
+            Moc and the sipplied MOC.
+
+            \sstitem
+             AST\_\_OR: The modified Moc is the union of the original Moc and
+            the supplied MOC.
+
+            \sstitem
+             AST\_\_XOR: The modified Moc is the exclusive disjunction of the
+            original Moc and the supplied MOC.
+         }
+      }
+      \sstsubsection{
+         negate
+      }{
+         If
+         non-zero,
+         the cells added to the existing Moc will be those included in the
+         supplied MOC.
+         If
+         zero,
+         the cells added to the existing Moc will be those not included in the
+         supplied MOC.
+      }
+      \sstsubsection{
+         maxorder
+      }{
+         The maximum HEALPix order to use. If a negative value is supplied,
+         the maximum order will be determined by searching the supplied MOC
+         (this will take extra time). In either case, if a value has already
+         been set for the \htmlref{MaxOrder}{MaxOrder} attribute in the Moc, then the attribute
+         value is used in preference to the value supplied for this parameter.
+         Any HEALPix cells in the supplied MOC that refer to an order greater
+         than
+         \texttt{"} maxorder\texttt{"}
+         are ignored.
+      }
+      \sstsubsection{
+         len
+      }{
+         The number of characters to read from the supplied string. If
+         this is greater than the length of the string, it is ignored and the
+         whole string is read.
+      }
+      \sstsubsection{
+         string
+      }{
+         Pointer to the
+         array of characters holding the supplied MOC. It should be
+         encoded using either the string or JSON serialisation described
+         in the MOC recommendation. The used serialisation is determined
+         from the first non-blank character, which should be either a
+         curly brace (\texttt{'} \{\texttt{'} - JSON serialisation) or a digit (string
+         serialisation).
+      }
+      \sstsubsection{
+         json
+      }{
+         Pointer to an int in which to return a
+         boolean flag indicating if the supplied string was interpreted
+         using the JSON (non-zero) or string (zero) serialisation.
+      }
+   }
+   \sstnotes{
+      \sstitemlist{
+
+         \sstitem
+          If no value has yet been set for attribute MaxOrder, then this
+         function will automatically set it to the value supplied for
+         \texttt{"} Maxorder\texttt{"} ,
+         or to the largest order present in the supplied string MOC if
+         \texttt{"} Maxorder\texttt{"}  is negative.
+      }
+   }
+}
+\sstroutine{
    astAddParameter
 }{
    Add a new global parameter definition to a table
@@ -11426,6 +11696,331 @@ Object             - Base class for all AST Objects
          \sstitem
           Unlike columns, the definition of a parameter does not specify its type,
          size or dimensionality.
+      }
+   }
+}
+\sstroutine{
+   astAddPixelMask$<$X$>$
+}{
+   Add a set of pixels to a Moc
+}{
+   \sstdescription{
+      This is a set of functions that modifies a \htmlref{Moc}{Moc} by combining it
+      with a subset of the pixel positions contained within a supplied
+      2-dimensional array. A \htmlref{FrameSet}{FrameSet} must be supplied describing the World
+      Coordinate Systems associated with the array. The current \htmlref{Frame}{Frame} of
+      this FrameSet must be a \htmlref{SkyFrame}{SkyFrame} or a \htmlref{CmpFrame}{CmpFrame} containing a SkyFrame.
+
+      The subset of pixels to be combined with the Moc are selected using
+      the \texttt{"} value\texttt{"}  and \texttt{"} oper\texttt{"}
+      parameters. The way in which the existing Moc and the selected pixels
+      are combined together is determined by the
+      \texttt{"} cmode\texttt{"}  parameter.
+
+      An adaptive alogorithm is used to find the HEALPix cells that are
+      inside the selected area in the pixel array. An initial grid,
+      corresponding to the HEALPix cells at the order given by the Moc\texttt{'} s
+      \texttt{"} \htmlref{MinOrder}{MinOrder}\texttt{"}  attribute, is placed over the pixel array. Each of these
+      cells is tested at 9 positions (corners, edge-centres and cell-centre).
+      If all 9 positions are inside the selected area of pixels, then the
+      whole cell is assumed to be inside. If no positions are inside the
+      selected area, then the whole cell is assumed to be outside. If there
+      is a mix of inside and outside positions, the cell is divided into
+      four sub-cells at HEALPix order \texttt{"} MinOrder$+$1\texttt{"} , and the same test is
+      applied to each sub-cell in turn. When the HEALPix order reaches the
+      value of the Moc\texttt{'} s \texttt{"} \htmlref{MaxOrder}{MaxOrder}\texttt{"}  attribute, each cell is tested only at
+      the cell centre, and is assumed to be inside the selected area if the
+      cell centre is inside the selected area.
+
+      This process means that contiguous \texttt{"} islands\texttt{"}  or \texttt{"} holes\texttt{"}  in the
+      supplied pixel mask may be missed if they are smaller than the cell
+      size associated with HEALPix order \texttt{"} MinOrder\texttt{"} .
+
+      If no value has yet been set for the MaxOrder attribute, then this
+      function will automatically set it to the smallest value that results
+      in the cells in the Moc being no larger than half the size of the pixels
+      in the centre of the array. Note, if the value set for attribute
+      MinOrder is greater than or equal to MaxOrder, a value of
+      (MaxOrder-1) will be used in place of MinOrder.
+
+      You should use a function which matches the numerical type of the
+      data you are processing by replacing $<$X$>$ in the generic function
+      name
+      astAddPixelMask$<$X$>$
+      by an appropriate 1- or 2-character type code. For example, if you
+      are procesing data with type
+      \texttt{"} float\texttt{"} , you should use the function astAddPixelMaskF
+      (see the \texttt{"} Data Type Codes\texttt{"}  section below for the codes appropriate to
+      other numerical types).
+   }
+   \sstsynopsis{
+      void astAddPixelMask$<$X$>$( AstMoc $*$this, int cmode, AstFrameSet $*$wcs,
+                               $<$Xtype$>$ value, int oper, int flags,
+                               $<$Xtype$>$ badval, const $<$Xtype$>$ array[],
+                               const int dims[2] )
+   }
+   \sstparameters{
+      \sstsubsection{
+         this
+      }{
+         Pointer to the Moc to be modified.
+      }
+      \sstsubsection{
+         cmode
+      }{
+         Indicates how the Moc and select pixels are to be combined. Any of the
+         following values may be supplied:
+         \sstitemlist{
+
+            \sstitem
+             AST\_\_AND: The modified Moc is the intersection of the original
+            Moc and the selected pixels.
+
+            \sstitem
+             AST\_\_OR: The modified Moc is the union of the original Moc and
+            the selected pixels.
+
+            \sstitem
+             AST\_\_XOR: The modified Moc is the exclusive disjunction of the
+            original Moc and the selected pixels.
+         }
+      }
+      \sstsubsection{
+         wcs
+      }{
+         Pointer to a FrameSet defining the World Coordinate Systems
+         associated with the image. The current Frame should be a SkyFrame
+         or a CmpFrame containing a SkyFrame. The base Frame should have
+         the same number of axes as the current Frame and should represent
+         \texttt{"} grid\texttt{"}  coordinates within a pixel array (i.e. the first pixel is
+         centred at (1.0,1.0,...) and the distance between pixel centres
+         is 1.0 on both axes).  The array supplied for parameter
+         \texttt{"} array\texttt{"}
+         is assumed to be a 2-dimensional slice from this array, spanned
+         by the grid axes corresponding to the SkyFrame axes.
+      }
+      \sstsubsection{
+         value
+      }{
+         A data value that specifies the selected pixels. See parameter
+         \texttt{"} oper\texttt{"} .
+      }
+      \sstsubsection{
+         oper
+      }{
+         Indicates how the
+         \texttt{"} value\texttt{"}
+         parameter is used to select the required pixels. It can
+         have any of the following values:
+         \sstitemlist{
+
+            \sstitem
+             AST\_\_LT: select pixels with value less than \texttt{"} value\texttt{"} .
+
+            \sstitem
+             AST\_\_LE: select pixels with value less than or equal to \texttt{"} value\texttt{"} .
+
+            \sstitem
+             AST\_\_EQ: select pixels with value equal to \texttt{"} value\texttt{"} .
+
+            \sstitem
+             AST\_\_NE: select pixels with value not equal to \texttt{"} value\texttt{"} .
+
+            \sstitem
+             AST\_\_GE: select pixels with value greater than or equal to \texttt{"} value\texttt{"} .
+
+            \sstitem
+             AST\_\_GT: select pixels with value greater than \texttt{"} value\texttt{"} .
+         }
+      }
+      \sstsubsection{
+         flags
+      }{
+         The bitwise OR of a set of flag values which may be used to
+         provide additional control over the operation. See
+         the \texttt{"} Control Flags\texttt{"}  section below for a description of the
+         options available.  If no flag values are to be set, a value
+         of zero should be given.
+      }
+      \sstsubsection{
+         badval
+      }{
+         This parameter should have the same type as the elements of
+         the data array. It specifies the value used to flag missing
+         data (bad pixels). Such pixels are never included in the Moc.
+
+         If the AST\_\_USEBAD flag is set via the \texttt{"} flags\texttt{"}  parameter,
+         then this value is used to test for bad pixels in the
+         supplied data array.
+      }
+      \sstsubsection{
+         array
+      }{
+         Pointer to the
+         2-dimensional data array. The numerical type of this array should
+         match the 1- or 2-character type code appended to the function name
+         (e.g. if you are using
+         astAddPixelMaskF, the type of each array element should be \texttt{"} float\texttt{"} ).
+
+         The storage order of data within this array should be such that the
+         index of the first grid dimension varies most rapidly (i.e.
+         Fortran array indexing is used).
+      }
+      \sstsubsection{
+         dims
+      }{
+         Pointer to an array
+         containing the length of each pixel axis, in pixels.
+      }
+   }
+   \sstdiytopic{
+      Control Flags
+   }{
+      The following flags are defined in the \texttt{"} ast.h\texttt{"}  header file and
+      may be used to provide additional control over the process.
+      Having selected a set of flags, you should supply the
+      bitwise OR of their values via the \texttt{"} flags\texttt{"}  parameter:
+
+      \sstitemlist{
+
+         \sstitem
+          AST\_\_USEBAD: Indicates that there may be bad pixels in the
+         input array which must be recognised by comparing with the
+         value given for \texttt{"} badval\texttt{"} .
+         If this flag is not set, all input values are treated literally.
+      }
+   }
+   \sstdiytopic{
+      Data Type Codes
+   }{
+      To select the appropriate masking function, you should
+      replace $<$X$>$ in the generic function name astAddPixelMask$<$X$>$ with a
+      1- or 2-character data type code, so as to match the numerical
+      type $<$Xtype$>$ of the data you are processing, as follows:
+      \sstitemlist{
+
+         \sstitem
+          D: double
+
+         \sstitem
+          F: float
+
+         \sstitem
+          L: long int
+
+         \sstitem
+          UL: unsigned long int
+
+         \sstitem
+          I: int
+
+         \sstitem
+          UI: unsigned int
+
+         \sstitem
+          S: short int
+
+         \sstitem
+          US: unsigned short int
+
+         \sstitem
+          B: byte (signed char)
+
+         \sstitem
+          UB: unsigned byte (unsigned char)
+
+      }
+      For example, astAddPixelMaskD would be used to process \texttt{"} double\texttt{"}
+      data, while astAddPixelMaskS would be used to process \texttt{"} short int\texttt{"}
+      data, etc.
+   }
+}
+\sstroutine{
+   astAddRegion
+}{
+   Add a Region into a Moc
+}{
+   \sstdescription{
+      This function modifies a \htmlref{Moc}{Moc} by combining it with a supplied \htmlref{Region}{Region}.
+      The Region must be defined within a \htmlref{SkyFrame}{SkyFrame}, or within a \htmlref{CmpFrame}{CmpFrame} that
+      contains a SkyFrame. The Region will be converted to ICRS before being
+      combined with the Moc. The way in which they are combined is determined
+      by the
+      \texttt{"} cmode\texttt{"}  parameter.
+
+      Note, since Moc is a subclass of Region this method can be used to add
+      a Moc into another Moc. In such cases, the data is transferred from
+      one Moc to another directly. For other classes of Region an adaptive
+      algorithm is used to find the HEALPix cells that are inside the Region.
+      An initial grid, corresponding to the HEALPix cells at the order given
+      by the Moc\texttt{'} s \texttt{"} \htmlref{MinOrder}{MinOrder}\texttt{"}  attribute, is placed over the bounding box of
+      the supplied Region. Each of these cells is tested at 9 positions
+      (corners, edge-centres and cell-centre). If all 9 positions are inside
+      the supplied Region, then the whole cell is assumed to be inside the
+      Region. If no positions are inside the supplied Region, then the whole
+      cell is assumed to be outside the Region. If there is a mix of inside
+      and outside positions, the cell is divided into four sub-cells at
+      HEALPix order \texttt{"} MinOrder$+$1\texttt{"} , and the same test is applied to each
+      sub-cell in turn. When the HEALPix order reaches the value of the
+      Moc\texttt{'} s \texttt{"} \htmlref{MaxOrder}{MaxOrder}\texttt{"}  attribute, each cell is tested only at the cell
+      centre, and is assumed to be inside the Region if the cell centre is
+      in the Region.
+
+      This process means that contiguous \texttt{"} islands\texttt{"}  or \texttt{"} holes\texttt{"}  in the
+      supplied region may be missed if they are smaller than the cell size
+      associated with HEALPix order \texttt{"} MinOrder\texttt{"} .
+   }
+   \sstsynopsis{
+      void astAddRegion( AstMoc $*$this, int cmode, AstRegion $*$region )
+   }
+   \sstparameters{
+      \sstsubsection{
+         this
+      }{
+         Pointer to the Moc to be modified.
+      }
+      \sstsubsection{
+         cmode
+      }{
+         Indicates how the Moc and Region are to be combined. Any of the
+         following values may be supplied:
+         \sstitemlist{
+
+            \sstitem
+             AST\_\_AND: The modified Moc is the intersection of the original
+            Moc and the Region.
+
+            \sstitem
+             AST\_\_OR: The modified Moc is the union of the original Moc and
+            the Region.
+
+            \sstitem
+             AST\_\_XOR: The modified Moc is the exclusive disjunction of the
+            original Moc and the Region.
+         }
+      }
+      \sstsubsection{
+         region
+      }{
+         Pointer to the Region to be combined with the Moc.
+      }
+   }
+   \sstnotes{
+      \sstitemlist{
+
+         \sstitem
+          When combining the Region with the Moc, it is assumed that the Moc
+         has not been inverted (i.e. the current value of the Moc\texttt{'} s \texttt{'} \htmlref{Negated}{Negated}\texttt{'}
+         attribute is ignored).
+
+         \sstitem
+          If no value has yet been set for attribute MaxOrder, then this
+         function will automatically set it to a value that depends on the
+         class of Region being added. If the Region being added is another
+         Moc, the MaxOrder attribute of the Moc is used. For other classes
+         of Region, the value used corresponds to the resolution closest to
+         0.1\% of the linear size of the Region being added (determined using
+         method \htmlref{astGetRegionDisc}{astGetRegionDisc}).
       }
    }
 }
@@ -16655,6 +17250,49 @@ Object             - Base class for all AST Objects
    }
 }
 \sstroutine{
+   astGetCell
+}{
+   Identify the next cell in a normalised Moc
+}{
+   \sstdescription{
+      This function returns the order and \texttt{"} npix\texttt{"}  value for the cell at a
+      specified index in the normalised \htmlref{Moc}{Moc}. See the MOC recommendation
+      for more information about \texttt{"} npix\texttt{"}  values and MOC normalisation.
+   }
+   \sstsynopsis{
+      void astGetCell( AstMoc $*$this, int icell, int $*$order, int64\_t $*$npix )
+   }
+   \sstparameters{
+      \sstsubsection{
+         this
+      }{
+         Pointer to the Moc to be modified.
+      }
+      \sstsubsection{
+         icell
+      }{
+         The index of the cell for which information is required. The
+         first cell has index
+         zero.
+         An error will be reported if the supplied value is greater than
+         or equal to
+         the value of the \htmlref{MocLength}{MocLength} attribute.
+      }
+      \sstsubsection{
+         order
+      }{
+         Returned holding the HEALPix order of the cell at the requested
+         index.
+      }
+      \sstsubsection{
+         npix
+      }{
+         Returned holding the \texttt{"} npix\texttt{"}  value of the cell at the requested
+         index.
+      }
+   }
+}
+\sstroutine{
    astGetColumnData
 }{
    Retrieve all the data values stored in a column
@@ -17043,8 +17681,8 @@ Object             - Base class for all AST Objects
 
          \sstitem
           The returned Mapping will include the clipping effect of any
-         Regions which occur on the path between the two supplied Frames
-         (this includes the two supplied Frames themselves).
+         Regions which occur on the path between the two supplied
+         Frames (this includes the two supplied Frames themselves).
 
          \sstitem
           The values given for the \texttt{"} iframe1\texttt{"}  and \texttt{"} iframe2\texttt{"}  parameters
@@ -17067,6 +17705,128 @@ Object             - Base class for all AST Objects
           A null \htmlref{Object}{Object} pointer (AST\_\_NULL) will be returned if this
          function is invoked with the AST error status set, or if it
          should fail for any reason.
+      }
+   }
+}
+\sstroutine{
+   astGetMocData
+}{
+   Get the FITS binary table data describing a Moc
+}{
+   \sstdescription{
+      This function retrieves the data values that form the FITS binary
+      table representation of the MOC and stores them in a supplied array.
+      Such a table contains a single scalar-valued column in which each
+      row holds a signed integer identifier for a single HEALPix cell,
+      following the scheme described in the MOC recommendation. Depending
+      on the order of the \htmlref{Moc}{Moc}, these integers may be 4 bytes or 8 bytes.
+
+      The number of rows in the table and the required integer data type
+      are available through the \htmlref{MocType}{MocType} and \htmlref{MocLength}{MocLength} attributes of the
+      Moc class.
+
+      The FITS headers to store in the FITS binary table can be obtained
+      using function
+      \htmlref{astGetMocHeader}{astGetMocHeader}.
+   }
+   \sstsynopsis{
+      void astGetMocData( AstMoc $*$this, size\_t mxsize, void $*$data )
+   }
+   \sstparameters{
+      \sstsubsection{
+         this
+      }{
+         Pointer to the Moc to be modified.
+      }
+      \sstsubsection{
+         mxsize
+      }{
+         The length of the supplied array in bytes. An error will be reported
+         if this value is smaller than the number required to describe the
+         Moc (the product of the MocType and MocLength attributes).
+      }
+      \sstsubsection{
+         data
+      }{
+         Pointer to the
+         area of memory in which to return the signed integer cell
+         identifiers. This area is assumed to contain at least
+         \texttt{"} mxsize\texttt{"}  bytes.
+      }
+   }
+}
+\sstroutine{
+   astGetMocHeader
+}{
+   Get the FITS binary table headers describing a Moc
+}{
+   \sstdescription{
+      This function returns a \htmlref{FitsChan}{FitsChan} holding the headers that should be
+      stored in a FITS binary table extension describing the supplied \htmlref{Moc}{Moc}.
+      The data values for the extension can be obtained using method
+      \htmlref{astGetMocData}{astGetMocData}.
+   }
+   \sstsynopsis{
+      AstFitsCHan $*$astGetMocHeader( AstMoc $*$this )
+   }
+   \sstparameters{
+      \sstsubsection{
+         this
+      }{
+         Pointer to the Moc to be modified.
+      }
+   }
+}
+\sstroutine{
+   astGetMocString
+}{
+   Get the JSON or string-encoded representation of a Moc
+}{
+   \sstdescription{
+      This function stores the JSON or string-encoded representation of
+      the supplied \htmlref{Moc}{Moc} in the supplied string buffer.
+   }
+   \sstsynopsis{
+      void astGetMocString( AstMoc $*$this, int json, size\_t mxsize,
+                            char $*$string, size\_t $*$size, int $*$status )
+   }
+   \sstparameters{
+      \sstsubsection{
+         this
+      }{
+         Pointer to the Moc.
+      }
+      \sstsubsection{
+         json
+      }{
+         If non-zero,
+         the Moc is encoded using JSON serialisation. Otherwise it is
+         encoded using string-serialisation.
+      }
+      \sstsubsection{
+         mxsize
+      }{
+         The length of the supplied string buffer in bytes. An error will
+         be reported if this value is smaller than the number required to
+         describe the Moc. However, if zero is supplied, the buffer will
+         be ignored - no string will be returned but the required size of
+         the buffer will still be returned in
+         \texttt{'} size\texttt{'} .
+      }
+      \sstsubsection{
+         string
+      }{
+         Pointer to the
+         area of memory in which to return the JSON or string-encoded
+         representation of the Moc. This area is assumed to contain at least
+         \texttt{'} mxsize\texttt{'}  bytes. Only used if \texttt{'} mxsize\texttt{'}  is greater than zero.
+         Note, the string is not null-terminated.
+      }
+      \sstsubsection{
+         size
+      }{
+         Returned holding the number of bytes needed to store the complete
+         JSON or string-encoded representation of the Moc.
       }
    }
 }
@@ -17187,6 +17947,61 @@ Object             - Base class for all AST Objects
    }
 }
 \sstroutine{
+   astGetRegionDisc
+}{
+   Returns the centre and radius of a disc containing a 2D Region
+}{
+   \sstdescription{
+      This function
+      returns the centre and radius of a disce that just encloses the
+      supplied 2-dimensional \htmlref{Region}{Region}. The centre is returned as a pair
+      of axis values within the \htmlref{Frame}{Frame} represented by the Region. The
+      value of the \htmlref{Negated}{Negated} attribute is ignored (i.e. it is assumed
+      that the Region has not been negated).
+   }
+   \sstsynopsis{
+      void GetRegionDisc( AstRegion $*$this, double centre[3],
+                          double $*$radius )
+   }
+   \sstparameters{
+      \sstsubsection{
+         this
+      }{
+         Pointer to the Region.
+      }
+      \sstsubsection{
+         centre
+      }{
+         Pointer to a
+         two-element array in which to return the axis values at the centre
+         of the bounding disc.
+      }
+      \sstsubsection{
+         radius
+      }{
+         Pointer to a variable in which to return the
+         radius of the bounding disc, as a geodesic distance within the
+         Frame represented by the Region. It will be returned holding
+         AST\_\_BAD If the Region is unbounded.
+      }
+   }
+   \sstnotes{
+      \sstitemlist{
+
+         \sstitem
+          An error is reported if the Region is not 2-dimensional.
+
+         \sstitem
+          The value of the Negated attribute is ignored (i.e. it is assumed that
+         the Region has not been negated).
+
+         \sstitem
+          If the Region is unbounded, the radius will be returned set to
+         AST\_\_BAD and the supplied centre axis values will be returned unchanged.
+      }
+   }
+}
+\sstroutine{
    astGetRegionFrame
 }{
    Obtain a pointer to the encapsulated Frame within a Region
@@ -17275,7 +18090,7 @@ Object             - Base class for all AST Objects
       returns the axis values at a mesh of points either covering the
       surface (i.e. boundary) of the supplied \htmlref{Region}{Region}, or filling the
       interior (i.e. volume) of the Region. The number of points in
-      the mesh is approximately equal to the \htmlref{MeshSize}{MeshSize} attribute.
+      the mesh is determined by the \htmlref{MeshSize}{MeshSize} attribute.
    }
    \sstsynopsis{
       void astGetRegionMesh( AstRegion $*$this, int surface, int maxpoint,
@@ -19451,6 +20266,14 @@ Object             - Base class for all AST Objects
          will be returned if this function is invoked
          with the global error status set, or if it should fail for any
          reason.
+
+         \sstitem
+          If all tested positions within the supplied box generate bad
+         output positions, then the returned function value will be
+         zero.
+         However, the returned coefficients will represent a unit
+         transformation, except that the constant term for each output
+         will be set to AST\_\_BAD.
       }
    }
 }
@@ -22526,6 +23349,213 @@ Object             - Base class for all AST Objects
           Any variant Mappings explicitly added to the current Frame using
          astAddVariant
          will be ignored if the current Frame is mirroring another Frame.
+      }
+   }
+}
+\sstroutine{
+   astMoc
+}{
+   Create a Moc
+}{
+   \sstdescription{
+      This function creates a new \htmlref{Moc}{Moc} object and optionally initialises
+      its attributes.
+
+      The Moc class uses the IVOA MOC (Multi-Order Coverage) recommendation
+      to describe a region on the sky. The region is made up of an
+      arbitrary collection of cells from the HEALPix sky tessellation,
+      and thus may represent any area on the sky, subject to the
+      constraint that the edges of the area correspond to edges of the
+      HEALPix cells. See the MOC recommendation for further information
+      (http://www.ivoa.net/documents/MOC/).
+
+      As a description of a region on the sky, the Moc class can be seen
+      as an alternative to the \htmlref{Region}{Region} class. Note, Mocs and Regions
+      are not interchangable (that is, a Moc is not a subclass of Region
+      and therefore Region methods cannot be applied to Mocs). The Moc
+      class is intended to describe an arbitrary collection of cells on
+      the sky, whereas the Region classes describe exact geometric shapes.
+      The Moc class has a method that allow a Region to be converted into
+      an approximating Moc, but Mocs cannot be converted into Regions.
+
+      The MOC recommendation requires that a MOC always describes a sky
+      area using the ICRS coordinate system. However, the Moc class
+      allows its attributes to be changed so that it represents any
+      celestial coordinate system that can be mapped to ICRS. Note,
+      changing the \htmlref{System}{System} attribute will not change the area on the
+      sky covered by the Moc - it will just change the way that area is
+      described. For instance, if a Moc is created that covers a particular
+      galaxy in ICRS, and the System attriubute is then changed to Galactic,
+      the Moc will still cover the same galaxy, but it will now be described
+      in Galactic coordinates rather than ICRS. When a Moc is written out
+      through a \htmlref{FitsChan}{FitsChan}, FITS headers describing the Moc will be stored
+      in the FitsChan. The binary data for the single column of the
+      coresponding FITS binary table can be retrieved from the Moc using
+      method \htmlref{astGetMocData}{astGetMocData}.
+
+      In practice, to use this class an empty Moc object (i.e. a Moc
+      describing a null area of the sky) should first be created using the
+      astMoc
+      constructor. Areas of the sky should then be added into the empty
+      Moc using one or more of the class methods.
+   }
+   \sstsynopsis{
+      AstMoc $*$astMoc( const char $*$options, ... )
+   }
+   \sstparameters{
+      \sstsubsection{
+         maxorder
+      }{
+      }
+      \sstsubsection{
+         options
+      }{
+         Pointer to a null-terminated string containing an optional
+         comma-separated list of attribute assignments to be used for
+         initialising the new Moc. The syntax used is identical to
+         that for the \htmlref{astSet}{astSet} function and may include \texttt{"} printf\texttt{"}  format
+         specifiers identified by \texttt{"} \%\texttt{"}  symbols in the normal way.
+      }
+      \sstsubsection{
+         ...
+      }{
+         If the \texttt{"} options\texttt{"}  string contains \texttt{"} \%\texttt{"}  format specifiers, then
+         an optional list of additional parameters may follow it in
+         order to supply values to be substituted for these
+         specifiers. The rules for supplying these are identical to
+         those for the astSet function (and for the C \texttt{"} printf\texttt{"}
+         function).
+      }
+   }
+   \sstreturnedvalue{
+      \sstsubsection{
+         astMoc()
+      }{
+         A pointer to the new Moc.
+      }
+   }
+   \sstnotes{
+      \sstitemlist{
+
+         \sstitem
+          A null \htmlref{Object}{Object} pointer (AST\_\_NULL) will be returned if this
+         function is invoked with the AST error status set, or if it
+         should fail for any reason.
+      }
+   }
+   \sstdiytopic{
+      Status Handling
+   }{
+      The protected interface to this function includes an extra
+      parameter at the end of the parameter list descirbed above. This
+      parameter is a pointer to the integer inherited status
+      variable: \texttt{"} int $*$status\texttt{"} .
+   }
+}
+\sstroutine{
+   astMocChan
+}{
+   Create a MocChan
+}{
+   \sstdescription{
+      This function creates a new \htmlref{MocChan}{MocChan} and optionally initialises
+      its attributes.
+
+      A MocChan is a specialised form of \htmlref{Channel}{Channel} which supports the
+      reading and writing of AST \htmlref{Moc}{Moc} objects as text, using the
+      conventions of the JSON and string encodings described in
+      the IVOA\texttt{'} s MOC recommendation, version 1.1. Writing a Moc
+      to a MocChan (using
+      \htmlref{astWrite}{astWrite}) will, if the Moc is suitable, generate a
+      textual description of that Moc, and reading from a MocChan will
+      create a new Moc from its textual description. See the Moc class
+      for further information.
+
+      Normally, when you use a MocChan, you should provide \texttt{"} source\texttt{"}
+      and \texttt{"} sink\texttt{"}  functions which connect it to an external data store
+      by reading and writing the resulting text. These functions
+      should perform any conversions needed between external character
+      encodings and the internal ASCII encoding. If no such functions
+      are supplied, a Channel will read from standard input and write
+      to standard output.
+
+      Alternatively, a MocChan can be told to read or write from
+      specific text files using the \htmlref{SinkFile}{SinkFile} and \htmlref{SourceFile}{SourceFile} attributes,
+      in which case no sink or source function need be supplied.
+   }
+   \sstsynopsis{
+      AstMocChan $*$astMocChan( const char $*$($*$ source)( void ),
+                              void ($*$ sink)( const char $*$ ),
+                              const char $*$options, ... )
+   }
+   \sstparameters{
+      \sstsubsection{
+         source
+      }{
+         Pointer to a source function that takes no arguments and
+         returns a pointer to a null-terminated string.  If no value
+         has been set for the SourceFile attribute, this function
+         will be used by the MocChan to obtain lines of input text. On
+         each invocation, it should return a pointer to the next input
+         line read from some external data store, and a NULL pointer
+         when there are no more lines to read.
+
+         If \texttt{"} source\texttt{"}  is NULL and no value has been set for the SourceFile
+         attribute, the MocChan will read from standard input instead.
+      }
+      \sstsubsection{
+         sink
+      }{
+         Pointer to a sink function that takes a pointer to a
+         null-terminated string as an argument and returns void.
+         If no value has been set for the SinkFile attribute, this
+         function will be used by the MocChan to deliver lines of
+         output text. On each invocation, it should deliver the
+         contents of the string supplied to some external data store.
+
+         If \texttt{"} sink\texttt{"}  is NULL, and no value has been set for the SinkFile
+         attribute, the MocChan will write to standard output instead.
+      }
+      \sstsubsection{
+         options
+      }{
+         Pointer to a null-terminated string containing an optional
+         comma-separated list of attribute assignments to be used for
+         initialising the new MocChan. The syntax used is identical to
+         that for the \htmlref{astSet}{astSet} function and may include \texttt{"} printf\texttt{"}  format
+         specifiers identified by \texttt{"} \%\texttt{"}  symbols in the normal way.
+      }
+      \sstsubsection{
+         ...
+      }{
+         If the \texttt{"} options\texttt{"}  string contains \texttt{"} \%\texttt{"}  format specifiers, then
+         an optional list of additional arguments may follow it in
+         order to supply values to be substituted for these
+         specifiers. The rules for supplying these are identical to
+         those for the astSet function (and for the C \texttt{"} printf\texttt{"}
+         function).
+      }
+   }
+   \sstreturnedvalue{
+      \sstsubsection{
+         astMocChan()
+      }{
+         A pointer to the new MocChan.
+      }
+   }
+   \sstnotes{
+      \sstitemlist{
+
+         \sstitem
+          If the external data source or sink uses a character encoding
+         other than ASCII, the supplied source and sink functions should
+         translate between the external character encoding and the internal
+         ASCII encoding used by AST.
+
+         \sstitem
+          A null \htmlref{Object}{Object} pointer (AST\_\_NULL) will be returned if this
+         function is invoked with the AST error status set, or if it
+         should fail for any reason.
       }
    }
 }
@@ -26993,11 +28023,11 @@ Object             - Base class for all AST Objects
    \sstdescription{
       This function searches the suppliedMapping (which may be a
       compound \htmlref{Mapping}{Mapping} such as a \htmlref{CmpMap}{CmpMap}) for any component Mappings
-      that are instances of the AST \htmlref{Region}{Region} class. It then creates a new
-      Mapping from which all Regions have been removed. If a Region
-      cannot simply be removed (for instance, if it is a component of a
-      parallel CmpMap), then it is replaced with an equivalent \htmlref{UnitMap}{UnitMap}
-      in the returned Mapping.
+      that are instances of the AST \htmlref{Region}{Region} class. It then creates
+      a new Mapping from which all Regions have been removed. If
+      a Region cannot simply be removed (for instance, if it is a
+      component of a parallel CmpMap), then it is replaced with an
+      equivalent \htmlref{UnitMap}{UnitMap} in the returned Mapping.
    }
    \sstsynopsis{
       AstMapping $*$astRemoveRegions( AstMapping $*$this )
@@ -27013,18 +28043,18 @@ Object             - Base class for all AST Objects
       \sstsubsection{
          \htmlref{CmpFrame}{CmpFrame}
       }{
-         If the supplied Mapping is a CmpFrame, any component Frames that
-         are instances of the Region class are replaced by the equivalent
-         \htmlref{Frame}{Frame}.
+         If the supplied Mapping is a CmpFrame, any component Frames
+         that are instances of the Region class are replaced by the
+         equivalent \htmlref{Frame}{Frame}.
       }
       \sstsubsection{
          \htmlref{FrameSet}{FrameSet}
       }{
          If the supplied Mapping is a FrameSet, the returned Mapping
-         will be a copy of the supplied FrameSet in which Regions have
-         been removed from all the inter-Frame Mappings, and any Frames
-         which are instances of the Region class are repalced by the
-         equivalent Frame.
+         will be a copy of the supplied FrameSet in which Regions
+         have been removed from all the inter-Frame Mappings, and any
+         Frames which are instances of the Region class are replaced by
+         the equivalent Frame.
       }
       \sstsubsection{
          Mapping
@@ -27049,8 +28079,8 @@ Object             - Base class for all AST Objects
       \sstitemlist{
 
          \sstitem
-          This function can safely be applied even to Mappings which
-         contain no Regions. If no Regions are found, it
+          This function can safely be applied even to Mappings
+         which contain no Regions. If no Regions are found, it
          behaves exactly like \htmlref{astClone}{astClone} and returns a pointer to the
          original Mapping.
 
@@ -31323,6 +32353,57 @@ Object             - Base class for all AST Objects
    }
 }
 \sstroutine{
+   astTestCell
+}{
+   Tests if a single HEALPix cell is included in a Moc
+}{
+   \sstdescription{
+      This function returns
+      a non-zero value
+      if the \htmlref{Moc}{Moc} includes the specified cell.
+   }
+   \sstsynopsis{
+      void astTestCell( AstMoc $*$this, int order, int64\_t npix, int parent )
+   }
+   \sstparameters{
+      \sstsubsection{
+         this
+      }{
+         Pointer to the Moc to be modified.
+      }
+      \sstsubsection{
+         order
+      }{
+         The HEALPix order of the cell to test.
+         Zero
+         is returned if this is higher than the maximum order allowed in
+         the Moc (as given by its \htmlref{MaxOrder}{MaxOrder} attribute).
+      }
+      \sstsubsection{
+         npix
+      }{
+         The \texttt{"} npix\texttt{"}  value identifying the cell to test (see the MOC
+         recommendation for more details).
+      }
+      \sstsubsection{
+         parent
+      }{
+         Indicates the value to return if the tested cell is not included
+         at the specified order, but a parent cell (at a lower order) is
+         included.
+      }
+   }
+   \sstreturnedvalue{
+      \sstsubsection{
+         astTestCell()
+      }{
+         One if the specified cell is included in the Moc at the
+         specified order, of (if \texttt{"} parent\texttt{"}  is non-zero) a parent cell is
+         included in the Moc. Zero otherwise.
+      }
+   }
+}
+\sstroutine{
    astTestFits
 }{
    See if a named keyword has a defined value in a FitsChan
@@ -34445,8 +35526,8 @@ Object             - Base class for all AST Objects
       attribute controls what happens when the coordinate system
       represented by a Region is changed in this way.
 
-      If Adaptive is non-zero (the default), then area represented by the
-      Region adapts to the new coordinate system. That is, the numerical
+      If Adaptive is non-zero (the default), then the area represented by
+      the Region adapts to the new coordinate system. That is, the numerical
       values which define the area represented by the Region are changed
       by mapping them from the old coordinate system into the new coordinate
       system. Thus the Region continues to represent the same physical
@@ -34470,7 +35551,7 @@ Object             - Base class for all AST Objects
       had been zero, then the numerical values would not have been changed,
       resulting in the final Region representing 2000 nm to 4000 nm.
 
-      Setting Adaptive to zero can be necessary if you want correct
+      Setting Adaptive to zero can be necessary if you need to correct
       inaccurate attribute settings in an existing Region. For instance,
       when creating a Region you may not know what \htmlref{Epoch}{Epoch} value to use, so
       you would leave Epoch unset resulting in some default value being used.
@@ -35476,6 +36557,14 @@ Object             - Base class for all AST Objects
       }{
          The default Closed value for an Stc is the Closed value of its
          encapsulated Region.
+      }
+      \sstsubsection{
+         \htmlref{Moc}{Moc}
+      }{
+         The Moc class ignored this attribute, and the behaviour for
+         boundary points is undefined (i.e. they may be inside or
+         outside the Region, depending on the position being tested and
+         the nature of the Moc).
       }
    }
 }
@@ -39505,6 +40594,94 @@ Object             - Base class for all AST Objects
    }
 }
 \sstroutine{
+   MaxOrder
+}{
+   The highest HEALPix order used in the MOC
+}{
+   \sstdescription{
+      This attribute gives the best resolution of the MOC expressed as a
+      HEALPix order in the range zero to 27 (this class does not support
+      orders greater than 27). It\texttt{'} s value can only be set once (for
+      instance as an option when the \htmlref{Moc}{Moc} constructor is invoked). An
+      error will be reported if a subsequent attempt to set or clear the
+      attribute is made. If no value is supplied for MaxOrder before the
+      first area of sky is added to the empty Moc, then a default value
+      will be selected and set, depending on the method used to add the
+      first area to the Moc:
+
+      \sstitemlist{
+
+         \sstitem
+          \htmlref{astAddCell}{astAddCell}: the order of the specified cell.
+
+         \sstitem
+          \htmlref{astAddRegion}{astAddRegion}: if the added \htmlref{Region}{Region} is a Moc, then the Moc\texttt{'} s MaxOrder
+                         value is used, Otherwise the value used corresponds to
+                         the resolution closest to 0.1\% of the linear size of
+                         the Region being added (determined using method
+                         \htmlref{astGetRegionDisc}{astGetRegionDisc}).
+
+         \sstitem
+          \htmlref{astAddPixelMask$<$X$>$}{astAddPixelMask$<$X$>$}: the smallest order that results in the cells in
+         the Moc being no larger than the size of the pixels in the centre of
+         the pixel mask.
+
+         \sstitem
+          \htmlref{astAddMocData}{astAddMocData}: the largest order present in the supplied normalised
+          MOC data array.
+
+         \sstitem
+          \htmlref{astAddMocString}{astAddMocString}: the largest order present in the supplied MOC.
+
+      }
+      A default value of -1 will be returned for the MaxOrder attribute
+      prior to its value being set.
+
+      The \htmlref{MaxRes}{MaxRes} attribute is equivalent to MaxOrder but expresses the
+      resolution as a number of arc-seconds rather than as a HEALPix order.
+
+      Increasing the HEALPix order by one roughly halves the resolution of the
+      Moc. For instance, a value of 18 corresponds to a resolution of about
+      0.8 arc-second, and 19 corresponds to about 0.4 arc-seconds.
+   }
+   \sstattributetype{
+      Integer.
+   }
+   \sstapplicability{
+      \sstsubsection{
+         Moc
+      }{
+         All Mocs have this attribute.
+      }
+   }
+}
+\sstroutine{
+   MaxRes
+}{
+   The best resolution of the MOC
+}{
+   \sstdescription{
+      This attribute is an alternative to the \htmlref{MaxOrder}{MaxOrder} attribute and gives
+      the best resolution of the MOC expressed as a number of arc-seconds.
+      It can be set only when the \htmlref{Moc}{Moc} is constructed - an error is
+      reported if any subsequent attempt is made to set or clear the value
+      of MaxRes. See attribute MaxOrder for more details.
+
+      A default value of zero will be returned for the MaxRes attribute
+      prior to its value (or the value of MaxOrder) being set.
+   }
+   \sstattributetype{
+      Floating point, read-only.
+   }
+   \sstapplicability{
+      \sstsubsection{
+         Moc
+      }{
+         All Mocs have this attribute.
+      }
+   }
+}
+\sstroutine{
    MeshSize
 }{
    Number of points used to represent the boundary of a Region
@@ -39540,6 +40717,17 @@ Object             - Base class for all AST Objects
       }{
          The default MeshSize for a CmpRegion is the MeshSize of its
          first component Region.
+      }
+      \sstsubsection{
+         \htmlref{Moc}{Moc}
+      }{
+         The MeshSize attribute is ignored when forming a mesh covering
+         the boundary of a Moc. Instead, the mesh will include a point
+         for the exterior corners of every HEALPix cell (at the order
+         specified by attribute \htmlref{MaxOrder}{MaxOrder}) that touches the boundary. Note,
+         this applies only to meshes covering the boundary of the Moc -
+         the MeshSize attribute is used as normal when forming a mesh
+         covering the area of the Moc.
       }
       \sstsubsection{
          \htmlref{Stc}{Stc}
@@ -39608,6 +40796,76 @@ Object             - Base class for all AST Objects
           If a template Frame is used to match a target with a different
          number of axes, the \htmlref{MatchEnd}{MatchEnd} attribute of the template is used
          to determine how the individual axes of each Frame should match.
+      }
+   }
+}
+\sstroutine{
+   MinOrder
+}{
+   The lowest HEALPix order used in the MOC
+}{
+   \sstdescription{
+      This attribute controls the size of the largest hole or island that
+      could be missed when adding Regions or pixel masks into a \htmlref{Moc}{Moc} using
+      methods \htmlref{astAddRegion}{astAddRegion} or astAddPixelMask.
+      It gives the resolution of the initial grid used to identify areas
+      that are inside or outside the \htmlref{Region}{Region} or pixel mask, expressed as a
+      HEALPix order in the range zero to 27 (this class does not support
+      orders greater than 27). Unselected areas (i.e. bounded \texttt{"} holes\texttt{"}  or
+      or \texttt{"} islands\texttt{"} in the selection) that are smaller than one cell of this
+      initial grid may be missed (i.e. such holes may be \texttt{"} filled in\texttt{"}  and
+      islands omitted in the resulting Moc).
+
+      The default value is (\htmlref{MaxOrder}{MaxOrder}-4), with a lower limit of zero. For
+      instance, if MaxOrder is 16 (a resolution of 3.2 arc-seconds), then
+      MinOrder will be 12, meaning that bounded holes within selected areas
+      may be filled in if the hole is smaller than 51 arc-seconds. Increase
+      the value of this attribute to ensures that only holes smaller than
+      this value can be missed. Note, doing so will increase the time spent
+      creating the Moc.
+
+      To ensure no pixels are missed, set MinOrder to some very large
+      value (larger than 27). If MinOrder is set greater than MaxOrder, the
+      value of MaxOrder will be used whenever MinOrder is required.
+
+      The \htmlref{MinRes}{MinRes} attribute is equivalent to MinOrder but expresses the
+      resolution as a number of arc-seconds rather than as a HEALPix order.
+      Any change made to MinOrder will cause a corresponding change in the
+      MinRes attribute.
+   }
+   \sstattributetype{
+      Integer.
+   }
+   \sstapplicability{
+      \sstsubsection{
+         Moc
+      }{
+         All Mocs have this attribute.
+      }
+   }
+}
+\sstroutine{
+   MinRes
+}{
+   The worst resolution of the MOC
+}{
+   \sstdescription{
+      This attribute gives the poorest resolution of the MOC expressed as
+      a number of arc-seconds. When a new value is set for MinRes, the
+      \htmlref{MinOrder}{MinOrder} attribute will be set to the order that gives a resolution
+      closest to the requested resolution. When the current value of
+      MinRes is requested, the resolution corresponding to the current
+      value of MinOrder will be returned. When MinRes is tested or
+      cleared, the MinOrder attribute will be tested or cleared.
+   }
+   \sstattributetype{
+      Floating point.
+   }
+   \sstapplicability{
+      \sstsubsection{
+         \htmlref{Moc}{Moc}
+      }{
+         All Mocs have this attribute.
       }
    }
 }
@@ -39696,6 +40954,141 @@ Object             - Base class for all AST Objects
          \texttt{"} MinTickLen(2)\texttt{"} ), then a \texttt{"} set\texttt{"}  or \texttt{"} clear\texttt{"}  operation will affect
          the attribute value of all the Plot axes, while a \texttt{"} get\texttt{"}  or \texttt{"} test\texttt{"}
          operation will use just the MinTickLen(1) value.
+      }
+   }
+}
+\sstroutine{
+   MocArea
+}{
+   The area covered by the Moc, in square arc-minutes
+}{
+   \sstdescription{
+      This read-only attribute gives the area covered by the \htmlref{Moc}{Moc}, in
+      square arc-minutes.
+   }
+   \sstattributetype{
+      Floating point, read-only.
+   }
+   \sstapplicability{
+      \sstsubsection{
+         Moc
+      }{
+         All Mocs have this attribute.
+      }
+   }
+}
+\sstroutine{
+   MocFormat
+}{
+   Format for encoding Mocs as text
+}{
+   \sstdescription{
+      This attribute specifies the format to use when AST \htmlref{Moc}{Moc}
+      Objects are converted to text by a \htmlref{MocChan}{MocChan}. There are currently two
+      ways (conventions) by which MOCs may be represented in the form of
+      text and the MocFormat attribute is used to specify which of these
+      should be used:
+
+      \sstitemlist{
+
+         \sstitem
+          \texttt{"} JSON\texttt{"} : Encodes a Moc \htmlref{Object}{Object} as a JSON string using the JSON
+         serialisation described in the MOC recommendation (version 1.1).
+
+         \sstitem
+          \texttt{"} STRING\texttt{"} : Encodes a Moc Object as using the string serialisation
+         described in the MOC recommendation (version 1.1).
+
+      }
+      The value assigned to the MocFormat does not affect the behaviour
+      of the
+      \htmlref{astRead}{astRead}
+      method, which automatically identifies the format used by the
+      external text and sets the MocFormat attribute to the
+      corresponding value.
+
+      The \htmlref{astWrite}{astWrite}
+      method will create the external text using the format
+      specified by the current value of the MocFormat attribute.
+
+      The initial default value of the attribute is \texttt{"} UNKNOWN\texttt{"} .
+   }
+   \sstattributetype{
+      String.
+   }
+   \sstapplicability{
+      \sstsubsection{
+         MocChan
+      }{
+         All MocChans have this attribute.
+      }
+   }
+}
+\sstroutine{
+   MocLength
+}{
+   The table length used to describe a Moc in FITS
+}{
+   \sstdescription{
+      This read-only attribute gives the length of the number of rows
+      needed to describe the \htmlref{Moc}{Moc} in a FITS binary table. This is the
+      number of cells in the normalised Moc.
+   }
+   \sstattributetype{
+      Integer, read-only.
+   }
+   \sstapplicability{
+      \sstsubsection{
+         Moc
+      }{
+         All Mocs have this attribute.
+      }
+   }
+}
+\sstroutine{
+   MocLineLen
+}{
+   Controls output buffer length
+}{
+   \sstdescription{
+      This attribute specifies the maximum length to use when writing out
+      text through the sink function supplied when the \htmlref{MocChan}{MocChan} was created.
+
+      The number of characters in each string written out through the sink
+      function will not be greater than the value of this attribute (but
+      may be less). The default value is 80.
+   }
+   \sstattributetype{
+      Integer.
+   }
+   \sstapplicability{
+      \sstsubsection{
+         MocChan
+      }{
+         All MocChans have this attribute.
+      }
+   }
+}
+\sstroutine{
+   MocType
+}{
+   The data type used to describe a Moc in FITS
+}{
+   \sstdescription{
+      This read-only attribute gives the data type to be used when
+      writing out the \htmlref{Moc}{Moc} to a FITS binary table. The attribute takes the
+      value 4 or 8. The binary table should contain a single column of
+      signed integer values in which each integer has 4 or 8 bytes, as
+      indicated by the value of this attribute.
+   }
+   \sstattributetype{
+      Integer, read-only.
+   }
+   \sstapplicability{
+      \sstsubsection{
+         Moc
+      }{
+         All Mocs have this attribute.
       }
    }
 }
@@ -43002,6 +44395,35 @@ Object             - Base class for all AST Objects
    }
 }
 \sstroutine{
+   TextGapType
+}{
+   Controls the interpretation of attributes TextLabGap and TitleGap
+}{
+   \sstdescription{
+      This attribute controls how the values supplied for attributes
+      TextLabGap and \htmlref{TitleGap}{TitleGap} are used. If the TextGapType value is
+      \texttt{"} box\texttt{"}  (the default), then the gaps are measured from the nearest
+      edge of the bounding box enclosing all other parts of the annotated
+      grid (excluding other descriptive labels). If the TextGapType value
+      is \texttt{"} plot\texttt{"} , then the gaps are measured from the nearest edge of the
+      plotting area.
+
+      Note, this attribute only affects the position from which the gaps
+      are measured - the size of the gap should always be given as a
+      fraction of the minimum dimension of the plotting area.
+   }
+   \sstattributetype{
+      String.
+   }
+   \sstapplicability{
+      \sstsubsection{
+         \htmlref{Plot}{Plot}
+      }{
+         All Plots have this attribute.
+      }
+   }
+}
+\sstroutine{
    TextLab(axis)
 }{
    Draw descriptive axis labels for a Plot?
@@ -43068,15 +44490,18 @@ Object             - Base class for all AST Objects
       be drawn.
 
       For each axis, the TextLabGap value gives the spacing between the
-      descriptive label and the edge of a box enclosing all other parts
-      of the annotated grid (excluding other descriptive labels). The gap
+      descriptive label and a reference point specified by the \htmlref{TextGapType}{TextGapType}
+      attribute (by default, the edge of a box enclosing all other parts
+      of the annotated grid, excluding other descriptive labels). The gap
       is measured to the nearest edge of the label (i.e. the top or the
       bottom). Positive values cause the descriptive label to be placed
       outside the bounding box, while negative values cause it to be placed
       inside.
 
       The TextLabGap value should be given as a fraction of the minimum
-      dimension of the plotting area, the default value being $+$0.01.
+      dimension of the plotting area, the default value depends on the
+      value of attribute TextGapType: if TextGapType is \texttt{"} box\texttt{"} , the
+      default is $+$0.01, otherwise the default is $+$0.07.
    }
    \sstattributetype{
       Floating point.
@@ -43383,10 +44808,10 @@ Object             - Base class for all AST Objects
       where the title of a \htmlref{Plot}{Plot} is drawn.
 
       Its value gives the spacing between the bottom edge of the title
-      and the top edge of a bounding box containing all the other parts
-      of the annotated grid. Positive values cause the title to be
-      drawn outside the box, while negative values cause it to be drawn
-      inside.
+      and a reference point specified by the \htmlref{TextGapType}{TextGapType} attribute (by
+      default, the top edge of a box enclosing all other parts of the
+      annotated grid). Positive values cause the title to be drawn
+      outside the box, while negative values cause it to be drawn inside.
 
       The TitleGap value should be given as a fraction of the minimum
       dimension of the plotting area, the default value being $+$0.05.
@@ -45553,9 +46978,9 @@ Object             - Base class for all AST Objects
       hence of reversing the Mapping between them.
 
       Regions may be added into a FrameSet (since a \htmlref{Region}{Region} is a type of
-      Frame), either explicitly or as components within CmpFrames. In this
-      case the Mapping between a pair of Frames within a FrameSet will
-      include the effects of the clipping produced by any Regions included
+      Frame), either explicitly or as components within CmpFrames. In
+      this case the Mapping between a pair of Frames within a FrameSet
+      will include the masking effects produced by any Regions included
       in the path between the Frames.
    }
    \sstconstructor{
@@ -46172,6 +47597,185 @@ Object             - Base class for all AST Objects
    }
 }
 \sstroutine{
+   Moc
+}{
+   An arbitrary region of the sky expressed as a collection of HEALPix
+   cells
+}{
+   \sstdescription{
+      The Moc class uses the IVOA MOC (Multi-Order Coverage) recommendation
+      to describe a region on the sky. The region is made up of an
+      arbitrary collection of cells from the HEALPix sky tessellation,
+      and thus may represent any area on the sky, subject to the
+      constraint that the edges of the area correspond to edges of the
+      HEALPix cells. See the MOC recommendation for further information
+      (http://www.ivoa.net/documents/MOC/).
+
+      The Moc class describes an arbitrary collection of cells on the sky,
+      whereas other subclasses of \htmlref{Region}{Region} describe exact geometric shapes
+      in any arbitrary domain. This results in some differences between
+      Mocs and other types of Region, the main one being that Mocs have
+      no associated uncertainty.
+
+      The MOC recommendation requires that a MOC always describes a sky
+      area using the ICRS coordinate system. However, the Moc class, like
+      other subclasses of Region, allows its attributes to be changed so
+      that it represents the equivalent area in any celestial coordinate
+      system that can be mapped to ICRS. See attribute \htmlref{Adaptive}{Adaptive}.
+
+      In practice, to use this class an empty Moc object (i.e. a Moc
+      describing a null area of the sky) should first be created using the
+      \htmlref{astMoc}{astMoc}
+      constructor. Areas of the sky should then be added into the empty
+      Moc using one or more of the class methods.
+
+      If it is required to write a Moc out to a FITS binary table, the
+      data value and headers to put in the table can be obtained using
+      methods
+      \htmlref{astGetMocData}{astGetMocData} and \htmlref{astGetMocHeader}{astGetMocHeader}
+      The MOC described by an existing FITS binary table can be added
+      into a Moc object using the
+      \htmlref{astAddMocData}{astAddMocData} method.
+
+      Note, this class is limited to MOCs for which the number of cells
+      in the normalised MOC can be represented in a four byte signed integer.
+   }
+   \sstconstructor{
+      astMoc
+   }
+   \sstdiytopic{
+      Inheritance
+   }{
+      The Moc class inherits from the Region class.
+   }
+   \sstdiytopic{
+      Attributes
+   }{
+      In addition to those attributes common to all Regions, every
+      Moc also has the following attributes:
+      \sstitemlist{
+
+         \sstitem
+          \htmlref{MaxOrder}{MaxOrder}: the highest HEALPix order used in the MOC
+
+         \sstitem
+          \htmlref{MaxRes}{MaxRes}: the best resolution of the MOC, in arc-seconds
+
+         \sstitem
+          \htmlref{MinOrder}{MinOrder}: the lowest HEALPix order used in the MOC
+
+         \sstitem
+          \htmlref{MinRes}{MinRes}: the worst resolution of the MOC, in arc-seconds
+
+         \sstitem
+          \htmlref{MocArea}{MocArea}: the area of the MOC
+
+         \sstitem
+          \htmlref{MocLength}{MocLength}: the table length used to describe a MOC in FITS
+
+         \sstitem
+          \htmlref{MocType}{MocType}: the data type used to describe a MOC in FITS
+      }
+   }
+   \sstdiytopic{
+      Functions
+   }{
+      In addition to those functions applicable to all Regions, the
+      following functions may also be applied to all Mocs:
+
+      \sstitemlist{
+
+         \sstitem
+          \htmlref{astAddCell}{astAddCell}: Adds a single HEALPix cell into an existing Moc
+
+         \sstitem
+          \htmlref{astAddMocData}{astAddMocData}: Adds a FITS binary table into an existing Moc
+
+         \sstitem
+          \htmlref{astAddMocString}{astAddMocString}: Adds a JSON or string-encoded MOC into an existing Moc
+
+         \sstitem
+          \htmlref{astAddPixelMask$<$X$>$}{astAddPixelMask$<$X$>$}: Adds a pixel mask to an existing Moc
+
+         \sstitem
+          \htmlref{astAddRegion}{astAddRegion}: Adds a Region to an existing Moc
+
+         \sstitem
+          \htmlref{astGetCell}{astGetCell}: Identify the next cell included in a Moc
+
+         \sstitem
+          \htmlref{astGetMocData}{astGetMocData}: Get the FITS binary table data describing a Moc
+
+         \sstitem
+          \htmlref{astGetMocHeader}{astGetMocHeader}: Get the FITS binary table headers describing a Moc
+
+         \sstitem
+          \htmlref{astGetMocString}{astGetMocString}: Get the JSON or string-encoded form of a Moc
+
+         \sstitem
+          \htmlref{astTestCell}{astTestCell}: Test if a single HEALPix cell is included in a Moc
+      }
+   }
+}
+\sstroutine{
+   MocChan
+}{
+   I/O Channel for textual representations of Mocs
+}{
+   \sstdescription{
+      A MocChan is a specialised form of \htmlref{Channel}{Channel} which supports the
+      reading and writing of AST \htmlref{Moc}{Moc} objects as text, using the
+      conventions of the JSON and string encodings described in
+      the IVOA\texttt{'} s MOC recommendation, version 1.1. Writing a Moc
+      to a MocChan (using
+      \htmlref{astWrite}{astWrite}) will, if the Moc is suitable, generate a
+      textual description of that Moc, and reading from a MocChan will
+      create a new Moc from its textual description. See the Moc class
+      for further information.
+
+      Normally, when you use a MocChan, you should provide \texttt{"} source\texttt{"}
+      and \texttt{"} sink\texttt{"}  functions which connect it to an external data store
+      by reading and writing the resulting text. These functions
+      should perform any conversions needed between external character
+      encodings and the internal ASCII encoding. If no such functions
+      are supplied, a Channel will read from standard input and write
+      to standard output.
+
+      Alternatively, a MocChan can be told to read or write from
+      specific text files using the \htmlref{SinkFile}{SinkFile} and \htmlref{SourceFile}{SourceFile} attributes,
+      in which case no sink or source function need be supplied.
+   }
+   \sstconstructor{
+      \htmlref{astMocChan}{astMocChan}
+   }
+   \sstdiytopic{
+      Inheritance
+   }{
+      The MocChan class inherits from the Channel class.
+   }
+   \sstdiytopic{
+      Attributes
+   }{
+      In addition to those attributes common to all Channels, every
+      MocChan also has the following attributes:
+
+      \sstitemlist{
+
+         \sstitem
+          \htmlref{MocFormat}{MocFormat}: Whether to use JSON or string format
+
+         \sstitem
+          \htmlref{MocLineLen}{MocLineLen}: Controls output buffer length
+      }
+   }
+   \sstdiytopic{
+      Functions
+   }{
+      The MocChan class does not define any new functions beyond those
+      which are applicable to all Channels.
+   }
+}
+\sstroutine{
    NormMap
 }{
    Normalise coordinates using a supplied Frame
@@ -46631,6 +48235,9 @@ Object             - Base class for all AST Objects
 
          \sstitem
           \htmlref{Style(element)}{Style(element)}: Line style for a Plot element
+
+         \sstitem
+          \htmlref{TextGapType}{TextGapType}: Controls interpretation of TextLabGap and \htmlref{TitleGap}{TitleGap}
 
          \sstitem
           \htmlref{TextLab(axis)}{TextLab(axis)}: Draw descriptive axis labels for a Plot?
@@ -47276,7 +48883,7 @@ Object             - Base class for all AST Objects
       \sstitemlist{
 
          \sstitem
-          \htmlref{astGetRegionBounds}{astGetRegionBounds}: Get the bounds of a Region
+          \htmlref{astGetRegionBounds}{astGetRegionBounds}: Get the bounds of a box containing a Region
 
          \sstitem
           \htmlref{astGetRegionFrame}{astGetRegionFrame}: Get a copy of the Frame represent by a Region
@@ -47292,6 +48899,9 @@ Object             - Base class for all AST Objects
 
          \sstitem
           \htmlref{astGetUnc}{astGetUnc}: Obtain uncertainty information from a Region
+
+         \sstitem
+          \htmlref{astGetRegionDisc}{astGetRegionDisc}: Get the bounds of disc containing a Region
 
          \sstitem
           \htmlref{astMapRegion}{astMapRegion}: Transform a Region into a new coordinate system
@@ -54222,11 +55832,9 @@ Previously, the entire FrameSet was stored as the Mapping.
 
 \end{enumerate}
 
-\subsection{\xlabel{changes}\xlabel{list_of_most_recent_changes}Changes
-Introduced in V8.6.3}
-The following describes the most significant changes which have
-occurred in the AST library between versions V8.6.2 and V8.6.3 (the
-current version):
+\subsection{Changes Introduced in V8.6.3}
+The following describes the most significant changes which
+occurred in the AST library between versions V8.6.2 and V8.6.3:
 
 \begin{enumerate}
 
@@ -54241,6 +55849,46 @@ distortion scheme has been improved.
 
 \item The astRebinSeq method of the Mapping class can now use a different
 weight when pasting each separate input data array into the output mosaic.
+
+\end{enumerate}
+
+\subsection{Changes Introduced in V8.7.0}
+The following describes the most significant changes which
+occurred in the AST library between versions V8.6.3 and V8.7.0:
+
+\begin{enumerate}
+
+\item The \htmlref{Region}{Region} class has a new method called \htmlref{astGetRegionDisc}{astGetRegionDisc}, which
+returns the centre and radius of a disc that just encloses a
+2-dimensional Region.
+
+\item A new subclass of Region called ``\htmlref{Moc}{Moc}'' has been added. A Moc
+describes an arbitrary region of the sky in the form of a set of HEALPix
+cells.
+
+\item The \htmlref{Bounded}{Bounded} attribute defined by the Region class is now always
+non-zero for Regions defined within a \htmlref{SkyFrame}{SkyFrame}, regardless of whether the
+Region has been negated. Previously, it was non-zero only if the Region
+had not been negated. Note, this change only affects Regions defined
+within SkyFrames.
+
+\end{enumerate}
+
+\subsection{\xlabel{changes}\xlabel{list_of_most_recent_changes}Changes
+Introduced in V8.7.1}
+The following describes the most significant changes which have
+occurred in the AST library between versions V8.7.0 and V8.7.1 (the
+current version):
+
+\begin{enumerate}
+
+\item The \htmlref{Moc}{Moc} class now supports version 1.1 of the the MOC recommendation.
+This includes new support for string and JSON encoded MOCs. See methods
+\htmlref{astGetMocString}{astGetMocString} and \htmlref{astAddMocString}{astAddMocString} in the Moc class, and also the new
+\htmlref{MocChan}{MocChan} class.
+
+\item The \htmlref{FitsChan}{FitsChan} class will now read FITS-WCS headers that have
+alternate axis descriptions but no primary axis descriptions.
 
 \end{enumerate}
 

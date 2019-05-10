@@ -368,6 +368,7 @@ typedef struct AstWcsMap {
    int *np;                      /* Pointer to array of projection parameter counts */
    struct AstPrjPrm params;      /* WCS structure holding projection
                                     parameters, etc. Defined in proj.h */
+   int loncheck;                 /* Check returned longitude values? */
    int fits_proj;                /* Use as FITS-WCS projection? */
    int tpn_tan;                  /* Include TAN projection in TPN transformation? */
 } AstWcsMap;
@@ -401,6 +402,11 @@ typedef struct AstWcsMapVtab {
    int (* TestFITSProj)( AstWcsMap *, int * );
    void (* ClearFITSProj)( AstWcsMap *, int * );
    void (* SetFITSProj)( AstWcsMap *, int, int * );
+
+   int (* GetLonCheck)( AstWcsMap *, int * );
+   int (* TestLonCheck)( AstWcsMap *, int * );
+   void (* ClearLonCheck)( AstWcsMap *, int * );
+   void (* SetLonCheck)( AstWcsMap *, int, int * );
 
    int (* GetTPNTan)( AstWcsMap *, int * );
    int (* TestTPNTan)( AstWcsMap *, int * );
@@ -478,6 +484,11 @@ void astInitWcsMapGlobals_( AstWcsMapGlobals * );
    void astClearFITSProj_( AstWcsMap *, int * );
    void astSetFITSProj_( AstWcsMap *, int, int * );
 
+   int astGetLonCheck_( AstWcsMap *, int * );
+   int astTestLonCheck_( AstWcsMap *, int * );
+   void astClearLonCheck_( AstWcsMap *, int * );
+   void astSetLonCheck_( AstWcsMap *, int, int * );
+
    int astGetTPNTan_( AstWcsMap *, int * );
    int astTestTPNTan_( AstWcsMap *, int * );
    void astClearTPNTan_( AstWcsMap *, int * );
@@ -554,6 +565,15 @@ astINVOKE(V,astGetFITSProj_(astCheckWcsMap(this),STATUS_PTR))
 astINVOKE(V,astSetFITSProj_(astCheckWcsMap(this),value,STATUS_PTR))
 #define astTestFITSProj(this) \
 astINVOKE(V,astTestFITSProj_(astCheckWcsMap(this),STATUS_PTR))
+
+#define astClearLonCheck(this) \
+astINVOKE(V,astClearLonCheck_(astCheckWcsMap(this),STATUS_PTR))
+#define astGetLonCheck(this) \
+astINVOKE(V,astGetLonCheck_(astCheckWcsMap(this),STATUS_PTR))
+#define astSetLonCheck(this,value) \
+astINVOKE(V,astSetLonCheck_(astCheckWcsMap(this),value,STATUS_PTR))
+#define astTestLonCheck(this) \
+astINVOKE(V,astTestLonCheck_(astCheckWcsMap(this),STATUS_PTR))
 
 #define astClearTPNTan(this) \
 astINVOKE(V,astClearTPNTan_(astCheckWcsMap(this),STATUS_PTR))

@@ -4443,7 +4443,7 @@ f     function is invoked with STATUS set to an error value, or if it
    if ( !astOK ) return NULL;
 
 /* Obtain and validate a pointer to the SpecFrame structures provided. */
-   sfrm = specfrm_void ? astCheckSpecFrame( astMakePointer( specfrm_void ) ) : NULL;
+   sfrm = specfrm_void ? astVerifySpecFrame( astMakePointer( specfrm_void ) ) : NULL;
 
 /* Initialise the FluxFrame, allocating memory and initialising the virtual
    function table as well if necessary. */

@@ -6523,6 +6523,14 @@ f     - A value of .FALSE.
 *     will be returned if this function is invoked
 *     with the global error status set, or if it should fail for any
 *     reason.
+*     - If all tested positions within the supplied box generate bad
+*     output positions, then the returned function value will be
+c     zero.
+f     .FALSE.
+*     However, the returned coefficients will represent a unit
+*     transformation, except that the constant term for each output
+*     will be set to AST__BAD.
+
 *--
 
 *  Implementation Deficiencies:
@@ -6888,6 +6896,25 @@ f     - A value of .FALSE.
          pset_out_t = astAnnul( pset_out_t );
       }
       pset_in_t = astAnnul( pset_in_t );
+
+/* If all Mapping outputs generate bad values, return the coefficients of
+   a unit transformation, but put a bad value into the constant term for each
+   output. */
+   } else if( astOK ){
+      grad = fit + ndim_out;
+      zero = fit;
+
+      ii = 0;
+      for ( coord_out = 0; coord_out < ndim_out; coord_out++ ) {
+         for ( coord_in = 0; coord_in < ndim_in; coord_in++ ) {
+            if ( coord_out == coord_in ) {
+               grad[ ii++ ] = 1.0;
+            } else {
+               grad[ ii++ ] = 0.0;
+            }
+         }
+         zero[ coord_out ] = AST__BAD;
+      }
    }
 
 /* If an error occurred, or the Mapping was found to be non-linear,
@@ -12926,11 +12953,11 @@ f     RESULT = AST_REMOVEREGIONS( THIS, STATUS )
 *  Description:
 *     This function searches the suppliedMapping (which may be a
 *     compound Mapping such as a CmpMap) for any component Mappings
-*     that are instances of the AST Region class. It then creates a new
-*     Mapping from which all Regions have been removed. If a Region
-*     cannot simply be removed (for instance, if it is a component of a
-*     parallel CmpMap), then it is replaced with an equivalent UnitMap
-*     in the returned Mapping.
+*     that are instances of the AST Region class. It then creates
+*     a new Mapping from which all Regions have been removed. If
+*     a Region cannot simply be removed (for instance, if it is a
+*     component of a parallel CmpMap), then it is replaced with an
+*     equivalent UnitMap in the returned Mapping.
 
 *  Parameters:
 c     this
@@ -12946,15 +12973,15 @@ f     AST_REMOVEREGIONS = INTEGER
 
 *  Applicability:
 *     CmpFrame
-*        If the supplied Mapping is a CmpFrame, any component Frames that
-*        are instances of the Region class are replaced by the equivalent
-*        Frame.
+*        If the supplied Mapping is a CmpFrame, any component Frames
+*        that are instances of the Region class are replaced by the
+*        equivalent Frame.
 *     FrameSet
 *        If the supplied Mapping is a FrameSet, the returned Mapping
-*        will be a copy of the supplied FrameSet in which Regions have
-*        been removed from all the inter-Frame Mappings, and any Frames
-*        which are instances of the Region class are repalced by the
-*        equivalent Frame.
+*        will be a copy of the supplied FrameSet in which Regions
+*        have been removed from all the inter-Frame Mappings, and any
+*        Frames which are instances of the Region class are replaced by
+*        the equivalent Frame.
 *     Mapping
 *        This function applies to all Mappings.
 *     Region
@@ -12962,8 +12989,8 @@ f     AST_REMOVEREGIONS = INTEGER
 *        be the equivalent Frame.
 
 *  Notes:
-*     - This function can safely be applied even to Mappings which
-*     contain no Regions. If no Regions are found, it
+*     - This function can safely be applied even to Mappings
+*     which contain no Regions. If no Regions are found, it
 c     behaves exactly like astClone and returns a pointer to the
 f     behaves exactly like AST_CLONE and returns a pointer to the
 *     original Mapping.

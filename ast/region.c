@@ -107,8 +107,8 @@ c     following functions may also be applied to all Regions:
 f     In addition to those routines applicable to all Frames, the
 f     following routines may also be applied to all Regions:
 *
-c     - astGetRegionBounds: Get the bounds of a Region
-f     - AST_GETREGIONBOUNDS: Get the bounds of a Region
+c     - astGetRegionBounds: Get the bounds of a box containing a Region
+f     - AST_GETREGIONBOUNDS: Get the bounds of a box containing a Region
 c     - astGetRegionFrame: Get a copy of the Frame represent by a Region
 f     - AST_GETREGIONFRAME: Get a copy of the Frame represent by a Region
 c     - astGetRegionFrameSet: Get a copy of the Frameset encapsulated by a Region
@@ -118,6 +118,8 @@ f     - AST_GETREGIONMESH: Get a mesh of points covering a Region
 c     - astGetRegionPoints: Get the positions that define a Region
 f     - AST_GETREGIONPOINTS: Get the positions that define a Region
 c     - astGetUnc: Obtain uncertainty information from a Region
+c     - astGetRegionDisc: Get the bounds of disc containing a Region
+f     - AST_GETREGIONDISC: Get the bounds of disc containing a Region
 f     - AST_GETUNC: Obtain uncertainty information from a Region
 c     - astMapRegion: Transform a Region into a new coordinate system
 f     - AST_MAPREGION: Transform a Region into a new coordinate system
@@ -232,13 +234,25 @@ f     - AST_SHOWMESH: Display a mesh of points on the surface of a Region
 *     1-DEC-2016 (DSB):
 *        Changed MapRegion to remove any unnecessary base frame axes in
 *        the returned Region.
+*     15-NOV-2018 (DSB):
+*        Use error code AST__NOIMP instead of AST__INTER when reporting
+*        an error about an abstract method not being implemented.
+*     4-DEC-2018 (DSB):
+*        Change GetBounded so that Regions defined within SkyFrames are
+*        always bounded, whether negated or not.
+*     11-DEC-2018 (DSB):
+*        Add astGetRegionDisc.
+*     16-JAN-2019 (DSB):
+*        Change Conv() so that it aligns in the current Frame of "to". Without this, 
+*        it is possible for uncertainty regions to be mapped incorrectly into the 
+*        frame of the new region when creating new regions.
 *class--
 
 *  Implementation Notes:
-*     - All sub-classes must over-ride the following abstract methods declared
-*     in this class: astRegBaseBox, astRegBaseMesh, astRegPins, astRegCentre.
-*     They must also extend the astTransform method. In addition they should
-*     usually extend astSimplify.
+*     - All sub-classes must over-ride the following abstract methods
+*     declared in this class: astRegBaseBox, astRegBaseMesh, astRegPins,
+*     astRegTrace. They must also extend the astTransform method. In addition
+*     they should usually extend astSimplify and astRegCentre.
 
 */
 
@@ -800,11 +814,13 @@ static int Test##attribute( AstFrame *this_frame, int axis, int *status ) { \
 #include "permmap.h"             /* Coordinate permutation Mappings */
 #include "cmpmap.h"              /* Compound Mappings */
 #include "frame.h"               /* Parent Frame class */
+#include "skyframe.h"            /* Celestial coordinate frames */
 #include "frameset.h"            /* Interconnected coordinate systems */
 #include "region.h"              /* Interface definition for this class */
 #include "circle.h"              /* Circular regions */
 #include "box.h"                 /* Box regions */
 #include "cmpregion.h"           /* Compound regions */
+#include "wcsmap.h"              /* For AST__DPI */
 #include "ellipse.h"             /* Elliptical regions */
 #include "pointset.h"            /* Sets of points */
 #include "globals.h"             /* Thread-safe global data access */
@@ -955,6 +971,7 @@ static void GetRegionBounds( AstRegion *, double *, double *, int * );
 static void GetRegionBounds2( AstRegion *, double *, double *, int * );
 static void GetRegionMesh( AstRegion *, int, int, int, int *, double *, int * );
 static void GetRegionPoints( AstRegion *, int, int, int *, double *, int * );
+static void GetRegionDisc( AstRegion *, double[2], double *, int * );
 static void Intersect( AstFrame *, const double[2], const double[2], const double[2], const double[2], double[2], int * );
 static void LineOffset( AstFrame *, AstLineDef *, double, double, double[2], int * );
 static void MatchAxes( AstFrame *, AstFrame *, int *, int * );
@@ -2288,6 +2305,8 @@ static AstFrameSet *Conv( AstFrameSet *from, AstFrameSet *to, int *status ){
 *     This function provides a convenient interface for astConvert.
 *     It is like astConvert except it does not alter the base Frames of
 *     the supplied FrameSets and does not require a Domain list.
+*
+*     It aligns in the current Frame of "to".
 
 *  Parameters:
 *     from
@@ -2304,6 +2323,7 @@ static AstFrameSet *Conv( AstFrameSet *from, AstFrameSet *to, int *status ){
 
 /* Local Variables: */
    AstFrameSet *result;        /* FrameSet to return */
+   const char *dom;            /* Domain in which to align */
    int from_base;              /* Index of original base Frame in "from" */
    int to_base;                /* Index of original base Frame in "to" */
 
@@ -2314,8 +2334,11 @@ static AstFrameSet *Conv( AstFrameSet *from, AstFrameSet *to, int *status ){
    to_base = astGetBase( to );
    from_base = astGetBase( from );
 
+/* Get the domain of the currentFrame of "to". */
+   dom = astGetDomain( to );
+
 /* Invoke astConvert. */
-   result = astConvert( from, to, "" );
+   result = astConvert( from, to, dom );
 
 /* Re-instate original base Frames. */
    astSetBase( to, to_base );
@@ -3339,10 +3362,27 @@ static int GetBounded( AstRegion *this, int *status ) {
 *-
 */
 
+/* Local Variables: */
+   int result;
+   AstFrame *bfrm;
+
+/* Check inherited status */
+   if( !astOK ) return 0;
+
 /* For Regions which are defined by one or more closed curves such as Circles,
    Boxes, etc, the Region is bounded so long as it has not been negated.
-   Classes for which this is not true should over-ride this implementation. */
-   return !astGetNegated( this );
+   Classes for which this is not true should over-ride this implementation.
+   Note, Regions defined within SkyFrames (i.e. on a sphere) are always
+   bounded, since a finite region has a finite negation. */
+   bfrm = astGetFrame( this->frameset, AST__BASE );
+   if( astIsASkyFrame( bfrm ) ) {
+      result = 1;
+   } else {
+      result = !astGetNegated( this );
+   }
+   bfrm = astAnnul( bfrm );
+
+   return result;
 }
 
 static AstAxis *GetAxis( AstFrame *this_frame, int axis, int *status ) {
@@ -4575,6 +4615,7 @@ void astInitRegionVtab_(  AstRegionVtab *vtab, const char *name, int *status ) {
    vtab->GetRegionBounds2 = GetRegionBounds2;
    vtab->GetRegionMesh = GetRegionMesh;
    vtab->GetRegionPoints = GetRegionPoints;
+   vtab->GetRegionDisc = GetRegionDisc;
    vtab->RegOverlay = RegOverlay;
    vtab->RegFrame = RegFrame;
    vtab->RegDummyFS = RegDummyFS;
@@ -6852,11 +6893,12 @@ static int OverlapX( AstRegion *that, AstRegion *this, int *status ){
    AstMapping *map;               /* Mapping form "reg2" current to "reg1" base */
    AstMapping *map_reg1;          /* Pointer to current->base Mapping in "reg1" */
    AstPointSet *ps1;              /* Mesh covering second Region */
+   AstPointSet *ps2;              /* Mesh covering second Region */
    AstPointSet *ps3;              /* Mesh covering first Region */
    AstPointSet *ps4;              /* Mesh covering first Region */
-   AstPointSet *ps2;              /* Mesh covering second Region */
-   AstPointSet *reg2_mesh;        /* Mesh covering second Region */
+   AstPointSet *ps5;              /* Another PointSet */
    AstPointSet *reg1_mesh;        /* Mesh covering first Region */
+   AstPointSet *reg2_mesh;        /* Mesh covering second Region */
    AstPointSet *reg2_submesh;     /* Second Region mesh minus boundary points */
    AstRegion *reg1;               /* Region to use as the first Region */
    AstRegion *reg2;               /* Region to use as the second Region */
@@ -6865,6 +6907,7 @@ static int OverlapX( AstRegion *that, AstRegion *this, int *status ){
    double **ptr1;                 /* Pointer to mesh axis values */
    double **ptr;                  /* Pointer to pointset data */
    double *p;                     /* Pointer to next axis value */
+   double axsum;                  /* Sum of axis values */
    int *mask;                     /* Mask identifying common boundary points */
    int allbad;                    /* Were all axis values bad? */
    int allgood;                   /* Were all axis values good? */
@@ -6878,13 +6921,15 @@ static int OverlapX( AstRegion *that, AstRegion *this, int *status ){
    int i;                         /* Mesh axis index */
    int iax;                       /* Axis index */
    int inv0;                      /* Original FrameSet Invert flag */
+   int inside1;                   /* The position is inside reg1? */
+   int inside2;                   /* The position is inside reg2? */
    int ip;                        /* Index of point */
    int j;                         /* Mesh point index */
    int nc;                        /* Number of axis values per point */
    int np;                        /* Number of points in mesh */
-   int result;                    /* Value to return */
    int reg1_neg;                  /* Was "reg1" negated to make it bounded? */
    int reg2_neg;                  /* Was "reg2" negated to make it bounded? */
+   int result;                    /* Value to return */
    int that_neg;                  /* Was "that" negated to make it bounded? */
    int this_neg;                  /* Was "this" negated to make it bounded? */
    int touch;                     /* Do the Regions touch? */
@@ -7090,12 +7135,65 @@ L1:
    the first region is bounded. */
       if( astRegPins( reg1, ps1, unc1, &mask ) && good ) {
 
-/* If the boundaries are equivalent, the Regions are either identical or
-   are mutually exclusive. To distinguish between these cases, we
-   looked at the Bounded attributes. If the Bounded attribute is the same
-   for both Regions then they are identical, otherwise they are mutually
-   exclusive. */
-         result = ( ( !reg1_neg && bnd1 ) == ( !reg2_neg && bnd2 ) ) ? 5 : 6;
+/* If the boundaries are equivalent, the Regions are either identical
+   or are mutually exclusive. To distinguish between these cases, we
+   transform an aritrary position (the mean of the pin positions) using
+   both Regions - if it's inside both or outside both, then the Regions are
+   identical, otherwise they are mutually exclusive. Note, we cannot just
+   check the value of the Bounded attribute since both the region and its
+   negation will be bounded if the region is defined on the sky. */
+         ps4 = astPointSet( 1, nc, " ", status );
+         ptr = astGetPoints( ps4 );
+         if( astOK ) {
+
+/* Get the average of the pin positions. */
+            for( i = 0; i < nc; i++ ) {
+               good = 0;
+               axsum = 0.0;
+               for( j = 0; j < np; j++ ) {
+                  if( ptr1[ i ][ j ] != AST__BAD ) {
+                     good++;
+                     axsum += ptr1[ i ][ j ];
+                  }
+               }
+               if( good ) {
+                  ptr[ i ][ 0 ] = axsum/good;
+               } else {
+                  ptr[ i ][ 0 ] = AST__BAD;
+               }
+            }
+         }
+
+/* Transform from the base frame of reg1 to the current frame of reg1,
+   then transform using reg1 as a Mapping to determine if it is inside
+   reg1. */
+         ps3 = astTransform( map_reg1, ps4, 0, NULL );
+         ps5 = astTransform( reg1, ps3, 0, NULL );
+         ptr = astGetPoints( ps5 );
+         inside1 = astOK ? ( ptr[ 0 ][ 0 ] != AST__BAD ) : 0;
+         ps3 = astAnnul( ps3 );
+         ps5 = astAnnul( ps5 );
+
+/* Transform from the base frame of reg1 to the current frame of reg2,
+   then transform using reg2 as a Mapping to determine if it is inside
+   reg2. */
+         ps3 = astTransform( map, ps4, 0, NULL );
+         ps5 = astTransform( reg2, ps3, 0, NULL );
+         ptr = astGetPoints( ps5 );
+         inside2 = astOK ? ( ptr[ 0 ][ 0 ] != AST__BAD ) : 0;
+         ps3 = astAnnul( ps3 );
+         ps5 = astAnnul( ps5 );
+
+/* Free the remaining PointSet. */
+         ps4 = astAnnul( ps4 );
+
+/* Swap the inside flags if the regions were negated. */
+         if( reg1_neg ) inside1 = !inside1;
+         if( reg2_neg ) inside2 = !inside2;
+
+/* If both points are inside or both points are outside, reg1 and reg2
+   are equivalent, otherwise they are mutually exclusive. */
+         result = ( inside1 == inside2 ) ? 5 : 6;
 
 /* If the boundaries of the two Regions are not equivalent. */
       } else {
@@ -7668,7 +7766,7 @@ static void RegBaseBox( AstRegion *this, double *lbnd, double *ubnd, int *status
 
 /* This abstract implementation simply reports an error. All sub-classes of
    Region should over-ride this to return appropriate values. */
-   astError( AST__INTER, "astRegBaseBox(%s): The %s class does not implement "
+   astError( AST__NOIMP, "astRegBaseBox(%s): The %s class does not implement "
              "the astRegBaseBox method inherited from the Region class "
              "(internal AST programming error).", status, astGetClass( this ),
              astGetClass( this ) );
@@ -8035,7 +8133,7 @@ static AstPointSet *RegBaseMesh( AstRegion *this, int *status ){
 
 /* This abstract method must be over-ridden by each concrete sub-class.
    Report an error if this null imlementation is called.*/
-   astError( AST__INTER, "astRegBaseMesh(%s): The %s class does not implement "
+   astError( AST__NOIMP, "astRegBaseMesh(%s): The %s class does not implement "
              "the astRegBaseMesh method inherited from the Region class "
              "(internal AST programming error).", status, astGetClass( this ),
              astGetClass( this ) );
@@ -8219,7 +8317,7 @@ static double *RegCentre( AstRegion *this, double *cen, double **ptr,
 *    - Any bad (AST__BAD) centre axis values are ignored. That is, the
 *    centre value on such axes is left unchanged.
 *    - Some Region sub-classes do not have a centre. Such classes will report
-*    an AST__INTER error code if this method is called with either "ptr" or
+*    an AST__NOIMP error code if this method is called with either "ptr" or
 *    "cen" not NULL. If "ptr" and "cen" are both NULL, then no error is
 *    reported if this method is invoked on a Region of an unsuitable class,
 *    but NULL is always returned.
@@ -8240,7 +8338,7 @@ static double *RegCentre( AstRegion *this, double *cen, double **ptr,
    which allows the centre to be shifted. Report an error if this null
    imlementation is called to set a new centre. If it is called to
    enquire the current centre, then return a NULL pointer. */
-   if( ptr || cen ) astError( AST__INTER, "astRegCentre(%s): The %s "
+   if( ptr || cen ) astError( AST__NOIMP, "astRegCentre(%s): The %s "
                        "class does not implement the astRegCentre method "
                        "inherited from the Region class (internal AST "
                        "programming error).", status, astGetClass( this ),
@@ -8706,7 +8804,7 @@ static int RegPins( AstRegion *this, AstPointSet *pset, AstRegion *unc,
 
 /* This abstract implementation simply reports an error. All sub-classes of
    Region should over-ride this to return appropriate values. */
-   astError( AST__INTER, "astRegPins(%s): The %s class does not implement "
+   astError( AST__NOIMP, "astRegPins(%s): The %s class does not implement "
              "the astRegPins method inherited from the Region class "
              "(internal AST programming error).", status, astGetClass( this ),
              astGetClass( this ) );
@@ -9033,7 +9131,7 @@ f     This routine
 *     returns the axis values at a mesh of points either covering the
 *     surface (i.e. boundary) of the supplied Region, or filling the
 *     interior (i.e. volume) of the Region. The number of points in
-*     the mesh is approximately equal to the MeshSize attribute.
+*     the mesh is determined by the MeshSize attribute.
 
 *  Parameters:
 c     this
@@ -9387,6 +9485,231 @@ f        AST_DECOMPOSE
 /* Free resources. */
       pset = astAnnul( pset );
 
+   }
+}
+
+static void GetRegionDisc( AstRegion *this, double centre[2], double *radius,
+                           int *status ){
+/*
+*++
+*  Name:
+c     astGetRegionDisc
+f     AST_GETREGIONDisc
+
+*  Purpose:
+*     Returns the centre and radius of a disc containing a 2D Region.
+
+*  Type:
+*     Public virtual function.
+
+*  Synopsis:
+c     #include "region.h"
+c     void GetRegionDisc( AstRegion *this, double centre[3],
+c                         double *radius )
+f     CALL AST_GETREGIONDISC( THIS, CENTRE, RADIUS, STATUS )
+
+*  Class Membership:
+*     Region method.
+
+*  Description:
+c     This function
+f     This routine
+*     returns the centre and radius of a disce that just encloses the
+*     supplied 2-dimensional Region. The centre is returned as a pair
+*     of axis values within the Frame represented by the Region. The
+*     value of the Negated attribute is ignored (i.e. it is assumed
+*     that the Region has not been negated).
+
+*  Parameters:
+c     this
+f     THIS = INTEGER (Given)
+*        Pointer to the Region.
+c     centre
+f     CENTRE( 2 ) = DOUBLE PRECISION (Returned)
+c        Pointer to a
+f        A
+*        two-element array in which to return the axis values at the centre
+*        of the bounding disc.
+c     radius
+f     RADIUS = DOUBLE PRECISION (Returned)
+c        Pointer to a variable in which to return the
+f        The
+*        radius of the bounding disc, as a geodesic distance within the
+*        Frame represented by the Region. It will be returned holding
+*        AST__BAD If the Region is unbounded.
+f     STATUS = INTEGER (Given and Returned)
+f        The global status.
+
+*  Notes:
+*    - An error is reported if the Region is not 2-dimensional.
+*    - The value of the Negated attribute is ignored (i.e. it is assumed that
+*    the Region has not been negated).
+*    - If the Region is unbounded, the radius will be returned set to
+*    AST__BAD and the supplied centre axis values will be returned unchanged.
+
+*--
+*/
+
+/* Local Variables: */
+   AstPointSet *mesh;
+   double **ptr;
+   double angle;
+   double dist;
+   double dx;
+   double dxmax;
+   double dxmin;
+   double dy;
+   double dymax;
+   double dymin;
+   double point1[ 2 ];
+   double point2[ 2 ];
+   double point3[ 2 ];
+   double point4[ 2 ];
+   int ipoint;
+   int nax;
+   int npoint;
+   int old_neg;
+   int step;
+
+/* Initialise the radius. */
+   *radius = AST__BAD;
+
+/* Check the inherited status. */
+   if( !astOK ) return;
+
+/* Validate */
+   nax = astGetNaxes( this );
+   if( nax != 2 ) {
+      astError( AST__INVAR, "astGetRegionDisc(%s): Supplied %s is not "
+                "2-dimensional.", status, astGetClass( this ),
+                astGetClass( this ));
+   }
+
+/* Temporarily set the Negated flag to zero. */
+   if( astTestNegated( this ) ) {
+      old_neg = astGetNegated( this );
+   } else {
+      old_neg = -100;
+   }
+   astSetNegated( this, 0 );
+
+/* If the Region is not bounded, return AST__BAD as the radius. */
+   if( astGetBounded( this ) ){
+
+/* Get a mesh of points over the boundary of the Region within the
+   current Frame. */
+      mesh = astRegMesh( this );
+      ptr = astGetPoints( mesh );
+      if( astOK ) {
+
+/* Since the Region may be defined on the sky, we cannot just find the
+   centroid of the mesh points since the axes may not have a flat
+   geometry. Instead we form a local coordinate system by choosing an
+   arbitrary mesh point as the origin, and then defining a basis vector
+   joining this origin with another arbitrary mesh point. The local
+   coordinate system is then distance from the origin parallel and
+   perpendicular to the basis vector. This is not necessarily a flat
+   system, but it should allow us to find the centre of the disk by
+   taking the centroid of the mesh points (in the local coordinate
+   system). First choose the origin of the local system - the first mesh
+   point. */
+         point1[ 0 ] = ptr[ 0 ][ 0 ];
+         point1[ 1 ] = ptr[ 1 ][ 0 ];
+
+/* Next choose the other end of the basis vector - a point about half way
+   round the boundary */
+         npoint = astGetNpoint( mesh );
+         point2[ 0 ] = ptr[ 0 ][ npoint/2 ];
+         point2[ 1 ] = ptr[ 1 ][ npoint/2 ];
+
+/* Check all these axis values are good. */
+         if( point1[ 0 ] != AST__BAD && point1[ 1 ] != AST__BAD &&
+             point2[ 0 ] != AST__BAD && point2[ 1 ] != AST__BAD ) {
+
+/* No need to use all mesh points (there can be thousands). Choose a step
+   length that gives us about two hundred. */
+            step = ( npoint > 200 ) ? npoint/200 : 1;
+
+/* Loop over 200ish points in the mesh, maintaining the bounding box of
+   the mesh points in the local system. No need to do point 0 since we
+   know it is at (0,0) in the local system. */
+            dxmax = 0.0;
+            dxmin = 0.0;
+            dymax = 0.0;
+            dymin = 0.0;
+            for( ipoint = step; ipoint < npoint; ipoint += step ) {
+
+/* Check the mesh point is good. */
+               point3[ 0 ] = ptr[ 0 ][ ipoint ];
+               point3[ 1 ] = ptr[ 1 ][ ipoint ];
+               if( point3[ 0 ] != AST__BAD && point3[ 1 ] != AST__BAD ) {
+
+/* Resolve the vector from point1 to the current point into two
+   components - parallel and perpendicular to the vector from point1 to
+   point2. */
+                  astResolve( this, point1, point2, point3, point4, &dx, &dy );
+
+/* The dy value returned by astResolve is always positive. Assign it a
+   sign depending on the sign of the angle at point4. */
+                  if( astAngle( this, point1, point4, point3 ) < 0.0 ) dy = -dy;
+
+/* Record the max and min values of the two components. */
+                  dxmax = astMAX( dx, dxmax );
+                  dxmin = astMIN( dx, dxmin );
+                  dymax = astMAX( dy, dymax );
+                  dymin = astMIN( dy, dymin );
+               }
+            }
+
+/* The centre of the bounding box is a good enough approximation to the
+   centre of the bounding disc. Get the centre in the local system. */
+            dx = 0.5*( dxmax + dxmin );
+            dy = 0.5*( dymax + dymin );
+
+/* Convert to the system of the Region. First get the Region coords of a
+   point slightly "north" of point1 (go "north" by a distance equal to
+   0.001 of the distance along the basis vector used above). */
+            dist = astDistance( this, point1, point2 );
+            point3[ 0 ] = point1[ 0 ];
+            point3[ 1 ] = point1[ 1 ] + 0.001*dist;
+
+/* Find the angle from "north" to the basis vector. */
+            angle = astAngle( this, point3, point1, point2 );
+
+/* Offset away from point1 at the above angle by the local x value of the
+   centre. */
+            angle = astOffset2( this, point1, angle, dx, point3 );
+
+/* Rotate by 90 degrees and offset away from the above point (point3)
+   by the local y value of the centre. This gives us the centre in Region
+   coordinates. */
+            (void) astOffset2( this, point3, angle - AST__DPIBY2, dy, centre );
+
+/* Now loop round all good points on the mesh and find the maximum distance
+   from this centre to any mesh point. */
+            *radius = 0.0;
+            for( ipoint = 0; ipoint < npoint; ipoint++ ) {
+               point3[ 0 ] = ptr[ 0 ][ ipoint ];
+               point3[ 1 ] = ptr[ 1 ][ ipoint ];
+               dist = astDistance( this, centre, point3 );
+               if( dist != AST__BAD ) *radius = astMAX( *radius, dist );
+            }
+
+/* Increase the radius by a very small amount to account for possible
+   rounding errors. */
+            *radius *= 1.000001;
+         }
+      }
+
+/* Free resources. */
+      mesh = astAnnul( mesh );
+   }
+
+/* Re-instate the orignal value of the Negated flag. */
+   if( old_neg == -100 ) {
+      astClearNegated( this );
+   } else {
+      astSetNegated( this, old_neg );
    }
 }
 
@@ -10365,7 +10688,7 @@ f        The global status.
 
 /* Check an uncertainty Region was supplied, and is of a usable class
    (i.e. a class which can be re-centred). */
-   cen0 = unc ? astRegCentre( unc, NULL, NULL, 0, 0 ) : NULL;
+   cen0 = unc ? astRegCentre( unc, NULL, NULL, 0, AST__CURRENT ) : NULL;
    if( cen0 ) {
       cen0 = astFree( cen0 );
 
@@ -11965,8 +12288,8 @@ static int ValidateSystem( AstFrame *this_frame, AstSystemType system, const cha
 *     attribute controls what happens when the coordinate system
 *     represented by a Region is changed in this way.
 *
-*     If Adaptive is non-zero (the default), then area represented by the
-*     Region adapts to the new coordinate system. That is, the numerical
+*     If Adaptive is non-zero (the default), then the area represented by
+*     the Region adapts to the new coordinate system. That is, the numerical
 *     values which define the area represented by the Region are changed
 *     by mapping them from the old coordinate system into the new coordinate
 *     system. Thus the Region continues to represent the same physical
@@ -11990,7 +12313,7 @@ static int ValidateSystem( AstFrame *this_frame, AstSystemType system, const cha
 *     had been zero, then the numerical values would not have been changed,
 *     resulting in the final Region representing 2000 nm to 4000 nm.
 *
-*     Setting Adaptive to zero can be necessary if you want correct
+*     Setting Adaptive to zero can be necessary if you need to correct
 *     inaccurate attribute settings in an existing Region. For instance,
 *     when creating a Region you may not know what Epoch value to use, so
 *     you would leave Epoch unset resulting in some default value being used.
@@ -12226,6 +12549,14 @@ f     AST_GETREGIONMESH
 *     CmpRegion
 *        The default MeshSize for a CmpRegion is the MeshSize of its
 *        first component Region.
+*     Moc
+*        The MeshSize attribute is ignored when forming a mesh covering
+*        the boundary of a Moc. Instead, the mesh will include a point
+*        for the exterior corners of every HEALPix cell (at the order
+*        specified by attribute MaxOrder) that touches the boundary. Note,
+*        this applies only to meshes covering the boundary of the Moc -
+*        the MeshSize attribute is used as normal when forming a mesh
+*        covering the area of the Moc.
 *     Stc
 *        The default MeshSize for an Stc is the MeshSize of its
 *        encapsulated Region.
@@ -12276,6 +12607,11 @@ astMAKE_GET(Region,MeshSize,int,0,( ( this->meshsize == -INT_MAX)?((astGetNaxes(
 *     Stc
 *        The default Closed value for an Stc is the Closed value of its
 *        encapsulated Region.
+*     Moc
+*        The Moc class ignored this attribute, and the behaviour for
+*        boundary points is undefined (i.e. they may be inside or
+*        outside the Region, depending on the position being tested and
+*        the nature of the Moc).
 *att--
 */
 /* This is a boolean value (0 or 1) with a value of -INT_MAX when
@@ -13265,6 +13601,10 @@ void astGetRegionPoints_( AstRegion *this, int maxpoint, int maxcoord,
    if ( !astOK ) return;
    (**astMEMBER(this,Region,GetRegionPoints))( this, maxpoint, maxcoord,
                                                npoint, points, status );
+}
+void astGetRegionDisc_( AstRegion *this, double centre[2], double *radius, int *status ){
+   if ( !astOK ) return;
+   (**astMEMBER(this,Region,GetRegionDisc))( this, centre, radius, status );
 }
 void astShowMesh_( AstRegion *this, int format, const char *ttl, int *status ){
    if ( !astOK ) return;

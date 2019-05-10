@@ -371,7 +371,7 @@
 #define AST__THREADSAFE @THREADS@
 
 #if defined(astCLASS )
-#define AST__GETATTRIB_BUFF_LEN 50 /* Length of string returned by GetAttrib. */
+#define AST__GETATTRIB_BUFF_LEN 200 /* Length of string returned by GetAttrib. */
 #define AST__ASTGETC_MAX_STRINGS 50 /* Number of string values to buffer within astGetC */
 
 /* Values supplied to astManageLock */

@@ -33,14 +33,15 @@
 #define MAP_FILE 0
 #endif /* !MAP_FILE */
 
+#ifdef HAVE_ZLIB
+#include "zlib.h"
+
 #ifdef Z_U4
    typedef Z_U4 z_crc_t;
 #else
    typedef unsigned long z_crc_t;
 #endif
 
-#ifdef HAVE_ZLIB
-#include "zlib.h"
 #include "crypt.h"
 
 #ifdef CFG_RUNTIME_DLLFILE

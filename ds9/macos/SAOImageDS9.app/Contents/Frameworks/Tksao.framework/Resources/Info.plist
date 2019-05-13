@@ -15,7 +15,7 @@
 	<string>Tk</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Tksao 8.0,
-Copyright 1999-2018
+Copyright 1999-2019
 Smithsonian Astrophysical Observatory"</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.sao.tksao</string>

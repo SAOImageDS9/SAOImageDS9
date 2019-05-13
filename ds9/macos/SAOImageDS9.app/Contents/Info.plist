@@ -36,7 +36,7 @@
 	<string>ds9</string>
 	<key>CFBundleGetInfoString</key>
 	<string>"SAOImageDS9 8.1b1
-Copyright 1999-2018
+Copyright 1999-2019
 Smithsonian Astrophysical Observatory"</string>
 	<key>CFBundleIconFile</key>
 	<string>App.icns</string>

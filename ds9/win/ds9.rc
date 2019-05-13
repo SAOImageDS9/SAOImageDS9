@@ -19,7 +19,7 @@ BEGIN
             VALUE "OriginalFilename", "ds9.exe"
             VALUE "CompanyName", "Smithsonian Astrophysical Observatory"
             VALUE "FileVersion", VV
-            VALUE "LegalCopyright", "Copyright 1999-2018 by Smithsonian Astrophysical Observatory"
+            VALUE "LegalCopyright", "Copyright 1999-2019 by Smithsonian Astrophysical Observatory"
             VALUE "ProductName", "SAOImageDS9"
             VALUE "ProductVersion", VV
         END

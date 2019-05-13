@@ -33,6 +33,7 @@
 #define MAP_FILE 0
 #endif /* !MAP_FILE */
 
+typedef unsigned long z_crc_t;
 #ifdef HAVE_ZLIB
 #include "zlib.h"
 #include "crypt.h"
@@ -296,12 +297,12 @@ static const char pwrot[16] = {
 
 /*
  * Table to compute CRC32.
- */
 #ifdef Z_U4
    typedef Z_U4 z_crc_t;
 #else
    typedef unsigned long z_crc_t;
 #endif
+ */
 
 static const z_crc_t crc32tab[256] = {
     0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419,

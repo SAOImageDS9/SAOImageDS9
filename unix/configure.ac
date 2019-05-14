@@ -52,6 +52,8 @@ case $system in
 	AC_SUBST(TKFLAGS)
 	TLSFLAGS="--with-ssl-dir=/opt/local"
 	AC_SUBST(TLSFLAGS)
+	SSLTARGET=darwin64-x86_64-cc
+	AC_SUBST(SSLTARGET)
 
 	CORES=`sysctl -n "hw.ncpu"`
 	;;

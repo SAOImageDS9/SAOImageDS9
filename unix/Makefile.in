@@ -12,10 +12,9 @@ mandir		= @mandir@
 OS		= @OS@
 ARCH		= @ARCH@
 TKFLAGS		= @TKFLAGS@
+SSLTARGET	= @SSLTARGET@
 TLSFLAGS	= @TLSFLAGS@
 JOBS		= @CORES@
-
-TLSFLAGS	="CFLAGS=-DNO_IDEA=1 -DNO_RC5=1" --with-ssl-dir=$(prefix)/openssl
 
 include ./make.include
 
@@ -109,7 +108,7 @@ openssl/Makefile:
 	@echo ""
 	@echo "*** $@ ***"
 	cd openssl; \
-	./config --prefix=$(prefix)
+	./config $(SSLTARGET) --prefix=$(prefix)
 
 #--------------------------clean
 

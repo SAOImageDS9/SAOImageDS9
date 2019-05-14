@@ -15,6 +15,8 @@ TKFLAGS		= @TKFLAGS@
 TLSFLAGS	= @TLSFLAGS@
 JOBS		= @CORES@
 
+TLSFLAGS	="CFLAGS=-DNO_IDEA=1 -DNO_RC5=1" --with-ssl-dir=$(prefix)/openssl
+
 include ./make.include
 
 WITHTCL 	= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/unix
@@ -23,9 +25,10 @@ CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 #--------------------------build
 
-.PHONY	: saods9 tcl tk
+.PHONY	: saods9 tcl tk openssl
 
 saods9	: dirs tcl tk \
+	openssl \
 	tcliis tclsignal \
 	tclzipfs tls tclxml xpa \
 	tkblt tktable tkimg \
@@ -42,7 +45,7 @@ tcl$(TCL_VERSION)/unix/Makefile :
 	@echo "*** $@ ***"
 	cd tcl$(TCL_VERSION)/unix; \
 	./configure \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
+	$(PREFIX) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -57,7 +60,7 @@ tk$(TCL_VERSION)/unix/Makefile :
 	cd tk$(TCL_VERSION)/unix; \
 	./configure \
 	$(TKFLAGS) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
+	$(PREFIX) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -95,9 +98,22 @@ tclsignal/Makefile :
 	$(STD) \
 	$(CACHE)
 
+#--------------------------openssl
+
+openssl	: openssl/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C openssl -j $(JOBS)
+
+openssl/Makefile:
+	@echo ""
+	@echo "*** $@ ***"
+	cd openssl; \
+	./config --prefix=$(prefix)
+
 #--------------------------clean
 
-.PHONY	: tclclean tkclean osclean tclzipfsclean tclsignalclean 
+.PHONY	: tclclean tkclean osclean tclzipfsclean tclsignalclean opensslclean
 
 tclclean :
 	@echo ""
@@ -109,7 +125,7 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/unix clean
 
-osclean : tclzipfsclean tclsignalclean
+osclean : tclzipfsclean tclsignalclean opensslclean
 
 tclzipfsclean:
 	@echo ""
@@ -121,10 +137,15 @@ tclsignalclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tclsignal clean
 
+opensslclean:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C openssl clean
+
 #--------------------------distclean
 
 .PHONY	: tcldistclean tkdistclean
-.PHONY	: osdistclean tclzipfsdistclean tclsignaldistclean 
+.PHONY	: osdistclean tclzipfsdistclean tclsignaldistclean openssldistclean
 
 tcldistclean :
 	@echo ""
@@ -136,7 +157,7 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/unix distclean
 
-osdistclean : tclzipfsdistclean tclsignaldistclean
+osdistclean : tclzipfsdistclean tclsignaldistclean openssldistclean
 
 tclzipfsdistclean:
 	@echo ""
@@ -149,6 +170,12 @@ tclsignaldistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tclsignal distclean
 	rm -f tclsignal/tclsignalConfig.sh
+
+openssldistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C openssl clean
+	rm -f openssl/Makefile
 
 #--------------------------distribution
 

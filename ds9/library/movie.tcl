@@ -13,7 +13,7 @@ proc MovieDef {} {
     set imovie(top) .moviestatus
     set imovie(mb) .moviestatusmb
 
-    set movie(type) mpeg
+    set movie(type) gif
     set movie(action) slice
     set movie(num) 24
     set movie(az,from) 45

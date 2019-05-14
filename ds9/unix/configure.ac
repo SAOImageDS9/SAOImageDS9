@@ -141,13 +141,8 @@ TEA_CONFIG_SYSTEM
 case $system in
     Darwin*)
 	AC_DEFINE([ZIPFILE])
-
-	SSLLIBS="/opt/local/lib/libssl.a /opt/local/lib/libcrypto.a"
-	AC_SUBST(SSLLIBS)
 	;;
     *)
-	AC_CHECK_LIB([crypto],[CRYPTO_new_ex_data])
-	AC_CHECK_LIB([ssl],[TLSv1_1_method])
 	;;
 esac
 

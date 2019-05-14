@@ -12,7 +12,7 @@ mandir		= @mandir@
 OS		= @OS@
 ARCH		= @ARCH@
 TKFLAGS		= @TKFLAGS@
-SSLTARGET	= @SSLTARGET@
+SSLCONFIG	= @SSLCONFIG@
 TLSFLAGS	= @TLSFLAGS@
 JOBS		= @CORES@
 
@@ -108,7 +108,7 @@ openssl/Makefile:
 	@echo ""
 	@echo "*** $@ ***"
 	cd openssl; \
-	./config $(SSLTARGET) --prefix=$(prefix)
+	$(SSLCONFIG) --prefix=$(prefix)
 
 #--------------------------clean
 

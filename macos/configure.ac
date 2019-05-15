@@ -44,9 +44,6 @@ AC_SUBST(ARCH)
 prefix=$ac_pwd
 exec_prefix=$ac_pwd
 
-TLSFLAGS="--with-ssl-dir=/opt/local"
-AC_SUBST(TLSFLAGS)
-
 CORES=`sysctl -n "hw.ncpu"`
 AC_SUBST(CORES)
 

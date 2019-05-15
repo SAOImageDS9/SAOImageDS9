@@ -11,8 +11,9 @@ mandir		= @mandir@
 
 OS		= @OS@
 ARCH		= @ARCH@
-TLSFLAGS	= @TLSFLAGS@
 JOBS		= @CORES@
+
+TLSFLAGS	= --with-ssl-dir=$(prefix)/openssl
 
 include ./make.include
 
@@ -38,9 +39,10 @@ TKFILES = \
 
 #--------------------------build
 
-.PHONY	: saods9 tcl tk tkmacosx
+.PHONY	: saods9 tcl tk tkmacosx openssl
 
 saods9	: dirs tcl tk \
+	openssl \
 	tcliis tclsignal \
 	tls tclxml xpa \
 	tkblt tktable tkimg \
@@ -121,6 +123,19 @@ tclsignal/Makefile :
 	$(STD) \
 	$(CACHE)
 
+#--------------------------openssl
+
+openssl	: openssl/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C openssl -j $(JOBS)
+
+openssl/Makefile:
+	@echo ""
+	@echo "*** $@ ***"
+	cd openssl; \
+	./config --prefix=$(prefix)
+
 #-------------------------- tkmacosx
 
 tkmacosx: tkmacosx/Makefile
@@ -140,7 +155,7 @@ tkmacosx/Makefile :
 
 #--------------------------clean
 
-.PHONY	: tclclean tkclean osclean tclsignalclean tkmacosxclean
+.PHONY	: tclclean tkclean osclean tclsignalclean tkmacosxclean opensslclean
 
 tclclean :
 	@echo ""
@@ -152,7 +167,7 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx clean
 
-osclean : tclsignalclean tkmacosxclean
+osclean : tclsignalclean tkmacosxclean opensslclean
 
 tclsignalclean :
 	@echo ""
@@ -164,9 +179,14 @@ tkmacosxclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmacosx clean
 
+opensslclean:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C openssl clean
+
 #--------------------------distclean
 
-.PHONY	: tcldistclean tkdistclean
+.PHONY	: tcldistclean tkdistclean openssldistclean
 .PHONY	: osdistclean tclsignaldistclean tkmacosxdistclean 
 
 tcldistclean :
@@ -179,7 +199,7 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx distclean
 
-osdistclean : tclsignaldistclean tkmacosxdistclean 
+osdistclean : tclsignaldistclean tkmacosxdistclean  openssldistclean
 
 tclsignaldistclean :
 	@echo ""
@@ -191,6 +211,12 @@ tkmacosxdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmacosx distclean
+
+openssldistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C openssl clean
+	rm -f openssl/Makefile
 
 #--------------------------distribution
 

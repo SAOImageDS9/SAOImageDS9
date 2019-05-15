@@ -66,7 +66,7 @@ TKIMGTMPFILES = \
 .NOTPARALLEL :
 .PHONY	: all dirs ds9 tcliis tclxml tclzipfs tls xpa
 .PHONY	: tkblt tkcon tkhtml1 tkimg tkmpeg tkagif tksao tktable
-.PHONY	: ast funtools
+.PHONY	: ast funtools openssl
 
 all	: saods9
 
@@ -98,6 +98,19 @@ ds9/$(OS)/Makefile :
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)
+
+#--------------------------openssl
+
+openssl	: openssl/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C openssl -j $(JOBS)
+
+openssl/Makefile:
+	@echo ""
+	@echo "*** $@ ***"
+	cd openssl; \
+	$(SSLCONFIG) --prefix=$(prefix)
 
 #-------------------------- tcliis
 
@@ -148,7 +161,8 @@ tls/Makefile :
 	@echo "*** $@ ***"
 	cd tls; \
 	./configure \
-	$(TLSFLAGS) \
+ 	--with-ssl-dir=$(prefix)/openssl \
+	 $(TLSFLAGS) \
 	$(WITHTCL) \
 	$(PREFIX) \
 	$(STD)
@@ -434,13 +448,14 @@ scrub :
 
 .PHONY	: clean
 .PHONY	: dirsclean ds9clean ds9parsersclean localclean
-.PHONY	: tcliisclean
+.PHONY	: opensslclean tcliisclean 
 .PHONY	: tclxmlclean tlsclean
 .PHONY	: tkbltclean tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tkagifclean
 .PHONY	: tksaoclean astclean funtoolsclean tktableclean xpaclean
 
 clean	: tclclean tkclean \
+	opensslclean \
 	tcliisclean \
 	tlsclean tclxmlclean xpaclean \
 	tkbltclean tkconclean tktableclean tkimgclean \
@@ -467,6 +482,11 @@ localclean :
 	@echo ""
 	@echo "*** $@ ***"
 	-rm -f core *~ *#
+
+opensslclean:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C openssl clean
 
 tcliisclean :
 	@echo ""
@@ -541,7 +561,7 @@ xpaclean :
 #-------------------------- distclean
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
-.PHONY	: tcliisdistclean
+.PHONY	: openssldistclean tcliisdistclean 
 .PHONY	: tclxmldistclean tlsdistclean
 .PHONY	: tkbltdistclean tkcondistclean tkhtml1distclean 
 .PHONY	: tkimgdistclean tkmpegdistclean tkagifdistclean 
@@ -549,12 +569,12 @@ xpaclean :
 .PHONY	: tktabledistclean xpadistclean
 
 distclean : tcldistclean tkdistclean \
-	tcliisdistclean tclsignaldistclean \
-	tlsdistclean tclxmldistclean xpadistclean \
-	tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
-	tkmpegdistclean tkagifdistclean tkhtml1distclean \
-	tksaodistclean astdistclean funtoolsdistclean ds9distclean \
-	osdistclean dirsdistclean localdistclean scrub
+	  openssldistclean tcliisdistclean tclsignaldistclean \
+	  tlsdistclean tclxmldistclean xpadistclean \
+	  tkbltdistclean tktabledistclean tkcondistclean tkimgdistclean \
+	  tkmpegdistclean tkagifdistclean tkhtml1distclean \
+	  tksaodistclean astdistclean funtoolsdistclean ds9distclean \
+	  osdistclean dirsdistclean localdistclean scrub
 
 dirsdistclean:
 	@echo ""
@@ -571,6 +591,19 @@ localdistclean :
 	@echo "*** $@ ***"
 	-rm -f core *~ *#
 	-rm -f config.log config.status config.cache Makefile 
+
+openssldistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C openssl clean
+	rm -f openssl/Makefile
+	rm -rf openssl/include
+	rm -f openssl/crypto/opensslconf.h
+	rm -f openssl/apps/CA.pl
+	rm -f openssl/tools/c_rehash
+	find openssl/test -type l -exec rm {} \;
+	find openssl/apps -type l -exec rm {} \;
+	find openssl/certs/demo -type l -exec rm {} \;
 
 tcliisdistclean :
 	@echo ""

@@ -13,7 +13,7 @@ OS		= @OS@
 ARCH		= @ARCH@
 JOBS		= @CORES@
 
-TLSFLAGS	= --with-ssl-dir=$(prefix)/openssl
+SSLCONFIG	= ./config
 
 include ./make.include
 
@@ -39,7 +39,7 @@ TKFILES = \
 
 #--------------------------build
 
-.PHONY	: saods9 tcl tk tkmacosx openssl
+.PHONY	: saods9 tcl tk tkmacosx
 
 saods9	: dirs tcl tk \
 	openssl \
@@ -123,19 +123,6 @@ tclsignal/Makefile :
 	$(STD) \
 	$(CACHE)
 
-#--------------------------openssl
-
-openssl	: openssl/Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C openssl -j $(JOBS)
-
-openssl/Makefile:
-	@echo ""
-	@echo "*** $@ ***"
-	cd openssl; \
-	./config --prefix=$(prefix)
-
 #-------------------------- tkmacosx
 
 tkmacosx: tkmacosx/Makefile
@@ -155,7 +142,7 @@ tkmacosx/Makefile :
 
 #--------------------------clean
 
-.PHONY	: tclclean tkclean osclean tclsignalclean tkmacosxclean opensslclean
+.PHONY	: tclclean tkclean osclean tclsignalclean tkmacosxclean
 
 tclclean :
 	@echo ""
@@ -167,7 +154,7 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx clean
 
-osclean : tclsignalclean tkmacosxclean opensslclean
+osclean : tclsignalclean tkmacosxclean
 
 tclsignalclean :
 	@echo ""
@@ -179,14 +166,9 @@ tkmacosxclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmacosx clean
 
-opensslclean:
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C openssl clean
-
 #--------------------------distclean
 
-.PHONY	: tcldistclean tkdistclean openssldistclean
+.PHONY	: tcldistclean tkdistclean
 .PHONY	: osdistclean tclsignaldistclean tkmacosxdistclean 
 
 tcldistclean :
@@ -199,7 +181,7 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx distclean
 
-osdistclean : tclsignaldistclean tkmacosxdistclean  openssldistclean
+osdistclean : tclsignaldistclean tkmacosxdistclean
 
 tclsignaldistclean :
 	@echo ""
@@ -211,12 +193,6 @@ tkmacosxdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmacosx distclean
-
-openssldistclean :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C openssl clean
-	rm -f openssl/Makefile
 
 #--------------------------distribution
 

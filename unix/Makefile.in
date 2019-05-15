@@ -15,8 +15,6 @@ TKFLAGS		= @TKFLAGS@
 SSLCONFIG	= @SSLCONFIG@
 JOBS		= @CORES@
 
-TLSFLAGS	= --with-ssl-dir=$(prefix)/openssl
-
 include ./make.include
 
 WITHTCL 	= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/unix
@@ -25,7 +23,7 @@ CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 #--------------------------build
 
-.PHONY	: saods9 tcl tk openssl
+.PHONY	: saods9 tcl tk
 
 saods9	: dirs tcl tk \
 	openssl \
@@ -98,22 +96,9 @@ tclsignal/Makefile :
 	$(STD) \
 	$(CACHE)
 
-#--------------------------openssl
-
-openssl	: openssl/Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C openssl -j $(JOBS)
-
-openssl/Makefile:
-	@echo ""
-	@echo "*** $@ ***"
-	cd openssl; \
-	$(SSLCONFIG) --prefix=$(prefix)
-
 #--------------------------clean
 
-.PHONY	: tclclean tkclean osclean tclzipfsclean tclsignalclean opensslclean
+.PHONY	: tclclean tkclean osclean tclzipfsclean tclsignalclean
 
 tclclean :
 	@echo ""
@@ -125,7 +110,7 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/unix clean
 
-osclean : tclzipfsclean tclsignalclean opensslclean
+osclean : tclzipfsclean tclsignalclean
 
 tclzipfsclean:
 	@echo ""
@@ -137,15 +122,10 @@ tclsignalclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tclsignal clean
 
-opensslclean:
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C openssl clean
-
 #--------------------------distclean
 
 .PHONY	: tcldistclean tkdistclean
-.PHONY	: osdistclean tclzipfsdistclean tclsignaldistclean openssldistclean
+.PHONY	: osdistclean tclzipfsdistclean tclsignaldistclean
 
 tcldistclean :
 	@echo ""
@@ -157,7 +137,7 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/unix distclean
 
-osdistclean : tclzipfsdistclean tclsignaldistclean openssldistclean
+osdistclean : tclzipfsdistclean tclsignaldistclean
 
 tclzipfsdistclean:
 	@echo ""
@@ -170,12 +150,6 @@ tclsignaldistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tclsignal distclean
 	rm -f tclsignal/tclsignalConfig.sh
-
-openssldistclean :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C openssl clean
-	rm -f openssl/Makefile
 
 #--------------------------distribution
 

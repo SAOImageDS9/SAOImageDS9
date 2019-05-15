@@ -22,7 +22,9 @@ CONFIGFLAGS	=CC=$(TARGET)-gcc AR=$(TARGET)-ar
 ASTFLAGS	= CFLAGS=-DCMINPACK_NO_DLL
 XPAFLAGS	= CFLAGS=-DSTATIC_BUILD
 TCLXMLFLAGS 	= --with-xml-static=yes
-TLSFLAGS	="CFLAGS=-DNO_IDEA=1 -DNO_RC5=1" --with-ssl-dir=$(prefix)/openssl
+TLSFLAGS	="CFLAGS=-DNO_IDEA=1 -DNO_RC5=1"
+SSLCONFIG	= export CROSS_COMPILE=$(TARGET)-; ./Configure mingw64 shared no-asm
+
 include ./make.include
 
 WITHTCL		= TEA_PLATFORM=windows --with-tcl=$(prefix)/tcl$(TCL_VERSION)/win $(ENABLE64BIT)
@@ -35,7 +37,7 @@ DS9APP	=SAOImageDS9\ $(DS9_VERSION)
 
 #--------------------------build
 
-.PHONY	: saods9 tcl tk tkwin libxml2 openssl
+.PHONY	: saods9 tcl tk tkwin libxml2
 
 saods9	: dirs tcl tk \
 	libxml2 openssl \
@@ -109,21 +111,9 @@ libxml2/win32/config.mingw :
 	cd libxml2/win32; \
 	cscript configure.js trio=no threads=no ftp=yes http=yes html=yes c14n=yes catalog=yes docb=yes xpath=yes xptr=yes xinclude=yes iconv=no icu=no iso8859x=no zlib=no lzma=no xml_debug=yes mem_debug=yes run_debug=no regexps=yes modules=no tree=yes reader=yes writer=yes walker=yes pattern=yes push=yes valid=yes sax1=yes legacy=yes output=yes schemas=yes schematron=yes python=no compiler=mingw static=yes prefix="..\.." bindir="..\..\bin" incdir="..\..\include" libdir="..\..\lib"
 
-openssl	: openssl/Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C openssl -j $(JOBS)
-
-openssl/Makefile:
-	@echo ""
-	@echo "*** $@ ***"
-	cd openssl; \
-	export CROSS_COMPILE=$(TARGET)-; \
-	./Configure mingw64 --prefix=$(prefix) shared no-asm
-
 #--------------------------clean
 
-.PHONY	: tclclean tkclean osclean libxml2clean opensslclean tkwinclean
+.PHONY	: tclclean tkclean osclean libxml2clean tkwinclean
 
 tclclean :
 	@echo ""
@@ -135,17 +125,12 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/win clean
 
-osclean : libxml2clean opensslclean tkwinclean
+osclean : libxml2clean tkwinclean
 
 libxml2clean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C libxml2/win32 -f Makefile.mingw clean
-
-opensslclean:
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C openssl clean
 
 tkwinclean :
 	@echo ""
@@ -155,7 +140,7 @@ tkwinclean :
 #--------------------------distclean
 
 .PHONY	: tcldistclean tkdistclean 
-.PHONY	: osdistclean libxml2distclean openssldistclean tkwindistclean
+.PHONY	: osdistclean libxml2distclean tkwindistclean
 
 tcldistclean :
 	@echo ""
@@ -167,18 +152,12 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/win distclean
 
-osdistclean : libxml2distclean openssldistclean tkwindistclean
+osdistclean : libxml2distclean tkwindistclean
 
 libxml2distclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C libxml2/win32 -f Makefile.mingw distclean
-
-openssldistclean :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C openssl clean
-	rm -f openssl/Makefile
 
 tkwindistclean :
 	@echo ""

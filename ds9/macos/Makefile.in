@@ -178,7 +178,8 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(TK_LIB_SPEC) \
 	$(TCL_LIB_SPEC) \
 	$(TK_LIBS) \
-	$(LIBS)
+	$(LIBS) \
+	-L $(prefix)/openssl -lssl -lcrypto
 
 # update date/time so we know when the build was done
 $(APPDIR):

@@ -12,7 +12,7 @@ mandir		= @mandir@
 OS		= @OS@
 ARCH		= @ARCH@
 TKFLAGS		= @TKFLAGS@
-TLSFLAGS	= @TLSFLAGS@
+SSLCONFIG	= @SSLCONFIG@
 JOBS		= @CORES@
 
 include ./make.include
@@ -26,6 +26,7 @@ CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 .PHONY	: saods9 tcl tk
 
 saods9	: dirs tcl tk \
+	openssl \
 	tcliis tclsignal \
 	tclzipfs tls tclxml xpa \
 	tkblt tktable tkimg \
@@ -42,7 +43,7 @@ tcl$(TCL_VERSION)/unix/Makefile :
 	@echo "*** $@ ***"
 	cd tcl$(TCL_VERSION)/unix; \
 	./configure \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
+	$(PREFIX) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -57,7 +58,7 @@ tk$(TCL_VERSION)/unix/Makefile :
 	cd tk$(TCL_VERSION)/unix; \
 	./configure \
 	$(TKFLAGS) \
-	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
+	$(PREFIX) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
@@ -97,7 +98,7 @@ tclsignal/Makefile :
 
 #--------------------------clean
 
-.PHONY	: tclclean tkclean osclean tclzipfsclean tclsignalclean 
+.PHONY	: tclclean tkclean osclean tclzipfsclean tclsignalclean
 
 tclclean :
 	@echo ""
@@ -124,7 +125,7 @@ tclsignalclean :
 #--------------------------distclean
 
 .PHONY	: tcldistclean tkdistclean
-.PHONY	: osdistclean tclzipfsdistclean tclsignaldistclean 
+.PHONY	: osdistclean tclzipfsdistclean tclsignaldistclean
 
 tcldistclean :
 	@echo ""

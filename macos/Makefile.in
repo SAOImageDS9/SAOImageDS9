@@ -11,8 +11,9 @@ mandir		= @mandir@
 
 OS		= @OS@
 ARCH		= @ARCH@
-TLSFLAGS	= @TLSFLAGS@
 JOBS		= @CORES@
+
+SSLCONFIG	= ./config
 
 include ./make.include
 
@@ -41,6 +42,7 @@ TKFILES = \
 .PHONY	: saods9 tcl tk tkmacosx
 
 saods9	: dirs tcl tk \
+	openssl \
 	tcliis tclsignal \
 	tls tclxml xpa \
 	tkblt tktable tkimg \
@@ -179,7 +181,7 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx distclean
 
-osdistclean : tclsignaldistclean tkmacosxdistclean 
+osdistclean : tclsignaldistclean tkmacosxdistclean
 
 tclsignaldistclean :
 	@echo ""

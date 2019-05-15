@@ -584,7 +584,6 @@ PACKAGE_URL=''
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
 CORES
-TLSFLAGS
 ARCH
 OS
 INSTALL_LIBRARY
@@ -1905,9 +1904,6 @@ ARCH=$with_arch
 
 prefix=$ac_pwd
 exec_prefix=$ac_pwd
-
-TLSFLAGS="--with-ssl-dir=/opt/local"
-
 
 CORES=`sysctl -n "hw.ncpu"`
 

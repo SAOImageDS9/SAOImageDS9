@@ -50,21 +50,24 @@ case $system in
     Darwin* )
 	TKFLAGS="--disable-corefoundation"
 	AC_SUBST(TKFLAGS)
-	TLSFLAGS="--with-ssl-dir=/opt/local"
-	AC_SUBST(TLSFLAGS)
 
+	SSLCONFIG="./Configure darwin64-x86_64-cc"
 	CORES=`sysctl -n "hw.ncpu"`
 	;;
     CYGWIN* )
+	SSLCONFIG="./config"
 	CORES=`grep -c ^processor /proc/cpuinfo`
 	;;
     Linux* )
+	SSLCONFIG="./config"
 	CORES=`grep -c ^processor /proc/cpuinfo`
 	;;
     *)
+	SSLCONFIG="./config"
 	CORES=1
 	;;
 esac
+AC_SUBST(SSLCONFIG)
 AC_SUBST(CORES)
 
 #--------------------------------------------------------------------

@@ -39,13 +39,7 @@ requires cygwin with mingw compilers
 % win/configure
 % make
 
-SAOImageDS9 will be located in SAOImageDS9/bin
-
 Additional Linux notes: 
-Certain packages must be installed to build, depending upon linux version. Also, DS9 requires openssl 1.0.x. 
-Newer linux versions install version 1.1.x by default, which is not backward compatible. 
-You may need to manually install version openssl 1.0.x.
-
 *** CentOS
    % sudo yum install automake
    % sudo yum install autoconf
@@ -54,7 +48,6 @@ You may need to manually install version openssl 1.0.x.
    % sudo yum install libxml2-devel
    % sudo yum install libxslt-devel
    % sudo yum install libXft-devel
-   % sudo yum install openssl-devel
    % sudo yum install tcl-devel
    % sudo yum install tk-devel
    
@@ -66,13 +59,11 @@ You may need to manually install version openssl 1.0.x.
    % sudo yum install libxml2-devel
    % sudo yum install libxslt-devel
    % sudo yum install libXft-devel
-   % sudo yum install openssl-devel
    % sudo yum install tcl-devel
    % sudo yum install tk-devel
 
    % sudo yum install make
    % sudo yum install gcc-c++
-   % sudo yum install compat-openssl10-devel --allowerasing
    
 *** OpenSUSE
    % zypper install make
@@ -82,7 +73,6 @@ You may need to manually install version openssl 1.0.x.
    % zypper install gcc-c++
    % zypper install libX11-devel
    % zypper install zlib-devel
-   % zypper install openssl-devel
    % zypper install libxml2-devel
    % zypper install libxslt-devel
    % zypper install libXft-devel

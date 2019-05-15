@@ -13,8 +13,9 @@ OS		= @OS@
 ARCH		= @ARCH@
 TKFLAGS		= @TKFLAGS@
 SSLCONFIG	= @SSLCONFIG@
-TLSFLAGS	= @TLSFLAGS@
 JOBS		= @CORES@
+
+TLSFLAGS	= --with-ssl-dir=$(prefix)/openssl
 
 include ./make.include
 

@@ -13,7 +13,7 @@ OS		= @OS@
 ARCH		= @ARCH@
 JOBS		= @CORES@
 
-SSLCONFIG	= ./config
+SSLCONFIG	= ./Configure darwin64-x86_64-cc
 
 include ./make.include
 

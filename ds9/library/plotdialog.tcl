@@ -52,6 +52,7 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
     $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
     $var(mb) add cascade -label [msgcat::mc {Graph}] -menu $var(mb).graph
+    $var(mb) add cascade -label [msgcat::mc {Axes}] -menu $var(mb).axes
     $var(mb) add cascade -label [msgcat::mc {Data}] -menu $var(mb).data
 
     menu $var(mb).file
@@ -129,10 +130,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 
     # Graph
     menu $var(mb).graph
-    $var(mb).graph add cascade -label [msgcat::mc {Axes}] \
-	-menu $var(mb).graph.axes
-    $var(mb).graph add cascade -label [msgcat::mc {Legend}] \
-	-menu $var(mb).graph.legend
     $var(mb).graph add cascade -label [msgcat::mc {Font}] \
 	-menu $var(mb).graph.font
     $var(mb).graph add cascade -label [msgcat::mc {Background}] \
@@ -140,48 +137,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     $var(mb).graph add separator
     $var(mb).graph add command -label "[msgcat::mc {Title}]..." \
 	-command [list PlotTitleDialog $varname]
-
-    menu $var(mb).graph.axes
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Grid}] \
-	-variable ${varname}(axis,x,grid) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
-	-variable ${varname}(axis,x,log) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
-	-variable ${varname}(axis,x,flip) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add separator
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Y Grid}] \
-	-variable ${varname}(axis,y,grid) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
-	-variable ${varname}(axis,y,log) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
-	-variable ${varname}(axis,y,flip) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add separator
-    $var(mb).graph.axes add command -label "[msgcat::mc {Range}]..." \
-	-command [list PlotRangeDialog $varname]
-
-    menu $var(mb).graph.legend
-    $var(mb).graph.legend add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(legend) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.legend add separator
-    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Right}] \
-	-variable ${varname}(legend,position) -value right \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Left}] \
-	-variable ${varname}(legend,position) -value left \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Top}] \
-	-variable ${varname}(legend,position) -value top \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Bottom}] \
-	-variable ${varname}(legend,position) -value bottom \
-	-command [list $var(proc,updategraph) $varname]
 
     menu $var(mb).graph.font
     $var(mb).graph.font add cascade -label [msgcat::mc {Title}] \
@@ -202,6 +157,54 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     FontMenu $var(mb).graph.font.legend $varname legend,font,family legend,font,size legend,font,weight legend,font,slant [list $var(proc,updategraph) $varname]
 
     PlotColorMenu $var(mb).graph.bg $varname graph,bg [list $var(proc,updategraph) $varname]
+
+    # Axes
+    $var(mb).axes add cascade -label [msgcat::mc {Grid}] \
+	-menu $var(mb).axes.grid
+    $var(mb).graph add cascade -label [msgcat::mc {Legend}] \
+	-menu $var(mb).axes.legend
+
+    menu $var(mb).axes.grid
+    $var(mb).axes.grid add checkbutton -label [msgcat::mc {X Grid}] \
+	-variable ${varname}(axis,x,grid) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).axes.grid add checkbutton -label [msgcat::mc {Log}] \
+	-variable ${varname}(axis,x,log) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).axes.grid add checkbutton -label [msgcat::mc {Flip}] \
+	-variable ${varname}(axis,x,flip) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).axes.grid add separator
+    $var(mb).axes.grid add checkbutton -label [msgcat::mc {Y Grid}] \
+	-variable ${varname}(axis,y,grid) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).axes.grid add checkbutton -label [msgcat::mc {Log}] \
+	-variable ${varname}(axis,y,log) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).axes.grid add checkbutton -label [msgcat::mc {Flip}] \
+	-variable ${varname}(axis,y,flip) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).axes.grid add separator
+    $var(mb).axes.grid add command -label "[msgcat::mc {Range}]..." \
+	-command [list PlotRangeDialog $varname]
+
+    menu $var(mb).axes.legend
+    $var(mb).axes.legend add checkbutton -label [msgcat::mc {Show}] \
+	-variable ${varname}(legend) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).axes.legend add separator
+    $var(mb).axes.legend add radiobutton -label [msgcat::mc {Right}] \
+	-variable ${varname}(legend,position) -value right \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).axes.legend add radiobutton -label [msgcat::mc {Left}] \
+	-variable ${varname}(legend,position) -value left \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).axes.legend add radiobutton -label [msgcat::mc {Top}] \
+	-variable ${varname}(legend,position) -value top \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).axes.legend add radiobutton -label [msgcat::mc {Bottom}] \
+	-variable ${varname}(legend,position) -value bottom \
+	-command [list $var(proc,updategraph) $varname]
 
     # dataset
     menu $var(mb).data

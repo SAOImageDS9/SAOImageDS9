@@ -139,9 +139,31 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 	-menu $var(mb).graph.bg
     $var(mb).graph add separator
     $var(mb).graph add command -label "[msgcat::mc {Title}]..." \
-	-command [list $var(proc,titledialog) $varname]
+	-command [list PlotTitleDialog $varname]
 
     menu $var(mb).graph.axes
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Grid}] \
+	-variable ${varname}(axis,x,grid) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
+	-variable ${varname}(axis,x,log) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
+	-variable ${varname}(axis,x,flip) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).graph.axes add separator
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Y Grid}] \
+	-variable ${varname}(axis,y,grid) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
+	-variable ${varname}(axis,y,log) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
+	-variable ${varname}(axis,y,flip) \
+	-command [list $var(proc,updategraph) $varname]
+    $var(mb).graph.axes add separator
+    $var(mb).graph.axes add command -label "[msgcat::mc {Range}]..." \
+	-command [list PlotRangeDialog $varname]
 
     menu $var(mb).graph.legend
     $var(mb).graph.legend add checkbutton -label [msgcat::mc {Show}] \
@@ -187,34 +209,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 	-menu $var(mb).data.select
     $var(mb).data add separator
     menu $var(mb).data.select
-}
-
-proc PlotGraphAxesMenu {varname} {
-    upvar #0 $varname var
-    global $varname
-    
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Grid}] \
-	-variable ${varname}(axis,x,grid) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
-	-variable ${varname}(axis,x,log) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
-	-variable ${varname}(axis,x,flip) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add separator
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Y Grid}] \
-	-variable ${varname}(axis,y,grid) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
-	-variable ${varname}(axis,y,log) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
-	-variable ${varname}(axis,y,flip) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add separator
-    $var(mb).graph.axes add command -label "[msgcat::mc {Range}]..." \
-	-command [list PlotRangeDialog $varname]
 }
 
 proc PlotChangeMode {varname} {
@@ -383,7 +377,6 @@ proc PlotTitleDialog {varname} {
     set ed(graph,title) $var(graph,title)
     set ed(axis,x,title) $var(axis,x,title)
     set ed(axis,y,title) $var(axis,y,title)
-    set ed(axis,y,title,res) $var(axis,y,title,res)
     set ed(legend,title) $var(legend,title)
 
     DialogCreate $w [msgcat::mc {Title}] ed(ok)
@@ -396,8 +389,6 @@ proc PlotTitleDialog {varname} {
     ttk::entry $f.xtitle -textvariable ed(axis,x,title) -width 30
     ttk::label $f.ylabel -text [msgcat::mc {Y Axis Title}]
     ttk::entry $f.ytitle -textvariable ed(axis,y,title) -width 30
-    ttk::label $f.ylabelres -text [msgcat::mc {Y Axis Title Strip}]
-    ttk::entry $f.ytitleres -textvariable ed(axis,y,titleres) -width 30
     ttk::label $f.legendlabel -text [msgcat::mc {Legend Title}]
     ttk::entry $f.legendtitle -textvariable ed(legend,title) -width 30
 
@@ -429,7 +420,6 @@ proc PlotTitleDialog {varname} {
 	set var(graph,title) $ed(graph,title)
 	set var(axis,x,title) $ed(axis,x,title)
 	set var(axis,y,title) $ed(axis,y,title)
-	set var(axis,y,title,res) $ed(axis,y,title,res)
 	set var(legend,title) $ed(legend,title)
 
 	$var(proc,updategraph) $varname

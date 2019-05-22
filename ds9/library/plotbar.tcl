@@ -56,7 +56,6 @@ proc PlotBarProc {varname} {
     set var(proc,updateelement) PlotBarUpdateElement
     set var(proc,highlite) PlotBarHighliteElement
     set var(proc,button) PlotBarButton
-    set var(proc,titledialog) PlotTitleDialog
 }
 
 proc PlotDialogBar {varname} {
@@ -64,8 +63,6 @@ proc PlotDialogBar {varname} {
     global $varname
 
     global ds9
-
-    PlotGraphAxesMenu $varname
 
     # Graph
     $var(mb).graph add separator

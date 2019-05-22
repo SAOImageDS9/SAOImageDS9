@@ -56,7 +56,6 @@ proc PlotScatterProc {varname} {
     set var(proc,updateelement) PlotScatterUpdateElement
     set var(proc,highlite) PlotScatterHighliteElement
     set var(proc,button) PlotScatterButton
-    set var(proc,titledialog) PlotTitleDialog
 }
 
 proc PlotDialogScatter {varname} {
@@ -64,8 +63,6 @@ proc PlotDialogScatter {varname} {
     global $varname
 
     global ds9
-
-    PlotGraphAxesMenu $varname
 
     # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \

@@ -45,7 +45,6 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
 
     PlotLineProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
-    PlotGraphAxesMenu $varname
     PlotDialogLine $varname
 }
 
@@ -57,7 +56,6 @@ proc PlotLineProc {varname} {
     set var(proc,updateelement) PlotLineUpdateElement
     set var(proc,highlite) PlotLineHighliteElement
     set var(proc,button) PlotLineButton
-    set var(proc,titledialog) PlotTitleDialog
 }
 
 proc PlotDialogLine {varname} {
@@ -66,9 +64,7 @@ proc PlotDialogLine {varname} {
 
     global ds9
 
-    PlotGraphAxesMenu $varname
-
-    # Dataset
+    # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(show) \
 	-command [list PlotLineUpdateElement $varname]

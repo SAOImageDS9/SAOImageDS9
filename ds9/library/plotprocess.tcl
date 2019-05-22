@@ -53,8 +53,8 @@ proc PrefsDialogPlot {} {
     grid $f.ttextlab $f.textlab  -padx 2 -pady 2 -sticky w
     grid $f.tnumlab $f.numlab -padx 2 -pady 2 -sticky w
 
-    # Dataset
-    set f [ttk::labelframe $w.plot.dataset -text [msgcat::mc {Dataset}]]
+    # Data
+    set f [ttk::labelframe $w.plot.data -text [msgcat::mc {Data Set}]]
 
     #  Show
     ttk::checkbutton $f.show -text [msgcat::mc {Show}] -variable pap(show)
@@ -102,7 +102,7 @@ proc PrefsDialogPlot {} {
     grid $f.errortitle $f.error $f.errorcap $f.errorcolor $f.errorwidth \
 	-padx 2 -pady 2 -sticky w
 
-    pack $w.plot.graph $w.plot.grid $w.plot.axis $w.plot.dataset \
+    pack $w.plot.graph $w.plot.grid $w.plot.axis $w.plot.data \
 	-side top -fill both -expand true
 }
 
@@ -188,6 +188,11 @@ proc PlotCmdBar {title xaxis yaxis dim} {
 proc PlotCmdScatter {title xaxis yaxis dim} {
     global parse
     PlotScatter $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
+}
+
+proc PlotCmdStrip {title xaxis yaxis dim} {
+    global parse
+    PlotStrip $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
 }
 
 proc PlotCmdAnalysisPlotStdin {which} {

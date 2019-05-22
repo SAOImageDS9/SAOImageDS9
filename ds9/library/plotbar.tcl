@@ -56,6 +56,7 @@ proc PlotBarProc {varname} {
     set var(proc,updateelement) PlotBarUpdateElement
     set var(proc,highlite) PlotBarHighliteElement
     set var(proc,button) PlotBarButton
+    set var(proc,titledialog) PlotTitleDialog
 }
 
 proc PlotDialogBar {varname} {
@@ -63,6 +64,8 @@ proc PlotDialogBar {varname} {
     global $varname
 
     global ds9
+
+    PlotGraphAxesMenu $varname
 
     # Graph
     $var(mb).graph add separator
@@ -84,64 +87,65 @@ proc PlotDialogBar {varname} {
 	-variable ${varname}(bar,mode) -value overlap \
 	-command [list $var(proc,updategraph) $varname]
 
-    # Dataset
-    $var(mb).dataset add checkbutton -label [msgcat::mc {Show}] \
+    # Data
+    $var(mb).data add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(show) \
 	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset add separator
-    $var(mb).dataset add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).dataset.color
-    $var(mb).dataset add cascade -label [msgcat::mc {Relief}] \
-	-menu $var(mb).dataset.relief
-    $var(mb).dataset add cascade -label [msgcat::mc {Error}] \
-	-menu $var(mb).dataset.error
-    $var(mb).dataset add separator
-    $var(mb).dataset add command -label "[msgcat::mc {Name}]..." \
+    $var(mb).data add separator
+    $var(mb).data add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).data.color
+    $var(mb).data add cascade -label [msgcat::mc {Relief}] \
+	-menu $var(mb).data.relief
+    $var(mb).data add cascade -label [msgcat::mc {Error}] \
+	-menu $var(mb).data.error
+    $var(mb).data add separator
+    $var(mb).data add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
-    PlotColorMenu $var(mb).dataset.color $varname color \
+    PlotColorMenu $var(mb).data.color $varname color \
 	[list PlotBarUpdateElement $varname]
 
     # Relief
-    menu $var(mb).dataset.relief
-    $var(mb).dataset.relief add radiobutton -label [msgcat::mc {Flat}] \
+    menu $var(mb).data.relief
+    $var(mb).data.relief add radiobutton -label [msgcat::mc {Flat}] \
 	-variable ${varname}(bar,relief) -value flat \
 	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset.relief add radiobutton -label [msgcat::mc {Sunken}] \
+    $var(mb).data.relief add radiobutton -label [msgcat::mc {Sunken}] \
 	-variable ${varname}(bar,relief) -value sunken \
 	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset.relief add radiobutton -label [msgcat::mc {Raised}] \
+    $var(mb).data.relief add radiobutton -label [msgcat::mc {Raised}] \
 	-variable ${varname}(bar,relief) -value raised \
 	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset.relief add radiobutton -label [msgcat::mc {Solid}] \
+    $var(mb).data.relief add radiobutton -label [msgcat::mc {Solid}] \
 	-variable ${varname}(bar,relief) -value solid \
 	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset.relief add radiobutton -label [msgcat::mc {Groove}] \
+    $var(mb).data.relief add radiobutton -label [msgcat::mc {Groove}] \
 	-variable ${varname}(bar,relief) -value groove \
 	-command [list PlotBarUpdateElement $varname]
 
     # Error
-    menu $var(mb).dataset.error
-    $var(mb).dataset.error add checkbutton -label [msgcat::mc {Show}] \
+    menu $var(mb).data.error
+    $var(mb).data.error add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(error) \
 	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset.error add checkbutton -label [msgcat::mc {Cap}] \
+    $var(mb).data.error add checkbutton -label [msgcat::mc {Cap}] \
 	-variable ${varname}(error,cap) \
 	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset.error add separator
-    $var(mb).dataset.error add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).dataset.error.color
-    $var(mb).dataset.error add cascade -label [msgcat::mc {Width}] \
-	-menu $var(mb).dataset.error.width
+    $var(mb).data.error add separator
+    $var(mb).data.error add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).data.error.color
+    $var(mb).data.error add cascade -label [msgcat::mc {Width}] \
+	-menu $var(mb).data.error.width
 
-    PlotColorMenu $var(mb).dataset.error.color $varname error,color \
+    PlotColorMenu $var(mb).data.error.color $varname error,color \
 	[list PlotBarUpdateElement $varname]
-    WidthDashMenu $var(mb).dataset.error.width $varname error,width {} \
+    WidthDashMenu $var(mb).data.error.width $varname error,width {} \
 	[list PlotBarUpdateElement $varname] {}
 
     # graph
     set var(type) bar
-    set var(graph) [blt::barchart $var(top).bar \
+    set var(frame) [ttk::frame $var(top).fr]
+    set var(graph) [blt::barchart $var(frame).bar \
 			-width 600 \
 			-height 500 \
 			-highlightthickness 0 \
@@ -151,6 +155,7 @@ proc PlotDialogBar {varname} {
     $var(graph) yaxis configure -grid yes
 
     pack $var(graph) -expand yes -fill both
+    pack $var(frame) -expand yes -fill both
 
     # set up zoom stack, assuming mode is zoom
     switch $ds9(wm) {

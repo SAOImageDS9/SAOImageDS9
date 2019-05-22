@@ -57,6 +57,8 @@ proc AnalysisMainMenu {} {
 	-command PlotBarTool
     $ds9(mb).analysis add command -label "[msgcat::mc {Scatter Plot Tool}]..." \
 	-command PlotScatterTool
+    $ds9(mb).analysis add command -label "[msgcat::mc {Strip Plot Tool}]..." \
+	-command PlotStripTool
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add command \
 	-label "[msgcat::mc {Virtual Observatory}]..."\

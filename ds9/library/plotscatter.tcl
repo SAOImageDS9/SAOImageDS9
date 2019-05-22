@@ -56,6 +56,7 @@ proc PlotScatterProc {varname} {
     set var(proc,updateelement) PlotScatterUpdateElement
     set var(proc,highlite) PlotScatterHighliteElement
     set var(proc,button) PlotScatterButton
+    set var(proc,titledialog) PlotTitleDialog
 }
 
 proc PlotDialogScatter {varname} {
@@ -64,97 +65,101 @@ proc PlotDialogScatter {varname} {
 
     global ds9
 
-    # Dataset
-    $var(mb).dataset add checkbutton -label [msgcat::mc {Show}] \
+    PlotGraphAxesMenu $varname
+
+    # Data
+    $var(mb).data add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(show) \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset add separator
-    $var(mb).dataset add cascade -label [msgcat::mc {Shape}] \
-	-menu $var(mb).dataset.shape
-    $var(mb).dataset add cascade -label [msgcat::mc {Error}] \
-	-menu $var(mb).dataset.error
-    $var(mb).dataset add separator
-    $var(mb).dataset add command -label "[msgcat::mc {Name}]..." \
+    $var(mb).data add separator
+    $var(mb).data add cascade -label [msgcat::mc {Shape}] \
+	-menu $var(mb).data.shape
+    $var(mb).data add cascade -label [msgcat::mc {Error}] \
+	-menu $var(mb).data.error
+    $var(mb).data add separator
+    $var(mb).data add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
     # Shape
-    menu $var(mb).dataset.shape
-    $var(mb).dataset.shape add radiobutton \
+    menu $var(mb).data.shape
+    $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Circle}] \
 	-variable ${varname}(shape,symbol) -value circle \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset.shape add radiobutton \
+    $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Square}] \
 	-variable ${varname}(shape,symbol) -value square \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset.shape add radiobutton \
+    $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Diamond}] \
 	-variable ${varname}(shape,symbol) -value diamond \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset.shape add radiobutton \
+    $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Plus}] \
 	-variable ${varname}(shape,symbol) -value plus \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset.shape add radiobutton \
+    $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Cross}] \
 	-variable ${varname}(shape,symbol) -value cross \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset.shape add radiobutton \
+    $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Simple Plus}] \
 	-variable ${varname}(shape,symbol) -value splus \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset.shape add radiobutton \
+    $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Simple Cross}] \
 	-variable ${varname}(shape,symbol) -value scross \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset.shape add radiobutton \
+    $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Triangle}] \
 	-variable ${varname}(shape,symbol) -value triangle \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset.shape add radiobutton \
+    $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Arrow}] \
 	-variable ${varname}(shape,symbol) -value arrow \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset.shape add separator
-    $var(mb).dataset.shape add checkbutton \
+    $var(mb).data.shape add separator
+    $var(mb).data.shape add checkbutton \
 	-label [msgcat::mc {Fill}] \
 	-variable ${varname}(shape,fill) \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset.shape add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).dataset.shape.color
+    $var(mb).data.shape add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).data.shape.color
 		  
     # Color
-    PlotColorMenu $var(mb).dataset.shape.color $varname shape,color \
+    PlotColorMenu $var(mb).data.shape.color $varname shape,color \
 	[list PlotScatterUpdateElement $varname]
 
     # Error
-    menu $var(mb).dataset.error
-    $var(mb).dataset.error add checkbutton -label [msgcat::mc {Show}] \
+    menu $var(mb).data.error
+    $var(mb).data.error add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(error) \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset.error add checkbutton -label [msgcat::mc {Cap}] \
+    $var(mb).data.error add checkbutton -label [msgcat::mc {Cap}] \
 	-variable ${varname}(error,cap) \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).dataset.error add separator
-    $var(mb).dataset.error add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).dataset.error.color
-    $var(mb).dataset.error add cascade -label [msgcat::mc {Width}] \
-	-menu $var(mb).dataset.error.width
+    $var(mb).data.error add separator
+    $var(mb).data.error add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).data.error.color
+    $var(mb).data.error add cascade -label [msgcat::mc {Width}] \
+	-menu $var(mb).data.error.width
 
-    PlotColorMenu $var(mb).dataset.error.color $varname error,color \
+    PlotColorMenu $var(mb).data.error.color $varname error,color \
 	[list PlotScatterUpdateElement $varname]
-    WidthDashMenu $var(mb).dataset.error.width $varname error,width {} \
+    WidthDashMenu $var(mb).data.error.width $varname error,width {} \
 	[list PlotScatterUpdateElement $varname] {}
 
     # graph
     set var(type) scatter
-    set var(graph) [blt::graph $var(top).scatter \
+    set var(frame) [ttk::frame $var(top).fr]
+    set var(graph) [blt::graph $var(frame).scatter \
 			-width 600 \
 			-height 500 \
 			-highlightthickness 0 \
 		       ]
 
     pack $var(graph) -expand yes -fill both
+    pack $var(frame) -expand yes -fill both
 
     # set up zoom stack, assuming mode is zoom
     switch $ds9(wm) {

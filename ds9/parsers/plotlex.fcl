@@ -111,7 +111,6 @@ stats	    {return $STATS_}
 statistics  {return $STATISTICS_}
 step	    {return $STEP_}
 stdin	    {return $STDIN_}
-strip	    {return $STRIP_}
 style	    {return $STYLE_}
 sunken	    {return $SUNKEN_}
 tabloid	    {return $TABLOID_}

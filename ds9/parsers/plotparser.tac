@@ -114,7 +114,6 @@
 %token STATISTICS_
 %token STEP_
 %token STDIN_
-%token STRIP_
 %token STYLE_
 %token SUNKEN_
 %token TABLOID_
@@ -162,7 +161,6 @@ command : plot
  plot : LINE_ line
  | BAR_ {PlotCmdNew {}; PlotCmdBar {} {} {} xy}
  | SCATTER_ {PlotCmdNew {}; PlotCmdScatter {} {} {} xy}
- | STRIP_ {PlotCmdNew {}; PlotCmdStrip {} {} {} xy}
 # parse error command line
  | {PlotCmdNew {}; PlotCmdLine {} {} {} xy}
  
@@ -182,7 +180,6 @@ new : newLine
  | LINE_ newLine
  | BAR_ newBar
  | SCATTER_ newScatter
- | STRIP_ newStrip
  ;
  
 newLine : STRING_ STRING_ STRING_ dim {PlotCmdLine $1 $2 $3 $4}
@@ -210,15 +207,6 @@ newScatter : STRING_ STRING_ STRING_ dim  {PlotCmdScatter $1 $2 $3 $4}
  | STDIN_ {PlotCmdAnalysisPlotStdin scatter}
  # backward compatibility
  | STRING_ STRING_ STRING_ INT_  {PlotCmdScatter $1 $2 $3 $4}
- ;
-
-newStrip : STRING_ STRING_ STRING_ dim  {PlotCmdStrip $1 $2 $3 $4}
-# parse error command line
- | {PlotCmdStrip {} {} {} xy}
-# xpa only
- | STDIN_ {PlotCmdAnalysisPlotStdin strip}
- # backward compatibility
- | STRING_ STRING_ STRING_ INT_  {PlotCmdStrip $1 $2 $3 $4}
  ;
 
 xy : 'x' {set _ x}

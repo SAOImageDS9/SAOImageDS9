@@ -53,15 +53,6 @@ proc PlotDef {} {
     set pap(axis,y,max) {}
     set pap(axis,y,format) {}
 
-    set pap(axis,y,title,res) {}
-    set pap(axis,y,grid,res) 1
-    set pap(axis,y,log,res) 0
-    set pap(axis,y,flip,res) 0
-    set pap(axis,y,auto,res) 1
-    set pap(axis,y,min,res) {}
-    set pap(axis,y,max,res) {}
-    set pap(axis,y,format,res) {}
-
     set pap(axis,title,family) helvetica
     set pap(axis,title,size) 9
     set pap(axis,title,weight) normal
@@ -92,11 +83,36 @@ proc PlotDef {} {
     set pap(bar,mode) normal
 }
 
+proc PlotAddPlot {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+}
+
 proc PlotAxisFormat {varname axis w nn} {
     upvar #0 $varname var
     global $varname
 
     return [format $var(axis,$axis,format) $nn]
+}
+
+proc PlotChangeMode {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
+
+    switch $var(mode) {
+	pointer {
+	    blt::RemoveBindTag $var(graph) zoom-$var(graph)
+	    bind $var(graph) <1> [list PlotButton $varname %x %y]
+	}
+	zoom {
+	    bind $var(graph) <1> {}
+	    blt::AddBindTag $var(graph) zoom-$var(graph)
+	}
+    }
 }
 
 proc PlotClearData {varname} {
@@ -161,12 +177,7 @@ proc PlotClearData {varname} {
 	set var(axis,y,max) {}
 	set var(axis,y,format) {}
 	
-	set var(axis,y,auto,res) 1
-	set var(axis,y,min,res) {}
-	set var(axis,y,max,res) {}
-	set var(axis,y,format,res) {}
-
-	$var(mb).data.select delete $ds9(menu,start) end
+	$var(mb).plot.select delete $ds9(menu,start) end
 
 	$var(proc,updategraph) $varname
 	PlotStats $varname
@@ -175,7 +186,7 @@ proc PlotClearData {varname} {
  	set var(data,total) 1
  	set var(data,current) 1
 
-	$var(mb).data.select delete [expr $ds9(menu,start)+1] end
+	$var(mb).plot.select delete [expr $ds9(menu,start)+1] end
  	PlotCurrentData $varname
 	$var(proc,updategraph) $varname
     }
@@ -427,12 +438,19 @@ proc PlotDataSetOne {varname dim data} {
     PlotGetVar $varname $nn
 
     # update data set menu
-    $var(mb).data.select add radiobutton -label "$var(name)" \
+    $var(mb).plot.select add radiobutton -label "$var(name)" \
 	-variable ${varname}(data,current) -value $nn \
 	-command [list PlotCurrentData $varname]
 
     PlotCreateElement $varname
     $var(proc,updateelement) $varname
+}
+
+proc PlotDeletePlot {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ds9
 }
 
 proc PlotDupData {varname mm} {
@@ -490,7 +508,7 @@ proc PlotDupData {varname mm} {
     set var($nn,bar,relief) $var($mm,bar,relief)
 
     # update data set menu
-    $var(mb).data.select add radiobutton -label "$var($nn,name)" \
+    $var(mb).plot.select add radiobutton -label "$var($nn,name)" \
 	-variable ${varname}(data,current) -value $nn \
 	-command [list PlotCurrentData $varname]
 
@@ -589,7 +607,7 @@ proc PlotExternal {varname} {
     PlotGetVar $varname $nn
 
     # update data set menu
-    $var(mb).data.select add radiobutton \
+    $var(mb).plot.select add radiobutton \
 	-label "[msgcat::mc {Data Set}] $nn" \
 	-variable ${varname}(data,current) -value $nn \
 	-command "PlotCurrentData $varname"
@@ -895,15 +913,6 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(axis,y,max) $var(axis,y,max)
     set analysisplot(axis,y,format) $var(axis,y,format)
 
-    set analysisplot(axis,y,title,res) $var(axis,y,title,res)
-    set analysisplot(axis,y,grid,res) $var(axis,y,grid,res)
-    set analysisplot(axis,y,log,res) $var(axis,y,log,res) 
-    set analysisplot(axis,y,flip,res) $var(axis,y,flip,res) 
-    set analysisplot(axis,y,auto,res) $var(axis,y,auto,res)
-    set analysisplot(axis,y,min,res) $var(axis,y,min,res)
-    set analysisplot(axis,y,max,res) $var(axis,y,max,res)
-    set analysisplot(axis,y,format,res) $var(axis,y,format,res)
-
     set analysisplot(axis,title,family) $var(axis,title,family) 
     set analysisplot(axis,title,size) $var(axis,title,size) 
     set analysisplot(axis,title,weight) $var(axis,title,weight) 
@@ -1049,14 +1058,13 @@ proc PlotStatsDestroyCB {varname} {
     set var(stats) 0
 }
 
-proc PlotTitle {varname title xaxis yaxis {yaxis2 {}}} {
+proc PlotTitle {varname title xaxis yaxis} {
     upvar #0 $varname var
     global $varname
 
     set var(graph,title) "$title"
     set var(axis,x,title) "$xaxis"
     set var(axis,y,title) "$yaxis"
-    set var(axis,y,title,res) "$yaxis2"
 }
 
 proc PlotUpdateGraph {varname} {

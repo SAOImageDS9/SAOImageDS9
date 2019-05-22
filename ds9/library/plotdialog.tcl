@@ -41,7 +41,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     set var(graph,title) "$title"
     set var(axis,x,title) "$xaxis"
     set var(axis,y,title) "$yaxis"
-    set var(axis,y,title,res) {}
 
     # can be turned off for external line plots
     set var(graph,format) 1
@@ -52,9 +51,10 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
     $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
     $var(mb) add cascade -label [msgcat::mc {Graph}] -menu $var(mb).graph
-    $var(mb) add cascade -label [msgcat::mc {Axes}] -menu $var(mb).axes
+    $var(mb) add cascade -label [msgcat::mc {Plot}] -menu $var(mb).plot
     $var(mb) add cascade -label [msgcat::mc {Data}] -menu $var(mb).data
 
+    # File
     menu $var(mb).file
     $var(mb).file add command -label "[msgcat::mc {Load Data}]..." \
 	-command [list PlotLoadData $varname]
@@ -100,7 +100,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     $var(mb).file add command -label [msgcat::mc {Close}] \
 	-command [list PlotDestroy $varname]
 
-    # Export Menu
     menu $var(mb).file.export
     $var(mb).file.export add command -label {GIF...} \
 	-command [list PlotExportDialog $varname gif]
@@ -130,13 +129,24 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 
     # Graph
     menu $var(mb).graph
+
+    $var(mb).graph add cascade -label [msgcat::mc {Select Plot}] \
+	-menu $var(mb).graph.select
+    $var(mb).graph add separator
+    $var(mb).graph add command -label [msgcat::mc {Add Plot}] \
+	-command [list PlotAddPlot $varname]
+    $var(mb).graph add command -label [msgcat::mc {Delete Plot}] \
+	-command [list PlotDeletePlot $varname]
+    $var(mb).graph add separator
+    menu $var(mb).graph.select
+
     $var(mb).graph add cascade -label [msgcat::mc {Font}] \
 	-menu $var(mb).graph.font
     $var(mb).graph add cascade -label [msgcat::mc {Background}] \
 	-menu $var(mb).graph.bg
     $var(mb).graph add separator
     $var(mb).graph add command -label "[msgcat::mc {Title}]..." \
-	-command [list PlotTitleDialog $varname]
+	-command [list PlotGraphTitleDialog $varname]
 
     menu $var(mb).graph.font
     $var(mb).graph.font add cascade -label [msgcat::mc {Title}] \
@@ -158,78 +168,66 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 
     PlotColorMenu $var(mb).graph.bg $varname graph,bg [list $var(proc,updategraph) $varname]
 
-    # Axes
-    $var(mb).axes add cascade -label [msgcat::mc {Grid}] \
-	-menu $var(mb).axes.grid
-    $var(mb).graph add cascade -label [msgcat::mc {Legend}] \
-	-menu $var(mb).axes.legend
+    # Plot
+    menu $var(mb).plot
 
-    menu $var(mb).axes.grid
-    $var(mb).axes.grid add checkbutton -label [msgcat::mc {X Grid}] \
+    $var(mb).plot add cascade -label [msgcat::mc {Select Data Set}] \
+	-menu $var(mb).plot.select
+    $var(mb).plot add separator
+    menu $var(mb).plot.select
+
+    $var(mb).plot add cascade -label [msgcat::mc {Axes}] \
+	-menu $var(mb).plot.axes
+    $var(mb).plot add cascade -label [msgcat::mc {Legend}] \
+	-menu $var(mb).plot.legend
+    $var(mb).plot add separator
+    $var(mb).plot add command -label "[msgcat::mc {Titles}]..." \
+	-command [list PlotPlotTitleDialog $varname]
+
+    menu $var(mb).plot.axes
+    $var(mb).plot.axes add checkbutton -label [msgcat::mc {X Grid}] \
 	-variable ${varname}(axis,x,grid) \
 	-command [list $var(proc,updategraph) $varname]
-    $var(mb).axes.grid add checkbutton -label [msgcat::mc {Log}] \
+    $var(mb).plot.axes add checkbutton -label [msgcat::mc {Log}] \
 	-variable ${varname}(axis,x,log) \
 	-command [list $var(proc,updategraph) $varname]
-    $var(mb).axes.grid add checkbutton -label [msgcat::mc {Flip}] \
+    $var(mb).plot.axes add checkbutton -label [msgcat::mc {Flip}] \
 	-variable ${varname}(axis,x,flip) \
 	-command [list $var(proc,updategraph) $varname]
-    $var(mb).axes.grid add separator
-    $var(mb).axes.grid add checkbutton -label [msgcat::mc {Y Grid}] \
+    $var(mb).plot.axes add separator
+    $var(mb).plot.axes add checkbutton -label [msgcat::mc {Y Grid}] \
 	-variable ${varname}(axis,y,grid) \
 	-command [list $var(proc,updategraph) $varname]
-    $var(mb).axes.grid add checkbutton -label [msgcat::mc {Log}] \
+    $var(mb).plot.axes add checkbutton -label [msgcat::mc {Log}] \
 	-variable ${varname}(axis,y,log) \
 	-command [list $var(proc,updategraph) $varname]
-    $var(mb).axes.grid add checkbutton -label [msgcat::mc {Flip}] \
+    $var(mb).plot.axes add checkbutton -label [msgcat::mc {Flip}] \
 	-variable ${varname}(axis,y,flip) \
 	-command [list $var(proc,updategraph) $varname]
-    $var(mb).axes.grid add separator
-    $var(mb).axes.grid add command -label "[msgcat::mc {Range}]..." \
+    $var(mb).plot.axes add separator
+    $var(mb).plot.axes add command -label "[msgcat::mc {Range}]..." \
 	-command [list PlotRangeDialog $varname]
 
-    menu $var(mb).axes.legend
-    $var(mb).axes.legend add checkbutton -label [msgcat::mc {Show}] \
+    menu $var(mb).plot.legend
+    $var(mb).plot.legend add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(legend) \
 	-command [list $var(proc,updategraph) $varname]
-    $var(mb).axes.legend add separator
-    $var(mb).axes.legend add radiobutton -label [msgcat::mc {Right}] \
+    $var(mb).plot.legend add separator
+    $var(mb).plot.legend add radiobutton -label [msgcat::mc {Right}] \
 	-variable ${varname}(legend,position) -value right \
 	-command [list $var(proc,updategraph) $varname]
-    $var(mb).axes.legend add radiobutton -label [msgcat::mc {Left}] \
+    $var(mb).plot.legend add radiobutton -label [msgcat::mc {Left}] \
 	-variable ${varname}(legend,position) -value left \
 	-command [list $var(proc,updategraph) $varname]
-    $var(mb).axes.legend add radiobutton -label [msgcat::mc {Top}] \
+    $var(mb).plot.legend add radiobutton -label [msgcat::mc {Top}] \
 	-variable ${varname}(legend,position) -value top \
 	-command [list $var(proc,updategraph) $varname]
-    $var(mb).axes.legend add radiobutton -label [msgcat::mc {Bottom}] \
+    $var(mb).plot.legend add radiobutton -label [msgcat::mc {Bottom}] \
 	-variable ${varname}(legend,position) -value bottom \
 	-command [list $var(proc,updategraph) $varname]
 
     # dataset
     menu $var(mb).data
-    $var(mb).data add cascade -label [msgcat::mc {Select}] \
-	-menu $var(mb).data.select
-    $var(mb).data add separator
-    menu $var(mb).data.select
-}
-
-proc PlotChangeMode {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ds9
-
-    switch $var(mode) {
-	pointer {
-	    blt::RemoveBindTag $var(graph) zoom-$var(graph)
-	    bind $var(graph) <1> [list PlotButton $varname %x %y]
-	}
-	zoom {
-	    bind $var(graph) <1> {}
-	    blt::AddBindTag $var(graph) zoom-$var(graph)
-	}
-    }
 }
 
 proc PlotDataFormatDialog {xarname} {
@@ -369,36 +367,24 @@ proc PlotRangeDialog {varname} {
     return $rr
 }
 
-proc PlotTitleDialog {varname} {
+proc PlotGraphTitleDialog {varname} {
     upvar #0 $varname var
     global $varname
     global ed
 
-    set w {.aptitle}
+    set w {.apgraphtitle}
 
     set ed(ok) 0
     set ed(graph,title) $var(graph,title)
-    set ed(axis,x,title) $var(axis,x,title)
-    set ed(axis,y,title) $var(axis,y,title)
-    set ed(legend,title) $var(legend,title)
 
     DialogCreate $w [msgcat::mc {Title}] ed(ok)
 
     # Param
     set f [ttk::frame $w.param]
-    ttk::label $f.label -text [msgcat::mc {Plot Title}]
+    ttk::label $f.label -text [msgcat::mc {Title}]
     ttk::entry $f.title -textvariable ed(graph,title) -width 30
-    ttk::label $f.xlabel -text [msgcat::mc {X Axis Title}]
-    ttk::entry $f.xtitle -textvariable ed(axis,x,title) -width 30
-    ttk::label $f.ylabel -text [msgcat::mc {Y Axis Title}]
-    ttk::entry $f.ytitle -textvariable ed(axis,y,title) -width 30
-    ttk::label $f.legendlabel -text [msgcat::mc {Legend Title}]
-    ttk::entry $f.legendtitle -textvariable ed(legend,title) -width 30
 
     grid $f.label $f.title -padx 2 -pady 2 -sticky ew
-    grid $f.xlabel $f.xtitle -padx 2 -pady 2 -sticky ew
-    grid $f.ylabel $f.ytitle -padx 2 -pady 2 -sticky ew
-    grid $f.legendlabel $f.legendtitle -padx 2 -pady 2 -sticky ew
     grid columnconfigure $f 1 -weight 1
 
     # Buttons
@@ -421,6 +407,61 @@ proc PlotTitleDialog {varname} {
 
     if {$ed(ok)} {
 	set var(graph,title) $ed(graph,title)
+	$var(proc,updategraph) $varname
+    }
+    
+    set rr $ed(ok)
+    unset ed
+    return $rr
+}
+
+proc PlotPlotTitleDialog {varname} {
+    upvar #0 $varname var
+    global $varname
+    global ed
+
+    set w {.applottitle}
+
+    set ed(ok) 0
+    set ed(axis,x,title) $var(axis,x,title)
+    set ed(axis,y,title) $var(axis,y,title)
+    set ed(legend,title) $var(legend,title)
+
+    DialogCreate $w [msgcat::mc {Title}] ed(ok)
+
+    # Param
+    set f [ttk::frame $w.param]
+    ttk::label $f.xlabel -text [msgcat::mc {X Axis Title}]
+    ttk::entry $f.xtitle -textvariable ed(axis,x,title) -width 30
+    ttk::label $f.ylabel -text [msgcat::mc {Y Axis Title}]
+    ttk::entry $f.ytitle -textvariable ed(axis,y,title) -width 30
+    ttk::label $f.legendlabel -text [msgcat::mc {Legend Title}]
+    ttk::entry $f.legendtitle -textvariable ed(legend,title) -width 30
+
+    grid $f.xlabel $f.xtitle -padx 2 -pady 2 -sticky ew
+    grid $f.ylabel $f.ytitle -padx 2 -pady 2 -sticky ew
+    grid $f.legendlabel $f.legendtitle -padx 2 -pady 2 -sticky ew
+    grid columnconfigure $f 1 -weight 1
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+	-default active 
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
+
+    DialogCenter $w 
+    DialogWait $w ed(ok) $w.param.xtitle
+    DialogDismiss $w
+
+    if {$ed(ok)} {
 	set var(axis,x,title) $ed(axis,x,title)
 	set var(axis,y,title) $ed(axis,y,title)
 	set var(legend,title) $ed(legend,title)
@@ -472,7 +513,7 @@ proc DatasetNameDialog {varname} {
     DialogDismiss $w
 
     if {$ed(ok)} {
-	$var(mb).data.select entryconfig "$var(name)" -label "$ed(name)"
+	$var(mb).plot.select entryconfig "$var(name)" -label "$ed(name)"
 	set var(name) $ed(name)
 	$var(proc,updateelement) $varname
     }

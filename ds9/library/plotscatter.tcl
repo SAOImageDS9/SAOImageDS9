@@ -32,7 +32,8 @@ proc PlotScatter {tt wtt title xaxis yaxis dim data} {
     PlotScatterProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotDialogScatter $varname
-
+    PlotAddPlot $varname
+    
     PlotDataSet $varname $dim $data
     $var(proc,updategraph) $varname
     PlotStats $varname
@@ -46,12 +47,14 @@ proc PlotScatterDialog {varname wtt title xaxis yaxis} {
     PlotScatterProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotDialogScatter $varname
+    PlotAddPlot $varname
 }
 
 proc PlotScatterProc {varname} {
     upvar #0 $varname var
     global $varname
 
+    set var(proc,addplot) PlotScatterAddPlot
     set var(proc,updategraph) PlotUpdateGraph
     set var(proc,updateelement) PlotScatterUpdateElement
     set var(proc,highlite) PlotScatterHighliteElement
@@ -145,8 +148,12 @@ proc PlotDialogScatter {varname} {
 	[list PlotScatterUpdateElement $varname]
     WidthDashMenu $var(mb).data.error.width $varname error,width {} \
 	[list PlotScatterUpdateElement $varname] {}
+}
 
-    # graph
+proc PlotScatterAddPlot {varname} {
+    upvar #0 $varname var
+    global $varname
+
     set var(type) scatter
     set var(graph) [ttk::frame $var(top).fr]
     set var(plot) [blt::graph $var(graph).scatter \
@@ -159,6 +166,7 @@ proc PlotDialogScatter {varname} {
     pack $var(graph) -expand yes -fill both
 
     # set up zoom stack, assuming mode is zoom
+    global ds9
     switch $ds9(wm) {
 	x11 -
 	win32 {Blt_ZoomStack $var(plot) -mode release}

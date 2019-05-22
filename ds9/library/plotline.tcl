@@ -32,6 +32,7 @@ proc PlotLine {tt wtt title xaxis yaxis dim data} {
     PlotLineProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotDialogLine $varname
+    PlotAddPlot $varname
 
     PlotDataSet $varname $dim $data
     $var(proc,updategraph) $varname
@@ -46,6 +47,7 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     PlotLineProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotDialogLine $varname
+    PlotAddPlot $varname
 }
 
 proc PlotLineProc {varname} {
@@ -53,6 +55,7 @@ proc PlotLineProc {varname} {
     global $varname
 
     set var(proc,updategraph) PlotUpdateGraph
+    set var(proc,addplot) PlotLineAddPlot
     set var(proc,updateelement) PlotLineUpdateElement
     set var(proc,highlite) PlotLineHighliteElement
     set var(proc,button) PlotLineButton
@@ -219,7 +222,12 @@ proc PlotDialogLine {varname} {
     WidthDashMenu $var(mb).data.error.width $varname error,width {} \
 	[list PlotLineUpdateElement $varname] {}
 
-    # graph
+}
+
+proc PlotLineAddPlot {varname} {
+    upvar #0 $varname var
+    global $varname
+
     set var(type) line
     set var(graph) [ttk::frame $var(top).fr]
     set var(plot) [blt::graph $var(graph).line \
@@ -232,6 +240,7 @@ proc PlotDialogLine {varname} {
     pack $var(graph) -expand yes -fill both
 
     # set up zoom stack, assuming mode is zoom
+    global ds9
     switch $ds9(wm) {
 	x11 -
 	win32 {Blt_ZoomStack $var(plot) -mode release}

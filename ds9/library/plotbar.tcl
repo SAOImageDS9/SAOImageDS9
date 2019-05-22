@@ -32,7 +32,8 @@ proc PlotBar {tt wtt title xaxis yaxis dim data} {
     PlotBarProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotDialogBar $varname
-
+    PlotAddPlot $varname
+    
     PlotDataSet $varname $dim $data
     $var(proc,updategraph) $varname
     PlotStats $varname
@@ -46,12 +47,14 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
     PlotBarProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotDialogBar $varname
+    PlotAddPlot $varname
 }
 
 proc PlotBarProc {varname} {
     upvar #0 $varname var
     global $varname
 
+    set var(proc,addplot) PlotBarAddPlot
     set var(proc,updategraph) PlotBarUpdateGraph
     set var(proc,updateelement) PlotBarUpdateElement
     set var(proc,highlite) PlotBarHighliteElement
@@ -139,7 +142,12 @@ proc PlotDialogBar {varname} {
     WidthDashMenu $var(mb).data.error.width $varname error,width {} \
 	[list PlotBarUpdateElement $varname] {}
 
-    # graph
+}
+
+proc PlotBarAddPlot {varname} {
+    upvar #0 $varname var
+    global $varname
+
     set var(type) bar
     set var(graph) [ttk::frame $var(top).fr]
     set var(plot) [blt::barchart $var(graph).bar \
@@ -155,6 +163,7 @@ proc PlotDialogBar {varname} {
     pack $var(graph) -expand yes -fill both
 
     # set up zoom stack, assuming mode is zoom
+    global ds9
     switch $ds9(wm) {
 	x11 -
 	win32 {Blt_ZoomStack $var(plot) -mode release}

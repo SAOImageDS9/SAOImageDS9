@@ -27,9 +27,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     set var(mode) zoom
     set var(callback) {}
 
-    set var(data,total) 0
-    set var(data,current) 0
-
     set var(name) {}
     set var(xdata) {}
     set var(ydata) {}
@@ -38,9 +35,7 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 
     array set $varname [array get pap]
 
-    set var(graph,title) "$title"
-    set var(axis,x,title) "$xaxis"
-    set var(axis,y,title) "$yaxis"
+    PlotTitle $varname $title $xaxis $yaxis
 
     # can be turned off for external line plots
     set var(graph,format) 1
@@ -228,6 +223,9 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 
     # dataset
     menu $var(mb).data
+
+    set var(plot,total) 0
+    set var(plot,current) 0
 }
 
 proc PlotDataFormatDialog {xarname} {

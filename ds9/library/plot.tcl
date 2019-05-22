@@ -88,6 +88,19 @@ proc PlotAddPlot {varname} {
     global $varname
 
     global ds9
+
+    incr ${varname}(plot,total)
+    incr ${varname}(plot,current) 0
+
+    set cc $var(plot,current)
+
+    set var(plot,$cc,data,total) 0
+    set var(plot,$cc,data,current) 0
+
+    set var(data,total) $var(plot,$cc,data,total)
+    set var(data,current) $var(plot,$cc,data,current)
+
+    $var(proc,addplot) $varname
 }
 
 proc PlotAxisFormat {varname axis w nn} {

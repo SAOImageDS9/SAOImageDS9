@@ -23,18 +23,18 @@ proc PlotPostScript {varname} {
     global ds9
 
     # set postscript fonts
-    $var(graph) configure \
+    $var(plot) configure \
 	-font "$var(graph,title,family) $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
 
-    $var(graph) xaxis configure \
+    $var(plot) xaxis configure \
 	-tickfont "$var(axis,font,family) $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "$var(axis,title,family) $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-    $var(graph) yaxis configure \
+    $var(plot) yaxis configure \
 	-tickfont "$var(axis,font,family) $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "$var(axis,title,family) $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-    $var(graph) legend configure \
+    $var(plot) legend configure \
 	-font "$var(legend,font,family) $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	-titlefont "$var(legend,title,family) $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
 
@@ -94,26 +94,26 @@ proc PlotPostScript {varname} {
     }
 
     if {$ps(dest) == "file" && $ps(filename) != {}} {
-	eval $var(graph) postscript output $ps(filename) $options
+	eval $var(plot) postscript output $ps(filename) $options
     } else {
 	set ch [open "| $ps(cmd)" w]
-	puts $ch [eval $var(graph) postscript output $options]
+	puts $ch [eval $var(plot) postscript output $options]
 	close $ch
     }
 
     # reset fonts
-    $var(graph) configure \
+    $var(plot) configure \
 	-font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
 
-    $var(graph) xaxis configure \
+    $var(plot) xaxis configure \
 	-tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-    $var(graph) yaxis configure \
+    $var(plot) yaxis configure \
 	-tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-    $var(graph) legend configure \
+    $var(plot) legend configure \
 	-font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	-titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
 }

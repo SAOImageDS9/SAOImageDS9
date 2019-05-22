@@ -221,21 +221,21 @@ proc PlotDialogLine {varname} {
 
     # graph
     set var(type) line
-    set var(frame) [ttk::frame $var(top).fr]
-    set var(graph) [blt::graph $var(frame).line \
+    set var(graph) [ttk::frame $var(top).fr]
+    set var(plot) [blt::graph $var(graph).line \
 			-width 600 \
 			-height 500 \
 			-highlightthickness 0 \
 		       ]
 
+    pack $var(plot) -expand yes -fill both
     pack $var(graph) -expand yes -fill both
-    pack $var(frame) -expand yes -fill both
 
     # set up zoom stack, assuming mode is zoom
     switch $ds9(wm) {
 	x11 -
-	win32 {Blt_ZoomStack $var(graph) -mode release}
-	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
+	win32 {Blt_ZoomStack $var(plot) -mode release}
+	aqua {Blt_ZoomStack $var(plot) -mode release -button "ButtonPress-2"}
     }
 }
 
@@ -281,7 +281,7 @@ proc PlotLineUpdateElement {varname} {
 	set cap 0
     }
 
-    $var(graph) element configure "d-${nn}" \
+    $var(plot) element configure "d-${nn}" \
 	-label $var(name) -hide [expr !$var(show)] \
 	-symbol $var(shape,symbol) -fill $clr -scalesymbols no \
 	-pixels 5 -outline $var(shape,color) \

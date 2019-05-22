@@ -141,24 +141,24 @@ proc PlotDialogBar {varname} {
 
     # graph
     set var(type) bar
-    set var(frame) [ttk::frame $var(top).fr]
-    set var(graph) [blt::barchart $var(frame).bar \
+    set var(graph) [ttk::frame $var(top).fr]
+    set var(plot) [blt::barchart $var(graph).bar \
 			-width 600 \
 			-height 500 \
 			-highlightthickness 0 \
 		       ]
 
-    $var(graph) xaxis configure -grid no -stepsize 0
-    $var(graph) yaxis configure -grid yes
+    $var(plot) xaxis configure -grid no -stepsize 0
+    $var(plot) yaxis configure -grid yes
 
+    pack $var(plot) -expand yes -fill both
     pack $var(graph) -expand yes -fill both
-    pack $var(frame) -expand yes -fill both
 
     # set up zoom stack, assuming mode is zoom
     switch $ds9(wm) {
 	x11 -
-	win32 {Blt_ZoomStack $var(graph) -mode release}
-	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
+	win32 {Blt_ZoomStack $var(plot) -mode release}
+	aqua {Blt_ZoomStack $var(plot) -mode release -button "ButtonPress-2"}
     }
 }
 
@@ -167,7 +167,7 @@ proc PlotBarUpdateGraph {varname} {
     global $varname
 
     PlotUpdateGraph $varname
-    $var(graph) configure -barmode $var(bar,mode)
+    $var(plot) configure -barmode $var(bar,mode)
 }
 
 proc PlotBarUpdateElement {varname} {
@@ -189,7 +189,7 @@ proc PlotBarUpdateElement {varname} {
 	set cap 0
     }
 
-    $var(graph) element configure "d-${nn}" \
+    $var(plot) element configure "d-${nn}" \
 	-label $var(name) -hide [expr !$var(show)] \
 	-relief $var(bar,relief) -color $var(color) \
 	-showerrorbars $show -errorbarcolor $var(error,color) \

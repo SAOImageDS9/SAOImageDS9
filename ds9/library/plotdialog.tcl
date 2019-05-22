@@ -614,7 +614,7 @@ proc PlotExport {varname fn format} {
     # besure we are on top
     raise $var(top)
 
-    set rr [catch {image create photo -format window -data $var(frame)} ph]
+    set rr [catch {image create photo -format window -data $var(graph)} ph]
     if {$rr} {
 	Error $iap(error)
 	return

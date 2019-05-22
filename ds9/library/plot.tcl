@@ -105,12 +105,12 @@ proc PlotChangeMode {varname} {
 
     switch $var(mode) {
 	pointer {
-	    blt::RemoveBindTag $var(graph) zoom-$var(graph)
-	    bind $var(graph) <1> [list PlotButton $varname %x %y]
+	    blt::RemoveBindTag $var(plot) zoom-$var(plot)
+	    bind $var(plot) <1> [list PlotButton $varname %x %y]
 	}
 	zoom {
-	    bind $var(graph) <1> {}
-	    blt::AddBindTag $var(graph) zoom-$var(graph)
+	    bind $var(plot) <1> {}
+	    blt::AddBindTag $var(plot) zoom-$var(plot)
 	}
     }
 }
@@ -131,10 +131,10 @@ proc PlotClearData {varname} {
     for {set nn 1} {$nn<=$var(data,total)} {incr nn} {
 	if {$var($nn,manage)} {
 	    # delete elements
-	    foreach el [$var(graph) element names] {
+	    foreach el [$var(plot) element names] {
 		set f [split $el -]
 		if {[lindex $f 1] == $nn} {
-		    $var(graph) element delete $el
+		    $var(plot) element delete $el
 		}
 	    }
 
@@ -1089,23 +1089,23 @@ proc PlotUpdateGraph {varname} {
 	set ymax $var(axis,y,max)
     }
 
-    $var(graph) xaxis configure -min $xmin -max $xmax \
+    $var(plot) xaxis configure -min $xmin -max $xmax \
 	-descending $var(axis,x,flip)
-    $var(graph) yaxis configure -min $ymin -max $ymax \
+    $var(plot) yaxis configure -min $ymin -max $ymax \
 	-descending $var(axis,y,flip)
 
     if {$var(graph,format)} {
 	if {$var(axis,x,format) != {}} {
-	    $var(graph) xaxis configure \
+	    $var(plot) xaxis configure \
 		-command [list PlotAxisFormat $varname x]
 	} else {
-	    $var(graph) xaxis configure -command {}
+	    $var(plot) xaxis configure -command {}
 	}
 	if {$var(axis,y,format) != {}} {
-	    $var(graph) yaxis configure \
+	    $var(plot) yaxis configure \
 		-command [list PlotAxisFormat $varname y]
 	} else {
-	    $var(graph) yaxis configure -command {}
+	    $var(plot) yaxis configure -command {}
 	}
     }
 
@@ -1132,26 +1132,26 @@ proc PlotUpdateGraph {varname} {
     }
 
     # Graph
-    $var(graph) configure -plotpadx 0 -plotpady 0 \
+    $var(plot) configure -plotpadx 0 -plotpady 0 \
 	-title $var(graph,title) \
 	-font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)" \
 	-bg $var(graph,bg) -plotbackground $var(graph,bg)
 
-    $var(graph) xaxis configure \
+    $var(plot) xaxis configure \
 	-bg $var(graph,bg) \
 	-grid $var(axis,x,grid) -logscale $var(axis,x,log) \
 	-title $var(axis,x,title) \
 	-tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-    $var(graph) yaxis configure \
+    $var(plot) yaxis configure \
 	-bg $var(graph,bg) \
 	-grid $var(axis,y,grid) -logscale $var(axis,y,log) \
 	-title $var(axis,y,title) \
 	-tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-    $var(graph) legend configure -hide [expr !$var(legend)] \
+    $var(plot) legend configure -hide [expr !$var(legend)] \
 	-bg $var(graph,bg) \
 	-position $var(legend,position) -title $var(legend,title) \
 	-font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
@@ -1169,23 +1169,23 @@ proc PlotCreateElement {varname} {
 
     # delete current elements
     set nn $var(data,current)
-    foreach el [$var(graph) element names] {
+    foreach el [$var(plot) element names] {
 	set f [split $el -]
 	if {[lindex $f 1] == $nn} {
-	    $var(graph) element delete $el
+	    $var(plot) element delete $el
 	}
     }
 
     global $var(xdata) $var(ydata)
-    $var(graph) element create "d-${nn}" -xdata $var(xdata) -ydata $var(ydata)
+    $var(plot) element create "d-${nn}" -xdata $var(xdata) -ydata $var(ydata)
     if {$var(xedata) != {}} {
 	if {[$var(xedata) length] != 0} {
-	    $var(graph) element configure "d-${nn}" -xerror $var(xedata)
+	    $var(plot) element configure "d-${nn}" -xerror $var(xedata)
 	}
     }
     if {$var(yedata) != {}} {
 	if {[$var(yedata) length] != 0} {
-	    $var(graph) element configure "d-${nn}" -yerror $var(yedata)
+	    $var(plot) element configure "d-${nn}" -yerror $var(yedata)
 	}
     }
 }

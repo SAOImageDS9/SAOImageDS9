@@ -54,7 +54,7 @@ proc PlotScatterProc {varname} {
     upvar #0 $varname var
     global $varname
 
-    set var(proc,addplot) PlotScatterAddGraph
+    set var(proc,addgraph) PlotScatterAddGraph
     set var(proc,updategraph) PlotUpdateGraph
     set var(proc,updateelement) PlotScatterUpdateElement
     set var(proc,highlite) PlotScatterHighliteElement

@@ -56,7 +56,7 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     $var(mb).file add command -label "[msgcat::mc {Save Data}]..." \
 	-command [list PlotSaveData $varname]
     $var(mb).file add command -label [msgcat::mc {Clear Data}] \
-	-command [list PlotClearData $varname]
+	-command [list PlotDeleteData $varname]
     $var(mb).file add command -label [msgcat::mc {Duplicate Data}] \
 	-command [list PlotDupData $varname 1]
     $var(mb).file add separator

@@ -94,13 +94,13 @@ proc PlotAddGraph {varname} {
 
     set cc $var(graph,current)
 
-    set var(graph,$cc,data,total) 0
-    set var(graph,$cc,data,current) 0
+    set var(graph$cc,data,total) 0
+    set var(graph$cc,data,current) 0
 
-    set var(data,total) $var(graph,$cc,data,total)
-    set var(data,current) $var(graph,$cc,data,current)
+    set var(data,total) $var(graph$cc,data,total)
+    set var(data,current) $var(graph$cc,data,current)
 
-    $var(proc,addplot) $varname
+    $var(proc,addgraph) $varname
 }
 
 proc PlotAxisFormat {varname axis w nn} {
@@ -128,7 +128,7 @@ proc PlotChangeMode {varname} {
     }
 }
 
-proc PlotClearData {varname} {
+proc PlotDeleteData {varname} {
     upvar #0 $varname var
     global $varname
 

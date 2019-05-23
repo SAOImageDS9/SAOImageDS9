@@ -54,8 +54,8 @@ proc PlotLineProc {varname} {
     upvar #0 $varname var
     global $varname
 
+    set var(proc,addgraph) PlotLineAddGraph
     set var(proc,updategraph) PlotUpdateGraph
-    set var(proc,addplot) PlotLineAddGraph
     set var(proc,updateelement) PlotLineUpdateElement
     set var(proc,highlite) PlotLineHighliteElement
     set var(proc,button) PlotLineButton

@@ -32,7 +32,7 @@ proc PlotLine {tt wtt title xaxis yaxis dim data} {
     PlotLineProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotDialogLine $varname
-    PlotAddPlot $varname
+    PlotAddGraph $varname
 
     PlotDataSet $varname $dim $data
     $var(proc,updategraph) $varname
@@ -47,7 +47,7 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     PlotLineProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotDialogLine $varname
-    PlotAddPlot $varname
+    PlotAddGraph $varname
 }
 
 proc PlotLineProc {varname} {
@@ -55,7 +55,7 @@ proc PlotLineProc {varname} {
     global $varname
 
     set var(proc,updategraph) PlotUpdateGraph
-    set var(proc,addplot) PlotLineAddPlot
+    set var(proc,addplot) PlotLineAddGraph
     set var(proc,updateelement) PlotLineUpdateElement
     set var(proc,highlite) PlotLineHighliteElement
     set var(proc,button) PlotLineButton
@@ -224,27 +224,27 @@ proc PlotDialogLine {varname} {
 
 }
 
-proc PlotLineAddPlot {varname} {
+proc PlotLineAddGraph {varname} {
     upvar #0 $varname var
     global $varname
 
     set var(type) line
-    set var(graph) [ttk::frame $var(top).fr]
-    set var(plot) [blt::graph $var(graph).line \
+    set var(canvas) [ttk::frame $var(top).fr]
+    set var(graph) [blt::graph $var(canvas).line \
 			-width 600 \
 			-height 500 \
 			-highlightthickness 0 \
 		       ]
 
-    pack $var(plot) -expand yes -fill both
     pack $var(graph) -expand yes -fill both
+    pack $var(canvas) -expand yes -fill both
 
     # set up zoom stack, assuming mode is zoom
     global ds9
     switch $ds9(wm) {
 	x11 -
-	win32 {Blt_ZoomStack $var(plot) -mode release}
-	aqua {Blt_ZoomStack $var(plot) -mode release -button "ButtonPress-2"}
+	win32 {Blt_ZoomStack $var(graph) -mode release}
+	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
     }
 }
 
@@ -290,7 +290,7 @@ proc PlotLineUpdateElement {varname} {
 	set cap 0
     }
 
-    $var(plot) element configure "d-${nn}" \
+    $var(graph) element configure "d-${nn}" \
 	-label $var(name) -hide [expr !$var(show)] \
 	-symbol $var(shape,symbol) -fill $clr -scalesymbols no \
 	-pixels 5 -outline $var(shape,color) \

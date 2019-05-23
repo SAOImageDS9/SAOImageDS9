@@ -32,7 +32,7 @@ proc PlotScatter {tt wtt title xaxis yaxis dim data} {
     PlotScatterProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotDialogScatter $varname
-    PlotAddPlot $varname
+    PlotAddGraph $varname
     
     PlotDataSet $varname $dim $data
     $var(proc,updategraph) $varname
@@ -47,14 +47,14 @@ proc PlotScatterDialog {varname wtt title xaxis yaxis} {
     PlotScatterProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotDialogScatter $varname
-    PlotAddPlot $varname
+    PlotAddGraph $varname
 }
 
 proc PlotScatterProc {varname} {
     upvar #0 $varname var
     global $varname
 
-    set var(proc,addplot) PlotScatterAddPlot
+    set var(proc,addplot) PlotScatterAddGraph
     set var(proc,updategraph) PlotUpdateGraph
     set var(proc,updateelement) PlotScatterUpdateElement
     set var(proc,highlite) PlotScatterHighliteElement
@@ -150,27 +150,27 @@ proc PlotDialogScatter {varname} {
 	[list PlotScatterUpdateElement $varname] {}
 }
 
-proc PlotScatterAddPlot {varname} {
+proc PlotScatterAddGraph {varname} {
     upvar #0 $varname var
     global $varname
 
     set var(type) scatter
-    set var(graph) [ttk::frame $var(top).fr]
-    set var(plot) [blt::graph $var(graph).scatter \
+    set var(canvas) [ttk::frame $var(top).fr]
+    set var(graph) [blt::graph $var(canvas).scatter \
 			-width 600 \
 			-height 500 \
 			-highlightthickness 0 \
 		       ]
 
-    pack $var(plot) -expand yes -fill both
     pack $var(graph) -expand yes -fill both
+    pack $var(canvas) -expand yes -fill both
 
     # set up zoom stack, assuming mode is zoom
     global ds9
     switch $ds9(wm) {
 	x11 -
-	win32 {Blt_ZoomStack $var(plot) -mode release}
-	aqua {Blt_ZoomStack $var(plot) -mode release -button "ButtonPress-2"}
+	win32 {Blt_ZoomStack $var(graph) -mode release}
+	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
     }
 }
 
@@ -208,7 +208,7 @@ proc PlotScatterUpdateElement {varname} {
 	set cap 0
     }
 
-    $var(plot) element configure "d-${nn}" \
+    $var(graph) element configure "d-${nn}" \
 	-label $var(name) -hide [expr !$var(show)] \
 	-symbol $var(shape,symbol) -fill $clr -scalesymbols no \
 	-outline $var(shape,color) \
@@ -216,7 +216,7 @@ proc PlotScatterUpdateElement {varname} {
 	-showerrorbars $show -errorbarcolor $var(error,color) \
 	-errorbarwidth $var(error,width) -errorbarcap $cap
 
-    $var(plot) pen configure active -color blue \
+    $var(graph) pen configure active -color blue \
 	-symbol $var(shape,symbol) \
 	-linewidth 0 -pixels 5 \
 	-showerrorbars $show -errorbarcolor $var(error,color) \
@@ -235,18 +235,18 @@ proc PlotScatterButton {varname x y} {
 	return
     }
 
-    set rr [$var(plot) element closest $x $y]
+    set rr [$var(graph) element closest $x $y]
     set elem [lindex $rr 1]
     set row [lindex $rr 3]
 
     if {$elem != {}} {
 	if {$row != {}} {
-	    $var(plot) element deactivate $elem
-	    $var(plot) element activate $elem $row
+	    $var(graph) element deactivate $elem
+	    $var(graph) element activate $elem $row
 	    # rows start at 1
 	    eval "$var(callback) [expr $row+1]"
 	} else {
-	    $var(plot) element deactivate $elem
+	    $var(graph) element deactivate $elem
 	    eval "$var(callback) {}"
 	}
     }
@@ -261,10 +261,10 @@ proc PlotScatterHighliteElement {varname rowlist} {
     }
 
     if {$var(show)} {
-	$var(plot) element deactivate d-1
+	$var(graph) element deactivate d-1
 	if {$rowlist != {}} {
 	    # can have multiple rows
-	    eval "$var(plot) element activate d-1 $rowlist"
+	    eval "$var(graph) element activate d-1 $rowlist"
 	}
     }
 }

@@ -32,7 +32,7 @@ proc PlotBar {tt wtt title xaxis yaxis dim data} {
     PlotBarProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotDialogBar $varname
-    PlotAddPlot $varname
+    PlotAddGraph $varname
     
     PlotDataSet $varname $dim $data
     $var(proc,updategraph) $varname
@@ -47,14 +47,14 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
     PlotBarProc $varname
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotDialogBar $varname
-    PlotAddPlot $varname
+    PlotAddGraph $varname
 }
 
 proc PlotBarProc {varname} {
     upvar #0 $varname var
     global $varname
 
-    set var(proc,addplot) PlotBarAddPlot
+    set var(proc,addplot) PlotBarAddGraph
     set var(proc,updategraph) PlotBarUpdateGraph
     set var(proc,updateelement) PlotBarUpdateElement
     set var(proc,highlite) PlotBarHighliteElement
@@ -144,30 +144,30 @@ proc PlotDialogBar {varname} {
 
 }
 
-proc PlotBarAddPlot {varname} {
+proc PlotBarAddGraph {varname} {
     upvar #0 $varname var
     global $varname
 
     set var(type) bar
-    set var(graph) [ttk::frame $var(top).fr]
-    set var(plot) [blt::barchart $var(graph).bar \
+    set var(canvas) [ttk::frame $var(top).fr]
+    set var(graph) [blt::barchart $var(canvas).bar \
 			-width 600 \
 			-height 500 \
 			-highlightthickness 0 \
 		       ]
 
-    $var(plot) xaxis configure -grid no -stepsize 0
-    $var(plot) yaxis configure -grid yes
+    $var(graph) xaxis configure -grid no -stepsize 0
+    $var(graph) yaxis configure -grid yes
 
-    pack $var(plot) -expand yes -fill both
     pack $var(graph) -expand yes -fill both
+    pack $var(canvas) -expand yes -fill both
 
     # set up zoom stack, assuming mode is zoom
     global ds9
     switch $ds9(wm) {
 	x11 -
-	win32 {Blt_ZoomStack $var(plot) -mode release}
-	aqua {Blt_ZoomStack $var(plot) -mode release -button "ButtonPress-2"}
+	win32 {Blt_ZoomStack $var(graph) -mode release}
+	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
     }
 }
 
@@ -176,7 +176,7 @@ proc PlotBarUpdateGraph {varname} {
     global $varname
 
     PlotUpdateGraph $varname
-    $var(plot) configure -barmode $var(bar,mode)
+    $var(graph) configure -barmode $var(bar,mode)
 }
 
 proc PlotBarUpdateElement {varname} {
@@ -198,7 +198,7 @@ proc PlotBarUpdateElement {varname} {
 	set cap 0
     }
 
-    $var(plot) element configure "d-${nn}" \
+    $var(graph) element configure "d-${nn}" \
 	-label $var(name) -hide [expr !$var(show)] \
 	-relief $var(bar,relief) -color $var(color) \
 	-showerrorbars $show -errorbarcolor $var(error,color) \

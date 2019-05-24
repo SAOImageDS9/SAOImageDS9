@@ -131,7 +131,7 @@ proc PlotBarAddGraph {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc  $var(graph,current)
+    set cc $var(graph,current)
 
     set var(type$cc) bar
     set var(graph$cc) [blt::barchart $var(canvas).gr$cc \
@@ -149,14 +149,19 @@ proc PlotBarUpdateGraph {varname} {
     global $varname
 
     PlotUpdateGraph $varname
-    $var(graph) configure -barmode $var(bar,mode)
+
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    for {set ii 1} {$ii<=$tt} {incr ii} {
+	$var(graph$ii) configure -barmode $var(bar,mode)
+    }
 }
 
 proc PlotBarUpdateElement {varname} {
     upvar #0 $varname var
     global $varname
 
-    set nn $var(data,current)
     PlotGetVar $varname $nn
 
     if {$var(error)} {

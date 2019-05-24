@@ -110,13 +110,11 @@ proc PlotAddGraph {varname} {
     incr ${varname}(graph,total)
     incr ${varname}(graph,current)
 
+    set tt $var(graph,total)
     set cc $var(graph,current)
 
     set var(graph$cc,data,total) 0
     set var(graph$cc,data,current) 0
-
-    set var(data,total) $var(graph$cc,data,total)
-    set var(data,current) $var(graph$cc,data,current)
 
     $var(proc,addgraph) $varname
 
@@ -148,8 +146,6 @@ proc PlotDeleteGraph {varname} {
 	set cc $var(graph,current)
 
 	set var(graph) $var(graph$cc)
-	set var(data,total) $var(graph$cc,data,total)
-	set var(data,current) $var(graph$cc,data,current)
     }
 }
 
@@ -158,13 +154,16 @@ proc PlotAddData {varname} {
     upvar #0 $varname var
     global $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     # warning: uses current vars
-    if {$var(data,total) == 0} {
+    if {$tt == 0} {
 	return
     }
 
     # delete current elements
-    set nn $var(data,current)
+    set nn $var(graph$cc,data,current)
     foreach el [$var(graph) element names] {
 	set f [split $el -]
 	if {[lindex $f 1] == $nn} {
@@ -217,14 +216,17 @@ proc PlotDeleteData {varname} {
 
     global ds9
 
-    if {$var(data,total) == 0} {
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    if {$tt == 0} {
 	return
     }
 
     # first set can be external
     set clear $var(1,manage)
 
-    for {set nn 1} {$nn<=$var(data,total)} {incr nn} {
+    for {set nn 1} {$nn<=$tt} {incr nn} {
 	if {$var($nn,manage)} {
 	    # delete elements
 	    foreach el [$var(graph) element names] {
@@ -253,8 +255,8 @@ proc PlotDeleteData {varname} {
     }
 
     if {$clear} {
-	set var(data,total) 0
-	set var(data,current) 0
+	set var(graph$cc,data,total) 0
+	set var(graph$cc,data,current) 0
 
 	set var(name) {}
 	set var(xdata) {}
@@ -279,8 +281,8 @@ proc PlotDeleteData {varname} {
 	PlotStats $varname
 	PlotList $varname
     } else {
- 	set var(data,total) 1
- 	set var(data,current) 1
+ 	set var(graph$cc,data,total) 1
+ 	set var(graph$cc,data,current) 1
 
 	$var(mb).graph.select delete [expr $ds9(menu,start)+1] end
  	PlotCurrentData $varname
@@ -292,8 +294,11 @@ proc PlotCurrentData {varname} {
     upvar #0 $varname var
     global $varname
 
-    if {$var(data,total) > 0} {
-	set nn $var(data,current)
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    if {$tt > 0} {
+	set nn $var(graph$cc,data,current)
 
 	set var(manage) $var($nn,manage)
 	set var(dim) $var($nn,dim)
@@ -347,6 +352,9 @@ proc PlotDataSetOne {varname dim data} {
     upvar #0 $varname var
     global $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     # look for no data
     if {[string length $data] == 0} {
 	return
@@ -356,9 +364,9 @@ proc PlotDataSetOne {varname dim data} {
     set ll [llength $data]
 
     # incr count
-    incr ${varname}(data,total) 
-    set nn $var(data,total)
-    set var(data,current) $nn
+    incr ${varname}(graph$cc,data,total) 
+    set nn $var(graph$cc,data,total)
+    set var(graph$cc,data,current) $nn
 
     # new vector names
     set xdata ap${varname}xx${nn}
@@ -535,7 +543,7 @@ proc PlotDataSetOne {varname dim data} {
 
     # update data set menu
     $var(mb).graph.select add radiobutton -label "$var(name)" \
-	-variable ${varname}(data,current) -value $nn \
+	-variable ${varname}(graph$cc,data,current) -value $nn \
 	-command [list PlotCurrentData $varname]
 
     PlotAddData $varname
@@ -546,13 +554,16 @@ proc PlotDupData {varname mm} {
     upvar #0 $varname var
     global $varname
 
-    if {$var(data,total) == 0} {
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    if {$tt == 0} {
 	return
     }
 
     # incr count
-    incr ${varname}(data,total) 
-    set nn $var(data,total)
+    incr ${varname}(graph$cc,data,total) 
+    set nn $var(graph$cc,data,total)
     set pp [expr $nn-1]
 
     # new vector names
@@ -598,11 +609,11 @@ proc PlotDupData {varname mm} {
 
     # update data set menu
     $var(mb).graph.select add radiobutton -label "$var($nn,name)" \
-	-variable ${varname}(data,current) -value $nn \
+	-variable ${varname}(graph$cc,data,current) -value $nn \
 	-command [list PlotCurrentData $varname]
 
     # make current
-    set var(data,current) $nn
+    set var(graph$cc,data,current) $nn
 
     set var(manage) $var($nn,manage)
     set var(dim) $var($nn,dim)
@@ -627,12 +638,15 @@ proc PlotDestroy {varname} {
     
     global iap
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     # see if it still is around
     if {![PlotPing $varname]} {
  	return
     }
     
-    for {set nn 1} {$nn<=$var(data,total)} {incr nn} {
+    for {set nn 1} {$nn<=$tt} {incr nn} {
 	switch $var($nn,dim) {
 	    xy {
 		blt::vector destroy $var($nn,xdata) $var($nn,ydata)
@@ -678,10 +692,13 @@ proc PlotExternal {varname} {
     upvar #0 $varname var
     global $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     # incr count
-    incr ${varname}(data,total) 
-    set nn $var(data,total)
-    set var(data,current) $nn
+    incr ${varname}(graph$cc,data,total) 
+    set nn $var(graph$cc,data,total)
+    set var(graph$cc,data,current) $nn
 
     set var(name) "Data Set $nn"
 
@@ -698,7 +715,7 @@ proc PlotExternal {varname} {
     # update data set menu
     $var(mb).graph.select add radiobutton \
 	-label "[msgcat::mc {Data Set}] $nn" \
-	-variable ${varname}(data,current) -value $nn \
+	-variable ${varname}(graph$cc,data,current) -value $nn \
 	-command "PlotCurrentData $varname"
 
     PlotAddData $varname
@@ -1323,13 +1340,16 @@ proc PlotBackup {ch dir} {
     set rdir "./[lindex [file split $dir] end]"
 
     # only save ap plots
-    foreach tt $iap(windows) {
-	if {[string range $tt 0 1] == {ap}} {
-	    set fdir [file join $dir $tt]
+    foreach ww $iap(windows) {
+	if {[string range $ww 0 1] == {ap}} {
+	    set fdir [file join $dir $ww]
 	    
-	    set varname $tt
+	    set varname $ww
 	    upvar #0 $varname var
 	    global $varname
+
+	    set tt $var(graph,total)
+	    set cc $var(graph,current)
 
 	    # create dir if needed
 	    if {![file isdirectory $fdir]} {
@@ -1346,9 +1366,9 @@ proc PlotBackup {ch dir} {
 		strip {puts $ch "PlotStripTool"}
 	    }
 
-	    set save $var(data,current)
-	    for {set ii 1} {$ii<=$var(data,total)} {incr ii} {
-		set ${varname}(data,current) $ii
+	    set save $var(graph$cc,data,current)
+	    for {set ii 1} {$ii<=$tt} {incr ii} {
+		set ${varname}(graph$cc,data,current) $ii
 		PlotCurrentData $varname
 
 		PlotSaveDataFile $varname "$fdir/plot$ii.dat"
@@ -1357,7 +1377,7 @@ proc PlotBackup {ch dir} {
 		puts $ch "PlotLoadDataFile $varname $fdir/plot$ii.dat $var(dim)"
 		puts $ch "PlotLoadConfigFile $varname $fdir/plot$ii.plt"
 	    }
-	    set ${varname}(data,current) $save
+	    set ${varname}(graph$cc,data,current) $save
 	    PlotCurrentData $varname
 	}
     }

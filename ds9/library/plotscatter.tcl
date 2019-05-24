@@ -152,12 +152,15 @@ proc PlotScatterUpdateElement {varname} {
     upvar #0 $varname var
     global $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     # warning: uses current vars
-    if {$var(data,total) == 0} {
+    if {$tt == 0} {
  	return
     }
     
-    set nn $var(data,current)
+    set nn $var(graph$cc,data,current)
     PlotGetVar $varname $nn
 
     if {$var(shape,symbol) == "none"} {
@@ -201,7 +204,10 @@ proc PlotScatterButton {varname x y} {
     upvar #0 $varname var
     global $varname
 
-    if {$var(data,total) == 0} {
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    if {$tt == 0} {
 	return
     }
 
@@ -230,7 +236,10 @@ proc PlotScatterHighliteElement {varname rowlist} {
     upvar #0 $varname var
     global $varname
 
-    if {$var(data,total) == 0} {
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    if {$tt == 0} {
 	return
     }
 

@@ -29,10 +29,7 @@ proc PlotBar {tt wtt title xaxis yaxis dim data} {
     upvar #0 $varname var
     global $varname
 
-    PlotBarProc $varname
-    PlotDialog $varname $wtt $title $xaxis $yaxis
-    PlotDialogBar $varname
-    PlotAddGraph $varname
+    PlotBarDialog $varname $wtt $title $xaxis $yaxis
     
     PlotDataSet $varname $dim $data
     $var(proc,updategraph) $varname

@@ -83,6 +83,24 @@ proc PlotDef {} {
     set pap(bar,mode) normal
 }
 
+# Canvas
+proc PlotLayoutCanvas {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    for {set ii 1} {$ii<=$tt} {incr ii} {
+	pack forget $var(graph$ii)
+    }
+
+    for {set ii 1} {$ii<=$tt} {incr ii} {
+	pack $var(graph$ii) -side top -expand yes -fill both
+    }
+}
+
+# Graph
 proc PlotAddGraph {varname} {
     upvar #0 $varname var
     global $varname
@@ -105,8 +123,6 @@ proc PlotAddGraph {varname} {
     set var(graph) $var(graph$cc)
     set var(type) $var(type$cc)
 
-    pack $var(graph) -expand yes -fill both
-
     # set up zoom stack, assuming mode is zoom
     global ds9
     switch $ds9(wm) {
@@ -114,6 +130,8 @@ proc PlotAddGraph {varname} {
 	win32 {Blt_ZoomStack $var(graph) -mode release}
 	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
     }
+
+    PlotLayoutCanvas $varname
 }
 
 proc PlotDeleteGraph {varname} {
@@ -132,6 +150,39 @@ proc PlotDeleteGraph {varname} {
 	set var(graph) $var(graph$cc)
 	set var(data,total) $var(graph$cc,data,total)
 	set var(data,current) $var(graph$cc,data,current)
+    }
+}
+
+# Data
+proc PlotAddData {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    # warning: uses current vars
+    if {$var(data,total) == 0} {
+	return
+    }
+
+    # delete current elements
+    set nn $var(data,current)
+    foreach el [$var(graph) element names] {
+	set f [split $el -]
+	if {[lindex $f 1] == $nn} {
+	    $var(graph) element delete $el
+	}
+    }
+
+    global $var(xdata) $var(ydata)
+    $var(graph) element create "d-${nn}" -xdata $var(xdata) -ydata $var(ydata)
+    if {$var(xedata) != {}} {
+	if {[$var(xedata) length] != 0} {
+	    $var(graph) element configure "d-${nn}" -xerror $var(xedata)
+	}
+    }
+    if {$var(yedata) != {}} {
+	if {[$var(yedata) length] != 0} {
+	    $var(graph) element configure "d-${nn}" -yerror $var(yedata)
+	}
     }
 }
 
@@ -487,7 +538,7 @@ proc PlotDataSetOne {varname dim data} {
 	-variable ${varname}(data,current) -value $nn \
 	-command [list PlotCurrentData $varname]
 
-    PlotCreateElement $varname
+    PlotAddData $varname
     $var(proc,updateelement) $varname
 }
 
@@ -563,7 +614,7 @@ proc PlotDupData {varname mm} {
 
     PlotSetVar $varname $nn
 
-    PlotCreateElement $varname
+    PlotAddData $varname
     $var(proc,updateelement) $varname
     $var(proc,updategraph) $varname
     PlotStats $varname
@@ -650,7 +701,7 @@ proc PlotExternal {varname} {
 	-variable ${varname}(data,current) -value $nn \
 	-command "PlotCurrentData $varname"
 
-    PlotCreateElement $varname
+    PlotAddData $varname
 }
 
 proc PlotList {varname} {
@@ -1194,38 +1245,6 @@ proc PlotUpdateGraph {varname} {
 	-position $var(legend,position) -title $var(legend,title) \
 	-font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	-titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
-}
-
-proc PlotCreateElement {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    # warning: uses current vars
-    if {$var(data,total) == 0} {
-	return
-    }
-
-    # delete current elements
-    set nn $var(data,current)
-    foreach el [$var(graph) element names] {
-	set f [split $el -]
-	if {[lindex $f 1] == $nn} {
-	    $var(graph) element delete $el
-	}
-    }
-
-    global $var(xdata) $var(ydata)
-    $var(graph) element create "d-${nn}" -xdata $var(xdata) -ydata $var(ydata)
-    if {$var(xedata) != {}} {
-	if {[$var(xedata) length] != 0} {
-	    $var(graph) element configure "d-${nn}" -xerror $var(xedata)
-	}
-    }
-    if {$var(yedata) != {}} {
-	if {[$var(yedata) length] != 0} {
-	    $var(graph) element configure "d-${nn}" -yerror $var(yedata)
-	}
-    }
 }
 
 proc PlotColorMenu {w varname color cmd} {

@@ -29,10 +29,7 @@ proc PlotScatter {tt wtt title xaxis yaxis dim data} {
     upvar #0 $varname var
     global $varname
 
-    PlotScatterProc $varname
-    PlotDialog $varname $wtt $title $xaxis $yaxis
-    PlotDialogScatter $varname
-    PlotAddGraph $varname
+    PlotScatterDialog $varname $wtt $title $xaxis $yaxis
     
     PlotDataSet $varname $dim $data
     $var(proc,updategraph) $varname

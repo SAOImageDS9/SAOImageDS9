@@ -54,7 +54,7 @@ proc PrefsDialogPlot {} {
     grid $f.tnumlab $f.numlab -padx 2 -pady 2 -sticky w
 
     # Data
-    set f [ttk::labelframe $w.plot.data -text [msgcat::mc {Data Set}]]
+    set f [ttk::labelframe $w.plot.data -text [msgcat::mc {Dataset}]]
 
     #  Show
     ttk::checkbutton $f.show -text [msgcat::mc {Show}] -variable pap(show)
@@ -314,6 +314,18 @@ proc PlotCmdExport {format fn} {
 	}
     }
     PlotExport $cvarname $fn $format
+}
+
+proc PlotCmdSelectData {which} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set tt $cvar(graph,total)
+    set cc $cvar(graph,current)
+
+    set cvar(graph$cc,data,current) $which
+
+    PlotCurrentData $cvarname
 }
 
 proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {

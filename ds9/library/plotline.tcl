@@ -230,7 +230,7 @@ proc PlotLineUpdateElement {varname} {
     set cc $var(graph,current)
 
     # warning: uses current vars
-    if {$tt == 0} {
+    if {$var(graph$cc,data,total) == 0} {
  	return
     }
     
@@ -267,7 +267,7 @@ proc PlotLineUpdateElement {varname} {
 	set cap 0
     }
 
-    $var(graph) element configure "d-${nn}" \
+    $var(graph$cc) element configure "d-${nn}" \
 	-label $var(name) -hide [expr !$var(show)] \
 	-symbol $var(shape,symbol) -fill $clr -scalesymbols no \
 	-pixels 5 -outline $var(shape,color) \

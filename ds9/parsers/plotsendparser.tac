@@ -94,9 +94,9 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | SMOOTH_ {ProcessSendCmdCVARGet smooth}
  | WIDTH_ {ProcessSendCmdCVARGet width}
  | DASH_ {ProcessSendCmdCVARYesNo dash}
- | SELECT_ {ProcessSendCmdCVARGet data,current}
+ | SELECT_ {ProcessSendCmdCVARGet graph1,data,current}
  # backward compatibility
- | DATASET_ {ProcessSendCmdCVARGet data,current}
+ | DATASET_ {ProcessSendCmdCVARGet graph1,data,current}
  ;
  
 axis : xy GRID_ {ProcessSendCmdCVARYesNo "axis,$1,grid"}

@@ -5420,7 +5420,7 @@ proc plot::yyparse {} {
                     62 { set _ xyexey }
                     64 { PlotCmdSave $2 }
                     65 { PlotCmdData $2 }
-                    66 { ProcessCmdCVAR0 PlotClearData }
+                    66 { ProcessCmdCVAR0 PlotDeleteData }
                     70 { ProcessCmdCVAR stats $2 PlotStats }
                     71 { ProcessCmdCVAR stats $2 PlotStats }
                     72 { ProcessCmdCVAR list $2 PlotList }
@@ -5438,8 +5438,8 @@ proc plot::yyparse {} {
                     95 { PlotCmdUpdateElement smooth $2 }
                     96 { PlotCmdUpdateElement width $2 }
                     97 { PlotCmdUpdateElement dash $2 }
-                    98 { ProcessCmdCVAR data,current $2 PlotCurrentData }
-                    99 { ProcessCmdCVAR data,current $2 PlotCurrentData }
+                    98 { PlotCmdSelectData $2 }
+                    99 { PlotCmdSelectData $2 }
                     102 { PlotCmdExport [ExtToFormat $1] $1 }
                     103 { PlotCmdExport [ExtToFormat $1] $1 }
                     104 { PlotCmdExport $1 $2 }

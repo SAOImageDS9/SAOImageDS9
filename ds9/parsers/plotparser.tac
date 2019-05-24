@@ -230,7 +230,7 @@ plotCmd : LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
  # xpa/samp only
  | DATA_ dim {PlotCmdData $2}
- | CLEAR_ {ProcessCmdCVAR0 PlotClearData}
+ | CLEAR_ {ProcessCmdCVAR0 PlotDeleteData}
  | EXPORT_ export
  | DUPLICATE_ duplicate
  # backward compatibility
@@ -270,9 +270,9 @@ plotCmd : LOAD_ load
  | WIDTH_ INT_ {PlotCmdUpdateElement width $2}
  | DASH_ yesno {PlotCmdUpdateElement dash $2}
 
- | SELECT_ INT_ {ProcessCmdCVAR data,current $2 PlotCurrentData}
+ | SELECT_ INT_ {PlotCmdSelectData $2}
  # backward compatibility
- | DATASET_ INT_ {ProcessCmdCVAR data,current $2 PlotCurrentData}
+ | DATASET_ INT_ {PlotCmdSelectData $2}
 
  # backward compatibility
  | GRAPH_ oldGraph

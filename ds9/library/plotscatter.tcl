@@ -156,7 +156,7 @@ proc PlotScatterUpdateElement {varname} {
     set cc $var(graph,current)
 
     # warning: uses current vars
-    if {$tt == 0} {
+    if {$var(graph$cc,data,total) == 0} {
  	return
     }
     
@@ -185,7 +185,7 @@ proc PlotScatterUpdateElement {varname} {
 	set cap 0
     }
 
-    $var(graph) element configure "d-${nn}" \
+    $var(graph$cc) element configure "d-${nn}" \
 	-label $var(name) -hide [expr !$var(show)] \
 	-symbol $var(shape,symbol) -fill $clr -scalesymbols no \
 	-outline $var(shape,color) \
@@ -193,7 +193,7 @@ proc PlotScatterUpdateElement {varname} {
 	-showerrorbars $show -errorbarcolor $var(error,color) \
 	-errorbarwidth $var(error,width) -errorbarcap $cap
 
-    $var(graph) pen configure active -color blue \
+    $var(graph$cc) pen configure active -color blue \
 	-symbol $var(shape,symbol) \
 	-linewidth 0 -pixels 5 \
 	-showerrorbars $show -errorbarcolor $var(error,color) \
@@ -207,7 +207,7 @@ proc PlotScatterButton {varname x y} {
     set tt $var(graph,total)
     set cc $var(graph,current)
 
-    if {$tt == 0} {
+    if {$var(graph$cc,data,total) == 0} {
 	return
     }
 
@@ -215,18 +215,18 @@ proc PlotScatterButton {varname x y} {
 	return
     }
 
-    set rr [$var(graph) element closest $x $y]
+    set rr [$var(graph$cc) element closest $x $y]
     set elem [lindex $rr 1]
     set row [lindex $rr 3]
 
     if {$elem != {}} {
 	if {$row != {}} {
-	    $var(graph) element deactivate $elem
-	    $var(graph) element activate $elem $row
+	    $var(graph$cc) element deactivate $elem
+	    $var(graph$cc) element activate $elem $row
 	    # rows start at 1
 	    eval "$var(callback) [expr $row+1]"
 	} else {
-	    $var(graph) element deactivate $elem
+	    $var(graph$cc) element deactivate $elem
 	    eval "$var(callback) {}"
 	}
     }
@@ -239,15 +239,15 @@ proc PlotScatterHighliteElement {varname rowlist} {
     set tt $var(graph,total)
     set cc $var(graph,current)
 
-    if {$tt == 0} {
+    if {$var(graph$cc,data,total) == 0} {
 	return
     }
 
     if {$var(show)} {
-	$var(graph) element deactivate d-1
+	$var(graph$cc) element deactivate d-1
 	if {$rowlist != {}} {
 	    # can have multiple rows
-	    eval "$var(graph) element activate d-1 $rowlist"
+	    eval "$var(graph$cc) element activate d-1 $rowlist"
 	}
     }
 }

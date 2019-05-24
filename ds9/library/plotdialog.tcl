@@ -166,7 +166,7 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     # Graph
     menu $var(mb).graph
 
-    $var(mb).graph add cascade -label [msgcat::mc {Select Data Set}] \
+    $var(mb).graph add cascade -label [msgcat::mc {Select Dataset}] \
 	-menu $var(mb).graph.select
     $var(mb).graph add separator
     menu $var(mb).graph.select
@@ -489,7 +489,7 @@ proc DatasetNameDialog {varname} {
 
     # Param
     set f [ttk::frame $w.param]
-    ttk::label $f.label -text [msgcat::mc {Data Set Name}]
+    ttk::label $f.label -text [msgcat::mc {Dataset Name}]
     ttk::entry $f.name -textvariable ed(name) -width 30
 
     grid $f.label $f.name -padx 2 -pady 2 -sticky ew

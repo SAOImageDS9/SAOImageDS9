@@ -90,7 +90,7 @@ proc PlotAddGraph {varname} {
     global ds9
 
     incr ${varname}(graph,total)
-    incr ${varname}(graph,current) 0
+    incr ${varname}(graph,current)
 
     set cc $var(graph,current)
 
@@ -101,6 +101,38 @@ proc PlotAddGraph {varname} {
     set var(data,current) $var(graph$cc,data,current)
 
     $var(proc,addgraph) $varname
+
+    set var(graph) $var(graph$cc)
+    set var(type) $var(type$cc)
+
+    pack $var(graph) -expand yes -fill both
+
+    # set up zoom stack, assuming mode is zoom
+    global ds9
+    switch $ds9(wm) {
+	x11 -
+	win32 {Blt_ZoomStack $var(graph) -mode release}
+	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
+    }
+}
+
+proc PlotDeleteGraph {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set cc $var(graph,current)
+    if {$cc>1} {
+	destroy $var(graph$cc)
+
+	incr ${varname}(graph,total) -1
+	incr ${varname}(graph,current) -1
+
+	set cc $var(graph,current)
+
+	set var(graph) $var(graph$cc)
+	set var(data,total) $var(graph$cc,data,total)
+	set var(data,current) $var(graph$cc,data,current)
+    }
 }
 
 proc PlotAxisFormat {varname axis w nn} {
@@ -457,13 +489,6 @@ proc PlotDataSetOne {varname dim data} {
 
     PlotCreateElement $varname
     $var(proc,updateelement) $varname
-}
-
-proc PlotDeleteGraph {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ds9
 }
 
 proc PlotDupData {varname mm} {

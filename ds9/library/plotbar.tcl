@@ -148,27 +148,17 @@ proc PlotBarAddGraph {varname} {
     upvar #0 $varname var
     global $varname
 
-    set var(type) bar
-    set var(canvas) [ttk::frame $var(top).fr]
-    set var(graph) [blt::barchart $var(canvas).bar \
-			-width 600 \
-			-height 500 \
-			-highlightthickness 0 \
-		       ]
+    set cc  $var(graph,current)
 
-    $var(graph) xaxis configure -grid no -stepsize 0
-    $var(graph) yaxis configure -grid yes
+    set var(type$cc) bar
+    set var(graph$cc) [blt::barchart $var(canvas).gr$cc \
+			   -width 600 \
+			   -height 500 \
+			   -highlightthickness 0 \
+			  ]
 
-    pack $var(graph) -expand yes -fill both
-    pack $var(canvas) -expand yes -fill both
-
-    # set up zoom stack, assuming mode is zoom
-    global ds9
-    switch $ds9(wm) {
-	x11 -
-	win32 {Blt_ZoomStack $var(graph) -mode release}
-	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
-    }
+    $var(graph$cc) xaxis configure -grid no -stepsize 0
+    $var(graph$cc) yaxis configure -grid yes
 }
 
 proc PlotBarUpdateGraph {varname} {

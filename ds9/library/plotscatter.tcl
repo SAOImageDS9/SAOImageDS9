@@ -154,24 +154,14 @@ proc PlotScatterAddGraph {varname} {
     upvar #0 $varname var
     global $varname
 
-    set var(type) scatter
-    set var(canvas) [ttk::frame $var(top).fr]
-    set var(graph) [blt::graph $var(canvas).scatter \
-			-width 600 \
-			-height 500 \
-			-highlightthickness 0 \
-		       ]
+    set cc  $var(graph,current)
 
-    pack $var(graph) -expand yes -fill both
-    pack $var(canvas) -expand yes -fill both
-
-    # set up zoom stack, assuming mode is zoom
-    global ds9
-    switch $ds9(wm) {
-	x11 -
-	win32 {Blt_ZoomStack $var(graph) -mode release}
-	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
-    }
+    set var(type$cc) scatter
+    set var(graph$cc) [blt::graph $var(canvas).gr$cc \
+			   -width 600 \
+			   -height 500 \
+			   -highlightthickness 0 \
+			  ]
 }
 
 proc PlotScatterUpdateElement {varname} {

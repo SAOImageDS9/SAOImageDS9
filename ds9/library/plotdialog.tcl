@@ -224,6 +224,9 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     # dataset
     menu $var(mb).data
 
+    set var(canvas) [ttk::frame $var(top).fr]
+    pack $var(canvas) -expand yes -fill both
+
     set var(graph,total) 0
     set var(graph,current) 0
 }

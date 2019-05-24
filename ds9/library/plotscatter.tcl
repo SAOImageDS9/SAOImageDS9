@@ -7,6 +7,7 @@ package provide DS9 1.0
 # used by backup
 proc PlotScatterTool {} {
     global iap
+
     PlotScatter $iap(tt) [msgcat::mc {Scatter Plot Tool}] {} {} {} 2 {}
 }
 
@@ -41,28 +42,14 @@ proc PlotScatterDialog {varname wtt title xaxis yaxis} {
     upvar #0 $varname var
     global $varname
 
-    PlotScatterProc $varname
-    PlotDialog $varname $wtt $title $xaxis $yaxis
-    PlotDialogScatter $varname
-    PlotAddGraph $varname
-}
-
-proc PlotScatterProc {varname} {
-    upvar #0 $varname var
-    global $varname
-
     set var(proc,addgraph) PlotScatterAddGraph
     set var(proc,updategraph) PlotUpdateGraph
     set var(proc,updateelement) PlotScatterUpdateElement
     set var(proc,highlite) PlotScatterHighliteElement
     set var(proc,button) PlotScatterButton
-}
 
-proc PlotDialogScatter {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ds9
+    PlotDialog $varname $wtt $title $xaxis $yaxis
+    PlotAddGraph $varname
 
     # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \

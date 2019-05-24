@@ -7,6 +7,7 @@ package provide DS9 1.0
 # used by backup
 proc PlotBarTool {} {
     global iap
+
     PlotBar $iap(tt) [msgcat::mc {Bar Plot Tool}] {} {} {} 2 {}
 }
 
@@ -41,28 +42,14 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
     upvar #0 $varname var
     global $varname
 
-    PlotBarProc $varname
-    PlotDialog $varname $wtt $title $xaxis $yaxis
-    PlotDialogBar $varname
-    PlotAddGraph $varname
-}
-
-proc PlotBarProc {varname} {
-    upvar #0 $varname var
-    global $varname
-
     set var(proc,addgraph) PlotBarAddGraph
     set var(proc,updategraph) PlotBarUpdateGraph
     set var(proc,updateelement) PlotBarUpdateElement
     set var(proc,highlite) PlotBarHighliteElement
     set var(proc,button) PlotBarButton
-}
 
-proc PlotDialogBar {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ds9
+    PlotDialog $varname $wtt $title $xaxis $yaxis
+    PlotAddGraph $varname
 
     # Graph
     $var(mb).graph add separator
@@ -138,7 +125,6 @@ proc PlotDialogBar {varname} {
 	[list PlotBarUpdateElement $varname]
     WidthDashMenu $var(mb).data.error.width $varname error,width {} \
 	[list PlotBarUpdateElement $varname] {}
-
 }
 
 proc PlotBarAddGraph {varname} {

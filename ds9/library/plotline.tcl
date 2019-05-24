@@ -7,6 +7,7 @@ package provide DS9 1.0
 # used by backup
 proc PlotLineTool {} {
     global iap
+
     PlotLine $iap(tt) [msgcat::mc {Line Plot Tool}] {} {} {} 2 {}
 }
 
@@ -41,28 +42,14 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     upvar #0 $varname var
     global $varname
 
-    PlotLineProc $varname
-    PlotDialog $varname $wtt $title $xaxis $yaxis
-    PlotDialogLine $varname
-    PlotAddGraph $varname
-}
-
-proc PlotLineProc {varname} {
-    upvar #0 $varname var
-    global $varname
-
     set var(proc,addgraph) PlotLineAddGraph
     set var(proc,updategraph) PlotUpdateGraph
     set var(proc,updateelement) PlotLineUpdateElement
     set var(proc,highlite) PlotLineHighliteElement
     set var(proc,button) PlotLineButton
-}
 
-proc PlotDialogLine {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ds9
+    PlotDialog $varname $wtt $title $xaxis $yaxis
+    PlotAddGraph $varname
 
     # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \

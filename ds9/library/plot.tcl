@@ -119,8 +119,8 @@ proc PlotAddGraph {varname} {
     set var(name) {}
     set var(graph$cc,xdata) {}
     set var(graph$cc,ydata) {}
-    set var(xedata) {}
-    set var(yedata) {}
+    set var(graph$cc,xedata) {}
+    set var(graph$cc,yedata) {}
 
     $var(proc,addgraph) $varname
 
@@ -174,14 +174,16 @@ proc PlotAddData {varname} {
     global $var(graph$cc,xdata) $var(graph$cc,ydata)
     $var(graph$cc) element create "d-${nn}" \
 	-xdata $var(graph$cc,xdata) -ydata $var(graph$cc,ydata)
-    if {$var(xedata) != {}} {
-	if {[$var(xedata) length] != 0} {
-	    $var(graph$cc) element configure "d-${nn}" -xerror $var(xedata)
+    if {$var(graph$cc,xedata) != {}} {
+	if {[$var(graph$cc,xedata) length] != 0} {
+	    $var(graph$cc) element configure "d-${nn}" \
+		-xerror $var(graph$cc,xedata)
 	}
     }
-    if {$var(yedata) != {}} {
-	if {[$var(yedata) length] != 0} {
-	    $var(graph$cc) element configure "d-${nn}" -yerror $var(yedata)
+    if {$var(graph$cc,yedata) != {}} {
+	if {[$var(graph$cc,yedata) length] != 0} {
+	    $var(graph$cc) element configure "d-${nn}" \
+		-yerror $var(graph$cc,yedata)
 	}
     }
 }
@@ -245,9 +247,10 @@ proc PlotDeleteData {varname} {
 		$var(graph$cc,$nn,xdata) $var(graph$cc,$nn,ydata)
 	    switch $var(graph$cc,$nn,dim) {
 		xy {}
-		xyex {blt::vector destroy $var($nn,xedata)}
-		xyey {blt::vector destroy $var($nn,yedata)}
-		xyexey {blt::vector destroy $var($nn,xedata) $var($nn,yedata)}
+		xyex {blt::vector destroy $var(graph$cc,$nn,xedata)}
+		xyey {blt::vector destroy $var(graph$cc,$nn,yedata)}
+		xyexey {blt::vector destroy \
+			    $var(graph$cc,$nn,xedata) $var(graph$cc,$nn,yedata)}
 	    }
 
 	    foreach x [array names $varname] {
@@ -266,8 +269,8 @@ proc PlotDeleteData {varname} {
 	set var(name) {}
 	set var(graph$cc,xdata) {}
 	set var(graph$cc,ydata) {}
-	set var(xedata) {}
-	set var(yedata) {}
+	set var(graph$cc,xedata) {}
+	set var(graph$cc,yedata) {}
 
 	# reset other variables
 	set var(axis,x,auto) 1
@@ -310,8 +313,8 @@ proc PlotCurrentData {varname} {
 
 	set var(graph$cc,xdata) $var(graph$cc,$nn,xdata)
 	set var(graph$cc,ydata) $var(graph$cc,$nn,ydata)
-	set var(xedata) $var($nn,xedata)
-	set var(yedata) $var($nn,yedata)
+	set var(graph$cc,xedata) $var(graph$cc,$nn,xedata)
+	set var(graph$cc,yedata) $var(graph$cc,$nn,yedata)
 
 	PlotSetVar $varname $nn
     }
@@ -400,8 +403,8 @@ proc PlotDataSetOne {varname dim data} {
 	2 -
 	xy {
 	    set var(graph$cc,dim) xy
-	    set var(xedata) {}
-	    set var(yedata) {}
+	    set var(graph$cc,xedata) {}
+	    set var(graph$cc,yedata) {}
 
 	    for {set ii 0} {$ii<$ll} {incr ii 2} {
 		lappend x [lindex $data $ii]
@@ -413,11 +416,11 @@ proc PlotDataSetOne {varname dim data} {
 
 	xyex {
 	    set var(graph$cc,dim) xyex
-	    set var(xedata) $xedata
-	    set var(yedata) {}
+	    set var(graph$cc,xedata) $xedata
+	    set var(graph$cc,yedata) {}
 
-	    global $var(xedata)
-	    blt::vector create $var(xedata)
+	    global $var(graph$cc,xedata)
+	    blt::vector create $var(graph$cc,xedata)
 
 	    for {set ii 0} {$ii<$ll} {incr ii 3} {
 		lappend x [lindex $data $ii]
@@ -426,17 +429,17 @@ proc PlotDataSetOne {varname dim data} {
 	    }
 	    $var(graph$cc,xdata) set $x
 	    $var(graph$cc,ydata) set $y
-	    $var(xedata) set $xe
+	    $var(graph$cc,xedata) set $xe
 	}
 
 	3 -
 	xyey {
 	    set var(graph$cc,dim) xyey
-	    set var(xedata) {}
-	    set var(yedata) $yedata
+	    set var(graph$cc,xedata) {}
+	    set var(graph$cc,yedata) $yedata
 
-	    global $var(yedata)
-	    blt::vector create $var(yedata)
+	    global $var(graph$cc,yedata)
+	    blt::vector create $var(graph$cc,yedata)
 
 	    for {set ii 0} {$ii<$ll} {incr ii 3} {
 		lappend x [lindex $data $ii]
@@ -445,16 +448,16 @@ proc PlotDataSetOne {varname dim data} {
 	    }
 	    $var(graph$cc,xdata) set $x
 	    $var(graph$cc,ydata) set $y
-	    $var(yedata) set $ye
+	    $var(graph$cc,yedata) set $ye
 	}
 
 	xyexey {
 	    set var(graph$cc,dim) xyexey
-	    set var(xedata) $xedata
-	    set var(yedata) $yedata
+	    set var(graph$cc,xedata) $xedata
+	    set var(graph$cc,yedata) $yedata
 
-	    global $var(xedata) $var(yedata)
-	    blt::vector create $var(xedata) $var(yedata)
+	    global $var(graph$cc,xedata) $var(graph$cc,yedata)
+	    blt::vector create $var(graph$cc,xedata) $var(graph$cc,yedata)
 
 	    for {set ii 0} {$ii<$ll} {incr ii 4} {
 		lappend x [lindex $data $ii]
@@ -464,17 +467,17 @@ proc PlotDataSetOne {varname dim data} {
 	    }
 	    $var(graph$cc,xdata) set $x
 	    $var(graph$cc,ydata) set $y
-	    $var(xedata) set $xe
-	    $var(yedata) set $ye
+	    $var(graph$cc,xedata) set $xe
+	    $var(graph$cc,yedata) set $ye
 	}
 
 	4.1 {
 	    set var(graph$cc,dim) xyey
-	    set var(xedata) {}
-	    set var(yedata) $yedata
+	    set var(graph$cc,xedata) {}
+	    set var(graph$cc,yedata) $yedata
 
-	    global $var(yedata)
-	    blt::vector create $var(yedata)
+	    global $var(graph$cc,yedata)
+	    blt::vector create $var(graph$cc,yedata)
 
 	    for {set ii 0} {$ii<$ll} {incr ii 4} {
 		lappend x [lindex $data $ii]
@@ -483,13 +486,13 @@ proc PlotDataSetOne {varname dim data} {
 	    }
 	    $var(graph$cc,xdata) set $x
 	    $var(graph$cc,ydata) set $y
-	    $var(yedata) set $ye
+	    $var(graph$cc,yedata) set $ye
 	}
 
 	4.2 {
 	    set var(graph$cc,dim) xy
-	    set var(xedata) {}
-	    set var(yedata) {}
+	    set var(graph$cc,xedata) {}
+	    set var(graph$cc,yedata) {}
 
 	    for {set ii 0} {$ii<$ll} {incr ii 4} {
 		lappend x [lindex $data $ii]
@@ -501,11 +504,11 @@ proc PlotDataSetOne {varname dim data} {
 
 	5.1 {
 	    set var(graph$cc,dim) xyey
-	    set var(xedata) {}
-	    set var(yedata) $yedata
+	    set var(graph$cc,xedata) {}
+	    set var(graph$cc,yedata) $yedata
 
-	    global $var(yedata)
-	    blt::vector create $var(yedata)
+	    global $var(graph$cc,yedata)
+	    blt::vector create $var(graph$cc,yedata)
 
 	    for {set ii 0} {$ii<$ll} {incr ii 5} {
 		lappend x [lindex $data $ii]
@@ -514,16 +517,16 @@ proc PlotDataSetOne {varname dim data} {
 	    }
 	    $var(graph$cc,xdata) set $x
 	    $var(graph$cc,ydata) set $y
-	    $var(yedata) set $ye
+	    $var(graph$cc,yedata) set $ye
 	}
 
 	5.2 {
 	    set var(graph$cc,dim) xyey
-	    set var(xedata) {}
-	    set var(yedata) $yedata
+	    set var(graph$cc,xedata) {}
+	    set var(graph$cc,yedata) $yedata
 
-	    global $var(yedata)
-	    blt::vector create $var(yedata)
+	    global $var(graph$cc,yedata)
+	    blt::vector create $var(graph$cc,yedata)
 
 	    for {set ii 0} {$ii<$ll} {incr ii 5} {
 		lappend x [lindex $data $ii]
@@ -532,7 +535,7 @@ proc PlotDataSetOne {varname dim data} {
 	    }
 	    $var(graph$cc,xdata) set $x
 	    $var(graph$cc,ydata) set $y
-	    $var(yedata) set $ye
+	    $var(graph$cc,yedata) set $ye
 	}
     }
 
@@ -541,8 +544,8 @@ proc PlotDataSetOne {varname dim data} {
 
     set var(graph$cc,$nn,xdata) $var(graph$cc,xdata) 
     set var(graph$cc,$nn,ydata) $var(graph$cc,ydata) 
-    set var($nn,xedata) $var(xedata) 
-    set var($nn,yedata) $var(yedata) 
+    set var(graph$cc,$nn,xedata) $var(graph$cc,xedata) 
+    set var(graph$cc,$nn,yedata) $var(graph$cc,yedata) 
 
     PlotGetVar $varname $nn
 
@@ -575,24 +578,24 @@ proc PlotDupData {varname mm} {
     set var($nn,name) "Dataset $nn"
     set var(graph$cc,$nn,xdata)  ap${varname}xx${nn}
     set var(graph$cc,$nn,ydata)  ap${varname}yy${nn}
-    set var($nn,xedata) ap${varname}xe${nn}
-    set var($nn,yedata) ap${varname}ye${nn}
+    set var(graph$cc,$nn,xedata) ap${varname}xe${nn}
+    set var(graph$cc,$nn,yedata) ap${varname}ye${nn}
     global $var(graph$cc,$mm,xdata) $var(graph$cc,$mm,ydata) \
-	$var($mm,xedata) $var($mm,yedata)
+	$var(graph$cc,$mm,xedata) $var(graph$cc,$mm,yedata)
     global $var(graph$cc,$nn,xdata) $var(graph$cc,$nn,ydata) \
-	$var($nn,xedata) $var($nn,yedata)
+	$var(graph$cc,$nn,xedata) $var(graph$cc,$nn,yedata)
     
     $var(graph$cc,$mm,xdata) dup $var(graph$cc,$nn,xdata)
     $var(graph$cc,$mm,ydata) dup $var(graph$cc,$nn,ydata)
-    if {$var($mm,xedata) != {}} {
-	$var($mm,xedata) dup $var($nn,xedata)
+    if {$var(graph$cc,$mm,xedata) != {}} {
+	$var(graph$cc,$mm,xedata) dup $var(graph$cc,$nn,xedata)
     } else {
-	set var($nn,xedata) {}
+	set var(graph$cc,$nn,xedata) {}
     }
-    if {$var($mm,yedata) != {}} {
-	$var($mm,yedata) dup $var($nn,yedata)
+    if {$var(graph$cc,$mm,yedata) != {}} {
+	$var(graph$cc,$mm,yedata) dup $var(graph$cc,$nn,yedata)
     } else {
-	set var($nn,yedata) {}
+	set var(graph$cc,$nn,yedata) {}
     }
 
     set var(graph$cc,$nn,manage) 1
@@ -627,8 +630,8 @@ proc PlotDupData {varname mm} {
 
     set var(graph$cc,xdata) $var(graph$cc,$nn,xdata)
     set var(graph$cc,ydata) $var(graph$cc,$nn,ydata)
-    set var(xedata) $var($nn,xedata)
-    set var(yedata) $var($nn,yedata)
+    set var(graph$cc,xedata) $var(graph$cc,$nn,xedata)
+    set var(graph$cc,yedata) $var(graph$cc,$nn,yedata)
 
     PlotSetVar $varname $nn
 
@@ -662,17 +665,17 @@ proc PlotDestroy {varname} {
 	    xyex {
 		blt::vector destroy \
 		    $var(graph$cc,$nn,xdata) $var(graph$cc,$nn,ydata) \
-		    $var($nn,xedata)
+		    $var(graph$cc,$nn,xedata)
 	    }
 	    xyey {
 		blt::vector destroy \
 		    $var(graph$cc,$nn,xdata) $var(graph$cc,$nn,ydata) \
-		    $var($nn,yedata)
+		    $var(graph$cc,$nn,yedata)
 	    }
 	    xyexey {
 		blt::vector destroy \
 		    $var(graph$cc,$nn,xdata) $var(graph$cc,$nn,ydata) \
-		    $var($nn,xedata) $var($nn,yedata)
+		    $var(graph$cc,$nn,xedata) $var(graph$cc,$nn,yedata)
 	    }
 	}
     }
@@ -718,8 +721,8 @@ proc PlotExternal {varname} {
 
     set var(graph$cc,$nn,xdata) $var(graph$cc,xdata) 
     set var(graph$cc,$nn,ydata) $var(graph$cc,ydata) 
-    set var($nn,xedata) $var(xedata) 
-    set var($nn,yedata) $var(yedata) 
+    set var(graph$cc,$nn,xedata) $var(graph$cc,xedata) 
+    set var(graph$cc,$nn,yedata) $var(graph$cc,yedata) 
 
     PlotGetVar $varname $nn
 
@@ -755,7 +758,7 @@ proc PlotListGenerate {varname} {
     set rr {}
     if {$var(graph$cc,xdata) != {}} {
 	global $var(graph$cc,xdata) $var(graph$cc,ydata) \
-	    $var(xedata) $var(yedata)
+	    $var(graph$cc,xedata) $var(graph$cc,yedata)
 	set ll [$var(graph$cc,xdata) length]
 	set xx [$var(graph$cc,xdata) range]
 	set yy [$var(graph$cc,ydata) range]
@@ -767,20 +770,20 @@ proc PlotListGenerate {varname} {
 		}
 	    }
 	    xyex {
-		set xe [$var(xedata) range]
+		set xe [$var(graph$cc,xedata) range]
 		for {set ii 0} {$ii<$ll} {incr ii} {
 		    append rr "[lindex $xx $ii] [lindex $yy $ii] [lindex $xe $ii]\n"
 		}
 	    }
 	    xyey {
-		set ye [$var(yedata) range]
+		set ye [$var(graph$cc,yedata) range]
 		for {set ii 0} {$ii<$ll} {incr ii} {
 		    append rr "[lindex $xx $ii] [lindex $yy $ii] [lindex $ye $ii]\n"
 		}
 	    }
 	    xyexey {
-		set xe [$var(xedata) range]
-		set ye [$var(yedata) range]
+		set xe [$var(graph$cc,xedata) range]
+		set ye [$var(graph$cc,yedata) range]
 		for {set ii 0} {$ii<$ll} {incr ii} {
 		    append rr "[lindex $xx $ii] [lindex $yy $ii] [lindex $xe $ii] [lindex $ye $ii]\n"
 		}
@@ -1096,7 +1099,8 @@ proc PlotSaveDataFile {varname filename} {
 	return
     }
 
-    global $var(graph$cc,xdata) $var(graph$cc,ydata) $var(xedata) $var(yedata)
+    global $var(graph$cc,xdata) $var(graph$cc,ydata) \
+	$var(graph$cc,xedata) $var(graph$cc,yedata)
     set ll [$var(graph$cc,xdata) length]
     set xx [$var(graph$cc,xdata) range]
     set yy [$var(graph$cc,ydata) range]
@@ -1109,20 +1113,20 @@ proc PlotSaveDataFile {varname filename} {
 	    }
 	}
 	xyex {
-	    set xe [$var(xedata) range]
+	    set xe [$var(graph$cc,xedata) range]
 	    for {set ii 0} {$ii<$ll} {incr ii} {
 		puts $ch "[lindex $xx $ii] [lindex $yy $ii] [lindex $xe $ii]"
 	    }
 	}
 	xyey {
-	    set ye [$var(yedata) range]
+	    set ye [$var(graph$cc,yedata) range]
 	    for {set ii 0} {$ii<$ll} {incr ii} {
 		puts $ch "[lindex $xx $ii] [lindex $yy $ii] [lindex $ye $ii]"
 	    }
 	}
 	xyexey {
-	    set xe [$var(xedata) range]
-	    set ye [$var(yedata) range]
+	    set xe [$var(graph$cc,xedata) range]
+	    set ye [$var(graph$cc,yedata) range]
 	    for {set ii 0} {$ii<$ll} {incr ii} {
 		puts $ch "[lindex $xx $ii] [lindex $yy $ii] [lindex $xe $ii] [lindex $ye $ii]"
 	    }

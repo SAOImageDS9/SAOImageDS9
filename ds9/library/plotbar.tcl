@@ -190,7 +190,7 @@ proc PlotBarUpdateElement {varname} {
 
     $var(graph$cc) element configure "d-${nn}" \
 	-label $var(graph$cc,name) -hide [expr !$var(graph$cc,show)] \
-	-relief $var(bar,relief) -color $var(color) \
+	-relief $var(bar,relief) -color $var(graph$cc,color) \
 	-showerrorbars $show -errorbarcolor $var(error,color) \
 	-errorbarwidth $var(error,width) -errorbarcap $cap
 }

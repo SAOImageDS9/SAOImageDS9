@@ -125,6 +125,15 @@ proc PlotAddGraph {varname} {
 
     array set $varname [array get pap]
     set var(graph$cc,show) $pap(show)
+    set var(graph$cc,shape,symbol) $pap(shape,symbol)
+    set var(graph$cc,shape,fill) $pap(shape,fill)
+    set var(graph$cc,shape,color) $pap(shape,color)
+    set var(graph$cc,smooth) $pap(smooth)
+    set var(graph$cc,color) $pap(color)
+    set var(graph$cc,fill) $pap(fill)
+    set var(graph$cc,fill,color) $pap(fill,color)
+    set var(graph$cc,width) $pap(width)
+    set var(graph$cc,dash) $pap(dash)
 
     $var(proc,addgraph) $varname
 
@@ -331,30 +340,33 @@ proc PlotDataSet {varname dim data} {
     upvar #0 $varname var
     global $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     switch -- $dim {
 	4 {
 	    # first data set
 	    PlotDataSetOne $varname "4.1" $data
 
 	    # set color
-	    set cc $var(color)
-	    set var(color) [PlotNextColor $var(color)]
+	    set col $var(graph$cc,color)
+	    set var(graph$cc,color) [PlotNextColor $var(graph$cc,color)]
 
 	    # second data set
 	    PlotDataSetOne $varname "4.2" $data
-	    set var(color) $cc
+	    set var(graph$cc,color) $col
 	}
 	5 {
 	    # first data set
 	    PlotDataSetOne $varname "5.1" $data
 
 	    # set color
-	    set cc $var(color)
-	    set var(color) [PlotNextColor $var(color)]
+	    set col $var(graph$cc,color)
+	    set var(graph$cc,color) [PlotNextColor $var(graph$cc,color)]
 
 	    # second data set
 	    PlotDataSetOne $varname "5.2" $data
-	    set var(color) $cc
+	    set var(graph$cc,color) $col
 	}
 	default {PlotDataSetOne $varname $dim $data}
     }
@@ -606,15 +618,16 @@ proc PlotDupData {varname mm} {
     set var(graph$cc,$nn,dim) $var(graph$cc,$mm,dim)
 
     set var(graph$cc,$nn,show) $var(graph$cc,$mm,show)
-    set var($nn,shape,symbol) $var($mm,shape,symbol)
-    set var($nn,shape,fill) $var($mm,shape,fill)
-    set var($nn,shape,color) $var($mm,shape,color)
-    set var($nn,smooth) $var($mm,smooth)
-    set var($nn,color) [PlotNextColor $var($mm,color)]
-    set var($nn,fill) $var($mm,fill)
-    set var($nn,fill,color) [PlotNextColor $var($mm,fill,color)]
-    set var($nn,width) $var($mm,width)
-    set var($nn,dash) $var($mm,dash)
+    set var(graph$cc,$nn,shape,symbol) $var(graph$cc,$mm,shape,symbol)
+    set var(graph$cc,$nn,shape,fill) $var(graph$cc,$mm,shape,fill)
+    set var(graph$cc,$nn,shape,color) $var(graph$cc,$mm,shape,color)
+    set var(graph$cc,$nn,smooth) $var(graph$cc,$mm,smooth)
+    set var(graph$cc,$nn,color) [PlotNextColor $var(graph$cc,$mm,color)]
+    set var(graph$cc,$nn,fill) $var(graph$cc,$mm,fill)
+    set var(graph$cc,$nn,fill,color) \
+	[PlotNextColor $var(graph$cc,$mm,fill,color)]
+    set var(graph$cc,$nn,width) $var(graph$cc,$mm,width)
+    set var(graph$cc,$nn,dash) $var(graph$cc,$mm,dash)
     set var($nn,error) $var($mm,error)
     set var($nn,error,cap) $var($mm,error,cap)
     set var($nn,error,color) $var($mm,error,color)
@@ -1200,6 +1213,9 @@ proc PlotTitle {varname title xaxis yaxis} {
     upvar #0 $varname var
     global $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     set var(graph,title) "$title"
     set var(axis,x,title) "$xaxis"
     set var(axis,y,title) "$yaxis"
@@ -1303,23 +1319,26 @@ proc PlotColorMenu {w varname color cmd} {
     upvar #0 $varname var
     global $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     menu $w
     $w add radiobutton -label [msgcat::mc {Black}] \
-	-variable ${varname}($color) -value black -command $cmd
+	-variable ${varname}(graph$cc,$color) -value black -command $cmd
     $w add radiobutton -label [msgcat::mc {White}] \
-	-variable ${varname}($color) -value white -command $cmd
+	-variable ${varname}(graph$cc,$color) -value white -command $cmd
     $w add radiobutton -label [msgcat::mc {Red}] \
-	-variable ${varname}($color) -value red -command $cmd
+	-variable ${varname}(graph$cc,$color) -value red -command $cmd
     $w add radiobutton -label [msgcat::mc {Green}] \
-	-variable ${varname}($color) -value green -command $cmd
+	-variable ${varname}(graph$cc,$color) -value green -command $cmd
     $w add radiobutton -label [msgcat::mc {Blue}] \
-	-variable ${varname}($color) -value blue -command $cmd
+	-variable ${varname}(graph$cc,$color) -value blue -command $cmd
     $w add radiobutton -label [msgcat::mc {Cyan}] \
-	-variable ${varname}($color) -value cyan -command $cmd
+	-variable ${varname}(graph$cc,$color) -value cyan -command $cmd
     $w add radiobutton -label [msgcat::mc {Magenta}] \
-	-variable ${varname}($color) -value magenta -command $cmd
+	-variable ${varname}(graph$cc,$color) -value magenta -command $cmd
     $w add radiobutton -label [msgcat::mc {Yellow}] \
-	-variable ${varname}($color) -value yellow -command $cmd
+	-variable ${varname}(graph$cc,$color) -value yellow -command $cmd
     $w add separator
     $w add command -label "[msgcat::mc {Other Color}]..." \
 	-command [list ColorMenuOther $varname $color $cmd]
@@ -1334,15 +1353,15 @@ proc PlotSetVar {varname nn} {
 
     set var(graph$cc,name) $var(graph$cc,$nn,name)
     set var(graph$cc,show) $var(graph$cc,$nn,show) 
-    set var(shape,symbol) $var($nn,shape,symbol) 
-    set var(shape,fill) $var($nn,shape,fill) 
-    set var(shape,color) $var($nn,shape,color) 
-    set var(smooth) $var($nn,smooth) 
-    set var(color) $var($nn,color) 
-    set var(fill) $var($nn,fill) 
-    set var(fill,color) $var($nn,fill,color) 
-    set var(width) $var($nn,width) 
-    set var(dash) $var($nn,dash) 
+    set var(graph$cc,shape,symbol) $var(graph$cc,$nn,shape,symbol) 
+    set var(graph$cc,shape,fill) $var(graph$cc,$nn,shape,fill) 
+    set var(graph$cc,shape,color) $var(graph$cc,$nn,shape,color) 
+    set var(graph$cc,smooth) $var(graph$cc,$nn,smooth) 
+    set var(graph$cc,color) $var(graph$cc,$nn,color) 
+    set var(graph$cc,fill) $var(graph$cc,$nn,fill) 
+    set var(graph$cc,fill,color) $var(graph$cc,$nn,fill,color) 
+    set var(graph$cc,width) $var(graph$cc,$nn,width) 
+    set var(graph$cc,dash) $var(graph$cc,$nn,dash) 
     set var(error) $var($nn,error) 
     set var(error,cap) $var($nn,error,cap) 
     set var(error,color) $var($nn,error,color) 
@@ -1359,15 +1378,15 @@ proc PlotGetVar {varname nn} {
 
     set var(graph$cc,$nn,name) $var(graph$cc,name)
     set var(graph$cc,$nn,show) $var(graph$cc,show)
-    set var($nn,shape,symbol) $var(shape,symbol)
-    set var($nn,shape,fill) $var(shape,fill)
-    set var($nn,shape,color) $var(shape,color)
-    set var($nn,smooth) $var(smooth)
-    set var($nn,color) $var(color)
-    set var($nn,fill) $var(fill)
-    set var($nn,fill,color) $var(fill,color)
-    set var($nn,width) $var(width)
-    set var($nn,dash) $var(dash)
+    set var(graph$cc,$nn,shape,symbol) $var(graph$cc,shape,symbol)
+    set var(graph$cc,$nn,shape,fill) $var(graph$cc,shape,fill)
+    set var(graph$cc,$nn,shape,color) $var(graph$cc,shape,color)
+    set var(graph$cc,$nn,smooth) $var(graph$cc,smooth)
+    set var(graph$cc,$nn,color) $var(graph$cc,color)
+    set var(graph$cc,$nn,fill) $var(graph$cc,fill)
+    set var(graph$cc,$nn,fill,color) $var(graph$cc,fill,color)
+    set var(graph$cc,$nn,width) $var(graph$cc,width)
+    set var(graph$cc,$nn,dash) $var(graph$cc,dash)
     set var($nn,error) $var(error)
     set var($nn,error,cap) $var(error,cap)
     set var($nn,error,color) $var(error,color)

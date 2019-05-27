@@ -1492,14 +1492,14 @@ proc plotsend::yyparse {} {
                     17 { ProcessSendCmdCVARGet graph,bg }
                     21 { ProcessSendCmdCVARGet bar,mode }
                     22 { PlotSendCmdCVARYesNo show }
-                    23 { ProcessSendCmdCVARGet color }
-                    24 { ProcessSendCmdCVARGet fill }
-                    25 { ProcessSendCmdCVARGet fill,color }
+                    23 { PlotSendCmdCVARGet color }
+                    24 { PlotSendCmdCVARGet fill }
+                    25 { PlotSendCmdCVARGet fill,color }
                     28 { PlotSendCmdCVARGet name }
                     30 { ProcessSendCmdCVARGet bar,relief }
-                    31 { ProcessSendCmdCVARGet smooth }
-                    32 { ProcessSendCmdCVARGet width }
-                    33 { ProcessSendCmdCVARYesNo dash }
+                    31 { PlotSendCmdCVARGet smooth }
+                    32 { PlotSendCmdCVARGet width }
+                    33 { PlotSendCmdCVARYesNo dash }
                     34 { PlotSendCmdCVARGet data,current }
                     35 { PlotSendCmdCVARGet data,current }
                     36 { ProcessSendCmdCVARYesNo "axis,$1,grid" }
@@ -1536,9 +1536,9 @@ proc plotsend::yyparse {} {
                     67 { ProcessSendCmdCVARYesNo error,cap }
                     68 { ProcessSendCmdCVARGet error,color }
                     69 { ProcessSendCmdCVARGet error,width }
-                    70 { ProcessSendCmdCVARGet shape,symbol }
-                    71 { ProcessSendCmdCVARYesNo shape,fill }
-                    72 { ProcessSendCmdCVARGet shape,color }
+                    70 { PlotSendCmdCVARGet shape,symbol }
+                    71 { PlotSendCmdCVARYesNo shape,fill }
+                    72 { PlotSendCmdCVARGet shape,color }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

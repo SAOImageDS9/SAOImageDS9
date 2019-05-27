@@ -79,48 +79,48 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     menu $var(mb).data.shape
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {None}] \
-	-variable ${varname}(shape,symbol) -value none \
+	-variable ${varname}(graph$cc,shape,symbol) -value none \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Circle}] \
-	-variable ${varname}(shape,symbol) -value circle \
+	-variable ${varname}(graph$cc,shape,symbol) -value circle \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Square}] \
-	-variable ${varname}(shape,symbol) -value square \
+	-variable ${varname}(graph$cc,shape,symbol) -value square \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Diamond}] \
-	-variable ${varname}(shape,symbol) -value diamond \
+	-variable ${varname}(graph$cc,shape,symbol) -value diamond \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Plus}] \
-	-variable ${varname}(shape,symbol) -value plus \
+	-variable ${varname}(graph$cc,shape,symbol) -value plus \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Cross}] \
-	-variable ${varname}(shape,symbol) -value cross \
+	-variable ${varname}(graph$cc,shape,symbol) -value cross \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Simple Plus}] \
-	-variable ${varname}(shape,symbol) -value splus \
+	-variable ${varname}(graph$cc,shape,symbol) -value splus \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Simple Cross}] \
-	-variable ${varname}(shape,symbol) -value scross \
+	-variable ${varname}(graph$cc,shape,symbol) -value scross \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Triangle}] \
-	-variable ${varname}(shape,symbol) -value triangle \
+	-variable ${varname}(graph$cc,shape,symbol) -value triangle \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Arrow}] \
-	-variable ${varname}(shape,symbol) -value arrow \
+	-variable ${varname}(graph$cc,shape,symbol) -value arrow \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.shape add separator
     $var(mb).data.shape add checkbutton \
 	-label [msgcat::mc {Fill}] \
-	-variable ${varname}(shape,fill) \
+	-variable ${varname}(graph$cc,shape,fill) \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.shape add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).data.shape.color
@@ -132,23 +132,23 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     menu $var(mb).data.smooth
     $var(mb).data.smooth add radiobutton \
 	-label [msgcat::mc {Step}] \
-	-variable ${varname}(smooth) -value step \
+	-variable ${varname}(graph$cc,smooth) -value step \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.smooth add radiobutton \
 	-label [msgcat::mc {Linear}] \
-	-variable ${varname}(smooth) -value linear \
+	-variable ${varname}(graph$cc,smooth) -value linear \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.smooth add radiobutton \
 	-label [msgcat::mc {Cubic}] \
-	-variable ${varname}(smooth) -value cubic \
+	-variable ${varname}(graph$cc,smooth) -value cubic \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.smooth add radiobutton \
 	-label [msgcat::mc {Quadratic}] \
-	-variable ${varname}(smooth) -value quadratic \
+	-variable ${varname}(graph$cc,smooth) -value quadratic \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.smooth add radiobutton \
 	-label [msgcat::mc {Catrom}] \
-	-variable ${varname}(smooth) -value catrom \
+	-variable ${varname}(graph$cc,smooth) -value catrom \
 	-command [list PlotLineUpdateElement $varname]
 
     # Color
@@ -158,30 +158,30 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     # Width
     menu $var(mb).data.width
     $var(mb).data.width add radiobutton \
-	-label {0} -variable ${varname}(width) \
+	-label {0} -variable ${varname}(graph$cc,width) \
 	-value 0 -command [list PlotLineUpdateElement $varname]
     $var(mb).data.width add radiobutton \
-	-label {1} -variable ${varname}(width) \
+	-label {1} -variable ${varname}(graph$cc,width) \
 	-value 1 -command [list PlotLineUpdateElement $varname]
     $var(mb).data.width add radiobutton \
-	-label {2} -variable ${varname}(width) \
+	-label {2} -variable ${varname}(graph$cc,width) \
 	-value 2 -command [list PlotLineUpdateElement $varname]
     $var(mb).data.width add radiobutton \
-	-label {3} -variable ${varname}(width) \
+	-label {3} -variable ${varname}(graph$cc,width) \
 	-value 3 -command [list PlotLineUpdateElement $varname]
     $var(mb).data.width add radiobutton \
-	-label {4} -variable ${varname}(width) \
+	-label {4} -variable ${varname}(graph$cc,width) \
 	-value 4 -command [list PlotLineUpdateElement $varname]
     $var(mb).data.width add separator
     $var(mb).data.width add checkbutton \
-	-label [msgcat::mc {Dash}] -variable ${varname}(dash) \
+	-label [msgcat::mc {Dash}] -variable ${varname}(graph$cc,dash) \
 	-command [list PlotLineUpdateElement $varname]
 
     # Fill
     menu $var(mb).data.fill
     $var(mb).data.fill add checkbutton \
 	-label [msgcat::mc {Show}] \
-	-variable ${varname}(fill) \
+	-variable ${varname}(graph$cc,fill) \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.fill add separator
     $var(mb).data.fill add cascade -label [msgcat::mc {Color}] \
@@ -240,19 +240,19 @@ proc PlotLineUpdateElement {varname} {
     set nn $var(graph$cc,data,current)
     PlotGetVar $varname $nn
 
-    if {$var(fill)} {
-	set fillClr $var(fill,color)
+    if {$var(graph$cc,fill)} {
+	set fillClr $var(graph$cc,fill,color)
     } else {
 	set fillClr {}
     }
 
-    if {$var(shape,fill)} {
-	set clr $var(shape,color)
+    if {$var(graph$cc,shape,fill)} {
+	set clr $var(graph$cc,shape,color)
     } else {
 	set clr {}
     }
 
-    if {$var(dash)} {
+    if {$var(graph$cc,dash)} {
 	set dash {8 3}
     } else {
 	set dash { }
@@ -272,11 +272,11 @@ proc PlotLineUpdateElement {varname} {
 
     $var(graph$cc) element configure "d-${nn}" \
 	-label $var(graph$cc,name) -hide [expr !$var(graph$cc,show)] \
-	-symbol $var(shape,symbol) -fill $clr -scalesymbols no \
-	-pixels 5 -outline $var(shape,color) \
-	-smooth $var(smooth) \
-	-color $var(color) -areabackground $fillClr \
-	-linewidth $var(width) -dashes $dash \
+	-symbol $var(graph$cc,shape,symbol) -fill $clr -scalesymbols no \
+	-pixels 5 -outline $var(graph$cc,shape,color) \
+	-smooth $var(graph$cc,smooth) \
+	-color $var(graph$cc,color) -areabackground $fillClr \
+	-linewidth $var(graph$cc,width) -dashes $dash \
 	-showerrorbars $show -errorbarcolor $var(error,color) \
 	-errorbarwidth $var(error,width) -errorbarcap $cap
 }

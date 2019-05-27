@@ -82,18 +82,18 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | TITLE_ title
  | BARMODE_ {ProcessSendCmdCVARGet bar,mode}
  | SHOW_ {PlotSendCmdCVARYesNo show}
- | COLOR_ {ProcessSendCmdCVARGet color}
- | FILL_ {ProcessSendCmdCVARGet fill}
- | FILLCOLOR_ {ProcessSendCmdCVARGet fill,color}
+ | COLOR_ {PlotSendCmdCVARGet color}
+ | FILL_ {PlotSendCmdCVARGet fill}
+ | FILLCOLOR_ {PlotSendCmdCVARGet fill,color}
  | ERROR_ errorr
  # backward compatibility
  | ERRORBAR_ errorr
  | NAME_ {PlotSendCmdCVARGet name}
  | SHAPE_ shape
  | RELIEF_ {ProcessSendCmdCVARGet bar,relief}
- | SMOOTH_ {ProcessSendCmdCVARGet smooth}
- | WIDTH_ {ProcessSendCmdCVARGet width}
- | DASH_ {ProcessSendCmdCVARYesNo dash}
+ | SMOOTH_ {PlotSendCmdCVARGet smooth}
+ | WIDTH_ {PlotSendCmdCVARGet width}
+ | DASH_ {PlotSendCmdCVARYesNo dash}
  | SELECT_ {PlotSendCmdCVARGet data,current}
  # backward compatibility
  | DATASET_ {PlotSendCmdCVARGet data,current}
@@ -149,9 +149,9 @@ errorr : {ProcessSendCmdCVARYesNo error}
  | WIDTH_ {ProcessSendCmdCVARGet error,width}
  ;
 
-shape : {ProcessSendCmdCVARGet shape,symbol}
- | FILL_ {ProcessSendCmdCVARYesNo shape,fill}
- | COLOR_ {ProcessSendCmdCVARGet shape,color}
+shape : {PlotSendCmdCVARGet shape,symbol}
+ | FILL_ {PlotSendCmdCVARYesNo shape,fill}
+ | COLOR_ {PlotSendCmdCVARGet shape,color}
  ;
 
 %%

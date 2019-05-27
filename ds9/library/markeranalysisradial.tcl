@@ -112,8 +112,8 @@ proc MarkerAnalysisRadialCB {frame id} {
 
 	set vvar(graph$cc,manage) 0
 	set vvar(graph$cc,dim) xyey
-	set vvar(xdata) $xdata
-	set vvar(ydata) $ydata
+	set vvar(graph$cc,xdata) $xdata
+	set vvar(graph$cc,ydata) $ydata
 	set vvar(yedata) $yedata
 	blt::vector create $xdata $ydata $yedata
     }

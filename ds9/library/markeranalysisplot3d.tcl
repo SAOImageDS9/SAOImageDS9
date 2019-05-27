@@ -179,8 +179,8 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 
 	set vvar(graph$cc,manage) 0
 	set vvar(graph$cc,dim) xy
-	set vvar(xdata) $xdata
-	set vvar(ydata) $ydata
+	set vvar(graph$cc,xdata) $xdata
+	set vvar(graph$cc,ydata) $ydata
 	blt::vector create $xdata $ydata
     }
 

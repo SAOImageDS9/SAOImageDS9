@@ -27,11 +27,8 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     set var(mode) zoom
     set var(callback) {}
 
-    set var(name) {}
-    set var(xdata) {}
-    set var(ydata) {}
-    set var(xedata) {}
-    set var(yedata) {}
+    set var(graph,total) 0
+    set var(graph,current) 0
 
     array set $varname [array get pap]
 
@@ -226,9 +223,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 
     set var(canvas) [ttk::frame $var(top).fr]
     pack $var(canvas) -expand yes -fill both
-
-    set var(graph,total) 0
-    set var(graph,current) 0
 }
 
 proc PlotDataFormatDialog {xarname} {

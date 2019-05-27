@@ -1491,17 +1491,17 @@ proc plotsend::yyparse {} {
                     15 { ProcessSendCmdCVARGet mode }
                     17 { ProcessSendCmdCVARGet graph,bg }
                     21 { ProcessSendCmdCVARGet bar,mode }
-                    22 { ProcessSendCmdCVARYesNo show }
+                    22 { PlotSendCmdCVARYesNo show }
                     23 { ProcessSendCmdCVARGet color }
                     24 { ProcessSendCmdCVARGet fill }
                     25 { ProcessSendCmdCVARGet fill,color }
-                    28 { ProcessSendCmdCVARGet name }
+                    28 { PlotSendCmdCVARGet name }
                     30 { ProcessSendCmdCVARGet bar,relief }
                     31 { ProcessSendCmdCVARGet smooth }
                     32 { ProcessSendCmdCVARGet width }
                     33 { ProcessSendCmdCVARYesNo dash }
-                    34 { ProcessSendCmdCVARGet graph1,data,current }
-                    35 { ProcessSendCmdCVARGet graph1,data,current }
+                    34 { PlotSendCmdCVARGet data,current }
+                    35 { PlotSendCmdCVARGet data,current }
                     36 { ProcessSendCmdCVARYesNo "axis,$1,grid" }
                     37 { ProcessSendCmdCVARYesNo "axis,$1,log" }
                     38 { ProcessSendCmdCVARYesNo "axis,$1,flip" }

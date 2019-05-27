@@ -51,6 +51,9 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotAddGraph $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     # Graph
     $var(mb).graph add separator
     $var(mb).graph add cascade -label "[msgcat::mc {Mode}]..." \
@@ -73,7 +76,7 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
 
     # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(show) \
+	-variable ${varname}(graph$cc,show) \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).data add separator
     $var(mb).data add cascade -label [msgcat::mc {Color}] \
@@ -186,7 +189,7 @@ proc PlotBarUpdateElement {varname} {
     }
 
     $var(graph$cc) element configure "d-${nn}" \
-	-label $var(name) -hide [expr !$var(show)] \
+	-label $var(graph$cc,name) -hide [expr !$var(graph$cc,show)] \
 	-relief $var(bar,relief) -color $var(color) \
 	-showerrorbars $show -errorbarcolor $var(error,color) \
 	-errorbarwidth $var(error,width) -errorbarcap $cap

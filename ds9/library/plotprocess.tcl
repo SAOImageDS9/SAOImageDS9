@@ -343,3 +343,26 @@ proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {
     plotsend::yy_scan_string $param
     plotsend::yyparse
 }
+
+proc PlotSendCmdCVARGet {key} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set tt $cvar(graph,total)
+    set cc $cvar(graph,current)
+
+    global parse
+    $parse(proc) $parse(id) "$cvar(graph$cc,$key)\n"
+}
+
+proc PlotSendCmdCVARYesNo {key} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set tt $cvar(graph,total)
+    set cc $cvar(graph,current)
+
+    global parse
+    $parse(proc) $parse(id) [ToYesNo $cvar(graph$cc,$key)]
+}
+

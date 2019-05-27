@@ -51,9 +51,12 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotAddGraph $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(show) \
+	-variable ${varname}(graph$cc,show) \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data add separator
     $var(mb).data add cascade -label [msgcat::mc {Shape}] \
@@ -268,7 +271,7 @@ proc PlotLineUpdateElement {varname} {
     }
 
     $var(graph$cc) element configure "d-${nn}" \
-	-label $var(name) -hide [expr !$var(show)] \
+	-label $var(graph$cc,name) -hide [expr !$var(graph$cc,show)] \
 	-symbol $var(shape,symbol) -fill $clr -scalesymbols no \
 	-pixels 5 -outline $var(shape,color) \
 	-smooth $var(smooth) \

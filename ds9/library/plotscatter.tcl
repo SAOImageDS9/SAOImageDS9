@@ -51,9 +51,12 @@ proc PlotScatterDialog {varname wtt title xaxis yaxis} {
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotAddGraph $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(show) \
+	-variable ${varname}(graph$cc,show) \
 	-command [list PlotScatterUpdateElement $varname]
     $var(mb).data add separator
     $var(mb).data add cascade -label [msgcat::mc {Shape}] \
@@ -186,7 +189,7 @@ proc PlotScatterUpdateElement {varname} {
     }
 
     $var(graph$cc) element configure "d-${nn}" \
-	-label $var(name) -hide [expr !$var(show)] \
+	-label $var(graph$cc,name) -hide [expr !$var(graph$cc,show)] \
 	-symbol $var(shape,symbol) -fill $clr -scalesymbols no \
 	-outline $var(shape,color) \
 	-linewidth 0 -pixels 5 \
@@ -243,7 +246,7 @@ proc PlotScatterHighliteElement {varname rowlist} {
 	return
     }
 
-    if {$var(show)} {
+    if {$var(graph$cc,show)} {
 	$var(graph$cc) element deactivate d-1
 	if {$rowlist != {}} {
 	    # can have multiple rows

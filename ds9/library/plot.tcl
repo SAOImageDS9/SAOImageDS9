@@ -106,6 +106,7 @@ proc PlotAddGraph {varname} {
     global $varname
 
     global ds9
+    global pap
 
     incr ${varname}(graph,total)
     incr ${varname}(graph,current)
@@ -116,11 +117,14 @@ proc PlotAddGraph {varname} {
     set var(graph$cc,data,total) 0
     set var(graph$cc,data,current) 0
 
-    set var(name) {}
+    set var(graph$cc,name) {}
     set var(graph$cc,xdata) {}
     set var(graph$cc,ydata) {}
     set var(graph$cc,xedata) {}
     set var(graph$cc,yedata) {}
+
+    array set $varname [array get pap]
+    set var(graph$cc,show) $pap(show)
 
     $var(proc,addgraph) $varname
 
@@ -266,7 +270,7 @@ proc PlotDeleteData {varname} {
 	set var(graph$cc,data,total) 0
 	set var(graph$cc,data,current) 0
 
-	set var(name) {}
+	set var(graph$cc,name) {}
 	set var(graph$cc,xdata) {}
 	set var(graph$cc,ydata) {}
 	set var(graph$cc,xedata) {}
@@ -384,7 +388,7 @@ proc PlotDataSetOne {varname dim data} {
 
     # basics xy
     set var(graph$cc,manage) 1
-    set var(name) "Dataset $nn"
+    set var(graph$cc,name) "Dataset $nn"
     set var(graph$cc,xdata) $xdata
     set var(graph$cc,ydata) $ydata
     global $var(graph$cc,xdata) $var(graph$cc,ydata)
@@ -550,7 +554,7 @@ proc PlotDataSetOne {varname dim data} {
     PlotGetVar $varname $nn
 
     # update data set menu
-    $var(mb).graph.select add radiobutton -label "$var(name)" \
+    $var(mb).graph.select add radiobutton -label "$var(graph$cc,name)" \
 	-variable ${varname}(graph$cc,data,current) -value $nn \
 	-command [list PlotCurrentData $varname]
 
@@ -575,7 +579,7 @@ proc PlotDupData {varname mm} {
     set pp [expr $nn-1]
 
     # new vector names
-    set var($nn,name) "Dataset $nn"
+    set var(graph$cc,$nn,name) "Dataset $nn"
     set var(graph$cc,$nn,xdata)  ap${varname}xx${nn}
     set var(graph$cc,$nn,ydata)  ap${varname}yy${nn}
     set var(graph$cc,$nn,xedata) ap${varname}xe${nn}
@@ -601,7 +605,7 @@ proc PlotDupData {varname mm} {
     set var(graph$cc,$nn,manage) 1
     set var(graph$cc,$nn,dim) $var(graph$cc,$mm,dim)
 
-    set var($nn,show) $var($mm,show)
+    set var(graph$cc,$nn,show) $var(graph$cc,$mm,show)
     set var($nn,shape,symbol) $var($mm,shape,symbol)
     set var($nn,shape,fill) $var($mm,shape,fill)
     set var($nn,shape,color) $var($mm,shape,color)
@@ -618,7 +622,7 @@ proc PlotDupData {varname mm} {
     set var($nn,bar,relief) $var($mm,bar,relief)
 
     # update data set menu
-    $var(mb).graph.select add radiobutton -label "$var($nn,name)" \
+    $var(mb).graph.select add radiobutton -label "$var(graph$cc,$nn,name)" \
 	-variable ${varname}(graph$cc,data,current) -value $nn \
 	-command [list PlotCurrentData $varname]
 
@@ -714,7 +718,7 @@ proc PlotExternal {varname} {
     set nn $var(graph$cc,data,total)
     set var(graph$cc,data,current) $nn
 
-    set var(name) "Dataset $nn"
+    set var(graph$cc,name) "Dataset $nn"
 
     set var(graph$cc,$nn,manage) $var(graph$cc,manage)
     set var(graph$cc,$nn,dim) $var(graph$cc,dim)
@@ -1325,8 +1329,11 @@ proc PlotSetVar {varname nn} {
     upvar #0 $varname var
     global $varname
 
-    set var(name) $var($nn,name)
-    set var(show) $var($nn,show) 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    set var(graph$cc,name) $var(graph$cc,$nn,name)
+    set var(graph$cc,show) $var(graph$cc,$nn,show) 
     set var(shape,symbol) $var($nn,shape,symbol) 
     set var(shape,fill) $var($nn,shape,fill) 
     set var(shape,color) $var($nn,shape,color) 
@@ -1347,8 +1354,11 @@ proc PlotGetVar {varname nn} {
     upvar #0 $varname var
     global $varname
 
-    set var($nn,name) $var(name)
-    set var($nn,show) $var(show)
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    set var(graph$cc,$nn,name) $var(graph$cc,name)
+    set var(graph$cc,$nn,show) $var(graph$cc,show)
     set var($nn,shape,symbol) $var(shape,symbol)
     set var($nn,shape,fill) $var(shape,fill)
     set var($nn,shape,color) $var(shape,color)

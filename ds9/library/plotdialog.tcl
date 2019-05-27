@@ -30,8 +30,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     set var(graph,total) 0
     set var(graph,current) 0
 
-    array set $varname [array get pap]
-
     PlotTitle $varname $title $xaxis $yaxis
 
     # can be turned off for external line plots
@@ -474,10 +472,13 @@ proc DatasetNameDialog {varname} {
     global $varname
     global ed
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     set w {.aptitle}
 
     set ed(ok) 0
-    set ed(name) $var(name)
+    set ed(name) $var(graph$cc,name)
 
     DialogCreate $w [msgcat::mc {Data}] ed(ok)
 
@@ -508,8 +509,9 @@ proc DatasetNameDialog {varname} {
     DialogDismiss $w
 
     if {$ed(ok)} {
-	$var(mb).graph.select entryconfig "$var(name)" -label "$ed(name)"
-	set var(name) $ed(name)
+	$var(mb).graph.select entryconfig "$var(graph$cc,name)" \
+	    -label "$ed(name)"
+	set var(graph$cc,name) $ed(name)
 	$var(proc,updateelement) $varname
     }
     

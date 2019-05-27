@@ -81,22 +81,22 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | FONT_ fontt
  | TITLE_ title
  | BARMODE_ {ProcessSendCmdCVARGet bar,mode}
- | SHOW_ {ProcessSendCmdCVARYesNo show}
+ | SHOW_ {PlotSendCmdCVARYesNo show}
  | COLOR_ {ProcessSendCmdCVARGet color}
  | FILL_ {ProcessSendCmdCVARGet fill}
  | FILLCOLOR_ {ProcessSendCmdCVARGet fill,color}
  | ERROR_ errorr
  # backward compatibility
  | ERRORBAR_ errorr
- | NAME_ {ProcessSendCmdCVARGet name}
+ | NAME_ {PlotSendCmdCVARGet name}
  | SHAPE_ shape
  | RELIEF_ {ProcessSendCmdCVARGet bar,relief}
  | SMOOTH_ {ProcessSendCmdCVARGet smooth}
  | WIDTH_ {ProcessSendCmdCVARGet width}
  | DASH_ {ProcessSendCmdCVARYesNo dash}
- | SELECT_ {ProcessSendCmdCVARGet graph1,data,current}
+ | SELECT_ {PlotSendCmdCVARGet data,current}
  # backward compatibility
- | DATASET_ {ProcessSendCmdCVARGet graph1,data,current}
+ | DATASET_ {PlotSendCmdCVARGet data,current}
  ;
  
 axis : xy GRID_ {ProcessSendCmdCVARYesNo "axis,$1,grid"}

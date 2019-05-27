@@ -169,8 +169,11 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 	$vvar(graph) xaxis configure \
 	    -command "MarkerAnalysisPlot2dXAxis $vvarname"
 
-	set vvar(manage) 0
-	set vvar(dim) xy
+	set tt $vvar(graph,total)
+	set cc $vvar(graph,current)
+
+	set vvar(graph$cc,manage) 0
+	set vvar(graph$cc,dim) xy
 	set vvar(xdata) $xdata
 	set vvar(ydata) $ydata
 	blt::vector create $xdata $ydata $xcdata $ycdata

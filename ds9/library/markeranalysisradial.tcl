@@ -107,8 +107,11 @@ proc MarkerAnalysisRadialCB {frame id} {
 	PlotLineDialog $vvarname $tt "Radial Profile" $sys {}
 	MarkerAnalysisRadialAxisTitle $vvarname
 
-	set vvar(manage) 0
-	set vvar(dim) xyey
+	set tt $vvar(graph,total)
+	set cc $vvar(graph,current)
+
+	set vvar(graph$cc,manage) 0
+	set vvar(graph$cc,dim) xyey
 	set vvar(xdata) $xdata
 	set vvar(ydata) $ydata
 	set vvar(yedata) $yedata

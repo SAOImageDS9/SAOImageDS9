@@ -222,10 +222,10 @@ proc PlotDeleteData {varname} {
     }
 
     # first set can be external
-    set clear $var(1,manage)
+    set clear $var(graph$cc,1,manage)
 
     for {set nn 1} {$nn<=$var(graph$cc,data,total)} {incr nn} {
-	if {$var($nn,manage)} {
+	if {$var(graph$cc,$nn,manage)} {
 	    # delete elements
 	    foreach el [$var(graph$cc) element names] {
 		set f [split $el -]
@@ -236,7 +236,7 @@ proc PlotDeleteData {varname} {
 
 	    # destroy vectors
 	    blt::vector destroy $var($nn,xdata) $var($nn,ydata)
-	    switch $var($nn,dim) {
+	    switch $var(graph$cc,$nn,dim) {
 		xy {}
 		xyex {blt::vector destroy $var($nn,xedata)}
 		xyey {blt::vector destroy $var($nn,yedata)}
@@ -298,8 +298,8 @@ proc PlotCurrentData {varname} {
     if {$var(graph$cc,data,total) > 0} {
 	set nn $var(graph$cc,data,current)
 
-	set var(manage) $var($nn,manage)
-	set var(dim) $var($nn,dim)
+	set var(graph$cc,manage) $var(graph$cc,$nn,manage)
+	set var(graph$cc,dim) $var(graph$cc,$nn,dim)
 
 	set var(xdata) $var($nn,xdata)
 	set var(ydata) $var($nn,ydata)
@@ -373,7 +373,7 @@ proc PlotDataSetOne {varname dim data} {
     set yedata ap${varname}ye${nn}
 
     # basics xy
-    set var(manage) 1
+    set var(graph$cc,manage) 1
     set var(name) "Dataset $nn"
     set var(xdata) $xdata
     set var(ydata) $ydata
@@ -392,7 +392,7 @@ proc PlotDataSetOne {varname dim data} {
     switch -- $dim {
 	2 -
 	xy {
-	    set var(dim) xy
+	    set var(graph$cc,dim) xy
 	    set var(xedata) {}
 	    set var(yedata) {}
 
@@ -405,7 +405,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
 
 	xyex {
-	    set var(dim) xyex
+	    set var(graph$cc,dim) xyex
 	    set var(xedata) $xedata
 	    set var(yedata) {}
 
@@ -424,7 +424,7 @@ proc PlotDataSetOne {varname dim data} {
 
 	3 -
 	xyey {
-	    set var(dim) xyey
+	    set var(graph$cc,dim) xyey
 	    set var(xedata) {}
 	    set var(yedata) $yedata
 
@@ -442,7 +442,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
 
 	xyexey {
-	    set var(dim) xyexey
+	    set var(graph$cc,dim) xyexey
 	    set var(xedata) $xedata
 	    set var(yedata) $yedata
 
@@ -462,7 +462,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
 
 	4.1 {
-	    set var(dim) xyey
+	    set var(graph$cc,dim) xyey
 	    set var(xedata) {}
 	    set var(yedata) $yedata
 
@@ -480,7 +480,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
 
 	4.2 {
-	    set var(dim) xy
+	    set var(graph$cc,dim) xy
 	    set var(xedata) {}
 	    set var(yedata) {}
 
@@ -493,7 +493,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
 
 	5.1 {
-	    set var(dim) xyey
+	    set var(graph$cc,dim) xyey
 	    set var(xedata) {}
 	    set var(yedata) $yedata
 
@@ -511,7 +511,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
 
 	5.2 {
-	    set var(dim) xyey
+	    set var(graph$cc,dim) xyey
 	    set var(xedata) {}
 	    set var(yedata) $yedata
 
@@ -529,8 +529,8 @@ proc PlotDataSetOne {varname dim data} {
 	}
     }
 
-    set var($nn,manage) 1
-    set var($nn,dim) $var(dim)
+    set var(graph$cc,$nn,manage) 1
+    set var(graph$cc,$nn,dim) $var(graph$cc,dim)
 
     set var($nn,xdata) $var(xdata) 
     set var($nn,ydata) $var(ydata) 
@@ -586,8 +586,8 @@ proc PlotDupData {varname mm} {
 	set var($nn,yedata) {}
     }
 
-    set var($nn,manage) 1
-    set var($nn,dim) $var($mm,dim)
+    set var(graph$cc,$nn,manage) 1
+    set var(graph$cc,$nn,dim) $var(graph$cc,$mm,dim)
 
     set var($nn,show) $var($mm,show)
     set var($nn,shape,symbol) $var($mm,shape,symbol)
@@ -613,8 +613,8 @@ proc PlotDupData {varname mm} {
     # make current
     set var(graph$cc,data,current) $nn
 
-    set var(manage) $var($nn,manage)
-    set var(dim) $var($nn,dim)
+    set var(graph$cc,manage) $var(graph$cc,$nn,manage)
+    set var(graph$cc,dim) $var(graph$cc,$nn,dim)
 
     set var(xdata) $var($nn,xdata)
     set var(ydata) $var($nn,ydata)
@@ -645,7 +645,7 @@ proc PlotDestroy {varname} {
     }
     
     for {set nn 1} {$nn<=$var(graph$cc,data,total)} {incr nn} {
-	switch $var($nn,dim) {
+	switch $var(graph$cc,$nn,dim) {
 	    xy {
 		blt::vector destroy $var($nn,xdata) $var($nn,ydata)
 	    }
@@ -700,8 +700,8 @@ proc PlotExternal {varname} {
 
     set var(name) "Dataset $nn"
 
-    set var($nn,manage) $var(manage)
-    set var($nn,dim) $var(dim)
+    set var(graph$cc,$nn,manage) $var(graph$cc,manage)
+    set var(graph$cc,$nn,dim) $var(graph$cc,dim)
 
     set var($nn,xdata) $var(xdata) 
     set var($nn,ydata) $var(ydata) 
@@ -736,6 +736,9 @@ proc PlotListGenerate {varname} {
     upvar #0 $varname var
     global $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     set rr {}
     if {$var(xdata) != {}} {
 	global $var(xdata) $var(ydata) $var(xedata) $var(yedata)
@@ -743,7 +746,7 @@ proc PlotListGenerate {varname} {
 	set xx [$var(xdata) range]
 	set yy [$var(ydata) range]
 
-	switch $var(dim) {
+	switch $var(graph$cc,dim) {
 	    xy {
 		for {set ii 0} {$ii<$ll} {incr ii} {
 		    append rr "[lindex $xx $ii] [lindex $yy $ii]\n"
@@ -1065,6 +1068,9 @@ proc PlotSaveDataFile {varname filename} {
     upvar #0 $varname var
     global $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     if {$var(xdata) == {}} {
 	return
     }
@@ -1079,7 +1085,7 @@ proc PlotSaveDataFile {varname filename} {
     set yy [$var(ydata) range]
 
     set ch [open $filename w]
-    switch $var(dim) {
+    switch $var(graph$cc,dim) {
 	xy {
 	    for {set ii 0} {$ii<$ll} {incr ii} {
 		puts $ch "[lindex $xx $ii] [lindex $yy $ii]"
@@ -1223,12 +1229,12 @@ proc PlotUpdateGraph {varname} {
 	$var(mb).file entryconfig [msgcat::mc {Statistics}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {List Data}] -state normal
 
-	if {$var(1,manage)} {
-	    $var(mb).file entryconfig [msgcat::mc {Duplicate Data}] \
-		-state disabled
-	} else {
+	if {$var(graph$cc,1,manage)} {
 	    $var(mb).file entryconfig [msgcat::mc {Duplicate Data}] \
 		-state normal
+	} else {
+	    $var(mb).file entryconfig [msgcat::mc {Duplicate Data}] \
+		-state disable
 	}
     } else {
 	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state disabled
@@ -1375,7 +1381,7 @@ proc PlotBackup {ch dir} {
 		PlotSaveDataFile $varname "$fdir/plot$ii.dat"
 		PlotSaveConfigFile $varname "$fdir/plot$ii.plt"
 
-		puts $ch "PlotLoadDataFile $varname $fdir/plot$ii.dat $var(dim)"
+		puts $ch "PlotLoadDataFile $varname $fdir/plot$ii.dat $var(graph$cc,dim)"
 		puts $ch "PlotLoadConfigFile $varname $fdir/plot$ii.plt"
 	    }
 	    set ${varname}(graph$cc,data,current) $save

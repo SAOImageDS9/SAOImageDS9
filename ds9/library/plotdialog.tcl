@@ -567,6 +567,32 @@ proc PlotShapeMenu {varname} {
 	[list $var(proc,updateelement) $varname]
 }
 
+proc PlotErrorMenu {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    menu $var(mb).data.error
+    $var(mb).data.error add checkbutton -label [msgcat::mc {Show}] \
+	-variable ${varname}(graph$cc,error) \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.error add checkbutton -label [msgcat::mc {Cap}] \
+	-variable ${varname}(graph$cc,error,cap) \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.error add separator
+    $var(mb).data.error add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).data.error.color
+    $var(mb).data.error add cascade -label [msgcat::mc {Width}] \
+	-menu $var(mb).data.error.width
+
+    PlotColorMenu $var(mb).data.error.color $varname graph$cc,error,color \
+	[list $var(proc,updateelement) $varname]
+    WidthDashMenu $var(mb).data.error.width $varname graph$cc,error,width {} \
+	[list $var(proc,updateelement) $varname] {}
+}
+
 proc PlotExportDialog {varname format} {
     upvar #0 $varname var
     global $varname

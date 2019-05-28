@@ -75,6 +75,7 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     $var(mb).data add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
+    # Shape
     PlotShapeMenu $varname
 
     # Smooth
@@ -140,24 +141,7 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
 	[list PlotLineUpdateElement $varname]
 
     # Error
-    menu $var(mb).data.error
-    $var(mb).data.error add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(graph$cc,error) \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.error add checkbutton -label [msgcat::mc {Cap}] \
-	-variable ${varname}(graph$cc,error,cap) \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.error add separator
-    $var(mb).data.error add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).data.error.color
-    $var(mb).data.error add cascade -label [msgcat::mc {Width}] \
-	-menu $var(mb).data.error.width
-
-    PlotColorMenu $var(mb).data.error.color $varname graph$cc,error,color \
-	[list PlotLineUpdateElement $varname]
-    WidthDashMenu $var(mb).data.error.width $varname graph$cc,error,width {} \
-	[list PlotLineUpdateElement $varname] {}
-
+    PlotErrorMenu $varname
 }
 
 proc PlotLineAddGraph {varname} {

@@ -134,9 +134,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 	-menu $var(mb).canvas.font
     $var(mb).canvas add cascade -label [msgcat::mc {Background}] \
 	-menu $var(mb).canvas.bg
-    $var(mb).canvas add separator
-    $var(mb).canvas add command -label "[msgcat::mc {Title}]..." \
-	-command [list PlotGraphTitleDialog $varname]
 
     menu $var(mb).canvas.font
     $var(mb).canvas.font add cascade -label [msgcat::mc {Title}] \
@@ -172,7 +169,7 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 	-menu $var(mb).graph.legend
     $var(mb).graph add separator
     $var(mb).graph add command -label "[msgcat::mc {Titles}]..." \
-	-command [list PlotPlotTitleDialog $varname]
+	-command [list PlotGraphTitleDialog $varname]
 
     menu $var(mb).graph.axes
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Grid}] \
@@ -365,10 +362,13 @@ proc PlotGraphTitleDialog {varname} {
     global $varname
     global ed
 
-    set w {.apgraphtitle}
+    set w {.applottitle}
 
     set ed(ok) 0
     set ed(graph,title) $var(graph,title)
+    set ed(axis,x,title) $var(axis,x,title)
+    set ed(axis,y,title) $var(axis,y,title)
+    set ed(legend,title) $var(legend,title)
 
     DialogCreate $w [msgcat::mc {Title}] ed(ok)
 
@@ -376,8 +376,17 @@ proc PlotGraphTitleDialog {varname} {
     set f [ttk::frame $w.param]
     ttk::label $f.label -text [msgcat::mc {Title}]
     ttk::entry $f.title -textvariable ed(graph,title) -width 30
+    ttk::label $f.xlabel -text [msgcat::mc {X Axis Title}]
+    ttk::entry $f.xtitle -textvariable ed(axis,x,title) -width 30
+    ttk::label $f.ylabel -text [msgcat::mc {Y Axis Title}]
+    ttk::entry $f.ytitle -textvariable ed(axis,y,title) -width 30
+    ttk::label $f.legendlabel -text [msgcat::mc {Legend Title}]
+    ttk::entry $f.legendtitle -textvariable ed(legend,title) -width 30
 
     grid $f.label $f.title -padx 2 -pady 2 -sticky ew
+    grid $f.xlabel $f.xtitle -padx 2 -pady 2 -sticky ew
+    grid $f.ylabel $f.ytitle -padx 2 -pady 2 -sticky ew
+    grid $f.legendlabel $f.legendtitle -padx 2 -pady 2 -sticky ew
     grid columnconfigure $f 1 -weight 1
 
     # Buttons
@@ -400,61 +409,6 @@ proc PlotGraphTitleDialog {varname} {
 
     if {$ed(ok)} {
 	set var(graph,title) $ed(graph,title)
-	$var(proc,updategraph) $varname
-    }
-    
-    set rr $ed(ok)
-    unset ed
-    return $rr
-}
-
-proc PlotPlotTitleDialog {varname} {
-    upvar #0 $varname var
-    global $varname
-    global ed
-
-    set w {.applottitle}
-
-    set ed(ok) 0
-    set ed(axis,x,title) $var(axis,x,title)
-    set ed(axis,y,title) $var(axis,y,title)
-    set ed(legend,title) $var(legend,title)
-
-    DialogCreate $w [msgcat::mc {Title}] ed(ok)
-
-    # Param
-    set f [ttk::frame $w.param]
-    ttk::label $f.xlabel -text [msgcat::mc {X Axis Title}]
-    ttk::entry $f.xtitle -textvariable ed(axis,x,title) -width 30
-    ttk::label $f.ylabel -text [msgcat::mc {Y Axis Title}]
-    ttk::entry $f.ytitle -textvariable ed(axis,y,title) -width 30
-    ttk::label $f.legendlabel -text [msgcat::mc {Legend Title}]
-    ttk::entry $f.legendtitle -textvariable ed(legend,title) -width 30
-
-    grid $f.xlabel $f.xtitle -padx 2 -pady 2 -sticky ew
-    grid $f.ylabel $f.ytitle -padx 2 -pady 2 -sticky ew
-    grid $f.legendlabel $f.legendtitle -padx 2 -pady 2 -sticky ew
-    grid columnconfigure $f 1 -weight 1
-
-    # Buttons
-    set f [ttk::frame $w.buttons]
-    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
-	-default active 
-    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
-    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
-
-    bind $w <Return> {set ed(ok) 1}
-
-    # Fini
-    ttk::separator $w.sep -orient horizontal
-    pack $w.buttons $w.sep -side bottom -fill x
-    pack $w.param -side top -fill both -expand true
-
-    DialogCenter $w 
-    DialogWait $w ed(ok) $w.param.xtitle
-    DialogDismiss $w
-
-    if {$ed(ok)} {
 	set var(axis,x,title) $ed(axis,x,title)
 	set var(axis,y,title) $ed(axis,y,title)
 	set var(legend,title) $ed(legend,title)

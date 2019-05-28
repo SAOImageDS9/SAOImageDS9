@@ -1030,6 +1030,9 @@ proc PlotSaveConfigFile {varname filename} {
     upvar #0 $varname var
     global $varname
 
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
     if {$filename == {}} {
 	return
     }
@@ -1084,21 +1087,22 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(axis,font,weight) $var(axis,font,weight)
     set analysisplot(axis,font,slant) $var(axis,font,slant)
 
-    set analysisplot(show) $var(show)
-    set analysisplot(shape,symbol) $var(shape,symbol)
-    set analysisplot(shape,fill) $var(shape,fill)
-    set analysisplot(shape,color) $var(shape,color)
-    set analysisplot(smooth) $var(smooth)
-    set analysisplot(color) $var(color)
-    set analysisplot(fill) $var(fill)
-    set analysisplot(fill,color) $var(fill,color)
-    set analysisplot(width) $var(width)
-    set analysisplot(dash) $var(dash)
+    set analysisplot(show) $var(graph$cc,show)
+    set analysisplot(smooth) $var(graph$cc,smooth)
+    set analysisplot(color) $var(graph$cc,color)
+    set analysisplot(fill) $var(graph$cc,fill)
+    set analysisplot(fill,color) $var(graph$cc,fill,color)
+    set analysisplot(width) $var(graph$cc,width)
+    set analysisplot(dash) $var(graph$cc,dash)
 
-    set analysisplot(error) $var(error)
-    set analysisplot(error,cap) $var(error,cap)
-    set analysisplot(error,color) $var(error,color)
-    set analysisplot(error,width) $var(error,width)
+    set analysisplot(shape,symbol) $var(graph$cc,shape,symbol)
+    set analysisplot(shape,fill) $var(graph$cc,shape,fill)
+    set analysisplot(shape,color) $var(graph$cc,shape,color)
+
+    set analysisplot(error) $var(graph$cc,error)
+    set analysisplot(error,cap) $var(graph$cc,error,cap)
+    set analysisplot(error,color) $var(graph$cc,error,color)
+    set analysisplot(error,width) $var(graph$cc,error,width)
 
     set analysisplot(bar,relief) $var(bar,relief)
     set analysisplot(bar,mode) $var(bar,mode)

@@ -378,8 +378,10 @@ proc IMGSVRParse {varname} {
     }
 
     switch -- [string tolower $var(mime)] {
+	"text/html" -
+	"text/plain" -
 	"application/octet-stream" {
-	    # its never fails, someone can't get there mime types correct. 
+	    # it never fails, someone can't get there mime types correct. 
 	    # Override the mime type based on path
 	    switch -- [file extension $var(fn)] {
 		.bz2 {set var(encoding) bzip2}
@@ -417,8 +419,6 @@ proc IMGSVRParse {varname} {
 	"image/x-zfits" -
 	"binary/x-zfits" {set var(encoding) pack}
 
-	"text/html" -
-	"text/plain" -
 	default {
 	    # NOTE: error notices may come as text/html
 	    eval [list $var(proc,error) $varname [msgcat::mc {No Data Available}]]

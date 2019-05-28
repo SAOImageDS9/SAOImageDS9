@@ -934,7 +934,7 @@ proc HVParseSingle {varname} {
 	"text/html" -
 	"text/plain" -
 	"application/octet-stream" {
-	    # its never fails, someone can't get there mime types correct. 
+	    # it never fails, someone can't get there mime types correct. 
 	    # Override the mime type based on path
 
 	    ParseURL $var(url) r

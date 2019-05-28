@@ -80,7 +80,7 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | LEGEND_ legend
  | FONT_ fontt
  | TITLE_ title
- | BARMODE_ {ProcessSendCmdCVARGet bar,mode}
+ | BARMODE_ {PlotSendCmdCVARGet bar,mode}
  | SHOW_ {PlotSendCmdCVARYesNo show}
  | COLOR_ {PlotSendCmdCVARGet color}
  | FILL_ {PlotSendCmdCVARGet fill}
@@ -90,7 +90,7 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | ERRORBAR_ errorr
  | NAME_ {PlotSendCmdCVARGet name}
  | SHAPE_ shape
- | RELIEF_ {ProcessSendCmdCVARGet bar,relief}
+ | RELIEF_ {PlotSendCmdCVARGet bar,relief}
  | SMOOTH_ {PlotSendCmdCVARGet smooth}
  | WIDTH_ {PlotSendCmdCVARGet width}
  | DASH_ {PlotSendCmdCVARYesNo dash}

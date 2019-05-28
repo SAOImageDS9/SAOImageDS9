@@ -1490,13 +1490,13 @@ proc plotsend::yyparse {} {
                     14 { ProcessSendCmdCVAR PlotListGenerate }
                     15 { ProcessSendCmdCVARGet mode }
                     17 { ProcessSendCmdCVARGet graph,bg }
-                    21 { ProcessSendCmdCVARGet bar,mode }
+                    21 { PlotSendCmdCVARGet bar,mode }
                     22 { PlotSendCmdCVARYesNo show }
                     23 { PlotSendCmdCVARGet color }
                     24 { PlotSendCmdCVARGet fill }
                     25 { PlotSendCmdCVARGet fill,color }
                     28 { PlotSendCmdCVARGet name }
-                    30 { ProcessSendCmdCVARGet bar,relief }
+                    30 { PlotSendCmdCVARGet bar,relief }
                     31 { PlotSendCmdCVARGet smooth }
                     32 { PlotSendCmdCVARGet width }
                     33 { PlotSendCmdCVARYesNo dash }

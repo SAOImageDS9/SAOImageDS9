@@ -55,6 +55,7 @@ proc GetFileHTTP {url fn} {
     		    -timeout $ihttp(timeout) \
 		    -headers "[ProxyHTTP]"} token]} {
 	close $ch
+	Error "[msgcat::mc {Unable to locate URL}] $var(url)"
 	return
     }
 
@@ -138,17 +139,20 @@ proc LoadURLFitsHTTP {url layer mode} {
     set fn [tmpnam [file extension $r(path)]]
 
     set ch [open $fn w]
-    set token [http::geturl $url \
-		   -channel $ch \
-		   -binary 1 \
-    		   -timeout $ihttp(timeout) \
-		   -headers "[ProxyHTTP]"]
+    if {[catch {set token [http::geturl $url \
+				-channel $ch \
+				-binary 1 \
+				-timeout $ihttp(timeout) \
+				-headers "[ProxyHTTP]"]}]} {
+	close $var(ch)
+	Error "[msgcat::mc {Unable to locate URL}] $url"
+    }
 
     # reset errorInfo (may be set in http::geturl)
     global errorInfo
     set errorInfo {}
 
-    catch {close $ch}
+    close $ch
 
     upvar #0 $token t
 
@@ -225,8 +229,10 @@ proc LoadURLFitsHTTP {url layer mode} {
     }
 
     switch -- [string tolower $mime] {
+	"text/plain" -
+	"text/html" -
 	"application/octet-stream" {
-	    # its never fails, someone can't get there mime types correct. 
+	    # it never fails, someone can't get there mime types correct. 
 	    # Override the mime type based on path
 	    switch -- [file extension $fn] {
 		.bz2 {set var(encoding) bzip2}
@@ -264,8 +270,6 @@ proc LoadURLFitsHTTP {url layer mode} {
 	"image/x-zfits" -
 	"binary/x-zfits" {set encoding pack}
 
-	"text/plain" {}
-	"text/html" -
 	default {
 	    Error "[msgcat::mc {File not Found or Unable to load FITS data MIME type}] $mime"
 	    return

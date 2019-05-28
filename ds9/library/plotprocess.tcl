@@ -75,7 +75,17 @@ proc PrefsDialogPlot {} {
     ttk::label $f.smoothtitle -text [msgcat::mc {Smooth}]
     ttk::menubutton $f.smooth -textvariable pap(smooth) \
 	-menu $f.smooth.menu
-    PlotLineSmoothMenu $f.smooth.menu pap(smooth)
+    menu $f.smooth.menu
+    $f.smooth.menu add radiobutton -label [msgcat::mc {Step}] \
+	-variable pap(smooth) -value step
+    $f.smooth.menu add radiobutton -label [msgcat::mc {Linear}] \
+	-variable pap(smooth) -value linear
+    $f.smooth.menu add radiobutton -label [msgcat::mc {Cubic}] \
+	-variable pap(smooth) -value cubic
+    $f.smooth.menu add radiobutton -label [msgcat::mc {Quadratic}] \
+	-variable pap(smooth) -value quadratic
+    $f.smooth.menu add radiobutton -label [msgcat::mc {Catrom}] \
+	-variable pap(smooth) -value catrom
     grid $f.smoothtitle $f.smooth -padx 2 -pady 2 -sticky w
 
     #  Color

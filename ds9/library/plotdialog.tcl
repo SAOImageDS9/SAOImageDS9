@@ -506,20 +506,6 @@ proc PlotLineShapeMenu {which var} {
 	-variable $var -value arrow
 }
 
-proc PlotLineSmoothMenu {which var} {
-    menu $which
-    $which add radiobutton -label [msgcat::mc {Step}] \
-	-variable $var -value step
-    $which add radiobutton -label [msgcat::mc {Linear}] \
-	-variable $var -value linear
-    $which add radiobutton -label [msgcat::mc {Cubic}] \
-	-variable $var -value cubic
-    $which add radiobutton -label [msgcat::mc {Quadratic}] \
-	-variable $var -value quadratic
-    $which add radiobutton -label [msgcat::mc {Catrom}] \
-	-variable $var -value catrom
-}
-
 proc PlotShapeMenu {varname} {
     upvar #0 $varname var
     global $varname

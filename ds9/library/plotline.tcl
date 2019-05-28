@@ -75,58 +75,7 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     $var(mb).data add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
-    # Shape
-    menu $var(mb).data.shape
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {None}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value none \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Circle}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value circle \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Square}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value square \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Diamond}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value diamond \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Plus}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value plus \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Cross}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value cross \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Simple Plus}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value splus \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Simple Cross}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value scross \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Triangle}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value triangle \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Arrow}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value arrow \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.shape add separator
-    $var(mb).data.shape add checkbutton \
-	-label [msgcat::mc {Fill}] \
-	-variable ${varname}(graph$cc,shape,fill) \
-	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.shape add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).data.shape.color
-
-    PlotColorMenu $var(mb).data.shape.color $varname graph$cc,shape,color \
-	[list PlotLineUpdateElement $varname]
+    PlotShapeMenu $varname
 
     # Smooth
     menu $var(mb).data.smooth

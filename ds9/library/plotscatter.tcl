@@ -67,55 +67,7 @@ proc PlotScatterDialog {varname wtt title xaxis yaxis} {
     $var(mb).data add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
-    # Shape
-    menu $var(mb).data.shape
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Circle}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value circle \
-	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Square}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value square \
-	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Diamond}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value diamond \
-	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Plus}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value plus \
-	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Cross}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value cross \
-	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Simple Plus}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value splus \
-	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Simple Cross}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value scross \
-	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Triangle}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value triangle \
-	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).data.shape add radiobutton \
-	-label [msgcat::mc {Arrow}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value arrow \
-	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).data.shape add separator
-    $var(mb).data.shape add checkbutton \
-	-label [msgcat::mc {Fill}] \
-	-variable ${varname}(graph$cc,shape,fill) \
-	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).data.shape add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).data.shape.color
-		  
-    # Color
-    PlotColorMenu $var(mb).data.shape.color $varname graph$cc,shape,color \
-	[list PlotScatterUpdateElement $varname]
+    PlotShapeMenu $varname
 
     # Error
     menu $var(mb).data.error

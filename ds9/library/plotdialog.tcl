@@ -520,6 +520,67 @@ proc PlotLineSmoothMenu {which var} {
 	-variable $var -value catrom
 }
 
+proc PlotShapeMenu {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    # Shape
+    menu $var(mb).data.shape
+    $var(mb).data.shape add radiobutton \
+	-label [msgcat::mc {None}] \
+	-variable ${varname}(graph$cc,shape,symbol) -value none \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.shape add radiobutton \
+	-label [msgcat::mc {Circle}] \
+	-variable ${varname}(graph$cc,shape,symbol) -value circle \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.shape add radiobutton \
+	-label [msgcat::mc {Square}] \
+	-variable ${varname}(graph$cc,shape,symbol) -value square \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.shape add radiobutton \
+	-label [msgcat::mc {Diamond}] \
+	-variable ${varname}(graph$cc,shape,symbol) -value diamond \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.shape add radiobutton \
+	-label [msgcat::mc {Plus}] \
+	-variable ${varname}(graph$cc,shape,symbol) -value plus \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.shape add radiobutton \
+	-label [msgcat::mc {Cross}] \
+	-variable ${varname}(graph$cc,shape,symbol) -value cross \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.shape add radiobutton \
+	-label [msgcat::mc {Simple Plus}] \
+	-variable ${varname}(graph$cc,shape,symbol) -value splus \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.shape add radiobutton \
+	-label [msgcat::mc {Simple Cross}] \
+	-variable ${varname}(graph$cc,shape,symbol) -value scross \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.shape add radiobutton \
+	-label [msgcat::mc {Triangle}] \
+	-variable ${varname}(graph$cc,shape,symbol) -value triangle \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.shape add radiobutton \
+	-label [msgcat::mc {Arrow}] \
+	-variable ${varname}(graph$cc,shape,symbol) -value arrow \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.shape add separator
+    $var(mb).data.shape add checkbutton \
+	-label [msgcat::mc {Fill}] \
+	-variable ${varname}(graph$cc,shape,fill) \
+	-command [list $var(proc,updateelement) $varname]
+    $var(mb).data.shape add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).data.shape.color
+
+    PlotColorMenu $var(mb).data.shape.color $varname graph$cc,shape,color \
+	[list $var(proc,updateelement) $varname]
+}
+
 proc PlotExportDialog {varname format} {
     upvar #0 $varname var
     global $varname

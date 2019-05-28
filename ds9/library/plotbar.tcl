@@ -89,7 +89,7 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
     $var(mb).data add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
-    PlotColorMenu $var(mb).data.color $varname color \
+    PlotColorMenu $var(mb).data.color $varname graph$cc,color \
 	[list PlotBarUpdateElement $varname]
 
     # Relief

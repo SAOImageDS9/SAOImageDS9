@@ -16,16 +16,13 @@ proc PlotDef {} {
     set iap(tiff,compress) none
     set iap(error) [msgcat::mc {An error has occurred while creating the image. Please be sure that the plot window is in the upper left corner of the default screen and the entire window is visible.}]
 
+    # per Canvas
     set pap(graph,bg) white
-    set pap(graph,title) {}
     set pap(graph,title,family) helvetica
     set pap(graph,title,size) 12
     set pap(graph,title,weight) normal
     set pap(graph,title,slant) roman
 
-    set pap(legend) 0
-    set pap(legend,title) Legend
-    set pap(legend,position) right
     set pap(legend,title,family) helvetica
     set pap(legend,title,size) 10
     set pap(legend,title,weight) normal
@@ -34,6 +31,23 @@ proc PlotDef {} {
     set pap(legend,font,size) 9
     set pap(legend,font,weight) normal
     set pap(legend,font,slant) roman
+
+    set pap(axis,title,family) helvetica
+    set pap(axis,title,size) 9
+    set pap(axis,title,weight) normal
+    set pap(axis,title,slant) roman
+
+    set pap(axis,font,family) helvetica
+    set pap(axis,font,size) 9
+    set pap(axis,font,weight) normal
+    set pap(axis,font,slant) roman
+
+    # per Graph
+    set pap(graph,title) {}
+
+    set pap(legend) 0
+    set pap(legend,title) Legend
+    set pap(legend,position) right
 
     set pap(axis,x,title) {}
     set pap(axis,x,grid) 1
@@ -53,16 +67,9 @@ proc PlotDef {} {
     set pap(axis,y,max) {}
     set pap(axis,y,format) {}
 
-    set pap(axis,title,family) helvetica
-    set pap(axis,title,size) 9
-    set pap(axis,title,weight) normal
-    set pap(axis,title,slant) roman
+    set pap(bar,mode) normal
 
-    set pap(axis,font,family) helvetica
-    set pap(axis,font,size) 9
-    set pap(axis,font,weight) normal
-    set pap(axis,font,slant) roman
-
+    # per DataSet
     set pap(show) 1
     set pap(smooth) linear
     set pap(color) black
@@ -81,7 +88,6 @@ proc PlotDef {} {
     set pap(error,width) 1
 
     set pap(bar,relief) raised
-    set pap(bar,mode) normal
 }
 
 # Canvas
@@ -125,6 +131,12 @@ proc PlotAddGraph {varname} {
     set var(graph$cc,yedata) {}
 
     array set $varname [array get pap]
+
+    # per Canvas
+    # per Graph
+    set var(graph$cc,bar,mode) $pap(bar,mode)
+
+    # per DataSet
     set var(graph$cc,show) $pap(show)
     set var(graph$cc,shape,symbol) $pap(shape,symbol)
     set var(graph$cc,shape,fill) $pap(shape,fill)
@@ -142,7 +154,6 @@ proc PlotAddGraph {varname} {
     set var(graph$cc,error,width) $pap(error,width)
 
     set var(graph$cc,bar,relief) $pap(bar,relief)
-    set var(graph$cc,bar,mode) $pap(bar,mode)
 
     $var(proc,addgraph) $varname
 
@@ -723,21 +734,21 @@ proc PlotColorMenu {w varname color cmd} {
 
     menu $w
     $w add radiobutton -label [msgcat::mc {Black}] \
-	-variable ${varname}(graph$cc,$color) -value black -command $cmd
+	-variable ${varname}($color) -value black -command $cmd
     $w add radiobutton -label [msgcat::mc {White}] \
-	-variable ${varname}(graph$cc,$color) -value white -command $cmd
+	-variable ${varname}($color) -value white -command $cmd
     $w add radiobutton -label [msgcat::mc {Red}] \
-	-variable ${varname}(graph$cc,$color) -value red -command $cmd
+	-variable ${varname}($color) -value red -command $cmd
     $w add radiobutton -label [msgcat::mc {Green}] \
-	-variable ${varname}(graph$cc,$color) -value green -command $cmd
+	-variable ${varname}($color) -value green -command $cmd
     $w add radiobutton -label [msgcat::mc {Blue}] \
-	-variable ${varname}(graph$cc,$color) -value blue -command $cmd
+	-variable ${varname}($color) -value blue -command $cmd
     $w add radiobutton -label [msgcat::mc {Cyan}] \
-	-variable ${varname}(graph$cc,$color) -value cyan -command $cmd
+	-variable ${varname}($color) -value cyan -command $cmd
     $w add radiobutton -label [msgcat::mc {Magenta}] \
-	-variable ${varname}(graph$cc,$color) -value magenta -command $cmd
+	-variable ${varname}($color) -value magenta -command $cmd
     $w add radiobutton -label [msgcat::mc {Yellow}] \
-	-variable ${varname}(graph$cc,$color) -value yellow -command $cmd
+	-variable ${varname}($color) -value yellow -command $cmd
     $w add separator
     $w add command -label "[msgcat::mc {Other Color}]..." \
 	-command [list ColorMenuOther $varname $color $cmd]
@@ -750,6 +761,7 @@ proc PlotSetVar {varname nn} {
     set tt $var(graph,total)
     set cc $var(graph,current)
 
+    # per DataSet
     set var(graph$cc,name) $var(graph$cc,$nn,name)
     set var(graph$cc,show) $var(graph$cc,$nn,show) 
     set var(graph$cc,smooth) $var(graph$cc,$nn,smooth) 
@@ -778,6 +790,7 @@ proc PlotGetVar {varname nn} {
     set tt $var(graph,total)
     set cc $var(graph,current)
 
+    # per DataSet
     set var(graph$cc,$nn,name) $var(graph$cc,name)
     set var(graph$cc,$nn,show) $var(graph$cc,show)
     set var(graph$cc,$nn,smooth) $var(graph$cc,smooth)

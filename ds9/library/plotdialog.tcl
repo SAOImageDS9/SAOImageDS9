@@ -153,7 +153,8 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     FontMenu $var(mb).canvas.font.legendtitle $varname legend,title,family legend,title,size legend,title,weight legend,title,slant [list $var(proc,updategraph) $varname]
     FontMenu $var(mb).canvas.font.legend $varname legend,font,family legend,font,size legend,font,weight legend,font,slant [list $var(proc,updategraph) $varname]
 
-    PlotColorMenu $var(mb).canvas.bg $varname graph,bg [list $var(proc,updategraph) $varname]
+    PlotColorMenu $var(mb).canvas.bg $varname graph,bg \
+	[list $var(proc,updategraph) $varname]
 
     # Graph
     menu $var(mb).graph

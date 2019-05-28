@@ -114,7 +114,7 @@ proc PlotScatterDialog {varname wtt title xaxis yaxis} {
 	-menu $var(mb).data.shape.color
 		  
     # Color
-    PlotColorMenu $var(mb).data.shape.color $varname shape,color \
+    PlotColorMenu $var(mb).data.shape.color $varname graph$cc,shape,color \
 	[list PlotScatterUpdateElement $varname]
 
     # Error

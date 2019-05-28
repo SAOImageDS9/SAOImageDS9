@@ -125,7 +125,7 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     $var(mb).data.shape add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).data.shape.color
 
-    PlotColorMenu $var(mb).data.shape.color $varname shape,color \
+    PlotColorMenu $var(mb).data.shape.color $varname graph$cc,shape,color \
 	[list PlotLineUpdateElement $varname]
 
     # Smooth
@@ -152,7 +152,7 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
 	-command [list PlotLineUpdateElement $varname]
 
     # Color
-    PlotColorMenu $var(mb).data.color $varname color \
+    PlotColorMenu $var(mb).data.color $varname graph$cc,color \
 	[list PlotLineUpdateElement $varname]
 
     # Width
@@ -187,7 +187,7 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     $var(mb).data.fill add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).data.fill.color
 
-    PlotColorMenu $var(mb).data.fill.color $varname fill,color \
+    PlotColorMenu $var(mb).data.fill.color $varname graph$cc,fill,color \
 	[list PlotLineUpdateElement $varname]
 
     # Error

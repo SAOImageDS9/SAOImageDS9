@@ -1532,10 +1532,10 @@ proc plotsend::yyparse {} {
                     63 { ProcessSendCmdCVARGet "axis,$1,title" }
                     64 { ProcessSendCmdCVARGet "axis,$1,title" }
                     65 { ProcessSendCmdCVARGet legend,title }
-                    66 { ProcessSendCmdCVARYesNo error }
-                    67 { ProcessSendCmdCVARYesNo error,cap }
-                    68 { ProcessSendCmdCVARGet error,color }
-                    69 { ProcessSendCmdCVARGet error,width }
+                    66 { PlotSendCmdCVARYesNo error }
+                    67 { PlotSendCmdCVARYesNo error,cap }
+                    68 { PlotSendCmdCVARGet error,color }
+                    69 { PlotSendCmdCVARGet error,width }
                     70 { PlotSendCmdCVARGet shape,symbol }
                     71 { PlotSendCmdCVARYesNo shape,fill }
                     72 { PlotSendCmdCVARGet shape,color }

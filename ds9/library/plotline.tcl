@@ -193,10 +193,10 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     # Error
     menu $var(mb).data.error
     $var(mb).data.error add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(error) \
+	-variable ${varname}(graph$cc,error) \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.error add checkbutton -label [msgcat::mc {Cap}] \
-	-variable ${varname}(error,cap) \
+	-variable ${varname}(graph$cc,error,cap) \
 	-command [list PlotLineUpdateElement $varname]
     $var(mb).data.error add separator
     $var(mb).data.error add cascade -label [msgcat::mc {Color}] \
@@ -204,9 +204,9 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     $var(mb).data.error add cascade -label [msgcat::mc {Width}] \
 	-menu $var(mb).data.error.width
 
-    PlotColorMenu $var(mb).data.error.color $varname error,color \
+    PlotColorMenu $var(mb).data.error.color $varname graph$cc,error,color \
 	[list PlotLineUpdateElement $varname]
-    WidthDashMenu $var(mb).data.error.width $varname error,width {} \
+    WidthDashMenu $var(mb).data.error.width $varname graph$cc,error,width {} \
 	[list PlotLineUpdateElement $varname] {}
 
 }
@@ -258,14 +258,14 @@ proc PlotLineUpdateElement {varname} {
 	set dash { }
     }
 
-    if {$var(error)} {
+    if {$var(graph$cc,error)} {
 	set show both
     } else {
 	set show none
     }
 
-    if {$var(error,cap)} {
-	set cap [expr $var(error,width)+3]
+    if {$var(graph$cc,error,cap)} {
+	set cap [expr $var(graph$cc,error,width)+3]
     } else {
 	set cap 0
     }
@@ -277,8 +277,8 @@ proc PlotLineUpdateElement {varname} {
 	-smooth $var(graph$cc,smooth) \
 	-color $var(graph$cc,color) -areabackground $fillClr \
 	-linewidth $var(graph$cc,width) -dashes $dash \
-	-showerrorbars $show -errorbarcolor $var(error,color) \
-	-errorbarwidth $var(error,width) -errorbarcap $cap
+	-showerrorbars $show -errorbarcolor $var(graph$cc,error,color) \
+	-errorbarwidth $var(graph$cc,error,width) -errorbarcap $cap
 }
 
 proc PlotLineButton {varname x y} {

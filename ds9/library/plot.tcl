@@ -64,15 +64,16 @@ proc PlotDef {} {
     set pap(axis,font,slant) roman
 
     set pap(show) 1
-    set pap(shape,symbol) none
-    set pap(shape,fill) 1
-    set pap(shape,color) red
     set pap(smooth) linear
     set pap(color) black
     set pap(fill) 0
     set pap(fill,color) black
     set pap(width) 1
     set pap(dash) 0
+
+    set pap(shape,symbol) none
+    set pap(shape,fill) 1
+    set pap(shape,color) red
 
     set pap(error) 1
     set pap(error,cap) 0
@@ -134,6 +135,11 @@ proc PlotAddGraph {varname} {
     set var(graph$cc,fill,color) $pap(fill,color)
     set var(graph$cc,width) $pap(width)
     set var(graph$cc,dash) $pap(dash)
+
+    set var(graph$cc,error) $pap(error)
+    set var(graph$cc,error,cap) $pap(error,cap)
+    set var(graph$cc,error,color) $pap(error,color)
+    set var(graph$cc,error,width) $pap(error,width)
 
     $var(proc,addgraph) $varname
 
@@ -197,34 +203,6 @@ proc PlotAddData {varname} {
 	if {[$var(graph$cc,yedata) length] != 0} {
 	    $var(graph$cc) element configure "d-${nn}" \
 		-yerror $var(graph$cc,yedata)
-	}
-    }
-}
-
-proc PlotAxisFormat {varname axis w nn} {
-    upvar #0 $varname var
-    global $varname
-
-    return [format $var(axis,$axis,format) $nn]
-}
-
-proc PlotChangeMode {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set tt $var(graph,total)
-    set cc $var(graph,current)
-
-    for {set ii 1} {$ii<=$tt} {incr ii} {
-	switch $var(mode) {
-	    pointer {
-		blt::RemoveBindTag $var(graph$ii) zoom-$var(graph$ii)
-		bind $var(graph$ii) <1> [list PlotButton $varname %x %y]
-	    }
-	    zoom {
-		bind $var(graph$ii) <1> {}
-		blt::AddBindTag $var(graph$ii) zoom-$var(graph$ii)
-	    }
 	}
     }
 }
@@ -311,6 +289,18 @@ proc PlotDeleteData {varname} {
     }
 }
 
+proc PlotCurrentGraph {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    if {$tt > 0} {
+	PlotCurrentData $varname
+    }
+}
+
 proc PlotCurrentData {varname} {
     upvar #0 $varname var
     global $varname
@@ -334,6 +324,34 @@ proc PlotCurrentData {varname} {
 
     PlotStats $varname
     PlotList $varname
+}
+
+proc PlotAxisFormat {varname axis w nn} {
+    upvar #0 $varname var
+    global $varname
+
+    return [format $var(axis,$axis,format) $nn]
+}
+
+proc PlotChangeMode {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    for {set ii 1} {$ii<=$tt} {incr ii} {
+	switch $var(mode) {
+	    pointer {
+		blt::RemoveBindTag $var(graph$ii) zoom-$var(graph$ii)
+		bind $var(graph$ii) <1> [list PlotButton $varname %x %y]
+	    }
+	    zoom {
+		bind $var(graph$ii) <1> {}
+		blt::AddBindTag $var(graph$ii) zoom-$var(graph$ii)
+	    }
+	}
+    }
 }
 
 proc PlotDataSet {varname dim data} {
@@ -628,10 +646,12 @@ proc PlotDupData {varname mm} {
 	[PlotNextColor $var(graph$cc,$mm,fill,color)]
     set var(graph$cc,$nn,width) $var(graph$cc,$mm,width)
     set var(graph$cc,$nn,dash) $var(graph$cc,$mm,dash)
-    set var($nn,error) $var($mm,error)
-    set var($nn,error,cap) $var($mm,error,cap)
-    set var($nn,error,color) $var($mm,error,color)
-    set var($nn,error,width) $var($mm,error,width)
+
+    set var(graph$cc,$nn,error) $var(graph$cc,$mm,error)
+    set var(graph$cc,$nn,error,cap) $var(graph$cc,$mm,error,cap)
+    set var(graph$cc,$nn,error,color) $var(graph$cc,$mm,error,color)
+    set var(graph$cc,$nn,error,width) $var(graph$cc,$mm,error,width)
+
     set var($nn,bar,relief) $var($mm,bar,relief)
 
     # update data set menu
@@ -1353,19 +1373,22 @@ proc PlotSetVar {varname nn} {
 
     set var(graph$cc,name) $var(graph$cc,$nn,name)
     set var(graph$cc,show) $var(graph$cc,$nn,show) 
-    set var(graph$cc,shape,symbol) $var(graph$cc,$nn,shape,symbol) 
-    set var(graph$cc,shape,fill) $var(graph$cc,$nn,shape,fill) 
-    set var(graph$cc,shape,color) $var(graph$cc,$nn,shape,color) 
     set var(graph$cc,smooth) $var(graph$cc,$nn,smooth) 
     set var(graph$cc,color) $var(graph$cc,$nn,color) 
     set var(graph$cc,fill) $var(graph$cc,$nn,fill) 
     set var(graph$cc,fill,color) $var(graph$cc,$nn,fill,color) 
     set var(graph$cc,width) $var(graph$cc,$nn,width) 
     set var(graph$cc,dash) $var(graph$cc,$nn,dash) 
-    set var(error) $var($nn,error) 
-    set var(error,cap) $var($nn,error,cap) 
-    set var(error,color) $var($nn,error,color) 
-    set var(error,width) $var($nn,error,width) 
+
+    set var(graph$cc,shape,symbol) $var(graph$cc,$nn,shape,symbol) 
+    set var(graph$cc,shape,fill) $var(graph$cc,$nn,shape,fill) 
+    set var(graph$cc,shape,color) $var(graph$cc,$nn,shape,color)
+
+    set var(graph$cc,error) $var(graph$cc,$nn,error) 
+    set var(graph$cc,error,cap) $var(graph$cc,$nn,error,cap) 
+    set var(graph$cc,error,color) $var(graph$cc,$nn,error,color) 
+    set var(graph$cc,error,width) $var(graph$cc,$nn,error,width) 
+
     set var(bar,relief) $var($nn,bar,relief) 
 }
 
@@ -1378,19 +1401,22 @@ proc PlotGetVar {varname nn} {
 
     set var(graph$cc,$nn,name) $var(graph$cc,name)
     set var(graph$cc,$nn,show) $var(graph$cc,show)
-    set var(graph$cc,$nn,shape,symbol) $var(graph$cc,shape,symbol)
-    set var(graph$cc,$nn,shape,fill) $var(graph$cc,shape,fill)
-    set var(graph$cc,$nn,shape,color) $var(graph$cc,shape,color)
     set var(graph$cc,$nn,smooth) $var(graph$cc,smooth)
     set var(graph$cc,$nn,color) $var(graph$cc,color)
     set var(graph$cc,$nn,fill) $var(graph$cc,fill)
     set var(graph$cc,$nn,fill,color) $var(graph$cc,fill,color)
     set var(graph$cc,$nn,width) $var(graph$cc,width)
     set var(graph$cc,$nn,dash) $var(graph$cc,dash)
-    set var($nn,error) $var(error)
-    set var($nn,error,cap) $var(error,cap)
-    set var($nn,error,color) $var(error,color)
-    set var($nn,error,width) $var(error,width)
+
+    set var(graph$cc,$nn,shape,symbol) $var(graph$cc,shape,symbol)
+    set var(graph$cc,$nn,shape,fill) $var(graph$cc,shape,fill)
+    set var(graph$cc,$nn,shape,color) $var(graph$cc,shape,color)
+
+    set var(graph$cc,$nn,error) $var(graph$cc,error)
+    set var(graph$cc,$nn,error,cap) $var(graph$cc,error,cap)
+    set var(graph$cc,$nn,error,color) $var(graph$cc,error,color)
+    set var(graph$cc,$nn,error,width) $var(graph$cc,error,width)
+
     set var($nn,bar,relief) $var(bar,relief)
 }
 

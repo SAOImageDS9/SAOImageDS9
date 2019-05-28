@@ -143,10 +143,10 @@ title : {ProcessSendCmdCVARGet graph,title}
  | LEGEND_ {ProcessSendCmdCVARGet legend,title}
  ;
 
-errorr : {ProcessSendCmdCVARYesNo error}
- | CAP_ {ProcessSendCmdCVARYesNo error,cap}
- | COLOR_ {ProcessSendCmdCVARGet error,color}
- | WIDTH_ {ProcessSendCmdCVARGet error,width}
+errorr : {PlotSendCmdCVARYesNo error}
+ | CAP_ {PlotSendCmdCVARYesNo error,cap}
+ | COLOR_ {PlotSendCmdCVARGet error,color}
+ | WIDTH_ {PlotSendCmdCVARGet error,width}
  ;
 
 shape : {PlotSendCmdCVARGet shape,symbol}

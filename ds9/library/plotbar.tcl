@@ -95,19 +95,19 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
     # Relief
     menu $var(mb).data.relief
     $var(mb).data.relief add radiobutton -label [msgcat::mc {Flat}] \
-	-variable ${varname}(bar,relief) -value flat \
+	-variable ${varname}(graph$cc,bar,relief) -value flat \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).data.relief add radiobutton -label [msgcat::mc {Sunken}] \
-	-variable ${varname}(bar,relief) -value sunken \
+	-variable ${varname}(graph$cc,bar,relief) -value sunken \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).data.relief add radiobutton -label [msgcat::mc {Raised}] \
-	-variable ${varname}(bar,relief) -value raised \
+	-variable ${varname}(graph$cc,bar,relief) -value raised \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).data.relief add radiobutton -label [msgcat::mc {Solid}] \
-	-variable ${varname}(bar,relief) -value solid \
+	-variable ${varname}(graph$cc,bar,relief) -value solid \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).data.relief add radiobutton -label [msgcat::mc {Groove}] \
-	-variable ${varname}(bar,relief) -value groove \
+	-variable ${varname}(graph$cc,bar,relief) -value groove \
 	-command [list PlotBarUpdateElement $varname]
 
     # Error
@@ -190,7 +190,7 @@ proc PlotBarUpdateElement {varname} {
 
     $var(graph$cc) element configure "d-${nn}" \
 	-label $var(graph$cc,name) -hide [expr !$var(graph$cc,show)] \
-	-relief $var(bar,relief) -color $var(graph$cc,color) \
+	-relief $var(graph$cc,bar,relief) -color $var(graph$cc,color) \
 	-showerrorbars $show -errorbarcolor $var(graph$cc,error,color) \
 	-errorbarwidth $var(graph$cc,error,width) -errorbarcap $cap
 }

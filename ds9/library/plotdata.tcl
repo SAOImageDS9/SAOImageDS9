@@ -141,6 +141,9 @@ proc PlotDataSetOne {varname dim data} {
     upvar #0 $varname var
     global $varname
 
+    # save current state
+    PlotSaveState $varname
+
     set tt $var(graph,total)
     set cc $var(graph,current)
 
@@ -157,6 +160,9 @@ proc PlotDataSetOne {varname dim data} {
     set nn $var(graph$cc,data,total)
     set var(graph$cc,data,current) $nn
 
+    # init new state
+    PlotInitState $varname
+    
     # new vector names
     set xdata ap${varname}xx${nn}
     set ydata ap${varname}yy${nn}
@@ -328,7 +334,7 @@ proc PlotDataSetOne {varname dim data} {
     set var(graph$cc,$nn,xedata) $var(graph$cc,xedata) 
     set var(graph$cc,$nn,yedata) $var(graph$cc,yedata) 
 
-    PlotGetVar $varname $nn
+    PlotSaveState $varname
 
     # update data set menu
     $var(mb).graph.select add radiobutton -label "$var(graph$cc,name)" \
@@ -417,7 +423,7 @@ proc PlotDupData {varname mm} {
     set var(graph$cc,xedata) $var(graph$cc,$nn,xedata)
     set var(graph$cc,yedata) $var(graph$cc,$nn,yedata)
 
-    PlotSetVar $varname $nn
+    PlotRestoreState $varname $nn
 
     PlotAddData $varname
     $var(proc,updateelement) $varname
@@ -425,4 +431,3 @@ proc PlotDupData {varname mm} {
     PlotStats $varname
     PlotList $varname
 }
-

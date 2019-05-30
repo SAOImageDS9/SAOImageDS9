@@ -16,7 +16,6 @@ proc PlotLoadConfigFile {varname filename} {
     upvar #0 $varname var
     global $varname
 
-    set tt $var(graph,total)
     set cc $var(graph,current)
 
     if {$filename == {}} {
@@ -74,6 +73,7 @@ proc PlotLoadConfigFile {varname filename} {
     set var(axis,font,weight) $analysisplot(axis,font,weight) 
     set var(axis,font,slant) $analysisplot(axis,font,slant) 
 
+#    set var(graph$cc,name) {}
     set var(graph$cc,show) $analysisplot(show) 
     set var(graph$cc,smooth) $analysisplot(smooth) 
     set var(graph$cc,color) $analysisplot(color) 
@@ -204,7 +204,6 @@ proc PlotSaveConfigFile {varname filename} {
     upvar #0 $varname var
     global $varname
 
-    set tt $var(graph,total)
     set cc $var(graph,current)
 
     if {$filename == {}} {
@@ -261,6 +260,7 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(axis,font,weight) $var(axis,font,weight)
     set analysisplot(axis,font,slant) $var(axis,font,slant)
 
+#    set analysisplot(name) {}
     set analysisplot(show) $var(graph$cc,show)
     set analysisplot(smooth) $var(graph$cc,smooth)
     set analysisplot(color) $var(graph$cc,color)

@@ -100,8 +100,7 @@ proc PlotScatterUpdateElement {varname} {
  	return
     }
     
-    set nn $var(graph$cc,data,current)
-    PlotGetVar $varname $nn
+    PlotSaveState $varname
 
     if {$var(graph$cc,shape,symbol) == "none"} {
 	set var(graph$cc,shape,symbol) circle
@@ -125,6 +124,7 @@ proc PlotScatterUpdateElement {varname} {
 	set cap 0
     }
 
+    set nn $var(graph$cc,data,current)
     $var(graph$cc) element configure "d-${nn}" \
 	-label $var(graph$cc,name) -hide [expr !$var(graph$cc,show)] \
 	-symbol $var(graph$cc,shape,symbol) -fill $clr -scalesymbols no \

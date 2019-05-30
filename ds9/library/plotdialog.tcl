@@ -29,6 +29,10 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 
     set var(graph,total) 0
     set var(graph,current) 0
+    set var(graph0,data,total) 0
+    set var(graph0,data,current) 0
+
+    PlotInitState $varname
 
     PlotTitle $varname $title $xaxis $yaxis
 

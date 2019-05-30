@@ -173,8 +173,7 @@ proc PlotBarUpdateElement {varname} {
  	return
     }
     
-    set nn $var(graph$cc,data,current)
-    PlotGetVar $varname $nn
+    PlotSaveState $varname
 
     if {$var(graph$cc,error)} {
 	set show both
@@ -188,6 +187,7 @@ proc PlotBarUpdateElement {varname} {
 	set cap 0
     }
 
+    set nn $var(graph$cc,data,current)
     $var(graph$cc) element configure "d-${nn}" \
 	-label $var(graph$cc,name) -hide [expr !$var(graph$cc,show)] \
 	-relief $var(graph$cc,bar,relief) -color $var(graph$cc,color) \

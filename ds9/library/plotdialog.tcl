@@ -521,43 +521,43 @@ proc PlotShapeMenu {varname} {
     menu $var(mb).data.shape
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {None}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value none \
+	-variable ${varname}(graph,ds,shape,symbol) -value none \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Circle}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value circle \
+	-variable ${varname}(graph,ds,shape,symbol) -value circle \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Square}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value square \
+	-variable ${varname}(graph,ds,shape,symbol) -value square \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Diamond}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value diamond \
+	-variable ${varname}(graph,ds,shape,symbol) -value diamond \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Plus}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value plus \
+	-variable ${varname}(graph,ds,shape,symbol) -value plus \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Cross}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value cross \
+	-variable ${varname}(graph,ds,shape,symbol) -value cross \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Simple Plus}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value splus \
+	-variable ${varname}(graph,ds,shape,symbol) -value splus \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Simple Cross}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value scross \
+	-variable ${varname}(graph,ds,shape,symbol) -value scross \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Triangle}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value triangle \
+	-variable ${varname}(graph,ds,shape,symbol) -value triangle \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.shape add radiobutton \
 	-label [msgcat::mc {Arrow}] \
-	-variable ${varname}(graph$cc,shape,symbol) -value arrow \
+	-variable ${varname}(graph,ds,shape,symbol) -value arrow \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.shape add separator
     $var(mb).data.shape add checkbutton \
@@ -567,7 +567,7 @@ proc PlotShapeMenu {varname} {
     $var(mb).data.shape add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).data.shape.color
 
-    PlotColorMenu $var(mb).data.shape.color $varname graph$cc,shape,color \
+    PlotColorMenu $var(mb).data.shape.color $varname graph,ds,shape,color \
 	[list $var(proc,updateelement) $varname]
 }
 
@@ -580,10 +580,10 @@ proc PlotErrorMenu {varname} {
 
     menu $var(mb).data.error
     $var(mb).data.error add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(graph$cc,error) \
+	-variable ${varname}(graph,ds,error) \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.error add checkbutton -label [msgcat::mc {Cap}] \
-	-variable ${varname}(graph$cc,error,cap) \
+	-variable ${varname}(graph,ds,error,cap) \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.error add separator
     $var(mb).data.error add cascade -label [msgcat::mc {Color}] \
@@ -591,9 +591,9 @@ proc PlotErrorMenu {varname} {
     $var(mb).data.error add cascade -label [msgcat::mc {Width}] \
 	-menu $var(mb).data.error.width
 
-    PlotColorMenu $var(mb).data.error.color $varname graph$cc,error,color \
+    PlotColorMenu $var(mb).data.error.color $varname graph,ds,error,color \
 	[list $var(proc,updateelement) $varname]
-    WidthDashMenu $var(mb).data.error.width $varname graph$cc,error,width {} \
+    WidthDashMenu $var(mb).data.error.width $varname graph,ds,error,width {} \
 	[list $var(proc,updateelement) $varname] {}
 }
 

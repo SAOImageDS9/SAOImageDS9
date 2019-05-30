@@ -265,7 +265,7 @@ plotCmd : LOAD_ load
  | ERRORBAR_ errorr
  | NAME_ STRING_ {PlotCmdUpdateElement graph,ds,name $2}
  | SHAPE_ shape
- | RELIEF_ relief {PlotCmdUpdateElement bar,relief $2}
+ | RELIEF_ relief {PlotCmdUpdateElement graph,ds,bar,relief $2}
  | SMOOTH_ smooth {PlotCmdUpdateElement graph,ds,smooth $2}
  | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,width $2}
  | DASH_ yesno {PlotCmdUpdateElement graph,ds,dash $2}
@@ -414,15 +414,15 @@ dummy1 : DISCRETE_
  | ERRORBAR_
  ; 
 
-errorr : yesno {PlotCmdUpdateElement error $1}
- | CAP_ yesno {PlotCmdUpdateElement error,cap $2}
- | COLOR_ STRING_ {PlotCmdUpdateElement error,color $2}
- | WIDTH_ INT_ {PlotCmdUpdateElement error,width $2}
+errorr : yesno {PlotCmdUpdateElement graph,ds,error $1}
+ | CAP_ yesno {PlotCmdUpdateElement graph,ds,error,cap $2}
+ | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,error,color $2}
+ | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,error,width $2}
  ;
 
-shape : shapes {PlotCmdUpdateElement shape,symbol $1}
- | FILL_ yesno {PlotCmdUpdateElement shape,file $2}
- | COLOR_ STRING_ {PlotCmdUpdateElement shape,color $2}
+shape : shapes {PlotCmdUpdateElement graph,ds,shape,symbol $1}
+ | FILL_ yesno {PlotCmdUpdateElement graph,ds,shape,file $2}
+ | COLOR_ STRING_ {PlotCmdUpdateElement graph,ds,shape,color $2}
  ;
 
 shapes : NONE_ {set _ none}
@@ -488,10 +488,10 @@ oldGraphScale : LINEARLINEAR_ {PlotCmdUpdateGraph "axis,x,log" 0; PlotCmdUpdateG
  ;
 
 # backward compatibility
-oldLine : DISCRETE_ shapes {PlotCmdUpdateElement shape,symbol $2}
+oldLine : DISCRETE_ shapes {PlotCmdUpdateElement graph,ds,shape,symbol $2}
  | dummy2 WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,width $3}
  | dummy2 DASH_ yesno {PlotCmdUpdateElement graph,ds,dash $3}
- | dummy2 STYLE_ INT_ {PlotCmdUpdateElement error $3}
+ | dummy2 STYLE_ INT_ {PlotCmdUpdateElement graph,ds,error $3}
  ;
 
 dummy2 : LINE_
@@ -507,8 +507,8 @@ oldView : DISCRETE_ yesno {PlotCmdUpdateElement graph,ds,show $2}
  | LINE_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth linear}
  | STEP_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth step}
  | QUADRATIC_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth quadratic}
- | ERROR_ yesno {PlotCmdUpdateElement error $2}
- | ERRORBAR_ yesno {PlotCmdUpdateElement error $2}
+ | ERROR_ yesno {PlotCmdUpdateElement graph,ds,error $2}
+ | ERRORBAR_ yesno {PlotCmdUpdateElement graph,ds,error $2}
  ;
 
 %%

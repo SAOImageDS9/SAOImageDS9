@@ -1496,7 +1496,7 @@ proc plotsend::yyparse {} {
                     24 { ProcessSendCmdCVARGet graph,ds,fill }
                     25 { ProcessSendCmdCVARGet graph,ds,fill,color }
                     28 { ProcessSendCmdCVARGet graph,ds,name }
-                    30 { PlotSendCmdCVARGet bar,relief }
+                    30 { ProcessSendCmdCVARGet graph,ds,bar,relief }
                     31 { ProcessSendCmdCVARGet graph,ds,smooth }
                     32 { ProcessSendCmdCVARGet graph,ds,width }
                     33 { ProcessSendCmdCVARYesNo graph,ds,dash }
@@ -1532,13 +1532,13 @@ proc plotsend::yyparse {} {
                     63 { ProcessSendCmdCVARGet "axis,$1,title" }
                     64 { ProcessSendCmdCVARGet "axis,$1,title" }
                     65 { ProcessSendCmdCVARGet legend,title }
-                    66 { PlotSendCmdCVARYesNo error }
-                    67 { PlotSendCmdCVARYesNo error,cap }
-                    68 { PlotSendCmdCVARGet error,color }
-                    69 { PlotSendCmdCVARGet error,width }
-                    70 { PlotSendCmdCVARGet shape,symbol }
-                    71 { PlotSendCmdCVARYesNo shape,fill }
-                    72 { PlotSendCmdCVARGet shape,color }
+                    66 { ProcessSendCmdCVARYesNo graph,ds,error }
+                    67 { ProcessSendCmdCVARYesNo graph,ds,error,cap }
+                    68 { ProcessSendCmdCVARGet graph,ds,error,color }
+                    69 { ProcessSendCmdCVARGet graph,ds,error,width }
+                    70 { ProcessSendCmdCVARGet graph,ds,shape,symbol }
+                    71 { ProcessSendCmdCVARYesNo graph,ds,shape,fill }
+                    72 { ProcessSendCmdCVARGet graph,ds,shape,color }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

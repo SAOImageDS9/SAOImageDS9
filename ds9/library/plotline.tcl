@@ -178,8 +178,8 @@ proc PlotLineUpdateElement {varname} {
 	set fillClr {}
     }
 
-    if {$var(graph$cc,shape,fill)} {
-	set clr $var(graph$cc,shape,color)
+    if {$var(graph,ds,shape,fill)} {
+	set clr $var(graph,ds,shape,color)
     } else {
 	set clr {}
     }
@@ -190,14 +190,14 @@ proc PlotLineUpdateElement {varname} {
 	set dash { }
     }
 
-    if {$var(graph$cc,error)} {
+    if {$var(graph,ds,error)} {
 	set show both
     } else {
 	set show none
     }
 
-    if {$var(graph$cc,error,cap)} {
-	set cap [expr $var(graph$cc,error,width)+3]
+    if {$var(graph,ds,error,cap)} {
+	set cap [expr $var(graph,ds,error,width)+3]
     } else {
 	set cap 0
     }
@@ -205,13 +205,13 @@ proc PlotLineUpdateElement {varname} {
     set nn $var(graph$cc,data,current)
     $var(graph$cc) element configure "d-${nn}" \
 	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
-	-symbol $var(graph$cc,shape,symbol) -fill $clr -scalesymbols no \
-	-pixels 5 -outline $var(graph$cc,shape,color) \
+	-symbol $var(graph,ds,shape,symbol) -fill $clr -scalesymbols no \
+	-pixels 5 -outline $var(graph,ds,shape,color) \
 	-smooth $var(graph,ds,smooth) \
 	-color $var(graph,ds,color) -areabackground $fillClr \
 	-linewidth $var(graph,ds,width) -dashes $dash \
-	-showerrorbars $show -errorbarcolor $var(graph$cc,error,color) \
-	-errorbarwidth $var(graph$cc,error,width) -errorbarcap $cap
+	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
+	-errorbarwidth $var(graph,ds,error,width) -errorbarcap $cap
 }
 
 proc PlotLineButton {varname x y} {

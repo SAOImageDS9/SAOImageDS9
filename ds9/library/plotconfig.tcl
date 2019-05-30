@@ -82,17 +82,18 @@ proc PlotLoadConfigFile {varname filename} {
     set var(graph,ds,width) $analysisplot(width) 
     set var(graph,ds,dash) $analysisplot(dash) 
 
-    set var(graph$cc,shape,symbol) $analysisplot(shape,symbol) 
-    set var(graph$cc,shape,fill) $analysisplot(shape,fill) 
-    set var(graph$cc,shape,color) $analysisplot(shape,color) 
+    set var(graph,ds,shape,symbol) $analysisplot(shape,symbol) 
+    set var(graph,ds,shape,fill) $analysisplot(shape,fill) 
+    set var(graph,ds,shape,color) $analysisplot(shape,color) 
 
-    set var(graph$cc,error) $analysisplot(error) 
-    set var(graph$cc,error,cap) $analysisplot(error,cap) 
-    set var(graph$cc,error,color) $analysisplot(error,color) 
-    set var(graph$cc,error,width) $analysisplot(error,width) 
+    set var(graph,ds,error) $analysisplot(error) 
+    set var(graph,ds,error,cap) $analysisplot(error,cap) 
+    set var(graph,ds,error,color) $analysisplot(error,color) 
+    set var(graph,ds,error,width) $analysisplot(error,width) 
 
-    set var(graph$cc,bar,relief) $analysisplot(bar,relief) 
-    set var(graph$cc,bar,mode) $analysisplot(bar,mode) 
+    set var(graph,ds,bar,relief) $analysisplot(bar,relief) 
+
+    set var(graph,bar,mode) $analysisplot(bar,mode) 
 
     unset analysisplot
 
@@ -127,12 +128,12 @@ proc PlotLoadConfigFile {varname filename} {
     }
     FixVar ${varname}(graph,ds,dash) ${varname}(linear,dash)
 
-    FixVar ${varname}(graph$cc,shape,color) ${varname}(discrete,color)
-    FixVar ${varname}(graph$cc,shape,fill) ${varname}(discrete,fill)
+    FixVar ${varname}(graph,ds,shape,color) ${varname}(discrete,color)
+    FixVar ${varname}(graph,ds,shape,fill) ${varname}(discrete,fill)
 
     if {[info exists ${varname}(discrete)]} {
 	if {$var(discrete)} {
-	    FixVar ${varname}(graph$cc,shape,symbol) \
+	    FixVar ${varname}(graph,ds,shape,symbol) \
 		${varname}(discrete,symbol)
 	} else {
 	    FixVarRm ${varname}(discrete,symbol)
@@ -270,16 +271,17 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(width) $var(graph,ds,width)
     set analysisplot(dash) $var(graph,ds,dash)
 
-    set analysisplot(shape,symbol) $var(graph$cc,shape,symbol)
-    set analysisplot(shape,fill) $var(graph$cc,shape,fill)
-    set analysisplot(shape,color) $var(graph$cc,shape,color)
+    set analysisplot(shape,symbol) $var(graph,ds,shape,symbol)
+    set analysisplot(shape,fill) $var(graph,ds,shape,fill)
+    set analysisplot(shape,color) $var(graph,ds,shape,color)
 
-    set analysisplot(error) $var(graph$cc,error)
-    set analysisplot(error,cap) $var(graph$cc,error,cap)
-    set analysisplot(error,color) $var(graph$cc,error,color)
-    set analysisplot(error,width) $var(graph$cc,error,width)
+    set analysisplot(error) $var(graph,ds,error)
+    set analysisplot(error,cap) $var(graph,ds,error,cap)
+    set analysisplot(error,color) $var(graph,ds,error,color)
+    set analysisplot(error,width) $var(graph,ds,error,width)
 
-    set analysisplot(bar,relief) $var(graph$cc,bar,relief)
+    set analysisplot(bar,relief) $var(graph,ds,bar,relief)
+
     set analysisplot(bar,mode) $var(graph$cc,bar,mode)
 
     puts $ch "array set analysisplot \{ [array get analysisplot] \}"

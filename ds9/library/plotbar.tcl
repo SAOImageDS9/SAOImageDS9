@@ -95,28 +95,28 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
     # Relief
     menu $var(mb).data.relief
     $var(mb).data.relief add radiobutton -label [msgcat::mc {Flat}] \
-	-variable ${varname}(graph$cc,bar,relief) -value flat \
+	-variable ${varname}(graph,ds,bar,relief) -value flat \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).data.relief add radiobutton -label [msgcat::mc {Sunken}] \
-	-variable ${varname}(graph$cc,bar,relief) -value sunken \
+	-variable ${varname}(graph,ds,bar,relief) -value sunken \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).data.relief add radiobutton -label [msgcat::mc {Raised}] \
-	-variable ${varname}(graph$cc,bar,relief) -value raised \
+	-variable ${varname}(graph,ds,bar,relief) -value raised \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).data.relief add radiobutton -label [msgcat::mc {Solid}] \
-	-variable ${varname}(graph$cc,bar,relief) -value solid \
+	-variable ${varname}(graph,ds,bar,relief) -value solid \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).data.relief add radiobutton -label [msgcat::mc {Groove}] \
-	-variable ${varname}(graph$cc,bar,relief) -value groove \
+	-variable ${varname}(graph,ds,bar,relief) -value groove \
 	-command [list PlotBarUpdateElement $varname]
 
     # Error
     menu $var(mb).data.error
     $var(mb).data.error add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(graph$cc,error) \
+	-variable ${varname}(graph,ds,error) \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).data.error add checkbutton -label [msgcat::mc {Cap}] \
-	-variable ${varname}(graph$cc,error,cap) \
+	-variable ${varname}(graph,ds,error,cap) \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).data.error add separator
     $var(mb).data.error add cascade -label [msgcat::mc {Color}] \
@@ -124,9 +124,9 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
     $var(mb).data.error add cascade -label [msgcat::mc {Width}] \
 	-menu $var(mb).data.error.width
 
-    PlotColorMenu $var(mb).data.error.color $varname graph$cc,error,color \
+    PlotColorMenu $var(mb).data.error.color $varname graph,ds,error,color \
 	[list PlotBarUpdateElement $varname]
-    WidthDashMenu $var(mb).data.error.width $varname graph$cc,error,width {} \
+    WidthDashMenu $var(mb).data.error.width $varname graph,ds,error,width {} \
 	[list PlotBarUpdateElement $varname] {}
 }
 
@@ -175,14 +175,14 @@ proc PlotBarUpdateElement {varname} {
     
     PlotSaveState $varname
 
-    if {$var(graph$cc,error)} {
+    if {$var(graph,ds,error)} {
 	set show both
     } else {
 	set show none
     }
 
-    if {$var(graph$cc,error,cap)} {
-	set cap [expr $var(graph$cc,error,width)+3]
+    if {$var(graph,ds,error,cap)} {
+	set cap [expr $var(graph,ds,error,width)+3]
     } else {
 	set cap 0
     }
@@ -190,9 +190,9 @@ proc PlotBarUpdateElement {varname} {
     set nn $var(graph$cc,data,current)
     $var(graph$cc) element configure "d-${nn}" \
 	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
-	-relief $var(graph$cc,bar,relief) -color $var(graph,ds,color) \
-	-showerrorbars $show -errorbarcolor $var(graph$cc,error,color) \
-	-errorbarwidth $var(graph$cc,error,width) -errorbarcap $cap
+	-relief $var(graph,ds,bar,relief) -color $var(graph,ds,color) \
+	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
+	-errorbarwidth $var(graph,ds,error,width) -errorbarcap $cap
 }
 
 proc PlotBarButton {varname x y} {

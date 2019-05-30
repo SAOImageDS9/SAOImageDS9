@@ -90,7 +90,7 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | ERRORBAR_ errorr
  | NAME_ {ProcessSendCmdCVARGet graph,ds,name}
  | SHAPE_ shape
- | RELIEF_ {PlotSendCmdCVARGet bar,relief}
+ | RELIEF_ {ProcessSendCmdCVARGet graph,ds,bar,relief}
  | SMOOTH_ {ProcessSendCmdCVARGet graph,ds,smooth}
  | WIDTH_ {ProcessSendCmdCVARGet graph,ds,width}
  | DASH_ {ProcessSendCmdCVARYesNo graph,ds,dash}
@@ -143,15 +143,15 @@ title : {ProcessSendCmdCVARGet graph,title}
  | LEGEND_ {ProcessSendCmdCVARGet legend,title}
  ;
 
-errorr : {PlotSendCmdCVARYesNo error}
- | CAP_ {PlotSendCmdCVARYesNo error,cap}
- | COLOR_ {PlotSendCmdCVARGet error,color}
- | WIDTH_ {PlotSendCmdCVARGet error,width}
+errorr : {ProcessSendCmdCVARYesNo graph,ds,error}
+ | CAP_ {ProcessSendCmdCVARYesNo graph,ds,error,cap}
+ | COLOR_ {ProcessSendCmdCVARGet graph,ds,error,color}
+ | WIDTH_ {ProcessSendCmdCVARGet graph,ds,error,width}
  ;
 
-shape : {PlotSendCmdCVARGet shape,symbol}
- | FILL_ {PlotSendCmdCVARYesNo shape,fill}
- | COLOR_ {PlotSendCmdCVARGet shape,color}
+shape : {ProcessSendCmdCVARGet graph,ds,shape,symbol}
+ | FILL_ {ProcessSendCmdCVARYesNo graph,ds,shape,fill}
+ | COLOR_ {ProcessSendCmdCVARGet graph,ds,shape,color}
  ;
 
 %%

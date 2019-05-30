@@ -5434,7 +5434,7 @@ proc plot::yyparse {} {
                     88 { PlotCmdUpdateElement graph,ds,fill $2 }
                     89 { PlotCmdUpdateElement graph,ds,fill,color $2 }
                     92 { PlotCmdUpdateElement graph,ds,name $2 }
-                    94 { PlotCmdUpdateElement bar,relief $2 }
+                    94 { PlotCmdUpdateElement graph,ds,bar,relief $2 }
                     95 { PlotCmdUpdateElement graph,ds,smooth $2 }
                     96 { PlotCmdUpdateElement graph,ds,width $2 }
                     97 { PlotCmdUpdateElement graph,ds,dash $2 }
@@ -5520,13 +5520,13 @@ proc plot::yyparse {} {
                     179 { set _ overlap }
                     180 { PlotCmdUpdateElement graph,ds,color $1 }
                     181 { PlotCmdUpdateElement graph,ds,color $2 }
-                    189 { PlotCmdUpdateElement error $1 }
-                    190 { PlotCmdUpdateElement error,cap $2 }
-                    191 { PlotCmdUpdateElement error,color $2 }
-                    192 { PlotCmdUpdateElement error,width $2 }
-                    193 { PlotCmdUpdateElement shape,symbol $1 }
-                    194 { PlotCmdUpdateElement shape,file $2 }
-                    195 { PlotCmdUpdateElement shape,color $2 }
+                    189 { PlotCmdUpdateElement graph,ds,error $1 }
+                    190 { PlotCmdUpdateElement graph,ds,error,cap $2 }
+                    191 { PlotCmdUpdateElement graph,ds,error,color $2 }
+                    192 { PlotCmdUpdateElement graph,ds,error,width $2 }
+                    193 { PlotCmdUpdateElement graph,ds,shape,symbol $1 }
+                    194 { PlotCmdUpdateElement graph,ds,shape,file $2 }
+                    195 { PlotCmdUpdateElement graph,ds,shape,color $2 }
                     196 { set _ none }
                     197 { set _ circle }
                     198 { set _ square }
@@ -5562,16 +5562,16 @@ proc plot::yyparse {} {
                     235 { PlotCmdUpdateGraph "axis,x,log" 0; PlotCmdUpdateGraph "axis,y,log" 1 }
                     236 { PlotCmdUpdateGraph "axis,x,log" 1; PlotCmdUpdateGraph "axis,y,log" 0 }
                     237 { PlotCmdUpdateGraph "axis,x,log" 1; PlotCmdUpdateGraph "axis,y,log" 1 }
-                    238 { PlotCmdUpdateElement shape,symbol $2 }
+                    238 { PlotCmdUpdateElement graph,ds,shape,symbol $2 }
                     239 { PlotCmdUpdateElement graph,ds,width $3 }
                     240 { PlotCmdUpdateElement graph,ds,dash $3 }
-                    241 { PlotCmdUpdateElement error $3 }
+                    241 { PlotCmdUpdateElement graph,ds,error $3 }
                     248 { PlotCmdUpdateElement graph,ds,show $2 }
                     249 { PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth linear }
                     250 { PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth step }
                     251 { PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth quadratic }
-                    252 { PlotCmdUpdateElement error $2 }
-                    253 { PlotCmdUpdateElement error $2 }
+                    252 { PlotCmdUpdateElement graph,ds,error $2 }
+                    253 { PlotCmdUpdateElement graph,ds,error $2 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

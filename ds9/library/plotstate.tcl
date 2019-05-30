@@ -104,16 +104,16 @@ proc PlotInitState {varname} {
     set var(graph,ds,width) $pap(graph,ds,width)
     set var(graph,ds,dash) $pap(graph,ds,dash)
 
-    set var(graph$cc,shape,symbol) $pap(shape,symbol)
-    set var(graph$cc,shape,fill) $pap(shape,fill)
-    set var(graph$cc,shape,color) $pap(shape,color)
+    set var(graph,ds,shape,symbol) $pap(shape,symbol)
+    set var(graph,ds,shape,fill) $pap(shape,fill)
+    set var(graph,ds,shape,color) $pap(shape,color)
 
-    set var(graph$cc,error) $pap(error)
-    set var(graph$cc,error,cap) $pap(error,cap)
-    set var(graph$cc,error,color) $pap(error,color)
-    set var(graph$cc,error,width) $pap(error,width)
+    set var(graph,ds,error) $pap(error)
+    set var(graph,ds,error,cap) $pap(error,cap)
+    set var(graph,ds,error,color) $pap(error,color)
+    set var(graph,ds,error,width) $pap(error,width)
 
-    set var(graph$cc,bar,relief) $pap(bar,relief)
+    set var(graph,ds,bar,relief) $pap(bar,relief)
 }
 
 proc PlotSaveState {varname} {
@@ -133,16 +133,16 @@ proc PlotSaveState {varname} {
     set var(graph$cc,$nn,width) $var(graph,ds,width)
     set var(graph$cc,$nn,dash) $var(graph,ds,dash)
 
-    set var(graph$cc,$nn,shape,symbol) $var(graph$cc,shape,symbol)
-    set var(graph$cc,$nn,shape,fill) $var(graph$cc,shape,fill)
-    set var(graph$cc,$nn,shape,color) $var(graph$cc,shape,color)
+    set var(graph$cc,$nn,shape,symbol) $var(graph,ds,shape,symbol)
+    set var(graph$cc,$nn,shape,fill) $var(graph,ds,shape,fill)
+    set var(graph$cc,$nn,shape,color) $var(graph,ds,shape,color)
 
-    set var(graph$cc,$nn,error) $var(graph$cc,error)
-    set var(graph$cc,$nn,error,cap) $var(graph$cc,error,cap)
-    set var(graph$cc,$nn,error,color) $var(graph$cc,error,color)
-    set var(graph$cc,$nn,error,width) $var(graph$cc,error,width)
+    set var(graph$cc,$nn,error) $var(graph,ds,error)
+    set var(graph$cc,$nn,error,cap) $var(graph,ds,error,cap)
+    set var(graph$cc,$nn,error,color) $var(graph,ds,error,color)
+    set var(graph$cc,$nn,error,width) $var(graph,ds,error,width)
 
-    set var(graph$cc,$nn,bar,relief) $var(graph$cc,bar,relief)
+    set var(graph$cc,$nn,bar,relief) $var(graph,ds,bar,relief)
 }
 
 proc PlotRestoreState {varname nn} {
@@ -162,14 +162,14 @@ proc PlotRestoreState {varname nn} {
     set var(graph,ds,width) $var(graph$cc,$nn,width) 
     set var(graph,ds,dash) $var(graph$cc,$nn,dash) 
 
-    set var(graph$cc,shape,symbol) $var(graph$cc,$nn,shape,symbol) 
-    set var(graph$cc,shape,fill) $var(graph$cc,$nn,shape,fill) 
-    set var(graph$cc,shape,color) $var(graph$cc,$nn,shape,color)
+    set var(graph,ds,shape,symbol) $var(graph$cc,$nn,shape,symbol) 
+    set var(graph,ds,shape,fill) $var(graph$cc,$nn,shape,fill) 
+    set var(graph,ds,shape,color) $var(graph$cc,$nn,shape,color)
 
-    set var(graph$cc,error) $var(graph$cc,$nn,error) 
-    set var(graph$cc,error,cap) $var(graph$cc,$nn,error,cap) 
-    set var(graph$cc,error,color) $var(graph$cc,$nn,error,color) 
-    set var(graph$cc,error,width) $var(graph$cc,$nn,error,width) 
+    set var(graph,ds,error) $var(graph$cc,$nn,error) 
+    set var(graph,ds,error,cap) $var(graph$cc,$nn,error,cap) 
+    set var(graph,ds,error,color) $var(graph$cc,$nn,error,color) 
+    set var(graph,ds,error,width) $var(graph$cc,$nn,error,width) 
 
-    set var(graph$cc,bar,relief) $var(graph$cc,$nn,bar,relief) 
+    set var(graph,ds,bar,relief) $var(graph$cc,$nn,bar,relief) 
 }

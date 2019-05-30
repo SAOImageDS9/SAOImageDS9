@@ -81,19 +81,19 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | FONT_ fontt
  | TITLE_ title
  | BARMODE_ {PlotSendCmdCVARGet bar,mode}
- | SHOW_ {PlotSendCmdCVARYesNo show}
- | COLOR_ {PlotSendCmdCVARGet color}
- | FILL_ {PlotSendCmdCVARGet fill}
- | FILLCOLOR_ {PlotSendCmdCVARGet fill,color}
+ | SHOW_ {ProcessSendCmdCVARYesNo graph,ds,show}
+ | COLOR_ {ProcessSendCmdCVARGet graph,ds,color}
+ | FILL_ {ProcessSendCmdCVARGet graph,ds,fill}
+ | FILLCOLOR_ {ProcessSendCmdCVARGet graph,ds,fill,color}
  | ERROR_ errorr
  # backward compatibility
  | ERRORBAR_ errorr
- | NAME_ {PlotSendCmdCVARGet name}
+ | NAME_ {ProcessSendCmdCVARGet graph,ds,name}
  | SHAPE_ shape
  | RELIEF_ {PlotSendCmdCVARGet bar,relief}
- | SMOOTH_ {PlotSendCmdCVARGet smooth}
- | WIDTH_ {PlotSendCmdCVARGet width}
- | DASH_ {PlotSendCmdCVARYesNo dash}
+ | SMOOTH_ {ProcessSendCmdCVARGet graph,ds,smooth}
+ | WIDTH_ {ProcessSendCmdCVARGet graph,ds,width}
+ | DASH_ {ProcessSendCmdCVARYesNo graph,ds,dash}
  | SELECT_ {PlotSendCmdCVARGet data,current}
  # backward compatibility
  | DATASET_ {PlotSendCmdCVARGet data,current}

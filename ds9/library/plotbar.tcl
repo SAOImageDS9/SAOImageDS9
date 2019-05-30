@@ -76,7 +76,7 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
 
     # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(graph$cc,show) \
+	-variable ${varname}(graph,ds,show) \
 	-command [list PlotBarUpdateElement $varname]
     $var(mb).data add separator
     $var(mb).data add cascade -label [msgcat::mc {Color}] \
@@ -189,8 +189,8 @@ proc PlotBarUpdateElement {varname} {
 
     set nn $var(graph$cc,data,current)
     $var(graph$cc) element configure "d-${nn}" \
-	-label $var(graph$cc,name) -hide [expr !$var(graph$cc,show)] \
-	-relief $var(graph$cc,bar,relief) -color $var(graph$cc,color) \
+	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
+	-relief $var(graph$cc,bar,relief) -color $var(graph,ds,color) \
 	-showerrorbars $show -errorbarcolor $var(graph$cc,error,color) \
 	-errorbarwidth $var(graph$cc,error,width) -errorbarcap $cap
 }

@@ -5430,14 +5430,14 @@ proc plot::yyparse {} {
                     79 { ProcessCmdCVAR mode $2 PlotChangeMode }
                     81 { PlotCmdUpdateGraph graph,bg $2 }
                     85 { PlotCmdUpdateGraph bar,mode $2 }
-                    86 { PlotCmdUpdateElement show $2 }
-                    88 { PlotCmdUpdateElement fill $2 }
-                    89 { PlotCmdUpdateElement fill,color $2 }
-                    92 { PlotCmdUpdateElement name $2 }
+                    86 { PlotCmdUpdateElement graph,ds,show $2 }
+                    88 { PlotCmdUpdateElement graph,ds,fill $2 }
+                    89 { PlotCmdUpdateElement graph,ds,fill,color $2 }
+                    92 { PlotCmdUpdateElement graph,ds,name $2 }
                     94 { PlotCmdUpdateElement bar,relief $2 }
-                    95 { PlotCmdUpdateElement smooth $2 }
-                    96 { PlotCmdUpdateElement width $2 }
-                    97 { PlotCmdUpdateElement dash $2 }
+                    95 { PlotCmdUpdateElement graph,ds,smooth $2 }
+                    96 { PlotCmdUpdateElement graph,ds,width $2 }
+                    97 { PlotCmdUpdateElement graph,ds,dash $2 }
                     98 { PlotCmdSelectData $2 }
                     99 { PlotCmdSelectData $2 }
                     102 { PlotCmdExport [ExtToFormat $1] $1 }
@@ -5518,8 +5518,8 @@ proc plot::yyparse {} {
                     177 { set _ stacked }
                     178 { set _ aligned }
                     179 { set _ overlap }
-                    180 { PlotCmdUpdateElement color $1 }
-                    181 { PlotCmdUpdateElement color $2 }
+                    180 { PlotCmdUpdateElement graph,ds,color $1 }
+                    181 { PlotCmdUpdateElement graph,ds,color $2 }
                     189 { PlotCmdUpdateElement error $1 }
                     190 { PlotCmdUpdateElement error,cap $2 }
                     191 { PlotCmdUpdateElement error,color $2 }
@@ -5563,13 +5563,13 @@ proc plot::yyparse {} {
                     236 { PlotCmdUpdateGraph "axis,x,log" 1; PlotCmdUpdateGraph "axis,y,log" 0 }
                     237 { PlotCmdUpdateGraph "axis,x,log" 1; PlotCmdUpdateGraph "axis,y,log" 1 }
                     238 { PlotCmdUpdateElement shape,symbol $2 }
-                    239 { PlotCmdUpdateElement width $3 }
-                    240 { PlotCmdUpdateElement dash $3 }
+                    239 { PlotCmdUpdateElement graph,ds,width $3 }
+                    240 { PlotCmdUpdateElement graph,ds,dash $3 }
                     241 { PlotCmdUpdateElement error $3 }
-                    248 { PlotCmdUpdateElement show $2 }
-                    249 { PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth linear }
-                    250 { PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth step }
-                    251 { PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth quadratic }
+                    248 { PlotCmdUpdateElement graph,ds,show $2 }
+                    249 { PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth linear }
+                    250 { PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth step }
+                    251 { PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth quadratic }
                     252 { PlotCmdUpdateElement error $2 }
                     253 { PlotCmdUpdateElement error $2 }
                 }

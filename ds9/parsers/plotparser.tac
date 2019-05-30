@@ -256,19 +256,19 @@ plotCmd : LOAD_ load
  | TITLE_ title
  | BARMODE_ barmode {PlotCmdUpdateGraph bar,mode $2}
 
- | SHOW_ yesno {PlotCmdUpdateElement show $2}
+ | SHOW_ yesno {PlotCmdUpdateElement graph,ds,show $2}
  | COLOR_ color
- | FILL_ yesno {PlotCmdUpdateElement fill $2}
- | FILLCOLOR_ STRING_ {PlotCmdUpdateElement fill,color $2}
+ | FILL_ yesno {PlotCmdUpdateElement graph,ds,fill $2}
+ | FILLCOLOR_ STRING_ {PlotCmdUpdateElement graph,ds,fill,color $2}
  | ERROR_ errorr
  # backward compatibility
  | ERRORBAR_ errorr
- | NAME_ STRING_ {PlotCmdUpdateElement name $2}
+ | NAME_ STRING_ {PlotCmdUpdateElement graph,ds,name $2}
  | SHAPE_ shape
  | RELIEF_ relief {PlotCmdUpdateElement bar,relief $2}
- | SMOOTH_ smooth {PlotCmdUpdateElement smooth $2}
- | WIDTH_ INT_ {PlotCmdUpdateElement width $2}
- | DASH_ yesno {PlotCmdUpdateElement dash $2}
+ | SMOOTH_ smooth {PlotCmdUpdateElement graph,ds,smooth $2}
+ | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,width $2}
+ | DASH_ yesno {PlotCmdUpdateElement graph,ds,dash $2}
 
  | SELECT_ INT_ {PlotCmdSelectData $2}
  # backward compatibility
@@ -400,9 +400,9 @@ barmode : NORMAL_ {set _ normal}
  | OVERLAP_ {set _ overlap}
  ;
 
-color : STRING_ {PlotCmdUpdateElement color $1}
+color : STRING_ {PlotCmdUpdateElement graph,ds,color $1}
 # backward compatiabilty
- | dummy1 STRING_ {PlotCmdUpdateElement color $2}
+ | dummy1 STRING_ {PlotCmdUpdateElement graph,ds,color $2}
  ;
 
 dummy1 : DISCRETE_
@@ -489,8 +489,8 @@ oldGraphScale : LINEARLINEAR_ {PlotCmdUpdateGraph "axis,x,log" 0; PlotCmdUpdateG
 
 # backward compatibility
 oldLine : DISCRETE_ shapes {PlotCmdUpdateElement shape,symbol $2}
- | dummy2 WIDTH_ INT_ {PlotCmdUpdateElement width $3}
- | dummy2 DASH_ yesno {PlotCmdUpdateElement dash $3}
+ | dummy2 WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,width $3}
+ | dummy2 DASH_ yesno {PlotCmdUpdateElement graph,ds,dash $3}
  | dummy2 STYLE_ INT_ {PlotCmdUpdateElement error $3}
  ;
 
@@ -503,10 +503,10 @@ dummy2 : LINE_
  ; 
 
 # backward compatibility
-oldView : DISCRETE_ yesno {PlotCmdUpdateElement show $2}
- | LINE_ yesno {PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth linear}
- | STEP_ yesno {PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth step}
- | QUADRATIC_ yesno {PlotCmdUpdateElement show $2; PlotCmdUpdateElement smooth quadratic}
+oldView : DISCRETE_ yesno {PlotCmdUpdateElement graph,ds,show $2}
+ | LINE_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth linear}
+ | STEP_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth step}
+ | QUADRATIC_ yesno {PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth quadratic}
  | ERROR_ yesno {PlotCmdUpdateElement error $2}
  | ERRORBAR_ yesno {PlotCmdUpdateElement error $2}
  ;

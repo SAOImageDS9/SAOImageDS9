@@ -114,24 +114,24 @@ proc PlotDataSet {varname dim data} {
 	    PlotDataSetOne $varname "4.1" $data
 
 	    # set color
-	    set col $var(graph$cc,color)
-	    set var(graph$cc,color) [PlotNextColor $var(graph$cc,color)]
+	    set col [PlotNextColor $var(graph,ds,color)]
 
 	    # second data set
 	    PlotDataSetOne $varname "4.2" $data
-	    set var(graph$cc,color) $col
+	    set var(graph,ds,color) $col
+	    $var(proc,updateelement) $varname
 	}
 	5 {
 	    # first data set
 	    PlotDataSetOne $varname "5.1" $data
 
 	    # set color
-	    set col $var(graph$cc,color)
-	    set var(graph$cc,color) [PlotNextColor $var(graph$cc,color)]
+	    set col [PlotNextColor $var(graph,ds,color)]
 
 	    # second data set
 	    PlotDataSetOne $varname "5.2" $data
-	    set var(graph$cc,color) $col
+	    set var(graph,ds,color) $col
+	    $var(proc,updateelement) $varname
 	}
 	default {PlotDataSetOne $varname $dim $data}
     }
@@ -171,7 +171,7 @@ proc PlotDataSetOne {varname dim data} {
 
     # basics xy
     set var(graph$cc,manage) 1
-    set var(graph$cc,name) "Dataset $nn"
+    set var(graph,ds,name) "Dataset $nn"
     set var(graph$cc,xdata) $xdata
     set var(graph$cc,ydata) $ydata
     global $var(graph$cc,xdata) $var(graph$cc,ydata)
@@ -337,7 +337,7 @@ proc PlotDataSetOne {varname dim data} {
     PlotSaveState $varname
 
     # update data set menu
-    $var(mb).graph.select add radiobutton -label "$var(graph$cc,name)" \
+    $var(mb).graph.select add radiobutton -label "$var(graph,ds,name)" \
 	-variable ${varname}(graph$cc,data,current) -value $nn \
 	-command [list PlotCurrentData $varname]
 
@@ -389,9 +389,6 @@ proc PlotDupData {varname mm} {
     set var(graph$cc,$nn,dim) $var(graph$cc,$mm,dim)
 
     set var(graph$cc,$nn,show) $var(graph$cc,$mm,show)
-    set var(graph$cc,$nn,shape,symbol) $var(graph$cc,$mm,shape,symbol)
-    set var(graph$cc,$nn,shape,fill) $var(graph$cc,$mm,shape,fill)
-    set var(graph$cc,$nn,shape,color) $var(graph$cc,$mm,shape,color)
     set var(graph$cc,$nn,smooth) $var(graph$cc,$mm,smooth)
     set var(graph$cc,$nn,color) [PlotNextColor $var(graph$cc,$mm,color)]
     set var(graph$cc,$nn,fill) $var(graph$cc,$mm,fill)
@@ -399,6 +396,10 @@ proc PlotDupData {varname mm} {
 	[PlotNextColor $var(graph$cc,$mm,fill,color)]
     set var(graph$cc,$nn,width) $var(graph$cc,$mm,width)
     set var(graph$cc,$nn,dash) $var(graph$cc,$mm,dash)
+
+    set var(graph$cc,$nn,shape,symbol) $var(graph$cc,$mm,shape,symbol)
+    set var(graph$cc,$nn,shape,fill) $var(graph$cc,$mm,shape,fill)
+    set var(graph$cc,$nn,shape,color) $var(graph$cc,$mm,shape,color)
 
     set var(graph$cc,$nn,error) $var(graph$cc,$mm,error)
     set var(graph$cc,$nn,error,cap) $var(graph$cc,$mm,error,cap)

@@ -437,7 +437,7 @@ proc DatasetNameDialog {varname} {
     set w {.aptitle}
 
     set ed(ok) 0
-    set ed(name) $var(graph$cc,name)
+    set ed(name) $var(graph,ds,name)
 
     DialogCreate $w [msgcat::mc {Data}] ed(ok)
 
@@ -468,9 +468,9 @@ proc DatasetNameDialog {varname} {
     DialogDismiss $w
 
     if {$ed(ok)} {
-	$var(mb).graph.select entryconfig "$var(graph$cc,name)" \
+	$var(mb).graph.select entryconfig "$var(graph,ds,name)" \
 	    -label "$ed(name)"
-	set var(graph$cc,name) $ed(name)
+	set var(graph,ds,name) $ed(name)
 	$var(proc,updateelement) $varname
     }
     
@@ -562,7 +562,7 @@ proc PlotShapeMenu {varname} {
     $var(mb).data.shape add separator
     $var(mb).data.shape add checkbutton \
 	-label [msgcat::mc {Fill}] \
-	-variable ${varname}(graph$cc,shape,fill) \
+	-variable ${varname}(graph,ds,shape,fill) \
 	-command [list $var(proc,updateelement) $varname]
     $var(mb).data.shape add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).data.shape.color

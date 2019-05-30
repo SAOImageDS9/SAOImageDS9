@@ -73,14 +73,14 @@ proc PlotLoadConfigFile {varname filename} {
     set var(axis,font,weight) $analysisplot(axis,font,weight) 
     set var(axis,font,slant) $analysisplot(axis,font,slant) 
 
-#    set var(graph$cc,name) {}
-    set var(graph$cc,show) $analysisplot(show) 
-    set var(graph$cc,smooth) $analysisplot(smooth) 
-    set var(graph$cc,color) $analysisplot(color) 
-    set var(graph$cc,fill) $analysisplot(fill) 
-    set var(graph$cc,fill,color) $analysisplot(fill,color) 
-    set var(graph$cc,width) $analysisplot(width) 
-    set var(graph$cc,dash) $analysisplot(dash) 
+#    set var(graph,ds,name) {}
+    set var(graph,ds,show) $analysisplot(show) 
+    set var(graph,ds,smooth) $analysisplot(smooth) 
+    set var(graph,ds,color) $analysisplot(color) 
+    set var(graph,ds,fill) $analysisplot(fill) 
+    set var(graph,ds,fill,color) $analysisplot(fill,color) 
+    set var(graph,ds,width) $analysisplot(width) 
+    set var(graph,ds,dash) $analysisplot(dash) 
 
     set var(graph$cc,shape,symbol) $analysisplot(shape,symbol) 
     set var(graph$cc,shape,fill) $analysisplot(shape,fill) 
@@ -119,15 +119,16 @@ proc PlotLoadConfigFile {varname filename} {
     FixVar ${varname}(axis,font,weight) ${varname}(numlabWeight)
     FixVar ${varname}(axis,font,slant) ${varname}(numlabSlant)
 
-    FixVar ${varname}(graph$cc,show) ${varname}(linear)
-    FixVar ${varname}(graph$cc,shape,color) ${varname}(discrete,color)
-    FixVar ${varname}(graph$cc,shape,fill) ${varname}(discrete,fill)
-    FixVar ${varname}(graph$cc,width) ${varname}(linear,width)
-    FixVar ${varname}(graph$cc,color) ${varname}(linear,color)
+    FixVar ${varname}(graph,ds,show) ${varname}(linear)
+    FixVar ${varname}(graph,ds,width) ${varname}(linear,width)
+    FixVar ${varname}(graph,ds,color) ${varname}(linear,color)
     if {[info exists ${varname}(linear,dash)]} {
 	set var(linear,dash) [FromYesNo $var(linear,dash)]
     }
-    FixVar ${varname}(graph$cc,dash) ${varname}(linear,dash)
+    FixVar ${varname}(graph,ds,dash) ${varname}(linear,dash)
+
+    FixVar ${varname}(graph$cc,shape,color) ${varname}(discrete,color)
+    FixVar ${varname}(graph$cc,shape,fill) ${varname}(discrete,fill)
 
     if {[info exists ${varname}(discrete)]} {
 	if {$var(discrete)} {
@@ -261,13 +262,13 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(axis,font,slant) $var(axis,font,slant)
 
 #    set analysisplot(name) {}
-    set analysisplot(show) $var(graph$cc,show)
-    set analysisplot(smooth) $var(graph$cc,smooth)
-    set analysisplot(color) $var(graph$cc,color)
-    set analysisplot(fill) $var(graph$cc,fill)
-    set analysisplot(fill,color) $var(graph$cc,fill,color)
-    set analysisplot(width) $var(graph$cc,width)
-    set analysisplot(dash) $var(graph$cc,dash)
+    set analysisplot(show) $var(graph,ds,show)
+    set analysisplot(smooth) $var(graph,ds,smooth)
+    set analysisplot(color) $var(graph,ds,color)
+    set analysisplot(fill) $var(graph,ds,fill)
+    set analysisplot(fill,color) $var(graph,ds,fill,color)
+    set analysisplot(width) $var(graph,ds,width)
+    set analysisplot(dash) $var(graph,ds,dash)
 
     set analysisplot(shape,symbol) $var(graph$cc,shape,symbol)
     set analysisplot(shape,fill) $var(graph$cc,shape,fill)

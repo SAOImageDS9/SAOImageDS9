@@ -55,7 +55,6 @@ proc PlotAddGraph {varname} {
     set var(graph$cc,data,total) 0
     set var(graph$cc,data,current) 0
 
-    set var(graph$cc,name) {}
     set var(graph$cc,xdata) {}
     set var(graph$cc,ydata) {}
     set var(graph$cc,xedata) {}
@@ -181,7 +180,7 @@ proc PlotDeleteData {varname} {
 	set var(graph$cc,data,total) 0
 	set var(graph$cc,data,current) 0
 
-	set var(graph$cc,name) {}
+	set var(graph,ds,name) {}
 	set var(graph$cc,xdata) {}
 	set var(graph$cc,ydata) {}
 	set var(graph$cc,xedata) {}
@@ -350,7 +349,7 @@ proc PlotExternal {varname} {
     set nn $var(graph$cc,data,total)
     set var(graph$cc,data,current) $nn
 
-    set var(graph$cc,name) "Dataset $nn"
+    set var(graph,ds,name) "Dataset $nn"
 
     set var(graph$cc,$nn,manage) $var(graph$cc,manage)
     set var(graph$cc,$nn,dim) $var(graph$cc,dim)

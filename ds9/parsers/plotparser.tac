@@ -344,13 +344,13 @@ mode : POINTER_ {set _ pointer}
  | ZOOM_ {set _ zoom}
  ;
 
-axis : xy GRID_ yesno {PlotCmdUpdateGraph "axis,$1,grid" $3}
- | xy LOG_ yesno {PlotCmdUpdateGraph "axis,$1,log" $3}
- | xy FLIP_ yesno {PlotCmdUpdateGraph "axis,$1,flip" $3}
- | xy AUTO_ yesno {PlotCmdUpdateGraph "axis,$1,auto" $3}
- | xy MIN_ numeric {PlotCmdUpdateGraph "axis,$1,min" $3}
- | xy MAX_ numeric {PlotCmdUpdateGraph "axis,$1,max" $3}
- | xy FORMAT_ STRING_ {PlotCmdUpdateGraph "axis,$1,format" $3}
+axis : xy GRID_ yesno {PlotCmdUpdateGraph "graph,axis,$1,grid" $3}
+ | xy LOG_ yesno {PlotCmdUpdateGraph "graph,axis,$1,log" $3}
+ | xy FLIP_ yesno {PlotCmdUpdateGraph "graph,axis,$1,flip" $3}
+ | xy AUTO_ yesno {PlotCmdUpdateGraph "graph,axis,$1,auto" $3}
+ | xy MIN_ numeric {PlotCmdUpdateGraph "graph,axis,$1,min" $3}
+ | xy MAX_ numeric {PlotCmdUpdateGraph "graph,axis,$1,max" $3}
+ | xy FORMAT_ STRING_ {PlotCmdUpdateGraph "graph,axis,$1,format" $3}
  ;
 
 legend : yesno {PlotCmdUpdateGraph graph,legend $1}
@@ -389,8 +389,8 @@ fontType : TITLE_ {set _ graph,title}
  ;
 
 title : STRING_ {PlotCmdUpdateGraph graph,title $1}
- | xy STRING_ {PlotCmdUpdateGraph "axis,$1,title" $2}
- | xyaxis STRING_ {PlotCmdUpdateGraph "axis,$1,title" $2}
+ | xy STRING_ {PlotCmdUpdateGraph "graph,axis,$1,title" $2}
+ | xyaxis STRING_ {PlotCmdUpdateGraph "graph,axis,$1,title" $2}
  | LEGEND_ STRING_ {PlotCmdUpdateGraph graph,legend,title $2}
  ;
 
@@ -454,26 +454,26 @@ smooth : STEP_ {set _ step}
 
 # backward compatibility
 oldGraph : GRID_ oldGraphGrid
- | LOG_ xy yesno {PlotCmdUpdateGraph "axis,$2,log" $3}
- | FLIP_ xy yesno {PlotCmdUpdateGraph "axis,$2,flip" $3}
- | FORMAT_ xy STRING_ {PlotCmdUpdateGraph "axis,$3,format" $3}
+ | LOG_ xy yesno {PlotCmdUpdateGraph "graph,axis,$2,log" $3}
+ | FLIP_ xy yesno {PlotCmdUpdateGraph "graph,axis,$2,flip" $3}
+ | FORMAT_ xy STRING_ {PlotCmdUpdateGraph "graph,axis,$3,format" $3}
  | RANGE_ oldGraphRange
  | LABELS_ oldGraphLabels
  | TYPE_ oldGraphType
  | SCALE_ oldGraphScale
  ;
 
-oldGraphGrid : xy yesno {PlotCmdUpdateGraph "axis,$1,grid" $2}
- | yesno {PlotCmdUpdateGraph "axis,x,grid" $1; PlotCmdUpdateGraph "axis,y,grid" $1}
+oldGraphGrid : xy yesno {PlotCmdUpdateGraph "graph,axis,$1,grid" $2}
+ | yesno {PlotCmdUpdateGraph "graph,axis,x,grid" $1; PlotCmdUpdateGraph "graph,axis,y,grid" $1}
  ;
 
-oldGraphRange : xy AUTO_ yesno {PlotCmdUpdateGraph "axis,$1,auto" $3}
- | xy MIN_ numeric {PlotCmdUpdateGraph "axis,$1,min" $3}
- | xy MAX_ numeric {PlotCmdUpdateGraph "axis,$1,max" $3}
+oldGraphRange : xy AUTO_ yesno {PlotCmdUpdateGraph "graph,axis,$1,auto" $3}
+ | xy MIN_ numeric {PlotCmdUpdateGraph "graph,axis,$1,min" $3}
+ | xy MAX_ numeric {PlotCmdUpdateGraph "graph,axis,$1,max" $3}
  ;
 
 oldGraphLabels : TITLE_ STRING_ {PlotCmdUpdateGraph graph,title $2}
- | xyaxis STRING_ {PlotCmdUpdateGraph "axis,$1,title" $2}
+ | xyaxis STRING_ {PlotCmdUpdateGraph "graph,axis,$1,title" $2}
  | LEGEND_ STRING_ {PlotCmdUpdateGraph graph,legend,title $2}
  ;
 
@@ -481,10 +481,10 @@ oldGraphType : LINE_
  | BAR_
  ;
 
-oldGraphScale : LINEARLINEAR_ {PlotCmdUpdateGraph "axis,x,log" 0; PlotCmdUpdateGraph "axis,y,log" 0}
- | LINEARLOG_ {PlotCmdUpdateGraph "axis,x,log" 0; PlotCmdUpdateGraph "axis,y,log" 1}
- | LOGLINEAR_ {PlotCmdUpdateGraph "axis,x,log" 1; PlotCmdUpdateGraph "axis,y,log" 0}
- | LOGLOG_ {PlotCmdUpdateGraph "axis,x,log" 1; PlotCmdUpdateGraph "axis,y,log" 1}
+oldGraphScale : LINEARLINEAR_ {PlotCmdUpdateGraph "graph,axis,x,log" 0; PlotCmdUpdateGraph "graph,axis,y,log" 0}
+ | LINEARLOG_ {PlotCmdUpdateGraph "graph,axis,x,log" 0; PlotCmdUpdateGraph "graph,axis,y,log" 1}
+ | LOGLINEAR_ {PlotCmdUpdateGraph "graph,axis,x,log" 1; PlotCmdUpdateGraph "graph,axis,y,log" 0}
+ | LOGLOG_ {PlotCmdUpdateGraph "graph,axis,x,log" 1; PlotCmdUpdateGraph "graph,axis,y,log" 1}
  ;
 
 # backward compatibility

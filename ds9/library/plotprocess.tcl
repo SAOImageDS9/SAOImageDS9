@@ -30,18 +30,18 @@ proc PrefsDialogPlot {} {
     set f [ttk::labelframe $w.plot.axis -text [msgcat::mc {Axis}]]
 
     ttk::label $f.xtitle -text [msgcat::mc {X}]
-    ttk::checkbutton $f.x -text [msgcat::mc {Grid}] -variable pap(axis,x,grid)
+    ttk::checkbutton $f.x -text [msgcat::mc {Grid}] -variable pap(graph,axis,x,grid)
     ttk::radiobutton $f.xlinear -text [msgcat::mc {Linear}] \
-	-variable pap(axis,x,log) -value 0
+	-variable pap(graph,axis,x,log) -value 0
     ttk::radiobutton $f.xlog -text [msgcat::mc {Log}] \
-	-variable pap(axis,x,log) -value 1
+	-variable pap(graph,axis,x,log) -value 1
 
     ttk::label $f.ytitle -text [msgcat::mc {Y}]
-    ttk::checkbutton $f.y -text [msgcat::mc {Grid}] -variable pap(axis,y,grid)
+    ttk::checkbutton $f.y -text [msgcat::mc {Grid}] -variable pap(graph,axis,y,grid)
     ttk::radiobutton $f.ylinear -text [msgcat::mc {Linear}] \
-	-variable pap(axis,y,log) -value 0
+	-variable pap(graph,axis,y,log) -value 0
     ttk::radiobutton $f.ylog -text [msgcat::mc {Log}] \
-	-variable pap(axis,y,log) -value 1
+	-variable pap(graph,axis,y,log) -value 1
 
     ttk::label $f.ttextlab -text [msgcat::mc {Axis Title}]
     FontMenuButton $f.textlab pap axis,title,family axis,title,size axis,title,weight axis,title,slant {}

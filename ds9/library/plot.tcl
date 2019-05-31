@@ -187,15 +187,15 @@ proc PlotDeleteData {varname} {
 	set var(graph$cc,yedata) {}
 
 	# reset other variables
-	set var(axis,x,auto) 1
-	set var(axis,x,min) {}
-	set var(axis,x,max) {}
-	set var(axis,x,format) {}
+	set var(graph$cc,axis,x,auto) 1
+	set var(graph$cc,axis,x,min) {}
+	set var(graph$cc,axis,x,max) {}
+	set var(graph$cc,axis,x,format) {}
 
-	set var(axis,y,auto) 1
-	set var(axis,y,min) {}
-	set var(axis,y,max) {}
-	set var(axis,y,format) {}
+	set var(graph$cc,axis,y,auto) 1
+	set var(graph$cc,axis,y,min) {}
+	set var(graph$cc,axis,y,max) {}
+	set var(graph$cc,axis,y,format) {}
 	
 	$var(mb).graph.select delete $ds9(menu,start) end
 
@@ -253,7 +253,7 @@ proc PlotAxisFormat {varname axis w nn} {
     upvar #0 $varname var
     global $varname
 
-    return [format $var(axis,$axis,format) $nn]
+    return [format $var(graph,axis,$axis,format) $nn]
 }
 
 proc PlotChangeMode {varname} {
@@ -436,20 +436,6 @@ proc PlotListDestroyCB {varname} {
     set var(list) 0
 }
 
-proc PlotNextColor {which} {
-    switch -- $which {
-	black {return red}
-	red {return green}
-	green {return blue}
-	blue {return cyan}
-	cyan {return magenta}
-	magenta {return yellow}
-	yellow {return black}
-	white {return white}
-	default {return red}
-    }
-}
-
 proc PlotPing {varname} {
     upvar #0 $varname var
     global $varname
@@ -547,35 +533,35 @@ proc PlotUpdateGraph {varname} {
 
     global ds9
 
-    if {$var(axis,x,auto)} {
+    if {$var(graph,axis,x,auto)} {
 	set xmin {}
 	set xmax {}
     } else {
-	set xmin $var(axis,x,min)
-	set xmax $var(axis,x,max)
+	set xmin $var(graph,axis,x,min)
+	set xmax $var(graph,axis,x,max)
     }
 
-    if {$var(axis,y,auto)} {
+    if {$var(graph,axis,y,auto)} {
 	set ymin {}
 	set ymax {}
     } else {
-	set ymin $var(axis,y,min)
-	set ymax $var(axis,y,max)
+	set ymin $var(graph,axis,y,min)
+	set ymax $var(graph,axis,y,max)
     }
 
     $var(graph$cc) xaxis configure -min $xmin -max $xmax \
-	-descending $var(axis,x,flip)
+	-descending $var(graph,axis,x,flip)
     $var(graph$cc) yaxis configure -min $ymin -max $ymax \
-	-descending $var(axis,y,flip)
+	-descending $var(graph,axis,y,flip)
 
     if {$var(graph,format)} {
-	if {$var(axis,x,format) != {}} {
+	if {$var(graph,axis,x,format) != {}} {
 	    $var(graph$cc) xaxis configure \
 		-command [list PlotAxisFormat $varname x]
 	} else {
 	    $var(graph$cc) xaxis configure -command {}
 	}
-	if {$var(axis,y,format) != {}} {
+	if {$var(graph,axis,y,format) != {}} {
 	    $var(graph$cc) yaxis configure \
 		-command [list PlotAxisFormat $varname y]
 	} else {
@@ -613,15 +599,15 @@ proc PlotUpdateGraph {varname} {
 
     $var(graph$cc) xaxis configure \
 	-bg $var(graph,bg) \
-	-grid $var(axis,x,grid) -logscale $var(axis,x,log) \
-	-title $var(axis,x,title) \
+	-grid $var(graph,axis,x,grid) -logscale $var(graph,axis,x,log) \
+	-title $var(graph,axis,x,title) \
 	-tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
     $var(graph$cc) yaxis configure \
 	-bg $var(graph,bg) \
-	-grid $var(axis,y,grid) -logscale $var(axis,y,log) \
-	-title $var(axis,y,title) \
+	-grid $var(graph,axis,y,grid) -logscale $var(graph,axis,y,log) \
+	-title $var(graph,axis,y,title) \
 	-tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
@@ -680,8 +666,8 @@ proc PlotTitle {varname title xaxis yaxis} {
     set cc $var(graph,current)
 
     set var(graph,title) "$title"
-    set var(axis,x,title) "$xaxis"
-    set var(axis,y,title) "$yaxis"
+    set var(graph,axis,x,title) "$xaxis"
+    set var(graph,axis,y,title) "$yaxis"
 }
 
 proc PlotBackup {ch dir} {

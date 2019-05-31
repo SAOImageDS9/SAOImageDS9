@@ -1502,13 +1502,13 @@ proc plotsend::yyparse {} {
                     33 { ProcessSendCmdCVARYesNo graph,ds,dash }
                     34 { PlotSendCmdCVARGet data,current }
                     35 { PlotSendCmdCVARGet data,current }
-                    36 { ProcessSendCmdCVARYesNo "axis,$1,grid" }
-                    37 { ProcessSendCmdCVARYesNo "axis,$1,log" }
-                    38 { ProcessSendCmdCVARYesNo "axis,$1,flip" }
-                    39 { ProcessSendCmdCVARYesNo "axis,$1,auto" }
-                    40 { ProcessSendCmdCVARGet "axis,$1,min" }
-                    41 { ProcessSendCmdCVARGet "axis,$1,max" }
-                    42 { ProcessSendCmdCVARGet "axis,$1,format" }
+                    36 { ProcessSendCmdCVARYesNo "graph,axis,$1,grid" }
+                    37 { ProcessSendCmdCVARYesNo "graph,axis,$1,log" }
+                    38 { ProcessSendCmdCVARYesNo "graph,axis,$1,flip" }
+                    39 { ProcessSendCmdCVARYesNo "graph,axis,$1,auto" }
+                    40 { ProcessSendCmdCVARGet "graph,axis,$1,min" }
+                    41 { ProcessSendCmdCVARGet "graph,axis,$1,max" }
+                    42 { ProcessSendCmdCVARGet "graph,axis,$1,format" }
                     43 { ProcessSendCmdCVARYesNo graph,legend }
                     44 { ProcessSendCmdCVARGet graph,legend,position }
                     45 { ProcessSendCmdCVARGet "$1,family" }
@@ -1529,8 +1529,8 @@ proc plotsend::yyparse {} {
                     60 { set _ legend,font }
                     61 { set _ legend,title }
                     62 { ProcessSendCmdCVARGet graph,title }
-                    63 { ProcessSendCmdCVARGet "axis,$1,title" }
-                    64 { ProcessSendCmdCVARGet "axis,$1,title" }
+                    63 { ProcessSendCmdCVARGet "graph,axis,$1,title" }
+                    64 { ProcessSendCmdCVARGet "graph,axis,$1,title" }
                     65 { ProcessSendCmdCVARGet graph,legend,title }
                     66 { ProcessSendCmdCVARYesNo graph,ds,error }
                     67 { ProcessSendCmdCVARYesNo graph,ds,error,cap }

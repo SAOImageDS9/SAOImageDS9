@@ -178,23 +178,23 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 
     menu $var(mb).graph.axes
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Grid}] \
-	-variable ${varname}(axis,x,grid) \
+	-variable ${varname}(graph,axis,x,grid) \
 	-command [list $var(proc,updategraph) $varname]
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
-	-variable ${varname}(axis,x,log) \
+	-variable ${varname}(graph,axis,x,log) \
 	-command [list $var(proc,updategraph) $varname]
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
-	-variable ${varname}(axis,x,flip) \
+	-variable ${varname}(graph,axis,x,flip) \
 	-command [list $var(proc,updategraph) $varname]
     $var(mb).graph.axes add separator
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Y Grid}] \
-	-variable ${varname}(axis,y,grid) \
+	-variable ${varname}(graph,axis,y,grid) \
 	-command [list $var(proc,updategraph) $varname]
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
-	-variable ${varname}(axis,y,log) \
+	-variable ${varname}(graph,axis,y,log) \
 	-command [list $var(proc,updategraph) $varname]
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
-	-variable ${varname}(axis,y,flip) \
+	-variable ${varname}(graph,axis,y,flip) \
 	-command [list $var(proc,updategraph) $varname]
     $var(mb).graph.axes add separator
     $var(mb).graph.axes add command -label "[msgcat::mc {Range}]..." \
@@ -289,15 +289,15 @@ proc PlotRangeDialog {varname} {
 
     set ed(ok) 0
 
-    set ed(x,auto) $var(axis,x,auto)
-    set ed(x,min) $var(axis,x,min)
-    set ed(x,max) $var(axis,x,max)
-    set ed(x,format) $var(axis,x,format)
+    set ed(graph,axis,x,auto) $var(graph,axis,x,auto)
+    set ed(graph,axis,x,min) $var(graph,axis,x,min)
+    set ed(graph,axis,x,max) $var(graph,axis,x,max)
+    set ed(graph,axis,x,format) $var(graph,axis,x,format)
 
-    set ed(y,auto) $var(axis,y,auto)
-    set ed(y,min) $var(axis,y,min)
-    set ed(y,max) $var(axis,y,max)
-    set ed(y,format) $var(axis,y,format)
+    set ed(graph,axis,y,auto) $var(graph,axis,y,auto)
+    set ed(graph,axis,y,min) $var(graph,axis,y,min)
+    set ed(graph,axis,y,max) $var(graph,axis,y,max)
+    set ed(graph,axis,y,format) $var(graph,axis,y,format)
 
     DialogCreate $w [msgcat::mc {Range}] ed(ok)
 
@@ -310,16 +310,16 @@ proc PlotRangeDialog {varname} {
     ttk::label $f.tauto -text [msgcat::mc {Automatic}]
 
     ttk::label $f.x -text [msgcat::mc {X}]
-    ttk::entry $f.xmin -textvariable ed(x,min) -width 12
-    ttk::entry $f.xmax -textvariable ed(x,max) -width 12
-    ttk::entry $f.xformat -textvariable ed(x,format) -width 8
-    ttk::checkbutton $f.xauto -variable ed(x,auto)
+    ttk::entry $f.xmin -textvariable ed(graph,axis,x,min) -width 12
+    ttk::entry $f.xmax -textvariable ed(graph,axis,x,max) -width 12
+    ttk::entry $f.xformat -textvariable ed(graph,axis,x,format) -width 8
+    ttk::checkbutton $f.xauto -variable ed(graph,axis,x,auto)
 
     ttk::label $f.y -text [msgcat::mc {Y}]
-    ttk::entry $f.ymin -textvariable ed(y,min) -width 12
-    ttk::entry $f.ymax -textvariable ed(y,max) -width 12
-    ttk::entry $f.yformat -textvariable ed(y,format) -width 8
-    ttk::checkbutton $f.yauto -variable ed(y,auto)
+    ttk::entry $f.ymin -textvariable ed(graph,axis,y,min) -width 12
+    ttk::entry $f.ymax -textvariable ed(graph,axis,y,max) -width 12
+    ttk::entry $f.yformat -textvariable ed(graph,axis,y,format) -width 8
+    ttk::checkbutton $f.yauto -variable ed(graph,axis,y,auto)
 
     grid $f.t $f.tfrom $f.tto $f.tformat $f.tauto -padx 2 -pady 2 -sticky w
     grid $f.x $f.xmin $f.xmax $f.xformat $f.xauto -padx 2 -pady 2 -sticky w
@@ -344,15 +344,15 @@ proc PlotRangeDialog {varname} {
     DialogDismiss $w
 
     if {$ed(ok)} {
-	set var(axis,x,auto) $ed(x,auto)
-	set var(axis,x,min) $ed(x,min) 
-	set var(axis,x,max) $ed(x,max) 
-	set var(axis,x,format) $ed(x,format)
+	set var(graph,axis,x,auto) $ed(graph,axis,x,auto)
+	set var(graph,axis,x,min) $ed(graph,axis,x,min) 
+	set var(graph,axis,x,max) $ed(graph,axis,x,max) 
+	set var(graph,axis,x,format) $ed(graph,axis,x,format)
 
-	set var(axis,y,auto) $ed(y,auto)
-	set var(axis,y,min) $ed(y,min) 
-	set var(axis,y,max) $ed(y,max) 
-	set var(axis,y,format) $ed(y,format)
+	set var(graph,axis,y,auto) $ed(graph,axis,y,auto)
+	set var(graph,axis,y,min) $ed(graph,axis,y,min) 
+	set var(graph,axis,y,max) $ed(graph,axis,y,max) 
+	set var(graph,axis,y,format) $ed(graph,axis,y,format)
 
 	$var(proc,updategraph) $varname
     }
@@ -371,8 +371,8 @@ proc PlotGraphTitleDialog {varname} {
 
     set ed(ok) 0
     set ed(graph,title) $var(graph,title)
-    set ed(axis,x,title) $var(axis,x,title)
-    set ed(axis,y,title) $var(axis,y,title)
+    set ed(graph,axis,x,title) $var(graph,axis,x,title)
+    set ed(graph,axis,y,title) $var(graph,axis,y,title)
     set ed(graph,legend,title) $var(graph,legend,title)
 
     DialogCreate $w [msgcat::mc {Title}] ed(ok)
@@ -382,9 +382,9 @@ proc PlotGraphTitleDialog {varname} {
     ttk::label $f.label -text [msgcat::mc {Title}]
     ttk::entry $f.title -textvariable ed(graph,title) -width 30
     ttk::label $f.xlabel -text [msgcat::mc {X Axis Title}]
-    ttk::entry $f.xtitle -textvariable ed(axis,x,title) -width 30
+    ttk::entry $f.xtitle -textvariable ed(graph,axis,x,title) -width 30
     ttk::label $f.ylabel -text [msgcat::mc {Y Axis Title}]
-    ttk::entry $f.ytitle -textvariable ed(axis,y,title) -width 30
+    ttk::entry $f.ytitle -textvariable ed(graph,axis,y,title) -width 30
     ttk::label $f.legendlabel -text [msgcat::mc {Legend Title}]
     ttk::entry $f.legendtitle -textvariable ed(graph,legend,title) -width 30
 
@@ -414,8 +414,8 @@ proc PlotGraphTitleDialog {varname} {
 
     if {$ed(ok)} {
 	set var(graph,title) $ed(graph,title)
-	set var(axis,x,title) $ed(axis,x,title)
-	set var(axis,y,title) $ed(axis,y,title)
+	set var(graph,axis,x,title) $ed(graph,axis,x,title)
+	set var(graph,axis,y,title) $ed(graph,axis,y,title)
 	set var(graph,legend,title) $ed(graph,legend,title)
 
 	$var(proc,updategraph) $varname

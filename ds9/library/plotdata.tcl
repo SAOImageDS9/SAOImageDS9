@@ -113,24 +113,18 @@ proc PlotDataSet {varname dim data} {
 	    # first data set
 	    PlotDataSetOne $varname "4.1" $data
 
-	    # set color
-	    set col [PlotNextColor $var(graph,ds,color)]
-
 	    # second data set
 	    PlotDataSetOne $varname "4.2" $data
-	    set var(graph,ds,color) $col
+
 	    $var(proc,updateelement) $varname
 	}
 	5 {
 	    # first data set
 	    PlotDataSetOne $varname "5.1" $data
 
-	    # set color
-	    set col [PlotNextColor $var(graph,ds,color)]
-
 	    # second data set
 	    PlotDataSetOne $varname "5.2" $data
-	    set var(graph,ds,color) $col
+
 	    $var(proc,updateelement) $varname
 	}
 	default {PlotDataSetOne $varname $dim $data}
@@ -390,10 +384,9 @@ proc PlotDupData {varname mm} {
 
     set var(graph$cc,$nn,show) $var(graph$cc,$mm,show)
     set var(graph$cc,$nn,smooth) $var(graph$cc,$mm,smooth)
-    set var(graph$cc,$nn,color) [PlotNextColor $var(graph$cc,$mm,color)]
+    set var(graph$cc,$nn,color) $var(graph$cc,$mm,color)
     set var(graph$cc,$nn,fill) $var(graph$cc,$mm,fill)
-    set var(graph$cc,$nn,fill,color) \
-	[PlotNextColor $var(graph$cc,$mm,fill,color)]
+    set var(graph$cc,$nn,fill,color) $var(graph$cc,$mm,fill,color)
     set var(graph$cc,$nn,width) $var(graph$cc,$mm,width)
     set var(graph$cc,$nn,dash) $var(graph$cc,$mm,dash)
 

@@ -36,30 +36,30 @@ proc PlotDefState {} {
     set pap(axis,font,weight) normal
     set pap(axis,font,slant) roman
 
-    set pap(axis,x,title) {}
-    set pap(axis,x,grid) 1
-    set pap(axis,x,log) 0
-    set pap(axis,x,flip) 0
-    set pap(axis,x,auto) 1
-    set pap(axis,x,min) {}
-    set pap(axis,x,max) {}
-    set pap(axis,x,format) {}
-
-    set pap(axis,y,title) {}
-    set pap(axis,y,grid) 1
-    set pap(axis,y,log) 0
-    set pap(axis,y,flip) 0
-    set pap(axis,y,auto) 1
-    set pap(axis,y,min) {}
-    set pap(axis,y,max) {}
-    set pap(axis,y,format) {}
-
+    # per Graph
     set pap(graph,title) {}
 
-    # per Graph
     set pap(graph,legend) 0
     set pap(graph,legend,title) Legend
     set pap(graph,legend,position) right
+
+    set pap(graph,axis,x,title) {}
+    set pap(graph,axis,x,grid) 1
+    set pap(graph,axis,x,log) 0
+    set pap(graph,axis,x,flip) 0
+    set pap(graph,axis,x,auto) 1
+    set pap(graph,axis,x,min) {}
+    set pap(graph,axis,x,max) {}
+    set pap(graph,axis,x,format) {}
+
+    set pap(graph,axis,y,title) {}
+    set pap(graph,axis,y,grid) 1
+    set pap(graph,axis,y,log) 0
+    set pap(graph,axis,y,flip) 0
+    set pap(graph,axis,y,auto) 1
+    set pap(graph,axis,y,min) {}
+    set pap(graph,axis,y,max) {}
+    set pap(graph,axis,y,format) {}
 
     # per DataSet
     set pap(graph,ds,name) {}
@@ -95,9 +95,29 @@ proc PlotInitState {varname} {
     set var(bar,mode) $pap(bar,mode)
 
     # per Graph
+    set var(graph,title) $pap(graph,title)
+
     set var(graph,legend) $pap(graph,legend)
     set var(graph,legend,title) $pap(graph,legend,title)
     set var(graph,legend,position) $pap(graph,legend,position)
+
+    set var(graph,axis,x,title) $pap(graph,axis,x,title)
+    set var(graph,axis,x,grid) $pap(graph,axis,x,grid)
+    set var(graph,axis,x,log) $pap(graph,axis,x,log)
+    set var(graph,axis,x,flip) $pap(graph,axis,x,flip)
+    set var(graph,axis,x,auto) $pap(graph,axis,x,auto)
+    set var(graph,axis,x,min) $pap(graph,axis,x,min)
+    set var(graph,axis,x,max) $pap(graph,axis,x,max)
+    set var(graph,axis,x,format) $pap(graph,axis,x,format)
+
+    set var(graph,axis,y,title) $pap(graph,axis,y,title)
+    set var(graph,axis,y,grid) $pap(graph,axis,y,grid)
+    set var(graph,axis,y,log) $pap(graph,axis,y,log)
+    set var(graph,axis,y,flip) $pap(graph,axis,y,flip)
+    set var(graph,axis,y,auto) $pap(graph,axis,y,auto)
+    set var(graph,axis,y,min) $pap(graph,axis,y,min)
+    set var(graph,axis,y,max) $pap(graph,axis,y,max)
+    set var(graph,axis,y,format) $pap(graph,axis,y,format)
 
     # per DataSet
     set var(graph,ds,name) $pap(graph,ds,name)
@@ -129,9 +149,29 @@ proc PlotSaveState {varname} {
     set nn $var(graph$cc,data,current)
 
     # per Graph
+    set var(graph$cc,title) $var(graph,title)
+
     set var(graph$cc,legend) $var(graph,legend)
     set var(graph$cc,legend,title) $var(graph,legend,title)
     set var(graph$cc,legend,position) $var(graph,legend,position)
+
+    set var(graph$cc,axis,x,title) $var(graph,axis,x,title)
+    set var(graph$cc,axis,x,grid) $var(graph,axis,x,grid)
+    set var(graph$cc,axis,x,log) $var(graph,axis,x,log)
+    set var(graph$cc,axis,x,flip) $var(graph,axis,x,flip)
+    set var(graph$cc,axis,x,auto) $var(graph,axis,x,auto)
+    set var(graph$cc,axis,x,min) $var(graph,axis,x,min)
+    set var(graph$cc,axis,x,max) $var(graph,axis,x,max)
+    set var(graph$cc,axis,x,format) $var(graph,axis,x,format)
+
+    set var(graph$cc,axis,y,title) $var(graph,axis,y,title)
+    set var(graph$cc,axis,y,grid) $var(graph,axis,y,grid)
+    set var(graph$cc,axis,y,log) $var(graph,axis,y,log)
+    set var(graph$cc,axis,y,flip) $var(graph,axis,y,flip)
+    set var(graph$cc,axis,y,auto) $var(graph,axis,y,auto)
+    set var(graph$cc,axis,y,min) $var(graph,axis,y,min)
+    set var(graph$cc,axis,y,max) $var(graph,axis,y,max)
+    set var(graph$cc,axis,y,format) $var(graph,axis,y,format)
 
     # per DataSet
     set var(graph$cc,$nn,name) $var(graph,ds,name)
@@ -163,9 +203,20 @@ proc PlotRestoreState {varname nn} {
     set nn $var(graph$cc,data,current)
 
     # per Graph
+    set var(graph,title) $var(graph$cc,title)
+
     set var(graph,legend) $var(graph$cc,legend)
     set var(graph,legend,title) $var(graph$cc,legend,title)
     set var(graph,legend,position) $var(graph$cc,legend,position)
+
+    set var(graph,axis,x,title) $var(graph$cc,axis,x,title)
+    set var(graph,axis,x,grid) $var(graph$cc,axis,x,grid)
+    set var(graph,axis,x,log) $var(graph$cc,axis,x,log)
+    set var(graph,axis,x,flip) $var(graph$cc,axis,x,flip)
+    set var(graph,axis,x,auto) $var(graph$cc,axis,x,auto)
+    set var(graph,axis,x,min) $var(graph$cc,axis,x,min)
+    set var(graph,axis,x,max) $var(graph$cc,axis,x,max)
+    set var(graph,axis,x,format) $var(graph$cc,axis,x,format)
 
     # per DataSet
     set var(graph,ds,name) $var(graph$cc,$nn,name)

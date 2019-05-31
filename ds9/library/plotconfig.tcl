@@ -28,8 +28,6 @@ proc PlotLoadConfigFile {varname filename} {
     set var(graph,bg) $analysisplot(graph,bg)
     set var(bar,mode) $analysisplot(bar,mode) 
 
-
-    set var(graph,title) $analysisplot(graph,title)
     set var(graph,title,family) $analysisplot(graph,title,family)
     set var(graph,title,size) $analysisplot(graph,title,size) 
     set var(graph,title,weight) $analysisplot(graph,title,weight) 
@@ -44,24 +42,6 @@ proc PlotLoadConfigFile {varname filename} {
     set var(legend,font,weight) $analysisplot(legend,font,weight) 
     set var(legend,font,slant) $analysisplot(legend,font,slant) 
 
-    set var(axis,x,title) $analysisplot(axis,x,title) 
-    set var(axis,x,grid) $analysisplot(axis,x,grid) 
-    set var(axis,x,log) $analysisplot(axis,x,log) 
-    set var(axis,x,flip) $analysisplot(axis,x,flip) 
-    set var(axis,x,auto) $analysisplot(axis,x,auto) 
-    set var(axis,x,min) $analysisplot(axis,x,min) 
-    set var(axis,x,max) $analysisplot(axis,x,max) 
-    set var(axis,x,format) $analysisplot(axis,x,format)
-
-    set var(axis,y,title) $analysisplot(axis,y,title) 
-    set var(axis,y,grid) $analysisplot(axis,y,grid) 
-    set var(axis,y,log) $analysisplot(axis,y,log) 
-    set var(axis,y,flip) $analysisplot(axis,y,flip) 
-    set var(axis,y,auto) $analysisplot(axis,y,auto) 
-    set var(axis,y,min) $analysisplot(axis,y,min) 
-    set var(axis,y,max) $analysisplot(axis,y,max) 
-    set var(axis,y,format) $analysisplot(axis,y,format) 
-
     set var(axis,title,family) $analysisplot(axis,title,family) 
     set var(axis,title,size) $analysisplot(axis,title,size) 
     set var(axis,title,weight) $analysisplot(axis,title,weight) 
@@ -73,9 +53,29 @@ proc PlotLoadConfigFile {varname filename} {
     set var(axis,font,slant) $analysisplot(axis,font,slant) 
 
     # per Graph
+    set var(graph,title) $analysisplot(graph,title)
+
     set var(graph,legend) $analysisplot(legend) 
     set var(graph,legend,title) $analysisplot(legend,title) 
     set var(graph,legend,position) $analysisplot(legend,position) 
+
+    set var(graph,axis,x,title) $analysisplot(axis,x,title) 
+    set var(graph,axis,x,grid) $analysisplot(axis,x,grid) 
+    set var(graph,axis,x,log) $analysisplot(axis,x,log) 
+    set var(graph,axis,x,flip) $analysisplot(axis,x,flip) 
+    set var(graph,axis,x,auto) $analysisplot(axis,x,auto) 
+    set var(graph,axis,x,min) $analysisplot(axis,x,min) 
+    set var(graph,axis,x,max) $analysisplot(axis,x,max) 
+    set var(graph,axis,x,format) $analysisplot(axis,x,format)
+
+    set var(graph,axis,y,title) $analysisplot(axis,y,title) 
+    set var(graph,axis,y,grid) $analysisplot(axis,y,grid) 
+    set var(graph,axis,y,log) $analysisplot(axis,y,log) 
+    set var(graph,axis,y,flip) $analysisplot(axis,y,flip) 
+    set var(graph,axis,y,auto) $analysisplot(axis,y,auto) 
+    set var(graph,axis,y,min) $analysisplot(axis,y,min) 
+    set var(graph,axis,y,max) $analysisplot(axis,y,max) 
+    set var(graph,axis,y,format) $analysisplot(axis,y,format) 
 
     # per Dataset
     #    set var(graph,ds,name) {}
@@ -101,13 +101,6 @@ proc PlotLoadConfigFile {varname filename} {
     unset analysisplot
 
     # backward compatibility
-    FixVar ${varname}(axis,x,grid) ${varname}(graph,x,grid)
-    FixVar ${varname}(axis,x,log) ${varname}(graph,x,log)
-    FixVar ${varname}(axis,x,flip) ${varname}(graph,x,flip)
-    FixVar ${varname}(axis,y,grid) ${varname}(graph,y,grid)
-    FixVar ${varname}(axis,y,log) ${varname}(graph,y,log)
-    FixVar ${varname}(axis,y,flip) ${varname}(graph,y,flip)
-
     FixVar ${varname}(graph,title,family) ${varname}(titleFont)
     FixVar ${varname}(graph,title,size) ${varname}(titleSize)
     FixVar ${varname}(graph,title,weight) ${varname}(titleWeight)
@@ -159,14 +152,14 @@ proc PlotLoadConfigFile {varname filename} {
     FixVarRm ${varname}(step,width)
 
     if {[info exists var(grid)]} {
-	set var(axis,x,grid) $var(grid)
-	set var(axis,y,grid) $var(grid)
+	set var(graph,axis,x,grid) $var(grid)
+	set var(graph,axis,y,grid) $var(grid)
 	unset var(grid)
     }
     if {[info exists var(format)]} {
 	set var(graph,format) $var(format)
-	set var(axis,x,format) $var(format,x)
-	set var(axis,y,format) $var(format,y)
+	set var(graph,axis,x,format) $var(format,x)
+	set var(graph,axis,y,format) $var(format,y)
 	unset var(format)
 	unset var(format,x)
 	unset var(format,y)
@@ -175,20 +168,20 @@ proc PlotLoadConfigFile {varname filename} {
     if {[info exists var(grid,log)]} {
 	switch $var(grid,log) {
 	    linearlinear {
-		set var(axis,x,log) 0
-		set var(axis,y,log) 0
+		set var(graph,axis,x,log) 0
+		set var(graph,axis,y,log) 0
 	    }
 	    linearlog {
-		set var(axis,x,log) 0
-		set var(axis,y,log) 1
+		set var(graph,axis,x,log) 0
+		set var(graph,axis,y,log) 1
 	    }
 	    loglinear {
-		set var(axis,x,log) 1
-		set var(axis,y,log) 0
+		set var(graph,axis,x,log) 1
+		set var(graph,axis,y,log) 0
 	    }
 	    loglog {
-		set var(axis,x,log) 1
-		set var(axis,y,log) 1
+		set var(graph,axis,x,log) 1
+		set var(graph,axis,y,log) 1
 	    }
 	}
 	unset var(grid,log)
@@ -220,7 +213,6 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(graph,bg) $var(graph,bg)
     set analysisplot(bar,mode) $var(bar,mode)
 
-    set analysisplot(graph,title) $var(graph,title) 
     set analysisplot(graph,title,family) $var(graph,title,family) 
     set analysisplot(graph,title,size) $var(graph,title,size) 
     set analysisplot(graph,title,weight) $var(graph,title,weight) 
@@ -235,24 +227,6 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(legend,font,weight) $var(legend,font,weight)
     set analysisplot(legend,font,slant) $var(legend,font,slant)
 
-    set analysisplot(axis,x,title) $var(axis,x,title) 
-    set analysisplot(axis,x,grid) $var(axis,x,grid)
-    set analysisplot(axis,x,log) $var(axis,x,log) 
-    set analysisplot(axis,x,flip) $var(axis,x,flip) 
-    set analysisplot(axis,x,auto) $var(axis,x,auto)
-    set analysisplot(axis,x,min) $var(axis,x,min)
-    set analysisplot(axis,x,max) $var(axis,x,max)
-    set analysisplot(axis,x,format) $var(axis,x,format)
-
-    set analysisplot(axis,y,title) $var(axis,y,title)
-    set analysisplot(axis,y,grid) $var(axis,y,grid)
-    set analysisplot(axis,y,log) $var(axis,y,log) 
-    set analysisplot(axis,y,flip) $var(axis,y,flip) 
-    set analysisplot(axis,y,auto) $var(axis,y,auto)
-    set analysisplot(axis,y,min) $var(axis,y,min)
-    set analysisplot(axis,y,max) $var(axis,y,max)
-    set analysisplot(axis,y,format) $var(axis,y,format)
-
     set analysisplot(axis,title,family) $var(axis,title,family) 
     set analysisplot(axis,title,size) $var(axis,title,size) 
     set analysisplot(axis,title,weight) $var(axis,title,weight) 
@@ -264,9 +238,29 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(axis,font,slant) $var(axis,font,slant)
 
     # per Graph
+    set analysisplot(graph,title) $var(graph,title) 
+
     set analysisplot(legend) $var(graph,legend)
     set analysisplot(legend,title) $var(graph,legend,title)
     set analysisplot(legend,position) $var(graph,legend,position)
+
+    set analysisplot(axis,x,title) $var(graph,axis,x,title) 
+    set analysisplot(axis,x,grid) $var(graph,axis,x,grid)
+    set analysisplot(axis,x,log) $var(graph,axis,x,log) 
+    set analysisplot(axis,x,flip) $var(graph,axis,x,flip) 
+    set analysisplot(axis,x,auto) $var(graph,axis,x,auto)
+    set analysisplot(axis,x,min) $var(graph,axis,x,min)
+    set analysisplot(axis,x,max) $var(graph,axis,x,max)
+    set analysisplot(axis,x,format) $var(graph,axis,x,format)
+
+    set analysisplot(axis,y,title) $var(graph,axis,y,title)
+    set analysisplot(axis,y,grid) $var(graph,axis,y,grid)
+    set analysisplot(axis,y,log) $var(graph,axis,y,log) 
+    set analysisplot(axis,y,flip) $var(graph,axis,y,flip) 
+    set analysisplot(axis,y,auto) $var(graph,axis,y,auto)
+    set analysisplot(axis,y,min) $var(graph,axis,y,min)
+    set analysisplot(axis,y,max) $var(graph,axis,y,max)
+    set analysisplot(axis,y,format) $var(graph,axis,y,format)
 
     # per Dataset
 #    set analysisplot(name) {}

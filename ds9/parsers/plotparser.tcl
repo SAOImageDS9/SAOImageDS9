@@ -5480,13 +5480,13 @@ proc plot::yyparse {} {
                     139 { set _ gray }
                     140 { set _ pointer }
                     141 { set _ zoom }
-                    142 { PlotCmdUpdateGraph "axis,$1,grid" $3 }
-                    143 { PlotCmdUpdateGraph "axis,$1,log" $3 }
-                    144 { PlotCmdUpdateGraph "axis,$1,flip" $3 }
-                    145 { PlotCmdUpdateGraph "axis,$1,auto" $3 }
-                    146 { PlotCmdUpdateGraph "axis,$1,min" $3 }
-                    147 { PlotCmdUpdateGraph "axis,$1,max" $3 }
-                    148 { PlotCmdUpdateGraph "axis,$1,format" $3 }
+                    142 { PlotCmdUpdateGraph "graph,axis,$1,grid" $3 }
+                    143 { PlotCmdUpdateGraph "graph,axis,$1,log" $3 }
+                    144 { PlotCmdUpdateGraph "graph,axis,$1,flip" $3 }
+                    145 { PlotCmdUpdateGraph "graph,axis,$1,auto" $3 }
+                    146 { PlotCmdUpdateGraph "graph,axis,$1,min" $3 }
+                    147 { PlotCmdUpdateGraph "graph,axis,$1,max" $3 }
+                    148 { PlotCmdUpdateGraph "graph,axis,$1,format" $3 }
                     149 { PlotCmdUpdateGraph graph,legend $1 }
                     150 { PlotCmdUpdateGraph graph,legend,position $2 }
                     151 { set _ right }
@@ -5511,8 +5511,8 @@ proc plot::yyparse {} {
                     170 { set _ legend,font }
                     171 { set _ legend,title }
                     172 { PlotCmdUpdateGraph graph,title $1 }
-                    173 { PlotCmdUpdateGraph "axis,$1,title" $2 }
-                    174 { PlotCmdUpdateGraph "axis,$1,title" $2 }
+                    173 { PlotCmdUpdateGraph "graph,axis,$1,title" $2 }
+                    174 { PlotCmdUpdateGraph "graph,axis,$1,title" $2 }
                     175 { PlotCmdUpdateGraph graph,legend,title $2 }
                     176 { set _ normal }
                     177 { set _ stacked }
@@ -5547,21 +5547,21 @@ proc plot::yyparse {} {
                     213 { set _ cubic }
                     214 { set _ quadratic }
                     215 { set _ catrom }
-                    217 { PlotCmdUpdateGraph "axis,$2,log" $3 }
-                    218 { PlotCmdUpdateGraph "axis,$2,flip" $3 }
-                    219 { PlotCmdUpdateGraph "axis,$3,format" $3 }
-                    224 { PlotCmdUpdateGraph "axis,$1,grid" $2 }
-                    225 { PlotCmdUpdateGraph "axis,x,grid" $1; PlotCmdUpdateGraph "axis,y,grid" $1 }
-                    226 { PlotCmdUpdateGraph "axis,$1,auto" $3 }
-                    227 { PlotCmdUpdateGraph "axis,$1,min" $3 }
-                    228 { PlotCmdUpdateGraph "axis,$1,max" $3 }
+                    217 { PlotCmdUpdateGraph "graph,axis,$2,log" $3 }
+                    218 { PlotCmdUpdateGraph "graph,axis,$2,flip" $3 }
+                    219 { PlotCmdUpdateGraph "graph,axis,$3,format" $3 }
+                    224 { PlotCmdUpdateGraph "graph,axis,$1,grid" $2 }
+                    225 { PlotCmdUpdateGraph "graph,axis,x,grid" $1; PlotCmdUpdateGraph "graph,axis,y,grid" $1 }
+                    226 { PlotCmdUpdateGraph "graph,axis,$1,auto" $3 }
+                    227 { PlotCmdUpdateGraph "graph,axis,$1,min" $3 }
+                    228 { PlotCmdUpdateGraph "graph,axis,$1,max" $3 }
                     229 { PlotCmdUpdateGraph graph,title $2 }
-                    230 { PlotCmdUpdateGraph "axis,$1,title" $2 }
+                    230 { PlotCmdUpdateGraph "graph,axis,$1,title" $2 }
                     231 { PlotCmdUpdateGraph graph,legend,title $2 }
-                    234 { PlotCmdUpdateGraph "axis,x,log" 0; PlotCmdUpdateGraph "axis,y,log" 0 }
-                    235 { PlotCmdUpdateGraph "axis,x,log" 0; PlotCmdUpdateGraph "axis,y,log" 1 }
-                    236 { PlotCmdUpdateGraph "axis,x,log" 1; PlotCmdUpdateGraph "axis,y,log" 0 }
-                    237 { PlotCmdUpdateGraph "axis,x,log" 1; PlotCmdUpdateGraph "axis,y,log" 1 }
+                    234 { PlotCmdUpdateGraph "graph,axis,x,log" 0; PlotCmdUpdateGraph "graph,axis,y,log" 0 }
+                    235 { PlotCmdUpdateGraph "graph,axis,x,log" 0; PlotCmdUpdateGraph "graph,axis,y,log" 1 }
+                    236 { PlotCmdUpdateGraph "graph,axis,x,log" 1; PlotCmdUpdateGraph "graph,axis,y,log" 0 }
+                    237 { PlotCmdUpdateGraph "graph,axis,x,log" 1; PlotCmdUpdateGraph "graph,axis,y,log" 1 }
                     238 { PlotCmdUpdateElement graph,ds,shape,symbol $2 }
                     239 { PlotCmdUpdateElement graph,ds,width $3 }
                     240 { PlotCmdUpdateElement graph,ds,dash $3 }

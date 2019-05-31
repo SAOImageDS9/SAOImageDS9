@@ -99,13 +99,13 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | DATASET_ {PlotSendCmdCVARGet data,current}
  ;
  
-axis : xy GRID_ {ProcessSendCmdCVARYesNo "axis,$1,grid"}
- | xy LOG_ {ProcessSendCmdCVARYesNo "axis,$1,log"}
- | xy FLIP_ {ProcessSendCmdCVARYesNo "axis,$1,flip"}
- | xy AUTO_ {ProcessSendCmdCVARYesNo "axis,$1,auto"}
- | xy MIN_ {ProcessSendCmdCVARGet "axis,$1,min"}
- | xy MAX_ {ProcessSendCmdCVARGet "axis,$1,max"}
- | xy FORMAT_ {ProcessSendCmdCVARGet "axis,$1,format"}
+axis : xy GRID_ {ProcessSendCmdCVARYesNo "graph,axis,$1,grid"}
+ | xy LOG_ {ProcessSendCmdCVARYesNo "graph,axis,$1,log"}
+ | xy FLIP_ {ProcessSendCmdCVARYesNo "graph,axis,$1,flip"}
+ | xy AUTO_ {ProcessSendCmdCVARYesNo "graph,axis,$1,auto"}
+ | xy MIN_ {ProcessSendCmdCVARGet "graph,axis,$1,min"}
+ | xy MAX_ {ProcessSendCmdCVARGet "graph,axis,$1,max"}
+ | xy FORMAT_ {ProcessSendCmdCVARGet "graph,axis,$1,format"}
  ;
 
 legend : {ProcessSendCmdCVARYesNo graph,legend}
@@ -138,8 +138,8 @@ fontType : TITLE_ {set _ graph,title}
  ;
 
 title : {ProcessSendCmdCVARGet graph,title}
- | xy {ProcessSendCmdCVARGet "axis,$1,title"}
- | xyaxis {ProcessSendCmdCVARGet "axis,$1,title"}
+ | xy {ProcessSendCmdCVARGet "graph,axis,$1,title"}
+ | xyaxis {ProcessSendCmdCVARGet "graph,axis,$1,title"}
  | LEGEND_ {ProcessSendCmdCVARGet graph,legend,title}
  ;
 

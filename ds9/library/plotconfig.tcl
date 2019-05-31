@@ -26,6 +26,8 @@ proc PlotLoadConfigFile {varname filename} {
     #	array set $varname [array get analysisplot]
 
     set var(graph,bg) $analysisplot(graph,bg)
+    set var(bar,mode) $analysisplot(bar,mode) 
+
 
     set var(graph,title) $analysisplot(graph,title)
     set var(graph,title,family) $analysisplot(graph,title,family)
@@ -33,9 +35,6 @@ proc PlotLoadConfigFile {varname filename} {
     set var(graph,title,weight) $analysisplot(graph,title,weight) 
     set var(graph,title,slant) $analysisplot(graph,title,slant) 
 
-    set var(legend) $analysisplot(legend) 
-    set var(legend,title) $analysisplot(legend,title) 
-    set var(legend,position) $analysisplot(legend,position) 
     set var(legend,title,family) $analysisplot(legend,title,family) 
     set var(legend,title,size) $analysisplot(legend,title,size) 
     set var(legend,title,weight) $analysisplot(legend,title,weight) 
@@ -73,7 +72,13 @@ proc PlotLoadConfigFile {varname filename} {
     set var(axis,font,weight) $analysisplot(axis,font,weight) 
     set var(axis,font,slant) $analysisplot(axis,font,slant) 
 
-#    set var(graph,ds,name) {}
+    # per Graph
+    set var(graph,legend) $analysisplot(legend) 
+    set var(graph,legend,title) $analysisplot(legend,title) 
+    set var(graph,legend,position) $analysisplot(legend,position) 
+
+    # per Dataset
+    #    set var(graph,ds,name) {}
     set var(graph,ds,show) $analysisplot(show) 
     set var(graph,ds,smooth) $analysisplot(smooth) 
     set var(graph,ds,color) $analysisplot(color) 
@@ -92,8 +97,6 @@ proc PlotLoadConfigFile {varname filename} {
     set var(graph,ds,error,width) $analysisplot(error,width) 
 
     set var(graph,ds,bar,relief) $analysisplot(bar,relief) 
-
-    set var(graph,bar,mode) $analysisplot(bar,mode) 
 
     unset analysisplot
 
@@ -215,6 +218,7 @@ proc PlotSaveConfigFile {varname filename} {
     set ch [open $filename w]
 
     set analysisplot(graph,bg) $var(graph,bg)
+    set analysisplot(bar,mode) $var(bar,mode)
 
     set analysisplot(graph,title) $var(graph,title) 
     set analysisplot(graph,title,family) $var(graph,title,family) 
@@ -222,9 +226,6 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(graph,title,weight) $var(graph,title,weight) 
     set analysisplot(graph,title,slant) $var(graph,title,slant) 
 
-    set analysisplot(legend) $var(legend)
-    set analysisplot(legend,title) $var(legend,title)
-    set analysisplot(legend,position) $var(legend,position)
     set analysisplot(legend,title,family) $var(legend,title,family)
     set analysisplot(legend,title,size) $var(legend,title,size)
     set analysisplot(legend,title,weight) $var(legend,title,weight)
@@ -262,6 +263,12 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(axis,font,weight) $var(axis,font,weight)
     set analysisplot(axis,font,slant) $var(axis,font,slant)
 
+    # per Graph
+    set analysisplot(legend) $var(graph,legend)
+    set analysisplot(legend,title) $var(graph,legend,title)
+    set analysisplot(legend,position) $var(graph,legend,position)
+
+    # per Dataset
 #    set analysisplot(name) {}
     set analysisplot(show) $var(graph,ds,show)
     set analysisplot(smooth) $var(graph,ds,smooth)
@@ -281,8 +288,6 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(error,width) $var(graph,ds,error,width)
 
     set analysisplot(bar,relief) $var(graph,ds,bar,relief)
-
-    set analysisplot(bar,mode) $var(graph$cc,bar,mode)
 
     puts $ch "array set analysisplot \{ [array get analysisplot] \}"
     close $ch

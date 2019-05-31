@@ -1490,7 +1490,7 @@ proc plotsend::yyparse {} {
                     14 { ProcessSendCmdCVAR PlotListGenerate }
                     15 { ProcessSendCmdCVARGet mode }
                     17 { ProcessSendCmdCVARGet graph,bg }
-                    21 { PlotSendCmdCVARGet bar,mode }
+                    21 { ProcessSendCmdCVARGet bar,mode }
                     22 { ProcessSendCmdCVARYesNo graph,ds,show }
                     23 { ProcessSendCmdCVARGet graph,ds,color }
                     24 { ProcessSendCmdCVARGet graph,ds,fill }
@@ -1509,8 +1509,8 @@ proc plotsend::yyparse {} {
                     40 { ProcessSendCmdCVARGet "axis,$1,min" }
                     41 { ProcessSendCmdCVARGet "axis,$1,max" }
                     42 { ProcessSendCmdCVARGet "axis,$1,format" }
-                    43 { ProcessSendCmdCVARYesNo legend }
-                    44 { ProcessSendCmdCVARGet legend,position }
+                    43 { ProcessSendCmdCVARYesNo graph,legend }
+                    44 { ProcessSendCmdCVARGet graph,legend,position }
                     45 { ProcessSendCmdCVARGet "$1,family" }
                     46 { ProcessSendCmdCVARGet "$1,family" }
                     47 { ProcessSendCmdCVARGet "$1,size" }
@@ -1531,7 +1531,7 @@ proc plotsend::yyparse {} {
                     62 { ProcessSendCmdCVARGet graph,title }
                     63 { ProcessSendCmdCVARGet "axis,$1,title" }
                     64 { ProcessSendCmdCVARGet "axis,$1,title" }
-                    65 { ProcessSendCmdCVARGet legend,title }
+                    65 { ProcessSendCmdCVARGet graph,legend,title }
                     66 { ProcessSendCmdCVARYesNo graph,ds,error }
                     67 { ProcessSendCmdCVARYesNo graph,ds,error,cap }
                     68 { ProcessSendCmdCVARGet graph,ds,error,color }

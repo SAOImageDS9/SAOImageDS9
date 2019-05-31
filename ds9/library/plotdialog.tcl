@@ -202,20 +202,20 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 
     menu $var(mb).graph.legend
     $var(mb).graph.legend add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(legend) \
+	-variable ${varname}(graph,legend) \
 	-command [list $var(proc,updategraph) $varname]
     $var(mb).graph.legend add separator
     $var(mb).graph.legend add radiobutton -label [msgcat::mc {Right}] \
-	-variable ${varname}(legend,position) -value right \
+	-variable ${varname}(graph,legend,position) -value right \
 	-command [list $var(proc,updategraph) $varname]
     $var(mb).graph.legend add radiobutton -label [msgcat::mc {Left}] \
-	-variable ${varname}(legend,position) -value left \
+	-variable ${varname}(graph,legend,position) -value left \
 	-command [list $var(proc,updategraph) $varname]
     $var(mb).graph.legend add radiobutton -label [msgcat::mc {Top}] \
-	-variable ${varname}(legend,position) -value top \
+	-variable ${varname}(graph,legend,position) -value top \
 	-command [list $var(proc,updategraph) $varname]
     $var(mb).graph.legend add radiobutton -label [msgcat::mc {Bottom}] \
-	-variable ${varname}(legend,position) -value bottom \
+	-variable ${varname}(graph,legend,position) -value bottom \
 	-command [list $var(proc,updategraph) $varname]
 
     # dataset
@@ -373,7 +373,7 @@ proc PlotGraphTitleDialog {varname} {
     set ed(graph,title) $var(graph,title)
     set ed(axis,x,title) $var(axis,x,title)
     set ed(axis,y,title) $var(axis,y,title)
-    set ed(legend,title) $var(legend,title)
+    set ed(graph,legend,title) $var(graph,legend,title)
 
     DialogCreate $w [msgcat::mc {Title}] ed(ok)
 
@@ -386,7 +386,7 @@ proc PlotGraphTitleDialog {varname} {
     ttk::label $f.ylabel -text [msgcat::mc {Y Axis Title}]
     ttk::entry $f.ytitle -textvariable ed(axis,y,title) -width 30
     ttk::label $f.legendlabel -text [msgcat::mc {Legend Title}]
-    ttk::entry $f.legendtitle -textvariable ed(legend,title) -width 30
+    ttk::entry $f.legendtitle -textvariable ed(graph,legend,title) -width 30
 
     grid $f.label $f.title -padx 2 -pady 2 -sticky ew
     grid $f.xlabel $f.xtitle -padx 2 -pady 2 -sticky ew
@@ -416,7 +416,7 @@ proc PlotGraphTitleDialog {varname} {
 	set var(graph,title) $ed(graph,title)
 	set var(axis,x,title) $ed(axis,x,title)
 	set var(axis,y,title) $ed(axis,y,title)
-	set var(legend,title) $ed(legend,title)
+	set var(graph,legend,title) $ed(graph,legend,title)
 
 	$var(proc,updategraph) $varname
     }

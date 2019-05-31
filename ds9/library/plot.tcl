@@ -528,16 +528,14 @@ proc PlotStatsDestroyCB {varname} {
     set var(stats) 0
 }
 
-proc PlotTitle {varname title xaxis yaxis} {
+# procs
+proc PlotUpdateCanvas {varname} {
     upvar #0 $varname var
     global $varname
 
     set tt $var(graph,total)
-    set cc $var(graph,current)
-
-    set var(graph,title) "$title"
-    set var(axis,x,title) "$xaxis"
-    set var(axis,y,title) "$yaxis"
+    for {set ii 1} {$ii<=$tt} {incr ii} {
+    }
 }
 
 proc PlotUpdateGraph {varname} {
@@ -627,13 +625,24 @@ proc PlotUpdateGraph {varname} {
 	-tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	-titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-    $var(graph$cc) legend configure -hide [expr !$var(legend)] \
+    $var(graph$cc) legend configure -hide [expr !$var(graph,legend)] \
 	-bg $var(graph,bg) \
-	-position $var(legend,position) -title $var(legend,title) \
+	-position $var(graph,legend,position) -title $var(graph,legend,title) \
 	-font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	-titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
 }
 
+proc PlotButton {varname x y} {
+    upvar #0 $varname var
+    global $varname
+}
+
+proc PlotHighliteElement {varname rowlist} {
+    upvar #0 $varname var
+    global $varname
+}
+
+# menus
 proc PlotColorMenu {w varname color cmd} {
     upvar #0 $varname var
     global $varname
@@ -661,6 +670,18 @@ proc PlotColorMenu {w varname color cmd} {
     $w add separator
     $w add command -label "[msgcat::mc {Other Color}]..." \
 	-command [list ColorMenuOther $varname $color $cmd]
+}
+
+proc PlotTitle {varname title xaxis yaxis} {
+    upvar #0 $varname var
+    global $varname
+
+    set tt $var(graph,total)
+    set cc $var(graph,current)
+
+    set var(graph,title) "$title"
+    set var(axis,x,title) "$xaxis"
+    set var(axis,y,title) "$yaxis"
 }
 
 proc PlotBackup {ch dir} {

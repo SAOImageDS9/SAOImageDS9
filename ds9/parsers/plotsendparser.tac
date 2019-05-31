@@ -80,7 +80,7 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | LEGEND_ legend
  | FONT_ fontt
  | TITLE_ title
- | BARMODE_ {PlotSendCmdCVARGet bar,mode}
+ | BARMODE_ {ProcessSendCmdCVARGet bar,mode}
  | SHOW_ {ProcessSendCmdCVARYesNo graph,ds,show}
  | COLOR_ {ProcessSendCmdCVARGet graph,ds,color}
  | FILL_ {ProcessSendCmdCVARGet graph,ds,fill}
@@ -108,8 +108,8 @@ axis : xy GRID_ {ProcessSendCmdCVARYesNo "axis,$1,grid"}
  | xy FORMAT_ {ProcessSendCmdCVARGet "axis,$1,format"}
  ;
 
-legend : {ProcessSendCmdCVARYesNo legend}
- | POSITION_ {ProcessSendCmdCVARGet legend,position}
+legend : {ProcessSendCmdCVARYesNo graph,legend}
+ | POSITION_ {ProcessSendCmdCVARGet graph,legend,position}
  ;
  
 fontt : fontType FONT_ {ProcessSendCmdCVARGet "$1,family"}
@@ -140,7 +140,7 @@ fontType : TITLE_ {set _ graph,title}
 title : {ProcessSendCmdCVARGet graph,title}
  | xy {ProcessSendCmdCVARGet "axis,$1,title"}
  | xyaxis {ProcessSendCmdCVARGet "axis,$1,title"}
- | LEGEND_ {ProcessSendCmdCVARGet legend,title}
+ | LEGEND_ {ProcessSendCmdCVARGet graph,legend,title}
  ;
 
 errorr : {ProcessSendCmdCVARYesNo graph,ds,error}

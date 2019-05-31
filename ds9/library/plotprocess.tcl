@@ -274,6 +274,14 @@ proc PlotCmdSaveConfig {fn} {
     }
 }
 
+proc PlotCmdUpdateCanvas {which value} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    set cvar($which) $value
+    $cvar(proc,updatecanvas) $cvarname
+}
+
 proc PlotCmdUpdateGraph {which value} {
     global cvarname
     upvar #0 $cvarname cvar

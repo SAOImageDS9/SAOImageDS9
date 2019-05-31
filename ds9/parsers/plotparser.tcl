@@ -5429,7 +5429,7 @@ proc plot::yyparse {} {
                     78 { ProcessCmdCVAR0 PlotDestroy }
                     79 { ProcessCmdCVAR mode $2 PlotChangeMode }
                     81 { PlotCmdUpdateGraph graph,bg $2 }
-                    85 { PlotCmdUpdateGraph bar,mode $2 }
+                    85 { PlotCmdUpdateCanvas bar,mode $2 }
                     86 { PlotCmdUpdateElement graph,ds,show $2 }
                     88 { PlotCmdUpdateElement graph,ds,fill $2 }
                     89 { PlotCmdUpdateElement graph,ds,fill,color $2 }
@@ -5487,8 +5487,8 @@ proc plot::yyparse {} {
                     146 { PlotCmdUpdateGraph "axis,$1,min" $3 }
                     147 { PlotCmdUpdateGraph "axis,$1,max" $3 }
                     148 { PlotCmdUpdateGraph "axis,$1,format" $3 }
-                    149 { PlotCmdUpdateGraph legend $1 }
-                    150 { PlotCmdUpdateGraph "legend,position" $2 }
+                    149 { PlotCmdUpdateGraph graph,legend $1 }
+                    150 { PlotCmdUpdateGraph graph,legend,position $2 }
                     151 { set _ right }
                     152 { set _ left }
                     153 { set _ top }
@@ -5513,7 +5513,7 @@ proc plot::yyparse {} {
                     172 { PlotCmdUpdateGraph graph,title $1 }
                     173 { PlotCmdUpdateGraph "axis,$1,title" $2 }
                     174 { PlotCmdUpdateGraph "axis,$1,title" $2 }
-                    175 { PlotCmdUpdateGraph legend,title $2 }
+                    175 { PlotCmdUpdateGraph graph,legend,title $2 }
                     176 { set _ normal }
                     177 { set _ stacked }
                     178 { set _ aligned }
@@ -5557,7 +5557,7 @@ proc plot::yyparse {} {
                     228 { PlotCmdUpdateGraph "axis,$1,max" $3 }
                     229 { PlotCmdUpdateGraph graph,title $2 }
                     230 { PlotCmdUpdateGraph "axis,$1,title" $2 }
-                    231 { PlotCmdUpdateGraph legend,title $2 }
+                    231 { PlotCmdUpdateGraph graph,legend,title $2 }
                     234 { PlotCmdUpdateGraph "axis,x,log" 0; PlotCmdUpdateGraph "axis,y,log" 0 }
                     235 { PlotCmdUpdateGraph "axis,x,log" 0; PlotCmdUpdateGraph "axis,y,log" 1 }
                     236 { PlotCmdUpdateGraph "axis,x,log" 1; PlotCmdUpdateGraph "axis,y,log" 0 }

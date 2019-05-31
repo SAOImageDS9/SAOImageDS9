@@ -254,7 +254,7 @@ plotCmd : LOAD_ load
  | LEGEND_ legend
  | FONT_ fontt
  | TITLE_ title
- | BARMODE_ barmode {PlotCmdUpdateGraph bar,mode $2}
+ | BARMODE_ barmode {PlotCmdUpdateCanvas bar,mode $2}
 
  | SHOW_ yesno {PlotCmdUpdateElement graph,ds,show $2}
  | COLOR_ color
@@ -353,8 +353,8 @@ axis : xy GRID_ yesno {PlotCmdUpdateGraph "axis,$1,grid" $3}
  | xy FORMAT_ STRING_ {PlotCmdUpdateGraph "axis,$1,format" $3}
  ;
 
-legend : yesno {PlotCmdUpdateGraph legend $1}
- | POSITION_ legendPos {PlotCmdUpdateGraph "legend,position" $2}
+legend : yesno {PlotCmdUpdateGraph graph,legend $1}
+ | POSITION_ legendPos {PlotCmdUpdateGraph graph,legend,position $2}
  ;
  
 legendPos : RIGHT_ {set _ right}
@@ -391,7 +391,7 @@ fontType : TITLE_ {set _ graph,title}
 title : STRING_ {PlotCmdUpdateGraph graph,title $1}
  | xy STRING_ {PlotCmdUpdateGraph "axis,$1,title" $2}
  | xyaxis STRING_ {PlotCmdUpdateGraph "axis,$1,title" $2}
- | LEGEND_ STRING_ {PlotCmdUpdateGraph legend,title $2}
+ | LEGEND_ STRING_ {PlotCmdUpdateGraph graph,legend,title $2}
  ;
 
 barmode : NORMAL_ {set _ normal}
@@ -474,7 +474,7 @@ oldGraphRange : xy AUTO_ yesno {PlotCmdUpdateGraph "axis,$1,auto" $3}
 
 oldGraphLabels : TITLE_ STRING_ {PlotCmdUpdateGraph graph,title $2}
  | xyaxis STRING_ {PlotCmdUpdateGraph "axis,$1,title" $2}
- | LEGEND_ STRING_ {PlotCmdUpdateGraph legend,title $2}
+ | LEGEND_ STRING_ {PlotCmdUpdateGraph graph,legend,title $2}
  ;
 
 oldGraphType : LINE_

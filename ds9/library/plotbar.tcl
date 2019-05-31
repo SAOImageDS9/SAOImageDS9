@@ -43,10 +43,11 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
     global $varname
 
     set var(proc,addgraph) PlotBarAddGraph
-    set var(proc,updategraph) PlotBarUpdateGraph
+    set var(proc,updatecanvas) PlotBarUpdateCanvas
+    set var(proc,updategraph) PlotUpdateGraph
     set var(proc,updateelement) PlotBarUpdateElement
-    set var(proc,highlite) PlotBarHighliteElement
-    set var(proc,button) PlotBarButton
+    set var(proc,highlite) PlotHighliteElement
+    set var(proc,button) PlotButton
 
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotAddGraph $varname
@@ -63,16 +64,16 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
     menu $var(mb).graph.mode
     $var(mb).graph.mode add radiobutton -label [msgcat::mc {Normal}] \
 	-variable ${varname}(bar,mode) -value normal \
-	-command [list $var(proc,updategraph) $varname]
+	-command [list $var(proc,updatecanvas) $varname]
     $var(mb).graph.mode add radiobutton -label [msgcat::mc {Stacked}] \
 	-variable ${varname}(bar,mode) -value stacked \
-	-command [list $var(proc,updategraph) $varname]
+	-command [list $var(proc,updatecanvas) $varname]
     $var(mb).graph.mode add radiobutton -label [msgcat::mc {Aligned}] \
 	-variable ${varname}(bar,mode) -value aligned \
-	-command [list $var(proc,updategraph) $varname]
+	-command [list $var(proc,updatecanvas) $varname]
     $var(mb).graph.mode add radiobutton -label [msgcat::mc {Overlap}] \
 	-variable ${varname}(bar,mode) -value overlap \
-	-command [list $var(proc,updategraph) $varname]
+	-command [list $var(proc,updatecanvas) $varname]
 
     # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \
@@ -147,15 +148,13 @@ proc PlotBarAddGraph {varname} {
     $var(graph$cc) yaxis configure -grid yes
 }
 
-proc PlotBarUpdateGraph {varname} {
+proc PlotBarUpdateCanvas {varname} {
     upvar #0 $varname var
     global $varname
 
-    PlotUpdateGraph $varname
+    PlotUpdateCanvas $varname
 
     set tt $var(graph,total)
-    set cc $var(graph,current)
-
     for {set ii 1} {$ii<=$tt} {incr ii} {
 	$var(graph$ii) configure -barmode $var(bar,mode)
     }
@@ -193,14 +192,4 @@ proc PlotBarUpdateElement {varname} {
 	-relief $var(graph,ds,bar,relief) -color $var(graph,ds,color) \
 	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
 	-errorbarwidth $var(graph,ds,error,width) -errorbarcap $cap
-}
-
-proc PlotBarButton {varname x y} {
-    upvar #0 $varname var
-    global $varname
-}
-
-proc PlotBarHighliteElement {varname rowlist} {
-    upvar #0 $varname var
-    global $varname
 }

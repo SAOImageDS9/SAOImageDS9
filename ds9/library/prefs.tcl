@@ -464,7 +464,8 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
-	    FixPrefs7.6to8.1
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	6.0 {
 	    FixPrefs6.0to6.1 
@@ -476,7 +477,8 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
-	    FixPrefs7.6to8.1
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	6.1 -
 	6.1.1 -
@@ -489,7 +491,8 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
-	    FixPrefs7.6to8.1
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	6.2 {
 	    FixPrefs6.2to7.0
@@ -499,7 +502,8 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
-	    FixPrefs7.6to8.1
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.0 {
 	    FixPrefs7.0to7.1
@@ -508,7 +512,8 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
-	    FixPrefs7.6to8.1
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.1 {
 	    FixPrefs7.1to7.2
@@ -516,14 +521,16 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
-	    FixPrefs7.6to8.1
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.2 {
 	    FixPrefs7.2to7.3
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
-	    FixPrefs7.6to8.1
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.3 -
 	7.3.1 -
@@ -531,28 +538,34 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
-	    FixPrefs7.6to8.1
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.4 {
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
-	    FixPrefs7.6to8.1
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.5 {
 	    FixPrefs7.5to7.6
-	    FixPrefs7.6to8.1
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.6 {
-	    FixPrefs7.6to8.1
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	8.0 {
-	    FixPrefs7.6to8.1
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
     }
 }
 
-proc FixPrefs7.6to8.1 {} {
+proc FixPrefs8.0to8.1 {} {
     global pap
+
     FixVar pap(graph,ds,show) pap(show)
     FixVar pap(graph,ds,smooth) pap(smooth)
     FixVar pap(graph,ds,color) pap(color)
@@ -573,8 +586,12 @@ proc FixPrefs7.6to8.1 {} {
     FixVar pap(graph,ds,bar,relief) pap(relief)
 }
 
+proc FixPrefs7.6to8.0 {} {
+}
+
 proc FixPrefs7.5to7.6 {} {
     global smooth
+
     set smooth(radius,minor) $smooth(radius)
     set smooth(sigma) [expr int($smooth(radius)/2.)]
     set smooth(sigma,minor) $smooth(sigma)
@@ -589,6 +606,7 @@ proc FixPrefs7.3to7.4 {} {
 
 proc FixPrefs7.2to7.3 {} {
     global current
+
     if {$current(mode) == {pointer}} {
 	set current(mode) region
     }
@@ -662,6 +680,7 @@ proc FixPrefs7.1to7.2 {} {
 
 proc FixPrefs7.0to7.1 {} {
     global pap
+
     if {[info exists pap(grid)]} {
 	set pap(grid,x) $pap(grid)
 	set pap(grid,y) $pap(grid)

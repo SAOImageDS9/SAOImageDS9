@@ -43,6 +43,7 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     global $varname
 
     set var(proc,addgraph) PlotLineAddGraph
+    set var(proc,updatecanvas) PlotUpdateCanvas
     set var(proc,updategraph) PlotUpdateGraph
     set var(proc,updateelement) PlotLineUpdateElement
     set var(proc,highlite) PlotLineHighliteElement
@@ -212,15 +213,5 @@ proc PlotLineUpdateElement {varname} {
 	-linewidth $var(graph,ds,width) -dashes $dash \
 	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
 	-errorbarwidth $var(graph,ds,error,width) -errorbarcap $cap
-}
-
-proc PlotLineButton {varname x y} {
-    upvar #0 $varname var
-    global $varname
-}
-
-proc PlotLineHighliteElement {varname rowlist} {
-    upvar #0 $varname var
-    global $varname
 }
 

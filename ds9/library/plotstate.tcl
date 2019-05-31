@@ -10,6 +10,8 @@ proc PlotDefState {} {
 
     # per Canvas
     set pap(graph,bg) white
+    set pap(bar,mode) normal
+
     set pap(graph,title,family) helvetica
     set pap(graph,title,size) 12
     set pap(graph,title,weight) normal
@@ -34,13 +36,6 @@ proc PlotDefState {} {
     set pap(axis,font,weight) normal
     set pap(axis,font,slant) roman
 
-    # per Graph
-    set pap(graph,title) {}
-
-    set pap(legend) 0
-    set pap(legend,title) Legend
-    set pap(legend,position) right
-
     set pap(axis,x,title) {}
     set pap(axis,x,grid) 1
     set pap(axis,x,log) 0
@@ -59,7 +54,12 @@ proc PlotDefState {} {
     set pap(axis,y,max) {}
     set pap(axis,y,format) {}
 
-    set pap(bar,mode) normal
+    set pap(graph,title) {}
+
+    # per Graph
+    set pap(graph,legend) 0
+    set pap(graph,legend,title) Legend
+    set pap(graph,legend,position) right
 
     # per DataSet
     set pap(graph,ds,name) {}
@@ -91,8 +91,13 @@ proc PlotInitState {varname} {
 
     set cc $var(graph,current)
 
+    # per Canvas
+    set var(bar,mode) $pap(bar,mode)
+
     # per Graph
-    set var(graph$cc,bar,mode) $pap(bar,mode)
+    set var(graph,legend) $pap(graph,legend)
+    set var(graph,legend,title) $pap(graph,legend,title)
+    set var(graph,legend,position) $pap(graph,legend,position)
 
     # per DataSet
     set var(graph,ds,name) $pap(graph,ds,name)
@@ -123,6 +128,11 @@ proc PlotSaveState {varname} {
     set cc $var(graph,current)
     set nn $var(graph$cc,data,current)
 
+    # per Graph
+    set var(graph$cc,legend) $var(graph,legend)
+    set var(graph$cc,legend,title) $var(graph,legend,title)
+    set var(graph$cc,legend,position) $var(graph,legend,position)
+
     # per DataSet
     set var(graph$cc,$nn,name) $var(graph,ds,name)
     set var(graph$cc,$nn,show) $var(graph,ds,show)
@@ -151,6 +161,11 @@ proc PlotRestoreState {varname nn} {
 
     set cc $var(graph,current)
     set nn $var(graph$cc,data,current)
+
+    # per Graph
+    set var(graph,legend) $var(graph$cc,legend)
+    set var(graph,legend,title) $var(graph$cc,legend,title)
+    set var(graph,legend,position) $var(graph$cc,legend,position)
 
     # per DataSet
     set var(graph,ds,name) $var(graph$cc,$nn,name)

@@ -57,58 +57,61 @@ proc PrefsDialogPlot {} {
     set f [ttk::labelframe $w.plot.data -text [msgcat::mc {Dataset}]]
 
     #  Show
-    ttk::checkbutton $f.show -text [msgcat::mc {Show}] -variable pap(show)
+    ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
+	-variable pap(graph,ds,show)
     grid $f.show -padx 2 -pady 2 -sticky w
 
     #  Shape
     ttk::label $f.shapetitle -text [msgcat::mc {Shape}]
-    ttk::menubutton $f.shape -textvariable pap(shape,symbol) \
+    ttk::menubutton $f.shape -textvariable pap(graph,ds,shape,symbol) \
 	-menu $f.shape.menu
-    PlotLineShapeMenu $f.shape.menu pap(shape,symbol)
+    PlotLineShapeMenu $f.shape.menu pap(graph,ds,shape,symbol)
     ttk::checkbutton $f.shapefill -text [msgcat::mc {Fill}] \
-	-variable pap(shape,fill)
-    ColorMenuButton $f.shapecolor pap shape,color {}
+	-variable pap(graph,ds,shape,fill)
+    ColorMenuButton $f.shapecolor pap graph,ds,shape,color {}
     grid $f.shapetitle $f.shape $f.shapefill $f.shapecolor \
 	-padx 2 -pady 2 -sticky w
 
     #  Smooth
     ttk::label $f.smoothtitle -text [msgcat::mc {Smooth}]
-    ttk::menubutton $f.smooth -textvariable pap(smooth) \
+    ttk::menubutton $f.smooth -textvariable pap(graph,ds,smooth) \
 	-menu $f.smooth.menu
     menu $f.smooth.menu
     $f.smooth.menu add radiobutton -label [msgcat::mc {Step}] \
-	-variable pap(smooth) -value step
+	-variable pap(graph,ds,smooth) -value step
     $f.smooth.menu add radiobutton -label [msgcat::mc {Linear}] \
-	-variable pap(smooth) -value linear
+	-variable pap(graph,ds,smooth) -value linear
     $f.smooth.menu add radiobutton -label [msgcat::mc {Cubic}] \
-	-variable pap(smooth) -value cubic
+	-variable pap(graph,ds,smooth) -value cubic
     $f.smooth.menu add radiobutton -label [msgcat::mc {Quadratic}] \
-	-variable pap(smooth) -value quadratic
+	-variable pap(graph,ds,smooth) -value quadratic
     $f.smooth.menu add radiobutton -label [msgcat::mc {Catrom}] \
-	-variable pap(smooth) -value catrom
+	-variable pap(graph,ds,smooth) -value catrom
     grid $f.smoothtitle $f.smooth -padx 2 -pady 2 -sticky w
 
     #  Color
     ttk::label $f.colortitle -text [msgcat::mc {Color}]
-    ColorMenuButton $f.color pap color {}
+    ColorMenuButton $f.color pap graph,ds,color {}
     grid $f.colortitle $f.color -padx 2 -pady 2 -sticky w
 
     #  Width
     ttk::label $f.widthtitle -text [msgcat::mc {Width}]
-    ttk::menubutton $f.width -textvariable pap(width) -menu $f.width.menu
-    WidthDashMenu $f.width.menu pap width dash {} {}
+    ttk::menubutton $f.width -textvariable pap(graph,ds,width) \
+	-menu $f.width.menu
+    WidthDashMenu $f.width.menu pap graph,ds,width graph,ds,dash {} {}
     grid $f.widthtitle $f.width -padx 2 -pady 2 -sticky w
 
     #  Error
     ttk::label $f.errortitle -text [msgcat::mc {Error}]
     ttk::checkbutton $f.error -text [msgcat::mc {Show}] \
-	-variable pap(error)
+	-variable pap(graph,ds,error)
     ttk::checkbutton $f.errorcap -text [msgcat::mc {Cap}] \
-	-variable pap(error,cap)
-    ColorMenuButton $f.errorcolor pap error,color {}
-    ttk::menubutton $f.errorwidth -textvariable pap(error,width) \
+	-variable pap(graph,ds,error,cap)
+    ColorMenuButton $f.errorcolor pap graph,ds,error,color {}
+    ttk::menubutton $f.errorwidth -textvariable pap(graph,ds,error,width) \
 	-menu $f.errorwidth.menu
-    WidthDashMenu $f.errorwidth.menu pap width dash {} {}
+    WidthDashMenu $f.errorwidth.menu pap \
+	graph,ds,error,width graph,ds,error,dash {} {}
     grid $f.errortitle $f.error $f.errorcap $f.errorcolor $f.errorwidth \
 	-padx 2 -pady 2 -sticky w
 

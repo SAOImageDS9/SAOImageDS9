@@ -71,16 +71,16 @@ proc PlotDefState {} {
     set pap(graph,ds,width) 1
     set pap(graph,ds,dash) 0
 
-    set pap(shape,symbol) none
-    set pap(shape,fill) 1
-    set pap(shape,color) red
+    set pap(graph,ds,shape,symbol) none
+    set pap(graph,ds,shape,fill) 1
+    set pap(graph,ds,shape,color) red
 
-    set pap(error) 1
-    set pap(error,cap) 0
-    set pap(error,color) red
-    set pap(error,width) 1
+    set pap(graph,ds,error) 1
+    set pap(graph,ds,error,cap) 0
+    set pap(graph,ds,error,color) red
+    set pap(graph,ds,error,width) 1
 
-    set pap(bar,relief) raised
+    set pap(graph,ds,bar,relief) raised
 }
 
 proc PlotInitState {varname} {
@@ -104,16 +104,16 @@ proc PlotInitState {varname} {
     set var(graph,ds,width) $pap(graph,ds,width)
     set var(graph,ds,dash) $pap(graph,ds,dash)
 
-    set var(graph,ds,shape,symbol) $pap(shape,symbol)
-    set var(graph,ds,shape,fill) $pap(shape,fill)
-    set var(graph,ds,shape,color) $pap(shape,color)
+    set var(graph,ds,shape,symbol) $pap(graph,ds,shape,symbol)
+    set var(graph,ds,shape,fill) $pap(graph,ds,shape,fill)
+    set var(graph,ds,shape,color) $pap(graph,ds,shape,color)
 
-    set var(graph,ds,error) $pap(error)
-    set var(graph,ds,error,cap) $pap(error,cap)
-    set var(graph,ds,error,color) $pap(error,color)
-    set var(graph,ds,error,width) $pap(error,width)
+    set var(graph,ds,error) $pap(graph,ds,error)
+    set var(graph,ds,error,cap) $pap(graph,ds,error,cap)
+    set var(graph,ds,error,color) $pap(graph,ds,error,color)
+    set var(graph,ds,error,width) $pap(graph,ds,error,width)
 
-    set var(graph,ds,bar,relief) $pap(bar,relief)
+    set var(graph,ds,bar,relief) $pap(graph,ds,bar,relief)
 }
 
 proc PlotSaveState {varname} {

@@ -15,7 +15,7 @@ proc PrefsDialogPlot {} {
     # Graph
     set f [ttk::labelframe $w.plot.graph -text [msgcat::mc {Graph}]]
     ttk::label $f.tbg -text [msgcat::mc {Background}]
-    ColorMenuButton $f.bg pap graph,bg {}
+    ColorMenuButton $f.bg pap background {}
 
     grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
 
@@ -341,11 +341,8 @@ proc PlotCmdSelectData {which} {
     global cvarname
     upvar #0 $cvarname cvar
 
-    set tt $cvar(graph,total)
     set cc $cvar(graph,current)
-
-    set cvar(graph$cc,data,current) $which
-
+    set cvar($cc,data,current) $which
     PlotCurrentData $cvarname
 }
 
@@ -369,21 +366,19 @@ proc PlotSendCmdCVARGet {key} {
     global cvarname
     upvar #0 $cvarname cvar
 
-    set tt $cvar(graph,total)
     set cc $cvar(graph,current)
 
     global parse
-    $parse(proc) $parse(id) "$cvar(graph$cc,$key)\n"
+    $parse(proc) $parse(id) "$cvar($cc,$key)\n"
 }
 
 proc PlotSendCmdCVARYesNo {key} {
     global cvarname
     upvar #0 $cvarname cvar
 
-    set tt $cvar(graph,total)
     set cc $cvar(graph,current)
 
     global parse
-    $parse(proc) $parse(id) [ToYesNo $cvar(graph$cc,$key)]
+    $parse(proc) $parse(id) [ToYesNo $cvar($cc,$key)]
 }
 

@@ -76,7 +76,7 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | LIST_ {ProcessSendCmdCVAR PlotListGenerate}
  | MODE_ {ProcessSendCmdCVARGet mode}
  | AXIS_ axis
- | BACKGROUND_ {ProcessSendCmdCVARGet graph,bg}
+ | BACKGROUND_ {ProcessSendCmdCVARGet bg}
  | LEGEND_ legend
  | FONT_ fontt
  | TITLE_ title

@@ -52,9 +52,6 @@ proc PlotScatterDialog {varname wtt title xaxis yaxis} {
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotAddGraph $varname
 
-    set tt $var(graph,total)
-    set cc $var(graph,current)
-
     # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
@@ -73,6 +70,8 @@ proc PlotScatterDialog {varname wtt title xaxis yaxis} {
 
     # Error
     PlotErrorMenu $varname
+
+    $var(proc,updatecanvas) $varname
 }
 
 proc PlotScatterAddGraph {varname} {
@@ -81,23 +80,19 @@ proc PlotScatterAddGraph {varname} {
 
     set cc  $var(graph,current)
 
-    set var(type$cc) scatter
-    set var(graph$cc) [blt::graph $var(canvas).gr$cc \
-			   -width 600 \
-			   -height 500 \
-			   -highlightthickness 0 \
-			  ]
+    set var($cc,type) scatter
+    set var($cc) [blt::graph $var(canvas).$cc -width 600 -height 500 \
+		      -highlightthickness 0]
 }
 
 proc PlotScatterUpdateElement {varname} {
     upvar #0 $varname var
     global $varname
 
-    set tt $var(graph,total)
     set cc $var(graph,current)
 
     # warning: uses current vars
-    if {$var(graph$cc,data,total) == 0} {
+    if {$var($cc,data,total) == 0} {
  	return
     }
     
@@ -125,8 +120,8 @@ proc PlotScatterUpdateElement {varname} {
 	set cap 0
     }
 
-    set nn $var(graph$cc,data,current)
-    $var(graph$cc) element configure "d-${nn}" \
+    set nn $var($cc,data,current)
+    $var($cc) element configure "d-${nn}" \
 	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
 	-symbol $var(graph,ds,shape,symbol) -fill $clr -scalesymbols no \
 	-outline $var(graph,ds,shape,color) \
@@ -134,7 +129,7 @@ proc PlotScatterUpdateElement {varname} {
 	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
 	-errorbarwidth $var(graph,ds,error,width) -errorbarcap $cap
 
-    $var(graph$cc) pen configure active -color blue \
+    $var($cc) pen configure active -color blue \
 	-symbol $var(graph,ds,shape,symbol) \
 	-linewidth 0 -pixels 5 \
 	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
@@ -145,10 +140,9 @@ proc PlotScatterButton {varname x y} {
     upvar #0 $varname var
     global $varname
 
-    set tt $var(graph,total)
     set cc $var(graph,current)
 
-    if {$var(graph$cc,data,total) == 0} {
+    if {$var($cc,data,total) == 0} {
 	return
     }
 
@@ -156,18 +150,18 @@ proc PlotScatterButton {varname x y} {
 	return
     }
 
-    set rr [$var(graph$cc) element closest $x $y]
+    set rr [$var($cc) element closest $x $y]
     set elem [lindex $rr 1]
     set row [lindex $rr 3]
 
     if {$elem != {}} {
 	if {$row != {}} {
-	    $var(graph$cc) element deactivate $elem
-	    $var(graph$cc) element activate $elem $row
+	    $var($cc) element deactivate $elem
+	    $var($cc) element activate $elem $row
 	    # rows start at 1
 	    eval "$var(callback) [expr $row+1]"
 	} else {
-	    $var(graph$cc) element deactivate $elem
+	    $var($cc) element deactivate $elem
 	    eval "$var(callback) {}"
 	}
     }
@@ -177,18 +171,17 @@ proc PlotScatterHighliteElement {varname rowlist} {
     upvar #0 $varname var
     global $varname
 
-    set tt $var(graph,total)
     set cc $var(graph,current)
 
-    if {$var(graph$cc,data,total) == 0} {
+    if {$var($cc,data,total) == 0} {
 	return
     }
 
     if {$var(graph,ds,show)} {
-	$var(graph$cc) element deactivate d-1
+	$var($cc) element deactivate d-1
 	if {$rowlist != {}} {
 	    # can have multiple rows
-	    eval "$var(graph$cc) element activate d-1 $rowlist"
+	    eval "$var($cc) element activate d-1 $rowlist"
 	}
     }
 }

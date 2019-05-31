@@ -52,9 +52,6 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotAddGraph $varname
 
-    set tt $var(graph,total)
-    set cc $var(graph,current)
-
     # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
@@ -138,36 +135,34 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     $var(mb).data.fill add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).data.fill.color
 
-    PlotColorMenu $var(mb).data.fill.color $varname graph$cc,fill,color \
+    PlotColorMenu $var(mb).data.fill.color $varname graph,fill,color \
 	[list PlotLineUpdateElement $varname]
 
     # Error
     PlotErrorMenu $varname
+
+    $var(proc,updatecanvas) $varname
 }
 
 proc PlotLineAddGraph {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc  $var(graph,current)
+    set cc $var(graph,current)
 
-    set var(type$cc) line
-    set var(graph$cc) [blt::graph $var(canvas).gr$cc \
-			   -width 600 \
-			   -height 500 \
-			   -highlightthickness 0 \
-			  ]
+    set var($cc,type) line
+    set var($cc) [blt::graph $var(canvas).$cc -width 600 -height 500 \
+		      -highlightthickness 0]
 }
 
 proc PlotLineUpdateElement {varname} {
     upvar #0 $varname var
     global $varname
     
-    set tt $var(graph,total)
     set cc $var(graph,current)
 
     # warning: uses current vars
-    if {$var(graph$cc,data,total) == 0} {
+    if {$var($cc,data,total) == 0} {
  	return
     }
     
@@ -203,8 +198,8 @@ proc PlotLineUpdateElement {varname} {
 	set cap 0
     }
 
-    set nn $var(graph$cc,data,current)
-    $var(graph$cc) element configure "d-${nn}" \
+    set nn $var($cc,data,current)
+    $var($cc) element configure "d-${nn}" \
 	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
 	-symbol $var(graph,ds,shape,symbol) -fill $clr -scalesymbols no \
 	-pixels 5 -outline $var(graph,ds,shape,color) \

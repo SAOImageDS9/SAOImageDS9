@@ -23,10 +23,6 @@ proc PlotLoadConfigFile {varname filename} {
     }
 
     source $filename
-    #	array set $varname [array get analysisplot]
-
-    set var(graph,bg) $analysisplot(graph,bg)
-    set var(bar,mode) $analysisplot(bar,mode) 
 
     set var(graph,title,family) $analysisplot(graph,title,family)
     set var(graph,title,size) $analysisplot(graph,title,size) 
@@ -78,7 +74,6 @@ proc PlotLoadConfigFile {varname filename} {
     set var(graph,axis,y,format) $analysisplot(axis,y,format) 
 
     # per Dataset
-    #    set var(graph,ds,name) {}
     set var(graph,ds,show) $analysisplot(show) 
     set var(graph,ds,smooth) $analysisplot(smooth) 
     set var(graph,ds,color) $analysisplot(color) 
@@ -210,9 +205,6 @@ proc PlotSaveConfigFile {varname filename} {
 
     set ch [open $filename w]
 
-    set analysisplot(graph,bg) $var(graph,bg)
-    set analysisplot(bar,mode) $var(bar,mode)
-
     set analysisplot(graph,title,family) $var(graph,title,family) 
     set analysisplot(graph,title,size) $var(graph,title,size) 
     set analysisplot(graph,title,weight) $var(graph,title,weight) 
@@ -263,7 +255,6 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(axis,y,format) $var(graph,axis,y,format)
 
     # per Dataset
-#    set analysisplot(name) {}
     set analysisplot(show) $var(graph,ds,show)
     set analysisplot(smooth) $var(graph,ds,smooth)
     set analysisplot(color) $var(graph,ds,color)

@@ -250,7 +250,7 @@ plotCmd : LOAD_ load
  | MODE_ mode {ProcessCmdCVAR mode $2 PlotChangeMode}
 
  | AXIS_ axis
- | BACKGROUND_ STRING_ {PlotCmdUpdateGraph graph,bg $2}
+ | BACKGROUND_ STRING_ {PlotCmdUpdateGraph bg $2}
  | LEGEND_ legend
  | FONT_ fontt
  | TITLE_ title

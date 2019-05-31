@@ -174,13 +174,12 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	set vvar(mode) pointer
 	PlotChangeMode $vvarname
 
-	set tt $vvar(graph,total)
 	set cc $vvar(graph,current)
 
-	set vvar(graph$cc,manage) 0
-	set vvar(graph$cc,dim) xy
-	set vvar(graph$cc,xdata) $xdata
-	set vvar(graph$cc,ydata) $ydata
+	set vvar($cc,manage) 0
+	set vvar($cc,dim) xy
+	set vvar($cc,xdata) $xdata
+	set vvar($cc,ydata) $ydata
 	blt::vector create $xdata $ydata
     }
 

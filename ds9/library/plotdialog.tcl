@@ -27,12 +27,8 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     set var(mode) zoom
     set var(callback) {}
 
-    set var(graph,total) 0
-    set var(graph,current) 0
-    set var(graph0,data,total) 0
-    set var(graph0,data,current) 0
-
-    PlotInitState $varname
+    set var(graphs) {}
+    set var(seq) 0
 
     PlotTitle $varname $title $xaxis $yaxis
 
@@ -151,14 +147,24 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     $var(mb).canvas.font add cascade -label [msgcat::mc {Legend}] \
 	-menu $var(mb).canvas.font.legend
 
-    FontMenu $var(mb).canvas.font.title $varname graph,title,family graph,title,size graph,title,weight graph,title,slant [list $var(proc,updategraph) $varname]
-    FontMenu $var(mb).canvas.font.textlab $varname axis,title,family axis,title,size axis,title,weight axis,title,slant [list $var(proc,updategraph) $varname]
-    FontMenu $var(mb).canvas.font.numlab $varname axis,font,family axis,font,size axis,font,weight axis,font,slant [list $var(proc,updategraph) $varname]
-    FontMenu $var(mb).canvas.font.legendtitle $varname legend,title,family legend,title,size legend,title,weight legend,title,slant [list $var(proc,updategraph) $varname]
-    FontMenu $var(mb).canvas.font.legend $varname legend,font,family legend,font,size legend,font,weight legend,font,slant [list $var(proc,updategraph) $varname]
+    FontMenu $var(mb).canvas.font.title \
+	$varname graph,title,family graph,title,size graph,title,weight \
+	graph,title,slant [list $var(proc,updatecanvas) $varname]
+    FontMenu $var(mb).canvas.font.textlab \
+	$varname axis,title,family axis,title,size axis,title,weight \
+	axis,title,slant [list $var(proc,updatecanvas) $varname]
+    FontMenu $var(mb).canvas.font.numlab \
+	$varname axis,font,family axis,font,size axis,font,weight \
+	axis,font,slant [list $var(proc,updatecanvas) $varname]
+    FontMenu $var(mb).canvas.font.legendtitle \
+	$varname legend,title,family legend,title,size legend,title,weight \
+	legend,title,slant [list $var(proc,updatecanvas) $varname]
+    FontMenu $var(mb).canvas.font.legend \
+	$varname legend,font,family legend,font,size legend,font,weight \
+	legend,font,slant [list $var(proc,updatecanvas) $varname]
 
-    PlotColorMenu $var(mb).canvas.bg $varname graph,bg \
-	[list $var(proc,updategraph) $varname]
+    PlotColorMenu $var(mb).canvas.bg $varname background \
+	[list $var(proc,updatecanvas) $varname]
 
     # Graph
     menu $var(mb).graph
@@ -431,9 +437,6 @@ proc DatasetNameDialog {varname} {
     global $varname
     global ed
 
-    set tt $var(graph,total)
-    set cc $var(graph,current)
-
     set w {.aptitle}
 
     set ed(ok) 0
@@ -514,9 +517,6 @@ proc PlotShapeMenu {varname} {
     upvar #0 $varname var
     global $varname
 
-    set tt $var(graph,total)
-    set cc $var(graph,current)
-
     # Shape
     menu $var(mb).data.shape
     $var(mb).data.shape add radiobutton \
@@ -574,9 +574,6 @@ proc PlotShapeMenu {varname} {
 proc PlotErrorMenu {varname} {
     upvar #0 $varname var
     global $varname
-
-    set tt $var(graph,total)
-    set cc $var(graph,current)
 
     menu $var(mb).data.error
     $var(mb).data.error add checkbutton -label [msgcat::mc {Show}] \

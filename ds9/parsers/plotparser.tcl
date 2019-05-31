@@ -5428,7 +5428,7 @@ proc plot::yyparse {} {
                     74 { PlotCmdSaveConfig $2 }
                     78 { ProcessCmdCVAR0 PlotDestroy }
                     79 { ProcessCmdCVAR mode $2 PlotChangeMode }
-                    81 { PlotCmdUpdateGraph graph,bg $2 }
+                    81 { PlotCmdUpdateGraph bg $2 }
                     85 { PlotCmdUpdateCanvas bar,mode $2 }
                     86 { PlotCmdUpdateElement graph,ds,show $2 }
                     88 { PlotCmdUpdateElement graph,ds,fill $2 }

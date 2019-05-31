@@ -52,9 +52,6 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotAddGraph $varname
 
-    set tt $var(graph,total)
-    set cc $var(graph,current)
-
     # Graph
     $var(mb).graph add separator
     $var(mb).graph add cascade -label "[msgcat::mc {Mode}]..." \
@@ -90,7 +87,7 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
     $var(mb).data add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
-    PlotColorMenu $var(mb).data.color $varname graph$cc,color \
+    PlotColorMenu $var(mb).data.color $varname graph,color \
 	[list PlotBarUpdateElement $varname]
 
     # Relief
@@ -129,6 +126,8 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
 	[list PlotBarUpdateElement $varname]
     WidthDashMenu $var(mb).data.error.width $varname graph,ds,error,width {} \
 	[list PlotBarUpdateElement $varname] {}
+
+    $var(proc,updatecanvas) $varname
 }
 
 proc PlotBarAddGraph {varname} {
@@ -137,15 +136,12 @@ proc PlotBarAddGraph {varname} {
 
     set cc $var(graph,current)
 
-    set var(type$cc) bar
-    set var(graph$cc) [blt::barchart $var(canvas).gr$cc \
-			   -width 600 \
-			   -height 500 \
-			   -highlightthickness 0 \
-			  ]
+    set var($cc,type) bar
+    set var($cc) [blt::barchart $var(canvas).$cc -width 600 -height 500 \
+		      -highlightthickness 0]
 
-    $var(graph$cc) xaxis configure -grid no -stepsize 0
-    $var(graph$cc) yaxis configure -grid yes
+    $var($cc) xaxis configure -grid no -stepsize 0
+    $var($cc) yaxis configure -grid yes
 }
 
 proc PlotBarUpdateCanvas {varname} {
@@ -154,9 +150,8 @@ proc PlotBarUpdateCanvas {varname} {
 
     PlotUpdateCanvas $varname
 
-    set tt $var(graph,total)
-    for {set ii 1} {$ii<=$tt} {incr ii} {
-	$var(graph$ii) configure -barmode $var(bar,mode)
+    foreach cc $var(graphs) {
+	$var($cc) configure -barmode $var(bar,mode)
     }
 }
 
@@ -164,11 +159,10 @@ proc PlotBarUpdateElement {varname} {
     upvar #0 $varname var
     global $varname
 
-    set tt $var(graph,total)
     set cc $var(graph,current)
 
     # warning: uses current vars
-    if {$var(graph$cc,data,total) == 0} {
+    if {$var($cc,data,total) == 0} {
  	return
     }
     
@@ -186,8 +180,8 @@ proc PlotBarUpdateElement {varname} {
 	set cap 0
     }
 
-    set nn $var(graph$cc,data,current)
-    $var(graph$cc) element configure "d-${nn}" \
+    set nn $var($cc,data,current)
+    $var($cc) element configure "d-${nn}" \
 	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
 	-relief $var(graph,ds,bar,relief) -color $var(graph,ds,color) \
 	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \

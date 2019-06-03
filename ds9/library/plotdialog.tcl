@@ -30,6 +30,8 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     set var(graphs) {}
     set var(seq) 0
 
+    array set $varname [array get pap]
+
     PlotTitle $varname $title $xaxis $yaxis
 
     # can be turned off for external line plots

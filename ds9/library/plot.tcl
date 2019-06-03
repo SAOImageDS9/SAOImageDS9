@@ -58,8 +58,8 @@ proc PlotAddGraph {varname} {
     set var($cc,xedata) {}
     set var($cc,yedata) {}
 
-    array set $varname [array get pap]
-
+    PlotInitGraph $varname
+    
     $var(proc,addgraph) $varname
 
     # set up zoom stack, assuming mode is zoom

@@ -83,6 +83,57 @@ proc PlotDefState {} {
     set pap(graph,ds,bar,relief) raised
 }
 
+proc PlotInitGraph {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global pap
+
+    # per Graph
+    set var(graph,legend) $pap(graph,legend)
+    set var(graph,legend,title) $pap(graph,legend,title)
+    set var(graph,legend,position) $pap(graph,legend,position)
+
+    set var(graph,axis,x,title) $pap(graph,axis,x,title)
+    set var(graph,axis,x,grid) $pap(graph,axis,x,grid)
+    set var(graph,axis,x,log) $pap(graph,axis,x,log)
+    set var(graph,axis,x,flip) $pap(graph,axis,x,flip)
+    set var(graph,axis,x,auto) $pap(graph,axis,x,auto)
+    set var(graph,axis,x,min) $pap(graph,axis,x,min)
+    set var(graph,axis,x,max) $pap(graph,axis,x,max)
+    set var(graph,axis,x,format) $pap(graph,axis,x,format)
+
+    set var(graph,axis,y,title) $pap(graph,axis,y,title)
+    set var(graph,axis,y,grid) $pap(graph,axis,y,grid)
+    set var(graph,axis,y,log) $pap(graph,axis,y,log)
+    set var(graph,axis,y,flip) $pap(graph,axis,y,flip)
+    set var(graph,axis,y,auto) $pap(graph,axis,y,auto)
+    set var(graph,axis,y,min) $pap(graph,axis,y,min)
+    set var(graph,axis,y,max) $pap(graph,axis,y,max)
+    set var(graph,axis,y,format) $pap(graph,axis,y,format)
+
+    # per DataSet
+    set var(graph,ds,name) $pap(graph,ds,name)
+    set var(graph,ds,show) $pap(graph,ds,show) 
+    set var(graph,ds,smooth) $pap(graph,ds,smooth) 
+    set var(graph,ds,color) $pap(graph,ds,color) 
+    set var(graph,ds,fill) $pap(graph,ds,fill) 
+    set var(graph,ds,fill,color) $pap(graph,ds,fill,color) 
+    set var(graph,ds,width) $pap(graph,ds,width) 
+    set var(graph,ds,dash) $pap(graph,ds,dash) 
+
+    set var(graph,ds,shape,symbol) $pap(graph,ds,shape,symbol) 
+    set var(graph,ds,shape,fill) $pap(graph,ds,shape,fill) 
+    set var(graph,ds,shape,color) $pap(graph,ds,shape,color)
+
+    set var(graph,ds,error) $pap(graph,ds,error) 
+    set var(graph,ds,error,cap) $pap(graph,ds,error,cap) 
+    set var(graph,ds,error,color) $pap(graph,ds,error,color) 
+    set var(graph,ds,error,width) $pap(graph,ds,error,width) 
+
+    set var(graph,ds,bar,relief) $pap(graph,ds,bar,relief) 
+}
+
 proc PlotSaveState {varname} {
     upvar #0 $varname var
     global $varname
@@ -159,6 +210,15 @@ proc PlotRestoreState {varname nn} {
     set var(graph,axis,x,min) $var($cc,axis,x,min)
     set var(graph,axis,x,max) $var($cc,axis,x,max)
     set var(graph,axis,x,format) $var($cc,axis,x,format)
+
+    set var(graph,axis,y,title) $var($cc,axis,y,title)
+    set var(graph,axis,y,grid) $var($cc,axis,y,grid)
+    set var(graph,axis,y,log) $var($cc,axis,y,log)
+    set var(graph,axis,y,flip) $var($cc,axis,y,flip)
+    set var(graph,axis,y,auto) $var($cc,axis,y,auto)
+    set var(graph,axis,y,min) $var($cc,axis,y,min)
+    set var(graph,axis,y,max) $var($cc,axis,y,max)
+    set var(graph,axis,y,format) $var($cc,axis,y,format)
 
     # per DataSet
     set var(graph,ds,name) $var($cc,$nn,name)

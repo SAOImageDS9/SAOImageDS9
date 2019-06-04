@@ -288,6 +288,7 @@ proc ColorbarKey {K A xx yy} {
 		    $current(colorbar) tag delete $xx $yy
 		    if {$current(frame) != {}} {
 			$current(frame) colormap [$current(colorbar) get colormap]
+			$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
 		    }
 		}
 	    }
@@ -358,6 +359,7 @@ proc ColorbarMotion1 {x y} {
 	    $current(colorbar) tag edit motion $x $y
 	    if {$current(frame) != {}} {
 		$current(frame) colormap [$current(colorbar) get colormap]
+		$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
 	    }
 	}
     }
@@ -390,6 +392,7 @@ proc ColorbarRelease1 {x y} {
 	    $current(colorbar) tag edit end $x $y
 	    if {$current(frame) != {}} {
 		$current(frame) colormap [$current(colorbar) get colormap]
+		$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
 	    }
 	}
     }
@@ -671,9 +674,12 @@ proc LoadColorTag {fn} {
     global current
 
     if {$fn != {}} {
+	# yes, we need this
+	UpdateColormapLevel
 	$current(colorbar) tag load "\{$fn\}"
 	if {$current(frame) != {}} {
 	    $current(frame) colormap [$current(colorbar) get colormap]
+	    $current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
 	}
     }
 }
@@ -693,6 +699,7 @@ proc DeleteColorTag {} {
     $current(colorbar) tag delete
     if {$current(frame) != {}} {
 	$current(frame) colormap [$current(colorbar) get colormap]
+	$current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
     }
 }
 
@@ -750,6 +757,7 @@ proc ColorTagDialog {x y} {
 	$current(colorbar) tag $ed2(id) $ed2(start) $ed2(stop) $ed2(color)
 	if {$current(frame) != {}} {
 	    $current(frame) colormap [$current(colorbar) get colormap]
+	    $current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
 	}
     }
 

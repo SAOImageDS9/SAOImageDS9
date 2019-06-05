@@ -85,6 +85,7 @@ proc PlotAddData {varname} {
     global $varname
 
     set cc $var(graph,current)
+    set nn $var($cc,data,current)
 
     # warning: uses current vars
     if {$var($cc,data,total) == 0} {
@@ -92,7 +93,6 @@ proc PlotAddData {varname} {
     }
 
     # delete current elements
-    set nn $var($cc,data,current)
     foreach el [$var($cc) element names] {
 	set f [split $el -]
 	if {[lindex $f 1] == $nn} {
@@ -219,7 +219,6 @@ proc PlotCurrentData {varname} {
 	set nn $var($cc,data,current)
 
 	set var($cc,manage) $var($cc,$nn,manage)
-	set var($cc,dim) $var($cc,$nn,dim)
 
 	PlotRestoreState $varname $nn
     }
@@ -314,7 +313,6 @@ proc PlotExternal {varname} {
     set var(graph,ds,name) "Dataset $nn"
 
     set var($cc,$nn,manage) $var($cc,manage)
-    set var($cc,$nn,dim) $var($cc,dim)
 
     PlotSaveState $varname
 
@@ -354,7 +352,7 @@ proc PlotListGenerate {varname} {
 	set xx [$var(graph,ds,xdata) range]
 	set yy [$var(graph,ds,ydata) range]
 
-	switch $var($cc,dim) {
+	switch $var(graph,ds,dim) {
 	    xy {
 		for {set ii 0} {$ii<$ll} {incr ii} {
 		    append rr "[lindex $xx $ii] [lindex $yy $ii]\n"
@@ -661,7 +659,7 @@ proc PlotBackup {ch dir} {
 		PlotSaveDataFile $varname "$fdir/plot$ii.dat"
 		PlotSaveConfigFile $varname "$fdir/plot$ii.plt"
 
-		puts $ch "PlotLoadDataFile $varname $fdir/plot$ii.dat $var($cc,dim)"
+		puts $ch "PlotLoadDataFile $varname $fdir/plot$ii.dat $var($cc,$ii,dim)"
 		puts $ch "PlotLoadConfigFile $varname $fdir/plot$ii.plt"
 	    }
 	    set ${varname}($cc,data,current) $save

@@ -107,7 +107,7 @@ proc PlotDataSetOne {varname dim data} {
     switch -- $dim {
 	2 -
 	xy {
-	    set var($cc,dim) xy
+	    set var(graph,ds,dim) xy
 
 	    for {set ii 0} {$ii<$ll} {incr ii 2} {
 		lappend x [lindex $data $ii]
@@ -118,7 +118,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
 
 	xyex {
-	    set var($cc,dim) xyex
+	    set var(graph,ds,dim) xyex
 	    set var(graph,ds,xedata) $xedata
 
 	    global $var(graph,ds,xedata)
@@ -136,7 +136,7 @@ proc PlotDataSetOne {varname dim data} {
 
 	3 -
 	xyey {
-	    set var($cc,dim) xyey
+	    set var(graph,ds,dim) xyey
 	    set var(graph,ds,yedata) $yedata
 
 	    global $var(graph,ds,yedata)
@@ -153,7 +153,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
 
 	xyexey {
-	    set var($cc,dim) xyexey
+	    set var(graph,ds,dim) xyexey
 	    set var(graph,ds,xedata) $xedata
 	    set var(graph,ds,yedata) $yedata
 
@@ -173,7 +173,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
 
 	4.1 {
-	    set var($cc,dim) xyey
+	    set var(graph,ds,dim) xyey
 	    set var(graph,ds,yedata) $yedata
 
 	    global $var(graph,ds,yedata)
@@ -190,7 +190,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
 
 	4.2 {
-	    set var($cc,dim) xy
+	    set var(graph,ds,dim) xy
 
 	    for {set ii 0} {$ii<$ll} {incr ii 4} {
 		lappend x [lindex $data $ii]
@@ -201,7 +201,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
 
 	5.1 {
-	    set var($cc,dim) xyey
+	    set var(graph,ds,dim) xyey
 	    set var(graph,ds,yedata) $yedata
 
 	    global $var(graph,ds,yedata)
@@ -218,7 +218,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
 
 	5.2 {
-	    set var($cc,dim) xyey
+	    set var(graph,ds,dim) xyey
 	    set var(graph,ds,yedata) $yedata
 
 	    global $var(graph,ds,yedata)
@@ -236,7 +236,6 @@ proc PlotDataSetOne {varname dim data} {
     }
 
     set var($cc,$nn,manage) 1
-    set var($cc,$nn,dim) $var($cc,dim)
 
     PlotSaveState $varname
 
@@ -327,7 +326,6 @@ proc PlotDupData {varname mm} {
     set var($cc,data,current) $nn
 
     set var($cc,manage) $var($cc,$nn,manage)
-    set var($cc,dim) $var($cc,$nn,dim)
 
     PlotRestoreState $varname $nn
 
@@ -402,7 +400,7 @@ proc PlotSaveDataFile {varname filename} {
     set yy [$var(graph,ds,ydata) range]
 
     set ch [open $filename w]
-    switch $var($cc,dim) {
+    switch $var(graph,ds,dim) {
 	xy {
 	    for {set ii 0} {$ii<$ll} {incr ii} {
 		puts $ch "[lindex $xx $ii] [lindex $yy $ii]"

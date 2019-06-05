@@ -5428,7 +5428,7 @@ proc plot::yyparse {} {
                     74 { PlotCmdSaveConfig $2 }
                     78 { ProcessCmdCVAR0 PlotDestroy }
                     79 { ProcessCmdCVAR mode $2 PlotChangeMode }
-                    81 { PlotCmdUpdateGraph bg $2 }
+                    81 { PlotCmdUpdateCanvas background $2 }
                     85 { PlotCmdUpdateCanvas bar,mode $2 }
                     86 { PlotCmdUpdateElement graph,ds,show $2 }
                     88 { PlotCmdUpdateElement graph,ds,fill $2 }
@@ -5493,15 +5493,15 @@ proc plot::yyparse {} {
                     152 { set _ left }
                     153 { set _ top }
                     154 { set _ bottom }
-                    155 { PlotCmdUpdateGraph "$1,family" $3 }
-                    156 { PlotCmdUpdateGraph "$1,family" $3 }
-                    157 { PlotCmdUpdateGraph "$1,size" $3 }
-                    158 { PlotCmdUpdateGraph "$1,weight" $3 }
-                    159 { PlotCmdUpdateGraph "$1,slant" $3 }
+                    155 { PlotCmdUpdateCanvas "$1,family" $3 }
+                    156 { PlotCmdUpdateCanvas "$1,family" $3 }
+                    157 { PlotCmdUpdateCanvas "$1,size" $3 }
+                    158 { PlotCmdUpdateCanvas "$1,weight" $3 }
+                    159 { PlotCmdUpdateCanvas "$1,slant" $3 }
                     160 { PlotCmdFontStyle $1 $3 }
-                    161 { PlotCmdUpdateGraph "$1,size" $3 }
-                    162 { PlotCmdUpdateGraph "$1,weight" $3 }
-                    163 { PlotCmdUpdateGraph "$1,slant" $3 }
+                    161 { PlotCmdUpdateCanvas "$1,size" $3 }
+                    162 { PlotCmdUpdateCanvas "$1,weight" $3 }
+                    163 { PlotCmdUpdateCanvas "$1,slant" $3 }
                     164 { PlotCmdFontStyle $1 $3 }
                     165 { set _ graph,title }
                     166 { set _ axis,title }

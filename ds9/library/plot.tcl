@@ -277,25 +277,13 @@ proc PlotDestroy {varname} {
     }
     
     for {set nn 1} {$nn<=$var($cc,data,total)} {incr nn} {
+	blt::vector destroy $var($cc,$nn,xdata) $var($cc,$nn,ydata)
 	switch $var($cc,$nn,dim) {
-	    xy {
-		blt::vector destroy \
-		    $var($cc,$nn,xdata) $var($cc,$nn,ydata)
-	    }
-	    xyex {
-		blt::vector destroy \
-		    $var($cc,$nn,xdata) $var($cc,$nn,ydata) \
-		    $var($cc,$nn,xedata)
-	    }
-	    xyey {
-		blt::vector destroy \
-		    $var($cc,$nn,xdata) $var($cc,$nn,ydata) \
-		    $var($cc,$nn,yedata)
-	    }
+	    xy {}
+	    xyex {blt::vector destroy $var($cc,$nn,xedata)}
+	    xyey {blt::vector destroy $var($cc,$nn,yedata)}
 	    xyexey {
-		blt::vector destroy \
-		    $var($cc,$nn,xdata) $var($cc,$nn,ydata) \
-		    $var($cc,$nn,xedata) $var($cc,$nn,yedata)
+		blt::vector destroy $var($cc,$nn,xedata) $var($cc,$nn,yedata)
 	    }
 	}
     }

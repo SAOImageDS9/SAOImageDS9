@@ -31,8 +31,8 @@ proc PlotScatter {tt wtt title xaxis yaxis dim data} {
     global $varname
 
     PlotScatterDialog $varname $wtt $title $xaxis $yaxis
-    
     PlotDataSet $varname $dim $data
+
     $var(proc,updategraph) $varname
     PlotStats $varname
     PlotList $varname

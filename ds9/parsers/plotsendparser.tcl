@@ -1489,7 +1489,7 @@ proc plotsend::yyparse {} {
                     13 { ProcessSendCmdCVAR PlotStatsGenerate }
                     14 { ProcessSendCmdCVAR PlotListGenerate }
                     15 { ProcessSendCmdCVARGet mode }
-                    17 { ProcessSendCmdCVARGet bg }
+                    17 { ProcessSendCmdCVARGet background }
                     21 { ProcessSendCmdCVARGet bar,mode }
                     22 { ProcessSendCmdCVARYesNo graph,ds,show }
                     23 { ProcessSendCmdCVARGet graph,ds,color }

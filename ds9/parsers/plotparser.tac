@@ -250,7 +250,7 @@ plotCmd : LOAD_ load
  | MODE_ mode {ProcessCmdCVAR mode $2 PlotChangeMode}
 
  | AXIS_ axis
- | BACKGROUND_ STRING_ {PlotCmdUpdateGraph bg $2}
+ | BACKGROUND_ STRING_ {PlotCmdUpdateCanvas background $2}
  | LEGEND_ legend
  | FONT_ fontt
  | TITLE_ title
@@ -363,17 +363,17 @@ legendPos : RIGHT_ {set _ right}
  | BOTTOM_ {set _ bottom}
  ;
 
-fontt : fontType FONT_ font {PlotCmdUpdateGraph "$1,family" $3}
+fontt : fontType FONT_ font {PlotCmdUpdateCanvas "$1,family" $3}
 # backward compatibility
- | fontType FAMILY_ font {PlotCmdUpdateGraph "$1,family" $3}
- | fontType FONTSIZE_ INT_ {PlotCmdUpdateGraph "$1,size" $3}
- | fontType FONTWEIGHT_ fontWeight {PlotCmdUpdateGraph "$1,weight" $3}
- | fontType FONTSLANT_ fontSlant {PlotCmdUpdateGraph "$1,slant" $3}
+ | fontType FAMILY_ font {PlotCmdUpdateCanvas "$1,family" $3}
+ | fontType FONTSIZE_ INT_ {PlotCmdUpdateCanvas "$1,size" $3}
+ | fontType FONTWEIGHT_ fontWeight {PlotCmdUpdateCanvas "$1,weight" $3}
+ | fontType FONTSLANT_ fontSlant {PlotCmdUpdateCanvas "$1,slant" $3}
 # backward compatibility
  | fontType FONTSTYLE_ fontStyle {PlotCmdFontStyle $1 $3}
- | fontType SIZE_ INT_ {PlotCmdUpdateGraph "$1,size" $3}
- | fontType WEIGHT_ fontWeight {PlotCmdUpdateGraph "$1,weight" $3}
- | fontType SLANT_ fontSlant {PlotCmdUpdateGraph "$1,slant" $3}
+ | fontType SIZE_ INT_ {PlotCmdUpdateCanvas "$1,size" $3}
+ | fontType WEIGHT_ fontWeight {PlotCmdUpdateCanvas "$1,weight" $3}
+ | fontType SLANT_ fontSlant {PlotCmdUpdateCanvas "$1,slant" $3}
  | fontType STYLE_ fontStyle {PlotCmdFontStyle $1 $3}
  ;
 

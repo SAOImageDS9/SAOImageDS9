@@ -100,19 +100,19 @@ proc PlotAddData {varname} {
 	}
     }
 
-    global $var($cc,xdata) $var($cc,ydata)
+    global $var(graph,ds,xdata) $var(graph,ds,ydata)
     $var($cc) element create "d-${nn}" \
-	-xdata $var($cc,xdata) -ydata $var($cc,ydata)
-    if {$var($cc,xedata) != {}} {
-	if {[$var($cc,xedata) length] != 0} {
+	-xdata $var(graph,ds,xdata) -ydata $var(graph,ds,ydata)
+    if {$var(graph,ds,xedata) != {}} {
+	if {[$var(graph,ds,xedata) length] != 0} {
 	    $var($cc) element configure "d-${nn}" \
-		-xerror $var($cc,xedata)
+		-xerror $var(graph,ds,xedata)
 	}
     }
-    if {$var($cc,yedata) != {}} {
-	if {[$var($cc,yedata) length] != 0} {
+    if {$var(graph,ds,yedata) != {}} {
+	if {[$var(graph,ds,yedata) length] != 0} {
 	    $var($cc) element configure "d-${nn}" \
-		-yerror $var($cc,yedata)
+		-yerror $var(graph,ds,yedata)
 	}
     }
 }
@@ -167,10 +167,10 @@ proc PlotDeleteData {varname} {
 	set var($cc,data,current) 0
 
 	set var(graph,ds,name) {}
-	set var($cc,xdata) {}
-	set var($cc,ydata) {}
-	set var($cc,xedata) {}
-	set var($cc,yedata) {}
+	set var(graph,ds,xdata) {}
+	set var(graph,ds,ydata) {}
+	set var(graph,ds,xedata) {}
+	set var(graph,ds,yedata) {}
 
 	# reset other variables
 	set var($cc,axis,x,auto) 1
@@ -347,11 +347,12 @@ proc PlotListGenerate {varname} {
     set cc $var(graph,current)
 
     set rr {}
-    if {$var($cc,xdata) != {}} {
-	global $var($cc,xdata) $var($cc,ydata) $var($cc,xedata) $var($cc,yedata)
-	set ll [$var($cc,xdata) length]
-	set xx [$var($cc,xdata) range]
-	set yy [$var($cc,ydata) range]
+    if {$var(graph,ds,xdata) != {}} {
+	global $var(graph,ds,xdata) $var(graph,ds,ydata) \
+	    $var(graph,ds,xedata) $var(graph,ds,yedata)
+	set ll [$var(graph,ds,xdata) length]
+	set xx [$var(graph,ds,xdata) range]
+	set yy [$var(graph,ds,ydata) range]
 
 	switch $var($cc,dim) {
 	    xy {
@@ -360,20 +361,20 @@ proc PlotListGenerate {varname} {
 		}
 	    }
 	    xyex {
-		set xe [$var($cc,xedata) range]
+		set xe [$var(graph,ds,xedata) range]
 		for {set ii 0} {$ii<$ll} {incr ii} {
 		    append rr "[lindex $xx $ii] [lindex $yy $ii] [lindex $xe $ii]\n"
 		}
 	    }
 	    xyey {
-		set ye [$var($cc,yedata) range]
+		set ye [$var(graph,ds,yedata) range]
 		for {set ii 0} {$ii<$ll} {incr ii} {
 		    append rr "[lindex $xx $ii] [lindex $yy $ii] [lindex $ye $ii]\n"
 		}
 	    }
 	    xyexey {
-		set xe [$var($cc,xedata) range]
-		set ye [$var($cc,yedata) range]
+		set xe [$var(graph,ds,xedata) range]
+		set ye [$var(graph,ds,yedata) range]
 		for {set ii 0} {$ii<$ll} {incr ii} {
 		    append rr "[lindex $xx $ii] [lindex $yy $ii] [lindex $xe $ii] [lindex $ye $ii]\n"
 		}
@@ -440,14 +441,14 @@ proc PlotStatsGenerate {varname} {
     set varr {}
     set sdev {}
 
-    if {$var($cc,ydata) != {}} {
-	if {[$var($cc,ydata) length] > 0} {
-	    set min [format "%6.3f" [blt::vector expr min($var($cc,ydata))]]
-	    set max [format "%6.3f" [blt::vector expr max($var($cc,ydata))]]
-	    set mean [format "%6.3f" [blt::vector expr mean($var($cc,ydata))]]
-	    set median [format "%6.3f" [blt::vector expr median($var($cc,ydata))]]
-	    set varr [format "%6.3f" [expr [blt::vector expr var($var($cc,ydata))]]]
-	    set sdev [format "%6.3f" [expr [blt::vector expr sdev($var($cc,ydata))]]]
+    if {$var(graph,ds,ydata) != {}} {
+	if {[$var(graph,ds,ydata) length] > 0} {
+	    set min [format "%6.3f" [blt::vector expr min($var(graph,ds,ydata))]]
+	    set max [format "%6.3f" [blt::vector expr max($var(graph,ds,ydata))]]
+	    set mean [format "%6.3f" [blt::vector expr mean($var(graph,ds,ydata))]]
+	    set median [format "%6.3f" [blt::vector expr median($var(graph,ds,ydata))]]
+	    set varr [format "%6.3f" [expr [blt::vector expr var($var(graph,ds,ydata))]]]
+	    set sdev [format "%6.3f" [expr [blt::vector expr sdev($var(graph,ds,ydata))]]]
 	}
     }
     
@@ -539,7 +540,7 @@ proc PlotUpdateGraph {varname} {
     }
 
     # Menus
-    if {$var($cc,xdata) != {}} {
+    if {$var(graph,ds,xdata) != {}} {
 	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state normal
 	$var(mb).file entryconfig [msgcat::mc {Clear Data}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Statistics}] -state normal

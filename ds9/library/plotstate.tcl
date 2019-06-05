@@ -113,10 +113,10 @@ proc PlotInitGraph {varname} {
     set var(graph,axis,y,format) $pap(graph,axis,y,format)
 
     # per DataSet
-    set var(graph1,xdata) {}
-    set var(graph1,ydata) {}
-    set var(graph1,xedata) {}
-    set var(graph1,yedata) {}
+    set var(graph,ds,xdata) {}
+    set var(graph,ds,ydata) {}
+    set var(graph,ds,xedata) {}
+    set var(graph,ds,yedata) {}
 
     set var(graph,ds,name) $pap(graph,ds,name)
     set var(graph,ds,show) $pap(graph,ds,show) 
@@ -172,10 +172,10 @@ proc PlotSaveState {varname} {
     set var($cc,axis,y,format) $var(graph,axis,y,format)
 
     # per DataSet
-    set var($cc,$nn,xdata) $var($cc,xdata)
-    set var($cc,$nn,ydata) $var($cc,ydata)
-    set var($cc,$nn,xedata) $var($cc,xedata)
-    set var($cc,$nn,yedata) $var($cc,yedata)
+    set var($cc,$nn,xdata) $var(graph,ds,xdata)
+    set var($cc,$nn,ydata) $var(graph,ds,ydata)
+    set var($cc,$nn,xedata) $var(graph,ds,xedata)
+    set var($cc,$nn,yedata) $var(graph,ds,yedata)
 
     set var($cc,$nn,name) $var(graph,ds,name)
     set var($cc,$nn,show) $var(graph,ds,show)
@@ -231,10 +231,10 @@ proc PlotRestoreState {varname nn} {
     set var(graph,axis,y,format) $var($cc,axis,y,format)
 
     # per DataSet
-    set var($cc,xdata) $var($cc,$nn,xdata)
-    set var($cc,ydata) $var($cc,$nn,ydata)
-    set var($cc,xedata) $var($cc,$nn,xedata)
-    set var($cc,yedata) $var($cc,$nn,yedata)
+    set var(graph,ds,xdata) $var($cc,$nn,xdata)
+    set var(graph,ds,ydata) $var($cc,$nn,ydata)
+    set var(graph,ds,xedata) $var($cc,$nn,xedata)
+    set var(graph,ds,yedata) $var($cc,$nn,yedata)
 
     set var(graph,ds,name) $var($cc,$nn,name)
     set var(graph,ds,show) $var($cc,$nn,show) 

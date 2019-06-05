@@ -105,12 +105,13 @@ int SAOColorMap::load(const char* var)
     return 1;  // we found at least one LIColor for each RGB
 }
 
-void SAOColorMap::save(const char* fn)
+int SAOColorMap::save(const char* fn)
 {
   ofstream f(fn);
   if (!f)
-    return;
+    return 0;
   f << *this;
+  return 1;
 }
 
 unsigned char SAOColorMap::getColorChar(int i, int count, List<LIColor>* cc)

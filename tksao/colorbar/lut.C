@@ -96,12 +96,13 @@ int LUTColorMap::load(const char* var)
     return 1;  // we found at least one RGBColor
 }
 
-void LUTColorMap::save(const char* fn)
+int LUTColorMap::save(const char* fn)
 {
   ofstream fstr(fn);
   if (!fstr)
-    return;
+    return 0;
   fstr << *this;
+  return 1;
 }
 
 unsigned char LUTColorMap::getRedChar(int ii, int count)

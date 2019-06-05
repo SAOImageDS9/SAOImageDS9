@@ -487,7 +487,10 @@ void Colorbar::mapCmd(int id)
 
 void Colorbar::saveCmd(const char* fn)
 {
-  cmaps.current()->save(fn);
+  if (!cmaps.current()->save(fn)) {
+    Tcl_AppendResult(interp, " unable to save colormap: ", fn, NULL);
+    result = TCL_ERROR;
+  }
 }
 
 void Colorbar::saveCmd(int id, const char* fn)
@@ -495,12 +498,16 @@ void Colorbar::saveCmd(int id, const char* fn)
   ColorMapInfo* ptr = cmaps.begin();
   while (ptr) {
     if (ptr->getID() == id) {
-      ptr->save(fn);
+      if (!ptr->save(fn)) {
+	Tcl_AppendResult(interp, " unable to save colormap: ", fn, NULL);
+	result = TCL_ERROR;
+      }
       return;
     }
     ptr = ptr->next();
   }
 
+  Tcl_AppendResult(interp, " unable to save colormap: ", fn, NULL);
   result = TCL_ERROR;
 }
 

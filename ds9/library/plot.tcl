@@ -53,11 +53,6 @@ proc PlotAddGraph {varname} {
     set var($cc,data,total) 0
     set var($cc,data,current) 0
 
-    set var($cc,xdata) {}
-    set var($cc,ydata) {}
-    set var($cc,xedata) {}
-    set var($cc,yedata) {}
-
     PlotInitGraph $varname
     
     $var(proc,addgraph) $varname
@@ -226,11 +221,6 @@ proc PlotCurrentData {varname} {
 	set var($cc,manage) $var($cc,$nn,manage)
 	set var($cc,dim) $var($cc,$nn,dim)
 
-	set var($cc,xdata) $var($cc,$nn,xdata)
-	set var($cc,ydata) $var($cc,$nn,ydata)
-	set var($cc,xedata) $var($cc,$nn,xedata)
-	set var($cc,yedata) $var($cc,$nn,yedata)
-
 	PlotRestoreState $varname $nn
     }
 
@@ -326,11 +316,6 @@ proc PlotExternal {varname} {
     set var($cc,$nn,manage) $var($cc,manage)
     set var($cc,$nn,dim) $var($cc,dim)
 
-    set var($cc,$nn,xdata) $var($cc,xdata) 
-    set var($cc,$nn,ydata) $var($cc,ydata) 
-    set var($cc,$nn,xedata) $var($cc,xedata) 
-    set var($cc,$nn,yedata) $var($cc,yedata) 
-
     PlotSaveState $varname
 
     # update data set menu
@@ -363,8 +348,7 @@ proc PlotListGenerate {varname} {
 
     set rr {}
     if {$var($cc,xdata) != {}} {
-	global $var($cc,xdata) $var($cc,ydata) \
-	    $var($cc,xedata) $var($cc,yedata)
+	global $var($cc,xdata) $var($cc,ydata) $var($cc,xedata) $var($cc,yedata)
 	set ll [$var($cc,xdata) length]
 	set xx [$var($cc,xdata) range]
 	set yy [$var($cc,ydata) range]

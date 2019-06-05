@@ -238,11 +238,6 @@ proc PlotDataSetOne {varname dim data} {
     set var($cc,$nn,manage) 1
     set var($cc,$nn,dim) $var($cc,dim)
 
-    set var($cc,$nn,xdata) $var($cc,xdata) 
-    set var($cc,$nn,ydata) $var($cc,ydata) 
-    set var($cc,$nn,xedata) $var($cc,xedata) 
-    set var($cc,$nn,yedata) $var($cc,yedata) 
-
     PlotSaveState $varname
 
     # update data set menu
@@ -333,11 +328,6 @@ proc PlotDupData {varname mm} {
 
     set var($cc,manage) $var($cc,$nn,manage)
     set var($cc,dim) $var($cc,$nn,dim)
-
-    set var($cc,xdata) $var($cc,$nn,xdata)
-    set var($cc,ydata) $var($cc,$nn,ydata)
-    set var($cc,xedata) $var($cc,$nn,xedata)
-    set var($cc,yedata) $var($cc,$nn,yedata)
 
     PlotRestoreState $varname $nn
 

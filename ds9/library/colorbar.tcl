@@ -133,33 +133,39 @@ proc LoadColormap {} {
 }
 
 # used by backup
-proc LoadColormapFile {filename} {
+proc LoadColormapFile {fn} {
     global colorbar
     global icolorbar
 
     global current
     global ds9
 
-    if {$filename != {}} {
-	colorbar load "\{$filename\}"
-	set id [colorbar get id]
-	set colorbar(map) [colorbar get name]
+    if {$fn == {}} {
+	return
+    }
 
-	$ds9(mb).color.user add radiobutton \
+    if {[catch {colorbar load "\{$fn\}"} rr]} {
+	Error $rr
+	return
+    }
+    
+    set id [colorbar get id]
+    set colorbar(map) [colorbar get name]
+
+    $ds9(mb).color.user add radiobutton \
+	-label "$colorbar(map)" \
+	-variable colorbar(map) \
+	-command [list ChangeColormapID $id]
+
+    if {[winfo exists $icolorbar(top)]} {
+	$icolorbar(mb).colormap.user add radiobutton \
 	    -label "$colorbar(map)" \
 	    -variable colorbar(map) \
 	    -command [list ChangeColormapID $id]
-
-	if {[winfo exists $icolorbar(top)]} {
-	    $icolorbar(mb).colormap.user add radiobutton \
-		-label "$colorbar(map)" \
-		-variable colorbar(map) \
-		-command [list ChangeColormapID $id]
-	}
-	incr icolorbar(count)
-
-	ChangeColormapID $id
     }
+    incr icolorbar(count)
+
+    ChangeColormapID $id
 }
 
 proc SaveColormap {} {
@@ -167,36 +173,45 @@ proc SaveColormap {} {
     SaveColormapFile [SaveFileDialog colorbarfbox]
 }
 
-proc SaveColormapFile {filename} {
-    if {$filename != {}} {
-	colorbar save "\{$filename\}"
+proc SaveColormapFile {fn} {
+    if {$fn == {}} {
+	return
+    }
+
+    if {[catch {colorbar save "\{$fn\}"} rr]} {
+	Error $rr
+	return
     }
 }
 
 proc LoadContrastBias {} {
     global dcolorbar
 
-    set filename [OpenFileDialog contrastbiasfbox]
-    if {$filename != {}} {
-	if {![catch {set ch [open $filename r]}]} {
-	    set ll [gets $ch]
-	    close $ch
-	    set dcolorbar(contrast) [lindex $ll 0]
-	    set dcolorbar(bias) [lindex $ll 1]
-	    ApplyColormap
-	}
+    set fn [OpenFileDialog contrastbiasfbox]
+    if {$fn == {}} {
+	return
+    }
+
+    if {![catch {set ch [open $fn r]}]} {
+	set ll [gets $ch]
+	close $ch
+	set dcolorbar(contrast) [lindex $ll 0]
+	set dcolorbar(bias) [lindex $ll 1]
+	ApplyColormap
     }
 }
 
 proc SaveContrastBias {} {
     global dcolorbar
 
-    set filename [SaveFileDialog contrastbiasfbox]
-    if {$filename != {}} {
-	if {![catch {set ch [open $filename w]}]} {
-	    puts $ch "$dcolorbar(contrast) $dcolorbar(bias)"
-	    close $ch
-	}
+    set fn [SaveFileDialog contrastbiasfbox]
+    if {$fn == {}} {
+	return
+    }
+    
+    if {![catch {set ch [open $fn w]}]} {
+	puts $ch "$dcolorbar(contrast) $dcolorbar(bias)"
+	close $ch
     }
 }
 
@@ -676,7 +691,10 @@ proc LoadColorTag {fn} {
     if {$fn != {}} {
 	# yes, we need this
 	UpdateColormapLevel
-	$current(colorbar) tag load "\{$fn\}"
+	if {[catch {$current(colorbar) tag load "\{$fn\}"} rr]} {
+	    Error $rr
+	    return
+	}
 	if {$current(frame) != {}} {
 	    $current(frame) colormap [$current(colorbar) get colormap]
 	    $current(frame) colorbar tag "\{[$current(colorbar) get tag]\}"
@@ -688,8 +706,13 @@ proc SaveColorTag {} {
     global current
 
     set fn [SaveFileDialog colortagfbox]
-    if {$fn != {}} {
-	$current(colorbar) tag save "\{$fn\}"
+    if {$fn == {}} {
+	return
+    }
+
+    if {[catch {colorbar tag save "\{$fn\}"} rr]} {
+	Error $rr
+	return
     }
 }
 

@@ -65,7 +65,7 @@ public:
   ColorMapInfo* dup() {return new SAOColorMap(*this);}
   int load();
   int load(const char* var);
-  void save(const char*);
+  int save(const char*);
 
   unsigned char getRedChar(int i, int c) {return getColorChar(i,c,&red);}
   unsigned char getGreenChar(int i, int c) {return getColorChar(i,c,&green);}

@@ -487,7 +487,10 @@ void Colorbar::mapCmd(int id)
 
 void Colorbar::saveCmd(const char* fn)
 {
-  cmaps.current()->save(fn);
+  if (!cmaps.current()->save(fn)) {
+    Tcl_AppendResult(interp, " unable to save colormap: ", fn, NULL);
+    result = TCL_ERROR;
+  }
 }
 
 void Colorbar::saveCmd(int id, const char* fn)
@@ -495,12 +498,16 @@ void Colorbar::saveCmd(int id, const char* fn)
   ColorMapInfo* ptr = cmaps.begin();
   while (ptr) {
     if (ptr->getID() == id) {
-      ptr->save(fn);
+      if (!ptr->save(fn)) {
+	Tcl_AppendResult(interp, " unable to save colormap: ", fn, NULL);
+	result = TCL_ERROR;
+      }
       return;
     }
     ptr = ptr->next();
   }
 
+  Tcl_AppendResult(interp, " unable to save colormap: ", fn, NULL);
   result = TCL_ERROR;
 }
 
@@ -723,69 +730,78 @@ void Colorbar::tagLoadCmd(const char* fn)
 {
   ifstream str(fn);
 
-  if (str) {
-    ctags.deleteAll();
-
-    while (!str.eof()) {
-      int mm=0;
-      int nn=0;
-      double aa =0;
-      double bb =0;
-      char color[32];
-      *color ='\0';
-
-      str >> aa >> bb >> color;
-
-      if (aa && bb && *color) {
-	// special case
-	if (aa>lut[cnt-1] && bb>lut[cnt-1])
-	  continue;
-	else if (aa<lut[0] && bb<lut[0])
-	  continue;
-
-	mm =0;
-	for (int ii=0; ii<cnt; ii++)
-	  if (aa<lut[ii]) {
-	    mm=ii;
-	    break;
-	  }
-	nn =cnt-1;
-	for (int ii=cnt-1; ii>=0; ii--)
-	  if (bb>lut[ii]) {
-	    nn=ii;
-	    break;
-	  }
-
-	Vector rr = Vector(mm,nn)/cnt*colorCount;
-	ctags.append(new ColorTag(this,rr[0],rr[1],color));
-      }
-    }
-
-    updateColors();
+  if (!str) {
+    Tcl_AppendResult(interp, " unable to load color tags: ", fn, NULL);
+    result = TCL_ERROR;
+    return;
   }
+
+  ctags.deleteAll();
+
+  while (!str.eof()) {
+    int mm=0;
+    int nn=0;
+    double aa =0;
+    double bb =0;
+    char color[32];
+    *color ='\0';
+
+    str >> aa >> bb >> color;
+
+    if (aa && bb && *color) {
+      // special case
+      if (aa>lut[cnt-1] && bb>lut[cnt-1])
+	continue;
+      else if (aa<lut[0] && bb<lut[0])
+	continue;
+
+      mm =0;
+      for (int ii=0; ii<cnt; ii++)
+	if (aa<lut[ii]) {
+	  mm=ii;
+	  break;
+	}
+      nn =cnt-1;
+      for (int ii=cnt-1; ii>=0; ii--)
+	if (bb>lut[ii]) {
+	  nn=ii;
+	  break;
+	}
+
+      Vector rr = Vector(mm,nn)/cnt*colorCount;
+      ctags.append(new ColorTag(this,rr[0],rr[1],color));
+    }
+  }
+
+  updateColors();
 }
 
 void Colorbar::tagSaveCmd(const char* fn)
 {
   ofstream str(fn);
-  if (str) {
-    ctags.head();
-    while (ctags.current()) {
-      int startid = float(ctags.current()->start())/colorCount * cnt;
-      int stopid = float(ctags.current()->stop())/colorCount * cnt;
-      if (startid<0)
-	startid = 0;
-      if (startid>=cnt)
-	startid = cnt-1;
-      if (stopid<0)
-	stopid = 0;
-      if (stopid>=cnt)
-	stopid = cnt-1;
 
-      str << lut[startid] << ' ' << lut[stopid] << ' '
-	  << ctags.current()->colorname() << endl;
-      ctags.next();
-    }
+  if (!str) {
+    Tcl_AppendResult(interp, " unable to save color tags: ", fn, NULL);
+    result = TCL_ERROR;
+    return;
+  }
+
+  ctags.head();
+  while (ctags.current()) {
+    int startid = float(ctags.current()->start())/colorCount * cnt;
+    int stopid = float(ctags.current()->stop())/colorCount * cnt;
+    if (startid<0)
+      startid = 0;
+    if (startid>=cnt)
+      startid = cnt-1;
+    if (stopid<0)
+      stopid = 0;
+    if (stopid>=cnt)
+      stopid = cnt-1;
+
+    str << lut[startid] << ' ' << lut[stopid] << ' '
+	<< ctags.current()->colorname() << endl;
+    ctags.next();
   }
 }
 

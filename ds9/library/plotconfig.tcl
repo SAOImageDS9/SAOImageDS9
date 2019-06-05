@@ -16,8 +16,6 @@ proc PlotLoadConfigFile {varname filename} {
     upvar #0 $varname var
     global $varname
 
-    set cc $var(graph,current)
-
     if {$filename == {}} {
 	return
     }
@@ -196,8 +194,6 @@ proc PlotSaveConfig {varname} {
 proc PlotSaveConfigFile {varname filename} {
     upvar #0 $varname var
     global $varname
-
-    set cc $var(graph,current)
 
     if {$filename == {}} {
 	return

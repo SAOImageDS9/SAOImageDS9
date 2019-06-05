@@ -217,10 +217,7 @@ proc PlotCurrentData {varname} {
 
     if {$var($cc,data,total) > 0} {
 	set nn $var($cc,data,current)
-
-	set var($cc,manage) $var($cc,$nn,manage)
-
-	PlotRestoreState $varname $nn
+	PlotRestoreState $varname
     }
 
     PlotStats $varname
@@ -310,9 +307,8 @@ proc PlotExternal {varname} {
     set nn $var($cc,data,total)
     set var($cc,data,current) $nn
 
+    set var(graph,ds,manage) 0
     set var(graph,ds,name) "Dataset $nn"
-
-    set var($cc,$nn,manage) $var($cc,manage)
 
     PlotSaveState $varname
 
@@ -341,8 +337,6 @@ proc PlotList {varname} {
 proc PlotListGenerate {varname} {
     upvar #0 $varname var
     global $varname
-
-    set cc $var(graph,current)
 
     set rr {}
     if {$var(graph,ds,xdata) != {}} {
@@ -429,8 +423,6 @@ proc PlotStats {varname} {
 proc PlotStatsGenerate {varname} {
     upvar #0 $varname var
     global $varname
-
-    set cc $var(graph,current)
 
     set min {}
     set max {}

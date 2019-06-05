@@ -109,7 +109,7 @@ proc MarkerAnalysisRadialCB {frame id} {
 
 	set cc $vvar(graph,current)
 
-	set vvar($cc,manage) 0
+	set vvar(graph,ds,manage) 0
 	set vvar(graph,ds,dim) xyey
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata

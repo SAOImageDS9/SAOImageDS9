@@ -8,8 +8,6 @@ proc PlotDataSet {varname dim data} {
     upvar #0 $varname var
     global $varname
 
-    set cc $var(graph,current)
-
     switch -- $dim {
 	4 {
 	    # first data set
@@ -83,7 +81,7 @@ proc PlotDataSetOne {varname dim data} {
     set yedata ap${varname}graph${cc}ye${nn}
 
     # basics
-    set var($cc,manage) 1
+    set var(graph,ds,manage) 1
     set var(graph,ds,name) "Dataset $nn"
 
     # vectors
@@ -235,8 +233,6 @@ proc PlotDataSetOne {varname dim data} {
 	}
     }
 
-    set var($cc,$nn,manage) 1
-
     PlotSaveState $varname
 
     # update data set menu
@@ -324,10 +320,7 @@ proc PlotDupData {varname mm} {
 
     # make current
     set var($cc,data,current) $nn
-
-    set var($cc,manage) $var($cc,$nn,manage)
-
-    PlotRestoreState $varname $nn
+    PlotRestoreState $varname
 
     PlotAddData $varname
     $var(proc,updateelement) $varname
@@ -370,8 +363,6 @@ proc PlotSaveData {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc $var(graph,current)
-
     if {$var(graph,ds,xdata) == {}} {
 	return
     }
@@ -382,8 +373,6 @@ proc PlotSaveData {varname} {
 proc PlotSaveDataFile {varname filename} {
     upvar #0 $varname var
     global $varname
-
-    set cc $var(graph,current)
 
     if {$var(graph,ds,xdata) == {}} {
 	return

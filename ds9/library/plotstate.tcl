@@ -92,9 +92,9 @@ proc PlotInitGraph {varname} {
     set cc $var(graph,current)
     set nn $var($cc,data,current)
     set var(graph) $var($cc)
-    set var(graph,ds) $nn
-    
+
     # per Graph
+    set var(graph,format) 1
     set var(graph,legend) $pap(graph,legend)
     set var(graph,legend,title) $pap(graph,legend,title)
     set var(graph,legend,position) $pap(graph,legend,position)
@@ -156,6 +156,7 @@ proc PlotSaveState {varname} {
 
     # per Graph
     set var($cc,title) $var(graph,title)
+    set var($cc,format) $var(graph,format)
 
     set var($cc,legend) $var(graph,legend)
     set var($cc,legend,title) $var(graph,legend,title)
@@ -216,10 +217,10 @@ proc PlotRestoreState {varname} {
     set cc $var(graph,current)
     set nn $var($cc,data,current)
     set var(graph) $var($cc)
-    set var(graph,ds) $nn
 
     # per Graph
     set var(graph,title) $var($cc,title)
+    set var(graph,format) $var($cc,format)
 
     set var(graph,legend) $var($cc,legend)
     set var(graph,legend,title) $var($cc,legend,title)

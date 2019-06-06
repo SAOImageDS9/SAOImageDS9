@@ -34,9 +34,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 
     PlotTitle $varname $title $xaxis $yaxis
 
-    # can be turned off for external line plots
-    set var(graph,format) 1
-
     # create window
     Toplevel $var(top) $var(mb) 7 $wtt [list PlotDestroy $varname]
 

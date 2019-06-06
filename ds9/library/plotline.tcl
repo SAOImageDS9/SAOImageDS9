@@ -199,7 +199,7 @@ proc PlotLineUpdateElement {varname} {
     }
 
     set nn $var($cc,data,current)
-    $var($cc) element configure "d-${nn}" \
+    $var(graph) element configure "d-${nn}" \
 	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
 	-symbol $var(graph,ds,shape,symbol) -fill $clr -scalesymbols no \
 	-pixels 5 -outline $var(graph,ds,shape,color) \

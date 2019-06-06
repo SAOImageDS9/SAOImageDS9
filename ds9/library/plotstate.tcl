@@ -89,6 +89,11 @@ proc PlotInitGraph {varname} {
 
     global pap
 
+    set cc $var(graph,current)
+    set nn $var($cc,data,current)
+    set var(graph) $var($cc)
+    set var(graph,ds) $nn
+    
     # per Graph
     set var(graph,legend) $pap(graph,legend)
     set var(graph,legend,title) $pap(graph,legend,title)
@@ -210,6 +215,8 @@ proc PlotRestoreState {varname} {
 
     set cc $var(graph,current)
     set nn $var($cc,data,current)
+    set var(graph) $var($cc)
+    set var(graph,ds) $nn
 
     # per Graph
     set var(graph,title) $var($cc,title)

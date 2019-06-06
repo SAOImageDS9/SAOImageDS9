@@ -121,7 +121,7 @@ proc PlotScatterUpdateElement {varname} {
     }
 
     set nn $var($cc,data,current)
-    $var($cc) element configure "d-${nn}" \
+    $var(graph) element configure "d-${nn}" \
 	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
 	-symbol $var(graph,ds,shape,symbol) -fill $clr -scalesymbols no \
 	-outline $var(graph,ds,shape,color) \
@@ -129,7 +129,7 @@ proc PlotScatterUpdateElement {varname} {
 	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
 	-errorbarwidth $var(graph,ds,error,width) -errorbarcap $cap
 
-    $var($cc) pen configure active -color blue \
+    $var(graph) pen configure active -color blue \
 	-symbol $var(graph,ds,shape,symbol) \
 	-linewidth 0 -pixels 5 \
 	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
@@ -150,18 +150,18 @@ proc PlotScatterButton {varname x y} {
 	return
     }
 
-    set rr [$var($cc) element closest $x $y]
+    set rr [$var(graph) element closest $x $y]
     set elem [lindex $rr 1]
     set row [lindex $rr 3]
 
     if {$elem != {}} {
 	if {$row != {}} {
-	    $var($cc) element deactivate $elem
-	    $var($cc) element activate $elem $row
+	    $var(graph) element deactivate $elem
+	    $var(graph) element activate $elem $row
 	    # rows start at 1
 	    eval "$var(callback) [expr $row+1]"
 	} else {
-	    $var($cc) element deactivate $elem
+	    $var(graph) element deactivate $elem
 	    eval "$var(callback) {}"
 	}
     }
@@ -178,10 +178,10 @@ proc PlotScatterHighliteElement {varname rowlist} {
     }
 
     if {$var(graph,ds,show)} {
-	$var($cc) element deactivate d-1
+	$var(graph) element deactivate d-1
 	if {$rowlist != {}} {
 	    # can have multiple rows
-	    eval "$var($cc) element activate d-1 $rowlist"
+	    eval "$var(graph) element activate d-1 $rowlist"
 	}
     }
 }

@@ -53,16 +53,16 @@ proc PlotAddGraph {varname} {
     set var($cc,data,total) 0
     set var($cc,data,current) 0
 
-    PlotInitGraph $varname
-    
     $var(proc,addgraph) $varname
 
+    PlotInitGraph $varname
+    
     # set up zoom stack, assuming mode is zoom
     global ds9
     switch $ds9(wm) {
 	x11 -
-	win32 {Blt_ZoomStack $var($cc) -mode release}
-	aqua {Blt_ZoomStack $var($cc) -mode release -button "ButtonPress-2"}
+	win32 {Blt_ZoomStack $var(graph) -mode release}
+	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
     }
 
     PlotLayoutCanvas $varname
@@ -72,11 +72,15 @@ proc PlotDeleteGraph {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc $var(graph,current)
-    if {$cc != {}} {
-	destroy $var($cc)
-	list replace ${varname}(graphs) $cc {}
+    if {[llength $var(graphs)] <= 1} {
+	return
     }
+
+    destroy $var(graph)
+    list replace ${varname}(graphs) $var(graph,current) {}
+
+    set var(graph,current) [lindex $var(graphs) 0]
+    PlotRestoreState $varname
 }
 
 # Data
@@ -93,25 +97,25 @@ proc PlotAddData {varname} {
     }
 
     # delete current elements
-    foreach el [$var($cc) element names] {
+    foreach el [$var(graph) element names] {
 	set f [split $el -]
 	if {[lindex $f 1] == $nn} {
-	    $var($cc) element delete $el
+	    $var(graph) element delete $el
 	}
     }
 
     global $var(graph,ds,xdata) $var(graph,ds,ydata)
-    $var($cc) element create "d-${nn}" \
+    $var(graph) element create "d-${nn}" \
 	-xdata $var(graph,ds,xdata) -ydata $var(graph,ds,ydata)
     if {$var(graph,ds,xedata) != {}} {
 	if {[$var(graph,ds,xedata) length] != 0} {
-	    $var($cc) element configure "d-${nn}" \
+	    $var(graph) element configure "d-${nn}" \
 		-xerror $var(graph,ds,xedata)
 	}
     }
     if {$var(graph,ds,yedata) != {}} {
 	if {[$var(graph,ds,yedata) length] != 0} {
-	    $var($cc) element configure "d-${nn}" \
+	    $var(graph) element configure "d-${nn}" \
 		-yerror $var(graph,ds,yedata)
 	}
     }
@@ -135,10 +139,10 @@ proc PlotDeleteData {varname} {
     for {set nn 1} {$nn<=$var($cc,data,total)} {incr nn} {
 	if {$var($cc,$nn,manage)} {
 	    # delete elements
-	    foreach el [$var($cc) element names] {
+	    foreach el [$var(graph) element names] {
 		set f [split $el -]
 		if {[lindex $f 1] == $nn} {
-		    $var($cc) element delete $el
+		    $var(graph) element delete $el
 		}
 	    }
 
@@ -216,7 +220,6 @@ proc PlotCurrentData {varname} {
     set cc $var(graph,current)
 
     if {$var($cc,data,total) > 0} {
-	set nn $var($cc,data,current)
 	PlotRestoreState $varname
     }
 
@@ -491,8 +494,6 @@ proc PlotUpdateGraph {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc $var(graph,current)
-
     if {$var(graph,axis,x,auto)} {
 	set xmin {}
 	set xmax {}
@@ -509,23 +510,23 @@ proc PlotUpdateGraph {varname} {
 	set ymax $var(graph,axis,y,max)
     }
 
-    $var($cc) xaxis configure -min $xmin -max $xmax \
+    $var(graph) xaxis configure -min $xmin -max $xmax \
 	-descending $var(graph,axis,x,flip)
-    $var($cc) yaxis configure -min $ymin -max $ymax \
+    $var(graph) yaxis configure -min $ymin -max $ymax \
 	-descending $var(graph,axis,y,flip)
 
     if {$var(graph,format)} {
 	if {$var(graph,axis,x,format) != {}} {
-	    $var($cc) xaxis configure \
+	    $var(graph) xaxis configure \
 		-command [list PlotAxisFormat $varname x]
 	} else {
-	    $var($cc) xaxis configure -command {}
+	    $var(graph) xaxis configure -command {}
 	}
 	if {$var(graph,axis,y,format) != {}} {
-	    $var($cc) yaxis configure \
+	    $var(graph) yaxis configure \
 		-command [list PlotAxisFormat $varname y]
 	} else {
-	    $var($cc) yaxis configure -command {}
+	    $var(graph) yaxis configure -command {}
 	}
     }
 
@@ -533,16 +534,9 @@ proc PlotUpdateGraph {varname} {
     if {$var(graph,ds,xdata) != {}} {
 	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state normal
 	$var(mb).file entryconfig [msgcat::mc {Clear Data}] -state normal
+	$var(mb).file entryconfig [msgcat::mc {Duplicate Data}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Statistics}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {List Data}] -state normal
-
-	if {$var($cc,1,manage)} {
-	    $var(mb).file entryconfig [msgcat::mc {Duplicate Data}] \
-		-state normal
-	} else {
-	    $var(mb).file entryconfig [msgcat::mc {Duplicate Data}] \
-		-state disable
-	}
     } else {
 	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Clear Data}] -state disabled
@@ -552,17 +546,17 @@ proc PlotUpdateGraph {varname} {
     }
 
     # Graph
-    $var($cc) configure -plotpadx 0 -plotpady 0 -title $var(graph,title) 
+    $var(graph) configure -plotpadx 0 -plotpady 0 -title $var(graph,title) 
 
-    $var($cc) xaxis configure \
+    $var(graph) xaxis configure \
 	-grid $var(graph,axis,x,grid) -logscale $var(graph,axis,x,log) \
 	-title $var(graph,axis,x,title)
 
-    $var($cc) yaxis configure \
+    $var(graph) yaxis configure \
 	-grid $var(graph,axis,y,grid) -logscale $var(graph,axis,y,log) \
 	-title $var(graph,axis,y,title)
 
-    $var($cc) legend configure -hide [expr !$var(graph,legend)] \
+    $var(graph) legend configure -hide [expr !$var(graph,legend)] \
 	-position $var(graph,legend,position) -title $var(graph,legend,title)
 }
 

@@ -107,8 +107,6 @@ proc MarkerAnalysisRadialCB {frame id} {
 	PlotLineDialog $vvarname $tt "Radial Profile" $sys {}
 	MarkerAnalysisRadialAxisTitle $vvarname
 
-	set cc $vvar(graph,current)
-
 	set vvar(graph,ds,manage) 0
 	set vvar(graph,ds,dim) xyey
 	set vvar(graph,ds,xdata) $xdata
@@ -170,10 +168,11 @@ proc MarkerAnalysisRadialAxisTitle {vvarname} {
     }
 
     # set for plot code
-    set vvar(axis,x,title) $xtitle
-    set vvar(axis,y,title) $ytitle
+    set vvar(graph,axis,x,title) $xtitle
+    set vvar(graph,axis,y,title) $ytitle
 
     # update now (may not make it into plot code)
-    $vvar(graph) xaxis configure -title $xtitle
-    $vvar(graph) yaxis configure -title $ytitle
+    set cc $vvar(graph,current)
+    $vvar($cc) xaxis configure -title $xtitle
+    $vvar($cc) yaxis configure -title $ytitle
 }

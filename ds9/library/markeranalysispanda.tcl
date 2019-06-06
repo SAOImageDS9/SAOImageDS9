@@ -151,10 +151,11 @@ proc MarkerAnalysisPandaAxisTitle {vvarname} {
     }
 
     # set for plot code
-    set vvar(axis,x,title) $xtitle
-    set vvar(axis,y,title) $ytitle
+    set vvar(graph,axis,x,title) $xtitle
+    set vvar(graph,axis,y,title) $ytitle
 
     # update now (may not make it into plot code)
-    $vvar(graph) xaxis configure -title $xtitle
-    $vvar(graph) yaxis configure -title $ytitle
+    set cc $vvar(graph,current)
+    $vvar($cc) xaxis configure -title $xtitle
+    $vvar($cc) yaxis configure -title $ytitle
 }

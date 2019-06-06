@@ -166,10 +166,10 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 	set vvar(graph,format) 0
 	set vvar(xcdata) $xcdata
 	set vvar(ycdata) $ycdata
-	$vvar(graph) xaxis configure \
-	    -command "MarkerAnalysisPlot2dXAxis $vvarname"
 
 	set cc $vvar(graph,current)
+	$vvar($cc) xaxis configure \
+	    -command "MarkerAnalysisPlot2dXAxis $vvarname"
 
 	set vvar(graph,ds,manage) 0
 	set vvar(graph,ds,dim) xy
@@ -235,10 +235,11 @@ proc MarkerAnalysisPlot2dXAxisTitle {vvarname} {
     }
 
     # set for plot code
-    set vvar(axis,x,title) $xtitle
+    set vvar(graph,axis,x,title) $xtitle
 
     # update now (may not make it into plot code)
-    $vvar(graph) xaxis configure -title $xtitle
+    set cc $vvar(graph,current)
+    $vvar($cc) xaxis configure -title $xtitle
 }
 
 proc MarkerAnalysisPlot2dYAxisTitle {vvarname} {
@@ -246,10 +247,11 @@ proc MarkerAnalysisPlot2dYAxisTitle {vvarname} {
     global $vvarname
 
     # set for plot code
-    set vvar(axis,y,title) "$vvar(bunit) [string totitle $vvar(method)]"
+    set vvar(graph,axis,y,title) "$vvar(bunit) [string totitle $vvar(method)]"
 
     # update now (may not make it into plot code)
-    $vvar(graph) yaxis configure -title $vvar(axis,y,title)
+    set cc $vvar(graph,current)
+    $vvar($cc) yaxis configure -title $vvar(graph,axis,y,title)
 }
 
 proc MarkerAnalysisPlot2dXAxis {vvarname w xx} {

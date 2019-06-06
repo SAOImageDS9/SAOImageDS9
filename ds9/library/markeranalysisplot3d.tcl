@@ -165,16 +165,15 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	MarkerAnalysisPlot3dXAxisTitle $vvarname
 	MarkerAnalysisPlot3dYAxisTitle $vvarname
 
-	set vvar(markerslice) [$vvar(graph) marker create line -element bar1 \
+	set cc $vvar(graph,current)
+	set vvar(markerslice) [$vvar($cc) marker create line -element bar1 \
 			     -outline cyan -linewidth 2 \
 			     -bindtags [list slice]]
-	$vvar(graph) marker bind slice <B1-Motion> \
+	$vvar($cc) marker bind slice <B1-Motion> \
 	    [list MarkerAnalysisPlot3dMotion $vvarname %x %y]
 
 	set vvar(mode) pointer
 	PlotChangeMode $vvarname
-
-	set cc $vvar(graph,current)
 
 	set vvar(graph,ds,manage) 0
 	set vvar(graph,ds,dim) xy
@@ -207,7 +206,8 @@ proc MarkerAnalysisPlot3dMotion {vvarname xx yy} {
 	return
     }
 
-    set vvar(slice) [lindex [$vvar(graph) invtransform $xx $yy] 0]
+    set cc $vvar(graph,current)
+    set vvar(slice) [lindex [$vvar($cc) invtransform $xx $yy] 0]
     $vvar(frame) update fits slice $vvar(slice) $vvar(system) $vvar(sky)
 
     MarkerAnalysisPlot3dMarker $vvarname
@@ -236,7 +236,9 @@ proc MarkerAnalysisPlot3dMarker {vvarname} {
     if {[::math::fuzzy::tge $vvar(slice) $max]} {
 	set vvar(slice) [expr $max-$delta]
     }
-    $vvar(graph) marker configure $vvar(markerslice) \
+
+    set cc $vvar(graph,current)
+    $vvar($cc) marker configure $vvar(markerslice) \
 	-coords "$vvar(slice) -Inf $vvar(slice) Inf"
 }
 
@@ -297,10 +299,11 @@ proc MarkerAnalysisPlot3dXAxisTitle {vvarname} {
     }
 
     # set for plot code
-    set vvar(axis,x,title) $xtitle
+    set vvar(graph,axis,x,title) $xtitle
 
     # update now (may not make it into plot code)
-    $vvar(graph) xaxis configure -title $xtitle
+    set cc $vvar(graph,current)
+    $vvar($cc) xaxis configure -title $xtitle
 }
 
 proc MarkerAnalysisPlot3dYAxisTitle {vvarname} {
@@ -308,8 +311,9 @@ proc MarkerAnalysisPlot3dYAxisTitle {vvarname} {
     global $vvarname
 
     # set for plot code
-    set vvar(axis,y,title) "$vvar(bunit) [string totitle $vvar(method)]"
+    set vvar(graph,axis,y,title) "$vvar(bunit) [string totitle $vvar(method)]"
 
     # update now (may not make it into plot code)
-    $vvar(graph) yaxis configure -title $vvar(axis,y,title)
+    set cc $vvar(graph,current)
+    $vvar($cc) yaxis configure -title $vvar(graph,axis,y,title)
 }

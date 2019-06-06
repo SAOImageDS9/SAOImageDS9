@@ -80,8 +80,6 @@ proc MarkerAnalysisHistogramCB {frame id} {
 	}
 	PlotLineDialog $vvarname $tt Histogram $bunit Counts
 
-	set cc $vvar(graph,current)
-
 	set vvar(graph,ds,manage) 0
 	set vvar(graph,ds,dim) xy
 	set vvar(graph,ds,xdata) $xdata

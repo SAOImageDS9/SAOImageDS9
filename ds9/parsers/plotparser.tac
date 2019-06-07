@@ -230,7 +230,7 @@ plotCmd : LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
  # xpa/samp only
  | DATA_ dim {PlotCmdData $2}
- | CLEAR_ {ProcessCmdCVAR0 PlotDeleteData}
+ | CLEAR_ {ProcessCmdCVAR0 PlotDeleteAllDataSet}
  | EXPORT_ export
  | DUPLICATE_ duplicate
  # backward compatibility
@@ -303,8 +303,8 @@ load : STRING_ {PlotCmdLoad $1 xy}
  | STRING_ dim  {PlotCmdLoad $1 $2}
  ;
  
-duplicate : {global cvarname; PlotDupData $cvarname 1}
- | INT_ {global cvarname; PlotDupData $cvarname $1}
+duplicate : {global cvarname; PlotDupDataSet $cvarname 1}
+ | INT_ {global cvarname; PlotDupDataSet $cvarname $1}
  ;
 
 pagesetup : ORIENT_ pageOrient {ProcessCmdSet ps orient $2}

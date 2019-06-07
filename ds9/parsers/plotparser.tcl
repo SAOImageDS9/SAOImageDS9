@@ -5420,7 +5420,7 @@ proc plot::yyparse {} {
                     62 { set _ xyexey }
                     64 { PlotCmdSave $2 }
                     65 { PlotCmdData $2 }
-                    66 { ProcessCmdCVAR0 PlotDeleteData }
+                    66 { ProcessCmdCVAR0 PlotDeleteAllDataSet }
                     70 { ProcessCmdCVAR stats $2 PlotStats }
                     71 { ProcessCmdCVAR stats $2 PlotStats }
                     72 { ProcessCmdCVAR list $2 PlotList }
@@ -5455,8 +5455,8 @@ proc plot::yyparse {} {
                     114 { ProcessCmdSet iap jpeg,quality $1 }
                     115 { PlotCmdLoad $1 xy }
                     116 { PlotCmdLoad $1 $2 }
-                    117 { global cvarname; PlotDupData $cvarname 1 }
-                    118 { global cvarname; PlotDupData $cvarname $1 }
+                    117 { global cvarname; PlotDupDataSet $cvarname 1 }
+                    118 { global cvarname; PlotDupDataSet $cvarname $1 }
                     119 { ProcessCmdSet ps orient $2 }
                     120 { ProcessCmdSet ps orient $2 }
                     121 { ProcessCmdSet ps size $2 }

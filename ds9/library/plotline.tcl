@@ -135,7 +135,7 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     $var(mb).data.fill add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).data.fill.color
 
-    PlotColorMenu $var(mb).data.fill.color $varname graph,fill,color \
+    PlotColorMenu $var(mb).data.fill.color $varname graph,ds,fill,color \
 	[list PlotLineUpdateElement $varname]
 
     # Error

@@ -91,11 +91,6 @@ proc PlotAddData {varname} {
     set cc $var(graph,current)
     set nn $var($cc,data,current)
 
-    # warning: uses current vars
-    if {$var($cc,data,total) == 0} {
-	return
-    }
-
     # delete current elements
     foreach el [$var(graph) element names] {
 	set f [split $el -]
@@ -118,87 +113,6 @@ proc PlotAddData {varname} {
 	    $var(graph) element configure "d-${nn}" \
 		-yerror $var(graph,ds,yedata)
 	}
-    }
-}
-
-proc PlotDeleteData {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ds9
-
-    set cc $var(graph,current)
-
-    if {$var($cc,data,total) == 0} {
-	return
-    }
-
-    # first set can be external
-    set clear $var($cc,1,manage)
-
-    for {set nn 1} {$nn<=$var($cc,data,total)} {incr nn} {
-	if {$var($cc,$nn,manage)} {
-	    # delete elements
-	    foreach el [$var(graph) element names] {
-		set f [split $el -]
-		if {[lindex $f 1] == $nn} {
-		    $var(graph) element delete $el
-		}
-	    }
-
-	    # destroy vectors
-	    blt::vector destroy \
-		$var($cc,$nn,xdata) $var($cc,$nn,ydata)
-	    switch $var($cc,$nn,dim) {
-		xy {}
-		xyex {blt::vector destroy $var($cc,$nn,xedata)}
-		xyey {blt::vector destroy $var($cc,$nn,yedata)}
-		xyexey {blt::vector destroy \
-			    $var($cc,$nn,xedata) $var($cc,$nn,yedata)}
-	    }
-
-	    foreach x [array names $varname] {
-		set f [split $x ,]
-		if {([lindex $f 0] == $nn)} {
-		    unset ${varname}($x)
-		}
-	    }
-	}
-    }
-
-    if {$clear} {
-	set var($cc,data,total) 0
-	set var($cc,data,current) 0
-
-	set var(graph,ds,name) {}
-	set var(graph,ds,xdata) {}
-	set var(graph,ds,ydata) {}
-	set var(graph,ds,xedata) {}
-	set var(graph,ds,yedata) {}
-
-	# reset other variables
-	set var($cc,axis,x,auto) 1
-	set var($cc,axis,x,min) {}
-	set var($cc,axis,x,max) {}
-	set var($cc,axis,x,format) {}
-
-	set var($cc,axis,y,auto) 1
-	set var($cc,axis,y,min) {}
-	set var($cc,axis,y,max) {}
-	set var($cc,axis,y,format) {}
-	
-	$var(mb).graph.select delete $ds9(menu,start) end
-
-	$var(proc,updategraph) $varname
-	PlotStats $varname
-	PlotList $varname
-    } else {
- 	set var($cc,data,total) 1
- 	set var($cc,data,current) 1
-
-	$var(mb).graph.select delete [expr $ds9(menu,start)+1] end
- 	PlotCurrentData $varname
-	$var(proc,updategraph) $varname
     }
 }
 
@@ -533,16 +447,10 @@ proc PlotUpdateGraph {varname} {
     # Menus
     if {$var(graph,ds,xdata) != {}} {
 	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state normal
-	$var(mb).file entryconfig [msgcat::mc {Clear Data}] -state normal
-	$var(mb).file entryconfig [msgcat::mc {Duplicate Data}] -state normal
-	$var(mb).file entryconfig [msgcat::mc {Statistics}] -state normal
-	$var(mb).file entryconfig [msgcat::mc {List Data}] -state normal
+	$var(mb).file entryconfig [msgcat::mc {Clear All Data}] -state normal
     } else {
 	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state disabled
-	$var(mb).file entryconfig [msgcat::mc {Clear Data}] -state disabled
-	$var(mb).file entryconfig [msgcat::mc {Duplicate Data}] -state disabled
-	$var(mb).file entryconfig [msgcat::mc {Statistics}] -state disabled
-	$var(mb).file entryconfig [msgcat::mc {List Data}] -state disabled
+	$var(mb).file entryconfig [msgcat::mc {Clear All Data}] -state disabled
     }
 
     # Graph

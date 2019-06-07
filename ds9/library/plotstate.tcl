@@ -155,6 +155,7 @@ proc PlotSaveState {varname} {
     set nn $var($cc,data,current)
 
     puts "PlotSaveState $cc"
+#    DumpCallStack
 
     # per Graph
     set var($cc,format) $var(graph,format)

@@ -90,11 +90,9 @@ proc MarkerAnalysisHistogramCB {frame id} {
     $frame get marker $id analysis histogram $xdata $ydata $vvar(nbins)
 
     if {!$ping} {
-	PlotExternal $vvarname
 	set vvar(graph,ds,smooth) step
 	set vvar(graph,ds,fill) 1
-
-	$vvar(proc,updateelement) $vvarname
+	PlotExternal $vvarname
     }
 
     PlotStats $vvarname

@@ -189,7 +189,6 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 
     if {!$ping} {
 	PlotExternal $vvarname
-	$vvar(proc,updateelement) $vvarname
     }
 
     PlotStats $vvarname

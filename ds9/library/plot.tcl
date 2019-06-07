@@ -27,10 +27,6 @@ proc PlotAddGraph {varname} {
     global ds9
     global pap
 
-    if {$var(graphs) != {}} {
-	PlotSaveState $varname
-    }
-
     incr ${varname}(seq)
     set cc "graph$var(seq)"
     lappend var(graphs) $cc
@@ -42,7 +38,6 @@ proc PlotAddGraph {varname} {
     $var(proc,addgraph) $varname
 
     PlotInitGraph $varname
-    PlotSaveState $varname
     
     $var(proc,updategraph) $varname
     $var(proc,updatecanvas) $varname
@@ -121,6 +116,8 @@ proc PlotAddElement {varname} {
     $var(mb).graph.select add radiobutton -label "$var(graph,ds,name)" \
 	-variable ${varname}($cc,data,current) -value $nn \
 	-command [list PlotCurrent $varname]
+
+    $var(proc,updateelement) $varname
 }
 
 proc PlotCurrent {varname} {
@@ -218,7 +215,6 @@ proc PlotExternal {varname} {
     set var(graph,ds,manage) 0
     set var(graph,ds,name) "Dataset $nn"
 
-    PlotSaveState $varname
     PlotAddElement $varname
 }
 
@@ -366,6 +362,8 @@ proc PlotUpdateCanvas {varname} {
     global $varname
     global ds9
 
+    PlotSaveState $varname
+    
     foreach cc $var(graphs) {
 	$var($cc) configure -plotpadx 0 -plotpady 0 \
 	    -font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)" \

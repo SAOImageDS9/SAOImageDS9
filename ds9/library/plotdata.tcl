@@ -33,9 +33,6 @@ proc PlotDataSetOne {varname dim data} {
     upvar #0 $varname var
     global $varname
 
-    # save current state
-    PlotSaveState $varname
-
     set cc $var(graph,current)
 
     # look for no data
@@ -231,9 +228,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
     }
 
-    PlotSaveState $varname
     PlotAddElement $varname
-    $var(proc,updateelement) $varname
 }
 
 proc PlotDupDataSet {varname mm} {
@@ -308,8 +303,8 @@ proc PlotDupDataSet {varname mm} {
     # make current
     set var($cc,data,current) $nn
     PlotRestoreState $varname
-
     PlotAddElement $varname
+
     PlotStats $varname
     PlotList $varname
 }

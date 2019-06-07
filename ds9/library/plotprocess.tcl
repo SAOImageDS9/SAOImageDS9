@@ -341,7 +341,7 @@ proc PlotCmdSelectData {which} {
 
     set cc $cvar(graph,current)
     set cvar($cc,data,current) $which
-    PlotCurrent $cvarname
+    PlotCurrentDataSet $cvarname
 }
 
 # used by SAMP and CATALOG

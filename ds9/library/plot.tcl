@@ -53,7 +53,7 @@ proc PlotAddGraph {varname} {
     # update select graph menu
     $var(mb).canvas.select add radiobutton -label "Graph $var(seq)" \
 	-variable ${varname}(graph,current) -value $cc \
-	-command [list PlotCurrent $varname]
+	-command [list PlotCurrentGraph $varname]
 
     # layout
     foreach cc $var(graphs) {
@@ -115,12 +115,20 @@ proc PlotAddElement {varname} {
     # update select dataset menu
     $var(mb).graph.select add radiobutton -label "$var(graph,ds,name)" \
 	-variable ${varname}($cc,data,current) -value $nn \
-	-command [list PlotCurrent $varname]
+	-command [list PlotCurrentDataSet $varname]
 
     $var(proc,updateelement) $varname
 }
 
-proc PlotCurrent {varname} {
+proc PlotCurrentGraph {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    PlotRestoreState $varname
+    PlotCurrentDataSet $varname
+}
+
+proc PlotCurrentDataSet {varname} {
     upvar #0 $varname var
     global $varname
 
@@ -532,7 +540,7 @@ proc PlotBackup {ch dir} {
 	    set save $var($cc,data,current)
 	    for {set ii 1} {$ii<=$var($cc,data,total)} {incr ii} {
 		set ${varname}($cc,data,current) $ii
-		PlotCurrent $varname
+		PlotCurrentDataSet $varname
 
 		PlotSaveDataFile $varname "$fdir/plot$ii.dat"
 		PlotSaveConfigFile $varname "$fdir/plot$ii.plt"
@@ -541,7 +549,7 @@ proc PlotBackup {ch dir} {
 		puts $ch "PlotLoadConfigFile $varname $fdir/plot$ii.plt"
 	    }
 	    set ${varname}($cc,data,current) $save
-	    PlotCurrent $varname
+	    PlotCurrentDataSet $varname
 	}
     }
 }

@@ -46,8 +46,8 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     set var(proc,updatecanvas) PlotUpdateCanvas
     set var(proc,updategraph) PlotUpdateGraph
     set var(proc,updateelement) PlotLineUpdateElement
-    set var(proc,highlite) PlotLineHighliteElement
-    set var(proc,button) PlotLineButton
+    set var(proc,highlite) PlotHighliteElement
+    set var(proc,button) PlotButton
 
     PlotDialog $varname $wtt $title $xaxis $yaxis
     PlotAddGraph $varname

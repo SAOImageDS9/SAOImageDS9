@@ -346,6 +346,20 @@ proc PlotCmdSelectData {which} {
     PlotCurrentData $cvarname
 }
 
+# used by SAMP and CATALOG
+proc PlotCmdHighliteElement {varname rowlist} {
+    upvar #0 $varname var
+    global $varname
+
+    # rowlist starts at 1
+    set result {}
+    foreach rr $rowlist {
+	append result "[expr $rr-1] "
+    }
+
+    $var(proc,highlite) $varname $result
+}
+
 proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {
     global iap
     global parse

@@ -19,20 +19,6 @@ proc PlotDef {} {
     PlotDefState
 }
 
-# Canvas
-proc PlotLayoutCanvas {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    foreach cc $var(graphs) {
-	pack forget $var($cc)
-    }
-
-    foreach cc $var(graphs) {
-	pack $var($cc) -side top -expand yes -fill both
-    }
-}
-
 # Graph
 proc PlotAddGraph {varname} {
     upvar #0 $varname var
@@ -57,6 +43,9 @@ proc PlotAddGraph {varname} {
 
     PlotInitGraph $varname
     
+    $var(proc,updategraph) $varname
+    $var(proc,updatecanvas) $varname
+
     # set up zoom stack, assuming mode is zoom
     global ds9
     switch $ds9(wm) {
@@ -65,7 +54,14 @@ proc PlotAddGraph {varname} {
 	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
     }
 
-    PlotLayoutCanvas $varname
+    # layout
+    foreach cc $var(graphs) {
+	pack forget $var($cc)
+    }
+
+    foreach cc $var(graphs) {
+	pack $var($cc) -side top -expand yes -fill both
+    }
 }
 
 proc PlotDeleteGraph {varname} {

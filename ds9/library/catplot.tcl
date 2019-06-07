@@ -87,9 +87,8 @@ proc CATPlotGenerate {varname} {
     }
 
     PlotDeleteAllDataSet $vvarname
-    PlotDataSet $vvarname $dim $rr
+    PlotAddDataSet $vvarname $dim $rr
     PlotTitle $vvarname $var(title) $xtitle $ytitle
-    $vvar(proc,updategraph) $vvarname
     PlotStats $vvarname
     PlotList $vvarname
 }

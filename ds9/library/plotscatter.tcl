@@ -31,9 +31,7 @@ proc PlotScatter {tt wtt title xaxis yaxis dim data} {
     global $varname
 
     PlotScatterDialog $varname $wtt $title $xaxis $yaxis
-    PlotDataSet $varname $dim $data
-
-    $var(proc,updategraph) $varname
+    PlotAddDataSet $varname $dim $data
     PlotStats $varname
     PlotList $varname
 }
@@ -70,8 +68,6 @@ proc PlotScatterDialog {varname wtt title xaxis yaxis} {
 
     # Error
     PlotErrorMenu $varname
-
-    $var(proc,updatecanvas) $varname
 }
 
 proc PlotScatterAddGraph {varname} {

@@ -95,7 +95,6 @@ proc MarkerAnalysisHistogramCB {frame id} {
 	set vvar(graph,ds,fill) 1
 
 	$vvar(proc,updateelement) $vvarname
-	$vvar(proc,updategraph) $vvarname
     }
 
     PlotStats $vvarname

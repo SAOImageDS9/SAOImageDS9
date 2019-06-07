@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc PlotDataSet {varname dim data} {
+proc PlotAddDataSet {varname dim data} {
     upvar #0 $varname var
     global $varname
 
@@ -15,8 +15,6 @@ proc PlotDataSet {varname dim data} {
 
 	    # second data set
 	    PlotDataSetOne $varname "4.2" $data
-
-	    $var(proc,updateelement) $varname
 	}
 	5 {
 	    # first data set
@@ -24,10 +22,10 @@ proc PlotDataSet {varname dim data} {
 
 	    # second data set
 	    PlotDataSetOne $varname "5.2" $data
-
-	    $var(proc,updateelement) $varname
 	}
-	default {PlotDataSetOne $varname $dim $data}
+	default {
+	    PlotDataSetOne $varname $dim $data
+	}
     }
 }
 
@@ -352,9 +350,7 @@ proc PlotLoadDataFile {varname filename dim} {
     close $ch
 
     PlotRaise $varname
-
-    PlotDataSet $varname $dim $data
-    $var(proc,updategraph) $varname
+    PlotAddDataSet $varname $dim $data
     PlotStats $varname
     PlotList $varname
 }

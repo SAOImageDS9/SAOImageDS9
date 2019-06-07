@@ -31,9 +31,7 @@ proc PlotLine {tt wtt title xaxis yaxis dim data} {
     global $varname
 
     PlotLineDialog $varname $wtt $title $xaxis $yaxis
-    PlotDataSet $varname $dim $data
-
-    $var(proc,updategraph) $varname
+    PlotAddDataSet $varname $dim $data
     PlotStats $varname
     PlotList $varname
 }
@@ -140,8 +138,6 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
 
     # Error
     PlotErrorMenu $varname
-
-    $var(proc,updatecanvas) $varname
 }
 
 proc PlotLineAddGraph {varname} {

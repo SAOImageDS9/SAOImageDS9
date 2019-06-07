@@ -232,8 +232,7 @@ proc PlotCmdData {dim} {
     }
     
     PlotRaise $cvarname
-    PlotDataSet $cvarname $dim $parse(buf)
-    $cvar(proc,updategraph) $cvarname
+    PlotAddDataSet $cvarname $dim $parse(buf)
     PlotStats $cvarname
     PlotList $cvarname
 }
@@ -317,7 +316,7 @@ proc PlotCmdFontStyle {which value} {
 	}
     }
 
-    $cvar(proc,updategraph) $cvarname
+    $cvar(proc,updatecanvas) $cvarname
 }
 
 proc PlotCmdExport {format fn} {

@@ -31,9 +31,7 @@ proc PlotBar {tt wtt title xaxis yaxis dim data} {
     global $varname
 
     PlotBarDialog $varname $wtt $title $xaxis $yaxis
-    PlotDataSet $varname $dim $data
-
-    $var(proc,updategraph) $varname
+    PlotAddDataSet $varname $dim $data
     PlotStats $varname
     PlotList $varname
 }
@@ -126,8 +124,6 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
 	[list PlotBarUpdateElement $varname]
     WidthDashMenu $var(mb).data.error.width $varname graph,ds,error,width {} \
 	[list PlotBarUpdateElement $varname] {}
-
-    $var(proc,updatecanvas) $varname
 }
 
 proc PlotBarAddGraph {varname} {

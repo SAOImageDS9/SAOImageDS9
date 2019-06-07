@@ -180,8 +180,9 @@ proc PlotLoadConfigFile {varname filename} {
 	unset var(grid,log)
     }
 
-    $var(proc,updategraph) $varname
     $var(proc,updateelement) $varname
+    $var(proc,updategraph) $varname
+    $var(proc,updatecanvas) $varname
 }
 
 proc PlotSaveConfig {varname} {

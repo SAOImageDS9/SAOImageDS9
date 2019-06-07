@@ -42,6 +42,7 @@ proc PlotAddGraph {varname} {
     $var(proc,addgraph) $varname
 
     PlotInitGraph $varname
+    PlotSaveState $varname
     
     $var(proc,updategraph) $varname
     $var(proc,updatecanvas) $varname
@@ -53,6 +54,11 @@ proc PlotAddGraph {varname} {
 	win32 {Blt_ZoomStack $var(graph) -mode release}
 	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
     }
+
+    # update select graph menu
+    $var(mb).canvas.select add radiobutton -label "Graph $var(seq)" \
+	-variable ${varname}(graph,current) -value $cc \
+	-command [list PlotCurrent $varname]
 
     # layout
     foreach cc $var(graphs) {
@@ -111,33 +117,17 @@ proc PlotAddElement {varname} {
 	}
     }
 
-    # update data set menu
+    # update select dataset menu
     $var(mb).graph.select add radiobutton -label "$var(graph,ds,name)" \
 	-variable ${varname}($cc,data,current) -value $nn \
-	-command [list PlotCurrentData $varname]
+	-command [list PlotCurrent $varname]
 }
 
-proc PlotCurrentGraph {varname} {
+proc PlotCurrent {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc $var(graph,current)
-
-    if {$cc != {}} {
-	PlotCurrentData $varname
-    }
-}
-
-proc PlotCurrentData {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set cc $var(graph,current)
-
-    if {$var($cc,data,total) > 0} {
-	PlotRestoreState $varname
-    }
-
+    PlotRestoreState $varname
     PlotStats $varname
     PlotList $varname
 }
@@ -402,6 +392,8 @@ proc PlotUpdateGraph {varname} {
     upvar #0 $varname var
     global $varname
 
+    PlotSaveState $varname
+
     if {$var(graph,axis,x,auto)} {
 	set xmin {}
 	set xmax {}
@@ -542,7 +534,7 @@ proc PlotBackup {ch dir} {
 	    set save $var($cc,data,current)
 	    for {set ii 1} {$ii<=$var($cc,data,total)} {incr ii} {
 		set ${varname}($cc,data,current) $ii
-		PlotCurrentData $varname
+		PlotCurrent $varname
 
 		PlotSaveDataFile $varname "$fdir/plot$ii.dat"
 		PlotSaveConfigFile $varname "$fdir/plot$ii.plt"
@@ -551,7 +543,7 @@ proc PlotBackup {ch dir} {
 		puts $ch "PlotLoadConfigFile $varname $fdir/plot$ii.plt"
 	    }
 	    set ${varname}($cc,data,current) $save
-	    PlotCurrentData $varname
+	    PlotCurrent $varname
 	}
     }
 }

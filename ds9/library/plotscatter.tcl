@@ -85,15 +85,13 @@ proc PlotScatterUpdateElement {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc $var(graph,current)
+    PlotSaveState $varname
 
-    # warning: uses current vars
+    set cc $var(graph,current)
     if {$var($cc,data,total) == 0} {
  	return
     }
     
-    PlotSaveState $varname
-
     if {$var(graph,ds,shape,symbol) == "none"} {
 	set var(graph,ds,shape,symbol) circle
     }

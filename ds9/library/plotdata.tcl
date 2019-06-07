@@ -523,7 +523,7 @@ proc PlotDeleteAllDataSet {varname} {
  	set var($cc,data,current) 1
 
 	$var(mb).graph.select delete [expr $ds9(menu,start)+1] end
- 	PlotCurrentData $varname
+ 	PlotCurrent $varname
 	$var(proc,updategraph) $varname
     }
 }

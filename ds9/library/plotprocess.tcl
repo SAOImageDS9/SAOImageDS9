@@ -286,7 +286,7 @@ proc PlotCmdUpdateGraph {which value} {
     upvar #0 $cvarname cvar
 
     set cvar($which) $value
-    $cvar(proc,updategraph) $cvarname
+    UpdateGraph $cvarname
 }
 
 proc PlotCmdUpdateElement {which value} {
@@ -315,7 +315,6 @@ proc PlotCmdFontStyle {which value} {
 	    set cvar($which,slant) italic
 	}
     }
-
     $cvar(proc,updatecanvas) $cvarname
 }
 
@@ -342,7 +341,7 @@ proc PlotCmdSelectData {which} {
 
     set cc $cvar(graph,current)
     set cvar($cc,data,current) $which
-    PlotCurrentData $cvarname
+    PlotCurrent $cvarname
 }
 
 # used by SAMP and CATALOG

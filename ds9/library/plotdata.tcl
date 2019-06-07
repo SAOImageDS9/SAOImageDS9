@@ -232,13 +232,7 @@ proc PlotDataSetOne {varname dim data} {
     }
 
     PlotSaveState $varname
-
-    # update data set menu
-    $var(mb).graph.select add radiobutton -label "$var(graph,ds,name)" \
-	-variable ${varname}($cc,data,current) -value $nn \
-	-command [list PlotCurrentData $varname]
-
-    PlotAddData $varname
+    PlotAddElement $varname
     $var(proc,updateelement) $varname
 }
 
@@ -311,18 +305,11 @@ proc PlotDupDataSet {varname mm} {
 
     set var($cc,$nn,bar,relief) $var($cc,$mm,bar,relief)
 
-    # update data set menu
-    $var(mb).graph.select add radiobutton -label "$var($cc,$nn,name)" \
-	-variable ${varname}($cc,data,current) -value $nn \
-	-command [list PlotCurrentData $varname]
-
     # make current
     set var($cc,data,current) $nn
     PlotRestoreState $varname
 
-    PlotAddData $varname
-    $var(proc,updateelement) $varname
-    $var(proc,updategraph) $varname
+    PlotAddElement $varname
     PlotStats $varname
     PlotList $varname
 }

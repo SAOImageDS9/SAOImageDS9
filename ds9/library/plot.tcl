@@ -80,7 +80,7 @@ proc PlotDeleteGraph {varname} {
 }
 
 # Data
-proc PlotAddData {varname} {
+proc PlotAddElement {varname} {
     upvar #0 $varname var
     global $varname
 
@@ -110,6 +110,11 @@ proc PlotAddData {varname} {
 		-yerror $var(graph,ds,yedata)
 	}
     }
+
+    # update data set menu
+    $var(mb).graph.select add radiobutton -label "$var(graph,ds,name)" \
+	-variable ${varname}($cc,data,current) -value $nn \
+	-command [list PlotCurrentData $varname]
 }
 
 proc PlotCurrentGraph {varname} {
@@ -224,14 +229,7 @@ proc PlotExternal {varname} {
     set var(graph,ds,name) "Dataset $nn"
 
     PlotSaveState $varname
-
-    # update data set menu
-    $var(mb).graph.select add radiobutton \
-	-label "[msgcat::mc {Dataset}] $nn" \
-	-variable ${varname}($cc,data,current) -value $nn \
-	-command "PlotCurrentData $varname"
-
-    PlotAddData $varname
+    PlotAddElement $varname
 }
 
 proc PlotList {varname} {

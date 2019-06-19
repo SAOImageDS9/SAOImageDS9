@@ -452,6 +452,10 @@ proc FixPrefs {version} {
 	set version 5.x
     }
 
+    # these old vars may exists in the wild
+    # be sure to rm them
+    FixPrefsVarOld
+
     switch $version {
 	5.x {
 	    FixPrefs5.xto6.0
@@ -464,6 +468,8 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	6.0 {
 	    FixPrefs6.0to6.1 
@@ -475,6 +481,8 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	6.1 -
 	6.1.1 -
@@ -487,6 +495,8 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	6.2 {
 	    FixPrefs6.2to7.0
@@ -496,6 +506,8 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.0 {
 	    FixPrefs7.0to7.1
@@ -504,6 +516,8 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.1 {
 	    FixPrefs7.1to7.2
@@ -511,12 +525,16 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.2 {
 	    FixPrefs7.2to7.3
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.3 -
 	7.3.1 -
@@ -524,16 +542,62 @@ proc FixPrefs {version} {
 	    FixPrefs7.3to7.4
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.4 {
 	    FixPrefs7.4to7.5
 	    FixPrefs7.5to7.6
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
 	7.5 {
 	    FixPrefs7.5to7.6
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
 	}
-	7.6 {}
+	7.6 {
+	    FixPrefs7.6to8.0
+	    FixPrefs8.0to8.1
+	}
+	8.0 {
+	    FixPrefs8.0to8.1
+	}
+	8.1 {}
     }
+}
+
+proc FixPrefsVarOld {} {
+    # these old vars may exists in the wild
+    # be sure to rm them
+    FixVarRm pbuttons(bin,match)
+    FixVarRm pbuttons(scale,match)
+    FixVarRm pbuttons(color,match)
+
+    # 5.7
+    FixVarRm pbuttons(help,issue)
+    
+    # 6.2
+    FixVarRm pbuttons(file,savefits)
+    FixVarRm pbuttons(file,savempeg)
+    FixVarRm pbuttons(region,circle3d)
+
+    # 7.0
+    FixVarRm pbuttons(file,about)
+    FixVarRm pbuttons(help,home)
+
+    # 7.5
+    FixVarRm pbuttons(help,keyboard)
+
+    # 8.0
+    FixVarRm pbuttons(file,samp)
+}
+
+proc FixPrefs8.0to8.1 {} {
+    FixVarRm pbuttons(file,samp)
+}
+
+proc FixPrefs7.6to8.0 {} {
 }
 
 proc FixPrefs7.5to7.6 {} {
@@ -541,6 +605,8 @@ proc FixPrefs7.5to7.6 {} {
     set smooth(radius,minor) $smooth(radius)
     set smooth(sigma) [expr int($smooth(radius)/2.)]
     set smooth(sigma,minor) $smooth(sigma)
+
+    FixVarRm pbuttons(help,keyboard)
 }
 
 proc FixPrefs7.4to7.5 {} {
@@ -649,6 +715,9 @@ proc FixPrefs7.0to7.1 {} {
 	unset pap(grid)
 	unset pap(grid,log)
     }
+
+    FixVarRm pbuttons(file,about)
+    FixVarRm pbuttons(help,home)
 }
 
 proc FixPrefs6.2to7.0 {} {
@@ -677,18 +746,19 @@ proc FixPrefs6.2to7.0 {} {
     FixVar pbuttons(frame,match,scale) pbuttons(frame,matchscale)
     FixVar pbuttons(frame,match,color) pbuttons(frame,matchcolor)
 
-    FixVarRm pbuttons(region,circle3d)
-
     FixVar ppanner(compass) ppanner(compass,image)
     FixVarRm ppanner(compass,wcs,system)
     FixVarRm ppanner(compass,wcs,sky)
 
-    global pmarker
     FixVarRm pmarker(dialog,system)
     FixVarRm pmarker(dialog,sky)
     FixVarRm pmarker(dialog,skyformat)
     FixVarRm pmarker(dialog,dist,system)
     FixVarRm pmarker(dialog,dist,format)
+
+    FixVarRm pbuttons(file,savefits)
+    FixVarRm pbuttons(file,savempeg)
+    FixVarRm pbuttons(region,circle3d)
 
     # mousewheel MacOSX Lion
     global tcl_platform
@@ -814,8 +884,6 @@ proc FixPrefs6.0to6.1 {} {
     FixVarSet pgraph(horz,log) graph(horz,log) 
     FixVarSet pgraph(vert,grid) graph(vert,grid) 
     FixVarSet pgraph(vert,log) graph(vert,log) 
-#    global graph
-#    catch {unset graph}
 
     # cat
     FixVar pcat(server) cat(server)
@@ -1055,5 +1123,7 @@ proc FixPrefs5.xto6.0 {} {
         FixVarRm pbuttons(zoom,1/8)
         FixVarRm pbuttons(zoom,1/4)
         FixVarRm pbuttons(zoom,1/2)
+
+	FixVarRm pbuttons(help,issue)
     }
 }

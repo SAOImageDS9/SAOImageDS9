@@ -389,8 +389,7 @@ void FrameRGB::loadDone(int rr)
       keyContext = currentContext;
       keyContextSet =1;
     }
-
-    Base::loadDone(rr);
   }
+  Base::loadDone(rr);
 }
 

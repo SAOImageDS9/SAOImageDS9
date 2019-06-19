@@ -1,0 +1,91 @@
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
+<title>DS9 Version 8.1 Release Notes</title>
+</head>
+<body link="#0000EE" bgcolor="#FFFFFF" alink="#FF0000" vlink="#551A8B" text="#000000">
+<h3><img alt="" src="../sun.gif" height="98" align="middle" width="100"> SAOImageDS9 Version 8.1 Release Notes</h3>
+<div style="margin-left: 2em">
+<ol>
+<li><tt>10.29.2018 BLOCK: all supported WCSs now updated to reflect blocking.</tt></li>
+<li><tt>10.30.2018 WFPC2: fixed an issue with blocking and WFPC2 images.</tt></li>
+<li><tt>11.02.2018 MASK: mask now supports WCS, in addition to physical, image.</tt></li>
+<li><tt>11.06.2018 SAVEIMAGE: all supported WCSs now updated to reflect current rotation, orientation, pan, and zoom.</tt></li>
+<li><tt>12.07.2018 CONTOURS: merge old and new contour parsers so that regardless of file extension, the file will be correctly parsed.</tt></li>
+<li><tt>12.10.2018 CONTOURS: LEVELS command now takes one numeric in addition to a string.</tt></li>
+<li><tt>12.14.2018 GRID: add checks to avoid NULL pointers in cases of odd WCS defs.</tt></li>
+<li><tt>12.14.2018 BINNING: bring forward any 3rd column WCS defines for binned 3d cubes.</tt></li>
+<li><tt>12.14.2018 PLOT3D: verify 3D WCS, reset to IMAGE if not available.</tt></li>
+<li><tt>12.19.2018 SAVEIMAGE: is now supported under Windows.</tt></li>
+<li><tt>12.19.2018 MOVIE3D: is now supported under Windows.</tt></li>
+<li><tt>12.27.2018 TCLIIS: update TEA to 3.13.</tt></li>
+<li><tt>12.27.2018 TKSAO: update TEA to 3.13.</tt></li>
+<li><tt>12.29.2018 TKMACOSX: update TEA to 3.13.</tt></li>
+<li><tt>12.29.2018 TKWIN: update TEA to 3.13.</tt></li>
+<li><tt>12.29.2018 TCLSIGNAL: update TEA to 3.13.</tt></li>
+<li><tt>12.29.2018 TCLXML: update TEA to 3.13.</tt></li>
+<li><tt>12.29.2018 TCLZVFS: update TEA to 3.13.</tt></li>
+<li><tt>12.29.2018 TKBLT: update TEA to 3.13.</tt></li>
+<li><tt>12.29.2018 TLS: update TEA to 3.13.</tt></li>
+<li><tt>01.07.2019 TKCON: update TEA to 3.13.</tt></li>
+<li><tt>01.07.2019 TKHTML1: update TEA to 3.13.</tt></li>
+<li><tt>01.07.2019 TKMPEG: update TEA to 3.13.</tt></li>
+<li><tt>01.07.2019 TKTABLE: update TEA to 3.13.</tt></li>
+<li><tt>01.08.2019 TKIMG: updated to version 1.4.7</tt></li>
+<li><tt>01.17.2019 TCLZIPFS: now using tclzipfs for unix port.</tt></li>
+<li><tt>01.24.2019 SAVEIMAGE: is now supported under MacOS Aqua.</tt></li>
+<li><tt>01.24.2019 MOVIE3D: is now supported under Windows.</tt></li>
+<li><tt>01.24.2019 MOVIE3D: is now supported under MacOS Aqua.</tt></li>
+<li><tt>02.11.2019 WCS: 1D WCS is now supported.</tt></li>
+<li><tt>02.11.2019 WCS: Increase WCS params dialog to full 4 axes.</tt></li>
+<li><tt>02.14.2019 BIN: fix binning physical in case of no WCS.</tt></li>
+<li><tt>02.15.2019 TCLLIB: updated to version 1.19.</tt></li>
+<li><tt>02.26.2019 GUI: add command "preserve scale" for backward compatibility.</tt></li>
+<li><tt>02.28.2019 TKBLT: fixed postscript bounding box issue.</tt></li>
+<li><tt>03.01.2019 PLOT: removed old split data sets from plot widgets.</tt></li>
+<li><tt>03.02.2019 SHM: fixed type in loading shared memory segments.</tt></li>
+<li><tt>03.04.2019 CATALOG: fixed issue allowing column names for size/size2/angle via parser.</tt></li>
+<li><tt>03.06.2019 PLOT: update error cap documentation.</tt></li>
+<li><tt>03.06.2019 PLOT: Line Plot, add 0 width option to Width Menu.</tt></li>
+<li><tt>03.06.2019 PLOT: support graph background color.</tt></li>
+<li><tt>03.06.2019 PLOT: add plot export to gif,png,tiff,jpeg.</tt></li>
+<li><tt>03.07.2019 TKBLT: fix segv Marker Op delete.</tt></li>
+<li><tt>03.18.2019 CONTOURS: contours are now threaded.</tt></li>
+<li><tt>03.18.2019 CONTOURS: default contour method is now smooth.</tt></li>
+<li><tt>03.19.2019 TKIMG: update to verision 1.4.9.</tt></li>
+<li><tt>03.21.2019 PLOT: removed old sequence flag.</tt></li>
+<li><tt>03.25.2019 MOVIE: fixed movie 3d to/from params issues.</tt></li>
+<li><tt>03.25.2019 MOVIE: add support for animated gif movies.</tt></li>
+<li><tt>03.28.2019 3D: add 3D mouse mode.</tt></li>
+<li><tt>03.28.2019 GIF: use native Tk gif.</tt></li>
+<li><tt>03.28.2019 PNG: use native Tk png.</tt></li>
+<li><tt>04.16.2019 GUI: fix math::fuzzy issue with MacOS Aqua.</tt></li>
+<li><tt>04.17.2019 MACOS: fix issue with analysis filedialog macro and MacOS Aqua.</tt></li>
+<li><tt>04.22.2019 GUI: rotate image and change colorbar now uses full render algorithm.</tt></li>
+<li><tt>04.23.2019 MASK: default systems is now WCS (similar to RGB).</tt></li>
+<li><tt>04.25.2019 MASK: fixed an issue with mask and backups.</tt></li>
+<li><tt>04.25.2019 BACKUP: fixed an issue with reading version 6.x backup files.</tt></li>
+<li><tt>04.25.2019 CUBE: add 'get cube coordsys command'</tt></li>
+<li><tt>05.02.2019 XPA: fix -xpa command issue.</tt></li>
+<li><tt>05.02.2019 CUBE: fix an issue with updating the current slice via the dialog slider.</tt></li>
+<li><tt>05.02.2019 REGION: fixed histogram analysis plot if region off image.</tt></li>
+<li><tt>05.03.2019 REGION: fixed statistics dialog if region off image.</tt></li>
+<li><tt>05.07.2019 SAMP: removed previous added -keepalive to http::geturl calls except for URL cda.harvard.edu.</tt></li>
+<li><tt>05.08.2019 GUI: display 3d coordinates in infobox if available for all types of frames.</tt></li>
+<li><tt>05.08.2019 DARWIN: reposition window to upper left corner if X11 and Darwin for SaveAs and Movie.</tt></li>
+<li><tt>05.10.2019 AST: update to version 8.7.1.</tt></li>
+<li><tt>05.13.2019 OPENSSL: DS9 now links against its own version of openssl and no longer is dependent upon system libs.</tt></li>
+<li><tt><b>05.15.2019 RELEASE version 8.1b1</b></tt></li>
+<li><tt>05.28.2019 URL: more tolerant of mime types when downloading via http.</tt></li>
+<li><tt>06.04.2019 COLORBAR: fixed a number of issues with updating the screen with color tags active.</tt></li>
+<li><tt>06.05.2019 GUI: colobar cmds load/save errors now report via Error proc.</tt></li>
+<li><tt>06.19.2019 RGB: fixed an issue introduced in 8.1b1 in which a bad fits file loaded into RGB frame would not generate an error message.</tt></li>
+<li><tt>06.19.2019 PREFS: screen for old pbuttons vars which may have been passed along from previous prefs files before processing the buttons.</tt></li>
+<li><tt><b>xx.xx.2019 RELEASE version 8.1b2</b></tt></li>
+</ol>
+</div>
+</body>
+</html>

@@ -559,6 +559,7 @@ proc FixPrefs {version} {
 	7.6 {
 	    FixPrefs7.6to8.0
 	    FixPrefs8.0to8.1
+
 	}
 	8.0 {
 	    FixPrefs8.0to8.1

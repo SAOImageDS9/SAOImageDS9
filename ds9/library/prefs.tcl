@@ -452,6 +452,10 @@ proc FixPrefs {version} {
 	set version 5.x
     }
 
+    # these old vars may exists in the wild
+    # be sure to rm them
+    FixPrefsVarOld
+
     switch $version {
 	5.x {
 	    FixPrefs5.xto6.0
@@ -557,15 +561,39 @@ proc FixPrefs {version} {
 	    FixPrefs8.0to8.1
 	}
 	8.0 {
-	    FixPrefs7.6to8.0
 	    FixPrefs8.0to8.1
 	}
+	8.1 {}
     }
 }
 
-proc FixPrefs8.0to8.1 {} {
-    global pap
+proc FixPrefsVarOld {} {
+    # these old vars may exists in the wild
+    # be sure to rm them
+    FixVarRm pbuttons(bin,match)
+    FixVarRm pbuttons(scale,match)
+    FixVarRm pbuttons(color,match)
 
+    # 5.7
+    FixVarRm pbuttons(help,issue)
+    
+    # 6.2
+    FixVarRm pbuttons(file,savefits)
+    FixVarRm pbuttons(file,savempeg)
+    FixVarRm pbuttons(region,circle3d)
+
+    # 7.0
+    FixVarRm pbuttons(file,about)
+    FixVarRm pbuttons(help,home)
+
+    # 7.5
+    FixVarRm pbuttons(help,keyboard)
+
+    # 8.0
+    FixVarRm pbuttons(file,samp)
+}
+
+proc FixPrefs8.0to8.1 {} {
     FixVar pap(graph,ds,show) pap(show)
     FixVar pap(graph,ds,smooth) pap(smooth)
     FixVar pap(graph,ds,color) pap(color)
@@ -584,6 +612,8 @@ proc FixPrefs8.0to8.1 {} {
     FixVar pap(graph,ds,error,style) pap(error,style)
 
     FixVar pap(graph,ds,bar,relief) pap(relief)
+
+    FixVarRm pbuttons(file,samp)
 }
 
 proc FixPrefs7.6to8.0 {} {
@@ -595,6 +625,8 @@ proc FixPrefs7.5to7.6 {} {
     set smooth(radius,minor) $smooth(radius)
     set smooth(sigma) [expr int($smooth(radius)/2.)]
     set smooth(sigma,minor) $smooth(sigma)
+
+    FixVarRm pbuttons(help,keyboard)
 }
 
 proc FixPrefs7.4to7.5 {} {
@@ -705,6 +737,9 @@ proc FixPrefs7.0to7.1 {} {
 	unset pap(grid)
 	unset pap(grid,log)
     }
+
+    FixVarRm pbuttons(file,about)
+    FixVarRm pbuttons(help,home)
 }
 
 proc FixPrefs6.2to7.0 {} {
@@ -733,18 +768,19 @@ proc FixPrefs6.2to7.0 {} {
     FixVar pbuttons(frame,match,scale) pbuttons(frame,matchscale)
     FixVar pbuttons(frame,match,color) pbuttons(frame,matchcolor)
 
-    FixVarRm pbuttons(region,circle3d)
-
     FixVar ppanner(compass) ppanner(compass,image)
     FixVarRm ppanner(compass,wcs,system)
     FixVarRm ppanner(compass,wcs,sky)
 
-    global pmarker
     FixVarRm pmarker(dialog,system)
     FixVarRm pmarker(dialog,sky)
     FixVarRm pmarker(dialog,skyformat)
     FixVarRm pmarker(dialog,dist,system)
     FixVarRm pmarker(dialog,dist,format)
+
+    FixVarRm pbuttons(file,savefits)
+    FixVarRm pbuttons(file,savempeg)
+    FixVarRm pbuttons(region,circle3d)
 
     # mousewheel MacOSX Lion
     global tcl_platform
@@ -870,8 +906,6 @@ proc FixPrefs6.0to6.1 {} {
     FixVarSet pgraph(horz,log) graph(horz,log) 
     FixVarSet pgraph(vert,grid) graph(vert,grid) 
     FixVarSet pgraph(vert,log) graph(vert,log) 
-#    global graph
-#    catch {unset graph}
 
     # cat
     FixVar pcat(server) cat(server)
@@ -1111,5 +1145,7 @@ proc FixPrefs5.xto6.0 {} {
         FixVarRm pbuttons(zoom,1/8)
         FixVarRm pbuttons(zoom,1/4)
         FixVarRm pbuttons(zoom,1/2)
+
+	FixVarRm pbuttons(help,issue)
     }
 }

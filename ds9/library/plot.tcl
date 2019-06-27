@@ -305,7 +305,7 @@ proc PlotChangeMode {varname} {
 		blt::RemoveBindTag $var($cc) zoom-$var($cc)
 		bind $var($cc) <1> [list PlotButton $varname %x %y]
 	    }
-p	    zoom {
+	    zoom {
 		bind $var($cc) <1> {}
 		blt::AddBindTag $var($cc) zoom-$var($cc)
 	    }

@@ -154,6 +154,8 @@ proc PlotSaveState {varname} {
     upvar #0 $varname var
     global $varname
 
+    puts "SaveState $var(graph,current) $var(graph,ds,current)"
+
     # per Graph
     set cc $var(graph,current)
 
@@ -189,7 +191,7 @@ proc PlotSaveState {varname} {
     set var($cc,axis,y,format) $var(graph,axis,y,format)
 
     # per DataSet
-    set nn $var($cc,ds,current)
+    set nn $var(graph,ds,current)
 
     set var($cc,$nn,name) $var(graph,ds,name)
     set var($cc,$nn,dim) $var(graph,ds,dim)
@@ -260,6 +262,7 @@ proc PlotRestoreState {varname} {
 
     # per DataSet
     set nn $var($cc,ds,current)
+    puts "RestoreState $cc $nn"
 
     set var(graph,ds,name) $var($cc,$nn,name)
     set var(graph,ds,dim) $var($cc,$nn,dim)

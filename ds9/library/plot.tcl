@@ -170,6 +170,7 @@ proc PlotAddElement {varname} {
     global $var(graph,ds,xdata) $var(graph,ds,ydata)
     $var(graph) element create ${nn} \
 	-xdata $var(graph,ds,xdata) -ydata $var(graph,ds,ydata)
+    puts "add $nn $var(graph,ds,xdata) $var(graph,ds,ydata)"
     if {$var(graph,ds,xedata) != {}} {
 	if {[$var(graph,ds,xedata) length] != 0} {
 	    $var(graph) element configure ${nn} \
@@ -200,7 +201,7 @@ proc PlotDeleteDataSetCurrent {varname} {
 	return
     }
 
-    PlotDeleteDataSet $varname $var(graph,ds,current)
+    PlotDeleteDataSet $varname
 }
 
 proc PlotDeleteDataSetAll {varname} {
@@ -212,15 +213,17 @@ proc PlotDeleteDataSetAll {varname} {
     }
 
     foreach nn $var(graph,dss) {
-	PlotDeleteDataSet $varname $nn
+	set var(graph,ds,current) $nn
+	PlotDeleteDataSet $varname
     }
 }
 
-proc PlotDeleteDataSet {varname nn} {
+proc PlotDeleteDataSet {varname} {
     upvar #0 $varname var
     global $varname
 
     set cc $var(graph,current)
+    set nn $var($cc,ds,current)
 
     if {[llength $var($cc,dss)] == 0} {
 	return
@@ -234,16 +237,16 @@ proc PlotDeleteDataSet {varname nn} {
     $var(mb).graph.select delete $var($cc,$nn,name)
 
     # delete element
-    $var(graph) element delete $nn
+    $var($cc) element delete $nn
 
     # destroy vectors
+    puts "delete $nn $var($cc,$nn,xdata) $var($cc,$nn,ydata)"
     blt::vector destroy $var($cc,$nn,xdata) $var($cc,$nn,ydata)
     switch $var($cc,$nn,dim) {
 	xy {}
 	xyex {blt::vector destroy $var($cc,$nn,xedata)}
 	xyey {blt::vector destroy $var($cc,$nn,yedata)}
-	xyexey {blt::vector destroy \
-		    $var($cc,$nn,xedata) $var($cc,$nn,yedata)}
+	xyexey {blt::vector destroy $var($cc,$nn,xedata) $var($cc,$nn,yedata)}
     }
     set ii [lsearch $var($cc,dss) $nn]
     if {$ii>=0} {
@@ -261,18 +264,19 @@ proc PlotDeleteDataSet {varname nn} {
     # set current dataset
     set var($cc,ds,current) [lindex $var($cc,dss) 0]
     PlotRestoreState $varname
-    PlotStats $varname
-    PlotList $varname
 
     # update menus
     $var(proc,updateelement) $varname
+
+    PlotStats $varname
+    PlotList $varname
 }
 
 proc PlotCurrentGraph {varname} {
     upvar #0 $varname var
     global $varname
 
-    PlotRestoreState $varname
+    PlotSaveState $varname
     PlotStats $varname
     PlotList $varname
 }
@@ -281,7 +285,7 @@ proc PlotCurrentDataSet {varname} {
     upvar #0 $varname var
     global $varname
 
-    PlotRestoreState $varname
+    PlotSaveState $varname
     PlotStats $varname
     PlotList $varname
 }
@@ -333,8 +337,8 @@ proc PlotList {varname} {
     upvar #0 $varname var
     global $varname
 
-    puts "***"
-    DumpCallStack
+#    puts "***"
+#    DumpCallStack
     
     if {!$var(list)} {
 	return

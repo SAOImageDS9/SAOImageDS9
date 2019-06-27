@@ -154,9 +154,6 @@ proc PlotSaveState {varname} {
     upvar #0 $varname var
     global $varname
 
-    puts "***"
-    DumpCallStack
-    
     # per Graph
     set cc $var(graph,current)
 

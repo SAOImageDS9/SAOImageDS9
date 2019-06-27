@@ -229,7 +229,6 @@ proc PlotDataSetOne {varname dim data} {
 	}
     }
 
-    PlotSaveState $varname
     PlotAddElement $varname
 }
 

@@ -90,8 +90,10 @@ proc PlotAddGraph {varname} {
 	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
     }
 
-    # set current graph
-    PlotSaveState $varname
+    # update menus
+    $var(proc,updateelement) $varname
+    $var(proc,updategraph) $varname
+    $var(proc,updatecanvas) $varname
 
     # update layout
     foreach cc $var(graphs) {
@@ -101,11 +103,6 @@ proc PlotAddGraph {varname} {
     foreach cc $var(graphs) {
 	pack $var($cc) -side top -expand yes -fill both
     }
-
-    # update menus
-    $var(proc,updateelement) $varname
-    $var(proc,updategraph) $varname
-    $var(proc,updatecanvas) $varname
 }
 
 proc PlotDeleteGraphCurrent {varname} {
@@ -154,6 +151,8 @@ proc PlotDeleteGraph {varname cc} {
     # set current graph
     set var(graph,current) [lindex $var(graphs) 0]
     PlotRestoreState $varname
+    PlotStats $varname
+    PlotList $varname
 
     # update menus
     $var(proc,updateelement) $varname
@@ -188,9 +187,6 @@ proc PlotAddElement {varname} {
     $var(mb).graph.select add radiobutton -label "$var(graph,ds,name)" \
 	-variable ${varname}(graph,ds,current) -value $nn \
 	-command [list PlotCurrentDataSet $varname]
-
-    # set current dataset
-    PlotSaveState $varname
 
     # update menus
     $var(proc,updateelement) $varname
@@ -265,6 +261,8 @@ proc PlotDeleteDataSet {varname nn} {
     # set current dataset
     set var($cc,ds,current) [lindex $var($cc,dss) 0]
     PlotRestoreState $varname
+    PlotStats $varname
+    PlotList $varname
 
     # update menus
     $var(proc,updateelement) $varname
@@ -335,6 +333,9 @@ proc PlotList {varname} {
     upvar #0 $varname var
     global $varname
 
+    puts "***"
+    DumpCallStack
+    
     if {!$var(list)} {
 	return
     }

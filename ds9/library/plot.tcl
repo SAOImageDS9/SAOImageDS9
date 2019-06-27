@@ -277,7 +277,7 @@ proc PlotCurrentGraph {varname} {
     upvar #0 $varname var
     global $varname
 
-    PlotSaveState $varname
+    PlotRestoreState $varname
     PlotStats $varname
     PlotList $varname
 }
@@ -286,7 +286,7 @@ proc PlotCurrentDataSet {varname} {
     upvar #0 $varname var
     global $varname
 
-    PlotSaveState $varname
+    PlotRestoreState $varname
     PlotStats $varname
     PlotList $varname
 }

@@ -171,17 +171,14 @@ proc PlotAddElement {varname} {
     global $var(graph,ds,xdata) $var(graph,ds,ydata)
     $var(graph) element create ${nn} \
 	-xdata $var(graph,ds,xdata) -ydata $var(graph,ds,ydata)
-    puts "add $nn $var(graph,ds,xdata) $var(graph,ds,ydata)"
     if {$var(graph,ds,xedata) != {}} {
 	if {[$var(graph,ds,xedata) length] != 0} {
-	    $var(graph) element configure ${nn} \
-		-xerror $var(graph,ds,xedata)
+	    $var(graph) element configure ${nn} -xerror $var(graph,ds,xedata)
 	}
     }
     if {$var(graph,ds,yedata) != {}} {
 	if {[$var(graph,ds,yedata) length] != 0} {
-	    $var(graph) element configure ${nn} \
-		-yerror $var(graph,ds,yedata)
+	    $var(graph) element configure ${nn} -yerror $var(graph,ds,yedata)
 	}
     }
 
@@ -241,7 +238,6 @@ proc PlotDeleteDataSet {varname} {
     $var($cc) element delete $nn
 
     # destroy vectors
-    puts "delete $nn $var($cc,$nn,xdata) $var($cc,$nn,ydata)"
     blt::vector destroy $var($cc,$nn,xdata) $var($cc,$nn,ydata)
     switch $var($cc,$nn,dim) {
 	xy {}

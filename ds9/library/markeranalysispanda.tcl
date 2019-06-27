@@ -103,7 +103,7 @@ proc MarkerAnalysisPandaCB {frame id} {
 	MarkerAnalysisPandaAxisTitle $vvarname
     }
 
-    PlotDeleteAllDataSet $vvarname
+    PlotDeleteDataSetAll $vvarname
     PlotAddDataSet $vvarname 3 [$frame get marker $id analysis panda $sys]
     PlotStats $vvarname
     PlotList $vvarname

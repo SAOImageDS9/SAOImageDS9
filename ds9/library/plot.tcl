@@ -19,6 +19,45 @@ proc PlotDef {} {
     PlotDefState
 }
 
+# Canvas
+proc PlotDestroy {varname} {
+    upvar #0 $varname var
+    global $varname
+    
+    global iap
+
+    # see if it still is around
+    if {![PlotPing $varname]} {
+ 	return
+    }
+    
+    # delete all graphs
+    foreach cc $var(graphs) {
+	PlotDeleteGraph $varname $cc
+    }
+    
+    destroy $var(top)
+    destroy $var(mb)
+
+    # stats window?
+    if {$var(stats)} {
+	SimpleTextDestroy "${varname}stats"
+    }
+
+    # list window?
+    if {$var(list)} {
+	SimpleTextDestroy "${varname}list"
+    }
+
+    # delete it from the xpa list
+    set ii [lsearch $iap(windows) $varname]
+    if {$ii>=0} {
+	set iap(windows) [lreplace $iap(windows) $ii $ii]
+    }
+
+    unset $varname
+}
+
 # Graph
 proc PlotAddGraph {varname} {
     upvar #0 $varname var
@@ -32,15 +71,16 @@ proc PlotAddGraph {varname} {
     lappend var(graphs) $cc
     set var(graph,current) $cc
 
-    set var($cc,data,total) 0
-    set var($cc,data,current) 0
+    # Init graph vars
+    PlotInitGraph $varname
 
+    # create graph
     $var(proc,addgraph) $varname
 
-    PlotInitGraph $varname
-    
-    $var(proc,updategraph) $varname
-    $var(proc,updatecanvas) $varname
+    # create menu item
+    $var(mb).canvas.select add radiobutton -label $var(graph,name) \
+	-variable ${varname}(graph,current) -value $cc \
+	-command [list PlotCurrentGraph $varname]
 
     # set up zoom stack, assuming mode is zoom
     global ds9
@@ -50,12 +90,10 @@ proc PlotAddGraph {varname} {
 	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
     }
 
-    # update select graph menu
-    $var(mb).canvas.select add radiobutton -label "Graph $var(seq)" \
-	-variable ${varname}(graph,current) -value $cc \
-	-command [list PlotCurrentGraph $varname]
+    # set current graph
+    PlotSaveState $varname
 
-    # layout
+    # update layout
     foreach cc $var(graphs) {
 	pack forget $var($cc)
     }
@@ -63,9 +101,14 @@ proc PlotAddGraph {varname} {
     foreach cc $var(graphs) {
 	pack $var($cc) -side top -expand yes -fill both
     }
+
+    # update menus
+    $var(proc,updateelement) $varname
+    $var(proc,updategraph) $varname
+    $var(proc,updatecanvas) $varname
 }
 
-proc PlotDeleteGraph {varname} {
+proc PlotDeleteGraphCurrent {varname} {
     upvar #0 $varname var
     global $varname
 
@@ -73,11 +116,49 @@ proc PlotDeleteGraph {varname} {
 	return
     }
 
-    destroy $var(graph)
-    list replace ${varname}(graphs) $var(graph,current) {}
+    PlotDeleteGraph $varname $var(graph,current)
+}
 
+proc PlotDeleteGraph {varname cc} {
+    upvar #0 $varname var
+    global $varname
+
+    # remove menu item
+    $var(mb).canvas.select delete $var(graph,name)
+
+    # delete all datasets
+    foreach nn $var($cc,dss) {
+	PlotDeleteDataSet $varname $nn
+    }
+
+    # delete graph
+    destroy $var(graph)
+    set ii [lsearch $var(graphs) $cc]
+    if {$ii>=0} {
+	set var(graphs) [lreplace $var(graphs) $ii $ii]
+    }
+
+    # delete all graph vars
+    foreach vv [array names $varname] {
+	set gr [split $vv ,]
+	if {[lindex $gr 0] == $cc} {
+	    unset ${varname}($vv)
+	}
+    }
+
+    # if last graph, stop here
+    if {[llength $var(graphs)] == 0} {
+	return
+    }
+
+    # set current graph
     set var(graph,current) [lindex $var(graphs) 0]
     PlotRestoreState $varname
+
+    # update menus
+    $var(proc,updateelement) $varname
+    $var(proc,updategraph) $varname
+    $var(proc,updatecanvas) $varname
 }
 
 # Data
@@ -85,38 +166,107 @@ proc PlotAddElement {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc $var(graph,current)
-    set nn $var($cc,data,current)
-
-    # delete current elements
-    foreach el [$var(graph) element names] {
-	set f [split $el -]
-	if {[lindex $f 1] == $nn} {
-	    $var(graph) element delete $el
-	}
-    }
-
+    # create graph elements
+    set nn $var(graph,ds,current)
     global $var(graph,ds,xdata) $var(graph,ds,ydata)
-    $var(graph) element create "d-${nn}" \
+    $var(graph) element create ${nn} \
 	-xdata $var(graph,ds,xdata) -ydata $var(graph,ds,ydata)
     if {$var(graph,ds,xedata) != {}} {
 	if {[$var(graph,ds,xedata) length] != 0} {
-	    $var(graph) element configure "d-${nn}" \
+	    $var(graph) element configure ${nn} \
 		-xerror $var(graph,ds,xedata)
 	}
     }
     if {$var(graph,ds,yedata) != {}} {
 	if {[$var(graph,ds,yedata) length] != 0} {
-	    $var(graph) element configure "d-${nn}" \
+	    $var(graph) element configure ${nn} \
 		-yerror $var(graph,ds,yedata)
 	}
     }
 
-    # update select dataset menu
+    # create menu item
     $var(mb).graph.select add radiobutton -label "$var(graph,ds,name)" \
-	-variable ${varname}($cc,data,current) -value $nn \
+	-variable ${varname}(graph,ds,current) -value $nn \
 	-command [list PlotCurrentDataSet $varname]
 
+    # set current dataset
+    PlotSaveState $varname
+
+    # update menus
+    $var(proc,updateelement) $varname
+}
+
+proc PlotDeleteDataSetCurrent {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[llength $var(graph,dss)] == 0} {
+	return
+    }
+
+    PlotDeleteDataSet $varname $var(graph,ds,current)
+}
+
+proc PlotDeleteDataSetAll {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[llength $var(graph,dss)] == 0} {
+	return
+    }
+
+    foreach nn $var(graph,dss) {
+	PlotDeleteDataSet $varname $nn
+    }
+}
+
+proc PlotDeleteDataSet {varname nn} {
+    upvar #0 $varname var
+    global $varname
+
+    set cc $var(graph,current)
+
+    if {[llength $var($cc,dss)] == 0} {
+	return
+    }
+
+    if {!$var($cc,$nn,manage)} {
+	return
+    }
+
+    # remove menu item
+    $var(mb).graph.select delete $var($cc,$nn,name)
+
+    # delete element
+    $var(graph) element delete $nn
+
+    # destroy vectors
+    blt::vector destroy $var($cc,$nn,xdata) $var($cc,$nn,ydata)
+    switch $var($cc,$nn,dim) {
+	xy {}
+	xyex {blt::vector destroy $var($cc,$nn,xedata)}
+	xyey {blt::vector destroy $var($cc,$nn,yedata)}
+	xyexey {blt::vector destroy \
+		    $var($cc,$nn,xedata) $var($cc,$nn,yedata)}
+    }
+    set ii [lsearch $var($cc,dss) $nn]
+    if {$ii>=0} {
+	set var($cc,dss) [lreplace $var($cc,dss) $ii $ii]
+    }
+
+    # delete all dataset vars
+    foreach vv [array names $varname] {
+	set gr [split $vv ,]
+	if {[lindex $gr 1] == $nn} {
+	    unset ${varname}($vv)
+	}
+    }
+
+    # set current dataset
+    set var($cc,ds,current) [lindex $var($cc,dss) 0]
+    PlotRestoreState $varname
+
+    # update menus
     $var(proc,updateelement) $varname
 }
 
@@ -125,7 +275,8 @@ proc PlotCurrentGraph {varname} {
     global $varname
 
     PlotRestoreState $varname
-    PlotCurrentDataSet $varname
+    PlotStats $varname
+    PlotList $varname
 }
 
 proc PlotCurrentDataSet {varname} {
@@ -154,59 +305,12 @@ proc PlotChangeMode {varname} {
 		blt::RemoveBindTag $var($cc) zoom-$var($cc)
 		bind $var($cc) <1> [list PlotButton $varname %x %y]
 	    }
-	    zoom {
+p	    zoom {
 		bind $var($cc) <1> {}
 		blt::AddBindTag $var($cc) zoom-$var($cc)
 	    }
 	}
     }
-}
-
-proc PlotDestroy {varname} {
-    upvar #0 $varname var
-    global $varname
-    
-    global iap
-
-    set cc $var(graph,current)
-
-    # see if it still is around
-    if {![PlotPing $varname]} {
- 	return
-    }
-    
-    for {set nn 1} {$nn<=$var($cc,data,total)} {incr nn} {
-	blt::vector destroy $var($cc,$nn,xdata) $var($cc,$nn,ydata)
-	switch $var($cc,$nn,dim) {
-	    xy {}
-	    xyex {blt::vector destroy $var($cc,$nn,xedata)}
-	    xyey {blt::vector destroy $var($cc,$nn,yedata)}
-	    xyexey {
-		blt::vector destroy $var($cc,$nn,xedata) $var($cc,$nn,yedata)
-	    }
-	}
-    }
-    
-    destroy $var(top)
-    destroy $var(mb)
-
-    # stats window?
-    if {$var(stats)} {
-	SimpleTextDestroy "${varname}stats"
-    }
-
-    # list window?
-    if {$var(list)} {
-	SimpleTextDestroy "${varname}list"
-    }
-
-    # delete it from the xpa list
-    set ii [lsearch $iap(windows) $varname]
-    if {$ii>=0} {
-	set iap(windows) [lreplace $iap(windows) $ii $ii]
-    }
-
-    unset $varname
 }
 
 proc PlotExternal {varname} {
@@ -216,9 +320,10 @@ proc PlotExternal {varname} {
     set cc $var(graph,current)
 
     # incr count
-    incr ${varname}($cc,data,total) 
-    set nn $var($cc,data,total)
-    set var($cc,data,current) $nn
+    incr ${varname}($cc,seq) 
+    set nn $var($cc,seq)
+    lappend var($cc,dss) $nn
+    set var($cc,ds,current) $nn
 
     set var(graph,ds,manage) 0
     set var(graph,ds,name) "Dataset $nn"
@@ -439,10 +544,8 @@ proc PlotUpdateGraph {varname} {
     # Menus
     if {$var(graph,ds,xdata) != {}} {
 	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state normal
-	$var(mb).file entryconfig [msgcat::mc {Clear All Data}] -state normal
     } else {
 	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state disabled
-	$var(mb).file entryconfig [msgcat::mc {Clear All Data}] -state disabled
     }
 
     # Graph
@@ -537,20 +640,19 @@ proc PlotBackup {ch dir} {
 		strip {puts $ch "PlotStripTool"}
 	    }
 
-	    set save $var($cc,data,current)
-	    for {set ii 1} {$ii<=$var($cc,data,total)} {incr ii} {
-		set ${varname}($cc,data,current) $ii
+	    set save $var($cc,ds,current)
+	    foreach nn $var($cc,dss) {
+		set ${varname}($cc,ds,current) $nn
 		PlotCurrentDataSet $varname
 
-		PlotSaveDataFile $varname "$fdir/plot$ii.dat"
-		PlotSaveConfigFile $varname "$fdir/plot$ii.plt"
+		PlotSaveDataFile $varname "$fdir/plot$nn.dat"
+		PlotSaveConfigFile $varname "$fdir/plot$nn.plt"
 
-		puts $ch "PlotLoadDataFile $varname $fdir/plot$ii.dat $var($cc,$ii,dim)"
-		puts $ch "PlotLoadConfigFile $varname $fdir/plot$ii.plt"
+		puts $ch "PlotLoadDataFile $varname $fdir/plot$nn.dat $var($cc,$nn,dim)"
+		puts $ch "PlotLoadConfigFile $varname $fdir/plot$nn.plt"
 	    }
-	    set ${varname}($cc,data,current) $save
+	    set ${varname}($cc,ds,current) $save
 	    PlotCurrentDataSet $varname
 	}
     }
 }
-

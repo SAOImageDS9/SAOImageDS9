@@ -50,9 +50,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     $var(mb).file add command -label "[msgcat::mc {Save Data}]..." \
 	-command [list PlotSaveData $varname]
     $var(mb).file add separator
-    $var(mb).file add command -label [msgcat::mc {Clear All Data}] \
-	-command [list PlotDeleteAllData $varname]
-    $var(mb).file add separator
     $var(mb).file add cascade -label [msgcat::mc {Export}] \
 	-menu $var(mb).file.export
     $var(mb).file add separator
@@ -119,7 +116,7 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     $var(mb).canvas add command -label [msgcat::mc {Add Graph}] \
 	-command [list PlotAddGraph $varname]
     $var(mb).canvas add command -label [msgcat::mc {Delete Graph}] \
-	-command [list PlotDeleteGraph $varname]
+	-command [list PlotDeleteGraphCurrent $varname]
     $var(mb).canvas add separator
     menu $var(mb).canvas.select
 
@@ -166,7 +163,7 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 	-menu $var(mb).graph.select
     $var(mb).graph add separator
     $var(mb).graph add command -label [msgcat::mc {Delete Dataset}] \
-	-command [list PlotDeleteDataSet $varname]
+	-command [list PlotDeleteDataSetCurrent $varname]
     $var(mb).graph add command -label [msgcat::mc {Duplicate Dataset}] \
 	-command [list PlotDupDataSet $varname 1]
     $var(mb).graph add separator

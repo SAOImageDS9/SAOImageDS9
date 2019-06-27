@@ -133,8 +133,7 @@ proc PlotBarAddGraph {varname} {
     set cc $var(graph,current)
 
     set var($cc,type) bar
-    set var($cc) [blt::barchart $var(canvas).$cc -width 600 -height 500 \
-		      -highlightthickness 0]
+    blt::barchart $var(graphe) -width 600 -height 500 -highlightthickness 0
 
     $var($cc) xaxis configure -grid no -stepsize 0
     $var($cc) yaxis configure -grid yes
@@ -158,7 +157,7 @@ proc PlotBarUpdateElement {varname} {
     PlotSaveState $varname
 
     set cc $var(graph,current)
-    if {$var($cc,data,total) == 0} {
+    if {[llength $var($cc,dss)] == 0} {
  	return
     }
     
@@ -174,8 +173,8 @@ proc PlotBarUpdateElement {varname} {
 	set cap 0
     }
 
-    set nn $var($cc,data,current)
-    $var(graph) element configure "d-${nn}" \
+    set nn $var($cc,ds,current)
+    $var(graph) element configure ${nn} \
 	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
 	-relief $var(graph,ds,bar,relief) -color $var(graph,ds,color) \
 	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \

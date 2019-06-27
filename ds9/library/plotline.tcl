@@ -147,8 +147,7 @@ proc PlotLineAddGraph {varname} {
     set cc $var(graph,current)
 
     set var($cc,type) line
-    set var($cc) [blt::graph $var(canvas).$cc -width 600 -height 500 \
-		      -highlightthickness 0]
+    blt::graph $var(graph) -width 600 -height 500 -highlightthickness 0
 }
 
 proc PlotLineUpdateElement {varname} {
@@ -158,7 +157,7 @@ proc PlotLineUpdateElement {varname} {
     PlotSaveState $varname
 
     set cc $var(graph,current)
-    if {$var($cc,data,total) == 0} {
+    if {[llength $var($cc,dss)] == 0} {
  	return
     }
     
@@ -192,8 +191,8 @@ proc PlotLineUpdateElement {varname} {
 	set cap 0
     }
 
-    set nn $var($cc,data,current)
-    $var(graph) element configure "d-${nn}" \
+    set nn $var($cc,ds,current)
+    $var(graph) element configure ${nn} \
 	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
 	-symbol $var(graph,ds,shape,symbol) -fill $clr -scalesymbols no \
 	-pixels 5 -outline $var(graph,ds,shape,color) \

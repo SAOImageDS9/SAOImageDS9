@@ -1500,8 +1500,8 @@ proc plotsend::yyparse {} {
                     31 { ProcessSendCmdCVARGet graph,ds,smooth }
                     32 { ProcessSendCmdCVARGet graph,ds,width }
                     33 { ProcessSendCmdCVARYesNo graph,ds,dash }
-                    34 { PlotSendCmdCVARGet data,current }
-                    35 { PlotSendCmdCVARGet data,current }
+                    34 { PlotSendCmdCVARGet ds,current }
+                    35 { PlotSendCmdCVARGet ds,current }
                     36 { ProcessSendCmdCVARYesNo "graph,axis,$1,grid" }
                     37 { ProcessSendCmdCVARYesNo "graph,axis,$1,log" }
                     38 { ProcessSendCmdCVARYesNo "graph,axis,$1,flip" }

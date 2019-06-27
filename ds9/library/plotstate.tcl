@@ -60,7 +60,6 @@ proc PlotDefState {} {
     set pap(graph,axis,y,format) {}
 
     # per DataSet
-    set pap(graph,ds,name) {}
     set pap(graph,ds,show) 1
     set pap(graph,ds,smooth) linear
     set pap(graph,ds,color) black
@@ -87,13 +86,17 @@ proc PlotInitGraph {varname} {
 
     global pap
 
-    set cc $var(graph,current)
-    set nn $var($cc,data,current)
-    set var(graph) $var($cc)
-
     # per Graph
+    set cc $var(graph,current)
+
+    set var(graph) $var(canvas).$cc
+    set var(graph,name) "Graph $var(seq)"
     set var(graph,format) 1
     set var(graph,title) {}
+
+    set var(graph,seq) 0
+    set var(graph,dss) {}
+    set var(graph,ds,current) {}
 
     set var(graph,legend) $pap(graph,legend)
     set var(graph,legend,title) $pap(graph,legend,title)
@@ -118,6 +121,7 @@ proc PlotInitGraph {varname} {
     set var(graph,axis,y,format) $pap(graph,axis,y,format)
 
     # per DataSet
+    set var(graph,ds,name) {}
     set var(graph,ds,dim) xy
     set var(graph,ds,manage) 1
 
@@ -126,7 +130,6 @@ proc PlotInitGraph {varname} {
     set var(graph,ds,xedata) {}
     set var(graph,ds,yedata) {}
 
-    set var(graph,ds,name) $pap(graph,ds,name)
     set var(graph,ds,show) $pap(graph,ds,show) 
     set var(graph,ds,smooth) $pap(graph,ds,smooth) 
     set var(graph,ds,color) $pap(graph,ds,color) 
@@ -151,15 +154,20 @@ proc PlotSaveState {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc $var(graph,current)
-    set nn $var($cc,data,current)
-
-    puts "PlotSaveState $cc"
-#    DumpCallStack
-
+    puts "***"
+    DumpCallStack
+    
     # per Graph
+    set cc $var(graph,current)
+
+    set var($cc) $var(graph)
+    set var($cc,name) $var(graph,name)
     set var($cc,format) $var(graph,format)
     set var($cc,title) $var(graph,title)
+
+    set var($cc,seq) $var(graph,seq)
+    set var($cc,dss) $var(graph,dss)
+    set var($cc,ds,current) $var(graph,ds,current)
 
     set var($cc,legend) $var(graph,legend)
     set var($cc,legend,title) $var(graph,legend,title)
@@ -184,6 +192,9 @@ proc PlotSaveState {varname} {
     set var($cc,axis,y,format) $var(graph,axis,y,format)
 
     # per DataSet
+    set nn $var($cc,ds,current)
+
+    set var($cc,$nn,name) $var(graph,ds,name)
     set var($cc,$nn,dim) $var(graph,ds,dim)
     set var($cc,$nn,manage) $var(graph,ds,manage)
 
@@ -192,7 +203,6 @@ proc PlotSaveState {varname} {
     set var($cc,$nn,xedata) $var(graph,ds,xedata)
     set var($cc,$nn,yedata) $var(graph,ds,yedata)
 
-    set var($cc,$nn,name) $var(graph,ds,name)
     set var($cc,$nn,show) $var(graph,ds,show)
     set var($cc,$nn,smooth) $var(graph,ds,smooth)
     set var($cc,$nn,color) $var(graph,ds,color)
@@ -217,15 +227,17 @@ proc PlotRestoreState {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc $var(graph,current)
-    set nn $var($cc,data,current)
-    set var(graph) $var($cc)
-
-    puts "PlotRestoreState $cc"
-
     # per Graph
+    set cc $var(graph,current)
+
+    set var(graph) $var($cc)
+    set var(graph,name) $var($cc,name)
     set var(graph,format) $var($cc,format)
     set var(graph,title) $var($cc,title)
+
+    set var(graph,seq) $var($cc,seq)
+    set var(graph,dss) $var($cc,dss) 
+    set var(graph,ds,current) $var($cc,ds,current)
 
     set var(graph,legend) $var($cc,legend)
     set var(graph,legend,title) $var($cc,legend,title)
@@ -250,6 +262,9 @@ proc PlotRestoreState {varname} {
     set var(graph,axis,y,format) $var($cc,axis,y,format)
 
     # per DataSet
+    set nn $var($cc,ds,current)
+
+    set var(graph,ds,name) $var($cc,$nn,name)
     set var(graph,ds,dim) $var($cc,$nn,dim)
     set var(graph,ds,manage) $var($cc,$nn,manage)
 
@@ -258,7 +273,6 @@ proc PlotRestoreState {varname} {
     set var(graph,ds,xedata) $var($cc,$nn,xedata)
     set var(graph,ds,yedata) $var($cc,$nn,yedata)
 
-    set var(graph,ds,name) $var($cc,$nn,name)
     set var(graph,ds,show) $var($cc,$nn,show) 
     set var(graph,ds,smooth) $var($cc,$nn,smooth) 
     set var(graph,ds,color) $var($cc,$nn,color) 

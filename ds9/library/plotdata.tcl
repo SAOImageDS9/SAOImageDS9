@@ -44,9 +44,10 @@ proc PlotDataSetOne {varname dim data} {
     set ll [llength $data]
 
     # incr count
-    incr ${varname}($cc,data,total) 
-    set nn $var($cc,data,total)
-    set var($cc,data,current) $nn
+    incr ${varname}(graph,seq)
+    set nn $var(graph,seq)
+    lappend ${varname}(graph,dss) $nn
+    set var(graph,ds,current) $nn
 
     # init new state
     global pap
@@ -228,6 +229,7 @@ proc PlotDataSetOne {varname dim data} {
 	}
     }
 
+    PlotSaveState $varname
     PlotAddElement $varname
 }
 
@@ -236,14 +238,14 @@ proc PlotDupDataSet {varname mm} {
     global $varname
 
     set cc $var(graph,current)
-
-    if {$var($cc,data,total) == 0} {
+    if {[llength $var($cc,dss)] == 0} {
 	return
     }
 
     # incr count
-    incr ${varname}($cc,data,total) 
-    set nn $var($cc,data,total)
+    incr ${varname}($cc,seq) 
+    set nn $var($cc,seq)
+    lappend var($cc,dss) $nn
     set pp [expr $nn-1]
 
     # new vector names
@@ -301,8 +303,8 @@ proc PlotDupDataSet {varname mm} {
     set var($cc,$nn,bar,relief) $var($cc,$mm,bar,relief)
 
     # make current
-    set var($cc,data,current) $nn
-    PlotRestoreState $varname
+    set var($cc,ds,current) $nn
+
     PlotAddElement $varname
 
     PlotStats $varname
@@ -398,129 +400,5 @@ proc PlotSaveDataFile {varname filename} {
     PlotRaise $varname
 }
 
-proc PlotDeleteDataSet {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ds9
-
-    set cc $var(graph,current)
-    set nn $var(graph,data,current)
-
-    if {$var($cc,data,total) == 0} {
-	return
-    }
-
-    if {$var($cc,$nn,manage)} {
-	# delete elements
-	foreach el [$var(graph) element names] {
-	    set f [split $el -]
-	    if {[lindex $f 1] == $nn} {
-		$var(graph) element delete $el
-	    }
-	}
-
-	# destroy vectors
-	blt::vector destroy $var($cc,$nn,xdata) $var($cc,$nn,ydata)
-	switch $var($cc,$nn,dim) {
-	    xy {}
-	    xyex {blt::vector destroy $var($cc,$nn,xedata)}
-	    xyey {blt::vector destroy $var($cc,$nn,yedata)}
-	    xyexey {blt::vector destroy \
-			$var($cc,$nn,xedata) $var($cc,$nn,yedata)}
-	}
-
-	foreach vv [array names $varname] {
-	    set ds [split $vv ,]
-	    if {([lindex $ds 1] == $nn)} {
-		unset ${varname}($ds)
-	    }
-	}
-
-	incr ${varname}($cc,data,total) -1
-	set ${varname}($cc,data,current) 0
-    }
-}
-
-proc PlotDeleteAllDataSet {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ds9
-
-    set cc $var(graph,current)
-
-    if {$var($cc,data,total) == 0} {
-	return
-    }
-
-    # first set can be external
-    set clear $var($cc,1,manage)
-
-    for {set nn 1} {$nn<=$var($cc,data,total)} {incr nn} {
-	if {$var($cc,$nn,manage)} {
-	    # delete elements
-	    foreach el [$var(graph) element names] {
-		set f [split $el -]
-		if {[lindex $f 1] == $nn} {
-		    $var(graph) element delete $el
-		}
-	    }
-
-	    # destroy vectors
-	    blt::vector destroy \
-		$var($cc,$nn,xdata) $var($cc,$nn,ydata)
-	    switch $var($cc,$nn,dim) {
-		xy {}
-		xyex {blt::vector destroy $var($cc,$nn,xedata)}
-		xyey {blt::vector destroy $var($cc,$nn,yedata)}
-		xyexey {blt::vector destroy \
-			    $var($cc,$nn,xedata) $var($cc,$nn,yedata)}
-	    }
-
-	    foreach x [array names $varname] {
-		set f [split $x ,]
-		if {([lindex $f 0] == $nn)} {
-		    unset ${varname}($x)
-		}
-	    }
-	}
-    }
-
-    if {$clear} {
-	set var($cc,data,total) 0
-	set var($cc,data,current) 0
-
-	set var(graph,ds,name) {}
-	set var(graph,ds,xdata) {}
-	set var(graph,ds,ydata) {}
-	set var(graph,ds,xedata) {}
-	set var(graph,ds,yedata) {}
-
-	# reset other variables
-	set var($cc,axis,x,auto) 1
-	set var($cc,axis,x,min) {}
-	set var($cc,axis,x,max) {}
-	set var($cc,axis,x,format) {}
-
-	set var($cc,axis,y,auto) 1
-	set var($cc,axis,y,min) {}
-	set var($cc,axis,y,max) {}
-	set var($cc,axis,y,format) {}
-	
-	$var(mb).graph.select delete $ds9(menu,start) end
-
-	$var(proc,updategraph) $varname
-	PlotStats $varname
-	PlotList $varname
-    } else {
- 	set var($cc,data,total) 1
- 	set var($cc,data,current) 1
-
-	$var(mb).graph.select delete [expr $ds9(menu,start)+1] end
- 	PlotCurrentDataSet $varname
-	$var(proc,updategraph) $varname
-    }
-}
 
 

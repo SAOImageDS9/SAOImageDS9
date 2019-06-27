@@ -151,13 +151,14 @@ proc PlotDeleteGraph {varname cc} {
     # set current graph
     set var(graph,current) [lindex $var(graphs) 0]
     PlotRestoreState $varname
-    PlotStats $varname
-    PlotList $varname
 
     # update menus
     $var(proc,updateelement) $varname
     $var(proc,updategraph) $varname
     $var(proc,updatecanvas) $varname
+
+    PlotStats $varname
+    PlotList $varname
 }
 
 # Data
@@ -223,7 +224,7 @@ proc PlotDeleteDataSet {varname} {
     global $varname
 
     set cc $var(graph,current)
-    set nn $var($cc,ds,current)
+    set nn $var(graph,ds,current)
 
     if {[llength $var($cc,dss)] == 0} {
 	return
@@ -262,7 +263,7 @@ proc PlotDeleteDataSet {varname} {
     }
 
     # set current dataset
-    set var($cc,ds,current) [lindex $var($cc,dss) 0]
+    set var(graph,ds,current) [lindex $var($cc,dss) 0]
     PlotRestoreState $varname
 
     # update menus
@@ -325,8 +326,8 @@ proc PlotExternal {varname} {
     incr ${varname}($cc,seq) 
     set nn $var($cc,seq)
     lappend var($cc,dss) $nn
-    set var($cc,ds,current) $nn
 
+    set var(graph,ds,current) $nn
     set var(graph,ds,manage) 0
     set var(graph,ds,name) "Dataset $nn"
 
@@ -645,9 +646,9 @@ proc PlotBackup {ch dir} {
 		strip {puts $ch "PlotStripTool"}
 	    }
 
-	    set save $var($cc,ds,current)
+	    set save $var(graph,ds,current)
 	    foreach nn $var($cc,dss) {
-		set ${varname}($cc,ds,current) $nn
+		set ${varname}(graph,ds,current) $nn
 		PlotCurrentDataSet $varname
 
 		PlotSaveDataFile $varname "$fdir/plot$nn.dat"
@@ -656,7 +657,7 @@ proc PlotBackup {ch dir} {
 		puts $ch "PlotLoadDataFile $varname $fdir/plot$nn.dat $var($cc,$nn,dim)"
 		puts $ch "PlotLoadConfigFile $varname $fdir/plot$nn.plt"
 	    }
-	    set ${varname}($cc,ds,current) $save
+	    set ${varname}(graph,ds,current) $save
 	    PlotCurrentDataSet $varname
 	}
     }

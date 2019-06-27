@@ -302,7 +302,7 @@ proc PlotDupDataSet {varname mm} {
     set var($cc,$nn,bar,relief) $var($cc,$mm,bar,relief)
 
     # make current
-    set var($cc,ds,current) $nn
+    set var(graph,ds,current) $nn
 
     PlotAddElement $varname
 

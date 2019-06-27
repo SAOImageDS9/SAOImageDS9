@@ -88,6 +88,7 @@ proc PlotInitGraph {varname} {
 
     # per Graph
     set cc $var(graph,current)
+    set var(graph,ds,current) {}
 
     set var(graph) $var(canvas).$cc
     set var(graph,name) "Graph $var(seq)"
@@ -96,7 +97,6 @@ proc PlotInitGraph {varname} {
 
     set var(graph,seq) 0
     set var(graph,dss) {}
-    set var(graph,ds,current) {}
 
     set var(graph,legend) $pap(graph,legend)
     set var(graph,legend,title) $pap(graph,legend,title)
@@ -158,6 +158,7 @@ proc PlotSaveState {varname} {
 
     # per Graph
     set cc $var(graph,current)
+    set nn $var(graph,ds,current)
 
     set var($cc) $var(graph)
     set var($cc,name) $var(graph,name)
@@ -166,7 +167,6 @@ proc PlotSaveState {varname} {
 
     set var($cc,seq) $var(graph,seq)
     set var($cc,dss) $var(graph,dss)
-    set var($cc,ds,current) $var(graph,ds,current)
 
     set var($cc,legend) $var(graph,legend)
     set var($cc,legend,title) $var(graph,legend,title)
@@ -191,8 +191,6 @@ proc PlotSaveState {varname} {
     set var($cc,axis,y,format) $var(graph,axis,y,format)
 
     # per DataSet
-    set nn $var(graph,ds,current)
-
     set var($cc,$nn,name) $var(graph,ds,name)
     set var($cc,$nn,dim) $var(graph,ds,dim)
     set var($cc,$nn,manage) $var(graph,ds,manage)
@@ -226,8 +224,11 @@ proc PlotRestoreState {varname} {
     upvar #0 $varname var
     global $varname
 
+    puts "RestoreState $var(graph,current) $var(graph,ds,current)"
+
     # per Graph
     set cc $var(graph,current)
+    set nn $var(graph,ds,current)
 
     set var(graph) $var($cc)
     set var(graph,name) $var($cc,name)
@@ -236,7 +237,6 @@ proc PlotRestoreState {varname} {
 
     set var(graph,seq) $var($cc,seq)
     set var(graph,dss) $var($cc,dss) 
-    set var(graph,ds,current) $var($cc,ds,current)
 
     set var(graph,legend) $var($cc,legend)
     set var(graph,legend,title) $var($cc,legend,title)
@@ -261,9 +261,6 @@ proc PlotRestoreState {varname} {
     set var(graph,axis,y,format) $var($cc,axis,y,format)
 
     # per DataSet
-    set nn $var($cc,ds,current)
-    puts "RestoreState $cc $nn"
-
     set var(graph,ds,name) $var($cc,$nn,name)
     set var(graph,ds,dim) $var($cc,$nn,dim)
     set var(graph,ds,manage) $var($cc,$nn,manage)

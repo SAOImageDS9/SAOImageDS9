@@ -191,7 +191,7 @@ proc PlotLineUpdateElement {varname} {
 	set cap 0
     }
 
-    set nn $var($cc,ds,current)
+    set nn $var(graph,ds,current)
     $var(graph) element configure ${nn} \
 	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
 	-symbol $var(graph,ds,shape,symbol) -fill $clr -scalesymbols no \

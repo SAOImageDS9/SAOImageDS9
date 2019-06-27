@@ -340,7 +340,7 @@ proc PlotCmdSelectData {which} {
     upvar #0 $cvarname cvar
 
     set cc $cvar(graph,current)
-    set cvar($cc,ds,current) $which
+    set cvar(graph,ds,current) $which
     PlotCurrentDataSet $cvarname
 }
 

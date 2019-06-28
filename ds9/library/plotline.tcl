@@ -147,7 +147,6 @@ proc PlotLineAddGraph {varname} {
     set cc $var(graph,current)
 
     set var($cc,type) line
-    puts "create $var(graph)"
     blt::graph $var(graph) -width 600 -height 500 -highlightthickness 0
 }
 

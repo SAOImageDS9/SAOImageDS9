@@ -141,7 +141,6 @@ proc PlotDeleteGraph {varname} {
     }
 
     # delete graph
-    puts "destroy $var(graph)"
     destroy $var(graph)
     set ii [lsearch $var(graphs) $cc]
     if {$ii>=0} {

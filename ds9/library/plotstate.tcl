@@ -90,7 +90,7 @@ proc PlotInitGraph {varname} {
     set cc $var(graph,current)
     set var(graph,ds,current) {}
 
-    set var(graph) $var(canvas).$cc
+    set var(graph) $var(canvas).gr$cc
     set var(graph,name) "Graph $var(seq)"
     set var(graph,format) 1
     set var(graph,title) {}

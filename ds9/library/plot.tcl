@@ -34,6 +34,9 @@ proc PlotDestroy {varname} {
     # delete all graphs
     foreach cc $var(graphs) {
 	set var(graph,current) $cc
+	set var(graph,ds,current) [lindex $var($cc,dss) 0]
+	PlotRestoreState $varname
+
 	PlotDeleteGraph $varname
     }
     
@@ -68,7 +71,7 @@ proc PlotAddGraph {varname} {
     global pap
 
     incr ${varname}(seq)
-    set cc "graph$var(seq)"
+    set cc $var(seq)
     lappend var(graphs) $cc
     set var(graph,current) $cc
 
@@ -138,6 +141,7 @@ proc PlotDeleteGraph {varname} {
     }
 
     # delete graph
+    puts "destroy $var(graph)"
     destroy $var(graph)
     set ii [lsearch $var(graphs) $cc]
     if {$ii>=0} {
@@ -159,6 +163,8 @@ proc PlotDeleteGraph {varname} {
 
     # set current graph
     set var(graph,current) [lindex $var(graphs) 0]
+    set cc $var(graph,current)
+    set var(graph,ds,current) [lindex $var($cc,dss) 0]
     PlotRestoreState $varname
 
     # update menus
@@ -298,6 +304,10 @@ proc PlotBuildDataSetMenu {varname} {
 proc PlotCurrentGraph {varname} {
     upvar #0 $varname var
     global $varname
+
+    # reset current dataset to first
+    set cc $var(graph,current)
+    set var(graph,ds,current) [lindex $var($cc,dss) 0]
 
     PlotRestoreState $varname
 

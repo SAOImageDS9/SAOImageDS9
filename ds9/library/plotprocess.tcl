@@ -339,7 +339,7 @@ proc PlotCmdSelectGraph {which} {
     global cvarname
     upvar #0 $cvarname cvar
 
-    set cvar(graph,current) "graph$which"
+    set cvar(graph,current) $which
     PlotCurrentGraph $cvarname
 }
 

@@ -174,7 +174,7 @@ proc PlotBarUpdateElement {varname} {
     }
 
     set nn $var(graph,ds,current)
-    $var(graph) element configure ${nn} \
+    $var(graph) element configure $nn \
 	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
 	-relief $var(graph,ds,bar,relief) -color $var(graph,ds,color) \
 	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \

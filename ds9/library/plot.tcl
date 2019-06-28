@@ -33,7 +33,8 @@ proc PlotDestroy {varname} {
     
     # delete all graphs
     foreach cc $var(graphs) {
-	PlotDeleteGraph $varname $cc
+	set var(graph,current) $cc
+	PlotDeleteGraph $varname
     }
     
     destroy $var(top)
@@ -95,6 +96,11 @@ proc PlotAddGraph {varname} {
     $var(proc,updategraph) $varname
     $var(proc,updatecanvas) $varname
 
+    PlotBuildDataSetMenu $varname
+
+    PlotStats $varname
+    PlotList $varname
+
     # update layout
     foreach cc $var(graphs) {
 	pack forget $var($cc)
@@ -113,19 +119,22 @@ proc PlotDeleteGraphCurrent {varname} {
 	return
     }
 
-    PlotDeleteGraph $varname $var(graph,current)
+    PlotDeleteGraph $varname
 }
 
-proc PlotDeleteGraph {varname cc} {
+proc PlotDeleteGraph {varname} {
     upvar #0 $varname var
     global $varname
 
+    set cc $var(graph,current)
+
     # remove menu item
-    $var(mb).canvas.select delete $var(graph,name)
+    $var(mb).canvas.select delete $var($cc,name)
 
     # delete all datasets
     foreach nn $var($cc,dss) {
-	PlotDeleteDataSet $varname $nn
+	set var(graph,ds,current) $nn
+	PlotDeleteDataSet $varname
     }
 
     # delete graph
@@ -157,6 +166,8 @@ proc PlotDeleteGraph {varname cc} {
     $var(proc,updategraph) $varname
     $var(proc,updatecanvas) $varname
 
+    PlotBuildDataSetMenu $varname
+
     PlotStats $varname
     PlotList $varname
 }
@@ -169,26 +180,26 @@ proc PlotAddElement {varname} {
     # create graph elements
     set nn $var(graph,ds,current)
     global $var(graph,ds,xdata) $var(graph,ds,ydata)
-    $var(graph) element create ${nn} \
+    $var(graph) element create $nn \
 	-xdata $var(graph,ds,xdata) -ydata $var(graph,ds,ydata)
     if {$var(graph,ds,xedata) != {}} {
 	if {[$var(graph,ds,xedata) length] != 0} {
-	    $var(graph) element configure ${nn} -xerror $var(graph,ds,xedata)
+	    $var(graph) element configure $nn -xerror $var(graph,ds,xedata)
 	}
     }
     if {$var(graph,ds,yedata) != {}} {
 	if {[$var(graph,ds,yedata) length] != 0} {
-	    $var(graph) element configure ${nn} -yerror $var(graph,ds,yedata)
+	    $var(graph) element configure $nn -yerror $var(graph,ds,yedata)
 	}
     }
 
-    # create menu item
-    $var(mb).graph.select add radiobutton -label "$var(graph,ds,name)" \
-	-variable ${varname}(graph,ds,current) -value $nn \
-	-command [list PlotCurrentDataSet $varname]
-
     # update menus
     $var(proc,updateelement) $varname
+
+    PlotBuildDataSetMenu $varname
+
+    PlotStats $varname
+    PlotList $varname
 }
 
 proc PlotDeleteDataSetCurrent {varname} {
@@ -231,9 +242,6 @@ proc PlotDeleteDataSet {varname} {
 	return
     }
 
-    # remove menu item
-    $var(mb).graph.select delete $var($cc,$nn,name)
-
     # delete element
     $var($cc) element delete $nn
 
@@ -265,8 +273,26 @@ proc PlotDeleteDataSet {varname} {
     # update menus
     $var(proc,updateelement) $varname
 
+    PlotBuildDataSetMenu $varname
+
     PlotStats $varname
     PlotList $varname
+}
+
+proc PlotBuildDataSetMenu {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    # remove menu item
+    $var(mb).graph.select delete 0 end
+
+    # create menu item
+    set cc $var(graph,current)
+    foreach nn $var(graph,dss) {
+	$var(mb).graph.select add radiobutton -label "$var($cc,$nn,name)" \
+	    -variable ${varname}(graph,ds,current) -value $nn \
+	    -command [list PlotCurrentDataSet $varname]
+    }
 }
 
 proc PlotCurrentGraph {varname} {
@@ -274,6 +300,9 @@ proc PlotCurrentGraph {varname} {
     global $varname
 
     PlotRestoreState $varname
+
+    PlotBuildDataSetMenu $varname
+
     PlotStats $varname
     PlotList $varname
 }
@@ -283,6 +312,7 @@ proc PlotCurrentDataSet {varname} {
     global $varname
 
     PlotRestoreState $varname
+
     PlotStats $varname
     PlotList $varname
 }
@@ -310,24 +340,6 @@ proc PlotChangeMode {varname} {
 	    }
 	}
     }
-}
-
-proc PlotExternal {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set cc $var(graph,current)
-
-    # incr count
-    incr ${varname}($cc,seq) 
-    set nn $var($cc,seq)
-    lappend var($cc,dss) $nn
-
-    set var(graph,ds,current) $nn
-    set var(graph,ds,manage) 0
-    set var(graph,ds,name) "Dataset $nn"
-
-    PlotAddElement $varname
 }
 
 proc PlotList {varname} {
@@ -644,7 +656,7 @@ proc PlotBackup {ch dir} {
 
 	    set save $var(graph,ds,current)
 	    foreach nn $var($cc,dss) {
-		set ${varname}(graph,ds,current) $nn
+		set var(graph,ds,current) $nn
 		PlotCurrentDataSet $varname
 
 		PlotSaveDataFile $varname "$fdir/plot$nn.dat"

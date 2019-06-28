@@ -11,6 +11,7 @@
 %start command
 
 %token A4_
+%token ADD_
 %token ALIGNED_
 %token ARROW_
 %token AUTO_
@@ -33,6 +34,7 @@
 %token DASH_
 %token DATA_
 %token DATASET_
+%token DELETE_
 %token DESTINATION_
 %token DIAMOND_
 %token DISCRETE_
@@ -228,9 +230,12 @@ dim : XY_ {set _ xy}
 
 plotCmd : LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
+ | ADD_ GRAPH_ {ProcessCmdCVAR0 PlotAddGraph}
+ | DELETE_ delete
  # xpa/samp only
  | DATA_ dim {PlotCmdData $2}
- | CLEAR_ {ProcessCmdCVAR0 PlotDeleteAllDataSet}
+ # backward compatibility
+ | CLEAR_ {ProcessCmdCVAR0 PlotDeleteDataSetAll}
  | EXPORT_ export
  | DUPLICATE_ duplicate
  # backward compatibility
@@ -270,14 +275,24 @@ plotCmd : LOAD_ load
  | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,width $2}
  | DASH_ yesno {PlotCmdUpdateElement graph,ds,dash $2}
 
- | SELECT_ INT_ {PlotCmdSelectData $2}
+ | SELECT_ select
  # backward compatibility
- | DATASET_ INT_ {PlotCmdSelectData $2}
+ | DATASET_ INT_ {PlotCmdSelectDataSet $2}
 
  # backward compatibility
  | GRAPH_ oldGraph
  # backward compatibility
  | VIEW_ oldView
+ ;
+
+select: DATASET_ INT_ {PlotCmdSelectDataSet $2}
+ | GRAPH_ INT_ {PlotCmdSelectGraph $2}
+ # backward compatibility
+ | INT_ {PlotCmdSelectDataSet $2}
+ ;
+
+delete: GRAPH_ {ProcessCmdCVAR0 PlotDeleteGraphCurrent}
+ | DATASET_ {ProcessCmdCVAR0 PlotDeleteDataSetCurrent}
  ;
 
 export : STRING_ {PlotCmdExport [ExtToFormat $1] $1}

@@ -24,6 +24,7 @@
 %token FILLCOLOR_
 %token FLIP_
 %token FORMAT_
+%token GRAPH_
 %token GRID_
 %token LABELS_
 %token LEGEND_
@@ -94,11 +95,17 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | SMOOTH_ {ProcessSendCmdCVARGet graph,ds,smooth}
  | WIDTH_ {ProcessSendCmdCVARGet graph,ds,width}
  | DASH_ {ProcessSendCmdCVARYesNo graph,ds,dash}
- | SELECT_ {PlotSendCmdCVARGet ds,current}
+ | SELECT_ select
  # backward compatibility
- | DATASET_ {PlotSendCmdCVARGet ds,current}
+ | DATASET_ {ProcessSendCmdCVARGet graph,ds,current}
  ;
  
+select : DATASET_ {ProcessSendCmdCVARGet graph,ds,current}
+ | GRAPH_ {ProcessSendCmdCVARGet graph,current}
+ # backward compatibility
+ | {ProcessSendCmdCVARGet graph,ds,current}
+ ;
+
 axis : xy GRID_ {ProcessSendCmdCVARYesNo "graph,axis,$1,grid"}
  | xy LOG_ {ProcessSendCmdCVARYesNo "graph,axis,$1,log"}
  | xy FLIP_ {ProcessSendCmdCVARYesNo "graph,axis,$1,flip"}

@@ -24,6 +24,7 @@ fill		{return $FILL_}
 fillcolor	{return $FILLCOLOR_}
 flip		{return $FLIP_}
 format		{return $FORMAT_}
+graph		{return $GRAPH_}
 grid		{return $GRID_}
 labels		{return $LABELS_}
 legend		{return $LEGEND_}

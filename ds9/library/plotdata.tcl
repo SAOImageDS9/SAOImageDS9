@@ -41,13 +41,14 @@ proc PlotDataSetOne {varname dim data} {
     }
 
     # total length
-    set ll [llength $data]
-
     # incr count
     incr ${varname}(graph,seq)
     set nn $var(graph,seq)
     lappend ${varname}(graph,dss) $nn
     set var(graph,ds,current) $nn
+
+    set var(graph,ds,manage) 1
+    set var(graph,ds,name) "Dataset $nn"
 
     # init new state
     global pap
@@ -76,10 +77,6 @@ proc PlotDataSetOne {varname dim data} {
     set xedata ap${varname}graph${cc}xe${nn}
     set yedata ap${varname}graph${cc}ye${nn}
 
-    # basics
-    set var(graph,ds,manage) 1
-    set var(graph,ds,name) "Dataset $nn"
-
     # vectors
     set var(graph,ds,xdata) $xdata
     set var(graph,ds,ydata) $ydata
@@ -98,6 +95,8 @@ proc PlotDataSetOne {varname dim data} {
     set y {}
     set xe {}
     set ye {}
+    set ll [llength $data]
+
     switch -- $dim {
 	2 -
 	xy {
@@ -228,6 +227,22 @@ proc PlotDataSetOne {varname dim data} {
 	    $var(graph,ds,yedata) set $ye
 	}
     }
+
+    PlotAddElement $varname
+}
+
+proc PlotExternal {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    # incr count
+    incr ${varname}(graph,seq) 
+    set nn $var(graph,seq)
+    lappend ${varname}(graph,dss) $nn
+    set var(graph,ds,current) $nn
+
+    set var(graph,ds,manage) 0
+    set var(graph,ds,name) "Dataset $nn"
 
     PlotAddElement $varname
 }

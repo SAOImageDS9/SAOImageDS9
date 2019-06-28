@@ -335,11 +335,18 @@ proc PlotCmdExport {format fn} {
     PlotExport $cvarname $fn $format
 }
 
-proc PlotCmdSelectData {which} {
+proc PlotCmdSelectGraph {which} {
     global cvarname
     upvar #0 $cvarname cvar
 
-    set cc $cvar(graph,current)
+    set cvar(graph,current) "graph$which"
+    PlotCurrentGraph $cvarname
+}
+
+proc PlotCmdSelectDataSet {which} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
     set cvar(graph,ds,current) $which
     PlotCurrentDataSet $cvarname
 }
@@ -373,24 +380,3 @@ proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {
     plotsend::yy_scan_string $param
     plotsend::yyparse
 }
-
-proc PlotSendCmdCVARGet {key} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cc $cvar(graph,current)
-
-    global parse
-    $parse(proc) $parse(id) "$cvar($cc,$key)\n"
-}
-
-proc PlotSendCmdCVARYesNo {key} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cc $cvar(graph,current)
-
-    global parse
-    $parse(proc) $parse(id) [ToYesNo $cvar($cc,$key)]
-}
-

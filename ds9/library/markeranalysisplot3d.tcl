@@ -222,17 +222,6 @@ proc MarkerAnalysisPlot3dMarker {vvarname} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    set ss [$vvar(frame) get crop 3d $vvar(system) $vvar(sky)]
-    set min [lindex $ss 0]
-    set max [lindex $ss 1]
-    set delta [expr ($max-$min)*.0001]
-    if {[::math::fuzzy::tle $vvar(slice) $min]} {
-	set vvar(slice) [expr $min+$delta]
-    }
-    if {[::math::fuzzy::tge $vvar(slice) $max]} {
-	set vvar(slice) [expr $max-$delta]
-    }
-
     $vvar(graph) marker configure $vvar(markerslice) \
 	-coords "$vvar(slice) -Inf $vvar(slice) Inf"
 }

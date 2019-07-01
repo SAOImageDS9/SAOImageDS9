@@ -205,7 +205,6 @@ proc MarkerAnalysisPlot3dMotion {vvarname xx yy} {
 
     set vvar(slice) [lindex [$vvar(graph) invtransform $xx $yy] 0]
     $vvar(frame) update fits slice $vvar(slice) $vvar(system) $vvar(sky)
-
     MarkerAnalysisPlot3dMarker $vvarname
 
     # current frame only

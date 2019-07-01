@@ -115,11 +115,18 @@ proc CATSkyBotVOT {varname} {
 	if {$exp != {} && [string is double $exp]} {
 	    # ok, rebuild epoch
 	    set ttt [split $tt {:}]
-	    set total [expr [lindex $ttt 0]*60.*60. + [lindex $ttt 1]*60. + [lindex $ttt 2] + [expr $exp/2.]]
-	    set hh [format "%02d" [expr int($total/60./60.)]]
-	    set total [expr $total - $hh*60.*60.]
-	    set mm [format "%02d" [expr int($total/60.)]]
-	    set ss [format "%02.1f" [expr $total - $mm*60.]]
+	    set total [expr [lindex $ttt 0]*24.*60. + [lindex $ttt 1]*60. + [lindex $ttt 2] + [expr $exp/2.]]
+
+	    set ht [expr int($total/24./60.)]
+	    set hh [format "%02d" $ht]
+	    set total [expr $total - $ht*24.*60.]
+
+	    set mt [expr int($total/60.)]
+	    set mm [format "%02d" $mt]
+
+	    set st [expr $total - $mt*60.]
+	    set ss [format "%02.1f" $st]
+
 	    set epoch "${dd}T${hh}:${mm}:${ss}"
 	}
     }

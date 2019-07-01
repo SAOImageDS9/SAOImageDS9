@@ -78,7 +78,6 @@ proc CATSkyBotVOT {varname} {
 	ARError $varname [msgcat::mc {Unable to determine date of observation}]
 	return
     }
-    puts $epoch
 
     # do we have a time? else check UT, UTC-OBS, UTIME, TIME-OBS
     set ut {}
@@ -106,7 +105,6 @@ proc CATSkyBotVOT {varname} {
     set dt [split $epoch {T}]
     set dd [lindex $dt 0]
     set tt [lindex $dt 1]
-    puts "$dt|$dd|$tt"
     if {$tt != {}} {
 	# do we have EXPTIME or EXP_TIME?
 	set exp [string trim [$current(frame) get fits header keyword EXPTIME]]

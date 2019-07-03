@@ -578,9 +578,20 @@ after $ds9(msg,timeout) [list ErrorTimer]
 # ok, we're done
 set ds9(init) 0
 
-# major kludge- jump start keyevents for windows
+# major kludges
 switch $ds9(wm) {
-    x11 -
+    x11 {
+	# lock down geometry at statup
+	# so unneeded configure events are not generated
+	# a problem with recent versions of linux
+	wm geometry $ds9(top) "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
+    }
     aqua {}
-    win32 {event generate $ds9(canvas) <Tab> -x 0 -y 0}
+    win32 {
+	# jump start keyevents for windows
+	event generate $ds9(canvas) <Tab> -x 0 -y 0
+    }
 }
+
+
+

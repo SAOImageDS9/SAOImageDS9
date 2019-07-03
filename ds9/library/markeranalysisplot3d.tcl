@@ -168,6 +168,7 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	set vvar(markerslice) [$vvar(graph) marker create line -element bar1 \
 			     -outline cyan -linewidth 2 \
 			     -bindtags [list slice]]
+	$vvar(graph) configure -halo 10
 	$vvar(graph) marker bind slice <B1-Motion> \
 	    [list MarkerAnalysisPlot3dMotion $vvarname %x %y]
 

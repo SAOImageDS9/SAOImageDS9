@@ -1808,7 +1808,11 @@ void Base::getFitsSliceFromImageCmd(int ss, Coord::CoordSystem sys,
     FitsImage* ptr = currentContext->fits;
     Vector3d dd = Vector3d(ptr->center(),ss) * Translate3d(-.5,-.5,-.5);
     Vector3d out = ptr->mapFromRef(dd,sys,sky);
-    printDouble(out[2]);
+
+    // set precision high enough for plot in GHz freq
+    ostringstream str;
+    str << setprecision(18) << out[2] << ends;
+    Tcl_AppendResult(interp, str.str().c_str(), NULL);
   }
   else
     Tcl_AppendResult(interp, "1", NULL);

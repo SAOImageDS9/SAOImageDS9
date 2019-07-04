@@ -14,7 +14,7 @@ proc CubeDef {} {
 
     set cube(lock) none
     set cube(lock,axes) 0
-# axes cnt starts at 0
+    # axes cnt starts at 0
     set cube(system) wcs
     set cube(sky) fk5
     set cube(axes) 123
@@ -71,7 +71,7 @@ proc CubeSlice {ss} {
 
     set dcube(image) $ss
     set dcube(wcs) \
-	[$current(frame) get fits slice from image $cube(system) $cube(sky)]
+	[format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
 
     UpdateCube
 }
@@ -266,7 +266,7 @@ proc CubeApply {} {
 
     set dcube(image) $ss
     set dcube(wcs) \
-	[$current(frame) get fits slice from image $cube(system) $cube(sky)]
+	[format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
 
     UpdateCube
 }
@@ -299,7 +299,7 @@ proc CubeApplyWCS {} {
 
     set dcube(image) $ss
     set dcube(wcs) \
-	[$current(frame) get fits slice from image $cube(system) $cube(sky)]
+	[format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
 
     UpdateCube
 }
@@ -398,14 +398,14 @@ proc CubeDialog {} {
     set dcube(taxis) [ttk::label $f.taxis -text [msgcat::mc {Axis}]]
     set dcube(twcs) \
 	[ttk::label $f.twcs -textvariable dcube(vcoord) -anchor center]
-    set dcube(wcsentry) [ttk::entry $f.slice -textvariable dcube(wcs) -width 10]
+    set dcube(wcsentry) [ttk::entry $f.slice -textvariable dcube(wcs) -width 12]
     bind $dcube(wcsentry) <Return> [list CubeApplyWCS]
     set dcube(slider) \
 	[slider $f.scale 0 100 {} dcube(image) [list CubeApply] 4 10]
 
-# Buttons
+    # Buttons
 
-set f [ttk::frame $w.buttons]
+    set f [ttk::frame $w.buttons]
     ttk::button $f.first -text [msgcat::mc {First}] -width -6 -command CubeFirst
     ttk::button $f.prev -text [msgcat::mc {Previous}] -width -6 \
 	-command CubePrev
@@ -420,6 +420,8 @@ set f [ttk::frame $w.buttons]
     ttk::separator $w.sep -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.param -side top -fill both -expand true
+
+    set dcube(format) {%g}
 
     UpdateCubeDialog
 }
@@ -483,7 +485,7 @@ proc UpdateCubeDialog {} {
 	UpdateCubeDialogNoImage
 	return
     }
-	
+    
     # special case, no image
     if {![$current(frame) has fits]} {
 	UpdateCubeDialogNoImage
@@ -559,7 +561,8 @@ proc UpdateCubeDialog {} {
 
     # we must do this after the scale has been configured
     set dcube(image) [$current(frame) get fits slice]
-    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
+    set dcube(wcs) \
+	[format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
 }
 
 proc UpdateCubeDialogNoImage {} {
@@ -671,7 +674,8 @@ proc UpdateCubeMotionDialog {} {
 
     # we must do this after the scale has been configured
     set dcube(image) [$current(frame) get fits slice]
-    set dcube(wcs) [$current(frame) get fits slice from image $cube(system) $cube(sky)]
+    set dcube(wcs) \
+	[format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
 }
 
 proc CubeBackup {ch which} {
@@ -810,7 +814,7 @@ proc CubeCmd {ss} {
 
     set dcube(image) $ss
     set dcube(wcs) \
-	[$current(frame) get fits slice from image $cube(system) $cube(sky)]
+	[format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
 
     UpdateCube
 }
@@ -839,7 +843,7 @@ proc CubeCmdCoord {ss sys sky} {
 
     set dcube(image) $ss
     set dcube(wcs) \
-	[$current(frame) get fits slice from image $cube(system) $cube(sky)]
+	[format $dcube(format) [$current(frame) get fits slice from image $cube(system) $cube(sky)]]
 
     UpdateCube
 }

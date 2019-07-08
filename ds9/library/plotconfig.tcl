@@ -27,6 +27,8 @@ proc PlotLoadConfigFile {varname filename} {
     set var(graph,title,weight) $analysisplot(graph,title,weight) 
     set var(graph,title,slant) $analysisplot(graph,title,slant) 
 
+    set var(legend) $analysisplot(legend) 
+    set var(legend,position) $analysisplot(legend,position) 
     set var(legend,title,family) $analysisplot(legend,title,family) 
     set var(legend,title,size) $analysisplot(legend,title,size) 
     set var(legend,title,weight) $analysisplot(legend,title,weight) 
@@ -49,9 +51,7 @@ proc PlotLoadConfigFile {varname filename} {
     # per Graph
     set var(graph,title) $analysisplot(graph,title)
 
-    set var(graph,legend) $analysisplot(legend) 
     set var(graph,legend,title) $analysisplot(legend,title) 
-    set var(graph,legend,position) $analysisplot(legend,position) 
 
     set var(graph,axis,x,title) $analysisplot(axis,x,title) 
     set var(graph,axis,x,grid) $analysisplot(axis,x,grid) 
@@ -207,6 +207,8 @@ proc PlotSaveConfigFile {varname filename} {
     set analysisplot(graph,title,weight) $var(graph,title,weight) 
     set analysisplot(graph,title,slant) $var(graph,title,slant) 
 
+    set analysisplot(legend) $var(legend)
+    set analysisplot(legend,position) $var(legend,position)
     set analysisplot(legend,title,family) $var(legend,title,family)
     set analysisplot(legend,title,size) $var(legend,title,size)
     set analysisplot(legend,title,weight) $var(legend,title,weight)
@@ -229,9 +231,7 @@ proc PlotSaveConfigFile {varname filename} {
     # per Graph
     set analysisplot(graph,title) $var(graph,title) 
 
-    set analysisplot(legend) $var(graph,legend)
     set analysisplot(legend,title) $var(graph,legend,title)
-    set analysisplot(legend,position) $var(graph,legend,position)
 
     set analysisplot(axis,x,title) $var(graph,axis,x,title) 
     set analysisplot(axis,x,grid) $var(graph,axis,x,grid)

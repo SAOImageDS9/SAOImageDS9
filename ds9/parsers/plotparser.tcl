@@ -5613,8 +5613,8 @@ proc plot::yyparse {} {
                     153 { PlotCmdUpdateGraph "graph,axis,$1,min" $3 }
                     154 { PlotCmdUpdateGraph "graph,axis,$1,max" $3 }
                     155 { PlotCmdUpdateGraph "graph,axis,$1,format" $3 }
-                    156 { PlotCmdUpdateGraph graph,legend $1 }
-                    157 { PlotCmdUpdateGraph graph,legend,position $2 }
+                    156 { PlotCmdUpdateCanvas legend $1 }
+                    157 { PlotCmdUpdateCanvas legend,position $2 }
                     158 { set _ right }
                     159 { set _ left }
                     160 { set _ top }

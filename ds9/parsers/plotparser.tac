@@ -368,8 +368,8 @@ axis : xy GRID_ yesno {PlotCmdUpdateGraph "graph,axis,$1,grid" $3}
  | xy FORMAT_ STRING_ {PlotCmdUpdateGraph "graph,axis,$1,format" $3}
  ;
 
-legend : yesno {PlotCmdUpdateGraph graph,legend $1}
- | POSITION_ legendPos {PlotCmdUpdateGraph graph,legend,position $2}
+legend : yesno {PlotCmdUpdateCanvas legend $1}
+ | POSITION_ legendPos {PlotCmdUpdateCanvas legend,position $2}
  ;
  
 legendPos : RIGHT_ {set _ right}

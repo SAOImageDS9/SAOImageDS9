@@ -115,8 +115,8 @@ axis : xy GRID_ {ProcessSendCmdCVARYesNo "graph,axis,$1,grid"}
  | xy FORMAT_ {ProcessSendCmdCVARGet "graph,axis,$1,format"}
  ;
 
-legend : {ProcessSendCmdCVARYesNo graph,legend}
- | POSITION_ {ProcessSendCmdCVARGet graph,legend,position}
+legend : {ProcessSendCmdCVARYesNo legend}
+ | POSITION_ {ProcessSendCmdCVARGet legend,position}
  ;
  
 fontt : fontType FONT_ {ProcessSendCmdCVARGet "$1,family"}

@@ -266,7 +266,7 @@ proc PlotDeleteDataSet {varname} {
     # delete all dataset vars
     foreach vv [array names $varname] {
 	set gr [split $vv ,]
-	if {[lindex $gr 1] == $nn} {
+	if {[lindex $gr 0] == $cc && [lindex $gr 1] == $nn} {
 	    unset ${varname}($vv)
 	}
     }
@@ -517,6 +517,8 @@ proc PlotUpdateCanvas {varname} {
 
 	$var($cc) legend configure \
 	    -bg $var(background) \
+	    -hide [expr !$var(legend)] \
+	    -position $var(legend,position) \
 	    -font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	    -titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
     }
@@ -582,8 +584,7 @@ proc PlotUpdateGraph {varname} {
 	-grid $var(graph,axis,y,grid) -logscale $var(graph,axis,y,log) \
 	-title $var(graph,axis,y,title)
 
-    $var(graph) legend configure -hide [expr !$var(graph,legend)] \
-	-position $var(graph,legend,position) -title $var(graph,legend,title)
+    $var(graph) legend configure -title $var(graph,legend,title)
 }
 
 proc PlotButton {varname x y} {

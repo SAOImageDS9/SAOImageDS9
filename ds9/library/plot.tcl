@@ -77,15 +77,50 @@ proc PlotLayoutCanvas {varname} {
 	grid forget $var($cc,canvas)
     }
 
-    set ww 1
-    set ii 0
-    grid columnconfigure $var(top) 0 -weight 1
-    foreach cc $var(graphs) {
-	grid rowconfigure $var(top) $ii -weight $ww
-	grid $var($cc,canvas) -sticky news
+    switch $var(layout) {
+	column {
+	    set ww 1
+	    set ii 0
+	    grid columnconfigure $var(top) 0 -weight 1
+	    foreach cc $var(graphs) {
+		grid rowconfigure $var(top) $ii -weight $ww
+		grid $var($cc,canvas) -row $ii -column 0 -sticky news
 
-	set ww 2
-	incr ii
+		set ww 2
+		incr ii
+	    }
+	}
+	row {
+	    set ww 1
+	    set ii 0
+	    grid rowconfigure $var(top) 0 -weight 1
+	    foreach cc $var(graphs) {
+		grid columnconfigure $var(top) $ii -weight $ww
+		grid $var($cc,canvas) -row 0 -column $ii -sticky news
+
+		set ww 2
+		incr ii
+	    }
+	}
+	grid {
+	    set num [llength $var(graphs)]
+	    set nr [expr int(sqrt($num)+.5)]
+	    set nc [expr int(sqrt($num-1))+1]
+
+	    set xx 0
+	    set yy 0
+	    foreach cc $var(graphs) {
+		grid columnconfigure $var(top) $xx -weight 1
+		grid rowconfigure $var(top) $yy -weight 1
+		grid $var($cc,canvas) -row $yy -column $xx -sticky news
+
+		incr xx
+		if {$xx==$nc} {
+		    set xx 0
+		    incr yy
+		}
+	    }
+	}
     }
 }
 

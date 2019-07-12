@@ -66,11 +66,16 @@ proc PlotLayoutCanvas {varname} {
     upvar #0 $varname var
     global $varname
 
-    # update layout
-    set ii 0
+    set ss [grid size $var(top)]
+    for {set jj 0} {$jj<[lindex $ss 0]} {incr jj} {
+	grid columnconfigure $var(top) $jj -weight 0
+    }
+    for {set ii 0} {$ii<[lindex $ss 1]} {incr ii} {
+	grid rowconfigure $var(top) $ii -weight 0
+    }
+    
     foreach cc $var(graphs) {
 	grid forget $var($cc,canvas)
-	incr ii
     }
 
     set ww 1
@@ -161,8 +166,12 @@ proc PlotDeleteGraph {varname} {
     }
 
     # delete graph
+    grid forget $var(graph)
+    grid forget $var(canvas)
     destroy $var(graph)
     destroy $var(canvas)
+
+    # remove from list
     set ii [lsearch $var(graphs) $cc]
     if {$ii>=0} {
 	set var(graphs) [lreplace $var(graphs) $ii $ii]

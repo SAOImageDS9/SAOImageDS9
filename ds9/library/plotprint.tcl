@@ -24,18 +24,18 @@ proc PlotPostScript {varname} {
 
     foreach cc $var(graphs) {
 	# set postscript fonts
-	$var($cc) configure \
+	$var($cc,graph) configure \
 	    -font "$var(graph,title,family) $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
 
-	$var($cc) xaxis configure \
+	$var($cc,graph) xaxis configure \
 	    -tickfont "$var(axis,font,family) $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	    -titlefont "$var(axis,title,family) $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-	$var($cc) yaxis configure \
+	$var($cc,graph) yaxis configure \
 	    -tickfont "$var(axis,font,family) $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	    -titlefont "$var(axis,title,family) $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-	$var($cc) legend configure \
+	$var($cc,graph) legend configure \
 	    -font "$var(legend,font,family) $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	    -titlefont "$var(legend,title,family) $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
 
@@ -95,26 +95,26 @@ proc PlotPostScript {varname} {
 	}
 
 	if {$ps(dest) == "file" && $ps(filename) != {}} {
-	    eval $var($cc) postscript output $ps(filename) $options
+	    eval $var($cc,graph) postscript output $ps(filename) $options
 	} else {
 	    set ch [open "| $ps(cmd)" w]
-	    puts $ch [eval $var($cc) postscript output $options]
+	    puts $ch [eval $var($cc,graph) postscript output $options]
 	    close $ch
 	}
 
 	# reset fonts
-	$var($cc) configure \
+	$var($cc,graph) configure \
 	    -font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
 
-	$var($cc) xaxis configure \
+	$var($cc,graph) xaxis configure \
 	    -tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-	$var($cc) yaxis configure \
+	$var($cc,graph) yaxis configure \
 	    -tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-	$var($cc) legend configure \
+	$var($cc,graph) legend configure \
 	    -font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	    -titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
     }

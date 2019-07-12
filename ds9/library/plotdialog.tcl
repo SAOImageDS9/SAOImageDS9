@@ -229,7 +229,9 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     menu $var(mb).data
 
     set var(canvas) [ttk::frame $var(top).fr]
-    pack $var(canvas) -expand yes -fill both
+    grid rowconfigure $var(top) 0 -weight 1
+    grid columnconfigure $var(top) 0 -weight 1
+    grid $var(canvas) -sticky news
 }
 
 proc PlotDataFormatDialog {xarname} {

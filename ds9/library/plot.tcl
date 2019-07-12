@@ -104,14 +104,7 @@ proc PlotAddGraph {varname} {
     PlotStats $varname
     PlotList $varname
 
-    # update layout
-    foreach cc $var(graphs) {
-	pack forget $var($cc)
-    }
-
-    foreach cc $var(graphs) {
-	pack $var($cc) -side top -expand yes -fill both
-    }
+    PlotLayoutCanvas $varname
 }
 
 proc PlotDeleteGraphCurrent {varname} {
@@ -171,10 +164,36 @@ proc PlotDeleteGraph {varname} {
     $var(proc,updategraph) $varname
     $var(proc,updatecanvas) $varname
 
+    PlotLayoutCanvas $varname
+
     PlotBuildDataSetMenu $varname
 
     PlotStats $varname
     PlotList $varname
+}
+
+proc PlotLayoutCanvas {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    # update layout
+    set ii 0
+    foreach cc $var(graphs) {
+	grid rowconfigure $var(canvas) $ii -weight 0
+	grid remove $var($cc,graph)
+	incr ii
+    }
+
+    set ww 1
+    set ii 0
+    grid columnconfigure $var(canvas) 0 -weight 1
+    foreach cc $var(graphs) {
+	grid rowconfigure $var(canvas) $ii -weight $ww
+	grid $var($cc,graph) -sticky news
+
+	set ww 2
+	incr ii
+    }
 }
 
 # Data
@@ -248,7 +267,7 @@ proc PlotDeleteDataSet {varname} {
     }
 
     # delete element
-    $var($cc) element delete $nn
+    $var($cc,graph) element delete $nn
 
     # destroy vectors
     blt::vector destroy $var($cc,$nn,xdata) $var($cc,$nn,ydata)
@@ -340,12 +359,12 @@ proc PlotChangeMode {varname} {
     foreach cc $var(graphs) {
 	switch $var(mode) {
 	    pointer {
-		blt::RemoveBindTag $var($cc) zoom-$var($cc)
-		bind $var($cc) <1> [list PlotButton $varname %x %y]
+		blt::RemoveBindTag $var($cc,graph) zoom-$var($cc)
+		bind $var($cc,graph) <1> [list PlotButton $varname %x %y]
 	    }
 	    zoom {
-		bind $var($cc) <1> {}
-		blt::AddBindTag $var($cc) zoom-$var($cc)
+		bind $var($cc,graph) <1> {}
+		blt::AddBindTag $var($cc,graph) zoom-$var($cc)
 	    }
 	}
     }
@@ -501,21 +520,21 @@ proc PlotUpdateCanvas {varname} {
     PlotSaveState $varname
     
     foreach cc $var(graphs) {
-	$var($cc) configure -plotpadx 0 -plotpady 0 \
+	$var($cc,graph) configure -plotpadx 0 -plotpady 0 \
 	    -font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)" \
 	    -bg $var(background) -plotbackground $var(background)
 
-	$var($cc) xaxis configure \
+	$var($cc,graph) xaxis configure \
 	    -bg $var(background) \
 	    -tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-	$var($cc) yaxis configure \
+	$var($cc,graph) yaxis configure \
 	    -bg $var(background) \
 	    -tickfont "{$ds9($var(axis,font,family))} $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
 	    -titlefont "{$ds9($var(axis,title,family))} $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-	$var($cc) legend configure \
+	$var($cc,graph) legend configure \
 	    -bg $var(background) \
 	    -hide [expr !$var(legend)] \
 	    -position $var(legend,position) \

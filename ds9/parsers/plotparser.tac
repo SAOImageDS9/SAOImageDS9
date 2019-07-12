@@ -28,6 +28,7 @@
 %token CLEAR_
 %token CLOSE_
 %token COLOR_
+%token COLUMN_
 %token COMMAND_
 %token CROSS_
 %token CUBIC_
@@ -58,6 +59,7 @@
 %token GROOVE_
 %token LABELS_
 %token LANDSCAPE_
+%token LAYOUT_
 %token LEFT_
 %token LEGAL_
 %token LEGEND_
@@ -97,6 +99,7 @@
 %token RELIEF_
 %token RGB_
 %token RIGHT_
+%token ROW_
 %token SAVE_
 %token SAVECONFIG_
 %token SCALE_
@@ -274,10 +277,11 @@ plotCmd : LOAD_ load
  | SMOOTH_ smooth {PlotCmdUpdateElement graph,ds,smooth $2}
  | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,width $2}
  | DASH_ yesno {PlotCmdUpdateElement graph,ds,dash $2}
+ | LAYOUT_ layout {ProcessCmdCVAR layout $2 PlotLayoutCanvas}
 
  | SELECT_ select
  # backward compatibility
- | DATASET_ INT_ {PlotCmdSelectDataSet $2}
+ | DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $2}
 
  # backward compatibility
  | GRAPH_ oldGraph
@@ -285,10 +289,10 @@ plotCmd : LOAD_ load
  | VIEW_ oldView
  ;
 
-select: DATASET_ INT_ {PlotCmdSelectDataSet $2}
- | GRAPH_ INT_ {PlotCmdSelectGraph $2}
+select: DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $2}
+ | GRAPH_ INT_ {ProcessCmdCVAR graph,current $2}
  # backward compatibility
- | INT_ {PlotCmdSelectDataSet $2}
+ | INT_ {ProcessCmdCVAR graph,ds,current $2}
  ;
 
 delete: GRAPH_ {ProcessCmdCVAR0 PlotDeleteGraphCurrent}
@@ -312,6 +316,11 @@ exportOps : NONE_ {ProcessCmdSet iap tiff,compress none}
  | PACKBITS_ {ProcessCmdSet iap tiff,compress packbits}
  | DEFLATE_ {ProcessCmdSet iap tiff,compress deflate}
  | numeric {ProcessCmdSet iap jpeg,quality $1}
+ ;
+
+layout: ROW_ {set _ row}
+ | COLUMN_ {set _ column}
+ | GRID_ {set _ grid}
  ;
 
 load : STRING_ {PlotCmdLoad $1 xy}

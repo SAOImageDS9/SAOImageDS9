@@ -118,6 +118,9 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     $var(mb).canvas add command -label [msgcat::mc {Delete Graph}] \
 	-command [list PlotDeleteGraphCurrent $varname]
     $var(mb).canvas add separator
+    $var(mb).canvas add cascade -label [msgcat::mc {Layout}] \
+	-menu $var(mb).canvas.layout
+    $var(mb).canvas add separator
     menu $var(mb).canvas.select
 
     $var(mb).canvas add cascade -label [msgcat::mc {Legend}] \
@@ -126,6 +129,17 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 	-menu $var(mb).canvas.font
     $var(mb).canvas add cascade -label [msgcat::mc {Background}] \
 	-menu $var(mb).canvas.bg
+
+    menu $var(mb).canvas.layout
+    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Column}] \
+	-variable ${varname}(layout) -value column \
+	-command [list PlotLayoutCanvas $varname]
+    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Row}] \
+	-variable ${varname}(layout) -value row \
+	-command [list PlotLayoutCanvas $varname]
+    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Grid}] \
+	-variable ${varname}(layout) -value grid \
+	-command [list PlotLayoutCanvas $varname]
 
     menu $var(mb).canvas.legend
     $var(mb).canvas.legend add checkbutton -label [msgcat::mc {Show}] \

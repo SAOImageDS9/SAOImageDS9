@@ -9,6 +9,8 @@ proc PlotDefState {} {
     global pap
 
     # per Canvas
+    set pap(layout) column
+
     set pap(background) white
     set pap(bar,mode) normal
 

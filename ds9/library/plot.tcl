@@ -5,7 +5,6 @@
 package provide DS9 1.0
 
 proc PlotDef {} {
-    global pap
     global iap
 
     set iap(tt) {ap}
@@ -94,9 +93,6 @@ proc PlotLayoutCanvas {varname} {
 proc PlotAddGraph {varname} {
     upvar #0 $varname var
     global $varname
-
-    global ds9
-    global pap
 
     incr ${varname}(seq)
     set cc $var(seq)

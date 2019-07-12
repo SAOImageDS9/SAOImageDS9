@@ -203,11 +203,6 @@ proc PlotCmdScatter {title xaxis yaxis dim} {
     PlotScatter $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
 }
 
-proc PlotCmdStrip {title xaxis yaxis dim} {
-    global parse
-    PlotStrip $parse(tt) {} $title $xaxis $yaxis $dim $parse(buf)
-}
-
 proc PlotCmdAnalysisPlotStdin {which} {
     global parse
     AnalysisPlotStdin $which $parse(tt) {} $parse(buf)
@@ -333,22 +328,6 @@ proc PlotCmdExport {format fn} {
 	}
     }
     PlotExport $cvarname $fn $format
-}
-
-proc PlotCmdSelectGraph {which} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(graph,current) $which
-    PlotCurrentGraph $cvarname
-}
-
-proc PlotCmdSelectDataSet {which} {
-    global cvarname
-    upvar #0 $cvarname cvar
-
-    set cvar(graph,ds,current) $which
-    PlotCurrentDataSet $cvarname
 }
 
 # used by SAMP and CATALOG

@@ -27,6 +27,7 @@
 %token GRAPH_
 %token GRID_
 %token LABELS_
+%token LAYOUT_
 %token LEGEND_
 %token LEGENDTITLE_
 %token LIST_
@@ -95,6 +96,7 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | SMOOTH_ {ProcessSendCmdCVARGet graph,ds,smooth}
  | WIDTH_ {ProcessSendCmdCVARGet graph,ds,width}
  | DASH_ {ProcessSendCmdCVARYesNo graph,ds,dash}
+ | LAYOUT_ {ProcessSendCmdCVARGet layout}
  | SELECT_ select
  # backward compatibility
  | DATASET_ {ProcessSendCmdCVARGet graph,ds,current}

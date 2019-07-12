@@ -25,6 +25,7 @@ circle	    {return $CIRCLE_}
 clear	    {return $CLEAR_}
 close	    {return $CLOSE_}
 color	    {return $COLOR_}
+column	    {return $COLUMN_}
 command	    {return $COMMAND_}
 cross	    {return $CROSS_}
 cubic	    {return $CUBIC_}
@@ -55,6 +56,7 @@ grid	    {return $GRID_}
 groove	    {return $GROOVE_}
 labels	    {return $LABELS_}
 landscape   {return $LANDSCAPE_}
+layout	    {return $LAYOUT_}
 left	    {return $LEFT_}
 legal	    {return $LEGAL_}
 legend	    {return $LEGEND_}
@@ -94,6 +96,7 @@ range	    {return $RANGE_}
 relief	    {return $RELIEF_}
 rgb	    {return $RGB_}
 right	    {return $RIGHT_}
+row	    {return $ROW_}
 save	    {return $SAVE_}
 saveconfig  {return $SAVECONFIG_}
 scale	    {return $SCALE_}

@@ -90,6 +90,7 @@ proc PlotInitGraph {varname} {
     set cc $var(graph,current)
     set var(graph,ds,current) {}
 
+    set var(canvas) [ttk::frame $var(top).fr$cc]
     set var(graph) $var(canvas).gr$cc
     set var(graph,name) "Graph $var(seq)"
     set var(graph,format) 1
@@ -159,6 +160,7 @@ proc PlotSaveState {varname} {
     set cc $var(graph,current)
     set nn $var(graph,ds,current)
 
+    set var($cc,canvas) $var(canvas)
     set var($cc,graph) $var(graph)
     set var($cc,name) $var(graph,name)
     set var($cc,format) $var(graph,format)
@@ -228,6 +230,7 @@ proc PlotRestoreState {varname} {
     set cc $var(graph,current)
     set nn $var(graph,ds,current)
 
+    set var(canvas) $var($cc,canvas)
     set var(graph) $var($cc,graph)
     set var(graph,name) $var($cc,name)
     set var(graph,format) $var($cc,format)

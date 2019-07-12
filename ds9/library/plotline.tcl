@@ -34,6 +34,17 @@ proc PlotLine {tt wtt title xaxis yaxis dim data} {
     PlotAddDataSet $varname $dim $data
     PlotStats $varname
     PlotList $varname
+
+    global ds9
+    switch $ds9(wm) {
+	x11 {
+	    update idletasks
+	    wm geometry $var(top) \
+		"[winfo width $var(top)]x[winfo height $var(top)]"
+	}
+	aqua -
+	win32 {}
+    }
 }
 
 proc PlotLineDialog {varname wtt title xaxis yaxis} {

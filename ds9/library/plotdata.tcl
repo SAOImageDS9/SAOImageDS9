@@ -245,6 +245,17 @@ proc PlotExternal {varname} {
     set var(graph,ds,name) "Dataset $nn"
 
     PlotAddElement $varname
+
+    global ds9
+    switch $ds9(wm) {
+	x11 {
+	    update idletasks
+	    wm geometry $var(top) \
+		"[winfo width $var(top)]x[winfo height $var(top)]"
+	}
+	aqua -
+	win32 {}
+    }
 }
 
 proc PlotDupDataSet {varname mm} {

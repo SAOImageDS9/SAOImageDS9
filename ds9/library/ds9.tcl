@@ -584,7 +584,8 @@ switch $ds9(wm) {
 	# lock down geometry at statup
 	# so unneeded configure events are not generated
 	# a problem with recent versions of linux
-	wm geometry $ds9(top) "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
+	wm geometry $ds9(top) \
+	    "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
     }
     aqua {}
     win32 {

@@ -62,6 +62,29 @@ proc PlotDestroy {varname} {
     unset $varname
 }
 
+proc PlotLayoutCanvas {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    # update layout
+    set ii 0
+    foreach cc $var(graphs) {
+	grid forget $var($cc,canvas)
+	incr ii
+    }
+
+    set ww 1
+    set ii 0
+    grid columnconfigure $var(top) 0 -weight 1
+    foreach cc $var(graphs) {
+	grid rowconfigure $var(top) $ii -weight $ww
+	grid $var($cc,canvas) -sticky news
+
+	set ww 2
+	incr ii
+    }
+}
+
 # Graph
 proc PlotAddGraph {varname} {
     upvar #0 $varname var
@@ -104,6 +127,10 @@ proc PlotAddGraph {varname} {
     PlotStats $varname
     PlotList $varname
 
+    grid columnconfigure $var(canvas) 0 -weight 1
+    grid rowconfigure $var(canvas) 0 -weight 1
+    grid $var($cc,graph) -sticky news
+
     PlotLayoutCanvas $varname
 }
 
@@ -135,6 +162,7 @@ proc PlotDeleteGraph {varname} {
 
     # delete graph
     destroy $var(graph)
+    destroy $var(canvas)
     set ii [lsearch $var(graphs) $cc]
     if {$ii>=0} {
 	set var(graphs) [lreplace $var(graphs) $ii $ii]
@@ -170,30 +198,6 @@ proc PlotDeleteGraph {varname} {
 
     PlotStats $varname
     PlotList $varname
-}
-
-proc PlotLayoutCanvas {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    # update layout
-    set ii 0
-    foreach cc $var(graphs) {
-	grid rowconfigure $var(canvas) $ii -weight 0
-	grid remove $var($cc,graph)
-	incr ii
-    }
-
-    set ww 1
-    set ii 0
-    grid columnconfigure $var(canvas) 0 -weight 1
-    foreach cc $var(graphs) {
-	grid rowconfigure $var(canvas) $ii -weight $ww
-	grid $var($cc,graph) -sticky news
-
-	set ww 2
-	incr ii
-    }
 }
 
 # Data

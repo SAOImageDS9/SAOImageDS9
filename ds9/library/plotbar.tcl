@@ -146,8 +146,8 @@ proc PlotBarAddGraph {varname} {
     set var($cc,type) bar
     blt::barchart $var(graph) -width 600 -height 500 -highlightthickness 0
 
-    $var($cc,graph) xaxis configure -grid no -stepsize 0
-    $var($cc,graph) yaxis configure -grid yes
+    $var(graph) xaxis configure -grid no -stepsize 0
+    $var(graph) yaxis configure -grid yes
 }
 
 proc PlotBarUpdateCanvas {varname} {

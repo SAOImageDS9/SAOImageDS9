@@ -292,7 +292,7 @@ plotCmd : LOAD_ load
 select: DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $2}
  | GRAPH_ INT_ {ProcessCmdCVAR graph,current $2}
  # backward compatibility
- | INT_ {ProcessCmdCVAR graph,ds,current $2}
+ | INT_ {ProcessCmdCVAR graph,ds,current $1}
  ;
 
 delete: GRAPH_ {ProcessCmdCVAR0 PlotDeleteGraphCurrent}
@@ -327,8 +327,9 @@ load : STRING_ {PlotCmdLoad $1 xy}
  | STRING_ dim  {PlotCmdLoad $1 $2}
  ;
  
-duplicate : {global cvarname; PlotDupDataSet $cvarname 1}
- | INT_ {global cvarname; PlotDupDataSet $cvarname $1}
+duplicate : {global cvarname; PlotDupDataSet $cvarname}
+# backward compatibility
+ | INT_ {global cvarname; PlotDupDataSet $cvarname}
  ;
 
 pagesetup : ORIENT_ pageOrient {ProcessCmdSet ps orient $2}

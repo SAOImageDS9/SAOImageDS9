@@ -85,7 +85,7 @@ proc PlotScatterAddGraph {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc  $var(graph,current)
+    set cc $var(graph,current)
 
     set var($cc,type) scatter
     blt::graph $var(graph) -width 600 -height 500 -highlightthickness 0

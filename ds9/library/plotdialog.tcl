@@ -495,13 +495,6 @@ proc DatasetNameDialog {varname} {
     return $rr
 }
 
-proc PlotButton {varname x y} {
-    upvar #0 $varname var
-    global $varname
-
-    $var(proc,button) $varname $x $y
-}
-
 proc PlotLineShapeMenu {which var} {
     menu $which
     $which add radiobutton -label [msgcat::mc {None}] \

@@ -403,12 +403,12 @@ proc PlotChangeMode {varname} {
     foreach cc $var(graphs) {
 	switch $var(mode) {
 	    pointer {
-		blt::RemoveBindTag $var($cc,graph) zoom-$var($cc)
-		bind $var($cc,graph) <1> [list PlotButton $varname %x %y]
+		blt::RemoveBindTag $var($cc,graph) zoom-$var($cc,graph)
+		bind $var($cc,graph) <1> [list PlotButtonInvoke $varname %x %y]
 	    }
 	    zoom {
 		bind $var($cc,graph) <1> {}
-		blt::AddBindTag $var($cc,graph) zoom-$var($cc)
+		blt::AddBindTag $var($cc,graph) zoom-$var($cc,graph)
 	    }
 	}
     }
@@ -648,6 +648,13 @@ proc PlotUpdateGraph {varname} {
 	-title $var(graph,axis,y,title)
 
     $var(graph) legend configure -title $var(graph,legend,title)
+}
+
+proc PlotButtonInvoke {varname x y} {
+    upvar #0 $varname var
+    global $varname
+
+    $var(proc,button) $varname $x $y
 }
 
 proc PlotButton {varname x y} {

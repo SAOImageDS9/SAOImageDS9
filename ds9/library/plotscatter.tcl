@@ -88,7 +88,7 @@ proc PlotScatterAddGraph {varname} {
     set cc  $var(graph,current)
 
     set var($cc,type) scatter
-    blt::graph $var(graphe) -width 600 -height 500 -highlightthickness 0
+    blt::graph $var(graph) -width 600 -height 500 -highlightthickness 0
 }
 
 proc PlotScatterUpdateElement {varname} {

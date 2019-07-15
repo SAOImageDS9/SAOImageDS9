@@ -176,16 +176,17 @@ proc PlotScatterHighliteElement {varname rowlist} {
     global $varname
 
     set cc $var(graph,current)
+    set nn $var(graph,ds,current)
 
     if {[llength $var($cc,dss)] == 0} {
 	return
     }
 
     if {$var(graph,ds,show)} {
-	$var(graph) element deactivate d-1
+	$var(graph) element deactivate $nn
 	if {$rowlist != {}} {
 	    # can have multiple rows
-	    eval "$var(graph) element activate d-1 $rowlist"
+	    eval "$var(graph) element activate $nn $rowlist"
 	}
     }
 }

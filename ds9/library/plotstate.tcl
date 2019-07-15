@@ -155,9 +155,6 @@ proc PlotSaveState {varname} {
     upvar #0 $varname var
     global $varname
 
-#    puts "PlotSaveState $var(graph,current):$var(graph,ds,current)"
-#    DumpCallStack
-
     # per Graph
     set cc $var(graph,current)
     set nn $var(graph,ds,current)
@@ -224,9 +221,6 @@ proc PlotSaveState {varname} {
 proc PlotRestoreState {varname} {
     upvar #0 $varname var
     global $varname
-
-#    puts "PlotRestoreState $var(graph,current):$var(graph,ds,current)"
-#    DumpCallStack
 
     # per Graph
     set cc $var(graph,current)

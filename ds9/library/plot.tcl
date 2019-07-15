@@ -418,9 +418,6 @@ proc PlotList {varname} {
     upvar #0 $varname var
     global $varname
 
-#    puts "***"
-#    DumpCallStack
-    
     if {!$var(list)} {
 	return
     }

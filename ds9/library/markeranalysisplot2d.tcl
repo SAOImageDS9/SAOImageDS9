@@ -116,7 +116,7 @@ proc MarkerAnalysisPlot2dCB {frame id} {
     global $varname
     upvar #0 $varname var
 
-    set vvarname ${imarker(prefix,plot2d)}marker${id}frame${frame}
+    set vvarname ${imarker(prefix,plot2d)}${id}${frame}
     upvar #0 $vvarname vvar
     global $vvarname
 

@@ -77,7 +77,7 @@ proc MarkerAnalysisRadialCB {frame id} {
     global $varname
     upvar #0 $varname var
 
-    set vvarname ${imarker(prefix,radial)}marker${id}frame${frame}
+    set vvarname ${imarker(prefix,radial)}${id}${frame}
     upvar #0 $vvarname vvar
     global $vvarname
 

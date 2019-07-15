@@ -58,7 +58,7 @@ proc MarkerAnalysisHistogramCB {frame id} {
     global $varname
     upvar #0 $varname var
 
-    set vvarname ${imarker(prefix,histogram)}${id}${frame}
+    set vvarname ${imarker(prefix,histogram)}marker${id}frame${frame}
     upvar #0 $vvarname vvar
     global $vvarname
 
@@ -66,8 +66,8 @@ proc MarkerAnalysisHistogramCB {frame id} {
     set vvar(id) $id
     set vvar(nbins) 512
 
-    set xdata ${vvarname}x
-    set ydata ${vvarname}y
+    set xdata ${vvarname}xx
+    set ydata ${vvarname}yy
     global $xdata $ydata
 
     set ping [PlotPing $vvarname]

@@ -116,7 +116,7 @@ proc MarkerAnalysisPlot2dCB {frame id} {
     global $varname
     upvar #0 $varname var
 
-    set vvarname ${imarker(prefix,plot2d)}${id}${frame}
+    set vvarname ${imarker(prefix,plot2d)}marker${id}frame${frame}
     upvar #0 $vvarname vvar
     global $vvarname
 
@@ -144,8 +144,8 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 	set vvar(method) average
     }
 
-    set xdata ${vvarname}x
-    set ydata ${vvarname}y
+    set xdata ${vvarname}xx
+    set ydata ${vvarname}yy
     set xcdata ${vvarname}xc
     set ycdata ${vvarname}yc
     global $xdata $ydata $xcdata $ycdata

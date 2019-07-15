@@ -77,7 +77,7 @@ proc MarkerAnalysisRadialCB {frame id} {
     global $varname
     upvar #0 $varname var
 
-    set vvarname ${imarker(prefix,radial)}${id}${frame}
+    set vvarname ${imarker(prefix,radial)}marker${id}frame${frame}
     upvar #0 $vvarname vvar
     global $vvarname
 
@@ -95,9 +95,9 @@ proc MarkerAnalysisRadialCB {frame id} {
 	set sys $wcs(system)
     }
 
-    set xdata ${imarker(prefix,radial)}${id}${frame}x
-    set ydata ${imarker(prefix,radial)}${id}${frame}y
-    set yedata ${imarker(prefix,radial)}${id}${frame}ye
+    set xdata ${vvarname}xx
+    set ydata ${vvarname}yy
+    set yedata ${vvarname}ye
     global $xdata $ydata $yedata
 
     set ping [PlotPing $vvarname]

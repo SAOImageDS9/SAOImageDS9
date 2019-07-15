@@ -69,7 +69,7 @@ proc PlotDataSetOne {varname dim data} {
     set var(graph,ds,error,width) $pap(graph,ds,error,width)
 
     set var(graph,ds,bar,relief) $pap(graph,ds,bar,relief)
-n    
+    
     # new vector names
     set xdata ap${varname}graph${cc}xx${nn}
     set ydata ap${varname}graph${cc}yy${nn}

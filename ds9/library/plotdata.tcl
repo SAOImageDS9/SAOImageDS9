@@ -40,7 +40,6 @@ proc PlotDataSetOne {varname dim data} {
 	return
     }
 
-    # total length
     # incr count
     incr ${varname}(graph,seq)
     set nn $var(graph,seq)
@@ -70,7 +69,7 @@ proc PlotDataSetOne {varname dim data} {
     set var(graph,ds,error,width) $pap(graph,ds,error,width)
 
     set var(graph,ds,bar,relief) $pap(graph,ds,bar,relief)
-    
+n    
     # new vector names
     set xdata ap${varname}graph${cc}xx${nn}
     set ydata ap${varname}graph${cc}yy${nn}
@@ -231,7 +230,7 @@ proc PlotDataSetOne {varname dim data} {
     PlotAddElement $varname
 }
 
-proc PlotExternal {varname} {
+proc PlotExternal {varname dim} {
     upvar #0 $varname var
     global $varname
 
@@ -243,6 +242,8 @@ proc PlotExternal {varname} {
 
     set var(graph,ds,manage) 0
     set var(graph,ds,name) "Dataset $nn"
+
+    set vvar(graph,ds,dim) $dim
 
     PlotAddElement $varname
 
@@ -258,7 +259,7 @@ proc PlotExternal {varname} {
     }
 }
 
-proc PlotDupDataSet {varname mm} {
+proc PlotDupDataSet {varname} {
     upvar #0 $varname var
     global $varname
 
@@ -266,12 +267,36 @@ proc PlotDupDataSet {varname mm} {
     if {[llength $var($cc,dss)] == 0} {
 	return
     }
+    set mm $var(graph,ds,current)
 
     # incr count
-    incr ${varname}($cc,seq) 
-    set nn $var($cc,seq)
-    lappend var($cc,dss) $nn
-    set pp [expr $nn-1]
+    incr ${varname}(graph,seq) 
+    set nn $var(graph,seq)
+    lappend var(graph,dss) $nn
+    set var(graph,ds,current) $nn
+
+    set var(graph,ds,manage) 1
+    set var(graph,ds,name) "Dataset $nn"
+
+    # init new state
+    set var(graph,ds,show) $var($cc,$mm,show)
+    set var(graph,ds,smooth) $var($cc,$mm,smooth)
+    set var(graph,ds,color) $var($cc,$mm,color)
+    set var(graph,ds,fill) $var($cc,$mm,fill)
+    set var(graph,ds,fill,color) $var($cc,$mm,fill,color)
+    set var(graph,ds,width) $var($cc,$mm,width)
+    set var(graph,ds,dash) $var($cc,$mm,dash)
+
+    set var(graph,ds,shape,symbol) $var($cc,$mm,shape,symbol)
+    set var(graph,ds,shape,fill) $var($cc,$mm,shape,fill)
+    set var(graph,ds,shape,color) $var($cc,$mm,shape,color)
+
+    set var(graph,ds,error) $var($cc,$mm,error)
+    set var(graph,ds,error,cap) $var($cc,$mm,error,cap)
+    set var(graph,ds,error,color) $var($cc,$mm,error,color)
+    set var(graph,ds,error,width) $var($cc,$mm,error,width)
+
+    set var(graph,ds,bar,relief) $var($cc,$mm,bar,relief)
 
     # new vector names
     set xdata ap${varname}graph${cc}xx${nn}
@@ -279,61 +304,33 @@ proc PlotDupDataSet {varname mm} {
     set xedata ap${varname}graph${cc}xe${nn}
     set yedata ap${varname}graph${cc}ye${nn}
 
-    # basics
-    set var($cc,$nn,manage) 1
-    set var($cc,$nn,name) "Dataset $nn"
-
-    set var($cc,$nn,xdata) $xdata
-    set var($cc,$nn,ydata) $ydata
-    set var($cc,$nn,xedata) $xedata
-    set var($cc,$nn,yedata) $yedata
+    # vectors
+    set var(graph,ds,xdata) $xdata
+    set var(graph,ds,ydata) $ydata
+    set var(graph,ds,xedata) $xedata
+    set var(graph,ds,yedata) $yedata
     
     global $var($cc,$mm,xdata) $var($cc,$mm,ydata) \
 	$var($cc,$mm,xedata) $var($cc,$mm,yedata)
-    global $var($cc,$nn,xdata) $var($cc,$nn,ydata) \
-	$var($cc,$nn,xedata) $var($cc,$nn,yedata)
+    global $var(graph,ds,xdata) $var(graph,ds,ydata) \
+	$var(graph,ds,xedata) $var(graph,ds,yedata)
     
-    $var($cc,$mm,xdata) dup $var($cc,$nn,xdata)
-    $var($cc,$mm,ydata) dup $var($cc,$nn,ydata)
+    $var($cc,$mm,xdata) dup $var(graph,ds,xdata)
+    $var($cc,$mm,ydata) dup $var(graph,ds,ydata)
     if {$var($cc,$mm,xedata) != {}} {
-	$var($cc,$mm,xedata) dup $var($cc,$nn,xedata)
+	$var($cc,$mm,xedata) dup $var(graph,ds,xedata)
     } else {
-	set var($cc,$nn,xedata) {}
+	set var(graph,ds,xedata) {}
     }
     if {$var($cc,$mm,yedata) != {}} {
-	$var($cc,$mm,yedata) dup $var($cc,$nn,yedata)
+	$var($cc,$mm,yedata) dup $var(graph,ds,yedata)
     } else {
-	set var($cc,$nn,yedata) {}
+	set var(graph,ds,yedata) {}
     }
 
-    set var($cc,$nn,dim) $var($cc,$mm,dim)
-
-    set var($cc,$nn,show) $var($cc,$mm,show)
-    set var($cc,$nn,smooth) $var($cc,$mm,smooth)
-    set var($cc,$nn,color) $var($cc,$mm,color)
-    set var($cc,$nn,fill) $var($cc,$mm,fill)
-    set var($cc,$nn,fill,color) $var($cc,$mm,fill,color)
-    set var($cc,$nn,width) $var($cc,$mm,width)
-    set var($cc,$nn,dash) $var($cc,$mm,dash)
-
-    set var($cc,$nn,shape,symbol) $var($cc,$mm,shape,symbol)
-    set var($cc,$nn,shape,fill) $var($cc,$mm,shape,fill)
-    set var($cc,$nn,shape,color) $var($cc,$mm,shape,color)
-
-    set var($cc,$nn,error) $var($cc,$mm,error)
-    set var($cc,$nn,error,cap) $var($cc,$mm,error,cap)
-    set var($cc,$nn,error,color) $var($cc,$mm,error,color)
-    set var($cc,$nn,error,width) $var($cc,$mm,error,width)
-
-    set var($cc,$nn,bar,relief) $var($cc,$mm,bar,relief)
-
-    # make current
-    set var(graph,ds,current) $nn
+    set var(graph,ds,dim) $var($cc,$mm,dim)
 
     PlotAddElement $varname
-
-    PlotStats $varname
-    PlotList $varname
 }
 
 proc PlotLoadData {varname} {

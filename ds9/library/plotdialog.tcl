@@ -196,10 +196,11 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     $var(mb).graph add cascade -label [msgcat::mc {Select Dataset}] \
 	-menu $var(mb).graph.select
     $var(mb).graph add separator
+    $var(mb).graph add command -label [msgcat::mc {Duplicate Dataset}] \
+	-command [list PlotDupDataSet $varname]
+    $var(mb).graph add separator
     $var(mb).graph add command -label [msgcat::mc {Delete Dataset}] \
 	-command [list PlotDeleteDataSetCurrent $varname]
-    $var(mb).graph add command -label [msgcat::mc {Duplicate Dataset}] \
-	-command [list PlotDupDataSet $varname 1]
     $var(mb).graph add separator
     $var(mb).graph add command -label [msgcat::mc {Statistics}] \
 	-command "set ${varname}(stats) 1; PlotStats $varname"

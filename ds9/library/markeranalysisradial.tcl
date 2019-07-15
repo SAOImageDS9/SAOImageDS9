@@ -107,8 +107,6 @@ proc MarkerAnalysisRadialCB {frame id} {
 	PlotLineDialog $vvarname $tt "Radial Profile" $sys {}
 	MarkerAnalysisRadialAxisTitle $vvarname
 
-	set vvar(graph,ds,manage) 0
-	set vvar(graph,ds,dim) xyey
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
 	set vvar(graph,ds,yedata) $yedata
@@ -118,7 +116,7 @@ proc MarkerAnalysisRadialCB {frame id} {
     $frame get marker $id analysis radial $xdata $ydata $yedata $sys
 
     if {!$ping} {
-	PlotExternal $vvarname
+	PlotExternal $vvarname xyey
 	$vvar(proc,updateelement) $vvarname
     }
 

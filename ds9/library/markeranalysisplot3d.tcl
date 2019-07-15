@@ -175,8 +175,6 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	set vvar(mode) pointer
 	PlotChangeMode $vvarname
 
-	set vvar(graph,ds,manage) 0
-	set vvar(graph,ds,dim) xy
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
 	blt::vector create $xdata $ydata
@@ -189,7 +187,7 @@ proc MarkerAnalysisPlot3dCB {frame id} {
     MarkerAnalysisPlot3dMarker $vvarname
 
     if {!$ping} {
-	PlotExternal $vvarname
+	PlotExternal $vvarname xy
     }
 
     PlotStats $vvarname

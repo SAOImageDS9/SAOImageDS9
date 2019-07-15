@@ -80,8 +80,6 @@ proc MarkerAnalysisHistogramCB {frame id} {
 	}
 	PlotLineDialog $vvarname $tt Histogram $bunit Counts
 
-	set vvar(graph,ds,manage) 0
-	set vvar(graph,ds,dim) xy
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
 	blt::vector create $xdata $ydata
@@ -92,7 +90,7 @@ proc MarkerAnalysisHistogramCB {frame id} {
     if {!$ping} {
 	set vvar(graph,ds,smooth) step
 	set vvar(graph,ds,fill) 1
-	PlotExternal $vvarname
+	PlotExternal $vvarname xy
     }
 
     PlotStats $vvarname

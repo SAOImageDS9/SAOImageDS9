@@ -170,8 +170,6 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 	$vvar(graph) xaxis configure \
 	    -command "MarkerAnalysisPlot2dXAxis $vvarname"
 
-	set vvar(graph,ds,manage) 0
-	set vvar(graph,ds,dim) xy
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
 	blt::vector create $xdata $ydata $xcdata $ycdata
@@ -181,7 +179,7 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 	$vvar(system) $vvar(sky) $vvar(method)
 
     if {!$ping} {
-	PlotExternal $vvarname
+	PlotExternal $vvarname xy
     }
 
     PlotStats $vvarname

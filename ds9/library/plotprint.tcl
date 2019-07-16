@@ -22,6 +22,7 @@ proc PlotPostScript {varname} {
     global ps
     global ds9
 
+    set first 1
     foreach cc $var(graphs) {
 	# set postscript fonts
 	$var($cc,graph) configure \
@@ -95,12 +96,19 @@ proc PlotPostScript {varname} {
 	}
 
 	if {$ps(dest) == "file" && $ps(filename) != {}} {
-	    eval $var($cc,graph) postscript output $ps(filename) $options
+	    set fn $ps(filename)
+	    if {!$first} {
+		set root [file rootname $fn]
+		set ext [file extension $fn]
+		set fn ${root}${cc}${ext}
+	    }
+	    eval $var($cc,graph) postscript output $fn $options
 	} else {
 	    set ch [open "| $ps(cmd)" w]
 	    puts $ch [eval $var($cc,graph) postscript output $options]
 	    close $ch
 	}
+	set first 0
 
 	# reset fonts
 	$var($cc,graph) configure \

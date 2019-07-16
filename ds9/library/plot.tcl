@@ -125,6 +125,7 @@ proc PlotLayoutCanvas {varname} {
 }
 
 # Graph
+# used by backup
 proc PlotAddGraph {varname} {
     upvar #0 $varname var
     global $varname
@@ -710,12 +711,6 @@ proc PlotBackup {ch dir} {
 	if {[string range $ww 0 1] == {ap}} {
 	    set fdir [file join $dir $ww]
 	    
-	    set varname $ww
-	    upvar #0 $varname var
-	    global $varname
-
-	    set cc $var(graph,current)
-
 	    # create dir if needed
 	    if {![file isdirectory $fdir]} {
 		if {[catch {file mkdir $fdir}]} {
@@ -724,24 +719,45 @@ proc PlotBackup {ch dir} {
 		}
 	    }
 
+	    set varname $ww
+	    upvar #0 $varname var
+	    global $varname
+
+	    set cc $var(graph,current)
 	    switch $var($cc,type) {
 		line {puts $ch "PlotLineTool"}
 		bar {puts $ch "PlotBarTool"}
 		scatter {puts $ch "PlotScatterTool"}
 	    }
 
-	    set save $var(graph,ds,current)
-	    foreach nn $var($cc,dss) {
-		set var(graph,ds,current) $nn
-		PlotCurrentDataSet $varname
+	    set gr $var(graph,current)
+	    set ds $var(graph,ds,current)
 
-		PlotSaveDataFile $varname "$fdir/plot$nn.dat"
-		PlotSaveConfigFile $varname "$fdir/plot$nn.plt"
+	    set first 1
+	    foreach cc $var(graphs) {
+		set var(graph,current) $cc
+		PlotCurrentGraph $varname
+		if {!$first} {
+		    puts $ch "PlotAddGraph $varname"
+		}
+		set first 0
 
-		puts $ch "PlotLoadDataFile $varname $fdir/plot$nn.dat $var($cc,$nn,dim)"
-		puts $ch "PlotLoadConfigFile $varname $fdir/plot$nn.plt"
+		foreach nn $var($cc,dss) {
+		    set var(graph,ds,current) $nn
+		    PlotCurrentDataSet $varname
+
+		    PlotSaveDataFile $varname "$fdir/graph${cc}ds${nn}.dat"
+		    PlotSaveConfigFile $varname "$fdir/graph${cc}ds${nn}.plt"
+
+		    puts $ch "PlotLoadDataFile $varname $fdir/graph${cc}ds${nn}.dat $var($cc,$nn,dim)"
+		    puts $ch "PlotLoadConfigFile $varname $fdir/graph${cc}ds${nn}.plt"
+		}
 	    }
-	    set ${varname}(graph,ds,current) $save
+
+	    set var(graph,current) $gr
+	    PlotCurrentGraph $varname
+	    
+	    set var(graph,ds,current) $ds
 	    PlotCurrentDataSet $varname
 	}
     }

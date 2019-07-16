@@ -58,8 +58,14 @@ proc PlotLineDialog {varname wtt title xaxis yaxis} {
     set var(proc,highlite) PlotHighliteElement
     set var(proc,button) PlotButton
 
-    PlotDialog $varname $wtt $title $xaxis $yaxis
+    PlotDialog $varname $wtt
     PlotAddGraph $varname
+
+    set var(graph,title) "$title"
+    set var(graph,axis,x,title) "$xaxis"
+    set var(graph,axis,y,title) "$yaxis"
+
+    $var(proc,updategraph) $varname
 
     # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \

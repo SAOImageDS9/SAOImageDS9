@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc PlotDialog {varname wtt title xaxis yaxis} {
+proc PlotDialog {varname wtt} {
     upvar #0 $varname var
     global $varname
 
@@ -31,8 +31,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     set var(seq) 0
 
     array set $varname [array get pap]
-
-    PlotTitle $varname $title $xaxis $yaxis
 
     # create window
     Toplevel $var(top) $var(mb) 7 $wtt [list PlotDestroy $varname]

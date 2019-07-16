@@ -728,7 +728,6 @@ proc PlotBackup {ch dir} {
 		line {puts $ch "PlotLineTool"}
 		bar {puts $ch "PlotBarTool"}
 		scatter {puts $ch "PlotScatterTool"}
-		strip {puts $ch "PlotStripTool"}
 	    }
 
 	    set save $var(graph,ds,current)

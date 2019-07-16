@@ -104,7 +104,8 @@ proc MarkerAnalysisRadialCB {frame id} {
 
     if {!$ping} {
 	set tt [string totitle [$frame get marker $id type]]
-	PlotLineDialog $vvarname $tt "Radial Profile" $sys {}
+	PlotLineDialog $vvarname $tt
+	PlotTitle $vvarname "Radial Profile" $sys {}
 	MarkerAnalysisRadialAxisTitle $vvarname
 
 	set vvar(graph,ds,xdata) $xdata

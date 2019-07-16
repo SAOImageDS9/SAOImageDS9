@@ -30,7 +30,8 @@ proc PlotBar {tt wtt title xaxis yaxis dim data} {
     upvar #0 $varname var
     global $varname
 
-    PlotBarDialog $varname $wtt $title $xaxis $yaxis
+    PlotBarDialog $varname $wtt
+    PlotTitle $varname $title $xaxis $yaxis
     PlotAddDataSet $varname $dim $data
     PlotStats $varname
     PlotList $varname
@@ -47,7 +48,7 @@ proc PlotBar {tt wtt title xaxis yaxis dim data} {
     }
 }
 
-proc PlotBarDialog {varname wtt title xaxis yaxis} {
+proc PlotBarDialog {varname wtt} {
     upvar #0 $varname var
     global $varname
 
@@ -60,12 +61,6 @@ proc PlotBarDialog {varname wtt title xaxis yaxis} {
 
     PlotDialog $varname $wtt
     PlotAddGraph $varname
-
-    set var(graph,title) "$title"
-    set var(graph,axis,x,title) "$xaxis"
-    set var(graph,axis,y,title) "$yaxis"
-
-    $var(proc,updategraph) $varname
 
     # Graph
     $var(mb).graph add separator

@@ -161,7 +161,8 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	if {$vvar(bunit)=={}} {
 	    set vvar(bunit) {Counts}
 	}
-	PlotLineDialog $vvarname $tt {} $vvar(system) $vvar(bunit)
+	PlotLineDialog $vvarname $tt
+	PlotTitle $vvarname {} $vvar(system) $vvar(bunit)
 	MarkerAnalysisPlot3dXAxisTitle $vvarname
 	MarkerAnalysisPlot3dYAxisTitle $vvarname
 

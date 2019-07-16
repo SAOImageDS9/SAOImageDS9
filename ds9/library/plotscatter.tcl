@@ -30,7 +30,8 @@ proc PlotScatter {tt wtt title xaxis yaxis dim data} {
     upvar #0 $varname var
     global $varname
 
-    PlotScatterDialog $varname $wtt $title $xaxis $yaxis
+    PlotScatterDialog $varname $wtt
+    PlotTitle $varname $title $xaxis $yaxis
     PlotAddDataSet $varname $dim $data
     PlotStats $varname
     PlotList $varname
@@ -47,7 +48,7 @@ proc PlotScatter {tt wtt title xaxis yaxis dim data} {
     }
 }
 
-proc PlotScatterDialog {varname wtt title xaxis yaxis} {
+proc PlotScatterDialog {varname wtt} {
     upvar #0 $varname var
     global $varname
 
@@ -60,12 +61,6 @@ proc PlotScatterDialog {varname wtt title xaxis yaxis} {
 
     PlotDialog $varname $wtt
     PlotAddGraph $varname
-
-    set var(graph,title) "$title"
-    set var(graph,axis,x,title) "$xaxis"
-    set var(graph,axis,y,title) "$yaxis"
-
-    $var(proc,updategraph) $varname
 
     # Data
     $var(mb).data add checkbutton -label [msgcat::mc {Show}] \

@@ -692,6 +692,17 @@ proc PlotColorMenu {w varname color cmd} {
 	-command [list ColorMenuOther $varname $color $cmd]
 }
 
+proc PlotTitle {varname title xaxis yaxis} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(graph,title) "$title"
+    set var(graph,axis,x,title) "$xaxis"
+    set var(graph,axis,y,title) "$yaxis"
+
+    $var(proc,updategraph) $varname
+}
+
 proc PlotBackup {ch dir} {
     global iap
 

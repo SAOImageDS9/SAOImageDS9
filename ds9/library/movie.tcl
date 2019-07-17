@@ -149,7 +149,7 @@ proc MovieCreate {fn} {
     }
 
     # for darwin only
-    set geom [DarwinPhotoFix]
+    set geom [DarwinPhotoFix $ds9(top) 0 1]
 
     set movie(fn) $fn
     switch $movie(action) {
@@ -170,7 +170,7 @@ proc MovieCreate {fn} {
     }
 
     # reset if needed
-    DarwinPhotoRestore $geom
+    DarwinPhotoRestore $ds9(top) $geom
 }
 
 proc MovieFrame {} {

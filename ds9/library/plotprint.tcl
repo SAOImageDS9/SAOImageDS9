@@ -62,8 +62,8 @@ proc PlotPostScript {varname} {
 	}
 
 	# Size
-	set ww [expr [winfo width $var(top)]*$ps(scale)/100./$scaling]
-	set hh [expr [winfo height $var(top)]*$ps(scale)/100./$scaling]
+	set ww [expr [winfo width $var(canvas)]*$ps(scale)/100./$scaling]
+	set hh [expr [winfo height $var(canvas)]*$ps(scale)/100./$scaling]
 	append options " -width $ww -height $hh"
 
 	# Page size

@@ -94,7 +94,7 @@ proc SaveImagePhoto {fn format} {
     global saveimage
 
     # for darwin only
-    set geom [DarwinPhotoFix]
+    set geom [DarwinPhotoFix $ds9(top) 0 1]
 
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
     if {$rr} {
@@ -115,7 +115,7 @@ proc SaveImagePhoto {fn format} {
     image delete $ph
 
     # reset if needed
-    DarwinPhotoRestore $geom
+    DarwinPhotoRestore $ds9(top) $geom
 }
 
 # Process Cmds

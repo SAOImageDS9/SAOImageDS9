@@ -1342,27 +1342,27 @@ proc FixSpec {sysname skyname formatname defsys defsky defformat} {
     return $rr
 }
 
-proc DarwinPhotoFix {} {
+proc DarwinPhotoFix {top xx yy} {
     global ds9
     global tcl_platform
     
     if {$ds9(wm) == {x11} && $tcl_platform(os) == {Darwin}} {
-	set geom [wm geometry $ds9(top)]
-	wm geometry $ds9(top) "[lindex [split $geom {+}] 0]+0+1"
+	set geom [wm geometry $top]
+	wm geometry $top "[lindex [split $geom {+}] 0]+$xx+$yy"
 	update
 	return $geom
     }
     return {}
 }
 
-proc DarwinPhotoRestore {geom} {
+proc DarwinPhotoRestore {top geom} {
     global ds9
     global tcl_platform
 
     if {$geom != {} &&
 	$ds9(wm) == {x11} &&
 	$tcl_platform(os) == {Darwin}} {
-	wm geometry $ds9(top) $geom
+	wm geometry $top $geom
     }
 }
 

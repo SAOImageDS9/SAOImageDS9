@@ -401,54 +401,6 @@ wm title $ds9(top) "SAOImage $ds9(title)"
 wm iconname $ds9(top) "SAOImage $ds9(title)"
 wm protocol $ds9(top) WM_DELETE_WINDOW QuitDS9
 
-# Init Temporary Dir before prefs
-InitTempDir
-
-# Init the filter compiler
-InitFilterCompiler
-
-# we need to check to see to run prefs first
-ProcessCommandLineFirst
-
-# Load any preferences here, before we do any real work
-if {$ds9(prefs)} {
-    LoadPrefs
-}
-
-# set fonts
-SetDefaultFont false
-SetDefaultTextFont false
-
-# we need to set certain variables such as color, title, language
-ProcessCommandLineSecond
-
-# initialize language
-switch $pds9(language) {
-    locale {
-	switch $ds9(wm) {
-	    x11 {
-		foreach ee {LC_MESSAGES LC_ALL LANG} {
-		    if {[info exists env($ee)]} {
-			set ll [string tolower [string range $env($ee) 0 1]]
-			if {[SetLanguage $ll]} {
-			    break
-			}
-		    }
-		}
-	    }
-	    aqua {
-		foreach ll [MacOSXGetLocale] {
-		    if {[SetLanguage $ll]} {
-			break
-		    }
-		}
-	    }
-	    win32 {}
-	}
-    }
-    default {SetLanguage $pds9(language)}
-}
-
 # set the visual
 set ds9(visual) [winfo visual .]
 set ds9(depth) [winfo depth .]
@@ -481,6 +433,54 @@ switch -- $ds9(visual)$ds9(depth) {
     default {BadVisualError}
 }
 
+# Init Temporary Dir before prefs
+InitTempDir
+
+# Init the filter compiler
+InitFilterCompiler
+
+# we need to check to see to run prefs first
+ProcessCommandLineFirst
+
+# Load any preferences here, before we do any real work
+if {$ds9(prefs)} {
+    LoadPrefs
+}
+
+# set fonts
+SetDefaultFont false
+SetDefaultTextFont false
+
+# we need to set certain variables such as debug, title, language, xpa
+ProcessCommandLineSecond
+
+# initialize language
+switch $pds9(language) {
+    locale {
+	switch $ds9(wm) {
+	    x11 {
+		foreach ee {LC_MESSAGES LC_ALL LANG} {
+		    if {[info exists env($ee)]} {
+			set ll [string tolower [string range $env($ee) 0 1]]
+			if {[SetLanguage $ll]} {
+			    break
+			}
+		    }
+		}
+	    }
+	    aqua {
+		foreach ll [MacOSXGetLocale] {
+		    if {[SetLanguage $ll]} {
+			break
+		    }
+		}
+	    }
+	    win32 {}
+	}
+    }
+    default {SetLanguage $pds9(language)}
+}
+
 # create our main frame
 set ds9(main) [ttk::frame ${ds9(top)}ds9]
 pack $ds9(main) -fill both -expand true
@@ -488,8 +488,7 @@ pack $ds9(main) -fill both -expand true
 # Create image canvas
 CreateCanvas
 
-# Create Colorbar-- Create this first, so in case of a private colormap,
-# gui colors will be allocated in the new colormap, not the default colormap
+# Create Colorbar
 CreateColorbar
 
 # Create other parts of the display

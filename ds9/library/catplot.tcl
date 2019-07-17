@@ -78,6 +78,7 @@ proc CATPlotGenerate {varname} {
     if {!$ping} {
 	PlotScatterDialog $vvarname $var(title)
 	PlotTitle $vvarname $var(title) $xtitle $ytitle
+
 	set vvar(mode) pointer
 	PlotChangeMode $vvarname
 

@@ -98,8 +98,7 @@ proc MarkerAnalysisPandaCB {frame id} {
     set ping [PlotPing $vvarname]
 
     if {!$ping} {
-	set tt [string totitle [$frame get marker $id type]]
-	PlotLineDialog $vvarname $tt
+	PlotLineDialog $vvarname [string totitle [$frame get marker $id type]]
 	PlotTitle $vvarname "Radial Profile" $sys {}
 	MarkerAnalysisPandaAxisTitle $vvarname
     }

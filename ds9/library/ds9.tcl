@@ -24,6 +24,7 @@ proc DS9Def {} {
     set ds9(depth) 8
     set ds9(FTY_MAXAXES) 10
     set ds9(threads) [GetNumCores]
+    set ds9(prefs) 1
 
     set ds9(helvetica) [font configure TkDefaultFont -family]
     set ds9(courier) [font configure TkFixedFont -family]
@@ -383,19 +384,6 @@ event add <<SelectAll>> <${ds9(ctrl)}a>
 event add <<Find>> <${ds9(ctrl)}f>
 event add <<FindNext>> <${ds9(ctrl)}g>
 
-# Init Temporary Dir before prefs
-InitTempDir
-
-# Init the filter compiler
-InitFilterCompiler
-
-# Load any preferences here, before we do any real work
-LoadPrefs
-
-# set fonts
-SetDefaultFont false
-SetDefaultTextFont false
-
 switch $ds9(wm) {
     x11 -
     win32 {}
@@ -413,9 +401,26 @@ wm title $ds9(top) "SAOImage $ds9(title)"
 wm iconname $ds9(top) "SAOImage $ds9(title)"
 wm protocol $ds9(top) WM_DELETE_WINDOW QuitDS9
 
-# we need to set certain variables before anything else
-# such as color, title, language
+# Init Temporary Dir before prefs
+InitTempDir
+
+# Init the filter compiler
+InitFilterCompiler
+
+# we need to check to see to run prefs first
 ProcessCommandLineFirst
+
+# Load any preferences here, before we do any real work
+if {$ds9(prefs)} {
+    LoadPrefs
+}
+
+# set fonts
+SetDefaultFont false
+SetDefaultTextFont false
+
+# we need to set certain variables such as color, title, language
+ProcessCommandLineSecond
 
 # initialize language
 switch $pds9(language) {

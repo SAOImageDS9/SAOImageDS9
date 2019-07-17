@@ -29,7 +29,7 @@ xpa : yesno
  | method 
  | NOXPANS_ 
 
-| CONNECT_ {XPAConnect}
+ | CONNECT_ {XPAConnect}
  | DISCONNECT_ {XPADisconnect}
  | INFO_ {XPAInfo}
 # backward compatibility

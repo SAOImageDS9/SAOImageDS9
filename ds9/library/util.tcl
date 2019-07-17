@@ -1377,6 +1377,16 @@ proc DS9Backup {ch which} {
 
 # Process Cmds
 
+proc ProcessPrefsFirstCmd {varname iname} {
+    upvar $varname var
+    upvar $iname i
+
+    prefsfirst::YY_FLUSH_BUFFER
+    prefsfirst::yy_scan_string [lrange $var $i end]
+    prefsfirst::yyparse
+    incr i [expr $prefsfirst::yycnt-1]
+}
+
 proc ProcessPrefsCmd {varname iname} {
     upvar $varname var
     upvar $iname i

@@ -14,7 +14,6 @@ proc BadVisualError {} {
 proc ProcessCommandLineFirst {} {
     global argc
     global argv
-    global icolorbar
     global ds9
     global pds9
 
@@ -23,10 +22,26 @@ proc ProcessCommandLineFirst {} {
 	set item [lindex $argv $i]
 
 	switch -- $item {
-	    -help {
-		puts "For more information, use --help"
-		QuitDS9
+	    -prefs {
+		incr i
+		ProcessPrefsFirstCmd argv i
 	    }
+	}
+	incr i
+    }
+}
+
+proc ProcessCommandLineSecond {} {
+    global argc
+    global argv
+    global ds9
+    global pds9
+
+    set i 0
+    while {$i < $argc} {
+	set item [lindex $argv $i]
+
+	switch -- $item {
 	    -debug {
 		incr i
 		ProcessDebugTclCmd argv i

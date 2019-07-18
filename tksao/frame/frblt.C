@@ -513,7 +513,7 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
   double rr = ptr->getWCSSize(sys);
   double aa = rr*rr;
 
-  for (int qq=0; qq<aa; qq++) {
+  for (int qq=0; qq<na; qq++) {
     for (int kk=0; kk<num; kk++) {
       double err = sqrt(fabs(sum[kk][qq]));
       double area =0;
@@ -550,7 +550,7 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
     }
   }
 
-  return num*aa;
+  return num*na;
 }
 
 // for simple regions
@@ -714,7 +714,7 @@ void Base::markerAnalysisStats(Marker* pp, ostream& str,
 
 // for panda regions
 void Base::markerAnalysisStats(Marker* pp, ostream& str, 
-			       int num, int aa, BBox* bb, 
+			       int num, int na, BBox* bb, 
 			       Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   // does not extend across mosaic boundries
@@ -726,22 +726,22 @@ void Base::markerAnalysisStats(Marker* pp, ostream& str,
   int srcw = ptr->width();
   FitsBound* params = ptr->getDataParams(currentContext->secMode());
 
-  double sum[num][aa];
-  memset(sum,0,num*aa*sizeof(double));
-  double sum2[num][aa];
-  memset(sum2,0,num*aa*sizeof(double));
-  int cnt[num][aa];
-  memset(cnt,0,num*aa*sizeof(int));
-  double min[num][aa];
-  double max[num][aa];
+  double sum[num][na];
+  memset(sum,0,num*na*sizeof(double));
+  double sum2[num][na];
+  memset(sum2,0,num*na*sizeof(double));
+  int cnt[num][na];
+  memset(cnt,0,num*na*sizeof(int));
+  double min[num][na];
+  double max[num][na];
   for (int ii=0; ii<num; ii++) {
-    for (int jj=0; jj<aa; jj++) {
+    for (int jj=0; jj<na; jj++) {
       min[ii][jj] =DBL_MAX;
       max[ii][jj] =-DBL_MAX;
     }
   }
-  double median[num][aa];
-  memset(median,0,num*aa*sizeof(double));
+  double median[num][na];
+  memset(median,0,num*na*sizeof(double));
 
   for (int kk=0; kk<num; kk++) {
     // take the bbox and extend to lower/upper pixel boundaries
@@ -753,7 +753,7 @@ void Base::markerAnalysisStats(Marker* pp, ostream& str,
 
     // main loop
     SETSIGBUS
-      for (int qq=0; qq<aa; qq++) {
+      for (int qq=0; qq<na; qq++) {
 	memset(marr,0,msize*sizeof(double));
 
 	for (int jj=ll[1]; jj<ur[1]; jj++) {
@@ -799,16 +799,16 @@ void Base::markerAnalysisStats(Marker* pp, ostream& str,
   int unit = markerAnalysisStats1(pp,ptr,str,sys,sky);
 
   for (int kk=0; kk<num; kk++) 
-    for (int qq=0; qq<aa; qq++)
+    for (int qq=0; qq<na; qq++)
       if (cnt[kk][qq])
-	markerAnalysisStats2(ptr,str,sys,kk*aa+qq,cnt[kk][qq],sum[kk][qq],unit);
+	markerAnalysisStats2(ptr,str,sys,kk*na+qq,cnt[kk][qq],sum[kk][qq],unit);
 
   markerAnalysisStats3(str);
 
   for (int kk=0; kk<num; kk++)
-    for (int qq=0; qq<aa; qq++)
+    for (int qq=0; qq<na; qq++)
       if (cnt[kk][qq])
-	markerAnalysisStats4(str,kk*aa+qq,cnt[kk][qq],sum[kk][qq],sum2[kk][qq],
+	markerAnalysisStats4(str,kk*na+qq,cnt[kk][qq],sum[kk][qq],sum2[kk][qq],
 			     median[kk][qq],min[kk][qq],max[kk][qq]);
 }
 

@@ -104,7 +104,22 @@ proc MarkerAnalysisPandaCB {frame id} {
     }
 
     PlotDeleteDataSetAll $vvarname
-    PlotAddDataSet $vvarname 3 [$frame get marker $id analysis panda $sys]
+
+    set data [$frame get marker $id analysis panda $sys]
+    set id 0
+    for {set jj 0} {$jj<$var(angnum)} {incr jj} {
+ 	set dd {}
+ 	for {set ii 0} {$ii<$var(annuli)} {incr ii} {
+ 	    lappend dd [lindex $data $id]
+ 	    incr id
+ 	    lappend dd [lindex $data $id]
+ 	    incr id
+ 	    lappend dd [lindex $data $id]
+ 	    incr id
+ 	}
+ 	PlotAddDataSet $vvarname 3 $dd
+    }
+
     PlotStats $vvarname
     PlotList $vvarname
 }

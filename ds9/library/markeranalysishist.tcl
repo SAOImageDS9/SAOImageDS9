@@ -70,25 +70,21 @@ proc MarkerAnalysisHistogramCB {frame id} {
     set ydata ${vvarname}yy
     global $xdata $ydata
 
-    set ping [PlotPing $vvarname]
+    if {[info command $xdata] == {}} {
+	blt::vector create $xdata $ydata
+    }
+    $frame get marker $id analysis histogram $xdata $ydata $vvar(nbins)
 
-    if {!$ping} {
-	set tt [string totitle [$frame get marker $id type]]
+    if {![PlotPing $vvarname]} {
 	set bunit [string trim [$frame get fits header keyword BUNIT]]
 	if {$bunit=={}} {
 	    set bunit {Values}
 	}
-	PlotLineDialog $vvarname $tt
+	PlotLineDialog $vvarname [string totitle [$frame get marker $id type]]
 	PlotTitle $vvarname Histogram $bunit Counts
 
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
-	blt::vector create $xdata $ydata
-    }
- 
-    $frame get marker $id analysis histogram $xdata $ydata $vvar(nbins)
-
-    if {!$ping} {
 	set vvar(graph,ds,smooth) step
 	set vvar(graph,ds,fill) 1
 	PlotExternal $vvarname xy

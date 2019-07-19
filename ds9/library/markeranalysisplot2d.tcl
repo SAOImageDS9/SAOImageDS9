@@ -149,17 +149,24 @@ proc MarkerAnalysisPlot2dCB {frame id} {
     set xcdata ${vvarname}xc
     set ycdata ${vvarname}yc
     global $xdata $ydata $xcdata $ycdata
-
-    set ping [PlotPing $vvarname]
-
-    if {!$ping} {
-	set tt [string totitle [$frame get marker $id type]]
+    if {[info command $xdata] == {}} {
+	blt::vector create $xdata $ydata
+    }
+    # vectors may still be present due to previous graph deletion
+    if {[info command $xcdata] == {}} {
+	blt::vector create $xcdata $ycdata
+    }
+    $frame get marker $id analysis plot2d $xdata $ydata $xcdata $ycdata \
+	$vvar(system) $vvar(sky) $vvar(method)
+    
+    if {![PlotPing $vvarname]} {
 	set vvar(bunit) [string trim [$frame get fits header keyword BUNIT]]
 	if {$vvar(bunit)=={}} {
 	    set vvar(bunit) {Counts}
 	}
-	PlotLineDialog $vvarname $tt
+	PlotLineDialog $vvarname [string totitle [$frame get marker $id type]]
 	PlotTitle $vvarname {} $vvar(system) $vvar(bunit)
+
 	MarkerAnalysisPlot2dXAxisTitle $vvarname
 	MarkerAnalysisPlot2dYAxisTitle $vvarname
 
@@ -173,13 +180,6 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
-	blt::vector create $xdata $ydata $xcdata $ycdata
-    }
-
-    $frame get marker $id analysis plot2d $xdata $ydata $xcdata $ycdata \
-	$vvar(system) $vvar(sky) $vvar(method)
-
-    if {!$ping} {
 	PlotExternal $vvarname xy
     }
 
@@ -198,18 +198,17 @@ proc MarkerAnalysisPlot2dDeleteCB {frame id} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    set xcdata ${vvarname}xc
-    set ycdata ${vvarname}yc
-
-    # clear extra vectors
-    global $xcdata $ycdata
-    catch {blt::vector destroy $xcdata $ycdata}
-
     # clear any errors
     global errorInfo
     set errorInfo {}
 
     PlotDestroy $vvarname
+
+    # clear extra vectors
+    set xcdata ${vvarname}xc
+    set ycdata ${vvarname}yc
+    global $xcdata $ycdata
+    blt::vector destroy $xcdata $ycdata
 }
 
 proc MarkerAnalysisPlot2dXAxisTitle {vvarname} {
@@ -230,22 +229,24 @@ proc MarkerAnalysisPlot2dXAxisTitle {vvarname} {
 	}
     }
 
-    # set for plot code
-    set vvar(graph,axis,x,title) $xtitle
-
-    # update now (may not make it into plot code)
-    $vvar(graph) xaxis configure -title $xtitle
+    set cc 1
+    if {[info exists vvar($cc,graph)]} {
+	set vvar($cc,axis,x,title) $xtitle
+	$vvar($cc,graph) xaxis configure -title $xtitle
+    }
 }
 
 proc MarkerAnalysisPlot2dYAxisTitle {vvarname} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    # set for plot code
-    set vvar(graph,axis,y,title) "$vvar(bunit) [string totitle $vvar(method)]"
+    set ytitle "$vvar(bunit) [string totitle $vvar(method)]"
 
-    # update now (may not make it into plot code)
-    $vvar(graph) yaxis configure -title $vvar(graph,axis,y,title)
+    set cc 1
+    if {[info exists vvar($cc,graph)]} {
+	set vvar($cc,axis,y,title) $ytitle
+	$vvar($cc,graph) yaxis configure -title $ytitle
+    }
 }
 
 proc MarkerAnalysisPlot2dXAxis {vvarname w xx} {

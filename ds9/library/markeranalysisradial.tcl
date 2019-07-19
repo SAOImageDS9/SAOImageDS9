@@ -100,24 +100,21 @@ proc MarkerAnalysisRadialCB {frame id} {
     set yedata ${vvarname}ye
     global $xdata $ydata $yedata
 
-    set ping [PlotPing $vvarname]
-
-    if {!$ping} {
+    if {[info command $xdata] == {}} {
+	blt::vector create $xdata $ydata $yedata
+    }
+    $frame get marker $id analysis radial $xdata $ydata $yedata $sys
+    
+    if {![PlotPing $vvarname]} {
 	PlotLineDialog $vvarname [string totitle [$frame get marker $id type]]
 	PlotTitle $vvarname "Radial Profile" $sys {}
+
 	MarkerAnalysisRadialAxisTitle $vvarname
 
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
 	set vvar(graph,ds,yedata) $yedata
-	blt::vector create $xdata $ydata $yedata
-    }
-
-    $frame get marker $id analysis radial $xdata $ydata $yedata $sys
-
-    if {!$ping} {
 	PlotExternal $vvarname xyey
-	$vvar(proc,updateelement) $vvarname
     }
 
     PlotStats $vvarname
@@ -164,11 +161,12 @@ proc MarkerAnalysisRadialAxisTitle {vvarname} {
 	}
     }
 
-    # set for plot code
-    set vvar(graph,axis,x,title) $xtitle
-    set vvar(graph,axis,y,title) $ytitle
+    set cc 1
+    if {[info exists vvar($cc,graph)]} {
+	set vvar($cc,axis,x,title) $xtitle
+	set vvar($cc,axis,y,title) $ytitle
 
-    # update now (may not make it into plot code)
-    $vvar(graph) xaxis configure -title $xtitle
-    $vvar(graph) yaxis configure -title $ytitle
+	$vvar($cc,graph) xaxis configure -title $xtitle
+	$vvar($cc,graph) yaxis configure -title $ytitle
+    }
 }

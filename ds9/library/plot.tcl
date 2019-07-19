@@ -279,6 +279,10 @@ proc PlotDeleteDataSetCurrent {varname} {
 	return
     }
 
+    if {!$var(graph,ds,manage)} {
+	return
+    }
+
     PlotDeleteDataSet $varname
 }
 
@@ -304,10 +308,6 @@ proc PlotDeleteDataSet {varname} {
     set nn $var(graph,ds,current)
 
     if {[llength $var($cc,dss)] == 0} {
-	return
-    }
-
-    if {!$var($cc,$nn,manage)} {
 	return
     }
 

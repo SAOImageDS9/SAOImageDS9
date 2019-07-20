@@ -149,6 +149,7 @@ proc MarkerAnalysisPlot2dCB {frame id} {
     set xcdata ${vvarname}xc
     set ycdata ${vvarname}yc
     global $xdata $ydata $xcdata $ycdata
+
     if {[info command $xdata] == {}} {
 	blt::vector create $xdata $ydata
     }

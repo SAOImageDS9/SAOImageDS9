@@ -95,29 +95,30 @@ proc MarkerAnalysisPandaCB {frame id} {
 	set sys $wcs(system)
     }
 
-    set ping [PlotPing $vvarname]
+    for {set jj 0} {$jj<$var(angnum)} {incr jj} {
+	set xdata ${vvarname}xx$jj
+	set ydata ${vvarname}yy$jj
+	set yedata ${vvarname}ye$jj
+	global $xdata $ydata $yedata
 
-    if {!$ping} {
-	PlotLineDialog $vvarname [string totitle [$frame get marker $id type]]
-	PlotTitle $vvarname "Radial Profile" $sys {}
-	MarkerAnalysisPandaAxisTitle $vvarname
+	if {[info command $xdata] == {}} {
+	    blt::vector create $xdata $ydata $yedata
+	}
+	$frame get marker $id analysis panda $xdata $ydata $yedata $sys $jj
     }
 
-    PlotDeleteDataSetAll $vvarname
+    if {![PlotPing $vvarname]} {
+	PlotLineDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotTitle $vvarname "Radial Profile" $sys {}
 
-    set data [$frame get marker $id analysis panda $sys]
-    set id 0
-    for {set jj 0} {$jj<$var(angnum)} {incr jj} {
- 	set dd {}
- 	for {set ii 0} {$ii<$var(annuli)} {incr ii} {
- 	    lappend dd [lindex $data $id]
- 	    incr id
- 	    lappend dd [lindex $data $id]
- 	    incr id
- 	    lappend dd [lindex $data $id]
- 	    incr id
- 	}
- 	PlotAddDataSet $vvarname 3 $dd
+	MarkerAnalysisPandaAxisTitle $vvarname
+
+	for {set jj 0} {$jj<$var(angnum)} {incr jj} {
+	    set vvar(graph,ds,xdata) ${vvarname}xx$jj
+	    set vvar(graph,ds,ydata) ${vvarname}yy$jj
+	    set vvar(graph,ds,yedata) ${vvarname}ye$jj
+	    PlotExternal $vvarname xyey
+	}
     }
 
     PlotStats $vvarname
@@ -164,11 +165,12 @@ proc MarkerAnalysisPandaAxisTitle {vvarname} {
 	}
     }
 
-    # set for plot code
-    set vvar(graph,axis,x,title) $xtitle
-    set vvar(graph,axis,y,title) $ytitle
+    set cc 1
+    if {[info exists vvar($cc,graph)]} {
+	set vvar($cc,axis,x,title) $xtitle
+	set vvar($cc,axis,y,title) $ytitle
 
-    # update now (may not make it into plot code)
-    $vvar(graph) xaxis configure -title $xtitle
-    $vvar(graph) yaxis configure -title $ytitle
+	$vvar($cc,graph) xaxis configure -title $xtitle
+	$vvar($cc,graph) yaxis configure -title $ytitle
+    }
 }

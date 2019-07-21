@@ -52,13 +52,8 @@ proc PlotBarDialog {varname wtt} {
     upvar #0 $varname var
     global $varname
 
-    set var(proc,addgraph) PlotBarAddGraph
-    set var(proc,updateelement) PlotBarUpdateElement
-    set var(proc,highlite) PlotHighliteElement
-    set var(proc,button) PlotButton
-
     PlotDialog $varname $wtt
-    PlotAddGraph $varname
+    PlotAddGraph $varname bar
 }
 
 proc PlotBarMenus {varname} {

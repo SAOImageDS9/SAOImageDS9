@@ -62,22 +62,23 @@ proc plot::unsetupvalues {numsyms} {
 
 array set plot::table {
   257:0 reduce
-  96:264,target 176
-  237:277,target 335
-  283:277,target 1
-  253:272,target 350
+  96:264,target 180
+  237:277,target 339
+  283:277,target 372
+  253:272,target 354
   122:0,target 2
   9:285 shift
   21:369,target 85
-  338:277,target 9
-  96:375,target 176
-  77:277,target 249
+  382:432,target 389
+  96:375,target 180
+  77:277,target 253
   1:311,target 33
   9:286 shift
-  384:277,target 52
+  384:277,target 243
   172:277 reduce
-  16:394,target 255
-  147:417,target 271
+  16:394,target 259
+  277:439,target 368
+  147:417,target 275
   78:261,target 126
   62:404,target 219
   9:288 shift
@@ -87,44 +88,44 @@ array set plot::table {
   299:0 reduce
   4:341 shift
   9:300 shift
+  387:0,target 45
   9:301 shift
   10:390 shift
-  277:257 shift
   9:302 shift
   24:320,target 99
-  37:458,target 145
   39:406 shift
   377:275 shift
-  277:258 shift
   142:277 shift
   58:412,target 208
   9:303 shift
   9:293 shift
   10:298,target 69
   39:407 shift
-  277:260 shift
-  277:259 shift
+  377:276 shift
   157:X,target 100
-  91:263,target 178
+  91:263,target 182
   61:257,target 122
   50:350,target 182
   9:294 shift
-  14:385,target 254
+  14:385,target 258
   39:408 shift
-  356:0,target 173
-  277:261 shift
+  381:396,target 129
+  356:0,target 171
   135:0 reduce
   9:295 shift
   39:409 shift
   352:0 reduce
-  277:262 shift
-  247:271,target 345
-  91:374,target 178
+  277:276,target 270
+  247:271,target 349
+  91:374,target 182
   9:307 shift
   40:412 goto
+  378:276,target 270
+  278:260,target 125
+  278:259,target 124
   112:277 reduce
   9:308 shift
-  325:0,target 184
+  325:0,target 110
   9:309 shift
   9:310 shift
   37:295,target 142
@@ -133,6 +134,7 @@ array set plot::table {
   9:311 shift
   23:284,target 91
   177:0 reduce
+  261:412 goto
   43:365,target 167
   81:332 reduce
   56:275 shift
@@ -145,21 +147,24 @@ array set plot::table {
   230:0 reduce
   229:0 reduce
   227:258,target 123
-  373:275,target 265
+  99:434 goto
+  277:275 shift
   137:277,target 66
   9:320 shift
+  277:276 shift
   247:271 shift
   277:277 reduce
   247:272 shift
   238:277,target 47
   62:x shift
   26:277 shift
+  284:277,target 373
   62:y shift
-  340:277,target 166
-  339:277,target 10
+  340:277,target 382
+  339:277,target 381
   247:274 shift
   78:277,target 1
-  385:277,target 49
+  385:277,target 242
   272:0 reduce
   21:332 shift
   21:0 reduce
@@ -167,27 +172,26 @@ array set plot::table {
   59:291,target 209
   4:369 reduce
   9:329 shift
-  38:458,target 146
   107:0 reduce
   60:412,target 215
   56:302 shift
   0:302,target 31
   324:0 reduce
-  92:263,target 177
+  92:263,target 181
   51:350,target 182
-  15:385,target 256
-  39:436 goto
+  15:385,target 260
+  382:396,target 129
   217:277 reduce
   51:345 shift
   39:437 goto
-  248:271,target 349
-  162:403,target 289
+  248:271,target 353
+  162:403,target 293
   51:346 shift
   9:334 shift
-  92:374,target 177
+  39:438 goto
+  92:374,target 181
   9:335 shift
   9:336 shift
-  273:438,target 364
   100:262,target 54
   92:263 reduce
   51:350 shift
@@ -196,36 +200,27 @@ array set plot::table {
   366:0 reduce
   177:277 reduce
   92:264 reduce
-  180:354,target 301
+  180:354,target 305
   92:265 reduce
   9:340 shift
   92:266 reduce
   9:341 shift
-  384:0,target 52
+  384:0,target 243
   147:275 shift
   92:267 reduce
   59:359,target 212
-  283:257 shift
   147:276 shift
   4:384 reduce
   9:285,target 25
-  283:258 shift
   192:0 reduce
   147:277 reduce
-  283:260 shift
-  283:259 shift
-  273:275,target 265
   102:339,target 53
   383:277 reduce
-  353:0,target 172
-  283:261 shift
+  353:0,target 11
   228:258,target 123
   15:394 reduce
-  374:275,target 265
-  283:262 shift
-  274:258,target 123
   161:430 goto
-  138:277,target 129
+  138:277,target 133
   184:277,target 78
   98:264,target 245
   63:310,target 226
@@ -238,13 +233,17 @@ array set plot::table {
   117:277 reduce
   9:349 shift
   32:432,target 133
-  322:0,target 206
-  285:277,target 231
+  338:432,target 380
+  322:0,target 148
+  285:277,target 374
   61:0,target 1
   353:277 reduce
-  341:277,target 168
+  341:277,target 8
   98:375,target 251
   81:369 reduce
+  27:456,target 111
+  386:277,target 48
+  281:0,target 1
   8:371,target 56
   29:0,target 80
   323:277 reduce
@@ -254,36 +253,36 @@ array set plot::table {
   35:0 reduce
   61:412,target 216
   1:302,target 33
-  93:263,target 181
+  93:263,target 185
   57:298,target 69
-  16:385,target 255
-  147:408,target 268
-  10:460 goto
+  16:385,target 259
+  288:338,target 377
+  147:408,target 272
   253:271 shift
   51:374 shift
   9:362 shift
-  283:277 reduce
+  10:461 goto
+  283:277 shift
   253:272 shift
   122:0 reduce
-  93:374,target 181
+  93:374,target 185
   21:369 shift
-  338:0 reduce
+  281:260,target 125
+  281:259,target 124
   77:0 reduce
   101:262,target 56
   81:384 reduce
   9:366 shift
-  181:354,target 301
+  181:354,target 305
   9:367 shift
-  177:0,target 152
+  177:0,target 156
   164:0 reduce
   4:421 goto
-  381:0 reduce
   52:297,target 187
   9:371 shift
-  35:441,target 139
   9:372 shift
-  244:270,target 339
-  244:269,target 338
+  244:270,target 343
+  244:269,target 342
   146:0,target 93
   103:339,target 55
   9:373 shift
@@ -291,28 +290,30 @@ array set plot::table {
   223:277 reduce
   140:277,target 70
   139:277,target 71
-  62:454,target 223
   216:0 reduce
   185:277,target 77
   92:312 reduce
   9:376 shift
-  241:277,target 336
+  376:258,target 123
+  277:343 shift
+  241:277,target 340
   141:261,target 126
   21:384 shift
-  372:412 goto
-  286:277,target 245
-  35:277,target 128
-  342:277,target 13
+  286:277,target 236
+  35:277,target 132
+  342:277,target 9
   81:277,target 29
+  387:277,target 45
+  287:261,target 126
   183:278 shift
   9:381 shift
   19:394,target 80
+  44:451,target 171
   0:335,target 31
   9:382 shift
-  381:0,target 238
   258:0 reduce
-  161:465 goto
   9:371,target 56
+  161:466 goto
   37:257 shift
   224:257,target 122
   153:277 shift
@@ -320,9 +321,11 @@ array set plot::table {
   32:396,target 129
   37:259 shift
   37:260 shift
-  350:0,target 12
-  349:0,target 11
-  94:263,target 182
+  388:277 reduce
+  350:0,target 16
+  349:0,target 15
+  338:396,target 129
+  94:263,target 186
   88:0,target 37
   23:344,target 95
   37:261 shift
@@ -332,9 +335,8 @@ array set plot::table {
   258:257 shift
   258:258 shift
   123:277 reduce
-  94:374,target 182
-  53:461,target 197
-  318:0,target 144
+  94:374,target 186
+  318:0,target 147
   258:260 shift
   258:259 shift
   9:392 shift
@@ -344,7 +346,7 @@ array set plot::table {
   258:261 shift
   102:262,target 53
   97:277 reduce
-  11:300,target 257
+  11:300,target 261
   258:262 shift
   81:422 goto
   4:369,target 27
@@ -352,7 +354,7 @@ array set plot::table {
   228:257 shift
   136:0 reduce
   353:0 reduce
-  277:0,target 1
+  277:0,target 116
   228:258 shift
   0:394,target 31
   228:260 shift
@@ -360,28 +362,26 @@ array set plot::table {
   328:277 reduce
   228:261 shift
   67:277 reduce
-  36:441,target 140
   228:262 shift
   147:343 shift
   62:329 shift
-  104:339,target 260
+  104:339,target 264
   178:0 reduce
   141:277,target 1
   8:303,target 34
   8:293,target 28
-  288:277 reduce
   37:277 reduce
   242:277,target 51
   215:0,target 72
   62:X,target 100
-  287:277,target 247
+  287:277,target 1
   158:257 shift
-  36:277,target 128
-  343:277,target 14
+  36:277,target 132
+  343:277,target 10
   158:258 shift
   82:277,target 236
-  59:462,target 214
-  30:456,target 120
+  388:277,target 52
+  288:282 shift
   231:0 reduce
   158:260 shift
   158:259 shift
@@ -394,176 +394,177 @@ array set plot::table {
   158:262 shift
   21:427 goto
   225:257,target 122
-  377:396 shift
   100:322,target 54
-  377:397 shift
   273:0 reduce
   228:277 reduce
-  95:263,target 179
-  377:398 shift
-  372:257,target 122
+  95:263,target 183
   37:290 shift
-  377:399 shift
-  252:271,target 345
+  252:271,target 349
   50:374,target 183
   8:362,target 53
-  112:0,target 191
-  95:374,target 179
+  112:0,target 195
+  95:374,target 183
   0:310,target 31
   0:309,target 31
-  283:260,target 125
-  283:259,target 124
-  51:442 goto
   183:328 shift
   158:x,target 102
   108:0 reduce
   103:262,target 55
-  12:300,target 258
+  51:443 goto
+  12:300,target 262
   325:0 reduce
   37:295 shift
-  247:416,target 348
-  188:313,target 315
+  247:416,target 352
+  188:313,target 319
   183:331 shift
   9:433 goto
   1:394,target 33
+  377:417 goto
   63:359,target 228
   44:262,target 127
   158:277 reduce
   10:281,target 67
   367:0 reduce
-  346:0,target 16
+  346:0,target 13
   85:0,target 50
-  63:471,target 230
   8:320,target 42
-  377:275,target 382
-  277:258,target 123
-  142:277,target 263
+  377:275,target 269
+  142:277,target 267
   9:303,target 34
   9:293,target 28
   39:407,target 149
-  187:277,target 314
-  182:328,target 305
+  187:277,target 318
+  182:328,target 309
   128:277 reduce
-  315:0,target 148
+  50:443,target 184
+  315:0,target 154
+  277:408 shift
   243:277,target 40
   364:277 reduce
-  288:277,target 246
+  277:410 shift
   203:0 reduce
   193:0 reduce
   37:277,target 1
   344:277,target 170
+  277:411 shift
   83:277,target 237
-  277:412 goto
+  389:277,target 49
+  162:469,target 294
   38:261,target 126
-  334:275 shift
-  274:0,target 1
+  274:0,target 125
   92:374 reduce
-  377:432 goto
-  224:412,target 327
+  334:277 reduce
+  224:412,target 331
   100:338,target 54
   92:375 reduce
   73:277 reduce
   226:257,target 122
+  277:417 goto
   243:0,target 40
   101:322,target 56
-  96:263,target 176
+  96:263,target 180
   19:385,target 79
-  186:363,target 312
+  186:363,target 316
   0:326,target 31
   304:277 reduce
   294:277 reduce
-  253:271,target 349
+  253:271,target 353
   51:374,target 183
   9:362,target 53
+  10:461,target 77
   247:416 goto
-  212:0,target 225
+  212:0,target 229
   188:313 shift
-  182:387,target 308
-  96:374,target 176
+  182:387,target 312
+  96:374,target 180
   1:310,target 33
   1:309,target 33
   42:322,target 158
   287:0 reduce
   36:0 reduce
+  264:275 shift
   183:356 shift
   78:260,target 125
   78:259,target 124
-  13:300,target 253
+  13:300,target 257
+  264:276 shift
   92:385 reduce
-  264:277 reduce
   205:262,target 127
   171:0,target 84
   123:0 reduce
-  56:434 goto
   45:262,target 127
-  340:0 reduce
-  339:0 reduce
   78:0 reduce
+  56:435 goto
   8:336,target 47
-  186:321,target 311
+  288:338 shift
+  186:321,target 315
   147:408 shift
   140:0,target 70
   139:0,target 71
+  288:339 shift
+  277:275,target 269
   234:277 reduce
   147:410 shift
   9:320,target 42
   147:411 shift
   92:393 reduce
   2:277 reduce
-  378:275,target 384
+  378:275,target 269
+  278:258,target 123
   25:y,target 103
-  183:328,target 305
+  183:328,target 309
   165:0 reduce
-  108:0,target 189
-  382:0 reduce
+  108:0,target 193
+  51:443,target 185
   78:257 shift
   23:283,target 90
-  300:277,target 135
-  290:277,target 234
-  289:277,target 248
+  300:277,target 166
+  290:277,target 249
+  289:277,target 235
   204:277 shift
   194:277 reduce
   78:258 shift
   38:277,target 1
-  345:277,target 15
+  345:277,target 172
   84:277,target 82
   78:260 shift
   78:259 shift
   13:300 reduce
+  277:439 goto
   147:417 goto
   78:261 shift
   62:404 shift
   40:261,target 126
   43:296 shift
+  374:0,target 245
   78:262 shift
   62:405 shift
   217:0 reduce
-  225:412,target 328
+  225:412,target 332
   164:277 reduce
   101:338,target 56
   227:257,target 122
-  343:0,target 14
+  343:0,target 10
   102:322,target 53
-  372:412,target 379
   1:326,target 33
   32:396 shift
+  259:0 reduce
   134:277 reduce
   32:397 shift
-  312:0,target 149
-  183:387,target 308
+  312:0,target 142
+  183:387,target 312
   32:398 shift
   43:322,target 166
   370:277 reduce
   369:277 reduce
   32:399 shift
-  14:300,target 254
-  283:412 goto
+  14:300,target 258
   271:0,target 122
   312:0 reduce
   183:387 shift
   43:322 shift
-  340:277 reduce
-  339:277 reduce
+  340:277 shift
+  339:277 shift
   78:277 reduce
   0:301,target 31
   9:336,target 47
@@ -571,28 +572,28 @@ array set plot::table {
   239:0,target 39
   104:282 shift
   25:430,target 104
-  162:402,target 288
+  186:448,target 317
+  162:402,target 292
   57:281,target 67
-  334:275,target 375
   253:414 goto
-  147:438 goto
   137:0 reduce
   354:0 reduce
   310:277 reduce
   309:277 reduce
   299:277 reduce
-  144:277,target 200
+  147:439 goto
+  144:277,target 204
   208:0,target 88
-  200:277,target 107
+  200:277,target 111
   198:0,target 64
-  189:277,target 318
+  189:277,target 322
   100:261,target 54
-  301:277,target 134
-  291:277,target 244
+  301:277,target 168
+  291:277,target 251
   62:430 goto
   39:277,target 147
   40:277,target 1
-  346:277,target 16
+  346:277,target 13
   85:277,target 241
   62:431 goto
   8:311,target 39
@@ -600,13 +601,12 @@ array set plot::table {
   269:277 reduce
   188:358 shift
   179:0 reduce
-  167:0,target 123
+  167:0,target 127
   18:277 reduce
-  226:412,target 329
+  226:412,target 333
   102:338,target 53
   228:257,target 122
-  136:0,target 108
-  274:257,target 122
+  136:0,target 112
   240:277 reduce
   239:277 reduce
   103:322,target 55
@@ -616,53 +616,53 @@ array set plot::table {
   7:277 reduce
   105:0,target 82
   98:374,target 250
+  57:461,target 207
   3:309,target 11
   3:310,target 12
-  27:455,target 111
   210:277 reduce
   209:277 reduce
   199:277 reduce
-  15:300,target 256
+  15:300,target 260
   274:0 reduce
-  371:0,target 228
+  371:0,target 239
   170:277 reduce
   1:301,target 33
   5:0,target 25
-  273:343,target 267
   104:318 shift
-  340:0,target 166
-  339:0,target 10
   110:0 reduce
   109:0 reduce
   104:319 shift
   78:0,target 1
+  56:435,target 203
   37:394 shift
   326:0 reduce
-  249:270,target 339
-  249:269,target 338
+  249:270,target 343
+  249:269,target 342
   65:0 reduce
   104:322 shift
   100:277,target 54
+  381:275,target 386
+  281:258,target 123
   145:277,target 92
   140:277 reduce
   139:277 reduce
-  62:454 goto
-  308:0,target 138
-  298:0,target 161
+  308:0,target 144
+  298:0,target 169
   191:277,target 79
   101:261,target 56
+  62:455 goto
   375:277 reduce
   235:369,target 85
-  302:277,target 130
-  292:277,target 243
+  302:277,target 165
+  292:277,target 250
   152:0 reduce
   41:277,target 155
   368:0 reduce
-  347:277,target 17
+  347:277,target 14
   86:277,target 43
   9:311,target 39
   37:412 goto
-  267:0,target 118
+  267:0,target 206
   158:Y,target 101
   110:277 reduce
   109:277 reduce
@@ -670,79 +670,78 @@ array set plot::table {
   0:376,target 31
   345:277 reduce
   84:277 shift
-  244:268,target 337
-  227:412,target 330
+  244:268,target 341
+  227:412,target 334
   103:338,target 55
   43:365 shift
   258:412 goto
   229:257,target 122
   194:0 reduce
-  104:322,target 257
-  183:444 goto
+  104:322,target 261
+  376:257,target 122
   315:277 reduce
-  190:363,target 312
+  190:363,target 316
+  183:445 goto
   141:260,target 125
   141:259,target 124
   54:277 shift
   205:0,target 1
-  195:0,target 220
+  195:0,target 224
   104:337 shift
   59:333,target 211
   228:412 goto
   104:338 shift
+  287:260,target 125
+  287:259,target 124
   104:339 shift
-  44:450,target 171
   0:334,target 31
-  16:300,target 255
-  275:277 shift
+  16:300,target 259
+  275:277 reduce
   164:0,target 103
   4:421,target 21
-  252:416,target 355
-  254:262,target 127
+  252:416,target 359
   245:275 shift
-  288:0 reduce
   133:0,target 67
   37:0 reduce
-  190:321,target 311
+  190:321,target 315
   158:412 goto
   101:277,target 56
+  99:332,target 255
+  23:454,target 98
+  382:275,target 388
   146:277,target 93
   102:0,target 53
   31:258,target 123
-  192:277,target 217
+  192:277,target 221
   124:0 reduce
   102:261,target 53
   341:0 reduce
   215:277 reduce
   303:277,target 131
-  293:277,target 233
-  246:415,target 344
-  348:277,target 171
+  293:277,target 252
+  246:415,target 348
+  348:277,target 174
   87:277,target 28
-  367:0,target 235
-  334:396 shift
+  367:0,target 161
   169:327 shift
   90:263 reduce
   60:257 shift
   1:376,target 33
   13:385 reduce
-  334:397 shift
   175:277 reduce
   166:0 reduce
   90:264 reduce
   60:258 shift
   2:0,target 24
   383:0 reduce
-  334:398 shift
-  228:412,target 331
-  104:338,target 259
+  228:412,target 335
+  104:338,target 263
   90:265 reduce
   60:260 shift
   60:259 shift
-  334:399 shift
-  274:412,target 365
+  336:0,target 265
   90:266 reduce
-  75:0,target 209
+  75:0,target 213
   60:261 shift
   48:353 shift
   34:320,target 136
@@ -750,44 +749,48 @@ array set plot::table {
   60:262 shift
   8:302,target 33
   44:355,target 169
+  281:257 shift
+  381:275 shift
+  281:258 shift
   145:277 reduce
-  305:0,target 137
-  295:0,target 163
+  305:0,target 138
+  295:0,target 248
+  281:260 shift
+  281:259 shift
   44:0,target 1
-  381:277 reduce
+  281:261 shift
   13:394 reduce
+  281:262 shift
   158:430 goto
   37:259,target 124
   37:260,target 125
   1:334,target 33
-  264:0,target 203
   115:277 reduce
   351:277 reduce
   261:0 reduce
-  255:262,target 127
-  233:0,target 252
+  233:0,target 256
   24:320 shift
-  37:458 goto
+  37:459 goto
+  190:448,target 323
   321:277 reduce
   102:277,target 53
   60:277 reduce
   0:308,target 31
   313:0 reduce
-  283:258,target 123
-  192:0,target 217
-  188:446 goto
-  147:277,target 110
+  192:0,target 221
+  147:277,target 114
   52:0 reduce
+  264:417 goto
   203:277,target 101
-  193:277,target 221
+  193:277,target 225
+  188:447 goto
   103:261,target 55
   0:420,target 7
-  304:277,target 140
-  294:277,target 165
-  350:277,target 12
-  349:277,target 11
-  334:432 goto
-  281:277 shift
+  304:277,target 139
+  294:277,target 238
+  350:277,target 16
+  349:277,target 15
+  281:277 reduce
   88:277,target 37
   53:323,target 193
   29:277 reduce
@@ -797,62 +800,61 @@ array set plot::table {
   44:261,target 126
   355:0 reduce
   251:274 shift
-  260:417,target 363
-  259:417,target 362
-  229:412,target 332
+  229:412,target 336
   130:0,target 60
   129:0,target 59
   3:359,target 15
-  277:257,target 122
   9:302,target 33
   39:406,target 148
+  376:412,target 383
   59:291 shift
-  50:442,target 184
+  3:471,target 19
   0:367,target 31
   30:287 shift
   221:277 shift
   169:364 shift
-  162:468,target 290
   38:259,target 124
   38:260,target 125
   90:312 reduce
-  43:439 goto
-  364:0,target 113
+  43:440 goto
+  364:0,target 157
   233:0 reduce
   100:337,target 54
   95:263 reduce
   95:264 reduce
   59:299 shift
   95:265 reduce
-  333:0,target 30
-  158:464 goto
+  333:0,target 268
   95:266 reduce
-  72:0,target 211
+  72:0,target 215
   30:306 shift
+  158:465 goto
   95:267 reduce
   48:395 shift
+  275:0 reduce
   78:412 goto
-  10:460,target 77
+  338:275,target 379
   151:277 reduce
   103:277,target 55
   1:308,target 33
   30:309 shift
   30:310 shift
-  302:0,target 130
-  292:0,target 243
-  148:277,target 114
+  302:0,target 165
+  292:0,target 250
+  148:277,target 118
   57:315,target 205
-  204:277,target 322
-  194:277,target 219
+  386:277 reduce
+  204:277,target 326
+  194:277,target 223
   78:258,target 123
-  305:277,target 137
-  295:277,target 163
+  305:277,target 138
+  295:277,target 248
   205:261,target 126
   111:0 reduce
   44:277,target 1
-  351:277,target 169
+  351:277,target 17
   327:0 reduce
-  261:0,target 192
+  261:0,target 1
   121:277 shift
   66:0 reduce
   45:261,target 126
@@ -862,9 +864,11 @@ array set plot::table {
   230:0,target 104
   229:0,target 1
   226:257 shift
+  99:434,target 257
   226:258 shift
   370:0 reduce
   369:0 reduce
+  278:257,target 122
   226:260 shift
   226:259 shift
   52:314,target 189
@@ -872,14 +876,14 @@ array set plot::table {
   326:277 reduce
   226:261 shift
   65:277 reduce
-  51:442,target 185
   226:262 shift
   169:389 shift
   1:367,target 33
-  169:289,target 294
+  169:289,target 298
   35:275 shift
   205:0 reduce
   195:0 reduce
+  163:468,target 297
   59:333 shift
   40:259,target 124
   40:260,target 125
@@ -887,66 +891,72 @@ array set plot::table {
   19:300,target 78
   35:277 reduce
   101:337,target 56
-  257:262,target 127
   84:384 shift
   8:394,target 64
   30:332 shift
   126:0,target 4
   0:342,target 4
-  256:277 shift
+  277:343,target 271
+  256:277 reduce
   7:419 goto
   21:384,target 86
   42:337,target 160
   33:275,target 134
-  150:277,target 116
-  149:277,target 115
+  150:277,target 120
+  149:277,target 119
   226:277 reduce
   205:277,target 1
-  195:277,target 220
+  195:277,target 224
   300:0 reduce
   290:0 reduce
   289:0 reduce
   38:0 reduce
-  306:277,target 136
-  296:277,target 162
+  306:277,target 134
+  296:277,target 247
   181:325 shift
   95:312 reduce
   45:277,target 1
-  361:0,target 154
-  352:277,target 167
-  99:0,target 65
+  361:0,target 160
+  352:277,target 175
+  99:0,target 105
   0:300,target 31
   9:335,target 46
   125:0 reduce
   342:0 reduce
-  330:0,target 260
-  329:0,target 264
-  186:447,target 313
-  162:401,target 287
+  330:0,target 189
+  329:0,target 188
+  162:401,target 291
   81:0 reduce
-  68:0,target 208
-  277:412,target 367
+  68:0,target 212
   160:y,target 103
   100:260,target 54
   100:259,target 54
-  48:448 goto
-  288:0,target 246
+  48:449 goto
   37:0,target 1
   167:0 reduce
+  99:287,target 254
   384:0 reduce
   59:359 shift
   8:309,target 37
   8:310,target 38
-  257:0,target 1
+  262:257 shift
+  48:449,target 178
+  262:258 shift
+  257:0,target 65
   126:277 reduce
+  262:260 shift
+  262:259 shift
   362:277 reduce
+  262:261 shift
   102:337,target 53
+  262:262 shift
   258:262,target 127
   81:422,target 235
   9:394,target 64
   30:359 shift
   226:0,target 1
-  163:332,target 292
+  163:332,target 296
+  46:441,target 174
   90:374 reduce
   332:277 reduce
   90:375 reduce
@@ -956,52 +966,58 @@ array set plot::table {
   84:427 goto
   80:275,target 234
   79:275,target 233
-  57:460,target 207
-  57:459,target 206
+  57:460,target 206
   262:0 reduce
-  151:277,target 117
+  151:277,target 121
   30:309,target 115
   30:310,target 116
   206:277,target 95
-  196:277,target 218
+  196:277,target 222
   0:263 reduce
-  307:277,target 139
+  307:277,target 135
   302:277 reduce
-  297:277,target 164
+  297:277,target 237
   292:277 reduce
-  251:415,target 354
+  251:415,target 358
   154:0,target 90
   46:277,target 173
   0:316,target 31
   41:277 shift
-  353:277,target 172
+  353:277,target 11
   181:354 shift
   81:369,target 29
   1:300,target 33
   314:0 reduce
   123:0,target 5
   90:385 reduce
-  56:434,target 203
+  263:417,target 366
   262:277 reduce
-  249:268,target 337
-  169:451 goto
+  249:268,target 341
+  278:412,target 369
+  169:452 goto
+  281:257,target 122
   59:383 shift
   186:321 shift
   140:0 reduce
   139:0 reduce
   101:260,target 56
   101:259,target 56
+  388:0,target 52
+  381:396 shift
   356:0 reduce
   8:326,target 43
+  381:397 shift
   232:277 reduce
+  381:398 shift
   90:393 reduce
   0:277 shift
   9:309,target 37
   9:310,target 38
+  381:399 shift
   158:X,target 100
   102:257 reduce
   30:383 shift
-  357:0,target 156
+  357:0,target 176
   202:275 shift
   102:258 reduce
   52:295,target 186
@@ -1013,10 +1029,10 @@ array set plot::table {
   192:277 reduce
   103:337,target 55
   102:261 reduce
-  273:411,target 270
+  259:262,target 127
   102:262 reduce
   11:300 reduce
-  326:0,target 185
+  326:0,target 210
   65:0,target 32
   0:285 reduce
   34:302,target 135
@@ -1026,40 +1042,44 @@ array set plot::table {
   234:0 reduce
   0:287 shift
   35:275,target 138
-  285:0,target 231
   106:277,target 83
   0:288 reduce
+  287:258,target 123
+  159:467,target 286
   152:277,target 69
   0:300 reduce
-  207:277,target 204
+  207:277,target 208
   197:277,target 96
   0:301 reduce
   60:412 goto
   0:302 reduce
-  308:277,target 138
-  298:277,target 161
-  254:0,target 1
+  308:277,target 144
+  298:277,target 169
+  254:0,target 107
   132:277 reduce
   47:277,target 175
   1:316,target 33
   0:293 reduce
   0:303 reduce
-  354:277,target 174
+  354:277,target 12
   276:0 reduce
-  254:261,target 126
   0:294 reduce
   367:277 reduce
   0:295 reduce
+  281:412 goto
   223:0,target 86
   63:383,target 229
   0:307 reduce
+  264:417,target 367
+  188:447,target 321
   102:277 reduce
   0:308 reduce
   112:0 reduce
   95:374 reduce
   0:310 reduce
   0:309 reduce
-  23:453,target 98
+  23:453,target 97
+  381:432 goto
   337:277 reduce
   328:0 reduce
   95:375 reduce
@@ -1081,8 +1101,9 @@ array set plot::table {
   46:277 shift
   0:316 reduce
   371:0 reduce
-  104:337,target 258
+  104:337,target 262
   0:320 reduce
+  261:262,target 127
   120:0,target 89
   95:385 reduce
   267:277 reduce
@@ -1090,48 +1111,47 @@ array set plot::table {
   206:0 reduce
   196:0 reduce
   36:275,target 138
-  385:0,target 49
+  385:0,target 242
   186:363 shift
-  107:277,target 187
+  107:277,target 191
   0:349,target 31
   0:326 reduce
   25:Y,target 101
   237:277 shift
-  153:277,target 273
+  153:277,target 277
   37:258,target 123
   208:277,target 88
   198:277,target 64
   95:393 reduce
   5:277 reduce
-  254:277,target 1
+  254:277,target 107
   0:329 reduce
-  354:0,target 174
-  310:277,target 133
-  309:277,target 132
-  299:277,target 127
-  355:277,target 175
-  255:261,target 126
+  354:0,target 12
+  310:277,target 140
+  309:277,target 141
+  299:277,target 167
+  147:439,target 276
+  355:277,target 173
   0:332 shift
   207:277 reduce
   197:277 reduce
   100:319,target 54
-  90:312,target 180
+  90:312,target 184
   0:334 reduce
   16:300 reduce
-  43:439,target 168
-  323:0,target 205
+  43:440,target 168
+  323:0,target 149
   0:335 reduce
   301:0 reduce
   291:0 reduce
-  190:447,target 319
   0:336 reduce
   40:0 reduce
+  281:412,target 371
   0:307,target 31
-  283:257,target 122
   167:277 reduce
-  147:276,target 266
+  147:276,target 270
   4:384,target 27
-  282:0,target 232
+  282:0,target 231
   103:260,target 55
   103:259,target 55
   102:318 reduce
@@ -1145,11 +1165,11 @@ array set plot::table {
   343:0 reduce
   102:322 reduce
   1:392,target 33
-  373:275 shift
   137:277 reduce
   44:259,target 124
   44:260,target 125
-  373:276 shift
+  373:277 reduce
+  262:262,target 127
   168:0 reduce
   0:348 reduce
   25:X shift
@@ -1160,60 +1180,55 @@ array set plot::table {
   9:301,target 32
   10:390,target 76
   25:Y shift
-  3:469,target 18
-  3:470,target 19
+  3:470,target 18
   343:277 reduce
   82:277 shift
-  59:462 goto
   0:366,target 31
-  30:456 goto
   178:0,target 81
+  59:463 goto
   30:457 goto
-  108:277,target 189
+  108:277,target 193
   1:349,target 33
-  181:443 goto
+  30:458 goto
   154:277,target 90
   38:258,target 123
-  210:277,target 224
-  209:277,target 226
+  210:277,target 228
+  209:277,target 230
   199:277,target 76
+  181:444 goto
   313:277 reduce
-  255:277,target 1
-  147:0,target 110
+  255:277,target 106
+  147:0,target 114
   52:277 reduce
   0:357 reduce
-  311:277,target 150
+  311:277,target 143
   102:337 reduce
   49:277,target 179
-  356:277,target 173
+  356:277,target 171
   226:412 goto
   102:338 reduce
-  273:275 shift
   102:339 reduce
   101:319,target 56
-  273:276 shift
-  263:0 reduce
-  91:312,target 178
+  91:312,target 182
   0:362 reduce
   8:376,target 59
   273:277 reduce
   22:277 shift
-  163:287,target 291
+  163:287,target 295
   1:307,target 33
   31:412,target 128
   42:319,target 157
   0:366 reduce
-  382:0,target 48
   78:257,target 122
   0:367 reduce
   315:0 reduce
   243:277 reduce
-  248:414,target 351
+  248:414,target 355
   205:260,target 125
   205:259,target 124
   0:369 shift
   0:371 reduce
-  351:0,target 169
+  351:0,target 17
   89:0,target 22
   45:260,target 125
   45:259,target 124
@@ -1223,76 +1238,84 @@ array set plot::table {
   0:373 reduce
   8:334,target 45
   213:277 reduce
+  169:452,target 302
   141:0 reduce
   52:304 shift
   357:0 reduce
   52:295 shift
-  320:0,target 105
-  319:0,target 145
+  320:0,target 151
+  319:0,target 152
   58:0,target 1
   0:376 reduce
-  143:275,target 264
+  143:275,target 268
   52:297 shift
-  35:441 goto
   11:385 reduce
+  35:442 goto
   173:277 reduce
   1:366,target 33
-  278:0,target 227
+  278:0,target 1
   63:332,target 227
   0:381 reduce
-  110:277,target 188
-  109:277,target 190
+  110:277,target 192
+  109:277,target 194
   0:382 reduce
-  163:467,target 293
   155:277,target 91
   143:275 shift
   40:258,target 123
-  211:277,target 223
+  278:257 shift
+  211:277,target 227
   52:314 shift
   3:333,target 14
   25:x shift
   378:275 shift
-  256:277,target 359
+  278:258 shift
+  256:277,target 108
   7:419,target 22
   25:y shift
-  312:277,target 149
-  357:277,target 156
-  257:261,target 126
+  378:276 shift
+  312:277,target 142
+  278:260 shift
+  278:259 shift
+  357:277,target 176
+  278:261 shift
   235:0 reduce
   11:394 reduce
+  278:262 shift
   156:430 goto
   102:319,target 53
   0:388 reduce
   0:341,target 31
   216:0,target 73
-  92:312,target 177
+  92:312,target 181
   9:376,target 59
   113:277 reduce
   0:392 reduce
   348:277 reduce
-  283:412,target 371
   87:277 reduce
   277:0 reduce
   175:0,target 75
   0:394 reduce
+  262:412 goto
   27:271 shift
   318:277 reduce
-  144:0,target 200
+  144:0,target 204
   162:400 shift
   0:288,target 31
   330:0 reduce
   329:0 reduce
-  186:447 goto
   162:401 shift
   68:0 reduce
   51:346,target 181
   9:334,target 45
+  39:438,target 153
+  186:448 goto
   162:402 shift
   57:281 shift
   248:271 shift
   162:403 shift
-  162:400,target 286
+  162:400,target 290
   278:277 reduce
+  277:411,target 274
   248:272 shift
   160:x,target 102
   58:262,target 127
@@ -1301,25 +1324,24 @@ array set plot::table {
   57:390,target 76
   27:280 shift
   372:0 reduce
-  245:275,target 341
-  244:413,target 340
+  245:275,target 345
+  244:413,target 344
   0:418 goto
   111:277,target 87
   0:420 goto
   8:308,target 36
-  48:448,target 178
-  212:277,target 225
-  347:0,target 17
-  257:277,target 1
+  212:277,target 229
+  347:0,target 14
+  257:277,target 65
   207:0 reduce
   197:0 reduce
   86:0,target 43
   57:292 shift
   0:423 goto
-  313:277,target 146
-  52:277,target 141
+  313:277,target 136
+  52:277,target 145
   0:357,target 31
-  358:277,target 155
+  358:277,target 178
   258:261,target 126
   218:277 shift
   97:277,target 85
@@ -1327,17 +1349,17 @@ array set plot::table {
   57:305 shift
   57:295 shift
   1:341,target 33
-  316:0,target 147
-  93:312,target 181
+  316:0,target 153
+  93:312,target 185
   63:306,target 224
-  46:440,target 174
-  273:343 shift
   93:263 reduce
   57:298 shift
   16:385 reduce
+  42:464,target 164
   178:277 reduce
   93:264 reduce
   52:351 shift
+  275:0,target 126
   93:265 reduce
   78:412,target 232
   93:266 reduce
@@ -1353,91 +1375,82 @@ array set plot::table {
   57:305,target 70
   57:295,target 204
   16:394 reduce
-  254:257 shift
-  213:0,target 222
+  213:0,target 226
   23:324,target 92
-  254:258 shift
   127:0 reduce
   118:277 reduce
   344:0 reduce
-  254:260 shift
-  254:259 shift
-  90:267,target 180
+  90:267,target 184
   83:0 reduce
   60:262,target 127
   354:277 reduce
-  254:261 shift
-  201:275,target 320
+  201:275,target 324
   101:258,target 56
-  254:262 shift
   172:0,target 74
   224:257 shift
   0:263,target 31
   224:258 shift
-  112:277,target 191
+  112:277,target 195
   9:308,target 36
   224:260 shift
   224:259 shift
   170:0 reduce
+  386:0 reduce
   324:277 reduce
   224:261 shift
-  213:277,target 222
+  213:277,target 226
   141:0,target 1
   52:304,target 188
   258:277,target 1
   224:262 shift
   158:261,target 126
   21:426,target 87
-  314:277,target 143
+  314:277,target 137
+  182:445,target 313
   1:357,target 33
-  360:277,target 153
-  359:277,target 159
-  273:410,target 269
+  360:277,target 177
+  359:277,target 179
+  259:261,target 126
   33:275 shift
-  110:0,target 188
-  109:0,target 190
-  104:319,target 256
+  110:0,target 192
+  109:0,target 194
+  104:319,target 260
   37:394,target 143
-  180:325,target 300
-  94:312,target 182
+  284:277 shift
+  180:325,target 304
+  94:312,target 186
   156:x,target 102
   141:257,target 122
-  375:0,target 44
-  284:282 shift
-  159:466,target 282
+  375:0,target 232
+  287:257,target 122
   254:277 reduce
   0:332,target 3
-  264:0 reduce
   9:367,target 55
   1:315,target 33
   344:0,target 170
-  254:260,target 125
-  254:259,target 124
   83:0,target 46
   57:343 shift
   224:277 reduce
   100:0 reduce
   316:0 reduce
-  313:0,target 146
-  188:446,target 317
+  313:0,target 136
   93:312 reduce
   63:306 shift
-  52:0,target 141
-  46:440 goto
-  23:452,target 97
+  52:0,target 145
+  46:441 goto
   235:384,target 86
   98:263 shift
-  91:267,target 178
+  91:267,target 182
   61:262,target 127
   3:383,target 16
-  202:275,target 321
+  202:275,target 325
   184:277 reduce
   102:258,target 53
   98:264 shift
   63:310 shift
   63:309 shift
   0:279,target 31
-  272:0,target 111
+  272:0,target 123
   98:265 shift
   57:352 shift
   21:332,target 84
@@ -1447,61 +1460,64 @@ array set plot::table {
   1:263,target 33
   27:347 shift
   358:0 reduce
-  113:277,target 197
+  113:277,target 201
   98:267 shift
   97:0 reduce
-  373:417 goto
   158:277,target 1
   38:257 shift
   214:277,target 97
   154:277 reduce
   38:258 shift
+  260:277,target 363
+  259:277,target 1
   173:399,target 132
-  162:468 goto
   38:259 shift
   38:260 shift
-  315:277,target 148
+  389:277 reduce
+  315:277,target 154
+  183:445,target 314
+  162:469 goto
   54:277,target 198
   38:261 shift
-  361:277,target 154
+  361:277,target 160
+  261:261,target 126
   184:0 reduce
-  99:277,target 65
+  99:277,target 105
   38:262 shift
-  210:0,target 224
-  209:0,target 226
+  259:257 shift
+  210:0,target 228
+  209:0,target 230
   199:0,target 76
   8:300,target 31
   38:394,target 143
-  181:325,target 300
+  259:258 shift
+  181:325,target 304
   124:277 reduce
-  95:312,target 179
-  273:408 shift
+  95:312,target 183
+  259:260 shift
+  259:259 shift
   360:277 reduce
   359:277 reduce
-  273:410 shift
-  273:411 shift
+  259:261 shift
+  259:262 shift
   168:0,target 100
   0:348,target 31
   25:X,target 100
   229:257 shift
+  161:466,target 289
   37:257,target 122
   229:258 shift
-  284:282,target 372
   229:260 shift
   229:259 shift
   330:277 reduce
   329:277 reduce
-  253:414,target 356
+  253:414,target 360
   229:261 shift
-  147:438,target 272
   137:0,target 66
   68:277 reduce
   57:370 shift
-  255:260,target 125
-  255:259,target 124
   229:262 shift
-  273:417 goto
-  159:329,target 279
+  159:329,target 283
   100:318,target 54
   278:0 reduce
   63:332 shift
@@ -1511,55 +1527,49 @@ array set plot::table {
   289:277 reduce
   38:277 reduce
   173:396 shift
-  147:275,target 265
-  92:267,target 177
-  260:275 shift
-  259:275 shift
+  147:275,target 269
+  92:267,target 181
   173:397 shift
   103:258,target 55
   57:378 shift
   1:279,target 33
-  372:0,target 1
+  372:0,target 246
   331:0 reduce
-  260:276 shift
-  259:276 shift
   173:398 shift
   70:0 reduce
   69:0 reduce
   57:379 shift
+  260:277 shift
+  259:277 reduce
   173:399 shift
-  114:277,target 193
+  114:277,target 197
   6:0,target 0
   2:0 reduce
   44:258,target 123
-  341:0,target 168
+  341:0,target 8
   215:277,target 72
-  378:396 shift
-  284:338 shift
-  261:277,target 192
+  261:277,target 1
   27:380 shift
-  378:397 shift
-  316:277,target 147
-  284:339 shift
+  373:0 reduce
+  316:277,target 153
   230:277 reduce
   229:277 reduce
-  159:388,target 280
+  159:388,target 284
   55:277,target 199
   8:316,target 41
-  378:398 shift
-  362:277,target 158
+  362:277,target 159
+  262:261,target 126
   38:290 shift
-  378:399 shift
-  310:0,target 133
-  309:0,target 132
-  299:0,target 127
+  310:0,target 140
+  309:0,target 141
+  299:0,target 167
   100:257 reduce
   98:312 shift
   4:341,target 20
   9:300,target 31
-  141:412,target 262
+  141:412,target 266
   100:258 reduce
-  96:312,target 176
+  96:312,target 180
   57:390 shift
   100:260 reduce
   100:259 reduce
@@ -1568,17 +1578,17 @@ array set plot::table {
   198:0 reduce
   189:277 shift
   100:261 reduce
-  273:438 goto
-  268:0,target 119
+  287:412,target 375
+  268:0,target 207
   160:Y,target 101
   100:262 reduce
   1:348,target 33
   17:0,target 23
   38:295 shift
   42:361,target 161
-  373:417,target 380
-  52:445 goto
   38:257,target 122
+  52:446 goto
+  378:417 goto
   44:257 shift
   44:258 shift
   44:259 shift
@@ -1589,7 +1599,7 @@ array set plot::table {
   63:359 shift
   44:262 shift
   206:0,target 95
-  196:0,target 218
+  196:0,target 222
   173:432 goto
   130:277 reduce
   129:277 reduce
@@ -1597,15 +1607,15 @@ array set plot::table {
   365:277 reduce
   303:0 reduce
   293:0 reduce
-  93:267,target 181
-  165:0,target 124
-  250:275,target 353
+  93:267,target 185
+  165:0,target 128
+  278:412 goto
+  250:275,target 357
   205:258,target 123
   100:277 reduce
-  115:277,target 198
+  115:277,target 202
   93:374 reduce
-  378:432 goto
-  335:277 shift
+  335:277 reduce
   134:0,target 102
   128:0 reduce
   93:375 reduce
@@ -1615,14 +1625,13 @@ array set plot::table {
   216:277,target 73
   84:0 reduce
   50:345,target 180
-  262:277,target 201
+  262:277,target 1
   205:257 shift
-  169:451,target 298
   100:282 reduce
-  317:277,target 142
+  317:277,target 150
   205:258 shift
   9:316,target 41
-  363:277,target 157
+  363:277,target 163
   248:414 goto
   205:260 shift
   205:259 shift
@@ -1632,33 +1641,30 @@ array set plot::table {
   205:261 shift
   0:382,target 31
   44:277 reduce
-  377:399,target 132
   205:262 shift
   171:0 reduce
-  273:417,target 271
-  368:0,target 242
+  387:0 reduce
+  368:0,target 117
   93:385 reduce
   37:412,target 144
-  374:417,target 381
   265:277 reduce
   40:257,target 122
   3:0,target 35
   3:332,target 13
   223:0 reduce
   63:383 shift
-  337:0,target 8
+  337:0,target 30
   190:321 shift
-  76:0,target 214
-  257:260,target 125
-  257:259,target 124
+  180:444,target 306
+  76:0,target 218
   8:392,target 63
   235:277 shift
   102:318,target 53
   0:340,target 31
   93:393 reduce
   3:277 reduce
-  306:0,target 136
-  296:0,target 162
+  306:0,target 134
+  296:0,target 247
   156:X shift
   45:0,target 1
   265:0 reduce
@@ -1666,37 +1672,36 @@ array set plot::table {
   156:Y shift
   205:277 reduce
   195:277 reduce
-  94:267,target 182
-  265:0,target 18
+  94:267,target 186
+  265:0,target 196
   156:Y,target 101
   14:300 reduce
-  249:413,target 352
+  249:413,target 356
   101:0 reduce
   317:0 reduce
   235:287 shift
-  116:277,target 199
+  116:277,target 203
   8:349,target 51
-  234:0,target 250
+  234:0,target 254
   165:277 reduce
   0:287,target 2
-  217:277,target 183
+  217:277,target 187
   159:329 shift
   100:318 reduce
   51:345,target 180
-  39:437,target 153
-  263:277,target 202
+  39:437,target 152
   100:319 reduce
-  318:277,target 144
-  364:277,target 113
+  318:277,target 147
+  364:277,target 157
+  277:410,target 273
   203:0,target 101
-  193:0,target 221
+  193:0,target 225
   100:322 reduce
   360:0 reduce
   359:0 reduce
   135:277 reduce
   58:261,target 126
   1:382,target 33
-  378:399,target 132
   100:257,target 54
   98:312,target 249
   371:277 reduce
@@ -1709,20 +1714,21 @@ array set plot::table {
   80:275 shift
   79:275 shift
   57:460 goto
-  57:459 goto
   98:374 shift
+  57:461 goto
   3:309 shift
   3:310 shift
   4:332,target 27
   10:379,target 75
   21:287,target 83
-  27:455 goto
+  34:436,target 137
   341:277 reduce
   131:0,target 61
   98:375 shift
+  27:456 goto
+  181:444,target 307
   258:260,target 125
   258:259,target 124
-  254:412 goto
   9:392,target 63
   103:318,target 55
   1:340,target 33
@@ -1732,16 +1738,16 @@ array set plot::table {
   49:277 shift
   225:262,target 127
   100:337 reduce
-  42:463,target 164
   224:412 goto
   100:338 reduce
   3:306,target 10
+  158:465,target 282
   100:339 reduce
-  95:267,target 179
+  95:267,target 183
   48:395,target 177
-  372:262,target 127
-  365:0,target 229
+  365:0,target 158
   98:385 shift
+  280:0 reduce
   271:277 reduce
   8:366,target 54
   20:277 shift
@@ -1749,75 +1755,82 @@ array set plot::table {
   0:0,target 26
   156:x shift
   141:257 shift
-  117:277,target 194
+  117:277,target 198
   9:349,target 51
+  334:0,target 264
   156:y shift
   141:258 shift
-  73:0,target 213
-  218:277,target 324
+  73:0,target 217
+  376:257 shift
+  218:277,target 328
   190:363 shift
   141:260 shift
   141:259 shift
-  264:277,target 203
+  376:258 shift
   241:277 shift
   141:261 shift
+  376:260 shift
+  376:259 shift
   332:0 reduce
-  320:277,target 105
-  319:277,target 145
+  320:277,target 151
+  319:277,target 152
   141:262 shift
   98:393 shift
   71:0 reduce
   58:277,target 1
-  365:277,target 229
+  376:261 shift
+  365:277,target 158
   303:0,target 131
-  293:0,target 233
-  334:399,target 132
+  293:0,target 252
+  376:262 shift
   235:332 shift
-  90:266,target 180
+  90:266,target 184
   60:261,target 126
   48:353,target 176
   8:279 shift
   101:257,target 56
   3:0 reduce
   3:332 shift
-  246:274,target 343
+  246:274,target 347
   211:277 reduce
   3:333 shift
-  262:0,target 201
+  262:0,target 1
   19:300 shift
+  374:0 reduce
   9:307,target 35
   40:412,target 154
   8:285 shift
   0:373,target 31
   8:286 shift
+  288:282,target 376
   231:0,target 98
   171:277 reduce
   158:260,target 125
   158:259,target 124
-  182:444,target 309
   8:288 shift
   42:368,target 162
-  273:408,target 268
+  259:260,target 125
+  259:259,target 124
   210:0 reduce
   209:0 reduce
   199:0 reduce
   8:300 shift
   38:394 shift
-  104:318,target 255
+  104:318,target 259
   8:301 shift
-  200:0,target 107
+  200:0,target 111
   8:302 shift
   44:355 shift
   141:277 reduce
   8:303 shift
   8:293 shift
   226:262,target 127
-  169:389,target 297
+  169:389,target 301
   8:294 shift
   376:277 reduce
   8:295 shift
   158:0,target 1
-  96:267,target 176
+  96:267,target 180
   8:307 shift
   38:412 goto
   111:277 reduce
@@ -1827,30 +1840,29 @@ array set plot::table {
   8:309 shift
   8:310 shift
   346:277 reduce
-  254:258,target 123
   127:0,target 7
-  118:277,target 196
+  118:277,target 200
   85:277 shift
   8:311 shift
   164:277,target 103
   304:0 reduce
   294:0 reduce
+  259:412 goto
   220:277,target 58
   219:277,target 57
-  265:277,target 18
-  321:277,target 106
+  265:277,target 196
+  321:277,target 146
   60:277,target 1
   8:315 shift
-  366:277,target 230
+  366:277,target 162
   316:277 reduce
   159:388 shift
   55:277 shift
   8:316 shift
-  91:266,target 178
+  91:266,target 182
   61:261,target 126
   8:341,target 49
-  260:417 goto
-  259:417 goto
+  381:399,target 132
   229:412 goto
   130:0 reduce
   129:0 reduce
@@ -1858,33 +1870,34 @@ array set plot::table {
   3:359 shift
   30:383,target 119
   346:0 reduce
-  247:274,target 347
+  247:274,target 351
   85:0 reduce
-  63:471 goto
   8:320 shift
-  362:0,target 158
+  362:0,target 159
+  63:472 goto
   276:277 reduce
   159:404 shift
+  377:417,target 384
   246:273 shift
   159:405 shift
   246:274 shift
   1:373,target 33
-  331:0,target 262
-  260:276,target 266
-  259:276,target 266
+  331:0,target 263
   173:398,target 131
   172:0 reduce
-  70:0,target 210
-  69:0,target 216
+  70:0,target 214
+  69:0,target 220
   57:379,target 75
-  183:444,target 310
+  388:0 reduce
   8:326 shift
+  261:260,target 125
+  261:259,target 124
   235:369 shift
   161:y,target 103
   8:288,target 27
-  300:0,target 135
-  290:0,target 234
-  289:0,target 248
+  300:0,target 166
+  290:0,target 249
+  289:0,target 235
   8:329 shift
   38:0,target 1
   227:262,target 127
@@ -1892,7 +1905,6 @@ array set plot::table {
   216:277 reduce
   50:345 shift
   258:0,target 1
-  161:465,target 285
   50:346 shift
   8:334 shift
   8:335 shift
@@ -1903,44 +1915,44 @@ array set plot::table {
   50:350 shift
   14:385 reduce
   266:0 reduce
-  255:258,target 123
   227:0,target 1
   176:277 reduce
   157:Y shift
   120:277,target 89
-  119:277,target 195
+  119:277,target 199
   91:264 reduce
   61:258 shift
-  165:277,target 124
+  165:277,target 128
   91:265 reduce
   61:260 shift
   61:259 shift
   8:340 shift
-  221:277,target 325
-  169:364,target 296
+  221:277,target 329
+  169:364,target 300
   91:266 reduce
   61:261 shift
   8:341 shift
-  266:277,target 19
+  266:277,target 205
   235:384 shift
   91:267 reduce
   61:262 shift
   3:383 shift
-  322:277,target 206
+  322:277,target 148
   61:277,target 1
   8:357,target 52
   31:257 shift
-  367:277,target 235
+  382:275 shift
+  367:277,target 161
   146:277 reduce
   102:0 reduce
   0:295,target 31
   31:258 shift
   318:0 reduce
-  92:266,target 177
+  92:266,target 181
   9:341,target 49
   31:259 shift
   31:260 shift
-  382:277 reduce
+  382:399,target 132
   103:257,target 55
   14:394 reduce
   31:261 shift
@@ -1948,11 +1960,13 @@ array set plot::table {
   155:0,target 91
   27:280,target 108
   31:262 shift
+  277:417,target 275
   159:431 goto
   8:348 shift
   44:412 goto
   116:277 reduce
   8:349 shift
+  378:417,target 385
   144:0 reduce
   44:257,target 122
   361:0 reduce
@@ -1960,18 +1974,20 @@ array set plot::table {
   124:0,target 3
   99:0 reduce
   8:315,target 40
-  38:458 goto
+  262:260,target 125
+  262:259,target 124
+  38:459 goto
   9:288,target 27
+  389:0,target 49
   322:277 reduce
   61:277 reduce
   8:357 shift
   228:262,target 127
-  190:447 goto
-  147:343,target 267
+  147:343,target 271
   62:329,target 218
-  274:262,target 127
+  190:448 goto
   160:X,target 100
-  358:0,target 155
+  358:0,target 178
   252:271 shift
   98:267,target 248
   97:0,target 85
@@ -1985,36 +2001,37 @@ array set plot::table {
   252:274 shift
   205:412 goto
   8:263,target 23
-  327:0,target 259
-  121:277,target 261
+  327:0,target 209
+  121:277,target 265
   66:0,target 34
   8:366 shift
-  166:277,target 125
+  166:277,target 129
   4:287,target 27
   8:367 shift
-  235:426,target 333
-  222:277,target 326
+  235:426,target 337
+  222:277,target 330
   157:y,target 103
   3:425,target 17
-  267:277,target 118
-  323:277,target 205
-  286:0,target 245
+  267:277,target 206
+  323:277,target 149
+  286:0,target 236
+  281:0 reduce
   62:277,target 217
   8:371 shift
   9:357,target 52
   29:0 reduce
-  35:0,target 128
-  368:277,target 242
+  35:0,target 132
+  368:277,target 117
   1:295,target 33
   8:372 shift
   157:x shift
-  93:266,target 181
+  93:266,target 185
   8:373 shift
   235:426 goto
   222:277 shift
   157:y shift
   3:425 goto
-  255:0,target 1
+  255:0,target 106
   235:427 goto
   205:257,target 122
   100:282,target 54
@@ -2029,7 +2046,7 @@ array set plot::table {
   96:264 reduce
   182:278 shift
   96:265 reduce
-  90:385,target 180
+  90:385,target 184
   4:0 reduce
   8:381 shift
   96:266 reduce
@@ -2038,96 +2055,96 @@ array set plot::table {
   158:0 reduce
   96:267 reduce
   375:0 reduce
-  159:466 goto
+  287:257 shift
   0:381,target 31
-  377:398,target 131
+  287:258 shift
+  159:467 goto
   152:277 reduce
   37:290,target 141
-  44:450 goto
+  287:260 shift
+  287:259 shift
+  387:277 reduce
+  287:261 shift
   229:262,target 127
   19:394 shift
+  44:451 goto
+  287:262 shift
   152:0,target 69
   8:388 shift
-  257:257 shift
   211:0 reduce
-  257:258 shift
+  376:262,target 127
   235:332,target 84
   122:277 reduce
   8:279,target 24
-  257:260 shift
-  257:259 shift
   84:384,target 86
   8:392 shift
   30:332,target 117
   357:277 reduce
-  257:261 shift
-  180:443,target 302
   9:263,target 23
-  257:262 shift
-  257:258,target 123
   122:277,target 2
   8:394 shift
   227:257 shift
-  167:277,target 123
+  167:277,target 127
   227:258 shift
   223:277,target 86
-  268:277,target 119
+  268:277,target 207
   227:260 shift
   227:259 shift
   17:277,target 23
+  386:0,target 48
   327:277 reduce
-  324:277,target 186
+  324:277,target 109
   227:261 shift
   224:261,target 126
   66:277 reduce
-  370:277,target 241
-  369:277,target 240
+  370:277,target 234
+  369:277,target 233
   227:262 shift
   32:399,target 132
-  94:266,target 182
+  338:399,target 132
+  94:266,target 186
   156:X,target 100
   36:275 shift
-  355:0,target 175
+  355:0,target 173
   305:0 reduce
   295:0 reduce
-  251:274,target 343
+  251:274,target 347
   44:0 reduce
   287:277 reduce
   101:282,target 56
   36:277 reduce
-  159:431,target 281
+  159:431,target 285
   8:348,target 50
   44:412,target 170
   0:286,target 31
-  324:0,target 186
+  324:0,target 109
   85:384 shift
-  39:436,target 152
+  263:276,target 270
   131:0 reduce
-  91:385,target 178
+  91:385,target 182
   347:0 reduce
   257:277 reduce
   86:0 reduce
   27:271,target 107
-  283:0,target 1
+  277:408,target 272
   58:260,target 125
   58:259,target 124
   1:381,target 33
-  378:398,target 131
   38:290,target 141
   227:277 reduce
   173:0 reduce
+  389:0 reduce
   141:412 goto
   96:312 reduce
-  3:469 goto
   3:470 goto
   9:279,target 24
   10:378,target 74
-  34:435,target 137
+  376:412 goto
   85:384,target 242
-  50:442 goto
+  3:471 goto
   187:277 shift
   182:328 shift
-  181:443,target 303
+  50:443 goto
   258:258,target 123
   225:0 reduce
   123:277,target 5
@@ -2135,23 +2152,21 @@ array set plot::table {
   168:277,target 100
   8:433 goto
   224:277,target 1
-  270:277,target 121
-  269:277,target 120
-  188:358,target 316
+  270:277,target 19
+  269:277,target 18
+  188:358,target 320
   179:0,target 94
   18:277,target 36
-  325:277,target 184
+  325:277,target 110
   225:261,target 126
-  371:277,target 228
+  371:277,target 239
   158:X shift
   267:0 reduce
   158:Y shift
-  158:464,target 278
-  95:266,target 179
+  95:266,target 183
   30:306,target 114
-  372:261,target 126
-  252:274,target 347
-  205:412,target 323
+  252:274,target 351
+  205:412,target 327
   127:277 reduce
   102:282,target 53
   56:320,target 202
@@ -2163,64 +2178,70 @@ array set plot::table {
   320:0 reduce
   319:0 reduce
   58:0 reduce
-  92:385,target 177
+  264:276,target 270
+  92:385,target 181
   91:374 reduce
-  383:0,target 45
-  334:398,target 131
+  383:0,target 241
   333:277 reduce
   91:375 reduce
-  90:265,target 180
+  90:265,target 184
   72:277 reduce
   60:260,target 125
   60:259,target 124
   145:0 reduce
   362:0 reduce
-  246:273,target 342
+  246:273,target 346
   159:405,target 220
   85:429 goto
   84:427,target 240
   1:263 reduce
-  352:0,target 167
-  277:262,target 127
+  352:0,target 175
   303:277 reduce
   293:277 reduce
   246:415 goto
   0:372,target 31
   158:258,target 123
-  321:0,target 106
+  321:0,target 146
+  263:275 shift
   182:356 shift
   60:0,target 1
+  263:276 shift
+  259:258,target 123
   124:277,target 3
   91:385 reduce
-  263:277 reduce
-  170:277,target 160
+  170:277,target 164
   225:277,target 1
   53:386,target 196
+  280:0,target 240
   271:277,target 122
   20:277,target 81
   28:0,target 68
-  326:277,target 185
+  326:277,target 210
   240:0 reduce
   239:0 reduce
   226:261,target 126
   65:277,target 32
   25:430 goto
-  372:277,target 1
+  382:396 shift
+  372:277,target 246
+  99:369,target 256
+  382:397 shift
   233:277 reduce
-  96:266,target 176
+  96:266,target 180
   8:382,target 61
+  382:398 shift
   91:393 reduce
   0:329,target 31
+  382:399 shift
   103:257 reduce
   103:282,target 55
   103:258 reduce
   1:279 reduce
   282:0 reduce
-  254:257,target 122
   103:260 reduce
   103:259 reduce
   31:0 reduce
-  217:0,target 183
+  217:0,target 187
   203:277 reduce
   193:277 reduce
   103:261 reduce
@@ -2229,16 +2250,18 @@ array set plot::table {
   1:424,target 9
   12:300 reduce
   158:y shift
-  93:385,target 181
+  93:385,target 185
   1:285 reduce
-  176:0,target 151
+  176:0,target 155
   1:286 reduce
-  91:265,target 178
+  334:0 reduce
+  91:265,target 182
   73:0 reduce
   61:260,target 125
   61:259,target 124
   8:340,target 48
-  90:393,target 180
+  381:398,target 131
+  90:393,target 184
   1:288 reduce
   0:277,target 1
   62:y,target 103
@@ -2246,7 +2269,8 @@ array set plot::table {
   145:0,target 92
   1:301 reduce
   5:0 reduce
-  156:430,target 274
+  278:262,target 127
+  156:430,target 278
   61:412 goto
   1:302 reduce
   0:388,target 31
@@ -2256,20 +2280,20 @@ array set plot::table {
   376:0 reduce
   1:372,target 33
   1:294 reduce
-  25:449 goto
+  25:450 goto
   368:277 reduce
-  260:275,target 265
-  259:275,target 265
   173:397,target 130
   57:378,target 74
   1:295 reduce
   42:318 shift
+  261:258,target 123
   163:287 shift
   161:x,target 102
   125:277,target 6
   1:307 reduce
   31:412 goto
   42:319 shift
+  338:275 shift
   171:277,target 84
   103:277 reduce
   1:308 reduce
@@ -2280,22 +2304,23 @@ array set plot::table {
   1:310 reduce
   1:309 reduce
   42:322 shift
-  380:0,target 239
-  379:0,target 237
-  338:277 reduce
-  272:277,target 111
+  382:432 goto
+  380:0,target 41
+  379:0,target 44
+  272:277,target 123
   96:375 reduce
   77:277 reduce
   1:311 reduce
   10:370,target 73
   21:277,target 82
-  327:277,target 259
+  327:277,target 209
   227:261,target 126
   66:277,target 34
   42:324 shift
+  373:277,target 244
   103:282 reduce
   9:382,target 61
-  348:0,target 171
+  348:0,target 174
   87:0,target 28
   1:329,target 33
   1:315 reduce
@@ -2305,74 +2330,69 @@ array set plot::table {
   47:277 shift
   1:316 reduce
   252:416 goto
-  104:282,target 254
-  255:257,target 122
-  317:0,target 142
+  104:282,target 258
+  317:0,target 150
   235:287,target 83
   1:320 reduce
   96:385 reduce
   30:287,target 113
   268:277 reduce
-  94:385,target 182
+  94:385,target 186
   17:277 reduce
   306:0 reduce
   296:0 reduce
   45:0 reduce
-  276:0,target 236
+  276:0,target 115
   0:294,target 31
-  92:265,target 177
+  92:265,target 181
   9:340,target 48
   42:337 shift
-  91:393,target 178
+  382:398,target 131
+  91:393,target 182
   1:326 reduce
   238:277 reduce
   132:0 reduce
   96:393 reduce
   348:0 reduce
-  157:430,target 275
+  157:430,target 279
   87:0 reduce
   1:388,target 33
   1:329 reduce
+  52:446,target 191
   214:0,target 97
   208:277 reduce
   198:277 reduce
   1:334 reduce
+  262:258,target 123
   174:0 reduce
   126:277,target 4
   1:335 reduce
   172:277,target 74
   1:336 reduce
   227:277,target 1
-  173:0,target 126
-  273:277,target 112
+  173:0,target 130
+  273:277,target 124
   168:277 reduce
   22:277,target 89
-  328:277,target 263
+  328:277,target 190
   228:261,target 126
   103:318 reduce
-  67:277,target 215
+  67:277,target 219
   1:340 reduce
-  274:261,target 126
+  374:277,target 245
   103:319 reduce
   1:341 reduce
   226:0 reduce
   163:332 shift
   98:266,target 247
   27:347,target 109
-  274:257 shift
   103:322 reduce
-  374:275 shift
-  274:258 shift
   138:277 reduce
   53:377,target 195
-  374:276 shift
-  274:260 shift
-  274:259 shift
-  254:412,target 357
-  274:261 shift
+  374:277 reduce
   111:0,target 87
-  274:262 shift
   160:X shift
+  287:412 goto
   268:0 reduce
   160:Y shift
   157:x,target 102
@@ -2381,35 +2401,35 @@ array set plot::table {
   17:0 reduce
   42:361 shift
   108:277 reduce
-  95:385,target 179
+  95:385,target 183
   1:349 reduce
-  376:0,target 41
+  376:0,target 1
   344:277 reduce
   83:277 shift
   1:294,target 33
-  25:449,target 105
-  93:265,target 181
-  257:412 goto
-  147:411,target 270
-  92:393,target 177
+  25:450,target 105
+  93:265,target 185
+  147:411,target 274
+  92:393,target 181
   2:277,target 24
   321:0 reduce
   60:0 reduce
   23:329,target 93
   23:330,target 94
-  345:0,target 15
-  182:444 goto
+  345:0,target 172
   84:0,target 42
   42:368 shift
   314:277 reduce
-  158:430,target 277
+  281:262,target 127
+  182:445 goto
+  158:430,target 281
   1:357 reduce
   103:337 reduce
   10:292,target 68
   244:268 shift
   227:412 goto
   103:338 reduce
-  314:0,target 143
+  314:0,target 137
   244:270 shift
   244:269 shift
   146:0 reduce
@@ -2420,69 +2440,69 @@ array set plot::table {
   1:362 reduce
   274:277 reduce
   127:277,target 7
-  173:277,target 126
-  377:397,target 130
-  273:0,target 112
+  173:277,target 130
+  273:0,target 124
   228:277,target 1
-  274:277,target 1
+  274:277,target 125
   1:366 reduce
-  330:277,target 260
-  329:277,target 264
+  330:277,target 189
+  329:277,target 188
   229:261,target 126
-  68:277,target 208
+  68:277,target 212
   57:370,target 73
   1:367 reduce
-  375:277,target 44
+  375:277,target 232
   23:283 shift
   242:0,target 51
   23:388,target 96
   23:284 shift
+  376:261,target 126
   1:371 reduce
   1:372 reduce
-  255:412,target 358
   1:373 reduce
-  257:257,target 122
   214:277 reduce
-  211:0,target 223
+  211:0,target 227
   1:376 reduce
   9:373,target 58
-  96:385,target 176
-  36:441 goto
+  96:385,target 180
   224:260,target 125
   224:259,target 124
-  170:0,target 160
+  170:0,target 164
   58:257 shift
   12:385 reduce
+  36:442 goto
   42:391 shift
   174:277 reduce
   58:258 shift
   32:398,target 131
-  283:0 reduce
-  94:265,target 182
+  338:398,target 131
+  94:265,target 186
   58:260 shift
   58:259 shift
   1:381 reduce
-  93:393,target 181
+  93:393,target 185
   58:261 shift
   1:382 reduce
   3:277,target 35
-  251:273,target 342
+  251:273,target 346
   160:x shift
-  138:0,target 129
+  138:0,target 133
   58:262 shift
   160:y shift
-  160:430,target 283
+  160:430,target 287
   144:277 reduce
   31:262,target 127
   0:285,target 31
   380:277 reduce
   379:277 reduce
-  107:0,target 187
+  335:0 reduce
+  107:0,target 191
   74:0 reduce
   56:302,target 201
   53:317 shift
   12:394 reduce
-  182:356,target 307
+  263:275,target 269
+  182:356,target 311
   157:430 goto
   1:388 reduce
   128:277,target 99
@@ -2491,97 +2511,98 @@ array set plot::table {
   174:277,target 63
   58:258,target 123
   1:392 reduce
-  378:397,target 130
+  373:0,target 244
   350:277 reduce
   349:277 reduce
-  284:339,target 374
   230:277,target 104
   229:277,target 1
   88:277 reduce
   53:323 shift
-  275:277,target 366
+  275:277,target 126
   1:394 reduce
-  331:277,target 262
-  70:277,target 210
-  69:277,target 216
+  331:277,target 263
+  70:277,target 214
+  69:277,target 220
   7:0,target 20
-  376:277,target 41
+  376:277,target 1
   8:295,target 30
-  342:0,target 13
+  342:0,target 9
   81:0,target 29
   320:277 reduce
   319:277 reduce
   58:277 reduce
   213:0 reduce
   23:324 shift
+  263:417 goto
   249:268 shift
-  311:0,target 150
+  30:458,target 121
+  311:0,target 143
   258:257,target 122
   249:270 shift
   249:269 shift
-  280:277 shift
+  280:277 reduce
   279:277 shift
   28:277 reduce
   62:431,target 222
   23:329 shift
   23:330 shift
-  270:0,target 121
-  269:0,target 120
+  270:0,target 19
+  269:0,target 18
   255:0 reduce
   225:260,target 125
   225:259,target 124
   161:Y,target 101
   18:0,target 36
   250:275 shift
-  95:265,target 179
-  372:260,target 125
-  372:259,target 124
-  94:393,target 182
+  95:265,target 183
+  94:393,target 186
   4:277,target 27
   238:0,target 47
   307:0 reduce
   297:0 reduce
-  283:262,target 127
-  161:430,target 284
+  161:430,target 288
   1:285,target 33
   1:424 goto
   220:277 reduce
   219:277 reduce
-  207:0,target 204
+  207:0,target 208
   197:0,target 96
   57:292,target 68
   0:423,target 8
-  183:356,target 307
-  173:432,target 299
+  264:275,target 269
+  183:356,target 311
+  173:432,target 303
   133:0 reduce
   130:277,target 60
   129:277,target 59
   350:0 reduce
   349:0 reduce
-  334:397,target 130
+  338:396 shift
   175:277,target 75
-  166:0,target 125
+  166:0,target 129
   94:263 reduce
-  90:264,target 180
+  90:264,target 184
   88:0 reduce
   60:258,target 123
   23:344 shift
+  338:397 shift
   231:277,target 98
   179:277 reduce
   94:264 reduce
-  276:277,target 236
+  338:398 shift
+  276:277,target 115
   159:404,target 219
   94:265 reduce
-  332:277,target 261
+  338:399 shift
+  332:277,target 267
   94:266 reduce
-  90:375,target 180
-  71:277,target 207
-  277:261,target 126
-  135:0,target 109
+  90:375,target 184
+  71:277,target 211
+  135:0,target 113
   94:267 reduce
   9:295,target 30
   39:409,target 151
-  182:331,target 306
+  182:331,target 310
   175:0 reduce
   8:433,target 65
   150:277 reduce
@@ -2589,84 +2610,82 @@ array set plot::table {
   0:371,target 31
   158:257,target 122
   385:277 reduce
-  257:412,target 360
+  259:257,target 122
   53:360 shift
-  255:257 shift
-  255:258 shift
   227:0 reduce
   120:277 reduce
   119:277 reduce
-  255:260 shift
-  255:259 shift
   98:385,target 252
-  370:0,target 241
-  369:0,target 240
+  370:0,target 234
+  369:0,target 233
   355:277 reduce
-  255:261 shift
   226:260,target 125
   226:259,target 124
-  255:262 shift
   10:352,target 72
   225:257 shift
-  182:278,target 304
-  96:265,target 176
+  182:278,target 308
+  96:265,target 180
   4:0,target 27
   8:381,target 60
   225:258 shift
   161:X shift
-  95:393,target 179
+  95:393,target 183
   64:275 shift
   5:277,target 25
-  338:0,target 9
   270:0 reduce
   269:0 reduce
   225:260 shift
   225:259 shift
   161:Y shift
-  77:0,target 249
+  77:0,target 253
   18:0 reduce
   325:277 reduce
   225:261 shift
   42:324,target 159
   225:262 shift
-  42:463 goto
   78:262,target 127
   62:405,target 220
-  307:0,target 139
-  297:0,target 164
+  42:464 goto
+  307:0,target 135
+  297:0,target 237
   105:0 reduce
+  338:432 goto
   322:0 reduce
-  285:277 reduce
+  285:277 shift
   61:0 reduce
+  37:459,target 145
   131:277,target 61
-  266:0,target 19
-  176:277,target 151
+  266:0,target 205
+  176:277,target 155
   157:Y,target 101
-  91:264,target 178
+  91:264,target 182
   61:258,target 123
   53:377 shift
-  232:277,target 251
+  381:397,target 130
+  232:277,target 255
   83:384 shift
-  277:277,target 1
-  247:272,target 346
+  277:277,target 116
+  247:272,target 350
   62:x,target 102
   26:277,target 106
-  333:277,target 30
+  333:277,target 268
   255:277 reduce
   147:0 reduce
-  91:375,target 178
-  72:277,target 211
+  91:375,target 182
+  72:277,target 215
   364:0 reduce
+  278:261,target 126
   235:0,target 42
-  11:394,target 257
-  183:331,target 306
+  11:394,target 261
+  183:331,target 310
   9:433,target 66
   1:371,target 33
   173:396,target 129
   258:412,target 361
   225:277 reduce
-  194:0,target 219
+  194:0,target 223
   53:386 shift
+  261:257,target 122
   200:0 reduce
   180:325 shift
   94:312 reduce
@@ -2676,81 +2695,86 @@ array set plot::table {
   227:260,target 125
   227:259,target 124
   185:277 reduce
-  373:276,target 266
   242:0 reduce
-  183:278,target 304
+  183:278,target 308
   9:381,target 60
   23:388 shift
   132:0,target 62
-  96:393,target 176
-  374:417 goto
+  96:393,target 180
   40:257 shift
-  163:467 goto
   155:277 reduce
   40:258 shift
+  163:468 goto
   53:360,target 194
   40:259 shift
   40:260 shift
   101:0,target 56
   40:261 shift
   40:262 shift
+  261:257 shift
+  261:258 shift
   161:x shift
   125:277 reduce
+  38:459,target 146
+  261:260 shift
+  261:259 shift
   161:y shift
   132:277,target 62
   0:293,target 31
   0:303,target 31
-  366:0,target 230
+  366:0,target 162
   361:277 reduce
-  177:277,target 152
+  261:261 shift
+  177:277,target 156
   99:277 reduce
-  92:264,target 177
-  233:277,target 252
+  92:264,target 181
+  382:397,target 130
+  261:262 shift
+  233:277,target 256
   120:0 reduce
-  278:277,target 227
-  274:412 goto
-  248:272,target 350
+  336:0 reduce
+  278:277,target 1
+  248:272,target 354
   75:0 reduce
   34:320 shift
-  377:432,target 383
-  92:375,target 177
-  73:277,target 213
-  380:277,target 239
-  379:277,target 237
-  74:0,target 212
+  334:277,target 264
+  92:375,target 181
+  73:277,target 217
+  380:277,target 41
+  379:277,target 44
+  335:0,target 266
+  74:0,target 216
   53:317,target 192
-  12:394,target 258
+  12:394,target 262
   331:277 reduce
   70:277 reduce
   69:277 reduce
-  52:445,target 191
   7:0 reduce
-  158:412,target 276
+  158:412,target 280
   83:428 goto
-  304:0,target 140
-  294:0,target 165
+  304:0,target 139
+  294:0,target 238
+  259:412,target 362
   244:413 goto
+  262:257,target 122
+  99:287 shift
   301:277 reduce
   291:277 reduce
   9:286,target 26
   39:277 shift
   40:277 reduce
   180:354 shift
-  273:276,target 266
-  263:0,target 202
   0:362,target 31
   228:260,target 125
   228:259,target 124
   214:0 reduce
-  374:276,target 266
-  274:260,target 125
-  274:259,target 124
   261:277 reduce
   98:265,target 246
   57:352,target 72
-  232:0,target 251
+  232:0,target 255
   7:277,target 21
   10:281 shift
+  256:0 reduce
   231:277 reduce
   191:0,target 79
   10:343,target 71
@@ -2769,23 +2793,23 @@ array set plot::table {
   191:277 reduce
   178:277,target 81
   101:261 reduce
-  93:264,target 181
+  93:264,target 185
   52:351,target 190
-  234:277,target 250
-  147:410,target 269
+  288:339,target 378
+  234:277,target 254
+  147:410,target 273
   101:262 reduce
-  280:277,target 369
-  279:277,target 368
+  280:277,target 240
+  279:277,target 370
   28:277,target 68
-  378:432,target 385
-  335:277,target 377
+  335:277,target 266
   128:0,target 99
-  93:375,target 181
-  74:277,target 212
+  93:375,target 185
+  74:277,target 216
   10:292 shift
-  381:277,target 238
+  281:261,target 126
   45:257 shift
-  13:394,target 253
+  13:394,target 257
   134:0 reduce
   45:258 shift
   351:0 reduce
@@ -2795,35 +2819,41 @@ array set plot::table {
   8:329,target 44
   10:305 shift
   45:261 shift
+  261:412,target 364
   45:262 shift
   58:412 goto
   10:298 shift
   131:277 reduce
-  11:385,target 257
-  377:396,target 129
+  11:385,target 261
+  35:442,target 139
   176:0 reduce
   366:277 reduce
-  363:0,target 157
+  363:0,target 163
   1:362,target 33
   229:260,target 125
   229:259,target 124
-  23:452 goto
+  62:455,target 223
   23:453 goto
   101:277 reduce
-  332:0,target 261
+  99:332 shift
+  23:454 goto
+  376:260,target 125
+  376:259,target 124
+  332:0,target 267
   141:262,target 127
   98:393,target 253
   94:374 reduce
-  71:0,target 207
-  53:461 goto
-  336:277 shift
+  71:0,target 211
+  336:277 reduce
   228:0 reduce
   94:375 reduce
   75:277 reduce
+  53:462 goto
+  287:262,target 127
   101:282 reduce
   8:388,target 62
-  301:0,target 134
-  291:0,target 244
+  301:0,target 168
+  291:0,target 251
   249:413 goto
   0:336,target 31
   40:0,target 1
@@ -2834,42 +2864,37 @@ array set plot::table {
   1:320,target 33
   271:0 reduce
   224:258,target 123
+  259:0,target 1
   134:277,target 102
   32:397,target 130
+  338:397,target 130
   179:277,target 94
-  94:264,target 182
+  94:264,target 186
   235:277,target 82
   94:385 reduce
-  334:432,target 376
-  281:277,target 370
+  281:277,target 1
   266:277 reduce
   29:277,target 80
   30:277,target 112
-  336:277,target 378
+  336:277,target 265
   228:0,target 1
   106:0 reduce
-  94:375,target 182
-  75:277,target 209
-  382:277,target 48
+  94:375,target 186
+  75:277,target 213
+  53:462,target 197
   323:0 reduce
-  14:394,target 254
+  14:394,target 258
   31:261,target 126
-  372:257 shift
   9:329,target 44
-  372:258 shift
   236:277 shift
-  372:260 shift
-  372:259 shift
+  262:412,target 365
   94:393 reduce
   4:277 reduce
-  372:261 shift
-  372:262 shift
   365:0 reduce
   58:257,target 122
-  12:385,target 258
+  12:385,target 262
+  36:442,target 140
   42:391,target 163
-  378:396,target 129
-  284:338,target 373
   27:380,target 110
   206:277 reduce
   196:277 reduce
@@ -2882,7 +2907,8 @@ array set plot::table {
   166:277 reduce
   4:287 reduce
   101:318 reduce
-  30:457,target 121
+  59:463,target 214
+  30:457,target 120
   101:319 reduce
   9:388,target 62
   37:262,target 127
@@ -2897,53 +2923,51 @@ array set plot::table {
   64:275,target 231
   10:352 shift
   372:277 reduce
-  360:0,target 153
-  359:0,target 159
-  135:277,target 109
-  95:264,target 179
+  360:0,target 177
+  359:0,target 179
+  135:277,target 113
+  99:369 shift
+  95:264,target 183
   59:299,target 210
-  372:258,target 123
-  236:277,target 334
-  285:0 reduce
-  282:277,target 232
-  252:272,target 346
+  236:277,target 338
+  282:277,target 231
+  252:272,target 350
   106:277 reduce
   31:277,target 1
-  337:277,target 8
-  328:0,target 263
-  95:375,target 179
-  76:277,target 214
-  67:0,target 215
+  381:432,target 387
+  337:277,target 30
+  328:0,target 190
+  95:375,target 183
+  76:277,target 218
+  67:0,target 219
   0:311,target 31
-  383:277,target 45
+  383:277,target 241
   342:277 reduce
-  283:261,target 126
   81:277 reduce
-  15:394,target 256
+  15:394,target 260
   158:y,target 103
-  255:412 goto
-  287:0,target 247
-  180:443 goto
+  287:0,target 1
   9:263 shift
-  36:0,target 128
+  36:0,target 132
   337:0 reduce
+  180:444 goto
   76:0 reduce
   312:277 reduce
-  334:396,target 129
-  169:327,target 295
+  169:327,target 299
   101:337 reduce
-  90:263,target 180
+  90:263,target 184
   60:257,target 122
-  13:385,target 253
+  13:385,target 257
+  256:0,target 108
   225:412 goto
   101:338 reduce
   101:339 reduce
-  90:374,target 180
+  63:472,target 230
+  90:374,target 184
   81:287 reduce
   380:0 reduce
   379:0 reduce
-  277:260,target 125
-  277:259,target 124
+  377:276,target 270
   272:277 reduce
   9:294,target 29
   10:370 shift
@@ -2960,33 +2984,33 @@ array set plot::table {
   100:339,target 54
   9:279 shift
   10:378 shift
-  34:435 goto
   226:258,target 123
   4:332 reduce
   10:379 shift
   21:287 shift
+  34:436 goto
   212:277 reduce
-  136:277,target 108
+  136:277,target 112
 }
 
 array set plot::rules {
   9,l 413
   164,l 451
-  216,l 460
-  258,l 470
+  216,l 461
+  258,l 471
   49,l 429
   50,l 429
-  136,l 444
+  136,l 443
   92,l 433
   178,l 453
-  231,l 463
+  231,l 464
   22,l 418
-  108,l 435
+  108,l 434
   64,l 433
-  151,l 448
+  151,l 447
   203,l 458
-  193,l 457
-  245,l 468
+  193,l 456
+  245,l 467
   36,l 425
   123,l 439
   78,l 433
@@ -2995,19 +3019,19 @@ array set plot::rules {
   260,l 471
   259,l 471
   51,l 429
-  137,l 444
+  137,l 443
   93,l 433
-  180,l 453
+  180,l 454
   179,l 453
-  232,l 463
+  232,l 464
   23,l 420
   109,l 435
-  110,l 436
+  110,l 435
   65,l 433
-  152,l 448
+  152,l 447
   204,l 459
-  194,l 457
-  246,l 468
+  194,l 456
+  246,l 467
   37,l 426
   124,l 439
   79,l 433
@@ -3019,12 +3043,12 @@ array set plot::rules {
   52,l 429
   138,l 444
   94,l 433
-  181,l 453
-  233,l 463
+  181,l 454
+  233,l 464
   24,l 420
-  111,l 436
+  111,l 435
   66,l 433
-  153,l 449
+  153,l 448
   205,l 459
   195,l 457
   247,l 468
@@ -3038,25 +3062,25 @@ array set plot::rules {
   11,l 414
   53,l 430
   139,l 444
-  140,l 444
+  140,l 445
   95,l 433
-  182,l 453
-  234,l 463
+  182,l 454
+  234,l 464
   25,l 420
   112,l 436
   67,l 433
-  0,l 472
-  154,l 449
+  0,l 473
+  154,l 448
   206,l 459
   196,l 457
   248,l 468
   39,l 426
   40,l 426
-  126,l 440
+  126,l 439
   82,l 433
   168,l 452
-  221,l 461
-  263,l 471
+  221,l 462
+  263,l 472
   12,l 414
   54,l 430
   141,l 445
@@ -3068,17 +3092,17 @@ array set plot::rules {
   68,l 433
   1,l 412
   155,l 449
-  207,l 460
-  197,l 457
+  207,l 459
+  197,l 458
   250,l 469
   249,l 469
   41,l 427
   127,l 440
   83,l 433
-  170,l 452
+  170,l 453
   169,l 452
   222,l 462
-  264,l 471
+  264,l 472
   13,l 415
   100,l 433
   55,l 430
@@ -3093,80 +3117,84 @@ array set plot::rules {
   2,l 412
   156,l 449
   208,l 460
-  198,l 457
+  198,l 458
   251,l 469
   42,l 427
-  128,l 441
+  128,l 440
   84,l 433
-  171,l 452
+  171,l 453
   223,l 462
+  265,l 472
   14,l 415
   101,l 433
   56,l 430
   143,l 445
   98,l 433
   185,l 454
-  237,l 465
+  237,l 464
   28,l 420
   115,l 437
   71,l 433
   3,l 412
-  157,l 449
+  157,l 450
   210,l 460
   209,l 460
-  199,l 457
+  199,l 458
   252,l 469
   43,l 427
-  129,l 441
-  130,l 442
+  129,l 440
+  130,l 441
   85,l 433
-  172,l 452
+  172,l 453
   224,l 462
+  266,l 472
   15,l 416
   102,l 433
   57,l 431
   144,l 445
   99,l 433
   186,l 454
-  238,l 465
+  238,l 464
   30,l 420
   29,l 422
   116,l 437
   72,l 433
   4,l 412
-  158,l 449
-  211,l 460
+  158,l 450
+  211,l 461
   253,l 470
   44,l 427
-  131,l 442
+  131,l 441
   86,l 433
-  173,l 452
+  173,l 453
   225,l 462
+  267,l 472
   16,l 416
   103,l 433
   58,l 431
-  145,l 445
+  145,l 446
   187,l 455
-  240,l 466
+  240,l 465
   239,l 465
   31,l 423
   117,l 437
   73,l 433
   5,l 412
   160,l 450
-  159,l 449
-  212,l 460
+  159,l 450
+  212,l 461
   254,l 470
   45,l 428
   132,l 442
   87,l 433
-  174,l 452
-  226,l 462
+  174,l 453
+  226,l 463
+  268,l 472
   17,l 416
   104,l 433
   59,l 432
   60,l 432
-  146,l 445
+  146,l 446
   188,l 455
   241,l 466
   32,l 420
@@ -3174,12 +3202,12 @@ array set plot::rules {
   74,l 433
   6,l 412
   161,l 450
-  213,l 460
+  213,l 461
   255,l 470
   46,l 428
   133,l 442
   88,l 433
-  175,l 452
+  175,l 453
   227,l 463
   18,l 417
   105,l 434
@@ -3194,8 +3222,8 @@ array set plot::rules {
   120,l 438
   75,l 433
   7,l 412
-  162,l 451
-  214,l 460
+  162,l 450
+  214,l 461
   256,l 470
   47,l 428
   134,l 443
@@ -3210,14 +3238,14 @@ array set plot::rules {
   148,l 446
   201,l 458
   191,l 456
-  243,l 467
+  243,l 466
   34,l 420
   121,l 438
   76,l 433
   8,l 413
-  163,l 451
-  215,l 460
-  257,l 470
+  163,l 450
+  215,l 461
+  257,l 471
   48,l 428
   135,l 443
   91,l 433
@@ -3227,13 +3255,13 @@ array set plot::rules {
   21,l 419
   107,l 434
   63,l 433
-  149,l 447
-  150,l 447
+  149,l 446
+  150,l 446
   202,l 458
   192,l 456
   244,l 467
   35,l 425
-  122,l 438
+  122,l 439
   77,l 433
 }
 
@@ -3245,98 +3273,99 @@ array set plot::rules {
   77,dc 2
   114,dc 1
   180,dc 1
-  179,dc 1
-  255,dc 1
+  179,dc 3
+  255,dc 3
   69,dc 2
   70,dc 2
-  106,dc 2
+  106,dc 1
   9,dc 1
   172,dc 3
   247,dc 1
   62,dc 1
   2,dc 1
   164,dc 1
-  240,dc 2
-  239,dc 3
+  240,dc 1
+  239,dc 2
   54,dc 1
-  156,dc 3
-  232,dc 2
+  156,dc 1
+  232,dc 3
   46,dc 0
-  148,dc 1
+  148,dc 2
   224,dc 1
   38,dc 2
-  141,dc 0
+  141,dc 1
   216,dc 1
   31,dc 0
   96,dc 2
-  133,dc 2
+  133,dc 1
   208,dc 1
   198,dc 1
   23,dc 2
   88,dc 2
   125,dc 1
-  201,dc 2
+  201,dc 1
   191,dc 1
+  266,dc 2
   15,dc 1
   81,dc 2
-  117,dc 1
+  117,dc 3
   183,dc 1
   258,dc 1
   73,dc 2
-  109,dc 1
-  110,dc 1
+  109,dc 2
+  110,dc 2
   175,dc 3
-  251,dc 3
-  65,dc 2
+  251,dc 1
+  65,dc 3
   102,dc 2
   5,dc 1
-  167,dc 3
-  243,dc 1
+  167,dc 1
+  243,dc 3
   57,dc 1
-  160,dc 1
+  160,dc 3
   159,dc 3
   235,dc 2
   49,dc 4
   50,dc 0
   152,dc 1
-  227,dc 2
+  227,dc 1
   42,dc 0
-  144,dc 2
+  144,dc 1
   220,dc 1
   219,dc 1
   34,dc 3
   99,dc 2
-  136,dc 1
+  136,dc 2
   212,dc 1
   26,dc 0
   92,dc 2
-  128,dc 0
+  128,dc 1
   204,dc 1
   194,dc 1
   18,dc 1
   84,dc 2
   121,dc 1
-  186,dc 2
-  262,dc 2
+  186,dc 1
+  262,dc 1
   11,dc 1
   76,dc 2
-  113,dc 3
-  178,dc 1
-  254,dc 1
+  113,dc 1
+  178,dc 3
+  254,dc 3
   68,dc 1
-  105,dc 2
+  105,dc 0
   8,dc 1
   171,dc 3
-  246,dc 1
+  246,dc 2
   61,dc 1
   1,dc 0
-  163,dc 1
-  238,dc 3
+  163,dc 3
+  238,dc 2
   53,dc 1
-  155,dc 3
+  155,dc 1
   231,dc 2
   45,dc 4
-  147,dc 1
+  147,dc 2
   223,dc 1
   37,dc 1
   139,dc 1
@@ -3345,75 +3374,77 @@ array set plot::rules {
   30,dc 5
   29,dc 0
   95,dc 2
-  132,dc 2
-  207,dc 1
+  132,dc 0
+  207,dc 2
   197,dc 1
   22,dc 3
   87,dc 2
   124,dc 1
   200,dc 1
-  190,dc 1
-  189,dc 1
+  190,dc 2
+  189,dc 2
+  265,dc 2
   14,dc 1
   79,dc 2
   80,dc 1
-  116,dc 1
+  116,dc 2
   182,dc 1
   257,dc 1
   72,dc 2
   108,dc 1
   174,dc 3
-  250,dc 3
-  249,dc 2
+  250,dc 1
+  249,dc 1
   64,dc 2
   101,dc 2
   4,dc 1
-  166,dc 3
-  242,dc 2
+  166,dc 1
+  242,dc 3
   56,dc 1
   158,dc 3
-  234,dc 2
+  234,dc 3
   48,dc 4
   151,dc 1
   226,dc 1
   41,dc 4
-  143,dc 2
+  143,dc 1
   218,dc 1
   33,dc 0
   98,dc 2
-  135,dc 1
+  135,dc 2
   211,dc 1
   25,dc 1
   91,dc 2
-  127,dc 2
-  203,dc 2
+  127,dc 1
+  203,dc 1
   193,dc 1
+  268,dc 2
   17,dc 1
   83,dc 2
   119,dc 1
   120,dc 1
-  185,dc 2
-  261,dc 2
+  185,dc 1
+  261,dc 1
   10,dc 1
   75,dc 2
-  112,dc 2
-  177,dc 1
-  253,dc 1
+  112,dc 1
+  177,dc 3
+  253,dc 2
   67,dc 2
   104,dc 2
   7,dc 1
   170,dc 3
-  169,dc 3
-  245,dc 1
+  169,dc 1
+  245,dc 2
   59,dc 1
   60,dc 1
   0,dc 1
-  162,dc 1
-  237,dc 3
+  162,dc 3
+  237,dc 2
   52,dc 4
-  154,dc 3
-  230,dc 3
-  229,dc 3
+  154,dc 1
+  230,dc 1
+  229,dc 1
   44,dc 4
   146,dc 2
   222,dc 1
@@ -3424,17 +3455,17 @@ array set plot::rules {
   94,dc 2
   131,dc 2
   206,dc 2
-  196,dc 1
+  196,dc 2
   21,dc 0
   86,dc 2
   123,dc 1
-  188,dc 1
+  188,dc 2
   264,dc 2
   13,dc 1
   78,dc 2
-  115,dc 1
+  115,dc 2
   181,dc 1
-  256,dc 1
+  256,dc 3
   71,dc 2
   107,dc 1
   173,dc 3
@@ -3442,62 +3473,63 @@ array set plot::rules {
   63,dc 2
   100,dc 2
   3,dc 1
-  165,dc 1
-  241,dc 2
+  165,dc 2
+  241,dc 3
   55,dc 1
   157,dc 3
-  233,dc 2
+  233,dc 3
   47,dc 1
-  149,dc 1
-  150,dc 1
+  149,dc 2
+  150,dc 2
   225,dc 1
   39,dc 2
   40,dc 2
-  142,dc 2
+  142,dc 1
   217,dc 1
   32,dc 2
   97,dc 2
-  134,dc 1
-  210,dc 1
-  209,dc 1
+  134,dc 2
+  210,dc 2
+  209,dc 2
   199,dc 1
   24,dc 1
   89,dc 2
   90,dc 2
   126,dc 1
-  202,dc 2
-  192,dc 2
+  202,dc 1
+  192,dc 1
+  267,dc 2
   16,dc 1
   82,dc 2
   118,dc 1
-  184,dc 2
-  260,dc 2
-  259,dc 2
+  184,dc 1
+  260,dc 1
+  259,dc 1
   74,dc 2
-  111,dc 2
-  176,dc 1
-  252,dc 3
+  111,dc 1
+  176,dc 3
+  252,dc 1
   66,dc 2
   103,dc 2
   6,dc 1
-  168,dc 3
-  244,dc 1
+  168,dc 1
+  244,dc 2
   58,dc 1
-  161,dc 2
-  236,dc 1
+  161,dc 3
+  236,dc 2
   51,dc 1
-  153,dc 3
-  228,dc 3
+  153,dc 1
+  228,dc 1
   43,dc 1
-  145,dc 2
+  145,dc 0
   221,dc 1
   35,dc 0
-  137,dc 1
+  137,dc 2
   213,dc 1
   27,dc 0
   93,dc 2
   129,dc 1
-  130,dc 2
+  130,dc 1
   205,dc 2
   195,dc 1
   20,dc 1
@@ -3513,61 +3545,63 @@ array set plot::rules {
   27,line 249
   24,line 245
   21,line 240
+  268,line 620
   17,line 233
+  265,line 617
   14,line 228
-  262,line 612
+  262,line 611
   11,line 223
-  258,line 605
+  258,line 607
   255,line 602
-  252,line 597
+  252,line 596
   248,line 590
-  245,line 587
+  245,line 585
   242,line 580
-  238,line 574
+  238,line 572
   9,line 219
   235,line 569
   6,line 215
-  232,line 564
+  232,line 566
   3,line 212
-  228,line 560
+  228,line 559
   225,line 554
   222,line 551
-  218,line 545
-  215,line 540
-  212,line 536
+  218,line 544
+  215,line 541
+  212,line 538
   208,line 532
-  198,line 516
+  198,line 518
   205,line 527
   195,line 513
   202,line 522
-  192,line 508
+  192,line 507
   188,line 501
   185,line 496
-  182,line 491
-  178,line 486
-  175,line 480
-  172,line 477
-  168,line 472
+  182,line 492
+  178,line 485
+  175,line 482
+  172,line 478
+  168,line 471
   165,line 466
-  162,line 463
-  158,line 455
+  162,line 461
+  158,line 457
   155,line 452
-  152,line 447
+  152,line 445
   148,line 439
-  145,line 434
+  145,line 436
   142,line 431
   138,line 425
   135,line 420
   132,line 415
-  128,line 409
+  128,line 406
   125,line 401
-  122,line 396
+  122,line 398
   118,line 392
   115,line 387
   99,line 357
   112,line 382
   96,line 354
-  108,line 376
+  108,line 373
   93,line 351
   105,line 370
   89,line 346
@@ -3601,64 +3635,65 @@ array set plot::rules {
   23,line 244
   20,line 240
   19,line 237
+  267,line 619
   16,line 232
-  264,line 614
+  264,line 616
   13,line 227
-  261,line 611
+  261,line 610
   10,line 220
-  257,line 604
+  257,line 606
   254,line 601
-  251,line 596
+  251,line 595
   247,line 589
   244,line 584
   241,line 579
-  237,line 573
+  237,line 571
   8,line 218
-  234,line 566
+  234,line 568
   5,line 214
-  231,line 563
+  231,line 565
   2,line 211
-  227,line 559
+  227,line 558
   27,e 1
   224,line 553
-  221,line 548
-  217,line 544
-  214,line 538
-  211,line 535
-  207,line 531
-  197,line 515
+  221,line 550
+  217,line 543
+  214,line 540
+  211,line 537
+  207,line 529
+  197,line 517
   204,line 526
-  194,line 512
+  194,line 509
   201,line 521
-  191,line 507
+  191,line 506
   187,line 500
   184,line 495
-  181,line 490
-  177,line 485
-  174,line 479
-  171,line 476
-  167,line 471
+  181,line 491
+  177,line 484
+  174,line 481
+  171,line 477
+  167,line 470
   164,line 465
   161,line 460
-  157,line 454
-  154,line 451
-  151,line 446
+  157,line 456
+  154,line 449
+  151,line 444
   147,line 438
   144,line 433
   141,line 430
-  137,line 424
+  137,line 422
   134,line 419
-  131,line 414
+  131,line 411
   127,line 405
   124,line 400
   121,line 395
   117,line 389
   114,line 386
   98,line 356
-  111,line 381
+  111,line 379
   95,line 353
   29,e 3
-  107,line 373
+  107,line 372
   92,line 350
   104,line 367
   88,line 345
@@ -3685,78 +3720,79 @@ array set plot::rules {
   25,line 247
   22,line 241
   18,line 236
+  266,line 618
   15,line 231
-  263,line 613
+  263,line 615
   12,line 224
-  260,line 610
-  259,line 609
+  260,line 609
+  259,line 608
   256,line 603
   253,line 600
-  250,line 595
-  249,line 594
-  246,line 588
-  243,line 583
-  240,line 578
+  250,line 594
+  249,line 593
+  246,line 586
+  243,line 581
+  240,line 576
   239,line 575
   236,line 570
   7,line 216
-  233,line 565
+  233,line 567
   4,line 213
-  230,line 562
-  229,line 561
+  230,line 561
+  229,line 560
   1,line 210
-  226,line 555
+  226,line 557
   223,line 552
   220,line 547
   219,line 546
-  216,line 541
-  213,line 537
+  216,line 542
+  213,line 539
   210,line 534
   209,line 533
-  199,line 517
+  199,line 519
   206,line 528
   196,line 514
   203,line 523
-  193,line 511
+  193,line 508
   200,line 520
   190,line 503
   189,line 502
   186,line 497
   183,line 494
   180,line 489
-  179,line 488
+  179,line 486
   176,line 483
-  173,line 478
+  173,line 479
   33,e 1
-  170,line 475
-  169,line 473
-  166,line 470
-  163,line 464
+  170,line 476
+  169,line 472
+  166,line 469
+  163,line 462
   160,line 459
-  159,line 456
+  159,line 458
   156,line 453
-  153,line 450
-  149,line 442
-  150,line 443
-  146,line 435
+  153,line 448
+  149,line 440
+  150,line 441
+  146,line 437
   143,line 432
   139,line 426
-  140,line 427
-  136,line 423
+  140,line 429
+  136,line 421
   133,line 416
-  129,line 410
-  130,line 413
-  126,line 404
+  129,line 407
+  130,line 410
+  126,line 402
   123,line 399
   119,line 393
   120,line 394
   116,line 388
   113,line 383
   97,line 355
-  109,line 377
-  110,line 380
+  109,line 376
+  110,line 378
   94,line 352
-  106,line 372
+  106,line 371
   91,line 348
   103,line 366
   87,line 344
@@ -3782,54 +3818,54 @@ array set plot::lr1_table {
   117,trans {}
   193,trans {}
   203,trans {}
-  27,trans {{271 107} {280 108} {347 109} {380 110} {455 111}}
+  27,trans {{271 107} {280 108} {347 109} {380 110} {456 111}}
   278,trans {}
   364,trans {}
   116,trans {}
   192,trans {}
-  202,trans {{275 333}}
+  202,trans {{275 337}}
   26,trans {{277 106}}
-  277,trans {{275 269} {276 270} {343 271} {408 272} {410 273} {411 274} {417 275} {438 376}}
+  277,trans {}
   363,trans {}
   115,trans {}
   191,trans {}
-  201,trans {{275 332}}
-  25,trans {{X 100} {Y 101} {x 102} {y 103} {430 104} {449 105}}
+  201,trans {{275 336}}
+  25,trans {{X 100} {Y 101} {x 102} {y 103} {430 104} {450 105}}
   276,trans {}
   362,trans {}
   0 {{0 0 0} {20 0 0} {22 0 0} {23 {0 277} 0} {24 {0 277} 0} {25 {0 277} 0} {26 {0 277} 0} {28 {0 277} 0} {30 {0 277} 0} {32 {0 277} 0} {34 {0 277} 0} {31 {263 279 285 286 288 293 294 295 300 301 302 303 307 308 309 310 311 315 316 320 326 329 334 335 336 340 341 348 349 357 362 366 367 371 372 373 376 381 382 388 392 394} 0}}
   1 {{34 {0 277} 1} {33 {263 279 285 286 288 293 294 295 300 301 302 303 307 308 309 310 311 315 316 320 326 329 334 335 336 340 341 348 349 357 362 366 367 371 372 373 376 381 382 388 392 394} 0}}
   2 {{24 {0 277} 1}}
   114,trans {}
-  3 {{23 {0 277} 1} {35 {0 277} 0} {36 {0 277} 0} {249 {0 277} 0} {250 {0 277} 0} {251 {0 277} 0} {252 {0 277} 0} {253 {300 385 394} 0} {254 {300 385 394} 0} {255 {300 385 394} 0} {256 {300 385 394} 0} {257 {300 385 394} 0} {258 {300 385 394} 0}}
+  3 {{23 {0 277} 1} {35 {0 277} 0} {36 {0 277} 0} {253 {0 277} 0} {254 {0 277} 0} {255 {0 277} 0} {256 {0 277} 0} {257 {300 385 394} 0} {258 {300 385 394} 0} {259 {300 385 394} 0} {260 {300 385 394} 0} {261 {300 385 394} 0} {262 {300 385 394} 0}}
   4 {{28 {0 277} 1} {30 {0 277} 1} {27 {0 277 287 332 369 384} 0}}
   5 {{25 {0 277} 1}}
   6 {{0 0 1}}
-  189,trans {{277 330}}
-  190,trans {{321 323} {363 324} {447 331}}
+  189,trans {{277 334}}
+  190,trans {{321 327} {363 328} {448 335}}
   200,trans {}
   7 {{20 0 1} {22 0 1} {21 277 0}}
   8 {{32 {0 277} 1} {63 {0 277} 0} {64 {0 277} 0} {65 {0 277} 0} {66 {0 277} 0} {67 {0 277} 0} {68 {0 277} 0} {69 {0 277} 0} {70 {0 277} 0} {71 {0 277} 0} {72 {0 277} 0} {73 {0 277} 0} {74 {0 277} 0} {75 {0 277} 0} {76 {0 277} 0} {77 {0 277} 0} {78 {0 277} 0} {79 {0 277} 0} {80 {0 277} 0} {81 {0 277} 0} {82 {0 277} 0} {83 {0 277} 0} {84 {0 277} 0} {85 {0 277} 0} {86 {0 277} 0} {87 {0 277} 0} {88 {0 277} 0} {89 {0 277} 0} {90 {0 277} 0} {91 {0 277} 0} {92 {0 277} 0} {93 {0 277} 0} {94 {0 277} 0} {95 {0 277} 0} {96 {0 277} 0} {97 {0 277} 0} {98 {0 277} 0} {99 {0 277} 0} {100 {0 277} 0} {101 {0 277} 0} {102 {0 277} 0} {103 {0 277} 0} {104 {0 277} 0}}
   9 {{34 {0 277} 2} {63 {0 277} 0} {64 {0 277} 0} {65 {0 277} 0} {66 {0 277} 0} {67 {0 277} 0} {68 {0 277} 0} {69 {0 277} 0} {70 {0 277} 0} {71 {0 277} 0} {72 {0 277} 0} {73 {0 277} 0} {74 {0 277} 0} {75 {0 277} 0} {76 {0 277} 0} {77 {0 277} 0} {78 {0 277} 0} {79 {0 277} 0} {80 {0 277} 0} {81 {0 277} 0} {82 {0 277} 0} {83 {0 277} 0} {84 {0 277} 0} {85 {0 277} 0} {86 {0 277} 0} {87 {0 277} 0} {88 {0 277} 0} {89 {0 277} 0} {90 {0 277} 0} {91 {0 277} 0} {92 {0 277} 0} {93 {0 277} 0} {94 {0 277} 0} {95 {0 277} 0} {96 {0 277} 0} {97 {0 277} 0} {98 {0 277} 0} {99 {0 277} 0} {100 {0 277} 0} {101 {0 277} 0} {102 {0 277} 0} {103 {0 277} 0} {104 {0 277} 0}}
   24,trans {{320 99}}
   275,trans {}
-  99,trans {}
+  99,trans {{287 258} {332 259} {369 260} {434 261}}
   361,trans {}
   113,trans {}
-  188,trans {{313 327} {358 328} {446 329}}
-  23,trans {{283 90} {284 91} {324 92} {329 93} {330 94} {344 95} {388 96} {452 97} {453 98}}
+  188,trans {{313 331} {358 332} {447 333}}
+  23,trans {{283 90} {284 91} {324 92} {329 93} {330 94} {344 95} {388 96} {453 97} {454 98}}
   274,trans {}
   98,trans {{263 248} {264 249} {265 250} {266 251} {267 252} {312 253} {374 254} {375 255} {385 256} {393 257}}
   359,trans {}
   360,trans {}
   112,trans {}
-  187,trans {{277 326}}
+  187,trans {{277 330}}
   22,trans {{277 89}}
   273,trans {}
   97,trans {}
   358,trans {}
   111,trans {}
-  186,trans {{321 323} {363 324} {447 325}}
+  186,trans {{321 327} {363 328} {448 329}}
   21,trans {{277 82} {287 83} {332 84} {369 85} {384 86} {426 87} {427 88}}
   272,trans {}
   96,trans {}
@@ -3850,81 +3886,81 @@ array set plot::lr1_table {
   94,trans {}
   355,trans {}
   107,trans {}
-  183,trans {{278 316} {328 317} {331 318} {356 319} {387 320} {444 322}}
+  183,trans {{278 320} {328 321} {331 322} {356 323} {387 324} {445 326}}
   17,trans {}
-  268,trans {}
+  268,trans {{275 273} {276 274} {417 379}}
   93,trans {}
   354,trans {}
   106,trans {}
-  182,trans {{278 316} {328 317} {331 318} {356 319} {387 320} {444 321}}
+  182,trans {{278 320} {328 321} {331 322} {356 323} {387 324} {445 325}}
   16,trans {}
-  267,trans {}
+  267,trans {{275 273} {276 274} {417 378}}
   92,trans {}
   353,trans {}
   105,trans {}
-  181,trans {{325 312} {354 313} {443 315}}
+  181,trans {{325 316} {354 317} {444 319}}
   15,trans {}
-  266,trans {}
+  266,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 377}}
   91,trans {}
-  352,trans {}
-  104,trans {{282 258} {318 259} {319 260} {322 261} {337 262} {338 263} {339 264}}
+  352,trans {{277 394}}
+  104,trans {{282 262} {318 263} {319 264} {322 265} {337 266} {338 267} {339 268}}
   179,trans {}
-  180,trans {{325 312} {354 313} {443 314}}
+  180,trans {{325 316} {354 317} {444 318}}
   14,trans {}
-  265,trans {}
+  265,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 376}}
   89,trans {}
   90,trans {}
-  351,trans {}
+  351,trans {{277 393}}
   103,trans {}
   178,trans {}
   13,trans {}
-  264,trans {{275 269} {276 270} {417 375}}
+  264,trans {{277 375}}
   88,trans {}
   349,trans {}
-  350,trans {}
+  350,trans {{275 391} {396 129} {397 130} {398 131} {399 132} {432 392}}
   102,trans {}
   177,trans {}
   12,trans {}
-  263,trans {{275 269} {276 270} {417 374}}
+  263,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 374}}
   87,trans {}
-  348,trans {{277 390}}
+  348,trans {}
   101,trans {}
   176,trans {}
   11,trans {}
   262,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 373}}
   86,trans {}
-  347,trans {{277 389}}
+  347,trans {}
   100,trans {}
   175,trans {}
-  10,trans {{281 67} {292 68} {298 69} {305 70} {343 71} {352 72} {370 73} {378 74} {379 75} {390 76} {460 77}}
-  261,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 372}}
+  10,trans {{281 67} {292 68} {298 69} {305 70} {343 71} {352 72} {370 73} {378 74} {379 75} {390 76} {461 77}}
+  261,trans {}
   85,trans {{277 245} {384 246} {429 247}}
-  346,trans {{275 387} {396 129} {397 130} {398 131} {399 132} {432 388}}
+  346,trans {}
   174,trans {}
-  259,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 370}}
-  260,trans {{277 371}}
+  259,trans {}
+  260,trans {}
   84,trans {{277 82} {384 86} {427 244}}
   345,trans {}
-  173,trans {{396 129} {397 130} {398 131} {399 132} {432 311}}
-  258,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 369}}
+  173,trans {{396 129} {397 130} {398 131} {399 132} {432 315}}
+  258,trans {}
   83,trans {{277 241} {384 242} {428 243}}
   344,trans {}
   172,trans {}
-  257,trans {{271 361} {272 362} {414 368}}
+  257,trans {{271 365} {272 366} {414 372}}
   82,trans {{277 240}}
   343,trans {}
   171,trans {}
-  256,trans {{271 357} {272 358} {274 359} {416 367}}
+  256,trans {{271 361} {272 362} {274 363} {416 371}}
   81,trans {{422 239}}
   342,trans {}
-  169,trans {{289 306} {327 307} {364 308} {389 309} {451 310}}
+  169,trans {{289 310} {327 311} {364 312} {389 313} {452 314}}
   170,trans {}
-  255,trans {{273 354} {274 355} {415 366}}
+  255,trans {{273 358} {274 359} {415 370}}
   79,trans {{275 237}}
   80,trans {{275 238}}
   341,trans {}
   168,trans {}
-  254,trans {{275 365}}
+  254,trans {{275 369}}
   78,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 236}}
   339,trans {}
   340,trans {}
@@ -3933,30 +3969,30 @@ array set plot::lr1_table {
   167,trans {}
   102 {{53 {282 318 319 322 337 338 339} 1}}
   103 {{55 {282 318 319 322 337 338 339} 1}}
-  104 {{153 {0 277} 1} {154 {0 277} 1} {155 {0 277} 1} {156 {0 277} 1} {157 {0 277} 1} {158 {0 277} 1} {159 {0 277} 1}}
+  104 {{157 {0 277} 1} {158 {0 277} 1} {159 {0 277} 1} {160 {0 277} 1} {161 {0 277} 1} {162 {0 277} 1} {163 {0 277} 1}}
   105 {{82 {0 277} 2}}
-  253,trans {{268 349} {269 350} {270 351} {413 364}}
+  253,trans {{268 353} {269 354} {270 355} {413 368}}
   106 {{83 {0 277} 2}}
-  107 {{187 {0 277} 1}}
-  108 {{189 {0 277} 1}}
-  110 {{188 {0 277} 1}}
-  109 {{190 {0 277} 1}}
+  107 {{191 {0 277} 1}}
+  108 {{193 {0 277} 1}}
+  110 {{192 {0 277} 1}}
+  109 {{194 {0 277} 1}}
   77,trans {}
   338,trans {}
   111 {{87 {0 277} 2}}
-  112 {{191 {0 277} 1}}
-  113 {{197 277 1}}
-  114 {{193 277 1}}
-  115 {{198 277 1}}
-  116 {{199 277 1}}
-  117 {{194 277 1}}
+  112 {{195 {0 277} 1}}
+  113 {{201 277 1}}
+  114 {{197 277 1}}
+  115 {{202 277 1}}
+  116 {{203 277 1}}
+  117 {{198 277 1}}
   166,trans {}
-  118 {{196 277 1}}
+  118 {{200 277 1}}
   120 {{89 {0 277} 2}}
-  119 {{195 277 1}}
-  121 {{192 {0 277} 1}}
+  119 {{199 277 1}}
+  121 {{196 {0 277} 1}}
   122 {{2 {0 277} 1}}
-  252,trans {{271 361} {272 362} {414 363}}
+  252,trans {{271 365} {272 366} {414 367}}
   123 {{5 {0 277} 1}}
   124 {{3 {0 277} 1}}
   125 {{6 {0 277} 1}}
@@ -3972,102 +4008,102 @@ array set plot::lr1_table {
   133 {{67 {0 277} 2}}
   134 {{102 {0 277} 2}}
   165,trans {}
-  135 {{109 {0 277} 1}}
-  136 {{108 {0 277} 1}}
+  135 {{113 {0 277} 1}}
+  136 {{112 {0 277} 1}}
   137 {{66 {0 277} 2}}
-  138 {{129 {0 277} 1}}
-  251,trans {{271 357} {272 358} {274 359} {416 360}}
+  138 {{133 {0 277} 1}}
+  251,trans {{271 361} {272 362} {274 363} {416 364}}
   140 {{70 {0 277} 2}}
   139 {{71 {0 277} 2}}
-  141 {{201 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  142 {{202 {0 277} 1}}
-  143 {{203 {0 277} 1}}
+  141 {{205 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  142 {{206 {0 277} 1}}
+  143 {{207 {0 277} 1}}
   75,trans {}
   336,trans {}
-  144 {{200 {0 277} 1}}
+  144 {{204 {0 277} 1}}
   145 {{92 {0 277} 2}}
   146 {{93 {0 277} 2}}
-  147 {{110 {0 277} 1} {111 {0 277} 1} {118 {0 277} 0} {119 {0 277} 0} {120 {0 277} 0} {121 {0 277} 0} {122 {0 277} 0} {18 {0 277} 0} {19 {0 277} 0}}
-  148 {{114 277 1}}
-  150 {{116 277 1}}
-  149 {{115 277 1}}
-  151 {{117 277 1}}
+  147 {{114 {0 277} 1} {115 {0 277} 1} {122 {0 277} 0} {123 {0 277} 0} {124 {0 277} 0} {125 {0 277} 0} {126 {0 277} 0} {18 {0 277} 0} {19 {0 277} 0}}
+  148 {{118 277 1}}
+  150 {{120 277 1}}
+  149 {{119 277 1}}
+  151 {{121 277 1}}
   164,trans {}
   152 {{69 {0 277} 2}}
-  153 {{112 {0 277} 1} {113 {0 277} 1}}
+  153 {{116 {0 277} 1} {117 {0 277} 1}}
   154 {{90 {0 277} 2}}
   155 {{91 {0 277} 2}}
-  249,trans {{275 353}}
-  250,trans {{273 354} {274 355} {415 356}}
-  156 {{229 {0 277} 1} {53 {0 257 258 259 260 261 262} 0} {54 {0 257 258 259 260 261 262} 0} {55 {0 257 258 259 260 261 262} 0} {56 {0 257 258 259 260 261 262} 0}}
-  157 {{230 {0 277} 1} {53 277 0} {54 277 0} {55 277 0} {56 277 0}}
-  158 {{227 {0 277} 1} {235 {0 277} 0} {236 {0 277} 0} {53 {0 257 258 259 260 261 262} 0} {54 {0 257 258 259 260 261 262} 0} {55 {0 257 258 259 260 261 262} 0} {56 {0 257 258 259 260 261 262} 0} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  159 {{232 {0 277} 1} {240 {0 277} 0} {241 {0 277} 0} {242 {0 277} 0} {57 277 0} {58 277 0}}
-  160 {{228 {0 277} 1} {53 {0 257 258 259 260 261 262} 0} {54 {0 257 258 259 260 261 262} 0} {55 {0 257 258 259 260 261 262} 0} {56 {0 257 258 259 260 261 262} 0}}
+  249,trans {{275 357}}
+  250,trans {{273 358} {274 359} {415 360}}
+  156 {{233 {0 277} 1} {53 {0 257 258 259 260 261 262} 0} {54 {0 257 258 259 260 261 262} 0} {55 {0 257 258 259 260 261 262} 0} {56 {0 257 258 259 260 261 262} 0}}
+  157 {{234 {0 277} 1} {53 277 0} {54 277 0} {55 277 0} {56 277 0}}
+  158 {{231 {0 277} 1} {239 {0 277} 0} {240 {0 277} 0} {53 {0 257 258 259 260 261 262} 0} {54 {0 257 258 259 260 261 262} 0} {55 {0 257 258 259 260 261 262} 0} {56 {0 257 258 259 260 261 262} 0} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  159 {{236 {0 277} 1} {244 {0 277} 0} {245 {0 277} 0} {246 {0 277} 0} {57 277 0} {58 277 0}}
+  160 {{232 {0 277} 1} {53 {0 257 258 259 260 261 262} 0} {54 {0 257 258 259 260 261 262} 0} {55 {0 257 258 259 260 261 262} 0} {56 {0 257 258 259 260 261 262} 0}}
   74,trans {}
   335,trans {}
-  161 {{231 {0 277} 1} {237 {0 277} 0} {238 {0 277} 0} {239 {0 277} 0} {53 {282 338 339} 0} {54 {282 338 339} 0} {55 {282 338 339} 0} {56 {282 338 339} 0}}
-  162 {{234 {0 277} 1} {245 {0 277} 0} {246 {0 277} 0} {247 {0 277} 0} {248 {0 277} 0}}
-  163 {{233 {0 277} 1} {243 {0 277} 0} {244 {0 277} 0}}
+  161 {{235 {0 277} 1} {241 {0 277} 0} {242 {0 277} 0} {243 {0 277} 0} {53 {282 338 339} 0} {54 {282 338 339} 0} {55 {282 338 339} 0} {56 {282 338 339} 0}}
+  162 {{238 {0 277} 1} {249 {0 277} 0} {250 {0 277} 0} {251 {0 277} 0} {252 {0 277} 0}}
+  163 {{237 {0 277} 1} {247 {0 277} 0} {248 {0 277} 0}}
   164 {{103 {0 277} 2}}
-  165 {{124 {0 277} 1}}
-  166 {{125 {0 277} 1}}
-  167 {{123 {0 277} 1}}
-  163,trans {{287 303} {332 304} {467 305}}
+  165 {{128 {0 277} 1}}
+  166 {{129 {0 277} 1}}
+  167 {{127 {0 277} 1}}
+  163,trans {{287 307} {332 308} {468 309}}
   168 {{100 {0 277} 2}}
-  169 {{161 {0 277} 1} {162 {0 277} 0} {163 {0 277} 0} {164 {0 277} 0} {165 {0 277} 0}}
-  170 {{160 {0 277} 1}}
+  169 {{165 {0 277} 1} {166 {0 277} 0} {167 {0 277} 0} {168 {0 277} 0} {169 {0 277} 0}}
+  170 {{164 {0 277} 1}}
   171 {{84 {0 277} 2}}
   172 {{74 {0 277} 2}}
-  248,trans {{268 349} {269 350} {270 351} {413 352}}
-  173 {{126 {0 277} 1} {127 {0 277} 1} {59 {0 277} 0} {60 {0 277} 0} {61 {0 277} 0} {62 {0 277} 0}}
+  248,trans {{268 353} {269 354} {270 355} {413 356}}
+  173 {{130 {0 277} 1} {131 {0 277} 1} {59 {0 277} 0} {60 {0 277} 0} {61 {0 277} 0} {62 {0 277} 0}}
   174 {{63 {0 277} 2}}
   175 {{75 {0 277} 2}}
-  176 {{151 {0 277} 1}}
+  176 {{155 {0 277} 1}}
   73,trans {}
   334,trans {}
-  177 {{152 {0 277} 1}}
+  177 {{156 {0 277} 1}}
   178 {{81 {0 277} 2}}
   179 {{94 {0 277} 2}}
-  180 {{130 {0 277} 1} {134 {0 277} 0} {135 {0 277} 0}}
-  181 {{131 {0 277} 1} {134 {0 277} 0} {135 {0 277} 0}}
-  182 {{132 {0 277} 1} {136 {0 277} 0} {137 {0 277} 0} {138 {0 277} 0} {139 {0 277} 0} {140 {0 277} 0}}
-  183 {{133 {0 277} 1} {136 {0 277} 0} {137 {0 277} 0} {138 {0 277} 0} {139 {0 277} 0} {140 {0 277} 0}}
+  180 {{134 {0 277} 1} {138 {0 277} 0} {139 {0 277} 0}}
+  181 {{135 {0 277} 1} {138 {0 277} 0} {139 {0 277} 0}}
+  182 {{136 {0 277} 1} {140 {0 277} 0} {141 {0 277} 0} {142 {0 277} 0} {143 {0 277} 0} {144 {0 277} 0}}
+  183 {{137 {0 277} 1} {140 {0 277} 0} {141 {0 277} 0} {142 {0 277} 0} {143 {0 277} 0} {144 {0 277} 0}}
   184 {{78 {0 277} 2}}
-  162,trans {{400 298} {401 299} {402 300} {403 301} {468 302}}
+  162,trans {{400 302} {401 303} {402 304} {403 305} {469 306}}
   185 {{77 {0 277} 2}}
-  186 {{146 {0 277} 1} {149 {0 277} 0} {150 {0 277} 0}}
-  187 {{143 {0 277} 1}}
-  188 {{142 {0 277} 1} {147 {0 277} 0} {148 {0 277} 0}}
+  186 {{150 {0 277} 1} {153 {0 277} 0} {154 {0 277} 0}}
+  187 {{147 {0 277} 1}}
+  188 {{146 {0 277} 1} {151 {0 277} 0} {152 {0 277} 0}}
   247,trans {}
-  189 {{144 {0 277} 1}}
-  190 {{145 {0 277} 1} {149 {0 277} 0} {150 {0 277} 0}}
-  200 {{107 {0 277} 1}}
+  189 {{148 {0 277} 1}}
+  190 {{149 {0 277} 1} {153 {0 277} 0} {154 {0 277} 0}}
+  200 {{111 {0 277} 1}}
   191 {{79 {0 277} 2}}
-  201 {{105 {0 277} 1}}
-  192 {{217 {0 277} 1}}
-  202 {{106 {0 277} 1}}
-  193 {{221 {0 277} 1}}
+  201 {{109 {0 277} 1}}
+  192 {{221 {0 277} 1}}
+  202 {{110 {0 277} 1}}
+  193 {{225 {0 277} 1}}
   203 {{101 {0 277} 2}}
   72,trans {}
   333,trans {}
-  194 {{219 {0 277} 1}}
-  204 {{206 {0 277} 1}}
-  195 {{220 {0 277} 1}}
-  205 {{205 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  196 {{218 {0 277} 1}}
+  194 {{223 {0 277} 1}}
+  204 {{210 {0 277} 1}}
+  195 {{224 {0 277} 1}}
+  205 {{209 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  196 {{222 {0 277} 1}}
   206 {{95 {0 277} 2}}
   197 {{96 {0 277} 2}}
-  207 {{204 {0 277} 1}}
+  207 {{208 {0 277} 1}}
   198 {{64 {0 277} 2}}
   208 {{88 {0 277} 2}}
   199 {{76 {0 277} 2}}
-  209 {{226 {0 277} 1}}
-  210 {{224 {0 277} 1}}
-  211 {{223 {0 277} 1}}
-  161,trans {{X 292} {Y 293} {x 294} {y 295} {430 296} {465 297}}
-  212 {{225 {0 277} 1}}
-  213 {{222 {0 277} 1}}
+  209 {{230 {0 277} 1}}
+  210 {{228 {0 277} 1}}
+  211 {{227 {0 277} 1}}
+  161,trans {{X 296} {Y 297} {x 298} {y 299} {430 300} {466 301}}
+  212 {{229 {0 277} 1}}
+  213 {{226 {0 277} 1}}
   214 {{97 {0 277} 2}}
   215 {{72 {0 277} 2}}
   246,trans {}
@@ -4078,322 +4114,328 @@ array set plot::lr1_table {
   220 {{55 277 1}}
   71,trans {}
   332,trans {}
-  221 {{183 {0 277} 1}}
-  222 {{186 {0 277} 1}}
+  221 {{187 {0 277} 1}}
+  222 {{190 {0 277} 1}}
   223 {{57 277 1}}
   224 {{58 277 1}}
-  225 {{184 {0 277} 1}}
-  226 {{185 {0 277} 1}}
+  225 {{188 {0 277} 1}}
+  226 {{189 {0 277} 1}}
   227 {{86 {0 277} 2}}
-  159,trans {{329 287} {388 288} {404 223} {405 224} {431 289} {466 290}}
-  160,trans {{X 278} {Y 279} {x 280} {y 281} {430 291}}
-  228 {{259 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  229 {{263 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  230 {{264 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  231 {{260 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  232 {{262 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  245,trans {{277 348}}
-  233 {{261 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  159,trans {{329 291} {388 292} {404 223} {405 224} {431 293} {467 294}}
+  160,trans {{X 282} {Y 283} {x 284} {y 285} {430 295}}
+  228 {{263 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  229 {{267 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  230 {{268 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  231 {{264 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  232 {{266 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  245,trans {{277 352}}
+  233 {{265 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
   234 {{104 {0 277} 2}}
   235 {{98 {0 277} 2}}
   69,trans {}
   70,trans {}
-  236 {{251 {0 277} 3}}
+  236 {{255 {0 277} 3}}
   331,trans {}
-  237 {{252 {0 277} 3}}
-  238 {{250 {0 277} 3}}
+  237 {{256 {0 277} 3}}
+  238 {{254 {0 277} 3}}
   239 {{30 {0 277} 4} {37 {0 277} 0} {38 {0 277} 0} {39 {0 277} 0} {40 {0 277} 0} {41 {0 277} 0} {42 {0 277} 0} {43 {0 277} 0} {44 {0 277} 0}}
   240 {{41 {0 277} 2} {44 {0 277} 2}}
   241 {{45 {0 277} 1} {48 {0 277} 1}}
   242 {{47 {0 277} 1}}
   243 {{39 {0 277} 2}}
   244 {{38 {0 277} 2}}
-  158,trans {{X 278} {Y 279} {x 280} {y 281} {257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 284} {430 285} {464 286}}
+  158,trans {{X 282} {Y 283} {x 284} {y 285} {257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 288} {430 289} {465 290}}
   245 {{49 {0 277} 1} {52 {0 277} 1}}
   246 {{51 {0 277} 1}}
   247 {{40 {0 277} 2}}
-  248 {{166 {0 277} 2} {8 {0 277} 0} {9 {0 277} 0} {10 {0 277} 0}}
+  248 {{170 {0 277} 2} {8 {0 277} 0} {9 {0 277} 0} {10 {0 277} 0}}
   244,trans {}
-  249 {{168 {0 277} 2}}
-  250 {{170 {0 277} 2} {13 {0 277} 0} {14 {0 277} 0}}
-  251 {{171 {0 277} 2} {15 {0 277} 0} {16 {0 277} 0} {17 {0 277} 0}}
-  252 {{169 {0 277} 2} {11 {0 277} 0} {12 {0 277} 0}}
+  249 {{172 {0 277} 2}}
+  250 {{174 {0 277} 2} {13 {0 277} 0} {14 {0 277} 0}}
+  251 {{175 {0 277} 2} {15 {0 277} 0} {16 {0 277} 0} {17 {0 277} 0}}
+  252 {{173 {0 277} 2} {11 {0 277} 0} {12 {0 277} 0}}
   68,trans {}
-  253 {{167 {0 277} 2} {8 {0 277} 0} {9 {0 277} 0} {10 {0 277} 0}}
+  253 {{171 {0 277} 2} {8 {0 277} 0} {9 {0 277} 0} {10 {0 277} 0}}
   329,trans {}
   330,trans {}
-  254 {{172 {0 277} 2}}
-  255 {{174 {0 277} 2} {13 {0 277} 0} {14 {0 277} 0}}
-  256 {{175 {0 277} 2} {15 {0 277} 0} {16 {0 277} 0} {17 {0 277} 0}}
-  257 {{173 {0 277} 2} {11 {0 277} 0} {12 {0 277} 0}}
-  258 {{156 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  259 {{155 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  260 {{159 {0 277} 2}}
-  10 {{249 {0 277} 1} {207 {0 277} 0} {208 {0 277} 0} {209 {0 277} 0} {210 {0 277} 0} {211 {0 277} 0} {212 {0 277} 0} {213 {0 277} 0} {214 {0 277} 0} {215 {0 277} 0} {216 {0 277} 0}}
-  261 {{153 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  157,trans {{X 217} {Y 218} {x 219} {y 220} {430 283}}
-  11 {{257 {300 385 394} 1}}
-  262 {{154 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  12 {{258 {300 385 394} 1}}
-  263 {{158 {0 277} 2} {18 {0 277} 0} {19 {0 277} 0}}
-  13 {{253 {300 385 394} 1}}
-  264 {{157 {0 277} 2} {18 {0 277} 0} {19 {0 277} 0}}
-  14 {{254 {300 385 394} 1}}
-  265 {{192 {0 277} 2}}
+  254 {{176 {0 277} 2}}
+  255 {{178 {0 277} 2} {13 {0 277} 0} {14 {0 277} 0}}
+  256 {{179 {0 277} 2} {15 {0 277} 0} {16 {0 277} 0} {17 {0 277} 0}}
+  257 {{177 {0 277} 2} {11 {0 277} 0} {12 {0 277} 0}}
+  258 {{107 {0 277} 1}}
+  259 {{106 {0 277} 1}}
+  260 {{108 {0 277} 1}}
+  10 {{253 {0 277} 1} {211 {0 277} 0} {212 {0 277} 0} {213 {0 277} 0} {214 {0 277} 0} {215 {0 277} 0} {216 {0 277} 0} {217 {0 277} 0} {218 {0 277} 0} {219 {0 277} 0} {220 {0 277} 0}}
+  261 {{65 {0 277} 3}}
+  157,trans {{X 217} {Y 218} {x 219} {y 220} {430 287}}
+  11 {{261 {300 385 394} 1}}
+  262 {{160 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  12 {{262 {300 385 394} 1}}
+  263 {{159 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  13 {{257 {300 385 394} 1}}
+  264 {{163 {0 277} 2}}
+  14 {{258 {300 385 394} 1}}
+  265 {{157 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
   243,trans {}
-  15 {{256 {300 385 394} 1}}
-  266 {{201 {0 277} 2}}
-  16 {{255 {300 385 394} 1}}
-  267 {{202 {0 277} 2}}
+  15 {{260 {300 385 394} 1}}
+  266 {{158 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  16 {{259 {300 385 394} 1}}
+  267 {{162 {0 277} 2} {18 {0 277} 0} {19 {0 277} 0}}
   17 {{23 {0 277} 2}}
-  268 {{203 {0 277} 2}}
+  268 {{161 {0 277} 2} {18 {0 277} 0} {19 {0 277} 0}}
   18 {{36 {0 277} 1}}
   67,trans {}
-  269 {{18 {0 277} 1}}
-  270 {{19 {0 277} 1}}
+  269 {{196 {0 277} 2}}
+  270 {{205 {0 277} 2}}
   328,trans {}
-  19 {{250 {0 277} 1} {251 {0 277} 1} {252 {0 277} 1}}
+  19 {{254 {0 277} 1} {255 {0 277} 1} {256 {0 277} 1}}
   20 {{30 {0 277} 2}}
-  271 {{118 {0 277} 1}}
+  271 {{206 {0 277} 2}}
   21 {{28 {0 277} 2} {37 {0 277} 0} {38 {0 277} 0} {39 {0 277} 0} {40 {0 277} 0} {41 {0 277} 0} {42 {0 277} 0} {43 {0 277} 0} {44 {0 277} 0}}
-  272 {{119 {0 277} 1}}
+  272 {{207 {0 277} 2}}
   22 {{22 0 2}}
-  273 {{120 {0 277} 1}}
-  23 {{85 {0 277} 1} {166 {0 277} 0} {167 {0 277} 0} {168 {0 277} 0} {169 {0 277} 0} {170 {0 277} 0} {171 {0 277} 0} {172 {0 277} 0} {173 {0 277} 0} {174 {0 277} 0} {175 {0 277} 0} {176 {263 264 265 266 267 312 374 375 385 393} 0} {177 {263 264 265 266 267 312 374 375 385 393} 0} {178 {263 264 265 266 267 312 374 375 385 393} 0} {179 {263 264 265 266 267 312 374 375 385 393} 0} {180 {263 264 265 266 267 312 374 375 385 393} 0} {181 {263 264 265 266 267 312 374 375 385 393} 0} {182 {263 264 265 266 267 312 374 375 385 393} 0}}
-  274 {{121 {0 277} 1}}
+  273 {{18 {0 277} 1}}
+  23 {{85 {0 277} 1} {170 {0 277} 0} {171 {0 277} 0} {172 {0 277} 0} {173 {0 277} 0} {174 {0 277} 0} {175 {0 277} 0} {176 {0 277} 0} {177 {0 277} 0} {178 {0 277} 0} {179 {0 277} 0} {180 {263 264 265 266 267 312 374 375 385 393} 0} {181 {263 264 265 266 267 312 374 375 385 393} 0} {182 {263 264 265 266 267 312 374 375 385 393} 0} {183 {263 264 265 266 267 312 374 375 385 393} 0} {184 {263 264 265 266 267 312 374 375 385 393} 0} {185 {263 264 265 266 267 312 374 375 385 393} 0} {186 {263 264 265 266 267 312 374 375 385 393} 0}}
+  274 {{19 {0 277} 1}}
   24 {{65 {0 277} 1}}
   275 {{122 {0 277} 1}}
-  25 {{82 {0 277} 1} {153 {0 277} 0} {154 {0 277} 0} {155 {0 277} 0} {156 {0 277} 0} {157 {0 277} 0} {158 {0 277} 0} {159 {0 277} 0} {53 {282 318 319 322 337 338 339} 0} {54 {282 318 319 322 337 338 339} 0} {55 {282 318 319 322 337 338 339} 0} {56 {282 318 319 322 337 338 339} 0}}
-  276 {{111 {0 277} 2}}
+  25 {{82 {0 277} 1} {157 {0 277} 0} {158 {0 277} 0} {159 {0 277} 0} {160 {0 277} 0} {161 {0 277} 0} {162 {0 277} 0} {163 {0 277} 0} {53 {282 318 319 322 337 338 339} 0} {54 {282 318 319 322 337 338 339} 0} {55 {282 318 319 322 337 338 339} 0} {56 {282 318 319 322 337 338 339} 0}}
+  276 {{123 {0 277} 1}}
   26 {{83 {0 277} 1}}
-  277 {{112 {0 277} 2} {113 {0 277} 2} {118 {0 277} 0} {119 {0 277} 0} {120 {0 277} 0} {121 {0 277} 0} {122 {0 277} 0} {18 {0 277} 0} {19 {0 277} 0}}
-  156,trans {{X 278} {Y 279} {x 280} {y 281} {430 282}}
-  27 {{87 {0 277} 1} {187 {0 277} 0} {188 {0 277} 0} {189 {0 277} 0} {190 {0 277} 0}}
-  278 {{54 {0 257 258 259 260 261 262} 1}}
+  277 {{124 {0 277} 1}}
+  156,trans {{X 282} {Y 283} {x 284} {y 285} {430 286}}
+  27 {{87 {0 277} 1} {191 {0 277} 0} {192 {0 277} 0} {193 {0 277} 0} {194 {0 277} 0}}
+  278 {{125 {0 277} 1}}
   28 {{68 {0 277} 1}}
-  279 {{56 {0 257 258 259 260 261 262} 1}}
-  280 {{53 {0 257 258 259 260 261 262} 1}}
+  279 {{126 {0 277} 1}}
+  280 {{115 {0 277} 2}}
   29 {{80 {0 277} 1}}
-  30 {{89 {0 277} 1} {191 {0 277} 0} {192 {0 277} 0} {193 277 0} {194 277 0} {195 277 0} {196 277 0} {197 277 0} {198 277 0} {199 277 0}}
-  281 {{55 {0 257 258 259 260 261 262} 1}}
+  30 {{89 {0 277} 1} {195 {0 277} 0} {196 {0 277} 0} {197 277 0} {198 277 0} {199 277 0} {200 277 0} {201 277 0} {202 277 0} {203 277 0}}
+  281 {{116 {0 277} 2} {117 {0 277} 2} {122 {0 277} 0} {123 {0 277} 0} {124 {0 277} 0} {125 {0 277} 0} {126 {0 277} 0} {18 {0 277} 0} {19 {0 277} 0}}
   31 {{99 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  282 {{229 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  282 {{54 {0 257 258 259 260 261 262} 1}}
   242,trans {}
   32 {{67 {0 277} 1} {59 {0 277} 0} {60 {0 277} 0} {61 {0 277} 0} {62 {0 277} 0}}
-  283 {{230 {0 277} 2}}
+  283 {{56 {0 257 258 259 260 261 262} 1}}
   33 {{102 {0 277} 1}}
-  284 {{236 {0 277} 1}}
-  34 {{66 {0 277} 1} {108 {0 277} 0} {109 {0 277} 0}}
-  285 {{235 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  35 {{71 {0 277} 1} {128 {0 277} 0} {129 {0 277} 0}}
+  284 {{53 {0 257 258 259 260 261 262} 1}}
+  34 {{66 {0 277} 1} {112 {0 277} 0} {113 {0 277} 0}}
+  285 {{55 {0 257 258 259 260 261 262} 1}}
+  35 {{71 {0 277} 1} {132 {0 277} 0} {133 {0 277} 0}}
   66,trans {}
-  286 {{227 {0 277} 2}}
+  286 {{233 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
   327,trans {}
-  36 {{70 {0 277} 1} {128 {0 277} 0} {129 {0 277} 0}}
-  287 {{242 {0 277} 1}}
-  37 {{92 {0 277} 1} {200 {0 277} 0} {201 {0 277} 0} {202 {0 277} 0} {203 {0 277} 0} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  36 {{70 {0 277} 1} {132 {0 277} 0} {133 {0 277} 0}}
+  287 {{234 {0 277} 2}}
+  37 {{92 {0 277} 1} {204 {0 277} 0} {205 {0 277} 0} {206 {0 277} 0} {207 {0 277} 0} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
   288 {{240 {0 277} 1}}
-  38 {{93 {0 277} 1} {200 {0 277} 0} {201 {0 277} 0} {202 {0 277} 0} {203 {0 277} 0} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  289 {{241 {0 277} 1}}
-  290 {{232 {0 277} 2}}
-  300 {{246 {0 277} 1}}
+  38 {{93 {0 277} 1} {204 {0 277} 0} {205 {0 277} 0} {206 {0 277} 0} {207 {0 277} 0} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  289 {{239 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  290 {{231 {0 277} 2}}
+  300 {{241 {0 277} 1} {242 {0 277} 1} {243 {0 277} 1}}
   40 {{90 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  39 {{69 {0 277} 1} {110 {0 277} 0} {111 {0 277} 0} {112 {0 277} 0} {113 {0 277} 0} {114 277 0} {115 277 0} {116 277 0} {117 277 0}}
-  291 {{228 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  301 {{248 {0 277} 1}}
+  39 {{69 {0 277} 1} {114 {0 277} 0} {115 {0 277} 0} {116 {0 277} 0} {117 {0 277} 0} {118 277 0} {119 277 0} {120 277 0} {121 277 0}}
+  291 {{246 {0 277} 1}}
+  301 {{235 {0 277} 2}}
   41 {{91 {0 277} 1}}
-  292 {{54 {282 338 339} 1}}
-  302 {{234 {0 277} 2}}
-  42 {{103 {0 277} 1} {227 {0 277} 0} {228 {0 277} 0} {229 {0 277} 0} {230 {0 277} 0} {231 {0 277} 0} {232 {0 277} 0} {233 {0 277} 0} {234 {0 277} 0}}
-  293 {{56 {282 338 339} 1}}
-  303 {{244 {0 277} 1}}
-  43 {{100 {0 277} 1} {123 {0 277} 0} {124 {0 277} 0} {125 {0 277} 0}}
+  292 {{244 {0 277} 1}}
+  302 {{249 {0 277} 1}}
+  42 {{103 {0 277} 1} {231 {0 277} 0} {232 {0 277} 0} {233 {0 277} 0} {234 {0 277} 0} {235 {0 277} 0} {236 {0 277} 0} {237 {0 277} 0} {238 {0 277} 0}}
+  293 {{245 {0 277} 1}}
+  303 {{251 {0 277} 1}}
+  43 {{100 {0 277} 1} {127 {0 277} 0} {128 {0 277} 0} {129 {0 277} 0}}
   155,trans {}
-  294 {{53 {282 338 339} 1}}
-  304 {{243 {0 277} 1}}
-  44 {{84 {0 277} 1} {160 {0 277} 0} {161 {0 277} 0} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  295 {{55 {282 338 339} 1}}
-  305 {{233 {0 277} 2}}
+  294 {{236 {0 277} 2}}
+  304 {{250 {0 277} 1}}
+  44 {{84 {0 277} 1} {164 {0 277} 0} {165 {0 277} 0} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  295 {{232 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  305 {{252 {0 277} 1}}
   45 {{74 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  296 {{237 {0 277} 1} {238 {0 277} 1} {239 {0 277} 1}}
-  306 {{165 {0 277} 1}}
-  46 {{63 {0 277} 1} {126 {0 277} 0} {127 {0 277} 0}}
-  297 {{231 {0 277} 2}}
-  307 {{163 {0 277} 1}}
+  296 {{54 {282 338 339} 1}}
+  306 {{238 {0 277} 2}}
+  46 {{63 {0 277} 1} {130 {0 277} 0} {131 {0 277} 0}}
+  297 {{56 {282 338 339} 1}}
+  307 {{248 {0 277} 1}}
   47 {{75 {0 277} 1}}
-  298 {{245 {0 277} 1}}
-  308 {{162 {0 277} 1}}
-  241,trans {{277 347}}
-  48 {{81 {0 277} 1} {151 {0 277} 0} {152 {0 277} 0}}
-  299 {{247 {0 277} 1}}
-  309 {{164 {0 277} 1}}
-  310 {{161 {0 277} 2}}
-  50 {{78 {0 277} 1} {130 {0 277} 0} {131 {0 277} 0} {132 {0 277} 0} {133 {0 277} 0}}
+  298 {{53 {282 338 339} 1}}
+  308 {{247 {0 277} 1}}
+  241,trans {{277 351}}
+  48 {{81 {0 277} 1} {155 {0 277} 0} {156 {0 277} 0}}
+  299 {{55 {282 338 339} 1}}
+  309 {{237 {0 277} 2}}
+  310 {{169 {0 277} 1}}
+  50 {{78 {0 277} 1} {134 {0 277} 0} {135 {0 277} 0} {136 {0 277} 0} {137 {0 277} 0}}
   49 {{94 {0 277} 1}}
-  311 {{127 {0 277} 2}}
-  51 {{77 {0 277} 1} {130 {0 277} 0} {131 {0 277} 0} {132 {0 277} 0} {133 {0 277} 0}}
-  312 {{135 {0 277} 1}}
-  52 {{79 {0 277} 1} {141 {0 277} 0} {142 {0 277} 0} {143 {0 277} 0} {144 {0 277} 0} {145 {0 277} 0} {146 {0 277} 0}}
+  311 {{167 {0 277} 1}}
+  51 {{77 {0 277} 1} {134 {0 277} 0} {135 {0 277} 0} {136 {0 277} 0} {137 {0 277} 0}}
+  312 {{166 {0 277} 1}}
+  52 {{79 {0 277} 1} {145 {0 277} 0} {146 {0 277} 0} {147 {0 277} 0} {148 {0 277} 0} {149 {0 277} 0} {150 {0 277} 0}}
   65,trans {}
-  313 {{134 {0 277} 1}}
+  313 {{168 {0 277} 1}}
   326,trans {}
-  53 {{96 {0 277} 1} {217 {0 277} 0} {218 {0 277} 0} {219 {0 277} 0} {220 {0 277} 0} {221 {0 277} 0}}
-  314 {{130 {0 277} 2}}
+  53 {{96 {0 277} 1} {221 {0 277} 0} {222 {0 277} 0} {223 {0 277} 0} {224 {0 277} 0} {225 {0 277} 0}}
+  314 {{165 {0 277} 2}}
   54 {{64 {0 277} 1}}
   315 {{131 {0 277} 2}}
   55 {{76 {0 277} 1}}
-  316 {{140 {0 277} 1}}
-  56 {{101 {0 277} 1} {105 {0 277} 0} {106 {0 277} 0} {107 {0 277} 0}}
-  317 {{137 {0 277} 1}}
-  57 {{95 {0 277} 1} {204 {0 277} 0} {205 {0 277} 0} {206 {0 277} 0} {207 {0 277} 0} {208 {0 277} 0} {209 {0 277} 0} {210 {0 277} 0} {211 {0 277} 0} {212 {0 277} 0} {213 {0 277} 0} {214 {0 277} 0} {215 {0 277} 0} {216 {0 277} 0}}
-  318 {{136 {0 277} 1}}
+  316 {{139 {0 277} 1}}
+  56 {{101 {0 277} 1} {109 {0 277} 0} {110 {0 277} 0} {111 {0 277} 0}}
+  317 {{138 {0 277} 1}}
+  57 {{95 {0 277} 1} {208 {0 277} 0} {209 {0 277} 0} {210 {0 277} 0} {211 {0 277} 0} {212 {0 277} 0} {213 {0 277} 0} {214 {0 277} 0} {215 {0 277} 0} {216 {0 277} 0} {217 {0 277} 0} {218 {0 277} 0} {219 {0 277} 0} {220 {0 277} 0}}
+  318 {{134 {0 277} 2}}
   58 {{88 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  319 {{139 {0 277} 1}}
-  320 {{138 {0 277} 1}}
+  319 {{135 {0 277} 2}}
+  320 {{144 {0 277} 1}}
   60 {{72 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  59 {{97 {0 277} 1} {222 {0 277} 0} {223 {0 277} 0} {224 {0 277} 0} {225 {0 277} 0} {226 {0 277} 0}}
+  59 {{97 {0 277} 1} {226 {0 277} 0} {227 {0 277} 0} {228 {0 277} 0} {229 {0 277} 0} {230 {0 277} 0}}
   154,trans {}
-  321 {{132 {0 277} 2}}
+  321 {{141 {0 277} 1}}
   61 {{73 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  322 {{133 {0 277} 2}}
-  62 {{86 {0 277} 1} {183 {0 277} 0} {184 {0 277} 0} {185 {0 277} 0} {186 {0 277} 0} {53 277 0} {54 277 0} {55 277 0} {56 277 0} {57 277 0} {58 277 0}}
-  323 {{150 {0 277} 1}}
-  63 {{104 {0 277} 1} {259 {0 277} 0} {260 {0 277} 0} {261 {0 277} 0} {262 {0 277} 0} {263 {0 277} 0} {264 {0 277} 0}}
-  324 {{149 {0 277} 1}}
+  322 {{140 {0 277} 1}}
+  62 {{86 {0 277} 1} {187 {0 277} 0} {188 {0 277} 0} {189 {0 277} 0} {190 {0 277} 0} {53 277 0} {54 277 0} {55 277 0} {56 277 0} {57 277 0} {58 277 0}}
+  323 {{143 {0 277} 1}}
+  63 {{104 {0 277} 1} {263 {0 277} 0} {264 {0 277} 0} {265 {0 277} 0} {266 {0 277} 0} {267 {0 277} 0} {268 {0 277} 0}}
+  324 {{142 {0 277} 1}}
   64 {{98 {0 277} 1}}
-  325 {{146 {0 277} 2}}
-  239,trans {{277 82} {287 83} {332 84} {369 85} {384 86} {426 345} {427 88}}
-  240,trans {{277 346}}
+  325 {{136 {0 277} 2}}
+  239,trans {{277 82} {287 83} {332 84} {369 85} {384 86} {426 349} {427 88}}
+  240,trans {{277 350}}
   65 {{32 {0 277} 2}}
-  326 {{143 {0 277} 2}}
+  326 {{137 {0 277} 2}}
   66 {{34 {0 277} 3}}
-  327 {{148 {0 277} 1}}
-  67 {{215 {0 277} 1}}
-  328 {{147 {0 277} 1}}
-  68 {{208 {0 277} 1}}
+  327 {{154 {0 277} 1}}
+  67 {{219 {0 277} 1}}
+  328 {{153 {0 277} 1}}
+  68 {{212 {0 277} 1}}
   64,trans {{275 235}}
-  329 {{142 {0 277} 2}}
-  330 {{144 {0 277} 2}}
+  329 {{150 {0 277} 2}}
+  330 {{147 {0 277} 2}}
   325,trans {}
-  70 {{210 {0 277} 1}}
-  69 {{216 {0 277} 1}}
-  331 {{145 {0 277} 2}}
-  71 {{207 {0 277} 1}}
-  332 {{105 {0 277} 2}}
-  72 {{211 {0 277} 1}}
-  333 {{106 {0 277} 2}}
-  73 {{213 {0 277} 1}}
-  334 {{206 {0 277} 2}}
-  74 {{212 {0 277} 1}}
-  335 {{205 {0 277} 2}}
-  75 {{209 {0 277} 1}}
-  336 {{186 {0 277} 2}}
-  76 {{214 {0 277} 1}}
-  153,trans {{277 277}}
-  337 {{184 {0 277} 2}}
-  77 {{249 {0 277} 2}}
-  338 {{185 {0 277} 2}}
-  78 {{251 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  339 {{259 {0 277} 2}}
-  340 {{263 {0 277} 2}}
-  80 {{250 {0 277} 2}}
-  79 {{252 {0 277} 2}}
-  341 {{264 {0 277} 2}}
+  70 {{214 {0 277} 1}}
+  69 {{220 {0 277} 1}}
+  331 {{152 {0 277} 1}}
+  71 {{211 {0 277} 1}}
+  332 {{151 {0 277} 1}}
+  72 {{215 {0 277} 1}}
+  333 {{146 {0 277} 2}}
+  73 {{217 {0 277} 1}}
+  334 {{148 {0 277} 2}}
+  74 {{216 {0 277} 1}}
+  335 {{149 {0 277} 2}}
+  75 {{213 {0 277} 1}}
+  336 {{109 {0 277} 2}}
+  76 {{218 {0 277} 1}}
+  153,trans {{277 281}}
+  337 {{110 {0 277} 2}}
+  77 {{253 {0 277} 2}}
+  338 {{210 {0 277} 2}}
+  78 {{255 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  339 {{209 {0 277} 2}}
+  340 {{190 {0 277} 2}}
+  80 {{254 {0 277} 2}}
+  79 {{256 {0 277} 2}}
+  341 {{188 {0 277} 2}}
   81 {{30 {0 277} 3} {29 {0 277 287 332 369 384} 0}}
-  342 {{260 {0 277} 2}}
+  342 {{189 {0 277} 2}}
   238,trans {}
   82 {{41 {0 277} 1} {44 {0 277} 1}}
-  343 {{262 {0 277} 2}}
+  343 {{263 {0 277} 2}}
   83 {{39 {0 277} 1} {45 {0 277} 0} {46 {0 277} 0} {47 {0 277} 0} {48 {0 277} 0}}
-  344 {{261 {0 277} 2}}
+  344 {{267 {0 277} 2}}
   84 {{38 {0 277} 1} {41 {0 277} 0} {42 {0 277} 0} {43 {0 277} 0} {44 {0 277} 0}}
-  345 {{30 {0 277} 5}}
+  345 {{268 {0 277} 2}}
   85 {{40 {0 277} 1} {49 {0 277} 0} {50 {0 277} 0} {51 {0 277} 0} {52 {0 277} 0}}
-  63,trans {{306 228} {309 229} {310 230} {332 231} {359 232} {383 233} {471 234}}
-  346 {{41 {0 277} 3} {44 {0 277} 3} {59 {0 277} 0} {60 {0 277} 0} {61 {0 277} 0} {62 {0 277} 0}}
+  63,trans {{306 228} {309 229} {310 230} {332 231} {359 232} {383 233} {472 234}}
+  346 {{264 {0 277} 2}}
   324,trans {}
   86 {{43 {0 277} 1}}
-  347 {{45 {0 277} 2} {48 {0 277} 2}}
+  347 {{266 {0 277} 2}}
   87 {{28 {0 277} 3}}
-  348 {{49 {0 277} 2} {52 {0 277} 2}}
+  348 {{265 {0 277} 2}}
   88 {{37 {0 277} 1}}
-  349 {{8 {0 277} 1}}
-  350 {{9 {0 277} 1}}
-  90 {{180 {263 264 265 266 267 312 374 375 385 393} 1}}
+  349 {{30 {0 277} 5}}
+  350 {{41 {0 277} 3} {44 {0 277} 3} {59 {0 277} 0} {60 {0 277} 0} {61 {0 277} 0} {62 {0 277} 0}}
+  399,trans {}
+  90 {{184 {263 264 265 266 267 312 374 375 385 393} 1}}
   89 {{22 0 3}}
-  351 {{10 {0 277} 1}}
-  91 {{178 {263 264 265 266 267 312 374 375 385 393} 1}}
-  352 {{166 {0 277} 3}}
-  92 {{177 {263 264 265 266 267 312 374 375 385 393} 1}}
-  353 {{168 {0 277} 3}}
-  93 {{181 {263 264 265 266 267 312 374 375 385 393} 1}}
+  351 {{45 {0 277} 2} {48 {0 277} 2}}
+  91 {{182 {263 264 265 266 267 312 374 375 385 393} 1}}
+  352 {{49 {0 277} 2} {52 {0 277} 2}}
+  92 {{181 {263 264 265 266 267 312 374 375 385 393} 1}}
+  353 {{8 {0 277} 1}}
+  93 {{185 {263 264 265 266 267 312 374 375 385 393} 1}}
   152,trans {}
-  354 {{13 {0 277} 1}}
-  94 {{182 {263 264 265 266 267 312 374 375 385 393} 1}}
-  355 {{14 {0 277} 1}}
-  95 {{179 {263 264 265 266 267 312 374 375 385 393} 1}}
+  354 {{9 {0 277} 1}}
+  94 {{186 {263 264 265 266 267 312 374 375 385 393} 1}}
+  355 {{10 {0 277} 1}}
+  95 {{183 {263 264 265 266 267 312 374 375 385 393} 1}}
   356 {{170 {0 277} 3}}
-  96 {{176 {263 264 265 266 267 312 374 375 385 393} 1}}
-  357 {{15 {0 277} 1}}
+  96 {{180 {263 264 265 266 267 312 374 375 385 393} 1}}
+  357 {{172 {0 277} 3}}
   97 {{85 {0 277} 2}}
   237,trans {}
-  358 {{16 {0 277} 1}}
-  98 {{166 {0 277} 1} {167 {0 277} 1} {168 {0 277} 1} {169 {0 277} 1} {170 {0 277} 1} {171 {0 277} 1} {172 {0 277} 1} {173 {0 277} 1} {174 {0 277} 1} {175 {0 277} 1}}
-  359 {{17 {0 277} 1}}
-  360 {{171 {0 277} 3}}
-  99 {{65 {0 277} 2}}
-  361 {{11 {0 277} 1}}
-  362 {{12 {0 277} 1}}
-  62,trans {{X 217} {Y 218} {x 219} {y 220} {277 221} {329 222} {404 223} {405 224} {430 225} {431 226} {454 227}}
-  363 {{169 {0 277} 3}}
+  358 {{13 {0 277} 1}}
+  98 {{170 {0 277} 1} {171 {0 277} 1} {172 {0 277} 1} {173 {0 277} 1} {174 {0 277} 1} {175 {0 277} 1} {176 {0 277} 1} {177 {0 277} 1} {178 {0 277} 1} {179 {0 277} 1}}
+  359 {{14 {0 277} 1}}
+  360 {{174 {0 277} 3}}
+  99 {{65 {0 277} 2} {105 {0 277} 0} {106 {0 277} 0} {107 {0 277} 0} {108 {0 277} 0}}
+  361 {{15 {0 277} 1}}
+  362 {{16 {0 277} 1}}
+  62,trans {{X 217} {Y 218} {x 219} {y 220} {277 221} {329 222} {404 223} {405 224} {430 225} {431 226} {455 227}}
+  363 {{17 {0 277} 1}}
   323,trans {}
-  364 {{167 {0 277} 3}}
-  365 {{172 {0 277} 3}}
-  366 {{174 {0 277} 3}}
-  367 {{175 {0 277} 3}}
-  368 {{173 {0 277} 3}}
-  369 {{156 {0 277} 3}}
-  370 {{155 {0 277} 3}}
+  364 {{175 {0 277} 3}}
+  365 {{11 {0 277} 1}}
+  366 {{12 {0 277} 1}}
+  398,trans {}
+  367 {{173 {0 277} 3}}
+  368 {{171 {0 277} 3}}
+  369 {{176 {0 277} 3}}
+  370 {{178 {0 277} 3}}
   151,trans {}
-  371 {{159 {0 277} 3}}
-  372 {{153 {0 277} 3}}
-  373 {{154 {0 277} 3}}
-  374 {{158 {0 277} 3}}
+  371 {{179 {0 277} 3}}
+  372 {{177 {0 277} 3}}
+  373 {{160 {0 277} 3}}
+  374 {{159 {0 277} 3}}
   236,trans {}
-  375 {{157 {0 277} 3}}
-  376 {{113 {0 277} 3}}
-  377 {{229 {0 277} 3}}
-  378 {{230 {0 277} 3}}
+  375 {{163 {0 277} 3}}
+  376 {{157 {0 277} 3}}
+  377 {{158 {0 277} 3}}
+  378 {{162 {0 277} 3}}
   61,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 216}}
-  379 {{235 {0 277} 2}}
-  380 {{242 {0 277} 2}}
+  379 {{161 {0 277} 3}}
+  380 {{117 {0 277} 3}}
   322,trans {}
-  381 {{240 {0 277} 2}}
+  381 {{233 {0 277} 3}}
   9,trans {{263 23} {279 24} {285 25} {286 26} {288 27} {293 28} {294 29} {295 30} {300 31} {301 32} {302 33} {303 34} {307 35} {308 36} {309 37} {310 38} {311 39} {315 40} {316 41} {320 42} {326 43} {329 44} {334 45} {335 46} {336 47} {340 48} {341 49} {348 50} {349 51} {357 52} {362 53} {366 54} {367 55} {371 56} {372 57} {373 58} {376 59} {381 60} {382 61} {388 62} {392 63} {394 64} {433 66}}
-  382 {{241 {0 277} 2}}
-  383 {{228 {0 277} 3}}
+  382 {{234 {0 277} 3}}
+  383 {{239 {0 277} 2}}
   397,trans {}
-  384 {{237 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  385 {{239 {0 277} 2} {18 {0 277} 0} {19 {0 277} 0}}
-  386 {{238 {0 277} 2} {18 {0 277} 0} {19 {0 277} 0}}
+  384 {{246 {0 277} 2}}
+  385 {{244 {0 277} 2}}
+  386 {{245 {0 277} 2}}
   149,trans {}
   150,trans {}
-  387 {{44 {0 277} 4}}
-  388 {{41 {0 277} 4}}
-  389 {{45 {0 277} 3} {48 {0 277} 3} {59 {0 277} 0} {60 {0 277} 0} {61 {0 277} 0} {62 {0 277} 0}}
-  390 {{49 {0 277} 3} {52 {0 277} 3} {59 {0 277} 0} {60 {0 277} 0} {61 {0 277} 0} {62 {0 277} 0}}
-  391 {{237 {0 277} 3}}
-  392 {{239 {0 277} 3}}
+  387 {{232 {0 277} 3}}
+  388 {{241 {0 277} 2} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  400 {{52 {0 277} 4}}
+  389 {{243 {0 277} 2} {18 {0 277} 0} {19 {0 277} 0}}
+  390 {{242 {0 277} 2} {18 {0 277} 0} {19 {0 277} 0}}
+  401 {{49 {0 277} 4}}
+  391 {{44 {0 277} 4}}
   235,trans {}
-  393 {{238 {0 277} 3}}
-  394 {{48 {0 277} 4}}
-  395 {{45 {0 277} 4}}
-  396 {{52 {0 277} 4}}
-  59,trans {{291 209} {299 210} {333 211} {359 212} {383 213} {462 214}}
+  392 {{41 {0 277} 4}}
+  393 {{45 {0 277} 3} {48 {0 277} 3} {59 {0 277} 0} {60 {0 277} 0} {61 {0 277} 0} {62 {0 277} 0}}
+  394 {{49 {0 277} 3} {52 {0 277} 3} {59 {0 277} 0} {60 {0 277} 0} {61 {0 277} 0} {62 {0 277} 0}}
+  395 {{241 {0 277} 3}}
+  396 {{243 {0 277} 3}}
+  59,trans {{291 209} {299 210} {333 211} {359 212} {383 213} {463 214}}
   60,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 215}}
   321,trans {}
-  397 {{49 {0 277} 4}}
+  397 {{242 {0 277} 3}}
+  398 {{48 {0 277} 4}}
   8,trans {{263 23} {279 24} {285 25} {286 26} {288 27} {293 28} {294 29} {295 30} {300 31} {301 32} {302 33} {303 34} {307 35} {308 36} {309 37} {310 38} {311 39} {315 40} {316 41} {320 42} {326 43} {329 44} {334 45} {335 46} {336 47} {340 48} {341 49} {348 50} {349 51} {357 52} {362 53} {366 54} {367 55} {371 56} {372 57} {373 58} {376 59} {381 60} {382 61} {388 62} {392 63} {394 64} {433 65}}
+  399 {{45 {0 277} 4}}
   396,trans {}
   148,trans {}
   234,trans {}
@@ -4402,144 +4444,146 @@ array set plot::lr1_table {
   320,trans {}
   7,trans {{419 22}}
   395,trans {}
-  147,trans {{275 269} {276 270} {343 271} {408 272} {410 273} {411 274} {417 275} {438 276}}
-  233,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 344}}
-  57,trans {{281 67} {292 68} {295 204} {298 69} {305 70} {315 205} {343 71} {352 72} {370 73} {378 74} {379 75} {390 76} {459 206} {460 207}}
+  147,trans {{275 273} {276 274} {343 275} {408 276} {410 277} {411 278} {417 279} {439 280}}
+  233,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 348}}
+  57,trans {{281 67} {292 68} {295 204} {298 69} {305 70} {315 205} {343 71} {352 72} {370 73} {378 74} {379 75} {390 76} {460 206} {461 207}}
   318,trans {}
   6,trans {}
-  394,trans {}
+  394,trans {{275 400} {396 129} {397 130} {398 131} {399 132} {432 401}}
   146,trans {}
-  232,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 343}}
-  56,trans {{275 200} {302 201} {320 202} {434 203}}
+  232,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 347}}
+  56,trans {{275 200} {302 201} {320 202} {435 203}}
   317,trans {}
   5,trans {}
-  393,trans {}
+  393,trans {{275 398} {396 129} {397 130} {398 131} {399 132} {432 399}}
   145,trans {}
-  231,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 342}}
+  231,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 346}}
   55,trans {{277 199}}
   316,trans {}
   4,trans {{341 20} {421 21}}
   392,trans {}
   144,trans {}
-  229,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 340}}
-  230,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 341}}
+  229,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 344}}
+  230,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 345}}
   54,trans {{277 198}}
   315,trans {}
-  3,trans {{306 10} {309 11} {310 12} {332 13} {333 14} {359 15} {383 16} {425 17} {469 18} {470 19}}
+  3,trans {{306 10} {309 11} {310 12} {332 13} {333 14} {359 15} {383 16} {425 17} {470 18} {471 19}}
+  401,trans {}
   391,trans {}
-  143,trans {{275 268}}
-  228,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 339}}
-  53,trans {{317 192} {323 193} {360 194} {377 195} {386 196} {461 197}}
+  143,trans {{275 272}}
+  228,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 343}}
+  53,trans {{317 192} {323 193} {360 194} {377 195} {386 196} {462 197}}
   314,trans {}
   2,trans {}
-  390,trans {{275 396} {396 129} {397 130} {398 131} {399 132} {432 397}}
-  389,trans {{275 394} {396 129} {397 130} {398 131} {399 132} {432 395}}
-  142,trans {{277 267}}
+  400,trans {}
+  390,trans {{275 273} {276 274} {417 397}}
+  389,trans {{275 273} {276 274} {417 396}}
+  142,trans {{277 271}}
   227,trans {}
-  52,trans {{295 186} {297 187} {304 188} {314 189} {351 190} {445 191}}
+  52,trans {{295 186} {297 187} {304 188} {314 189} {351 190} {446 191}}
   313,trans {}
   1,trans {{424 9}}
-  388,trans {}
-  141,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 266}}
-  226,trans {{277 338}}
-  51,trans {{345 180} {346 181} {350 182} {374 183} {442 185}}
+  388,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 395}}
+  141,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 270}}
+  226,trans {{277 342}}
+  51,trans {{345 180} {346 181} {350 182} {374 183} {443 185}}
   312,trans {}
   0,trans {{277 1} {287 2} {332 3} {342 4} {369 5} {418 6} {420 7} {423 8}}
   387,trans {}
   139,trans {}
   140,trans {}
-  225,trans {{277 337}}
+  225,trans {{277 341}}
   49,trans {{277 179}}
-  50,trans {{345 180} {346 181} {350 182} {374 183} {442 184}}
+  50,trans {{345 180} {346 181} {350 182} {374 183} {443 184}}
   311,trans {}
-  386,trans {{275 269} {276 270} {417 393}}
+  386,trans {}
   138,trans {}
   224,trans {}
-  48,trans {{353 176} {395 177} {448 178}}
+  48,trans {{353 176} {395 177} {449 178}}
   299,trans {}
   309,trans {}
   310,trans {}
-  385,trans {{275 269} {276 270} {417 392}}
+  385,trans {}
   137,trans {}
   223,trans {}
   47,trans {{277 175}}
   298,trans {}
   308,trans {}
-  384,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 391}}
+  384,trans {}
   136,trans {}
-  222,trans {{277 336}}
-  46,trans {{277 173} {440 174}}
+  222,trans {{277 340}}
+  46,trans {{277 173} {441 174}}
   297,trans {}
   307,trans {}
   383,trans {}
   135,trans {}
   221,trans {}
   45,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 172}}
-  296,trans {{282 384} {338 385} {339 386}}
+  296,trans {}
   306,trans {}
   382,trans {}
   134,trans {}
   219,trans {}
   220,trans {}
-  44,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {355 169} {412 170} {450 171}}
-  295,trans {}
+  44,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {355 169} {412 170} {451 171}}
+  295,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 387}}
   305,trans {}
   381,trans {}
   133,trans {}
   218,trans {}
-  43,trans {{296 165} {322 166} {365 167} {439 168}}
+  43,trans {{296 165} {322 166} {365 167} {440 168}}
   294,trans {}
   304,trans {}
   380,trans {}
   379,trans {}
   132,trans {}
   217,trans {}
-  42,trans {{318 156} {319 157} {322 158} {324 159} {337 160} {361 161} {368 162} {391 163} {463 164}}
-  293,trans {}
+  42,trans {{318 156} {319 157} {322 158} {324 159} {337 160} {361 161} {368 162} {391 163} {464 164}}
+  293,trans {{277 386}}
   303,trans {}
   378,trans {}
   131,trans {}
   216,trans {}
   41,trans {{277 155}}
-  292,trans {}
+  292,trans {{277 385}}
   302,trans {}
   377,trans {}
   129,trans {}
   130,trans {}
   215,trans {}
-  39,trans {{277 147} {406 148} {407 149} {408 150} {409 151} {436 152} {437 153}}
+  39,trans {{277 147} {406 148} {407 149} {408 150} {409 151} {437 152} {438 153}}
   40,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 154}}
-  291,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 383}}
+  291,trans {{277 384}}
   301,trans {}
   376,trans {}
   128,trans {}
   214,trans {}
-  38,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {290 141} {295 142} {394 143} {412 144} {458 146}}
-  289,trans {{277 382}}
+  38,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {290 141} {295 142} {394 143} {412 144} {459 146}}
+  289,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 383}}
   290,trans {}
-  300,trans {}
+  300,trans {{282 388} {338 389} {339 390}}
   375,trans {}
   127,trans {}
   213,trans {}
-  37,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {290 141} {295 142} {394 143} {412 144} {458 145}}
-  288,trans {{277 381}}
+  37,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {290 141} {295 142} {394 143} {412 144} {459 145}}
+  288,trans {}
   374,trans {}
   126,trans {}
   212,trans {}
-  36,trans {{275 138} {441 140}}
-  287,trans {{277 380}}
+  36,trans {{275 138} {442 140}}
+  287,trans {{277 382}}
   373,trans {}
   125,trans {}
   211,trans {}
-  35,trans {{275 138} {441 139}}
-  286,trans {}
+  35,trans {{275 138} {442 139}}
+  286,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 381}}
   372,trans {}
   124,trans {}
   199,trans {}
   209,trans {}
   210,trans {}
-  34,trans {{302 135} {320 136} {435 137}}
-  285,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 379}}
+  34,trans {{302 135} {320 136} {436 137}}
+  285,trans {}
   371,trans {}
   123,trans {}
   198,trans {}
@@ -4552,25 +4596,25 @@ array set plot::lr1_table {
   197,trans {}
   207,trans {}
   32,trans {{396 129} {397 130} {398 131} {399 132} {432 133}}
-  283,trans {{277 378}}
+  283,trans {}
   368,trans {}
-  121,trans {{277 265}}
+  121,trans {{277 269}}
   196,trans {}
   206,trans {}
   31,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 128}}
-  282,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 377}}
+  282,trans {}
   367,trans {}
   119,trans {}
   120,trans {}
   195,trans {}
-  205,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 335}}
-  30,trans {{277 112} {287 113} {306 114} {309 115} {310 116} {332 117} {359 118} {383 119} {456 120} {457 121}}
+  205,trans {{257 122} {258 123} {259 124} {260 125} {261 126} {262 127} {412 339}}
+  30,trans {{277 112} {287 113} {306 114} {309 115} {310 116} {332 117} {359 118} {383 119} {457 120} {458 121}}
   29,trans {}
-  281,trans {}
+  281,trans {{275 273} {276 274} {343 275} {408 276} {410 277} {411 278} {417 279} {439 380}}
   366,trans {}
   118,trans {}
   194,trans {}
-  204,trans {{277 334}}
+  204,trans {{277 338}}
   28,trans {}
   279,trans {}
   280,trans {}
@@ -4638,38 +4682,38 @@ array set plot::token_id_table {
   363,title RGB
   434,t 1
   448,title {}
-  471,line 608
+  471,line 605
   259,t 0
   260,t 0
-  467,line 582
+  467,line 583
   276,title float
   312,t 0
   362,title RELIEF
-  464,line 568
+  464,line 564
   354,t 0
   447,title {}
-  461,line 543
+  461,line 536
   x x
   y y
   396,t 0
   406,t 0
-  457,line 510
+  457,line 511
   275,title integer
   448,t 1
   361,title RANGE
-  454,line 493
+  454,line 488
   446,title {}
   274,t 0
-  451,line 462
-  447,line 441
+  451,line 464
+  447,line 443
   274,title ITALIC
   326,t 0
   359,title QUADRATIC
   360,title RAISED
-  444,line 422
+  444,line 424
   368,t 0
   445,title {}
-  441,line 407
+  441,line 409
   421,t 1
   273,title ROMAN
   437,line 385
@@ -4852,31 +4896,32 @@ array set plot::token_id_table {
   424,title {}
   316,t 0
   358,t 0
+  473,line 621
   337,title LOG
   411,t 0
   470,line 599
-  469,line 593
+  469,line 592
   423,title {}
-  466,line 577
+  466,line 578
   453,t 1
-  463,line 558
+  463,line 556
   278,t 0
   336,title LOADCONFIG
-  460,line 530
+  460,line 531
   459,line 525
   422,title {}
   331,t 0
   456,line 505
   373,t 0
-  453,line 482
+  453,line 474
   X,t 0
   335,title LOAD
   425,t 1
-  450,line 458
-  449,line 449
+  450,line 455
+  449,line 451
   421,title {}
   467,t 1
-  446,line 437
+  446,line 435
   303,t 0
   293,t 0
   257 YES_
@@ -4892,15 +4937,15 @@ array set plot::token_id_table {
   345,t 0
   419,title {}
   420,title {}
-  439,line 398
-  440,line 403
+  439,line 397
+  440,line 404
   265 FONTSLANT_
   266 FONTSTYLE_
   267 FONTWEIGHT_
   268 TIMES_
   270 COURIER_
   269 HELVETICA_
-  436,line 379
+  436,line 381
   271 NORMAL_
   387,t 0
   272 BOLD_
@@ -5154,70 +5199,71 @@ array set plot::token_id_table {
   399,title XYEXEY
   409,title PNG
   410,title PACKBITS
-  434 select
-  435 delete
-  436 export
-  437 exportExt
+  434 graph
+  435 select
+  436 delete
+  437 export
   375,t 0
-  438 exportOps
+  438 exportExt
   336,line 94
-  439 layout
-  440 load
-  441 duplicate
-  442 pagesetup
-  443 pageOrient
-  444 pageSize
-  445 print
+  439 exportOps
+  440 layout
+  441 load
+  442 duplicate
+  443 pagesetup
+  444 pageOrient
+  445 pageSize
   333,line 91
   427,t 1
-  446 printDest
+  446 print
   323,title GROOVE
-  447 printColor
-  448 mode
-  450 legend
-  449 axis
-  451 legendPos
+  447 printDest
+  448 printColor
+  450 axis
+  449 mode
+  451 legend
   329,line 87
   330,line 88
   398,title XYEY
   408,title JPEG
   470,t 1
   469,t 1
-  452 fontt
-  453 fontType
-  454 title
-  455 barmode
-  456 color
+  452 legendPos
+  453 fontt
+  454 fontType
+  455 title
+  456 barmode
   326,line 84
-  457 dummy1
+  457 color
   295,t 0
   305,t 0
-  458 errorr
-  460 shapes
-  459 shape
-  461 relief
-  462 smooth
+  458 dummy1
+  460 shape
+  459 errorr
+  461 shapes
+  462 relief
   323,line 81
-  463 oldGraph
+  463 smooth
   322,title GRID
-  464 oldGraphGrid
+  464 oldGraph
   347,t 0
-  465 oldGraphRange
-  466 oldGraphLabels
-  467 oldGraphType
+  465 oldGraphGrid
+  466 oldGraphRange
+  467 oldGraphLabels
   319,line 77
   320,line 78
   397,title XYEX
   407,title TIFF
-  468 oldGraphScale
-  470 dummy2
-  469 oldLine
-  471 oldView
+  468 oldGraphType
+  470 oldLine
+  469 oldGraphScale
+  471 dummy2
   389,t 0
   390,t 0
   400,t 0
-  472 start'
+  472 oldView
   y,line 296
+  473 start'
   316,line 73
   442,t 1
   313,line 70
@@ -5294,19 +5340,20 @@ array set plot::token_id_table {
   457,t 1
   388,title TITLE
   283,t 0
-  472,line 615
+  472,line 614
   335,t 0
   312,title FAMILY
-  468,line 586
+  468,line 588
   387,title TABLOID
   377,t 0
-  465,line 572
+  465,line 574
+  473,title {}
   429,t 1
   430,t 1
-  462,line 550
+  462,line 549
   311,title EXPORT
   472,t 1
-  458,line 519
+  458,line 516
   386,title SUNKEN
   455,line 499
   297,t 0
@@ -5318,14 +5365,14 @@ array set plot::token_id_table {
   299,title CUBIC
   309,title ERROR
   310,title ERRORBAR
-  448,line 445
+  448,line 447
   385,title STYLE
   392,t 0
   402,t 0
-  445,line 429
+  445,line 428
   471,title {}
   444,t 1
-  442,line 412
+  442,line 413
   298,title CROSS
   270,t 0
   269,t 0
@@ -5365,6 +5412,7 @@ array set plot::token_id_table {
   381,title STATS
   395,line 154
   405,line 167
+  473,t 1
   466,title {}
   392,line 151
   402,line 163
@@ -5610,7 +5658,7 @@ proc plot::yyparse {} {
                     61 { set _ xyey }
                     62 { set _ xyexey }
                     64 { PlotCmdSave $2 }
-                    65 { ProcessCmdCVAR0 PlotAddGraph }
+                    65 { ProcessCmdCVAR0 PlotAddGraph $3 }
                     67 { PlotCmdData $2 }
                     68 { ProcessCmdCVAR0 PlotDeleteDataSetAll }
                     72 { ProcessCmdCVAR stats $2 PlotStats }
@@ -5632,146 +5680,150 @@ proc plot::yyparse {} {
                     99 { PlotCmdUpdateElement graph,ds,dash $2 }
                     100 { ProcessCmdCVAR layout $2 PlotLayoutCanvas }
                     102 { ProcessCmdCVAR graph,ds,current $2 }
-                    105 { ProcessCmdCVAR graph,ds,current $2 }
-                    106 { ProcessCmdCVAR graph,current $2 }
-                    107 { ProcessCmdCVAR graph,ds,current $1 }
-                    108 { ProcessCmdCVAR0 PlotDeleteGraphCurrent }
-                    109 { ProcessCmdCVAR0 PlotDeleteDataSetCurrent }
-                    110 { PlotCmdExport [ExtToFormat $1] $1 }
-                    111 { PlotCmdExport [ExtToFormat $1] $1 }
-                    112 { PlotCmdExport $1 $2 }
-                    113 { PlotCmdExport $1 $2 }
-                    114 { set _ gif }
-                    115 { set _ tiff }
-                    116 { set _ jpeg }
-                    117 { set _ png }
-                    118 { ProcessCmdSet iap tiff,compress none }
-                    119 { ProcessCmdSet iap tiff,compress jpeg }
-                    120 { ProcessCmdSet iap tiff,compress packbits }
-                    121 { ProcessCmdSet iap tiff,compress deflate }
-                    122 { ProcessCmdSet iap jpeg,quality $1 }
-                    123 { set _ row }
-                    124 { set _ column }
-                    125 { set _ grid }
-                    126 { PlotCmdLoad $1 xy }
-                    127 { PlotCmdLoad $1 $2 }
-                    128 { global cvarname; PlotDupDataSet $cvarname }
-                    129 { global cvarname; PlotDupDataSet $cvarname }
-                    130 { ProcessCmdSet ps orient $2 }
-                    131 { ProcessCmdSet ps orient $2 }
-                    132 { ProcessCmdSet ps size $2 }
-                    133 { ProcessCmdSet ps size $2 }
-                    134 { set _ portrait }
-                    135 { set _ landscape }
-                    136 { set _ letter }
-                    137 { set _ legal }
-                    138 { set _ tabloid }
-                    139 { set _ poster }
-                    140 { set _ a4 }
-                    141 { ProcessCmdCVAR0 PlotPostScript }
-                    142 { ProcessCmdSet ps dest $2 }
-                    143 { ProcessCmdSet ps cmd $2 }
-                    144 { ProcessCmdSet ps filename $2 }
-                    145 { ProcessCmdSet ps color $2 }
-                    146 { ProcessCmdSet ps color $2 }
-                    147 { set _ printer }
-                    148 { set _ file }
-                    149 { set _ rgb }
-                    150 { set _ gray }
-                    151 { set _ pointer }
-                    152 { set _ zoom }
-                    153 { PlotCmdUpdateGraph "graph,axis,$1,grid" $3 }
-                    154 { PlotCmdUpdateGraph "graph,axis,$1,log" $3 }
-                    155 { PlotCmdUpdateGraph "graph,axis,$1,flip" $3 }
-                    156 { PlotCmdUpdateGraph "graph,axis,$1,auto" $3 }
-                    157 { PlotCmdUpdateGraph "graph,axis,$1,min" $3 }
-                    158 { PlotCmdUpdateGraph "graph,axis,$1,max" $3 }
-                    159 { PlotCmdUpdateGraph "graph,axis,$1,format" $3 }
-                    160 { PlotCmdUpdateCanvas legend $1 }
-                    161 { PlotCmdUpdateCanvas legend,position $2 }
-                    162 { set _ right }
-                    163 { set _ left }
-                    164 { set _ top }
-                    165 { set _ bottom }
-                    166 { PlotCmdUpdateCanvas "$1,family" $3 }
-                    167 { PlotCmdUpdateCanvas "$1,family" $3 }
-                    168 { PlotCmdUpdateCanvas "$1,size" $3 }
-                    169 { PlotCmdUpdateCanvas "$1,weight" $3 }
-                    170 { PlotCmdUpdateCanvas "$1,slant" $3 }
-                    171 { PlotCmdFontStyle $1 $3 }
+                    105 { set _ line }
+                    106 { set _ line }
+                    107 { set _ bar }
+                    108 { set _ scatter }
+                    109 { ProcessCmdCVAR graph,ds,current $2 }
+                    110 { ProcessCmdCVAR graph,current $2 }
+                    111 { ProcessCmdCVAR graph,ds,current $1 }
+                    112 { ProcessCmdCVAR0 PlotDeleteGraphCurrent }
+                    113 { ProcessCmdCVAR0 PlotDeleteDataSetCurrent }
+                    114 { PlotCmdExport [ExtToFormat $1] $1 }
+                    115 { PlotCmdExport [ExtToFormat $1] $1 }
+                    116 { PlotCmdExport $1 $2 }
+                    117 { PlotCmdExport $1 $2 }
+                    118 { set _ gif }
+                    119 { set _ tiff }
+                    120 { set _ jpeg }
+                    121 { set _ png }
+                    122 { ProcessCmdSet iap tiff,compress none }
+                    123 { ProcessCmdSet iap tiff,compress jpeg }
+                    124 { ProcessCmdSet iap tiff,compress packbits }
+                    125 { ProcessCmdSet iap tiff,compress deflate }
+                    126 { ProcessCmdSet iap jpeg,quality $1 }
+                    127 { set _ row }
+                    128 { set _ column }
+                    129 { set _ grid }
+                    130 { PlotCmdLoad $1 xy }
+                    131 { PlotCmdLoad $1 $2 }
+                    132 { global cvarname; PlotDupDataSet $cvarname }
+                    133 { global cvarname; PlotDupDataSet $cvarname }
+                    134 { ProcessCmdSet ps orient $2 }
+                    135 { ProcessCmdSet ps orient $2 }
+                    136 { ProcessCmdSet ps size $2 }
+                    137 { ProcessCmdSet ps size $2 }
+                    138 { set _ portrait }
+                    139 { set _ landscape }
+                    140 { set _ letter }
+                    141 { set _ legal }
+                    142 { set _ tabloid }
+                    143 { set _ poster }
+                    144 { set _ a4 }
+                    145 { ProcessCmdCVAR0 PlotPostScript }
+                    146 { ProcessCmdSet ps dest $2 }
+                    147 { ProcessCmdSet ps cmd $2 }
+                    148 { ProcessCmdSet ps filename $2 }
+                    149 { ProcessCmdSet ps color $2 }
+                    150 { ProcessCmdSet ps color $2 }
+                    151 { set _ printer }
+                    152 { set _ file }
+                    153 { set _ rgb }
+                    154 { set _ gray }
+                    155 { set _ pointer }
+                    156 { set _ zoom }
+                    157 { PlotCmdUpdateGraph "graph,axis,$1,grid" $3 }
+                    158 { PlotCmdUpdateGraph "graph,axis,$1,log" $3 }
+                    159 { PlotCmdUpdateGraph "graph,axis,$1,flip" $3 }
+                    160 { PlotCmdUpdateGraph "graph,axis,$1,auto" $3 }
+                    161 { PlotCmdUpdateGraph "graph,axis,$1,min" $3 }
+                    162 { PlotCmdUpdateGraph "graph,axis,$1,max" $3 }
+                    163 { PlotCmdUpdateGraph "graph,axis,$1,format" $3 }
+                    164 { PlotCmdUpdateCanvas legend $1 }
+                    165 { PlotCmdUpdateCanvas legend,position $2 }
+                    166 { set _ right }
+                    167 { set _ left }
+                    168 { set _ top }
+                    169 { set _ bottom }
+                    170 { PlotCmdUpdateCanvas "$1,family" $3 }
+                    171 { PlotCmdUpdateCanvas "$1,family" $3 }
                     172 { PlotCmdUpdateCanvas "$1,size" $3 }
                     173 { PlotCmdUpdateCanvas "$1,weight" $3 }
                     174 { PlotCmdUpdateCanvas "$1,slant" $3 }
                     175 { PlotCmdFontStyle $1 $3 }
-                    176 { set _ graph,title }
-                    177 { set _ axis,title }
-                    178 { set _ axis,title }
-                    179 { set _ axis,font }
-                    180 { set _ axis,font }
-                    181 { set _ legend,font }
-                    182 { set _ legend,title }
-                    183 { PlotCmdUpdateGraph graph,title $1 }
-                    184 { PlotCmdUpdateGraph "graph,axis,$1,title" $2 }
-                    185 { PlotCmdUpdateGraph "graph,axis,$1,title" $2 }
-                    186 { PlotCmdUpdateGraph graph,legend,title $2 }
-                    187 { set _ normal }
-                    188 { set _ stacked }
-                    189 { set _ aligned }
-                    190 { set _ overlap }
-                    191 { PlotCmdUpdateElement graph,ds,color $1 }
-                    192 { PlotCmdUpdateElement graph,ds,color $2 }
-                    200 { PlotCmdUpdateElement graph,ds,error $1 }
-                    201 { PlotCmdUpdateElement graph,ds,error,cap $2 }
-                    202 { PlotCmdUpdateElement graph,ds,error,color $2 }
-                    203 { PlotCmdUpdateElement graph,ds,error,width $2 }
-                    204 { PlotCmdUpdateElement graph,ds,shape,symbol $1 }
-                    205 { PlotCmdUpdateElement graph,ds,shape,file $2 }
-                    206 { PlotCmdUpdateElement graph,ds,shape,color $2 }
-                    207 { set _ none }
-                    208 { set _ circle }
-                    209 { set _ square }
-                    210 { set _ diamond }
-                    211 { set _ plus }
-                    212 { set _ splus }
-                    213 { set _ scross }
-                    214 { set _ triangle }
-                    215 { set _ arrow }
-                    216 { set _ scross }
-                    217 { set _ flat }
-                    218 { set _ sunken }
-                    219 { set _ raised }
-                    220 { set _ solid }
-                    221 { set _ groove }
-                    222 { set _ step }
-                    223 { set _ linear }
-                    224 { set _ cubic }
-                    225 { set _ quadratic }
-                    226 { set _ catrom }
-                    228 { PlotCmdUpdateGraph "graph,axis,$2,log" $3 }
-                    229 { PlotCmdUpdateGraph "graph,axis,$2,flip" $3 }
-                    230 { PlotCmdUpdateGraph "graph,axis,$3,format" $3 }
-                    235 { PlotCmdUpdateGraph "graph,axis,$1,grid" $2 }
-                    236 { PlotCmdUpdateGraph "graph,axis,x,grid" $1; PlotCmdUpdateGraph "graph,axis,y,grid" $1 }
-                    237 { PlotCmdUpdateGraph "graph,axis,$1,auto" $3 }
-                    238 { PlotCmdUpdateGraph "graph,axis,$1,min" $3 }
-                    239 { PlotCmdUpdateGraph "graph,axis,$1,max" $3 }
-                    240 { PlotCmdUpdateGraph graph,title $2 }
-                    241 { PlotCmdUpdateGraph "graph,axis,$1,title" $2 }
-                    242 { PlotCmdUpdateGraph graph,legend,title $2 }
-                    245 { PlotCmdUpdateGraph "graph,axis,x,log" 0; PlotCmdUpdateGraph "graph,axis,y,log" 0 }
-                    246 { PlotCmdUpdateGraph "graph,axis,x,log" 0; PlotCmdUpdateGraph "graph,axis,y,log" 1 }
-                    247 { PlotCmdUpdateGraph "graph,axis,x,log" 1; PlotCmdUpdateGraph "graph,axis,y,log" 0 }
-                    248 { PlotCmdUpdateGraph "graph,axis,x,log" 1; PlotCmdUpdateGraph "graph,axis,y,log" 1 }
-                    249 { PlotCmdUpdateElement graph,ds,shape,symbol $2 }
-                    250 { PlotCmdUpdateElement graph,ds,width $3 }
-                    251 { PlotCmdUpdateElement graph,ds,dash $3 }
-                    252 { PlotCmdUpdateElement graph,ds,error $3 }
-                    259 { PlotCmdUpdateElement graph,ds,show $2 }
-                    260 { PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth linear }
-                    261 { PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth step }
-                    262 { PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth quadratic }
-                    263 { PlotCmdUpdateElement graph,ds,error $2 }
-                    264 { PlotCmdUpdateElement graph,ds,error $2 }
+                    176 { PlotCmdUpdateCanvas "$1,size" $3 }
+                    177 { PlotCmdUpdateCanvas "$1,weight" $3 }
+                    178 { PlotCmdUpdateCanvas "$1,slant" $3 }
+                    179 { PlotCmdFontStyle $1 $3 }
+                    180 { set _ graph,title }
+                    181 { set _ axis,title }
+                    182 { set _ axis,title }
+                    183 { set _ axis,font }
+                    184 { set _ axis,font }
+                    185 { set _ legend,font }
+                    186 { set _ legend,title }
+                    187 { PlotCmdUpdateGraph graph,title $1 }
+                    188 { PlotCmdUpdateGraph "graph,axis,$1,title" $2 }
+                    189 { PlotCmdUpdateGraph "graph,axis,$1,title" $2 }
+                    190 { PlotCmdUpdateGraph graph,legend,title $2 }
+                    191 { set _ normal }
+                    192 { set _ stacked }
+                    193 { set _ aligned }
+                    194 { set _ overlap }
+                    195 { PlotCmdUpdateElement graph,ds,color $1 }
+                    196 { PlotCmdUpdateElement graph,ds,color $2 }
+                    204 { PlotCmdUpdateElement graph,ds,error $1 }
+                    205 { PlotCmdUpdateElement graph,ds,error,cap $2 }
+                    206 { PlotCmdUpdateElement graph,ds,error,color $2 }
+                    207 { PlotCmdUpdateElement graph,ds,error,width $2 }
+                    208 { PlotCmdUpdateElement graph,ds,shape,symbol $1 }
+                    209 { PlotCmdUpdateElement graph,ds,shape,file $2 }
+                    210 { PlotCmdUpdateElement graph,ds,shape,color $2 }
+                    211 { set _ none }
+                    212 { set _ circle }
+                    213 { set _ square }
+                    214 { set _ diamond }
+                    215 { set _ plus }
+                    216 { set _ splus }
+                    217 { set _ scross }
+                    218 { set _ triangle }
+                    219 { set _ arrow }
+                    220 { set _ scross }
+                    221 { set _ flat }
+                    222 { set _ sunken }
+                    223 { set _ raised }
+                    224 { set _ solid }
+                    225 { set _ groove }
+                    226 { set _ step }
+                    227 { set _ linear }
+                    228 { set _ cubic }
+                    229 { set _ quadratic }
+                    230 { set _ catrom }
+                    232 { PlotCmdUpdateGraph "graph,axis,$2,log" $3 }
+                    233 { PlotCmdUpdateGraph "graph,axis,$2,flip" $3 }
+                    234 { PlotCmdUpdateGraph "graph,axis,$3,format" $3 }
+                    239 { PlotCmdUpdateGraph "graph,axis,$1,grid" $2 }
+                    240 { PlotCmdUpdateGraph "graph,axis,x,grid" $1; PlotCmdUpdateGraph "graph,axis,y,grid" $1 }
+                    241 { PlotCmdUpdateGraph "graph,axis,$1,auto" $3 }
+                    242 { PlotCmdUpdateGraph "graph,axis,$1,min" $3 }
+                    243 { PlotCmdUpdateGraph "graph,axis,$1,max" $3 }
+                    244 { PlotCmdUpdateGraph graph,title $2 }
+                    245 { PlotCmdUpdateGraph "graph,axis,$1,title" $2 }
+                    246 { PlotCmdUpdateGraph graph,legend,title $2 }
+                    249 { PlotCmdUpdateGraph "graph,axis,x,log" 0; PlotCmdUpdateGraph "graph,axis,y,log" 0 }
+                    250 { PlotCmdUpdateGraph "graph,axis,x,log" 0; PlotCmdUpdateGraph "graph,axis,y,log" 1 }
+                    251 { PlotCmdUpdateGraph "graph,axis,x,log" 1; PlotCmdUpdateGraph "graph,axis,y,log" 0 }
+                    252 { PlotCmdUpdateGraph "graph,axis,x,log" 1; PlotCmdUpdateGraph "graph,axis,y,log" 1 }
+                    253 { PlotCmdUpdateElement graph,ds,shape,symbol $2 }
+                    254 { PlotCmdUpdateElement graph,ds,width $3 }
+                    255 { PlotCmdUpdateElement graph,ds,dash $3 }
+                    256 { PlotCmdUpdateElement graph,ds,error $3 }
+                    263 { PlotCmdUpdateElement graph,ds,show $2 }
+                    264 { PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth linear }
+                    265 { PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth step }
+                    266 { PlotCmdUpdateElement graph,ds,show $2; PlotCmdUpdateElement graph,ds,smooth quadratic }
+                    267 { PlotCmdUpdateElement graph,ds,error $2 }
+                    268 { PlotCmdUpdateElement graph,ds,error $2 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

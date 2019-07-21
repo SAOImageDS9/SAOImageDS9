@@ -52,13 +52,8 @@ proc PlotScatterDialog {varname wtt} {
     upvar #0 $varname var
     global $varname
 
-    set var(proc,addgraph) PlotScatterAddGraph
-    set var(proc,updateelement) PlotScatterUpdateElement
-    set var(proc,highlite) PlotScatterHighliteElement
-    set var(proc,button) PlotScatterButton
-
     PlotDialog $varname $wtt
-    PlotAddGraph $varname
+    PlotAddGraph $varname scatter
 }
 
 

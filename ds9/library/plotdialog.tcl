@@ -111,8 +111,8 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas add cascade -label [msgcat::mc {Select Graph}] \
 	-menu $var(mb).canvas.select
     $var(mb).canvas add separator
-    $var(mb).canvas add command -label [msgcat::mc {Add Graph}] \
-	-command [list PlotAddGraph $varname]
+    $var(mb).canvas add cascade -label [msgcat::mc {Add Graph}] \
+	-menu $var(mb).canvas.graph
     $var(mb).canvas add command -label [msgcat::mc {Delete Graph}] \
 	-command [list PlotDeleteGraphCurrent $varname]
     $var(mb).canvas add separator
@@ -127,6 +127,14 @@ proc PlotDialog {varname wtt} {
 	-menu $var(mb).canvas.font
     $var(mb).canvas add cascade -label [msgcat::mc {Background}] \
 	-menu $var(mb).canvas.bg
+
+    menu $var(mb).canvas.graph
+    $var(mb).canvas.graph add command -label [msgcat::mc {Line}] \
+	-command [list PlotAddGraph $varname line]
+    $var(mb).canvas.graph add command -label [msgcat::mc {Bar}] \
+	-command [list PlotAddGraph $varname bar]
+    $var(mb).canvas.graph add command -label [msgcat::mc {Scatter}] \
+	-command [list PlotAddGraph $varname scatter]
 
     menu $var(mb).canvas.layout
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Column}] \
@@ -503,7 +511,7 @@ proc DatasetNameDialog {varname} {
 	$var(mb).graph.select entryconfig "$var(graph,ds,name)" \
 	    -label "$ed(name)"
 	set var(graph,ds,name) $ed(name)
-	$var(proc,updateelement) $varname
+	$var(graph,proc,updateelement) $varname
     }
     
     set rr $ed(ok)
@@ -544,53 +552,53 @@ proc PlotShapeMenu {varname which} {
     $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {None}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value none \
-	-command [list $var(proc,updateelement) $varname]
+	-command [list $var(graph,proc,updateelement) $varname]
     $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Circle}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value circle \
-	-command [list $var(proc,updateelement) $varname]
+	-command [list $var(graph,proc,updateelement) $varname]
     $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Square}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value square \
-	-command [list $var(proc,updateelement) $varname]
+	-command [list $var(graph,proc,updateelement) $varname]
     $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Diamond}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value diamond \
-	-command [list $var(proc,updateelement) $varname]
+	-command [list $var(graph,proc,updateelement) $varname]
     $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Plus}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value plus \
-	-command [list $var(proc,updateelement) $varname]
+	-command [list $var(graph,proc,updateelement) $varname]
     $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Cross}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value cross \
-	-command [list $var(proc,updateelement) $varname]
+	-command [list $var(graph,proc,updateelement) $varname]
     $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Simple Plus}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value splus \
-	-command [list $var(proc,updateelement) $varname]
+	-command [list $var(graph,proc,updateelement) $varname]
     $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Simple Cross}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value scross \
-	-command [list $var(proc,updateelement) $varname]
+	-command [list $var(graph,proc,updateelement) $varname]
     $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Triangle}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value triangle \
-	-command [list $var(proc,updateelement) $varname]
+	-command [list $var(graph,proc,updateelement) $varname]
     $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Arrow}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value arrow \
-	-command [list $var(proc,updateelement) $varname]
+	-command [list $var(graph,proc,updateelement) $varname]
     $var(mb).$which.shape add separator
     $var(mb).$which.shape add checkbutton \
 	-label [msgcat::mc {Fill}] \
 	-variable ${varname}(graph,ds,shape,fill) \
-	-command [list $var(proc,updateelement) $varname]
+	-command [list $var(graph,proc,updateelement) $varname]
     $var(mb).$which.shape add cascade -label [msgcat::mc {Color}] \
 	-menu $var(mb).$which.shape.color
 
     PlotColorMenu $var(mb).$which.shape.color $varname graph,ds,shape,color \
-	[list $var(proc,updateelement) $varname]
+	[list $var(graph,proc,updateelement) $varname]
 }
 
 proc PlotErrorMenu {varname which} {

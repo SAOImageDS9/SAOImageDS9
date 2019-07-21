@@ -126,7 +126,7 @@ proc PlotLayoutCanvas {varname} {
 
 # Graph
 # used by backup
-proc PlotAddGraph {varname} {
+proc PlotAddGraph {varname type} {
     upvar #0 $varname var
     global $varname
 
@@ -139,7 +139,27 @@ proc PlotAddGraph {varname} {
     PlotInitGraph $varname
 
     # create graph
-    $var(proc,addgraph) $varname
+    set var(graph,type) $type
+    switch $type {
+	line {
+	    PlotLineAddGraph $varname
+	    set var(graph,proc,updateelement) PlotLineUpdateElement
+	    set var(graph,proc,highlite) PlotHighLiteElement
+	    set var(graph,proc,button) PlotButton
+	}
+	bar {
+	    PlotBarAddGraph $varname
+	    set var(graph,proc,updateelement) PlotBarUpdateElement
+	    set var(graph,proc,highlite) PlotHighLiteElement
+	    set var(graph,proc,button) PlotButton
+	}
+	scatter {
+	    PlotScatterAddGraph $varname
+	    set var(graph,proc,updateelement) PlotScattterUpdateElement
+	    set var(graph,proc,highlite) PlotScatterHighLiteElement
+	    set var(graph,proc,button) PlotScatterButton
+	}
+    }
 
     # create menu item
     $var(mb).canvas.select add radiobutton -label $var(graph,name) \
@@ -155,7 +175,7 @@ proc PlotAddGraph {varname} {
     }
 
     # update menus
-    $var(proc,updateelement) $varname
+    $var(graph,proc,updateelement) $varname
     PlotUpdateGraph $varname
     PlotUpdateCanvas $varname
 
@@ -230,7 +250,7 @@ proc PlotDeleteGraph {varname} {
     PlotRestoreState $varname
 
     # update menus
-    $var(proc,updateelement) $varname
+    $var(graph,proc,updateelement) $varname
     PlotUpdateGraph $varname
     PlotUpdateCanvas $varname
 
@@ -265,7 +285,7 @@ proc PlotAddElement {varname} {
     }
 
     # update menus
-    $var(proc,updateelement) $varname
+    $var(graph,proc,updateelement) $varname
 
     PlotUpdateGraphMenu $varname
 
@@ -342,7 +362,7 @@ proc PlotDeleteDataSet {varname} {
     PlotRestoreState $varname
 
     # update menus
-    $var(proc,updateelement) $varname
+    $var(graph,proc,updateelement) $varname
 
     PlotUpdateGraphMenu $varname
 
@@ -645,7 +665,7 @@ proc PlotButtonInvoke {varname x y} {
     upvar #0 $varname var
     global $varname
 
-    $var(proc,button) $varname $x $y
+    $var(graph,proc,button) $varname $x $y
 }
 
 proc PlotButton {varname x y} {
@@ -733,7 +753,7 @@ proc PlotBackup {ch dir} {
 		set var(graph,current) $cc
 		PlotCurrentGraph $varname
 		if {!$first} {
-		    puts $ch "PlotAddGraph $varname"
+		    puts $ch "PlotAddGraph $varname $var($cc,type)"
 		}
 		set first 0
 

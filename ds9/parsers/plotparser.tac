@@ -233,7 +233,7 @@ dim : XY_ {set _ xy}
 
 plotCmd : LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
- | ADD_ GRAPH_ {ProcessCmdCVAR0 PlotAddGraph}
+ | ADD_ GRAPH_ graph {ProcessCmdCVAR0 PlotAddGraph $3}
  | DELETE_ delete
  # xpa/samp only
  | DATA_ dim {PlotCmdData $2}
@@ -287,6 +287,12 @@ plotCmd : LOAD_ load
  | GRAPH_ oldGraph
  # backward compatibility
  | VIEW_ oldView
+ ;
+
+graph : {set _ line}
+ | LINE_ {set _ line}
+ | BAR_ {set _ bar}
+ | SCATTER_ {set _ scatter}
  ;
 
 select: DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $2}

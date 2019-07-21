@@ -289,7 +289,7 @@ proc PlotCmdUpdateElement {which value} {
     upvar #0 $cvarname cvar
 
     set cvar($which) $value
-    $cvar(proc,updateelement) $cvarname
+    $cvar(graph,proc,updateelement) $cvarname
 }
 
 proc PlotCmdFontStyle {which value} {
@@ -341,7 +341,7 @@ proc PlotCmdHighliteElement {varname rowlist} {
 	append result "[expr $rr-1] "
     }
 
-    $var(proc,highlite) $varname $result
+    $var(graph,proc,highlite) $varname $result
 }
 
 proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {

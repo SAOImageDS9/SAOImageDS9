@@ -96,6 +96,10 @@ proc PlotInitGraph {varname} {
     set var(graph) $var(canvas).gr$cc
 
     set var(graph,type) {}
+    set var(graph,proc,updateelement) {}
+    set var(graph,proc,hightlite) {}
+    set var(graph,proc,button) {}
+    
     set var(graph,name) "Graph $var(seq)"
     set var(graph,format) 1
     set var(graph,title) {}
@@ -165,6 +169,10 @@ proc PlotSaveState {varname} {
     set var($cc,graph) $var(graph)
 
     set var($cc,type) $var(graph,type)
+    set var($cc,proc,updateelement) $var(graph,proc,updateelement)
+    set var($cc,proc,highlite) $var(graph,proc,highlite)
+    set var($cc,proc,button) $var(graph,proc,button)
+
     set var($cc,name) $var(graph,name)
     set var($cc,format) $var(graph,format)
     set var($cc,title) $var(graph,title)
@@ -234,6 +242,10 @@ proc PlotRestoreState {varname} {
     set var(graph) $var($cc,graph)
 
     set var(graph,type) $var($cc,type)
+    set var(graph,proc,updateelement) $var(graph,proc,updateelement)
+    set var(graph,proc,highlite) $var(graph,proc,highlite)
+    set var(graph,proc,button) $var(graph,proc,button)
+    
     set var(graph,name) $var($cc,name)
     set var(graph,format) $var($cc,format)
     set var(graph,title) $var($cc,title)

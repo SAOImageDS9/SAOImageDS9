@@ -693,13 +693,11 @@ proc PlotUpdateGraphMenu {varname} {
     global $varname
 
     if {[llength $var(graph,dss)] == 0} {
-	$var(mb) entryconfig [msgcat::mc {Data}] -state disabled
 	$var(mb).graph entryconfig [msgcat::mc {Duplicate Dataset}] \
 	    -state disabled
 	$var(mb).graph entryconfig [msgcat::mc {Delete Dataset}] \
 	    -state disabled
     } else {
-	$var(mb) entryconfig [msgcat::mc {Data}] -state normal
 	$var(mb).graph entryconfig [msgcat::mc {Duplicate Dataset}] \
 	    -state normal
 
@@ -738,12 +736,18 @@ proc PlotUpdateDataMenu {varname} {
 	bar {
 	    $var(mb) add cascade -label [msgcat::mc {Data}] \
 		-menu $var(mb).databar
-	    $var(mb).graph entryconfig Mode -state normal
+	    $var(mb).graph entryconfig [msgcat::mc {Mode}] -state normal
 	}
 	scatter {
 	    $var(mb) add cascade -label [msgcat::mc {Data}] \
 		-menu $var(mb).datascatter
-	    $var(mb).graph entryconfig Mode -state disabled
+	    $var(mb).graph entryconfig [msgcat::mc {Mode}] -state disabled
 	}
+    }
+
+    if {[llength $var(graph,dss)] == 0} {
+	$var(mb) entryconfig [msgcat::mc {Data}] -state disabled
+    } else {
+	$var(mb) entryconfig [msgcat::mc {Data}] -state normal
     }
 }

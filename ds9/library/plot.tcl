@@ -549,7 +549,11 @@ proc PlotUpdateCanvas {varname} {
     PlotSaveState $varname
     
     foreach cc $var(graphs) {
-	$var($cc,graph) configure -barmode $var(bar,mode)
+	switch ($cc,type) {
+	    line {}
+	    bar {$var($cc,graph) configure -barmode $var(bar,mode)}
+	    scatter {}
+	}
 
 	$var($cc,graph) configure -plotpadx 0 -plotpady 0 \
 	    -font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)" \

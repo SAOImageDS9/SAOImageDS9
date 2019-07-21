@@ -49,14 +49,10 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis add cascade -label [msgcat::mc {Catalogs}] \
 	-menu $ds9(mb).analysis.cat
     $ds9(mb).analysis add separator
-    $ds9(mb).analysis add command -label "[msgcat::mc {Catalog Tool}]..." \
+    $ds9(mb).analysis add command -label [msgcat::mc {Catalog Tool}] \
 	-command CATTool
-    $ds9(mb).analysis add command -label "[msgcat::mc {Line Plot Tool}]..." \
-	-command PlotLineTool
-    $ds9(mb).analysis add command -label "[msgcat::mc {Bar Plot Tool}]..." \
-	-command PlotBarTool
-    $ds9(mb).analysis add command -label "[msgcat::mc {Scatter Plot Tool}]..." \
-	-command PlotScatterTool
+    $ds9(mb).analysis add cascade -label [msgcat::mc {Plot Tool}] \
+	-menu $ds9(mb).analysis.plot
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add command \
 	-label "[msgcat::mc {Virtual Observatory}]..."\
@@ -152,6 +148,14 @@ proc AnalysisMainMenu {} {
 	-command CATMatchFrame
     $ds9(mb).analysis.cat add separator
     CATAnalysisMenu
+
+    menu $ds9(mb).analysis.plot
+    $ds9(mb).analysis.plot add command -label [msgcat::mc {Line}] \
+	-command PlotLineTool
+    $ds9(mb).analysis.plot add command -label [msgcat::mc {Bar}] \
+	-command PlotBarTool
+    $ds9(mb).analysis.plot add command -label [msgcat::mc {Scatter}] \
+	-command PlotScatterTool
 }
 
 proc PrefsDialogAnalysisMenu {w} {

@@ -233,7 +233,7 @@ dim : XY_ {set _ xy}
 
 plotCmd : LOAD_ load
  | SAVE_ STRING_ {PlotCmdSave $2}
- | ADD_ GRAPH_ graph {ProcessCmdCVAR0 PlotAddGraph $3}
+ | ADD_ GRAPH_ graph {ProcessCmdCVAROpt PlotAddGraph $3}
  | DELETE_ delete
  # xpa/samp only
  | DATA_ dim {PlotCmdData $2}

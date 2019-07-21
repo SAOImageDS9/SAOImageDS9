@@ -5658,7 +5658,7 @@ proc plot::yyparse {} {
                     61 { set _ xyey }
                     62 { set _ xyexey }
                     64 { PlotCmdSave $2 }
-                    65 { ProcessCmdCVAR0 PlotAddGraph $3 }
+                    65 { ProcessCmdCVAROpt PlotAddGraph $3 }
                     67 { PlotCmdData $2 }
                     68 { ProcessCmdCVAR0 PlotDeleteDataSetAll }
                     72 { ProcessCmdCVAR stats $2 PlotStats }

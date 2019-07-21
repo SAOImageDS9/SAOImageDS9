@@ -252,6 +252,11 @@ proc ProcessCmdCVAR0 {cmd} {
     eval $cmd $cvarname
 }
 
+proc ProcessCmdCVAROpt {cmd opt} {
+    global cvarname
+    eval $cmd $cvarname $opt
+}
+
 proc ProcessCmdCVAR {key value {cmd {}}} {
     global cvarname
     upvar #0 $cvarname cvar

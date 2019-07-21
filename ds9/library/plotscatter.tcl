@@ -76,10 +76,76 @@ proc PlotScatterMenus {varname} {
 	-command [list DatasetNameDialog $varname]
 
     # Shape
-    PlotShapeMenu $varname datascatter
+    menu $var(mb).datascatter.shape
+    $var(mb).datascatter.shape add radiobutton \
+	-label [msgcat::mc {None}] \
+	-variable ${varname}(graph,ds,shape,symbol) -value none \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.shape add radiobutton \
+	-label [msgcat::mc {Circle}] \
+	-variable ${varname}(graph,ds,shape,symbol) -value circle \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.shape add radiobutton \
+	-label [msgcat::mc {Square}] \
+	-variable ${varname}(graph,ds,shape,symbol) -value square \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.shape add radiobutton \
+	-label [msgcat::mc {Diamond}] \
+	-variable ${varname}(graph,ds,shape,symbol) -value diamond \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.shape add radiobutton \
+	-label [msgcat::mc {Plus}] \
+	-variable ${varname}(graph,ds,shape,symbol) -value plus \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.shape add radiobutton \
+	-label [msgcat::mc {Cross}] \
+	-variable ${varname}(graph,ds,shape,symbol) -value cross \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.shape add radiobutton \
+	-label [msgcat::mc {Simple Plus}] \
+	-variable ${varname}(graph,ds,shape,symbol) -value splus \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.shape add radiobutton \
+	-label [msgcat::mc {Simple Cross}] \
+	-variable ${varname}(graph,ds,shape,symbol) -value scross \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.shape add radiobutton \
+	-label [msgcat::mc {Triangle}] \
+	-variable ${varname}(graph,ds,shape,symbol) -value triangle \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.shape add radiobutton \
+	-label [msgcat::mc {Arrow}] \
+	-variable ${varname}(graph,ds,shape,symbol) -value arrow \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.shape add separator
+    $var(mb).datascatter.shape add checkbutton \
+	-label [msgcat::mc {Fill}] \
+	-variable ${varname}(graph,ds,shape,fill) \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.shape add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).datascatter.shape.color
+
+    PlotColorMenu $var(mb).datascatter.shape.color $varname \
+	graph,ds,shape,color [list PlotScatterUpdateElement $varname]
 
     # Error
-    PlotErrorMenu $varname datascatter
+    menu $var(mb).datascatter.error
+    $var(mb).datascatter.error add checkbutton -label [msgcat::mc {Show}] \
+	-variable ${varname}(graph,ds,error) \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.error add checkbutton -label [msgcat::mc {Cap}] \
+	-variable ${varname}(graph,ds,error,cap) \
+	-command [list PlotScatterUpdateElement $varname]
+    $var(mb).datascatter.error add separator
+    $var(mb).datascatter.error add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).datascatter.error.color
+    $var(mb).datascatter.error add cascade -label [msgcat::mc {Width}] \
+	-menu $var(mb).datascatter.error.width
+
+    PlotColorMenu $var(mb).datascatter.error.color $varname \
+	graph,ds,error,color [list PlotScatterUpdateElement $varname]
+    WidthDashMenu $var(mb).datascatter.error.width $varname \
+	graph,ds,error,width {} [list PlotScatterUpdateElement $varname] {}
 }
 
 

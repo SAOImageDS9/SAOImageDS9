@@ -76,7 +76,7 @@ proc PlotBarMenus {varname} {
     $var(mb).databar add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
-    PlotColorMenu $var(mb).databar.color $varname graph,color \
+    PlotColorMenu $var(mb).databar.color $varname graph,ds,color \
 	[list PlotBarUpdateElement $varname]
 
     # Relief

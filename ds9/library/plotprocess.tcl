@@ -281,7 +281,7 @@ proc PlotCmdUpdateGraph {which value} {
     upvar #0 $cvarname cvar
 
     set cvar($which) $value
-    $cvar(proc,updategraph) $cvarname
+    PlotUpdateGraph $cvarname
 }
 
 proc PlotCmdUpdateElement {which value} {

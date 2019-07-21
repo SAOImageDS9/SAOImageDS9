@@ -54,41 +54,46 @@ proc PlotScatterDialog {varname wtt} {
 
     set var(proc,addgraph) PlotScatterAddGraph
     set var(proc,updatecanvas) PlotUpdateCanvas
-    set var(proc,updategraph) PlotUpdateGraph
     set var(proc,updateelement) PlotScatterUpdateElement
     set var(proc,highlite) PlotScatterHighliteElement
     set var(proc,button) PlotScatterButton
 
     PlotDialog $varname $wtt
     PlotAddGraph $varname
+}
+
+
+proc PlotScatterMenus {varname} {
+    upvar #0 $varname var
+    global $varname
 
     # Data
-    $var(mb).data add checkbutton -label [msgcat::mc {Show}] \
+    menu $var(mb).datascatter
+    $var(mb).datascatter add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
 	-command [list PlotScatterUpdateElement $varname]
-    $var(mb).data add separator
-    $var(mb).data add cascade -label [msgcat::mc {Shape}] \
-	-menu $var(mb).data.shape
-    $var(mb).data add cascade -label [msgcat::mc {Error}] \
-	-menu $var(mb).data.error
-    $var(mb).data add separator
-    $var(mb).data add command -label "[msgcat::mc {Name}]..." \
+    $var(mb).datascatter add separator
+    $var(mb).datascatter add cascade -label [msgcat::mc {Shape}] \
+	-menu $var(mb).datascatter.shape
+    $var(mb).datascatter add cascade -label [msgcat::mc {Error}] \
+	-menu $var(mb).datascatter.error
+    $var(mb).datascatter add separator
+    $var(mb).datascatter add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
     # Shape
-    PlotShapeMenu $varname
+    PlotShapeMenu $varname datascatter
 
     # Error
-    PlotErrorMenu $varname
+    PlotErrorMenu $varname datascatter
 }
+
 
 proc PlotScatterAddGraph {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc $var(graph,current)
-
-    set var($cc,type) scatter
+    set var(graph,type) scatter
     blt::graph $var(graph) -width 600 -height 500 -highlightthickness 0
 }
 

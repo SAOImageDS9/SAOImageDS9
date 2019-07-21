@@ -54,111 +54,114 @@ proc PlotLineDialog {varname wtt} {
 
     set var(proc,addgraph) PlotLineAddGraph
     set var(proc,updatecanvas) PlotUpdateCanvas
-    set var(proc,updategraph) PlotUpdateGraph
     set var(proc,updateelement) PlotLineUpdateElement
     set var(proc,highlite) PlotHighliteElement
     set var(proc,button) PlotButton
 
     PlotDialog $varname $wtt
     PlotAddGraph $varname
+}
+
+proc PlotLineMenus {varname} {
+    upvar #0 $varname var
+    global $varname
 
     # Data
-    $var(mb).data add checkbutton -label [msgcat::mc {Show}] \
+    menu $var(mb).dataline
+    $var(mb).dataline add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,show) \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data add separator
-    $var(mb).data add cascade -label [msgcat::mc {Shape}] \
-	-menu $var(mb).data.shape
-    $var(mb).data add cascade -label [msgcat::mc {Smooth}] \
-	-menu $var(mb).data.smooth
-    $var(mb).data add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).data.color
-    $var(mb).data add cascade -label [msgcat::mc {Width}] \
-	-menu $var(mb).data.width
-    $var(mb).data add cascade -label [msgcat::mc {Fill}] \
-	-menu $var(mb).data.fill
-    $var(mb).data add cascade -label [msgcat::mc {Error}] \
-	-menu $var(mb).data.error
-    $var(mb).data add separator
-    $var(mb).data add command -label "[msgcat::mc {Name}]..." \
+    $var(mb).dataline add separator
+    $var(mb).dataline add cascade -label [msgcat::mc {Shape}] \
+	-menu $var(mb).dataline.shape
+    $var(mb).dataline add cascade -label [msgcat::mc {Smooth}] \
+	-menu $var(mb).dataline.smooth
+    $var(mb).dataline add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).dataline.color
+    $var(mb).dataline add cascade -label [msgcat::mc {Width}] \
+	-menu $var(mb).dataline.width
+    $var(mb).dataline add cascade -label [msgcat::mc {Fill}] \
+	-menu $var(mb).dataline.fill
+    $var(mb).dataline add cascade -label [msgcat::mc {Error}] \
+	-menu $var(mb).dataline.error
+    $var(mb).dataline add separator
+    $var(mb).dataline add command -label "[msgcat::mc {Name}]..." \
 	-command [list DatasetNameDialog $varname]
 
     # Shape
-    PlotShapeMenu $varname
+    PlotShapeMenu $varname dataline
 
     # Smooth
-    menu $var(mb).data.smooth
-    $var(mb).data.smooth add radiobutton \
+    menu $var(mb).dataline.smooth
+    $var(mb).dataline.smooth add radiobutton \
 	-label [msgcat::mc {Step}] \
 	-variable ${varname}(graph,ds,smooth) -value step \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.smooth add radiobutton \
+    $var(mb).dataline.smooth add radiobutton \
 	-label [msgcat::mc {Linear}] \
 	-variable ${varname}(graph,ds,smooth) -value linear \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.smooth add radiobutton \
+    $var(mb).dataline.smooth add radiobutton \
 	-label [msgcat::mc {Cubic}] \
 	-variable ${varname}(graph,ds,smooth) -value cubic \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.smooth add radiobutton \
+    $var(mb).dataline.smooth add radiobutton \
 	-label [msgcat::mc {Quadratic}] \
 	-variable ${varname}(graph,ds,smooth) -value quadratic \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.smooth add radiobutton \
+    $var(mb).dataline.smooth add radiobutton \
 	-label [msgcat::mc {Catrom}] \
 	-variable ${varname}(graph,ds,smooth) -value catrom \
 	-command [list PlotLineUpdateElement $varname]
 
     # Color
-    PlotColorMenu $var(mb).data.color $varname graph,ds,color \
+    PlotColorMenu $var(mb).dataline.color $varname graph,ds,color \
 	[list PlotLineUpdateElement $varname]
 
     # Width
-    menu $var(mb).data.width
-    $var(mb).data.width add radiobutton \
+    menu $var(mb).dataline.width
+    $var(mb).dataline.width add radiobutton \
 	-label {0} -variable ${varname}(graph,ds,width) \
 	-value 0 -command [list PlotLineUpdateElement $varname]
-    $var(mb).data.width add radiobutton \
+    $var(mb).dataline.width add radiobutton \
 	-label {1} -variable ${varname}(graph,ds,width) \
 	-value 1 -command [list PlotLineUpdateElement $varname]
-    $var(mb).data.width add radiobutton \
+    $var(mb).dataline.width add radiobutton \
 	-label {2} -variable ${varname}(graph,ds,width) \
 	-value 2 -command [list PlotLineUpdateElement $varname]
-    $var(mb).data.width add radiobutton \
+    $var(mb).dataline.width add radiobutton \
 	-label {3} -variable ${varname}(graph,ds,width) \
 	-value 3 -command [list PlotLineUpdateElement $varname]
-    $var(mb).data.width add radiobutton \
+    $var(mb).dataline.width add radiobutton \
 	-label {4} -variable ${varname}(graph,ds,width) \
 	-value 4 -command [list PlotLineUpdateElement $varname]
-    $var(mb).data.width add separator
-    $var(mb).data.width add checkbutton \
+    $var(mb).dataline.width add separator
+    $var(mb).dataline.width add checkbutton \
 	-label [msgcat::mc {Dash}] -variable ${varname}(graph,ds,dash) \
 	-command [list PlotLineUpdateElement $varname]
 
     # Fill
-    menu $var(mb).data.fill
-    $var(mb).data.fill add checkbutton \
+    menu $var(mb).dataline.fill
+    $var(mb).dataline.fill add checkbutton \
 	-label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,fill) \
 	-command [list PlotLineUpdateElement $varname]
-    $var(mb).data.fill add separator
-    $var(mb).data.fill add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).data.fill.color
+    $var(mb).dataline.fill add separator
+    $var(mb).dataline.fill add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).dataline.fill.color
 
-    PlotColorMenu $var(mb).data.fill.color $varname graph,ds,fill,color \
+    PlotColorMenu $var(mb).dataline.fill.color $varname graph,ds,fill,color \
 	[list PlotLineUpdateElement $varname]
 
     # Error
-    PlotErrorMenu $varname
+    PlotErrorMenu $varname dataline
 }
 
 proc PlotLineAddGraph {varname} {
     upvar #0 $varname var
     global $varname
 
-    set cc $var(graph,current)
-
-    set var($cc,type) line
+    set var(graph,type) line
     blt::graph $var(graph) -width 600 -height 500 -highlightthickness 0
 }
 

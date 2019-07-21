@@ -39,7 +39,7 @@ proc PlotDialog {varname wtt} {
     $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
     $var(mb) add cascade -label [msgcat::mc {Canvas}] -menu $var(mb).canvas
     $var(mb) add cascade -label [msgcat::mc {Graph}] -menu $var(mb).graph
-    $var(mb) add cascade -label [msgcat::mc {Data}] -menu $var(mb).data
+    $var(mb) add cascade -label [msgcat::mc {Data}] -menu $var(mb).dataline
 
     # File
     menu $var(mb).file
@@ -196,7 +196,6 @@ proc PlotDialog {varname wtt} {
     $var(mb).graph add separator
     $var(mb).graph add command -label [msgcat::mc {Duplicate Dataset}] \
 	-command [list PlotDupDataSet $varname]
-    $var(mb).graph add separator
     $var(mb).graph add command -label [msgcat::mc {Delete Dataset}] \
 	-command [list PlotDeleteDataSetCurrent $varname]
     $var(mb).graph add separator
@@ -206,40 +205,59 @@ proc PlotDialog {varname wtt} {
 	-command "set ${varname}(list) 1; PlotList $varname"
     $var(mb).graph add separator
 
-    menu $var(mb).graph.select
-
     $var(mb).graph add cascade -label [msgcat::mc {Axes}] \
 	-menu $var(mb).graph.axes
     $var(mb).graph add separator
     $var(mb).graph add command -label "[msgcat::mc {Titles}]..." \
 	-command [list PlotGraphTitleDialog $varname]
+    $var(mb).graph add separator
+    $var(mb).graph add cascade -label [msgcat::mc {Mode}] \
+	-menu $var(mb).graph.barmode
+
+    menu $var(mb).graph.select
 
     menu $var(mb).graph.axes
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Grid}] \
 	-variable ${varname}(graph,axis,x,grid) \
-	-command [list $var(proc,updategraph) $varname]
+	-command [list PlotUpdateGraph $varname]
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
 	-variable ${varname}(graph,axis,x,log) \
-	-command [list $var(proc,updategraph) $varname]
+	-command [list PlotUpdateGraph $varname]
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
 	-variable ${varname}(graph,axis,x,flip) \
-	-command [list $var(proc,updategraph) $varname]
+	-command [list PlotUpdateGraph $varname]
     $var(mb).graph.axes add separator
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Y Grid}] \
 	-variable ${varname}(graph,axis,y,grid) \
-	-command [list $var(proc,updategraph) $varname]
+	-command [list PlotUpdateGraph $varname]
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
 	-variable ${varname}(graph,axis,y,log) \
-	-command [list $var(proc,updategraph) $varname]
+	-command [list PlotUpdateGraph $varname]
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
 	-variable ${varname}(graph,axis,y,flip) \
-	-command [list $var(proc,updategraph) $varname]
+	-command [list PlotUpdateGraph $varname]
     $var(mb).graph.axes add separator
     $var(mb).graph.axes add command -label "[msgcat::mc {Range}]..." \
 	-command [list PlotRangeDialog $varname]
 
-    # dataset
-    menu $var(mb).data
+    # Graph Mode
+    menu $var(mb).graph.barmode
+    $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Normal}] \
+	-variable ${varname}(bar,mode) -value normal \
+	-command [list $var(proc,updatecanvas) $varname]
+    $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Stacked}] \
+	-variable ${varname}(bar,mode) -value stacked \
+	-command [list $var(proc,updatecanvas) $varname]
+    $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Aligned}] \
+	-variable ${varname}(bar,mode) -value aligned \
+	-command [list $var(proc,updatecanvas) $varname]
+    $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Overlap}] \
+	-variable ${varname}(bar,mode) -value overlap \
+	-command [list $var(proc,updatecanvas) $varname]
+
+    PlotLineMenus $varname
+    PlotBarMenus $varname
+    PlotScatterMenus $varname
 }
 
 proc PlotDataFormatDialog {xarname} {
@@ -371,7 +389,7 @@ proc PlotRangeDialog {varname} {
 	set var(graph,axis,y,max) $ed(graph,axis,y,max) 
 	set var(graph,axis,y,format) $ed(graph,axis,y,format)
 
-	$var(proc,updategraph) $varname
+	PlotUpdateGraph $varname
     }
     
     set rr $ed(ok)
@@ -435,7 +453,7 @@ proc PlotGraphTitleDialog {varname} {
 	set var(graph,axis,y,title) $ed(graph,axis,y,title)
 	set var(graph,legend,title) $ed(graph,legend,title)
 
-	$var(proc,updategraph) $varname
+	PlotUpdateGraph $varname
     }
     
     set rr $ed(ok)
@@ -517,84 +535,84 @@ proc PlotLineShapeMenu {which var} {
 	-variable $var -value arrow
 }
 
-proc PlotShapeMenu {varname} {
+proc PlotShapeMenu {varname which} {
     upvar #0 $varname var
     global $varname
 
     # Shape
-    menu $var(mb).data.shape
-    $var(mb).data.shape add radiobutton \
+    menu $var(mb).$which.shape
+    $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {None}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value none \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.shape add radiobutton \
+    $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Circle}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value circle \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.shape add radiobutton \
+    $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Square}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value square \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.shape add radiobutton \
+    $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Diamond}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value diamond \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.shape add radiobutton \
+    $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Plus}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value plus \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.shape add radiobutton \
+    $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Cross}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value cross \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.shape add radiobutton \
+    $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Simple Plus}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value splus \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.shape add radiobutton \
+    $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Simple Cross}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value scross \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.shape add radiobutton \
+    $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Triangle}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value triangle \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.shape add radiobutton \
+    $var(mb).$which.shape add radiobutton \
 	-label [msgcat::mc {Arrow}] \
 	-variable ${varname}(graph,ds,shape,symbol) -value arrow \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.shape add separator
-    $var(mb).data.shape add checkbutton \
+    $var(mb).$which.shape add separator
+    $var(mb).$which.shape add checkbutton \
 	-label [msgcat::mc {Fill}] \
 	-variable ${varname}(graph,ds,shape,fill) \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.shape add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).data.shape.color
+    $var(mb).$which.shape add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).$which.shape.color
 
-    PlotColorMenu $var(mb).data.shape.color $varname graph,ds,shape,color \
+    PlotColorMenu $var(mb).$which.shape.color $varname graph,ds,shape,color \
 	[list $var(proc,updateelement) $varname]
 }
 
-proc PlotErrorMenu {varname} {
+proc PlotErrorMenu {varname which} {
     upvar #0 $varname var
     global $varname
 
-    menu $var(mb).data.error
-    $var(mb).data.error add checkbutton -label [msgcat::mc {Show}] \
+    menu $var(mb).$which.error
+    $var(mb).$which.error add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(graph,ds,error) \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.error add checkbutton -label [msgcat::mc {Cap}] \
+    $var(mb).$which.error add checkbutton -label [msgcat::mc {Cap}] \
 	-variable ${varname}(graph,ds,error,cap) \
 	-command [list $var(proc,updateelement) $varname]
-    $var(mb).data.error add separator
-    $var(mb).data.error add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).data.error.color
-    $var(mb).data.error add cascade -label [msgcat::mc {Width}] \
-	-menu $var(mb).data.error.width
+    $var(mb).$which.error add separator
+    $var(mb).$which.error add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).$which.error.color
+    $var(mb).$which.error add cascade -label [msgcat::mc {Width}] \
+	-menu $var(mb).$which.error.width
 
-    PlotColorMenu $var(mb).data.error.color $varname graph,ds,error,color \
+    PlotColorMenu $var(mb).$which.error.color $varname graph,ds,error,color \
 	[list $var(proc,updateelement) $varname]
-    WidthDashMenu $var(mb).data.error.width $varname graph,ds,error,width {} \
+    WidthDashMenu $var(mb).$which.error.width $varname graph,ds,error,width {} \
 	[list $var(proc,updateelement) $varname] {}
 }
 
@@ -670,9 +688,29 @@ proc PlotExport {varname fn format} {
     DarwinPhotoRestore $var(top) $geom
 }
 
-proc PlotUpdateDataSetMenu {varname} {
+proc PlotUpdateGraphMenu {varname} {
     upvar #0 $varname var
     global $varname
+
+    if {[llength $var(graph,dss)] == 0} {
+	$var(mb) entryconfig [msgcat::mc {Data}] -state disabled
+	$var(mb).graph entryconfig [msgcat::mc {Duplicate Dataset}] \
+	    -state disabled
+	$var(mb).graph entryconfig [msgcat::mc {Delete Dataset}] \
+	    -state disabled
+    } else {
+	$var(mb) entryconfig [msgcat::mc {Data}] -state normal
+	$var(mb).graph entryconfig [msgcat::mc {Duplicate Dataset}] \
+	    -state normal
+
+	if {!$var(graph,ds,manage)} {
+	    $var(mb).graph entryconfig [msgcat::mc {Delete Dataset}] \
+		-state disabled
+	} else {
+	    $var(mb).graph entryconfig [msgcat::mc {Delete Dataset}] \
+		-state normal
+	}
+    }
 
     # remove menu item
     $var(mb).graph.select delete 0 end
@@ -686,4 +724,26 @@ proc PlotUpdateDataSetMenu {varname} {
     }
 }
 
+proc PlotUpdateDataMenu {varname} {
+    upvar #0 $varname var
+    global $varname
 
+    $var(mb) delete [msgcat::mc {Data}]
+    switch $var(graph,type) {
+	line {
+	    $var(mb) add cascade -label [msgcat::mc {Data}] \
+		-menu $var(mb).dataline
+	    $var(mb).graph entryconfig Mode -state disabled
+	}
+	bar {
+	    $var(mb) add cascade -label [msgcat::mc {Data}] \
+		-menu $var(mb).databar
+	    $var(mb).graph entryconfig Mode -state normal
+	}
+	scatter {
+	    $var(mb) add cascade -label [msgcat::mc {Data}] \
+		-menu $var(mb).datascatter
+	    $var(mb).graph entryconfig Mode -state disabled
+	}
+    }
+}

@@ -156,10 +156,11 @@ proc PlotAddGraph {varname} {
 
     # update menus
     $var(proc,updateelement) $varname
-    $var(proc,updategraph) $varname
+    PlotUpdateGraph $varname
     $var(proc,updatecanvas) $varname
 
-    PlotUpdateDataSetMenu $varname
+    PlotUpdateGraphMenu $varname
+    PlotUpdateDataMenu $varname
 
     PlotStats $varname
     PlotList $varname
@@ -230,12 +231,13 @@ proc PlotDeleteGraph {varname} {
 
     # update menus
     $var(proc,updateelement) $varname
-    $var(proc,updategraph) $varname
+    PlotUpdateGraph $varname
     $var(proc,updatecanvas) $varname
 
     PlotLayoutCanvas $varname
 
-    PlotUpdateDataSetMenu $varname
+    PlotUpdateGraphMenu $varname
+    PlotUpdateDataMenu $varname
 
     PlotStats $varname
     PlotList $varname
@@ -265,7 +267,7 @@ proc PlotAddElement {varname} {
     # update menus
     $var(proc,updateelement) $varname
 
-    PlotUpdateDataSetMenu $varname
+    PlotUpdateGraphMenu $varname
 
     PlotStats $varname
     PlotList $varname
@@ -342,7 +344,7 @@ proc PlotDeleteDataSet {varname} {
     # update menus
     $var(proc,updateelement) $varname
 
-    PlotUpdateDataSetMenu $varname
+    PlotUpdateGraphMenu $varname
 
     PlotStats $varname
     PlotList $varname
@@ -358,7 +360,8 @@ proc PlotCurrentGraph {varname} {
 
     PlotRestoreState $varname
 
-    PlotUpdateDataSetMenu $varname
+    PlotUpdateGraphMenu $varname
+    PlotUpdateDataMenu $varname
 
     PlotStats $varname
     PlotList $varname
@@ -684,7 +687,7 @@ proc PlotTitle {varname title xaxis yaxis} {
     set var(graph,axis,x,title) "$xaxis"
     set var(graph,axis,y,title) "$yaxis"
 
-    $var(proc,updategraph) $varname
+    PlotUpdateGraph $varname
 }
 
 proc PlotBackup {ch dir} {

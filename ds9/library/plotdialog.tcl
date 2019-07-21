@@ -669,3 +669,21 @@ proc PlotExport {varname fn format} {
     # reset if needed
     DarwinPhotoRestore $var(top) $geom
 }
+
+proc PlotUpdateDataSetMenu {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    # remove menu item
+    $var(mb).graph.select delete 0 end
+
+    # create menu item
+    set cc $var(graph,current)
+    foreach nn $var(graph,dss) {
+	$var(mb).graph.select add radiobutton -label "$var($cc,$nn,name)" \
+	    -variable ${varname}(graph,ds,current) -value $nn \
+	    -command [list PlotCurrentDataSet $varname]
+    }
+}
+
+

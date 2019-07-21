@@ -159,7 +159,7 @@ proc PlotAddGraph {varname} {
     $var(proc,updategraph) $varname
     $var(proc,updatecanvas) $varname
 
-    PlotBuildDataSetMenu $varname
+    PlotUpdateDataSetMenu $varname
 
     PlotStats $varname
     PlotList $varname
@@ -235,7 +235,7 @@ proc PlotDeleteGraph {varname} {
 
     PlotLayoutCanvas $varname
 
-    PlotBuildDataSetMenu $varname
+    PlotUpdateDataSetMenu $varname
 
     PlotStats $varname
     PlotList $varname
@@ -265,7 +265,7 @@ proc PlotAddElement {varname} {
     # update menus
     $var(proc,updateelement) $varname
 
-    PlotBuildDataSetMenu $varname
+    PlotUpdateDataSetMenu $varname
 
     PlotStats $varname
     PlotList $varname
@@ -342,26 +342,10 @@ proc PlotDeleteDataSet {varname} {
     # update menus
     $var(proc,updateelement) $varname
 
-    PlotBuildDataSetMenu $varname
+    PlotUpdateDataSetMenu $varname
 
     PlotStats $varname
     PlotList $varname
-}
-
-proc PlotBuildDataSetMenu {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    # remove menu item
-    $var(mb).graph.select delete 0 end
-
-    # create menu item
-    set cc $var(graph,current)
-    foreach nn $var(graph,dss) {
-	$var(mb).graph.select add radiobutton -label "$var($cc,$nn,name)" \
-	    -variable ${varname}(graph,ds,current) -value $nn \
-	    -command [list PlotCurrentDataSet $varname]
-    }
 }
 
 proc PlotCurrentGraph {varname} {
@@ -374,7 +358,7 @@ proc PlotCurrentGraph {varname} {
 
     PlotRestoreState $varname
 
-    PlotBuildDataSetMenu $varname
+    PlotUpdateDataSetMenu $varname
 
     PlotStats $varname
     PlotList $varname

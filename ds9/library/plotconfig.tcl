@@ -182,7 +182,7 @@ proc PlotLoadConfigFile {varname filename} {
 
     $var(proc,updateelement) $varname
     PlotUpdateGraph $varname
-    $var(proc,updatecanvas) $varname
+    PlotUpdateCanvas $varname
 }
 
 proc PlotSaveConfig {varname} {

@@ -157,7 +157,7 @@ proc PlotAddGraph {varname} {
     # update menus
     $var(proc,updateelement) $varname
     PlotUpdateGraph $varname
-    $var(proc,updatecanvas) $varname
+    PlotUpdateCanvas $varname
 
     PlotUpdateGraphMenu $varname
     PlotUpdateDataMenu $varname
@@ -232,7 +232,7 @@ proc PlotDeleteGraph {varname} {
     # update menus
     $var(proc,updateelement) $varname
     PlotUpdateGraph $varname
-    $var(proc,updatecanvas) $varname
+    PlotUpdateCanvas $varname
 
     PlotLayoutCanvas $varname
 
@@ -549,6 +549,8 @@ proc PlotUpdateCanvas {varname} {
     PlotSaveState $varname
     
     foreach cc $var(graphs) {
+	$var($cc,graph) configure -barmode $var(bar,mode)
+
 	$var($cc,graph) configure -plotpadx 0 -plotpady 0 \
 	    -font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)" \
 	    -bg $var(background) -plotbackground $var(background)

@@ -273,7 +273,7 @@ proc PlotCmdUpdateCanvas {which value} {
     upvar #0 $cvarname cvar
 
     set cvar($which) $value
-    $cvar(proc,updatecanvas) $cvarname
+    PlotUpdateCanvas $cvarname
 }
 
 proc PlotCmdUpdateGraph {which value} {
@@ -310,7 +310,7 @@ proc PlotCmdFontStyle {which value} {
 	    set cvar($which,slant) italic
 	}
     }
-    $cvar(proc,updatecanvas) $cvarname
+    PlotUpdateCanvas $cvarname
 }
 
 proc PlotCmdExport {format fn} {

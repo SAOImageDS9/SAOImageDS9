@@ -142,20 +142,20 @@ proc PlotDialog {varname wtt} {
     menu $var(mb).canvas.legend
     $var(mb).canvas.legend add checkbutton -label [msgcat::mc {Show}] \
 	-variable ${varname}(legend) \
-	-command [list $var(proc,updatecanvas) $varname]
+	-command [list PlotUpdateCanvas $varname]
     $var(mb).canvas.legend add separator
     $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Right}] \
 	-variable ${varname}(legend,position) -value right \
-	-command [list $var(proc,updatecanvas) $varname]
+	-command [list PlotUpdateCanvas $varname]
     $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Left}] \
 	-variable ${varname}(legend,position) -value left \
-	-command [list $var(proc,updatecanvas) $varname]
+	-command [list PlotUpdateCanvas $varname]
     $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Top}] \
 	-variable ${varname}(legend,position) -value top \
-	-command [list $var(proc,updatecanvas) $varname]
+	-command [list PlotUpdateCanvas $varname]
     $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Bottom}] \
 	-variable ${varname}(legend,position) -value bottom \
-	-command [list $var(proc,updatecanvas) $varname]
+	-command [list PlotUpdateCanvas $varname]
 
     menu $var(mb).canvas.font
     $var(mb).canvas.font add cascade -label [msgcat::mc {Title}] \
@@ -171,22 +171,22 @@ proc PlotDialog {varname wtt} {
 
     FontMenu $var(mb).canvas.font.title \
 	$varname graph,title,family graph,title,size graph,title,weight \
-	graph,title,slant [list $var(proc,updatecanvas) $varname]
+	graph,title,slant [list PlotUpdateCanvas $varname]
     FontMenu $var(mb).canvas.font.textlab \
 	$varname axis,title,family axis,title,size axis,title,weight \
-	axis,title,slant [list $var(proc,updatecanvas) $varname]
+	axis,title,slant [list PlotUpdateCanvas $varname]
     FontMenu $var(mb).canvas.font.numlab \
 	$varname axis,font,family axis,font,size axis,font,weight \
-	axis,font,slant [list $var(proc,updatecanvas) $varname]
+	axis,font,slant [list PlotUpdateCanvas $varname]
     FontMenu $var(mb).canvas.font.legendtitle \
 	$varname legend,title,family legend,title,size legend,title,weight \
-	legend,title,slant [list $var(proc,updatecanvas) $varname]
+	legend,title,slant [list PlotUpdateCanvas $varname]
     FontMenu $var(mb).canvas.font.legend \
 	$varname legend,font,family legend,font,size legend,font,weight \
-	legend,font,slant [list $var(proc,updatecanvas) $varname]
+	legend,font,slant [list PlotUpdateCanvas $varname]
 
     PlotColorMenu $var(mb).canvas.bg $varname background \
-	[list $var(proc,updatecanvas) $varname]
+	[list PlotUpdateCanvas $varname]
 
     # Graph
     menu $var(mb).graph
@@ -244,16 +244,16 @@ proc PlotDialog {varname wtt} {
     menu $var(mb).graph.barmode
     $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Normal}] \
 	-variable ${varname}(bar,mode) -value normal \
-	-command [list $var(proc,updatecanvas) $varname]
+	-command [list PlotUpdateCanvas $varname]
     $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Stacked}] \
 	-variable ${varname}(bar,mode) -value stacked \
-	-command [list $var(proc,updatecanvas) $varname]
+	-command [list PlotUpdateCanvas $varname]
     $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Aligned}] \
 	-variable ${varname}(bar,mode) -value aligned \
-	-command [list $var(proc,updatecanvas) $varname]
+	-command [list PlotUpdateCanvas $varname]
     $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Overlap}] \
 	-variable ${varname}(bar,mode) -value overlap \
-	-command [list $var(proc,updatecanvas) $varname]
+	-command [list PlotUpdateCanvas $varname]
 
     PlotLineMenus $varname
     PlotBarMenus $varname

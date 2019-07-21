@@ -53,7 +53,6 @@ proc PlotBarDialog {varname wtt} {
     global $varname
 
     set var(proc,addgraph) PlotBarAddGraph
-    set var(proc,updatecanvas) PlotBarUpdateCanvas
     set var(proc,updateelement) PlotBarUpdateElement
     set var(proc,highlite) PlotHighliteElement
     set var(proc,button) PlotButton
@@ -132,17 +131,6 @@ proc PlotBarAddGraph {varname} {
 
     $var(graph) xaxis configure -grid no -stepsize 0
     $var(graph) yaxis configure -grid yes
-}
-
-proc PlotBarUpdateCanvas {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    PlotUpdateCanvas $varname
-
-    foreach cc $var(graphs) {
-	$var($cc,graph) configure -barmode $var(bar,mode)
-    }
 }
 
 proc PlotBarUpdateElement {varname} {

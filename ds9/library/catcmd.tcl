@@ -120,7 +120,7 @@ proc CATSelectBrowseCmd {varname ss rc} {
 
     # plot
     if {$var(plot)} {
-	PlotCmdHighliteElement $var(plot,var) $rowlist
+	CATPlotHighliteElement $varname $rowlist
     }
 
     # samp
@@ -196,7 +196,7 @@ proc CATSelectRows {varname src rowlist} {
     switch $src {
 	samp {
 	    if {$var(plot)} {
-		PlotCmdHighliteElement $var(plot,var) $rowlist
+		CATPlotHighliteElement $varname $rowlist
 	    }
 	}
 	plot {
@@ -748,7 +748,7 @@ proc CATRelease {which x y} {
 		    CATStatusRows $varname $rowlist
 		    # plot
 		    if {$var(plot)} {
-			PlotCmdHighliteElement $var(plot,var) $rowlist
+			CATPlotHighliteElement $varname 1 1 $rowlist
 		    }
 		    # samp
 		    if {[info exists samp]} {
@@ -773,7 +773,7 @@ proc CATRelease {which x y} {
 	    CATStatusRows $varname $rowlist
 	    #plot
 	    if {$var(plot)} {
-		PlotCmdHighliteElement $var(plot,var) $rowlist
+		CATPlotHighliteElement $varname $rowlist
 	    }
 	    # samp
 	    if {[info exists samp]} {

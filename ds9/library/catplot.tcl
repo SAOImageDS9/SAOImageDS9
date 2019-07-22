@@ -218,3 +218,24 @@ proc CATPlotDialogColsMenu {varname f ww} {
 	}
     }
 }
+
+# used by CATALOG
+proc CATPlotHighliteElement {varname rowlist} {
+    upvar #0 $varname var
+    global $varname
+
+    set vvarname $var(plot,var)
+    upvar #0 $vvarname vvar
+    global $vvarname
+
+    # rowlist starts at 1
+    set result {}
+    foreach rr $rowlist {
+	append result "[expr $rr-1] "
+    }
+
+    if {[info exists vvar(1,graph)]} {
+	$vvar(1,proc,highlite) $vvarname 1 1 $result
+    }
+}
+

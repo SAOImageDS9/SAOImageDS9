@@ -146,19 +146,19 @@ proc PlotAddGraph {varname type} {
 	line {
 	    PlotLineAddGraph $varname
 	    set var(graph,proc,updateelement) PlotLineUpdateElement
-	    set var(graph,proc,highlite) PlotHighLiteElement
+	    set var(graph,proc,highlite) PlotHighliteElement
 	    set var(graph,proc,button) PlotButton
 	}
 	bar {
 	    PlotBarAddGraph $varname
 	    set var(graph,proc,updateelement) PlotBarUpdateElement
-	    set var(graph,proc,highlite) PlotHighLiteElement
+	    set var(graph,proc,highlite) PlotHighliteElement
 	    set var(graph,proc,button) PlotButton
 	}
 	scatter {
 	    PlotScatterAddGraph $varname
 	    set var(graph,proc,updateelement) PlotScatterUpdateElement
-	    set var(graph,proc,highlite) PlotScatterHighLiteElement
+	    set var(graph,proc,highlite) PlotScatterHighliteElement
 	    set var(graph,proc,button) PlotScatterButton
 	}
     }
@@ -673,11 +673,13 @@ proc PlotButtonInvoke {varname x y} {
 proc PlotButton {varname x y} {
     upvar #0 $varname var
     global $varname
+# no-op
 }
 
-proc PlotHighliteElement {varname rowlist} {
+proc PlotHighliteElement {varname cc nn rowlist} {
     upvar #0 $varname var
     global $varname
+# no-op
 }
 
 # menus

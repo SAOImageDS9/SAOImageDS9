@@ -155,18 +155,14 @@ proc PlotScatterUpdateElement {varname} {
 
     PlotSaveState $varname
 
-#    DumpCallStack
-
     set cc $var(graph,current)
     if {[llength $var($cc,dss)] == 0} {
  	return
     }
     
-#    puts "***$var(graph,ds,shape,symbol)"
     if {$var(graph,ds,shape,symbol) == "none"} {
 	set var(graph,ds,shape,symbol) circle
     }
-#    puts "=$var(graph,ds,shape,symbol)"
 
     if {$var(graph,ds,shape,fill)} {
 	set clr $var(graph,ds,shape,color)
@@ -206,6 +202,8 @@ proc PlotScatterButton {varname x y} {
     upvar #0 $varname var
     global $varname
 
+    puts "PlotScatterButton $varname $x $y"
+    
     set cc $var(graph,current)
 
     if {[llength $var($cc,dss)] == 0} {
@@ -233,22 +231,19 @@ proc PlotScatterButton {varname x y} {
     }
 }
 
-proc PlotScatterHighliteElement {varname rowlist} {
+proc PlotScatterHighliteElement {varname cc nn rowlist} {
     upvar #0 $varname var
     global $varname
-
-    set cc $var(graph,current)
-    set nn $var(graph,ds,current)
 
     if {[llength $var($cc,dss)] == 0} {
 	return
     }
 
-    if {$var(graph,ds,show)} {
-	$var(graph) element deactivate $nn
+    if {$var($cc,$nn,show)} {
+	$var($cc,graph) element deactivate $nn
 	if {$rowlist != {}} {
 	    # can have multiple rows
-	    eval "$var(graph) element activate $nn $rowlist"
+	    eval "$var($cc,graph) element activate $nn $rowlist"
 	}
     }
 }

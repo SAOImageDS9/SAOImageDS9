@@ -122,6 +122,8 @@ proc PlotLayoutCanvas {varname} {
 	    }
 	}
     }
+
+    update
 }
 
 # Graph

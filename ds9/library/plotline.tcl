@@ -30,7 +30,8 @@ proc PlotLine {tt wtt title xaxis yaxis dim data} {
     upvar #0 $varname var
     global $varname
 
-    PlotLineDialog $varname $wtt
+    PlotDialog $varname $wtt
+    PlotAddGraph $varname line
     PlotTitle $varname $title $xaxis $yaxis
     PlotAddDataSet $varname $dim $data
     PlotStats $varname
@@ -46,14 +47,6 @@ proc PlotLine {tt wtt title xaxis yaxis dim data} {
 	aqua -
 	win32 {}
     }
-}
-
-proc PlotLineDialog {varname wtt} {
-    upvar #0 $varname var
-    global $varname
-
-    PlotDialog $varname $wtt
-    PlotAddGraph $varname line
 }
 
 proc PlotLineMenus {varname} {

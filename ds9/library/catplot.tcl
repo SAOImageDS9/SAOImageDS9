@@ -76,7 +76,8 @@ proc CATPlotGenerate {varname} {
     set ping [PlotPing $vvarname]
 
     if {!$ping} {
-	PlotScatterDialog $vvarname $var(title)
+	PlotDialog $vvarname $var(title)
+	PlotAddGraph $vvarname scatter
 	PlotTitle $vvarname $var(title) $xtitle $ytitle
 
 	set vvar(mode) pointer

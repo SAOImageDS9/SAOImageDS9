@@ -155,7 +155,7 @@ proc PlotAddGraph {varname type} {
 	}
 	scatter {
 	    PlotScatterAddGraph $varname
-	    set var(graph,proc,updateelement) PlotScattterUpdateElement
+	    set var(graph,proc,updateelement) PlotScatterUpdateElement
 	    set var(graph,proc,highlite) PlotScatterHighLiteElement
 	    set var(graph,proc,button) PlotScatterButton
 	}
@@ -738,24 +738,16 @@ proc PlotBackup {ch dir} {
 	    upvar #0 $varname var
 	    global $varname
 
-	    set cc $var(graph,current)
-	    switch $var($cc,type) {
-		line {puts $ch "PlotLineTool"}
-		bar {puts $ch "PlotBarTool"}
-		scatter {puts $ch "PlotScatterTool"}
-	    }
+	    puts $ch "PlotDialog $varname $varname"
 
+	    set cc $var(graph,current)
 	    set gr $var(graph,current)
 	    set ds $var(graph,ds,current)
 
-	    set first 1
 	    foreach cc $var(graphs) {
 		set var(graph,current) $cc
 		PlotCurrentGraph $varname
-		if {!$first} {
-		    puts $ch "PlotAddGraph $varname $var($cc,type)"
-		}
-		set first 0
+		puts $ch "PlotAddGraph $varname $var($cc,type)"
 
 		foreach nn $var($cc,dss) {
 		    set var(graph,ds,current) $nn
@@ -768,6 +760,7 @@ proc PlotBackup {ch dir} {
 		    puts $ch "PlotLoadConfigFile $varname $fdir/graph${cc}ds${nn}.plt"
 		}
 	    }
+	    puts $ch "wm geometry $var(top) [winfo width $var(top)]x[winfo height $var(top)]"
 
 	    set var(graph,current) $gr
 	    PlotCurrentGraph $varname

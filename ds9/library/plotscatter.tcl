@@ -30,7 +30,8 @@ proc PlotScatter {tt wtt title xaxis yaxis dim data} {
     upvar #0 $varname var
     global $varname
 
-    PlotScatterDialog $varname $wtt
+    PlotDialog $varname $wtt
+    PlotAddGraph $varname scatter
     PlotTitle $varname $title $xaxis $yaxis
     PlotAddDataSet $varname $dim $data
     PlotStats $varname
@@ -47,15 +48,6 @@ proc PlotScatter {tt wtt title xaxis yaxis dim data} {
 	win32 {}
     }
 }
-
-proc PlotScatterDialog {varname wtt} {
-    upvar #0 $varname var
-    global $varname
-
-    PlotDialog $varname $wtt
-    PlotAddGraph $varname scatter
-}
-
 
 proc PlotScatterMenus {varname} {
     upvar #0 $varname var
@@ -163,14 +155,18 @@ proc PlotScatterUpdateElement {varname} {
 
     PlotSaveState $varname
 
+#    DumpCallStack
+
     set cc $var(graph,current)
     if {[llength $var($cc,dss)] == 0} {
  	return
     }
     
+#    puts "***$var(graph,ds,shape,symbol)"
     if {$var(graph,ds,shape,symbol) == "none"} {
 	set var(graph,ds,shape,symbol) circle
     }
+#    puts "=$var(graph,ds,shape,symbol)"
 
     if {$var(graph,ds,shape,fill)} {
 	set clr $var(graph,ds,shape,color)

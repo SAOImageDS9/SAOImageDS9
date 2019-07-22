@@ -108,7 +108,8 @@ proc MarkerAnalysisPandaCB {frame id} {
     }
 
     if {![PlotPing $vvarname]} {
-	PlotLineDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotAddGraph $vvarname line
 	PlotTitle $vvarname "Radial Profile" $sys {}
 
 	MarkerAnalysisPandaAxisTitle $vvarname

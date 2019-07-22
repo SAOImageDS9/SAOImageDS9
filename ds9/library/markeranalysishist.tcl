@@ -80,7 +80,8 @@ proc MarkerAnalysisHistogramCB {frame id} {
 	if {$bunit=={}} {
 	    set bunit {Values}
 	}
-	PlotLineDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotAddGraph $vvarname line
 	PlotTitle $vvarname Histogram $bunit Counts
 
 	set vvar(graph,ds,xdata) $xdata

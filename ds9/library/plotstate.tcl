@@ -242,9 +242,9 @@ proc PlotRestoreState {varname} {
     set var(graph) $var($cc,graph)
 
     set var(graph,type) $var($cc,type)
-    set var(graph,proc,updateelement) $var(graph,proc,updateelement)
-    set var(graph,proc,highlite) $var(graph,proc,highlite)
-    set var(graph,proc,button) $var(graph,proc,button)
+    set var(graph,proc,updateelement) $var($cc,proc,updateelement)
+    set var(graph,proc,highlite) $var($cc,proc,highlite)
+    set var(graph,proc,button) $var($cc,proc,button)
     
     set var(graph,name) $var($cc,name)
     set var(graph,format) $var($cc,format)

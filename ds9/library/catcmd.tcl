@@ -136,9 +136,14 @@ proc CATSelectBrowseCmd {varname ss rc} {
     }
 }
 
-proc CATSelectRows {varname src rowlist} {
+proc CATSelectRows {varname src rowlist cc} {
     upvar #0 $varname var
     global $varname
+
+    # only process from first graph
+    if {$cc != 1} {
+	return
+    }
 
     # just in case?
     set rowlist [lsort -unique $rowlist]
@@ -146,7 +151,7 @@ proc CATSelectRows {varname src rowlist} {
     # rows start at 1
     global debug
     if {$debug(tcl,cat)} {
-	puts stderr "CATSelectRows $varname $src $rowlist"
+	puts stderr "CATSelectRows $varname $src $rowlist $cc"
     }
 
     if {![info exists ${varname}(top)]} {

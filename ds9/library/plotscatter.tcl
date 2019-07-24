@@ -219,10 +219,10 @@ proc PlotScatterButton {varname cc nn xx yy} {
 	    $var($cc,graph) element deactivate $elem
 	    $var($cc,graph) element activate $elem $row
 	    # rows start at 1
-	    eval "$var(callback) [expr $row+1]"
+	    eval "$var(callback) [expr $row+1] $cc"
 	} else {
 	    $var($cc,graph) element deactivate $elem
-	    eval "$var(callback) {}"
+	    eval "$var(callback) {} $cc"
 	}
     }
 }

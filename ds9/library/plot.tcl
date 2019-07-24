@@ -308,6 +308,20 @@ proc PlotDeleteDataSetCurrent {varname} {
     PlotDeleteDataSet $varname
 }
 
+proc PlotDeleteDataSetAll {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[llength $var(graph,dss)] == 0} {
+	return
+    }
+
+    foreach nn $var(graph,dss) {
+	set var(graph,ds,current) $nn
+	PlotDeleteDataSet $varname
+    }
+}
+
 proc PlotDeleteDataSet {varname} {
     upvar #0 $varname var
     global $varname

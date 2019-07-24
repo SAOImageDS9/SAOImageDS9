@@ -56,13 +56,7 @@ proc CATPlotGenerate {varname} {
     global $xdata $ydata $xedata $yedata
 
     if {[info command $xdata] == {}} {
-	blt::vector create $xdata $ydata
-	switch $dim {
-	    xy {}
-	    xyex {blt::vector create $xedata}
-	    xyey {blt::vector create $yedata}
-	    xyexey {blt::vector create $xedata $yedata}
-	}
+	blt::vector create $xdata $ydata $xedata $yedata
     }
 
     set xx {}
@@ -85,15 +79,19 @@ proc CATPlotGenerate {varname} {
 	    xy {
 		append xx [subst "$var(plot,x) "]
 		append yy [subst "$var(plot,y) "]
+		append xe [subst "0 "]
+		append ye [subst "0 "]
 	    }
 	    xyex {
 		append xx [subst "$var(plot,x) "]
 		append yy [subst "$var(plot,y) "]
 		append xe [subst "$var(plot,xerr) "]
+		append ye [subst "0 "]
 	    }
 	    xyey {
 		append xx [subst "$var(plot,x) "]
 		append yy [subst "$var(plot,y) "]
+		append xe [subst "0 "]
 		append ye [subst "$var(plot,yerr) "]
 	    }
 	    xyexey {
@@ -107,15 +105,8 @@ proc CATPlotGenerate {varname} {
 
     $xdata set $xx
     $ydata set $yy
-    switch $dim {
-	xy {}
-	xyex {$xedata set $xe}
-	xyey {$yedata set $ye}
-	xyexey {
-	    $xedata set $xe
-	    $yedata set $ye
-	}
-    }
+    $xedata set $xe
+    $yedata set $ye
 
     if {![PlotPing $vvarname]} {
 	PlotDialog $vvarname $var(title)
@@ -130,17 +121,10 @@ proc CATPlotGenerate {varname} {
 	set vvar(callback) "CATSelectRows $varname plot"
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
-	switch $dim {
-	    xy {}
-	    xyex {set vvar(graph,ds,xedata) $xedata}
-	    xyey {set vvar(graph,ds,yedata) $yedata}
-	    xyexey {
-		set vvar(graph,ds,xedata) $xedata
-		set vvar(graph,ds,yedata) $yedata
-	    }
-	}
+	set vvar(graph,ds,xedata) $xedata
+	set vvar(graph,ds,yedata) $yedata
 
-	PlotExternal $vvarname $dim
+	PlotExternal $vvarname xyexey
     }
 
     # colnames can change

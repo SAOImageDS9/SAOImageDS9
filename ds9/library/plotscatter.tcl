@@ -198,13 +198,9 @@ proc PlotScatterUpdateElement {varname} {
 	-errorbarwidth $var(graph,ds,error,width) -errorbarcap $cap
 }
 
-proc PlotScatterButton {varname x y} {
+proc PlotScatterButton {varname cc nn xx yy} {
     upvar #0 $varname var
     global $varname
-
-    puts "PlotScatterButton $varname $x $y"
-    
-    set cc $var(graph,current)
 
     if {[llength $var($cc,dss)] == 0} {
 	return
@@ -214,18 +210,18 @@ proc PlotScatterButton {varname x y} {
 	return
     }
 
-    set rr [$var(graph) element closest $x $y]
+    set rr [$var($cc,graph) element closest $xx $yy]
     set elem [lindex $rr 1]
     set row [lindex $rr 3]
 
     if {$elem != {}} {
 	if {$row != {}} {
-	    $var(graph) element deactivate $elem
-	    $var(graph) element activate $elem $row
+	    $var($cc,graph) element deactivate $elem
+	    $var($cc,graph) element activate $elem $row
 	    # rows start at 1
 	    eval "$var(callback) [expr $row+1]"
 	} else {
-	    $var(graph) element deactivate $elem
+	    $var($cc,graph) element deactivate $elem
 	    eval "$var(callback) {}"
 	}
     }

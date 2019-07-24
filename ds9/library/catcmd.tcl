@@ -748,7 +748,7 @@ proc CATRelease {which x y} {
 		    CATStatusRows $varname $rowlist
 		    # plot
 		    if {$var(plot)} {
-			CATPlotHighliteElement $varname 1 1 $rowlist
+			CATPlotHighliteElement $varname $rowlist
 		    }
 		    # samp
 		    if {[info exists samp]} {

@@ -45,7 +45,30 @@ proc CATPlotGenerate {varname} {
     set nrows [starbase_nrows $var(tbldb)]
     set cols [starbase_columns $var(tbldb)]
 
-    set rr {}
+    set vvarname plot${varname}
+    upvar #0 $vvarname vvar
+    global $vvarname
+
+    set xdata ${vvarname}xx
+    set ydata ${vvarname}yy
+    set xedata ${vvarname}xe
+    set yedata ${vvarname}ye
+    global $xdata $ydata $xedata $yedata
+
+    if {[info command $xdata] == {}} {
+	blt::vector create $xdata $ydata
+	switch $dim {
+	    xy {}
+	    xyex {blt::vector create $xedata}
+	    xyey {blt::vector create $yedata}
+	    xyexey {blt::vector create $xedata $yedata}
+	}
+    }
+
+    set xx {}
+    set yy {}
+    set xe {}
+    set ye {}
     for {set ii 1} {$ii <= $nrows} {incr ii} {
 	foreach col $cols {
 	    set val [starbase_get $var(tbldb) $ii \
@@ -59,37 +82,72 @@ proc CATPlotGenerate {varname} {
 	}
 
 	switch $dim {
-	    xy {append rr [subst "$var(plot,x), $var(plot,y)\n"]}
-	    xyex {append rr [subst "$var(plot,x), $var(plot,y), $var(plot,xerr)\n"]}
-	    xyey {append rr [subst "$var(plot,x), $var(plot,y), $var(plot,yerr)\n"]}
-	    xyexey {append rr [subst "$var(plot,x), $var(plot,y), $var(plot,xerr), $var(plot,yerr)\n"]}
+	    xy {
+		append xx [subst "$var(plot,x) "]
+		append yy [subst "$var(plot,y) "]
+	    }
+	    xyex {
+		append xx [subst "$var(plot,x) "]
+		append yy [subst "$var(plot,y) "]
+		append xe [subst "$var(plot,xerr) "]
+	    }
+	    xyey {
+		append xx [subst "$var(plot,x) "]
+		append yy [subst "$var(plot,y) "]
+		append ye [subst "$var(plot,yerr) "]
+	    }
+	    xyexey {
+		append xx [subst "$var(plot,x) "]
+		append yy [subst "$var(plot,y) "]
+		append xe [subst "$var(plot,xerr) "]
+		append ye [subst "$var(plot,yerr) "]
+	    }
 	}
     }
 
-    set xtitle [regsub -all {\$*} $var(plot,x) {}]
-    set ytitle [regsub -all {\$*} $var(plot,y) {}]
+    $xdata set $xx
+    $ydata set $yy
+    switch $dim {
+	xy {}
+	xyex {$xedata set $xe}
+	xyey {$yedata set $ye}
+	xyexey {
+	    $xedata set $xe
+	    $yedata set $ye
+	}
+    }
 
-    set vvarname plot${varname}
-    upvar #0 $vvarname vvar
-    global $vvarname
-
-    set ping [PlotPing $vvarname]
-
-    if {!$ping} {
+    if {![PlotPing $vvarname]} {
 	PlotDialog $vvarname $var(title)
 	PlotAddGraph $vvarname scatter
-	PlotTitle $vvarname $var(title) $xtitle $ytitle
 
 	set vvar(mode) pointer
 	PlotChangeMode $vvarname
 
-	set vvar(callback) "CATSelectRows $varname plot"
 	set var(plot) 1
 	set var(plot,var) $vvarname
+
+	set vvar(callback) "CATSelectRows $varname plot"
+	set vvar(graph,ds,xdata) $xdata
+	set vvar(graph,ds,ydata) $ydata
+	switch $dim {
+	    xy {}
+	    xyex {set vvar(graph,ds,xedata) $xedata}
+	    xyey {set vvar(graph,ds,yedata) $yedata}
+	    xyexey {
+		set vvar(graph,ds,xedata) $xedata
+		set vvar(graph,ds,yedata) $yedata
+	    }
+	}
+
+	PlotExternal $vvarname $dim
     }
 
-    PlotDeleteDataSetAll $vvarname
-    PlotAddDataSet $vvarname $dim $rr
+    # colnames can change
+    set xtitle [regsub -all {\$*} $var(plot,x) {}]
+    set ytitle [regsub -all {\$*} $var(plot,y) {}]
+    PlotTitle $vvarname $var(title) $xtitle $ytitle
+
     PlotStats $vvarname
     PlotList $vvarname
 }

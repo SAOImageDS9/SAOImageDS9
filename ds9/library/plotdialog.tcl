@@ -615,10 +615,11 @@ proc PlotExport {varname fn format} {
     DarwinPhotoRestore $var(top) $geom
 }
 
-proc PlotUpdateGraphMenu {varname} {
+proc PlotUpdateMenus {varname} {
     upvar #0 $varname var
     global $varname
 
+# Graph
     if {[llength $var(graph,dss)] == 0} {
 	$var(mb).graph entryconfig [msgcat::mc {Duplicate Dataset}] \
 	    -state disabled
@@ -647,18 +648,14 @@ proc PlotUpdateGraphMenu {varname} {
 	    -variable ${varname}(graph,ds,current) -value $nn \
 	    -command [list PlotCurrentDataSet $varname]
     }
-}
 
-proc PlotUpdateDataMenu {varname} {
-    upvar #0 $varname var
-    global $varname
-
+# Data
     $var(mb) delete [msgcat::mc {Data}]
     switch $var(graph,type) {
 	line {
 	    $var(mb) add cascade -label [msgcat::mc {Data}] \
 		-menu $var(mb).dataline
-	    $var(mb).graph entryconfig Mode -state disabled
+	    $var(mb).graph entryconfig [msgcat::mc {Mode}] -state disabled
 	}
 	bar {
 	    $var(mb) add cascade -label [msgcat::mc {Data}] \

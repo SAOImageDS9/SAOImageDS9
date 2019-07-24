@@ -243,7 +243,7 @@ proc PlotExternal {varname dim} {
     set var(graph,ds,manage) 0
     set var(graph,ds,name) "Dataset $nn"
 
-    set vvar(graph,ds,dim) $dim
+    set var(graph,ds,dim) $dim
 
     PlotAddElement $varname
 

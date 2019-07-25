@@ -10,6 +10,7 @@ proc PlotDefState {} {
 
     # per Canvas
     set pap(layout) grid
+    set pap(layout,lock) 0
 
     set pap(background) white
     set pap(bar,mode) normal
@@ -34,7 +35,6 @@ proc PlotDefState {} {
     set pap(axis,title,size) 9
     set pap(axis,title,weight) normal
     set pap(axis,title,slant) roman
-
     set pap(axis,font,family) helvetica
     set pap(axis,font,size) 9
     set pap(axis,font,weight) normal

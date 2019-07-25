@@ -119,14 +119,14 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas add cascade -label [msgcat::mc {Layout}] \
 	-menu $var(mb).canvas.layout
     $var(mb).canvas add separator
-    menu $var(mb).canvas.select
-
     $var(mb).canvas add cascade -label [msgcat::mc {Legend}] \
 	-menu $var(mb).canvas.legend
     $var(mb).canvas add cascade -label [msgcat::mc {Font}] \
 	-menu $var(mb).canvas.font
     $var(mb).canvas add cascade -label [msgcat::mc {Background}] \
 	-menu $var(mb).canvas.bg
+
+    menu $var(mb).canvas.select
 
     menu $var(mb).canvas.graph
     $var(mb).canvas.graph add command -label [msgcat::mc {Line}] \
@@ -137,15 +137,20 @@ proc PlotDialog {varname wtt} {
 	-command [list PlotAddGraph $varname scatter]
 
     menu $var(mb).canvas.layout
-    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Column}] \
-	-variable ${varname}(layout) -value column \
-	-command [list PlotLayoutCanvas $varname]
-    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Row}] \
-	-variable ${varname}(layout) -value row \
-	-command [list PlotLayoutCanvas $varname]
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Grid}] \
 	-variable ${varname}(layout) -value grid \
-	-command [list PlotLayoutCanvas $varname]
+	-command [list PlotChangeLayout $varname]
+    $var(mb).canvas.layout add separator
+    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Column}] \
+	-variable ${varname}(layout) -value column \
+	-command [list PlotChangeLayout $varname]
+    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Row}] \
+	-variable ${varname}(layout) -value row \
+	-command [list PlotChangeLayout $varname]
+    $var(mb).canvas.layout add separator
+    $var(mb).canvas.layout add checkbutton -label [msgcat::mc {Lock Axis}] \
+	-variable ${varname}(layout,lock) \
+	-command [list PlotChangeLayout $varname]
 
     menu $var(mb).canvas.legend
     $var(mb).canvas.legend add checkbutton -label [msgcat::mc {Show}] \
@@ -619,7 +624,20 @@ proc PlotUpdateMenus {varname} {
     upvar #0 $varname var
     global $varname
 
-# Graph
+    # Canvas
+    switch $var(layout) {
+	grid {
+	    $var(mb).canvas.layout entryconfig [msgcat::mc {Lock Axis}] \
+		-state disabled
+	}
+	row -
+	column {
+	    $var(mb).canvas.layout entryconfig [msgcat::mc {Lock Axis}] \
+		-state normal
+	}
+    }
+
+    # Graph
     if {[llength $var(graph,dss)] == 0} {
 	$var(mb).graph entryconfig [msgcat::mc {Duplicate Dataset}] \
 	    -state disabled
@@ -638,10 +656,7 @@ proc PlotUpdateMenus {varname} {
 	}
     }
 
-    # remove menu item
     $var(mb).graph.select delete 0 end
-
-    # create menu item
     set cc $var(graph,current)
     foreach nn $var(graph,dss) {
 	$var(mb).graph.select add radiobutton -label "$var($cc,$nn,name)" \
@@ -649,7 +664,7 @@ proc PlotUpdateMenus {varname} {
 	    -command [list PlotCurrentDataSet $varname]
     }
 
-# Data
+    # Data
     $var(mb) delete [msgcat::mc {Data}]
     switch $var(graph,type) {
 	line {

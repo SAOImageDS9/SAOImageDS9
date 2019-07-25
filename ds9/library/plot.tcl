@@ -176,7 +176,6 @@ proc PlotAddGraph {varname type} {
 	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
     }
 
-    # update menus
     $var(graph,proc,updateelement) $varname
     PlotUpdateGraph $varname
     PlotUpdateCanvas $varname
@@ -252,7 +251,6 @@ proc PlotDeleteGraph {varname} {
     set var(graph,ds,current) [lindex $var($cc,dss) 0]
     PlotRestoreState $varname
 
-    # update menus
     $var(graph,proc,updateelement) $varname
     PlotUpdateGraph $varname
     PlotUpdateCanvas $varname
@@ -403,6 +401,15 @@ proc PlotAxisFormat {varname axis w nn} {
     global $varname
 
     return [format $var(graph,axis,$axis,format) $nn]
+}
+
+proc PlotChangeLayout {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    PlotLayoutCanvas $varname
+    PlotUpdateCanvas $varname
+    PlotUpdateMenus $varname
 }
 
 proc PlotChangeMode {varname} {
@@ -571,6 +578,9 @@ proc PlotUpdateCanvas {varname} {
 
     PlotSaveState $varname
     
+    set first [lindex $var(graphs) 0]
+    set last [lindex $var(graphs) end]
+
     foreach cc $var(graphs) {
 	switch ($cc,type) {
 	    line {}
@@ -598,6 +608,59 @@ proc PlotUpdateCanvas {varname} {
 	    -position $var(legend,position) \
 	    -font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	    -titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
+
+	if {$var(layout,lock) &&
+	    ($var(layout) == {row} || $var(layout) == {column})} {
+	    $var($cc,graph) xaxis configure -exterior 0
+	    $var($cc,graph) yaxis configure -exterior 0
+
+	    $var($cc,graph) x2axis configure -hide no \
+		-grid no \
+		-exterior 0 \
+		-bg $var(background)
+	    $var($cc,graph) y2axis configure -hide no \
+		-grid no \
+		-exterior 0 \
+		-bg $var(background)
+
+	    switch $var(layout) {
+		column {
+		    if {$cc != $last} {
+			$var($cc,graph) xaxis configure -showticks 0
+			$var($cc,graph) x2axis configure -showticks 0
+			$var($cc,graph) yaxis configure -showticks 1
+			$var($cc,graph) y2axis configure -showticks 0
+		    } else {
+			$var($cc,graph) xaxis configure -showticks 1
+			$var($cc,graph) x2axis configure -showticks 0
+			$var($cc,graph) yaxis configure -showticks 1
+			$var($cc,graph) y2axis configure -showticks 0
+		    }
+		}
+		row {
+		    if {$cc != $last} {
+			$var($cc,graph) xaxis configure -showticks 1
+			$var($cc,graph) x2axis configure -showticks 0
+			$var($cc,graph) yaxis configure -showticks 1
+			$var($cc,graph) y2axis configure -showticks 0
+		    } else {
+			$var($cc,graph) xaxis configure -showticks 1
+			$var($cc,graph) x2axis configure -showticks 0
+			$var($cc,graph) yaxis configure -showticks 0
+			$var($cc,graph) y2axis configure -showticks 0
+		    }
+		}
+	    }
+	} else {
+	    $var($cc,graph) configure -plotpadx 0 -plotpady 0 \
+		-topmargin 0 -bottommargin 0 -leftmargin 0 -rightmargin 0
+
+	    $var($cc,graph) xaxis configure -exterior 1 -showticks 1
+	    $var($cc,graph) yaxis configure -exterior 1 -showticks 1
+
+	    $var($cc,graph) x2axis configure -hide yes
+	    $var($cc,graph) y2axis configure -hide yes
+	}
     }
 }
 

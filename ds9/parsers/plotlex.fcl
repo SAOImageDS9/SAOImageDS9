@@ -68,6 +68,7 @@ list	    {return $LIST_}
 load	    {return $LOAD_}
 loadconfig  {return $LOADCONFIG_}
 log	    {return $LOG_}
+lock	    {return $LOCK_}
 max	    {return $MAX_}
 min	    {return $MIN_}
 mode	    {return $MODE_}

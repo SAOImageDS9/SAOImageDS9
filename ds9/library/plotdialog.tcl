@@ -148,7 +148,7 @@ proc PlotDialog {varname wtt} {
 	-variable ${varname}(layout) -value row \
 	-command [list PlotChangeLayout $varname]
     $var(mb).canvas.layout add separator
-    $var(mb).canvas.layout add checkbutton -label [msgcat::mc {Lock Axis}] \
+    $var(mb).canvas.layout add checkbutton -label [msgcat::mc {Lock}] \
 	-variable ${varname}(layout,lock) \
 	-command [list PlotChangeLayout $varname]
 
@@ -634,12 +634,12 @@ proc PlotUpdateMenus {varname} {
     # Canvas
     switch $var(layout) {
 	grid {
-	    $var(mb).canvas.layout entryconfig [msgcat::mc {Lock Axis}] \
+	    $var(mb).canvas.layout entryconfig [msgcat::mc {Lock}] \
 		-state disabled
 	}
 	row -
 	column {
-	    $var(mb).canvas.layout entryconfig [msgcat::mc {Lock Axis}] \
+	    $var(mb).canvas.layout entryconfig [msgcat::mc {Lock}] \
 		-state normal
 	}
     }

@@ -11,10 +11,12 @@ proc PlotDefState {} {
     # per Canvas
     set pap(layout) grid
     set pap(layout,lock) 0
+    set pap(layout,axis,x,grid) 0
     set pap(layout,axis,x,log) 0
     set pap(layout,axis,x,flip) 0
     set pap(layout,axis,x,min) 0
     set pap(layout,axis,x,max) 0
+    set pap(layout,axis,y,grid) 0
     set pap(layout,axis,y,log) 0
     set pap(layout,axis,y,flip) 0
     set pap(layout,axis,y,min) 0

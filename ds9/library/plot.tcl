@@ -617,25 +617,39 @@ proc PlotUpdateCanvas {varname} {
     if {$var(layout,lock)} {
 	set legendpos plotarea
 
-	if {[info exists ${varname}($first,1,xdata)]} {
-	    set xmin [blt::vector expr min($var($first,1,xdata))]
-	    set xmax [blt::vector expr max($var($first,1,xdata))]
+	if {$var($first,axis,x,auto)} {
+	    if {[info exists ${varname}($first,1,xdata)]} {
+		set xmin [blt::vector expr min($var($first,1,xdata))]
+		set xmax [blt::vector expr max($var($first,1,xdata))]
+	    } else {
+		set xmin 0
+		set xmax 1
+	    }
 	} else {
-	    set xmin 0
-	    set xmax 1
-	}
-	if {[info exists ${varname}($first,1,ydata)]} {
-	    set ymin [blt::vector expr min($var($first,1,ydata))]
-	    set ymax [blt::vector expr max($var($first,1,ydata))]
-	} else {
-	    set ymin 0
-	    set ymax 1
+	    set xmin $var($first,axis,x,min)
+	    set xmax $var($first,axis,x,max)
 	}
 
+	if {$var($first,axis,y,auto)} {
+	    if {[info exists ${varname}($first,1,ydata)]} {
+		set ymin [blt::vector expr min($var($first,1,ydata))]
+		set ymax [blt::vector expr max($var($first,1,ydata))]
+	    } else {
+		set ymin 0
+		set ymax 1
+	    }
+	} else {
+	    set ymin $var($first,axis,y,min)
+	    set ymax $var($first,axis,y,max)
+	}
+
+	set var(layout,axis,x,grid) $var($first,axis,x,grid)
 	set var(layout,axis,x,log) $var($first,axis,x,log)
 	set var(layout,axis,x,flip) $var($first,axis,x,flip)
 	set var(layout,axis,x,min) $xmin
 	set var(layout,axis,x,max) $xmax
+
+	set var(layout,axis,y,grid) $var($first,axis,y,grid)
 	set var(layout,axis,y,log) $var($first,axis,y,log)
 	set var(layout,axis,y,flip) $var($first,axis,y,flip)
 	set var(layout,axis,y,min) $ymin
@@ -643,10 +657,15 @@ proc PlotUpdateCanvas {varname} {
     } else {
 	set legendpos $var(legend,position)
 
+	set var(layout,axis,x,grid) 1
 	set var(layout,axis,x,log) 0
 	set var(layout,axis,x,flip) 0
 	set var(layout,axis,x,min) 0
 	set var(layout,axis,x,max) 1
+
+	set var(layout,axis,y,grid) 1
+	set var(layout,axis,y,log) 0
+	set var(layout,axis,y,flip) 0
 	set var(layout,axis,y,min) 0
 	set var(layout,axis,y,max) 1
     }
@@ -699,13 +718,9 @@ proc PlotUpdateCanvas {varname} {
 	    $var($cc,graph) xaxis configure -exterior 0
 	    $var($cc,graph) yaxis configure -exterior 0
 
-	    $var($cc,graph) x2axis configure -hide no \
-		-grid no \
-		-exterior 0 \
+	    $var($cc,graph) x2axis configure -hide no -grid no -exterior 0 \
 		-bg $var(background)
-	    $var($cc,graph) y2axis configure -hide no \
-		-grid no \
-		-exterior 0 \
+	    $var($cc,graph) y2axis configure -hide no -grid no -exterior 0 \
 		-bg $var(background)
 
 	    switch $var(layout) {
@@ -759,10 +774,8 @@ proc PlotUpdateCanvas {varname} {
 	    $var($cc,graph) configure -plotpadx 0 -plotpady 0 \
 		-topmargin 0 -bottommargin 0 -leftmargin 0 -rightmargin 0
 
-	    $var($cc,graph) xaxis configure -exterior 1 \
-		-showticks 1
-	    $var($cc,graph) yaxis configure -exterior 1 \
-		-showticks 1
+	    $var($cc,graph) xaxis configure -exterior 1 -showticks 1
+	    $var($cc,graph) yaxis configure -exterior 1 -showticks 1
 
 	    $var($cc,graph) x2axis configure -hide yes
 	    $var($cc,graph) y2axis configure -hide yes
@@ -777,8 +790,6 @@ proc PlotUpdateGraph {varname} {
     PlotSaveState $varname
 
     if {$var(graph,axis,x,manage)} {
-	set xlog $var(graph,axis,x,log)
-	set xflip $var(graph,axis,x,flip)
 	if {$var(graph,axis,x,auto)} {
 	    set xmin {}
 	    set xmax {}
@@ -787,15 +798,11 @@ proc PlotUpdateGraph {varname} {
 	    set xmax $var(graph,axis,x,max)
 	}
     } else {
-	set xlog $var(layout,axis,x,log)
-	set xflip $var(layout,axis,x,flip)
 	set xmin $var(layout,axis,x,min)
 	set xmax $var(layout,axis,x,max)
     }
 
     if {$var(graph,axis,y,manage)} {
-	set ylog $var(graph,axis,y,log)
-	set yflip $var(graph,axis,y,flip)
 	if {$var(graph,axis,y,auto)} {
 	    set ymin {}
 	    set ymax {}
@@ -804,10 +811,26 @@ proc PlotUpdateGraph {varname} {
 	    set ymax $var(graph,axis,y,max)
 	}
     } else {
-	set ylog $var(layout,axis,y,log)
-	set yflip $var(layout,axis,y,flip)
 	set ymin $var(layout,axis,y,min)
 	set ymax $var(layout,axis,y,max)
+    }
+
+    if {$var(graph,axis,x,manage) && $var(graph,axis,y,manage)} {
+	set xgrid $var(graph,axis,x,grid)
+	set xlog $var(graph,axis,x,log)
+	set xflip $var(graph,axis,x,flip)
+
+	set ygrid $var(graph,axis,y,grid)
+	set ylog $var(graph,axis,y,log)
+	set yflip $var(graph,axis,y,flip)
+    } else {
+	set xgrid $var(layout,axis,x,grid)
+	set xlog $var(layout,axis,x,log)
+	set xflip $var(layout,axis,x,flip)
+
+	set ygrid $var(layout,axis,y,grid)
+	set ylog $var(layout,axis,y,log)
+	set yflip $var(layout,axis,y,flip)
     }
 
     if {$var(graph,format)} {
@@ -827,12 +850,10 @@ proc PlotUpdateGraph {varname} {
 
     # Graph
     $var(graph) xaxis configure \
-	-min $xmin -max $xmax -descending $xflip \
-	-grid $var(graph,axis,x,grid) -logscale $xlog
+	-min $xmin -max $xmax -descending $xflip -grid $xgrid -logscale $xlog
 
     $var(graph) yaxis configure \
-	-min $ymin -max $ymax -descending $yflip \
-	-grid $var(graph,axis,y,grid) -logscale $ylog
+	-min $ymin -max $ymax -descending $yflip -grid $ygrid -logscale $ylog
 
     if {$var(graph,axis,x,manage)} {
 	$var(graph) configure -plotpadx 0 -plotpady 0 -title $var(graph,title) 

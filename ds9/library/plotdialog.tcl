@@ -232,23 +232,23 @@ proc PlotDialog {varname wtt} {
     menu $var(mb).graph.axes
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Grid}] \
 	-variable ${varname}(graph,axis,x,grid) \
-	-command [list PlotUpdateGraph $varname]
+	-command [list PlotChangeAxis $varname]
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
 	-variable ${varname}(graph,axis,x,log) \
-	-command [list PlotUpdateGraph $varname]
+	-command [list PlotChangeAxis $varname]
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
 	-variable ${varname}(graph,axis,x,flip) \
-	-command [list PlotUpdateGraph $varname]
+	-command [list PlotChangeAxis $varname]
     $var(mb).graph.axes add separator
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Y Grid}] \
 	-variable ${varname}(graph,axis,y,grid) \
-	-command [list PlotUpdateGraph $varname]
+	-command [list PlotChangeAxis $varname]
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
 	-variable ${varname}(graph,axis,y,log) \
-	-command [list PlotUpdateGraph $varname]
+	-command [list PlotChangeAxis $varname]
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
 	-variable ${varname}(graph,axis,y,flip) \
-	-command [list PlotUpdateGraph $varname]
+	-command [list PlotChangeAxis $varname]
     $var(mb).graph.axes add separator
     $var(mb).graph.axes add command -label "[msgcat::mc {Range}]..." \
 	-command [list PlotRangeDialog $varname]
@@ -402,7 +402,7 @@ proc PlotRangeDialog {varname} {
 	set var(graph,axis,y,max) $ed(graph,axis,y,max) 
 	set var(graph,axis,y,format) $ed(graph,axis,y,format)
 
-	PlotUpdateGraph $varname
+	PlotChangeAxis $varname
     }
     
     set rr $ed(ok)

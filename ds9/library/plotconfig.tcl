@@ -181,8 +181,8 @@ proc PlotLoadConfigFile {varname filename} {
     }
 
     $var(graph,proc,updateelement) $varname
-    PlotUpdateGraph $varname
     PlotUpdateCanvas $varname
+    PlotUpdateGraph $varname
 
     PlotUpdateMenus $varname
 }

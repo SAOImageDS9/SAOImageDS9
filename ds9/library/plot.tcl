@@ -177,8 +177,8 @@ proc PlotAddGraph {varname type} {
     }
 
     $var(graph,proc,updateelement) $varname
-    PlotUpdateGraph $varname
     PlotUpdateCanvas $varname
+    PlotUpdateGraph $varname
 
     PlotUpdateMenus $varname
 
@@ -252,15 +252,15 @@ proc PlotDeleteGraph {varname} {
     PlotRestoreState $varname
 
     $var(graph,proc,updateelement) $varname
-    PlotUpdateGraph $varname
     PlotUpdateCanvas $varname
-
-    PlotLayoutCanvas $varname
+    PlotUpdateGraph $varname
 
     PlotUpdateMenus $varname
 
     PlotStats $varname
     PlotList $varname
+
+    PlotLayoutCanvas $varname
 }
 
 # Data
@@ -407,9 +407,10 @@ proc PlotChangeLayout {varname} {
     upvar #0 $varname var
     global $varname
 
-    PlotLayoutCanvas $varname
     PlotUpdateCanvas $varname
     PlotUpdateMenus $varname
+
+    PlotLayoutCanvas $varname
 }
 
 proc PlotChangeMode {varname} {

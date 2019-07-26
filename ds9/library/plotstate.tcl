@@ -24,9 +24,8 @@ proc PlotDefState {} {
     set pap(background) white
     set pap(bar,mode) normal
 
-    # waj
     set pap(graph,format) 1
-    set pap(graph,title) {Title}
+    set pap(graph,title) {}
     set pap(graph,title,family) helvetica
     set pap(graph,title,size) 12
     set pap(graph,title,weight) normal
@@ -55,8 +54,7 @@ proc PlotDefState {} {
     # per Graph
     set pap(graph,legend,title) Legend
 
-    # waj
-    set pap(graph,axis,x,title) {X Axis}
+    set pap(graph,axis,x,title) {}
     set pap(graph,axis,x,grid) 1
     set pap(graph,axis,x,log) 0
     set pap(graph,axis,x,flip) 0
@@ -65,8 +63,7 @@ proc PlotDefState {} {
     set pap(graph,axis,x,max) {}
     set pap(graph,axis,x,format) {}
 
-    # waj
-    set pap(graph,axis,y,title) {Y Axis}
+    set pap(graph,axis,y,title) {}
     set pap(graph,axis,y,grid) 1
     set pap(graph,axis,y,log) 0
     set pap(graph,axis,y,flip) 0

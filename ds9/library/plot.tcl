@@ -210,6 +210,12 @@ proc PlotDeleteGraph {varname} {
     upvar #0 $varname var
     global $varname
 
+    # reset layout if strip
+    if {$var(layout) == {strip}} {
+	set var(layout) column
+	PlotChangeLayout $varname
+    }
+
     set cc $var(graph,current)
 
     # remove menu item
@@ -909,10 +915,9 @@ proc PlotTitle {varname title xaxis yaxis} {
     upvar #0 $varname var
     global $varname
 
-# waj
-#    set var(graph,title) "$title"
-#    set var(graph,axis,x,title) "$xaxis"
-#    set var(graph,axis,y,title) "$yaxis"
+    set var(graph,title) "$title"
+    set var(graph,axis,x,title) "$xaxis"
+    set var(graph,axis,y,title) "$yaxis"
 
     PlotUpdateGraph $varname
 }

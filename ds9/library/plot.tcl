@@ -480,38 +480,40 @@ proc PlotListGenerate {varname} {
     upvar #0 $varname var
     global $varname
 
-    set rr {}
-    if {$var(graph,ds,xdata) != {}} {
-	global $var(graph,ds,xdata) $var(graph,ds,ydata) \
-	    $var(graph,ds,xedata) $var(graph,ds,yedata)
-	set ll [$var(graph,ds,xdata) length]
-	set xx [$var(graph,ds,xdata) range]
-	set yy [$var(graph,ds,ydata) range]
+    if {$var(graph,ds,xdata) == {}} {
+	return
+    }
 
-	switch $var(graph,ds,dim) {
-	    xy {
-		for {set ii 0} {$ii<$ll} {incr ii} {
-		    append rr "[lindex $xx $ii] [lindex $yy $ii]\n"
-		}
+    global $var(graph,ds,xdata) $var(graph,ds,ydata) \
+	$var(graph,ds,xedata) $var(graph,ds,yedata)
+    set ll [$var(graph,ds,xdata) length]
+    set xx [$var(graph,ds,xdata) range]
+    set yy [$var(graph,ds,ydata) range]
+
+    set rr {}
+    switch $var(graph,ds,dim) {
+	xy {
+	    for {set ii 0} {$ii<$ll} {incr ii} {
+		append rr "[lindex $xx $ii] [lindex $yy $ii]\n"
 	    }
-	    xyex {
-		set xe [$var(graph,ds,xedata) range]
-		for {set ii 0} {$ii<$ll} {incr ii} {
-		    append rr "[lindex $xx $ii] [lindex $yy $ii] [lindex $xe $ii]\n"
-		}
+	}
+	xyex {
+	    set xe [$var(graph,ds,xedata) range]
+	    for {set ii 0} {$ii<$ll} {incr ii} {
+		append rr "[lindex $xx $ii] [lindex $yy $ii] [lindex $xe $ii]\n"
 	    }
-	    xyey {
-		set ye [$var(graph,ds,yedata) range]
-		for {set ii 0} {$ii<$ll} {incr ii} {
-		    append rr "[lindex $xx $ii] [lindex $yy $ii] [lindex $ye $ii]\n"
-		}
+	}
+	xyey {
+	    set ye [$var(graph,ds,yedata) range]
+	    for {set ii 0} {$ii<$ll} {incr ii} {
+		append rr "[lindex $xx $ii] [lindex $yy $ii] [lindex $ye $ii]\n"
 	    }
-	    xyexey {
-		set xe [$var(graph,ds,xedata) range]
-		set ye [$var(graph,ds,yedata) range]
-		for {set ii 0} {$ii<$ll} {incr ii} {
-		    append rr "[lindex $xx $ii] [lindex $yy $ii] [lindex $xe $ii] [lindex $ye $ii]\n"
-		}
+	}
+	xyexey {
+	    set xe [$var(graph,ds,xedata) range]
+	    set ye [$var(graph,ds,yedata) range]
+	    for {set ii 0} {$ii<$ll} {incr ii} {
+		append rr "[lindex $xx $ii] [lindex $yy $ii] [lindex $xe $ii] [lindex $ye $ii]\n"
 	    }
 	}
     }
@@ -611,23 +613,38 @@ proc PlotUpdateCanvas {varname} {
     
     set first [lindex $var(graphs) 0]
     set last [lindex $var(graphs) end]
+    
+    if {[info exists ${varname}($first,1,xdata)]} {
+	set xmin [blt::vector expr min($var($first,1,xdata))]
+	set xmax [blt::vector expr max($var($first,1,xdata))]
+    } else {
+	set xmin 0
+	set xmax 1
+    }
+    if {[info exists ${varname}($first,1,ydata)]} {
+	set ymin [blt::vector expr min($var($first,1,ydata))]
+	set ymax [blt::vector expr max($var($first,1,ydata))]
+    } else {
+	set ymin 0
+	set ymax 1
+    }
 
     if {$var(layout,lock)} {
 	set var(layout,axis,x,log) $var($first,axis,x,log)
 	set var(layout,axis,x,flip) $var($first,axis,x,flip)
-	set var(layout,axis,x,min) 1
-	set var(layout,axis,x,max) 10
+	set var(layout,axis,x,min) $xmin
+	set var(layout,axis,x,max) $xmax
 	set var(layout,axis,y,log) $var($first,axis,y,log)
 	set var(layout,axis,y,flip) $var($first,axis,y,flip)
-	set var(layout,axis,y,min) 0
-	set var(layout,axis,y,max) 9
+	set var(layout,axis,y,min) $ymin
+	set var(layout,axis,y,max) $ymax
     } else {
 	set var(layout,axis,x,log) 0
 	set var(layout,axis,x,flip) 0
-	set var(layout,axis,x,min) {}
-	set var(layout,axis,x,max) {}
-	set var(layout,axis,y,min) {}
-	set var(layout,axis,y,max) {}
+	set var(layout,axis,x,min) 0
+	set var(layout,axis,x,max) 1
+	set var(layout,axis,y,min) 0
+	set var(layout,axis,y,max) 1
     }
 
     foreach cc $var(graphs) {

@@ -624,6 +624,13 @@ proc PlotUpdateMenus {varname} {
     upvar #0 $varname var
     global $varname
 
+    # File
+    if {$var(graph,ds,xdata) != {}} {
+	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state normal
+    } else {
+	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state disabled
+    }
+
     # Canvas
     switch $var(layout) {
 	grid {

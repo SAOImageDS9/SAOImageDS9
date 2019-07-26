@@ -706,13 +706,6 @@ proc PlotUpdateGraph {varname} {
 	}
     }
 
-    # Menus
-    if {$var(graph,ds,xdata) != {}} {
-	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state normal
-    } else {
-	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state disabled
-    }
-
     # Graph
     $var(graph) configure -plotpadx 0 -plotpady 0 -title $var(graph,title) 
 

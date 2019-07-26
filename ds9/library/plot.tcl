@@ -582,7 +582,7 @@ proc PlotUpdateCanvas {varname} {
     set last [lindex $var(graphs) end]
 
     foreach cc $var(graphs) {
-	switch ($cc,type) {
+	switch $var($cc,type) {
 	    line {}
 	    bar {$var($cc,graph) configure -barmode $var(bar,mode)}
 	    scatter {}

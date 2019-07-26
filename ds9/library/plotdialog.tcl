@@ -224,7 +224,7 @@ proc PlotDialog {varname wtt} {
     $var(mb).graph add command -label "[msgcat::mc {Titles}]..." \
 	-command [list PlotGraphTitleDialog $varname]
     $var(mb).graph add separator
-    $var(mb).graph add cascade -label [msgcat::mc {Mode}] \
+    $var(mb).graph add cascade -label [msgcat::mc {Bar Mode}] \
 	-menu $var(mb).graph.barmode
 
     menu $var(mb).graph.select
@@ -677,17 +677,17 @@ proc PlotUpdateMenus {varname} {
 	line {
 	    $var(mb) add cascade -label [msgcat::mc {Data}] \
 		-menu $var(mb).dataline
-	    $var(mb).graph entryconfig [msgcat::mc {Mode}] -state disabled
+	    $var(mb).graph entryconfig [msgcat::mc {Bar Mode}] -state disabled
 	}
 	bar {
 	    $var(mb) add cascade -label [msgcat::mc {Data}] \
 		-menu $var(mb).databar
-	    $var(mb).graph entryconfig [msgcat::mc {Mode}] -state normal
+	    $var(mb).graph entryconfig [msgcat::mc {Bar Mode}] -state normal
 	}
 	scatter {
 	    $var(mb) add cascade -label [msgcat::mc {Data}] \
 		-menu $var(mb).datascatter
-	    $var(mb).graph entryconfig [msgcat::mc {Mode}] -state disabled
+	    $var(mb).graph entryconfig [msgcat::mc {Bar Mode}] -state disabled
 	}
     }
 

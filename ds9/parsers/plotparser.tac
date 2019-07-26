@@ -71,7 +71,6 @@
 %token LOAD_
 %token LOADCONFIG_
 %token LOG_
-%token LOCK_
 %token MAX_
 %token MIN_
 %token MODE_
@@ -118,8 +117,9 @@
 %token STACKED_
 %token STATS_
 %token STATISTICS_
-%token STEP_
 %token STDIN_
+%token STEP_
+%token STRIP_
 %token STYLE_
 %token SUNKEN_
 %token TABLOID_
@@ -278,7 +278,7 @@ plotCmd : LOAD_ load
  | SMOOTH_ smooth {PlotCmdUpdateElement graph,ds,smooth $2}
  | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,width $2}
  | DASH_ yesno {PlotCmdUpdateElement graph,ds,dash $2}
- | LAYOUT_ layout
+ | LAYOUT_ layout {ProcessCmdCVAR layout strip PlotChangeLayout}
 
  | SELECT_ select
  # backward compatibility
@@ -325,10 +325,10 @@ exportOps : NONE_ {ProcessCmdSet iap tiff,compress none}
  | numeric {ProcessCmdSet iap jpeg,quality $1}
  ;
 
-layout: ROW_ {ProcessCmdCVAR layout row PlotChangeLayout}
- | COLUMN_ {ProcessCmdCVAR layout column PlotChangeLayout}
- | GRID_ {ProcessCmdCVAR layout grid PlotChangeLayout}
- | LOCK_ yesno {ProcessCmdCVAR layout,lock $2 PlotChangeLayout}
+layout: ROW_ {set _ row}
+ | COLUMN_ {set _ column}
+ | GRID_ {set _ grid}
+ | STRIP_ {set _ strip}
  ;
 
 load : STRING_ {PlotCmdLoad $1 xy}

@@ -140,7 +140,6 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Grid}] \
 	-variable ${varname}(layout) -value grid \
 	-command [list PlotChangeLayout $varname]
-    $var(mb).canvas.layout add separator
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Column}] \
 	-variable ${varname}(layout) -value column \
 	-command [list PlotChangeLayout $varname]
@@ -148,8 +147,8 @@ proc PlotDialog {varname wtt} {
 	-variable ${varname}(layout) -value row \
 	-command [list PlotChangeLayout $varname]
     $var(mb).canvas.layout add separator
-    $var(mb).canvas.layout add checkbutton -label [msgcat::mc {Lock}] \
-	-variable ${varname}(layout,lock) \
+    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Strip}] \
+	-variable ${varname}(layout) -value strip \
 	-command [list PlotChangeLayout $varname]
 
     menu $var(mb).canvas.legend
@@ -632,17 +631,6 @@ proc PlotUpdateMenus {varname} {
     }
 
     # Canvas
-    switch $var(layout) {
-	grid {
-	    $var(mb).canvas.layout entryconfig [msgcat::mc {Lock}] \
-		-state disabled
-	}
-	row -
-	column {
-	    $var(mb).canvas.layout entryconfig [msgcat::mc {Lock}] \
-		-state normal
-	}
-    }
 
     # Graph
     if {[llength $var(graph,dss)] == 0} {

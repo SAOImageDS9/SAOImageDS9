@@ -68,7 +68,6 @@ list	    {return $LIST_}
 load	    {return $LOAD_}
 loadconfig  {return $LOADCONFIG_}
 log	    {return $LOG_}
-lock	    {return $LOCK_}
 max	    {return $MAX_}
 min	    {return $MIN_}
 mode	    {return $MODE_}
@@ -115,8 +114,9 @@ square	    {return $SQUARE_}
 stacked	    {return $STACKED_}
 stats	    {return $STATS_}
 statistics  {return $STATISTICS_}
-step	    {return $STEP_}
 stdin	    {return $STDIN_}
+step	    {return $STEP_}
+strip	    {return $STRIP_}
 style	    {return $STYLE_}
 sunken	    {return $SUNKEN_}
 tabloid	    {return $TABLOID_}

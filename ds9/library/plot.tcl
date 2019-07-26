@@ -78,7 +78,8 @@ proc PlotLayoutCanvas {varname} {
     }
 
     switch $var(layout) {
-	column {
+	column -
+	strip {
 	    set ww 1
 	    set ii 0
 	    grid columnconfigure $var(top) 0 -weight 1
@@ -408,19 +409,22 @@ proc PlotChangeAxis {varname} {
     upvar #0 $varname var
     global $varname
 
-    if {$var(layout,lock)} {
-	PlotUpdateCanvas $varname
-	set cc $var(graph,current)
-	foreach gg $var(graphs) {
-	    set var(graph,current) $gg
-	    PlotRestoreState $varname
+    switch $var(layout) {
+	grid -
+	column -
+	row {PlotUpdateGraph $varname}
+	strip {
+	    PlotUpdateCanvas $varname
+	    set cc $var(graph,current)
+	    foreach gg $var(graphs) {
+		set var(graph,current) $gg
+		PlotRestoreState $varname
 
-	    PlotUpdateGraph $varname
+		PlotUpdateGraph $varname
+	    }
+	    set var(graph,current) $cc
+	    PlotRestoreState $varname
 	}
-	set var(graph,current) $cc
-	PlotRestoreState $varname
-    } else {
-	PlotUpdateGraph $varname
     }
 }
 
@@ -614,60 +618,65 @@ proc PlotUpdateCanvas {varname} {
     set first [lindex $var(graphs) 0]
     set last [lindex $var(graphs) end]
     
-    if {$var(layout,lock)} {
-	set legendpos plotarea
+    switch $var(layout) {
+	grid -
+	row -
+	column {
+	    set legendpos $var(legend,position)
 
-	if {$var($first,axis,x,auto)} {
-	    if {[info exists ${varname}($first,1,xdata)]} {
-		set xmin [blt::vector expr min($var($first,1,xdata))]
-		set xmax [blt::vector expr max($var($first,1,xdata))]
-	    } else {
-		set xmin 0
-		set xmax 1
-	    }
-	} else {
-	    set xmin $var($first,axis,x,min)
-	    set xmax $var($first,axis,x,max)
+	    set var(layout,axis,x,grid) 1
+	    set var(layout,axis,x,log) 0
+	    set var(layout,axis,x,flip) 0
+	    set var(layout,axis,x,min) 0
+	    set var(layout,axis,x,max) 1
+
+	    set var(layout,axis,y,grid) 1
+	    set var(layout,axis,y,log) 0
+	    set var(layout,axis,y,flip) 0
+	    set var(layout,axis,y,min) 0
+	    set var(layout,axis,y,max) 1
 	}
+	strip {
+	    set legendpos plotarea
 
-	if {$var($first,axis,y,auto)} {
-	    if {[info exists ${varname}($first,1,ydata)]} {
-		set ymin [blt::vector expr min($var($first,1,ydata))]
-		set ymax [blt::vector expr max($var($first,1,ydata))]
+	    if {$var($first,axis,x,auto)} {
+		if {[info exists ${varname}($first,1,xdata)]} {
+		    set xmin [blt::vector expr min($var($first,1,xdata))]
+		    set xmax [blt::vector expr max($var($first,1,xdata))]
+		} else {
+		    set xmin 0
+		    set xmax 1
+		}
 	    } else {
-		set ymin 0
-		set ymax 1
+		set xmin $var($first,axis,x,min)
+		set xmax $var($first,axis,x,max)
 	    }
-	} else {
-	    set ymin $var($first,axis,y,min)
-	    set ymax $var($first,axis,y,max)
+
+	    if {$var($first,axis,y,auto)} {
+		if {[info exists ${varname}($first,1,ydata)]} {
+		    set ymin [blt::vector expr min($var($first,1,ydata))]
+		    set ymax [blt::vector expr max($var($first,1,ydata))]
+		} else {
+		    set ymin 0
+		    set ymax 1
+		}
+	    } else {
+		set ymin $var($first,axis,y,min)
+		set ymax $var($first,axis,y,max)
+	    }
+
+	    set var(layout,axis,x,grid) $var($first,axis,x,grid)
+	    set var(layout,axis,x,log) $var($first,axis,x,log)
+	    set var(layout,axis,x,flip) $var($first,axis,x,flip)
+	    set var(layout,axis,x,min) $xmin
+	    set var(layout,axis,x,max) $xmax
+
+	    set var(layout,axis,y,grid) $var($first,axis,y,grid)
+	    set var(layout,axis,y,log) $var($first,axis,y,log)
+	    set var(layout,axis,y,flip) $var($first,axis,y,flip)
+	    set var(layout,axis,y,min) $ymin
+	    set var(layout,axis,y,max) $ymax
 	}
-
-	set var(layout,axis,x,grid) $var($first,axis,x,grid)
-	set var(layout,axis,x,log) $var($first,axis,x,log)
-	set var(layout,axis,x,flip) $var($first,axis,x,flip)
-	set var(layout,axis,x,min) $xmin
-	set var(layout,axis,x,max) $xmax
-
-	set var(layout,axis,y,grid) $var($first,axis,y,grid)
-	set var(layout,axis,y,log) $var($first,axis,y,log)
-	set var(layout,axis,y,flip) $var($first,axis,y,flip)
-	set var(layout,axis,y,min) $ymin
-	set var(layout,axis,y,max) $ymax
-    } else {
-	set legendpos $var(legend,position)
-
-	set var(layout,axis,x,grid) 1
-	set var(layout,axis,x,log) 0
-	set var(layout,axis,x,flip) 0
-	set var(layout,axis,x,min) 0
-	set var(layout,axis,x,max) 1
-
-	set var(layout,axis,y,grid) 1
-	set var(layout,axis,y,log) 0
-	set var(layout,axis,y,flip) 0
-	set var(layout,axis,y,min) 0
-	set var(layout,axis,y,max) 1
     }
 
     foreach cc $var(graphs) {
@@ -701,84 +710,58 @@ proc PlotUpdateCanvas {varname} {
 	set var($cc,axis,x,manage) 1
 	set var($cc,axis,y,manage) 1
 
-	if {$var(layout,lock) && $var(layout) != {grid}} {
-	    if {$cc != $first} {
-		switch $var(layout) {
-		    row {
-			set var($cc,axis,x,manage) 1
-			set var($cc,axis,y,manage) 0
-		    }
-		    column {
-			set var($cc,axis,x,manage) 0
-			set var($cc,axis,y,manage) 1
-		    }
+	switch $var(layout) {
+	    grid -
+	    row -
+	    column {
+		$var($cc,graph) configure -plotpadx 0 -plotpady 0 \
+		    -topmargin 0 -bottommargin 0 -leftmargin 0 -rightmargin 0
+
+		$var($cc,graph) xaxis configure -exterior 1 -showticks 1
+		$var($cc,graph) yaxis configure -exterior 1 -showticks 1
+
+		$var($cc,graph) x2axis configure -hide yes
+		$var($cc,graph) y2axis configure -hide yes
+	    }
+	    strip {
+		if {$cc != $first} {
+		    set var($cc,axis,x,manage) 0
+		    set var($cc,axis,y,manage) 1
+		}
+
+		$var($cc,graph) xaxis configure -exterior 0
+		$var($cc,graph) yaxis configure -exterior 0
+
+		$var($cc,graph) x2axis configure -hide no -grid no -exterior 0 \
+		    -bg $var(background)
+		$var($cc,graph) y2axis configure -hide no -grid no -exterior 0 \
+		    -bg $var(background)
+
+		set left [expr 50 + $var(axis,title,size)]
+		set right 10
+		
+		$var($cc,graph) configure -leftmargin $left -rightmargin $right
+
+		if {$cc == $first} {
+		    $var($cc,graph) configure -topmargin 0 -bottommargin 1
+		} elseif {$cc == $last} {
+		    $var($cc,graph) configure -topmargin 1 -bottommargin 0
+		} else {
+		    $var($cc,graph) configure -topmargin 1 -bottommargin 1
+		}
+		
+		if {$cc != $last} {
+		    $var($cc,graph) xaxis configure -showticks 0
+		    $var($cc,graph) x2axis configure -showticks 0
+		    $var($cc,graph) yaxis configure -showticks 1
+		    $var($cc,graph) y2axis configure -showticks 0
+		} else {
+		    $var($cc,graph) xaxis configure -showticks 1
+		    $var($cc,graph) x2axis configure -showticks 0
+		    $var($cc,graph) yaxis configure -showticks 1
+		    $var($cc,graph) y2axis configure -showticks 0
 		}
 	    }
-
-	    $var($cc,graph) xaxis configure -exterior 0
-	    $var($cc,graph) yaxis configure -exterior 0
-
-	    $var($cc,graph) x2axis configure -hide no -grid no -exterior 0 \
-		-bg $var(background)
-	    $var($cc,graph) y2axis configure -hide no -grid no -exterior 0 \
-		-bg $var(background)
-
-	    switch $var(layout) {
-		column {
-		    set left [expr 50 + $var(axis,title,size)]
-		    set right 10
-		    
-		    $var($cc,graph) configure -leftmargin $left \
-			-rightmargin $right
-
-		    if {$cc == $first} {
-			$var($cc,graph) configure -topmargin 0 -bottommargin 1
-		    } elseif {$cc == $last} {
-			$var($cc,graph) configure -topmargin 1 -bottommargin 0
-		    } else {
-			$var($cc,graph) configure -topmargin 1 -bottommargin 1
-		    }
-		    
-		    if {$cc != $last} {
-			$var($cc,graph) xaxis configure -showticks 0
-			$var($cc,graph) x2axis configure -showticks 0
-			$var($cc,graph) yaxis configure -showticks 1
-			$var($cc,graph) y2axis configure -showticks 0
-		    } else {
-			$var($cc,graph) xaxis configure -showticks 1
-			$var($cc,graph) x2axis configure -showticks 0
-			$var($cc,graph) yaxis configure -showticks 1
-			$var($cc,graph) y2axis configure -showticks 0
-		    }
-		}
-		row {
-		    if {$cc == $first} {
-			$var($cc,graph) configure -leftmargin 0 -rightmargin 1
-		    } else {
-			$var($cc,graph) configure -leftmargin 1 -rightmargin 1
-		    }
-		    if {$cc == $first} {
-			$var($cc,graph) xaxis configure -showticks 1
-			$var($cc,graph) x2axis configure -showticks 0
-			$var($cc,graph) yaxis configure -showticks 1
-			$var($cc,graph) y2axis configure -showticks 0
-		    } else {
-			$var($cc,graph) xaxis configure -showticks 1
-			$var($cc,graph) x2axis configure -showticks 0
-			$var($cc,graph) yaxis configure -showticks 0
-			$var($cc,graph) y2axis configure -showticks 0
-		    }
-		}
-	    }
-	} else {
-	    $var($cc,graph) configure -plotpadx 0 -plotpady 0 \
-		-topmargin 0 -bottommargin 0 -leftmargin 0 -rightmargin 0
-
-	    $var($cc,graph) xaxis configure -exterior 1 -showticks 1
-	    $var($cc,graph) yaxis configure -exterior 1 -showticks 1
-
-	    $var($cc,graph) x2axis configure -hide yes
-	    $var($cc,graph) y2axis configure -hide yes
 	}
     }
 }

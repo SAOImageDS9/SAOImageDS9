@@ -614,22 +614,24 @@ proc PlotUpdateCanvas {varname} {
     set first [lindex $var(graphs) 0]
     set last [lindex $var(graphs) end]
     
-    if {[info exists ${varname}($first,1,xdata)]} {
-	set xmin [blt::vector expr min($var($first,1,xdata))]
-	set xmax [blt::vector expr max($var($first,1,xdata))]
-    } else {
-	set xmin 0
-	set xmax 1
-    }
-    if {[info exists ${varname}($first,1,ydata)]} {
-	set ymin [blt::vector expr min($var($first,1,ydata))]
-	set ymax [blt::vector expr max($var($first,1,ydata))]
-    } else {
-	set ymin 0
-	set ymax 1
-    }
-
     if {$var(layout,lock)} {
+	set legendpos plotarea
+
+	if {[info exists ${varname}($first,1,xdata)]} {
+	    set xmin [blt::vector expr min($var($first,1,xdata))]
+	    set xmax [blt::vector expr max($var($first,1,xdata))]
+	} else {
+	    set xmin 0
+	    set xmax 1
+	}
+	if {[info exists ${varname}($first,1,ydata)]} {
+	    set ymin [blt::vector expr min($var($first,1,ydata))]
+	    set ymax [blt::vector expr max($var($first,1,ydata))]
+	} else {
+	    set ymin 0
+	    set ymax 1
+	}
+
 	set var(layout,axis,x,log) $var($first,axis,x,log)
 	set var(layout,axis,x,flip) $var($first,axis,x,flip)
 	set var(layout,axis,x,min) $xmin
@@ -639,6 +641,8 @@ proc PlotUpdateCanvas {varname} {
 	set var(layout,axis,y,min) $ymin
 	set var(layout,axis,y,max) $ymax
     } else {
+	set legendpos $var(legend,position)
+
 	set var(layout,axis,x,log) 0
 	set var(layout,axis,x,flip) 0
 	set var(layout,axis,x,min) 0
@@ -671,7 +675,7 @@ proc PlotUpdateCanvas {varname} {
 	$var($cc,graph) legend configure \
 	    -bg $var(background) \
 	    -hide [expr !$var(legend)] \
-	    -position $var(legend,position) \
+	    -position $legendpos \
 	    -font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	    -titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
 
@@ -706,6 +710,20 @@ proc PlotUpdateCanvas {varname} {
 
 	    switch $var(layout) {
 		column {
+		    set left [expr 50 + $var(axis,title,size)]
+		    set right 10
+		    
+		    $var($cc,graph) configure -leftmargin $left \
+			-rightmargin $right
+
+		    if {$cc == $first} {
+			$var($cc,graph) configure -topmargin 0 -bottommargin 1
+		    } elseif {$cc == $last} {
+			$var($cc,graph) configure -topmargin 1 -bottommargin 0
+		    } else {
+			$var($cc,graph) configure -topmargin 1 -bottommargin 1
+		    }
+		    
 		    if {$cc != $last} {
 			$var($cc,graph) xaxis configure -showticks 0
 			$var($cc,graph) x2axis configure -showticks 0
@@ -719,7 +737,12 @@ proc PlotUpdateCanvas {varname} {
 		    }
 		}
 		row {
-		    if {$cc != $last} {
+		    if {$cc == $first} {
+			$var($cc,graph) configure -leftmargin 0 -rightmargin 1
+		    } else {
+			$var($cc,graph) configure -leftmargin 1 -rightmargin 1
+		    }
+		    if {$cc == $first} {
 			$var($cc,graph) xaxis configure -showticks 1
 			$var($cc,graph) x2axis configure -showticks 0
 			$var($cc,graph) yaxis configure -showticks 1
@@ -803,17 +826,31 @@ proc PlotUpdateGraph {varname} {
     }
 
     # Graph
-    $var(graph) configure -plotpadx 0 -plotpady 0 -title $var(graph,title) 
-
     $var(graph) xaxis configure \
 	-min $xmin -max $xmax -descending $xflip \
-	-grid $var(graph,axis,x,grid) -logscale $xlog \
-	-title $var(graph,axis,x,title)
+	-grid $var(graph,axis,x,grid) -logscale $xlog
 
     $var(graph) yaxis configure \
 	-min $ymin -max $ymax -descending $yflip \
-	-grid $var(graph,axis,y,grid) -logscale $ylog \
-	-title $var(graph,axis,y,title)
+	-grid $var(graph,axis,y,grid) -logscale $ylog
+
+    if {$var(graph,axis,x,manage)} {
+	$var(graph) configure -plotpadx 0 -plotpady 0 -title $var(graph,title) 
+    } else {
+	$var(graph) configure -plotpadx 0 -plotpady 0 -title {}
+    }
+    
+    if {$var(graph,axis,x,manage) && [$var(graph) xaxis cget -showticks]} {
+	$var(graph) xaxis configure -title $var(graph,axis,x,title)
+    } else {
+	$var(graph) xaxis configure -title {}
+    }
+
+    if {$var(graph,axis,y,manage) && [$var(graph) yaxis cget -showticks]} {
+	$var(graph) yaxis configure -title $var(graph,axis,y,title)
+    } else {
+	$var(graph) yaxis configure -title {}
+    }
 
     $var(graph) legend configure -title $var(graph,legend,title)
 }
@@ -868,9 +905,10 @@ proc PlotTitle {varname title xaxis yaxis} {
     upvar #0 $varname var
     global $varname
 
-    set var(graph,title) "$title"
-    set var(graph,axis,x,title) "$xaxis"
-    set var(graph,axis,y,title) "$yaxis"
+# waj
+#    set var(graph,title) "$title"
+#    set var(graph,axis,x,title) "$xaxis"
+#    set var(graph,axis,y,title) "$yaxis"
 
     PlotUpdateGraph $varname
 }

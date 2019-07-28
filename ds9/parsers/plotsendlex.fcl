@@ -47,6 +47,7 @@ slant		{return $SLANT_}
 smooth		{return $SMOOTH_}
 stats		{return $STATS_}
 statistics	{return $STATISTICS_}
+strip		{return $STRIP_}
 style		{return $STYLE_}
 title		{return $TITLE_}
 weight		{return $WEIGHT_}

@@ -279,6 +279,8 @@ plotCmd : LOAD_ load
  | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,width $2}
  | DASH_ yesno {PlotCmdUpdateElement graph,ds,dash $2}
  | LAYOUT_ layout {ProcessCmdCVAR layout strip PlotChangeLayout}
+ | LAYOUT_ STRIP_ WEIGHT_ numeric
+   {ProcessCmdCVAR layout,strip,weight $4 PlotChangeLayout}
 
  | SELECT_ select
  # backward compatibility

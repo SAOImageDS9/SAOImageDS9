@@ -47,6 +47,7 @@
 %token SMOOTH_
 %token STATS_
 %token STATISTICS_
+%token STRIP_
 %token STYLE_
 %token TITLE_
 %token WEIGHT_
@@ -97,6 +98,7 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | WIDTH_ {ProcessSendCmdCVARGet graph,ds,width}
  | DASH_ {ProcessSendCmdCVARYesNo graph,ds,dash}
  | LAYOUT_ {ProcessSendCmdCVARGet layout}
+ | LAYOUT_ STRIP_ WEIGHT_ {ProcessSendCmdCVARGet layout,strip,weight}
  | SELECT_ select
  # backward compatibility
  | DATASET_ {ProcessSendCmdCVARGet graph,ds,current}

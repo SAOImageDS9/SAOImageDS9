@@ -725,11 +725,14 @@ proc PlotUpdateCanvas {varname} {
 	    grid -
 	    row -
 	    column {
-		$var($cc,graph) configure -plotpadx 0 -plotpady 0 \
-		    -topmargin 0 -bottommargin 0 -leftmargin 0 -rightmargin 0
+		$var($cc,graph) configure \
+		    -topmargin 0 -bottommargin 0 \
+		    -leftmargin 0 -rightmargin 0 \
+		    -borderwidth 2 \
+		    -plotrelief flat -plotborderwidth 2
 
-		$var($cc,graph) xaxis configure -exterior 1 -showticks 1
-		$var($cc,graph) yaxis configure -exterior 1 -showticks 1
+		$var($cc,graph) xaxis configure -showticks 1 -linewidth 1
+		$var($cc,graph) yaxis configure -showticks 1 -linewidth 1
 
 		$var($cc,graph) x2axis configure -hide yes
 		$var($cc,graph) y2axis configure -hide yes
@@ -740,18 +743,13 @@ proc PlotUpdateCanvas {varname} {
 		    set var($cc,axis,y,manage) 1
 		}
 
-		$var($cc,graph) xaxis configure -exterior 0
-		$var($cc,graph) yaxis configure -exterior 0
-
-		$var($cc,graph) x2axis configure -hide no -grid no -exterior 0 \
-		    -bg $var(background)
-		$var($cc,graph) y2axis configure -hide no -grid no -exterior 0 \
-		    -bg $var(background)
-
 		set left [expr 50 + $var(axis,title,size)]
 		set right 10
 		
-		$var($cc,graph) configure -leftmargin $left -rightmargin $right
+		$var($cc,graph) configure \
+		    -leftmargin $left -rightmargin $right \
+		    -borderwidth 0 \
+		    -plotrelief solid -plotborderwidth 1
 
 		if {$cc == $first} {
 		    $var($cc,graph) configure -topmargin 0 -bottommargin 1
@@ -761,16 +759,21 @@ proc PlotUpdateCanvas {varname} {
 		    $var($cc,graph) configure -topmargin 1 -bottommargin 1
 		}
 		
+		$var($cc,graph) x2axis configure -hide yes -grid no \
+		    -bg $var(background) -linewidth 0
+		$var($cc,graph) y2axis configure -hide yes -grid no \
+		    -bg $var(background) -linewidth 0
+
 		if {$cc != $last} {
-		    $var($cc,graph) xaxis configure -showticks 0
-		    $var($cc,graph) x2axis configure -showticks 0
-		    $var($cc,graph) yaxis configure -showticks 1
-		    $var($cc,graph) y2axis configure -showticks 0
+		    $var($cc,graph) xaxis configure -showticks 0 -linewidth 0
+		    $var($cc,graph) x2axis configure -showticks 0 -linewidth 0
+		    $var($cc,graph) yaxis configure -showticks 1 -linewidth 1
+		    $var($cc,graph) y2axis configure -showticks 0 -linewidth 0
 		} else {
-		    $var($cc,graph) xaxis configure -showticks 1
-		    $var($cc,graph) x2axis configure -showticks 0
-		    $var($cc,graph) yaxis configure -showticks 1
-		    $var($cc,graph) y2axis configure -showticks 0
+		    $var($cc,graph) xaxis configure -showticks 1 -linewidth 1
+		    $var($cc,graph) x2axis configure -showticks 0 -linewidth 0
+		    $var($cc,graph) yaxis configure -showticks 1 -linewidth 1
+		    $var($cc,graph) y2axis configure -showticks 0 -linewidth 0
 		}
 	    }
 	}

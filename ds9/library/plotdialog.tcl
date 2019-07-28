@@ -150,6 +150,7 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Strip}] \
 	-variable ${varname}(layout) -value strip \
 	-command [list PlotChangeLayout $varname]
+    $var(mb).canvas.layout add separator
     $var(mb).canvas.layout add command \
 	-label "[msgcat::mc {Strip Parameters}]..." \
 	-command [list PlotStripDialog $varname]

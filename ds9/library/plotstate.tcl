@@ -11,16 +11,14 @@ proc PlotDefState {} {
     # per Canvas
     set pap(layout) grid
     set pap(layout,strip,weight) 50
+    set pap(layout,axis,x,min) 0
+    set pap(layout,axis,x,max) 0
     set pap(layout,axis,x,grid) 0
     set pap(layout,axis,x,log) 0
     set pap(layout,axis,x,flip) 0
-    set pap(layout,axis,x,min) 0
-    set pap(layout,axis,x,max) 0
     set pap(layout,axis,y,grid) 0
     set pap(layout,axis,y,log) 0
     set pap(layout,axis,y,flip) 0
-    set pap(layout,axis,y,min) 0
-    set pap(layout,axis,y,max) 0
 
     set pap(background) white
     set pap(bar,mode) normal
@@ -131,7 +129,6 @@ proc PlotInitGraph {varname} {
     set var(graph,axis,x,max) $pap(graph,axis,x,max)
     set var(graph,axis,x,format) $pap(graph,axis,x,format)
 
-    set var(graph,axis,y,manage) 1
     set var(graph,axis,y,title) $pap(graph,axis,y,title)
     set var(graph,axis,y,grid) $pap(graph,axis,y,grid)
     set var(graph,axis,y,log) $pap(graph,axis,y,log)
@@ -206,7 +203,6 @@ proc PlotSaveState {varname} {
     set var($cc,axis,x,max) $var(graph,axis,x,max)
     set var($cc,axis,x,format) $var(graph,axis,x,format)
 
-    set var($cc,axis,y,manage) $var(graph,axis,y,manage)
     set var($cc,axis,y,title) $var(graph,axis,y,title)
     set var($cc,axis,y,grid) $var(graph,axis,y,grid)
     set var($cc,axis,y,log) $var(graph,axis,y,log)
@@ -281,7 +277,6 @@ proc PlotRestoreState {varname} {
     set var(graph,axis,x,max) $var($cc,axis,x,max)
     set var(graph,axis,x,format) $var($cc,axis,x,format)
 
-    set var(graph,axis,y,manage) $var($cc,axis,y,manage)
     set var(graph,axis,y,title) $var($cc,axis,y,title)
     set var(graph,axis,y,grid) $var($cc,axis,y,grid)
     set var(graph,axis,y,log) $var($cc,axis,y,log)

@@ -733,9 +733,6 @@ proc PlotUpdateCanvas {varname} {
 
 		$var($cc,graph) xaxis configure -showticks 1 -linewidth 1
 		$var($cc,graph) yaxis configure -showticks 1 -linewidth 1
-
-		$var($cc,graph) x2axis configure -hide yes
-		$var($cc,graph) y2axis configure -hide yes
 	    }
 	    strip {
 		if {$cc != $first} {
@@ -759,21 +756,12 @@ proc PlotUpdateCanvas {varname} {
 		    $var($cc,graph) configure -topmargin 1 -bottommargin 1
 		}
 		
-		$var($cc,graph) x2axis configure -hide yes -grid no \
-		    -bg $var(background) -linewidth 0
-		$var($cc,graph) y2axis configure -hide yes -grid no \
-		    -bg $var(background) -linewidth 0
-
 		if {$cc != $last} {
 		    $var($cc,graph) xaxis configure -showticks 0 -linewidth 0
-		    $var($cc,graph) x2axis configure -showticks 0 -linewidth 0
 		    $var($cc,graph) yaxis configure -showticks 1 -linewidth 1
-		    $var($cc,graph) y2axis configure -showticks 0 -linewidth 0
 		} else {
 		    $var($cc,graph) xaxis configure -showticks 1 -linewidth 1
-		    $var($cc,graph) x2axis configure -showticks 0 -linewidth 0
 		    $var($cc,graph) yaxis configure -showticks 1 -linewidth 1
-		    $var($cc,graph) y2axis configure -showticks 0 -linewidth 0
 		}
 	    }
 	}

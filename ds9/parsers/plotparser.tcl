@@ -5712,7 +5712,7 @@ proc plot::yyparse {} {
                     97 { PlotCmdUpdateElement graph,ds,smooth $2 }
                     98 { PlotCmdUpdateElement graph,ds,width $2 }
                     99 { PlotCmdUpdateElement graph,ds,dash $2 }
-                    100 { ProcessCmdCVAR layout strip PlotChangeLayout }
+                    100 { ProcessCmdCVAR layout $2 PlotChangeLayout }
                     101 { ProcessCmdCVAR layout,strip,weight $4 PlotChangeLayout }
                     103 { ProcessCmdCVAR graph,ds,current $2 }
                     106 { set _ line }

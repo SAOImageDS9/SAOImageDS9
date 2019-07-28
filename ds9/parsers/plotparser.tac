@@ -278,7 +278,7 @@ plotCmd : LOAD_ load
  | SMOOTH_ smooth {PlotCmdUpdateElement graph,ds,smooth $2}
  | WIDTH_ INT_ {PlotCmdUpdateElement graph,ds,width $2}
  | DASH_ yesno {PlotCmdUpdateElement graph,ds,dash $2}
- | LAYOUT_ layout {ProcessCmdCVAR layout strip PlotChangeLayout}
+ | LAYOUT_ layout {ProcessCmdCVAR layout $2 PlotChangeLayout}
  | LAYOUT_ STRIP_ WEIGHT_ numeric
    {ProcessCmdCVAR layout,strip,weight $4 PlotChangeLayout}
 

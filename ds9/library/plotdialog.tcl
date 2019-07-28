@@ -236,20 +236,20 @@ proc PlotDialog {varname wtt} {
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Grid}] \
 	-variable ${varname}(graph,axis,x,grid) \
 	-command [list PlotChangeAxis $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Log}] \
 	-variable ${varname}(graph,axis,x,log) \
 	-command [list PlotChangeAxis $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Flip}] \
 	-variable ${varname}(graph,axis,x,flip) \
 	-command [list PlotChangeAxis $varname]
     $var(mb).graph.axes add separator
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Y Grid}] \
 	-variable ${varname}(graph,axis,y,grid) \
 	-command [list PlotChangeAxis $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Y Log}] \
 	-variable ${varname}(graph,axis,y,log) \
 	-command [list PlotChangeAxis $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Y Flip}] \
 	-variable ${varname}(graph,axis,y,flip) \
 	-command [list PlotChangeAxis $varname]
     $var(mb).graph.axes add separator
@@ -690,14 +690,28 @@ proc PlotUpdateMenus {varname} {
     switch $var(layout) {
 	grid -
 	row -
-	column {$var(mb).graph entryconfig [msgcat::mc {Axes}] -state normal}
+	column {
+	    $var(mb).graph.axes entryconfig [msgcat::mc {X Grid}] -state normal
+	    $var(mb).graph.axes entryconfig [msgcat::mc {X Log}] -state normal
+	    $var(mb).graph.axes entryconfig [msgcat::mc {X Flip}] -state normal
+	}
 	strip {
 	    set cc $var(graph,current)
 	    set first [lindex $var(graphs) 0]
 	    if {$cc == $first} {
-		$var(mb).graph entryconfig [msgcat::mc {Axes}] -state normal
+		$var(mb).graph.axes entryconfig [msgcat::mc {X Grid}] \
+		    -state normal
+		$var(mb).graph.axes entryconfig [msgcat::mc {X Log}] \
+		    -state normal
+		$var(mb).graph.axes entryconfig [msgcat::mc {X Flip}] \
+		    -state normal
 	    } else {
-		$var(mb).graph entryconfig [msgcat::mc {Axes}] -state disabled
+		$var(mb).graph.axes entryconfig [msgcat::mc {X Grid}] \
+		    -state disabled
+		$var(mb).graph.axes entryconfig [msgcat::mc {X Log}] \
+		    -state disabled
+		$var(mb).graph.axes entryconfig [msgcat::mc {X Flip}] \
+		    -state disabled
 	    }
 	}
     }

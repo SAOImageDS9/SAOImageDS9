@@ -150,6 +150,9 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Strip}] \
 	-variable ${varname}(layout) -value strip \
 	-command [list PlotChangeLayout $varname]
+    $var(mb).canvas.layout add command \
+	-label "[msgcat::mc {Strip Parameters}]..." \
+	-command [list PlotStripDialog $varname]
 
     menu $var(mb).canvas.legend
     $var(mb).canvas.legend add checkbutton -label [msgcat::mc {Show}] \
@@ -321,6 +324,56 @@ proc PlotDataFormatDialog {xarname} {
 	set xar $ed(dim)
     }
 
+    set rr $ed(ok)
+    unset ed
+    return $rr
+}
+
+proc PlotStripDialog {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ed
+
+    set w {.aptitle}
+
+    set ed(ok) 0
+
+    set ed(layout,strip,weight) $var(layout,strip,weight)
+
+    DialogCreate $w [msgcat::mc {Strip}] ed(ok)
+
+    # Param
+    set f [ttk::frame $w.param]
+    ttk::label $f.t -text [msgcat::mc {Graph Weight}]
+    ttk::entry $f.ww -textvariable ed(layout,strip,weight) -width 6
+    ttk::label $f.tt -text [msgcat::mc {%}]
+
+    grid $f.t $f.ww $f.tt -padx 2 -pady 2 -sticky w
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+	-default active 
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
+
+    DialogCenter $w 
+    DialogWait $w ed(ok) $w.param.ww
+    DialogDismiss $w
+
+    if {$ed(ok)} {
+	set var(layout,strip,weight) $ed(layout,strip,weight)
+	PlotChangeLayout $varname
+    }
+    
     set rr $ed(ok)
     unset ed
     return $rr
@@ -633,6 +686,22 @@ proc PlotUpdateMenus {varname} {
     # Canvas
 
     # Graph
+    switch $var(layout) {
+	grid -
+	row -
+	column {$var(mb).graph entryconfig [msgcat::mc {Axes}] -state normal}
+	strip {
+	    set cc $var(graph,current)
+	    set first [lindex $var(graphs) 0]
+	    if {$cc == $first} {
+		$var(mb).graph entryconfig [msgcat::mc {Axes}] -state normal
+	    } else {
+		$var(mb).graph entryconfig [msgcat::mc {Axes}] -state disabled
+	    }
+	}
+    }
+
+
     if {[llength $var(graph,dss)] == 0} {
 	$var(mb).graph entryconfig [msgcat::mc {Duplicate Dataset}] \
 	    -state disabled

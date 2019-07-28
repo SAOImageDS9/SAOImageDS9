@@ -78,31 +78,6 @@ proc PlotLayoutCanvas {varname} {
     }
 
     switch $var(layout) {
-	column -
-	strip {
-	    set ww 1
-	    set ii 0
-	    grid columnconfigure $var(top) 0 -weight 1
-	    foreach cc $var(graphs) {
-		grid rowconfigure $var(top) $ii -weight $ww
-		grid $var($cc,canvas) -row $ii -column 0 -sticky news
-
-		set ww 2
-		incr ii
-	    }
-	}
-	row {
-	    set ww 1
-	    set ii 0
-	    grid rowconfigure $var(top) 0 -weight 1
-	    foreach cc $var(graphs) {
-		grid columnconfigure $var(top) $ii -weight $ww
-		grid $var($cc,canvas) -row 0 -column $ii -sticky news
-
-		set ww 2
-		incr ii
-	    }
-	}
 	grid {
 	    set num [llength $var(graphs)]
 	    set nr [expr int(sqrt($num)+.5)]
@@ -120,6 +95,36 @@ proc PlotLayoutCanvas {varname} {
 		    set xx 0
 		    incr yy
 		}
+	    }
+	}
+	column {
+	    set ii 0
+	    grid columnconfigure $var(top) 0 -weight 1
+	    foreach cc $var(graphs) {
+		grid rowconfigure $var(top) $ii -weight 1
+		grid $var($cc,canvas) -row $ii -column 0 -sticky news
+		incr ii
+	    }
+	}
+	row {
+	    set ii 0
+	    grid rowconfigure $var(top) 0 -weight 1
+	    foreach cc $var(graphs) {
+		grid columnconfigure $var(top) $ii -weight 1
+		grid $var($cc,canvas) -row 0 -column $ii -sticky news
+		incr ii
+	    }
+	}
+	strip {
+	    set ww 1
+	    set ii 0
+	    grid columnconfigure $var(top) 0 -weight 1
+	    foreach cc $var(graphs) {
+		grid rowconfigure $var(top) $ii -weight $ww
+		grid $var($cc,canvas) -row $ii -column 0 -sticky news
+
+		set ww [expr int(100./$var(layout,strip,weight))]
+		incr ii
 	    }
 	}
     }

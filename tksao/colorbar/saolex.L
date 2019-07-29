@@ -54,6 +54,7 @@ no		{return NO_;}
 off		{return OFF_;}
 on		{return ON_;}
 pseudocolor	{return PSEUDOCOLOR_;}
+pseudocolour    {return PSEUDOCOLOR_;}
 red		{return RED_;}
 true		{return TRUE_;}
 yes		{return YES_;}

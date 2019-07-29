@@ -1334,15 +1334,6 @@ void Marker::analysisXYEResult(char* xname, char* yname, char* ename,
   Blt_ResetVector(ee, e, num, num*sizeof(double), TCL_DYNAMIC);
 }
 
-void Marker::analysisXYEResult(double* x, double* y, double* e, int num)
-{
-  for (int ii=0; ii<num; ii++) {
-    ostringstream str;
-    str << x[ii] << ' ' << y[ii] << ' ' << e[ii] << endl << ends;
-    Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
-  }
-}
-
 Matrix Marker::fwdMatrix()
 {
   return Rotate(angle) * FlipY() * Translate(center);

@@ -439,10 +439,9 @@ int Base::markerAnalysisRadial(Marker* pp, double** x, double** y, double** e,
 
 // for panda regions
 int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e, 
-			       int num, Vector* annuli, 
-			       int na, double* angles,
-			       BBox* bb, Coord::CoordSystem sys)
-
+			      int num, Vector* annuli, 
+			      int angnum,
+			      BBox* bb, Coord::CoordSystem sys)
 {
   // does not extend across mosaic boundries
   // uses currentContext
@@ -453,10 +452,10 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
   int srcw = ptr->width();
   FitsBound* params = ptr->getDataParams(currentContext->secMode());
 
-  double sum[num][na];
-  memset(sum,0,num*na*sizeof(double));
-  int cnt[num][na];
-  memset(cnt,0,num*na*sizeof(int));
+  double sum[num];
+  memset(sum,0,num*sizeof(double));
+  int cnt[num];
+  memset(cnt,0,num*sizeof(int));
 
   for (int kk=0; kk<num; kk++) {
     // take the bbox and extend to lower/upper pixel boundaries
@@ -465,24 +464,21 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
 
     // main loop
     SETSIGBUS
-      for (int qq=0; qq<na; qq++) {
-
-	for (int jj=ll[1]; jj<ur[1]; jj++) {
-	  for (int ii=ll[0]; ii<ur[0]; ii++) {
-	    if (ii>=params->xmin && ii<params->xmax && 
-		jj>=params->ymin && jj<params->ymax) {
-	      // shift to center of pixel in DATA
-	      Vector rr = Vector(ii,jj)+Vector(.5,.5);
-	      Vector ss = rr*ptr->dataToRef;
+      for (int jj=ll[1]; jj<ur[1]; jj++) {
+	for (int ii=ll[0]; ii<ur[0]; ii++) {
+	  if (ii>=params->xmin && ii<params->xmax && 
+	      jj>=params->ymin && jj<params->ymax) {
+	    // shift to center of pixel in DATA
+	    Vector rr = Vector(ii,jj)+Vector(.5,.5);
+	    Vector ss = rr*ptr->dataToRef;
 	  
-	      if (pp->isIn(ss,Coord::REF,kk+1,qq) && 
-		  !pp->isIn(ss,Coord::REF,kk,qq)) {
-		double val =ptr->getValueDouble(long(jj)*srcw+long(ii));
-		// check for nan
-		if (isfinite(val)) {
-		  sum[kk][qq] += val;
-		  cnt[kk][qq]++;
-		}
+	    if (pp->isIn(ss,Coord::REF,kk+1,angnum) && 
+		!pp->isIn(ss,Coord::REF,kk,angnum)) {
+	      double val =ptr->getValueDouble(long(jj)*srcw+long(ii));
+	      // check for nan
+	      if (isfinite(val)) {
+		sum[kk] += val;
+		cnt[kk]++;
 	      }
 	    }
 	  }
@@ -491,9 +487,9 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
     CLEARSIGBUS
   }
 
-  *x = (double*)malloc(num*na*sizeof(double));
-  *y = (double*)malloc(num*na*sizeof(double));
-  *e = (double*)malloc(num*na*sizeof(double));
+  *x = (double*)malloc(num*sizeof(double));
+  *y = (double*)malloc(num*sizeof(double));
+  *e = (double*)malloc(num*sizeof(double));
 
   int unit =0;
   double xaxis =1;
@@ -513,44 +509,43 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
   double rr = ptr->getWCSSize(sys);
   double aa = rr*rr;
 
-  for (int qq=0; qq<na; qq++) {
-    for (int kk=0; kk<num; kk++) {
-      double err = sqrt(fabs(sum[kk][qq]));
-      double area =0;
-      double bri =0;
-      double brierr =0;
-      switch (unit) {
-      case 0:
-	// pixels
-	area = abs(cnt[kk][qq]);
-	break;
-      case 1:
-	// Cel WCS
-	area = aa*60*60*60*60*cnt[kk][qq];
-	break;
-      case 2:
-	// Linear WCS
-	area = aa*cnt[kk][qq];
-	break;
-      }
 
-      // area can be zero
-      if (area) {
-	bri = sum[kk][qq]/area;
-	brierr = err/area;
-      }
-
-      double rr0 = (annuli[kk+1][0]-annuli[kk][0])/2. +annuli[kk][0];
-      double rr1 = (annuli[kk+1][1]-annuli[kk][1])/2. +annuli[kk][1];
-      double rad = (rr0 + rr1)/2.;
-
-      (*x)[qq*num+kk] = rad*xaxis;
-      (*y)[qq*num+kk] = bri;
-      (*e)[qq*num+kk] = brierr;
+  for (int kk=0; kk<num; kk++) {
+    double err = sqrt(fabs(sum[kk]));
+    double area =0;
+    double bri =0;
+    double brierr =0;
+    switch (unit) {
+    case 0:
+      // pixels
+      area = abs(cnt[kk]);
+      break;
+    case 1:
+      // Cel WCS
+      area = aa*60*60*60*60*cnt[kk];
+      break;
+    case 2:
+      // Linear WCS
+      area = aa*cnt[kk];
+      break;
     }
+
+    // area can be zero
+    if (area) {
+      bri = sum[kk]/area;
+      brierr = err/area;
+    }
+
+    double rr0 = (annuli[kk+1][0]-annuli[kk][0])/2. +annuli[kk][0];
+    double rr1 = (annuli[kk+1][1]-annuli[kk][1])/2. +annuli[kk][1];
+    double rad = (rr0 + rr1)/2.;
+
+    (*x)[kk] = rad*xaxis;
+    (*y)[kk] = bri;
+    (*e)[kk] = brierr;
   }
 
-  return num*na;
+  return num;
 }
 
 // for simple regions

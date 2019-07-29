@@ -147,7 +147,6 @@ protected:
 
   void analysisXYResult(char*, char*, double*, double*, int);
   void analysisXYEResult(char*, char*, char*, double*, double*, double*, int);
-  void analysisXYEResult(double*, double*, double*, int);
   void analysisXYEEResult(char*, char*, char*, char*, 
 			  double*, double*, double*, double*, int);
 
@@ -345,7 +344,7 @@ protected:
   virtual void analysisHistogram(char*, char*, int) {}
   virtual void analysisRadial(char*, char*, char*, Coord::CoordSystem) {}
   virtual void analysisStats(Coord::CoordSystem, Coord::SkyFrame) {}
-  virtual void analysisPanda(Coord::CoordSystem) {}
+  virtual void analysisPanda(char*, char*, char*, Coord::CoordSystem, int) {}
   virtual void analysisPlot2d(char*, char*, char*, char*,
 			      Coord::CoordSystem, Coord::SkyFrame, 
 			      Marker::AnalysisMethod) {}

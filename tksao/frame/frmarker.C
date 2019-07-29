@@ -957,12 +957,14 @@ void Base::getMarkerAnalysisPlot3dCmd(int id, char* xname, char* yname,
   }
 }
 
-void Base::getMarkerAnalysisPandaCmd(int id, Coord::CoordSystem sys)
+void Base::getMarkerAnalysisPandaCmd(int id, char* xname, char* yname,
+				     char* yename, Coord::CoordSystem sys,
+				     int angnum)
 {
   Marker* mm=markers->head();
   while (mm) {
     if (mm->getId() == id) {
-      mm->analysisPanda(sys);
+      mm->analysisPanda(xname, yname, yename, sys, angnum);
       return;
     }
     mm=mm->next();

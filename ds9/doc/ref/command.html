@@ -9,8 +9,8 @@
       2.4.7-10 i686) [Netscape]">
     <title>Command Line Options</title>
   </head>
-  <body alink="#FF0000" link="#0000FF" vlink="#551A8B">
-    <h3><img alt="" src="../sun.gif" align="middle" height="98"
+  <body link="#0000FF" alink="#FF0000" vlink="#551A8B">
+    <h3><img alt="" src="../sun.gif" height="98" align="middle"
         width="100"> Command Line Options</h3>
     <blockquote>
       <p>DS9 will process each command line option, one at a time, as
@@ -1552,11 +1552,25 @@
         -plot [line|bar|scatter]<br>
         <br>
         # existing plot<br>
-        -plot[[&lt;plotname&gt;] load &lt;filename&gt;
+        -plot [[&lt;plotname&gt;] load &lt;filename&gt;
         xy|xyex|xyey|xyexey]<br>
         &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] save &lt;filename&gt;]<br>
-        &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] clear]<br>
-        &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] duplicate [#]]<br>
+      </tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout
+              grid|row|column|strip]<br>
+            </tt></tt></tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;
+              [[&lt;plotname&gt;] layout strip weight &lt;percent&gt;]<br>
+            </tt></tt>&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] add graph
+          line|bar|scatter]<br>
+        </tt><tt><tt>&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] select graph
+            &lt;graph&gt;]<br>
+          </tt></tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;
+                [[&lt;plotname&gt;] delete graph]<br>
+              </tt></tt>&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] select
+            dataset &lt;dataset&gt;]<br>
+          </tt></tt><tt><tt><tt><tt><tt>&nbsp;&nbsp;&nbsp;
+                  [[&lt;plotname&gt;] delete dataset]<br>
+                </tt></tt></tt></tt></tt>&nbsp;&nbsp;&nbsp;
+        [[&lt;plotname&gt;] duplicate]<br>
         &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] stats yes|no]<br>
         &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] list yes|no]<br>
         &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] loadconfig
@@ -1578,14 +1592,17 @@
         &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] close]<br>
         &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] mode pointer|zoom]<br>
         <br>
-        # export image<br>
-        plot[[&lt;plotname&gt;]export[gif|tiff|jpeg|png]&lt;filename&gt;<br>
-        &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;]export jpeg
-        &lt;filename&gt;[1-100]<br>
-        &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;]export tiff
-        &lt;filename&gt;[none|jpeg|packbits|deflate]<br>
-        &nbsp;<br>
-        # configure graph<br>
+        # export image</tt><br>
+      <tt><tt>plot </tt><tt><tt>[[&lt;plotname&gt;] export
+            &lt;filename&gt;]<br>
+          </tt>&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] export
+          gif|tiff|jpeg|png &lt;filename&gt;]<br>
+          &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] export jpeg
+          &lt;filename&gt; [1-100]]<br>
+          &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] export tiff
+          &lt;filename&gt; none|jpeg|packbits|deflate]]<br>
+          <br>
+        </tt># configure graph<br>
         -plot [[&lt;plotname&gt;] axis x|y grid yes|no]<br>
         &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y log yes|no]<br>
         &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y flip yes|no]<br>
@@ -1602,12 +1619,12 @@
         right|left|top|bottom]<br>
         &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers
         font times|helvetica|courier]<br>
-        &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;]
-        fonttitle|labels|numberssize &lt;value&gt;]<br>
-        &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;]
-        fonttitle|labels|numbersweight normal|bold]<br>
-        &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;]
-        fonttitle|labels|numbersslant roman|italic]<br>
+        &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers
+        size &lt;value&gt;]<br>
+        &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers
+        weight normal|bold]<br>
+        &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers
+        slant roman|italic]<br>
         &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] title &lt;string&gt;]<br>
         &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] title x|y &lt;string&gt;]<br>
         &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] barmode
@@ -1630,9 +1647,6 @@
         &nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] error width &lt;value&gt;]<br>
         &nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] name &lt;string&gt;]<br>
         <br>
-        # select current dataset<br>
-        -plot [[&lt;plotname&gt;] select &lt;value&gt;]<br>
-        &nbsp;<br>
         Example:<br>
         # create new empty plot window<br>
         $ds9 -plot bar<br>
@@ -1640,9 +1654,23 @@
         # existing plot<br>
         $ds9 -plot load xy.dat<br>
         $ds9 -plot save foo.dat<br>
-        $ds9 -plot clear<br>
-        $ds9 -plot duplicate 1<br>
-        $ds9 -plot stats yes<br>
+      </tt><tt><tt>$ds9 -plot layout strip<br>
+        </tt></tt><tt><tt>$ds9 -plot layout strip weight 30<br>
+        </tt></tt><tt><tt><tt><tt><tt><tt>$ds9 -plot add graph scatter<br>
+                </tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+                              -plot select graph 1<br>
+                            </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+                              -plot delete graph<br>
+                            </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+                                          -plot select dataset 1<br>
+                                        </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+                                                          -plot delete
+                                                          dataset<br>
+                                                          </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt><tt>$ds9
+                                                          -plot
+                                                          duplicate<br>
+                                                          </tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt></tt>$ds9
+        -plot stats yes<br>
         $ds9 -plot list yes<br>
         $ds9 -plot loadconfig foo.plt<br>
         $ds9 -plot saveconfig foo.plt<br>
@@ -1701,9 +1729,7 @@
         $ds9 -plot error width 2<br>
         $ds9 -plot name 'My Data'<br>
         <br>
-        # select current dataset<br>
-        $ds9 -plot select 2</tt>
-      <p><b><a name="png" id="png"></a>png</b></p>
+      </tt><b><a name="png" id="png"></a>png</b>
       <p>Load PNG image into current frame.<br>
       </p>
       <tt>Syntax:<br>

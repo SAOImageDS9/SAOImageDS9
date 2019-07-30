@@ -129,7 +129,8 @@ proc PlotLayoutCanvas {varname} {
 	}
     }
 
-    update
+    # needed so layout can be properly realized
+    update idletasks
 }
 
 # Graph

@@ -298,10 +298,10 @@ graph : {set _ line}
  | SCATTER_ {set _ scatter}
  ;
 
-select: DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $2}
- | GRAPH_ INT_ {ProcessCmdCVAR graph,current $2}
+select: DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet}
+ | GRAPH_ INT_ {ProcessCmdCVAR graph,current $2 PlotCurrentGraph}
  # backward compatibility
- | INT_ {ProcessCmdCVAR graph,ds,current $1}
+ | INT_ {ProcessCmdCVAR graph,ds,current $1 PlotCurrentDataSet}
  ;
 
 delete: GRAPH_ {ProcessCmdCVAR0 PlotDeleteGraphCurrent}

@@ -5719,9 +5719,9 @@ proc plot::yyparse {} {
                     107 { set _ line }
                     108 { set _ bar }
                     109 { set _ scatter }
-                    110 { ProcessCmdCVAR graph,ds,current $2 }
-                    111 { ProcessCmdCVAR graph,current $2 }
-                    112 { ProcessCmdCVAR graph,ds,current $1 }
+                    110 { ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
+                    111 { ProcessCmdCVAR graph,current $2 PlotCurrentGraph }
+                    112 { ProcessCmdCVAR graph,ds,current $1 PlotCurrentDataSet }
                     113 { ProcessCmdCVAR0 PlotDeleteGraphCurrent }
                     114 { ProcessCmdCVAR0 PlotDeleteDataSetCurrent }
                     115 { PlotCmdExport [ExtToFormat $1] $1 }

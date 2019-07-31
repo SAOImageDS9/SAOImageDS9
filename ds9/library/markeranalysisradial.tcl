@@ -95,38 +95,34 @@ proc MarkerAnalysisRadialCB {frame id} {
 	set sys $wcs(system)
     }
 
-    set xdata ${imarker(prefix,radial)}${id}${frame}x
-    set ydata ${imarker(prefix,radial)}${id}${frame}y
-    set yedata ${imarker(prefix,radial)}${id}${frame}ye
+    set xdata ${vvarname}xx
+    set ydata ${vvarname}yy
+    set yedata ${vvarname}ye
     global $xdata $ydata $yedata
 
-    set ping [PlotPing $vvarname]
-
-    if {!$ping} {
-	set tt [string totitle [$frame get marker $id type]]
-	PlotLineDialog $vvarname $tt "Radial Profile" $sys {}
-	MarkerAnalysisRadialAxisTitle $vvarname
-
-	set vvar(manage) 0
-	set vvar(dim) xyey
-	set vvar(xdata) $xdata
-	set vvar(ydata) $ydata
-	set vvar(yedata) $yedata
+    if {[info command $xdata] == {}} {
 	blt::vector create $xdata $ydata $yedata
     }
-
     $frame get marker $id analysis radial $xdata $ydata $yedata $sys
+    
+    if {![PlotPing $vvarname]} {
+	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotAddGraph $vvarname line
+	PlotTitle $vvarname "Radial Profile" $sys {}
 
-    if {!$ping} {
-	PlotExternal $vvarname
-	$vvar(proc,updateelement) $vvarname
-	$vvar(proc,updategraph) $vvarname
+	MarkerAnalysisRadialAxisTitle $vvarname
+
+	set vvar(graph,ds,xdata) $xdata
+	set vvar(graph,ds,ydata) $ydata
+	set vvar(graph,ds,yedata) $yedata
+	PlotExternal $vvarname xyey
     }
 
     PlotStats $vvarname
     PlotList $vvarname
 }
 
+# hardcoded marker.C
 proc MarkerAnalysisRadialDeleteCB {frame id} {
     # this routine could be called by the region 
     # after the dialog has been deleted
@@ -167,11 +163,12 @@ proc MarkerAnalysisRadialAxisTitle {vvarname} {
 	}
     }
 
-    # set for plot code
-    set vvar(axis,x,title) $xtitle
-    set vvar(axis,y,title) $ytitle
+    set cc 1
+    if {[info exists vvar($cc,graph)]} {
+	set vvar($cc,axis,x,title) $xtitle
+	set vvar($cc,axis,y,title) $ytitle
 
-    # update now (may not make it into plot code)
-    $vvar(graph) xaxis configure -title $xtitle
-    $vvar(graph) yaxis configure -title $ytitle
+	$vvar($cc,graph) xaxis configure -title $xtitle
+	$vvar($cc,graph) yaxis configure -title $ytitle
+    }
 }

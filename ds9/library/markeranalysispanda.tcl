@@ -95,17 +95,33 @@ proc MarkerAnalysisPandaCB {frame id} {
 	set sys $wcs(system)
     }
 
-    set ping [PlotPing $vvarname]
+    for {set jj 0} {$jj<$var(angnum)} {incr jj} {
+	set xdata ${vvarname}xx$jj
+	set ydata ${vvarname}yy$jj
+	set yedata ${vvarname}ye$jj
+	global $xdata $ydata $yedata
 
-    if {!$ping} {
-	set tt [string totitle [$frame get marker $id type]]
-	PlotLineDialog $vvarname $tt "Radial Profile" $sys {}
-	MarkerAnalysisPandaAxisTitle $vvarname
+	if {[info command $xdata] == {}} {
+	    blt::vector create $xdata $ydata $yedata
+	}
+	$frame get marker $id analysis panda $xdata $ydata $yedata $sys $jj
     }
 
-    PlotClearData $vvarname
-    PlotDataSet $vvarname 3 [$frame get marker $id analysis panda $sys]
-    $vvar(proc,updategraph) $vvarname
+    if {![PlotPing $vvarname]} {
+	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotAddGraph $vvarname line
+	PlotTitle $vvarname "Radial Profile" $sys {}
+
+	MarkerAnalysisPandaAxisTitle $vvarname
+
+	for {set jj 0} {$jj<$var(angnum)} {incr jj} {
+	    set vvar(graph,ds,xdata) ${vvarname}xx$jj
+	    set vvar(graph,ds,ydata) ${vvarname}yy$jj
+	    set vvar(graph,ds,yedata) ${vvarname}ye$jj
+	    PlotExternal $vvarname xyey
+	}
+    }
+
     PlotStats $vvarname
     PlotList $vvarname
 }
@@ -150,11 +166,12 @@ proc MarkerAnalysisPandaAxisTitle {vvarname} {
 	}
     }
 
-    # set for plot code
-    set vvar(axis,x,title) $xtitle
-    set vvar(axis,y,title) $ytitle
+    set cc 1
+    if {[info exists vvar($cc,graph)]} {
+	set vvar($cc,axis,x,title) $xtitle
+	set vvar($cc,axis,y,title) $ytitle
 
-    # update now (may not make it into plot code)
-    $vvar(graph) xaxis configure -title $xtitle
-    $vvar(graph) yaxis configure -title $ytitle
+	$vvar($cc,graph) xaxis configure -title $xtitle
+	$vvar($cc,graph) yaxis configure -title $ytitle
+    }
 }

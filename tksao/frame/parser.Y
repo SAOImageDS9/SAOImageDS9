@@ -2270,8 +2270,8 @@ markerGet : CENTROID_ markerGetCentroid
 	| HANDLE_ numeric numeric {fr->getMarkerHandleCmd(Vector($2,$3));}
 	| ID_ numeric numeric {fr->getMarkerIdCmd(Vector($2,$3));}
 
-	| INT ANALYSIS_ CPANDA_ coordSystem
-	{fr->getMarkerAnalysisPandaCmd($1,(Coord::CoordSystem)$4);}
+	| INT ANALYSIS_ CPANDA_ STRING STRING STRING coordSystem INT
+	{fr->getMarkerAnalysisPandaCmd($1,$4,$5,$6,(Coord::CoordSystem)$7,$8);}
         | INT ANALYSIS_ HISTOGRAM_ STRING STRING INT
 	{fr->getMarkerAnalysisHistogramCmd($1,$4,$5,$6);}
 	| INT ANALYSIS_ PLOT2D_ STRING STRING STRING STRING coordSystem skyFrame analysisParam

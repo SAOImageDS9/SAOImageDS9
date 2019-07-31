@@ -411,7 +411,8 @@ void Cpanda::analysis(AnalysisTask mm, int which)
   }
 }
 
-void Cpanda::analysisPanda(Coord::CoordSystem sys)
+void Cpanda::analysisPanda(char* xname, char* yname, char* ename,
+			   Coord::CoordSystem sys, int angnum)
 {
   double* xx;
   double* yy;
@@ -425,10 +426,10 @@ void Cpanda::analysisPanda(Coord::CoordSystem sys)
   }
 
   int num = parent->markerAnalysisPanda(this, &xx, &yy, &ee, 
-					 numAnnuli_-1, annuli_, 
-					 numAngles_-1, angles_, 
-					 bb, sys);
-  analysisXYEResult(xx, yy, ee, num);
+					numAnnuli_-1, annuli_, 
+					angnum,
+					bb, sys);
+  analysisXYEResult(xname, yname, ename, xx, yy, ee, num);
 }
 
 void Cpanda::analysisStats(Coord::CoordSystem sys, Coord::SkyFrame sky)

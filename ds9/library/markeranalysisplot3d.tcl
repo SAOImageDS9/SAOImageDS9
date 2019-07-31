@@ -149,19 +149,25 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	set vvar(system) image
     }
 
-    set xdata ${vvarname}x
-    set ydata ${vvarname}y
+    set xdata ${vvarname}xx
+    set ydata ${vvarname}yy
     global $xdata $ydata
 
-    set ping [PlotPing $vvarname]
-
-    if {!$ping} {
-	set tt [string totitle [$frame get marker $id type]]
+    if {[info command $xdata] == {}} {
+	blt::vector create $xdata $ydata
+    }
+    $frame get marker $id analysis plot3d $xdata $ydata \
+	$vvar(system) $vvar(sky) $vvar(method)
+    
+    if {![PlotPing $vvarname]} {
 	set vvar(bunit) [string trim [$frame get fits header keyword BUNIT]]
 	if {$vvar(bunit)=={}} {
 	    set vvar(bunit) {Counts}
 	}
-	PlotLineDialog $vvarname $tt {} $vvar(system) $vvar(bunit)
+	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotAddGraph $vvarname line
+	PlotTitle $vvarname {} $vvar(system) $vvar(bunit)
+
 	MarkerAnalysisPlot3dXAxisTitle $vvarname
 	MarkerAnalysisPlot3dYAxisTitle $vvarname
 
@@ -175,57 +181,34 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	set vvar(mode) pointer
 	PlotChangeMode $vvarname
 
-	set vvar(manage) 0
-	set vvar(dim) xy
-	set vvar(xdata) $xdata
-	set vvar(ydata) $ydata
-	blt::vector create $xdata $ydata
+	set vvar(graph,ds,xdata) $xdata
+	set vvar(graph,ds,ydata) $ydata
+	PlotExternal $vvarname xy
     }
-
-    $frame get marker $id analysis plot3d $xdata $ydata \
-	$vvar(system) $vvar(sky) $vvar(method)
 
     set vvar(slice) [$frame get fits slice from image $vvar(system) $vvar(sky)]
     MarkerAnalysisPlot3dMarker $vvarname
-
-    if {!$ping} {
-	PlotExternal $vvarname
-	$vvar(proc,updateelement) $vvarname
-	$vvar(proc,updategraph) $vvarname
-    }
 
     PlotStats $vvarname
     PlotList $vvarname
 }
 
-proc MarkerAnalysisPlot3dMotion {vvarname xx yy} {
+# hardcoded marker.C
+proc MarkerAnalysisPlot3dDeleteCB {frame id} {
+    # this routine could be called by the region 
+    # after the dialog has been deleted
+
+    global imarker
+
+    set vvarname ${imarker(prefix,plot3d)}${id}${frame}
     upvar #0 $vvarname vvar
     global $vvarname
 
-    if {$vvar(mode) != "pointer"} {
-	return
-    }
+    # clear any errors
+    global errorInfo
+    set errorInfo {}
 
-    set vvar(slice) [lindex [$vvar(graph) invtransform $xx $yy] 0]
-    $vvar(frame) update fits slice $vvar(slice) $vvar(system) $vvar(sky)
-    MarkerAnalysisPlot3dMarker $vvarname
-
-    # current frame only
-    global current
-    if {$vvar(frame) == $current(frame)} {
-	UpdateCubeMotionDialog
-	UpdateScaleDialog
-	UpdateContourScale
-	UpdateContourDialog
-    }
-}
-
-proc MarkerAnalysisPlot3dMarker {vvarname} {
-    upvar #0 $vvarname vvar
-    global $vvarname
-
-    $vvar(graph) marker configure $vvar(markerslice) \
-	-coords "$vvar(slice) -Inf $vvar(slice) Inf"
+    PlotDestroy $vvarname
 }
 
 # hardcoded marker.C
@@ -246,22 +229,40 @@ proc MarkerAnalysisPlot3dSliceCB {frame id} {
     }
 }
 
-# hardcoded marker.C
-proc MarkerAnalysisPlot3dDeleteCB {frame id} {
-    # this routine could be called by the region 
-    # after the dialog has been deleted
-
-    global imarker
-
-    set vvarname ${imarker(prefix,plot3d)}${id}${frame}
+proc MarkerAnalysisPlot3dMotion {vvarname xx yy} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    # clear any errors
-    global errorInfo
-    set errorInfo {}
+    if {$vvar(mode) != "pointer"} {
+	return
+    }
 
-    PlotDestroy $vvarname
+    set cc 1
+    if {[info exists vvar($cc,graph)]} {
+	set vvar(slice) [lindex [$vvar($cc,graph) invtransform $xx $yy] 0]
+	$vvar(frame) update fits slice $vvar(slice) $vvar(system) $vvar(sky)
+	MarkerAnalysisPlot3dMarker $vvarname
+    }
+
+    # current frame only
+    global current
+    if {$vvar(frame) == $current(frame)} {
+	UpdateCubeMotionDialog
+	UpdateScaleDialog
+	UpdateContourScale
+	UpdateContourDialog
+    }
+}
+
+proc MarkerAnalysisPlot3dMarker {vvarname} {
+    upvar #0 $vvarname vvar
+    global $vvarname
+
+    set cc 1
+    if {[info exists vvar($cc,graph)]} {
+	$vvar($cc,graph) marker configure $vvar(markerslice) \
+	    -coords "$vvar(slice) -Inf $vvar(slice) Inf"
+    }
 }
 
 proc MarkerAnalysisPlot3dXAxisTitle {vvarname} {
@@ -284,20 +285,22 @@ proc MarkerAnalysisPlot3dXAxisTitle {vvarname} {
 	}
     }
 
-    # set for plot code
-    set vvar(axis,x,title) $xtitle
-
-    # update now (may not make it into plot code)
-    $vvar(graph) xaxis configure -title $xtitle
+    set cc 1
+    if {[info exists vvar($cc,graph)]} {
+	set vvar($cc,axis,x,title) $xtitle
+	$vvar($cc,graph) xaxis configure -title $xtitle
+    }
 }
 
 proc MarkerAnalysisPlot3dYAxisTitle {vvarname} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    # set for plot code
-    set vvar(axis,y,title) "$vvar(bunit) [string totitle $vvar(method)]"
+    set ytitle "$vvar(bunit) [string totitle $vvar(method)]"
 
-    # update now (may not make it into plot code)
-    $vvar(graph) yaxis configure -title $vvar(axis,y,title)
+    set cc 1
+    if {[info exists vvar($cc,graph)]} {
+	set vvar($cc,axis,y,title) $ytitle
+	$vvar($cc,graph) yaxis configure -title $vvar(graph,axis,y,title)
+    }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-<meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
+<meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.4), see www.w3.org">
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
 <title>Command Line Options</title>
@@ -457,7 +457,7 @@ $ds9 -catalog match 2mass csc<br>
 $ds9 -catalog maxrows 2000<br>
 $ds9 -catalog name m51<br>
 $ds9 -catalog panto no<br>
-$ds9 -catalog plot'\$Jmag' '\$Hmag' '\$e_Jmag' '\$e_Hmag'<br>
+$ds9 -catalog plot'$Jmag' '$Hmag' '$e_Jmag' '$e_Hmag'<br>
 $ds9 -catalog print<br>
 $ds9 -catalog psky fk5<br>
 $ds9 -catalog psystem wcs<br>
@@ -1401,10 +1401,16 @@ xyexey&nbsp;&nbsp;&nbsp; x,y coordinates with&nbsp; x and y errors<br></tt></blo
 -plot [line|bar|scatter]<br>
 <br>
 # existing plot<br>
--plot[[&lt;plotname&gt;] load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
+-plot [[&lt;plotname&gt;] load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] save &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] clear]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] duplicate [#]]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout grid|row|column|strip]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout strip weight &lt;percent&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] add graph line|bar|scatter]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] select graph &lt;graph&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] delete graph]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] select dataset &lt;dataset&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] delete dataset]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] duplicate]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] stats yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] list yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] loadconfig &lt;filename&gt;]<br>
@@ -1420,10 +1426,10 @@ xyexey&nbsp;&nbsp;&nbsp; x,y coordinates with&nbsp; x and y errors<br></tt></blo
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] mode pointer|zoom]<br>
 <br>
 # export image<br>
-plot[[&lt;plotname&gt;]export[gif|tiff|jpeg|png]&lt;filename&gt;<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;]export jpeg &lt;filename&gt;[1-100]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;]export tiff &lt;filename&gt;[none|jpeg|packbits|deflate]<br>
-&nbsp;<br>
+plot [[&lt;plotname&gt;] export &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] export gif|tiff|jpeg|png &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] export jpeg &lt;filename&gt; [1-100]]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] export tiff &lt;filename&gt; none|jpeg|packbits|deflate]]<br>
 # configure graph<br>
 -plot [[&lt;plotname&gt;] axis x|y grid yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y log yes|no]<br>
@@ -1436,9 +1442,9 @@ plot[[&lt;plotname&gt;]export[gif|tiff|jpeg|png]&lt;filename&gt;<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] legend yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] legend position right|left|top|bottom]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers font times|helvetica|courier]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] fonttitle|labels|numberssize &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] fonttitle|labels|numbersweight normal|bold]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] fonttitle|labels|numbersslant roman|italic]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers size &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers weight normal|bold]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers slant roman|italic]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] title &lt;string&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] title x|y &lt;string&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] barmode normal|stacked|aligned|overlap]<br>
@@ -1458,9 +1464,6 @@ plot[[&lt;plotname&gt;]export[gif|tiff|jpeg|png]&lt;filename&gt;<br>
 &nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] error width &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp;[[&lt;plotname&gt;] name &lt;string&gt;]<br>
 <br>
-# select current dataset<br>
--plot [[&lt;plotname&gt;] select &lt;value&gt;]<br>
-&nbsp;<br>
 Example:<br>
 # create new empty plot window<br>
 $ds9 -plot bar<br>
@@ -1468,8 +1471,14 @@ $ds9 -plot bar<br>
 # existing plot<br>
 $ds9 -plot load xy.dat<br>
 $ds9 -plot save foo.dat<br>
-$ds9 -plot clear<br>
-$ds9 -plot duplicate 1<br>
+$ds9 -plot layout strip<br>
+$ds9 -plot layout strip weight 30<br>
+$ds9 -plot add graph scatter<br>
+$ds9 -plot select graph 1<br>
+$ds9 -plot delete graph<br>
+$ds9 -plot select dataset 1<br>
+$ds9 -plot delete dataset<br>
+$ds9 -plot duplicate<br>
 $ds9 -plot stats yes<br>
 $ds9 -plot list yes<br>
 $ds9 -plot loadconfig foo.plt<br>
@@ -1528,10 +1537,7 @@ $ds9 -plot error color red<br>
 $ds9 -plot error cap yes<br>
 $ds9 -plot error width 2<br>
 $ds9 -plot name 'My Data'<br>
-<br>
-# select current dataset<br>
-$ds9 -plot select 2</tt>
-<p><b><a name="png" id="png"></a>png</b></p>
+<br></tt> <b><a name="png" id="png"></a>png</b>
 <p>Load PNG image into current frame.<br></p>
 <tt>Syntax:<br>
 -png &lt;filename&gt;<br>

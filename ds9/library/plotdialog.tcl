@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc PlotDialog {varname wtt title xaxis yaxis} {
+proc PlotDialog {varname wtt} {
     upvar #0 $varname var
     global $varname
 
@@ -27,50 +27,29 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     set var(mode) zoom
     set var(callback) {}
 
-    set var(data,total) 0
-    set var(data,current) 0
-
-    set var(name) {}
-    set var(xdata) {}
-    set var(ydata) {}
-    set var(xedata) {}
-    set var(yedata) {}
+    set var(graphs) {}
+    set var(seq) 0
 
     array set $varname [array get pap]
-
-    set var(graph,title) "$title"
-    set var(axis,x,title) "$xaxis"
-    set var(axis,y,title) "$yaxis"
-
-    # can be turned off for external line plots
-    set var(graph,format) 1
 
     # create window
     Toplevel $var(top) $var(mb) 7 $wtt [list PlotDestroy $varname]
 
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
     $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
+    $var(mb) add cascade -label [msgcat::mc {Canvas}] -menu $var(mb).canvas
     $var(mb) add cascade -label [msgcat::mc {Graph}] -menu $var(mb).graph
-    $var(mb) add cascade -label [msgcat::mc {Dataset}] -menu $var(mb).dataset
-    $var(mb) add cascade -label [msgcat::mc {Select}] -menu $var(mb).select
+    $var(mb) add cascade -label [msgcat::mc {Data}] -menu $var(mb).dataline
 
+    # File
     menu $var(mb).file
     $var(mb).file add command -label "[msgcat::mc {Load Data}]..." \
 	-command [list PlotLoadData $varname]
     $var(mb).file add command -label "[msgcat::mc {Save Data}]..." \
 	-command [list PlotSaveData $varname]
-    $var(mb).file add command -label [msgcat::mc {Clear Data}] \
-	-command [list PlotClearData $varname]
-    $var(mb).file add command -label [msgcat::mc {Duplicate Data}] \
-	-command [list PlotDupData $varname 1]
     $var(mb).file add separator
     $var(mb).file add cascade -label [msgcat::mc {Export}] \
 	-menu $var(mb).file.export
-    $var(mb).file add separator
-    $var(mb).file add command -label [msgcat::mc {Statistics}] \
-	-command "set ${varname}(stats) 1; PlotStats $varname"
-    $var(mb).file add command -label [msgcat::mc {List Data}] \
-	-command "set ${varname}(list) 1; PlotList $varname"
     $var(mb).file add separator
     $var(mb).file add command -label "[msgcat::mc {Load Configuration}]..." \
 	-command [list PlotLoadConfig $varname]
@@ -99,7 +78,6 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
     $var(mb).file add command -label [msgcat::mc {Close}] \
 	-command [list PlotDestroy $varname]
 
-    # Export Menu
     menu $var(mb).file.export
     $var(mb).file.export add command -label {GIF...} \
 	-command [list PlotExportDialog $varname gif]
@@ -127,105 +105,175 @@ proc PlotDialog {varname wtt title xaxis yaxis} {
 	-variable ${varname}(mode) -value zoom \
 	-command [list PlotChangeMode $varname]
 
+    # Canvas
+    menu $var(mb).canvas
+
+    $var(mb).canvas add cascade -label [msgcat::mc {Select Graph}] \
+	-menu $var(mb).canvas.select
+    $var(mb).canvas add separator
+    $var(mb).canvas add cascade -label [msgcat::mc {Add Graph}] \
+	-menu $var(mb).canvas.graph
+    $var(mb).canvas add command -label [msgcat::mc {Delete Graph}] \
+	-command [list PlotDeleteGraphCurrent $varname]
+    $var(mb).canvas add separator
+    $var(mb).canvas add cascade -label [msgcat::mc {Layout}] \
+	-menu $var(mb).canvas.layout
+    $var(mb).canvas add separator
+    $var(mb).canvas add cascade -label [msgcat::mc {Legend}] \
+	-menu $var(mb).canvas.legend
+    $var(mb).canvas add cascade -label [msgcat::mc {Font}] \
+	-menu $var(mb).canvas.font
+    $var(mb).canvas add cascade -label [msgcat::mc {Background}] \
+	-menu $var(mb).canvas.bg
+
+    menu $var(mb).canvas.select
+
+    menu $var(mb).canvas.graph
+    $var(mb).canvas.graph add command -label [msgcat::mc {Line}] \
+	-command [list PlotAddGraph $varname line]
+    $var(mb).canvas.graph add command -label [msgcat::mc {Bar}] \
+	-command [list PlotAddGraph $varname bar]
+    $var(mb).canvas.graph add command -label [msgcat::mc {Scatter}] \
+	-command [list PlotAddGraph $varname scatter]
+
+    menu $var(mb).canvas.layout
+    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Grid}] \
+	-variable ${varname}(layout) -value grid \
+	-command [list PlotChangeLayout $varname]
+    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Column}] \
+	-variable ${varname}(layout) -value column \
+	-command [list PlotChangeLayout $varname]
+    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Row}] \
+	-variable ${varname}(layout) -value row \
+	-command [list PlotChangeLayout $varname]
+    $var(mb).canvas.layout add separator
+    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Strip}] \
+	-variable ${varname}(layout) -value strip \
+	-command [list PlotChangeLayout $varname]
+    $var(mb).canvas.layout add separator
+    $var(mb).canvas.layout add command \
+	-label "[msgcat::mc {Strip Parameters}]..." \
+	-command [list PlotStripDialog $varname]
+
+    menu $var(mb).canvas.legend
+    $var(mb).canvas.legend add checkbutton -label [msgcat::mc {Show}] \
+	-variable ${varname}(legend) \
+	-command [list PlotUpdateCanvas $varname]
+    $var(mb).canvas.legend add separator
+    $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Right}] \
+	-variable ${varname}(legend,position) -value right \
+	-command [list PlotUpdateCanvas $varname]
+    $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Left}] \
+	-variable ${varname}(legend,position) -value left \
+	-command [list PlotUpdateCanvas $varname]
+    $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Top}] \
+	-variable ${varname}(legend,position) -value top \
+	-command [list PlotUpdateCanvas $varname]
+    $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Bottom}] \
+	-variable ${varname}(legend,position) -value bottom \
+	-command [list PlotUpdateCanvas $varname]
+
+    menu $var(mb).canvas.font
+    $var(mb).canvas.font add cascade -label [msgcat::mc {Title}] \
+	-menu $var(mb).canvas.font.title
+    $var(mb).canvas.font add cascade -label [msgcat::mc {Axes Title}] \
+	-menu $var(mb).canvas.font.textlab
+    $var(mb).canvas.font add cascade -label [msgcat::mc {Axes Number}] \
+	-menu $var(mb).canvas.font.numlab
+    $var(mb).canvas.font add cascade -label [msgcat::mc {Legend Title}] \
+	-menu $var(mb).canvas.font.legendtitle
+    $var(mb).canvas.font add cascade -label [msgcat::mc {Legend}] \
+	-menu $var(mb).canvas.font.legend
+
+    FontMenu $var(mb).canvas.font.title \
+	$varname graph,title,family graph,title,size graph,title,weight \
+	graph,title,slant [list PlotUpdateCanvas $varname]
+    FontMenu $var(mb).canvas.font.textlab \
+	$varname axis,title,family axis,title,size axis,title,weight \
+	axis,title,slant [list PlotUpdateCanvas $varname]
+    FontMenu $var(mb).canvas.font.numlab \
+	$varname axis,font,family axis,font,size axis,font,weight \
+	axis,font,slant [list PlotUpdateCanvas $varname]
+    FontMenu $var(mb).canvas.font.legendtitle \
+	$varname legend,title,family legend,title,size legend,title,weight \
+	legend,title,slant [list PlotUpdateCanvas $varname]
+    FontMenu $var(mb).canvas.font.legend \
+	$varname legend,font,family legend,font,size legend,font,weight \
+	legend,font,slant [list PlotUpdateCanvas $varname]
+
+    PlotColorMenu $var(mb).canvas.bg $varname background \
+	[list PlotUpdateCanvas $varname]
+
     # Graph
     menu $var(mb).graph
+
+    $var(mb).graph add cascade -label [msgcat::mc {Select Dataset}] \
+	-menu $var(mb).graph.select
+    $var(mb).graph add separator
+    $var(mb).graph add command -label [msgcat::mc {Duplicate Dataset}] \
+	-command [list PlotDupDataSet $varname]
+    $var(mb).graph add command -label [msgcat::mc {Delete Dataset}] \
+	-command [list PlotDeleteDataSetCurrent $varname]
+    $var(mb).graph add separator
+    $var(mb).graph add command -label [msgcat::mc {Statistics}] \
+	-command "set ${varname}(stats) 1; PlotStats $varname"
+    $var(mb).graph add command -label [msgcat::mc {List Data}] \
+	-command "set ${varname}(list) 1; PlotList $varname"
+    $var(mb).graph add separator
+
     $var(mb).graph add cascade -label [msgcat::mc {Axes}] \
 	-menu $var(mb).graph.axes
-    $var(mb).graph add cascade -label [msgcat::mc {Legend}] \
-	-menu $var(mb).graph.legend
-    $var(mb).graph add cascade -label [msgcat::mc {Font}] \
-	-menu $var(mb).graph.font
-    $var(mb).graph add cascade -label [msgcat::mc {Background}] \
-	-menu $var(mb).graph.bg
     $var(mb).graph add separator
-    $var(mb).graph add command -label "[msgcat::mc {Title}]..." \
-	-command [list PlotTitleDialog $varname]
+    $var(mb).graph add command -label "[msgcat::mc {Titles}]..." \
+	-command [list PlotGraphTitleDialog $varname]
+    $var(mb).graph add separator
+    $var(mb).graph add cascade -label [msgcat::mc {Bar Mode}] \
+	-menu $var(mb).graph.barmode
+
+    menu $var(mb).graph.select
 
     menu $var(mb).graph.axes
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Grid}] \
-	-variable ${varname}(axis,x,grid) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
-	-variable ${varname}(axis,x,log) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
-	-variable ${varname}(axis,x,flip) \
-	-command [list $var(proc,updategraph) $varname]
+	-variable ${varname}(graph,axis,x,grid) \
+	-command [list PlotChangeAxis $varname]
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Log}] \
+	-variable ${varname}(graph,axis,x,log) \
+	-command [list PlotChangeAxis $varname]
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {X Flip}] \
+	-variable ${varname}(graph,axis,x,flip) \
+	-command [list PlotChangeAxis $varname]
     $var(mb).graph.axes add separator
     $var(mb).graph.axes add checkbutton -label [msgcat::mc {Y Grid}] \
-	-variable ${varname}(axis,y,grid) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Log}] \
-	-variable ${varname}(axis,y,log) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Flip}] \
-	-variable ${varname}(axis,y,flip) \
-	-command [list $var(proc,updategraph) $varname]
+	-variable ${varname}(graph,axis,y,grid) \
+	-command [list PlotChangeAxis $varname]
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Y Log}] \
+	-variable ${varname}(graph,axis,y,log) \
+	-command [list PlotChangeAxis $varname]
+    $var(mb).graph.axes add checkbutton -label [msgcat::mc {Y Flip}] \
+	-variable ${varname}(graph,axis,y,flip) \
+	-command [list PlotChangeAxis $varname]
     $var(mb).graph.axes add separator
     $var(mb).graph.axes add command -label "[msgcat::mc {Range}]..." \
 	-command [list PlotRangeDialog $varname]
 
-    menu $var(mb).graph.legend
-    $var(mb).graph.legend add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(legend) \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.legend add separator
-    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Right}] \
-	-variable ${varname}(legend,position) -value right \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Left}] \
-	-variable ${varname}(legend,position) -value left \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Top}] \
-	-variable ${varname}(legend,position) -value top \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Bottom}] \
-	-variable ${varname}(legend,position) -value bottom \
-	-command [list $var(proc,updategraph) $varname]
+    # Graph Mode
+    menu $var(mb).graph.barmode
+    $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Normal}] \
+	-variable ${varname}(bar,mode) -value normal \
+	-command [list PlotUpdateCanvas $varname]
+    $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Stacked}] \
+	-variable ${varname}(bar,mode) -value stacked \
+	-command [list PlotUpdateCanvas $varname]
+    $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Aligned}] \
+	-variable ${varname}(bar,mode) -value aligned \
+	-command [list PlotUpdateCanvas $varname]
+    $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Overlap}] \
+	-variable ${varname}(bar,mode) -value overlap \
+	-command [list PlotUpdateCanvas $varname]
 
-    menu $var(mb).graph.font
-    $var(mb).graph.font add cascade -label [msgcat::mc {Title}] \
-	-menu $var(mb).graph.font.title
-    $var(mb).graph.font add cascade -label [msgcat::mc {Axes Title}] \
-	-menu $var(mb).graph.font.textlab
-    $var(mb).graph.font add cascade -label [msgcat::mc {Axes Number}] \
-	-menu $var(mb).graph.font.numlab
-    $var(mb).graph.font add cascade -label [msgcat::mc {Legend Title}] \
-	-menu $var(mb).graph.font.legendtitle
-    $var(mb).graph.font add cascade -label [msgcat::mc {Legend}] \
-	-menu $var(mb).graph.font.legend
-
-    FontMenu $var(mb).graph.font.title $varname graph,title,family graph,title,size graph,title,weight graph,title,slant [list $var(proc,updategraph) $varname]
-    FontMenu $var(mb).graph.font.textlab $varname axis,title,family axis,title,size axis,title,weight axis,title,slant [list $var(proc,updategraph) $varname]
-    FontMenu $var(mb).graph.font.numlab $varname axis,font,family axis,font,size axis,font,weight axis,font,slant [list $var(proc,updategraph) $varname]
-    FontMenu $var(mb).graph.font.legendtitle $varname legend,title,family legend,title,size legend,title,weight legend,title,slant [list $var(proc,updategraph) $varname]
-    FontMenu $var(mb).graph.font.legend $varname legend,font,family legend,font,size legend,font,weight legend,font,slant [list $var(proc,updategraph) $varname]
-
-    PlotColorMenu $var(mb).graph.bg $varname graph,bg [list $var(proc,updategraph) $varname]
-
-    # dataset
-    menu $var(mb).dataset
-
-    # select
-    menu $var(mb).select
-}
-
-proc PlotChangeMode {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    global ds9
-
-    switch $var(mode) {
-	pointer {
-	    blt::RemoveBindTag $var(graph) zoom-$var(graph)
-	    bind $var(graph) <1> [list PlotButton $varname %x %y]
-	}
-	zoom {
-	    bind $var(graph) <1> {}
-	    blt::AddBindTag $var(graph) zoom-$var(graph)
-	}
-    }
+    PlotLineMenus $varname
+    PlotBarMenus $varname
+    PlotScatterMenus $varname
 }
 
 proc PlotDataFormatDialog {xarname} {
@@ -282,6 +330,56 @@ proc PlotDataFormatDialog {xarname} {
     return $rr
 }
 
+proc PlotStripDialog {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global ed
+
+    set w {.aptitle}
+
+    set ed(ok) 0
+
+    set ed(layout,strip,weight) $var(layout,strip,weight)
+
+    DialogCreate $w [msgcat::mc {Strip}] ed(ok)
+
+    # Param
+    set f [ttk::frame $w.param]
+    ttk::label $f.t -text [msgcat::mc {Graph Weight}]
+    ttk::entry $f.ww -textvariable ed(layout,strip,weight) -width 6
+    ttk::label $f.tt -text [msgcat::mc {%}]
+
+    grid $f.t $f.ww $f.tt -padx 2 -pady 2 -sticky w
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+	-default active 
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
+
+    DialogCenter $w 
+    DialogWait $w ed(ok) $w.param.ww
+    DialogDismiss $w
+
+    if {$ed(ok)} {
+	set var(layout,strip,weight) $ed(layout,strip,weight)
+	PlotChangeLayout $varname
+    }
+    
+    set rr $ed(ok)
+    unset ed
+    return $rr
+}
+
 proc PlotRangeDialog {varname} {
     upvar #0 $varname var
     global $varname
@@ -292,15 +390,15 @@ proc PlotRangeDialog {varname} {
 
     set ed(ok) 0
 
-    set ed(x,auto) $var(axis,x,auto)
-    set ed(x,min) $var(axis,x,min)
-    set ed(x,max) $var(axis,x,max)
-    set ed(x,format) $var(axis,x,format)
+    set ed(graph,axis,x,auto) $var(graph,axis,x,auto)
+    set ed(graph,axis,x,min) $var(graph,axis,x,min)
+    set ed(graph,axis,x,max) $var(graph,axis,x,max)
+    set ed(graph,axis,x,format) $var(graph,axis,x,format)
 
-    set ed(y,auto) $var(axis,y,auto)
-    set ed(y,min) $var(axis,y,min)
-    set ed(y,max) $var(axis,y,max)
-    set ed(y,format) $var(axis,y,format)
+    set ed(graph,axis,y,auto) $var(graph,axis,y,auto)
+    set ed(graph,axis,y,min) $var(graph,axis,y,min)
+    set ed(graph,axis,y,max) $var(graph,axis,y,max)
+    set ed(graph,axis,y,format) $var(graph,axis,y,format)
 
     DialogCreate $w [msgcat::mc {Range}] ed(ok)
 
@@ -313,16 +411,16 @@ proc PlotRangeDialog {varname} {
     ttk::label $f.tauto -text [msgcat::mc {Automatic}]
 
     ttk::label $f.x -text [msgcat::mc {X}]
-    ttk::entry $f.xmin -textvariable ed(x,min) -width 12
-    ttk::entry $f.xmax -textvariable ed(x,max) -width 12
-    ttk::entry $f.xformat -textvariable ed(x,format) -width 8
-    ttk::checkbutton $f.xauto -variable ed(x,auto)
+    ttk::entry $f.xmin -textvariable ed(graph,axis,x,min) -width 12
+    ttk::entry $f.xmax -textvariable ed(graph,axis,x,max) -width 12
+    ttk::entry $f.xformat -textvariable ed(graph,axis,x,format) -width 8
+    ttk::checkbutton $f.xauto -variable ed(graph,axis,x,auto)
 
     ttk::label $f.y -text [msgcat::mc {Y}]
-    ttk::entry $f.ymin -textvariable ed(y,min) -width 12
-    ttk::entry $f.ymax -textvariable ed(y,max) -width 12
-    ttk::entry $f.yformat -textvariable ed(y,format) -width 8
-    ttk::checkbutton $f.yauto -variable ed(y,auto)
+    ttk::entry $f.ymin -textvariable ed(graph,axis,y,min) -width 12
+    ttk::entry $f.ymax -textvariable ed(graph,axis,y,max) -width 12
+    ttk::entry $f.yformat -textvariable ed(graph,axis,y,format) -width 8
+    ttk::checkbutton $f.yauto -variable ed(graph,axis,y,auto)
 
     grid $f.t $f.tfrom $f.tto $f.tformat $f.tauto -padx 2 -pady 2 -sticky w
     grid $f.x $f.xmin $f.xmax $f.xformat $f.xauto -padx 2 -pady 2 -sticky w
@@ -347,17 +445,17 @@ proc PlotRangeDialog {varname} {
     DialogDismiss $w
 
     if {$ed(ok)} {
-	set var(axis,x,auto) $ed(x,auto)
-	set var(axis,x,min) $ed(x,min) 
-	set var(axis,x,max) $ed(x,max) 
-	set var(axis,x,format) $ed(x,format)
+	set var(graph,axis,x,auto) $ed(graph,axis,x,auto)
+	set var(graph,axis,x,min) $ed(graph,axis,x,min) 
+	set var(graph,axis,x,max) $ed(graph,axis,x,max) 
+	set var(graph,axis,x,format) $ed(graph,axis,x,format)
 
-	set var(axis,y,auto) $ed(y,auto)
-	set var(axis,y,min) $ed(y,min) 
-	set var(axis,y,max) $ed(y,max) 
-	set var(axis,y,format) $ed(y,format)
+	set var(graph,axis,y,auto) $ed(graph,axis,y,auto)
+	set var(graph,axis,y,min) $ed(graph,axis,y,min) 
+	set var(graph,axis,y,max) $ed(graph,axis,y,max) 
+	set var(graph,axis,y,format) $ed(graph,axis,y,format)
 
-	$var(proc,updategraph) $varname
+	PlotChangeAxis $varname
     }
     
     set rr $ed(ok)
@@ -365,31 +463,31 @@ proc PlotRangeDialog {varname} {
     return $rr
 }
 
-proc PlotTitleDialog {varname} {
+proc PlotGraphTitleDialog {varname} {
     upvar #0 $varname var
     global $varname
     global ed
 
-    set w {.aptitle}
+    set w {.applottitle}
 
     set ed(ok) 0
     set ed(graph,title) $var(graph,title)
-    set ed(axis,x,title) $var(axis,x,title)
-    set ed(axis,y,title) $var(axis,y,title)
-    set ed(legend,title) $var(legend,title)
+    set ed(graph,axis,x,title) $var(graph,axis,x,title)
+    set ed(graph,axis,y,title) $var(graph,axis,y,title)
+    set ed(graph,legend,title) $var(graph,legend,title)
 
     DialogCreate $w [msgcat::mc {Title}] ed(ok)
 
     # Param
     set f [ttk::frame $w.param]
-    ttk::label $f.label -text [msgcat::mc {Plot Title}]
+    ttk::label $f.label -text [msgcat::mc {Title}]
     ttk::entry $f.title -textvariable ed(graph,title) -width 30
     ttk::label $f.xlabel -text [msgcat::mc {X Axis Title}]
-    ttk::entry $f.xtitle -textvariable ed(axis,x,title) -width 30
+    ttk::entry $f.xtitle -textvariable ed(graph,axis,x,title) -width 30
     ttk::label $f.ylabel -text [msgcat::mc {Y Axis Title}]
-    ttk::entry $f.ytitle -textvariable ed(axis,y,title) -width 30
+    ttk::entry $f.ytitle -textvariable ed(graph,axis,y,title) -width 30
     ttk::label $f.legendlabel -text [msgcat::mc {Legend Title}]
-    ttk::entry $f.legendtitle -textvariable ed(legend,title) -width 30
+    ttk::entry $f.legendtitle -textvariable ed(graph,legend,title) -width 30
 
     grid $f.label $f.title -padx 2 -pady 2 -sticky ew
     grid $f.xlabel $f.xtitle -padx 2 -pady 2 -sticky ew
@@ -417,11 +515,11 @@ proc PlotTitleDialog {varname} {
 
     if {$ed(ok)} {
 	set var(graph,title) $ed(graph,title)
-	set var(axis,x,title) $ed(axis,x,title)
-	set var(axis,y,title) $ed(axis,y,title)
-	set var(legend,title) $ed(legend,title)
+	set var(graph,axis,x,title) $ed(graph,axis,x,title)
+	set var(graph,axis,y,title) $ed(graph,axis,y,title)
+	set var(graph,legend,title) $ed(graph,legend,title)
 
-	$var(proc,updategraph) $varname
+	PlotUpdateGraph $varname
     }
     
     set rr $ed(ok)
@@ -437,9 +535,9 @@ proc DatasetNameDialog {varname} {
     set w {.aptitle}
 
     set ed(ok) 0
-    set ed(name) $var(name)
+    set ed(name) $var(graph,ds,name)
 
-    DialogCreate $w [msgcat::mc {Dataset}] ed(ok)
+    DialogCreate $w [msgcat::mc {Data}] ed(ok)
 
     # Param
     set f [ttk::frame $w.param]
@@ -468,21 +566,15 @@ proc DatasetNameDialog {varname} {
     DialogDismiss $w
 
     if {$ed(ok)} {
-	$var(mb).select entryconfig "$var(name)" -label "$ed(name)"
-	set var(name) $ed(name)
-	$var(proc,updateelement) $varname
+	$var(mb).graph.select entryconfig "$var(graph,ds,name)" \
+	    -label "$ed(name)"
+	set var(graph,ds,name) $ed(name)
+	$var(graph,proc,updateelement) $varname
     }
     
     set rr $ed(ok)
     unset ed
     return $rr
-}
-
-proc PlotButton {varname x y} {
-    upvar #0 $varname var
-    global $varname
-
-    $var(proc,button) $varname $x $y
 }
 
 proc PlotLineShapeMenu {which var} {
@@ -509,21 +601,10 @@ proc PlotLineShapeMenu {which var} {
 	-variable $var -value arrow
 }
 
-proc PlotLineSmoothMenu {which var} {
-    menu $which
-    $which add radiobutton -label [msgcat::mc {Step}] \
-	-variable $var -value step
-    $which add radiobutton -label [msgcat::mc {Linear}] \
-	-variable $var -value linear
-    $which add radiobutton -label [msgcat::mc {Cubic}] \
-	-variable $var -value cubic
-    $which add radiobutton -label [msgcat::mc {Quadratic}] \
-	-variable $var -value quadratic
-    $which add radiobutton -label [msgcat::mc {Catrom}] \
-	-variable $var -value catrom
-}
-
 proc PlotExportDialog {varname format} {
+    upvar #0 $varname var
+    global $varname
+
     global giffbox
     global jpegfbox
     global tifffbox
@@ -563,10 +644,15 @@ proc PlotExport {varname fn format} {
 	return
     }
 
-    # besure we are on top
+    # be sure we are on top
     raise $var(top)
+    # and realized
+    update
 
-    set rr [catch {image create photo -format window -data $var(graph)} ph]
+    # for darwin only
+    set geom [DarwinPhotoFix $var(top) 0 0]
+
+    set rr [catch {image create photo -format window -data $var(top)} ph]
     if {$rr} {
 	Error $iap(error)
 	return
@@ -582,4 +668,104 @@ proc PlotExport {varname fn format} {
     }
 
     image delete $ph
+
+    # reset if needed
+    DarwinPhotoRestore $var(top) $geom
+}
+
+proc PlotUpdateMenus {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    # File
+    if {$var(graph,ds,xdata) != {}} {
+	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state normal
+    } else {
+	$var(mb).file entryconfig "[msgcat::mc {Save Data}]..." -state disabled
+    }
+
+    # Canvas
+
+    # Graph
+    switch $var(layout) {
+	grid -
+	row -
+	column {
+	    $var(mb).graph.axes entryconfig [msgcat::mc {X Grid}] -state normal
+	    $var(mb).graph.axes entryconfig [msgcat::mc {X Log}] -state normal
+	    $var(mb).graph.axes entryconfig [msgcat::mc {X Flip}] -state normal
+	}
+	strip {
+	    set cc $var(graph,current)
+	    set first [lindex $var(graphs) 0]
+	    if {$cc == $first} {
+		$var(mb).graph.axes entryconfig [msgcat::mc {X Grid}] \
+		    -state normal
+		$var(mb).graph.axes entryconfig [msgcat::mc {X Log}] \
+		    -state normal
+		$var(mb).graph.axes entryconfig [msgcat::mc {X Flip}] \
+		    -state normal
+	    } else {
+		$var(mb).graph.axes entryconfig [msgcat::mc {X Grid}] \
+		    -state disabled
+		$var(mb).graph.axes entryconfig [msgcat::mc {X Log}] \
+		    -state disabled
+		$var(mb).graph.axes entryconfig [msgcat::mc {X Flip}] \
+		    -state disabled
+	    }
+	}
+    }
+
+
+    if {[llength $var(graph,dss)] == 0} {
+	$var(mb).graph entryconfig [msgcat::mc {Duplicate Dataset}] \
+	    -state disabled
+	$var(mb).graph entryconfig [msgcat::mc {Delete Dataset}] \
+	    -state disabled
+    } else {
+	$var(mb).graph entryconfig [msgcat::mc {Duplicate Dataset}] \
+	    -state normal
+
+	if {!$var(graph,ds,manage)} {
+	    $var(mb).graph entryconfig [msgcat::mc {Delete Dataset}] \
+		-state disabled
+	} else {
+	    $var(mb).graph entryconfig [msgcat::mc {Delete Dataset}] \
+		-state normal
+	}
+    }
+
+    $var(mb).graph.select delete 0 end
+    set cc $var(graph,current)
+    foreach nn $var(graph,dss) {
+	$var(mb).graph.select add radiobutton -label "$var($cc,$nn,name)" \
+	    -variable ${varname}(graph,ds,current) -value $nn \
+	    -command [list PlotCurrentDataSet $varname]
+    }
+
+    # Data
+    $var(mb) delete [msgcat::mc {Data}]
+    switch $var(graph,type) {
+	line {
+	    $var(mb) add cascade -label [msgcat::mc {Data}] \
+		-menu $var(mb).dataline
+	    $var(mb).graph entryconfig [msgcat::mc {Bar Mode}] -state disabled
+	}
+	bar {
+	    $var(mb) add cascade -label [msgcat::mc {Data}] \
+		-menu $var(mb).databar
+	    $var(mb).graph entryconfig [msgcat::mc {Bar Mode}] -state normal
+	}
+	scatter {
+	    $var(mb) add cascade -label [msgcat::mc {Data}] \
+		-menu $var(mb).datascatter
+	    $var(mb).graph entryconfig [msgcat::mc {Bar Mode}] -state disabled
+	}
+    }
+
+    if {[llength $var(graph,dss)] == 0} {
+	$var(mb) entryconfig [msgcat::mc {Data}] -state disabled
+    } else {
+	$var(mb) entryconfig [msgcat::mc {Data}] -state normal
+    }
 }

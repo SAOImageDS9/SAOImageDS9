@@ -24,8 +24,10 @@ fill		{return $FILL_}
 fillcolor	{return $FILLCOLOR_}
 flip		{return $FLIP_}
 format		{return $FORMAT_}
+graph		{return $GRAPH_}
 grid		{return $GRID_}
 labels		{return $LABELS_}
+layout		{return $LAYOUT_}
 legend		{return $LEGEND_}
 legendtitle	{return $LEGENDTITLE_}
 list		{return $LIST_}
@@ -45,6 +47,7 @@ slant		{return $SLANT_}
 smooth		{return $SMOOTH_}
 stats		{return $STATS_}
 statistics	{return $STATISTICS_}
+strip		{return $STRIP_}
 style		{return $STYLE_}
 title		{return $TITLE_}
 weight		{return $WEIGHT_}

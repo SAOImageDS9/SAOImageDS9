@@ -7,6 +7,7 @@ package provide DS9 1.0
 # used by backup
 proc PlotBarTool {} {
     global iap
+
     PlotBar $iap(tt) [msgcat::mc {Bar Plot Tool}] {} {} {} 2 {}
 }
 
@@ -29,177 +30,124 @@ proc PlotBar {tt wtt title xaxis yaxis dim data} {
     upvar #0 $varname var
     global $varname
 
-    PlotBarProc $varname
-    PlotDialog $varname $wtt $title $xaxis $yaxis
-    PlotDialogBar $varname
-
-    PlotDataSet $varname $dim $data
-    $var(proc,updategraph) $varname
+    PlotDialog $varname $wtt
+    PlotAddGraph $varname bar
+    PlotTitle $varname $title $xaxis $yaxis
+    PlotAddDataSet $varname $dim $data
     PlotStats $varname
     PlotList $varname
-}
-
-proc PlotBarDialog {varname wtt title xaxis yaxis} {
-    upvar #0 $varname var
-    global $varname
-
-    PlotBarProc $varname
-    PlotDialog $varname $wtt $title $xaxis $yaxis
-    PlotDialogBar $varname
-}
-
-proc PlotBarProc {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set var(proc,updategraph) PlotBarUpdateGraph
-    set var(proc,updateelement) PlotBarUpdateElement
-    set var(proc,highlite) PlotBarHighliteElement
-    set var(proc,button) PlotBarButton
-}
-
-proc PlotDialogBar {varname} {
-    upvar #0 $varname var
-    global $varname
 
     global ds9
-
-    # Graph
-    $var(mb).graph add separator
-    $var(mb).graph add cascade -label "[msgcat::mc {Mode}]..." \
-	-menu $var(mb).graph.mode
-
-    # Graph Mode
-    menu $var(mb).graph.mode
-    $var(mb).graph.mode add radiobutton -label [msgcat::mc {Normal}] \
-	-variable ${varname}(bar,mode) -value normal \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.mode add radiobutton -label [msgcat::mc {Stacked}] \
-	-variable ${varname}(bar,mode) -value stacked \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.mode add radiobutton -label [msgcat::mc {Aligned}] \
-	-variable ${varname}(bar,mode) -value aligned \
-	-command [list $var(proc,updategraph) $varname]
-    $var(mb).graph.mode add radiobutton -label [msgcat::mc {Overlap}] \
-	-variable ${varname}(bar,mode) -value overlap \
-	-command [list $var(proc,updategraph) $varname]
-
-    # Dataset
-    $var(mb).dataset add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(show) \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset add separator
-    $var(mb).dataset add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).dataset.color
-    $var(mb).dataset add cascade -label [msgcat::mc {Relief}] \
-	-menu $var(mb).dataset.relief
-    $var(mb).dataset add cascade -label [msgcat::mc {Error}] \
-	-menu $var(mb).dataset.error
-    $var(mb).dataset add separator
-    $var(mb).dataset add command -label "[msgcat::mc {Name}]..." \
-	-command [list DatasetNameDialog $varname]
-
-    PlotColorMenu $var(mb).dataset.color $varname color \
-	[list PlotBarUpdateElement $varname]
-
-    # Relief
-    menu $var(mb).dataset.relief
-    $var(mb).dataset.relief add radiobutton -label [msgcat::mc {Flat}] \
-	-variable ${varname}(bar,relief) -value flat \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset.relief add radiobutton -label [msgcat::mc {Sunken}] \
-	-variable ${varname}(bar,relief) -value sunken \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset.relief add radiobutton -label [msgcat::mc {Raised}] \
-	-variable ${varname}(bar,relief) -value raised \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset.relief add radiobutton -label [msgcat::mc {Solid}] \
-	-variable ${varname}(bar,relief) -value solid \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset.relief add radiobutton -label [msgcat::mc {Groove}] \
-	-variable ${varname}(bar,relief) -value groove \
-	-command [list PlotBarUpdateElement $varname]
-
-    # Error
-    menu $var(mb).dataset.error
-    $var(mb).dataset.error add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(error) \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset.error add checkbutton -label [msgcat::mc {Cap}] \
-	-variable ${varname}(error,cap) \
-	-command [list PlotBarUpdateElement $varname]
-    $var(mb).dataset.error add separator
-    $var(mb).dataset.error add cascade -label [msgcat::mc {Color}] \
-	-menu $var(mb).dataset.error.color
-    $var(mb).dataset.error add cascade -label [msgcat::mc {Width}] \
-	-menu $var(mb).dataset.error.width
-
-    PlotColorMenu $var(mb).dataset.error.color $varname error,color \
-	[list PlotBarUpdateElement $varname]
-    WidthDashMenu $var(mb).dataset.error.width $varname error,width {} \
-	[list PlotBarUpdateElement $varname] {}
-
-    # graph
-    set var(type) bar
-    set var(graph) [blt::barchart $var(top).bar \
-			-width 600 \
-			-height 500 \
-			-highlightthickness 0 \
-		       ]
-
-    $var(graph) xaxis configure -grid no -stepsize 0
-    $var(graph) yaxis configure -grid yes
-
-    pack $var(graph) -expand yes -fill both
-
-    # set up zoom stack, assuming mode is zoom
     switch $ds9(wm) {
-	x11 -
-	win32 {Blt_ZoomStack $var(graph) -mode release}
-	aqua {Blt_ZoomStack $var(graph) -mode release -button "ButtonPress-2"}
+	x11 {
+	    update idletasks
+	    wm geometry $var(top) \
+		"[winfo width $var(top)]x[winfo height $var(top)]"
+	}
+	aqua -
+	win32 {}
     }
 }
 
-proc PlotBarUpdateGraph {varname} {
+proc PlotBarMenus {varname} {
     upvar #0 $varname var
     global $varname
 
-    PlotUpdateGraph $varname
-    $var(graph) configure -barmode $var(bar,mode)
+    # Data
+    menu $var(mb).databar
+    $var(mb).databar add checkbutton -label [msgcat::mc {Show}] \
+	-variable ${varname}(graph,ds,show) \
+	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar add separator
+    $var(mb).databar add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).databar.color
+    $var(mb).databar add cascade -label [msgcat::mc {Relief}] \
+	-menu $var(mb).databar.relief
+    $var(mb).databar add cascade -label [msgcat::mc {Error}] \
+	-menu $var(mb).databar.error
+    $var(mb).databar add separator
+    $var(mb).databar add command -label "[msgcat::mc {Name}]..." \
+	-command [list DatasetNameDialog $varname]
+
+    PlotColorMenu $var(mb).databar.color $varname graph,ds,color \
+	[list PlotBarUpdateElement $varname]
+
+    # Relief
+    menu $var(mb).databar.relief
+    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Flat}] \
+	-variable ${varname}(graph,ds,bar,relief) -value flat \
+	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Sunken}] \
+	-variable ${varname}(graph,ds,bar,relief) -value sunken \
+	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Raised}] \
+	-variable ${varname}(graph,ds,bar,relief) -value raised \
+	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Solid}] \
+	-variable ${varname}(graph,ds,bar,relief) -value solid \
+	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.relief add radiobutton -label [msgcat::mc {Groove}] \
+	-variable ${varname}(graph,ds,bar,relief) -value groove \
+	-command [list PlotBarUpdateElement $varname]
+
+    # Error
+    menu $var(mb).databar.error
+    $var(mb).databar.error add checkbutton -label [msgcat::mc {Show}] \
+	-variable ${varname}(graph,ds,error) \
+	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.error add checkbutton -label [msgcat::mc {Cap}] \
+	-variable ${varname}(graph,ds,error,cap) \
+	-command [list PlotBarUpdateElement $varname]
+    $var(mb).databar.error add separator
+    $var(mb).databar.error add cascade -label [msgcat::mc {Color}] \
+	-menu $var(mb).databar.error.color
+    $var(mb).databar.error add cascade -label [msgcat::mc {Width}] \
+	-menu $var(mb).databar.error.width
+
+    PlotColorMenu $var(mb).databar.error.color $varname graph,ds,error,color \
+	[list PlotBarUpdateElement $varname]
+    WidthDashMenu $var(mb).databar.error.width $varname graph,ds,error,width \
+	{} [list PlotBarUpdateElement $varname] {}
+}
+
+proc PlotBarAddGraph {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(graph,type) bar
+    blt::barchart $var(graph) -width 600 -height 500 -highlightthickness 0
+
+    $var(graph) xaxis configure -grid no -stepsize 0
+    $var(graph) yaxis configure -grid yes
 }
 
 proc PlotBarUpdateElement {varname} {
     upvar #0 $varname var
     global $varname
 
-    set nn $var(data,current)
-    PlotGetVar $varname $nn
+    PlotSaveState $varname
 
-    if {$var(error)} {
+    set cc $var(graph,current)
+    if {[llength $var($cc,dss)] == 0} {
+ 	return
+    }
+    
+    if {$var(graph,ds,error)} {
 	set show both
     } else {
 	set show none
     }
 
-    if {$var(error,cap)} {
-	set cap [expr $var(error,width)+3]
+    if {$var(graph,ds,error,cap)} {
+	set cap [expr $var(graph,ds,error,width)+3]
     } else {
 	set cap 0
     }
 
-    $var(graph) element configure "d-${nn}" \
-	-label $var(name) -hide [expr !$var(show)] \
-	-relief $var(bar,relief) -color $var(color) \
-	-showerrorbars $show -errorbarcolor $var(error,color) \
-	-errorbarwidth $var(error,width) -errorbarcap $cap
-}
-
-proc PlotBarButton {varname x y} {
-    upvar #0 $varname var
-    global $varname
-}
-
-proc PlotBarHighliteElement {varname rowlist} {
-    upvar #0 $varname var
-    global $varname
+    set nn $var(graph,ds,current)
+    $var(graph) element configure $nn \
+	-label $var(graph,ds,name) -hide [expr !$var(graph,ds,show)] \
+	-relief $var(graph,ds,bar,relief) -color $var(graph,ds,color) \
+	-showerrorbars $show -errorbarcolor $var(graph,ds,error,color) \
+	-errorbarwidth $var(graph,ds,error,width) -errorbarcap $cap
 }

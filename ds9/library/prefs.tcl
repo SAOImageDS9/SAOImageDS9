@@ -559,6 +559,7 @@ proc FixPrefs {version} {
 	7.6 {
 	    FixPrefs7.6to8.0
 	    FixPrefs8.0to8.1
+
 	}
 	8.0 {
 	    FixPrefs8.0to8.1
@@ -594,6 +595,25 @@ proc FixPrefsVarOld {} {
 }
 
 proc FixPrefs8.0to8.1 {} {
+    FixVar pap(graph,ds,show) pap(show)
+    FixVar pap(graph,ds,smooth) pap(smooth)
+    FixVar pap(graph,ds,color) pap(color)
+    FixVar pap(graph,ds,fill) pap(fill)
+    FixVar pap(graph,ds,fill,color) pap(fill,color)
+    FixVar pap(graph,ds,width) pap(width)
+    FixVar pap(graph,ds,dash) pap(dash)
+
+    FixVar pap(graph,ds,shape,symbol) pap(shape,symbol)
+    FixVar pap(graph,ds,shape,fill) pap(shape,fill)
+    FixVar pap(graph,ds,shape,color) pap(shape,color)
+
+    FixVar pap(graph,ds,error) pap(error)
+    FixVar pap(graph,ds,error,color) pap(error,color)
+    FixVar pap(graph,ds,error,width) pap(error,width)
+    FixVar pap(graph,ds,error,style) pap(error,style)
+
+    FixVar pap(graph,ds,bar,relief) pap(relief)
+
     FixVarRm pbuttons(file,samp)
 }
 
@@ -602,6 +622,7 @@ proc FixPrefs7.6to8.0 {} {
 
 proc FixPrefs7.5to7.6 {} {
     global smooth
+
     set smooth(radius,minor) $smooth(radius)
     set smooth(sigma) [expr int($smooth(radius)/2.)]
     set smooth(sigma,minor) $smooth(sigma)
@@ -618,6 +639,7 @@ proc FixPrefs7.3to7.4 {} {
 
 proc FixPrefs7.2to7.3 {} {
     global current
+
     if {$current(mode) == {pointer}} {
 	set current(mode) region
     }
@@ -691,6 +713,7 @@ proc FixPrefs7.1to7.2 {} {
 
 proc FixPrefs7.0to7.1 {} {
     global pap
+
     if {[info exists pap(grid)]} {
 	set pap(grid,x) $pap(grid)
 	set pap(grid,y) $pap(grid)

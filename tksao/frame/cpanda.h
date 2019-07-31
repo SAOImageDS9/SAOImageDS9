@@ -61,7 +61,7 @@ class Cpanda : public BaseEllipse {
   void deleteAnglesAnnuli(int h);
 
   void analysis(AnalysisTask, int);
-  void analysisPanda(Coord::CoordSystem sys);
+  void analysisPanda(char*, char*, char*, Coord::CoordSystem sys, int);
   void analysisStats(Coord::CoordSystem, Coord::SkyFrame sky);
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat,

@@ -71,7 +71,7 @@ proc DS9Def {} {
     }
     set ds9(menu,size,frame,goto) [expr $ds9(menu,start)+0]
     set ds9(menu,size,frame,active) [expr $ds9(menu,start)+3]
-    set ds9(menu,size,analysis) [expr $ds9(menu,start)+35]
+    set ds9(menu,size,analysis) [expr $ds9(menu,start)+33]
     set ds9(menu,size,wrap) 20
 
     set ds9(display) single
@@ -588,7 +588,8 @@ switch $ds9(wm) {
 	# lock down geometry at statup
 	# so unneeded configure events are not generated
 	# a problem with recent versions of linux
-	wm geometry $ds9(top) "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
+	wm geometry $ds9(top) \
+	    "[winfo width $ds9(top)]x[winfo height $ds9(top)]"
     }
     aqua {}
     win32 {

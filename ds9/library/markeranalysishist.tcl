@@ -66,35 +66,29 @@ proc MarkerAnalysisHistogramCB {frame id} {
     set vvar(id) $id
     set vvar(nbins) 512
 
-    set xdata ${vvarname}x
-    set ydata ${vvarname}y
+    set xdata ${vvarname}xx
+    set ydata ${vvarname}yy
     global $xdata $ydata
 
-    set ping [PlotPing $vvarname]
+    if {[info command $xdata] == {}} {
+	blt::vector create $xdata $ydata
+    }
+    $frame get marker $id analysis histogram $xdata $ydata $vvar(nbins)
 
-    if {!$ping} {
-	set tt [string totitle [$frame get marker $id type]]
+    if {![PlotPing $vvarname]} {
 	set bunit [string trim [$frame get fits header keyword BUNIT]]
 	if {$bunit=={}} {
 	    set bunit {Values}
 	}
-	PlotLineDialog $vvarname $tt Histogram $bunit Counts
+	PlotDialog $vvarname [string totitle [$frame get marker $id type]]
+	PlotAddGraph $vvarname line
+	PlotTitle $vvarname Histogram $bunit Counts
 
-	set vvar(manage) 0
-	set vvar(dim) xy
-	set vvar(xdata) $xdata
-	set vvar(ydata) $ydata
-	blt::vector create $xdata $ydata
-    }
-
-    $frame get marker $id analysis histogram $xdata $ydata $vvar(nbins)
-
-    if {!$ping} {
-	PlotExternal $vvarname
-	set vvar(smooth) step
-	set vvar(fill) 1
-	$vvar(proc,updateelement) $vvarname
-	$vvar(proc,updategraph) $vvarname
+	set vvar(graph,ds,xdata) $xdata
+	set vvar(graph,ds,ydata) $ydata
+	set vvar(graph,ds,smooth) step
+	set vvar(graph,ds,fill) 1
+	PlotExternal $vvarname xy
     }
 
     PlotStats $vvarname

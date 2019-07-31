@@ -24,8 +24,10 @@
 %token FILLCOLOR_
 %token FLIP_
 %token FORMAT_
+%token GRAPH_
 %token GRID_
 %token LABELS_
+%token LAYOUT_
 %token LEGEND_
 %token LEGENDTITLE_
 %token LIST_
@@ -45,6 +47,7 @@
 %token SMOOTH_
 %token STATS_
 %token STATISTICS_
+%token STRIP_
 %token STYLE_
 %token TITLE_
 %token WEIGHT_
@@ -76,36 +79,44 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | LIST_ {ProcessSendCmdCVAR PlotListGenerate}
  | MODE_ {ProcessSendCmdCVARGet mode}
  | AXIS_ axis
- | BACKGROUND_ {ProcessSendCmdCVARGet graph,bg}
+ | BACKGROUND_ {ProcessSendCmdCVARGet background}
  | LEGEND_ legend
  | FONT_ fontt
  | TITLE_ title
  | BARMODE_ {ProcessSendCmdCVARGet bar,mode}
- | SHOW_ {ProcessSendCmdCVARYesNo show}
- | COLOR_ {ProcessSendCmdCVARGet color}
- | FILL_ {ProcessSendCmdCVARGet fill}
- | FILLCOLOR_ {ProcessSendCmdCVARGet fill,color}
+ | SHOW_ {ProcessSendCmdCVARYesNo graph,ds,show}
+ | COLOR_ {ProcessSendCmdCVARGet graph,ds,color}
+ | FILL_ {ProcessSendCmdCVARGet graph,ds,fill}
+ | FILLCOLOR_ {ProcessSendCmdCVARGet graph,ds,fill,color}
  | ERROR_ errorr
  # backward compatibility
  | ERRORBAR_ errorr
- | NAME_ {ProcessSendCmdCVARGet name}
+ | NAME_ {ProcessSendCmdCVARGet graph,ds,name}
  | SHAPE_ shape
- | RELIEF_ {ProcessSendCmdCVARGet bar,relief}
- | SMOOTH_ {ProcessSendCmdCVARGet smooth}
- | WIDTH_ {ProcessSendCmdCVARGet width}
- | DASH_ {ProcessSendCmdCVARYesNo dash}
- | SELECT_ {ProcessSendCmdCVARGet data,current}
+ | RELIEF_ {ProcessSendCmdCVARGet graph,ds,bar,relief}
+ | SMOOTH_ {ProcessSendCmdCVARGet graph,ds,smooth}
+ | WIDTH_ {ProcessSendCmdCVARGet graph,ds,width}
+ | DASH_ {ProcessSendCmdCVARYesNo graph,ds,dash}
+ | LAYOUT_ {ProcessSendCmdCVARGet layout}
+ | LAYOUT_ STRIP_ WEIGHT_ {ProcessSendCmdCVARGet layout,strip,weight}
+ | SELECT_ select
  # backward compatibility
- | DATASET_ {ProcessSendCmdCVARGet data,current}
+ | DATASET_ {ProcessSendCmdCVARGet graph,ds,current}
  ;
  
-axis : xy GRID_ {ProcessSendCmdCVARYesNo "axis,$1,grid"}
- | xy LOG_ {ProcessSendCmdCVARYesNo "axis,$1,log"}
- | xy FLIP_ {ProcessSendCmdCVARYesNo "axis,$1,flip"}
- | xy AUTO_ {ProcessSendCmdCVARYesNo "axis,$1,auto"}
- | xy MIN_ {ProcessSendCmdCVARGet "axis,$1,min"}
- | xy MAX_ {ProcessSendCmdCVARGet "axis,$1,max"}
- | xy FORMAT_ {ProcessSendCmdCVARGet "axis,$1,format"}
+select : DATASET_ {ProcessSendCmdCVARGet graph,ds,current}
+ | GRAPH_ {ProcessSendCmdCVARGet graph,current}
+ # backward compatibility
+ | {ProcessSendCmdCVARGet graph,ds,current}
+ ;
+
+axis : xy GRID_ {ProcessSendCmdCVARYesNo "graph,axis,$1,grid"}
+ | xy LOG_ {ProcessSendCmdCVARYesNo "graph,axis,$1,log"}
+ | xy FLIP_ {ProcessSendCmdCVARYesNo "graph,axis,$1,flip"}
+ | xy AUTO_ {ProcessSendCmdCVARYesNo "graph,axis,$1,auto"}
+ | xy MIN_ {ProcessSendCmdCVARGet "graph,axis,$1,min"}
+ | xy MAX_ {ProcessSendCmdCVARGet "graph,axis,$1,max"}
+ | xy FORMAT_ {ProcessSendCmdCVARGet "graph,axis,$1,format"}
  ;
 
 legend : {ProcessSendCmdCVARYesNo legend}
@@ -138,20 +149,20 @@ fontType : TITLE_ {set _ graph,title}
  ;
 
 title : {ProcessSendCmdCVARGet graph,title}
- | xy {ProcessSendCmdCVARGet "axis,$1,title"}
- | xyaxis {ProcessSendCmdCVARGet "axis,$1,title"}
- | LEGEND_ {ProcessSendCmdCVARGet legend,title}
+ | xy {ProcessSendCmdCVARGet "graph,axis,$1,title"}
+ | xyaxis {ProcessSendCmdCVARGet "graph,axis,$1,title"}
+ | LEGEND_ {ProcessSendCmdCVARGet graph,legend,title}
  ;
 
-errorr : {ProcessSendCmdCVARYesNo error}
- | CAP_ {ProcessSendCmdCVARYesNo error,cap}
- | COLOR_ {ProcessSendCmdCVARGet error,color}
- | WIDTH_ {ProcessSendCmdCVARGet error,width}
+errorr : {ProcessSendCmdCVARYesNo graph,ds,error}
+ | CAP_ {ProcessSendCmdCVARYesNo graph,ds,error,cap}
+ | COLOR_ {ProcessSendCmdCVARGet graph,ds,error,color}
+ | WIDTH_ {ProcessSendCmdCVARGet graph,ds,error,width}
  ;
 
-shape : {ProcessSendCmdCVARGet shape,symbol}
- | FILL_ {ProcessSendCmdCVARYesNo shape,fill}
- | COLOR_ {ProcessSendCmdCVARGet shape,color}
+shape : {ProcessSendCmdCVARGet graph,ds,shape,symbol}
+ | FILL_ {ProcessSendCmdCVARYesNo graph,ds,shape,fill}
+ | COLOR_ {ProcessSendCmdCVARGet graph,ds,shape,color}
  ;
 
 %%

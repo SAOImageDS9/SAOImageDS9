@@ -1,7 +1,7 @@
 <!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-<meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.1), see www.w3.org">
+<meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 16.4), see www.w3.org">
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
 <title>SAMP</title>
@@ -1769,10 +1769,16 @@ plot []<br>
 plot [[&lt;plotname&gt;] data xy|xyex|xyey|xyexey]<br>
 <br>
 # existing plot<br>
-plot[[&lt;plotname&gt;] load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
+plot [[&lt;plotname&gt;] load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] save &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] clear]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] duplicate [#]]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout grid|row|column|strip]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout strip weight &lt;percent&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] add graph line|bar|scatter]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] select graph &lt;graph&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] delete graph]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] select dataset &lt;dataset&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] delete dataset]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] duplicate]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] stats yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] list yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] loadconfig &lt;filename&gt;]<br>
@@ -1788,10 +1794,11 @@ plot[[&lt;plotname&gt;] load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] mode pointer|zoom]<br>
 <br>
 # export image<br>
-plot[[&lt;plotname&gt;]export[gif|tiff|jpeg|png]&lt;filename&gt;<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;]export jpeg &lt;filename&gt;[1-100]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;]export tiff &lt;filename&gt;[none|jpeg|packbits|deflate]<br>
-&nbsp;<br>
+plot [[&lt;plotname&gt;] export &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] export gif|tiff|jpeg|png &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] export jpeg &lt;filename&gt; [1-100]]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] export tiff &lt;filename&gt; none|jpeg|packbits|deflate]]<br>
+<br>
 # configure graph<br>
 plot [[&lt;plotname&gt;] axis x|y grid yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] axis x|y log yes|no]<br>
@@ -1804,9 +1811,9 @@ plot [[&lt;plotname&gt;] axis x|y grid yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] legend yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] legend position right|left|top|bottom]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers font times|helvetica|courier]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] fonttitle|labels|numberssize &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] fonttitle|labels|numbersweight normal|bold]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] fonttitle|labels|numbersslant roman|italic]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers size &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers weight normal|bold]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] font title|labels|numbers slant roman|italic]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] title &lt;string&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] title x|y &lt;string&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] barmode normal|stacked|aligned|overlap]<br>
@@ -1826,9 +1833,6 @@ plot [[&lt;plotname&gt;] show yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] error width &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] name &lt;string&gt;]<br>
 <br>
-# select current dataset<br>
-plot [[&lt;plotname&gt;] select &lt;value&gt;]<br>
-&nbsp;<br>
 Example:<br>
 # return all plotnames<br>
 string value = ds9.get(string cmd)<br>
@@ -1845,14 +1849,24 @@ plot new name foo bar<br>
 <br>
 # existing plot<br>
 string value = ds9.get(string cmd)<br>
+plot select layout<br>
+plot select layout strip weight<br>
+plot select graph<br>
+plot select dataset<br>
 plot stats<br>
 plot list<br>
 <br>
 ds9.set(string cmd)<br>
 plot load foo.dat xy<br>
 plot save foo.dat<br>
-plot clear<br>
-plot duplicate 1<br>
+plot layout strip<br>
+plot layout strip weight 30<br>
+plot add graph scatter<br>
+plot select graph 1<br>
+plot delete graph<br>
+plot select dataset 1<br>
+plot delete dataset<br>
+plot duplicate<br>
 plot stats yes<br>
 plot list yes<br>
 plot loadconfig foo.plt<br>
@@ -1955,15 +1969,7 @@ plot error color red<br>
 plot error cap yes<br>
 plot error width 2<br>
 plot name "My Data"<br>
-<br>
-# select current dataset<br>
-string value = ds9.get(string cmd)<br>
-plot select<br>
-<br>
-ds9.set(string cmd)<br>
-plot select 2<br>
-<br></tt>
-<p><b><a name="png" id="png"></a>png</b></p>
+<br></tt> <b><a name="png" id="png"></a>png</b>
 <p>Load PNG image into current frame.</p>
 <tt>Syntax:<br>
 png [new|slice] [&lt;filename&gt;]<br>

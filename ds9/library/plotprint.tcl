@@ -23,20 +23,13 @@ proc PlotPostScript {varname} {
     global ds9
 
     # set postscript fonts
-    $var(graph) configure \
-	-font "$var(graph,title,family) $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
+    $var(graph) configure -font "$var(graph,title,family) $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)"
 
-    $var(graph) xaxis configure \
-	-tickfont "$var(axis,font,family) $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
-	-titlefont "$var(axis,title,family) $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
+    $var(graph) xaxis configure -tickfont "$var(axis,font,family) $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" -titlefont "$var(axis,title,family) $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-    $var(graph) yaxis configure \
-	-tickfont "$var(axis,font,family) $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" \
-	-titlefont "$var(axis,title,family) $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
+    $var(graph) yaxis configure -tickfont "$var(axis,font,family) $var(axis,font,size) $var(axis,font,weight) $var(axis,font,slant)" -titlefont "$var(axis,title,family) $var(axis,title,size) $var(axis,title,weight) $var(axis,title,slant)"
 
-    $var(graph) legend configure \
-	-font "$var(legend,font,family) $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
-	-titlefont "$var(legend,title,family) $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
+    $var(graph) legend configure -font "$var(legend,font,family) $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" -titlefont "$var(legend,title,family) $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
 
     set options "-decorations false"
 
@@ -60,31 +53,31 @@ proc PlotPostScript {varname} {
     }
 
     # Size
-    set ww [expr [winfo width $var(top)]*$ps(scale)/100./$scaling]
-    set hh [expr [winfo height $var(top)]*$ps(scale)/100./$scaling]
+    set ww [expr [winfo width $var(canvas)]*$ps(scale)/100./$scaling]
+    set hh [expr [winfo height $var(canvas)]*$ps(scale)/100./$scaling]
     append options " -width $ww -height $hh"
 
     # Page size
     switch -- $ps(size) {
-  	letter {append options " -paperwidth 8.5i -paperheight 11.i"}
-  	legal {append options " -paperwidth 8.5i -paperheight 14.i"}
-  	tabloid {append options " -paperwidth 11i -paperheight 17.i"}
-  	poster {append options " -paperwidth 36.i -paperheight 48.i"}
-  	a4 {append options " -paperwidth 195m -paperheight 282m"}
- 	other {
- 	    if {$ps(width) != {} && $ps(height) != {}} {
- 		set pgww "[append ps(width) i]"
+	letter {append options " -paperwidth 8.5i -paperheight 11.i"}
+	legal {append options " -paperwidth 8.5i -paperheight 14.i"}
+	tabloid {append options " -paperwidth 11i -paperheight 17.i"}
+	poster {append options " -paperwidth 36.i -paperheight 48.i"}
+	a4 {append options " -paperwidth 195m -paperheight 282m"}
+	other {
+	    if {$ps(width) != {} && $ps(height) != {}} {
+		set pgww "[append ps(width) i]"
 		set pghh "[append ps(height) i]"
 		append options " -paperwidth $pgww -paperheight pghh"
- 	    }
- 	}
- 	othermm {
- 	    if {$ps(width) != {} && $ps(height) != {}} {
- 		set pgww "[append ps(width) m]"
+	    }
+	}
+	othermm {
+	    if {$ps(width) != {} && $ps(height) != {}} {
+		set pgww "[append ps(width) m]"
 		set pghh "[append ps(height) m]"
 		append options " -paperwidth $pgww -paperheight pghh"
- 	    }
- 	}
+	    }
+	}
     }
 
     # Orientation

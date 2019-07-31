@@ -60,6 +60,7 @@ callback	{return CALLBACK_;}
 cir[c][l][e]	{return CIRCLE_;}
 circle3d	{return CIRCLE3D_;}
 color		{return COLOR_;}
+colour		{return COLOR_;}
 compass		{return COMPASS_;}
 composite	{return COMPOSITE_;}
 cpanda		{return CPANDA_;}

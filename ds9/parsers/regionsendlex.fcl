@@ -12,6 +12,7 @@ autocentroid {return $AUTOCENTROID_}
 background  {return $BACKGROUND_}
 centroid    {return $CENTROID_}
 color	    {return $COLOR_}
+colour	    {return $COLOR_}
 delim	    {return $DELIM_}
 epsilon	    {return $EPSILON_}
 exclude	    {return $EXCLUDE_}

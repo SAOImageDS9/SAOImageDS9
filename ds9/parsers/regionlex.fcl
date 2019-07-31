@@ -16,6 +16,7 @@ background  {return $BACKGROUND_}
 centroid    {return $CENTROID_}
 close	    {return $CLOSE_}
 color	    {return $COLOR_}
+colour	    {return $COLOR_}
 command	    {return $COMMAND_}
 composite   {return $COMPOSITE_}
 copy	    {return $COPY_}

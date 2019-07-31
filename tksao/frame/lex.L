@@ -82,10 +82,15 @@ circle		{return CIRCLE_;}
 clear		{return CLEAR_;}
 clip		{return CLIP_;}
 color		{return COLOR_;}
+colour		{return COLOR_;}
 colorbar	{return COLORBAR_;}
+colourbar	{return COLORBAR_;}
 colormap	{return COLORMAP_;}
+colourmap	{return COLORMAP_;}
 colorscale	{return COLORSCALE_;}
+colourscale	{return COLORSCALE_;}
 colorspace	{return COLORSPACE_;}
+colourspace	{return COLORSPACE_;}
 cols		{return COLS_;}
 column		{return COLUMN_;}
 command		{return COMMAND_;}

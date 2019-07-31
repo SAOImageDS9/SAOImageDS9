@@ -48,6 +48,7 @@ H   [0-9a-fA-F]
 amplifier	{return AMPLIFIER_;}
 b1950		{return B1950_;}
 color		{return COLOR_;}
+colour		{return COLOR_;}
 dash		{return DASH_;}
 dashlist	{return DASHLIST_;}
 debug		{return DEBUG_;}

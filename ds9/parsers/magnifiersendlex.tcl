@@ -211,40 +211,47 @@ set ZOOM_ 260
             set yyleng [string length $yytext]
             set matched_rule 0
         }
-        # rule 1: cursor
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(cursor)} $yy_current_buffer match] > 0 && \
+        # rule 1: colour
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(colour)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 1
         }
-        # rule 2: region
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(region)} $yy_current_buffer match] > 0 && \
+        # rule 2: cursor
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(cursor)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 2
         }
-        # rule 3: zoom
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(zoom)} $yy_current_buffer match] > 0 && \
+        # rule 3: region
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(region)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 3
         }
-        # rule 4: \s
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+        # rule 4: zoom
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(zoom)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 4
         }
-        # rule 5: .
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+        # rule 5: \s
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 5
+        }
+        # rule 6: .
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 6
         }
         if {$matched_rule == -1} {
             set yytext [string index $yy_current_buffer $index_]
@@ -262,18 +269,21 @@ set ZOOM_ 260
 return $COLOR_
             }
             1 {
-return $CURSOR_
+return $COLOR_
             }
             2 {
-return $REGION_
+return $CURSOR_
             }
             3 {
-return $ZOOM_
+return $REGION_
             }
             4 {
-# ignore whitespace
+return $ZOOM_
             }
             5 {
+# ignore whitespace
+            }
+            6 {
 set yylval $yytext; return $yylval
             }
             default

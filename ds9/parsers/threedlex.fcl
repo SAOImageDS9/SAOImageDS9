@@ -15,6 +15,7 @@ bg		{return $BG_}
 border		{return $BORDER_}
 close		{return $CLOSE_}
 color		{return $COLOR_}
+colour		{return $COLOR_}
 compass		{return $COMPASS_}
 el		{return $EL_}
 elevation	{return $EL_}

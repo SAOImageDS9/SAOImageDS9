@@ -26,6 +26,7 @@ circle	    {return $CIRCLE_}
 clear       {return $CLEAR_}
 close	    {return $CLOSE_}
 color	    {return $COLOR_}
+colour	    {return $COLOR_}
 condition   {return $CONDITION_}
 coordinate  {return $COORDINATE_}
 cross	    {return $CROSS_}

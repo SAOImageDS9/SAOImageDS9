@@ -8,9 +8,11 @@
 %%
 
 bgcolor	    {return $BGCOLOR_}
+bgcolour    {return $BGCOLOR_}
 clear	    {return $CLEAR_}
 irafalign   {return $IRAFALIGN_}
 nancolor    {return $NANCOLOR_}
+nancolour   {return $NANCOLOR_}
 precision   {return $PRECISION_}
 threads	    {return $THREADS_}
 

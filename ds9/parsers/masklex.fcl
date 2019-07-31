@@ -10,6 +10,7 @@
 close	    {return $CLOSE_}
 clear	    {return $CLEAR_}
 color	    {return $COLOR_}
+colour	    {return $COLOR_}
 mark	    {return $MARK_}
 nan	    {return $NAN_}
 nonnan	    {return $NONNAN_}

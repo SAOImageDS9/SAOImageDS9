@@ -25,6 +25,7 @@ circle	    {return $CIRCLE_}
 clear	    {return $CLEAR_}
 close	    {return $CLOSE_}
 color	    {return $COLOR_}
+colour	    {return $COLOR_}
 column	    {return $COLUMN_}
 command	    {return $COMMAND_}
 cross	    {return $CROSS_}
@@ -46,6 +47,7 @@ file	    {return $FILE_}
 filename    {return $FILENAME_}
 fill	    {return $FILL_}
 fillcolor   {return $FILLCOLOR_}
+fillcolour   {return $FILLCOLOR_}
 flat	    {return $FLAT_}
 flip	    {return $FLIP_}
 font	    {return $FONT_}

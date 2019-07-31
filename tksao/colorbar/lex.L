@@ -32,8 +32,11 @@ bw		{return BW_;}
 channel		{return CHANNEL_;}
 cmyk		{return CMYK_;}
 colormap	{return COLORMAP_;}
+colourmap	{return COLORMAP_;}
 colorbar	{return COLORBAR_;}
+colourbar	{return COLORBAR_;}
 colorspace	{return COLORSPACE_;}
+colourspace	{return COLORSPACE_;}
 contrast	{return CONTRAST_;}
 cursor          {return CURSOR_;}
 debug		{return DEBUG_;}

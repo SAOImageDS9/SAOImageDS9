@@ -8,6 +8,7 @@
 %%
 
 color	    {return $COLOR_}
+colour	    {return $COLOR_}
 command	    {return $COMMAND_}
 destination {return $DESTINATION_}
 filename    {return $FILENAME_}

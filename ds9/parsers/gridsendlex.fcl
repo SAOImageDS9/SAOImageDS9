@@ -10,6 +10,7 @@
 axes		{return $AXES_}
 border		{return $BORDER_}
 color		{return $COLOR_}
+colour		{return $COLOR_}
 dash		{return $DASH_}
 def		{return $DEF_}
 def1		{return $DEF1_}

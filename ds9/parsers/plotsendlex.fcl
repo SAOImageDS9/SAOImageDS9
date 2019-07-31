@@ -15,6 +15,7 @@ background	{return $BACKGROUND_}
 barmode		{return $BARMODE_}
 cap		{return $CAP_}
 color		{return $COLOR_}
+colour		{return $COLOR_}
 dash		{return $DASH_}
 dataset		{return $DATASET_}
 error		{return $ERROR_}
@@ -22,6 +23,7 @@ errorbar	{return $ERRORBAR_}
 family		{return $FAMILY_}
 fill		{return $FILL_}
 fillcolor	{return $FILLCOLOR_}
+fillcolour	{return $FILLCOLOR_}
 flip		{return $FLIP_}
 format		{return $FORMAT_}
 graph		{return $GRAPH_}

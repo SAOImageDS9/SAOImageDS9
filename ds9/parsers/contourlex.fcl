@@ -12,6 +12,7 @@ block		{return $BLOCK_}
 clear		{return $CLEAR_}
 close		{return $CLOSE_}
 color		{return $COLOR_}
+colour		{return $COLOR_}
 convert		{return $CONVERT_}
 copy		{return $COPY_}
 dash		{return $DASH_}

@@ -22,6 +22,7 @@ proc PlotLoadConfigFile {varname filename} {
 
     source $filename
 
+    set var(graph,title) $analysisplot(graph,title)
     set var(graph,title,family) $analysisplot(graph,title,family)
     set var(graph,title,size) $analysisplot(graph,title,size) 
     set var(graph,title,weight) $analysisplot(graph,title,weight) 
@@ -49,8 +50,6 @@ proc PlotLoadConfigFile {varname filename} {
     set var(axis,font,slant) $analysisplot(axis,font,slant) 
 
     # per Graph
-    set var(graph,title) $analysisplot(graph,title)
-
     set var(graph,legend,title) $analysisplot(legend,title) 
 
     set var(graph,axis,x,title) $analysisplot(axis,x,title) 

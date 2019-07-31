@@ -378,6 +378,7 @@ proc PlotDeleteDataSet {varname} {
     PlotList $varname
 }
 
+# used by backup
 proc PlotCurrentGraph {varname} {
     upvar #0 $varname var
     global $varname
@@ -394,6 +395,7 @@ proc PlotCurrentGraph {varname} {
     PlotList $varname
 }
 
+# used by backup
 proc PlotCurrentDataSet {varname} {
     upvar #0 $varname var
     global $varname
@@ -437,6 +439,7 @@ proc PlotChangeAxis {varname} {
     }
 }
 
+# used by backup
 proc PlotChangeLayout {varname} {
     upvar #0 $varname var
     global $varname
@@ -459,6 +462,7 @@ proc PlotChangeLayout {varname} {
     PlotLayoutCanvas $varname
 }
 
+# used by backup
 proc PlotChangeMode {varname} {
     upvar #0 $varname var
     global $varname
@@ -620,6 +624,7 @@ proc PlotStatsDestroyCB {varname} {
 }
 
 # procs
+# used by backup
 proc PlotUpdateCanvas {varname} {
     upvar #0 $varname var
     global $varname
@@ -900,6 +905,7 @@ proc PlotBackup {ch dir} {
 	    upvar #0 $varname var
 	    global $varname
 
+	    puts $ch "global $varname"
 	    puts $ch "PlotDialog $varname $varname"
 
 	    set cc $var(graph,current)
@@ -923,6 +929,23 @@ proc PlotBackup {ch dir} {
 		}
 	    }
 	    puts $ch "wm geometry $var(top) [winfo width $var(top)]x[winfo height $var(top)]"
+
+	    puts $ch "set ${varname}(layout) $var(layout)"
+	    puts $ch "set ${varname}(layout,strip,weight) $var(layout,strip,weight)"
+	    puts $ch "PlotChangeLayout $varname"
+
+	    puts $ch "set ${varname}(background) $var(background)"
+	    puts $ch "set ${varname}(bar,mode) $var(bar,mode)"
+	    puts $ch "PlotUpdateCanvas $varname"
+
+	    puts $ch "set ${varname}(mode) $var(mode)"
+	    puts $ch "PlotChangeMode $varname"
+
+	    puts $ch "set ${varname}(graph,current) $gr"
+	    puts $ch "PlotCurrentGraph $varname"
+
+	    puts $ch "set ${varname}(graph,ds,current) $ds"
+	    puts $ch "PlotCurrentDataSet $varname"
 
 	    set var(graph,current) $gr
 	    PlotCurrentGraph $varname

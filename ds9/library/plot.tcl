@@ -720,7 +720,6 @@ proc PlotUpdateCanvas {varname} {
 
 	set var($cc,axis,x,manage) 1
 	set var($cc,axis,y,manage) 1
-
 	switch $var(layout) {
 	    grid -
 	    row -

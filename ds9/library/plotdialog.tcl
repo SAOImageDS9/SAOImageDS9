@@ -122,6 +122,8 @@ proc PlotDialog {varname wtt} {
 	-menu $var(mb).canvas.font
     $var(mb).canvas add cascade -label [msgcat::mc {Background}] \
 	-menu $var(mb).canvas.bg
+    $var(mb).canvas add cascade -label [msgcat::mc {Bar Mode}] \
+	-menu $var(mb).canvas.barmode
 
     menu $var(mb).canvas.select
 
@@ -183,6 +185,20 @@ proc PlotDialog {varname wtt} {
     PlotColorMenu $var(mb).canvas.bg $varname background \
 	[list PlotUpdateCanvas $varname]
 
+    menu $var(mb).canvas.barmode
+    $var(mb).canvas.barmode add radiobutton -label [msgcat::mc {Normal}] \
+	-variable ${varname}(bar,mode) -value normal \
+	-command [list PlotUpdateCanvas $varname]
+    $var(mb).canvas.barmode add radiobutton -label [msgcat::mc {Stacked}] \
+	-variable ${varname}(bar,mode) -value stacked \
+	-command [list PlotUpdateCanvas $varname]
+    $var(mb).canvas.barmode add radiobutton -label [msgcat::mc {Aligned}] \
+	-variable ${varname}(bar,mode) -value aligned \
+	-command [list PlotUpdateCanvas $varname]
+    $var(mb).canvas.barmode add radiobutton -label [msgcat::mc {Overlap}] \
+	-variable ${varname}(bar,mode) -value overlap \
+	-command [list PlotUpdateCanvas $varname]
+
     # Graph
     menu $var(mb).graph
 
@@ -204,8 +220,6 @@ proc PlotDialog {varname wtt} {
 	-menu $var(mb).graph.axes
     $var(mb).graph add cascade -label [msgcat::mc {Legend}] \
 	-menu $var(mb).graph.legend
-    $var(mb).graph add cascade -label [msgcat::mc {Bar Mode}] \
-	-menu $var(mb).graph.barmode
     $var(mb).graph add separator
     $var(mb).graph add command -label "[msgcat::mc {Titles}]..." \
 	-command [list PlotGraphTitleDialog $varname]
@@ -256,21 +270,6 @@ proc PlotDialog {varname wtt} {
     $var(mb).graph.legend add radiobutton -label [msgcat::mc {Plot Area}] \
 	-variable ${varname}(graph,legend,position) -value plotarea \
 	-command [list PlotChangeLegend $varname]
-
-    # Graph Mode
-    menu $var(mb).graph.barmode
-    $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Normal}] \
-	-variable ${varname}(bar,mode) -value normal \
-	-command [list PlotUpdateCanvas $varname]
-    $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Stacked}] \
-	-variable ${varname}(bar,mode) -value stacked \
-	-command [list PlotUpdateCanvas $varname]
-    $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Aligned}] \
-	-variable ${varname}(bar,mode) -value aligned \
-	-command [list PlotUpdateCanvas $varname]
-    $var(mb).graph.barmode add radiobutton -label [msgcat::mc {Overlap}] \
-	-variable ${varname}(bar,mode) -value overlap \
-	-command [list PlotUpdateCanvas $varname]
 
     PlotLineMenus $varname
     PlotBarMenus $varname
@@ -750,17 +749,14 @@ proc PlotUpdateMenus {varname} {
 	line {
 	    $var(mb) add cascade -label [msgcat::mc {Data}] \
 		-menu $var(mb).dataline
-	    $var(mb).graph entryconfig [msgcat::mc {Bar Mode}] -state disabled
 	}
 	bar {
 	    $var(mb) add cascade -label [msgcat::mc {Data}] \
 		-menu $var(mb).databar
-	    $var(mb).graph entryconfig [msgcat::mc {Bar Mode}] -state normal
 	}
 	scatter {
 	    $var(mb) add cascade -label [msgcat::mc {Data}] \
 		-menu $var(mb).datascatter
-	    $var(mb).graph entryconfig [msgcat::mc {Bar Mode}] -state disabled
 	}
     }
 

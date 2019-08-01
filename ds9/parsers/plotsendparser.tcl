@@ -1584,8 +1584,8 @@ proc plotsend::yyparse {} {
                     45 { ProcessSendCmdCVARGet "graph,axis,$1,min" }
                     46 { ProcessSendCmdCVARGet "graph,axis,$1,max" }
                     47 { ProcessSendCmdCVARGet "graph,axis,$1,format" }
-                    48 { ProcessSendCmdCVARYesNo legend }
-                    49 { ProcessSendCmdCVARGet legend,position }
+                    48 { ProcessSendCmdCVARYesNo graph,legend }
+                    49 { ProcessSendCmdCVARGet graph,legend,position }
                     50 { ProcessSendCmdCVARGet "$1,family" }
                     51 { ProcessSendCmdCVARGet "$1,family" }
                     52 { ProcessSendCmdCVARGet "$1,size" }

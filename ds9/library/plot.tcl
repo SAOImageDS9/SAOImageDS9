@@ -439,6 +439,32 @@ proc PlotChangeAxis {varname} {
     }
 }
 
+proc PlotChangeLegend {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    switch $var(layout) {
+	grid -
+	column -
+	row {PlotUpdateGraph $varname}
+	strip {
+	    PlotUpdateCanvas $varname
+	    set cc $var(graph,current)
+	    set nn $var(graph,ds,current)
+	    foreach gg $var(graphs) {
+		set var(graph,current) $gg
+		set var(graph,ds,current) [lindex $var($gg,dss) 0]
+		PlotRestoreState $varname
+
+		PlotUpdateGraph $varname
+	    }
+	    set var(graph,current) $cc
+	    set var(graph,ds,current) $nn
+	    PlotRestoreState $varname
+	}
+    }
+}
+
 # used by backup
 proc PlotChangeLayout {varname} {
     upvar #0 $varname var
@@ -692,38 +718,14 @@ proc PlotUpdateCanvas {varname} {
 
 	$var($cc,graph) legend configure \
 	    -bg $var(background) \
-	    -position $var(legend,position) \
 	    -font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	    -titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
 
-	switch $var(legend,position) {
-	    top {
-		if {$cc == $first} {
-		    $var($cc,graph) legend configure -hide [expr !$var(legend)]
-		} else {
-		    $var($cc,graph) legend configure -hide yes
-		}
-	    }
-	    bottom {
-		if {$cc == $last} {
-		    $var($cc,graph) legend configure -hide [expr !$var(legend)]
-		} else {
-		    $var($cc,graph) legend configure -hide yes
-		}
-	    }
-	    left -
-	    right -
-	    plotarea {
-		$var($cc,graph) legend configure -hide [expr !$var(legend)]
-	    }
-	}
-
-	set var($cc,axis,x,manage) 1
-	set var($cc,axis,y,manage) 1
 	switch $var(layout) {
 	    grid -
 	    row -
 	    column {
+		set var($cc,axis,x,manage) 1
 		$var($cc,graph) configure \
 		    -topmargin 0 -bottommargin 0 \
 		    -leftmargin 0 -rightmargin 0 \
@@ -734,15 +736,16 @@ proc PlotUpdateCanvas {varname} {
 		$var($cc,graph) yaxis configure -showticks 1 -linewidth 1
 	    }
 	    strip {
-		if {$cc != $first} {
+		if {$cc == $first} {
+		    set var($cc,axis,x,manage) 1
+		} else {
 		    set var($cc,axis,x,manage) 0
-		    set var($cc,axis,y,manage) 1
 		}
 
 		set left [expr 8*$var(axis,font,size) + $var(axis,title,size)]
 		set right 10
 		
-		if {$var(legend)} {
+		if {$var($first,legend)} {
 		    # find max legend dataset name width
 		    set nc 0
 		    foreach nn $var($first,dss) {
@@ -752,7 +755,7 @@ proc PlotUpdateCanvas {varname} {
 			}
 		    }
 		    set ll [expr $var(legend,title,size)*4 + $var(legend,font,size)*$nc]
-		    switch $var(legend,position) {
+		    switch $var($first,legend,position) {
 			top {}
 			bottom {}
 			right {set right [expr $right + $ll]}
@@ -861,7 +864,10 @@ proc PlotUpdateGraph {varname} {
     }
 
     $var(graph) yaxis configure -title $var(graph,axis,y,title)
-    $var(graph) legend configure -title $var(graph,legend,title)
+
+    $var(graph) legend configure -hide [expr !$var(graph,legend)] \
+	-title $var(graph,legend,title) \
+	-position $var(graph,legend,position)
 }
 
 proc PlotButtonInvoke {varname cc nn xx yy} {

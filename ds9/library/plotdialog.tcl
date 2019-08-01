@@ -118,9 +118,6 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas add separator
     $var(mb).canvas add cascade -label [msgcat::mc {Layout}] \
 	-menu $var(mb).canvas.layout
-    $var(mb).canvas add separator
-    $var(mb).canvas add cascade -label [msgcat::mc {Legend}] \
-	-menu $var(mb).canvas.legend
     $var(mb).canvas add cascade -label [msgcat::mc {Font}] \
 	-menu $var(mb).canvas.font
     $var(mb).canvas add cascade -label [msgcat::mc {Background}] \
@@ -154,27 +151,6 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas.layout add command \
 	-label "[msgcat::mc {Strip Parameters}]..." \
 	-command [list PlotStripDialog $varname]
-
-    menu $var(mb).canvas.legend
-    $var(mb).canvas.legend add checkbutton -label [msgcat::mc {Show}] \
-	-variable ${varname}(legend) \
-	-command [list PlotUpdateCanvas $varname]
-    $var(mb).canvas.legend add separator
-    $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Right}] \
-	-variable ${varname}(legend,position) -value right \
-	-command [list PlotUpdateCanvas $varname]
-    $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Left}] \
-	-variable ${varname}(legend,position) -value left \
-	-command [list PlotUpdateCanvas $varname]
-    $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Top}] \
-	-variable ${varname}(legend,position) -value top \
-	-command [list PlotUpdateCanvas $varname]
-    $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Bottom}] \
-	-variable ${varname}(legend,position) -value bottom \
-	-command [list PlotUpdateCanvas $varname]
-    $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Plot Area}] \
-	-variable ${varname}(legend,position) -value plotarea \
-	-command [list PlotUpdateCanvas $varname]
 
     menu $var(mb).canvas.font
     $var(mb).canvas.font add cascade -label [msgcat::mc {Title}] \
@@ -226,12 +202,13 @@ proc PlotDialog {varname wtt} {
 
     $var(mb).graph add cascade -label [msgcat::mc {Axes}] \
 	-menu $var(mb).graph.axes
+    $var(mb).graph add cascade -label [msgcat::mc {Legend}] \
+	-menu $var(mb).graph.legend
+    $var(mb).graph add cascade -label [msgcat::mc {Bar Mode}] \
+	-menu $var(mb).graph.barmode
     $var(mb).graph add separator
     $var(mb).graph add command -label "[msgcat::mc {Titles}]..." \
 	-command [list PlotGraphTitleDialog $varname]
-    $var(mb).graph add separator
-    $var(mb).graph add cascade -label [msgcat::mc {Bar Mode}] \
-	-menu $var(mb).graph.barmode
 
     menu $var(mb).graph.select
 
@@ -258,6 +235,27 @@ proc PlotDialog {varname wtt} {
     $var(mb).graph.axes add separator
     $var(mb).graph.axes add command -label "[msgcat::mc {Range}]..." \
 	-command [list PlotRangeDialog $varname]
+
+    menu $var(mb).graph.legend
+    $var(mb).graph.legend add checkbutton -label [msgcat::mc {Show}] \
+	-variable ${varname}(graph,legend) \
+	-command [list PlotChangeLegend $varname]
+    $var(mb).graph.legend add separator
+    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Right}] \
+	-variable ${varname}(graph,legend,position) -value right \
+	-command [list PlotChangeLegend $varname]
+    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Left}] \
+	-variable ${varname}(graph,legend,position) -value left \
+	-command [list PlotChangeLegend $varname]
+    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Top}] \
+	-variable ${varname}(graph,legend,position) -value top \
+	-command [list PlotChangeLegend $varname]
+    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Bottom}] \
+	-variable ${varname}(graph,legend,position) -value bottom \
+	-command [list PlotChangeLegend $varname]
+    $var(mb).graph.legend add radiobutton -label [msgcat::mc {Plot Area}] \
+	-variable ${varname}(graph,legend,position) -value plotarea \
+	-command [list PlotChangeLegend $varname]
 
     # Graph Mode
     menu $var(mb).graph.barmode

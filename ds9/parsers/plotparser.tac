@@ -278,7 +278,6 @@ plotCmd : LOAD_ load
  | LIST_ yesno {ProcessCmdCVAR list $2 PlotList}
  | AXIS_ axis
  | LEGEND_ legend
- | RELIEF_ relief {PlotCmdUpdateElement graph,ds,bar,relief $2}
  | TITLE_ title
 
  # Data
@@ -293,6 +292,7 @@ plotCmd : LOAD_ load
  | ERROR_ errorr
  # backward compatibility
  | ERRORBAR_ errorr
+ | RELIEF_ relief {PlotCmdUpdateElement graph,ds,bar,relief $2}
  | NAME_ STRING_ {PlotCmdUpdateElement graph,ds,name $2}
 
  # backward compatibility
@@ -476,6 +476,7 @@ color : STRING_ {PlotCmdUpdateElement graph,ds,color $1}
 # backward compatiabilty
  | dummy1 STRING_ {PlotCmdUpdateElement graph,ds,color $2}
  ;
+
 dummy1 : DISCRETE_
  | LINE_
  | STEP_

@@ -122,6 +122,7 @@ proc PlotDialog {varname wtt} {
 	-menu $var(mb).canvas.font
     $var(mb).canvas add cascade -label [msgcat::mc {Background}] \
 	-menu $var(mb).canvas.bg
+    $var(mb).canvas add separator
     $var(mb).canvas add cascade -label [msgcat::mc {Bar Mode}] \
 	-menu $var(mb).canvas.barmode
 
@@ -715,7 +716,6 @@ proc PlotUpdateMenus {varname} {
 	    }
 	}
     }
-
 
     if {[llength $var(graph,dss)] == 0} {
 	$var(mb).graph entryconfig [msgcat::mc {Duplicate Dataset}] \

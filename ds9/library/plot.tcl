@@ -447,21 +447,7 @@ proc PlotChangeLegend {varname} {
 	grid -
 	column -
 	row {PlotUpdateGraph $varname}
-	strip {
-	    PlotUpdateCanvas $varname
-	    set cc $var(graph,current)
-	    set nn $var(graph,ds,current)
-	    foreach gg $var(graphs) {
-		set var(graph,current) $gg
-		set var(graph,ds,current) [lindex $var($gg,dss) 0]
-		PlotRestoreState $varname
-
-		PlotUpdateGraph $varname
-	    }
-	    set var(graph,current) $cc
-	    set var(graph,ds,current) $nn
-	    PlotRestoreState $varname
-	}
+	strip {PlotUpdateCanvas $varname}
     }
 }
 

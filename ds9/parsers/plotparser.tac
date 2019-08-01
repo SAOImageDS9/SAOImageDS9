@@ -86,6 +86,7 @@
 %token PAGESETUP_
 %token PAGESIZE_
 %token PALETTE_
+%token PLOTAREA_
 %token PLUS_
 %token POINTER_
 %token PORTRAIT_
@@ -396,6 +397,7 @@ legendPos : RIGHT_ {set _ right}
  | LEFT_ {set _ left}
  | TOP_ {set _ top}
  | BOTTOM_ {set _ bottom}
+ | PLOTAREA_ {set _ plotarea}
  ;
 
 fontt : fontType FONT_ font {PlotCmdUpdateCanvas "$1,family" $3}

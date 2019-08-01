@@ -172,6 +172,9 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Bottom}] \
 	-variable ${varname}(legend,position) -value bottom \
 	-command [list PlotUpdateCanvas $varname]
+    $var(mb).canvas.legend add radiobutton -label [msgcat::mc {Plot Area}] \
+	-variable ${varname}(legend,position) -value plotarea \
+	-command [list PlotUpdateCanvas $varname]
 
     menu $var(mb).canvas.font
     $var(mb).canvas.font add cascade -label [msgcat::mc {Title}] \
@@ -519,7 +522,7 @@ proc PlotGraphTitleDialog {varname} {
 	set var(graph,axis,y,title) $ed(graph,axis,y,title)
 	set var(graph,legend,title) $ed(graph,legend,title)
 
-	PlotUpdateGraph $varname
+	PlotUpdateCanvas $varname
     }
     
     set rr $ed(ok)

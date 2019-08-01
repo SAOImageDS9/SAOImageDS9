@@ -639,8 +639,6 @@ proc PlotUpdateCanvas {varname} {
 	grid -
 	row -
 	column {
-	    set legendpos $var(legend,position)
-
 	    set var(layout,axis,x,title) {}
 	    set var(layout,axis,x,min) 0
 	    set var(layout,axis,x,max) 1
@@ -649,8 +647,6 @@ proc PlotUpdateCanvas {varname} {
 	    set var(layout,axis,x,flip) 0
 	}
 	strip {
-	    set legendpos plotarea
-
 	    if {$var($first,axis,x,auto)} {
 		if {[info exists ${varname}($first,1,xdata)]} {
 		    set xmin [blt::vector expr min($var($first,1,xdata))]
@@ -696,10 +692,31 @@ proc PlotUpdateCanvas {varname} {
 
 	$var($cc,graph) legend configure \
 	    -bg $var(background) \
-	    -hide [expr !$var(legend)] \
-	    -position $legendpos \
+	    -position $var(legend,position) \
 	    -font "{$ds9($var(legend,font,family))} $var(legend,font,size) $var(legend,font,weight) $var(legend,font,slant)" \
 	    -titlefont "{$ds9($var(legend,title,family))} $var(legend,title,size) $var(legend,title,weight) $var(legend,title,slant)"
+
+	switch $var(legend,position) {
+	    top {
+		if {$cc == $first} {
+		    $var($cc,graph) legend configure -hide [expr !$var(legend)]
+		} else {
+		    $var($cc,graph) legend configure -hide yes
+		}
+	    }
+	    bottom {
+		if {$cc == $last} {
+		    $var($cc,graph) legend configure -hide [expr !$var(legend)]
+		} else {
+		    $var($cc,graph) legend configure -hide yes
+		}
+	    }
+	    left -
+	    right -
+	    plotarea {
+		$var($cc,graph) legend configure -hide [expr !$var(legend)]
+	    }
+	}
 
 	set var($cc,axis,x,manage) 1
 	set var($cc,axis,y,manage) 1
@@ -723,9 +740,27 @@ proc PlotUpdateCanvas {varname} {
 		    set var($cc,axis,y,manage) 1
 		}
 
-		set left \
-		    [expr 10 + 8*$var(axis,font,size) + $var(axis,title,size)]
+		set left [expr 8*$var(axis,font,size) + $var(axis,title,size)]
 		set right 10
+		
+		if {$var(legend)} {
+		    # find max legend dataset name width
+		    set nc 0
+		    foreach nn $var($first,dss) {
+			set nr [string length $var($first,$nn,name)]
+			if {$nr > $nc} {
+			    set nc $nr
+			}
+		    }
+		    set ll [expr $var(legend,title,size)*4 + $var(legend,font,size)*$nc]
+		    switch $var(legend,position) {
+			top {}
+			bottom {}
+			right {set right [expr $right + $ll]}
+			left {set left [expr $left + $ll]}
+			plotarea {}
+		    }
+		}
 		
 		$var($cc,graph) configure \
 		    -leftmargin $left -rightmargin $right \

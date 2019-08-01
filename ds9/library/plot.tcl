@@ -641,6 +641,7 @@ proc PlotUpdateCanvas {varname} {
 	column {
 	    set legendpos $var(legend,position)
 
+	    set var(layout,axis,x,title) {}
 	    set var(layout,axis,x,min) 0
 	    set var(layout,axis,x,max) 1
 	    set var(layout,axis,x,grid) 1
@@ -663,6 +664,7 @@ proc PlotUpdateCanvas {varname} {
 		set xmax $var($first,axis,x,max)
 	    }
 
+	    set var(layout,axis,x,title) $var($first,axis,x,title)
 	    set var(layout,axis,x,min) $xmin
 	    set var(layout,axis,x,max) $xmax
 	    set var(layout,axis,x,grid) $var($first,axis,x,grid)
@@ -778,10 +780,12 @@ proc PlotUpdateGraph {varname} {
     }
 
     if {$var(graph,axis,x,manage)} {
+	set xtitle $var(graph,axis,x,title)
 	set xgrid $var(graph,axis,x,grid)
 	set xlog $var(graph,axis,x,log)
 	set xflip $var(graph,axis,x,flip)
     } else {
+	set xtitle $var(layout,axis,x,title)
 	set xgrid $var(layout,axis,x,grid)
 	set xlog $var(layout,axis,x,log)
 	set xflip $var(layout,axis,x,flip)
@@ -817,7 +821,7 @@ proc PlotUpdateGraph {varname} {
     }
     
     if {[$var(graph) xaxis cget -showticks]} {
-	$var(graph) xaxis configure -title $var(graph,axis,x,title)
+	$var(graph) xaxis configure -title $xtitle
     } else {
 	$var(graph) xaxis configure -title {}
     }

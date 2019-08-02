@@ -259,7 +259,7 @@ plotCmd : LOAD_ load
    {ProcessCmdCVAR layout,strip,weight $4 PlotChangeLayout}
  | FONT_ fontt
  | BACKGROUND_ STRING_ {ProcessCmdCVAR background $2 PlotUpdateCanvas}
- | BARMODE_ barmode {ProcessCmdCVAR bar,mode $2 PlotUpdateCanvas}
+ | BARMODE_ barmode {ProcessCmdCVAR bar,mode $2 PlotUpdateGraph}
 
  # Graph Menu
  | SELECT_ DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet}
@@ -440,10 +440,10 @@ relief : FLAT_ {set _ flat}
  | GROOVE_ {set _ groove}
  ;
 
-title : STRING_ {ProcessCmdCVAR graph,title $1 PlotUpdateGraph}
- | xy STRING_ {ProcessCmdCVAR "graph,axis,$1,title" $2 PlotUpdateGraph}
- | xyaxis STRING_ {ProcessCmdCVAR "graph,axis,$1,title" $2 PlotUpdateGraph}
- | LEGEND_ STRING_ {ProcessCmdCVAR graph,legend,title $2 PlotUpdateGraph}
+title : STRING_ {ProcessCmdCVAR graph,title $1 PlotChangeTitle}
+ | xy STRING_ {ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle}
+ | xyaxis STRING_ {ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle}
+ | LEGEND_ STRING_ {ProcessCmdCVAR graph,legend,title $2 PlotChangeTitle}
  ;
 
 # Data Menu params

@@ -61,78 +61,6 @@ proc PlotDestroy {varname} {
     unset $varname
 }
 
-proc PlotLayoutCanvas {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    set ss [grid size $var(top)]
-    for {set jj 0} {$jj<[lindex $ss 0]} {incr jj} {
-	grid columnconfigure $var(top) $jj -weight 0
-    }
-    for {set ii 0} {$ii<[lindex $ss 1]} {incr ii} {
-	grid rowconfigure $var(top) $ii -weight 0
-    }
-    
-    foreach cc $var(graphs) {
-	grid forget $var($cc,canvas)
-    }
-
-    switch $var(layout) {
-	grid {
-	    set num [llength $var(graphs)]
-	    set nr [expr int(sqrt($num)+.5)]
-	    set nc [expr int(sqrt($num-1))+1]
-
-	    set xx 0
-	    set yy 0
-	    foreach cc $var(graphs) {
-		grid columnconfigure $var(top) $xx -weight 1
-		grid rowconfigure $var(top) $yy -weight 1
-		grid $var($cc,canvas) -row $yy -column $xx -sticky news
-
-		incr xx
-		if {$xx==$nc} {
-		    set xx 0
-		    incr yy
-		}
-	    }
-	}
-	column {
-	    set ii 0
-	    grid columnconfigure $var(top) 0 -weight 1
-	    foreach cc $var(graphs) {
-		grid rowconfigure $var(top) $ii -weight 1
-		grid $var($cc,canvas) -row $ii -column 0 -sticky news
-		incr ii
-	    }
-	}
-	row {
-	    set ii 0
-	    grid rowconfigure $var(top) 0 -weight 1
-	    foreach cc $var(graphs) {
-		grid columnconfigure $var(top) $ii -weight 1
-		grid $var($cc,canvas) -row 0 -column $ii -sticky news
-		incr ii
-	    }
-	}
-	strip {
-	    set ww 1
-	    set ii 0
-	    grid columnconfigure $var(top) 0 -weight 1
-	    foreach cc $var(graphs) {
-		grid rowconfigure $var(top) $ii -weight $ww
-		grid $var($cc,canvas) -row $ii -column 0 -sticky news
-
-		set ww [expr int(100./$var(layout,strip,weight))]
-		incr ii
-	    }
-	}
-    }
-
-    # needed so layout can be properly realized
-    update idletasks
-}
-
 # Graph
 # used by backup
 proc PlotAddGraph {varname type} {
@@ -405,14 +333,6 @@ proc PlotCurrentDataSet {varname} {
     PlotStats $varname
     PlotList $varname
 }
-
-proc PlotAxisFormat {varname axis w nn} {
-    upvar #0 $varname var
-    global $varname
-
-    return [format $var(graph,axis,$axis,format) $nn]
-}
-
 proc PlotChangeAxis {varname} {
     upvar #0 $varname var
     global $varname
@@ -447,7 +367,10 @@ proc PlotChangeLegend {varname} {
 	grid -
 	column -
 	row {PlotUpdateGraph $varname}
-	strip {PlotUpdateCanvas $varname}
+	strip {
+	    PlotUpdateCanvas $varname
+	    PlotUpdateGraph $varname
+	}
     }
 }
 
@@ -474,6 +397,21 @@ proc PlotChangeLayout {varname} {
     PlotLayoutCanvas $varname
 }
 
+proc PlotChangeTitle {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    switch $var(layout) {
+	grid -
+	column -
+	row {PlotUpdateGraph $varname}
+	strip {
+	    PlotUpdateCanvas $varname
+	    PlotUpdateGraph $varname
+	}
+    }
+}
+
 # used by backup
 proc PlotChangeMode {varname} {
     upvar #0 $varname var
@@ -493,6 +431,13 @@ proc PlotChangeMode {varname} {
 	    }
 	}
     }
+}
+
+proc PlotAxisFormat {varname axis w nn} {
+    upvar #0 $varname var
+    global $varname
+
+    return [format $var(graph,axis,$axis,format) $nn]
 }
 
 proc PlotList {varname} {
@@ -635,6 +580,78 @@ proc PlotStatsDestroyCB {varname} {
     set var(stats) 0
 }
 
+proc PlotLayoutCanvas {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set ss [grid size $var(top)]
+    for {set jj 0} {$jj<[lindex $ss 0]} {incr jj} {
+	grid columnconfigure $var(top) $jj -weight 0
+    }
+    for {set ii 0} {$ii<[lindex $ss 1]} {incr ii} {
+	grid rowconfigure $var(top) $ii -weight 0
+    }
+    
+    foreach cc $var(graphs) {
+	grid forget $var($cc,canvas)
+    }
+
+    switch $var(layout) {
+	grid {
+	    set num [llength $var(graphs)]
+	    set nr [expr int(sqrt($num)+.5)]
+	    set nc [expr int(sqrt($num-1))+1]
+
+	    set xx 0
+	    set yy 0
+	    foreach cc $var(graphs) {
+		grid columnconfigure $var(top) $xx -weight 1
+		grid rowconfigure $var(top) $yy -weight 1
+		grid $var($cc,canvas) -row $yy -column $xx -sticky news
+
+		incr xx
+		if {$xx==$nc} {
+		    set xx 0
+		    incr yy
+		}
+	    }
+	}
+	column {
+	    set ii 0
+	    grid columnconfigure $var(top) 0 -weight 1
+	    foreach cc $var(graphs) {
+		grid rowconfigure $var(top) $ii -weight 1
+		grid $var($cc,canvas) -row $ii -column 0 -sticky news
+		incr ii
+	    }
+	}
+	row {
+	    set ii 0
+	    grid rowconfigure $var(top) 0 -weight 1
+	    foreach cc $var(graphs) {
+		grid columnconfigure $var(top) $ii -weight 1
+		grid $var($cc,canvas) -row 0 -column $ii -sticky news
+		incr ii
+	    }
+	}
+	strip {
+	    set ww 1
+	    set ii 0
+	    grid columnconfigure $var(top) 0 -weight 1
+	    foreach cc $var(graphs) {
+		grid rowconfigure $var(top) $ii -weight $ww
+		grid $var($cc,canvas) -row $ii -column 0 -sticky news
+
+		set ww [expr int(100./$var(layout,strip,weight))]
+		incr ii
+	    }
+	}
+    }
+
+    # needed so layout can be properly realized
+    update idletasks
+}
+
 # procs
 # used by backup
 proc PlotUpdateCanvas {varname} {
@@ -643,7 +660,7 @@ proc PlotUpdateCanvas {varname} {
     global ds9
 
     PlotSaveState $varname
-    
+
     set first [lindex $var(graphs) 0]
     set last [lindex $var(graphs) end]
     
@@ -682,12 +699,6 @@ proc PlotUpdateCanvas {varname} {
     }
 
     foreach cc $var(graphs) {
-	switch $var($cc,type) {
-	    line {}
-	    bar {$var($cc,graph) configure -barmode $var(bar,mode)}
-	    scatter {}
-	}
-
 	$var($cc,graph) configure -plotpadx 0 -plotpady 0 \
 	    -font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)" \
 	    -bg $var(background) -plotbackground $var(background)
@@ -728,10 +739,12 @@ proc PlotUpdateCanvas {varname} {
 		    set var($cc,axis,x,manage) 0
 		}
 
-		set left [expr 8*$var(axis,font,size) + $var(axis,title,size)]
-		set right 10
+#		set left [expr 8*$var(axis,font,size) + $var(axis,title,size)]
+#		set right 10
+		set left 100
+		set right 100
 		
-		if {$var($first,legend)} {
+		if {$var($first,legend) &&0} {
 		    # find max legend dataset name width
 		    set nc 0
 		    foreach nn $var($first,dss) {
@@ -814,6 +827,12 @@ proc PlotUpdateGraph {varname} {
 	set xflip $var(layout,axis,x,flip)
     }
 
+    switch $var(graph,type) {
+	line {}
+	bar {$var(graph) configure -barmode $var(bar,mode)}
+	scatter {}
+    }
+
     if {$var(graph,format)} {
 	if {$var(graph,axis,x,format) != {}} {
 	    $var(graph) xaxis configure \
@@ -851,9 +870,47 @@ proc PlotUpdateGraph {varname} {
 
     $var(graph) yaxis configure -title $var(graph,axis,y,title)
 
-    $var(graph) legend configure -hide [expr !$var(graph,legend)] \
-	-title $var(graph,legend,title) \
-	-position $var(graph,legend,position)
+    switch $var(layout) {
+	grid -
+	row -
+	column {
+	    $var(graph) legend configure -hide [expr !$var(graph,legend)] \
+		-title $var(graph,legend,title) \
+		-position $var(graph,legend,position)
+	}
+	strip {
+	    switch $var(graph,legend,position) {
+		top {
+		    if {$var(graph,axis,x,manage)} {
+			$var(graph) legend configure \
+			    -hide [expr !$var(graph,legend)] \
+			    -title $var(graph,legend,title) \
+			    -position $var(graph,legend,position)
+		    } else {
+			$var(graph) legend configure -hide yes
+		    }
+		}
+		bottom {
+		    if {[$var(graph) xaxis cget -showticks]} {
+			$var(graph) legend configure \
+			    -hide [expr !$var(graph,legend)] \
+			    -title $var(graph,legend,title) \
+			    -position $var(graph,legend,position)
+		    } else {
+			$var(graph) legend configure -hide yes
+		    }
+		}
+		right -
+		left -
+		plotarea {
+		    $var(graph) legend configure \
+			-hide [expr !$var(graph,legend)] \
+			-title $var(graph,legend,title) \
+			-position $var(graph,legend,position)
+		}
+	    }
+	}
+    }
 }
 
 proc PlotButtonInvoke {varname cc nn xx yy} {
@@ -910,7 +967,7 @@ proc PlotTitle {varname title xaxis yaxis} {
     set var(graph,axis,x,title) "$xaxis"
     set var(graph,axis,y,title) "$yaxis"
 
-    PlotUpdateGraph $varname
+    PlotChangeTitle $varname
 }
 
 proc PlotBackup {ch dir} {

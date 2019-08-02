@@ -5688,7 +5688,7 @@ proc plot::yyparse {} {
                     77 { ProcessCmdCVAR layout $2 PlotChangeLayout }
                     78 { ProcessCmdCVAR layout,strip,weight $4 PlotChangeLayout }
                     80 { ProcessCmdCVAR background $2 PlotUpdateCanvas }
-                    81 { ProcessCmdCVAR bar,mode $2 PlotUpdateCanvas }
+                    81 { ProcessCmdCVAR bar,mode $2 PlotUpdateGraph }
                     82 { ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet }
                     83 { ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
                     84 { ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
@@ -5793,10 +5793,10 @@ proc plot::yyparse {} {
                     194 { set _ raised }
                     195 { set _ solid }
                     196 { set _ groove }
-                    197 { ProcessCmdCVAR graph,title $1 PlotUpdateGraph }
-                    198 { ProcessCmdCVAR "graph,axis,$1,title" $2 PlotUpdateGraph }
-                    199 { ProcessCmdCVAR "graph,axis,$1,title" $2 PlotUpdateGraph }
-                    200 { ProcessCmdCVAR graph,legend,title $2 PlotUpdateGraph }
+                    197 { ProcessCmdCVAR graph,title $1 PlotChangeTitle }
+                    198 { ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle }
+                    199 { ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle }
+                    200 { ProcessCmdCVAR graph,legend,title $2 PlotChangeTitle }
                     201 { PlotCmdUpdateElement graph,ds,shape,symbol $1 }
                     202 { PlotCmdUpdateElement graph,ds,shape,file $2 }
                     203 { PlotCmdUpdateElement graph,ds,shape,color $2 }

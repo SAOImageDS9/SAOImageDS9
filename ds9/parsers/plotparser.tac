@@ -293,7 +293,7 @@ plotCmd : LOAD_ load
  # backward compatibility
  | ERRORBAR_ errorr
  | RELIEF_ relief {PlotCmdUpdateElement graph,ds,bar,relief $2}
- | NAME_ STRING_ {PlotCmdUpdateElement graph,ds,name $2}
+ | NAME_ STRING_ {PlotCmdDataSetName $2}
 
  # backward compatibility
  | GRAPH_ oldGraph

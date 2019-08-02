@@ -314,6 +314,15 @@ proc PlotCmdExport {format fn} {
     PlotExport $cvarname $fn $format
 }
 
+proc PlotCmdDataSetName {name} {
+    global cvarname
+    upvar #0 $cvarname cvar
+
+    $cvar(mb).graph.select entryconfig "$cvar(graph,ds,name)" -label "$name"
+    set cvar(graph,ds,name) $name
+    $cvar(graph,proc,updateelement) $cvarname
+}
+
 proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {
     global iap
     global parse

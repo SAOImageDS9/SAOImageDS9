@@ -5704,7 +5704,7 @@ proc plot::yyparse {} {
                     101 { PlotCmdUpdateElement graph,ds,fill $2 }
                     102 { PlotCmdUpdateElement graph,ds,fill,color $2 }
                     105 { PlotCmdUpdateElement graph,ds,bar,relief $2 }
-                    106 { PlotCmdDataSetName $2 }
+                    106 { ProcessCmdCVAROpt PlotDataSetName $2 }
                     109 { PlotCmdLoad $1 xy }
                     110 { PlotCmdLoad $1 $2 }
                     111 { PlotCmdExport [ExtToFormat $1] $1 }

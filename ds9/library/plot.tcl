@@ -652,6 +652,63 @@ proc PlotLayoutCanvas {varname} {
     update idletasks
 }
 
+proc PlotCalcMargins {varname rpixname lpixname} {
+    upvar $rpixname rpix
+    upvar $lpixname lpix
+    upvar #0 $varname var
+    global $varname
+
+    set rpix 0
+    set lpix 0
+
+    set lchar 0
+    set rchar 0
+    set ytitle 0
+    foreach cc $var(graphs) {
+	# y axis title
+	if {$var($cc,axis,y,title) !={}} {
+	    set ytitle 1
+	}
+
+	# legend
+	if {$var($cc,legend)} {
+	    # find max legend dataset name width
+	    set nc 0
+	    foreach nn $var($cc,dss) {
+		set nr [string length $var($cc,$nn,name)]
+		if {$nr > $nc} {
+		    set nc $nr
+		}
+	    }
+	    switch $var($cc,legend,position) {
+		top {}
+		bottom {}
+		right {
+		    if {$nc > $rchar} {
+			set rchar $nc
+		    }
+		}
+		left {
+		    if {$nc > $lchar} {
+			set lchar $nc
+		    }
+		}
+		plotarea {}
+	    }
+	}
+    }
+    if {$rchar>0} {
+	set rpix [expr $rpix + int(($var(legend,title,size)*4 + $var(legend,font,size)*$rchar)*.75)]
+    }
+    if {$lchar>0} {
+	set lpix [expr $lpix + int(($var(legend,title,size)*4 + $var(legend,font,size)*$lchar)*.75)]
+    }
+
+    set rpix [expr 10 + $rpix]
+    set lpix [expr 8*$var(axis,font,size) + $ytitle*$var(axis,title,size) + $lpix]
+}
+
+
 # procs
 # used by backup
 proc PlotUpdateCanvas {varname} {
@@ -697,7 +754,18 @@ proc PlotUpdateCanvas {varname} {
 	    set var(layout,axis,x,flip) $var($first,axis,x,flip)
 	}
     }
-
+    
+    set right 0
+    set left 0
+    switch $var(layout) {
+	grid -
+	row -
+	column {}
+	strip {
+	    PlotCalcMargins $varname right left
+	}
+    }
+    
     foreach cc $var(graphs) {
 	$var($cc,graph) configure -plotpadx 0 -plotpady 0 \
 	    -font "{$ds9($var(graph,title,family))} $var(graph,title,size) $var(graph,title,weight) $var(graph,title,slant)" \
@@ -739,30 +807,6 @@ proc PlotUpdateCanvas {varname} {
 		    set var($cc,axis,x,manage) 0
 		}
 
-#		set left [expr 8*$var(axis,font,size) + $var(axis,title,size)]
-#		set right 10
-		set left 100
-		set right 100
-		
-		if {$var($first,legend) &&0} {
-		    # find max legend dataset name width
-		    set nc 0
-		    foreach nn $var($first,dss) {
-			set nr [string length $var($first,$nn,name)]
-			if {$nr > $nc} {
-			    set nc $nr
-			}
-		    }
-		    set ll [expr $var(legend,title,size)*4 + $var(legend,font,size)*$nc]
-		    switch $var($first,legend,position) {
-			top {}
-			bottom {}
-			right {set right [expr $right + $ll]}
-			left {set left [expr $left + $ll]}
-			plotarea {}
-		    }
-		}
-		
 		$var($cc,graph) configure \
 		    -leftmargin $left -rightmargin $right \
 		    -borderwidth 0 \
@@ -968,6 +1012,22 @@ proc PlotTitle {varname title xaxis yaxis} {
     set var(graph,axis,y,title) "$yaxis"
 
     PlotChangeTitle $varname
+}
+
+proc PlotDataSetName {varname name} {
+    upvar #0 $varname var
+    global $varname
+
+    $var(mb).graph.select entryconfig "$var(graph,ds,name)" -label "$name"
+    set var(graph,ds,name) $name
+    $var(graph,proc,updateelement) $varname
+
+    switch $var(layout) {
+	grid -
+	row -
+	column {}
+	strip {PlotUpdateCanvas $varname}
+    }
 }
 
 proc PlotBackup {ch dir} {

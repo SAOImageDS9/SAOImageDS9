@@ -567,10 +567,7 @@ proc DatasetNameDialog {varname} {
     DialogDismiss $w
 
     if {$ed(ok)} {
-	$var(mb).graph.select entryconfig "$var(graph,ds,name)" \
-	    -label "$ed(name)"
-	set var(graph,ds,name) $ed(name)
-	$var(graph,proc,updateelement) $varname
+	PlotDataSetName $varname $ed(name)
     }
     
     set rr $ed(ok)

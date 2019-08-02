@@ -293,7 +293,7 @@ plotCmd : LOAD_ load
  # backward compatibility
  | ERRORBAR_ errorr
  | RELIEF_ relief {PlotCmdUpdateElement graph,ds,bar,relief $2}
- | NAME_ STRING_ {PlotCmdDataSetName $2}
+ | NAME_ STRING_ {ProcessCmdCVAROpt PlotDataSetName $2}
 
  # backward compatibility
  | GRAPH_ oldGraph

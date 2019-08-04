@@ -85,6 +85,7 @@ page        {return $PAGE_}
 pagesetup   {return $PAGESETUP_}
 pagesize    {return $PAGESIZE_}
 palette	    {return $PALETTE_}
+plotarea    {return $PLOTAREA_}
 plus	    {return $PLUS_}
 pointer	    {return $POINTER_}
 portrait    {return $PORTRAIT_}

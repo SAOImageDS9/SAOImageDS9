@@ -28,8 +28,6 @@ proc PlotDefState {} {
     set pap(graph,title,weight) normal
     set pap(graph,title,slant) roman
 
-    set pap(legend) 0
-    set pap(legend,position) right
     set pap(legend,title,family) helvetica
     set pap(legend,title,size) 10
     set pap(legend,title,weight) normal
@@ -49,7 +47,9 @@ proc PlotDefState {} {
     set pap(axis,font,slant) roman
 
     # per Graph
+    set pap(graph,legend) 0
     set pap(graph,legend,title) Legend
+    set pap(graph,legend,position) right
 
     set pap(graph,axis,x,title) {}
     set pap(graph,axis,x,grid) 1
@@ -115,7 +115,9 @@ proc PlotInitGraph {varname} {
     set var(graph,seq) 0
     set var(graph,dss) {}
 
+    set var(graph,legend) $pap(graph,legend)
     set var(graph,legend,title) $pap(graph,legend,title)
+    set var(graph,legend,position) $pap(graph,legend,position)
 
     set var(graph,axis,x,manage) 1
     set var(graph,axis,x,title) $pap(graph,axis,x,title)
@@ -189,7 +191,9 @@ proc PlotSaveState {varname} {
     set var($cc,seq) $var(graph,seq)
     set var($cc,dss) $var(graph,dss)
 
+    set var($cc,legend) $var(graph,legend)
     set var($cc,legend,title) $var(graph,legend,title)
+    set var($cc,legend,position) $var(graph,legend,position)
 
     set var($cc,axis,x,manage) $var(graph,axis,x,manage)
     set var($cc,axis,x,title) $var(graph,axis,x,title)
@@ -263,7 +267,9 @@ proc PlotRestoreState {varname} {
     set var(graph,seq) $var($cc,seq)
     set var(graph,dss) $var($cc,dss) 
 
+    set var(graph,legend) $var($cc,legend)
     set var(graph,legend,title) $var($cc,legend,title)
+    set var(graph,legend,position) $var($cc,legend,position)
 
     set var(graph,axis,x,manage) $var($cc,axis,x,manage)
     set var(graph,axis,x,title) $var($cc,axis,x,title)

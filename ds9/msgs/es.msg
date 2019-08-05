@@ -1,3 +1,4 @@
+::msgcat::mcset es {%} 
 ::msgcat::mcset es {2D} 
 ::msgcat::mcset es {3D View} 
 ::msgcat::mcset es {3D} 
@@ -7,6 +8,7 @@
 ::msgcat::mcset es {About SAOImageDS9} 
 ::msgcat::mcset es {About} {Acerca de}
 ::msgcat::mcset es {Acknowledgment} {Reconocimientos}
+::msgcat::mcset es {Add Graph} 
 ::msgcat::mcset es {Add} {Agregar}
 ::msgcat::mcset es {Advanced} {Avanzado}
 ::msgcat::mcset es {Aligned} 
@@ -70,7 +72,9 @@
 ::msgcat::mcset es {Background} {Fondo}
 ::msgcat::mcset es {Backup} 
 ::msgcat::mcset es {Back} [encoding convertfrom iso8859-1 {Para atrás}]  
+::msgcat::mcset es {Bar Mode} 
 ::msgcat::mcset es {Bar Plot Tool} 
+::msgcat::mcset es {Bar} 
 ::msgcat::mcset es {Bias} 
 ::msgcat::mcset es {Bin 3rd Column} {Bin tercera columna} 
 ::msgcat::mcset es {Bin Center} {Centro del bin}
@@ -115,6 +119,7 @@
 ::msgcat::mcset es {Can Rotate} {Puede rotar}
 ::msgcat::mcset es {Cancelled} 
 ::msgcat::mcset es {Cancel} {Cancelar}
+::msgcat::mcset es {Canvas} 
 ::msgcat::mcset es {Cap} 
 ::msgcat::mcset es {Catalog Server} [encoding convertfrom iso8859-1 {Servidor de catálogo}]
 ::msgcat::mcset es {Catalog Tool} [encoding convertfrom iso8859-1 {Herramienta de catálogo}]
@@ -131,7 +136,6 @@
 ::msgcat::mcset es {Clear All} {Despejar todos}
 ::msgcat::mcset es {Clear Analysis Commands} {Borrar las instrucciones de análisis}
 ::msgcat::mcset es {Clear Cache} {Limpiar cache}
-::msgcat::mcset es {Clear Data} {Limpiar de datos} 
 ::msgcat::mcset es {Clear External Analysis Commands?}  [encoding convertfrom iso8859-1 {¿Borrar las instrucciones externas de análisis?}]
 ::msgcat::mcset es {Clear Filter} {Borrar filtro} 
 ::msgcat::mcset es {Clear Frame} {Despejar marco}
@@ -220,7 +224,9 @@
 ::msgcat::mcset es {Delete All Regions} {Borrar todas las regiones}
 ::msgcat::mcset es {Delete All} 
 ::msgcat::mcset es {Delete Color Tags} 
+::msgcat::mcset es {Delete Dataset} 
 ::msgcat::mcset es {Delete Frame} {Borrar marco}
+::msgcat::mcset es {Delete Graph} 
 ::msgcat::mcset es {Delete Group} {Borrar grupo}
 ::msgcat::mcset es {Delete Load} 
 ::msgcat::mcset es {Delete Selected Regions} {Borrar regiones seleccionadas}
@@ -242,7 +248,7 @@
 ::msgcat::mcset es {Download Colormap} 
 ::msgcat::mcset es {Download VOTABLE format if available} 
 ::msgcat::mcset es {Drag to Center} {Arrastrar para centrar} 
-::msgcat::mcset es {Duplicate Data} 
+::msgcat::mcset es {Duplicate Dataset} 
 ::msgcat::mcset es {East} {Este}
 ::msgcat::mcset es {Ecliptic} [encoding convertfrom iso8859-1 {Eclíptica}]
 ::msgcat::mcset es {Edit Group Name} {Editar el nombre del grupo}
@@ -294,7 +300,6 @@
 ::msgcat::mcset es {Fits} 
 ::msgcat::mcset es {Fixed in Size} [encoding convertfrom iso8859-1 {Fijado en tamaño}]
 ::msgcat::mcset es {Flat} 
-::msgcat::mcset es {Flip} 
 ::msgcat::mcset es {Font} {Fuente}
 ::msgcat::mcset es {For more information, use --help} 
 ::msgcat::mcset es {Format} {Formato}
@@ -605,7 +610,8 @@
 ::msgcat::mcset es {Please specify width, height, and either name or (ra,dec)} {Por farvor, especifique el ancho, altura, y nombre o (A.R.,Dec.)}
 ::msgcat::mcset es {Plot 2D} 
 ::msgcat::mcset es {Plot 3D} 
-::msgcat::mcset es {Plot Title} [encoding convertfrom iso8859-1 {Título de la gráfica}]
+::msgcat::mcset es {Plot Area} 
+::msgcat::mcset es {Plot Tool} 
 ::msgcat::mcset es {Plotting Regions} {Dibujando regiones}
 ::msgcat::mcset es {Plot} 
 ::msgcat::mcset es {Plus} [encoding convertfrom iso8859-1 {Más}]
@@ -697,6 +703,7 @@
 ::msgcat::mcset es {Scale} {Escala}
 ::msgcat::mcset es {Scan} {Escanear} 
 ::msgcat::mcset es {Scatter Plot Tool} 
+::msgcat::mcset es {Scatter} 
 ::msgcat::mcset es {Scope} {Alcance}
 ::msgcat::mcset es {Search for Catalogs} [encoding convertfrom iso8859-1 {Buscar por catálogos}]
 ::msgcat::mcset es {Searching for catalogs} [encoding convertfrom iso8859-1 {Buscando por catálogos}]
@@ -704,8 +711,9 @@
 ::msgcat::mcset es {Segment} 
 ::msgcat::mcset es {Select All} {Seleccionar todos}
 ::msgcat::mcset es {Select Coordinate System } {Seleccionar el sistema de coordenadas}
+::msgcat::mcset es {Select Dataset} 
+::msgcat::mcset es {Select Graph} 
 ::msgcat::mcset es {Select None} {Seleccionar nada}
-::msgcat::mcset es {Select} 
 ::msgcat::mcset es {Send} 
 ::msgcat::mcset es {Server} {Servidor}
 ::msgcat::mcset es {Sexagesimal} 
@@ -753,6 +761,8 @@
 ::msgcat::mcset es {Stop} {Parar} 
 ::msgcat::mcset es {Story of SAOImageDS9} 
 ::msgcat::mcset es {Story} 
+::msgcat::mcset es {Strip Parameters} 
+::msgcat::mcset es {Strip} 
 ::msgcat::mcset es {Sum} {Suma}
 ::msgcat::mcset es {Sunken} 
 ::msgcat::mcset es {Symbol Editor} [encoding convertfrom iso8859-1 {Editor de símbolos}]
@@ -774,6 +784,7 @@
 ::msgcat::mcset es {Tile Parameters} [encoding convertfrom iso8859-1 {Parámetros de alicatado}]
 ::msgcat::mcset es {Tile} {Tejar}
 ::msgcat::mcset es {Times} 
+::msgcat::mcset es {Titles} 
 ::msgcat::mcset es {Title} [encoding convertfrom iso8859-1 {Título}]
 ::msgcat::mcset es {Tophat} 
 ::msgcat::mcset es {Topographic} 
@@ -846,13 +857,17 @@
 ::msgcat::mcset es {Window} 
 ::msgcat::mcset es {Words matching title, description} [encoding convertfrom iso8859-1 {Palabras que coincidan con el título, descripción}]
 ::msgcat::mcset es {X Axis Title} 
+::msgcat::mcset es {X Flip} 
 ::msgcat::mcset es {X Grid} 
+::msgcat::mcset es {X Log} 
 ::msgcat::mcset es {XPA Information} [encoding convertfrom iso8859-1 {Información XPA}]
 ::msgcat::mcset es {XPA not initialized} {XPA no inicializado}
 ::msgcat::mcset es {XPA} 
 ::msgcat::mcset es {X} 
 ::msgcat::mcset es {Y Axis Title} 
+::msgcat::mcset es {Y Flip} 
 ::msgcat::mcset es {Y Grid} 
+::msgcat::mcset es {Y Log} 
 ::msgcat::mcset es {Yellow} {Amarillo}
 ::msgcat::mcset es {Y} 
 ::msgcat::mcset es {Z Axis Scale} 

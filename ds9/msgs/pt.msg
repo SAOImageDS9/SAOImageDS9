@@ -1,3 +1,4 @@
+::msgcat::mcset pt {%} 
 ::msgcat::mcset pt {2D} 
 ::msgcat::mcset pt {3D View} 
 ::msgcat::mcset pt {3D} 
@@ -7,6 +8,7 @@
 ::msgcat::mcset pt {About SAOImageDS9} 
 ::msgcat::mcset pt {About} {Sobre}
 ::msgcat::mcset pt {Acknowledgment} [encoding convertfrom iso8859-1 {Créditos}]
+::msgcat::mcset pt {Add Graph} 
 ::msgcat::mcset pt {Add} {Adicionar}
 ::msgcat::mcset pt {Advanced} [encoding convertfrom iso8859-1 {Avançado}]
 ::msgcat::mcset pt {Aligned} 
@@ -70,7 +72,9 @@
 ::msgcat::mcset pt {Background} {Fundo}
 ::msgcat::mcset pt {Backup} 
 ::msgcat::mcset pt {Back} {Anterior}
+::msgcat::mcset pt {Bar Mode} 
 ::msgcat::mcset pt {Bar Plot Tool} 
+::msgcat::mcset pt {Bar} 
 ::msgcat::mcset pt {Bias} 
 ::msgcat::mcset pt {Bin 3rd Column} {Bin terceira coluna}
 ::msgcat::mcset pt {Bin Center} {Centro do Bin}
@@ -115,6 +119,7 @@
 ::msgcat::mcset pt {Can Rotate} {Pode Rodar}
 ::msgcat::mcset pt {Cancelled} 
 ::msgcat::mcset pt {Cancel} {Cancelar}
+::msgcat::mcset pt {Canvas} 
 ::msgcat::mcset pt {Cap} 
 ::msgcat::mcset pt {Catalog Server} [encoding convertfrom iso8859-1 {Servidor do Catálogo}]
 ::msgcat::mcset pt {Catalog Tool} [encoding convertfrom iso8859-1 {Ferramenta de Catálogos}]
@@ -131,7 +136,6 @@
 ::msgcat::mcset pt {Clear All} {Limpar tudo}
 ::msgcat::mcset pt {Clear Analysis Commands} [encoding convertfrom iso8859-1 {Limpar Comandos de Análise}]
 ::msgcat::mcset pt {Clear Cache} {Limpar cache}
-::msgcat::mcset pt {Clear Data} {Limpar dados}
 ::msgcat::mcset pt {Clear External Analysis Commands?} {Limpar Comandos de Análise Externos?}
 ::msgcat::mcset pt {Clear Filter} {Limpar Filtro}
 ::msgcat::mcset pt {Clear Frame} {Limpar Frame}
@@ -220,7 +224,9 @@
 ::msgcat::mcset pt {Delete All Regions} {Apagar todas as Regiões}
 ::msgcat::mcset pt {Delete All} 
 ::msgcat::mcset pt {Delete Color Tags} 
+::msgcat::mcset pt {Delete Dataset} 
 ::msgcat::mcset pt {Delete Frame} {Apague o Frame}
+::msgcat::mcset pt {Delete Graph} 
 ::msgcat::mcset pt {Delete Group} {Apague o Grupo}
 ::msgcat::mcset pt {Delete Load} 
 ::msgcat::mcset pt {Delete Selected Regions} [encoding convertfrom iso8859-1 {Apagar Regiões Selecionadas}]
@@ -242,7 +248,7 @@
 ::msgcat::mcset pt {Download Colormap} 
 ::msgcat::mcset pt {Download VOTABLE format if available} 
 ::msgcat::mcset pt {Drag to Center} {Arrate para centralizar}
-::msgcat::mcset pt {Duplicate Data} 
+::msgcat::mcset pt {Duplicate Dataset} 
 ::msgcat::mcset pt {East} {Leste}
 ::msgcat::mcset pt {Ecliptic} {Ecliptico}
 ::msgcat::mcset pt {Edit Group Name} {Editar nome do Grupo} 
@@ -294,7 +300,6 @@
 ::msgcat::mcset pt {Fits} 
 ::msgcat::mcset pt {Fixed in Size} {Fixa em tamanho}
 ::msgcat::mcset pt {Flat} 
-::msgcat::mcset pt {Flip} 
 ::msgcat::mcset pt {Font} {Fonte}
 ::msgcat::mcset pt {For more information, use --help} 
 ::msgcat::mcset pt {Format} {Formato}
@@ -605,7 +610,8 @@
 ::msgcat::mcset pt {Please specify width, height, and either name or (ra,dec)} 
 ::msgcat::mcset pt {Plot 2D} 
 ::msgcat::mcset pt {Plot 3D} 
-::msgcat::mcset pt {Plot Title} [encoding convertfrom iso8859-1 {Título}]
+::msgcat::mcset pt {Plot Area} 
+::msgcat::mcset pt {Plot Tool} 
 ::msgcat::mcset pt {Plotting Regions} 
 ::msgcat::mcset pt {Plot} 
 ::msgcat::mcset pt {Plus} {Mais}
@@ -697,6 +703,7 @@
 ::msgcat::mcset pt {Scale} {Escala}
 ::msgcat::mcset pt {Scan} 
 ::msgcat::mcset pt {Scatter Plot Tool} 
+::msgcat::mcset pt {Scatter} 
 ::msgcat::mcset pt {Scope} {Escopo}
 ::msgcat::mcset pt {Search for Catalogs} [encoding convertfrom iso8859-1 {Buscar Catálogos}]
 ::msgcat::mcset pt {Searching for catalogs} [encoding convertfrom iso8859-1 {Buscando Catálogos}]
@@ -704,8 +711,9 @@
 ::msgcat::mcset pt {Segment} 
 ::msgcat::mcset pt {Select All} {Selecionar tudo}
 ::msgcat::mcset pt {Select Coordinate System } {Selecionar Sistema de Coordenadas}
+::msgcat::mcset pt {Select Dataset} 
+::msgcat::mcset pt {Select Graph} 
 ::msgcat::mcset pt {Select None} {Selecionar Nada}
-::msgcat::mcset pt {Select} 
 ::msgcat::mcset pt {Send} 
 ::msgcat::mcset pt {Server} {Servidor}
 ::msgcat::mcset pt {Sexagesimal} 
@@ -753,6 +761,8 @@
 ::msgcat::mcset pt {Stop} {Parar}
 ::msgcat::mcset pt {Story of SAOImageDS9} 
 ::msgcat::mcset pt {Story} 
+::msgcat::mcset pt {Strip Parameters} 
+::msgcat::mcset pt {Strip} 
 ::msgcat::mcset pt {Sum} {Soma}
 ::msgcat::mcset pt {Sunken} 
 ::msgcat::mcset pt {Symbol Editor} 
@@ -774,6 +784,7 @@
 ::msgcat::mcset pt {Tile Parameters} 
 ::msgcat::mcset pt {Tile} 
 ::msgcat::mcset pt {Times} 
+::msgcat::mcset pt {Titles} 
 ::msgcat::mcset pt {Title} [encoding convertfrom iso8859-1 {Título}]
 ::msgcat::mcset pt {Tophat} 
 ::msgcat::mcset pt {Topographic} 
@@ -846,13 +857,17 @@
 ::msgcat::mcset pt {Window} 
 ::msgcat::mcset pt {Words matching title, description} 
 ::msgcat::mcset pt {X Axis Title} 
+::msgcat::mcset pt {X Flip} 
 ::msgcat::mcset pt {X Grid} 
+::msgcat::mcset pt {X Log} 
 ::msgcat::mcset pt {XPA Information} [encoding convertfrom iso8859-1 {Informação sobre o XPA}]
 ::msgcat::mcset pt {XPA not initialized} [encoding convertfrom iso8859-1 {XPA não inicializado}]
 ::msgcat::mcset pt {XPA} 
 ::msgcat::mcset pt {X} 
 ::msgcat::mcset pt {Y Axis Title} 
+::msgcat::mcset pt {Y Flip} 
 ::msgcat::mcset pt {Y Grid} 
+::msgcat::mcset pt {Y Log} 
 ::msgcat::mcset pt {Yellow} {Amarelo}
 ::msgcat::mcset pt {Y} 
 ::msgcat::mcset pt {Z Axis Scale} 

@@ -1,3 +1,4 @@
+::msgcat::mcset da {%} 
 ::msgcat::mcset da {2D} 
 ::msgcat::mcset da {3D View} 
 ::msgcat::mcset da {3D} 
@@ -7,6 +8,7 @@
 ::msgcat::mcset da {About SAOImageDS9} 
 ::msgcat::mcset da {About} {Om}
 ::msgcat::mcset da {Acknowledgment} {Tak}
+::msgcat::mcset da {Add Graph} 
 ::msgcat::mcset da {Add} [encoding convertfrom iso8859-1 {Tilføj}]
 ::msgcat::mcset da {Advanced} {Avanceret}
 ::msgcat::mcset da {Aligned} 
@@ -70,7 +72,9 @@
 ::msgcat::mcset da {Background} {Baggrund}
 ::msgcat::mcset da {Backup} 
 ::msgcat::mcset da {Back} {Tilbage}
+::msgcat::mcset da {Bar Mode} 
 ::msgcat::mcset da {Bar Plot Tool} 
+::msgcat::mcset da {Bar} 
 ::msgcat::mcset da {Bias} {Bias}
 ::msgcat::mcset da {Bin 3rd Column} [encoding convertfrom iso8859-1 {Bin 3dje søjle}]
 ::msgcat::mcset da {Bin Center} {Bin center}
@@ -115,6 +119,7 @@
 ::msgcat::mcset da {Can Rotate} [encoding convertfrom iso8859-1 {Må rotere}]
 ::msgcat::mcset da {Cancelled} 
 ::msgcat::mcset da {Cancel} {Slet}
+::msgcat::mcset da {Canvas} 
 ::msgcat::mcset da {Cap} 
 ::msgcat::mcset da {Catalog Server} {Katalog server}
 ::msgcat::mcset da {Catalog Tool} {Katalog funktion} 
@@ -131,7 +136,6 @@
 ::msgcat::mcset da {Clear All} {Fjern alt}
 ::msgcat::mcset da {Clear Analysis Commands} {Fjern analyse funktioner}
 ::msgcat::mcset da {Clear Cache} [encoding convertfrom iso8859-1 {Tøm cache}]
-::msgcat::mcset da {Clear Data} {Fjern data}
 ::msgcat::mcset da {Clear External Analysis Commands?} [encoding convertfrom iso8859-1 {Ryd ekstern analyse kommandoer?}]
 ::msgcat::mcset da {Clear Filter} {Fjern filter}
 ::msgcat::mcset da {Clear Frame} {Ryd ramme}
@@ -220,7 +224,9 @@
 ::msgcat::mcset da {Delete All Regions} {Slet alle områder}
 ::msgcat::mcset da {Delete All} {Slet alt}
 ::msgcat::mcset da {Delete Color Tags} 
+::msgcat::mcset da {Delete Dataset} 
 ::msgcat::mcset da {Delete Frame} {Slet denne ramme}
+::msgcat::mcset da {Delete Graph} 
 ::msgcat::mcset da {Delete Group} {Slet gruppe}
 ::msgcat::mcset da {Delete Load} 
 ::msgcat::mcset da {Delete Selected Regions} [encoding convertfrom iso8859-1 {Slet valgte områder}]
@@ -242,7 +248,7 @@
 ::msgcat::mcset da {Download Colormap} 
 ::msgcat::mcset da {Download VOTABLE format if available} 
 ::msgcat::mcset da {Drag to Center} [encoding convertfrom iso8859-1 {Træk til center}]
-::msgcat::mcset da {Duplicate Data} 
+::msgcat::mcset da {Duplicate Dataset} 
 ::msgcat::mcset da {East} [encoding convertfrom iso8859-1 {Øst}]
 ::msgcat::mcset da {Ecliptic} {Ekliptisk}
 ::msgcat::mcset da {Edit Group Name} {Rediger gruppe navn}
@@ -294,7 +300,6 @@
 ::msgcat::mcset da {Fits} 
 ::msgcat::mcset da {Fixed in Size} [encoding convertfrom iso8859-1 {Fastlåst størrelse}]
 ::msgcat::mcset da {Flat} 
-::msgcat::mcset da {Flip} 
 ::msgcat::mcset da {Font} {Skrifttype}
 ::msgcat::mcset da {For more information, use --help} 
 ::msgcat::mcset da {Format} {Format}
@@ -605,7 +610,8 @@
 ::msgcat::mcset da {Please specify width, height, and either name or (ra,dec)} [encoding convertfrom iso8859-1 {angiv venligst bredde, højde, og enten navn eller (ra,dec)}]
 ::msgcat::mcset da {Plot 2D} 
 ::msgcat::mcset da {Plot 3D} 
-::msgcat::mcset da {Plot Title} {Plot titel}
+::msgcat::mcset da {Plot Area} 
+::msgcat::mcset da {Plot Tool} 
 ::msgcat::mcset da {Plotting Regions} [encoding convertfrom iso8859-1 {Plotte områder}]
 ::msgcat::mcset da {Plot} 
 ::msgcat::mcset da {Plus} 
@@ -697,6 +703,7 @@
 ::msgcat::mcset da {Scale} {Skala}
 ::msgcat::mcset da {Scan} {skan}
 ::msgcat::mcset da {Scatter Plot Tool} 
+::msgcat::mcset da {Scatter} 
 ::msgcat::mcset da {Scope} [encoding convertfrom iso8859-1 {Gældende}]
 ::msgcat::mcset da {Search for Catalogs} [encoding convertfrom iso8859-1 {søg efter kataloger}]
 ::msgcat::mcset da {Searching for catalogs} [encoding convertfrom iso8859-1 {søger efter kataloger}]
@@ -704,8 +711,9 @@
 ::msgcat::mcset da {Segment} 
 ::msgcat::mcset da {Select All} [encoding convertfrom iso8859-1 {Vælg alle}]
 ::msgcat::mcset da {Select Coordinate System } [encoding convertfrom iso8859-1 {vælg koordinat system}]
+::msgcat::mcset da {Select Dataset} 
+::msgcat::mcset da {Select Graph} 
 ::msgcat::mcset da {Select None} [encoding convertfrom iso8859-1 {Vælg ingen}]
-::msgcat::mcset da {Select} 
 ::msgcat::mcset da {Send} 
 ::msgcat::mcset da {Server} {Server}
 ::msgcat::mcset da {Sexagesimal} 
@@ -753,6 +761,8 @@
 ::msgcat::mcset da {Stop} 
 ::msgcat::mcset da {Story of SAOImageDS9} 
 ::msgcat::mcset da {Story} 
+::msgcat::mcset da {Strip Parameters} 
+::msgcat::mcset da {Strip} 
 ::msgcat::mcset da {Sum} 
 ::msgcat::mcset da {Sunken} 
 ::msgcat::mcset da {Symbol Editor} 
@@ -774,6 +784,7 @@
 ::msgcat::mcset da {Tile Parameters} {Mosaik parametre}
 ::msgcat::mcset da {Tile} {Mosaik}
 ::msgcat::mcset da {Times} 
+::msgcat::mcset da {Titles} 
 ::msgcat::mcset da {Title} {Titel}
 ::msgcat::mcset da {Tophat} 
 ::msgcat::mcset da {Topographic} 
@@ -846,13 +857,17 @@
 ::msgcat::mcset da {Window} 
 ::msgcat::mcset da {Words matching title, description} {Ord tilpasset titel, beskrivelse }
 ::msgcat::mcset da {X Axis Title} 
+::msgcat::mcset da {X Flip} 
 ::msgcat::mcset da {X Grid} 
+::msgcat::mcset da {X Log} 
 ::msgcat::mcset da {XPA Information} {XPA information}
 ::msgcat::mcset da {XPA not initialized} {XPA ikke startet}
 ::msgcat::mcset da {XPA} 
 ::msgcat::mcset da {X} 
 ::msgcat::mcset da {Y Axis Title} 
+::msgcat::mcset da {Y Flip} 
 ::msgcat::mcset da {Y Grid} 
+::msgcat::mcset da {Y Log} 
 ::msgcat::mcset da {Yellow} {Gul}
 ::msgcat::mcset da {Y} 
 ::msgcat::mcset da {Z Axis Scale} 

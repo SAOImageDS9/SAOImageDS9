@@ -1,3 +1,4 @@
+::msgcat::mcset cs {%} 
 ::msgcat::mcset cs {2D} 
 ::msgcat::mcset cs {3D View} 
 ::msgcat::mcset cs {3D} 
@@ -7,6 +8,7 @@
 ::msgcat::mcset cs {About SAOImageDS9} 
 ::msgcat::mcset cs {About} [encoding convertfrom iso8859-2 {O programu}] 
 ::msgcat::mcset cs {Acknowledgment} [encoding convertfrom iso8859-2 {Podìkování}]
+::msgcat::mcset cs {Add Graph} 
 ::msgcat::mcset cs {Add} [encoding convertfrom iso8859-2 {Pøidat}]
 ::msgcat::mcset cs {Advanced} [encoding convertfrom iso8859-2 {Dal¹í nastavení}]
 ::msgcat::mcset cs {Aligned} 
@@ -70,7 +72,9 @@
 ::msgcat::mcset cs {Background} [encoding convertfrom iso8859-2 {Pozadí}]
 ::msgcat::mcset cs {Backup} [encoding convertfrom iso8859-2 {Záloha}]
 ::msgcat::mcset cs {Back} [encoding convertfrom iso8859-2 {Zpìt}]
+::msgcat::mcset cs {Bar Mode} 
 ::msgcat::mcset cs {Bar Plot Tool} 
+::msgcat::mcset cs {Bar} 
 ::msgcat::mcset cs {Bias} 
 ::msgcat::mcset cs {Bin 3rd Column} [encoding convertfrom iso8859-2 {Binuj tøetí sloupec}]
 ::msgcat::mcset cs {Bin Center} [encoding convertfrom iso8859-2 {Binuj støed}]
@@ -115,6 +119,7 @@
 ::msgcat::mcset cs {Can Rotate} 
 ::msgcat::mcset cs {Cancelled} 
 ::msgcat::mcset cs {Cancel} [encoding convertfrom iso8859-2 {Zru¹it}]
+::msgcat::mcset cs {Canvas} 
 ::msgcat::mcset cs {Cap} 
 ::msgcat::mcset cs {Catalog Server} [encoding convertfrom iso8859-2 {Katalogový server}]
 ::msgcat::mcset cs {Catalog Tool} [encoding convertfrom iso8859-2 {Katalogový nástroj}]
@@ -131,7 +136,6 @@
 ::msgcat::mcset cs {Clear All} [encoding convertfrom iso8859-2 {Vyma¾ v¹e}]
 ::msgcat::mcset cs {Clear Analysis Commands} [encoding convertfrom iso8859-2 {Vyma¾ analytické pøíkazy}]
 ::msgcat::mcset cs {Clear Cache} 
-::msgcat::mcset cs {Clear Data} 
 ::msgcat::mcset cs {Clear External Analysis Commands?} 
 ::msgcat::mcset cs {Clear Filter} [encoding convertfrom iso8859-2 {Vynuluvoat filtr}]
 ::msgcat::mcset cs {Clear Frame} [encoding convertfrom iso8859-2 {Vyèistit snímek}]
@@ -220,7 +224,9 @@
 ::msgcat::mcset cs {Delete All Regions} [encoding convertfrom iso8859-2 {Smazat v¹echny oblasti}]
 ::msgcat::mcset cs {Delete All} [encoding convertfrom iso8859-2 {Smazat v¹e}]
 ::msgcat::mcset cs {Delete Color Tags} 
+::msgcat::mcset cs {Delete Dataset} 
 ::msgcat::mcset cs {Delete Frame} [encoding convertfrom iso8859-2 {Smazat snímek}]
+::msgcat::mcset cs {Delete Graph} 
 ::msgcat::mcset cs {Delete Group} [encoding convertfrom iso8859-2 {Smazat skupiny}]
 ::msgcat::mcset cs {Delete Load} 
 ::msgcat::mcset cs {Delete Selected Regions} [encoding convertfrom iso8859-2 {Smazat vybrané oblasti}]
@@ -242,7 +248,7 @@
 ::msgcat::mcset cs {Download Colormap} 
 ::msgcat::mcset cs {Download VOTABLE format if available} 
 ::msgcat::mcset cs {Drag to Center} 
-::msgcat::mcset cs {Duplicate Data} 
+::msgcat::mcset cs {Duplicate Dataset} 
 ::msgcat::mcset cs {East} [encoding convertfrom iso8859-2 {Východ}]
 ::msgcat::mcset cs {Ecliptic} [encoding convertfrom iso8859-2 {Ekliptikální}]
 ::msgcat::mcset cs {Edit Group Name} 
@@ -294,7 +300,6 @@
 ::msgcat::mcset cs {Fits} 
 ::msgcat::mcset cs {Fixed in Size} 
 ::msgcat::mcset cs {Flat} 
-::msgcat::mcset cs {Flip} 
 ::msgcat::mcset cs {Font} [encoding convertfrom iso8859-2 {Znak}]
 ::msgcat::mcset cs {For more information, use --help} [encoding convertfrom iso8859-2 {Pro více informací, pou¾ijte --help}]
 ::msgcat::mcset cs {Format} [encoding convertfrom iso8859-2 {Formát}]
@@ -605,7 +610,8 @@
 ::msgcat::mcset cs {Please specify width, height, and either name or (ra,dec)} 
 ::msgcat::mcset cs {Plot 2D} 
 ::msgcat::mcset cs {Plot 3D} 
-::msgcat::mcset cs {Plot Title} 
+::msgcat::mcset cs {Plot Area} 
+::msgcat::mcset cs {Plot Tool} 
 ::msgcat::mcset cs {Plotting Regions} 
 ::msgcat::mcset cs {Plot} 
 ::msgcat::mcset cs {Plus} 
@@ -697,6 +703,7 @@
 ::msgcat::mcset cs {Scale} [encoding convertfrom iso8859-2 {©kálování}]
 ::msgcat::mcset cs {Scan} 
 ::msgcat::mcset cs {Scatter Plot Tool} 
+::msgcat::mcset cs {Scatter} 
 ::msgcat::mcset cs {Scope} 
 ::msgcat::mcset cs {Search for Catalogs} 
 ::msgcat::mcset cs {Searching for catalogs} 
@@ -704,8 +711,9 @@
 ::msgcat::mcset cs {Segment} 
 ::msgcat::mcset cs {Select All} [encoding convertfrom iso8859-2 {Vybrat v¹echny}]
 ::msgcat::mcset cs {Select Coordinate System } 
+::msgcat::mcset cs {Select Dataset} 
+::msgcat::mcset cs {Select Graph} 
 ::msgcat::mcset cs {Select None} [encoding convertfrom iso8859-2 {Zru¹it výbìr}]
-::msgcat::mcset cs {Select} 
 ::msgcat::mcset cs {Send} 
 ::msgcat::mcset cs {Server} 
 ::msgcat::mcset cs {Sexagesimal} [encoding convertfrom iso8859-2 {©edesátkové}]
@@ -753,6 +761,8 @@
 ::msgcat::mcset cs {Stop} 
 ::msgcat::mcset cs {Story of SAOImageDS9} 
 ::msgcat::mcset cs {Story} 
+::msgcat::mcset cs {Strip Parameters} 
+::msgcat::mcset cs {Strip} 
 ::msgcat::mcset cs {Sum} 
 ::msgcat::mcset cs {Sunken} 
 ::msgcat::mcset cs {Symbol Editor} 
@@ -774,6 +784,7 @@
 ::msgcat::mcset cs {Tile Parameters} [encoding convertfrom iso8859-2 {Parametry dla¾dic}]
 ::msgcat::mcset cs {Tile} [encoding convertfrom iso8859-2 {Dla¾dice}]
 ::msgcat::mcset cs {Times} 
+::msgcat::mcset cs {Titles} 
 ::msgcat::mcset cs {Title} 
 ::msgcat::mcset cs {Tophat} 
 ::msgcat::mcset cs {Topographic} 
@@ -846,13 +857,17 @@
 ::msgcat::mcset cs {Window} 
 ::msgcat::mcset cs {Words matching title, description} 
 ::msgcat::mcset cs {X Axis Title} 
+::msgcat::mcset cs {X Flip} 
 ::msgcat::mcset cs {X Grid} 
+::msgcat::mcset cs {X Log} 
 ::msgcat::mcset cs {XPA Information} 
 ::msgcat::mcset cs {XPA not initialized} [encoding convertfrom iso8859-2]
 ::msgcat::mcset cs {XPA} 
 ::msgcat::mcset cs {X} 
 ::msgcat::mcset cs {Y Axis Title} 
+::msgcat::mcset cs {Y Flip} 
 ::msgcat::mcset cs {Y Grid} 
+::msgcat::mcset cs {Y Log} 
 ::msgcat::mcset cs {Yellow} [encoding convertfrom iso8859-2 {®lutá}]
 ::msgcat::mcset cs {Y} 
 ::msgcat::mcset cs {Z Axis Scale} 

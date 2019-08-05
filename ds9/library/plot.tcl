@@ -626,7 +626,7 @@ proc PlotLayoutCanvas {varname} {
 	    }
 	}
 	strip {
-	    set pp [expr $var(layout,strip,weight)/100.]
+	    set pp [expr $var(layout,strip,scale)/100.]
 	    if {$pp<0 && $pp>1} {
 		set pp 1
 	    }
@@ -1079,9 +1079,8 @@ proc PlotBackup {ch dir} {
 		}
 	    }
 	    puts $ch "wm geometry $var(top) [winfo width $var(top)]x[winfo height $var(top)]"
-
 	    puts $ch "set ${varname}(layout) $var(layout)"
-	    puts $ch "set ${varname}(layout,strip,weight) $var(layout,strip,weight)"
+	    puts $ch "set ${varname}(layout,strip,scale) $var(layout,strip,scale)"
 	    puts $ch "PlotChangeLayout $varname"
 
 	    puts $ch "set ${varname}(background) $var(background)"

@@ -41,6 +41,7 @@ numbers		{return $NUMBERS_}
 name		{return $NAME_}
 position	{return $POSITION_}
 relief		{return $RELIEF_}
+scale		{return $SCALE_}
 select		{return $SELECT_}
 shape		{return $SHAPE_}
 show		{return $SHOW_}

@@ -29,7 +29,7 @@ proc PlotLine {tt wtt title xaxis yaxis dim data} {
     set varname $tt
     upvar #0 $varname var
     global $varname
-
+    
     PlotDialog $varname $wtt
     PlotAddGraph $varname line
     PlotTitle $varname $title $xaxis $yaxis

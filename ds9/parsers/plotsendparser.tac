@@ -39,6 +39,7 @@
 %token NAME_
 %token POSITION_
 %token RELIEF_
+%token SCALE_
 %token SELECT_
 %token SHAPE_
 %token SHOW_
@@ -98,7 +99,7 @@ plotCmd : STATS_ {ProcessSendCmdCVAR PlotStatsGenerate}
  | WIDTH_ {ProcessSendCmdCVARGet graph,ds,width}
  | DASH_ {ProcessSendCmdCVARYesNo graph,ds,dash}
  | LAYOUT_ {ProcessSendCmdCVARGet layout}
- | LAYOUT_ STRIP_ WEIGHT_ {ProcessSendCmdCVARGet layout,strip,weight}
+ | LAYOUT_ STRIP_ SCALE_ {ProcessSendCmdCVARGet layout,strip,scale}
  | SELECT_ select
  # backward compatibility
  | DATASET_ {ProcessSendCmdCVARGet graph,ds,current}

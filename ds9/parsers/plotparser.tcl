@@ -1342,6 +1342,7 @@ array set plot::table {
   57:298 shift
   42:464,target 163
   178:277 reduce
+  167:369 shift
   93:264 reduce
   57:458,target 205
   52:351 shift
@@ -1413,7 +1414,6 @@ array set plot::table {
   180:325,target 305
   94:312,target 171
   53:388,target 196
-  167:395 shift
   156:x,target 102
   169:391,target 302
   375:0,target 246
@@ -2724,7 +2724,6 @@ array set plot::table {
   183:278,target 309
   132:0,target 62
   23:390 shift
-  167:395,target 297
   40:257 shift
   183:389,target 313
   40:258 shift
@@ -2814,6 +2813,7 @@ array set plot::table {
   298:0 reduce
   191:277 reduce
   178:277,target 73
+  167:369,target 297
   101:261 reduce
   93:264,target 170
   52:351,target 190
@@ -3981,7 +3981,7 @@ array set plot::lr1_table {
   340,trans {}
   100 {{54 {282 318 319 322 337 338 339} 1}}
   101 {{56 {282 318 319 322 337 338 339} 1}}
-  167,trans {{395 309}}
+  167,trans {{369 309}}
   102 {{53 {282 318 319 322 337 338 339} 1}}
   103 {{55 {282 318 319 322 337 338 339} 1}}
   104 {{178 {0 277} 1} {179 {0 277} 1} {180 {0 277} 1} {181 {0 277} 1} {182 {0 277} 1} {183 {0 277} 1} {184 {0 277} 1}}
@@ -5686,7 +5686,7 @@ proc plot::yyparse {} {
                     75 { ProcessCmdCVAR graph,current $3 PlotCurrentGraph }
                     76 { ProcessCmdCVAR0 PlotDeleteGraphCurrent }
                     77 { ProcessCmdCVAR layout $2 PlotChangeLayout }
-                    78 { ProcessCmdCVAR layout,strip,weight $4 PlotChangeLayout }
+                    78 { ProcessCmdCVAR layout,strip,scale $4 PlotChangeLayout }
                     80 { ProcessCmdCVAR background $2 PlotUpdateCanvas }
                     81 { ProcessCmdCVAR bar,mode $2 PlotUpdateGraph }
                     82 { ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet }

@@ -122,9 +122,7 @@ proc PlotAddGraph {varname type} {
 
     PlotChangeMode $varname
 
-    grid columnconfigure $var(canvas) 0 -weight 1
-    grid rowconfigure $var(canvas) 0 -weight 1
-    grid $var($cc,graph) -sticky news
+    place $var($cc,graph) -in $var(canvas) -relwidth 1 -relheight 1 -x 0 -y 0
 
     PlotLayoutCanvas $varname
 }
@@ -156,8 +154,8 @@ proc PlotDeleteGraph {varname} {
     }
 
     # delete graph
-    grid forget $var(graph)
-    grid forget $var(canvas)
+    place forget $var(graph)
+    place forget $var(canvas)
     destroy $var(graph)
     destroy $var(canvas)
 
@@ -393,7 +391,6 @@ proc PlotChangeLayout {varname} {
     set var(graph,ds,current) $nn
     PlotRestoreState $varname
     PlotUpdateMenus $varname
-
     PlotLayoutCanvas $varname
 }
 
@@ -405,10 +402,7 @@ proc PlotChangeTitle {varname} {
 	grid -
 	column -
 	row {PlotUpdateGraph $varname}
-	strip {
-	    PlotUpdateCanvas $varname
-	    PlotUpdateGraph $varname
-	}
+	strip {PlotChangeLayout $varname}
     }
 }
 
@@ -584,30 +578,25 @@ proc PlotLayoutCanvas {varname} {
     upvar #0 $varname var
     global $varname
 
-    set ss [grid size $var(top)]
-    for {set jj 0} {$jj<[lindex $ss 0]} {incr jj} {
-	grid columnconfigure $var(top) $jj -weight 0
-    }
-    for {set ii 0} {$ii<[lindex $ss 1]} {incr ii} {
-	grid rowconfigure $var(top) $ii -weight 0
-    }
-    
     foreach cc $var(graphs) {
-	grid forget $var($cc,canvas)
+	place forget $var($cc,canvas)
     }
 
     switch $var(layout) {
 	grid {
-	    set num [llength $var(graphs)]
-	    set nr [expr int(sqrt($num)+.5)]
-	    set nc [expr int(sqrt($num-1))+1]
+	    set ll [llength $var(graphs)]
+	    set nr [expr int(sqrt($ll)+.5)]
+	    set nc [expr int(sqrt($ll-1))+1]
+
+	    set z1 [expr 1./$nc]
+	    set z2 [expr 1./$nr]
 
 	    set xx 0
 	    set yy 0
 	    foreach cc $var(graphs) {
-		grid columnconfigure $var(top) $xx -weight 1
-		grid rowconfigure $var(top) $yy -weight 1
-		grid $var($cc,canvas) -row $yy -column $xx -sticky news
+		place $var($cc,canvas) -in $var(top) \
+		    -relwidth $z1 -relheight $z2 \
+		    -relx [expr $xx*$z1] -rely [expr $yy*$z2] -anchor nw
 
 		incr xx
 		if {$xx==$nc} {
@@ -616,33 +605,47 @@ proc PlotLayoutCanvas {varname} {
 		}
 	    }
 	}
-	column {
+	row {
+	    set zz [expr 1./[llength $var(graphs)]]
 	    set ii 0
-	    grid columnconfigure $var(top) 0 -weight 1
 	    foreach cc $var(graphs) {
-		grid rowconfigure $var(top) $ii -weight 1
-		grid $var($cc,canvas) -row $ii -column 0 -sticky news
+		place $var($cc,canvas) -in $var(top) \
+		    -relwidth $zz -relheight 1 \
+		    -relx [expr $ii*$zz] -rely .5 -anchor w
 		incr ii
 	    }
 	}
-	row {
+	column {
+	    set zz [expr 1./[llength $var(graphs)]]
 	    set ii 0
-	    grid rowconfigure $var(top) 0 -weight 1
 	    foreach cc $var(graphs) {
-		grid columnconfigure $var(top) $ii -weight 1
-		grid $var($cc,canvas) -row 0 -column $ii -sticky news
+		place $var($cc,canvas) -in $var(top) \
+		    -relwidth 1 -relheight $zz \
+		    -relx .5 -rely [expr $ii*$zz] -anchor n
 		incr ii
 	    }
 	}
 	strip {
-	    set ww 1
-	    set ii 0
-	    grid columnconfigure $var(top) 0 -weight 1
-	    foreach cc $var(graphs) {
-		grid rowconfigure $var(top) $ii -weight $ww
-		grid $var($cc,canvas) -row $ii -column 0 -sticky news
+	    set pp [expr $var(layout,strip,scale)/100.]
+	    if {$pp<0 && $pp>1} {
+		set pp 1
+	    }
+	    
+	    set ll [llength $var(graphs)]
+	    set tt [expr int(1./$pp)+($ll-1)]
+	    set z2 [expr 1./$tt]
+	    set z1 [expr 1.-(($ll-1)*$z2)]
 
-		set ww [expr int(100./$var(layout,strip,weight))]
+	    set ii 0
+	    foreach cc $var(graphs) {
+		if {$ii == 0} {
+		    place $var($cc,canvas) -in $var(top) \
+			-relwidth 1 -relheight $z1 -x 0 -y 0
+		} else {
+		    place $var($cc,canvas) -in $var(top) \
+			-relwidth 1 -relheight $z2 \
+			-relx .5 -rely [expr $ii*$z2 + $z1] -anchor s
+		}
 		incr ii
 	    }
 	}
@@ -1076,9 +1079,8 @@ proc PlotBackup {ch dir} {
 		}
 	    }
 	    puts $ch "wm geometry $var(top) [winfo width $var(top)]x[winfo height $var(top)]"
-
 	    puts $ch "set ${varname}(layout) $var(layout)"
-	    puts $ch "set ${varname}(layout,strip,weight) $var(layout,strip,weight)"
+	    puts $ch "set ${varname}(layout,strip,scale) $var(layout,strip,scale)"
 	    puts $ch "PlotChangeLayout $varname"
 
 	    puts $ch "set ${varname}(background) $var(background)"

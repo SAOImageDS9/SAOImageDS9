@@ -255,8 +255,8 @@ plotCmd : LOAD_ load
  | SELECT_ GRAPH_ INT_ {ProcessCmdCVAR graph,current $3 PlotCurrentGraph}
  | DELETE_ GRAPH_ {ProcessCmdCVAR0 PlotDeleteGraphCurrent}
  | LAYOUT_ layout {ProcessCmdCVAR layout $2 PlotChangeLayout}
- | LAYOUT_ STRIP_ WEIGHT_ numeric
-   {ProcessCmdCVAR layout,strip,weight $4 PlotChangeLayout}
+ | LAYOUT_ STRIP_ SCALE_ numeric
+   {ProcessCmdCVAR layout,strip,scale $4 PlotChangeLayout}
  | FONT_ fontt
  | BACKGROUND_ STRING_ {ProcessCmdCVAR background $2 PlotUpdateCanvas}
  | BARMODE_ barmode {ProcessCmdCVAR bar,mode $2 PlotUpdateGraph}

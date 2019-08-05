@@ -34,6 +34,7 @@ proc PlotDialog {varname wtt} {
 
     # create window
     Toplevel $var(top) $var(mb) 7 $wtt [list PlotDestroy $varname]
+    wm geometry $var(top) "600x500"
 
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
     $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
@@ -137,11 +138,11 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Grid}] \
 	-variable ${varname}(layout) -value grid \
 	-command [list PlotChangeLayout $varname]
-    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Column}] \
-	-variable ${varname}(layout) -value column \
-	-command [list PlotChangeLayout $varname]
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Row}] \
 	-variable ${varname}(layout) -value row \
+	-command [list PlotChangeLayout $varname]
+    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Column}] \
+	-variable ${varname}(layout) -value column \
 	-command [list PlotChangeLayout $varname]
     $var(mb).canvas.layout add separator
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Strip}] \
@@ -341,14 +342,14 @@ proc PlotStripDialog {varname} {
 
     set ed(ok) 0
 
-    set ed(layout,strip,weight) $var(layout,strip,weight)
+    set ed(layout,strip,scale) $var(layout,strip,scale)
 
     DialogCreate $w [msgcat::mc {Strip}] ed(ok)
 
     # Param
     set f [ttk::frame $w.param]
-    ttk::label $f.t -text [msgcat::mc {Graph Weight}]
-    ttk::entry $f.ww -textvariable ed(layout,strip,weight) -width 6
+    ttk::label $f.t -text [msgcat::mc {Graph Scale}]
+    ttk::entry $f.ww -textvariable ed(layout,strip,scale) -width 6
     ttk::label $f.tt -text [msgcat::mc {%}]
 
     grid $f.t $f.ww $f.tt -padx 2 -pady 2 -sticky w
@@ -372,7 +373,7 @@ proc PlotStripDialog {varname} {
     DialogDismiss $w
 
     if {$ed(ok)} {
-	set var(layout,strip,weight) $ed(layout,strip,weight)
+	set var(layout,strip,scale) $ed(layout,strip,scale)
 	PlotChangeLayout $varname
     }
     

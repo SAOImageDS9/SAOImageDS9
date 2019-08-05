@@ -1696,7 +1696,7 @@ plot [[&lt;plotname&gt;] data xy|xyex|xyey|xyexey]<br>
 plot [[&lt;plotname&gt;] load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout grid|row|column|strip]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout strip weight &lt;percent&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout strip scale &lt;percent&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] add graph line|bar|scatter]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] select graph &lt;graph&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] delete graph]<br>
@@ -1787,7 +1787,7 @@ $cat xy.dat | xpaset ds9 plot foo data xy<br>
 <br>
 # existing plot<br>
 $xpaget ds9 plot layout<br>
-$xpaget ds9 plot layout strip weight<br>
+$xpaget ds9 plot layout strip scale<br>
 $xpaget ds9 plot select graph<br>
 $xpaget ds9 plot select dataset<br>
 $xpaget ds9 plot stats<br>
@@ -1795,7 +1795,7 @@ $xpaget ds9 plot list<br>
 $xpaset -p ds9 plot load xy.dat xy<br>
 $xpaset -p ds9 plot save foo.dat<br>
 $xpaset -p ds9 plot layout strip<br>
-$xpaset -p ds9 plot layout strip weight 30<br>
+$xpaset -p ds9 plot layout strip scale 30<br>
 $xpaset -p ds9 plot add graph scatter<br>
 $xpaset -p ds9 plot select graph 1<br>
 $xpaset -p ds9 plot delete graph<br>

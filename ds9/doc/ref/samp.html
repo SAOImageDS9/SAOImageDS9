@@ -1772,7 +1772,7 @@ plot [[&lt;plotname&gt;] data xy|xyex|xyey|xyexey]<br>
 plot [[&lt;plotname&gt;] load &lt;filename&gt; xy|xyex|xyey|xyexey]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout grid|row|column|strip]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout strip weight &lt;percent&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] layout strip scale &lt;percent&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] add graph line|bar|scatter]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] select graph &lt;graph&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;plotname&gt;] delete graph]<br>
@@ -1850,7 +1850,7 @@ plot new name foo bar<br>
 # existing plot<br>
 string value = ds9.get(string cmd)<br>
 plot select layout<br>
-plot select layout strip weight<br>
+plot select layout strip scale<br>
 plot select graph<br>
 plot select dataset<br>
 plot stats<br>
@@ -1860,7 +1860,7 @@ ds9.set(string cmd)<br>
 plot load foo.dat xy<br>
 plot save foo.dat<br>
 plot layout strip<br>
-plot layout strip weight 30<br>
+plot layout strip scale 30<br>
 plot add graph scatter<br>
 plot select graph 1<br>
 plot delete graph<br>

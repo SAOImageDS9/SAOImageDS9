@@ -122,9 +122,10 @@ proc PlotAddGraph {varname type} {
 
     PlotChangeMode $varname
 
-    grid columnconfigure $var(canvas) 0 -weight 1
-    grid rowconfigure $var(canvas) 0 -weight 1
-    grid $var($cc,graph) -sticky news
+#    grid columnconfigure $var(canvas) 0 -weight 1
+#    grid rowconfigure $var(canvas) 0 -weight 1
+#    grid $var($cc,graph) -sticky news
+    place $var($cc,graph) -in $var(canvas) -relwidth 1 -relheight 1 -x 0 -y 0
 
     PlotLayoutCanvas $varname
 }
@@ -156,8 +157,10 @@ proc PlotDeleteGraph {varname} {
     }
 
     # delete graph
-    grid forget $var(graph)
-    grid forget $var(canvas)
+    place forget $var(graph)
+    place forget $var(canvas)
+#    grid forget $var(graph)
+#    grid forget $var(canvas)
     destroy $var(graph)
     destroy $var(canvas)
 
@@ -393,7 +396,6 @@ proc PlotChangeLayout {varname} {
     set var(graph,ds,current) $nn
     PlotRestoreState $varname
     PlotUpdateMenus $varname
-
     PlotLayoutCanvas $varname
 }
 
@@ -405,10 +407,7 @@ proc PlotChangeTitle {varname} {
 	grid -
 	column -
 	row {PlotUpdateGraph $varname}
-	strip {
-	    PlotUpdateCanvas $varname
-	    PlotUpdateGraph $varname
-	}
+	strip {PlotChangeLayout $varname}
     }
 }
 
@@ -581,6 +580,84 @@ proc PlotStatsDestroyCB {varname} {
 }
 
 proc PlotLayoutCanvas {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    foreach cc $var(graphs) {
+	place forget $var($cc,canvas)
+    }
+
+    switch $var(layout) {
+	grid {}
+	row {}
+	column {
+	    set pp 1
+	    
+	    set ll [llength $var(graphs)]
+	    if {$ll == 1} {
+		set tt 1
+		set z1 1
+		set z2 0
+	    } else {
+		set tt $ll
+		set z2 [expr 1./$tt]
+		set z1 [expr 1.-(($ll-1)*$z2)]
+	    }
+
+	    set ii 0
+	    foreach cc $var(graphs) {
+		if {$ii == 0} {
+		    place $var($cc,canvas) -in $var(top) \
+			-relwidth 1 -relheight $z1 \
+			-x 0 -y 0
+		} else {
+		    set hh [expr $ii*$z2 + $z1]
+		    place $var($cc,canvas) -in $var(top) \
+			-relwidth 1 -relheight $z2 \
+			-relx .5 -rely $hh -anchor s
+		}
+		incr ii
+	    }
+	}
+	strip {
+	    set pp [expr $var(layout,strip,weight)/100.]
+	    if {$pp<0 && $pp>1} {
+		set pp 1
+	    }
+	    
+	    set ll [llength $var(graphs)]
+	    if {$ll == 1} {
+		set tt 1
+		set z1 1
+		set z2 0
+	    } else {
+		set tt [expr int(1./$pp)+($ll-1)]
+		set z2 [expr 1./$tt]
+		set z1 [expr 1.-(($ll-1)*$z2)]
+	    }
+
+	    set ii 0
+	    foreach cc $var(graphs) {
+		if {$ii == 0} {
+		    place $var($cc,canvas) -in $var(top) \
+			-relwidth 1 -relheight $z1 \
+			-x 0 -y 0
+		} else {
+		    set hh [expr $ii*$z2 + $z1]
+		    place $var($cc,canvas) -in $var(top) \
+			-relwidth 1 -relheight $z2 \
+			-relx .5 -rely $hh -anchor s
+		}
+		incr ii
+	    }
+	}
+    }
+
+    # needed so layout can be properly realized
+    update idletasks
+}
+
+proc PlotLayoutCanvass {varname} {
     upvar #0 $varname var
     global $varname
 

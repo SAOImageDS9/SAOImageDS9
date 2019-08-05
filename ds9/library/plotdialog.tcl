@@ -137,11 +137,11 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Grid}] \
 	-variable ${varname}(layout) -value grid \
 	-command [list PlotChangeLayout $varname]
-    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Column}] \
-	-variable ${varname}(layout) -value column \
-	-command [list PlotChangeLayout $varname]
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Row}] \
 	-variable ${varname}(layout) -value row \
+	-command [list PlotChangeLayout $varname]
+    $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Column}] \
+	-variable ${varname}(layout) -value column \
 	-command [list PlotChangeLayout $varname]
     $var(mb).canvas.layout add separator
     $var(mb).canvas.layout add radiobutton -label [msgcat::mc {Strip}] \

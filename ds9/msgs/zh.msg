@@ -1,3 +1,4 @@
+::msgcat::mcset zh {%} 
 ::msgcat::mcset zh {2D} 
 ::msgcat::mcset zh {3D View} 
 ::msgcat::mcset zh {3D} 
@@ -7,6 +8,7 @@
 ::msgcat::mcset zh {About SAOImageDS9} 
 ::msgcat::mcset zh {About} [encoding convertfrom big5 "\xC3\xF6 \xA9\xF3"]
 ::msgcat::mcset zh {Acknowledgment} 
+::msgcat::mcset zh {Add Graph} 
 ::msgcat::mcset zh {Add} 
 ::msgcat::mcset zh {Advanced} 
 ::msgcat::mcset zh {Aligned} 
@@ -70,7 +72,9 @@
 ::msgcat::mcset zh {Background} 
 ::msgcat::mcset zh {Backup} 
 ::msgcat::mcset zh {Back} 
+::msgcat::mcset zh {Bar Mode} 
 ::msgcat::mcset zh {Bar Plot Tool} 
+::msgcat::mcset zh {Bar} 
 ::msgcat::mcset zh {Bias} 
 ::msgcat::mcset zh {Bin 3rd Column} 
 ::msgcat::mcset zh {Bin Center} 
@@ -115,6 +119,7 @@
 ::msgcat::mcset zh {Can Rotate} [encoding convertfrom big5 "\xA5\x69 \xA5\x48 \xB1\xDB \xC2\xE0"]
 ::msgcat::mcset zh {Cancelled} 
 ::msgcat::mcset zh {Cancel} 
+::msgcat::mcset zh {Canvas} 
 ::msgcat::mcset zh {Cap} 
 ::msgcat::mcset zh {Catalog Server} 
 ::msgcat::mcset zh {Catalog Tool} 
@@ -131,7 +136,6 @@
 ::msgcat::mcset zh {Clear All} 
 ::msgcat::mcset zh {Clear Analysis Commands} 
 ::msgcat::mcset zh {Clear Cache} 
-::msgcat::mcset zh {Clear Data} 
 ::msgcat::mcset zh {Clear External Analysis Commands?} 
 ::msgcat::mcset zh {Clear Filter} 
 ::msgcat::mcset zh {Clear Frame} [encoding convertfrom big5 "\xB2\x4D \xB0\xA3 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
@@ -220,7 +224,9 @@
 ::msgcat::mcset zh {Delete All Regions} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xA5\xEF \xB3\xA1 \xB0\xCF \xB0\xEC"]
 ::msgcat::mcset zh {Delete All} 
 ::msgcat::mcset zh {Delete Color Tags} 
+::msgcat::mcset zh {Delete Dataset} 
 ::msgcat::mcset zh {Delete Frame} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xBC\x76 \xB9\xB3 \xB5\xF8 \xB5\xA1"]
+::msgcat::mcset zh {Delete Graph} 
 ::msgcat::mcset zh {Delete Group} 
 ::msgcat::mcset zh {Delete Load} 
 ::msgcat::mcset zh {Delete Selected Regions} [encoding convertfrom big5 "\xA7\x52 \xB0\xA3 \xBF\xEF \xA8\xFA \xB0\xCF \xB0\xEC"]
@@ -242,7 +248,7 @@
 ::msgcat::mcset zh {Download Colormap} 
 ::msgcat::mcset zh {Download VOTABLE format if available} 
 ::msgcat::mcset zh {Drag to Center} 
-::msgcat::mcset zh {Duplicate Data} 
+::msgcat::mcset zh {Duplicate Dataset} 
 ::msgcat::mcset zh {East} 
 ::msgcat::mcset zh {Ecliptic} 
 ::msgcat::mcset zh {Edit Group Name} 
@@ -294,7 +300,6 @@
 ::msgcat::mcset zh {Fits} 
 ::msgcat::mcset zh {Fixed in Size} [encoding convertfrom big5 "\xA9\x54 \xA9\x77 \xA4\x6A \xA4\x70"]
 ::msgcat::mcset zh {Flat} 
-::msgcat::mcset zh {Flip} 
 ::msgcat::mcset zh {Font} 
 ::msgcat::mcset zh {For more information, use --help} 
 ::msgcat::mcset zh {Format} 
@@ -605,7 +610,8 @@
 ::msgcat::mcset zh {Please specify width, height, and either name or (ra,dec)} 
 ::msgcat::mcset zh {Plot 2D} 
 ::msgcat::mcset zh {Plot 3D} 
-::msgcat::mcset zh {Plot Title} 
+::msgcat::mcset zh {Plot Area} 
+::msgcat::mcset zh {Plot Tool} 
 ::msgcat::mcset zh {Plotting Regions} 
 ::msgcat::mcset zh {Plot} 
 ::msgcat::mcset zh {Plus} 
@@ -697,6 +703,7 @@
 ::msgcat::mcset zh {Scale} [encoding convertfrom big5 "\xA6\xE2 \xB6\xA5"]
 ::msgcat::mcset zh {Scan} 
 ::msgcat::mcset zh {Scatter Plot Tool} 
+::msgcat::mcset zh {Scatter} 
 ::msgcat::mcset zh {Scope} 
 ::msgcat::mcset zh {Search for Catalogs} 
 ::msgcat::mcset zh {Searching for catalogs} 
@@ -704,8 +711,9 @@
 ::msgcat::mcset zh {Segment} 
 ::msgcat::mcset zh {Select All} [encoding convertfrom big5 "\xBF\xEF \xA8\xFA \xA5\xFE \xB3\xA1"]
 ::msgcat::mcset zh {Select Coordinate System } 
+::msgcat::mcset zh {Select Dataset} 
+::msgcat::mcset zh {Select Graph} 
 ::msgcat::mcset zh {Select None} [encoding convertfrom big5 "\xA8\xFA \xAE\xF8 \xBF\xEF \xA8\xFA"]
-::msgcat::mcset zh {Select} 
 ::msgcat::mcset zh {Send} 
 ::msgcat::mcset zh {Server} 
 ::msgcat::mcset zh {Sexagesimal} 
@@ -753,6 +761,8 @@
 ::msgcat::mcset zh {Stop} 
 ::msgcat::mcset zh {Story of SAOImageDS9} 
 ::msgcat::mcset zh {Story} 
+::msgcat::mcset zh {Strip Parameters} 
+::msgcat::mcset zh {Strip} 
 ::msgcat::mcset zh {Sum} 
 ::msgcat::mcset zh {Sunken} 
 ::msgcat::mcset zh {Symbol Editor} 
@@ -774,6 +784,7 @@
 ::msgcat::mcset zh {Tile Parameters} 
 ::msgcat::mcset zh {Tile} [encoding convertfrom big5 "\xA6\x58 \xAD\xAB"]
 ::msgcat::mcset zh {Times} 
+::msgcat::mcset zh {Titles} 
 ::msgcat::mcset zh {Title} 
 ::msgcat::mcset zh {Tophat} 
 ::msgcat::mcset zh {Topographic} 
@@ -846,13 +857,17 @@
 ::msgcat::mcset zh {Window} 
 ::msgcat::mcset zh {Words matching title, description} 
 ::msgcat::mcset zh {X Axis Title} 
+::msgcat::mcset zh {X Flip} 
 ::msgcat::mcset zh {X Grid} 
+::msgcat::mcset zh {X Log} 
 ::msgcat::mcset zh {XPA Information} 
 ::msgcat::mcset zh {XPA not initialized} 
 ::msgcat::mcset zh {XPA} 
 ::msgcat::mcset zh {X} 
 ::msgcat::mcset zh {Y Axis Title} 
+::msgcat::mcset zh {Y Flip} 
 ::msgcat::mcset zh {Y Grid} 
+::msgcat::mcset zh {Y Log} 
 ::msgcat::mcset zh {Yellow} [encoding convertfrom big5 "\xB6\xC0 \xA6\xE2"]
 ::msgcat::mcset zh {Y} 
 ::msgcat::mcset zh {Z Axis Scale} 

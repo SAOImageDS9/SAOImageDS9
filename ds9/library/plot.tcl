@@ -122,8 +122,6 @@ proc PlotAddGraph {varname type} {
 
     PlotChangeMode $varname
 
-    place $var($cc,graph) -in $var(canvas) -relwidth 1 -relheight 1 -x 0 -y 0
-
     PlotLayoutCanvas $varname
 }
 
@@ -155,9 +153,7 @@ proc PlotDeleteGraph {varname} {
 
     # delete graph
     place forget $var(graph)
-    place forget $var(canvas)
     destroy $var(graph)
-    destroy $var(canvas)
 
     # remove from list
     set ii [lsearch $var(graphs) $cc]
@@ -331,6 +327,7 @@ proc PlotCurrentDataSet {varname} {
     PlotStats $varname
     PlotList $varname
 }
+
 proc PlotChangeAxis {varname} {
     upvar #0 $varname var
     global $varname
@@ -392,6 +389,7 @@ proc PlotChangeLayout {varname} {
     PlotRestoreState $varname
     PlotUpdateMenus $varname
     PlotLayoutCanvas $varname
+    PlotChangeMode $varname
 }
 
 proc PlotChangeTitle {varname} {
@@ -412,6 +410,7 @@ proc PlotChangeMode {varname} {
     global $varname
 
     set nn 1
+    set first [lindex $var(graphs) 0]
     foreach cc $var(graphs) {
 	switch $var(mode) {
 	    pointer {
@@ -421,7 +420,22 @@ proc PlotChangeMode {varname} {
 	    }
 	    zoom {
 		bind $var($cc,graph) <1> {}
-		blt::AddBindTag $var($cc,graph) zoom-$var($cc,graph)
+		switch $var(layout) {
+		    grid -
+		    row -
+		    column {
+			blt::AddBindTag $var($cc,graph) zoom-$var($cc,graph)
+		    }
+		    strip {
+			if {$cc == $first} {
+			    blt::AddBindTag $var($cc,graph) \
+				zoom-$var($cc,graph)
+			} else {
+			    blt::RemoveBindTag $var($cc,graph) \
+				zoom-$var($cc,graph)
+			}
+		    }
+		}
 	    }
 	}
     }
@@ -579,7 +593,7 @@ proc PlotLayoutCanvas {varname} {
     global $varname
 
     foreach cc $var(graphs) {
-	place forget $var($cc,canvas)
+	place forget $var($cc,graph)
     }
 
     switch $var(layout) {
@@ -594,7 +608,7 @@ proc PlotLayoutCanvas {varname} {
 	    set xx 0
 	    set yy 0
 	    foreach cc $var(graphs) {
-		place $var($cc,canvas) -in $var(top) \
+		place $var($cc,graph) -in $var(top) \
 		    -relwidth $z1 -relheight $z2 \
 		    -relx [expr $xx*$z1] -rely [expr $yy*$z2] -anchor nw
 
@@ -609,7 +623,7 @@ proc PlotLayoutCanvas {varname} {
 	    set zz [expr 1./[llength $var(graphs)]]
 	    set ii 0
 	    foreach cc $var(graphs) {
-		place $var($cc,canvas) -in $var(top) \
+		place $var($cc,graph) -in $var(top) \
 		    -relwidth $zz -relheight 1 \
 		    -relx [expr $ii*$zz] -rely .5 -anchor w
 		incr ii
@@ -619,7 +633,7 @@ proc PlotLayoutCanvas {varname} {
 	    set zz [expr 1./[llength $var(graphs)]]
 	    set ii 0
 	    foreach cc $var(graphs) {
-		place $var($cc,canvas) -in $var(top) \
+		place $var($cc,graph) -in $var(top) \
 		    -relwidth 1 -relheight $zz \
 		    -relx .5 -rely [expr $ii*$zz] -anchor n
 		incr ii
@@ -639,10 +653,10 @@ proc PlotLayoutCanvas {varname} {
 	    set ii 0
 	    foreach cc $var(graphs) {
 		if {$ii == 0} {
-		    place $var($cc,canvas) -in $var(top) \
+		    place $var($cc,graph) -in $var(top) \
 			-relwidth 1 -relheight $z1 -x 0 -y 0
 		} else {
-		    place $var($cc,canvas) -in $var(top) \
+		    place $var($cc,graph) -in $var(top) \
 			-relwidth 1 -relheight $z2 \
 			-relx .5 -rely [expr $ii*$z2 + $z1] -anchor s
 		}

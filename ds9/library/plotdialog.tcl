@@ -119,6 +119,7 @@ proc PlotDialog {varname wtt} {
     $var(mb).canvas add separator
     $var(mb).canvas add cascade -label [msgcat::mc {Layout}] \
 	-menu $var(mb).canvas.layout
+    $var(mb).canvas add separator
     $var(mb).canvas add cascade -label [msgcat::mc {Font}] \
 	-menu $var(mb).canvas.font
     $var(mb).canvas add cascade -label [msgcat::mc {Background}] \
@@ -344,11 +345,11 @@ proc PlotStripDialog {varname} {
 
     set ed(layout,strip,scale) $var(layout,strip,scale)
 
-    DialogCreate $w [msgcat::mc {Strip}] ed(ok)
+    DialogCreate $w [msgcat::mc {Strip Parameters}] ed(ok)
 
     # Param
     set f [ttk::frame $w.param]
-    ttk::label $f.t -text [msgcat::mc {Graph Scale}]
+    ttk::label $f.t -text [msgcat::mc {Scale}]
     ttk::entry $f.ww -textvariable ed(layout,strip,scale) -width 6
     ttk::label $f.tt -text [msgcat::mc {%}]
 

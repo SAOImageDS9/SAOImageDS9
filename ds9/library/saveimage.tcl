@@ -98,7 +98,7 @@ proc SaveImagePhoto {fn format} {
 
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
     if {$rr} {
-	DarwinPhotoRestore $geom
+	DarwinPhotoRestore $ds9(top) $geom
 	Error $saveimage(error)
 	return
     }

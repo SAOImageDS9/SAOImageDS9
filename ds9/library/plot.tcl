@@ -445,7 +445,6 @@ proc PlotChangeMode {varname} {
     }
 }
 
-
 proc PlotAxisFormat {varname axis w nn} {
     upvar #0 $varname var
     global $varname

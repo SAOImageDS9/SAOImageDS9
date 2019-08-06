@@ -79,11 +79,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   preservePan = 0;
 
-  panPM = 0;
-  panGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
-  rotateGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
   pannerPixmap = 0;
   pannerXImage = NULL;
   pannerWidth = 0;
@@ -124,7 +119,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   useHighlite = 0;
   highliteGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   XSetLineAttributes(display, highliteGC, 2, LineSolid, CapButt, JoinMiter);
-  XSetForeground(display, highliteGC, getColor("blue"));
 
   useCrosshair = 0;
 
@@ -147,12 +141,8 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   preserveMarkers = 0;
 
   markerGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
   markerGCXOR_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-  XSetForeground(display, markerGCXOR_, getColor("white"));
-
   selectGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-  XSetForeground(display, selectGCXOR, getColor("white"));
 
   grid = NULL;
   gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
@@ -199,15 +189,6 @@ Base::~Base()
 
   if (pannerXImage)
     XDestroyImage(pannerXImage);
-
-  if (panPM)
-    Tk_FreePixmap(display, panPM);
-
-  if (panGCXOR)
-    XFreeGC(display, panGCXOR);
-
-  if (rotateGCXOR)
-    XFreeGC(display, rotateGCXOR);
 
   if (pannerGC)
     XFreeGC(display, pannerGC);
@@ -1414,20 +1395,17 @@ void Base::updateGCs()
 
   // highliteGC
   XSetClipRectangles(display, highliteGC, 0, 0, rectWidget, 1, Unsorted);
-
-  // panGCXOR
-  XSetClipRectangles(display, panGCXOR, 0, 0, rectWindow, 1, Unsorted);
-
-  // rotateGCXOR
-  XSetClipRectangles(display, rotateGCXOR, 0, 0, rectWindow, 1, Unsorted);
+  XSetForeground(display, highliteGC, getColor("blue"));
 
   // markerGC
   XSetClipRectangles(display, markerGC_, 0, 0, rectWidget, 1, Unsorted);
   XSetClipRectangles(display, markerGCXOR_, 0, 0, rectWindow, 1, Unsorted);
+  XSetForeground(display, markerGCXOR_, getColor("white"));
 
   // selectGC
   x11Dash(selectGCXOR,1);
   XSetClipRectangles(display, selectGCXOR, 0, 0, rectWindow, 1, Unsorted);
+  XSetForeground(display, selectGCXOR, getColor("white"));
 
   // gridGC
   XSetClipRectangles(display, gridGC_, 0, 0, rectWidget, 1, Unsorted);

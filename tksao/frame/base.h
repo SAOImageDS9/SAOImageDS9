@@ -182,11 +182,8 @@ public:
 
   Vector zoom_; // current image zoom value
 
-  Pixmap panPM;              // tmp pixmap for pan motion
-  Vector panCursor;          // cursor for interactive panning
-  GC panGCXOR;               // GC for interactive panning
-
-  GC rotateGCXOR;            // GC for interactive rotation
+  Vector panCursor;          // tmp cursor for interactive panning
+  Vector panStart;           // tmp pan start
 
   Pixmap pannerPixmap;       // pixmap for panner
   XImage* pannerXImage;      // ximage for panner
@@ -1582,15 +1579,15 @@ public:
   virtual void panCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame) =0;
   virtual void panToCmd(const Vector&) =0;
   virtual void panToCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame) =0;
-  void panBeginCmd(const Vector&);
-  void panMotionCmd(const Vector&);
-  virtual void panEndCmd(const Vector&) =0;
+  virtual void panBeginCmd(const Vector&) =0;
+  virtual void panMotionCmd(const Vector&) =0;
+  void panEndCmd(const Vector& vv) {panMotionCmd(vv);}
   virtual void panBBoxCmd(const Vector&) =0;
   void panPreserveCmd(int r) {preservePan = r;}
   void rotateCmd(double);
-  virtual void rotateBeginCmd() {}
-  virtual void rotateMotionCmd(double) {}
-  virtual void rotateEndCmd() {}
+  void rotateBeginCmd();
+  void rotateMotionCmd(double);
+  void rotateEndCmd();
   void rotateToCmd(double);
   void getIRAFAlignCmd();
   void irafAlignCmd(int);

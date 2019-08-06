@@ -292,7 +292,8 @@ void FrameBase::panCmd(const Vector& vv)
   update(MATRIX);
 }
 
-void FrameBase::panCmd(const Vector& vv, Coord::CoordSystem sys, Coord::SkyFrame sky)
+void FrameBase::panCmd(const Vector& vv, Coord::CoordSystem sys,
+		       Coord::SkyFrame sky)
 {
   if (!currentContext->cfits)
     return;
@@ -313,7 +314,8 @@ void FrameBase::panToCmd(const Vector& vv)
   update(MATRIX);
 }
 
-void FrameBase::panToCmd(const Vector& vv, Coord::CoordSystem sys, Coord::SkyFrame sky)
+void FrameBase::panToCmd(const Vector& vv, Coord::CoordSystem sys,
+			 Coord::SkyFrame sky)
 {
   if (!currentContext->cfits)
     return;
@@ -337,37 +339,19 @@ void FrameBase::panBBoxCmd(const Vector& vv)
   update(MATRIX);
 }
 
-void FrameBase::panEndCmd(const Vector& vv)
+void FrameBase::panBeginCmd(const Vector& vv)
 {
-  // vv and panCursor are in Coord::CANVAS coords
-  // delete tmp pixmap
-  if (panPM)
-    Tk_FreePixmap(display, panPM);
-  panPM = 0;
+  // vv and panCursor are in CANVAS coords
+  panCursor = cursor;
+  panStart = vv;
+}
 
-  // use matrix, not map() for 3d?
-  Vector start = panCursor * canvasToRef;
-  Vector stop = vv * canvasToRef;
-  cursor -= stop - start;
+void FrameBase::panMotionCmd(const Vector& vv)
+{
+  Vector dd = vv -panStart;
+  cursor = panCursor + Vector(-dd[0],dd[1]);
 
   setBinCursor();
-  update(MATRIX);
-}
-
-void FrameBase::rotateBeginCmd()
-{
-  // save the current rotation
-  rotateRotation = rotation;
-}
-
-void FrameBase::rotateMotionCmd(double angle)
-{
-  rotation = rotateRotation + angle;
-  update(MATRIX);
-}
-
-void FrameBase::rotateEndCmd()
-{
   update(MATRIX);
 }
 

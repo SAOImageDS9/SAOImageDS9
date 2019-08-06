@@ -201,6 +201,8 @@ proc Motion1Panner {x y} {
 
     panner pan motion $x $y
     if {$current(frame) != {}} {
+	$current(frame) pan bbox [panner get bbox]
+
 	UpdateColormapLevelMosaic $current(frame) $x $y panner
 	UpdateInfoBox $current(frame) $x $y panner
 	UpdatePixelTableDialog $current(frame) $x $y panner
@@ -216,8 +218,8 @@ proc Release1Panner {x y} {
 	puts stderr "Release1Panner"
     }
 
+    panner pan end $x $y
     if {$current(frame) != {}} {
-	panner pan end $x $y
 	$current(frame) pan bbox [panner get bbox]
 
 	UpdateColormapLevelMosaic $current(frame) $x $y panner

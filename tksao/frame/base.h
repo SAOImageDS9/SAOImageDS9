@@ -186,8 +186,6 @@ public:
   Vector panCursor;          // cursor for interactive panning
   GC panGCXOR;               // GC for interactive panning
 
-  GC rotateGCXOR;            // GC for interactive rotation
-
   Pixmap pannerPixmap;       // pixmap for panner
   XImage* pannerXImage;      // ximage for panner
   int pannerWidth;           // panner width

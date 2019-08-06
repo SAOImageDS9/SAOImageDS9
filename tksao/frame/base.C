@@ -82,8 +82,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   panPM = 0;
   panGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
-  rotateGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
   pannerPixmap = 0;
   pannerXImage = NULL;
   pannerWidth = 0;
@@ -205,9 +203,6 @@ Base::~Base()
 
   if (panGCXOR)
     XFreeGC(display, panGCXOR);
-
-  if (rotateGCXOR)
-    XFreeGC(display, rotateGCXOR);
 
   if (pannerGC)
     XFreeGC(display, pannerGC);
@@ -1417,9 +1412,6 @@ void Base::updateGCs()
 
   // panGCXOR
   XSetClipRectangles(display, panGCXOR, 0, 0, rectWindow, 1, Unsorted);
-
-  // rotateGCXOR
-  XSetClipRectangles(display, rotateGCXOR, 0, 0, rectWindow, 1, Unsorted);
 
   // markerGC
   XSetClipRectangles(display, markerGC_, 0, 0, rectWidget, 1, Unsorted);

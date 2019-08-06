@@ -9,14 +9,6 @@
 
 class FrameBase : public Base {
 protected:
-  //  XImage* rotateSrcXM;       // rotate src ximage
-  //  XImage* rotateDestXM;      // rotate dest ximage
-  //  Pixmap rotatePM;           // rotate pixmap
-
-  //  XImage* colormapXM;      // rotate dest ximage
-  //  Pixmap colormapPM;       // rotate pixmap
-  //  GC colormapGCXOR;        // GC for interactive rotation
-
   Vector iisLastCursor;      // iis cursor state info
 				  
  private:

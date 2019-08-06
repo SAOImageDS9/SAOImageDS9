@@ -209,7 +209,8 @@ protected:
   virtual Vector fwdMap(const Vector&, Coord::InternalSystem);
   virtual Vector bckMap(const Vector&, Coord::InternalSystem);
 
-  virtual void x11(Drawable, Coord::InternalSystem, int, RenderMode,HandleMode);
+  virtual void x11(Drawable, Coord::InternalSystem, int, RenderMode,
+		   HandleMode);
   virtual void ps(int,int);
 #ifdef MAC_OSX_TK
   virtual void macosx(int);

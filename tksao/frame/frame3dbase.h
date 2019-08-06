@@ -179,14 +179,14 @@ class Frame3dBase : public Base {
   void panToCmd(const Vector&);
   void panToCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
   void panBBoxCmd(const Vector&);
-  void panEndCmd(const Vector&);
-  void rotateBeginCmd();
-  void rotateMotionCmd(double);
-  void rotateEndCmd();
+  void panBeginCmd(const Vector&);
+  void panMotionCmd(const Vector&);
   void zoomAboutCmd(const Vector&, const Vector&);
-  void zoomAboutCmd(const Vector&, const Vector&, Coord::CoordSystem, Coord::SkyFrame);
+  void zoomAboutCmd(const Vector&, const Vector&,
+		    Coord::CoordSystem, Coord::SkyFrame);
   void zoomToAboutCmd(const Vector&, const Vector&);
-  void zoomToAboutCmd(const Vector&, const Vector&, Coord::CoordSystem, Coord::SkyFrame);
+  void zoomToAboutCmd(const Vector&, const Vector&,
+		      Coord::CoordSystem, Coord::SkyFrame);
   void zoomToFitCmd(double);
 
   // 3d Commands

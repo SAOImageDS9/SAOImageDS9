@@ -79,9 +79,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   preservePan = 0;
 
-  panPM = 0;
-  panGCXOR = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-
   pannerPixmap = 0;
   pannerXImage = NULL;
   pannerWidth = 0;
@@ -197,12 +194,6 @@ Base::~Base()
 
   if (pannerXImage)
     XDestroyImage(pannerXImage);
-
-  if (panPM)
-    Tk_FreePixmap(display, panPM);
-
-  if (panGCXOR)
-    XFreeGC(display, panGCXOR);
 
   if (pannerGC)
     XFreeGC(display, pannerGC);
@@ -1409,9 +1400,6 @@ void Base::updateGCs()
 
   // highliteGC
   XSetClipRectangles(display, highliteGC, 0, 0, rectWidget, 1, Unsorted);
-
-  // panGCXOR
-  XSetClipRectangles(display, panGCXOR, 0, 0, rectWindow, 1, Unsorted);
 
   // markerGC
   XSetClipRectangles(display, markerGC_, 0, 0, rectWidget, 1, Unsorted);

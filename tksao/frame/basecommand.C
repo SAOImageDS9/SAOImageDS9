@@ -2564,68 +2564,6 @@ void Base::orientCmd(Coord::Orientation which)
   update(MATRIX);
 }
 
-void Base::panBeginCmd(const Vector& vv)
-{
-  // vv and panCursor are in CANVAS coords
-  panCursor = vv;
-
-  // copy tmp pixmap
-  panPM = Tk_GetPixmap(display, Tk_WindowId(tkwin),
-		       options->width, options->height, depth);
-  if (!panPM) {
-    internalError("Unable to Create Pan Motion Pixmap");
-    return;
-  }
-  XCopyArea(display, pixmap, panPM, widgetGC, 0, 0, options->width, 
-	    options->height, 0,0);
-}
-
-void Base::panMotionCmd(const Vector& vv)
-{
-  // vv and panCursor are in CANVAS coords
-
-  // Clear
-  Vector diff = (vv*canvasToWidget) - (panCursor*canvasToWidget);
-
-  BBox hh,ww;
-  if (diff[0]>0 && diff[1]>0) {
-    hh = BBox(Vector(0,0), Vector(options->width, diff[1]));
-    ww = BBox(Vector(0,0), Vector(diff[0], options->height));
-  } else if (diff[0]>0 && diff[1]<0) {
-    hh = BBox(Vector(options->width,options->height), 
-	      Vector(0,options->height+diff[1]));
-    ww = BBox(Vector(0,0), Vector(diff[0], options->height));
-  } else if (diff[0]<0 && diff[1]>0) {
-    hh = BBox(Vector(0,0), Vector(options->width, diff[1]));
-    ww = BBox(Vector(options->width,options->height), 
-	      Vector(options->width+diff[0], 0));
-  } else if (diff[0]<0 && diff[1]<0) {
-    hh = BBox(Vector(options->width,options->height), 
-	      Vector(0,options->height+diff[1]));
-    ww = BBox(Vector(options->width,options->height), 
-	      Vector(options->width+diff[0], 0));
-  }
-
-  hh = hh * widgetToWindow;
-  ww = ww * widgetToWindow;
-    
-  XSetForeground(display, widgetGC, getColor(bgColorName));
-
-  Vector hs = hh.size();
-  XFillRectangle(display, Tk_WindowId(tkwin), widgetGC, 
-		 (int)hh.ll[0], (int)hh.ll[1], (int)hs[0], (int)hs[1]);
-
-  Vector ws = ww.size();
-  XFillRectangle(display, Tk_WindowId(tkwin), widgetGC, 
-		 (int)ww.ll[0], (int)ww.ll[1], (int)ws[0], (int)ws[1]);
-
-  // display tmp pixmap at new location
-  Vector dd = ((vv * canvasToWidget) - (panCursor * canvasToWidget)) * 
-    widgetToWindow;
-  XCopyArea(display, panPM, Tk_WindowId(tkwin), panGCXOR, 
-	    0, 0, options->width, options->height, dd[0], dd[1]);
-}
-
 void Base::pannerCmd(int s)
 {
   usePanner = s;
@@ -2704,6 +2642,23 @@ void Base::rotateCmd(double r)
 void Base::rotateToCmd(double r)
 {
   rotation = r;
+  update(MATRIX);
+}
+
+void Base::rotateBeginCmd()
+{
+  // save the current rotation
+  rotateRotation = rotation;
+}
+
+void Base::rotateMotionCmd(double angle)
+{
+  rotation = rotateRotation + angle;
+  update(MATRIX);
+}
+
+void Base::rotateEndCmd()
+{
   update(MATRIX);
 }
 

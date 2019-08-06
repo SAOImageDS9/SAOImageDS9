@@ -419,32 +419,17 @@ void Frame3dBase::panBBoxCmd(const Vector& vv)
   update(MATRIX);
 }
 
-void Frame3dBase::panEndCmd(const Vector& vv)
+void Frame3dBase::panBeginCmd(const Vector& vv)
 {
-  if (panPM)
-    Tk_FreePixmap(display, panPM);
-  panPM = 0;
-
-  Vector dd = vv*canvasToWidget - panCursor*canvasToWidget;
-  viewCursor_ += dd*Scale(1/zoom_[0],1/zoom_[1]);
-
-  update(MATRIX);
+  // vv and panCursor are in CANVAS coords
+  panCursor = viewCursor_;
+  panStart = vv;
 }
 
-void Frame3dBase::rotateBeginCmd()
+void Frame3dBase::panMotionCmd(const Vector& vv)
 {
-  // save the current rotation
-  rotateRotation = rotation;
-}
-
-void Frame3dBase::rotateMotionCmd(double angle)
-{
-  rotation = rotateRotation + angle;
-  update(MATRIX);
-}
-
-void Frame3dBase::rotateEndCmd()
-{
+  Vector dd = vv*canvasToWidget - panStart*canvasToWidget;
+  viewCursor_ = panCursor + dd*Scale(1/zoom_[0],1/zoom_[1]);
   update(MATRIX);
 }
 

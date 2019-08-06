@@ -350,8 +350,9 @@ void FrameBase::panMotionCmd(const Vector& vv)
 {
   Vector dd = vv -panStart;
   cursor = panCursor + Vector(-dd[0],dd[1]);
-  update(MATRIX);
+
   setBinCursor();
+  update(MATRIX);
 }
 
 void FrameBase::saveFitsResampleFileCmd(const char* fn)

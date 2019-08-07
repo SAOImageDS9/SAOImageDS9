@@ -452,25 +452,25 @@ void Base::cropCenterCmd(const Vector& vv,
 
 void Base::cropBeginCmd(const Vector& vv)
 {
-  useCrop = 1;
-  cropBegin = vv;
-  cropEnd = vv;
+  doAnts = 1;
+  antsBegin = vv;
+  antsEnd = vv;
 }
 
 void Base::cropMotionCmd(const Vector& vv)
 {
-  cropEnd = vv;
+  antsEnd = vv;
   update(PIXMAP);
 }
 
 void Base::cropEndCmd(const Vector& vv)
 {
-  useCrop = 0;
-  cropEnd = vv;
+  doAnts = 0;
+  antsEnd = vv;
 
-  if (cropBegin[0]!=cropEnd[0] || cropBegin[1]!=cropEnd[1]) {
-    Vector ss = mapToRef(cropBegin, Coord::CANVAS);
-    Vector tt = mapToRef(cropEnd, Coord::CANVAS);
+  if (antsBegin[0]!=antsEnd[0] || antsBegin[1]!=antsEnd[1]) {
+    Vector ss = mapToRef(antsBegin, Coord::CANVAS);
+    Vector tt = mapToRef(antsEnd, Coord::CANVAS);
 
     if (!isMosaic()) {
       currentContext->setSecMode(FrScale::CROPSEC);
@@ -484,8 +484,8 @@ void Base::cropEndCmd(const Vector& vv)
     else {
       FitsImage* ptr1 =NULL;
       FitsImage* ptr2 =NULL;
-      if ((ptr1=isInFits(cropBegin,Coord::CANVAS,NULL)) ==
-	  (ptr2=isInFits(cropEnd,Coord::CANVAS,NULL))) {
+      if ((ptr1=isInFits(antsBegin,Coord::CANVAS,NULL)) ==
+	  (ptr2=isInFits(antsEnd,Coord::CANVAS,NULL))) {
 
 	currentContext->setSecMode(FrScale::CROPSEC);
 	// clear any previous params

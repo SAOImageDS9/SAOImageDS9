@@ -86,7 +86,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   pannerName[0] = '\0';
   usePanner = 0;
   pannerGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-  XSetLineAttributes(display, pannerGC, 1, LineSolid, CapButt, JoinMiter);
 
   magnifierPixmap = 0;
   magnifierXImage = NULL;
@@ -99,8 +98,8 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   useMagnifierCursor = 1;
   magnifierColorName = dupstr("white");
 
-  useCrop =0;
-  useCrop3d =0;
+  doAnts =0;
+  doAnts3d =0;
 
   wcsSystem_ = Coord::WCS;
   wcsSkyFrame_ = Coord::FK5;
@@ -121,7 +120,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   useHighlite = 0;
   highliteGC = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-  XSetLineAttributes(display, highliteGC, 2, LineSolid, CapButt, JoinMiter);
 
   useCrosshair = 0;
 
@@ -151,7 +149,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   contourGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
-  XSetLineAttributes(display, contourGC_, 1, LineSolid, CapButt, JoinMiter);
 
   bgColorName = dupstr("white");
   bgColor = getXColor("white");
@@ -1396,9 +1393,13 @@ void Base::updateGCs()
   rectWindow[0].width = (int)sizeWindow[0];
   rectWindow[0].height = (int)sizeWindow[1];
 
+  // pannerGC
+  XSetLineAttributes(display, pannerGC, 1, LineSolid, CapButt, JoinMiter);
+
   // highliteGC
   XSetClipRectangles(display, highliteGC, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, highliteGC, getColor("blue"));
+  XSetLineAttributes(display, highliteGC, 2, LineSolid, CapButt, JoinMiter);
 
   // markerGC
   XSetClipRectangles(display, markerGC_, 0, 0, rectWidget, 1, Unsorted);
@@ -1415,6 +1416,7 @@ void Base::updateGCs()
 
   // contourGC
   XSetClipRectangles(display, contourGC_, 0, 0, rectWidget, 1, Unsorted);
+  XSetLineAttributes(display, contourGC_, 1, LineSolid, CapButt, JoinMiter);
 }
 
 void Base::updateMagnifier()
@@ -1709,11 +1711,11 @@ void Base::updatePM(const BBox& bbox)
   if (useCrosshair)
     x11Crosshair(pixmap, Coord::WIDGET, options->width, options->height);
 
-  // crop
-  if (useCrop)
-    x11Crop();
-  if (useCrop3d)
-    x11Crop3d();
+  // select/crop
+  if (doAnts)
+    x11Ants();
+  if (doAnts3d)
+    x11Ants3d();
 
   // highlite bbox/compass
   x11Graphics();
@@ -1732,11 +1734,11 @@ char* Base::varcat(char* buf, char* base, char id, char* mod)
   return buf;
 }
 
-void Base::x11Crop()
+void Base::x11Ants()
 {
-  if (cropBegin[0]!=cropEnd[0] || cropBegin[1]!=cropEnd[1]) {
-    Vector ss = mapToRef(cropBegin, Coord::CANVAS);
-    Vector tt = mapToRef(cropEnd, Coord::CANVAS);
+  if (antsBegin[0]!=antsEnd[0] || antsBegin[1]!=antsEnd[1]) {
+    Vector ss = mapToRef(antsBegin, Coord::CANVAS);
+    Vector tt = mapToRef(antsEnd, Coord::CANVAS);
 
     Vector ll = mapFromRef(ss, Coord::CANVAS);
     Vector lr = mapFromRef(Vector(tt[0],ss[1]), Coord::CANVAS);

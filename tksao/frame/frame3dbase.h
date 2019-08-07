@@ -123,7 +123,7 @@ class Frame3dBase : public Base {
   void updateMatrices();
   void updatePanner();
 
-  void x11Crop3d();
+  void x11Ants3d();
   void x11Line(Vector, Vector, int, GC, Pixmap);
   void x11Graphics();
   void x11Border(Coord::InternalSystem, FrScale::SecMode, GC, Pixmap);

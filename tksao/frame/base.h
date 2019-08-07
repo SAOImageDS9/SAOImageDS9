@@ -156,8 +156,6 @@ public:
   Vector markerBegin;        // marker move begin in image coords
   Marker* editMarker;        // pointer to marker currently being edited
   Marker* rotateMarker;      // pointer to marker currently being rotated
-  Vector regionBegin;        // select region begin in canvas coords
-  Vector regionEnd;          // select region end in canvas coords
 
   Composite* compositeMarker; // pointer to current composite marker
 
@@ -205,10 +203,10 @@ public:
   Vector magnifierCursor;    // we need to save the last cursor used
   char* magnifierColorName;
 
-  int useCrop;
-  int useCrop3d;
-  Vector cropBegin;
-  Vector cropEnd;
+  int doAnts;
+  int doAnts3d;
+  Vector antsBegin;
+  Vector antsEnd;
 
   Coord::CoordSystem wcsSystem_;
   Coord::SkyFrame wcsSkyFrame_;
@@ -484,8 +482,8 @@ public:
   char* varcat(char*, char*, char, char*);
   virtual int validColorScale() =0;
 
-  void x11Crop();
-  virtual void x11Crop3d() {}
+  void x11Ants();
+  virtual void x11Ants3d() {}
   void x11Crosshair(Pixmap, Coord::InternalSystem, int, int);
   void x11Dash(GC, int);
   virtual void x11Graphics();

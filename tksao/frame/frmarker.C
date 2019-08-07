@@ -5997,8 +5997,9 @@ void Base::markerVectorArrowCmd(int id, int p)
 
 void Base::regionHighliteEndCmd()
 {
-  BBox bb(regionBegin, regionEnd);
+  doAnts = 0;
 
+  BBox bb(antsBegin, antsEnd);
   Marker* mm=markers->head();
   while (mm) {
     if (bb.isIn(mm->getBBox())==4 && mm->canHighlite())
@@ -6008,13 +6009,14 @@ void Base::regionHighliteEndCmd()
     mm=mm->next();
   } 
 
-  update(PIXMAP, bb.expand(2));
+  update(PIXMAP);
 }
 
 void Base::regionHighliteShiftEndCmd()
 {
-  BBox bb(regionBegin, regionEnd);
+  doAnts = 0;
 
+  BBox bb(antsBegin, antsEnd);
   Marker* mm=markers->head();
   while (mm) {
     if (bb.isIn(mm->getBBox())==4 && mm->canHighlite())
@@ -6022,33 +6024,27 @@ void Base::regionHighliteShiftEndCmd()
     mm=mm->next();
   }
 
-  update(PIXMAP, bb.expand(2));
+  update(PIXMAP);
 }
 
 void Base::regionSelectBeginCmd(const Vector& vv)
 {
-  regionBegin = vv;
-  regionEnd = vv;
+  doAnts =1;
+  antsBegin = vv;
+  antsEnd = vv;
 }
 
 void Base::regionSelectMotionCmd(const Vector& vv)
 {
-  // erase 
-  redrawNow((BBox(regionBegin, regionEnd)).expand(2));
-
-  // and draw to window
-  regionEnd = vv;
-  BBox cc = BBox(regionBegin, regionEnd) * canvasToWindow;
-  Vector size = cc.size();
-
-  XDrawRectangle(display, Tk_WindowId(tkwin), selectGCXOR,
-		 cc.ll[0], cc.ll[1], size[0], size[1]);
+  antsEnd = vv;
+  update(PIXMAP);
 }
 
 void Base::regionSelectEndCmd()
 {
-  BBox bb(regionBegin, regionEnd);
+  doAnts = 0;
 
+  BBox bb(antsBegin, antsEnd);
   Marker* mm=markers->head();
   while (mm) {
     if (bb.isIn(mm->getBBox())==4 && mm->canSelect())
@@ -6058,13 +6054,14 @@ void Base::regionSelectEndCmd()
     mm=mm->next();
   } 
 
-  update(PIXMAP, bb.expand(2));
+  update(PIXMAP);
 }
 
 void Base::regionSelectShiftEndCmd()
 {
-  BBox bb(regionBegin, regionEnd);
+  doAnts = 0;
 
+  BBox bb(antsBegin, antsEnd);
   Marker* mm=markers->head();
   while (mm) {
     if (bb.isIn(mm->getBBox())==4 && mm->canSelect())
@@ -6072,7 +6069,7 @@ void Base::regionSelectShiftEndCmd()
     mm=mm->next();
   }
 
-  update(PIXMAP, bb.expand(2));
+  update(PIXMAP);
 }
 
 // Marker Support

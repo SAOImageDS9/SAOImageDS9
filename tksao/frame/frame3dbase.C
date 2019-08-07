@@ -1016,13 +1016,13 @@ void Frame3dBase::updatePanner()
   }
 }
 
-void Frame3dBase::x11Crop3d()
+void Frame3dBase::x11Ants3d()
 {
   // just in case
   if (!keyContext->fits)
     return;
 
-  if (cropBegin[0]!=cropEnd[0] || cropBegin[1]!=cropEnd[1]) {
+  if (antsBegin[0]!=antsEnd[0] || antsBegin[1]!=antsEnd[1]) {
     // params is a BBOX in DATA coords 0-n
     FitsBound* params = 
       keyContext->fits->getDataParams(keyContext->secMode());

@@ -57,14 +57,14 @@ void Frame3dBase::blockToFitCmd()
 
 void Frame3dBase::crop3dBeginCmd(const Vector& vv, int which)
 {
-  useCrop3d =1;
-  cropBegin = vv * Scale(zoom_).invert();
-  cropEnd = vv * Scale(zoom_).invert();
+  doAnts3d =1;
+  antsBegin = vv * Scale(zoom_).invert();
+  antsEnd = vv * Scale(zoom_).invert();
 }
 
 void Frame3dBase::crop3dMotionCmd(const Vector& vv, int which)
 {
-  cropEnd = vv * Scale(zoom_).invert();
+  antsEnd = vv * Scale(zoom_).invert();
 
   // just in case
   if (!keyContext->fits)
@@ -74,7 +74,7 @@ void Frame3dBase::crop3dMotionCmd(const Vector& vv, int which)
   FitsZBound* zparams = 
     keyContext->getDataParams(keyContext->secMode());
 
-  Vector diff = cropEnd-cropBegin;
+  Vector diff = antsEnd-antsBegin;
   if (!which)
     cropsl_ = diff[0]+zparams->zmin;
   else
@@ -100,8 +100,8 @@ void Frame3dBase::crop3dMotionCmd(const Vector& vv, int which)
 
 void Frame3dBase::crop3dEndCmd(const Vector& vv, int which)
 {
-  useCrop3d =0;
-  cropEnd = vv * Scale(zoom_).invert();
+  doAnts3d =0;
+  antsEnd = vv * Scale(zoom_).invert();
 
   // just in case
   if (!keyContext->fits)
@@ -111,7 +111,7 @@ void Frame3dBase::crop3dEndCmd(const Vector& vv, int which)
   FitsZBound* zparams = 
     keyContext->getDataParams(keyContext->secMode());
 
-  Vector diff = cropEnd-cropBegin;
+  Vector diff = antsEnd-antsBegin;
   if (!which)
     cropsl_ = diff[0]+zparams->zmin;
   else
@@ -132,7 +132,7 @@ void Frame3dBase::crop3dEndCmd(const Vector& vv, int which)
       cropsl_ = depth;
   }
 
-  if (cropBegin[0]!=cropEnd[0] || cropBegin[1]!=cropEnd[1]) {
+  if (antsBegin[0]!=antsEnd[0] || antsBegin[1]!=antsEnd[1]) {
     keyContext->setSecMode(FrScale::CROPSEC);
 
     // params is a BBOX in DATA coords 0-n

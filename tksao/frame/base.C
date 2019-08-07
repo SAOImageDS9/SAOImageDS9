@@ -99,6 +99,9 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   useMagnifierCursor = 1;
   magnifierColorName = dupstr("white");
 
+  useCrop =0;
+  useCrop3d =0;
+
   wcsSystem_ = Coord::WCS;
   wcsSkyFrame_ = Coord::FK5;
   wcsSkyFormat_ = Coord::DEGREES;
@@ -1706,6 +1709,12 @@ void Base::updatePM(const BBox& bbox)
   if (useCrosshair)
     x11Crosshair(pixmap, Coord::WIDGET, options->width, options->height);
 
+  // crop
+  if (useCrop)
+    x11Crop();
+  if (useCrop3d)
+    x11Crop3d();
+
   // highlite bbox/compass
   x11Graphics();
 
@@ -1721,6 +1730,24 @@ char* Base::varcat(char* buf, char* base, char id, char* mod)
   buf[ll++] = '\0';
   strcat(buf,mod);
   return buf;
+}
+
+void Base::x11Crop()
+{
+  if (cropBegin[0]!=cropEnd[0] || cropBegin[1]!=cropEnd[1]) {
+    Vector ss = mapToRef(cropBegin, Coord::CANVAS);
+    Vector tt = mapToRef(cropEnd, Coord::CANVAS);
+
+    Vector ll = mapFromRef(ss, Coord::CANVAS);
+    Vector lr = mapFromRef(Vector(tt[0],ss[1]), Coord::CANVAS);
+    Vector ur = mapFromRef(tt, Coord::CANVAS);
+    Vector ul = mapFromRef(Vector(ss[0],tt[1]), Coord::CANVAS);
+
+    XDrawLine(display,pixmap,selectGCXOR,ll[0],ll[1],lr[0],lr[1]);
+    XDrawLine(display,pixmap,selectGCXOR,lr[0],lr[1],ur[0],ur[1]);
+    XDrawLine(display,pixmap,selectGCXOR,ur[0],ur[1],ul[0],ul[1]);
+    XDrawLine(display,pixmap,selectGCXOR,ul[0],ul[1],ll[0],ll[1]);
+  }
 }
 
 void Base::x11Crosshair(Pixmap pm, Coord::InternalSystem sys, 

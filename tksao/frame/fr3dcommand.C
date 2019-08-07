@@ -57,52 +57,23 @@ void Frame3dBase::blockToFitCmd()
 
 void Frame3dBase::crop3dBeginCmd(const Vector& vv, int which)
 {
-  // which =0 (zmin) which =1 (zmax)
-  if (!keyContext->fits)
-    return;
-
+  useCrop3d =1;
   cropBegin = vv * Scale(zoom_).invert();
   cropEnd = vv * Scale(zoom_).invert();
-
-  // params is a BBOX in DATA coords 0-n
-  FitsZBound* zparams = 
-    keyContext->getDataParams(keyContext->secMode());
-  if (!which)
-    cropsl_ = zparams->zmin;
-  else
-    cropsl_ = zparams->zmax;
 }
 
 void Frame3dBase::crop3dMotionCmd(const Vector& vv, int which)
 {
-  // which =0 (zmin) which =1 (zmax)
+  cropEnd = vv * Scale(zoom_).invert();
+
+  // just in case
   if (!keyContext->fits)
     return;
 
   // params is a BBOX in DATA coords 0-n
-  FitsBound* params = 
-    keyContext->fits->getDataParams(keyContext->secMode());
   FitsZBound* zparams = 
     keyContext->getDataParams(keyContext->secMode());
-  Vector ss(params->xmin,params->ymin);
-  Vector tt(params->xmax,params->ymax);
 
-  // erase 
-  if (cropBegin[0]!=cropEnd[0] || cropBegin[1]!=cropEnd[1]) {
-    Vector ll = mapFromRef3d(ss,Coord::CANVAS,cropsl_);
-    Vector lr = mapFromRef3d(Vector(tt[0],ss[1]),Coord::CANVAS,cropsl_);
-    Vector ur = mapFromRef3d(tt,Coord::CANVAS,cropsl_);
-    Vector ul = mapFromRef3d(Vector(ss[0],tt[1]),Coord::CANVAS,cropsl_);
-
-    BBox bb(ll);
-    bb.bound(lr);
-    bb.bound(ur);
-    bb.bound(ul);
-
-    redrawNow(bb.expand(2));
-  }
-
-  cropEnd = vv * Scale(zoom_).invert();
   Vector diff = cropEnd-cropBegin;
   if (!which)
     cropsl_ = diff[0]+zparams->zmin;
@@ -124,50 +95,22 @@ void Frame3dBase::crop3dMotionCmd(const Vector& vv, int which)
       cropsl_ = depth;
   }
 
-  // and draw to window
-  {
-    Vector ll = mapFromRef3d(ss,Coord::WINDOW,cropsl_);
-    Vector lr = mapFromRef3d(Vector(tt[0],ss[1]),Coord::WINDOW,cropsl_);
-    Vector ur = mapFromRef3d(tt,Coord::WINDOW,cropsl_);
-    Vector ul = mapFromRef3d(Vector(ss[0],tt[1]),Coord::WINDOW,cropsl_);
-
-    XDrawLine(display,Tk_WindowId(tkwin),selectGCXOR,ll[0],ll[1],lr[0],lr[1]);
-    XDrawLine(display,Tk_WindowId(tkwin),selectGCXOR,lr[0],lr[1],ur[0],ur[1]);
-    XDrawLine(display,Tk_WindowId(tkwin),selectGCXOR,ur[0],ur[1],ul[0],ul[1]);
-    XDrawLine(display,Tk_WindowId(tkwin),selectGCXOR,ul[0],ul[1],ll[0],ll[1]);
-  }
+  update(PIXMAP);
 }
 
 void Frame3dBase::crop3dEndCmd(const Vector& vv, int which)
 {
-  // which =0 (zmin) which =1 (zmax)
+  useCrop3d =0;
+  cropEnd = vv * Scale(zoom_).invert();
+
+  // just in case
   if (!keyContext->fits)
     return;
 
   // params is a BBOX in DATA coords 0-n
-  FitsBound* params = 
-    keyContext->fits->getDataParams(keyContext->secMode());
   FitsZBound* zparams = 
     keyContext->getDataParams(keyContext->secMode());
-  Vector ss(params->xmin,params->ymin);
-  Vector tt(params->xmax,params->ymax);
 
-  // erase 
-  if (cropBegin[0]!=cropEnd[0] || cropBegin[1]!=cropEnd[1]) {
-    Vector ll = mapFromRef3d(ss,Coord::CANVAS,cropsl_);
-    Vector lr = mapFromRef3d(Vector(tt[0],ss[1]),Coord::CANVAS,cropsl_);
-    Vector ur = mapFromRef3d(tt,Coord::CANVAS,cropsl_);
-    Vector ul = mapFromRef3d(Vector(ss[0],tt[1]),Coord::CANVAS,cropsl_);
-
-    BBox bb(ll);
-    bb.bound(lr);
-    bb.bound(ur);
-    bb.bound(ul);
-
-    redrawNow(bb.expand(2));
-  }
-
-  cropEnd = vv * Scale(zoom_).invert();
   Vector diff = cropEnd-cropBegin;
   if (!which)
     cropsl_ = diff[0]+zparams->zmin;

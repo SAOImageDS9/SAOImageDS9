@@ -205,6 +205,8 @@ public:
   Vector magnifierCursor;    // we need to save the last cursor used
   char* magnifierColorName;
 
+  int useCrop;
+  int useCrop3d;
   Vector cropBegin;
   Vector cropEnd;
 
@@ -482,6 +484,8 @@ public:
   char* varcat(char*, char*, char, char*);
   virtual int validColorScale() =0;
 
+  void x11Crop();
+  virtual void x11Crop3d() {}
   void x11Crosshair(Pixmap, Coord::InternalSystem, int, int);
   void x11Dash(GC, int);
   virtual void x11Graphics();

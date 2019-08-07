@@ -1016,6 +1016,31 @@ void Frame3dBase::updatePanner()
   }
 }
 
+void Frame3dBase::x11Crop3d()
+{
+  // just in case
+  if (!keyContext->fits)
+    return;
+
+  if (cropBegin[0]!=cropEnd[0] || cropBegin[1]!=cropEnd[1]) {
+    // params is a BBOX in DATA coords 0-n
+    FitsBound* params = 
+      keyContext->fits->getDataParams(keyContext->secMode());
+    Vector ss(params->xmin,params->ymin);
+    Vector tt(params->xmax,params->ymax);
+
+    Vector ll = mapFromRef3d(ss,Coord::CANVAS,cropsl_);
+    Vector lr = mapFromRef3d(Vector(tt[0],ss[1]),Coord::CANVAS,cropsl_);
+    Vector ur = mapFromRef3d(tt,Coord::CANVAS,cropsl_);
+    Vector ul = mapFromRef3d(Vector(ss[0],tt[1]),Coord::CANVAS,cropsl_);
+
+    XDrawLine(display,pixmap,selectGCXOR,ll[0],ll[1],lr[0],lr[1]);
+    XDrawLine(display,pixmap,selectGCXOR,lr[0],lr[1],ur[0],ur[1]);
+    XDrawLine(display,pixmap,selectGCXOR,ur[0],ur[1],ul[0],ul[1]);
+    XDrawLine(display,pixmap,selectGCXOR,ul[0],ul[1],ll[0],ll[1]);
+  }
+}
+
 void Frame3dBase::x11Graphics()
 {
   Base::x11Graphics();

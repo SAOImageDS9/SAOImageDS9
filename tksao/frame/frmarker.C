@@ -3641,7 +3641,7 @@ void Base::markerDeleteTagCmd(int id, int which)
   }
 }
 
-void Base::markerEditBeginCmd(int id, int h)
+void Base::markerEditBeginCmd(int id, int hh)
 {
   // remember which marker is being edited
   Marker* mm=markers->head();
@@ -3650,7 +3650,7 @@ void Base::markerEditBeginCmd(int id, int h)
       markerUndo(mm, EDIT);
 
       editMarker = mm;
-      editMarker->editBegin(h);
+      editMarker->editBegin(hh);
       return;
     }
     mm=mm->next();
@@ -3659,7 +3659,7 @@ void Base::markerEditBeginCmd(int id, int h)
   editMarker = NULL;
 }
 
-void Base::markerEditBeginCmd(const Vector& v, int h)
+void Base::markerEditBeginCmd(const Vector& vv, int hh)
 {
   // remember which marker is being edited
   Marker* mm=markers->head();
@@ -3668,7 +3668,7 @@ void Base::markerEditBeginCmd(const Vector& v, int h)
       markerUndo(mm, EDIT);
 
       editMarker = mm;
-      editMarker->editBegin(h);
+      editMarker->editBegin(hh);
       return;
     }
     mm=mm->next();
@@ -3680,21 +3680,21 @@ void Base::markerEditBeginCmd(const Vector& v, int h)
 void Base::markerEditMotionCmd(const Vector& vv, int hh)
 {
   if (editMarker) {
-    // erase current marker now
-    redraw(editMarker->getAllBBox());
-    forceUpdate();
-
+    editMarker->setRenderMode(Marker::XOR);
     editMarker->edit(mapToRef(vv,Coord::CANVAS), hh);
-    x11MarkerXOR(editMarker);
   }
+
+  update(PIXMAP);
 }
 
 void Base::markerEditEndCmd()
 {
-  if (editMarker)
+  if (editMarker) {
+    editMarker->setRenderMode(Marker::SRC);
     editMarker->editEnd();
-  editMarker = NULL;
+  }
 
+  editMarker = NULL;
   update(PIXMAP);
 }
 
@@ -4795,10 +4795,10 @@ void Base::markerMoveCmd(int id, const Vector& v)
   }
 }
 
-void Base::markerMoveBeginCmd(const Vector& v)
+void Base::markerMoveBeginCmd(const Vector& vv)
 {
-  markerBegin = mapToRef(v,Coord::CANVAS);
-  
+  markerBegin = mapToRef(vv,Coord::CANVAS);
+
   undoMarkers->deleteAll();
   Marker* mm=markers->head();
   while (mm) {
@@ -4811,112 +4811,35 @@ void Base::markerMoveBeginCmd(const Vector& v)
   }
 }
 
-void Base::markerMoveBeginCmd(int id, const Vector& v)
+void Base::markerMoveMotionCmd(const Vector& vv)
 {
-  markerBegin = mapToRef(v,Coord::CANVAS);
+  Vector markerEnd = mapToRef(vv,Coord::CANVAS);
+  Vector diff = markerEnd - markerBegin;
+  markerBegin = markerEnd;
 
-  undoMarkers->deleteAll();
   Marker* mm=markers->head();
   while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canMove()) {
-	undoMarkers->append(mm->dup());
-	undoMarkerType = MOVE;
-	mm->moveBegin();
-      }
-      return;
+    if (mm->isSelected() && mm->canMove()) {
+      mm->setRenderMode(Marker::XOR);
+      mm->move(diff);
     }
     mm=mm->next();
   }
-}
 
-void Base::markerMoveMotionCmd(const Vector& v)
-{
-  // first, accumulate erase markers
-  Marker* mm=markers->head();
-  if (mm) {
-    while (mm) {
-      if (mm->isSelected() && mm->canMove())
-	redraw(mm->getAllBBox());
-      mm=mm->next();
-    }
-
-    // and erase now
-    forceUpdate();
-
-    // ok, now draw selected markers in new location
-    Vector markerEnd = mapToRef(v,Coord::CANVAS);
-    Vector diff = markerEnd - markerBegin;
-    markerBegin = markerEnd;
-
-    mm=markers->head();
-    while (mm) {
-      if (mm->isSelected() && mm->canMove()) {
-	mm->move(diff);
-	x11MarkerXOR(mm);
-      }
-      mm=mm->next();
-    }
-  }
-}
-
-void Base::markerMoveMotionCmd(int id, const Vector& v)
-{
-  // first, accumulate erase markers
-  Marker* mm=markers->head(); 
-  if (mm) {
-    while (mm) {
-      if (mm->getId() && mm->canMove()) {
-	redraw(mm->getAllBBox());
-	break;
-      }
-      mm=mm->next();
-    }
-
-    if (!mm)
-      return; // can't find it
-
-    Marker *ptr = mm;
-
-    // and erase now
-    forceUpdate();
-
-    // ok, now draw selected markers in new location
-    Vector markerEnd = mapToRef(v,Coord::CANVAS);
-    Vector diff = markerEnd - markerBegin;
-    markerBegin = markerEnd;
-
-    ptr->move(diff);
-    x11MarkerXOR(ptr);
-  }
+  update(PIXMAP);
 }
 
 void Base::markerMoveEndCmd()
 {
   Marker* mm=markers->head();
   while (mm) {
-    if (mm->isSelected() && mm->canMove())
+    if (mm->isSelected() && mm->canMove()) {
+      mm->setRenderMode(Marker::SRC);
       mm->moveEnd();
-    mm=mm->next();
-  }
-
-  // update widget since we don't know where the selected markers came from
-  update(PIXMAP);
-}
-
-void Base::markerMoveEndCmd(int id)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canMove())
-	mm->moveEnd();
-      return;
     }
     mm=mm->next();
   }
 
-  // update widget since we don't know where the selected markers came from
   update(PIXMAP);
 }
 
@@ -5267,15 +5190,15 @@ void Base::markerRotateBeginCmd(int id)
     if (mm->getId() == id) {
       if (mm->canRotate()) {
 	markerUndo(mm, EDIT);
-	rotateMarker = mm;
-	rotateMarker->rotateBegin();
+	editMarker = mm;
+	editMarker->rotateBegin();
       }
       return;
     }
     mm=mm->next();
   }
 
-  rotateMarker = NULL;
+  editMarker = NULL;
 }
 
 void Base::markerRotateBeginCmd(const Vector& v)
@@ -5285,33 +5208,34 @@ void Base::markerRotateBeginCmd(const Vector& v)
   while (mm) {
     if (mm->isSelected() && mm->canRotate()) {
       markerUndo(mm, EDIT);
-      rotateMarker = mm;
-      rotateMarker->rotateBegin();
+      editMarker = mm;
+      editMarker->rotateBegin();
       return;
     }
     mm=mm->next();
   }
 
-  rotateMarker = NULL;
+  editMarker = NULL;
 }
 
 void Base::markerRotateMotionCmd(const Vector& vv, int hh)
 {
-  if (rotateMarker) {
-    // erase current marker now
-    redraw(rotateMarker->getAllBBox());
-    forceUpdate();
-
-    rotateMarker->rotate(mapToRef(vv,Coord::CANVAS), hh);
-    x11MarkerXOR(rotateMarker);
+  if (editMarker) {
+    editMarker->setRenderMode(Marker::XOR);
+    editMarker->rotate(mapToRef(vv,Coord::CANVAS), hh);
   }
+
+  update(PIXMAP);
 }
 
 void Base::markerRotateEndCmd()
 {
-  if (rotateMarker)
-    rotateMarker->rotateEnd();
-  rotateMarker = NULL;
+  if (editMarker) {
+    editMarker->setRenderMode(Marker::SRC);
+    editMarker->rotateEnd();
+  }
+
+  editMarker = NULL;
   update(PIXMAP);
 }
 
@@ -6221,7 +6145,7 @@ void Base::x11MagnifierMarkers(List<Marker>* ml, const BBox& bb)
   while (mm) {
     if (mm->isVisible(bb))
       mm->x11(magnifierPixmap, Coord::MAGNIFIER, showMarkersText,
-	      Marker::SRC, Marker::NOHANDLES);
+	      Marker::NOHANDLES);
     mm=mm->previous();
   }
 }
@@ -6233,17 +6157,9 @@ void Base::x11Markers(List<Marker>* ml, const BBox& bb)
   Marker* mm=ml->tail();
   while (mm) {
     if (mm->isVisible(bb))
-      mm->x11(pixmap, Coord::WIDGET, showMarkersText, 
-	      Marker::SRC, Marker::HANDLES);
+      mm->x11(pixmap, Coord::WIDGET, showMarkersText, Marker::HANDLES);
     mm=mm->previous();
   }
-}
-
-void Base::x11MarkerXOR(Marker* ptr)
-{
-  if (ptr)
-    ptr->x11(Tk_WindowId(tkwin), Coord::WINDOW, showMarkersText, 
-	     Marker::XOR, Marker::NOHANDLES);
 }
 
 void Base::unselectMarkers(List<Marker>* ml)

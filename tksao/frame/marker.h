@@ -66,6 +66,7 @@ protected:
   unsigned short properties;
   int selected;
   int highlited;
+  RenderMode renderMode;
 
   float dlist[2];
 
@@ -209,8 +210,7 @@ protected:
   virtual Vector fwdMap(const Vector&, Coord::InternalSystem);
   virtual Vector bckMap(const Vector&, Coord::InternalSystem);
 
-  virtual void x11(Drawable, Coord::InternalSystem, int, RenderMode,
-		   HandleMode);
+  virtual void x11(Drawable, Coord::InternalSystem, int, HandleMode);
   virtual void ps(int,int);
 #ifdef MAC_OSX_TK
   virtual void macosx(int);
@@ -286,6 +286,9 @@ protected:
   void unhighlite();
   void toggleHighlite();
   int isHighlited() {return highlited;}
+
+  void setRenderMode(RenderMode rr) {renderMode = rr;}
+  RenderMode getRenderMode() {return renderMode;}
 
   void key();
 

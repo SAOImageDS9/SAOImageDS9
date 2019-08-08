@@ -169,8 +169,6 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   undoMarkerType = NONE;
 
   editMarker = NULL;
-  rotateMarker = NULL;
-
   compositeMarker = NULL;
 
   inverseScale = NULL;

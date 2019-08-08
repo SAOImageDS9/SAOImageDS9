@@ -41,12 +41,13 @@ void Composite::x11(Drawable drawable, Coord::InternalSystem sys,
 
   Marker* mk=members.head();
   while (mk) {
-    Marker* m = mk->dup();
-    m->setComposite(fwdMatrix(), angle);
+    Marker* mm = mk->dup();
+    mm->setRenderMode(renderMode);
+    mm->setComposite(fwdMatrix(), angle);
     if (global)
-      m->setComposite(colorName, lineWidth, highlited);
-    m->x11(drawable, sys, tt, hh);
-    delete m;
+      mm->setComposite(colorName, lineWidth, highlited);
+    mm->x11(drawable, sys, tt, hh);
+    delete mm;
     mk=mk->next();
   }
 }

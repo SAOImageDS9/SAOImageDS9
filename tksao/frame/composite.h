@@ -36,7 +36,7 @@ public:
 
   Marker* dup() {return new Composite(*this);}
 
-  void x11(Drawable, Coord::InternalSystem, int, RenderMode, HandleMode);
+  void x11(Drawable, Coord::InternalSystem, int, HandleMode);
   void ps(int,int);
 #ifdef MAC_OSX_TK
   void macosx(int);

@@ -32,12 +32,12 @@ Composite::Composite(Base* p, const Vector& ctr,
 }
 
 void Composite::x11(Drawable drawable, Coord::InternalSystem sys,
-		    int tt, RenderMode mode, HandleMode hh)
+		    int tt, HandleMode hh)
 {
-  if (hh==HANDLES)
+  if (hh==HANDLES && renderMode != Marker::XOR)
     renderXHandles(drawable);
   if (tt)
-    renderXText(drawable, sys, mode);
+    renderXText(drawable, sys, renderMode);
 
   Marker* mk=members.head();
   while (mk) {
@@ -45,7 +45,7 @@ void Composite::x11(Drawable drawable, Coord::InternalSystem sys,
     m->setComposite(fwdMatrix(), angle);
     if (global)
       m->setComposite(colorName, lineWidth, highlited);
-    m->x11(drawable, sys, tt, mode, hh);
+    m->x11(drawable, sys, tt, hh);
     delete m;
     mk=mk->next();
   }

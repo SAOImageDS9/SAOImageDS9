@@ -1376,6 +1376,7 @@ void Base::updateGCs()
   // widget clip region
   BBox bbWidget = BBox(0, 0, options->width, options->height);
   Vector sizeWidget = bbWidget.size();
+  XRectangle rectWidget[1];
 
   rectWidget[0].x = (int)bbWidget.ll[0];
   rectWidget[0].y = (int)bbWidget.ll[1];
@@ -1385,6 +1386,7 @@ void Base::updateGCs()
   // window clip region
   BBox bbWindow = bbWidget * widgetToWindow;
   Vector sizeWindow = bbWindow.size();
+  XRectangle rectWindow[1];
 
   rectWindow[0].x = (int)bbWindow.ll[0];
   rectWindow[0].y = (int)bbWindow.ll[1];
@@ -1814,6 +1816,7 @@ void Base::ximageToPixmapMagnifier()
 void Base::macosx()
 {
   // clip rect
+  XRectangle rectWidget[1];
   XRectangle* rr = rectWidget;
   Vector v1 = Vector(rr->x, rr->y) * widgetToCanvas;
   Vector v2 = Vector(rr->x+rr->width, rr->y+rr->height) * widgetToCanvas;
@@ -1922,6 +1925,7 @@ void Base::macosxPrintCmd()
 void Base::win32()
 {
   // clip rect
+  XRectangle rectWidget[1];
   XRectangle* rr = rectWidget;
   Vector v1 = Vector(rr->x, rr->y) * widgetToCanvas;
   Vector v2 = Vector(rr->x+rr->width, rr->y+rr->height) * widgetToCanvas;

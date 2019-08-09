@@ -228,9 +228,6 @@ public:
   int useHighlite;
   GC highliteGC;
 
-  XRectangle rectWidget[1];
-  XRectangle rectWindow[1];
-
   int useCrosshair;
 
   int precLinear_;

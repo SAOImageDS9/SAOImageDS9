@@ -760,20 +760,12 @@ void Frame3dBase::updateGCs()
     // widget clip region
   BBox bbWidget = BBox(0, 0, options->width, options->height);
   Vector sizeWidget = bbWidget.size();
+  XRectangle rectWidget[1];
 
   rectWidget[0].x = (int)bbWidget.ll[0];
   rectWidget[0].y = (int)bbWidget.ll[1];
   rectWidget[0].width = (int)sizeWidget[0];
   rectWidget[0].height = (int)sizeWidget[1];
-
-  // window clip region
-  BBox bbWindow = bbWidget * widgetToWindow;
-  Vector sizeWindow = bbWindow.size();
-
-  rectWindow[0].x = (int)bbWindow.ll[0];
-  rectWindow[0].y = (int)bbWindow.ll[1];
-  rectWindow[0].width = (int)sizeWindow[0];
-  rectWindow[0].height = (int)sizeWindow[1];
 
   // 3d highlite
   if (!threedGC) {

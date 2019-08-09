@@ -1401,12 +1401,12 @@ void Base::updateGCs()
 
   // markerGC
   XSetClipRectangles(display, markerGC_, 0, 0, rectWidget, 1, Unsorted);
-  XSetClipRectangles(display, markerGCXOR_, 0, 0, rectWindow, 1, Unsorted);
+  XSetClipRectangles(display, markerGCXOR_, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, markerGCXOR_, getColor("white"));
 
   // selectGC
   x11Dash(selectGCXOR,1);
-  XSetClipRectangles(display, selectGCXOR, 0, 0, rectWindow, 1, Unsorted);
+  XSetClipRectangles(display, selectGCXOR, 0, 0, rectWidget, 1, Unsorted);
   XSetForeground(display, selectGCXOR, getColor("white"));
 
   // gridGC

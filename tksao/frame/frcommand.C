@@ -341,15 +341,12 @@ void FrameBase::panBBoxCmd(const Vector& vv)
 
 void FrameBase::panBeginCmd(const Vector& vv)
 {
-  // vv and panCursor are in CANVAS coords
-  panCursor = cursor;
-  panStart = vv;
+  panStart = mapToRef(vv,Coord::CANVAS);
 }
 
 void FrameBase::panMotionCmd(const Vector& vv)
 {
-  Vector dd = vv -panStart;
-  cursor = panCursor + Vector(-dd[0],dd[1]);
+  cursor -= mapToRef(vv,Coord::CANVAS) - panStart;
 
   setBinCursor();
   update(MATRIX);

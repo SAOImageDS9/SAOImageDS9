@@ -141,7 +141,6 @@ class Widget {
   void redraw(BBox);             // ping tk to redraw this bbox
   void redrawNow();              // force update now this widget
   void redrawNow(BBox);          // force update now this bbox
-  void forceUpdate();            // only force update
 
   virtual int parse(istringstream&) =0;           // parse subcommands
 

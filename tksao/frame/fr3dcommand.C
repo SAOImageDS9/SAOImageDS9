@@ -364,15 +364,14 @@ void Frame3dBase::panBBoxCmd(const Vector& vv)
 
 void Frame3dBase::panBeginCmd(const Vector& vv)
 {
-  // vv and panCursor are in CANVAS coords
-  panCursor = viewCursor_;
-  panStart = vv;
+  panStart = vv*canvasToWidget;
 }
 
 void Frame3dBase::panMotionCmd(const Vector& vv)
 {
-  Vector dd = vv*canvasToWidget - panStart*canvasToWidget;
-  viewCursor_ = panCursor + dd*Scale(1/zoom_[0],1/zoom_[1]);
+  Vector diff = vv*canvasToWidget - panStart;
+  viewCursor_ = diff*Scale(1/zoom_[0],1/zoom_[1]);
+
   update(MATRIX);
 }
 

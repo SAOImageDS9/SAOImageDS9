@@ -766,7 +766,7 @@ void Frame3dBase::updateGCs()
   rectWidget[0].width = (int)sizeWidget[0];
   rectWidget[0].height = (int)sizeWidget[1];
 
-// window clip region
+  // window clip region
   BBox bbWindow = bbWidget * widgetToWindow;
   Vector sizeWindow = bbWindow.size();
 
